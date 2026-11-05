@@ -536,6 +536,20 @@ class PrivatePodTests(unittest.TestCase):
             with self.subTest(bad=bad), self.assertRaisesRegex(pod.PilotError, "row_count"):
                 pod.data_bounded_settings(get_role_config("chat"), bad)
 
+    def test_solver_chat_command_requires_official_assistant_only_loss(self):
+        config = get_role_config("solver")
+        command = pod.training_command(Path("train_lora.py"), Path("train.chat.jsonl"), Path("adapter"),
+                                       Path("validation.chat.jsonl"), config, "chat")
+        self.assertEqual(command[command.index("--assistant-only-loss") + 1], "required")
+        self.assertEqual(command.count("--assistant-only-loss"), 1)
+
+    def test_native_solver_and_gemma_keep_existing_loss_policy(self):
+        for role, data_format in (("solver", "text"), ("chat", "chat")):
+            with self.subTest(role=role, data_format=data_format):
+                command = pod.training_command(Path("train_lora.py"), Path("train.jsonl"), Path("adapter"),
+                                               config=get_role_config(role), data_format=data_format)
+                self.assertNotIn("--assistant-only-loss", command)
+
     def test_tiny_chat_steps_use_validated_count_and_ignore_environment_overrides(self):
         self.configure_chat()
         rows = [{"messages": [{"role": "user", "content": "synthetic question " + str(i)},

@@ -481,6 +481,79 @@ def label_diagnostics(processor, enabled, reason, probe, data_format):
             'processor_class': class_name(processor), 'tokenizer_class': class_name(tokenizer), **probe}
 
 
+QWQ_TEMPLATE_SHA256 = '16488ad69d85833e5f66c50174f39834b688343337e9337f018deaa21b354117'
+QWQ_RESPONSE_PREFIX = '<|im_start|>assistant\n<think>\n'
+
+
+def qwq_response_only_rows(processor, rows, helper, max_length):
+    """Use Unsloth's official label masker on exact, unmodified QwQ template bytes.
+
+    Inputs contain final published answers, not model reasoning. A structural
+    empty thought channel makes the original generation prompt a token prefix.
+    Every real row is checked against that prompt before any optimizer exists.
+    """
+    template = getattr(processor, 'chat_template', None)
+    if not isinstance(template, str) or hashlib.sha256(template.encode()).hexdigest() != QWQ_TEMPLATE_SHA256:
+        raise ValueError('reviewed official QwQ template is required')
+    if not callable(helper):
+        raise ValueError('official response-only helper is unavailable')
+    masker = helper(None, tokenizer=processor, instruction_part='<|im_start|>user\n',
+                    response_part=QWQ_RESPONSE_PREFIX, force_match=True, return_function=True)
+    if not callable(masker):
+        raise ValueError('official response-only masker is unavailable')
+    tokenizer = getattr(processor, 'tokenizer', processor)
+    prepared = []
+    for row in rows:
+        messages = row['messages']
+        roles = [m.get('role') for m in messages]
+        if roles not in (['user', 'assistant'], ['system', 'user', 'assistant']):
+            raise ValueError('QwQ final-answer SFT requires a single reviewed turn')
+        if any(re.search(r'<\|[^\n]*?\|>|</?think>', m['content']) for m in messages):
+            raise ValueError('QwQ final-answer source contains control or reasoning-channel tokens')
+        copied = [dict(m) for m in messages]
+        copied[-1]['content'] = '<think>\n</think>\n' + copied[-1]['content']
+        prompt = processor.apply_chat_template(messages[:-1], tokenize=False, add_generation_prompt=True)
+        full = processor.apply_chat_template(copied, tokenize=False, add_generation_prompt=False)
+        if not isinstance(prompt, str) or not isinstance(full, str) or not prompt.endswith(QWQ_RESPONSE_PREFIX) or not full.startswith(prompt):
+            raise ValueError('official QwQ prompt is not a prefix of the final answer')
+        ids = tokenizer.encode(full, add_special_tokens=False)
+        prefix = tokenizer.encode(prompt, add_special_tokens=False)
+        if (not isinstance(ids, list) or not isinstance(prefix, list) or not prefix
+                or not len(prefix) < len(ids) <= max_length or ids[:len(prefix)] != prefix
+                or any(type(v) is not int or v < 0 for v in ids)):
+            raise ValueError('QwQ answer has invalid token prefix or exceeds the no-truncation limit')
+        labels = masker({'input_ids': [ids]}).get('labels')
+        eos_id = getattr(tokenizer, 'eos_token_id', None)
+        if type(eos_id) is not int or eos_id not in ids[len(prefix):]:
+            raise ValueError('QwQ final answer has no official EOS boundary')
+        end = ids.index(eos_id, len(prefix)) + 1
+        # The upstream masker intentionally stops at the assistant EOS; the
+        # official template's following newline is formatting, not an answer.
+        if end < len(ids) and not tokenizer.decode(ids[end:]).isspace():
+            raise ValueError('non-whitespace follows the QwQ final answer EOS')
+        expected = [-100] * len(prefix) + ids[len(prefix):end] + [-100] * (len(ids) - end)
+        if not isinstance(labels, list) or labels != [expected]:
+            raise ValueError('official QwQ response mask did not preserve the complete prompt and answer boundary')
+        prepared.append({'input_ids': ids, 'attention_mask': [1] * len(ids), 'labels': expected})
+    if getattr(processor, 'chat_template', None) != template:
+        raise ValueError('QwQ response masking changed the official template')
+    return prepared
+
+
+def verify_response_only_collation(collator, rows):
+    """Check the actual collator retains every reviewed label before training."""
+    for row in rows:
+        batch = collator([{k: list(v) for k, v in row.items()}])
+        def as_list(value):
+            return value.tolist() if callable(getattr(value, 'tolist', None)) else value
+        ids, labels = as_list(batch.get('input_ids')), as_list(batch.get('labels'))
+        if (not isinstance(ids, list) or not isinstance(labels, list) or len(ids) != 1 or len(labels) != 1
+                or ids[0][:len(row['input_ids'])] != row['input_ids']
+                or labels[0][:len(row['labels'])] != row['labels']
+                or any(v != -100 for v in labels[0][len(row['labels']):])):
+            raise ValueError('actual QwQ collator changed the verified response-only labels')
+
+
 GEMMA_FORMATTER_TEMPLATE_SHA256 = '6971ec85ae5b8a161889e66720199f18ccf0ff8232909a01e0bdce244e507ab1'
 GEMMA_SOURCE_TEMPLATE_SHA256 = 'ae53464bf3be25802b3a5b37def7fd89667067d7577049b3b2d74c4d8de4c6d4'
 
@@ -791,7 +864,28 @@ def main(argv=None):
     mask_enabled, patched_template, mask_reason = False, None, 'plain_text_full_sequence_loss'
     mask_probe = {'mask_probe_dimensions': 0, 'mask_probe_batch_size': 0,
                   'mask_probe_token_count': 0, 'mask_probe_assistant_tokens': 0}
-    if a.format == 'chat' and a.assistant_only_loss != 'off':
+    responses_only = a.base == 'solver' and a.format == 'chat' and a.assistant_only_loss == 'required'
+    response_train, response_held, response_collator = None, None, None
+    if responses_only:
+        from unsloth.chat_templates import train_on_responses_only
+        from transformers import DataCollatorForSeq2Seq
+        helper_path = inspect.getsourcefile(inspect.unwrap(train_on_responses_only))
+        if not helper_path or not Path(helper_path).is_file():
+            raise ValueError('official QwQ masking helper provenance is unavailable')
+        response_train = qwq_response_only_rows(tok, train, train_on_responses_only, a.max_len)
+        response_held = qwq_response_only_rows(tok, held, train_on_responses_only, a.max_len)
+        synthetic = [{'messages': [{'role': 'user', 'content': 'Synthetic question.'},
+                                  {'role': 'assistant', 'content': 'Final answer: x=2.'}]}]
+        probe_rows = qwq_response_only_rows(tok, synthetic, train_on_responses_only, a.max_len)
+        probe_labels = probe_rows[0]['labels']
+        mask_probe.update(mask_probe_dimensions=2, mask_probe_batch_size=1,
+                          mask_probe_token_count=len(probe_labels),
+                          mask_probe_assistant_tokens=sum(v != -100 for v in probe_labels))
+        response_collator = DataCollatorForSeq2Seq(tokenizer=getattr(tok, 'tokenizer', tok),
+                                                  label_pad_token_id=-100, return_tensors='pt')
+        verify_response_only_collation(response_collator, probe_rows + response_train + response_held)
+        mask_reason = 'official_unsloth_responses_only_verified'
+    elif a.format == 'chat' and a.assistant_only_loss != 'off':
         try:
             from trl import get_training_chat_template
         except ImportError:
@@ -807,7 +901,7 @@ def main(argv=None):
         tok.chat_template = patched_template
         if hasattr(tok, 'tokenizer'):
             tok.tokenizer.chat_template = patched_template
-    summary.update(assistant_only_loss=mask_enabled, assistant_loss_status=mask_reason)
+    summary.update(assistant_only_loss=mask_enabled or responses_only, assistant_loss_status=mask_reason)
     def fmt(rows):
         if a.format == 'chat':
             return Dataset.from_list([{'messages': r['messages']} for r in rows])
@@ -824,13 +918,36 @@ def main(argv=None):
         training_options['per_device_eval_batch_size'] = 1
     if 'assistant_only_loss' in inspect.signature(SFTConfig).parameters:
         training_options['assistant_only_loss'] = mask_enabled
-    trainer = SFTTrainer(model=model, processing_class=tok, train_dataset=fmt(train), eval_dataset=fmt(held) if held else None,
-                         args=SFTConfig(**training_options))
+    trainer_options = {}
+    if responses_only:
+        training_options.update(packing=False)
+        trainer_options['data_collator'] = response_collator
+    trainer = SFTTrainer(model=model, processing_class=tok,
+                         train_dataset=Dataset.from_list(response_train) if responses_only else fmt(train),
+                         eval_dataset=(Dataset.from_list(response_held) if responses_only else fmt(held)) if held else None,
+                         args=SFTConfig(**training_options), **trainer_options)
     effective_mask = getattr(getattr(trainer, 'args', None), 'assistant_only_loss', mask_enabled)
     if type(effective_mask) is not bool or effective_mask != mask_enabled:
         raise ValueError('trainer assistant masking configuration changed unexpectedly')
     summary['label_diagnostics'] = label_diagnostics(getattr(trainer, 'processing_class', tok), effective_mask,
                                                      mask_reason, mask_probe, a.format)
+    if responses_only:
+        # Selective supervision is supplied by verified labels, not TRL's
+        # assistant_only_loss setting. Preserve that distinction in receipts.
+        for actual, expected in ((trainer.train_dataset, response_train), (trainer.eval_dataset, response_held)):
+            if expected and (len(actual) != len(expected) or any(
+                    any(row.get(k) != reference[k] for k in ('input_ids', 'attention_mask', 'labels'))
+                    for row, reference in zip(actual, expected))):
+                raise ValueError('trainer changed the verified QwQ token dataset')
+        if getattr(trainer.args, 'completion_only_loss', False) not in (None, False):
+            raise ValueError('trainer enabled an unexpected second completion mask')
+        verify_response_only_collation(trainer.data_collator, response_train + response_held)
+        summary['label_diagnostics'].update(version=2, assistant_only_loss=True,
+            mask_method='official_unsloth_responses_only', mask_helper_sha256=file_sha256(helper_path),
+            records_verified=len(response_train) + len(response_held),
+            trainer_assistant_only_loss=False, trainer_completion_only_loss=False)
+        if summary['label_diagnostics']['selected_template_sha256'] != QWQ_TEMPLATE_SHA256:
+            raise ValueError('trainer changed the reviewed QwQ template')
     if mask_enabled and summary['label_diagnostics']['selected_template_sha256'] != hashlib.sha256(patched_template.encode()).hexdigest():
         raise ValueError('trainer changed the probed assistant-loss template')
     if a.training_profile == GEMMA_26B_QLORA_V1:

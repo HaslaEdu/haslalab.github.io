@@ -372,6 +372,11 @@ def training_command(script, data, adapter, validation=None, config=None, data_f
                "--rank", str(config["default_rank"]), "--max-steps", str(config["max_steps"]),
                "--epochs", "1", "--lr", "1e-5", "--max-len", str(config["max_length"]),
                "--holdout", "0", str(data), str(adapter)]
+    if config["role"] == "solver" and data_format == "chat":
+        # Specialist SFT learns the reviewed assistant answer, not the supplied
+        # question. The trainer must stop before optimization when the official
+        # template cannot provide a selective assistant-token mask.
+        command.extend(["--assistant-only-loss", "required"])
     if validation is not None:
         command.extend(["--validation-data", str(validation)])
     if config.get('training_profile') is not None:
@@ -445,15 +450,20 @@ def adapter_inventory(adapter, config=None):
     return files, sha_bytes(json.dumps(files, sort_keys=True, separators=(",", ":")).encode())
 
 
-def validated_label_diagnostics(value, data_format):
+def validated_label_diagnostics(value, data_format, role=None):
     statuses = {'plain_text_full_sequence_loss', 'explicit_full_sequence_loss',
                 'template_has_no_generation_markers', 'generation_mask_not_available',
                 'generation_mask_not_selective', 'generation_mask_shape_invalid', 'generation_mask_check_failed',
-                'library_generation_mask_verified', 'installed_trl_has_no_assistant_only_loss'}
+                'library_generation_mask_verified', 'installed_trl_has_no_assistant_only_loss',
+                'official_unsloth_responses_only_verified'}
     numbers = ('mask_probe_dimensions', 'mask_probe_batch_size', 'mask_probe_token_count', 'mask_probe_assistant_tokens')
     keys = {'version', 'assistant_only_loss', 'assistant_loss_status', 'selected_template_sha256',
             'processor_class', 'tokenizer_class', *numbers}
-    if (not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] != 1
+    version = value.get('version') if isinstance(value, dict) else None
+    if version == 2:
+        keys |= {'mask_method', 'mask_helper_sha256', 'records_verified',
+                 'trainer_assistant_only_loss', 'trainer_completion_only_loss'}
+    if (not isinstance(value, dict) or set(value) != keys or type(version) is not int or version not in (1, 2)
             or type(value['assistant_only_loss']) is not bool or not isinstance(value['assistant_loss_status'], str)
             or value['assistant_loss_status'] not in statuses
             or data_format not in ('text', 'chat')):
@@ -470,7 +480,17 @@ def validated_label_diagnostics(value, data_format):
     if (dimensions not in (0, 1, 2) or selected > tokens or dimensions == 0 and (batch or tokens or selected)
             or dimensions == 1 and batch != 1 or tokens and batch != 1):
         raise ValueError('invalid_label_diagnostics')
-    verified = value['assistant_loss_status'] == 'library_generation_mask_verified'
+    response_only = value['assistant_loss_status'] == 'official_unsloth_responses_only_verified'
+    if response_only != (version == 2):
+        raise ValueError('invalid_label_diagnostics')
+    if response_only and role not in (None, 'solver'):
+        raise ValueError('invalid_label_diagnostics')
+    if response_only and (value['mask_method'] != 'official_unsloth_responses_only'
+            or not isinstance(value['mask_helper_sha256'], str) or not re.fullmatch(r'[a-f0-9]{64}', value['mask_helper_sha256'])
+            or type(value['records_verified']) is not int or not 1 <= value['records_verified'] <= 250000
+            or value['trainer_assistant_only_loss'] is not False or value['trainer_completion_only_loss'] is not False):
+        raise ValueError('invalid_label_diagnostics')
+    verified = value['assistant_loss_status'] == 'library_generation_mask_verified' or response_only
     if value['assistant_only_loss'] != verified or verified and not (dimensions in (1, 2) and batch == 1 and 0 < selected < tokens):
         raise ValueError('invalid_label_diagnostics')
     if ((data_format == 'text') != (value['assistant_loss_status'] == 'plain_text_full_sequence_loss')
@@ -625,7 +645,7 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
     diagnostics = {}
     if 'label_diagnostics' in report:
         try:
-            diagnostics['label_diagnostics'] = validated_label_diagnostics(report['label_diagnostics'], data_format)
+            diagnostics['label_diagnostics'] = validated_label_diagnostics(report['label_diagnostics'], data_format, config['role'])
         except ValueError:
             raise PilotError('training_label_diagnostics_invalid') from None
     try:

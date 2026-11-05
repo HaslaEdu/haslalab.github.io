@@ -195,6 +195,91 @@ def validate_authored_chat(row):
         and _authored_chat_sha(row) == trusted['row_sha256'][row['id']])
 
 
+# Explicit root-reviewed authored physics cohort. These hashes bind every byte
+# of the reviewed rows; a source/reviewer label alone never grants admission.
+# Native/PDF source rules and the existing Gemma cohort remain unchanged.
+_AUTHORED_PHYSICS_COHORT = {
+    'dataset_version': 'qwq-physics-heat-curriculum-v3-20261105',
+    'provenance_type': 'authored_physics_curriculum_v1',
+    'authoring_agent': 'agent:codex/root/quality_audit',
+    'reviewer': 'agent:codex/root',
+    'review_basis': 'exact_contact_simulations_and_root_mathematical_review',
+    'review_receipt_sha256': 'db18b18efef1828ad5091c579bb3b733538817493b190ddb015ab6ac3b2b6f06',
+    'family_splits': {
+        'heat-counterexample-equal-C-sequential-N-squared': 'train',
+        'diagnostic:monatomic-ideal-gas-isochoric': 'validation',
+        'diagnostic:free-linear-thermal-expansion': 'validation'},
+    'metadata_keys': {
+        'adapter', 'authored', 'authoring_agent', 'contains_hidden_chain_of_thought',
+        'dataset_version', 'diagnostic_only', 'domain', 'family_id', 'general_benchmark_claim',
+        'group_id', 'human_reviewed', 'input_language', 'messages_sha256', 'provenance_type',
+        'review_basis', 'review_method', 'review_receipt_sha256', 'review_status', 'reviewer',
+        'role', 'source_record_id', 'source_type', 'split', 'synthetic', 'target_language',
+        'target_role', 'task', 'universal_scientific_correctness_claim'},
+    'row_sha256': {
+        'heat-counterexample-solve-ko': '6721cde6fe15fb608fb0abccd737764cca635bad615722325564fabc4a9b3b6e',
+        'heat-counterexample-solve-en': 'c0a0cf118b59c982a56f5feb578226b13dbe181c550be4e65fc6b824712bf210',
+        'heat-counterexample-concept-ko': 'd209b2d7c42ae88336809297c230542db18d036ab1ae9a9cdd8687e27dcc532c',
+        'heat-counterexample-concept-en': '5daba2bb965ff3099afb6d101a223059f6f78db900bf47a4535235d086aef8d4',
+        'heat-unequal-capacity-energy-ko': '8e601d4d1adb12255bd828f30edca400aeb11035027e298e2301f104236f6359',
+        'heat-unequal-capacity-energy-en': 'f69f45f5a8d20592c0c7653c10ca18e52df24d11126e1c3c494ef87fd3363ab5',
+        'heat-one-sided-splitting-ko': 'b666d9acc1ec61f4d947285f215d74f5fe6242a7af3c42117e510465c46b8672',
+        'heat-one-sided-splitting-en': '7e5065622a2c40ab33da2347a2950cfccf67de65ff985541a8c49b2513b60c4f',
+        'heat-user-original-ko': '0f4396121da88ab1db82aa5f55b647073a7754c79d8b86ffd3ea6cb191d870b5',
+        'heat-numerical-100-en': '99de831ae9ebb61bc42b0b64e15846b2d2d00b855b4729821f714dd72189a175',
+        'heat-numerical-10000-ko': '24ca3ed5e0593e6339a9a6f5e189b093254afe724b0b23fbe0d21eae5e663f21',
+        'diagnostic-isochoric-en': '9c553add562b7832fef5f966653d014f259e513e4981eae5c2e6f317db97be0a',
+        'diagnostic-isochoric-ko': 'dc62f32741f105d45cdd60917ca1f9b2b2cf67b09a6f79b142a507564862b564',
+        'diagnostic-expansion-en': '8d8b70de2dfba4413221ce656859038f0cd658294ac3d7e9cd29bda6c2ed50dc',
+        'diagnostic-expansion-ko': 'd751ba9b9a11330f6fe66f7e51dd528c37ca89ccae5c014db8f4cf8ae7f01385'}}
+
+
+def _authored_physics_require(value):
+    if not value:
+        raise ValueError('QwQ authored physics requires exact independently reviewed provenance')
+
+
+def _authored_physics_sha(value):
+    try:
+        return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
+            separators=(',', ':'), allow_nan=False).encode('utf8')).hexdigest()
+    except (TypeError, ValueError, UnicodeError):
+        raise ValueError('QwQ authored physics canonical content is invalid') from None
+
+
+def validate_authored_physics(row):
+    """Accept only this exact authored physics cohort, never invented PDF lineage."""
+    trusted = _AUTHORED_PHYSICS_COHORT
+    _authored_physics_require(isinstance(row, dict)
+        and set(row) == {'id', 'split', 'role', 'adapter', 'messages', 'metadata'})
+    meta, messages = row['metadata'], row['messages']
+    _authored_physics_require(isinstance(meta, dict) and set(meta) == trusted['metadata_keys'])
+    _authored_physics_require(row['role'] == meta['role'] == meta['target_role'] == 'solver'
+        and row['adapter'] == meta['adapter'] == 'lora_physics_lab'
+        and meta['domain'] == 'haslalab' and meta['target_language'] == 'en'
+        and meta['input_language'] in ('ko', 'en') and meta['task'] in ('solve', 'concept')
+        and meta['source_type'] == 'agent_authored_physics_curriculum'
+        and meta['review_status'] == 'verified' and meta['authored'] is True and meta['synthetic'] is True
+        and meta['human_reviewed'] is False and meta['contains_hidden_chain_of_thought'] is False
+        and meta['general_benchmark_claim'] is False and meta['universal_scientific_correctness_claim'] is False
+        and meta['review_method'] == 'agent_mathematical_review_and_exact_arithmetic')
+    _authored_physics_require(all(meta[key] == trusted[key] for key in (
+        'dataset_version', 'provenance_type', 'authoring_agent', 'reviewer', 'review_basis', 'review_receipt_sha256'))
+        and meta['authoring_agent'] != meta['reviewer']
+        and meta['group_id'] in trusted['family_splits'] and meta['family_id'] == meta['group_id']
+        and row['split'] == meta['split'] == trusted['family_splits'][meta['group_id']]
+        and meta['diagnostic_only'] is (meta['split'] == 'validation'))
+    _authored_physics_require(isinstance(messages, list) and len(messages) == 3
+        and all(isinstance(item, dict) and set(item) == {'role', 'content'}
+                and item['role'] == expected and isinstance(item['content'], str) and item['content'].strip()
+                for item, expected in zip(messages, ('system', 'user', 'assistant')))
+        and meta['messages_sha256'] == _authored_physics_sha(messages)
+        and messages[-1]['content'].isascii()
+        and not any(re.search(r'<\|[^\n]*?\|>|</?think>', item['content']) for item in messages))
+    _authored_physics_require(isinstance(row['id'], str) and row['id'] in trusted['row_sha256']
+        and _authored_physics_sha(row) == trusted['row_sha256'][row['id']])
+
+
 def validate_source_lineage(rows, role):
     """Require observed chat exchanges or traceable HaslaLab educational sources."""
     for row in rows:
@@ -227,6 +312,9 @@ def validate_source_lineage(rows, role):
                            for key in ('question_sha256', 'answer_sha256'))):
                 raise ValueError('Gemma requires source-grounded exchanges with the current author exclusion checks')
         else:
+            if meta.get('provenance_type') == 'authored_physics_curriculum_v1':
+                validate_authored_physics(row)
+                continue
             drive = meta.get('drive_provenance')
             drive_ok = (isinstance(drive, dict) and bool(drive.get('drive_file_id'))
                         and re.fullmatch(r'[a-f0-9]{64}', str(drive.get('local_original_pdf_sha256', '')))
