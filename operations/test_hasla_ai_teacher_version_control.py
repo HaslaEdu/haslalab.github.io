@@ -64,6 +64,33 @@ class TeacherControllerTests(unittest.TestCase):
         self.assertNotIn(token, json.dumps(metadata))
         self.assertNotIn('D1', json.dumps(metadata))
         self.assertEqual(next(x['text'] for x in bindings if x['name'] == 'HASLA_TEACHER_REQUEST_SHA256'), control.sha(body))
+        self.assertEqual(metadata['main_module'], 'teacher-entry.mjs')
+        entry = files['teacher-entry.mjs'][1].decode()
+        self.assertIn('export class StudioProvider extends WorkerEntrypoint', entry)
+        self.assertIn('fetch: teacher.fetch', entry)
+        self.assertIn('teacher_preview_rpc_disabled', entry)
+        self.assertIn('teacher_preview_queue_disabled', entry)
+        self.assertIn('teacher_preview_cron_disabled', entry)
+        self.assertNotIn('env.DB', entry)
+
+    def test_cloudflare_failure_keeps_only_numeric_codes_and_safe_phase(self):
+        response = Reply({'success': False, 'errors': [{'code': 10021, 'message': 'private bearer must not appear'},
+                          {'code': True}, {'code': 'secret'}, {'code': 10021}]}, 400)
+        client = control.Cloudflare('fixture-key', SimpleNamespace(request=lambda *a, **k: response))
+        with self.assertRaises(control.TeacherControlError) as raised:
+            client.call('POST', '/workers/scripts/haslalab-community/versions?bindings_inherit=strict', files={'fixture': 'only'})
+        self.assertEqual(raised.exception.phase, 'cloudflare_upload_version')
+        self.assertEqual(raised.exception.cloudflare_error_codes, [10021])
+        self.assertEqual(raised.exception.http_status, 400)
+        self.assertNotIn('private bearer', str(raised.exception))
+        self.assertTrue(response.closed)
+
+    def test_uploaded_source_manifest_distinguishes_handler_from_entry_shim(self):
+        source = b'export default {}'
+        manifest = control.source_manifest(source)
+        self.assertEqual(manifest['uploaded_source_manifest'][0]['sha256'], control.sha(source))
+        self.assertEqual(manifest['uploaded_source_manifest'][1]['sha256'], control.sha(control.ENTRY))
+        self.assertEqual(manifest['uploaded_source_sha256'], control.sha(control.canonical(manifest['uploaded_source_manifest'])))
 
     def test_readonly_snapshot_checks_bindings_preview_and_stable_single_production(self):
         snap = self.snapshot()

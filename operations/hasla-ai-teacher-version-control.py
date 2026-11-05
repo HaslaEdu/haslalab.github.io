@@ -36,10 +36,28 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'community/src/ai-teacher.js'
 SHA = re.compile(r'[a-f0-9]{40,64}\Z')
 UUID = re.compile(r'[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}\Z')
+ENTRY = b'''import teacher from './teacher.js';
+import { WorkerEntrypoint } from 'cloudflare:workers';
+// Preserve the existing named/default export surface for Worker-version upload.
+// This version is NEVER deployed; RPC, queue and cron paths fail closed.
+export class StudioProvider extends WorkerEntrypoint {
+  async responses() { throw new Error('teacher_preview_rpc_disabled'); }
+  async imageEdit() { throw new Error('teacher_preview_rpc_disabled'); }
+}
+export default {
+  fetch: teacher.fetch,
+  async queue() { throw new Error('teacher_preview_queue_disabled'); },
+  async scheduled() { throw new Error('teacher_preview_cron_disabled'); }
+};
+'''
 
 
 class TeacherControlError(RuntimeError):
-    pass
+    def __init__(self, code, *, phase=None, http_status=None, cloudflare_error_codes=None):
+        super().__init__(code)
+        self.phase = phase
+        self.http_status = http_status
+        self.cloudflare_error_codes = cloudflare_error_codes or []
 
 
 def require(value, code):
@@ -85,9 +103,19 @@ class Cloudflare:
         response = self.session.request(method, 'https://api.cloudflare.com/client/v4/accounts/' + ACCOUNT + suffix,
             headers={'Authorization': 'Bearer ' + self.token}, files=files, timeout=45, allow_redirects=False)
         try:
-            require(response.status_code == 200, 'cloudflare_http_' + str(response.status_code))
-            value = response.json()
-            require(value.get('success') is True, 'cloudflare_request_rejected')
+            phase = 'cloudflare_upload_version' if method == 'POST' else 'cloudflare_get_' + suffix.rsplit('/', 1)[-1]
+            try:
+                value = response.json()
+            except ValueError:
+                value = {}
+            codes = sorted({e['code'] for e in value.get('errors', []) if isinstance(e, dict)
+                            and type(e.get('code')) is int and 0 <= e['code'] <= 999999999}) if isinstance(value, dict) else []
+            if response.status_code not in (200, 201):
+                raise TeacherControlError('cloudflare_http_' + str(response.status_code), phase=phase,
+                                         http_status=response.status_code, cloudflare_error_codes=codes)
+            if not isinstance(value, dict) or value.get('success') is not True:
+                raise TeacherControlError('cloudflare_request_rejected', phase=phase,
+                                         http_status=response.status_code, cloudflare_error_codes=codes)
             return value['result']
         finally:
             response.close()
@@ -177,12 +205,20 @@ def make_upload(source, body, token, expires, snap):
     for name, text in (('HASLA_TEACHER_AUTH_SHA256', sha(token.encode())),
                        ('HASLA_TEACHER_EXPIRES_AT', str(expires)), ('HASLA_TEACHER_REQUEST_SHA256', sha(body))):
         bindings.append({'name': name, 'type': 'plain_text', 'text': text})
-    metadata = {'main_module': 'teacher.js', 'bindings': bindings,
+    metadata = {'main_module': 'teacher-entry.mjs', 'bindings': bindings,
                 'compatibility_date': snap['compatibility_date'], 'compatibility_flags': snap['compatibility_flags'],
                 'annotations': {'workers/message': 'Hasla bounded private teacher proof version; NEVER DEPLOY',
                                 'workers/tag': 'hasla-teacher-private'}}
     return {'metadata': (None, json.dumps(metadata), 'application/json'),
-            'teacher.js': ('teacher.js', source, 'application/javascript+module')}
+            'teacher.js': ('teacher.js', source, 'application/javascript+module'),
+            'teacher-entry.mjs': ('teacher-entry.mjs', ENTRY, 'application/javascript+module')}
+
+
+def source_manifest(source):
+    modules = [{'name': 'teacher.js', 'sha256': sha(source), 'bytes': len(source)},
+               {'name': 'teacher-entry.mjs', 'sha256': sha(ENTRY), 'bytes': len(ENTRY)}]
+    return {'uploaded_source_manifest': modules, 'uploaded_source_sha256': sha(canonical(modules)),
+            'uploaded_source_hash_format': 'canonical_json_module_manifest_ascii_sorted_keys_v1'}
 
 
 def same_production(cf, snap):
@@ -199,7 +235,7 @@ def bounded_result(response, task, nonce):
     require({r.get('provider'): r.get('requested_model') for r in value['results']} == MODELS, 'teacher_response_models_changed')
     allowed = {'provider', 'requested_model', 'reported_model', 'status', 'attempted', 'http_status',
                'response_id', 'usage', 'code', 'output', 'elapsed_ms', 'model', 'request_bytes',
-               'request_sha256', 'finish_status', 'output_sha256', 'output_hash_format', 'fixture'}
+               'request_sha256', 'finish_status', 'output_sha256', 'output_hash_format', 'fixture', 'requested_reasoning_profile'}
     require(set(value) <= {'version', 'task', 'nonce', 'status', 'both_providers_used', 'results',
                           'mathematics_verified', 'admitted_to_training', 'fixture', 'question', 'question_sha256'}
             and value.get('mathematics_verified') is False and value.get('admitted_to_training') is False
@@ -268,6 +304,7 @@ def main(argv=None):
     proof = {'schema': 1, 'code_commit': code_sha, 'handler_sha256': sha(source), 'task': args.task,
              'snapshot': snap, 'budget': budget, 'private_project_verified': True,
              'export_public_key_sha256': sha(public_key),
+             **source_manifest(source),
              'recorded_at': datetime.now(timezone.utc).isoformat(), 'gpu_used': False, 'production_deployed': False}
     if args.mode == 'preflight':
         reference = publish_private(wandb, proof, 'hasla-teacher-preflight-' + run_id, 'teacher-preflight')
@@ -281,7 +318,8 @@ def main(argv=None):
         return
     prior = load_preflight(wandb, args.preflight_artifact)
     require(all(prior.get(key) == proof[key] for key in ('schema', 'code_commit', 'handler_sha256', 'task', 'snapshot', 'budget',
-                                                      'export_public_key_sha256')),
+                                                      'export_public_key_sha256', 'uploaded_source_manifest',
+                                                      'uploaded_source_sha256', 'uploaded_source_hash_format')),
             'preflight_proof_changed')
     token, nonce = secrets.token_hex(32), secrets.token_hex(24)
     body = canonical({'task': args.task, 'nonce': nonce})
@@ -307,7 +345,7 @@ def main(argv=None):
               'source_sha256': sha(source), 'production_deployment_unchanged': unchanged,
               'gpu_used': False, 'secret_values_exported': False, 'expires_at': expires,
               'code_commit': code_sha, 'workflow_run_id': run_id, 'preflight_artifact': args.preflight_artifact,
-              'request_sha256': sha(body), 'export_public_key_sha256': sha(public_key)}
+              'request_sha256': sha(body), 'export_public_key_sha256': sha(public_key), **source_manifest(source)}
     reference = publish_private(wandb, record, 'hasla-teacher-final-' + run_id, 'teacher-final-proof')
     record['private_artifact'] = reference
     sealed_manifest = export_encrypted(record, public_key, args.export_dir)
@@ -328,7 +366,9 @@ if __name__ == '__main__':
     try:
         main()
     except TeacherControlError as error:
-        print(json.dumps({'event': 'hasla_teacher_private_failed', 'code': str(error), 'gpu_used': False}))
+        print(json.dumps({'event': 'hasla_teacher_private_failed', 'code': str(error), 'gpu_used': False,
+                          'phase': error.phase, 'http_status': error.http_status,
+                          'cloudflare_error_codes': error.cloudflare_error_codes}))
         raise SystemExit(1)
     except Exception as error:
         # Never print exceptions carrying provider responses, prompts or secrets.

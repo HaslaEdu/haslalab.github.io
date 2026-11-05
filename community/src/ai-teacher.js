@@ -3,6 +3,7 @@
 // https://developers.openai.com/api/docs/models/gpt-6.1-terra
 // https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses
 // https://api-docs.deepseek.com/api/create-chat-completion/
+// https://api-docs.deepseek.com/guides/thinking_mode/
 // Keys are used only from existing Worker bindings; no secret values are returned.
 
 export const TEACHER_MODELS=Object.freeze({deepseek:'deepseek-v4-pro',openai:'gpt-6.1-terra'});
@@ -10,6 +11,9 @@ export const TEACHER_MODELS=Object.freeze({deepseek:'deepseek-v4-pro',openai:'gp
 export const TEACHER_LIMITS=Object.freeze({outputTokens:32768,requestBytes:1024,providerRequestBytes:12288,responseBytes:524288,timeoutMs:120000});
 const URLS=Object.freeze({deepseek:'https://api.deepseek.com/chat/completions',openai:'https://api.openai.com/v1/responses'});
 const KEY_NAMES=Object.freeze({deepseek:'DEEPSEEK_API_KEY',openai:'OPENAI_API_KEY'});
+// Effort labels are provider-specific; record requested settings rather than
+// claiming cross-provider effort or vendor-token counts are identical units.
+export const TEACHER_REASONING_PROFILES=Object.freeze({deepseek:Object.freeze({mode:'enabled',effort:'high'}),openai:Object.freeze({mode:'enabled',effort:'medium'})});
 const TASKS=Object.freeze({heat_exchange_review:{kind:'heat',N:2,review:true},heat_exchange_n2:{kind:'heat',N:2,review:false},heat_exchange_n10000:{kind:'heat',N:10000,review:false},
   math_integral:{kind:'integral'},physics_mechanics:{kind:'mechanics'}});
 const encoder=new TextEncoder(),replays=new Map();
@@ -111,7 +115,7 @@ function providerCode(status){return status===401||status===403?'teacher_provide
 function safeId(value,secrets){return typeof value==='string'&&/^[A-Za-z0-9_.:-]{1,160}$/.test(value)&&!secrets.some(key=>value.includes(key))?value:null;}
 async function callProvider(provider,task,env,options){
   const model=TEACHER_MODELS[provider],key=env[KEY_NAMES[provider]],secrets=Object.values(KEY_NAMES).map(name=>env[name]).filter(value=>typeof value==='string'&&value.length>=8);
-  const result={provider,model,requested_model:model,reported_model:null,status:'failed',attempted:false,fixture:options.fixture,
+  const result={provider,model,requested_model:model,reported_model:null,requested_reasoning_profile:TEACHER_REASONING_PROFILES[provider],status:'failed',attempted:false,fixture:options.fixture,
     http_status:null,response_id:null,usage:null,finish_status:null,request_bytes:null,request_sha256:null,output_sha256:null,code:null};
   if(typeof key!=='string'||key.length<8||key.length>512){return {...result,status:'not_configured',code:'teacher_provider_unavailable'};}
   const controller=new AbortController(),timeoutMs=options.timeoutMs??TEACHER_LIMITS.timeoutMs;
@@ -120,7 +124,7 @@ async function callProvider(provider,task,env,options){
     const body=provider==='openai'?{model,store:false,stream:false,service_tier:'default',max_output_tokens:TEACHER_LIMITS.outputTokens,reasoning:{effort:'medium'},
       input:[{role:'developer',content:[{type:'input_text',text:policy(task)}]},{role:'user',content:[{type:'input_text',text:problem(task)}]}],
       text:{format:{type:'json_schema',name:'hasla_teacher_public_proof',strict:true,schema:teacherOutputSchema(task)}}}:
-      {model,stream:false,max_tokens:TEACHER_LIMITS.outputTokens,thinking:{type:'disabled'},temperature:0,
+      {model,stream:false,max_tokens:TEACHER_LIMITS.outputTokens,thinking:{type:'enabled'},reasoning_effort:'high',
        messages:[{role:'system',content:policy(task)},{role:'user',content:problem(task)}],response_format:{type:'json_object'}};
     const serialized=JSON.stringify(body);result.request_bytes=encoder.encode(serialized).byteLength;
     check(result.request_bytes<=TEACHER_LIMITS.providerRequestBytes,502,'teacher_request_size_limit');

@@ -31,7 +31,7 @@ async function fixture({task='heat_exchange_review',extra={},envChanges={}}={}){
 function response(provider,value=output()){
   return new Response(JSON.stringify(provider==='openai'?{id:'resp_fixture',model:'gpt-6.1-terra',status:'completed',usage:{input_tokens:900,output_tokens:500,total_tokens:1400,input_tokens_details:{cached_tokens:0},output_tokens_details:{reasoning_tokens:50}},
     output:[{type:'reasoning',summary:[{text:'PRIVATE_REASONING_MUST_NEVER_LEAVE'}]},{type:'message',role:'assistant',content:[{type:'output_text',text:JSON.stringify(value)}]}]}:
-    {id:'deepseek_fixture',model:'deepseek-v4-pro',usage:{prompt_tokens:800,completion_tokens:450,total_tokens:1250,prompt_cache_hit_tokens:0},
+    {id:'deepseek_fixture',model:'deepseek-v4-pro',usage:{prompt_tokens:800,completion_tokens:450,total_tokens:1250,prompt_cache_hit_tokens:0,completion_tokens_details:{reasoning_tokens:120}},
       choices:[{finish_reason:'stop',message:{role:'assistant',content:JSON.stringify(value),reasoning_content:'PRIVATE_REASONING_MUST_NEVER_LEAVE'}}]}),{headers:{'Content-Type':'application/json'}});
 }
 test('one bounded fixed-model request per provider; only public final JSON and safe usage leave',async()=>{
@@ -43,7 +43,9 @@ test('one bounded fixed-model request per provider; only public final JSON and s
   for(const call of calls){assert.equal(call.init.redirect,'manual');assert.ok(call.init.signal);assert.equal(call.body.max_output_tokens??call.body.max_tokens,32768);}
   assert.equal(calls.find(call=>call.url.includes('openai')).body.store,false);
   assert.equal(calls.find(call=>call.url.includes('openai')).body.service_tier,'default');
-  assert.equal(calls.find(call=>call.url.includes('deepseek')).body.thinking.type,'disabled');
+  const deepseekCall=calls.find(call=>call.url.includes('deepseek'));
+  assert.equal(deepseekCall.body.thinking.type,'enabled');assert.equal(deepseekCall.body.reasoning_effort,'high');
+  assert.equal(deepseekCall.body.response_format.type,'json_object');assert.equal(Object.hasOwn(deepseekCall.body,'temperature'),false);
   assert.equal(value.results.every(item=>item.usage.known&&item.status==='ok'),true);
   assert.equal(value.fixture,true);assert.ok(value.results.every(item=>item.fixture));
   assert.ok(value.question.includes('N=2'));assert.equal(value.question_sha256,await teacherDigest(value.question));
@@ -51,6 +53,10 @@ test('one bounded fixed-model request per provider; only public final JSON and s
     assert.match(item.request_sha256,/^[a-f0-9]{64}$/);assert.ok(item.request_bytes<=12288);assert.equal(item.model,item.requested_model);}
   assert.equal(value.results.find(item=>item.provider==='openai').finish_status,'completed');
   assert.equal(value.results.find(item=>item.provider==='deepseek').finish_status,'stop');
+  assert.deepEqual(value.results.find(item=>item.provider==='deepseek').requested_reasoning_profile,{mode:'enabled',effort:'high'});
+  assert.deepEqual(value.results.find(item=>item.provider==='openai').requested_reasoning_profile,{mode:'enabled',effort:'medium'});
+  assert.equal(value.results.find(item=>item.provider==='deepseek').usage.output_tokens,450);
+  assert.equal(value.results.find(item=>item.provider==='deepseek').usage.reasoning_tokens,120);
   const rendered=JSON.stringify(value);assert.ok(!rendered.includes('PRIVATE_REASONING'));assert.ok(!rendered.includes('fixture_openai_secret_key'));assert.ok(!rendered.includes('fixture_deepseek_secret_key'));
   assert.equal(value.mathematics_verified,false);assert.equal(value.admitted_to_training,false);
 });
