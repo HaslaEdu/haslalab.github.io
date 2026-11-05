@@ -1,5 +1,6 @@
 """Fixed, reversible JSON-string indexes over three actual private summaries."""
 import base64,gzip,hashlib,json,os,re,signal,urllib.request
+from copy import deepcopy
 from pathlib import Path
 import private_qwq_gpu_run as parent
 import private_qwq_gpu_eval as worker
@@ -44,6 +45,7 @@ class API:
 def reconstruct(summary,prefix):
     flat={k[len(prefix)+1:]:v for k,v in summary.items() if k.startswith(prefix+'.')}
     require(flat and len(flat)<=128)
+    require(not any(b.startswith(a+'.') for a in flat for b in flat if a!=b))
     root={}
     for path,value in flat.items():
         parts=path.split('.');require(all(re.fullmatch('[A-Za-z_][A-Za-z0-9_]{0,79}',p) for p in parts) and len(parts)<=5)
@@ -51,7 +53,7 @@ def reconstruct(summary,prefix):
         for part in parts[:-1]:
             if part not in node:node[part]={}
             require(type(node[part]) is dict);node=node[part]
-        require(parts[-1] not in node);node[parts[-1]]=value
+        require(parts[-1] not in node);node[parts[-1]]=deepcopy(value)
     return root
 
 def aliases(row):
