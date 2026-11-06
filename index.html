@@ -1201,9 +1201,9 @@ ko:{
     "실험과 실기는 국제 올림피아드에서 중요한 부분입니다. 그렇지만 국제 대회에 나가기 전이나 대비를 하기 위해 학생이 실제로 그 장비를 만져볼 기회는 많지 않고, 결과를 보는 것만으로는 눈금을 읽고 오차를 판단하는 감각이 생기지 않습니다.",
     "HaslaLab은 그 간극을 메우기 위해 만들어졌습니다. 각 실험 장비를 프로그램 하에서 그대로 재현해, 직접 조립하고 측정할 수 있게 합니다. 결과는 계산해 주지 않습니다 — 그건 당신이 할 일입니다."
   ],
-  team:[{name:"유준우", role:"Edu 개발 · 홍보", loc:"대한민국 거주", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
+  team:[{name:"유준우", role:"Edu 개발 · 홍보", loc:"대한민국 거주", education:"SNU 재학 중", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
   ebPerson:"만든 사람들",
-  person:{name:"MinGyuSong", role:"Lab 개발", loc:"대한민국 거주",
+  person:{name:"MinGyuSong", role:"LAB 개발 · 물리 모델", loc:"대한민국 거주",
     mail:"mgsnew88@naver.com", insta:"https://www.instagram.com/mimgyuson/", handle:"mimgyuson",
     creds:[
       {y:"2026", n:"APhO",  sub:"아시아물리올림피아드", medal:"bronze", label:"동메달"},
@@ -1270,9 +1270,9 @@ en:{
     "Experiments and practicals are a serious part of the international olympiads. Yet students preparing for an international competition rarely get to handle the apparatus, and reading the results alone never builds a feel for reading a scale or judging an error.",
     "HaslaLab was built to close that gap. Every piece of apparatus is reproduced in software exactly as it behaves, so you can assemble it and take the measurements yourself. The results are not computed for you — that part is your work."
   ],
-  team:[{name:"Junwoo Yu", role:"Edu development · promotion", loc:"Based in the Republic of Korea", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
+  team:[{name:"Junwoo Yu", role:"Edu development · promotion", loc:"Based in the Republic of Korea", education:"Student at SNU", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
   ebPerson:"The people",
-  person:{name:"MinGyuSong", role:"Lab development",
+  person:{name:"MinGyuSong", role:"LAB development · physics modeling",
     loc:"Based in the Republic of Korea",
     mail:"mgsnew88@naver.com", insta:"https://www.instagram.com/mimgyuson/", handle:"mimgyuson",
     creds:[
@@ -5209,6 +5209,7 @@ function viewAbout(){
               <h3>${esc(m.name)}</h3>
               <div class="role">${esc(m.role)}</div>
               <div class="loc">${esc(m.loc)}</div>
+              ${m.education?`<div class="loc">${esc(m.education)}</div>`:""}
               <p style="margin:8px 0 0">${instaLink(m.insta,m.handle,false)}</p>
             </div>
           </div>
@@ -9946,7 +9947,7 @@ function setDocTitle(first, second){
 
 /* side ads: a 160×600 AdFit unit in each margin when the window is wide enough (Korean site only). The unit ids come from
    the AdFit dashboard (광고 단위 추가 → 160×600); an empty id shows nothing on that side. */
-const ADFIT_SIDE_UNITS={left:"",right:"DAN-qczrGPkgs3ATsrwt"};
+const ADFIT_SIDE_UNITS={left:"DAN-qczrGPkgs3ATsrwt",right:"DAN-zyPVmJAPTSmPDSUC"};
 function mountHaslaAdFitSides(){
   for(const side of ["left","right"]){
     const id="adfitSide-"+side,unit=ADFIT_SIDE_UNITS[side];let box=document.getElementById(id);
