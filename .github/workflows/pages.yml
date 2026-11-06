@@ -1,0 +1,51 @@
+# Publishes the site to GitHub Pages without tools/ (6.7 GB of PDF authoring inputs and evidence that no page loads),
+# so the published site stays well under GitHub Pages' 1 GB size limit and its deploys stop timing out.
+# Takes effect once Settings → Pages → Build and deployment → Source is "GitHub Actions"; while the source is still
+# "Deploy from a branch", this workflow sees that and does nothing.
+name: Publish site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Is the site published by this workflow?
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          t=$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq .build_type 2>/dev/null || echo none)
+          echo "build_type=$t" >> "$GITHUB_OUTPUT"
+          [ "$t" = workflow ] || echo "::notice::Pages still deploys from a branch ($t); switch Settings → Pages → Source to GitHub Actions to use this workflow."
+      - uses: actions/checkout@v4
+        if: steps.source.outputs.build_type == 'workflow'
+      - name: Site without tools/
+        if: steps.source.outputs.build_type == 'workflow'
+        run: |
+          mkdir -p "$RUNNER_TEMP/site"
+          rsync -a --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ ./ "$RUNNER_TEMP/site/"
+          du -sh "$RUNNER_TEMP/site"
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.source.outputs.build_type == 'workflow'
+        with:
+          path: ${{ runner.temp }}/site
+      - id: deploy
+        if: steps.source.outputs.build_type == 'workflow'
+        uses: actions/deploy-pages@v4
