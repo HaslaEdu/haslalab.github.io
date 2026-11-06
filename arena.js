@@ -189,7 +189,9 @@ async function arChip() {
   const a = box.querySelector("[data-ar=login]"); if (a) a.onclick = () => { try { sessionStorage.setItem("hlCmBack", location.hash); } catch (e) {} };
 }
 
-function viewArena(first) { return `<div class="shell cm ar"><div id="arRoot" data-r="${esc(first)}"><div class="cmnote">…</div></div></div>`; }
+/* ads under the monthly problems and the ranking; none on the account, sign-in or exam pages */
+const AR_AD_PAGES = new Set(["monthly", "weekly", "rank"]);
+function viewArena(first) { return `<div class="shell cm ar"><div id="arRoot" data-r="${esc(first)}"><div class="cmnote">…</div></div></div>${AR_AD_PAGES.has(first) && typeof adFitBanner === "function" ? adFitBanner("primary") : ""}`; }
 /* Cached HTML can load a newer lazy arena file while its inline helpers are still old. */
 function arPageRead(path) {
   if(typeof cmPageRead==='function')return cmPageRead(path);
