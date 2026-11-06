@@ -563,7 +563,7 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 /* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
 .adfit-side{display:none}
-@media (min-width:1560px){.adfit-side{display:block;position:fixed;top:120px;width:160px;height:600px;z-index:5}.adfit-side[hidden]{display:none}
+@media (min-width:1484px){.adfit-side{display:block;position:fixed;top:120px;width:160px;height:600px;z-index:5}.adfit-side[hidden]{display:none}
   .adfit-side--left{left:max(12px,calc((100vw - 1180px)/2 - 190px))}.adfit-side--right{right:max(12px,calc((100vw - 1180px)/2 - 190px))}
   .adfit-side .adfit-banner-label{top:-14px}}
 @media print{.adfit-side{display:none!important}}
@@ -9949,9 +9949,15 @@ function setDocTitle(first, second){
    the AdFit dashboard (광고 단위 추가 → 160×600); an empty id shows nothing on that side. */
 const ADFIT_SIDE_UNITS={left:"DAN-qczrGPkgs3ATsrwt",right:"DAN-zyPVmJAPTSmPDSUC"};
 function mountHaslaAdFitSides(){
+  // The ads fit only when both gutters clear the visible page content.
+  const shells=[...document.querySelectorAll('#view .shell')].filter(el=>el.getClientRects().length);
+  const fits=window.innerWidth>=1484 && shells.length>0 && shells.every(el=>{
+    const r=el.getBoundingClientRect(), style=getComputedStyle(el);
+    return r.left+parseFloat(style.paddingLeft)>=180 && window.innerWidth-r.right+parseFloat(style.paddingRight)>=180;
+  });
   for(const side of ["left","right"]){
     const id="adfitSide-"+side,unit=ADFIT_SIDE_UNITS[side];let box=document.getElementById(id);
-    const want=lang==="ko"&&!!unit&&!/^#\/lab\b|\/(exam|review)(\/|$)/.test(location.hash);   // never beside an exam
+    const want=lang==="ko"&&fits&&!!unit&&!/^#\/lab\b|\/(exam|review)(\/|$)/.test(location.hash);   // never beside an exam
     if(!want){if(box)box.hidden=true;continue;}
     if(!box){
       box=document.createElement("aside");box.id=id;box.className="adfit-side adfit-side--"+side;box.setAttribute("aria-label","광고");
@@ -9963,6 +9969,7 @@ function mountHaslaAdFitSides(){
     box.hidden=false;
   }
 }
+window.addEventListener("resize",mountHaslaAdFitSides);
 let adFitObserver=null;
 function mountHaslaAdFit(){
   mountHaslaAdFitSides();
