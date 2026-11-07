@@ -30,7 +30,10 @@ E = os.environ
 WORKER = E.get('HASLA_WORKER', 'https://haslalab-community-edge.haslalab.workers.dev').rstrip('/')
 RUNPOD = 'https://rest.runpod.io/v1'
 COMMUNITY = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'community')
-ROLES = ['solver', 'chat'] if E.get('ROLE', 'both') == 'both' else [E['ROLE']]
+# The solver (QwQ 32B) is no longer trained (2026-11-07): Workers AI retires QwQ on 2026-11-20, and Hasla AI's
+# reasoning model is being chosen anew (tools/hasla-eval; plan and rules in HaslaEdu/hasla-ai). Only the chat role runs.
+STOPPED = {'solver'}
+ROLES = [r for r in (['solver', 'chat'] if (E.get('ROLE') or 'chat') == 'both' else [E.get('ROLE') or 'chat']) if r not in STOPPED]
 MIN = int(E.get('MIN_EXAMPLES') or 200)
 TRIALS = int(E.get('TRIALS') or 8)
 GPU = E.get('GPU') or 'NVIDIA A100 80GB PCIe'
