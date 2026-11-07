@@ -30,7 +30,7 @@ test('the catalogue search finds a competition problem and links its page', () =
   ];
   const [hit] = findOlympiadProblems({query: '얀센 효과'}, exams);
   assert.equal(hit.page, 'https://haslalab.org/#/ispho/2026');
-  assert.equal(hit.paper, 'https://haslalab.org/pdfx/ispho/ISPhO_2026_T1_KO.pdf');
+  assert.equal(hit.paper, 'https://haslalab-pdf.haslalab.workers.dev/pdf/Xispho_ISPhO_2026_T1_KO.pdf');
   assert.equal(hit.solution, 'https://haslalab-pdf.haslalab.workers.dev/pdf/ISPhO_2026_T1S.pdf');
   // a competition or year narrows the list even when no keyword matches ("IPhO 2025 문제 보여줘")
   assert.deepEqual(findOlympiadProblems({query: 'janssen', comp: 'ipho'}, exams).map(e => e.year), [2025]);

@@ -452,7 +452,9 @@ const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.len
        : EX.y > 1990 && EX.files.length === EX.tasks.length && EX.files.some(f => f !== "-") && EX.files.every(f => f === "-" || /^[A-Za-z0-9_]+_web\.html(\?task=[\w-]+)?$/.test(f)));
 const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang + (extra || "");
 const KEY = EX.c + EX.y;
-const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : /^pdfx\//.test(s) ? "../" + s : PDF_BASE + s.replace(/^pdf\//, "");
+/* pdfx/<folder>/<name>.pdf is served by the PDF Worker as X<folder>_<name>.pdf (tools/pdfx_release.py) */
+const pdfxName = s => s.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_");
+const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : /^pdfx\//.test(s) ? PDF_BASE + pdfxName(s) : PDF_BASE + s.replace(/^pdf\//, "");
 const label = () => (EX.name || EX.c.toUpperCase()) + " " + EX.y;
 /* the printable answer and working sheets (sheets.html) — the problem sheet is not among them */
 const sheetsHref = () => "sheets.html?" + new URLSearchParams({ c: EX.c, y: EX.y, n: EX.name || EX.c.toUpperCase(), e: EX.tasks.join(","), t: EX.titles.join("|"), lang,

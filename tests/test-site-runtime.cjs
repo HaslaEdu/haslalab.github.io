@@ -1,4 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+/* pdfx/<folder>/<name>.pdf is served by the PDF Worker as X<folder>_<name>.pdf (tools/pdfx_release.py) */
+const pdfxUrl=f=>/^pdfx\//.test(f)?'https://haslalab-pdf.haslalab.workers.dev/pdf/'+f.replace(/^pdfx\/(?:([a-z]+)\/)?/,(m,d)=>'X'+(d||'root')+'_'):f;
 const Runtime=require('../site-runtime.js'),root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const html=read('index.html'),main=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('const REL ='))[1];
 const earlyMain=html.match(/<script id="hlEarlyApi">([\s\S]*?)<\/script>/)[1];
@@ -83,7 +85,7 @@ test('lazy chunks retain every source export, general instructions and corrected
   for(const key of ['THEORY','THEORY_META','GENERAL','KPHE_PDF_VERSIONS'])assert.deepEqual(plain(split.window[key]),plain(full.window[key]),key);
   const lean=app();lean.load('theory:ipho');lean.load('theory:kphe');
   assert.deepEqual(plain(lean.run('GENERAL.ipho')),plain(full.window.GENERAL.ipho));
-  const [file,version]=Object.entries(full.window.KPHE_PDF_VERSIONS)[0];assert.equal(lean.run(`thyUrl(${JSON.stringify(file)})`),file+'?v='+version);
+  const [file,version]=Object.entries(full.window.KPHE_PDF_VERSIONS)[0];assert.equal(lean.run(`thyUrl(${JSON.stringify(file)})`),pdfxUrl(file)+'?v='+version);
   const [year,entries]=Object.entries(full.window.GENERAL.ipho)[0];const links=lean.run(`genLinks('ipho',{y:${JSON.stringify(year)}})`);assert.ok(links.includes(entries[0][1]),'the year retains its general instructions link');
 });
 
@@ -168,7 +170,7 @@ test('new physics archives retain official metadata and historical context throu
     assert.ok(lean.run(`viewComp(${JSON.stringify(key)})`).includes(manifest.officialWebsite));
   }
   const historical=lean.run('viewYear("eotvos",1987)'),paper=lean.run('THEORY.eotvos[1987].f.T.paper');
-  assert.ok(historical.includes(paper+'#page=2'),'the old paper opens at its verified report section');
+  assert.ok(historical.includes(pdfxUrl(paper)+'#page=2'),'the old paper opens at its verified report section');
   assert.ok(historical.includes('Report with reprinted problems'),'historical statements remain labelled as reprints');
   assert.ok(historical.includes('alongside other years and solutions'),'combined historical reports disclose unrelated solutions');
   assert.ok(historical.includes('a solution to this historical set is not supplied'),'a historical source report must not imply an unavailable matching solution');

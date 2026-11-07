@@ -133,7 +133,7 @@ const ANS = (Q.get("a") || "").split("|").map(s => s.trim());
 const SHEET = /^(pdfx\/[a-z]+\/)?[A-Za-z0-9][A-Za-z0-9_.-]{2,80}\.pdf$/;   // a release name, or a sheet kept on the site
 const WS = SHEET.test(Q.get("w") || "") ? Q.get("w") : "";
 const PDF_BASE = "https://haslalab-pdf.haslalab.workers.dev/pdf/";
-const sheetUrl = f => /^pdfx\//.test(f) ? "../" + f : PDF_BASE + f;
+const sheetUrl = f => /^pdfx\//.test(f) ? PDF_BASE + f.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_") : PDF_BASE + f;   // pdfx/ PDFs: tools/pdfx_release.py
 const T = {
   ko: { h: "답안지 · Working sheet 인쇄", ans: "Answer sheet", work: "Working sheet", per: "실험마다 Working sheet", pages: "쪽", print: "인쇄 / PDF로 저장",
     hint: "A4, 배율 100%(«실제 크기»), 여백 없음으로 인쇄하세요. 네 귀퉁이의 검은 사각형은 휴대폰 스캔이 종이를 반듯하게 펴는 기준이니 가리거나 접지 마세요. 문제지는 시험이 시작된 뒤 시험 화면의 «문제지 열기»로만 볼 수 있습니다.",

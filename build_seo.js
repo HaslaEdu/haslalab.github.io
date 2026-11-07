@@ -45,7 +45,10 @@ const PDF_BASE = /const PDF_BASE = "([^"]+)"/.exec(fs.readFileSync(path.join(ROO
 const ASSETS = new Set(Object.keys(JSON.parse(fs.readFileSync(path.join(ROOT, "pdf-assets.json"), "utf8"))));
 const isPdf = p => p.startsWith("pdf/");
 const exists = p => isPdf(p) ? ASSETS.has(p.slice(4)) : fs.existsSync(path.join(ROOT, p));
-const href = p => isPdf(p) ? PDF_BASE + p.slice(4) : p;
+/* PDFs under pdfx/ stay in the repository but are served by the PDF Worker too (tools/pdfx_release.py) */
+const isPdfx = p => /^pdfx\/.*\.pdf$/.test(p);
+const href = p => isPdf(p) ? PDF_BASE + p.slice(4)
+  : isPdfx(p) ? PDF_BASE + p.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_") : p;
 
 /* ── walk the catalogue once ── */
 const rows = [];          // one per problem
@@ -94,7 +97,7 @@ const urls = [
   { loc: "/problems.html", pri: "0.8", freq: "weekly" },
   { loc: "/problems-en.html", pri: "0.8", freq: "weekly" },
   ...[...simPages].sort().map(s => ({ loc: "/" + s, pri: "0.9", freq: "monthly" })),
-  ...[...docs].filter(d => !isPdf(d)).sort().map(d => ({ loc: "/" + d, pri: "0.5", freq: "yearly" })),
+  ...[...docs].filter(d => !isPdf(d) && !isPdfx(d)).sort().map(d => ({ loc: "/" + d, pri: "0.5", freq: "yearly" })),
 ];
 
 const enc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
