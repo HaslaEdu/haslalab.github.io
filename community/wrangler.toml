@@ -67,6 +67,8 @@ DEEPSEEK_OCR_MODEL = "deepseek-flash"
 # Gemini reads the pages and Gemini 3.8 Flash grades them alone (labRoles). Model bench of 2026-11-01 against 15 audited
 # sittings: 3.8 Flash alone (thinking low) graded closest to the audits at ~$0.02 a task; DeepSeek moderated by Flash-Lite
 # and a moderation of every item scored lower; handing the grader the papers as well (LAB_GRADE_PDFS) gained nothing.
+# empty, not absent: keep_vars would otherwise keep the old "deepseek" on the Worker
+LAB_ONLY_PROVIDER = ""
 LAB_PIPELINE = "mixed"
 LAB_SCHEME_PROVIDER = "deepseek"
 # Theory pages are read by Gemini 3.8 Flash (the owner's decision, 2026-11-03). Reading bench of that day, 40 checks on
