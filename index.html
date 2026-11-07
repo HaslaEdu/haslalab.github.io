@@ -563,10 +563,10 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 /* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
 .adfit-side{display:none}
-@media (min-width:1200px){.adfit-side{display:block;position:fixed;top:120px;width:160px;height:600px;z-index:5}.adfit-side[hidden]{display:none}
-  .adfit-side--left{left:max(12px,calc((100vw - 1180px)/2 - 190px))}.adfit-side--right{right:max(12px,calc((100vw - 1180px)/2 - 190px))}
+@media (min-width:1200px){.adfit-side{display:block;position:fixed;top:120px;width:160px;height:600px;z-index:5;transform:scale(.8)}.adfit-side[hidden]{display:none}
+  .adfit-side--left{left:max(12px,calc((100vw - 1180px)/2 - 158px));transform-origin:top left}.adfit-side--right{right:max(12px,calc((100vw - 1180px)/2 - 158px));transform-origin:top right}
   .adfit-side .adfit-banner-label{top:-14px}}
-@media (min-width:1200px) and (max-width:1483px){html:lang(ko) #view .shell{max-width:calc(100% - 360px)}}
+@media (min-width:1200px) and (max-width:1483px){html:lang(ko) #view .shell{max-width:calc(100% - 296px)}}
 @media print{.adfit-side{display:none!important}}
 .sns-ig{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;font-size:13px;border:1px solid var(--grid-bold,#B4CADC);border-radius:999px;padding:4px 11px}
 .sns-ig:hover{background:var(--cm-soft,rgba(127,127,127,.08))}
@@ -9955,7 +9955,7 @@ function mountHaslaAdFitSides(){
   const shells=[...document.querySelectorAll('#view .shell')].filter(el=>el.getClientRects().length);
   const fits=window.innerWidth>=1200 && shells.length>0 && shells.every(el=>{
     const r=el.getBoundingClientRect(), style=getComputedStyle(el);
-    return r.left+parseFloat(style.paddingLeft)>=180 && window.innerWidth-r.right+parseFloat(style.paddingRight)>=180;
+    return r.left+parseFloat(style.paddingLeft)>=148 && window.innerWidth-r.right+parseFloat(style.paddingRight)>=148;
   });
   for(const side of ["left","right"]){
     const id="adfitSide-"+side,unit=ADFIT_SIDE_UNITS[side];let box=document.getElementById(id);
