@@ -21,7 +21,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -36,6 +36,12 @@ jobs:
           [ "$t" = workflow ] || echo "::notice::Pages still deploys from a branch ($t); switch Settings → Pages → Source to GitHub Actions to use this workflow."
       - uses: actions/checkout@v4
         if: steps.source.outputs.build_type == 'workflow'
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/tools/
+            !/node_modules/
       - name: Site without tools/
         if: steps.source.outputs.build_type == 'workflow'
         run: |
@@ -49,3 +55,5 @@ jobs:
       - id: deploy
         if: steps.source.outputs.build_type == 'workflow'
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 2400000
