@@ -562,17 +562,13 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 
 /* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
-/* side ads (desktop only): the 160×600 unit at its own size (AdFit does not allow resizing), set in a quiet card in the
-   middle of each margin. JS decides when there is room (and narrows the page a little when it needs to) and places the cards. */
-.adfit-side{position:fixed;width:160px;padding:22px 8px 8px;box-sizing:content-box;z-index:5;
-  background:var(--paper);border:1px solid var(--grid-fine);border-radius:12px;box-shadow:0 1px 2px rgba(22,33,46,.04);
-  opacity:.001;transition:opacity .45s ease}
+/* side ads (desktop only): the 160×600 unit at its own size, with only a small label, in the middle of each margin.
+   JS shows them only where the page already leaves room for them (the page is never narrowed for an ad) and places them. */
+.adfit-side{position:fixed;width:160px;padding-top:16px;z-index:5;opacity:.001;transition:opacity .45s ease}
 .adfit-side.is-filled{opacity:1}
 .adfit-side[hidden]{display:none}
-.adfit-side .adfit-banner-label{top:7px;left:10px;letter-spacing:.06em;color:var(--graphite);opacity:.75}
-.adfit-side .kakao_ad_area{border-radius:4px;overflow:hidden}
-html[data-theme="dark"] .adfit-side{background:#1c1722;border-color:#352e40;box-shadow:none}
-html.hl-side-ads #view .shell{max-width:min(1180px,calc(100% - 344px))}
+.adfit-side .adfit-banner-label{top:0;left:0;letter-spacing:.06em;color:var(--graphite);opacity:.6}
+.adfit-side .kakao_ad_area{border-radius:6px;overflow:hidden;box-shadow:0 0 0 1px var(--grid-fine)}
 #hlAdDebug{position:fixed;left:8px;bottom:8px;z-index:9999;background:#111a;color:#fff;font:11px/1.45 var(--mono);padding:8px 10px;border-radius:8px;white-space:pre;pointer-events:none}
 @media print{.adfit-side{display:none!important}}
 .sns-ig{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;font-size:13px;border:1px solid var(--grid-bold,#B4CADC);border-radius:999px;padding:4px 11px}
@@ -9204,8 +9200,7 @@ function viewCommunity(){
       <div id="cmRoot"><div class="cmpanel"><p class="cmempty">${T.loading}</p></div></div>
       <aside class="cmright" id="cmRight"></aside>
     </div>
-  </div>
-  ${adFitBanner("primary")}`;
+  </div>`;
 }
 
 function cmRailHtml(active){
@@ -9972,13 +9967,12 @@ function adDebug(){
   let el=document.getElementById("hlAdDebug"); if(!el){ el=document.createElement("div"); el.id="hlAdDebug"; document.body.append(el); }
   el.textContent=`window ${innerWidth}×${innerHeight} (zoom ${devicePixelRatio})\nside ads: ${adSideWhy}\nleft: ${AD_SIDE_STATE.left}\nright: ${AD_SIDE_STATE.right}\nAdFit script: ${window.__hlAdScript||"-"}`;
 }
-const SIDE_CARD=178, SIDE_GAP=10;                     /* card width with its padding and border; gap to the window edge */
+const SIDE_CARD=160, SIDE_GAP=16;                     /* ad width; the least gap on each side of it */
 function mountHaslaAdFitSides(){
-  const route=!/^#\/lab\b|\/(exam|review)(\/|$)/.test(location.hash);   // never beside an exam
-  const why=lang!=="ko"?"English site (no ads)":!matchMedia("(hover:hover)").matches?"touch screen":!route?"exam page":
-    innerWidth<1280?`window narrower than 1280 px`:innerHeight<712?`window shorter than 712 px`:"";
+  const route=!/^#\/(lab|community)\b|\/(exam|review)(\/|$)/.test(location.hash);   // never beside an exam or in the community
+  const why=lang!=="ko"?"English site (no ads)":!matchMedia("(hover:hover)").matches?"touch screen":!route?"exam or community page":
+    innerHeight<700?`window shorter than 700 px`:"";
   const on=!why;
-  document.documentElement.classList.toggle("hl-side-ads",on);
   /* where the page content starts and ends, once it has made room */
   const shells=on?[...document.querySelectorAll('#view .shell')].filter(el=>el.getClientRects().length):[];
   let L=Infinity,R=-Infinity;
@@ -10001,7 +9995,7 @@ function mountHaslaAdFitSides(){
     }
     box.hidden=false;
     /* centred in its margin, and in the window below the header */
-    const x=Math.round((room-SIDE_CARD)/2), y=Math.max(80,Math.round((innerHeight-632)/2+28));
+    const x=Math.round((room-SIDE_CARD)/2), y=Math.max(80,Math.round((innerHeight-616)/2+28));
     box.style.top=y+"px"; box.style.left=side==="left"?x+"px":""; box.style.right=side==="right"?x+"px":"";
   }
   adDebug();
