@@ -1011,7 +1011,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=dc6e12cec006">
+<link rel="stylesheet" href="site-design.css?v=cf56b2e6cbeb">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=9afa7e19caab">
 </head>
@@ -1161,7 +1161,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=7385ce7c7606"></script>
-<script src="site-ux.js?v=2ca3a2df27c0"></script>
+<script src="site-ux.js?v=7080533dcfaa"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="ai-chat.js?v=3cfdb03f8e1d"></script>
 <script>
@@ -9970,14 +9970,18 @@ function adDebug(){
 }
 const SIDE_CARD=160, SIDE_GAP=16;                     /* ad width; the least gap on each side of it */
 function mountHaslaAdFitSides(){
-  const route=!/^#\/(lab|community)\b|\/(exam|review)(\/|$)/.test(location.hash);   // never beside an exam or in the community
-  const why=lang!=="ko"?"English site (no ads)":!matchMedia("(hover:hover)").matches?"touch screen":!route?"exam or community page":
+  /* never beside an exam or in the community; nor where people read: the archive (contests, textbooks, schools) and
+     the learning tools widen to the whole window, and those pages carry an ad in the flow of the page instead */
+  const route=!/^#\/(lab|community|archive)\b|^#\/learn\/[^/]+\/(studio|search)\b|\/(exam|review)(\/|$)/.test(location.hash);
+  const why=lang!=="ko"?"English site (no ads)":!matchMedia("(hover:hover)").matches?"touch screen":!route?"exam, community or reading page":
     innerHeight<700?`window shorter than 700 px`:"";
   const on=!why;
   /* where the page content starts and ends, once it has made room */
   const shells=on?[...document.querySelectorAll('#view .shell')].filter(el=>el.getClientRects().length):[];
   let L=Infinity,R=-Infinity;
   for(const el of shells){ const r=el.getBoundingClientRect(), st=getComputedStyle(el); L=Math.min(L,r.left+parseFloat(st.paddingLeft)); R=Math.max(R,r.right-parseFloat(st.paddingRight)); }
+  /* and whatever actually sticks out of them (a list that widens once its data has loaded) */
+  if(shells.length) for(const el of document.querySelectorAll('#view *')){ if(el.classList.contains('shell')) continue; const r=el.getBoundingClientRect(); if(r.width<120||r.height<12||r.width>=document.documentElement.clientWidth-8) continue;   /* full-width bands do not count */ L=Math.min(L,r.left); R=Math.max(R,r.right); }
   const room=shells.length?Math.min(L,innerWidth-R):0, fits=on&&room>=SIDE_CARD+2*SIDE_GAP;
   adSideWhy=why||(fits?`shown (margin ${Math.round(room)} px)`:`margin ${Math.round(room)} px is too narrow`);
   for(const side of ["left","right"]){
@@ -10002,6 +10006,9 @@ function mountHaslaAdFitSides(){
   adDebug();
 }
 window.addEventListener("resize",mountHaslaAdFitSides);
+/* the page can widen after it is drawn (an archive list arriving): look again whenever #view changes size */
+if(typeof ResizeObserver==="function"){ let t=0; const view=document.getElementById("view");
+  if(view) new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(mountHaslaAdFitSides,150); }).observe(view); }
 let adFitObserver=null;
 function mountHaslaAdFit(){
   mountHaslaAdFitSides();

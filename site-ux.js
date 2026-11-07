@@ -1,7 +1,7 @@
 /* HaslaLab: things that make the site quicker to get around.
-   - the home page: four large ways in (experiments, past papers, the monthly problem, the AI) and "continue"
-     with the sims last opened on this device (sim/simfull.js keeps that list);
-   - search from anywhere (Ctrl+K, ⌘K or /): competitions, years, experiments, theory papers and the main pages;
+   - the home page: "continue" with the sims last opened on this device (sim/simfull.js keeps that list);
+   - search from anywhere (Ctrl+K, ⌘K or /): competitions, years, experiments, theory papers and the main pages, and
+     the words handed on to the archive's full-text search of contest and textbook problems;
    - on a year's page, the experiments opened before on this device are marked "done", with a filter;
    - on phones, the main menu moves to a bar at the bottom of the screen.
    index.html's render() calls HL_UX.afterRender(first, second) after every page it draws. */
@@ -12,7 +12,7 @@
           mon: "월별문제", monB: "이번 달 문제", monS: "매달 새 문제 · 랭킹", ai: "AI에게 묻기", aiB: "하슬라 AI", aiS: "개념·풀이·사이트 사용법",
           cont: "이어서 하기", contGo: "이어서 →", last: "마지막으로 연 실험", also: "최근", search: "검색", ph: "대회, 연도, 실험, 이론 문제, 메뉴 검색…",
           none: q => `"${q}"에 맞는 결과가 없습니다. 대회 이름(IPhO)이나 연도(2017)로 찾아보세요.`, nav: "↑↓ 이동", open: "Enter 열기", esc: "Esc 닫기",
-          kind: { comp: "대회", year: "연도", exp: "실험", thy: "이론", page: "메뉴", recent: "최근" },
+          kind: { comp: "대회", year: "연도", exp: "실험", thy: "이론", page: "메뉴", recent: "최근", text: "본문" },
           done: "해 봄", all: "전체", todo: "안 해 본 것만", ago: t => { const m = Math.round((Date.now() - t) / 60000); return m < 60 ? `${Math.max(1, m)}분 전` : m < 1440 ? `${Math.round(m / 60)}시간 전` : `${Math.round(m / 1440)}일 전`; },
           pages: [["홈", "#/"], ["아카이브 · 대회 목록", "#/comps"], ["학습", "#/learn"], ["문제 검색", "#/learn/physics/search"], ["문제 제작소", "#/learn/physics/studio"],
                   ["월별문제", "#/monthly"], ["랭킹", "#/rank"], ["커뮤니티", "#/community"], ["소개", "#/about"], ["로그인", "#/login"], ["내 정보", "#/me"]] },
@@ -20,7 +20,7 @@
           mon: "Monthly problem", monB: "This month's problem", monS: "A new problem each month · ranking", ai: "Ask the AI", aiB: "Hasla AI", aiS: "Concepts, solutions, using the site",
           cont: "Continue", contGo: "Continue →", last: "Last opened", also: "Recent", search: "Search", ph: "Search competitions, years, experiments, theory, pages…",
           none: q => `Nothing matches "${q}". Try a competition (IPhO) or a year (2017).`, nav: "↑↓ move", open: "Enter open", esc: "Esc close",
-          kind: { comp: "Comp", year: "Year", exp: "Exp", thy: "Theory", page: "Page", recent: "Recent" },
+          kind: { comp: "Comp", year: "Year", exp: "Exp", thy: "Theory", page: "Page", recent: "Recent", text: "Text" },
           done: "Done", all: "All", todo: "Not tried yet", ago: t => { const m = Math.round((Date.now() - t) / 60000); return m < 60 ? `${Math.max(1, m)} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`; },
           pages: [["Home", "#/"], ["Archive · competitions", "#/comps"], ["Learn", "#/learn"], ["Search problems", "#/learn/physics/search"], ["Problem Studio", "#/learn/physics/studio"],
                   ["Monthly problem", "#/monthly"], ["Ranking", "#/rank"], ["Community", "#/community"], ["About", "#/about"], ["Sign in", "#/login"], ["My page", "#/me"]] }
@@ -33,31 +33,16 @@
   const shown = k => typeof compShown !== "function" || compShown(k);
 
   /* ── the home page ── */
-  function liveCount() {
-    let n = 0; if (!hasData()) return n;
-    for (const [k, c] of Object.entries(DATA)) if (shown(k)) for (const y of c.years) n += y.problems.filter(p => !p.hold && p.files && p.files.sim).length;
-    return n;
-  }
   function home() {
-    const cover = document.querySelector(".hl-home-cover"); if (!cover || document.querySelector(".hlx-actions")) return;
-    const t = T(), cta = cover.querySelector(".cta"); if (cta) cta.remove();
-    const wrap = document.createElement("div"); wrap.className = "hlx-home";
-    wrap.innerHTML = `<div class="hlx-actions" role="navigation" aria-label="${t.exp} · ${t.thy} · ${t.mon} · ${t.ai}">
-      <a href="#/comps" data-k="exp"><i>${t.exp}</i><b>${t.expB}</b><small>${t.expS(liveCount())}</small></a>
-      <a href="#/comps" data-k="thy"><i>${t.thy}</i><b>${t.thyB}</b><small>${t.thyS}</small></a>
-      <a href="#/monthly"><i>${t.mon}</i><b>${t.monB}</b><small>${t.monS}</small></a>
-      <a href="#" data-k="ai"><i>${t.ai}</i><b>${t.aiB}</b><small>${t.aiS}</small></a></div>`;
-    const r = recent();
-    if (r.length) {
-      const [a, ...more] = r;
-      wrap.insertAdjacentHTML("beforeend", `<div class="hlx-cont"><div class="m"><b>${t.cont} · ${esc(a.title)}</b><span>${t.last} · ${t.ago(a.t)}</span></div>
-        ${more.length ? `<div class="more"><span>${t.also}</span>${more.slice(0, 2).map(x => `<a href="${simHref(x.file)}">${esc(x.title.split(/[—·]/)[0].trim())}</a>`).join("")}</div>` : ""}
-        <a class="go" href="${simHref(a.file)}">${t.contGo}</a></div>`);
-    }
+    /* only what no other part of the site offers: the sims this device opened last (the menu, the hero buttons
+       and the floating AI button already cover the rest) */
+    const cover = document.querySelector(".hl-home-cover"); if (!cover || document.querySelector(".hlx-home")) return;
+    const r = recent(); if (!r.length) return;
+    const t = T(), [a, ...more] = r, wrap = document.createElement("div"); wrap.className = "hlx-home";
+    wrap.innerHTML = `<div class="hlx-cont"><div class="m"><b>${t.cont} · ${esc(a.title)}</b><span>${t.last} · ${t.ago(a.t)}</span></div>
+      ${more.length ? `<div class="more"><span>${t.also}</span>${more.slice(0, 2).map(x => `<a href="${simHref(x.file)}">${esc(x.title.split(/[—·]/)[0].trim())}</a>`).join("")}</div>` : ""}
+      <a class="go" href="${simHref(a.file)}">${t.contGo}</a></div>`;
     cover.after(wrap);
-    wrap.querySelector('[data-k="thy"]').addEventListener("click", () => { if (typeof setTrack === "function") { try { localStorage.setItem("hlTrack", "thy"); } catch (e) {} } });
-    wrap.querySelector('[data-k="exp"]').addEventListener("click", () => { try { localStorage.setItem("hlTrack", "exp"); } catch (e) {} });
-    wrap.querySelector('[data-k="ai"]').addEventListener("click", e => { e.preventDefault(); const b = document.querySelector(".hlai-btn"); if (b) b.click(); });
   }
 
   /* ── a year's page: what was opened before ── */
@@ -125,7 +110,10 @@
       for (const w of words) { const at = h.indexOf(w); if (at < 0) { ok = false; break; } s += at === 0 ? 0 : at < 6 ? 1 : 2; }
       if (ok) hits.push([s * 10 + order[it.k], it]);
     }
-    return hits.sort((a, b) => a[0] - b[0]).slice(0, 9).map(h => h[1]);
+    const q2 = encodeURIComponent(q.trim()), lg = L();
+    return hits.sort((a, b) => a[0] - b[0]).slice(0, 7).map(h => h[1]).concat(
+      { k: "text", label: lg === "ko" ? `대회 문제 본문에서 「${q.trim()}」 찾기` : `Find “${q.trim()}” in contest problems`, href: `#/archive/contests/phys?q=${q2}` },
+      { k: "text", label: lg === "ko" ? `교재 문제 본문에서 「${q.trim()}」 찾기` : `Find “${q.trim()}” in textbook problems`, href: `#/archive/books/phys?q=${q2}` });
   }
   let pal = null, sel = 0, items = [];
   function go(it) {
