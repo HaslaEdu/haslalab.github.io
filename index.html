@@ -562,20 +562,18 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 
 /* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
-.adfit-side{display:none}
-/* side ads (desktop only): the 160×600 unit at its own size (AdFit does not allow resizing), set in a quiet card in
-   the middle of each empty margin, shown only where the margin is wide enough and only once an ad has arrived */
-@media (min-width:1540px) and (min-height:760px) and (hover:hover){
-  .adfit-side{display:block;position:fixed;top:calc(50vh - 302px + 30px);width:160px;padding:22px 8px 8px;box-sizing:content-box;z-index:5;
-    background:var(--paper);border:1px solid var(--grid-fine);border-radius:12px;box-shadow:0 1px 2px rgba(22,33,46,.04);
-    opacity:0;visibility:hidden;transition:opacity .45s ease,visibility 0s linear .45s}
-  .adfit-side.is-filled{opacity:1;visibility:visible;transition:opacity .45s ease}
-  .adfit-side[hidden]{display:none}
-  .adfit-side--left{left:calc((100vw - 1124px)/4 - 88px)}
-  .adfit-side--right{right:calc((100vw - 1124px)/4 - 88px)}
-  .adfit-side .adfit-banner-label{top:7px;left:10px;letter-spacing:.06em;color:var(--graphite);opacity:.75}
-  .adfit-side .kakao_ad_area{border-radius:4px;overflow:hidden}
-  html[data-theme="dark"] .adfit-side{background:#1c1722;border-color:#352e40;box-shadow:none}}
+/* side ads (desktop only): the 160×600 unit at its own size (AdFit does not allow resizing), set in a quiet card in the
+   middle of each margin. JS decides when there is room (and narrows the page a little when it needs to) and places the cards. */
+.adfit-side{position:fixed;width:160px;padding:22px 8px 8px;box-sizing:content-box;z-index:5;
+  background:var(--paper);border:1px solid var(--grid-fine);border-radius:12px;box-shadow:0 1px 2px rgba(22,33,46,.04);
+  opacity:.001;transition:opacity .45s ease}
+.adfit-side.is-filled{opacity:1}
+.adfit-side[hidden]{display:none}
+.adfit-side .adfit-banner-label{top:7px;left:10px;letter-spacing:.06em;color:var(--graphite);opacity:.75}
+.adfit-side .kakao_ad_area{border-radius:4px;overflow:hidden}
+html[data-theme="dark"] .adfit-side{background:#1c1722;border-color:#352e40;box-shadow:none}
+html.hl-side-ads #view .shell{max-width:min(1180px,calc(100% - 344px))}
+#hlAdDebug{position:fixed;left:8px;bottom:8px;z-index:9999;background:#111a;color:#fff;font:11px/1.45 var(--mono);padding:8px 10px;border-radius:8px;white-space:pre;pointer-events:none}
 @media print{.adfit-side{display:none!important}}
 .sns-ig{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;font-size:13px;border:1px solid var(--grid-bold,#B4CADC);border-radius:999px;padding:4px 11px}
 .sns-ig:hover{background:var(--cm-soft,rgba(127,127,127,.08))}
@@ -9962,31 +9960,51 @@ function setDocTitle(first, second){
 /* side ads: a 160×600 AdFit unit in each margin when the window is wide enough for it beside the page (desktop, Korean site only). The unit ids come from
    the AdFit dashboard (광고 단위 추가 → 160×600); an empty id shows nothing on that side. */
 const ADFIT_SIDE_UNITS={left:"DAN-qczrGPkgs3ATsrwt",right:"DAN-zyPVmJAPTSmPDSUC"};
-/* AdFit calls these with the <ins>: the card fades in when an ad has loaded and goes away again when none comes */
-window.hlAdSideLoad=el=>{ (el&&el.closest?el.closest(".adfit-side"):null)?.classList.add("is-filled"); };
-window.hlAdSideFail=el=>{ (el&&el.closest?el.closest(".adfit-side"):null)?.classList.remove("is-filled"); };
+/* AdFit calls these with the <ins>: the card shows once an ad has loaded and fades out again when none comes */
+const AD_SIDE_STATE={left:"-",right:"-"};
+const adSideOf=el=>el&&el.closest?el.closest(".adfit-side"):null;
+window.hlAdSideLoad=el=>{ const b=adSideOf(el); if(b){ b.classList.add("is-filled"); AD_SIDE_STATE[b.dataset.side]="ad loaded"; adDebug(); } };
+window.hlAdSideFail=el=>{ const b=adSideOf(el); if(b){ b.classList.remove("is-filled"); AD_SIDE_STATE[b.dataset.side]="no ad (AdFit had none to show)"; adDebug(); } };
+let adSideWhy="";
+/* ?ads=debug (or #...?ads=debug) shows why the side ads are or are not there */
+function adDebug(){
+  if(!/[?&]ads=debug\b/.test(location.search+location.hash)) return;
+  let el=document.getElementById("hlAdDebug"); if(!el){ el=document.createElement("div"); el.id="hlAdDebug"; document.body.append(el); }
+  el.textContent=`window ${innerWidth}×${innerHeight} (zoom ${devicePixelRatio})\nside ads: ${adSideWhy}\nleft: ${AD_SIDE_STATE.left}\nright: ${AD_SIDE_STATE.right}\nAdFit script: ${window.__hlAdScript||"-"}`;
+}
+const SIDE_CARD=178, SIDE_GAP=10;                     /* card width with its padding and border; gap to the window edge */
 function mountHaslaAdFitSides(){
-  // The ads fit only when both gutters clear the visible page content.
-  const shells=[...document.querySelectorAll('#view .shell')].filter(el=>el.getClientRects().length);
-  const fits=window.innerWidth>=1540 && window.innerHeight>=760 && matchMedia("(hover:hover)").matches && shells.length>0 && shells.every(el=>{
-    const r=el.getBoundingClientRect(), style=getComputedStyle(el);
-    return r.left+parseFloat(style.paddingLeft)>=200 && window.innerWidth-r.right+parseFloat(style.paddingRight)>=200;
-  });
+  const route=!/^#\/lab\b|\/(exam|review)(\/|$)/.test(location.hash);   // never beside an exam
+  const why=lang!=="ko"?"English site (no ads)":!matchMedia("(hover:hover)").matches?"touch screen":!route?"exam page":
+    innerWidth<1280?`window narrower than 1280 px`:innerHeight<712?`window shorter than 712 px`:"";
+  const on=!why;
+  document.documentElement.classList.toggle("hl-side-ads",on);
+  /* where the page content starts and ends, once it has made room */
+  const shells=on?[...document.querySelectorAll('#view .shell')].filter(el=>el.getClientRects().length):[];
+  let L=Infinity,R=-Infinity;
+  for(const el of shells){ const r=el.getBoundingClientRect(), st=getComputedStyle(el); L=Math.min(L,r.left+parseFloat(st.paddingLeft)); R=Math.max(R,r.right-parseFloat(st.paddingRight)); }
+  const room=shells.length?Math.min(L,innerWidth-R):0, fits=on&&room>=SIDE_CARD+2*SIDE_GAP;
+  adSideWhy=why||(fits?`shown (margin ${Math.round(room)} px)`:`margin ${Math.round(room)} px is too narrow`);
   for(const side of ["left","right"]){
     const id="adfitSide-"+side,unit=ADFIT_SIDE_UNITS[side];let box=document.getElementById(id);
-    const want=lang==="ko"&&fits&&!!unit&&!/^#\/lab\b|\/(exam|review)(\/|$)/.test(location.hash);   // never beside an exam
-    if(!want){if(box)box.hidden=true;continue;}
+    if(!fits||!unit){ if(box) box.hidden=true; continue; }
     if(!box){
-      box=document.createElement("aside");box.id=id;box.className="adfit-side adfit-side--"+side;box.setAttribute("aria-label","광고");
+      box=document.createElement("aside");box.id=id;box.dataset.side=side;box.className="adfit-side adfit-side--"+side;box.setAttribute("aria-label","광고");
       box.innerHTML='<span class="adfit-banner-label">광고</span>';
       const ins=document.createElement("ins");ins.className="kakao_ad_area";ins.style.display="none";ins.dataset.adUnit=unit;ins.dataset.adWidth="160";ins.dataset.adHeight="600";ins.dataset.adOnload="hlAdSideLoad";ins.dataset.adOnfail="hlAdSideFail";box.append(ins);
-      document.body.append(box);
-      /* the card fades in only once AdFit has put an ad in it; with no ad it stays out of sight */
-      if(typeof MutationObserver==="function") new MutationObserver(()=>{ if(ins.style.display!=="none"&&ins.querySelector("iframe")) box.classList.add("is-filled"); }).observe(ins,{attributes:true,childList:true,subtree:true});
-      const script=document.createElement("script");script.src="https://t1.kakaocdn.net/kas/static/ba.min.js";script.async=true;document.body.append(script);
+      document.body.append(box); AD_SIDE_STATE[side]="waiting for AdFit";
+      /* a fallback for the load callback: anything AdFit puts in the slot shows the card */
+      if(typeof MutationObserver==="function") new MutationObserver(()=>{ if(ins.childElementCount||ins.style.display!=="none"){ box.classList.add("is-filled"); if(AD_SIDE_STATE[side]==="waiting for AdFit"){ AD_SIDE_STATE[side]="ad shown"; adDebug(); } } }).observe(ins,{attributes:true,childList:true,subtree:true});
+      const script=document.createElement("script");script.src="https://t1.kakaocdn.net/kas/static/ba.min.js";script.async=true;
+      script.onload=()=>{ window.__hlAdScript="loaded"; adDebug(); }; script.onerror=()=>{ window.__hlAdScript="blocked (ad blocker or network)"; adDebug(); };
+      document.body.append(script);
     }
     box.hidden=false;
+    /* centred in its margin, and in the window below the header */
+    const x=Math.round((room-SIDE_CARD)/2), y=Math.max(80,Math.round((innerHeight-632)/2+28));
+    box.style.top=y+"px"; box.style.left=side==="left"?x+"px":""; box.style.right=side==="right"?x+"px":"";
   }
+  adDebug();
 }
 window.addEventListener("resize",mountHaslaAdFitSides);
 let adFitObserver=null;
