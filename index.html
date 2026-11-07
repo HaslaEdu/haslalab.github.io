@@ -563,10 +563,19 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 /* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
 .adfit-side{display:none}
-@media (min-width:1200px){.adfit-side{display:block;position:fixed;top:120px;width:160px;height:600px;z-index:5;transform:scale(.6)}.adfit-side[hidden]{display:none}
-  .adfit-side--left{left:max(12px,calc((100vw - 1180px)/2 - 126px));transform-origin:top left}.adfit-side--right{right:max(12px,calc((100vw - 1180px)/2 - 126px));transform-origin:top right}
-  .adfit-side .adfit-banner-label{top:-14px}}
-@media (min-width:1200px) and (max-width:1483px){html:lang(ko) #view .shell{max-width:calc(100% - 232px)}}
+/* side ads (desktop only): the 160×600 unit at its own size (AdFit does not allow resizing), set in a quiet card in
+   the middle of each empty margin, shown only where the margin is wide enough and only once an ad has arrived */
+@media (min-width:1540px) and (min-height:760px) and (hover:hover){
+  .adfit-side{display:block;position:fixed;top:calc(50vh - 302px + 30px);width:160px;padding:22px 8px 8px;box-sizing:content-box;z-index:5;
+    background:var(--paper);border:1px solid var(--grid-fine);border-radius:12px;box-shadow:0 1px 2px rgba(22,33,46,.04);
+    opacity:0;visibility:hidden;transition:opacity .45s ease,visibility 0s linear .45s}
+  .adfit-side.is-filled{opacity:1;visibility:visible;transition:opacity .45s ease}
+  .adfit-side[hidden]{display:none}
+  .adfit-side--left{left:calc((100vw - 1124px)/4 - 88px)}
+  .adfit-side--right{right:calc((100vw - 1124px)/4 - 88px)}
+  .adfit-side .adfit-banner-label{top:7px;left:10px;letter-spacing:.06em;color:var(--graphite);opacity:.75}
+  .adfit-side .kakao_ad_area{border-radius:4px;overflow:hidden}
+  html[data-theme="dark"] .adfit-side{background:#1c1722;border-color:#352e40;box-shadow:none}}
 @media print{.adfit-side{display:none!important}}
 .sns-ig{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;font-size:13px;border:1px solid var(--grid-bold,#B4CADC);border-radius:999px;padding:4px 11px}
 .sns-ig:hover{background:var(--cm-soft,rgba(127,127,127,.08))}
@@ -9950,15 +9959,18 @@ function setDocTitle(first, second){
   document.title = parts.length ? `${parts[0]} \u00b7 ${SITE}` : `${SITE} \u2014 ${tail}`;
 }
 
-/* side ads: a 160×600 AdFit unit in each margin when the window is wide enough (Korean site only). The unit ids come from
+/* side ads: a 160×600 AdFit unit in each margin when the window is wide enough for it beside the page (desktop, Korean site only). The unit ids come from
    the AdFit dashboard (광고 단위 추가 → 160×600); an empty id shows nothing on that side. */
 const ADFIT_SIDE_UNITS={left:"DAN-qczrGPkgs3ATsrwt",right:"DAN-zyPVmJAPTSmPDSUC"};
+/* AdFit calls these with the <ins>: the card fades in when an ad has loaded and goes away again when none comes */
+window.hlAdSideLoad=el=>{ (el&&el.closest?el.closest(".adfit-side"):null)?.classList.add("is-filled"); };
+window.hlAdSideFail=el=>{ (el&&el.closest?el.closest(".adfit-side"):null)?.classList.remove("is-filled"); };
 function mountHaslaAdFitSides(){
   // The ads fit only when both gutters clear the visible page content.
   const shells=[...document.querySelectorAll('#view .shell')].filter(el=>el.getClientRects().length);
-  const fits=window.innerWidth>=1200 && shells.length>0 && shells.every(el=>{
+  const fits=window.innerWidth>=1540 && window.innerHeight>=760 && matchMedia("(hover:hover)").matches && shells.length>0 && shells.every(el=>{
     const r=el.getBoundingClientRect(), style=getComputedStyle(el);
-    return r.left+parseFloat(style.paddingLeft)>=116 && window.innerWidth-r.right+parseFloat(style.paddingRight)>=116;
+    return r.left+parseFloat(style.paddingLeft)>=200 && window.innerWidth-r.right+parseFloat(style.paddingRight)>=200;
   });
   for(const side of ["left","right"]){
     const id="adfitSide-"+side,unit=ADFIT_SIDE_UNITS[side];let box=document.getElementById(id);
@@ -9967,8 +9979,10 @@ function mountHaslaAdFitSides(){
     if(!box){
       box=document.createElement("aside");box.id=id;box.className="adfit-side adfit-side--"+side;box.setAttribute("aria-label","광고");
       box.innerHTML='<span class="adfit-banner-label">광고</span>';
-      const ins=document.createElement("ins");ins.className="kakao_ad_area";ins.style.display="none";ins.dataset.adUnit=unit;ins.dataset.adWidth="160";ins.dataset.adHeight="600";box.append(ins);
+      const ins=document.createElement("ins");ins.className="kakao_ad_area";ins.style.display="none";ins.dataset.adUnit=unit;ins.dataset.adWidth="160";ins.dataset.adHeight="600";ins.dataset.adOnload="hlAdSideLoad";ins.dataset.adOnfail="hlAdSideFail";box.append(ins);
       document.body.append(box);
+      /* the card fades in only once AdFit has put an ad in it; with no ad it stays out of sight */
+      if(typeof MutationObserver==="function") new MutationObserver(()=>{ if(ins.style.display!=="none"&&ins.querySelector("iframe")) box.classList.add("is-filled"); }).observe(ins,{attributes:true,childList:true,subtree:true});
       const script=document.createElement("script");script.src="https://t1.kakaocdn.net/kas/static/ba.min.js";script.async=true;document.body.append(script);
     }
     box.hidden=false;

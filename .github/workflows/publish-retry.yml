@@ -1,0 +1,28 @@
+# Re-runs a failed site publish (GitHub Pages sometimes leaves a deployment queued until deploy-pages times out;
+# the same artifact goes through on a second try). Only the newest commit on main is retried, at most twice, so an
+# older site never replaces a newer one.
+name: Retry site publish
+
+on:
+  workflow_run:
+    workflows: [Publish site]
+    types: [completed]
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  retry:
+    if: github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.run_attempt < 3
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          head=$(gh api "repos/${GITHUB_REPOSITORY}/commits/main" --jq .sha)
+          if [ "$head" != "$SHA" ]; then echo "main has moved on ($head); a newer publish covers it."; exit 0; fi
+          sleep 90
+          gh run rerun "$RUN_ID" --failed --repo "$GITHUB_REPOSITORY"
