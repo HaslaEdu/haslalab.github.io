@@ -1,0 +1,31 @@
+# Copies the PDFs under pdfx/ into GitHub releases (pdf-x<folder>), where the PDF Worker serves them from, so the
+# Pages site no longer has to carry them. Runs when a PDF in pdfx/ changes on main, or by hand.
+name: pdfx PDFs to releases
+
+on:
+  push:
+    branches: [main]
+    paths: ["pdfx/**.pdf", "tools/pdfx_release.py", ".github/workflows/pdfx-release.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pdfx-release
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /pdfx/
+            /tools/pdfx_release.py
+      - run: python3 tools/pdfx_release.py
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
