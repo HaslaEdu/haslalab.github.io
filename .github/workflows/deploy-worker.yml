@@ -62,9 +62,17 @@ jobs:
       - run: node provision-jobs.mjs
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # wrangler deploy copies secrets from the newest UPLOADED version, not the live one; stop before it drops any
+      - run: python3 ../tools/worker-secrets-guard.py haslalab-community
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # the sign-in keys are secrets too: a deploy that leaves none is a broken deploy
+      - run: |
+          sleep 5
+          curl -fsS -A 'HaslaLab deploy check' https://haslalab-community.haslalab.workers.dev/api/oauth/providers | tee /dev/stderr | grep -q '"google"'
       # Reviewed weekly content is bundled above and publishes atomically through
       # the existing D1 binding on the first weekly/problem request. This avoids
       # requiring D1 management privileges from the deployment credential.
