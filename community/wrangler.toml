@@ -57,8 +57,9 @@ ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaed
 GEMINI_MODEL = "gemini-3.5-flash-lite"
 DEEPSEEK_MODEL = "deepseek-flash"
 DEEPSEEK_OCR_MODEL = "deepseek-flash"
-# DeepSeek runs every stage while the Gemini account has no credit (LAB_ONLY_PROVIDER pins every sitting to it). When it
-# is topped up, the Gemini choices of the bench were: providers gemini, LAB_READ_MODEL gemini-3.1-pro-preview,
+# From 2026-11-01 to 11-07 DeepSeek ran every stage (LAB_ONLY_PROVIDER = "deepseek"), Gemini being taken for an account
+# without credit. It was this Worker's Hong Kong placement that Gemini refused; its requests now leave through Seoul
+# (ai-egress/) and the pin is gone. The Gemini choices of the bench were: providers gemini, LAB_READ_MODEL gemini-3.1-pro-preview,
 # LAB_SCHEME_MODEL and LAB_GRADE_MODEL gemini-3.8-flash, LAB_READ_FALLBACK_MODEL gemini-3.8-flash,
 # LAB_SCHEME_FALLBACK_MODEL gemini-3.1-pro-preview, and no LAB_ONLY_PROVIDER. DeepSeek bench (36 audited tasks):
 # deepseek-flash builds the schemes (it sees the PDF pages; v4-pro reads no image and its schemes graded 6 points
@@ -73,7 +74,6 @@ LAB_SCHEME_PROVIDER = "deepseek"
 # enhanced 68%, DeepSeek Flash 65%. 3.8 Flash answered «high demand» to a third of the reads: those pages go to
 # 3.1 Flash-Lite at once (LAB_READ_FALLBACK_MODEL) instead of failing.
 LAB_READ_PROVIDER = "gemini"
-LAB_ONLY_PROVIDER = "deepseek"
 LAB_GRADE_PROVIDER = "deepseek"
 LAB_GRADE_MODEL = "deepseek-flash"
 # DeepSeek thinking (low, high, max) stays off until the bench has measured it

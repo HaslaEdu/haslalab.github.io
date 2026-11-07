@@ -24,7 +24,7 @@ export const KEY_CHECKS = [
   { id: 'openai', keys: ['OPENAI_API_KEY'], req: e => ['https://api.openai.com/v1/models', { headers: { Authorization: 'Bearer ' + str(e.OPENAI_API_KEY) } }] },
   { id: 'anthropic', keys: ['ANTHROPIC_API_KEY'], req: e => ['https://api.anthropic.com/v1/models?limit=1', { headers: { 'x-api-key': str(e.ANTHROPIC_API_KEY), 'anthropic-version': '2023-06-01' } }] },
   { id: 'upstage', keys: ['UPSTAGE_API_KEY'], req: e => ['https://api.upstage.ai/v1/models', { headers: { Authorization: 'Bearer ' + str(e.UPSTAGE_API_KEY) } }] },
-  { id: 'google_cloud', keys: ['GOOGLE_CLOUD_API_KEY'], req: e => ['https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash:countTokens?key=' + encodeURIComponent(str(e.GOOGLE_CLOUD_API_KEY)),
+  { id: 'google_cloud', keys: ['GOOGLE_CLOUD_API_KEY'], req: e => ['https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-3.1-flash-lite:countTokens?key=' + encodeURIComponent(str(e.GOOGLE_CLOUD_API_KEY)),
     { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'hi' }] }] }) }] },
   { id: 'tavily', keys: ['TAVILY_API_KEY'], req: e => ['https://api.tavily.com/usage', { headers: { Authorization: 'Bearer ' + str(e.TAVILY_API_KEY) } }] },
   { id: 'brave_search', keys: ['BRAVE_SEARCH_KEY'], req: e => ['https://api.search.brave.com/res/v1/web/search?q=physics&count=1', { headers: { 'X-Subscription-Token': str(e.BRAVE_SEARCH_KEY), Accept: 'application/json' } }] },
@@ -41,8 +41,8 @@ const words = b => String(b?.error?.message || b?.message || (typeof b?.error ==
 
 export async function checkAiKeys(env, { fetchImpl = globalThis.fetch, timeoutMs = 15000 } = {}) {
   const out = [];
-  /* and never one of this Worker's own values, however short, even when a provider quotes it back */
-  const own = Object.values(env || {}).filter(v => typeof v === 'string' && v.trim().length >= 6).map(v => v.trim());
+  /* and never one of this Worker's own values, even when a provider quotes it back */
+  const own = Object.values(env || {}).filter(v => typeof v === 'string' && v.trim().length >= 16).map(v => v.trim());
   const scrub = m => { if (!m) return m; for (const v of own) m = m.split(v).join('…'); return m; };
   const run = async c => {
     const present = c.present ? !!c.present(env) : c.keys.every(k => !!str(env[k]));
