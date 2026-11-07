@@ -1,4 +1,5 @@
 # Publishes the site to GitHub Pages without tools/ (6.7 GB of PDF authoring inputs and evidence that no page loads),
+# community/ (the Worker's source), src/ (the Python originals of the sims) and tests/,
 # so the published site stays well under GitHub Pages' 1 GB size limit and its deploys stop timing out.
 # Takes effect once Settings → Pages → Build and deployment → Source is "GitHub Actions"; while the source is still
 # "Deploy from a branch", this workflow sees that and does nothing.
@@ -14,9 +15,11 @@ permissions:
   pages: write
   id-token: write
 
+# Never cancel a deploy half way: a Pages deployment cut off while queued can leave the next one waiting until it
+# times out. Runs pushed meanwhile wait, and only the newest of them goes ahead.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -42,11 +45,14 @@ jobs:
             /*
             !/tools/
             !/node_modules/
+            !/community/
+            !/src/
+            !/tests/
       - name: Site without tools/
         if: steps.source.outputs.build_type == 'workflow'
         run: |
           mkdir -p "$RUNNER_TEMP/site"
-          rsync -a --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ ./ "$RUNNER_TEMP/site/"
+          rsync -a --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --exclude /community/ --exclude /src/ --exclude /tests/ ./ "$RUNNER_TEMP/site/"
           du -sh "$RUNNER_TEMP/site"
       - uses: actions/upload-pages-artifact@v3
         if: steps.source.outputs.build_type == 'workflow'
@@ -56,4 +62,4 @@ jobs:
         if: steps.source.outputs.build_type == 'workflow'
         uses: actions/deploy-pages@v4
         with:
-          timeout: 2400000
+          timeout: 600000            # the most deploy-pages allows; a stuck deploy is re-run by publish-retry.yml
