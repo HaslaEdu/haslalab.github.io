@@ -56,8 +56,8 @@ jobs:
         if: steps.source.outputs.build_type == 'workflow'
         run: |
           mkdir -p "$RUNNER_TEMP/site"
-          rsync -a --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --include /community/ --include '/community/weekly/***' --exclude '/community/*' --exclude /tests/ --exclude '/pdfx/**.pdf' ./ "$RUNNER_TEMP/site/"
-          du -sh "$RUNNER_TEMP/site"
+          rsync -a --prune-empty-dirs --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --include /community/ --include '/community/weekly/***' --exclude '/community/*' --exclude /tests/ --exclude '/pdfx/**.pdf' ./ "$RUNNER_TEMP/site/"
+          du -sh "$RUNNER_TEMP/site"; find "$RUNNER_TEMP/site" -type f | wc -l
       # One artifact name per attempt: a re-run keeps the earlier attempts' artifacts, and deploy-pages refuses to
       # pick between several artifacts with the same name ("Multiple artifacts named github-pages").
       - uses: actions/upload-pages-artifact@v3
