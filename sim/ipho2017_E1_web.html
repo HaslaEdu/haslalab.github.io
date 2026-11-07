@@ -134,6 +134,7 @@
       <div class="cvwrap">
         <canvas id="cv"></canvas>
         <button id="btnBack" class="back" hidden></button>
+        <button id="btnCellV" class="back" style="left:auto;right:10px" hidden></button>
       </div>
     </div>
   </div>
@@ -562,7 +563,7 @@ const T={
     cap2:{screen:"스크린 정면 (2D) — 모눈종이 30 × 30 cm · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
           cell:"확산 셀 확대 — 실험대의 3D 셀을 레이저 쪽 옆에서 본 모습: 넓은 유리면 너머의 소금물·물 층과 흰 채움선 · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
           rail:"레일 옆면 확대 — 실험대의 3D 레일을 정면 옆에서 본 모습: 받침의 흰 지시선과 레일 눈금 (확대하면 mm 눈금) · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로"},
-    back:"◀ 3D로 돌아가기",
+    back:"◀ 3D로 돌아가기", cellV:"🔍 셀 확대",
     hTime:"시간 배속", jump:"확산 30분 지점으로 건너뛰기",
     hLaser:"1. 선 레이저 모듈", focus:"초점 (레이저 앞쪽 캡 — 휠로도 돌림)", theta:"레이저 회전 (선의 기울기)",
     hWatch:"7. 스톱워치", ss:"시작 / 정지", rst:"리셋",
@@ -612,7 +613,7 @@ const T={
     cap2:{screen:"the screen face on (2D) — millimetre paper 30 × 30 cm · wheel: zoom, drag: pan / R-click: back to 3D",
           cell:"the diffusion cell close up — the 3D cell on the bench seen from the laser side: the salt solution and water layers behind the big glass face and the white fill line · wheel: zoom, drag: pan / R-click: back to 3D",
           rail:"the side of the rail close up — the 3D rail on the bench seen square from the front: the bases' white index lines on the rail scale (zoom in for millimetres) · wheel: zoom, drag: pan / R-click: back to 3D"},
-    back:"◀ back to 3D",
+    back:"◀ back to 3D", cellV:"🔍 cell close-up",
     hTime:"Time scale", jump:"jump to 30 min of diffusion",
     hLaser:"1. Line laser module", focus:"focus (the cap at the front — or the wheel over it)", theta:"rotation of the laser (angle of the line)",
     hWatch:"7. Stopwatch", ss:"start / stop", rst:"reset",
@@ -1518,9 +1519,10 @@ function wipe(p){
   if(n&&!S.puddles.length) say("wiped");
   if(carry.wet>=CAP-1e-6) say("sheetWet");
 }
-function openView(v){ if(view!==v&&window.HLzoom) HLzoom(cv); view=v; say("view"); V2.k=1; V2.px=0; V2.py=0; $("btnBack").hidden=false; renderCap(); }
+function openView(v){ if(view!==v&&window.HLzoom) HLzoom(cv); view=v; $("btnCellV").hidden=true; say("view"); V2.k=1; V2.px=0; V2.py=0; $("btnBack").hidden=false; renderCap(); }
 function closeView(){ if(view&&window.HLzoom) HLzoom(cv,{out:true}); view=null; $("btnBack").hidden=true; renderCap(); }
 $("btnBack").onclick=closeView;
+$("btnCellV").onclick=()=>{ if(!ST.on.cell){ say("needCell"); return; } if(S.cellOut){ say("cellOutNow"); return; } openView("cell"); };
 let trayDrag=false;
 trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); hand=null; drawTray(); });
 trayCv.addEventListener("pointerdown",e=>{ if(e.button!==0) return; const y=e.clientY-trayCv.getBoundingClientRect().top; trayDrag=true;
@@ -1544,7 +1546,7 @@ function layout(){
 }
 function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
   for(const s of [1,10,30,60,300]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===speed?"on":""; b.onclick=()=>{ speed=s; renderSpeeds(); }; box.appendChild(b); } }
-function renderCap(){ $("t-cap").textContent=view?d().cap2[view]:d().cap; $("btnBack").textContent=d().back; }
+function renderCap(){ $("t-cap").textContent=view?d().cap2[view]:d().cap; $("btnBack").textContent=d().back; $("btnCellV").textContent=d().cellV; }
 function renderStatus(){
   const L=[], t=d();
   if(!ST.on.laser||!ST.on.cell||!ST.on.screen) L.push([t.st.none,false]);
@@ -1667,7 +1669,7 @@ function frame(){
   else if(view) view3Side(view,CAM.W,CAM.H);
   else { const g=ctx.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx.fillStyle=g; ctx.fillRect(0,0,CAM.W,CAM.H);
     begin3(); drawScene3(); drawGhost(); render3(ctx); }
-  if(++frameN%6===0){ renderStatus(); drawTray(); }
+  if(++frameN%6===0){ renderStatus(); drawTray(); $("btnCellV").hidden=!!view||!ST.on.cell||S.cellOut; }
 }
 window.addEventListener("resize",layout);
 applyLang(); requestAnimationFrame(tick);
