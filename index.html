@@ -1154,7 +1154,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
-<script src="site-catalogue.js?v=15690555759d"></script>
+<script src="site-catalogue.js?v=042e9bbf79e8"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=7385ce7c7606"></script>
@@ -1202,7 +1202,7 @@ ko:{
     "실험과 실기는 국제 올림피아드에서 중요한 부분입니다. 그렇지만 국제 대회에 나가기 전이나 대비를 하기 위해 학생이 실제로 그 장비를 만져볼 기회는 많지 않고, 결과를 보는 것만으로는 눈금을 읽고 오차를 판단하는 감각이 생기지 않습니다.",
     "HaslaLab은 그 간극을 메우기 위해 만들어졌습니다. 각 실험 장비를 프로그램 하에서 그대로 재현해, 직접 조립하고 측정할 수 있게 합니다. 결과는 계산해 주지 않습니다 — 그건 당신이 할 일입니다."
   ],
-  team:[{name:"유준우", role:"Edu 개발 · 홍보", loc:"대한민국 거주", education:"SNU 재학 중 (~2026)", mail:"yujunu007@gmail.com", photo:"/logo/junwoo-yu.jpg", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
+  team:[{name:"유준우", role:"Edu 개발 · 홍보", loc:"대한민국 거주", education:"SNU 재학 중 (~2026)", school:"서울대학교", mail:"yujunu007@gmail.com", photo:"/logo/junwoo-yu.jpg", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
   ebPerson:"만든 사람들",
   person:{name:"MinGyuSong", role:"LAB 개발 · 물리 모델", loc:"대한민국 거주",
     mail:"mgsnew88@naver.com", insta:"https://www.instagram.com/mimgyuson/", handle:"mimgyuson",
@@ -1271,7 +1271,7 @@ en:{
     "Experiments and practicals are a serious part of the international olympiads. Yet students preparing for an international competition rarely get to handle the apparatus, and reading the results alone never builds a feel for reading a scale or judging an error.",
     "HaslaLab was built to close that gap. Every piece of apparatus is reproduced in software exactly as it behaves, so you can assemble it and take the measurements yourself. The results are not computed for you — that part is your work."
   ],
-  team:[{name:"Junwoo Yu", role:"Edu development · promotion", loc:"Based in the Republic of Korea", education:"SNU student (~2026)", mail:"yujunu007@gmail.com", photo:"/logo/junwoo-yu.jpg", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
+  team:[{name:"Junwoo Yu", role:"Edu development · promotion", loc:"Based in the Republic of Korea", education:"SNU student (~2026)", school:"Seoul National University", mail:"yujunu007@gmail.com", photo:"/logo/junwoo-yu.jpg", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
   ebPerson:"The people",
   person:{name:"MinGyuSong", role:"LAB development · physics modeling",
     loc:"Based in the Republic of Korea",
@@ -5212,9 +5212,12 @@ function viewAbout(){
               <div class="loc">${esc(m.loc)}</div>
               ${m.mail?`<a class="mail" href="mailto:${esc(m.mail)}">${esc(m.mail)}</a>`:""}
               <p style="margin:8px 0 0">${instaLink(m.insta,m.handle,false)}</p>
-              ${m.education?`<div class="loc" style="display:flex;align-items:center;gap:12px;margin-top:14px"><img src="/logo/snu-emblem.png" alt="서울대학교" style="width:56px;height:56px;object-fit:contain;background:white;border-radius:12px;padding:4px;box-sizing:border-box"><span>${esc(m.education)}</span></div>`:""}
             </div>
           </div>
+          ${m.education?`<ul class="cred"><li style="grid-template-columns:56px 1fr;align-items:center">
+            <img src="/logo/snu-emblem.png" alt="${esc(m.school||"")}" style="width:56px;height:56px;object-fit:contain;background:white;border-radius:12px;padding:4px;box-sizing:border-box">
+            <span class="cn">${esc(m.education)}${m.school?`<small>${esc(m.school)}</small>`:""}</span>
+          </li></ul>`:""}
         </div>`).join("")}
       </div>
     </div>
