@@ -5,6 +5,8 @@
 //  · read: a page photo → its transcript (Claude's gold transcriptions in the bench), as Vertex AI's supervised-tuning
 //    lines for Gemini (gs:// photo URIs: the photos go to a Cloud Storage bucket first).
 
+import { scrubPersonal } from "./pii.js";
+
 export const LAB_TRAIN_SQL = `CREATE TABLE IF NOT EXISTS lab_train (id INTEGER PRIMARY KEY AUTOINCREMENT, kind TEXT NOT NULL,
   session_id INTEGER, task TEXT, page_id INTEGER, exam_key TEXT, input TEXT NOT NULL, target TEXT NOT NULL,
   source TEXT NOT NULL DEFAULT 'model', verified INTEGER NOT NULL DEFAULT 0, note TEXT,
@@ -37,7 +39,8 @@ export function gradeTrainInput(scheme, pages, { task = "", exam = "", v2 = fals
   /* v2: the paper's own general rules (its numerical tolerance, its unit and significant-figure rules) */
   const rules = v2 ? [scheme?.unit_rule, scheme?.notes].filter(x => typeof x === "string" && x.trim()).map(x => clip(x, 600)) : [];
   const order = [...(pages || [])].sort((a, b) => (a.kind === "answer" ? 0 : 1) - (b.kind === "answer" ? 0 : 1) || (a.no || 0) - (b.no || 0));
-  const sheets = order.map(p => `[page ${p.no ?? ""} · ${p.kind || "page"}]\n${clip(p.ocr ?? p.text ?? "", 12000)}`);
+  /* answers only: a name, school, code or contact written on the sheet is taken out (pii.js) */
+  const sheets = order.map(p => `[page ${p.no ?? ""} · ${p.kind || "page"}]\n${clip(scrubPersonal(p.ocr ?? p.text ?? ""), 12000)}`);
   return [`Exam: ${exam} ${task}`.trim(), ...(rules.length ? ["", "Paper rules: " + rules.join(" ")] : []), "", "Marking scheme (id | points | what earns them | official | method):", ...lines, "", "Student pages:", ...sheets].join("\n");
 }
 

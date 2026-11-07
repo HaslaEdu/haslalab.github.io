@@ -22,11 +22,19 @@ const SITE = 'https://haslalab.org/';
 //     per M tokens on Workers AI. Workers AI does not take LoRAs on it yet; CoreWeave's serverless inference does at the
 //     same per-token price, so a trained adapter is served from there (AI_CHAT_URL/_KEY/_REMOTE below) and the
 //     untuned model stays on Workers AI as the fallback.
-//   SOLVER: QwQ 32B, a reasoning model Workers AI takes LoRAs on (AI_SOLVER_LORA: the name given to
-//     `wrangler ai finetune create`).
+//   SOLVER: until Hasla AI's own reasoning model is ready (HaslaEdu/hasla-ai), DeepSeek's API (deepseek-flash, thinking
+//     on) when the Worker holds DEEPSEEK_API_KEY, from 2026-11-14 (Korea time): the privacy policy announces the new
+//     transfer seven days ahead (AI_SOLVER_DEEPSEEK_FROM moves the day). On Workers AI the solver is QwQ 32B until
+//     Workers AI retires it on 2026-11-20, then Gemma 4.
 //   GUARD: Llama Guard 3 (LoRA on Workers AI); FAST, the intent classifier: Llama 3.1 8B (a LoRA on CoreWeave too).
 export const CHAT_MODEL = '@cf/google/gemma-4-26b-a4b-it';
-export const SOLVER_MODEL = '@cf/qwen/qwq-32b';
+export const QWQ_SOLVER = '@cf/qwen/qwq-32b';
+export const SOLVER_DEEPSEEK = 'deepseek-flash', SOLVER_DEEPSEEK_FROM = '2026-11-14', QWQ_RETIRED = '2026-11-20';
+const kstDay = (ms = Date.now()) => new Date(ms + 9 * 3600e3).toISOString().slice(0, 10);
+/** the solver on Workers AI on a given day (Korea time) */
+export const solverWorkersModel = (day = kstDay()) => (day < QWQ_RETIRED ? QWQ_SOLVER : CHAT_MODEL);
+export const SOLVER_MODEL = solverWorkersModel();
+const SOLVER_MAX_TOKENS = 32000;   // DeepSeek's thinking and answer together
 export const GUARD_MODEL = '@cf/meta/llama-guard-3-8b';
 export const FAST_MODEL = '@cf/meta/llama-3.1-8b-instruct-fast';
 // the nightly self-test (ai-eval.js): one model writes students' questions, another grades the answers
@@ -36,7 +44,7 @@ export const TEACHER_MODEL = '@cf/deepseek-ai/deepseek-v4-pro-0813';
 export const MODELS = {CHAT: CHAT_MODEL, SOLVER: SOLVER_MODEL, GUARD: GUARD_MODEL, FAST: FAST_MODEL,
   ASKER: CHAT_MODEL, JUDGE: '@cf/openai/gpt-oss-120b', TEACHER: TEACHER_MODEL};
 const MAX_TURNS = 20, MAX_CHARS = 4000, MAX_STEPS = 5;
-const HISTORY_CHARS = 16000, TOOL_CHARS = 8000;   // kept well inside the smallest window in use (QwQ, 24k tokens)
+const HISTORY_CHARS = 16000, TOOL_CHARS = 8000;   // kept well inside the smallest context window in use
 
 const MATH_RULE = `Write every formula in LaTeX: $...$ inline and $$...$$ on its own line (never \\( \\), \\[ \\] or
 formulas in plain text); keep the dollar signs out of code blocks.`;
@@ -136,14 +144,18 @@ const remoteOf = (env, which) => env[`AI_${which}_URL`] && env[`AI_${which}_KEY`
   ? {url: env[`AI_${which}_URL`], key: env[`AI_${which}_KEY`], remote: env[`AI_${which}_REMOTE`]}
   : which === 'TEACHER' && env.DEEPSEEK_API_KEY && !env.AI_TEACHER_MODEL
     ? {url: 'https://api.deepseek.com', key: env.DEEPSEEK_API_KEY, remote: env.AI_TEACHER_DEEPSEEK || 'deepseek-v4-pro', extra: {thinking: {type: 'disabled'}}}
-    : null;
+    /* the solver thinks on DeepSeek's side; its thinking streams in a field of its own and is never shown */
+    : which === 'SOLVER' && env.DEEPSEEK_API_KEY && !env.AI_SOLVER_MODEL && kstDay() >= (env.AI_SOLVER_DEEPSEEK_FROM || SOLVER_DEEPSEEK_FROM)
+      ? {url: 'https://api.deepseek.com', key: env.DEEPSEEK_API_KEY, remote: env.AI_SOLVER_DEEPSEEK || SOLVER_DEEPSEEK,
+        extra: {thinking: {type: 'enabled'}, max_tokens: SOLVER_MAX_TOKENS}, timeout: 300000}
+      : null;
 export async function runModel(env, which, input, maxTokens) {
   const rem = remoteOf(env, which), url = rem?.url, key = rem?.key, remote = rem?.remote;
   if (url && key && remote) {
-    try { return await runRemote(url, key, remote, rem.extra ? {...input, extra: rem.extra} : input, maxTokens, env[`AI_${which}_PROJECT`]); }
+    try { return await runRemote(url, key, remote, rem.extra ? {...input, extra: rem.extra} : input, maxTokens, env[`AI_${which}_PROJECT`], rem.timeout); }
     catch (e) { console.error('ai-remote', which, String(e?.message || e).slice(0, 200)); }
   }
-  const model = env[`AI_${which}_MODEL`] || MODELS[which];
+  const model = env[`AI_${which}_MODEL`] || (which === 'SOLVER' ? solverWorkersModel() : MODELS[which]);
   const lora = env[`AI_${which}_LORA`];
   const out = CHAT_SCHEMA.test(model) ? {max_completion_tokens: maxTokens} : {max_tokens: maxTokens};
   const quiet = /^@cf\/google\/gemma-4/.test(model) && which !== 'JUDGE' ? {chat_template_kwargs: {enable_thinking: false}} : {};
@@ -151,13 +163,13 @@ export async function runModel(env, which, input, maxTokens) {
 }
 /* an OpenAI-compatible chat completion (CoreWeave / W&B Inference serves our LoRAs this way); a stream comes back as
    the response body, the same server-sent events generate() reads from Workers AI */
-async function runRemote(url, key, model, input, maxTokens, project) {
+async function runRemote(url, key, model, input, maxTokens, project, timeout = null) {
   const r = await fetch(url.replace(/\/+$/, '') + '/chat/completions', {method: 'POST',
     // W&B Inference bills a team/project (AI_<ROLE>_PROJECT), sent as OpenAI's project header
     headers: {'Content-Type': 'application/json', Authorization: `Bearer ${key}`, ...(project ? {'OpenAI-Project': project} : {})},
     body: JSON.stringify({model, messages: input.messages, ...(input.tools ? {tools: input.tools} : {}), ...(input.stream ? {stream: true, stream_options: {include_usage: true}} : {}),
       ...(input.temperature != null ? {temperature: input.temperature} : {}), ...(maxTokens ? {max_tokens: maxTokens} : {}), ...(input.extra || {})}),
-    signal: AbortSignal.timeout(input.stream ? 300000 : 120000)});
+    signal: AbortSignal.timeout(timeout || (input.stream ? 300000 : 120000))});
   if (!r.ok) throw new Error(`remote ${r.status}`);
   return input.stream ? r.body : r.json();
 }
@@ -450,9 +462,12 @@ export async function generate(env, which, messages, maxTokens, onDelta, {reason
     let stream = null;
     try { stream = await runModel(env, which, {messages, stream: true}, maxTokens); } catch { stream = null; }
     if (stream && typeof stream.getReader === 'function') {
-      let full = '', sent = 0, open = !reasoning;
+      let full = '', sent = 0, open = !reasoning, ownField = false;
       for await (const piece of sseTexts(stream)) {
         if (piece.usage && env.__meter) { env.__meter.in += +piece.usage.prompt_tokens || 0; env.__meter.out += +piece.usage.completion_tokens || 0; }
+        /* a model that thinks in a field of its own (DeepSeek) sends only the answer as text: it is shown as it comes */
+        if (piece.reasoning) ownField = true;
+        if (!open && ownField && piece.text && !full.includes('<think>')) open = true;
         full += piece.text || '';
         if (!open) { const k = full.indexOf('</think>'); if (k < 0) continue; open = true; sent = k + 8; }
         if (full.length > sent) { onDelta(full.slice(sent)); sent = full.length; }

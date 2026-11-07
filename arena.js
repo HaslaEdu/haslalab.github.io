@@ -568,7 +568,7 @@ function arSheetT() {
   return lang === "ko" ? {
     h: "답안지", print: "답안지 양식 열기 · 인쇄", help: "소문항마다 최종 답과 풀이를 함께 작성하세요. 수식은 LaTeX로 입력할 수 있습니다. 풀지 않은 소문항은 두 칸을 모두 비워도 됩니다.",
     answer: "최종 답", answerHint: "LaTeX 예: \\omega(q)=\\sqrt{...} · 일반 글도 입력할 수 있습니다.", working: "풀이·근거", workingHint: "유도 과정과 근거를 적으세요. 수식은 $...$ 또는 $$...$$로 입력합니다.",
-    typed: "LaTeX 입력", photo: "답안지 촬영", photoHelp: "실전모드처럼 답안지 전체를 한 쪽씩 촬영해 보내세요. 네 모서리의 검은 표식으로 보정한 사진과 판독된 내용을 확인한 뒤 제출합니다.",
+    typed: "LaTeX 입력", photo: "답안지 촬영", photoHelp: "실전모드처럼 답안지 전체를 한 쪽씩 촬영해 보내세요. 네 모서리의 검은 표식으로 보정한 사진과 판독된 내용을 확인한 뒤 제출합니다. 답안지에는 이름·학교·수험번호·연락처를 적지 마세요.",
     photoPart: "사진을 넣을 소문항", preview: "수식 미리보기", submit: "답안 제출 · 기회 1회 사용", total: "문제당 제출 기회 3회", remaining: n => `남은 제출 기회 ${n} / 3회`,
     saved: "작성 내용은 이 계정의 브라우저에 임시 저장됩니다. 임시 저장과 사진 읽기는 제출 기회를 사용하지 않습니다.", exhausted: "이 문제의 제출 기회 3회를 모두 사용했습니다. 기존 채점 결과는 아래에서 확인할 수 있습니다.",
     incomplete: id => `${id}: 최종 답과 풀이를 함께 입력하세요.`, empty: "한 소문항 이상에 최종 답과 풀이를 입력하세요.", tooLong: "답안이 너무 깁니다. 전체 답과 풀이를 60,000자 이내로 줄여주세요.", partLong: id => `${id}: 최종 답은 4,000자, 풀이는 16,000자 이내로 줄여주세요.`, photoLong: "읽은 풀이가 소문항당 16,000자를 넘었습니다. 내용을 확인하고 줄인 뒤 제출하세요.",
@@ -585,7 +585,7 @@ function arSheetT() {
   } : {
     h: "Answer sheet", print: "Open / print the answer sheet", help: "Enter the final answer and supporting work for each part. LaTeX is supported. Leave both boxes blank for any part you do not attempt.",
     answer: "Final answer", answerHint: "LaTeX, e.g. \\omega(q)=\\sqrt{...}, or ordinary text.", working: "Working and justification", workingHint: "Show your derivation and reasoning. Use $...$ or $$...$$ for formulas.",
-    typed: "LaTeX input", photo: "Photograph answer sheets", photoHelp: "Use the exam-mode scanner to send each full answer-sheet page. Check the corrected image and recognized answers before submitting.",
+    typed: "LaTeX input", photo: "Photograph answer sheets", photoHelp: "Use the exam-mode scanner to send each full answer-sheet page. Check the corrected image and recognized answers before submitting. Do not write your name, school, candidate number or contact details on the sheets.",
     photoPart: "Part shown in the photo", preview: "Formula preview", submit: "Submit answer · use 1 attempt", total: "3 submission attempts per problem", remaining: n => `${n} / 3 attempts remaining`,
     saved: "Drafts are saved for this account in this browser. Saving a draft or reading a photo does not use an attempt.", exhausted: "All 3 attempts for this problem have been used. Your existing grades remain below.",
     incomplete: id => `${id}: enter both a final answer and supporting work.`, empty: "Complete the final answer and working for at least one part.", tooLong: "Keep all answers and working within 60,000 characters.", partLong: id => `${id}: keep the answer within 4,000 characters and the working within 16,000.`, photoLong: "The recognized working exceeds 16,000 characters for this part. Check and shorten it before submitting.",
