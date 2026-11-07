@@ -36,6 +36,32 @@ def runpod(method, path, **kw):
     return r.json() if r.text else {}
 
 
+D1 = '96761b6d-c194-4ee5-9836-7845b51a5f07'
+
+
+def fetch_grade_cases(bench):
+    """event 2's audited answer sheets, read from D1 (the bench row of tune-grade-export) at run time: they are students'
+    papers, so they never go into this public repository (grade_cases.json is git-ignored)"""
+    path = os.path.join(HERE, 'grade_cases.json')
+    if os.path.exists(path) or not bench:
+        return
+    for tok in (E.get('CLOUDFLARE_API_TOKEN'), E.get('CLOUDFLARE_AI_TOKEN')):
+        if not tok:
+            continue
+        try:
+            h = {'Authorization': f'Bearer {tok}'}
+            acct = E.get('CLOUDFLARE_ACCOUNT_ID') or requests.get('https://api.cloudflare.com/client/v4/accounts', headers=h, timeout=60).json()['result'][0]['id']
+            r = requests.post(f'https://api.cloudflare.com/client/v4/accounts/{acct}/d1/database/{D1}/query', headers=h, timeout=60,
+                              json={'sql': 'SELECT output FROM lab_bench WHERE id = ?', 'params': [str(bench)]}).json()
+            out = json.loads(r['result'][0]['results'][0]['output'])
+            json.dump({'system': out['system'], 'cases': out['cases']}, open(path, 'w', encoding='utf-8'), ensure_ascii=False)
+            print(f'· event 2: {len(out["cases"])} answer sheets from bench {bench}', flush=True)
+            return
+        except Exception as e:
+            print(f'! event 2 cases with this token: {str(e)[:200]}', flush=True)
+    print('! event 2 skipped: the answer sheets could not be read from D1', flush=True)
+
+
 def run_eval(name, extra, out, events, budget):
     cmd = [sys.executable, os.path.join(HERE, 'run_eval.py'), '--name', name, '--events', events, '--budget', str(budget),
            '--out', out] + extra
@@ -92,6 +118,8 @@ def main():
     events, budget = E.get('EVENTS') or '1,2,3', int(E.get('BUDGET') or 16000)
     outdir = os.path.join(HERE, 'results', E.get('RUN') or time.strftime('%Y%m%d-%H%M'))
     os.makedirs(outdir, exist_ok=True)
+    if '2' in events:
+        fetch_grade_cases(E.get('GRADE_BENCH') or '5613')
     for n in names:
         cfg = MODELS[n]
         if cfg['kind'] == 'workers-ai':

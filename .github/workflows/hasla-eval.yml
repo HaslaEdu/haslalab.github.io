@@ -19,6 +19,9 @@ on:
       gpus:
         description: "RunPod GPU types, cheapest first"
         default: "NVIDIA L40S,NVIDIA RTX 6000 Ada Generation,NVIDIA A100 80GB PCIe"
+      grade_bench:
+        description: "lab_bench id of the tune-grade-export run holding event 2's answer sheets"
+        default: "5613"
       cloud:
         description: "RunPod cloud (COMMUNITY is cheaper, SECURE more available)"
         default: "COMMUNITY"
@@ -51,6 +54,7 @@ jobs:
           BUDGET: ${{ inputs.budget }}
           GPUS: ${{ inputs.gpus }}
           CLOUD: ${{ inputs.cloud }}
+          GRADE_BENCH: ${{ inputs.grade_bench }}
           RUN: run-${{ github.run_id }}
       - name: push the results to a branch of their own
         if: always()

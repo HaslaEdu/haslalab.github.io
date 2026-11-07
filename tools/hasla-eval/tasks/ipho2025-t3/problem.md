@@ -41,8 +41,8 @@ Champagne is a French sparkling wine. Fermentation of sugars produces carbon dio
 
 - Surface tension of champagne $\sigma = 47\times10^{-3}\ \mathrm{J\cdot m^{-2}}$
 - Density of the liquid $\rho_\ell = 1.0\times10^3\ \mathrm{kg\cdot m^{-3}}$
-- Henry's constant at $T_0 = 20$ °C, $k_{\rm H}(20\,°\mathrm{C}) = 3.3\times10^{-4}\ \mathrm{mol\cdot m^{-3}\cdot Pa^{-1}}$
-- Henry's constant at $T_0 = 6$ °C, $k_{\rm H}(6\,°\mathrm{C}) = 5.4\times10^{-4}\ \mathrm{mol\cdot m^{-3}\cdot Pa^{-1}}$
+- Henry's constant at $T_0 = 20$ °C, $k_{\rm H}(20\,^\circ\mathrm{C}) = 3.3\times10^{-4}\ \mathrm{mol\cdot m^{-3}\cdot Pa^{-1}}$
+- Henry's constant at $T_0 = 6$ °C, $k_{\rm H}(6\,^\circ\mathrm{C}) = 5.4\times10^{-4}\ \mathrm{mol\cdot m^{-3}\cdot Pa^{-1}}$
 - Atmospheric pressure $P_0 = 1\ \mathrm{bar} = 1.0\times10^5$ Pa
 - Gases are ideal with an adiabatic coefficient $\gamma = 1.3$
 
