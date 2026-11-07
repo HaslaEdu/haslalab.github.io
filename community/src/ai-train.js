@@ -12,6 +12,7 @@ import { answer, runModel, readCompletion } from './ai-assistant.js';
 import { pickBankProblem, readVerdict } from './ai-eval.js';
 import { ensureAiEval } from './ai-memory.js';
 import { trainingLine } from './ai-eval.js';
+import { checkAiKeys } from './ai-keys.js';
 
 export const AI_TRAIN_PATH = '/api/admin/ai-train';
 export const SETTING_KEYS = ['AI_SOLVER_LORA', 'AI_CHAT_LORA', 'AI_GUARD_LORA', 'AI_CHAT_URL', 'AI_CHAT_REMOTE', 'AI_CHAT_PROJECT', 'AI_FAST_URL', 'AI_FAST_REMOTE', 'AI_FAST_PROJECT'];
@@ -109,6 +110,8 @@ export function createAiTrainRouter({HttpError, currentUser}) {
       if (me.role !== 'admin') throw new HttpError(403, 'forbidden');
     }
     const db = env.DB, url = new URL(req.url), p = url.pathname.replace(/\/+$/, ''), m = req.method;
+    /* do the AI and search keys work (statuses only; ai-keys.js) */
+    if (p === AI_TRAIN_PATH + '/keys' && m === 'GET') return {keys: await checkAiKeys(env)};
     await ensureAiTrain(db);
     await ensureAiEval(db);
     const body = m === 'POST' ? await req.json().catch(() => ({})) : {};
