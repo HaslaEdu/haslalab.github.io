@@ -134,7 +134,6 @@
       <div class="cvwrap">
         <canvas id="cv"></canvas>
         <button id="btnBack" class="back" hidden></button>
-        <button id="btnCellV" class="back" style="left:auto;right:10px" hidden></button>
       </div>
     </div>
   </div>
@@ -563,13 +562,13 @@ const T={
     cap2:{screen:"스크린 정면 (2D) — 모눈종이 30 × 30 cm · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
           cell:"확산 셀 확대 — 실험대의 3D 셀을 레이저 쪽 옆에서 본 모습: 넓은 유리면 너머의 소금물·물 층과 흰 채움선 · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로",
           rail:"레일 옆면 확대 — 실험대의 3D 레일을 정면 옆에서 본 모습: 받침의 흰 지시선과 레일 눈금 (확대하면 mm 눈금) · 휠: 확대·축소, 끌기: 이동 / 우클릭: 3D로"},
-    back:"◀ 3D로 돌아가기", cellV:"🔍 셀 확대",
+    back:"◀ 3D로 돌아가기",
     hTime:"시간 배속", jump:"확산 30분 지점으로 건너뛰기",
     hLaser:"1. 선 레이저 모듈", focus:"초점 (레이저 앞쪽 캡 — 휠로도 돌림)", theta:"레이저 회전 (선의 기울기)",
     hWatch:"7. 스톱워치", ss:"시작 / 정지", rst:"리셋",
     hPaper:"8. 모눈종이", trace:"연필로 레이저 선을 따라 그리기", fresh:"새 종이", png:"종이를 PNG로 저장",
    
-    hint:"• 소금물 병은 책상에 꺼낸 뒤 클릭해 들고, 셀 위에서 마우스를 누르고 있으면 병을 기울여 콸콸 붓습니다 — 흰 선에 닿을 때 떼세요. 「🔍 셀 확대」로 확대한 화면에서도 부을 수 있습니다.\n• 증류수 병을 클릭하면 뚜껑이 열리고 닫힙니다. 피펫을 들고 열린 병을 누르고 있으면 고무를 놓으며 물을 빨아들이고, 셀 위에서(확대 화면에서도) 누르고 있으면 방울이 떨어집니다.\n• 소금물과 증류수는 둘 다 투명해서 경계는 굴절로만 희미하게 보입니다. 처음 물을 넣으면 굴절률이 급하게 바뀌는 경계가 아지랑이처럼 일렁입니다.\n• 셀을 비울 때는 셀을 끌어 들어 올린 뒤 폐액통을 클릭하세요. 빨리 움직이면 출렁여서 책상에 쏟아집니다 — 휴지(11)를 뽑아 문질러 닦으세요.\n• 비운 셀 안쪽에는 이전 용액이 조금(양은 그때그때 다름) 남습니다. 칼+휴지(10)로 닦지 않고 부으면 그 용액과 섞이고, 계속 안 닦으면 이전 용액들이 계속 섞여 쌓입니다.\n• 레이저의 빨간·검은 집게(또는 전선)를 끌어다 배터리 홀더의 (+)·(−) 단자에 대고 놓으면 물립니다. 극성이 반대면 켜지지 않습니다. 그다음 홀더의 빨간 버튼으로 켜고 끕니다.\n• 스톱워치는 책상에 꺼내 놓아야 잴 수 있습니다.\n• Z₀·d·Z는 레일 눈금에서, ξ·δ는 모눈에서 직접 읽으세요. 셀: 6.5 × 0.8 × 9.5 cm.",
+    hint:"• 소금물 병은 책상에 꺼낸 뒤 클릭해 들고, 셀 위에서 마우스를 누르고 있으면 병을 기울여 콸콸 붓습니다 — 흰 선에 닿을 때 떼세요. 병이나 피펫을 든 채 셀을 짧게 클릭하면 셀 확대 화면이 열리고, 거기서도 누르고 있으면 붓거나 떨어뜨립니다.\n• 증류수 병을 클릭하면 뚜껑이 열리고 닫힙니다. 피펫을 들고 열린 병을 누르고 있으면 고무를 놓으며 물을 빨아들이고, 셀 위에서(확대 화면에서도) 누르고 있으면 방울이 떨어집니다.\n• 소금물과 증류수는 둘 다 투명해서 경계는 굴절로만 희미하게 보입니다. 처음 물을 넣으면 굴절률이 급하게 바뀌는 경계가 아지랑이처럼 일렁입니다.\n• 셀을 비울 때는 셀을 끌어 들어 올린 뒤 폐액통을 클릭하세요. 빨리 움직이면 출렁여서 책상에 쏟아집니다 — 휴지(11)를 뽑아 문질러 닦으세요.\n• 비운 셀 안쪽에는 이전 용액이 조금(양은 그때그때 다름) 남습니다. 칼+휴지(10)로 닦지 않고 부으면 그 용액과 섞이고, 계속 안 닦으면 이전 용액들이 계속 섞여 쌓입니다.\n• 레이저의 빨간·검은 집게(또는 전선)를 끌어다 배터리 홀더의 (+)·(−) 단자에 대고 놓으면 물립니다. 극성이 반대면 켜지지 않습니다. 그다음 홀더의 빨간 버튼으로 켜고 끕니다.\n• 스톱워치는 책상에 꺼내 놓아야 잴 수 있습니다.\n• Z₀·d·Z는 레일 눈금에서, ξ·δ는 모눈에서 직접 읽으세요. 셀: 6.5 × 0.8 × 9.5 cm.",
     items:{laser:"1. 선 레이저 모듈", cell:"2. 확산 셀 (홀더)", screen:"3. 스크린 (홀더)", s23:"5. 소금물 23 g / 150 mL", s28:"5. 소금물 28 g / 150 mL", s33:"5. 소금물 33 g / 150 mL",
            water:"6. 증류수 (아쿠아데스트)", watch:"7. 스톱워치", paper:"8. 모눈종이", pipette:"9. 피펫", batt:"12. 배터리 홀더", bucket:"13. 폐액통 (양동이)", knife:"10. 칼 + 휴지 (셀 닦기)", tissue:"11. 휴지", sheet:"휴지 한 장"},
     lab:{lbase:"Laser Base", cbase:"Cell Base", sbase:"Screen Base", salt:"소금물", aqua:"증류수", noPaper:"모눈종이를 붙이지 않았습니다 — 부품함의 모눈종이를 집어 스크린을 클릭하세요", noScreen:"스크린이 레일에 없습니다"},
@@ -613,13 +612,13 @@ const T={
     cap2:{screen:"the screen face on (2D) — millimetre paper 30 × 30 cm · wheel: zoom, drag: pan / R-click: back to 3D",
           cell:"the diffusion cell close up — the 3D cell on the bench seen from the laser side: the salt solution and water layers behind the big glass face and the white fill line · wheel: zoom, drag: pan / R-click: back to 3D",
           rail:"the side of the rail close up — the 3D rail on the bench seen square from the front: the bases' white index lines on the rail scale (zoom in for millimetres) · wheel: zoom, drag: pan / R-click: back to 3D"},
-    back:"◀ back to 3D", cellV:"🔍 cell close-up",
+    back:"◀ back to 3D",
     hTime:"Time scale", jump:"jump to 30 min of diffusion",
     hLaser:"1. Line laser module", focus:"focus (the cap at the front — or the wheel over it)", theta:"rotation of the laser (angle of the line)",
     hWatch:"7. Stopwatch", ss:"start / stop", rst:"reset",
     hPaper:"8. Millimetre paper", trace:"trace the laser line with a pencil", fresh:"fresh sheet", png:"save the sheet as PNG",
    
-    hint:"• Take a salt solution bottle out onto the desk and click it to lift it; hold the mouse down over the cell and the bottle tips over and gushes in — let go when it reaches the white line. It works in the 「🔍 cell close-up」 too.\n• Click the distilled water bottle to open or close its cap. With the pipette in hand, hold the mouse on the open bottle: the bulb is released and water is drawn up; hold it over the cell (also in the close-up) to release drops.\n• Salt solution and distilled water are both clear: the boundary shows only faintly, by refraction. When the water first goes in, the sharp change of refractive index shimmers like heat haze.\n• To empty the cell, drag it to lift it and click the waste bucket. Move it too fast and it sloshes over onto the desk — pull a tissue (11) and rub the spill dry.\n• An emptied cell keeps a little of the old solution inside (a different amount each time). Pour without wiping it with the knife + tissue (10) and it mixes in; keep not wiping and the old solutions keep piling up and mixing.\n• Drag the laser's red and black clips (or their wires) onto the (+) and (−) terminals of the battery holder and let go to clip them on. The wrong way round, the laser stays dark. Then press the red button on the holder to turn it on and off.\n• The stopwatch only works once it is out on the desk.\n• Read Z₀, d and Z off the rail scale and ξ, δ off the millimetre grid. Cell: 6.5 × 0.8 × 9.5 cm.",
+    hint:"• Take a salt solution bottle out onto the desk and click it to lift it; hold the mouse down over the cell and the bottle tips over and gushes in — let go when it reaches the white line. With a bottle or the pipette in hand, a short click on the cell opens its close-up, where holding the mouse down pours or drips too.\n• Click the distilled water bottle to open or close its cap. With the pipette in hand, hold the mouse on the open bottle: the bulb is released and water is drawn up; hold it over the cell (also in the close-up) to release drops.\n• Salt solution and distilled water are both clear: the boundary shows only faintly, by refraction. When the water first goes in, the sharp change of refractive index shimmers like heat haze.\n• To empty the cell, drag it to lift it and click the waste bucket. Move it too fast and it sloshes over onto the desk — pull a tissue (11) and rub the spill dry.\n• An emptied cell keeps a little of the old solution inside (a different amount each time). Pour without wiping it with the knife + tissue (10) and it mixes in; keep not wiping and the old solutions keep piling up and mixing.\n• Drag the laser's red and black clips (or their wires) onto the (+) and (−) terminals of the battery holder and let go to clip them on. The wrong way round, the laser stays dark. Then press the red button on the holder to turn it on and off.\n• The stopwatch only works once it is out on the desk.\n• Read Z₀, d and Z off the rail scale and ξ, δ off the millimetre grid. Cell: 6.5 × 0.8 × 9.5 cm.",
     items:{laser:"1. Line laser module", cell:"2. Diffusion cell (holder)", screen:"3. Screen (holder)", s23:"5. Salt solution 23 g / 150 mL", s28:"5. Salt solution 28 g / 150 mL", s33:"5. Salt solution 33 g / 150 mL",
            water:"6. Distilled water (aquadest)", watch:"7. Stopwatch", paper:"8. Millimetre paper", pipette:"9. Pipette", batt:"12. Battery holder", bucket:"13. Waste bucket", knife:"10. Knife + tissue (cell cleaner)", tissue:"11. Tissue", sheet:"a tissue"},
     lab:{lbase:"Laser Base", cbase:"Cell Base", sbase:"Screen Base", salt:"salt water", aqua:"distilled water", noPaper:"No paper on the screen — pick up the millimetre paper and click the screen", noScreen:"No screen on the rail"},
@@ -677,6 +676,7 @@ const HAND_OFFSET=0.010, HAND_WANDER=0.011;
 const WDROP_RISE=0.075, WDROPS_DEFAULT=40, WDROP_RATE=6.0;
 const N_POINTS=2200, PRESET_CONC=[23.0,28.0,33.0];
 /* pouring and the cell's inside: 3.4 mL per cm of height, liquid floor 0.15 cm above the glass bottom */
+const HOLD_MS=250;                    /* with a bottle or the pipette: a click on the cell opens its close-up, a longer press pours or drips */
 const A_IN=3.4, LIQ0=0.15, POUR_Q=7.0, TILT_MAX=2.2, TILT_FLOW=1.5, HAZE_T=25, CABLE=32, TERM_Y=1.75;
 const HZ={t:0};
 
@@ -1355,7 +1355,6 @@ function addSalt(k,dV){
 function startPour(k){
   if(!ST.on.cell||S.cellOut){ say(ST.on.cell?"cellOutNow":"needCell"); return; }
   if(S.tFirst||S.wlevel>0.01){ say("hasWater"); return; }
-  const g=+k.slice(1); say(S.filled?"pourMore":S.cellWet?"wetPour":"pourStart",g);
   S.pourB={k,tilt:S.pourB?S.pourB.tilt:0,on:true,flow:0,t:0,vol:0,spilt:false};
 }
 function endPour(){ const pb=S.pourB; if(!pb||!pb.on) return; pb.on=false;
@@ -1364,6 +1363,7 @@ function updPour(dt){ const pb=S.pourB; if(!pb) return;
   pb.t+=dt; pb.tilt=Math.max(0,Math.min(TILT_MAX,pb.tilt+(pb.on?3.2:-4)*dt));
   const glug=0.78+0.26*Math.sin(2*Math.PI*4.2*pb.t)+0.08*Math.sin(2*Math.PI*9.7*pb.t);       /* air gulping back in: 콸콸 */
   pb.flow=pb.tilt>TILT_FLOW?POUR_Q*glug*Math.min(1,(pb.tilt-TILT_FLOW)/(TILT_MAX-TILT_FLOW)):0;
+  if(pb.flow>0&&!pb.said){ pb.said=true; const g=+pb.k.slice(1); say(S.filled?"pourMore":S.cellWet?"wetPour":"pourStart",g); }
   if(pb.flow>0){ const dV=pb.flow*dt; pb.vol+=dV; addSalt(pb.k,dV); S.turb=1;
     const lv=S.saltLv; let n=pb.flow*6*dt; while(n>0&&S.bub.length<70){ if(Math.random()<n) S.bub.push({dx:uni(-0.18,0.18),z:uni(-1.4,0.9),y:uni(LIQ0+0.1,Math.max(LIQ0+0.2,lv-0.1)),r:uni(0.025,0.075),vy:uni(1.2,3.5)}); n-=1; } }
   if(!pb.on&&pb.tilt<=0) S.pourB=null;
@@ -1391,7 +1391,7 @@ function useCarried(px,py,id){
   if(isSalt(k)&&id==="cell"){ startPour(k); return; }
   if(k==="pipette"){
     if(id==="water"){ startSuck(); return; }
-    if(id==="cell"){ if(!S.filled){ say("needFill"); return; } if(S.pip<1){ say("pipEmpty"); return; } S.dripping=true; return; }
+    if(id==="cell"){ if(!S.filled){ say("needFill"); return; } if(S.pip<1){ say("pipEmpty"); return; } S.dripArm=performance.now(); return; }
   }
   if(k==="cell"){
     if(id==="bucket"){ if(!S.filled){ say("dumpEmpty"); return; }
@@ -1429,7 +1429,9 @@ cv.addEventListener("pointerdown",e=>{
   const id=pick3(p[0],p[1]);
   if(e.button===1){ down={p,id,moved:false,shift:true}; return; }
   if(hand){ placeFromHand(p[0],p[1],id); drawTray(); return; }
-  if(carry){ useCarried(p[0],p[1],id); return; }
+  if(carry){ useCarried(p[0],p[1],id);
+    if(id==="cell"&&(isSalt(carry.k)||carry.k==="pipette")) down={p,id,moved:false,hold:true,t0:performance.now()};
+    return; }
   down={p,id,moved:false,shift:e.shiftKey};
   if(id==="batt_sw"){ S.sw=!S.sw; say(S.conn||!S.sw?"sw":S.rev?"swRev":"swNoConn",S.sw?"ON":"OFF"); down=null; return; }
   if(id&&(id.startsWith("clip_")||id.startsWith("wire_"))){ const key=id.slice(-1), c=S.clip[key];
@@ -1446,6 +1448,7 @@ cv.addEventListener("pointerdown",e=>{
 });
 cv.addEventListener("pointermove",e=>{
   const p=pos(e), dx=p[0]-mouse[0], dy=p[1]-mouse[1]; mouse=p;
+  if(down&&down.hold) return;                                   /* the bottle or pipette stays at the cell while pressed */
   if(view){ if(down&&down.view&&!down.act){ if(Math.hypot(p[0]-down.p[0],p[1]-down.p[1])>4) down.moved=true; V2.px+=dx; V2.py+=dy; clampV2(); } return; }
   if(carry&&carry.k==="sheet"&&S.wiping) wipe(p);
   if(!down) return;
@@ -1471,7 +1474,8 @@ function dropClip(key){ const c=S.clip[key], E=c.drag; if(!E) return; c.drag=nul
     if(S.clip[other].at===sg){ say("occupied"); looseAt(key,[E[0],0.05,E[2]]); updConn(); return; }
     c.at=sg; updConn(); say(S.conn?"conn":S.rev?"rev":"clipOn",key,sg==="+"?"+":"−"); return; }
   S.snap=null; looseAt(key,E); updConn(); say("clipOff"); }
-const up=e=>{ cv.classList.remove("grabbing"); S.dripping=false; S.wiping=false; endPour(); endSuck();
+const up=e=>{ cv.classList.remove("grabbing"); S.dripping=false; S.dripArm=0; S.wiping=false; endPour(); endSuck();
+  if(down&&down.hold){ const short=performance.now()-down.t0<HOLD_MS; down=null; if(short&&!view) openView("cell"); return; }
   if(drag&&drag.k==="clip") dropClip(drag.key);
   if(down&&down.right){ if(!down.moved){ rclick(down.p); drawTray(); } down=null; drag=null; return; }
   if(down&&!down.moved&&!view){ const id=down.id;
@@ -1514,10 +1518,9 @@ function wipe(p){
   if(n&&!S.puddles.length) say("wiped");
   if(carry.wet>=CAP-1e-6) say("sheetWet");
 }
-function openView(v){ if(view!==v&&window.HLzoom) HLzoom(cv); view=v; $("btnCellV").hidden=true; say("view"); V2.k=1; V2.px=0; V2.py=0; $("btnBack").hidden=false; renderCap(); }
+function openView(v){ if(view!==v&&window.HLzoom) HLzoom(cv); view=v; say("view"); V2.k=1; V2.px=0; V2.py=0; $("btnBack").hidden=false; renderCap(); }
 function closeView(){ if(view&&window.HLzoom) HLzoom(cv,{out:true}); view=null; $("btnBack").hidden=true; renderCap(); }
 $("btnBack").onclick=closeView;
-$("btnCellV").onclick=()=>{ if(!ST.on.cell){ say("needCell"); return; } if(S.cellOut){ say("cellOutNow"); return; } openView("cell"); };
 let trayDrag=false;
 trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); hand=null; drawTray(); });
 trayCv.addEventListener("pointerdown",e=>{ if(e.button!==0) return; const y=e.clientY-trayCv.getBoundingClientRect().top; trayDrag=true;
@@ -1541,7 +1544,7 @@ function layout(){
 }
 function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
   for(const s of [1,10,30,60,300]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===speed?"on":""; b.onclick=()=>{ speed=s; renderSpeeds(); }; box.appendChild(b); } }
-function renderCap(){ $("t-cap").textContent=view?d().cap2[view]:d().cap; $("btnBack").textContent=d().back; $("btnCellV").textContent=d().cellV; }
+function renderCap(){ $("t-cap").textContent=view?d().cap2[view]:d().cap; $("btnBack").textContent=d().back; }
 function renderStatus(){
   const L=[], t=d();
   if(!ST.on.laser||!ST.on.cell||!ST.on.screen) L.push([t.st.none,false]);
@@ -1647,6 +1650,7 @@ function frame(){
     S.bub=S.bub.filter(b=>b.y<lv-0.04); }
   for(const key of ["r","b"]){ const c=S.clip[key]; if(c.at&&ST.on.batt&&!c.drag){ const A=leadStart(key), E=termPos(c.at);   /* pulled off when the holder goes too far */
     if(Math.hypot(E[0]-A[0],E[2]-A[2])>CABLE+2){ looseAt(key,[A[0]+(E[0]-A[0])*0.9,0.05,A[2]+(E[2]-A[2])*0.9]); updConn(); say("pulled"); } } }
+  if(S.dripArm&&performance.now()-S.dripArm>=HOLD_MS){ S.dripArm=0; if(carry&&carry.k==="pipette") S.dripping=true; }
   if(S.dripping&&S.filled&&carry&&carry.k==="pipette"&&S.pip>=1){
     S.dropCredit+=dt*WDROP_RATE; const landed=Math.min(Math.floor(S.dropCredit),Math.floor(S.pip));
     if(landed>0){ S.dropCredit-=landed;
@@ -1663,7 +1667,7 @@ function frame(){
   else if(view) view3Side(view,CAM.W,CAM.H);
   else { const g=ctx.createLinearGradient(0,0,0,CAM.H); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1b1f25"); ctx.fillStyle=g; ctx.fillRect(0,0,CAM.W,CAM.H);
     begin3(); drawScene3(); drawGhost(); render3(ctx); }
-  if(++frameN%6===0){ renderStatus(); drawTray(); $("btnCellV").hidden=!!view||!ST.on.cell||S.cellOut; }
+  if(++frameN%6===0){ renderStatus(); drawTray(); }
 }
 window.addEventListener("resize",layout);
 applyLang(); requestAnimationFrame(tick);
