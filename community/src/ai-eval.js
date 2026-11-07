@@ -55,25 +55,36 @@ async function bankJson(env, path) {
 const versionText = x => x?.selected_version?.text || x?.versions?.find(v => v.language === 'ko')?.text || x?.versions?.[0]?.text || '';
 
 /* a problem bank problem with a solution in text and no figure, not tested in the last 90 days */
+/* a problem bank problem the assistant can be asked about in text: no figure, a statement of 20–6000 characters and a
+   solution in text. Most problems fail one of these (the night of 2026-11-04: every case failed «no problem with a text
+   solution» after looking at 4 recommendations), so it looks through up to 3 difficulty levels and 15 unseen problems on
+   each, and a miss says why each problem was passed over. */
 export async function pickBankProblem(env, db, rand = Math.random, kind = 'bank') {
   if (!env.PROBLEM_BANK) throw new Error('problem bank unavailable');
-  const stars = 1 + Math.floor(rand() * 5);
-  const {items = []} = await bankJson(env, `/recommendations?${new URLSearchParams({lang: 'ko', limit: '20', stars: String(stars)})}`);
-  const ids = items.map(i => i.id).filter(Boolean);
-  if (!ids.length) throw new Error('no problems');
-  const seen = new Set((await db.prepare(`SELECT ref FROM ai_eval WHERE kind=? AND created_at>unixepoch()-7776000 AND ref IN (${ids.map(() => '?').join(',')})`)
-    .bind(kind, ...ids).all()).results.map(r => r.ref));
-  const order = ids.filter(id => !seen.has(id)).sort(() => rand() - 0.5);
-  for (const id of order.slice(0, 4)) {
-    const {question} = await bankJson(env, `/questions/${encodeURIComponent(id)}?lang=ko`);
-    if (!question || question.figures?.length || question.assets?.some(a => a.role === 'figure')) continue;
-    const text = versionText(question);
-    if (text.trim().length < 20 || text.length > 6000) continue;
-    const {solutions = []} = await bankJson(env, `/questions/${encodeURIComponent(id)}/solutions?lang=ko`);
-    const solution = solutions.map(versionText).find(t => t.trim().length >= 10);
-    if (solution) return {id, text, solution};
+  const why = {seen: 0, figure: 0, length: 0, no_solution: 0, error: 0}, start = Math.floor(rand() * 5);
+  for (let step = 0; step < 3; step++) {
+    const stars = 1 + (start + step * 2) % 5;
+    const {items = []} = await bankJson(env, `/recommendations?${new URLSearchParams({lang: 'ko', limit: '40', stars: String(stars)})}`).catch(() => ({items: []}));
+    const ids = [...new Set(items.map(i => i.id).filter(Boolean))];
+    if (!ids.length) continue;
+    const seen = new Set((await db.prepare(`SELECT ref FROM ai_eval WHERE kind=? AND created_at>unixepoch()-7776000 AND ref IN (${ids.map(() => '?').join(',')})`)
+      .bind(kind, ...ids).all()).results.map(r => r.ref));
+    why.seen += seen.size;
+    const order = ids.filter(id => !seen.has(id)).sort(() => rand() - 0.5);
+    for (const id of order.slice(0, 15)) {
+      try {
+        const {question} = await bankJson(env, `/questions/${encodeURIComponent(id)}?lang=ko`);
+        if (!question || question.figures?.length || question.assets?.some(a => a.role === 'figure')) { why.figure++; continue; }
+        const text = versionText(question);
+        if (text.trim().length < 20 || text.length > 6000) { why.length++; continue; }
+        const {solutions = []} = await bankJson(env, `/questions/${encodeURIComponent(id)}/solutions?lang=ko`);
+        const solution = solutions.map(versionText).find(t => t.trim().length >= 10);
+        if (solution) return {id, text, solution};
+        why.no_solution++;
+      } catch { why.error++; }
+    }
   }
-  throw new Error('no problem with a text solution');
+  throw new Error('no problem with a text solution: ' + Object.entries(why).map(([k, v]) => `${k}=${v}`).join(' '));
 }
 
 async function ask(env, system, content, fallback) {

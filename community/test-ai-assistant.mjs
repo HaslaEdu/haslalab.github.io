@@ -349,3 +349,17 @@ test('a competition name alone keeps the page language; the prompt carries today
   assert.doesNotMatch(groundFacts([{role: 'user', content: '단진자 주기'}], day), /HaslaLab has/);
   assert.match(styled('SYS', [{role: 'user', content: 'ipho'}], 'default', 'ko')[0].content, /Today is \d{4}-\d{2}-\d{2}/);
 });
+
+test('the teacher runs on DeepSeek\'s own API, thinking off, when the Worker holds its key', async () => {
+  const {runModel} = await import('./src/ai-assistant.js');
+  const real = globalThis.fetch, calls = [];
+  globalThis.fetch = async (url, init) => { calls.push({url: String(url), body: JSON.parse(init.body)}); return Response.json({choices: [{message: {content: '<think>x</think>y'}}]}); };
+  try {
+    const r = await runModel({DEEPSEEK_API_KEY: 'k', AI: {run: async () => { throw new Error('workers ai'); }}}, 'TEACHER', {messages: [{role: 'user', content: 'q'}]}, 8192);
+    assert.equal(r.choices[0].message.content, '<think>x</think>y');
+    assert.equal(calls[0].url, 'https://api.deepseek.com/chat/completions');
+    assert.equal(calls[0].body.model, 'deepseek-v4-pro');
+    assert.deepEqual(calls[0].body.thinking, {type: 'disabled'});
+    assert.equal(calls[0].body.max_tokens, 8192);
+  } finally { globalThis.fetch = real; }
+});

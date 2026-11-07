@@ -129,10 +129,18 @@ export function readCompletion(res) {
    max_completion_tokens; the older ones: max_tokens, which otherwise defaults to 256), Gemma 4 without its thinking
    pass (an answer, not a monologue), and the LoRA adapter when one is set. */
 const CHAT_SCHEMA = /^@cf\/(?:openai\/|google\/gemma-4|qwen\/qwen3\.[1-9]|deepseek-ai\/deepseek-v4|moonshotai\/)/;
+/* the teacher is DeepSeek V4 Pro on DeepSeek's own API when the Worker has its key: Workers AI retires its copy of V4 Pro
+   on 2026-11-20, and DeepSeek's terms allow its outputs for training. Thinking off: the teacher writes its short think
+   into the answer itself (TEACHER_SYSTEM in ai-eval.js), and a long hidden think would only cost time. */
+const remoteOf = (env, which) => env[`AI_${which}_URL`] && env[`AI_${which}_KEY`] && env[`AI_${which}_REMOTE`]
+  ? {url: env[`AI_${which}_URL`], key: env[`AI_${which}_KEY`], remote: env[`AI_${which}_REMOTE`]}
+  : which === 'TEACHER' && env.DEEPSEEK_API_KEY && !env.AI_TEACHER_MODEL
+    ? {url: 'https://api.deepseek.com', key: env.DEEPSEEK_API_KEY, remote: env.AI_TEACHER_DEEPSEEK || 'deepseek-v4-pro', extra: {thinking: {type: 'disabled'}}}
+    : null;
 export async function runModel(env, which, input, maxTokens) {
-  const url = env[`AI_${which}_URL`], key = env[`AI_${which}_KEY`], remote = env[`AI_${which}_REMOTE`];
+  const rem = remoteOf(env, which), url = rem?.url, key = rem?.key, remote = rem?.remote;
   if (url && key && remote) {
-    try { return await runRemote(url, key, remote, input, maxTokens, env[`AI_${which}_PROJECT`]); }
+    try { return await runRemote(url, key, remote, rem.extra ? {...input, extra: rem.extra} : input, maxTokens, env[`AI_${which}_PROJECT`]); }
     catch (e) { console.error('ai-remote', which, String(e?.message || e).slice(0, 200)); }
   }
   const model = env[`AI_${which}_MODEL`] || MODELS[which];
@@ -148,7 +156,7 @@ async function runRemote(url, key, model, input, maxTokens, project) {
     // W&B Inference bills a team/project (AI_<ROLE>_PROJECT), sent as OpenAI's project header
     headers: {'Content-Type': 'application/json', Authorization: `Bearer ${key}`, ...(project ? {'OpenAI-Project': project} : {})},
     body: JSON.stringify({model, messages: input.messages, ...(input.tools ? {tools: input.tools} : {}), ...(input.stream ? {stream: true, stream_options: {include_usage: true}} : {}),
-      ...(input.temperature != null ? {temperature: input.temperature} : {}), ...(maxTokens ? {max_tokens: maxTokens} : {})}),
+      ...(input.temperature != null ? {temperature: input.temperature} : {}), ...(maxTokens ? {max_tokens: maxTokens} : {}), ...(input.extra || {})}),
     signal: AbortSignal.timeout(input.stream ? 300000 : 120000)});
   if (!r.ok) throw new Error(`remote ${r.status}`);
   return input.stream ? r.body : r.json();

@@ -3699,7 +3699,7 @@ async function labBench(env, s, job) {
       const put = (name, list) => list.length ? gcsPut(env, t, `runs/${row.id}/${name}`, new TextEncoder().encode(list.map(x => x.line).join('\n') + '\n'), 'application/jsonl') : null;
       out = { pages: lines.length, train: await put('train.jsonl', sp.train), validation: await put('validation.jsonl', sp.validation),
         train_pages: sp.train.map(x => x.page_id), validation_pages: sp.validation.map(x => x.page_id) };
-    } else if (spec.stage === 'tune-grade-data' || spec.stage === 'tune-grade-eval') {
+    } else if (spec.stage === 'tune-grade-data' || spec.stage === 'tune-grade-eval' || spec.stage === 'tune-grade-export') {
       /* a Gemini grader tuned on audited papers (pilot, 2026-11-03): spec.tasks [{session, task, split: train|eval, items:
          [{id, points, got}] (the audit's reference marks)}], spec.scheme the scheme the bench grades with.
          tune-grade-data: the train tasks as Vertex tuning lines to gs://bucket/runs/<id>/grade-train.jsonl.
@@ -3707,7 +3707,7 @@ async function labBench(env, s, job) {
          marked against the audit. */
       const cases = [], v2 = spec.version === 2, system = v2 ? GRADE_TRAIN_SYSTEM_V2 : GRADE_TRAIN_SYSTEM;
       for (const c of (spec.tasks || []).slice(0, 60)) {
-        if (spec.stage === 'tune-grade-data' ? c.split !== 'train' : c.split !== 'eval') continue;
+        if (spec.stage === 'tune-grade-data' ? c.split !== 'train' : spec.stage === 'tune-grade-eval' ? c.split !== 'eval' : !['train', 'eval'].includes(c.split)) continue;
         const ss = await env.DB.prepare('SELECT * FROM lab_sessions WHERE id=?').bind(c.session).first(); if (!ss) { cases.push({ ...c, items: undefined, skip: 'no_session' }); continue; }
         const sch = await labScheme(env, labAs(ss, spec.scheme.provider, { model: spec.scheme.model, thinking: spec.scheme.thinking, check: spec.scheme.check }), c.task, null, true).catch(() => null);
         /* an eval task without the audit's marks is graded on every scheme line; its marks come back to be compared offline */
@@ -3723,7 +3723,11 @@ async function labBench(env, s, job) {
         cases.push({ session: c.session, task: c.task, exam: ss.exam_key, lines, input: inputOf(lines), parts: groups && groups.length > 1 ? groups.map(inputOf) : null });
       }
       const ready = cases.filter(c => c.lines);
-      if (spec.stage === 'tune-grade-data') {
+      /* tune-grade-export: the audited papers as the grading model sees them (system, input) with the audit's marks, for
+         the model-selection evaluation run outside the Worker (tools/hasla-eval) */
+      if (spec.stage === 'tune-grade-export') out = { system, cases: ready.map(c => ({ session: c.session, task: c.task, exam: c.exam, input: c.input,
+        items: c.lines.map(l => ({ id: l.item.id, points: l.item.points, got: l.got })) })), skipped: cases.filter(c => c.skip) };
+      else if (spec.stage === 'tune-grade-data') {
         const cfg = gcpConfig(env); if (!cfg.key || !cfg.bucket) throw new Error('gcp_not_configured');
         const t = await gcpToken(env), body = ready.map(c => vertexGradeLine(c.input, c.lines, system)).join('\n') + '\n';
         out = { tasks: ready.map(c => ({ session: c.session, task: c.task, lines: c.lines.length, chars: c.input.length })), skipped: cases.filter(c => c.skip),
