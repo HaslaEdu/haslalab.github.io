@@ -1,3 +1,4 @@
+# The solver (QwQ 32B) is no longer trained since 2026-11-07; only the chat role runs (see tools/ai/autotrain.py).
 # Hasla AI's automatic training (tools/ai/autotrain.py): when enough newly approved conversations have built up, a
 # RunPod GPU trains a LoRA for each role and the adapter is in use as soon as it answers; it is then compared with the
 # setting it replaced on the same problems and rolled back by itself when clearly worse. Checks every day at 03:17
@@ -16,8 +17,8 @@ on:
       role:
         description: "which model to train"
         type: choice
-        options: [both, solver, chat]
-        default: both
+        options: [chat]
+        default: chat
       min_examples:
         description: "train only with at least this many new approved conversations"
         default: "200"
@@ -64,7 +65,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
-          ROLE: ${{ inputs.role || 'both' }}
+          ROLE: ${{ inputs.role || 'chat' }}
           MIN_EXAMPLES: ${{ inputs.min_examples || '200' }}
           TRIALS: ${{ inputs.trials || '8' }}
           GPU: ${{ inputs.gpu || 'NVIDIA A100 80GB PCIe' }}
