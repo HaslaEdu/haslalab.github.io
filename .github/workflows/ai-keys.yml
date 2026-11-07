@@ -67,7 +67,7 @@ jobs:
           print(f"{'key':22} {'present':8} {'works':6} detail")
           for k in res:
               works = {True: "yes", False: "NO", None: "-"}[k.get("ok")] if k.get("present") else "-"
-              detail = ", ".join(f"{a}={k[a]}" for a in ("status", "error", "balance_available", "balance", "note") if k.get(a) not in (None, ""))
+              detail = ", ".join(f"{a}={k[a]}" for a in ("status", "error", "message", "balance_available", "balance", "note") if k.get(a) not in (None, ""))
               print(f"{k['id']:22} {str(k.get('present')):8} {works:6} {detail}")
               if k.get("present") and k.get("ok") is False: bad.append(k["id"])
           if bad:

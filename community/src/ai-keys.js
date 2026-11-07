@@ -35,9 +35,15 @@ export const KEY_CHECKS = [
 
 const code = b => String(b?.error?.status || b?.error?.code || b?.error?.type || b?.error || b?.code || b?.message || '')
   .replace(/[^A-Za-z0-9_.: -]+/g, ' ').trim().slice(0, 60) || null;
+/* the provider's own words (Google's "User location is not supported…"), without anything that looks like a key */
+const words = b => String(b?.error?.message || b?.message || (typeof b?.error === 'string' ? '' : '') || '')
+  .replace(/[A-Za-z0-9_\-]{16,}/g, '…').replace(/[^\p{L}\p{N} _.,:;()'/-]+/gu, ' ').replace(/\s+/g, ' ').trim().slice(0, 140) || null;
 
 export async function checkAiKeys(env, { fetchImpl = globalThis.fetch, timeoutMs = 15000 } = {}) {
   const out = [];
+  /* and never one of this Worker's own values, however short, even when a provider quotes it back */
+  const own = Object.values(env || {}).filter(v => typeof v === 'string' && v.trim().length >= 6).map(v => v.trim());
+  const scrub = m => { if (!m) return m; for (const v of own) m = m.split(v).join('…'); return m; };
   const run = async c => {
     const present = c.present ? !!c.present(env) : c.keys.every(k => !!str(env[k]));
     if (!present) return { id: c.id, present: false, ok: false };
@@ -45,7 +51,7 @@ export async function checkAiKeys(env, { fetchImpl = globalThis.fetch, timeoutMs
     try {
       const r = await fetchImpl(url, { ...init, redirect: 'manual', signal: AbortSignal.timeout(timeoutMs) });
       const body = await r.json().catch(() => null);
-      return { id: c.id, present: true, ok: r.ok, status: r.status, ...(r.ok ? (c.read ? c.read(body) : {}) : { error: code(body) }) };
+      return { id: c.id, present: true, ok: r.ok, status: r.status, ...(r.ok ? (c.read ? c.read(body) : {}) : { error: scrub(code(body)), message: scrub(words(body)) }) };
     } catch (e) {
       return { id: c.id, present: true, ok: false, status: null, error: e?.name === 'TimeoutError' ? 'timeout' : 'network' };
     }

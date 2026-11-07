@@ -4,6 +4,11 @@ compatibility_date = "2025-09-01"
 # Variables set in the dashboard (PADDLE_PRICES, LAB_KEEP_HOURS …) survive `wrangler deploy`; secrets always do.
 keep_vars = true
 
+# AI providers that refuse requests from Hong Kong go out through Seoul (ai-egress/, community/src/ai-egress.js)
+[[services]]
+binding = "AI_EGRESS"
+service = "haslalab-ai-egress"
+
 [[services]]
 binding = "STUDIO_ENGINE"
 service = "haslalab-studio-engine"
