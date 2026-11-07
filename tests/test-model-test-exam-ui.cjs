@@ -38,7 +38,7 @@ test('exam selection defaults to canonical competition/year/task without PDF or 
   assert.equal(h.fields.entryId.value,'kphe:2026-2:P1'); assert.equal(h.fields.problem.disabled,true); assert.equal(h.fields.problem.required,false);
   assert.match(h.root.innerHTML,/기출 선택/); assert.match(h.root.innerHTML,/고급 · 직접 입력/); assert.match(h.root.innerHTML,/最大|최대/);
   assert.match(h.nodes.arModelExamInfo.innerHTML,/https:\/\/haslalab-pdf.haslalab.workers.dev\/pdf\/%/);
-  assert.match(h.nodes.arModelExamInfo.innerHTML,/https:\/\/haslalab.org\/pdfx\/solution.pdf/);
+  assert.match(h.nodes.arModelExamInfo.innerHTML,/https:\/\/haslalab-pdf\.haslalab\.workers\.dev\/pdf\/Xroot_solution\.pdf/);
   assert.equal(h.posts.length,0); assert.equal(h.scannerCalls(),0);
   h.fields.images.onchange(); assert.equal(h.posts.length,0); assert.equal(h.calls.length,2);
 });
@@ -58,7 +58,7 @@ test('localized paper and printable answer-sheet links open safely without AI ex
   const ko=harness({exams:[selected]}); await ko.open();
   const html=ko.nodes.arModelExamInfo.innerHTML;
   assert.ok(html.includes(encodeURIComponent('문제_KO.pdf'))); assert.doesNotMatch(html,/Original_EN.pdf/);
-  assert.match(html,/href="https:\/\/haslalab.org\/pdfx\/answers\/sheet-1.pdf"[^>]*>답안지 1</);
+  assert.match(html,/href="https:\/\/haslalab-pdf\.haslalab\.workers\.dev\/pdf\/Xanswers_sheet-1\.pdf"[^>]*>답안지 1</);
   assert.match(html,/href="https:\/\/official.example\/sheet-2.pdf"[^>]*>답안지 2</);
   assert.equal(ko.posts.length,0); assert.equal(ko.scannerCalls(),0);
   const en=harness({language:'en',exams:[{...selected,answerSheets:['Answer.pdf','javascript:alert(1)']}]}); await en.open();

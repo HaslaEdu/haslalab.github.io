@@ -73,7 +73,7 @@ http.createServer(async (req, res) => {
     res.statusCode = 404; return res.end("{}");
   }
   if (req.url === "/seen") { res.setHeader("Content-Type", "application/json"); return res.end(JSON.stringify(seen)); }
-  if (req.url.startsWith("/site/pdfx/")) {                         // the site's own copies: problems cut out of a booklet
+  if (/^\/pdf\/X[a-z]+_/.test(req.url)) {                        // pdfx/ copies (release pdf-x<folder>): problems cut out of a booklet
     const name = decodeURIComponent(req.url.split("/").pop());
     if (!/_P\d+S/.test(name)) { res.statusCode = 404; return res.end("nope"); }
     seen.siteSolutions = (seen.siteSolutions || 0) + 1;

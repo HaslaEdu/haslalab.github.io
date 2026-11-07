@@ -1803,6 +1803,14 @@ function labPrompt(s, task, rb, rubric, answer, lang) {
    account by its workers.dev address, so the PDF Worker cannot be asked); the release is named after the file's prefix */
 const solUrl = (env, name) => env.LAB_PDF_BASE ? env.LAB_PDF_BASE + name
   : `https://github.com/HaslaEdu/haslalab.github.io/releases/download/pdf-${name.split("_")[0].toLowerCase()}/${name}`;
+/* PDFs kept under pdfx/ in the site's repository are no longer on the site but in releases pdf-x<folder>, named
+   X<folder>_<name>.pdf (tools/pdfx_release.py): pdfx/eotvos/Eotvos_2014_TS.pdf -> pdf-xeotvos/Xeotvos_Eotvos_2014_TS.pdf */
+const pdfxRelease = (env, path) => solUrl(env, String(path).replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_"));
+/* a release download answers with a redirect to GitHub's asset host; nothing else is followed */
+const PDFX_ASSET_HOSTS = new Set(["objects.githubusercontent.com", "release-assets.githubusercontent.com"]);
+const pdfxHops = first => value => { if (value === first) return true;
+  try { const u = new URL(value); return u.protocol === "https:" && PDFX_ASSET_HOSTS.has(u.hostname) && !u.username && !u.password && !u.port; } catch { return false; } };
+const labPdfxPdf = (env, path) => { const url = pdfxRelease(env, path); return labTrustedPdf(url, pdfxHops(url)); };
 const LAB_REG = { version: "2026-10-29", rules: [
   { id: "R1", en: "A final answer counts only if it is written in its box on an official answer sheet. A value that appears only on a working sheet earns at most the method marks the scheme gives for it.", ko: "최종 답은 공식 답안지의 해당 칸에 쓴 것만 인정합니다. 연습지에만 있는 값은 기준표가 정한 풀이 점수까지만 받습니다." },
   { id: "R2", en: "When the answer sheet and a working sheet disagree, the answer sheet governs.", ko: "답안지와 연습지가 다르면 답안지를 따릅니다." },
@@ -2019,8 +2027,8 @@ function labReviewPaperAllowed(value) {
 async function labReviewPaper(env, paper) {
   if (!labReviewPaperAllowed(paper)) throw new Error("untrusted_problem");
   if (SOL_RE.test(paper)) return labPdf(env, paper);
-  const url = paper.startsWith("pdfx/") ? `https://haslalab.org/${paper}` : paper;
-  return labTrustedPdf(url, labReviewPaperAllowed);
+  if (paper.startsWith("pdfx/")) return labPdfxPdf(env, paper);
+  return labTrustedPdf(paper, labReviewPaperAllowed);
 }
 async function labTrustedPdf(initialUrl, allowed) {
   let url = initialUrl;
@@ -2095,15 +2103,15 @@ async function labPdf(env, src) {
     if (r.status === 404) missing++; else console.error("lab solution", name, r.status);
   }
   if (missing === names.length) {
-    /* a problem cut out of a booklet (tools/nbpho_split.py) is kept on the site: pdfx/<prefix>/<name> */
-    const r = await fetch(`${env.LAB_SITE_BASE || "https://haslalab.org/"}pdfx/${src.split("_")[0].toLowerCase()}/${src}`, { signal: labProviderSignal(env,30000) });
+    /* a problem cut out of a booklet (tools/nbpho_split.py) is kept in pdfx/<prefix>/<name>, served from release pdf-x<prefix> */
+    const r = await fetch(pdfxRelease(env, `pdfx/${src.split("_")[0].toLowerCase()}/${src}`), { redirect: "follow", signal: labProviderSignal(env,30000) });
     if (r.ok) { const b = new Uint8Array(await r.arrayBuffer()); if (b.length > 15e6) throw new Error("solution too large"); return b; }
     if (r.status === 404) return null;
   }
   throw new Error("solution not fetched");
 }
 async function labCanonicalPdf(env,source) {
-  if(source?.startsWith('pdfx/'))return labTrustedPdf('https://haslalab.org/'+source,value=>value==='https://haslalab.org/'+source);
+  if(source?.startsWith('pdfx/'))return labPdfxPdf(env,source);
   if(source?.startsWith('https://'))return labTrustedPdf(source,value=>value===source);
   return labPdf(env,source);
 }

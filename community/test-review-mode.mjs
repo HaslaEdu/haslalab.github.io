@@ -195,7 +195,7 @@ test('qualitative scans preserve the original OCR once, include the image, and r
 });
 const eotvosSources = JSON.parse(readFileSync(new URL('../tools/theory/eotvos.json', import.meta.url), 'utf8')).years
   .filter(y => [2014, 2015, 2016, 2020].includes(y.y)).sort((a, b) => a.y - b.y)
-  .map(y => ({ year:y.y,solution:y.files.find(f=>f.kind==='solution').url,canonical:`https://haslalab.org/pdfx/eotvos/Eotvos_${y.y}_TS.pdf` }));
+  .map(y => ({ year:y.y,solution:y.files.find(f=>f.kind==='solution').url,canonical:`https://github.com/HaslaEdu/haslalab.github.io/releases/download/pdf-xeotvos/Xeotvos_Eotvos_${y.y}_TS.pdf` }));
 const eotvosSessions = [];
 test('timed Eotvos preserves exactly the four verified journal source URLs for their matching year', async () => {
   for (const [index, source] of eotvosSources.entries()) {
@@ -262,8 +262,8 @@ test('PLANCKS uses its verified four-hour sitting and the 2021 sixteen-hour onli
 test('a locally archived Eotvos report keeps current-year/printed-points safeguards and uses the canonical problem for qualitative review', async () => {
   const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; let calls = 0;
   globalThis.fetch = async (url, options) => {
+    if (String(url).includes('/releases/download/pdf-xeotvos/')) return new Response('%PDF-1.7\nOriginal annual report');
     if (String(url).startsWith('https://github.com/')) return new Response('', { status: 404 });
-    if (String(url).startsWith('https://haslalab.org/pdfx/eotvos/')) return new Response('%PDF-1.7\nOriginal annual report');
     assert.ok(String(url).includes(':generateContent')); calls++;
     const prompt = JSON.parse(options.body).contents[0].parts.map(p => p.text || '').join('\n');
     if(prompt.includes('qualitative physics study review'))return Response.json({candidates:[{content:{parts:[{text:JSON.stringify({summary:'The submitted force law is explicit.',strengths:['Force law'],gaps:[],evidence:[{page:1,quote:'F = ma',note:'Original submitted expression.'}]})}]}}]});

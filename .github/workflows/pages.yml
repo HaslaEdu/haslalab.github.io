@@ -1,6 +1,7 @@
 # Publishes the site to GitHub Pages without tools/ (6.7 GB of PDF authoring inputs and evidence that no page loads),
 # community/ (the Worker's source; only community/weekly/, whose rubrics the Worker reads back from the site, stays) and tests/;
-# src/ stays: the problem cards link to the Python originals,
+# src/ stays: the problem cards link to the Python originals; the PDFs in pdfx/ are served by the PDF Worker from
+# releases (tools/pdfx_release.py, pdfx-release.yml), so they are left out too (the zip/xlsx/json files there stay),
 # so the published site stays well under GitHub Pages' 1 GB size limit and its deploys stop timing out.
 # Takes effect once Settings → Pages → Build and deployment → Source is "GitHub Actions"; while the source is still
 # "Deploy from a branch", this workflow sees that and does nothing.
@@ -49,11 +50,13 @@ jobs:
             !/community/
             /community/weekly/
             !/tests/
+            !/pdfx/*.pdf
+            !/pdfx/*/*.pdf
       - name: Site without tools/
         if: steps.source.outputs.build_type == 'workflow'
         run: |
           mkdir -p "$RUNNER_TEMP/site"
-          rsync -a --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --include /community/ --include '/community/weekly/***' --exclude '/community/*' --exclude /tests/ ./ "$RUNNER_TEMP/site/"
+          rsync -a --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --include /community/ --include '/community/weekly/***' --exclude '/community/*' --exclude /tests/ --exclude '/pdfx/**.pdf' ./ "$RUNNER_TEMP/site/"
           du -sh "$RUNNER_TEMP/site"
       # One artifact name per attempt: a re-run keeps the earlier attempts' artifacts, and deploy-pages refuses to
       # pick between several artifacts with the same name ("Multiple artifacts named github-pages").

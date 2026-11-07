@@ -1778,7 +1778,7 @@ function arModelTestSourceLink(value) {
     if (typeof value !== "string" || !value || value.length > 2048 || /[\\\u0000-\u001f]/.test(value)) return "";
     let target = value;
     if (!/^https:\/\//i.test(target)) {
-      if (/^pdfx\//.test(target) && !target.split("/").some(x => x === "." || x === "..") && !/[?#]/.test(target)) target = "https://haslalab.org/" + target;
+      if (/^pdfx\//.test(target) && !target.split("/").some(x => x === "." || x === "..") && !/[?#]/.test(target)) target = /\.pdf$/.test(target) ? "https://haslalab-pdf.haslalab.workers.dev/pdf/" + target.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_") : "https://haslalab.org/" + target;   // pdfx PDFs: tools/pdfx_release.py
       else if (!/[/:?#]/.test(target) && target !== "." && target !== "..") target = "https://haslalab-pdf.haslalab.workers.dev/pdf/" + encodeURIComponent(target);
       else return "";
     }

@@ -490,7 +490,7 @@ for (const item of published) {
     assert.equal(page.changed_pixels_outside_prose, 0);
   }
 }
-assert.equal(thyUrl('pdfx/kphe/existing.pdf'), 'pdfx/kphe/existing.pdf?v=existing');
+assert.equal(thyUrl('pdfx/kphe/existing.pdf'), base + 'Xkphe_existing.pdf?v=existing');   // pdfx/ PDFs come from releases pdf-x<folder>
 assert.equal(thyUrl('unchanged.pdf'), base + 'unchanged.pdf');
 for (const font of read('tools/ko/fonts/NOTO_CJK_PROVENANCE.json')) {
   const data = fs.readFileSync(path.join(root, 'tools/ko/fonts', font.file));
