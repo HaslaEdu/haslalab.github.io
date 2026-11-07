@@ -1,0 +1,40 @@
+{
+  "id": "apho2023-t1",
+  "comp": "apho",
+  "year": 2023,
+  "task": "T1",
+  "title": "ISS Orbital Decay Dynamics",
+  "total_points": 10.0,
+  "parts": [
+    {"id": "A.1", "points": 0.5, "figure_dependent": false},
+    {"id": "A.2", "points": 0.3, "figure_dependent": false},
+    {"id": "A.3", "points": 0.6, "figure_dependent": false},
+    {"id": "A.4", "points": 0.4, "figure_dependent": false},
+    {"id": "A.5", "points": 0.2, "figure_dependent": false},
+    {"id": "B.1", "points": 0.5, "figure_dependent": false},
+    {"id": "B.2", "points": 0.5, "figure_dependent": false},
+    {"id": "B.3", "points": 1.0, "figure_dependent": false},
+    {"id": "B.4", "points": 0.5, "figure_dependent": false},
+    {"id": "B.5", "points": 0.5, "figure_dependent": false},
+    {"id": "C.1", "points": 0.5, "figure_dependent": false},
+    {"id": "C.2", "points": 0.5, "figure_dependent": false},
+    {"id": "D.1", "points": 0.3, "figure_dependent": false},
+    {"id": "D.2", "points": 0.7, "figure_dependent": false},
+    {"id": "E.1", "points": 0.6, "figure_dependent": false},
+    {"id": "E.2", "points": 0.6, "figure_dependent": false},
+    {"id": "E.3", "points": 0.8, "figure_dependent": false},
+    {"id": "F.1", "points": 0.4, "figure_dependent": false},
+    {"id": "F.2", "points": 0.4, "figure_dependent": false},
+    {"id": "F.3", "points": 0.2, "figure_dependent": false}
+  ],
+  "official_scheme": true,
+  "notes": "Answer-sheet Tables 1-2 (F.1, F.2) reproduced from the official Korean answer sheet (English answer sheet not obtained). Statement quotes n_ion ~ 1e12 m^-3; tables and official answers use 1e13 m^-3.",
+  "sources": [
+    "https://olimpicos.net/files/apho/APhO_2023_Q1.pdf",
+    "https://olimpicos.net/files/apho/APhO_2023_S1.pdf",
+    "https://olimpicos.net/files/apho/APhO_2023_M1.pdf",
+    "pdfx/apho/APhO_2023_T1_A_KO.pdf",
+    "https://haslalab-pdf.haslalab.workers.dev/pdf/APhO_2023_T1_M_KO.pdf",
+    "tools/theory/apho.json"
+  ]
+}

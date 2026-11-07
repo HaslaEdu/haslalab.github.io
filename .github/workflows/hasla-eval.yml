@@ -1,0 +1,67 @@
+# Hasla AI reasoning-model selection (tools/hasla-eval): runs the three events (make problems, grade audited papers,
+# solve IPhO/APhO theory) against each model asked for. Models not served by Workers AI get a RunPod GPU pod running
+# vLLM for the length of their run; every pod is removed at the end. The answers, times and token counts are pushed to
+# a branch of their own (hasla-eval-results/<run>) to be graded. Run by hand only (Actions → Hasla AI eval).
+name: Hasla AI eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: "models (gemma4, qwen38, qwen36, p1, su01)"
+        default: "gemma4,qwen38,qwen36,p1,su01"
+      events:
+        description: "events (1 make, 2 grade, 3 solve)"
+        default: "1,2,3"
+      budget:
+        description: "thinking budget in tokens"
+        default: "16000"
+      gpus:
+        description: "RunPod GPU types, cheapest first"
+        default: "NVIDIA L40S,NVIDIA RTX 6000 Ada Generation,NVIDIA A100 80GB PCIe"
+      grade_bench:
+        description: "lab_bench id of the tune-grade-export run holding event 2's answer sheets"
+        default: "5613"
+      cloud:
+        description: "RunPod cloud (COMMUNITY is cheaper, SECURE more available)"
+        default: "COMMUNITY"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hasla-eval
+  cancel-in-progress: false
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests
+      - run: python tools/hasla-eval/orchestrate.py
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          MODELS: ${{ inputs.models }}
+          EVENTS: ${{ inputs.events }}
+          BUDGET: ${{ inputs.budget }}
+          GPUS: ${{ inputs.gpus }}
+          CLOUD: ${{ inputs.cloud }}
+          GRADE_BENCH: ${{ inputs.grade_bench }}
+          RUN: run-${{ github.run_id }}
+      - name: push the results to a branch of their own
+        if: always()
+        run: |
+          git config user.name "hasla-eval"
+          git config user.email "hasla-eval@users.noreply.github.com"
+          git checkout -b "hasla-eval-results/${{ github.run_id }}"
+          git add -f tools/hasla-eval/results
+          git commit -m "Hasla AI eval results, run ${{ github.run_id }}" || exit 0
+          git push origin "hasla-eval-results/${{ github.run_id }}"

@@ -1,0 +1,34 @@
+{
+  "id": "apho2023-t2",
+  "comp": "apho",
+  "year": 2023,
+  "task": "T2",
+  "title": "A ball on a turntable",
+  "total_points": 10.0,
+  "parts": [
+    {"id": "A.1", "points": 0.1, "figure_dependent": false},
+    {"id": "A.2", "points": 0.2, "figure_dependent": false},
+    {"id": "A.3", "points": 0.2, "figure_dependent": false},
+    {"id": "A.4", "points": 0.5, "figure_dependent": false},
+    {"id": "A.5", "points": 0.5, "figure_dependent": false},
+    {"id": "B.1", "points": 0.2, "figure_dependent": false},
+    {"id": "B.2", "points": 0.6, "figure_dependent": false},
+    {"id": "B.3", "points": 0.6, "figure_dependent": false},
+    {"id": "B.4", "points": 0.1, "figure_dependent": false},
+    {"id": "B.5", "points": 2.5, "figure_dependent": false},
+    {"id": "C.1", "points": 0.5, "figure_dependent": false},
+    {"id": "C.2", "points": 0.5, "figure_dependent": false},
+    {"id": "C.3", "points": 1.0, "figure_dependent": false},
+    {"id": "C.4", "points": 0.9, "figure_dependent": false},
+    {"id": "C.5", "points": 1.6, "figure_dependent": false}
+  ],
+  "official_scheme": true,
+  "notes": "C.4 asks for a sketch of the trajectory; the text version asks for a verbal description (Archimedean-type spiral). key.md flags inconsistencies inside the official solution (B.5 eq. 65 extra factor alpha; C.3 beta missing Omega and the resulting charge sign in C.4; C.5 4*pi*N vs 4*pi^2*N).",
+  "sources": [
+    "https://olimpicos.net/files/apho/APhO_2023_Q2.pdf",
+    "https://olimpicos.net/files/apho/APhO_2023_S2.pdf",
+    "https://olimpicos.net/files/apho/APhO_2023_M2.pdf",
+    "https://haslalab-pdf.haslalab.workers.dev/pdf/APhO_2023_T2_M_KO.pdf",
+    "tools/theory/apho.json"
+  ]
+}
