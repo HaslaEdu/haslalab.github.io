@@ -1154,7 +1154,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
-<script src="site-catalogue.js?v=8eabd729aae0"></script>
+<script src="site-catalogue.js?v=15690555759d"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=7385ce7c7606"></script>
@@ -5212,7 +5212,7 @@ function viewAbout(){
               <div class="loc">${esc(m.loc)}</div>
               ${m.mail?`<a class="mail" href="mailto:${esc(m.mail)}">${esc(m.mail)}</a>`:""}
               <p style="margin:8px 0 0">${instaLink(m.insta,m.handle,false)}</p>
-              ${m.education?`<div class="loc" style="display:flex;align-items:center;gap:8px;margin-top:12px"><img src="/logo/snu-emblem.png" alt="서울대학교" style="width:28px;height:28px;object-fit:contain;background:white;border-radius:50%"><span>${esc(m.education)}</span></div>`:""}
+              ${m.education?`<div class="loc" style="display:flex;align-items:center;gap:12px;margin-top:14px"><img src="/logo/snu-emblem.png" alt="서울대학교" style="width:56px;height:56px;object-fit:contain;background:white;border-radius:12px;padding:4px;box-sizing:border-box"><span>${esc(m.education)}</span></div>`:""}
             </div>
           </div>
         </div>`).join("")}
