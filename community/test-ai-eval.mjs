@@ -215,3 +215,13 @@ test('a teacher case: DeepSeek V4 Pro writes a short think and the answer; judge
   assert.equal((await aiEvalTick(env3, {now: night})).kind, 'teacher');
   assert.equal(await aiEvalTick(env3, {now: night}), null);
 });
+
+test('the problem picker looks past the first few problems and says why it found none', async () => {
+  const { pickBankProblem } = await import('./src/ai-eval.js');
+  const env = {DB: d1(), PROBLEM_BANK: bank({figure: true})};
+  await ensureAiEval(env.DB);
+  await assert.rejects(pickBankProblem(env, env.DB, () => 0.3, 'teacher'), /no problem with a text solution: seen=0 figure=\d+ length=0 no_solution=0 error=0/);
+  const ok = {DB: d1(), PROBLEM_BANK: bank()};
+  await ensureAiEval(ok.DB);
+  assert.match((await pickBankProblem(ok, ok.DB, () => 0.3, 'teacher')).id, /^q\d$/);
+});
