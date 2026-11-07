@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter, webSearch, runModel, fitHistory, stripThinking,
-  CHAT_MODEL, SOLVER_MODEL, FAST_MODEL, ruleIntent, classify, firstFilter, compIn, keywordOf, siteAnswer, generate, styled, STYLES } from './src/ai-assistant.js';
+  CHAT_MODEL, SOLVER_MODEL, QWQ_SOLVER, solverWorkersModel, FAST_MODEL, ruleIntent, classify, firstFilter, compIn, keywordOf, siteAnswer, generate, styled, STYLES } from './src/ai-assistant.js';
 
 const GUARD = '@cf/meta/llama-guard-3-8b';
 function fakeAI(script, {unsafe = false} = {}) {
@@ -76,7 +76,7 @@ test('each model gets its output limit under its own name, and our LoRA adapter 
   assert.deepEqual(seen[0].input.chat_template_kwargs, {enable_thinking: false}, 'answers without a thinking pass');
   assert.equal(seen[0].input.lora, undefined);
   assert.equal(seen[1].input.lora, 'haslalab-solver-v1');
-  assert.equal(seen[1].input.max_tokens, 8192, 'QwQ takes max_tokens');
+  assert.equal(seen[1].input[seen[1].model === QWQ_SOLVER ? 'max_tokens' : 'max_completion_tokens'], 8192, 'QwQ takes max_tokens, Gemma 4 the chat schema');
   assert.equal(seen[2].input.max_completion_tokens, 4096);
   assert.equal(seen[2].input.max_tokens, undefined);
   await runModel({AI, AI_CHAT_MODEL: '@cf/x/y'}, 'CHAT', {messages: []}, 10);
@@ -103,6 +103,35 @@ test('a role can be served by an OpenAI-compatible endpoint (our LoRA on CoreWea
   assert.equal(readCompletion(await runModel(env, 'CHAT', {messages: []}, 10)).text, '기본 답', 'falls back to Workers AI');
   assert.deepEqual(seen, [CHAT_MODEL]);
   assert.equal(readCompletion(await runModel({...env, AI_CHAT_KEY: ''}, 'CHAT', {messages: []}, 10)).text, '기본 답', 'needs all three settings');
+});
+
+test("the solver is DeepSeek's API with thinking on while Hasla AI's own model is not ready; its answer streams as it comes", async t => {
+  const sent = [];
+  const sse = lines => new Response(lines.map(l => `data: ${typeof l === 'string' ? l : JSON.stringify(l)}\n\n`).join(''));
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    sent.push({url: String(url), auth: init.headers.Authorization, body: JSON.parse(init.body)});
+    return sse([{choices: [{delta: {reasoning_content: '생각 중'}}]}, {choices: [{delta: {reasoning_content: '...'}}]},
+      {choices: [{delta: {content: '답은 '}}]}, {choices: [{delta: {content: '$2$'}, finish_reason: 'stop'}]}, '[DONE]']);
+  });
+  const seen = [];
+  const env = {DEEPSEEK_API_KEY: 'ds-secret', AI_SOLVER_DEEPSEEK_FROM: '2000-01-01', AI: {run: async model => { seen.push(model); return {response: 'x'}; }}};
+  const deltas = [];
+  const text = await generate(env, 'SOLVER', [{role: 'user', content: '1+1'}], 8192, d => deltas.push(d), {reasoning: true});
+  assert.equal(text, '답은 $2$');
+  assert.deepEqual(deltas, ['답은 ', '$2$'], 'the answer is shown piece by piece, the thinking never');
+  assert.equal(sent[0].url, 'https://api.deepseek.com/chat/completions');
+  assert.equal(sent[0].auth, 'Bearer ds-secret');
+  assert.deepEqual([sent[0].body.model, sent[0].body.thinking, sent[0].body.max_tokens, sent[0].body.stream],
+    ['deepseek-flash', {type: 'enabled'}, 32000, true], 'thinking on, room for thinking and answer');
+  assert.equal(seen.length, 0, 'no Workers AI call');
+  await runModel({...env, AI_SOLVER_MODEL: '@cf/x/solver'}, 'SOLVER', {messages: []}, 10);
+  assert.deepEqual(seen, ['@cf/x/solver'], 'a Worker variable still picks a Workers AI model');
+  await runModel({AI: env.AI}, 'SOLVER', {messages: []}, 10);
+  assert.deepEqual(seen.at(-1), solverWorkersModel(), 'without the key: the Workers AI solver');
+  await runModel({...env, AI_SOLVER_DEEPSEEK_FROM: '2999-01-01'}, 'SOLVER', {messages: []}, 10);
+  assert.equal(sent.length, 1, 'before the announced day: no DeepSeek call');
+  assert.equal(solverWorkersModel('2026-11-19'), QWQ_SOLVER);
+  assert.equal(solverWorkersModel('2026-11-20'), CHAT_MODEL, 'Gemma 4 once Workers AI retires QwQ');
 });
 
 test('a call written as text is still a call; thinking is dropped; long histories are cut from the oldest end', () => {

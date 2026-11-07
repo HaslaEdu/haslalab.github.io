@@ -3709,6 +3709,8 @@ async function labBench(env, s, job) {
       for (const c of (spec.tasks || []).slice(0, 60)) {
         if (spec.stage === 'tune-grade-data' ? c.split !== 'train' : spec.stage === 'tune-grade-eval' ? c.split !== 'eval' : !['train', 'eval'].includes(c.split)) continue;
         const ss = await env.DB.prepare('SELECT * FROM lab_sessions WHERE id=?').bind(c.session).first(); if (!ss) { cases.push({ ...c, items: undefined, skip: 'no_session' }); continue; }
+        /* a paper is used for tuning or evaluation only when its candidate ticked the training consent (HaslaEdu/hasla-ai L6) */
+        if (!ss.user_id || !await trainAllowed(env.DB, ss.user_id, env[DB_SCOPE] || env.DB)) { cases.push({ session: c.session, task: c.task, skip: 'no_training_consent' }); continue; }
         const sch = await labScheme(env, labAs(ss, spec.scheme.provider, { model: spec.scheme.model, thinking: spec.scheme.thinking, check: spec.scheme.check }), c.task, null, true).catch(() => null);
         /* an eval task without the audit's marks is graded on every scheme line; its marks come back to be compared offline */
         const lines = sch && (Array.isArray(c.items) ? auditedLines(sch, c.items, Number.isFinite(+spec.minShare) ? Math.max(0.2, Math.min(1, +spec.minShare)) : 0.8) : spec.stage === 'tune-grade-eval' ? sch.items.map(item => ({ item, got: null })) : null);

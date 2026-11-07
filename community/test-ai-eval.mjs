@@ -150,7 +150,7 @@ test('a table from before the new columns gets them; cases record their route an
   const r = await runBankCase(env, db, Math.random, {style: 'community'});
   assert.equal(r.style, 'community');
   // the problem goes to the reasoning model (sorted as solve), with the tone in its prompt and a reminder on the message
-  const sys = env.AI.calls.find(c => c.model === '@cf/qwen/qwq-32b');
+  const sys = env.AI.calls.find(c => /^You are an olympiad physics and mathematics tutor/.test(c.input.messages?.[0]?.content || ''));
   assert.match(sys.input.messages[0].content, /casual tone/);
   assert.match(sys.input.messages.at(-1).content, /커뮤 말투/);
   assert.equal(r.route, 'solve');

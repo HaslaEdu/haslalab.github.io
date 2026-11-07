@@ -14,6 +14,7 @@
 import { answer, runModel, readCompletion, stripThinking, findOlympiadProblems, STYLES, styleOf } from './ai-assistant.js';
 import { remember, forget, usageStats, pruneUsage, forgetFastCache } from './ai-memory.js';
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
+import { scrubPersonal } from './pii.js';
 
 export const AI_EVAL_PATH = '/api/admin/ai-eval';
 export { AI_EVAL_SQL, ensureAiEval } from './ai-memory.js';
@@ -226,8 +227,9 @@ export function trainingLine(row) {
   const system = `You are Hasla AI (하슬라 AI), HaslaLab's assistant. ${STYLES[styleOf(row.style)].split('\n')[0]}`;
   let context = [];
   try { context = JSON.parse(row.context || '[]').filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string'); } catch {}
-  return JSON.stringify({messages: [{role: 'system', content: system}, ...context.map(m => ({role: m.role, content: m.content})),
-    {role: 'user', content: row.question}, {role: 'assistant', content: row.corrected || row.answer}]});
+  /* a member's name, school or contact written into a chat stays out of training (pii.js) */
+  return JSON.stringify({messages: [{role: 'system', content: system}, ...context.map(m => ({role: m.role, content: scrubPersonal(m.content)})),
+    {role: 'user', content: scrubPersonal(row.question)}, {role: 'assistant', content: scrubPersonal(row.corrected || row.answer)}]});
 }
 
 export function createAiEvalRouter({HttpError, currentUser}) {
