@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "schemes/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "problem-search.*", "index.html", "arena.js", "tests/test-problem-search-*.cjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "schemes/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "problem-search.*", "index.html", "arena.js", "tests/test-problem-search-*.cjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "pdf-worker/**", "ai-egress/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -44,7 +44,7 @@ jobs:
       - run: node --test test-omr.mjs
       - run: node --test test-ai-assistant.mjs
       - run: node --test test-ai-eval.mjs
-      - run: node --test test-ai-train.mjs test-ai-keys.mjs
+      - run: node --test test-ai-train.mjs test-ai-keys.mjs test-ai-egress.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-qr-isolation.mjs test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
       - run: node --test test-lab-standings.mjs ../tests/test-result-comparison.cjs ../tests/test-*-results.cjs
@@ -64,6 +64,10 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       # wrangler deploy copies secrets from the newest UPLOADED version, not the live one; stop before it drops any
       - run: python3 ../tools/worker-secrets-guard.py haslalab-community
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # the AI egress (ai-egress/, placed in Seoul) first: the community Worker binds to it
+      - run: node --check ../ai-egress/src/index.js && npx wrangler deploy --config ../ai-egress/wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       - run: npx wrangler deploy
