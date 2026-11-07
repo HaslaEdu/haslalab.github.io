@@ -1,0 +1,75 @@
+# Do the Worker's AI and search keys work? Asks the Worker (GET /api/admin/ai-train/keys, community/src/ai-keys.js):
+# one cheap request per key, statuses only, never a key. Authenticates like train-ai.yml: a fresh random
+# AI_TRAIN_KEY set as a Worker secret for the run, replaced by another random one afterwards.
+# Weekly (Monday 09:41 Korean time) and by hand (Actions → AI keys check → Run workflow).
+name: AI keys check
+
+on:
+  schedule:
+    - cron: "41 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# shares train-ai.yml's group: both set AI_TRAIN_KEY
+concurrency:
+  group: train-ai
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: community
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            community
+            tools
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: community/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: python3 ../tools/worker-secrets-guard.py haslalab-community
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - shell: python3 {0}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          import json, secrets, subprocess, sys, time, urllib.request
+          URL = "https://haslalab-community.haslalab.workers.dev/api/admin/ai-train/keys"
+          def put(value):
+              r = subprocess.run(["npx", "wrangler", "secret", "put", "AI_TRAIN_KEY"], input=value, text=True, capture_output=True)
+              if r.returncode: sys.exit("could not set AI_TRAIN_KEY:\n" + r.stderr[-800:])
+          key = secrets.token_hex(24)
+          put(key)
+          try:
+              res = None
+              for i in range(8):
+                  time.sleep(8)
+                  try:
+                      req = urllib.request.Request(URL, headers={"X-Hasla-Train-Key": key, "User-Agent": "HaslaLab AI keys check"})
+                      with urllib.request.urlopen(req, timeout=60) as r:
+                          res = json.load(r)["keys"]; break
+                  except Exception as e:
+                      print("waiting for the key to take effect:", e)
+              if res is None: sys.exit("the Worker did not answer the key check")
+          finally:
+              put(secrets.token_hex(24))      # this run's key stops working
+          bad = []
+          print(f"{'key':22} {'present':8} {'works':6} detail")
+          for k in res:
+              works = {True: "yes", False: "NO", None: "-"}[k.get("ok")] if k.get("present") else "-"
+              detail = ", ".join(f"{a}={k[a]}" for a in ("status", "error", "balance_available", "balance", "note") if k.get(a) not in (None, ""))
+              print(f"{k['id']:22} {str(k.get('present')):8} {works:6} {detail}")
+              if k.get("present") and k.get("ok") is False: bad.append(k["id"])
+          if bad:
+              print(f"::error::keys that do not work: {', '.join(bad)}")
+              sys.exit(1)

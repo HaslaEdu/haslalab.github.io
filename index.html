@@ -326,6 +326,9 @@ section{padding:58px 0}
 .learn-studio .phead{margin-bottom:24px}
 .learn-studio-frame{display:block;width:100%;height:1050px;min-height:600px;border:0;background:transparent}
 .archive-categories{display:flex;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--grid-bold);margin:0 0 26px}
+/* a book or school widens the page (archive-library.css); the tabs stay in line with the header above them */
+.archive-reading>.archive-categories{max-width:1124px;margin-inline:auto}
+.archive-reading>.adfit-banner.adfit-banner--top{margin:26px auto 22px}
 .archive-categories a{display:block;padding:12px 4px;color:var(--graphite);font-size:16px;border-bottom:2px solid transparent}
 .archive-categories a[aria-current="page"]{color:var(--accent,var(--rail));border-bottom-color:var(--accent,var(--rail));font-weight:600}
 .archive-loading{padding:25px 0;color:var(--graphite)}
@@ -4982,7 +4985,12 @@ function disposeArchiveLibrary(){
   try{archiveController?.dispose();}catch(e){}archiveController=null;archiveMountState=null;
 }
 function archiveMountKey(route){return [route.kind,route.collection,route.baseHash,route.resolveLegacy,lang].join('|');}
-function updateArchiveReadingChrome(route){const node=document.getElementById('archiveNative'),shell=node?.closest('.shell');if(!shell)return;const reading=route.params.has('source')||route.params.has('problem')||route.kind==='course'&&route.params.has('school');shell.dataset.archiveKind=route.kind;shell.classList.toggle('archive-reading',reading);for(const element of shell.querySelectorAll(':scope > .phead,:scope > .subjs'))element.hidden=reading;}
+function updateArchiveReadingChrome(route){const node=document.getElementById('archiveNative'),shell=node?.closest('.shell');if(!shell)return;const reading=route.params.has('source')||route.params.has('problem')||route.kind==='course'&&route.params.has('school');shell.dataset.archiveKind=route.kind;shell.classList.toggle('archive-reading',reading);for(const element of shell.querySelectorAll(':scope > .phead,:scope > .subjs'))element.hidden=reading;
+  /* a book or school spans the window, so nothing fits beside it: its ad sits under the category tabs, where it is seen,
+     instead of below a long list; the lists keep theirs at the bottom and get the side ads where the margins allow */
+  const banner=shell.querySelector(':scope > .adfit-banner')||(shell.nextElementSibling?.classList.contains('adfit-banner')?shell.nextElementSibling:null),cats=shell.querySelector(':scope > .archive-categories');
+  if(banner&&cats){ if(reading){ if(cats.nextElementSibling!==banner) cats.after(banner); banner.classList.add('adfit-banner--top'); } else if(banner.parentElement===shell){ shell.after(banner); banner.classList.remove('adfit-banner--top'); } }
+  try{ mountHaslaAdFitSides(); }catch(e){}}
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
   if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=e5d884ae246e"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=356121d191a3"),import("./archive-reference-media.js?v=5e0538ed8abd")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
@@ -9984,9 +9992,10 @@ function adDebug(){
 }
 const SIDE_CARD=160, SIDE_GAP=16;                     /* ad width; the least gap on each side of it */
 function mountHaslaAdFitSides(){
-  /* never beside an exam or in the community; nor where people read: the archive (contests, textbooks, schools) and
-     the learning tools widen to the whole window, and those pages carry an ad in the flow of the page instead */
-  const route=!/^#\/(lab|community|archive)\b|^#\/learn\/[^/]+\/(studio|search)\b|\/(exam|review)(\/|$)/.test(location.hash);
+  /* never beside an exam or in the community; nor where people read: a book, problem or school in the archive and the
+     learning tools widen to the whole window, and those pages carry an ad in the flow of the page instead */
+  const route=!/^#\/(lab|community)\b|^#\/archive\b.*[?&](source|problem|school)=|^#\/learn\/[^/]+\/(studio|search)\b|\/(exam|review)(\/|$)/.test(location.hash)
+    &&!document.querySelector('#view .archive-reading');
   const why=lang!=="ko"?"English site (no ads)":!matchMedia("(hover:hover)").matches?"touch screen":!route?"exam, community or reading page":
     innerHeight<700?`window shorter than 700 px`:"";
   const on=!why;
