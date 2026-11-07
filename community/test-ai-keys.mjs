@@ -2,15 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { checkAiKeys, KEY_CHECKS } from './src/ai-keys.js';
 
-const env = { GEMINI_API_KEY: 'gem-secret-1', DEEPSEEK_API_KEY: 'ds-secret-2', OPENAI_API_KEY: 'oa-secret-3',
-  ANTHROPIC_API_KEY: 'an-secret-4', TAVILY_API_KEY: 'tv-secret-5', MATHPIX_CLIENT_ID: 'mp-id', MATHPIX_CLIENT_SECRET: 'mp-secret-6', AI: {} };
+const env = { GEMINI_API_KEY: 'gem-secret-1-0123456789abcd', DEEPSEEK_API_KEY: 'ds-secret-2-0123456789abcd', OPENAI_API_KEY: 'oa-secret-3-0123456789abcd',
+  ANTHROPIC_API_KEY: 'an-secret-4-0123456789abcd', TAVILY_API_KEY: 'tv-secret-5-0123456789abcd', MATHPIX_CLIENT_ID: 'mp-id', MATHPIX_CLIENT_SECRET: 'mp-secret-6-0123456789abcd', AI: {} };
 
 test('every present key is checked once; statuses, never keys or bodies, come back', async () => {
   const seen = [];
   const fetchImpl = async (url, init) => {
     seen.push(String(url));
     if (url.includes('deepseek')) return Response.json({ is_available: true, balance_infos: [{ total_balance: '3.10', currency: 'USD' }] });
-    if (url.includes('openai')) return Response.json({ error: { code: 'invalid_api_key', message: 'Incorrect API key provided: oa-secret-3' } }, { status: 401 });
+    if (url.includes('openai')) return Response.json({ error: { code: 'invalid_api_key', message: 'Incorrect API key provided: oa-secret-3-0123456789abcd' } }, { status: 401 });
     if (url.includes('anthropic')) throw Object.assign(new Error('t'), { name: 'TimeoutError' });
     return Response.json({ data: [], echoed: JSON.stringify(init) });
   };
