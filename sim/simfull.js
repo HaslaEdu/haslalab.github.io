@@ -97,3 +97,92 @@
   new MutationObserver(sync).observe(root, {attributes: true, attributeFilter: ["lang"]});
   sync();
 })();
+/* HaslaLab sims: remember the last sims opened on this device (the home page offers "continue", the
+   problem cards show "done"), and the first time any sim is opened, a short guided tour of the bench:
+   the parts tray, the bench itself (with the sim's own instructions), then the side panel.
+   Nothing here runs inside an exam (where the sim sits in a frame). */
+(() => {
+  const inFrame = (() => { try { return window.top !== window; } catch (e) { return true; } })();
+  if (inFrame) return;
+  const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+                  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+  const file = location.pathname.split("/").pop();
+  function remember() {
+    const title = (document.title || file).replace(/\s*[·|]\s*HaslaLab\s*$/, "");
+    const list = store.get("hl-recent-sims", []).filter(r => r.file !== file);
+    list.unshift({ file, title, t: Date.now() });
+    store.set("hl-recent-sims", list.slice(0, 40));
+  }
+  const lang = () => (document.documentElement.lang || "ko").startsWith("en") ? "en" : "ko";
+  const TXT = {
+    ko: { first: "처음 오셨네요", skip: "안내 건너뛰기", prev: "이전", next: "다음", done: "시작하기", again: "조작 안내",
+          tray: ["부품함", "부품을 클릭해 집은 뒤, 실험대의 레일이나 책상을 클릭하면 놓입니다. 우클릭하면 부품함으로 되돌립니다."],
+          bench: ["실험대", "빈 곳을 끌면 시점이 돌아가고 휠로 확대합니다."],
+          panel: ["조작판", "시간 배속·측정·기록 같은 도구가 여기 있고, 맨 아래에 자세한 도움말이 있습니다. 이 안내는 왼쪽 아래 「조작 안내」로 다시 볼 수 있습니다."] },
+    en: { first: "First time here", skip: "Skip the tour", prev: "Back", next: "Next", done: "Start", again: "How to use",
+          tray: ["Parts box", "Click a part to pick it up, then click the rail or the desk to put it down. Right-click returns it to the box."],
+          bench: ["The bench", "Drag empty space to turn the view and use the wheel to zoom."],
+          panel: ["Side panel", "Time scale, measuring and recording tools are here, with the full help at the bottom. Open this tour again with «How to use» at the bottom left."] } };
+  function steps() {
+    const T = TXT[lang()], out = [];
+    const tray = document.querySelector("aside.tray"), cv = document.getElementById("cv"), panel = document.querySelector("aside.panel");
+    if (tray && tray.offsetWidth) out.push({ el: tray, t: T.tray });
+    if (cv && cv.offsetWidth) { const cap = (document.getElementById("t-cap") || {}).textContent; out.push({ el: cv, t: [T.bench[0], cap && cap.trim().length > 20 ? cap.trim() : T.bench[1]] }); }
+    if (panel && panel.offsetWidth) out.push({ el: panel, t: T.panel });
+    return out;
+  }
+  let tour = null;
+  function close(finished) {
+    if (!tour) return; tour.ring.remove(); tour.box.remove(); removeEventListener("resize", tour.place); removeEventListener("keydown", tour.key, true);
+    tour = null; store.set("hl-sim-tour-done", true); if (finished !== false) againBtn();
+  }
+  function start() {
+    const S = steps(); if (S.length < 2 || tour) return;
+    const T = TXT[lang()];
+    const ring = document.createElement("div"), box = document.createElement("div");
+    Object.assign(ring.style, { position: "fixed", zIndex: 9000, border: "3px solid #f2c14e", borderRadius: "12px", boxShadow: "0 0 0 9999px rgba(8,10,14,.55)", pointerEvents: "none", transition: "all .3s ease" });
+    Object.assign(box.style, { position: "fixed", zIndex: 9001, width: "min(320px, calc(100vw - 24px))", background: "#fff", color: "#16212E", borderRadius: "12px", padding: "16px 18px",
+      boxShadow: "0 14px 34px rgba(0,0,0,.4)", font: "14px/1.55 'IBM Plex Sans KR','Malgun Gothic',system-ui,sans-serif" });
+    box.setAttribute("role", "dialog"); box.setAttribute("aria-live", "polite");
+    document.body.append(ring, box);
+    let k = 0;
+    const place = () => {
+      const r = S[k].el.getBoundingClientRect(), vh = innerHeight, vw = innerWidth;
+      const top = Math.max(6, r.top - 6), h = Math.min(vh - 12 - top, r.height + 12);
+      Object.assign(ring.style, { left: (r.left - 6) + "px", top: top + "px", width: (r.width + 12) + "px", height: h + "px" });
+      const bw = box.offsetWidth, bh = box.offsetHeight;
+      let x = r.right + 18; if (x + bw > vw - 12) x = r.left - bw - 18; if (x < 12) x = Math.min(vw - bw - 12, Math.max(12, r.left + 24));
+      let y = Math.min(vh - bh - 12, Math.max(12, top + 30));
+      if (x >= r.left - 6 && x <= r.right + 6) y = Math.min(vh - bh - 12, Math.max(12, top + h - bh - 20));   /* over a wide part: sit near its foot */
+      Object.assign(box.style, { left: x + "px", top: y + "px" });
+    };
+    const paint = () => {
+      const [title, body] = S[k].t, last = k === S.length - 1;
+      box.innerHTML = `<div style="font:600 11px ui-monospace,Consolas,monospace;color:#5d43b0;letter-spacing:.1em;margin-bottom:4px">${T.first} · ${k + 1} / ${S.length}</div>`
+        + `<b style="font-size:16px"></b><p style="margin:6px 0 0"></p>`
+        + `<div style="display:flex;gap:8px;margin-top:14px;align-items:center"><button type="button" data-a="skip" style="margin-right:auto;border:0;background:none;color:#5C6B7A;font:inherit;font-size:12.5px;cursor:pointer;padding:4px 0">${T.skip}</button>`
+        + (k ? `<button type="button" data-a="prev" style="border:1px solid #B4CADC;background:#fff;color:#16212E;border-radius:8px;padding:5px 12px;font:inherit;font-size:13px;cursor:pointer">${T.prev}</button>` : "")
+        + `<button type="button" data-a="next" style="border:0;background:#5d43b0;color:#fff;border-radius:8px;padding:6px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer">${last ? T.done : T.next}</button></div>`;
+      box.querySelector("b").textContent = title; box.querySelector("p").textContent = body;
+      place(); box.querySelector('[data-a="next"]').focus({ preventScroll: true });
+    };
+    box.addEventListener("click", e => { const a = e.target.closest("button"); if (!a) return;
+      if (a.dataset.a === "skip") close(); else if (a.dataset.a === "prev") { k--; paint(); } else if (k < S.length - 1) { k++; paint(); } else close(); });
+    const key = e => { if (e.key === "Escape") { close(); e.preventDefault(); } };
+    addEventListener("resize", place); addEventListener("keydown", key, true);
+    tour = { ring, box, place, key };
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) ring.style.transition = "none";
+    paint();
+  }
+  function againBtn() {
+    if (document.getElementById("hlTourAgain") || steps().length < 2) return;
+    const b = document.createElement("button"); b.id = "hlTourAgain"; b.type = "button"; b.textContent = "? " + TXT[lang()].again;
+    Object.assign(b.style, { position: "fixed", left: "12px", bottom: "12px", zIndex: 40, border: "1px solid #3b4450", background: "rgba(21,24,29,.85)", color: "#d8dee5",
+      borderRadius: "999px", padding: "6px 12px", font: "12px 'IBM Plex Sans KR','Malgun Gothic',system-ui,sans-serif", cursor: "pointer" });
+    b.addEventListener("click", start); document.body.append(b);
+  }
+  addEventListener("load", () => {
+    remember();
+    setTimeout(() => { if (store.get("hl-sim-tour-done", false)) againBtn(); else start(); }, 700);   /* after the sim has laid itself out */
+  });
+})();
