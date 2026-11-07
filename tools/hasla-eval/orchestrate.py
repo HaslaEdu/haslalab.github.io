@@ -13,12 +13,18 @@ import time
 
 import requests
 
+from run_eval import cloudflare_account
+
 E = os.environ
 HERE = os.path.dirname(os.path.abspath(__file__))
 RUNPOD = 'https://rest.runpod.io/v1'
 IMAGE = E.get('VLLM_IMAGE') or 'vllm/vllm-openai:latest'
-GPUS = [g.strip() for g in (E.get('GPUS') or 'NVIDIA L40S,NVIDIA RTX 6000 Ada Generation,NVIDIA A100 80GB PCIe').split(',') if g.strip()]
-SERVE = '--host 0.0.0.0 --port 8000 --max-model-len 65536 --quantization fp8 --kv-cache-dtype fp8 --gpu-memory-utilization 0.92 --max-num-seqs 16'
+GPU_DEFAULT = ('NVIDIA L40S,NVIDIA RTX 6000 Ada Generation,NVIDIA L40,NVIDIA A40,NVIDIA RTX A6000,NVIDIA A100 80GB PCIe,'
+               'NVIDIA A100-SXM4-80GB,NVIDIA H100 PCIe,NVIDIA H100 80GB HBM3')
+GPUS = [g.strip() for g in (E.get('GPUS') or GPU_DEFAULT).split(',') if g.strip()]
+SERVE = '--host 0.0.0.0 --port 8000 --max-model-len 65536 --quantization fp8 --gpu-memory-utilization 0.92 --max-num-seqs 16'
+# FP8 KV cache only on Ada/Hopper (compute capability 8.9+); an Ampere card (A40, A6000, A100) keeps it in 16 bits
+KV = 'cc=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader | head -1 | tr -d .); kv=""; [ "${cc:-0}" -ge 89 ] && kv="--kv-cache-dtype fp8"; '
 
 MODELS = {
     'gemma4': {'kind': 'workers-ai', 'model': '@cf/google/gemma-4-26b-a4b-it', 'args': ['--template-kwargs', '{"enable_thinking": true}']},
@@ -50,7 +56,7 @@ def fetch_grade_cases(bench):
             continue
         try:
             h = {'Authorization': f'Bearer {tok}'}
-            acct = E.get('CLOUDFLARE_ACCOUNT_ID') or requests.get('https://api.cloudflare.com/client/v4/accounts', headers=h, timeout=60).json()['result'][0]['id']
+            acct = cloudflare_account()
             r = requests.post(f'https://api.cloudflare.com/client/v4/accounts/{acct}/d1/database/{D1}/query', headers=h, timeout=60,
                               json={'sql': 'SELECT output FROM lab_bench WHERE id = ?', 'params': [str(bench)]}).json()
             out = json.loads(r['result'][0]['results'][0]['output'])
@@ -60,6 +66,27 @@ def fetch_grade_cases(bench):
         except Exception as e:
             print(f'! event 2 cases with this token: {str(e)[:200]}', flush=True)
     print('! event 2 skipped: the answer sheets could not be read from D1', flush=True)
+
+
+def create_pod(spec, name):
+    """a pod on the first cloud with a free card of the list (COMMUNITY first unless CLOUD says SECURE), retried for up
+    to 15 minutes while RunPod has none free"""
+    first = (E.get('CLOUD') or 'COMMUNITY').upper()
+    clouds = [first] + [c for c in ('COMMUNITY', 'SECURE') if c != first]
+    t0, last = time.time(), None
+    while time.time() - t0 < 900:
+        for cloud in clouds:
+            try:
+                pod = runpod('POST', '/pods', json={**spec, 'cloudType': cloud})
+                print(f'· {name}: {cloud} cloud', flush=True)
+                return pod
+            except RuntimeError as e:
+                last = e
+                if 'no instances' not in str(e).lower() and 'not available' not in str(e).lower():
+                    raise
+        print(f'· {name}: no free GPU yet, trying again in 60 s', flush=True)
+        time.sleep(60)
+    raise RuntimeError(f'no free GPU in 15 minutes: {last}')
 
 
 def run_eval(name, extra, out, events, budget):
@@ -72,13 +99,12 @@ def run_eval(name, extra, out, events, budget):
 def pod_model(name, cfg, events, budget, outdir):
     pod, t0, meta = None, time.time(), {'name': name, 'hf': cfg['hf']}
     try:
-        pod = runpod('POST', '/pods', json={
-            'name': f'hasla-eval-{name}', 'imageName': IMAGE, 'gpuTypeIds': GPUS, 'gpuCount': 1,
-            'cloudType': E.get('CLOUD') or 'COMMUNITY', 'containerDiskInGb': 120, 'volumeInGb': 0, 'ports': ['8000/http'],
+        pod = create_pod({
+            'name': f'hasla-eval-{name}', 'imageName': IMAGE, 'gpuTypeIds': GPUS, 'gpuCount': 1, 'containerDiskInGb': 120, 'volumeInGb': 0, 'ports': ['8000/http'],
             'env': {'HF_TOKEN': E.get('HF_TOKEN', ''), 'HUGGING_FACE_HUB_TOKEN': E.get('HF_TOKEN', '')},
             'dockerEntrypoint': ['bash', '-lc'],
-            'dockerStartCmd': [f'vllm serve {cfg["hf"]} {SERVE}'],
-        })
+            'dockerStartCmd': [KV + f'vllm serve {cfg["hf"]} {SERVE} $kv'],
+        }, name)
         meta.update({'pod': pod.get('id'), 'cost_per_hr': float(pod.get('costPerHr') or 0), 'gpu': (pod.get('machine') or {}).get('gpuTypeId')})
         print(f'· {name}: pod {pod.get("id")} ${meta["cost_per_hr"]}/h', flush=True)
         base = f'https://{pod["id"]}-8000.proxy.runpod.net/v1'

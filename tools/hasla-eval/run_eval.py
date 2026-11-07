@@ -78,13 +78,32 @@ def split_think(text, reasoning, cut):
     return reasoning.strip(), text.strip()
 
 
+def cloudflare_account():
+    """the Cloudflare account id: CLOUDFLARE_ACCOUNT_ID, else the first account either token can see (/accounts lists
+    nothing for a token made on one account; /memberships, as wrangler reads it, still names the account)"""
+    if E.get('CLOUDFLARE_ACCOUNT_ID'):
+        return E['CLOUDFLARE_ACCOUNT_ID']
+    for tok in (E.get('CLOUDFLARE_API_TOKEN'), E.get('CLOUDFLARE_AI_TOKEN')):
+        if not tok:
+            continue
+        h = {'Authorization': f'Bearer {tok}'}
+        for path, pick in (('accounts', lambda x: x['id']), ('memberships', lambda x: x['account']['id'])):
+            try:
+                res = requests.get(f'https://api.cloudflare.com/client/v4/{path}', headers=h, timeout=60).json().get('result') or []
+                if res:
+                    E['CLOUDFLARE_ACCOUNT_ID'] = pick(res[0])
+                    return E['CLOUDFLARE_ACCOUNT_ID']
+            except Exception:
+                pass
+    raise RuntimeError('no Cloudflare account id: set CLOUDFLARE_ACCOUNT_ID (a repository variable or secret)')
+
+
 class Model:
     def __init__(self, a):
         self.a = a
         if a.kind == 'workers-ai':
             tok = E.get('CLOUDFLARE_AI_TOKEN') or E.get('CLOUDFLARE_API_TOKEN')
-            acct = E.get('CLOUDFLARE_ACCOUNT_ID') or requests.get('https://api.cloudflare.com/client/v4/accounts',
-                headers={'Authorization': f'Bearer {tok}'}, timeout=60).json()['result'][0]['id']
+            acct = cloudflare_account()
             self.url = f'https://api.cloudflare.com/client/v4/accounts/{acct}/ai/v1/chat/completions'
             self.headers = {'Authorization': f'Bearer {tok}', 'Content-Type': 'application/json'}
         else:

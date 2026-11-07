@@ -17,13 +17,13 @@ on:
         description: "thinking budget in tokens"
         default: "16000"
       gpus:
-        description: "RunPod GPU types, cheapest first"
-        default: "NVIDIA L40S,NVIDIA RTX 6000 Ada Generation,NVIDIA A100 80GB PCIe"
+        description: "RunPod GPU types, cheapest first (empty: the 48 GB cards, then 80 GB)"
+        default: ""
       grade_bench:
         description: "lab_bench id of the tune-grade-export run holding event 2's answer sheets"
         default: "5613"
       cloud:
-        description: "RunPod cloud (COMMUNITY is cheaper, SECURE more available)"
+        description: "RunPod cloud tried first (COMMUNITY is cheaper; SECURE is tried next when it has no free card)"
         default: "COMMUNITY"
 
 permissions:
@@ -49,6 +49,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
           MODELS: ${{ inputs.models }}
           EVENTS: ${{ inputs.events }}
           BUDGET: ${{ inputs.budget }}
