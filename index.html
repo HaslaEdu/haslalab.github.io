@@ -563,9 +563,10 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 /* ═══════ AdFit banners ═══════ */
 .adfit-banner{position:relative;width:320px;max-width:calc(100% - 24px);height:50px;margin:42px auto 6px}
 .adfit-side{display:none}
-@media (min-width:1484px){.adfit-side{display:block;position:fixed;top:120px;width:160px;height:600px;z-index:5}.adfit-side[hidden]{display:none}
+@media (min-width:1200px){.adfit-side{display:block;position:fixed;top:120px;width:160px;height:600px;z-index:5}.adfit-side[hidden]{display:none}
   .adfit-side--left{left:max(12px,calc((100vw - 1180px)/2 - 190px))}.adfit-side--right{right:max(12px,calc((100vw - 1180px)/2 - 190px))}
   .adfit-side .adfit-banner-label{top:-14px}}
+@media (min-width:1200px) and (max-width:1483px){html:lang(ko) #view .shell{max-width:calc(100% - 360px)}}
 @media print{.adfit-side{display:none!important}}
 .sns-ig{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;font-size:13px;border:1px solid var(--grid-bold,#B4CADC);border-radius:999px;padding:4px 11px}
 .sns-ig:hover{background:var(--cm-soft,rgba(127,127,127,.08))}
@@ -1201,7 +1202,7 @@ ko:{
     "실험과 실기는 국제 올림피아드에서 중요한 부분입니다. 그렇지만 국제 대회에 나가기 전이나 대비를 하기 위해 학생이 실제로 그 장비를 만져볼 기회는 많지 않고, 결과를 보는 것만으로는 눈금을 읽고 오차를 판단하는 감각이 생기지 않습니다.",
     "HaslaLab은 그 간극을 메우기 위해 만들어졌습니다. 각 실험 장비를 프로그램 하에서 그대로 재현해, 직접 조립하고 측정할 수 있게 합니다. 결과는 계산해 주지 않습니다 — 그건 당신이 할 일입니다."
   ],
-  team:[{name:"유준우", role:"Edu 개발 · 홍보", loc:"대한민국 거주", education:"SNU 재학 중", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
+  team:[{name:"유준우", role:"Edu 개발 · 홍보", loc:"대한민국 거주", education:"SNU 재학 중", mail:"yujunu007@gmail.com", photo:"/logo/junwoo-yu.jpg", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
   ebPerson:"만든 사람들",
   person:{name:"MinGyuSong", role:"LAB 개발 · 물리 모델", loc:"대한민국 거주",
     mail:"mgsnew88@naver.com", insta:"https://www.instagram.com/mimgyuson/", handle:"mimgyuson",
@@ -1270,7 +1271,7 @@ en:{
     "Experiments and practicals are a serious part of the international olympiads. Yet students preparing for an international competition rarely get to handle the apparatus, and reading the results alone never builds a feel for reading a scale or judging an error.",
     "HaslaLab was built to close that gap. Every piece of apparatus is reproduced in software exactly as it behaves, so you can assemble it and take the measurements yourself. The results are not computed for you — that part is your work."
   ],
-  team:[{name:"Junwoo Yu", role:"Edu development · promotion", loc:"Based in the Republic of Korea", education:"Student at SNU", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
+  team:[{name:"Junwoo Yu", role:"Edu development · promotion", loc:"Based in the Republic of Korea", education:"Student at SNU", mail:"yujunu007@gmail.com", photo:"/logo/junwoo-yu.jpg", insta:"https://www.instagram.com/yujunu007/", handle:"yujunu007"}],
   ebPerson:"The people",
   person:{name:"MinGyuSong", role:"LAB development · physics modeling",
     loc:"Based in the Republic of Korea",
@@ -5204,12 +5205,13 @@ function viewAbout(){
         </div>
         ${(d.team||[]).map(m=>`<div class="person" style="margin-top:14px">
           <div class="ptop">
-            <div class="av av-ph" aria-hidden="true">${esc(m.name.charAt(0))}</div>
+            <div class="av">${m.photo?`<img src="${esc(m.photo)}" alt="${esc(m.name)}">`:esc(m.name.charAt(0))}</div>
             <div>
               <h3>${esc(m.name)}</h3>
               <div class="role">${esc(m.role)}</div>
               <div class="loc">${esc(m.loc)}</div>
               ${m.education?`<div class="loc">${esc(m.education)}</div>`:""}
+              ${m.mail?`<a class="mail" href="mailto:${esc(m.mail)}">${esc(m.mail)}</a>`:""}
               <p style="margin:8px 0 0">${instaLink(m.insta,m.handle,false)}</p>
             </div>
           </div>
@@ -9951,7 +9953,7 @@ const ADFIT_SIDE_UNITS={left:"DAN-qczrGPkgs3ATsrwt",right:"DAN-zyPVmJAPTSmPDSUC"
 function mountHaslaAdFitSides(){
   // The ads fit only when both gutters clear the visible page content.
   const shells=[...document.querySelectorAll('#view .shell')].filter(el=>el.getClientRects().length);
-  const fits=window.innerWidth>=1484 && shells.length>0 && shells.every(el=>{
+  const fits=window.innerWidth>=1200 && shells.length>0 && shells.every(el=>{
     const r=el.getBoundingClientRect(), style=getComputedStyle(el);
     return r.left+parseFloat(style.paddingLeft)>=180 && window.innerWidth-r.right+parseFloat(style.paddingRight)>=180;
   });
