@@ -323,3 +323,29 @@ export function createMonthlyCaptureRouter({HttpError,needUser,ensureContent,vis
     }catch(error){if(error instanceof MonthlyAnswerError)throw new HttpError(error.status,error.code);throw error;}
   };
 }
+
+/* Admin repair: read one stored answer-sheet page again (its saved OCR and photo) and store the parts it yields, for a
+   page whose split failed (e.g. Gemini's 400 before 2026-11-08). Only the page's parts/status and the session revision
+   change; the candidate submits as usual afterwards. */
+export async function rereadMonthlyCapturePage(env,photoId,{invoke,imageType}) {
+  if (typeof photoId!=='string'||!UUID.test(photoId)) fail('bad_photo');
+  const page=await env.DB.prepare(`SELECT c.*,p.mime,p.bytes,p.ocr_text,p.user_id,p.problem_id,s.provider AS session_provider,s.submission_id
+    FROM monthly_capture_pages c JOIN monthly_answer_photos p ON p.id=c.photo_id JOIN monthly_capture_sessions s ON s.id=c.session_id WHERE c.photo_id=?`).bind(photoId).first();
+  if (!page) fail('not_found',404);
+  if (page.submission_id) fail('capture_already_submitted',409);
+  const problem=await env.DB.prepare('SELECT * FROM problems WHERE id=?').bind(page.problem_id).first(), sheet=problem&&getMonthlyAnswerSheet(problem);
+  if (!sheet||!sheet.pages[page.page_no-1]) fail('not_found',404);
+  const chunks=(await env.DB.prepare('SELECT data FROM monthly_answer_photo_chunks WHERE photo_id=? ORDER BY no').bind(photoId).all()).results;
+  const data=new Uint8Array(page.bytes);let offset=0;
+  for (const chunk of chunks) { const bytes=new Uint8Array(chunk.data); if (offset+bytes.length>data.length) fail('photo_unavailable',500); data.set(bytes,offset); offset+=bytes.length; }
+  if (offset!==page.bytes||imageType(data)!==page.mime) fail('photo_unavailable',500);
+  const images=[{mime:page.mime,data:imageBase64(data),label:'Original student answer-sheet photograph; printed page '+page.page_no}];
+  const parts=await extractMonthlyCaptureParts(sheet,page.page_no,String(page.ocr_text||''),page.kind,
+    (prompt,schema,originals)=>invoke(env,prompt,schema,originals,page.session_provider||'gemini'),{images,photoId});
+  await env.DB.batch([
+    env.DB.prepare(`UPDATE monthly_capture_pages SET parts=?,ocr_status='done',ocr_error=NULL WHERE photo_id=?`).bind(JSON.stringify(parts),photoId),
+    env.DB.prepare('UPDATE monthly_capture_sessions SET revision=revision+1 WHERE id=? AND submission_id IS NULL').bind(page.session_id),
+  ]);
+  return {photoId,sessionId:page.session_id,userId:page.user_id,problem,provider:page.session_provider||'gemini',active:!!page.active,
+    filled:parts.filter(p=>p.answer||p.working).length,total:parts.length};
+}

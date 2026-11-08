@@ -1,0 +1,75 @@
+# Re-read stored monthly answer-sheet pages whose split failed and trial-grade the repaired captures
+# (POST /api/admin/ai-train/monthly-trial, community/src/index.js monthlyTrial). Prints statuses only: answer text and
+# scores stay in the private table admin_monthly_trials. Authenticates like train-ai.yml with a fresh AI_TRAIN_KEY.
+name: Monthly trial grading
+
+on:
+  workflow_dispatch:
+    inputs:
+      photo_ids:
+        description: "Photo ids, comma separated"
+        required: true
+      grade:
+        description: "Also trial-grade the repaired captures"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: train-ai
+  cancel-in-progress: false
+
+jobs:
+  trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: community
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            community
+            tools
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: community/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: python3 ../tools/worker-secrets-guard.py haslalab-community
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - shell: python3 {0}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          PHOTO_IDS: ${{ github.event.inputs.photo_ids }}
+          GRADE: ${{ github.event.inputs.grade }}
+        run: |
+          import json, os, re, secrets, subprocess, sys, time, urllib.request
+          ids = [x.strip() for x in os.environ["PHOTO_IDS"].split(",") if re.fullmatch(r"[0-9a-f-]{36}", x.strip())]
+          if not ids: sys.exit("no valid photo ids")
+          URL = "https://haslalab-community.haslalab.workers.dev/api/admin/ai-train/monthly-trial"
+          def put(value):
+              r = subprocess.run(["npx", "wrangler", "secret", "put", "AI_TRAIN_KEY"], input=value, text=True, capture_output=True)
+              if r.returncode: sys.exit("could not set AI_TRAIN_KEY:\n" + r.stderr[-800:])
+          key = secrets.token_hex(24); put(key)
+          try:
+              res = None
+              for i in range(8):
+                  time.sleep(8)
+                  try:
+                      req = urllib.request.Request(URL, method="POST", data=json.dumps({"photo_ids": ids, "grade": os.environ["GRADE"] == "true"}).encode(),
+                                                   headers={"X-Hasla-Train-Key": key, "Content-Type": "application/json", "User-Agent": "HaslaLab monthly trial"})
+                      with urllib.request.urlopen(req, timeout=300) as r: res = json.load(r); break
+                  except urllib.error.HTTPError as e:
+                      if e.code in (401, 403): print("waiting for the key:", e.code); continue
+                      print("error", e.code, e.read()[:300]); break
+                  except Exception as e: print("waiting:", e)
+          finally:
+              put(secrets.token_hex(24))
+          print(json.dumps(res, indent=1))
+          if not res: sys.exit(1)

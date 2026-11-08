@@ -35,7 +35,7 @@ import { ensureNoticePins, noticeIsPinned, removeNoticePin } from './notice-pins
 import { monthlySubmissionView, assessMonthlyAuthorship } from './monthly-policy.js';
 import { monthlyPublicPresentation } from './monthly-presentation.js';
 import { createMonthlyPhotoRouter, prepareMonthlyPhotoSubmission, monthlyPhotoAttachments, monthlyPhotoDeletion, boundedForm } from './monthly-photos.js';
-import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMonthlyCaptureSchema, monthlyCaptureDeletion } from './monthly-capture.js';
+import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMonthlyCaptureSchema, monthlyCaptureDeletion, rereadMonthlyCapturePage } from './monthly-capture.js';
 import { settleMonthlyRewards, monthlyRewardSummary } from './monthly-rewards.js';
 import { createMonthlyExperimentRouter, attachMonthlyExperimentEvidence, ensureMonthlyExperimentSchema, monthlyExperimentDeletion, getMonthlyExperimentReference } from './monthly-experiment.js';
 import { prepareMonthlyExperimentVisuals } from './monthly-experiment-visuals.js';
@@ -255,13 +255,47 @@ const monthlyExtract = (env, prompt, schema, images, provider) => { const model 
   return model ? callGrader(env, prompt, schema, images, model.split('-')[0], model) : callGrader(env, prompt, schema, images, provider); };
 const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr:monthlyOcr,imageType,invoke:monthlyExtract,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,attempts:monthlyAttempts,scope:env=>env[DB_SCOPE]||env.DB});
+/* POST /api/admin/ai-train/monthly-trial {photo_ids:[…], grade:true} (admin or the workflow key): read failed answer-sheet
+   pages again (repairing them, so the candidate can submit as usual) and grade each repaired, still unsubmitted capture as a
+   trial, exactly as a submission would be graded, without saving a submission or spending an attempt. Results go to the
+   private table admin_monthly_trials (read by the operator); the response carries no answer text and no score. */
+async function monthlyTrial(env, body) {
+  const ids = Array.isArray(body.photo_ids) ? body.photo_ids.filter(x => typeof x === 'string').slice(0, 8) : [];
+  if (!ids.length) throw new HttpError(400, 'bad_photo');
+  await ensureMonthlyCaptureSchema(env.DB, env[DB_SCOPE] || env.DB);
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS admin_monthly_trials (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at INTEGER NOT NULL,
+    user_id INTEGER, problem_id INTEGER, session_id TEXT, result TEXT NOT NULL)`).run();
+  const reread = [], sessions = new Map();
+  for (const id of ids) {
+    try { const r = await rereadMonthlyCapturePage(env, id, { invoke: monthlyExtract, imageType });
+      reread.push({ photo: id, ok: true, filled: r.filled, total: r.total, active: r.active });
+      if (r.active) sessions.set(r.sessionId, r); }
+    catch (e) { reread.push({ photo: id, ok: false, error: String(e?.code || e?.message || 'failed').slice(0, 60) }); }
+  }
+  const trials = [];
+  if (body.grade) for (const [sessionId, r] of sessions) {
+    let result;
+    try {
+      const x = r.problem, normalized = await prepareMonthlyCaptureSubmission(env.DB, r.userId, x,
+        { scan_id: sessionId, provider: r.provider, request_id: ('trial' + Date.now()).padEnd(32, 'x'), lang: 'ko' }, env[DB_SCOPE] || env.DB);
+      const visuals = await prepareMonthlyExperimentVisuals(env.DB, r.userId, x, normalized, env[DB_SCOPE] || env.DB);
+      const g = guardMonthlyGrade(await gradeEssay(env, x, normalized.graderAnswer || normalized.answer, 'ko',
+        { experimentReference: normalized.experimentReference, images: visuals.images, provider: normalized.provider, monthly: true }), x, normalized, 'ko');
+      result = { ok: !!g, score: g?.score ?? null, points: x.points, grader: g?.detail?.grader || null, parts: normalized.sheet.parts, detail: g?.detail || null };
+    } catch (e) { result = { ok: false, error: String(e?.code || e?.message || 'failed').slice(0, 80) }; }
+    const row = await env.DB.prepare('INSERT INTO admin_monthly_trials(created_at,user_id,problem_id,session_id,result) VALUES(?,?,?,?,?)')
+      .bind(now(), r.userId, r.problem.id, sessionId, JSON.stringify(result)).run();
+    trials.push({ session: sessionId, trial_id: row.meta?.last_row_id ?? null, ok: result.ok, error: result.error || null });
+  }
+  return { reread, trials };
+}
 
 const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUser,limit,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,scope:env=>env[DB_SCOPE]||env.DB});
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
 const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit,clientIp,trainAllowed:(env,id)=>aiTrainAllowed(env.DB,id,env[DB_SCOPE]||env.DB)});
 const aiEvalRouter=createAiEvalRouter({HttpError,currentUser});
-const aiTrainRouter=createAiTrainRouter({HttpError,currentUser});
+const aiTrainRouter=createAiTrainRouter({HttpError,currentUser,monthlyTrial:(env,body)=>monthlyTrial(env,body)});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url, ctx) {
