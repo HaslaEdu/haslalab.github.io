@@ -36,6 +36,7 @@ import { monthlySubmissionView, assessMonthlyAuthorship } from './monthly-policy
 import { monthlyPublicPresentation } from './monthly-presentation.js';
 import { createMonthlyPhotoRouter, prepareMonthlyPhotoSubmission, monthlyPhotoAttachments, monthlyPhotoDeletion, boundedForm } from './monthly-photos.js';
 import { createHphoRouter } from './hpho.js';
+import { createHphoExamRouter } from './hpho-exam.js';
 import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMonthlyCaptureSchema, monthlyCaptureDeletion, readMonthlyCapturePage } from './monthly-capture.js';
 import { settleMonthlyRewards, monthlyRewardSummary } from './monthly-rewards.js';
 import { createMonthlyExperimentRouter, attachMonthlyExperimentEvidence, ensureMonthlyExperimentSchema, monthlyExperimentDeletion, getMonthlyExperimentReference } from './monthly-experiment.js';
@@ -282,6 +283,7 @@ const monthlyRead = (env, sheet, pageNo, kind, provider, images, photoId) => Str
   ? readMonthlyCapturePage(sheet, pageNo, kind, (prompt, schema, originals) => monthlyWithFallback(env, (model, thinking) =>
       callGrader(env, prompt, schema, originals, model.split('-')[0], model, { maxTokens: monthlyTokens(env, true), thinking, ...monthlyWaitOptions(env) })), { images, photoId })
   : null;
+const hphoExamRouter = createHphoExamRouter({HttpError,needUser,limit,isAdmin:u=>isAdmin(u),scope:env=>env[DB_SCOPE]||env.DB});
 const hphoRouter = createHphoRouter({HttpError,needUser,limit,isAdmin:u=>isAdmin(u),scope:env=>env[DB_SCOPE]||env.DB});
 const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr:monthlyOcr,imageType,invoke:monthlyExtract,read:monthlyRead,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,attempts:monthlyAttempts,scope:env=>env[DB_SCOPE]||env.DB});
@@ -720,6 +722,8 @@ async function handle(req, env, url, ctx) {
   if (omr !== undefined) return omr;
   const monthlyPhoto = await monthlyPhotoRouter(p, m, me, req, env, url);
   if (monthlyPhoto !== undefined) return monthlyPhoto;
+  const hpx = await hphoExamRouter(p,m,body,me,env,url);
+  if (hpx !== undefined) return hpx;
   const hp = await hphoRouter(p,m,body,me,env);
   if (hp !== undefined) return hp;
   const monthlyCapture = await monthlyCaptureRouter(p,m,body,me,req,env,url);
