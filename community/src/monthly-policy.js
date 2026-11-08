@@ -10,7 +10,8 @@ export function monthlySubmissionView(submission, problem, { admin = false, time
   if (held) detail = null;
   else if (!admin && detail) {
     // Authorship signals are an uncertain moderation audit, not student feedback.
-    const { authorship, ...released } = detail;
+    // The fallback grader's error is an operator diagnostic, not feedback either.
+    const { authorship, fixed_grader_error, ...released } = detail;
     detail = Object.keys(released).length ? released : null;
   }
   return { ...submission, ...(submission.status === 'ai_suspected' ? { score: null } : {}),
