@@ -32,6 +32,15 @@ async function providerErrorCode(response){
     return typeof code==='string'&&PROVIDER_CODES.has(code)?code:null;
   }catch{return null;}finally{try{reader.releaseLock();}catch{}}
 }
+/* Gemini's responseSchema is an OpenAPI subset: it answers 400 to JSON-Schema keys it does not know (additionalProperties,
+   $schema …), which every monthly answer-sheet read and authorship check sent. Our own checks still validate the answer. */
+const GEMINI_SCHEMA_DROP=new Set(['additionalProperties','$schema','$id','$defs','definitions','unevaluatedProperties','patternProperties']);
+export function geminiSchema(schema){
+  if(Array.isArray(schema))return schema.map(geminiSchema);
+  if(!schema||typeof schema!=='object')return schema;
+  const out={};for(const [k,v] of Object.entries(schema))if(!GEMINI_SCHEMA_DROP.has(k))out[k]=k==='properties'?Object.fromEntries(Object.entries(v||{}).map(([n,x])=>[n,geminiSchema(x)])):geminiSchema(v);
+  return out;
+}
 function jsonExample(schema,depth=0){
   if(!schema||depth>5)return null;if(schema.nullable)return null;
   if(schema.type==='object')return Object.fromEntries((schema.required||Object.keys(schema.properties||{})).map(key=>[key,jsonExample(schema.properties?.[key],depth+1)]));
@@ -146,7 +155,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
       ...(['none','minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{}),...(serviceTier==='flex'?{service_tier:'flex'}:{})}:
     provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],...(geminiToolList.length?{tools:geminiToolList}:{}),
     /* temperature is ignored by Gemini 3.6 Flash and newer (Google's changelog); it is sent only where it still counts */
-    generationConfig:{responseMimeType:'application/json',responseSchema:schema,...(/^gemini-(2\.|3-flash-preview|3\.1-|3\.5-flash-lite)/.test(model)?{temperature:Number(temperature)||0}:{}),maxOutputTokens:count,
+    generationConfig:{responseMimeType:'application/json',responseSchema:geminiSchema(schema),...(/^gemini-(2\.|3-flash-preview|3\.1-|3\.5-flash-lite)/.test(model)?{temperature:Number(temperature)||0}:{}),maxOutputTokens:count,
       /* Gemini only: more image tokens per picture, for small handwriting (bench read.media high) */
       ...(['MEDIA_RESOLUTION_HIGH','MEDIA_RESOLUTION_MEDIUM','MEDIA_RESOLUTION_LOW'].includes(mediaResolution)?{mediaResolution}:{}),
       // thinking is billed as output: a page read with the model's own default once spent 5.5k thought tokens on 263 characters
@@ -194,7 +203,9 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const openaiResponses=async()=>{
     const rurl=url.replace(/\/chat\/completions$/,'/responses');
     const input=[{role:'user',content:content.map(p=>p.type==='image_url'?{type:'input_image',image_url:p.image_url.url,detail:p.image_url.detail||'high'}:
-      p.type==='file'?{type:'input_file',filename:p.file.filename,file_data:p.file.file_data}:{type:'input_text',text:p.text})}];
+      p.type==='file'?{type:'input_file',filename:p.file.filename,file_data:p.file.file_data}:{type:'input_text',text:p.text}).concat(
+      /* json_object needs the word in the input itself, not only in the instructions (OpenAI answers 400 otherwise) */
+      [{type:'input_text',text:'Reply with one JSON object only.'}])}];
     const rbody={model,instructions:jsonRules,input,text:{format:{type:'json_object'}},max_output_tokens:Math.max(count,16384),store:false,
       ...(['none','low','medium','high','xhigh'].includes(level)?{reasoning:{effort:level}}:{}),...(serviceTier==='flex'?{service_tier:'flex'}:{}),
       ...(useTools?{tools:tools.map(t=>({type:'function',name:t.function.name,description:t.function.description,parameters:t.function.parameters})),include:['reasoning.encrypted_content']}:{})};

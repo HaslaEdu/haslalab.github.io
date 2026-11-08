@@ -125,16 +125,17 @@ test('network retries reuse one request id; successful acceptance requires an ed
   assert.equal(JSON.parse([...storage.values()][0]).request_id,null);
 });
 
-test('monthly provider choices expose only the two provider IDs and the actual typed request locks its selection',async()=>{
+test('monthly problems show no provider picker or provider names; requests carry the fixed reader and still lock while sending',async()=>{
   const {context}=app(),p=plain(sample);p.vision={default:'gemini',providers:[{id:'deepseek',available:true,model:'private-deepseek-model'},{id:'gemini',available:true,model:'private-gemini-model'}]};
-  const html=context.arMonthlyAnswerHtml(p,true),options=[...html.matchAll(/<option value="(deepseek|gemini)"[^>]*>([^<]+)<\/option>/g)];
-  assert.deepEqual(options.map(match=>match[2]),['deepseek','gemini']);assert.doesNotMatch(html,/private-.*-model/);assert.match(html,/<option value="gemini" selected/);
+  const html=context.arMonthlyAnswerHtml(p,true);
+  assert.doesNotMatch(html,/<select[^>]*data-vision-provider|<option value="(deepseek|gemini)"/);assert.doesNotMatch(html,/private-.*-model/);
+  assert.match(html,/<input type="hidden" data-vision-provider value="gemini">/);
+  assert.doesNotMatch(html.replace(/<[^>]*>/g,' '),/gemini|deepseek/i,'no provider name in the visible text');
   const f=bindingFixture(context,p),requests=[];let finish;
   context.cmApi=async(method,url,payload)=>{requests.push(plain(payload));return new Promise(resolve=>finish=resolve);};
-  f.provider.value='deepseek';f.provider.onchange();f.fields.get('answer:a').value='42';f.fields.get('working:a').value='Explicit working';
-  const pending=f.form.onsubmit({preventDefault(){}});assert.equal(requests[0].provider,'deepseek');assert.equal(f.provider.disabled,true);
+  f.fields.get('answer:a').value='42';f.fields.get('working:a').value='Explicit working';
+  const pending=f.form.onsubmit({preventDefault(){}});assert.equal(requests[0].provider,'gemini');assert.equal(f.provider.disabled,true);
   finish({status:'pending',attempts:{limit:3,used:1,remaining:2}});await pending;assert.equal(requests.length,1);assert.equal(f.provider.disabled,false);
-  const off=plain(p);off.vision.providers[0].available=false;assert.match(context.arMonthlyAnswerHtml(off,true),/<option value="deepseek"[^>]*disabled/);
 });
 
 test('a provider chosen by one monthly owner cannot submit or render a late result for another owner',async()=>{

@@ -391,7 +391,7 @@ function arResult(s, prob) {
     return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span></div>${record}<p class="arnote">${S.release(releaseAt ? arDeadline(releaseAt + 1) : "")}</p>`;
   }
   if (d.kind === "short") return `<div class="arres ${d.ok ? "ok" : "no"}"><b>${d.ok ? "✓ " + T.right : "✗ " + T.wrong}</b><span>${s.score} / ${prob.points}${T.pts}</span></div>`;
-  return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span>${d.grader ? `<small>${T.grader}: ${esc(d.grader)}</small>` : ""}</div>${record}
+  return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span>${d.grader && cm.me?.role === "admin" ? `<small>${T.grader}: ${esc(d.grader)}</small>` : ""}</div>${record}
     ${d.evidenceIssue ? `<p class="arwarn">${T.evidenceIssue}</p>` : ""}
     ${(d.scores || []).length ? `<table class="cmtbl artbl"><thead><tr><th style="width:42%">${T.criteria}</th><th style="width:70px">${T.score}</th><th>${T.evidence}</th></tr></thead><tbody>
       ${d.scores.map((c) => `<tr><td class="t"><b>${esc(arMonthlyPartNumber(prob,c.id,c.display_id))}</b> ${esc(c.name)}<div class="arnote">${esc(c.note)}</div></td>
@@ -415,12 +415,14 @@ function arVisionHtml(source, provider = "gemini", locked = false) {
   const selected = AR_VISION_PROVIDERS.includes(provider) ? provider : "gemini";
   return `<label class="arnote" style="display:block;margin:10px 0">${lang==="en"?"OCR, grading and feedback":"OCR·채점·피드백"}<select data-vision-provider aria-label="${lang==="en"?"Grading provider":"채점 제공자"}" ${locked?"disabled":""}>${arVisionCapabilities(source).map(row=>`<option value="${row.id}" ${row.id===selected?"selected":""} ${row.available?"":"disabled"}>${row.id}</option>`).join("")}</select></label>`;
 }
+/* monthly problems: no provider picker (Terra grades, Gemini 3.8 Flash reads the photos); the field stays, hidden */
+function arMonthlyVisionHtml() { return `<input type="hidden" data-vision-provider value="gemini">`; }
 function arVisionField(root) { try { return root.querySelector("[data-vision-provider]"); } catch (_) { return null; } }
 function arVisionProvider(root, fallback = "gemini") {
   const value=arVisionField(root)?.value||fallback;return AR_VISION_PROVIDERS.includes(value)?value:"gemini";
 }
 function arVisionAvailable(source, provider) { return arVisionCapabilities(source).some(row=>row.id===provider&&row.available); }
-const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=2d410ba50bfe").catch(error => { arScanner = null; throw error; }));
+const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=83f84d19686e").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
 function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
@@ -643,7 +645,7 @@ function arCaptureT() {
     h:"촬영 답안 제출",open:"이 기기에서 스캔 열기",qr:"휴대폰 촬영",connect:"QR 연결 시작",private:"이 QR로 보낸 답안은 현재 계정과 이 문제에만 연결됩니다.",renew:"QR 새로 만들기",newAnswer:"새 촬영 답안 준비",loading:"촬영 환경을 여는 중…",
     steps:["답안지 양식의 한 쪽 전체를 촬영합니다.","QR을 휴대폰으로 읽거나 이 기기에서 스캔을 여세요. 네 모서리 보정·회전·원본 비교를 사용할 수 있습니다.","보낸 쪽과 판독 내용을 확인하세요. 잘못 읽혔으면 빼고 다시 촬영합니다.","모든 답안지를 보낸 뒤 아래의 답안 제출 버튼을 누르세요."],
     pages:"보낸 쪽",none:"아직 보낸 쪽이 없습니다.",read:"판독된 답안",noEdit:"촬영 답안의 판독 내용은 직접 수정하지 않습니다. 잘못 읽혔거나 누락된 부분은 해당 쪽을 빼고 다시 촬영하세요.",
-    remove:"빼기",removeQ:"이 쪽을 촬영 답안에서 뺄까요? 서버에 보관된 기존 제출 원본은 유지됩니다.",page:n=>`${n}쪽`,original:"촬영 원본 보기",refresh:"새로고침",
+    remove:"빼기",removeQ:"이 쪽을 촬영 답안에서 뺄까요? 서버에 보관된 기존 제출 원본은 유지됩니다.",page:n=>`${n}쪽`,original:"촬영 원본 보기",refresh:"새로고침",zoom:"크게 보기",close:"닫기",partsOnPage:"이 쪽에서 읽은 소문항",loadingPhoto:"사진을 불러오는 중…",
     empty:"답안지를 촬영해 보내고 판독된 최종 답과 풀이를 확인하세요.",incomplete:"아직 판독하지 못한 답안이 있습니다. 답안지의 최종 답·풀이 칸과 쪽 번호를 확인하고 다시 촬영하세요.",
     closed:"이 촬영 답안은 접수되었습니다. 다른 답안을 제출하려면 새 촬영 답안을 준비하세요.",expired:"촬영 링크가 만료되었습니다. QR을 새로 만들어 주세요.",
     done:"읽음",reading:"판독 중",failed:"판독 실패 · 다시 촬영",noQr:"QR을 표시하지 못했습니다. 아래 링크에서 스캔을 여세요.",failedLoad:"촬영 답안 목록을 불러오지 못했습니다. 새로고침해 주세요."
@@ -651,7 +653,7 @@ function arCaptureT() {
     h:"Photographed answer submission",open:"Open scanner on this device",qr:"Photograph with your phone",connect:"Connect phone scanner",private:"Photos sent through this QR code belong to your current account and this problem.",renew:"New QR code",newAnswer:"Prepare another photo answer",loading:"Opening the scanner…",
     steps:["Photograph one complete page of the provided answer sheet.","Scan the QR code or open the scanner here. Use corner correction, rotation and original comparison.","Check the uploaded pages and recognized answers. Remove and retake a page if it was read incorrectly.","Send all pages, then use the submit button below."],
     pages:"Sent pages",none:"No pages sent yet.",read:"Recognized answers",noEdit:"Recognized photo answers are read-only. Remove and retake a page if anything was read incorrectly or omitted.",
-    remove:"Remove",removeQ:"Remove this page from the photo answer? Originals of previously submitted answers remain stored.",page:n=>`Page ${n}`,original:"View capture",refresh:"Refresh",
+    remove:"Remove",removeQ:"Remove this page from the photo answer? Originals of previously submitted answers remain stored.",page:n=>`Page ${n}`,original:"View capture",refresh:"Refresh",zoom:"Enlarge",close:"Close",partsOnPage:"Parts read from this page",loadingPhoto:"Loading the photo…",
     empty:"Send an answer-sheet photo and check the recognized final answer and working.",incomplete:"Some answers have not been read completely. Check the final-answer and working boxes and page number, then retake the page.",
     closed:"This photographed answer was accepted. Prepare another photo answer to make a new submission.",expired:"The scanning link has expired. Create a new QR code.",
     done:"Read",reading:"Reading",failed:"Reading failed · retake",noQr:"The QR code could not be shown. Use the scanner link below.",failedLoad:"The photo-answer list could not be loaded. Refresh and try again."
@@ -674,6 +676,24 @@ function arMonthlyCaptureReady(scan) {
   return !!(scan?.pages?.length && scan.pages.every(page=>page.ocr_status==="done") &&
     scan.parts?.some(part=>part.answer&&part.working) && scan.parts.every(part=>!!part.answer===!!part.working));
 }
+/* the enlarged view of one sent page, as in exam and contest grading: the photograph large beside the full recognized
+   text and the parts read from that page (read-only; the photo is the one already loaded into the card) */
+function arMonthlyPageZoom(p,scan,id,pagesRoot,C){
+  const page=(scan?.pages||[]).find(x=>x.id===id);if(!page||typeof document==="undefined")return;
+  const src=[...pagesRoot.querySelectorAll("img[data-capture-zoom]")].find(img=>img.dataset.captureZoom===id)?.getAttribute("src")||"";
+  document.querySelector(".armonthly-zoom")?.remove();
+  const parts=(page.parts||[]).filter(part=>part.answer||part.working),S=arSheetT();
+  const box=document.createElement("div");box.className="armonthly-zoom";box.setAttribute("role","dialog");box.setAttribute("aria-modal","true");box.setAttribute("aria-label",C.page(page.page_no||page.no));
+  box.innerHTML=`<div class="armonthly-zoom-card"><div class="armonthly-zoom-head"><b>${esc(C.page(page.page_no||page.task||page.no))}</b><button type="button" class="cmbtn sm" data-zoom-close>${C.close} ✕</button></div>
+    <div class="armonthly-zoom-body"><div class="armonthly-zoom-photo">${src?`<img alt="${C.original}" src="${esc(src)}">`:`<p class="arnote">${C.loadingPhoto}</p>`}</div>
+    <div class="armonthly-zoom-read"><h4 class="arh4">${C.read}</h4><div class="arsheet-preview">${arSheetWorkingPreview(page.text||"")}</div>
+    ${parts.length?`<h4 class="arh4">${C.partsOnPage}</h4><div class="arsheet-saved">${parts.map(part=>`<section><h4>${esc(arMonthlyPartNumber(p,part.id))}</h4><b>${S.answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${S.working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}</div>`:""}</div></div></div>`;
+  const close=()=>{box.remove();document.removeEventListener("keydown",key);window.removeEventListener("hashchange",close);};
+  const key=e=>{if(e.key==="Escape")close();};
+  box.onclick=e=>{if(e.target===box)close();};box.querySelector("[data-zoom-close]").onclick=close;
+  document.addEventListener("keydown",key);window.addEventListener("hashchange",close);
+  document.body.append(box);arMath(box);box.querySelector("[data-zoom-close]").focus?.();
+}
 // The photo workflow uses the same upload-only grant and scanner as exam mode.
 // The API, rather than editable text fields, owns the photographed submission.
 function arBindMonthlyCapture(root,p,alive,{scanId=null,onChange=()=>{},onBusy=()=>{},active=()=>true,provider=()=>"gemini"}={}) {
@@ -694,8 +714,9 @@ function arBindMonthlyCapture(root,p,alive,{scanId=null,onChange=()=>{},onBusy=(
     if(next===signature)return;signature=next;
     pages.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h4 class="arh4">${C.pages} · ${scan.pages?.length||0}</h4><button type="button" class="cmbtn sm" data-capture-refresh>${C.refresh}</button></div><p class="arnote">${C.noEdit}</p>`+
       (scan.pages?.length?scan.pages.map(page=>`<article class="arpanel" style="padding:12px;margin:10px 0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b>${esc(C.page(page.page_no||page.task||page.no))}</b><span class="arnote">${page.ocr_status==="done"?C.done:page.ocr_status==="failed"?esc(arVisionError(page.ocr_error)||C.failed):C.reading}</span><button type="button" class="cmbtn sm" data-capture-remove="${esc(page.id)}" ${busy||!scan.open?"disabled":""}>${C.remove}</button></div>
-        <div class="arsheet-photo-saved"><button type="button" class="cmbtn sm" data-monthly-photo="${esc(page.id)}" style="margin-top:8px">${C.original}</button><p class="arinfo" hidden></p><img alt="${C.original}" hidden style="max-width:100%;height:auto"></div>
-        <details style="margin-top:8px"><summary>${C.read}</summary><div class="arsheet-preview">${arSheetWorkingPreview(page.text||"")}</div></details></article>`).join(""):`<p class="arnote">${C.none}</p>`)+
+        <div class="armonthly-page-grid"><div class="arsheet-photo-saved armonthly-page-photo"><button type="button" class="cmbtn sm" data-monthly-photo="${esc(page.id)}" data-monthly-photo-auto>${C.loadingPhoto}</button><p class="arinfo" hidden></p><img alt="${C.original}" hidden data-capture-zoom="${esc(page.id)}"></div>
+        <div class="armonthly-page-read"><b class="armonthly-page-read-h">${C.read}</b><div class="arsheet-preview">${page.text?arSheetWorkingPreview(page.text):`<p class="arnote">${page.ocr_status==="failed"?C.failed:C.reading}</p>`}</div></div></div>
+        <button type="button" class="cmbtn sm armonthly-page-zoom" data-capture-zoom="${esc(page.id)}">⤢ ${C.zoom}</button></article>`).join(""):`<p class="arnote">${C.none}</p>`)+
       (scan.parts?.some(part=>part.answer||part.working)?`<h4 class="arh4">${C.read}</h4><div class="arsheet-saved">${scan.parts.filter(part=>part.answer||part.working).map(part=>`<section><h4>${esc(arMonthlyPartNumber(p,part.id))}</h4><b>${arSheetT().answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${arSheetT().working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}</div>`:"")+
       (!scan.open?`<p class="cmnote">${scan.status==="submitted"?C.closed:C.expired}</p>${scan.status==="submitted"?`<button type="button" class="cmbtn sm" data-capture-new>${C.newAnswer}</button>`:""}`:"");
     pages.querySelector("[data-capture-refresh]").onclick=()=>refresh(true);
@@ -706,6 +727,8 @@ function arBindMonthlyCapture(root,p,alive,{scanId=null,onChange=()=>{},onBusy=(
     };
     const nextButton=pages.querySelector("[data-capture-new]");if(nextButton)nextButton.onclick=()=>start(true);
     arMath(pages);arBindMonthlyPhotos(pages,current);
+    for(const button of pages.querySelectorAll("[data-monthly-photo-auto]"))button.click();
+    for(const el of pages.querySelectorAll("[data-capture-zoom]"))el.onclick=()=>arMonthlyPageZoom(p,scan,el.dataset.captureZoom,pages,C);
   };
   const apply=next=>{if(!current()||!next)return;const previous=scan;scan=next;scanId=next.id;renderPages();onChange(next,previous);};
   async function paintQr(){
@@ -738,7 +761,7 @@ function arMonthlyAnswerHtml(p, ocrOn) {
     <p class="arnote">${S.release(p.closes_at ? arDeadline(p.closes_at + 1) : "")}</p><p class="arnote">${S.authorship}</p><p class="arnote">${S.retained}</p>
     ${!signed ? `<p>${T.loginToSubmit} <a class="cmbtn sm pri" href="#/login" id="arLogin">${T.login}</a></p>` : ""}
     ${exhausted ? `<p class="cmnote">${S.exhausted}</p>` : ""}
-    <form id="arSheetF" class="armonthly-sheet">${arVisionHtml(p,p.provider||"gemini")}
+    <form id="arSheetF" class="armonthly-sheet">${arMonthlyVisionHtml()}
       <div class="arsheet-modes" role="group" aria-label="${S.h}"><button type="button" class="cmbtn sm pri" data-sheet-mode="typed" aria-pressed="true">${S.typed}</button><button type="button" class="cmbtn sm" data-sheet-mode="photo" aria-pressed="false">${S.photo}</button></div>
       <div class="arsheet-photo" hidden>${arMonthlyCaptureHtml(p,ocrOn)}</div>
       <div class="arsheet-typed">
@@ -944,7 +967,7 @@ async function arProblem(root, alive, id,preloaded) {
         <div class="armeta">${arProblemKindBadge(p)}<span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
           <span>${p.points}${T.pts}</span>${p.answerSheet&&Number.isFinite(p.best)?`<span>${T.best} ${p.best} / ${p.points}${T.pts}</span>`:""}<span>${T.deadline} ${arDeadline(p.closes_at)}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source && !p.answerSheet ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
       ${arMonthlyExperimentHtml(p)}
-      ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(arMonthlyPartNumber(p,c.id,c.display_id))}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
+      ${p.criteria && p.closed ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(arMonthlyPartNumber(p,c.id,c.display_id))}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
     </div>
     <div class="arpanel" id="arAns">
       ${p.answerSheet?.parts?.length ? arMonthlyAnswerHtml(p,ocrOn) : `<h3>${T.answer}</h3>
@@ -952,7 +975,7 @@ async function arProblem(root, alive, id,preloaded) {
         <form id="arF" class="arshort"><input name="a" inputmode="decimal" autocomplete="off" placeholder="${T.answerPh}" maxlength="60">${p.unit ? `<span>${esc(p.unit)}</span>` : ""}
           <button class="cmbtn pri" type="submit">${T.submit}</button></form>` : `
         <form id="arF" class="aressay">
-          ${arVisionHtml(j,p.provider||"gemini")}
+          ${arMonthlyVisionHtml()}
           <div class="arocr">
             <label class="cmbtn sm ${ocrOn ? "" : "dis"}">📷 ${T.photo}<input type="file" accept="image/jpeg,image/png,image/webp" capture="environment" hidden ${ocrOn ? "" : "disabled"}></label>
             <label class="archk"><input type="checkbox" name="math" checked> ${T.mathMode}</label>

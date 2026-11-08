@@ -292,3 +292,39 @@ test('legacy submissions share the cap and changing the answer mode cannot reset
     assert.equal(providerCalls(), 2);
   });
 });
+
+test('MONTHLY_GRADE_PROVIDER/MODEL: GPT-6.1 Terra grades every candidate; when it fails the chosen provider grades instead', async () => {
+  await environment(async ({ api, sql, env }) => {
+    Object.assign(env, { MONTHLY_GRADE_PROVIDER: 'openai', MONTHLY_GRADE_MODEL: 'gpt-6.1-terra', OPENAI_API_KEY: 'test-no-real-key' });
+    const gemini = globalThis.fetch, openai = [];
+    let openaiDown = false;
+    globalThis.fetch = async (url, init) => {
+      if (!String(url).startsWith('https://api.openai.com/')) return gemini(url, init);
+      const request = JSON.parse(init.body);
+      openai.push(request.model);
+      assert.match(String(url), /\/v1\/responses$/, 'GPT-6 models are called through the Responses API');
+      assert.equal(request.reasoning?.effort, 'medium');
+      assert.ok(JSON.stringify(request.input).toLowerCase().includes('json'), "OpenAI's json_object needs the word in the input");
+      if (openaiDown) return new Response(JSON.stringify({ error: { code: 'rate_limit_exceeded' } }), { status: 429 });
+      const rubric = JSON.parse(sql.prepare('SELECT rubric FROM problems WHERE id=4').get().rubric);
+      const assessment = { scores: rubric.map(c => ({ id: c.id, got: c.id === 'a' ? c.max : 0, decision: c.id === 'a' ? 'met' : 'not_met',
+        note: 'Terra test assessment', evidence: c.id === 'a' ? [equation] : [] })), feedback: [], confidence: 0.99 };
+      return Response.json({ output: [{ type: 'message', content: [{ type: 'output_text', text: JSON.stringify(assessment) }] }], usage: { input_tokens: 10, output_tokens: 10 } });
+    };
+    await api('/problems/4');
+    const first = await api('/problems/4/submit', { body: payload('terra') });
+    assert.equal(first.status, 200);
+    let saved = sql.prepare("SELECT score, detail FROM submissions WHERE problem_id=4 ORDER BY id DESC LIMIT 1").get();
+    assert.equal(saved.score, 10);
+    assert.equal(JSON.parse(saved.detail).grader, 'openai:gpt-6.1-terra');
+    assert.equal(JSON.parse(saved.detail).provider, 'gemini', 'the candidate keeps the provider they chose');
+    assert.deepEqual(openai, ['gpt-6.1-terra']);
+    openaiDown = true;
+    const second = await api('/problems/4/submit', { body: payload('fallback') });
+    assert.equal(second.status, 200);
+    saved = sql.prepare("SELECT score, detail FROM submissions WHERE problem_id=4 ORDER BY id DESC LIMIT 1").get();
+    assert.equal(saved.score, 10);
+    assert.equal(JSON.parse(saved.detail).fixed_grader_error.code, 'vision_provider_rate_limited', 'why it fell back is kept for the operator');
+    assert.match(JSON.parse(saved.detail).grader, /^gemini/, 'graded by the chosen provider instead');
+  });
+});

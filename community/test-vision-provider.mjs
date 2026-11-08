@@ -197,7 +197,7 @@ test('OpenAI Responses API (bench): reasoning with tools, the reasoning items se
  assert.match(seen[0].url,/\/v1\/responses$/);
  const b=seen[0].body;assert.deepEqual(b.reasoning,{effort:'low'});assert.equal(b.service_tier,'flex');assert.equal(b.store,false);
  assert.deepEqual(b.text.format,{type:'json_object'});assert.equal(b.tools[0].name,'f');assert.deepEqual(b.include,['reasoning.encrypted_content']);
- assert.deepEqual(b.input[0].content.map(c=>c.type),['input_text','input_text','input_image']);
+ assert.deepEqual(b.input[0].content.map(c=>c.type),['input_text','input_text','input_image','input_text']);assert.match(b.input[0].content.at(-1).text,/JSON/);
  assert.deepEqual(asked,[['f',{a:1}]]);
  const back=seen[1].body.input.slice(1);
  assert.deepEqual(back.map(x=>x.type),['reasoning','function_call','function_call_output'],'the turn goes back with its reasoning');
@@ -311,4 +311,17 @@ test('Gemini through Vertex AI (a publisher model URL) takes the bearer token to
  assert.equal(seen[0].url,v);assert.equal(seen[0].headers.Authorization,'Bearer tok');
  await visionJSON({GEMINI_API_KEY:'g'},{provider:'gemini',geminiUrl:'https://aiplatform.googleapis.com/v1/projects/p-1/locations/global/publishers/anthropic/models/claude-x:generateContent',geminiBearer:'tok',fetchImpl,parts:[{text:'x'}]});
  assert.doesNotMatch(seen[1].url,/aiplatform/);
+});
+
+test('Gemini never receives JSON-Schema keys its responseSchema rejects (additionalProperties made every answer-sheet read a 400)', async () => {
+  const { visionJSON } = await import('./src/vision-provider.js');
+  let sent = null;
+  const fetchImpl = async (url, init) => { sent = JSON.parse(init.body); return Response.json({ candidates: [{ content: { parts: [{ text: '{"parts":[]}' }] }, finishReason: 'STOP' }], usageMetadata: { promptTokenCount: 1, candidatesTokenCount: 1 } }); };
+  const schema = { type: 'object', additionalProperties: false, properties: { parts: { type: 'array', items: { type: 'object', additionalProperties: false,
+    properties: { id: { type: 'string' } }, required: ['id'] } } }, required: ['parts'] };
+  await visionJSON({ GEMINI_API_KEY: 'test-key' }, { provider: 'gemini', model: 'gemini-3.8-flash', input: 'x', schema, fetchImpl });
+  assert.ok(sent, 'request sent');
+  assert.ok(!JSON.stringify(sent.generationConfig.responseSchema).includes('additionalProperties'));
+  assert.deepEqual(sent.generationConfig.responseSchema.properties.parts.items.required, ['id']);
+  assert.ok(schema.additionalProperties === false, "the caller's schema is left as it was");
 });

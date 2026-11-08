@@ -624,3 +624,33 @@ html[data-theme="dark"] body.hl-site .hlx-done{color:#6fcf97}
   html.hlx-has-tabs .hlai-btn{bottom:calc(74px + env(safe-area-inset-bottom,0px))!important}
 }
 @media print{#hlxTabs,#hlxSearch,.hlx-dim{display:none!important}}
+
+/* monthly photographed answers: each sent page as in exam/contest grading, the photo beside its recognized text, and an
+   enlarged view (arMonthlyPageZoom) with the photo large beside the full transcript */
+body.hl-site .ar .armonthly-page-grid{display:grid;grid-template-columns:minmax(150px,42%) minmax(0,1fr);gap:14px;margin-top:10px;align-items:start}
+body.hl-site .ar .armonthly-page-photo img{display:block;width:100%;height:auto;max-height:420px;object-fit:contain;border:1px solid var(--grid-fine,#dce7f1);border-radius:8px;background:#fff;cursor:zoom-in}
+body.hl-site .ar .armonthly-page-read{max-height:420px;overflow:auto;border:1px solid var(--grid-fine,#dce7f1);border-radius:8px;padding:10px 12px;background:var(--paper,#fbfcfd)}
+body.hl-site .ar .armonthly-page-read-h{display:block;font-size:13px;margin-bottom:6px}
+body.hl-site .ar .armonthly-page-zoom{margin-top:8px}
+@media(max-width:640px){body.hl-site .ar .armonthly-page-grid{grid-template-columns:1fr}}
+.armonthly-zoom{position:fixed;inset:0;z-index:1000;background:rgba(10,14,24,.62);display:flex;align-items:center;justify-content:center;padding:18px}
+.armonthly-zoom-card{background:var(--paper,#fbfcfd);color:var(--ink,#151a2d);border-radius:12px;width:min(1400px,100%);max-height:calc(100vh - 36px);display:flex;flex-direction:column;box-shadow:0 18px 60px rgba(0,0,0,.35)}
+.armonthly-zoom-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--grid-fine,#dce7f1)}
+.armonthly-zoom-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;padding:16px;overflow:hidden;min-height:0}
+.armonthly-zoom-photo{overflow:auto;max-height:calc(100vh - 120px)}
+.armonthly-zoom-photo img{display:block;width:100%;height:auto;border-radius:8px;background:#fff}
+.armonthly-zoom-read{overflow:auto;max-height:calc(100vh - 120px);padding-right:6px}
+@media(max-width:860px){.armonthly-zoom-body{grid-template-columns:1fr;overflow:auto}.armonthly-zoom-photo,.armonthly-zoom-read{max-height:none}}
+body.hl-site .ar .armonthly-page-photo [hidden]{display:none!important}
+
+/* the one-off arrival announcement (site-ux.js notice) */
+.hlx-notice{position:fixed;inset:0;z-index:1200;background:rgba(10,14,24,.5);display:flex;align-items:center;justify-content:center;padding:18px}
+.hlx-notice-card{background:var(--paper,#fbfcfd);color:var(--ink,#151a2d);border-radius:14px;max-width:420px;width:100%;padding:26px 24px 18px;box-shadow:0 18px 60px rgba(0,0,0,.3)}
+.hlx-notice-card h2{font-size:21px;margin:0 0 12px;line-height:1.35}
+.hlx-notice-card p{margin:0 0 6px;font-size:15px;line-height:1.6;color:var(--graphite,#3a4256)}
+.hlx-notice-actions{display:flex;gap:10px;margin-top:18px}
+.hlx-notice-go{flex:1;text-align:center;background:#6f4dcc;color:#fff!important;border-radius:10px;padding:11px 14px;font-weight:600;text-decoration:none}
+.hlx-notice-actions button{background:transparent;border:1px solid var(--grid-bold,#b4cadc);border-radius:10px;padding:11px 16px;color:inherit;cursor:pointer}
+.hlx-notice-never{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;color:var(--graphite,#5a6378);cursor:pointer}
+html[data-theme="dark"] .hlx-notice-card{background:#1c1825;color:#ede7f6}
+html[data-theme="dark"] .hlx-notice-card p{color:#c9c0d8}

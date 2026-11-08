@@ -69,6 +69,22 @@ DEEPSEEK_OCR_MODEL = "deepseek-flash"
 # and a moderation of every item scored lower; handing the grader the papers as well (LAB_GRADE_PDFS) gained nothing.
 # empty, not absent: keep_vars would otherwise keep the old "deepseek" on the Worker
 LAB_ONLY_PROVIDER = ""
+# The monthly problems are graded by GPT-6.1 Terra (through the Seoul egress) for every candidate, the owner's choice of
+# 2026-11-08; if that call fails, the provider the candidate chose grades instead (index.js monthlyGrader).
+MONTHLY_GRADE_PROVIDER = "openai"
+# and their answer photos are read by Gemini 3.8 Flash; candidates no longer pick a provider for them
+MONTHLY_OCR_MODEL = "gemini-3.8-flash"
+MONTHLY_OCR_THINKING = "low"
+# the lab reads' limits, then 3.1 Flash-Lite for a page that loops, times out or is refused (index.js monthlyWithFallback)
+MONTHLY_OCR_TIMEOUT_MS = "70000"
+MONTHLY_OCR_MAX_TOKENS = "7000"
+MONTHLY_OCR_FALLBACK_MODEL = "gemini-3.1-flash-lite"
+MONTHLY_GRADE_MODEL = "gpt-6.1-terra"
+# through the Responses API, with medium reasoning
+MONTHLY_GRADE_API = "responses"
+MONTHLY_GRADE_THINKING = "medium"
+# if Terra fails: Gemini 3.8 Flash (the candidate's reader default, 3.5 Flash-Lite, marked every part uncertain)
+MONTHLY_GRADE_FALLBACK_MODEL = "gemini-3.8-flash"
 LAB_PIPELINE = "mixed"
 LAB_SCHEME_PROVIDER = "deepseek"
 # Theory pages are read by Gemini 3.8 Flash (the owner's decision, 2026-11-03). Reading bench of that day, 40 checks on

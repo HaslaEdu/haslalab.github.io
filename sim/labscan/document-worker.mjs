@@ -3,7 +3,7 @@
    DocCornerNet (scanic-ml, MIT, served from this site: vendor/scanic-ml-0.2.0), whose quad is fitted to the measured
    edges like any other before chooseDocument picks one. The model is downloaded as doccornernet_lean.f16.bin (weights
    as fp16, 0.84 MB gzipped instead of 1.67 MB) and rebuilt into the fp32 model here. No photo leaves the device. */
-import { toGray, detectDocumentQuadGray, findPageQuadGray, chooseDocument, decodeCornerModel, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=2d410ba50bfe';
+import { toGray, detectDocumentQuadGray, findPageQuadGray, chooseDocument, decodeCornerModel, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=83f84d19686e';
 
 const ML_ASSETS = new URL('../../vendor/scanic-ml-0.2.0/', import.meta.url).href;
 let ml = null, mlFailedAt = 0;
