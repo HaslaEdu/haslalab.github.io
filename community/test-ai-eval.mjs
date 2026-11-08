@@ -222,8 +222,27 @@ test('the problem picker looks past the first few problems and says why it found
   const { pickBankProblem } = await import('./src/ai-eval.js');
   const env = {DB: d1(), PROBLEM_BANK: bank({figure: true})};
   await ensureAiEval(env.DB);
-  await assert.rejects(pickBankProblem(env, env.DB, () => 0.3, 'teacher'), /no problem with a text solution: seen=0 figure=\d+ length=0 no_solution=0 error=0/);
+  await assert.rejects(pickBankProblem(env, env.DB, () => 0.3, 'teacher'), /no problem with a text solution: seen=0 held_out=0 figure=\d+ length=0 no_solution=0 error=0/);
   const ok = {DB: d1(), PROBLEM_BANK: bank()};
   await ensureAiEval(ok.DB);
   assert.match((await pickBankProblem(ok, ok.DB, () => 0.3, 'teacher')).id, /^q\d$/);
+});
+
+test('a problem held out for Hasla AI\'s evaluation is never picked for a training case', async () => {
+  const { pickBankProblem } = await import('./src/ai-eval.js');
+  const { HOLDOUT_BANK_IDS } = await import('./src/ai-holdout.js');
+  assert.equal(HOLDOUT_BANK_IDS.size, 30);
+  const held = [...HOLDOUT_BANK_IDS][0];
+  const real = bank();
+  const env = {DB: d1(), PROBLEM_BANK: {async fetch(url) {
+    const u = new URL(url);
+    if (u.pathname.endsWith('/recommendations')) return Response.json({items: [{id: held}, {id: 'q1'}]});
+    return real.fetch(url);
+  }}};
+  await ensureAiEval(env.DB);
+  for (let i = 0; i < 5; i++) assert.equal((await pickBankProblem(env, env.DB, () => i / 5, 'teacher')).id, 'q1');
+  const only = {DB: env.DB, PROBLEM_BANK: {async fetch(url) {
+    return new URL(url).pathname.endsWith('/recommendations') ? Response.json({items: [{id: held}]}) : real.fetch(url);
+  }}};
+  await assert.rejects(pickBankProblem(only, only.DB, () => 0.3, 'teacher'), /held_out=3 /);
 });

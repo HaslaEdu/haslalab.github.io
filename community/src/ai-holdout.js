@@ -1,0 +1,36 @@
+/* Problem-bank problems held out from Hasla AI's training (HaslaEdu/hasla-ai eval/holdout/, rule L4: evaluation
+   problems are never trained on). They make the Korean part of the held-out set the reasoning model is scored on, so
+   the nightly self-test and teacher cases, whose approved answers become training data, never pick them.
+   Generated from eval/holdout/exclude.json (bank_ids); keep the two in step. */
+export const HOLDOUT_BANK_IDS = new Set([
+  'q_c18ce4940f1d9267fc2b5c9b8ab30c7ddc6ce463b6bb29fffd4f459cb7a8f7a1',
+  'q_24c8aaeb88f7b2bafac1b6fa0cb7cd8c093d0139d2645adb306e911f884755fd',
+  'q_06c00159eb1ea58101d2bcb04eed7e16127155c6489fc6c421f16837e03f716d',
+  'q_96b0cb006b96fd9428ee6b976bf894d00843031b17b2861d11e0af717bcd0183',
+  'q_a11f76fec5d86db0a7283a23c979494d056e9c01bd92e66b22d6de9379e604ec',
+  'q_9abdfc74942757fd14f84b9362968632cb02ca58857320ad41fd5e6ece0ebd64',
+  'q_49190f9d13e8bf9022289aaced6e2af31a16c0a381cdbb21e78d732b2104f080',
+  'q_034116c4137c5de78e0bd32c81f72f2db53cfd2058fe8a1b512ffdfc0b884fe3',
+  'q_fb75344e7165e2c4ecf9ea22dc3c9d6356338e416464a3337a2088f52f4c6b15',
+  'q_38d8f5f32e107078fa207ed32066cd3d19489877b40113f7e97bf29a92c7ed31',
+  'q_d33bf3e00429b011cb605cd1c8908420fe6f3b5383d5e62aa8adafce0919afbd',
+  'q_99a1bfcd8100feda4756a3ae8c303bf04212bfa79cf5d72fb195bdc287c6952f',
+  'q_f1ec5a741b8fe38dbb23be711f0769a3c2a06a3ba4d0170ab53e7a155aa4f734',
+  'q_b3920a16e227eacae9004e0e11da2f04cc371523cf5a89794e7ad49c4b72428e',
+  'q_5a20fe66c4d632045149e08834578cc03d58c35042945edd4987dd4a6d896272',
+  'q_5cdb5ddc1e3afe657f636e344fce0495cf3cf07b009f8702429443eba60f7045',
+  'q_5e7122a2266c2946fedaf1ba4cb52b1368d9f21d77ebf3484affc6560c039c51',
+  'q_2e4efc2fed249f219dbf7ab8fd9bdaae0d42a3b0f5aa9a32117d7458aae278ed',
+  'q_f25ae5abd773167f1d374af722187926ab0734a5cff7f272ed6c37046b4de392',
+  'q_a923c8861b547fd052287fad590a1280b62a9fdd8717bc8903544ee90006b26b',
+  'q_1f1b0e7429d3115f99c836a21d6b6f02b6c013cb921b42daf80fad0ced147770',
+  'q_fec9d4fdbb7830c569d100763aa416e6277b12adf3fdc97c890f092fbd59a219',
+  'q_896f6172ac5ec100283cab76677bdc348b01325ce70ffb994937381b21da17ea',
+  'q_493e86ca4a67f294999e7db8a1f7bd87c696f9f3aa3d76aedefc45c5a65db9b0',
+  'q_ce53d55cb69f7808fe83bcc07b84c034f8f02ce5e88665b4a41f219186416e31',
+  'q_28391e0f751ea5ee7a814e78fe6cd386ee39efa6deed382695e319f50dacff27',
+  'q_d8f1738cce167727712468bae520e9e9a2e36a1d532b795f7b099a7aaa322394',
+  'q_47d228c2bd8ea468d265eaef5300b70afc77a8e1ab4013f622fec57a489cc299',
+  'q_7fa5f158a662173ac7bae041fa49e3058244f33af56cb7000b910f59b1c5361e',
+  'q_49feb9ab564ac7d225fa6f8908fa06955439128401f992ff8b2cd3264be87863',
+]);

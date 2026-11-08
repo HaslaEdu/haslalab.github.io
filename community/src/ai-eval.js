@@ -15,6 +15,7 @@ import { answer, runModel, readCompletion, stripThinking, findOlympiadProblems, 
 import { remember, forget, usageStats, pruneUsage, forgetFastCache } from './ai-memory.js';
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
 import { scrubPersonal } from './pii.js';
+import { HOLDOUT_BANK_IDS } from './ai-holdout.js';
 
 export const AI_EVAL_PATH = '/api/admin/ai-eval';
 export { AI_EVAL_SQL, ensureAiEval } from './ai-memory.js';
@@ -62,12 +63,15 @@ const versionText = x => x?.selected_version?.text || x?.versions?.find(v => v.l
    each, and a miss says why each problem was passed over. */
 export async function pickBankProblem(env, db, rand = Math.random, kind = 'bank') {
   if (!env.PROBLEM_BANK) throw new Error('problem bank unavailable');
-  const why = {seen: 0, figure: 0, length: 0, no_solution: 0, error: 0}, start = Math.floor(rand() * 5);
+  const why = {seen: 0, held_out: 0, figure: 0, length: 0, no_solution: 0, error: 0}, start = Math.floor(rand() * 5);
   for (let step = 0; step < 3; step++) {
     const stars = 1 + (start + step * 2) % 5;
     /* 30 is the most the bank serves (more is a 400: invalid_pagination), so every case failed on 2026-11-07 */
     const {items = []} = await bankJson(env, `/recommendations?${new URLSearchParams({lang: 'ko', limit: '30', stars: String(stars)})}`).catch(() => ({items: []}));
-    const ids = [...new Set(items.map(i => i.id).filter(Boolean))];
+    const all = [...new Set(items.map(i => i.id).filter(Boolean))];
+    /* held out for Hasla AI's evaluation: never a training case (ai-holdout.js) */
+    const ids = all.filter(id => !HOLDOUT_BANK_IDS.has(id));
+    why.held_out += all.length - ids.length;
     if (!ids.length) continue;
     const seen = new Set((await db.prepare(`SELECT ref FROM ai_eval WHERE kind=? AND created_at>unixepoch()-7776000 AND ref IN (${ids.map(() => '?').join(',')})`)
       .bind(kind, ...ids).all()).results.map(r => r.ref));
