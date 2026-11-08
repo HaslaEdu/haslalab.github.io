@@ -254,7 +254,7 @@ const monthlyThinking = env => String(env.MONTHLY_OCR_THINKING || 'low').trim();
    output cap on 10-30% of handwritten pages (the 2026-11-01 bench), and with 16k tokens and 170 s a looping page kept the
    candidate waiting ~100 s. A page that times out, loops or is refused is read at once by MONTHLY_OCR_FALLBACK_MODEL
    (3.1 Flash-Lite, ~10 s), as the lab's reads fall back (lab_calls of 2026-11-03: 3.8 Flash 26 s a page when it finishes) */
-const monthlyWait = env => Math.max(30000, Math.min(240000, Number(env.MONTHLY_OCR_TIMEOUT_MS) || 70000));
+const monthlyWait = env => Math.max(30000, Math.min(240000, Number(env.MONTHLY_OCR_TIMEOUT_MS) || 90000));
 const monthlyTokens = (env, read) => Math.max(2000, Math.min(16384, Number(env.MONTHLY_OCR_MAX_TOKENS) || 7000)) + (read ? 2000 : 0);
 const monthlyWaitOptions = env => ({ timeoutMs: monthlyWait(env), signal: labProviderSignal(env, monthlyWait(env)) });
 const MONTHLY_FALLBACK_CODES = ['vision_provider_rate_limited', 'vision_provider_failed', 'vision_model_unavailable', 'vision_response_truncated', 'vision_provider_timeout'];

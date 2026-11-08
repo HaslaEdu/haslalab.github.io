@@ -76,7 +76,7 @@ MONTHLY_GRADE_PROVIDER = "openai"
 MONTHLY_OCR_MODEL = "gemini-3.8-flash"
 MONTHLY_OCR_THINKING = "low"
 # the lab reads' limits, then 3.1 Flash-Lite for a page that loops, times out or is refused (index.js monthlyWithFallback)
-MONTHLY_OCR_TIMEOUT_MS = "70000"
+MONTHLY_OCR_TIMEOUT_MS = "90000"
 MONTHLY_OCR_MAX_TOKENS = "7000"
 MONTHLY_OCR_FALLBACK_MODEL = "gemini-3.1-flash-lite"
 MONTHLY_GRADE_MODEL = "gpt-6.1-terra"
