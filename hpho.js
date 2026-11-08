@@ -6,6 +6,8 @@
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const COUNTRIES = "AD AE AF AG AI AL AM AO AR AS AT AU AW AZ BA BB BD BE BF BG BH BI BJ BM BN BO BR BS BT BW BY BZ CA CD CF CG CH CI CK CL CM CN CO CR CU CV CW CY CZ DE DJ DK DM DO DZ EC EE EG ER ES ET FI FJ FM FO FR GA GB GD GE GH GI GL GM GN GQ GR GT GU GW GY HK HN HR HT HU ID IE IL IN IQ IR IS IT JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MG MH MK ML MM MN MO MR MT MU MV MW MX MY MZ NA NC NE NG NI NL NO NP NR NZ OM PA PE PF PG PH PK PL PR PS PT PW PY QA RO RS RU RW SA SB SC SD SE SG SI SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TG TH TJ TL TM TN TO TR TT TV TW TZ UA UG US UY UZ VA VC VE VG VI VN VU WS XK YE ZA ZM ZW".split(" ");
   /* the server's AID_AUTO_COUNTRIES (community/src/hpho.js): the fee is waived there without asking */
+  /* fee assistance is on hold (community/src/hpho.js AID_ENABLED): its section and form fields are not shown */
+  const AID_ON = false;
   const AID_AUTO = new Set("AF BF BI CF TD CD ER ET GM GW KP LR MG MW ML MZ NE RW SL SO SS SD SY TG UG YE AO BD BJ BT BO KH CM CV KM CG CI DJ EG SZ GH GN HT HN IN KE KI KG LA LB LS MR FM MA MM NP NI NG PK PG PH WS ST SN SB LK TJ TZ TL TN UZ VU VN PS ZM ZW".split(" "));
   const T = {
     ko: {
@@ -100,7 +102,7 @@
       <p class="hpho-note">${x.note}</p>
       <ul class="hpho-facts">${x.facts.map(([a, b]) => `<li><b>${a}</b><span>${b}</span></li>`).join("")}</ul>
       <section class="hpho-round" id="hphoRound" aria-live="polite"><p class="hpho-muted">…</p></section>
-      <section class="hpho-rules"><h2>${x.aidTitle}</h2><p>${x.aidIntro}</p><ul>${x.aidRules.map(r => `<li>${r}</li>`).join("")}</ul></section>
+      ${AID_ON ? `<section class="hpho-rules"><h2>${x.aidTitle}</h2><p>${x.aidIntro}</p><ul>${x.aidRules.map(r => `<li>${r}</li>`).join("")}</ul></section>` : ""}
       <section class="hpho-rules"><h2>${x.rulesTitle}</h2><ol>${x.rules.map(r => `<li>${r}</li>`).join("")}</ol></section>
     </div>`;
   }
@@ -137,7 +139,7 @@
       <label class="hpho-check"><input type="checkbox" name="pledge" required> ${x.pledge}</label>
       <label class="hpho-check"><input type="checkbox" name="proctoring" required> ${x.proctor}</label>
       <label class="hpho-check"><input type="checkbox" name="identity_notice" required> ${x.identity}</label>
-      ${r.fee_usd ? `<div class="hpho-aid"><p class="hpho-muted" data-hpho-aid-auto hidden>${x.aidAuto}</p>
+      ${r.fee_usd && AID_ON ? `<div class="hpho-aid"><p class="hpho-muted" data-hpho-aid-auto hidden>${x.aidAuto}</p>
         <div data-hpho-aid-ask><label class="hpho-check"><input type="checkbox" name="aid_request"${sel.aid && sel.aid !== "none" && sel.aid !== "auto" ? " checked" : ""}> ${x.aidAsk}</label>
         <div data-hpho-aid-fields hidden><label>${x.aidReason}<select name="aid_reason"><option value=""></option>${Object.entries(x.aidReasons).map(([k, v]) => `<option value="${k}"${sel.aid_reason === k ? " selected" : ""}>${v}</option>`).join("")}</select></label>
         <label>${x.aidNote}<textarea name="aid_note" maxlength="300" rows="3">${esc(sel.aid_note || "")}</textarea></label></div></div></div>` : ""}

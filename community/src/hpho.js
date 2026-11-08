@@ -27,6 +27,8 @@ const HPHO_COLUMNS = [`ALTER TABLE hpho_entries ADD COLUMN aid TEXT NOT NULL DEF
 /* the World Bank's low- and lower-middle-income economies (FY2026 list as HaslaEdu applies it; check it before each round) */
 export const AID_AUTO_COUNTRIES = new Set(('AF BF BI CF TD CD ER ET GM GW KP LR MG MW ML MZ NE RW SL SO SS SD SY TG UG YE ' +
   'AO BD BJ BT BO KH CM CV KM CG CI DJ EG SZ GH GN HT HN IN KE KI KG LA LB LS MR FM MA MM NP NI NG PK PG PH WS ST SN SB LK TJ TZ TL TN UZ VU VN PS ZM ZW').split(' '));
+/* on hold (the owner, 2026-11-08): no automatic waiver and no requests until HaslaEdu decides how to target it */
+export const AID_ENABLED = false;
 export const AID_REASONS = ['family_income', 'public_assistance', 'school_referral', 'other'];
 export const AID_STATES = ['none', 'auto', 'pending', 'approved', 'declined'];
 
@@ -72,7 +74,8 @@ export function checkEntry(body, { year = new Date().getUTCFullYear() } = {}) {
   const minor = year - birth < 19;                                            /* may still be 18 on the day: ask */
   if (minor && body?.guardian_consent !== true) return { error: 'guardian_consent_required' };
   let aid = 'none', aid_reason = null, aid_note = null;
-  if (AID_AUTO_COUNTRIES.has(country)) aid = 'auto';
+  if (!AID_ENABLED) { /* assistance on hold: every candidate owes the round's fee */ }
+  else if (AID_AUTO_COUNTRIES.has(country)) aid = 'auto';
   else if (body?.aid_request === true) {
     aid_reason = AID_REASONS.includes(body.aid_reason) ? body.aid_reason : null;
     if (!aid_reason) return { error: 'bad_aid_reason' };
