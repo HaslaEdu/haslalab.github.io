@@ -391,7 +391,7 @@ function arResult(s, prob) {
     return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span></div>${record}<p class="arnote">${S.release(releaseAt ? arDeadline(releaseAt + 1) : "")}</p>`;
   }
   if (d.kind === "short") return `<div class="arres ${d.ok ? "ok" : "no"}"><b>${d.ok ? "✓ " + T.right : "✗ " + T.wrong}</b><span>${s.score} / ${prob.points}${T.pts}</span></div>`;
-  return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span>${d.grader ? `<small>${T.grader}: ${esc(d.grader)}</small>` : ""}</div>${record}
+  return `<div class="arres ${s.score >= prob.points ? "ok" : ""}"><b>${T.score}</b><span>${s.score} / ${prob.points}${T.pts}</span>${d.grader && cm.me?.role === "admin" ? `<small>${T.grader}: ${esc(d.grader)}</small>` : ""}</div>${record}
     ${d.evidenceIssue ? `<p class="arwarn">${T.evidenceIssue}</p>` : ""}
     ${(d.scores || []).length ? `<table class="cmtbl artbl"><thead><tr><th style="width:42%">${T.criteria}</th><th style="width:70px">${T.score}</th><th>${T.evidence}</th></tr></thead><tbody>
       ${d.scores.map((c) => `<tr><td class="t"><b>${esc(arMonthlyPartNumber(prob,c.id,c.display_id))}</b> ${esc(c.name)}<div class="arnote">${esc(c.note)}</div></td>
@@ -415,6 +415,8 @@ function arVisionHtml(source, provider = "gemini", locked = false) {
   const selected = AR_VISION_PROVIDERS.includes(provider) ? provider : "gemini";
   return `<label class="arnote" style="display:block;margin:10px 0">${lang==="en"?"OCR, grading and feedback":"OCR·채점·피드백"}<select data-vision-provider aria-label="${lang==="en"?"Grading provider":"채점 제공자"}" ${locked?"disabled":""}>${arVisionCapabilities(source).map(row=>`<option value="${row.id}" ${row.id===selected?"selected":""} ${row.available?"":"disabled"}>${row.id}</option>`).join("")}</select></label>`;
 }
+/* monthly problems: no provider picker (Terra grades, Gemini 3.8 Flash reads the photos); the field stays, hidden */
+function arMonthlyVisionHtml() { return `<input type="hidden" data-vision-provider value="gemini">`; }
 function arVisionField(root) { try { return root.querySelector("[data-vision-provider]"); } catch (_) { return null; } }
 function arVisionProvider(root, fallback = "gemini") {
   const value=arVisionField(root)?.value||fallback;return AR_VISION_PROVIDERS.includes(value)?value:"gemini";
@@ -738,7 +740,7 @@ function arMonthlyAnswerHtml(p, ocrOn) {
     <p class="arnote">${S.release(p.closes_at ? arDeadline(p.closes_at + 1) : "")}</p><p class="arnote">${S.authorship}</p><p class="arnote">${S.retained}</p>
     ${!signed ? `<p>${T.loginToSubmit} <a class="cmbtn sm pri" href="#/login" id="arLogin">${T.login}</a></p>` : ""}
     ${exhausted ? `<p class="cmnote">${S.exhausted}</p>` : ""}
-    <form id="arSheetF" class="armonthly-sheet">${arVisionHtml(p,p.provider||"gemini")}
+    <form id="arSheetF" class="armonthly-sheet">${arMonthlyVisionHtml()}
       <div class="arsheet-modes" role="group" aria-label="${S.h}"><button type="button" class="cmbtn sm pri" data-sheet-mode="typed" aria-pressed="true">${S.typed}</button><button type="button" class="cmbtn sm" data-sheet-mode="photo" aria-pressed="false">${S.photo}</button></div>
       <div class="arsheet-photo" hidden>${arMonthlyCaptureHtml(p,ocrOn)}</div>
       <div class="arsheet-typed">
@@ -952,7 +954,7 @@ async function arProblem(root, alive, id,preloaded) {
         <form id="arF" class="arshort"><input name="a" inputmode="decimal" autocomplete="off" placeholder="${T.answerPh}" maxlength="60">${p.unit ? `<span>${esc(p.unit)}</span>` : ""}
           <button class="cmbtn pri" type="submit">${T.submit}</button></form>` : `
         <form id="arF" class="aressay">
-          ${arVisionHtml(j,p.provider||"gemini")}
+          ${arMonthlyVisionHtml()}
           <div class="arocr">
             <label class="cmbtn sm ${ocrOn ? "" : "dis"}">📷 ${T.photo}<input type="file" accept="image/jpeg,image/png,image/webp" capture="environment" hidden ${ocrOn ? "" : "disabled"}></label>
             <label class="archk"><input type="checkbox" name="math" checked> ${T.mathMode}</label>
