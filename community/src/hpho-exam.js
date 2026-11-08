@@ -3,12 +3,18 @@
      POST /api/hpho/rounds/:id/exam/start    a registered candidate, from the start time until the end
      POST /api/hpho/rounds/:id/exam/events   up to 100 events per call; every call is a heartbeat
      POST /api/hpho/rounds/:id/exam/end      the candidate finishes early (the clock ends it otherwise)
+     POST /api/hpho/rounds/:id/exam/snap     a webcam or screen snapshot (multipart: image, source, reason), kept in R2
      GET  /api/hpho/rounds/:id/exam/state    the caller's own session
      GET  /api/hpho/rounds/:id/exam/log?candidate=HP271-0042   admin: one candidate's session and events
    Like MIPT's online rounds, answer photos are uploaded during an hour after the exam (UPLOAD_MIN), not during it.
    Events are what the client reports, so a gap in the heartbeat is itself recorded (the server sees it). */
 
 export const UPLOAD_MIN = 60;
+export const SNAP_MAX_BYTES = 250 * 1024;
+export const SNAP_SOURCES = ['webcam', 'screen'];
+/* the snapshot's object key: round, candidate number (never the account), source, time and reason */
+export const snapKey = (round, candidate, source, t, reason) => `hpho/${round}/${candidate}/${t}-${source}-${reason}.jpg`;
+const isJpeg = b => b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff;
 export const HEARTBEAT_GAP = 45;           /* seconds without a call before the next call records a gap */
 export const EXAM_EVENTS = ['heartbeat', 'window_ready', 'focus_lost', 'focus_back', 'display_change', 'screen_locked', 'screen_unlocked',
   'suspend', 'resume', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'network_back', 'page_hidden', 'page_visible',
@@ -48,8 +54,8 @@ export const examWindow = r => ({ opens: r.start_at, ends: r.start_at + r.durati
 
 export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB }) {
   const fail = (status, code) => { throw new HttpError(status, code); };
-  return async function exam(p, m, body, me, env, url) {
-    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(start|events|end|state|log)$/.exec(p);
+  return async function exam(p, m, body, me, env, url, req) {
+    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(start|events|end|state|log|snap)$/.exec(p);
     if (!r) return undefined;
     const [, id, action] = r, db = scope(env);
     needUser(me); await ensureHphoExam(db);
@@ -93,6 +99,21 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
         .bind(id, me.id, -t, t, `server: no contact for ${t - session.last_beat}s`));
       await db.batch(stmts);
       return { ok: true, now: t, ends_at: session.ends_at, gap };
+    }
+    if (action === 'snap') {
+      await limit(env, 'hpho-snap:' + me.id, 90, 600);
+      if (t > w.ends + 600 || session.ended_at) fail(409, 'exam_over');
+      const store = env.HPHO_SNAPS || env.LAB_PAGES; if (!store) fail(503, 'storage_unavailable');
+      let form; try { form = await req.formData(); } catch { fail(400, 'bad_snapshot'); }
+      const file = form.get('image'), source = SNAP_SOURCES.includes(form.get('source')) ? form.get('source') : null;
+      const reason = /^[a-z_]{3,24}$/.test(String(form.get('reason') || '')) ? String(form.get('reason')) : null;
+      if (!file || typeof file.arrayBuffer !== 'function' || !source || !reason || !['random', ...EXAM_EVENTS].includes(reason)) fail(400, 'bad_snapshot');
+      if (file.size > SNAP_MAX_BYTES) fail(413, 'snapshot_too_large');
+      const bytes = new Uint8Array(await file.arrayBuffer()); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg');
+      const key = snapKey(id, session.candidate_no, source, t, reason);
+      await store.put(key, bytes, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: id, candidate: session.candidate_no, source, reason } });
+      await db.prepare('UPDATE hpho_sessions SET last_beat=? WHERE round_id=? AND user_id=?').bind(t, id, me.id).run();
+      return { ok: true };
     }
     if (action === 'end') {
       if (!session.ended_at) await db.prepare('UPDATE hpho_sessions SET ended_at=? WHERE round_id=? AND user_id=?').bind(Math.min(t, session.ends_at), id, me.id).run();

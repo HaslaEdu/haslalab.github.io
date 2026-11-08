@@ -142,7 +142,10 @@ function corsHeaders(req, env) {
 function json(data, status, cors) {
   return new Response(JSON.stringify(data), {
     status: status || 200,
-    headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...cors },
+    /* an API answer is data only: never rendered, framed, sniffed or sent on with a referrer */
+    headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
+      "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'", "X-Frame-Options": "DENY", "Referrer-Policy": "no-referrer",
+      "Strict-Transport-Security": "max-age=31536000; includeSubDomains", ...cors },
   });
 }
 
@@ -722,7 +725,7 @@ async function handle(req, env, url, ctx) {
   if (omr !== undefined) return omr;
   const monthlyPhoto = await monthlyPhotoRouter(p, m, me, req, env, url);
   if (monthlyPhoto !== undefined) return monthlyPhoto;
-  const hpx = await hphoExamRouter(p,m,body,me,env,url);
+  const hpx = await hphoExamRouter(p,m,body,me,env,url,req);
   if (hpx !== undefined) return hpx;
   const hp = await hphoRouter(p,m,body,me,env);
   if (hp !== undefined) return hp;
