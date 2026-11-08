@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {createHphoRouter, checkEntry, checkRound, candidatePrefix} from './src/hpho.js';
+import {createHphoRouter, checkEntry, checkRound, candidatePrefix, AID_ENABLED} from './src/hpho.js';
 
 class HttpError extends Error { constructor(status, code) { super(code); this.status = status; this.code = code; } }
 function d1() {
@@ -62,7 +62,13 @@ test('rounds, registration, withdrawal and the admin list', async () => {
   assert.equal(await code(f.call('/api/hpho/rounds/2027-1/entry', 'POST', entry, student)), 'registration_closed');
 });
 
-test('fee assistance: automatic for low- and lower-middle-income economies, otherwise a request an admin decides', async () => {
+test('while assistance is on hold every candidate owes the fee', () => {
+  if (AID_ENABLED) return;
+  assert.equal(checkEntry({ ...entry, country: 'NP' }).aid, 'none');
+  assert.equal(checkEntry({ ...entry, aid_request: true, aid_reason: 'family_income', aid_note: '가계 형편이 어려워 참가비가 부담됩니다.' }).aid, 'none');
+});
+
+test('fee assistance: automatic for low- and lower-middle-income economies, otherwise a request an admin decides', { skip: !AID_ENABLED && 'assistance is on hold' }, async () => {
   assert.equal(checkEntry({ ...entry, country: 'NP' }).aid, 'auto');
   assert.equal(checkEntry(entry).aid, 'none');
   assert.equal(checkEntry({ ...entry, aid_request: true, aid_reason: 'nope', aid_note: '집안 형편이 어렵습니다.' }).error, 'bad_aid_reason');
