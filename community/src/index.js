@@ -35,7 +35,7 @@ import { ensureNoticePins, noticeIsPinned, removeNoticePin } from './notice-pins
 import { monthlySubmissionView, assessMonthlyAuthorship } from './monthly-policy.js';
 import { monthlyPublicPresentation } from './monthly-presentation.js';
 import { createMonthlyPhotoRouter, prepareMonthlyPhotoSubmission, monthlyPhotoAttachments, monthlyPhotoDeletion, boundedForm } from './monthly-photos.js';
-import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMonthlyCaptureSchema, monthlyCaptureDeletion, readMonthlyCapturePage } from './monthly-capture.js';
+import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMonthlyCaptureSchema, monthlyCaptureDeletion, readMonthlyCapturePage, extractMonthlyCaptureParts } from './monthly-capture.js';
 import { settleMonthlyRewards, monthlyRewardSummary } from './monthly-rewards.js';
 import { createMonthlyExperimentRouter, attachMonthlyExperimentEvidence, ensureMonthlyExperimentSchema, monthlyExperimentDeletion, getMonthlyExperimentReference } from './monthly-experiment.js';
 import { prepareMonthlyExperimentVisuals } from './monthly-experiment-visuals.js';
@@ -258,13 +258,37 @@ const monthlyRead = (env, sheet, pageNo, kind, provider, images, photoId) => { c
   return model ? readMonthlyCapturePage(sheet, pageNo, kind, (prompt, schema, originals) => callGrader(env, prompt, schema, originals, model.split('-')[0], model, { maxTokens: 16384 }), { images, photoId }) : null; };
 const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr:monthlyOcr,imageType,invoke:monthlyExtract,read:monthlyRead,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,attempts:monthlyAttempts,scope:env=>env[DB_SCOPE]||env.DB});
+/* TEMPORARY benchmark (removed after one run): times reading one stored answer-sheet page the old way (OCR, then a split
+   call) against the new one-call read, with the same photo and model, alternating. Reads only; returns timings and counts. */
+async function monthlyBench(env, body) {
+  const id = typeof body.photo_id === 'string' && /^[0-9a-f-]{36}$/.test(body.photo_id) ? body.photo_id : null;
+  if (!id) throw new HttpError(400, 'bad_photo');
+  const row = await env.DB.prepare(`SELECT p.mime,p.bytes,p.problem_id,c.page_no,c.kind FROM monthly_answer_photos p JOIN monthly_capture_pages c ON c.photo_id=p.id WHERE p.id=?`).bind(id).first();
+  if (!row) throw new HttpError(404, 'not_found');
+  const problem = await env.DB.prepare('SELECT * FROM problems WHERE id=?').bind(row.problem_id).first(), sheet = getMonthlyAnswerSheet(problem);
+  const chunks = (await env.DB.prepare('SELECT data FROM monthly_answer_photo_chunks WHERE photo_id=? ORDER BY no').bind(id).all()).results;
+  const data = new Uint8Array(row.bytes); let off = 0; for (const c of chunks) { const b = new Uint8Array(c.data); data.set(b, off); off += b.length; }
+  const images = [{ mime: row.mime, data: b64(data), label: 'Student answer-sheet page ' + row.page_no }], model = String(env.MONTHLY_OCR_MODEL || 'gemini-3.8-flash');
+  const filled = parts => parts.filter(p => p.answer || p.working).length, runs = [];
+  const twoStep = async () => { const t0 = Date.now();
+    try { const o = await ocr(env, new Blob([data], { type: row.mime }), 'math', null, 'gemini', model), t1 = Date.now();
+      const parts = await extractMonthlyCaptureParts(sheet, row.page_no, String(o.text || ''), row.kind, (prompt, schema, originals) => monthlyExtract(env, prompt, schema, originals, 'gemini'), { images, photoId: id });
+      return { way: 'two_calls', ok: true, ocr_ms: t1 - t0, split_ms: Date.now() - t1, total_ms: Date.now() - t0, filled: filled(parts) };
+    } catch (e) { return { way: 'two_calls', ok: false, total_ms: Date.now() - t0, error: String(e?.code || e?.message).slice(0, 60) }; } };
+  const oneCall = async () => { const t0 = Date.now();
+    try { const r = await monthlyRead(env, sheet, row.page_no, row.kind, 'gemini', images, id);
+      return { way: 'one_call', ok: !r.error, total_ms: Date.now() - t0, filled: filled(r.parts), ...(r.error ? { error: String(r.error?.code || '').slice(0, 60) } : {}) };
+    } catch (e) { return { way: 'one_call', ok: false, total_ms: Date.now() - t0, error: String(e?.code || e?.message).slice(0, 60) }; } };
+  for (let i = 0; i < 2; i++) { runs.push(await twoStep()); runs.push(await oneCall()); }
+  return { image_bytes: row.bytes, model, runs };
+}
 
 const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUser,limit,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,scope:env=>env[DB_SCOPE]||env.DB});
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
 const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit,clientIp,trainAllowed:(env,id)=>aiTrainAllowed(env.DB,id,env[DB_SCOPE]||env.DB)});
 const aiEvalRouter=createAiEvalRouter({HttpError,currentUser});
-const aiTrainRouter=createAiTrainRouter({HttpError,currentUser});
+const aiTrainRouter=createAiTrainRouter({HttpError,currentUser,monthlyBench:(env,body)=>monthlyBench(env,body)});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url, ctx) {
