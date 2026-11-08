@@ -100,7 +100,7 @@ const sameKey = (a, b) => {
   return d === 0;
 };
 
-export function createAiTrainRouter({HttpError, currentUser}) {
+export function createAiTrainRouter({HttpError, currentUser, monthlyTrial = null}) {
   return async function aiTrain(req, env) {
     const key = req.headers.get('X-Hasla-Train-Key');
     const machine = typeof env.AI_TRAIN_KEY === 'string' && env.AI_TRAIN_KEY.length >= MIN_KEY && sameKey(key || '', env.AI_TRAIN_KEY);
@@ -115,6 +115,8 @@ export function createAiTrainRouter({HttpError, currentUser}) {
     await ensureAiTrain(db);
     await ensureAiEval(db);
     const body = m === 'POST' ? await req.json().catch(() => ({})) : {};
+    /* re-read and trial-grade stored monthly answer-sheet pages (index.js monthlyTrial) */
+    if (p === AI_TRAIN_PATH + '/monthly-trial' && m === 'POST' && monthlyTrial) return monthlyTrial(env, body);
     const role = (m === 'POST' ? body.role : url.searchParams.get('role')) === 'chat' ? 'chat' : 'solver';
 
     if (p === AI_TRAIN_PATH + '/status' && m === 'GET') {
