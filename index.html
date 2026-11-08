@@ -1014,7 +1014,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=0c249b781d5a">
+<link rel="stylesheet" href="site-design.css?v=98049881d2f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=9afa7e19caab">
 </head>
@@ -1165,7 +1165,8 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=7385ce7c7606"></script>
-<script src="hpho.js?v=6f3854613adb"></script>
+<script src="hpho.js?v=b8232817089e"></script>
+<script src="hpho-exam.js?v=23607f8dba7d"></script>
 <script src="site-ux.js?v=e94c70468260"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="ai-chat.js?v=3cfdb03f8e1d"></script>
@@ -10130,6 +10131,7 @@ function render(){
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
+  else if(first==="hpho"&&second==="exam"&&window.HL_HPHO_EXAM){ html=HL_HPHO_EXAM.view(); active="weekly"; }
   else if(first==="hpho"&&window.HL_HPHO){ html=HL_HPHO.view(); active="weekly"; }
   else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
   else if(first && DATA[first] && !compShown(first)){ const to="#/comps/"+subjOf(first); try{history.replaceState(null,"",to);}catch(e){location.hash=to;return;} return render(); }
@@ -10143,7 +10145,8 @@ function render(){
   paintPageChrome(active);
   mountHaslaAdFit();
   if(window.HL_UX) HL_UX.afterRender(first, second);
-  if(first==="hpho"&&window.HL_HPHO) HL_HPHO.mount();
+  if(first==="hpho"&&second==="exam"&&window.HL_HPHO_EXAM) HL_HPHO_EXAM.mount();
+  else if(first==="hpho"&&window.HL_HPHO) HL_HPHO.mount();
 
   buildRails();
   paintSiteTheme();

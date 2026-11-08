@@ -716,3 +716,20 @@ body.hl-site .hpho-aid{display:grid;gap:10px;padding:12px;border:1px dashed #c9d
 body.hl-site .hpho-aid [hidden]{display:none}
 body.hl-site .hpho-form textarea{padding:8px 10px;border:1px solid #c9d1de;border-radius:7px;font:inherit;font-weight:400;background:#fff;color:inherit;resize:vertical}
 html[data-theme="dark"] body.hl-site .hpho-form textarea{background:#141019;border-color:#51435f}
+
+/* HPhO exam page (hpho-exam.js): one bar with the candidate number, the lights and the clock, MIPT-style */
+body.hl-site .hpho-exam-bar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:16px 0;padding:12px 16px;border:1px solid #d5dbe6;border-radius:10px;background:#fff;font-size:14px}
+body.hl-site .hpho-exam-title{font-size:15px;margin-right:auto}
+body.hl-site .hpho-light{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+body.hl-site .hpho-light::before{content:"";width:9px;height:9px;border-radius:50%;background:#9aa4b2}
+body.hl-site .hpho-light.is-ok::before{background:#1d9a4d}body.hl-site .hpho-light.is-bad::before{background:#d92d20}
+body.hl-site .hpho-exam-clock b{font-family:var(--mono);font-size:20px;margin-left:6px}
+body.hl-site .hpho-exam-clock.is-low b{color:#d92d20}
+body.hl-site .hpho-exam-big{font-family:var(--mono);font-size:44px;font-weight:700;margin:4px 0 14px}
+body.hl-site .hpho-checks{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px;max-width:520px}
+body.hl-site .hpho-checks li{display:flex;justify-content:space-between;padding:10px 12px;border:1px solid #d5dbe6;border-radius:8px}
+body.hl-site .hpho-checks li.is-ok b{color:#1d7a3e}body.hl-site .hpho-checks li.is-bad b{color:#b42318}
+body.hl-site .hpho-exam-rules{margin:0 0 16px;padding-left:20px;display:grid;gap:6px;line-height:1.6;font-size:14px}
+body.hl-site .hpho-btn:disabled{opacity:.45;cursor:not-allowed}
+html[data-theme="dark"] body.hl-site .hpho-exam-bar{background:#17131f;border-color:#3b344d}
+html[data-theme="dark"] body.hl-site .hpho-checks li{border-color:#3b344d}

@@ -117,6 +117,7 @@
     const rows = [[x.regOpen, when(r.reg_open)], [x.regClose, when(r.reg_close)], [x.start, `${when(r.start_at)} <small>(${left(r.start_at)})</small>`], [x.length, r.duration_min + x.min], [x.fee, r.fee_usd ? "$" + r.fee_usd.toFixed(2) : x.free]];
     let action;
     if (mine) action = `<div class="hpho-mine"><p class="hpho-badge">${x.mine}</p><p>${x.candidate}: <b class="hpho-no">${esc(mine.candidate_no)}</b></p><p class="hpho-muted">${x.candidateNote}</p>
+      <p><a class="hpho-btn" href="#/hpho/exam">${L() === "en" ? "Technical check · exam room" : "기술 점검 · 시험장 입장"}</a></p>
       ${r.fee_usd ? `<p>${x.feeLabel}: <b>${x.feeState[mine.aid] || x.feeState.none}</b>${mine.fee_due ? ` · $${Number(mine.fee_due).toFixed(2)}` : ""}</p>` : ""}
       ${st === "open" ? `<details><summary>${x.update}</summary>${formHtml(r, mine)}</details><button type="button" class="hpho-link" data-hpho-withdraw="${esc(r.id)}">${x.withdraw}</button>` : ""}</div>`;
     else if (st !== "open") action = "";
