@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install requests wandb safetensors torch --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple
+      - run: pip install requests wandb safetensors numpy torch --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple
       - run: python tools/ai/coreweave_lora_check.py
         env:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}

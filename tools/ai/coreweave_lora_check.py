@@ -96,8 +96,9 @@ def main():
             art = wandb.Artifact(f'hasla-servecheck-{kind}', type='lora', metadata={'wandb.base_model': BASE},
                                  storage_region='coreweave-us')
             art.add_dir(d)
-            run.log_artifact(art).wait()
-        ok, msg = ask(f'wandb-artifact:///{entity}/{PROJECT}/hasla-servecheck-{kind}:latest', entity)
+            art = run.log_artifact(art).wait()
+        # runtime loading refuses the :latest alias, so name the exact version
+        ok, msg = ask(f'wandb-artifact:///{entity}/{PROJECT}/hasla-servecheck-{kind}:{art.version}', entity)
         results[kind] = ok
         print(f'{kind}: {n} LoRA pairs, {size / 1e6:.0f} MB -> {"OK" if ok else "FAIL"} {msg}', flush=True)
     run.finish()
