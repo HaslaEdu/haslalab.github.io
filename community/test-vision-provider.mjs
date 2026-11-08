@@ -197,7 +197,7 @@ test('OpenAI Responses API (bench): reasoning with tools, the reasoning items se
  assert.match(seen[0].url,/\/v1\/responses$/);
  const b=seen[0].body;assert.deepEqual(b.reasoning,{effort:'low'});assert.equal(b.service_tier,'flex');assert.equal(b.store,false);
  assert.deepEqual(b.text.format,{type:'json_object'});assert.equal(b.tools[0].name,'f');assert.deepEqual(b.include,['reasoning.encrypted_content']);
- assert.deepEqual(b.input[0].content.map(c=>c.type),['input_text','input_text','input_image']);
+ assert.deepEqual(b.input[0].content.map(c=>c.type),['input_text','input_text','input_image','input_text']);assert.match(b.input[0].content.at(-1).text,/JSON/);
  assert.deepEqual(asked,[['f',{a:1}]]);
  const back=seen[1].body.input.slice(1);
  assert.deepEqual(back.map(x=>x.type),['reasoning','function_call','function_call_output'],'the turn goes back with its reasoning');

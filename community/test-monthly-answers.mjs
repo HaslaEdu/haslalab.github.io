@@ -304,6 +304,7 @@ test('MONTHLY_GRADE_PROVIDER/MODEL: GPT-6.1 Terra grades every candidate; when i
       openai.push(request.model);
       assert.match(String(url), /\/v1\/responses$/, 'GPT-6 models are called through the Responses API');
       assert.equal(request.reasoning?.effort, 'medium');
+      assert.ok(JSON.stringify(request.input).toLowerCase().includes('json'), "OpenAI's json_object needs the word in the input");
       if (openaiDown) return new Response(JSON.stringify({ error: { code: 'rate_limit_exceeded' } }), { status: 429 });
       const rubric = JSON.parse(sql.prepare('SELECT rubric FROM problems WHERE id=4').get().rubric);
       const assessment = { scores: rubric.map(c => ({ id: c.id, got: c.id === 'a' ? c.max : 0, decision: c.id === 'a' ? 'met' : 'not_met',

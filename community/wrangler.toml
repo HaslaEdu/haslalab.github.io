@@ -78,6 +78,8 @@ MONTHLY_GRADE_MODEL = "gpt-6.1-terra"
 # through the Responses API, with medium reasoning
 MONTHLY_GRADE_API = "responses"
 MONTHLY_GRADE_THINKING = "medium"
+# if Terra fails: Gemini 3.8 Flash (the candidate's reader default, 3.5 Flash-Lite, marked every part uncertain)
+MONTHLY_GRADE_FALLBACK_MODEL = "gemini-3.8-flash"
 LAB_PIPELINE = "mixed"
 LAB_SCHEME_PROVIDER = "deepseek"
 # Theory pages are read by Gemini 3.8 Flash (the owner's decision, 2026-11-03). Reading bench of that day, 40 checks on
