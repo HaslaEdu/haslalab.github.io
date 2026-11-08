@@ -36,7 +36,8 @@ test('monthly sending preserves the separate original and corrected scan using t
   const form = await monthlyScanPayload({blob:scan,file:rotated,captureFile:capture},async(blob,options)=>{calls.push({blob,options});return blob;});
   assert.equal(await form.get('image').text(),'corrected page');assert.equal(form.get('image').type,'image/png');
   assert.equal(await form.get('original_image').text(),'original camera image');assert.equal(form.get('original_image').type,'image/jpeg');
-  assert.deepEqual(calls.map(call=>call.blob),[scan,capture]);assert.ok(calls.every(call=>call.options.maxBytes===4*1024*1024));
+  assert.deepEqual(calls.map(call=>call.blob),[scan,capture]);assert.ok(calls.every(call=>call.options.maxBytes===1850000),'both at the exam scanner limit');
+  assert.deepEqual([calls[0].options.recompress,calls[1].options.recompress,calls[1].options.maxSide],[undefined,true,2400],'the camera original is drawn again at 2400 px');
   assert.equal(form.get('token'),null,'credentials are carried by the transport header');
   assert.match(form.get('request_id'),/^[A-Za-z0-9_-]{16,100}$/);
   const same=[];await monthlyScanPayload({blob:capture,file:capture,captureFile:capture},async(blob)=>{same.push(blob);return blob;});

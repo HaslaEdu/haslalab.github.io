@@ -29,9 +29,12 @@ export async function monthlyScanPayload(shot,encodeUpload) {
   // One ID survives a lost response. Replacing the photo, page, kind or
   // corrected pixels clears it in the shared scanner's monthly branch.
   if (!shot.requestId) shot.requestId = monthlyUploadId();
-  const scan = await encodeUpload(shot.blob,{maxBytes:4*1024*1024});
+  // Both images go up at the exam scanner's size: the corrected page as the scanner made it (quality 0.85, under 1.85 MB),
+  // and the original photo, which the server stores, shows and hands to the reader and grader, drawn again at 2400 px and
+  // the same quality instead of the camera's ~3 MB JPEG (0.85 read audited pages as well as the originals; labscan).
+  const scan = await encodeUpload(shot.blob,{maxBytes:1850000});
   const capture = shot.captureFile || shot.file;
-  const original = capture === shot.blob ? scan : await encodeUpload(capture,{maxBytes:4*1024*1024});
+  const original = capture === shot.blob ? scan : await encodeUpload(capture,{maxBytes:1850000,recompress:true,maxSide:2400});
   const form = new FormData();
   const extension = blob => ({'image/jpeg':'jpg','image/png':'png','image/webp':'webp'})[blob.type];
   const scanExt = extension(scan), originalExt = extension(original);
