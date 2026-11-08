@@ -244,9 +244,13 @@ const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
 const modelTestRouter = createModelTestRouter({HttpError, currentUser, needUser, limit});
 const accountSecurityRouter = createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,checkPw,pwOk});
 const signupEmail = createSignupEmail({HttpError,now,limit,sha256,clientIp,scope:env => env[DB_SCOPE] || env.DB});
-const monthlyPhotoRouter = createMonthlyPhotoRouter({HttpError, needUser, limit, ocr, imageType,
+/* the monthly answer photos are all read by MONTHLY_OCR_MODEL (Gemini 3.8 Flash, the model that read handwritten theory pages
+   best on the 2026-11-03 bench), whichever provider the page records */
+const monthlyOcr = (env, file, mode, m, provider) => { const model = String(env.MONTHLY_OCR_MODEL || '').trim();
+  return model ? ocr(env, file, mode, m, model.split('-')[0], model) : ocr(env, file, mode, m, provider); };
+const monthlyPhotoRouter = createMonthlyPhotoRouter({HttpError, needUser, limit, ocr: monthlyOcr, imageType,
   ensureContent:ensureWeeklyContent, visibleSql:visibleMonthlySql, attempts:monthlyAttempts, scope:env => env[DB_SCOPE] || env.DB});
-const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr,imageType,invoke:callGrader,
+const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr:monthlyOcr,imageType,invoke:callGrader,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,attempts:monthlyAttempts,scope:env=>env[DB_SCOPE]||env.DB});
 
 const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUser,limit,
@@ -1112,13 +1116,13 @@ async function ocrResponseJSON(response) {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new HttpError(502, "ocr_bad_response");
   return parsed;
 }
-async function ocr(env, file, mode, m, provider) {
+async function ocr(env, file, mode, m, provider, model) {
   requireVisionProvider(env, provider);
   const bytes = new Uint8Array(await file.arrayBuffer()), type = imageType(bytes.subarray(0,16));
   if (!type) throw new HttpError(415,'bad_image');
   try {
     const result = await visionTranscript(env,provider,[{mime:type,data:b64(bytes),label:'Original submitted answer page'}],
-      {maxTokens:16384,timeoutMs:110000,signal:labProviderSignal(env,110000)});
+      {maxTokens:16384,timeoutMs:110000,signal:labProviderSignal(env,110000),...(model?{model}:{})});
     meterAdd(env,m,{step:'ocr',provider,...result.usage,model:result.usage.resolved_model||VISION_MODELS[provider],price_key:VISION_MODELS[provider],ok:1});
     return {text:result.text,low:result.uncertainties,confidence:result.confidence,engine:provider,
       format:result.format,visuals:result.visuals,legible:result.legible,equations:[]};
@@ -1370,7 +1374,7 @@ async function arena(p, m, body, me, req, env, url) {
     await purgeVisionPhotos(env);
     const usage=await env.DB.prepare('SELECT COUNT(*) n,COALESCE(SUM(bytes),0) bytes FROM vision_photo_evidence WHERE user_id=? AND problem_id=? AND expires_at>?').bind(me.id,pid,now()).first();
     if(usage.n>=VISION_PHOTO_MAX||usage.bytes+f.size>VISION_PHOTO_BYTES)throw new HttpError(413,'photo_storage_limit');
-    const result=await ocr(env,f,url.searchParams.get('mode')==='math'?'math':'text',null,provider);
+    const result=await monthlyOcr(env,f,url.searchParams.get('mode')==='math'?'math':'text',null,provider);
     const bytes=new Uint8Array(await f.arrayBuffer()),mime=imageType(bytes.subarray(0,16));
     warnNotJpeg("monthly ocr photo",mime,bytes.length);
     return {...result,provider,photo_id:await storeVisionPhoto(env,me.id,pid,provider,bytes,mime)};
