@@ -312,7 +312,8 @@ export function createMonthlyCaptureRouter({HttpError,needUser,ensureContent,vis
         const scanned=read?new Uint8Array(await image.arrayBuffer()):null;
         const page=read?await read(env,sheet,pageNo,kind,provider,[{mime:imageType(scanned),data:imageBase64(scanned),label:'Corrected student answer-sheet page '+pageNo}],photoId):null;
         /* a one-call read that came back with nothing (seen once in the bench, in 5 s) is read again the two-step way */
-        const emptyRead=page&&!page.error&&String(page.text||'').trim().length<20&&!page.parts.some(part=>part.answer||part.working);
+        /* a reply with no part filled (a transcript but nothing placed in the sheet) is read again in two steps */
+        const emptyRead=page&&!page.error&&!page.parts.some(part=>part.answer||part.working);
         if(page&&!emptyRead){
           transcript=page.text;parts=page.parts;
           if(new TextEncoder().encode(transcript).byteLength>MONTHLY_MAX_OCR_BYTES)fail('ocr_too_big',413);
