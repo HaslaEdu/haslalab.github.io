@@ -248,10 +248,9 @@ test('published native problems use authenticated, evidence-backed grading and r
       assert.equal(pub.status, 200);
       assert.equal(pub.data.problem.body, monthlyPublicPresentation(row).body_ko);
       assert.equal(pub.data.problem.source, null);
-      assert.equal(pub.data.problem.criteria.length, JSON.parse(row.rubric).length);
+      assert.equal(pub.data.problem.criteria, undefined, "the marking items (hints) stay hidden until the deadline");
       assert.equal(pub.data.problem.solution, undefined);
       assert.equal(pub.data.problem.rubric, undefined);
-      assert.ok(pub.data.problem.criteria.every(c => !('requirement' in c) && !('partial' in c)));
       const denied = await request(`/problems/${row.id}/submit`, { body: answerBody(row) });
       assert.equal(denied.status, 401);
       const graded = await request(`/problems/${row.id}/submit`, { authenticated: true, body: answerBody(row) });
