@@ -250,19 +250,56 @@ const signupEmail = createSignupEmail({HttpError,now,limit,sha256,clientIp,scope
    think at length (a bench of 2026-11-08: 82 s to read one page, a one-call read past the 110 s limit); "low" is what the lab's
    3.8 Flash reads use */
 const monthlyThinking = env => String(env.MONTHLY_OCR_THINKING || 'low').trim();
-/* and its time limit: Gemini 3.8 Flash took 58-98 s on one page in the same bench, too close to the general 110 s */
-const monthlyWait = env => Math.max(30000, Math.min(240000, Number(env.MONTHLY_OCR_TIMEOUT_MS) || 170000));
+/* and its limits, those of the lab's page reads (LAB_READ_TIMEOUT_MS / LAB_READ_MAX_TOKENS): a 3.x Flash model loops to its
+   output cap on 10-30% of handwritten pages (the 2026-11-01 bench), and with 16k tokens and 170 s a looping page kept the
+   candidate waiting ~100 s. A page that times out, loops or is refused is read at once by MONTHLY_OCR_FALLBACK_MODEL
+   (3.1 Flash-Lite, ~10 s), as the lab's reads fall back (lab_calls of 2026-11-03: 3.8 Flash 26 s a page when it finishes) */
+const monthlyWait = env => Math.max(30000, Math.min(240000, Number(env.MONTHLY_OCR_TIMEOUT_MS) || 70000));
+const monthlyTokens = (env, read) => Math.max(2000, Math.min(16384, Number(env.MONTHLY_OCR_MAX_TOKENS) || 7000)) + (read ? 2000 : 0);
 const monthlyWaitOptions = env => ({ timeoutMs: monthlyWait(env), signal: labProviderSignal(env, monthlyWait(env)) });
-const monthlyOcr = (env, file, mode, m, provider) => { const model = String(env.MONTHLY_OCR_MODEL || '').trim();
-  return model ? ocr(env, file, mode, m, model.split('-')[0], model, monthlyThinking(env), monthlyWait(env)) : ocr(env, file, mode, m, provider); };
+const MONTHLY_FALLBACK_CODES = ['vision_provider_rate_limited', 'vision_provider_failed', 'vision_model_unavailable', 'vision_response_truncated', 'vision_provider_timeout'];
+let monthlyFallbacks = 0;
+async function monthlyWithFallback(env, run) {
+  const model = String(env.MONTHLY_OCR_MODEL || '').trim(), fb = String(env.MONTHLY_OCR_FALLBACK_MODEL || '').trim();
+  try { return await run(model, monthlyThinking(env)); }
+  catch (error) {
+    if (!fb || fb === model || !MONTHLY_FALLBACK_CODES.includes(error?.code)) throw error;
+    console.error('monthly read fallback', error.code, fb); monthlyFallbacks++;
+    return run(fb, String(env.MONTHLY_OCR_FALLBACK_THINKING || 'low').trim());
+  }
+}
+const monthlyOcr = (env, file, mode, m, provider) => String(env.MONTHLY_OCR_MODEL || '').trim()
+  ? monthlyWithFallback(env, (model, thinking) => ocr(env, file, mode, m, model.split('-')[0], model, thinking, monthlyWait(env), monthlyTokens(env)))
+  : ocr(env, file, mode, m, provider);
 const monthlyPhotoRouter = createMonthlyPhotoRouter({HttpError, needUser, limit, ocr: monthlyOcr, imageType,
   ensureContent:ensureWeeklyContent, visibleSql:visibleMonthlySql, attempts:monthlyAttempts, scope:env => env[DB_SCOPE] || env.DB});
 /* and the step after it, which splits a page's transcript into the sheet's parts looking at the photo too, uses that model */
-const monthlyExtract = (env, prompt, schema, images, provider) => { const model = String(env.MONTHLY_OCR_MODEL || '').trim();
-  return model ? callGrader(env, prompt, schema, images, model.split('-')[0], model, { thinking: monthlyThinking(env), ...monthlyWaitOptions(env) }) : callGrader(env, prompt, schema, images, provider); };
+const monthlyExtract = (env, prompt, schema, images, provider) => String(env.MONTHLY_OCR_MODEL || '').trim()
+  ? monthlyWithFallback(env, (model, thinking) => callGrader(env, prompt, schema, images, model.split('-')[0], model, { thinking, maxTokens: monthlyTokens(env), ...monthlyWaitOptions(env) }))
+  : callGrader(env, prompt, schema, images, provider);
 /* with MONTHLY_OCR_MODEL a page is read in one call (transcription and parts together); null keeps the two-step path */
-const monthlyRead = (env, sheet, pageNo, kind, provider, images, photoId) => { const model = String(env.MONTHLY_OCR_MODEL || '').trim();
-  return model ? readMonthlyCapturePage(sheet, pageNo, kind, (prompt, schema, originals) => callGrader(env, prompt, schema, originals, model.split('-')[0], model, { maxTokens: 16384, thinking: monthlyThinking(env), ...monthlyWaitOptions(env) }), { images, photoId }) : null; };
+const monthlyRead = (env, sheet, pageNo, kind, provider, images, photoId) => String(env.MONTHLY_OCR_MODEL || '').trim()
+  ? readMonthlyCapturePage(sheet, pageNo, kind, (prompt, schema, originals) => monthlyWithFallback(env, (model, thinking) =>
+      callGrader(env, prompt, schema, originals, model.split('-')[0], model, { maxTokens: monthlyTokens(env, true), thinking, ...monthlyWaitOptions(env) })), { images, photoId })
+  : null;
+/* TEMPORARY: times the production page read on one stored photo (timings only); removed after use */
+async function monthlyBench(env, body) {
+  const id = typeof body.photo_id === 'string' && /^[0-9a-f-]{36}$/.test(body.photo_id) ? body.photo_id : null;
+  if (!id) throw new HttpError(400, 'bad_photo');
+  const row = await env.DB.prepare(`SELECT p.mime,p.bytes,p.problem_id,c.page_no,c.kind FROM monthly_answer_photos p JOIN monthly_capture_pages c ON c.photo_id=p.id WHERE p.id=?`).bind(id).first();
+  if (!row) throw new HttpError(404, 'not_found');
+  const problem = await env.DB.prepare('SELECT * FROM problems WHERE id=?').bind(row.problem_id).first(), sheet = getMonthlyAnswerSheet(problem);
+  const chunks = (await env.DB.prepare('SELECT data FROM monthly_answer_photo_chunks WHERE photo_id=? ORDER BY no').bind(id).all()).results;
+  const data = new Uint8Array(row.bytes); let off = 0; for (const c of chunks) { const b = new Uint8Array(c.data); data.set(b, off); off += b.length; }
+  const images = [{ mime: row.mime, data: b64(data), label: 'Student answer-sheet page ' + row.page_no }], model = String(env.MONTHLY_OCR_MODEL || 'gemini-3.8-flash');
+  const filled = parts => parts.filter(p => p.answer || p.working).length, runs = [];
+  const oneCall = async () => { const t0 = Date.now(), f0 = monthlyFallbacks;
+    try { const r = await monthlyRead(env, sheet, row.page_no, row.kind, 'gemini', images, id);
+      return { way: 'one_call', ok: !r.error, total_ms: Date.now() - t0, fell_back: monthlyFallbacks - f0, text_chars: String(r.text || '').length, filled: filled(r.parts), ...(r.error ? { error: String(r.error?.code || '').slice(0, 60) } : {}) };
+    } catch (e) { return { way: 'one_call', ok: false, total_ms: Date.now() - t0, error: String(e?.code || e?.message).slice(0, 60) }; } };
+  for (let i = 0; i < 3; i++) runs.push(await oneCall());
+  return { image_bytes: row.bytes, model, runs };
+}
 const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr:monthlyOcr,imageType,invoke:monthlyExtract,read:monthlyRead,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,attempts:monthlyAttempts,scope:env=>env[DB_SCOPE]||env.DB});
 
@@ -271,7 +308,7 @@ const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUse
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
 const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit,clientIp,trainAllowed:(env,id)=>aiTrainAllowed(env.DB,id,env[DB_SCOPE]||env.DB)});
 const aiEvalRouter=createAiEvalRouter({HttpError,currentUser});
-const aiTrainRouter=createAiTrainRouter({HttpError,currentUser});
+const aiTrainRouter=createAiTrainRouter({HttpError,currentUser,monthlyBench:(env,body)=>monthlyBench(env,body)});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url, ctx) {
@@ -1141,13 +1178,13 @@ async function ocrResponseJSON(response) {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new HttpError(502, "ocr_bad_response");
   return parsed;
 }
-async function ocr(env, file, mode, m, provider, model, thinking, waitMs = 110000) {
+async function ocr(env, file, mode, m, provider, model, thinking, waitMs = 110000, maxTokens = 16384) {
   requireVisionProvider(env, provider);
   const bytes = new Uint8Array(await file.arrayBuffer()), type = imageType(bytes.subarray(0,16));
   if (!type) throw new HttpError(415,'bad_image');
   try {
     const result = await visionTranscript(env,provider,[{mime:type,data:b64(bytes),label:'Original submitted answer page'}],
-      {maxTokens:16384,timeoutMs:waitMs,signal:labProviderSignal(env,waitMs),...(model?{model}:{}),...(thinking?{thinking}:{})});
+      {maxTokens,timeoutMs:waitMs,signal:labProviderSignal(env,waitMs),...(model?{model}:{}),...(thinking?{thinking}:{})});
     meterAdd(env,m,{step:'ocr',provider,...result.usage,model:result.usage.resolved_model||VISION_MODELS[provider],price_key:VISION_MODELS[provider],ok:1});
     return {text:result.text,low:result.uncertainties,confidence:result.confidence,engine:provider,
       format:result.format,visuals:result.visuals,legible:result.legible,equations:[]};
