@@ -11,12 +11,12 @@
       check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인" }, ok: "확인", bad: "문제 있음", wait: "확인 중…",
       notReg: "이 회차에 접수하지 않았습니다.", login: "로그인하세요.", room: "대기실", startsIn: "시험 시작까지", start: "시험 시작", candidate: "수험번호",
       left: "남은 시간", end: "시험 종료", endAsk: "시험을 종료할까요? 종료하면 다시 돌아올 수 없습니다.", rules: ["시험 중에는 이 창만 사용하세요. 다른 프로그램과 웹사이트는 사용할 수 없습니다.", "창을 벗어나거나 화면이 잠기면 기록됩니다. 녹화가 끊기지 않도록 이 창을 유지하세요.", "답안지에는 수험번호만 적으세요."],
-      problems: "문제", problemsSoon: "문제는 시험 시작 시각에 이 화면에 공개됩니다.", over: "시험이 끝났습니다", upload: until => `답안 사진은 ${until}까지 올려 주세요.`, conn: "연결", connOk: "정상", connBad: "끊김 · 다시 연결 중", proctor: "감독", proctorOn: "기록 중" },
+      problems: "문제", problemsSoon: "문제는 시험 시작 시각에 이 화면에 공개됩니다.", leave: "시험 창 닫기", over: "시험이 끝났습니다", upload: until => `답안 사진은 ${until}까지 올려 주세요.`, conn: "연결", connOk: "정상", connBad: "끊김 · 다시 연결 중", proctor: "감독", proctorOn: "기록 중" },
     en: { title: "HPhO exam", appOnly: "HPhO can only be sat in the exam window of the HaslaEdu desktop app.", appGet: "Get the desktop app",
       check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in" }, ok: "OK", bad: "Problem", wait: "Checking…",
       notReg: "You are not registered for this round.", login: "Please sign in.", room: "Waiting room", startsIn: "Exam starts in", start: "Start the exam", candidate: "Candidate number",
       left: "Time left", end: "Finish exam", endAsk: "Finish the exam? You cannot come back once you finish.", rules: ["Use only this window during the exam. Other programs and websites are not allowed.", "Leaving the window or locking the screen is recorded. Keep this window open so the recording stays continuous.", "Write only your candidate number on the answer sheets."],
-      problems: "Problems", problemsSoon: "The problems appear here at the start time.", over: "The exam is over", upload: until => `Upload your answer photos by ${until}.`, conn: "Connection", connOk: "Online", connBad: "Lost · reconnecting", proctor: "Proctoring", proctorOn: "Recording" },
+      problems: "Problems", problemsSoon: "The problems appear here at the start time.", leave: "Close the exam window", over: "The exam is over", upload: until => `Upload your answer photos by ${until}.`, conn: "Connection", connOk: "Online", connBad: "Lost · reconnecting", proctor: "Proctoring", proctorOn: "Recording" },
   };
   const bridge = () => (window.haslaExam && typeof window.haslaExam.onEvent === "function") ? window.haslaExam : null;
   let st = { round: null, entry: null, session: null, phase: "check", online: true, seq: 0, queue: [], timer: 0, flushTimer: 0, unsub: null };
@@ -55,15 +55,17 @@
     if (!bridge()) { box.innerHTML = `<section class="hpho-round"><h2>${x.title}</h2><p>${x.appOnly}</p><a class="hpho-btn" href="https://physleague.kr/#/desktop" target="_blank" rel="noopener">${x.appGet}</a></section>`; return; }
     if (st.phase === "check") {
       const c = st.checks || {}, row = k => `<li class="${c[k] === true ? "is-ok" : c[k] === false ? "is-bad" : ""}"><span>${x.checks[k]}</span><b>${c[k] === true ? x.ok : c[k] === false ? x.bad : x.wait}</b></li>`;
-      box.innerHTML = `<section class="hpho-round"><h2>${x.check}</h2><ul class="hpho-checks">${["app", "login", "net", "entry"].map(row).join("")}</ul>${st.error ? `<p class="hpho-form-msg">${esc(st.error)}</p>` : ""}</section>`;
+      box.innerHTML = `<section class="hpho-round"><h2>${x.check}</h2><ul class="hpho-checks">${["app", "login", "net", "entry"].map(row).join("")}</ul>${st.error ? `<p class="hpho-form-msg">${esc(st.error)}</p>` : ""}${bridge()?.leave ? `<p><button type="button" class="hpho-link" id="hphoExamLeave">${x.leave}</button></p>` : ""}</section>`;
+      box.querySelector("#hphoExamLeave")?.addEventListener("click", () => bridge()?.leave?.());
       return;
     }
     if (st.phase === "room") {
       const wait = st.round.start_at - nowS();
       box.innerHTML = `<section class="hpho-round hpho-room"><h2>${x.room}</h2><p class="hpho-muted">${x.startsIn}</p><p class="hpho-exam-big">${fmt(wait)}</p>
         <ol class="hpho-exam-rules">${x.rules.map(r => `<li>${r}</li>`).join("")}</ol>
-        <button type="button" class="hpho-btn" id="hphoExamStart"${wait > 0 ? " disabled" : ""}>${x.start}</button>${st.error ? `<p class="hpho-form-msg">${esc(st.error)}</p>` : ""}</section>`;
+        <p class="hpho-exam-actions"><button type="button" class="hpho-btn" id="hphoExamStart"${wait > 0 ? " disabled" : ""}>${x.start}</button> ${bridge()?.leave ? `<button type="button" class="hpho-link" id="hphoExamLeave">${x.leave}</button>` : ""}</p>${st.error ? `<p class="hpho-form-msg">${esc(st.error)}</p>` : ""}</section>`;
       box.querySelector("#hphoExamStart").addEventListener("click", start);
+      box.querySelector("#hphoExamLeave")?.addEventListener("click", () => bridge()?.leave?.());
       return;
     }
     if (st.phase === "exam") {
@@ -97,7 +99,7 @@
       const r = await cmApi("POST", path("start"), { client: b.client });
       st.session = { ends_at: r.ends_at }; st.phase = "exam";
       if (!st.unsub) st.unsub = b.onEvent(e => { if (e && typeof e.kind === "string") push(e.kind, e.detail); });
-      push("window_ready", r.resumed ? "resumed" : "started"); b.started?.({ endsAt: r.ends_at });
+      push("window_ready", r.resumed ? "resumed" : "started"); b.started?.();
       clearInterval(st.flushTimer); st.flushTimer = setInterval(flush, 10000); flush(); paint();
     } catch (e) { st.error = e?.code || "network"; paint(); }
   }
@@ -105,7 +107,7 @@
     clearInterval(st.flushTimer); if (st.phase !== "exam") return;
     await flush().catch(() => {});
     try { const r = await cmApi("POST", path("end"), {}); st.uploadUntil = r.upload_until; } catch (e) {}
-    st.phase = "over"; bridge()?.finished?.({ byClock: !!byClock }); paint();
+    st.phase = "over"; bridge()?.finished?.(); paint();
   }
   function mount() {
     clearInterval(st.timer); st = { ...st, phase: "check", session: null, error: null, queue: [] };
