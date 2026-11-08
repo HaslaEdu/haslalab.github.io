@@ -61,3 +61,32 @@ test('rounds, registration, withdrawal and the admin list', async () => {
   await f.call('/api/hpho/rounds/2027-1', 'POST', { ...round, reg_close: t - 1, reg_open: t - 7200 }, admin);
   assert.equal(await code(f.call('/api/hpho/rounds/2027-1/entry', 'POST', entry, student)), 'registration_closed');
 });
+
+test('fee assistance: automatic for low- and lower-middle-income economies, otherwise a request an admin decides', async () => {
+  assert.equal(checkEntry({ ...entry, country: 'NP' }).aid, 'auto');
+  assert.equal(checkEntry(entry).aid, 'none');
+  assert.equal(checkEntry({ ...entry, aid_request: true, aid_reason: 'nope', aid_note: '집안 형편이 어렵습니다.' }).error, 'bad_aid_reason');
+  assert.equal(checkEntry({ ...entry, aid_request: true, aid_reason: 'family_income', aid_note: '짧음' }).error, 'aid_note_required');
+  const f = router();
+  await f.call('/api/hpho/rounds/2027-1', 'POST', round, admin);
+  const auto = await f.call('/api/hpho/rounds/2027-1/entry', 'POST', { ...entry, country: 'VN' }, { id: 8 });
+  assert.equal(auto.fee_due, 0);
+  const req = await f.call('/api/hpho/rounds/2027-1/entry', 'POST', { ...entry, aid_request: true, aid_reason: 'family_income', aid_note: '가계 형편이 어려워 참가비가 부담됩니다.' }, student);
+  assert.deepEqual([req.aid, req.fee_due], ['pending', 3]);
+  assert.equal(await code(f.call('/api/hpho/rounds/2027-1/aid', 'POST', { candidate_no: req.candidate_no, decision: 'approved' }, student)), 'forbidden');
+  await f.call('/api/hpho/rounds/2027-1/aid', 'POST', { candidate_no: req.candidate_no, decision: 'approved' }, admin);
+  assert.equal((await f.call('/api/hpho', 'GET', null, student)).entries['2027-1'].fee_due, 0);
+  const edit = await f.call('/api/hpho/rounds/2027-1/entry', 'POST', { ...entry, level: 'middle', aid_request: true, aid_reason: 'family_income', aid_note: '가계 형편이 어려워 참가비가 부담됩니다.' }, student);
+  assert.equal(edit.aid, 'approved', 'editing other fields keeps the decision');
+  assert.equal(await code(f.call('/api/hpho/rounds/2027-1/aid', 'POST', { candidate_no: auto.candidate_no, decision: 'declined' }, admin)), 'no_aid_request', 'automatic assistance is not up for decision');
+  const list = await f.call('/api/hpho/rounds/2027-1/entries', 'GET', null, admin);
+  assert.deepEqual([list.aid.auto, list.aid.approved], [1, 1]);
+});
+
+test('the assistance columns are added to a table created before them', async () => {
+  const { sql, DB } = d1();
+  sql.exec(`CREATE TABLE hpho_entries (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, candidate_no TEXT NOT NULL, country TEXT NOT NULL, level TEXT NOT NULL, birth_year INTEGER NOT NULL, guardian_consent INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL, PRIMARY KEY (round_id, user_id))`);
+  const r = createHphoRouter({ HttpError, needUser, limit: async () => {}, isAdmin: u => u?.role === 'admin' });
+  await r('/api/hpho', 'GET', null, null, { DB });
+  assert.ok(sql.prepare('PRAGMA table_info(hpho_entries)').all().some(c => c.name === 'aid'));
+});

@@ -6,7 +6,10 @@
      POST   /api/hpho/rounds/:id              admin: create or edit a round
      GET    /api/hpho/rounds/:id/entries      admin: the round's entries
    The answer sheets carry the candidate number only; candidates are warned not to write their name or school, and
-   anything identifying they write anyway is their own responsibility (no automatic disqualification). */
+   anything identifying they write anyway is their own responsibility (no automatic disqualification).
+   Fee assistance: a candidate from a low- or lower-middle-income economy (AID_AUTO_COUNTRIES, the World Bank's
+   classification; review it each year) pays nothing without asking; anyone else may apply with a reason and a short
+   note, no documents, and an admin decides (POST /api/hpho/rounds/:id/aid). */
 
 export const HPHO_SCHEMA = [
   `CREATE TABLE IF NOT EXISTS hpho_rounds (id TEXT PRIMARY KEY, title_ko TEXT NOT NULL, title_en TEXT NOT NULL,
@@ -17,6 +20,15 @@ export const HPHO_SCHEMA = [
     created_at INTEGER NOT NULL, PRIMARY KEY (round_id, user_id))`,
   `CREATE UNIQUE INDEX IF NOT EXISTS hpho_entries_no ON hpho_entries(round_id, candidate_no)`,
 ];
+/* columns added after the table first went live: each ALTER runs once, a "duplicate column" is the column already there */
+const HPHO_COLUMNS = [`ALTER TABLE hpho_entries ADD COLUMN aid TEXT NOT NULL DEFAULT 'none'`, `ALTER TABLE hpho_entries ADD COLUMN aid_reason TEXT`,
+  `ALTER TABLE hpho_entries ADD COLUMN aid_note TEXT`, `ALTER TABLE hpho_entries ADD COLUMN aid_at INTEGER`];
+
+/* the World Bank's low- and lower-middle-income economies (FY2026 list as HaslaEdu applies it; check it before each round) */
+export const AID_AUTO_COUNTRIES = new Set(('AF BF BI CF TD CD ER ET GM GW KP LR MG MW ML MZ NE RW SL SO SS SD SY TG UG YE ' +
+  'AO BD BJ BT BO KH CM CV KM CG CI DJ EG SZ GH GN HT HN IN KE KI KG LA LB LS MR FM MA MM NP NI NG PK PG PH WS ST SN SB LK TJ TZ TL TN UZ VU VN PS ZM ZW').split(' '));
+export const AID_REASONS = ['family_income', 'public_assistance', 'school_referral', 'other'];
+export const AID_STATES = ['none', 'auto', 'pending', 'approved', 'declined'];
 
 export const HPHO_LEVELS = ['middle', 'high', 'university', 'other'];
 const ROUND_ID = /^(20\d\d)-([12])$/;
@@ -26,7 +38,10 @@ const now = () => Math.floor(Date.now() / 1000);
 const ready = new WeakMap();
 export function ensureHpho(db) {
   if (!ready.has(db)) {
-    const p = db.batch(HPHO_SCHEMA.map(sql => db.prepare(sql))).then(() => true);
+    const p = db.batch(HPHO_SCHEMA.map(sql => db.prepare(sql))).then(async () => {
+      for (const sql of HPHO_COLUMNS) try { await db.prepare(sql).run(); } catch (e) { if (!/duplicate column/i.test(String(e?.message || e))) throw e; }
+      return true;
+    });
     ready.set(db, p); p.catch(() => ready.delete(db));
   }
   return ready.get(db);
@@ -56,8 +71,19 @@ export function checkEntry(body, { year = new Date().getUTCFullYear() } = {}) {
   if (body?.identity_notice !== true) return { error: 'identity_notice_required' }; /* candidate number only on sheets */
   const minor = year - birth < 19;                                            /* may still be 18 on the day: ask */
   if (minor && body?.guardian_consent !== true) return { error: 'guardian_consent_required' };
-  return { country, level, birth_year: birth, guardian_consent: minor ? 1 : 0 };
+  let aid = 'none', aid_reason = null, aid_note = null;
+  if (AID_AUTO_COUNTRIES.has(country)) aid = 'auto';
+  else if (body?.aid_request === true) {
+    aid_reason = AID_REASONS.includes(body.aid_reason) ? body.aid_reason : null;
+    if (!aid_reason) return { error: 'bad_aid_reason' };
+    aid_note = typeof body.aid_note === 'string' ? body.aid_note.trim().slice(0, 300) : '';
+    if (aid_note.length < 10) return { error: 'aid_note_required' };
+    aid = 'pending';
+  }
+  return { country, level, birth_year: birth, guardian_consent: minor ? 1 : 0, aid, aid_reason, aid_note };
 }
+/* what a candidate owes: nothing under automatic or approved assistance, else the round's fee */
+export const feeDue = (round, aid) => aid === 'auto' || aid === 'approved' ? 0 : round.fee_usd;
 
 export function checkRound(id, body) {
   if (!ROUND_ID.test(id)) return { error: 'bad_round' };
@@ -84,8 +110,10 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
     if (p === '/api/hpho' && m === 'GET') {
       const rounds = (await db.prepare(`SELECT * FROM hpho_rounds WHERE status!='draft' ORDER BY start_at DESC LIMIT 20`).all()).results || [];
       const entries = {};
-      if (me) for (const e of (await db.prepare('SELECT round_id,candidate_no,country,level,birth_year,created_at FROM hpho_entries WHERE user_id=?').bind(me.id).all()).results || [])
-        entries[e.round_id] = e;
+      if (me) for (const e of (await db.prepare('SELECT round_id,candidate_no,country,level,birth_year,aid,aid_reason,aid_note,created_at FROM hpho_entries WHERE user_id=?').bind(me.id).all()).results || []) {
+        const round = rounds.find(r => r.id === e.round_id);
+        entries[e.round_id] = { ...e, fee_due: round ? feeDue(round, e.aid) : null };
+      }
       return { rounds: rounds.map(publicRound), entries, now: now() };
     }
     let r = /^\/api\/hpho\/rounds\/([^/]+)\/entry$/.exec(p);
@@ -97,19 +125,21 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
         await limit(env, 'hpho:' + me.id, 10, 3600);
         if (!registrable(round)) fail(409, 'registration_closed');
         const ok = checkEntry(body); if (ok.error) fail(400, ok.error);
-        const had = await db.prepare('SELECT candidate_no FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).first();
+        const had = await db.prepare('SELECT candidate_no,aid,aid_reason FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).first();
         if (had) {
-          await db.prepare('UPDATE hpho_entries SET country=?,level=?,birth_year=?,guardian_consent=? WHERE round_id=? AND user_id=?')
-            .bind(ok.country, ok.level, ok.birth_year, ok.guardian_consent, id, me.id).run();
-          return { ok: true, candidate_no: had.candidate_no, updated: true };
+          /* an admin's decision on a request stands while the candidate keeps asking; a new request or a new country re-opens it */
+          const aid = ok.aid === 'pending' && ['approved', 'declined'].includes(had.aid) && had.aid_reason === ok.aid_reason ? had.aid : ok.aid;
+          await db.prepare('UPDATE hpho_entries SET country=?,level=?,birth_year=?,guardian_consent=?,aid=?,aid_reason=?,aid_note=?,aid_at=CASE WHEN ?=aid THEN aid_at ELSE NULL END WHERE round_id=? AND user_id=?')
+            .bind(ok.country, ok.level, ok.birth_year, ok.guardian_consent, aid, ok.aid_reason, ok.aid_note, aid, id, me.id).run();
+          return { ok: true, candidate_no: had.candidate_no, updated: true, aid, fee_due: feeDue(round, aid) };
         }
         const prefix = candidatePrefix(id);
         for (let i = 0; i < 8; i++) {
           const no = prefix + String(crypto.getRandomValues(new Uint32Array(1))[0] % 10000).padStart(4, '0');
           try {
-            await db.prepare('INSERT INTO hpho_entries(round_id,user_id,candidate_no,country,level,birth_year,guardian_consent,created_at) VALUES(?,?,?,?,?,?,?,?)')
-              .bind(id, me.id, no, ok.country, ok.level, ok.birth_year, ok.guardian_consent, now()).run();
-            return { ok: true, candidate_no: no };
+            await db.prepare('INSERT INTO hpho_entries(round_id,user_id,candidate_no,country,level,birth_year,guardian_consent,aid,aid_reason,aid_note,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)')
+              .bind(id, me.id, no, ok.country, ok.level, ok.birth_year, ok.guardian_consent, ok.aid, ok.aid_reason, ok.aid_note, now()).run();
+            return { ok: true, candidate_no: no, aid: ok.aid, fee_due: feeDue(round, ok.aid) };
           } catch (e) { if (!/UNIQUE/i.test(String(e?.message || e))) throw e; }
         }
         fail(503, 'candidate_number_busy');
@@ -133,8 +163,18 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
     }
     if ((r = /^\/api\/hpho\/rounds\/([^/]+)\/entries$/.exec(p)) && m === 'GET') {
       needUser(me); if (!isAdmin(me)) fail(403, 'forbidden');
-      const rows = (await db.prepare('SELECT candidate_no,country,level,birth_year,guardian_consent,created_at FROM hpho_entries WHERE round_id=? ORDER BY created_at').bind(r[1]).all()).results || [];
-      return { count: rows.length, entries: rows };
+      const rows = (await db.prepare('SELECT candidate_no,country,level,birth_year,guardian_consent,aid,aid_reason,aid_note,aid_at,created_at FROM hpho_entries WHERE round_id=? ORDER BY created_at').bind(r[1]).all()).results || [];
+      const aid = Object.fromEntries(AID_STATES.map(k => [k, rows.filter(e => e.aid === k).length]));
+      return { count: rows.length, aid, entries: rows };
+    }
+    if ((r = /^\/api\/hpho\/rounds\/([^/]+)\/aid$/.exec(p)) && m === 'POST') {
+      needUser(me); if (!isAdmin(me)) fail(403, 'forbidden');
+      const decision = ['approved', 'declined'].includes(body?.decision) ? body.decision : fail(400, 'bad_decision');
+      const no = typeof body?.candidate_no === 'string' ? body.candidate_no : fail(400, 'bad_candidate');
+      const res = await db.prepare(`UPDATE hpho_entries SET aid=?,aid_at=? WHERE round_id=? AND candidate_no=? AND aid IN ('pending','approved','declined')`)
+        .bind(decision, now(), r[1], no).run();
+      if (!res.meta?.changes) fail(404, 'no_aid_request');
+      return { ok: true, candidate_no: no, aid: decision };
     }
     fail(404, 'not_found');
   };
