@@ -34,6 +34,8 @@ function fakeAI({answerText = '답: v = 2 m/s', judge = '{"score": 8, "correct":
 function bank({figure = false} = {}) {
   return {async fetch(url) {
     const u = new URL(url);
+    // like the real bank: more than 30 is refused (src/problem-bank.js, invalid_pagination)
+    if (u.pathname.endsWith('/recommendations') && !(+u.searchParams.get('limit') <= 30)) return Response.json({error: 'invalid_pagination'}, {status: 400});
     if (u.pathname.endsWith('/recommendations')) return Response.json({items: ['q1', 'q2', 'q3'].map(id => ({id}))});
     if (/\/q\d\/solutions$/.test(u.pathname)) return Response.json({solutions: [{selected_version: {text: '에너지 보존으로 v = 2 m/s.'}}]});
     if (/\/q\d$/.test(u.pathname)) return Response.json({question: {figures: figure ? [{}] : [], assets: [], selected_version: {text: '질량 1 kg의 공이 높이 0.2 m에서 떨어진다. 바닥에서의 속력은?'}}});

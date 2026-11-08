@@ -65,7 +65,8 @@ export async function pickBankProblem(env, db, rand = Math.random, kind = 'bank'
   const why = {seen: 0, figure: 0, length: 0, no_solution: 0, error: 0}, start = Math.floor(rand() * 5);
   for (let step = 0; step < 3; step++) {
     const stars = 1 + (start + step * 2) % 5;
-    const {items = []} = await bankJson(env, `/recommendations?${new URLSearchParams({lang: 'ko', limit: '40', stars: String(stars)})}`).catch(() => ({items: []}));
+    /* 30 is the most the bank serves (more is a 400: invalid_pagination), so every case failed on 2026-11-07 */
+    const {items = []} = await bankJson(env, `/recommendations?${new URLSearchParams({lang: 'ko', limit: '30', stars: String(stars)})}`).catch(() => ({items: []}));
     const ids = [...new Set(items.map(i => i.id).filter(Boolean))];
     if (!ids.length) continue;
     const seen = new Set((await db.prepare(`SELECT ref FROM ai_eval WHERE kind=? AND created_at>unixepoch()-7776000 AND ref IN (${ids.map(() => '?').join(',')})`)
