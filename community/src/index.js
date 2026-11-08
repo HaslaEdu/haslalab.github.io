@@ -246,16 +246,20 @@ const accountSecurityRouter = createAccountSecurityRouter({HttpError,now,limit,s
 const signupEmail = createSignupEmail({HttpError,now,limit,sha256,clientIp,scope:env => env[DB_SCOPE] || env.DB});
 /* the monthly answer photos are all read by MONTHLY_OCR_MODEL (Gemini 3.8 Flash, the model that read handwritten theory pages
    best on the 2026-11-03 bench), whichever provider the page records */
+/* its thinking level: the request's default ("minimal") is refused by Gemini 3.8 Flash and the retry without it let the model
+   think at length (a bench of 2026-11-08: 82 s to read one page, a one-call read past the 110 s limit); "low" is what the lab's
+   3.8 Flash reads use */
+const monthlyThinking = env => String(env.MONTHLY_OCR_THINKING || 'low').trim();
 const monthlyOcr = (env, file, mode, m, provider) => { const model = String(env.MONTHLY_OCR_MODEL || '').trim();
-  return model ? ocr(env, file, mode, m, model.split('-')[0], model) : ocr(env, file, mode, m, provider); };
+  return model ? ocr(env, file, mode, m, model.split('-')[0], model, monthlyThinking(env)) : ocr(env, file, mode, m, provider); };
 const monthlyPhotoRouter = createMonthlyPhotoRouter({HttpError, needUser, limit, ocr: monthlyOcr, imageType,
   ensureContent:ensureWeeklyContent, visibleSql:visibleMonthlySql, attempts:monthlyAttempts, scope:env => env[DB_SCOPE] || env.DB});
 /* and the step after it, which splits a page's transcript into the sheet's parts looking at the photo too, uses that model */
 const monthlyExtract = (env, prompt, schema, images, provider) => { const model = String(env.MONTHLY_OCR_MODEL || '').trim();
-  return model ? callGrader(env, prompt, schema, images, model.split('-')[0], model) : callGrader(env, prompt, schema, images, provider); };
+  return model ? callGrader(env, prompt, schema, images, model.split('-')[0], model, { thinking: monthlyThinking(env) }) : callGrader(env, prompt, schema, images, provider); };
 /* with MONTHLY_OCR_MODEL a page is read in one call (transcription and parts together); null keeps the two-step path */
 const monthlyRead = (env, sheet, pageNo, kind, provider, images, photoId) => { const model = String(env.MONTHLY_OCR_MODEL || '').trim();
-  return model ? readMonthlyCapturePage(sheet, pageNo, kind, (prompt, schema, originals) => callGrader(env, prompt, schema, originals, model.split('-')[0], model, { maxTokens: 16384 }), { images, photoId }) : null; };
+  return model ? readMonthlyCapturePage(sheet, pageNo, kind, (prompt, schema, originals) => callGrader(env, prompt, schema, originals, model.split('-')[0], model, { maxTokens: 16384, thinking: monthlyThinking(env) }), { images, photoId }) : null; };
 const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr:monthlyOcr,imageType,invoke:monthlyExtract,read:monthlyRead,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,attempts:monthlyAttempts,scope:env=>env[DB_SCOPE]||env.DB});
 /* TEMPORARY benchmark (removed after one run): times reading one stored answer-sheet page the old way (OCR, then a split
@@ -1158,13 +1162,13 @@ async function ocrResponseJSON(response) {
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new HttpError(502, "ocr_bad_response");
   return parsed;
 }
-async function ocr(env, file, mode, m, provider, model) {
+async function ocr(env, file, mode, m, provider, model, thinking) {
   requireVisionProvider(env, provider);
   const bytes = new Uint8Array(await file.arrayBuffer()), type = imageType(bytes.subarray(0,16));
   if (!type) throw new HttpError(415,'bad_image');
   try {
     const result = await visionTranscript(env,provider,[{mime:type,data:b64(bytes),label:'Original submitted answer page'}],
-      {maxTokens:16384,timeoutMs:110000,signal:labProviderSignal(env,110000),...(model?{model}:{})});
+      {maxTokens:16384,timeoutMs:110000,signal:labProviderSignal(env,110000),...(model?{model}:{}),...(thinking?{thinking}:{})});
     meterAdd(env,m,{step:'ocr',provider,...result.usage,model:result.usage.resolved_model||VISION_MODELS[provider],price_key:VISION_MODELS[provider],ok:1});
     return {text:result.text,low:result.uncertainties,confidence:result.confidence,engine:provider,
       format:result.format,visuals:result.visuals,legible:result.legible,equations:[]};
