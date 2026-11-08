@@ -26,7 +26,7 @@ async function environment(run) {
       sql.exec('BEGIN');try{const value=statements.map(st=>{const result=st.executeSync();if(failPhoto&&st.query.includes('INSERT INTO monthly_capture_pages')){failPhoto=false;throw Error('local photo interruption');}return result;});sql.exec('COMMIT');return value;}catch(error){sql.exec('ROLLBACK');throw error;}}};
   const saved={fetch:globalThis.fetch,caches:globalThis.caches,now:Date.now};
   let clock=NOW,transcript=TRANSCRIPT,extracted=parts(),beforeOcr=async()=>{},beforeGrade=async()=>{},beforeExtract=async()=>{};
-  const calls={ocr:0,extract:0,grade:0,screen:0},providerCalls=[];
+  const calls={ocr:0,extract:0,grade:0,screen:0},providerCalls=[],reads=[];
   Date.now=()=>clock*1000;globalThis.caches={default:{async match(){},async put(){}}};
   const tokens=[];
   for(let id=1;id<=2;id++){
@@ -40,7 +40,8 @@ async function environment(run) {
     const request=JSON.parse(init.body),schema=gemini?request.generationConfig.responseSchema:JSON.parse(request.messages[0].content.split('JSON schema:\n')[1]);
     providerCalls.push({provider:gemini?'gemini':'deepseek',request,schema});
     let raw;
-    if(schema.properties.visuals){calls.ocr++;await beforeOcr();assert.ok(JSON.stringify(request).includes(Buffer.from(png(32)).toString('base64')));raw={text:transcript,confidence:0.98,legible:true,uncertainties:[],visuals:[]};}
+    if(schema.properties.parts&&schema.properties.text){reads.push({model:String(url).match(/models\/([^:]+):/)?.[1],scan:JSON.stringify(request).includes(Buffer.from(png(32)).toString('base64')),original:JSON.stringify(request).includes(Buffer.from(png(200)).toString('base64'))});raw={text:transcript,legible:true,parts:extracted};}
+    else if(schema.properties.visuals){calls.ocr++;await beforeOcr();assert.ok(JSON.stringify(request).includes(Buffer.from(png(32)).toString('base64')));raw={text:transcript,confidence:0.98,legible:true,uncertainties:[],visuals:[]};}
     else if(schema.properties.parts){calls.extract++;const response=await beforeExtract();if(response instanceof Response)return response;raw={parts:extracted};}
     else if(schema.properties.assessment){calls.screen++;raw={assessment:'uncertain',confidence:0.5,signals:[]};}
     else{
@@ -67,7 +68,7 @@ async function environment(run) {
     return phone(scan,`/pages?task=${page}&kind=${kind}`,{body:form});
   };
   const submit=async(scan,key,extra={})=>api('/problems/4/submit',{body:{scan_id:scan.id,provider:scan.provider||'gemini',request_id:requestId(key),lang:'ko',...extra}});
-  try{return await run({sql,DB,api,grant,phone,upload,submit,calls,providerCalls,time:value=>{clock=value;},
+  try{return await run({sql,DB,env,reads,api,grant,phone,upload,submit,calls,providerCalls,time:value=>{clock=value;},
     transcript:value=>{transcript=value;},extract:value=>{extracted=value;},beforeOcr:callback=>{beforeOcr=callback;},beforeGrade:callback=>{beforeGrade=callback;},beforeExtract:callback=>{beforeExtract=callback;},beforeReserve:callback=>{beforeReserve=callback;},beforeGrant:callback=>{beforeGrant=callback;},failPhoto:()=>{failPhoto=true;},reservationBatches});}
   finally{globalThis.fetch=saved.fetch;globalThis.caches=saved.caches;Date.now=saved.now;sql.close();}
 }
@@ -505,5 +506,19 @@ test('a QR provider is frozen, cannot be overridden by a phone, and fresh grants
     const blocked=await phone(scan,'/pages?task=1&provider=gemini',{body:new FormData()});assert.equal(blocked.status,409);assert.equal(calls.ocr,0);
     assert.equal((await api('/monthly/problems/4/scan?scan_id='+scan.id,{user:2})).status,404);
     const fresh=(await grant({fresh:true,provider:'gemini'})).data.scan;assert.equal(fresh.provider,'gemini');assert.equal((await phone(scan)).status,403);assert.equal((await phone(foreign)).status,200);assert.equal((await upload(fresh)).status,200);
+  });
+});
+
+test('MONTHLY_OCR_MODEL: one call on the corrected page reads the transcription and the parts; the verbatim check still applies',async()=>{
+  await environment(async({env,reads,grant,phone,upload,calls,extract})=>{
+    env.MONTHLY_OCR_MODEL='gemini-3.8-flash';
+    const scan=(await grant()).data.scan,result=await upload(scan);
+    assert.equal(result.status,200);assert.equal(result.data.ocr_status,'done');
+    assert.deepEqual(calls,{ocr:0,extract:0,grade:0,screen:0},'no separate OCR and split calls');
+    assert.equal(reads.length,1);assert.equal(reads[0].model,'gemini-3.8-flash');
+    assert.deepEqual([reads[0].scan,reads[0].original],[true,false],'it reads the corrected page, not the original photo');
+    const view=(await phone(scan)).data;assert.equal(view.parts.find(part=>part.id==='a').answer,ANSWER);
+    extract([{id:'a',answer:'an answer that is not in the transcription',working:WORKING}]);
+    const bad=await upload(scan);assert.equal(bad.status,200);assert.equal(bad.data.ocr_status,'failed','text not in its own transcription is refused');
   });
 });
