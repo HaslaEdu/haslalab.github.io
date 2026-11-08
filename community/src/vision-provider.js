@@ -203,7 +203,9 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const openaiResponses=async()=>{
     const rurl=url.replace(/\/chat\/completions$/,'/responses');
     const input=[{role:'user',content:content.map(p=>p.type==='image_url'?{type:'input_image',image_url:p.image_url.url,detail:p.image_url.detail||'high'}:
-      p.type==='file'?{type:'input_file',filename:p.file.filename,file_data:p.file.file_data}:{type:'input_text',text:p.text})}];
+      p.type==='file'?{type:'input_file',filename:p.file.filename,file_data:p.file.file_data}:{type:'input_text',text:p.text}).concat(
+      /* json_object needs the word in the input itself, not only in the instructions (OpenAI answers 400 otherwise) */
+      [{type:'input_text',text:'Reply with one JSON object only.'}])}];
     const rbody={model,instructions:jsonRules,input,text:{format:{type:'json_object'}},max_output_tokens:Math.max(count,16384),store:false,
       ...(['none','low','medium','high','xhigh'].includes(level)?{reasoning:{effort:level}}:{}),...(serviceTier==='flex'?{service_tier:'flex'}:{}),
       ...(useTools?{tools:tools.map(t=>({type:'function',name:t.function.name,description:t.function.description,parameters:t.function.parameters})),include:['reasoning.encrypted_content']}:{})};

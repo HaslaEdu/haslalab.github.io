@@ -1034,6 +1034,10 @@ async function gradeEssay(env, prob, answer, lang, context = {}) {
       fixedError = { code: String(error?.code || 'failed').slice(0, 60), status: error?.provider_status ?? null, provider_code: error?.provider_code || null,
         message: typeof error?.provider_message === 'string' ? error.provider_message.slice(0, 200) : null }; }
   }
+  /* the fallback for the fixed grader: MONTHLY_GRADE_FALLBACK_MODEL (Gemini 3.8 Flash) rather than the candidate's reader default */
+  const fallback = fixed && String(env.MONTHLY_GRADE_FALLBACK_MODEL || '').trim();
+  if (!res && fallback) { try { res = await callGrader(env, prompt, SCORE_SCHEMA, context.images||[], fallback.split('-')[0], fallback, { thinking: 'low' }); }
+    catch (error) { console.error('monthly fallback grader', fallback, error?.code || error?.message); } }
   if (!res) res = await callGrader(env, prompt, SCORE_SCHEMA, context.images||[], context.provider);
   if (!res) return null;
   const g = normalizeGrade(res.raw, rubric, answer);
