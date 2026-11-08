@@ -178,6 +178,32 @@
     document.documentElement.classList.toggle("hlx-has-tabs", !exam);
   }
 
+  /* ── the HaslaEdu Windows app opens this site with ?desktop=1 (physleague.kr passes it on): remembered for the window's
+     session, it widens the layout for a PC screen, gives the window the browser keys it lacks (Alt+←/→ back and forward,
+     F5 reload) and keeps the HaslaEdu link inside the app ── */
+  const DESKTOP_KEY = "hl-desktop-app";
+  const desktop = (() => {
+    let on = false;
+    try { on = new URLSearchParams(location.search).get("desktop") === "1" || sessionStorage.getItem(DESKTOP_KEY) === "1"; if (on) sessionStorage.setItem(DESKTOP_KEY, "1"); } catch (e) {}
+    return on;
+  })();
+  if (desktop) {
+    document.documentElement.classList.add("hl-desktop");
+    addEventListener("keydown", e => {
+      if (e.defaultPrevented || e.ctrlKey || e.metaKey) return;
+      if (e.altKey && e.key === "ArrowLeft") { e.preventDefault(); history.back(); }
+      else if (e.altKey && e.key === "ArrowRight") { e.preventDefault(); history.forward(); }
+      else if (!e.altKey && e.key === "F5") { e.preventDefault(); location.reload(); }
+    });
+  }
+  function eduLink() {
+    const a = document.getElementById("eduLink"); if (!a) return;
+    const url = new URL("https://physleague.kr/"); url.searchParams.set("lang", L());
+    if (desktop) { url.searchParams.set("desktop", "1"); a.removeAttribute("target"); }
+    a.href = url.href;
+    a.title = L() === "en" ? "Go to HaslaEdu" : "하슬라에듀로 이동";
+  }
+
   /* ── a one-off announcement on arrival: "다시 보지 않기" remembers it on this device; it ends by itself ── */
   const NOTICE_TEXT = {
     ko: { title: "월별문제 촬영 제출, 다시 됩니다 📸",
@@ -211,6 +237,7 @@
   window.HL_UX = {
     afterRender(first, second) {
       try { notice(); } catch (e) {}
+      try { eduLink(); } catch (e) {}
       try { searchButton(); tabs();
         if (!first) home();
         else if (hasData() && DATA[first] && second && /^\d{4}$/.test(second)) year();
