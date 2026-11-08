@@ -74,6 +74,7 @@ LAB_ONLY_PROVIDER = ""
 MONTHLY_GRADE_PROVIDER = "openai"
 # and their answer photos are read by Gemini 3.8 Flash; candidates no longer pick a provider for them
 MONTHLY_OCR_MODEL = "gemini-3.8-flash"
+MONTHLY_OCR_THINKING = "low"
 MONTHLY_GRADE_MODEL = "gpt-6.1-terra"
 # through the Responses API, with medium reasoning
 MONTHLY_GRADE_API = "responses"
