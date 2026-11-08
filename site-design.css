@@ -365,9 +365,8 @@ html[data-theme="dark"] body.hl-site #view textarea{background:#141019;color:#eb
   body.hl-site .mark img{width:23px;height:23px;grid-column:1;grid-row:1/3;align-self:center}
   body.hl-site .mark em{display:block;grid-column:2;grid-row:2;font-size:7.4px;letter-spacing:.08em;padding:0}
   body.hl-site #siteTheme{width:28px;height:28px;font-size:15px}
-  body.hl-site .hl-edu{padding:4px 6px;font-size:10px}
-  body.hl-site .hl-edu span{display:none}
-  body.hl-site .hl-edu::before{content:"Edu"}
+  /* no room beside the logo on a phone: the link takes a short second line, under the buttons */
+  body.hl-site .hl-edu{grid-column:1/-1;grid-row:2;justify-self:end;margin:-2px 0 6px;padding:3px 8px;font-size:11px}
   body.hl-site #acct a{gap:5px;padding:5px 6px;font-size:11px}
   body.hl-site #acct .acct-me>span:not(.cmav){display:inline;max-width:48px;font-size:10px;line-height:1.2;white-space:normal}
   body.hl-site header .lang{width:86px;padding:2px;justify-content:space-between;gap:0}
@@ -705,3 +704,9 @@ html[data-theme="dark"] body.hl-site .hpho-form select{background:#141019;border
 html[data-theme="dark"] body.hl-site .hpho-btn{background:#bca0ed;color:#17131f}
 html[data-theme="dark"] body.hl-site .hpho-tabs a[aria-current="page"]{color:#c9b8f0;border-color:#bca0ed}
 body.hl-site .hpho-form [hidden]{display:none}
+
+/* a tablet narrow enough that the logo and the Edu link would meet: the link gets its own short line above the menu */
+@media(min-width:641px) and (max-width:820px){
+  body.hl-site .hl-edu{grid-column:1/-1;grid-row:2;justify-self:end;margin:-4px 0 2px;padding:3px 8px;font-size:11px}
+  body.hl-site #nav{grid-row:3}
+}
