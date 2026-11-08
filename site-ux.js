@@ -178,8 +178,34 @@
     document.documentElement.classList.toggle("hlx-has-tabs", !exam);
   }
 
+  /* ── a one-off announcement on arrival: "다시 보지 않기" remembers it on this device; it ends by itself ── */
+  const NOTICE = { key: "hl-notice-2026-11-monthly-scan", until: Date.parse("2026-12-01T00:00:00+09:00"), href: "#/monthly",
+    title: "월별문제 촬영 제출, 다시 됩니다 📸",
+    body: ["답안지 사진이 판독되지 않던 오류를 고쳤습니다.", "이번 달 문제 5개, 다시 도전해 보세요!", "상위 3명에게는 토큰 9·6·3개를 드립니다 (마감 12월 1일 00:00)."],
+    go: "월별문제 풀러 가기", close: "닫기", never: "다시 보지 않기" };
+  let noticeShown = false;
+  function notice() {
+    if (noticeShown || Date.now() >= NOTICE.until || L() !== "ko") return;
+    if (/^#\/lab\b|\/(exam|review)(\/|$)|^#\/monthly\b/.test(location.hash)) return;
+    try { if (localStorage.getItem(NOTICE.key) === "never" || sessionStorage.getItem(NOTICE.key) === "closed") return; } catch (e) {}
+    noticeShown = true;
+    const box = document.createElement("div"); box.className = "hlx-notice"; box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-labelledby", "hlxNoticeTitle");
+    box.innerHTML = `<div class="hlx-notice-card"><h2 id="hlxNoticeTitle">${esc(NOTICE.title)}</h2>${NOTICE.body.map(line => `<p>${esc(line)}</p>`).join("")}
+      <div class="hlx-notice-actions"><a class="hlx-notice-go" href="${NOTICE.href}">${esc(NOTICE.go)}</a><button type="button" data-notice-close>${esc(NOTICE.close)}</button></div>
+      <label class="hlx-notice-never"><input type="checkbox" data-notice-never> ${esc(NOTICE.never)}</label></div>`;
+    const done = () => { try { if (box.querySelector("[data-notice-never]").checked) localStorage.setItem(NOTICE.key, "never"); else sessionStorage.setItem(NOTICE.key, "closed"); } catch (e) {}
+      box.remove(); removeEventListener("keydown", key); };
+    const key = e => { if (e.key === "Escape") done(); };
+    box.querySelector("[data-notice-close]").addEventListener("click", done);
+    box.querySelector(".hlx-notice-go").addEventListener("click", done);
+    box.addEventListener("click", e => { if (e.target === box) done(); });
+    addEventListener("keydown", key);
+    document.body.append(box); box.querySelector(".hlx-notice-go").focus();
+  }
+
   window.HL_UX = {
     afterRender(first, second) {
+      try { notice(); } catch (e) {}
       try { searchButton(); tabs();
         if (!first) home();
         else if (hasData() && DATA[first] && second && /^\d{4}$/.test(second)) year();
