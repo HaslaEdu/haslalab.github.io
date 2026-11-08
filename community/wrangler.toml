@@ -75,6 +75,9 @@ MONTHLY_GRADE_PROVIDER = "openai"
 # and their answer photos are read by Gemini 3.8 Flash; candidates no longer pick a provider for them
 MONTHLY_OCR_MODEL = "gemini-3.8-flash"
 MONTHLY_GRADE_MODEL = "gpt-6.1-terra"
+# through the Responses API, with medium reasoning
+MONTHLY_GRADE_API = "responses"
+MONTHLY_GRADE_THINKING = "medium"
 LAB_PIPELINE = "mixed"
 LAB_SCHEME_PROVIDER = "deepseek"
 # Theory pages are read by Gemini 3.8 Flash (the owner's decision, 2026-11-03). Reading bench of that day, 40 checks on
