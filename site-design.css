@@ -34,6 +34,13 @@ body.hl-site #siteTheme{
 }
 body.hl-site #siteTheme:hover{border-color:#8670b3;background:#f6f3fc}
 body.hl-site #acct{flex:none;margin-left:auto}
+/* HaslaEdu, the family site: a quiet link beside the logo */
+body.hl-site .hl-edu{display:inline-flex;align-items:center;gap:4px;flex:none;margin-left:-8px;padding:4px 9px;border:1px solid #d5dbe6;border-radius:999px;
+  color:#5c438f;font:600 12px/1 var(--sans);text-decoration:none;white-space:nowrap}
+body.hl-site .hl-edu svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+body.hl-site .hl-edu:hover{border-color:#8670b3;background:#f6f3fc}
+html[data-theme="dark"] body.hl-site .hl-edu{color:#c9b8f0;border-color:#51435f}
+html[data-theme="dark"] body.hl-site .hl-edu:hover{background:#231b2e}
 body.hl-site #acct a{padding:6px 10px;line-height:1.45}
 body.hl-site #acct .acct-me>span:not(.cmav){
   display:inline;max-width:112px;white-space:normal;overflow:visible;
@@ -333,6 +340,7 @@ html[data-theme="dark"] body.hl-site #view textarea{background:#141019;color:#eb
     gap:9px 13px;padding-top:10px;padding-bottom:0;
   }
   body.hl-site .mark{grid-column:1;grid-row:1;justify-self:start}
+  body.hl-site .hl-edu{grid-column:1;grid-row:1;justify-self:end;margin-left:0}
   body.hl-site #siteTheme{grid-column:2;grid-row:1}
   body.hl-site #acct{grid-column:3;grid-row:1;margin-left:0}
   body.hl-site header .lang{grid-column:4;grid-row:1;margin-left:0}
@@ -357,6 +365,9 @@ html[data-theme="dark"] body.hl-site #view textarea{background:#141019;color:#eb
   body.hl-site .mark img{width:23px;height:23px;grid-column:1;grid-row:1/3;align-self:center}
   body.hl-site .mark em{display:block;grid-column:2;grid-row:2;font-size:7.4px;letter-spacing:.08em;padding:0}
   body.hl-site #siteTheme{width:28px;height:28px;font-size:15px}
+  body.hl-site .hl-edu{padding:4px 6px;font-size:10px}
+  body.hl-site .hl-edu span{display:none}
+  body.hl-site .hl-edu::before{content:"Edu"}
   body.hl-site #acct a{gap:5px;padding:5px 6px;font-size:11px}
   body.hl-site #acct .acct-me>span:not(.cmav){display:inline;max-width:48px;font-size:10px;line-height:1.2;white-space:normal}
   body.hl-site header .lang{width:86px;padding:2px;justify-content:space-between;gap:0}
@@ -654,3 +665,7 @@ body.hl-site .ar .armonthly-page-photo [hidden]{display:none!important}
 .hlx-notice-never{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;color:var(--graphite,#5a6378);cursor:pointer}
 html[data-theme="dark"] .hlx-notice-card{background:#1c1825;color:#ede7f6}
 html[data-theme="dark"] .hlx-notice-card p{color:#c9c0d8}
+
+/* the HaslaEdu Windows app (site-ux.js: ?desktop=1): a PC window, so the pages use more of its width */
+html.hl-desktop body.hl-site .shell{max-width:1440px}
+html.hl-desktop body.hl-site .archive-reading>.archive-categories{max-width:1360px}
