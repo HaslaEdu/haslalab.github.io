@@ -23,13 +23,13 @@ const SITE = 'https://haslalab.org/';
 //     same per-token price, so a trained adapter is served from there (AI_CHAT_URL/_KEY/_REMOTE below) and the
 //     untuned model stays on Workers AI as the fallback.
 //   SOLVER: until Hasla AI's own reasoning model is ready (HaslaEdu/hasla-ai), DeepSeek's API (deepseek-flash, thinking
-//     on) when the Worker holds DEEPSEEK_API_KEY, from 2026-11-14 (Korea time): the privacy policy announces the new
-//     transfer seven days ahead (AI_SOLVER_DEEPSEEK_FROM moves the day). On Workers AI the solver is QwQ 32B until
-//     Workers AI retires it on 2026-11-20, then Gemma 4.
+//     on) when the Worker holds DEEPSEEK_API_KEY, from 2026-11-08 (Korea time; AI_SOLVER_DEEPSEEK_FROM moves the day).
+//     On Workers AI (no key, or DeepSeek failing) the solver is QwQ 32B until Workers AI retires it on 2026-11-20,
+//     then Gemma 4.
 //   GUARD: Llama Guard 3 (LoRA on Workers AI); FAST, the intent classifier: Llama 3.1 8B (a LoRA on CoreWeave too).
 export const CHAT_MODEL = '@cf/google/gemma-4-26b-a4b-it';
 export const QWQ_SOLVER = '@cf/qwen/qwq-32b';
-export const SOLVER_DEEPSEEK = 'deepseek-flash', SOLVER_DEEPSEEK_FROM = '2026-11-14', QWQ_RETIRED = '2026-11-20';
+export const SOLVER_DEEPSEEK = 'deepseek-flash', SOLVER_DEEPSEEK_FROM = '2026-11-08', QWQ_RETIRED = '2026-11-20';
 const kstDay = (ms = Date.now()) => new Date(ms + 9 * 3600e3).toISOString().slice(0, 10);
 /** the solver on Workers AI on a given day (Korea time) */
 export const solverWorkersModel = (day = kstDay()) => (day < QWQ_RETIRED ? QWQ_SOLVER : CHAT_MODEL);
