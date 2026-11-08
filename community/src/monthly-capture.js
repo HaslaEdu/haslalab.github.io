@@ -311,7 +311,9 @@ export function createMonthlyCaptureRouter({HttpError,needUser,ensureContent,vis
         /* one call on the corrected page the scanner made (the photo the reader reads best and the smallest one) */
         const scanned=read?new Uint8Array(await image.arrayBuffer()):null;
         const page=read?await read(env,sheet,pageNo,kind,provider,[{mime:imageType(scanned),data:imageBase64(scanned),label:'Corrected student answer-sheet page '+pageNo}],photoId):null;
-        if(page){
+        /* a one-call read that came back with nothing (seen once in the bench, in 5 s) is read again the two-step way */
+        const emptyRead=page&&!page.error&&String(page.text||'').trim().length<20&&!page.parts.some(part=>part.answer||part.working);
+        if(page&&!emptyRead){
           transcript=page.text;parts=page.parts;
           if(new TextEncoder().encode(transcript).byteLength>MONTHLY_MAX_OCR_BYTES)fail('ocr_too_big',413);
           if(page.error){status='failed';ocrError=safeOcrFailureCode(page.error?.code,'capture_read_failed');}
