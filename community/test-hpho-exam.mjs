@@ -26,7 +26,8 @@ async function setup(startOffset) {
   /* then move the start to where the test wants it */
   sql.prepare('UPDATE hpho_rounds SET start_at=?').run(t + startOffset);
   const call = (action, m, body, me, query = '') => exam(`/api/hpho/rounds/2027-1/exam/${action}`, m, body, me, env, new URL('https://x/' + query));
-  return { sql, call, t };
+  const callRaw = (action, form, store) => exam(`/api/hpho/rounds/2027-1/exam/${action}`, 'POST', {}, student, { ...env, HPHO_SNAPS: store }, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: form }));
+  return { sql, call, callRaw, t };
 }
 
 test('client and event checks', () => {
@@ -66,4 +67,24 @@ test('events are stored once each, a silent stretch is recorded by the server, a
   assert.ok(log.events.some(e => e.seq < 0 && /no contact/.test(e.detail)));
   const end = await f.call('end', 'POST', {}, student);
   assert.ok(end.upload_until - log.session.ends_at === UPLOAD_MIN * 60);
+});
+
+test('snapshots: JPEG only, small, from a live session, stored under the candidate number', async () => {
+  const f = await setup(-60);
+  const puts = [];
+  const env2 = { put: (k, v, o) => puts.push([k, v.length, o]) };
+  const snap = (bytes, source = 'webcam', reason = 'random') => {
+    const form = new FormData(); form.set('image', new Blob([bytes], { type: 'image/jpeg' })); form.set('source', source); form.set('reason', reason);
+    return f.callRaw('snap', form, env2);
+  };
+  await f.call('start', 'POST', { client }, student);
+  const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]);
+  assert.equal((await snap(jpeg)).ok, true);
+  assert.match(puts[0][0], /^hpho\/2027-1\/HP271-\d{4}\/\d+-webcam-random\.jpg$/);
+  assert.equal(await code(snap(new Uint8Array([0x89, 0x50, 0x4e, 0x47]))), 'snapshot_not_jpeg');
+  assert.equal(await code(snap(jpeg, 'microphone')), 'bad_snapshot');
+  assert.equal(await code(snap(jpeg, 'screen', 'not a reason')), 'bad_snapshot');
+  assert.equal(await code(snap(new Uint8Array(260 * 1024).fill(0xff))), 'snapshot_too_large');
+  await f.call('end', 'POST', {}, student);
+  assert.equal(await code(snap(jpeg)), 'exam_over');
 });
