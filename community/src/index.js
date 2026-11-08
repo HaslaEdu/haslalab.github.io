@@ -250,7 +250,10 @@ const monthlyOcr = (env, file, mode, m, provider) => { const model = String(env.
   return model ? ocr(env, file, mode, m, model.split('-')[0], model) : ocr(env, file, mode, m, provider); };
 const monthlyPhotoRouter = createMonthlyPhotoRouter({HttpError, needUser, limit, ocr: monthlyOcr, imageType,
   ensureContent:ensureWeeklyContent, visibleSql:visibleMonthlySql, attempts:monthlyAttempts, scope:env => env[DB_SCOPE] || env.DB});
-const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr:monthlyOcr,imageType,invoke:callGrader,
+/* and the step after it, which splits a page's transcript into the sheet's parts looking at the photo too, uses that model */
+const monthlyExtract = (env, prompt, schema, images, provider) => { const model = String(env.MONTHLY_OCR_MODEL || '').trim();
+  return model ? callGrader(env, prompt, schema, images, model.split('-')[0], model) : callGrader(env, prompt, schema, images, provider); };
+const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr:monthlyOcr,imageType,invoke:monthlyExtract,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,attempts:monthlyAttempts,scope:env=>env[DB_SCOPE]||env.DB});
 
 const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUser,limit,
@@ -886,7 +889,8 @@ function pubProblem(r, lang, open, full) {
   if (answerSheet) o.answerSheet = answerSheet;
   if (full) {
     o.body = en ? r.body_en : r.body_ko;
-    if (r.kind === "essay" && r.rubric) o.criteria = JSON.parse(r.rubric).map(c => ({ id: c.id, name: c.name, max: c.max }));
+    /* the marking items name what each part is after (a hint), so they come out with the solution, after the deadline */
+    if (closed && r.kind === "essay" && r.rubric) o.criteria = JSON.parse(r.rubric).map(c => ({ id: c.id, name: c.name, max: c.max }));
     if (closed) o.solution = en ? r.model_en : r.model_ko;      // the worked solution once the period is over
   }
   return o;

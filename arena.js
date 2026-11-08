@@ -946,7 +946,7 @@ async function arProblem(root, alive, id,preloaded) {
         <div class="armeta">${arProblemKindBadge(p)}<span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
           <span>${p.points}${T.pts}</span>${p.answerSheet&&Number.isFinite(p.best)?`<span>${T.best} ${p.best} / ${p.points}${T.pts}</span>`:""}<span>${T.deadline} ${arDeadline(p.closes_at)}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source && !p.answerSheet ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
       ${arMonthlyExperimentHtml(p)}
-      ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(arMonthlyPartNumber(p,c.id,c.display_id))}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
+      ${p.criteria && p.closed ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(arMonthlyPartNumber(p,c.id,c.display_id))}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
     </div>
     <div class="arpanel" id="arAns">
       ${p.answerSheet?.parts?.length ? arMonthlyAnswerHtml(p,ocrOn) : `<h3>${T.answer}</h3>

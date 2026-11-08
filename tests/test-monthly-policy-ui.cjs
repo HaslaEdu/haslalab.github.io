@@ -469,7 +469,7 @@ test('letter labels replace greenhouse legacy numbers across forms, validation, 
 
 test('problem headers and criterion summaries use monthly rounds and display letters without exposing old numbering',async()=>{
   const {context}=app();context.cm.me=null;context.arBindMonthlyAnswer=()=>{};
-  const root={innerHTML:'',querySelector:()=>null},p={...clone(problem),id:7,no:4,subject:'astronomy',round:'experiment',criteria:[{id:'16',name:'Radiative equilibrium',max:100}],
+  const root={innerHTML:'',querySelector:()=>null},p={...clone(problem),id:7,no:4,subject:'astronomy',round:'experiment',closed:true,criteria:[{id:'16',name:'Radiative equilibrium',max:100}],
     answerSheet:{version:'2026-11-v1',parts:[{id:'16',displayId:'a',label_ko:'복사 평형',label_en:'Radiative equilibrium',points:100}]},
     mine:[{status:'graded',score:73,created_at:1,answer_sheet:{parts:[{id:'16',answer:'T',working:'Derivation'}]}}]};
   context.cmApi=async()=>({problem:p,health:{ocr:false}});
@@ -486,4 +486,14 @@ test('read-only captured parts use display letters while their server-owned IDs 
   const controller=context.arBindMonthlyCapture(ui.root,p,()=>true);await controller.start();
   assert.match(ui.pages.innerHTML,/<h4>\(a\)<\/h4>/);assert.ok(!ui.pages.innerHTML.includes('<h4>16</h4>'));
   assert.equal(controller.snapshot().parts[0].id,'16');controller.dispose();
+});
+
+test('an open monthly problem never lists its marking items (they hint at each part); they appear after the deadline',async()=>{
+  const {context}=app();context.cm.me=null;context.arBindMonthlyAnswer=()=>{};
+  const root={innerHTML:'',querySelector:()=>null},p={...clone(problem),id:7,no:4,closed:false,criteria:[{id:'16',name:'Exact force and linearization',max:10}],
+    answerSheet:{version:'2026-11-v1',parts:[{id:'16',displayId:'a',label_ko:'복사 평형',label_en:'Radiative equilibrium',points:100}]}};
+  context.cmApi=async()=>({problem:p,health:{ocr:false}});
+  await context.arProblem(root,()=>true,7);
+  assert.ok(root.innerHTML.length>500,'the problem page rendered: '+root.innerHTML.slice(0,300));
+  assert.doesNotMatch(root.innerHTML,/Exact force and linearization|class="arcrit"/);
 });
