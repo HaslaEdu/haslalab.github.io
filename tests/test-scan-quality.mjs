@@ -430,3 +430,11 @@ test('a green outline is taken automatically after three frames over 0.7 s, thou
   for (let frame = 0; frame < 12; frame++) { tilted.state.now = frame * 350; await tilted.next(); }
   assert.equal(tilted.photos.length, 0, 'a strongly tilted sheet waits for a flatter view'); await tilted.click('shoot'); assert.equal(tilted.photos.length, 1);
 });
+
+test('encodeUpload recompress: a small camera JPEG is kept as is unless asked; with recompress the smaller result goes up', async () => {
+  const { encodeUpload } = await import('../sim/labscan/scanner.js');
+  const jpeg = new Blob([new Uint8Array(1000)], { type: 'image/jpeg' });
+  assert.equal(await encodeUpload(jpeg, { maxBytes: 1850000 }), jpeg, 'a fitting JPEG keeps its bytes by default');
+  // without a canvas (Node) recompress cannot draw, so the original goes up unchanged rather than failing
+  assert.equal(await encodeUpload(jpeg, { maxBytes: 1850000, recompress: true, maxSide: 2400 }), jpeg);
+});
