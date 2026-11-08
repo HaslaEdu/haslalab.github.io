@@ -1014,7 +1014,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=a127fe94df45">
+<link rel="stylesheet" href="site-design.css?v=dbb355afcb77">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=9afa7e19caab">
 </head>
@@ -1161,10 +1161,11 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
-<script src="site-catalogue.js?v=491f0b78e9e8"></script>
+<script src="site-catalogue.js?v=4f649246cd00"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=7385ce7c7606"></script>
+<script src="hpho.js?v=51b910d62838"></script>
 <script src="site-ux.js?v=e94c70468260"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="ai-chat.js?v=3cfdb03f8e1d"></script>
@@ -9955,6 +9956,7 @@ const SITE = "HaslaLab";
 function setDocTitle(first, second){
   const d=UI[lang], parts=[];
   if(first==="about")            parts.push(d.hAbout);
+  else if(first==="hpho")        parts.push("HPhO");
   else if(first==="archive"){
     const route=window.HL_ARCHIVE?.parse(location.hash),category=route?.category;
     const label=category==="books"?(lang==="ko"?"교재":"Books"):category==="schools"?(lang==="ko"?"학교":"Schools"):(lang==="ko"?"대회":"Contests");
@@ -10128,6 +10130,7 @@ function render(){
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
+  else if(first==="hpho"&&window.HL_HPHO){ html=HL_HPHO.view(); active="weekly"; }
   else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
   else if(first && DATA[first] && !compShown(first)){ const to="#/comps/"+subjOf(first); try{history.replaceState(null,"",to);}catch(e){location.hash=to;return;} return render(); }
   else if(first && DATA[first]){  html=second==="exam"||second==="review"?viewComp(first,studyMode):second?viewYear(first,second,studyMode):viewComp(first); active="comps"; }
@@ -10140,6 +10143,7 @@ function render(){
   paintPageChrome(active);
   mountHaslaAdFit();
   if(window.HL_UX) HL_UX.afterRender(first, second);
+  if(first==="hpho"&&window.HL_HPHO) HL_HPHO.mount();
 
   buildRails();
   paintSiteTheme();
@@ -10151,7 +10155,7 @@ function render(){
   if(active==="home"){ startHero(); mountHomeActivity(); }
   if(active==="community") cmMount();
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
-  if(active==="weekly"||first==="lab") arMount();
+  if((active==="weekly"&&first!=="hpho")||first==="lab") arMount();
   if(typeof arChip==="function")arChip();else cmAccountChip();
   if(first==="comps"||first==="archive"){ const t=document.querySelector(".subjs a[aria-current]"); if(t){ const n=t.parentNode; n.scrollLeft+=t.getBoundingClientRect().left-n.getBoundingClientRect().left-(n.clientWidth-t.offsetWidth)/2; } }
 }
