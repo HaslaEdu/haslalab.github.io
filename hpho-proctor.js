@@ -35,7 +35,7 @@
     const out = { camera: false, mic: false, screen: false, system: false, detector: false };
     if (live(p?.cam)) { out.camera = p.cam.getVideoTracks().length > 0; out.mic = p.cam.getAudioTracks().length > 0; }
     else try {
-      const cam = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, frameRate: { ideal: 15, max: 15 }, facingMode: "user" }, audio: { echoCancellation: false, noiseSuppression: false } });
+      const cam = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, frameRate: { ideal: 15, max: 15 }, facingMode: "user" }, audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true } });
       out.camera = cam.getVideoTracks().length > 0; out.mic = cam.getAudioTracks().length > 0;
       p = { ...(p || {}), cam };
     } catch (e) { out.error = e?.name || "camera"; }
@@ -106,14 +106,17 @@
       for (let i = 1; i < freq.length; i++) { const f = i * hz; if (f < 50 || f > 8000) continue; const e = Math.pow(10, freq[i] / 10); b += e; if (f >= 100 && f <= 3500) a += e; }
       return b ? a / b : 0; };
     try {
-      let floor = 0; for (let i = 0; i < 8; i++) { await wait(100); floor = Math.max(floor, rms()); }
+      /* the room's own noise: the median of eight readings (a click, or a candidate who starts reading at once, must not
+         become the floor), and never above a quiet room's level */
+      const quietRoom = []; for (let i = 0; i < 8; i++) { await wait(100); quietRoom.push(rms()); }
+      const floor = Math.min(0.008, quietRoom.sort((a, b) => a - b)[4]);
       level?.(0, "speak"); recording = true;
-      const thr = Math.max(0.012, floor * 3);
+      const thr = Math.max(0.006, floor * 2.5);
       let voiced = 0, bursts = 0, on = false, quiet = 0, top = 0, first = -1, last = -1;
       for (let i = 0; i < 100; i++) {
         await wait(100);
         const r = rms(); top = Math.max(top, r); level?.(Math.min(1, r * 8));
-        if (r > thr && speechShare() > 0.55) { voiced++; if (!on) { bursts++; on = true; } quiet = 0; if (first < 0) first = i; last = i; }
+        if (r > thr && speechShare() > 0.45) { voiced++; if (!on) { bursts++; on = true; } quiet = 0; if (first < 0) first = i; last = i; }
         else { if (++quiet >= 2) on = false; }
         if (voiced >= 18 && bursts >= 2 && quiet >= 12) break;            /* the sentence, then a second of silence */
       }
@@ -121,8 +124,9 @@
       const span = first < 0 ? 0 : last - first + 1;
       /* a loud but short sound (a shout, a word, a knock) is "short", not "quiet" */
       /* the Korean sentence takes about three seconds: under two seconds of speech is not it ("예, 아", a shout, a knock) */
-      const reason = top < 0.008 ? "silent" : voiced < 3 ? "quiet" : voiced < 15 || bursts < 2 || span < 20 ? "short" : null;
-      return { ok: !reason, ...(reason ? { reason } : {}), wav: rec ? wav16k(chunks, ctx.sampleRate) : null };
+      const reason = top < 0.004 ? "silent" : voiced < 3 ? "quiet" : voiced < 15 || bursts < 2 || span < 20 ? "short" : null;
+      /* top: the loudest moment; the page lets the server's model hear a recording the level was unsure about */
+      return { ok: !reason, ...(reason ? { reason } : {}), top, wav: rec ? wav16k(chunks, ctx.sampleRate) : null };
     } finally { recording = false; level?.(0); try { rec?.disconnect(); sink?.disconnect(); src.disconnect(); } catch (e) {} ctx.close().catch(() => {}); }
   }
   /* mono float chunks at the context's rate, as a 16 kHz 16-bit WAV (at most ten seconds: about 320 KB) */

@@ -360,11 +360,13 @@
       st.step = { ...st.step, cue: x.micStep[3] }; paint();
       const m = await P.micCheck((v, cue) => { if (cue === "speak") { const c = document.getElementById("hphoCue"); if (c) { c.textContent = x.micStep[4]; c.classList.add("is-now"); } } const el = document.getElementById("hphoMeter"); if (el) el.style.width = Math.round(v * 100) + "%"; });
       let reason = m.ok ? null : m.reason;
-      /* the level said a sentence-like voice was there: the server's model checks the words */
-      if (!reason && m.wav) {
+      /* the server's model hears the words: always when the level found a sentence, and also when the level was unsure
+         (a quiet microphone) but something was heard. Then the model decides; without it the level's verdict stands */
+      if (m.wav && (!reason || (["quiet", "short"].includes(reason) && m.top >= 0.004))) {
         st.step = { ...st.step, cue: x.micStep[5], meter: false }; paint();
-        try { const r = await sendForm("voicecheck", { audio: m.wav, lang: L() }); reason = r.unavailable ? retry("voice") : r.said ? null : "not_said"; }
-        catch (e) { reason = "failed"; }
+        try { const r = await sendForm("voicecheck", { audio: m.wav, lang: L() });
+          reason = r.unavailable ? (reason || retry("voice")) : r.said ? null : "not_said"; }
+        catch (e) { reason = reason || "failed"; }
       }
       st.checks.voice = !reason;
       if (reason) { st.step = null; st.error = reason === "unavailable" ? x.unavailable : x.mic[reason] || x.mic.short; paint(); return false; }
