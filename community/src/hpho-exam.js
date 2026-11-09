@@ -94,6 +94,7 @@ export const EARCHECK_EARLY = 3600;        /* the ear and voice checks open an h
 const EAR_VERDICTS = ['clear', 'device', 'unclear'];
 const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, taken during the technical check before an online physics exam${n === 3 ? ': the first faces the camera with both hands raised beside the face (wrists visible), in the second the head is turned to show one ear, in the third the other ear' : ': in the first the head is turned to show one ear, in the second the other ear'}.
 Decide whether the candidate wears anything in, on or over the ears or head that could carry sound: earbuds, in-ear earphones, headphones, an over-ear or on-ear headset (also the headband over the head), a hearing device, or a wire leading to an ear. A headset seen in any photo counts, even if an ear is hidden.
+Judge each photo on its own and each ear separately: a single earbud in only one ear is "device" for that photo, even if the other ear is clear. Look closely inside and just behind the ear (the ear canal, the bowl of the ear, behind the ear) for small or skin-coloured earbuds and hearing devices.
 Earrings, ear piercings, hair clips and glasses are not devices. Use "unclear" for a photo in which neither the ear nor anything over it can be seen (hair, angle, blur, too dark) or there is no person.
 "wrists" is true only if both wrists can be clearly seen in the first photo (hands raised beside the face).
 "ears_covered" is true if a hat, beanie, hood, headband or hair covers an ear in the ear photos (the ear itself must be seen).
@@ -572,8 +573,10 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       /* glasses that might be smart are not a fail yet: the page asks to see them up close (glasscheck) */
       const verdict = v.unavailable ? null : v.verdicts.includes('device') ? 'device' : v.ears_covered ? 'covered' : v.watch ? 'watch' : v.cap ? 'cap' : shots.length === 3 && v.wrists === false ? 'wrists' : v.verdicts.includes('unclear') ? 'unclear' : ['check', 'smart'].includes(v.glasses) ? 'glasses_check' : 'clear';
       /* recorded by the server (seq below every client seq and every server gap mark) */
-      await serverEvent('ear_check', v.unavailable ? 'model unavailable' : `${verdict} (${v.verdicts.join(',')})${v.note ? ' · ' + v.note : ''}`, 4e9).run();
-      return v.unavailable ? { ok: true, unavailable: true } : { ok: true, verdict, verdicts: v.verdicts };
+      /* which ear: the first turned photo or the second (front, first, second) */
+      const ears = shots.length === 3 ? [1, 2].filter(i => v.verdicts?.[i] === 'device') : [];
+      await serverEvent('ear_check', v.unavailable ? 'model unavailable' : `${verdict} (front,first,second = ${v.verdicts.join(',')})${v.note ? ' · ' + v.note : ''}`, 4e9).run();
+      return v.unavailable ? { ok: true, unavailable: true } : { ok: true, verdict, verdicts: v.verdicts, ears };
     }
 
     /* the server's own records of the checks (negative seq) since the room opened */
