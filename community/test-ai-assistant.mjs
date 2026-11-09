@@ -286,7 +286,7 @@ test('answers stream as they are written; a reasoning model\'s thinking never re
   assert.equal(meter.out, 7, 'usage from the stream\'s last event');
 });
 
-test('the route: visitors get two messages, members no quota but a flood guard; it streams, logs allowed chats and takes feedback', async () => {
+test('the route: visitors get two messages, members a flood guard and a daily ceiling, the site a daily ceiling; it streams, logs allowed chats and takes feedback', async () => {
   class HttpError extends Error { constructor(status, code) { super(code); this.status = status; } }
   const limits = [], counts = {};
   let allowed = false;
@@ -307,7 +307,7 @@ test('the route: visitors get two messages, members no quota but a flood guard; 
   const plain = await route(post({messages: [{role: 'user', content: '반가워'}], train: true}), env);
   assert.equal(plain.answer, '안녕하세요');
   assert.equal(plain.id, null);
-  assert.deepEqual(limits, [['ai:m:7', 30, 60]], 'only the flood guard');
+  assert.deepEqual(limits, [[`ai:site:${new Date().toISOString().slice(0, 10)}`, 20000, 86400], ['ai:m:7', 30, 60], ['ai:d:7', 300, 86400]], 'site ceiling, flood guard, daily ceiling');
   assert.ok(counts['ai:g:203.0.113.9'] >= 3, 'visitors are counted by address');
   // consent given: streamed, and kept for review
   allowed = true;
