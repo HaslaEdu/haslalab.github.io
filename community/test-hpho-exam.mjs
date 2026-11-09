@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {createHphoRouter, roundTracks, checkRound, publicRound} from './src/hpho.js';
-import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, roomVerdict, checkNote, examWindow, needsReview, UPLOAD_MIN, SCAN_VIEWS} from './src/hpho-exam.js';
+import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, roomVerdict, viewVerdict, checkNote, suspicion, hphoRetainTick, PHONE_VIEWS, examWindow, needsReview, UPLOAD_MIN, SCAN_VIEWS} from './src/hpho-exam.js';
 
 class HttpError extends Error { constructor(status, code) { super(code); this.status = status; this.code = code; } }
 function d1() {
@@ -14,7 +14,7 @@ function d1() {
 /* an R2 bucket in memory: put, get, head, list */
 function r2() {
   const m = new Map();
-  return { m, async put(k, v, o) { m.set(k, { bytes: new Uint8Array(v), meta: o }); },
+  return { m, async delete(keys) { for (const k of [].concat(keys)) m.delete(k); }, async put(k, v, o) { m.set(k, { bytes: new Uint8Array(v), meta: o }); },
     async get(k) { const o = m.get(k); return o ? { body: o.bytes, size: o.bytes.length, httpMetadata: o.meta?.httpMetadata } : null; },
     async head(k) { const o = m.get(k); return o ? { size: o.bytes.length } : null; },
     async list({ prefix }) { return { objects: [...m.keys()].filter(k => k.startsWith(prefix)).map(key => ({ key })), truncated: false }; } };
@@ -29,9 +29,9 @@ const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]), PDF = new TextEn
 function wav() { const b = new Uint8Array(64); b.set(new TextEncoder().encode('RIFF'), 0); b.set(new TextEncoder().encode('WAVE'), 8); return b; }
 
 /* a round whose theory exam starts `theory` seconds from now and whose experiment starts a day later */
-async function setup(theory, { voice = { said: true }, ear = { verdicts: ['clear', 'clear', 'clear'] }, room = { found: [], unclear: false } } = {}) {
+async function setup(theory, { voice = { said: true }, ear = { verdicts: ['clear', 'clear', 'clear'] }, room = { found: [], unclear: false }, view = () => ({ covered: true, found: [] }), place = { ok: true, missing: [] } } = {}) {
   const { sql, DB } = d1(), store = r2(), env = { DB, HPHO_SNAPS: store }, t = Math.floor(Date.now() / 1000);
-  const reg = createHphoRouter(deps), exam = createHphoExamRouter({ ...deps, voiceCheck: async () => voice, earVision: async () => ear, roomScan: async () => room });
+  const reg = createHphoRouter(deps), exam = createHphoExamRouter({ ...deps, voiceCheck: async () => voice, earVision: async () => ear, roomScan: async () => room, phoneView: async (_e, v) => view(v), placement: async () => place });
   await reg('/api/hpho/rounds/2027-1', 'POST', { title_ko: 'a', title_en: 'a', reg_open: t - 7200, reg_close: t + 3600, theory_at: t + 7200, experiment_at: t + 7200 + 86400, fee_usd: 0, status: 'open' }, admin, env);
   await reg('/api/hpho/rounds/2027-1/entry', 'POST', entry, student, env);
   sql.prepare('UPDATE hpho_rounds SET theory_at=?,start_at=?,experiment_at=?').run(t + theory, t + theory, t + theory + 86400);
@@ -40,7 +40,10 @@ async function setup(theory, { voice = { said: true }, ear = { verdicts: ['clear
     return exam(`/api/hpho/rounds/2027-1/exam/${track}/${action}`, 'POST', {}, me, env, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: f })); };
   /* move the theory exam by s seconds (negative: it is now later in the day) */
   const shift = s => sql.prepare('UPDATE hpho_rounds SET theory_at=theory_at+?,start_at=start_at+?').run(s, s);
-  return { sql, store, call, form, shift, t, reg, env };
+  const phone = (code, action, fields) => { if (!fields) return exam(`/api/hpho/phone/${code}/${action}`, 'GET', null, null, env, new URL('https://x/'));
+    const fd = new FormData(); for (const [k, v] of Object.entries(fields)) fd.set(k, v instanceof Uint8Array ? new Blob([v]) : v);
+    return exam(`/api/hpho/phone/${code}/${action}`, 'POST', {}, null, env, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: fd })); };
+  return { sql, store, call, form, shift, t, reg, env, phone };
 }
 
 test('a round has a theory and an experiment exam, five hours each', () => {
@@ -219,8 +222,8 @@ test('recordings and the live monitor', async () => {
   const WEBM = new Uint8Array([0x1a, 0x45, 0xdf, 0xa3, 1, 2, 3]);
   assert.equal(await code(f.form('clip', { clip: WEBM, source: 'webcam' })), 'not_seated');
   await f.call('checkin', 'POST', { client }, student);
-  assert.equal((await f.form('clip', { clip: WEBM, source: 'screen' })).ok, true, 'recorded from the waiting room on');
-  assert.equal(await code(f.form('clip', { clip: JPEG, source: 'screen' })), 'clip_not_webm');
+  assert.equal(await code(f.form('clip', { clip: WEBM, source: 'screen' })), 'not_kept', 'no recording on the server from a seat not flagged');
+  assert.equal(await code(f.call('keep', 'POST', {}, student)), 'not_over');
   await f.form('snap', { image: JPEG, source: 'webcam', reason: 'random' });
   await f.call('events', 'POST', { events: [{ seq: 1, kind: 'system_sound', detail: '4s' }, { seq: 2, kind: 'heartbeat' }] }, student);
   const m = await f.call('monitor', 'GET', null, admin);
@@ -228,6 +231,11 @@ test('recordings and the live monitor', async () => {
   assert.match(m.seats[0].last_webcam, /-webcam-random\.jpg$/);
   assert.deepEqual(m.seats[0].alerts.map(a => a.kind), ['system_sound']);
   assert.equal(await code(f.call('monitor', 'GET', null, student)), 'forbidden');
+  /* the time is over: the computer's sound flagged the seat, so its recordings come up */
+  f.shift(-1801 - 300 * 60);
+  assert.equal((await f.call('keep', 'POST', {}, student)).keep, true);
+  assert.equal((await f.form('clip', { clip: WEBM, source: 'screen' })).ok, true);
+  assert.equal(await code(f.form('clip', { clip: JPEG, source: 'screen' })), 'clip_not_webm');
   const no = m.seats[0].candidate_no, log = await f.call('log', 'GET', null, admin, '?candidate=' + no);
   assert.equal(log.clips.length, 1);
   assert.equal((await f.call('media', 'GET', null, admin, '?key=' + encodeURIComponent(log.clips[0]))).status, 200);
@@ -240,4 +248,70 @@ test('the old paths without a track are the theory exam; a draft is for admins o
   f.sql.prepare("UPDATE hpho_rounds SET status='draft'").run();
   assert.equal(await code(exam('/api/hpho/rounds/2027-1/exam/state', 'GET', null, student, f.env, new URL('https://x/'))), 'round_not_found');
   assert.equal((await exam('/api/hpho/rounds/2027-1/exam/state', 'GET', null, admin, f.env, new URL('https://x/'))).window.track, 'theory');
+});
+
+test('only flagged seats keep their recordings and proctoring photos', async () => {
+  assert.deepEqual(suspicion({}, [{ kind: 'focus_lost' }, { kind: 'focus_lost' }]), [], 'a glance away twice is not a flag');
+  assert.deepEqual(suspicion({}, [{ kind: 'phone_seen' }]), ['phone_seen×1']);
+  assert.match(suspicion({}, [{ kind: 'process_new', detail: 'notepad.exe !anydesk.exe' }]).join(), /programs: !anydesk\.exe/);
+  assert.deepEqual(suspicion({ verdict: 'review' }, []), ['verdict: review']);
+  const WEBM = new Uint8Array([0x1a, 0x45, 0xdf, 0xa3, 1]);
+  const f = await setup(1800);
+  const other2 = { id: 11 };
+  await f.reg('/api/hpho/rounds/2027-1/entry', 'POST', entry, other2, f.env);
+  for (const who of [student, other2]) {
+    await f.call('checkin', 'POST', { client }, who);
+    await f.form('snap', { image: JPEG, source: 'webcam', reason: 'random' }, who);
+  }
+  await f.call('events', 'POST', { events: [{ seq: 1, kind: 'faces_multiple' }] }, other2);
+  f.sql.prepare('UPDATE hpho_seats SET check_note=NULL').run();      /* as if both had passed the ear, voice and room checks */
+  f.shift(-1801 - 300 * 60);
+  assert.equal((await f.call('keep', 'POST', {}, student)).keep, false, 'not flagged: the recordings stay on the computer and are deleted there');
+  assert.equal((await f.call('keep', 'POST', {}, other2)).keep, true);
+  await f.form('clip', { clip: WEBM, source: 'screen' }, other2);
+  await f.form('snap', { image: JPEG, source: 'webcam', reason: 'after_time' }, student);
+  const keys = () => [...f.store.m.keys()].filter(k => /^hpho(-rec)?\//.test(k));
+  assert.equal(keys().length, 4);
+  assert.equal(await code(f.call('retain', 'POST', {}, admin)), 'not_over');
+  const later = Date.now() + (3600 + 3600 + 60) * 1000;            /* the upload closed more than an hour ago */
+  assert.equal((await hphoRetainTick(f.env, { now: Date.now() })).length, 0, 'not before the hour after the upload');
+  const done = await hphoRetainTick(f.env, { now: later });
+  assert.equal(done.length, 2);
+  const kept = done.find(d => d.kept), gone = done.find(d => !d.kept);
+  assert.match(kept.kept, /faces_multiple/); assert.equal(gone.deleted, 1);
+  assert.equal(keys().length, 3, 'the flagged seat keeps its recording and photo; the other only its webcam after the time');
+  assert.ok(keys().filter(k => !k.includes(kept.candidate_no)).every(k => /-webcam-after_time\.jpg$/.test(k)));
+  assert.equal((await hphoRetainTick(f.env, { now: later })).length, 0, 'decided once');
+});
+
+test('the phone: paired by a QR code, scans the room view by view, then stands where it sees the candidate', async () => {
+  let notes = false;
+  const f = await setup(1800, { view: v => v === 'desk' && !notes ? (notes = true, { covered: true, found: ['phone'] }) : v === 'under' ? { covered: true, found: ['notes'] } : { covered: true, found: [] } });
+  assert.equal(await code(f.phone('x'.repeat(30), 'state')), 'phone_not_found');
+  const { code: c } = await f.call('phone', 'POST', {}, student);
+  assert.match(c, /^[A-Za-z0-9_-]{32}$/);
+  const s = await f.phone(c, 'state');
+  assert.equal(s.candidate_no.startsWith('HP271-'), true); assert.equal(s.scanned, false);
+  assert.equal((await f.call('phone', 'GET', null, student)).phone.online, true);
+  const frames = { f0: JPEG, f1: JPEG, f2: JPEG, f3: JPEG };
+  assert.equal(await code(f.phone(c, 'scan', { view: 'front', f0: JPEG })), 'too_few_frames');
+  assert.equal((await f.phone(c, 'scan', { view: 'desk', ...frames })).status, 'blocked', 'a phone on the desk: remove it and sweep again');
+  for (const view of PHONE_VIEWS) await f.phone(c, 'scan', { view, ...frames });
+  const after = (await f.call('phone', 'GET', null, student)).phone;
+  assert.equal(after.scanned, true); assert.equal(after.scan.under.status, 'notes');
+  assert.equal((await f.phone(c, 'place', { image: JPEG })).placed, true);
+  assert.equal((await f.phone(c, 'snap', { image: JPEG, reason: 'random' })).ok, true);
+  /* the scan's record feeds the seat's checks: notes under the desk go to review */
+  await f.form('earcheck', { front: JPEG, first: JPEG, second: JPEG });
+  await f.form('voicecheck', { audio: wav(), lang: 'ko' });
+  await f.call('checkin', 'POST', { client }, student);
+  const seat = (await f.call('seats', 'GET', null, admin)).seats[0];
+  assert.match(seat.check_note, /room: flag: phone · under=notes/);
+  const m = await f.call('monitor', 'GET', null, admin);
+  assert.match(m.seats[0].last_phone, /-phone-random\.jpg$/); assert.equal(m.seats[0].phone_online, true);
+  /* a new code replaces the old one */
+  const again = await f.call('phone', 'POST', {}, student);
+  assert.equal(await code(f.phone(c, 'state')), 'phone_not_found');
+  assert.equal((await f.phone(again.code, 'state')).scanned, true, 'the scan stays with the seat');
+  assert.deepEqual(viewVerdict({ covered: false, person: false, phone: false, screen: false, headset: false, notes: false }).covered, false);
 });

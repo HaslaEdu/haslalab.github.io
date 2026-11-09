@@ -21,9 +21,12 @@
     ko: { title: "HPhO 시험", appOnly: "HPhO는 하슬라에듀 데스크톱 앱의 시험 창에서만 응시할 수 있습니다.", appGet: "데스크톱 앱 내려받기",
       entrance: "시험 입장", track: { theory: "이론 시험", experiment: "실험 시험" }, hours: "5시간", enter: "입장", back: "답안 제출하러 입장", reenter: "다시 입장",
       opensAt: v => `입장: ${v}부터 (시작 1시간 전)`, seatBy: v => `착석 마감: ${v} (시작 20분 전)`, opensLater: "입장 시간이 아닙니다", seatClosed: "착석 마감이 지나 입장할 수 없습니다", ended: "종료", submitted: "제출 완료", noRound: "응시할 수 있는 시험이 없습니다.",
-      check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인", camera: "웹캠", mic: "마이크", screen: "화면 기록", face: "얼굴 인식", voice: "문장 읽기 (마이크)", ears: "귀·머리 검사 (이어폰·헤드셋)", system: "컴퓨터 소리 녹음", displays: "모니터 1대", room: "주변 스캔" }, retry: "다시 점검", preview: "카메라 미리보기", camNeed: "웹캠·마이크·화면 기록이 모두 켜져야 응시할 수 있습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.",
+      check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인", camera: "웹캠", mic: "마이크", screen: "화면 기록", face: "얼굴 인식", voice: "문장 읽기 (마이크)", ears: "귀·머리 검사 (이어폰·헤드셋)", system: "컴퓨터 소리 녹음", displays: "모니터 1대", phone: "휴대폰 감독 연결", room: "주변 스캔 (휴대폰)", place: "휴대폰 위치" }, retry: "다시 점검", preview: "카메라 미리보기", camNeed: "웹캠·마이크·화면 기록이 모두 켜져야 응시할 수 있습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.",
       screenNeed: "화면 기록을 시작하지 못했습니다. 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", systemNeed: "컴퓨터 소리를 녹음하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", displaysNeed: n => n > 1 ? `모니터가 ${n}대 연결되어 있습니다. 모니터를 하나만 남기고 나머지는 케이블을 뽑은 뒤 다시 점검하세요.` : "모니터 수를 확인하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트하세요.",
       unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.", coverTitle: "모니터가 추가로 연결되었습니다", coverText: "추가 모니터의 케이블을 지금 뽑으세요. 뽑을 때까지 시험지가 가려지며, 이 상황은 기록되어 감독관이 검토합니다.",
+      phoneStep: ["휴대폰 감독", "휴대폰 카메라로 아래 QR을 찍어 휴대폰에서 여세요. 휴대폰이 방을 한 방향씩 천천히 비추면 AI가 확인하고, 마지막으로 휴대폰을 옆이나 뒤에 세워 본인·손·책상·화면이 보이게 합니다. 휴대폰 화면의 안내를 따르세요."],
+      phoneList: { online: "휴대폰 연결", scan: (n, m) => `주변 스캔 ${n} / ${m}`, placed: "휴대폰 위치 확인" }, phoneLost: "휴대폰 감독이 끊겼습니다. 휴대폰 화면을 다시 켜거나, 이 QR을 휴대폰으로 다시 찍으세요. 끊긴 시간은 기록됩니다.", phoneOn: "휴대폰", phoneOk: "연결", phoneBad: "끊김",
+      saving: (n, m) => `감독 녹화를 올리는 중… ${n} / ${m}. 창이 닫힐 때까지 기다려 주세요.`,
       roomStep: ["주변 스캔", "웹캠(노트북이면 노트북 화면)을 천천히 돌려 방을 보여 주세요. 화면에 나오는 방향으로 돌리고, 숫자가 0이 될 때까지 멈춰 주세요.", "주변 스캔 시작"],
       views: { front: "앞쪽 벽", left: "왼쪽 벽", right: "오른쪽 벽", back: "뒤쪽 (등 뒤)", ceiling: "천장", desk: "책상 위 전체", under: "책상 아래 · 발밑", done: "확인하는 중…" },
       room: { person: "다른 사람", phone: "휴대폰·스마트워치·태블릿", screen: "다른 화면(모니터·노트북·TV)", headset: "이어폰·헤드셋", notes: "책·필기" }, roomBlocked: list => `주변에서 ${list}이(가) 보였습니다. 치우거나 다른 곳으로 옮긴 뒤 다시 스캔하세요.`, roomFail: "스캔 사진을 보내지 못했습니다. 다시 스캔하세요.",
@@ -45,9 +48,12 @@
     en: { title: "HPhO exam", appOnly: "HPhO can only be sat in the exam window of the HaslaEdu desktop app.", appGet: "Get the desktop app",
       entrance: "Exam entrance", track: { theory: "Theory exam", experiment: "Experimental exam" }, hours: "5 hours", enter: "Enter", back: "Enter to submit answers", reenter: "Enter again",
       opensAt: v => `Entry from ${v} (an hour before the start)`, seatBy: v => `Be seated by ${v} (20 minutes before the start)`, opensLater: "Not open yet", seatClosed: "Seating has closed", ended: "Over", submitted: "Submitted", noRound: "There is no exam to sit.",
-      check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in", camera: "Webcam", mic: "Microphone", screen: "Screen recording", face: "Face", voice: "Reading aloud (microphone)", ears: "Ears and head (earphones, headset)", system: "Computer sound recording", displays: "One monitor", room: "Room scan" }, retry: "Check again", preview: "Camera preview", camNeed: "The webcam, microphone and screen recording must all be on to sit the exam. Make sure no other program is using the camera.",
+      check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in", camera: "Webcam", mic: "Microphone", screen: "Screen recording", face: "Face", voice: "Reading aloud (microphone)", ears: "Ears and head (earphones, headset)", system: "Computer sound recording", displays: "One monitor", phone: "Phone connected", room: "Room scan (phone)", place: "Phone position" }, retry: "Check again", preview: "Camera preview", camNeed: "The webcam, microphone and screen recording must all be on to sit the exam. Make sure no other program is using the camera.",
       screenNeed: "Screen recording could not start. Update the app to the latest version, then check again.", systemNeed: "The computer's sound could not be recorded. Update the HaslaEdu app to the latest version, then check again.", displaysNeed: n => n > 1 ? `${n} monitors are connected. Unplug all but one, then check again.` : "The number of monitors could not be read. Update the HaslaEdu app to the latest version.",
       unavailable: "The checking server did not answer. Check again in a moment.", coverTitle: "Another monitor was connected", coverText: "Unplug the extra monitor now. The paper is covered until you do; this is recorded and reviewed by a proctor.",
+      phoneStep: ["Phone proctoring", "Scan the QR below with your phone camera and open it on the phone. The phone shows the room slowly, one side at a time, for the AI to check; then you stand it to your side or behind you so it sees you, your hands, the desk and the screen. Follow the instructions on the phone."],
+      phoneList: { online: "Phone connected", scan: (n, m) => `Room scan ${n} / ${m}`, placed: "Phone position checked" }, phoneLost: "The phone proctoring stopped. Turn the phone's screen back on, or scan this QR again. The time it was off is recorded.", phoneOn: "Phone", phoneOk: "Connected", phoneBad: "Lost",
+      saving: (n, m) => `Uploading the proctoring recording… ${n} / ${m}. Wait until the window closes.`,
       roomStep: ["Room scan", "Slowly turn the webcam (or the laptop) to show the room. Point it where the screen says and hold still until the count reaches 0.", "Start the room scan"],
       views: { front: "The wall in front", left: "The left wall", right: "The right wall", back: "Behind you", ceiling: "The ceiling", desk: "The whole desk top", under: "Under the desk, your feet", done: "Checking…" },
       room: { person: "another person", phone: "a phone, smartwatch or tablet", screen: "another screen (monitor, laptop, TV)", headset: "earphones or a headset", notes: "books or notes" }, roomBlocked: list => `The scan shows ${list}. Remove it, then scan again.`, roomFail: "The scan photos could not be sent. Scan again.",
@@ -109,7 +115,7 @@
     const left = st.phase === "exam" ? w.ends - nowS() : st.phase === "submit" ? w.upload_until - nowS() : st.phase === "room" ? w.start_at - nowS() : null;
     bar.innerHTML = `<b class="hpho-exam-title"><img class="hpho-exam-icon hpho-logo-light" src="logo/brand/hpho-icon-light.svg?v=20261109-hpho" alt=""><img class="hpho-exam-icon hpho-logo-dark" src="logo/brand/hpho-icon-dark.svg?v=20261109-hpho" alt="" aria-hidden="true">${x.title}${st.round ? " · " + (st.round.status === "draft" ? (L() === "en" ? "Practice exam" : "모의 시험") : esc(st.round.title[L()])) : ""}${st.track && st.phase !== "lobby" ? " · " + x.track[st.track] : ""}</b>
       ${st.entry ? `<span>${x.candidate} <b class="hpho-no">${esc(st.entry.candidate_no)}</b></span>` : ""}
-      ${live ? `<span class="hpho-light ${st.online ? "is-ok" : "is-bad"}">${x.conn}: ${st.online ? x.connOk : x.connBad}</span><span class="hpho-light is-ok">${x.proctor}: ${x.proctorOn}</span>
+      ${live ? `<span class="hpho-light ${st.online ? "is-ok" : "is-bad"}">${x.conn}: ${st.online ? x.connOk : x.connBad}</span><span class="hpho-light is-ok">${x.proctor}: ${x.proctorOn}</span><span class="hpho-light ${st.phoneOnline === false ? "is-bad" : "is-ok"}">${x.phoneOn}: ${st.phoneOnline === false ? x.phoneBad : x.phoneOk}</span>
         <span class="hpho-exam-clock${left < 600 && st.phase !== "room" ? " is-low" : ""}">${st.phase === "submit" ? x.uploadUntil : st.phase === "room" ? x.startsIn : x.left} <b>${fmt(left)}</b></span>` : ""}`;
   }
   const leaveBtn = () => bridge()?.leave ? `<button type="button" class="hpho-link" id="hphoExamLeave">${T[L()].leave}</button>` : "";
@@ -143,10 +149,10 @@
     wireLeave(box);
   }
   function paintCheck(box) {
-    const x = T[L()], c = st.checks || {}, keys = ["app", "login", "net", "entry", "camera", "mic", "screen", "system", "displays", ...(st.quick ? [] : ["face", "voice", "ears"]), "room"];
+    const x = T[L()], c = st.checks || {}, keys = ["app", "login", "net", "entry", "camera", "mic", "screen", "system", "displays", ...(st.quick ? [] : ["face", "voice", "ears"]), "phone", "room", "place"];
     const row = k => `<li class="${c[k] === true ? "is-ok" : c[k] === false ? "is-bad" : ""}"><span>${x.checks[k]}</span><b>${c[k] === true ? x.ok : c[k] === false ? x.bad : x.wait}</b></li>`;
     const s = st.step;
-    const step = s ? `<div class="hpho-step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.view ? `<p class="hpho-scan-view">${esc(s.view)}${s.count ? ` <b>${s.count}</b>` : ""}</p>` : ""}${s.quote ? `<p class="hpho-step-quote">${esc(s.quote)}</p>` : ""}${s.cue ? `<p class="hpho-step-cue" id="hphoCue">${esc(s.cue)}</p>` : ""}${s.meter ? `<div class="hpho-meter" aria-hidden="true"><i id="hphoMeter"></i></div>` : ""}${s.button ? `<p><button type="button" class="hpho-btn" id="hphoStepGo">${esc(s.button)}</button></p>` : ""}</div>` : "";
+    const step = s ? `<div class="hpho-step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.qr ? `<div class="hpho-qr">${s.qr}<ul id="hphoPhoneList"></ul></div>` : ""}${s.view ? `<p class="hpho-scan-view">${esc(s.view)}${s.count ? ` <b>${s.count}</b>` : ""}</p>` : ""}${s.quote ? `<p class="hpho-step-quote">${esc(s.quote)}</p>` : ""}${s.cue ? `<p class="hpho-step-cue" id="hphoCue">${esc(s.cue)}</p>` : ""}${s.meter ? `<div class="hpho-meter" aria-hidden="true"><i id="hphoMeter"></i></div>` : ""}${s.button ? `<p><button type="button" class="hpho-btn" id="hphoStepGo">${esc(s.button)}</button></p>` : ""}</div>` : "";
     const done = keys.filter(k => c[k] === true).length;
     box.innerHTML = `<section class="hpho-round hpho-check"><div class="hpho-check-head"><h2>${x.check} · ${x.track[st.track]}</h2><span class="hpho-muted">${done} / ${keys.length}</span></div>
       <div class="hpho-check-grid"><ul class="hpho-checks">${keys.map(row).join("")}</ul>
@@ -297,7 +303,9 @@
   async function loadTracks() {
     const list = (st.round.tracks || [{ track: "theory" }]).map(k => k.track);
     st.tracks = {};
-    for (const k of list) { const s = await cmApi("GET", `/hpho/rounds/${encodeURIComponent(st.round.id)}/exam/${k}/state`); sync(s); st.tracks[k] = s; }
+    for (const k of list) { const s = await cmApi("GET", `/hpho/rounds/${encodeURIComponent(st.round.id)}/exam/${k}/state`); sync(s); st.tracks[k] = s;
+      /* recordings left on this computer by an exam that ended (the app was closed before they were settled) */
+      if (s.window && nowS() >= s.window.ends && s.session) settleRecordings(k).catch(() => {}); }
   }
   function enter(track) { st.track = track; st.error = null; st.phase = "check"; st.checks = {}; st.quick = !!st.tracks[track]?.session; check(); }
   async function check() {
@@ -314,7 +322,7 @@
       /* the face, voice and ear checks: on the first entry; a candidate coming back (already seated) skips them.
          The room scan: every time, a return after a disconnect too */
       if (!st.quick && !(await quality(P))) return;
-      if (!(await scanRoom(P))) return;
+      if (!(await phoneCheck())) return;
       const r = await cmApi("POST", path("checkin"), { client: bridge().client, lang: st.paperLang || L() }); sync(r);
       st.session = r.session; st.tracks[st.track].session = r.session; st.tracks[st.track].window = r.window;
       st.paperLang = r.session.paper_lang; st.seq = Math.max(st.seq, r.seq || 0); st.pages = r.session.pages || 0;
@@ -322,7 +330,6 @@
       await loadDocs();
       /* seated: the window is locked and recorded from here on, the waiting room included */
       watch();
-      if (st.roomClip) { uploadClip(st.roomClip, "room"); st.roomClip = null; }
       route();
     } catch (e) { st.error = errText(e); paint(); }
   }
@@ -382,38 +389,72 @@
   }
   /* a check the server's model could not answer: "unavailable" for the first three tries, then let through (flagged) */
   function retry(what) { st.tries[what] = (st.tries[what] || 0) + 1; return st.tries[what] < 3 ? "unavailable" : null; }
-  /* the room scan: the webcam shows each side of the room, the ceiling and under the desk; the model looks at the stills */
-  async function scanRoom(P) {
+  /* the phone (hpho-phone.js): paired by a QR, it scans the room view by view (the model judges each), then stands where
+     it sees the candidate. A return after a disconnect scans again. The page waits until the phone reports all of it */
+  const qrSvg = async url => {
+    if (typeof window.qrcode !== "function") await new Promise((res, rej) => { const sc = document.createElement("script"); sc.src = "vendor/qrcode/qrcode.js"; sc.onload = res; sc.onerror = rej; document.head.append(sc); });
+    const q = window.qrcode(0, "M"); q.addData(url); q.make(); return q.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+  };
+  const phoneUrl = code => (window.HL_HPHO_PHONE_BASE || location.origin + location.pathname.replace(/[^/]*$/, "")).replace(/\/?$/, "/") + `?lang=${L()}#/hpho/phone/${code}`;
+  async function pairPhone(rescan) { const r = await cmApi("POST", path("phone"), { rescan: !!rescan }); st.phoneCode = r.code; return qrSvg(phoneUrl(r.code)); }
+  async function phoneCheck() {
     const x = T[L()];
-    st.step = { title: x.roomStep[0], text: x.roomStep[1], button: x.roomStep[2] }; st.checks.room = undefined;
-    await waitGo();
-    const r = await P.roomScan?.((view, count) => { st.step = { title: x.roomStep[0], text: x.roomStep[1], view: x.views[view], count }; const box = document.querySelector(".hpho-scan-view"); if (box) box.innerHTML = `${esc(x.views[view])}${count ? ` <b>${count}</b>` : ""}`; else paint(); });
-    let why = null, found = [];
-    if (!r) why = "failed";
-    else try {
-      const res = await sendForm("roomscan", r.stills);
-      if (res.unavailable) why = retry("room");
-      else if (res.blocked?.length) { why = "blocked"; found = res.blocked; }
-    } catch (e) { why = "failed"; }
-    st.checks.room = !why;
-    if (why) { st.step = null; st.error = why === "blocked" ? x.roomBlocked(found.map(k => x.room[k]).join(", ")) : why === "unavailable" ? x.unavailable : x.roomFail; paint(); return false; }
-    st.roomClip = r.clip; st.step = null;
-    return true;
+    st.checks.phone = st.checks.room = st.checks.place = undefined;
+    st.step = { title: x.phoneStep[0], text: x.phoneStep[1], qr: await pairPhone(st.quick) }; paint();
+    for (;;) {
+      if (st.phase !== "check") return false;
+      let ph = null; try { ph = (await cmApi("GET", path("phone"))).phone; } catch (e) {}
+      const done = ph ? Object.values(ph.scan || {}).filter(v => ["clear", "notes", "unverified"].includes(v.status)).length : 0;
+      st.checks.phone = !!ph?.online || undefined; st.checks.room = ph?.scanned || undefined; st.checks.place = !!(ph?.placed || ph?.scanned && ph.place_note === "model unavailable") || undefined;
+      const list = document.getElementById("hphoPhoneList");
+      if (list) list.innerHTML = `<li class="${ph?.online ? "is-ok" : ""}">${x.phoneList.online}</li><li class="${ph?.scanned ? "is-ok" : ""}">${x.phoneList.scan(done, 7)}</li><li class="${st.checks.place ? "is-ok" : ""}">${x.phoneList.placed}</li>`;
+      document.querySelectorAll(".hpho-checks li").forEach(() => {});
+      if (st.checks.phone && st.checks.room && st.checks.place) { st.step = null; return true; }
+      await new Promise(r => setTimeout(r, 2000));
+    }
   }
-  /* recording segments: each goes up as it closes; one that fails is tried again (up to four kept waiting) */
-  const uploads = new Set();
-  function uploadClip(blob, source) {
-    if (!blob) return;
-    (st.clipQueue ||= []).push({ blob, source });
-    if (st.clipQueue.length > 4) { st.clipQueue.shift(); push("recording_failed", "a segment was dropped (network)"); }
-    const send = async () => {
-      while (st.clipQueue.length) {
-        const c = st.clipQueue[0];
-        try { await sendForm("clip", { clip: c.blob, source: c.source }); st.clipQueue.shift(); }
-        catch (e) { if (["exam_over", "not_seated"].includes(e?.code)) { st.clipQueue.shift(); continue; } return; }
+  /* during the exam: the phone's heartbeat every 20 s; while it is lost, a banner with a new QR */
+  async function watchPhone() {
+    if (!["room", "exam", "submit"].includes(st.phase)) return;
+    let ph = null; try { ph = (await cmApi("GET", path("phone"))).phone; } catch (e) { return; }
+    const was = st.phoneOnline !== false; st.phoneOnline = !!ph?.online;
+    if (was && !st.phoneOnline) push("phone_lost");
+    if (!was && st.phoneOnline) push("phone_back");
+    let el = document.getElementById("hphoPhoneBanner");
+    if (st.phoneOnline) el?.remove();
+    else if (!el) { el = Object.assign(document.createElement("div"), { id: "hphoPhoneBanner", className: "hpho-phone-banner" }); el.innerHTML = `${await pairPhone(false).catch(() => "")}<p>${T[L()].phoneLost}</p>`; document.body.append(el); }
+    paintBar();
+  }
+  /* the recordings stay on this computer (IndexedDB, in the app's own storage) during the exam; at the end the server
+     says whether the seat was flagged: then they go up, else they are deleted here */
+  const REC_DB = "hpho-recordings";
+  const idb = () => new Promise((res, rej) => { const o = indexedDB.open(REC_DB, 1); o.onupgradeneeded = () => o.result.createObjectStore("seg", { keyPath: "id", autoIncrement: true }).createIndex("seat", "seat"); o.onsuccess = () => res(o.result); o.onerror = () => rej(o.error); });
+  const seatKey = (track = st.track) => `${st.round.id}|${track}`;
+  async function storeClip(blob, source) {
+    if (!blob || !st.round) return;
+    try { const db = await idb(); await new Promise((res, rej) => { const tx = db.transaction("seg", "readwrite"); tx.objectStore("seg").add({ seat: seatKey(), source, at: nowS(), blob }); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); db.close(); }
+    catch (e) { push("recording_failed", "kept on this computer: " + (e?.name || "storage")); }
+  }
+  async function segments(track) {
+    const db = await idb();
+    const list = await new Promise((res, rej) => { const q = db.transaction("seg").objectStore("seg").index("seat").getAll(seatKey(track)); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); });
+    return { db, list };
+  }
+  /* the end: ask the server (keep), then upload or delete the recordings kept here */
+  async function settleRecordings(track = st.track) {
+    let keep = false; try { keep = (await cmApi("POST", path("keep", track), {})).keep; } catch (e) { return; }
+    let db, list; try { ({ db, list } = await segments(track)); } catch (e) { return; }
+    for (const [i, seg] of list.entries()) {
+      if (keep) {
+        const box = document.getElementById("hphoExamMain"); if (box) box.innerHTML = `<section class="hpho-round"><p>${T[L()].saving(i + 1, list.length)}</p></section>`;
+        let sent = false;
+        for (let a = 0; a < 3 && !sent; a++) try { const fd = new FormData(); fd.set("clip", seg.blob, "clip.webm"); fd.set("source", seg.source);
+          const r = await fetch(cmBase() + "/api" + path("clip", track), { method: "POST", headers: { Authorization: "Bearer " + cmTok() }, body: fd }); sent = r.ok || r.status === 403 || r.status === 409; } catch (e) { await new Promise(r => setTimeout(r, 3000)); }
+        if (!sent) continue;                                   /* kept here, sent on the next opening */
       }
-    };
-    const job = send().finally(() => uploads.delete(job)); uploads.add(job);
+      await new Promise(res => { const tx = db.transaction("seg", "readwrite"); tx.objectStore("seg").delete(seg.id); tx.oncomplete = res; tx.onerror = res; });
+    }
+    db.close();
   }
   /* a monitor connected during the exam: the page is covered (the paper cannot be seen on it) until it is unplugged */
   function cover(on) {
@@ -434,7 +475,8 @@
       if (["focus_lost", "display_change", "screen_unlocked"].includes(e.kind) || e.kind === "process_new" && /(^| )!/.test(e.detail || "")) window.HL_HPHO_PROCTOR?.snap(e.kind);
       if (e.kind === "display_change") cover(parseInt(e.detail, 10) > 1);
     });
-    if (!st.watching) { st.watching = true; window.HL_HPHO_PROCTOR?.start({ onEvent: (kind, detail) => push(kind, detail), upload: uploadSnap, clip: uploadClip }); }
+    if (!st.watching) { st.watching = true; window.HL_HPHO_PROCTOR?.start({ onEvent: (kind, detail) => push(kind, detail), upload: uploadSnap, clip: storeClip }); }
+    clearInterval(st.phoneTimer); st.phoneTimer = setInterval(watchPhone, 20000);
     push("displays", String(typeof b.displays === "function" ? b.displays() : "?"));
     b.started?.();
     clearInterval(st.flushTimer); st.flushTimer = setInterval(flush, 10000);
@@ -497,8 +539,9 @@
   async function finish() {
     clearInterval(st.flushTimer);
     push("submitted", String(st.pages)); await flush().catch(() => {});
+    clearInterval(st.phoneTimer); document.getElementById("hphoPhoneBanner")?.remove();
     await window.HL_HPHO_PROCTOR?.stop(); st.watching = false;
-    await Promise.race([Promise.all([...uploads]), new Promise(r => setTimeout(r, 90000))]);
+    await settleRecordings().catch(() => {});
     for (const u of st.thumbs || []) URL.revokeObjectURL(u); st.thumbs = [];
     bridge()?.finished?.(); paint();
   }
@@ -524,7 +567,7 @@
   }
   function mount() {
     clearInterval(st.timer); clearInterval(st.flushTimer);
-    st = { ...st, phase: "lobby", session: null, error: null, queue: [], step: null, tries: {}, clipQueue: [], roomClip: null, track: null, docs: [], pages: 0, thumbs: [], ticks: 0 };
+    st = { ...st, phase: "lobby", session: null, error: null, queue: [], step: null, tries: {}, track: null, docs: [], pages: 0, thumbs: [], ticks: 0 };
     if (!st.wired) { st.wired = true;
       document.addEventListener("visibilitychange", () => { if (["room", "exam", "submit"].includes(st.phase)) push(document.hidden ? "page_hidden" : "page_visible"); });
       addEventListener("offline", () => { if (["room", "exam", "submit"].includes(st.phase)) push("network_lost"); });

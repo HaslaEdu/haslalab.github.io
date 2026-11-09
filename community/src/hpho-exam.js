@@ -16,7 +16,18 @@
      POST voicecheck            the technical check's spoken sentence (multipart: audio WAV, lang): was it said?
      POST roomscan              the room scan's stills (multipart: front, left, right, back, ceiling, desk, under):
                                 another person, a phone, another screen, a headset, notes?
-     POST clip                  a five-minute recording segment (multipart: clip WebM, source webcam|screen|room)
+     POST keep                  at the end: is this seat flagged? only then the recordings come to the server
+     POST phone                 pair the candidate's phone (the second camera, Monito-style): a one-time code for the QR
+     GET  phone                 the phone's state: connected, the room scan view by view, its placement
+   The phone, by the code in the QR (no sign-in on the phone), at /api/hpho/phone/:code/<action>:
+     GET  state                 round, track, candidate number, what is left to do
+     POST scan                  one view of the room scan (multipart: view, frames f0..f7 taken while the phone turns
+                                slowly): the model looks for forbidden things in that view
+     POST place                 a photo from where the phone will stand: are the candidate, hands, desk and screen seen?
+     POST snap                  a proctoring photo from the phone (multipart: image, reason), every 15 s
+     POST beat                  the phone is still there
+     POST clip                  a five-minute recording segment (multipart: clip WebM, source webcam|screen|room),
+                                accepted only from a flagged seat
      GET  docs                  which documents exist (general guide, writing sheet, answer sheet, paper) per language
      GET  doc?kind=&lang=       one PDF: the sheets from the room's opening, the paper from the start to the end, to a
                                 seated candidate who has started
@@ -29,19 +40,28 @@
      GET  log?candidate=        one candidate's seat, events, snapshot and answer keys
      GET  media?key=            one stored snapshot or answer page
      POST verdict               {candidate, verdict: clear|review|cheating, note}: a person's decision after review
+     POST retain                keep or delete the recordings now (the cron does it an hour after the upload closes)
+   What is stored: the recordings (webcam with microphone, screen with the computer's sound, the room scans) stay on the
+   candidate's computer during the exam and come to the server only from a seat the detectors flagged (suspicion(),
+   asked through keep at the end); the server refuses them from any other seat. The proctoring photos of a seat that
+   was not flagged are deleted an hour after its upload closed (hphoRetainTick, every 15 minutes from the cron), except
+   the webcam photos after the time was over (writing then is cheating). Answers, check photos and events stay.
    Events are what the client reports, so a gap in the heartbeat is itself recorded (the server sees it). */
 import { ensureHpho, roundTracks, TRACKS } from './hpho.js';
 
 export const UPLOAD_MIN = 60;
 export const SNAP_MAX_BYTES = 250 * 1024;          /* a webcam still of the checks (640 px) */
 /* proctoring photos: the webcam at 640 px, the screen at its own resolution (up to 1920 px) so its text stays readable */
-export const SNAP_SOURCE_MAX = { webcam: 400 * 1024, screen: 1536 * 1024 };
+export const SNAP_SOURCE_MAX = { webcam: 400 * 1024, screen: 1536 * 1024, phone: 600 * 1024 };
 export const ANSWER_MAX_BYTES = 4 * 1024 * 1024;
 export const ANSWER_MAX_PAGES = 80;
 export const DOC_MAX_BYTES = 40 * 1024 * 1024;
 export const VOICE_MAX_BYTES = 1024 * 1024;
 export const SNAP_SOURCES = ['webcam', 'screen'];
 export const CLIP_SOURCES = ['webcam', 'screen', 'room'];
+/* the phone's room scan: each view swept slowly, a few frames of each judged together */
+export const PHONE_VIEWS = ['front', 'left', 'right', 'back', 'ceiling', 'desk', 'under'];
+export const PHONE_FRAMES = 8, PHONE_ONLINE = 40;
 export const CLIP_MAX_BYTES = 24 * 1024 * 1024;
 export const SCAN_VIEWS = ['front', 'left', 'right', 'back', 'ceiling', 'desk', 'under'];
 export const DOC_KINDS = ['guide', 'writing', 'answer', 'paper'];      /* general guide, 답안지 (writing sheet), answer sheet, the paper */
@@ -64,13 +84,24 @@ export const EXAM_EVENTS = ['heartbeat', 'window_ready', 'focus_lost', 'focus_ba
   'suspend', 'resume', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'network_back', 'page_hidden', 'page_visible',
   'camera_started', 'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'process_new', 'process_list', 'clip_saved', 'snapshot_saved',
   'face_check', 'mic_check', 'ear_check', 'checkin', 'reconnect', 'time_over', 'after_time', 'answer_page', 'submitted', 'paper_lang',
-  'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated'];
+  'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated', 'phone_lost', 'phone_back'];
 export const EARCHECK_EARLY = 3600;        /* the ear and voice checks open an hour before the start, with the technical check */
 const EAR_VERDICTS = ['clear', 'device', 'unclear'];
 const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, taken during the technical check before an online physics exam${n === 3 ? ': the first faces the camera, in the second the head is turned to show one ear, in the third the other ear' : ': in the first the head is turned to show one ear, in the second the other ear'}.
 Decide whether the candidate wears anything in, on or over the ears or head that could carry sound: earbuds, in-ear earphones, headphones, an over-ear or on-ear headset (also the headband over the head), a hearing device, or a wire leading to an ear. A headset seen in any photo counts, even if an ear is hidden.
 Earrings, ear piercings, hair clips and glasses are not devices. Use "unclear" for a photo in which neither the ear nor anything over it can be seen (hair, angle, blur, too dark) or there is no person.
 Reply with JSON only: {"verdicts":[${Array.from({ length: n }, () => '"clear"|"device"|"unclear"').join(',')}],"note":"at most 15 words, in English"}`;
+const VIEW_NAMES = { front: 'the wall in front of the candidate', left: 'the left side of the room', right: 'the right side of the room', back: 'behind the candidate',
+  ceiling: 'the ceiling', desk: 'the whole desk top, including around and behind the computer', under: 'under the desk and the floor around the chair' };
+const VIEW_PROMPT = view => `These ${PHONE_FRAMES} or fewer frames come from a phone camera turned slowly during the room scan before an online physics exam. This part of the scan should show ${VIEW_NAMES[view]}.
+Look carefully at every frame, including small objects, papers, other screens and reflections, for:
+- another person or part of one; - a phone, smartwatch, tablet or e-reader (the phone that is filming is not visible to itself);
+- a screen other than the one computer used for the exam (a second monitor, a laptop, a TV or projector showing anything);
+- earphones, earbuds or a headset; - books, notes, sticky notes, written or printed papers, formula sheets, writing on the walls or desk (blank or printed answer sheets, a pen, a ruler, a calculator and a drink are allowed).
+Also say whether the frames really show ${VIEW_NAMES[view]} ("covered": false if they show something else, are too dark, too blurred from turning too fast, or blocked).
+Reply with JSON only: {"covered":bool,"person":bool,"phone":bool,"screen":bool,"headset":bool,"notes":bool,"note":"at most 20 words, in English"}`;
+const PLACE_PROMPT = `This photo is from a phone placed as a second camera for an online physics exam. It should stand to the side of or behind the candidate, about 1 to 1.5 m away, so that one picture shows the candidate (head and body), both hands, the desk top and the computer screen.
+Reply with JSON only: {"person":bool,"hands":bool,"desk":bool,"screen":bool,"note":"what to change, at most 15 words, in English"}`;
 const ROOM_PROMPT = `These are webcam stills from the room scan before an online physics exam, taken in order: ${SCAN_VIEWS.join(', ')} (the front of the room, the left and right walls, behind the candidate, the ceiling, the desk top, under the desk).
 Look for: another person (or part of one); a phone, smartwatch or tablet; a screen other than the one computer the candidate sits the exam on (a second monitor, a laptop, a TV showing text); earphones or a headset; books, notes or written papers (blank or printed exam answer sheets, a pen, a calculator and a drink are allowed).
 Reply with JSON only: {"person":bool,"phone":bool,"screen":bool,"headset":bool,"notes":bool,"unclear":bool,"note":"at most 20 words, in English"} ("unclear": the stills are too dark or blurred to judge).`;
@@ -110,6 +141,23 @@ export async function geminiRoomScan(env, stills) {
   catch { return { unavailable: true }; }
 }
 export const ROOM_BLOCK = ['person', 'phone', 'screen', 'headset'];      /* these stop the candidate; notes go to review */
+/* one view of the phone's scan */
+export async function geminiPhoneView(env, view, frames) {
+  if (!env.GEMINI_API_KEY) return { unavailable: true };
+  try { return viewVerdict(await gemini(env, [...frames.map(b => ({ inline_data: { mime_type: 'image/jpeg', data: b64(b) } })), { text: VIEW_PROMPT(view) }])); }
+  catch { return { unavailable: true }; }
+}
+export function viewVerdict(v) {
+  if (!v || ![...ROOM_BLOCK, 'notes', 'covered'].every(k => typeof v[k] === 'boolean')) return { unavailable: true };
+  return { covered: v.covered, found: [...ROOM_BLOCK, 'notes'].filter(k => v[k]), note: clean(v.note, 160) };
+}
+export async function geminiPlacement(env, photo) {
+  if (!env.GEMINI_API_KEY) return { unavailable: true };
+  try { const v = await gemini(env, [{ inline_data: { mime_type: 'image/jpeg', data: b64(photo) } }, { text: PLACE_PROMPT }]);
+    if (!v || !['person', 'hands', 'desk', 'screen'].every(k => typeof v[k] === 'boolean')) return { unavailable: true };
+    return { ok: v.person && v.hands && v.desk && v.screen, missing: ['person', 'hands', 'desk', 'screen'].filter(k => !v[k]), note: clean(v.note, 120) }; }
+  catch { return { unavailable: true }; }
+}
 export function roomVerdict(v) {
   if (!v || ![...ROOM_BLOCK, 'notes', 'unclear'].every(k => typeof v[k] === 'boolean')) return { unavailable: true };
   return { found: [...ROOM_BLOCK, 'notes'].filter(k => v[k]), unclear: v.unclear, note: clean(v.note, 160) };
@@ -137,9 +185,14 @@ export const HPHO_EXAM_SCHEMA = [
     checked_in_at INTEGER NOT NULL, started_at INTEGER, ends_at INTEGER NOT NULL, last_beat INTEGER NOT NULL, submitted_at INTEGER,
     paper_lang TEXT NOT NULL DEFAULT 'ko', client TEXT, events INTEGER NOT NULL DEFAULT 0, gaps INTEGER NOT NULL DEFAULT 0,
     reconnects INTEGER NOT NULL DEFAULT 0, pages INTEGER NOT NULL DEFAULT 0, verdict TEXT, verdict_note TEXT, verdict_at INTEGER,
-    check_note TEXT, last_webcam TEXT, last_screen TEXT, clips INTEGER NOT NULL DEFAULT 0,
+    check_note TEXT, last_webcam TEXT, last_screen TEXT, clips INTEGER NOT NULL DEFAULT 0, kept TEXT, pruned_at INTEGER,
     PRIMARY KEY (round_id, user_id, track))`,
   `CREATE UNIQUE INDEX IF NOT EXISTS hpho_seats_no ON hpho_seats(round_id, track, candidate_no)`,
+  /* the candidate's phone for one exam: the code's hash (the code itself is only in the QR), its scan and placement */
+  `CREATE TABLE IF NOT EXISTS hpho_phones (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, track TEXT NOT NULL, candidate_no TEXT NOT NULL,
+    code_hash TEXT NOT NULL, created_at INTEGER NOT NULL, last_beat INTEGER, scan TEXT NOT NULL DEFAULT '{}', placed INTEGER NOT NULL DEFAULT 0,
+    place_note TEXT, last_snap TEXT, PRIMARY KEY (round_id, user_id, track))`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS hpho_phones_code ON hpho_phones(code_hash)`,
   `CREATE TABLE IF NOT EXISTS hpho_events (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, seq INTEGER NOT NULL,
     client_at INTEGER, at INTEGER NOT NULL, kind TEXT NOT NULL, detail TEXT, PRIMARY KEY (round_id, user_id, seq))`,
 ];
@@ -194,13 +247,73 @@ export function checkNote(events) {
 /* the seat's own ends_at is what the exam's end was at check-in; the page is told the round's current times (window) */
 const seatView = s => s && { candidate_no: s.candidate_no, checked_in_at: s.checked_in_at, started_at: s.started_at, ends_at: s.ends_at,
   submitted_at: s.submitted_at, paper_lang: s.paper_lang, reconnects: s.reconnects, pages: s.pages };
-const adminSeat = s => ({ ...seatView(s), client: s.client, events: s.events, gaps: s.gaps, last_beat: s.last_beat, clips: s.clips,
+const adminSeat = s => ({ ...seatView(s), client: s.client, events: s.events, gaps: s.gaps, last_beat: s.last_beat, clips: s.clips, kept: s.kept, pruned_at: s.pruned_at,
   check_note: s.check_note, verdict: s.verdict, verdict_note: s.verdict_note, verdict_at: s.verdict_at, review: needsReview(s) });
+/* why a seat's recordings are kept for a person to review: what the on-device detectors (MediaPipe face and phone,
+   voice and computer-sound levels), the desktop app (window, monitors, programs), the server (heartbeat gaps,
+   reconnects) and the model checks (ears, voice, room) found. A strong sign once is enough; weak ones (a glance away,
+   a short silence of the network) must repeat. A person's verdict of review or cheating always keeps them */
+export const STRONG = ['faces_multiple', 'phone_seen', 'system_sound', 'camera_stopped', 'window_close_attempt', 'recording_failed'];
+export const WEAK = ['focus_lost', 'face_missing', 'voice', 'page_hidden', 'network_lost', 'shortcut_blocked', 'screen_locked', 'suspend', 'phone_lost'];
+export const WEAK_LIMIT = 3;
+export function suspicion(seat, events) {
+  const out = [], n = k => events.filter(e => e.kind === k).length;
+  for (const k of STRONG) if (n(k)) out.push(`${k}×${n(k)}`);
+  for (const k of WEAK) if (n(k) >= WEAK_LIMIT) out.push(`${k}×${n(k)}`);
+  if (events.some(e => e.kind === 'display_change' && parseInt(e.detail, 10) > 1)) out.push('second_display');
+  const risky = events.filter(e => e.kind === 'process_new' && /(^| )!/.test(e.detail || ''));
+  if (risky.length) out.push('programs: ' + [...new Set(risky.flatMap(e => (e.detail.match(/!\S+/g) || [])))].join(' ').slice(0, 80));
+  if ((seat.reconnects || 0) >= REVIEW_RECONNECTS) out.push(`reconnects×${seat.reconnects}`);
+  if ((seat.gaps || 0) >= REVIEW_GAPS) out.push(`gaps×${seat.gaps}`);
+  if (seat.check_note) out.push('checks: ' + seat.check_note.slice(0, 80));
+  if (['review', 'cheating'].includes(seat.verdict)) out.push('verdict: ' + seat.verdict);
+  return out;
+}
+export const RETAIN_AFTER = 3600;          /* the hour after the upload closes, in which an organiser may still flag a seat */
+/* keep or delete one seat's recordings and proctoring photos; returns what was decided */
+export async function retainSeat(db, store, round, seat, w, t) {
+  const events = (await db.prepare('SELECT seq,at,kind,detail FROM hpho_events WHERE round_id=? AND user_id=? AND (track=? OR track IS NULL) AND at>=? AND at<=?')
+    .bind(round, seat.user_id, seat.track, w.opens, w.upload_until + 600).all()).results || [];
+  /* a seat already flagged at the end (keep) stays flagged; else the flags are counted now (a person's verdict included) */
+  const why = seat.kept ? [seat.kept, ...(['review', 'cheating'].includes(seat.verdict) && !seat.kept.includes('verdict') ? ['verdict: ' + seat.verdict] : [])] : suspicion(seat, events);
+  let deleted = 0;
+  if (!why.length && store?.list) {
+    const keys = [];
+    const collect = async (prefix, keep = () => true) => { let cursor;
+      do { const l = await store.list({ prefix, cursor, limit: 1000 }); keys.push(...l.objects.map(o => o.key).filter(keep)); cursor = l.truncated ? l.cursor : null; } while (cursor); };
+    await collect(`hpho-rec/${round}/${seat.track}/${seat.candidate_no}/`);
+    /* the proctoring photos of this exam's time; the ear and room check stills stay */
+    await collect(`hpho/${round}/${seat.candidate_no}/`, k => { const m = /\/(\d+)-(webcam|screen)-([a-z_]+)\.jpg$/.exec(k); return !!m && +m[1] >= w.opens && +m[1] <= w.upload_until + 600 && !(m[2] === 'webcam' && m[3] === 'after_time'); });
+    for (let i = 0; i < keys.length; i += 100) { const part = keys.slice(i, i + 100); await (store.delete ? store.delete(part) : Promise.all(part.map(k => store.del?.(k)))); deleted += part.length; }
+  }
+  const kept = why.length ? why.join('; ').slice(0, 500) : null;
+  await db.prepare('UPDATE hpho_seats SET kept=?,pruned_at=?,last_webcam=CASE WHEN ? THEN last_webcam ELSE NULL END,last_screen=CASE WHEN ? THEN last_screen ELSE NULL END WHERE round_id=? AND user_id=? AND track=?')
+    .bind(kept, t, why.length ? 1 : 0, why.length ? 1 : 0, round, seat.user_id, seat.track).run();
+  return { candidate_no: seat.candidate_no, kept, deleted };
+}
+/* the cron's step: seats whose upload closed more than an hour ago and were not decided yet (a few at a time) */
+export async function hphoRetainTick(env, { now: at = Date.now(), scope = e => e.DB, limit = 20 } = {}) {
+  const db = scope(env), store = env.HPHO_SNAPS || env.LAB_PAGES, t = Math.floor(at / 1000);
+  await ensureHphoExam(db);
+  const seats = (await db.prepare('SELECT s.*, r.start_at AS r_start, r.duration_min AS r_dur, r.theory_at AS r_theory, r.experiment_at AS r_exp FROM hpho_seats s JOIN hpho_rounds r ON r.id=s.round_id WHERE s.pruned_at IS NULL ORDER BY s.checked_in_at LIMIT 500').all()).results || [];
+  const out = [];
+  for (const s of seats) {
+    if (out.length >= limit) break;
+    const w = examWindow({ start_at: s.r_start, duration_min: s.r_dur, theory_at: s.r_theory, experiment_at: s.r_exp }, s.track);
+    if (!w || t < w.upload_until + RETAIN_AFTER) continue;
+    out.push(await retainSeat(db, store, s.round_id, s, w, t));
+  }
+  return out;
+}
+
 /* events a proctor watching live wants to see */
 export const ALERTS = ['focus_lost', 'display_change', 'screen_locked', 'suspend', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'page_hidden',
-  'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'system_sound', 'reconnect', 'recording_failed', 'after_time', 'process_new'];
+  'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'system_sound', 'reconnect', 'recording_failed', 'after_time', 'process_new', 'phone_lost'];
 
-export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB, earVision = geminiEarVision, voiceCheck = geminiVoiceCheck, roomScan = geminiRoomScan }) {
+const sha256 = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
+const phoneState = (ph, t) => ph && { paired: !!ph.last_beat, online: !!ph.last_beat && t - ph.last_beat < PHONE_ONLINE, placed: !!ph.placed, place_note: ph.place_note,
+  scan: JSON.parse(ph.scan || '{}'), scanned: PHONE_VIEWS.every(v => ['clear', 'notes', 'unverified'].includes(JSON.parse(ph.scan || '{}')[v]?.status)) };
+export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB, earVision = geminiEarVision, voiceCheck = geminiVoiceCheck, roomScan = geminiRoomScan, phoneView = geminiPhoneView, placement = geminiPlacement }) {
   const fail = (status, code) => { throw new HttpError(status, code); };
   const form = async req => { try { return await req.formData(); } catch { fail(400, 'bad_upload'); } };
   const bytesOf = async (file, max, tooLarge = 'upload_too_large') => {
@@ -208,8 +321,64 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     if (file.size > max) fail(413, tooLarge);
     return new Uint8Array(await file.arrayBuffer());
   };
+  /* the phone: its code is its only key; it works from the room's opening until the upload closes */
+  async function phoneRoute(code, action, m, env, req) {
+    const db = scope(env); await ensureHphoExam(db);
+    const ph = /^[A-Za-z0-9_-]{20,64}$/.test(code) ? await db.prepare('SELECT * FROM hpho_phones WHERE code_hash=?').bind(await sha256(code)).first() : null;
+    if (!ph) fail(404, 'phone_not_found');
+    const round = await db.prepare('SELECT * FROM hpho_rounds WHERE id=?').bind(ph.round_id).first(), w = round && examWindow(round, ph.track), t = now();
+    if (!w || t >= w.upload_until + 600) fail(409, 'exam_over');
+    const store = env.HPHO_SNAPS || env.LAB_PAGES, where = [ph.round_id, ph.user_id, ph.track];
+    const event = (kind, detail, mark) => db.prepare(`INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail,track) VALUES(?,?,?,NULL,?,?,?,?)`).bind(ph.round_id, ph.user_id, -(mark + t), t, kind, String(detail || '').slice(0, 200), ph.track);
+    const beat = () => db.prepare('UPDATE hpho_phones SET last_beat=? WHERE round_id=? AND user_id=? AND track=?').bind(t, ...where).run();
+    if (action === 'state' && m === 'GET') { await beat(); return { round: ph.round_id, track: ph.track, candidate_no: ph.candidate_no, window: w, now: t, views: PHONE_VIEWS, ...phoneState({ ...ph, last_beat: t }, t) }; }
+    if (m !== 'POST') fail(405, 'method_not_allowed');
+    await limit(env, 'hpho-phone:' + ph.user_id, 400, 600);
+    if (action === 'beat') { await beat(); return { ok: true, now: t }; }
+    let f; try { f = await req.formData(); } catch { fail(400, 'bad_upload'); }
+    const jpeg = async (name, max = SNAP_SOURCE_MAX.phone) => { const file = f.get(name); if (!file || typeof file.arrayBuffer !== 'function') fail(400, 'bad_upload'); if (file.size > max) fail(413, 'snapshot_too_large');
+      const b = new Uint8Array(await file.arrayBuffer()); if (!isJpeg(b)) fail(415, 'snapshot_not_jpeg'); return b; };
+    const put = (key, b, reason) => store?.put(key, b, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: ph.round_id, track: ph.track, candidate: ph.candidate_no, source: 'phone', reason } });
+    if (action === 'scan') {
+      const view = PHONE_VIEWS.includes(f.get('view')) ? f.get('view') : fail(400, 'bad_view');
+      const frames = []; for (let i = 0; i < PHONE_FRAMES; i++) if (f.get('f' + i)) frames.push(await jpeg('f' + i));
+      if (frames.length < 3) fail(400, 'too_few_frames');
+      for (const [i, b] of frames.entries()) await put(`hpho/${ph.round_id}/${ph.candidate_no}/${t}-phone-scan_${view}_${i}.jpg`, b, 'room_scan');
+      const scan = JSON.parse(ph.scan || '{}'), tries = (scan[view]?.tries || 0) + 1;
+      const v = await phoneView(env, view, frames);
+      /* blocked: remove it and sweep again. Not covered (too fast, too dark): sweep again. No model: three tries, then unverified */
+      const status = v.unavailable ? (tries >= 3 ? 'unverified' : 'unavailable') : !v.covered ? 'redo' : v.found.some(k => ROOM_BLOCK.includes(k)) ? 'blocked' : v.found.includes('notes') ? 'notes' : 'clear';
+      scan[view] = { status, tries, found: v.found || [], at: t };
+      const stmts = [db.prepare('UPDATE hpho_phones SET scan=?,last_beat=? WHERE round_id=? AND user_id=? AND track=?').bind(JSON.stringify(scan), t, ...where)];
+      /* every view done: one room_scan record (the seat's checks read it) */
+      if (PHONE_VIEWS.every(k => ['clear', 'notes', 'unverified'].includes(scan[k]?.status))) {
+        const flags = PHONE_VIEWS.filter(k => scan[k].status !== 'clear').map(k => `${k}=${scan[k].status === 'notes' ? 'notes' : 'model unavailable'}`);
+        stmts.push(event('room_scan', flags.length ? `flag: phone · ${flags.join(',')}` : 'clear (phone)', 3e9));
+      }
+      await db.batch(stmts);
+      return { ok: true, view, status, found: v.found || [], note: v.note || '' };
+    }
+    if (action === 'place') {
+      const b = await jpeg('image'); await put(`hpho/${ph.round_id}/${ph.candidate_no}/${t}-phone-placement.jpg`, b, 'placement');
+      const v = await placement(env, b), tries = (ph.placed_tries || 0) + 1;
+      const ok = v.unavailable ? null : v.ok;
+      await db.prepare('UPDATE hpho_phones SET placed=?,place_note=?,last_beat=? WHERE round_id=? AND user_id=? AND track=?')
+        .bind(ok ? 1 : 0, v.unavailable ? 'model unavailable' : ok ? null : (v.missing.join(',') + (v.note ? ' · ' + v.note : '')).slice(0, 200), t, ...where).run();
+      return v.unavailable ? { ok: true, unavailable: true } : { ok: true, placed: ok, missing: v.missing };
+    }
+    if (action === 'snap') {
+      const reason = /^[a-z_]{3,24}$/.test(String(f.get('reason') || '')) ? String(f.get('reason')) : 'random';
+      const b = await jpeg('image'), key = `hpho/${ph.round_id}/${ph.candidate_no}/${t}-phone-${reason}.jpg`;
+      await put(key, b, reason);
+      await db.batch([db.prepare('UPDATE hpho_phones SET last_snap=?,last_beat=? WHERE round_id=? AND user_id=? AND track=?').bind(key, t, ...where)]);
+      return { ok: true };
+    }
+    fail(404, 'not_found');
+  }
   return async function exam(p, m, body, me, env, url, req) {
-    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(?:(theory|experiment)\/)?(state|checkin|lang|start|events|snap|earcheck|voicecheck|roomscan|clip|docs|doc|answer|submit|upload|seats|monitor|log|media|verdict)$/.exec(p);
+    const phone = /^\/api\/hpho\/phone\/([^/]+)\/(state|scan|place|snap|beat)$/.exec(p);
+    if (phone) return phoneRoute(phone[1], phone[2], m, env, req);
+    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(?:(theory|experiment)\/)?(state|checkin|lang|start|events|snap|earcheck|voicecheck|roomscan|phone|keep|clip|docs|doc|answer|submit|upload|seats|monitor|log|media|verdict|retain)$/.exec(p);
     if (!r) return undefined;
     const [, id, track = 'theory', action] = r, db = scope(env), admin = isAdmin(me);
     needUser(me); await ensureHphoExam(db);
@@ -220,7 +389,14 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     const q = k => url?.searchParams?.get(k) || '';
 
     /* ── the organisers ── */
-    if (['upload', 'seats', 'monitor', 'log', 'media', 'verdict'].includes(action)) {
+    if (['upload', 'seats', 'monitor', 'log', 'media', 'verdict', 'retain'].includes(action)) {
+      if (action === 'retain' && m === 'POST') {
+        /* now, for this exam's seats (after its upload closed): keep the flagged, delete the rest */
+        if (t < w.upload_until) fail(409, 'not_over');
+        const rows = (await db.prepare('SELECT * FROM hpho_seats WHERE round_id=? AND track=?').bind(id, track).all()).results || [];
+        const out = []; for (const s of rows) out.push(await retainSeat(db, store, id, s, w, t));
+        return { ok: true, seats: out };
+      }
       if (!admin) fail(403, 'forbidden');
       if (action === 'upload' && m === 'POST') {
         if (!store) fail(503, 'storage_unavailable');
@@ -238,7 +414,9 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
         const rows = (await db.prepare('SELECT * FROM hpho_seats WHERE round_id=? AND track=? ORDER BY candidate_no').bind(id, track).all()).results || [];
         const alerts = (await db.prepare(`SELECT user_id,at,kind,detail FROM hpho_events WHERE round_id=? AND (track=? OR track IS NULL) AND at>=? AND kind IN (${ALERTS.map(() => '?').join(',')}) ORDER BY at DESC LIMIT 500`)
           .bind(id, track, t - 900, ...ALERTS).all()).results || [];
+        const phones = new Map(((await db.prepare('SELECT user_id,last_beat,last_snap FROM hpho_phones WHERE round_id=? AND track=?').bind(id, track).all()).results || []).map(x => [x.user_id, x]));
         return { window: w, now: t, seats: rows.map(s => ({ ...adminSeat(s), last_webcam: s.last_webcam, last_screen: s.last_screen, online: t - s.last_beat < 45 && !s.submitted_at,
+          last_phone: phones.get(s.user_id)?.last_snap || null, phone_online: !!phones.get(s.user_id)?.last_beat && t - phones.get(s.user_id).last_beat < PHONE_ONLINE,
           alerts: alerts.filter(a => a.user_id === s.user_id).slice(0, 6).map(({ at, kind, detail }) => ({ at, kind, detail })) })) };
       }
       if (action === 'log' && m === 'GET') {
@@ -276,6 +454,19 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     const serverEvent = (kind, detail, mark = 0) => db.prepare(`INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail,track) VALUES(?,?,?,NULL,?,?,?,?)`)
       .bind(id, me.id, -(mark + t), t, kind, String(detail || '').slice(0, 200), track);
 
+    if (action === 'phone') {
+      if (!entry) fail(403, 'not_registered');
+      const ph = await db.prepare('SELECT * FROM hpho_phones WHERE round_id=? AND user_id=? AND track=?').bind(id, me.id, track).first();
+      if (m === 'GET') return { now: t, phone: phoneState(ph, t), views: PHONE_VIEWS };
+      if (m !== 'POST') fail(405, 'method_not_allowed');
+      if (t < w.start_at - EARCHECK_EARLY || t >= w.upload_until) fail(409, 'check_closed');
+      /* a new code (the QR shows it once); a phone already paired keeps its scan, a new code replaces the old one */
+      const code = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(24)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      /* rescan (a return after a disconnect): the room is shown again and the phone stood again */
+      if (ph) await db.prepare(`UPDATE hpho_phones SET code_hash=?${body?.rescan ? ",scan='{}',placed=0,place_note=NULL" : ''} WHERE round_id=? AND user_id=? AND track=?`).bind(await sha256(code), id, me.id, track).run();
+      else await db.prepare('INSERT INTO hpho_phones(round_id,user_id,track,candidate_no,code_hash,created_at) VALUES(?,?,?,?,?,?)').bind(id, me.id, track, entry.candidate_no, await sha256(code), t).run();
+      return { ok: true, code };
+    }
     if (action === 'state' && m === 'GET') return { window: w, now: t, registered: !!entry, session: seatView(seat), seq: seat ? await lastSeq() : 0 };
 
     if (action === 'docs' && m === 'GET') {
@@ -400,10 +591,20 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       await db.prepare(`UPDATE hpho_seats SET last_beat=?,${source === 'screen' ? 'last_screen' : 'last_webcam'}=? WHERE round_id=? AND user_id=? AND track=?`).bind(t, key, id, me.id, track).run();
       return { ok: true };
     }
+    if (action === 'keep') {
+      /* asked once the time is over: the seat's flags so far decide whether its recordings come to the server. The
+         candidate learns only yes or no, never why */
+      if (t < w.ends) fail(409, 'not_over');
+      const events = (await db.prepare('SELECT seq,at,kind,detail FROM hpho_events WHERE round_id=? AND user_id=? AND (track=? OR track IS NULL) AND at>=?').bind(id, me.id, track, w.opens).all()).results || [];
+      const why = suspicion(seat, events), kept = why.length ? why.join('; ').slice(0, 500) : null;
+      await db.prepare('UPDATE hpho_seats SET kept=COALESCE(?,kept) WHERE round_id=? AND user_id=? AND track=?').bind(kept, id, me.id, track).run();
+      return { ok: true, keep: !!(kept || seat.kept) };
+    }
     if (action === 'clip') {
-      /* the recording, in five-minute WebM segments: from the seat in the waiting room until the answers are submitted */
-      await limit(env, 'hpho-clip:' + me.id, 40, 600);
-      if (t > w.upload_until + 600 || seat.submitted_at && t > seat.submitted_at + 120) fail(409, 'exam_over');
+      /* the recording, in five-minute WebM segments, from a flagged seat only, until half an hour after the upload closed */
+      await limit(env, 'hpho-clip:' + me.id, 400, 3600);
+      if (!seat.kept) fail(403, 'not_kept');
+      if (t > w.upload_until + 1800) fail(409, 'exam_over');
       if (!store) fail(503, 'storage_unavailable');
       const f = await form(req), source = CLIP_SOURCES.includes(f.get('source')) ? f.get('source') : fail(400, 'bad_clip');
       const bytes = await bytesOf(f.get('clip'), CLIP_MAX_BYTES, 'clip_too_large'); if (!isWebm(bytes)) fail(415, 'clip_not_webm');
