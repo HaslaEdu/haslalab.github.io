@@ -131,10 +131,14 @@ Listen to the recording. "said" is true only if a human voice clearly reads that
 Reply with JSON only, writing what you heard as plain text (no escape sequences): {"said":true|false,"heard":"what you heard, at most 12 words"}`;
 const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(s); };
 async function gemini(env, parts, maxOutputTokens = 200) {
-  const model = env.HPHO_VISION_MODEL || env.GEMINI_MODEL || 'gemini-flash-lite-latest';
+  /* gemini-3.1-flash-lite with the images at low resolution: on the lab's photo sets (10 sets, 6 rounds each) it missed
+     no earphone in either ear and gave the same answer every round, at about a third of the tokens of the default
+     resolution; gemini-3.5-flash-lite missed the right ear 23 times in 60. A fixed version, so the verdicts do not
+     change when Google moves a "latest" alias. Not GEMINI_MODEL: that one is for the site's other features */
+  const model = env.HPHO_VISION_MODEL || 'gemini-3.1-flash-lite';
   const r = await fetch(`${env.GEMINI_BASE || 'https://generativelanguage.googleapis.com/v1beta/models'}/${model}:generateContent`, {
     method: 'POST', signal: AbortSignal.timeout(30000), headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
-    body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens } }) });
+    body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens, mediaResolution: env.HPHO_MEDIA_RESOLUTION || 'MEDIA_RESOLUTION_LOW' } }) });
   if (!r.ok) return null;
   const j = await r.json(), raw = (j.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('');
   return lenientJson(raw);
