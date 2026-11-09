@@ -862,3 +862,9 @@ body.hl-site .hpho-meter-big{height:16px;border-radius:8px}
 body.hl-site .hpho-example .ex-ring{fill:none;stroke:#d5dbe6;stroke-width:6}
 body.hl-site .hpho-example .ex-spin{animation:hphoSpin 6s linear infinite}@keyframes hphoSpin{to{transform:rotate(360deg)}}
 body.hl-site .hpho-track-box{position:absolute;inset:0;width:100%;height:100%;transform:scaleX(-1);pointer-events:none}
+body.hl-site .hpho-example .ex-monitor{fill:#2f3a4d}body.hl-site .hpho-example .ex-key{fill:#9aa4b2}body.hl-site .hpho-example .ex-pawn{fill:#7059a4}
+body.hl-site .hpho-example .ex-back{stroke-dasharray:4 3}
+body.hl-site .hpho-example .ex-pan{animation:hphoPan 3.6s ease-in-out infinite alternate}@keyframes hphoPan{from{transform:translateX(-56px)}to{transform:translateX(56px)}}
+body.hl-site .hpho-example .ex-nod-up{animation:hphoNodUp 4s ease-in-out infinite}@keyframes hphoNodUp{0%,15%{transform:rotate(0)}50%,60%{transform:rotate(-60deg)}95%,100%{transform:rotate(0)}}
+body.hl-site .hpho-example .ex-nod-down{animation:hphoNodDown 4s ease-in-out infinite}@keyframes hphoNodDown{0%,15%{transform:rotate(0)}50%,60%{transform:rotate(60deg)}95%,100%{transform:rotate(0)}}
+body.hl-site .hpho-phone-video.is-front{transform:scaleX(-1)}body.hl-site .hpho-flip{font-size:15px;color:#5c438f}

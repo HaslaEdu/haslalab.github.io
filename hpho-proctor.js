@@ -9,6 +9,16 @@
    after a disconnect, the candidate shows the room with the webcam (roomScan): walls, ceiling, desk and under the desk. */
 (() => {
   const VISION = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21";
+  const HAND_MODEL = "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
+  let hands = null;
+  /* the hand tracker (MediaPipe Hand Landmarker, 21 points a hand): only for the ear/head/wrist check */
+  function handTracker() {
+    return hands ||= (async () => {
+      const { FilesetResolver, HandLandmarker } = await import(VISION + "/vision_bundle.mjs");
+      const files = await FilesetResolver.forVisionTasks(VISION + "/wasm");
+      return HandLandmarker.createFromOptions(files, { baseOptions: { modelAssetPath: HAND_MODEL, delegate: "GPU" }, runningMode: "VIDEO", numHands: 2 });
+    })().catch(() => { hands = null; return null; });
+  }
   const MODELS = {
     face: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
     objects: "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/int8/1/efficientdet_lite0.tflite",
@@ -161,22 +171,36 @@
     if (!p.det) p.det = await detectors();
     const shot = () => { const c = document.createElement("canvas"), k = Math.min(1, 640 / v.videoWidth); c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
       c.getContext("2d").drawImage(v, 0, 0, c.width, c.height); return new Promise(res => c.toBlob(res, "image/jpeg", 0.85)); };
+    /* a turn of the head held for half a second, within ten seconds; no turn, no photo (the step stops: "turn further") */
     const turned = async (sign) => {
-      /* up to eight seconds for a clear turn held for half a second; then the photo is taken anyway */
+      if (!p.det) { await wait(3000); return { side: sign, blob: await shot() }; }
       let held = 0, side = sign;
-      for (let i = 0; i < 80; i++) {
+      for (let i = 0; i < 100; i++) {
         await wait(100);
-        const y = p.det ? yaw(v) : null;
-        if (y !== null && Math.abs(y) > 0.35 && (sign === 0 || Math.sign(y) === sign)) { side = Math.sign(y); if (++held >= 5) break; } else held = 0;
+        const y = yaw(v);
+        if (y !== null && Math.abs(y) > 0.35 && (sign === 0 || Math.sign(y) === sign)) { side = Math.sign(y); if (++held >= 5) return { side, blob: await shot() }; } else held = 0;
       }
-      return { side, blob: await shot() };
+      return null;
     };
-    /* the front first (a headset shows from the front too), then one ear, then the other */
-    step("front"); await wait(2500); const front = await shot();
-    step("first"); const a = await turned(0);
-    step("second"); const b = await turned(a.side ? -a.side : 0);
+    /* the front with both hands raised beside the face, palms and wrists showing: the hand tracker must see two hands up
+       at face height for half a second, within fifteen seconds */
+    const raised = async () => {
+      const ht = await Promise.race([handTracker(), wait(8000).then(() => null)]);
+      if (!ht) { await wait(3000); return shot(); }                  /* no tracker: the photo, and the server's model judges */
+      let held = 0;
+      for (let i = 0; i < 150; i++) {
+        await wait(100);
+        let r; try { r = ht.detectForVideo(v, performance.now()); } catch (e) { continue; }
+        const up = (r.landmarks || []).filter(h => h[0].y < 0.9 && (h[9].y < 0.62));    /* wrist in the picture, the palm's middle high */
+        if (up.length >= 2) { if (++held >= 5) return shot(); } else held = 0;
+      }
+      return null;
+    };
+    step("front"); const front = await raised(); if (!front) { step("stop"); return { error: "hands" }; }
+    step("first"); const a = await turned(0); if (!a) { step("stop"); return { error: "turn" }; }
+    step("second"); const b = await turned(-a.side || 0); if (!b) { step("stop"); return { error: "turn" }; }
     step("done");
-    return front && a.blob && b.blob ? { front, first: a.blob, second: b.blob } : null;
+    return a.blob && b.blob ? { front, first: a.blob, second: b.blob } : null;
   }
   /* the room scan: the webcam (or the laptop) turned to each view in turn, a still of each and a video of the whole of it.
      step(view, secondsLeft) tells the page what to show */

@@ -15,26 +15,26 @@
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const KEEP = 6, SIDE = 768, FAST = 50;                   /* frames sent per view; their longest side; degrees per second */
   /* how far each view turns the phone (degrees) and which way: across (a wall, the desk) or up/down (ceiling, under) */
-  const TURN = { room: 360, desk: 80, under: 70, ceiling: 70 };
+  const TURN = { room: 360, desk: 80, under: 100, ceiling: 100 };
   const T = {
     ko: { title: "HPhO 휴대폰 감독", intro: "이 휴대폰은 시험 동안 두 번째 카메라로 쓰입니다. 먼저 방을 천천히 비춰 검사하고, 그다음 옆이나 뒤에 세워 두면 됩니다. 시험이 끝날 때까지 이 화면을 켜 두세요(충전기 연결).", cam: "카메라 켜기", camFail: "카메라를 켜지 못했습니다. 브라우저의 카메라 권한을 허용한 뒤 다시 시도하세요.",
       bad: "이 QR은 만료되었거나 잘못되었습니다. 시험 창에 보이는 새 QR을 다시 찍으세요.", inUse: "이 QR은 이미 다른 휴대폰에 연결되어 있습니다. 처음 연결한 휴대폰을 쓰거나, 시험 창에서 새 QR을 받으세요.", over: "시험이 끝났습니다. 이 화면을 닫아도 됩니다.", net: "서버에 연결하지 못했습니다. 다시 시도하는 중…",
       scanTitle: (i, n) => `주변 스캔 ${i} / ${n}`, views: { room: "방 전체 한 바퀴", desk: "책상 위와 모니터 주변", under: "책상 아래와 발밑", ceiling: "천장" },
-      how: { room: "자리에 앉은 채로 휴대폰을 눈높이로 들고, 몸을 돌려 방 전체를 한 바퀴(360°) 천천히 비추세요. 게이지가 다 찰 때까지 계속 도세요.", desk: "책상 위를 한쪽 끝에서 다른 쪽 끝까지 천천히 비추고, 모니터 옆과 뒤, 키보드 주변도 보여 주세요.", under: "휴대폰을 책상 높이에서 천천히 내려 책상 밑과 발밑, 의자 주변 바닥을 비추세요.", ceiling: "휴대폰을 눈높이에서 천천히 위로 들어 천장을 끝까지 비추세요." },
+      how: { room: "자리에 앉은 채로 휴대폰을 눈높이로 들고, 몸을 돌려 방 전체를 한 바퀴(360°) 천천히 비추세요. 게이지가 다 찰 때까지 계속 도세요.", desk: "책상 위를 한쪽 끝에서 다른 쪽 끝까지 천천히 비추고, 모니터 옆과 뒤, 키보드 주변도 보여 주세요.", under: "휴대폰을 정면으로 들고 있다가 천천히 아래로 내려 책상 밑과 발밑, 의자 주변 바닥을 비춘 뒤, 다시 정면으로 천천히 올리세요.", ceiling: "휴대폰을 정면으로 들고 있다가 천천히 위로 올려 천장을 비춘 뒤, 다시 정면으로 천천히 내리세요." },
       example: "이렇게 움직이세요", go: "스캔 시작", turning: "천천히 계속 돌리세요", fast: "너무 빨라요! 천천히", hold: "움직여 주세요", judging: "AI가 확인하는 중…", gyroOff: "이 휴대폰은 움직임 센서를 쓸 수 없어 시간으로 잽니다. 8초 동안 천천히 돌리세요.",
       redo: "흐리거나 어두워서 잘 보이지 않았습니다. 더 천천히, 밝게 다시 비춰 주세요.", blocked: list => `${list}이(가) 보입니다. 치우거나 방 밖으로 옮긴 뒤 이 방향을 다시 비춰 주세요.`, unavailable: "AI 확인 서버가 응답하지 않았습니다. 다시 비춰 주세요.",
       found: { person: "다른 사람", phone: "휴대폰·스마트워치·태블릿", screen: "다른 화면", headset: "이어폰·헤드셋", notes: "책·필기" },
-      placeTitle: "휴대폰 세워 두기", place: "휴대폰을 옆이나 뒤쪽 1~1.5m 거리에 가로로 세워 두세요. 화면에 본인(머리와 몸), 두 손, 책상 위, 컴퓨터 화면이 모두 보여야 합니다.", placeGo: "이 위치로 확인", placeMissing: list => `화면에 ${list}이(가) 잘 보이지 않습니다. 위치를 옮기고 다시 확인하세요.`,
+      placeTitle: "휴대폰 세워 두기", place: "휴대폰을 옆이나 뒤쪽 1~1.5m 거리에 가로로 세워 두세요. 화면에 본인(머리와 몸), 두 손, 책상 위, 컴퓨터 화면이 모두 보여야 합니다.", placeGo: "이 위치로 확인", toFront: "앞(셀카) 카메라로 바꾸기", toRear: "뒤 카메라로 바꾸기", placeMissing: list => `화면에 ${list}이(가) 잘 보이지 않습니다. 위치를 옮기고 다시 확인하세요.`,
       parts: { person: "본인", hands: "두 손", desk: "책상 위", screen: "컴퓨터 화면" }, watchTitle: "감독 중", watch: "이 화면을 끄거나 다른 앱으로 나가지 마세요. 충전기를 연결해 두세요. 시험이 끝나면 자동으로 멈춥니다.", hidden: "휴대폰 감독 화면을 벗어났습니다. 이 기록은 감독관에게 전달됩니다.",
       net: { label: "네트워크", good: "좋음", fair: "보통", poor: "느림", off: "끊김" } },
     en: { title: "HPhO phone proctoring", intro: "This phone is a second camera during the exam. First show the room slowly for the check, then stand the phone to your side or behind you. Keep this screen on until the exam ends (connect a charger).", cam: "Turn on the camera", camFail: "The camera could not start. Allow camera access in the browser, then try again.",
       bad: "This QR code has expired or is wrong. Scan the new QR shown in the exam window.", inUse: "This QR is already connected to another phone. Use the first phone, or get a new QR in the exam window.", over: "The exam is over. You can close this page.", net: "Could not reach the server. Retrying…",
       scanTitle: (i, n) => `Room scan ${i} / ${n}`, views: { room: "The whole room, all round", desk: "The desk and around the monitor", under: "Under the desk", ceiling: "The ceiling" },
-      how: { room: "Sitting in your seat, hold the phone at eye height and turn slowly to show the whole room, all the way round (360°). Keep turning until the gauge is full.", desk: "Show the desk slowly from one end to the other, and the sides and back of the monitor and around the keyboard.", under: "Lower the phone slowly from desk height to show under the desk, your feet and the floor around the chair.", ceiling: "Raise the phone slowly from eye level to show the ceiling to its far end." },
+      how: { room: "Sitting in your seat, hold the phone at eye height and turn slowly to show the whole room, all the way round (360°). Keep turning until the gauge is full.", desk: "Show the desk slowly from one end to the other, and the sides and back of the monitor and around the keyboard.", under: "Hold the phone straight ahead, tilt it slowly down to show under the desk, your feet and the floor around the chair, then slowly back up to straight ahead.", ceiling: "Hold the phone straight ahead, tilt it slowly up to show the ceiling, then slowly back down to straight ahead." },
       example: "Move it like this", go: "Start the scan", turning: "Keep turning slowly", fast: "Too fast! Slower", hold: "Start moving", judging: "The AI is checking…", gyroOff: "This phone's motion sensor is not available, so the time is used instead: turn slowly for eight seconds.",
       redo: "It was blurred or dark. Sweep again, more slowly and with more light.", blocked: list => `${list} can be seen. Remove it or take it out of the room, then show this side again.`, unavailable: "The AI check did not answer. Sweep again.",
       found: { person: "another person", phone: "a phone, smartwatch or tablet", screen: "another screen", headset: "earphones or a headset", notes: "books or notes" },
-      placeTitle: "Stand the phone", place: "Stand the phone sideways 1–1.5 m to your side or behind you. The picture must show you (head and body), both hands, the desk top and the computer screen.", placeGo: "Check this position", placeMissing: list => `${list} cannot be seen well. Move the phone and check again.`,
+      placeTitle: "Stand the phone", place: "Stand the phone sideways 1–1.5 m to your side or behind you. The picture must show you (head and body), both hands, the desk top and the computer screen.", placeGo: "Check this position", toFront: "Use the front (selfie) camera", toRear: "Use the rear camera", placeMissing: list => `${list} cannot be seen well. Move the phone and check again.`,
       parts: { person: "you", hands: "both hands", desk: "the desk top", screen: "the computer screen" }, watchTitle: "Proctoring", watch: "Do not turn off this screen or switch apps. Keep the charger connected. It stops by itself when the exam ends.", hidden: "You left the phone proctoring screen. This is reported to the proctor.",
       net: { label: "Network", good: "Good", fair: "Fair", poor: "Slow", off: "Offline" } },
   };
@@ -147,20 +147,30 @@
   }
 
   /* how to move the phone, drawn (Monito-style): a turn across for the walls and the desk, a tilt for the ceiling and under */
+  /* how to move the phone, drawn (Monito-style). The room: a full turn seen from above. The desk: a desk with its monitor
+     and keyboard, the phone moving across it. The ceiling and under the desk: a figure seen from the side (a chess piece
+     holding the phone) that tilts the phone up (or down) from straight ahead and back again */
   function example(view) {
-    const across = view === "desk", up = view === "ceiling";
-    const scene = view === "room"
-      ? `<circle cx="100" cy="75" r="58" class="ex-ring"/><circle cx="100" cy="75" r="11" class="ex-me"/>
+    const head = `<defs><marker id="exArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="ex-head"/></marker></defs>`;
+    let scene;
+    if (view === "room") scene = `<circle cx="100" cy="75" r="58" class="ex-ring"/><circle cx="100" cy="75" r="11" class="ex-me"/>
          <g class="ex-phone ex-spin" style="transform-origin:100px 75px"><rect x="94" y="38" width="12" height="18" rx="2"/><path d="M100 38 L80 16 M100 38 L120 16" class="ex-ray"/></g>
-         <path d="M150 40 A58 58 0 1 1 140 30" class="ex-arrow" marker-end="url(#exArrow)"/>`
-      : across
-      ? `<rect x="20" y="70" width="160" height="40" rx="3" class="ex-desk"/><rect x="80" y="60" width="40" height="12" rx="2" class="ex-wall"/><circle cx="100" cy="128" r="12" class="ex-me"/>
-         <g class="ex-phone ex-sweep"><rect x="94" y="90" width="12" height="20" rx="2"/><path d="M100 90 L60 30 M100 90 L140 30" class="ex-ray"/></g>
-         <path d="M58 52 Q100 30 142 52" class="ex-arrow" marker-end="url(#exArrow)"/>`
-      : `<rect x="20" y="${up ? 10 : 132}" width="160" height="8" class="ex-wall"/><rect x="40" y="${up ? 120 : 70}" width="120" height="6" rx="2" class="ex-desk"/>
-         <g class="ex-phone ${up ? "ex-tilt-up" : "ex-tilt-down"}" style="transform-origin:100px 96px"><rect x="94" y="86" width="12" height="20" rx="2"/><path d="M100 86 L${up ? "70 20 M100 86 L130 20" : "70 130 M100 106 L130 130"}" class="ex-ray"/></g>
-         <path d="${up ? "M150 100 Q165 60 150 30" : "M150 60 Q165 95 150 125"}" class="ex-arrow" marker-end="url(#exArrow)"/>`;
-    return `<figure class="hpho-example"><svg viewBox="0 0 200 150" role="img" aria-label="${esc(T[L()].example)}"><defs><marker id="exArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" class="ex-head"/></marker></defs>${scene}</svg><figcaption>${esc(T[L()].example)}</figcaption></figure>`;
+         <path d="M150 40 A58 58 0 1 1 140 30" class="ex-arrow" marker-end="url(#exArrow)"/>`;
+    else if (view === "desk") scene = `<rect x="16" y="64" width="168" height="62" rx="4" class="ex-desk"/>
+         <rect x="66" y="70" width="68" height="34" rx="2" class="ex-monitor"/><rect x="96" y="104" width="8" height="6" class="ex-monitor"/>
+         <rect x="62" y="112" width="76" height="10" rx="2" class="ex-key"/><rect x="146" y="112" width="10" height="12" rx="4" class="ex-key"/>
+         <g class="ex-phone ex-pan"><rect x="94" y="16" width="12" height="20" rx="2"/><path d="M100 36 L84 64 M100 36 L116 64" class="ex-ray"/></g>
+         <path d="M40 46 L160 46" class="ex-arrow" marker-end="url(#exArrow)"/>`;
+    else {
+      const up = view === "ceiling";
+      /* the figure: a chess piece (a pawn) seen from the side, the phone in front of its head */
+      scene = `<rect x="10" y="${up ? 8 : 136}" width="180" height="6" class="ex-wall"/>
+         <g class="ex-pawn"><circle cx="70" cy="62" r="13"/><path d="M60 76 Q70 70 80 76 L86 118 L54 118 Z"/><rect x="46" y="118" width="48" height="10" rx="3"/></g>
+         <g class="ex-phone ${up ? "ex-nod-up" : "ex-nod-down"}" style="transform-origin:86px 66px"><rect x="86" y="58" width="20" height="12" rx="2"/><path d="M106 64 L150 52 M106 64 L150 76" class="ex-ray"/></g>
+         <path d="M${up ? "160 64 Q172 36 160 14" : "160 64 Q172 100 160 128"}" class="ex-arrow" marker-end="url(#exArrow)"/>
+         <path d="M${up ? "150 18 Q140 40 150 60" : "150 124 Q140 96 150 70"}" class="ex-arrow ex-back" marker-end="url(#exArrow)"/>`;
+    }
+    return `<figure class="hpho-example"><svg viewBox="0 0 200 150" role="img" aria-label="${esc(T[L()].example)}">${head}${scene}</svg><figcaption>${esc(T[L()].example)}</figcaption></figure>`;
   }
 
   function view() { return `<div class="shell hpho hpho-phone"><div id="hphoPhone"><p class="hpho-muted">…</p></div></div>`; }
@@ -182,9 +192,7 @@
       box.querySelector("#hphoCamGo").addEventListener("click", async () => {
         tones([[1, 0, 0.01, 0.0001]]);                                 /* the sounds may play from now on (a tap opened them) */
         try {
-          const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
-          st.video = Object.assign(document.createElement("video"), { muted: true, playsInline: true, autoplay: true, srcObject: s }); st.video.className = "hpho-phone-video";
-          await st.video.play().catch(() => {}); for (let i = 0; i < 30 && !st.video.videoWidth; i++) await wait(100);
+          await openCamera("environment");
           try { st.lock = await navigator.wakeLock?.request("screen"); } catch (e) {}
           st.error = null; ding(); loadDetector(); next();
         } catch (e) { st.error = x.camFail; beep(); next(); }
@@ -255,10 +263,20 @@
       next();
     });
   }
+  /* the rear camera, or the front one (to stand the phone with its screen facing the candidate) */
+  async function openCamera(facing) {
+    const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+    st.video?.srcObject?.getTracks().forEach(t => t.stop());
+    st.facing = facing;
+    st.video ||= Object.assign(document.createElement("video"), { muted: true, playsInline: true, autoplay: true, className: "hpho-phone-video" });
+    st.video.srcObject = s; st.video.classList.toggle("is-front", facing === "user");
+    await st.video.play().catch(() => {}); for (let i = 0; i < 30 && !st.video.videoWidth; i++) await wait(100);
+  }
   function placeStep() {
     const x = T[L()];
-    const box = paint(`<h2>${x.placeTitle}</h2><p>${x.place}</p>${videoHtml()}${st.msg ? `<p class="hpho-form-msg">${esc(st.msg)}</p>` : ""}<p><button type="button" class="hpho-btn" id="hphoPlaceGo">${x.placeGo}</button></p>`);
+    const box = paint(`<h2>${x.placeTitle}</h2><p>${x.place}</p>${videoHtml()}<p><button type="button" class="hpho-link hpho-flip" id="hphoFlip">⟲ ${st.facing === "user" ? x.toRear : x.toFront}</button></p>${st.msg ? `<p class="hpho-form-msg">${esc(st.msg)}</p>` : ""}<p><button type="button" class="hpho-btn" id="hphoPlaceGo">${x.placeGo}</button></p>`);
     dockVideo(); st.msg = null;
+    box.querySelector("#hphoFlip").addEventListener("click", async () => { try { await openCamera(st.facing === "user" ? "environment" : "user"); } catch (e) { problem(x.camFail); } placeStep(); });
     box.querySelector("#hphoPlaceGo").addEventListener("click", async e => {
       e.currentTarget.disabled = true;
       try {

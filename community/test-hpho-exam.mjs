@@ -195,9 +195,11 @@ test('ear check: the front and both ears; a headset in any photo stops the candi
   const f = await setup(1800, { ear: { verdicts: ['device', 'clear', 'unclear'] } });
   assert.equal((await f.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'device');
   assert.equal(earVerdict({ verdicts: ['clear', 'maybe', 'clear'] }, 3).unavailable, true);
-  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], cap: false, watch: false, glasses: 'none', note: 'a b' });
+  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], wrists: true, cap: false, watch: false, glasses: 'none', note: 'a b' });
   const glasses = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], glasses: 'smart' } });
   assert.equal((await glasses.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'glasses');
+  const wrists = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], wrists: false } });
+  assert.equal((await wrists.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'wrists', 'hands not raised: no pass');
   const cap = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], cap: true } });
   assert.equal((await cap.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'cap', 'a brimmed cap hides the eyes');
   assert.deepEqual(earVerdict({ first: 'clear', second: 'clear' }).verdicts, ['clear', 'clear'], 'the old two-photo form is still read');
