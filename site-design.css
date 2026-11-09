@@ -812,3 +812,14 @@ body.hl-site .hpho-table tr.is-review{background:#fff6e5}
 body.hl-site .hpho-status.is-review{background:#fff1d6;color:#9a5b00}
 body.hl-site .hpho-events{font-size:12px;max-height:320px;overflow:auto;padding-left:18px;font-family:var(--mono)}
 html[data-theme="dark"] body.hl-site .hpho-table tr.is-review{background:#2c2316}
+body.hl-site .hpho-scan-view{font-size:22px;font-weight:700;color:#5c438f;margin:10px 0}body.hl-site .hpho-scan-view b{font-family:var(--mono);margin-left:8px}
+body.hl-site .hpho-live{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin-top:8px}
+body.hl-site .hpho-live-tile{border:1px solid #d5dbe6;border-radius:8px;padding:8px;font-size:12px}
+body.hl-site .hpho-live-tile.is-review{border-color:#e0a030}body.hl-site .hpho-live-tile.is-off{opacity:.7;border-color:#d92d20}
+body.hl-site .hpho-live-tile header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+body.hl-site .hpho-live-pics{display:grid;grid-template-columns:1fr 1.3fr;gap:4px}
+body.hl-site .hpho-live-pics img,body.hl-site .hpho-live-pics span{width:100%;aspect-ratio:4/3;object-fit:cover;background:#0f0d16;border-radius:4px;display:grid;place-items:center;color:#a49cb8}
+body.hl-site .hpho-live-tile ul{margin:6px 0 0;padding-left:16px}
+body.hl-site .hpho-clips{font-size:12px;columns:2;padding-left:18px}
+body.hl-site .hpho-clip-video{width:100%;max-width:720px;margin-top:8px;background:#000}
+html[data-theme="dark"] body.hl-site .hpho-live-tile{border-color:#3b344d}

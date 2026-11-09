@@ -2,14 +2,18 @@
    own computer. Faces, a phone in view and sustained speech are detected locally (MediaPipe Tasks for vision, a level
    meter for sound), so the video never leaves the computer as a stream: what reaches the server are events and small
    JPEG snapshots, taken at random intervals (10-60 s, so a candidate cannot time them) and at once when something is
-   detected. The AI that reviews the snapshots runs on the server after the exam; a person decides. */
+   detected. The AI that reviews the snapshots runs on the server after the exam; a person decides.
+   From the seat in the waiting room until the answers are in, two recordings run as five-minute WebM segments, each
+   uploaded as it closes: the webcam with the microphone, and the screen with the computer's own sound (Windows loopback,
+   from the desktop app). Sound played on the computer is also detected (system_sound). Before the first seat, and again
+   after a disconnect, the candidate shows the room with the webcam (roomScan): walls, ceiling, desk and under the desk. */
 (() => {
   const VISION = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21";
   const MODELS = {
     face: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
     objects: "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/int8/1/efficientdet_lite0.tflite",
   };
-  const NEAR = { face_missing: 6, faces_multiple: 3, phone_seen: 2, voice: 3 };   /* seconds a condition must last */
+  const NEAR = { face_missing: 6, faces_multiple: 3, phone_seen: 2, voice: 3, system_sound: 3 };   /* seconds a condition must last */
   const COOLDOWN = 60;                                                         /* seconds before the same event again */
   let p = null;
 
@@ -28,16 +32,18 @@
   /* the technical check: camera and microphone (and the screen, inside the desktop app) can be opened; a stream already
      open from an earlier try is kept */
   async function check() {
-    const out = { camera: false, mic: false, screen: false, detector: false };
+    const out = { camera: false, mic: false, screen: false, system: false, detector: false };
     if (live(p?.cam)) { out.camera = p.cam.getVideoTracks().length > 0; out.mic = p.cam.getAudioTracks().length > 0; }
     else try {
       const cam = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" }, audio: { echoCancellation: false, noiseSuppression: false } });
       out.camera = cam.getVideoTracks().length > 0; out.mic = cam.getAudioTracks().length > 0;
       p = { ...(p || {}), cam };
     } catch (e) { out.error = e?.name || "camera"; }
-    if (live(p?.scr)) out.screen = true;
+    if (live(p?.scr)) { out.screen = true; out.system = p.scr.getAudioTracks().length > 0; }
     else try {
-      const scr = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 1 }, audio: false }); p = { ...(p || {}), scr };
+      /* the screen and the computer's own sound together (the desktop app answers with the primary display and loopback) */
+      const scr = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 1 }, audio: true }); p = { ...(p || {}), scr };
+      out.system = scr.getAudioTracks().length > 0;
       /* a recording counts once a frame of it has arrived */
       const v = Object.assign(document.createElement("video"), { muted: true, playsInline: true, srcObject: scr }); v.play?.().catch(() => {});
       for (let i = 0; i < 30 && !v.videoWidth; i++) await wait(100);
@@ -107,12 +113,13 @@
         const r = rms(); top = Math.max(top, r); level?.(Math.min(1, r * 8));
         if (r > thr && speechShare() > 0.55) { voiced++; if (!on) { bursts++; on = true; } quiet = 0; if (first < 0) first = i; last = i; }
         else { if (++quiet >= 2) on = false; }
-        if (voiced >= 14 && bursts >= 2 && quiet >= 12) break;            /* the sentence, then a second of silence */
+        if (voiced >= 18 && bursts >= 2 && quiet >= 12) break;            /* the sentence, then a second of silence */
       }
       recording = false;
       const span = first < 0 ? 0 : last - first + 1;
       /* a loud but short sound (a shout, a word, a knock) is "short", not "quiet" */
-      const reason = top < 0.008 ? "silent" : voiced < 3 ? "quiet" : voiced < 10 || bursts < 2 || span < 15 ? "short" : null;
+      /* the Korean sentence takes about three seconds: under two seconds of speech is not it ("예, 아", a shout, a knock) */
+      const reason = top < 0.008 ? "silent" : voiced < 3 ? "quiet" : voiced < 15 || bursts < 2 || span < 20 ? "short" : null;
       return { ok: !reason, ...(reason ? { reason } : {}), wav: rec ? wav16k(chunks, ctx.sampleRate) : null };
     } finally { recording = false; level?.(0); try { rec?.disconnect(); sink?.disconnect(); src.disconnect(); } catch (e) {} ctx.close().catch(() => {}); }
   }
@@ -151,10 +158,30 @@
       }
       return { side, blob: await shot() };
     };
+    /* the front first (a headset shows from the front too), then one ear, then the other */
+    step("front"); await wait(1500); const front = await shot();
     step("first"); const a = await turned(0);
     step("second"); const b = await turned(a.side ? -a.side : 0);
     step("done");
-    return a.blob && b.blob ? { first: a.blob, second: b.blob } : null;
+    return front && a.blob && b.blob ? { front, first: a.blob, second: b.blob } : null;
+  }
+  /* the room scan: the webcam (or the laptop) turned to each view in turn, a still of each and a video of the whole of it.
+     step(view, secondsLeft) tells the page what to show */
+  const SCAN = ["front", "left", "right", "back", "ceiling", "desk", "under"];
+  async function roomScan(step, seconds = 5) {
+    const v = await selfVideo(); if (!v) return null;
+    let rec = null; const parts = [];
+    try { rec = new MediaRecorder(new MediaStream(p.cam.getVideoTracks()), { mimeType: "video/webm;codecs=vp8", videoBitsPerSecond: 250000 }); rec.ondataavailable = e => e.data.size && parts.push(e.data); rec.start(); } catch (e) { rec = null; }
+    const stills = {};
+    for (const view of SCAN) {
+      for (let s = seconds; s > 0; s--) { step(view, s); await wait(1000); }
+      const c = document.createElement("canvas"), k = Math.min(1, 640 / v.videoWidth); c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
+      c.getContext("2d").drawImage(v, 0, 0, c.width, c.height); stills[view] = await new Promise(res => c.toBlob(res, "image/jpeg", 0.8));
+    }
+    step("done", 0);
+    let clip = null;
+    if (rec) { await new Promise(res => { rec.onstop = res; rec.stop(); }); clip = parts.length ? new Blob(parts, { type: "video/webm" }) : null; }
+    return { stills, clip };
   }
 
   function preview() {
@@ -183,16 +210,18 @@
   }
 
   /* start watching: events go to onEvent(kind, detail), snapshots to upload(blob, source, reason) */
-  function start({ onEvent, upload }) {
+  function start({ onEvent, upload, clip }) {
     if (!p?.cam) { onEvent("camera_stopped", "no camera"); return; }
-    p.onEvent = onEvent; p.upload = upload; p.last = {}; p.since = {}; p.alive = true; p.errors = 0; p.pace = p.pace || [10, 60];
+    p.onEvent = onEvent; p.upload = upload; p.clip = clip; p.last = {}; p.since = {}; p.alive = true; p.errors = 0; p.pace = p.pace || [10, 60];
     if (p.scr) { p.scrVideo = Object.assign(document.createElement("video"), { muted: true, playsInline: true, srcObject: p.scr }); p.scrVideo.play?.().catch(() => {}); }
     onEvent("camera_started", p.det ? "local detection on" : "local detection unavailable");
     p.cam.getTracks().forEach(t => t.addEventListener("ended", () => p.alive && onEvent("camera_stopped", t.kind + " ended")));
     try {
       const ctx = new AudioContext(), src = ctx.createMediaStreamSource(p.cam), an = ctx.createAnalyser(); an.fftSize = 1024; src.connect(an);
       p.audio = { ctx, an, buf: new Float32Array(an.fftSize) };
+      if (p.scr?.getAudioTracks().length) { const s2 = ctx.createMediaStreamSource(new MediaStream(p.scr.getAudioTracks())), a2 = ctx.createAnalyser(); a2.fftSize = 1024; s2.connect(a2); p.sys = { an: a2, buf: new Float32Array(a2.fftSize) }; }
     } catch (e) {}
+    record();
     let tick = 0;
     p.loop = setInterval(() => {
       tick++;
@@ -203,6 +232,8 @@
         else seen.phone_seen = !!p.since.phone_seen;
       }
       if (p.audio) { p.audio.an.getFloatTimeDomainData(p.audio.buf); let s = 0; for (const x of p.audio.buf) s += x * x; seen.voice = Math.sqrt(s / p.audio.buf.length) > 0.04; }
+      /* anything the computer itself plays (a video, a call, a voice assistant) */
+      if (p.sys) { p.sys.an.getFloatTimeDomainData(p.sys.buf); let s = 0; for (const x of p.sys.buf) s += x * x; seen.system_sound = Math.sqrt(s / p.sys.buf.length) > 0.01; }
       for (const [kind, on] of Object.entries(seen)) {
         if (!on) { p.since[kind] = 0; continue; }
         p.since[kind] = (p.since[kind] || 0) + 1;
@@ -230,8 +261,36 @@
       try { const blob = await frame(stream, width); if (blob) p.upload(blob, source, reason); } catch (e) {}
     }
   }
-  function stop() {
+  /* the two recordings, in five-minute segments: each segment is a whole WebM file (its own header), uploaded as it
+     closes, so any five minutes can be played on its own. A segment that failed to go up is tried again with the next */
+  const SEGMENT = 300000;
+  function record() {
+    if (!p?.clip || p.recs) return;
+    p.recs = [];
+    const pick = t => ["video/webm;codecs=vp8,opus", "video/webm"].find(m => MediaRecorder.isTypeSupported?.(m)) || "";
+    const sources = [["webcam", p.cam, 110000], ...(p.scr ? [["screen", p.scr, 90000]] : [])];
+    for (const [source, stream, bits] of sources) {
+      const segment = () => {
+        if (!p?.alive || !stream.active) return;
+        let r; const parts = [];
+        try { r = new MediaRecorder(stream, { mimeType: pick(), videoBitsPerSecond: bits, audioBitsPerSecond: 24000 }); } catch (e) { p.onEvent?.("recording_failed", source + ": " + (e?.name || "recorder")); return; }
+        r.ondataavailable = e => { if (e.data.size) parts.push(e.data); };
+        r.onstop = () => { if (parts.length) p?.clip?.(new Blob(parts, { type: "video/webm" }), source); if (p?.alive) segment(); };
+        r.start(1000); p.recs.push(r);
+        setTimeout(() => { if (r.state !== "inactive") r.stop(); }, SEGMENT);
+      };
+      segment();
+    }
+    p.onEvent?.("recording_started", sources.map(s => s[0]).join("+"));
+  }
+  /* close the open segments now (the answers are in, or the page is leaving): their last minutes go up too */
+  function flushRecordings() {
+    const recs = p?.recs || []; if (p) p.alive = false;
+    return Promise.all(recs.filter(r => r.state !== "inactive").map(r => new Promise(res => { const was = r.onstop; r.onstop = () => { was?.(); res(); }; r.stop(); })));
+  }
+  async function stop() {
     if (!p) return;
+    await flushRecordings().catch(() => {});
     p.alive = false; clearInterval(p.loop); clearTimeout(p.timer);
     try { p.audio?.ctx.close(); } catch (e) {}
     for (const s of [p.cam, p.scr]) s?.getTracks().forEach(t => t.stop());
@@ -240,5 +299,5 @@
   }
   /* counters only (no image, no stream), for the page's own status line and for tests */
   const stats = () => p ? { alive: !!p.alive, detector: !!p.det, faces: p.faces ?? null, errors: p.errors || 0, lastError: p.lastError || null, since: { ...(p.since || {}) } } : null;
-  window.HL_HPHO_PROCTOR = { check, dock, faceCheck, micCheck, earShots, start, snap, stop, stats, pace, still, wav16k };
+  window.HL_HPHO_PROCTOR = { check, dock, faceCheck, micCheck, earShots, roomScan, start, snap, stop, stats, pace, still, wav16k, SCAN };
 })();

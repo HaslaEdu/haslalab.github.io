@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {createHphoRouter, roundTracks, checkRound, publicRound} from './src/hpho.js';
-import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, examWindow, needsReview, UPLOAD_MIN} from './src/hpho-exam.js';
+import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, roomVerdict, checkNote, examWindow, needsReview, UPLOAD_MIN, SCAN_VIEWS} from './src/hpho-exam.js';
 
 class HttpError extends Error { constructor(status, code) { super(code); this.status = status; this.code = code; } }
 function d1() {
@@ -29,9 +29,9 @@ const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]), PDF = new TextEn
 function wav() { const b = new Uint8Array(64); b.set(new TextEncoder().encode('RIFF'), 0); b.set(new TextEncoder().encode('WAVE'), 8); return b; }
 
 /* a round whose theory exam starts `theory` seconds from now and whose experiment starts a day later */
-async function setup(theory, { voice = { said: true }, ear = { first: 'clear', second: 'clear' } } = {}) {
+async function setup(theory, { voice = { said: true }, ear = { verdicts: ['clear', 'clear', 'clear'] }, room = { found: [], unclear: false } } = {}) {
   const { sql, DB } = d1(), store = r2(), env = { DB, HPHO_SNAPS: store }, t = Math.floor(Date.now() / 1000);
-  const reg = createHphoRouter(deps), exam = createHphoExamRouter({ ...deps, voiceCheck: async () => voice, earVision: async () => ear });
+  const reg = createHphoRouter(deps), exam = createHphoExamRouter({ ...deps, voiceCheck: async () => voice, earVision: async () => ear, roomScan: async () => room });
   await reg('/api/hpho/rounds/2027-1', 'POST', { title_ko: 'a', title_en: 'a', reg_open: t - 7200, reg_close: t + 3600, theory_at: t + 7200, experiment_at: t + 7200 + 86400, fee_usd: 0, status: 'open' }, admin, env);
   await reg('/api/hpho/rounds/2027-1/entry', 'POST', entry, student, env);
   sql.prepare('UPDATE hpho_rounds SET theory_at=?,start_at=?,experiment_at=?').run(t + theory, t + theory, t + theory + 86400);
@@ -182,12 +182,55 @@ test('voice check: the sentence must be heard, a noise does not pass', async () 
   assert.equal(voiceVerdict({ said: 'yes' }).unavailable, true);
 });
 
-test('ear check verdicts', async () => {
-  const f = await setup(1800, { ear: { first: 'device', second: 'clear' } });
-  assert.equal((await f.form('earcheck', { first: JPEG, second: JPEG })).first, 'device');
-  assert.equal(earVerdict({ first: 'clear', second: 'maybe' }).unavailable, true);
-  assert.equal(earVerdict({ first: 'clear', second: 'unclear', note: 'a\nb' }).note, 'a b');
+test('ear check: the front and both ears; a headset in any photo stops the candidate', async () => {
+  const f = await setup(1800, { ear: { verdicts: ['device', 'clear', 'unclear'] } });
+  assert.equal((await f.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'device');
+  assert.equal(earVerdict({ verdicts: ['clear', 'maybe', 'clear'] }, 3).unavailable, true);
+  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], note: 'a b' });
+  assert.deepEqual(earVerdict({ first: 'clear', second: 'clear' }).verdicts, ['clear', 'clear'], 'the old two-photo form is still read');
   assert.equal(needsReview({ reconnects: 1, gaps: 3 }), true);
+});
+
+test('room scan: a person, a phone, another screen or a headset stops; notes go to review', async () => {
+  const stills = Object.fromEntries(SCAN_VIEWS.map(v => [v, JPEG]));
+  const f = await setup(1800, { room: { found: ['phone', 'notes'], unclear: false } });
+  const r = await f.form('roomscan', stills);
+  assert.deepEqual(r.blocked, ['phone']);
+  assert.equal(await code(f.form('roomscan', { front: JPEG })), 'bad_upload', 'every view is needed');
+  assert.deepEqual(roomVerdict({ person: false, phone: false, screen: true, headset: false, notes: true, unclear: false }).found, ['screen', 'notes']);
+  assert.equal(roomVerdict({ person: 'no' }).unavailable, true);
+});
+
+test('checks the server could not confirm flag the seat for review', async () => {
+  assert.equal(checkNote([{ kind: 'ear_check', at: 1, detail: 'clear (clear,clear,clear)' }, { kind: 'mic_check', at: 1, detail: 'said · heard: x' }, { kind: 'room_scan', at: 1, detail: 'clear' }]), null);
+  assert.match(checkNote([{ kind: 'ear_check', at: 1, detail: 'model unavailable' }, { kind: 'mic_check', at: 2, detail: 'said' }]), /ears: model unavailable; room: not done/);
+  const f = await setup(1800, { voice: { unavailable: true } });
+  await f.form('earcheck', { front: JPEG, first: JPEG, second: JPEG });
+  await f.form('voicecheck', { audio: wav(), lang: 'ko' });
+  await f.form('roomscan', Object.fromEntries(SCAN_VIEWS.map(v => [v, JPEG])));
+  await f.call('checkin', 'POST', { client }, student);
+  const seat = (await f.call('seats', 'GET', null, admin)).seats[0];
+  assert.match(seat.check_note, /^voice: model unavailable$/);
+  assert.equal(seat.review, true);
+});
+
+test('recordings and the live monitor', async () => {
+  const f = await setup(1800);
+  const WEBM = new Uint8Array([0x1a, 0x45, 0xdf, 0xa3, 1, 2, 3]);
+  assert.equal(await code(f.form('clip', { clip: WEBM, source: 'webcam' })), 'not_seated');
+  await f.call('checkin', 'POST', { client }, student);
+  assert.equal((await f.form('clip', { clip: WEBM, source: 'screen' })).ok, true, 'recorded from the waiting room on');
+  assert.equal(await code(f.form('clip', { clip: JPEG, source: 'screen' })), 'clip_not_webm');
+  await f.form('snap', { image: JPEG, source: 'webcam', reason: 'random' });
+  await f.call('events', 'POST', { events: [{ seq: 1, kind: 'system_sound', detail: '4s' }, { seq: 2, kind: 'heartbeat' }] }, student);
+  const m = await f.call('monitor', 'GET', null, admin);
+  assert.equal(m.seats[0].online, true);
+  assert.match(m.seats[0].last_webcam, /-webcam-random\.jpg$/);
+  assert.deepEqual(m.seats[0].alerts.map(a => a.kind), ['system_sound']);
+  assert.equal(await code(f.call('monitor', 'GET', null, student)), 'forbidden');
+  const no = m.seats[0].candidate_no, log = await f.call('log', 'GET', null, admin, '?candidate=' + no);
+  assert.equal(log.clips.length, 1);
+  assert.equal((await f.call('media', 'GET', null, admin, '?key=' + encodeURIComponent(log.clips[0]))).status, 200);
 });
 
 test('the old paths without a track are the theory exam; a draft is for admins only', async () => {
