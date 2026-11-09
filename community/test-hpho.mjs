@@ -17,7 +17,7 @@ const router = () => { const { sql, DB } = d1(); const env = { DB };
   return { sql, call: (p, m, body, me) => r(p, m, body, me, env) }; };
 const admin = { id: 1, role: 'admin' }, student = { id: 7 }, t = Math.floor(Date.now() / 1000);
 const round = { title_ko: '제1회 HPhO', title_en: 'HPhO 2027-I', reg_open: t - 3600, reg_close: t + 86400, start_at: t + 2 * 86400, duration_min: 240, fee_usd: 3, status: 'open' };
-const entry = { country: 'kr', level: 'high', birth_year: new Date().getUTCFullYear() - 17, age14: true, pledge: true, proctoring: true, identity_notice: true, guardian_consent: true };
+const entry = { country: 'kr', level: 'high', birth_year: new Date().getUTCFullYear() - 17, age14: true, email: 'student@example.com', pledge: true, proctoring: true, identity_notice: true, guardian_consent: true };
 const code = async p => { try { await p; return null; } catch (e) { return e.code; } };
 
 test('candidate numbers carry the round and four random digits', () => {

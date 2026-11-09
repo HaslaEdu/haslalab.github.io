@@ -23,8 +23,29 @@ export const HPHO_SCHEMA = [
 /* columns added after the table first went live: each ALTER runs once, a "duplicate column" is the column already there */
 const HPHO_COLUMNS = [`ALTER TABLE hpho_entries ADD COLUMN aid TEXT NOT NULL DEFAULT 'none'`, `ALTER TABLE hpho_entries ADD COLUMN aid_reason TEXT`,
   `ALTER TABLE hpho_entries ADD COLUMN aid_note TEXT`, `ALTER TABLE hpho_entries ADD COLUMN aid_at INTEGER`,
+  /* where HPhO's notices go (the day-before mail): any address the candidate gives, not necessarily the account's */
+  `ALTER TABLE hpho_entries ADD COLUMN email TEXT`,
   /* optional, separate from the required proctoring consent: may the proctoring records help train HaslaEdu's AI proctor */
-  `ALTER TABLE hpho_entries ADD COLUMN train_consent INTEGER NOT NULL DEFAULT 0`];
+  `ALTER TABLE hpho_entries ADD COLUMN train_consent INTEGER NOT NULL DEFAULT 0`,
+  /* IsPhO-style days: the theory and the experiment exam each start at their own time (start_at stays the theory start) */
+  `ALTER TABLE hpho_rounds ADD COLUMN theory_at INTEGER`, `ALTER TABLE hpho_rounds ADD COLUMN experiment_at INTEGER`];
+
+/* each exam (theory, experiment) lasts five hours; its room opens an hour before, and a candidate must be seated in the
+   waiting room twenty minutes before the start (the owner's rules, 2026-11-09) */
+export const TRACKS = ['theory', 'experiment'];
+export const TRACK_MIN = 300;
+export const OPEN_BEFORE = 3600;
+export const SEAT_BEFORE = 1200;
+/* a round's exams in order: a round from before the split has its one exam (start_at, duration_min) as the theory */
+export function roundTracks(r) {
+  const out = [];
+  const add = (track, start, min) => { if (Number.isInteger(start)) out.push({ track, start_at: start, duration_min: min, opens: start - OPEN_BEFORE, seat_by: start - SEAT_BEFORE, ends: start + min * 60 }); };
+  if (r.theory_at != null) { add('theory', r.theory_at, TRACK_MIN); add('experiment', r.experiment_at ?? null, TRACK_MIN); }
+  else add('theory', r.start_at, r.duration_min);
+  return out;
+}
+/* when the round's last exam ends */
+export const roundEnds = r => Math.max(...roundTracks(r).map(x => x.ends), r.start_at + r.duration_min * 60);
 
 /* the World Bank's low- and lower-middle-income economies (FY2026 list as HaslaEdu applies it; check it before each round) */
 export const AID_AUTO_COUNTRIES = new Set(('AF BF BI CF TD CD ER ET GM GW KP LR MG MW ML MZ NE RW SL SO SS SD SY TG UG YE ' +
@@ -55,10 +76,11 @@ export function ensureHpho(db) {
    register for and sit at any time before it ends, to test the exam end to end */
 export function publicRound(r) {
   return { id: r.id, title: { ko: r.title_ko, en: r.title_en }, reg_open: r.reg_open, reg_close: r.reg_close,
-    start_at: r.start_at, duration_min: r.duration_min, fee_usd: r.fee_usd, status: r.status };
+    start_at: r.start_at, duration_min: r.duration_min, fee_usd: r.fee_usd, status: r.status,
+    tracks: roundTracks(r).map(({ track, start_at, duration_min }) => ({ track, start_at, duration_min })) };
 }
 const registrable = (r, t = now(), admin = false) => r && (r.status === 'open' && t >= r.reg_open && t < r.reg_close
-  || admin && r.status === 'draft' && t < r.start_at + r.duration_min * 60);
+  || admin && r.status === 'draft' && t < roundEnds(r));
 export const visibleRound = (r, admin) => !!r && (r.status !== 'draft' || admin);
 
 /* "HP271-4821": the round's year and half, then four digits drawn at random (an entry count cannot be read off it) */
@@ -77,6 +99,8 @@ export function checkEntry(body, { year = new Date().getUTCFullYear() } = {}) {
      candidate confirms it for a birthday still to come this year */
   if (birth > year - 14) return { error: 'too_young' };
   if (body?.age14 !== true) return { error: 'age14_required' };
+  const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
+  if (email.length > 254 || !/^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(email)) return { error: 'bad_email' };
   if (body?.pledge !== true) return { error: 'pledge_required' };            /* rules, honour code, no outside help */
   if (body?.proctoring !== true) return { error: 'proctoring_consent_required' }; /* desktop app, webcam and screen */
   if (body?.identity_notice !== true) return { error: 'identity_notice_required' }; /* candidate number only on sheets */
@@ -95,7 +119,7 @@ export function checkEntry(body, { year = new Date().getUTCFullYear() } = {}) {
   /* a minor may let the records train the AI proctor only with a guardian's consent to that too, asked separately */
   const train = body?.train_consent === true;
   if (train && minor && body?.train_guardian_consent !== true) return { error: 'train_guardian_consent_required' };
-  return { country, level, birth_year: birth, guardian_consent: minor ? 1 : 0, aid, aid_reason, aid_note, train_consent: train ? 1 : 0 };
+  return { country, level, birth_year: birth, email, guardian_consent: minor ? 1 : 0, aid, aid_reason, aid_note, train_consent: train ? 1 : 0 };
 }
 /* what a candidate owes: nothing under automatic or approved assistance, else the round's fee */
 export const feeDue = (round, aid) => aid === 'auto' || aid === 'approved' ? 0 : round.fee_usd;
@@ -105,16 +129,21 @@ export function checkRound(id, body) {
   const text = (v, n) => typeof v === 'string' && v.trim() && v.trim().length <= n ? v.trim() : null;
   const title_ko = text(body?.title_ko, 80), title_en = text(body?.title_en, 80);
   if (!title_ko || !title_en) return { error: 'bad_title' };
-  const ints = ['reg_open', 'reg_close', 'start_at'].map(k => Number(body?.[k]));
-  if (!ints.every(Number.isInteger)) return { error: 'bad_time' };
+  /* theory_at (and experiment_at) set the two exam days; a round given only start_at keeps one exam of duration_min */
+  const theory_at = body?.theory_at == null ? null : Number(body.theory_at), experiment_at = body?.experiment_at == null ? null : Number(body.experiment_at);
+  if (experiment_at != null && theory_at == null) return { error: 'bad_time' };
+  const ints = ['reg_open', 'reg_close'].map(k => Number(body?.[k])).concat(theory_at ?? Number(body?.start_at));
+  if (!ints.every(Number.isInteger) || [theory_at, experiment_at].some(v => v != null && !Number.isInteger(v))) return { error: 'bad_time' };
   const [reg_open, reg_close, start_at] = ints;
   if (!(reg_open < reg_close && reg_close <= start_at)) return { error: 'bad_time_order' };
-  const duration_min = Number(body?.duration_min);
+  /* the experiment starts after the theory exam has ended (another day, or later the same day) */
+  if (experiment_at != null && experiment_at < theory_at + TRACK_MIN * 60) return { error: 'bad_time_order' };
+  const duration_min = theory_at != null ? TRACK_MIN : Number(body?.duration_min);
   if (!Number.isInteger(duration_min) || duration_min < 30 || duration_min > 600) return { error: 'bad_duration' };
   const fee_usd = Number(body?.fee_usd ?? 0);
   if (!Number.isFinite(fee_usd) || fee_usd < 0 || fee_usd > 5) return { error: 'bad_fee' };   /* the owner's cap: $5 */
   const status = STATUSES.includes(body?.status) ? body.status : 'draft';
-  return { title_ko, title_en, reg_open, reg_close, start_at, duration_min, fee_usd: Math.round(fee_usd * 100) / 100, status };
+  return { title_ko, title_en, reg_open, reg_close, start_at, duration_min, theory_at, experiment_at, fee_usd: Math.round(fee_usd * 100) / 100, status };
 }
 
 export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB }) {
@@ -125,7 +154,7 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
     if (p === '/api/hpho' && m === 'GET') {
       const rounds = (await db.prepare(`SELECT * FROM hpho_rounds WHERE status!='draft' OR ? ORDER BY start_at DESC LIMIT 20`).bind(isAdmin(me) ? 1 : 0).all()).results || [];
       const entries = {};
-      if (me) for (const e of (await db.prepare('SELECT round_id,candidate_no,country,level,birth_year,train_consent,aid,aid_reason,aid_note,created_at FROM hpho_entries WHERE user_id=?').bind(me.id).all()).results || []) {
+      if (me) for (const e of (await db.prepare('SELECT round_id,candidate_no,country,level,birth_year,email,train_consent,aid,aid_reason,aid_note,created_at FROM hpho_entries WHERE user_id=?').bind(me.id).all()).results || []) {
         const round = rounds.find(r => r.id === e.round_id);
         entries[e.round_id] = { ...e, fee_due: round ? feeDue(round, e.aid) : null };
       }
@@ -144,16 +173,16 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
         if (had) {
           /* an admin's decision on a request stands while the candidate keeps asking; a new request or a new country re-opens it */
           const aid = ok.aid === 'pending' && ['approved', 'declined'].includes(had.aid) && had.aid_reason === ok.aid_reason ? had.aid : ok.aid;
-          await db.prepare('UPDATE hpho_entries SET country=?,level=?,birth_year=?,guardian_consent=?,train_consent=?,aid=?,aid_reason=?,aid_note=?,aid_at=CASE WHEN ?=aid THEN aid_at ELSE NULL END WHERE round_id=? AND user_id=?')
-            .bind(ok.country, ok.level, ok.birth_year, ok.guardian_consent, ok.train_consent, aid, ok.aid_reason, ok.aid_note, aid, id, me.id).run();
+          await db.prepare('UPDATE hpho_entries SET country=?,level=?,birth_year=?,email=?,guardian_consent=?,train_consent=?,aid=?,aid_reason=?,aid_note=?,aid_at=CASE WHEN ?=aid THEN aid_at ELSE NULL END WHERE round_id=? AND user_id=?')
+            .bind(ok.country, ok.level, ok.birth_year, ok.email, ok.guardian_consent, ok.train_consent, aid, ok.aid_reason, ok.aid_note, aid, id, me.id).run();
           return { ok: true, candidate_no: had.candidate_no, updated: true, aid, fee_due: feeDue(round, aid) };
         }
         const prefix = candidatePrefix(id);
         for (let i = 0; i < 8; i++) {
           const no = prefix + String(crypto.getRandomValues(new Uint32Array(1))[0] % 10000).padStart(4, '0');
           try {
-            await db.prepare('INSERT INTO hpho_entries(round_id,user_id,candidate_no,country,level,birth_year,guardian_consent,train_consent,aid,aid_reason,aid_note,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
-              .bind(id, me.id, no, ok.country, ok.level, ok.birth_year, ok.guardian_consent, ok.train_consent, ok.aid, ok.aid_reason, ok.aid_note, now()).run();
+            await db.prepare('INSERT INTO hpho_entries(round_id,user_id,candidate_no,country,level,birth_year,email,guardian_consent,train_consent,aid,aid_reason,aid_note,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
+              .bind(id, me.id, no, ok.country, ok.level, ok.birth_year, ok.email, ok.guardian_consent, ok.train_consent, ok.aid, ok.aid_reason, ok.aid_note, now()).run();
             return { ok: true, candidate_no: no, aid: ok.aid, fee_due: feeDue(round, ok.aid) };
           } catch (e) { if (!/UNIQUE/i.test(String(e?.message || e))) throw e; }
         }
@@ -169,11 +198,11 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
     if ((r = /^\/api\/hpho\/rounds\/([^/]+)$/.exec(p)) && m === 'POST') {
       needUser(me); if (!isAdmin(me)) fail(403, 'forbidden');
       const ok = checkRound(r[1], body); if (ok.error) fail(400, ok.error);
-      await db.prepare(`INSERT INTO hpho_rounds(id,title_ko,title_en,reg_open,reg_close,start_at,duration_min,fee_usd,status,created_at)
-        VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title_ko=excluded.title_ko,title_en=excluded.title_en,
+      await db.prepare(`INSERT INTO hpho_rounds(id,title_ko,title_en,reg_open,reg_close,start_at,duration_min,theory_at,experiment_at,fee_usd,status,created_at)
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title_ko=excluded.title_ko,title_en=excluded.title_en,
         reg_open=excluded.reg_open,reg_close=excluded.reg_close,start_at=excluded.start_at,duration_min=excluded.duration_min,
-        fee_usd=excluded.fee_usd,status=excluded.status,updated_at=excluded.created_at`)
-        .bind(r[1], ok.title_ko, ok.title_en, ok.reg_open, ok.reg_close, ok.start_at, ok.duration_min, ok.fee_usd, ok.status, now()).run();
+        theory_at=excluded.theory_at,experiment_at=excluded.experiment_at,fee_usd=excluded.fee_usd,status=excluded.status,updated_at=excluded.created_at`)
+        .bind(r[1], ok.title_ko, ok.title_en, ok.reg_open, ok.reg_close, ok.start_at, ok.duration_min, ok.theory_at, ok.experiment_at, ok.fee_usd, ok.status, now()).run();
       return { ok: true, id: r[1] };
     }
     if ((r = /^\/api\/hpho\/rounds\/([^/]+)\/entries$/.exec(p)) && m === 'GET') {
