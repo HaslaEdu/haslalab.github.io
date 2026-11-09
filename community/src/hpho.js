@@ -23,6 +23,8 @@ export const HPHO_SCHEMA = [
 /* columns added after the table first went live: each ALTER runs once, a "duplicate column" is the column already there */
 const HPHO_COLUMNS = [`ALTER TABLE hpho_entries ADD COLUMN aid TEXT NOT NULL DEFAULT 'none'`, `ALTER TABLE hpho_entries ADD COLUMN aid_reason TEXT`,
   `ALTER TABLE hpho_entries ADD COLUMN aid_note TEXT`, `ALTER TABLE hpho_entries ADD COLUMN aid_at INTEGER`,
+  /* where HPhO's notices go (the day-before mail): any address the candidate gives, not necessarily the account's */
+  `ALTER TABLE hpho_entries ADD COLUMN email TEXT`,
   /* optional, separate from the required proctoring consent: may the proctoring records help train HaslaEdu's AI proctor */
   `ALTER TABLE hpho_entries ADD COLUMN train_consent INTEGER NOT NULL DEFAULT 0`,
   /* IsPhO-style days: the theory and the experiment exam each start at their own time (start_at stays the theory start) */
@@ -97,6 +99,8 @@ export function checkEntry(body, { year = new Date().getUTCFullYear() } = {}) {
      candidate confirms it for a birthday still to come this year */
   if (birth > year - 14) return { error: 'too_young' };
   if (body?.age14 !== true) return { error: 'age14_required' };
+  const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : '';
+  if (email.length > 254 || !/^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(email)) return { error: 'bad_email' };
   if (body?.pledge !== true) return { error: 'pledge_required' };            /* rules, honour code, no outside help */
   if (body?.proctoring !== true) return { error: 'proctoring_consent_required' }; /* desktop app, webcam and screen */
   if (body?.identity_notice !== true) return { error: 'identity_notice_required' }; /* candidate number only on sheets */
@@ -115,7 +119,7 @@ export function checkEntry(body, { year = new Date().getUTCFullYear() } = {}) {
   /* a minor may let the records train the AI proctor only with a guardian's consent to that too, asked separately */
   const train = body?.train_consent === true;
   if (train && minor && body?.train_guardian_consent !== true) return { error: 'train_guardian_consent_required' };
-  return { country, level, birth_year: birth, guardian_consent: minor ? 1 : 0, aid, aid_reason, aid_note, train_consent: train ? 1 : 0 };
+  return { country, level, birth_year: birth, email, guardian_consent: minor ? 1 : 0, aid, aid_reason, aid_note, train_consent: train ? 1 : 0 };
 }
 /* what a candidate owes: nothing under automatic or approved assistance, else the round's fee */
 export const feeDue = (round, aid) => aid === 'auto' || aid === 'approved' ? 0 : round.fee_usd;
@@ -150,7 +154,7 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
     if (p === '/api/hpho' && m === 'GET') {
       const rounds = (await db.prepare(`SELECT * FROM hpho_rounds WHERE status!='draft' OR ? ORDER BY start_at DESC LIMIT 20`).bind(isAdmin(me) ? 1 : 0).all()).results || [];
       const entries = {};
-      if (me) for (const e of (await db.prepare('SELECT round_id,candidate_no,country,level,birth_year,train_consent,aid,aid_reason,aid_note,created_at FROM hpho_entries WHERE user_id=?').bind(me.id).all()).results || []) {
+      if (me) for (const e of (await db.prepare('SELECT round_id,candidate_no,country,level,birth_year,email,train_consent,aid,aid_reason,aid_note,created_at FROM hpho_entries WHERE user_id=?').bind(me.id).all()).results || []) {
         const round = rounds.find(r => r.id === e.round_id);
         entries[e.round_id] = { ...e, fee_due: round ? feeDue(round, e.aid) : null };
       }
@@ -169,16 +173,16 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
         if (had) {
           /* an admin's decision on a request stands while the candidate keeps asking; a new request or a new country re-opens it */
           const aid = ok.aid === 'pending' && ['approved', 'declined'].includes(had.aid) && had.aid_reason === ok.aid_reason ? had.aid : ok.aid;
-          await db.prepare('UPDATE hpho_entries SET country=?,level=?,birth_year=?,guardian_consent=?,train_consent=?,aid=?,aid_reason=?,aid_note=?,aid_at=CASE WHEN ?=aid THEN aid_at ELSE NULL END WHERE round_id=? AND user_id=?')
-            .bind(ok.country, ok.level, ok.birth_year, ok.guardian_consent, ok.train_consent, aid, ok.aid_reason, ok.aid_note, aid, id, me.id).run();
+          await db.prepare('UPDATE hpho_entries SET country=?,level=?,birth_year=?,email=?,guardian_consent=?,train_consent=?,aid=?,aid_reason=?,aid_note=?,aid_at=CASE WHEN ?=aid THEN aid_at ELSE NULL END WHERE round_id=? AND user_id=?')
+            .bind(ok.country, ok.level, ok.birth_year, ok.email, ok.guardian_consent, ok.train_consent, aid, ok.aid_reason, ok.aid_note, aid, id, me.id).run();
           return { ok: true, candidate_no: had.candidate_no, updated: true, aid, fee_due: feeDue(round, aid) };
         }
         const prefix = candidatePrefix(id);
         for (let i = 0; i < 8; i++) {
           const no = prefix + String(crypto.getRandomValues(new Uint32Array(1))[0] % 10000).padStart(4, '0');
           try {
-            await db.prepare('INSERT INTO hpho_entries(round_id,user_id,candidate_no,country,level,birth_year,guardian_consent,train_consent,aid,aid_reason,aid_note,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
-              .bind(id, me.id, no, ok.country, ok.level, ok.birth_year, ok.guardian_consent, ok.train_consent, ok.aid, ok.aid_reason, ok.aid_note, now()).run();
+            await db.prepare('INSERT INTO hpho_entries(round_id,user_id,candidate_no,country,level,birth_year,email,guardian_consent,train_consent,aid,aid_reason,aid_note,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
+              .bind(id, me.id, no, ok.country, ok.level, ok.birth_year, ok.email, ok.guardian_consent, ok.train_consent, ok.aid, ok.aid_reason, ok.aid_note, now()).run();
             return { ok: true, candidate_no: no, aid: ok.aid, fee_due: feeDue(round, ok.aid) };
           } catch (e) { if (!/UNIQUE/i.test(String(e?.message || e))) throw e; }
         }

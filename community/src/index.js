@@ -36,7 +36,7 @@ import { monthlySubmissionView, assessMonthlyAuthorship } from './monthly-policy
 import { monthlyPublicPresentation } from './monthly-presentation.js';
 import { createMonthlyPhotoRouter, prepareMonthlyPhotoSubmission, monthlyPhotoAttachments, monthlyPhotoDeletion, boundedForm } from './monthly-photos.js';
 import { createHphoRouter } from './hpho.js';
-import { createHphoExamRouter, hphoRetainTick } from './hpho-exam.js';
+import { createHphoExamRouter, hphoRetainTick, hphoMailTick } from './hpho-exam.js';
 import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMonthlyCaptureSchema, monthlyCaptureDeletion, readMonthlyCapturePage } from './monthly-capture.js';
 import { settleMonthlyRewards, monthlyRewardSummary } from './monthly-rewards.js';
 import { createMonthlyExperimentRouter, attachMonthlyExperimentEvidence, ensureMonthlyExperimentSchema, monthlyExperimentDeletion, getMonthlyExperimentReference } from './monthly-experiment.js';
@@ -839,8 +839,10 @@ export default {
       .then(()=>settleMonthlyRewards(env.DB,{timestamp:Math.floor((event.scheduledTime??Date.now())/1000),key:env.DB}))
       .then(result=>{if(result.published.length)invalidatePublicReads(env);}),labSweepJobs(env)];
     if(Math.floor((event.scheduledTime??Date.now())/60000)%15===0)work.push(labPurge(env),purgeVisionPhotos(env),
-      /* HPhO: an hour after an exam's upload closed, only the flagged seats keep their recordings (hpho-exam.js) */
-      hphoRetainTick(env,{now:event.scheduledTime??Date.now(),scope:e=>e[DB_SCOPE]||e.DB}).catch(e=>console.error('hpho-retain',String(e?.message||e).slice(0,200))));
+      /* HPhO: a day after an exam's upload closed, only the flagged seats keep their recordings (hpho-exam.js) */
+      hphoRetainTick(env,{now:event.scheduledTime??Date.now(),scope:e=>e[DB_SCOPE]||e.DB}).catch(e=>console.error('hpho-retain',String(e?.message||e).slice(0,200))),
+      /* HPhO: the day-before mail with the environment test link */
+      hphoMailTick(env,{now:event.scheduledTime??Date.now(),scope:e=>e[DB_SCOPE]||e.DB}).catch(e=>console.error('hpho-mail',String(e?.message||e).slice(0,200))));
     /* the weekly Google Drive backup (drive-backup.js): starts Sunday 18:00 UTC, then one short step a minute until done */
     work.push(backupTick(env,{now:event.scheduledTime??Date.now()}).catch(e=>console.error('backup',String(e?.message||e).slice(0,200))));
     /* the assistant's nightly self-test (ai-eval.js): one case a minute from 02:00 Korean time until the day's total */

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {createHphoRouter, roundTracks, checkRound, publicRound} from './src/hpho.js';
-import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, roomVerdict, viewVerdict, lenientJson, checkNote, suspicion, hphoRetainTick, PHONE_VIEWS, examWindow, needsReview, UPLOAD_MIN, SCAN_VIEWS} from './src/hpho-exam.js';
+import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, roomVerdict, viewVerdict, lenientJson, checkNote, suspicion, hphoRetainTick, hphoMailTick, PHONE_VIEWS, examWindow, needsReview, UPLOAD_MIN, SCAN_VIEWS} from './src/hpho-exam.js';
 
 class HttpError extends Error { constructor(status, code) { super(code); this.status = status; this.code = code; } }
 function d1() {
@@ -23,7 +23,7 @@ const needUser = u => { if (!u) throw new HttpError(401, 'login_required'); retu
 const deps = { HttpError, needUser, limit: async () => {}, isAdmin: u => u?.role === 'admin' };
 const admin = { id: 1, role: 'admin' }, student = { id: 7 }, other = { id: 9 };
 const client = { app: 'haslaedu-desktop', version: '0.5.5' };
-const entry = { country: 'KR', level: 'high', birth_year: new Date().getUTCFullYear() - 20, age14: true, pledge: true, proctoring: true, identity_notice: true };
+const entry = { country: 'KR', level: 'high', birth_year: new Date().getUTCFullYear() - 20, age14: true, email: 'student@example.com', pledge: true, proctoring: true, identity_notice: true };
 const code = async p => { try { await p; return null; } catch (e) { return e.code; } };
 const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]), PDF = new TextEncoder().encode('%PDF-1.7 x');
 function wav() { const b = new Uint8Array(64); b.set(new TextEncoder().encode('RIFF'), 0); b.set(new TextEncoder().encode('WAVE'), 8); return b; }
@@ -180,7 +180,7 @@ test('voice check: the sentence must be heard, a noise does not pass', async () 
   assert.equal((await yes.form('voicecheck', { audio: wav(), lang: 'ko' })).said, true);
   const down = await setup(1800, { voice: { unavailable: true } });
   assert.equal((await down.form('voicecheck', { audio: wav(), lang: 'en' })).unavailable, true);
-  assert.equal(await code((await setup(3700)).form('voicecheck', { audio: wav(), lang: 'ko' })), 'check_closed');
+  assert.equal(await code((await setup(-6 * 3600)).form('voicecheck', { audio: wav(), lang: 'ko' })), 'check_closed', 'not after the exam');
   /* the page's own "said" does not overrule the server's model */
   const local = await no.form('voicecheck', { audio: wav(), lang: 'ko', local: 'said', heard: '저는 정직하게 응시하겠습니다' });
   assert.equal(local.said, false);
@@ -294,7 +294,7 @@ test('only flagged seats keep their recordings and proctoring photos', async () 
   assert.equal(keys().length, 4);
   assert.equal(await code(f.call('retain', 'POST', {}, admin)), 'not_over');
   assert.equal(await code(f.call('retain', 'POST', {}, student)), 'forbidden', 'organisers only');
-  const later = Date.now() + (3600 + 3600 + 60) * 1000;            /* the upload closed more than an hour ago */
+  const later = Date.now() + (3600 + 86400 + 60) * 1000;           /* the upload closed more than a day ago */
   assert.equal((await hphoRetainTick(f.env, { now: Date.now() })).length, 0, 'not before the hour after the upload');
   const done = await hphoRetainTick(f.env, { now: later });
   assert.equal(done.length, 2);
@@ -366,4 +366,55 @@ test('away for ten seconds during the exam: the seat goes to a person for review
 test('the page cannot post the server-only check records', async () => {
   assert.equal(checkEvents([{ seq: 1, kind: 'ear_check', detail: 'clear' }]).error, 'bad_events');
   assert.equal(checkEvents([{ seq: 1, kind: 'focus_lost' }]).events.length, 1);
+});
+
+test('environment test before the exam; the day after, organisers delete a reviewed seat; every look is logged', async () => {
+  const f = await setup(2 * 86400);                                   /* the exam is in two days */
+  assert.equal((await f.call('state', 'GET', null, student)).practice_at, null);
+  await f.form('earcheck', { front: JPEG, first: JPEG, second: JPEG });  /* the checks work before the room opens */
+  assert.equal(await code(f.call('practice', 'POST', { client: { app: 'x' } }, student)), 'bad_client');
+  const p = await f.call('practice', 'POST', { client, result: 'all clear' }, student);
+  assert.equal((await f.call('state', 'GET', null, student)).practice_at, p.at);
+  assert.equal(await code(f.call('checkin', 'POST', { client }, student)), 'not_open', 'the test takes no seat');
+  /* the exam's own check later on ignores the test (checkNote reads from an hour before the start) */
+  f.shift(-2 * 86400 + 1800);
+  assert.equal(await code(f.call('practice', 'POST', { client }, student)), 'practice_closed');
+  await f.call('checkin', 'POST', { client }, student);
+  const no = (await f.call('seats', 'GET', null, admin)).seats[0].candidate_no;
+  await f.call('events', 'POST', { events: [{ seq: 1, kind: 'faces_multiple' }] }, student);
+  f.shift(-1801 - 300 * 60);
+  await f.call('keep', 'POST', {}, student);
+  await f.form('clip', { clip: new Uint8Array([0x1a, 0x45, 0xdf, 0xa3, 1]), source: 'screen' });
+  assert.equal(await code(f.call('purge', 'POST', { candidate: no }, student)), 'forbidden');
+  f.shift(-UPLOAD_MIN * 60 - 10);
+  assert.equal(await code(f.call('purge', 'POST', { candidate: no }, admin)), 'verdict_first', 'reviewed first');
+  await f.call('verdict', 'POST', { candidate: no, verdict: 'clear', note: 'ok' }, admin);
+  const log = await f.call('log', 'GET', null, admin, '?candidate=' + no);
+  await f.call('media', 'GET', null, admin, '?key=' + encodeURIComponent(log.clips[0]));
+  const r = await f.call('purge', 'POST', { candidate: no }, admin);
+  assert.ok(r.deleted >= 1);
+  assert.equal((await f.call('log', 'GET', null, admin, '?candidate=' + no)).clips.length, 0);
+  const audit = f.sql.prepare('SELECT action FROM hpho_audit ORDER BY at').all().map(a => a.action);
+  assert.deepEqual(audit.filter(a => a !== 'view').concat(audit.includes('view') ? ['view'] : []), ['purge', 'view']);
+});
+
+test('registration needs an address for HPhO notices', async () => {
+  const { checkEntry } = await import('./src/hpho.js');
+  assert.equal(checkEntry({ ...entry, email: 'no-at-sign' }).error, 'bad_email');
+  assert.equal(checkEntry({ ...entry, email: ' Me@Example.COM ' }).email, 'me@example.com');
+});
+
+test('the day before: one mail per candidate and exam, with the times and the environment test', async () => {
+  const f = await setup(24 * 3600), sent = [];
+  const send = async (_env, m) => { sent.push(m); };
+  assert.deepEqual(await hphoMailTick(f.env, { now: Date.now(), send }), [], 'mail off: nothing sent');
+  Object.assign(f.env, { AUTH_EMAIL_ENABLED: 'on', AUTH_MAIL_FROM: 'noreply@notify.example' });
+  const first = await hphoMailTick(f.env, { now: Date.now(), send });
+  assert.equal(first.length, 1);
+  assert.equal(sent[0].to, 'student@example.com'); assert.equal(sent[0].from.email, 'noreply@notify.example');
+  assert.match(sent[0].subject, /내일 HPhO 이론 시험/); assert.match(sent[0].text, /환경 테스트/); assert.match(sent[0].text, /착석 마감/);
+  assert.deepEqual(await hphoMailTick(f.env, { now: Date.now(), send }), [], 'once only');
+  f.env.HPHO_MAIL_FROM = 'hpho@notify.example';
+  const g = await setup(3 * 86400); Object.assign(g.env, { AUTH_EMAIL_ENABLED: 'on', AUTH_MAIL_FROM: 'x@y.z' });
+  assert.deepEqual(await hphoMailTick(g.env, { now: Date.now(), send }), [], 'not three days before');
 });

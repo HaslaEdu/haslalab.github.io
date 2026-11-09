@@ -17,14 +17,14 @@
       facts: [["개인전", "혼자 응시합니다"], ["반기 1회", "1년에 두 번 열립니다"], ["이론 + 실험", "실험은 하슬라랩 가상 실험대에서"], ["전 세계 동시", "모든 참가자가 같은 시각에 시작합니다"], ["AI 채점", "채점 후 이의신청 기간이 있습니다"]],
       tracks: { theory: "이론 시험", experiment: "실험 시험" }, hours: "5시간", entryNote: "각 시험은 시작 1시간 전부터 입장할 수 있고, 시작 20분 전까지 대기실에 착석해야 합니다.",
       admin: { title: "관리자", upload: "시험 자료 올리기", track: "시험", kind: "자료", lang: "언어", file: "PDF 파일", send: "올리기", sent: "올렸습니다.", kinds: { guide: "General Guide", writing: "답안지", answer: "Answer Sheet", paper: "문제지" },
-        seats: "응시 기록 검토", load: "불러오기", cols: ["수험번호", "착석", "시작", "재접속", "끊김", "답안 쪽", "제출", "판정"], review: "검토 필요", none: "아직 착석한 응시자가 없습니다.", log: "기록 보기", save: "판정 저장", verdicts: { "": "—", clear: "이상 없음", review: "검토 중", cheating: "부정행위" }, note: "메모", events: "이벤트", snaps: "감독 사진", answers: "답안 사진", clips: "녹화 (5분 단위)", checkNote: "점검 미확인",
+        seats: "응시 기록 검토", load: "불러오기", cols: ["수험번호", "착석", "시작", "재접속", "끊김", "답안 쪽", "제출", "판정"], review: "검토 필요", none: "아직 착석한 응시자가 없습니다.", log: "기록 보기", save: "판정 저장", verdicts: { "": "—", clear: "이상 없음", review: "검토 중", cheating: "부정행위" }, note: "메모", events: "이벤트", snaps: "감독 사진", answers: "답안 사진", clips: "녹화 (5분 단위)", purge: "검토 완료 · 기록 삭제", purgeAsk: n => `${n}의 감독 녹화와 사진을 모두 삭제합니다. 판정과 이벤트 기록은 남습니다. 되돌릴 수 없습니다. 삭제할까요?`, purged: n => `삭제됨 (${n}개)`, checkNote: "점검 미확인",
         live: "실시간 감독", liveStart: "감독 시작", liveStop: "멈춤", liveNote: "20초마다 최신 웹캠·화면 사진과 최근 15분 경고를 다시 불러옵니다.", online: "접속 중", offline: "끊김", noPhoto: "사진 없음",
         alerts: { focus_lost: "창 이탈", display_change: "모니터 변경", screen_locked: "화면 잠금", suspend: "절전", shortcut_blocked: "단축키", window_close_attempt: "창 닫기 시도", network_lost: "네트워크 끊김", page_hidden: "화면 숨김", camera_stopped: "카메라 꺼짐", face_missing: "얼굴 없음", faces_multiple: "여러 명", phone_seen: "휴대폰", voice: "말소리", system_sound: "컴퓨터 소리", reconnect: "재접속", recording_failed: "녹화 실패", after_time: "종료 후" } },
       next: "다음 대회", none: "첫 대회 일정은 곧 공개됩니다.", regOpen: "접수", regClose: "접수 마감", start: "시험 시작", length: "시험 시간", min: "분", fee: "참가비", free: "무료",
       localTz: z => `내 시간대(${z}) 기준`, until: "남음", d: "일", h: "시간", m: "분",
       status: { open: "접수 중", closed: "접수 마감", finished: "종료", soon: "접수 예정", rehearsal: "관리자 전용" },
       signIn: "접수하려면 로그인하세요.", login: "로그인",
-      formTitle: "참가 접수", country: "국가", level: "과정", levels: { middle: "중학생", high: "고등학생", university: "대학생", other: "기타" }, birth: "출생 연도",
+      email: "연락 이메일", emailNote: "시험 전날 시험 시각과 환경 테스트 안내를 이 주소로 보냅니다. 계정 이메일과 달라도 됩니다.", formTitle: "참가 접수", country: "국가", level: "과정", levels: { middle: "중학생", high: "고등학생", university: "대학생", other: "기타" }, birth: "출생 연도",
       pledge: "대회 규정을 읽었고, 시험 중 다른 사람·AI·인터넷·교재의 도움을 받지 않겠습니다.",
       proctor: "시험은 하슬라에듀 데스크톱 앱으로 응시하며, 감독을 위해 웹캠·마이크·화면이 기록되는 데 동의합니다. 시험 중 찍힌 얼굴·화면 사진은 하슬라 서버에 저장되고, 부정행위 검토를 위해 외부 AI 서비스(Google Gemini)로 전송되어 분석될 수 있습니다(AI 감독관). 감독 기록은 결과 확정 후 정해진 기간이 지나면 삭제됩니다.",
       age14: "만 14세 이상입니다. (HPhO는 만 14세 이상만 응시할 수 있습니다.)",
@@ -51,7 +51,7 @@
       aidReasons: { family_income: "가계 형편이 어려움", public_assistance: "기초생활수급·차상위 등 공공 지원 대상", school_referral: "학교·기관의 추천", other: "기타" },
       feeLabel: "참가비", feeState: { auto: "면제 (자동)", pending: "지원 심사 중", approved: "면제 (지원 승인)", declined: "지원 미승인 · 납부 필요", none: "납부 필요" },
       saved: "접수되었습니다.", err: "처리하지 못했습니다: ",
-      errors: { bad_aid_reason: "지원 사유를 고르세요.", aid_note_required: "지원 사유를 10자 이상 적어 주세요.", bad_country: "국가를 고르세요.", bad_level: "과정을 고르세요.", bad_birth_year: "출생 연도를 확인하세요.", pledge_required: "규정 서약에 동의해야 합니다.", proctoring_consent_required: "감독 기록에 동의해야 합니다.", identity_notice_required: "답안지 안내를 확인해야 합니다.", guardian_consent_required: "만 19세 미만은 보호자 동의가 필요합니다.", too_young: "HPhO는 만 14세 이상만 응시할 수 있습니다.", age14_required: "만 14세 이상인지 확인해 주세요.", train_guardian_consent_required: "만 19세 미만이 감독관 AI 학습에 동의하려면 보호자 동의도 필요합니다.", registration_closed: "접수 기간이 아닙니다.", login_required: "로그인이 필요합니다." },
+      errors: { bad_aid_reason: "지원 사유를 고르세요.", aid_note_required: "지원 사유를 10자 이상 적어 주세요.", bad_email: "연락 이메일을 확인하세요.", bad_country: "국가를 고르세요.", bad_level: "과정을 고르세요.", bad_birth_year: "출생 연도를 확인하세요.", pledge_required: "규정 서약에 동의해야 합니다.", proctoring_consent_required: "감독 기록에 동의해야 합니다.", identity_notice_required: "답안지 안내를 확인해야 합니다.", guardian_consent_required: "만 19세 미만은 보호자 동의가 필요합니다.", too_young: "HPhO는 만 14세 이상만 응시할 수 있습니다.", age14_required: "만 14세 이상인지 확인해 주세요.", train_guardian_consent_required: "만 19세 미만이 감독관 AI 학습에 동의하려면 보호자 동의도 필요합니다.", registration_closed: "접수 기간이 아닙니다.", login_required: "로그인이 필요합니다." },
     },
     en: {
       tabMonthly: "Monthly", tabHpho: "HPhO", eyebrow: "HaslaLab Physics Olympiad",
@@ -60,14 +60,14 @@
       facts: [["Individual", "You sit it on your own"], ["Twice a year", "One round each half-year"], ["Theory + experiment", "Experiments on the HaslaLab virtual bench"], ["Same time worldwide", "Everyone starts at the same moment"], ["AI-marked", "With a window for appeals"]],
       tracks: { theory: "Theory exam", experiment: "Experimental exam" }, hours: "5 hours", entryNote: "Each exam room opens an hour before the start; be seated in the waiting room 20 minutes before it.",
       admin: { title: "Organisers", upload: "Upload exam documents", track: "Exam", kind: "Document", lang: "Language", file: "PDF file", send: "Upload", sent: "Uploaded.", kinds: { guide: "General Guide", writing: "Writing sheet", answer: "Answer Sheet", paper: "Paper" },
-        seats: "Review the exam records", load: "Load", cols: ["Candidate", "Seated", "Started", "Reconnects", "Gaps", "Pages", "Submitted", "Verdict"], review: "Needs review", none: "No candidate has been seated yet.", log: "Open record", save: "Save verdict", verdicts: { "": "—", clear: "Clear", review: "Under review", cheating: "Cheating" }, note: "Note", events: "Events", snaps: "Proctoring photos", answers: "Answer photos", clips: "Recordings (5-minute parts)", checkNote: "Unverified checks",
+        seats: "Review the exam records", load: "Load", cols: ["Candidate", "Seated", "Started", "Reconnects", "Gaps", "Pages", "Submitted", "Verdict"], review: "Needs review", none: "No candidate has been seated yet.", log: "Open record", save: "Save verdict", verdicts: { "": "—", clear: "Clear", review: "Under review", cheating: "Cheating" }, note: "Note", events: "Events", snaps: "Proctoring photos", answers: "Answer photos", clips: "Recordings (5-minute parts)", purge: "Reviewed · delete records", purgeAsk: n => `Delete every proctoring recording and photo of ${n}? The verdict and the events stay. This cannot be undone.`, purged: n => `Deleted (${n})`, checkNote: "Unverified checks",
         live: "Live proctoring", liveStart: "Start watching", liveStop: "Stop", liveNote: "Every 20 s: the latest webcam and screen photo and the alerts of the last 15 minutes.", online: "Online", offline: "Disconnected", noPhoto: "No photo",
         alerts: { focus_lost: "Left window", display_change: "Display change", screen_locked: "Screen locked", suspend: "Sleep", shortcut_blocked: "Shortcut", window_close_attempt: "Tried to close", network_lost: "Network lost", page_hidden: "Hidden", camera_stopped: "Camera off", face_missing: "No face", faces_multiple: "Several people", phone_seen: "Phone", voice: "Speech", system_sound: "Computer sound", reconnect: "Reconnect", recording_failed: "Recording failed", after_time: "After time" } },
       next: "Next round", none: "The first round's dates will be announced soon.", regOpen: "Registration opens", regClose: "Registration closes", start: "Exam starts", length: "Duration", min: "min", fee: "Fee", free: "Free",
       localTz: z => `in your time zone (${z})`, until: "left", d: "d", h: "h", m: "m",
       status: { open: "Registration open", closed: "Registration closed", finished: "Finished", soon: "Opens soon", rehearsal: "Admins only" },
       signIn: "Sign in to register.", login: "Sign in",
-      formTitle: "Register", country: "Country", level: "Level", levels: { middle: "Middle school", high: "High school", university: "University", other: "Other" }, birth: "Year of birth",
+      email: "Contact email", emailNote: "The day before each exam we send the times and the environment test link here. It need not be your account's email.", formTitle: "Register", country: "Country", level: "Level", levels: { middle: "Middle school", high: "High school", university: "University", other: "Other" }, birth: "Year of birth",
       pledge: "I have read the rules and will take no help from people, AI, the internet or books during the exam.",
       proctor: "I will sit the exam in the HaslaEdu desktop app and agree that my webcam, microphone and screen are recorded for proctoring. Photos of my face and screen taken during the exam are stored on HaslaLab's server and may be sent to an external AI service (Google Gemini) for review (the AI proctor). Proctoring records are deleted a set time after results are final.",
       age14: "I am 14 or older. (HPhO is open to candidates aged 14 and over.)",
@@ -94,7 +94,7 @@
       aidReasons: { family_income: "My family cannot easily afford it", public_assistance: "I receive public financial assistance", school_referral: "Referred by my school or an organisation", other: "Other" },
       feeLabel: "Fee", feeState: { auto: "Waived (automatic)", pending: "Assistance under review", approved: "Waived (assistance approved)", declined: "Assistance declined · fee due", none: "Fee due" },
       saved: "You are registered.", err: "Could not complete: ",
-      errors: { bad_aid_reason: "Choose a reason for assistance.", aid_note_required: "Please explain in at least 10 characters.", bad_country: "Choose your country.", bad_level: "Choose your level.", bad_birth_year: "Check your year of birth.", pledge_required: "You must accept the pledge.", proctoring_consent_required: "You must agree to proctoring.", identity_notice_required: "Please confirm the answer-sheet notice.", guardian_consent_required: "Under 19: a guardian's consent is required.", too_young: "HPhO is open to candidates aged 14 and over.", age14_required: "Please confirm that you are 14 or older.", train_guardian_consent_required: "Under 19: training the AI proctor also needs a guardian's consent.", registration_closed: "Registration is not open.", login_required: "Please sign in." },
+      errors: { bad_aid_reason: "Choose a reason for assistance.", aid_note_required: "Please explain in at least 10 characters.", bad_email: "Check the contact email.", bad_country: "Choose your country.", bad_level: "Choose your level.", bad_birth_year: "Check your year of birth.", pledge_required: "You must accept the pledge.", proctoring_consent_required: "You must agree to proctoring.", identity_notice_required: "Please confirm the answer-sheet notice.", guardian_consent_required: "Under 19: a guardian's consent is required.", too_young: "HPhO is open to candidates aged 14 and over.", age14_required: "Please confirm that you are 14 or older.", train_guardian_consent_required: "Under 19: training the AI proctor also needs a guardian's consent.", registration_closed: "Registration is not open.", login_required: "Please sign in." },
     },
   };
   let state = { data: null, error: null, busy: false };
@@ -193,13 +193,17 @@
         const d = await cmApi("GET", `/hpho/rounds/${id}/exam/${track}/seats`);
         list.innerHTML = d.seats.length ? `<div class="hpho-table-wrap"><table class="hpho-table"><thead><tr>${a.cols.map(c => `<th>${c}</th>`).join("")}<th></th></tr></thead><tbody>${d.seats.map(s => `<tr class="${s.review ? "is-review" : ""}">
           <td><b class="hpho-no">${esc(s.candidate_no)}</b>${s.review ? ` <span class="hpho-status is-review">${a.review}</span>` : ""}${s.check_note ? `<br><small title="${esc(s.check_note)}">${a.checkNote}: ${esc(s.check_note)}</small>` : ""}</td><td>${time(s.checked_in_at)}</td><td>${time(s.started_at)}</td><td>${s.reconnects}</td><td>${s.gaps}</td><td>${s.pages}</td><td>${time(s.submitted_at)}</td>
-          <td><select data-v="${esc(s.candidate_no)}">${Object.entries(a.verdicts).map(([k, v]) => `<option value="${k}"${(s.verdict || "") === k ? " selected" : ""}>${v}</option>`).join("")}</select> <input data-n="${esc(s.candidate_no)}" placeholder="${a.note}" value="${esc(s.verdict_note || "")}" maxlength="500"> <button type="button" class="hpho-link" data-save="${esc(s.candidate_no)}">${a.save}</button></td>
+          <td><select data-v="${esc(s.candidate_no)}">${Object.entries(a.verdicts).map(([k, v]) => `<option value="${k}"${(s.verdict || "") === k ? " selected" : ""}>${v}</option>`).join("")}</select> <input data-n="${esc(s.candidate_no)}" placeholder="${a.note}" value="${esc(s.verdict_note || "")}" maxlength="500"> <button type="button" class="hpho-link" data-save="${esc(s.candidate_no)}">${a.save}</button>${s.verdict && s.kept ? ` <button type="button" class="hpho-link" data-purge="${esc(s.candidate_no)}">${a.purge}</button>` : ""}</td>
           <td><button type="button" class="hpho-link" data-log="${esc(s.candidate_no)}">${a.log}</button></td></tr>`).join("")}</tbody></table></div>` : `<p class="hpho-muted">${a.none}</p>`;
         list.querySelectorAll("[data-save]").forEach(b => b.addEventListener("click", async () => {
           const no = b.dataset.save, v = list.querySelector(`[data-v="${CSS.escape(no)}"]`).value; if (!v) return;
           try { await cmApi("POST", `/hpho/rounds/${id}/exam/${track}/verdict`, { candidate: no, verdict: v, note: list.querySelector(`[data-n="${CSS.escape(no)}"]`).value }); b.textContent = "✓"; } catch (e) { alert(T[L()].err + (e?.code || "")); }
         }));
         list.querySelectorAll("[data-log]").forEach(b => b.addEventListener("click", () => openLog(track, b.dataset.log)));
+        list.querySelectorAll("[data-purge]").forEach(b => b.addEventListener("click", async () => {
+          if (!confirm(a.purgeAsk(b.dataset.purge))) return;
+          try { const r = await cmApi("POST", `/hpho/rounds/${id}/exam/${track}/purge`, { candidate: b.dataset.purge }); b.textContent = a.purged(r.deleted); b.disabled = true; } catch (e) { alert(T[L()].err + (e?.code || "")); }
+        }));
       } catch (e) { list.innerHTML = `<p class="hpho-muted">${esc(T[L()].err + (e?.code || "network"))}</p>`; }
     }
     /* one candidate: the events in order, and the proctoring and answer photos (fetched with the admin's sign-in) */
@@ -257,6 +261,7 @@
     return `<form class="hpho-form" data-hpho-round="${esc(r.id)}"><h3>${mine ? x.update : x.formTitle}</h3>
       <label>${x.country}<select name="country" required><option value=""></option>${opts.map(([c, n]) => `<option value="${c}"${sel.country === c ? " selected" : ""}>${esc(n)}</option>`).join("")}</select></label>
       <label>${x.level}<select name="level" required><option value=""></option>${Object.entries(x.levels).map(([k, v]) => `<option value="${k}"${sel.level === k ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+      <label>${x.email}<input type="email" name="email" required maxlength="254" autocomplete="email" value="${esc(sel.email || "")}"><small class="hpho-muted">${x.emailNote}</small></label>
       <label>${x.birth}<select name="birth_year" required><option value=""></option>${years.map(v => `<option${+sel.birth_year === v ? " selected" : ""}>${v}</option>`).join("")}</select></label>
       <label class="hpho-check"><input type="checkbox" name="age14" required> ${x.age14}</label>
       <label class="hpho-check"><input type="checkbox" name="pledge" required> ${x.pledge}</label>
@@ -304,7 +309,7 @@
     if (aidBox) { form.country.addEventListener("change", syncAid); form.aid_request.addEventListener("change", syncAid); syncAid(); }
     form.addEventListener("submit", async e => {
       e.preventDefault(); if (state.busy) return; state.busy = true; msg.textContent = "…";
-      const body = { country: form.country.value, level: form.level.value, birth_year: +form.birth_year.value,
+      const body = { country: form.country.value, level: form.level.value, birth_year: +form.birth_year.value, email: form.email.value,
         age14: form.age14.checked, pledge: form.pledge.checked, proctoring: form.proctoring.checked, identity_notice: form.identity_notice.checked, guardian_consent: form.guardian_consent.checked, train_consent: form.train_consent.checked, train_guardian_consent: form.train_guardian_consent.checked,
         ...(form.aid_request && form.aid_request.checked && !AID_AUTO.has(form.country.value) ? { aid_request: true, aid_reason: form.aid_reason.value, aid_note: form.aid_note.value } : {}) };
       try { await cmApi("POST", `/hpho/rounds/${encodeURIComponent(form.dataset.hphoRound)}/entry`, body); msg.textContent = x.saved; await load(); }

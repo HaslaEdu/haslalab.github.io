@@ -48,6 +48,7 @@
    was not flagged are deleted an hour after its upload closed (hphoRetainTick, every 15 minutes from the cron), except
    the webcam photos after the time was over (writing then is cheating). Answers, check photos and events stay.
    Events are what the client reports, so a gap in the heartbeat is itself recorded (the server sees it). */
+import { sendMail, mailHtml } from './account-security.js';
 import { ensureHpho, roundTracks, TRACKS } from './hpho.js';
 
 export const UPLOAD_MIN = 60;
@@ -89,7 +90,7 @@ export const EXAM_EVENTS = ['heartbeat', 'window_ready', 'focus_lost', 'focus_ba
   'suspend', 'resume', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'network_back', 'page_hidden', 'page_visible',
   'camera_started', 'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'process_new', 'process_list', 'clip_saved', 'snapshot_saved',
   'face_check', 'mic_check', 'ear_check', 'checkin', 'reconnect', 'time_over', 'after_time', 'answer_page', 'submitted', 'paper_lang',
-  'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated', 'phone_lost', 'phone_back', 'seat_left', 'absent', 'glass_check'];
+  'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated', 'phone_lost', 'phone_back', 'seat_left', 'absent', 'glass_check', 'practice_done'];
 export const EARCHECK_EARLY = 3600;        /* the ear and voice checks open an hour before the start, with the technical check */
 const EAR_VERDICTS = ['clear', 'device', 'unclear'];
 const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, taken during the technical check before an online physics exam${n === 3 ? ': the first faces the camera with both hands raised beside the face (wrists visible), in the second the head is turned to show one ear, in the third the other ear' : ': in the first the head is turned to show one ear, in the second the other ear'}.
@@ -231,6 +232,11 @@ export const HPHO_EXAM_SCHEMA = [
     code_hash TEXT NOT NULL, created_at INTEGER NOT NULL, last_beat INTEGER, scan TEXT NOT NULL DEFAULT '{}', placed INTEGER NOT NULL DEFAULT 0,
     place_note TEXT, last_snap TEXT, device TEXT, PRIMARY KEY (round_id, user_id, track))`,
   `CREATE UNIQUE INDEX IF NOT EXISTS hpho_phones_code ON hpho_phones(code_hash)`,
+  /* the day-before mail, once per candidate and exam */
+  `CREATE TABLE IF NOT EXISTS hpho_mail (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, track TEXT NOT NULL, kind TEXT NOT NULL,
+    sent_at INTEGER NOT NULL, PRIMARY KEY (round_id, user_id, track, kind))`,
+  /* every organiser's look at a proctoring photo, recording or answer page, and every deletion */
+  `CREATE TABLE IF NOT EXISTS hpho_audit (at INTEGER NOT NULL, admin_id INTEGER NOT NULL, round_id TEXT NOT NULL, action TEXT NOT NULL, target TEXT NOT NULL)`,
   `CREATE TABLE IF NOT EXISTS hpho_events (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, seq INTEGER NOT NULL,
     client_at INTEGER, at INTEGER NOT NULL, kind TEXT NOT NULL, detail TEXT, PRIMARY KEY (round_id, user_id, seq))`,
 ];
@@ -253,7 +259,7 @@ export function checkClient(c) {
   return app && version ? `${app}/${version}` : null;
 }
 /* written by the server only (its own record of the checks, the seat, a return, the phone's absence) */
-export const SERVER_ONLY = ['face_check', 'mic_check', 'ear_check', 'glass_check', 'room_scan', 'checkin', 'reconnect', 'absent_phone'];
+export const SERVER_ONLY = ['face_check', 'mic_check', 'ear_check', 'glass_check', 'room_scan', 'checkin', 'reconnect', 'absent_phone', 'practice_done'];
 export function checkEvents(list) {
   if (!Array.isArray(list) || list.length > 100) return { error: 'bad_events' };
   const out = [];
@@ -314,19 +320,22 @@ export function suspicion(seat, events) {
   if (['review', 'cheating'].includes(seat.verdict)) out.push('verdict: ' + seat.verdict);
   return out;
 }
-export const RETAIN_AFTER = 3600;          /* the hour after the upload closes, in which an organiser may still flag a seat */
+export const RETAIN_AFTER = 86400;         /* a day after the upload closes (an organiser may still flag a seat until then) */
 /* keep or delete one seat's recordings and proctoring photos; returns what was decided */
-export async function retainSeat(db, store, round, seat, w, t) {
+export async function retainSeat(db, store, round, seat, w, t, purge = false) {
   const events = (await db.prepare('SELECT seq,at,kind,detail FROM hpho_events WHERE round_id=? AND user_id=? AND (track=? OR track IS NULL) AND at>=? AND at<=?')
     .bind(round, seat.user_id, seat.track, w.opens, w.upload_until + 600).all()).results || [];
   /* a seat already flagged at the end (keep) stays flagged; else the flags are counted now (a person's verdict included) */
-  const why = seat.kept ? [seat.kept, ...(['review', 'cheating'].includes(seat.verdict) && !seat.kept.includes('verdict') ? ['verdict: ' + seat.verdict] : [])] : suspicion(seat, events);
+  const why = purge ? [] : seat.kept ? [seat.kept, ...(['review', 'cheating'].includes(seat.verdict) && !seat.kept.includes('verdict') ? ['verdict: ' + seat.verdict] : [])] : suspicion(seat, events);
   let deleted = 0;
   if (!why.length && store?.list) {
     const keys = [];
     const collect = async (prefix, keep = () => true) => { let cursor;
       do { const l = await store.list({ prefix, cursor, limit: 1000 }); keys.push(...l.objects.map(o => o.key).filter(keep)); cursor = l.truncated ? l.cursor : null; } while (cursor); };
     await collect(`hpho-rec/${round}/${seat.track}/${seat.candidate_no}/`);
+    /* deleted by an organiser after review: the photos taken after the time and the check photos go too */
+    if (purge) await collect(`hpho/${round}/${seat.candidate_no}/`, k => { const m = /\/(\d+)-/.exec(k); return !!m && +m[1] >= w.opens - EARCHECK_EARLY && +m[1] <= w.upload_until + 600; });
+    else
     /* the proctoring photos of this exam's time; the ear and room check stills stay */
     await collect(`hpho/${round}/${seat.candidate_no}/`, k => { const m = /\/(\d+)-(webcam|screen|phone)-([a-z0-9_]+)\.(jpg|webp)$/.exec(k); return !!m && +m[1] >= w.opens && +m[1] <= w.upload_until + 600 && !(m[2] === 'webcam' && m[3] === 'after_time') && !m[3].startsWith('scan_'); });
     for (let i = 0; i < keys.length; i += 100) { const part = keys.slice(i, i + 100); await (store.delete ? store.delete(part) : Promise.all(part.map(k => store.del?.(k)))); deleted += part.length; }
@@ -349,6 +358,54 @@ export async function hphoRetainTick(env, { now: at = Date.now(), scope = e => e
     out.push(await retainSeat(db, store, s.round_id, s, w, t));
   }
   return out;
+}
+
+/* ── the day-before mail (cron, every 15 minutes): each registered candidate, once per exam that starts in 18 to 30
+   hours, gets the times, the environment test link and what to prepare. To the address given at registration; from
+   HPHO_MAIL_FROM (an address the Worker's send_email binding allows) or the account mails' sender */
+const kst = s => new Date(s * 1000 + 9 * 3600e3).toISOString().slice(0, 16).replace('T', ' ') + ' (KST)';
+export function reminderMail(round, x, entry, origin = 'https://haslalab.org') {
+  const en = entry.country !== 'KR', track = { theory: en ? 'theory' : '이론', experiment: en ? 'experiment' : '실험' }[x.track] || x.track;
+  const link = `${origin}/?lang=${en ? 'en' : 'ko'}#/hpho/exam`, title = en ? `HPhO ${track} exam tomorrow: run the environment test` : `내일 HPhO ${track} 시험 · 환경 테스트를 해 주세요`;
+  const name = String((en ? round.title_en : round.title_ko) || 'HPhO').slice(0, 80).replace(/[<>&"]/g, '');
+  const lines = en ? [
+    `Candidate number: ${entry.candidate_no}`, `Room opens: ${kst(x.opens)}`, `Be seated by: ${kst(x.seat_by)} (no entry after this)`, `Start: ${kst(x.start_at)} · ${x.duration_min} minutes`,
+    'Today: open the HaslaEdu desktop app (0.5.5 or later), go to HPhO and press "Environment test". It runs every check (microphone, webcam, ears, phone, room) without starting the exam.',
+    'On the desk only: writing tools, the answer sheets, blank A4, a scientific calculator, a clear water bottle. No watch, earphones, smart glasses or brimmed cap.',
+    'No toilet breaks during the exam: go before you enter. Keep the computer and the phone on chargers, the phone on the same network.']
+  : [
+    `수험번호: ${entry.candidate_no}`, `입실 시작: ${kst(x.opens)}`, `착석 마감: ${kst(x.seat_by)} (이후 입실 불가)`, `시험 시작: ${kst(x.start_at)} · ${x.duration_min}분`,
+    '오늘 하슬라에듀 데스크톱 앱(0.5.5 이상)에서 HPhO의 ‘환경 테스트’를 눌러 주세요. 시험을 시작하지 않고 마이크·웹캠·귀·휴대폰·주변 인식까지 모든 점검을 미리 해 볼 수 있습니다.',
+    '책상 위에는 필기구, 배포된 답안지, 백지 A4, 공학용 계산기, 투명 물병만 둘 수 있습니다. 시계·이어폰·스마트 안경·챙 모자는 안 됩니다.',
+    '시험 중에는 화장실을 갈 수 없으니 입실 전에 다녀오세요. PC와 휴대폰은 충전기에 연결해 두세요.'];
+  const esc = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const main = `<ul style="font-size:14px;line-height:1.9;padding-left:18px">${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul><p style="margin:24px 0"><a href="${esc(link)}" style="display:inline-block;background:#7059a4;color:#fff;text-decoration:none;border-radius:7px;padding:14px 22px;font-weight:700">${en ? 'Open HPhO' : 'HPhO 열기'}</a></p>`;
+  const intro = en ? `${esc(name)}: your ${track} exam starts tomorrow.` : `${esc(name)} ${track} 시험이 내일입니다.`;
+  const ignore = en ? 'You receive this because you registered for HPhO.' : 'HPhO에 접수하셔서 보내 드리는 메일입니다.';
+  const notice = en ? 'We never ask for your password by email.' : '이메일로 비밀번호를 묻지 않습니다.';
+  return { subject: 'HPhO · ' + title, text: [title, intro, ...lines, link].join('\n\n'), html: mailHtml({ english: en, title: esc(title), intro, expiry: '', main, ignore, notice }) };
+}
+export async function hphoMailTick(env, { now: at = Date.now(), scope = e => e.DB, limit = 40, send = sendMail } = {}) {
+  const from = env.HPHO_MAIL_FROM || env.AUTH_MAIL_FROM; if (!from || env.AUTH_EMAIL_ENABLED !== 'on') return [];
+  const db = scope(env), t = Math.floor(at / 1000); await ensureHphoExam(db);
+  const rounds = (await db.prepare("SELECT * FROM hpho_rounds WHERE status IN ('open','closed') AND (theory_at BETWEEN ? AND ? OR experiment_at BETWEEN ? AND ? OR start_at BETWEEN ? AND ?)")
+    .bind(t + 18 * 3600, t + 30 * 3600, t + 18 * 3600, t + 30 * 3600, t + 18 * 3600, t + 30 * 3600).all()).results || [];
+  const sent = [];
+  for (const round of rounds) for (const x of roundTracks(round)) {
+    if (x.start_at < t + 18 * 3600 || x.start_at > t + 30 * 3600) continue;
+    const w = examWindow(round, x.track);
+    const rows = (await db.prepare("SELECT e.user_id,e.candidate_no,e.country,e.email FROM hpho_entries e LEFT JOIN hpho_mail m ON m.round_id=e.round_id AND m.user_id=e.user_id AND m.track=? AND m.kind='day_before' WHERE e.round_id=? AND m.user_id IS NULL AND e.email IS NOT NULL LIMIT ?")
+      .bind(x.track, round.id, limit - sent.length).all()).results || [];
+    for (const e of rows) {
+      const mail = reminderMail(round, w, e);
+      /* the mark first: a send that fails is not retried into a second copy */
+      await db.prepare("INSERT OR IGNORE INTO hpho_mail(round_id,user_id,track,kind,sent_at) VALUES(?,?,?,'day_before',?)").bind(round.id, e.user_id, x.track, t).run();
+      try { await send(env, { from: { email: from, name: 'HPhO' }, to: e.email, ...mail }, `hpho-${round.id}-${x.track}-${e.user_id}`); sent.push(e.candidate_no); }
+      catch (err) { console.error('hpho-mail', e.candidate_no, String(err?.message || err).slice(0, 120)); }
+      if (sent.length >= limit) return sent;
+    }
+  }
+  return sent;
 }
 
 /* events a proctor watching live wants to see */
@@ -434,7 +491,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
   return async function exam(p, m, body, me, env, url, req) {
     const phone = /^\/api\/hpho\/phone\/([^/]+)\/(state|scan|place|snap|beat)$/.exec(p);
     if (phone) return phoneRoute(phone[1], phone[2], m, env, req, url?.searchParams?.get('d'));
-    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(?:(theory|experiment)\/)?(state|checkin|lang|start|events|snap|earcheck|voicecheck|glasscheck|roomscan|phone|keep|clip|docs|doc|answer|submit|upload|seats|monitor|log|media|verdict|retain)$/.exec(p);
+    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(?:(theory|experiment)\/)?(state|checkin|practice|lang|start|events|snap|earcheck|voicecheck|glasscheck|roomscan|phone|keep|clip|docs|doc|answer|submit|upload|seats|monitor|log|media|verdict|retain|purge)$/.exec(p);
     if (!r) return undefined;
     const [, id, track = 'theory', action] = r, db = scope(env), admin = isAdmin(me);
     needUser(me); await ensureHphoExam(db);
@@ -445,8 +502,19 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     const q = k => url?.searchParams?.get(k) || '';
 
     /* ── the organisers ── */
-    if (['upload', 'seats', 'monitor', 'log', 'media', 'verdict', 'retain'].includes(action)) {
+    if (['upload', 'seats', 'monitor', 'log', 'media', 'verdict', 'retain', 'purge'].includes(action)) {
       if (!admin) fail(403, 'forbidden');
+      const audit = (what, target) => db.prepare('INSERT INTO hpho_audit(at,admin_id,round_id,action,target) VALUES(?,?,?,?,?)').bind(t, me.id, id, what, String(target).slice(0, 300)).run();
+      if (action === 'purge' && m === 'POST') {
+        /* a flagged seat's recordings and photos stay until an organiser has decided (a verdict) and deletes them here */
+        const s = await db.prepare('SELECT * FROM hpho_seats WHERE round_id=? AND track=? AND candidate_no=?').bind(id, track, String(body?.candidate || '')).first();
+        if (!s) fail(404, 'not_found');
+        if (!s.verdict) fail(409, 'verdict_first');
+        if (t < w.upload_until) fail(409, 'not_over');
+        const done = await retainSeat(db, store, id, { ...s, kept: null, verdict: null, check_note: null, reconnects: 0, gaps: 0 }, w, t, true);
+        await audit('purge', s.candidate_no);
+        return { ok: true, deleted: done.deleted };
+      }
       if (action === 'retain' && m === 'POST') {
         /* now, for this exam's seats (after its upload closed): keep the flagged, delete the rest */
         if (t < w.upload_until) fail(409, 'not_over');
@@ -489,6 +557,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
           clips: await keys(`hpho-rec/${id}/${track}/${s.candidate_no}/`) };
       }
       if (action === 'media' && m === 'GET') {
+        await audit('view', q('key'));
         const key = q('key');
         if (!(key.startsWith(`hpho/${id}/`) || key.startsWith(`hpho-answers/${id}/`) || key.startsWith(`hpho-rec/${id}/`)) || key.includes('..') || !store) fail(404, 'not_found');
         const o = await store.get(key); if (!o) fail(404, 'not_found');
@@ -516,15 +585,31 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       const ph = await db.prepare('SELECT * FROM hpho_phones WHERE round_id=? AND user_id=? AND track=?').bind(id, me.id, track).first();
       if (m === 'GET') return { now: t, phone: phoneState(ph, t), views: PHONE_VIEWS };
       if (m !== 'POST') fail(405, 'method_not_allowed');
-      if (t < w.start_at - EARCHECK_EARLY || t >= w.upload_until) fail(409, 'check_closed');
-      /* a new code (the QR shows it once); a phone already paired keeps its scan, a new code replaces the old one */
+      if (t >= w.upload_until) fail(409, 'check_closed');
+      /* a new code (the QR shows it once); a phone already paired keeps its scan, a new code replaces the old one.
+         A phone set up for the environment test, before the room opened, starts the exam's scan afresh */
+      if (ph && t >= w.start_at - EARCHECK_EARLY && ph.created_at < w.start_at - EARCHECK_EARLY) {
+        await db.prepare("UPDATE hpho_phones SET scan='{}',placed=0,place_note=NULL,created_at=? WHERE round_id=? AND user_id=? AND track=?").bind(t, id, me.id, track).run();
+      }
       const code = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(24)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
       /* rescan (a return after a disconnect): the room is shown again and the phone stood again */
       if (ph) await db.prepare(`UPDATE hpho_phones SET code_hash=?,device=NULL${body?.rescan ? ",scan='{}',placed=0,place_note=NULL" : ''} WHERE round_id=? AND user_id=? AND track=?`).bind(await sha256(code), id, me.id, track).run();
       else await db.prepare('INSERT INTO hpho_phones(round_id,user_id,track,candidate_no,code_hash,created_at) VALUES(?,?,?,?,?,?)').bind(id, me.id, track, entry.candidate_no, await sha256(code), t).run();
       return { ok: true, code };
     }
-    if (action === 'state' && m === 'GET') return { window: w, now: t, registered: !!entry, session: seatView(seat), seq: seat ? await lastSeq() : 0 };
+    if (action === 'practice') {
+      /* the environment test (KPhE's "사전 테스트 체험"): the whole check, without a seat; the result is kept */
+      if (!entry) fail(403, 'not_registered');
+      if (m !== 'POST') fail(405, 'method_not_allowed');
+      if (t >= w.start_at - EARCHECK_EARLY) fail(409, 'practice_closed');
+      const client = checkClient(body?.client); if (!client) fail(400, 'bad_client');
+      await serverEvent('practice_done', `${client} · ${String(body?.result || 'ok').slice(0, 120)}`, 2e9).run();
+      return { ok: true, at: t };
+    }
+    if (action === 'state' && m === 'GET') {
+      const practice = entry ? await db.prepare("SELECT MAX(at) AS at FROM hpho_events WHERE round_id=? AND user_id=? AND track=? AND kind='practice_done'").bind(id, me.id, track).first() : null;
+      return { window: w, now: t, registered: !!entry, session: seatView(seat), seq: seat ? await lastSeq() : 0, practice_at: practice?.at || null };
+    }
 
     if (action === 'docs' && m === 'GET') {
       if (!entry && !admin) fail(403, 'not_registered');
@@ -552,7 +637,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     if (!entry) fail(403, 'not_registered');
 
     if (['earcheck', 'voicecheck', 'glasscheck', 'roomscan'].includes(action)) {
-      if (t < w.start_at - EARCHECK_EARLY || t >= w.ends) fail(409, 'check_closed');
+      if (t >= w.ends) fail(409, 'check_closed');                 /* before the room opens: the environment test */
       await limit(env, `hpho-${action}:` + me.id, 8, 600);
       const f = await form(req);
       if (action === 'voicecheck') {
