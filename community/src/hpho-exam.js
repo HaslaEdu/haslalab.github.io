@@ -513,6 +513,12 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
         const lang = DOC_LANGS.includes(f.get('lang')) ? f.get('lang') : 'ko';
         const wav = await bytesOf(f.get('audio'), VOICE_MAX_BYTES, 'audio_too_large'); if (!isWav(wav)) fail(415, 'audio_not_wav');
         if (store) await store.put(`hpho/${id}/${entry.candidate_no}/${t}-mic-voice_check.wav`, wav, { httpMetadata: { contentType: 'audio/wav' }, customMetadata: { round: id, candidate: entry.candidate_no, source: 'mic', reason: 'voice_check' } });
+        /* decided on the candidate's computer (Whisper in the page): no model call here; the recording and what was heard
+           are kept, so a person can listen to it */
+        if (f.get('local') === 'said') {
+          await serverEvent('mic_check', `said (on device) · heard: ${clean(String(f.get('heard') || ''), 100)}`, 5e9).run();
+          return { ok: true, said: true, local: true };
+        }
         const v = await voiceCheck(env, wav, lang);
         await serverEvent('mic_check', v.unavailable ? 'model unavailable' : `${v.said ? 'said' : 'not said'}${v.heard ? ' · heard: ' + v.heard : ''}`, 5e9).run();
         return v.unavailable ? { ok: true, unavailable: true } : { ok: true, said: v.said };

@@ -181,6 +181,9 @@ test('voice check: the sentence must be heard, a noise does not pass', async () 
   const down = await setup(1800, { voice: { unavailable: true } });
   assert.equal((await down.form('voicecheck', { audio: wav(), lang: 'en' })).unavailable, true);
   assert.equal(await code((await setup(3700)).form('voicecheck', { audio: wav(), lang: 'ko' })), 'check_closed');
+  /* decided on the computer: kept and recorded, no model call (the model stub here would say not said) */
+  const local = await no.form('voicecheck', { audio: wav(), lang: 'ko', local: 'said', heard: '저는 정직하게 응시하겠습니다' });
+  assert.deepEqual([local.said, local.local], [true, true]);
   assert.deepEqual(voiceVerdict({ said: true, heard: 'x\u0000y' }), { said: true, heard: 'x y' });
   assert.equal(voiceVerdict({ said: 'yes' }).unavailable, true);
 });

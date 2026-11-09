@@ -318,7 +318,7 @@
       /* recordings left on this computer by an exam that ended (the app was closed before they were settled) */
       if (s.window && nowS() >= s.window.ends && s.session) settleRecordings(k).catch(() => {}); }
   }
-  function enter(track) { st.track = track; st.error = null; st.phase = "check"; st.checks = {}; st.phoneQr = null; st.dinged = new Set(); st.scanDone = 0; st.quick = !!st.tracks[track]?.session; check(); }
+  function enter(track) { loadAsr(); st.track = track; st.error = null; st.phase = "check"; st.checks = {}; st.phoneQr = null; st.dinged = new Set(); st.scanDone = 0; st.quick = !!st.tracks[track]?.session; check(); }
   async function check() {
     const x = T[L()];
     st.checks = { net: !st.offline }; st.phase = "check"; paint();
@@ -379,7 +379,10 @@
          (a quiet microphone) but something was heard. Then the model decides; without it the level's verdict stands */
       if (m.wav && (!reason || (["quiet", "short"].includes(reason) && m.top >= 0.004))) {
         st.step = { ...st.step, cue: x.micStep[5], meter: false }; paint();
-        try { const r = await sendForm("voicecheck", { audio: m.wav, lang: L() });
+        const heard = await hearLocally(m.wav, L());
+        if (heard?.zone === "fail") reason = "not_said";
+        else try {
+          const r = await sendForm("voicecheck", { audio: m.wav, lang: L(), ...(heard?.zone === "pass" ? { local: "said", heard: heard.text } : {}) });
           reason = r.unavailable ? (reason || retry("voice")) : r.said ? null : "not_said"; }
         catch (e) { reason = reason || "failed"; }
       }
@@ -411,6 +414,39 @@
     }
     if (which.includes("ears")) st.checks.ears = true;
     return true;
+  }
+  /* the sentence heard on this computer first (Whisper, transformers.js; evaluated with recorded voices, clean and noisy:
+     whisper-base decided 20 of 24 here and was never wrong, the other 4 went to the server). The core of the sentence is
+     matched anywhere in the transcript, so what "HPhO" becomes does not matter. Clearly said: no server model call;
+     clearly not: "read the sentence"; in between, or the model could not load: the server's model listens */
+  const ASR = { lib: "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js", model: "onnx-community/whisper-base" };
+  const CORE = { ko: "정직하게응시하겠습니다", en: "willsithphohonestly" };
+  let asr = null;
+  function loadAsr() {
+    return asr ||= (async () => { const { pipeline, env } = await import(ASR.lib); env.allowLocalModels = false;
+      return pipeline("automatic-speech-recognition", ASR.model, { dtype: "q8", device: "wasm" }); })().catch(() => { asr = null; return null; });
+  }
+  const normText = (s, lang) => s.toLowerCase().normalize("NFC").replace(/[\s.,!?'"“”‘’·~\-]/g, "");
+  function similar(a, b) {
+    const m = a.length, n = b.length; if (!m || !n) return 0;
+    let prev = Array.from({ length: n + 1 }, (_, j) => j);
+    for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+    return 1 - prev[n] / Math.max(m, n);
+  }
+  function coreScore(text, lang) {
+    const t = normText(text, lang), c = CORE[lang]; let best = 0;
+    for (let len = Math.max(1, c.length - 3); len <= c.length + 3; len++) for (let i = 0; i + len <= t.length; i++) best = Math.max(best, similar(t.slice(i, i + len), c));
+    return best * (lang === "ko" ? (t.startsWith("저는") ? 1 : 0.85) : 1);
+  }
+  /* our own 16 kHz WAV back to samples */
+  async function wavSamples(blob) { const v = new DataView(await blob.arrayBuffer()), n = (v.byteLength - 44) >> 1, out = new Float32Array(n); for (let i = 0; i < n; i++) out[i] = v.getInt16(44 + i * 2, true) / 32768; return out; }
+  async function hearLocally(wav, lang) {
+    const model = await Promise.race([loadAsr(), new Promise(r => setTimeout(() => r(null), 20000))]);
+    if (!model) return null;
+    try { const r = await model(await wavSamples(wav), { language: lang === "en" ? "english" : "korean", task: "transcribe", max_new_tokens: 48 });
+      const score = coreScore(r.text || "", lang);
+      return { text: (r.text || "").trim().slice(0, 100), zone: score >= 0.8 ? "pass" : score < 0.5 ? "fail" : "unsure" }; }
+    catch (e) { return null; }
   }
   /* "ding-dong" when a check is confirmed (Monito-style): two soft tones, made here (no sound file) */
   /* and "beep-beep" when a check finds a problem or something fails (the AI did not recognise it, no answer, an error) */
