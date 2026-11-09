@@ -38,6 +38,7 @@
       rules: [
         "답안지에는 수험번호만 적습니다. 이름·학교 등 신원을 알 수 있는 정보는 적지 마세요. 적어서 생기는 불이익은 본인 책임입니다.",
         "시험 중에는 다른 사람, AI, 인터넷 검색, 교재의 도움을 받을 수 없습니다.",
+        "시계·스마트워치(종류 무관), 이어폰·헤드셋, 스마트 안경, 챙 있는 모자는 착용할 수 없습니다. 남은 시간은 시험 화면에 표시됩니다.",
         "시험은 하슬라에듀 Windows 데스크톱 앱의 감독 모드로 응시합니다. 웹캠·마이크·화면과 창 전환이 기록되며, 얼굴·화면 사진은 부정행위 검토를 위해 외부 AI 서비스(Google Gemini)로 분석될 수 있습니다.",
         "AI는 의심 장면을 표시만 하며, 실격 여부는 사람이 검토해 결정합니다. 감독 기록은 결과 확정 후 정해진 기간이 지나면 삭제됩니다.",
         "답안은 AI가 채점하고, 결과 공개 후 이의신청 기간이 있습니다. 입상 후보에게는 짧은 화상 확인을 요청할 수 있습니다.",
@@ -79,6 +80,7 @@
       rules: [
         "Write only your candidate number on the answer sheets. Do not write your name, school or anything that identifies you; anything you write is your own responsibility.",
         "No help from other people, AI, internet search or books during the exam.",
+        "No watch or smartwatch of any kind, earphones or headset, smart glasses, or brimmed cap. The time left is shown on the exam screen.",
         "The exam is sat in the proctoring mode of the HaslaEdu Windows desktop app. Your webcam, microphone, screen and window switches are recorded, and photos of your face and screen may be analysed by an external AI service (Google Gemini) for review.",
         "AI only flags moments; a person reviews every flag before any disqualification. Proctoring records are deleted a set time after results are final.",
         "Answers are marked by AI, with an appeal window after results. Prize candidates may be asked for a short video check.",
