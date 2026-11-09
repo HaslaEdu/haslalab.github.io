@@ -31,6 +31,19 @@
       placeTitle: "Stand the phone", place: "Stand the phone sideways 1–1.5 m to your side or behind you. The picture must show you (head and body), both hands, the desk top and the computer screen.", placeGo: "Check this position", placeMissing: list => `${list} cannot be seen well. Move the phone and check again.`,
       parts: { person: "you", hands: "both hands", desk: "the desk top", screen: "the computer screen" }, watchTitle: "Proctoring", watch: "Do not turn off this screen or switch apps. Keep the charger connected. It stops by itself when the exam ends.", hidden: "You left the phone proctoring screen. This is reported to the proctor." },
   };
+  /* "ding-dong" when a check is confirmed (Monito-style): two soft tones, made here (no sound file) */
+  let audio = null;
+  function ding() {
+    try {
+      audio ||= new AudioContext(); audio.resume?.();
+      const t0 = audio.currentTime;
+      for (const [f, at] of [[1046.5, 0], [784, 0.18]]) {
+        const o = audio.createOscillator(), g = audio.createGain(); o.type = "sine"; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t0 + at); g.gain.exponentialRampToValueAtTime(0.25, t0 + at + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + at + 0.45);
+        o.connect(g).connect(audio.destination); o.start(t0 + at); o.stop(t0 + at + 0.5);
+      }
+    } catch (e) {}
+  }
   let st = null;
   const api = () => (window.HL_HPHO_API || cmBase()).replace(/\/+$/, "") + "/api/hpho/phone/" + encodeURIComponent(st.code) + "/";
   const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -74,7 +87,7 @@
           st.video = Object.assign(document.createElement("video"), { muted: true, playsInline: true, autoplay: true, srcObject: s }); st.video.className = "hpho-phone-video";
           await st.video.play().catch(() => {}); for (let i = 0; i < 30 && !st.video.videoWidth; i++) await wait(100);
           try { st.lock = await navigator.wakeLock?.request("screen"); } catch (e) {}
-          st.error = null; next();
+          st.error = null; ding(); next();
         } catch (e) { st.error = x.camFail; next(); }
       });
       return;
@@ -111,6 +124,7 @@
         const fields = { view: v }; sharp.slice(0, KEEP).forEach((f, i) => { fields["f" + i] = f.blob; });
         const r = await call("scan", fields);
         st.state.scan[v] = { status: r.status, found: r.found };
+        if (["clear", "notes", "unverified"].includes(r.status)) ding();
       } catch (err) { st.msg = x.net; }
       next();
     });
@@ -126,6 +140,7 @@
         st.placeTries = (st.placeTries || 0) + 1;
         if (r.unavailable) { if (st.placeTries >= 3) st.placeAccepted = true; else st.msg = x.unavailable; }
         else if (!r.placed) st.msg = x.placeMissing(r.missing.map(k => x.parts[k]).join(", "));
+        else ding();
       } catch (err) { st.msg = x.net; }
       next();
     });
