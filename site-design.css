@@ -741,3 +741,32 @@ body.hl-site .hpho-wordmark{height:clamp(84px,14vw,128px);width:auto}
 body.hl-site .hpho-exam-icon{width:30px;height:30px;vertical-align:middle;margin-right:10px}
 body.hl-site .hpho-logo-dark,html[data-theme="dark"] body.hl-site .hpho-logo-light{display:none}
 html[data-theme="dark"] body.hl-site .hpho-logo-dark{display:inline-block}
+
+/* the HPhO exam page fills the exam window: none of the site around it */
+body.hl-site[data-site-route="hpho-exam"]>header,body.hl-site[data-site-route="hpho-exam"]>footer,
+body.hl-site[data-site-route="hpho-exam"] .hlai-btn,body.hl-site[data-site-route="hpho-exam"] .hlai-panel,
+body.hl-site[data-site-route="hpho-exam"] .adfit-side,body.hl-site[data-site-route="hpho-exam"] .adfit-banner,
+body.hl-site[data-site-route="hpho-exam"] #haslalab-adfit-banner,body.hl-site[data-site-route="hpho-exam"] .rail,
+body.hl-site[data-site-route="hpho-exam"] .hlx-notice{display:none!important}
+/* the technical check: a larger preview, the step's instructions and a sound meter */
+body.hl-site .hpho-check-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+body.hl-site .hpho-check-grid{display:grid;grid-template-columns:minmax(260px,400px) minmax(0,1fr);gap:24px 56px;align-items:start;margin-top:12px}
+body.hl-site .hpho-check-grid .hpho-checks{margin:0;max-width:none}
+body.hl-site .hpho-check-side{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(240px,1fr);grid-auto-rows:min-content;gap:14px 20px;min-width:0;align-items:start}
+body.hl-site .hpho-check-media,body.hl-site .hpho-check-info{display:grid;gap:14px;min-width:0;align-content:start}
+body.hl-site .hpho-check-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;margin:0;min-height:40px}
+body.hl-site .hpho-self-slot{position:relative;aspect-ratio:4/3;border-radius:12px;background:#0f0d16;overflow:hidden;display:grid;place-items:center;color:#a49cb8;font-size:14px}
+body.hl-site .hpho-self-slot .hpho-self{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0}
+body.hl-site .hpho-check-side .hpho-step{margin:0;max-width:none}
+body.hl-site .hpho-check-problem{padding:12px 14px;border:1px solid #f0c4bf;border-radius:10px;background:#fdf3f2}
+body.hl-site .hpho-check-problem .hpho-form-msg{margin:0}
+html[data-theme="dark"] body.hl-site .hpho-check-problem{background:#2a1716;border-color:#6b2f2a}
+@media (max-width:1180px){body.hl-site .hpho-check-side{grid-template-columns:1fr}body.hl-site .hpho-check-grid{column-gap:32px}}
+@media (max-width:860px){body.hl-site .hpho-check-grid{grid-template-columns:1fr}}
+body.hl-site .hpho-step{margin:16px 0 0;padding:14px 16px;max-width:520px;border:1px solid #7059a4;border-radius:10px;background:#f6f3fb}
+body.hl-site .hpho-step h3{margin:0 0 6px;font-size:16px}body.hl-site .hpho-step p{margin:6px 0}
+body.hl-site .hpho-step-quote{font-size:18px;font-weight:600}
+body.hl-site .hpho-meter{height:10px;border-radius:5px;background:#e3deee;overflow:hidden;margin:10px 0}
+body.hl-site .hpho-meter i{display:block;height:100%;width:0;background:#1d7a3e;transition:width .1s linear}
+html[data-theme="dark"] body.hl-site .hpho-step{background:#1d1828;border-color:#5b4a85}
+html[data-theme="dark"] body.hl-site .hpho-meter{background:#2b2540}

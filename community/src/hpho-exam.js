@@ -4,6 +4,8 @@
      POST /api/hpho/rounds/:id/exam/events   up to 100 events per call; every call is a heartbeat
      POST /api/hpho/rounds/:id/exam/end      the candidate finishes early (the clock ends it otherwise)
      POST /api/hpho/rounds/:id/exam/snap     a webcam or screen snapshot (multipart: image, source, reason), kept in R2
+     POST /api/hpho/rounds/:id/exam/earcheck the technical check's ear photos (multipart: first, second), from an hour before
+                                             the start: an AI model says whether anything is worn in or on each ear
      GET  /api/hpho/rounds/:id/exam/state    the caller's own session
      GET  /api/hpho/rounds/:id/exam/log?candidate=HP271-0042   admin: one candidate's session and events
    Like MIPT's online rounds, answer photos are uploaded during an hour after the exam (UPLOAD_MIN), not during it.
@@ -18,7 +20,35 @@ const isJpeg = b => b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0
 export const HEARTBEAT_GAP = 45;           /* seconds without a call before the next call records a gap */
 export const EXAM_EVENTS = ['heartbeat', 'window_ready', 'focus_lost', 'focus_back', 'display_change', 'screen_locked', 'screen_unlocked',
   'suspend', 'resume', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'network_back', 'page_hidden', 'page_visible',
-  'camera_started', 'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'process_new', 'process_list', 'clip_saved', 'snapshot_saved'];
+  'camera_started', 'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'process_new', 'process_list', 'clip_saved', 'snapshot_saved',
+  'face_check', 'mic_check', 'ear_check'];
+export const EARCHECK_EARLY = 3600;        /* the ear check opens an hour before the start, with the technical check */
+const EAR_VERDICTS = ['clear', 'device', 'unclear'];
+const EAR_PROMPT = `These are two webcam photos of an exam candidate, taken during the technical check before an online physics exam: in the first the head is turned to show one ear, in the second the other ear.
+For each photo decide whether anything is worn in, on or over the visible ear: earbuds, earphones, headphones, a headset, a hearing device, or a wire leading to the ear.
+Earrings, ear piercings and glasses are not devices. Use "unclear" when the ear itself cannot be seen (hair, angle, blur, too dark) or there is no person.
+Reply with JSON only: {"first":"clear"|"device"|"unclear","second":"clear"|"device"|"unclear","note":"at most 15 words, in English"}`;
+/* the default ear model: Gemini, with the two photos inline. { unavailable: true } when it cannot answer, so the check never
+   blocks a candidate because the model is down (the photos are kept and the result is recorded either way) */
+export async function geminiEarVision(env, first, second) {
+  if (!env.GEMINI_API_KEY) return { unavailable: true };
+  const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(s); };
+  try {
+    const model = env.HPHO_VISION_MODEL || env.GEMINI_MODEL || 'gemini-flash-lite-latest';
+    const r = await fetch(`${env.GEMINI_BASE || 'https://generativelanguage.googleapis.com/v1beta/models'}/${model}:generateContent`, {
+      method: 'POST', signal: AbortSignal.timeout(30000), headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
+      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ inline_data: { mime_type: 'image/jpeg', data: b64(first) } }, { inline_data: { mime_type: 'image/jpeg', data: b64(second) } }, { text: EAR_PROMPT }] }],
+        generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens: 200 } }) });
+    if (!r.ok) return { unavailable: true };
+    const j = await r.json(), raw = (j.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('');
+    return earVerdict(JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')));
+  } catch { return { unavailable: true }; }
+}
+/* the model's answer, reduced to the two verdicts and a short note */
+export function earVerdict(v) {
+  if (!v || !EAR_VERDICTS.includes(v.first) || !EAR_VERDICTS.includes(v.second)) return { unavailable: true };
+  return { first: v.first, second: v.second, note: typeof v.note === 'string' ? v.note.replace(/[\u0000-\u001f]/g, ' ').slice(0, 120) : '' };
+}
 const now = () => Math.floor(Date.now() / 1000);
 
 export const HPHO_EXAM_SCHEMA = [
@@ -52,10 +82,10 @@ export function checkEvents(list) {
 }
 export const examWindow = r => ({ opens: r.start_at, ends: r.start_at + r.duration_min * 60, upload_until: r.start_at + r.duration_min * 60 + UPLOAD_MIN * 60 });
 
-export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB }) {
+export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB, earVision = geminiEarVision }) {
   const fail = (status, code) => { throw new HttpError(status, code); };
   return async function exam(p, m, body, me, env, url, req) {
-    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(start|events|end|state|log|snap)$/.exec(p);
+    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(start|events|end|state|log|snap|earcheck)$/.exec(p);
     if (!r) return undefined;
     const [, id, action] = r, db = scope(env);
     needUser(me); await ensureHphoExam(db);
@@ -73,6 +103,30 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     const session = await db.prepare('SELECT * FROM hpho_sessions WHERE round_id=? AND user_id=?').bind(id, me.id).first();
     if (action === 'state' && m === 'GET') return { window: w, now: t, session: session && { started_at: session.started_at, ends_at: session.ends_at, ended_at: session.ended_at, candidate_no: session.candidate_no } };
     if (m !== 'POST') fail(405, 'method_not_allowed');
+    if (action === 'earcheck') {
+      const entry = await db.prepare('SELECT candidate_no FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).first();
+      if (!entry) fail(403, 'not_registered');
+      if (t < w.opens - EARCHECK_EARLY || t >= w.ends) fail(409, 'check_closed');
+      await limit(env, 'hpho-ear:' + me.id, 8, 600);
+      let form; try { form = await req.formData(); } catch { fail(400, 'bad_snapshot'); }
+      const shots = [];
+      for (const name of ['first', 'second']) {
+        const file = form.get(name);
+        if (!file || typeof file.arrayBuffer !== 'function') fail(400, 'bad_snapshot');
+        if (file.size > SNAP_MAX_BYTES * 2) fail(413, 'snapshot_too_large');
+        const bytes = new Uint8Array(await file.arrayBuffer()); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg');
+        shots.push(bytes);
+      }
+      const store = env.HPHO_SNAPS || env.LAB_PAGES;
+      if (store) for (const [i, bytes] of shots.entries())
+        await store.put(`hpho/${id}/${entry.candidate_no}/${t}-earcheck-${i ? 'second' : 'first'}.jpg`, bytes, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: id, candidate: entry.candidate_no, source: 'webcam', reason: 'ear_check' } });
+      const v = await earVision(env, shots[0], shots[1]);
+      const detail = v.unavailable ? 'model unavailable' : `first=${v.first} second=${v.second}${v.note ? ' · ' + v.note : ''}`;
+      /* recorded by the server, before any session exists (seq below every client seq and every server gap mark) */
+      await db.prepare(`INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail) VALUES(?,?,?,NULL,?,'ear_check',?)`)
+        .bind(id, me.id, -(4e9 + t), t, detail.slice(0, 200)).run();
+      return v.unavailable ? { ok: true, unavailable: true } : { ok: true, first: v.first, second: v.second };
+    }
     if (action === 'start') {
       const entry = await db.prepare('SELECT candidate_no FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).first();
       if (!entry) fail(403, 'not_registered');

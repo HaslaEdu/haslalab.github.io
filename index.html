@@ -1015,7 +1015,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=d18ebee09661">
+<link rel="stylesheet" href="site-design.css?v=41d619f8e18e">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=9afa7e19caab">
 </head>
@@ -1166,9 +1166,9 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=7385ce7c7606"></script>
-<script src="hpho.js?v=820edcdb6a82"></script>
-<script src="hpho-proctor.js?v=5fb1d00b4a5c"></script>
-<script src="hpho-exam.js?v=3f6af6eb1f00"></script>
+<script src="hpho.js?v=d0ecf6dc2170"></script>
+<script src="hpho-proctor.js?v=2b2c31d3d05d"></script>
+<script src="hpho-exam.js?v=a6640af296fc"></script>
 <script src="site-ux.js?v=e94c70468260"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="ai-chat.js?v=3cfdb03f8e1d"></script>
@@ -10147,13 +10147,16 @@ function render(){
   else if(first && DATA[first] && !compShown(first)){ const to="#/comps/"+subjOf(first); try{history.replaceState(null,"",to);}catch(e){location.hash=to;return;} return render(); }
   else if(first && DATA[first]){  html=second==="exam"||second==="review"?viewComp(first,studyMode):second?viewYear(first,second,studyMode):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
-  document.body.dataset.siteRoute=active==="comps"?"archive":active;
+  /* the HPhO exam page is the whole window: no site header, footer, ads or assistant */
+  const examPage=first==="hpho"&&second==="exam";
+  document.body.dataset.siteRoute=examPage?"hpho-exam":active==="comps"?"archive":active;
+  if(!examPage)document.body.classList.remove("hpho-checking");
   document.getElementById("view").innerHTML=html;
   document.documentElement.lang = lang;
   setDocTitle(first, second);
 
   paintPageChrome(active);
-  mountHaslaAdFit();
+  if(!examPage)mountHaslaAdFit();
   if(window.HL_UX) HL_UX.afterRender(first, second);
   if(first==="hpho"&&second==="exam"&&window.HL_HPHO_EXAM) HL_HPHO_EXAM.mount();
   else if(first==="hpho"&&window.HL_HPHO) HL_HPHO.mount();
