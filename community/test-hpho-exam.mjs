@@ -29,9 +29,9 @@ const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]), PDF = new TextEn
 function wav() { const b = new Uint8Array(64); b.set(new TextEncoder().encode('RIFF'), 0); b.set(new TextEncoder().encode('WAVE'), 8); return b; }
 
 /* a round whose theory exam starts `theory` seconds from now and whose experiment starts a day later */
-async function setup(theory, { voice = { said: true }, ear = { verdicts: ['clear', 'clear', 'clear'] }, room = { found: [], unclear: false }, view = () => ({ covered: true, found: [] }), place = { ok: true, missing: [] } } = {}) {
+async function setup(theory, { voice = { said: true }, ear = { verdicts: ['clear', 'clear', 'clear'] }, room = { found: [], unclear: false }, view = () => ({ covered: true, found: [] }), place = { ok: true, missing: [] }, glass = { smart: false, clear: true } } = {}) {
   const { sql, DB } = d1(), store = r2(), env = { DB, HPHO_SNAPS: store }, t = Math.floor(Date.now() / 1000);
-  const reg = createHphoRouter(deps), exam = createHphoExamRouter({ ...deps, voiceCheck: async () => voice, earVision: async () => ear, roomScan: async () => room, phoneView: async (_e, v) => view(v), placement: async () => place });
+  const reg = createHphoRouter(deps), exam = createHphoExamRouter({ ...deps, voiceCheck: async () => voice, earVision: async () => ear, glassCheck: async () => glass, roomScan: async () => room, phoneView: async (_e, v) => view(v), placement: async () => place });
   await reg('/api/hpho/rounds/2027-1', 'POST', { title_ko: 'a', title_en: 'a', reg_open: t - 7200, reg_close: t + 3600, theory_at: t + 7200, experiment_at: t + 7200 + 86400, fee_usd: 0, status: 'open' }, admin, env);
   await reg('/api/hpho/rounds/2027-1/entry', 'POST', entry, student, env);
   sql.prepare('UPDATE hpho_rounds SET theory_at=?,start_at=?,experiment_at=?').run(t + theory, t + theory, t + theory + 86400);
@@ -195,9 +195,11 @@ test('ear check: the front and both ears; a headset in any photo stops the candi
   const f = await setup(1800, { ear: { verdicts: ['device', 'clear', 'unclear'] } });
   assert.equal((await f.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'device');
   assert.equal(earVerdict({ verdicts: ['clear', 'maybe', 'clear'] }, 3).unavailable, true);
-  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], wrists: true, cap: false, watch: false, glasses: 'none', note: 'a b' });
-  const glasses = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], glasses: 'smart' } });
-  assert.equal((await glasses.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'glasses');
+  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], ears_covered: false, wrists: true, cap: false, watch: false, glasses: 'none', note: 'a b' });
+  const glasses = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], glasses: 'check' } });
+  assert.equal((await glasses.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'glasses_check', 'thick glasses: shown up close next');
+  const beanie = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], ears_covered: true } });
+  assert.equal((await beanie.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'covered', 'a beanie over the ears: lift it');
   const wrists = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], wrists: false } });
   assert.equal((await wrists.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'wrists', 'hands not raised: no pass');
   const cap = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], cap: true } });
@@ -330,4 +332,11 @@ test('the phone: paired by a QR code, scans the room view by view, then stands w
   assert.equal(await code(f.phone(c, 'state')), 'phone_not_found');
   assert.equal((await f.phone(again.code, 'state')).scanned, true, 'the scan stays with the seat');
   assert.deepEqual(viewVerdict({ covered: false, person: false, phone: false, screen: false, headset: false, notes: false }).covered, false);
+});
+
+test('glasses shown up close: smart ones stop the candidate', async () => {
+  const f = await setup(1800, { glass: { smart: true, clear: true } });
+  assert.equal((await f.form('glasscheck', { front: JPEG, inside: JPEG })).smart, true);
+  const g = await setup(1800);
+  assert.deepEqual(await g.form('glasscheck', { front: JPEG, inside: JPEG }), { ok: true, smart: false, clear: true });
 });

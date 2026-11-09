@@ -166,41 +166,58 @@
     } catch (e) { return null; }
   }
   /* the two ear photos: the head turned to one side, then to the other (step(name) tells the page what to say) */
+  /* the ear, head and wrist check, as a procedure where nothing is photographed until this computer has recognised the
+     pose (no fallback: without the face and hand trackers the step stops). step(name, info) tells the page what to show;
+     info is the live state (face seen, hands up, how long held, how far the head is turned).
+       front  one face, in the middle; two hands raised to face height, one on each side of the face, wrists in the
+              picture; held 0.7 s
+       first  the head turned (either way) until an ear faces the camera; held 0.5 s
+       second the head turned the other way; held 0.5 s
+     The photos then go to the server's model (earphones, a headset, a cap, a beanie over the ears, a watch, glasses). */
   async function earShots(step) {
-    const v = await selfVideo(); if (!v) return null;
-    if (!p.det) p.det = await detectors();
+    const v = await selfVideo(); if (!v) return { error: "detector" };
+    for (let i = 0; i < 3 && !p.det; i++) p.det = await detectors();
+    let ht = null; for (let i = 0; i < 3 && !ht; i++) ht = await Promise.race([handTracker(), wait(15000).then(() => null)]);
+    if (!p.det || !ht) return { error: "detector" };
     const shot = () => { const c = document.createElement("canvas"), k = Math.min(1, 640 / v.videoWidth); c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
       c.getContext("2d").drawImage(v, 0, 0, c.width, c.height); return new Promise(res => c.toBlob(res, "image/jpeg", 0.85)); };
-    /* a turn of the head held for half a second, within ten seconds; no turn, no photo (the step stops: "turn further") */
-    const turned = async (sign) => {
-      if (!p.det) { await wait(3000); return { side: sign, blob: await shot() }; }
-      let held = 0, side = sign;
-      for (let i = 0; i < 100; i++) {
-        await wait(100);
-        const y = yaw(v);
-        if (y !== null && Math.abs(y) > 0.35 && (sign === 0 || Math.sign(y) === sign)) { side = Math.sign(y); if (++held >= 5) return { side, blob: await shot() }; } else held = 0;
-      }
-      return null;
-    };
-    /* the front with both hands raised beside the face, palms and wrists showing: the hand tracker must see two hands up
-       at face height for half a second, within fifteen seconds */
+    const face = () => { try { const d = p.det.face.detectForVideo(v, performance.now()).detections; if (d.length !== 1) return { n: d.length };
+      const b = d[0].boundingBox, W = v.videoWidth, H = v.videoHeight; return { n: 1, cx: (b.originX + b.width / 2) / W, top: b.originY / H, bottom: (b.originY + b.height) / H, w: b.width / W }; } catch (e) { return { n: 0 }; } };
+    /* both hands up, one each side of the face, palms at face height, wrists in the picture */
     const raised = async () => {
-      const ht = await Promise.race([handTracker(), wait(8000).then(() => null)]);
-      if (!ht) { await wait(3000); return shot(); }                  /* no tracker: the photo, and the server's model judges */
       let held = 0;
-      for (let i = 0; i < 150; i++) {
+      for (let i = 0; i < 200; i++) {
         await wait(100);
-        let r; try { r = ht.detectForVideo(v, performance.now()); } catch (e) { continue; }
-        const up = (r.landmarks || []).filter(h => h[0].y < 0.9 && (h[9].y < 0.62));    /* wrist in the picture, the palm's middle high */
-        if (up.length >= 2) { if (++held >= 5) return shot(); } else held = 0;
+        const f = face(); let r; try { r = ht.detectForVideo(v, performance.now()); } catch (e) { continue; }
+        const lm = r.landmarks || []; p.handsOverlay = lm;
+        const faceOk = f.n === 1 && Math.abs(f.cx - 0.5) < 0.28 && f.w >= 0.12;
+        const up = faceOk ? lm.filter(h => h[0].y > 0 && h[0].y < 0.97 && h[9].y < f.bottom + 0.12 && h[9].y > f.top - 0.35) : [];
+        const sides = new Set(up.map(h => Math.sign(h[9].x - f.cx)));
+        const ok = faceOk && up.length >= 2 && sides.size === 2;
+        held = ok ? held + 1 : 0;
+        step("front", { face: faceOk, faces: f.n, hands: Math.min(2, up.length), hold: Math.min(1, held / 7) });
+        if (held >= 7) { const b = await shot(); p.handsOverlay = null; return b; }
+      }
+      p.handsOverlay = null; return null;
+    };
+    /* the head turned until an ear faces the camera (the nose against the eyes, BlazeFace keypoints) */
+    const turned = async (name, sign) => {
+      let held = 0;
+      for (let i = 0; i < 120; i++) {
+        await wait(100);
+        const y = yaw(v), want = sign === 0 ? Math.abs(y ?? 0) : (y ?? 0) * sign;
+        const ok = y !== null && want > 0.35;
+        held = ok ? held + 1 : 0;
+        step(name, { turn: Math.max(0, Math.min(1, want / 0.35)), hold: Math.min(1, held / 5), face: y !== null });
+        if (held >= 5) return { side: Math.sign(y), blob: await shot() };
       }
       return null;
     };
     step("front"); const front = await raised(); if (!front) { step("stop"); return { error: "hands" }; }
-    step("first"); const a = await turned(0); if (!a) { step("stop"); return { error: "turn" }; }
-    step("second"); const b = await turned(-a.side || 0); if (!b) { step("stop"); return { error: "turn" }; }
+    step("first"); const a = await turned("first", 0); if (!a) { step("stop"); return { error: "turn" }; }
+    step("second"); const b = await turned("second", -a.side); if (!b) { step("stop"); return { error: "turn" }; }
     step("done");
-    return a.blob && b.blob ? { front, first: a.blob, second: b.blob } : null;
+    return { front, first: a.blob, second: b.blob };
   }
   /* the room scan: the webcam (or the laptop) turned to each view in turn, a still of each and a video of the whole of it.
      step(view, secondsLeft) tells the page what to show */
@@ -264,6 +281,10 @@
         g.fillStyle = g.strokeStyle; for (const k of (f.keypoints || []).slice(0, 6)) { g.beginPath(); g.arc(k.x * W, k.y * H, Math.max(2.5, W / 220), 0, 7); g.fill(); }
       }
       slot.dataset.face = d.length === 0 ? "none" : many ? "many" : "one";
+      for (const h of p.handsOverlay || []) { g.fillStyle = g.strokeStyle = "#4da3ff"; g.lineWidth = Math.max(2, W / 260);
+        for (const [i, j] of [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [5, 9], [9, 10], [10, 11], [11, 12], [9, 13], [13, 14], [14, 15], [15, 16], [13, 17], [0, 17], [17, 18], [18, 19], [19, 20]]) {
+          g.beginPath(); g.moveTo(h[i].x * W, h[i].y * H); g.lineTo(h[j].x * W, h[j].y * H); g.stroke(); }
+        g.beginPath(); g.arc(h[0].x * W, h[0].y * H, Math.max(5, W / 90), 0, 7); g.fill(); }
     };
     requestAnimationFrame(loop);
   }
@@ -379,5 +400,9 @@
   }
   /* counters only (no image, no stream), for the page's own status line and for tests */
   const stats = () => p ? { alive: !!p.alive, detector: !!p.det, faces: p.faces ?? null, errors: p.errors || 0, lastError: p.lastError || null, since: { ...(p.since || {}) } } : null;
-  window.HL_HPHO_PROCTOR = { check, shareScreen, dock, faceCheck, micCheck, earShots, roomScan, start, snap, stop, stats, pace, still, wav16k, SCAN };
+  /* a still of the camera at its full size (glasses held up close) */
+  async function closeUp() { const v = await selfVideo(); if (!v) return null;
+    const c = document.createElement("canvas"), k = Math.min(1, 1280 / v.videoWidth); c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
+    c.getContext("2d").drawImage(v, 0, 0, c.width, c.height); return new Promise(res => c.toBlob(res, "image/jpeg", 0.9)); }
+  window.HL_HPHO_PROCTOR = { check, closeUp, shareScreen, dock, faceCheck, micCheck, earShots, roomScan, start, snap, stop, stats, pace, still, wav16k, SCAN };
 })();

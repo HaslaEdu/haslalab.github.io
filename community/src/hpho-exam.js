@@ -14,6 +14,7 @@
      POST snap                  a webcam or screen snapshot (multipart: image, source, reason), kept in R2
      POST earcheck              the technical check's ear photos (multipart: first, second): worn in or on the ears?
      POST voicecheck            the technical check's spoken sentence (multipart: audio WAV, lang): was it said?
+     POST glasscheck            glasses that might be smart, held to the camera (multipart: front, inside): camera, speaker, light?
      POST roomscan              the room scan's stills (multipart: front, left, right, back, ceiling, desk, under):
                                 another person, a phone, another screen, a headset, notes?
      POST keep                  at the end: is this seat flagged? only then the recordings come to the server
@@ -95,9 +96,19 @@ const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, take
 Decide whether the candidate wears anything in, on or over the ears or head that could carry sound: earbuds, in-ear earphones, headphones, an over-ear or on-ear headset (also the headband over the head), a hearing device, or a wire leading to an ear. A headset seen in any photo counts, even if an ear is hidden.
 Earrings, ear piercings, hair clips and glasses are not devices. Use "unclear" for a photo in which neither the ear nor anything over it can be seen (hair, angle, blur, too dark) or there is no person.
 "wrists" is true only if both wrists can be clearly seen in the first photo (hands raised beside the face).
+"ears_covered" is true if a hat, beanie, hood, headband or hair covers an ear in the ear photos (the ear itself must be seen).
 Also: "cap" is true if the candidate wears a cap or a hat with a brim (a baseball cap, a bucket hat, a sun hat), which can hide the eyes; a beanie or a hat without a brim is fine. "watch" is true if a smartwatch, fitness band or any watch is on a visible wrist.
-"glasses": "none" if no glasses; "regular" for ordinary glasses; "smart" if they may be smart glasses (a camera lens or dot at a corner of the frame, an LED, unusually thick temples with a speaker or touch pad near the ear, a display in a lens).
-Reply with JSON only, plain text in the note (no escape sequences): {"verdicts":[${Array.from({ length: n }, () => '"clear"|"device"|"unclear"').join(',')}],"wrists":bool,"cap":bool,"watch":bool,"glasses":"none"|"regular"|"smart","note":"at most 15 words, in English"}`;
+"glasses": "none" if no glasses; "regular" for thin ordinary glasses; "check" if they could be smart glasses and should be shown up close (thick frames or temples, a dot or lens at a corner of the frame, an LED, a bulge near the ear, a display in a lens).
+Reply with JSON only, plain text in the note (no escape sequences): {"verdicts":[${Array.from({ length: n }, () => '"clear"|"device"|"unclear"').join(',')}],"ears_covered":bool,"wrists":bool,"cap":bool,"watch":bool,"glasses":"none"|"regular"|"check","note":"at most 15 words, in English"}`;
+const GLASS_PROMPT = `These two close-up webcam photos show a candidate's glasses, taken off and held to the camera before an online exam: the first from the front (lenses and frame corners), the second the inside of the temples.
+"smart" is true if they are or may be smart glasses: a camera lens or pinhole at a frame corner or the bridge, an LED, speaker grilles or touch pads on the temples, a charging contact, a display or projector in a lens, a brand such as Ray-Ban Meta, Xreal, Even Realities, Brilliant Labs. "clear_view" is false if the glasses are not seen well enough to judge.
+Reply with JSON only: {"smart":bool,"clear_view":bool,"note":"at most 15 words, in English"}`;
+export async function geminiGlassCheck(env, front, inside) {
+  if (!env.GEMINI_API_KEY) return { unavailable: true };
+  try { const v = await gemini(env, [{ inline_data: { mime_type: 'image/jpeg', data: b64(front) } }, { inline_data: { mime_type: 'image/jpeg', data: b64(inside) } }, { text: GLASS_PROMPT }]);
+    return v && typeof v.smart === 'boolean' ? { smart: v.smart, clear: v.clear_view !== false, note: clean(v.note, 120) } : { unavailable: true }; }
+  catch { return { unavailable: true }; }
+}
 const VIEW_NAMES = { room: 'the whole room, all the way round (a 360° turn at eye height)', desk: 'the whole desk top, including the sides and back of the monitor and around the keyboard',
   under: 'under the desk and the floor around the chair', ceiling: 'the ceiling' };
 const VIEW_PROMPT = view => `These ${PHONE_FRAMES} or fewer frames come from a phone camera turned slowly during the room scan before an online physics exam. This part of the scan should show ${VIEW_NAMES[view]}.
@@ -152,7 +163,7 @@ const clean = (v, n) => typeof v === 'string' ? v.replace(/[\u0000-\u001f]/g, ' 
 export function earVerdict(v, n = 2) {
   const list = Array.isArray(v?.verdicts) ? v.verdicts : [v?.first, v?.second];
   if (!v || list.length !== n || !list.every(x => EAR_VERDICTS.includes(x))) return { unavailable: true };
-  return { verdicts: list, wrists: v.wrists !== false, cap: v.cap === true, watch: v.watch === true, glasses: ['regular', 'smart'].includes(v.glasses) ? v.glasses : 'none', note: clean(v.note, 120) };
+  return { verdicts: list, ears_covered: v.ears_covered === true, wrists: v.wrists !== false, cap: v.cap === true, watch: v.watch === true, glasses: ['regular', 'check', 'smart'].includes(v.glasses) ? v.glasses : 'none', note: clean(v.note, 120) };
 }
 /* the room scan's stills, judged together */
 export async function geminiRoomScan(env, stills) {
@@ -333,7 +344,7 @@ export const ALERTS = ['focus_lost', 'display_change', 'screen_locked', 'suspend
 const sha256 = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
 const phoneState = (ph, t) => ph && { paired: !!ph.last_beat, online: !!ph.last_beat && t - ph.last_beat < PHONE_ONLINE, placed: !!ph.placed, place_note: ph.place_note,
   scan: JSON.parse(ph.scan || '{}'), scanned: PHONE_VIEWS.every(v => ['clear', 'notes', 'unverified'].includes(JSON.parse(ph.scan || '{}')[v]?.status)) };
-export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB, earVision = geminiEarVision, voiceCheck = geminiVoiceCheck, roomScan = geminiRoomScan, phoneView = geminiPhoneView, placement = geminiPlacement }) {
+export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB, earVision = geminiEarVision, voiceCheck = geminiVoiceCheck, glassCheck = geminiGlassCheck, roomScan = geminiRoomScan, phoneView = geminiPhoneView, placement = geminiPlacement }) {
   const fail = (status, code) => { throw new HttpError(status, code); };
   const form = async req => { try { return await req.formData(); } catch { fail(400, 'bad_upload'); } };
   const bytesOf = async (file, max, tooLarge = 'upload_too_large') => {
@@ -404,7 +415,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
   return async function exam(p, m, body, me, env, url, req) {
     const phone = /^\/api\/hpho\/phone\/([^/]+)\/(state|scan|place|snap|beat)$/.exec(p);
     if (phone) return phoneRoute(phone[1], phone[2], m, env, req, url?.searchParams?.get('d'));
-    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(?:(theory|experiment)\/)?(state|checkin|lang|start|events|snap|earcheck|voicecheck|roomscan|phone|keep|clip|docs|doc|answer|submit|upload|seats|monitor|log|media|verdict|retain)$/.exec(p);
+    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(?:(theory|experiment)\/)?(state|checkin|lang|start|events|snap|earcheck|voicecheck|glasscheck|roomscan|phone|keep|clip|docs|doc|answer|submit|upload|seats|monitor|log|media|verdict|retain)$/.exec(p);
     if (!r) return undefined;
     const [, id, track = 'theory', action] = r, db = scope(env), admin = isAdmin(me);
     needUser(me); await ensureHphoExam(db);
@@ -520,7 +531,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     if (m !== 'POST') fail(405, 'method_not_allowed');
     if (!entry) fail(403, 'not_registered');
 
-    if (['earcheck', 'voicecheck', 'roomscan'].includes(action)) {
+    if (['earcheck', 'voicecheck', 'glasscheck', 'roomscan'].includes(action)) {
       if (t < w.start_at - EARCHECK_EARLY || t >= w.ends) fail(409, 'check_closed');
       await limit(env, `hpho-${action}:` + me.id, 8, 600);
       const f = await form(req);
@@ -540,6 +551,13 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       }
       const still = async name => { const bytes = await bytesOf(f.get(name), SNAP_MAX_BYTES * 2, 'snapshot_too_large'); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg'); return bytes; };
       const keep = (bytes, name, reason) => store?.put(`hpho/${id}/${entry.candidate_no}/${t}-${reason === 'room_scan' ? 'roomscan' : 'earcheck'}-${name}.jpg`, bytes, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: id, candidate: entry.candidate_no, source: 'webcam', reason } });
+      if (action === 'glasscheck') {
+        const front = await still('front'), inside = await still('inside');
+        await keep(front, 'glasses-front', 'ear_check'); await keep(inside, 'glasses-inside', 'ear_check');
+        const v = await glassCheck(env, front, inside);
+        await serverEvent('ear_check', v.unavailable ? 'glasses: model unavailable' : v.smart ? `glasses: smart${v.note ? ' · ' + v.note : ''}` : v.clear ? `clear (glasses shown, ordinary)${v.note ? ' · ' + v.note : ''}` : 'glasses: unclear', 4e9 + 1).run();
+        return v.unavailable ? { ok: true, unavailable: true } : { ok: true, smart: v.smart, clear: v.clear };
+      }
       if (action === 'roomscan') {
         const stills = [];
         for (const v of SCAN_VIEWS) { const b = await still(v); stills.push(b); await keep(b, v, 'room_scan'); }
@@ -551,7 +569,8 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       const names = f.get('front') ? ['front', 'first', 'second'] : ['first', 'second'], shots = [];
       for (const n of names) { const b = await still(n); shots.push(b); await keep(b, n, 'ear_check'); }
       const v = await earVision(env, ...shots);
-      const verdict = v.unavailable ? null : v.verdicts.includes('device') ? 'device' : v.glasses === 'smart' ? 'glasses' : v.watch ? 'watch' : v.cap ? 'cap' : shots.length === 3 && v.wrists === false ? 'wrists' : v.verdicts.includes('unclear') ? 'unclear' : 'clear';
+      /* glasses that might be smart are not a fail yet: the page asks to see them up close (glasscheck) */
+      const verdict = v.unavailable ? null : v.verdicts.includes('device') ? 'device' : v.ears_covered ? 'covered' : v.watch ? 'watch' : v.cap ? 'cap' : shots.length === 3 && v.wrists === false ? 'wrists' : v.verdicts.includes('unclear') ? 'unclear' : ['check', 'smart'].includes(v.glasses) ? 'glasses_check' : 'clear';
       /* recorded by the server (seq below every client seq and every server gap mark) */
       await serverEvent('ear_check', v.unavailable ? 'model unavailable' : `${verdict} (${v.verdicts.join(',')})${v.note ? ' · ' + v.note : ''}`, 4e9).run();
       return v.unavailable ? { ok: true, unavailable: true } : { ok: true, verdict, verdicts: v.verdicts };
