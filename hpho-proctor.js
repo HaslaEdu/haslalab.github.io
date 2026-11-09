@@ -35,14 +35,16 @@
     const out = { camera: false, mic: false, screen: false, system: false, detector: false };
     if (live(p?.cam)) { out.camera = p.cam.getVideoTracks().length > 0; out.mic = p.cam.getAudioTracks().length > 0; }
     else try {
-      const cam = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: "user" }, audio: { echoCancellation: false, noiseSuppression: false } });
+      const cam = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, frameRate: { ideal: 15, max: 15 }, facingMode: "user" }, audio: { echoCancellation: false, noiseSuppression: false } });
       out.camera = cam.getVideoTracks().length > 0; out.mic = cam.getAudioTracks().length > 0;
       p = { ...(p || {}), cam };
     } catch (e) { out.error = e?.name || "camera"; }
     if (live(p?.scr)) { out.screen = true; out.system = p.scr.getAudioTracks().length > 0; }
     else try {
       /* the screen and the computer's own sound together (the desktop app answers with the primary display and loopback) */
-      const scr = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 1 }, audio: true }); p = { ...(p || {}), scr };
+      const scr = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 2 }, audio: true }); p = { ...(p || {}), scr };
+      /* the screen is text: keep its sharpness, let the frame rate give (the encoder keeps detail over motion) */
+      scr.getVideoTracks().forEach(t => { try { t.contentHint = "text"; } catch (e) {} });
       out.system = scr.getAudioTracks().length > 0;
       /* a recording counts once a frame of it has arrived */
       const v = Object.assign(document.createElement("video"), { muted: true, playsInline: true, srcObject: scr }); v.play?.().catch(() => {});
@@ -204,9 +206,9 @@
     const v = stream === p.cam ? document.getElementById("hphoSelf") : (p.scrVideo ||= Object.assign(document.createElement("video"), { muted: true, srcObject: stream }));
     if (v !== document.getElementById("hphoSelf")) v.play?.().catch(() => {});
     if (!v.videoWidth) return null;
-    const c = document.createElement("canvas"), k = width / v.videoWidth; c.width = width; c.height = Math.round(v.videoHeight * k);
+    const k = Math.min(1, width / v.videoWidth), c = document.createElement("canvas"); c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k);
     c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
-    return new Promise(res => c.toBlob(res, "image/jpeg", 0.6));
+    return new Promise(res => c.toBlob(res, "image/jpeg", 0.85));
   }
 
   /* start watching: events go to onEvent(kind, detail), snapshots to upload(blob, source, reason) */
@@ -251,13 +253,22 @@
   }
   /* a full-size still from the webcam (an answer page held up to it), JPEG */
   async function still() {
-    const v = document.getElementById("hphoSelf"); if (!v?.videoWidth) return null;
+    const v = document.getElementById("hphoSelf"), track = p?.cam?.getVideoTracks()[0]; if (!v?.videoWidth || !track) return null;
+    /* the camera's largest picture for the moment of the photo (an answer page needs its handwriting), then back to 640x480 */
+    try { await track.applyConstraints({ width: { ideal: 3840 }, height: { ideal: 2160 }, frameRate: { ideal: 15 } }); } catch (e) {}
+    for (let i = 0; i < 20 && v.videoWidth <= 640; i++) await wait(100);
+    await wait(400);
     const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
-    return new Promise(res => c.toBlob(res, "image/jpeg", 0.9));
+    const blob = await new Promise(res => c.toBlob(res, "image/jpeg", 0.94));
+    try { await track.applyConstraints({ width: 640, height: 480, frameRate: { ideal: 15, max: 15 } }); } catch (e) {}
+    return blob;
   }
   async function snap(reason) {
     if (!p?.alive || !p.upload) return;
-    for (const [source, stream, width] of [["webcam", p.cam, 320], ["screen", p.scr, 640]]) {
+    /* like HaslaLab's page scans: the resolution is kept where reading depends on it, the bytes come off through the
+       JPEG quality (0.85 is about half of 0.94 and still reads). The webcam at its 640 px; the screen at its own size
+       up to 1920 px, so a chat window or a formula on it can be read */
+    for (const [source, stream, width] of [["webcam", p.cam, 640], ["screen", p.scr, 1920]]) {
       try { const blob = await frame(stream, width); if (blob) p.upload(blob, source, reason); } catch (e) {}
     }
   }
@@ -267,13 +278,15 @@
   function record() {
     if (!p?.clip || p.recs) return;
     p.recs = [];
-    const pick = t => ["video/webm;codecs=vp8,opus", "video/webm"].find(m => MediaRecorder.isTypeSupported?.(m)) || "";
-    const sources = [["webcam", p.cam, 110000], ...(p.scr ? [["screen", p.scr, 90000]] : [])];
+    /* VP9 keeps small text and faces at fewer bytes than VP8; the bit rates are ceilings, and a screen that does not
+       change costs almost nothing. Webcam 640x480 at 15 fps: enough to see where the eyes and hands go */
+    const pick = t => ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"].find(m => MediaRecorder.isTypeSupported?.(m)) || "";
+    const sources = [["webcam", p.cam, 250000], ...(p.scr ? [["screen", p.scr, 350000]] : [])];
     for (const [source, stream, bits] of sources) {
       const segment = () => {
         if (!p?.alive || !stream.active) return;
         let r; const parts = [];
-        try { r = new MediaRecorder(stream, { mimeType: pick(), videoBitsPerSecond: bits, audioBitsPerSecond: 24000 }); } catch (e) { p.onEvent?.("recording_failed", source + ": " + (e?.name || "recorder")); return; }
+        try { r = new MediaRecorder(stream, { mimeType: pick(), videoBitsPerSecond: bits, audioBitsPerSecond: 32000 }); } catch (e) { p.onEvent?.("recording_failed", source + ": " + (e?.name || "recorder")); return; }
         r.ondataavailable = e => { if (e.data.size) parts.push(e.data); };
         r.onstop = () => { if (parts.length) p?.clip?.(new Blob(parts, { type: "video/webm" }), source); if (p?.alive) segment(); };
         r.start(1000); p.recs.push(r);

@@ -23,7 +23,7 @@
       opensAt: v => `입장: ${v}부터 (시작 1시간 전)`, seatBy: v => `착석 마감: ${v} (시작 20분 전)`, opensLater: "입장 시간이 아닙니다", seatClosed: "착석 마감이 지나 입장할 수 없습니다", ended: "종료", submitted: "제출 완료", noRound: "응시할 수 있는 시험이 없습니다.",
       check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인", camera: "웹캠", mic: "마이크", screen: "화면 기록", face: "얼굴 인식", voice: "문장 읽기 (마이크)", ears: "귀·머리 검사 (이어폰·헤드셋)", system: "컴퓨터 소리 녹음", displays: "모니터 1대", room: "주변 스캔" }, retry: "다시 점검", preview: "카메라 미리보기", camNeed: "웹캠·마이크·화면 기록이 모두 켜져야 응시할 수 있습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.",
       screenNeed: "화면 기록을 시작하지 못했습니다. 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", systemNeed: "컴퓨터 소리를 녹음하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", displaysNeed: n => n > 1 ? `모니터가 ${n}대 연결되어 있습니다. 모니터를 하나만 남기고 나머지는 케이블을 뽑은 뒤 다시 점검하세요.` : "모니터 수를 확인하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트하세요.",
-      unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.",
+      unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.", coverTitle: "모니터가 추가로 연결되었습니다", coverText: "추가 모니터의 케이블을 지금 뽑으세요. 뽑을 때까지 시험지가 가려지며, 이 상황은 기록되어 감독관이 검토합니다.",
       roomStep: ["주변 스캔", "웹캠(노트북이면 노트북 화면)을 천천히 돌려 방을 보여 주세요. 화면에 나오는 방향으로 돌리고, 숫자가 0이 될 때까지 멈춰 주세요.", "주변 스캔 시작"],
       views: { front: "앞쪽 벽", left: "왼쪽 벽", right: "오른쪽 벽", back: "뒤쪽 (등 뒤)", ceiling: "천장", desk: "책상 위 전체", under: "책상 아래 · 발밑", done: "확인하는 중…" },
       room: { person: "다른 사람", phone: "휴대폰·스마트워치·태블릿", screen: "다른 화면(모니터·노트북·TV)", headset: "이어폰·헤드셋", notes: "책·필기" }, roomBlocked: list => `주변에서 ${list}이(가) 보였습니다. 치우거나 다른 곳으로 옮긴 뒤 다시 스캔하세요.`, roomFail: "스캔 사진을 보내지 못했습니다. 다시 스캔하세요.",
@@ -47,7 +47,7 @@
       opensAt: v => `Entry from ${v} (an hour before the start)`, seatBy: v => `Be seated by ${v} (20 minutes before the start)`, opensLater: "Not open yet", seatClosed: "Seating has closed", ended: "Over", submitted: "Submitted", noRound: "There is no exam to sit.",
       check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in", camera: "Webcam", mic: "Microphone", screen: "Screen recording", face: "Face", voice: "Reading aloud (microphone)", ears: "Ears and head (earphones, headset)", system: "Computer sound recording", displays: "One monitor", room: "Room scan" }, retry: "Check again", preview: "Camera preview", camNeed: "The webcam, microphone and screen recording must all be on to sit the exam. Make sure no other program is using the camera.",
       screenNeed: "Screen recording could not start. Update the app to the latest version, then check again.", systemNeed: "The computer's sound could not be recorded. Update the HaslaEdu app to the latest version, then check again.", displaysNeed: n => n > 1 ? `${n} monitors are connected. Unplug all but one, then check again.` : "The number of monitors could not be read. Update the HaslaEdu app to the latest version.",
-      unavailable: "The checking server did not answer. Check again in a moment.",
+      unavailable: "The checking server did not answer. Check again in a moment.", coverTitle: "Another monitor was connected", coverText: "Unplug the extra monitor now. The paper is covered until you do; this is recorded and reviewed by a proctor.",
       roomStep: ["Room scan", "Slowly turn the webcam (or the laptop) to show the room. Point it where the screen says and hold still until the count reaches 0.", "Start the room scan"],
       views: { front: "The wall in front", left: "The left wall", right: "The right wall", back: "Behind you", ceiling: "The ceiling", desk: "The whole desk top", under: "Under the desk, your feet", done: "Checking…" },
       room: { person: "another person", phone: "a phone, smartwatch or tablet", screen: "another screen (monitor, laptop, TV)", headset: "earphones or a headset", notes: "books or notes" }, roomBlocked: list => `The scan shows ${list}. Remove it, then scan again.`, roomFail: "The scan photos could not be sent. Scan again.",
@@ -415,10 +415,25 @@
     };
     const job = send().finally(() => uploads.delete(job)); uploads.add(job);
   }
+  /* a monitor connected during the exam: the page is covered (the paper cannot be seen on it) until it is unplugged */
+  function cover(on) {
+    let el = document.getElementById("hphoCover");
+    if (!on) { el?.remove(); return; }
+    if (el) return;
+    const x = T[L()];
+    el = Object.assign(document.createElement("div"), { id: "hphoCover", className: "hpho-cover" });
+    el.innerHTML = `<div><h2>${x.coverTitle}</h2><p>${x.coverText}</p></div>`;
+    document.body.append(el);
+  }
   /* proctoring on (once): the window's events, the camera and the screen */
   function watch() {
     const b = bridge();
-    if (!st.unsub) st.unsub = b.onEvent(e => { if (e && typeof e.kind === "string") { push(e.kind, e.detail); if (["focus_lost", "display_change", "screen_unlocked"].includes(e.kind)) window.HL_HPHO_PROCTOR?.snap(e.kind); } });
+    if (!st.unsub) st.unsub = b.onEvent(e => {
+      if (!e || typeof e.kind !== "string") return;
+      push(e.kind, e.detail);
+      if (["focus_lost", "display_change", "screen_unlocked"].includes(e.kind) || e.kind === "process_new" && /(^| )!/.test(e.detail || "")) window.HL_HPHO_PROCTOR?.snap(e.kind);
+      if (e.kind === "display_change") cover(parseInt(e.detail, 10) > 1);
+    });
     if (!st.watching) { st.watching = true; window.HL_HPHO_PROCTOR?.start({ onEvent: (kind, detail) => push(kind, detail), upload: uploadSnap, clip: uploadClip }); }
     push("displays", String(typeof b.displays === "function" ? b.displays() : "?"));
     b.started?.();
@@ -444,8 +459,18 @@
     flush(); paint();
   }
   function uploadSnap(blob, source, reason) { sendForm("snap", { image: blob, source, reason }).catch(() => {}); }
-  /* a page: at most 2400 px on its longest side, JPEG, under the server's 4 MB */
+  /* a page: through HaslaLab's own scan encoder (sim/labscan/scanner.js: the 200 dpi floor, then JPEG quality steps),
+     else at most 2400 px on its longest side; JPEG under the server's 4 MB */
+  let scanner = null;
   async function shrink(file) {
+    try {
+      scanner ||= await import("./sim/labscan/scanner.js");
+      const b = await scanner.encodeUpload(file, { maxBytes: 3.8e6, recompress: true });
+      if (b && b.type === "image/jpeg" && b.size < 3.8e6) return b;
+    } catch (e) {}
+    return shrinkPlain(file);
+  }
+  async function shrinkPlain(file) {
     const img = await createImageBitmap(file), k = Math.min(1, 2400 / Math.max(img.width, img.height));
     const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
     for (const q of [0.88, 0.75, 0.6]) { const b = await new Promise(res => c.toBlob(res, "image/jpeg", q)); if (b && b.size < 3.8e6) return b; }

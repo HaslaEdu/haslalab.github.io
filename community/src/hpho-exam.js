@@ -33,7 +33,9 @@
 import { ensureHpho, roundTracks, TRACKS } from './hpho.js';
 
 export const UPLOAD_MIN = 60;
-export const SNAP_MAX_BYTES = 250 * 1024;
+export const SNAP_MAX_BYTES = 250 * 1024;          /* a webcam still of the checks (640 px) */
+/* proctoring photos: the webcam at 640 px, the screen at its own resolution (up to 1920 px) so its text stays readable */
+export const SNAP_SOURCE_MAX = { webcam: 400 * 1024, screen: 1536 * 1024 };
 export const ANSWER_MAX_BYTES = 4 * 1024 * 1024;
 export const ANSWER_MAX_PAGES = 80;
 export const DOC_MAX_BYTES = 40 * 1024 * 1024;
@@ -196,7 +198,7 @@ const adminSeat = s => ({ ...seatView(s), client: s.client, events: s.events, ga
   check_note: s.check_note, verdict: s.verdict, verdict_note: s.verdict_note, verdict_at: s.verdict_at, review: needsReview(s) });
 /* events a proctor watching live wants to see */
 export const ALERTS = ['focus_lost', 'display_change', 'screen_locked', 'suspend', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'page_hidden',
-  'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'system_sound', 'reconnect', 'recording_failed', 'after_time'];
+  'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'system_sound', 'reconnect', 'recording_failed', 'after_time', 'process_new'];
 
 export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB, earVision = geminiEarVision, voiceCheck = geminiVoiceCheck, roomScan = geminiRoomScan }) {
   const fail = (status, code) => { throw new HttpError(status, code); };
@@ -392,7 +394,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       const f = await form(req), source = SNAP_SOURCES.includes(f.get('source')) ? f.get('source') : null;
       const reason = /^[a-z_]{3,24}$/.test(String(f.get('reason') || '')) ? String(f.get('reason')) : null;
       if (!source || !reason || !['random', ...EXAM_EVENTS].includes(reason)) fail(400, 'bad_snapshot');
-      const bytes = await bytesOf(f.get('image'), SNAP_MAX_BYTES, 'snapshot_too_large'); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg');
+      const bytes = await bytesOf(f.get('image'), SNAP_SOURCE_MAX[source], 'snapshot_too_large'); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg');
       const key = snapKey(id, seat.candidate_no, source, t, reason);
       await store.put(key, bytes, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: id, track, candidate: seat.candidate_no, source, reason } });
       await db.prepare(`UPDATE hpho_seats SET last_beat=?,${source === 'screen' ? 'last_screen' : 'last_webcam'}=? WHERE round_id=? AND user_id=? AND track=?`).bind(t, key, id, me.id, track).run();

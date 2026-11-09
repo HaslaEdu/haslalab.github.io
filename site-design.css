@@ -823,3 +823,5 @@ body.hl-site .hpho-live-tile ul{margin:6px 0 0;padding-left:16px}
 body.hl-site .hpho-clips{font-size:12px;columns:2;padding-left:18px}
 body.hl-site .hpho-clip-video{width:100%;max-width:720px;margin-top:8px;background:#000}
 html[data-theme="dark"] body.hl-site .hpho-live-tile{border-color:#3b344d}
+body.hl-site .hpho-cover{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:rgba(20,10,10,.96);color:#fff;text-align:center;padding:24px}
+body.hl-site .hpho-cover h2{font-size:26px;margin:0 0 10px;color:#ffb4ab}body.hl-site .hpho-cover p{font-size:17px;max-width:44ch;margin:0 auto}
