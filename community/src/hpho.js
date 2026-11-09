@@ -69,7 +69,11 @@ export function checkEntry(body, { year = new Date().getUTCFullYear() } = {}) {
   const level = HPHO_LEVELS.includes(body?.level) ? body.level : null;
   if (!level) return { error: 'bad_level' };
   const birth = Number(body?.birth_year);
-  if (!Number.isInteger(birth) || birth < year - 40 || birth > year - 8) return { error: 'bad_birth_year' };
+  if (!Number.isInteger(birth) || birth < year - 40) return { error: 'bad_birth_year' };
+  /* 14 or older (the owner's rule, 2026-11-09): only the year is asked, so the year itself must allow it and the
+     candidate confirms it for a birthday still to come this year */
+  if (birth > year - 14) return { error: 'too_young' };
+  if (body?.age14 !== true) return { error: 'age14_required' };
   if (body?.pledge !== true) return { error: 'pledge_required' };            /* rules, honour code, no outside help */
   if (body?.proctoring !== true) return { error: 'proctoring_consent_required' }; /* desktop app, webcam and screen */
   if (body?.identity_notice !== true) return { error: 'identity_notice_required' }; /* candidate number only on sheets */

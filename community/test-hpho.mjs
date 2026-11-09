@@ -17,7 +17,7 @@ const router = () => { const { sql, DB } = d1(); const env = { DB };
   return { sql, call: (p, m, body, me) => r(p, m, body, me, env) }; };
 const admin = { id: 1, role: 'admin' }, student = { id: 7 }, t = Math.floor(Date.now() / 1000);
 const round = { title_ko: '제1회 HPhO', title_en: 'HPhO 2027-I', reg_open: t - 3600, reg_close: t + 86400, start_at: t + 2 * 86400, duration_min: 240, fee_usd: 3, status: 'open' };
-const entry = { country: 'kr', level: 'high', birth_year: new Date().getUTCFullYear() - 17, pledge: true, proctoring: true, identity_notice: true, guardian_consent: true };
+const entry = { country: 'kr', level: 'high', birth_year: new Date().getUTCFullYear() - 17, age14: true, pledge: true, proctoring: true, identity_notice: true, guardian_consent: true };
 const code = async p => { try { await p; return null; } catch (e) { return e.code; } };
 
 test('candidate numbers carry the round and four random digits', () => {
@@ -108,4 +108,11 @@ test('training the AI proctor is a separate, optional consent that can be withdr
   assert.equal((await f.call('/api/hpho', 'GET', null, student)).entries['2027-1'].train_consent, 1);
   await f.call('/api/hpho/rounds/2027-1/entry', 'POST', entry, student);
   assert.equal((await f.call('/api/hpho', 'GET', null, student)).entries['2027-1'].train_consent, 0, 'withdrawn by editing');
+});
+
+test('HPhO is open from 14: the year must allow it and the candidate confirms it', () => {
+  const y = new Date().getUTCFullYear();
+  assert.equal(checkEntry({ ...entry, birth_year: y - 13 }).error, 'too_young');
+  assert.equal(checkEntry({ ...entry, birth_year: y - 14, age14: false }).error, 'age14_required');
+  assert.equal(checkEntry({ ...entry, birth_year: y - 14 }).birth_year, y - 14);
 });
