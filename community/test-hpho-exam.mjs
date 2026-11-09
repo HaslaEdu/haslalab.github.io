@@ -340,3 +340,18 @@ test('glasses shown up close: smart ones stop the candidate', async () => {
   const g = await setup(1800);
   assert.deepEqual(await g.form('glasscheck', { front: JPEG, inside: JPEG }), { ok: true, smart: false, clear: true });
 });
+
+test('away for ten seconds during the exam: the seat goes to a person for review', async () => {
+  const f = await setup(1800);
+  await f.call('checkin', 'POST', { client }, student);
+  const { code: c } = await f.call('phone', 'POST', {}, student);
+  await f.phone(c, 'snap', { image: JPEG, reason: 'absent' });
+  assert.equal((await f.call('log', 'GET', null, admin, '?candidate=' + (await f.call('seats', 'GET', null, admin)).seats[0].candidate_no)).events.filter(e => e.kind === 'absent').length, 0, 'not in the waiting room');
+  f.shift(-1860);                                                   /* the exam has started */
+  await f.phone(c, 'snap', { image: JPEG, reason: 'absent' });
+  const no = (await f.call('seats', 'GET', null, admin)).seats[0].candidate_no;
+  const log = await f.call('log', 'GET', null, admin, '?candidate=' + no);
+  assert.ok(log.events.some(e => e.kind === 'absent' && /phone/.test(e.detail)));
+  const { suspicion } = await import('./src/hpho-exam.js');
+  assert.deepEqual(suspicion({}, [{ kind: 'absent' }]), ['absent×1'], 'one absence is enough');
+});

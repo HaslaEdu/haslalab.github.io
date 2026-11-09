@@ -23,7 +23,7 @@
       opensAt: v => `입장: ${v}부터 (시작 1시간 전)`, seatBy: v => `착석 마감: ${v} (시작 20분 전)`, opensLater: "입장 시간이 아닙니다", seatClosed: "착석 마감이 지나 입장할 수 없습니다", ended: "종료", submitted: "제출 완료", noRound: "응시할 수 있는 시험이 없습니다.",
       check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인", camera: "웹캠 (얼굴 인식)", mic: "마이크 (문장 읽기)", screen: "화면 기록 (모니터 1대)", face: "얼굴 인식", voice: "문장 읽기 (마이크)", ears: "귀·머리·손목 검사", system: "컴퓨터 소리 녹음", displays: "모니터 1대", phone: "휴대폰 연결", room: "주변 인식 (휴대폰)", place: "휴대폰 위치" }, retry: "다시 점검", preview: "카메라 미리보기", camNeed: "웹캠·마이크·화면 기록이 모두 켜져야 응시할 수 있습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.",
       screenNeed: "화면 기록을 시작하지 못했습니다. 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", systemNeed: "컴퓨터 소리를 녹음하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", displaysNeed: n => n > 1 ? `모니터가 ${n}대 연결되어 있습니다. 모니터를 하나만 남기고 나머지는 케이블을 뽑은 뒤 다시 점검하세요.` : "모니터 수를 확인하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트하세요.",
-      unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.", stepAway: "자리 비우기 (화장실 등)", stepAwayAsk: "자리를 비우면 돌아와서 모든 점검(얼굴·마이크·귀·휴대폰·주변 인식)을 처음부터 다시 해야 합니다. 그 사이 시험이 시작되어도 시간은 늘어나지 않습니다. 자리를 비울까요?", awayBack: "자리를 비웠으므로 모든 점검을 다시 합니다. 준비되면 점검을 진행하세요.", awayAuto: "얼굴이 20초 이상 보이지 않아 자리를 비운 것으로 처리했습니다. 모든 점검을 다시 해야 합니다.", earLive: { front: i => `${i.faces > 1 ? "두 사람 이상 보임" : i.face ? "얼굴 ✓" : "얼굴을 가운데로"} · 들어 올린 손 ${i.hands}/2${i.hands === 2 ? " ✓" : ""}${i.hold > 0 ? " · 그대로 유지" : ""}`, turn: i => !i.face ? "얼굴이 보이지 않습니다" : i.turn >= 1 ? "좋습니다, 그대로 유지" : "고개를 더 돌려 주세요" }, glassStep: "안경 가까이 보여 주기", glassFront: "안경을 벗어서 앞면(렌즈와 테 모서리)이 카메라를 향하게 가까이 들어 주세요.", glassInside: "이번에는 안경다리 안쪽이 보이게 돌려서 카메라 가까이 들어 주세요.",
+      unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.", forbiddenTitle: "금지 물품이 감지되었습니다", forbiddenTag: "금지 물품", forbiddenNote: "물품을 치우거나 벗은 뒤 ‘다시 점검’을 누르세요. 이 판정은 감독 기록에 남습니다.", forbiddenItem: { device: "이어폰·헤드셋", device_first: "이어폰 (처음 보여 준 쪽 귀)", device_second: "이어폰 (두 번째로 보여 준 쪽 귀)", cap: "챙 있는 모자", watch: "시계·스마트워치", glasses: "스마트 안경", covered: "귀를 덮은 모자" }, stepAway: "자리 비우기 (화장실 등)", stepAwayAsk: "자리를 비우면 돌아와서 모든 점검(얼굴·마이크·귀·휴대폰·주변 인식)을 처음부터 다시 해야 합니다. 그 사이 시험이 시작되어도 시간은 늘어나지 않습니다. 자리를 비울까요?", awayBack: "자리를 비웠으므로 모든 점검을 다시 합니다. 준비되면 점검을 진행하세요.", awayAuto: "얼굴이 20초 이상 보이지 않아 자리를 비운 것으로 처리했습니다. 모든 점검을 다시 해야 합니다.", earLive: { front: i => `${i.faces > 1 ? "두 사람 이상 보임" : i.face ? "얼굴 ✓" : "얼굴을 가운데로"} · 들어 올린 손 ${i.hands}/2${i.hands === 2 ? " ✓" : ""}${i.hold > 0 ? " · 그대로 유지" : ""}`, turn: i => !i.face ? "얼굴이 보이지 않습니다" : i.turn >= 1 ? "좋습니다, 그대로 유지" : "고개를 더 돌려 주세요" }, glassStep: "안경 가까이 보여 주기", glassFront: "안경을 벗어서 앞면(렌즈와 테 모서리)이 카메라를 향하게 가까이 들어 주세요.", glassInside: "이번에는 안경다리 안쪽이 보이게 돌려서 카메라 가까이 들어 주세요.",
       allowStep: ["화면 감시 허용", "시험 동안 아래 항목이 감독을 위해 기록됩니다. 허용해야 다음 단계로 넘어갈 수 있습니다.", "허용"],
       allowList: ["컴퓨터 화면 전체 (녹화와 사진)", "컴퓨터에서 나오는 소리", "실행 중인 프로그램 이름 (창 제목·내용은 아님)", "창 이탈·모니터 연결·화면 잠금"], net: { label: "네트워크", good: "좋음", fair: "보통", poor: "느림", off: "끊김", how: "10초마다 시험 서버까지 왕복 시간을 잽니다. 속도(Mbps)는 브라우저가 추정한 값입니다." }, phoneFirst: "먼저 휴대폰을 연결합니다. 휴대폰 카메라로 아래 QR을 찍어 여세요. 휴대폰 화면에서 「카메라 켜기」를 누르면 연결되고, 다음 점검으로 넘어갑니다. 주변 스캔은 얼굴·마이크·귀 점검 뒤에 휴대폰으로 합니다.", coverTitle: "모니터가 추가로 연결되었습니다", coverText: "추가 모니터의 케이블을 지금 뽑으세요. 뽑을 때까지 시험지가 가려지며, 이 상황은 기록되어 감독관이 검토합니다.",
       phoneStep: ["휴대폰 감독 연결", "휴대폰 카메라로 아래 QR을 찍어 휴대폰에서 여세요. 휴대폰으로 방을 한 방향씩 천천히 비추면 AI가 확인하고, 마지막으로 휴대폰을 옆이나 뒤에 세워 본인·손·책상·화면이 보이게 합니다. 이 세 가지가 끝나야 연결이 완료되고 다음 점검으로 넘어갑니다."],
@@ -52,7 +52,7 @@
       opensAt: v => `Entry from ${v} (an hour before the start)`, seatBy: v => `Be seated by ${v} (20 minutes before the start)`, opensLater: "Not open yet", seatClosed: "Seating has closed", ended: "Over", submitted: "Submitted", noRound: "There is no exam to sit.",
       check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in", camera: "Webcam (face)", mic: "Microphone (reading aloud)", screen: "Screen recording (one monitor)", face: "Face", voice: "Reading aloud (microphone)", ears: "Ears, head and wrists", system: "Computer sound recording", displays: "One monitor", phone: "Phone connected", room: "Room check (phone)", place: "Phone position" }, retry: "Check again", preview: "Camera preview", camNeed: "The webcam, microphone and screen recording must all be on to sit the exam. Make sure no other program is using the camera.",
       screenNeed: "Screen recording could not start. Update the app to the latest version, then check again.", systemNeed: "The computer's sound could not be recorded. Update the HaslaEdu app to the latest version, then check again.", displaysNeed: n => n > 1 ? `${n} monitors are connected. Unplug all but one, then check again.` : "The number of monitors could not be read. Update the HaslaEdu app to the latest version.",
-      unavailable: "The checking server did not answer. Check again in a moment.", stepAway: "Step away (toilet…)", stepAwayAsk: "If you step away, every check (face, microphone, ears, phone, room) must be done again from the start when you return. The exam does not wait. Step away?", awayBack: "You stepped away, so every check is done again. Go through the checks when you are ready.", awayAuto: "Your face was not seen for 20 seconds, so you are treated as having stepped away. Every check must be done again.", earLive: { front: i => `${i.faces > 1 ? "more than one person" : i.face ? "face ✓" : "face to the middle"} · hands up ${i.hands}/2${i.hands === 2 ? " ✓" : ""}${i.hold > 0 ? " · hold still" : ""}`, turn: i => !i.face ? "your face is not seen" : i.turn >= 1 ? "good, hold still" : "turn your head further" }, glassStep: "Show your glasses up close", glassFront: "Take your glasses off and hold the front (lenses and frame corners) close to the camera.", glassInside: "Now turn them to show the inside of the temples, close to the camera.",
+      unavailable: "The checking server did not answer. Check again in a moment.", forbiddenTitle: "A forbidden item was detected", forbiddenTag: "Forbidden item", forbiddenNote: "Remove it, then press ‘Check again’. This verdict is kept in the proctoring record.", forbiddenItem: { device: "Earphones or a headset", device_first: "An earphone (the first ear shown)", device_second: "An earphone (the second ear shown)", cap: "A cap or hat with a brim", watch: "A watch or smartwatch", glasses: "Smart glasses", covered: "A hat covering the ears" }, stepAway: "Step away (toilet…)", stepAwayAsk: "If you step away, every check (face, microphone, ears, phone, room) must be done again from the start when you return. The exam does not wait. Step away?", awayBack: "You stepped away, so every check is done again. Go through the checks when you are ready.", awayAuto: "Your face was not seen for 20 seconds, so you are treated as having stepped away. Every check must be done again.", earLive: { front: i => `${i.faces > 1 ? "more than one person" : i.face ? "face ✓" : "face to the middle"} · hands up ${i.hands}/2${i.hands === 2 ? " ✓" : ""}${i.hold > 0 ? " · hold still" : ""}`, turn: i => !i.face ? "your face is not seen" : i.turn >= 1 ? "good, hold still" : "turn your head further" }, glassStep: "Show your glasses up close", glassFront: "Take your glasses off and hold the front (lenses and frame corners) close to the camera.", glassInside: "Now turn them to show the inside of the temples, close to the camera.",
       allowStep: ["Allow screen monitoring", "During the exam the following are recorded for proctoring. You must allow them to go on.", "Allow"],
       allowList: ["The whole computer screen (recording and photos)", "Sound played on the computer", "The names of running programs (not window titles or contents)", "Leaving the window, connecting a monitor, locking the screen"], net: { label: "Network", good: "Good", fair: "Fair", poor: "Slow", off: "Offline", how: "The round trip to the exam server, measured every 10 s; the speed (Mbps) is the browser's estimate." }, phoneFirst: "First connect your phone: scan the QR below with its camera and open it. Press “Turn on the camera” on the phone to connect; the next checks follow. The room scan is done with the phone after the face, microphone and ear checks.", coverTitle: "Another monitor was connected", coverText: "Unplug the extra monitor now. The paper is covered until you do; this is recorded and reviewed by a proctor.",
       phoneStep: ["Connect the phone", "Scan the QR below with your phone camera and open it on the phone. Show the room slowly, one side at a time, for the AI to check; then stand the phone to your side or behind you so it sees you, your hands, the desk and the screen. The connection is complete, and the next checks follow, only when all three are done."],
@@ -157,7 +157,7 @@
   }
   function paintCheck(box) {
     const x = T[L()], c = st.checks || {}, keys = ["net", "screen", "camera", "mic", "system", ...(st.quick ? [] : ["ears"]), "phone", "room"];
-    const row = k => `<li class="${c[k] === true ? "is-ok" : c[k] === false ? "is-bad" : ""}"><span>${x.checks[k]}</span><b>${c[k] === true ? x.ok : c[k] === false ? x.bad : x.wait}</b></li>`;
+    const row = k => `<li class="${c[k] === true ? "is-ok" : c[k] === false ? "is-bad" : ""}"><span>${x.checks[k]}</span><b>${c[k] === true ? x.ok : c[k] === false ? (k === "ears" && st.forbidden ? x.forbiddenTag : x.bad) : x.wait}</b></li>`;
     const s = st.step;
     const step = s ? `<div class="hpho-step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.list ? `<ul class="hpho-allow-list">${s.list.map(i => `<li>${esc(i)}</li>`).join("")}</ul>` : ""}${s.qr ? `<div class="hpho-qr">${s.qr}<ul id="hphoPhoneList"></ul></div>` : ""}${s.view ? `<p class="hpho-scan-view">${esc(s.view)}${s.count ? ` <b>${s.count}</b>` : ""}</p>` : ""}${s.quote ? `<p class="hpho-step-quote">${esc(s.quote)}</p>` : ""}${s.cue ? `<p class="hpho-step-cue" id="hphoCue">${esc(s.cue)}</p>` : ""}${s.meter ? `<div class="hpho-meter" aria-hidden="true"><i id="hphoMeter"></i></div>` : ""}${s.button ? `<p><button type="button" class="hpho-btn" id="hphoStepGo">${esc(s.button)}</button></p>` : ""}</div>` : "";
     const done = keys.filter(k => c[k] === true).length;
@@ -165,12 +165,12 @@
       <div class="hpho-check-grid"><ul class="hpho-checks">${keys.map(row).join("")}</ul>
       <div class="hpho-check-side"><div class="hpho-check-media"><div class="hpho-self-slot" id="hphoSelfSlot"><span>${x.preview}</span></div>
         <p class="hpho-check-actions">${st.error ? `<button type="button" class="hpho-btn" id="hphoExamRetry">${x.retry}</button>` : ""}${leaveBtn()}</p></div>
-        <div class="hpho-check-info">${step}${st.error ? `<div class="hpho-check-problem"><p class="hpho-form-msg">${esc(st.error)}</p></div>` : ""}</div></div></div></section>`;
+        <div class="hpho-check-info">${step}${st.forbidden ? `<div class="hpho-forbidden" role="alert"><h3>⛔ ${x.forbiddenTitle}</h3><p class="hpho-forbidden-item">${esc(st.forbidden)}</p><p>${esc(st.error || "")}</p><p class="hpho-muted">${x.forbiddenNote}</p></div>` : st.error ? `<div class="hpho-check-problem"><p class="hpho-form-msg">${esc(st.error)}</p></div>` : ""}</div></div></div></section>`;
     window.HL_HPHO_PROCTOR?.dock?.(box.querySelector("#hphoSelfSlot"));
     const fresh = keys.filter(k => c[k] === true && !st.dinged?.has(k));
     if (fresh.length) { (st.dinged ||= new Set()); fresh.forEach(k => st.dinged.add(k)); ding(); }
     wireLeave(box);
-    box.querySelector("#hphoExamRetry")?.addEventListener("click", () => { st.error = null; check(); });
+    box.querySelector("#hphoExamRetry")?.addEventListener("click", () => { st.error = null; st.forbidden = null; check(); });
     box.querySelector("#hphoStepGo")?.addEventListener("click", () => { const go = st.step?.go; st.step = { ...st.step, button: null, go: null }; paint(); go?.(); }, { once: true });
   }
   function docTabs(kinds) {
@@ -234,7 +234,7 @@
   }
   function paint() {
     const x = T[L()], box = document.getElementById("hphoExamMain"); if (!box) return;
-    if (st.error && st.error !== st.beeped && ["check", "lobby", "room", "submit"].includes(st.phase)) { st.beeped = st.error; beep(); }
+    if (st.error && st.error !== st.beeped && ["check", "lobby", "room", "submit"].includes(st.phase)) { st.beeped = st.error; if (!st.forbidden) beep(); }
     if (!st.error) st.beeped = null;
     paintBar();
     if (!bridge()) { box.innerHTML = `<section class="hpho-round"><h2>${x.title}</h2><p>${x.appOnly}</p><a class="hpho-btn" href="https://physleague.kr/#/desktop" target="_blank" rel="noopener">${x.appGet}</a></section>`; return; }
@@ -329,7 +329,7 @@
     st.error = how === "auto" ? x.awayAuto : x.awayBack;
     check();
   }
-  function enter(track) { loadAsr(); st.track = track; st.error = null; st.phase = "check"; st.checks = {}; st.phoneQr = null; st.dinged = new Set(); st.scanDone = 0; st.quick = !!st.tracks[track]?.session; check(); }
+  function enter(track) { loadAsr(); st.track = track; st.error = null; st.forbidden = null; st.phase = "check"; st.checks = {}; st.phoneQr = null; st.dinged = new Set(); st.scanDone = 0; st.quick = !!st.tracks[track]?.session; check(); }
   async function check() {
     const x = T[L()];
     st.checks = { net: !st.offline }; st.phase = "check"; paint();
@@ -438,6 +438,8 @@
       }
       const why = !r ? "failed" : r.unavailable ? retry("ears") : ["device", "device_first", "device_second", "cap", "watch", "glasses", "wrists", "covered", "glasses_unclear"].includes(r.verdict) ? r.verdict : r.verdict === "unclear" && (st.tries.ears_unclear = (st.tries.ears_unclear || 0) + 1) < 3 ? "unclear" : null;
       st.checks.ears = !why;
+      /* a forbidden item is not a technical problem: shown as its own notice, with the item named */
+      if (why && x.forbiddenItem[why]) { st.step = null; st.forbidden = x.forbiddenItem[why]; st.error = x.ear[why]; beep(); paint(); return false; }
       if (why) { st.step = null; st.error = why === "unavailable" ? x.unavailable : x.ear[why]; paint(); return false; }
       st.passed.ears = true;
     }
@@ -583,7 +585,7 @@
       if (["focus_lost", "display_change", "screen_unlocked"].includes(e.kind) || e.kind === "process_new" && /(^| )!/.test(e.detail || "")) window.HL_HPHO_PROCTOR?.snap(e.kind);
       if (e.kind === "display_change") cover(parseInt(e.detail, 10) > 1);
     });
-    if (!st.watching) { st.watching = true; window.HL_HPHO_PROCTOR?.start({ onEvent: (kind, detail) => push(kind, detail), upload: uploadSnap, clip: storeClip }); }
+    if (!st.watching) { st.watching = true; window.HL_HPHO_PROCTOR?.start({ onEvent: (kind, detail) => { if (kind === "absent" && !["exam", "submit"].includes(st.phase)) return; push(kind, detail); }, upload: uploadSnap, clip: storeClip }); }
     clearInterval(st.phoneTimer); st.phoneTimer = setInterval(watchPhone, 20000);
     push("displays", String(typeof b.displays === "function" ? b.displays() : "?"));
     b.started?.();

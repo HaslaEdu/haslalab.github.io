@@ -298,7 +298,16 @@
     const snap = async reason => { try { await call("snap", { image: await grab(st.video, 960), reason }); say(""); }
       catch (e) { if (e.code === "exam_over") return stop(); say(x.net); beep(); } };
     snap("random");
-    st.timers = [setInterval(() => snap("random"), 15000), setInterval(() => call("beat", {}).catch(e => e.code === "exam_over" ? stop() : beep()), 10000)];
+    /* the candidate gone from the phone's picture (no person for ten seconds, the on-phone detector every 2 s): one photo
+       marked "absent", which the server records for a person to review */
+    let gone = 0;
+    const presence = async () => {
+      const det = await Promise.race([loadDetector(), wait(3000).then(() => null)]); if (!det || !st.video?.videoWidth) return;
+      let people = 0; try { people = (det.detect(still(st.video, 640)).detections || []).filter(d => d.categories?.some(c => c.categoryName === "person" && c.score >= 0.4)).length; } catch (e) { return; }
+      gone = people ? 0 : gone + 2;
+      if (gone === 10 || gone === 11) snap("absent");
+    };
+    st.timers = [setInterval(presence, 2000), setInterval(() => snap("random"), 15000), setInterval(() => call("beat", {}).catch(e => e.code === "exam_over" ? stop() : beep()), 10000)];
     document.addEventListener("visibilitychange", st.onVis = () => { if (document.hidden) return; snap("phone_back"); say(x.hidden); beep(); try { navigator.wakeLock?.request("screen").then(l => st.lock = l); } catch (e) {} });
   }
   function stop() {

@@ -868,3 +868,6 @@ body.hl-site .hpho-example .ex-pan{animation:hphoPan 3.6s ease-in-out infinite a
 body.hl-site .hpho-example .ex-nod-up{animation:hphoNodUp 4s ease-in-out infinite}@keyframes hphoNodUp{0%,15%{transform:rotate(0)}50%,60%{transform:rotate(-60deg)}95%,100%{transform:rotate(0)}}
 body.hl-site .hpho-example .ex-nod-down{animation:hphoNodDown 4s ease-in-out infinite}@keyframes hphoNodDown{0%,15%{transform:rotate(0)}50%,60%{transform:rotate(60deg)}95%,100%{transform:rotate(0)}}
 body.hl-site .hpho-phone-video.is-front{transform:scaleX(-1)}body.hl-site .hpho-flip{font-size:15px;color:#5c438f}
+body.hl-site .hpho-forbidden{border:2px solid #d92d20;background:#fff1f0;border-radius:10px;padding:12px 14px;margin-top:10px}
+body.hl-site .hpho-forbidden h3{margin:0 0 6px;color:#b42318;font-size:18px}body.hl-site .hpho-forbidden-item{font-size:20px;font-weight:800;margin:4px 0;color:#b42318}
+html[data-theme="dark"] body.hl-site .hpho-forbidden{background:#3a1512;border-color:#ff6b5e}html[data-theme="dark"] body.hl-site .hpho-forbidden h3,html[data-theme="dark"] body.hl-site .hpho-forbidden-item{color:#ff9a90}

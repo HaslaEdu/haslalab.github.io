@@ -89,7 +89,7 @@ export const EXAM_EVENTS = ['heartbeat', 'window_ready', 'focus_lost', 'focus_ba
   'suspend', 'resume', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'network_back', 'page_hidden', 'page_visible',
   'camera_started', 'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'process_new', 'process_list', 'clip_saved', 'snapshot_saved',
   'face_check', 'mic_check', 'ear_check', 'checkin', 'reconnect', 'time_over', 'after_time', 'answer_page', 'submitted', 'paper_lang',
-  'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated', 'phone_lost', 'phone_back', 'seat_left'];
+  'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated', 'phone_lost', 'phone_back', 'seat_left', 'absent'];
 export const EARCHECK_EARLY = 3600;        /* the ear and voice checks open an hour before the start, with the technical check */
 const EAR_VERDICTS = ['clear', 'device', 'unclear'];
 const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, taken during the technical check before an online physics exam${n === 3 ? ': the first faces the camera with both hands raised beside the face (wrists visible), in the second the head is turned to show one ear, in the third the other ear' : ': in the first the head is turned to show one ear, in the second the other ear'}.
@@ -289,7 +289,7 @@ const adminSeat = s => ({ ...seatView(s), client: s.client, events: s.events, ga
    voice and computer-sound levels), the desktop app (window, monitors, programs), the server (heartbeat gaps,
    reconnects) and the model checks (ears, voice, room) found. A strong sign once is enough; weak ones (a glance away,
    a short silence of the network) must repeat. A person's verdict of review or cheating always keeps them */
-export const STRONG = ['faces_multiple', 'phone_seen', 'system_sound', 'camera_stopped', 'window_close_attempt', 'recording_failed'];
+export const STRONG = ['absent', 'faces_multiple', 'phone_seen', 'system_sound', 'camera_stopped', 'window_close_attempt', 'recording_failed'];
 export const WEAK = ['focus_lost', 'face_missing', 'voice', 'page_hidden', 'network_lost', 'shortcut_blocked', 'screen_locked', 'suspend', 'phone_lost'];
 export const WEAK_LIMIT = 3;
 export function suspicion(seat, events) {
@@ -344,7 +344,7 @@ export async function hphoRetainTick(env, { now: at = Date.now(), scope = e => e
 
 /* events a proctor watching live wants to see */
 export const ALERTS = ['focus_lost', 'display_change', 'screen_locked', 'suspend', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'page_hidden',
-  'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'system_sound', 'reconnect', 'recording_failed', 'after_time', 'process_new', 'phone_lost', 'seat_left'];
+  'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'system_sound', 'reconnect', 'recording_failed', 'after_time', 'process_new', 'phone_lost', 'seat_left', 'absent'];
 
 const sha256 = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
 const phoneState = (ph, t) => ph && { paired: !!ph.last_beat, online: !!ph.last_beat && t - ph.last_beat < PHONE_ONLINE, placed: !!ph.placed, place_note: ph.place_note,
@@ -412,7 +412,9 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       const reason = /^[a-z_]{3,24}$/.test(String(f.get('reason') || '')) ? String(f.get('reason')) : 'random';
       const b = await jpeg('image'), key = `hpho/${ph.round_id}/${ph.candidate_no}/${t}-phone-${reason}.jpg`;
       await put(key, b, reason);
-      await db.batch([db.prepare('UPDATE hpho_phones SET last_snap=?,last_beat=? WHERE round_id=? AND user_id=? AND track=?').bind(key, t, ...where)]);
+      const away = reason === 'absent' && t >= w.start_at && t < w.upload_until;
+      await db.batch([db.prepare('UPDATE hpho_phones SET last_snap=?,last_beat=? WHERE round_id=? AND user_id=? AND track=?').bind(key, t, ...where),
+        ...(away ? [event('absent', 'phone: no person 10 s', 7e9)] : [])]);
       return { ok: true };
     }
     fail(404, 'not_found');

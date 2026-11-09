@@ -324,6 +324,12 @@
       if (p.audio) { p.audio.an.getFloatTimeDomainData(p.audio.buf); let s = 0; for (const x of p.audio.buf) s += x * x; seen.voice = Math.sqrt(s / p.audio.buf.length) > 0.04; }
       /* anything the computer itself plays (a video, a call, a voice assistant) */
       if (p.sys) { p.sys.an.getFloatTimeDomainData(p.sys.buf); let s = 0; for (const x of p.sys.buf) s += x * x; seen.system_sound = Math.sqrt(s / p.sys.buf.length) > 0.01; }
+      /* away: no face for ten seconds in a row is one "absent" (photographed once per absence); the page decides what
+         it means (the waiting room: every check again; the exam: a seat for a person to review) */
+      if (p.det && v?.videoWidth) {
+        p.noFace = seen.face_missing ? (p.noFace || 0) + 1 : 0;
+        if (p.noFace === 10) { onEvent("absent", "webcam: no face 10 s"); snap("absent"); }
+      }
       for (const [kind, on] of Object.entries(seen)) {
         if (!on) { p.since[kind] = 0; continue; }
         p.since[kind] = (p.since[kind] || 0) + 1;
