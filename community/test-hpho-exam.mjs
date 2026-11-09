@@ -15,7 +15,7 @@ const needUser = u => { if (!u) throw new HttpError(401, 'login_required'); retu
 const deps = { HttpError, needUser, limit: async () => {}, isAdmin: u => u?.role === 'admin' };
 const admin = { id: 1, role: 'admin' }, student = { id: 7 }, other = { id: 9 };
 const client = { app: 'haslaedu-desktop', version: '0.5.0' };
-const entry = { country: 'KR', level: 'high', birth_year: new Date().getUTCFullYear() - 20, pledge: true, proctoring: true, identity_notice: true };
+const entry = { country: 'KR', level: 'high', birth_year: new Date().getUTCFullYear() - 20, age14: true, pledge: true, proctoring: true, identity_notice: true };
 const code = async p => { try { await p; return null; } catch (e) { return e.code; } };
 
 async function setup(startOffset) {

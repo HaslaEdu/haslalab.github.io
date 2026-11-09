@@ -22,6 +22,7 @@
       formTitle: "참가 접수", country: "국가", level: "과정", levels: { middle: "중학생", high: "고등학생", university: "대학생", other: "기타" }, birth: "출생 연도",
       pledge: "대회 규정을 읽었고, 시험 중 다른 사람·AI·인터넷·교재의 도움을 받지 않겠습니다.",
       proctor: "시험은 하슬라에듀 데스크톱 앱으로 응시하며, 감독을 위해 웹캠·마이크·화면이 기록되는 데 동의합니다. 시험 중 찍힌 얼굴·화면 사진은 하슬라 서버에 저장되고, 부정행위 검토를 위해 외부 AI 서비스(Google Gemini)로 전송되어 분석될 수 있습니다(AI 감독관). 감독 기록은 결과 확정 후 정해진 기간이 지나면 삭제됩니다.",
+      age14: "만 14세 이상입니다. (HPhO는 만 14세 이상만 응시할 수 있습니다.)",
       identity: "답안지에는 수험번호만 적습니다. 이름·학교 등 신원 정보를 적어 생기는 일은 제 책임입니다.",
       guardian: "만 19세 미만이며, 보호자가 참가와 감독 기록에 동의했습니다.",
       trainGuardian: "만 19세 미만이며, 보호자가 감독 기록을 감독관 AI 학습에 사용하는 것에도 동의했습니다.",
@@ -43,7 +44,7 @@
       aidReasons: { family_income: "가계 형편이 어려움", public_assistance: "기초생활수급·차상위 등 공공 지원 대상", school_referral: "학교·기관의 추천", other: "기타" },
       feeLabel: "참가비", feeState: { auto: "면제 (자동)", pending: "지원 심사 중", approved: "면제 (지원 승인)", declined: "지원 미승인 · 납부 필요", none: "납부 필요" },
       saved: "접수되었습니다.", err: "처리하지 못했습니다: ",
-      errors: { bad_aid_reason: "지원 사유를 고르세요.", aid_note_required: "지원 사유를 10자 이상 적어 주세요.", bad_country: "국가를 고르세요.", bad_level: "과정을 고르세요.", bad_birth_year: "출생 연도를 확인하세요.", pledge_required: "규정 서약에 동의해야 합니다.", proctoring_consent_required: "감독 기록에 동의해야 합니다.", identity_notice_required: "답안지 안내를 확인해야 합니다.", guardian_consent_required: "만 19세 미만은 보호자 동의가 필요합니다.", train_guardian_consent_required: "만 19세 미만이 감독관 AI 학습에 동의하려면 보호자 동의도 필요합니다.", registration_closed: "접수 기간이 아닙니다.", login_required: "로그인이 필요합니다." },
+      errors: { bad_aid_reason: "지원 사유를 고르세요.", aid_note_required: "지원 사유를 10자 이상 적어 주세요.", bad_country: "국가를 고르세요.", bad_level: "과정을 고르세요.", bad_birth_year: "출생 연도를 확인하세요.", pledge_required: "규정 서약에 동의해야 합니다.", proctoring_consent_required: "감독 기록에 동의해야 합니다.", identity_notice_required: "답안지 안내를 확인해야 합니다.", guardian_consent_required: "만 19세 미만은 보호자 동의가 필요합니다.", too_young: "HPhO는 만 14세 이상만 응시할 수 있습니다.", age14_required: "만 14세 이상인지 확인해 주세요.", train_guardian_consent_required: "만 19세 미만이 감독관 AI 학습에 동의하려면 보호자 동의도 필요합니다.", registration_closed: "접수 기간이 아닙니다.", login_required: "로그인이 필요합니다." },
     },
     en: {
       tabMonthly: "Monthly", tabHpho: "HPhO", eyebrow: "HaslaLab Physics Olympiad",
@@ -57,6 +58,7 @@
       formTitle: "Register", country: "Country", level: "Level", levels: { middle: "Middle school", high: "High school", university: "University", other: "Other" }, birth: "Year of birth",
       pledge: "I have read the rules and will take no help from people, AI, the internet or books during the exam.",
       proctor: "I will sit the exam in the HaslaEdu desktop app and agree that my webcam, microphone and screen are recorded for proctoring. Photos of my face and screen taken during the exam are stored on HaslaLab's server and may be sent to an external AI service (Google Gemini) for review (the AI proctor). Proctoring records are deleted a set time after results are final.",
+      age14: "I am 14 or older. (HPhO is open to candidates aged 14 and over.)",
       identity: "I will write only my candidate number on the answer sheets. Anything identifying I write is my own responsibility.",
       guardian: "I am under 19 and a parent or guardian has agreed to my taking part and to the proctoring records.",
       trainGuardian: "I am under 19 and a parent or guardian has also agreed that my proctoring records may be used to train the AI proctor.",
@@ -78,7 +80,7 @@
       aidReasons: { family_income: "My family cannot easily afford it", public_assistance: "I receive public financial assistance", school_referral: "Referred by my school or an organisation", other: "Other" },
       feeLabel: "Fee", feeState: { auto: "Waived (automatic)", pending: "Assistance under review", approved: "Waived (assistance approved)", declined: "Assistance declined · fee due", none: "Fee due" },
       saved: "You are registered.", err: "Could not complete: ",
-      errors: { bad_aid_reason: "Choose a reason for assistance.", aid_note_required: "Please explain in at least 10 characters.", bad_country: "Choose your country.", bad_level: "Choose your level.", bad_birth_year: "Check your year of birth.", pledge_required: "You must accept the pledge.", proctoring_consent_required: "You must agree to proctoring.", identity_notice_required: "Please confirm the answer-sheet notice.", guardian_consent_required: "Under 19: a guardian's consent is required.", train_guardian_consent_required: "Under 19: training the AI proctor also needs a guardian's consent.", registration_closed: "Registration is not open.", login_required: "Please sign in." },
+      errors: { bad_aid_reason: "Choose a reason for assistance.", aid_note_required: "Please explain in at least 10 characters.", bad_country: "Choose your country.", bad_level: "Choose your level.", bad_birth_year: "Check your year of birth.", pledge_required: "You must accept the pledge.", proctoring_consent_required: "You must agree to proctoring.", identity_notice_required: "Please confirm the answer-sheet notice.", guardian_consent_required: "Under 19: a guardian's consent is required.", too_young: "HPhO is open to candidates aged 14 and over.", age14_required: "Please confirm that you are 14 or older.", train_guardian_consent_required: "Under 19: training the AI proctor also needs a guardian's consent.", registration_closed: "Registration is not open.", login_required: "Please sign in." },
     },
   };
   let state = { data: null, error: null, busy: false };
@@ -134,13 +136,14 @@
 
   function formHtml(r, mine) {
     const x = T[L()], y = new Date().getUTCFullYear(), years = [];
-    for (let v = y - 9; v >= y - 40; v--) years.push(v);
+    for (let v = y - 14; v >= y - 40; v--) years.push(v);
     const opts = COUNTRIES.map(c => [c, countryName(c)]).sort((a, b) => a[0] === "KR" ? -1 : b[0] === "KR" ? 1 : a[1].localeCompare(b[1]));
     const sel = mine || {};
     return `<form class="hpho-form" data-hpho-round="${esc(r.id)}"><h3>${mine ? x.update : x.formTitle}</h3>
       <label>${x.country}<select name="country" required><option value=""></option>${opts.map(([c, n]) => `<option value="${c}"${sel.country === c ? " selected" : ""}>${esc(n)}</option>`).join("")}</select></label>
       <label>${x.level}<select name="level" required><option value=""></option>${Object.entries(x.levels).map(([k, v]) => `<option value="${k}"${sel.level === k ? " selected" : ""}>${v}</option>`).join("")}</select></label>
       <label>${x.birth}<select name="birth_year" required><option value=""></option>${years.map(v => `<option${+sel.birth_year === v ? " selected" : ""}>${v}</option>`).join("")}</select></label>
+      <label class="hpho-check"><input type="checkbox" name="age14" required> ${x.age14}</label>
       <label class="hpho-check"><input type="checkbox" name="pledge" required> ${x.pledge}</label>
       <label class="hpho-check"><input type="checkbox" name="proctoring" required> ${x.proctor}</label>
       <label class="hpho-check"><input type="checkbox" name="identity_notice" required> ${x.identity}</label>
@@ -186,7 +189,7 @@
     form.addEventListener("submit", async e => {
       e.preventDefault(); if (state.busy) return; state.busy = true; msg.textContent = "…";
       const body = { country: form.country.value, level: form.level.value, birth_year: +form.birth_year.value,
-        pledge: form.pledge.checked, proctoring: form.proctoring.checked, identity_notice: form.identity_notice.checked, guardian_consent: form.guardian_consent.checked, train_consent: form.train_consent.checked, train_guardian_consent: form.train_guardian_consent.checked,
+        age14: form.age14.checked, pledge: form.pledge.checked, proctoring: form.proctoring.checked, identity_notice: form.identity_notice.checked, guardian_consent: form.guardian_consent.checked, train_consent: form.train_consent.checked, train_guardian_consent: form.train_guardian_consent.checked,
         ...(form.aid_request && form.aid_request.checked && !AID_AUTO.has(form.country.value) ? { aid_request: true, aid_reason: form.aid_reason.value, aid_note: form.aid_note.value } : {}) };
       try { await cmApi("POST", `/hpho/rounds/${encodeURIComponent(form.dataset.hphoRound)}/entry`, body); msg.textContent = x.saved; await load(); }
       catch (err) { const c = err?.code || err?.message || ""; msg.textContent = x.errors[c] || x.err + c; }
