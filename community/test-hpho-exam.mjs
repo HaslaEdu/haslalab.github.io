@@ -99,3 +99,29 @@ test('a draft round is a rehearsal: an admin sits it, a member gets not found', 
   assert.match((await call('start', { client }, admin)).candidate_no, /^HP991-\d{4}$/);
   assert.ok(sql.prepare('SELECT 1 FROM hpho_sessions').get());
 });
+
+test('the ear check: two JPEGs from a registered candidate, judged by the model, kept and recorded before any session', async () => {
+  const { earVerdict } = await import('./src/hpho-exam.js');
+  assert.deepEqual(earVerdict({ first: 'clear', second: 'device', note: 'white earbud\u0007 right' }), { first: 'clear', second: 'device', note: 'white earbud  right' });
+  assert.deepEqual(earVerdict({ first: 'yes', second: 'clear' }), { unavailable: true });
+  const { sql, DB } = d1(), t = Math.floor(Date.now() / 1000), puts = [];
+  const store = { async put(key, bytes, meta) { puts.push(key); } };
+  let verdict = { first: 'clear', second: 'device', note: 'earbud' };
+  const deps2 = { ...deps, earVision: async (env, a, b) => (assert.ok(a.length && b.length), verdict) };
+  const reg = createHphoRouter(deps2), exam = createHphoExamRouter(deps2), env = { DB, HPHO_SNAPS: store };
+  await reg('/api/hpho/rounds/2027-1', 'POST', { title_ko: 'a', title_en: 'a', reg_open: t - 7200, reg_close: t + 600, start_at: t + 1800, duration_min: 240, fee_usd: 0, status: 'open' }, admin, env);
+  await reg('/api/hpho/rounds/2027-1/entry', 'POST', entry, student, env);
+  const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]);
+  const send = (me, parts = { first: jpeg, second: jpeg }) => { const form = new FormData(); for (const [k, v] of Object.entries(parts)) form.set(k, new Blob([v], { type: 'image/jpeg' }));
+    return exam('/api/hpho/rounds/2027-1/exam/earcheck', 'POST', {}, me, env, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: form })); };
+  assert.equal(await code(send(other)), 'not_registered');
+  assert.equal(await code(send(student, { first: jpeg })), 'bad_snapshot');
+  assert.equal(await code(send(student, { first: jpeg, second: new Uint8Array([1, 2, 3, 4]) })), 'snapshot_not_jpeg');
+  assert.deepEqual(await send(student), { ok: true, first: 'clear', second: 'device' }, 'open half an hour before the start');
+  assert.equal(puts.length, 2); assert.match(puts[0], /^hpho\/2027-1\/HP271-\d{4}\/\d+-earcheck-first\.jpg$/);
+  assert.match(sql.prepare(`SELECT detail FROM hpho_events WHERE kind='ear_check'`).get().detail, /first=clear second=device/);
+  verdict = { unavailable: true };
+  assert.deepEqual(await send(student), { ok: true, unavailable: true }, 'a model that cannot answer never blocks');
+  sql.prepare('UPDATE hpho_rounds SET start_at=?').run(t + 7200);
+  assert.equal(await code(send(student)), 'check_closed', 'not more than an hour before the start');
+});
