@@ -15,6 +15,9 @@
       title: "HPhO", lead: "올림피아드를 실제로 겪어보는 연습 대회입니다.",
       note: "HPhO는 입시나 수상 실적을 위한 공인 대회가 아닙니다. 새로운 주제의 문제를 실전처럼 풀어보는 경험을 위해 HaslaEdu가 직접 출제합니다.",
       facts: [["개인전", "혼자 응시합니다"], ["반기 1회", "1년에 두 번 열립니다"], ["이론 + 실험", "실험은 하슬라랩 가상 실험대에서"], ["전 세계 동시", "모든 참가자가 같은 시각에 시작합니다"], ["AI 채점", "채점 후 이의신청 기간이 있습니다"]],
+      tracks: { theory: "이론 시험", experiment: "실험 시험" }, hours: "5시간", entryNote: "각 시험은 시작 1시간 전부터 입장할 수 있고, 시작 20분 전까지 대기실에 착석해야 합니다.",
+      admin: { title: "관리자", upload: "시험 자료 올리기", track: "시험", kind: "자료", lang: "언어", file: "PDF 파일", send: "올리기", sent: "올렸습니다.", kinds: { guide: "General Guide", writing: "답안지", answer: "Answer Sheet", paper: "문제지" },
+        seats: "응시 기록 검토", load: "불러오기", cols: ["수험번호", "착석", "시작", "재접속", "끊김", "답안 쪽", "제출", "판정"], review: "검토 필요", none: "아직 착석한 응시자가 없습니다.", log: "기록 보기", save: "판정 저장", verdicts: { "": "—", clear: "이상 없음", review: "검토 중", cheating: "부정행위" }, note: "메모", events: "이벤트", snaps: "감독 사진", answers: "답안 사진" },
       next: "다음 대회", none: "첫 대회 일정은 곧 공개됩니다.", regOpen: "접수", regClose: "접수 마감", start: "시험 시작", length: "시험 시간", min: "분", fee: "참가비", free: "무료",
       localTz: z => `내 시간대(${z}) 기준`, until: "남음", d: "일", h: "시간", m: "분",
       status: { open: "접수 중", closed: "접수 마감", finished: "종료", soon: "접수 예정", rehearsal: "관리자 전용" },
@@ -51,6 +54,9 @@
       title: "HPhO", lead: "A practice olympiad that feels like the real thing.",
       note: "HPhO is not an accredited contest and is not meant for admissions or award records. HaslaEdu writes it so you can meet new topics and sit a paper under real conditions.",
       facts: [["Individual", "You sit it on your own"], ["Twice a year", "One round each half-year"], ["Theory + experiment", "Experiments on the HaslaLab virtual bench"], ["Same time worldwide", "Everyone starts at the same moment"], ["AI-marked", "With a window for appeals"]],
+      tracks: { theory: "Theory exam", experiment: "Experimental exam" }, hours: "5 hours", entryNote: "Each exam room opens an hour before the start; be seated in the waiting room 20 minutes before it.",
+      admin: { title: "Organisers", upload: "Upload exam documents", track: "Exam", kind: "Document", lang: "Language", file: "PDF file", send: "Upload", sent: "Uploaded.", kinds: { guide: "General Guide", writing: "Writing sheet", answer: "Answer Sheet", paper: "Paper" },
+        seats: "Review the exam records", load: "Load", cols: ["Candidate", "Seated", "Started", "Reconnects", "Gaps", "Pages", "Submitted", "Verdict"], review: "Needs review", none: "No candidate has been seated yet.", log: "Open record", save: "Save verdict", verdicts: { "": "—", clear: "Clear", review: "Under review", cheating: "Cheating" }, note: "Note", events: "Events", snaps: "Proctoring photos", answers: "Answer photos" },
       next: "Next round", none: "The first round's dates will be announced soon.", regOpen: "Registration opens", regClose: "Registration closes", start: "Exam starts", length: "Duration", min: "min", fee: "Fee", free: "Free",
       localTz: z => `in your time zone (${z})`, until: "left", d: "d", h: "h", m: "m",
       status: { open: "Registration open", closed: "Registration closed", finished: "Finished", soon: "Opens soon", rehearsal: "Admins only" },
@@ -94,7 +100,8 @@
   }
   function roundStatus(r) {
     const t = Math.floor(Date.now() / 1000);
-    if (r.status === "finished" || t >= r.start_at + r.duration_min * 60) return "finished";
+    const end = Math.max(r.start_at + r.duration_min * 60, ...(r.tracks || []).map(k => k.start_at + k.duration_min * 60));
+    if (r.status === "finished" || t >= end) return "finished";
     if (r.status === "draft") return "rehearsal";   /* only admins are sent drafts: a test round open until it ends */
     if (r.status === "open" && t < r.reg_open) return "soon";
     if (r.status === "open" && t < r.reg_close) return "open";
@@ -121,7 +128,11 @@
     const r = d.rounds.find(r => roundStatus(r) !== "finished") || null;
     if (!r) return `<h2>${x.next}</h2><p class="hpho-muted">${x.none}</p>`;
     const st = roundStatus(r), mine = d.entries?.[r.id], me = typeof cm === "object" && cm ? cm.me : null;
-    const rows = [[x.regOpen, when(r.reg_open)], [x.regClose, when(r.reg_close)], [x.start, `${when(r.start_at)} <small>(${left(r.start_at)})</small>`], [x.length, r.duration_min + x.min], [x.fee, r.fee_usd ? "$" + r.fee_usd.toFixed(2) : x.free]];
+    /* IsPhO-style: the theory and the experiment exam, each with its own date and time */
+    const tracks = r.tracks?.length ? r.tracks : [{ track: "theory", start_at: r.start_at, duration_min: r.duration_min }];
+    const rows = [[x.regOpen, when(r.reg_open)], [x.regClose, when(r.reg_close)],
+      ...tracks.map(k => [x.tracks[k.track], `${when(k.start_at)} <small>(${k.duration_min === 300 ? x.hours : k.duration_min + x.min}${k.start_at > Date.now() / 1000 ? " · " + left(k.start_at) : ""})</small>`]),
+      [x.fee, r.fee_usd ? "$" + r.fee_usd.toFixed(2) : x.free]];
     let action;
     if (mine) action = `<div class="hpho-mine"><p class="hpho-badge">${x.mine}</p><p>${x.candidate}: <b class="hpho-no">${esc(mine.candidate_no)}</b></p><p class="hpho-muted">${x.candidateNote}</p>
       <p><a class="hpho-btn" href="#/hpho/exam">${L() === "en" ? "Technical check · exam room" : "기술 점검 · 시험장 입장"}</a></p>
@@ -134,7 +145,71 @@
     const heading = st === "rehearsal" ? (L() === "en" ? "Practice exam" : "모의 시험") : `${x.next} · ${esc(r.title[L()])}`;
     return `<div class="hpho-round-head"><h2>${heading}</h2><span class="hpho-status is-${st}">${x.status[st]}</span></div>
       <p class="hpho-muted">${x.localTz(esc(tz()))}</p>
-      <dl class="hpho-times">${rows.map(([a, b]) => `<div><dt>${a}</dt><dd>${b}</dd></div>`).join("")}</dl>${action}`;
+      <dl class="hpho-times">${rows.map(([a, b]) => `<div><dt>${a}</dt><dd>${b}</dd></div>`).join("")}</dl><p class="hpho-muted">${x.entryNote}</p>${action}
+      ${me?.role === "admin" ? adminHtml(r, tracks) : ""}`;
+  }
+
+  /* the organisers' tools: upload the guide, the sheets and the paper (per exam and language), and review the seats */
+  function adminHtml(r, tracks) {
+    const a = T[L()].admin, opt = (o, f = v => v) => o.map(v => `<option value="${v}">${esc(f(v))}</option>`).join("");
+    const trackOpt = opt(tracks.map(k => k.track), v => T[L()].tracks[v]);
+    return `<details class="hpho-admin" data-hpho-admin="${esc(r.id)}"><summary>${a.title}</summary>
+      <form class="hpho-form" data-hpho-upload><h3>${a.upload}</h3>
+        <label>${a.track}<select name="track">${trackOpt}</select></label>
+        <label>${a.kind}<select name="kind">${opt(["guide", "writing", "answer", "paper"], v => a.kinds[v])}</select></label>
+        <label>${a.lang}<select name="lang">${opt(["ko", "en"])}</select></label>
+        <label>${a.file}<input type="file" name="file" accept="application/pdf" required></label>
+        <p class="hpho-form-msg" role="status"></p><button type="submit" class="hpho-btn">${a.send}</button></form>
+      <div class="hpho-form" data-hpho-seats><h3>${a.seats}</h3><label>${a.track}<select name="track">${trackOpt}</select></label>
+        <p><button type="button" class="hpho-btn" data-hpho-load>${a.load}</button></p><div data-hpho-seat-list></div><div data-hpho-seat-log></div></div></details>`;
+  }
+  const authFetch = (p, init = {}) => fetch(cmBase() + "/api" + p, { ...init, headers: { ...(init.headers || {}), Authorization: "Bearer " + cmTok() } });
+  function bindAdmin(box) {
+    const root = box.querySelector("[data-hpho-admin]"); if (!root) return;
+    const a = T[L()].admin, id = encodeURIComponent(root.dataset.hphoAdmin), up = root.querySelector("[data-hpho-upload]");
+    up.addEventListener("submit", async e => {
+      e.preventDefault(); const msg = up.querySelector(".hpho-form-msg"); msg.textContent = "…";
+      const fd = new FormData(); fd.set("kind", up.kind.value); fd.set("lang", up.lang.value); fd.set("file", up.file.files[0]);
+      const res = await authFetch(`/hpho/rounds/${id}/exam/${up.track.value}/upload`, { method: "POST", body: fd }).catch(() => null);
+      const j = res ? await res.json().catch(() => ({})) : {};
+      msg.textContent = res?.ok ? `${a.sent} (${Math.round(j.size / 1024)} KB)` : T[L()].err + (j.error || "network");
+    });
+    const seats = root.querySelector("[data-hpho-seats]"), list = seats.querySelector("[data-hpho-seat-list]"), logBox = seats.querySelector("[data-hpho-seat-log]");
+    const time = s => s ? new Date(s * 1000).toLocaleTimeString(L() === "en" ? "en-GB" : "ko-KR") : "—";
+    async function load() {
+      const track = seats.querySelector("[name=track]").value;
+      try {
+        const d = await cmApi("GET", `/hpho/rounds/${id}/exam/${track}/seats`);
+        list.innerHTML = d.seats.length ? `<div class="hpho-table-wrap"><table class="hpho-table"><thead><tr>${a.cols.map(c => `<th>${c}</th>`).join("")}<th></th></tr></thead><tbody>${d.seats.map(s => `<tr class="${s.review ? "is-review" : ""}">
+          <td><b class="hpho-no">${esc(s.candidate_no)}</b>${s.review ? ` <span class="hpho-status is-review">${a.review}</span>` : ""}</td><td>${time(s.checked_in_at)}</td><td>${time(s.started_at)}</td><td>${s.reconnects}</td><td>${s.gaps}</td><td>${s.pages}</td><td>${time(s.submitted_at)}</td>
+          <td><select data-v="${esc(s.candidate_no)}">${Object.entries(a.verdicts).map(([k, v]) => `<option value="${k}"${(s.verdict || "") === k ? " selected" : ""}>${v}</option>`).join("")}</select> <input data-n="${esc(s.candidate_no)}" placeholder="${a.note}" value="${esc(s.verdict_note || "")}" maxlength="500"> <button type="button" class="hpho-link" data-save="${esc(s.candidate_no)}">${a.save}</button></td>
+          <td><button type="button" class="hpho-link" data-log="${esc(s.candidate_no)}">${a.log}</button></td></tr>`).join("")}</tbody></table></div>` : `<p class="hpho-muted">${a.none}</p>`;
+        list.querySelectorAll("[data-save]").forEach(b => b.addEventListener("click", async () => {
+          const no = b.dataset.save, v = list.querySelector(`[data-v="${CSS.escape(no)}"]`).value; if (!v) return;
+          try { await cmApi("POST", `/hpho/rounds/${id}/exam/${track}/verdict`, { candidate: no, verdict: v, note: list.querySelector(`[data-n="${CSS.escape(no)}"]`).value }); b.textContent = "✓"; } catch (e) { alert(T[L()].err + (e?.code || "")); }
+        }));
+        list.querySelectorAll("[data-log]").forEach(b => b.addEventListener("click", () => openLog(track, b.dataset.log)));
+      } catch (e) { list.innerHTML = `<p class="hpho-muted">${esc(T[L()].err + (e?.code || "network"))}</p>`; }
+    }
+    /* one candidate: the events in order, and the proctoring and answer photos (fetched with the admin's sign-in) */
+    async function openLog(track, no) {
+      logBox.innerHTML = "<p class='hpho-muted'>…</p>";
+      try {
+        const d = await cmApi("GET", `/hpho/rounds/${id}/exam/${track}/log?candidate=${encodeURIComponent(no)}`);
+        logBox.innerHTML = `<h3>${esc(no)}</h3><details open><summary>${a.events} (${d.events.length})</summary><ol class="hpho-events">${d.events.map(e => `<li><time>${time(e.at)}</time> <b>${esc(e.kind)}</b> ${esc(e.detail || "")}</li>`).join("")}</ol></details>
+          <details><summary>${a.snaps} (${d.snaps.length})</summary><div class="hpho-thumbs" data-keys="snaps"></div></details>
+          <details><summary>${a.answers} (${d.answers.length})</summary><div class="hpho-thumbs" data-keys="answers"></div></details>`;
+        for (const [kind, keys] of [["snaps", d.snaps.filter(k => /\.jpg$/.test(k))], ["answers", d.answers]]) {
+          const host = logBox.querySelector(`[data-keys="${kind}"]`), det = host.closest("details");
+          const fill = async () => { det.removeEventListener("toggle", fill); for (const k of keys) {
+            const res = await authFetch(`/hpho/rounds/${id}/exam/${track}/media?key=${encodeURIComponent(k)}`).catch(() => null); if (!res?.ok) continue;
+            const img = Object.assign(document.createElement("img"), { src: URL.createObjectURL(await res.blob()), title: k.split("/").pop(), loading: "lazy" });
+            const link = Object.assign(document.createElement("a"), { href: img.src, target: "_blank" }); link.append(img); host.append(link); } };
+          if (det.open) fill(); else det.addEventListener("toggle", fill);
+        }
+      } catch (e) { logBox.innerHTML = `<p class="hpho-muted">${esc(T[L()].err + (e?.code || "network"))}</p>`; }
+    }
+    seats.querySelector("[data-hpho-load]").addEventListener("click", load);
   }
 
   function formHtml(r, mine) {
@@ -169,7 +244,8 @@
   function paint() {
     const box = document.getElementById("hphoRound"); if (!box) return;
     box.innerHTML = roundHtml();
-    box.querySelectorAll(".hpho-form").forEach(bindForm);
+    box.querySelectorAll(".hpho-form[data-hpho-round]").forEach(bindForm);
+    bindAdmin(box);
     box.querySelector("[data-hpho-withdraw]")?.addEventListener("click", async e => {
       if (!confirm(T[L()].withdrawAsk)) return;
       try { await cmApi("DELETE", `/hpho/rounds/${encodeURIComponent(e.currentTarget.dataset.hphoWithdraw)}/entry`); } catch (err) { alert(T[L()].err + (err?.message || "")); }
@@ -202,7 +278,7 @@
   let timer = 0;
   function mount() {
     clearInterval(timer); state.data = null; load();
-    timer = setInterval(() => { if (!document.getElementById("hphoRound")) return clearInterval(timer); if (!document.querySelector(".hpho-form:focus-within")) paint(); }, 60000);
+    timer = setInterval(() => { if (!document.getElementById("hphoRound")) return clearInterval(timer); if (!document.querySelector(".hpho-form:focus-within, .hpho-admin[open]")) paint(); }, 60000);
   }
   window.HL_HPHO = { view, mount, roundStatus };
 })();

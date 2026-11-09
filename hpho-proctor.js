@@ -81,21 +81,50 @@
     const reason = ["many", "none", "dark", "small", "off"].reduce((a, k) => n[k] > n[a] ? k : a, "none");
     return { ok: false, reason };
   }
-  /* is the microphone heard? up to ten seconds while the candidate reads a sentence aloud; level(0..1) feeds a meter */
+  /* is the sentence read aloud? The level is measured against the room's own noise first, then a voice must be heard in
+     the speech band (100-3500 Hz), in more than one burst and for long enough to be a sentence: a shout, a cough or a tap
+     on the desk does not pass. The recording (16 kHz WAV) goes to the server, where a model checks the words themselves.
+     level(0..1) feeds the meter; level(0, "speak") tells the page to show "read now" */
   async function micCheck(level) {
     if (!p?.cam?.getAudioTracks().length) return { ok: false, reason: "no_mic" };
     let ctx; try { ctx = new AudioContext(); await ctx.resume(); } catch (e) { return { ok: false, reason: "no_audio" }; }
-    const an = ctx.createAnalyser(); an.fftSize = 1024; ctx.createMediaStreamSource(p.cam).connect(an);
-    const buf = new Float32Array(an.fftSize); let voiced = 0, top = 0;
+    const src = ctx.createMediaStreamSource(new MediaStream(p.cam.getAudioTracks())), an = ctx.createAnalyser(); an.fftSize = 2048; src.connect(an);
+    const chunks = []; let recording = false, rec = null, sink = null;
+    try { rec = ctx.createScriptProcessor(4096, 1, 1); rec.onaudioprocess = e => { if (recording) chunks.push(new Float32Array(e.inputBuffer.getChannelData(0))); };
+      sink = ctx.createGain(); sink.gain.value = 0; src.connect(rec); rec.connect(sink); sink.connect(ctx.destination); } catch (e) { rec = null; }
+    const buf = new Float32Array(an.fftSize), freq = new Float32Array(an.frequencyBinCount), hz = ctx.sampleRate / an.fftSize;
+    const rms = () => { an.getFloatTimeDomainData(buf); let s = 0; for (const x of buf) s += x * x; return Math.sqrt(s / buf.length); };
+    const speechShare = () => { an.getFloatFrequencyData(freq); let a = 0, b = 0;
+      for (let i = 1; i < freq.length; i++) { const f = i * hz; if (f < 50 || f > 8000) continue; const e = Math.pow(10, freq[i] / 10); b += e; if (f >= 100 && f <= 3500) a += e; }
+      return b ? a / b : 0; };
     try {
-      for (let i = 0; i < 100 && voiced < 12; i++) {
+      let floor = 0; for (let i = 0; i < 8; i++) { await wait(100); floor = Math.max(floor, rms()); }
+      level?.(0, "speak"); recording = true;
+      const thr = Math.max(0.012, floor * 3);
+      let voiced = 0, bursts = 0, on = false, quiet = 0, top = 0, first = -1, last = -1;
+      for (let i = 0; i < 100; i++) {
         await wait(100);
-        an.getFloatTimeDomainData(buf); let s = 0; for (const x of buf) s += x * x;
-        const rms = Math.sqrt(s / buf.length); top = Math.max(top, rms); level?.(Math.min(1, rms * 8));
-        if (rms > 0.03) voiced++;
+        const r = rms(); top = Math.max(top, r); level?.(Math.min(1, r * 8));
+        if (r > thr && speechShare() > 0.55) { voiced++; if (!on) { bursts++; on = true; } quiet = 0; if (first < 0) first = i; last = i; }
+        else { if (++quiet >= 2) on = false; }
+        if (voiced >= 14 && bursts >= 2 && quiet >= 12) break;            /* the sentence, then a second of silence */
       }
-    } finally { level?.(0); ctx.close().catch(() => {}); }
-    return voiced >= 12 ? { ok: true } : { ok: false, reason: top < 0.008 ? "silent" : "quiet" };
+      recording = false;
+      const span = first < 0 ? 0 : last - first + 1;
+      /* a loud but short sound (a shout, a word, a knock) is "short", not "quiet" */
+      const reason = top < 0.008 ? "silent" : voiced < 3 ? "quiet" : voiced < 10 || bursts < 2 || span < 15 ? "short" : null;
+      return { ok: !reason, ...(reason ? { reason } : {}), wav: rec ? wav16k(chunks, ctx.sampleRate) : null };
+    } finally { recording = false; level?.(0); try { rec?.disconnect(); sink?.disconnect(); src.disconnect(); } catch (e) {} ctx.close().catch(() => {}); }
+  }
+  /* mono float chunks at the context's rate, as a 16 kHz 16-bit WAV (at most ten seconds: about 320 KB) */
+  function wav16k(chunks, rate) {
+    const n = chunks.reduce((a, c) => a + c.length, 0), k = rate / 16000, len = Math.min(160000, Math.floor(n / k));
+    const all = new Float32Array(n); let o = 0; for (const c of chunks) { all.set(c, o); o += c.length; }
+    const out = new DataView(new ArrayBuffer(44 + len * 2)), str = (at, t) => { for (let i = 0; i < t.length; i++) out.setUint8(at + i, t.charCodeAt(i)); };
+    str(0, "RIFF"); out.setUint32(4, 36 + len * 2, true); str(8, "WAVE"); str(12, "fmt "); out.setUint32(16, 16, true); out.setUint16(20, 1, true); out.setUint16(22, 1, true);
+    out.setUint32(24, 16000, true); out.setUint32(28, 32000, true); out.setUint16(32, 2, true); out.setUint16(34, 16, true); str(36, "data"); out.setUint32(40, len * 2, true);
+    for (let i = 0; i < len; i++) { let s = 0, a = Math.floor(i * k), b = Math.max(a + 1, Math.floor((i + 1) * k)); for (let j = a; j < b; j++) s += all[j]; const v = Math.max(-1, Math.min(1, s / (b - a))); out.setInt16(44 + i * 2, v < 0 ? v * 0x8000 : v * 0x7fff, true); }
+    return new Blob([out.buffer], { type: "audio/wav" });
   }
   /* which way the head is turned: the nose against the middle of the eyes, in eye-distances (BlazeFace keypoints 0,1 eyes, 2 nose) */
   function yaw(v) {
@@ -156,7 +185,7 @@
   /* start watching: events go to onEvent(kind, detail), snapshots to upload(blob, source, reason) */
   function start({ onEvent, upload }) {
     if (!p?.cam) { onEvent("camera_stopped", "no camera"); return; }
-    p.onEvent = onEvent; p.upload = upload; p.last = {}; p.since = {}; p.alive = true; p.errors = 0;
+    p.onEvent = onEvent; p.upload = upload; p.last = {}; p.since = {}; p.alive = true; p.errors = 0; p.pace = p.pace || [10, 60];
     if (p.scr) { p.scrVideo = Object.assign(document.createElement("video"), { muted: true, playsInline: true, srcObject: p.scr }); p.scrVideo.play?.().catch(() => {}); }
     onEvent("camera_started", p.det ? "local detection on" : "local detection unavailable");
     p.cam.getTracks().forEach(t => t.addEventListener("ended", () => p.alive && onEvent("camera_stopped", t.kind + " ended")));
@@ -180,8 +209,20 @@
         if (p.since[kind] >= NEAR[kind] && Date.now() / 1000 - (p.last[kind] || 0) > COOLDOWN) { p.last[kind] = Date.now() / 1000; onEvent(kind); snap(kind); }
       }
     }, 1000);
-    const next = () => { p.timer = setTimeout(() => { snap("random"); if (p.alive) next(); }, (10 + Math.random() * 50) * 1000); };
-    next();
+    const next = () => { const [lo, hi] = p.pace; p.timer = setTimeout(() => { snap(p.paceReason || "random"); if (p.alive) next(); }, (lo + Math.random() * (hi - lo)) * 1000); };
+    p.next = next; next();
+  }
+  /* how often the random snapshots come, and why they are taken: after the time is over they come every few seconds,
+     marked after_time, so a person can see whether anyone kept writing */
+  function pace(lo, hi, reason) {
+    if (!p) return; p.pace = [lo, hi]; p.paceReason = reason || null;
+    if (p.alive && p.next) { clearTimeout(p.timer); p.next(); }
+  }
+  /* a full-size still from the webcam (an answer page held up to it), JPEG */
+  async function still() {
+    const v = document.getElementById("hphoSelf"); if (!v?.videoWidth) return null;
+    const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
+    return new Promise(res => c.toBlob(res, "image/jpeg", 0.9));
   }
   async function snap(reason) {
     if (!p?.alive || !p.upload) return;
@@ -199,5 +240,5 @@
   }
   /* counters only (no image, no stream), for the page's own status line and for tests */
   const stats = () => p ? { alive: !!p.alive, detector: !!p.det, faces: p.faces ?? null, errors: p.errors || 0, lastError: p.lastError || null, since: { ...(p.since || {}) } } : null;
-  window.HL_HPHO_PROCTOR = { check, dock, faceCheck, micCheck, earShots, start, snap, stop, stats };
+  window.HL_HPHO_PROCTOR = { check, dock, faceCheck, micCheck, earShots, start, snap, stop, stats, pace, still, wav16k };
 })();

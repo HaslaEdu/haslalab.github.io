@@ -1,66 +1,128 @@
-/* HPhO exam sessions, kept apart from registration (hpho.js). The exam is sat in the HaslaEdu desktop app's exam window;
-   the web exam page there starts the session, sends the window's proctoring events with its own heartbeat, and ends it.
-     POST /api/hpho/rounds/:id/exam/start    a registered candidate, from the start time until the end
-     POST /api/hpho/rounds/:id/exam/events   up to 100 events per call; every call is a heartbeat
-     POST /api/hpho/rounds/:id/exam/end      the candidate finishes early (the clock ends it otherwise)
-     POST /api/hpho/rounds/:id/exam/snap     a webcam or screen snapshot (multipart: image, source, reason), kept in R2
-     POST /api/hpho/rounds/:id/exam/earcheck the technical check's ear photos (multipart: first, second), from an hour before
-                                             the start: an AI model says whether anything is worn in or on each ear
-     GET  /api/hpho/rounds/:id/exam/state    the caller's own session
-     GET  /api/hpho/rounds/:id/exam/log?candidate=HP271-0042   admin: one candidate's session and events
-   Like MIPT's online rounds, answer photos are uploaded during an hour after the exam (UPLOAD_MIN), not during it.
+/* HPhO exam seats, kept apart from registration (hpho.js). A round has a theory and an experiment exam, each on its own
+   day, IsPhO-style (hpho.js roundTracks): the exam room opens an hour before the start, a candidate must be seated in the
+   waiting room twenty minutes before it, the exam lasts five hours, and when the clock ends it the page moves to the
+   submission page, where the answer photos are uploaded while the proctoring keeps recording (writing on the answer
+   sheets after the end is cheating). The exam is sat in the HaslaEdu desktop app's exam window.
+   Every route is /api/hpho/rounds/:id/exam/:track/<action>, track theory or experiment (without it: theory, the paths
+   the first exam page used):
+     GET  state                 the caller's own seat and the track's times
+     POST checkin {client,lang} take a seat in the waiting room (from an hour before until 20 min before the start;
+                                a seated candidate may come back until the end)
+     POST lang {lang}           the language of the paper, until the start
+     POST start {client}        the exam begins (from the start time); calling it again resumes after a disconnect
+     POST events                up to 100 proctoring events per call; every call is a heartbeat
+     POST snap                  a webcam or screen snapshot (multipart: image, source, reason), kept in R2
+     POST earcheck              the technical check's ear photos (multipart: first, second): worn in or on the ears?
+     POST voicecheck            the technical check's spoken sentence (multipart: audio WAV, lang): was it said?
+     GET  docs                  which documents exist (general guide, writing sheet, answer sheet, paper) per language
+     GET  doc?kind=&lang=       one PDF: the sheets from the room's opening, the paper from the start to the end, to a
+                                seated candidate who has started
+     POST answer                one answer page (multipart: image, page), from the end until the upload closes
+     POST submit                the answers are in: the seat is done and the exam window may close
+     admin:
+     POST upload                a document (multipart: file PDF, kind, lang) — the organisers upload these themselves
+     GET  seats                 every seat of the track, with disconnects and gaps flagged for review
+     GET  log?candidate=        one candidate's seat, events, snapshot and answer keys
+     GET  media?key=            one stored snapshot or answer page
+     POST verdict               {candidate, verdict: clear|review|cheating, note}: a person's decision after review
    Events are what the client reports, so a gap in the heartbeat is itself recorded (the server sees it). */
+import { ensureHpho, roundTracks, TRACKS } from './hpho.js';
 
 export const UPLOAD_MIN = 60;
 export const SNAP_MAX_BYTES = 250 * 1024;
+export const ANSWER_MAX_BYTES = 4 * 1024 * 1024;
+export const ANSWER_MAX_PAGES = 80;
+export const DOC_MAX_BYTES = 40 * 1024 * 1024;
+export const VOICE_MAX_BYTES = 1024 * 1024;
 export const SNAP_SOURCES = ['webcam', 'screen'];
+export const DOC_KINDS = ['guide', 'writing', 'answer', 'paper'];      /* general guide, 답안지 (writing sheet), answer sheet, the paper */
+export const DOC_LANGS = ['ko', 'en'];
+export const VERDICTS = ['clear', 'review', 'cheating'];
+/* a seat is flagged for a person to look at the recording once the candidate dropped out this often */
+export const REVIEW_RECONNECTS = 3, REVIEW_GAPS = 3;
 /* the snapshot's object key: round, candidate number (never the account), source, time and reason */
 export const snapKey = (round, candidate, source, t, reason) => `hpho/${round}/${candidate}/${t}-${source}-${reason}.jpg`;
+export const docKey = (round, track, kind, lang) => `hpho-docs/${round}/${track}/${kind}-${lang}.pdf`;
+export const answerKey = (round, track, candidate, page, ext) => `hpho-answers/${round}/${track}/${candidate}/${String(page).padStart(3, '0')}.${ext}`;
 const isJpeg = b => b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff;
+const isPng = b => b.length > 7 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47;
+const isPdf = b => b.length > 4 && String.fromCharCode(...b.subarray(0, 5)) === '%PDF-';
+const isWav = b => b.length > 44 && String.fromCharCode(...b.subarray(0, 4)) === 'RIFF' && String.fromCharCode(...b.subarray(8, 12)) === 'WAVE';
 export const HEARTBEAT_GAP = 45;           /* seconds without a call before the next call records a gap */
 export const EXAM_EVENTS = ['heartbeat', 'window_ready', 'focus_lost', 'focus_back', 'display_change', 'screen_locked', 'screen_unlocked',
   'suspend', 'resume', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'network_back', 'page_hidden', 'page_visible',
   'camera_started', 'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'process_new', 'process_list', 'clip_saved', 'snapshot_saved',
-  'face_check', 'mic_check', 'ear_check'];
-export const EARCHECK_EARLY = 3600;        /* the ear check opens an hour before the start, with the technical check */
+  'face_check', 'mic_check', 'ear_check', 'checkin', 'reconnect', 'time_over', 'after_time', 'answer_page', 'submitted', 'paper_lang'];
+export const EARCHECK_EARLY = 3600;        /* the ear and voice checks open an hour before the start, with the technical check */
 const EAR_VERDICTS = ['clear', 'device', 'unclear'];
 const EAR_PROMPT = `These are two webcam photos of an exam candidate, taken during the technical check before an online physics exam: in the first the head is turned to show one ear, in the second the other ear.
 For each photo decide whether anything is worn in, on or over the visible ear: earbuds, earphones, headphones, a headset, a hearing device, or a wire leading to the ear.
 Earrings, ear piercings and glasses are not devices. Use "unclear" when the ear itself cannot be seen (hair, angle, blur, too dark) or there is no person.
 Reply with JSON only: {"first":"clear"|"device"|"unclear","second":"clear"|"device"|"unclear","note":"at most 15 words, in English"}`;
+/* the sentence the candidate reads aloud in the microphone check, in the language of the page */
+export const VOICE_SENTENCE = { ko: '저는 HPhO에 정직하게 응시하겠습니다.', en: 'I will sit HPhO honestly.' };
+const voicePrompt = lang => `This is a microphone test recorded before an online exam. The candidate was asked to read this sentence aloud: "${VOICE_SENTENCE[lang]}".
+Listen to the recording. "said" is true only if a human voice clearly reads that sentence, or very nearly that sentence (small slips are fine). It is false for silence, noise, music, tapping, a shout or a word that is not the sentence, humming, or a different sentence.
+Reply with JSON only: {"said":true|false,"heard":"what you heard, at most 12 words"}`;
+const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(s); };
+async function gemini(env, parts, maxOutputTokens = 200) {
+  const model = env.HPHO_VISION_MODEL || env.GEMINI_MODEL || 'gemini-flash-lite-latest';
+  const r = await fetch(`${env.GEMINI_BASE || 'https://generativelanguage.googleapis.com/v1beta/models'}/${model}:generateContent`, {
+    method: 'POST', signal: AbortSignal.timeout(30000), headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
+    body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens } }) });
+  if (!r.ok) return null;
+  const j = await r.json(), raw = (j.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('');
+  return JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''));
+}
 /* the default ear model: Gemini, with the two photos inline. { unavailable: true } when it cannot answer, so the check never
    blocks a candidate because the model is down (the photos are kept and the result is recorded either way) */
 export async function geminiEarVision(env, first, second) {
   if (!env.GEMINI_API_KEY) return { unavailable: true };
-  const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(s); };
-  try {
-    const model = env.HPHO_VISION_MODEL || env.GEMINI_MODEL || 'gemini-flash-lite-latest';
-    const r = await fetch(`${env.GEMINI_BASE || 'https://generativelanguage.googleapis.com/v1beta/models'}/${model}:generateContent`, {
-      method: 'POST', signal: AbortSignal.timeout(30000), headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
-      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ inline_data: { mime_type: 'image/jpeg', data: b64(first) } }, { inline_data: { mime_type: 'image/jpeg', data: b64(second) } }, { text: EAR_PROMPT }] }],
-        generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens: 200 } }) });
-    if (!r.ok) return { unavailable: true };
-    const j = await r.json(), raw = (j.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('');
-    return earVerdict(JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')));
-  } catch { return { unavailable: true }; }
+  try { return earVerdict(await gemini(env, [{ inline_data: { mime_type: 'image/jpeg', data: b64(first) } }, { inline_data: { mime_type: 'image/jpeg', data: b64(second) } }, { text: EAR_PROMPT }])); }
+  catch { return { unavailable: true }; }
 }
 /* the model's answer, reduced to the two verdicts and a short note */
 export function earVerdict(v) {
   if (!v || !EAR_VERDICTS.includes(v.first) || !EAR_VERDICTS.includes(v.second)) return { unavailable: true };
   return { first: v.first, second: v.second, note: typeof v.note === 'string' ? v.note.replace(/[\u0000-\u001f]/g, ' ').slice(0, 120) : '' };
 }
+/* the default voice model: Gemini listens to the WAV and says whether the sentence was read. A level meter alone let a
+   shout, a cough or a tap on the desk pass; this hears the words. Unavailable: the page's own level check decides. */
+export async function geminiVoiceCheck(env, wav, lang) {
+  if (!env.GEMINI_API_KEY) return { unavailable: true };
+  try { return voiceVerdict(await gemini(env, [{ inline_data: { mime_type: 'audio/wav', data: b64(wav) } }, { text: voicePrompt(lang) }])); }
+  catch { return { unavailable: true }; }
+}
+export function voiceVerdict(v) {
+  if (!v || typeof v.said !== 'boolean') return { unavailable: true };
+  return { said: v.said, heard: typeof v.heard === 'string' ? v.heard.replace(/[\u0000-\u001f]/g, ' ').slice(0, 120) : '' };
+}
 const now = () => Math.floor(Date.now() / 1000);
 
 export const HPHO_EXAM_SCHEMA = [
+  /* the first exam page's sessions (one per round); kept for its records, no longer written */
   `CREATE TABLE IF NOT EXISTS hpho_sessions (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, candidate_no TEXT NOT NULL,
     started_at INTEGER NOT NULL, ends_at INTEGER NOT NULL, last_beat INTEGER NOT NULL, ended_at INTEGER, client TEXT,
     events INTEGER NOT NULL DEFAULT 0, gaps INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (round_id, user_id))`,
+  `CREATE TABLE IF NOT EXISTS hpho_seats (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, track TEXT NOT NULL, candidate_no TEXT NOT NULL,
+    checked_in_at INTEGER NOT NULL, started_at INTEGER, ends_at INTEGER NOT NULL, last_beat INTEGER NOT NULL, submitted_at INTEGER,
+    paper_lang TEXT NOT NULL DEFAULT 'ko', client TEXT, events INTEGER NOT NULL DEFAULT 0, gaps INTEGER NOT NULL DEFAULT 0,
+    reconnects INTEGER NOT NULL DEFAULT 0, pages INTEGER NOT NULL DEFAULT 0, verdict TEXT, verdict_note TEXT, verdict_at INTEGER,
+    PRIMARY KEY (round_id, user_id, track))`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS hpho_seats_no ON hpho_seats(round_id, track, candidate_no)`,
   `CREATE TABLE IF NOT EXISTS hpho_events (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, seq INTEGER NOT NULL,
     client_at INTEGER, at INTEGER NOT NULL, kind TEXT NOT NULL, detail TEXT, PRIMARY KEY (round_id, user_id, seq))`,
 ];
+const EXAM_COLUMNS = [`ALTER TABLE hpho_events ADD COLUMN track TEXT`];
 const ready = new WeakMap();
 export function ensureHphoExam(db) {
-  if (!ready.has(db)) { const p = db.batch(HPHO_EXAM_SCHEMA.map(s => db.prepare(s))).then(() => true); ready.set(db, p); p.catch(() => ready.delete(db)); }
+  if (!ready.has(db)) {
+    const p = Promise.all([ensureHpho(db), db.batch(HPHO_EXAM_SCHEMA.map(s => db.prepare(s)))]).then(async () => {
+      for (const sql of EXAM_COLUMNS) try { await db.prepare(sql).run(); } catch (e) { if (!/duplicate column/i.test(String(e?.message || e))) throw e; }
+      return true;
+    });
+    ready.set(db, p); p.catch(() => ready.delete(db));
+  }
   return ready.get(db);
 }
 
@@ -74,104 +136,219 @@ export function checkEvents(list) {
   const out = [];
   for (const e of list) {
     const seq = Number(e?.seq), t = Number(e?.t);
-    if (!Number.isInteger(seq) || seq < 0 || seq > 1e7 || !EXAM_EVENTS.includes(e?.kind)) return { error: 'bad_events' };
+    if (!Number.isInteger(seq) || seq < 0 || seq > 1e9 || !EXAM_EVENTS.includes(e?.kind)) return { error: 'bad_events' };
     const detail = e.detail == null ? null : String(e.detail).replace(/[\u0000-\u001f]/g, ' ').slice(0, 200);
     out.push({ seq, client_at: Number.isInteger(t) ? t : null, kind: e.kind, detail });
   }
   return { events: out };
 }
-export const examWindow = r => ({ opens: r.start_at, ends: r.start_at + r.duration_min * 60, upload_until: r.start_at + r.duration_min * 60 + UPLOAD_MIN * 60 });
+/* one exam's times: the room opens, seating closes, the start, the end, and the end of the answer upload */
+export function examWindow(round, track = 'theory') {
+  const x = roundTracks(round).find(v => v.track === track);
+  if (!x) return null;
+  return { track, opens: x.opens, seat_by: x.seat_by, start_at: x.start_at, ends: x.ends, upload_until: x.ends + UPLOAD_MIN * 60, duration_min: x.duration_min };
+}
+/* a seat flagged for review: dropped out or went silent often enough that a person should look at the recording */
+export const needsReview = s => (s.reconnects || 0) >= REVIEW_RECONNECTS || (s.gaps || 0) >= REVIEW_GAPS;
+/* the seat's own ends_at is what the exam's end was at check-in; the page is told the round's current times (window) */
+const seatView = s => s && { candidate_no: s.candidate_no, checked_in_at: s.checked_in_at, started_at: s.started_at, ends_at: s.ends_at,
+  submitted_at: s.submitted_at, paper_lang: s.paper_lang, reconnects: s.reconnects, pages: s.pages };
+const adminSeat = s => ({ ...seatView(s), client: s.client, events: s.events, gaps: s.gaps, last_beat: s.last_beat,
+  verdict: s.verdict, verdict_note: s.verdict_note, verdict_at: s.verdict_at, review: needsReview(s) });
 
-export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB, earVision = geminiEarVision }) {
+export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scope = env => env.DB, earVision = geminiEarVision, voiceCheck = geminiVoiceCheck }) {
   const fail = (status, code) => { throw new HttpError(status, code); };
+  const form = async req => { try { return await req.formData(); } catch { fail(400, 'bad_upload'); } };
+  const bytesOf = async (file, max, tooLarge = 'upload_too_large') => {
+    if (!file || typeof file.arrayBuffer !== 'function') fail(400, 'bad_upload');
+    if (file.size > max) fail(413, tooLarge);
+    return new Uint8Array(await file.arrayBuffer());
+  };
   return async function exam(p, m, body, me, env, url, req) {
-    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(start|events|end|state|log|snap|earcheck)$/.exec(p);
+    const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(?:(theory|experiment)\/)?(state|checkin|lang|start|events|snap|earcheck|voicecheck|docs|doc|answer|submit|upload|seats|log|media|verdict)$/.exec(p);
     if (!r) return undefined;
-    const [, id, action] = r, db = scope(env);
+    const [, id, track = 'theory', action] = r, db = scope(env), admin = isAdmin(me);
     needUser(me); await ensureHphoExam(db);
     const round = await db.prepare('SELECT * FROM hpho_rounds WHERE id=?').bind(id).first();
-    if (!round || round.status === 'draft' && !isAdmin(me)) fail(404, 'round_not_found');   /* a draft: an admins' rehearsal */
-    const w = examWindow(round), t = now();
-    if (action === 'log' && m === 'GET') {
-      if (!isAdmin(me)) fail(403, 'forbidden');
-      const no = url?.searchParams?.get('candidate') || '';
-      const s = await db.prepare('SELECT * FROM hpho_sessions WHERE round_id=? AND candidate_no=?').bind(id, no).first();
-      if (!s) fail(404, 'no_session');
-      const events = (await db.prepare('SELECT seq,client_at,at,kind,detail FROM hpho_events WHERE round_id=? AND user_id=? ORDER BY seq').bind(id, s.user_id).all()).results || [];
-      return { session: { candidate_no: s.candidate_no, started_at: s.started_at, ends_at: s.ends_at, ended_at: s.ended_at, client: s.client, events: s.events, gaps: s.gaps }, events };
-    }
-    const session = await db.prepare('SELECT * FROM hpho_sessions WHERE round_id=? AND user_id=?').bind(id, me.id).first();
-    if (action === 'state' && m === 'GET') return { window: w, now: t, session: session && { started_at: session.started_at, ends_at: session.ends_at, ended_at: session.ended_at, candidate_no: session.candidate_no } };
-    if (m !== 'POST') fail(405, 'method_not_allowed');
-    if (action === 'earcheck') {
-      const entry = await db.prepare('SELECT candidate_no FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).first();
-      if (!entry) fail(403, 'not_registered');
-      if (t < w.opens - EARCHECK_EARLY || t >= w.ends) fail(409, 'check_closed');
-      await limit(env, 'hpho-ear:' + me.id, 8, 600);
-      let form; try { form = await req.formData(); } catch { fail(400, 'bad_snapshot'); }
-      const shots = [];
-      for (const name of ['first', 'second']) {
-        const file = form.get(name);
-        if (!file || typeof file.arrayBuffer !== 'function') fail(400, 'bad_snapshot');
-        if (file.size > SNAP_MAX_BYTES * 2) fail(413, 'snapshot_too_large');
-        const bytes = new Uint8Array(await file.arrayBuffer()); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg');
-        shots.push(bytes);
+    if (!round || round.status === 'draft' && !admin) fail(404, 'round_not_found');   /* a draft: an admins' rehearsal */
+    const w = examWindow(round, track); if (!w) fail(404, 'no_such_exam');
+    const t = now(), store = env.HPHO_SNAPS || env.LAB_PAGES;
+    const q = k => url?.searchParams?.get(k) || '';
+
+    /* ── the organisers ── */
+    if (['upload', 'seats', 'log', 'media', 'verdict'].includes(action)) {
+      if (!admin) fail(403, 'forbidden');
+      if (action === 'upload' && m === 'POST') {
+        if (!store) fail(503, 'storage_unavailable');
+        const f = await form(req), kind = String(f.get('kind') || ''), lang = String(f.get('lang') || '');
+        if (!DOC_KINDS.includes(kind) || !DOC_LANGS.includes(lang)) fail(400, 'bad_doc');
+        const bytes = await bytesOf(f.get('file'), DOC_MAX_BYTES); if (!isPdf(bytes)) fail(415, 'doc_not_pdf');
+        await store.put(docKey(id, track, kind, lang), bytes, { httpMetadata: { contentType: 'application/pdf' }, customMetadata: { round: id, track, kind, lang, at: String(t) } });
+        return { ok: true, kind, lang, size: bytes.length };
       }
-      const store = env.HPHO_SNAPS || env.LAB_PAGES;
+      if (action === 'seats' && m === 'GET') {
+        const rows = (await db.prepare('SELECT * FROM hpho_seats WHERE round_id=? AND track=? ORDER BY candidate_no').bind(id, track).all()).results || [];
+        return { window: w, now: t, seats: rows.map(adminSeat), review: rows.filter(needsReview).length };
+      }
+      if (action === 'log' && m === 'GET') {
+        const s = await db.prepare('SELECT * FROM hpho_seats WHERE round_id=? AND track=? AND candidate_no=?').bind(id, track, q('candidate')).first();
+        if (!s) fail(404, 'no_session');
+        const events = (await db.prepare('SELECT seq,client_at,at,kind,detail FROM hpho_events WHERE round_id=? AND user_id=? AND (track=? OR track IS NULL) ORDER BY at,seq').bind(id, s.user_id, track).all()).results || [];
+        const keys = async prefix => { if (!store?.list) return []; const out = []; let cursor;
+          do { const l = await store.list({ prefix, cursor, limit: 1000 }); out.push(...l.objects.map(o => o.key)); cursor = l.truncated ? l.cursor : null; } while (cursor && out.length < 5000);
+          return out; };
+        /* the snapshots of this exam: taken from an hour before its start until its upload closed */
+        const snaps = (await keys(`hpho/${id}/${s.candidate_no}/`)).filter(k => { const at = Number(/\/(\d+)-[a-z]+-[a-z_]+\.\w+$/.exec(k)?.[1]); return at >= w.opens && at <= w.upload_until + 600; });
+        return { seat: adminSeat(s), window: w, events, snaps, answers: await keys(`hpho-answers/${id}/${track}/${s.candidate_no}/`) };
+      }
+      if (action === 'media' && m === 'GET') {
+        const key = q('key');
+        if (!(key.startsWith(`hpho/${id}/`) || key.startsWith(`hpho-answers/${id}/`)) || key.includes('..') || !store) fail(404, 'not_found');
+        const o = await store.get(key); if (!o) fail(404, 'not_found');
+        return new Response(o.body, { headers: { 'Content-Type': o.httpMetadata?.contentType || 'image/jpeg', 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' } });
+      }
+      if (action === 'verdict' && m === 'POST') {
+        const verdict = VERDICTS.includes(body?.verdict) ? body.verdict : fail(400, 'bad_verdict');
+        const note = typeof body?.note === 'string' ? body.note.replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 500) : '';
+        const res = await db.prepare('UPDATE hpho_seats SET verdict=?,verdict_note=?,verdict_at=? WHERE round_id=? AND track=? AND candidate_no=?')
+          .bind(verdict, note, t, id, track, String(body?.candidate || '')).run();
+        if (!res.meta?.changes) fail(404, 'no_session');
+        return { ok: true, verdict };
+      }
+      fail(405, 'method_not_allowed');
+    }
+
+    const entry = await db.prepare('SELECT candidate_no FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).first();
+    const seat = await db.prepare('SELECT * FROM hpho_seats WHERE round_id=? AND user_id=? AND track=?').bind(id, me.id, track).first();
+    const lastSeq = async () => (await db.prepare('SELECT MAX(seq) AS s FROM hpho_events WHERE round_id=? AND user_id=? AND seq>=0').bind(id, me.id).first())?.s || 0;
+    const serverEvent = (kind, detail, mark = 0) => db.prepare(`INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail,track) VALUES(?,?,?,NULL,?,?,?,?)`)
+      .bind(id, me.id, -(mark + t), t, kind, String(detail || '').slice(0, 200), track);
+
+    if (action === 'state' && m === 'GET') return { window: w, now: t, registered: !!entry, session: seatView(seat), seq: seat ? await lastSeq() : 0 };
+
+    if (action === 'docs' && m === 'GET') {
+      if (!entry && !admin) fail(403, 'not_registered');
+      if (t < w.opens && !admin) return { docs: [], now: t };
+      const docs = [];
+      for (const kind of DOC_KINDS) for (const lang of DOC_LANGS) {
+        const o = store ? await store.head(docKey(id, track, kind, lang)) : null;
+        if (o) docs.push({ kind, lang, size: o.size });
+      }
+      return { docs, now: t };
+    }
+    if (action === 'doc' && m === 'GET') {
+      const kind = q('kind'), lang = q('lang');
+      if (!DOC_KINDS.includes(kind) || !DOC_LANGS.includes(lang)) fail(400, 'bad_doc');
+      if (!admin) {
+        if (!entry) fail(403, 'not_registered');
+        if (t < w.opens) fail(409, 'not_open');
+        /* the paper: only on the exam's own clock, to a candidate who is sitting it; once the time is over it is gone */
+        if (kind === 'paper' && (!seat?.started_at || t < w.start_at || t >= w.ends)) fail(409, t >= w.ends ? 'exam_over' : 'not_started');
+      }
+      const o = store ? await store.get(docKey(id, track, kind, lang)) : null; if (!o) fail(404, 'no_doc');
+      return new Response(o.body, { headers: { 'Content-Type': 'application/pdf', 'Cache-Control': 'private, no-store', 'Content-Disposition': 'inline', 'X-Content-Type-Options': 'nosniff' } });
+    }
+    if (m !== 'POST') fail(405, 'method_not_allowed');
+    if (!entry) fail(403, 'not_registered');
+
+    if (action === 'earcheck' || action === 'voicecheck') {
+      if (t < w.start_at - EARCHECK_EARLY || t >= w.ends) fail(409, 'check_closed');
+      await limit(env, `hpho-${action}:` + me.id, 8, 600);
+      const f = await form(req);
+      if (action === 'voicecheck') {
+        const lang = DOC_LANGS.includes(f.get('lang')) ? f.get('lang') : 'ko';
+        const wav = await bytesOf(f.get('audio'), VOICE_MAX_BYTES, 'audio_too_large'); if (!isWav(wav)) fail(415, 'audio_not_wav');
+        if (store) await store.put(`hpho/${id}/${entry.candidate_no}/${t}-mic-voice_check.wav`, wav, { httpMetadata: { contentType: 'audio/wav' }, customMetadata: { round: id, candidate: entry.candidate_no, source: 'mic', reason: 'voice_check' } });
+        const v = await voiceCheck(env, wav, lang);
+        await serverEvent('mic_check', v.unavailable ? 'model unavailable' : `${v.said ? 'said' : 'not said'}${v.heard ? ' · heard: ' + v.heard : ''}`, 5e9).run();
+        return v.unavailable ? { ok: true, unavailable: true } : { ok: true, said: v.said };
+      }
+      const shots = [];
+      for (const name of ['first', 'second']) { const bytes = await bytesOf(f.get(name), SNAP_MAX_BYTES * 2, 'snapshot_too_large'); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg'); shots.push(bytes); }
       if (store) for (const [i, bytes] of shots.entries())
         await store.put(`hpho/${id}/${entry.candidate_no}/${t}-earcheck-${i ? 'second' : 'first'}.jpg`, bytes, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: id, candidate: entry.candidate_no, source: 'webcam', reason: 'ear_check' } });
       const v = await earVision(env, shots[0], shots[1]);
-      const detail = v.unavailable ? 'model unavailable' : `first=${v.first} second=${v.second}${v.note ? ' · ' + v.note : ''}`;
-      /* recorded by the server, before any session exists (seq below every client seq and every server gap mark) */
-      await db.prepare(`INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail) VALUES(?,?,?,NULL,?,'ear_check',?)`)
-        .bind(id, me.id, -(4e9 + t), t, detail.slice(0, 200)).run();
+      /* recorded by the server (seq below every client seq and every server gap mark) */
+      await serverEvent('ear_check', v.unavailable ? 'model unavailable' : `first=${v.first} second=${v.second}${v.note ? ' · ' + v.note : ''}`, 4e9).run();
       return v.unavailable ? { ok: true, unavailable: true } : { ok: true, first: v.first, second: v.second };
     }
-    if (action === 'start') {
-      const entry = await db.prepare('SELECT candidate_no FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).first();
-      if (!entry) fail(403, 'not_registered');
-      if (t < w.opens) fail(409, 'not_started');
+
+    if (action === 'checkin') {
+      if (t < w.opens) fail(409, 'not_open');
       if (t >= w.ends) fail(409, 'exam_over');
       const client = checkClient(body?.client); if (!client) fail(400, 'desktop_app_required');
-      if (session) return { ok: true, resumed: true, candidate_no: session.candidate_no, ends_at: session.ends_at, now: t };
-      await db.prepare('INSERT INTO hpho_sessions(round_id,user_id,candidate_no,started_at,ends_at,last_beat,client) VALUES(?,?,?,?,?,?,?)')
-        .bind(id, me.id, entry.candidate_no, t, w.ends, t, client).run();
-      return { ok: true, candidate_no: entry.candidate_no, ends_at: w.ends, now: t };
+      const lang = DOC_LANGS.includes(body?.lang) ? body.lang : 'ko';
+      if (seat) {
+        /* back after leaving the room, or after a disconnect during the exam (counted: a person reviews frequent ones) */
+        if (seat.started_at) await db.batch([db.prepare('UPDATE hpho_seats SET reconnects=reconnects+1,client=? WHERE round_id=? AND user_id=? AND track=?').bind(client, id, me.id, track), serverEvent('reconnect', `checkin again · ${client}`, 8e9)]);
+        const s = await db.prepare('SELECT * FROM hpho_seats WHERE round_id=? AND user_id=? AND track=?').bind(id, me.id, track).first();
+        return { ok: true, resumed: true, session: seatView(s), window: w, now: t, seq: await lastSeq() };
+      }
+      /* seated twenty minutes before the start, or not at all (admins rehearsing a draft are let in late) */
+      if (t >= w.seat_by && !(admin && round.status === 'draft')) fail(409, 'seating_closed');
+      await db.batch([db.prepare('INSERT INTO hpho_seats(round_id,user_id,track,candidate_no,checked_in_at,ends_at,last_beat,paper_lang,client) VALUES(?,?,?,?,?,?,?,?,?)')
+        .bind(id, me.id, track, entry.candidate_no, t, w.ends, t, lang, client), serverEvent('checkin', client, 6e9)]);
+      const s = await db.prepare('SELECT * FROM hpho_seats WHERE round_id=? AND user_id=? AND track=?').bind(id, me.id, track).first();
+      return { ok: true, session: seatView(s), window: w, now: t, seq: await lastSeq() };
     }
-    if (!session) fail(409, 'no_session');
+    if (!seat) fail(409, 'not_seated');
+    if (action === 'lang') {
+      if (seat.started_at || t >= w.start_at) fail(409, 'exam_started');
+      const lang = DOC_LANGS.includes(body?.lang) ? body.lang : fail(400, 'bad_lang');
+      await db.prepare('UPDATE hpho_seats SET paper_lang=? WHERE round_id=? AND user_id=? AND track=?').bind(lang, id, me.id, track).run();
+      return { ok: true, paper_lang: lang };
+    }
+    if (action === 'start') {
+      if (t < w.start_at) fail(409, 'not_started');
+      if (t >= w.ends) fail(409, 'exam_over');
+      const client = checkClient(body?.client); if (!client) fail(400, 'desktop_app_required');
+      if (seat.started_at) return { ok: true, resumed: true, candidate_no: seat.candidate_no, ends_at: w.ends, paper_lang: seat.paper_lang, now: t, seq: await lastSeq() };
+      await db.prepare('UPDATE hpho_seats SET started_at=?,last_beat=?,client=? WHERE round_id=? AND user_id=? AND track=?').bind(t, t, client, id, me.id, track).run();
+      return { ok: true, candidate_no: seat.candidate_no, ends_at: w.ends, paper_lang: seat.paper_lang, now: t, seq: await lastSeq() };
+    }
     if (action === 'events') {
       await limit(env, 'hpho-ev:' + me.id, 120, 600);
-      if (t > w.ends + 600) fail(409, 'exam_over');
+      if (t > w.upload_until + 600) fail(409, 'exam_over');
       const ok = checkEvents(body?.events); if (ok.error) fail(400, ok.error);
       const stmts = [];
       /* a silence the client did not report (the app killed, the network cut) is recorded here, by the server */
-      const gap = t - session.last_beat > HEARTBEAT_GAP && !session.ended_at && session.last_beat < w.ends;
+      const gap = !!seat.started_at && t - seat.last_beat > HEARTBEAT_GAP && !seat.submitted_at && seat.last_beat < w.upload_until;
       for (const e of ok.events)
-        stmts.push(db.prepare('INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail) VALUES(?,?,?,?,?,?,?)').bind(id, me.id, e.seq, e.client_at, t, e.kind, e.detail));
-      stmts.push(db.prepare('UPDATE hpho_sessions SET last_beat=?,events=events+?,gaps=gaps+? WHERE round_id=? AND user_id=?').bind(t, ok.events.length, gap ? 1 : 0, id, me.id));
-      if (gap) stmts.push(db.prepare(`INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail) VALUES(?,?,?,NULL,?,'heartbeat',?)`)
-        .bind(id, me.id, -t, t, `server: no contact for ${t - session.last_beat}s`));
+        stmts.push(db.prepare('INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail,track) VALUES(?,?,?,?,?,?,?,?)').bind(id, me.id, e.seq, e.client_at, t, e.kind, e.detail, track));
+      stmts.push(db.prepare('UPDATE hpho_seats SET last_beat=?,events=events+?,gaps=gaps+? WHERE round_id=? AND user_id=? AND track=?').bind(t, ok.events.length, gap ? 1 : 0, id, me.id, track));
+      if (gap) stmts.push(serverEvent('heartbeat', `server: no contact for ${t - seat.last_beat}s`));
       await db.batch(stmts);
-      return { ok: true, now: t, ends_at: session.ends_at, gap };
+      return { ok: true, now: t, ends_at: w.ends, upload_until: w.upload_until, gap };
     }
     if (action === 'snap') {
-      await limit(env, 'hpho-snap:' + me.id, 90, 600);
-      if (t > w.ends + 600 || session.ended_at) fail(409, 'exam_over');
-      const store = env.HPHO_SNAPS || env.LAB_PAGES; if (!store) fail(503, 'storage_unavailable');
-      let form; try { form = await req.formData(); } catch { fail(400, 'bad_snapshot'); }
-      const file = form.get('image'), source = SNAP_SOURCES.includes(form.get('source')) ? form.get('source') : null;
-      const reason = /^[a-z_]{3,24}$/.test(String(form.get('reason') || '')) ? String(form.get('reason')) : null;
-      if (!file || typeof file.arrayBuffer !== 'function' || !source || !reason || !['random', ...EXAM_EVENTS].includes(reason)) fail(400, 'bad_snapshot');
-      if (file.size > SNAP_MAX_BYTES) fail(413, 'snapshot_too_large');
-      const bytes = new Uint8Array(await file.arrayBuffer()); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg');
-      const key = snapKey(id, session.candidate_no, source, t, reason);
-      await store.put(key, bytes, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: id, candidate: session.candidate_no, source, reason } });
-      await db.prepare('UPDATE hpho_sessions SET last_beat=? WHERE round_id=? AND user_id=?').bind(t, id, me.id).run();
+      await limit(env, 'hpho-snap:' + me.id, 120, 600);
+      if (t > w.upload_until + 600 || seat.submitted_at) fail(409, 'exam_over');
+      if (!store) fail(503, 'storage_unavailable');
+      const f = await form(req), source = SNAP_SOURCES.includes(f.get('source')) ? f.get('source') : null;
+      const reason = /^[a-z_]{3,24}$/.test(String(f.get('reason') || '')) ? String(f.get('reason')) : null;
+      if (!source || !reason || !['random', ...EXAM_EVENTS].includes(reason)) fail(400, 'bad_snapshot');
+      const bytes = await bytesOf(f.get('image'), SNAP_MAX_BYTES, 'snapshot_too_large'); if (!isJpeg(bytes)) fail(415, 'snapshot_not_jpeg');
+      await store.put(snapKey(id, seat.candidate_no, source, t, reason), bytes, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: id, track, candidate: seat.candidate_no, source, reason } });
+      await db.prepare('UPDATE hpho_seats SET last_beat=? WHERE round_id=? AND user_id=? AND track=?').bind(t, id, me.id, track).run();
       return { ok: true };
     }
-    if (action === 'end') {
-      if (!session.ended_at) await db.prepare('UPDATE hpho_sessions SET ended_at=? WHERE round_id=? AND user_id=?').bind(Math.min(t, session.ends_at), id, me.id).run();
-      return { ok: true, upload_until: w.upload_until };
+    if (action === 'answer') {
+      /* the answers go up after the time is over, never during the exam */
+      if (t < w.ends) fail(409, 'not_over');
+      if (t > w.upload_until || seat.submitted_at) fail(409, 'upload_closed');
+      if (!store) fail(503, 'storage_unavailable');
+      await limit(env, 'hpho-ans:' + me.id, 200, 3600);
+      const f = await form(req), page = Number(f.get('page'));
+      if (!Number.isInteger(page) || page < 1 || page > ANSWER_MAX_PAGES) fail(400, 'bad_page');
+      const bytes = await bytesOf(f.get('image'), ANSWER_MAX_BYTES), ext = isJpeg(bytes) ? 'jpg' : isPng(bytes) ? 'png' : fail(415, 'answer_not_image');
+      await store.put(answerKey(id, track, seat.candidate_no, page, ext), bytes, { httpMetadata: { contentType: ext === 'jpg' ? 'image/jpeg' : 'image/png' }, customMetadata: { round: id, track, candidate: seat.candidate_no, page: String(page) } });
+      await db.prepare('UPDATE hpho_seats SET pages=MAX(pages,?),last_beat=? WHERE round_id=? AND user_id=? AND track=?').bind(page, t, id, me.id, track).run();
+      return { ok: true, page };
+    }
+    if (action === 'submit') {
+      if (t < w.ends) fail(409, 'not_over');
+      if (!seat.submitted_at) await db.batch([db.prepare('UPDATE hpho_seats SET submitted_at=? WHERE round_id=? AND user_id=? AND track=?').bind(t, id, me.id, track), serverEvent('submitted', `${seat.pages} page(s)`, 7e9)]);
+      return { ok: true, pages: seat.pages };
     }
     fail(404, 'not_found');
   };

@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {createHphoRouter} from './src/hpho.js';
-import {createHphoExamRouter, checkEvents, checkClient, UPLOAD_MIN} from './src/hpho-exam.js';
+import {createHphoRouter, roundTracks, checkRound, publicRound} from './src/hpho.js';
+import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, examWindow, needsReview, UPLOAD_MIN} from './src/hpho-exam.js';
 
 class HttpError extends Error { constructor(status, code) { super(code); this.status = status; this.code = code; } }
 function d1() {
@@ -11,117 +11,190 @@ function d1() {
     async all() { return { results: sql.prepare(q).all(...args) }; }, async run() { const r = sql.prepare(q).run(...args); return { meta: { changes: r.changes } }; } });
   return { sql, DB: { prepare: q => make(q), async batch(list) { for (const s of list) await s.run(); return []; } } };
 }
+/* an R2 bucket in memory: put, get, head, list */
+function r2() {
+  const m = new Map();
+  return { m, async put(k, v, o) { m.set(k, { bytes: new Uint8Array(v), meta: o }); },
+    async get(k) { const o = m.get(k); return o ? { body: o.bytes, size: o.bytes.length, httpMetadata: o.meta?.httpMetadata } : null; },
+    async head(k) { const o = m.get(k); return o ? { size: o.bytes.length } : null; },
+    async list({ prefix }) { return { objects: [...m.keys()].filter(k => k.startsWith(prefix)).map(key => ({ key })), truncated: false }; } };
+}
 const needUser = u => { if (!u) throw new HttpError(401, 'login_required'); return u; };
 const deps = { HttpError, needUser, limit: async () => {}, isAdmin: u => u?.role === 'admin' };
 const admin = { id: 1, role: 'admin' }, student = { id: 7 }, other = { id: 9 };
-const client = { app: 'haslaedu-desktop', version: '0.5.0' };
+const client = { app: 'haslaedu-desktop', version: '0.5.5' };
 const entry = { country: 'KR', level: 'high', birth_year: new Date().getUTCFullYear() - 20, age14: true, pledge: true, proctoring: true, identity_notice: true };
 const code = async p => { try { await p; return null; } catch (e) { return e.code; } };
+const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]), PDF = new TextEncoder().encode('%PDF-1.7 x');
+function wav() { const b = new Uint8Array(64); b.set(new TextEncoder().encode('RIFF'), 0); b.set(new TextEncoder().encode('WAVE'), 8); return b; }
 
-async function setup(startOffset) {
-  const { sql, DB } = d1(), env = { DB }, t = Math.floor(Date.now() / 1000);
-  const reg = createHphoRouter(deps), exam = createHphoExamRouter(deps);
-  await reg('/api/hpho/rounds/2027-1', 'POST', { title_ko: 'a', title_en: 'a', reg_open: t - 7200, reg_close: t + 3600, start_at: t + 7200, duration_min: 240, fee_usd: 3.5, status: 'open' }, admin, env);
+/* a round whose theory exam starts `theory` seconds from now and whose experiment starts a day later */
+async function setup(theory, { voice = { said: true }, ear = { first: 'clear', second: 'clear' } } = {}) {
+  const { sql, DB } = d1(), store = r2(), env = { DB, HPHO_SNAPS: store }, t = Math.floor(Date.now() / 1000);
+  const reg = createHphoRouter(deps), exam = createHphoExamRouter({ ...deps, voiceCheck: async () => voice, earVision: async () => ear });
+  await reg('/api/hpho/rounds/2027-1', 'POST', { title_ko: 'a', title_en: 'a', reg_open: t - 7200, reg_close: t + 3600, theory_at: t + 7200, experiment_at: t + 7200 + 86400, fee_usd: 0, status: 'open' }, admin, env);
   await reg('/api/hpho/rounds/2027-1/entry', 'POST', entry, student, env);
-  /* then move the start to where the test wants it */
-  sql.prepare('UPDATE hpho_rounds SET start_at=?').run(t + startOffset);
-  const call = (action, m, body, me, query = '') => exam(`/api/hpho/rounds/2027-1/exam/${action}`, m, body, me, env, new URL('https://x/' + query));
-  const callRaw = (action, form, store) => exam(`/api/hpho/rounds/2027-1/exam/${action}`, 'POST', {}, student, { ...env, HPHO_SNAPS: store }, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: form }));
-  return { sql, call, callRaw, t };
+  sql.prepare('UPDATE hpho_rounds SET theory_at=?,start_at=?,experiment_at=?').run(t + theory, t + theory, t + theory + 86400);
+  const call = (action, m, body, me, query = '', track = 'theory') => exam(`/api/hpho/rounds/2027-1/exam/${track}/${action}`, m, body, me, env, new URL('https://x/' + query));
+  const form = (action, fields, me = student, track = 'theory') => { const f = new FormData(); for (const [k, v] of Object.entries(fields)) f.set(k, v instanceof Uint8Array ? new Blob([v]) : v);
+    return exam(`/api/hpho/rounds/2027-1/exam/${track}/${action}`, 'POST', {}, me, env, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: f })); };
+  /* move the theory exam by s seconds (negative: it is now later in the day) */
+  const shift = s => sql.prepare('UPDATE hpho_rounds SET theory_at=theory_at+?,start_at=start_at+?').run(s, s);
+  return { sql, store, call, form, shift, t, reg, env };
 }
 
+test('a round has a theory and an experiment exam, five hours each', () => {
+  const r = { start_at: 1000, duration_min: 300, theory_at: 1000, experiment_at: 1000 + 86400 };
+  assert.deepEqual(roundTracks(r).map(x => [x.track, x.start_at, x.ends - x.start_at, x.start_at - x.opens, x.start_at - x.seat_by]),
+    [['theory', 1000, 18000, 3600, 1200], ['experiment', 87400, 18000, 3600, 1200]]);
+  assert.deepEqual(roundTracks({ start_at: 50, duration_min: 240 }).map(x => x.track), ['theory'], 'a round from before the split keeps one exam');
+  assert.equal(publicRound({ ...r, id: 'x', title_ko: 'a', title_en: 'b' }).tracks.length, 2);
+  const base = { title_ko: 'a', title_en: 'a', reg_open: 1, reg_close: 2 };
+  assert.equal(checkRound('2027-1', { ...base, theory_at: 100, experiment_at: 200 }).error, 'bad_time_order', 'the experiment comes after the theory has ended');
+  assert.equal(checkRound('2027-1', { ...base, theory_at: 100, experiment_at: 100 + 18000 }).duration_min, 300);
+  assert.equal(examWindow({ start_at: 0, duration_min: 300, theory_at: 0 }, 'experiment'), null);
+});
+
 test('client and event checks', () => {
-  assert.equal(checkClient(client), 'haslaedu-desktop/0.5.0');
+  assert.equal(checkClient(client), 'haslaedu-desktop/0.5.5');
   assert.equal(checkClient({ app: 'chrome', version: '1.0.0' }), null);
   assert.equal(checkEvents([{ seq: 1, t: 5, kind: 'focus_lost', detail: 'x\u0007y' }]).events[0].detail, 'x y');
   assert.equal(checkEvents([{ seq: 1, kind: 'rm -rf' }]).error, 'bad_events');
   assert.equal(checkEvents(Array.from({ length: 101 }, (_, i) => ({ seq: i, kind: 'heartbeat' }))).error, 'bad_events');
 });
 
-test('a session opens only at the start time, for a registered candidate, from the desktop app', async () => {
-  const early = await setup(600);
-  assert.equal(await code(early.call('start', 'POST', { client }, student)), 'not_started');
-  const f = await setup(-60);
-  assert.equal(await code(f.call('start', 'POST', { client }, other)), 'not_registered');
-  assert.equal(await code(f.call('start', 'POST', {}, student)), 'desktop_app_required');
+test('the room opens an hour before; seats close twenty minutes before the start', async () => {
+  const early = await setup(3700);
+  assert.equal(await code(early.call('checkin', 'POST', { client }, student)), 'not_open');
+  const f = await setup(1800);
+  assert.equal(await code(f.call('checkin', 'POST', { client }, other)), 'not_registered');
+  assert.equal(await code(f.call('checkin', 'POST', {}, student)), 'desktop_app_required');
+  const s = await f.call('checkin', 'POST', { client, lang: 'en' }, student);
+  assert.match(s.session.candidate_no, /^HP271-\d{4}$/);
+  assert.equal(s.session.paper_lang, 'en');
+  const late = await setup(1100);
+  assert.equal(await code(late.call('checkin', 'POST', { client }, student)), 'seating_closed', 'eighteen minutes before: too late');
+  /* a seated candidate who left the room may come back after seating closed */
+  f.shift(-1000);
+  assert.equal((await f.call('checkin', 'POST', { client }, student)).resumed, true);
+  /* the experiment has its own seat, on its own day */
+  assert.equal(await code(f.call('checkin', 'POST', { client }, student, '', 'experiment')), 'not_open');
+});
+
+test('the paper language can be changed in the waiting room, not after the start', async () => {
+  const f = await setup(1800);
+  assert.equal(await code(f.call('lang', 'POST', { lang: 'en' }, student)), 'not_seated');
+  await f.call('checkin', 'POST', { client }, student);
+  assert.equal((await f.call('lang', 'POST', { lang: 'en' }, student)).paper_lang, 'en');
+  f.shift(-1801);
+  assert.equal(await code(f.call('lang', 'POST', { lang: 'ko' }, student)), 'exam_started');
+});
+
+test('the exam starts at the start time; a disconnect resumes and is counted', async () => {
+  const f = await setup(1800);
+  await f.call('checkin', 'POST', { client }, student);
+  assert.equal(await code(f.call('start', 'POST', { client }, student)), 'not_started');
+  f.shift(-1801);
   const s = await f.call('start', 'POST', { client }, student);
-  assert.match(s.candidate_no, /^HP271-\d{4}$/);
-  assert.equal((await f.call('start', 'POST', { client }, student)).resumed, true, 'reopening the app resumes');
-  const over = await setup(-240 * 60 - 1);
-  assert.equal(await code(over.call('start', 'POST', { client }, student)), 'exam_over');
-});
-
-test('events are stored once each, a silent stretch is recorded by the server, and only an admin reads the log', async () => {
-  const f = await setup(-60);
-  await f.call('start', 'POST', { client }, student);
-  await f.call('events', 'POST', { events: [{ seq: 1, t: f.t, kind: 'window_ready' }, { seq: 2, t: f.t, kind: 'focus_lost', detail: 'alt-tab' }] }, student);
-  await f.call('events', 'POST', { events: [{ seq: 2, t: f.t, kind: 'focus_lost' }] }, student);     /* a resend */
-  f.sql.prepare('UPDATE hpho_sessions SET last_beat=last_beat-120').run();
-  const r = await f.call('events', 'POST', { events: [{ seq: 3, kind: 'heartbeat' }] }, student);
-  assert.equal(r.gap, true);
-  assert.equal(await code(f.call('log', 'GET', null, student, '?candidate=x')), 'forbidden');
-  const no = f.sql.prepare('SELECT candidate_no FROM hpho_sessions').get().candidate_no;
+  assert.ok(s.ends_at - s.now <= 300 * 60);
+  await f.call('events', 'POST', { events: [{ seq: 1, t: s.now, kind: 'window_ready' }, { seq: 2, t: s.now, kind: 'focus_lost' }] }, student);
+  /* the app crashes and comes back three times: each return goes through the check-in and is recorded */
+  for (let i = 0; i < 3; i++) {
+    const back = await f.call('checkin', 'POST', { client }, student);
+    assert.equal(back.seq, 2, 'the page continues the event numbering');
+    assert.equal((await f.call('start', 'POST', { client }, student)).resumed, true);
+  }
+  const seats = await f.call('seats', 'GET', null, admin);
+  assert.equal(seats.seats[0].reconnects, 3);
+  assert.equal(seats.review, 1, 'frequent disconnects are flagged for a person to review');
+  assert.equal(await code(f.call('seats', 'GET', null, student)), 'forbidden');
+  const no = seats.seats[0].candidate_no;
+  assert.equal((await f.call('verdict', 'POST', { candidate: no, verdict: 'cheating', note: 'left the camera for 10 min' }, admin)).verdict, 'cheating');
   const log = await f.call('log', 'GET', null, admin, '?candidate=' + no);
-  assert.deepEqual(log.events.filter(e => e.seq >= 0).map(e => e.kind), ['window_ready', 'focus_lost', 'heartbeat']);
-  assert.equal(log.session.gaps, 1);
-  assert.ok(log.events.some(e => e.seq < 0 && /no contact/.test(e.detail)));
-  const end = await f.call('end', 'POST', {}, student);
-  assert.ok(end.upload_until - log.session.ends_at === UPLOAD_MIN * 60);
+  assert.equal(log.seat.verdict, 'cheating');
+  assert.ok(log.events.some(e => e.kind === 'reconnect'));
+  assert.ok(log.events.some(e => e.kind === 'focus_lost'));
 });
 
-test('snapshots: JPEG only, small, from a live session, stored under the candidate number', async () => {
-  const f = await setup(-60);
-  const puts = [];
-  const env2 = { put: (k, v, o) => puts.push([k, v.length, o]) };
-  const snap = (bytes, source = 'webcam', reason = 'random') => {
-    const form = new FormData(); form.set('image', new Blob([bytes], { type: 'image/jpeg' })); form.set('source', source); form.set('reason', reason);
-    return f.callRaw('snap', form, env2);
-  };
+test('a silence the server sees is recorded as a gap', async () => {
+  const f = await setup(1800);
+  await f.call('checkin', 'POST', { client }, student);
+  f.shift(-1801);
   await f.call('start', 'POST', { client }, student);
-  const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]);
-  assert.equal((await snap(jpeg)).ok, true);
-  assert.match(puts[0][0], /^hpho\/2027-1\/HP271-\d{4}\/\d+-webcam-random\.jpg$/);
-  assert.equal(await code(snap(new Uint8Array([0x89, 0x50, 0x4e, 0x47]))), 'snapshot_not_jpeg');
-  assert.equal(await code(snap(jpeg, 'microphone')), 'bad_snapshot');
-  assert.equal(await code(snap(jpeg, 'screen', 'not a reason')), 'bad_snapshot');
-  assert.equal(await code(snap(new Uint8Array(260 * 1024).fill(0xff))), 'snapshot_too_large');
-  await f.call('end', 'POST', {}, student);
-  assert.equal(await code(snap(jpeg)), 'exam_over');
+  f.sql.prepare('UPDATE hpho_seats SET last_beat=last_beat-120').run();
+  assert.equal((await f.call('events', 'POST', { events: [] }, student)).gap, true);
+  assert.equal(f.sql.prepare('SELECT gaps FROM hpho_seats').get().gaps, 1);
 });
 
-test('a draft round is a rehearsal: an admin sits it, a member gets not found', async () => {
-  const { sql, DB } = d1(), env = { DB }, t = Math.floor(Date.now() / 1000);
-  const reg = createHphoRouter(deps), exam = createHphoExamRouter(deps);
-  await reg('/api/hpho/rounds/2099-1', 'POST', { title_ko: 'r', title_en: 'r', reg_open: t - 7200, reg_close: t - 3600, start_at: t - 60, duration_min: 120, fee_usd: 0, status: 'draft' }, admin, env);
-  await reg('/api/hpho/rounds/2099-1/entry', 'POST', entry, admin, env);
-  const call = (action, body, me) => exam(`/api/hpho/rounds/2099-1/exam/${action}`, 'POST', body, me, env, new URL('https://x/'));
-  assert.equal(await code(call('start', { client }, student)), 'round_not_found');
-  assert.match((await call('start', { client }, admin)).candidate_no, /^HP991-\d{4}$/);
-  assert.ok(sql.prepare('SELECT 1 FROM hpho_sessions').get());
+test('documents: the sheets from the opening, the paper only during the exam', async () => {
+  const f = await setup(1800);
+  assert.equal(await code(f.form('upload', { kind: 'paper', lang: 'ko', file: PDF }, student)), 'forbidden');
+  assert.equal(await code(f.form('upload', { kind: 'paper', lang: 'ko', file: JPEG }, admin)), 'doc_not_pdf');
+  for (const kind of ['guide', 'writing', 'answer', 'paper']) await f.form('upload', { kind, lang: 'ko', file: PDF }, admin);
+  await f.form('upload', { kind: 'paper', lang: 'en', file: PDF }, admin);
+  assert.equal((await f.call('docs', 'GET', null, student)).docs.length, 5);
+  const guide = await f.call('doc', 'GET', null, student, '?kind=guide&lang=ko');
+  assert.equal(guide.headers.get('Content-Type'), 'application/pdf');
+  assert.equal(await code(f.call('doc', 'GET', null, student, '?kind=paper&lang=ko')), 'not_started', 'no paper in the waiting room');
+  await f.call('checkin', 'POST', { client }, student);
+  f.shift(-1801);
+  assert.equal(await code(f.call('doc', 'GET', null, student, '?kind=paper&lang=ko')), 'not_started', 'not before the candidate has started');
+  await f.call('start', 'POST', { client }, student);
+  assert.equal((await f.call('doc', 'GET', null, student, '?kind=paper&lang=en')).status, 200);
+  f.shift(-300 * 60);
+  assert.equal(await code(f.call('doc', 'GET', null, student, '?kind=paper&lang=en')), 'exam_over', 'the paper is gone once the time is over');
 });
 
-test('the ear check: two JPEGs from a registered candidate, judged by the model, kept and recorded before any session', async () => {
-  const { earVerdict } = await import('./src/hpho-exam.js');
-  assert.deepEqual(earVerdict({ first: 'clear', second: 'device', note: 'white earbud\u0007 right' }), { first: 'clear', second: 'device', note: 'white earbud  right' });
-  assert.deepEqual(earVerdict({ first: 'yes', second: 'clear' }), { unavailable: true });
-  const { sql, DB } = d1(), t = Math.floor(Date.now() / 1000), puts = [];
-  const store = { async put(key, bytes, meta) { puts.push(key); } };
-  let verdict = { first: 'clear', second: 'device', note: 'earbud' };
-  const deps2 = { ...deps, earVision: async (env, a, b) => (assert.ok(a.length && b.length), verdict) };
-  const reg = createHphoRouter(deps2), exam = createHphoExamRouter(deps2), env = { DB, HPHO_SNAPS: store };
-  await reg('/api/hpho/rounds/2027-1', 'POST', { title_ko: 'a', title_en: 'a', reg_open: t - 7200, reg_close: t + 600, start_at: t + 1800, duration_min: 240, fee_usd: 0, status: 'open' }, admin, env);
-  await reg('/api/hpho/rounds/2027-1/entry', 'POST', entry, student, env);
-  const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 1, 2, 3]);
-  const send = (me, parts = { first: jpeg, second: jpeg }) => { const form = new FormData(); for (const [k, v] of Object.entries(parts)) form.set(k, new Blob([v], { type: 'image/jpeg' }));
-    return exam('/api/hpho/rounds/2027-1/exam/earcheck', 'POST', {}, me, env, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: form })); };
-  assert.equal(await code(send(other)), 'not_registered');
-  assert.equal(await code(send(student, { first: jpeg })), 'bad_snapshot');
-  assert.equal(await code(send(student, { first: jpeg, second: new Uint8Array([1, 2, 3, 4]) })), 'snapshot_not_jpeg');
-  assert.deepEqual(await send(student), { ok: true, first: 'clear', second: 'device' }, 'open half an hour before the start');
-  assert.equal(puts.length, 2); assert.match(puts[0], /^hpho\/2027-1\/HP271-\d{4}\/\d+-earcheck-first\.jpg$/);
-  assert.match(sql.prepare(`SELECT detail FROM hpho_events WHERE kind='ear_check'`).get().detail, /first=clear second=device/);
-  verdict = { unavailable: true };
-  assert.deepEqual(await send(student), { ok: true, unavailable: true }, 'a model that cannot answer never blocks');
-  sql.prepare('UPDATE hpho_rounds SET start_at=?').run(t + 7200);
-  assert.equal(await code(send(student)), 'check_closed', 'not more than an hour before the start');
+test('answers go up after the end, during the upload hour; then the seat is submitted', async () => {
+  const f = await setup(1800);
+  await f.call('checkin', 'POST', { client }, student);
+  f.shift(-1801); await f.call('start', 'POST', { client }, student);
+  assert.equal(await code(f.form('answer', { page: '1', image: JPEG })), 'not_over', 'not during the exam');
+  assert.equal(await code(f.call('submit', 'POST', {}, student)), 'not_over');
+  f.shift(-300 * 60);
+  /* the recording goes on after the time: writing on the sheets now is cheating */
+  assert.equal((await f.form('snap', { image: JPEG, source: 'webcam', reason: 'after_time' })).ok, true);
+  assert.equal((await f.form('answer', { page: '1', image: JPEG })).page, 1);
+  assert.equal(await code(f.form('answer', { page: '2', image: PDF })), 'answer_not_image');
+  await f.form('answer', { page: '2', image: JPEG });
+  assert.equal((await f.call('submit', 'POST', {}, student)).pages, 2);
+  assert.equal(await code(f.form('answer', { page: '3', image: JPEG })), 'upload_closed');
+  assert.equal(await code(f.form('snap', { image: JPEG, source: 'webcam', reason: 'random' })), 'exam_over');
+  const no = f.sql.prepare('SELECT candidate_no FROM hpho_seats').get().candidate_no;
+  const log = await f.call('log', 'GET', null, admin, '?candidate=' + no);
+  assert.equal(log.answers.length, 2);
+  assert.equal(log.snaps.length, 1);
+  assert.equal((await f.call('media', 'GET', null, admin, '?key=' + encodeURIComponent(log.answers[0]))).status, 200);
+  assert.equal(await code(f.call('media', 'GET', null, admin, '?key=other/x.jpg')), 'not_found');
+  assert.ok(UPLOAD_MIN >= 30);
+});
+
+test('voice check: the sentence must be heard, a noise does not pass', async () => {
+  const no = await setup(1800, { voice: { said: false } });
+  assert.equal((await no.form('voicecheck', { audio: wav(), lang: 'ko' })).said, false);
+  assert.equal(await code(no.form('voicecheck', { audio: JPEG, lang: 'ko' })), 'audio_not_wav');
+  const yes = await setup(1800);
+  assert.equal((await yes.form('voicecheck', { audio: wav(), lang: 'ko' })).said, true);
+  const down = await setup(1800, { voice: { unavailable: true } });
+  assert.equal((await down.form('voicecheck', { audio: wav(), lang: 'en' })).unavailable, true);
+  assert.equal(await code((await setup(3700)).form('voicecheck', { audio: wav(), lang: 'ko' })), 'check_closed');
+  assert.deepEqual(voiceVerdict({ said: true, heard: 'x\u0000y' }), { said: true, heard: 'x y' });
+  assert.equal(voiceVerdict({ said: 'yes' }).unavailable, true);
+});
+
+test('ear check verdicts', async () => {
+  const f = await setup(1800, { ear: { first: 'device', second: 'clear' } });
+  assert.equal((await f.form('earcheck', { first: JPEG, second: JPEG })).first, 'device');
+  assert.equal(earVerdict({ first: 'clear', second: 'maybe' }).unavailable, true);
+  assert.equal(earVerdict({ first: 'clear', second: 'unclear', note: 'a\nb' }).note, 'a b');
+  assert.equal(needsReview({ reconnects: 1, gaps: 3 }), true);
+});
+
+test('the old paths without a track are the theory exam; a draft is for admins only', async () => {
+  const f = await setup(1800), exam = createHphoExamRouter(deps);
+  const s = await exam('/api/hpho/rounds/2027-1/exam/state', 'GET', null, student, f.env, new URL('https://x/'));
+  assert.equal(s.window.track, 'theory');
+  f.sql.prepare("UPDATE hpho_rounds SET status='draft'").run();
+  assert.equal(await code(exam('/api/hpho/rounds/2027-1/exam/state', 'GET', null, student, f.env, new URL('https://x/'))), 'round_not_found');
+  assert.equal((await exam('/api/hpho/rounds/2027-1/exam/state', 'GET', null, admin, f.env, new URL('https://x/'))).window.track, 'theory');
 });
