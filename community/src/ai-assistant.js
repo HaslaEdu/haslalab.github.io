@@ -140,8 +140,12 @@ const CHAT_SCHEMA = /^@cf\/(?:openai\/|google\/gemma-4|qwen\/qwen3\.[1-9]|deepse
 /* the teacher is DeepSeek V4 Pro on DeepSeek's own API when the Worker has its key: Workers AI retires its copy of V4 Pro
    on 2026-11-20, and DeepSeek's terms allow its outputs for training. Thinking off: the teacher writes its short think
    into the answer itself (TEACHER_SYSTEM in ai-eval.js), and a long hidden think would only cost time. */
-const remoteOf = (env, which) => env[`AI_${which}_URL`] && env[`AI_${which}_KEY`] && env[`AI_${which}_REMOTE`]
-  ? {url: env[`AI_${which}_URL`], key: env[`AI_${which}_KEY`], remote: env[`AI_${which}_REMOTE`]}
+/* a role on W&B Inference without a key of its own uses the W&B key the Worker already holds (AI_CHAT_KEY, set by the
+   automatic training): one W&B account serves every role (the owner's decision, 2026-11-09) */
+const keyOf = (env, which) => env[`AI_${which}_KEY`]
+  || (/inference\.wandb\.ai/.test(env[`AI_${which}_URL`] || '') ? env.AI_CHAT_KEY || env.WANDB_API_KEY : undefined);
+const remoteOf = (env, which) => env[`AI_${which}_URL`] && keyOf(env, which) && env[`AI_${which}_REMOTE`]
+  ? {url: env[`AI_${which}_URL`], key: keyOf(env, which), remote: env[`AI_${which}_REMOTE`]}
   : which === 'TEACHER' && env.DEEPSEEK_API_KEY && !env.AI_TEACHER_MODEL
     ? {url: 'https://api.deepseek.com', key: env.DEEPSEEK_API_KEY, remote: env.AI_TEACHER_DEEPSEEK || 'deepseek-v4-pro', extra: {thinking: {type: 'disabled'}}}
     /* the solver thinks on DeepSeek's side; its thinking streams in a field of its own and is never shown */
