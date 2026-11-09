@@ -1,0 +1,54 @@
+# HaslaEdu for Windows: copies the EXEs that https://physleague.kr currently offers into a GitHub Release
+# here (tag haslaedu-desktop-v<version>), after checking the SHA-256 values the site publishes.
+# physleague.kr/downloads/ sends browsers to these files once GitHub reports the same SHA-256, because
+# Cloudflare serves Korea from its US edge and a 100 MB download crawls there. No secrets are used.
+name: HaslaEdu desktop mirror
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: haslaedu-desktop-mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SITE: https://physleague.kr
+    steps:
+      - name: Mirror the offered release
+        shell: bash
+        run: |
+          set -euo pipefail
+          manifest=$(curl -fsSL --retry 3 "$SITE/api/downloads?mirror=$GITHUB_RUN_ID")
+          version=$(jq -r '.version' <<<"$manifest")
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::Unexpected version: $version"; exit 1; }
+          tag="haslaedu-desktop-v$version"
+          assets=$(gh release view "$tag" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[] | "\(.name) \(.digest)"' 2>/dev/null || true)
+          mkdir -p dist; files=()
+          while read -r url sha available; do
+            name=${url##*/}
+            [[ "$url" =~ ^/downloads/HaslaEdu-$version-x64-(Portable|Installer)\.exe$ ]] || { echo "::error::Unexpected URL: $url"; exit 1; }
+            [ "$available" = true ] || { echo "$name is not on the site yet"; continue; }
+            [[ "$sha" =~ ^[0-9a-f]{64}$ ]] || { echo "::error::Missing SHA-256 for $name"; exit 1; }
+            if grep -qx "$name sha256:$sha" <<<"$assets"; then echo "$name already mirrored"; continue; fi
+            curl -fL --retry 3 -o "dist/$name" "$SITE$url"
+            echo "$sha  dist/$name" | sha256sum -c -
+            files+=("dist/$name")
+          done < <(jq -r '.files[] | "\(.url) \(.sha256) \(.available)"' <<<"$manifest")
+          if [ ${#files[@]} -eq 0 ]; then echo "$tag is up to date"; exit 0; fi
+          if gh release view "$tag" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" "${files[@]}" --clobber -R "$GITHUB_REPOSITORY"
+          else
+            gh release create "$tag" "${files[@]}" -R "$GITHUB_REPOSITORY" --latest=false \
+              --title "HaslaEdu for Windows $version" \
+              --notes "HaslaEdu for Windows $version, copied from $SITE after checking its published SHA-256 values. Download it from $SITE."
+          fi
+          gh release view "$tag" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[] | "\(.name) \(.size) \(.digest)"'
