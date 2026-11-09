@@ -89,7 +89,7 @@ export const EXAM_EVENTS = ['heartbeat', 'window_ready', 'focus_lost', 'focus_ba
   'suspend', 'resume', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'network_back', 'page_hidden', 'page_visible',
   'camera_started', 'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'process_new', 'process_list', 'clip_saved', 'snapshot_saved',
   'face_check', 'mic_check', 'ear_check', 'checkin', 'reconnect', 'time_over', 'after_time', 'answer_page', 'submitted', 'paper_lang',
-  'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated', 'phone_lost', 'phone_back'];
+  'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated', 'phone_lost', 'phone_back', 'seat_left'];
 export const EARCHECK_EARLY = 3600;        /* the ear and voice checks open an hour before the start, with the technical check */
 const EAR_VERDICTS = ['clear', 'device', 'unclear'];
 const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, taken during the technical check before an online physics exam${n === 3 ? ': the first faces the camera with both hands raised beside the face (wrists visible), in the second the head is turned to show one ear, in the third the other ear' : ': in the first the head is turned to show one ear, in the second the other ear'}.
@@ -116,13 +116,13 @@ const VIEW_PROMPT = view => `These ${PHONE_FRAMES} or fewer frames come from a p
 Look carefully at every frame, including small objects, papers, other screens and reflections, for:
 - another person or part of one; - a phone, smartwatch, tablet or e-reader (the phone that is filming is not visible to itself);
 - a screen other than the one computer used for the exam (a second monitor, a laptop, a TV or projector showing anything);
-- earphones, earbuds or a headset; - books, notes, sticky notes, written or printed papers, formula sheets, writing on the walls or desk (blank or printed answer sheets, a pen, a ruler, a calculator and a drink are allowed).
+- earphones, earbuds or a headset; - books, notes, sticky notes, written or printed papers, formula sheets, writing on the walls or desk (blank or printed answer sheets, pens and pencils, an eraser, a ruler, one scientific calculator and one clear water bottle are allowed).
 Also say whether the frames really show ${VIEW_NAMES[view]} ("covered": false if they show something else, are too dark, too blurred from turning too fast, or blocked).
 Reply with JSON only: {"covered":bool,"person":bool,"phone":bool,"screen":bool,"headset":bool,"notes":bool,"note":"at most 20 words, in English"}`;
 const PLACE_PROMPT = `This photo is from a phone placed as a second camera for an online physics exam. It should stand to the side of or behind the candidate, about 1 to 1.5 m away, so that one picture shows the candidate (head and body), both hands, the desk top and the computer screen.
 Reply with JSON only: {"person":bool,"hands":bool,"desk":bool,"screen":bool,"note":"what to change, at most 15 words, in English"}`;
 const ROOM_PROMPT = `These are webcam stills from the room scan before an online physics exam, taken in order: ${SCAN_VIEWS.join(', ')} (the front of the room, the left and right walls, behind the candidate, the ceiling, the desk top, under the desk).
-Look for: another person (or part of one); a phone, smartwatch or tablet; a screen other than the one computer the candidate sits the exam on (a second monitor, a laptop, a TV showing text); earphones or a headset; books, notes or written papers (blank or printed exam answer sheets, a pen, a calculator and a drink are allowed).
+Look for: another person (or part of one); a phone, smartwatch or tablet; a screen other than the one computer the candidate sits the exam on (a second monitor, a laptop, a TV showing text); earphones or a headset; books, notes or written papers (blank or printed exam answer sheets, pens, a ruler, one scientific calculator and one clear water bottle are allowed).
 Reply with JSON only: {"person":bool,"phone":bool,"screen":bool,"headset":bool,"notes":bool,"unclear":bool,"note":"at most 20 words, in English"} ("unclear": the stills are too dark or blurred to judge).`;
 /* the sentence the candidate reads aloud in the microphone check, in the language of the page */
 export const VOICE_SENTENCE = { ko: '저는 HPhO에 정직하게 응시하겠습니다.', en: 'I will sit HPhO honestly.' };
@@ -344,7 +344,7 @@ export async function hphoRetainTick(env, { now: at = Date.now(), scope = e => e
 
 /* events a proctor watching live wants to see */
 export const ALERTS = ['focus_lost', 'display_change', 'screen_locked', 'suspend', 'shortcut_blocked', 'window_close_attempt', 'network_lost', 'page_hidden',
-  'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'system_sound', 'reconnect', 'recording_failed', 'after_time', 'process_new', 'phone_lost'];
+  'camera_stopped', 'face_missing', 'faces_multiple', 'phone_seen', 'voice', 'system_sound', 'reconnect', 'recording_failed', 'after_time', 'process_new', 'phone_lost', 'seat_left'];
 
 const sha256 = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
 const phoneState = (ph, t) => ph && { paired: !!ph.last_beat, online: !!ph.last_beat && t - ph.last_beat < PHONE_ONLINE, placed: !!ph.placed, place_note: ph.place_note,
