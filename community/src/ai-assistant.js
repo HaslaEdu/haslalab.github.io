@@ -617,6 +617,9 @@ export async function answer(env0, history, {lang = 'ko', style = 'default', rou
    the AI-chat box of their consent (given at sign-up, or later in the chat or on the profile) ─────────────── */
 export const AI_FEEDBACK_PATH = '/api/ai/feedback', AI_FORGET_PATH = '/api/ai/forget';
 const FLOOD_PER_MINUTE = 30, GUEST_PER_DAY = 2;
+/* a day's ceiling per member (AI_MEMBER_DAY_LIMIT) and for the whole site (AI_SITE_DAY_LIMIT): a stolen session or a
+   script run through many accounts can only spend so much on the model in a day */
+const MEMBER_PER_DAY = 300, SITE_PER_DAY = 20000;
 const sse = (event, data) => `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 export function createAiAssistantRouter({HttpError, currentUser, needUser, limit, clientIp = req => req.headers.get('CF-Connecting-IP') || 'local',
   trainAllowed = async () => false}) {
@@ -640,8 +643,14 @@ export function createAiAssistantRouter({HttpError, currentUser, needUser, limit
     if (!env.AI) throw new HttpError(503, 'ai_unavailable');
     const history = cleanHistory(body?.messages);
     if (!history) throw new HttpError(400, 'invalid_messages');
-    if (me) await limit(env, `ai:m:${me.id}`, +env.AI_FLOOD_LIMIT || FLOOD_PER_MINUTE, 60);
-    else {
+    try { await limit(env, `ai:site:${new Date().toISOString().slice(0, 10)}`, +env.AI_SITE_DAY_LIMIT || SITE_PER_DAY, 86400); }
+    catch (e) { throw e?.status === 429 ? new HttpError(503, 'ai_busy') : e; }
+    if (me) {
+      await limit(env, `ai:m:${me.id}`, +env.AI_FLOOD_LIMIT || FLOOD_PER_MINUTE, 60);
+      try { await limit(env, `ai:d:${me.id}`, +env.AI_MEMBER_DAY_LIMIT || MEMBER_PER_DAY, 86400); }
+      catch (e) { throw e?.status === 429 ? new HttpError(429, 'daily_limit') : e; }
+    }
+    if (!me) {
       try { await limit(env, `ai:g:${clientIp(req)}`, env.AI_GUEST_LIMIT == null || env.AI_GUEST_LIMIT === '' ? GUEST_PER_DAY : Math.max(0, +env.AI_GUEST_LIMIT || 0), 86400); }
       catch (e) { throw e?.status === 429 ? new HttpError(429, 'guest_limit') : e; }
     }
