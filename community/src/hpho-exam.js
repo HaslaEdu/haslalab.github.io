@@ -95,7 +95,8 @@ const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, take
 Decide whether the candidate wears anything in, on or over the ears or head that could carry sound: earbuds, in-ear earphones, headphones, an over-ear or on-ear headset (also the headband over the head), a hearing device, or a wire leading to an ear. A headset seen in any photo counts, even if an ear is hidden.
 Earrings, ear piercings, hair clips and glasses are not devices. Use "unclear" for a photo in which neither the ear nor anything over it can be seen (hair, angle, blur, too dark) or there is no person.
 Also: "cap" is true if the candidate wears a cap or a hat with a brim (a baseball cap, a bucket hat, a sun hat), which can hide the eyes; a beanie or a hat without a brim is fine. "watch" is true if a smartwatch, fitness band or any watch is on a visible wrist.
-Reply with JSON only: {"verdicts":[${Array.from({ length: n }, () => '"clear"|"device"|"unclear"').join(',')}],"cap":bool,"watch":bool,"note":"at most 15 words, in English"}`;
+"glasses": "none" if no glasses; "regular" for ordinary glasses; "smart" if they may be smart glasses (a camera lens or dot at a corner of the frame, an LED, unusually thick temples with a speaker or touch pad near the ear, a display in a lens).
+Reply with JSON only, plain text in the note (no escape sequences): {"verdicts":[${Array.from({ length: n }, () => '"clear"|"device"|"unclear"').join(',')}],"cap":bool,"watch":bool,"glasses":"none"|"regular"|"smart","note":"at most 15 words, in English"}`;
 const VIEW_NAMES = { room: 'the whole room, all the way round (a 360° turn at eye height)', desk: 'the whole desk top, including the sides and back of the monitor and around the keyboard',
   under: 'under the desk and the floor around the chair', ceiling: 'the ceiling' };
 const VIEW_PROMPT = view => `These ${PHONE_FRAMES} or fewer frames come from a phone camera turned slowly during the room scan before an online physics exam. This part of the scan should show ${VIEW_NAMES[view]}.
@@ -114,7 +115,7 @@ Reply with JSON only: {"person":bool,"phone":bool,"screen":bool,"headset":bool,"
 export const VOICE_SENTENCE = { ko: '저는 HPhO에 정직하게 응시하겠습니다.', en: 'I will sit HPhO honestly.' };
 const voicePrompt = lang => `This is a microphone test recorded before an online exam. The candidate was asked to read this sentence aloud: "${VOICE_SENTENCE[lang]}".
 Listen to the recording. "said" is true only if a human voice clearly reads that sentence, or very nearly that sentence (small slips are fine). It is false for silence, noise, music, tapping, a shout or a word that is not the sentence, humming, or a different sentence.
-Reply with JSON only: {"said":true|false,"heard":"what you heard, at most 12 words"}`;
+Reply with JSON only, writing what you heard as plain text (no escape sequences): {"said":true|false,"heard":"what you heard, at most 12 words"}`;
 const b64 = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(s); };
 async function gemini(env, parts, maxOutputTokens = 200) {
   const model = env.HPHO_VISION_MODEL || env.GEMINI_MODEL || 'gemini-flash-lite-latest';
@@ -123,7 +124,20 @@ async function gemini(env, parts, maxOutputTokens = 200) {
     body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig: { responseMimeType: 'application/json', temperature: 0, maxOutputTokens } }) });
   if (!r.ok) return null;
   const j = await r.json(), raw = (j.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('');
-  return JSON.parse(String(raw).trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, ''));
+  return lenientJson(raw);
+}
+/* the model's reply as JSON. A free-text field (what was heard, a note) in Korean sometimes comes with a broken \u escape
+   that JSON.parse refuses, which made a correct answer look like no answer: the escapes are repaired, and failing that
+   the true/false fields and the verdict list are read from the text itself */
+export function lenientJson(raw) {
+  const text = String(raw || '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+  try { return JSON.parse(text); } catch {}
+  try { return JSON.parse(text.replace(/\\u(?![0-9a-fA-F]{4})/g, '\\\\u')); } catch {}
+  const out = {};
+  for (const m of text.matchAll(/"(\w+)"\s*:\s*(true|false)/g)) out[m[1]] = m[2] === 'true';
+  for (const m of text.matchAll(/"(\w+)"\s*:\s*"(clear|device|unclear|none|regular|smart)"/g)) out[m[1]] = m[2];
+  const list = /"verdicts"\s*:\s*\[([^\]]*)\]/.exec(text); if (list) out.verdicts = [...list[1].matchAll(/"(\w+)"/g)].map(x => x[1]);
+  return Object.keys(out).length ? out : null;
 }
 /* the default ear model: Gemini, with the two photos inline. { unavailable: true } when it cannot answer, so the check never
    blocks a candidate because the model is down (the photos are kept and the result is recorded either way) */
@@ -137,7 +151,7 @@ const clean = (v, n) => typeof v === 'string' ? v.replace(/[\u0000-\u001f]/g, ' 
 export function earVerdict(v, n = 2) {
   const list = Array.isArray(v?.verdicts) ? v.verdicts : [v?.first, v?.second];
   if (!v || list.length !== n || !list.every(x => EAR_VERDICTS.includes(x))) return { unavailable: true };
-  return { verdicts: list, cap: v.cap === true, watch: v.watch === true, note: clean(v.note, 120) };
+  return { verdicts: list, cap: v.cap === true, watch: v.watch === true, glasses: ['regular', 'smart'].includes(v.glasses) ? v.glasses : 'none', note: clean(v.note, 120) };
 }
 /* the room scan's stills, judged together */
 export async function geminiRoomScan(env, stills) {
@@ -536,7 +550,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       const names = f.get('front') ? ['front', 'first', 'second'] : ['first', 'second'], shots = [];
       for (const n of names) { const b = await still(n); shots.push(b); await keep(b, n, 'ear_check'); }
       const v = await earVision(env, ...shots);
-      const verdict = v.unavailable ? null : v.verdicts.includes('device') ? 'device' : v.watch ? 'watch' : v.cap ? 'cap' : v.verdicts.includes('unclear') ? 'unclear' : 'clear';
+      const verdict = v.unavailable ? null : v.verdicts.includes('device') ? 'device' : v.glasses === 'smart' ? 'glasses' : v.watch ? 'watch' : v.cap ? 'cap' : v.verdicts.includes('unclear') ? 'unclear' : 'clear';
       /* recorded by the server (seq below every client seq and every server gap mark) */
       await serverEvent('ear_check', v.unavailable ? 'model unavailable' : `${verdict} (${v.verdicts.join(',')})${v.note ? ' · ' + v.note : ''}`, 4e9).run();
       return v.unavailable ? { ok: true, unavailable: true } : { ok: true, verdict, verdicts: v.verdicts };

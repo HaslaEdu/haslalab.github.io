@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {createHphoRouter, roundTracks, checkRound, publicRound} from './src/hpho.js';
-import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, roomVerdict, viewVerdict, checkNote, suspicion, hphoRetainTick, PHONE_VIEWS, examWindow, needsReview, UPLOAD_MIN, SCAN_VIEWS} from './src/hpho-exam.js';
+import {createHphoExamRouter, checkEvents, checkClient, earVerdict, voiceVerdict, roomVerdict, viewVerdict, lenientJson, checkNote, suspicion, hphoRetainTick, PHONE_VIEWS, examWindow, needsReview, UPLOAD_MIN, SCAN_VIEWS} from './src/hpho-exam.js';
 
 class HttpError extends Error { constructor(status, code) { super(code); this.status = status; this.code = code; } }
 function d1() {
@@ -185,6 +185,9 @@ test('voice check: the sentence must be heard, a noise does not pass', async () 
   const local = await no.form('voicecheck', { audio: wav(), lang: 'ko', local: 'said', heard: '저는 정직하게 응시하겠습니다' });
   assert.deepEqual([local.said, local.local], [true, true]);
   assert.deepEqual(voiceVerdict({ said: true, heard: 'x\u0000y' }), { said: true, heard: 'x y' });
+  /* the model's reply with a broken escape in the Korean it heard (as Gemini sent it): still read as said */
+  assert.equal(lenientJson('{"said": true, "heard": "\\uc800\\ub294 \\uaca\u071f\\uc2b5"}').said, true);
+  assert.deepEqual(lenientJson('```json\n{"verdicts":["clear","device"],"cap":false,"glasses":"smart","note":"\\ub"}\n```'), { cap: false, glasses: 'smart', note: '\\ub', verdicts: ['clear', 'device'] });
   assert.equal(voiceVerdict({ said: 'yes' }).unavailable, true);
 });
 
@@ -192,7 +195,9 @@ test('ear check: the front and both ears; a headset in any photo stops the candi
   const f = await setup(1800, { ear: { verdicts: ['device', 'clear', 'unclear'] } });
   assert.equal((await f.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'device');
   assert.equal(earVerdict({ verdicts: ['clear', 'maybe', 'clear'] }, 3).unavailable, true);
-  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], cap: false, watch: false, note: 'a b' });
+  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], cap: false, watch: false, glasses: 'none', note: 'a b' });
+  const glasses = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], glasses: 'smart' } });
+  assert.equal((await glasses.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'glasses');
   const cap = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], cap: true } });
   assert.equal((await cap.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'cap', 'a brimmed cap hides the eyes');
   assert.deepEqual(earVerdict({ first: 'clear', second: 'clear' }).verdicts, ['clear', 'clear'], 'the old two-photo form is still read');
