@@ -85,7 +85,10 @@ export function checkEntry(body, { year = new Date().getUTCFullYear() } = {}) {
     if (aid_note.length < 10) return { error: 'aid_note_required' };
     aid = 'pending';
   }
-  return { country, level, birth_year: birth, guardian_consent: minor ? 1 : 0, aid, aid_reason, aid_note, train_consent: body?.train_consent === true ? 1 : 0 };
+  /* a minor may let the records train the AI proctor only with a guardian's consent to that too, asked separately */
+  const train = body?.train_consent === true;
+  if (train && minor && body?.train_guardian_consent !== true) return { error: 'train_guardian_consent_required' };
+  return { country, level, birth_year: birth, guardian_consent: minor ? 1 : 0, aid, aid_reason, aid_note, train_consent: train ? 1 : 0 };
 }
 /* what a candidate owes: nothing under automatic or approved assistance, else the round's fee */
 export const feeDue = (round, aid) => aid === 'auto' || aid === 'approved' ? 0 : round.fee_usd;

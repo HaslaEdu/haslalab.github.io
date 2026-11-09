@@ -99,10 +99,12 @@ test('the assistance columns are added to a table created before them', async ()
 
 test('training the AI proctor is a separate, optional consent that can be withdrawn', async () => {
   assert.equal(checkEntry(entry).train_consent, 0, 'off unless ticked');
-  assert.equal(checkEntry({ ...entry, train_consent: true }).train_consent, 1);
+  assert.equal(checkEntry({ ...entry, train_consent: true }).error, 'train_guardian_consent_required', 'a minor needs a guardian for this too');
+  assert.equal(checkEntry({ ...entry, train_consent: true, train_guardian_consent: true }).train_consent, 1);
+  assert.equal(checkEntry({ ...entry, birth_year: new Date().getUTCFullYear() - 25, guardian_consent: false, train_consent: true }).train_consent, 1, 'an adult decides alone');
   const f = router();
   await f.call('/api/hpho/rounds/2027-1', 'POST', round, admin);
-  await f.call('/api/hpho/rounds/2027-1/entry', 'POST', { ...entry, train_consent: true }, student);
+  await f.call('/api/hpho/rounds/2027-1/entry', 'POST', { ...entry, train_consent: true, train_guardian_consent: true }, student);
   assert.equal((await f.call('/api/hpho', 'GET', null, student)).entries['2027-1'].train_consent, 1);
   await f.call('/api/hpho/rounds/2027-1/entry', 'POST', entry, student);
   assert.equal((await f.call('/api/hpho', 'GET', null, student)).entries['2027-1'].train_consent, 0, 'withdrawn by editing');
