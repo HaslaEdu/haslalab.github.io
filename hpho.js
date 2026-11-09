@@ -17,7 +17,7 @@
       facts: [["개인전", "혼자 응시합니다"], ["반기 1회", "1년에 두 번 열립니다"], ["이론 + 실험", "실험은 하슬라랩 가상 실험대에서"], ["전 세계 동시", "모든 참가자가 같은 시각에 시작합니다"], ["AI 채점", "채점 후 이의신청 기간이 있습니다"]],
       next: "다음 대회", none: "첫 대회 일정은 곧 공개됩니다.", regOpen: "접수", regClose: "접수 마감", start: "시험 시작", length: "시험 시간", min: "분", fee: "참가비", free: "무료",
       localTz: z => `내 시간대(${z}) 기준`, until: "남음", d: "일", h: "시간", m: "분",
-      status: { open: "접수 중", closed: "접수 마감", finished: "종료", soon: "접수 예정" },
+      status: { open: "접수 중", closed: "접수 마감", finished: "종료", soon: "접수 예정", rehearsal: "리허설 · 관리자만" },
       signIn: "접수하려면 로그인하세요.", login: "로그인",
       formTitle: "참가 접수", country: "국가", level: "과정", levels: { middle: "중학생", high: "고등학생", university: "대학생", other: "기타" }, birth: "출생 연도",
       pledge: "대회 규정을 읽었고, 시험 중 다른 사람·AI·인터넷·교재의 도움을 받지 않겠습니다.",
@@ -53,7 +53,7 @@
       facts: [["Individual", "You sit it on your own"], ["Twice a year", "One round each half-year"], ["Theory + experiment", "Experiments on the HaslaLab virtual bench"], ["Same time worldwide", "Everyone starts at the same moment"], ["AI-marked", "With a window for appeals"]],
       next: "Next round", none: "The first round's dates will be announced soon.", regOpen: "Registration opens", regClose: "Registration closes", start: "Exam starts", length: "Duration", min: "min", fee: "Fee", free: "Free",
       localTz: z => `in your time zone (${z})`, until: "left", d: "d", h: "h", m: "m",
-      status: { open: "Registration open", closed: "Registration closed", finished: "Finished", soon: "Opens soon" },
+      status: { open: "Registration open", closed: "Registration closed", finished: "Finished", soon: "Opens soon", rehearsal: "Rehearsal · admins only" },
       signIn: "Sign in to register.", login: "Sign in",
       formTitle: "Register", country: "Country", level: "Level", levels: { middle: "Middle school", high: "High school", university: "University", other: "Other" }, birth: "Year of birth",
       pledge: "I have read the rules and will take no help from people, AI, the internet or books during the exam.",
@@ -95,6 +95,7 @@
   function roundStatus(r) {
     const t = Math.floor(Date.now() / 1000);
     if (r.status === "finished" || t >= r.start_at + r.duration_min * 60) return "finished";
+    if (r.status === "draft") return "rehearsal";   /* only admins are sent drafts: a test round open until it ends */
     if (r.status === "open" && t < r.reg_open) return "soon";
     if (r.status === "open" && t < r.reg_close) return "open";
     return "closed";
@@ -125,8 +126,8 @@
     if (mine) action = `<div class="hpho-mine"><p class="hpho-badge">${x.mine}</p><p>${x.candidate}: <b class="hpho-no">${esc(mine.candidate_no)}</b></p><p class="hpho-muted">${x.candidateNote}</p>
       <p><a class="hpho-btn" href="#/hpho/exam">${L() === "en" ? "Technical check · exam room" : "기술 점검 · 시험장 입장"}</a></p>
       ${r.fee_usd ? `<p>${x.feeLabel}: <b>${x.feeState[mine.aid] || x.feeState.none}</b>${mine.fee_due ? ` · $${Number(mine.fee_due).toFixed(2)}` : ""}</p>` : ""}
-      ${st === "open" ? `<details><summary>${x.update}</summary>${formHtml(r, mine)}</details><button type="button" class="hpho-link" data-hpho-withdraw="${esc(r.id)}">${x.withdraw}</button>` : ""}</div>`;
-    else if (st !== "open") action = "";
+      ${st === "open" || st === "rehearsal" ? `<details><summary>${x.update}</summary>${formHtml(r, mine)}</details><button type="button" class="hpho-link" data-hpho-withdraw="${esc(r.id)}">${x.withdraw}</button>` : ""}</div>`;
+    else if (st !== "open" && st !== "rehearsal") action = "";
     else if (!me) action = `<p>${x.signIn} <a class="hpho-btn" href="#/login">${x.login}</a></p>`;
     else action = formHtml(r, null);
     return `<div class="hpho-round-head"><h2>${x.next} · ${esc(r.title[L()])}</h2><span class="hpho-status is-${st}">${x.status[st]}</span></div>

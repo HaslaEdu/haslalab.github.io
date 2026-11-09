@@ -116,3 +116,16 @@ test('HPhO is open from 14: the year must allow it and the candidate confirms it
   assert.equal(checkEntry({ ...entry, birth_year: y - 14, age14: false }).error, 'age14_required');
   assert.equal(checkEntry({ ...entry, birth_year: y - 14 }).birth_year, y - 14);
 });
+
+test('a draft is an admins\' rehearsal: they see it, register and withdraw at any time until it ends; nobody else can', async () => {
+  const f = router(), now = Math.floor(Date.now() / 1000);
+  const draft = { ...round, title_ko: '리허설', reg_open: now - 7200, reg_close: now - 3600, start_at: now - 600, duration_min: 120, fee_usd: 0, status: 'draft' };
+  await f.call('/api/hpho/rounds/2099-1', 'POST', draft, admin);
+  assert.deepEqual((await f.call('/api/hpho', 'GET', null, student)).rounds, [], 'members never see a draft');
+  assert.deepEqual((await f.call('/api/hpho', 'GET', null, admin)).rounds.map(r => r.status), ['draft']);
+  assert.equal(await code(f.call('/api/hpho/rounds/2099-1/entry', 'POST', entry, student)), 'round_not_found');
+  assert.match((await f.call('/api/hpho/rounds/2099-1/entry', 'POST', entry, admin)).candidate_no, /^HP991-\d{4}$/, 'registration is open to an admin during the exam');
+  await f.call('/api/hpho/rounds/2099-1/entry', 'DELETE', null, admin);
+  await f.call('/api/hpho/rounds/2099-1', 'POST', { ...draft, start_at: now - 7200, reg_close: now - 7300, reg_open: now - 7400, duration_min: 60 }, admin);
+  assert.equal(await code(f.call('/api/hpho/rounds/2099-1/entry', 'POST', entry, admin)), 'registration_closed', 'not once it has ended');
+});

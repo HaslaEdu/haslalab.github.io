@@ -60,7 +60,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     const [, id, action] = r, db = scope(env);
     needUser(me); await ensureHphoExam(db);
     const round = await db.prepare('SELECT * FROM hpho_rounds WHERE id=?').bind(id).first();
-    if (!round || round.status === 'draft') fail(404, 'round_not_found');
+    if (!round || round.status === 'draft' && !isAdmin(me)) fail(404, 'round_not_found');   /* a draft: an admins' rehearsal */
     const w = examWindow(round), t = now();
     if (action === 'log' && m === 'GET') {
       if (!isAdmin(me)) fail(403, 'forbidden');
