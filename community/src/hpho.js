@@ -51,12 +51,15 @@ export function ensureHpho(db) {
   return ready.get(db);
 }
 
-/* a round as anyone may see it; a draft is never shown */
+/* a round as anyone may see it; a draft is never shown, except to admins: for them a draft is a rehearsal round they can
+   register for and sit at any time before it ends, to test the exam end to end */
 export function publicRound(r) {
   return { id: r.id, title: { ko: r.title_ko, en: r.title_en }, reg_open: r.reg_open, reg_close: r.reg_close,
     start_at: r.start_at, duration_min: r.duration_min, fee_usd: r.fee_usd, status: r.status };
 }
-const registrable = (r, t = now()) => r && r.status === 'open' && t >= r.reg_open && t < r.reg_close;
+const registrable = (r, t = now(), admin = false) => r && (r.status === 'open' && t >= r.reg_open && t < r.reg_close
+  || admin && r.status === 'draft' && t < r.start_at + r.duration_min * 60);
+export const visibleRound = (r, admin) => !!r && (r.status !== 'draft' || admin);
 
 /* "HP271-4821": the round's year and half, then four digits drawn at random (an entry count cannot be read off it) */
 export function candidatePrefix(roundId) {
@@ -120,7 +123,7 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
     if (p !== '/api/hpho' && !p.startsWith('/api/hpho/')) return undefined;
     const db = scope(env); await ensureHpho(db);
     if (p === '/api/hpho' && m === 'GET') {
-      const rounds = (await db.prepare(`SELECT * FROM hpho_rounds WHERE status!='draft' ORDER BY start_at DESC LIMIT 20`).all()).results || [];
+      const rounds = (await db.prepare(`SELECT * FROM hpho_rounds WHERE status!='draft' OR ? ORDER BY start_at DESC LIMIT 20`).bind(isAdmin(me) ? 1 : 0).all()).results || [];
       const entries = {};
       if (me) for (const e of (await db.prepare('SELECT round_id,candidate_no,country,level,birth_year,train_consent,aid,aid_reason,aid_note,created_at FROM hpho_entries WHERE user_id=?').bind(me.id).all()).results || []) {
         const round = rounds.find(r => r.id === e.round_id);
@@ -131,11 +134,11 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
     let r = /^\/api\/hpho\/rounds\/([^/]+)\/entry$/.exec(p);
     if (r) {
       needUser(me);
-      const id = r[1], round = await db.prepare('SELECT * FROM hpho_rounds WHERE id=?').bind(id).first();
-      if (!round || round.status === 'draft') fail(404, 'round_not_found');
+      const id = r[1], round = await db.prepare('SELECT * FROM hpho_rounds WHERE id=?').bind(id).first(), admin = isAdmin(me);
+      if (!visibleRound(round, admin)) fail(404, 'round_not_found');
       if (m === 'POST') {
         await limit(env, 'hpho:' + me.id, 10, 3600);
-        if (!registrable(round)) fail(409, 'registration_closed');
+        if (!registrable(round, now(), admin)) fail(409, 'registration_closed');
         const ok = checkEntry(body); if (ok.error) fail(400, ok.error);
         const had = await db.prepare('SELECT candidate_no,aid,aid_reason FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).first();
         if (had) {
@@ -157,7 +160,7 @@ export function createHphoRouter({ HttpError, needUser, limit, isAdmin, scope = 
         fail(503, 'candidate_number_busy');
       }
       if (m === 'DELETE') {
-        if (!registrable(round)) fail(409, 'registration_closed');
+        if (!registrable(round, now(), admin)) fail(409, 'registration_closed');
         await db.prepare('DELETE FROM hpho_entries WHERE round_id=? AND user_id=?').bind(id, me.id).run();
         return { ok: true };
       }

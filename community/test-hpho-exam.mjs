@@ -88,3 +88,14 @@ test('snapshots: JPEG only, small, from a live session, stored under the candida
   await f.call('end', 'POST', {}, student);
   assert.equal(await code(snap(jpeg)), 'exam_over');
 });
+
+test('a draft round is a rehearsal: an admin sits it, a member gets not found', async () => {
+  const { sql, DB } = d1(), env = { DB }, t = Math.floor(Date.now() / 1000);
+  const reg = createHphoRouter(deps), exam = createHphoExamRouter(deps);
+  await reg('/api/hpho/rounds/2099-1', 'POST', { title_ko: 'r', title_en: 'r', reg_open: t - 7200, reg_close: t - 3600, start_at: t - 60, duration_min: 120, fee_usd: 0, status: 'draft' }, admin, env);
+  await reg('/api/hpho/rounds/2099-1/entry', 'POST', entry, admin, env);
+  const call = (action, body, me) => exam(`/api/hpho/rounds/2099-1/exam/${action}`, 'POST', body, me, env, new URL('https://x/'));
+  assert.equal(await code(call('start', { client }, student)), 'round_not_found');
+  assert.match((await call('start', { client }, admin)).candidate_no, /^HP991-\d{4}$/);
+  assert.ok(sql.prepare('SELECT 1 FROM hpho_sessions').get());
+});
