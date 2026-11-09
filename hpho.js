@@ -24,6 +24,7 @@
       proctor: "시험은 하슬라에듀 데스크톱 앱으로 응시하며, 감독을 위해 웹캠·마이크·화면이 기록되는 데 동의합니다. 시험 중 찍힌 얼굴·화면 사진은 하슬라 서버에 저장되고, 부정행위 검토를 위해 외부 AI 서비스(Google Gemini)로 전송되어 분석될 수 있습니다(AI 감독관). 감독 기록은 결과 확정 후 정해진 기간이 지나면 삭제됩니다.",
       identity: "답안지에는 수험번호만 적습니다. 이름·학교 등 신원 정보를 적어 생기는 일은 제 책임입니다.",
       guardian: "만 19세 미만이며, 보호자가 참가와 감독 기록에 동의했습니다.",
+      train: "(선택) 내 감독 기록(얼굴·화면 사진과 감독 이벤트)을 HaslaEdu 감독관 AI의 학습 자료로 사용하는 데 동의합니다. 동의하지 않아도 응시에 아무 영향이 없고, 대회 전까지 접수 수정에서 언제든 철회할 수 있습니다.",
       submit: "접수하기", update: "접수 내용 수정", withdraw: "접수 취소", withdrawAsk: "접수를 취소할까요?",
       mine: "접수 완료", candidate: "수험번호", candidateNote: "답안지에는 이 수험번호만 적으세요.",
       rulesTitle: "규정 요약",
@@ -57,6 +58,7 @@
       proctor: "I will sit the exam in the HaslaEdu desktop app and agree that my webcam, microphone and screen are recorded for proctoring. Photos of my face and screen taken during the exam are stored on HaslaLab's server and may be sent to an external AI service (Google Gemini) for review (the AI proctor). Proctoring records are deleted a set time after results are final.",
       identity: "I will write only my candidate number on the answer sheets. Anything identifying I write is my own responsibility.",
       guardian: "I am under 19 and a parent or guardian has agreed to my taking part and to the proctoring records.",
+      train: "(Optional) I agree that my proctoring records (photos of my face and screen, and proctoring events) may be used to train HaslaEdu's AI proctor. Not agreeing has no effect on taking part, and I can withdraw this before the round by editing my registration.",
       submit: "Register", update: "Update registration", withdraw: "Withdraw", withdrawAsk: "Withdraw your registration?",
       mine: "Registered", candidate: "Candidate number", candidateNote: "Write only this number on your answer sheets.",
       rulesTitle: "Rules in brief",
@@ -144,6 +146,7 @@
         <div data-hpho-aid-ask><label class="hpho-check"><input type="checkbox" name="aid_request"${sel.aid && sel.aid !== "none" && sel.aid !== "auto" ? " checked" : ""}> ${x.aidAsk}</label>
         <div data-hpho-aid-fields hidden><label>${x.aidReason}<select name="aid_reason"><option value=""></option>${Object.entries(x.aidReasons).map(([k, v]) => `<option value="${k}"${sel.aid_reason === k ? " selected" : ""}>${v}</option>`).join("")}</select></label>
         <label>${x.aidNote}<textarea name="aid_note" maxlength="300" rows="3">${esc(sel.aid_note || "")}</textarea></label></div></div></div>` : ""}
+      <label class="hpho-check"><input type="checkbox" name="train_consent"${sel.train_consent ? " checked" : ""}> ${x.train}</label>
       <label class="hpho-check" data-hpho-guardian hidden><input type="checkbox" name="guardian_consent"> ${x.guardian}</label>
       <p class="hpho-form-msg" role="status"></p>
       <button type="submit" class="hpho-btn">${mine ? x.update : x.submit}</button></form>`;
@@ -177,7 +180,7 @@
     form.addEventListener("submit", async e => {
       e.preventDefault(); if (state.busy) return; state.busy = true; msg.textContent = "…";
       const body = { country: form.country.value, level: form.level.value, birth_year: +form.birth_year.value,
-        pledge: form.pledge.checked, proctoring: form.proctoring.checked, identity_notice: form.identity_notice.checked, guardian_consent: form.guardian_consent.checked,
+        pledge: form.pledge.checked, proctoring: form.proctoring.checked, identity_notice: form.identity_notice.checked, guardian_consent: form.guardian_consent.checked, train_consent: form.train_consent.checked,
         ...(form.aid_request && form.aid_request.checked && !AID_AUTO.has(form.country.value) ? { aid_request: true, aid_reason: form.aid_reason.value, aid_note: form.aid_note.value } : {}) };
       try { await cmApi("POST", `/hpho/rounds/${encodeURIComponent(form.dataset.hphoRound)}/entry`, body); msg.textContent = x.saved; await load(); }
       catch (err) { const c = err?.code || err?.message || ""; msg.textContent = x.errors[c] || x.err + c; }

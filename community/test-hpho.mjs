@@ -96,3 +96,14 @@ test('the assistance columns are added to a table created before them', async ()
   await r('/api/hpho', 'GET', null, null, { DB });
   assert.ok(sql.prepare('PRAGMA table_info(hpho_entries)').all().some(c => c.name === 'aid'));
 });
+
+test('training the AI proctor is a separate, optional consent that can be withdrawn', async () => {
+  assert.equal(checkEntry(entry).train_consent, 0, 'off unless ticked');
+  assert.equal(checkEntry({ ...entry, train_consent: true }).train_consent, 1);
+  const f = router();
+  await f.call('/api/hpho/rounds/2027-1', 'POST', round, admin);
+  await f.call('/api/hpho/rounds/2027-1/entry', 'POST', { ...entry, train_consent: true }, student);
+  assert.equal((await f.call('/api/hpho', 'GET', null, student)).entries['2027-1'].train_consent, 1);
+  await f.call('/api/hpho/rounds/2027-1/entry', 'POST', entry, student);
+  assert.equal((await f.call('/api/hpho', 'GET', null, student)).entries['2027-1'].train_consent, 0, 'withdrawn by editing');
+});
