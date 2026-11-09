@@ -30,7 +30,7 @@
 <main>
 <nav class="top"><a href="./">← HaslaLab</a><a href="terms.html">이용약관</a><a href="#en">English</a></nav>
 <h1>개인정보 처리방침</h1>
-<p class="muted">시행일: 2026년 11월 8일 · 버전 2026-11-08 (이전 판: 2026년 11월 3일 시행). 바뀐 곳에는 「2026-11-08 변경」을 붙였습니다. 2026-11-03 판에 동의한 회원은 다시 동의하지 않아도 됩니다.</p>
+<p class="muted">시행일: 2026년 11월 8일 · 버전 2026-11-08 (이전 판: 2026년 11월 3일 시행). 바뀐 곳에는 「2026-11-08 변경」을 붙였습니다. 2026-11-03 판에 동의한 회원은 다시 동의하지 않아도 됩니다. <b>HPhO 관련 내용(「2026-11-09 추가」)</b>은 HPhO에 접수하는 회원에게만 적용되며, 접수할 때 따로 동의를 받습니다.</p>
 <p>HaslaLab(이하 “서비스”)은 물리 올림피아드 답안을 AI로 판독·채점하고 결과를 알려 주는 서비스입니다. 서비스는 「개인정보 보호법」에 따라 이용자의 개인정보를 필요한 만큼만 처리하며, 이 방침으로 무엇을 왜 얼마 동안 처리하는지 알려 드립니다. 서비스는 실명, 전화번호, 신분증 등 본인 확인 정보를 받지 않습니다.</p>
 
 <h2>1. 처리하는 개인정보 항목</h2>
@@ -45,6 +45,8 @@
   <li><b>자동으로 생성되는 정보</b>: 과도한 요청을 막기 위한 IP 주소(요청 횟수 제한 기록), 접속 국가(가입 시 연령 확인이 필요한지 판단)</li>
   <li><b>게시글·댓글</b>: 커뮤니티에 쓴 글과 댓글, 추천 기록</li>
   <li><b>하슬라 AI 이용 기록</b>: 질문마다 처리 경로·걸린 시간·사용량(대화 내용은 제외)</li>
+  <li><b>HPhO 참가 정보(접수한 회원만)</b> <span class="muted">(2026-11-09 추가)</span>: 국가, 과정(중·고·대학 등), 출생 연도, 수험번호, 보호자 동의 여부(만 19세 미만), 규정·감독 동의 일시, 감독관 AI 학습 활용 동의 여부(선택)</li>
+  <li><b>HPhO 감독 기록(응시한 회원만)</b> <span class="muted">(2026-11-09 추가)</span>: 시험 시작·종료 시각, 시험 창 이탈·화면 잠금·연결 끊김 등 감독 이벤트, 시험 중 무작위 간격과 이상 상황이 감지된 순간에 찍은 <b>웹캠 사진(얼굴)과 화면 사진</b>. 영상은 계속 녹화해 보내지 않으며, 얼굴·휴대폰·말소리 감지는 응시자 컴퓨터 안에서 처리합니다. 실행 중인 프로그램 목록은 수집하지 않습니다.</li>
   <li><b>하슬라 AI 대화(선택)</b>: 회원가입 때(또는 내 정보·AI 채팅창에서) "하슬라 AI 대화 학습 활용"에 선택 동의한 경우에만, 보낸 메시지와 그 앞 대화 일부, AI의 답, 답변 평가(👍/👎). 로그인하지 않은 방문자의 질문은 저장하지 않으며, 하루 이용 횟수 제한에만 IP 주소를 씁니다(아래 요청 횟수 제한 기록).</li>
 </ul>
 <p class="muted">로그인 상태는 이용자 브라우저의 저장소(localStorage)에 보관되는 로그인 토큰으로 유지합니다. 광고나 행태 분석용 쿠키는 쓰지 않습니다.</p>
@@ -56,6 +58,8 @@
   <li>토큰 결제와 그 기록, 환불 등 결제 관련 처리</li>
   <li>커뮤니티 운영과 문의 응대</li>
   <li><b>AI 채점 개선(모델 학습)</b>: 이용자가 별도로 선택 동의한 경우에만, 그 이용자의 답안과 채점 결과를 채점 품질 개선에 씁니다. 하슬라랩의 채점 모델과 하슬라 AI의 채점·첨삭 학습이 여기에 포함됩니다. 하슬라 AI 학습에는 답안 사진이 아니라 판독한 답안 텍스트만 쓰며, 그 안에 적힌 이름·학교·수험번호·연락처는 지우고 씁니다. <span class="muted">(2026-11-08 변경)</span></li>
+  <li><b>HPhO 운영</b> <span class="muted">(2026-11-09 추가)</span>: 접수와 수험번호 발급, 시험 진행, 부정행위 방지와 그 검토(감독 사진은 사람이 검토하며, 검토를 돕기 위해 AI 감독관(Google Gemini)이 분석할 수 있습니다), 채점과 결과 발표</li>
+  <li><b>HPhO 감독관 AI 개선(선택)</b> <span class="muted">(2026-11-09 추가)</span>: 접수할 때 "감독관 AI 학습 활용"에 따로 동의한 경우에만 그 응시자의 감독 기록을 HaslaEdu 감독관 AI의 학습에 씁니다.</li>
   <li><b>하슬라 AI 운영과 개선</b>: 질문에 답하고 속도·비용을 관리합니다. AI 대화 학습 활용에 선택 동의한 경우에만 그 대화를 관리자가 검토해 AI의 답변 개선과 학습에 씁니다.</li>
 </ul>
 
@@ -69,6 +73,8 @@
   <li><b>결제 기록</b>: 「전자상거래 등에서의 소비자보호에 관한 법률」 등 관계 법령이 보관을 요구하는 경우 그 기간(예: 대금결제 및 재화 등의 공급에 관한 기록 5년) 동안 보관합니다.</li>
   <li><b>하슬라 AI 이용 기록</b>: 90일 뒤 자동으로 지웁니다.</li>
   <li><b>하슬라 AI 대화(허용한 경우만)</b>: 관리자가 검토하지 않은 대화는 1년 뒤 자동으로 지웁니다. 검토를 거쳐 학습 자료로 쓰기로 한 대화는 동의를 철회하거나 탈퇴할 때까지 보관합니다. 내 정보나 채팅창에서 동의를 철회하거나 탈퇴하면 즉시 지웁니다. 이미 그 대화로 학습한 AI 모델 파일(LoRA)은 대화 원문을 담고 있지 않아 남을 수 있으며, 다음 학습부터는 그 대화를 쓰지 않습니다.</li>
+  <li><b>HPhO 감독 기록</b> <span class="muted">(2026-11-09 추가)</span>: 해당 회차의 결과(이의신청 포함)가 확정된 날부터 30일 뒤 지웁니다. 다만 부정행위 판정에 대한 분쟁이 진행 중이면 끝날 때까지 보관합니다. 감독관 AI 학습 활용에 동의한 경우, 학습용 사본은 만든 날부터 최대 1년 보관하고 동의를 철회하면 즉시 지웁니다.</li>
+  <li><b>HPhO 참가 정보</b> <span class="muted">(2026-11-09 추가)</span>: 성적·수상 기록 확인을 위해 탈퇴할 때까지 보관합니다.</li>
   <li><b>게시글·댓글</b>: 탈퇴해도 대화의 흐름을 위해 남으며, 작성자 이름은 ‘탈퇴한 사용자’로 바뀝니다. 탈퇴 전에 직접 지울 수 있습니다.</li>
 </ul>
 
@@ -84,6 +90,7 @@
 <thead><tr><th>이전받는 자(국가)</th><th>이전 항목</th><th>목적</th><th>이전 시기·방법</th><th>보유·이용 기간</th></tr></thead>
 <tbody>
 <tr><td><b>Google LLC</b> (미국)<br><a href="https://policies.google.com/privacy" rel="noopener">개인정보 문의</a></td><td>답안 사진·파일과 채점 기준</td><td>Gemini로 답안 사진 판독(읽기)·채점</td><td>답안을 제출해 채점을 신청할 때, 암호화된 연결로 전송</td><td>요청을 처리하는 동안. 처리 결과만 서비스에 돌려받으며, 그 밖의 보관은 Google의 API 이용 약관에 따름</td></tr>
+<tr><td><b>Google LLC</b> (미국) — Gemini <span class="muted">(2026-11-09 추가)</span></td><td>HPhO 감독 사진(웹캠의 얼굴 사진과 화면 사진)과 그 사진이 찍힌 이유(감독 이벤트)</td><td>AI 감독관: 부정행위 검토를 돕는 분석</td><td>시험이 끝난 뒤 검토할 때, 암호화된 연결로 전송</td><td>요청을 처리하는 동안. 분석 결과만 서비스에 돌려받습니다</td></tr>
 <tr><td><b>Google LLC</b> (미국) — Google Drive</td><td>데이터베이스 백업 사본(위 1의 항목)</td><td>장애 대비 백업</td><td>매주 1회, 암호화된 연결로 전송</td><td>각 백업 최대 8주</td></tr>
 <tr><td><b>Google LLC</b> (미국) — Vertex AI</td><td>학습 활용에 동의한 이용자의 답안 판독 내용과 채점 결과</td><td>AI 채점 모델 조정(튜닝)</td><td>학습을 실행할 때, 암호화된 연결로 전송. <b>학습 활용에 동의한 경우에만</b></td><td>학습 작업 기간. 학습용 사본은 최대 1년</td></tr>
 <tr><td><b>DeepSeek</b> (중국)<br><a href="https://www.deepseek.com/" rel="noopener">연락처</a></td><td>① 답안 사진, 답안에서 옮겨 적은 텍스트(판독 결과)와 채점 기준 ② 하슬라 AI에 보낸 풀이 요청의 질문과 그 앞 대화(아이디·닉네임 등 계정 정보는 보내지 않음) <span class="muted">(2026-11-08 변경)</span></td><td>① 채점 ② 하슬라 AI의 문제 풀이(하슬라 AI의 자체 풀이 모델을 쓰기 전까지)</td><td>① 채점할 때 ② 풀이를 요청할 때, 암호화된 연결로 전송</td><td>요청을 처리하는 동안. 처리 결과만 서비스에 돌려받으며, 그 밖의 보관은 DeepSeek의 API 이용 약관에 따름</td></tr>
@@ -106,6 +113,7 @@
   <li><b>열람</b>: 내 정보와 응시 기록, 채점 결과는 사이트의 내 정보·성적표에서 언제든 볼 수 있습니다.</li>
   <li><b>정정</b>: 닉네임, 프로필 사진, 비밀번호, 이메일(복구 이메일)은 내 정보에서 직접 바꿀 수 있습니다.</li>
   <li><b>삭제(탈퇴)</b>: 내 정보의 ‘계정 삭제’로 언제든 탈퇴하고 정보를 지울 수 있습니다.</li>
+  <li><b>HPhO 감독관 AI 학습 동의 철회</b> <span class="muted">(2026-11-09 추가)</span>: 대회 전에는 HPhO 접수 수정에서, 그 뒤에는 아래 연락처로 언제든 철회할 수 있습니다. 철회해도 응시와 결과에는 영향이 없습니다.</li>
   <li><b>학습 활용 동의 철회</b>: 내 정보의 ‘AI 채점 개선(학습) 활용’에서 언제든 철회할 수 있으며, 철회하면 모아 둔 학습용 사본을 즉시 지웁니다. 철회해도 채점은 그대로 이용할 수 있습니다.</li>
   <li>그 밖의 열람·정정·삭제·처리정지 요구는 아래 연락처로 할 수 있으며, 지체 없이 처리합니다.</li>
 </ul>
@@ -131,6 +139,7 @@
   <li><b>How long</b>: until you delete your account. Training copies are kept at most 1 year and only with your consent; you can withdraw at any time, which deletes them. Weekly database backups on Google Drive are kept up to 8 weeks; photo copies in backups are removed when the site deletes the photos. Rate-limit records are kept up to 2 days.</li>
   <li><b>Deletion</b>: deleting your account permanently removes your data from the server.</li>
   <li><b>Processors and transfers abroad</b> (Korean PIPA art. 28-8(1)(3)), all over encrypted connections when you submit answers or use the service: Google LLC, USA (Gemini reads the answer photos; Google Drive backups; Vertex AI tuning only with your training consent); DeepSeek, China (grading, from the answer photos and their transcription; from 8 November 2026 also Hasla AI's problem solving, from the question and the earlier turns, without account details, until Hasla AI's own solver is in use); OpenAI, USA (grading review, from the answer photos, their transcription and the first grading); Mathpix, USA (re-reading a page whose numerical answer needs checking); Cloudflare, Inc., USA and worldwide (servers, database, photo storage, sign-up and recovery emails); Paddle.com Market Ltd, UK (payments).</li>
+  <li><b>HPhO</b> (added 9 November 2026, only for members who register): registration details (country, level, year of birth, candidate number, guardian consent under 19) and, for those who sit the exam, proctoring records: start and end times, events such as leaving the exam window or locking the screen, and webcam (face) and screen photos taken at random times and when something is detected. No continuous video is sent, detection runs on your own computer, and the list of running programs is not collected. Photos may be analysed by Google Gemini to help a person review possible misconduct. Proctoring records are deleted 30 days after the round's results (appeals included) are final. Only if you separately opt in at registration may your proctoring records be used to train HaslaEdu's AI proctor; training copies are kept at most a year and you can withdraw at any time.</li>
   <li><b>Children</b>: users in Korea under 14 cannot sign up; such an account is deleted when found.</li>
   <li><b>Your rights</b>: view, correct and delete your data from your profile, withdraw training consent there, or write to <a href="mailto:mgsnew88@naver.com">mgsnew88@naver.com</a>.</li>
 </ul>
