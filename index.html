@@ -605,6 +605,7 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 .cm .cmtop{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:20px 0 16px}
 .cm .cmtop h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;letter-spacing:-.03em}
 .cm .cmtop p{margin:4px 0 0;color:var(--graphite);font-size:14px}
+.cm .cm-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .shell.cm{max-width:1680px}
 .cmgrid{display:grid;grid-template-columns:236px minmax(0,1fr) 300px;gap:20px;align-items:start}
 @media(max-width:1100px){.cmgrid{grid-template-columns:200px minmax(0,1fr)}.cmright{grid-column:1/-1}}
@@ -9221,7 +9222,7 @@ function viewCommunity(){
   const T=CMT[lang];
   return `
   <div class="shell cm">
-    <div class="cmtop"><div><h1>${T.h}</h1><p>${T.sub}</p></div><div style="margin-left:auto;align-self:center">${instaLink()}</div></div>
+    <div class="cmtop"><h1 class="cm-sr">${T.h}</h1><div style="margin-left:auto;align-self:center">${instaLink()}</div></div>
     <div class="cmgrid">
       <aside class="cmrail" id="cmRail"></aside>
       <div id="cmRoot"><div class="cmpanel"><p class="cmempty">${T.loading}</p></div></div>
