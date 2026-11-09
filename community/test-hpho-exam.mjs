@@ -296,6 +296,8 @@ test('the phone: paired by a QR code, scans the room view by view, then stands w
   assert.equal(await code(f.phone(c, 'state', null, 'another-phone-bbbbbbbb')), 'phone_in_use', 'a second phone cannot take the seat');
   const frames = { f0: JPEG, f1: JPEG, f2: JPEG, f3: JPEG };
   assert.equal(await code(f.phone(c, 'scan', { view: 'front', f0: JPEG })), 'too_few_frames');
+  const WEBP = new Uint8Array([...new TextEncoder().encode('RIFF'), 0, 0, 0, 0, ...new TextEncoder().encode('WEBPVP8 ')]);
+  assert.equal((await f.phone(c, 'scan', { view: 'ceiling', f0: WEBP, f1: WEBP, f2: JPEG })).status, 'clear', 'WebP frames from the phone are taken');
   assert.equal((await f.phone(c, 'scan', { view: 'desk', ...frames })).status, 'blocked', 'a phone on the desk: remove it and sweep again');
   for (const view of PHONE_VIEWS) await f.phone(c, 'scan', { view, ...frames });
   const after = (await f.call('phone', 'GET', null, student)).phone;

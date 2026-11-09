@@ -77,6 +77,7 @@ export const docKey = (round, track, kind, lang) => `hpho-docs/${round}/${track}
 export const clipKey = (round, track, candidate, t, source) => `hpho-rec/${round}/${track}/${candidate}/${t}-${source}.webm`;
 export const answerKey = (round, track, candidate, page, ext) => `hpho-answers/${round}/${track}/${candidate}/${String(page).padStart(3, '0')}.${ext}`;
 const isJpeg = b => b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff;
+const isWebp = b => b.length > 12 && String.fromCharCode(...b.subarray(0, 4)) === 'RIFF' && String.fromCharCode(...b.subarray(8, 12)) === 'WEBP';
 const isPng = b => b.length > 7 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47;
 const isPdf = b => b.length > 4 && String.fromCharCode(...b.subarray(0, 5)) === '%PDF-';
 const isWebm = b => b.length > 4 && b[0] === 0x1a && b[1] === 0x45 && b[2] === 0xdf && b[3] === 0xa3;
@@ -146,7 +147,7 @@ export const ROOM_BLOCK = ['person', 'phone', 'screen', 'headset'];      /* thes
 /* one view of the phone's scan */
 export async function geminiPhoneView(env, view, frames) {
   if (!env.GEMINI_API_KEY) return { unavailable: true };
-  try { return viewVerdict(await gemini(env, [...frames.map(b => ({ inline_data: { mime_type: 'image/jpeg', data: b64(b) } })), { text: VIEW_PROMPT(view) }])); }
+  try { return viewVerdict(await gemini(env, [...frames.map(b => ({ inline_data: { mime_type: isWebp(b) ? 'image/webp' : 'image/jpeg', data: b64(b) } })), { text: VIEW_PROMPT(view) }])); }
   catch { return { unavailable: true }; }
 }
 export function viewVerdict(v) {
@@ -343,14 +344,15 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     await limit(env, 'hpho-phone:' + ph.user_id, 400, 600);
     if (action === 'beat') { await beat(); return { ok: true, now: t }; }
     let f; try { f = await req.formData(); } catch { fail(400, 'bad_upload'); }
-    const jpeg = async (name, max = SNAP_SOURCE_MAX.phone) => { const file = f.get(name); if (!file || typeof file.arrayBuffer !== 'function') fail(400, 'bad_upload'); if (file.size > max) fail(413, 'snapshot_too_large');
-      const b = new Uint8Array(await file.arrayBuffer()); if (!isJpeg(b)) fail(415, 'snapshot_not_jpeg'); return b; };
+    const jpeg = async (name, max = SNAP_SOURCE_MAX.phone, webp = false) => { const file = f.get(name); if (!file || typeof file.arrayBuffer !== 'function') fail(400, 'bad_upload'); if (file.size > max) fail(413, 'snapshot_too_large');
+      const b = new Uint8Array(await file.arrayBuffer()); if (!isJpeg(b) && !(webp && isWebp(b))) fail(415, 'snapshot_not_jpeg'); return b; };
     const put = (key, b, reason) => store?.put(key, b, { httpMetadata: { contentType: 'image/jpeg' }, customMetadata: { round: ph.round_id, track: ph.track, candidate: ph.candidate_no, source: 'phone', reason } });
     if (action === 'scan') {
       const view = PHONE_VIEWS.includes(f.get('view')) ? f.get('view') : fail(400, 'bad_view');
-      const frames = []; for (let i = 0; i < PHONE_FRAMES; i++) if (f.get('f' + i)) frames.push(await jpeg('f' + i));
+      /* the phone's frames: JPEG or WebP (smaller), already chosen and enhanced on the phone */
+      const frames = []; for (let i = 0; i < PHONE_FRAMES; i++) if (f.get('f' + i)) frames.push(await jpeg('f' + i, SNAP_SOURCE_MAX.phone, true));
       if (frames.length < 3) fail(400, 'too_few_frames');
-      for (const [i, b] of frames.entries()) await put(`hpho/${ph.round_id}/${ph.candidate_no}/${t}-phone-scan_${view}_${i}.jpg`, b, 'room_scan');
+      for (const [i, b] of frames.entries()) await store?.put(`hpho/${ph.round_id}/${ph.candidate_no}/${t}-phone-scan_${view}_${i}.${isWebp(b) ? 'webp' : 'jpg'}`, b, { httpMetadata: { contentType: isWebp(b) ? 'image/webp' : 'image/jpeg' }, customMetadata: { round: ph.round_id, track: ph.track, candidate: ph.candidate_no, source: 'phone', reason: 'room_scan' } });
       const scan = JSON.parse(ph.scan || '{}'), tries = (scan[view]?.tries || 0) + 1;
       const v = await phoneView(env, view, frames);
       /* blocked: remove it and sweep again. Not covered (too fast, too dark): sweep again. No model: three tries, then unverified */

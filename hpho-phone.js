@@ -62,7 +62,7 @@
   }
   const refreshNet = () => { const el = document.getElementById("hphoNet"); if (el) el.outerHTML = netBadge(); };
   async function call(action, fields) {
-    const init = fields ? { method: "POST", body: Object.entries(fields).reduce((fd, [k, v]) => (v instanceof Blob ? fd.set(k, v, k + ".jpg") : fd.set(k, v), fd), new FormData()) } : {};
+    const init = fields ? { method: "POST", body: Object.entries(fields).reduce((fd, [k, v]) => (v instanceof Blob ? fd.set(k, v, k + (v.type === "image/webp" ? ".webp" : ".jpg")) : fd.set(k, v), fd), new FormData()) } : {};
     const t0 = performance.now();
     let r; try { r = await fetch(api(action), init); } catch (e) { st.offline = true; refreshNet(); throw { code: "network" }; }
     st.offline = false; st.rtt = Math.round(performance.now() - t0); refreshNet();
@@ -75,6 +75,64 @@
     const k = Math.min(1, side / Math.max(v.videoWidth, v.videoHeight)), c = document.createElement("canvas");
     c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k); c.getContext("2d").drawImage(v, 0, 0, c.width, c.height);
     return new Promise(res => c.toBlob(res, "image/jpeg", 0.85));
+  }
+
+  /* ── on the phone, before the model: an object detector (MediaPipe, EfficientDet-Lite0, the COCO classes) looks at every
+     frame first. A phone, another person or more than one screen in a frame stops the sweep here, at no cost; books are
+     left for the model to judge as notes. The detector loads in the background once the camera is on. */
+  const VISION = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21";
+  const DETECTOR = "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/int8/1/efficientdet_lite0.tflite";
+  let detector = null;
+  function loadDetector() {
+    return detector ||= (async () => {
+      const { FilesetResolver, ObjectDetector } = await import(VISION + "/vision_bundle.mjs");
+      const files = await FilesetResolver.forVisionTasks(VISION + "/wasm");
+      return ObjectDetector.createFromOptions(files, { baseOptions: { modelAssetPath: DETECTOR, delegate: "GPU" }, runningMode: "IMAGE", scoreThreshold: 0.45,
+        categoryAllowlist: ["person", "cell phone", "laptop", "tv", "book"] });
+    })().catch(() => null);
+  }
+  /* what the detector finds in one frame, for this view: a person is expected under and on the desk (the candidate) */
+  function localFind(view, canvas, det) {
+    let list; try { list = det.detect(canvas).detections || []; } catch (e) { return []; }
+    const n = (name, min) => list.filter(d => d.categories?.some(c => c.categoryName === name && c.score >= min)).length;
+    const out = [];
+    if (n("cell phone", 0.5)) out.push("phone");
+    if (!["desk", "under"].includes(view) && n("person", 0.6)) out.push("person");
+    if (n("tv", 0.5) + n("laptop", 0.5) > 1) out.push("screen");
+    if (n("book", 0.5)) out.push("notes");
+    return out;
+  }
+  /* better pictures for the model: the levels stretched when a frame is dim or flat (1st to 99th percentile of the
+     light), then a light sharpening; done on the 768 px frame */
+  function enhance(canvas) {
+    const g = canvas.getContext("2d", { willReadFrequently: true }), w = canvas.width, h = canvas.height, img = g.getImageData(0, 0, w, h), d = img.data;
+    const hist = new Uint32Array(256); for (let i = 0; i < d.length; i += 4) hist[(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) | 0]++;
+    const total = w * h; let lo = 0, hi = 255, acc = 0;
+    for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= total * 0.01) { lo = v; break; } }
+    acc = 0; for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc >= total * 0.01) { hi = v; break; } }
+    const stretch = hi - lo < 200 && hi > lo + 20, k = stretch ? 255 / (hi - lo) : 1;
+    const src = new Uint8ClampedArray(d);
+    if (stretch) for (let i = 0; i < d.length; i += 4) for (let c = 0; c < 3; c++) src[i + c] = (d[i + c] - lo) * k;
+    const a = 0.25;                                           /* sharpen: centre 1+4a, the four neighbours -a */
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) { const i = (y * w + x) * 4;
+      for (let c = 0; c < 3; c++) d[i + c] = src[i + c] * (1 + 4 * a) - a * (src[i + c - 4] + src[i + c + 4] + src[i + c - w * 4] + src[i + c + w * 4]); }
+    g.putImageData(img, 0, 0);
+    return canvas;
+  }
+  /* WebP where the browser makes it (about a third smaller than JPEG at the same quality), else JPEG */
+  async function encode(canvas) {
+    const webp = await new Promise(res => canvas.toBlob(res, "image/webp", 0.8));
+    return webp?.type === "image/webp" ? webp : new Promise(res => canvas.toBlob(res, "image/jpeg", 0.85));
+  }
+  /* a 16x16 grey thumbnail: two frames that differ little are the same picture, and only one is sent */
+  function thumb(canvas) { const c = document.createElement("canvas"); c.width = c.height = 16; const g = c.getContext("2d", { willReadFrequently: true }); g.drawImage(canvas, 0, 0, 16, 16);
+    const d = g.getImageData(0, 0, 16, 16).data, out = new Float32Array(256); for (let i = 0; i < 256; i++) out[i] = 0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2]; return out; }
+  const differ = (a, b) => { let s = 0; for (let i = 0; i < 256; i++) s += Math.abs(a[i] - b[i]); return s / 256; };
+  /* the camera now as a 768 px canvas */
+  function still(v, side = SIDE) {
+    const k = Math.min(1, side / Math.max(v.videoWidth, v.videoHeight)), c = document.createElement("canvas");
+    c.width = Math.round(v.videoWidth * k); c.height = Math.round(v.videoHeight * k); c.getContext("2d", { willReadFrequently: true }).drawImage(v, 0, 0, c.width, c.height);
+    return c;
   }
   /* sharpness (variance of the Laplacian) and brightness, on a 160 px copy */
   function measure(v) {
@@ -123,7 +181,7 @@
           st.video = Object.assign(document.createElement("video"), { muted: true, playsInline: true, autoplay: true, srcObject: s }); st.video.className = "hpho-phone-video";
           await st.video.play().catch(() => {}); for (let i = 0; i < 30 && !st.video.videoWidth; i++) await wait(100);
           try { st.lock = await navigator.wakeLock?.request("screen"); } catch (e) {}
-          st.error = null; ding(); next();
+          st.error = null; ding(); loadDetector(); next();
         } catch (e) { st.error = x.camFail; beep(); next(); }
       });
       return;
@@ -164,17 +222,27 @@
         const progress = gyro ? turned / target : (performance.now() - started) / 8000;
         if (bar) bar.style.width = Math.min(100, Math.round(progress * 100)) + "%";
         if (gyro) { hint.textContent = rate > FAST ? x.fast : rate > 3 ? x.turning : x.hold; hint.classList.toggle("is-bad", rate > FAST); }
-        if (progress >= nextShot / (KEEP - 1) && frames.length < KEEP + 2) { const m = measure(st.video); frames.push({ blob: await grab(st.video), ...m }); nextShot++; }
+        if (progress >= nextShot / (KEEP - 1) && frames.length < KEEP + 2) { const m = measure(st.video); frames.push({ canvas: still(st.video), ...m }); nextShot++; }
         if (progress >= 1) break;
         if (performance.now() - started > 60000) break;                /* a minute without the full turn: judge what there is */
       }
       if (gyro) removeEventListener("devicemotion", onMotion);
       /* blurred or dark frames are not sent (no money spent on them); too few good ones: sweep again */
-      const good = frames.filter(f => f.sharp > 60 && f.light > 35);
-      if (good.length < 4) { problem(x.redo); return scanStep(v); }
+      const sharp = frames.filter(f => f.sharp > 60 && f.light > 35);
+      if (sharp.length < 4) { problem(x.redo); return scanStep(v); }
       hint.classList.remove("is-bad"); hint.textContent = x.judging;
+      /* the same picture twice (the phone held still): one is enough */
+      const good = []; for (const f of sharp) { f.thumb = thumb(f.canvas); if (!good.some(g => differ(g.thumb, f.thumb) < 6)) good.push(f); }
+      /* the detector here first: found something forbidden, stop without asking the model */
+      const det = await Promise.race([loadDetector(), wait(4000).then(() => null)]);
+      if (det) {
+        const seen = new Set(); for (const f of good) localFind(v, f.canvas, det).forEach(k => seen.add(k));
+        const stop = [...seen].filter(k => k !== "notes");
+        if (stop.length) { problem(x.blocked(stop.map(k => x.found[k]).join(", "))); return scanStep(v); }
+      }
       try {
-        const fields = { view: v }; good.slice(0, KEEP).forEach((f, k) => { fields["f" + k] = f.blob; });
+        const fields = { view: v };
+        for (const [k, f] of good.slice(0, KEEP).entries()) fields["f" + k] = await encode(enhance(f.canvas));
         const r = await call("scan", fields);
         st.state.scan[v] = { status: r.status, found: r.found, at: Date.now() };
         if (["clear", "notes", "unverified"].includes(r.status)) ding();
