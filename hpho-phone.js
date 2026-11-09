@@ -1,7 +1,8 @@
 /* HPhO phone (#/hpho/phone/<code>): the candidate's phone as the second camera, Monito-style. The exam page shows a QR
    with a one-time code; the phone opens this page from it (no sign-in on the phone; the first phone to open the code
    keeps it, community/src/hpho-exam.js phoneRoute) and
-   1. scans the room view by view (the walls, behind, the ceiling, the desk top, under the desk). An animation shows how
+   1. scans the room in four moves that do not overlap, as Monito and MIPT's online rounds do (one slow turn of the whole
+      room at eye height, the desk top with the monitor's sides and back, under the desk, the ceiling). An animation shows how
       to move the phone; the gauge fills as the phone actually turns (the gyroscope, DeviceMotion rotationRate), turning
       too fast does not count, and a frame is taken at each sixth of the turn. Blurred or dark frames are dropped here,
       and the rest (at most six, 768 px: one image tile each for the model) are judged by a model on the server;
@@ -14,12 +15,12 @@
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const KEEP = 6, SIDE = 768, FAST = 50;                   /* frames sent per view; their longest side; degrees per second */
   /* how far each view turns the phone (degrees) and which way: across (a wall, the desk) or up/down (ceiling, under) */
-  const TURN = { front: 90, left: 90, right: 90, back: 90, ceiling: 70, desk: 70, under: 70 };
+  const TURN = { room: 360, desk: 80, under: 70, ceiling: 70 };
   const T = {
     ko: { title: "HPhO 휴대폰 감독", intro: "이 휴대폰은 시험 동안 두 번째 카메라로 쓰입니다. 먼저 방을 천천히 비춰 검사하고, 그다음 옆이나 뒤에 세워 두면 됩니다. 시험이 끝날 때까지 이 화면을 켜 두세요(충전기 연결).", cam: "카메라 켜기", camFail: "카메라를 켜지 못했습니다. 브라우저의 카메라 권한을 허용한 뒤 다시 시도하세요.",
       bad: "이 QR은 만료되었거나 잘못되었습니다. 시험 창에 보이는 새 QR을 다시 찍으세요.", inUse: "이 QR은 이미 다른 휴대폰에 연결되어 있습니다. 처음 연결한 휴대폰을 쓰거나, 시험 창에서 새 QR을 받으세요.", over: "시험이 끝났습니다. 이 화면을 닫아도 됩니다.", net: "서버에 연결하지 못했습니다. 다시 시도하는 중…",
-      scanTitle: (i, n) => `주변 스캔 ${i} / ${n}`, views: { front: "앞쪽 벽", left: "왼쪽", right: "오른쪽", back: "뒤쪽 (의자 뒤)", ceiling: "천장", desk: "책상 위 전체", under: "책상 아래와 발밑" },
-      how: { front: "앞쪽 벽을 보고 서서, 휴대폰을 왼쪽 끝에서 오른쪽 끝까지 천천히 돌리세요.", left: "왼쪽을 보고, 휴대폰을 벽의 한쪽 끝에서 다른 쪽 끝까지 천천히 돌리세요.", right: "오른쪽을 보고, 휴대폰을 벽의 한쪽 끝에서 다른 쪽 끝까지 천천히 돌리세요.", back: "의자 뒤쪽을 보고, 휴대폰을 왼쪽 끝에서 오른쪽 끝까지 천천히 돌리세요.", ceiling: "휴대폰을 눈높이에서 천천히 위로 들어 천장 끝까지 비추세요.", desk: "휴대폰을 책상 위로 들고, 책상 한쪽 끝에서 다른 쪽 끝까지(모니터 뒤까지) 천천히 비추세요.", under: "휴대폰을 책상 높이에서 천천히 아래로 내려 책상 밑과 발밑, 의자 주변을 비추세요." },
+      scanTitle: (i, n) => `주변 스캔 ${i} / ${n}`, views: { room: "방 전체 한 바퀴", desk: "책상 위와 모니터 주변", under: "책상 아래와 발밑", ceiling: "천장" },
+      how: { room: "자리에 앉은 채로 휴대폰을 눈높이로 들고, 몸을 돌려 방 전체를 한 바퀴(360°) 천천히 비추세요. 게이지가 다 찰 때까지 계속 도세요.", desk: "책상 위를 한쪽 끝에서 다른 쪽 끝까지 천천히 비추고, 모니터 옆과 뒤, 키보드 주변도 보여 주세요.", under: "휴대폰을 책상 높이에서 천천히 내려 책상 밑과 발밑, 의자 주변 바닥을 비추세요.", ceiling: "휴대폰을 눈높이에서 천천히 위로 들어 천장을 끝까지 비추세요." },
       example: "이렇게 움직이세요", go: "스캔 시작", turning: "천천히 계속 돌리세요", fast: "너무 빨라요! 천천히", hold: "움직여 주세요", judging: "AI가 확인하는 중…", gyroOff: "이 휴대폰은 움직임 센서를 쓸 수 없어 시간으로 잽니다. 8초 동안 천천히 돌리세요.",
       redo: "흐리거나 어두워서 잘 보이지 않았습니다. 더 천천히, 밝게 다시 비춰 주세요.", blocked: list => `${list}이(가) 보입니다. 치우거나 방 밖으로 옮긴 뒤 이 방향을 다시 비춰 주세요.`, unavailable: "AI 확인 서버가 응답하지 않았습니다. 다시 비춰 주세요.",
       found: { person: "다른 사람", phone: "휴대폰·스마트워치·태블릿", screen: "다른 화면", headset: "이어폰·헤드셋", notes: "책·필기" },
@@ -28,8 +29,8 @@
       net: { label: "네트워크", good: "좋음", fair: "보통", poor: "느림", off: "끊김" } },
     en: { title: "HPhO phone proctoring", intro: "This phone is a second camera during the exam. First show the room slowly for the check, then stand the phone to your side or behind you. Keep this screen on until the exam ends (connect a charger).", cam: "Turn on the camera", camFail: "The camera could not start. Allow camera access in the browser, then try again.",
       bad: "This QR code has expired or is wrong. Scan the new QR shown in the exam window.", inUse: "This QR is already connected to another phone. Use the first phone, or get a new QR in the exam window.", over: "The exam is over. You can close this page.", net: "Could not reach the server. Retrying…",
-      scanTitle: (i, n) => `Room scan ${i} / ${n}`, views: { front: "The wall in front", left: "The left side", right: "The right side", back: "Behind you", ceiling: "The ceiling", desk: "The whole desk", under: "Under the desk" },
-      how: { front: "Face the front wall and turn the phone slowly from its left end to its right end.", left: "Face left and turn the phone slowly from one end of the wall to the other.", right: "Face right and turn the phone slowly from one end of the wall to the other.", back: "Face behind the chair and turn the phone slowly from left to right.", ceiling: "Raise the phone slowly from eye level until it shows the far end of the ceiling.", desk: "Hold the phone over the desk and move it slowly from one end to the other, behind the monitor too.", under: "Lower the phone slowly from desk height to show under the desk, your feet and around the chair." },
+      scanTitle: (i, n) => `Room scan ${i} / ${n}`, views: { room: "The whole room, all round", desk: "The desk and around the monitor", under: "Under the desk", ceiling: "The ceiling" },
+      how: { room: "Sitting in your seat, hold the phone at eye height and turn slowly to show the whole room, all the way round (360°). Keep turning until the gauge is full.", desk: "Show the desk slowly from one end to the other, and the sides and back of the monitor and around the keyboard.", under: "Lower the phone slowly from desk height to show under the desk, your feet and the floor around the chair.", ceiling: "Raise the phone slowly from eye level to show the ceiling to its far end." },
       example: "Move it like this", go: "Start the scan", turning: "Keep turning slowly", fast: "Too fast! Slower", hold: "Start moving", judging: "The AI is checking…", gyroOff: "This phone's motion sensor is not available, so the time is used instead: turn slowly for eight seconds.",
       redo: "It was blurred or dark. Sweep again, more slowly and with more light.", blocked: list => `${list} can be seen. Remove it or take it out of the room, then show this side again.`, unavailable: "The AI check did not answer. Sweep again.",
       found: { person: "another person", phone: "a phone, smartwatch or tablet", screen: "another screen", headset: "earphones or a headset", notes: "books or notes" },
@@ -147,9 +148,13 @@
 
   /* how to move the phone, drawn (Monito-style): a turn across for the walls and the desk, a tilt for the ceiling and under */
   function example(view) {
-    const across = ["front", "left", "right", "back", "desk"].includes(view), up = view === "ceiling";
-    const scene = across
-      ? `<rect x="20" y="${view === "desk" ? 70 : 14}" width="160" height="${view === "desk" ? 40 : 10}" rx="3" class="ex-wall"/><circle cx="100" cy="128" r="12" class="ex-me"/>
+    const across = view === "desk", up = view === "ceiling";
+    const scene = view === "room"
+      ? `<circle cx="100" cy="75" r="58" class="ex-ring"/><circle cx="100" cy="75" r="11" class="ex-me"/>
+         <g class="ex-phone ex-spin" style="transform-origin:100px 75px"><rect x="94" y="38" width="12" height="18" rx="2"/><path d="M100 38 L80 16 M100 38 L120 16" class="ex-ray"/></g>
+         <path d="M150 40 A58 58 0 1 1 140 30" class="ex-arrow" marker-end="url(#exArrow)"/>`
+      : across
+      ? `<rect x="20" y="70" width="160" height="40" rx="3" class="ex-desk"/><rect x="80" y="60" width="40" height="12" rx="2" class="ex-wall"/><circle cx="100" cy="128" r="12" class="ex-me"/>
          <g class="ex-phone ex-sweep"><rect x="94" y="90" width="12" height="20" rx="2"/><path d="M100 90 L60 30 M100 90 L140 30" class="ex-ray"/></g>
          <path d="M58 52 Q100 30 142 52" class="ex-arrow" marker-end="url(#exArrow)"/>`
       : `<rect x="20" y="${up ? 10 : 132}" width="160" height="8" class="ex-wall"/><rect x="40" y="${up ? 120 : 70}" width="120" height="6" rx="2" class="ex-desk"/>
@@ -222,7 +227,7 @@
         const progress = gyro ? turned / target : (performance.now() - started) / 8000;
         if (bar) bar.style.width = Math.min(100, Math.round(progress * 100)) + "%";
         if (gyro) { hint.textContent = rate > FAST ? x.fast : rate > 3 ? x.turning : x.hold; hint.classList.toggle("is-bad", rate > FAST); }
-        if (progress >= nextShot / (KEEP - 1) && frames.length < KEEP + 2) { const m = measure(st.video); frames.push({ canvas: still(st.video), ...m }); nextShot++; }
+        if (progress >= nextShot / (v === "room" ? KEEP : KEEP - 1) && frames.length < KEEP + 2) { const m = measure(st.video); frames.push({ canvas: still(st.video), ...m }); nextShot++; }
         if (progress >= 1) break;
         if (performance.now() - started > 60000) break;                /* a minute without the full turn: judge what there is */
       }

@@ -189,7 +189,9 @@ test('ear check: the front and both ears; a headset in any photo stops the candi
   const f = await setup(1800, { ear: { verdicts: ['device', 'clear', 'unclear'] } });
   assert.equal((await f.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'device');
   assert.equal(earVerdict({ verdicts: ['clear', 'maybe', 'clear'] }, 3).unavailable, true);
-  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], note: 'a b' });
+  assert.deepEqual(earVerdict({ verdicts: ['clear', 'unclear', 'clear'], note: 'a\nb' }, 3), { verdicts: ['clear', 'unclear', 'clear'], cap: false, watch: false, note: 'a b' });
+  const cap = await setup(1800, { ear: { verdicts: ['clear', 'clear', 'clear'], cap: true } });
+  assert.equal((await cap.form('earcheck', { front: JPEG, first: JPEG, second: JPEG })).verdict, 'cap', 'a brimmed cap hides the eyes');
   assert.deepEqual(earVerdict({ first: 'clear', second: 'clear' }).verdicts, ['clear', 'clear'], 'the old two-photo form is still read');
   assert.equal(needsReview({ reconnects: 1, gaps: 3 }), true);
 });
@@ -295,7 +297,8 @@ test('the phone: paired by a QR code, scans the room view by view, then stands w
   assert.equal((await f.call('phone', 'GET', null, student)).phone.online, true);
   assert.equal(await code(f.phone(c, 'state', null, 'another-phone-bbbbbbbb')), 'phone_in_use', 'a second phone cannot take the seat');
   const frames = { f0: JPEG, f1: JPEG, f2: JPEG, f3: JPEG };
-  assert.equal(await code(f.phone(c, 'scan', { view: 'front', f0: JPEG })), 'too_few_frames');
+  assert.equal(await code(f.phone(c, 'scan', { view: 'room', f0: JPEG })), 'too_few_frames');
+  assert.equal(await code(f.phone(c, 'scan', { view: 'front', ...{ f0: JPEG, f1: JPEG, f2: JPEG } })), 'bad_view');
   const WEBP = new Uint8Array([...new TextEncoder().encode('RIFF'), 0, 0, 0, 0, ...new TextEncoder().encode('WEBPVP8 ')]);
   assert.equal((await f.phone(c, 'scan', { view: 'ceiling', f0: WEBP, f1: WEBP, f2: JPEG })).status, 'clear', 'WebP frames from the phone are taken');
   assert.equal((await f.phone(c, 'scan', { view: 'desk', ...frames })).status, 'blocked', 'a phone on the desk: remove it and sweep again');

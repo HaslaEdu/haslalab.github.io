@@ -859,3 +859,6 @@ body.hl-site .hpho-example .ex-tilt-up{animation:hphoTiltUp 3.2s ease-in-out inf
 @keyframes hphoTiltUp{from{transform:rotate(0)}to{transform:rotate(-55deg)}}@keyframes hphoTiltDown{from{transform:rotate(0)}to{transform:rotate(55deg)}}
 body.hl-site .hpho-meter-big{height:16px;border-radius:8px}
 @media (prefers-reduced-motion:reduce){body.hl-site .hpho-example .ex-phone{animation-duration:6s}}
+body.hl-site .hpho-example .ex-ring{fill:none;stroke:#d5dbe6;stroke-width:6}
+body.hl-site .hpho-example .ex-spin{animation:hphoSpin 6s linear infinite}@keyframes hphoSpin{to{transform:rotate(360deg)}}
+body.hl-site .hpho-track-box{position:absolute;inset:0;width:100%;height:100%;transform:scaleX(-1);pointer-events:none}

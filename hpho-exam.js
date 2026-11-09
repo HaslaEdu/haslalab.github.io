@@ -21,7 +21,7 @@
     ko: { title: "HPhO 시험", appOnly: "HPhO는 하슬라에듀 데스크톱 앱의 시험 창에서만 응시할 수 있습니다.", appGet: "데스크톱 앱 내려받기",
       entrance: "시험 입장", track: { theory: "이론 시험", experiment: "실험 시험" }, hours: "5시간", enter: "입장", back: "답안 제출하러 입장", reenter: "다시 입장",
       opensAt: v => `입장: ${v}부터 (시작 1시간 전)`, seatBy: v => `착석 마감: ${v} (시작 20분 전)`, opensLater: "입장 시간이 아닙니다", seatClosed: "착석 마감이 지나 입장할 수 없습니다", ended: "종료", submitted: "제출 완료", noRound: "응시할 수 있는 시험이 없습니다.",
-      check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인", camera: "웹캠", mic: "마이크", screen: "화면 기록", face: "얼굴 인식", voice: "문장 읽기 (마이크)", ears: "귀·머리 검사 (이어폰·헤드셋)", system: "컴퓨터 소리 녹음", displays: "모니터 1대", phone: "휴대폰 감독 연결", room: "주변 스캔 (휴대폰)", place: "휴대폰 위치" }, retry: "다시 점검", preview: "카메라 미리보기", camNeed: "웹캠·마이크·화면 기록이 모두 켜져야 응시할 수 있습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.",
+      check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인", camera: "웹캠 (얼굴 인식)", mic: "마이크 (문장 읽기)", screen: "화면 기록 (모니터 1대)", face: "얼굴 인식", voice: "문장 읽기 (마이크)", ears: "귀·머리·손목 검사", system: "컴퓨터 소리 녹음", displays: "모니터 1대", phone: "휴대폰 연결", room: "주변 인식 (휴대폰)", place: "휴대폰 위치" }, retry: "다시 점검", preview: "카메라 미리보기", camNeed: "웹캠·마이크·화면 기록이 모두 켜져야 응시할 수 있습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.",
       screenNeed: "화면 기록을 시작하지 못했습니다. 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", systemNeed: "컴퓨터 소리를 녹음하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", displaysNeed: n => n > 1 ? `모니터가 ${n}대 연결되어 있습니다. 모니터를 하나만 남기고 나머지는 케이블을 뽑은 뒤 다시 점검하세요.` : "모니터 수를 확인하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트하세요.",
       unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.",
       allowStep: ["화면 감시 허용", "시험 동안 아래 항목이 감독을 위해 기록됩니다. 허용해야 다음 단계로 넘어갈 수 있습니다.", "허용"],
@@ -32,12 +32,12 @@
       roomStep: ["주변 스캔", "웹캠(노트북이면 노트북 화면)을 천천히 돌려 방을 보여 주세요. 화면에 나오는 방향으로 돌리고, 숫자가 0이 될 때까지 멈춰 주세요.", "주변 스캔 시작"],
       views: { front: "앞쪽 벽", left: "왼쪽 벽", right: "오른쪽 벽", back: "뒤쪽 (등 뒤)", ceiling: "천장", desk: "책상 위 전체", under: "책상 아래 · 발밑", done: "확인하는 중…" },
       room: { person: "다른 사람", phone: "휴대폰·스마트워치·태블릿", screen: "다른 화면(모니터·노트북·TV)", headset: "이어폰·헤드셋", notes: "책·필기" }, roomBlocked: list => `주변에서 ${list}이(가) 보였습니다. 치우거나 다른 곳으로 옮긴 뒤 다시 스캔하세요.`, roomFail: "스캔 사진을 보내지 못했습니다. 다시 스캔하세요.",
-      faceStep: ["얼굴 확인", "카메라를 정면으로 바라보세요. 얼굴 전체가 미리보기 가운데에 오도록 앉아 주세요."],
+      faceStep: ["웹캠 · 얼굴 인식", "카메라를 정면으로 바라보세요. 미리보기의 얼굴 테두리가 초록색이 되도록 가운데에 앉아 주세요."],
       face: { no_video: "카메라 영상이 들어오지 않습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.", detector: "얼굴 인식 기능을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 점검하세요.", none: "얼굴이 보이지 않습니다. 카메라를 정면으로 바라보세요.", many: "화면에 두 사람 이상이 보입니다. 혼자 있는 곳에서 응시하세요.", dark: "얼굴이 너무 어둡습니다. 조명을 켜거나 창 쪽을 바라보고 앉으세요.", small: "얼굴이 너무 작게 보입니다. 카메라에 조금 더 가까이 앉으세요.", off: "얼굴이 화면 가장자리에 있습니다. 미리보기 가운데로 오도록 자리를 옮기세요." },
       micStep: ["마이크 확인", "버튼을 누르고, 「지금 읽어 주세요」가 뜨면 아래 문장을 처음부터 끝까지 또박또박 읽어 주세요. 문장을 다 읽어야 통과합니다.", "마이크 점검 시작", "조용히 기다려 주세요… 주변 소리를 재는 중", "지금 읽어 주세요", "들은 문장을 확인하는 중…"],
       mic: { no_mic: "마이크를 찾지 못했습니다. 마이크를 연결하고 다시 점검하세요.", no_audio: "소리를 분석하지 못했습니다. 다시 점검하세요.", silent: "소리가 전혀 들리지 않습니다. 마이크가 음소거되어 있지 않은지, 올바른 마이크가 선택되었는지 확인하세요.", quiet: "목소리가 너무 작게 들립니다. 마이크에 가까이 앉아 조금 더 크게 읽어 주세요.", short: "문장 전체가 들리지 않았습니다. 소리를 지르거나 한 단어만 말하면 통과할 수 없습니다. 화면의 문장을 처음부터 끝까지 읽어 주세요.", not_said: "화면의 문장이 들리지 않았습니다. 문장을 그대로, 또박또박 읽어 주세요.", failed: "녹음을 보내지 못했습니다. 다시 점검하세요." },
-      earStep: ["귀 검사", "이어폰·헤드폰을 끼고 있지 않은지 확인합니다. 머리카락을 귀 뒤로 넘기고 버튼을 누르세요.", "귀 검사 시작"],
-      ear: { front: "카메라를 정면으로 바라보세요.", first: "고개를 천천히 한쪽으로 돌려 귀가 카메라에 보이게 하고, 잠시 멈추세요.", second: "이번에는 반대쪽으로 고개를 돌려 다른 쪽 귀를 보여 주세요.", done: "확인하는 중…", device: "귀나 머리에 이어폰·헤드폰·헤드셋 같은 기기가 보입니다. 모두 빼고 다시 검사하세요. 보청기를 써야 한다면 시험 전에 운영진에게 알려 주세요.", unclear: "귀가 잘 보이지 않았습니다. 머리카락을 넘기고 밝은 곳에서 고개를 조금 더 돌려 다시 검사하세요.", failed: "사진을 보내지 못했습니다. 다시 검사하세요." }, ok: "확인", bad: "문제 있음", wait: "확인 중…",
+      earStep: ["귀·머리·손목 검사", "이어폰·헤드셋, 챙 있는 모자(야구모자 등), 스마트워치를 확인합니다. 비니처럼 챙 없는 모자는 괜찮습니다. 머리카락을 귀 뒤로 넘기고 버튼을 누르세요.", "검사 시작"],
+      ear: { front: "카메라를 정면으로 보고, 두 손을 얼굴 양옆으로 들어 손바닥과 손목이 보이게 하세요.", cap: "챙이 있는 모자(야구모자·버킷햇 등)는 눈을 가릴 수 있어 벗어야 합니다. 비니처럼 챙 없는 모자는 괜찮습니다.", watch: "손목에 시계나 스마트워치가 보입니다. 풀어서 손이 닿지 않는 곳에 두세요.", first: "고개를 천천히 한쪽으로 돌려 귀가 카메라에 보이게 하고, 잠시 멈추세요.", second: "이번에는 반대쪽으로 고개를 돌려 다른 쪽 귀를 보여 주세요.", done: "확인하는 중…", device: "귀나 머리에 이어폰·헤드폰·헤드셋 같은 기기가 보입니다. 모두 빼고 다시 검사하세요. 보청기를 써야 한다면 시험 전에 운영진에게 알려 주세요.", unclear: "귀가 잘 보이지 않았습니다. 머리카락을 넘기고 밝은 곳에서 고개를 조금 더 돌려 다시 검사하세요.", failed: "사진을 보내지 못했습니다. 다시 검사하세요." }, ok: "확인", bad: "문제 있음", wait: "확인 중…",
       notReg: "이 회차에 접수하지 않았습니다.", login: "로그인하세요.", room: "대기실", startsIn: "시험 시작까지", candidate: "수험번호", autoStart: "시작 시각이 되면 시험지가 자동으로 열립니다. 이 창을 닫지 마세요.",
       paperLang: "시험지 언어", paperLangNote: "시험 시작 전까지 바꿀 수 있습니다.", langs: { ko: "한국어", en: "English" },
       docs: "시험 자료", docNames: { guide: "General Guide", writing: "답안지", answer: "Answer Sheet", paper: "문제지" }, noDocs: "아직 공개된 자료가 없습니다.", docsNote: "답안지와 Answer Sheet는 미리 인쇄해 두세요.",
@@ -50,7 +50,7 @@
     en: { title: "HPhO exam", appOnly: "HPhO can only be sat in the exam window of the HaslaEdu desktop app.", appGet: "Get the desktop app",
       entrance: "Exam entrance", track: { theory: "Theory exam", experiment: "Experimental exam" }, hours: "5 hours", enter: "Enter", back: "Enter to submit answers", reenter: "Enter again",
       opensAt: v => `Entry from ${v} (an hour before the start)`, seatBy: v => `Be seated by ${v} (20 minutes before the start)`, opensLater: "Not open yet", seatClosed: "Seating has closed", ended: "Over", submitted: "Submitted", noRound: "There is no exam to sit.",
-      check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in", camera: "Webcam", mic: "Microphone", screen: "Screen recording", face: "Face", voice: "Reading aloud (microphone)", ears: "Ears and head (earphones, headset)", system: "Computer sound recording", displays: "One monitor", phone: "Phone connected", room: "Room scan (phone)", place: "Phone position" }, retry: "Check again", preview: "Camera preview", camNeed: "The webcam, microphone and screen recording must all be on to sit the exam. Make sure no other program is using the camera.",
+      check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in", camera: "Webcam (face)", mic: "Microphone (reading aloud)", screen: "Screen recording (one monitor)", face: "Face", voice: "Reading aloud (microphone)", ears: "Ears, head and wrists", system: "Computer sound recording", displays: "One monitor", phone: "Phone connected", room: "Room check (phone)", place: "Phone position" }, retry: "Check again", preview: "Camera preview", camNeed: "The webcam, microphone and screen recording must all be on to sit the exam. Make sure no other program is using the camera.",
       screenNeed: "Screen recording could not start. Update the app to the latest version, then check again.", systemNeed: "The computer's sound could not be recorded. Update the HaslaEdu app to the latest version, then check again.", displaysNeed: n => n > 1 ? `${n} monitors are connected. Unplug all but one, then check again.` : "The number of monitors could not be read. Update the HaslaEdu app to the latest version.",
       unavailable: "The checking server did not answer. Check again in a moment.",
       allowStep: ["Allow screen monitoring", "During the exam the following are recorded for proctoring. You must allow them to go on.", "Allow"],
@@ -61,12 +61,12 @@
       roomStep: ["Room scan", "Slowly turn the webcam (or the laptop) to show the room. Point it where the screen says and hold still until the count reaches 0.", "Start the room scan"],
       views: { front: "The wall in front", left: "The left wall", right: "The right wall", back: "Behind you", ceiling: "The ceiling", desk: "The whole desk top", under: "Under the desk, your feet", done: "Checking…" },
       room: { person: "another person", phone: "a phone, smartwatch or tablet", screen: "another screen (monitor, laptop, TV)", headset: "earphones or a headset", notes: "books or notes" }, roomBlocked: list => `The scan shows ${list}. Remove it, then scan again.`, roomFail: "The scan photos could not be sent. Scan again.",
-      faceStep: ["Face check", "Look straight at the camera, with your whole face in the middle of the preview."],
+      faceStep: ["Webcam · face", "Look straight at the camera. Sit so the frame around your face in the preview turns green."],
       face: { no_video: "No picture from the camera. Make sure no other program is using it.", detector: "Face detection could not load. Check your internet connection and try again.", none: "Your face cannot be seen. Look straight at the camera.", many: "More than one person is in view. Sit the exam alone.", dark: "Your face is too dark. Turn on a light or face a window.", small: "Your face looks too small. Sit a little closer to the camera.", off: "Your face is at the edge of the picture. Move so it is in the middle of the preview." },
       micStep: ["Microphone check", "Press the button and, when “Read now” appears, read the whole sentence below clearly. Only the whole sentence passes.", "Start the microphone check", "Please wait quietly… measuring the room", "Read now", "Checking what was heard…"],
       mic: { no_mic: "No microphone was found. Connect one and check again.", no_audio: "The sound could not be analysed. Check again.", silent: "No sound at all. Make sure the microphone is not muted and the right one is selected.", quiet: "Your voice is too quiet. Sit closer to the microphone and read a little louder.", short: "The whole sentence was not heard. A shout or a single word does not pass: read the sentence on the screen from start to end.", not_said: "The sentence on the screen was not heard. Read it exactly as written, clearly.", failed: "The recording could not be sent. Check again." },
-      earStep: ["Ear check", "This checks that you are not wearing earphones or headphones. Tuck your hair behind your ears and press the button.", "Start the ear check"],
-      ear: { front: "Look straight at the camera.", first: "Slowly turn your head to one side so one ear faces the camera, and hold still.", second: "Now turn to the other side to show the other ear.", done: "Checking…", device: "Earphones, headphones, a headset or another device can be seen on your ears or head. Take them off and check again. If you need a hearing aid, tell the organisers before the exam.", unclear: "Your ears could not be seen clearly. Move your hair aside, use more light, turn your head a little further and check again.", failed: "The photos could not be sent. Check again." }, ok: "OK", bad: "Problem", wait: "Checking…",
+      earStep: ["Ears, head and wrists", "This checks for earphones or a headset, a cap or hat with a brim, and a smartwatch. A beanie or other hat without a brim is fine. Tuck your hair behind your ears and press the button.", "Start the check"],
+      ear: { front: "Look straight at the camera and raise both hands beside your face, palms and wrists showing.", cap: "A cap or hat with a brim (a baseball cap, a bucket hat) can hide your eyes: take it off. A beanie is fine.", watch: "A watch or smartwatch can be seen on your wrist. Take it off and put it out of reach.", first: "Slowly turn your head to one side so one ear faces the camera, and hold still.", second: "Now turn to the other side to show the other ear.", done: "Checking…", device: "Earphones, headphones, a headset or another device can be seen on your ears or head. Take them off and check again. If you need a hearing aid, tell the organisers before the exam.", unclear: "Your ears could not be seen clearly. Move your hair aside, use more light, turn your head a little further and check again.", failed: "The photos could not be sent. Check again." }, ok: "OK", bad: "Problem", wait: "Checking…",
       notReg: "You are not registered for this round.", login: "Please sign in.", room: "Waiting room", startsIn: "Exam starts in", candidate: "Candidate number", autoStart: "The paper opens by itself at the start time. Keep this window open.",
       paperLang: "Language of the paper", paperLangNote: "You can change it until the start.", langs: { ko: "한국어", en: "English" },
       docs: "Exam documents", docNames: { guide: "General Guide", writing: "Writing sheet", answer: "Answer Sheet", paper: "Paper" }, noDocs: "No documents have been published yet.", docsNote: "Print the writing and answer sheets beforehand.",
@@ -156,7 +156,7 @@
     wireLeave(box);
   }
   function paintCheck(box) {
-    const x = T[L()], c = st.checks || {}, keys = ["app", "login", "net", "entry", "camera", "mic", "screen", "system", "displays", "phone", ...(st.quick ? [] : ["face", "voice", "ears"]), "room", "place"];
+    const x = T[L()], c = st.checks || {}, keys = ["net", "mic", "camera", "system", "screen", ...(st.quick ? [] : ["ears"]), "phone", "room"];
     const row = k => `<li class="${c[k] === true ? "is-ok" : c[k] === false ? "is-bad" : ""}"><span>${x.checks[k]}</span><b>${c[k] === true ? x.ok : c[k] === false ? x.bad : x.wait}</b></li>`;
     const s = st.step;
     const step = s ? `<div class="hpho-step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.list ? `<ul class="hpho-allow-list">${s.list.map(i => `<li>${esc(i)}</li>`).join("")}</ul>` : ""}${s.qr ? `<div class="hpho-qr">${s.qr}<ul id="hphoPhoneList"></ul></div>` : ""}${s.view ? `<p class="hpho-scan-view">${esc(s.view)}${s.count ? ` <b>${s.count}</b>` : ""}</p>` : ""}${s.quote ? `<p class="hpho-step-quote">${esc(s.quote)}</p>` : ""}${s.cue ? `<p class="hpho-step-cue" id="hphoCue">${esc(s.cue)}</p>` : ""}${s.meter ? `<div class="hpho-meter" aria-hidden="true"><i id="hphoMeter"></i></div>` : ""}${s.button ? `<p><button type="button" class="hpho-btn" id="hphoStepGo">${esc(s.button)}</button></p>` : ""}</div>` : "";
@@ -321,11 +321,13 @@
   function enter(track) { st.track = track; st.error = null; st.phase = "check"; st.checks = {}; st.phoneQr = null; st.dinged = new Set(); st.scanDone = 0; st.quick = !!st.tracks[track]?.session; check(); }
   async function check() {
     const x = T[L()];
-    st.checks = { app: !!bridge(), login: true, net: true, entry: true }; st.phase = "check"; paint();
+    st.checks = { net: !st.offline }; st.phase = "check"; paint();
     try {
       const P = window.HL_HPHO_PROCTOR, pr = P ? await P.check({ screen: false }) : {};
-      Object.assign(st.checks, { camera: !!pr.camera, mic: !!pr.mic }); paint();
-      if (!pr.camera || !pr.mic) { st.error = x.camNeed; return paint(); }
+      if (!pr.camera || !pr.mic) { st.checks.camera = pr.camera ? undefined : false; st.checks.mic = pr.mic ? undefined : false; st.error = x.camNeed; return paint(); }
+      /* the microphone is done when the sentence is read, the webcam when the face is seen well (once; a return skips them) */
+      if (st.quick) Object.assign(st.checks, { mic: true, camera: true });
+      else if (!(await quality(P, ["voice", "face"]))) return;
       /* Monito-style: the candidate allows the screen, the computer's sound and the program list to be watched;
          nothing goes on without it */
       if (!st.screenAllowed) {
@@ -334,15 +336,14 @@
       }
       Object.assign(pr, await P.shareScreen());
       const displays = typeof bridge().displays === "function" ? bridge().displays() : 0;
-      Object.assign(st.checks, { camera: !!pr.camera, mic: !!pr.mic, screen: !!pr.screen, system: !!pr.system, displays: displays === 1 });
-      if (!pr.camera || !pr.mic) { st.error = x.camNeed; return paint(); }
+      Object.assign(st.checks, { system: !!pr.system, screen: !!pr.screen && displays === 1 });
       if (!pr.screen) { st.error = x.screenNeed; return paint(); }
       if (!pr.system) { st.error = x.systemNeed; return paint(); }
       if (displays !== 1) { st.error = x.displaysNeed(displays); return paint(); }
       /* the face, voice and ear checks: on the first entry; a candidate coming back (already seated) skips them.
          The room scan: every time, a return after a disconnect too */
+      if (!st.quick && !(await quality(P, ["ears"]))) return;
       if (!(await phoneCheck())) return;
-      if (!st.quick && !(await quality(P))) return;
       const r = await cmApi("POST", path("checkin"), { client: bridge().client, lang: st.paperLang || L() }); sync(r);
       st.session = r.session; st.tracks[st.track].session = r.session; st.tracks[st.track].window = r.window;
       st.paperLang = r.session.paper_lang; st.seq = Math.max(st.seq, r.seq || 0); st.pages = r.session.pages || 0;
@@ -365,15 +366,9 @@
   /* the checks a program can judge: the face is well seen, the sentence is read, nothing is worn in the ears. A step
      that passed is not repeated on "check again"; each result also goes into the exam log */
   const waitGo = () => new Promise(res => { st.step.go = res; paint(); });
-  async function quality(P) {
-    const x = T[L()]; document.body.classList.add("hpho-checking");
-    if (st.checks.face !== true && st.passed?.face !== true) {
-      st.step = { title: x.faceStep[0], text: x.faceStep[1] }; paint();
-      const f = await P.faceCheck(); st.checks.face = f.ok;
-      if (!f.ok) { st.step = null; st.error = x.face[f.reason] || x.face.none; paint(); return false; }
-    }
-    (st.passed ||= {}).face = st.checks.face = true;
-    if (st.passed.voice !== true) {
+  async function quality(P, which) {
+    const x = T[L()]; document.body.classList.add("hpho-checking"); st.passed ||= {};
+    if (which.includes("voice") && st.passed.voice !== true) {
       const sentence = (L() === "en" ? "“I will sit HPhO honestly.”" : "“저는 HPhO에 정직하게 응시하겠습니다.”");
       st.step = { title: x.micStep[0], text: x.micStep[1], quote: sentence, button: x.micStep[2], meter: true }; st.checks.voice = undefined;
       await waitGo();
@@ -388,12 +383,19 @@
           reason = r.unavailable ? (reason || retry("voice")) : r.said ? null : "not_said"; }
         catch (e) { reason = reason || "failed"; }
       }
-      st.checks.voice = !reason;
+      st.checks.mic = reason ? false : true;
       if (reason) { st.step = null; st.error = reason === "unavailable" ? x.unavailable : x.mic[reason] || x.mic.short; paint(); return false; }
       st.passed.voice = true;
     }
-    st.checks.voice = true;
-    if (st.passed.ears !== true) {
+    if (which.includes("voice")) st.checks.mic = true;
+    if (which.includes("face") && st.passed.face !== true) {
+      st.step = { title: x.faceStep[0], text: x.faceStep[1] }; paint();
+      const f = await P.faceCheck(); st.checks.camera = f.ok ? true : false;
+      if (!f.ok) { st.step = null; st.error = x.face[f.reason] || x.face.none; paint(); return false; }
+      st.passed.face = true;
+    }
+    if (which.includes("face")) st.checks.camera = true;
+    if (which.includes("ears") && st.passed.ears !== true) {
       st.step = { title: x.earStep[0], text: x.earStep[1], button: x.earStep[2] }; st.checks.ears = undefined;
       await waitGo();
       let earStep = null;
@@ -402,12 +404,12 @@
       if (shots) try { r = await sendForm("earcheck", shots); } catch (e) { r = null; }
       /* a device: always stop. Unclear photos or no answer from the model: try again; after three tries the exam is not
          held up, and the seat is flagged for a person to look at the photos */
-      const why = !r ? "failed" : r.unavailable ? retry("ears") : r.verdict === "device" ? "device" : r.verdict === "unclear" && (st.tries.ears_unclear = (st.tries.ears_unclear || 0) + 1) < 3 ? "unclear" : null;
+      const why = !r ? "failed" : r.unavailable ? retry("ears") : ["device", "cap", "watch"].includes(r.verdict) ? r.verdict : r.verdict === "unclear" && (st.tries.ears_unclear = (st.tries.ears_unclear || 0) + 1) < 3 ? "unclear" : null;
       st.checks.ears = !why;
       if (why) { st.step = null; st.error = why === "unavailable" ? x.unavailable : x.ear[why]; paint(); return false; }
       st.passed.ears = true;
     }
-    st.checks.ears = true;
+    if (which.includes("ears")) st.checks.ears = true;
     return true;
   }
   /* "ding-dong" when a check is confirmed (Monito-style): two soft tones, made here (no sound file) */
@@ -445,12 +447,12 @@
       const done = ph ? Object.values(ph.scan || {}).filter(v => ["clear", "notes", "unverified"].includes(v.status)).length : 0;
       st.checks.room = ph?.scanned || undefined; st.checks.place = !!(ph?.placed || ph?.scanned && ph.place_note === "model unavailable") || undefined;
       /* done only when the phone is connected, has scanned the room and stands in place */
-      st.checks.phone = !!(ph?.online && st.checks.room && st.checks.place) || undefined;
+      st.checks.phone = !!(ph?.online && st.checks.place) || undefined;
       const list = document.getElementById("hphoPhoneList");
-      if (list) list.innerHTML = `<li class="${ph?.online ? "is-ok" : ""}">${x.phoneList.online}${ph?.online ? "" : ` — ${x.phoneList.waiting}`}</li><li class="${ph?.scanned ? "is-ok" : ""}">${x.phoneList.scan(done, 7)}</li><li class="${st.checks.place ? "is-ok" : ""}">${x.phoneList.placed}</li>`;
+      if (list) list.innerHTML = `<li class="${ph?.online ? "is-ok" : ""}">${x.phoneList.online}${ph?.online ? "" : ` — ${x.phoneList.waiting}`}</li><li class="${ph?.scanned ? "is-ok" : ""}">${x.phoneList.scan(done, 4)}</li><li class="${st.checks.place ? "is-ok" : ""}">${x.phoneList.placed}</li>`;
       const key = [st.checks.phone, st.checks.room, st.checks.place, done].join();
       if (key !== shown) { if (shown !== -1 && done > (st.scanDone || 0)) ding(); st.scanDone = done; shown = key; paint(); }
-      if (st.checks.phone) { st.step = null; return true; }
+      if (st.checks.phone && st.checks.room) { st.step = null; return true; }
       await new Promise(r => setTimeout(r, 2000));
     }
   }

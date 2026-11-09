@@ -59,8 +59,9 @@ export const DOC_MAX_BYTES = 40 * 1024 * 1024;
 export const VOICE_MAX_BYTES = 1024 * 1024;
 export const SNAP_SOURCES = ['webcam', 'screen'];
 export const CLIP_SOURCES = ['webcam', 'screen', 'room'];
-/* the phone's room scan: each view swept slowly, a few frames of each judged together */
-export const PHONE_VIEWS = ['front', 'left', 'right', 'back', 'ceiling', 'desk', 'under'];
+/* the phone's room scan, as Monito and MIPT's online rounds do it, in four moves that do not overlap: one slow turn of
+   the whole room at eye height, the desk top with the monitor's sides and back, under the desk, the ceiling */
+export const PHONE_VIEWS = ['room', 'desk', 'under', 'ceiling'];
 /* six frames a view, each at most 768 px (one image tile for the model: the least it is billed for), after the phone
    itself dropped blurred or dark ones: a view costs about 1,600 input tokens */
 export const PHONE_FRAMES = 6, PHONE_ONLINE = 40;
@@ -90,12 +91,13 @@ export const EXAM_EVENTS = ['heartbeat', 'window_ready', 'focus_lost', 'focus_ba
   'system_sound', 'room_scan', 'recording_started', 'recording_failed', 'displays', 'seated', 'phone_lost', 'phone_back'];
 export const EARCHECK_EARLY = 3600;        /* the ear and voice checks open an hour before the start, with the technical check */
 const EAR_VERDICTS = ['clear', 'device', 'unclear'];
-const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, taken during the technical check before an online physics exam${n === 3 ? ': the first faces the camera, in the second the head is turned to show one ear, in the third the other ear' : ': in the first the head is turned to show one ear, in the second the other ear'}.
+const EAR_PROMPT = n => `These are ${n} webcam photos of an exam candidate, taken during the technical check before an online physics exam${n === 3 ? ': the first faces the camera with both hands raised beside the face (wrists visible), in the second the head is turned to show one ear, in the third the other ear' : ': in the first the head is turned to show one ear, in the second the other ear'}.
 Decide whether the candidate wears anything in, on or over the ears or head that could carry sound: earbuds, in-ear earphones, headphones, an over-ear or on-ear headset (also the headband over the head), a hearing device, or a wire leading to an ear. A headset seen in any photo counts, even if an ear is hidden.
 Earrings, ear piercings, hair clips and glasses are not devices. Use "unclear" for a photo in which neither the ear nor anything over it can be seen (hair, angle, blur, too dark) or there is no person.
-Reply with JSON only: {"verdicts":[${Array.from({ length: n }, () => '"clear"|"device"|"unclear"').join(',')}],"note":"at most 15 words, in English"}`;
-const VIEW_NAMES = { front: 'the wall in front of the candidate', left: 'the left side of the room', right: 'the right side of the room', back: 'behind the candidate',
-  ceiling: 'the ceiling', desk: 'the whole desk top, including around and behind the computer', under: 'under the desk and the floor around the chair' };
+Also: "cap" is true if the candidate wears a cap or a hat with a brim (a baseball cap, a bucket hat, a sun hat), which can hide the eyes; a beanie or a hat without a brim is fine. "watch" is true if a smartwatch, fitness band or any watch is on a visible wrist.
+Reply with JSON only: {"verdicts":[${Array.from({ length: n }, () => '"clear"|"device"|"unclear"').join(',')}],"cap":bool,"watch":bool,"note":"at most 15 words, in English"}`;
+const VIEW_NAMES = { room: 'the whole room, all the way round (a 360° turn at eye height)', desk: 'the whole desk top, including the sides and back of the monitor and around the keyboard',
+  under: 'under the desk and the floor around the chair', ceiling: 'the ceiling' };
 const VIEW_PROMPT = view => `These ${PHONE_FRAMES} or fewer frames come from a phone camera turned slowly during the room scan before an online physics exam. This part of the scan should show ${VIEW_NAMES[view]}.
 Look carefully at every frame, including small objects, papers, other screens and reflections, for:
 - another person or part of one; - a phone, smartwatch, tablet or e-reader (the phone that is filming is not visible to itself);
@@ -135,7 +137,7 @@ const clean = (v, n) => typeof v === 'string' ? v.replace(/[\u0000-\u001f]/g, ' 
 export function earVerdict(v, n = 2) {
   const list = Array.isArray(v?.verdicts) ? v.verdicts : [v?.first, v?.second];
   if (!v || list.length !== n || !list.every(x => EAR_VERDICTS.includes(x))) return { unavailable: true };
-  return { verdicts: list, note: clean(v.note, 120) };
+  return { verdicts: list, cap: v.cap === true, watch: v.watch === true, note: clean(v.note, 120) };
 }
 /* the room scan's stills, judged together */
 export async function geminiRoomScan(env, stills) {
@@ -528,7 +530,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       const names = f.get('front') ? ['front', 'first', 'second'] : ['first', 'second'], shots = [];
       for (const n of names) { const b = await still(n); shots.push(b); await keep(b, n, 'ear_check'); }
       const v = await earVision(env, ...shots);
-      const verdict = v.unavailable ? null : v.verdicts.includes('device') ? 'device' : v.verdicts.includes('unclear') ? 'unclear' : 'clear';
+      const verdict = v.unavailable ? null : v.verdicts.includes('device') ? 'device' : v.watch ? 'watch' : v.cap ? 'cap' : v.verdicts.includes('unclear') ? 'unclear' : 'clear';
       /* recorded by the server (seq below every client seq and every server gap mark) */
       await serverEvent('ear_check', v.unavailable ? 'model unavailable' : `${verdict} (${v.verdicts.join(',')})${v.note ? ' · ' + v.note : ''}`, 4e9).run();
       return v.unavailable ? { ok: true, unavailable: true } : { ok: true, verdict, verdicts: v.verdicts };

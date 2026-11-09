@@ -172,7 +172,7 @@
       return { side, blob: await shot() };
     };
     /* the front first (a headset shows from the front too), then one ear, then the other */
-    step("front"); await wait(1500); const front = await shot();
+    step("front"); await wait(2500); const front = await shot();
     step("first"); const a = await turned(0);
     step("second"); const b = await turned(a.side ? -a.side : 0);
     step("done");
@@ -205,13 +205,45 @@
     if (v.srcObject !== p.cam) v.srcObject = p.cam;
     v.play?.().catch(() => {});
   }
-  /* where the preview sits: in the check page's slot (large), or in the corner (slot null) */
+  /* where the preview sits: in the check page's slot (large, with the face tracked), or in the corner (slot null) */
   function dock(slot) {
     if (!p) { if (slot) p = {}; else return; }
     p.slot = slot || null;
     const v = p.video; if (!v) return;
     (slot || document.body).append(v); v.play?.().catch(() => {});
+    if (slot) track(slot); else untrack();
   }
+  /* face tracking on the preview, like a phone camera's: a box follows the face, green when it is well placed (one face,
+     big enough, in the middle, lit), amber when it should move, red when there is no face or more than one */
+  function track(slot) {
+    let c = slot.querySelector(".hpho-track-box");
+    if (!c) { c = Object.assign(document.createElement("canvas"), { className: "hpho-track-box" }); slot.append(c); }
+    if (p.tracking) return; p.tracking = true;
+    let last = 0;
+    const loop = async now => {
+      if (!p?.tracking) return;
+      requestAnimationFrame(loop);
+      if (now - last < 66) return; last = now;
+      const v = document.getElementById("hphoSelf"), box = p.slot?.querySelector(".hpho-track-box");
+      if (!v?.videoWidth || !box) return;
+      if (!p.det) { if (!p.detLoading) { p.detLoading = true; p.det = await detectors(); } return; }
+      const W = v.videoWidth, H = v.videoHeight; if (box.width !== W) { box.width = W; box.height = H; }
+      const g = box.getContext("2d"); g.clearRect(0, 0, W, H);
+      let d; try { d = p.det.face.detectForVideo(v, performance.now()).detections; } catch (e) { return; }
+      const many = d.length > 1;
+      for (const f of d) {
+        const b = f.boundingBox, cx = (b.originX + b.width / 2) / W, cy = (b.originY + b.height / 2) / H;
+        const good = !many && b.width / W >= 0.16 && Math.abs(cx - 0.5) <= 0.25 && Math.abs(cy - 0.5) <= 0.3;
+        g.strokeStyle = many ? "#ff4d4f" : good ? "#2fd06b" : "#ffb020"; g.lineWidth = Math.max(3, W / 160);
+        const r = 14, x = b.originX, y = b.originY, w = b.width, h = b.height;
+        g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.stroke();
+        g.fillStyle = g.strokeStyle; for (const k of (f.keypoints || []).slice(0, 6)) { g.beginPath(); g.arc(k.x * W, k.y * H, Math.max(2.5, W / 220), 0, 7); g.fill(); }
+      }
+      slot.dataset.face = d.length === 0 ? "none" : many ? "many" : "one";
+    };
+    requestAnimationFrame(loop);
+  }
+  function untrack() { if (p) p.tracking = false; document.querySelectorAll(".hpho-track-box").forEach(c => c.remove()); }
   function frame(stream, width) {
     const track = stream?.getVideoTracks?.()[0]; if (!track) return null;
     const v = stream === p.cam ? document.getElementById("hphoSelf") : (p.scrVideo ||= Object.assign(document.createElement("video"), { muted: true, srcObject: stream }));
