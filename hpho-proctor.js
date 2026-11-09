@@ -31,7 +31,8 @@
   const live = s => !!s && s.getTracks().length > 0 && s.getTracks().every(t => t.readyState === "live");
   /* the technical check: camera and microphone (and the screen, inside the desktop app) can be opened; a stream already
      open from an earlier try is kept */
-  async function check() {
+  /* screen: false leaves the screen for shareScreen(), which the page calls once the candidate pressed "allow" */
+  async function check({ screen = true } = {}) {
     const out = { camera: false, mic: false, screen: false, system: false, detector: false };
     if (live(p?.cam)) { out.camera = p.cam.getVideoTracks().length > 0; out.mic = p.cam.getAudioTracks().length > 0; }
     else try {
@@ -39,7 +40,8 @@
       out.camera = cam.getVideoTracks().length > 0; out.mic = cam.getAudioTracks().length > 0;
       p = { ...(p || {}), cam };
     } catch (e) { out.error = e?.name || "camera"; }
-    if (live(p?.scr)) { out.screen = true; out.system = p.scr.getAudioTracks().length > 0; }
+    if (!screen) { /* asked later */ }
+    else if (live(p?.scr)) { out.screen = true; out.system = p.scr.getAudioTracks().length > 0; }
     else try {
       /* the screen and the computer's own sound together (the desktop app answers with the primary display and loopback) */
       const scr = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 2 }, audio: true }); p = { ...(p || {}), scr };
@@ -56,6 +58,11 @@
     return out;
   }
   const wait = ms => new Promise(r => setTimeout(r, ms));
+  /* the screen with the computer's sound, after the candidate allowed it */
+  async function shareScreen() {
+    const out = await check({ screen: true });
+    return { screen: out.screen, system: out.system, error: out.screenError };
+  }
   async function selfVideo() {
     const v = document.getElementById("hphoSelf");
     for (let i = 0; i < 30 && v && !v.videoWidth; i++) await wait(100);
@@ -316,5 +323,5 @@
   }
   /* counters only (no image, no stream), for the page's own status line and for tests */
   const stats = () => p ? { alive: !!p.alive, detector: !!p.det, faces: p.faces ?? null, errors: p.errors || 0, lastError: p.lastError || null, since: { ...(p.since || {}) } } : null;
-  window.HL_HPHO_PROCTOR = { check, dock, faceCheck, micCheck, earShots, roomScan, start, snap, stop, stats, pace, still, wav16k, SCAN };
+  window.HL_HPHO_PROCTOR = { check, shareScreen, dock, faceCheck, micCheck, earShots, roomScan, start, snap, stop, stats, pace, still, wav16k, SCAN };
 })();

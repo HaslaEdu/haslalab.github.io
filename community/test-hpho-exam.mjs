@@ -40,9 +40,9 @@ async function setup(theory, { voice = { said: true }, ear = { verdicts: ['clear
     return exam(`/api/hpho/rounds/2027-1/exam/${track}/${action}`, 'POST', {}, me, env, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: f })); };
   /* move the theory exam by s seconds (negative: it is now later in the day) */
   const shift = s => sql.prepare('UPDATE hpho_rounds SET theory_at=theory_at+?,start_at=start_at+?').run(s, s);
-  const phone = (code, action, fields) => { if (!fields) return exam(`/api/hpho/phone/${code}/${action}`, 'GET', null, null, env, new URL('https://x/'));
+  const phone = (code, action, fields, d = 'phone-device-aaaaaaaa') => { const u = new URL('https://x/?d=' + d); if (!fields) return exam(`/api/hpho/phone/${code}/${action}`, 'GET', null, null, env, u);
     const fd = new FormData(); for (const [k, v] of Object.entries(fields)) fd.set(k, v instanceof Uint8Array ? new Blob([v]) : v);
-    return exam(`/api/hpho/phone/${code}/${action}`, 'POST', {}, null, env, new URL('https://x/'), new Request('https://x/', { method: 'POST', body: fd })); };
+    return exam(`/api/hpho/phone/${code}/${action}`, 'POST', {}, null, env, u, new Request('https://x/', { method: 'POST', body: fd })); };
   return { sql, store, call, form, shift, t, reg, env, phone };
 }
 
@@ -293,6 +293,7 @@ test('the phone: paired by a QR code, scans the room view by view, then stands w
   const s = await f.phone(c, 'state');
   assert.equal(s.candidate_no.startsWith('HP271-'), true); assert.equal(s.scanned, false);
   assert.equal((await f.call('phone', 'GET', null, student)).phone.online, true);
+  assert.equal(await code(f.phone(c, 'state', null, 'another-phone-bbbbbbbb')), 'phone_in_use', 'a second phone cannot take the seat');
   const frames = { f0: JPEG, f1: JPEG, f2: JPEG, f3: JPEG };
   assert.equal(await code(f.phone(c, 'scan', { view: 'front', f0: JPEG })), 'too_few_frames');
   assert.equal((await f.phone(c, 'scan', { view: 'desk', ...frames })).status, 'blocked', 'a phone on the desk: remove it and sweep again');

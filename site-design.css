@@ -842,3 +842,20 @@ body.hl-site .hpho-phone-banner{position:fixed;left:16px;right:16px;bottom:16px;
 body.hl-site .hpho-phone-banner svg{width:120px;height:120px;background:#fff;padding:4px}
 html[data-theme="dark"] body.hl-site .hpho-phone-steps li{background:#2b2540}
 body.hl-site[data-site-route="hpho-exam"] #hlxTabs{display:none!important}
+/* network badge (exam bar, phone), Monito-style: three bars */
+body.hl-site .hpho-net{display:inline-flex;align-items:flex-end;gap:2px;font-size:12px;white-space:nowrap}
+body.hl-site .hpho-net i{display:inline-block;width:4px;background:#c9d1de;border-radius:1px}body.hl-site .hpho-net i:nth-child(1){height:5px}body.hl-site .hpho-net i:nth-child(2){height:8px}body.hl-site .hpho-net i:nth-child(3){height:11px;margin-right:4px}
+body.hl-site .hpho-net.is-good i{background:#1d9a4d}body.hl-site .hpho-net.is-fair i:nth-child(-n+2){background:#d98c00}body.hl-site .hpho-net.is-poor i:nth-child(1){background:#d92d20}body.hl-site .hpho-net.is-off{color:#d92d20}
+body.hl-site .hpho-allow-list{margin:8px 0;padding-left:20px;display:grid;gap:4px;font-size:14px}
+body.hl-site .hpho-phone-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+body.hl-site .hpho-phone-guide{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;margin:8px 0}
+body.hl-site .hpho-example{margin:0;text-align:center;font-size:11px;color:#5c6b7a}body.hl-site .hpho-example svg{width:120px;height:90px}
+body.hl-site .hpho-example .ex-wall{fill:#d5dbe6}body.hl-site .hpho-example .ex-desk{fill:#b8a27a}body.hl-site .hpho-example .ex-me{fill:#7059a4}
+body.hl-site .hpho-example .ex-phone rect{fill:#2f3a4d}body.hl-site .hpho-example .ex-ray{stroke:#7059a4;stroke-width:1.5;stroke-dasharray:3 3;fill:none}
+body.hl-site .hpho-example .ex-arrow{stroke:#1d7a3e;stroke-width:2;fill:none}body.hl-site .hpho-example .ex-head{fill:#1d7a3e}
+body.hl-site .hpho-example .ex-sweep{transform-origin:100px 100px;animation:hphoSweep 3.2s ease-in-out infinite alternate}
+body.hl-site .hpho-example .ex-tilt-up{animation:hphoTiltUp 3.2s ease-in-out infinite alternate}body.hl-site .hpho-example .ex-tilt-down{animation:hphoTiltDown 3.2s ease-in-out infinite alternate}
+@keyframes hphoSweep{from{transform:rotate(-40deg)}to{transform:rotate(40deg)}}
+@keyframes hphoTiltUp{from{transform:rotate(0)}to{transform:rotate(-55deg)}}@keyframes hphoTiltDown{from{transform:rotate(0)}to{transform:rotate(55deg)}}
+body.hl-site .hpho-meter-big{height:16px;border-radius:8px}
+@media (prefers-reduced-motion:reduce){body.hl-site .hpho-example .ex-phone{animation-duration:6s}}

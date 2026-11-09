@@ -23,7 +23,9 @@
       opensAt: v => `입장: ${v}부터 (시작 1시간 전)`, seatBy: v => `착석 마감: ${v} (시작 20분 전)`, opensLater: "입장 시간이 아닙니다", seatClosed: "착석 마감이 지나 입장할 수 없습니다", ended: "종료", submitted: "제출 완료", noRound: "응시할 수 있는 시험이 없습니다.",
       check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인", camera: "웹캠", mic: "마이크", screen: "화면 기록", face: "얼굴 인식", voice: "문장 읽기 (마이크)", ears: "귀·머리 검사 (이어폰·헤드셋)", system: "컴퓨터 소리 녹음", displays: "모니터 1대", phone: "휴대폰 감독 연결", room: "주변 스캔 (휴대폰)", place: "휴대폰 위치" }, retry: "다시 점검", preview: "카메라 미리보기", camNeed: "웹캠·마이크·화면 기록이 모두 켜져야 응시할 수 있습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.",
       screenNeed: "화면 기록을 시작하지 못했습니다. 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", systemNeed: "컴퓨터 소리를 녹음하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", displaysNeed: n => n > 1 ? `모니터가 ${n}대 연결되어 있습니다. 모니터를 하나만 남기고 나머지는 케이블을 뽑은 뒤 다시 점검하세요.` : "모니터 수를 확인하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트하세요.",
-      unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.", phoneFirst: "먼저 휴대폰을 연결합니다. 휴대폰 카메라로 아래 QR을 찍어 여세요. 휴대폰 화면에서 「카메라 켜기」를 누르면 연결되고, 다음 점검으로 넘어갑니다. 주변 스캔은 얼굴·마이크·귀 점검 뒤에 휴대폰으로 합니다.", coverTitle: "모니터가 추가로 연결되었습니다", coverText: "추가 모니터의 케이블을 지금 뽑으세요. 뽑을 때까지 시험지가 가려지며, 이 상황은 기록되어 감독관이 검토합니다.",
+      unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.",
+      allowStep: ["화면 감시 허용", "시험 동안 아래 항목이 감독을 위해 기록됩니다. 허용해야 다음 단계로 넘어갈 수 있습니다.", "허용"],
+      allowList: ["컴퓨터 화면 전체 (녹화와 사진)", "컴퓨터에서 나오는 소리", "실행 중인 프로그램 이름 (창 제목·내용은 아님)", "창 이탈·모니터 연결·화면 잠금"], net: { label: "네트워크", good: "좋음", fair: "보통", poor: "느림", off: "끊김" }, phoneFirst: "먼저 휴대폰을 연결합니다. 휴대폰 카메라로 아래 QR을 찍어 여세요. 휴대폰 화면에서 「카메라 켜기」를 누르면 연결되고, 다음 점검으로 넘어갑니다. 주변 스캔은 얼굴·마이크·귀 점검 뒤에 휴대폰으로 합니다.", coverTitle: "모니터가 추가로 연결되었습니다", coverText: "추가 모니터의 케이블을 지금 뽑으세요. 뽑을 때까지 시험지가 가려지며, 이 상황은 기록되어 감독관이 검토합니다.",
       phoneStep: ["휴대폰 감독", "휴대폰 카메라로 아래 QR을 찍어 휴대폰에서 여세요. 휴대폰이 방을 한 방향씩 천천히 비추면 AI가 확인하고, 마지막으로 휴대폰을 옆이나 뒤에 세워 본인·손·책상·화면이 보이게 합니다. 휴대폰 화면의 안내를 따르세요."],
       phoneList: { online: "휴대폰 연결", scan: (n, m) => `주변 스캔 ${n} / ${m}`, placed: "휴대폰 위치 확인" }, phoneLost: "휴대폰 감독이 끊겼습니다. 휴대폰 화면을 다시 켜거나, 이 QR을 휴대폰으로 다시 찍으세요. 끊긴 시간은 기록됩니다.", phoneOn: "휴대폰", phoneOk: "연결", phoneBad: "끊김",
       saving: (n, m) => `감독 녹화를 올리는 중… ${n} / ${m}. 창이 닫힐 때까지 기다려 주세요.`,
@@ -50,7 +52,9 @@
       opensAt: v => `Entry from ${v} (an hour before the start)`, seatBy: v => `Be seated by ${v} (20 minutes before the start)`, opensLater: "Not open yet", seatClosed: "Seating has closed", ended: "Over", submitted: "Submitted", noRound: "There is no exam to sit.",
       check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in", camera: "Webcam", mic: "Microphone", screen: "Screen recording", face: "Face", voice: "Reading aloud (microphone)", ears: "Ears and head (earphones, headset)", system: "Computer sound recording", displays: "One monitor", phone: "Phone connected", room: "Room scan (phone)", place: "Phone position" }, retry: "Check again", preview: "Camera preview", camNeed: "The webcam, microphone and screen recording must all be on to sit the exam. Make sure no other program is using the camera.",
       screenNeed: "Screen recording could not start. Update the app to the latest version, then check again.", systemNeed: "The computer's sound could not be recorded. Update the HaslaEdu app to the latest version, then check again.", displaysNeed: n => n > 1 ? `${n} monitors are connected. Unplug all but one, then check again.` : "The number of monitors could not be read. Update the HaslaEdu app to the latest version.",
-      unavailable: "The checking server did not answer. Check again in a moment.", phoneFirst: "First connect your phone: scan the QR below with its camera and open it. Press “Turn on the camera” on the phone to connect; the next checks follow. The room scan is done with the phone after the face, microphone and ear checks.", coverTitle: "Another monitor was connected", coverText: "Unplug the extra monitor now. The paper is covered until you do; this is recorded and reviewed by a proctor.",
+      unavailable: "The checking server did not answer. Check again in a moment.",
+      allowStep: ["Allow screen monitoring", "During the exam the following are recorded for proctoring. You must allow them to go on.", "Allow"],
+      allowList: ["The whole computer screen (recording and photos)", "Sound played on the computer", "The names of running programs (not window titles or contents)", "Leaving the window, connecting a monitor, locking the screen"], net: { label: "Network", good: "Good", fair: "Fair", poor: "Slow", off: "Offline" }, phoneFirst: "First connect your phone: scan the QR below with its camera and open it. Press “Turn on the camera” on the phone to connect; the next checks follow. The room scan is done with the phone after the face, microphone and ear checks.", coverTitle: "Another monitor was connected", coverText: "Unplug the extra monitor now. The paper is covered until you do; this is recorded and reviewed by a proctor.",
       phoneStep: ["Phone proctoring", "Scan the QR below with your phone camera and open it on the phone. The phone shows the room slowly, one side at a time, for the AI to check; then you stand it to your side or behind you so it sees you, your hands, the desk and the screen. Follow the instructions on the phone."],
       phoneList: { online: "Phone connected", scan: (n, m) => `Room scan ${n} / ${m}`, placed: "Phone position checked" }, phoneLost: "The phone proctoring stopped. Turn the phone's screen back on, or scan this QR again. The time it was off is recorded.", phoneOn: "Phone", phoneOk: "Connected", phoneBad: "Lost",
       saving: (n, m) => `Uploading the proctoring recording… ${n} / ${m}. Wait until the window closes.`,
@@ -113,8 +117,10 @@
     const x = T[L()], bar = document.getElementById("hphoExamBar"); if (!bar) return;
     const w = W(), live = ["room", "exam", "submit"].includes(st.phase);
     const left = st.phase === "exam" ? w.ends - nowS() : st.phase === "submit" ? w.upload_until - nowS() : st.phase === "room" ? w.start_at - nowS() : null;
+    const n = x.net, level = !navigator.onLine || st.offline ? "off" : st.rtt == null || st.rtt < 300 ? "good" : st.rtt < 900 ? "fair" : "poor";
+    const netBadge = `<span class="hpho-net is-${level}"><i></i><i></i><i></i> ${n.label}: ${n[level]}${st.rtt != null && level !== "off" ? ` · ${st.rtt} ms` : ""}</span>`;
     bar.innerHTML = `<b class="hpho-exam-title"><img class="hpho-exam-icon hpho-logo-light" src="logo/brand/hpho-icon-light.svg?v=20261109-hpho" alt=""><img class="hpho-exam-icon hpho-logo-dark" src="logo/brand/hpho-icon-dark.svg?v=20261109-hpho" alt="" aria-hidden="true">${x.title}${st.round ? " · " + (st.round.status === "draft" ? (L() === "en" ? "Practice exam" : "모의 시험") : esc(st.round.title[L()])) : ""}${st.track && st.phase !== "lobby" ? " · " + x.track[st.track] : ""}</b>
-      ${st.entry ? `<span>${x.candidate} <b class="hpho-no">${esc(st.entry.candidate_no)}</b></span>` : ""}
+      ${st.entry ? `<span>${x.candidate} <b class="hpho-no">${esc(st.entry.candidate_no)}</b></span>` : ""}${netBadge}
       ${live ? `<span class="hpho-light ${st.online ? "is-ok" : "is-bad"}">${x.conn}: ${st.online ? x.connOk : x.connBad}</span><span class="hpho-light is-ok">${x.proctor}: ${x.proctorOn}</span><span class="hpho-light ${st.phoneOnline === false ? "is-bad" : "is-ok"}">${x.phoneOn}: ${st.phoneOnline === false ? x.phoneBad : x.phoneOk}</span>
         <span class="hpho-exam-clock${left < 600 && st.phase !== "room" ? " is-low" : ""}">${st.phase === "submit" ? x.uploadUntil : st.phase === "room" ? x.startsIn : x.left} <b>${fmt(left)}</b></span>` : ""}`;
   }
@@ -152,7 +158,7 @@
     const x = T[L()], c = st.checks || {}, keys = ["app", "login", "net", "entry", "camera", "mic", "screen", "system", "displays", "phone", ...(st.quick ? [] : ["face", "voice", "ears"]), "room", "place"];
     const row = k => `<li class="${c[k] === true ? "is-ok" : c[k] === false ? "is-bad" : ""}"><span>${x.checks[k]}</span><b>${c[k] === true ? x.ok : c[k] === false ? x.bad : x.wait}</b></li>`;
     const s = st.step;
-    const step = s ? `<div class="hpho-step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.qr ? `<div class="hpho-qr">${s.qr}<ul id="hphoPhoneList"></ul></div>` : ""}${s.view ? `<p class="hpho-scan-view">${esc(s.view)}${s.count ? ` <b>${s.count}</b>` : ""}</p>` : ""}${s.quote ? `<p class="hpho-step-quote">${esc(s.quote)}</p>` : ""}${s.cue ? `<p class="hpho-step-cue" id="hphoCue">${esc(s.cue)}</p>` : ""}${s.meter ? `<div class="hpho-meter" aria-hidden="true"><i id="hphoMeter"></i></div>` : ""}${s.button ? `<p><button type="button" class="hpho-btn" id="hphoStepGo">${esc(s.button)}</button></p>` : ""}</div>` : "";
+    const step = s ? `<div class="hpho-step"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>${s.list ? `<ul class="hpho-allow-list">${s.list.map(i => `<li>${esc(i)}</li>`).join("")}</ul>` : ""}${s.qr ? `<div class="hpho-qr">${s.qr}<ul id="hphoPhoneList"></ul></div>` : ""}${s.view ? `<p class="hpho-scan-view">${esc(s.view)}${s.count ? ` <b>${s.count}</b>` : ""}</p>` : ""}${s.quote ? `<p class="hpho-step-quote">${esc(s.quote)}</p>` : ""}${s.cue ? `<p class="hpho-step-cue" id="hphoCue">${esc(s.cue)}</p>` : ""}${s.meter ? `<div class="hpho-meter" aria-hidden="true"><i id="hphoMeter"></i></div>` : ""}${s.button ? `<p><button type="button" class="hpho-btn" id="hphoStepGo">${esc(s.button)}</button></p>` : ""}</div>` : "";
     const done = keys.filter(k => c[k] === true).length;
     box.innerHTML = `<section class="hpho-round hpho-check"><div class="hpho-check-head"><h2>${x.check} · ${x.track[st.track]}</h2><span class="hpho-muted">${done} / ${keys.length}</span></div>
       <div class="hpho-check-grid"><ul class="hpho-checks">${keys.map(row).join("")}</ul>
@@ -225,6 +231,8 @@
   }
   function paint() {
     const x = T[L()], box = document.getElementById("hphoExamMain"); if (!box) return;
+    if (st.error && st.error !== st.beeped && ["check", "lobby", "room", "submit"].includes(st.phase)) { st.beeped = st.error; beep(); }
+    if (!st.error) st.beeped = null;
     paintBar();
     if (!bridge()) { box.innerHTML = `<section class="hpho-round"><h2>${x.title}</h2><p>${x.appOnly}</p><a class="hpho-btn" href="https://physleague.kr/#/desktop" target="_blank" rel="noopener">${x.appGet}</a></section>`; return; }
     if (st.phase === "lobby") return paintLobby(box);
@@ -314,7 +322,16 @@
     const x = T[L()];
     st.checks = { app: !!bridge(), login: true, net: true, entry: true }; st.phase = "check"; paint();
     try {
-      const P = window.HL_HPHO_PROCTOR, pr = P ? await P.check() : {};
+      const P = window.HL_HPHO_PROCTOR, pr = P ? await P.check({ screen: false }) : {};
+      Object.assign(st.checks, { camera: !!pr.camera, mic: !!pr.mic }); paint();
+      if (!pr.camera || !pr.mic) { st.error = x.camNeed; return paint(); }
+      /* Monito-style: the candidate allows the screen, the computer's sound and the program list to be watched;
+         nothing goes on without it */
+      if (!st.screenAllowed) {
+        st.step = { title: x.allowStep[0], text: x.allowStep[1], list: x.allowList, button: x.allowStep[2] }; paint();
+        await waitGo(); st.screenAllowed = true; st.step = null;
+      }
+      Object.assign(pr, await P.shareScreen());
       const displays = typeof bridge().displays === "function" ? bridge().displays() : 0;
       Object.assign(st.checks, { camera: !!pr.camera, mic: !!pr.mic, screen: !!pr.screen, system: !!pr.system, displays: displays === 1 });
       if (!pr.camera || !pr.mic) { st.error = x.camNeed; return paint(); }
@@ -394,18 +411,17 @@
     return true;
   }
   /* "ding-dong" when a check is confirmed (Monito-style): two soft tones, made here (no sound file) */
+  /* and "beep-beep" when a check finds a problem or something fails (the AI did not recognise it, no answer, an error) */
   let audio = null;
-  function ding() {
-    try {
-      audio ||= new AudioContext(); audio.resume?.();
-      const t0 = audio.currentTime;
-      for (const [f, at] of [[1046.5, 0], [784, 0.18]]) {
-        const o = audio.createOscillator(), g = audio.createGain(); o.type = "sine"; o.frequency.value = f;
-        g.gain.setValueAtTime(0.0001, t0 + at); g.gain.exponentialRampToValueAtTime(0.25, t0 + at + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + at + 0.45);
-        o.connect(g).connect(audio.destination); o.start(t0 + at); o.stop(t0 + at + 0.5);
-      }
-    } catch (e) {}
+  function tones(list) {
+    try { audio ||= new AudioContext(); audio.resume?.(); const t0 = audio.currentTime;
+      for (const [f, at, len, vol] of list) { const o = audio.createOscillator(), g = audio.createGain(); o.type = "sine"; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t0 + at); g.gain.exponentialRampToValueAtTime(vol, t0 + at + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t0 + at + len);
+        o.connect(g).connect(audio.destination); o.start(t0 + at); o.stop(t0 + at + len + 0.05); } } catch (e) {}
   }
+  const ding = () => tones([[1046.5, 0, 0.45, 0.25], [784, 0.18, 0.5, 0.25]]);
+  const beep = () => tones([[1568, 0, 0.09, 0.2], [1568, 0.14, 0.09, 0.2]]);
+
   /* a check the server's model could not answer: "unavailable" for the first three tries, then let through (flagged) */
   function retry(what) { st.tries[what] = (st.tries[what] || 0) + 1; return st.tries[what] < 3 ? "unavailable" : null; }
   /* the phone (hpho-phone.js): paired by a QR, it scans the room view by view (the model judges each), then stands where
@@ -578,9 +594,17 @@
       if (st.phase === "lobby") paint();
     } catch (e) {} finally { st.resyncing = false; }
   }
+  /* the network's delay: one light request every 10 s (the exam's heartbeat is timed too) */
+  async function ping() {
+    const t0 = performance.now();
+    try { const r = await fetch(cmBase() + "/api/health", { cache: "no-store" }); if (!r.ok && r.status >= 500) throw 0; st.offline = false; st.rtt = Math.round(performance.now() - t0); }
+    catch (e) { const was = st.offline; st.offline = true; if (!was) beep(); }
+    paintBar();
+  }
   function tick() {
     if (!document.getElementById("hphoExamMain")) return clearInterval(st.timer);
-    if (["lobby", "room"].includes(st.phase) && ++st.ticks % 30 === 0) resync();
+    if (++st.ticks % 10 === 5) ping();
+    if (["lobby", "room"].includes(st.phase) && st.ticks % 30 === 0) resync();
     const w = W(), t = nowS();
     if (st.phase === "lobby") { if (st.round) document.querySelectorAll("[data-enter]").forEach(b => { const s = trackState(b.dataset.enter); b.disabled = !s.can; b.textContent = s.label; }); return; }
     if (!w) return;

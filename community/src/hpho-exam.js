@@ -61,7 +61,9 @@ export const SNAP_SOURCES = ['webcam', 'screen'];
 export const CLIP_SOURCES = ['webcam', 'screen', 'room'];
 /* the phone's room scan: each view swept slowly, a few frames of each judged together */
 export const PHONE_VIEWS = ['front', 'left', 'right', 'back', 'ceiling', 'desk', 'under'];
-export const PHONE_FRAMES = 8, PHONE_ONLINE = 40;
+/* six frames a view, each at most 768 px (one image tile for the model: the least it is billed for), after the phone
+   itself dropped blurred or dark ones: a view costs about 1,600 input tokens */
+export const PHONE_FRAMES = 6, PHONE_ONLINE = 40;
 export const CLIP_MAX_BYTES = 24 * 1024 * 1024;
 export const SCAN_VIEWS = ['front', 'left', 'right', 'back', 'ceiling', 'desk', 'under'];
 export const DOC_KINDS = ['guide', 'writing', 'answer', 'paper'];      /* general guide, 답안지 (writing sheet), answer sheet, the paper */
@@ -191,7 +193,7 @@ export const HPHO_EXAM_SCHEMA = [
   /* the candidate's phone for one exam: the code's hash (the code itself is only in the QR), its scan and placement */
   `CREATE TABLE IF NOT EXISTS hpho_phones (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, track TEXT NOT NULL, candidate_no TEXT NOT NULL,
     code_hash TEXT NOT NULL, created_at INTEGER NOT NULL, last_beat INTEGER, scan TEXT NOT NULL DEFAULT '{}', placed INTEGER NOT NULL DEFAULT 0,
-    place_note TEXT, last_snap TEXT, PRIMARY KEY (round_id, user_id, track))`,
+    place_note TEXT, last_snap TEXT, device TEXT, PRIMARY KEY (round_id, user_id, track))`,
   `CREATE UNIQUE INDEX IF NOT EXISTS hpho_phones_code ON hpho_phones(code_hash)`,
   `CREATE TABLE IF NOT EXISTS hpho_events (round_id TEXT NOT NULL, user_id INTEGER NOT NULL, seq INTEGER NOT NULL,
     client_at INTEGER, at INTEGER NOT NULL, kind TEXT NOT NULL, detail TEXT, PRIMARY KEY (round_id, user_id, seq))`,
@@ -322,13 +324,18 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
     return new Uint8Array(await file.arrayBuffer());
   };
   /* the phone: its code is its only key; it works from the room's opening until the upload closes */
-  async function phoneRoute(code, action, m, env, req) {
+  async function phoneRoute(code, action, m, env, req, device) {
     const db = scope(env); await ensureHphoExam(db);
     const ph = /^[A-Za-z0-9_-]{20,64}$/.test(code) ? await db.prepare('SELECT * FROM hpho_phones WHERE code_hash=?').bind(await sha256(code)).first() : null;
     if (!ph) fail(404, 'phone_not_found');
     const round = await db.prepare('SELECT * FROM hpho_rounds WHERE id=?').bind(ph.round_id).first(), w = round && examWindow(round, ph.track), t = now();
     if (!w || t >= w.upload_until + 600) fail(409, 'exam_over');
     const store = env.HPHO_SNAPS || env.LAB_PAGES, where = [ph.round_id, ph.user_id, ph.track];
+    /* one phone per seat: the first device to open the code keeps it; another one is refused while the first is
+       connected (no one else's phone can take over a candidate's seat, and two candidates' scans never mix) */
+    if (!/^[A-Za-z0-9_-]{16,64}$/.test(device || '')) fail(400, 'bad_device');
+    if (ph.device && ph.device !== device && ph.last_beat && t - ph.last_beat < PHONE_ONLINE) fail(409, 'phone_in_use');
+    if (ph.device !== device) { await db.prepare('UPDATE hpho_phones SET device=? WHERE round_id=? AND user_id=? AND track=?').bind(device, ...where).run(); ph.device = device; }
     const event = (kind, detail, mark) => db.prepare(`INSERT OR IGNORE INTO hpho_events(round_id,user_id,seq,client_at,at,kind,detail,track) VALUES(?,?,?,NULL,?,?,?,?)`).bind(ph.round_id, ph.user_id, -(mark + t), t, kind, String(detail || '').slice(0, 200), ph.track);
     const beat = () => db.prepare('UPDATE hpho_phones SET last_beat=? WHERE round_id=? AND user_id=? AND track=?').bind(t, ...where).run();
     if (action === 'state' && m === 'GET') { await beat(); return { round: ph.round_id, track: ph.track, candidate_no: ph.candidate_no, window: w, now: t, views: PHONE_VIEWS, ...phoneState({ ...ph, last_beat: t }, t) }; }
@@ -377,7 +384,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
   }
   return async function exam(p, m, body, me, env, url, req) {
     const phone = /^\/api\/hpho\/phone\/([^/]+)\/(state|scan|place|snap|beat)$/.exec(p);
-    if (phone) return phoneRoute(phone[1], phone[2], m, env, req);
+    if (phone) return phoneRoute(phone[1], phone[2], m, env, req, url?.searchParams?.get('d'));
     const r = /^\/api\/hpho\/rounds\/([^/]+)\/exam\/(?:(theory|experiment)\/)?(state|checkin|lang|start|events|snap|earcheck|voicecheck|roomscan|phone|keep|clip|docs|doc|answer|submit|upload|seats|monitor|log|media|verdict|retain)$/.exec(p);
     if (!r) return undefined;
     const [, id, track = 'theory', action] = r, db = scope(env), admin = isAdmin(me);
@@ -463,7 +470,7 @@ export function createHphoExamRouter({ HttpError, needUser, limit, isAdmin, scop
       /* a new code (the QR shows it once); a phone already paired keeps its scan, a new code replaces the old one */
       const code = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(24)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
       /* rescan (a return after a disconnect): the room is shown again and the phone stood again */
-      if (ph) await db.prepare(`UPDATE hpho_phones SET code_hash=?${body?.rescan ? ",scan='{}',placed=0,place_note=NULL" : ''} WHERE round_id=? AND user_id=? AND track=?`).bind(await sha256(code), id, me.id, track).run();
+      if (ph) await db.prepare(`UPDATE hpho_phones SET code_hash=?,device=NULL${body?.rescan ? ",scan='{}',placed=0,place_note=NULL" : ''} WHERE round_id=? AND user_id=? AND track=?`).bind(await sha256(code), id, me.id, track).run();
       else await db.prepare('INSERT INTO hpho_phones(round_id,user_id,track,candidate_no,code_hash,created_at) VALUES(?,?,?,?,?,?)').bind(id, me.id, track, entry.candidate_no, await sha256(code), t).run();
       return { ok: true, code };
     }
