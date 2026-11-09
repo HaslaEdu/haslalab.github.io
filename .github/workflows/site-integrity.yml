@@ -1,0 +1,53 @@
+# Every hour: is haslalab.org still serving exactly this repository's files, from GitHub Pages?
+# A defaced page (a stolen account pushing elsewhere, a hijacked domain or DNS) shows up here as a failed run,
+# which GitHub reports by e-mail. What to do then: docs/SECURITY-RECOVERY.md (haslaedu-web, private).
+name: Site integrity
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            index.html
+            site-ux.js
+            arena.js
+            hpho.js
+            hpho-exam.js
+            hpho-proctor.js
+            site-design.css
+            CNAME
+          sparse-checkout-cone-mode: false
+      - name: Domain points at GitHub Pages
+        run: |
+          domain=$(tr -d ' \n' < CNAME)
+          ips=$(dig +short A "$domain" | sort | tr '\n' ' ')
+          echo "$domain -> $ips"
+          for ip in $ips; do case "$ip" in 185.199.10[89].153|185.199.11[01].153) ;; *) echo "::error::$domain resolves to $ip, not GitHub Pages"; exit 1;; esac; done
+          [ -n "$ips" ] || { echo "::error::$domain does not resolve"; exit 1; }
+      - name: Live files equal the repository
+        run: |
+          domain=$(tr -d ' \n' < CNAME)
+          # a push in the last 30 minutes may still be deploying: then only report
+          age=$(( $(date +%s) - $(git log -1 --format=%ct) ))
+          bad=0
+          for f in index.html site-ux.js arena.js hpho.js hpho-exam.js hpho-proctor.js site-design.css; do
+            want=$(sha256sum "$f" | cut -c1-64)
+            got=$(curl -sfL --max-time 30 "https://$domain/$f" | sha256sum | cut -c1-64)
+            if [ "$want" != "$got" ]; then echo "::warning::$f differs from the repository"; bad=1; else echo "ok $f"; fi
+          done
+          if [ "$bad" = 1 ]; then
+            if [ "$age" -lt 1800 ]; then echo "::notice::the last push is ${age}s old; Pages may still be deploying"; exit 0; fi
+            echo "::error::haslalab.org is not serving this repository's files"; exit 1
+          fi

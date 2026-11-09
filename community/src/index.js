@@ -374,6 +374,22 @@ async function handle(req, env, url, ctx) {
     if (me) await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(me.tokenHash).run();
     return { ok: true };
   }
+  /* "sign out everywhere else": every other session of this account ends; this one stays */
+  if (p === "/api/logout/others" && m === "POST") {
+    needUser(me);
+    await limit(env, "logout-others:" + me.id, 10, 3600);
+    const r = await env.DB.prepare("DELETE FROM sessions WHERE user_id=? AND token_hash<>?").bind(me.id, me.tokenHash).run();
+    return { ok: true, ended: r.meta?.changes || 0 };
+  }
+  /* recovery after a break-in (docs: security recovery): an admin ends every session on the site, their own included,
+     so a stolen token stops working at once. The request must repeat the confirmation phrase. */
+  if (p === "/api/admin/security/end-all-sessions" && m === "POST") {
+    needUser(me); if (!isAdmin(me)) throw new HttpError(403, "forbidden");
+    if (body?.confirm !== "END ALL SESSIONS") throw new HttpError(400, "confirm_phrase_required");
+    const r = await env.DB.prepare("DELETE FROM sessions").run();
+    console.error("security: all sessions ended by admin", me.id);
+    return { ok: true, ended: r.meta?.changes || 0 };
+  }
   if (p === "/api/me" && m === "GET") return { user: me ? pubUser(me) : null };
   /* which boxes the sign-up and consent forms show: the age box only where the request comes from Korea */
   if (p === "/api/consent/info" && m === "GET") return consentInfo(req);

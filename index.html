@@ -9903,6 +9903,11 @@ async function cmAccount(root, alive){
       <span id="cmAvBox">${cmAv(cm.me.nickname,"l",cm.me.avatar)}</span><div><h2 style="margin:0">${esc(cm.me.nickname)}</h2>
       <div class="cmpm" style="border:0;padding:4px 0 0">@${esc(cm.me.username)}${cm.me.username_kind==='generated'?` · ${lang==='ko'?'고유번호':'Unique identifier'}`:''} · ${T.joined} ${cmFull(cm.me.created_at).slice(0,10)}${cm.me.role==="admin"?' · <span class="cmtag notice">admin</span>':""}</div></div></div>
     ${cm.me.username_setup_available?`<div id="cmUsernameSetup"></div>`:""}
+    <section class="cmform" data-sessions style="border-bottom:8px solid var(--cm-soft)">
+      <h3 style="font-size:15px">${lang === "en" ? "Signed-in devices" : "로그인된 기기"}</h3>
+      <p class="cmpm" style="border:0;padding:0 0 8px">${lang === "en" ? "Lost a device, or signed in somewhere you no longer use? End every other session; this device stays signed in." : "기기를 잃어버렸거나 다른 곳에 로그인한 채로 두었다면, 이 기기를 뺀 모든 기기에서 로그아웃하세요."}</p>
+      <button type="button" class="cmbtn" id="cmLogoutOthers">${lang === "en" ? "Sign out on other devices" : "다른 기기에서 모두 로그아웃"}</button> <span class="cmpm" id="cmLogoutOthersMsg" role="status" style="border:0"></span>
+    </section>
     ${cm.me.role === "admin" ? `<section class="cmform" data-developer-settings style="border-bottom:8px solid var(--cm-soft)">
       <h3 style="font-size:15px">${lang === "en" ? "Developer environment" : "개발자 환경"}</h3>
       <nav aria-label="${lang === "en" ? "Developer tools" : "개발자 도구"}" style="display:flex;flex-wrap:wrap;gap:8px">
@@ -9926,6 +9931,9 @@ async function cmAccount(root, alive){
       <div class="row"><span class="sp"></span><button class="cmbtn" type="button" id="cmDelAcc" style="color:#e03131;border-color:#ffc9c9">${T.delAcc}</button></div>
     </div></div>`;
   if(cm.me.username_setup_available)cmAccountUsername(root.querySelector("#cmUsernameSetup"),()=>{if(alive())cmAccount(root,alive);});
+  root.querySelector("#cmLogoutOthers")?.addEventListener("click",async e=>{const b=e.currentTarget,msg=root.querySelector("#cmLogoutOthersMsg");b.disabled=true;
+    try{const r=await cmApi("POST","/logout/others");msg.textContent=lang==="en"?`Done: ${r.ended} other session(s) ended.`:`완료: 다른 기기 ${r.ended}곳에서 로그아웃했습니다.`;}
+    catch(err){msg.textContent=lang==="en"?"Could not complete. Try again.":"처리하지 못했습니다. 다시 시도하세요.";}finally{b.disabled=false;}});
   cmAvatarForm(root.querySelector("#cmAvatar"), ()=>{ const b=root.querySelector("#cmAvBox"); if(b) b.innerHTML=cmAv(cm.me.nickname,"l",cm.me.avatar); });
   const nf=root.querySelector("#cmNick"), nOut=nf.querySelector(".cmerr"), nickFree=cmNickCheck(nf.nickname, nf.querySelector(".cmnick"), cm.me.nickname);
   nf.onsubmit=async e=>{

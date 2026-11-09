@@ -57,3 +57,20 @@ test('signup/login, old-password check, verified-email reset and revoked session
     assert.equal(s.sql.prepare('SELECT count(*) n FROM account_emails').get().n,0);assert.equal(s.sql.prepare('SELECT count(*) n FROM account_email_tokens').get().n,0);
   }finally{s.close()}
 });
+
+test('sign out on other devices keeps this one; an admin can end every session after a break-in',async()=>{
+  const s=setup();try{
+    assert.equal((await s.api('POST','/signup/email-code',{email:'devices@example.com'})).status,200);const code=s.emails.at(-1).text.split('\n\n').find(line=>/^\d{6}$/.test(line));
+    const a=(await s.api('POST','/signup',{username:'devices_owner',nickname:'기기 테스트',password:'device-password',consent:{terms:true,privacy:true,age14:true},email:'devices@example.com',code})).data.token;
+    const b=(await s.api('POST','/login',{username:'devices_owner',password:'device-password'})).data.token;
+    const c=(await s.api('POST','/login',{username:'devices_owner',password:'device-password'})).data.token;
+    assert.equal((await s.api('POST','/logout/others',{},a)).data.ended,2);
+    assert.equal((await s.api('GET','/me',undefined,a)).data.user.username,'devices_owner');
+    assert.equal((await s.api('GET','/me',undefined,b)).data.user,null);assert.equal((await s.api('GET','/me',undefined,c)).data.user,null);
+    assert.equal((await s.api('POST','/admin/security/end-all-sessions',{confirm:'END ALL SESSIONS'},a)).status,403,'members cannot');
+    s.sql.prepare("UPDATE users SET role='admin' WHERE username='devices_owner'").run();
+    assert.equal((await s.api('POST','/admin/security/end-all-sessions',{},a)).data.error,'confirm_phrase_required');
+    assert.equal((await s.api('POST','/admin/security/end-all-sessions',{confirm:'END ALL SESSIONS'},a)).status,200);
+    assert.equal((await s.api('GET','/me',undefined,a)).data.user,null,'the admin is signed out too');
+  }finally{s.close();}
+});
