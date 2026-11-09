@@ -57,7 +57,8 @@
   /* the network: every call's time; the badge shows its state */
   function netBadge() {
     const x = T[L()].net, ms = st?.rtt, level = !navigator.onLine || st?.offline ? "off" : ms == null ? "good" : ms < 300 ? "good" : ms < 900 ? "fair" : "poor";
-    return `<span class="hpho-net is-${level}" id="hphoNet"><i></i><i></i><i></i> ${x.label}: ${x[level]}${ms != null && level !== "off" ? ` · ${ms} ms` : ""}</span>`;
+    const c = navigator.connection, kind = level !== "off" && c ? ` · ${c.type === "wifi" ? "Wi-Fi" : c.type === "cellular" ? (c.effectiveType || "").toUpperCase() || "LTE" : ""}${c.downlink ? ` ${c.downlink >= 10 ? Math.round(c.downlink) : c.downlink} Mbps` : ""}` : "";
+    return `<span class="hpho-net is-${level}" id="hphoNet"><i></i><i></i><i></i> ${x.label}: ${x[level]}${ms != null && level !== "off" ? ` · ${ms} ms` : ""}${kind.trim() === "·" ? "" : kind}</span>`;
   }
   const refreshNet = () => { const el = document.getElementById("hphoNet"); if (el) el.outerHTML = netBadge(); };
   async function call(action, fields) {
@@ -217,7 +218,7 @@
   }
   function mount(code) {
     if (st?.code !== code) { if (st) stop(); st = { code }; }
-    addEventListener("online", refreshNet); addEventListener("offline", refreshNet);
+    addEventListener("online", refreshNet); addEventListener("offline", refreshNet); navigator.connection?.addEventListener?.("change", refreshNet);
     next();
   }
   window.HL_HPHO_PHONE = { view, mount };

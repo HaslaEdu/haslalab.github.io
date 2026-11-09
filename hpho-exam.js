@@ -25,9 +25,9 @@
       screenNeed: "화면 기록을 시작하지 못했습니다. 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", systemNeed: "컴퓨터 소리를 녹음하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트한 뒤 다시 점검하세요.", displaysNeed: n => n > 1 ? `모니터가 ${n}대 연결되어 있습니다. 모니터를 하나만 남기고 나머지는 케이블을 뽑은 뒤 다시 점검하세요.` : "모니터 수를 확인하지 못했습니다. 하슬라에듀 앱을 최신 버전으로 업데이트하세요.",
       unavailable: "확인 서버가 응답하지 않았습니다. 잠시 후 다시 점검하세요.",
       allowStep: ["화면 감시 허용", "시험 동안 아래 항목이 감독을 위해 기록됩니다. 허용해야 다음 단계로 넘어갈 수 있습니다.", "허용"],
-      allowList: ["컴퓨터 화면 전체 (녹화와 사진)", "컴퓨터에서 나오는 소리", "실행 중인 프로그램 이름 (창 제목·내용은 아님)", "창 이탈·모니터 연결·화면 잠금"], net: { label: "네트워크", good: "좋음", fair: "보통", poor: "느림", off: "끊김" }, phoneFirst: "먼저 휴대폰을 연결합니다. 휴대폰 카메라로 아래 QR을 찍어 여세요. 휴대폰 화면에서 「카메라 켜기」를 누르면 연결되고, 다음 점검으로 넘어갑니다. 주변 스캔은 얼굴·마이크·귀 점검 뒤에 휴대폰으로 합니다.", coverTitle: "모니터가 추가로 연결되었습니다", coverText: "추가 모니터의 케이블을 지금 뽑으세요. 뽑을 때까지 시험지가 가려지며, 이 상황은 기록되어 감독관이 검토합니다.",
-      phoneStep: ["휴대폰 감독", "휴대폰 카메라로 아래 QR을 찍어 휴대폰에서 여세요. 휴대폰이 방을 한 방향씩 천천히 비추면 AI가 확인하고, 마지막으로 휴대폰을 옆이나 뒤에 세워 본인·손·책상·화면이 보이게 합니다. 휴대폰 화면의 안내를 따르세요."],
-      phoneList: { online: "휴대폰 연결", scan: (n, m) => `주변 스캔 ${n} / ${m}`, placed: "휴대폰 위치 확인" }, phoneLost: "휴대폰 감독이 끊겼습니다. 휴대폰 화면을 다시 켜거나, 이 QR을 휴대폰으로 다시 찍으세요. 끊긴 시간은 기록됩니다.", phoneOn: "휴대폰", phoneOk: "연결", phoneBad: "끊김",
+      allowList: ["컴퓨터 화면 전체 (녹화와 사진)", "컴퓨터에서 나오는 소리", "실행 중인 프로그램 이름 (창 제목·내용은 아님)", "창 이탈·모니터 연결·화면 잠금"], net: { label: "네트워크", good: "좋음", fair: "보통", poor: "느림", off: "끊김", how: "10초마다 시험 서버까지 왕복 시간을 잽니다. 속도(Mbps)는 브라우저가 추정한 값입니다." }, phoneFirst: "먼저 휴대폰을 연결합니다. 휴대폰 카메라로 아래 QR을 찍어 여세요. 휴대폰 화면에서 「카메라 켜기」를 누르면 연결되고, 다음 점검으로 넘어갑니다. 주변 스캔은 얼굴·마이크·귀 점검 뒤에 휴대폰으로 합니다.", coverTitle: "모니터가 추가로 연결되었습니다", coverText: "추가 모니터의 케이블을 지금 뽑으세요. 뽑을 때까지 시험지가 가려지며, 이 상황은 기록되어 감독관이 검토합니다.",
+      phoneStep: ["휴대폰 감독 연결", "휴대폰 카메라로 아래 QR을 찍어 휴대폰에서 여세요. 휴대폰으로 방을 한 방향씩 천천히 비추면 AI가 확인하고, 마지막으로 휴대폰을 옆이나 뒤에 세워 본인·손·책상·화면이 보이게 합니다. 이 세 가지가 끝나야 연결이 완료되고 다음 점검으로 넘어갑니다."],
+      phoneList: { online: "QR로 휴대폰 열기", waiting: "QR을 찍어 주세요", scan: (n, m) => `주변 스캔 ${n} / ${m}`, placed: "휴대폰 위치 확인" }, phoneLost: "휴대폰 감독이 끊겼습니다. 휴대폰 화면을 다시 켜거나, 이 QR을 휴대폰으로 다시 찍으세요. 끊긴 시간은 기록됩니다.", phoneOn: "휴대폰", phoneOk: "연결", phoneBad: "끊김",
       saving: (n, m) => `감독 녹화를 올리는 중… ${n} / ${m}. 창이 닫힐 때까지 기다려 주세요.`,
       roomStep: ["주변 스캔", "웹캠(노트북이면 노트북 화면)을 천천히 돌려 방을 보여 주세요. 화면에 나오는 방향으로 돌리고, 숫자가 0이 될 때까지 멈춰 주세요.", "주변 스캔 시작"],
       views: { front: "앞쪽 벽", left: "왼쪽 벽", right: "오른쪽 벽", back: "뒤쪽 (등 뒤)", ceiling: "천장", desk: "책상 위 전체", under: "책상 아래 · 발밑", done: "확인하는 중…" },
@@ -54,9 +54,9 @@
       screenNeed: "Screen recording could not start. Update the app to the latest version, then check again.", systemNeed: "The computer's sound could not be recorded. Update the HaslaEdu app to the latest version, then check again.", displaysNeed: n => n > 1 ? `${n} monitors are connected. Unplug all but one, then check again.` : "The number of monitors could not be read. Update the HaslaEdu app to the latest version.",
       unavailable: "The checking server did not answer. Check again in a moment.",
       allowStep: ["Allow screen monitoring", "During the exam the following are recorded for proctoring. You must allow them to go on.", "Allow"],
-      allowList: ["The whole computer screen (recording and photos)", "Sound played on the computer", "The names of running programs (not window titles or contents)", "Leaving the window, connecting a monitor, locking the screen"], net: { label: "Network", good: "Good", fair: "Fair", poor: "Slow", off: "Offline" }, phoneFirst: "First connect your phone: scan the QR below with its camera and open it. Press “Turn on the camera” on the phone to connect; the next checks follow. The room scan is done with the phone after the face, microphone and ear checks.", coverTitle: "Another monitor was connected", coverText: "Unplug the extra monitor now. The paper is covered until you do; this is recorded and reviewed by a proctor.",
-      phoneStep: ["Phone proctoring", "Scan the QR below with your phone camera and open it on the phone. The phone shows the room slowly, one side at a time, for the AI to check; then you stand it to your side or behind you so it sees you, your hands, the desk and the screen. Follow the instructions on the phone."],
-      phoneList: { online: "Phone connected", scan: (n, m) => `Room scan ${n} / ${m}`, placed: "Phone position checked" }, phoneLost: "The phone proctoring stopped. Turn the phone's screen back on, or scan this QR again. The time it was off is recorded.", phoneOn: "Phone", phoneOk: "Connected", phoneBad: "Lost",
+      allowList: ["The whole computer screen (recording and photos)", "Sound played on the computer", "The names of running programs (not window titles or contents)", "Leaving the window, connecting a monitor, locking the screen"], net: { label: "Network", good: "Good", fair: "Fair", poor: "Slow", off: "Offline", how: "The round trip to the exam server, measured every 10 s; the speed (Mbps) is the browser's estimate." }, phoneFirst: "First connect your phone: scan the QR below with its camera and open it. Press “Turn on the camera” on the phone to connect; the next checks follow. The room scan is done with the phone after the face, microphone and ear checks.", coverTitle: "Another monitor was connected", coverText: "Unplug the extra monitor now. The paper is covered until you do; this is recorded and reviewed by a proctor.",
+      phoneStep: ["Connect the phone", "Scan the QR below with your phone camera and open it on the phone. Show the room slowly, one side at a time, for the AI to check; then stand the phone to your side or behind you so it sees you, your hands, the desk and the screen. The connection is complete, and the next checks follow, only when all three are done."],
+      phoneList: { online: "Phone opened from the QR", waiting: "scan the QR", scan: (n, m) => `Room scan ${n} / ${m}`, placed: "Phone position checked" }, phoneLost: "The phone proctoring stopped. Turn the phone's screen back on, or scan this QR again. The time it was off is recorded.", phoneOn: "Phone", phoneOk: "Connected", phoneBad: "Lost",
       saving: (n, m) => `Uploading the proctoring recording… ${n} / ${m}. Wait until the window closes.`,
       roomStep: ["Room scan", "Slowly turn the webcam (or the laptop) to show the room. Point it where the screen says and hold still until the count reaches 0.", "Start the room scan"],
       views: { front: "The wall in front", left: "The left wall", right: "The right wall", back: "Behind you", ceiling: "The ceiling", desk: "The whole desk top", under: "Under the desk, your feet", done: "Checking…" },
@@ -118,7 +118,8 @@
     const w = W(), live = ["room", "exam", "submit"].includes(st.phase);
     const left = st.phase === "exam" ? w.ends - nowS() : st.phase === "submit" ? w.upload_until - nowS() : st.phase === "room" ? w.start_at - nowS() : null;
     const n = x.net, level = !navigator.onLine || st.offline ? "off" : st.rtt == null || st.rtt < 300 ? "good" : st.rtt < 900 ? "fair" : "poor";
-    const netBadge = `<span class="hpho-net is-${level}"><i></i><i></i><i></i> ${n.label}: ${n[level]}${st.rtt != null && level !== "off" ? ` · ${st.rtt} ms` : ""}</span>`;
+    const conn = navigator.connection, speed = level !== "off" && conn?.downlink ? ` · ${conn.downlink >= 10 ? Math.round(conn.downlink) : conn.downlink} Mbps` : "";
+    const netBadge = `<span class="hpho-net is-${level}" title="${n.how}"><i></i><i></i><i></i> ${n.label}: ${n[level]}${st.rtt != null && level !== "off" ? ` · ${st.rtt} ms` : ""}${speed}</span>`;
     bar.innerHTML = `<b class="hpho-exam-title"><img class="hpho-exam-icon hpho-logo-light" src="logo/brand/hpho-icon-light.svg?v=20261109-hpho" alt=""><img class="hpho-exam-icon hpho-logo-dark" src="logo/brand/hpho-icon-dark.svg?v=20261109-hpho" alt="" aria-hidden="true">${x.title}${st.round ? " · " + (st.round.status === "draft" ? (L() === "en" ? "Practice exam" : "모의 시험") : esc(st.round.title[L()])) : ""}${st.track && st.phase !== "lobby" ? " · " + x.track[st.track] : ""}</b>
       ${st.entry ? `<span>${x.candidate} <b class="hpho-no">${esc(st.entry.candidate_no)}</b></span>` : ""}${netBadge}
       ${live ? `<span class="hpho-light ${st.online ? "is-ok" : "is-bad"}">${x.conn}: ${st.online ? x.connOk : x.connBad}</span><span class="hpho-light is-ok">${x.proctor}: ${x.proctorOn}</span><span class="hpho-light ${st.phoneOnline === false ? "is-bad" : "is-ok"}">${x.phoneOn}: ${st.phoneOnline === false ? x.phoneBad : x.phoneOk}</span>
@@ -340,9 +341,8 @@
       if (displays !== 1) { st.error = x.displaysNeed(displays); return paint(); }
       /* the face, voice and ear checks: on the first entry; a candidate coming back (already seated) skips them.
          The room scan: every time, a return after a disconnect too */
-      if (!(await phoneCheck("online"))) return;
+      if (!(await phoneCheck())) return;
       if (!st.quick && !(await quality(P))) return;
-      if (!(await phoneCheck("done"))) return;
       const r = await cmApi("POST", path("checkin"), { client: bridge().client, lang: st.paperLang || L() }); sync(r);
       st.session = r.session; st.tracks[st.track].session = r.session; st.tracks[st.track].window = r.window;
       st.paperLang = r.session.paper_lang; st.seq = Math.max(st.seq, r.seq || 0); st.pages = r.session.pages || 0;
@@ -434,22 +434,23 @@
   async function pairPhone(rescan) { const r = await cmApi("POST", path("phone"), { rescan: !!rescan }); st.phoneCode = r.code; return qrSvg(phoneUrl(r.code)); }
   /* until "online": the QR, until the phone has opened it; until "done": the room scan and the placement as well.
      One QR for both (a new code would cut off the phone that is already connected) */
-  async function phoneCheck(until) {
+  async function phoneCheck() {
     const x = T[L()];
     if (!st.phoneQr) { st.checks.phone = st.checks.room = st.checks.place = undefined; st.phoneQr = await pairPhone(st.quick); }
-    st.step = { title: x.phoneStep[0], text: until === "online" ? x.phoneFirst : x.phoneStep[1], qr: st.phoneQr }; paint();
+    st.step = { title: x.phoneStep[0], text: x.phoneStep[1], qr: st.phoneQr }; paint();
     let shown = -1;
     for (;;) {
       if (st.phase !== "check") return false;
       let ph = null; try { ph = (await cmApi("GET", path("phone"))).phone; } catch (e) {}
       const done = ph ? Object.values(ph.scan || {}).filter(v => ["clear", "notes", "unverified"].includes(v.status)).length : 0;
-      st.checks.phone = !!ph?.online || undefined; st.checks.room = ph?.scanned || undefined; st.checks.place = !!(ph?.placed || ph?.scanned && ph.place_note === "model unavailable") || undefined;
+      st.checks.room = ph?.scanned || undefined; st.checks.place = !!(ph?.placed || ph?.scanned && ph.place_note === "model unavailable") || undefined;
+      /* done only when the phone is connected, has scanned the room and stands in place */
+      st.checks.phone = !!(ph?.online && st.checks.room && st.checks.place) || undefined;
       const list = document.getElementById("hphoPhoneList");
-      if (list) list.innerHTML = `<li class="${ph?.online ? "is-ok" : ""}">${x.phoneList.online}</li><li class="${ph?.scanned ? "is-ok" : ""}">${x.phoneList.scan(done, 7)}</li><li class="${st.checks.place ? "is-ok" : ""}">${x.phoneList.placed}</li>`;
+      if (list) list.innerHTML = `<li class="${ph?.online ? "is-ok" : ""}">${x.phoneList.online}${ph?.online ? "" : ` — ${x.phoneList.waiting}`}</li><li class="${ph?.scanned ? "is-ok" : ""}">${x.phoneList.scan(done, 7)}</li><li class="${st.checks.place ? "is-ok" : ""}">${x.phoneList.placed}</li>`;
       const key = [st.checks.phone, st.checks.room, st.checks.place, done].join();
       if (key !== shown) { if (shown !== -1 && done > (st.scanDone || 0)) ding(); st.scanDone = done; shown = key; paint(); }
-      if (until === "online" && st.checks.phone) { st.step = null; return true; }
-      if (st.checks.phone && st.checks.room && st.checks.place) { st.step = null; return true; }
+      if (st.checks.phone) { st.step = null; return true; }
       await new Promise(r => setTimeout(r, 2000));
     }
   }
