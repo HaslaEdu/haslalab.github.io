@@ -86,14 +86,15 @@ MONTHLY_GRADE_THINKING = "medium"
 # if Terra fails: Gemini 3.8 Flash (the candidate's reader default, 3.5 Flash-Lite, marked every part uncertain)
 MONTHLY_GRADE_FALLBACK_MODEL = "gemini-3.8-flash"
 LAB_PIPELINE = "mixed"
-LAB_SCHEME_PROVIDER = "deepseek"
+LAB_SCHEME_PROVIDER = "gemini"
 # Theory pages are read by Gemini 3.8 Flash (the owner's decision, 2026-11-03). Reading bench of that day, 40 checks on
 # 9 handwritten pages (Claude's gold transcriptions): 3.8 Flash 97% at ~$0.014 a page; 3.1 Flash-Lite 72%, Upstage
 # enhanced 68%, DeepSeek Flash 65%. 3.8 Flash answered «high demand» to a third of the reads: those pages go to
 # 3.1 Flash-Lite at once (LAB_READ_FALLBACK_MODEL) instead of failing.
 LAB_READ_PROVIDER = "gemini"
-LAB_GRADE_PROVIDER = "deepseek"
-LAB_GRADE_MODEL = "deepseek-flash"
+# The owner's decision, 2026-11-09: contest grading by Gemini 3.8 Flash, paired with GPT-6.1 Terra (DeepSeek out)
+LAB_GRADE_PROVIDER = "gemini"
+LAB_GRADE_MODEL = "gemini-3.8-flash"
 # DeepSeek thinking (low, high, max) stays off until the bench has measured it
 LAB_GRADE_THINKING = "off"
 LAB_MODERATE_PROVIDER = "none"
@@ -102,7 +103,7 @@ LAB_MODERATE_PROVIDER = "none"
 # audited theory papers on Claude's gold reads: 12 misgrades (the same pair judged by DeepSeek 20, Luna alone 23, the
 # 3.8 Flash pipeline 12 at a higher price), ~$0.01-0.02 and ~2-3 min a task. Experiments stay with DeepSeek alone (LAB_PAIR_SCOPE "all" to change).
 LAB_PAIR_PROVIDER = "openai"
-LAB_PAIR_MODEL = "gpt-6-luna"
+LAB_PAIR_MODEL = "gpt-6.1-terra"
 LAB_PAIR_THINKING = "medium"
 # DeepSeek checks formulas, numbers and what is written with code before it marks (grade-tools.js): every bench above ran with it
 LAB_GRADE_TOOLS = "on"
@@ -135,6 +136,11 @@ PADDLE_CHECKOUT = "off"
 # DeepSeek V4 Pro (Workers AI, MIT weights) writes this many worked solutions a night for the QwQ solver's LoRA
 # (ai-eval.js teacher cases): judged correct with 8/10 or more they are approved for training at once
 AI_TEACHER_DAILY = "40"
+# Hasla AI's solver: Qwen3.6-35B-A3B on CoreWeave (W&B Inference), the owner's decision of 2026-11-09. The key is the
+# Worker secret AI_SOLVER_KEY (a W&B API key); without it the solver falls back to DeepSeek / Workers AI as before.
+AI_SOLVER_URL = "https://api.inference.wandb.ai/v1"
+AI_SOLVER_REMOTE = "Qwen/Qwen3.6-35B-A3B"
+AI_SOLVER_PROJECT = "mimgyuson-haslaedu/hasla-ai"
 # the problem studio (studio-gateway.js: digitize, generate, restore) is for administrators only
 STUDIO_ACCESS = "admin"
 # photo problem search (problem-bank-ocr.js): the photo is transcribed by this Gemini model
@@ -159,7 +165,7 @@ LAB_SCHEME_WARM = "on"
 LAB_BENCH_SLOTS = "8"
 # Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.8 Flash: graded with one
 # grader, its schemes came 2.2 points closer to the audits than 3.1 Pro's on 32 tasks (Claude and GPT schemes no closer).
-LAB_SCHEME_MODEL = "deepseek-flash"
+LAB_SCHEME_MODEL = "gemini-3.8-flash"
 LAB_SCHEME_THINKING = "off"
 # when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
 LAB_READ_FALLBACK_MODEL = "gemini-3.1-flash-lite"
