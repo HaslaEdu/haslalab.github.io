@@ -9,7 +9,7 @@
   const T = {
     ko: { title: "HPhO 시험", appOnly: "HPhO는 하슬라에듀 데스크톱 앱의 시험 창에서만 응시할 수 있습니다.", appGet: "데스크톱 앱 내려받기",
       check: "기술 점검", checks: { app: "하슬라에듀 데스크톱 앱", net: "서버 연결", entry: "참가 접수", login: "로그인", camera: "웹캠", mic: "마이크", screen: "화면 기록", face: "얼굴 인식", voice: "마이크 소리", ears: "귀 검사 (이어폰)" }, retry: "다시 점검", preview: "카메라 미리보기", camNeed: "웹캠·마이크·화면 기록이 모두 켜져야 응시할 수 있습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.",
-      screenNeed: "화면 기록을 시작하지 못했습니다. 앱을 최신 버전(0.5.2 이상)으로 업데이트한 뒤 다시 점검하세요.",
+      screenNeed: "화면 기록을 시작하지 못했습니다. 앱을 최신 버전(0.5.3 이상)으로 업데이트한 뒤 다시 점검하세요.",
       faceStep: ["얼굴 확인", "카메라를 정면으로 바라보세요. 얼굴 전체가 오른쪽 아래 미리보기 가운데에 오도록 앉아 주세요."],
       face: { no_video: "카메라 영상이 들어오지 않습니다. 다른 프로그램이 카메라를 쓰고 있지 않은지 확인하세요.", detector: "얼굴 인식 기능을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 점검하세요.", none: "얼굴이 보이지 않습니다. 카메라를 정면으로 바라보세요.", many: "화면에 두 사람 이상이 보입니다. 혼자 있는 곳에서 응시하세요.", dark: "얼굴이 너무 어둡습니다. 조명을 켜거나 창 쪽을 바라보고 앉으세요.", small: "얼굴이 너무 작게 보입니다. 카메라에 조금 더 가까이 앉으세요.", off: "얼굴이 화면 가장자리에 있습니다. 미리보기 가운데로 오도록 자리를 옮기세요." },
       micStep: ["마이크 확인", "버튼을 누른 뒤 아래 문장을 평소 목소리로 읽어 주세요.", "“저는 HPhO에 정직하게 응시하겠습니다.”", "마이크 점검 시작"],
@@ -21,7 +21,7 @@
       problems: "문제", problemsSoon: "문제는 시험 시작 시각에 이 화면에 공개됩니다.", leave: "시험 창 닫기", over: "시험이 끝났습니다", upload: until => `답안 사진은 ${until}까지 올려 주세요.`, conn: "연결", connOk: "정상", connBad: "끊김 · 다시 연결 중", proctor: "감독", proctorOn: "기록 중" },
     en: { title: "HPhO exam", appOnly: "HPhO can only be sat in the exam window of the HaslaEdu desktop app.", appGet: "Get the desktop app",
       check: "Technical check", checks: { app: "HaslaEdu desktop app", net: "Server connection", entry: "Registration", login: "Signed in", camera: "Webcam", mic: "Microphone", screen: "Screen recording", face: "Face", voice: "Microphone sound", ears: "Ear check (earphones)" }, retry: "Check again", preview: "Camera preview", camNeed: "The webcam, microphone and screen recording must all be on to sit the exam. Make sure no other program is using the camera.",
-      screenNeed: "Screen recording could not start. Update the app to the latest version (0.5.2 or later), then check again.",
+      screenNeed: "Screen recording could not start. Update the app to the latest version (0.5.3 or later), then check again.",
       faceStep: ["Face check", "Look straight at the camera, with your whole face in the middle of the preview at the bottom right."],
       face: { no_video: "No picture from the camera. Make sure no other program is using it.", detector: "Face detection could not load. Check your internet connection and try again.", none: "Your face cannot be seen. Look straight at the camera.", many: "More than one person is in view. Sit the exam alone.", dark: "Your face is too dark. Turn on a light or face a window.", small: "Your face looks too small. Sit a little closer to the camera.", off: "Your face is at the edge of the picture. Move so it is in the middle of the preview." },
       micStep: ["Microphone check", "Press the button, then read the sentence below in your normal voice.", "“I will sit HPhO honestly.”", "Start the microphone check"],
