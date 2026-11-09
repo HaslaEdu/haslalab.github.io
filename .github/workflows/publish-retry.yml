@@ -1,6 +1,8 @@
-# Re-runs a failed site publish (GitHub Pages sometimes leaves a deployment queued until deploy-pages times out;
-# the same artifact goes through on a second try). Only the newest commit on main is retried, at most twice, so an
-# older site never replaces a newer one.
+# What to do when a site publish fails. GitHub Pages keys a deployment by its commit: once a deployment for a commit
+# stalls (status stuck after finished_file_sync until deploy-pages times out at 10 minutes), every re-run of that same
+# commit joins the stalled one and fails the same way (2026-11-09: five attempts at 72daaf2d, while the commits before
+# and after went through in seconds). So a re-run only helps when the failure came before the deployment was created
+# (checkout, upload); a stalled deployment needs a new commit on main, which this workflow says in its summary.
 name: Retry site publish
 
 on:
@@ -14,7 +16,7 @@ permissions:
 
 jobs:
   retry:
-    if: github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.run_attempt < 3
+    if: github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.run_attempt < 2
     runs-on: ubuntu-latest
     steps:
       - env:
@@ -24,5 +26,11 @@ jobs:
         run: |
           head=$(gh api "repos/${GITHUB_REPOSITORY}/commits/main" --jq .sha)
           if [ "$head" != "$SHA" ]; then echo "main has moved on ($head); a newer publish covers it."; exit 0; fi
-          sleep 90
+          # did the failed run get as far as creating a Pages deployment? then a re-run would join the stalled one
+          deployed=$(gh api "repos/${GITHUB_REPOSITORY}/deployments?environment=github-pages&sha=${SHA}&per_page=1" --jq 'length')
+          if [ "$deployed" != "0" ]; then
+            msg="The Pages deployment for ${SHA:0:8} stalled. Re-running the same commit joins the stalled deployment, so this does not retry: the next commit on main publishes the site."
+            echo "::warning::$msg"; echo "$msg" >> "$GITHUB_STEP_SUMMARY"; exit 0
+          fi
+          sleep 30
           gh run rerun "$RUN_ID" --failed --repo "$GITHUB_REPOSITORY"
