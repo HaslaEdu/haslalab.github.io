@@ -1046,7 +1046,11 @@ async function gradeEssay(env, prob, answer, lang, context = {}) {
   if (!res) res = await callGrader(env, prompt, SCORE_SCHEMA, context.images||[], context.provider);
   if (!res) return null;
   const g = normalizeGrade(res.raw, rubric, answer);
-  return { score: Math.min(prob.points, g.scores.reduce((a, s) => a + s.got, 0)), detail: { kind: "essay", grader: res.model, ...g, ...(fixedError ? { fixed_grader_error: fixedError } : {}) } };
+  const total = Math.min(prob.points, g.scores.reduce((a, s) => a + s.got, 0));
+  /* an extreme mark is held up for a person: full marks (the likeliest outcome of an answer that talks the grader round)
+     and zero for an answer that is there */
+  const review = total >= prob.points && prob.points > 0 ? 'full_marks' : total === 0 && String(answer || '').trim().length > 40 ? 'zero_with_answer' : null;
+  return { score: total, detail: { kind: "essay", grader: res.model, ...g, ...(fixedError ? { fixed_grader_error: fixedError } : {}), ...(review ? { needs_review: review } : {}) } };
 }
 
 /* ── OCR (multipart field "image"; mode=math keeps formulas as LaTeX) ── */
