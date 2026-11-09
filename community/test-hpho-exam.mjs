@@ -181,9 +181,15 @@ test('voice check: the sentence must be heard, a noise does not pass', async () 
   const down = await setup(1800, { voice: { unavailable: true } });
   assert.equal((await down.form('voicecheck', { audio: wav(), lang: 'en' })).unavailable, true);
   assert.equal(await code((await setup(3700)).form('voicecheck', { audio: wav(), lang: 'ko' })), 'check_closed');
-  /* decided on the computer: kept and recorded, no model call (the model stub here would say not said) */
+  /* the page's own "said" does not overrule the server's model */
   const local = await no.form('voicecheck', { audio: wav(), lang: 'ko', local: 'said', heard: '저는 정직하게 응시하겠습니다' });
-  assert.deepEqual([local.said, local.local], [true, true]);
+  assert.equal(local.said, false);
+  /* without the model it is kept, unverified (the seat is reviewed) */
+  const off = await setup(1800, { voice: { unavailable: true } });
+  assert.deepEqual(await off.form('voicecheck', { audio: wav(), lang: 'ko', local: 'said', heard: 'x' }), { ok: true, said: true, local: true });
+  const { checkNote } = await import('./src/hpho-exam.js');
+  assert.match(checkNote([{ kind: 'mic_check', at: 1, detail: 'on device only (unverified) · heard: x' }]), /voice: on device only/);
+  assert.match(checkNote([{ kind: 'ear_check', at: 1, seq: -1, detail: 'device (clear,device,clear)' }, { kind: 'ear_check', at: 2, seq: -2, detail: 'clear (clear,clear,clear)' }]), /ears: earlier device/, 'an earphone found once stays on the record');
   assert.deepEqual(voiceVerdict({ said: true, heard: 'x\u0000y' }), { said: true, heard: 'x y' });
   /* the model's reply with a broken escape in the Korean it heard (as Gemini sent it): still read as said */
   assert.equal(lenientJson('{"said": true, "heard": "\\uc800\\ub294 \\uaca\u071f\\uc2b5"}').said, true);
@@ -287,6 +293,7 @@ test('only flagged seats keep their recordings and proctoring photos', async () 
   const keys = () => [...f.store.m.keys()].filter(k => /^hpho(-rec)?\//.test(k));
   assert.equal(keys().length, 4);
   assert.equal(await code(f.call('retain', 'POST', {}, admin)), 'not_over');
+  assert.equal(await code(f.call('retain', 'POST', {}, student)), 'forbidden', 'organisers only');
   const later = Date.now() + (3600 + 3600 + 60) * 1000;            /* the upload closed more than an hour ago */
   assert.equal((await hphoRetainTick(f.env, { now: Date.now() })).length, 0, 'not before the hour after the upload');
   const done = await hphoRetainTick(f.env, { now: later });
@@ -354,4 +361,9 @@ test('away for ten seconds during the exam: the seat goes to a person for review
   assert.ok(log.events.some(e => e.kind === 'absent' && /phone/.test(e.detail)));
   const { suspicion } = await import('./src/hpho-exam.js');
   assert.deepEqual(suspicion({}, [{ kind: 'absent' }]), ['absent×1'], 'one absence is enough');
+});
+
+test('the page cannot post the server-only check records', async () => {
+  assert.equal(checkEvents([{ seq: 1, kind: 'ear_check', detail: 'clear' }]).error, 'bad_events');
+  assert.equal(checkEvents([{ seq: 1, kind: 'focus_lost' }]).events.length, 1);
 });
