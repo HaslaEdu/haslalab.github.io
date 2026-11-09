@@ -26,7 +26,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 55
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -58,16 +58,36 @@ jobs:
           mkdir -p "$RUNNER_TEMP/site"
           rsync -a --prune-empty-dirs --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --include /community/ --include '/community/weekly/***' --exclude '/community/*' --exclude /tests/ --exclude '/pdfx/**.pdf' ./ "$RUNNER_TEMP/site/"
           du -sh "$RUNNER_TEMP/site"; find "$RUNNER_TEMP/site" -type f | wc -l
-      # One artifact name per attempt: a re-run keeps the earlier attempts' artifacts, and deploy-pages refuses to
-      # pick between several artifacts with the same name ("Multiple artifacts named github-pages").
-      - uses: actions/upload-pages-artifact@v3
+      # One artifact name per attempt: a re-run keeps the earlier attempts' artifacts.
+      - id: upload
+        uses: actions/upload-pages-artifact@v3
         if: steps.source.outputs.build_type == 'workflow'
         with:
           name: github-pages-${{ github.run_attempt }}
           path: ${{ runner.temp }}/site
+      # The deployment itself, with the same two Pages API calls actions/deploy-pages makes, but without its 10-minute
+      # ceiling and without cancelling: on 2026-11-09 every deployment stalled after finished_file_sync for longer than
+      # 10 minutes, and deploy-pages cancelled each one at its limit, so none could finish. This waits up to 45 minutes
+      # and leaves an unfinished deployment to Pages.
       - id: deploy
         if: steps.source.outputs.build_type == 'workflow'
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages-${{ github.run_attempt }}
-          timeout: 600000            # the most deploy-pages allows; a stalled deployment needs a new commit (publish-retry.yml)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact_id }}
+        run: |
+          oidc=$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq -r .value)
+          resp=$(gh api -X POST "repos/$GITHUB_REPOSITORY/pages/deployments" -F artifact_id="$ARTIFACT_ID" -f pages_build_version="$GITHUB_SHA" -f oidc_token="$oidc")
+          id=$(jq -r .id <<<"$resp"); url=$(jq -r '.page_url // empty' <<<"$resp")
+          [ -n "$url" ] && echo "page_url=$url" >> "$GITHUB_OUTPUT"
+          echo "Pages deployment $id"
+          last=""
+          for i in $(seq 1 270); do
+            st=$(gh api "repos/$GITHUB_REPOSITORY/pages/deployments/$id" --jq .status || echo "unknown")
+            [ "$st" != "$last" ] && echo "$(date -u +%T) $st" && last="$st"
+            case "$st" in
+              succeed) echo "published"; exit 0;;
+              deployment_failed|deployment_perms_error|deployment_content_failed|deployment_cancelled|deployment_lost) echo "::error::Pages deployment ended as $st"; exit 1;;
+            esac
+            sleep 10
+          done
+          echo "::error::the Pages deployment is still '$st' after 45 minutes; it was not cancelled and may still finish"; exit 1
