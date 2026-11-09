@@ -43,7 +43,7 @@
   function paintBar() {
     const x = T[L()], bar = document.getElementById("hphoExamBar"); if (!bar) return;
     const left = st.session ? st.session.ends_at - nowS() : null;
-    bar.innerHTML = `<b class="hpho-exam-title">${x.title}${st.round ? " · " + esc(st.round.title[L()]) : ""}</b>
+    bar.innerHTML = `<b class="hpho-exam-title"><img class="hpho-exam-icon hpho-logo-light" src="logo/brand/hpho-icon-light.svg?v=20261109-hpho" alt=""><img class="hpho-exam-icon hpho-logo-dark" src="logo/brand/hpho-icon-dark.svg?v=20261109-hpho" alt="" aria-hidden="true">${x.title}${st.round ? " · " + esc(st.round.title[L()]) : ""}</b>
       ${st.entry ? `<span>${x.candidate} <b class="hpho-no">${esc(st.entry.candidate_no)}</b></span>` : ""}
       ${st.phase === "exam" ? `<span class="hpho-light ${st.online ? "is-ok" : "is-bad"}">${x.conn}: ${st.online ? x.connOk : x.connBad}</span><span class="hpho-light is-ok">${x.proctor}: ${x.proctorOn}</span>
         <span class="hpho-exam-clock${left < 600 ? " is-low" : ""}">${x.left} <b>${fmt(left)}</b></span><button type="button" class="hpho-link" id="hphoExamEnd">${x.end}</button>` : ""}`;

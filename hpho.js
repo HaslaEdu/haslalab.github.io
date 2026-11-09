@@ -104,7 +104,7 @@
     const x = T[L()];
     return `<div class="shell hpho">
       <nav class="hpho-tabs" aria-label="${x.tabHpho}"><a href="#/monthly">${x.tabMonthly}</a><a href="#/hpho" aria-current="page">${x.tabHpho}</a></nav>
-      <div class="phead"><p class="eyebrow">${x.eyebrow}</p><h1>${x.title}</h1><div class="sub">${x.lead}</div></div>
+      <div class="phead"><p class="eyebrow">${x.eyebrow}</p><h1 class="hpho-logo"><img class="hpho-wordmark hpho-logo-light" src="logo/brand/hpho-wordmark-light.svg?v=20261109-hpho" alt="HPhO"><img class="hpho-wordmark hpho-logo-dark" src="logo/brand/hpho-wordmark-dark.svg?v=20261109-hpho" alt="" aria-hidden="true"></h1><div class="sub">${x.lead}</div></div>
       <p class="hpho-note">${x.note}</p>
       <ul class="hpho-facts">${x.facts.map(([a, b]) => `<li><b>${a}</b><span>${b}</span></li>`).join("")}</ul>
       <section class="hpho-round" id="hphoRound" aria-live="polite"><p class="hpho-muted">…</p></section>

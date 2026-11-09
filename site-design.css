@@ -734,3 +734,10 @@ body.hl-site .hpho-btn:disabled{opacity:.45;cursor:not-allowed}
 html[data-theme="dark"] body.hl-site .hpho-exam-bar{background:#17131f;border-color:#3b344d}
 html[data-theme="dark"] body.hl-site .hpho-checks li{border-color:#3b344d}
 body.hl-site .hpho-self{position:fixed;right:16px;bottom:16px;width:176px;height:132px;object-fit:cover;border-radius:10px;border:2px solid #7059a4;background:#000;z-index:60;transform:scaleX(-1)}
+
+/* the HPhO logo: a light and a dark file, the site's theme picks one */
+body.hl-site .hpho-logo{margin:0;line-height:0}
+body.hl-site .hpho-wordmark{height:clamp(84px,14vw,128px);width:auto}
+body.hl-site .hpho-exam-icon{width:30px;height:30px;vertical-align:middle;margin-right:10px}
+body.hl-site .hpho-logo-dark,html[data-theme="dark"] body.hl-site .hpho-logo-light{display:none}
+html[data-theme="dark"] body.hl-site .hpho-logo-dark{display:inline-block}
