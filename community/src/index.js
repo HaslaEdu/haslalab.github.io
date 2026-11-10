@@ -6,6 +6,7 @@
  */
 
 import { adminStats } from "./admin-stats.js";
+import { recordVisit } from "./visits.js";
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM, GRADE_TRAIN_SYSTEM_V2 } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus, cancelTuning } from "./vertex-tuning.js";
 import { backupTick } from "./drive-backup.js";
@@ -874,6 +875,11 @@ const worker = {
     }
     if (req.method === "GET" && (av = /^\/api\/lab\/pages\/(\d+)\/img$/.exec(url.pathname))) return labImage(req, env, +av[1], cors);
     if (req.method === "POST" && url.pathname === "/api/pay/paddle/webhook") return paddleWebhook(req, env, cors);   // signed over the raw body
+    /* a page load, counted by country and region only (visits.js); the answer never waits on the write */
+    if (req.method === "POST" && url.pathname === "/api/visit") {
+      await recordVisit(req, env, ctx, { allow: () => limit(env, "visit:" + clientIp(req), 120, 3600).then(() => true, () => false) });
+      return new Response(null, { status: 204, headers: { ...cors, "Cache-Control": "no-store" } });
+    }
     if (req.method === "GET" && url.pathname.startsWith("/api/yt/")) {
       try { return await ytRoute(req, env, url, cors); }
       catch (e) { if (e instanceof HttpError) return json({ error: e.code }, e.status, cors); console.error(e && e.stack || e); return json({ error: "server_error" }, 500, cors); }

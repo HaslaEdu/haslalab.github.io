@@ -1162,7 +1162,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
-<script src="site-catalogue.js?v=0461ea944b73"></script>
+<script src="site-catalogue.js?v=c3e8abc378aa"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=7385ce7c7606"></script>
@@ -8995,6 +8995,15 @@ function cmTok(v){
     if(prior!==(v||"")){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;if(archiveController)Promise.resolve().then(()=>archiveController?.update?.({}));}
   }catch(e){return "";}
 }
+/* one ping per page load for the admins' visitor counts by country and region: the server keeps only totals
+   (no IP address, no identifier). "first" is set on this browser's first load of the Korean day, which is all
+   this browser remembers (the date). Only on the real site, after the page has settled. */
+(()=>{try{
+  if(location.hostname!=="haslalab.org"||navigator.webdriver)return;
+  const day=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);let first=0;
+  try{if(localStorage.getItem("hlVisitDay")!==day){localStorage.setItem("hlVisitDay",day);first=1;}}catch(_){}
+  setTimeout(()=>{fetch(cmBase()+"/api/visit",{method:"POST",body:JSON.stringify({first}),headers:{"Content-Type":"text/plain"},credentials:"omit",keepalive:true}).catch(()=>{});},2500);
+}catch(_){}})();
 async function cmApi(method, path, body,options={}){
   method=String(method).toUpperCase();
   const base=cmBase(),t=cmTok(),currentLang=lang;

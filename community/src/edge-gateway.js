@@ -69,6 +69,9 @@ function forwardRequest(request, url) {
   const headers = new Headers(forwarded.headers);
   // A caller cannot provide an internal diagnostic. CF-Connecting-IP itself is passed unchanged.
   headers.delete('X-Hasla-IP-Check');
+  // The visitor's region as Cloudflare resolved it (for the country/region visit counts); never what the browser sent.
+  headers.delete('X-Hasla-Region');
+  if (request.cf?.region) headers.set('X-Hasla-Region', encodeURIComponent(String(request.cf.region).slice(0, 80)));
   return new Request(forwarded, { headers, redirect: 'manual' });
 }
 
