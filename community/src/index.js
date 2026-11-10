@@ -58,7 +58,7 @@ import { createAiTrainRouter, AI_TRAIN_PATH } from './ai-train.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount, writtenSwap } from './focus-read.js';
-import { injectionSignals, suspendForInjection, liftSuspension, ensureSuspensionSchema, SUSPENDED } from './injection-guard.js';
+import { screenAnswer, flagForReview, clearFlag, suspendForInjection, liftSuspension, ensureSuspensionSchema, SUSPENDED } from './injection-guard.js';
 import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
@@ -230,9 +230,10 @@ async function isSuspended(env, userId) {
   return (await env.DB.prepare('SELECT deleted FROM users WHERE id=?').bind(userId).first())?.deleted === SUSPENDED;
 }
 async function guardInjection(env, me, source, text) {
-  const signals = injectionSignals(text);
-  if (!signals.length) return;
-  if (await suspendForInjection(env, me.id, source, signals, env[DB_SCOPE] || env.DB) || await isSuspended(env, me.id)) throw new HttpError(403, "account_suspended");
+  const { suspend, review } = screenAnswer(text);
+  if (review.length) await flagForReview(env, me.id, source, review, env[DB_SCOPE] || env.DB);
+  if (!suspend.length) return;
+  if (await suspendForInjection(env, me.id, source, suspend, env[DB_SCOPE] || env.DB) || await isSuspended(env, me.id)) throw new HttpError(403, "account_suspended");
 }
 const RECENT_LOGIN_SEC = 900;
 function needRecentLogin(u, maxAgeSec = RECENT_LOGIN_SEC) {
@@ -1500,8 +1501,12 @@ async function arena(p, m, body, me, req, env, url) {
     if (p === "/api/admin/suspensions" && m === "GET") {
       await ensureSuspensionSchema(env.DB, env[DB_SCOPE] || env.DB);
       return { suspensions: (await env.DB.prepare(`SELECT x.user_id,u.nickname,x.reason,x.source,x.evidence,x.created_at,x.lifted_at FROM account_suspensions x
-        LEFT JOIN users u ON u.id=x.user_id ORDER BY x.created_at DESC LIMIT 100`).all()).results.map(r => ({ ...r, evidence: JSON.parse(r.evidence || "[]") })) };
+        LEFT JOIN users u ON u.id=x.user_id ORDER BY x.created_at DESC LIMIT 100`).all()).results.map(r => ({ ...r, evidence: JSON.parse(r.evidence || "[]") })),
+        /* likely attempts kept for review (injection-guard.js REVIEW): open ones first */
+        flags: (await env.DB.prepare(`SELECT f.id,f.user_id,u.nickname,f.source,f.evidence,f.created_at,f.cleared_at FROM answer_flags f
+          LEFT JOIN users u ON u.id=f.user_id ORDER BY f.cleared_at IS NOT NULL, f.created_at DESC LIMIT 100`).all()).results.map(r => ({ ...r, evidence: JSON.parse(r.evidence || "[]") })) };
     }
+    if ((r = /^\/api\/admin\/flags\/(\d+)\/clear$/.exec(p)) && m === "POST") return { ok: true, cleared: await clearFlag(env, +r[1], env[DB_SCOPE] || env.DB) };
     if ((r = /^\/api\/admin\/suspensions\/(\d+)\/lift$/.exec(p)) && m === "POST") {
       needRecentLogin(me);
       return { ok: true, lifted: await liftSuspension(env, +r[1], env[DB_SCOPE] || env.DB) };
@@ -3169,7 +3174,8 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   }
   if (mine.some(p => p.mime !== "text/plain" && p.ocr == null)) throw new HttpError(502, "ocr_failed");
   /* an answer that instructs the grader is not graded: the account is suspended (injection-guard.js) */
-  { const signals = injectionSignals(mine.map(p => p.ocr ?? p.text ?? "").join("\n"));
+  { const { suspend: signals, review } = screenAnswer(mine.map(p => p.ocr ?? p.text ?? "").join("\n"));
+    if (review.length) await flagForReview(env, s.user_id, `lab:${s.id}:${task}`, review, env[DB_SCOPE] || env.DB);
     if (signals.length && (await suspendForInjection(env, s.user_id, `lab:${s.id}:${task}`, signals, env[DB_SCOPE] || env.DB) || await isSuspended(env, s.user_id))) throw new HttpError(403, "account_suspended"); }
   const theory = labTheory(s, task);
   const family=familyOf(s.comp), kind=paperKind(s.comp,task,theory);
