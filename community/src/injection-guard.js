@@ -6,6 +6,9 @@
 // bare «<<» or «[1]» is never a signal; what is matched is our own prompt machinery (the fence names and section headers
 // the prompts use) and plain instructions to the grader in English or Korean. Each match is kept with its passage, so an
 // administrator can see why and lift the suspension (DELETE or lifted_at).
+// The rules themselves: guard-rules.js (a public stub here; the private set is copied over it at deploy).
+import { RULES, normalize } from './guard-rules.js';
+
 export const SUSPENSION_SCHEMA = [
   `CREATE TABLE IF NOT EXISTS account_suspensions (
     user_id INTEGER PRIMARY KEY,
@@ -22,23 +25,11 @@ export function ensureSuspensionSchema(db, scope = db) {
   return ready.get(scope);
 }
 
-const RULES = [
-  // the prompts' own fences and headers, written into an answer
-  ['fence', /<<\s*(?:END|ANSWER|SCHEME|OCR|PDF_TEXT|ANALYSIS|TRANSCRIPT|STEPS|PAGES|SECOND TRANSCRIPT|END SECOND TRANSCRIPT)\b[^>\n]{0,40}>>/i],
-  ['header', /^[ \t]*\[(?:TASK:\s*(?:grade|build marking scheme|review)|End of fixed rules|Rubric|Marking scheme[^\]\n]{0,40}|Private session reference[^\]\n]{0,40})\][ \t]*$/im],
-  ['role', /<\|(?:im_start|im_end|system|start_header_id|end_header_id)\|>|^[ \t]*(?:system|assistant|developer)\s*:\s*(?:you|ignore|grade|award|give)\b/im],
-  // instructions to the grader
-  ['instruction', /\b(?:ignore|disregard|forget|override)\s+(?:all\s+|any\s+|the\s+|your\s+)?(?:previous|prior|above|earlier|preceding|grading|marking|system)\s+(?:instructions?|rules?|prompts?|rubric|scheme|criteria)\b/i],
-  ['instruction', /\b(?:give|award|assign|grant)\s+(?:me\s+|this\s+(?:answer|solution|student)\s+|the\s+student\s+)?(?:full|maximum|max|all(?:\s+the)?|perfect|100\s*%)\s+(?:marks?|points?|score|credit)\b/i],
-  ['instruction', /\byou\s+(?:are|must|will|should)\s+(?:now\s+)?(?:give|award|grade\s+this\s+as|mark\s+this\s+as|output|return)\b[^.\n]{0,40}\b(?:full|maximum|correct|10\s*\/\s*10|100\s*%)/i],
-  ['instruction', /(?:이전|앞의|위의|기존|모든)\s*(?:지시|지침|명령|규칙|채점\s*기준|프롬프트)\S{0,3}\s*(?:무시|잊어|따르지\s*마)/],
-  ['instruction', /(?:채점\s*(?:기준|규칙|지침)\S{0,3}\s*무시|만점\s*(?:을|으로)?\s*(?:줘|주세요|주시오|처리|부여|매겨)|점수\s*를?\s*(?:만점|최고점|10\s*점)\s*(?:으로|을)?\s*(?:줘|주세요|처리|부여|매겨))/],
-];
 
 /** the injection signals in student-controlled text: [{rule, passage}], empty when there are none */
 export function injectionSignals(text) {
-  const s = String(text ?? '');
-  if (!s) return [];
+  const s = normalize(text);
+  if (!s.trim()) return [];
   const out = [];
   for (const [rule, re] of RULES) {
     const m = re.exec(s);
