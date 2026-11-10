@@ -1712,7 +1712,7 @@ async function arAdminStats(root, alive, days) {
     accounts: "Accounts", created: "Accounts ever made", active: "Active", deleted: "Deleted", suspended: "Suspended", admins: "Admin accounts", pending: "Signed in but no username yet",
     methods: "How members sign in", password: "Username & password", daily: "By day", day: "Day", signups: "Sign-ups", lab: "Exam gradings", mo: "Monthly gradings",
     exams: "Most graded exams", exam: "Exam", times: "Gradings", statuses: "Exam sessions by state", status: "State", all: "All", members: "Members only",
-    waiting: "waiting for grading", pay: "Payments", orders: "Orders", amount: "Amount", none: "None yet", table: "Show as a table", refresh: "Refresh", failed: "Could not load the statistics.", at: "As of"
+    waiting: "waiting for grading", visitors: "Visitors", views: "Page loads", visitNote: "Visitors are counted once per browser per day; counting started on 10 November 2026.", byCountry: "Visitors by country", byRegion: "Visitors by region", country: "Country", region: "Region", unknown: "Unknown", countriesN: "%d countries", pay: "Payments", orders: "Orders", amount: "Amount", none: "None yet", table: "Show as a table", refresh: "Refresh", failed: "Could not load the statistics.", at: "As of"
   } : {
     h: "사이트 통계", note: "숫자만 보여 줍니다. 관리자 계정은 빼고 셉니다. 날짜는 한국 시간 기준입니다.", denied: "관리자 계정만 사이트 통계를 볼 수 있습니다.", login: "로그인",
     people: "회원", graded: "채점 받은 사람", labGraded: "실전 모드 채점", monthly: "월간 문제 채점", ai: "Hasla AI 질문",
@@ -1720,7 +1720,7 @@ async function arAdminStats(root, alive, days) {
     accounts: "계정", created: "지금까지 만들어진 계정", active: "활성", deleted: "탈퇴·삭제", suspended: "정지", admins: "관리자 계정", pending: "인증만 하고 아이디를 안 정함",
     methods: "로그인 방법 (활성 회원)", password: "아이디·비밀번호", daily: "날짜별", day: "날짜", signups: "가입", lab: "실전 채점", mo: "월간 채점",
     exams: "많이 채점된 시험", exam: "시험", times: "채점 수", statuses: "실전 모드 세션 상태", status: "상태", all: "전체", members: "회원만",
-    waiting: "채점 대기", pay: "결제", orders: "주문", amount: "금액", none: "아직 없음", table: "표로 보기", refresh: "새로고침", failed: "통계를 불러오지 못했습니다.", at: "기준 시각"
+    waiting: "채점 대기", visitors: "방문자", views: "페이지 열람", visitNote: "방문자는 브라우저마다 하루에 한 번 셉니다. 2026년 11월 10일부터 세기 시작했습니다.", byCountry: "국가별 방문자", byRegion: "지역별 방문자", country: "국가", region: "지역", unknown: "알 수 없음", countriesN: "%d개 국가", pay: "결제", orders: "주문", amount: "금액", none: "아직 없음", table: "표로 보기", refresh: "새로고침", failed: "통계를 불러오지 못했습니다.", at: "기준 시각"
   };
   const denied = () => {
     if (!cm.me) try { sessionStorage.setItem("hlCmBack", "#/lab/admin-stats"); } catch (_) {}
@@ -1746,6 +1746,9 @@ async function arAdminStats(root, alive, days) {
           return `<g><rect class="arstat-hit" x="${i * w}" y="0" width="${w}" height="64"/>${h ? `<rect class="arstat-bar" x="${i * w + 1}" y="${64 - h}" width="${Math.max(1, w - 2)}" height="${h}" rx="1.5"/>` : ""}<title>${x.day}: ${n(x[k])}</title></g>`; }).join("")}
       </svg><div class="arstat-axis"><span>${d.series[0].day.slice(5)}</span><span>${d.series.at(-1).day.slice(5)}</span></div></figure>`;
   };
+  let names = null; try { names = new Intl.DisplayNames([en ? "en" : "ko"], {type: "region"}); } catch (_) {}
+  const country = (c) => c === "XX" || !c ? L.unknown : ((names && names.of(c)) || c);
+  const v = d.visits || {views: 0, visitors: 0, views_today: 0, visitors_today: 0, countries: 0, by_country: [], by_region: []};
   const provider = (k) => k === "password" ? L.password : ({google: "Google", github: "GitHub", discord: "Discord", kakao: en ? "Kakao" : "카카오", naver: "NAVER"})[k] || k;
   const methods = Object.entries(u.methods || {}).sort((a, b) => b[1] - a[1]);
   const statuses = Object.entries(d.lab.statuses || {}).sort((a, b) => b[1].all - a[1].all);
@@ -1762,15 +1765,21 @@ async function arAdminStats(root, alive, days) {
       .arstat-base{stroke:var(--cm-line,#e3e8ee);stroke-width:1}.arstat-axis{display:flex;justify-content:space-between;font-size:11px;opacity:.6}
       .arstat-t{width:100%;border-collapse:collapse;font-size:13px}.arstat-t th,.arstat-t td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--cm-line)}.arstat-t td.r,.arstat-t th.r{text-align:right;font-variant-numeric:tabular-nums}</style>
     <div class="arstat-grid">
+      ${tile(L.visitors, n(v.visitors), `${L.today} ${n(v.visitors_today)} · ${L.views} ${n(v.views)} · ${L.countriesN.replace("%d", n(v.countries))}`)}
       ${tile(L.people, n(u.people) + (en ? "" : L.of), `${L.today} +${n(u.new_today)} · ${L.d7} +${n(u.new_7d)}`)}
       ${tile(L.graded, n(d.graded.people) + (en ? "" : L.of), `${L.lab} ${n(d.lab.graded_people)} · ${L.mo} ${n(d.monthly.graded_people)}`)}
       ${tile(L.labGraded, n(d.lab.graded), `${L.d7} ${n(d.lab.graded_7d)}`)}
       ${tile(L.monthly, n(d.monthly.graded), d.monthly.waiting ? `${L.waiting} ${n(d.monthly.waiting)}` : "")}
       ${tile(L.ai, n(d.ai.asked), `${L.d7} ${n(d.ai.asked_7d)} · ${L.guests} ${n(d.ai.guests)} · ${L.membersAsked} ${n(d.ai.members)}`)}
     </div>
-    <div class="arpanel"><h3>${L.daily}</h3><div class="arstat-charts">${bars("signups", L.signups)}${bars("lab", L.lab)}${bars("monthly", L.mo)}${bars("ai", L.ai)}</div>
-      <details style="margin-top:10px"><summary style="cursor:pointer">${L.table}</summary><table class="arstat-t"><thead><tr><th>${L.day}</th><th class="r">${L.signups}</th><th class="r">${L.lab}</th><th class="r">${L.mo}</th><th class="r">${L.ai}</th></tr></thead>
-        <tbody>${d.series.slice().reverse().map((x) => `<tr><td>${x.day}</td><td class="r">${n(x.signups)}</td><td class="r">${n(x.lab)}</td><td class="r">${n(x.monthly)}</td><td class="r">${n(x.ai)}</td></tr>`).join("")}</tbody></table></details></div>
+    <div class="arpanel"><h3>${L.daily}</h3><div class="arstat-charts">${bars("visitors", L.visitors)}${bars("signups", L.signups)}${bars("lab", L.lab)}${bars("monthly", L.mo)}${bars("ai", L.ai)}</div>
+      <details style="margin-top:10px"><summary style="cursor:pointer">${L.table}</summary><table class="arstat-t"><thead><tr><th>${L.day}</th><th class="r">${L.visitors}</th><th class="r">${L.views}</th><th class="r">${L.signups}</th><th class="r">${L.lab}</th><th class="r">${L.mo}</th><th class="r">${L.ai}</th></tr></thead>
+        <tbody>${d.series.slice().reverse().map((x) => `<tr><td>${x.day}</td><td class="r">${n(x.visitors)}</td><td class="r">${n(x.views)}</td><td class="r">${n(x.signups)}</td><td class="r">${n(x.lab)}</td><td class="r">${n(x.monthly)}</td><td class="r">${n(x.ai)}</td></tr>`).join("")}</tbody></table></details></div>
+    <div class="arstat-charts">
+      <div class="arpanel"><h3>${L.byCountry}</h3>${v.by_country.length ? `<table class="arstat-t"><thead><tr><th>${L.country}</th><th class="r">${L.visitors}</th><th class="r">${L.views}</th></tr></thead><tbody>${v.by_country.map((x) => `<tr><td>${esc(country(x.country))}</td><td class="r">${n(x.visitors)}</td><td class="r">${n(x.views)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
+      <div class="arpanel"><h3>${L.byRegion}</h3>${v.by_region.length ? `<table class="arstat-t"><thead><tr><th>${L.region}</th><th class="r">${L.visitors}</th><th class="r">${L.views}</th></tr></thead><tbody>${v.by_region.map((x) => `<tr><td>${esc(x.region)} <small style="opacity:.65">${esc(country(x.country))}</small></td><td class="r">${n(x.visitors)}</td><td class="r">${n(x.views)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
+    </div>
+    <p class="arempty" style="margin:-4px 0 14px">${L.visitNote}</p>
     <div class="arstat-charts">
       <div class="arpanel"><h3>${L.accounts}</h3><table class="arstat-t"><tbody>
         ${[[L.created, u.created], [L.active, u.active], [L.people, u.people], [L.admins, u.admins], [L.pending, u.pending_username], [L.deleted, u.deleted], [L.suspended, u.suspended]].map(([k, v]) => `<tr><td>${k}</td><td class="r">${n(v)}</td></tr>`).join("")}

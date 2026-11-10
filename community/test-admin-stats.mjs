@@ -20,7 +20,8 @@ async function setup(){
  lab(1,'graded');lab(1,'graded');lab(2,'graded');lab(2,'graded','apho2023_E1');lab(3,'cancelled');
  const tokens={};for(const [id,name] of [[1,'admin'],[2,'student']]){tokens[name]=name.padEnd(32,'k');sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(await hash(tokens[name]),id,T,T+86400);}
  const get=async token=>{const r=await worker.fetch(new Request('https://worker.invalid/api/admin/stats',{headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.44',...(token?{Authorization:'Bearer '+token}:{})}}),env,{waitUntil(){}});return{status:r.status,cache:r.headers.get('Cache-Control'),text:await r.text()}};
- return{get,tokens,close(){sql.close()}};
+ const visit=async({first=0,country='KR',region='Seoul',ua='Mozilla/5.0 (Macintosh)',ip='192.0.2.50'}={})=>{const ctx={tasks:[],waitUntil(p){this.tasks.push(p)}};const r=await worker.fetch(new Request('https://worker.invalid/api/visit',{method:'POST',body:JSON.stringify({first}),headers:{Origin:origin,'Content-Type':'text/plain','User-Agent':ua,'CF-Connecting-IP':ip,...(country?{'CF-IPCountry':country}:{}),...(region?{'X-Hasla-Region':encodeURIComponent(region)}:{})}}),env,ctx);await Promise.all(ctx.tasks);return r.status};
+ return{get,visit,sql,tokens,close(){sql.close()}};
 }
 
 test('admin stats: only an admin session reads them',async()=>{
@@ -45,5 +46,24 @@ test('admin stats: people leave out admin accounts; grading, sign-in methods and
   assert.equal(d.series.reduce((a,x)=>a+x.lab,0),2);assert.equal(d.series.reduce((a,x)=>a+x.signups,0),3);
   assert.deepEqual(d.ai,{asked:0,guests:0,members:0,member_people:0,asked_7d:0,blocked:0},'no Hasla AI table yet reads as zero');
   for(const word of ['boss_account','student_one','nick_student_one','pending_abc'])assert.ok(!r.text.includes(word),'no account name in the answer: '+word);
+ }finally{s.close()}
+});
+
+test('visits: counted by country and region only, once a day per browser; bots and floods are not counted',async()=>{
+ const s=await setup();try{
+  assert.equal(await s.visit({first:1}),204);assert.equal(await s.visit(),204);
+  await s.visit({first:1,region:'Gyeonggi-do'});await s.visit({first:1,country:'US',region:'California',ip:'192.0.2.51'});
+  await s.visit({first:1,country:'',region:''});
+  await s.visit({first:1,ua:'Googlebot/2.1'});await s.visit({first:1,ua:''});
+  const kept=s.sql.prepare('SELECT * FROM visit_days ORDER BY country,region').all();
+  assert.deepEqual(kept.map(r=>[r.country,r.region,r.views,r.visitors]),[['KR','Gyeonggi-do',1,1],['KR','Seoul',2,1],['US','California',1,1],['XX','',1,1]]);
+  assert.deepEqual(Object.keys(kept[0]).sort(),['country','day','region','views','visitors'],'no address or identifier column');
+  for(let i=0;i<125;i++)await s.visit({ip:'192.0.2.99'});
+  assert.equal(s.sql.prepare("SELECT views FROM visit_days WHERE region='Seoul'").get().views,2+120,'one address counts at most 120 an hour');
+  const d=JSON.parse((await s.get(s.tokens.admin)).text).visits;
+  assert.equal(d.visitors,4);assert.equal(d.countries,2,'unknown is not a country');assert.equal(d.visitors_today,4);
+  assert.deepEqual(d.by_country.map(x=>x.country),['KR','US','XX']);
+  assert.deepEqual(d.by_region.map(x=>x.region).sort(),['California','Gyeonggi-do','Seoul'],'the unknown country has no region');
+  assert.equal(d.by_region.find(x=>x.region==='Seoul').views,122);
  }finally{s.close()}
 });

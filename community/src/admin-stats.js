@@ -11,6 +11,8 @@ const people = col => NOT_ADMIN.replace("%s", col);
 
 /* a table made lazily by another feature may not exist yet on a fresh database: that reads as no rows */
 const rows = async (db, sql, ...args) => { try { return (await db.prepare(sql).bind(...args).all()).results || []; } catch (e) { if (/no such table/i.test(String(e?.message))) return []; throw e; } };
+/* the first Korean day of a period of `days` days ending today */
+const seriesStart = (now, days) => new Date((now + 9 * 3600 - (days - 1) * 86400) * 1000).toISOString().slice(0, 10);
 const one = async (db, sql, ...args) => (await rows(db, sql, ...args))[0] || {};
 
 export async function adminStats(db, { days = 30, now = Math.floor(Date.now() / 1000) } = {}) {
@@ -51,13 +53,26 @@ export async function adminStats(db, { days = 30, now = Math.floor(Date.now() / 
     rows(db, `SELECT status, currency, COUNT(*) n, SUM(amount) amount FROM pay_orders WHERE ${people("user_id")} GROUP BY status, currency`),
     one(db, `SELECT COUNT(*) n FROM account_suspensions WHERE lifted_at IS NULL`),
   ]);
+  /* visits.js: page loads and first loads of the day, by country and region (no one is told apart) */
+  const sinceDay = seriesStart(now, days);
+  const [visitTotals, visitCountries, visitRegions, visitDays] = await Promise.all([
+    one(db, `SELECT SUM(views) views, SUM(visitors) visitors, SUM(CASE WHEN day=? THEN views END) views_today,
+        SUM(CASE WHEN day=? THEN visitors END) visitors_today, COUNT(DISTINCT CASE WHEN country<>'XX' THEN country END) countries
+      FROM visit_days WHERE day>=?`, today, today, sinceDay),
+    rows(db, `SELECT country, SUM(views) views, SUM(visitors) visitors FROM visit_days WHERE day>=?
+      GROUP BY country ORDER BY visitors DESC, views DESC, country LIMIT 30`, sinceDay),
+    rows(db, `SELECT country, region, SUM(views) views, SUM(visitors) visitors FROM visit_days WHERE day>=? AND region<>''
+      GROUP BY country, region ORDER BY visitors DESC, views DESC, country, region LIMIT 30`, sinceDay),
+    rows(db, `SELECT day, SUM(visitors) n, SUM(views) v FROM visit_days WHERE day>=? GROUP BY day`, sinceDay),
+  ]);
   /* anyone graded at least once, in the exam mode or on a monthly problem */
   const anyGraded = await one(db, `SELECT COUNT(*) n FROM (
       SELECT user_id FROM lab_sessions WHERE status='graded' UNION SELECT user_id FROM submissions WHERE status='graded') g
     WHERE ${people("g.user_id")}`);
   const num = v => Number(v) || 0;
   const series = new Map();
-  for (let i = days - 1; i >= 0; i--) { const d = new Date((now + 9 * 3600 - i * 86400) * 1000).toISOString().slice(0, 10); series.set(d, { day: d, signups: 0, lab: 0, monthly: 0, ai: 0 }); }
+  for (let i = days - 1; i >= 0; i--) { const d = new Date((now + 9 * 3600 - i * 86400) * 1000).toISOString().slice(0, 10); series.set(d, { day: d, visitors: 0, views: 0, signups: 0, lab: 0, monthly: 0, ai: 0 }); }
+  for (const r of visitDays) if (series.has(r.day)) Object.assign(series.get(r.day), { visitors: num(r.n), views: num(r.v) });
   for (const [list, key] of [[signupDays, "signups"], [labDays, "lab"], [monthlyDays, "monthly"], [aiDays, "ai"]])
     for (const r of list) if (series.has(r.day)) series.get(r.day)[key] = num(r.n);
   const statuses = Object.fromEntries(lab.map(r => [r.status, { all: num(r.n), people: num(r.people) }]));
@@ -72,6 +87,10 @@ export async function adminStats(db, { days = 30, now = Math.floor(Date.now() / 
       statuses, exams: labExams.map(r => ({ exam_key: r.exam_key, graded: num(r.n), people: num(r.people) })) },
     monthly: { submitted: num(monthly.submitted), graded: num(monthly.graded), graded_people: num(monthly.graded_people), waiting: num(monthly.waiting) },
     ai: { asked: num(ai.asked), guests: num(ai.guests), members: num(ai.members), member_people: num(ai.member_people), asked_7d: num(ai.asked_7d), blocked: num(ai.blocked) },
+    visits: { views: num(visitTotals.views), visitors: num(visitTotals.visitors), views_today: num(visitTotals.views_today), visitors_today: num(visitTotals.visitors_today),
+      countries: num(visitTotals.countries),
+      by_country: visitCountries.map(r => ({ country: r.country, views: num(r.views), visitors: num(r.visitors) })),
+      by_region: visitRegions.map(r => ({ country: r.country, region: r.region, views: num(r.views), visitors: num(r.visitors) })) },
     pay: pay.map(r => ({ status: r.status, currency: r.currency, orders: num(r.n), amount: num(r.amount) })),
     series: [...series.values()],
   };

@@ -182,3 +182,14 @@ test('settings and keyed avatars retain only their safe browser cache policies; 
   assert.equal(missingIP.headers.get('X-Hasla-IP-Preserved'), '0'); await missingIP.text(); await h.flush();
   assert.equal(h.stored.size, 1);
 });
+
+test('the visitor region comes from Cloudflare, never from the browser', async () => {
+  const h = harness(() => new Response(null, { status: 204 }));
+  const spoofed = new Request('https://haslalab-community-edge.haslalab.workers.dev/api/visit', { method: 'POST', body: '{}', headers: { Origin: ORIGIN, 'X-Hasla-Region': 'Forged' } });
+  await gateway.fetch(spoofed, { ALLOWED_ORIGINS: ORIGIN, COMMUNITY: { async fetch(request) { h.calls.push(request); return new Response(null, { status: 204 }); } } }, { waitUntil() {} });
+  assert.equal(h.calls.at(-1).headers.get('X-Hasla-Region'), null);
+  const located = new Request('https://haslalab-community-edge.haslalab.workers.dev/api/visit', { method: 'POST', body: '{}', headers: { Origin: ORIGIN, 'X-Hasla-Region': 'Forged' } });
+  Object.defineProperty(located, 'cf', { value: { country: 'KR', region: 'Gyeonggi-do' } });
+  await gateway.fetch(located, { ALLOWED_ORIGINS: ORIGIN, COMMUNITY: { async fetch(request) { h.calls.push(request); return new Response(null, { status: 204 }); } } }, { waitUntil() {} });
+  assert.equal(decodeURIComponent(h.calls.at(-1).headers.get('X-Hasla-Region')), 'Gyeonggi-do');
+});
