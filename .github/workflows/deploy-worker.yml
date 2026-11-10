@@ -23,6 +23,19 @@ jobs:
         working-directory: community
     steps:
       - uses: actions/checkout@v4
+      # The answer-injection rules are private (HaslaEdu/haslalab-server). HASLALAB_SERVER_TOKEN is a fine-grained token
+      # with read access to that repository's contents only. The public community/src/guard-rules.js is an older stub;
+      # the private file replaces it before any test or deploy, and the deploy stops if it is missing.
+      - uses: actions/checkout@v4
+        with:
+          repository: HaslaEdu/haslalab-server
+          token: ${{ secrets.HASLALAB_SERVER_TOKEN }}
+          path: .private-server
+          sparse-checkout: guard
+      - name: Private answer-injection rules
+        run: |
+          cp ../.private-server/guard/guard-rules.js src/guard-rules.js
+          node -e "import('./src/guard-rules.js').then(m=>{if(m.PRIVATE!==true){console.error('private guard rules missing');process.exit(1)}})"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -30,6 +43,7 @@ jobs:
           cache-dependency-path: community/package-lock.json
       - run: npm ci
       - run: node --check src/index.js
+      - run: node --test ../.private-server/guard/test-guard-rules.mjs
       - run: node --test test-account-security.mjs test-account-routes.mjs test-account-ui.cjs test-oauth-onboarding.mjs test-account-handoff.mjs test-consent.mjs test-signup-email.mjs ../tests/test-consent-ui.cjs ../tests/test-signup-ui.cjs
       - run: node --test ../tests/test-problem-search-learning.cjs ../tests/test-problem-search-ui.cjs
       # Studio creates its additive schema through the existing DB binding, so
