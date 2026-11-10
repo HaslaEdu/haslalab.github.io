@@ -244,7 +244,7 @@ async function arMount() {
     const path=problem?'/problems/'+Number(c)+'?lang='+lang:weekly?(a==='weekly'?'/weekly':'/monthly')+'?lang='+lang+arPeriodQuery(b):'/rank?scope='+(b==='all'?'all':b==='week'?'week':'month')+arPeriodQuery(b);
     primary=arPageRead(path);primary.catch(()=>{});
   }
-  try{if(a==='lab'&&!['model-test','server-guide'].includes(b)){
+  try{if(a==='lab'&&!['model-test','server-guide','admin-stats'].includes(b)){
     const shop=!b?cmApi('GET','/pay/config').catch(()=>({})):null;
     const id=b&&/^\d+$/.test(b)?'&id='+encodeURIComponent(b):'';
     bootstrap=typeof cmLabBootstrap==='function'?await cmLabBootstrap(b?{id:+b,include:'health'}:{}):await cmApi('GET','/lab/bootstrap?include=health'+(!b?',sessions':'')+id);
@@ -269,6 +269,7 @@ async function arMount() {
     else if ((a === "monthly" || a === "weekly") && b === "admin") await arAdmin(root, alive);
     else if (a === "lab" && b === "model-test") await arModelTest(root, alive);
     else if (a === "lab" && b === "server-guide") await arServerGuide(root, alive);
+    else if (a === "lab" && b === "admin-stats") await arAdminStats(root, alive);
     else if (a === "lab") await (b ? arLabOne(root, alive, +b,bootstrap?.session) : arLabList(root, alive,bootstrap));
     else await arWeekly(root, alive, b,primary);
   } catch (e) { if (alive()) root.innerHTML = `<div class="cmnote">${esc(arErr(e))}</div>`; }
@@ -1701,12 +1702,97 @@ function arModelTestLabels() {
     pipeline: ["1. Gemini OCR + Gemini 채점", "2. Gemini OCR + DeepSeek 채점", "3. DeepSeek OCR + DeepSeek 채점"]
   };
 }
+/* Admins: sign-ups, grading and Hasla AI use. The numbers come from /api/admin/stats, which the server answers
+   only for an admin session; this page holds nothing of its own, so opening it without that role shows nothing. */
+async function arAdminStats(root, alive, days) {
+  const en = lang === "en", L = en ? {
+    h: "Site statistics", note: "Counts only. Admin accounts are left out. Days are Korean days (UTC+9).", denied: "Only admin accounts can see the site statistics.", login: "Sign in",
+    people: "Members", graded: "Graded at least once", labGraded: "Exam-mode gradings", monthly: "Monthly problem gradings", ai: "Hasla AI questions",
+    today: "today", d7: "last 7 days", period: "last %d days", of: "people", guests: "guests", membersAsked: "members",
+    accounts: "Accounts", created: "Accounts ever made", active: "Active", deleted: "Deleted", suspended: "Suspended", admins: "Admin accounts", pending: "Signed in but no username yet",
+    methods: "How members sign in", password: "Username & password", daily: "By day", day: "Day", signups: "Sign-ups", lab: "Exam gradings", mo: "Monthly gradings",
+    exams: "Most graded exams", exam: "Exam", times: "Gradings", statuses: "Exam sessions by state", status: "State", all: "All", members: "Members only",
+    waiting: "waiting for grading", pay: "Payments", orders: "Orders", amount: "Amount", none: "None yet", table: "Show as a table", refresh: "Refresh", failed: "Could not load the statistics.", at: "As of"
+  } : {
+    h: "사이트 통계", note: "숫자만 보여 줍니다. 관리자 계정은 빼고 셉니다. 날짜는 한국 시간 기준입니다.", denied: "관리자 계정만 사이트 통계를 볼 수 있습니다.", login: "로그인",
+    people: "회원", graded: "채점 받은 사람", labGraded: "실전 모드 채점", monthly: "월간 문제 채점", ai: "Hasla AI 질문",
+    today: "오늘", d7: "최근 7일", period: "최근 %d일", of: "명", guests: "비회원", membersAsked: "회원",
+    accounts: "계정", created: "지금까지 만들어진 계정", active: "활성", deleted: "탈퇴·삭제", suspended: "정지", admins: "관리자 계정", pending: "인증만 하고 아이디를 안 정함",
+    methods: "로그인 방법 (활성 회원)", password: "아이디·비밀번호", daily: "날짜별", day: "날짜", signups: "가입", lab: "실전 채점", mo: "월간 채점",
+    exams: "많이 채점된 시험", exam: "시험", times: "채점 수", statuses: "실전 모드 세션 상태", status: "상태", all: "전체", members: "회원만",
+    waiting: "채점 대기", pay: "결제", orders: "주문", amount: "금액", none: "아직 없음", table: "표로 보기", refresh: "새로고침", failed: "통계를 불러오지 못했습니다.", at: "기준 시각"
+  };
+  const denied = () => {
+    if (!cm.me) try { sessionStorage.setItem("hlCmBack", "#/lab/admin-stats"); } catch (_) {}
+    root.innerHTML = `<div class="cmnote">${L.denied}${!cm.me ? ` <a class="cmbtn sm" href="#/login">${L.login}</a>` : ""}</div>`;
+  };
+  if (!cmTok() || cm.me?.role !== "admin") { denied(); return; }
+  root.innerHTML = `<div class="cmtop"><div><h1>${L.h}</h1></div></div>${arModelTestLink("admin-stats")}<p class="arempty">…</p>`;
+  let d;
+  try { d = await cmApi("GET", "/admin/stats?days=" + (days || 30)); }
+  catch (e) { if (!alive()) return; if (e.status === 401 || e.status === 403) { denied(); return; }
+    root.querySelector(".arempty").innerHTML = `${L.failed} ${esc(arErr(e))}`; return; }
+  if (!alive()) return;
+  const n = (v) => Number(v || 0).toLocaleString(en ? "en-US" : "ko-KR"), u = d.users, per = L.period.replace("%d", d.days);
+  const tile = (label, big, sub) => `<div class="arstat-tile"><span>${label}</span><b>${big}</b>${sub ? `<small>${sub}</small>` : ""}</div>`;
+  const sum = (k) => d.series.reduce((a, x) => a + x[k], 0);
+  /* one small bar chart per measure, each on its own scale (no shared axis across different measures) */
+  const bars = (k, label) => {
+    const max = Math.max(1, ...d.series.map((x) => x[k])), w = 300 / d.series.length;
+    return `<figure class="arstat-chart"><figcaption><b>${label}</b><span>${per} · ${n(sum(k))} · max ${n(max)}</span></figcaption>
+      <svg viewBox="0 0 300 64" preserveAspectRatio="none" role="img" aria-label="${esc(label)}">
+        <line x1="0" y1="63.5" x2="300" y2="63.5" class="arstat-base"/>
+        ${d.series.map((x, i) => { const h = x[k] ? Math.max(2, (x[k] / max) * 60) : 0;
+          return `<g><rect class="arstat-hit" x="${i * w}" y="0" width="${w}" height="64"/>${h ? `<rect class="arstat-bar" x="${i * w + 1}" y="${64 - h}" width="${Math.max(1, w - 2)}" height="${h}" rx="1.5"/>` : ""}<title>${x.day}: ${n(x[k])}</title></g>`; }).join("")}
+      </svg><div class="arstat-axis"><span>${d.series[0].day.slice(5)}</span><span>${d.series.at(-1).day.slice(5)}</span></div></figure>`;
+  };
+  const provider = (k) => k === "password" ? L.password : ({google: "Google", github: "GitHub", discord: "Discord", kakao: en ? "Kakao" : "카카오", naver: "NAVER"})[k] || k;
+  const methods = Object.entries(u.methods || {}).sort((a, b) => b[1] - a[1]);
+  const statuses = Object.entries(d.lab.statuses || {}).sort((a, b) => b[1].all - a[1].all);
+  root.innerHTML = `<div class="cmtop"><div><h1>${L.h}</h1><p class="arempty" style="margin:4px 0 0">${L.note} ${L.at}: ${esc(new Date(d.generated_at * 1000).toLocaleString(en ? "en-GB" : "ko-KR", {timeZone: "Asia/Seoul"}))}</p></div>
+      <div style="display:flex;gap:6px;align-items:center">${[7, 30, 90].map((x) => `<button type="button" class="cmbtn sm" data-days="${x}" ${x === d.days ? 'aria-pressed="true" style="font-weight:700"' : ""}>${en ? x + "d" : x + "일"}</button>`).join("")}
+      <button type="button" class="cmbtn sm" data-refresh>${L.refresh}</button></div></div>
+    ${arModelTestLink("admin-stats")}
+    <style>.arstat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+      .arstat-tile{border:1px solid var(--cm-line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+      .arstat-tile span{font-size:12.5px;opacity:.75}.arstat-tile b{font-size:26px;line-height:1.15;font-variant-numeric:tabular-nums}.arstat-tile small{font-size:12px;opacity:.7}
+      .arstat-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+      .arstat-chart{margin:0}.arstat-chart figcaption{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;margin-bottom:4px}.arstat-chart figcaption span{opacity:.7}
+      .arstat-chart svg{width:100%;height:64px;display:block}.arstat-bar{fill:var(--cm-acc,#3b5bdb)}.arstat-hit{fill:transparent}.arstat-hit:hover+.arstat-bar,g:hover>.arstat-bar{opacity:.75}
+      .arstat-base{stroke:var(--cm-line,#e3e8ee);stroke-width:1}.arstat-axis{display:flex;justify-content:space-between;font-size:11px;opacity:.6}
+      .arstat-t{width:100%;border-collapse:collapse;font-size:13px}.arstat-t th,.arstat-t td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--cm-line)}.arstat-t td.r,.arstat-t th.r{text-align:right;font-variant-numeric:tabular-nums}</style>
+    <div class="arstat-grid">
+      ${tile(L.people, n(u.people) + (en ? "" : L.of), `${L.today} +${n(u.new_today)} · ${L.d7} +${n(u.new_7d)}`)}
+      ${tile(L.graded, n(d.graded.people) + (en ? "" : L.of), `${L.lab} ${n(d.lab.graded_people)} · ${L.mo} ${n(d.monthly.graded_people)}`)}
+      ${tile(L.labGraded, n(d.lab.graded), `${L.d7} ${n(d.lab.graded_7d)}`)}
+      ${tile(L.monthly, n(d.monthly.graded), d.monthly.waiting ? `${L.waiting} ${n(d.monthly.waiting)}` : "")}
+      ${tile(L.ai, n(d.ai.asked), `${L.d7} ${n(d.ai.asked_7d)} · ${L.guests} ${n(d.ai.guests)} · ${L.membersAsked} ${n(d.ai.members)}`)}
+    </div>
+    <div class="arpanel"><h3>${L.daily}</h3><div class="arstat-charts">${bars("signups", L.signups)}${bars("lab", L.lab)}${bars("monthly", L.mo)}${bars("ai", L.ai)}</div>
+      <details style="margin-top:10px"><summary style="cursor:pointer">${L.table}</summary><table class="arstat-t"><thead><tr><th>${L.day}</th><th class="r">${L.signups}</th><th class="r">${L.lab}</th><th class="r">${L.mo}</th><th class="r">${L.ai}</th></tr></thead>
+        <tbody>${d.series.slice().reverse().map((x) => `<tr><td>${x.day}</td><td class="r">${n(x.signups)}</td><td class="r">${n(x.lab)}</td><td class="r">${n(x.monthly)}</td><td class="r">${n(x.ai)}</td></tr>`).join("")}</tbody></table></details></div>
+    <div class="arstat-charts">
+      <div class="arpanel"><h3>${L.accounts}</h3><table class="arstat-t"><tbody>
+        ${[[L.created, u.created], [L.active, u.active], [L.people, u.people], [L.admins, u.admins], [L.pending, u.pending_username], [L.deleted, u.deleted], [L.suspended, u.suspended]].map(([k, v]) => `<tr><td>${k}</td><td class="r">${n(v)}</td></tr>`).join("")}
+      </tbody></table></div>
+      <div class="arpanel"><h3>${L.methods}</h3>${methods.length ? `<table class="arstat-t"><tbody>${methods.map(([k, v]) => `<tr><td>${esc(provider(k))}</td><td class="r">${n(v)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
+    </div>
+    <div class="arstat-charts">
+      <div class="arpanel"><h3>${L.exams}</h3>${d.lab.exams.length ? `<table class="arstat-t"><thead><tr><th>${L.exam}</th><th class="r">${L.times}</th><th class="r">${L.people}</th></tr></thead><tbody>${d.lab.exams.map((x) => `<tr><td><code>${esc(x.exam_key)}</code></td><td class="r">${n(x.graded)}</td><td class="r">${n(x.people)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
+      <div class="arpanel"><h3>${L.statuses}</h3>${statuses.length ? `<table class="arstat-t"><thead><tr><th>${L.status}</th><th class="r">${L.all}</th><th class="r">${L.members}</th></tr></thead><tbody>${statuses.map(([k, v]) => `<tr><td><code>${esc(k)}</code></td><td class="r">${n(v.all)}</td><td class="r">${n(v.people)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
+      <div class="arpanel"><h3>${L.pay}</h3>${d.pay.length ? `<table class="arstat-t"><thead><tr><th>${L.status}</th><th class="r">${L.orders}</th><th class="r">${L.amount}</th></tr></thead><tbody>${d.pay.map((x) => `<tr><td><code>${esc(x.status)}</code></td><td class="r">${n(x.orders)}</td><td class="r">${n(x.amount)} ${esc(x.currency)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${L.none}</p>`}</div>
+    </div>`;
+  for (const b of root.querySelectorAll("[data-days]")) b.onclick = () => arAdminStats(root, alive, +b.dataset.days);
+  root.querySelector("[data-refresh]").onclick = () => arAdminStats(root, alive, d.days);
+}
+
 function arModelTestLink(active) {
   if (cm.me?.role !== "admin") return "";
   const english = lang === "en";
   return `<nav aria-label="${english ? "Developer tools" : "개발자 도구"}" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px">
     <a class="cmbtn sm" href="#/lab/model-test" ${active === "model-test" ? 'aria-current="page"' : ""}>${arModelTestLabels().link}</a>
-    <a class="cmbtn sm" href="#/lab/server-guide" ${active === "server-guide" ? 'aria-current="page"' : ""}>${english ? "Server & operations guide" : "서버 구조·운영 가이드"}</a></nav>`;
+    <a class="cmbtn sm" href="#/lab/server-guide" ${active === "server-guide" ? 'aria-current="page"' : ""}>${english ? "Server & operations guide" : "서버 구조·운영 가이드"}</a>
+    <a class="cmbtn sm" href="#/lab/admin-stats" ${active === "admin-stats" ? 'aria-current="page"' : ""}>${english ? "Site statistics" : "사이트 통계"}</a></nav>`;
 }
 function arModelTestError(error, T, maxImages = 3) {
   const code = String(error?.code || error?.error || ""), messages = {

@@ -5,6 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
+import { adminStats } from "./admin-stats.js";
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM, GRADE_TRAIN_SYSTEM_V2 } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus, cancelTuning } from "./vertex-tuning.js";
 import { backupTick } from "./drive-backup.js";
@@ -1488,6 +1489,8 @@ async function arena(p, m, body, me, req, env, url) {
   if (p.startsWith("/api/admin/")) {
     if (!isAdmin(me)) throw new HttpError(403, "forbidden");
     /* accounts suspended for an answer that instructed the grader: why (the matched passages), and lifting it */
+    /* sign-ups, grading and Hasla AI use, as counts only (admin-stats.js) */
+    if (p === "/api/admin/stats" && m === "GET") return adminStats(env[DB_SCOPE] || env.DB, { days: url.searchParams.get("days") });
     if (p === "/api/admin/suspensions" && m === "GET") {
       await ensureSuspensionSchema(env.DB, env[DB_SCOPE] || env.DB);
       return { suspensions: (await env.DB.prepare(`SELECT x.user_id,u.nickname,x.reason,x.source,x.evidence,x.created_at,x.lifted_at FROM account_suspensions x
