@@ -18,3 +18,5 @@ export const RULES = [
   ['instruction', /(?:이전|앞의|위의|기존|모든)\s*(?:지시|지침|명령|규칙|채점\s*기준|프롬프트)\S{0,3}\s*(?:무시|잊어|따르지\s*마)/],
   ['instruction', /(?:채점\s*(?:기준|규칙|지침)\S{0,3}\s*무시|만점\s*(?:을|으로)?\s*(?:줘|주세요|주시오|처리|부여|매겨)|점수\s*를?\s*(?:만점|최고점|10\s*점)\s*(?:으로|을)?\s*(?:줘|주세요|처리|부여|매겨))/],
 ];
+/* [rule, pattern] that flag an answer for an administrator to review instead of suspending (none in the public stub) */
+export const REVIEW = [];

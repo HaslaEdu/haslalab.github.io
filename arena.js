@@ -1590,7 +1590,9 @@ async function arAdmin(root, alive) {
       <form id="arPF" class="arpf">${F.map((k) => big.includes(k) ? `<label>${k}<textarea name="${k}" rows="4"></textarea></label>` : `<label>${k === "week" ? (lang === "ko" ? "월 (YYYY-MM)" : "Month (YYYY-MM)") : k}<input name="${k}"${k === "week" ? ' placeholder="2026-11"' : ""}></label>`).join("")}
         <p class="arempty">answer (short): {"value":1.79,"rel":0.005} or {"value":5.19,"abs":0.02} · rubric (essay): [{"id":"A","name":"…","max":25,"requirement":"…","partial":"…"}] · level: 1–30 (Bronze V = 1 … Bronze I = 5, Silver V = 6 … Ruby I = 30) · opens_at/closes_at: unix seconds</p>
         <button class="cmbtn pri" type="submit">${T.save}</button><span class="arinfo"></span></form></div>
-    <div class="arpanel" id="arLabAdm"></div>`;
+    <div class="arpanel" id="arLabAdm"></div>
+    <div class="arpanel" id="arGuardAdm"></div>`;
+  arGuardAdmin(root.querySelector("#arGuardAdm"));
   if ((ar.health || {}).lab) arLabAdmin(root.querySelector("#arLabAdm")); else root.querySelector("#arLabAdm").remove();
   const pf = root.querySelector("#arPF");
   root.querySelector("#arPick").onchange = (e) => { const x = pj.problems.find((y) => y.id == e.target.value) || {}; for (const k of F) pf[k].value = x[k] == null ? "" : x[k]; };
@@ -1602,6 +1604,25 @@ async function arAdmin(root, alive) {
     q.onsubmit = (e) => { e.preventDefault(); send({score: q.score.value, note: q.note.value}); };
     q.querySelector("[data-re]").onclick = () => send({regrade: true, lang});
   }
+}
+
+/* admins: accounts suspended for an answer that instructed the grader, and answers flagged for review (injection-guard.js) */
+async function arGuardAdmin(box) {
+  const en = lang === "en", L = en ? {h: "Answers that tried to instruct the grader", sus: "Suspended accounts", flags: "Flagged for review (graded as usual, account untouched)", none: "None", lift: "Lift suspension", clear: "Reviewed", lifted: "lifted", cleared: "reviewed", reLogin: "For safety, log in again first."}
+    : {h: "채점 AI에게 지시하려 한 답안", sus: "정지된 계정", flags: "검토 필요 (채점은 그대로 진행, 계정 조치 없음)", none: "없음", lift: "정지 해제", clear: "검토 완료", lifted: "해제됨", cleared: "검토함", reLogin: "보안을 위해 다시 로그인한 뒤 해 주세요."};
+  let d; try { d = await cmApi("GET", "/admin/suspensions"); } catch (e) { box.innerHTML = `<h3>${L.h}</h3><p class="arempty">${esc(arErr(e))}</p>`; return; }
+  const when = (t) => new Date(t * 1000).toLocaleString(en ? "en-GB" : "ko-KR", {timeZone: "Asia/Seoul"});
+  const ev = (list) => (list || []).map((x) => `<li><code>${esc(x.rule)}</code> ${esc(x.passage)}</li>`).join("");
+  const sus = d.suspensions || [], flags = d.flags || [], open = flags.filter((f) => !f.cleared_at).length;
+  box.innerHTML = `<h3>${L.h}</h3>
+    <h4 style="margin:10px 0 6px">${L.sus} (${sus.filter((x) => !x.lifted_at).length})</h4>
+    ${sus.map((x) => `<details class="arsub"><summary>${esc(x.nickname || "#" + x.user_id)} · ${esc(x.source)} · ${when(x.created_at)}${x.lifted_at ? ` · ${L.lifted}` : ""}</summary><ul>${ev(x.evidence)}</ul>
+      ${x.lifted_at ? "" : `<button class="cmbtn sm" type="button" data-lift="${x.user_id}">${L.lift}</button>`}</details>`).join("") || `<p class="arempty">${L.none}</p>`}
+    <h4 style="margin:14px 0 6px">${L.flags} (${open})</h4>
+    ${flags.map((f) => `<details class="arsub"${f.cleared_at ? ' style="opacity:.6"' : ""}><summary>${esc(f.nickname || "#" + f.user_id)} · ${esc(f.source)} · ${when(f.created_at)}${f.cleared_at ? ` · ${L.cleared}` : ""}</summary><ul>${ev(f.evidence)}</ul>
+      ${f.cleared_at ? "" : `<button class="cmbtn sm" type="button" data-clear="${f.id}">${L.clear}</button>`}</details>`).join("") || `<p class="arempty">${L.none}</p>`}`;
+  for (const b of box.querySelectorAll("[data-lift]")) b.onclick = async () => { try { await cmApi("POST", `/admin/suspensions/${b.dataset.lift}/lift`); arGuardAdmin(box); } catch (e) { cmToast(e.code === "recent_login_required" ? L.reLogin : arErr(e)); } };
+  for (const b of box.querySelectorAll("[data-clear]")) b.onclick = async () => { try { await cmApi("POST", `/admin/flags/${b.dataset.clear}/clear`); arGuardAdmin(box); } catch (e) { cmToast(arErr(e)); } };
 }
 
 /* Developer-only provider comparison. It does not create an exam or submit marks. */
