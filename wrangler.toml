@@ -54,7 +54,7 @@ dead_letter_queue = "haslalab-lab-jobs-dead"
 [vars]
 AUTH_EMAIL_ENABLED = "on"
 AUTH_MAIL_FROM = "noreply@notify.physleague.kr"
-ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765,https://physleague.kr,https://www.physleague.kr,https://haslaedu.haslalab.workers.dev"
+ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765,https://haslaedu.kr,https://www.haslaedu.kr,https://physleague.kr,https://www.physleague.kr,https://haslaedu.haslalab.workers.dev"
 # Production choices are fixed in vision-provider.js; keep the private model bench aligned.
 GEMINI_MODEL = "gemini-3.5-flash-lite"
 DEEPSEEK_MODEL = "deepseek-flash"

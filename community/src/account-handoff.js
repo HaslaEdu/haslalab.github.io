@@ -1,6 +1,7 @@
 // Short-lived proof-bound transfer between isolated Edu application sessions.
 // Session credentials never travel in a URL or get copied between web views.
-const origins=new Set(['https://physleague.kr','https://www.physleague.kr','https://haslaedu.haslalab.workers.dev']);
+// HaslaEdu's own addresses: haslaedu.kr (the main one from the domain move) and physleague.kr (kept for older clients).
+const origins=new Set(['https://haslaedu.kr','https://www.haslaedu.kr','https://physleague.kr','https://www.physleague.kr','https://haslaedu.haslalab.workers.dev']);
 const proof=value=>typeof value==='string'&&/^[A-Za-z0-9_-]{43}$/.test(value);
 const ready=new WeakMap();
 export const HANDOFF_SCHEMA=`CREATE TABLE IF NOT EXISTS account_session_handoffs (
