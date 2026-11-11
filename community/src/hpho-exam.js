@@ -383,7 +383,7 @@ export function reminderMail(round, x, entry, origin = 'https://haslalab.org') {
   const intro = en ? `${esc(name)}: your ${track} exam starts tomorrow.` : `${esc(name)} ${track} 시험이 내일입니다.`;
   const ignore = en ? 'You receive this because you registered for HPhO.' : 'HPhO에 접수하셔서 보내 드리는 메일입니다.';
   const notice = en ? 'We never ask for your password by email.' : '이메일로 비밀번호를 묻지 않습니다.';
-  return { subject: 'HPhO · ' + title, text: [title, intro, ...lines, link].join('\n\n'), html: mailHtml({ english: en, title: esc(title), intro, expiry: '', main, ignore, notice }) };
+  return { subject: '[HPhO] ' + title, text: [title, intro, ...lines, link].join('\n\n'), html: mailHtml({ english: en, title: esc(title), intro, expiry: '', main, ignore, notice }) };
 }
 export async function hphoMailTick(env, { now: at = Date.now(), scope = e => e.DB, limit = 40, send = sendMail } = {}) {
   const from = env.HPHO_MAIL_FROM || env.AUTH_MAIL_FROM; if (!from || env.AUTH_EMAIL_ENABLED !== 'on') return [];
@@ -400,7 +400,7 @@ export async function hphoMailTick(env, { now: at = Date.now(), scope = e => e.D
       const mail = reminderMail(round, w, e);
       /* the mark first: a send that fails is not retried into a second copy */
       await db.prepare("INSERT OR IGNORE INTO hpho_mail(round_id,user_id,track,kind,sent_at) VALUES(?,?,?,'day_before',?)").bind(round.id, e.user_id, x.track, t).run();
-      try { await send(env, { from: { email: from, name: 'HPhO' }, to: e.email, ...mail }, `hpho-${round.id}-${x.track}-${e.user_id}`); sent.push(e.candidate_no); }
+      try { await send(env, { from: { email: from, name: e.country !== 'KR' ? 'HPhO · HaslaEdu' : 'HPhO · 하슬라에듀' }, to: e.email, ...mail }, `hpho-${round.id}-${x.track}-${e.user_id}`); sent.push(e.candidate_no); }
       catch (err) { console.error('hpho-mail', e.candidate_no, String(err?.message || err).slice(0, 120)); }
       if (sent.length >= limit) return sent;
     }

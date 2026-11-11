@@ -26,7 +26,7 @@ test('a mailed code completes the sign-up; the address is stored verified and th
     const sent=await s.api('/signup/email-code',{email:'  Owner@Example.com ',lang:'ko'});
     assert.deepEqual(sent,{status:200,data:{ok:true}});
     assert.equal(s.mails.length,1);const mail=s.mails[0],code=s.mailedCode();
-    assert.equal(mail.to,'owner@example.com');assert.match(mail.subject,/가입 인증 코드/);assert.ok(!mail.subject.includes(code));assert.ok(mail.html.includes(code));assert.match(mail.text,/10분/);
+    assert.equal(mail.to,'owner@example.com');assert.match(mail.subject,/가입 인증 코드/);assert.equal(mail.subject,'[하슬라에듀] 가입 인증 코드 안내');assert.equal(mail.from.name,'하슬라에듀');assert.ok(!mail.subject.includes(code));assert.ok(mail.html.includes(code));assert.match(mail.text,/10분/);
     const row=s.sql.prepare('SELECT * FROM signup_email_codes').get();
     assert.equal(row.email,'owner@example.com');assert.notEqual(row.code_hash,code);assert.ok(!JSON.stringify(row).includes(code),'only the digest is kept');assert.equal(row.attempts,0);
     assert.ok(row.expires_at-row.created_at===600);
@@ -40,7 +40,7 @@ test('a mailed code completes the sign-up; the address is stored verified and th
     assert.deepEqual((await s.api('/me/security',null,{token:done.data.token})).data,{has_password:true,email:'owner@example.com',email_verified:true,pending_email:null,mail_available:true});
     assert.equal((await s.api('/signup',s.form('mail_second','owner@example.com',code))).data.error,'email_taken');
     // English mail on request
-    await s.api('/signup/email-code',{email:'en@example.com',lang:'en'});assert.match(s.mails.at(-1).subject,/Your sign-up code/);assert.match(s.mails.at(-1).text,/10 minutes/);
+    await s.api('/signup/email-code',{email:'en@example.com',lang:'en'});assert.equal(s.mails.at(-1).subject,'[HaslaEdu] Your sign-up code');assert.equal(s.mails.at(-1).from.name,'HaslaEdu');assert.match(s.mails.at(-1).text,/10 minutes/);
   }finally{s.close()}
 });
 
