@@ -1,10 +1,15 @@
-# Cloudflare Workers Builds deploys the community API from this repository.
-# The Worker itself lives in community/ (see community/README.md); this file lets the
-# build run from the repository root, where Workers Builds starts by default.
+# GENERATED from community/wrangler.toml by tools/sync-root-wrangler.mjs: do not edit by hand.
+# Cloudflare Workers Builds starts at the repository root; this copy only re-points the paths into community/.
 name = "haslalab-community"
 main = "community/src/worker.js"
 compatibility_date = "2025-09-01"
+# Variables set in the dashboard (PADDLE_PRICES, LAB_KEEP_HOURS …) survive `wrangler deploy`; secrets always do.
 keep_vars = true
+
+# AI providers that refuse requests from Hong Kong go out through Seoul (ai-egress/, community/src/ai-egress.js)
+[[services]]
+binding = "AI_EGRESS"
+service = "haslalab-ai-egress"
 
 [[services]]
 binding = "STUDIO_ENGINE"
@@ -18,17 +23,21 @@ binding = "AI"
 binding = "PROBLEM_BANK"
 service = "haslalab-problem-bank"
 
-[[r2_buckets]]
-binding = "LAB_PAGES"
-bucket_name = "haslalab-lab-pages"
+[[send_email]]
+name = "ACCOUNT_EMAIL"
+allowed_sender_addresses = ["noreply@notify.physleague.kr"]
 
+# Run the Worker next to its database rather than next to the visitor: a page makes several
+# database queries, and each one is a round trip, so this cuts the waiting the most.
 [placement]
-# Keep in sync with community/wrangler.toml; D1's primary reports HKG.
+# Production D1 metadata reports HKG primary. Place HTTP database work nearby.
 region = "aws:ap-east-1"
 
+# Recover interrupted job delivery within a minute; the handler gates photo cleanup to 15 minutes.
 [triggers]
 crons = ["* * * * *"]
 
+# Only small job IDs enter the queue; answer scans remain in the existing D1/R2 storage.
 [[queues.producers]]
 binding = "LAB_JOBS"
 queue = "haslalab-lab-jobs"
@@ -41,11 +50,141 @@ max_retries = 3
 max_concurrency = 10
 dead_letter_queue = "haslalab-lab-jobs-dead"
 
+# Sites allowed to call the API from the browser (comma-separated).
 [vars]
-ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
+AUTH_EMAIL_ENABLED = "on"
+AUTH_MAIL_FROM = "noreply@notify.physleague.kr"
+ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765,https://physleague.kr,https://www.physleague.kr,https://haslaedu.haslalab.workers.dev"
+# Production choices are fixed in vision-provider.js; keep the private model bench aligned.
+GEMINI_MODEL = "gemini-3.5-flash-lite"
+DEEPSEEK_MODEL = "deepseek-flash"
+DEEPSEEK_OCR_MODEL = "deepseek-flash"
+# From 2026-11-01 to 11-07 DeepSeek ran every stage (LAB_ONLY_PROVIDER = "deepseek"), Gemini being taken for an account
+# without credit. It was this Worker's Hong Kong placement that Gemini refused; its requests now leave through Seoul
+# (ai-egress/) and the pin is gone. The Gemini choices of the bench were: providers gemini, LAB_READ_MODEL gemini-3.1-pro-preview,
+# LAB_SCHEME_MODEL and LAB_GRADE_MODEL gemini-3.8-flash, LAB_READ_FALLBACK_MODEL gemini-3.8-flash,
+# LAB_SCHEME_FALLBACK_MODEL gemini-3.1-pro-preview, and no LAB_ONLY_PROVIDER. DeepSeek bench (36 audited tasks):
+# deepseek-flash builds the schemes (it sees the PDF pages; v4-pro reads no image and its schemes graded 6 points
+# further from the audits). With Gemini:
+# Gemini reads the pages and Gemini 3.8 Flash grades them alone (labRoles). Model bench of 2026-11-01 against 15 audited
+# sittings: 3.8 Flash alone (thinking low) graded closest to the audits at ~$0.02 a task; DeepSeek moderated by Flash-Lite
+# and a moderation of every item scored lower; handing the grader the papers as well (LAB_GRADE_PDFS) gained nothing.
+# empty, not absent: keep_vars would otherwise keep the old "deepseek" on the Worker
+LAB_ONLY_PROVIDER = ""
+# The monthly problems are graded by GPT-6.1 Terra (through the Seoul egress) for every candidate, the owner's choice of
+# 2026-11-08; if that call fails, the provider the candidate chose grades instead (index.js monthlyGrader).
+MONTHLY_GRADE_PROVIDER = "openai"
+# and their answer photos are read by Gemini 3.8 Flash; candidates no longer pick a provider for them
+MONTHLY_OCR_MODEL = "gemini-3.8-flash"
+MONTHLY_OCR_THINKING = "low"
+# the lab reads' limits, then 3.1 Flash-Lite for a page that loops, times out or is refused (index.js monthlyWithFallback)
+MONTHLY_OCR_TIMEOUT_MS = "90000"
+MONTHLY_OCR_MAX_TOKENS = "7000"
+MONTHLY_OCR_FALLBACK_MODEL = "gemini-3.1-flash-lite"
+MONTHLY_GRADE_MODEL = "gpt-6.1-terra"
+# through the Responses API, with medium reasoning
+MONTHLY_GRADE_API = "responses"
+MONTHLY_GRADE_THINKING = "medium"
+# if Terra fails: Gemini 3.8 Flash (the candidate's reader default, 3.5 Flash-Lite, marked every part uncertain)
+MONTHLY_GRADE_FALLBACK_MODEL = "gemini-3.8-flash"
+LAB_PIPELINE = "mixed"
+LAB_SCHEME_PROVIDER = "gemini"
+# Theory pages are read by Gemini 3.8 Flash (the owner's decision, 2026-11-03). Reading bench of that day, 40 checks on
+# 9 handwritten pages (Claude's gold transcriptions): 3.8 Flash 97% at ~$0.014 a page; 3.1 Flash-Lite 72%, Upstage
+# enhanced 68%, DeepSeek Flash 65%. 3.8 Flash answered «high demand» to a third of the reads: those pages go to
+# 3.1 Flash-Lite at once (LAB_READ_FALLBACK_MODEL) instead of failing.
+LAB_READ_PROVIDER = "gemini"
+# The owner's decision, 2026-11-09: contest grading by Gemini 3.8 Flash, paired with GPT-6.1 Terra (DeepSeek out)
+LAB_GRADE_PROVIDER = "gemini"
+LAB_GRADE_MODEL = "gemini-3.8-flash"
+# DeepSeek thinking (low, high, max) stays off until the bench has measured it
+LAB_GRADE_THINKING = "off"
+LAB_MODERATE_PROVIDER = "none"
+# Pair grading on theory papers (the owner's decision, 2026-11-03): GPT-6 Luna marks the paper beside DeepSeek as a chat
+# would, and decides only the items the two mark a quarter of their points or more apart. Bench of that day, four
+# audited theory papers on Claude's gold reads: 12 misgrades (the same pair judged by DeepSeek 20, Luna alone 23, the
+# 3.8 Flash pipeline 12 at a higher price), ~$0.01-0.02 and ~2-3 min a task. Experiments stay with DeepSeek alone (LAB_PAIR_SCOPE "all" to change).
+LAB_PAIR_PROVIDER = "openai"
+LAB_PAIR_MODEL = "gpt-6.1-terra"
+LAB_PAIR_THINKING = "medium"
+# DeepSeek checks formulas, numbers and what is written with code before it marks (grade-tools.js): every bench above ran with it
+LAB_GRADE_TOOLS = "on"
+# Theory page reading and moderation models (model bench, 2026-11-01, 18 handwritten IPhO 2023/2025 pages): 3.1 Pro read
+# every checked number and symbol right (3.1-flash-lite missed 6 of 102); DeepSeek grades; Flash-Lite moderates.
+LAB_READ_MODEL = "gemini-3.8-flash"
+# DeepSeek Flash sees a page through ~2.2k tokens: three overlapping zoomed strips beside it (jpeg-js) cut the checked
+# numbers it missed from 21 to 14 of 102 for $0.0002 more a page
+# kept for Gemini 3.8 Flash too: without them its reads of the 9 gold pages loosened (28 of 31 checks against 97% with
+# them) and looped as often (3 of 9 pages to the 10k cap), 2026-11-03
+LAB_READ_TILES = "3"
+# the paper's own symbols handed to the reader to tell look-alikes apart (I0 from Z0, gamma from Y): bench, DeepSeek Flash,
+# hard misreads fixed 5 -> 8 of 28, checked numbers missed 14 -> 13 of 102, for about $0.0001 a page
+LAB_READ_NOTATION = "on"
+# the look-alikes our audits found misread, listed in the read prompt (OCR checks: numbers missed 13 -> 11 of 102, same cost)
+LAB_READ_CONFUSIONS = "on"
+# a numerical answer the code marks wrong (R12) is read again by Mathpix on that page alone; a one-character misread
+# (10^12 for 10^18, 25 for 85) is replaced (bench: 2 misreads fixed, no wrong replacement; ~$0.005 a page it reads)
+LAB_FOCUS_READ = "on"
+# what Mathpix does not settle is read again by Gemini 3.8 Flash on a zoomed crop of its page (a 0,23 read 9,23 and an
+# exponent 10^9 for 10^7 stayed wrong with Mathpix alone, 2026-11-04); only pages with such a value, about $0.002 each
+LAB_FOCUS_ENGINE = "mathpix+gemini"
+LAB_FOCUS_MODEL = "gemini-3.8-flash"
+# answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
+# reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
+LAB_KEEP_HOURS = "off"
+# Paddle checkout closed (the owner's call, 2026-11-04): no Paddle pack in the shop and no new Paddle order; paid orders
+# still complete by the webhook and refunds still work. "on" (or deleting this line) opens it again.
+PADDLE_CHECKOUT = "off"
+# DeepSeek V4 Pro (Workers AI, MIT weights) writes this many worked solutions a night for the QwQ solver's LoRA
+# (ai-eval.js teacher cases): judged correct with 8/10 or more they are approved for training at once
+AI_TEACHER_DAILY = "40"
+# Hasla AI's solver: Qwen3.6-35B-A3B on CoreWeave (W&B Inference), the owner's decision of 2026-11-09. The key is the
+# Worker secret AI_SOLVER_KEY (a W&B API key); without it the solver falls back to DeepSeek / Workers AI as before.
+AI_SOLVER_URL = "https://api.inference.wandb.ai/v1"
+AI_SOLVER_REMOTE = "Qwen/Qwen3.6-35B-A3B"
+AI_SOLVER_PROJECT = "mimgyuson-haslaedu/hasla-ai"
+# the problem studio (studio-gateway.js: digitize, generate, restore) is for administrators only
+STUDIO_ACCESS = "admin"
+# photo problem search (problem-bank-ocr.js): the photo is transcribed by this Gemini model
+BANK_OCR_MODEL = "gemini-3.1-flash-lite"
+# weekly Google Drive backup (src/drive-backup.js): Sunday 18:00 UTC, a gzipped SQL dump (newest 8 kept) and each answer
+# photo once, removed from Drive when the site lets it go. Needs the secrets GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET and
+# GDRIVE_REFRESH_TOKEN (scope drive.file); without them nothing runs. "off" stops it.
+BACKUP_DRIVE = "on"
+# empty: Gemini thinks at the level the bench measured (minimal); "off" would leave it to the model
+LAB_READ_THINKING = ""
+# 3.8 Flash on AI Studio: 7 of 17 production reads failed at 126-128 s (a page looping on itself; the same on Vertex),
+# a whole page takes 16-41 s and at most 5.5k tokens. A read is cut at 90 s (the owner's choice, 2026-11-08) or 7k tokens, asked once more (the loops come
+# and go between calls), then goes to the fallback model; a page Google is too
+# busy for (429/503) is read by the same model through Vertex AI first (the service account's project)
+LAB_READ_TIMEOUT_MS = "90000"
+LAB_READ_MAX_TOKENS = "7000"
+LAB_READ_VERTEX = "on"
+LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
+# build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
+LAB_SCHEME_WARM = "on"
+# admin model-bench runs at once, only while no candidate's job waits
+LAB_BENCH_SLOTS = "8"
+# Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.8 Flash: graded with one
+# grader, its schemes came 2.2 points closer to the audits than 3.1 Pro's on 32 tasks (Claude and GPT schemes no closer).
+LAB_SCHEME_MODEL = "gemini-3.8-flash"
+LAB_SCHEME_THINKING = "off"
+# when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
+LAB_READ_FALLBACK_MODEL = "gemini-3.1-flash-lite"
+# a solution every scheme model refuses (IPhO 2024 T2: DeepSeek and GPT-6 Luna both answered 400, «failed to parse JSON
+# value», on its request, text-only retry included) is read by Gemini 3.8 Flash, then Luna: bench 2026-11-04, the T2
+# scheme built by 3.8 Flash and graded by DeepSeek + Luna gave 9.2 of 10 against the audit's 9.7. Built once a paper.
+LAB_SCHEME_FALLBACK_MODEL = "gemini-3.8-flash"
+LAB_SCHEME_FALLBACK_THINKING = "low"
+
+# answer photos (lab_pages.r2_key): new uploads go here instead of D1; kept after grading (LAB_KEEP_HOURS off)
+[[r2_buckets]]
+binding = "LAB_PAGES"
+bucket_name = "haslalab-lab-pages"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "haslalab-community"
+# paste the id printed by `npx wrangler d1 create haslalab-community`
 database_id = "96761b6d-c194-4ee5-9836-7845b51a5f07"
 migrations_dir = "community/migrations"

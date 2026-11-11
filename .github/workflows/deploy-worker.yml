@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "schemes/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "problem-search.*", "index.html", "arena.js", "tests/test-problem-search-*.cjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "pdf-worker/**", "ai-egress/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "schemes/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "problem-search.*", "index.html", "arena.js", "tests/test-problem-search-*.cjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "tools/sync-root-wrangler.mjs", "pdf-worker/**", "ai-egress/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -42,6 +42,8 @@ jobs:
           cache: npm
           cache-dependency-path: community/package-lock.json
       - run: npm ci
+      # the root wrangler.toml (for Workers Builds) is generated from community/wrangler.toml and must match it
+      - run: node ../tools/sync-root-wrangler.mjs --check
       - run: node --check src/index.js
       - run: node --test ../.private-server/guard/test-guard-rules.mjs
       - run: node --test test-account-security.mjs test-account-routes.mjs test-account-ui.cjs test-oauth-onboarding.mjs test-account-handoff.mjs test-consent.mjs test-signup-email.mjs ../tests/test-consent-ui.cjs ../tests/test-signup-ui.cjs

@@ -449,7 +449,8 @@ async function handle(req, env, url, ctx) {
     return {ok:true,user:pubUser(await accountUser(env,me.id))};
   }
   if (p === "/api/me" && m === "DELETE") {
-    needUser(me);
+    // Irreversible: a stolen long-lived token alone must not delete the account (the UI asks to sign in again).
+    needRecentLogin(me);
     await ensureAccountSecuritySchema(env.DB);
     await ensureUsernameClaimSchema(env.DB,env[DB_SCOPE]||env.DB);
     await ensureOmrSchema(env);
@@ -1460,6 +1461,9 @@ async function arena(p, m, body, me, req, env, url) {
     await purgeVisionPhotos(env);
     const usage=await env.DB.prepare('SELECT COUNT(*) n,COALESCE(SUM(bytes),0) bytes FROM vision_photo_evidence WHERE user_id=? AND problem_id=? AND expires_at>?').bind(me.id,pid,now()).first();
     if(usage.n>=VISION_PHOTO_MAX||usage.bytes+f.size>VISION_PHOTO_BYTES)throw new HttpError(413,'photo_storage_limit');
+    // The photo quota above is written only after the reading, so parallel requests all pass it: the same daily
+    // reading allowance as monthly-photos.js caps what one account can spend on the provider.
+    await limit(env,'ocr:'+me.id,30,86400);
     const result=await monthlyOcr(env,f,url.searchParams.get('mode')==='math'?'math':'text',null,provider);
     const bytes=new Uint8Array(await f.arrayBuffer()),mime=imageType(bytes.subarray(0,16));
     warnNotJpeg("monthly ocr photo",mime,bytes.length);
@@ -5139,7 +5143,8 @@ function oauthProviders(env) { return Object.keys(OAUTH).filter(p => { const k =
 const mockable = (env, u) => env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(u).pathname : u;
 function allowedReturn(env, raw) {
   let u; try { u = new URL(raw); } catch (e) { return null; }
-  const ok = (env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean).includes(u.origin);
+  // https only: a sign-in code never goes to a plain-http origin (http://localhost:8765 is allowed for CORS in development).
+  const ok = u.protocol === "https:" && (env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean).includes(u.origin);
   return ok ? u.origin + u.pathname + u.search : null;                 // the fragment is set on the way back
 }
 function backTo(ret, frag) { return new Response(null, { status: 302, headers: { Location: ret + "#/oauth?" + frag, "Cache-Control": "no-store" } }); }
