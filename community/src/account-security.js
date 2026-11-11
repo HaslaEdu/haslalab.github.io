@@ -40,10 +40,13 @@ const escapeHtml=value=>value.replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>
 /* one look for every account mail: `main` is the HTML between the expiry line and the footer (a button, or a sign-up code) */
 export const mailHtml=({english,title,intro,expiry,main,ignore,notice})=>`<!doctype html><html lang="${english?'en':'ko'}"><body style="margin:0;padding:32px 16px;background:#f6f5fa;color:#263247;font-family:Arial,'Malgun Gothic',sans-serif"><div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #e2ddea;border-radius:12px;padding:32px"><p style="margin:0 0 28px;font-size:22px;font-weight:700;color:#7059a4">HaslaEdu</p><h1 style="font-size:23px;line-height:1.5;margin:0 0 16px">${title}</h1><p style="font-size:15px;line-height:1.8">${intro}</p><p style="font-size:14px;line-height:1.8;color:#657187">${expiry}</p>${main}<hr style="border:0;border-top:1px solid #e2ddea;margin:28px 0"><p style="font-size:12px;line-height:1.8;color:#657187">${ignore}<br>${notice}</p></div></body></html>`;
 /* the send_email binding when the Worker has one, else Resend; `key` (a digest, never the secret) makes a retried send one mail */
+/* how the account mails present themselves, like other Korean services: sender "하슬라에듀" (HaslaEdu in English mail)
+   and "[하슬라에듀] … 안내" subjects */
+export function mailHeader(english,title){return english?{name:'HaslaEdu',subject:'[HaslaEdu] '+title}:{name:'하슬라에듀',subject:'[하슬라에듀] '+title+' 안내'}}
 export async function sendMail(env,message,key){
   if(typeof env.ACCOUNT_EMAIL?.send==='function'){await env.ACCOUNT_EMAIL.send(message);return}
   const from=message.from.email,response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+(env.AUTH_RESEND_API_KEY||env.RESEND_API_KEY),
-    'Content-Type':'application/json','Idempotency-Key':'account-'+key},body:JSON.stringify({...message,from:'HaslaEdu <'+from+'>'}),signal:AbortSignal.timeout(15000)});
+    'Content-Type':'application/json','Idempotency-Key':'account-'+key},body:JSON.stringify({...message,from:(message.from.name||'HaslaEdu')+' <'+from+'>'}),signal:AbortSignal.timeout(15000)});
   if(!response.ok)throw Error('mail_delivery_failed');
 }
 async function deliver(env,{to,purpose,token,origin,lang,digest}){
@@ -58,7 +61,8 @@ async function deliver(env,{to,purpose,token,origin,lang,digest}){
   const notice=english?'We never ask you to reply with your password or verification link.':'비밀번호나 인증 링크를 답장으로 보내 달라고 요청하지 않습니다.';
   const safeLink=escapeHtml(link);
   const main=`<p style="margin:28px 0"><a href="${safeLink}" style="display:inline-block;background:#7059a4;color:#fff;text-decoration:none;border-radius:7px;padding:14px 22px;font-weight:700">${title}</a></p><p style="font-size:12px;line-height:1.8;color:#657187">${copyLink}</p><p style="font-size:12px;line-height:1.8;word-break:break-all"><a href="${safeLink}" style="color:#7059a4">${safeLink}</a></p>`;
-  await sendMail(env,{from:{email:cleanRecoveryEmail(env.AUTH_MAIL_FROM),name:'HaslaEdu'},to,subject:'HaslaEdu · '+title,
+  const head=mailHeader(english,title);
+  await sendMail(env,{from:{email:cleanRecoveryEmail(env.AUTH_MAIL_FROM),name:head.name},to,subject:head.subject,
     text:['HaslaEdu',intro,link,expiry,ignore,notice].join('\n\n'),html:mailHtml({english,title,intro,expiry,main,ignore,notice})},digest);
 }
 /* the sign-up code (signup-email.js). The code is the only secret in it; it is six digits, so it needs no escaping */
@@ -69,7 +73,8 @@ export async function deliverSignupCode(env,{to,code,lang,minutes,key}){
   const ignore=english?'If you did not try to sign up, ignore this email: no account is made without the code.':'가입하려 한 적이 없다면 이 메일을 무시하세요. 코드 없이는 계정이 만들어지지 않습니다.';
   const notice=english?'We never ask you to reply with your password or code.':'비밀번호나 인증 코드를 답장으로 보내 달라고 요청하지 않습니다.';
   const main=`<p style="margin:28px 0;font-size:34px;font-weight:700;letter-spacing:8px;color:#263247;font-family:'Courier New',monospace">${code}</p>`;
-  await sendMail(env,{from:{email:cleanRecoveryEmail(env.AUTH_MAIL_FROM),name:'HaslaEdu'},to,subject:'HaslaEdu · '+title,
+  const head=mailHeader(english,title);
+  await sendMail(env,{from:{email:cleanRecoveryEmail(env.AUTH_MAIL_FROM),name:head.name},to,subject:head.subject,
     text:['HaslaEdu',intro,code,expiry,ignore,notice].join('\n\n'),html:mailHtml({english,title,intro,expiry,main,ignore,notice})},key);
 }
 export function createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,checkPw,pwOk}){
