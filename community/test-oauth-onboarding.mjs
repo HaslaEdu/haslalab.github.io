@@ -135,3 +135,20 @@ test('handoff JSON APIs enforce allowed Origin, JSON type and streaming body lim
   const response=await worker.fetch(new Request(gateway+'/api/oauth/desktop/start',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({extra:'x'.repeat(9000)})}),s.env,{waitUntil(){}});assert.equal(response.status,413);
  }finally{s.close()}
 });
+test('OAuth return address: listed providers use OAUTH_REDIRECT_ORIGIN for the authorize and token calls; others and bad values keep this Worker',async()=>{
+ const s=setup();try{
+  const start=async()=>{const r=await s.get('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'));assert.equal(r.status,302);return new URL(r.headers.get('Location')).searchParams.get('redirect_uri');};
+  assert.equal(await start(),gateway+'/api/oauth/google/callback','default: this Worker');
+  Object.assign(s.env,{OAUTH_REDIRECT_ORIGIN:'https://haslaedu.kr',OAUTH_REDIRECT_PROVIDERS:'google'});
+  assert.equal(await start(),'https://haslaedu.kr/api/oauth/google/callback');
+  // the token exchange sends the same redirect_uri the provider saw
+  const original=globalThis.fetch;let sent=null;
+  globalThis.fetch=async(input,init)=>{const u=new URL(input);if(u.pathname.includes('token')){sent=new URLSearchParams(String(init?.body||''));return Response.json({access_token:'fixture-access'})}return Response.json({sub:'moved-origin',name:'소셜 사용자'})};
+  try{const started=await s.get('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'));const state=new URL(started.headers.get('Location')).searchParams.get('state');
+   const finished=await s.get('/api/oauth/google/callback?state='+state+'&code=fixture');assert.equal(finished.status,302);assert.ok(finished.headers.get('Location').startsWith(origin+'/#/oauth?c='))}finally{globalThis.fetch=original}
+  assert.equal(sent?.get('redirect_uri'),'https://haslaedu.kr/api/oauth/google/callback');
+  for(const bad of ['http://haslaedu.kr','https://haslaedu.kr/path','not a url','']){s.env.OAUTH_REDIRECT_ORIGIN=bad;assert.equal(await start(),gateway+'/api/oauth/google/callback',bad);}
+  Object.assign(s.env,{OAUTH_REDIRECT_ORIGIN:'https://haslaedu.kr',OAUTH_REDIRECT_PROVIDERS:'naver'});
+  assert.equal(await start(),gateway+'/api/oauth/google/callback','unlisted provider keeps the old address');
+ }finally{s.close()}
+});

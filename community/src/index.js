@@ -5147,6 +5147,14 @@ function allowedReturn(env, raw) {
   const ok = u.protocol === "https:" && (env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean).includes(u.origin);
   return ok ? u.origin + u.pathname + u.search : null;                 // the fragment is set on the way back
 }
+/* Where the provider sends the browser back. OAUTH_REDIRECT_ORIGIN (an https origin, e.g. https://haslaedu.kr, whose Worker
+   passes /api/oauth/<provider>/callback through to this one) is used for the providers listed in OAUTH_REDIRECT_PROVIDERS,
+   so each provider moves only after its console lists the new callback; the others keep this Worker's own address. */
+function oauthRedirectOrigin(env, prov, url) {
+  const listed = String(env.OAUTH_REDIRECT_PROVIDERS || "").split(",").map(v => v.trim()).includes(prov);
+  let origin = null; try { const u = new URL(String(env.OAUTH_REDIRECT_ORIGIN || "")); if (u.protocol === "https:" && u.origin === String(env.OAUTH_REDIRECT_ORIGIN).replace(/\/$/, "")) origin = u.origin; } catch {}
+  return listed && origin ? origin : url.origin;
+}
 function backTo(ret, frag) { return new Response(null, { status: 302, headers: { Location: ret + "#/oauth?" + frag, "Cache-Control": "no-store" } }); }
 function oauthBack(env,ret,frag){return ret.startsWith('desktop:')?desktopOAuth.error(env,ret,new URLSearchParams(frag).get('e')||'oauth_failed'):backTo(ret,frag)}
 /* a provider's display name, made into a free nickname */
@@ -5161,7 +5169,7 @@ async function freeNick(env, raw) {
 }
 async function oauthRoute(req, env, url) {
   const [, , , prov, step] = url.pathname.split("/"), P = OAUTH[prov], keys = oauthKeys(env, prov);
-  const redirectUri = url.origin + `/api/oauth/${prov}/callback`;
+  const redirectUri = oauthRedirectOrigin(env, prov, url) + `/api/oauth/${prov}/callback`;
   if (step === "start") {
     const intent=url.searchParams.get('desktop'),desktop=intent?await desktopOAuth.start(env,intent,prov):null;
     const ret = intent?desktop?.returnTo:allowedReturn(env, url.searchParams.get("return") || "");
