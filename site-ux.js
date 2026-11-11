@@ -178,7 +178,7 @@
     document.documentElement.classList.toggle("hlx-has-tabs", !exam);
   }
 
-  /* ── the HaslaEdu Windows app opens this site with ?desktop=1 (physleague.kr passes it on): remembered for the window's
+  /* ── the HaslaEdu Windows app opens this site with ?desktop=1 (the HaslaEdu site passes it on): remembered for the window's
      session, it widens the layout for a PC screen, gives the window the browser keys it lacks (Alt+←/→ back and forward,
      F5 reload) and keeps the HaslaEdu link inside the app ── */
   const DESKTOP_KEY = "hl-desktop-app";
@@ -198,7 +198,9 @@
   }
   function eduLink() {
     const a = document.getElementById("eduLink"); if (!a) return;
-    const url = new URL("https://physleague.kr/"); url.searchParams.set("lang", L());
+    // HaslaEdu moved to haslaedu.kr. Inside the Windows app the link stays on physleague.kr: installed app versions only
+    // keep that host in the window, and the site does not move ?desktop=1 requests.
+    const url = new URL(desktop ? "https://physleague.kr/" : "https://haslaedu.kr/"); url.searchParams.set("lang", L());
     if (desktop) { url.searchParams.set("desktop", "1"); a.removeAttribute("target"); }
     a.href = url.href;
     a.title = L() === "en" ? "Go to HaslaEdu" : "하슬라에듀로 이동";

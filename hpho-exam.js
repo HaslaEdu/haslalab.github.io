@@ -240,7 +240,7 @@
     if (st.error && st.error !== st.beeped && ["check", "lobby", "room", "submit"].includes(st.phase)) { st.beeped = st.error; if (!st.forbidden) beep(); }
     if (!st.error) st.beeped = null;
     paintBar();
-    if (!bridge()) { box.innerHTML = `<section class="hpho-round"><h2>${x.title}</h2><p>${x.appOnly}</p><a class="hpho-btn" href="https://physleague.kr/#/desktop" target="_blank" rel="noopener">${x.appGet}</a></section>`; return; }
+    if (!bridge()) { box.innerHTML = `<section class="hpho-round"><h2>${x.title}</h2><p>${x.appOnly}</p><a class="hpho-btn" href="https://haslaedu.kr/#/desktop" target="_blank" rel="noopener">${x.appGet}</a></section>`; return; }
     if (st.phase === "lobby") return paintLobby(box);
     if (st.phase === "check") return paintCheck(box);
     if (st.phase === "room") return paintRoom(box);
