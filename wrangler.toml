@@ -58,7 +58,8 @@ AUTH_MAIL_FROM = "noreply@haslaedu.kr"
 # Social sign-in returns to https://haslaedu.kr/api/oauth/<provider>/callback (the haslaedu Worker passes it here) for the
 # providers listed; add a provider only after its console lists that callback URL. Others keep this Worker's address.
 OAUTH_REDIRECT_ORIGIN = "https://haslaedu.kr"
-OAUTH_REDIRECT_PROVIDERS = "google"
+# empty until Google accepts https://haslaedu.kr/api/oauth/google/callback for this client (checked 2026-11-11: not yet)
+OAUTH_REDIRECT_PROVIDERS = ""
 ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765,https://haslaedu.kr,https://www.haslaedu.kr,https://physleague.kr,https://www.physleague.kr,https://haslaedu.haslalab.workers.dev"
 # Production choices are fixed in vision-provider.js; keep the private model bench aligned.
 GEMINI_MODEL = "gemini-3.5-flash-lite"
