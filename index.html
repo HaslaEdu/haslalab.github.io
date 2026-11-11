@@ -8898,6 +8898,7 @@ const CMT = {
          mail_unavailable:"지금은 인증 메일을 보낼 수 없습니다. 잠시 뒤에 다시 하거나 소셜 로그인으로 가입해 주세요.",
          code_required:"이메일로 받은 6자리 인증 코드를 입력해 주세요.", code_invalid:"인증 코드가 맞지 않습니다.",
          code_expired:"인증 코드가 만료되었습니다. 코드를 다시 받아 주세요.", code_attempts:"인증 코드를 너무 여러 번 틀렸습니다. 코드를 다시 받아 주세요.",
+         recent_login_required:"보안을 위해 다시 로그인한 뒤에 할 수 있습니다.",
          server_error:"서버 오류가 났습니다."}
   },
   en:{
@@ -8972,6 +8973,7 @@ const CMT = {
          mail_unavailable:"We can't send the verification email right now. Try again later, or sign up with a social login.",
          code_required:"Enter the 6-digit code from the email.", code_invalid:"That code is not right.",
          code_expired:"That code has expired. Send a new one.", code_attempts:"Too many wrong codes. Send a new one.",
+         recent_login_required:"For safety, log in again first.",
          server_error:"The server hit an error."}
   }
 };
@@ -9961,7 +9963,13 @@ async function cmAccount(root, alive){
   cmAiTrainToggle(root.querySelector('#cmAiTrain'));
   root.querySelector("#cmDelAcc").onclick=async()=>{
     if(!confirm(T.confirmDelAcc)) return;
-    try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ cmToast(cmErr(e)); }
+    try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }
+    catch(e){
+      /* Deleting needs a sign-in from the last 15 minutes: sign out here, sign in again, and come back to this page. */
+      if(e&&e.code==="recent_login_required"&&confirm(cmErr(e)+(lang==="ko"?"\n지금 다시 로그인할까요?":"\nSign in again now?"))){
+        try{ await cmApi("POST","/logout"); }catch(x){} cmTok(null); cm.me=null;
+        try{ sessionStorage.setItem("hlCmBack","#/me"); }catch(x){} location.hash="#/login"; return; }
+      cmToast(cmErr(e)); }
   };
   try{
     const l=await cmApi("GET","/posts?field=author&lang="+lang+"&q="+encodeURIComponent(cm.me.nickname)); if(!alive()) return;
