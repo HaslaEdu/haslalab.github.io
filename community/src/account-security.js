@@ -28,7 +28,7 @@ export function ensureAccountSecuritySchema(db){
   if(!readySchemas.has(db))readySchemas.set(db,(async()=>{for(const sql of ACCOUNT_SECURITY_SCHEMA)await db.prepare(sql).run()})().catch(error=>{readySchemas.delete(db);throw error}));
   return readySchemas.get(db);
 }
-const ORIGINS=new Set(['https://haslalab.org','https://www.haslalab.org','https://physleague.kr','https://www.physleague.kr','https://haslaedu.haslalab.workers.dev']);
+const ORIGINS=new Set(['https://haslalab.org','https://www.haslalab.org','https://haslaedu.kr','https://www.haslaedu.kr','https://physleague.kr','https://www.physleague.kr','https://haslaedu.haslalab.workers.dev']);
 const EMAIL=/^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/;
 export function cleanRecoveryEmail(value){const email=typeof value==='string'?value.trim().toLowerCase():'';return email.length<=254&&EMAIL.test(email)?email:null}
 export function accountMailAvailable(env){return env.AUTH_EMAIL_ENABLED==='on'&&!!cleanRecoveryEmail(env.AUTH_MAIL_FROM)&&
