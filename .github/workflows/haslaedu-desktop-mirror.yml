@@ -1,6 +1,6 @@
-# HaslaEdu for Windows: copies the EXEs that https://physleague.kr currently offers into a GitHub Release
+# HaslaEdu for Windows: copies the EXEs that https://haslaedu.kr currently offers into a GitHub Release
 # here (tag haslaedu-desktop-v<version>), after checking the SHA-256 values the site publishes.
-# physleague.kr/downloads/ sends browsers to these files once GitHub reports the same SHA-256, because
+# haslaedu.kr/downloads/ (and the old physleague.kr address) sends browsers to these files once GitHub reports the same SHA-256, because
 # Cloudflare serves Korea from its US edge and a 100 MB download crawls there. No secrets are used.
 name: HaslaEdu desktop mirror
 
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
-      SITE: https://physleague.kr
+      SITE: https://haslaedu.kr
     steps:
       - name: Mirror the offered release
         shell: bash
