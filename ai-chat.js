@@ -40,9 +40,17 @@
 .hlai-btn{position:fixed;right:18px;bottom:18px;z-index:60;border:0;border-radius:999px;padding:11px 16px;background:var(--rail,#2E3945);color:#fff;
   font:600 14px var(--sans,sans-serif);box-shadow:0 6px 20px rgba(0,0,0,.18);cursor:pointer}
 .hlai-btn:hover{background:var(--ink,#16212E)}
-.hlai{position:fixed;right:18px;bottom:18px;z-index:61;width:min(420px,calc(100vw - 24px));height:min(620px,calc(100vh - 36px));display:none;flex-direction:column;
+.hlai{position:fixed;right:18px;bottom:calc(18px + var(--hlai-kb,0px));z-index:61;width:min(420px,calc(100vw - 24px));height:min(620px,calc(100vh - 36px));height:min(620px,calc(100dvh - 36px - var(--hlai-kb,0px)));display:none;flex-direction:column;
   background:var(--paper,#FBFCFD);color:var(--ink,#16212E);border:1px solid var(--grid-bold,#B4CADC);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.22);overflow:hidden;font:14px/1.55 var(--sans,sans-serif)}
 .hlai.on{display:flex}
+/* phones: a sheet between the top of the screen and the bottom tab bar (which sits above everything, z-index 70),
+   sized by top and bottom, not by 100vh, which on a phone counts the space under the browser's toolbars; the
+   keyboard, when open, lifts it (--hlai-kb, from visualViewport) */
+@media(max-width:640px){
+  .hlai{left:8px;right:8px;width:auto;top:calc(8px + env(safe-area-inset-top,0px));bottom:calc(8px + env(safe-area-inset-bottom,0px) + var(--hlai-kb,0px));height:auto!important;max-height:none}
+  .hlai .hlai-f textarea{height:62px}
+  html.hlx-has-tabs .hlai{bottom:calc(72px + env(safe-area-inset-bottom,0px));bottom:max(calc(72px + env(safe-area-inset-bottom,0px)),calc(8px + var(--hlai-kb,0px)))}
+}
 .hlai *{box-sizing:border-box;margin:0}
 .hlai-h{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--grid-bold,#B4CADC)}
 .hlai-h b{flex:1;font-size:15px}
@@ -294,7 +302,11 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
       history.pop(); save();
     } finally { busy = false; sendBtn.disabled = false; input.focus(); }
   }
-  function toggle(on) { box.classList.toggle('on', on); btn.style.display = on ? 'none' : ''; if (on) { paint(); readTrain(); input.focus(); } }
+  /* the on-screen keyboard: how much of the bottom of the window it covers, so the input stays above it */
+  const vv = window.visualViewport, keyboard = () => { if (!vv) return; const kb = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)); box.style.setProperty('--hlai-kb', (kb > 60 ? kb : 0) + 'px'); };
+  function toggle(on) { box.classList.toggle('on', on); btn.style.display = on ? 'none' : '';
+    if (vv) for (const ev of ['resize', 'scroll']) on ? vv.addEventListener(ev, keyboard) : vv.removeEventListener(ev, keyboard);
+    if (on) { keyboard(); paint(); readTrain(); input.focus(); } else box.style.removeProperty('--hlai-kb'); }
 
   const sheet = document.createElement('style'); sheet.textContent = css; document.head.appendChild(sheet);
   const btn = document.createElement('button');
