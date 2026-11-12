@@ -1,0 +1,23 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2015_T_KO.pdf",
+ "status": "READY",
+ "sha256": "3dc217a50af5e139e2bb69f8e7d7995ed78052802f5b03761287598f82596afa",
+ "bytes": 1675222,
+ "pages": 24,
+ "source_file": "PLANCKS_2015_T_EN.pdf",
+ "source_sha256": "0d581c3c4c175f594d040a0e37b84bece736f4976f7db63c9de0f0a7e1abd14d",
+ "source_pages": 24,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 10681,
+ "html_source": "tools/ko_reflow/plancks/2015.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI; the front cover and back cover (title artwork, partner logos) are stamped whole because a partial stamp leaves seams on their gradient background",
+  "overflow_or_occlusion_observed": false
+ }
+}
