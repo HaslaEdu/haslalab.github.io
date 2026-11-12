@@ -48,6 +48,22 @@ for (const item of published) {
     assert.equal(revisions[alias], item.sha256.slice(0, 16));
     assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
   }
+  if (item.audit_schema === 'html-reflow-stamped-v1') {
+    // Korean re-typeset on the source page geometry; figures, logos and pure-math displays stamped from the source
+    assert.equal(qa.schema, 'html-reflow-stamped-v1');
+    assert.equal(qa.status, 'READY');
+    for (const key of ['sha256', 'bytes', 'pages']) assert.equal(qa[key], item[key], `${item.file}: ${key}`);
+    assert.equal(qa.source_pages, item.pages);
+    assert.equal(qa.page_count_matches_source, true);
+    assert.equal(qa.page_sizes_match_source, true);
+    assert.equal(qa.figures_logos_and_pure_math_stamped_from_source, true);
+    assert.ok(qa.hangul_characters > 0);
+    assert.ok(fs.existsSync(path.join(root, qa.html_source)), qa.html_source);
+    assert.ok(fs.existsSync(path.join(root, qa.builder)), qa.builder);
+    assert.equal(qa.visual_review.reviewed, true);
+    assert.equal(qa.visual_review.overflow_or_occlusion_observed, false);
+    continue;
+  }
   if (item.audit_schema === 'source-scan-preserved-v1') {
     require('./helpers/source-scan-publication.cjs')(root, qa, item);
     continue;
