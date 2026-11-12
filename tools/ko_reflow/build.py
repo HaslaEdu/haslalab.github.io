@@ -5,6 +5,7 @@ original's own vector figures/logo into the placeholders.
 usage: python -I build.py SRC.html ORIGINAL.pdf OUT.pdf
 SRC.html: <meta name="page" content="W,H"> (pt) and page divs; figures are
   <span class="fig" data-page="1" data-clip="x0,y0,x1,y1" [data-scale="1"]></span>
+Elements with class "ov" (e.g. a Korean label on a white box) are drawn on top of the stamped figures.
 """
 import os, re, subprocess, sys, tempfile, pathlib
 import pymupdf
@@ -57,7 +58,7 @@ def prepare(src, orig):
         figs.append((int(attrs.get('page', 1)) - 1, pymupdf.Rect(x0, y0, x1, y1), sc, attrs.get('srcpage')))
         extra = mo.group(1) or ''
         return (f'<span class="fig{extra}" style="width:{(x1-x0)*sc:.2f}pt;height:{(y1-y0)*sc:.2f}pt;'
-                f'background:rgb(254,{i+1},77)"></span>')
+                f'background:rgb(254,{i % 250 + 1},{40 + i // 250})"></span>')
 
     html = re.sub(r'<span class="fig([^"]*)"[^>]*></span>', fig, html)
     kiturl = VENDOR.as_uri()
@@ -73,8 +74,7 @@ def prepare(src, orig):
     return html, od, figs
 
 
-def main(src, orig, out):
-    html, od, figs = prepare(src, orig)
+def print_pdf(html):
     tmpdir = pathlib.Path(tempfile.mkdtemp(dir=KIT / 'tmp' if (KIT / 'tmp').exists() else None))
     hp = tmpdir / 'page.html'
     hp.write_text(html, encoding='utf-8')
@@ -85,10 +85,21 @@ def main(src, orig, out):
                         '--disk-cache-size=1', '--disable-extensions', '--no-first-run',
                         f'--user-data-dir={tmpdir / "profile"}',
                         f'--print-to-pdf={raw}', hp.as_uri()], check=True, capture_output=True, timeout=180, env=dict(os.environ, TEMP=str(tmpdir), TMP=str(tmpdir)))
-        doc = pymupdf.open(stream=raw.read_bytes(), filetype='pdf')
+        return pymupdf.open(stream=raw.read_bytes(), filetype='pdf')
     finally:
         import shutil
         shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def main(src, orig, out):
+    html, od, figs = prepare(src, orig)
+    doc = print_pdf(html)
+    over = None
+    if re.search(r'class="[^"]*ov', html):
+        # labels that must sit ON a stamp (covering the source's own label): printed alone, laid over the stamps
+        over = print_pdf(html.replace('</head>', '<style>body *{visibility:hidden!important}'
+                                      '.ov,.ov *{visibility:visible!important}</style></head>', 1))
+        doc = print_pdf(html.replace('</head>', '<style>.ov{visibility:hidden!important}</style></head>', 1))
     want = len(re.findall(r'class="page"', html))
     if len(doc) != want:
         sys.exit(f'page overflow: printed {len(doc)} pages, expected {want}')
@@ -97,8 +108,8 @@ def main(src, orig, out):
     for pn, pg in enumerate(doc):
         for d in pg.get_drawings():
             f = d.get('fill')
-            if f and abs(f[0] - 254 / 255) < 0.003 and abs(f[2] - 77 / 255) < 0.003:
-                idx = round(f[1] * 255) - 1
+            if f and abs(f[0] - 254 / 255) < 0.003 and f[2] > 39.5 / 255 and f[1] > 0.5 / 255:
+                idx = (round(f[2] * 255) - 40) * 250 + round(f[1] * 255) - 1
                 found[idx] = (pn, pymupdf.Rect(d['rect']))
     for i, (opn, clip, sc, srcpage) in enumerate(figs):
         if i not in found:
@@ -107,6 +118,12 @@ def main(src, orig, out):
         pg = doc[pn]
         pg.draw_rect(r + (-0.8, -0.8, 0.8, 0.8), color=None, fill=(1, 1, 1), overlay=True)
         pg.show_pdf_page(r, od, int(srcpage) - 1 if srcpage else opn, clip=clip, overlay=True)
+    if over is not None:
+        if len(over) != len(doc):
+            sys.exit('overlay pass printed a different page count')
+        for pn, pg in enumerate(doc):
+            if over[pn].get_text('text').strip() or over[pn].get_drawings():
+                pg.show_pdf_page(pg.rect, over, pn, overlay=True)
     doc.set_metadata({'title': pathlib.Path(out).stem, 'producer': 'HaslaLab', 'creator': 'HaslaLab'})
     doc.save(out, garbage=4, deflate=True)
     print(out, len(doc), 'pages', len(figs), 'figures')
