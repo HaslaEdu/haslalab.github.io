@@ -20,6 +20,8 @@ CSS = """
 @font-face{font-family:CM;font-style:italic;font-weight:bold;src:url(KITURL/katex/fonts/KaTeX_Main-BoldItalic.woff2)}
 @font-face{font-family:KB;src:url(file:///C:/Windows/Fonts/HANBatang.ttf);size-adjust:94%}
 @font-face{font-family:KB;font-weight:bold;src:url(file:///C:/Windows/Fonts/HANBatangB.ttf);size-adjust:94%}
+@font-face{font-family:KG;src:url(file:///C:/Windows/Fonts/malgun.ttf)}
+@font-face{font-family:KG;font-weight:bold;src:url(file:///C:/Windows/Fonts/malgunbd.ttf)}
 @page{size:PWpt PHpt;margin:0}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -37,7 +39,7 @@ sub{font-size:70%;line-height:0;vertical-align:-0.2em}
 """
 
 
-def main(src, orig, out):
+def prepare(src, orig):
     html = pathlib.Path(src).read_text(encoding='utf-8')
     od = pymupdf.open(orig)
     for _p in od:  # clip coordinates are the visible (rotated) page's
@@ -68,6 +70,11 @@ def main(src, orig, out):
             '<script>renderMathInElement(document.body,{delimiters:[{left:"$",right:"$",display:false},'
             '{left:"\\\\[",right:"\\\\]",display:true}],throwOnError:true});</script>')
     html = html.replace('<head>', '<head>' + head, 1).replace('</body>', tail + '</body>', 1)
+    return html, od, figs
+
+
+def main(src, orig, out):
+    html, od, figs = prepare(src, orig)
     tmpdir = pathlib.Path(tempfile.mkdtemp(dir=KIT / 'tmp' if (KIT / 'tmp').exists() else None))
     hp = tmpdir / 'page.html'
     hp.write_text(html, encoding='utf-8')
@@ -77,7 +84,7 @@ def main(src, orig, out):
                         '--allow-file-access-from-files', '--virtual-time-budget=8000',
                         '--disk-cache-size=1', '--disable-extensions', '--no-first-run',
                         f'--user-data-dir={tmpdir / "profile"}',
-                        f'--print-to-pdf={raw}', hp.as_uri()], check=True, capture_output=True, timeout=180)
+                        f'--print-to-pdf={raw}', hp.as_uri()], check=True, capture_output=True, timeout=180, env=dict(os.environ, TEMP=str(tmpdir), TMP=str(tmpdir)))
         doc = pymupdf.open(stream=raw.read_bytes(), filetype='pdf')
     finally:
         import shutil
