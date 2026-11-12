@@ -14,7 +14,7 @@ const NAME = /^\/pdf\/(([A-Za-z]+)_[A-Za-z0-9._-]+\.pdf)$/;
 const DAY = 86400;
 /* Replacing assets in place keeps their download URLs, so cached copies would
  * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
-const CACHE_V = 66;         // USAPhO 1997–2026 Korean rebuilt on the original page layout
+const CACHE_V = 67;         // PLANCKS and Ortvay 2023–2025 Korean rebuilt on the original page layout
 
 export default {
   async fetch(req, env, ctx) {
