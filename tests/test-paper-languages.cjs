@@ -86,8 +86,11 @@ assert.match(koreanCards.main[0],/>문제지<\/a>/);
 assert.ok(!koreanCards.main[0].includes('lgtag'));
 assert.ok(!koreanCards.docs.some(doc=>doc.includes(cpho.paper)||doc.includes(cpho.papers.zh)));
 // Untranslated papers remain available and identify their actual source language.
-renderedCards.length=0;context.theoryHtml('eotvos',{y:2026});
+// Eötvös 2013–2026 now have Korean editions; the 1949 reprint is still Hungarian only.
+const huOnly=catalogue.eotvos['1949'].f.T;
+assert.equal(huOnly.ko,undefined);
+renderedCards.length=0;context.theoryHtml('eotvos',{y:1949});
 const koreanNative=renderedCards[0];
-assert.ok(koreanNative.main[0].includes(hu.paper));
+assert.ok(koreanNative.main[0].includes(huOnly.paper));
 assert.ok(koreanNative.main[0].includes('Magyar'));
 console.log('Paper language catalogue, practice links, exam URLs and input validation passed.');

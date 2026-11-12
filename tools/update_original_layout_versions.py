@@ -15,7 +15,7 @@ else:
     text=text.replace(marker,block+'\n'+marker,1)
 start=text.index('const thyUrl=');end=text.index('/* Competition or organiser websites',start)
 text=text[:start]+'''const thyUrl=f=>{
-  const url=/^(pdfx\\/|https?:)/.test(f)?f:PDF_BASE+f;
+  const url=/^https?:/.test(f)?f:/^pdfx\\//.test(f)?PDF_BASE+f.replace(/^pdfx\\/(?:([a-z]+)\\/)?/,(m,d)=>"X"+(d||"root")+"_"):PDF_BASE+f;   /* pdfx/: tools/pdfx_release.py */
   const key=(f.startsWith(PDF_BASE)?f.slice(PDF_BASE.length):f).split(/[?#]/)[0];
   const version=ORIGINAL_LAYOUT_PDF_VERSIONS[key]||(window.KPHE_PDF_VERSIONS||{})[f];
   return version?url+(url.includes("?")?"&":"?")+"v="+encodeURIComponent(version):url;
