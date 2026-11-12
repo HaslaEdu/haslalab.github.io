@@ -13,11 +13,11 @@ $$\vec M\cdot\frac{\partial\vec M}{\partial t} = 0,\qquad \frac{\partial}{\parti
 
 <div class="task">
 <p><b>A2</b>. 다음 방정식의 $z$ 성분을 생각하자.</p>
-$$\frac{d\vec m}{dt} = -\frac{\gamma}{1+\alpha^2}\,\vec m\times\vec B_{\rm eff} - \frac{\alpha\gamma}{1+\alpha^2}\Bigl((\vec m\cdot\vec B_{\rm eff})\,\vec m - \vec B_{\rm eff}\Bigr).$$
+$$\frac{\mathrm{d}\vec m}{\mathrm{d}t} = -\frac{\gamma}{1+\alpha^2}\,\vec m\times\vec B_{\rm eff} - \frac{\alpha\gamma}{1+\alpha^2}\Bigl((\vec m\cdot\vec B_{\rm eff})\,\vec m - \vec B_{\rm eff}\Bigr).$$
 <p>벡터곱 $(\vec m\times\vec B_{\rm eff})$는 $z$축에 수직이므로, 방정식에는 두 번째 항만 기여한다. $\vec m\cdot\vec B_{\rm eff} = m_zB_0$임을 고려하면</p>
 $$\dot m_z = \frac{\alpha\gamma}{1+\alpha^2}B_0\,(1 - m_z^2).$$
 <p>변수를 분리하면</p>
-$$\frac{dm_z}{1 - m_z^2} = \frac{\alpha\gamma}{1+\alpha^2}B_0\,dt$$
+$$\frac{\mathrm{d}m_z}{1 - m_z^2} = \frac{\alpha\gamma}{1+\alpha^2}B_0\,\mathrm{d}t$$
 <p>이고, 이를 $0$부터 $t$까지 적분하면</p>
 $$\frac{1}{2}\ln\frac{1+m_z(t)}{1-m_z(t)}\Biggr|_0^t = \frac{\alpha\gamma}{1+\alpha^2}B_0t.$$
 <p>초기 조건 $m_z(0) = 0$을 대입하면</p>
@@ -29,14 +29,14 @@ $$\frac{1}{2}\ln\frac{1+m_z(t)}{1-m_z(t)} = \frac{\alpha\gamma}{1+\alpha^2}B_0t$
 <p><b>A3</b>. <b>첫 번째 풀이.</b> 벡터 $\vec m$의 $xy$ 평면 위 사영을 $\vec m_{xy}$라 하자. 벡터 $\vec B_{\rm eff}$는 $z$축 방향이므로 그 $xy$ 평면 위 사영은 0이다. 또한 $\vec m\cdot\vec B_{\rm eff} = m_zB_0$이고</p>
 $$\vec m\times\vec B_{\rm eff} = (\vec m_{xy} + m_z\vec e_z)\times\vec B_{\rm eff} = \vec m_{xy}\times\vec B_{\rm eff}\qquad(\vec e_z\times\vec B_{\rm eff} = 0)$$
 <p>이므로, LLG 방정식의 $xy$ 평면 위 사영은 다음 꼴이다.</p>
-$$\frac{d\vec m_{xy}}{dt} = -\frac{\gamma}{1+\alpha^2}\,\vec m_{xy}\times\vec B_{\rm eff} - \frac{\alpha\gamma}{1+\alpha^2}\,m_zB_0\,\vec m_{xy}.$$
+$$\frac{\mathrm{d}\vec m_{xy}}{\mathrm{d}t} = -\frac{\gamma}{1+\alpha^2}\,\vec m_{xy}\times\vec B_{\rm eff} - \frac{\alpha\gamma}{1+\alpha^2}\,m_zB_0\,\vec m_{xy}.$$
 <figure style="float:right;width:40mm;margin:0 0 2mm 4mm"><img src="S1_fig1.png" style="width:40mm"></figure>
-<p>여기서 첫 번째 항(크기 $\gamma B_0m_{xy}/(1+\alpha^2)$)은 $\vec m_{xy}$에 수직이므로 $\vec m_{xy}$를 회전시킨다. 두 번째 항은 $\vec m_{xy}$에 평행하며 길이를 바꾼다. 시간 $dt$ 동안 수직 방향 변화 성분은</p>
-$$dm_\perp = \frac{\gamma B_0m_{xy}}{1+\alpha^2}\,dt$$
-<p>이므로, 회전각은 $d\varphi = dm_\perp/m_{xy}$이고 각속도는</p>
-$$\Omega = \frac{d\varphi}{dt} = \frac{\gamma B_0}{1+\alpha^2}.$$
+<p>여기서 첫 번째 항(크기 $\gamma B_0m_{xy}/(1+\alpha^2)$)은 $\vec m_{xy}$에 수직이므로 $\vec m_{xy}$를 회전시킨다. 두 번째 항은 $\vec m_{xy}$에 평행하며 길이를 바꾼다. 시간 $\mathrm{d}t$ 동안 수직 방향 변화 성분은</p>
+$$\mathrm{d}m_\perp = \frac{\gamma B_0m_{xy}}{1+\alpha^2}\,\mathrm{d}t$$
+<p>이므로, 회전각은 $\mathrm{d}\varphi = \mathrm{d}m_\perp/m_{xy}$이고 각속도는</p>
+$$\Omega = \frac{\mathrm{d}\varphi}{\mathrm{d}t} = \frac{\gamma B_0}{1+\alpha^2}.$$
 <p style="clear:both">$\Omega$를 얻는 또 다른 방법은, 어떤 벡터가 각속도 $\vec\Omega$로 회전하면 그 시간 미분이</p>
-$$\frac{d\vec m_{xy}}{dt} = \vec\Omega\times\vec m_{xy}$$
+$$\frac{\mathrm{d}\vec m_{xy}}{\mathrm{d}t} = \vec\Omega\times\vec m_{xy}$$
 <p>임을 이용하는 것이다. LLG 방정식의 첫 번째 항과 비교하면 곧바로</p>
 $$\vec\Omega = \frac{\gamma\vec B_{\rm eff}}{1+\alpha^2} = \frac{\gamma B_0}{1+\alpha^2}\,\vec e_z.$$
 <p>따라서 답은</p>
@@ -44,32 +44,32 @@ $$\vec\Omega = \frac{\gamma\vec B_{\rm eff}}{1+\alpha^2} = \frac{\gamma B_0}{1+\
 <p><b>두 번째 풀이.</b> LLG 방정식을 $x$축과 $y$축에 사영하면</p>
 $$\begin{cases}\dot m_x = -\dfrac{\gamma B_0}{1+\alpha^2}\,m_y - \dfrac{\alpha\gamma B_0m_z}{1+\alpha^2}\,m_x,\\[2mm] \dot m_y = \dfrac{\gamma B_0}{1+\alpha^2}\,m_x - \dfrac{\alpha\gamma B_0m_z}{1+\alpha^2}\,m_y.\end{cases}$$
 <p>새 복소 변수 $\hat m = m_x + im_y$를 도입하고, 두 번째 식에 $i$를 곱한 뒤 두 식을 더하면</p>
-$$\frac{d}{dt}(m_x + im_y) = -\frac{\gamma B_0}{1+\alpha^2}(-m_y + im_x) - \frac{\alpha\gamma m_zB_0}{1+\alpha^2}(m_x + im_y).$$
+$$\frac{\mathrm{d}}{\mathrm{d}t}(m_x + im_y) = -\frac{\gamma B_0}{1+\alpha^2}(-m_y + im_x) - \frac{\alpha\gamma m_zB_0}{1+\alpha^2}(m_x + im_y).$$
 <p>이 식은 다음과 같이 다시 쓸 수 있다.</p>
-$$\frac{d\hat m}{dt} = i\frac{\gamma B_0}{1+\alpha^2}\,\hat m - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}\,\hat m.$$
+$$\frac{\mathrm{d}\hat m}{\mathrm{d}t} = i\frac{\gamma B_0}{1+\alpha^2}\,\hat m - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}\,\hat m.$$
 <p>변수를 분리하면</p>
-$$\int\frac{d\hat m}{\hat m} = \int dt\left(\frac{i\gamma B_0}{1+\alpha^2} - \frac{\alpha\gamma B_0}{1+\alpha^2}\,m_z\right).$$
+$$\int\frac{\mathrm{d}\hat m}{\hat m} = \int \mathrm{d}t\left(\frac{i\gamma B_0}{1+\alpha^2} - \frac{\alpha\gamma B_0}{1+\alpha^2}\,m_z\right).$$
 <p>초기 조건 $\hat m(0) = m_x(0) + im_y(0) = 1$에 의해</p>
-$$\ln\hat m = \frac{i\gamma B_0t}{1+\alpha^2} - \frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t dt\,m_z(t),\qquad \hat m = A(t)\,e^{i\varphi(t)},$$
+$$\ln\hat m = \frac{i\gamma B_0t}{1+\alpha^2} - \frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t \mathrm{d}t\,m_z(t),\qquad \hat m = A(t)\,e^{i\varphi(t)},$$
 <p>여기서</p>
-$$A(t) = \exp\left(-\frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t m_z(t)\,dt\right)$$
+$$A(t) = \exp\left(-\frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t m_z(t)\,\mathrm{d}t\right)$$
 <p>는 $\vec m_{xy}$의 크기이고,</p>
 $$\varphi = \frac{\gamma B_0t}{1+\alpha^2}$$
 <p>는 $\vec m_{xy}$의 회전각에 해당한다. 왜냐하면</p>
 $$m_x(t) = A(t)\cos\varphi(t),\qquad m_y(t) = A(t)\sin\varphi(t)$$
 <p>이기 때문이다. 각 $\varphi$는 $t$의 일차 함수이므로 각속도는 일정하고, 그 값은 앞에서 얻은 것과 같다. $m_z(t)$의 식을 이용하면 크기 $A(t)$도 구할 수 있다.</p>
-$$\ln A(t) = -\frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t m_z(t)\,dt = -\int_0^t\frac{\alpha\gamma B_0\,dt}{1+\alpha^2}\tanh\frac{\alpha\gamma B_0t}{1+\alpha^2} = -\ln\cosh\frac{\alpha\gamma B_0t}{1+\alpha^2},$$
+$$\ln A(t) = -\frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t m_z(t)\,\mathrm{d}t = -\int_0^t\frac{\alpha\gamma B_0\,\mathrm{d}t}{1+\alpha^2}\tanh\frac{\alpha\gamma B_0t}{1+\alpha^2} = -\ln\cosh\frac{\alpha\gamma B_0t}{1+\alpha^2},$$
 <p>즉</p>
 $$A(t) = \frac{1}{\cosh\dfrac{\alpha\gamma B_0t}{1+\alpha^2}}$$
 <p>이므로 $m_z^2 + m_{xy}^2 = 1$, 즉 $\vec m$의 크기는 일정하며 1과 같다. 여기서 다음 공식과 관계식을 이용하였다.</p>
-$$\int\tanh x\,dx = \int\frac{\sinh x}{\cosh x}dx = \int\frac{d(\cosh x)}{\cosh x} = \ln\cosh x + C,\qquad \tanh^2x + \frac{1}{\cosh^2x} = 1.$$
+$$\int\tanh x\,\mathrm{d}x = \int\frac{\sinh x}{\cosh x}dx = \int\frac{\mathrm{d}(\cosh x)}{\cosh x} = \ln\cosh x + C,\qquad \tanh^2x + \frac{1}{\cosh^2x} = 1.$$
 <p>복소수를 쓰지 않고 해를 다음 꼴로 찾을 수도 있다.</p>
 $$m_x = A(t)\cos\varphi(t),\qquad m_y = A(t)\sin\varphi(t).$$
 <p>이 식들을 $\dot m_x$, $\dot m_y$의 방정식에 대입하면</p>
-$$\frac{dA}{dt}\cos\varphi - A\sin\varphi\,\frac{d\varphi}{dt} = -\frac{\gamma B_0}{1+\alpha^2}A\sin\varphi - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}A\cos\varphi;$$
-$$\frac{dA}{dt}\sin\varphi + A\cos\varphi\,\frac{d\varphi}{dt} = \frac{\gamma B_0}{1+\alpha^2}A\cos\varphi - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}A\sin\varphi.$$
+$$\frac{\mathrm{d}A}{\mathrm{d}t}\cos\varphi - A\sin\varphi\,\frac{\mathrm{d}\varphi}{\mathrm{d}t} = -\frac{\gamma B_0}{1+\alpha^2}A\sin\varphi - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}A\cos\varphi;$$
+$$\frac{\mathrm{d}A}{\mathrm{d}t}\sin\varphi + A\cos\varphi\,\frac{\mathrm{d}\varphi}{\mathrm{d}t} = \frac{\gamma B_0}{1+\alpha^2}A\cos\varphi - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}A\sin\varphi.$$
 <p>이 방정식들로부터 크기와 각의 시간 미분을 얻을 수 있다.</p>
-$$\frac{d\varphi}{dt} = \frac{\gamma B_0}{1+\alpha^2},\qquad \frac{dA}{dt} = -\frac{\alpha\gamma B_0m_z}{1+\alpha^2}A.$$
+$$\frac{\mathrm{d}\varphi}{\mathrm{d}t} = \frac{\gamma B_0}{1+\alpha^2},\qquad \frac{\mathrm{d}A}{\mathrm{d}t} = -\frac{\alpha\gamma B_0m_z}{1+\alpha^2}A.$$
 <p>이 관계식들은 처음 연립방정식에서 $\cos\varphi$와 $\sin\varphi$의 계수가 같다는 것에 지나지 않는다. 첫 번째 식은 앞에서 얻은 각속도의 식을, 두 번째 식은 크기의 미분을 준다.</p>
 <div class="ans">$$\Omega = \frac{\gamma B_0}{1+\alpha^2}$$</div></div>
 
@@ -136,11 +136,11 @@ $$\varphi = \arcsin m_{y0} = \arccos m_{x0} = \arctan\frac{m_{y0}}{m_{x0}}.$$
 <p><b>C3</b>. $v(b)$ 그래프를 그린다.</p>
 <figure><img src="S1_fig11.png" style="width:100mm"></figure>
 <p>그 기울기는</p>
-<div class="ans">$$\frac{dv}{db} = 42$$</div></div>
+<div class="ans">$$\frac{\mathrm{d}v}{\mathrm{d}b} = 42$$</div></div>
 
 <div class="task">
 <p><b>C4</b>. $v(\sin 2\varphi)$ 그래프를 그린다. 그 기울기는 $v_c = 4.2$이다. $b = b_{\rm cr}$에서 자구벽의 속도가 임계값이 되므로</p>
-$$b_{\rm cr} = \frac{v_c}{dv/db} = 0.10.$$
+$$b_{\rm cr} = \frac{v_c}{\mathrm{d}v/\mathrm{d}b} = 0.10.$$
 <figure><img src="S1_fig12.png" style="width:100mm"></figure>
 <div class="ans">$$v_c = 4.2,\qquad b_{\rm cr} = 0.10$$</div></div>
 
