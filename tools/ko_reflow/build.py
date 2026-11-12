@@ -95,7 +95,7 @@ def main(src, orig, out):
     html, od, figs = prepare(src, orig)
     doc = print_pdf(html)
     over = None
-    if re.search(r'class="[^"]*ov', html):
+    if re.search(r'class="[^"]*\bov\b', html):
         # labels that must sit ON a stamp (covering the source's own label): printed alone, laid over the stamps
         over = print_pdf(html.replace('</head>', '<style>body *{visibility:hidden!important}'
                                       '.ov,.ov *{visibility:visible!important}</style></head>', 1))
@@ -115,6 +115,8 @@ def main(src, orig, out):
         if i not in found:
             sys.exit(f'figure {i} placeholder not found')
         pn, r = found[i]
+        # Chrome snaps the placeholder to whole device pixels; keep its position but the stamp's exact size
+        r = pymupdf.Rect(r.x0, r.y0, r.x0 + clip.width * sc, r.y0 + clip.height * sc)
         pg = doc[pn]
         pg.draw_rect(r + (-0.8, -0.8, 0.8, 0.8), color=None, fill=(1, 1, 1), overlay=True)
         pg.show_pdf_page(r, od, int(srcpage) - 1 if srcpage else opn, clip=clip, overlay=True)
