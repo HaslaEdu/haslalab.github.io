@@ -638,7 +638,7 @@
   $('phoneCapture').hidden=!phoneCaptureAvailable;
   $('capturePhoto').addEventListener('click',()=>{if(phoneCaptureAvailable)$('captureInput').click();});
   $('captureInput').addEventListener('change',e=>{selectFile(e.target.files[0]);e.target.value='';});
-  const paintBrand=()=>{$('studioBrandMark').src='logo/brand/haslalab-'+(document.documentElement.dataset.theme==='dark'?'dark':'light')+'.svg?v=20261103-brands';};
+  const paintBrand=()=>{$('studioBrandMark').src='logo/brand/haslalab-'+(document.documentElement.dataset.theme==='dark'?'dark':'light')+'.svg?v=20261112-logo';};
   new MutationObserver(paintBrand).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});paintBrand();
   $('dropZone').addEventListener('click', e => { if (e.target !== $('imageInput')) $('imageInput').click(); });
   $('dropZone').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('imageInput').click(); } });
