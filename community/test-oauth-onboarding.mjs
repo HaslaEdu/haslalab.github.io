@@ -152,3 +152,20 @@ test('OAuth return address: listed providers use OAUTH_REDIRECT_ORIGIN for the a
   assert.equal(await start(),gateway+'/api/oauth/google/callback','unlisted provider keeps the old address');
  }finally{s.close()}
 });
+test('login CSRF: the nonce the page sent to the start comes back with the one-time code, and only then',async()=>{
+ const s=setup();try{
+  const nonce='N'.repeat(32),ret=encodeURIComponent(origin+'/');
+  const back=await s.oauth('/api/oauth/google/start?return='+ret+'&nonce='+nonce,'nonce-member'),q=new URLSearchParams(back.hash.split('?')[1]);
+  assert.ok(q.get('c'));assert.equal(q.get('n'),nonce,'the nonce returns beside the code');
+  assert.equal(s.sql.prepare('SELECT count(*) n FROM oauth_states').get().n,0,'the state (and its nonce) is used up');
+  const plain=new URLSearchParams((await s.oauth('/api/oauth/google/start?return='+ret,'nonce-member')).hash.split('?')[1]);
+  assert.ok(plain.get('c'));assert.equal(plain.get('n'),null,'no nonce sent, none returned (the page then refuses the code)');
+  for(const bad of ['short','x'.repeat(200),'bad%20chars%2Fhere%3Cscript%3E'])assert.equal(new URLSearchParams((await s.oauth('/api/oauth/google/start?return='+ret+'&nonce='+bad,'nonce-member')).hash.split('?')[1]).get('n'),null,bad);
+ }finally{s.close()}
+ // a deployment whose oauth_states predates the column gains it on the first start
+ const old=setup();try{
+  old.sql.exec('DROP TABLE oauth_states;CREATE TABLE oauth_states(state TEXT PRIMARY KEY,provider TEXT NOT NULL,verifier TEXT,return_to TEXT NOT NULL,link_user INTEGER,created_at INTEGER NOT NULL)');
+  const q=new URLSearchParams((await old.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/')+'&nonce='+'M'.repeat(32),'old-schema')).hash.split('?')[1]);
+  assert.equal(q.get('n'),'M'.repeat(32));assert.ok(old.sql.prepare('PRAGMA table_info(oauth_states)').all().some(c=>c.name==='nonce'));
+ }finally{old.close()}
+});

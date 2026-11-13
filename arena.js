@@ -38,7 +38,7 @@ const AT = {
        oldServer: "월별 문제 서버가 아직 업데이트되지 않았습니다. 잠시 후 다시 와 주세요.", ocrOff: "사진 인식(OCR)이 아직 서버에 연결되지 않았습니다. 답을 직접 입력해 주세요.",
        myH: "내 기록", myRank: "전체 순위", myTotal: "총점", mySolved: "만점 문제", recent: "최근 제출", settings: "계정 설정(비밀번호 · 탈퇴)",
        admin: "관리", addP: "문제 추가 / 고치기", queue: "채점 대기열", save: "저장", saved: "저장했습니다", giveScore: "점수 주기", regrade: "AI로 다시 채점",
-       oauthWith: {google: "Google로 계속하기", kakao: "카카오로 계속하기", naver: "네이버로 계속하기", github: "GitHub로 계속하기", discord: "Discord로 계속하기"}, oauthOr: "또는 아이디로", oauthOff: "관리자가 아직 연결하지 않았습니다",
+       oauthWith: {google: "Google로 계속하기", kakao: "카카오로 계속하기", naver: "네이버로 계속하기", github: "GitHub로 계속하기", discord: "Discord로 계속하기"}, oauthOr: "또는 아이디로", oauthForeign: "로그인을 시작한 창에서만 완료할 수 있어요. 다시 로그인해 주세요.", oauthOff: "관리자가 아직 연결하지 않았습니다",
        oauthNew: "가입했습니다. 닉네임은 계정 이름에서 가져왔으니, 원하면 아래에서 바꾸세요.", linked: "연결했습니다", linkH: "연결된 로그인", link: "연결하기", connected: "연결됨",
        nickH: "닉네임 바꾸기", change: "바꾸기", pwSet: "비밀번호 만들기 (아이디로도 로그인)", pwNew: "새 비밀번호 (8자 이상)", done: "바꿨습니다",
        tiers: {bronze: "브론즈", silver: "실버", gold: "골드", platinum: "플래티넘", diamond: "다이아몬드", ruby: "루비", master: "마스터", unrated: "Unrated"},
@@ -77,7 +77,7 @@ const AT = {
        oldServer: "The monthly-problem server has not been updated yet. Please come back shortly.", ocrOff: "Photo reading (OCR) is not connected yet. Please type your answer.",
        myH: "My record", myRank: "Overall rank", myTotal: "Total", mySolved: "Full marks", recent: "Recent submissions", settings: "Account settings (password, delete)",
        admin: "Admin", addP: "Add / edit a problem", queue: "Grading queue", save: "Save", saved: "Saved", giveScore: "Give score", regrade: "Regrade with AI",
-       oauthWith: {google: "Continue with Google", github: "Continue with GitHub", discord: "Continue with Discord", kakao: "Continue with Kakao", naver: "Continue with NAVER"}, oauthOr: "or with a username", oauthOff: "not connected by the admin yet",
+       oauthWith: {google: "Continue with Google", github: "Continue with GitHub", discord: "Continue with Discord", kakao: "Continue with Kakao", naver: "Continue with NAVER"}, oauthOr: "or with a username", oauthForeign: "A sign-in can only be completed in the window that started it. Please sign in again.", oauthOff: "not connected by the admin yet",
        oauthNew: "Welcome! Your nickname was taken from that account; change it below if you like.", linked: "Connected", linkH: "Sign-in methods", link: "Connect", connected: "connected",
        nickH: "Change nickname", change: "Change", pwSet: "Create a password (to sign in with your username too)", pwNew: "New password (8+ characters)", done: "Changed",
        tiers: {bronze: "Bronze", silver: "Silver", gold: "Gold", platinum: "Platinum", diamond: "Diamond", ruby: "Ruby", master: "Master", unrated: "Unrated"},
@@ -300,9 +300,19 @@ const OAUTH_ICON = {
   github: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>',
   kakao: '<svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#000" d="M9 1.5C4.306 1.5.5 4.46.5 8.112c0 2.3 1.512 4.328 3.803 5.509l-.968 3.547c-.086.313.272.563.546.382l4.225-2.787c.294.028.592.042.894.042 4.694 0 8.5-2.96 8.5-6.693C17.5 4.46 13.694 1.5 9 1.5z"/></svg>'};
 async function arHealth() { if (!ar.health || !ar.health.v) ar.health = await cmHealth(); return ar.health; }
+/* the sign-in this window started: a random nonce kept in this tab's sessionStorage goes to the start and comes back
+   with the one-time code; a code without it (a link someone else sent) is never redeemed here */
+const AR_OAUTH_NONCE = "hlOauthNonce";
+function arOauthNonce() {
+  const b = crypto.getRandomValues(new Uint8Array(24));
+  const n = btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  try { sessionStorage.setItem(AR_OAUTH_NONCE, n); } catch (e) { return ""; }
+  return n;
+}
 function arOauthStart(p, ticket) {
   try { if (!sessionStorage.getItem("hlCmBack")) sessionStorage.setItem("hlCmBack", "#/"); } catch (e) {}
-  location.href = cmBase() + "/api/oauth/" + p + "/start?return=" + encodeURIComponent(location.origin + location.pathname) + (ticket ? "&ticket=" + encodeURIComponent(ticket) : "");
+  const n = arOauthNonce();
+  location.href = cmBase() + "/api/oauth/" + p + "/start?return=" + encodeURIComponent(location.origin + location.pathname) + (ticket ? "&ticket=" + encodeURIComponent(ticket) : "") + (n ? "&nonce=" + encodeURIComponent(n) : "");
 }
 /* the three buttons at the top of the sign-in and sign-up cards */
 async function arOauth(root) {
@@ -321,7 +331,14 @@ async function arOauthBack(root) {
   history.replaceState(null, "", location.pathname + location.search + "#/oauth");
   /* the provider's side of a failure (the step, its status and error code, e.g. token-401-invalid_client), shown small so it can be reported */
   const why = (q.get("d") || "").replace(/[^a-z0-9_-]/gi, "").slice(0, 60);
+  let mine = null; try { mine = sessionStorage.getItem(AR_OAUTH_NONCE); } catch (e) {}
+  if (q.get("e")) { try { sessionStorage.removeItem(AR_OAUTH_NONCE); } catch (e) {} }
+  else if (q.get("c") && (!mine || q.get("n") !== mine)) {
+    /* not the sign-in this window started: the current session stays as it is */
+    root.innerHTML = `<div class="cmauth"><div class="card"><p class="cmerr" data-oauth-foreign>${esc(T.oauthForeign)}</p><a class="cmbtn pri" href="#/login">${T.login}</a></div></div>`; return;
+  }
   if (q.get("e") || !q.get("c")) { root.innerHTML = `<div class="cmauth"><div class="card"><p class="cmerr">${esc(arErr({code: q.get("e") || "bad_code"}))}</p>${why ? `<p class="arnote" data-oauth-why>${lang === "en" ? "Error code" : "오류 코드"}: <code>${esc(why)}</code></p>` : ""}<a class="cmbtn pri" href="#/login">${T.login}</a></div></div>`; return; }
+  try { sessionStorage.removeItem(AR_OAUTH_NONCE); } catch (e) {}
   try {
     const r = await cmApi("POST", "/oauth/redeem", {code: q.get("c")});
     cmTok(r.token); cm.me = r.user; cm.meChecked = true; arChip();

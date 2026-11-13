@@ -5167,6 +5167,23 @@ async function freeNick(env, raw) {
   }
   return "user" + Date.now() % 1e9;
 }
+/* login CSRF: the page that starts a sign-in keeps a random nonce (sessionStorage) and sends it here; it comes back with
+   the one-time code (#/oauth?c=...&n=...) and the page redeems only a code whose nonce it holds, so a link carrying
+   someone else's code cannot sign this browser into that account. Added to oauth_states without a migration step. */
+const OAUTH_NONCE_RE = /^[A-Za-z0-9_-]{22,128}$/;
+const oauthNonceReady = new WeakMap();
+function ensureOauthNonce(db) {
+  let pending = oauthNonceReady.get(db);
+  if (!pending) {
+    pending = (async () => {
+      const columns = (await db.prepare("PRAGMA table_info(oauth_states)").all()).results || [];
+      if (!columns.some(c => c.name === "nonce")) try { await db.prepare("ALTER TABLE oauth_states ADD COLUMN nonce TEXT").run(); }
+      catch (e) { if (!/duplicate column/i.test(String(e && e.message || e))) throw e; }
+    })().catch(e => { oauthNonceReady.delete(db); throw e; });
+    oauthNonceReady.set(db, pending);
+  }
+  return pending;
+}
 async function oauthRoute(req, env, url) {
   const [, , , prov, step] = url.pathname.split("/"), P = OAUTH[prov], keys = oauthKeys(env, prov);
   const redirectUri = oauthRedirectOrigin(env, prov, url) + `/api/oauth/${prov}/callback`;
@@ -5186,9 +5203,11 @@ async function oauthRoute(req, env, url) {
     }
     const state = b64u(crypto.getRandomValues(new Uint8Array(24)));
     const verifier = P.pkce ? b64u(crypto.getRandomValues(new Uint8Array(32))) : null;
+    const nonce = intent ? null : (OAUTH_NONCE_RE.test(url.searchParams.get("nonce") || "") ? url.searchParams.get("nonce") : null);
+    await ensureOauthNonce(env.DB);
     await env.DB.batch([
       env.DB.prepare("DELETE FROM oauth_states WHERE created_at<?").bind(now() - 600),
-      env.DB.prepare("INSERT INTO oauth_states(state,provider,verifier,return_to,link_user,created_at) VALUES(?,?,?,?,?,?)").bind(state, prov, verifier, ret, linkUser, now()),
+      env.DB.prepare("INSERT INTO oauth_states(state,provider,verifier,return_to,link_user,created_at,nonce) VALUES(?,?,?,?,?,?,?)").bind(state, prov, verifier, ret, linkUser, now(), nonce),
     ]);
     const q = new URLSearchParams({ client_id: keys.id, redirect_uri: redirectUri, response_type: "code", state });
     if (P.scope) q.set("scope", P.scope);
@@ -5197,6 +5216,7 @@ async function oauthRoute(req, env, url) {
     return new Response(null, { status: 302, headers: { Location: (env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(P.auth).pathname : P.auth) + "?" + q, "Cache-Control": "no-store" } });
   }
   /* callback */
+  await ensureOauthNonce(env.DB);
   const st = await env.DB.prepare("DELETE FROM oauth_states WHERE state=? AND provider=? RETURNING *").bind(url.searchParams.get("state") || "", prov).first();
   if (!st || st.created_at < now() - 600) return new Response("This sign-in link has expired. Please try again.", { status: 400 });
   /* from here the browser always goes back to the site with a reason, never to a bare error page on the Worker's address */
@@ -5243,5 +5263,5 @@ async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
   if(st.return_to.startsWith('desktop:'))return desktopOAuth.finish(env,st.return_to,userId,fresh);
   const one = b64u(crypto.getRandomValues(new Uint8Array(24)));
   await env.DB.prepare("INSERT INTO oauth_codes(code_hash,user_id,fresh,created_at) VALUES(?,?,?,?)").bind(await sha256(one), userId, fresh, now()).run();
-  return backTo(st.return_to, "c=" + one + (st.link_user ? "&linked=" + prov : ""));
+  return backTo(st.return_to, "c=" + one + (st.nonce ? "&n=" + st.nonce : "") + (st.link_user ? "&linked=" + prov : ""));
 }
