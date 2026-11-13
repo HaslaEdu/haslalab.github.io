@@ -1,0 +1,23 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2014_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "cc0aaafbef7de08ffcf95a9849ee7e2427a03f5c76f32d25b42ed6b584d7007b",
+ "bytes": 5096352,
+ "pages": 24,
+ "source_file": "PLANCKS_2014_TS.pdf",
+ "source_sha256": "30b57c4f0001cb224c50ec77070126c35286d1b7401aa9ce2f05ef9b71d9fec5",
+ "source_pages": 24,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 6195,
+ "html_source": "tools/ko_reflow/plancks/2014_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at 60 dpi, with 150-300 dpi close-ups of the cover, the author line and the stamped equation crops on p9, p15, p16, p21, p22; first-line baselines of every Korean block measured against the source text lines on all pages (all within 1.0 pt); edgecheck.py clean after tightening three crops (p10, p16, p23); check.py reports only full-width line-box artefacts of single-line blocks beside stamps, the full-page cover/back-cover stamps and the intentional float wraps on p18/p19, with no visible overlap",
+  "overflow_or_occlusion_observed": false
+ }
+}

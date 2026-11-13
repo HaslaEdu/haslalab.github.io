@@ -1,0 +1,1300 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* PLANCKS 2022 Problems & Solutions; problem pages reuse 2022.html. (Utopia 10.9pt body, TeX Gyre Adventor headings): text block x 56.7..538.6. Latin text in Computer
+   Modern with HANBatang Hangul; sans-serif headings, boxes and the "Background" label in Malgun Gothic (KG).
+   Running header logo, footer rule, page number and "PLANCKS 2022" are stamped from the original. */
+body{font-size:10.9pt;line-height:13.5pt}
+.a,.b,.l,.h,.ft,.box,.t{position:absolute;margin:0}
+.a{left:56.7pt;width:481.9pt}
+.b{left:67.1pt;width:471.5pt}
+.a>p,.b>p,.l>p,.h>p{text-indent:0}
+p.in{text-indent:10.9pt}
+.f{position:absolute;line-height:0}
+.l{left:84pt;width:454.6pt}
+.l>.k{position:absolute;left:-14.2pt}
+.l>.k2{position:absolute;left:-19.9pt}
+.h{left:67.6pt;width:471pt;font-size:10pt;line-height:12.1pt}
+.t{left:56.7pt;width:481.9pt;font-family:KG,sans-serif;font-weight:bold;font-size:14.3pt;line-height:17.4pt}
+.s{font-family:KG,sans-serif;font-weight:bold}
+.box{left:56.7pt;height:13.96pt;background:rgb(54,60,135);color:#fff;font-family:KG,sans-serif;font-size:10.9pt;line-height:13.96pt;padding:0 3pt}
+.ft{font-size:10.9pt}
+.c{text-align:center}
+.ix{display:block;width:6pt}
+/* solution pages */
+.x{position:absolute;left:56.7pt;width:481.9pt;margin:0}
+.x>p{text-indent:0}
+.x .katex{line-height:1}
+
+</style></head><body>
+
+<!-- 1 -->
+<div class="page">
+<div class="f" style="left:33.0pt;top:40.8pt"><span class="fig" data-srcpage="1" data-clip="33.0,40.8,563.5,180.4"></span></div>
+<div class="f" style="left:125.8pt;top:317.8pt"><span class="fig" data-srcpage="1" data-clip="125.8,317.8,470.4,380.2"></span></div>
+<div class="f" style="left:67.0pt;top:406.6pt"><span class="fig" data-srcpage="1" data-clip="67.0,406.6,529.5,445.4"></span></div>
+<div class="a c" style="left:56.7pt;top:490.6pt;font-size:17.2pt;line-height:20.8pt">뮌헨 &amp; 온라인</div>
+<div class="a c" style="left:56.7pt;top:528.5pt;font-size:14.3pt;line-height:17.4pt">2022년 5월 7일</div>
+<div class="a c s" style="left:56.7pt;top:683.2pt;font-size:24.9pt;line-height:30.1pt;color:rgb(54,60,135)">문제와 풀이</div>
+</div>
+
+<!-- 2 -->
+<div class="page">
+<div class="t" style="top:83.3pt">일러두기</div>
+<div class="a" style="top:112.2pt">참가자 여러분,</div>
+<div class="a" style="top:134.1pt"><p class="in">올해의 PLANCKS 문제지에 오신 것을 환영합니다! 오늘은 (이론) 물리 문제를 푸는 날입니다. 가장 높은 점수를 얻은 팀들이 올해의 PLANCKS 챔피언이라는 칭호를 얻게 됩니다. 문제를 풀기 전에, 시험에 관한 중요한 정보가 담긴 다음 일러두기와 PLANCKS 규정 발췌문을 주의 깊게 읽어 주십시오:</p></div>
+<div class="l" style="top:194.6pt"><span class="k">1.</span>대회 시험 시간은 <b>4시간</b>이다. 문제는 <b>10개</b>이며 각 문제는 <b>10점</b>이다.</div>
+<div class="l" style="top:212.6pt"><span class="k">2.</span>각 팀은 외부의 도움 없이 독자적으로 문제를 푼다.</div>
+<div class="l" style="top:230.5pt"><span class="k">3.</span><p>각 팀은 규칙, 특히 과학 경연에서 다른 팀에 대한 공정성을 지킬 것을 약속한다. 규칙을 위반한 팀은 실격된다.</p></div>
+<div class="l" style="top:262.0pt"><span class="k">4.</span><p>문제의 표현이 명확하지 않으면, 참가자는 누구나 자원봉사자에게 질문을 건네어 심사위원단에 <b>서면으로</b> 설명을 요청할 수 있다. 심사위원단은 서면으로 답한다. 그 정보가 모든 팀에 관련된 것이면 심사위원단은 모든 팀에 알린다.</p></div>
+<div class="l" style="top:320.7pt"><span class="k">5.</span><p>문제는 영어로 작성되어 있다. 답안도 <b>영어로</b> 제출해야 한다.</p></div>
+<div class="l" style="top:352.3pt"><span class="k">6.</span><p>심사위원단은 대회 중에 문제를 변경하거나 철회할 권리가 있다. 이 경우 심사위원단은 모든 팀에 알리고 채점을 적절히 조정한다. 그 밖의 다른 불이익은 없다.</p></div>
+<div class="l" style="top:397.4pt"><span class="k">7.</span><p>심사위원단이 승인하지 않은 기기는 사용할 수 없다. 사전과 그래프 기능이 없는 계산기는 사용할 수 있다!</p></div>
+<div class="l" style="top:429.0pt"><span class="k">8.</span><p>주최 측은 참가 팀들이 대회 중에 휴대 기기를 쓸 수 없도록 가능한 한 최선을 다한다.</p></div>
+<div class="l" style="top:460.6pt"><span class="k">9.</span><p>예외적인 경우, 조직위원회는 대회를 중지·중단 또는 연장하거나 채점 방식을 바꿀 권리가 있다.</p></div>
+<div class="l" style="top:492.4pt"><span class="k" style="left:-19.9pt">10.</span>규칙과 기준에 관해 의문이 있으면 심사위원단이 결정한다.</div>
+<div class="a" style="top:514.9pt">끝으로, 다음 사항에 유의하여라:</div>
+<div class="l" style="top:534.4pt"><span class="k" style="left:-10pt">$\bullet$</span><p>서로 다른 문제의 답안은 <b>별도의 종이</b>에 제출해야 한다. 즉, 새 문제의 답안을 쓸 때에는 새 종이에 쓰기 시작해야 한다.</p></div>
+<div class="l" style="top:566.0pt"><span class="k" style="left:-10pt">$\bullet$</span><p>읽을 수 없는 답안은 채점하지 않는다. 한 문제에 답안이 두 개 있고 어느 것도 지워져 있지 않으면 둘 다 틀린 것으로 처리한다.</p></div>
+<div class="l" style="top:597.7pt"><span class="k" style="left:-10pt">$\bullet$</span>제출하는 <b>모든</b> 종이에 팀 이름을 적어라.</div>
+<div class="a" style="top:620.2pt">대회 중에 궁금한 점이 생기면 여러분이 있는 층의 진행 요원에게 문의하여라.</div>
+<div class="a c" style="top:645.7pt;font-weight:bold">PLANCKS 2022 문제를 즐겁게, 그리고 성공적으로 풀기를 바랍니다!</div>
+<div class="a" style="left:67.6pt;width:431.6pt;top:671.1pt"><p><i>PLANCKS 2022 심사위원단 (Oliver Diekmann, Max Fahn, Miriam Gerharz, Philipp Heinen, Sören Kotlewski, Dr. Charlotta Lorenz, Alexander Osterkorn, Dominik Rattenbacher, Dr. Markus Schmitt, Philippe Suchsland, Rajshree Swarnkar, Dr. Matthias Zimmermann)</i></p></div>
+</div>
+
+<!-- 3 -->
+<div class="page">
+<div class="t" style="top:83.3pt">차례</div>
+<div class="a s" style="top:112.2pt">중력 삼체 문제에 관하여</div>
+<div class="f" style="left:531.9pt;top:112.8pt"><span class="fig" data-srcpage="3" data-clip="531.9,112.8,539.2,122.5"></span></div>
+<div class="a s" style="top:136.6pt">영화 <i>카지노 로얄</i> 속 제임스 본드의 자동차 사고</div>
+<div class="f" style="left:531.9pt;top:137.2pt"><span class="fig" data-srcpage="3" data-clip="531.9,137.2,539.2,146.9"></span></div>
+<div class="a s" style="top:161.1pt">지구를 두른 밧줄</div>
+<div class="f" style="left:525.8pt;top:161.7pt"><span class="fig" data-srcpage="3" data-clip="525.8,161.7,539.2,171.4"></span></div>
+<div class="a s" style="top:185.6pt">은하 중심 실험실</div>
+<div class="f" style="left:525.8pt;top:186.2pt"><span class="fig" data-srcpage="3" data-clip="525.8,186.2,539.2,195.9"></span></div>
+<div class="a s" style="top:210.0pt">스스로 가열되는 핵융합 플라스마의 조건</div>
+<div class="f" style="left:525.8pt;top:210.6pt"><span class="fig" data-srcpage="3" data-clip="525.8,210.6,539.2,220.3"></span></div>
+<div class="a s" style="top:234.5pt">정보 엔트로피로부터 얻는 볼츠만 인자</div>
+<div class="f" style="left:525.8pt;top:235.1pt"><span class="fig" data-srcpage="3" data-clip="525.8,235.1,539.2,244.8"></span></div>
+<div class="a s" style="top:258.9pt">능동 브라운 입자</div>
+<div class="f" style="left:525.8pt;top:259.5pt"><span class="fig" data-srcpage="3" data-clip="525.8,259.5,539.2,269.2"></span></div>
+<div class="a s" style="top:283.4pt">양자 합성곱 신경망</div>
+<div class="f" style="left:525.8pt;top:284.0pt"><span class="fig" data-srcpage="3" data-clip="525.8,284.0,539.2,293.7"></span></div>
+<div class="a s" style="top:307.7pt;width:454.1pt"><p>호킹 복사, 로그 위상 특이점,<br><span style="padding-left:12pt">그리고 뒤집힌 조화 진동자</span></p></div>
+<div class="f" style="left:525.8pt;top:322.0pt"><span class="fig" data-srcpage="3" data-clip="525.8,322.0,539.2,331.7"></span></div>
+<div class="a s" style="top:345.9pt;width:460pt">비선형 물리학의 드물고 극단적인 사건: 광섬유에서 바다의 파도까지</div>
+<div class="f" style="left:525.8pt;top:346.5pt"><span class="fig" data-srcpage="3" data-clip="525.8,346.5,539.2,356.2"></span></div>
+</div>
+
+<!-- 4: problem page (= problem paper p. 4) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="4" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:759.0pt"><span class="fig" data-srcpage="4" data-clip="55.8,759.0,539.5,764.0"></span></div><div class="f" style="left:55.8pt;top:764.0pt"><span class="fig" data-srcpage="4" data-clip="55.8,764.0,480.0,777.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:766.3pt">문제 1</div>
+<div class="box" style="top:85.04pt">문제 1</div>
+<div class="t" style="top:112.9pt">중력 삼체 문제에 관하여</div>
+<div class="f" style="left:56.3pt;top:142.6pt"><span class="fig" data-srcpage="4" data-clip="56.3,142.6,393.2,154.9"></span></div>
+<div class="f" style="left:55.8pt;top:167.1pt"><span class="fig" data-srcpage="4" data-clip="55.8,167.1,60.5,260.7"></span></div>
+<div class="b" style="top:166.3pt"><p><span class="s">배경</span>&ensp;$N$개의 별로 이루어진 중력계에서 각 별이 “공통 질량 중심 둘레를 돈다”는 말을 가끔 읽게 된다. “둘레”를 정성적인 의미로 이해한다면 이 말은 분명히 상당 부분 옳다. 그러나 물론 궤도는 원도 아니고 질량 중심을 초점으로 하는 케플러 타원도 아니므로, “둘레”라는 개념에 날카로운 의미를 부여할 수는 없다. 한편, 별이 세 개인 경우에는 별들이 정삼각형을 이루어 질량 중심 둘레를 강체처럼 회전하는(각 별은 원 궤도를 도는) 매우 특별한 해가 질량과 무관하게 존재한다는 것이 알려져 있다.</p></div>
+<div class="a" style="top:277.2pt"><p class="in">우리는 (무엇보다도) 공간에 한 점 $\vec x^*$가 일반적으로 존재하여, 각 별에 작용하는 다음 전체 힘 벡터</p></div>
+<div class="f" style="left:267.8pt;top:302.8pt"><span class="fig" data-srcpage="4" data-clip="267.8,302.8,538.5,329.9"></span></div>
+<div class="a" style="top:336.8pt"><p>가 모두 그 점을 향하는지, 그리고 그렇다면 이것이 중력의 $1/r^2$ 법칙에만 있는 특별한 성질인지를 알아보려고 한다. 이 문제에서는 뉴턴 상수를 $G_N=1$로 두고, 별 2가 별 1에 작용하는 힘을 다음과 같이 쓴다.</p></div>
+<div class="f" style="left:187.8pt;top:387.8pt"><span class="fig" data-srcpage="4" data-clip="187.8,387.8,538.5,414.4"></span></div>
+<div class="a" style="top:424.0pt"><p>우선 $n=2$(뉴턴 법칙)로 둔다. 별이 $N\ge4$개이면 위와 같은 점 $\vec x^*$가 일반적으로 존재하지 않음을 보이기는 어렵지 않다. (멀리 떨어진 두 무리로 나뉜 계를 생각해 보기만 하면 된다.) 따라서 $N=3$인 경우만 생각한다.</p></div>
+<div class="a" style="top:469.3pt"><b>a)</b> [1점] 질량 중심은 다음을 만족하는 유일한 점 $\vec x_0$으로 정의할 수 있음을 상기하여라.</div>
+<div class="f" style="left:245.8pt;top:493.6pt"><span class="fig" data-srcpage="4" data-clip="245.8,493.6,538.5,527.5"></span></div>
+<div class="a" style="top:537.8pt"><p>지금 다루는 문제에서는 대신 다음을 만족하는 유일한 점 $\vec x^*$를 “유사 질량 중심”으로 정의하는 것이 유용하다.</p></div>
+<div class="f" style="left:245.1pt;top:564.8pt"><span class="fig" data-srcpage="4" data-clip="245.1,564.8,538.5,598.7"></span></div>
+<div class="a" style="top:604.7pt">여기서 (배치에 따라 달라지는) “유사 질량”은 다음과 같이 정의된다.</div>
+<div class="f" style="left:257.8pt;top:628.0pt"><span class="fig" data-srcpage="4" data-clip="257.8,628.0,538.5,643.0"></span></div>
+<div class="a" style="top:653.5pt"><p>여기서 $i=1$이면 $j,k=2,3$이고, 나머지도 마찬가지이다. 식 (1.3)과 (1.4)를 각각 $\vec x_0$과 $\vec x^*$에 대해 풀어라. 일반적으로 $\vec x^*=\vec x_0$이라고 기대할 수 있는가?</p></div>
+<div class="a" style="top:685.3pt"><b>b)</b> [3점] 모든 전체 힘 $\vec F_i$가 유사 질량 중심 $\vec x^*$를 향함을 보여라.</div>
+</div>
+
+<!-- 5: problem page (= problem paper p. 5) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="5" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="5" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="5" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 1</div>
+<div class="h" style="top:90.2pt"><p><u>힌트</u>: a)의 결과를 이용하여 $\vec x_i-\vec x^*$가 $\vec F_i$의 배수임을 보여라. $i=1$에 대해서만 보여도 충분하다.</p></div>
+<div class="a" style="top:107.3pt"><p><b>c)</b> [4점] 지금까지는 고정된 한 순간만 살펴보았다. 다음 질문은 이 상황이 시간에 대해 안정한지, 즉 세 별이 이루는 삼각형이 유사 질량 중심 둘레를 강체처럼 회전할 수 있는지이다. 원심력 법칙에 따르면 이를 위해서는 다음이 필요하다.</p></div>
+<div class="f" style="left:242.3pt;top:157.6pt"><span class="fig" data-srcpage="5" data-clip="242.3,157.6,538.5,173.2"></span></div>
+<div class="a" style="top:183.6pt">여기서 $\omega^2$은 모든 $i=1,2,3$에 <u>공통</u>이다. b)의 결과를 이용하여 이 조건을 분석하여라!</div>
+<div class="a" style="top:201.4pt"><p><b>d)</b> [1점] 뉴턴의 $1/r^2$ 법칙 (1.2)를 $1/r^n$ 법칙 $(n\neq0)$으로 바꾸면, 즉 (1.2)와 유사 질량의 정의에서 $|\vec x_{ij}|^3$을 $|\vec x_{ij}|^{n+1}$로 바꾸면 a)~c)에서 무엇이 달라지는가?</p></div>
+<div class="a" style="top:233.0pt"><p><b>e)</b> [1점] $n=-1$이면, 즉 뉴턴 법칙 (1.2)가 질량의 곱에 비례하는 탄성력 $\vec F_{1,2}=-m_1m_2\vec x_{1,2}$가 되면 a)~c)에서 무엇이 달라지는가?</p></div>
+</div>
+
+<!-- 6 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="6" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="6" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="6" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 1</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:119.6pt"><b>a)</b> 식 (1.3)을 정리하면 다음을 얻는다.</div>
+<div class="f" style="left:261.5pt;top:131.4pt"><span class="fig" data-srcpage="6" data-clip="261.5,131.4,539.6,162.9"></span></div>
+<div class="x" style="top:165.3pt">마찬가지로,</div>
+<div class="f" style="left:260.8pt;top:175.6pt"><span class="fig" data-srcpage="6" data-clip="260.8,175.6,539.6,208.5"></span></div>
+<div class="x" style="top:210.9pt"><p>세 거리가 모두 같지 않은 한 위치 $\vec x_i$들은 일반적으로 서로 다른 상대 가중치로 평균되므로, 결과는 일반적으로 다르다.</p></div>
+<div class="x" style="top:242.5pt"><b>b)</b> a)와 간단한 계산으로 다음을 얻는다.</div>
+<div class="f" style="left:107.0pt;top:264.8pt"><span class="fig" data-srcpage="6" data-clip="107.0,264.8,539.6,378.3"></span></div>
+<div class="x" style="top:386.8pt"><p>여기서 $M^*=m_1x_{23}^3+m_2x_{13}^3+m_3x_{12}^3$은 전체 유사 질량을 줄여 쓴 것이다. 따라서 힘은 $\vec x^*$로부터의 변위와 반평행하다. $i=2,3$에 대해서도 마찬가지이다.</p></div>
+<div class="x" style="top:418.4pt"><b>c)</b> b)와 식 (1.6)으로부터 다음을 결론짓는다.</div>
+<div class="f" style="left:120.5pt;top:441.6pt"><span class="fig" data-srcpage="6" data-clip="120.5,441.6,539.6,475.5"></span></div>
+<div class="x" style="top:485.8pt"><p>$i=2,3$에 대해서도 마찬가지이다. $\mu$는 순열에 대해 대칭이고 $\omega$는 모든 $i$에 대해 같아야 하므로, $|\vec x_{12}|^3=|\vec x_{13}|^3=|\vec x_{23}|^3$, 즉 세 별은 <u>정삼각형</u>을 이루어야 한다. 이 경우 유사 질량 중심은 질량 중심과 같다. 이것이 잘 알려진 해이며, 다른 해는 없다. 순열에 대해 대칭인 양 $\mu$와 삼각형의 변의 길이가 주기를 결정한다.</p></div>
+<div class="x" style="top:544.5pt"><p><b>d)</b> 달라지는 것은 없다. 필요한 부분만 바꾸면(mutatis mutandis) 같은 결과가 그대로 성립한다. 모든 힘은 유사 질량 중심을 향하며, 이 점은 일반적으로 질량 중심과 다르다. 강체 회전은 질량이 임의인 정삼각형에 대해서만 가능하다.</p></div>
+<div class="x" style="top:589.6pt"><p><b>e)</b> a)에서: 3이 $n+1=0$으로 바뀌므로 유사 질량은 실제 질량과 같고, 유사 질량 중심은 질량 중심과 일치한다.</p></div>
+<div class="x" style="top:616.7pt">b)에서: 달라지는 것은 없다. 힘은 질량 중심을 향한다. $\mu$는 전체 질량이다.</div>
+<div class="x" style="top:630.3pt"><p>c)에서: 거리에 대한 조건은 $x_{12}^0=x_{13}^0=x_{23}^0$, 즉 $1=1=1$이 된다. 이는 거리와 <u>무관하게</u> 성립한다. 따라서 <u>모든</u> 삼각형이 질량 중심 둘레를 강체처럼 회전할 수 있다.</p></div>
+</div>
+
+<!-- 7: problem page (= problem paper p. 6) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="7" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="7" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="7" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 2</div>
+<div class="box" style="top:88.1pt">문제 2</div>
+<div class="t" style="top:115.9pt">영화 <i>카지노 로얄</i> 속 제임스 본드의 자동차 사고</div>
+<div class="f" style="left:56.3pt;top:145.6pt"><span class="fig" data-srcpage="7" data-clip="56.3,145.6,484.7,157.9"></span></div>
+<div class="f" style="left:55.8pt;top:170.3pt"><span class="fig" data-srcpage="7" data-clip="55.8,170.3,60.5,263.9"></span></div>
+<div class="b" style="top:169.4pt"><p><span class="s">배경</span>&ensp;물리학자이자 괴팅겐 대학교 총장인 Metin Tolan 교수는 자신의 책 <i>Shaken, not stirred – James Bond in the spotlight of physics</i>에서 제임스 본드 영화 <i>카지노 로얄</i>의 한 장면을 분석한다. 제임스 본드가 자동차를 타고 악당 르 쉬프르를 쫓고 있다. 그때 갑자기 본드의 연인 베스퍼 린드가 길 위에 묶여 있고, 본드는 운전대를 왼쪽으로 홱 꺾으며, 그러자 자동차가 뒤집힌다. 다음 그림은 자동차가 뒤집히는 장면의 개별 프레임을 보여 준다. 이 문제에서는 주어진 상황에서 자동차가 실제로 뒤집힐 수 있는지 분석하려고 한다.</p></div>
+<div class="f" style="left:55.8pt;top:287.8pt"><span class="fig" data-srcpage="7" data-clip="55.8,287.8,539.5,372.2"></span></div>
+<div class="a" style="top:387.0pt"><p class="in">자동차의 질량은 $m=1750$ kg, 폭은 $b=1.90$ m, 높이는 $h=1.28$ m이다. 자동차는 $g=9.81$ m/s<sup>2</sup>인 지구의 중력장에서 속력 $v=128$ km/h로 달린다.</p></div>
+<div class="a" style="top:418.5pt"><p><b>a)</b> [1점] 자동차를, 질량 중심이 높이의 아래쪽 1/3 지점 가운데에 있는 직육면체로 모형화하여라. 운전대를 홱 꺾었을 때 자동차에 작용하는 모든 힘을 자동차의 단면에 그려라. 자동차가 옆으로 뒤집힐 때 회전의 중심이 되는 점을 그려라. 이 문제에서는 자동차의 길이 방향 축에 대한 회전만 생각한다.</p></div>
+<div class="a" style="top:477.4pt"><b>b)</b> [1점] 자동차에 작용하는 힘과 돌림힘을 계산하여라.</div>
+<div class="a" style="top:495.2pt"><p><b>c)</b> [0.5점] 자동차가 그냥 방향을 트는 대신 뒤집히기 시작하려면 무슨 일이 일어나야 하는지 생각하여라.</p></div>
+<div class="a" style="top:526.8pt"><p><b>d)</b> [1점] 자동차가 뒤집히기 시작하지 않으려면 곡선 도로의 반지름이 최소 얼마여야 하는가?</p></div>
+<div class="a" style="top:558.4pt"><p><b>e)</b> [0.5점] 영화에서 곡선 반지름은 약 200 m이므로 자동차가 저절로 뒤집히지는 않을 것이다. 곡선 반지름이 일정할 때 그래도 자동차가 뒤집히려면 무슨 일이 일어나야 하는가?</p></div>
+<div class="a" style="top:590.0pt"><p><b>f)</b> [0.5점] 이 장면을 촬영할 때 자동차를 뒤집기 위해 두 가지 조치를 추가로 썼다. 그중 하나는 길이 $L=2.5$ m이고 높이가 0 cm에서 $H=10$ cm까지 올라가는 경사로로, 자동차의 왼쪽이 그 위를 지나갔다(즉, 자동차는 왼쪽 바퀴로 경사로를 올라간다). 다음 그림은 이 상황을 단순하게 나타낸 것이다. 경사로 위의 자동차를 뒤에서 본 모습으로 그리고, 원심력과 중력을 그 작용점과 함께 그려라.</p></div>
+<div class="a" style="top:662.2pt"><p><b>g)</b> [1점] 경사로 때문에 생기는 자동차의 각속도 변화($\dot\phi$, 그림 (b)에 $\phi$가 그려져 있다)를 계산하여라. 자동차가 경사로를 지나가는 데 걸리는 시간을 생각하여라. 간단히 하기 위해, 경사로의 높이는</p></div>
+</div>
+
+<!-- 8: problem page (= problem paper p. 7) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="8" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="8" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="8" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 2</div>
+<div class="f" style="left:80.0pt;top:87.3pt"><span class="fig" data-srcpage="8" data-clip="80.0,87.3,515.5,201.2"></span></div>
+<div class="a" style="top:221.5pt"><p>길이에 비해 무시할 수 있다고 가정하여라. 그다음 자동차의 오른쪽에 대한 왼쪽의 각도 변화를 계산하여라. 작은 각 근사를 써라.</p></div>
+<div class="a" style="top:253.0pt"><p><b>h)</b> [0.5점] 각속도의 변화는 자동차의 각운동량과 돌림힘에 대해 무엇을 뜻하는가? 돌림힘을 자동차의 관성 모멘트 $I$와 각가속도의 함수로 나타내어라.</p></div>
+<div class="a" style="top:298.2pt"><p><b>i)</b> [1점] 이제 경사로 때문에 자동차의 왼쪽에 작용하는 추가적인 힘을 계산하려면, 먼저 자동차가 회전할 때 중심이 되는 오른쪽 타이어에 대한 자동차의 관성 모멘트를 계산해야 한다. 자동차를 직육면체로 모형화하여라. 직육면체의 관성 모멘트를 직접 유도할 필요는 없으며, 잘 알려진 공식을 써도 된다. 슈타이너 정리(평행축 정리)를 이용하여라.</p></div>
+<div class="a" style="top:357.0pt"><b>j)</b> [1점] 돌림힘은 차량의 왼쪽에 작용한다. 차량 왼쪽의 힘을 무게 중심에서의 힘으로 바꾸려면 인자</div>
+<div class="f" style="left:273.1pt;top:382.3pt"><span class="fig" data-srcpage="8" data-clip="273.1,382.3,321.7,394.7"></span></div>
+<div class="a" style="top:405.9pt"><p>가 필요함을 보여라. $b$, $c$, $\alpha$는 위의 그림 (c)에 나타나 있다. 지레 법칙을 이용하고, 두 벡터 사이의 각을 $\alpha$라 할 때 벡터곱을 $\vec d\times\vec f=|\vec d||\vec f|\sin\alpha$로 써라. 여기서 $\phi$는 $\alpha$에 비해 무시할 수 있다.</p></div>
+<div class="a" style="top:451.0pt"><p><b>k)</b> [1점] 경사로가 무게 중심에 만드는 추가적인 힘 $F_R$를 구체적으로 계산하여라. 경사로가 그리 높지 않으므로 다시 $\alpha&gt;&gt;\phi$, $\alpha=24^\circ$라고 가정할 수 있다.</p></div>
+<div class="a" style="top:482.6pt"><p><b>l)</b> [1점] 이 힘만으로는 자동차를 뒤집기에 충분하지 않다. 영화 제작진이 시험해 보니 어떤 자동차에서는 이것으로 충분했지만, 여기서 쓴 자동차에는 충분하지 않았다. 그래서 자동차를 뒤집기 위한 두 번째 조치로, 질량 $m_B=20$ kg인 쇠막대를 $\Delta t_B=0.1$ s 동안 $\Delta v_B=10$ m/s만큼 가속하여 다음 그림과 같이 자동차의 왼쪽 바퀴 근처에서 쏘아 올렸다. 이렇게 해서 질량 중심에 생기는 추가적인 힘을 계산하여라. 여기서도 (j)에서 계산한 지레 법칙을 다시 적용해야 함에 유의하여라.</p></div>
+<div class="f" style="left:200.6pt;top:574.0pt"><span class="fig" data-srcpage="8" data-clip="200.6,574.0,394.9,659.0"></span></div>
+<div class="a" style="left:67.6pt;top:671.4pt">경사로와 쇠막대가 함께 작용하여 마침내 자동차를 뒤집을 수 있었다.</div>
+</div>
+
+<!-- 9 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="9" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="9" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="9" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 2</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:115.1pt">YouTube 링크: <span style="font-family:'KaTeX_Typewriter',monospace">https://www.youtube.com/watch?v=x-21uPJGXFQ</span></div>
+<div class="x" style="top:133.1pt"><p><b>a)</b> 힘을 올바르게 그리면 0.5점, 힘의 작용점을 올바르게 그리면 0.5점. $a=c$이고, $b$와 $h$는 그리지 않아도 된다.</p></div>
+<div class="f" style="left:201.3pt;top:170.0pt"><span class="fig" data-srcpage="9" data-clip="201.3,170.0,394.0,293.1"></span></div>
+<div class="x" style="top:310.7pt"><p><b>b)</b> 힘: 원심력 $F_Z=mv^2/r$, 중력 $F_G=mg$. 각 힘의 돌림힘은 자동차의 무게 중심에 작용한다. $c=\sqrt{(h/3)^2+(b/2)^2}$로 정의한다. (힘이 올바르면 0.5점, 돌림힘이 올바르면 0.5점)</p></div>
+<div class="f" style="left:255.0pt;top:362.0pt"><span class="fig" data-srcpage="9" data-clip="255.0,362.0,539.6,393.5"></span></div>
+<div class="x" style="top:408.8pt"><p><b>c)</b> 자동차를 바깥쪽으로 당기는 돌림힘이 자동차를 아래쪽으로 당기는 돌림힘보다 커야 한다. 즉 $M_Z&gt;M_G$이다. (0.5점)</p></div>
+<div class="x" style="top:440.4pt"><p><b>d)</b> (c)의 논리에 따라 (b)의 결과를 대입하고 정리하면 다음을 얻는다(계산이 올바르면 0.5점, 결과가 올바르면 0.5점).</p></div>
+<div class="f" style="left:240.0pt;top:473.0pt"><span class="fig" data-srcpage="9" data-clip="240.0,473.0,539.6,492.5"></span></div>
+<div class="x" style="top:507.5pt"><p><b>e)</b> 풀이의 핵심: 더 큰 돌림힘, 각운동량의 변화 또는 이와 비슷한 생각. (생각이 올바르면 0.5점)</p></div>
+<div class="x" style="top:539.1pt"><p><b>f)</b> 그림 (여기에는 책에 실린 완전한 그림을 보인다. 힘을 올바르게 그리고 질량 중심을 올바르게 나타내면 0.5점):</p></div>
+</div>
+
+<!-- 10 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="10" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="10" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="10" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 2</div>
+<div class="f" style="left:177.2pt;top:88.1pt"><span class="fig" data-srcpage="10" data-clip="177.2,88.1,418.1,263.0"></span></div>
+<div class="x" style="top:298.4pt"><p><b>g)</b> 자동차가 경사로를 지나가는 데 걸리는 시간(계산과 생각이 올바르면 0.5점, 결과가 올바르면 0.5점):</p></div>
+<div class="f" style="left:276.0pt;top:330.0pt"><span class="fig" data-srcpage="10" data-clip="276.0,330.0,320.0,359.5"></span></div>
+<div class="x" style="top:362.2pt">각도 변화:</div>
+<div class="f" style="left:249.0pt;top:381.0pt"><span class="fig" data-srcpage="10" data-clip="249.0,381.0,347.0,410.5"></span></div>
+<div class="x" style="top:413.6pt">따라서 각속도의 변화는 다음과 같다.</div>
+<div class="f" style="left:254.0pt;top:432.5pt"><span class="fig" data-srcpage="10" data-clip="254.0,432.5,339.0,462.0"></span></div>
+<div class="x" style="top:469.1pt"><b>h)</b> 각운동량이 변하므로 돌림힘 $&gt;0$이 생긴다. 생기는 돌림힘 $D$는 다음과 같다(0.5점).</div>
+<div class="f" style="left:273.0pt;top:488.0pt"><span class="fig" data-srcpage="10" data-clip="273.0,488.0,321.0,517.5"></span></div>
+<div class="x" style="top:526.8pt"><p><b>i)</b> $c=\sqrt{(h/3)^2+(b/2)^2}$일 때 관성 모멘트(세운 식이 올바르면 0.5점, 풀이가 올바르면 0.5점):</p></div>
+<div class="f" style="left:234.0pt;top:557.5pt"><span class="fig" data-srcpage="10" data-clip="234.0,557.5,362.0,587.0"></span></div>
+<div class="x" style="top:594.1pt"><p><b>j)</b> 지레 법칙에 따르면 작용하는 전체 돌림힘의 합은 0이어야 한다. 즉 자동차의 왼쪽에 작용하는 힘 $\vec F_L$이 만드는 돌림힘은 무게 중심에 작용하는 힘 $\vec F_R$가 만드는 돌림힘과 같아야 한다. 이때 각 $\phi$는 $\alpha$에 비해 무시할 수 있다고 한다(세운 식이 올바르면 0.5점, 결과가 올바르면 0.5점):</p></div>
+<div class="f" style="left:229.0pt;top:656.0pt"><span class="fig" data-srcpage="10" data-clip="229.0,656.0,368.0,734.0"></span></div>
+</div>
+
+<!-- 11 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="11" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="11" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="11" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 2</div>
+<div class="x" style="top:102.9pt"><b>k)</b> (세운 식이 올바르면 0.5점, 결과가 올바르면 0.5점)</div>
+<div class="f" style="left:213.0pt;top:124.5pt"><span class="fig" data-srcpage="11" data-clip="213.0,124.5,384.0,155.5"></span></div>
+<div class="x" style="top:165.9pt"><b>l)</b> 뉴턴 법칙으로 다음을 얻는다(0.5점).</div>
+<div class="f" style="left:233.0pt;top:187.5pt"><span class="fig" data-srcpage="11" data-clip="233.0,187.5,362.0,217.0"></span></div>
+<div class="x" style="top:224.7pt">이는 무게 중심에 대해 다음에 해당한다(0.5점).</div>
+<div class="f" style="left:229.0pt;top:246.5pt"><span class="fig" data-srcpage="11" data-clip="229.0,246.5,366.0,276.0"></span></div>
+</div>
+
+<!-- 12: problem page (= problem paper p. 8) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="12" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="12" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="12" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 3</div>
+<div class="box" style="top:88.1pt">문제 3</div>
+<div class="t" style="top:115.9pt">지구를 두른 밧줄</div>
+<div class="f" style="left:56.3pt;top:144.3pt"><span class="fig" data-srcpage="12" data-clip="56.3,144.3,546.0,184.9"></span></div>
+<div class="f" style="left:55.8pt;top:197.3pt"><span class="fig" data-srcpage="12" data-clip="55.8,197.3,60.5,262.9"></span></div>
+<div class="b" style="top:196.5pt"><p><span class="s">배경</span>&ensp;밧줄 한 고리가 반지름 $R$인 지구의 둘레를 감싸고 있다. 밧줄은 이상적이다(늘림 탄성률 $\infty$, 강도 $\infty$, 굽힘 탄성률 $0$, 두께는 무한히 얇다). 밧줄의 질량 밀도는 $\rho$ (kg/m)이다. 밧줄의 길이는 한 바퀴 전체에 걸쳐 표면에서 거리 $a$만큼 위에 떠 있게 할 수 있을 정도이다. 즉, 밧줄을 표면 위에 곧게 펴 놓으면 $2\pi a$만큼 남는다. $a\ll R$이라고 가정한다(예: $a=1$ m, $R\sim10^6$ m).</p></div>
+<div class="f" style="left:151.1pt;top:286.6pt"><span class="fig" data-srcpage="12" data-clip="151.1,286.6,450.7,361.9"></span></div>
+<div class="a" style="top:379.1pt"><p>누군가 점 $P$에서 밧줄을 잡아 들어 올린다. 밧줄을 들어 올릴 수 있는 최대 높이 $h$는 얼마인가?</p></div>
+<div class="a" style="top:410.6pt"><p><b>a)</b> [1점] 먼저 물리적 직관을 쌓아 보자. 우선, 밧줄을 높이 $h$로 들고 있을 때 지구 위에 놓여 있지 않은 밧줄의 길이 $l$을 도입하여라. 차원 분석과, $a=\mathrm{const}$ 또는 $\mathrm{R}=\mathrm{const}$인 경우에 $a/R\to0$에서의 극한 행동을 분석하여, $h$, $l$을 다음과 같이 나타낼 수 있음을 정당화하여라.</p></div>
+<div class="f" style="left:217.1pt;top:474.8pt"><span class="fig" data-srcpage="12" data-clip="217.1,474.8,538.5,507.2"></span></div>
+<div class="a" style="top:518.6pt">단, $a/R\ll1$인 극한에서이다.</div>
+<div class="a" style="top:536.6pt"><b>b)</b> [0.5점] $a/R\ll1$이면 $l/R\ll1$임을 보여라.</div>
+<div class="a" style="top:554.5pt"><b>c)</b> [2.5점] $a/R\ll1$인 극한에서 $l$, $h$를 계산하여 상수 $c_1$, $c_2$, $\alpha$, $\beta$를 구하여라.</div>
+<div class="h" style="top:568.4pt"><u>힌트</u>: $l/R\ll1$을 제외하면 이 문제는 앞의 문제들에 의존하지 않는다.</div>
+<div class="a" style="top:586.9pt"><p>이제 장력을 계산한다. 밧줄을 높이 $\tilde h$, $\pi a&lt;\tilde h\ll h$까지 들어 올린다고 하자. 밧줄은 대략 다음과 같은 모양이 된다(축척은 맞지 않다).</p></div>
+<div class="f" style="left:188.8pt;top:631.3pt"><span class="fig" data-srcpage="12" data-clip="188.8,631.3,406.4,726.2"></span></div>
+</div>
+
+<!-- 13: problem page (= problem paper p. 9) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="13" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="13" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="13" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 3</div>
+<div class="a" style="top:89.2pt"><p>케이블 이론에 따르면, 이른바 “현수선”인 $y(x)$는 균일한 중력장의 극한에서 쌍곡코사인 곡선의 일부이다. 우리의 목표는 곡선 $y(x)$를 결정하는 미분 방정식을 찾는 것이다. 이를 위해 밧줄에 작용하는 힘들을 생각하여라. $a/R\to\infty$인 극한에서 다루므로, 이후의 모든 소문항에서 지구의 곡률과 중력의 변화는 무시해도 된다.</p></div>
+<div class="a" style="top:161.3pt;line-height:14pt"><p><b>d)</b> [2점] 세 미지 함수 $y(x)$, $F_{R,x}$, $F_{R,y}$를 결정하는 미분 방정식 세 개를 유도하되, 풀지는 마라. 여기서 $F_{R,x}$와 $F_{R,y}$는 밧줄의 장력 $\vec F_R$의 두 벡터 성분이다. 기준계는 자유롭게 고르고, 중력의 세기와 방향은 $\vec g$로 나타내어라.</p></div>
+<div class="h" style="top:217.9pt"><u>힌트</u>: 밧줄의 짧은 한 토막에 작용하는 힘들을 생각하여라.</div>
+<div class="a" style="top:234.9pt"><p><b>e)</b> [1.5점] 밧줄이 땅에 닿기 시작하는 점 $G$를 도입하여, 앞 문항에서 유도한 미분 방정식의 경계 조건, 즉 기울기를 완전히 결정하는 데 필요한 조건을 써라. 특히, 땅에 닿는 점 $G$에서의 조건을 결정하는 힘의 법칙은 무엇인가?</p></div>
+<div class="a" style="top:294.4pt"><b>f)</b> [1점] 미분 방정식들을 풀어라.</div>
+<div class="h" style="top:306.4pt"><u>힌트</u>: 다음 적분의 결과</div>
+<div class="f" style="left:233.6pt;top:328.1pt"><span class="fig" data-srcpage="13" data-clip="233.6,328.1,538.5,352.4"></span></div>
+<div class="h" style="left:56.7pt;top:361.2pt">가 쓸모 있을 것이다. 여기서 $\mathrm{asinh}(z)$는 $\sinh(z)$의 역함수이다.</div>
+<div class="a" style="top:379.1pt"><p>미분 방정식의 해는 $y(x)=a+\cosh(b(x-c))/b$ 꼴이 되며, 이후에 이 결과를 써도 된다.</p></div>
+<div class="a" style="top:410.7pt"><p><b>g)</b> [1점] $P$를 훨씬 더 높이, 그러나 최댓값보다는 여전히 훨씬 낮게 들어 올린다. 특히 $\tilde h=h/10$이다. 점 $P$에서 밧줄의 장력은 얼마인가?</p></div>
+<div class="h" style="top:438.8pt"><u>힌트</u>: 점 $P$에서 $|y'|\ll1$이라고 가정해도 된다.</div>
+<div class="a" style="top:455.8pt"><p><b>h)</b> [0.5점] 앞 문항의 결과와 c)에서 구한 $h$에 근거할 때, $R\to\infty$인 극한에서 실제 밧줄을 높이 $\tilde h=h/10$까지 들어 올리면 밧줄은 어떻게 되겠는가?</p></div>
+</div>
+
+<!-- 14 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="14" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="14" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="14" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 3</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:119.5pt"><p><b>a)</b> 문제에서 주어진 대로, 첫 단계로 $h$, $l$이 해석적이어서 다음과 같이 나타낼 수 있다고 가정한다.</p></div>
+<div class="f" style="left:210.0pt;top:155.5pt"><span class="fig" data-srcpage="14" data-clip="210.0,155.5,539.6,189.4"></span></div>
+<div class="x" style="top:199.6pt">여기서 $a/R\ll1$이고, $\alpha,\beta,\epsilon_1,\epsilon_2&gt;0$이며 $c_1$, $c_2$는 차원 없는 상수이다.</div>
+<div class="x" style="top:213.1pt"><p style="text-indent:10.9pt">극한 $a/R\to0$에는 $a=\mathrm{const}$, $R\to\infty$로 다가갈 수도 있고 $a\to0$, $R=\mathrm{const}$로 다가갈 수도 있다. $a\to0$인 극한에서는 밧줄이 지구 둘레에 정확히 한 바퀴 들어맞는다. $h$, $l$은 연속 함수이고 $a=0$에서 $h=0$, $l=0$이므로 $h\to0$, $l\to0$이 되리라 기대한다. $R=\mathrm{const}$인 이 극한에서 두 함수는 다음을 만족해야 한다.</p></div>
+<div class="f" style="left:260.5pt;top:261.4pt"><span class="fig" data-srcpage="14" data-clip="260.5,261.4,539.6,277.4"></span></div>
+<div class="x" style="top:288.7pt">여기서 $a\to0$일 때 0으로 다가가려면 $\alpha',\beta'&gt;0$이어야 한다.</div>
+<div class="x" style="top:302.2pt"><p style="text-indent:10.9pt">$a=\mathrm{const}$, $R\to\infty$인 극한에서는 $h$와 $l$이 모두 무한대로 발산하리라 기대한다. 이를 확인하기 위해, 발산하는 $h$의 하한을 구한다. 그림 3.1과 같은 작도를 생각하자. 분명히 최대 $h$는 $\tilde h$보다 크다. $R\to\infty$인 극한에서는</p></div>
+<div class="f" style="left:173.5pt;top:352.8pt"><span class="fig" data-srcpage="14" data-clip="173.5,352.8,421.8,470.2"></span></div>
+<div class="x" style="top:477.6pt;font-size:10pt;text-align:center"><b>그림 3.1</b> $R\to\infty$, $a=\mathrm{const}$인 극한에서 $h$의 하한을 구하는 작도</div>
+<div class="x" style="top:501.4pt">$\tilde\theta R$의 고차 항이 사라지므로 다음과 같이 쓸 수 있다.</div>
+<div class="f" style="left:175.4pt;top:524.3pt"><span class="fig" data-srcpage="14" data-clip="175.4,524.3,539.6,549.5"></span></div>
+<div class="x" style="top:560.4pt">따라서 $\tilde h\to\infty$이고, 그러므로 $h\to\infty$, $l\to\infty$이다. 이를 위해서는 $a=\mathrm{const}$일 때 다음이 필요하다.</div>
+<div class="f" style="left:260.6pt;top:582.9pt"><span class="fig" data-srcpage="14" data-clip="260.6,582.9,539.6,597.6"></span></div>
+<div class="x" style="top:608.8pt">여기서 $\alpha,\beta&gt;0$이다. 이를 앞의 결과와 합치면 다음을 얻는다.</div>
+<div class="f" style="left:223.3pt;top:631.2pt"><span class="fig" data-srcpage="14" data-clip="223.3,631.2,539.6,647.0"></span></div>
+<div class="x" style="top:657.2pt">여기서 $0&lt;\alpha,\beta&lt;1$이다.</div>
+<div class="x" style="top:675.2pt"><b>b)</b> 이는 앞 문항의 결과 $l/R=c_1(a/R)^{1-\alpha}\ll1$에서 곧바로 나온다.</div>
+<div class="x" style="top:693.2pt"><p><b>c)</b> 앞 문항들을 이용하면 각 $\theta$(그림 3.1 참고)가 작음을 알 수 있다. 각에 대한 관계 $\sin(\theta/2)=l/(2(R+h))$와 관계식 $\theta R+2\pi a=l$로부터, 극한 $R\gg a$에서 $\theta\sim l/R$이고, 따라서 앞에서 구한 스케일링 꼴에 의해 $\theta\to0$이다.</p></div>
+</div>
+
+<!-- 15 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="15" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="15" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="15" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 3</div>
+<div class="x" style="top:89.3pt"><p style="text-indent:10.9pt">다음 관계를 이용한다. 밧줄의 길이는 $2\pi(R+a)$이며, 이는 $l$과 나머지 원호의 길이의 합과 같아야 한다.</p></div>
+<div class="f" style="left:227.1pt;top:127.7pt"><span class="fig" data-srcpage="15" data-clip="227.1,127.7,539.6,173.4"></span></div>
+<div class="x" style="top:184.9pt"><span style="padding-left:10.9pt"></span>$\theta$가 작음을 보였으므로 다음과 같이 쓸 수 있다.</div>
+<div class="f" style="left:218.0pt;top:206.5pt"><span class="fig" data-srcpage="15" data-clip="218.0,206.5,539.6,233.8"></span></div>
+<div class="x" style="top:240.9pt">이로부터 다음을 얻는다.</div>
+<div class="f" style="left:156.7pt;top:263.4pt"><span class="fig" data-srcpage="15" data-clip="156.7,263.4,539.6,391.9"></span></div>
+<div class="x" style="top:401.9pt">이제 다음으로부터 $h$를 얻는다.</div>
+<div class="f" style="left:126.9pt;top:424.7pt"><span class="fig" data-srcpage="15" data-clip="126.9,424.7,539.6,472.2"></span></div>
+<div class="x" style="top:483.9pt"><p><b>d)</b> 밧줄의 모양 $y(x)$를 결정하는 방정식은 두 개이다. 밧줄의 한 조각에 작용하는 힘과 기준계를 그림 3.2에 나타내었다. 이 기준계에서 방정식을 푸는 것은 꽤 복잡할 수 있지만,</p></div>
+<div class="f" style="left:151.7pt;top:521.0pt"><span class="fig" data-srcpage="15" data-clip="151.7,521.0,443.5,668.1"></span></div>
+<div class="x" style="top:675.5pt;font-size:10pt;text-align:center"><b>그림 3.2</b> Caption</div>
+<div class="x" style="top:702.3pt"><p>방정식을 세우는 것은 그보다 쉽다. 중력 $g(x,y)$가 위치에 따라 달라진다는 점에 유의하여라.</p></div>
+</div>
+
+<!-- 16 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="16" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="16" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="16" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 3</div>
+<div class="x" style="top:89.3pt"><p style="text-indent:10.9pt">한 가지 조건은 밧줄이 평형 상태에 있어야 하므로 모든 힘이 상쇄되어야 한다는 요구에서 나온다. 밧줄 내부의 장력 $\vec F_\mathrm{R}$와, 지구 중심 쪽으로 당기는 다음 중력이 있다.</p></div>
+<div class="f" style="left:213.7pt;top:135.6pt"><span class="fig" data-srcpage="16" data-clip="213.7,135.6,539.6,166.7"></span></div>
+<div class="x" style="top:174.9pt"><p>여기서 밧줄의 길이 $s$에 대해 $x$부터 $dx$까지 적분하였다. 이제 다음을 이용하여 $s$를 $x$로 바꾸어 쓸 수 있다.</p></div>
+<div class="f" style="left:249.6pt;top:210.6pt"><span class="fig" data-srcpage="16" data-clip="249.6,210.6,539.6,243.4"></span></div>
+<div class="x" style="top:254.0pt">(어림잡아 $ds^2=dx^2+dy^2$). 그러면 다음을 얻는다.</div>
+<div class="f" style="left:85.8pt;top:275.3pt"><span class="fig" data-srcpage="16" data-clip="85.8,275.3,539.6,306.5"></span></div>
+<div class="x" style="top:312.6pt">이를 이용하면 힘이 상쇄된다는 조건을 다음과 같이 쓸 수 있다.</div>
+<div class="f" style="left:216.1pt;top:333.0pt"><span class="fig" data-srcpage="16" data-clip="216.1,333.0,539.6,379.0"></span></div>
+<div class="x" style="top:384.5pt"><p style="text-indent:10.9pt">모양 $y$를 결정하는 데 필요한 두 번째 방정식은 평형 상태에서 $\vec F_\mathrm{R}(x)$가 밧줄에 접해야 한다는 요구에서 나온다. 이로부터 다음을 얻는다.</p></div>
+<div class="f" style="left:262.1pt;top:419.8pt"><span class="fig" data-srcpage="16" data-clip="262.1,419.8,539.6,448.3"></span></div>
+<div class="x" style="top:456.1pt">따라서 미분 방정식 세 개와 미지 함수 세 개 $y(x)$, $F_{\mathrm{R},y}(x)$, $F_{\mathrm{R},x}(x)$가 있다.</div>
+<div class="x" style="top:473.8pt"><p><b>e)</b> 이 방정식들은 1계 미분 방정식이므로, 모양을 정하려면 초기 조건이 세 개 필요하다. 이 조건들은 점 $G$, 즉 밧줄이 땅에 닿는 점을 생각하면 얻을 수 있다. 이 점에서 밧줄은 지구에 접하고 $\vec F_\mathrm{R}$는 밧줄에 접하므로 $F_{\mathrm{R},y}(x=G)=0$이다. 이는 $y'(x=G)=0$과 같다. 또한 $x=G$에서 $y(x=G)=0$을 얻는다. 마지막 조건은 밧줄이 지구의 곡면 $y_E(x)$보다 $\pi a$만큼 길다는 것이다.</p></div>
+<div class="f" style="left:186.8pt;top:549.3pt"><span class="fig" data-srcpage="16" data-clip="186.8,549.3,539.6,580.5"></span></div>
+<div class="x" style="top:586.6pt">따라서 남은 자유도는 하나, 곧 $G$뿐이다.</div>
+<div class="x" style="top:604.4pt"><p><b>f)</b> 지구의 곡률과 중력의 위치 의존성을 무시하여 방정식을 단순화한다. 이 경우 $h(x)=y(x)$이고 $\vec g=-g\vec e_y$이다. 즉 앞에서 고른 기준계가 지구와 나란하다. 미분 방정식은 다음과 같이 단순해진다.</p></div>
+<div class="f" style="left:207.1pt;top:663.4pt"><span class="fig" data-srcpage="16" data-clip="207.1,663.4,539.6,731.7"></span></div>
+</div>
+
+<!-- 17 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="17" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="17" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="17" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 3</div>
+<div class="x" style="top:89.3pt"><span style="padding-left:10.9pt"></span>첫째 식에서 $F_{\mathrm{R},x}(x)=\mathrm{const}\equiv F_{\mathrm{R},x}$를 얻는다. 이를 이용하면 둘째 식을 다음과 같이 다시 쓸 수 있다.</div>
+<div class="f" style="left:220.8pt;top:110.4pt"><span class="fig" data-srcpage="17" data-clip="220.8,110.4,539.6,126.3"></span></div>
+<div class="x" style="top:133.8pt">이 미분 방정식을 푸는 방법은 여러 가지이다.</div>
+<div class="x" style="top:147.4pt"><p style="text-indent:10.9pt">해를 추측하는 것 말고 가장 쉬운 방법은 아마 힌트대로 $x\to y'(x)$로 치환하는 것이며, 그러면 다음을 얻는다.</p></div>
+<div class="f" style="left:208.6pt;top:178.0pt"><span class="fig" data-srcpage="17" data-clip="208.6,178.0,539.6,234.8"></span></div>
+<div class="x" style="top:241.4pt"><span style="padding-left:10.9pt"></span>$y'(x)$를 적분하면 다음을 얻는다.</div>
+<div class="f" style="left:222.8pt;top:261.1pt"><span class="fig" data-srcpage="17" data-clip="222.8,261.1,539.6,276.9"></span></div>
+<div class="x" style="top:284.5pt"><p>여기서 $b=\rho g/F_{\mathrm{R},x}$를 도입하였다. $y(G)=0$, $y'(G)=0$으로부터 $C_1$과 $C_2$를 $G$로 나타낼 수 있으며, 그 결과는 다음과 같다.</p></div>
+<div class="f" style="left:220.8pt;top:317.7pt"><span class="fig" data-srcpage="17" data-clip="220.8,317.7,539.6,332.5"></span></div>
+<div class="x" style="top:345.1pt"><p><b>g)</b> 이제 앞 문항과 비교하여 계의 조건 하나를 바꾼다. 즉 $y(0)=\tilde h=h/10$을 요구하는데, 여기서 $h$는 첫 번째 소문항에서 구한 최대 높이이다. 이것으로 계가 완전히 결정된다.</p></div>
+<div class="x" style="top:385.7pt"><p style="text-indent:10.9pt">이 문항의 목표는 $x=0$에서 밧줄의 전체 장력, 곧 $F_{\mathrm{R},x}^2+F_{\mathrm{R},y}^2$의 제곱근을 계산하는 것이다.</p></div>
+<div class="x" style="top:412.8pt"><p style="text-indent:10.9pt">밧줄 내부의 전체 장력은, $b$를 $h$, $a$의 함수로 계산하여 $F_{\mathrm{R},x}$를 구하고, $y'(0)$과 $G$를 $h$, $a$의 함수로 계산하여 $F_{\mathrm{R},y}$를 구하면 얻을 수 있다.</p></div>
+<div class="x" style="top:439.9pt"><span style="padding-left:10.9pt"></span>앞에서 구한 꼴을 이용하면 조건 $y(0)=h/10=\tilde h$는 다음과 같이 된다.</div>
+<div class="f" style="left:244.8pt;top:459.1pt"><span class="fig" data-srcpage="17" data-clip="244.8,459.1,539.6,474.5"></span></div>
+<div class="x" style="top:483.0pt"><span style="padding-left:10.9pt"></span>밧줄의 길이가 고정되어 있다는 조건은 다음과 같이 된다.</div>
+<div class="f" style="left:121.3pt;top:502.9pt"><span class="fig" data-srcpage="17" data-clip="121.3,502.9,539.6,533.5"></span></div>
+<div class="x" style="top:539.1pt"><p style="text-indent:10.9pt">문제에서 주어진 대로 $|y'(0)|\ll1$을 이용한다. 그러면 $|bG|\ll1$이다. 이제 모든 식을 $bG$에 대해 3차까지 테일러 전개해야 한다. 그렇지 않으면 $G+\pi a=\sinh(bG)/b$를 만족할 수 없다. 테일러 전개하면 다음을 얻는다.</p></div>
+<div class="f" style="left:186.3pt;top:572.4pt"><span class="fig" data-srcpage="17" data-clip="186.3,572.4,539.6,605.4"></span></div>
+<div class="x" style="top:613.9pt">두 식을 서로 대입하면 다음을 이끌어 낼 수 있다.</div>
+<div class="f" style="left:246.2pt;top:633.5pt"><span class="fig" data-srcpage="17" data-clip="246.2,633.5,539.6,734.8"></span></div>
+</div>
+
+<!-- 18 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="18" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="18" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="18" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 3</div>
+<div class="x" style="top:89.3pt"><span style="padding-left:10.9pt"></span>따라서 다음이 성립한다.</div>
+<div class="f" style="left:150.0pt;top:111.5pt"><span class="fig" data-srcpage="18" data-clip="150.0,111.5,539.6,143.8"></span></div>
+<div class="x" style="top:157.6pt"><span style="padding-left:10.9pt"></span>첫 번째 문항을 이용하면 $a^2/\tilde h^2\ll1$이므로 해의 스케일링을 다음과 같이 구할 수 있다.</div>
+<div class="f" style="left:255.4pt;top:180.2pt"><span class="fig" data-srcpage="18" data-clip="255.4,180.2,539.6,209.2"></span></div>
+<div class="x" style="top:223.5pt"><b>h)</b> 밧줄이 끊어진다.</div>
+</div>
+
+<!-- 19: problem page (= problem paper p. 10) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="19" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="19" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="19" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 4</div>
+<div class="box" style="top:88.1pt">문제 4</div>
+<div class="t" style="top:115.7pt">은하 중심 실험실</div>
+<div class="f" style="left:56.3pt;top:145.3pt"><span class="fig" data-srcpage="19" data-clip="56.3,145.3,538.7,157.7"></span></div>
+<div class="f" style="left:55.8pt;top:169.1pt"><span class="fig" data-srcpage="19" data-clip="55.8,169.1,60.5,401.4"></span></div>
+<div class="b" style="top:168.2pt"><p><span class="s">배경</span>&ensp;우리 은하인 우리은하는 가까운 이웃 은하들 가운데 (안드로메다 다음으로) 두 번째로 큰 은하이다. 지름은 약 30 kpc (1 kpc $=1000$ pc $=3.1\times10^{19}$ m)이다. 그 중심 깊은 곳에는 초대질량의 밀집 전파원인 궁수자리 A$^*$(Sgr A$^*$)가 있다. 우리은하의 밝고 젊은 별은 대부분 은하 원반에서 기체가 풍부한 나선팔에 있지만, 전체 별의 수는 중심으로 갈수록 늘어난다. 특히 가장 안쪽 0.04 pc 안에는 S-별이라고 부르는, 빠르게 움직이는 젊은 별 약 100개가 빽빽하게 모인 성단이 있다. 이 별들이 중심의 중력 질량 둘레를 도는 궤도는 방향이 제멋대로이다. 이 중심 영역은 시선 방향에 있는 두꺼운 분자 구름 때문에 가시광선 파장에서는 관측할 수 없다. 그러나 적외선으로는 먼지를 꿰뚫어 볼 수 있다. GRAVITY는 칠레에 있는 초대형 망원경(VLT)의 8 m 적외선 망원경 네 대를 하나로 묶어 지름 $D=130$ m인 거대한 망원경 하나로 만드는 빔 결합 장치이다. GRAVITY는 높은 각분해능 덕분에, Sgr A$^*$ 바로 근처에 있는 별처럼 매우 어둡고 먼 천체를 그 운동의 하루하루 변화까지 기록할 수 있는 정밀도로 관측할 수 있다. 그 결과 은하 중심 영역은 이제 일반 상대성 이론을 탐구하고 검증하는 새로운 ”실험실”이 되었다.</p>
+<p style="margin-top:4.5pt">쓸모 있는 상수: 중력 상수 $\mathrm{G}=6.7\times10^{-11}\mathrm{m^3/kg\,s^2}$, 진공에서의 빛의 속력 $\mathrm{c}=3\times10^8$ m/s.</p></div>
+<div class="a" style="top:421.0pt"><p><b>a)</b> [2점] <b>우리은하의 질량:</b> 질량이 $M_\odot=1.99\times10^{30}$ kg인 태양은 <i>평범한 별</i>이다. 태양은 우리은하의 한 나선팔 가장자리에 있으며, Sgr A$^*$로부터 거리 $r_0=8.28$ kpc에서 원 궤도 속력 $v_\odot=251.05$ km/s로 Sgr A$^*$ 둘레를 돈다.</p></div>
+<div class="l" style="top:469.7pt"><span class="k2" style="left:-16.3pt">(i)</span>우리은하의 질량을 태양 질량 단위로 어림하여라.</div>
+<div class="l" style="top:491.8pt"><span class="k2" style="left:-19.5pt">(ii)</span>이것이 하한일 뿐인 이유를 설명하여라.</div>
+<div class="a" style="top:513.2pt"><p>실제 별의 양은 광도 측정으로부터 구할 수 있으며, 우리은하 전체 질량의 대략 15%에 이른다.</p></div>
+<div class="l" style="top:548.4pt"><span class="k2" style="left:-22.6pt">(iii)</span>나머지는 어디에 있으며, 무엇인가?</div>
+<div class="a" style="top:574.0pt"><p><b>b)</b> [2점] <b>Sgr A$^*$의 질량:</b> 천문학자들은 S-별의 운동으로부터 Sgr A$^*$의 질량을 추론한다. 별 S2(그림 4.1 참고)는 공전 주기가 $P=16.05$년으로 짧고, 긴반지름이 $a=0.125''$(각초)로 작으며, 이심률이 $e=0.88$로 커서 특히 적합하다. 중심의 중력 질량에 가장 가까이 다가가는 점, 즉 근점 거리는 $r_\text{peri}=14$ mas(밀리각초)이다. 먼저 Sgr A$^*$로부터 태양까지의 거리를 이용하여 궤도의 각크기를 각초 단위에서 SI 단위로 바꾸어라. 그다음 Sgr A$^*$의 질량을 태양 질량 단위로 계산하여라.</p></div>
+<div class="a" style="top:659.6pt"><p><b>c)</b> [2점] <b>Sgr A$^*$의 크기:</b> 블랙홀(BH)은 중력 이론에 고유한 수학적 대상이다. 블랙홀은 표면 대신 지평선을 가진다는 것, 즉 빛조차 <i>탈출</i>할 수 없는 임계 반지름을 가진다는 것으로 정의된다.</p></div>
+<div class="l" style="left:84pt;top:708.2pt"><span class="k2" style="left:-16.3pt">(i)</span><p>뉴턴 역학의 원리로부터 임계 반지름을 유도하여라. 이렇게 얻은 식은 일반 상대성 이론(GR)에서도 나오며, 슈바르츠실트 반지름 $r_S$라고 한다.</p></div>
+</div>
+
+<!-- 20: problem page (= problem paper p. 11) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="20" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="20" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="20" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 4</div>
+<div class="f" style="left:132.1pt;top:93.0pt"><span class="fig" data-srcpage="20" data-clip="132.1,93.0,460.9,485.9"></span></div>
+<div class="a" style="top:502.5pt;font-size:10pt;line-height:12pt"><p><b>그림 4.1</b> 은하수 중심의 초대질량 밀집 천체인 Sgr A$^*$ 둘레를 도는 안쪽 S-별 몇 개의 궤도. 별 S2(빨간색)는 궤도가 짧고 이심률이 매우 커서 Sgr A$^*$의 중력장을 조사하는 가장 흥미로운 탐침이다. 오른쪽 아래에는 비교를 위해 태양계 천체 몇 개의 궤도를 함께 나타내었다. 그림 출처: Eisenhauer et al. (2005)</p></div>
+<div class="l" style="top:571.7pt"><span class="k2" style="left:-19.5pt">(ii)</span><p>위에서 구한 질량에 대해 Sgr A$^*$의 $r_S$를 계산하고, 이를 해왕성과 태양 사이의 평균 거리 $r_\text{Neptune}=45$억 km와 비교하여라.</p></div>
+<div class="a" style="top:607.8pt"><p>GRAVITY/VLT 장치는 Sgr A$^*$ 근처의 별들을 볼 뿐 아니라, 그보다 더 가까운 곳에서 깜박이는 빛도 검출한다. 이 빛은 이따금 일어나는 뜨거운 플라스마 플레어에서 나온다. 플레어는 평균 반지름 60 $\mu$as(마이크로각초)로 Sgr A$^*$ 둘레를 돈다.</p></div>
+<div class="l" style="top:657.6pt"><span class="k2" style="left:-22.6pt">(iii)</span><p>이론과 관측을 고려하여, Sgr A$^*$가 밀집 천체여야 하며 블랙홀일 가능성이 높은 이유를 논증하여라.</p></div>
+<div class="a" style="top:698.0pt"><p><b>d)</b> [1점] <b>GRAVITY 장치:</b> (관측) 천문학에서 아마도 가장 중요한 식은, 임의의 망원경의 각분해능 $R$를 라디안 단위로 주어진 파장</p></div>
+</div>
+
+<!-- 21: problem page (= problem paper p. 12) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="21" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="21" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="21" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 4</div>
+<div class="a" style="top:89.4pt">$\lambda$와 망원경 지름 $D$로 나타내는 식이다.</div>
+<div class="f" style="left:268.8pt;top:101.8pt"><span class="fig" data-srcpage="21" data-clip="268.8,101.8,538.5,125.7"></span></div>
+<div class="a" style="top:130.8pt"><p>GRAVITY/VLT는 파장 2.2 $\mu$m의 적외선으로 관측한다. 그 분해능은 얼마인가? 블랙홀의 지평선을 분해하는 데 필요한 적외선 망원경의 지름을 어림하여라. 그런 망원경을 어디에 짓겠는가?</p></div>
+<div class="a" style="top:175.9pt"><p><b>e)</b> [1점] <b>중력 적색 편이:</b> 알베르트 아인슈타인이 제안한 GR의 고전적인 검증은 세 가지이다: 수성의 근일점 세차, 태양에 의한 빛의 휨, 빛의 중력 적색 편이. 은하 중심에서 중력 적색 편이 효과를 검출하기 위해 별 S2를 궤도를 따라 추적한다. 천문학자들은 (GRAVITY로) 별의 위치를 추적할 뿐 아니라, 분광기(예: VLT의 SINFONI 또는 ERIS)로 시선 속도도 기록한다. 이 별의 스펙트럼에는 파장 $\lambda'$에서 두드러진 흡수선이 나타난다. 중력 적색 편이가 무엇이며 별의 속도와 어떻게 관련되는지 설명하여라. S2의 궤도에서 효과가 가장 강할 것으로 예상되는 곳은 어디인가?</p></div>
+<div class="a" style="top:288.8pt"><p><b>f)</b> [2점] <b>근점의 세차:</b> 최근 천문학자들은 별 S2가 Sgr A$^*$ 둘레에서 세차 운동을 한다는 것을 보였다. 즉, S2는 닫힌 타원이 아니라 장미꽃 모양의 열린 궤적을 따라 움직인다. 이 발견으로 GR은 은하 중심에서 또 하나의 검증을 통과하였다. S2는 현재 궤도의 원점, 즉 Sgr A$^*$에서 가장 먼 점에 다가가고 있다. 관측에 따르면 S2의 근점은 한 바퀴마다 작은 각 $\delta\varphi=12'/\mathrm{orbit}$만큼 앞으로 나아간다. 원점의 위치가 (mas 단위로) 얼마나 바뀌는지 계산하여라. GRAVITY는 이것을 분해할 수 있는가? 참고: 적응 광학의 도움으로 목표 별에 대한 노출 시간을 늘릴 수 있어서, 실제 분해능은 위에서 계산한 공칭 $R$ 값보다 약 열 배 좋다.</p></div>
+</div>
+
+<!-- 22 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="22" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="22" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="22" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 4</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:119.6pt"><p><b>a)</b> 태양의 속도는 Reid et al (2020)의 국부 정지 기준(local standard of rest) $\Theta=30.32$ km/s/kpc로 주어진다. GRAVITY Col. (2021)의 측정값 $r_0=8.28$ kpc를 쓰면 이로부터 각속력 $v_\odot=251.05$ km/s를 얻는다. 안정한 원 궤도를 도는 물체에서는 구심력과 중력이 평형을 이룬다. 따라서 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:224.4pt;top:182.6pt"><span class="fig" data-srcpage="22" data-clip="224.4,182.6,539.6,257.6"></span></div>
+<div class="x" style="top:268.9pt"><p>여기서 $r_0=8.28\ \mathrm{kpc}=2.55\times10^{20}$ m이다. 또는 Sgr A$^*$까지의 거리와 태양의 원 궤도 속도로부터 태양의 공전 주기를 계산할 수도 있다.</p></div>
+<div class="f" style="left:220.7pt;top:305.2pt"><span class="fig" data-srcpage="22" data-clip="220.7,305.2,539.6,320.9"></span></div>
+<div class="x" style="top:331.4pt"><p>태양이 은하 중심 둘레를 한 바퀴 도는 데에는 2억 년이 조금 넘게 걸린다. 그다음 다음 관계로 공전 속도와 주기를 연결하면</p></div>
+<div class="f" style="left:276.7pt;top:367.1pt"><span class="fig" data-srcpage="22" data-clip="276.7,367.1,539.6,394.5"></span></div>
+<div class="x" style="top:403.3pt">케플러 제3법칙을 얻는다.</div>
+<div class="f" style="left:191.0pt;top:425.7pt"><span class="fig" data-srcpage="22" data-clip="191.0,425.7,539.6,457.0"></span></div>
+<div class="x" style="top:467.0pt;width:233pt">그러면 태양 질량 단위로 나타낸 둘러싸인 질량은</div>
+<div class="f" style="left:293.3pt;top:463.5pt"><span class="fig" data-srcpage="22" data-clip="293.3,463.5,426.0,484.6"></span></div>
+<div class="x" style="left:427.5pt;width:100pt;top:467.0pt">이다.</div>
+<div class="x" style="top:483.0pt"><p style="text-indent:10.9pt">이것은 우리은하 질량의 하한 어림값이다. 중심에서 $r_0$에 있는 태양은 우리은하 원반의 중간쯤에 있다. 이 계산은 태양 궤도 바깥에 있는 별들을 고려하지 않는다. 최근 계산(예: Watkins et al. 2019, 구상 성단의 고유 운동에 대한 Gaia DR2와 HST 측정을 이용)에서는 약 $4\times10^{11}\,M_\odot$의 질량을 얻는다. 이 값은 바깥 반지름이 39.5 kpc인 별 원반에 해당한다. 계산한 질량은 순수한 별의 질량이 아니라 전체 질량, 즉 별/바리온 물질과 암흑 물질을 모두 합한 것이다. 별의 질량은 우리은하 전체 질량의 약 15%에 불과하다. 암흑 물질은 헤일로를 이루어 우리은하 전체를 감싸고 있다. 그 밀도 분포는 대부분 평평하지만 은하 중심 쪽으로 갈수록 커진다.</p></div>
+<div class="x" style="top:608.4pt"><b>b)</b> 먼저 $r_0$을 이용하여 S2의 긴반지름을 각초에서 미터로 바꾼다.</div>
+<div class="f" style="left:200.0pt;top:631.5pt"><span class="fig" data-srcpage="22" data-clip="200.0,631.5,539.6,658.9"></span></div>
+<div class="x" style="top:666.9pt;white-space:nowrap">S2의 긴반지름은 $a=1.560\times10^{14}$ m이다. 그다음 케플러 제3법칙 식 4.7을 이용하여 Sgr A$^*$의</div>
+<div class="x" style="top:680.5pt;width:140pt">질량을 SI 단위로 구한다.</div>
+<div class="f" style="left:200.7pt;top:686.5pt"><span class="fig" data-srcpage="22" data-clip="200.7,686.5,539.6,723.8"></span></div>
+</div>
+
+<!-- 23 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="23" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="23" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="23" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 4</div>
+<div class="x" style="top:89.3pt">이를 태양 질량으로 나누면 블랙홀 질량은 다음과 같다.</div>
+<div class="f" style="left:233.3pt;top:109.5pt"><span class="fig" data-srcpage="23" data-clip="233.3,109.5,539.6,131.3"></span></div>
+<div class="x" style="top:145.6pt"><p><b>c)</b> 중력을 미치는 임의의 물체에 대한 뉴턴 역학의 탈출 속도는 운동 에너지와 중력 에너지를 같게 놓아 유도한다.</p></div>
+<div class="f" style="left:246.7pt;top:184.0pt"><span class="fig" data-srcpage="23" data-clip="246.7,184.0,539.6,256.0"></span></div>
+<div class="x" style="top:263.8pt"><p>빛(즉 빛의 속력 $c$)은 블랙홀을 탈출하지 못한다. 따라서 $v_\mathrm{escape}=c$로 두면 임계 반지름은 다음과 같다.</p></div>
+<div class="f" style="left:253.7pt;top:289.7pt"><span class="fig" data-srcpage="23" data-clip="253.7,289.7,539.6,317.1"></span></div>
+<div class="x" style="top:319.6pt">Sgr A$^*$의 임계 반지름, 곧 슈바르츠실트 반지름은 $M=M_{\mathrm{Sgr\,A}^*}$로 두어 구하며, 그 값은 다음과 같다.</div>
+<div class="f" style="left:251.3pt;top:342.3pt"><span class="fig" data-srcpage="23" data-clip="251.3,342.3,539.6,360.2"></span></div>
+<div class="x" style="top:370.0pt;white-space:nowrap">플레어 관측은 보이지 않는 천체가 반지름 60 $\mu$as 안에 있음을 보여 준다. 다음 환산 관계를 쓰면</div>
+<div class="f" style="left:216.5pt;top:392.1pt"><span class="fig" data-srcpage="23" data-clip="216.5,392.1,539.6,419.5"></span></div>
+<div class="x" style="top:422.0pt;width:166pt">플레어 반지름은 다음과 같다.</div>
+<div class="f" style="left:224.3pt;top:433.8pt"><span class="fig" data-srcpage="23" data-clip="224.3,433.8,539.6,450.3"></span></div>
+<div class="x" style="top:455.5pt"><p>이는 플레어가 Sgr A$^*$로부터 약 $6\,r_S$에서 궤도 운동함을 뜻한다. Sgr A$^*$의 전체 질량은 이 반지름 안에 있어야 한다.</p></div>
+<div class="x" style="top:482.6pt"><p style="text-indent:10.9pt">같은 질량의 별(평균 밀도를 약 $\propto10^3$ kg/m$^3$으로 가정)은 이 안에 들어갈 수 없다. 중성자별(평균 밀도 약 $\propto10^{17}$ kg/m$^3$)처럼 더 밀집한 천체라면 들어갈 수도 있다. 그러나 중성자별에서는 축퇴된 원자핵 때문에 생기는 페르미 압력이 약 2.5–3 $M_\odot$까지의 질량만 지탱할 수 있다(정확한 최댓값은 중성자별 내부의 상태 방정식에 따라 달라지며 아직 알려져 있지 않다). 3 $M_\odot$보다 큰 질량을 지탱하는 메커니즘은 알려져 있지 않다. 사실상 Sgr A$^*$는 무거운 블랙홀로 여겨진다.</p></div>
+<div class="x" style="top:581.9pt"><b>d)</b> 도입부의 $D=130$ m와 $\lambda=2.2\ \mu$m를 쓰면 다음을 얻는다.</div>
+<div class="f" style="left:240.0pt;top:604.4pt"><span class="fig" data-srcpage="23" data-clip="240.0,604.4,539.6,631.8"></span></div>
+<div class="x" style="top:638.7pt">위에서 계산한 Sgr A$^*$의 반지름을 이제 $\mu$as 단위로 나타내면</div>
+<div class="f" style="left:254.0pt;top:663.6pt"><span class="fig" data-srcpage="23" data-clip="254.0,663.6,539.6,677.5"></span></div>
+<div class="x" style="top:687.4pt;white-space:nowrap">이고, 이를 라디안으로 바꾸어(위의 $r_S$를 $(180/\mathrm{Pi}\cdot3600)$으로 나눈다) 필요한 망원경의</div>
+<div class="x" style="top:701.0pt;width:140pt">지름을 구한다.</div>
+<div class="f" style="left:203.1pt;top:709.0pt"><span class="fig" data-srcpage="23" data-clip="203.1,709.0,539.6,738.9"></span></div>
+</div>
+
+<!-- 24 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="24" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="24" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="24" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 4</div>
+<div class="x" style="top:102.9pt"><p><b>e)</b> 중력 적색 편이는 중력 우물에서 빠져나오는 광자가 에너지를 잃는 현상이다. 빛의 속력은 일정하고 광자는 느려질 수 없으므로, 이 에너지 손실은 스펙트럼의 붉은 쪽으로 파장이 늘어나는(또는 진동수가 줄어드는) 것에 해당한다. 시선 속도는 움직이는 S2의 스펙트럼에서 보이는 Br$\gamma$ 흡수선의 파장 $\lambda'$의 도플러 이동을 정지 상태의 값($\lambda$)과 비교하여 구한다.</p></div>
+<div class="f" style="left:266.0pt;top:177.5pt"><span class="fig" data-srcpage="24" data-clip="266.0,177.5,539.6,209.2"></span></div>
+<div class="x" style="top:211.9pt"><p>전체 중력 적색 편이는 특수 상대론적 성분인 가로 도플러 이동과, 일반 상대론적 성분인 실제 중력 적색 편이로 이루어진다. 이 효과는 S2가 Sgr A$^*$에 가장 가까이 있을 때, 곧 근점에 있을 때 가장 강하다.</p></div>
+<div class="x" style="top:257.0pt"><b>f)</b> 한 번 공전한 뒤(16년 뒤) 근점은 다음만큼 앞으로 나아간다는 것을 알고 있다.</div>
+<div class="f" style="left:208.9pt;top:279.5pt"><span class="fig" data-srcpage="24" data-clip="208.9,279.5,539.6,306.9"></span></div>
+<div class="x" style="top:316.7pt"><p>이동 방향은 한쪽이다(S2의 경우 동쪽). 이는 원점이 초점(Sgr A$^*$)을 중심으로 같은 각만큼 반대 방향으로 나아감을 뜻한다. 이 문제는 삼각법으로 풀 수 있다. 먼저 Sgr A$^*$에서 원점까지의 거리를 계산한다.</p></div>
+<div class="f" style="left:225.6pt;top:368.6pt"><span class="fig" data-srcpage="24" data-clip="225.6,368.6,539.6,382.7"></span></div>
+<div class="x" style="top:392.8pt"><p>그다음 이등변 삼각형 $\{r_{\mathrm{apo}\,1}\to\mathrm{Sgr\,A}^*\to r_{\mathrm{apo}\,2}\}$를 생각하자. 여기서 $\delta\phi_\mathrm{peri}$는 원점 쪽 두 변 사이의 각이다. 이 각을 반으로 나누어 두 원점 사이 거리의 절반을 계산한 다음, 2를 곱하여 전체 거리를 얻는다.</p></div>
+<div class="f" style="left:204.1pt;top:443.3pt"><span class="fig" data-srcpage="24" data-clip="204.1,443.3,539.6,470.8"></span></div>
+</div>
+
+<!-- 25: problem page (= problem paper p. 13) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="25" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="25" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="25" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 5</div>
+<div class="box" style="top:88.1pt">문제 5</div>
+<div class="t" style="top:115.9pt">스스로 가열되는 핵융합 플라스마의 조건</div>
+<div class="f" style="left:56.3pt;top:145.6pt"><span class="fig" data-srcpage="25" data-clip="56.3,145.6,539.5,157.9"></span></div>
+<div class="f" style="left:55.8pt;top:170.3pt"><span class="fig" data-srcpage="25" data-clip="55.8,170.3,60.5,392.9"></span></div>
+<div class="b" style="top:169.4pt"><p><span class="s">배경</span>&ensp;핵융합 발전소에서는 중수소 원자핵과 삼중수소 원자핵이 융합하여 $\alpha$ 입자와 중성자가 되는 반응으로 에너지를 얻는다:</p></div>
+<div class="f" style="left:231.3pt;top:206.6pt"><span class="fig" data-srcpage="25" data-clip="231.3,206.6,538.5,220.7"></span></div>
+<div class="b" style="top:232.0pt"><p>쿨롱 장벽을 넘으려면 반응물은 충분한 운동 에너지를 가져야 한다. 그러나 쿨롱 충돌의 수는 언제나 핵융합 반응의 수보다 많다. 따라서 에너지 수지가 양이 되는 것은 열적 플라스마에서만 가능하다. D-T 반응은 다른 어떤 반응보다 가장 낮은 플라스마 온도에서 가장 높은 핵융합률을 가진다. 그런데도 약 10 keV의 플라스마 온도가 필요하다. 미래의 원자로에서는 핵융합 반응에서 방출되는 에너지로 플라스마를 가열해야 한다. 중성자는 거의 상호작용하지 않고 플라스마를 빠져나가므로, $\alpha$ 입자만 플라스마 가열에 기여한다. 자기장으로 가둔 핵융합 플라스마의 열(=에너지) 수송은 여러 효과로 결정되며, 그 가운데 특히 중요한 것은 복사(주로 제동 복사)와 난류 수송이다. 에너지 손실을 나타내기 위해 흔히 이른바 에너지 가둠 시간 $\tau_E$를 쓰는데, 이는 (가열을 끈 뒤) 플라스마가 상당히 식기까지 걸리는 시간에 해당하는 척도이다.</p></div>
+<div class="a" style="top:413.9pt"><p><b>a)</b> [2점] 17.5 MeV의 전체 에너지가 융합하는 입자들의 질량 중심계에서 $^4$He와 중성자 사이에 어떻게 나뉘는지 계산하여라.</p></div>
+<div class="h" style="top:442.0pt"><u>힌트</u>: 운동량 보존과 에너지 보존을 이용하여라.</div>
+<div class="a" style="top:459.2pt"><p><b>b)</b> [2점] 일정한 전자 밀도 $n_e=10^{20}\,\mathrm{m}^{-3}$인 핵융합 발전소(부피: $V=1000\,\mathrm{m}^3$)에서 $\alpha$ 입자에 의한 가열 출력 $P_{heat}$를 계산하여라. 플라스마는 50%의 D 이온과 50%의 T 이온, 그리고 전자로 이루어져 있다고 가정하여라. 플라스마는 언제나 (준)중성, 즉 전자의 수와 이온의 수가 같다는 점에 유의하여라. 열적 플라스마에서 반응도(단위 부피당 단위 시간당 핵융합 반응 수)는 $T=10$ keV일 때 대략 $\langle\sigma v\rangle\approx10^{-22}\,\mathrm{m^3s^{-1}}$이다.</p></div>
+<div class="a" style="top:544.8pt"><p><b>c)</b> [2점] 손실 출력에 대한 식을 써라. 손실 출력 $P_{loss}$는 플라스마의 열에너지를 에너지 가둠 시간 $\tau_E$로 나눈 값으로 정의된다. 플라스마는 이상 기체처럼 행동한다고 가정하여라.</p></div>
+<div class="a" style="top:589.9pt"><p><b>d)</b> [2점] 플라스마 가열 출력과 손실 출력이 균형을 이루도록 하여, 이른바 로슨 판정 조건, 즉 플라스마 밀도 $n=n_i$(이온 밀도와 같다), 온도 $T$, 에너지 가둠 시간 $\tau_E$로 나타낸 판정 조건을 유도하여라. 참고: 고려하는 온도 범위(≈10 keV)에서 핵융합 반응도는 온도에 따라 대략 $T^2$에 비례하여 증가한다.</p></div>
+<div class="a" style="top:648.6pt"><p><b>e)</b> [2점] 핵융합 반응은 $^4$He를 만들어 내므로, 플라스마가 D와 T로만 이루어져 있다고 가정하는 것은 앞뒤가 맞지 않는다. 플라스마 이온의 10%가 $^4$He라면, 순수한 D-T 플라스마에 비해 핵융합 출력은 얼마나 줄어드는가?</p></div>
+</div>
+
+<!-- 26 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="26" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="26" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="26" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 5</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:119.6pt"><p><b>a)</b> 핵융합 생성물의 운동량과 에너지는 D-T의 운동량과 에너지보다 훨씬 크므로, 운동량 수지는 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:255.0pt;top:145.5pt"><span class="fig" data-srcpage="26" data-clip="255.0,145.5,539.6,160.5"></span></div>
+<div class="x" style="top:166.7pt">에너지 보존은 다음과 같다.</div>
+<div class="f" style="left:210.0pt;top:185.5pt"><span class="fig" data-srcpage="26" data-clip="210.0,185.5,539.6,213.0"></span></div>
+<div class="x" style="top:220.9pt">이 식들로부터 다음을 얻는다.</div>
+<div class="f" style="left:260.0pt;top:231.5pt"><span class="fig" data-srcpage="26" data-clip="260.0,231.5,539.6,259.5"></span></div>
+<div class="x" style="top:264.0pt">따라서 $E_n=14.1$ MeV, $E_\alpha=3.5$ MeV이다.</div>
+<div class="x" style="top:277.6pt;color:#00f">올바른 운동량 수지에 0.5점</div>
+<div class="x" style="top:291.1pt;color:#00f">올바른 에너지 수지에 0.5점</div>
+<div class="x" style="top:304.7pt;color:#00f">에너지의 비가 질량의 비임을 밝히면 0.5점</div>
+<div class="x" style="top:318.2pt;color:#00f">올바른 결과에 0.5점</div>
+<div class="x" style="top:336.2pt"><b>b)</b> 플라스마 가열에 쓸 수 있는 핵융합 출력은 다음과 같다.</div>
+<div class="f" style="left:238.0pt;top:360.0pt"><span class="fig" data-srcpage="26" data-clip="238.0,360.0,539.6,374.0"></span></div>
+<div class="x" style="top:385.2pt">플라스마는 50%의 D와 50%의 T로 이루어져 있으므로 다음을 얻는다.</div>
+<div class="f" style="left:245.0pt;top:406.5pt"><span class="fig" data-srcpage="26" data-clip="245.0,406.5,539.6,437.0"></span></div>
+<div class="x" style="top:443.7pt"><p>여기서 $n=n_e=n_i$는 플라스마 밀도로, (준)중성 플라스마에서 전자 밀도 및 이온 밀도와 같으며, $n_D=n_T=n/2$를 이용하였다. $E_\alpha=3.5$ MeV와 $V=1000$ m<sup>3</sup>을 넣으면 다음을 얻는다.</p></div>
+<div class="f" style="left:254.0pt;top:481.0pt"><span class="fig" data-srcpage="26" data-clip="254.0,481.0,539.6,495.0"></span></div>
+<div class="x" style="top:506.3pt;color:#00f">올바른 유도에 1.5점</div>
+<div class="x" style="top:519.9pt;color:#00f">올바른 수치 결과에 0.5점</div>
+<div class="x" style="top:537.9pt"><b>c)</b> 플라스마를 이상 기체로 보면 플라스마 에너지는 다음과 같다.</div>
+<div class="f" style="left:228.0pt;top:559.5pt"><span class="fig" data-srcpage="26" data-clip="228.0,559.5,539.6,588.0"></span></div>
+<div class="x" style="top:594.5pt"><p>여기서 $n_e$는 전자 밀도이고 $n_i$는 이온 밀도이다. 준중성($n_e=n_i=n$)을 가정하면 손실 출력은 다음과 같다.</p></div>
+<div class="f" style="left:227.0pt;top:619.0pt"><span class="fig" data-srcpage="26" data-clip="227.0,619.0,539.6,647.0"></span></div>
+<div class="x" style="top:651.4pt;color:#00f">에너지에 대한 올바른 식에 1.5점</div>
+<div class="x" style="top:665.0pt;color:#00f">$P_{loss}$에 대한 올바른 식에 0.5점</div>
+<div class="x" style="top:683.0pt"><b>d)</b> $\langle\sigma v\rangle=c_rT^2$으로 가정하고 다음 가열 출력을</div>
+<div class="f" style="left:202.0pt;top:705.0pt"><span class="fig" data-srcpage="26" data-clip="202.0,705.0,539.6,734.5"></span></div>
+</div>
+
+<!-- 27 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="27" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="27" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="27" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 5</div>
+<div class="x" style="top:89.3pt">다음 손실 출력과 균형을 이루게 하면</div>
+<div class="f" style="left:254.0pt;top:100.5pt"><span class="fig" data-srcpage="27" data-clip="254.0,100.5,539.6,128.0"></span></div>
+<div class="x" style="top:132.5pt">로슨 판정 조건을 얻는다.</div>
+<div class="f" style="left:244.0pt;top:144.0pt"><span class="fig" data-srcpage="27" data-clip="244.0,144.0,539.6,171.5"></span></div>
+<div class="x" style="top:176.8pt">(위의 수치를 넣으면 $c\approx3\cdot10^{21}\,\mathrm{keV\,s/m^3}$이다.)</div>
+<div class="x" style="top:190.3pt;color:#00f">$\langle\sigma v\rangle$의 올바른 의존성에 0.5점</div>
+<div class="x" style="top:203.9pt;color:#00f">올바른 균형 가정에 0.5점</div>
+<div class="x" style="top:217.4pt;color:#00f">올바른 로슨 판정 조건에 1점</div>
+<div class="x" style="top:235.5pt"><p><b>e)</b> 10%의 He는 ($Z=2$이므로) 플라스마 전자의 20%를 제공하고, 따라서 이온 밀도 $n_i=n_D+n_T$를 80%로 줄인다. 핵융합 출력은 $n_i^2=(n_D+n_T)^2$에 비례하므로 핵융합 출력은 36% 줄어든다.</p></div>
+<div class="x" style="top:276.1pt;color:#00f">이온 밀도를 올바르게 어림하면 1점</div>
+<div class="x" style="top:289.6pt;color:#00f">올바른 결과에 1점</div>
+<div class="x" style="top:303.2pt;color:#00f">다른 논증도 옳으면 인정한다.</div>
+</div>
+
+<!-- 28: problem page (= problem paper p. 14) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="28" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="28" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="28" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 6</div>
+<div class="box" style="top:88.1pt">문제 6</div>
+<div class="t" style="top:115.3pt">정보 엔트로피로부터 얻는 볼츠만 인자</div>
+<div class="f" style="left:56.3pt;top:145.1pt"><span class="fig" data-srcpage="28" data-clip="56.3,145.1,539.5,157.4"></span></div>
+<div class="f" style="left:55.8pt;top:166.8pt"><span class="fig" data-srcpage="28" data-clip="55.8,166.8,60.5,479.9"></span></div>
+<div class="b" style="top:166.0pt"><p><span class="s">배경</span>&ensp;통계역학은 열평형 상태에서 주어진 에너지의 모든 상태가 똑같이 일어날 법하며(이것이 미시 바른틀 앙상블을 정의한다), 에너지가 요동할 수 있으면 에너지 차이가 $\Delta\epsilon$인 상태들이 다음 볼츠만 인자에 따라 채워진다는 가정(기본 가설이라고 한다) 아래에서 작동한다.</p></div>
+<div class="f" style="left:245.1pt;top:230.3pt"><span class="fig" data-srcpage="28" data-clip="245.1,230.3,538.5,257.9"></span></div>
+<div class="b" style="top:267.5pt"><p>여기서 $T$는 온도이고 $k_B$는 볼츠만 상수이다. 그런데 더 근본적인 생각이 있다. Claude Shannon은 정보 엔트로피 $S$</p></div>
+<div class="f" style="left:222.3pt;top:304.8pt"><span class="fig" data-srcpage="28" data-clip="222.3,304.8,538.5,326.0"></span></div>
+<div class="b" style="top:340.0pt"><p>가 분포 $p(x)$의 무작위성을 나타내는 양의 척도이며, 서로 독립인 무작위 과정에 대해 더할 수 있음을 보였다. 다른 선택지도 있는데, 예를 들면 다음 엔트로피 척도이다.</p></div>
+<div class="f" style="left:195.3pt;top:377.3pt"><span class="fig" data-srcpage="28" data-clip="195.3,377.3,538.5,402.9"></span></div>
+<div class="b" style="top:412.5pt"><p>여기서 $\alpha\neq1$은 Alfred Rényi가 제안한 양의 자유 매개변수이다.<br>이제 다음과 같이 추론해 볼 수 있다: ($i$) 열평형은 무작위성이 가장 큰 상태에 해당해야 하고, ($ii$) 정보 엔트로피는 바로 그러한 무작위성의 척도이므로, 열평형에 있는 앙상블의 계들의 분포는 정보 엔트로피가 가장 큰 분포여야 한다.</p></div>
+<div class="a" style="top:493.0pt"><p class="in">정보 엔트로피 $S$와 $S_\alpha$는 실제 분포 $p(x)\mathrm{d}x$에 대한 범함수이며($x$는 위상 공간 좌표 전체를 나타낸다), 따라서 범함수 변분을 하여 이에 해당하는 분포를 찾을 수 있다. 이것을 Shannon 엔트로피와 Rényi 엔트로피 모두에 대해 해 보자!</p></div>
+<div class="a" style="top:551.1pt"><b>a)</b> [2점] 엔트로피에 익숙해져 보자.<br>가우스 분포</div>
+<div class="f" style="left:227.3pt;top:584.5pt"><span class="fig" data-srcpage="28" data-clip="227.3,584.5,538.5,613.2"></span></div>
+<div class="a" style="top:620.6pt">의 엔트로피 $S$를 $\sigma^2$의 함수로 계산하여라. 다음 계단 분포의 Shannon 엔트로피 $S$는 무엇인가?</div>
+<div class="f" style="left:231.3pt;top:640.8pt"><span class="fig" data-srcpage="28" data-clip="231.3,640.8,538.5,675.0"></span></div>
+<div class="a" style="top:681.1pt"><p>구간이나 분산이 커지면 엔트로피가 증가하는가? 이것의 물리적 의미는 무엇인가? 이제 두 분포에 대해 Rényi 엔트로피를 계산해 보아라. 두 엔트로피는 $\sigma^2$이나 $b-a$에 대해 비슷한 방식으로 변하는가?</p></div>
+<div class="h" style="top:722.7pt"><u>힌트</u>: 관계식 $\int\mathrm{d}x\,\mathrm{e}^{-x^2}=\sqrt\pi$가 쓸모 있을 것이다.</div>
+</div>
+
+<!-- 29: problem page (= problem paper p. 15) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="29" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="29" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="29" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 6</div>
+<div class="a" style="top:104.2pt"><p><b>b)</b> [2점] Shannon 엔트로피로부터 얻는 미시 바른틀 앙상블과 바른틀 앙상블<br>미시 바른틀 앙상블의 상수 분포는 다음과 같이 유도된다. 경계 조건 $\int\mathrm{d}x\,p(x)=1$ 아래에서 $S$를 최대로 만드는 분포를 구한다. 이로부터 다음 변분을 얻는다.</p></div>
+<div class="f" style="left:105.3pt;top:168.6pt"><span class="fig" data-srcpage="29" data-clip="105.3,168.6,538.5,197.5"></span></div>
+<div class="a" style="top:203.2pt"><p>여기서 $\lambda$는 라그랑주 승수이다. 해는 $p(x)=e^{(\lambda-1)}=\mathrm{const}$이며, $\lambda$는 원리적으로 $\int\mathrm{d}x\,p(x)=1$로부터 정할 수 있다. 따라서 상수 분포가 $S$를 최대로 만들며, 위상 공간 $x$에 걸쳐 계들이 고르게 분포한 것이 바로 미시 바른틀 앙상블이다! 식 (6.6)을 풀고 $p(x)=e^{(\lambda-1)}=\mathrm{const}$가 해임을 확인하여라.</p>
+<p class="in">이제 볼츠만 인자를 구해 보자: (두 번째 라그랑주 승수 $\mu$로 부과한) 추가 경계 조건 $\int\mathrm{d}x\,p(x)\epsilon(x)=\epsilon$ 아래에서 $S$를 최대로 만드는 분포 $p(x)$를 유도하여라. 여기서 $\epsilon(x)$는 주어진 계 좌표 $x$에 대한 에너지를 주는 함수이며, 이 함수의 정확한 꼴은 이 문제와 무관하다. 또한 다음을 보여라.</p></div>
+<div class="f" style="left:214.8pt;top:320.3pt"><span class="fig" data-srcpage="29" data-clip="214.8,320.3,538.5,347.7"></span></div>
+<div class="a" style="top:357.2pt"><p>단, $x$는 고정되어 있으며, 이는 이미 볼츠만 인자의 꼴이다. 미시 바른틀 앙상블에서의 온도 $T$의 정의</p></div>
+<div class="f" style="left:271.1pt;top:393.8pt"><span class="fig" data-srcpage="29" data-clip="271.1,393.8,538.5,419.9"></span></div>
+<div class="a" style="top:429.5pt">를 이용하여 라그랑주 승수가 $\mu=-1/(k_BT)$여야 함을 보여라.</div>
+<div class="h" style="top:443.6pt;line-height:13.4pt"><p><u>힌트</u>: 변분법을 간단히 정리하면 다음과 같다. 엔트로피 $S$를 함수 $p:\mathbb R\to\mathbb R$를 실수값 $S(p)=-\int\mathrm{d}x\,p(x)\ln p(x)$에 대응시키는 범함수로 볼 수 있다. 이러한 범함수에 대해 첫째 변분은 $\delta S(p)=\frac{\partial}{\partial\epsilon}S(p+\epsilon h)|_{\epsilon=0}$으로 주어지며, 여기서 $h$는 $p$와 같은 벡터 공간에 속하는 다른 함수이다. $p$ 둘레에서 $S$의 첫째 변분이 0이면 $p$가 $S$를 최대 또는 최소로 만든다는 것을 알 수 있다. 식 (6.6)처럼 경계 조건을 상수 라그랑주 승수로 더하면 같은 방법을 경계 조건이 있는 경우에도 쓸 수 있다.<br>이 문제에서는 라그랑주 승수 $\lambda$의 정확한 값을 구할 필요는 없다.</p></div>
+<div class="a" style="top:542.1pt;line-height:14pt"><p><b>c)</b> [2점] Rényi 엔트로피로부터 얻는 미시 바른틀 앙상블과 바른틀 앙상블<br>상수 분포가 Rényi 엔트로피 $S_\alpha$를 최대로 만들며, 이것이 미시 바른틀 앙상블에 해당함을 보여라. 이 결과를 에너지에 대한 제한 조건이 있는 경우로 일반화하여, 비 $\frac{p(\epsilon(x_2))}{p(\epsilon(x_1))}$를 유도할 수 있는가? 그 결과를 Shannon 엔트로피의 결과와 비슷한 꼴로 근사하려면 $\epsilon(x_2)-\epsilon(x_1)$에 대해 무엇이 성립해야 하는가? 끝으로, 최대화된 Rényi 엔트로피와 $\frac{\partial S}{\partial\epsilon}=\frac{1}{k_BT}$로부터 (아무런 근사 없이) 볼츠만 인자 $\mu$를 유도하여라.</p></div>
+<div class="h" style="top:627.5pt"><u>힌트</u>: 이번에도 라그랑주 승수 $\lambda$의 실제 값은 중요하지 않다.</div>
+</div>
+
+<!-- 30: problem page (= problem paper p. 16) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="30" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="30" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="30" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 6</div>
+<div class="a" style="top:107.3pt"><p><b>d)</b> [2점] Shannon 엔트로피와 Rényi 엔트로피의 동등성<br>$\alpha\to1$인 극한에서 Rényi 엔트로피로부터 Shannon의 엔트로피 척도를 다시 얻음을 보여라.</p></div>
+<div class="f" style="left:271.1pt;top:148.8pt"><span class="fig" data-srcpage="30" data-clip="271.1,148.8,538.5,165.7"></span></div>
+<div class="h" style="top:182.5pt"><u>힌트</u>: 로피탈 정리를 이용하여라.</div>
+<div class="a" style="top:213.1pt"><p><b>e)</b> [2점] Shannon 엔트로피를 고르는 이유<br>무작위성의 척도로 Shannon 엔트로피를 고르면 익숙한 볼츠만 인자가 나오지만, Rényi 엔트로피로는 이것이 재현되지 않는다. Rényi 엔트로피의 수학적 정식화에서 무엇이 물리적 관측과 모순되게 만드는가?</p></div>
+<div class="h" style="top:267.5pt;line-height:13.5pt"><p><u>힌트</u>: 어려운 질문이며 답하는 방법도 여러 가지이다. 다차원 계와 조건부 확률의 경우를 생각해 보아라. 또는 물리 법칙의 스케일링을 염두에 두고 논증하는 것이 도움이 될 수도 있다.</p></div>
+</div>
+
+<!-- 31 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="31" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="31" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="31" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 6</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:119.0pt"><b>a)</b> 가우스 분포의 엔트로피를 계산해 보자.</div>
+<div class="f" style="left:198.0pt;top:137.5pt"><span class="fig" data-srcpage="31" data-clip="198.0,137.5,396.0,251.0"></span></div>
+<div class="f" style="left:198.0pt;top:251.0pt"><span class="fig" data-srcpage="31" data-clip="198.0,251.0,290.0,277.0"></span></div>
+<div class="x" style="left:292.9pt;width:70pt;top:258.3pt">[0.5점]</div>
+<div class="x" style="top:283.4pt">여기서 $\int\mathrm{d}x\,e^{-x^2}=\sqrt{\pi}$를 이용하였다.</div>
+<div class="x" style="top:311.8pt"><p style="text-indent:10.9pt">이제 상수 함수에 대해 계산하자.</p></div>
+<div class="f" style="left:226.0pt;top:341.5pt"><span class="fig" data-srcpage="31" data-clip="226.0,341.5,370.0,401.5"></span></div>
+<div class="f" style="left:226.0pt;top:401.5pt"><span class="fig" data-srcpage="31" data-clip="226.0,401.5,300.0,415.0"></span></div>
+<div class="x" style="left:302.8pt;width:70pt;top:402.9pt">[0.5점]</div>
+<div class="x" style="top:423.7pt"><p style="text-indent:10.9pt">두 분포의 Shannon 엔트로피는 각각 $\sigma^2$과 $(b-c)$에 대해 로그적으로 증가한다. $\sigma^2$과 $(b-c)$가 작으면 계의 상태가 꽤 국소화되어 엔트로피가 작다. 작은 엔트로피는 계의 불확정성이 작다는 뜻이기 때문이다.</p></div>
+<div class="x" style="top:464.4pt">이제 Rényi 엔트로피를 살펴보자.</div>
+<div class="f" style="left:123.0pt;top:482.5pt"><span class="fig" data-srcpage="31" data-clip="123.0,482.5,472.0,578.0"></span></div>
+<div class="f" style="left:123.0pt;top:578.0pt"><span class="fig" data-srcpage="31" data-clip="123.0,578.0,290.0,607.0"></span></div>
+<div class="x" style="left:293.8pt;width:70pt;top:586.5pt">[0.5점]</div>
+<div class="x" style="top:613.2pt"><p style="text-indent:10.9pt">이제 계단 분포에 대해 계산하자.</p></div>
+<div class="f" style="left:209.0pt;top:629.5pt"><span class="fig" data-srcpage="31" data-clip="209.0,629.5,385.0,716.5"></span></div>
+<div class="f" style="left:209.0pt;top:716.5pt"><span class="fig" data-srcpage="31" data-clip="209.0,716.5,290.0,730.0"></span></div>
+<div class="x" style="left:293.8pt;width:70pt;top:717.7pt">[0.5점]</div>
+</div>
+
+<!-- 32 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="32" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="32" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="32" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 6</div>
+<div class="x" style="top:89.3pt"><p>두 분포의 Rényi 엔트로피는 Shannon 엔트로피와 같은 방식으로 변한다! [모든 적분이 옳더라도 변화 방식을 비교하지 않았으면 0.5점 감점]</p></div>
+<div class="x" style="top:120.0pt"><b>b)</b> 상수 함수가 엔트로피를 최대로 만듦을 증명한다.</div>
+<div class="f" style="left:168.0pt;top:137.5pt"><span class="fig" data-srcpage="32" data-clip="168.0,137.5,426.0,211.0"></span></div>
+<div class="f" style="left:168.0pt;top:211.0pt"><span class="fig" data-srcpage="32" data-clip="168.0,211.0,248.0,228.0"></span></div>
+<div class="x" style="left:250.9pt;width:70pt;top:215.2pt">[0.5점]</div>
+<div class="x" style="top:234.5pt">볼츠만 인자에 대해서도 같은 방법을 쓴다.</div>
+<div class="f" style="left:104.0pt;top:252.0pt"><span class="fig" data-srcpage="32" data-clip="104.0,252.0,490.0,297.0"></span></div>
+<div class="f" style="left:104.0pt;top:297.0pt"><span class="fig" data-srcpage="32" data-clip="104.0,297.0,203.0,314.0"></span></div>
+<div class="x" style="left:205.3pt;width:70pt;top:301.5pt">[0.5점]</div>
+<div class="x" style="top:320.7pt">따라서 서로 다른 두 에너지 $\epsilon_1=\epsilon(x_1)$과 $\epsilon_2=\epsilon(x_2)$에서의 비는 다음과 같다.</div>
+<div class="f" style="left:227.0pt;top:335.0pt"><span class="fig" data-srcpage="32" data-clip="227.0,335.0,310.0,362.0"></span></div>
+<div class="x" style="left:313.0pt;width:70pt;top:342.2pt">[0.5점]</div>
+<div class="x" style="top:368.3pt"><p style="text-indent:10.9pt">이제 $\frac{\partial S}{\partial\epsilon}=\frac{1}{k_BT}$를 이용하여 앞인자 $\mu$를 정해야 한다.</p></div>
+<div class="f" style="left:197.0pt;top:388.5pt"><span class="fig" data-srcpage="32" data-clip="197.0,388.5,397.0,474.8"></span></div>
+<div class="f" style="left:197.0pt;top:474.8pt"><span class="fig" data-srcpage="32" data-clip="197.0,474.8,278.0,502.0"></span></div>
+<div class="x" style="left:281.3pt;width:70pt;top:481.3pt">[0.5점]</div>
+<div class="x" style="top:508.8pt"><b>c)</b> Rényi 엔트로피에 대해 같은 계산을 되풀이한다. 먼저 상수 분포를 다룬다.</div>
+<div class="f" style="left:138.0pt;top:526.5pt"><span class="fig" data-srcpage="32" data-clip="138.0,526.5,432.0,586.0"></span></div>
+<div class="f" style="left:138.0pt;top:586.0pt"><span class="fig" data-srcpage="32" data-clip="138.0,586.0,276.0,619.0"></span></div>
+<div class="x" style="left:278.6pt;width:30pt;top:598.8pt">이때</div>
+<div class="f" style="left:308.0pt;top:590.0pt"><span class="fig" data-srcpage="32" data-clip="308.0,590.0,399.0,619.0"></span></div>
+<div class="x" style="left:401.4pt;width:70pt;top:598.8pt">[0.5점]</div>
+<div class="x" style="top:624.0pt"><p style="text-indent:10.9pt">이제 볼츠만 인자를 계산하자.</p></div>
+<div class="f" style="left:85.0pt;top:639.0pt"><span class="fig" data-srcpage="32" data-clip="85.0,639.0,530.0,698.5"></span></div>
+<div class="f" style="left:85.0pt;top:698.5pt"><span class="fig" data-srcpage="32" data-clip="85.0,698.5,272.0,731.0"></span></div>
+<div class="x" style="left:273.6pt;width:30pt;top:711.4pt">이때</div>
+<div class="f" style="left:303.0pt;top:698.5pt"><span class="fig" data-srcpage="32" data-clip="303.0,698.5,394.0,731.0"></span></div>
+<div class="x" style="left:396.3pt;width:70pt;top:711.4pt">[0.5점]</div>
+</div>
+
+<!-- 33 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="33" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="33" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="33" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 6</div>
+<div class="x" style="top:89.3pt">서로 다른 두 에너지에서의 비는 다음과 같다.</div>
+<div class="f" style="left:133.0pt;top:109.5pt"><span class="fig" data-srcpage="33" data-clip="133.0,109.5,465.0,216.0"></span></div>
+<div class="x ov" style="left:269.5pt;width:127pt;top:203.5pt;background:#fff">(에너지 차이가 작을 때)</div>
+<div class="x ov" style="left:405.5pt;width:55pt;top:203.5pt;background:#fff">[0.5점]</div>
+<div class="x" style="top:226.1pt">Rényi 엔트로피는 근사적으로만 보통의 지수적 변화를 준다! 이제 $\mu$를 계산한다.</div>
+<div class="f" style="left:160.0pt;top:247.0pt"><span class="fig" data-srcpage="33" data-clip="160.0,247.0,470.0,426.0"></span></div>
+<div class="x ov" style="left:304.8pt;width:55pt;top:401.9pt;background:#fff">[0.5점]</div>
+<div class="x" style="top:437.3pt"><b>d)</b> 다음을 증명하려고 한다.</div>
+<div class="f" style="left:265.0pt;top:461.0pt"><span class="fig" data-srcpage="33" data-clip="265.0,461.0,330.0,481.5"></span></div>
+<div class="x" style="top:488.7pt"><p style="text-indent:10.9pt">로피탈 규칙 $\lim_{x\to1}\tfrac{f(x)}{g(x)}=\lim_{x\to1}\tfrac{f'(x)}{g'(x)}$을 $f(x)=-\ln[\int\mathrm{d}x\,p(x)^\alpha]$, $g(x)=\alpha-1$에 적용한다.</p></div>
+<div class="x" style="top:507.7pt">그러면 다음을 얻는다.</div>
+<div class="f" style="left:168.0pt;top:525.5pt"><span class="fig" data-srcpage="33" data-clip="168.0,525.5,426.0,708.0"></span></div>
+<div class="x ov" style="left:316.0pt;width:55pt;top:535.7pt;background:#fff">[0.5점]</div>
+<div class="x ov" style="left:340.0pt;width:55pt;top:601.4pt;background:#fff">[0.5점]</div>
+<div class="x ov" style="left:370.5pt;width:55pt;top:633.8pt;background:#fff">[0.5점]</div>
+<div class="x ov" style="left:320.0pt;width:55pt;top:694.8pt;background:#fff">[0.5점]</div>
+</div>
+
+<!-- 34 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="34" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="34" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="34" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 6</div>
+<div class="x" style="top:102.2pt"><b>e)</b> 답하기 정말 어려운 문제이다. 창의적이고 올바른 생각에는 모두 2점을 준다.</div>
+<div class="x" style="top:116.8pt"><p>한 가지 생각: 열역학은 통계적 계에 관한 정보의 이론이다. 조건부 확률의 법칙 $S(y|x)+S(x)=S(x,y)$를 만족하는 엔트로피는 Shannon 엔트로피뿐이며, 따라서 $S=\langle\ln p\rangle$일 때 베이즈 법칙 $p(y|x)\cdot p(x)=p(x,y)$와 양립한다. 또 다른 생각은, 자연의 열역학 법칙이 거듭제곱 법칙이 아니라 지수적인 변화를 보인다고 논증하는 것이다.</p></div>
+</div>
+
+<!-- 35: problem page (= problem paper p. 17) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="35" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="35" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="35" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 7</div>
+<div class="box" style="top:88.1pt">문제 7</div>
+<div class="t" style="top:115.9pt">능동 브라운 입자</div>
+<div class="f" style="left:56.3pt;top:145.6pt"><span class="fig" data-srcpage="35" data-clip="56.3,145.6,541.5,171.4"></span></div>
+<div class="f" style="left:55.8pt;top:183.8pt"><span class="fig" data-srcpage="35" data-clip="55.8,183.8,60.5,235.7"></span></div>
+<div class="b" style="top:183.0pt"><p><span class="s">배경</span>&ensp;능동 입자라고도 하는 자기 추진 입자는 통계물리학에서 본질적으로 비평형인 계의 모형으로 인기가 있다. 또한 헤엄치는 세균 군집, 물고기 떼, 동물 무리, 새나 곤충 떼, 사람의 군중 같은 생물학적 또는 사회경제적 계를 흉내 내는 데에도 쓰인다.</p></div>
+<div class="a" style="top:252.1pt"><p class="in">이 문제에서는 점성이 있는 환경에서 2차원으로 움직이는 능동 입자 하나의 운동을 생각한다. 구체적으로, 위치 $\vec r(t)$에 있으며 단위 벡터 $\hat u(t)=(\cos\varphi(t),\sin\varphi(t))$가 주는 방향을 가리키는 극성 점입자를 생각한다. 여기서 각 $\varphi(t)$는 임의의 기준 방향에 대해 잰다. 입자는 주변 환경 때문에 브라운 운동을 한다. 능동성은 입자의 방향을 따라 작용하는 힘, 즉 일정한 크기 $f_a$를 가진 $\vec F_a(t)=f_a\hat u(t)$로 주어진다.</p>
+<p class="in">온도 때문에 입자에는 열적 힘 $\vec F_T(t)$와 열적 돌림힘 $T_T(t)$가 작용한다(자세한 내용은 뒤에서 정한다). 평면 안의 회전만 생각한다는 점에 유의하여라. 즉, 회전과 관련된 모든 양을 벡터로 보면 운동 평면에 수직이다.</p>
+<p class="in">입자의 모든 운동은 스토크스 법칙으로 주어지는 마찰력과 마찰 돌림힘에 의해 늦춰지며, 이는 마찰 상수 $\gamma$와 $\gamma_R$를 써서 $\vec F_S(t)=-\gamma\dot{\vec r}(t)$, $T_S=-\gamma_R\dot\varphi(t)$라고 가정할 수 있다.</p>
+<p class="in">입자의 질량은 $m$이고 관성 모멘트는 $I$이다.</p></div>
+<div class="a" style="top:432.8pt"><p><b>a)</b> [1점] 위에서 정한 힘과 돌림힘이 주어졌을 때, 위치 $\vec r(t)$와 각 $\varphi(t)$에 대한 운동 방정식을 써라.</p></div>
+<div class="a" style="top:477.9pt"><p><b>b)</b> [2점] 열적 힘이나 열적 돌림힘이 없을 때($T_S(0)=-\gamma_R\dot\varphi(0)=0$ 포함), 처음 속도가 $\dot{\vec r}(t=0)=v_0\hat u_0$이고 처음 방향이 $\hat u(t=0)=\hat u_0$이면 입자의 속도 $\dot{\vec r}(t)$를 계산하여라. 그 결과를 현상론적으로 설명하여라.</p></div>
+<div class="a" style="top:536.6pt"><p><b>c)</b> [1점] a)의 운동 방정식을 다음과 같이 근사할 수 있도록, 위에서 언급한 상수들에 따라 시간 $t$에 대한 조건을 정하여라.</p></div>
+<div class="f" style="left:238.1pt;top:573.0pt"><span class="fig" data-srcpage="35" data-clip="238.1,573.0,356.7,604.5"></span></div>
+<div class="a" style="top:615.7pt"><p>조건을 그렇게 고른 이유를 설명하여라. 엄밀한 계산은 필요 없다. 이것을 과감쇠 극한이라고 하며, 이후의 문항에서 이를 쓴다.</p></div>
+<div class="a" style="top:660.8pt"><p><b>d)</b> [2점] (c)에서 주어진 과감쇠 방정식을 생각하자. 열적 힘과 돌림힘은 무작위하다고 본다(주변에서 오는 무작위한 브라운 충격에 해당한다). 여러 번 실행하여 평균하면</p></div>
+</div>
+
+<!-- 36: problem page (= problem paper p. 18) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="36" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="36" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="36" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 7</div>
+<div class="a" style="top:89.4pt">다음을 얻는다.</div>
+<div class="f" style="left:208.3pt;top:112.8pt"><span class="fig" data-srcpage="36" data-clip="208.3,112.8,387.2,184.4"></span></div>
+<div class="a" style="top:194.5pt"><p>여기서 $k_BT$는 주변 환경의 열에너지에 해당하며, 세 번째 줄의 $j$, $k$는 열적 힘의 공간 성분을 나타낸다.<br>$\varphi(t=0)=0$, $\dot\varphi(t=0)=0$인 경우에 $\langle\varphi(t)\rangle$와 $\left\langle\varphi^2(t)\right\rangle$를 계산하여라.</p></div>
+<div class="a" style="top:253.2pt;line-height:14.6pt"><p><b>e)</b> [4점] $t=0$에서 계가 (c)에서 주어진 과감쇠 방정식으로 적절히 기술되는 상태로 이완되어 있다고 하자. $\vec r(t=0)=\vec 0$, $\dot{\vec r}(t=0)=f_a\hat u_0/\gamma$, $\varphi(t=0)=0$, $\dot\varphi(t=0)=0$인 경우에, 작은 시간 $t\ll1$에 대해, 즉 $t^2$ 항까지 평균 위치 $\langle\vec r(t)\rangle$와 평균 제곱 변위 $\left\langle|\vec r(t)|^2\right\rangle$를 계산하여라.<br>입자가 방향을 크게 바꾸기 전에 이동하는 전형적인 거리를 논의하여라. 이를 위해 먼저 속도가 처음 조건 $\dot{\vec r}(t=0)=f_a\hat u_0/\gamma$에서 $\dot{\vec r}(t=t_\text{reverse})=-f_a\hat u_0/\gamma$로 바뀌는 데 걸리는 시간 $t_\text{reverse}$를 생각하여라. 이 전형적인 거리에 관련된 시간 척도는 여기서 쓴 짧은 시간 근사가 성립하는 한계로 볼 수 있다는 점에 유의하여라.</p></div>
+<div class="h" style="top:370.2pt"><p><u>힌트</u>: 먼저 $\langle\hat u(t)\rangle$($t$의 1차까지 필요)와 $\langle\hat u(t)\hat u(t')\rangle$($t$의 0차만 필요)를 계산하여라.</p></div>
+</div>
+
+<!-- 37 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="37" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="37" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="37" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 7</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:119.6pt"><b>a)</b> 뉴턴 방정식은 다음과 같다.</div>
+<div class="f" style="left:183.0pt;top:141.5pt"><span class="fig" data-srcpage="37" data-clip="183.0,141.5,412.0,173.5"></span></div>
+<div class="x ov" style="left:356.6pt;width:55pt;top:144.1pt;background:#fff">[0.5점]</div>
+<div class="x ov" style="left:320.0pt;width:55pt;top:160.6pt;background:#fff">[0.5점]</div>
+<div class="x" style="top:191.5pt"><p><b>b)</b> 열적 돌림힘이 없으면 벡터 $\hat u(t)$는 일정하게 유지된다. 즉 $\hat u(t)=\hat u_0$이다. 방정식 $m\ddot{\vec r}(t)=-\gamma\dot{\vec r}(t)+f_a\hat u_0$의 해는 다음과 같다.</p></div>
+<div class="f" style="left:188.0pt;top:226.5pt"><span class="fig" data-srcpage="37" data-clip="188.0,226.5,407.0,241.5"></span></div>
+<div class="x ov" style="left:351.4pt;width:55pt;top:229.6pt;background:#fff">[0.5점]</div>
+<div class="x" style="top:255.2pt">처음 조건은 $\vec A=(v_0-f_a/\gamma)\,\hat u_0$일 때 만족된다 <span style="white-space:nowrap">[0.5점]</span>.</div>
+<div class="x" style="top:269.7pt"><p>따라서 긴 시간 극한에서 속도는 $f_a\hat u_0/\gamma$에 가까워진다 <span style="white-space:nowrap">[0.5점]</span>. 처음 속도가 이 최종 속도와 다르면, 입자는 최종 속도에 이를 때까지 가속되거나 감속된다 <span style="white-space:nowrap">[0.5점]</span>. <i>덧붙이는 말: 최종 속도로 다가가는 과정은 지수적 감쇠로 주어지며, 그 시간 척도는 $m/\gamma$이다.</i></p></div>
+<div class="x" style="top:328.4pt"><p><b>c)</b> 과감쇠 극한은 긴 시간 극한, 즉 $t>m/\gamma$이고 $t>I/\gamma_R$일 때 성립한다 <span style="white-space:nowrap">[0.5점]</span>. 이렇게 고르면 관성 항은 마찰 항보다 작으므로 무시할 수 있다 <span style="white-space:nowrap">[0.5점]</span>.</p></div>
+<div class="x" style="top:373.5pt"><p><b>d)</b> $\gamma_R\dot\varphi(t)=T_T(t)$로부터 $\varphi(t)=\int_0^t\mathrm{d}t'\,T_T(t')/\gamma_R$을 얻고, 따라서 $\langle\varphi(t)\rangle=\int_0^t\mathrm{d}t'\,\langle T_T(t')\rangle/\gamma_R=0$이다 <span style="white-space:nowrap">[0.5점]</span>. 또한 다음을 얻는다.</p></div>
+<div class="f" style="left:162.0pt;top:404.5pt"><span class="fig" data-srcpage="37" data-clip="162.0,404.5,440.0,562.5"></span></div>
+<div class="x ov" style="left:382.0pt;width:55pt;top:448.9pt;background:#fff">[0.5점]</div>
+<div class="x ov" style="left:315.4pt;width:55pt;top:512.3pt;background:#fff">[0.5점]</div>
+<div class="x ov" style="left:266.8pt;width:55pt;top:542.3pt;background:#fff">[0.5점]</div>
+<div class="x" style="top:576.0pt"><b>e)</b></div>
+<div class="f" style="left:208.0pt;top:600.5pt"><span class="fig" data-srcpage="37" data-clip="208.0,600.5,390.0,680.0"></span></div>
+<div class="x ov" style="left:338.4pt;width:48pt;top:659.7pt;background:#fff">[1점]</div>
+<div class="x" style="top:694.6pt">$\gamma\dot{\vec r}(t)=f_a\hat u(t)+\vec F_T(t)$이므로 $\vec r(t)=\int_0^t\mathrm{d}t'\,(f_a\hat u(t')+\vec F_T(t'))/\gamma$이고, 따라서</div>
+</div>
+
+<!-- 38 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="38" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="38" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="38" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 7</div>
+<div class="x" style="top:89.3pt">$\langle\vec r(t)\rangle=f_a\int_0^t\mathrm{d}t'\,\langle\hat u(t')\rangle/\gamma+0$이다. 그 결과 $\langle y(t)\rangle=0$이고</div>
+<div class="f" style="left:204.0pt;top:109.0pt"><span class="fig" data-srcpage="38" data-clip="204.0,109.0,392.0,171.0"></span></div>
+<div class="x ov" style="left:334.7pt;width:55pt;top:151.0pt;background:#fff">[0.5점]</div>
+<div class="x" style="top:180.9pt"><p style="text-indent:10.9pt">따라서 방향이 바뀌는 데 걸리는 전형적인 시간은 $\frac{\gamma_R}{k_BT}$이다. 입자는 평균 속도 $\frac{f_a}{\gamma}$로 움직이므로 전형적인 길이(지속 길이)는 $\frac{f_a\gamma_R}{\gamma k_BT}$이다 <span style="white-space:nowrap">[0.5점]</span>. <i>(덧붙이는 말: 지속 길이를 $\ln(2)$ 같은 상수 앞인자를 덧붙여 정의해도 된다. 문제에서 더 자세한 조건을 주지 않았으므로 그것도 괜찮다.)</i></p></div>
+<div class="x" style="top:238.1pt"><p style="text-indent:10.9pt">또한 다음이 성립한다.</p></div>
+<div class="f" style="left:166.0pt;top:258.0pt"><span class="fig" data-srcpage="38" data-clip="166.0,258.0,434.0,277.0"></span></div>
+<div class="x ov" style="left:377.6pt;width:55pt;top:264.1pt;background:#fff">[0.5점]</div>
+<div class="x" style="top:295.7pt"><p>$\gamma\dot{\vec r}(t)=f_a\hat u(t)+\vec F_T(t)$이므로 $\vec r(t)=\int_0^t\mathrm{d}t'\,(f_a\hat u(t')+\vec F_T(t'))/\gamma$이고, 따라서 다음을 얻는다(평균을 취하면 0이 되므로 $\hat u(t)$와 $\vec F_T(t')$에 대해 홀수 차수인 항은 뺐다).</p></div>
+<div class="f" style="left:90.0pt;top:333.0pt"><span class="fig" data-srcpage="38" data-clip="90.0,333.0,512.0,426.5"></span></div>
+<div class="x ov" style="left:455.0pt;width:55pt;top:345.6pt;background:#fff">[0.5점]</div>
+<div class="x ov" style="left:384.4pt;width:55pt;top:376.1pt;background:#fff">[0.5점]</div>
+<div class="x ov" style="left:222.0pt;width:55pt;top:406.5pt;background:#fff">[0.5점]</div>
+<div class="x" style="top:437.1pt">나머지 보정은 적어도 $t^3$ 차수이다.</div>
+</div>
+
+<!-- 39: problem page (= problem paper p. 19) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="39" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="39" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="39" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 8</div>
+<div class="box" style="top:88.1pt">문제 8</div>
+<div class="t" style="top:115.9pt">양자 합성곱 신경망</div>
+<div class="f" style="left:56.3pt;top:145.6pt"><span class="fig" data-srcpage="39" data-clip="56.3,145.6,548.5,171.4"></span></div>
+<div class="f" style="left:55.8pt;top:183.8pt"><span class="fig" data-srcpage="39" data-clip="55.8,183.8,60.5,369.9"></span></div>
+<div class="b" style="top:183.0pt"><p><span class="s">배경</span>&ensp;합성곱 신경망은 이미지 인식에 활용할 수 있는 인공 신경망이다. 합성곱 신경망은 래스터화된 이미지를 처리하여, 예를 들어 어떤 이미지에 <i>고양이</i>가 그려져 있는지 <i>개</i>가 그려져 있는지 분류할 수 있다. 양자 합성곱 신경망(QCNN)은 고전적인 합성곱 신경망에 대응하는 것으로, 먼 거리 양자 상관으로 특징지어지는 물질의 양자 상을 인식하도록 설계되어 있다. QCNN은 양자 상태를 처리하여 그 상태가 주어진 양자 상에 속하는지 판정한다. 여기서는 큐비트 네 개의 양자 상태를 처리하는 최소한의 QCNN 예를 생각한다. 각 큐비트의 힐베르트 공간은 $i=1,2,3,4$에 대해 두 양자 상태 $|0\rangle_i$와 $|1\rangle_i$로 생성된다. QCNN은 그림 8.1의 양자 회로에 바탕을 두며, 이 회로는 합성곱(C) 층, 풀링(P) 층, 그리고 회로 끝에서의 큐비트 1과 4의 측정으로 이루어진다. C 층에서는 이웃한 큐비트 사이의 CZ 게이트로 이루어진, 병진 불변인 유니타리 변환 $U_C$를 수행한다. P 층에서는 CNOT 게이트 두 개로 이루어진 유니타리 변환 $U_P$를 수행하고, 큐비트 2와 3을 버려서 회로 끝에서는 큐비트 1과 4만 측정한다.</p></div>
+<div class="f" style="left:163.8pt;top:403.6pt"><span class="fig" data-srcpage="39" data-clip="163.8,403.6,431.4,563.5"></span></div>
+<div class="a" style="top:583.8pt;font-size:10pt;line-height:12pt"><p><b>그림 8.1</b> 합성곱 층 $U_C$, 풀링 층 $U_P$, 큐비트 1과 4의 측정으로 이루어진 양자 합성곱 신경망. 가로선은 큐비트를 나타내며, 큐비트는 회로에서 왼쪽에서 오른쪽으로 시간 변화한다. CZ 게이트는 점으로 표시된 두 큐비트에 작용하는 세로선으로 나타낸다. CNOT 게이트는 점으로 표시된 제어 큐비트와 십자로 표시된 목표 큐비트를 잇는 세로선으로 나타낸다.</p></div>
+<div class="a" style="top:647.7pt"><p>제어 큐비트 $i$와 목표 큐비트 $j$를 갖는 CNOT$_{ij}$ 게이트는 제어 큐비트가 상태 $|1\rangle_i$에 있으면 목표 큐비트에 비트 뒤집기 $|0\rangle_j\leftrightarrow|1\rangle_j$를 수행하고, 제어 큐비트가 상태 $|0\rangle_i$에 있으면 아무 변환도 하지 않는다. 큐비트 $i$와 $j$에 작용하는 CZ$_{ij}$ 게이트는 두 큐비트가 상태 $|11\rangle_{ij}$에 있으면 위상 변화 $|11\rangle_{ij}\to-|11\rangle_{ij}$를 일으키고, 그 밖의 경우에는 아무 변환도 하지 않는다. 여기서 두 상태의 텐서곱에 대해 $|\psi\theta\rangle_{ij}=|\psi\rangle_i\otimes|\theta\rangle_j$라는 표기를 쓴다.</p></div>
+</div>
+
+<!-- 40: problem page (= problem paper p. 20) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="40" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="40" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="40" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 8</div>
+<div class="a" style="top:89.2pt;line-height:13.6pt"><p>QCNN은 $(\mathbb Z_2\times\mathbb Z_2)$ 대칭으로 보호되는 위상학적(SPT) 상을 인식하도록 설계되어 있다. 이 양자 상에 속하는 상태들은 이른바 <i>끈 질서 변수</i>의 기댓값이 0이 아니라는 특징이 있다. 여기서 생각하는 4-큐비트 계의 끈 질서 변수는 $\mathcal O_1=X_1X_3Z_4$와 $\mathcal O_2=Z_1X_2X_4$이다. 입력 상태 $|\psi\rangle$에 대해 QCNN 출력 $x_\text{QCNN}=\langle\psi|\,U^\dagger\tfrac{X_1+X_4}{2}U\,|\psi\rangle$는 QCNN 회로 $U=U_PU_C$를 지난 뒤 측정한 $(X_1+X_4)/2$의 기댓값이다. 따라서 QCNN 출력은 입력 상태 $|\psi\rangle$에서 직접 측정한 관측가능량 $\mathcal O=U^\dagger\tfrac{X_1+X_4}{2}U$의 기댓값 $\langle\psi|\,\mathcal O\,|\psi\rangle$에 해당한다.</p></div>
+<div class="a" style="top:202.1pt"><b>a)</b> [2점] 다음 게이트 항등식을 증명하여라.</div>
+<div class="f" style="left:210.6pt;top:223.3pt"><span class="fig" data-srcpage="40" data-clip="210.6,223.3,538.5,315.0"></span></div>
+<div class="a" style="top:323.0pt;line-height:13.6pt"><p>여기서 $X_i$와 $Z_i$는 파울리 연산자이며 고유 상태는 각각 $|\pm\rangle_i=(|0\rangle_i\pm|1\rangle_i)/\sqrt2$와 $|0/1\rangle_i$이고, $[A,B]=AB-BA$는 교환자이다.<br><i>힌트: 양자 상태의 행렬 표현</i></p></div>
+<div class="f" style="left:145.8pt;top:376.1pt"><span class="fig" data-srcpage="40" data-clip="145.8,376.1,538.5,429.9"></span></div>
+<div class="a" style="top:439.3pt"><i>과 파울리 연산자의 행렬 표현을 이용하여라</i></div>
+<div class="f" style="left:219.1pt;top:452.3pt"><span class="fig" data-srcpage="40" data-clip="219.1,452.3,538.5,479.9"></span></div>
+<div class="a" style="top:489.2pt"><p><b>b)</b> [1점] 1)에서 증명한 항등식을 이용하여 관측가능량 $\mathcal O$를 위에서 정의한 끈 질서 변수 $\mathcal O_1$과 $\mathcal O_2$로 나타내어라.</p></div>
+<div class="a" style="top:534.1pt"><p><b>c)</b> [1점] 이제 이른바 <i>클러스터 상태</i> $|C\rangle$를 생각하자. 이 상태는 이른바 <i>안정자 생성원</i> $S_1=X_1Z_2$, $S_2=Z_1X_2Z_3$, $S_3=Z_2X_3Z_4$, $S_4=Z_3X_4$ 네 개 모두에 대해 고윳값 $+1$을 갖는 고유 상태로 유일하게 정의된다. 이웃한 큐비트 사이의 CZ 게이트로 이루어진 회로 $U_{CZ}$</p></div>
+<div class="f" style="left:228.8pt;top:590.5pt"><span class="fig" data-srcpage="40" data-clip="228.8,590.5,360.7,732.7"></span></div>
+</div>
+
+<!-- 41: problem page (= problem paper p. 21) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="41" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="41" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="41" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 8</div>
+<div class="a" style="top:89.2pt"><p>가 곱 상태 $|++++\rangle=|+\rangle_1\otimes|+\rangle_2\otimes|+\rangle_3\otimes|+\rangle_4$로부터 클러스터 상태를 만들어 냄을 보여라.</p></div>
+<div class="a" style="top:134.4pt"><p><b>d)</b> [1점] QCNN 출력 $x_\text{QCNN}$은 SPT 상에 속하는 상태에 대해서는 1이고, SPT 상에 속하지 않는 상태에 대해서는 0이다. 동등성 $x_\text{QCNN}=\langle\mathcal O\rangle$를 이용하여 클러스터 상태 $|C\rangle$와 상태 $|P\rangle=|++++\rangle$, $|A\rangle=|+-+-\rangle$가 SPT 상에 속하는지 판정하여라.</p></div>
+<div class="a" style="top:206.8pt;line-height:16.2pt"><p><b>e)</b> [2점] QCNN의 중요한 특징은 어떤 종류의 섭동 $\mathcal P$를 견딜 수 있다는 것이다. 즉, 섭동된 상태 $\left|\tilde\psi\right\rangle=\mathcal P|\psi\rangle$가 임의의 $|\psi\rangle$에 대해 섭동되지 않은 상태 $|\psi\rangle$와 같은 QCNN 출력 $x_\text{QCNN}$을 유지한다. 다음 단일 큐비트 섭동</p></div>
+<div class="f" style="left:179.8pt;top:264.6pt"><span class="fig" data-srcpage="41" data-clip="179.8,264.6,538.5,276.9"></span></div>
+<div class="a" style="top:288.2pt">가운데 어느 것을 QCNN이 견디는지 판정하여라. 여기서 파울리 연산자 $Y_j$의 행렬 표현은 다음과 같다.</div>
+<div class="f" style="left:256.3pt;top:301.0pt"><span class="fig" data-srcpage="41" data-clip="256.3,301.0,538.5,340.4"></span></div>
+<div class="a" style="top:355.0pt"><b>f)</b> [3점] QCNN 출력 $x_{QCNN}=1$을 주는, SPT 상에 속하는 모든 상태를 구하여라.</div>
+</div>
+
+<!-- 42 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="42" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="42" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="42" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 8</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:119.6pt"><b>a)</b> 행렬 표현을 이용하여 게이트 항등식들을 증명한다.</div>
+<div class="f" style="left:56.7pt;top:133.6pt"><span class="fig" data-srcpage="42" data-clip="56.7,133.6,539.6,533.4"></span></div>
+<div class="x" style="top:545.1pt"><p>또는 $Z_i$와 $X_i$가 서로 반가환한다는 사실(반가환성은 증명할 필요가 없다)을 이용하여 다음을 보임으로써 식 (8.1)을 증명할 수도 있다.</p></div>
+<div class="f" style="left:228.0pt;top:579.8pt"><span class="fig" data-srcpage="42" data-clip="228.0,579.8,539.6,598.4"></span></div>
+<div class="x" style="top:607.6pt"><p>식 (8.2)를 증명하려면, $Z_i$, $Z_j$, $\mathrm{CZ}_{ij}$가 모두 계산 기저에서 대각 행렬이므로 서로 가환한다고 논증해도 된다.</p></div>
+<div class="x" style="top:648.3pt;color:rgb(0,0,255)"><p>총 2점: 식 8.1 증명에 0.5점, 식 8.2 증명에 0.5점, 식 8.3과 (8.4) 증명에 0.5점, 식 8.5 증명에 0.5점.</p></div>
+</div>
+
+<!-- 43 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="43" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="43" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="43" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 8</div>
+<div class="x" style="top:107.3pt"><b>b)</b> 게이트 항등식 (8.3), (8.4), (8.5)와 $Z_i^2=\mathbb 1$을 이용하여 다음을 보인다.</div>
+<div class="f" style="left:105.0pt;top:129.0pt"><span class="fig" data-srcpage="43" data-clip="105.0,129.0,539.6,182.4"></span></div>
+<div class="x" style="top:190.6pt;color:rgb(0,0,255)"><p>총 1점: 항등식 (8.3), (8.4)를 올바르게 이용하면 0.5점, 항등식 (8.5)와 $Z_i^2=\mathbb 1$을 올바르게 이용하면 0.5점.</p></div>
+<div class="x" style="top:235.8pt"><p><b>c)</b> 게이트 항등식 (8.2), (8.3), (8.4)와 $U_{\mathrm{CZ}}U_{\mathrm{CZ}}^\dagger=\mathbb 1$, $Z_i^2=\mathbb 1$, $X_i|+\rangle_i=|+\rangle_i$를 이용하여 다음을 보인다.</p></div>
+<div class="f" style="left:66.0pt;top:270.6pt"><span class="fig" data-srcpage="43" data-clip="66.0,270.6,539.6,345.6"></span></div>
+<div class="x" style="top:355.0pt"><p>따라서 회로 $U_{\mathrm{CZ}}$로 곱 상태 $|++++\rangle$로부터 만든 상태 $U_{\mathrm{CZ}}|++++\rangle$는 네 안정자 생성원 모두에 대해 고윳값 $+1$을 갖는 고유 상태이며, 따라서 클러스터 상태이다.</p></div>
+<div class="x" style="top:409.2pt;color:rgb(0,0,255)"><p>클러스터 상태가 네 안정자 생성원 모두에 대해 고윳값 $+1$을 갖는 고유 상태임을 보이면 총 1점: 안정자 생성원을 $U_{\mathrm{CZ}}$에 따라 변환하면 0.5점, 계산을 마무리하는 데 $Z_i^2=\mathbb 1$과 $X_i|+\rangle_i=|+\rangle_i$를 이용하면 0.5점.</p></div>
+<div class="x" style="top:467.9pt"><p><b>d)</b> 먼저 클러스터 상태가 네 안정자 생성원의 고윳값 $+1$ 고유 상태라는 사실을 이용하여 다음을 보인다.</p></div>
+<div class="f" style="left:185.0pt;top:505.2pt"><span class="fig" data-srcpage="43" data-clip="185.0,505.2,539.6,535.6"></span></div>
+<div class="x" style="top:547.0pt">이로부터 다음이 성립하며,</div>
+<div class="f" style="left:198.0pt;top:565.8pt"><span class="fig" data-srcpage="43" data-clip="198.0,565.8,539.6,594.0"></span></div>
+<div class="x" style="top:601.5pt">클러스터 상태는 SPT 상에 속한다. 나머지 두 상태에 대해서는 다음을 얻는다.</div>
+<div class="f" style="left:63.0pt;top:622.8pt"><span class="fig" data-srcpage="43" data-clip="63.0,622.8,539.6,677.6"></span></div>
+<div class="x" style="top:685.0pt"><p>따라서 이 두 상태는 SPT 상에 속하지 않는다. 여기서 $X_i|+\rangle_i=|+\rangle_i$와 $Z_i|+\rangle_i=|-\rangle_i$를 이용하였다.</p></div>
+</div>
+
+<!-- 44 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="44" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="44" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="44" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 8</div>
+<div class="x" style="top:89.3pt;color:rgb(0,0,255)"><p>총 1점: 클러스터 상태가 SPT 상에 속함을 보이면 0.5점, 나머지 두 상태가 SPT 상에 속하지 않음을 보이면 0.5점.</p></div>
+<div class="x" style="top:134.1pt;line-height:14.4pt"><p><b>e)</b> 주어진 섭동 $\mathcal P$에 대해, 섭동되지 않은 상태 $|\psi\rangle$와 섭동된 상태 $\mathcal P|\psi\rangle$의 QCNN 출력 $\langle\psi|\,\mathcal O\,|\psi\rangle$와 $\langle\psi|\,\mathcal P^\dagger\mathcal O\mathcal P\,|\psi\rangle$가 임의의 $|\psi\rangle$에 대해 일치할 <i>필요충분조건</i>은 $\mathcal P^\dagger\mathcal O\mathcal P=\mathcal O$이며, 이는 $[\mathcal O,\mathcal P]=0$과 동등하다. 먼저 $\alpha=X,Y,Z$, $\beta=X,Y,Z$이고 $i\neq j$이면 $[\sigma_i^\alpha,\sigma_j^\beta]=0$이며, $\alpha\neq\beta$이면 $\sigma_i^\alpha\sigma_i^\beta=-\sigma_i^\beta\sigma_i^\alpha$임을 상기하자. 여기서 $\sigma_i^X=X_i$, $\sigma_i^Y=Y_i$, $\sigma_i^Z=Z_i$이다. 끈 질서 변수 $\mathcal O_1$과 $\mathcal O_2$는 단일 큐비트 섭동 $\mathcal P$와 가환하거나 반가환한다. 예를 들어 다음과 같다.</p></div>
+<div class="f" style="left:150.0pt;top:227.0pt"><span class="fig" data-srcpage="44" data-clip="150.0,227.0,539.6,258.6"></span></div>
+<div class="x" style="top:267.9pt"><p>$\mathcal O$는 끈 질서 변수 $\mathcal O_1$과 $\mathcal O_2$의 합이므로, $\mathcal O_1$, $\mathcal O_2$와 모두 가환하는 섭동만 QCNN이 견딘다. 따라서 QCNN이 견디는 섭동은 $\mathcal P=X_2$와 $\mathcal P=X_3$뿐이라고 결론짓는다. 나머지 단일 큐비트 섭동은 모두 QCNN 출력을 바꾼다.</p></div>
+<div class="f" style="left:200.0pt;top:311.0pt"><span class="fig" data-srcpage="44" data-clip="200.0,311.0,539.6,582.0"></span></div>
+<div class="x" style="top:586.9pt"><p>여기서 위에서 말한 교환 관계와 $(\sigma_i^\alpha)^2=\mathbb 1$을 이용하였다. 예를 들어 섭동된 클러스터 상태 $Z_{2/3}|C\rangle$의 QCNN 출력은 0이 된다.</p></div>
+<div class="f" style="left:200.0pt;top:617.5pt"><span class="fig" data-srcpage="44" data-clip="200.0,617.5,539.6,641.0"></span></div>
+<div class="x" style="top:649.8pt;color:rgb(0,0,255)"><p>총 2점: 견딜 수 있는 섭동은 $\mathcal O$와 가환함을 알아차리면 0.5점, $\mathcal O_1$과 $\mathcal O_2$가 모든 섭동과 가환하거나 반가환함을 알아차리면 0.5점, 견딜 수 있는 섭동을 올바르게 찾으면 1점.</p></div>
+<div class="x" style="top:708.2pt"><p><b>f)</b> QCNN 출력 $x_\text{QCNN}=1$을 주려면 상태는 $\mathcal O_1$과 $\mathcal O_2$ 모두의 고윳값 $+1$ 고유 상태여야 한다. 항등식 (8.2), (8.3), (8.4)와 $Z_i^2=\mathbb 1$을 이용하여, 유니터리 $U_{\mathrm{CZ}}$가 끈 질서 변수를</p></div>
+</div>
+
+<!-- 45 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="45" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="45" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="45" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 8</div>
+<div class="x" style="top:89.3pt"><p>$U_{\mathrm{CZ}}^\dagger\mathcal O_1U_{\mathrm{CZ}}=X_1X_3$과 $U_{\mathrm{CZ}}^\dagger\mathcal O_2U_{\mathrm{CZ}}=X_2X_4$, 즉 $X$ 기저에서 대각인 연산자로 바꿈을 보인다. $X$ 기저 고유 상태들을 살펴보면, 네 상태 $|++++\rangle$, $|-+-+\rangle$, $|+-+-\rangle$, $|----\rangle$가 두 대각 연산자 $X_1X_3$과 $X_2X_4$ 모두에 대해 고윳값 $+1$을 갖는 고유 상태임을 알 수 있다. 나머지 $X$ 기저 고유 상태는 모두 적어도 하나의 고윳값 $-1$을 갖는다. 따라서 다음을 얻는다.</p></div>
+<div class="f" style="left:60.0pt;top:148.0pt"><span class="fig" data-srcpage="45" data-clip="60.0,148.0,539.6,301.0"></span></div>
+<div class="x" style="top:310.5pt"><p>이로써 $|C_1\rangle=|C\rangle=U_{\mathrm{CZ}}|++++\rangle$, $|C_2\rangle=U_{\mathrm{CZ}}|-+-+\rangle$, $|C_3\rangle=U_{\mathrm{CZ}}|+-+-\rangle$, $|C_4\rangle=U_{\mathrm{CZ}}|----\rangle$가 두 끈 질서 변수 모두에 대해 고윳값 $+1$을 갖는 네 고유 상태임을 알 수 있다. 연산자 $X_1X_3$과 $X_2X_4$로의 대응 덕분에, 두 끈 질서 변수 모두에 대해 고윳값 $+1$을 갖는 다른 고유 상태는 없으며 고유 상태들은 서로 직교함, 즉 $\langle C_i|C_k\rangle=\delta_{ij}$임을 안다. 여기서 $\delta_{ij}$는 크로네커 델타이다. 따라서 $i=1,2,3,4$에 대한 상태 $|C_i\rangle$가 $x_\text{QCNN}=1$을 주는, SPT 상에 속하는 모든 상태가 생성하는 부분 공간의 기저를 이룬다고 결론짓는다. 즉 $x_\text{QCNN}=1$인 임의의 상태 $|\psi\rangle$는 중첩 $|\psi\rangle=\sum_{i=1}^4\gamma_i|C_i\rangle$로 나타낼 수 있다.</p></div>
+<div class="x" style="top:432.4pt"><p>다른 풀이: 먼저 끈 질서 변수가 패리티 연산자, 즉 $\mathcal O_1^2=\mathcal O_2^2=\mathbb 1$임을 알아차린다. 각 패리티 연산자는 힐베르트 공간을 고윳값 $+1$과 $-1$의 고유 상태들이 생성하는, 차원이 같은 두 부분 공간으로 나눈다. 따라서 두 연산자에 공통인 고윳값 $+1$ 고유 상태들의 부분 공간은 차원이 $d=2^4/2^2=4$라고 결론짓는다. 섭동 $X_2$와 $X_3$이 QCNN 출력을 바꾸지 않는다는 문항 <b>5)</b>의 결과를 이용하면, 상태 $|C_2\rangle=X_2|C\rangle$, $|C_3\rangle=X_3|C\rangle$, $|C_4\rangle=X_2X_3|C\rangle$도 QCNN 출력 $x_\text{QCNN}=1$을 줌을 알 수 있다. 동시에 이 상태들은 클러스터 상태와 직교한다.</p></div>
+<div class="f" style="left:60.0pt;top:531.0pt"><span class="fig" data-srcpage="45" data-clip="60.0,531.0,539.6,590.6"></span></div>
+<div class="x" style="top:599.8pt"><p>마찬가지로 이 상태들이 서로 직교함을 보일 수 있다. 따라서 상태 $|C\rangle_1=|C\rangle$, $|C\rangle_2$, $|C\rangle_3$, $|C\rangle_4$가 $x_\text{QCNN}=1$을 주는, SPT 상에 속하는 모든 상태로 이루어진 4차원 부분 공간의 기저를 이룬다고 결론짓는다.</p></div>
+<div class="x" style="top:654.0pt;color:rgb(0,0,255)"><p>총 3점: $\mathcal O_1$과 $\mathcal O_2$ 모두의 고윳값 $+1$ 고유 상태가 $x_\text{QCNN}=1$을 줌을 알아차리면 0.5점, $x_\text{QCNN}=1$을 주는 네 상태 $|C_i\rangle$를 찾으면 1점, 이 상태들이 직교함을 보이면($X$ 기저 고유 상태로의 대응을 이용하든 직접 확인하든) 0.5점, $x_\text{QCNN}=1$인 임의의 상태 $|\psi\rangle$를 중첩 $|\psi\rangle=\sum_{i=1}^4\gamma_i|C_i\rangle$로 나타낼 수 있음을 논증하면($\mathcal O_1$과 $\mathcal O_2$를 대각 연산자로 대응시켜 그 고유 상태를 살펴보든, 패리티 연산자 $\mathcal O_1$과 $\mathcal O_2$의 공통 고윳값 $+1$ 부분 공간의 차원을 구하든) 1점.</p></div>
+</div>
+
+<!-- 46: problem page (= problem paper p. 22) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="46" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="46" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="46" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 9</div>
+<div class="box" style="top:88.1pt">문제 9</div>
+<div class="t" style="top:115.7pt;line-height:17.9pt">호킹 복사, 로그 위상 특이점, 그리고 뒤집힌 조화 진동자</div>
+<div class="f" style="left:55.3pt;top:162.3pt"><span class="fig" data-srcpage="46" data-clip="55.3,162.3,540.5,201.7"></span></div>
+<div class="f" style="left:55.8pt;top:215.3pt"><span class="fig" data-srcpage="46" data-clip="55.8,215.3,60.5,363.2"></span></div>
+<div class="b" style="top:214.4pt"><p><span class="s">배경</span>&ensp;블랙홀의 중심에는 시공간 특이점이 있으며, 이를 사건 지평선이 둘러싸서 시공간을 서로 떨어진 두 영역, 즉 바깥 관측자가 접근할 수 있는 영역과 접근할 수 없는 영역으로 나눈다. 사건 지평선에서는 질량이 없는 스칼라장의 모드 함수에 로그 위상 특이점이 나타나며, 이는 블랙홀이 방출하는 호킹 복사의 특징이다.</p>
+<p class="in">물리계가 블랙홀 증발과 관련된 현상을 보이는 상황은 많다. 가속 복사에서부터 음파에 대한 음향 지평선의 존재, 느린 빛과 보스–아인슈타인 응축의 양자 파국, 물결파를 쓰는 장치에 이르기까지 다양하다. 이처럼 수많은 물리계에 대한 통찰은 바탕에 있는 효과의 주요 특징을 담은 간단한 모형으로 얻을 수 있다. 호킹 복사에 대해서는 그러한 기본 모형이 바로 뒤집힌 조화 진동자이다.</p></div>
+<div class="a" style="top:379.6pt"><p><b>개요</b><br>이 문제의 앞부분에서는 다음 퍼텐셜로 기술되는, 가파름이 $\omega&gt;0$인 <i>뒤집힌 조화 진동자</i>를 받는 질량 $m$인 <i>고전적인</i> 입자를 생각한다.</p></div>
+<div class="f" style="left:254.1pt;top:430.3pt"><span class="fig" data-srcpage="46" data-clip="254.1,430.3,538.5,453.7"></span></div>
+<div class="a" style="top:463.2pt"><p>이 퍼텐셜은 좌표 $x$에 의존하며 그림 9.1에 나타나 있다. 블랙홀의 사건 지평선과 비슷하게, 뒤집힌 조화 진동자도 지평선을 가진다는 것을 보이게 될 것이다. 다만 그 지평선은 시공간이 아니라 위상 공간에 있다.</p></div>
+<div class="f" style="left:224.6pt;top:513.8pt"><span class="fig" data-srcpage="46" data-clip="224.6,513.8,370.7,660.7"></span></div>
+<div class="a" style="top:669.3pt;font-size:10pt;line-height:12pt"><p><b>그림 9.1</b> 뒤집힌 조화 진동자 퍼텐셜 $V(x)$(식 (9.1))를 위치 $x$의 함수로 나타낸 것. 각 에너지 $E$에 대해 고전적인 입자가 각각 왼쪽과 오른쪽에서 들어오는 두 경우를 나타내었다. 음의 에너지 $E&lt;0$인 고전적인 입자(빨간색과 주황색 선)는 퍼텐셜 장벽에서 반사된다. 반대로 양의 에너지 $E&gt;0$인 입자(파란색과 초록색 선)는 장벽을 넘어갈 수 있다. 그림 출처: F. Ullinger et al., AVS Quantum Sci. <b>4</b>, 024402 (2022), CC BY 4.0 라이선스에 따라 다시 실음.</p></div>
+</div>
+
+<!-- 47: problem page (= problem paper p. 23) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="47" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="47" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="47" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 9</div>
+<div class="a" style="top:89.2pt"><p class="in">다음으로, 뒤집힌 진동자의 <i>양자</i>계로 넘어가 그 성질을 분석한다. 특히, 이 계에서 <i>로그 위상 특이점</i>을 찾아내고, 이것이 매우 특별한 양자 통계를 닮은 투과 계수와 반사 계수를 만든다는 것을 보이게 된다.</p>
+<p class="in">그다음, 블랙홀의 사건 지평선에서 전자기장의 모드 함수에 나타나는 로그 위상 특이점을 확인한다. 이 특별한 특이점이 호킹 복사의 특징임을 보이게 될 것이다.</p>
+<p class="in">이렇게 하면 블랙홀의 사건 지평선에서 방출되는 호킹 복사와 뒤집힌 조화 진동자라는 간단한 계 사이의 흥미로운 유사성을 엿볼 수 있을 것이다.</p></div>
+<div class="a" style="top:215.2pt"><p><b>a)</b> [1.5점] 먼저 그림 9.1에 나타낸 퍼텐셜 $V(x)$(식 (9.1))로 특징지어지는, 가파름이 $\omega$인 1차원 뒤집힌 조화 진동자를 생각하자. 이 계에서 질량 $m$인 <i>고전적인 입자</i>의 동역학은 다음 해밀토니안으로 기술된다.</p></div>
+<div class="f" style="left:237.1pt;top:262.8pt"><span class="fig" data-srcpage="47" data-clip="237.1,262.8,538.5,288.7"></span></div>
+<div class="a" style="top:295.3pt"><p>여기서 $x$는 위치, $p$는 운동량이다. 해밀토니안 $H(x,p)$(식 (9.2))는 시간에 무관하므로, 각 고전적인 궤적에는 시각 $t=0$에서의 처음 조건 $x(0)=x_0$, $p(0)=p_0$으로 정해지는 특정한 에너지 $E=H(x_0,p_0)$가 대응한다.</p></div>
+<div class="l" style="top:345.0pt"><span class="k">1.</span><p>위상 공간, <i>즉</i> 위치 $x$와 운동량 $p$의 2차원 공간의 그림에서, 에너지가 (i) $E&lt;0$, (ii) $E=0$, (iii) $E&gt;0$인 위상 공간 궤적이 있는 영역을 찾아라.</p></div>
+<div class="l" style="top:380.1pt"><span class="k">2.</span><p>위상 공간의 각 사분면에서 위상 공간 궤적 $\{x(t),p(t)\}$를 그려라. 주어진 에너지 $E$에 대해 서로 다른 궤적은 몇 개 있는가?</p></div>
+<div class="h" style="left:56.7pt;width:481.9pt;top:416.6pt;line-height:13.5pt"><p style="text-indent:10.9pt"><u>힌트</u>: 첫 번째 문항에서, 위상 공간의 해당 사분면들은 서로 다른 에너지 영역에 대응하는 영역으로 확인된다.</p></div>
+<div class="a" style="top:447.4pt"><p><b>b)</b> [1.5점] 블랙홀 증발에서 익숙한 현상과 연결하기 위해, 다음 지평선 좌표를 도입한다.</p></div>
+<div class="f" style="left:245.3pt;top:479.6pt"><span class="fig" data-srcpage="47" data-clip="245.3,479.6,538.5,507.2"></span></div>
+<div class="a" style="top:518.2pt">그리고</div>
+<div class="f" style="left:242.8pt;top:524.5pt"><span class="fig" data-srcpage="47" data-clip="242.8,524.5,538.5,552.2"></span></div>
+<div class="a" style="top:555.9pt"><p>여기서 $\hbar$는 환산 플랑크 상수이다. 좌표 $\xi=0$과 $\eta=0$을 <i>위상 공간의 지평선</i>이라고 부른다. 이 특별한 기저에서 해밀토니안 $H$(식 (9.2))는 다음 꼴이 된다.</p></div>
+<div class="f" style="left:247.8pt;top:590.0pt"><span class="fig" data-srcpage="47" data-clip="247.8,590.0,538.5,614.2"></span></div>
+<div class="l" style="top:621.9pt"><span class="k">1.</span><p>뒤집힌 조화 진동자 안에서 시각 $t=0$에 좌표 $\xi_0=\xi(0)$에 있는 질량 $m$인 고전적인 입자를 생각하자. 입자가 좌표 $\xi_1=\xi(T_1)$에 도달하는 데 걸리는 시간 $T_1$을 처음 좌표와 나중 좌표의 함수로 구하여라. 이를 위해 다음 운동 방정식을 풀어라.</p></div>
+<div class="f" style="left:281.3pt;top:682.8pt"><span class="fig" data-srcpage="47" data-clip="281.3,682.8,538.5,738.0"></span></div>
+</div>
+
+<!-- 48: problem page (= problem paper p. 24) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="48" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="48" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="48" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 9</div>
+<div class="l" style="top:89.2pt"><span class="k">2.</span><p>$\xi_0\neq0$일 때 입자가 지평선 $\xi=0$에 도달하는 데 얼마나 걸리는가? 그 결과는 시각 $t=0$에서의 값 $\eta_0=\eta(0)$에 어떻게 의존하는가?</p></div>
+<div class="l" style="top:124.9pt"><span class="k">3.</span><p>$\omega\to0$인 극한에서 위상 공간의 지평선은 어떻게 되는가? 이로부터 이 극한에서 에너지 $E$가 가질 수 있는 값에 대해 무엇을 알 수 있는가? 위상 공간 그림을 이용하여 여러분의 주장을 뒷받침하여라.</p></div>
+<div class="a" style="top:180.4pt"><p><b>c)</b> [0.5점] 이제부터는 뒤집힌 조화 진동자 퍼텐셜 $V(x)$(식 (9.1))를 받는 질량 $m$인 <i>양자 입자</i>를 생각한다. 분석을 위해 다음 연산자들을 쓴다.</p></div>
+<div class="f" style="left:243.8pt;top:216.8pt"><span class="fig" data-srcpage="48" data-clip="243.8,216.8,538.5,244.9"></span></div>
+<div class="a" style="top:257.4pt">그리고</div>
+<div class="f" style="left:241.3pt;top:263.8pt"><span class="fig" data-srcpage="48" data-clip="241.3,263.8,538.5,292.2"></span></div>
+<div class="a" style="top:296.6pt">이들은 위치 연산자 $\hat x$와 운동량 연산자 $\hat p$로 정의된다.</div>
+<div class="a" style="top:311.4pt;line-height:15.6pt"><p class="in">위치 연산자 $\hat x$와 운동량 연산자 $\hat p$가 표준 교환 관계를 만족한다고 할 때, 교환자 $\left[\hat\xi,\hat\eta\right]$를 구하여라. 이로부터 연산자 $\hat\xi$와 $\hat\eta$ 사이의 관계에 대해 무엇을 알 수 있는가?</p></div>
+<div class="a" style="top:360.1pt"><p><b>d)</b> [1점] 고전적인 경우(식 (9.5) 참고)와 비슷하게, 뒤집힌 조화 진동자의 양자역학적 해밀토니안은 다음 꼴이다.</p></div>
+<div class="f" style="left:245.6pt;top:393.3pt"><span class="fig" data-srcpage="48" data-clip="245.6,393.3,538.5,417.2"></span></div>
+<div class="a" style="top:425.5pt"><p class="in">이제 이 계의 에너지 고유 상태 $|\varepsilon\rangle$, 즉 다음 정상 상태 슈뢰딩거 방정식의 해에 관심을 둔다.</p></div>
+<div class="f" style="left:261.8pt;top:451.6pt"><span class="fig" data-srcpage="48" data-clip="261.8,451.6,538.5,465.9"></span></div>
+<div class="a" style="top:472.0pt;width:468.7pt"><p>여기서 $\varepsilon$은 실숫값을 갖는 무차원 에너지이다.<br><span style="padding-left:10.9pt"></span>$\xi$-표현을 이용하여, $\xi\neq0$에 대해 다음 두 겹친 파동 함수</p></div>
+<div class="f" style="left:205.3pt;top:507.8pt"><span class="fig" data-srcpage="48" data-clip="205.3,507.8,538.5,536.2"></span></div>
+<div class="a" style="top:544.3pt"><p>가 식 (9.11)의 해이며, 위상 공간의 지평선 $\xi=0$에서 <i>로그 위상 특이점</i>을 가짐을 보여라. 여기서 헤비사이드 계단 함수를 다음과 같이 도입하였다.</p></div>
+<div class="f" style="left:249.3pt;top:580.0pt"><span class="fig" data-srcpage="48" data-clip="249.3,580.0,538.5,614.0"></span></div>
+<div class="h" style="left:56.7pt;width:481.9pt;top:623.3pt;line-height:12.6pt"><p style="text-indent:10.9pt"><u>힌트</u>: 위치 표현과 비슷하게, 양자 상태 $|\Psi^\pm_\varepsilon\rangle$의 $\xi$-표현 $\Psi^\pm_\varepsilon(\xi)=\langle\xi|\Psi^\pm_\varepsilon\rangle$은 고윳값 방정식 $\hat\xi\,|\xi\rangle=\xi\,|\xi\rangle$을 만족하는 연산자 $\hat\xi$(식 (9.8))의 고유 상태 $|\xi\rangle$를 써서 정의된다.</p></div>
+<div class="a" style="top:666.6pt;line-height:15.4pt"><p><b>e)</b> [0.5점] 식 (9.11)을 풀어서, $\eta$-표현 $\langle\eta|\Phi^\pm_\varepsilon\rangle$이 헤비사이드 계단 함수 $\Theta(\pm\eta)$에 비례하는, 무차원 에너지 $\varepsilon$의 겹친 고유 상태 $|\Phi^\pm_\varepsilon\rangle$을 구하여라.</p></div>
+<div class="a" style="top:698.7pt"><b>f)</b> [1.5점] 양자 상태 $|\Psi^+_\varepsilon\rangle$(식 (9.12) 참고)을 다음 중첩으로 나타낼 수 있음을 보여라.</div>
+<div class="f" style="left:220.3pt;top:721.3pt"><span class="fig" data-srcpage="48" data-clip="220.3,721.3,538.5,736.2"></span></div>
+</div>
+
+<!-- 49: problem page (= problem paper p. 25) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="49" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="49" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="49" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 9</div>
+<div class="a" style="top:89.4pt">에너지에 의존하는 계수를 갖는 상태 $|\Phi^\pm_\varepsilon\rangle$의 중첩이며, 그 계수는 다음과 같다.</div>
+<div class="f" style="left:200.6pt;top:108.5pt"><span class="fig" data-srcpage="49" data-clip="200.6,108.5,538.5,138.2"></span></div>
+<div class="a" style="top:144.0pt">여기서 $\Gamma(z)$는 오일러 감마 함수이다.</div>
+<div class="h" style="left:56.7pt;width:481.9pt;top:157.0pt;line-height:13.4pt"><p style="text-indent:10.9pt"><u>힌트</u>: $|\Psi^+_\varepsilon\rangle$의 $\eta$-표현과, 상태 $|\xi\rangle$와 $|\eta\rangle$ 사이의 관계 $\langle\eta|\xi\rangle=\frac{1}{\sqrt{2\pi}}\exp(-\mathrm i\xi\eta)$를 이용하여라. 이 관계는 각 연산자 $\hat\xi$와 $\hat\eta$의 교환 관계로부터 나온다. 또한 오일러 감마 함수의 정의 $\Gamma(z)=\mathrm e^{\mathrm i\pi z/2}\int_0^\infty\mathrm dx\,x^{z-1}\mathrm e^{-\mathrm ix}$와 $\Gamma(\bar z)=\overline{\Gamma(z)}$를 이용하여라. 여기서 윗줄은 켤레 복소수를 뜻한다.</p></div>
+<div class="a" style="top:217.8pt"><b>g)</b> [1.5점] 끝으로, 상태 $|\Psi^+_\varepsilon\rangle$에 대한 확률 밀도 $|\langle\eta|\Psi^+_\varepsilon\rangle|^2$을 자세히 살펴보자.</div>
+<div class="l" style="top:236.7pt"><span class="k">1.</span><p>해당하는 식들을 이용하여 가중치 $|S_\pm(\varepsilon)|^2$에 대한 확률 밀도 $|\langle\eta|\Psi^+_\varepsilon\rangle|^2$을 구하여라.</p></div>
+<div class="h" style="left:84pt;width:454.6pt;top:268.6pt;line-height:12.4pt"><p><u>힌트</u>: 오일러 감마 함수에 대한 관계 $\Gamma\left(\frac12-\mathrm i\varepsilon\right)\Gamma\left(\frac12+\mathrm i\varepsilon\right)=\pi/\cosh(\pi\varepsilon)$를 이용하여라. 여기서 $\cosh(x)=\frac12\left(\mathrm e^x+\mathrm e^{-x}\right)$이다.</p></div>
+<div class="l" style="top:303.4pt"><span class="k">2.</span><p>실제로 이 가중치들은 뒤집힌 조화 진동자의 투과 계수 $T(\varepsilon)=|S_-(\varepsilon)|^2$과 반사 계수 $R(\varepsilon)=|S_+(\varepsilon)|^2$에 해당한다. 그림 9.1과 a), b)에서 그린 위상 공간 그림을 이용하여, 이 계수들이 무차원 에너지 $\varepsilon$에 어떻게 의존하는지 고전적인 상황과 비교하여 설명하여라.</p></div>
+<div class="l" style="top:365.1pt"><span class="k">3.</span><p>뒤집힌 조화 진동자의 투과 계수 $T(\varepsilon)$와 반사 계수 $R(\varepsilon)$는 어떤 특별한 양자 통계를 닮았는가?</p></div>
+<div class="a" style="top:401.6pt"><p><b>h)</b> [1점] 블랙홀이 있을 때, 질량과 스핀이 없는 양자를 갖는 스칼라 양자장 $\Psi_0(t,r)$의 모드는 휘어진 시공간에서의 클라인–고든 방정식으로 결정할 수 있다. 각운동량이 0인 구면 대칭 파동에 대해, 블랙홀 근처에서 클라인–고든 방정식은 다음 꼴이다.</p></div>
+<div class="f" style="left:234.6pt;top:452.1pt"><span class="fig" data-srcpage="49" data-clip="234.6,452.1,538.5,480.7"></span></div>
+<div class="a" style="top:483.7pt"><p>여기서 $t$는 시간이고 반지름은 $r&gt;r_s$이며, 슈바르츠실트 반지름 $r_s=2GM/c^2$은 중력 상수 $G$, 빛의 속력 $c$, 블랙홀의 질량 $M$으로 정해진다. 또한 다음 레제–휠러 거북 좌표를 도입하였다.</p></div>
+<div class="f" style="left:241.8pt;top:534.3pt"><span class="fig" data-srcpage="49" data-clip="241.8,534.3,538.5,564.0"></span></div>
+<div class="a" style="top:567.6pt;line-height:13.4pt"><p class="in">식 (9.16)에서 변수 분리 $\Psi_0(t,r)=q(t)R_0(r)$를 이용하여, 시간 영역의 함수 $q(t)$와 지름 영역의 함수 $rR_0(r)$에 대한 상미분 방정식을 구하여라. 두 방정식은 분리 상수 $\Omega^2$으로 연결되며, 진동수 $\Omega=ck$는 해당 파수 $k$에 선형으로 의존한다. 고정된 $k$ 값에 대해 지름 방정식의 선형 독립인 두 해 $R^\pm_{0,k}(r)$를 구하고, 이 모드들이 $r=r_s$에 있는 블랙홀의 사건 지평선에서 나타나는 <i>로그 특이점</i>을 가짐을 보여라.</p></div>
+<div class="a" style="top:650.3pt"><p><b>i)</b> [1점] 블랙홀의 사건 지평선에서 호킹 복사가 방출되는 데 핵심은, <i>크루스칼–세케레시 좌표</i> $u$와 $v$에서 진동수 $\omega$인 평면파를, 사건 지평선 $r=r_s$에서 로그 특이점을 보이며 <i>슈바르츠실트 좌표</i> $t$와 $r^*$에 연관된 진동수 $\Omega$의 모드들로 전개하는 것이다. 특히 다음 분해가 존재한다.</p></div>
+<div class="f" style="left:186.8pt;top:710.3pt"><span class="fig" data-srcpage="49" data-clip="186.8,710.3,538.5,737.7"></span></div>
+</div>
+
+<!-- 50: problem page (= problem paper p. 26) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="50" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="50" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="50" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 9</div>
+<div class="a" style="top:89.2pt"><p>여기서 전개 계수는 $\alpha_{\Omega'\omega}$와 $\beta_{\Omega'\omega}$이고 $\tilde u=t-r^*$이다. 또한 $\bar\beta_{\Omega'\omega}$는 $\beta_{\Omega'\omega}$의 켤레 복소수를 나타낸다. 여기서부터는 $c=1$이라는 규약을 쓴다.</p></div>
+<div class="l" style="top:125.5pt"><span class="k">1.</span>식 (9.18)의 전개 계수 $\beta_{\Omega\omega}$를 다음과 같이 나타낼 수 있음을 보여라.</div>
+<div class="f" style="left:236.3pt;top:149.6pt"><span class="fig" data-srcpage="50" data-clip="236.3,149.6,538.5,178.9"></span></div>
+<div class="l" style="top:193.6pt">관계 $\tilde u=-2r_s\ln\left(-\frac{u}{2r_s}\right)$를 이용하여 $\Omega&gt;0$에 대해 식 (9.19)의 적분을 계산하여라.</div>
+<div class="h" style="left:84pt;width:454.6pt;top:215.6pt;line-height:13.5pt"><p><u>힌트</u>: 디랙 델타 함수의 정의 $\delta(x)=\frac{1}{2\pi}\int_{-\infty}^\infty\mathrm dy\,\mathrm e^{\mathrm ixy}$를 적용하고, f)에서 주어진 오일러 감마 함수 $\Gamma(z)$의 정의를 떠올려라.</p></div>
+<div class="l" style="top:250.6pt"><span class="k">2.</span><p>식 (9.19)를 이용하면, 블랙홀이 진동수 $\Omega$인 모드에서 호킹 복사로 방출하는 입자의 평균 개수는 다음과 같다.</p></div>
+<div class="f" style="left:215.8pt;top:287.8pt"><span class="fig" data-srcpage="50" data-clip="215.8,287.8,538.5,314.7"></span></div>
+<div class="l" style="top:328.4pt"><p>블랙홀의 표면 중력 $\kappa=1/(2r_s)$를 매개변수로 하여 식 (9.20)의 함수 $n(\Omega)$를 구하여라. 이 결과를 g)에서 뒤집힌 조화 진동자에 대해 얻은 결과와 비교하여라.</p></div>
+<div class="h" style="left:84pt;width:454.6pt;top:374.5pt;line-height:12.4pt"><p><u>힌트</u>: 오일러 감마 함수에 대한 항등식 $\Gamma(-\mathrm iz)\Gamma(\mathrm iz)=\pi/[z\sinh(\pi z)]$를 적용하여라. 여기서 $\sinh(\pi z)=\frac12\left(\mathrm e^{\pi z}-\mathrm e^{-\pi z}\right)$이다.</p></div>
+<div class="a" style="top:409.6pt"><p class="in">끝으로, 블랙홀의 사건 지평선에서의 호킹 복사 방출을 엄밀하게 다루는 것은 제2 양자화 안에서만 가능하다는 점을 강조하고 싶다. 그러나 이 문제는 이 흥미로운 현상이 일어나는 데 로그 위상 특이점이 결정적인 역할을 한다는 것에 대한 통찰을 준다. 또한 이 문제는 뒤집힌 조화 진동자라는 간단한 양자계와의 놀라운 유사성을 드러낸다.</p></div>
+</div>
+
+<!-- 51 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="51" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="51" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="51" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 9</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:115.1pt"><p>뒤집힌 조화 진동자와 블랙홀이 방출하는 호킹 복사 사이의 관계에 대한 더 자세한 내용은 최근 발표된 다음 논문에서 찾을 수 있다.</p></div>
+<div class="f" style="left:56.7pt;top:142.0pt"><span class="fig" data-srcpage="51" data-clip="56.7,142.0,539.0,168.6"></span></div>
+<div class="x" style="top:173.8pt"><b>a)</b> <i>[1.5점]</i></div>
+<div class="l" style="top:196.3pt"><span class="k">1.</span><p>위상 공간에서 각 에너지 영역을 찾기 위해 해밀토니안 $H(x,p)$(식 (9.2))와 관계 $E=H(x_0,p_0)$을 이용한다. 그러면 다음을 얻는다.</p></div>
+<div class="f" style="left:84.0pt;top:224.5pt"><span class="fig" data-srcpage="51" data-clip="84.0,224.5,375.0,292.0"></span></div>
+<div class="l" style="top:292.1pt"><p>위상 공간의 서로 다른 영역들을 그림 9.2에 나타내었다(간단히 하기 위해 매개변수를 $m=1$, $\omega=1$로 골랐다). 해밀토니안 $H(x,p)$는 시간에 무관하므로 에너지 $E$는 보존된다. 따라서 처음 위치 $x_0$과 처음 운동량 $p_0$을 갖는 고전적인 위상 공간 궤적 $\{x(t),p(t)\}$는 언제나 위상 공간의 같은 에너지 영역에 머문다. 그 결과, 각 위상 공간 궤적은 에너지 $E=0$에 해당하는 위상 공간의 <i>지평선</i>(굵은 검은 선)을 가로지를 수 없다.</p></div>
+<div class="f" style="left:205.0pt;top:376.0pt"><span class="fig" data-srcpage="51" data-clip="205.0,376.0,380.0,531.0"></span></div>
+<div class="x" style="top:537.0pt;font-size:10pt;line-height:12pt"><p><b>그림 9.2</b> 위치 $x$와 운동량 $p$로 이루어진 위상 공간에서 뒤집힌 조화 진동자의 서로 다른 에너지 영역: (i) $E&lt;0$(파란색), (ii) $E=0$(검은색), (iii) $E&gt;0$(빨간색).</p></div>
+<div class="l" style="top:583.5pt"><span class="k">2.</span><p>위상 공간에서 궤적을 그리기 위해, 다음 에너지를 주는 해밀토니안 $H(x,p)$(식 (9.2))를 떠올린다.</p></div>
+<div class="f" style="left:260.0pt;top:608.0pt"><span class="fig" data-srcpage="51" data-clip="260.0,608.0,539.0,638.5"></span></div>
+<div class="l" style="top:640.3pt"><p>이는 모든 시각 $t$에서 보존되는 양이므로, 운동량을 좌표 $x$의 함수로 다음과 같이 나타낼 수 있다.</p></div>
+<div class="f" style="left:238.0pt;top:664.5pt"><span class="fig" data-srcpage="51" data-clip="238.0,664.5,539.0,682.0"></span></div>
+<div class="l" style="top:687.4pt"><p>따라서 각 에너지 $E$에 대해 그림 9.2에 보인 것처럼 서로 다른 궤적이 두 개 있다. 실제로 그림에는 이 질문을 이미 다루었던 그림 9.1과 같은 에너지들에 대한 궤적을 그렸다.</p></div>
+</div>
+
+<!-- 52 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="52" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="52" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="52" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 9</div>
+<div class="l" style="top:89.3pt"><p>그러나 에너지가 0인 경우 $E=0$은 간단하지 않다. 식 (9.22)로부터 위상 공간의 두 지평선에 해당하는 궤적 $p_\pm(x)=\pm m\omega x$ 두 개만 있다고 짐작할 수도 있다. 그러나 한 지평선을 따라 움직이는 입자는 다른 지평선을 가로지를 수 없으므로, 이 매우 특별한 경우에는 궤적이 네 개 있다. 다섯 번째 궤적도 있다고 할 수 있는데, 바로 언제나 위상 공간의 원점에 머무는 $E=0$인 입자에 해당하는 궤적이다. 이 점은 b)에서 더 분명해질 것이다.</p></div>
+<div class="l" style="top:174.3pt"><p><i>에너지 $E=0$에 대한 이 미묘한 점을 알아채고 논의하면 0.5점의 가산점을 준다. 그러나 가산점을 받더라도 전체 문제에서 받을 수 있는 최고 점수를 넘을 수는 없다.</i></p></div>
+<div class="f" style="left:200.0pt;top:216.0pt"><span class="fig" data-srcpage="52" data-clip="200.0,216.0,382.0,385.0"></span></div>
+<div class="x" style="top:386.5pt;font-size:10pt;line-height:12pt"><p><b>그림 9.3</b> 위상 공간 궤적 $\{x(t),p(t)\}$. 화살표는 시간 $t$에 대해 앞으로 나아가는 방향을 나타낸다. 같은 에너지 $E$에 해당하는 서로 다른 두 궤적은 대각선을 따라 그려진 두 지평선 $\xi=0$과 $\eta=0$으로 나뉘며, 두 지평선은 위상 공간을 서로 겹치지 않는 네 영역으로 나눈다. 반평면 $\eta&lt;0$에서 위상 공간 궤적(파란색과 빨간색)은 왼쪽에서 퍼텐셜 장벽에 다가가는 입자의 운동을 나타내고, $\eta&gt;0$에서 위상 공간 궤적(초록색과 주황색)은 오른쪽에서 들어오는 입자에 해당한다. 영역 $\eta\xi&lt;0$에서 궤적(파란색과 초록색)은 양의 에너지 $E&gt;0$인 입자에 속하고, 영역 $\eta\xi&gt;0$에서 궤적(빨간색과 주황색)은 음의 에너지 $E&lt;0$인 입자에 해당한다. 에너지 $E=0$인 입자는 검은 화살표로 나타낸 것처럼 지평선 $\eta=0$ 또는 $\xi=0$을 따라 움직인다. 그림 출처: F. Ullinger et al., AVS Quantum Sci. <b>4</b>, 024402 (2022), CC BY 4.0 라이선스에 따라 다시 실음.</p></div>
+<div class="x" style="top:525.8pt"><b>b)</b> <i>[1.5점]</i></div>
+<div class="l" style="top:544.4pt"><span class="k">1.</span><p>해밀토니안 $H$(식 (9.5))를 이용하면, 식 (9.6)과 (9.7)로 주어진 운동 방정식은 다음 꼴이 된다.</p></div>
+<div class="f" style="left:285.0pt;top:573.0pt"><span class="fig" data-srcpage="52" data-clip="285.0,573.0,539.0,608.0"></span></div>
+<div class="l" style="top:614.1pt">그 해는 다음과 같다.</div>
+<div class="f" style="left:275.0pt;top:630.0pt"><span class="fig" data-srcpage="52" data-clip="275.0,630.0,539.0,664.5"></span></div>
+<div class="l" style="top:670.2pt">따라서 $\xi_1=\xi(T_1)$로 두면 다음 시간을 얻는다.</div>
+<div class="f" style="left:266.0pt;top:687.0pt"><span class="fig" data-srcpage="52" data-clip="266.0,687.0,539.0,718.5"></span></div>
+<div class="l" style="top:721.8pt">이 시간은 로그 의존성을 보인다.</div>
+</div>
+
+<!-- 53 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="53" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="53" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="53" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 9</div>
+<div class="l" style="top:89.3pt"><span class="k">2.</span><p>식 (9.27)로부터, 지평선 $\xi=0$에 도달하려면 $\xi_1\to0$인 극한에서 시간이 $T_1\to\infty$가 됨을 알 수 있다. 실제로 $\xi_0&lt;0$이면 극한 $\xi_1\to0^-$을, $\xi_0&gt;0$이면 극한 $\xi_1\to0^+$을 생각하고, $\omega&gt;0$임을 떠올린다. 따라서 <i>임의의</i> 처음 좌표 $\xi_0\neq0$에서, 즉 지평선 $\xi=0$ 위에 있지 않은 위상 공간의 임의의 점에서 출발하여 유한한 시간 안에 지평선 $\xi=0$에 도달할 수는 없다. 이 결과는 분명히 $\eta_0$의 값에 무관하다($\eta_0=0$일 때, 즉 입자가 다른 지평선을 따라 움직일 때에도 성립한다. 그림 9.3의 검은 선도 참고하여라).</p></div>
+<div class="l" style="top:187.8pt"><p>해밀토니안 $H$(식 (9.5))에서 분명히 알 수 있듯이, 지평선 $\xi=0$ 또는 $\eta=0$을 따라 움직이는 입자는 에너지 $E=0$을 가진다. 따라서 이 결과는 a)에서 제기한, 에너지가 $E=0$인 가능한 궤적의 개수 문제에 대해서도 더 자세한 설명을 준다. 실제로 어떤 고전적인 입자도 위상 공간의 두 지평선 중 하나를 유한한 시간 안에 가로지를 수 없다.</p></div>
+<div class="l" style="top:262.9pt"><span class="k">3.</span><p>위상 공간의 지평선은 조건 $\xi=0$과 $\eta=0$으로, 또는 식 (9.3)과 (9.4)에 따라 동등하게 $p=\pm m\omega x$로 정해진다. 따라서 $\omega\to0$인 극한에서 $p=0$을 얻는다. 즉, 두 지평선 모두 운동량이 0인 축과 나란해진다. 그 결과 $E&lt;0$인 에너지 영역은 사라지고 에너지 $E\ge0$만 허용된다. 실제로 $\omega\to0$이면 에너지가 $E\ge0$인 자유 입자를 얻으므로 이 결과는 타당하다. $\omega\to0$인 극한에서 위상 공간의 지평선과 에너지 영역을 그림 9.4에 그렸다.</p></div>
+<div class="f" style="left:70.0pt;top:344.0pt"><span class="fig" data-srcpage="53" data-clip="70.0,344.0,525.0,486.0"></span></div>
+<div class="x c" style="top:491.0pt;font-size:10pt;line-height:12pt"><b>그림 9.4</b> $\omega\to0$일 때 위상 공간에서 뒤집힌 조화 진동자의 에너지 영역이 변하는 모습.</div>
+<div class="x" style="top:523.6pt"><b>c)</b> <i>[0.5점]</i> 연산자 $\hat\xi$와 $\hat\eta$의 교환 관계는 다음과 같다.</div>
+<div class="f" style="left:203.0pt;top:541.0pt"><span class="fig" data-srcpage="53" data-clip="203.0,541.0,539.0,643.0"></span></div>
+<div class="x" style="top:650.7pt"><p>여기서 표준 교환 관계 $[\hat x,\hat p]=\mathrm i\hbar$를 이용하였다. 따라서 $\hat\xi$와 $\hat\eta$는 위치 연산자 $\hat x$와 운동량 연산자 $\hat p$처럼 <i>정준 켤레 연산자</i>이다. 그러므로 이 연산자들 사이에는 불확정성 관계가 존재한다.</p></div>
+<div class="x" style="top:695.1pt"><b>d)</b> <i>[1점]</i> 다음 정상 상태 슈뢰딩거 방정식을 생각한다.</div>
+<div class="f" style="left:225.0pt;top:709.0pt"><span class="fig" data-srcpage="53" data-clip="225.0,709.0,539.0,741.0"></span></div>
+</div>
+
+<!-- 54 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="54" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="54" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="54" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 9</div>
+<div class="x" style="top:89.3pt"><p>$\hat\xi$와 $\hat\eta$는 $[\hat\xi,\hat\eta]=\mathrm i$인 정준 켤레 연산자이므로(c) 참고), $\xi$-표현에서는 $\hat\xi\to\xi$, $\hat\eta\to-\mathrm i\,\partial/\partial\xi$로 바꾸어 쓸 수 있다. 뒤의 식은 운동량 연산자의 위치 표현과 비슷하다. 그 결과 식 (9.32)는 다음과 같이 된다.</p></div>
+<div class="f" style="left:205.0pt;top:135.5pt"><span class="fig" data-srcpage="54" data-clip="205.0,135.5,539.0,168.0"></span></div>
+<div class="x" style="top:177.4pt">다음으로 식 (9.33)을 다음과 같이 바꾸어 쓴다.</div>
+<div class="f" style="left:222.0pt;top:189.0pt"><span class="fig" data-srcpage="54" data-clip="222.0,189.0,539.0,218.5"></span></div>
+<div class="x" style="top:222.9pt"><p class="in">먼저, 식 (9.34)의 좌변으로부터 $\xi\to0$일 때(즉, 지평선에 다가갈 때) 문제가 생긴다는 것을 알 수 있다. 따라서 식 (9.34)는 영역 $\xi&lt;0$과 $\xi&gt;0$에서 따로 풀 수 있다. 이를 위해 식 (9.12)로 주어진 $\Psi^\pm_\varepsilon(\xi)$를 다음과 같이 다시 쓴다.</p></div>
+<div class="f" style="left:218.0pt;top:268.0pt"><span class="fig" data-srcpage="54" data-clip="218.0,268.0,539.0,301.5"></span></div>
+<div class="x" style="top:309.3pt">따라서 다음을 얻는다.</div>
+<div class="f" style="left:152.0pt;top:320.5pt"><span class="fig" data-srcpage="54" data-clip="152.0,320.5,539.0,359.0"></span></div>
+<div class="x" style="top:362.7pt">그 결과 다음에 이른다.</div>
+<div class="f" style="left:182.0pt;top:384.0pt"><span class="fig" data-srcpage="54" data-clip="182.0,384.0,539.0,416.0"></span></div>
+<div class="x" style="top:423.7pt"><p>이는 $\xi\neq0$에 대해 성립하므로 식 (9.35)는 식 (9.34)의 해이다. 그러나 특이점 때문에 이 파동 함수는 지평선 $\xi=0$에서 연속이 아니다.</p></div>
+<div class="x" style="top:457.4pt"><p><b>e)</b> <i>[0.5점]</i> 에너지 고유 상태 $|\Phi^\pm_\varepsilon\rangle$을 구하기 위해 교환자 $[\hat\xi,\hat\eta]=\mathrm i$를 떠올린다. 따라서 정상 상태 슈뢰딩거 방정식 (9.32)는 $\eta$-표현에서 다음과 같다.</p></div>
+<div class="f" style="left:198.0pt;top:493.0pt"><span class="fig" data-srcpage="54" data-clip="198.0,493.0,539.0,525.5"></span></div>
+<div class="x" style="top:534.6pt"><p>우변 앞의 음의 부호를 빼면 식 (9.38)은 식 (9.33)과 같은 꼴이다. 식 (9.34)의 해 $\Psi^\pm_\varepsilon(\xi)$(식 (9.12))를 떠올리면, 식 (9.38)의 해로서 다음을 찾을 수 있다.</p></div>
+<div class="f" style="left:202.0pt;top:567.0pt"><span class="fig" data-srcpage="54" data-clip="202.0,567.0,539.0,602.0"></span></div>
+<div class="x" style="top:609.7pt"><p>이 해는 $\Theta(\pm\eta)$에 비례하며, 로그 위상 앞에 반대 부호가 나타난다.</p></div>
+<div class="x" style="top:636.8pt"><p class="in">결과적으로, 에너지가 $\varepsilon$인 에너지 고유 상태의 두 집합 $|\Psi^\pm_\varepsilon\rangle$과 $|\Phi^\pm_\varepsilon\rangle$이 존재하며, 이들의 $\xi$-표현과 $\eta$-표현은 부호 차이를 빼면 같은 꼴임을 알 수 있다. 이 특징은 해밀토니안 $\hat H$(식 (9.10))가 연산자 $\hat\xi$와 $\hat\eta$의 맞바꿈에 대해 불변이라는 데서 비롯된다.</p></div>
+<div class="x" style="top:695.5pt"><p><b>f)</b> <i>[1.5점]</i> 상태 $|\Psi^+_\varepsilon\rangle$을 상태 $|\Phi^+_\varepsilon\rangle$과 $|\Phi^-_\varepsilon\rangle$의 중첩으로 나타내기 위해,</p></div>
+</div>
+
+<!-- 55 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="55" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="55" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="55" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 9</div>
+<div class="x" style="top:89.3pt">그 $\eta$-표현을 생각하고, 상태 $|\xi\rangle$로 나타낸 항등 연산자를 끼워 넣는다.</div>
+<div class="f" style="left:150.0pt;top:103.5pt"><span class="fig" data-srcpage="55" data-clip="150.0,103.5,539.0,205.0"></span></div>
+<div class="x" style="top:210.4pt">여기서 식 (9.12)를 이용하였다.</div>
+<div class="x" style="top:223.9pt"><p class="in">다음으로 치환 $x=\xi\eta$를 적용하면 다음에 이른다.</p></div>
+<div class="f" style="left:70.0pt;top:237.0pt"><span class="fig" data-srcpage="55" data-clip="70.0,237.0,539.0,377.5"></span></div>
+<div class="x" style="top:383.4pt">여기서 오일러 감마 함수 $\Gamma(z)$의 정의를 이용하였다.</div>
+<div class="x" style="top:401.4pt"><b>g)</b> <i>[1.5점]</i></div>
+<div class="l" style="top:423.9pt"><span class="k">1.</span>식 (9.14)를 이용하면 다음을 얻는다.</div>
+<div class="f" style="left:190.0pt;top:445.0pt"><span class="fig" data-srcpage="55" data-clip="190.0,445.0,539.0,486.5"></span></div>
+<div class="l" style="top:493.7pt"><p>여기서 $\langle\eta|\Phi^+_\varepsilon\rangle\langle\Phi^-_\varepsilon|\eta\rangle=\langle\eta|\Phi^-_\varepsilon\rangle\langle\Phi^+_\varepsilon|\eta\rangle=0$이라는 사실을 이용하였다. 식 (9.15)를 이용하면 다음을 보일 수 있다.</p></div>
+<div class="f" style="left:195.0pt;top:522.0pt"><span class="fig" data-srcpage="55" data-clip="195.0,522.0,539.0,615.0"></span></div>
+<div class="l" style="top:621.0pt">그 결과 다음에 이른다.</div>
+<div class="f" style="left:210.0pt;top:639.0pt"><span class="fig" data-srcpage="55" data-clip="210.0,639.0,539.0,673.0"></span></div>
+<div class="l" style="top:685.2pt"><span class="k">2.</span><p>왼쪽에서 들어오는 고전적인 입자는 에너지가 $E&lt;0$이면 뒤집힌 조화 진동자의 퍼텐셜 장벽에서 반사되고, 에너지가 $E&gt;0$이면 투과한다. 이 특징은 그림 9.1과 위상 공간 궤적 모두에서 분명히 드러난다. 이와 달리 양자 입자는</p></div>
+</div>
+
+<!-- 56 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="56" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="56" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="56" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 9</div>
+<div class="l" style="top:89.3pt"><p>퍼텐셜 우물을 뚫고 터널링할 수 있으며, 그 투과 계수 $T(\varepsilon)$와 반사 계수 $R(\varepsilon)$는 에너지 $\varepsilon$의 매끄러운 함수이다. $\varepsilon=0$이면 $T(0)=R(0)=1/2$, 즉 투과와 반사가 일어날 가능성이 같다. 에너지가 매우 클 때, 즉 $\varepsilon\to\pm\infty$일 때에만 고전적인 상황, 즉 $T(\varepsilon\to+\infty)=1$, $R(\varepsilon\to+\infty)=0$ 및 $T(\varepsilon\to-\infty)=0$, $R(\varepsilon\to-\infty)=1$을 다시 얻는다.</p></div>
+<div class="l" style="top:164.6pt"><span class="k">3.</span><p>뒤집힌 조화 진동자의 투과 계수와 반사 계수는 모두 다음 <i>페르미–디랙 통계</i>를 닮았다.</p></div>
+<div class="f" style="left:254.0pt;top:189.6pt"><span class="fig" data-srcpage="56" data-clip="254.0,189.6,539.0,215.0"></span></div>
+<div class="l" style="top:216.1pt"><p>여기서 $\mu$는 전체 화학 퍼텐셜이다. 계의 특성 에너지가 볼츠만 상수 $k_\mathrm B$와 온도 $T$의 곱 $k_\mathrm BT$로 주어지는 열역학과 달리, 다음 식에서 뒤집힌 조화 진동자의 에너지 척도를 정하는 것은 플랑크 상수 $h$와 가파름 $\omega$의 곱 $h\omega$를 $4\pi^2$으로 나눈 값이다.</p></div>
+<div class="f" style="left:260.0pt;top:270.0pt"><span class="fig" data-srcpage="56" data-clip="260.0,270.0,539.0,303.0"></span></div>
+<div class="l" style="top:305.9pt"><p>(에너지를 $\hbar\omega\varepsilon$으로 정의했음을 떠올려라.) 이 특별한 성질은 진폭 특이점과 결합된 로그 위상 특이점의 푸리에 변환에서 비롯된다.</p></div>
+<div class="x" style="top:355.8pt"><p><b>h)</b> <i>[1점]</i> 변수 분리 $\Psi_0(t,r)=q(t)R_0(r)$를 적용하여 식 (9.16)을 다음 꼴로 바꾸어 쓴다.</p></div>
+<div class="f" style="left:239.0pt;top:379.4pt"><span class="fig" data-srcpage="56" data-clip="239.0,379.4,539.0,409.5"></span></div>
+<div class="x" style="top:410.6pt"><p>좌변은 시간 $t$에만 의존하고 우변은 반지름 $r$에만 의존하며 $t$와 $r$는 서로 독립인 변수이므로, 양변은 분리 상수와 같아야 하며 이를 $\Omega^2$이라고 부른다. 그 결과 시간 영역에서 다음 진동자 방정식을 얻고</p></div>
+<div class="f" style="left:247.0pt;top:451.0pt"><span class="fig" data-srcpage="56" data-clip="247.0,451.0,539.0,486.0"></span></div>
+<div class="x" style="top:490.8pt">지름 방향으로는 다음 미분 방정식에 이른다.</div>
+<div class="f" style="left:237.0pt;top:504.0pt"><span class="fig" data-srcpage="56" data-clip="237.0,504.0,539.0,540.0"></span></div>
+<div class="x" style="top:543.9pt">여기서 $k=\Omega/c$이다.</div>
+<div class="x" style="top:557.5pt"><p class="in">지름 방정식 (9.57)에 집중하면, 그 해를 다음과 같이 찾을 수 있다.</p></div>
+<div class="f" style="left:202.0pt;top:571.0pt"><span class="fig" data-srcpage="56" data-clip="202.0,571.0,539.0,606.0"></span></div>
+<div class="x" style="top:609.6pt"><p>여기서 식 (9.17)로 주어진 $r^*$의 정의를 이용하였다. 모드 함수 $R^\pm_{0,k}(r)$는 $r=r_s$에 있는 블랙홀의 사건 지평선에서 <i>로그 위상 특이점</i>을 보인다. 뒤집힌 조화 진동자의 에너지 고유 상태와 달리, 함수 $R^\pm_{0,k}(r)$는 $r=r_s$에서 <i>위상 특이점</i>만 보이고 <i>진폭 특이점</i>은 보이지 않는다. 이 차이는 i)에서 보듯이 극적인 결과를 낳는다.</p></div>
+<div class="x" style="top:677.3pt"><p class="in">또한 시간 방정식 (9.56)을 양자화하면 특정 모드의 점유를 분석할 수 있으며, 그러면 조화 진동자에서 익숙한 생성 연산자와 소멸 연산자가 나타난다.</p></div>
+<div class="x" style="top:721.8pt"><b>i)</b> <i>[1점]</i></div>
+</div>
+
+<!-- 57 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="57" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="57" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="57" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 9</div>
+<div class="l" style="top:89.3pt"><span class="k">1.</span>먼저 주어진 분해에 인자 $\exp(-\mathrm i\Omega\tilde u)$를 곱하면 다음을 얻는다.</div>
+<div class="f" style="left:165.0pt;top:106.5pt"><span class="fig" data-srcpage="57" data-clip="165.0,106.5,539.0,142.0"></span></div>
+<div class="l" style="top:149.9pt">다음으로 이 식의 양변을 $\tilde u$에 대해 적분하면 다음을 얻는다.</div>
+<div class="f" style="left:120.0pt;top:166.5pt"><span class="fig" data-srcpage="57" data-clip="120.0,166.5,539.0,203.0"></span></div>
+<div class="l" style="top:211.1pt">$\Omega&gt;0$에 대해 우변을 계산하면 다음에 이른다.</div>
+<div class="f" style="left:228.0pt;top:227.5pt"><span class="fig" data-srcpage="57" data-clip="228.0,227.5,539.0,263.5"></span></div>
+<div class="l" style="top:271.6pt">또는 이와 동등하게,</div>
+<div class="f" style="left:230.0pt;top:280.5pt"><span class="fig" data-srcpage="57" data-clip="230.0,280.5,539.0,316.0"></span></div>
+<div class="l" style="top:330.0pt">다음으로 관계 $\tilde u=-2r_s\ln\left(-\frac{u}{2r_s}\right)$로부터 다음을 얻고</div>
+<div class="f" style="left:280.0pt;top:354.5pt"><span class="fig" data-srcpage="57" data-clip="280.0,354.5,539.0,383.5"></span></div>
+<div class="l" style="top:390.3pt">식 (9.62)는 다음 꼴이 된다.</div>
+<div class="f" style="left:185.0pt;top:410.0pt"><span class="fig" data-srcpage="57" data-clip="185.0,410.0,539.0,479.0"></span></div>
+<div class="l" style="top:486.7pt"><p>여기서 $s=-\omega u$이다. 오일러 감마 함수 $\Gamma(z)$의 정의를 떠올리면, 마침내 식 (9.65)를 다음과 같이 다시 쓸 수 있다.</p></div>
+<div class="f" style="left:200.0pt;top:512.5pt"><span class="fig" data-srcpage="57" data-clip="200.0,512.5,539.0,543.0"></span></div>
+<div class="l" style="top:546.2pt"><p>실제로, 이번에도 오일러 감마 함수가 나타나게 하는 것은 로그 위상 특이점의 푸리에 변환임을 알 수 있다.</p></div>
+<div class="l" style="top:582.2pt"><span class="k">2.</span>먼저 앞의 결과인 식 (9.66)을 이용하면 다음을 얻는다.</div>
+<div class="f" style="left:155.0pt;top:600.0pt"><span class="fig" data-srcpage="57" data-clip="155.0,600.0,539.0,636.5"></span></div>
+<div class="l" style="top:643.9pt">다음으로 항등식 $\Gamma(-\mathrm iz)\Gamma(\mathrm iz)=\pi/[z\sinh(\pi z)]$를 적용하면 다음을 얻는다.</div>
+<div class="f" style="left:175.0pt;top:662.0pt"><span class="fig" data-srcpage="57" data-clip="175.0,662.0,539.0,727.0"></span></div>
+</div>
+
+<!-- 58 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="58" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="58" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="58" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 9</div>
+<div class="l" style="top:89.3pt"><p>블랙홀의 표면 중력 $\kappa=1/(2r_s)$의 정의를 이용하면 다음과 같은 익숙한 식에 이른다.</p></div>
+<div class="f" style="left:260.0pt;top:113.5pt"><span class="fig" data-srcpage="58" data-clip="260.0,113.5,539.0,142.0"></span></div>
+<div class="l" style="top:145.2pt"><p>이는 블랙홀이 호킹 복사로 방출하는, 진동수가 $\Omega$인 입자의 평균 밀도이다. 식 (9.70)에서 보듯이 함수 $n(\Omega)$는 <b><i>보스–아인슈타인 분포</i></b>를 따른다.</p></div>
+<div class="l" style="top:176.8pt"><p>뒤집힌 조화 진동자의 경우에는 역제곱근 진폭 특이점과 결합된 로그 위상 특이점의 푸리에 변환의 결과로 페르미–디랙 분포를 얻었다. 이 특별한 의존성은 이 계의 투과 계수와 반사 계수에 반영되어 있다. 반면 블랙홀에 대한 논의에서는, 진폭에 단순 극을 갖는 로그 위상 특이점의 푸리에 변환이 보스–아인슈타인 분포를 나타나게 하였다.</p></div>
+</div>
+
+<!-- 59: problem page (= problem paper p. 27) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="59" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="59" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="59" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 10</div>
+<div class="box" style="top:88.1pt">문제 10</div>
+<div class="t" style="top:115.7pt;line-height:17.9pt">비선형 물리학의 드물고 극단적인 사건: 광섬유에서 바다의 파도까지</div>
+<div class="f" style="left:56.3pt;top:163.6pt"><span class="fig" data-srcpage="59" data-clip="56.3,163.6,308.9,175.9"></span></div>
+<div class="f" style="left:55.8pt;top:188.1pt"><span class="fig" data-srcpage="59" data-clip="55.8,188.1,60.5,295.4"></span></div>
+<div class="b" style="top:187.3pt"><p><span class="s">배경</span>&ensp;단일 모드 광섬유는 거의 이상적인 전파 매질이다. 실리카의 매우 낮은 감쇠와 광섬유의 단일 모드 특성이 결합하여, 빛은 공간 분포가 바뀌지 않은 채 수 킬로미터, 또 수 킬로미터를 전파할 수 있다. 그러나 매우 짧고 강한 펄스의 경우에는 두 가지 효과, 즉 분산과 비선형성을 고려해야 한다. 이 효과들은 각각 광학 굴절률이 진동수와 출력에 의존하는 것과 관련이 있다.</p>
+<p class="in">이 문제에서는 단일 모드 광섬유에서의 빛의 전파와 바다 파도의 드물고 극단적인 사건 사이의 흥미로운 관계를 살펴본다.</p></div>
+<div class="a" style="top:311.8pt"><p class="in">이 문제의 첫 부분에서는 극초단 광 펄스의 전파와 연속 전자기파의 공간 분포를 비교한다. 극초단 광 펄스에 대해, 그림 10.1 (a)에 주어진 위치 $z=z_0$에서 광 반송파를 포함한 전자기장의 세기(파란색)와 천천히 변하는 포락선의 시간 분포 $|\psi(z,t)|^2$(빨간색)을 나타내었다. 그림 10.1 (b)에는 연속 전자기파의 공간 세기 분포 $|\Psi(z,x)|^2$을 전파 좌표 $z$와 가로 좌표 $x$의 함수로 나타내었다.</p></div>
+<div class="f" style="left:104.0pt;top:403.3pt"><span class="fig" data-srcpage="59" data-clip="104.0,403.3,490.2,516.7"></span></div>
+<div class="a" style="top:526.4pt;font-size:10pt;line-height:12.5pt"><p><b>그림 10.1</b> (a) 주어진 위치 $z=z_0$에서 극초단 광 펄스의 시간 세기 분포(파란색)와 그 포락선 $|\psi(z,t)|^2$(빨간색). (b) 연속 전자기파의 공간 세기 분포 $|\Psi(z,x)|^2$을 가로 좌표 $x$와 전파 좌표 $z$에 대해 나타낸 것.</p></div>
+<div class="a" style="top:581.5pt"><p><b>a)</b> [0.5점] 그림 10.1 (a)와 같이 지속 시간이 1 ps보다 긴 극초단 펄스의 동역학을 살펴보자. 천천히 변하는 포락선 근사(즉 빛 펄스의 광 반송파를 무시한다)와 스칼라 근사에서, 복소 전기장 $\psi(z,t)$의 시간 변화는 다음 편미분 방정식으로 기술된다.</p></div>
+<div class="f" style="left:263.1pt;top:645.5pt"><span class="fig" data-srcpage="59" data-clip="263.1,645.5,538.5,671.5"></span></div>
+<div class="a" style="top:680.8pt"><p>여기서 $z$와 $t$는 각각 거리 좌표와 시간 좌표이다. $\beta_2$는 2차 분산 계수를 나타낸다. 위치 $z=z_0$에서 펄스의 모양은 처음 조건 $\psi(z_0,t)=\psi_0(t)$로 정해진다.</p></div>
+</div>
+
+<!-- 60: problem page (= problem paper p. 28) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="60" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="60" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="60" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 10</div>
+<div class="a" style="top:89.2pt"><p class="in">분산의 효과를 이해하려면 푸리에 공간에서 다루는 것이 유리하다. $\psi(z,t)$의 푸리에 변환은 다음과 같다.</p></div>
+<div class="f" style="left:223.3pt;top:126.5pt"><span class="fig" data-srcpage="60" data-clip="223.3,126.5,538.5,152.9"></span></div>
+<div class="a" style="left:67.6pt;width:471pt;top:164.8pt">식 (10.1)을 이용하여 $\tilde\psi(z,\omega)$에 대한 해를 유도하고, 이를 이용하여 분산의 효과를 설명하여라.</div>
+<div class="a" style="top:182.6pt"><p><b>b)</b> [0.5점] 이제 그림 10.1 (b)와 같은 연속파의 복소 전기장 $\Psi(x,z)$의 공간적 전파로 넘어가자. 1차원 근축 조건에서 회절을 지배하는 헬름홀츠 방정식은 다음과 같다.</p></div>
+<div class="f" style="left:257.3pt;top:222.1pt"><span class="fig" data-srcpage="60" data-clip="257.3,222.1,538.5,247.9"></span></div>
+<div class="a" style="top:252.8pt"><p>여기서 $z$와 $x$는 각각 세로 좌표와 가로 좌표이다. $\lambda$는 파장을 나타내고, $\Psi_0(x)=\Psi(z_0,x)$는 $z=z_0$에서의 처음 분포이다.</p>
+<p class="in">극초단 펄스의 분산과 연속파의 회절 사이에서 어떤 유사성을 끌어낼 수 있는가? 분산과 회절의 영향에 대해 논하여라.</p></div>
+<div class="h" style="top:308.0pt"><u>힌트</u>: 푸리에 공간을 이용하여 분석하여라.</div>
+<div class="a" style="top:325.0pt"><p><b>c)</b> [0.5점] 다음으로, 식 (10.1)에서 2차 분산 계수가 $|\beta_2|\ll1$로 무시할 만한 극초단 광 펄스 $\psi(z,t)$의 동역학을 분석한다. 광섬유의 비선형성 효과가 중요해지면 전자기장은 다음 방정식에 따라 시간 변화한다.</p></div>
+<div class="f" style="left:261.8pt;top:375.3pt"><span class="fig" data-srcpage="60" data-clip="261.8,375.3,538.5,399.9"></span></div>
+<div class="a" style="top:409.2pt;line-height:13.6pt"><p>여기서 $\gamma$는 광섬유의 비선형 계수이다.</p>
+<p class="in">세기 분포 $|\psi(z,t)|^2$이 거리 $z$에 무관한 경우를 생각하여 식 (10.4)의 해를 구하여라. 식 (10.4)의 이른바 커 비선형성은 펄스의 시간 분포에 어떤 물리적 결과를 가져오는가?</p></div>
+<div class="a" style="top:467.9pt"><p><b>d)</b> [1점] 비선형 광섬유 안의 극초단 광 펄스에서는 자체 집속이라는 효과가 일어날 수 있다. 이 현상을 더 깊이 이해하기 위해, 다시 연속 전자기파의 공간 분포 $\Psi(z,x)$와의 유사성을 세운다. 파동 광학에서 전파 좌표 $z=z_1$에 놓인 초점 거리 $f$인 완벽하게 수렴하는 1차원 렌즈의 효과는 다음과 같이 기술할 수 있다.</p></div>
+<div class="f" style="left:214.1pt;top:532.0pt"><span class="fig" data-srcpage="60" data-clip="214.1,532.0,538.5,560.5"></span></div>
+<div class="a" style="top:566.6pt;line-height:13.6pt"><p>여기서 $\Psi(z_1^-,x)$와 $\Psi(z_1^+,x)$는 렌즈 바로 앞과 바로 뒤의 장이다. $\lambda$는 식 (10.3)에서 도입한 파장이다.</p>
+<p class="in">식 (10.4)의 비선형성이 수렴 렌즈처럼 작용하는 이유를 설명하여라. 이를 위해 $z=z_0$에서 대칭인 시간 분포 $\psi(z_0,t)$를 갖는 극초단 광 펄스를 분석한다. 예로서 가우스 펄스 $\psi(z,t)=\psi_\text{max}\mathrm e^{-\frac{t^2}{K^2}}$를 쓰라. 시간 폭은 $K$, 진폭은 $\psi_\text{max}$이다. 이 문제에서는 펄스 모양을 $t$의 2차까지 근사하는 것으로 충분하다. c)에서처럼 세기 분포 $|\psi(z,t)|^2$은 $z$에 무관하다는 점에 유의하여라. 위치 $z=d&gt;z_0$에서의 파형 $\psi(z=d,t)$를 구하고 이를 식 (10.5)와 비교하여라.</p></div>
+</div>
+
+<!-- 61: problem page (= problem paper p. 29) -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="61" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="61" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="61" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 10</div>
+<div class="a" style="top:89.2pt"><p class="in">이 문제의 둘째 부분에서는 비선형 효과를 더 자세히 살펴본다. 실제로 높은 출력의 극초단 파형에서는 분산 효과와 비선형 효과가 동시에 작용한다. 따라서 광 펄스의 시간 변화는 다음 비선형 슈뢰딩거 방정식으로 기술된다.</p></div>
+<div class="f" style="left:237.1pt;top:139.8pt"><span class="fig" data-srcpage="61" data-clip="237.1,139.8,538.5,165.7"></span></div>
+<div class="a" style="top:175.2pt;line-height:13.6pt"><p>특성 길이 $L=1/(\gamma P_0)$와 시간 $t_0=\sqrt{|\beta_2|\,L}$을 써서 정규화된 좌표 $\xi=z/L$과 $\tau=t/t_0$을 도입하면, $\beta_2&lt;0$일 때 식 (10.6)은 다음과 같이 된다.</p></div>
+<div class="f" style="left:238.3pt;top:212.6pt"><span class="fig" data-srcpage="61" data-clip="238.3,212.6,538.5,240.7"></span></div>
+<div class="a" style="top:251.4pt">여기서 함수 $A=\psi/\sqrt{P_0}$는 다루는 파형의 전형적인 출력 $P_0$을 포함한다.</div>
+<div class="a" style="top:269.2pt"><p><b>e)</b> [2점] 비선형 방정식 (10.7)의 수학적 해는 자명하지 않다. 그러나 몇 가지 특정한 파형이 과거에 밝혀졌다. 그 가운데 두 파동, 즉 솔리톤</p></div>
+<div class="f" style="left:244.1pt;top:308.6pt"><span class="fig" data-srcpage="61" data-clip="244.1,308.6,538.5,323.2"></span></div>
+<div class="a" style="top:330.1pt">과 페레그린 브리더에 주목하자.</div>
+<div class="f" style="left:214.8pt;top:342.6pt"><span class="fig" data-srcpage="61" data-clip="214.8,342.6,538.5,370.2"></span></div>
+<div class="a" style="top:375.5pt">여기서 쌍곡 시컨트 함수를 다음과 같이 도입하였다.</div>
+<div class="f" style="left:250.1pt;top:398.8pt"><span class="fig" data-srcpage="61" data-clip="250.1,398.8,538.5,423.2"></span></div>
+<div class="a" style="top:434.8pt"><p class="in">$\xi=0$, $\xi=-\infty$, $\xi=\infty$에서 대략적인 세기 분포 $|A_s|^2$과 $|A_p|^2$을 $\tau$의 함수로 그려라. 두 경우에 $\tau=\pm\infty$에서의 세기와 $\tau=0$에서의 최대 출력을 구하여라. 두 파동의 최대 출력은 $\xi$의 함수로 어떻게 변하는가? 두 파동 사이의 주요 차이점을 밝혀라.</p></div>
+<div class="h" style="left:56.7pt;width:481.9pt;top:489.3pt;line-height:13.5pt"><p style="text-indent:10.9pt"><u>힌트</u>: 솔리톤의 경우에는 지수 함수를 2차까지 대략 근사해 보면 실마리를 얻을 수 있다. 로런츠 파형과의 정성적인 연관성도 끌어낼 수 있다.</p></div>
+<div class="a" style="top:534.1pt"><p><b>f)</b> [1점] e)에서 관찰된 모든 효과는 변조 불안정성이라는 과정과 밀접하게 연결되어 있다. 이 현상을 부각하기 위해, 다시 정규화하지 않은 슈뢰딩거 방정식 (10.6)으로 돌아가서 다음 연속파를 생각하자.</p></div>
+<div class="f" style="left:237.8pt;top:586.5pt"><span class="fig" data-srcpage="61" data-clip="237.8,586.5,538.5,599.0"></span></div>
+<div class="a" style="top:610.3pt"><p>이는 식 (10.6)의 해이다. 여기서 $\psi_0$과 $P_0$은 실숫값이며 각각 처음 파동의 진폭과 출력에 해당한다. 해 $\psi_C(z,t)$(식 (10.11))가 섭동에 대해 안정한지 확인하기 위해, 다음 섭동된 파동을 생각한다.</p></div>
+<div class="f" style="left:150.3pt;top:662.8pt"><span class="fig" data-srcpage="61" data-clip="150.3,662.8,538.5,675.2"></span></div>
+</div>
+
+<!-- 62: problem page (= problem paper p. 30) -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="62" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="62" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="62" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 10</div>
+<div class="a" style="top:89.2pt"><p class="in">섭동된 파동 $\psi_\varepsilon(z,t)$를 비선형 슈뢰딩거 방정식 (10.6)에 대입하여, 함수 $\varepsilon(z,t)$가 만족하는 다음 방정식을 유도하여라.</p></div>
+<div class="f" style="left:230.3pt;top:115.0pt"><span class="fig" data-srcpage="62" data-clip="230.3,115.0,538.5,140.9"></span></div>
+<div class="h" style="top:157.9pt"><u>힌트</u>: 섭동은 작다고 가정하므로 $\varepsilon^2$ 차수의 항은 무시할 수 있다.</div>
+<div class="a" style="top:177.7pt"><b>g)</b> [2점] 식 (10.13)의 해 가운데 다음과 같이 평면파로 나타낼 수 있는 해를 찾으려고 한다.</div>
+<div class="f" style="left:174.8pt;top:202.8pt"><span class="fig" data-srcpage="62" data-clip="174.8,202.8,538.5,215.2"></span></div>
+<div class="a" style="top:226.7pt">여기서 $a_1$, $a_2$, $k$는 복소수 상수이다. $a_1$과 $a_2$가 다음 연립 방정식의 해임을 보여라.</div>
+<div class="f" style="left:213.6pt;top:250.1pt"><span class="fig" data-srcpage="62" data-clip="213.6,250.1,538.5,307.9"></span></div>
+<div class="a" style="top:317.5pt"><p>어떤 $k$에 대해서는 이 연립 방정식이 자명하지 않은 해를 가질 수 있다. 자명하지 않은 해를 주는 $k$를 매개변수 $\beta_2$, $\omega$, $\gamma$, $P_0$의 함수로 구하여라.</p></div>
+<div class="a" style="top:349.1pt"><p><b>h)</b> [1.5점] $k$가 순수한 실수이면 이 비선형계는 섭동에 대해 안정하다. 그렇지 않고 $k$가 허수부를 가지면, 식 (10.14)에서 알 수 있듯이 섭동이 지수적으로 커진다. 정상 분산 영역$(\beta_2&gt;0)$이나 이상 분산 영역$(\beta_2&lt;0)$에서 전파가 불안정할 수 있는가? 파동이 불안정해지는 진동수 $\omega$의 범위를 유도하여라. 이득이 가장 크게 나타나는 진동수는 얼마인가(이득은 $k$의 허수부로 주어진다)? 이득의 대략적인 모양을 진동수 $\omega$의 함수로 그려라.</p></div>
+<div class="a" style="top:434.9pt"><p><b>i)</b> [1점] 비선형 슈뢰딩거 방정식은 바다 파도의 전파도 모형화한다. 이 맥락에서, 1차원 수조에서 $z$ 방향으로 전파하는, 파수 벡터 $k_0$을 가진 변조된 파열의 포락선 $u(z,t)$는 다음 방정식을 따른다.</p></div>
+<div class="f" style="left:241.6pt;top:485.3pt"><span class="fig" data-srcpage="62" data-clip="241.6,485.3,538.5,513.2"></span></div>
+<div class="a" style="top:522.8pt"><p>여기서 $g$는 중력 가속도이다. 정규화된 양을 쓰면 식 (10.16)은 다음 꼴로 바꿀 수 있다.</p></div>
+<div class="f" style="left:238.1pt;top:546.3pt"><span class="fig" data-srcpage="62" data-clip="238.1,546.3,538.5,574.2"></span></div>
+<div class="a" style="top:579.2pt"><p class="in">바다의 괴물파를 설명하는 데 관련될 수 있는 식 (10.17)의 해 $U(\xi,\tau)$를 제안하여라. 괴물파는 난데없이 나타났다가 흔적도 없이 사라지는 특별한 파도이다.</p></div>
+</div>
+
+<!-- 63 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="63" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="63" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="63" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 10</div>
+<div class="t" style="top:85.0pt">풀이</div>
+<div class="x" style="top:115.1pt"><p>d)~i)에 나오는, 분산이 있는 비선형 슈뢰딩거 방정식의 풀이에 관한 더 자세한 내용은 다음에서 찾을 수 있다: <span style="font-family:KaTeX_Typewriter">https://www.nature.com/articles/nphys1740.pdf</span></p></div>
+<div class="x" style="top:146.1pt"><b>a)</b> 푸리에 역변환은 다음과 같다.</div>
+<div class="f" style="left:215.0pt;top:163.5pt"><span class="fig" data-srcpage="63" data-clip="215.0,163.5,539.6,194.2"></span></div>
+<div class="x" style="top:199.3pt">이 식을 식 (10.1)의 양변에 대입하면 다음을 얻는다.</div>
+<div class="f" style="left:93.0pt;top:217.0pt"><span class="fig" data-srcpage="63" data-clip="93.0,217.0,539.6,279.4"></span></div>
+<div class="x" style="top:284.5pt"><p class="in">이 식의 해는 다음과 같다.</p></div>
+<div class="f" style="left:90.0pt;top:302.0pt"><span class="fig" data-srcpage="63" data-clip="90.0,302.0,226.0,331.0"></span></div>
+<div class="x" style="left:228.5pt;width:40pt;top:310.7pt">여기서</div>
+<div class="f" style="left:262.0pt;top:302.0pt"><span class="fig" data-srcpage="63" data-clip="262.0,302.0,406.0,333.0"></span></div>
+<div class="x" style="left:411.2pt;width:80pt;top:310.7pt"><span style="white-space:nowrap">[0.25점]</span></div>
+<div class="f" style="left:504.0pt;top:310.0pt"><span class="fig" data-srcpage="63" data-clip="504.0,310.0,539.6,323.0"></span></div>
+<div class="x" style="top:337.6pt"><p>따라서 분산은 파동에 위상 항을 더한다. 단색이 아닌 빔에서는 이것이 파동의 펄스 모양을 바꿀 수 있다. <span style="white-space:nowrap">[0.25점]</span></p></div>
+<div class="x" style="top:367.9pt"><b>b)</b> 힌트대로 다음 푸리에 변환을 분석한다.</div>
+<div class="f" style="left:215.0pt;top:386.5pt"><span class="fig" data-srcpage="63" data-clip="215.0,386.5,539.6,416.9"></span></div>
+<div class="x" style="top:421.8pt"><p>헬름홀츠 방정식은 식 (10.1)과 수학적 구조가 같으므로, 해를 바로 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:75.0pt;top:453.0pt"><span class="fig" data-srcpage="63" data-clip="75.0,453.0,226.0,484.0"></span></div>
+<div class="x" style="left:228.5pt;width:40pt;top:461.6pt">여기서</div>
+<div class="f" style="left:263.0pt;top:453.0pt"><span class="fig" data-srcpage="63" data-clip="263.0,453.0,421.0,484.0"></span></div>
+<div class="x" style="left:426.4pt;width:80pt;top:461.6pt"><span style="white-space:nowrap">[0.25점]</span></div>
+<div class="f" style="left:504.0pt;top:461.0pt"><span class="fig" data-srcpage="63" data-clip="504.0,461.0,539.6,474.0"></span></div>
+<div class="x" style="top:488.5pt"><p>분산과 회절은 모두 푸리에 변환된 파동에 2차 위상 항을 만든다. 분산은 파동의 시간적 성분과 관련되고(파동이 단색이 아닐 때), 회절은 공간적 전파와 관련된다(파동이 평면파가 아닐 때 나타난다). 두 경우 모두 파동의 광 스펙트럼은 변하지 않는다. 지수 항의 부호를 같게 하려면 음의 분산 계수 $\beta_2$를 생각해야 함에 유의하여라. <span style="white-space:nowrap">[0.25점]</span></p></div>
+<div class="x" style="top:573.7pt"><p><b>c)</b> $|\psi(z,t)|^2$이 $z$와 무관하다고 가정하므로, 해는 간단히 다음과 같은 지수 함수로 주어진다.</p></div>
+<div class="f" style="left:134.0pt;top:588.0pt"><span class="fig" data-srcpage="63" data-clip="134.0,588.0,278.0,612.0"></span></div>
+<div class="x" style="left:280.5pt;width:40pt;top:596.3pt">여기서</div>
+<div class="f" style="left:315.0pt;top:588.0pt"><span class="fig" data-srcpage="63" data-clip="315.0,588.0,393.0,612.0"></span></div>
+<div class="x" style="left:400.5pt;width:80pt;top:596.3pt"><span style="white-space:nowrap">[0.25점]</span></div>
+<div class="f" style="left:504.0pt;top:596.0pt"><span class="fig" data-srcpage="63" data-clip="504.0,596.0,539.6,609.0"></span></div>
+<div class="x" style="top:617.5pt"><p class="in">이 해에서는 $|\psi(z,t)|^2=|\psi(0,t)|^2$이므로 우리의 가정이 성립한다. 분산의 경우와 달리, 위상이 스펙트럼 영역이 아니라 시간 영역에 더해진다. 따라서 전파하는 펄스의 위상은 그 세기에 따라 전파 방향을 따라 변조된다. <span style="white-space:nowrap">[0.25점]</span></p></div>
+<div class="x" style="top:675.7pt"><p><b>d)</b> 대칭인 종 모양의 세기 분포를 2차까지 분석해야 한다. 따라서 가우스 분포를 $t$에 대해 2차까지 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:223.0pt;top:706.5pt"><span class="fig" data-srcpage="63" data-clip="223.0,706.5,539.6,738.0"></span></div>
+</div>
+
+<!-- 64 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="64" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="64" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="64" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 10</div>
+<div class="x" style="top:89.3pt">이 근사를 앞 문항의 해에 대입하면 다음을 얻는다.</div>
+<div class="f" style="left:66.0pt;top:110.3pt"><span class="fig" data-srcpage="64" data-clip="66.0,110.3,539.6,152.4"></span></div>
+<div class="x" style="top:152.4pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="x" style="top:165.9pt"><p>첫째 항은 펄스 전체에 균일한 위상 이동을 일으키는 반면, 둘째 항은 시간 영역에서 2차 위상 이동을 더하며, 이는 렌즈 항의 시간적 대응물이다. 여기에 분산까지 고려하면, 이 2차 위상 항은 전파하는 펄스를 시간적으로 집속시킨다. 이는 헬름홀츠 방정식의 회절을 따라 자유롭게 전파하는 빔이 공간에서 1차원 렌즈에 의해 집속되는 것과 똑같다. <span style="white-space:nowrap">[0.5점]</span></p></div>
+<div class="x" style="top:238.0pt"><p><b>e)</b> 먼저 솔리톤과 페레그린 브리더의 세기 분포에 대한 식을 계산하자.</p></div>
+<div class="x" style="top:278.6pt"><p class="in">시작하기 전에 힌트를 참고하여 지수 함수의 급수 전개를 상기하자.</p></div>
+<div class="f" style="left:219.0pt;top:298.5pt"><span class="fig" data-srcpage="64" data-clip="219.0,298.5,539.6,336.0"></span></div>
+<div class="x" style="top:343.3pt"><p class="in">2차까지의 근사를 이용하면 솔리톤에 대해 다음을 얻는다.</p></div>
+<div class="f" style="left:185.0pt;top:363.5pt"><span class="fig" data-srcpage="64" data-clip="185.0,363.5,539.6,479.0"></span></div>
+<div class="f" style="left:185.0pt;top:479.0pt"><span class="fig" data-srcpage="64" data-clip="185.0,479.0,296.0,502.5"></span></div>
+<div class="x" style="left:298.5pt;width:60pt;top:485.1pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="f" style="left:504.0pt;top:485.0pt"><span class="fig" data-srcpage="64" data-clip="504.0,485.0,539.6,498.5"></span></div>
+<div class="x" style="top:512.5pt"><p class="in">페레그린 브리더에 대해서는 다음을 얻는다.</p></div>
+<div class="f" style="left:148.7pt;top:533.6pt"><span class="fig" data-srcpage="64" data-clip="148.7,533.6,539.6,699.4"></span></div>
+<div class="f" style="left:148.7pt;top:699.4pt"><span class="fig" data-srcpage="64" data-clip="148.7,699.4,322.0,732.3"></span></div>
+<div class="x" style="left:330.1pt;width:60pt;top:710.0pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="f" style="left:504.0pt;top:710.0pt"><span class="fig" data-srcpage="64" data-clip="504.0,710.0,539.6,723.3"></span></div>
+</div>
+
+<!-- 65 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="65" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="65" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="65" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 10</div>
+<div class="x" style="top:89.3pt"><p class="in">이 두 해를 분석해 보자. 솔리톤의 세기 분포는 로런츠 함수로 근사되며 $\xi$에 의존하지 않으므로, 전파하는 동안 펄스 세기는 일정하게 유지된다. 최대 출력은 $\tau\to\pm\infty$에서의 0으로부터 $\tau=0$에서의 1까지 올라간다.</p></div>
+<div class="x" style="top:143.5pt"><p class="in">반면 페레그린 브리더는 $\xi$ 좌표에 의존한다. $\xi\to\pm\infty$에서 세기 분포는 그저 평평한 직선이다. $\xi=0$에서는 다음과 같다.</p></div>
+<div class="f" style="left:227.0pt;top:178.5pt"><span class="fig" data-srcpage="65" data-clip="227.0,178.5,539.6,211.0"></span></div>
+<div class="x" style="top:220.0pt"><p>이 함수는 $\tau=0$에서 최댓값 9를 갖고 $\tau\to\pm\infty$에서 1로 감소한다. $\tau=0$에서의 최대 출력은 $\xi$에 따라 다음과 같이 변한다.</p></div>
+<div class="f" style="left:237.0pt;top:246.3pt"><span class="fig" data-srcpage="65" data-clip="237.0,246.3,539.6,273.0"></span></div>
+<div class="x" style="top:276.8pt"><p>이는 로런츠 함수에 상수 오프셋을 더한 것이다. 페레그린 브리더의 설명에 <span style="white-space:nowrap">[0.5점]</span></p></div>
+<div class="x" style="top:317.4pt"><p class="in">2차 근사를 한 경우와 하지 않은 경우의 솔리톤 해, $\xi=0$과 $\xi=\pm\infty$에서의 페레그린 브리더 해, 그리고 두 해의 최대 출력의 $\xi$ 의존성을 그림 10.2에 나타내었다.</p></div>
+<div class="f" style="left:80.8pt;top:368.9pt"><span class="fig" data-srcpage="65" data-clip="80.8,368.9,514.5,613.7"></span></div>
+<div class="x" style="top:623.2pt;font-size:10pt;line-height:12pt"><p><b>그림 10.2</b> (a) 근사를 한 경우(주황색)와 하지 않은 경우(파란색)의 솔리톤 해의 세기 분포 $|A_s(\xi,\tau)|^2$. (b) $\xi=0$(파란색)과 $\xi=\pm\infty$(주황색)에서 페레그린 브리더 해의 세기 분포 $|A_P(\xi,\tau)|^2$. (c) 솔리톤(파란색)과 페레그린 브리더(주황색) 해의 최대 출력의 $\xi$ 의존성.</p></div>
+<div class="x" style="top:672.6pt"><p class="in">해의 해석은 다음과 같다. 솔리톤은 분산 효과와 비선형 자체 집속 효과가 서로 상쇄되는 특별한 해이므로, 일정한 세기 분포를 유지하며 전파할 수 있다. 반면 페레그린 브리더는 모양을 유지하지 않는다. 이 파동은 연속파로부터 나타나 연속적인 배경 위에 놓인 펄스로 집속되었다가, 마침내</p></div>
+</div>
+
+<!-- 66 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="66" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="66" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="66" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 10</div>
+<div class="x" style="top:89.3pt">다시 사라진다. 솔리톤의 설명에 <span style="white-space:nowrap">[0.5점]</span></div>
+<div class="x" style="top:107.0pt"><p><b>f)</b> 이 문항은 간단한 계산일 뿐이다. 계산을 쉽게 하기 위해 비선형 슈뢰딩거 방정식의 각 항을 따로 계산한다.</p></div>
+<div class="f" style="left:182.8pt;top:142.5pt"><span class="fig" data-srcpage="66" data-clip="182.8,142.5,539.6,172.5"></span></div>
+<div class="x" style="top:173.8pt">또한 $\psi_0$이 실수임에 유의하여라. 각 항은 다음과 같다.</div>
+<div class="f" style="left:132.6pt;top:194.9pt"><span class="fig" data-srcpage="66" data-clip="132.6,194.9,539.6,221.95"></span></div>
+<div class="f" style="left:132.6pt;top:221.95pt"><span class="fig" data-srcpage="66" data-clip="132.6,221.95,322.0,250.6"></span></div>
+<div class="x" style="left:327.8pt;width:70pt;top:230.0pt"><span style="white-space:nowrap">[0.25점]</span></div>
+<div class="f" style="left:504.0pt;top:230.5pt"><span class="fig" data-srcpage="66" data-clip="504.0,230.5,539.6,243.0"></span></div>
+<div class="x" style="top:255.7pt">그리고</div>
+<div class="f" style="left:60.0pt;top:273.5pt"><span class="fig" data-srcpage="66" data-clip="60.0,273.5,539.6,328.5"></span></div>
+<div class="x" style="left:175.2pt;width:70pt;top:329.2pt"><span style="white-space:nowrap">[0.25점]</span></div>
+<div class="x" style="top:352.0pt"><p class="in">$-\gamma P_0[\psi_0+\varepsilon(z,t)]\exp(\mathrm i\gamma P_0z)$가 방정식의 양변에 나타나고, 모든 항을 $\exp(\mathrm i\gamma P_0z)$로 나눌 수 있음에 주목한다 <span style="white-space:nowrap">[0.5점]</span>. 따라서 최종 결과는 다음과 같다.</p></div>
+<div class="f" style="left:183.2pt;top:387.5pt"><span class="fig" data-srcpage="66" data-clip="183.2,387.5,539.6,417.5"></span></div>
+<div class="x" style="top:423.0pt"><b>g)</b> 여기서는 제안된 $\varepsilon(z,t)$의 식을 식 (10.13)에 대입해야 하며, 그러면 다음을 얻는다.</div>
+<div class="f" style="left:62.0pt;top:452.0pt"><span class="fig" data-srcpage="66" data-clip="62.0,452.0,539.6,481.9"></span></div>
+<div class="f" style="left:220.0pt;top:481.9pt"><span class="fig" data-srcpage="66" data-clip="220.0,481.9,470.0,503.5"></span></div>
+<div class="x" style="left:475.3pt;width:60pt;top:485.7pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="f" style="left:504.0pt;top:503.0pt"><span class="fig" data-srcpage="66" data-clip="504.0,503.0,539.6,516.4"></span></div>
+<div class="f" style="left:62.0pt;top:535.5pt"><span class="fig" data-srcpage="66" data-clip="62.0,535.5,539.6,565.0"></span></div>
+<div class="x" style="top:572.2pt"><p>이 식이 성립하려면 $\exp[\mathrm i(kz-\omega t)]$와 $\exp[\mathrm i(k^*z-\omega t)]$에 비례하는 좌변과 우변의 항들이 각각 부분 방정식을 만족해야 한다. 따라서 다음 최종 연립 방정식을 얻는다.</p></div>
+<div class="f" style="left:211.8pt;top:606.0pt"><span class="fig" data-srcpage="66" data-clip="211.8,606.0,539.6,666.0"></span></div>
+<div class="x" style="top:673.3pt"><p class="in">두 번째 식의 복소 켤레를 취하면, 이 연립 방정식을 다음과 같은 행렬 꼴로 쓸 수 있다.</p></div>
+<div class="f" style="left:129.5pt;top:695.5pt"><span class="fig" data-srcpage="66" data-clip="129.5,695.5,406.0,737.5"></span></div>
+<div class="x" style="left:413.6pt;width:60pt;top:710.3pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="f" style="left:504.0pt;top:710.5pt"><span class="fig" data-srcpage="66" data-clip="504.0,710.5,539.6,723.5"></span></div>
+</div>
+
+<!-- 67 -->
+<div class="page">
+<div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="67" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="67" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:115.0pt;top:767.0pt"><span class="fig" data-srcpage="67" data-clip="115.0,767.0,539.5,780.0"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 10</div>
+<div class="x" style="top:89.3pt"><p class="in">행렬식이 0일 때에만 자명하지 않은 해가 있을 수 있다. 따라서 행렬식으로부터 $k$를 계산할 수 있다.</p></div>
+<div class="f" style="left:136.4pt;top:136.9pt"><span class="fig" data-srcpage="67" data-clip="136.4,136.9,400.0,165.5"></span></div>
+<div class="x" style="left:404.9pt;width:60pt;top:144.1pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="f" style="left:504.0pt;top:144.5pt"><span class="fig" data-srcpage="67" data-clip="504.0,144.5,539.6,157.0"></span></div>
+<div class="f" style="left:136.4pt;top:165.5pt"><span class="fig" data-srcpage="67" data-clip="136.4,165.5,539.6,230.5"></span></div>
+<div class="x" style="top:237.3pt">따라서 최종 결과는 다음과 같다.</div>
+<div class="f" style="left:201.7pt;top:258.0pt"><span class="fig" data-srcpage="67" data-clip="201.7,258.0,335.0,291.6"></span></div>
+<div class="x" style="left:339.7pt;width:60pt;top:269.8pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="f" style="left:504.0pt;top:270.0pt"><span class="fig" data-srcpage="67" data-clip="504.0,270.0,539.6,283.0"></span></div>
+<div class="x" style="top:307.1pt"><p><b>h)</b> 정상 분산 영역에서는 $k$가 항상 실수이므로 변조 불안정성이 생길 수 없다. 이상 분산 영역$(\beta_2&lt;0)$에서는 다음 조건일 때 변조 불안정성이 일어날 수 있다.</p></div>
+<div class="f" style="left:259.6pt;top:342.5pt"><span class="fig" data-srcpage="67" data-clip="259.6,342.5,539.6,372.0"></span></div>
+<div class="x" style="top:379.8pt"><p class="in">이로부터 임계 진동수를 유도할 수 있다.</p></div>
+<div class="f" style="left:232.1pt;top:403.0pt"><span class="fig" data-srcpage="67" data-clip="232.1,403.0,302.0,436.5"></span></div>
+<div class="x" style="left:309.3pt;width:60pt;top:414.5pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="f" style="left:504.0pt;top:414.6pt"><span class="fig" data-srcpage="67" data-clip="504.0,414.6,539.6,427.7"></span></div>
+<div class="x" style="top:447.6pt"><p class="in">$\omega&lt;\omega_c$이면 $k$는 순허수가 되어 변조 불안정성이 생길 수 있다. $\omega&gt;\omega_c$이면 $k$가 실수이므로 불안정성이 생길 수 없다.</p></div>
+<div class="x" style="top:474.7pt"><p>최대 이득을 찾기 위해 $k^2$의 최댓값을 계산한다. $\omega=0$과 $\omega=\omega_c$에서 $k=0$이므로 최댓값이 있음은 분명하다. $k$보다 $k^2$을 다루는 것이 더 쉽다.</p></div>
+<div class="f" style="left:241.0pt;top:521.0pt"><span class="fig" data-srcpage="67" data-clip="241.0,521.0,539.6,583.5"></span></div>
+<div class="x" style="top:595.1pt"><p>$\beta_2&lt;0$이므로 도함수는 $\omega_\text{max}=\sqrt{\tfrac{2\gamma P_0}{|\beta_2|}}$에서 0이 된다. $\omega_c=\sqrt2\,\omega_\text{max}$임에 유의하여라. $\omega_\text{max}$를 $k$의 식에 대입하면 다음을 얻는다.</p></div>
+<div class="f" style="left:201.0pt;top:648.5pt"><span class="fig" data-srcpage="67" data-clip="201.0,648.5,539.6,714.5"></span></div>
+<div class="f" style="left:201.0pt;top:714.5pt"><span class="fig" data-srcpage="67" data-clip="201.0,714.5,336.0,732.0"></span></div>
+<div class="x" style="left:340.4pt;width:60pt;top:717.5pt"><span style="white-space:nowrap">[0.5점]</span></div>
+<div class="f" style="left:504.0pt;top:717.0pt"><span class="fig" data-srcpage="67" data-clip="504.0,717.0,539.6,731.0"></span></div>
+</div>
+
+<!-- 68 -->
+<div class="page">
+<div class="f" style="left:464.1pt;top:49.0pt"><span class="fig" data-srcpage="68" data-clip="464.1,49.0,539.0,62.7"></span></div><div class="f" style="left:55.8pt;top:762.0pt"><span class="fig" data-srcpage="68" data-clip="55.8,762.0,539.5,767.0"></span></div><div class="f" style="left:55.8pt;top:767.0pt"><span class="fig" data-srcpage="68" data-clip="55.8,767.0,480.0,780.0"></span></div><div class="ft" style="left:400pt;width:138.6pt;text-align:right;top:769.3pt">문제 10</div>
+<div class="x" style="top:89.3pt"><p class="in">따라서 최대 이득은 $|k|=\gamma P_0$이다. 이득의 모양은 다음과 같아야 한다. 이득은 $\omega=0$과 $\omega=\omega_c$에서 0이다. $\omega$가 작을 때는 식 (10.56)의 제곱근 안의 $\omega^2$ 항을 무시할 수 있으므로 거의 선형으로 증가해야 한다. 최대점 $\omega_\text{max}$에서는 제곱근 안의 포물선이 우세해져 이득이 비교적 빠르게 0으로 떨어진다. 이득 함수를 그림 10.3에 나타내었다. <span style="white-space:nowrap">[0.5점]</span></p></div>
+<div class="f" style="left:80.8pt;top:165.8pt"><span class="fig" data-srcpage="68" data-clip="80.8,165.8,514.5,412.3"></span></div>
+<div class="x" style="top:418.1pt;font-size:10pt;line-height:14.8pt"><p><b>그림 10.3</b> 변조 불안정성의 이득 분포 $(|\mathrm{Im}(k)|)$. 파선은 최대 이득 지점 $\omega_\text{max}=\sqrt{\tfrac{2\gamma P_0}{|\beta_2|}}$의 위치를 나타낸다. 일점 쇄선은 임계 진동수 $\omega_c=\sqrt2\,\omega_\text{max}$의 위치를 나타내며, 그보다 높은 진동수에서는 이득이 0이다.</p></div>
+<div class="x" style="top:480.9pt"><p><b>i)</b> 식 (10.17)의 수학적 꼴은 정규화된 비선형 슈뢰딩거 방정식 (10.7)과 똑같다. 따라서 두 방정식은 같은 해를 갖는다. 앞에서 보았듯이 페레그린 브리더 해는 균일한 배경에서 생겨나 어떤 위치에서 날카롭게 정점에 이른다. 따라서 페레그린 브리더 해는 이른바 괴물파의 전형적인 예임이 분명하다. <span style="white-space:nowrap">[1점]</span></p></div>
+</div>
+
+</body></html>

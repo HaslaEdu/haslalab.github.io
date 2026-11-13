@@ -1,0 +1,23 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2023_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "f8a9d9473f2caa366b68328884bffc7007ac9c351007ed18edaf959c9114109b",
+ "bytes": 2332982,
+ "pages": 52,
+ "source_file": "PLANCKS_2023_TS.pdf",
+ "source_sha256": "a91826702490cd3becab1758a6deb8c15a042619a37c34b7b0b19532e8d6b5fd",
+ "source_pages": 52,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 16399,
+ "html_source": "tools/ko_reflow/plancks/2023_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "the 16 problem-statement pages reuse tools/ko_reflow/plancks/2023.html (source pages are byte-identical in text and positions; stamps remapped to TS page numbers); all 36 solution pages compared side by side with the source at 60-75 dpi, with 100-200 dpi close-ups where text meets stamps; first-line baselines measured against the source on every solution page (331 blocks, median offset +0.1 pt, all within about 1.2 pt); display equations, tables, figures, footnote rule and the reference list stamped from the source; edgecheck.py reports 0 stamps cutting ink; check.py leaves only harmless items: the 3 pre-existing problem-page artefacts (p23 side text vs figure, p40/p50 wide math boxes), Korean overlay labels deliberately placed on stamps (p14 under-brace labels, p19/p20 table headers), and line-box contacts of 2.7-5.9 pt between text blocks and neighbouring stamps or tall inline math with no visible ink overlap",
+  "overflow_or_occlusion_observed": false
+ }
+}

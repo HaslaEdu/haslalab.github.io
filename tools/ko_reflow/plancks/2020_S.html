@@ -1,0 +1,667 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* PLANCKS London 2020 solutions ("answer booklet", 37 pages combined from the problem authors' own files):
+   LaTeX pages (Computer Modern, 10-12pt, US letter or A4), Word pages in Arial (A4), and one handwritten scan
+   (Q5, a 595x2526 pt page, stamped whole). Pages keep their own sizes through named @page rules.
+   Magenta Qn corner labels, figures, display equations, page numbers, author names and e-mail footers are
+   stamped from the original. */
+@page a4{size:595.276pt 841.89pt;margin:0}
+.page[data-s="a4"]{page:a4;width:595.276pt;height:841.89pt}
+@page a4b{size:594.96pt 842.04pt;margin:0}
+.page[data-s="a4b"]{page:a4b;width:594.96pt;height:842.04pt}
+@page tall{size:595.276pt 2526.08pt;margin:0}
+.page[data-s="tall"]{page:tall;width:595.276pt;height:2526.08pt}
+body{font-size:10pt;line-height:12.1pt}
+.a{position:absolute}
+.a>p{text-indent:0}
+.c{text-align:center}
+.f{position:absolute;line-height:0}
+.k{position:absolute}
+.bl>.k{position:absolute;left:-10.9pt}
+.tb{position:absolute;border:0.4pt solid #000;height:27.5pt;text-align:center;line-height:27.5pt}
+.katex{line-height:1}
+.il{vertical-align:-6.5pt!important}
+.ar .katex{font-size:0.95em!important}
+.bx{position:absolute;border:0.75pt solid #7030a0;color:#7030a0;text-align:center}
+u{text-underline-offset:1.5pt}
+</style></head><body>
+<!-- 1: answer booklet cover (problem paper cover + note) -->
+<div class="page">
+<div class="a" style="left:161.9pt;top:20.61pt;font-size:32pt;line-height:36pt;font-family:Arial,KG,sans-serif;color:#a33086">답안 책자</div>
+<div class="f" style="left:189pt;top:72pt"><span class="fig" data-srcpage="1" data-clip="189,72,423,190.3"></span></div>
+<div class="f" style="left:72pt;top:210.2pt"><span class="fig" data-srcpage="1" data-clip="72,210.2,540,212"></span></div>
+<div class="a" style="left:72pt;top:219.6pt;width:468pt;font-size:10.9pt;line-height:13.5pt"><p>이번 PLANCKS 대회 문제지는 15쪽(이 표지 포함)이며 9개 문제로 이루어져 있다. 종이에 풀고, 모든 쪽의 맨 위에 팀 이름과 문제 번호를 함께 적어라.</p></div>
+<div class="a" style="left:72pt;top:260.2pt;width:468pt;font-size:10.9pt;line-height:13.5pt"><p>이 시험의 각 문제에 대해 풀이 과정을 보여야 한다. 다음 규칙을 따른다:</p></div>
+<div class="a bl" style="left:99.3pt;top:299.4pt;width:239.1pt;font-size:10.9pt;line-height:13.5pt"><span class="k">$\bullet$</span><p>대회는 <b>9개 문제로 이루어지며, 각 문제는 10점</b>이다. 문제에 소문항이 표시되어 있을 수 있다.</p></div>
+<div class="a bl" style="left:99.3pt;top:349pt;width:239.1pt;font-size:10.9pt;line-height:13.5pt"><span class="k">$\bullet$</span><p><b>풀이를 정리하여</b> 적당히 깔끔하고 일관되게 작성하여라. 모든 문제는 종이에 영어로 풀어야 하며, 제출 기간이 끝나기 전에 스캔하여 팀 폴더에 올려야 한다. 팀 폴더는 <span style="font-family:monospace;color:#00f">www.plancks.uk/exam</span>에서 찾을 수 있다. 파일 이름을 알맞게 붙이고, 모든 쪽에 팀 이름과 문제 번호, 쪽 번호를 적어라. <b>각 문제의 답안은 별도의 파일로 올려라</b>.</p></div>
+<div class="a bl" style="left:99.3pt;top:479.9pt;width:239.1pt;font-size:10.9pt;line-height:13.5pt"><span class="k">$\bullet$</span><p>문제가 명확하지 않으면 참가자는 zoom 통화로 설명을 요청할 수 있다. 그 답변이 모든 팀에 관련된 것이면 심사위원단이 이 정보를 다른 팀에도 알려 준다.</p></div>
+<div class="a bl" style="left:99.3pt;top:543.1pt;width:239.1pt;font-size:10.9pt;line-height:13.5pt"><span class="k">$\bullet$</span><p>프로그래밍 기능이 없는 공학용 계산기, 시계, 의료 기기를 제외한 기기(휴대전화, 태블릿 등)는 사용할 수 없다. 컴퓨터는 문제를 받고 답안을 올리는 일과 팀원 및 심사위원단과의 연락에만 사용하여야 한다. <b>문제를 푸는 데 인터넷 자료를 사용해서는 안 된다</b>.</p></div>
+<div class="a bl" style="left:99.3pt;top:660.4pt;width:239.1pt;font-size:10.9pt;line-height:13.5pt"><span class="k">$\bullet$</span><p>주최 측은 부정행위를 하거나 규칙을 어긴 팀을 언제든지 실격시킬 권리가 있다.</p></div>
+<div class="a bl" style="left:99.3pt;top:696.5pt;width:239.1pt;font-size:10.9pt;line-height:13.5pt"><span class="k">$\bullet$</span><p>규칙이 정하지 않은 상황은 주최 측이 결정한다.</p></div>
+<div class="tb" style="left:374.4pt;top:297.3pt;width:52.1pt;font-size:10.9pt">문제</div>
+<div class="tb" style="left:426.5pt;top:297.3pt;width:41.9pt;border-left:none;font-size:10.9pt">배점</div>
+<div class="tb" style="left:468.4pt;top:297.3pt;width:37.4pt;border-left:none;font-size:10.9pt">점수</div>
+<div class="f" style="left:374pt;top:324.6pt"><span class="fig" data-srcpage="1" data-clip="374,324.6,506.2,572.5"></span></div>
+<div class="tb" style="left:374.4pt;top:572.3pt;width:52.1pt;border-right:none;font-size:10.9pt">합계:</div>
+<div class="f" style="left:426.2pt;top:572.1pt"><span class="fig" data-srcpage="1" data-clip="426.2,572.1,506.2,600.2"></span></div>
+<div class="a" style="left:377pt;top:630.99pt;width:170pt;font-size:11pt;line-height:12pt;font-family:Arial,KG,sans-serif;color:#a33086"><p>이 답안 책자는 37쪽이다. 문제 번호는 왼쪽 위 모서리에 적혀 있다. 이 합본 문서에서 언급하는 다른 문제 번호나 쪽 번호는 맞지 않을 수 있다.</p></div>
+</div>
+
+<!-- 2: Q1 snow plough: problem -->
+<div class="page" data-s="a4" style="font-size:12.0pt;line-height:14.45pt;">
+<div class="f" style="left:54pt;top:39.3pt"><span class="fig" data-srcpage="2" data-clip="54,39.3,74.7,60.4"></span></div>
+<div class="a c" style="left:102.9pt;top:130.12pt;width:432pt;font-weight:bold">제설차 문제<br>Professor Alan Davies</div>
+<div class="a" style="left:120.4pt;top:172.01pt;font-weight:bold">문제</div>
+<div class="a" style="left:102.9pt;top:200.92pt;width:432pt"><p style="text-indent:17.5pt">눈 내리는 어느 겨울 아침, 제설차 한 대가 정확히 오전 6시에 차고를 떠나 길고 곧은 도로를 따라 나아간다. 운전자는 두 번째 한 시간 동안 이동한 거리가 첫 번째 한 시간 동안 이동한 거리의 절반이라는 것을 알아차린다. 눈은 몇 시에 내리기 시작했는가?</p></div>
+<div class="a" style="left:102.9pt;top:273.11pt;width:432pt"><p style="text-indent:17.5pt">다음의 변수와 매개변수로 이어지는 합리적인 가정 몇 가지를 제시하여라:</p></div>
+<div class="a" style="left:120.4pt;top:316.41pt;font-weight:bold">적절한 변수와 매개변수</div>
+<div class="a" style="left:102.9pt;top:330.91pt;width:432pt"><p>이동 시간 $t$, 06시에 $t=0$<br>제설차의 이동 거리 $x(t)$<br>눈의 높이 $h(t)$<br>단위 면적당 강설률 $R_S$<br>제설차가 눈을 치우는 비율 $R_P$<br>제설차 날의 폭 $w$<br>제설차가 출발하기 전까지 눈이 내린 시간 $T$</p></div>
+<div class="a c" style="left:102.9pt;top:446.51pt;width:432pt">모두 SI 단위로 측정한다</div>
+<div class="a" style="left:120.4pt;top:496.31pt">다음을 구하여라:</div>
+<div class="a" style="left:132.1pt;top:520.6pt;width:402.8pt;font-size:12pt;line-height:14.45pt"><span class="k" style="left:-14.9pt">1.</span><p>제설차가 시간 간격 $\Delta t$ 동안 짧은 거리 $\Delta x$를 움직일 때, $w$, $h$, $R_P$, $\Delta x$, $\Delta t$ 사이의 관계</p></div>
+<div class="a" style="left:132.1pt;top:559.4pt;width:402.8pt;font-size:12pt;line-height:14.45pt"><span class="k" style="left:-14.9pt">2.</span><p>$h$, $R_S$, $t$, $T$ 사이의 관계</p></div>
+<div class="f" style="left:315pt;top:778.3pt"><span class="fig" data-srcpage="2" data-clip="315,778.3,322.8,792.3"></span></div>
+</div>
+
+<!-- 3: Q1 solution -->
+<div class="page" data-s="a4" style="font-size:12.0pt;line-height:14.45pt;">
+<div class="f" style="left:38.3pt;top:28.5pt"><span class="fig" data-srcpage="3" data-clip="38.3,28.5,61.6,52.3"></span></div>
+<div class="a" style="left:120.4pt;top:130.12pt;font-weight:bold">풀이</div>
+<div class="a" style="left:120.4pt;top:159.01pt;font-weight:bold">합리적인 가정 몇 가지</div>
+<div class="a" style="left:102.9pt;top:173.51pt;width:432pt"><p>강설률은 일정하다.<br>제설차는 일정한 비율로 눈을 치운다.<br>제설차 날의 높이는 쌓인 눈의 깊이보다 높다.</p></div>
+<div class="a" style="left:102.9pt;top:231.31pt;width:432pt"><p style="text-indent:17.5pt">짧은 시간 간격 $\Delta t$ 동안 제설차가 거리 $\Delta x$만큼 움직인다고 하자(그림 1 참조).</p></div>
+<div class="f" style="left:184.4pt;top:262pt"><span class="fig" data-srcpage="3" data-clip="184.4,262,453.4,370"></span></div>
+<div class="a c" style="left:102.9pt;top:381.71pt;width:432pt">그림 1: 시각 $t$에서 눈의 깊이.</div>
+<div class="a" style="left:102.9pt;top:410.81pt;width:432pt"><p style="text-indent:17.5pt">그 시간 동안 치운 눈의 부피 $wh\Delta x$는 $R_P\Delta t$이다. 따라서 다음을 얻는다.</p></div>
+<div class="f" style="left:279.1pt;top:438.5pt"><span class="fig" data-srcpage="3" data-clip="279.1,438.5,535.9,455.5"></span></div>
+<div class="a" style="left:102.9pt;top:459.41pt;width:432pt"><p style="text-indent:17.5pt">시각 $t$까지 치운 눈의 전체 부피는 $xwh$이다. 이 눈은 시간 $t+T$ 동안 내린 것이므로, 이 부피는 $R_S(t+T)wx$로도 주어진다. 따라서</p></div>
+<div class="f" style="left:273.4pt;top:501.5pt"><span class="fig" data-srcpage="3" data-clip="273.4,501.5,535.9,518.5"></span></div>
+<div class="a" style="left:102.9pt;top:522.51pt;width:432pt"><p style="text-indent:17.5pt">식 (1)과 (2)로부터 다음을 얻는다.</p></div>
+<div class="f" style="left:256.9pt;top:550pt"><span class="fig" data-srcpage="3" data-clip="256.9,550,380.9,567"></span></div>
+<div class="a" style="left:102.9pt;top:600.01pt;width:432pt"><p style="text-indent:17.5pt">$\Delta x,\Delta t\to0$의 극한을 취하면 다음 미분 방정식을 얻는다.</p></div>
+<div class="f" style="left:280pt;top:624pt"><span class="fig" data-srcpage="3" data-clip="280,624,536,656"></span></div>
+<div class="a" style="left:102.9pt;top:657.71pt;width:432pt"><p style="text-indent:17.5pt">여기서 $\alpha=\frac{1}{w}\frac{R_P}{R_S}$이다.</p></div>
+<div class="a" style="left:102.9pt;top:686.62pt;width:432pt"><p style="text-indent:17.5pt">미분 방정식 (3)을 풀면</p></div>
+<div class="f" style="left:258pt;top:708.5pt"><span class="fig" data-srcpage="3" data-clip="258,708.5,379.8,725"></span></div>
+<div class="f" style="left:315pt;top:778.3pt"><span class="fig" data-srcpage="3" data-clip="315,778.3,322.8,792.3"></span></div>
+</div>
+
+<!-- 4 -->
+<div class="page" data-s="a4" style="font-size:12.0pt;line-height:14.45pt;">
+<div class="f" style="left:27.5pt;top:30.4pt"><span class="fig" data-srcpage="4" data-clip="27.5,30.4,50.8,54.3"></span></div>
+<div class="a" style="left:102.9pt;top:130.12pt;width:432pt"><p style="text-indent:17.5pt">초기 조건 $x(0)=0$을 이용하여 임의 상수를 구한다:</p></div>
+<div class="f" style="left:267.7pt;top:157.5pt"><span class="fig" data-srcpage="4" data-clip="267.7,157.5,370.1,174"></span></div>
+<div class="a" style="left:102.9pt;top:193.51pt;width:432pt"><p>그러므로 $\ln C=-\ln(T)$이고, 따라서</p></div>
+<div class="f" style="left:271.7pt;top:214pt"><span class="fig" data-srcpage="4" data-clip="271.7,214,535.9,248"></span></div>
+<div class="a" style="left:102.9pt;top:255.41pt;width:432pt"><p>지금까지 시간의 단위는 초였는데, 이 문제에서는 그다지 쓸모가 없다. 그래서 시간의 단위를 시간(h)으로 바꾼다. 식 (3)에서 $\alpha$는 시간에 무관하고, 식 (4)의 모든 항은 시간에 명시적으로 의존하지 않으므로, 식을 바꾸지 않고 어떤 단위를 써도 된다.</p></div>
+<div class="a" style="left:102.9pt;top:327.71pt;width:432pt"><p style="text-indent:17.5pt">제설차가 첫 번째 한 시간 동안 거리 $d$를 이동한다고 하자. 그러면 식 (4)로부터</p></div>
+<div class="f" style="left:272pt;top:353pt"><span class="fig" data-srcpage="4" data-clip="272,353,365.8,386.5"></span></div>
+<div class="a" style="left:102.9pt;top:397.91pt;width:432pt"><p>이고, 두 번째 한 시간 동안 이동한 거리는 첫 번째 한 시간 동안의 절반이므로</p></div>
+<div class="f" style="left:269pt;top:416pt"><span class="fig" data-srcpage="4" data-clip="269,416,369.9,449.5"></span></div>
+<div class="a" style="left:102.9pt;top:465.11pt">따라서</div>
+<div class="f" style="left:241.7pt;top:473pt"><span class="fig" data-srcpage="4" data-clip="241.7,473,396.1,506.5"></span></div>
+<div class="a" style="left:120.4pt;top:532.31pt">이고</div>
+<div class="f" style="left:255pt;top:542pt"><span class="fig" data-srcpage="4" data-clip="255,542,381,576"></span></div>
+<div class="a" style="left:102.9pt;top:587.21pt;width:432pt"><p>약간의 계산을 거치면 다음 이차 방정식을 얻는다.</p></div>
+<div class="f" style="left:278.7pt;top:606pt"><span class="fig" data-srcpage="4" data-clip="278.7,606,359.1,626.5"></span></div>
+<div class="a" style="left:102.9pt;top:650.41pt">그 해는</div>
+<div class="f" style="left:281.8pt;top:651pt"><span class="fig" data-srcpage="4" data-clip="281.8,651,354.8,693"></span></div>
+<div class="a" style="left:102.9pt;top:704.91pt;width:432pt"><p>음의 부호는 적절하지 않으므로 $T=(-1+\sqrt5)/2\approx0.618034$를 얻는다.</p></div>
+<div class="a" style="left:120.4pt;top:719.31pt">즉 37분 5초이다.</div>
+<div class="a" style="left:120.4pt;top:748.21pt">따라서 눈은 정확히 05:22:55에 내리기 시작하였다.</div>
+<div class="f" style="left:315pt;top:778.3pt"><span class="fig" data-srcpage="4" data-clip="315,778.3,322.8,792.3"></span></div>
+</div>
+
+<!-- 5: Q2 dotty dinosaur: problem -->
+<div class="page" data-s="a4" style="font-size:10.9pt;line-height:13.55pt;">
+<div class="f" style="left:27.5pt;top:25pt"><span class="fig" data-srcpage="5" data-clip="27.5,25,51,49"></span></div>
+<div class="a" style="left:100.2pt;top:85.27pt;font-style:italic">문제:</div>
+<div class="a" style="left:89.3pt;top:98.87pt;width:416.8pt"><p style="text-indent:10.9pt">유아용 게임 ‘Dotty Dinosaur(점박이 공룡)’에는 여섯 가지 색이 있는 공정한 주사위가 있다. 주사위를 굴려 어떤 색이 나오면, 그 색의 점 하나를 모아 공룡에 붙인다. 그 색의 점을 이미 가지고 있으면 아무것도 하지 않는다. 각 색마다 하나씩 여섯 개의 점을 모두 모으면 ‘이기고’ 게임이 끝난다.</p><p>점박이 공룡 게임 한 판을 ‘이기는’ 데 필요한 주사위 던지기 횟수의 평균을 구하여라.</p></div>
+</div>
+
+<!-- 6: Q2 solution -->
+<div class="page" data-s="a4" style="font-size:10.9pt;line-height:13.55pt;">
+<div class="f" style="left:18.6pt;top:20pt"><span class="fig" data-srcpage="6" data-clip="18.6,20,42,44"></span></div>
+<div class="a" style="left:89.3pt;top:85.27pt;width:416.8pt"><p style="text-indent:10.9pt"><i>풀이:</i> 이 문제의 풀이는 세 가지가 알려져 있다. 그중 둘은 표준적이지만 길다. 하나는 생성 함수를, 다른 하나는 전이 행렬을 이용한다. 이 두 풀이는 시간이 날 때 정리할 생각이다. 찾아낼 수만 있다면 아주 우아한 풀이도 있는데, 여기서는 그 풀이를 소개한다.</p><p style="text-indent:10.9pt">이미 $k$가지 색을 가지고 있을 때, 여섯 가지 색을 모두 ‘모으는’ 데 앞으로 더 필요한 던지기 횟수의 기댓값(즉 평균)을 $e_k$라 하자. 이미 모든 색을 가지고 있다면 더 던질 필요가 없으므로 당연히 $e_6=0$이다. 구하는 답은 $e_0$, 즉 아무 색도 없는 상태에서 6가지 색을 모으는 데 필요한 던지기 횟수이다.</p><p style="text-indent:10.9pt">$e_6$에서부터 거꾸로 계산해 나간다. 이미 점이 5개 있다면, 마지막 색이 나와 점이 6개가 될 확률이 1/6이고, 점 5개에 그대로 머무를 확률이 5/6이다. 이로부터 기댓값 사이의 다음 관계를 얻는다.</p></div>
+<div class="f" style="left:249pt;top:239.76pt"><span class="fig" data-srcpage="6" data-clip="249.00,239.76,347.00,267.50"></span></div>
+<div class="a" style="left:89.3pt;top:267.27pt;width:416.8pt"><p>이것은 점이 5개일 때 더 필요한 던지기 횟수를 다음과 같이 해석한 것이다.</p></div>
+<div class="a" style="left:116.6pt;top:286.1pt;width:389.4pt;font-size:10.9pt;line-height:13.55pt"><span class="k" style="left:-10.9pt">•</span>던지기 한 번(방금 던진 것),</div>
+<div class="a" style="left:116.6pt;top:307.1pt;width:389.4pt;font-size:10.9pt;line-height:13.55pt"><span class="k" style="left:-10.9pt">•</span>더하기, 1/6의 확률로 점이 6개가 되며, 이때는 $e_6$번을 더 던져야 한다,</div>
+<div class="a" style="left:116.6pt;top:328.1pt;width:389.4pt;font-size:10.9pt;line-height:13.55pt"><span class="k" style="left:-10.9pt">•</span>더하기, 5/6의 확률로 점 5개에 그대로 머무르며, 이때는 $e_5$번을 더 던져야 한다.</div>
+<div class="a" style="left:89.3pt;top:360.37pt;width:416.8pt"><p>같은 방식으로 아래로 내려가며 계산할 수 있다.</p></div>
+<div class="f" style="left:249pt;top:376.92pt"><span class="fig" data-srcpage="6" data-clip="249.00,376.92,347.00,535.00"></span></div>
+<div class="a" style="left:89.3pt;top:534.07pt;width:416.8pt"><p>맨 위에서 $e_6=0$을 대입하고 아래로 내려가며 곧바로 답을 구할 수도 있다. 그러나 각 식에 6을 곱하고 우변의 셋째 항을 각각 빼서 구조를 살펴보면 흥미롭다.</p></div>
+<div class="f" style="left:263pt;top:580pt"><span class="fig" data-srcpage="6" data-clip="263,580,332,678"></span></div>
+<div class="f" style="left:293pt;top:716pt"><span class="fig" data-srcpage="6" data-clip="293,716,302,728"></span></div>
+</div>
+
+<!-- 7 -->
+<div class="page" data-s="a4" style="font-size:10.9pt;line-height:13.55pt;">
+<div class="f" style="left:24.5pt;top:20pt"><span class="fig" data-srcpage="7" data-clip="24.5,20,48,44"></span></div>
+<div class="a" style="left:89.3pt;top:85.27pt;width:416.8pt"><p>이제 둘째 식을 2로, 셋째 식을 3으로, 이런 식으로 차례로 나누면 다음 점화식을 얻는다.</p></div>
+<div class="f" style="left:268pt;top:121pt"><span class="fig" data-srcpage="7" data-clip="268,121,327,277.5"></span></div>
+<div class="a" style="left:89.3pt;top:281.67pt;width:416.8pt"><p>마지막으로 $e_6=0$을 넣으면 꽤 멋진 공식을 얻는다.</p></div>
+<div class="f" style="left:183pt;top:298pt"><span class="fig" data-srcpage="7" data-clip="183,298,507,337"></span></div>
+<div class="a" style="left:89.3pt;top:341.47pt;width:416.8pt"><p style="text-indent:10.9pt">따라서 게임은 평균 14.7번 던지면 끝난다.</p><p>이것은 매번 $N$가지 물건 중 하나를 무작위로 얻을 때 $N$가지를 ‘모으는’ 데 필요한 횟수에 대한, 아주 멋지지만 의외로 잘 알려지지 않은 공식이다. 평균적으로</p></div>
+<div class="f" style="left:237pt;top:392pt"><span class="fig" data-srcpage="7" data-clip="237,392,507,425"></span></div>
+<div class="a" style="left:89.3pt;top:430.77pt;width:416.8pt"><p>번 모아야 각 물건을 적어도 하나씩 갖게 된다. 다시 말해, 모두 모으려면 평균적으로 각 물건마다 $\ln N$번씩 얻어야 한다.</p></div>
+<div class="f" style="left:293pt;top:716pt"><span class="fig" data-srcpage="7" data-clip="293,716,302,728"></span></div>
+</div>
+
+<!-- 8: Q3 Einstein story (answers filled in) -->
+<div class="page" data-s="a4" style="font-family:Arial,KG,sans-serif;font-size:12.0pt;line-height:13.8pt;">
+<div class="f" style="left:13.7pt;top:14pt"><span class="fig" data-srcpage="8" data-clip="13.7,14,37.5,37.5"></span></div>
+<div class="a" style="left:35.4pt;top:71.16pt;font-size:16pt;line-height:18.4pt;font-weight:bold">아인슈타인 시대 무렵의 이야기!</div>
+<div class="a" style="left:35.4pt;top:103.54pt;width:537.5pt"><p>Frank와 Steve 두 실험자가, 잔잔한 날씨에 대서양을 건너는 두 여객선에서 각각 빛을 이용한 똑같은 측정을 하고 있다고 하자. Frank의 실험실은 한 여객선의 갑판에, Steve의 실험실은 다른 여객선의 갑판에 있다. Frank가 탄 여객선은 50 km/hr로, Steve가 탄 여객선은 같은 방향으로 25 km/hr로 달린다. 두 실험실 모두 큰 창이 있어서, 빠른 배가 느린 배를 추월하며 두 여객선이 나란히 있는 동안 Frank는 자기 실험실에서 Steve의 실험실 안을 들여다볼 수 있고, Steve도 마찬가지이다:</p></div>
+<div class="f" style="left:60pt;top:205pt"><span class="fig" data-srcpage="8" data-clip="60,205,372,300"></span></div>
+<div class="a" style="left:35.4pt;top:324.34pt;width:537.5pt"><p>두 실험자는 각각 똑같은 장치를 하나씩 가지고 있다:</p></div>
+<div class="f" style="left:125pt;top:345pt"><span class="fig" data-srcpage="8" data-clip="125,345,295,512"></span></div>
+<div class="a" style="left:35.4pt;top:520.94pt;width:537.5pt"><p>광원이 빛 펄스를 수직 위로 보내면 거울이 이를 수직 아래로 반사한다. 매우 정밀한 검출기가 펄스가 올라갔다 내려오는 데 걸린 시간을 잰다.</p></div>
+<div class="a" style="left:35.4pt;top:562.34pt;width:537.5pt"><p>Frank와 Steve는 각자 자기 실험실에서 같은 실험을 하고, 펄스의 비행 시간 <b><i>T</i></b>를 재어 빛의 속력 <b><i>C</i></b>를 계산한다:</p></div>
+<div class="f" style="left:186pt;top:603pt"><span class="fig" data-srcpage="8" data-clip="186,603,235,637"></span></div>
+<div class="a" style="left:400pt;top:612.64pt">……  식 1</div>
+<div class="a" style="left:35.4pt;top:649.74pt;width:537.5pt"><p>두 사람은 전화로 이야기를 나누다가, 각자 얻은 빛의 속력 <b><i>C</i></b> 값이 정확히 같다는 것을 알게 된다. 한 실험실이 다른 실험실에 대해 25 km/hr로 움직이고 있었지만 어느 실험실도 가속하고 있지 않았으므로, 두 사람은 이 결과에 놀라지 않는다. 구체적으로, 두 실험자는 대학 물리 강의에서 배운 다음 내용을 떠올리고 있다:</p></div>
+<div class="a" style="left:35.4pt;top:732.54pt;color:#ff00ff;font-weight:bold;font-style:italic">물리 ‘법칙’은 가속하지 않는 운동을 하는 모든 실험자에게 똑같다.</div>
+<div class="f" style="left:551pt;top:779pt"><span class="fig" data-srcpage="8" data-clip="551,779,566,793"></span></div>
+</div>
+
+<!-- 9 -->
+<div class="page" data-s="a4" style="font-family:Arial,KG,sans-serif;font-size:12.0pt;line-height:13.8pt;">
+<div class="f" style="left:18.6pt;top:18pt"><span class="fig" data-srcpage="9" data-clip="18.6,18,42,43"></span></div>
+<div class="a" style="left:35.4pt;top:71.14pt;width:540pt"><p>이제 두 사람은 각 검출기를 조정하여 상대편 실험실의 펄스 비행 시간을 잴 수 있게 한 뒤 두 번째 실험을 한다. Frank의 여객선이 Steve의 여객선을 추월하고 있으므로, Frank에게는 Steve와 그의 실험실, 장치가 자기(Frank)의 오른쪽으로 움직이는 것으로 보인다:</p></div>
+<div class="f" style="left:60pt;top:118pt"><span class="fig" data-srcpage="9" data-clip="60,118,440,262"></span></div>
+<div class="a" style="left:35.4pt;top:264.44pt;width:537pt"><p>Frank는 Steve의 장치에서 빛 펄스가 위로 출발하는 것을 보고, 펄스가 거울에 닿는 동안 Steve의 거울이 오른쪽으로 움직이는 것을 본다. 반사된 뒤에는, 이 그림처럼 펄스가 비스듬한 경로를 따라 내려가는 것을 본다:</p></div>
+<div class="f" style="left:140pt;top:315pt"><span class="fig" data-srcpage="9" data-clip="140,315,282,443"></span></div>
+<div class="a" style="left:35.4pt;top:457.64pt;width:537pt"><p>Frank의 여객선이 추월하는 동안 Steve에게는 Frank와 그의 실험실이 오른쪽으로 움직이는 것으로 보인다. 기록을 비교해 보니 Steve와 Frank 모두 똑같이 비스듬한 경로 현상을 관찰하였다.</p></div>
+<div class="a" style="left:35.4pt;top:499.04pt;width:537pt"><p>이제 두 사람은 분석을 하여 다음을 적는다:</p></div>
+<div class="a" style="left:35.4pt;top:526.64pt;width:537pt;font-style:italic"><p>다른 여객선에 탄 실험자가 잰, 펄스가 광원에서 출발하여 검출기로 돌아오는 데 걸린 시간을 <b>T’</b>이라 하자. 이 시간 동안 한 여객선이 다른 여객선에 대해 움직인 거리 <b>AB</b>는 <span style="font-style:normal"><b><i>VT’</i></b></span>이다. 여기서 <b>V</b>는 한 여객선에 대한 다른 여객선의 속력이다.</p></div>
+<div class="a" style="left:35.4pt;top:581.74pt;width:537pt;font-style:italic"><p>다른 여객선에 탄 실험자가 본, 펄스가 이동한 거리 <b>D</b>는 다음과 같다:</p></div>
+<div class="f" style="left:185pt;top:617pt"><span class="fig" data-srcpage="9" data-clip="185,617,300,652"></span></div>
+<div class="a" style="left:35.4pt;top:662.14pt;font-style:italic">그러므로 다른 여객선에 탄 실험자가 본 빛의 속력 <b>C’</b>은</div>
+<div class="f" style="left:474pt;top:656pt"><span class="fig" data-srcpage="9" data-clip="474,656,488,688"></span></div>
+<div class="a" style="left:490pt;top:662.14pt;font-style:italic">이고, 따라서:</div>
+<div class="f" style="left:125pt;top:688.32pt"><span class="fig" data-srcpage="9" data-clip="125.00,688.32,325.00,753.00"></span></div>
+<div class="a" style="left:400pt;top:724.74pt">……….  식 2</div>
+<div class="f" style="left:551pt;top:779pt"><span class="fig" data-srcpage="9" data-clip="551,779,566,793"></span></div>
+</div>
+
+<!-- 10 -->
+<div class="page" data-s="a4" style="font-family:Arial,KG,sans-serif;font-size:12.0pt;line-height:13.8pt;">
+<div class="f" style="left:17.7pt;top:18pt"><span class="fig" data-srcpage="10" data-clip="17.7,18,41,43"></span></div>
+<div class="a" style="left:35.4pt;top:71.14pt;width:538pt"><p>Steve와 Frank는 이 결과를 곰곰이 생각한다. 아인슈타인이라는 사람이 빛의 속도에 관한 연구를 해 왔다는 이야기를 최근에 들었지만, 지금 이 시점에서 두 사람은 아인슈타인의 결론을 알지 못한다. 그래서 Steve와 Frank는 ‘당연한’ 일을 한다. 한 실험실에서 빛 펄스가 수직으로 오르내리는 시간은 다른 실험실에서 펄스가 비스듬한 경로를 따라 오르내리는 시간과 ‘정확히 같아야 한다’고 합의하는 것이다. 즉, <b><i>T = T’</i></b>이라 가정하고 식 1과 식 2를 결합하여 다음을 얻는다:</p></div>
+<div class="f" style="left:120.5pt;top:169pt"><span class="fig" data-srcpage="10" data-clip="120.5,169,197,210"></span></div>
+<div class="a" style="left:400pt;top:181.54pt">…………  식 3</div>
+<div class="a" style="left:35.4pt;top:220.64pt;width:537pt"><p>두 사람은 이 결과가 매우 흥미롭다고 생각한다. 실험자가 자신에 대해 움직이는 실험실에서 빛의 속력 <b><i>C’</i></b>을 재면, 그 값이 자기 실험실에서 잰 값보다 크다는 뜻이기 때문이다. 두 실험실의 상대 속력 차이가 클수록 두 빛의 속력의 차이도 커진다.</p></div>
+<div class="a" style="left:35.4pt;top:289.74pt;width:537pt"><p>Steve와 Frank는 자신들의 결과가 실로 세상을 뒤흔들 만한 것이라는 데 동의하고, 논문을 써서 발표할 준비에 들어간다.</p></div>
+<div class="a" style="left:35.4pt;top:331.14pt;width:537pt"><p>그러다 두 사람은 아인슈타인의 1905년 논문 한 부를 겨우 구해 읽고 혼란에 빠진다. 아인슈타인에 따르면, 빛의 근원에 대한 실험자의 속력이 얼마이든 (진공에서) 빛의 속력을 재면 언제나 <b>같은</b> 결과를 얻는다. 두 사람은, 만약 아인슈타인이 두 여객선에서 하는 실험을 도와주었다면, Steve가 자기 실험실에서 잰 빛의 속력과 Frank가 움직이는 Steve의 실험실 안의 장치를 들여다보며 잰 빛의 속력이 <b>같다</b>고 주장했으리라는 것을 안다. Steve가 Frank의 실험을 들여다보아도 같은 결과를 얻는다. 아인슈타인이라면 <b><i>C=C’</i></b>이라고 주장했을 것이다.</p></div>
+<div class="a" style="left:35.4pt;top:441.54pt;width:537pt"><p>이제 용감한 두 실험자는 <b><i>C=C’</i></b>이라고 가정하고 식 1과 식 2를 결합하여, 약간의 계산 끝에 다음을 얻는다:</p></div>
+<div class="f" style="left:158pt;top:482pt"><span class="fig" data-srcpage="10" data-clip="158,482,241.5,540"></span></div>
+<div class="a" style="left:400pt;top:491.44pt">……..  식 4</div>
+<div class="a" style="left:35.4pt;top:551.54pt;width:537pt"><p>두 사람은 이번에도 이것이 무슨 뜻인지 곰곰이 생각한다. 식 4의 분모는 언제나 1보다 작으므로, 움직이는 Steve의 실험실을 들여다보는 Frank에게는 Steve의 시간 <b><i>T’</i></b>이 자기(Frank)의 시간 <b><i>T</i></b>보다 느리게 흐른다는 사실을 피할 수 없다. 그리고 Steve도 움직이는 Frank의 실험실에서 흐르는 Frank의 시간에 대해 정확히 같은 결론을 내릴 것이다. 시간이 흐르는 빠르기가 모든 사람에게 같지 않다는 것은, 움직이는 광속 측정 실험을 들여다볼 때 빛의 속력이 커진다는 결과보다 더 기이한 결과이다!</p></div>
+<div class="a" style="left:35.4pt;top:662.04pt;width:539pt"><p>Steve와 Frank는 선택의 기로에 선다. <b><i>T = T’</i></b>이라 가정하면 식 3을 얻는다. <b><i>C = C’</i></b>이라 가정하면 식 4를 얻는다. 어느 쪽이 옳은가? 두 사람은 대작이 될 논문의 발표를 보류한다!</p></div>
+<div class="f" style="left:551pt;top:779pt"><span class="fig" data-srcpage="10" data-clip="551,779,566,793"></span></div>
+</div>
+
+<!-- 11: Q3 numbered answers -->
+<div class="page" data-s="a4" style="font-family:Arial,KG,sans-serif;font-size:12.0pt;line-height:13.8pt;">
+<div class="f" style="left:15.7pt;top:22pt"><span class="fig" data-srcpage="11" data-clip="15.7,22,39,47"></span></div>
+<div class="a" style="left:35.4pt;top:98.74pt">번호별 답:</div>
+<div class="a" style="left:35.4pt;top:112.54pt;font-style:italic">참고: 비슷한 답이라도 과학적으로 타당하면 점수를 줄 수 있다.</div>
+<div class="f" style="left:50pt;top:138pt"><span class="fig" data-srcpage="11" data-clip="50,138,320,714"></span></div>
+<div class="f" style="left:551pt;top:779pt"><span class="fig" data-srcpage="11" data-clip="551,779,566,793"></span></div>
+</div>
+
+<!-- 12: Q4 time of flight -->
+<div class="page" style="font-size:12.0pt;line-height:13.95pt;">
+<div class="f" style="left:29.4pt;top:38pt"><span class="fig" data-srcpage="12" data-clip="29.4,38,53,62"></span></div>
+<div class="a" style="left:72pt;top:69.30pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">비행 시간</div>
+<div class="a" style="left:72pt;top:95.47pt;font-style:italic">Dr James Kneller - Queen Mary, University of London</div>
+<div class="a" style="left:95.8pt;top:123.36pt;width:444.3pt"><span class="k" style="left:-19.9pt">(a)</span><p>(2점) 그림 2는 광전류를 시간에 대해 나타낸 전형적인 로그-로그 그래프이다. 이 그래프에서 통과 시간이 어디에 있을지 추론하고, 그 위치를 고른 이유를 설명하여라. 통과 시간의 실제 값을 구할 필요는 없다.</p></div>
+<div class="a" style="left:95.8pt;top:183.06pt;width:444.3pt;font-weight:bold"><p>이 그래프에는 두 개의 선형 구간이 있다. 두 구간의 교점이 통과 시간이며, 아래 그림에 나타내었다. 이 점은 흔히 ‘무릎의 꺾임’이라고 부른다. 그 값은 약 $\approx2.55\,\mu\mathrm{s}$이다. 통과 시간은 전하 묶음 속 운반자의 대부분이 전극에 도달하는 때이며, 그 뒤에는 전류가 급격히 줄어든다.</p></div>
+<div class="f" style="left:180pt;top:262pt"><span class="fig" data-srcpage="12" data-clip="180,262,432,486"></span></div>
+<div class="a" style="left:72pt;top:495.35pt;width:468pt;font-size:10pt;line-height:11.9pt"><p>그림 1: 과도 비행 시간을 보여 주는 시료. $h\nu$는 입사 광자, $E$는 걸어 준 바이어스를 나타낸다.</p></div>
+<div class="a" style="left:95.8pt;top:539.16pt;width:444.3pt"><span class="k" style="left:-20.5pt">(b)</span><p>(2점) 그림 3으로부터 이 시료의 전하 운반자 이동도를 계산하여라. 결과에 적절한 오차를 포함하여라.</p></div>
+<div class="a" style="left:95.8pt;top:584.96pt;width:444.3pt;font-weight:bold"><p>이동도 식은 $\mu=md^2$로 단순화할 수 있으므로 직선의 기울기를 계산해야 한다. 이를 이용하면 이동도는 $\mu=2.05\pm0.14\times10^4\,\mathrm{cm^2V^{-1}s^{-1}}$로 계산된다. 이동도 측정에서는 크기의 차수만 중요하므로 답이 정확할 필요는 없다. 단위나 오차가 없으면 점수를 주지 않는다.</p></div>
+</div>
+
+<!-- 13 -->
+<div class="page" style="font-size:12.0pt;line-height:13.95pt;">
+<div class="f" style="left:19.6pt;top:13pt"><span class="fig" data-srcpage="13" data-clip="19.6,13,43,37"></span></div>
+<div class="a" style="left:95.8pt;top:71.67pt;width:444.3pt"><span class="k" style="left:-19.2pt">(c)</span><p>(2점) 지금까지 어떤 종류의 전하 운반자를 측정하는지는 다루지 않았다. 이미 주어진 정보를 이용하여, 어떤 전하 입자의 이동도를 측정했는지 답하여라. 반대 전하는 어떻게 되는가?</p></div>
+<div class="a" style="left:95.8pt;top:131.37pt;width:444.3pt;font-weight:bold"><p style="text-indent:5pt">양공을 측정하고 있다. 그림 3을 보면 운반자를 끌어당기는 데 양의 전압을 쓰고 있으므로, 측정하는 운반자는 양의 양공이다<i>(1점)</i>. 전자는 접지된 ITO 전극으로 <i>주입된다(1점)</i>. 속박된 전자-양공 쌍인 엑시톤을 언급해도 점수를 준다. 엑시톤은 입사 광자에 의해 만들어지고, 걸어 준 바이어스가 전하들을 떼어 놓는다.</p></div>
+<div class="a" style="left:95.8pt;top:223.06pt;width:444.3pt"><span class="k" style="left:-20.5pt">(d)</span><p>(1점) 전하 운반자는 시료 몸체를 지나 전극으로 가는 도중에 포획될 수 있다. 이러한 포획 자리의 예를 하나 들어라.</p></div>
+<div class="a" style="left:95.8pt;top:268.86pt;width:444.3pt;font-weight:bold"><p>전자 덫. 최저 비점유 분자 궤도(LUMO)보다 아래에 있는 에너지 준위로, 전하 운반자가 몸체 안에서 움직이지 못하게 만들 수 있다. 이 때문에 재결합 확률이 보통의 랑주뱅 비율(쿨롱 인력)보다 커진다. LUMO는 무기 구조의 전도띠에 해당한다. 단순히 인공물(artefact)을 언급한 것에는 점수를 주지 않지만, 타당한 물리적 논증을 제시하면 점수를 준다.</p></div>
+<div class="a" style="left:95.8pt;top:374.46pt;width:444.3pt"><span class="k" style="left:-19.2pt">(e)</span><p>(2점) 전하 입자가 포획되면 전하 묶음은 어떤 영향을 받으며, 그림 2는 어떻게 달라지는가?</p></div>
+<div class="a" style="left:95.8pt;top:420.36pt;width:444.3pt;font-weight:bold"><p>포획 때문에 전하 묶음이 흩어져 하나의 균질한 단위로 움직이지 못한다<i>(1점)</i>. 그 결과 (묶음이 퍼지면서) 전하 운반자의 분산 수송이 일어난다. 운반자들이 더 이상 동시에 전극에 도착하지 않으므로, 그림 2에서 보이던 날카로운 변곡 봉우리가 흐려진다<i>(1점)</i>. 통과 구간의 직선들도 휘어진다.</p></div>
+<div class="a" style="left:95.8pt;top:498.06pt;width:444.3pt"><span class="k" style="left:-18.5pt">(f)</span><p>(1점) 바이어스 전압을 걸지 않으면 그림 2는 어떤 모양이 되는가? 그 이유를 설명하여라.</p></div>
+<div class="a" style="left:95.8pt;top:529.87pt;width:444.3pt;font-weight:bold"><p>전하 운반자를 끌어당기는 바이어스 전압이 없어도 그림 2에서 통과 시간은 뚜렷하게 보인다. 두 전극 물질의 일함수가 서로 달라서 생기는 내장 바이어스가 있기 때문이다. 생성되는 전류는 줄어들지만 그래프의 모양은 변하지 않는다.</p></div>
+<div class="a c" style="left:281pt;top:734.37pt;width:50pt">2쪽</div>
+</div>
+
+<!-- 14: Q5 handwritten solution (scan, no text layer): stamped whole -->
+<div class="page" data-s="tall">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="14" data-clip="0,0,595.276,2526.08"></span></div>
+</div>
+
+<!-- 15: Q6 Newcomen: problem -->
+<div class="page" data-s="a4b" style="font-family:Arial,KG,sans-serif;font-size:14.0pt;line-height:17.38pt;">
+<div class="f" style="left:20.6pt;top:21pt"><span class="fig" data-srcpage="15" data-clip="20.6,21,44,46"></span></div>
+<div class="a c" style="left:35.4pt;top:49.97pt;width:512pt;font-size:20pt;line-height:23pt;font-weight:bold">뉴커먼의 빔 기관</div>
+<div class="a" style="left:35.4pt;top:81.96pt;width:540pt"><p>영국의 산업 혁명은 ‘증기 기관’이 바람, 물, 말의 힘을 보조하다가 마침내 대신하기 시작하면서 시작되었다. 이런 기관 가운데 첫 번째는 1712년 토머스 뉴커먼(Thomas Newcomen)이 만든 것으로, 깊이가 약 50 m인 탄광에서 물을 퍼내는 데 쓰였다. 1739년 뉴커먼이 죽을 무렵에는 그의 기관 약 100대가 영국에서 가동되고 있었다. 이들은 모두 빔 기관이었다. 그 설계는 1760년부터 제임스 와트가 크게 개선하였으며, 1780년 무렵에는 빔 기관의 진동 운동을 더 쓸모 있는 회전 운동으로 바꾸게 되었다. 여기서는 그 뒤 150년 동안 매우 다양한 증기 기관이 등장했다는 것만 말해 두자. 뉴커먼 기관의 실물은 런던 과학 박물관에 있는 것을 비롯하여 여러 대가 남아 있다.</p></div>
+<div class="a" style="left:35.4pt;top:263.86pt;width:535pt"><p>뉴커먼의 원래 기관은 큰 집 한 채만 할 정도로 거대하였다. 여기 뉴커먼의 설계를 대략 바탕으로 한 가상의 기관이 있다. 작동 원리는 그의 기관과 같지만, 비율은 이 문제의 목적에 맞게 꽤 다르다. 증기를 공급하는 보일러는 그리지 않았다.</p></div>
+<div class="f" style="left:64pt;top:345pt"><span class="fig" data-srcpage="15" data-clip="64,345,561,777"></span></div>
+</div>
+
+<!-- 16 -->
+<div class="page" data-s="a4b" style="font-family:Arial,KG,sans-serif;font-size:14.0pt;line-height:17.38pt;">
+<div class="f" style="left:22.6pt;top:15pt"><span class="fig" data-srcpage="16" data-clip="22.6,15,46,40"></span></div>
+<div class="a" style="left:35.4pt;top:74.56pt;width:535pt"><p>큰 (나무) 빔 <b>B</b>는 가운데 점을 중심으로 회전한다. 빔이 흔들리며 ‘증기’ 실린더 <b>C</b> 안의 피스톤 막대 <b>P</b>와 피스톤(초록색)을 올렸다 내리고, 또 갱도 아래로 내려가는 매우 길고 무거운 펌프 막대 <b>PR</b>(빨간색)를 올렸다 내린다. 펌프 막대는 광산의 물이 모이는 집수정에 잠긴 고정된 원통형 관 <b>T</b> 안에서 움직인다. <b>V1</b>은 <b>T</b> 안에 고정된 ‘플랩’ 밸브이다. <b>V2</b>도 ‘플랩’ 밸브로서 펌프 막대 끝에 달린 피스톤의 일부이다. (빨간색) 펌프 막대 <b>PR</b>와 피스톤의 무게는 일부러 (초록색) 피스톤 막대 <b>P</b>와 피스톤의 무게보다 크게 만들었다.</p></div>
+<div class="a" style="left:35.4pt;top:221.56pt;width:535pt"><p>원래 기관은 스스로 돌아가지 않았고, 운전자가 순서에 맞추어 밸브를 열고 닫아야 했다. 그림(Diagram) 1은 펌프 막대가 아래로 내려가는 운동이 끝나기 직전의 기관을 보여 준다. 이 운동은 피스톤이 ‘멈춤쇠’에 ‘쿵’ 부딪히며 끝난다. 펌프에 물을 채우기 위해 기관은 이미 여러 사이클을 돌았다. 증기 밸브 <b>S</b>가 열려 있어서 대기압의 증기가 실린더 <b>C</b>로 들어간다. 펌프 막대가 더 무거우므로 밸브 <b>V2</b>가 열린 채로 내려가고, 막대 끝의 피스톤이 집수정 속으로 내려가면서 집수정의 물이 원통형 관 <b>T</b>의 아래쪽으로 들어온다. 펌프 막대가 내려가는 동안 밸브 <b>V1</b>은 닫힌 채로 있다.</p></div>
+<div class="a" style="left:35.4pt;top:385.96pt;width:538pt"><p>이제 운전자는 증기 공급 밸브 <b>S</b>를 잠그고, 아주 짧은 시간 동안 밸브 <b>W</b>를 열어 <b>C</b> 안에 차가운 물을 가늘게 뿌린다. 그러면 증기가 응결하여 <b>C</b> 안에 진공이 생긴다. (초록색) 피스톤에 작용하는 대기압이 피스톤을 아래로 밀기 시작하고, 펌프 막대 <b>PR</b>를 들어 올리기 시작한다. 이제 밸브 <b>V1</b>은 열리고 밸브 <b>V2</b>는 닫힌다. 그림(Diagram) 2는 (초록색) 피스톤이 ‘바닥에 닿아’ 멈추기 직전, 이 행정의 끝을 보여 준다. 기관이 위로 올라가며 ‘일하는’ 행정 동안 <b>T</b> 안의 물이 들어 올려져 지면 높이에서 광산 밖으로 흘러나간다. 이제 운전자는 증기 밸브 <b>S</b>를 열어 <b>C</b> 안의 진공을 ‘없애고’ 다음 사이클을 시작한다.</p></div>
+<div class="a" style="left:35.4pt;top:550.26pt;width:535pt"><p>다음 정보를 이용하여, 기관의 한 사이클 동안 들어 올려져 집수정에서 빠져나가는 물의 부피를 계산하여라. 한 사이클은 단순히 <b>PR</b>의 아래 방향 행정과 위 방향 행정 한 번씩, 또는 같은 말로 <b>P</b>의 위 방향 행정과 아래 방향 행정 한 번씩이며, 두 행정의 길이는 같다. 당연히 답은 여러분이 세우는 가정에 따라 달라지므로, 가정의 목록을 만드는 것이 중요하다.</p></div>
+<div class="a" style="left:50pt;top:662.66pt;font-weight:bold;font-style:italic">펌프 막대 PR의 막대 P에 대한 초과 질량, ExMass = 1200 kg</div>
+<div class="a" style="left:50pt;top:687.96pt;font-weight:bold;font-style:italic">행정, Str = 2 m</div>
+<div class="a" style="left:50pt;top:713.36pt;font-weight:bold;font-style:italic">지름, D = 0.8 m</div>
+<div class="a" style="left:50pt;top:738.76pt;font-weight:bold;font-style:italic">지름, d = 0.3 m</div>
+<div class="a" style="left:50pt;top:764.06pt;font-weight:bold;font-style:italic">대기압, AtmP = 0.1 MPa</div>
+</div>
+
+<!-- 17: Q6 answer -->
+<div class="page" data-s="a4b" style="font-family:Arial,KG,sans-serif;font-size:14.0pt;line-height:17.38pt;">
+<div class="f" style="left:9.8pt;top:12pt"><span class="fig" data-srcpage="17" data-clip="9.8,12,33,37"></span></div>
+<div class="a" style="left:50pt;top:49.26pt;font-weight:bold;font-style:italic">높이, H = 50 m</div>
+<div class="a" style="left:35.4pt;top:75.26pt;font-size:16pt;line-height:18.4pt;font-weight:bold">답:</div>
+<div class="a" style="left:35.4pt;top:102.36pt;width:540pt"><p>아래 분석에는 타당한 변형이 여러 가지 있을 수 있다.</p></div>
+<div class="a" style="left:35.4pt;top:127.86pt;width:540pt"><p>‘일하는’ 행정 동안 실린더 <b>C</b>에서 생기는 힘은, 빔의 자기 쪽 끝을 아래로 끌어당겨 빔의 다른 쪽 끝이 <b>PR</b>를 위로 당기고 관 <b>T</b> 안에 갇힌 물을 들어 올릴 수 있을 만큼 커야 한다는 것은 분명하다. ‘일하는’ 행정은 그림(Diagram) 1에 나타낸 기관 상태 직후에 시작된다.</p></div>
+<div class="bx" style="left:122.9pt;top:206.9pt;width:327.7pt;height:25.2pt"></div>
+<div class="a c" style="left:122.9pt;top:211.05pt;width:327.7pt;font-size:12pt;line-height:13.8pt;font-family:'Times New Roman',KB,serif;color:#7030a0">참가자는 계의 이 점을 관찰해야 한다 – 1점</div>
+<div class="a" style="left:35.4pt;top:235.96pt;width:530pt"><p><b>C</b> 안에 진공이 ‘순간적으로’ 생기면, (초록색) 피스톤에 작용하는 아래 방향 힘은 피스톤 윗면에 작용하는 대기압 때문이다.</p></div>
+<div class="a" style="left:50pt;top:278.66pt;font-weight:bold;font-style:italic">초록색 피스톤에 작용하는 아래 방향 힘 = π/4 x D<sup>2</sup> x AtmP</div>
+<div class="f" style="left:250pt;top:300pt"><span class="fig" data-srcpage="17" data-clip="250,300,500,323"></span></div>
+<div class="bx" style="left:116.9pt;top:346.4pt;width:355.6pt;height:23.7pt"></div>
+<div class="a c" style="left:116.9pt;top:350.65pt;width:355.6pt;font-size:12pt;line-height:13.8pt;font-family:'Times New Roman',KB,serif;color:#7030a0">초록색 피스톤에 작용하는 아래 방향 힘을 계산하면 1점을 준다</div>
+<div class="a" style="left:35.4pt;top:399.26pt;width:535pt"><p>펌프 막대 <b>PR</b>가 위로 움직이기 시작하는 순간 밸브 <b>V2</b>는 탁 닫히고 밸브 <b>V1</b>은 열린다. 빔의 왼쪽 끝에 작용하는 무게는 <b>PR</b>의 초과 무게에 길이 <b><i>(H + Str)</i></b>인 물기둥의 무게를 더한 것이다.</p></div>
+<div class="a" style="left:37pt;top:461.00pt;font-size:13pt;line-height:15pt;font-weight:bold;font-style:italic">빨간색 피스톤에 작용하는 아래 방향 무게 = (π/4 x d<sup>2</sup> x (H + Str) x Densw + ExMass) x g</div>
+<div class="f" style="left:200pt;top:480pt"><span class="fig" data-srcpage="17" data-clip="200,480,577,529"></span></div>
+<div class="bx" style="left:122.9pt;top:540.6pt;width:355.6pt;height:23.7pt"></div>
+<div class="a c" style="left:122.9pt;top:544.85pt;width:355.6pt;font-size:12pt;line-height:13.8pt;font-family:'Times New Roman',KB,serif;color:#7030a0">빨간색 피스톤에 작용하는 무게를 계산하면 1점을 준다</div>
+<div class="a" style="left:35.4pt;top:593.66pt;width:530pt"><p>여기서 <b><i>Densw</i></b> = 1,000 kg/m<sup>3</sup>은 물의 밀도이고 <b><i>g</i></b> = 9.81 m/s<sup>2</sup>은 중력 가속도이다.</p></div>
+<div class="a" style="left:35.4pt;top:636.36pt;width:540pt"><p>행정이 시작될 때 빔의 양 끝에 작용하는 두 힘은 분명히 균형을 이루지 않으므로 돌림힘이 생기고, 빔은 시계 방향으로 점점 더 빠르게 회전할 것이다.</p></div>
+<div class="bx" style="left:119.2pt;top:712.6pt;width:355.6pt;height:23.7pt"></div>
+<div class="a c" style="left:119.2pt;top:716.95pt;width:355.6pt;font-size:12pt;line-height:13.8pt;font-family:'Times New Roman',KB,serif;color:#7030a0">참가자는 계의 이 점을 관찰해야 한다 – 1점</div>
+<div class="a" style="left:35.4pt;top:740.06pt;width:540pt"><p>빔 <b>B</b>의 관성 모멘트에 대한 정보는 없고, 위의 두 힘의 크기는 실제로 매우 비슷하므로, 빔이 중심을 축으로 일정하게 회전하여 두 피스톤 막대가 모두 일정한 선형 비율로</p></div>
+</div>
+
+<!-- 18 -->
+<div class="page" data-s="a4b" style="font-family:Arial,KG,sans-serif;font-size:14.0pt;line-height:17.38pt;">
+<div class="f" style="left:17.7pt;top:15pt"><span class="fig" data-srcpage="18" data-clip="17.7,15,41,40"></span></div>
+<div class="a" style="left:35.4pt;top:49.26pt">움직인다고 가정한다.</div>
+<div class="bx" style="left:116.2pt;top:76pt;width:363.3pt;height:51.5pt"></div>
+<div class="a c" style="left:116.2pt;top:80.25pt;width:363.3pt;font-size:12pt;line-height:13.8pt;font-family:'Times New Roman',KB,serif;color:#7030a0">선형 비율을 가정하면 1점을 준다(참가자가 비율에 대해 다른 가정을 세운 경우에도, 이어지는 결론이 그 가정에서 따라 나오는지 확인하고 점수를 준다).</div>
+<div class="a" style="left:35.4pt;top:157.16pt;width:541pt"><p>펌프 막대 <b>PR</b>가 올라감에 따라 <b>T</b> 안에서 (빨간색) 피스톤 위에 있는 물의 무게가 줄어들므로, 이것이 중요한지 따져 보아야 한다. 그림(Diagram) 1과 2에 나타낸 기관 상태 사이의 어느 순간에 <b>PR</b> 끝의 피스톤이 집수정 수면 아래 깊이 <b>h</b>에 있다고 하자. 이 피스톤 아랫면에 작용하는 수압은 <b><i>Densw g h</i></b>이고, 이것은 피스톤 아랫면에 위 방향 힘 <b><i>Densw g h A</i></b>를 작용한다. 여기서 <b>A</b>는 피스톤의 넓이이다. 물기둥 때문에 피스톤 윗면에 작용하는 아래 방향 무게는 <b><i>Densw g (H + h) A</i></b>이므로 알짜 아래 방향 무게는 <b><i>Densw g H A</i></b>이다. 즉 (빨간색) 피스톤에 작용하는 아래 방향 무게는 행정 동안 변하지 않으며, 위의 (1)에서 계산한 값과 같다. 편리한 결과이다!</p></div>
+<div class="bx" style="left:122.9pt;top:340.6pt;width:363.3pt;height:39.5pt"></div>
+<div class="a c" style="left:122.9pt;top:344.85pt;width:363.3pt;font-size:12pt;line-height:13.8pt;font-family:'Times New Roman',KB,serif;color:#7030a0">물의 무게가 어떻게 변하는지, 그리고 그 변화가 중요한지 논의하면 1점을 준다.</div>
+<div class="a" style="left:35.4pt;top:409.16pt;width:535pt"><p>일하는 행정 동안 들어 올려져 <b>T</b>의 꼭대기로 흘러나가는 물의 부피는 간단히 다음과 같다.</p></div>
+<div class="a" style="left:60pt;top:451.86pt;font-weight:bold;font-style:italic">한 사이클 동안 퍼낸 물의 부피 = Str x A = 2 x π/4 x 0.3<sup>2</sup></div>
+<div class="f" style="left:300pt;top:476pt"><span class="fig" data-srcpage="18" data-clip="300,476,400,500"></span></div>
+<div class="bx" style="left:122.9pt;top:524.8pt;width:363.3pt;height:51.5pt"></div>
+<div class="a c" style="left:122.9pt;top:529.15pt;width:363.3pt;font-size:12pt;line-height:13.8pt;font-family:'Times New Roman',KB,serif;color:#7030a0">올바른 답, 또는 앞의 가정에서 따라 나오는 답에 1점을 준다. 다만 가정에 따라 답이 크게 달라지지는 않을 것이다.</div>
+<div class="a" style="left:35.4pt;top:605.76pt;width:540pt"><p>이 ‘사이클당 부피’는 그림(Diagram) 1과 2만 보고도 곧바로 계산할 수 있다고 생각할 수도 있다. 어느 정도는 맞는 말이지만, 작용하는 힘들이 기관을 실제로 의도한 작동 사이클대로 움직이게 하는지 확인하는 것이 매우 중요하다.</p></div>
+<div class="a" style="left:35.4pt;top:683.26pt;width:540pt"><p>‘일하는’ 행정이 끝나면 기관의 상태는 그림(Diagram) 2와 같다. 운전자는 밸브를 열어 <b>C</b>로 증기를 들여보낸다. <b>C</b>에 진공이 없으므로 이제 초록색 피스톤에는 아무 힘도 작용하지 않는다. (빨간색) 펌프 막대 <b>PR</b>의 초과 무게 때문에 막대가 내려가기 시작한다. 이것은 기관에 꼭 필요한 특징이다. 이번에도 균형을 이루지 않는 힘은 가속도를 낳으므로 <b>PR</b>는 아래로 가속된다. 이 운동에 대한 저항은 밸브 <b>V2</b>를 지나 흐르는 물의 점성에서 생기지만,</p></div>
+</div>
+
+<!-- 19 -->
+<div class="page" data-s="a4b" style="font-family:Arial,KG,sans-serif;font-size:14.0pt;line-height:17.38pt;">
+<div class="f" style="left:22.6pt;top:15pt"><span class="fig" data-srcpage="19" data-clip="22.6,15,46,40"></span></div>
+<div class="a" style="left:35.4pt;top:49.26pt;width:535pt"><p>이 저항을 계산할 정보가 없으므로 <b>PR</b>의 아래 방향 운동은 일정하다고 그냥 가정한다.</p></div>
+<div class="a" style="left:35.4pt;top:91.96pt;width:535pt"><p>또 하나 세워야 할 분명한 가정은 실린더 <b>C</b> 안과 관 <b>T</b> 안의 미끄럼 마찰을 무시할 수 있다는 것이다. 또한 ‘분무’한 물의 부피는 무시할 수 있고 실린더 <b>C</b> 안에 쌓이지 않는다고 가정한다.</p></div>
+<div class="a" style="left:35.4pt;top:152.06pt;width:535pt"><p>마지막으로 흥미로운 점을 하나 덧붙이면, 원래 설계의 기관이 쓰이기 시작한 지 얼마 되지 않아 기술자들은 빔의 흔들림을 이용해 밸브를 열고 닫게 하여 운전자가 필요 없게 만들었다. 이제 뉴커먼 기관은 스스로 작동하게 되었고, 분당 약 12 행정의 속도로 다소 덜컹거리며 돌아갔다.</p></div>
+<div class="a" style="left:35.4pt;top:229.56pt;width:535pt"><p>일을 하는 것이 증기의 압력이 아니라 대기의 압력이므로, 뉴커먼 기관은 흔히 ‘대기압’ 기관이라고 부른다.</p></div>
+<div class="bx" style="left:116.2pt;top:292.8pt;width:363.3pt;height:99.4pt"></div>
+<div class="a c" style="left:116.2pt;top:297.04pt;width:363.3pt;font-size:12pt;line-height:13.8pt;color:#7030a0">계와, 문제를 풀기 위해 세운 가정(예: 실린더 안의 마찰이 없다는 것 등)을 논의하면 3점을 준다.</div>
+<div class="a c" style="left:116.2pt;top:338.44pt;width:363.3pt;font-size:12pt;line-height:13.8pt;color:#7030a0">참가자가 결론에서 더 나아가 무언가(예: 효율, 분당 행정 수 등)를 논의하면 이 3점 가운데 1점을 준다.</div>
+<div class="f" style="left:177.48pt;top:425pt"><span class="fig" data-srcpage="19" data-clip="177.48,425.00,415.00,440.00"></span></div>
+</div>
+
+<!-- 20: Q7 1888 problems: solutions -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:39.3pt;top:15pt"><span class="fig" data-srcpage="20" data-clip="39.3,15,63,40"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="20" data-clip="56,57,556,72"></span></div>
+<div class="a c" style="left:56.7pt;top:94.64pt;width:498.7pt;font-size:12pt;line-height:14pt;font-weight:bold">PLANCKS 2020 결선<br>1888 문제 풀이</div>
+<div class="a" style="left:56.7pt;top:146.53pt;width:498.7pt"><p>참가자가 1888년에 시험을 치렀다면 가졌을 지식에 바탕을 둔 답과 오늘날의 지식에 바탕을 둔 답을 모두 인정한다. 여기 실은 풀이는 완전하지 않으므로, 채점자는 굵게 표시한 핵심 사항을 찾아보아야 한다.</p></div>
+<div class="a" style="left:56.7pt;top:209.50pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 a</div>
+<div class="a" style="left:56.7pt;top:245.12pt;width:498.7pt"><p style="text-indent:14.9pt">달과 지구는 둘 다 무거운 물체이며 중력으로 서로 끌어당기는데, 왜 서로를 향해 떨어지지 않을까? 달은 지구 둘레의 궤도에 있으며, 이는 달을 지구 쪽으로 당기는 중력에 언제나 수직인 속도(<b>접선 속도</b>)를 가진다는 뜻이다. 말하자면 이것이 안쪽으로 당기는 힘과 ‘앞으로 나아가려는 경향’ 사이의 균형을 유지한다.</p></div>
+<div class="a" style="left:56.7pt;top:302.92pt;width:498.7pt"><p style="text-indent:14.9pt">1점을 받을 수 있는 서술의 예 – 달은 끊임없이 떨어지고 있지만, <b>속도가 중력에 대해 접선 방향이므로 영원히 떨어지면서도 그 궤적이 지표면과 만나지 않는다</b>. 수직 방향으로 힘을 받으면서 수평 방향으로 움직이는 물체는 휘어진 궤적을 그린다. 그 곡선의 반지름이 지구의 반지름보다 큰 한, 달은 표면을 따라 휘어지며 끝없이 궤도를 돈다.</p></div>
+<div class="a" style="left:56.7pt;top:372.72pt;width:498.7pt"><p style="text-indent:14.9pt">참가자가 충분한 설명 없이 <b>접선 속도</b>만 짧게 언급하면 <u>0.5점</u>만 준다.</p></div>
+<div class="a" style="left:56.7pt;top:423.60pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 b</div>
+<div class="a" style="left:56.7pt;top:459.32pt;width:498.7pt"><p>이 유명한 실험은, 시라쿠사의 왕 히에론을 위해 만든 왕관이 금세공인의 주장대로 순금으로 만들어졌는지 알아보려 한 아르키메데스의 연구를 가리킨다. 이 실험은 가장 널리 알려진 과학 이론 가운데 하나로 이어졌고, 공상 과학 소설 속 모든 미친 과학자들이 무언가를 발견할 때 외치는 그 유명한 말 <i>“유레카”</i>를 낳았다.</p></div>
+<div class="a" style="left:56.7pt;top:517.12pt;width:498.7pt"><p style="text-indent:14.9pt"><b>아르키메데스의 원리</b> – 정지한 유체 속에 완전히 또는 부분적으로 잠긴 물체는 부력을 받으며, 그 크기는 물체가 밀어낸 유체의 무게와 같다. 이 원리를 서술하면 <u>0.5점</u>을 준다.</p></div>
+<div class="a" style="left:56.7pt;top:562.93pt;width:498.7pt"><p style="text-indent:14.9pt">아르키메데스의 원리를 이용하면 식 1의 관계로부터 중력을 구할 수 있다.</p></div>
+<div class="f" style="left:279pt;top:595pt"><span class="fig" data-srcpage="20" data-clip="279,595,556,609"></span></div>
+<div class="a" style="left:56.7pt;top:624.73pt;width:498.7pt"><p style="text-indent:14.9pt">여기서 $F_b$는 부력, $\rho$는 유체의 밀도, $g$는 중력 가속도, $V$는 밀어낸 유체의 부피이다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="20" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 11월</div>
+</div>
+
+<!-- 21 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:19.6pt;top:12pt"><span class="fig" data-srcpage="21" data-clip="19.6,12,44,36"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="21" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:56.7pt;top:96.23pt;width:498.7pt"><p style="text-indent:14.9pt">뉴턴 저울(용수철저울)에 매단 질량을 유체 속에 담그고 뉴턴 저울의 눈금 변화를 기록한 뒤, 부피와 유체의 밀도를 구하는 알맞은 방법을 제시하는 실험을 자세히 서술할 수 있다. 이와 동등한 다른 방법도 <u>0.5점</u>을 준다.</p></div>
+<div class="a" style="left:56.7pt;top:171.10pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 c</div>
+<div class="a" style="left:56.7pt;top:206.82pt;width:498.7pt"><p>각 소문항의 답에 <u>0.5점</u>을 준다.</p></div>
+<div class="a" style="left:81.6pt;top:236.62pt;width:473.8pt"><span class="k" style="left:-15.5pt">(i)</span><p><b>게이뤼삭의 법칙</b> – 부피가 일정할 때 압력은 온도에 비례한다. <b>온도를 높이면 압력도 높아진다</b>. 좀 더 자세히 설명하면, 온도가 올라가 입자들이 더 많은 에너지를 얻는다(입자들이 날뛴다). 압력은 단위 넓이당 힘이며, 부피가 일정하므로 넓이도 일정하다. 입자들의 속도가 커졌으므로 그릇 벽과 더 많이 충돌하고, 따라서 힘과 압력이 모두 커진다.</p></div>
+<div class="a" style="left:81.6pt;top:316.32pt;width:473.8pt"><span class="k" style="left:-18.3pt">(ii)</span><p><b>샤를의 법칙</b> – 온도가 일정할 때 유체의 압력과 부피의 곱은 일정하다. 즉 <b>PV= 일정</b>. 이 원리는 풍선처럼 밀봉한 유체 용기를 쥐어짜는 예로 설명할 수 있다. 부피가 줄면 압력은 분명히 커진다.</p></div>
+<div class="a" style="left:56.7pt;top:379.30pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 d</div>
+<div class="a" style="left:56.7pt;top:415.02pt;width:498.7pt"><p>다음을 서술하면 <u>0.5점</u>을 준다 – 기압계는 해수면 위아래에서 <b>대기압을 측정</b>하는 데 쓰인다. (이 때문에 고도를 재는 데에도 쓸 수 있다.)</p></div>
+<div class="a" style="left:56.7pt;top:448.82pt;width:498.7pt"><p style="text-indent:14.9pt">수은 기압계의 구조에 관해 다음을 서술하면 <u>0.5점</u>을 준다(참가자가 수은을 채운 기압계라고 꼭 말할 필요는 없으며, 물과 같은 다른 알맞은 유체를 채워도 된다) – <b>수은을 일부 채운 관을 거꾸로 하여 수은 그릇에 담그면, 관의 꼭대기에는 진공 기포가 생긴다. 관의 옆면에는 눈금이 있어 수은이 오르내리는 것을 나타낸다</b>. 이 오르내림은 대기압 때문이다(그림 1 참조). 이 원리는 관 속 수은의 무게와 대기압이 균형을 이루는 데 바탕을 둔다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="21" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 11월</div>
+</div>
+
+<!-- 22 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:19.6pt;top:12pt"><span class="fig" data-srcpage="22" data-clip="19.6,12,44,36"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="22" data-clip="56,57,556,72"></span></div>
+<div class="f" style="left:131pt;top:95pt"><span class="fig" data-srcpage="22" data-clip="131,95,481,337"></span></div>
+<div class="a" style="left:179.3pt;top:349.32pt;width:260pt"><p>그림 1: 간단한 수은 기압계의 구조.</p></div>
+<div class="a" style="left:56.7pt;top:384.62pt;width:498.7pt"><p style="text-indent:14.9pt">참가자는 압력에 따라 수은 높이가 변하는 이유를 다음과 같이 쓸 수도 있다. 그렇게 써도 되지만 추가 점수는 없다. – 수은의 무게가 대기압보다 작으면 유리관 속 수은 높이가 올라간다(고기압). 고기압 지역에서는 공기가 주변 지역으로 흘러 나가는 것보다 더 빨리 지표면 쪽으로 가라앉는다. 지표면 위의 공기 분자 수가 늘어나므로, 그 표면에 힘을 작용하는 분자가 더 많아진다. 수은 그릇 위 공기의 무게가 커지면 수은 높이는 더 높은 곳까지 올라간다.</p></div>
+<div class="a" style="left:56.7pt;top:483.20pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 e</div>
+<div class="a" style="left:56.7pt;top:518.93pt;width:498.7pt"><p>번개가 무엇인지에 대해 다음 설명 가운데 하나를 서술하면 <u>0.5점</u>을 준다 –</p></div>
+<div class="a" style="left:81.6pt;top:549.52pt;width:473.8pt"><span class="k" style="left:-15.5pt">(i)</span><p>전통적 설명 – 번개는 구름 속에 양전하와 음전하가 쌓일 때 생기는 전류이다. 구름 속에서 따뜻한 공기는 빗방울을 위로 올려 보내고, 얼음 결정을 품은 차가운 공기 구름은 아래로 내려가면서 서로 부딪친다. <b>이 충돌로 전하가 생긴다. 양전하(양성자)는 구름의 위쪽에, 음전하(전자)는 구름의 아래쪽에 모인다.</b> 반대 전하는 서로 끌어당기므로, 구름 아래의 땅에 양전하가 쌓인다.</p></div>
+<div class="a" style="left:81.6pt;top:628.73pt;width:473.8pt"><span class="k" style="left:-18.3pt">(ii)</span><p>현대적 설명 – 상대론적 폭주 전자 사태. 전기장에 의해 물질(보통 공기) 속을 질주하는 상대론적 전자의 수가 불어나는 현상이다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="22" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 11월</div>
+</div>
+
+<!-- 23 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:13.7pt;top:14pt"><span class="fig" data-srcpage="23" data-clip="13.7,14,37.5,37.5"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="23" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:81.6pt;top:96.23pt;width:473.8pt"><span class="k" style="left:-21pt">(iii)</span><p>엉뚱한 설명 – 1800년대 러시아에서는 비와 천둥·번개가 필요할 때 세 사람이 나무에 올라갔다. 한 사람은 횃불 두 개를 맞부딪쳐 그 불꽃으로 번개를 흉내 냈다. 다른 한 사람은 나뭇가지 위로 물을 부어 비를 흉내 냈다. 세 번째 사람은 주전자를 두드려 천둥을 불러들였다.</p></div>
+<div class="a" style="left:56.7pt;top:152.03pt;width:498.7pt"><p style="text-indent:14.9pt">피뢰침의 쓰임새에 관해 다음을 서술하면 <u>0.5점</u>을 준다 – <b>건물과 사람을 보호한다</b>. 피뢰침은 땅으로 이어지는 저항이 작은 경로를 제공하여, 벼락이 칠 때 엄청난 전류를 흘려보낼 수 있다. 피뢰침이 번개를 끌어당긴다는 언급에는 <u>점수를 주지 않는다</u>.</p></div>
+<div class="a" style="left:56.7pt;top:214.90pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 f</div>
+<div class="a" style="left:56.7pt;top:250.62pt;width:498.7pt"><p>그림 2와 비슷한 그림을 그리면 <u>0.5점</u>을 준다.</p></div>
+<div class="f" style="left:131pt;top:274pt"><span class="fig" data-srcpage="23" data-clip="131,274,481,458"></span></div>
+<div class="a" style="left:119.9pt;top:469.92pt;width:372pt"><p>그림 2: <i>물을 끓여라</i> – 증기 기관의 핵심 부품을 나타낸 간단한 그림.</p></div>
+<div class="a" style="left:56.7pt;top:505.72pt;width:498.7pt"><p style="text-indent:14.9pt">이 장치가 어떻게 작동하는지 설명하면 <u>0.5점</u>을 준다 – 보일러 속의 물을 가열하면 증기가 생긴다. 보일러 안에서 물이 증기로 바뀌면서 부피가 팽창하여 높은 압력이 생긴다. <b>증기의 팽창이 피스톤을 민다</b>. 피스톤 행정이 끝나면 배기구가 열려 증기가 빠져나간다. 그런 다음 이 과정이 반대 방향으로 되풀이된다. 피스톤은 구동 바퀴에 연결되어 있다.</p></div>
+<div class="a" style="left:56.7pt;top:580.60pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 g</div>
+<div class="a" style="left:56.7pt;top:616.33pt;width:498.7pt"><p>전기 분해가 무엇인지 설명하면 <u>0.5점</u>을 준다 – <b>이온성 물질에 전류를 흘려 구성 성분으로 분해하는 과정</b>. 전기 에너지를 늘리면(전압을 높이면) 분해 속도가 커진다는 언급도</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="23" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 11월</div>
+</div>
+
+<!-- 24 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:11.8pt;top:12pt"><span class="fig" data-srcpage="24" data-clip="11.8,12,35.5,36"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="24" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:56.7pt;top:96.23pt;width:498.7pt"><p>인정한다. 참가자는 그림 3과 같은 간단한 그림을 함께 그릴 수 있다.</p></div>
+<div class="f" style="left:131pt;top:132pt"><span class="fig" data-srcpage="24" data-clip="131,132,481,334"></span></div>
+<div class="a" style="left:172.6pt;top:346.22pt;width:280pt"><p>그림 3: 전기 분해 실험 장치의 구성.</p></div>
+<div class="a" style="left:56.7pt;top:382.02pt;width:498.7pt"><p style="text-indent:14.9pt">전기 분해의 예를 들면 <u>0.5점</u>을 준다 – <b>물을 산소 기체와 수소 기체로 분리하는 것</b>, 소금물을 전기 분해하여 수소, 염소 기체, 수산화 나트륨을 얻는 것 등.</p></div>
+<div class="a" style="left:56.7pt;top:432.90pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 h</div>
+<div class="a" style="left:56.7pt;top:468.62pt;width:498.7pt"><p>자석이 무엇인지 설명하면 <u>0.5점</u>을 준다 – <b>자석은 자기장을 만드는 물질 또는 물체로</b>, 다른 자석이나 철을 포함한 물체를 끌어당기는 성질이 있다. 참가자는 자석이 자기 모멘트로 이루어져 있으며, 이 자기 모멘트가 자석이나 자기장을 만드는 다른 물체의 세기와 방향에 관계된다고 언급할 수도 있다.</p></div>
+<div class="a" style="left:56.7pt;top:526.43pt;width:498.7pt"><p style="text-indent:14.9pt">자석을 만드는 방법 가운데 하나를 서술하면 <u>0.5점</u>을 준다 –</p></div>
+<div class="a" style="left:81.6pt;top:558.33pt;width:473.8pt"><span class="k" style="left:-15.5pt">(i)</span><p><b>철을 포함한 물질을 자화한다</b> – 쇳조각을 자석 위로 같은 방향으로 계속 문지르면, 모든 자기 이온이 자기장과 같은 방향을 향하게 되고, 자석을 떼어 낸 뒤에도 모든 모멘트가 정렬되어 있으므로 영구 자기장을 가진다.</p></div>
+<div class="a" style="left:81.6pt;top:602.12pt;width:473.8pt"><span class="k" style="left:-18.3pt">(ii)</span><p><b>전자석</b> – (1824년부터 존재) <b>절연된 구리 선을 철심에 감고 전류를 흘린다</b>. 전류 고리가 자기장을 만들어 철심을 자화한다. (비오-사바르 법칙을 언급할 수 있다.)</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="24" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 11월</div>
+</div>
+
+<!-- 25 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:19.6pt;top:12pt"><span class="fig" data-srcpage="25" data-clip="19.6,12,44,36"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="25" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:56.7pt;top:92.30pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 i</div>
+<div class="a" style="left:56.7pt;top:128.03pt;width:498.7pt"><p>이 문항은 19세기의 사진술에 관한 것이다. 이 시험 문제가 나온 당시에는 여러 종류의 사진기가 있었고 10년마다 새로운 발전이 있었으므로, 그 시대에 맞는 여러 가지 답을 인정한다.</p></div>
+<div class="a" style="left:56.7pt;top:161.92pt;width:498.7pt"><p style="text-indent:14.9pt">필요한 핵심은 은염(흔히 질산 은, 때로는 아이오딘화 은과 염화 은), 젤라틴 유제 등 무엇이든 <b>빛에 민감한</b> 물질이 있다는 것이다. 이 염이나 반죽을 종이나 필름에 바르고 햇빛에 노출하면 검게 변한다. 빛을 가린 물체는 감광판/필름 위에 영향을 받지 않은 염으로 그 모양을 남긴다. 감광 물질이 햇빛을 받아 어떻게 검게 변하는지 논의하면 <u>0.5점</u>을 준다.</p></div>
+<div class="f" style="left:131pt;top:233pt"><span class="fig" data-srcpage="25" data-clip="131,233,481,359"></span></div>
+<div class="a" style="left:137.6pt;top:371.62pt;width:340pt"><p>그림 4: 1800년대의 간단한 사진기의 내부 구조.</p></div>
+<div class="a" style="left:56.7pt;top:407.42pt;width:498.7pt"><p style="text-indent:14.9pt">참가자가 (그림 4와 같은) 사진기 그림을 그렸지만 감광 물질에 대해서는 충분히 논의하지 않았다면, 그 대신 <u>0.5점</u>을 준다.</p></div>
+<div class="a" style="left:56.7pt;top:441.32pt;width:498.7pt"><p style="text-indent:14.9pt">문항의 다음 부분은 가스등 불빛으로 사진을 찍으려 하면 왜 실패하는지를 묻는다. 이에 대해서는 두 가지 생각이 있으며, 참가자가 자신의 선택이 옳은 이유를 충분히 제시하면 어느 쪽이든 인정한다. 어느 경우든 충분히 논의하면 <u>0.5점</u>을 준다.</p></div>
+<div class="a" style="left:81.6pt;top:497.12pt;width:473.8pt"><span class="k" style="left:-15.5pt">(i)</span><p>과다 노출 – 사진기 가까이에 가스등이 있으면 강한 광원이 되어 감광판/필름을 완전히 포화시켜 상을 망친다.</p></div>
+<div class="a" style="left:81.6pt;top:528.93pt;width:473.8pt"><span class="k" style="left:-18.3pt">(ii)</span><p>노출 부족 – 1800년대에 가스등을 썼다는 것은 밤이거나 실내라는 뜻이므로, 사진을 찍는 데 쓸 햇빛이 없다. 가스등은 감광판/필름이 반응할 만큼 충분한 빛을 내지 못하므로 상이 매우 흐려진다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="25" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 11월</div>
+</div>
+
+<!-- 26 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:22.6pt;top:15pt"><span class="fig" data-srcpage="26" data-clip="22.6,15,46,40"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="26" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:56.7pt;top:92.30pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제 6 – 부분 j</div>
+<div class="a" style="left:56.7pt;top:128.03pt;width:498.7pt"><p>참가자는 다음을 증명해야 한다.</p></div>
+<div class="f" style="left:205pt;top:150pt"><span class="fig" data-srcpage="26" data-clip="205,150,556,190"></span></div>
+<div class="a" style="left:56.7pt;top:198.53pt;width:498.7pt"><p style="text-indent:14.9pt">먼저 $u=ax$로 치환한다. 적분 구간은 그대로이며, 다음을 얻는다.</p></div>
+<div class="f" style="left:225pt;top:224pt"><span class="fig" data-srcpage="26" data-clip="225,224,556,260"></span></div>
+<div class="a" style="left:56.7pt;top:271.12pt;width:498.7pt"><p style="text-indent:14.9pt">$\omega=\frac{b}{a}$로 두면 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:233pt;top:297pt"><span class="fig" data-srcpage="26" data-clip="233,297,556,333"></span></div>
+<div class="a" style="left:56.7pt;top:343.92pt;width:498.7pt"><p style="text-indent:14.9pt">이제 참가자는 라이프니츠 적분 규칙을 적용해야 한다. 피적분 함수는 $f(\omega,u)=e^{-u^2}\cos(2\omega u)$이다. 따라서 미분한 적분을 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:248pt;top:383pt"><span class="fig" data-srcpage="26" data-clip="248,383,556,416"></span></div>
+<div class="a" style="left:56.7pt;top:425.92pt;width:498.7pt"><p style="text-indent:14.9pt">그런 다음 새 피적분 함수의 미분을 계산한다.</p></div>
+<div class="f" style="left:184pt;top:458pt"><span class="fig" data-srcpage="26" data-clip="184,458,556,486"></span></div>
+<div class="a" style="left:56.7pt;top:493.82pt;width:498.7pt"><p style="text-indent:14.9pt">이를 식 5에 대입하면 다음을 얻는다.</p></div>
+<div class="f" style="left:215pt;top:520pt"><span class="fig" data-srcpage="26" data-clip="215,520,556,556"></span></div>
+<div class="a" style="left:56.7pt;top:574.83pt;width:498.7pt"><p style="text-indent:14.9pt">이제 부분 적분 $\int_0^\infty UV'=UV\big|_0^\infty-\int_0^\infty U'V$를 적용할 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:605.62pt;width:498.7pt"><p style="text-indent:14.9pt">참가자는 왜 $\omega$의 정의에 2를 넣지 않았는지 궁금할 수 있다. 식 6에서 볼 수 있듯이, $e^{-u^2}$를 $u$로 미분하면 깔끔하게 $-2ue^{-u^2}$이 나오기 때문이다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="26" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 11월</div>
+</div>
+
+<!-- 27 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:21.6pt;top:13pt"><span class="fig" data-srcpage="27" data-clip="21.6,13,45,38"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="27" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:56.7pt;top:96.23pt;width:498.7pt"><p style="text-indent:14.9pt">$U=\frac{1}{a}\sin(2\omega u)$, $V'=-2ue^{-u^2}$으로 두고, 이들을 $u$에 대해 각각 미분하고 적분하면 필요한 $U'=\frac{2\omega}{a}\cos(2\omega u)$와 $V=e^{-u^2}$을 얻는다.</p></div>
+<div class="f" style="left:155pt;top:140pt"><span class="fig" data-srcpage="27" data-clip="155,140,556,177"></span></div>
+<div class="a" style="left:56.7pt;top:188.72pt;width:498.7pt"><p style="text-indent:14.9pt">첫째 항에 적분 구간을 적용하면 0이 되는 것이 분명하므로, $I'(\omega)$에 대해 $I(\omega)$와 매우 비슷한 적분 하나만 남는다.</p></div>
+<div class="f" style="left:212pt;top:228pt"><span class="fig" data-srcpage="27" data-clip="212,228,556,260"></span></div>
+<div class="f" style="left:235pt;top:272pt"><span class="fig" data-srcpage="27" data-clip="235,272,556,301"></span></div>
+<div class="a" style="left:56.7pt;top:314.52pt;width:498.7pt"><p style="text-indent:14.9pt">이제 $I'(\omega)=-2\omega I(\omega)$ 꼴의 매우 간단한 미분 방정식을 얻었다. 적분의 미분이 $-2\omega$를 내놓아야 하므로 $I(\omega)$는 $C\cdot e^{-\omega^2}$ 꼴이어야 한다. 여기서 $C$는 상수이며 경계 조건을 적용하여 구할 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:361.72pt;width:498.7pt"><p style="text-indent:14.9pt">$\omega=0$일 때의 경계 조건을 확인하면</p></div>
+<div class="f" style="left:210pt;top:380pt"><span class="fig" data-srcpage="27" data-clip="210,380,556,412"></span></div>
+<div class="a" style="left:56.7pt;top:426.32pt;width:498.7pt"><p style="text-indent:14.9pt">따라서 원래의 적분을 $u$와 $\omega$로 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:200pt;top:455pt"><span class="fig" data-srcpage="27" data-clip="200,455,556,487"></span></div>
+<div class="a" style="left:56.7pt;top:498.72pt;width:498.7pt"><p style="text-indent:14.9pt">최종 결과는 처음에 $\omega=\frac{b}{a}$로 정의한 $\omega$에만 의존한다는 데 주목하자. 이로써 원래의 적분이 다음과 같음이 증명된다.</p></div>
+<div class="f" style="left:205pt;top:540pt"><span class="fig" data-srcpage="27" data-clip="205,540,556,570"></span></div>
+<div class="a" style="left:56.7pt;top:581.23pt;width:498.7pt"><p style="text-indent:14.9pt">완전한 증명에만 1점을 준다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="27" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 11월</div>
+</div>
+
+<!-- 28: Q8 IOP questions: domino and pendulum -->
+<div class="page" data-s="a4" style="font-size:10.9pt;line-height:14.4pt;">
+<div class="f" style="left:24.5pt;top:18pt"><span class="fig" data-srcpage="28" data-clip="24.5,18,48,42"></span></div>
+<div class="a" style="left:98pt;top:127.55pt">IOP 문제</div>
+<div class="a" style="left:98pt;top:142.35pt;width:398.4pt"><p>Q1): 높이가 $2l$이고 폭이 $2d$ ($d&lt;l$)인 균일한 2차원 도미노를 나타낸 그림 1 (a)를 생각하자. 도미노는 오른쪽 아래 모서리가 원점에 오도록 놓여 있으므로, 도미노의 질량 중심은 $(-d,-l)$에 있다.</p></div>
+<div class="a" style="left:98pt;top:212.85pt;width:398.4pt"><p>$d&lt;l$이면 도미노는 옆으로 누워 질량 중심이 $(l,d)$에 있을 때 에너지가 더 낮다(그림 1 (b) 참고). 도미노가 저절로 옆으로 쓰러져 최소 에너지 상태에 이르지 않는 까닭은 무엇인가?</p></div>
+<div class="f" style="left:198pt;top:267pt"><span class="fig" data-srcpage="28" data-clip="198,267,397,386"></span></div>
+<div class="a c" style="left:98pt;top:398.95pt;width:398.4pt">그림 1: (a) 높은 에너지 상태와 (b) 낮은 에너지 상태의 도미노.</div>
+<div class="a" style="left:98pt;top:438.35pt;width:398.4pt"><p>답): 도미노를 오른쪽 아래 모서리를 축으로 각도 $\theta$만큼 회전시킨 그림 2를 생각하자. 각도의 범위는 $0\le\theta\le\pi/2$이다. 다음 능동 회전을</p></div>
+<div class="f" style="left:198pt;top:479pt"><span class="fig" data-srcpage="28" data-clip="198,479,397,591"></span></div>
+<div class="a" style="left:98pt;top:604.25pt;width:398.4pt"><p>그림 2: 능동 회전 $\mathcal M(\theta)$에 의해 질량 중심이 $(-d,l)$에서 $(x,y)$로 옮겨 간다.</p></div>
+<div class="a" style="left:98pt;top:657.25pt;width:398.4pt"><p>적용하면 다음을 얻는다.</p></div>
+<div class="f" style="left:185pt;top:677pt"><span class="fig" data-srcpage="28" data-clip="185,677,497,716"></span></div>
+<div class="f" style="left:292pt;top:741pt"><span class="fig" data-srcpage="28" data-clip="292,741,302,754"></span></div>
+</div>
+
+<!-- 29 -->
+<div class="page" data-s="a4" style="font-size:10.9pt;line-height:14.4pt;">
+<div class="f" style="left:33.4pt;top:26pt"><span class="fig" data-srcpage="29" data-clip="33.4,26,57,51"></span></div>
+<div class="a" style="left:101.9pt;top:127.55pt;font-style:italic">즉</div>
+<div class="f" style="left:228pt;top:128pt"><span class="fig" data-srcpage="29" data-clip="228,128,497,172"></span></div>
+<div class="a" style="left:98pt;top:177.95pt;width:398.4pt;line-height:14.6pt"><p>$\theta=\pi/2$를 넣어 간단히 확인해 보면 예상대로 $(x,y)=(l,d)$를 얻으므로, 가정한 변환이 실제로 옳다는 확신을 준다.</p></div>
+<div class="a" style="left:98pt;top:206.45pt;width:398.4pt"><p>$y$에 대한 결과를 살펴보자.</p></div>
+<div class="f" style="left:250pt;top:232pt"><span class="fig" data-srcpage="29" data-clip="250,232,497,246"></span></div>
+<div class="a" style="left:98pt;top:256.45pt;width:398.4pt"><p>잘 알려진 $\sin\theta$와 $\cos\theta$의 작은 각 전개, 즉</p></div>
+<div class="f" style="left:233pt;top:283pt"><span class="fig" data-srcpage="29" data-clip="233,283,361,297"></span></div>
+<div class="a" style="left:98pt;top:307.95pt">를 쓰면</div>
+<div class="f" style="left:251pt;top:325pt"><span class="fig" data-srcpage="29" data-clip="251,325,497,339"></span></div>
+<div class="a" style="left:98pt;top:344.75pt;width:398.4pt;line-height:15.4pt"><p>이로부터, ($d&lt;l$일 때) $\theta$가 충분히 작으면 $d\theta$ 항이 $l\theta^2/2$ 항보다 우세하므로, 도미노의 질량 중심은 처음에는 <i>올라갔다가</i> 그 뒤에 낮아진다. $y$를 다음 꼴로 쓰면 이를 더 분명히 볼 수 있다.</p></div>
+<div class="f" style="left:236pt;top:400pt"><span class="fig" data-srcpage="29" data-clip="236,400,497,419"></span></div>
+<div class="a" style="left:98pt;top:432.05pt;width:398.4pt"><p>여기서 각도 $\varphi=\sin^{-1}l/\sqrt{l^2+d^2}$이며 다음이 성립한다.</p></div>
+<div class="f" style="left:205pt;top:455pt"><span class="fig" data-srcpage="29" data-clip="205,455,390,495"></span></div>
+<div class="a" style="left:98pt;top:510.87pt;width:398.4pt;line-height:13.55pt"><p>따라서 도미노가 저절로 쓰러지지 못하는 까닭은 최소 에너지에 이르기 전에 넘어야 할 퍼텐셜 장벽이 있기 때문이다. $y$에 대한 식을 좀 더 자세히 살펴보자.</p></div>
+<div class="f" style="left:233pt;top:560pt"><span class="fig" data-srcpage="29" data-clip="233,560,362,641"></span></div>
+<div class="a" style="left:98pt;top:648.55pt;width:398.4pt;line-height:16.8pt"><p>$dy/d\theta=0$으로 두면 $\tan\theta_m=d/l$, 즉 $\theta_m=\tan^{-1}d/l$이다. 이 각도에서 $\theta_m+\varphi=\frac{\pi}{2}$이므로 $\sin(\theta_m+\varphi)=1$, $y_m=\sqrt{l^2+d^2}$이고, $d^2y/d\theta^2$이 분명히</p></div>
+<div class="a" style="left:98pt;top:683.47pt;width:398.4pt;line-height:13.55pt"><p>음수이므로 이것은 최댓값이다. 그림 3은 $d&lt;l$인 $d$ 값에 대해 질량 중심의 높이가 각도 $\theta$에 따라 어떻게 변하는지 보여 준다. 그림에서 $\theta=0$일 때 질량 중심은 땅에서 높이 $l$에 있고,</p></div>
+<div class="f" style="left:292pt;top:741pt"><span class="fig" data-srcpage="29" data-clip="292,741,302,754"></span></div>
+</div>
+
+<!-- 30 -->
+<div class="page" data-s="a4" style="font-size:10.9pt;line-height:14.4pt;">
+<div class="f" style="left:26.5pt;top:22pt"><span class="fig" data-srcpage="30" data-clip="26.5,22,50,46"></span></div>
+<div class="a" style="left:98pt;top:127.20pt;width:398.4pt;line-height:15.1pt"><p>$\theta$가 커짐에 따라 높아지다가 $\theta=\theta_m=\tan^{-1}\frac{d}{l}$일 때 최대 높이 $\sqrt{l^2+d^2}$에 이른다. $\theta$가 이 값을 넘어 커지면 질량 중심은 높이 $d$까지 내려간다. 그림에서 질량 중심의 높이가 $l$과 같아지는 $\theta$ 값은 $\theta=0$과 $\theta^*$의 두 가지이다. 각도 $\theta^*$는 다음과 같다.</p></div>
+<div class="f" style="left:265pt;top:190pt"><span class="fig" data-srcpage="30" data-clip="265,190,330,206"></span></div>
+<div class="f" style="left:198pt;top:230pt"><span class="fig" data-srcpage="30" data-clip="198,230,397,323"></span></div>
+<div class="a c" style="left:98pt;top:336.65pt;width:398.4pt">그림 3: $\theta$에 따른 질량 중심 높이의 변화.</div>
+<div class="a" style="left:98pt;top:374.35pt;width:398.4pt"><p>Q2): 그림 4는 질량 $m$인 추가 가볍고 늘어나지 않으며 팽팽한 막대에 매달린 단진자를 나타낸다. 추는 각도 $\theta$만큼 벗어나 있으며, 중력 가속도가 $g$인 중력의 영향을 받아 움직인다. 추가</p></div>
+<div class="f" style="left:198pt;top:425pt"><span class="fig" data-srcpage="30" data-clip="198,425,397,571"></span></div>
+<div class="a c" style="left:98pt;top:584.45pt;width:398.4pt">그림 4: 단진자.</div>
+<div class="a" style="left:98pt;top:620.05pt;width:398.4pt"><p>각도 $\theta$만큼 벗어났을 때의 운동 방정식은 쉽게 유도할 수 있으며, 다음과 같다.</p></div>
+<div class="f" style="left:254pt;top:641pt"><span class="fig" data-srcpage="30" data-clip="254,641,497,671"></span></div>
+<div class="a" style="left:98pt;top:674.00pt;width:398.4pt;line-height:13.5pt"><p>각도가 작으면 $\sin\theta\approx\theta$ 근사가 성립하고, 운동 방정식은 다음과 같이 된다.</p></div>
+<div class="f" style="left:263pt;top:700pt"><span class="fig" data-srcpage="30" data-clip="263,700,497,730"></span></div>
+<div class="f" style="left:292pt;top:741pt"><span class="fig" data-srcpage="30" data-clip="292,741,302,754"></span></div>
+</div>
+
+<!-- 31 -->
+<div class="page" data-s="a4" style="font-size:10.9pt;line-height:14.4pt;">
+<div class="f" style="left:20.6pt;top:15pt"><span class="fig" data-srcpage="31" data-clip="20.6,15,44,39"></span></div>
+<div class="a" style="left:98pt;top:127.05pt;width:398.4pt;line-height:15.4pt"><p>초기 조건이 $\theta(0)=\theta_0$, $d\theta/dt(0)=0$, <i>즉</i> 추가 각도 $\theta_0$에서 정지 상태로 출발할 때, 이어지는 운동의 해는 다음과 같다.</p></div>
+<div class="f" style="left:240pt;top:166pt"><span class="fig" data-srcpage="31" data-clip="240,166,497,200"></span></div>
+<div class="a" style="left:98pt;top:212.95pt;width:398.4pt;line-height:15.8pt"><p>이로부터, 운동의 주기 $T$는 $T=2\pi\sqrt{l/g}$로 주어지며, (운동하는 동안 $\sin\theta\approx\theta$ 근사가 성립할 만큼 진폭이 작은 한) 진폭에 무관하다는 결론이 나온다.</p></div>
+<div class="a" style="left:98pt;top:260.47pt;width:398.4pt;line-height:13.55pt"><p>작은 각 근사가 성립하지 않을 만큼 초기 진폭이 커지면 주기가 길어진다는 것을, 연속성에 바탕을 둔 간단한 논증으로 보여라.</p></div>
+<div class="a" style="left:98pt;top:301.50pt;width:398.4pt;line-height:15.5pt"><p>답): 그림 5는 처음 벗어난 각도가 $\theta_0=\pi$인 진자를 보여 준다. 이 위치에서 추는 (불안정한) 평형 상태에 있으며, 다른 힘이 전혀 없으면</p></div>
+<div class="f" style="left:198pt;top:343pt"><span class="fig" data-srcpage="31" data-clip="198,343,397,589"></span></div>
+<div class="a c" style="left:98pt;top:602.75pt;width:398.4pt">그림 5: $\theta_0=\pi$인 경우.</div>
+<div class="a" style="left:98pt;top:641.25pt;width:398.4pt;line-height:15pt"><p>이 위치에 영원히 머무른다. 초기 진폭에 따라 달라지는 운동의 주기를 $T(\theta_0)$라 하면, $\theta_0$이 작을 때는 초기 진폭에 무관하게 $T(\theta_0)\approx2\pi\sqrt{l/g}$이고, 초기 진폭이 $\theta_0=\pi$이면 무한대로 커진다. 주기가 초기 진폭에 따라 연속적으로 변한다고 가정하면, 진폭이 $\theta_0$에 따라 커질 것으로 예상된다.</p></div>
+<div class="f" style="left:292pt;top:741pt"><span class="fig" data-srcpage="31" data-clip="292,741,302,754"></span></div>
+</div>
+
+<!-- 32: Q9 buried room -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:20.6pt;top:14pt"><span class="fig" data-srcpage="32" data-clip="20.6,14,44,39"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="32" data-clip="56,57,556,72"></span></div>
+<div class="a c" style="left:56.7pt;top:94.64pt;width:498.7pt;font-size:12pt;line-height:14pt;font-weight:bold">PLANCKS 2020 결선<br>묻힌 방 문제 풀이</div>
+<div class="a" style="left:56.7pt;top:146.53pt;width:498.7pt"><p>이 문항은 매우 열린 문제로서, 참가자가 어떤 가정을 세우고, 주어진 정보와 자신의 가정으로부터 어떤 결론을 이끌어 내는지 보려는 것이다. 따라서 이 문제에는 정확한 채점 기준이 없으며, 그 대신 합리적인 가정을 세우고 그 가정으로부터 기초 물리학을 이용해 논리적으로 논증하여 답에 이르면 점수를 준다.</p></div>
+<div class="a" style="left:56.7pt;top:221.40pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">사람에 관한 가정과 결론</div>
+<div class="a" style="left:56.7pt;top:257.12pt;width:498.7pt"><p>다음과 같은 방향의 추론에 <u>1점</u>을 준다.</p></div>
+<div class="a" style="left:81.6pt;top:289.02pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>문제는 여러분이 벽 가운데 하나에 서 있게 될지 떠 있게 될지를 묻는다. 문제에서 여러분의 몸이나 시신을 말하고 있지 않으므로, 참가자는 지구 중심의 엄청난 압력과 온도에서도 살아남을 수 있다고 가정해야 한다.</p></div>
+<div class="a" style="left:81.6pt;top:332.82pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>계산을 할 때에는 방 안의 사람을 점 질량으로 가정하고, 질량으로 100 kg처럼 합리적인 값을 주어야 한다.</p></div>
+<div class="a" style="left:81.6pt;top:364.72pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>그 사람이 니콜라스 케이지가 아니라고 가정한다 – 경고: 이 문제에 케이지를 풀어놓지 말 것. 그러면 무슨 일이든 일어날 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:415.70pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">지구에 관한 가정과 결론</div>
+<div class="a" style="left:81.6pt;top:445.42pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>지구를 완전한 구로 보고 밀도가 균일하다고 놓는 것은 당연한 단순화이다. 이런 계라면 지구의 정중앙에 떠 있을 때 모든 방향에서 똑같은 인력을 받는다(이것은 그저 논리적인 것이므로 식을 쓸 필요는 없다).<br><u>1–2점</u>을 이런 방향의 추론에 준다.</p></div>
+<div class="a" style="left:81.6pt;top:497.22pt;width:473.8pt"><p>위의 가정에 이어 이 문제에 접근하는 분명한 방법 하나는 간단한 그림과 일관된 논리만으로 풀 수 있다. 그림 1은 지구 둘레 어디에서나 표면에서의 영향이 같다는 것을 보여 준다. 그런 다음 꽉 찬 구의 중력이 표면에서 중심으로 갈수록 선형으로 줄어든다는 논증(구 안의 구 증명)을 하면, 중심에서 받는 힘이 0인 이유를 설명할 수 있을 것이다.</p></div>
+<div class="a" style="left:81.6pt;top:560.93pt;width:473.8pt"><p>이런 방향으로 좋은 그림과 설명을 제시하면 위의 가정에 대한 점수에 더하여 <u>1–2점</u>을 준다.</p></div>
+<div class="a" style="left:81.6pt;top:592.83pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>참가자가 지구를 구와 비슷하고 밀도가 위치에 따라 변한다고 가정했다면, 밀도가 다르면 방 안의 사람이 받는 중력이 어떻게 달라지는지 설명해야 한다. 예를 들어 사람이 지구 가운데에서 출발하고 한쪽에 다른 쪽보다 밀도가 높은 부분이 있다면, 그쪽의 질량이 더 크므로 사람은 그쪽 벽으로 끌려간다.<br><u>1–2점</u>을 이런 방향의 추론에 준다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="32" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 12월</div>
+</div>
+
+<!-- 33 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:11.8pt;top:15pt"><span class="fig" data-srcpage="33" data-clip="11.8,15,35.5,40"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="33" data-clip="56,57,556,72"></span></div>
+<div class="f" style="left:181pt;top:95pt"><span class="fig" data-srcpage="33" data-clip="181,95,431,338"></span></div>
+<div class="a" style="left:56.7pt;top:350.92pt;width:498.7pt"><p>그림 1: 지구가 구이고 밀도가 균일하여 중력도 균일하다고 가정한 지구의 그림.</p></div>
+<div class="a" style="left:56.7pt;top:403.80pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">태양계에 관한 가정과 결론</div>
+<div class="a" style="left:81.6pt;top:433.42pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>당연한 단순화는, 달과 태양은 매우 멀리 떨어져 있으므로 지구 중심에 있는 80 kg인 사람에게 미치는 영향을 무시할 수 있다고 하는 것이다. 이는 뉴턴의 중력 법칙을 이용하고 힘이 역제곱 법칙에 따라 어떻게 줄어드는지 말하여 뒷받침해야 한다.<br><u>1–2점</u>을 이런 방향의 추론에 준다.</p></div>
+<div class="a" style="left:81.6pt;top:489.22pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>태양이나 달이 방 안의 사람에게 여전히 상당한 영향을 준다고 가정했다면, 참가자는 ‘대충 계산’(아래 예 참조)이나 논리적 추론(예: 달이 조석에 영향을 준다는 것. 다만 이는 꽤 억지스럽다)으로 그렇다는 것을 보여야 한다.<br><u>1–2점</u>을 이런 방향의 추론에 준다.</p></div>
+<div class="a" style="left:81.6pt;top:541.02pt;width:473.8pt"><p>참가자는 뉴턴의 중력 법칙을 살펴보아 이 상황에서 태양이 여전히 어떤 역할을 한다는 것을 보일 수 있다. 앞에서 껍질 안의 사람은 힘을 받지 않는다고 결론지었지만, 그 사람에게 큰 영향을 줄 수 있는 다른 것들, 예를 들어 방 안의 다른 사람이 있을 수 있다. 그 영향이 있다면 태양이 그 사람에게 주는 영향과 비교하면 어떨까?</p></div>
+<div class="a" style="left:81.6pt;top:592.83pt;width:473.8pt"><p>$M_{Sun}\approx2\cdot10^{30}$ Kg, $1\,\mathrm{Au}\approx1.5\cdot10^{11}$ m로 두면 영향을 흥미롭게 비교해 볼 수 있다.</p></div>
+<div class="a" style="left:81.6pt;top:608.73pt;width:473.8pt"><p>방 안에서 1 m 떨어진 다른 사람에 대해서는</p></div>
+<div class="f" style="left:275pt;top:633.96pt"><span class="fig" data-srcpage="33" data-clip="275.00,633.96,556.00,660.00"></span></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="33" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 12월</div>
+</div>
+
+<!-- 34 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:13.7pt;top:14pt"><span class="fig" data-srcpage="34" data-clip="13.7,14,37.5,37.5"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="34" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:81.6pt;top:96.23pt;width:473.8pt"><p>이고, 태양과 방 안의 사람에 대해서는</p></div>
+<div class="f" style="left:267pt;top:120.60pt"><span class="fig" data-srcpage="34" data-clip="267.00,120.60,556.00,149.00"></span></div>
+<div class="a" style="left:81.6pt;top:149.53pt;width:473.8pt"><p>이다. 분명히 방 안의 사람에게는 방 안의 다른 사람보다 태양이 더 큰 영향을 준다. 태양이나 태양계의 다른 천체를 언급한 참가자의 풀이는 이 점을 반영해야 한다.</p></div>
+<div class="a" style="left:56.7pt;top:199.90pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">방에 관한 가정과 결론</div>
+<div class="a" style="left:56.7pt;top:235.62pt;width:498.7pt"><p>다음과 같은 방향의 추론에 <u>1점</u>을 준다.</p></div>
+<div class="a" style="left:81.6pt;top:264.32pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>방 안에 혼자 있는가, 아니면 다른 사람들이 있는가? 방 안의 다른 사람들은 어떤 영향을 줄까(먼저 위의 계산 참조)? 방 안의 물체 말고는 아무것도 영향을 주지 않는다고 가정했다면, 무슨 일이 일어날지에 대해 흥미로운 생각을 내놓을 수 있을까? 예를 들어 방 안의 두 사람이 서로 끌려와 만나는 데 얼마나 걸릴까?</p></div>
+<div class="a" style="left:81.6pt;top:318.82pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>벽은 무엇으로 되어 있는가? 분명히 터무니없이 튼튼하고 열에 강한 무언가겠지만, 이것이 문제에 어떤 영향을 줄까? 벽이 마법으로 되어 있어 밀도가 없다고 가정한다면, 그 결과는 무엇일까?</p></div>
+<div class="a" style="left:81.6pt;top:361.42pt;width:473.8pt"><span class="k" style="left:-8.5pt">•</span><p>방의 모양이 중요한가? 이 풀이의 다른 모든 논증에서 우리는 구를 좋아했고, 대부분의 계산에서 방을 구로 가정하였다. 그러나 상자 모양이면 사람 둘레에 있는 지구의 질량이 더 이상 구대칭이 아니므로 방 안의 힘이 실제로 달라질까? 참가자가 하려는 적분은 분명히 더 어려워지겠지만, 결국 지구의 크기를 방과 비교하면 아마 달라지지 않을 것이다.</p></div>
+<div class="a" style="left:56.7pt;top:447.60pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">문제에 대한 수학적 접근</div>
+<div class="a" style="left:56.7pt;top:483.32pt;width:498.7pt"><p>참가자는 이 문제에 수학적으로 접근하고 싶을 수도 있다. 여기서는 방 안의 중력장 세기가 0임을 보이는 두 가지 방법을 간추려 소개한다.</p></div>
+<div class="a" style="left:56.7pt;top:531.04pt;font-size:12pt;line-height:14pt;font-weight:bold">얇은 껍질</div>
+<div class="a" style="left:56.7pt;top:560.93pt;width:498.7pt"><p>첫 번째는 얇은 껍질의 경우로, 합리적인 가정을 세우면 <u>최대 3점</u>까지 줄 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:582.93pt;width:498.7pt"><p style="text-indent:14.9pt">얇은 구 껍질에 대해 보이는 것이다(가운데의 방을 구로 근사하고, 지구의 나머지를 얇은 구 껍질로 근사한다). 이 경우 껍질 안의 중력장 세기가 0임을 보일 수 있다. 전체 방법은 Tipler와 Mosca의 Physics for Scientist and Engineers에서 찾을 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:628.73pt;width:498.7pt"><p style="text-indent:14.9pt">두께가 무한히 얇은 고리의 요소 $dm$에 의한 점 $P$에서의 장을 구하자. $P$는 중심에서 거리 $x$에 있고, 요소에서 $P$까지의 거리는 $s$이며, 이것이 수평선과 각 $\alpha$를 이룬다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="34" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 12월</div>
+</div>
+
+<!-- 35 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:12.7pt;top:12pt"><span class="fig" data-srcpage="35" data-clip="12.7,12,36.5,37"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="35" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:56.7pt;top:96.23pt;width:498.7pt"><p style="text-indent:14.9pt">점 $P$에서 장의 크기는 다음과 같다.</p></div>
+<div class="f" style="left:280pt;top:130pt"><span class="fig" data-srcpage="35" data-clip="280,130,556,153"></span></div>
+<div class="a" style="left:56.7pt;top:163.53pt;width:498.7pt"><p style="text-indent:14.9pt">대칭성을 이용하면 수직 성분들은 모두 상쇄된다는 것을 알 수 있고, 장의 $x$ 성분은 다음과 같다.</p></div>
+<div class="f" style="left:233pt;top:209pt"><span class="fig" data-srcpage="35" data-clip="233,209,556,232"></span></div>
+<div class="a" style="left:56.7pt;top:242.72pt;width:498.7pt"><p style="text-indent:14.9pt">고리 전체에 대해 적분하면 장 세기의 $x$ 성분은 다음과 같다.</p></div>
+<div class="f" style="left:266pt;top:274pt"><span class="fig" data-srcpage="35" data-clip="266,274,556,297"></span></div>
+<div class="a" style="left:56.7pt;top:307.22pt;width:498.7pt"><p style="text-indent:14.9pt">여기서 $m$은 고리의 전체 질량이다.</p></div>
+<div class="a" style="left:56.7pt;top:329.22pt;width:498.7pt"><p style="text-indent:14.9pt">같은 논증으로, 이를 질량 $M$, 반지름 $R$인 구 껍질에 적용하면 다음을 얻는다.</p></div>
+<div class="f" style="left:261pt;top:360.72pt"><span class="fig" data-srcpage="35" data-clip="261.00,360.72,556.00,386.00"></span></div>
+<div class="a" style="left:56.7pt;top:397.60pt;width:498.7pt;line-height:13.2pt"><p style="text-indent:14.9pt">여기서 $dM$은 껍질의 질량 요소로서 $dM=\frac{M}{A}dA=\frac{M}{4\pi R^2}2\pi R^2\sin\theta d\theta$로 주어지며, $A$는 껍질의 넓이이다. 이로부터 무한소 장에 대해 다음 식을 얻는다.</p></div>
+<div class="f" style="left:248pt;top:441.72pt"><span class="fig" data-srcpage="35" data-clip="248.00,441.72,556.00,467.00"></span></div>
+<div class="a" style="left:56.7pt;top:477.42pt;width:498.7pt"><p style="text-indent:14.9pt">삼각법을 조금 쓰면 $s$, $\theta$, $\alpha$, $r$, $R$ 사이의 관계를 찾을 수 있고, 이로부터 적분할 수 있는 다음 결과를 얻는다.</p></div>
+<div class="f" style="left:233pt;top:515pt"><span class="fig" data-srcpage="35" data-clip="233,515,556,548"></span></div>
+<div class="a" style="left:56.7pt;top:560.43pt;width:498.7pt"><p style="text-indent:14.9pt">이 경우에는 점 $P$가 구 안에 있을 때에 관심이 있으므로, 관심 있는 장은 $R-r$에서 $R+r$까지 변한다. 따라서 적분한 장의 식은 다음과 같다.</p></div>
+<div class="f" style="left:217pt;top:603pt"><span class="fig" data-srcpage="35" data-clip="217,603,556,641"></span></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="35" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 12월</div>
+</div>
+
+<!-- 36 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:12.7pt;top:15pt"><span class="fig" data-srcpage="36" data-clip="12.7,15,36.5,40"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="36" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:56.7pt;top:96.23pt;width:498.7pt"><p>적분 구간을 넣으면 분명히 0이 된다. 그렇다면 힘은 어떨까? 사람의 질량이 $m$이고 처음부터 끝까지 그 사람을 점 $P$로 다루었다면, 힘을 구하는 데 뉴턴의 제2법칙 $F=mg$를 쓰면 되고, 구 안에서 그 사람에게 작용하는 알짜힘은 0임이 분명하다.</p></div>
+<div class="a" style="left:56.7pt;top:155.64pt;font-size:12pt;line-height:14pt;font-weight:bold">두꺼운 껍질</div>
+<div class="a" style="left:56.7pt;top:185.53pt;width:498.7pt"><p>두 번째 경우는 <i>조금 더 정확하며</i>, 합리적인 가정을 세우면 <u>최대 5점</u>까지 줄 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:207.42pt;width:498.7pt"><p style="text-indent:14.9pt">두께가 유한한 두꺼운 껍질에 대해 보이는 것이다(방을 구로 근사하고, 지구의 두꺼운 껍질의 두께를 $R_{Earth}-R_{Room}$으로 근사한다). 이 경우 껍질 안의 중력장 세기가 0임을 보일 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:253.32pt;width:498.7pt"><p style="text-indent:14.9pt">이번에는 중력 퍼텐셜을 살펴본다. 모든 문헌이 그렇게 하기 때문이기도 하고, Watford가 너무 멀어서 이 문제에 관한 내 1학년 노트를 가져올 수 없기 때문이기도 하다.</p></div>
+<div class="a" style="left:56.7pt;top:287.12pt;width:498.7pt"><p style="text-indent:14.9pt">두께가 유한한 껍질의 중력 퍼텐셜 $\Phi$를 살펴보자. 껍질의 질량은 $M$, 밀도는 $\rho$, 안쪽 반지름은 $a$, 바깥쪽 반지름은 $b$이다. 이를 계산하기 위해 껍질의 중심에서 거리 $R$, 퍼텐셜의 원천에서 거리 $r$에 있는 점 $P$를 생각한다.</p></div>
+<div class="a" style="left:56.7pt;top:333.02pt;width:498.7pt"><p style="text-indent:14.9pt">밀도로 나타낸 중력 퍼텐셜은 다음과 같다.</p></div>
+<div class="f" style="left:258pt;top:355pt"><span class="fig" data-srcpage="36" data-clip="258,355,556,390"></span></div>
+<div class="a" style="left:56.7pt;top:401.02pt;width:498.7pt"><p style="text-indent:14.9pt">무한소 부피는 $dV'=r'^2\sin\theta dr'd\theta d\phi$로 쓸 수 있다. $d\phi$ 항은 적분에서 $2\pi$를 내놓으며, 밀도가 일정하다고 가정하면(반지름에 따라 변하는 밀도를 쓰고 싶은 참가자에게는 행운을 빈다) 퍼텐셜에 대해 다음 식을 얻는다.</p></div>
+<div class="f" style="left:228pt;top:448pt"><span class="fig" data-srcpage="36" data-clip="228,448,556,486"></span></div>
+<div class="a" style="left:56.7pt;top:490.40pt;width:498.7pt;line-height:12.4pt"><p style="text-indent:14.9pt">삼각법을 조금 써서 <span class="fig il" data-srcpage="36" data-clip="265,492,282,511"></span>로 치환하면 $\theta$ 항을 없애고, 퍼텐셜의 원천에서 점 $P$까지의 거리 $r$로 나타낼 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:527.83pt;width:498.7pt"><p style="text-indent:14.9pt">이제 퍼텐셜은 다음과 같다.</p></div>
+<div class="f" style="left:235pt;top:550pt"><span class="fig" data-srcpage="36" data-clip="235,550,556,590"></span></div>
+<div class="a" style="left:56.7pt;top:595.93pt;width:498.7pt"><p style="text-indent:14.9pt">껍질 안의 점, 즉 $R&lt;a$인 점에 관심이 있으므로</p></div>
+<div class="f" style="left:234pt;top:621pt"><span class="fig" data-srcpage="36" data-clip="234,621,556,661"></span></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="36" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 12월</div>
+</div>
+
+<!-- 37 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:19.6pt;top:12pt"><span class="fig" data-srcpage="37" data-clip="19.6,12,44,36"></span></div>
+<div class="f" style="left:56pt;top:57pt"><span class="fig" data-srcpage="37" data-clip="56,57,556,72"></span></div>
+<div class="a" style="left:56.7pt;top:96.23pt;width:498.7pt"><p style="text-indent:14.9pt">이 적분들을 계산하면 껍질 안 어디에서나 퍼텐셜이 일정한 값을 가진다.</p></div>
+<div class="f" style="left:230pt;top:122pt"><span class="fig" data-srcpage="37" data-clip="230,122,556,147"></span></div>
+<div class="a" style="left:56.7pt;top:158.03pt;width:498.7pt"><p style="text-indent:14.9pt">사람의 질량 $m$과 그 사람이 받는 힘을 이어 주는 중력장 세기는 $g=-\nabla\Phi$로 주어진다. $R&lt;a$이면 퍼텐셜이 상수이므로 장의 세기는 0이고, 따라서 ‘속이 빈 지구’ 안의 사람이 받는 힘도 0이다.</p></div>
+<div class="a" style="left:56.7pt;top:215.82pt;width:498.7pt"><p style="text-indent:14.9pt">어느 경우든 상자 안의 사람이 (그 진술에 따르는 모든 전제 조건 아래에서) 지구 때문에 힘을 받지 않는다는 것을 보였다면, 참가자는 다른 것들, 즉 이 문제의 ‘풀이’에서 논의한 다른 생각들이 상자 안의 사람에게 영향을 준다고 말할 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:278.70pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">마지막 참고 사항</div>
+<div class="a" style="left:56.7pt;top:314.42pt;width:498.7pt"><p>참가자가 답하는 중 어느 시점에서든 브렌던 프레이저가 주연한 2008년 영화 ‘Journey to the center of the Earth(잃어버린 세계를 찾아서)’를 언급하면, 그들이 제시하려는 답이나 논증을 우주의 정설로 받아들여야 하며, <u>최대 6점</u>까지 줄 수 있다.</p></div>
+<div class="a" style="left:56.7pt;top:377.30pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold">요약</div>
+<div class="a" style="left:56.7pt;top:413.02pt;width:498.7pt"><p>이 문제의 점수 배분을 요약하면 다음과 같다. 다만 이처럼 열린 문제에서 어디에 점수를 줄지에 대한 최종 결정은 채점자에게 달려 있다. 채점자는 점수 배분을 일관되게 해야 하며, 위의 논의가 도움이 될 것이다. 이 문제에 줄 수 있는 최대 점수는 <u>10점</u>임을 다시 알려 둔다.</p></div>
+<div class="a" style="left:80.2pt;top:480.72pt;width:475.1pt"><span class="k" style="left:-15.5pt">(i)</span><p>지구 안의 중력장과 힘에 대한 논의에는 <u>1점에서 6점</u> 사이를 준다. 합리적인 가정을 세워 지구 중심의 사람이 받는 힘이 0이라고 결론지으면 <u>1–2점</u>, 그림을 곁들이면 <u>1점 추가</u>, 가정을 모두 갖추고 합리적인 수학적 접근을 하면 <u>5–6점</u>을 준다.</p></div>
+<div class="a" style="left:80.2pt;top:536.52pt;width:475.1pt"><span class="k" style="left:-18.2pt">(ii)</span><p>태양계의 다른 천체와, 그 영향 또는 영향이 없음에 대한 논의에는 <u>1점에서 2점</u> 사이를 준다.</p></div>
+<div class="a" style="left:80.2pt;top:568.43pt;width:475.1pt"><span class="k" style="left:-21pt">(iii)</span><p>방과 그 성질에 대한 논의에는 <u>최대 1점</u>을 줄 수 있다.</p></div>
+<div class="a" style="left:80.2pt;top:588.33pt;width:475.1pt"><span class="k" style="left:-20.7pt">(iv)</span><p>사람이나 사람의 수에 대한 논의에는 <u>최대 1점</u>을 줄 수 있다.</p></div>
+<div class="a" style="left:80.2pt;top:608.23pt;width:475.1pt"><span class="k" style="left:-18pt">(v)</span><p>여기서 논의하지 않은, 계에 일어날 수 있는 다른 일들에 대한 논의가 합리적이고 충분한 논리를 갖추었다면 <u>1–2점</u>을 추가로 줄 수 있다.</p></div>
+<div class="f" style="left:56pt;top:670pt"><span class="fig" data-srcpage="37" data-clip="56,670,310,683"></span></div>
+<div class="a" style="left:455pt;top:670.52pt;width:100.3pt;text-align:right">2020년 12월</div>
+</div>
+</body></html>

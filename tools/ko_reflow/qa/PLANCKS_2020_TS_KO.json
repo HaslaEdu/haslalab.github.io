@@ -1,0 +1,24 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2020_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "b3ac73fa4783763a76e67823ae38f816ee88c08a85a4e6bd25cbd921e0fffafd",
+ "bytes": 1551269,
+ "pages": 37,
+ "source_file": "PLANCKS_2020_TS.pdf",
+ "source_sha256": "b49710c114c61f9ea94aa947a795c70a1b097d7c539f0f5c34cb3b69af87a6a7",
+ "source_pages": 37,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "page_size_note": "mixed page sizes kept per page (US letter, A4, 594.96x842.04, 595x2526 scan) through named @page rules (data-s); Chrome snaps A4-type sizes to 594.96x841.92 and the tall page to 594.96x2526.0 (within 0.4 pt of the source)",
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 14681,
+ "html_source": "tools/ko_reflow/plancks/2020_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at 40-60 dpi; first-line baselines of every Korean block measured against the source text lines (302 blocks, median offset -0.26 pt; remaining >1 pt items are the cover table labels copied from the published 2020 problem paper (-2.2 pt), section headings at +1.1 pt, and lines whose inline KaTeX fractions/roots or an inline stamp open the leading by 2-4 pt); p14 (handwritten Q5 scan, no text layer) stamped whole; check.py reports only purple marking-note boxes enclosing their own Korean text (p17-19) and the whole-page stamp on p14 (off-page by its own size), none visible as overlap; after a stamp-integrity pass (every stamp's rendered pixels compared with the source crop at 150 dpi and every crop edge tested for ink continuing past it) 12 crops were widened (p6, p7, p9 x2, p10 x2, p15 Newcomen diagram whose left 30 pt had been cut, p19, p33, p34, p35 x2); the remaining edge hits are intentional: the cover table crops whose grid lines continue into the HTML-drawn header/total cells, and the logo and p33 photo crops that equal the image bounds",
+  "overflow_or_occlusion_observed": false
+ }
+}

@@ -1,0 +1,1077 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* PLANCKS 2023 (LaTeX article 12pt, Computer Modern): text block x 52..530, header y 49..88 (stamped), page number y 790 (stamped) */
+body{font-size:12pt;line-height:14.5pt}
+.hd{position:absolute;left:50pt;top:47pt}
+.pn{position:absolute;left:275pt;top:787pt}
+.a,.l,.l2,.c,.t{position:absolute;margin-top:calc(-1.8pt + var(--dy,0pt))}
+.a{left:52pt;width:478.3pt}
+.l{left:75pt;width:455.3pt}
+.l2{left:81pt;width:449.3pt}
+.l>.k,.l2>.k{position:absolute;left:-40pt;width:36pt;text-align:right}
+.l2>.k{width:34pt}
+.a>p,.l>p,.l2>p,.bl>p{text-indent:0}
+p.in{text-indent:17.9pt}
+.c{left:52pt;width:478.3pt;text-align:center}
+h2{position:absolute;left:52pt;top:106.5pt;margin:0;font-size:17.2pt;line-height:22pt;font-weight:bold}
+h2 .n{display:inline-block;width:29pt}
+h2 .n2{display:inline-block;width:39pt}
+.f{position:absolute}
+.big{font-size:14.3pt;font-weight:bold}
+/* cover */
+.ttl{position:absolute;left:52pt;width:464pt;top:243pt;text-align:center;font-size:20.7pt;font-weight:bold;line-height:24pt}
+.bl{position:absolute;left:81pt;width:449.3pt;margin-top:calc(-1.8pt + var(--dy,0pt))}
+.bl>.k{position:absolute;left:-11pt}
+.glue{font-family:CM,KB,serif;font-style:normal;font-weight:inherit}
+/* solutions pages (PLANCKS_2023_TS.pdf): body CMR12 12pt, line pitch 14.45pt; displays stamped from the original */
+.sp{line-height:14.45pt}
+.sh{position:absolute;left:52pt;margin-top:-1.8pt;font-size:14.3pt;line-height:14.45pt;font-weight:bold}
+.w{position:absolute;margin-top:calc(-1.8pt + var(--dy,0pt))}
+.katex{line-height:1}
+.sp b{line-height:0}
+.ovh{position:absolute;margin-top:-1.8pt;line-height:13pt;background:#fff}
+</style></head>
+<body>
+
+<!-- 1 (problem paper p1): cover -->
+<div class="page" style="--dy:0.6pt">
+<div class="f" style="left:195pt;top:46pt"><span class="fig" data-srcpage="1" data-clip="195,46,388,236"></span></div>
+<div class="ttl">PLANCKS 2023 문제지</div>
+<div class="a" style="left:70pt;top:304pt">참가자 여러분, PLANCKS 2023에 오신 것을 환영합니다.</div>
+<div class="bl" style="top:328pt"><span class="k">$\bullet$</span>대회에서 사용하는 언어는 영어이다.</div>
+<div class="bl" style="top:352pt"><span class="k">$\bullet$</span><p>대회는 <b>10개 문제</b>로 이루어지며, <b>각 문제는 10점</b>이다. 소문항별 배점은 각 문제에 표시되어 있다.</p></div>
+<div class="bl" style="top:391pt"><span class="k">$\bullet$</span><p>모든 문제의 답안은 문제마다 별도의 종이에 제출해야 한다. 각 답안지에 팀 이름과 문제 번호를 적어라. <b>각 답안지에 이 표시가 있어야 해당 문제가 채점된다</b>.</p></div>
+<div class="bl" style="top:444pt"><span class="k">$\bullet$</span><p>문제가 명확하지 않으면 참가자는 진행 요원을 통해 설명을 요청할 수 있다. 그 답변이 모든 팀에 관련된 것이면 심사위원단이 이 정보를 다른 팀에도 알려 준다.</p></div>
+<div class="bl" style="top:497pt"><span class="k">$\bullet$</span>사전(영어–모국어)은 사용할 수 있다.</div>
+<div class="bl" style="top:522pt"><span class="k">$\bullet$</span><p>프로그래밍 기능과 그래프 기능이 없는 계산기는 사용할 수 있다(공학용 계산기는 괜찮다).</p></div>
+<div class="bl" style="top:546pt"><span class="k">$\bullet$</span><p>대회 중에는 이 문제지와 사전을 제외한 어떤 책이나 다른 자료도 참고할 수 없다.</p></div>
+<div class="bl" style="top:585pt"><span class="k">$\bullet$</span>심사위원단은 부정행위나 규칙 위반을 한 팀을 실격시킬 권리가 있다.</div>
+<div class="bl" style="top:609pt"><span class="k">$\bullet$</span><p>시계와 의료 기기를 제외한 기기(휴대전화, 태블릿 등)는 사용할 수 없다. 휴대전화는 봉투에 넣어 두어라.</p></div>
+<div class="bl" style="top:648pt"><span class="k">$\bullet$</span>규칙이 정하지 않은 상황은 조직위원회(OC)가 결정한다.</div>
+<div class="a" style="left:105pt;width:373pt;top:674pt;text-align:center">최고의 물리 팀이 우승하기를!</div>
+<div class="a" style="left:330pt;width:200pt;top:775pt;text-align:right">Milan, 2023년 5월 14일</div>
+</div>
+
+<!-- 2 (problem paper p2): QM -->
+<div class="page">
+<span class="fig hd" data-srcpage="2" data-clip="50,47,532,89"></span>
+<h2><span class="n">1</span>양자역학</h2>
+<div class="f" style="left:212pt;top:128pt"><span class="fig" data-srcpage="2" data-clip="212,128,372,326"></span></div>
+<div class="c" style="top:339pt">그림 1: 동축인 두 원통 사이의 공동.</div>
+<div class="a" style="top:368pt"><p class="in">그림 1과 같이 높이가 $h$이고 반지름이 $a$, $A$ $(a&lt;A)$인 동축 원통 두 개 사이의 공동 안에 있는 입자의 에너지 준위를 구하여라. 다음 경우를 생각하여라:</p></div>
+<div class="l" style="top:405pt"><span class="k">i)</span><b>(1점)</b> $h\gg A$ (두 원통이 축을 따라 무한히 뻗어 있다);</div>
+<div class="l" style="top:429pt"><span class="k">ii)</span><b>(3점)</b> 공동의 위쪽 끝과 아래쪽 끝이 두 뚜껑으로 막혀 있다;</div>
+<div class="l" style="top:454pt"><span class="k">iii)</span><p><b>(6점)</b> 원통 축 방향을 향하는 균일한 자기장 $\vec B$가 작은 원통의 내부에만 있고, 그 밖의 모든 곳(공동 포함)에서는 0이다.</p></div>
+<div class="a" style="top:491pt">반지름 방향 부분은 그 해가 에너지 준위를 주는 방정식(들)을 얻는 것으로 충분하다.</div>
+<div class="a" style="left:70pt;top:520pt"><b>힌트:</b></div>
+<div class="l" style="top:543pt"><span class="k">i)</span>원통좌표계에서 기울기, 회전, 라플라시안은 다음과 같다.</div>
+<div class="f" style="left:104pt;top:562pt"><span class="fig" data-srcpage="2" data-clip="104,562,531,661"></span></div>
+<div class="l" style="top:674pt"><span class="k">ii)</span>베셀 함수는 다음 미분방정식의 해이다.</div>
+<div class="f" style="left:205pt;top:692pt"><span class="fig" data-srcpage="2" data-clip="205,692,531,712"></span></div>
+<div class="l" style="top:723pt"><p>제1종 베셀 함수 $y=J_\alpha(x)$는 $x\to0$에서 정칙이고, 제2종 베셀 함수 $y=Y_\alpha(x)$는 같은 극한에서 발산한다. 그림 2에 몇 가지 베셀 함수를 그려 놓았다.</p></div>
+<span class="fig pn" data-srcpage="2" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 3 (problem paper p3) -->
+<div class="page">
+<span class="fig hd" data-srcpage="3" data-clip="50,47,532,89"></span>
+<div class="f" style="left:140pt;top:350pt"><span class="fig" data-srcpage="3" data-clip="140,350,445,502"></span></div>
+<div class="c" style="top:510pt">그림 2: 제1종 및 제2종 베셀 함수.</div>
+<span class="fig pn" data-srcpage="3" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 4 -->
+<div class="page">
+<span class="fig hd" data-srcpage="4" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt"><p class="ni"><b>(i)과 (ii)</b> 두 원통 사이의 영역에서 해밀토니언은 i)과 ii)의 경우 자유 입자의 해밀토니언이 된다(경계 조건은 적절한 때에 논의한다). 공동 안에서 해밀토니언은 다음과 같다.</p></div>
+<div class="f" style="left:254.25pt;top:175.5pt"><span class="fig" data-srcpage="4" data-clip="254.25,175.5,531.75,207.75"></span></div>
+<div class="a sp" style="top:211.8pt"><p class="ni">첫 단계로 힌트 i)을 이용하여 라플라시안 연산자를 원통좌표 $(z,r,\phi)$로 쓴다. $z$가 완전히 분리됨에 주목하자. 따라서 해밀토니언의 고유함수를 구하기 위해 고유함수가 다음과 같이 인수분해된 꼴이라고 가정한다.</p></div>
+<div class="f" style="left:210.75pt;top:263.25pt"><span class="fig" data-srcpage="4" data-clip="210.75,263.25,531.75,279.75"></span></div>
+<div class="a sp" style="top:293.5pt">이에 대응하는 고유값은 다음과 같다.</div>
+<div class="f" style="left:251.25pt;top:306pt"><span class="fig" data-srcpage="4" data-clip="251.25,306,531.75,321.75"></span></div>
+<div class="a sp" style="top:328.8pt">경우 i)과 ii)는 $z$ 부분만 다르다.</div>
+<div class="bl sp" style="top:353.3pt"><span class="k">$\bullet$</span><p>경우 i)은 자유 입자 문제이며, 고유함수는 평면파이다.</p></div>
+<div class="f" style="left:236.25pt;top:375.75pt"><span class="fig" data-srcpage="4" data-clip="236.25,375.75,531.75,393"></span></div>
+<div class="w sp" style="left:81.3pt;top:406.1pt">그리고</div>
+<div class="f" style="left:259.5pt;top:411.75pt"><span class="fig" data-srcpage="4" data-clip="259.5,411.75,531.75,445.5"></span></div>
+<div class="bl sp" style="top:454.2pt"><span class="k">$\bullet$</span><p>경우 ii)는 대신 경계 조건 $\zeta^{E_z}(0)=\zeta^{E_z}(h)=0$을 갖는 1차원 무한 우물 문제이다. 해는 다음과 같다.</p></div>
+<div class="f" style="left:215.25pt;top:490.5pt"><span class="fig" data-srcpage="4" data-clip="215.25,490.5,531.75,521.25"></span></div>
+<div class="w sp" style="left:81.3pt;top:529.9pt">그리고 에너지 고유값은 다음과 같다.</div>
+<div class="f" style="left:251.25pt;top:537.75pt"><span class="fig" data-srcpage="4" data-clip="251.25,537.75,531.75,571.5"></span></div>
+<div class="a sp" style="top:579.7pt"><p class="in">이제 덜 자명한 $r,\phi$ 부분으로 넘어가자. 이 경우 해밀토니언의 고유상태에 대한 방정식은 다음과 같다.</p></div>
+<div class="f" style="left:132.75pt;top:612pt"><span class="fig" data-srcpage="4" data-clip="132.75,612,531.75,645.75"></span></div>
+<div class="a sp" style="top:657.9pt"><p class="ni">$\phi$에 대한 미분을 포함하는 부분은 각운동량 $L$(의 유일한 성분)로 쓸 수 있다.</p></div>
+<div class="f" style="left:258pt;top:681.75pt"><span class="fig" data-srcpage="4" data-clip="258,681.75,531.75,714"></span></div>
+<div class="a sp" style="top:719.6pt"><p class="ni" style="text-align-last:justify">회전 불변성 덕분에 연산자 $L$을 그 고유값 $\hbar l$로 바꿀 수 있다. 이에 따라 식 (12)를</p></div>
+<div class="a sp" style="top:734.0pt">다시 쓰면</div>
+<div class="f" style="left:178.5pt;top:744pt"><span class="fig" data-srcpage="4" data-clip="178.5,744,531.75,775.5"></span></div>
+<span class="fig pn" data-srcpage="4" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 5 -->
+<div class="page">
+<span class="fig hd" data-srcpage="5" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="ni">여기서 각운동량을 대각화한 뒤, 고유함수에서 $\phi$에 의존하는 부분을 다음과 같이 따로 떼어 냈다.</p></div>
+<div class="f" style="left:217.5pt;top:138.75pt"><span class="fig" data-srcpage="5" data-clip="217.5,138.75,531.75,171"></span></div>
+<div class="a sp" style="top:175.3pt">그리고 에너지 고유값이 $l$에 의존함이 드러나도록 이름을 다시 붙였다.</div>
+<div class="a sp" style="top:204.1pt"><p class="in">반지름 방향 부분에 대해서는 식 (14)의 양변에 $r^2$을 곱하고 미분을 계산하여 다음을 얻는다.</p></div>
+<div class="f" style="left:176.25pt;top:228pt"><span class="fig" data-srcpage="5" data-clip="176.25,228,531.75,260.25"></span></div>
+<div class="a sp" style="top:266.9pt"><p class="ni">베셀 함수가 만족하는 미분방정식(힌트 ii))과 거의 같은 꼴임을 알아볼 수 있으며, 다음 변수를 도입하면 바로 그 방정식을 얻는다.</p></div>
+<div class="f" style="left:243.75pt;top:294pt"><span class="fig" data-srcpage="5" data-clip="243.75,294,531.75,332.25"></span></div>
+<div class="a sp" style="top:342.4pt">실제로 다음을 얻는다.</div>
+<div class="f" style="left:189.75pt;top:349.5pt"><span class="fig" data-srcpage="5" data-clip="189.75,349.5,531.75,381.75"></span></div>
+<div class="a sp" style="top:387.7pt"><p class="ni">따라서 해를 구할 수 있으며, 이를 제1종 베셀 함수와 제2종 베셀 함수의 선형 결합으로 쓸 수 있다.</p></div>
+<div class="f" style="left:210pt;top:423.75pt"><span class="fig" data-srcpage="5" data-clip="210,423.75,531.75,442.5"></span></div>
+<div class="a sp" style="top:453.1pt"><p class="ni">공동이 영역 $r\to0$까지 뻗어 있지 않으므로 두 종류의 베셀 함수를 모두 남겨 두어야 함에 주의하라. 허용되는 에너지 준위를 구하려면 반지름 방향 부분에 경계 조건을 부과해야 한다. 파동함수는 공동의 가장자리에서 0이 되어야 하므로 다음이 성립해야 한다.</p></div>
+<div class="f" style="left:211.5pt;top:507pt"><span class="fig" data-srcpage="5" data-clip="211.5,507,531.75,523.5"></span></div>
+<div class="a sp" style="top:531.4pt">따라서 다음 두 관계식을 얻는다.</div>
+<div class="f" style="left:198.75pt;top:552.75pt"><span class="fig" data-srcpage="5" data-clip="198.75,552.75,531.75,590.25"></span></div>
+<div class="a sp" style="top:601.1pt">이로부터 (규격화 상수와 무관한) 다음 방정식을 얻으며,</div>
+<div class="f" style="left:225pt;top:623.25pt"><span class="fig" data-srcpage="5" data-clip="225,623.25,531.75,654.75"></span></div>
+<div class="a sp" style="top:664.7pt">그 해들이 허용되는 에너지 값이다.</div>
+<div class="a sp" style="top:692.3pt"><p class="in"><b>(iii)</b> 여기서 미묘한 점은 자기장의 역할이다. 자기장은 공동 바깥에서만 0이 아니지만, 그럼에도 에너지 고유함수에 영향을 준다. 자기장이 있을 때의 해밀토니언은 최소 결합 처방을 적용하여, 즉 다음과 같이 바꾸어 표준 해밀토니언으로부터 얻을 수 있다.</p></div>
+<div class="f" style="left:256.5pt;top:748.5pt"><span class="fig" data-srcpage="5" data-clip="256.5,748.5,531.75,779.25"></span></div>
+<span class="fig pn" data-srcpage="5" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 6 -->
+<div class="page">
+<span class="fig hd" data-srcpage="6" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="ni">여기서 $\vec A$는 전자기 벡터 퍼텐셜이다. 따라서 벡터 퍼텐셜을 구해야 하며, 벡터 퍼텐셜은 자기장과 다음 관계에 있다.</p></div>
+<div class="f" style="left:248.25pt;top:152.25pt"><span class="fig" data-srcpage="6" data-clip="248.25,152.25,531.75,167.25"></span></div>
+<div class="a sp" style="top:180.8pt">지금의 경우 $r&lt;a$이면 $\vec B=B_z\hat z$이고, 그렇지 않으면 $\vec B=0$이다.</div>
+<div class="a sp" style="top:195.2pt">힌트 i)에서 주어진 원통좌표계의 회전 연산자는 다음과 같다.</div>
+<div class="f" style="left:105pt;top:216.75pt"><span class="fig" data-srcpage="6" data-clip="105,216.75,531.75,247.5"></span></div>
+<div class="a sp" style="top:259.0pt"><p class="ni">문제의 대칭성($\phi$ 방향 회전 불변성과 $z$ 방향 병진 불변성) 때문에 $\partial_zA_i=\partial_\phi A_i=0$이다. 따라서 식 (25)는 다음과 같이 된다.</p></div>
+<div class="f" style="left:210.75pt;top:295.5pt"><span class="fig" data-srcpage="6" data-clip="210.75,295.5,288.75,384"></span></div>
+<div class="f" style="left:507.75pt;top:303pt"><span class="fig" data-srcpage="6" data-clip="507.75,303,531.75,375.75"></span></div>
+<div class="w sp" style="left:308.7pt;top:305.4pt">$r&lt;a$일 때,</div>
+<div class="w sp" style="left:308.7pt;top:334.6pt">$r&gt;a$일 때,</div>
+<div class="a sp" style="top:391.3pt">해는 다음과 같다.</div>
+<div class="f" style="left:210.75pt;top:408.75pt"><span class="fig" data-srcpage="6" data-clip="210.75,408.75,287.25,483"></span></div>
+<div class="f" style="left:507.75pt;top:417pt"><span class="fig" data-srcpage="6" data-clip="507.75,417,531.75,482.25"></span></div>
+<div class="w sp" style="left:317.7pt;top:419.1pt">$r&lt;a$일 때,</div>
+<div class="w sp" style="left:317.7pt;top:448.1pt">$r&gt;a$일 때,</div>
+<div class="a sp" style="top:494.7pt"><p class="ni">$r=0$에서 $A_\phi$가 정칙이어야 한다면 $c=0$으로 두어야 한다. $r=a$에서의 연속성으로부터 $c'=\frac{B_za^2}{2r}$이다. 따라서 파동함수에 위상 이동만 주는 다른 상수 항들을 무시하면, 공동 안의 벡터 퍼텐셜은 다음과 같다.</p></div>
+<div class="f" style="left:258pt;top:544.5pt"><span class="fig" data-srcpage="6" data-clip="258,544.5,531.75,576.75"></span></div>
+<div class="a sp" style="top:585.0pt">($A_\phi$에 대한 같은 결과는 스토크스 정리로도 얻을 수 있다.)</div>
+<div class="a sp" style="top:599.5pt">이제 최소 결합 처방 식 (24)를 적용하면 $\phi$ 성분만 다음과 같이 바뀐다.</div>
+<div class="f" style="left:218.25pt;top:619.5pt"><span class="fig" data-srcpage="6" data-clip="218.25,619.5,531.75,651.75"></span></div>
+<div class="a sp" style="top:662.1pt">따라서 이제 파동함수의 $\phi$ 의존 부분은 다음 연산자의 고유함수여야 한다.</div>
+<div class="f" style="left:234pt;top:682.5pt"><span class="fig" data-srcpage="6" data-clip="234,682.5,531.75,714"></span></div>
+<div class="a sp" style="top:724.0pt">즉, 다음 미분방정식을 만족해야 한다.</div>
+<div class="f" style="left:199.5pt;top:744pt"><span class="fig" data-srcpage="6" data-clip="199.5,744,531.75,776.25"></span></div>
+<span class="fig pn" data-srcpage="6" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 7 -->
+<div class="page">
+<span class="fig hd" data-srcpage="7" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt">여기에 다음 주기성 조건이 붙는다.</div>
+<div class="f" style="left:253.5pt;top:127.5pt"><span class="fig" data-srcpage="7" data-clip="253.5,127.5,531.75,142.5"></span></div>
+<div class="a sp" style="top:150.6pt">해는 간단하다.</div>
+<div class="f" style="left:190.5pt;top:157.5pt"><span class="fig" data-srcpage="7" data-clip="190.5,157.5,531.75,191.25"></span></div>
+<div class="a sp" style="top:196.3pt">그러나 이제 주기성 조건 때문에 다음이 성립해야 한다.</div>
+<div class="f" style="left:250.5pt;top:217.5pt"><span class="fig" data-srcpage="7" data-clip="250.5,217.5,531.75,249.75"></span></div>
+<div class="a sp" style="top:258.6pt">파동함수의 반지름 방향 부분이 이제 다음을 만족해야 하므로 에너지 준위가 영향을 받는다.</div>
+<div class="f" style="left:178.5pt;top:280.5pt"><span class="fig" data-srcpage="7" data-clip="178.5,280.5,531.75,312"></span></div>
+<div class="a sp" style="top:326.6pt"><p class="ni">식 (14)와 달리 여기서 $\tilde l$은 자기장에 비례하는 항 때문에 더 이상 정수가 아니다.</p></div>
+<div class="a sp" style="top:369.9pt"><p class="in">여기서 한 가지 짚어 둘 만하다. 우리가 땀 흘리며 힘들게 유도한 결과는 놀라워야 마땅하다. 공동 안에는 자기장이 없어서 입자가 아무 힘도 받지 않는데도, (입자가 들어갈 수 없는) 안쪽 영역에 자기장이 있다는 사실이 에너지 준위에 영향을 준다. 달리 말하면, 고전역학의 결론과 달리 모든 장이(따라서 입자에 작용하는 힘이) 0인 영역에서도 퍼텐셜이 하전 입자에 효과를 미친다. 이것이 <i>아로노프–봄</i> 효과이며(Y. Aharonov and D. Bohm, “Significance of electromagnetic potentials in the quantum theory,” Phys. Rev. <b>115</b> (1959), 485-491), 실험으로 측정되었다.</p></div>
+<span class="fig pn" data-srcpage="7" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 8 (problem paper p4): Thermo -->
+<div class="page">
+<span class="fig hd" data-srcpage="8" data-clip="50,47,532,89"></span>
+<h2><span class="n">2</span>열역학</h2>
+<div class="a" style="top:141pt"><p class="ni">이상기체 $n$몰이 들어 있고, 전도성 표면이 전하 $q$를 띤 구형 비눗방울을 생각하자. 비눗방울은 대기 조건에 놓여 있다. 온도를 $T_0$, 압력을 $p_0$이라 하고, $\gamma_0$을 <b>전하를 띠지 않은</b> 물과 비누 막의 표면장력 상수라 하자.</p></div>
+<div class="l" style="top:211pt"><span class="k">i)</span><b>(2점)</b> 표면장력 상수가 전하에 의존함을 보여라;</div>
+<div class="l" style="top:236pt"><span class="k">ii)</span><p><b>(4점)</b> 대전된 비눗방울의 평형 조건을 구하여라. 이 조건을 만족하는 값이 언제나 하나, 그리고 오직 하나만 있음을 확인하여라;</p></div>
+<div class="l" style="top:275pt"><span class="k">iii)</span><b>(4점)</b> 평형의 안정성을 조사하여라.</div>
+<span class="fig pn" data-srcpage="8" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 9 -->
+<div class="page">
+<span class="fig hd" data-srcpage="9" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt"><b>(i)</b> 비눗방울 막의 자유 에너지의 미분을 계산할 수 있다.</div>
+<div class="f" style="left:215.25pt;top:153.75pt"><span class="fig" data-srcpage="9" data-clip="215.25,153.75,367.5,185.25"></span></div>
+<div class="a sp" style="top:191.3pt"><p class="ni">여기서 $C=4\pi\epsilon_0r$는 비눗방울의 전기 용량, $r$는 비눗방울의 반지름, $\Sigma$는 표면적이며, 경계면이 두 개이므로 $\Sigma=8\pi r^2$으로 쓸 수 있다. 맥스웰 관계식으로부터 다음을 얻는다.</p></div>
+<div class="f" style="left:229.5pt;top:228pt"><span class="fig" data-srcpage="9" data-clip="229.5,228,354,261.75"></span></div>
+<div class="a sp" style="top:266.7pt">따라서 다음이 성립한다.</div>
+<div class="f" style="left:240.75pt;top:276.75pt"><span class="fig" data-srcpage="9" data-clip="240.75,276.75,342.75,311.25"></span></div>
+<div class="a sp" style="top:313.9pt">이 방정식을 적분하면 다음을 얻는다.</div>
+<div class="f" style="left:210.75pt;top:333pt"><span class="fig" data-srcpage="9" data-clip="210.75,333,372,366"></span></div>
+<div class="a sp" style="top:387.1pt"><p class="in"><b>(ii)</b> 평형 상태에서 “비눗방울” 계(기체와 막)는 항온조의 온도 $T_0$에 있다. 평형 조건을 구하려면 유일한 내부 변수 $V$(또는 반지름 $r$)에 대해 퍼텐셜 $\tilde G_0$의 최솟값을 찾는다.</p></div>
+<div class="f" style="left:227.25pt;top:439.5pt"><span class="fig" data-srcpage="9" data-clip="227.25,439.5,354.75,458.25"></span></div>
+<div class="a sp" style="top:464.8pt">비눗방울 안 기체의 압력을 $p_g$라 하자. $q$와 $T$가 일정할 때 $\mathrm dF$는 다음과 같다.</div>
+<div class="f" style="left:234.75pt;top:486.75pt"><span class="fig" data-srcpage="9" data-clip="234.75,486.75,348,502.5"></span></div>
+<div class="a sp" style="top:512.8pt">따라서</div>
+<div class="f" style="left:171pt;top:519.75pt"><span class="fig" data-srcpage="9" data-clip="171,519.75,412.5,556.5"></span></div>
+<div class="a sp" style="top:561.0pt">이로부터 평형 조건을 다음과 같이 얻을 수 있다.</div>
+<div class="f" style="left:166.5pt;top:579.75pt"><span class="fig" data-srcpage="9" data-clip="166.5,579.75,416.25,614.25"></span></div>
+<div class="a sp" style="top:624.6pt"><p class="ni">여기서 $\sigma=\frac{q}{4\pi r^2}$은 표면 전하 밀도이다. 항 $\frac{\sigma^2}{2\epsilon_0}$이 정전기 압력 $p_{el}$과 같음을 알 수 있으므로 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:227.25pt;top:658.5pt"><span class="fig" data-srcpage="9" data-clip="227.25,658.5,355.5,690.75"></span></div>
+<div class="a sp" style="top:697.9pt"><p class="ni">이 방정식의 우변은 <i>원리적으로는</i> 음수일 수도 있는데, 이는 비눗방울 안의 압력이 바깥 압력보다 높다는 뜻이다. 그러나 이는 받아들일 수 있는 결과가 아니다. 비눗방울이 구형이라고 가정했으므로 다음이 성립해야 하기 때문이다.</p></div>
+<div class="f" style="left:228.75pt;top:746.25pt"><span class="fig" data-srcpage="9" data-clip="228.75,746.25,354.75,778.5"></span></div>
+<span class="fig pn" data-srcpage="9" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 10 -->
+<div class="page">
+<span class="fig hd" data-srcpage="10" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt">$\gamma&gt;0$을 부과하고 나면 평형 조건을 다음과 같이 얻을 수 있다.</div>
+<div class="f" style="left:200.25pt;top:136.5pt"><span class="fig" data-srcpage="10" data-clip="200.25,136.5,383.25,169.5"></span></div>
+<div class="a sp" style="top:179.3pt"><p class="ni">여기서 $p_e$는 이상기체 법칙으로부터 얻었다. 이 방정식의 우변은 ($r_e&gt;0$에서) 단조증가 함수이며, $r_e\to0$이면 $-\infty$로, $r_e\to+\infty$이면 $+\infty$로 간다. 따라서 해는 오직 하나 존재한다.</p></div>
+<div class="a sp" style="top:235.8pt"><p class="in"><b>(iii)</b> 평형의 안정성을 조사하려면 $\tilde G_0$의 이계도함수의 부호를 정해야 한다.</p></div>
+<div class="f" style="left:157.5pt;top:269.25pt"><span class="fig" data-srcpage="10" data-clip="157.5,269.25,426,310.5"></span></div>
+<div class="a sp" style="top:322.4pt"><p class="ni">$q$는 양의 항에만 나타나므로 비눗방울의 안정성을 위협하지 않는다. 따라서 비눗방울이 구형이기만 하면 다음이 성립하며,</p></div>
+<div class="f" style="left:255pt;top:345.75pt"><span class="fig" data-srcpage="10" data-clip="255,345.75,328.5,383.25"></span></div>
+<div class="a sp" style="top:387.9pt">이는 평형이 안정함을 뜻한다.</div>
+<span class="fig pn" data-srcpage="10" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 11 (problem paper p5): Quantum optics -->
+<div class="page">
+<span class="fig hd" data-srcpage="11" data-clip="50,47,532,89"></span>
+<h2><span class="n">3</span>양자광학</h2>
+<div class="a" style="top:139pt"><p class="ni"><span class="big">라비 진동</span> — 움직이는 2준위 원자가 손실 없는 마이크로파 공동 안에서 고전적인 단일 모드 진동장과 상호작용한다. 원자 전이와 공동 장 사이의 디튜닝은 $\Delta\omega$이고, 상호작용 묘사에서 원자–공동 장 계를 기술하는 해밀토니언은 다음과 같다:</p></div>
+<div class="f" style="left:225pt;top:205pt"><span class="fig" data-srcpage="11" data-clip="225,205,531,238"></span></div>
+<div class="a" style="top:246pt"><p class="ni">여기서 $\sigma_3=|e\rangle\langle e|-|g\rangle\langle g|$와 $\sigma_1=|e\rangle\langle g|+|g\rangle\langle e|$는 파울리 연산자이고, $|e\rangle$와 $|g\rangle$는 각각 원자의 들뜬상태와 바닥상태이며, $\Omega_0$은 라비 진동수이다.</p>
+<p class="in">원자가 처음에 바닥상태, 즉 $|\psi_0\rangle=|g\rangle$에 있다고 가정하자.</p></div>
+<div class="l" style="top:299pt"><span class="k">i)</span><b>(2점)</b> 시간에 따라 변한 상태를 구하여라:</div>
+<div class="f" style="left:232pt;top:321pt"><span class="fig" data-srcpage="11" data-clip="232,321,531,353"></span></div>
+<div class="a" style="top:370pt"><p class="ni">다음으로, 원자를 들뜬상태에서 발견할 확률 $P_e(t)=|\langle e|\psi_t\rangle|^2$의 해석적 표현을 쓰고, 다음 경우에 대해 결과를 논하여라:</p></div>
+<div class="l" style="top:409pt"><span class="k">ii)</span><b>(1점)</b> $\Delta\omega=0$일 때(공명);</div>
+<div class="l" style="top:433pt"><span class="k">iii)</span><b>(1점)</b> $\Delta\omega\gg\Omega_0$일 때(큰 디튜닝).</div>
+<div class="a" style="top:457pt">상호작용 시간을 $t=\pi/\Omega_0$($\pi$-펄스에 해당)으로 정하고 $\Delta\omega\neq0$이라 하자:</div>
+<div class="l" style="top:482pt"><span class="k">iv)</span><p><b>(1점)</b> $P_e(t=\pi/\Omega_0)$을 $x=\Delta\omega/\Omega_0$의 함수로 쓰고, 첫 번째 극솟값이 나타나는 $x&gt;0$의 값을 구하여라.</p></div>
+<div class="a" style="top:519pt"><p class="in"><span class="big">램지 무늬</span> — 이제 그림과 같이 공동 두 개로 이루어진 장치를 생각하자.</p></div>
+<div class="a" style="top:548pt;width:249pt"><p class="ni">각 공동 안에서 원자와 장의 상호작용은 여전히 해밀토니언 (41)로 기술되지만, 두 공동 사이에서 자유롭게 진행하는 동안의 해밀토니언은 (상호작용 묘사에서) 다음과 같다:</p></div>
+<div class="f" style="left:134pt;top:628pt"><span class="fig" data-srcpage="11" data-clip="134,628,302,660"></span></div>
+<div class="f" style="left:306pt;top:548pt"><span class="fig" data-srcpage="11" data-clip="306,548,528,662"></span></div>
+<div class="a" style="top:665pt"><p class="ni">또한 두 공동 장의 위상이 같으며 이를 0으로 둔다고 가정한다. 두 공동 안에서의 상호작용 시간은 모두 $\tau=\pi/(2\,\Omega_0)$으로 $\frac{\pi}{2}$-펄스에 해당하며, 자유 진행은 시간 $T=\xi\tau$ ($\xi\in\mathbb N$) 동안 이어진다.</p>
+<p class="in">원자의 처음 상태가 여전히 $|\psi_0\rangle=|g\rangle$이고, 전체 진행(공동 1 — 자유 진행 — 공동 2)을 거친 뒤의 상태가 $|\psi_{\rm out}\rangle$이라 할 때:</p></div>
+<span class="fig pn" data-srcpage="11" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 12 (problem paper p6) -->
+<div class="page" style="--dy:3.0pt">
+<span class="fig hd" data-srcpage="12" data-clip="50,47,532,89"></span>
+<div class="l" style="top:111pt"><span class="k">v)</span><p><b>(2점)</b> 원자를 들뜬상태에서 발견할 확률 $\tilde P_e=|\langle e|\psi_{\rm out}\rangle|^2$을 $x=\Delta\omega/\Omega_0$의 함수로 나타내면 다음과 같이 쓸 수 있음을 증명하여라:</p></div>
+<div class="f" style="left:248pt;top:149pt"><span class="fig" data-srcpage="12" data-clip="248,149,531,171"></span></div>
+<div class="l2" style="top:182pt">여기서</div>
+<div class="f" style="left:220pt;top:185pt"><span class="fig" data-srcpage="12" data-clip="220,185,392,221"></span></div>
+<div class="l2" style="top:223pt">그리고</div>
+<div class="f" style="left:103pt;top:241pt"><span class="fig" data-srcpage="12" data-clip="103,241,509,280"></span></div>
+<div class="l" style="top:293pt"><span class="k">vi)</span><p><b>(3점)</b> $\tilde P_e(x_m;\xi)=0$을 만족하는 가장 작은 값 $x_m&gt;0$이 극한 $\xi\gg1$에서 $1/\xi$에 비례함을 보여라.</p></div>
+<span class="fig pn" data-srcpage="12" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 13 -->
+<div class="page">
+<span class="fig hd" data-srcpage="13" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt">— <b>라비 진동</b></div>
+<div class="a sp" style="top:151.8pt"><p class="in"><b>(i)</b> 문제를 푸는 데 꼭 필요하지는 않지만, 해밀토니언 (41)을 다음과 같이 간결한 꼴로 다시 쓰면 편리하다.</p></div>
+<div class="f" style="left:249pt;top:175.5pt"><span class="fig" data-srcpage="13" data-clip="249,175.5,333,207"></span></div>
+<div class="a sp" style="top:211.5pt">여기서 $\Omega=\sqrt{\Omega_0^2+(\Delta\omega)^2}$이고, 다음 단위 벡터를 도입하였다.</div>
+<div class="f" style="left:236.25pt;top:231.75pt"><span class="fig" data-srcpage="13" data-clip="236.25,231.75,345.75,263.25"></span></div>
+<div class="a sp" style="top:272.9pt"><p class="ni"><span style="float:right;width:0;height:14.45pt"></span><span style="float:right;clear:right;width:393.3pt;height:14.45pt"></span>그리고 $\vec\sigma=(\sigma_1,\sigma_2,\sigma_3)$는 파울리 연산자로 이루어진 벡터이다. $(\vec n\otimes\vec\sigma)^2=\mathbb I$이므로 다음을 쉽게 보일 수 있다.</p></div>
+<div class="f" style="left:141pt;top:295.5pt"><span class="fig" data-srcpage="13" data-clip="141,295.5,441.75,326.25"></span></div>
+<div class="a sp" style="left:69.6pt;width:160pt;top:331.5pt">다음과 같이 두 벡터를</div>
+<div class="f" style="left:196.5pt;top:348pt"><span class="fig" data-srcpage="13" data-clip="196.5,348,270,378.75"></span></div>
+<div class="f" style="left:312pt;top:348pt"><span class="fig" data-srcpage="13" data-clip="312,348,385.5,378.75"></span></div>
+<div class="w sp" style="left:278pt;width:40pt;text-align:center;top:358.7pt">및</div>
+<div class="a sp" style="top:389.0pt"><p class="ni">각각 원자 상태 $\{|e\rangle,|g\rangle\}$에 대응시키면, 시간 변화 연산자 $U_{\rm int}(t)$를 다음과 같은 행렬 꼴로 쓸 수 있다.</p></div>
+<div class="f" style="left:180.75pt;top:411.75pt"><span class="fig" data-srcpage="13" data-clip="180.75,411.75,531.75,448.5"></span></div>
+<div class="a sp" style="top:454.8pt">여기서</div>
+<div class="f" style="left:136.5pt;top:471.75pt"><span class="fig" data-srcpage="13" data-clip="136.5,471.75,445.5,578.25"></span></div>
+<div class="a sp" style="top:587.8pt">이어서 처음 상태 $|\psi_0\rangle=|g\rangle$를 고려하면 다음을 얻는다.</div>
+<div class="f" style="left:195pt;top:609pt"><span class="fig" data-srcpage="13" data-clip="195,609,387,647.25"></span></div>
+<div class="a sp" style="top:656.9pt">따라서 구하는 확률 $P_e(t)$는 다음과 같다.</div>
+<div class="f" style="left:192pt;top:675.75pt"><span class="fig" data-srcpage="13" data-clip="192,675.75,531.75,709.5"></span></div>
+<div class="a sp" style="top:719.3pt"><p class="in"><b>(ii)</b> 공명에서는 $\Delta\omega=0$이고 $\Omega=\Omega_0$이므로 다음을 얻는다.</p></div>
+<div class="f" style="left:189pt;top:738.75pt"><span class="fig" data-srcpage="13" data-clip="189,738.75,393.75,770.25"></span></div>
+<span class="fig pn" data-srcpage="13" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 14 -->
+<div class="page">
+<span class="fig hd" data-srcpage="14" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt">그리고 원자는 바닥상태와 들뜬상태 사이를 주기적으로 오간다(라비 진동).</div>
+<div class="a sp" style="top:129.7pt"><p class="in"><b>(iii)</b> 큰 디튜닝, 즉 $\Delta\omega\gg\Omega_0$이고 $\Omega\approx\Delta\omega$인 경우에는 다음을 얻는다.</p></div>
+<div class="f" style="left:203.25pt;top:151.5pt"><span class="fig" data-srcpage="14" data-clip="203.25,151.5,378.75,186"></span></div>
+<div class="a sp" style="top:198.2pt">원자는 (전체 위상을 제외하면) 처음 상태 $|\psi_0\rangle=|g\rangle$에 머문다.</div>
+<div class="a sp" style="top:212.6pt"><p class="in"><b>(iv)</b> 이제 $t=\pi/\Omega_0$으로 두면 식 (46)은 다음과 같이 된다.</p></div>
+<div class="f" style="left:150pt;top:234.75pt"><span class="fig" data-srcpage="14" data-clip="150,234.75,432,269.25"></span></div>
+<div class="a sp" style="top:279.4pt">매개변수 $x=\Delta\omega/\Omega_0$을 도입하면 이는 다음과 같이 다시 쓸 수 있다.</div>
+<div class="f" style="left:204pt;top:298.5pt"><span class="fig" data-srcpage="14" data-clip="204,298.5,378,332.25"></span></div>
+<div class="a sp" style="top:342.2pt">$P_e(x)$의 극솟값은 확률이 0이 될 때, 즉 다음이 성립할 때 나타나며,</div>
+<div class="f" style="left:226.5pt;top:358.5pt"><span class="fig" data-srcpage="14" data-clip="226.5,358.5,357,392.25"></span></div>
+<div class="a sp" style="top:400.8pt">첫 번째 극솟값에 해당하는 $k=1$에 대해 다음을 얻는다.</div>
+<div class="f" style="left:269.25pt;top:414.75pt"><span class="fig" data-srcpage="14" data-clip="269.25,414.75,313.5,439.5"></span></div>
+<div class="a sp" style="top:468.0pt">— <b>램지 무늬</b></div>
+<div class="a sp" style="top:482.5pt"><p class="in">문제의 둘째 부분을 풀려면 시간에 따라 변한 상태 $|\psi_{\tau,T}\rangle$를 구해야 하며, 이는 형식적으로 다음과 같이 주어진다.</p></div>
+<div class="f" style="left:197.25pt;top:509.25pt"><span class="fig" data-srcpage="14" data-clip="197.25,509.25,385.5,541.5"></span></div>
+<div class="w ov" style="left:242pt;width:36pt;top:531.6pt;font-size:8pt;line-height:11pt;background:#fff;text-align:center">공동 2</div>
+<div class="w ov" style="left:280pt;width:41pt;top:531.6pt;font-size:8pt;line-height:11pt;background:#fff;text-align:center">자유 진행</div>
+<div class="w ov" style="left:323pt;width:36pt;top:531.6pt;font-size:8pt;line-height:11pt;background:#fff;text-align:center">공동 1</div>
+<div class="a sp" style="top:547.8pt">여기서</div>
+<div class="f" style="left:165pt;top:567.75pt"><span class="fig" data-srcpage="14" data-clip="165,567.75,417,642"></span></div>
+<div class="a sp" style="top:655.7pt"><p class="ni">는 두 공동 사이의 자유 진행에 해당하는 시간 변화 연산자이다. 약간의 계산을 거치면 다음을 얻는다.</p></div>
+<div class="f" style="left:51pt;top:690pt"><span class="fig" data-srcpage="14" data-clip="51,690,531.75,729"></span></div>
+<div class="a sp" style="top:740.9pt"><p class="ni">여기서 $A_\tau=A(\Omega_0,\Delta\omega,\tau)$, $B_\tau=B(\Omega_0,\tau)$, $C_\tau=C(\Omega_0,\Delta\omega,\tau)$는 식 (45)에서 도입한 것이다.</p></div>
+<span class="fig pn" data-srcpage="14" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 15 -->
+<div class="page">
+<span class="fig hd" data-srcpage="15" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="in"><b>(v)</b> 이제 일반적으로 다음이 성립함을 쉽게 보일 수 있다.</p></div>
+<div class="f" style="left:62.25pt;top:135pt"><span class="fig" data-srcpage="15" data-clip="62.25,135,531.75,208.5"></span></div>
+<div class="a sp" style="top:220.6pt">$\tau=\pi/(2\,\Omega_0)$, $T=\xi\tau=\xi\pi/(2\,\Omega_0)$으로 두고 다시 $x=\Delta\omega/\Omega_0$을 도입하면 다음에 이른다.</div>
+<div class="f" style="left:51pt;top:236.25pt"><span class="fig" data-srcpage="15" data-clip="51,236.25,561,321.75"></span></div>
+<div class="a sp" style="top:333.2pt">여기서</div>
+<div class="f" style="left:222pt;top:335.25pt"><span class="fig" data-srcpage="15" data-clip="222,335.25,359.25,381.75"></span></div>
+<div class="a sp" style="top:385.1pt">그리고</div>
+<div class="f" style="left:92.25pt;top:402.75pt"><span class="fig" data-srcpage="15" data-clip="92.25,402.75,489.75,438"></span></div>
+<div class="a sp" style="top:450.2pt">예상대로 $\tilde P_e(x;0)=P_e(x)$임에 주목하라.</div>
+<div class="a sp" style="top:464.7pt"><p class="in"><b>(vi)</b> 식 (49)의 “포락선” $g(x)$는 다음일 때 0이 된다.</p></div>
+<div class="f" style="left:226.5pt;top:480pt"><span class="fig" data-srcpage="15" data-clip="226.5,480,357,513.75"></span></div>
+<div class="a sp" style="top:523.4pt"><p class="ni">따라서 $g(x)$는 $x=\sqrt{15}$에서 처음으로 0이 된다. 그러므로 $\tilde P_e(x_m)=0$을 주는 첫 번째 값 $x_m&gt;0$을 구하려면 구간 $0\le x\le\sqrt{15}$에 집중하여 $f_\xi(x)$의 거동을 조사하면 된다.</p></div>
+<div class="a sp" style="top:566.7pt"><p class="in">함수 $f_\xi(x)$는 다음일 때 0이 된다.</p></div>
+<div class="f" style="left:118.5pt;top:582.75pt"><span class="fig" data-srcpage="15" data-clip="118.5,582.75,463.5,617.25"></span></div>
+<div class="a sp" style="top:626.6pt">또는 더 간단히 다음일 때 0이 된다.</div>
+<div class="f" style="left:186pt;top:639pt"><span class="fig" data-srcpage="15" data-clip="186,639,531.75,699.75"></span></div>
+<div class="a sp" style="top:710.9pt"><p class="ni">우리가 찾는 $x_m&gt;0$의 값을 어림하려면 다음과 같이 하면 된다. 식 (50)의 함수 $G_\xi(x)$의 점근선은 다음 위치에 있으며,</p></div>
+<div class="f" style="left:218.25pt;top:746.25pt"><span class="fig" data-srcpage="15" data-clip="218.25,746.25,364.5,777"></span></div>
+<span class="fig pn" data-srcpage="15" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 16 -->
+<div class="page">
+<span class="fig hd" data-srcpage="16" data-clip="50,47,532,89"></span>
+<div class="f" style="left:98.25pt;top:110.25pt"><span class="fig" data-srcpage="16" data-clip="98.25,110.25,483.75,237.75"></span></div>
+<div class="a sp" style="top:246.8pt"><p class="ni">그림 3: 왼쪽: $\xi=4$일 때 $x\in(-2/\xi,2/\xi)$에서 그린 함수 $G_\xi(x)$와 $F(x)$의 그래프. 처음 두 점근선 $x=\pm2/\xi$와 교점 $x_m&gt;0$에 주목하라. 오른쪽: $\xi=4$일 때 $x$의 함수로 그린 $\tilde P_e(x;\xi)$의 그래프(실선). “포락선” $g(x)$와 그 처음 두 극솟값 $x=\pm\sqrt{15}$도 함께 나타내었다(점선).</p></div>
+<div class="a sp" style="top:325.3pt"><p class="ni">여기서 $k\in\mathbb N$이므로 첫 번째 점근선은 $|x|=2/\xi$에 있다. 실제로 $0\le x\le2/\xi$에서 다음이 성립하며,</p></div>
+<div class="f" style="left:262.5pt;top:351.75pt"><span class="fig" data-srcpage="16" data-clip="262.5,351.75,319.5,367.5"></span></div>
+<div class="a sp" style="top:374.3pt">$G_\xi(x)=0$이다. 이제 같은 구간 $0\le x\le2/\xi$에서 식 (50)의 우변을 살펴보자.</div>
+<div class="f" style="left:201pt;top:387.75pt"><span class="fig" data-srcpage="16" data-clip="201,387.75,381,447.75"></span></div>
+<div class="a sp" style="top:458.1pt">는 분명히 양수이다. 또한</div>
+<div class="f" style="left:222.75pt;top:472.5pt"><span class="fig" data-srcpage="16" data-clip="222.75,472.5,359.25,554.25"></span></div>
+<div class="a sp" style="top:562.9pt">이고</div>
+<div class="f" style="left:180.75pt;top:577.5pt"><span class="fig" data-srcpage="16" data-clip="180.75,577.5,402,654"></span></div>
+<div class="a sp" style="top:661.1pt">이므로 다음을 얻는다.</div>
+<div class="f" style="left:188.25pt;top:669pt"><span class="fig" data-srcpage="16" data-clip="188.25,669,395.25,699.75"></span></div>
+<div class="a sp" style="top:703.0pt">즉, $F(x)$는 구간 $0\le x\le2/\xi$에서 단조감소 함수이다.</div>
+<div class="a sp" style="top:717.4pt"><p class="in">결국 식 (50)은 $\tilde P_e(x_m)=0$을 주는 해 $0\le x_m\le2/\xi$를 가지며, 극한 $\xi\gg1$에서 $x_m\approx2/\xi$를 얻는다.</p></div>
+<div class="a sp" style="top:746.3pt"><p class="in">예로서 그림 3에는 $\xi=4$일 때 $G_\xi(x)$와 $F(x)$의 그래프를 해 $x_m$과 함께 나타내고(왼쪽 패널), 확률 $\tilde P_e(x_m;\xi)=0$의 그래프도 나타내었다(오른쪽 패널).</p></div>
+<span class="fig pn" data-srcpage="16" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 17 (problem paper p7): Structure of matter -->
+<div class="page" style="--dy:-0.8pt">
+<span class="fig hd" data-srcpage="17" data-clip="50,47,532,89"></span>
+<h2><span class="n">4</span>물질의 구조</h2>
+<div class="a" style="top:141pt"><p class="ni"><b>스핀 편극된 전자 세기</b> - 온도가 $T=0$인 전자 기체를 생각하자. 처음에는 전자–전자 쿨롱 상호작용을 무시하라. 이 전자 기체가 전자 스핀과 결합하는 정적이고 균일한 자기장 $B=8.64\ \mathrm T$ 속에 잠겨 있다고 가정하라(즉, 전자의 궤도 운동에 대한 자기장의 효과는 무시하라). 길이를 나타내는 양 $L$의 값은 다음과 같다: $L=41.1\ \mathrm{nm}$.</p></div>
+<div class="l" style="top:226pt"><span class="k">i)</span><p><b>(0.5점)</b> 바닥상태에서 $N$개 전자 모두의 전자 스핀 자기 모멘트가 자기장 방향으로 정렬되는 최대 수밀도 $n=N/V$의 식을 유도하고, 이 밀도의 값을 계산하여라($\mathrm{m^{-3}}$ 단위로).</p></div>
+<div class="l" style="top:279pt"><span class="k">ii)</span><p><b>(1점)</b> 금속 나노입자의 전자들을 극단적으로 단순화한 모형, 즉 정육면체 부피 $V=L\times L\times L$로 기술하라. 앞 문항의 결과를 이용하여 $N_{\max}=n\,V$를 계산하여라.</p></div>
+<div class="l" style="top:333pt"><span class="k">iii)</span><p><b>(1점)</b> $L\times L\times L$ 상자 안의 자유 전자 파동함수에 주기적 경계 조건(PBC)을 적용하라. 그 결과로 얻어지는 이산적인 단일 전자 에너지 준위와 축퇴도를 고려할 때, 같은 자기장에서 스핀이 100% 정렬되는 실제 최대 전자 수 $N^{\rm PBC}_{\max}$는 얼마인가?</p></div>
+<div class="l" style="top:400pt"><span class="k">iv)</span><p><b>(2점)</b> 나노입자 모형을 $L\times L\times L$ 정육면체 모양의 무한히 깊은 퍼텐셜 우물로 바꾸어, 문항 iii)의 PBC를 전자 파동함수에 대한 영 경계 조건(NBC)으로 바꾸어라. 그 결과로 얻어지는 이산적인 단일 전자 에너지 준위와 축퇴도를 고려할 때, 이 모형에서는 (같은 자기장에서) 스핀이 100% 정렬된 전자의 최대 수 $N^{\rm NBC}_{\max}$가 얼마가 되는가?</p></div>
+<div class="l" style="top:482pt"><span class="k">v)</span><p><b>(2.5점)</b> (하트리–포크 평균장 수준에서) 전자 사이의 전기적 반발이 균일한 양전하 배경으로 끌리는 인력에 의해 상쇄된다고 가정하자. 이 유효 독립 전자 묘사에서, 전자–전자 쿨롱 상호작용의 잔여 교환 효과에 대해 다음의 단순화한 해밀토니언을 택하라: $H_{\rm exch}=-\frac{1}{2}J(N_\uparrow^2+N_\downarrow^2)^{1/2}$. $J&gt;0$이면 이 항이 스핀 반평행 상태보다 스핀 정렬 상태를 선호함을 확인하여라. $L\times L\times L$ 상자 안에 균일하게 비국소화된 두 전자의 쿨롱 반발로 $J$의 값을 어림하여라.</p></div>
+<div class="l" style="top:594pt"><span class="k">vi)</span><p><b>(3점)</b> 문항 ii)의 연속체 모형에서 교환 항 $H_{\rm exch}$가 있으면, 같은 자기장에서 스핀이 100% 정렬된 전자의 최대 수 $N_{\max}$는 어떻게 달라지는가? 어떤 값 $N^{\rm exch}_{\max}$로 바뀌는가?</p></div>
+<span class="fig pn" data-srcpage="17" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 18 -->
+<div class="page">
+<span class="fig hd" data-srcpage="18" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt"><p class="ni"><b>(i)</b> 전자 스핀에만 결합하는 자기장은 스핀 업 에너지 준위를 $2\cdot\frac{1}{2}\mu_BB=\mu_BB$만큼 올리고, 스핀 다운 에너지를 같은 양만큼 내린다.</p></div>
+<div class="a sp" style="top:166.3pt"><p class="in">$T=0$인 페르미 기체는 페르미 준위 $\epsilon_F$가 스핀 다운 띠를 가로지르되 스핀 업 띠와는 만나지 않는 한 완전히 편극된다.</p></div>
+<div class="f" style="left:150.75pt;top:195pt"><span class="fig" data-srcpage="18" data-clip="150.75,195,435.75,396"></span></div>
+<div class="a sp" style="top:409.9pt"><p class="in">그림에 나타낸 것처럼, 100% 편극과 양립하는 최대 전자 수는 페르미 준위가 스핀 업 띠의 바닥 바로 아래에 무한히 가까이 있을 때 나타난다. 이 조건은 다음과 같이 표현된다.</p></div>
+<div class="f" style="left:226.5pt;top:462.75pt"><span class="fig" data-srcpage="18" data-clip="226.5,462.75,355.5,478.5"></span></div>
+<div class="a sp" style="top:491.6pt"><p class="ni">스핀 다운 전자의 스핀 축퇴도 $g_s$가 보통의 2가 아니라 1임에 주목하면, 다음 표준 식으로부터 해당 최대 전자 밀도에 대한 방정식을 얻는다.</p></div>
+<div class="f" style="left:232.5pt;top:531pt"><span class="fig" data-srcpage="18" data-clip="232.5,531,349.5,566.25"></span></div>
+<div class="a sp" style="top:571.3pt">이 식은 $\epsilon_F$를 수밀도 $n$과 연결한다.</div>
+<div class="a sp" style="top:585.7pt"><p class="in">따라서</p></div>
+<div class="f" style="left:186.75pt;top:594pt"><span class="fig" data-srcpage="18" data-clip="186.75,594,396,749.25"></span></div>
+<span class="fig pn" data-srcpage="18" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 19 -->
+<div class="page">
+<span class="fig hd" data-srcpage="19" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="in">수치로 계산하면</p></div>
+<div class="f" style="left:139.5pt;top:133.5pt"><span class="fig" data-srcpage="19" data-clip="139.5,133.5,442.5,235.5"></span></div>
+<div class="a sp" style="top:246.0pt"><p class="in">이는 비교적 작은 밀도로, 일반적인 금속의 보통 전도 전자 밀도보다 적어도 다섯 자릿수 작다. 보통의 금속 밀도에서 파울리 원리가 부과하는 전형적인 운동 에너지에 비해 자기 에너지가 작다는 점을 생각하면, 이렇게 작은 값은 예상할 만하다.</p></div>
+<div class="a sp" style="top:316.9pt"><p class="in"><b>(ii)</b></p></div>
+<div class="f" style="left:117pt;top:342pt"><span class="fig" data-srcpage="19" data-clip="117,342,465,359.25"></span></div>
+<div class="a sp" style="top:365.1pt">즉, 전자 약 5개이다.</div>
+<div class="a sp" style="top:392.7pt"><p class="in"><b>(iii)</b> 한 변이 $L$인 정육면체 상자에서 PBC가 허용하는 $\vec k$ 값은 다음과 같다.</p></div>
+<div class="f" style="left:172.5pt;top:410.25pt"><span class="fig" data-srcpage="19" data-clip="172.5,410.25,276,441.75"></span></div>
+<div class="w sp" style="left:288.1pt;top:420.8pt">여기서 $n_\alpha=0,\pm1,\pm2,\dots$</div>
+<div class="a sp" style="top:446.5pt">이에 대응하는 이산적인 운동 에너지 준위는 다음과 같다.</div>
+<div class="f" style="left:123.75pt;top:464.25pt"><span class="fig" data-srcpage="19" data-clip="123.75,464.25,458.25,498.75"></span></div>
+<div class="a sp" style="top:507.5pt"><p class="ni">에너지 척도를 $A=(2\pi\hbar)^2/(2m_eL^2)$로 나타내면, 그 결과로 얻는 낮은 에너지 준위들은 다음과 같다.</p></div>
+<div class="f" style="left:198.75pt;top:537pt"><span class="fig" data-srcpage="19" data-clip="198.75,537,383.25,642"></span></div>
+<div class="ovh ov" style="left:273pt;width:59pt;top:541pt">축퇴도</div>
+<div class="ovh ov" style="left:341.5pt;width:38pt;top:541pt">에너지</div>
+<div class="a sp" style="top:649.3pt"><p class="in">주어진 자료로 운동 에너지 척도 $A=1.42662\times10^{-22}\ \mathrm J=890.4\ \mu\mathrm{eV}$를 자기 에너지 척도 $2\mu_BB=1.60255\times10^{-22}\ \mathrm J=1000.2\ \mu\mathrm{eV}$와 비교하면 다음을 알 수 있다.</p></div>
+<div class="f" style="left:244.5pt;top:684pt"><span class="fig" data-srcpage="19" data-clip="244.5,684,338.25,699.75"></span></div>
+<div class="a sp" style="top:709.2pt"><p class="ni">따라서 표의 처음 두 줄에 있는 준위(준위 $0$과 $A$)를 채울 만큼의 전자로는 스핀이 완전히 편극되지만, 셋째 줄 이후의 준위(준위 $2A$, $3A$ 등)는 채워지지 않는다. 그 결과 스핀 다운 전자의 수는 다음과 같으며,</p></div>
+<div class="f" style="left:240.75pt;top:756.75pt"><span class="fig" data-srcpage="19" data-clip="240.75,756.75,341.25,775.5"></span></div>
+<span class="fig pn" data-srcpage="19" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 20 -->
+<div class="page">
+<span class="fig hd" data-srcpage="20" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt">이는 문항 (<i>ii</i>)의 결과와 눈에 띄게 다르다.</div>
+<div class="a sp" style="top:142.8pt"><p class="in"><b>(iv)</b> PBC를 NBC로 바꾸면 파동함수는 평면파에서 실수 삼각함수로 바뀐다. 원점을 상자의 한 꼭짓점에 두면, NBC와 양립하는 자유 전자 파동함수는 각 성분 $\alpha=x,y,z$에 대한 $\sin(r_\alpha\pi n_\alpha/L)$의 곱에 비례한다. “양자수”는 $n_\alpha=1,2,3,\dots$이며, 그 결과로 얻는 에너지 준위는 다음과 같다.</p></div>
+<div class="f" style="left:128.25pt;top:206.25pt"><span class="fig" data-srcpage="20" data-clip="128.25,206.25,454.5,240.75"></span></div>
+<div class="a sp" style="top:251.4pt"><p class="ni">관련된 에너지 척도를 $A'=(\pi\hbar)^2/(2m_eL^2)\equiv A/4=3.5665\times10^{-23}\ \mathrm J=222.6\ \mu\mathrm{eV}$로 나타내자. 그 결과로 얻는 낮은 에너지 준위들은 다음과 같다.</p></div>
+<div class="f" style="left:153.75pt;top:286.5pt"><span class="fig" data-srcpage="20" data-clip="153.75,286.5,428.25,405.75"></span></div>
+<div class="ovh ov" style="left:218.5pt;width:59pt;top:290.3pt">축퇴도</div>
+<div class="ovh ov" style="left:286.8pt;width:38pt;top:290.3pt">에너지</div>
+<div class="ovh ov" style="left:332.3pt;width:90pt;top:290.3pt">들뜸 에너지</div>
+<div class="a sp" style="top:415.2pt">다음을 알 수 있다.</div>
+<div class="f" style="left:238.5pt;top:425.25pt"><span class="fig" data-srcpage="20" data-clip="238.5,425.25,343.5,443.25"></span></div>
+<div class="a sp" style="top:450.5pt"><p class="ni">따라서 표의 처음 두 줄에 있는 준위(준위 $3A'$과 $6A'$)를 채울 만큼의 전자로는 스핀이 완전히 편극되며, 그 위의 준위들은 비어 있게 된다. 그 결과 스핀 다운 전자의 수는 다음과 같다.</p></div>
+<div class="f" style="left:240.75pt;top:501.75pt"><span class="fig" data-srcpage="20" data-clip="240.75,501.75,342,520.5"></span></div>
+<div class="a sp" style="top:532.2pt">문항 2, 3과 비교하여 또 하나의 다른 값이다!</div>
+<div class="a sp" style="top:559.8pt"><p class="in"><b>(v)</b> 스핀이 정렬된 상태의 에너지는 $E^{\rm ferro}=-\frac{1}{2}JN$이다. $N_\uparrow=N-N_\downarrow$이므로 $N_\downarrow,N_\uparrow\neq0$ 또는 $N$인 상태는 에너지가 더 크다. 즉,</p></div>
+<div class="f" style="left:119.25pt;top:596.25pt"><span class="fig" data-srcpage="20" data-clip="119.25,596.25,462.75,660"></span></div>
+<div class="a sp" style="top:671.8pt">이는 $N_\downarrow$과 $N_\uparrow$이 모두 0이 아닌 한 성립한다.</div>
+<div class="a sp" style="top:686.2pt"><p class="in" style="text-align-last:justify">부피 $V$에 균일하게 비국소화된 전자 하나의 수밀도는 $V^{-1}$이다. 이에 대응하는 전하 밀도는 $-q_eV^{-1}$이다. 이렇게 균일한 두 전하 분포 사이의 반발 에너지는 다음과 같이</p></div>
+<span class="fig pn" data-srcpage="20" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 21 -->
+<div class="page">
+<span class="fig hd" data-srcpage="21" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt">어림할 수 있다.</div>
+<div class="f" style="left:96pt;top:136.5pt"><span class="fig" data-srcpage="21" data-clip="96,136.5,485.25,308.25"></span></div>
+<div class="a sp" style="top:331.3pt"><p class="in"><b>(vi)</b> 교환 항은 스핀이 완전히 정렬될 때, 예를 들어 $N_\downarrow=N$, $N_\uparrow=0$일 때 최소이며, 그 값은 다음과 같다.</p></div>
+<div class="f" style="left:249pt;top:352.5pt"><span class="fig" data-srcpage="21" data-clip="249,352.5,333,383.25"></span></div>
+<div class="a sp" style="top:387.2pt">스핀 1개가 뒤집힌 상태($N_\downarrow=N-1$, $N_\uparrow=1$)의 에너지는 다음과 같다.</div>
+<div class="f" style="left:152.25pt;top:409.5pt"><span class="fig" data-srcpage="21" data-clip="152.25,409.5,430.5,440.25"></span></div>
+<div class="a sp" style="top:449.2pt">에너지 차이</div>
+<div class="f" style="left:90.75pt;top:470.25pt"><span class="fig" data-srcpage="21" data-clip="90.75,470.25,491.25,683.25"></span></div>
+<div class="a sp" style="top:695.1pt">는 스핀 하나를 뒤집는 데 필요한 자기 에너지 $2\mu_BB$에 더해진다.</div>
+<div class="a sp" style="top:709.5pt"><p class="in">이 교환 에너지 때문에 문항 2에서 구한 관계식은 다음과 같이 바뀐다.</p></div>
+<div class="f" style="left:197.25pt;top:732pt"><span class="fig" data-srcpage="21" data-clip="197.25,732,385.5,766.5"></span></div>
+<span class="fig pn" data-srcpage="21" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 22 -->
+<div class="page">
+<span class="fig hd" data-srcpage="22" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt">이 방정식은 $\Delta E_{\rm exch}=\frac{1}{2}J$로 둘 수 있는 매우 큰 $N$의 극한에서 쉽게 풀린다.</div>
+<div class="f" style="left:213.75pt;top:138pt"><span class="fig" data-srcpage="22" data-clip="213.75,138,368.25,168.75"></span></div>
+<div class="a sp" style="top:177.5pt"><p class="in">수치로 계산하면</p></div>
+<div class="f" style="left:159.75pt;top:199.5pt"><span class="fig" data-srcpage="22" data-clip="159.75,199.5,423,250.5"></span></div>
+<div class="a sp" style="top:264.5pt"><p class="ni">이 밀도는 물론 문항 1의 결과보다 훨씬 크다. 같은 나노 부피 $V=L^3$ 안에서 스핀이 정렬된 전자의 최대 수는 이에 대응하여 다음과 같다.</p></div>
+<div class="f" style="left:116.25pt;top:301.5pt"><span class="fig" data-srcpage="22" data-clip="116.25,301.5,465.75,320.25"></span></div>
+<div class="a sp" style="top:331.8pt"><p class="ni">즉, 전자 약 1423개이다. 실제로 $N=N^{\rm exch}_{\max}\gg1$이며, 이는 $\Delta E_{\rm exch}$ 계산에서 큰 $N$ 근사를 <i>사후적으로</i> 정당화한다.</p></div>
+<span class="fig pn" data-srcpage="22" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 23 (problem paper p8): Classical mechanics -->
+<div class="page">
+<span class="fig hd" data-srcpage="23" data-clip="50,47,532,89"></span>
+<h2><span class="n">5</span>고전역학</h2>
+<div class="a" style="left:58pt;width:239pt;top:174pt"><p class="ni">구대칭인 공의 바깥 반지름은 $r$, 질량은 $m$이며, 공의 질량중심(CM)에 대한 관성 모멘트는 $I^*=\beta\,mr^2$이다. 이 공은 반지름 $R$인 구형 공동 안에서 미끄러지지 않고 구른다(“순수 구름”). 모든 것은 지표면의 중력장 $g$ 안에 놓여 있다. 구름 마찰은 무시할 수 있다. 공과 구면의 접점은 구형 공동의 중심에서 잰 각 $\theta$만큼 최저점에서 벗어나 있다.</p></div>
+<div class="f" style="left:306pt;top:133pt"><span class="fig" data-srcpage="23" data-clip="306,133,504,331"></span></div>
+<div class="a" style="top:332pt"><p class="in">처음에 공은 공동의 최저점에 있고 질량중심 속력 $v_0$으로 움직인다.</p></div>
+<div class="a" style="top:361pt"><p class="in">일반적으로 구면 위의 순수 구름 운동은 자유도(DoF)가 2이며, 이는 극각 $\theta$와 방위각 $\phi$로 매개화할 수 있다.</p></div>
+<div class="l2" style="top:400pt"><span class="k">i)</span><p><b>(2점)</b> 구르는 공의 라그랑지언을 $\theta$, $\dot\theta$, $\phi$, $\dot\phi$의 함수로 쓰고, 이 문제에서는 $\theta$만 중요함을, 즉 이 문제의 자유도가 1뿐임을 증명하여라.</p></div>
+<div class="a" style="left:70pt;width:460pt;top:439pt">(앞의 내용을 증명하지 못했다면, 참이라고 가정하고 계속 풀어라…)</div>
+<div class="a" style="top:468pt"><p class="in">$\theta$와 이 문제의 다른 매개변수들의 함수로 다음 식들을 써라:</p></div>
+<div class="l2" style="top:510pt"><span class="k">ii)</span><b>(0.5점)</b> 질량중심의 속력: $v(\theta)=\dots$</div>
+<div class="l2" style="top:534pt"><span class="k">iii)</span><b>(0.5점)</b> 질량중심의 접선 가속도: $a_t(\theta)=\dots$</div>
+<div class="l2" style="top:558pt"><span class="k">iv)</span><b>(0.5점)</b> 표면이 만드는 구속 반작용력: $F_{\rm constr}(\theta)=\dots$</div>
+<div class="l2" style="top:583pt"><span class="k">v)</span><b>(0.5점)</b> 표면이 만드는 정지 마찰력: $F_{frict}(\theta)=\dots$</div>
+<div class="a" style="left:70pt;width:460pt;top:610pt">구르는 물체가 구대칭임을 염두에 두고:</div>
+<div class="l2" style="top:635pt"><span class="k">vi)</span><b>(2점)</b> $\beta$의 가능한 최댓값($\beta_{\max}$)은 얼마인가?</div>
+<div class="a" style="left:70pt;width:460pt;top:659pt">이제 $\beta=\beta_{\max}$, $r=1\ \mathrm{cm}$, $R=0.5\ \mathrm m$, $\mu_s=0.9$라고 하자:</div>
+<div class="l2" style="top:683pt"><span class="k">vii)</span><p><b>(4점)</b> 구르는 공이 운동하는 동안 내내 “순수 구름” 조건을 유지하도록 하는 처음 속력 $v_0$의 최솟값 $v^{\min}_0$은 얼마인가? [식과 수치를 모두 제시하라]</p></div>
+<span class="fig pn" data-srcpage="23" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 24 -->
+<div class="page">
+<span class="fig hd" data-srcpage="24" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt"><p class="ni">구르는 공의 질량중심은 반지름 $(R-r)$인 구면 위를 속력 $v$로 움직인다. 최저 위치에서 잰 질량중심의 높이는 $h=(R-r)(1-\cos\theta)$이다. 공은 각속도 $\omega$로 구르며, 미끄러지지 않는다는 조건 때문에 $v=\omega r$이다. 또한 공이 어떻게 움직이든 구대칭이므로 회전축에 대한 관성 모멘트는 언제나 $I^*$이다. 따라서 구르는 공의 운동 에너지는 다음과 같다.</p></div>
+<div class="f" style="left:197.25pt;top:214.5pt"><span class="fig" data-srcpage="24" data-clip="197.25,214.5,531.75,246.75"></span></div>
+<div class="a sp" style="top:254.9pt"><p class="in">퍼텐셜 에너지는 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:194.25pt;top:278.25pt"><span class="fig" data-srcpage="24" data-clip="194.25,278.25,531.75,294"></span></div>
+<div class="a sp" style="top:306.5pt"><p class="in">질량중심의 속도에는 두 성분이 있다.</p></div>
+<div class="f" style="left:191.25pt;top:330pt"><span class="fig" data-srcpage="24" data-clip="191.25,330,391.5,345.75"></span></div>
+<div class="a sp" style="top:359.4pt"><p class="ni">따라서 속력은 $v=(R-r)\sqrt{(\dot\theta)^2+(\sin\theta\,\dot\phi)^2}$으로 쓸 수 있다. 라그랑지언은 다음과 같다.</p></div>
+<div class="f" style="left:68.25pt;top:379pt"><span class="fig" data-srcpage="24" data-clip="68.25,379,504,408.1"></span></div>
+<div class="a sp" style="top:416.6pt"><p class="in">라그랑지언이 $\phi$에 대해 순환적이므로(즉 $\frac{d\mathcal L}{d\phi}=0$) 그 켤레 운동량은 운동하는 동안 상수이다: $\mathcal L_\phi=\frac{d\mathcal L}{d\dot\phi}=m{(1+\beta)}{[(R-r)\sin\theta]^2}\dot\phi$. 처음 조건($\theta=0$일 때)에서 이 값이 0이므로 언제까지나 0으로 남는다. 즉 $\dot\phi=0$이고 운동은 $\theta$ 방향으로만 일어난다.</p></div>
+<div class="a sp" style="top:510.7pt"><p class="in">구르는 공에 작용하는 힘은 다음과 같다.</p></div>
+<div class="bl sp" style="top:534.6pt"><span class="k">$\bullet$</span><p>무게 $\vec F_g=-mg\,\hat z$: 보존력이며 아래쪽을 향한다. 이 힘은 표면에 각각 수직인 방향과 접하는 방향 $\hat n$, $\hat t$로 다음과 같이 나눌 수 있다.</p></div>
+<div class="f" style="left:235.5pt;top:573.75pt"><span class="fig" data-srcpage="24" data-clip="235.5,573.75,376.5,591.75"></span></div>
+<div class="bl sp" style="top:605.0pt"><span class="k">$\bullet$</span><p>구속 반작용력 $\vec F_{constr}=F_{constr}\,\hat n$: 구형 공동의 중심을 향하며($F_{constr}\ge0$), 변위가 언제나 이 힘에 수직이므로 일을 하지 않는다.</p></div>
+<div class="bl sp" style="top:658.1pt"><span class="k">$\bullet$</span><p>정지 마찰력 $\vec F_{frict}=F_{frict}\,\hat t$: 표면에 접하며, 접점이 언제나 정지해 있으므로 일을 하지 않는다. 이 힘은 다음 조건을 만족해야 한다.</p></div>
+<div class="f" style="left:257.25pt;top:699pt"><span class="fig" data-srcpage="24" data-clip="257.25,699,354,714.75"></span></div>
+<div class="a sp" style="top:727.0pt"><p class="in">문항 <b>(ii)</b>, <b>(iii)</b>은 에너지 보존을 이용하여 풀 수 있다.</p></div>
+<div class="f" style="left:198pt;top:747pt"><span class="fig" data-srcpage="24" data-clip="198,747,384,779.25"></span></div>
+<span class="fig pn" data-srcpage="24" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 25 -->
+<div class="page">
+<span class="fig hd" data-srcpage="25" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:120.8pt"><p class="ni">순수 구름 조건으로부터 $\omega=\frac{v}{r}$이므로 $I^*\omega^2=\beta mr^2\frac{v^2}{r^2}=m\beta v^2$이다. 또한 구르는 공의 질량중심은 반지름 $(R-r)$인 원둘레를 따라 움직인다. 공동의 최저점에 있는 질량중심에 대해 $h=0$으로 잡으면 $h=(R-r)(1-\cos\theta)$이다. 따라서 다음을 얻는다.</p></div>
+<div class="f" style="left:186pt;top:169.5pt"><span class="fig" data-srcpage="25" data-clip="186,169.5,396,200.25"></span></div>
+<div class="a sp" style="top:211.4pt">최저점에서 $E=\frac{m}{2}(1+\beta)v_0^2$이므로 다음을 얻는다.</div>
+<div class="f" style="left:210.75pt;top:236.25pt"><span class="fig" data-srcpage="25" data-clip="210.75,236.25,531.75,267.75"></span></div>
+<div class="f" style="left:68.25pt;top:274.5pt"><span class="fig" data-srcpage="25" data-clip="68.25,274.5,287.25,320"></span></div>
+<div class="a sp" style="top:320.5pt"><p class="in">식 (53)을 시간에 대해 미분하면 다음을 얻는다.</p></div>
+<div class="f" style="left:221.25pt;top:340.5pt"><span class="fig" data-srcpage="25" data-clip="221.25,340.5,360,371.25"></span></div>
+<div class="a sp" style="top:387.7pt"><p class="ni">이제 질량중심은 반지름 $(R-r)$인 원둘레를 따라 각속력 $\frac{d\theta}{dt}$로 움직이므로 $v=(R-r)\frac{d\theta}{dt}$이다. 그러면 ($v$를 약분하여) 다음을 얻는다.</p></div>
+<div class="f" style="left:68.25pt;top:430.6pt"><span class="fig" data-srcpage="25" data-clip="68.25,430.6,193.5,466.5"></span></div>
+<div class="a sp" style="top:479.3pt"><p class="in">문항 <b>(iii)</b>에 대한 다른 풀이: 돌림힘의 기본 방정식을 이용하자. 힘 $\vec F_{constr}$, $\vec F_{frict}$는 적응력이다. 즉 운동을 먼저 풀기 전에는 계산할 수 없다. 따라서 접점을 기준점으로 잡자. 그러면 두 적응력의 팔이 0이므로 이들의 돌림힘도 0이다. 반면에 무게는 모두 질량중심에 작용하는 것으로 생각할 수 있으므로, 그 돌림힘의 크기는 $|M_g|=rmg\sin\theta$이고 그림의 평면에서 “바깥쪽”을 향한다. 공은 (그림에서) 시계 방향으로 구르므로 $\vec\omega$와 $\vec L$은 모두 그림의 평면에서 “안쪽”을 향한다. 따라서 “안쪽” 방향을 양의 방향으로 잡는 것이 편리하다. 그러면 다음을 얻는다.</p></div>
+<div class="f" style="left:213pt;top:602.25pt"><span class="fig" data-srcpage="25" data-clip="213,602.25,368.25,618.75"></span></div>
+<div class="a sp" style="top:635.7pt">그리고 $M_g=-mrg\sin\theta$이다. $M_g=\frac{dL}{dt}$로부터 다시 답 <b>(iii)</b>을 얻는다.</div>
+<div class="a sp" style="top:666.4pt"><p class="in">모든 힘을 $\hat n$ 방향으로 사영하면 구심력을 얻는다.</p></div>
+<div class="f" style="left:216.75pt;top:684.75pt"><span class="fig" data-srcpage="25" data-clip="216.75,684.75,364.5,717"></span></div>
+<div class="a sp" style="top:724.7pt">이로부터 식 (53)을 이용하면 다음을 얻는다.</div>
+<div class="f" style="left:171pt;top:744pt"><span class="fig" data-srcpage="25" data-clip="171,744,411,776.25"></span></div>
+<span class="fig pn" data-srcpage="25" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 26 -->
+<div class="page">
+<span class="fig hd" data-srcpage="26" data-clip="50,47,532,89"></span>
+<div class="f" style="left:68.25pt;top:111pt"><span class="fig" data-srcpage="26" data-clip="68.25,111,343.5,148.5"></span></div>
+<div class="a sp" style="top:162.8pt"><p class="in">모든 힘을 $\hat t$ 방향으로 사영하면 접선 방향 힘을 얻는다.</p></div>
+<div class="f" style="left:197.25pt;top:177.75pt"><span class="fig" data-srcpage="26" data-clip="197.25,177.75,384,209.25"></span></div>
+<div class="f" style="left:68.25pt;top:213pt"><span class="fig" data-srcpage="26" data-clip="68.25,213,237,249.75"></span></div>
+<div class="a sp" style="top:261.7pt"><p class="in">주어진 $r$와 $m$에서 관성 모멘트가 최대가 되는 것은 질량이 회전축에서 최대한 멀리 분포할 때이다. 구대칭인 경우 이는 속이 빈 구일 때 일어나며, 이때 $I^*=\frac{2}{3}mr^2$이다. 따라서</p></div>
+<div class="f" style="left:68.25pt;top:312pt"><span class="fig" data-srcpage="26" data-clip="68.25,312,150,345.75"></span></div>
+<div class="a sp" style="top:358.4pt"><p class="in">순수 구름이 일어날 조건은 $F_{constr}&gt;0$(접촉)과 $|F_{frict}|&lt;\mu_sF_{constr}$(미끄러지지 않음)이다. 분명히 첫째 조건은 둘째 조건에 포함되므로 둘째 조건에 집중한다. 다음 조건을 조사해야 한다.</p></div>
+<div class="f" style="left:147.75pt;top:402.75pt"><span class="fig" data-srcpage="26" data-clip="147.75,402.75,435,435"></span></div>
+<div class="a sp" style="top:447.9pt">이는 $\beta=\frac{2}{3}$일 때 (그리고 $m$을 약분하면) 다음과 같다.</div>
+<div class="f" style="left:182.25pt;top:468.75pt"><span class="fig" data-srcpage="26" data-clip="182.25,468.75,401.25,501"></span></div>
+<div class="a sp" style="top:503.8pt">또는</div>
+<div class="f" style="left:186pt;top:510.75pt"><span class="fig" data-srcpage="26" data-clip="186,510.75,396,552"></span></div>
+<div class="a sp" style="top:557.2pt">이제 함수 $f(\theta)$를 조사하자.</div>
+<div class="f" style="left:168pt;top:573.75pt"><span class="fig" data-srcpage="26" data-clip="168,573.75,414.75,591"></span></div>
+<div class="a sp" style="top:603.1pt"><p class="ni">극값은 $f'(\theta_0)=0$으로 두어 얻으며, 이로부터 $\tan(\theta_0)=-\frac{2}{11\mu_s}=-0.202$이다. 관심 구간 $\theta\in[0;\pi]$에서 유일한 해는 $\theta_0=2.942\ \mathrm{rad}$이다. 이 조건에서 $f(\theta_0)=10.10$이고 $f''(\theta_0)=-f(\theta_0)&lt;0$이므로 이는 극댓값이다. 따라서 $\mu_s\left(\frac{5v_0^2}{g(R-r)}-6\right)&gt;f(\theta_0)$이면 순수 구름이 언제나 유지된다고 확신할 수 있다. $v_0$으로 나타내면 이 조건은 다음과 같다.</p></div>
+<div class="f" style="left:219pt;top:688.5pt"><span class="fig" data-srcpage="26" data-clip="219,688.5,363.75,720"></span></div>
+<div class="a sp" style="top:722.6pt">즉</div>
+<div class="f" style="left:68.25pt;top:730.5pt"><span class="fig" data-srcpage="26" data-clip="68.25,730.5,331.5,776.25"></span></div>
+<span class="fig pn" data-srcpage="26" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 27 (problem paper p9): EM -->
+<div class="page">
+<span class="fig hd" data-srcpage="27" data-clip="50,47,532,89"></span>
+<h2><span class="n">6</span>전자기학</h2>
+<div class="a" style="top:141pt"><p class="ni">동축 케이블(그림 4a)은 반지름 $a$, 길이 $h$, 저항 $R$인 중심의 <i>옴</i> 도체와, 이를 둘러싼 반지름 $b$인 동축의 완전 도체 원통으로 이루어져 있다. 중심 도체와 바깥 원통 사이의 영역은 진공이다.</p></div>
+<div class="f" style="left:84pt;top:190pt"><span class="fig" data-srcpage="27" data-clip="84,190,500,407"></span></div>
+<div class="c" style="top:416pt">그림 4: 동축 케이블 a), 전지 b), 저항 c)의 기하 구조</div>
+<div class="a" style="top:457pt"><p class="in">케이블의 한쪽 끝은 두께를 무시할 수 있는 원형 전지에 연결되어 있다(그림 4b). 영역 $r&lt;a$의 전위는 $V$이고, 전지 내부의 전위는 반지름 방향으로 다음과 같이 0까지 감소한다.</p></div>
+<div class="f" style="left:245pt;top:505pt"><span class="fig" data-srcpage="27" data-clip="245,505,340,542"></span></div>
+<div class="a" style="top:544pt"><p class="in">케이블의 다른 쪽 끝은 <i>옴</i> 도체로 만든 원형 부하 저항 $R_L$에 연결되어 있다. 이 저항은 두께를 무시할 수 있고, 안쪽 반지름과 바깥 반지름이 각각 $a$와 $b$이다(그림 4c). 다음 네 영역을 생각하자.</p></div>
+<div class="a" style="left:160pt;width:55pt;top:606pt;text-align:right">영역 1</div>
+<div class="f" style="left:224pt;top:596pt"><span class="fig" data-srcpage="27" data-clip="224,596,278,627"></span></div>
+<div class="a" style="left:291pt;width:55pt;top:606pt;text-align:right">영역 2</div>
+<div class="f" style="left:355pt;top:596pt"><span class="fig" data-srcpage="27" data-clip="355,596,409,627"></span></div>
+<div class="a" style="left:160pt;width:55pt;top:649pt;text-align:right">영역 3</div>
+<div class="f" style="left:224pt;top:639pt"><span class="fig" data-srcpage="27" data-clip="224,639,278,670"></span></div>
+<div class="a" style="left:291pt;width:55pt;top:649pt;text-align:right">영역 4</div>
+<div class="f" style="left:355pt;top:639pt"><span class="fig" data-srcpage="27" data-clip="355,639,409,670"></span></div>
+<div class="l" style="top:679pt"><span class="k">i)</span><p><b>(4점)</b> 네 영역 각각의 전기장과, 네 영역을 나누는 경계면의 표면 전하 밀도를 구하여라. <i>힌트:</i> 원통좌표계에서 라플라스 방정식을 변수 분리법으로 풀고(문제 1의 첫 번째 힌트도 참고하라), 분리 상수는 0으로 두어라.</p></div>
+<div class="l" style="top:746pt"><span class="k">ii)</span><p><b>(2점)</b> 위 영역들에서 포인팅 벡터를 구하고, 여러 영역 사이의 에너지 흐름을 논하여라.</p></div>
+<span class="fig pn" data-srcpage="27" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 28 (problem paper p10) -->
+<div class="page">
+<span class="fig hd" data-srcpage="28" data-clip="50,47,532,89"></span>
+<div class="l" style="top:114pt"><span class="k">iii)</span><p><b>(4점)</b> 마지막으로 $R=0$이라 하고, 계의 전자기 운동량을 구하여라. 그리고 계의 각 부분에 운동이 있다면 그 운동과 비교하여라.</p></div>
+<span class="fig pn" data-srcpage="28" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 29 -->
+<div class="page">
+<span class="fig hd" data-srcpage="29" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt"><b>(i) 영역 1, 2, 3, 4의 전기장</b></div>
+<div class="a sp" style="top:159.5pt"><p class="ni">정상 전류가 흐르는 도체와 관련된 전기장 문제는 교과서에서 그다지 주목받지 못했다. 주목할 만한 예외로 Sommerfeld [1], Jefimenko [2], Haus와 Melcher [3]가 있다. 이 문제는 논문들에서 다루어져 왔다. 여기서 제시하는 풀이는 Marcus [4], Russell [5], McDonald [6]의 방법에 바탕을 둔다. 문제의 대칭성으로 보아 안쪽 도체의 축을 $z$축으로 하는 원통좌표계를 쓰는 것이 좋다. 방위각 대칭 때문에 퍼텐셜은 $z$와 $r$ 좌표만의 함수 $\phi(r,z)$이다. <i>옴</i> 도체 속 정상 전류 문제는 보통 라플라스 방정식으로 풀며, 경우에 따라 혼합 경계 조건을 쓴다. 이 문제의 경계 조건(아래에서 제시한다)을 쓰면, 분리 상수를 0으로 둔 변수 분리법으로 얻는 다음 일반해에 이른다 [4], [5].</p></div>
+<div class="f" style="left:214.5pt;top:316.5pt"><span class="fig" data-srcpage="29" data-clip="214.5,316.5,368.25,330.75"></span></div>
+<div class="a sp" style="top:339.4pt"><p class="in">도체에 흐르는 전체 전류는 $I=V/(R+R_L)$이다. 안쪽 도체에서의 전압 강하는 $VR/(R+R_L)$이고, 나머지 전압 $VR_L/(R+R_L)$은 부하 저항에 걸린다. 앞으로 편의를 위해 $\alpha=R/(R+R_L)$, $\beta=R_L/(R+R_L)$로 정의하면 $\alpha+\beta=1$이다.</p></div>
+<div class="a sp" style="top:399.4pt"><b>안쪽 도체 내부, 영역 1의 전기장</b></div>
+<div class="a sp" style="top:421.6pt"><p class="ni">$r&gt;a$에서는 전도가 없으므로 전류 밀도(와 전기장)는 도선 표면에 수직인 성분을 갖지 않는다. 경계 조건은 다음과 같다.</p></div>
+<div class="f" style="left:147.75pt;top:460.5pt"><span class="fig" data-srcpage="29" data-clip="147.75,460.5,434.25,481.5"></span></div>
+<div class="a sp" style="top:485.9pt"><p class="in">경계 조건을 적용하면 영역 1의 해를 얻는다.</p></div>
+<div class="f" style="left:153.75pt;top:509.25pt"><span class="fig" data-srcpage="29" data-clip="153.75,509.25,423.75,538.5"></span></div>
+<div class="a sp" style="top:556.2pt"><b>부하 저항, 영역 2의 전기장</b></div>
+<div class="a sp" style="top:578.4pt"><p class="ni">부하 저항은 두께를 무시할 수 있으므로 전류는 표면 전류 밀도 $\mathbf K(r)=1/\eta\,\mathbf E(r)$의 꼴이 되며, $\eta$는 표면 비저항이다. 두께가 0이므로 퍼텐셜에서 $z$ 의존성이 사라진다. 경계 조건은 다음과 같다.</p></div>
+<div class="f" style="left:179.25pt;top:631.5pt"><span class="fig" data-srcpage="29" data-clip="179.25,631.5,403.5,652.5"></span></div>
+<div class="a sp" style="top:657.1pt"><p class="in">경계 조건을 적용하면 영역 2의 해를 얻는다.</p></div>
+<div class="f" style="left:94.5pt;top:692.25pt"><span class="fig" data-srcpage="29" data-clip="94.5,692.25,483,721.5"></span></div>
+<span class="fig pn" data-srcpage="29" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 30 -->
+<div class="page">
+<span class="fig hd" data-srcpage="30" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><b>전지, 영역 3의 전기장</b></div>
+<div class="a sp" style="top:137.4pt">전지 안의 퍼텐셜 분포는 주어져 있으며, 그 결과 전기장은 다음과 같다.</div>
+<div class="f" style="left:139.5pt;top:160.5pt"><span class="fig" data-srcpage="30" data-clip="139.5,160.5,438,189.75"></span></div>
+<div class="a sp" style="top:197.5pt"><p class="in">전지가 전류를 유지하는 데 필요한 기전력을 공급하므로 전류는 전기장과 반대 방향으로 흐름에 주목하라.</p></div>
+<div class="a sp" style="top:243.1pt"><b>자유 공간 영역 4의 전기장</b></div>
+<div class="a sp" style="top:265.3pt"><p class="ni">자유 공간 영역에서 퍼텐셜은 바깥 경계 $r=b$에서 0이어야 하고, 영역 1, 2, 3과의 경계에서 퍼텐셜 연속 조건을 만족해야 한다. 그 결과 퍼텐셜은 다음과 같다.</p></div>
+<div class="f" style="left:77.25pt;top:329.25pt"><span class="fig" data-srcpage="30" data-clip="77.25,329.25,500.25,358.5"></span></div>
+<div class="a sp" style="top:376.5pt"><b>전기장 그림과 표면 전하 밀도</b></div>
+<div class="a sp" style="width:348.7pt;top:398.6pt"><p class="ni">전기장의 정성적인 그림을 그림 5에 나타내었다. 영역 4에서 자유 공간 영역을 둘러싼 면에 수직인 전기장 성분이 경계면의 표면 전하 밀도를 결정한다.</p></div>
+<div class="f" style="left:409.5pt;top:412.5pt"><span class="fig" data-srcpage="30" data-clip="409.5,412.5,531.75,681.75"></span></div>
+<div class="w sp" style="left:410.7pt;width:119.6pt;top:692.1pt"><p class="ni">그림 5: 네 영역의 전기장을 정성적으로 나타낸 그림</p></div>
+<div class="w sp" style="left:81.3pt;top:479.6pt">경계 1–4</div>
+<div class="w sp" style="left:81.3pt;top:511.6pt">경계 4</div>
+<div class="w sp" style="left:81.3pt;top:543.5pt">경계 4–3</div>
+<div class="w sp" style="left:81.3pt;top:575.5pt">경계 4–2</div>
+<div class="f" style="left:179.25pt;top:475.5pt"><span class="fig" data-srcpage="30" data-clip="179.25,475.5,372.75,594"></span></div>
+<div class="a sp" style="width:348.7pt;top:604.7pt"><p class="in">위 식들에서 $\ln a/b&lt;0$임에 주의하라.</p></div>
+<span class="fig pn" data-srcpage="30" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 31 -->
+<div class="page">
+<span class="fig hd" data-srcpage="31" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><b>(ii) 포인팅 벡터와 일률 흐름</b></div>
+<div class="a sp" style="top:137.4pt"><p class="ni">전류가 정상 상태이므로 변위 전류 항 없이 앙페르 회로 법칙을 쓸 수 있다. 문제의 대칭성 때문에 자기 유도장의 장선은 $z$축과 동축인 원이다. 다음을 얻는다.</p></div>
+<div class="f" style="left:219pt;top:188.25pt"><span class="fig" data-srcpage="31" data-clip="219,188.25,363.75,237.75"></span></div>
+<div class="a sp" style="top:241.1pt"><p class="in">영역 4에서 포인팅 벡터는 간단히 다음과 같다.</p></div>
+<div class="f" style="left:125.25pt;top:262.5pt"><span class="fig" data-srcpage="31" data-clip="125.25,262.5,456,294.75"></span></div>
+<div class="a sp" style="top:298.2pt"><p class="in">앞에서 계산한 전기장의 식을 대입하면 다음을 얻는다.</p></div>
+<div class="f" style="left:168pt;top:320.25pt"><span class="fig" data-srcpage="31" data-clip="168,320.25,414,351.75"></span></div>
+<div class="a sp" style="top:357.8pt"><p class="in">포인팅 벡터 $\mathbf S$는 반지름 성분과 축 성분을 가지며, 바깥 면($r=b$)에서는 0이다. 이제 전지, 중심 도체, 부하 저항의 면을 지나는 흐름을 계산하자. 먼저 전지 면을 지나는 흐름은 다음과 같다.</p></div>
+<div class="f" style="left:56.25pt;top:418.5pt"><span class="fig" data-srcpage="31" data-clip="56.25,418.5,525,454.5"></span></div>
+<div class="a sp" style="top:462.1pt">예상대로 이는 전지가 공급하는 일률과 같다.</div>
+<div class="a sp" style="top:476.5pt">중심 도체를 지나는 흐름은 다음과 같다.</div>
+<div class="f" style="left:67.5pt;top:508.5pt"><span class="fig" data-srcpage="31" data-clip="67.5,508.5,514.5,543.75"></span></div>
+<div class="a sp" style="top:551.4pt"><p class="in">이번에도 이는 중심 도체에서 소모되는 일률이다.</p></div>
+<div class="a sp" style="top:580.3pt"><p class="in">마지막으로 부하 저항을 지나는 흐름은 다음과 같으며,</p></div>
+<div class="f" style="left:51pt;top:612pt"><span class="fig" data-srcpage="31" data-clip="51,612,546.75,648"></span></div>
+<div class="a sp" style="top:655.2pt"><p class="in">이 또한 예상한 대로이다.</p></div>
+<div class="a sp" style="top:686.0pt"><b>(iii) 전자기장의 운동량</b></div>
+<div class="a sp" style="top:708.2pt"><p class="ni"><span style="float:right;width:0;height:14.45pt"></span><span style="float:right;clear:right;width:383.3pt;height:14.45pt"></span>전자기장의 운동량 밀도 $\mathbf g$는 포인팅 벡터에 비례한다. 영역 4에서는 다음을 얻는다.</p></div>
+<div class="f" style="left:150.75pt;top:744.75pt"><span class="fig" data-srcpage="31" data-clip="150.75,744.75,431.25,776.25"></span></div>
+<span class="fig pn" data-srcpage="31" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 32 -->
+<div class="page">
+<span class="fig hd" data-srcpage="32" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="in">계의 전체 운동량은 밀도 $\mathbf g$를 부피에 대해 적분하여 얻는다<sup>1</sup>.</p></div>
+<div class="f" style="left:91.5pt;top:149.25pt"><span class="fig" data-srcpage="32" data-clip="91.5,149.25,489.75,183.75"></span></div>
+<div class="a sp" style="top:193.7pt"><p class="in">얼핏 보면 시간에 무관한 전자기장을 갖는 계에서 0이 아닌 운동량을 얻는 것은 분명 이상하다. 이 점은 Griffiths [7]가 논의했고, 더 최근에는 Boyer [8], McDonald [6], Babson 등 [9]이 논의했다. 여기서 중요한 점은 에너지가 전지($z_{battery}=h$)를 떠나 부하의 에너지를 증가시킨다는 것이다($z_{load}=0$에서의 줄 소산). 안쪽 도체에서의 줄 소산을 없애기 위해, 이후의 논의에서는 중심 도체의 저항이 0($R=0$)이라고 가정하자. 그러면 전자기 운동량은 다음과 같이 된다.</p></div>
+<div class="f" style="left:242.25pt;top:303pt"><span class="fig" data-srcpage="32" data-clip="242.25,303,339,334.5"></span></div>
+<div class="a sp" style="top:337.4pt"><p class="in">계가 고립되어 있다고 가정하면 계의 에너지 중심은 정지해 있어야 한다. 에너지 중심의 좌표 $z_{CE}$는 다음과 같다.</p></div>
+<div class="f" style="left:103.5pt;top:373.5pt"><span class="fig" data-srcpage="32" data-clip="103.5,373.5,477.75,408.75"></span></div>
+<div class="a sp" style="top:412.5pt"><p class="in">위 정의에서 $\rho_{Matter}$와 $\rho_{Energy}$는 각각 처음에 전지에 들어 있던 물질 밀도와 에너지 밀도이고, $M_Tc^2=M_{Matter}c^2+U$는 계의 전체 에너지이다<sup>2</sup>. 에너지 중심이 정지해 있으므로 다음을 얻는다.</p></div>
+<div class="f" style="left:88.5pt;top:474.75pt"><span class="fig" data-srcpage="32" data-clip="88.5,474.75,495,506.25"></span></div>
+<div class="a sp" style="top:514.6pt"><p class="in">마지막으로 다음을 얻는다.</p></div>
+<div class="f" style="left:51pt;top:536.25pt"><span class="fig" data-srcpage="32" data-clip="51,536.25,536.25,567.75"></span></div>
+<div class="a sp" style="top:577.5pt"><p class="in">따라서 전자기 운동량 $\mathbf p_{EM}$은 크기가 같고 방향이 반대인 물질의 운동량 $M_Tv_{CEMatter}$로 상쇄된다고 결론지을 수 있다. 물질 운동량의 기원은 전지를 켠 직후 정상 상태에 이르기 전의 초기 과도 상태 동안 케이블에 작용하는 힘에 있다. 과도 상태를 자세히 분석하려면 더 연구가 필요하다. 물질의 되튐 속력은 $1/c^2$ 정도로서 분명 측정할 수 없지만, 전자기 이론의 자기 일관성을 확인할 수 있다는 점에서 흥미롭다.</p></div>
+<div class="f" style="left:51pt;top:666.75pt"><span class="fig" data-srcpage="32" data-clip="51,666.75,244.5,670.5"></span></div>
+<div class="a" style="top:672.9pt;font-size:10pt;line-height:12pt"><p style="text-indent:13.4pt"><sup>1</sup>중심 도체 내부의 운동량 밀도도 포함해야 하지만, 이는 적분하면 0이 된다.</p></div>
+<div class="a" style="top:696.9pt;font-size:10pt;line-height:12pt"><p style="text-indent:13.4pt"><sup>2</sup>안쪽 도체와 바깥 도체 사이의 자유 공간에 저장된 전자기 에너지의 기여는 고려하지 않는다. 이 에너지는 무시할 수 있고 시간에 무관하다.</p></div>
+<span class="fig pn" data-srcpage="32" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 33 -->
+<div class="page">
+<span class="fig hd" data-srcpage="33" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><b>참고문헌</b></div>
+<div class="f" style="left:51pt;top:139.5pt"><span class="fig" data-srcpage="33" data-clip="51,139.5,531.75,450.75"></span></div>
+<span class="fig pn" data-srcpage="33" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 34 (problem paper p11): Medical physics -->
+<div class="page">
+<span class="fig hd" data-srcpage="34" data-clip="50,47,532,89"></span>
+<h2><span class="n">7</span>의학물리학</h2>
+<div class="a" style="top:141pt"><p class="ni">일반적인 외부 빔 방사선 치료에서는 X선을 이용하여 종양에 방사선량을 주면서 주변의 건강한 조직은 가능한 한 보호한다. 전자를 $15\ \mathrm{MeV}$의 에너지까지 가속한 다음 금속 표적에서 정지시키는 의료용 선형 가속기(linac)를 생각하자. 전자 운동 에너지의 일부는 제동복사 X선으로 바뀌어 방사선 치료용 광자 빔을 이룬다. 발생한 X선의 에너지와 인체 조직의 낮은 원자 번호 때문에, 광자 빔이 환자의 조직과 일으키는 가장 중요한 상호작용은 콤프턴 산란이다.</p>
+<p class="ni">광자가 자유 전자(즉, 느슨하게 결합된 전자)에 의해 산란각 $\theta$(입사 광자의 방향과 산란 광자의 방향 사이의 각)로 산란되는 콤프턴 효과 상호작용을 생각하자.</p></div>
+<div class="l2" style="top:295pt"><span class="k">i)</span><p><b>(1점)</b> 반동 전자의 운동 에너지를 입사 광자의 에너지와 산란각 $\theta$의 함수로 유도하여라;</p></div>
+<div class="l2" style="top:334pt"><span class="k">ii)</span><p><b>(1점)</b> 입사 광자의 에너지가 아무리 높더라도, $\pi/2$보다 큰 각 $\theta$로 산란된 광자의 에너지는 $511\ \mathrm{keV}$를 넘을 수 없음을 보여라.</p></div>
+<div class="a" style="top:372pt"><p class="ni">이제 linac에서 만든 X선과 흡수체의 상호작용, 그리고 이와 관련된 상호작용 계수 $\mu/\rho$(질량 감쇠 계수)와 $\mu_{en}/\rho$(질량 에너지 흡수 계수)를 생각하자.</p></div>
+<div class="l2" style="top:425pt"><span class="k">iii)</span><p><b>(1점)</b> 비 $\frac{\mu_{en}/\rho}{\mu/\rho}$를 다음 양들로 나타내어라: (a) $j$ 유형의 상호작용에서 입사 광자 에너지 중 하전 입자의 운동 에너지로 전달되는 평균 비율 $f_j$, (b) $j$ 유형의 상호작용에 해당하는 부분 단면적 $\sigma_j$, (c) 광자가 하전 입자에 전달한 운동 에너지 중 이후 복사 과정에서 잃는 비율 $g$.</p></div>
+<div class="a" style="top:508pt"><p class="ni">linac이 만드는 광자 빔의 에너지에 따른 비 $\frac{\mu_{en}/\rho}{\mu/\rho}$를 원자 번호 $Z$가 큰 흡수체(납)에 대해 그림 6에 나타내었다.</p></div>
+<div class="l2" style="top:547pt"><span class="k">iv)</span><p><b>(1점)</b> 납에서 비 $\frac{\mu_{en}/\rho}{\mu/\rho}$가 $100\ \mathrm{keV}$ 부근에서 최솟값을 갖는 것을 어떻게 설명하겠는가?</p></div>
+<div class="l2" style="top:586pt"><span class="k">v)</span><p><b>(1점)</b> 납에서 광자 에너지가 대략 $10\ \mathrm{MeV}$ 이상으로 커질 때 비 $\frac{\mu_{en}/\rho}{\mu/\rho}$가 감소하는 것을 어떻게 설명하겠는가?</p></div>
+<div class="a" style="top:625pt"><p class="ni">질량이 $m\gg m_{\rm electron}$인 가속된 하전 입자도 종양을 치료하는 외부 빔 방사선 치료에 쓸 수 있다. 일반적인 방사선 치료에 비해 하드론 치료가 지니는 선량의 국소적 집중이라는 이점은 이러한 입자가 물질 속에서 에너지를 내놓는 전형적인 방식과 관련되며, 이는 베테–블로흐 방정식을 따른다. 무거운 하전 입자의 속력이 0에 가까워질 때 나타나는 브래그 봉우리의 존재는 물질 속에서 이러한 입자의 <i>비정</i>(range)이라는 개념도 정의한다.</p></div>
+<div class="l2" style="top:721pt"><span class="k">vi)</span><p><b>(1점)</b> 하드론이 물질에서 잃는 에너지의 주요 의존성을 설명하고, 브래그 봉우리의 특징(왜 봉우리를 이루며 왜 폭이 0이 아닌지)을 논하여라.</p></div>
+<div class="l2" style="top:760pt"><span class="k">vii)</span><b>(1점)</b> 다음 경우에 대해 비정의 스케일링 법칙을 나타내어라:</div>
+<span class="fig pn" data-srcpage="34" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 35 (problem paper p12) -->
+<div class="page">
+<span class="fig hd" data-srcpage="35" data-clip="50,47,532,89"></span>
+<div class="f" style="left:84pt;top:110pt"><span class="fig" data-srcpage="35" data-clip="84,110,499,428"></span></div>
+<div class="c" style="top:437pt">그림 6</div>
+<div class="a" style="left:91pt;width:439pt;top:486pt">a) 속력이 같은 서로 다른 입자가 같은 매질을 지날 때;</div>
+<div class="a" style="left:90pt;width:440pt;top:506pt">b) 같은 입자가 서로 다른 매질을 지날 때.</div>
+<div class="l2" style="top:530pt"><span class="k">viii)</span><p><b>(1점)</b> 양성자와 탄소 이온의 속력이 같을 때, 탄소 이온의 비정에 대한 양성자의 비정의 비를 계산하여라.</p></div>
+<div class="a" style="top:569pt"><p class="ni">하전 입자는 매질을 지날 때 원자핵의 장에 의한 다중 쿨롱 산란(MCS)도 겪으며, 이 때문에 처음 궤적에서 조금씩 편향된다.</p></div>
+<div class="l2" style="top:611pt"><span class="k">ix)</span><p><b>(1점)</b> 지나는 두께가 얇을 때 MCS로 생기는, 한 평면에 투영한 편향각의 제곱평균제곱근($\theta_0$)의 식을 설명하여라.</p></div>
+<div class="l2" style="top:650pt"><span class="k">x)</span><p><b>(1점)</b> $150\ \mathrm{MeV}$ 양성자와 $285\ \mathrm{MeV/u}$ 탄소 이온이 공기 속을 1미터 지난 뒤, 탄소 이온의 $\theta_0$에 대한 양성자의 $\theta_0$의 비를 계산하여라.</p></div>
+<span class="fig pn" data-srcpage="35" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 36 -->
+<div class="page">
+<span class="fig hd" data-srcpage="36" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt"><p class="ni"><b>(i)</b> 반동 전자의 운동 에너지 식을 유도하는 데에는 상대론적 전체 에너지 보존 법칙과 운동량 보존 법칙을 이용한다.</p></div>
+<div class="a sp" style="top:166.3pt">전체 에너지 보존은 다음과 같이 표현된다.</div>
+<div class="f" style="left:181.5pt;top:187.5pt"><span class="fig" data-srcpage="36" data-clip="181.5,187.5,531.75,205.5"></span></div>
+<div class="a sp" style="top:217.5pt"><p class="ni">여기서 $h\nu$는 입사 광자의 에너지, $h\nu'$은 산란 광자의 에너지, $m_ec^2$은 반동 전자의 정지 에너지, $E_e$는 반동 전자의 전체 에너지, $E_K$는 반동 전자의 운동 에너지이다.</p></div>
+<div class="a sp" style="top:260.8pt">운동량 보존은 삼각법 법칙과 함께 다음과 같이 표현할 수 있다.</div>
+<div class="f" style="left:221.25pt;top:281.25pt"><span class="fig" data-srcpage="36" data-clip="221.25,281.25,531.75,300.75"></span></div>
+<div class="a sp" style="top:312.0pt"><p class="ni">여기서 $p_e$는 반동 전자의 운동량, $p$는 입사 광자의 운동량, $p'$은 산란 광자의 운동량이다.</p></div>
+<div class="a sp" style="top:340.9pt"><p class="ni">위의 두 식을 적절히 결합하면 반동 전자의 운동 에너지를 다음과 같이 유도할 수 있다.</p></div>
+<div class="f" style="left:215.25pt;top:363pt"><span class="fig" data-srcpage="36" data-clip="215.25,363,531.75,394.5"></span></div>
+<div class="a sp" style="top:401.9pt">여기서 $\alpha=\frac{h\nu}{m_ec^2}$이다.</div>
+<div class="a sp" style="top:429.5pt"><p class="in"><b>(ii)</b> 산란 광자의 에너지는 다음과 같이 유도할 수 있다.</p></div>
+<div class="f" style="left:215.25pt;top:450pt"><span class="fig" data-srcpage="36" data-clip="215.25,450,531.75,481.5"></span></div>
+<div class="a sp" style="top:492.1pt"><p class="ni">주어진 각 $\theta$에서 산란 광자의 에너지는 입사 광자 에너지가 커질수록 증가하다가 포화값에 이른다. $\theta=\pi/2$이면 산란 광자의 에너지는 $h\nu'=\frac{h\nu}{1+\frac{h\nu}{m_ec^2}}$이며, $h\nu\to\infty$일 때 포화값 $h\nu'\to m_ec^2=511\ \mathrm{keV}$를 갖는다. 각이 더 크면 산란 광자 에너지의 포화값은 $511\ \mathrm{keV}$보다 작고, $\theta=\pi$이면 산란 광자 에너지의 포화값은 $\frac{1}{2}m_ec^2$이다.</p></div>
+<div class="a sp" style="top:598.2pt"><p class="in"><b>(iii)</b> 답으로 제시해야 할 최종 식은 다음과 같다.</p></div>
+<div class="f" style="left:222.75pt;top:620.25pt"><span class="fig" data-srcpage="36" data-clip="222.75,620.25,531.75,656.25"></span></div>
+<div class="a sp" style="top:667.5pt">실제로 다음이 성립함을 알 수 있다.</div>
+<div class="f" style="left:225.75pt;top:690.75pt"><span class="fig" data-srcpage="36" data-clip="225.75,690.75,531.75,706.5"></span></div>
+<div class="a sp" style="top:718.7pt">여기서 $(\mu_{tr}/\rho)$는 질량 에너지 전달 계수로, 다음과 같이 쓸 수 있다.</div>
+<div class="f" style="left:189.75pt;top:740.25pt"><span class="fig" data-srcpage="36" data-clip="189.75,740.25,531.75,775.5"></span></div>
+<span class="fig pn" data-srcpage="36" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 37 -->
+<div class="page">
+<span class="fig hd" data-srcpage="37" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt">여기서 $f_{tr}$는 전체 평균 에너지 전달 비율이다. 따라서</div>
+<div class="f" style="left:199.5pt;top:136.5pt"><span class="fig" data-srcpage="37" data-clip="199.5,136.5,531.75,172.5"></span></div>
+<div class="a sp" style="top:184.7pt">그리고</div>
+<div class="f" style="left:222.75pt;top:192.75pt"><span class="fig" data-srcpage="37" data-clip="222.75,192.75,531.75,228"></span></div>
+<div class="a sp" style="top:236.7pt">요컨대 비 $\frac{\mu_{en}/\rho}{\mu/\rho}$는 전체 평균 에너지 흡수 비율에 해당한다.</div>
+<div class="f" style="left:221.25pt;top:264.75pt"><span class="fig" data-srcpage="37" data-clip="221.25,264.75,531.75,295.5"></span></div>
+<div class="a sp" style="top:321.9pt"><p class="in"><b>(iv)</b> 우리가 고려하는 에너지 범위에서 비 $\frac{\mu_{en}/\rho}{\mu/\rho}$의 최솟값은 본질적으로 전체 평균 에너지 전달 함수 $f_{tr}$의 최솟값에 해당한다. 납처럼 원자 번호 $Z$가 큰 흡수체에서 $f_{tr}$는 광자 에너지가 $K$ 껍질 결합 에너지와 같을 때 최솟값을 갖는다.</p></div>
+<div class="a sp" style="top:392.7pt"><p class="in"><b>(v)</b> 광자 에너지가 커질수록 비 $\frac{\mu_{en}/\rho}{\mu/\rho}$가 감소하는 것(즉 전체 평균 에너지 흡수 비율 $f_{ab}$의 감소)은, 주어진 흡수체 물질에서 평균 복사 비율 $g$가 광자 에너지와 함께 증가하기 때문이다. 이는 주로 2차 하전 입자가 흡수 매질을 지나는 동안 일으키는 제동복사 상호작용 때문이다. $f_{tr}$는 광자 에너지가 커질수록 계속 증가하지만, $f_{ab}$는 국소 최댓값에 이른 뒤 $g$의 증가 때문에 감소한다. $f_{ab}$의 국소 봉우리가 나타나는 에너지는 흡수체의 원자 번호 $Z$에 반비례하며, 납처럼 $Z$가 큰 흡수체에서는 대략 $10\ \mathrm{MeV}$에서 나타난다.</p></div>
+<div class="a sp" style="top:524.9pt"><p class="in"><b>(vi)</b> 물질 속에서 하전 하드론의 에너지 손실은 베테–블로흐 공식으로 기술된다.</p></div>
+<div class="f" style="left:186.75pt;top:546.75pt"><span class="fig" data-srcpage="37" data-clip="186.75,546.75,531.75,579"></span></div>
+<div class="a sp" style="top:591.0pt">여기서</div>
+<div class="bl sp" style="top:615.4pt"><span class="k">$\bullet$</span>$\rho$는 물질의 밀도이다.</div>
+<div class="bl sp" style="top:639.8pt"><span class="k">$\bullet$</span><p>$Z/A$는 물질의 원자 번호와 질량수의 비이다(수소를 제외하면 언제나 $\sim0.5$이다).</p></div>
+<div class="bl sp" style="top:678.7pt"><span class="k">$\bullet$</span>$I$는 물질의 평균 들뜸 에너지이다.</div>
+<div class="bl sp" style="top:703.1pt"><span class="k">$\bullet$</span>$z$는 입사 입자의 원자 번호이다.</div>
+<div class="bl sp" style="top:727.5pt"><span class="k">$\bullet$</span>$\beta=v/c$는 입사 입자의 속도이다.</div>
+<div class="bl sp" style="top:751.9pt"><span class="k">$\bullet$</span>$C$는 껍질 보정으로, 낮은 에너지에서 중요하다.</div>
+<span class="fig pn" data-srcpage="37" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 38 -->
+<div class="page">
+<span class="fig hd" data-srcpage="38" data-clip="50,47,532,89"></span>
+<div class="bl sp" style="top:115.2pt"><span class="k">$\bullet$</span>$\delta$는 밀도 보정으로, 높은 에너지에서 중요하다.</div>
+<div class="a sp" style="top:135.0pt"><p class="ni">물질 속에서 하전 하드론의 에너지 손실을 지나온 깊이의 함수로 나타내면 브래그 곡선의 특징을 보인다. 물질에 들어가는 입구에서 입자의 속도는 최대이므로 에너지 손실은 더 작다. 깊이가 깊어질수록 입자의 속도는 줄고 에너지 손실은 커진다. 입자 궤적의 끝($\beta\sim10^{-2}$)에서 입자는 물질의 각 전자 근처에서 “오랜” 시간을 보내며 많은 에너지를 전달한다. 그다음 입자는 전자를 붙잡기 시작하여 유효 전하($z$)가 낮아지고 저지능이 떨어지며, 그 결과 브래그 봉우리라 부르는 봉우리가 생긴다.</p>
+<p class="ni">봉우리의 폭은 하전 하드론과 물질 원자핵 사이 쿨롱 상호작용의 확률적 성질에 따라 달라진다. 상호작용의 수와 각 상호작용에서 원자 전자에 전달되는 운동 에너지의 양은 (같은 매질을 같은 베타로 지나는) 입자마다 달라서 에너지 손실의 통계적 요동이 생긴다.</p>
+<p class="ni">브래그 봉우리의 위치는 하전 하드론의 처음 운동 에너지에 따라 달라진다. 에너지가 클수록 브래그 봉우리는 더 깊은 곳에 있다.</p></div>
+<div class="a sp" style="top:335.9pt"><p class="in"><b>(vii)</b> 하전 하드론의 비정은 베테–블로흐 공식으로부터 유도할 수 있다.</p></div>
+<div class="a sp" style="top:350.4pt">같은 물질을 지나는 서로 다른 입자에 대해 $R$는 $\beta$의 함수로 나타낼 수 있다.</div>
+<div class="f" style="left:127.5pt;top:366.75pt"><span class="fig" data-srcpage="38" data-clip="127.5,366.75,531.75,401.25"></span></div>
+<div class="a sp" style="top:406.3pt"><p class="ni">같은 $\beta$로 서로 다른 물질을 지나는 입자에 대해 $R$는 브래그–클리먼 규칙으로 나타낼 수 있다.</p></div>
+<div class="f" style="left:264.75pt;top:431.25pt"><span class="fig" data-srcpage="38" data-clip="264.75,431.25,531.75,447.75"></span></div>
+<div class="a sp" style="top:453.8pt">여기서</div>
+<div class="f" style="left:263.25pt;top:453.75pt"><span class="fig" data-srcpage="38" data-clip="263.25,453.75,531.75,495"></span></div>
+<div class="w sp" style="left:65.1pt;width:465pt;top:499.7pt">a) 같은 물질을 같은 $\beta$로 지나는 서로 다른 입자에 대해 식 (65)를 적용하면</div>
+<div class="f" style="left:265.5pt;top:516.75pt"><span class="fig" data-srcpage="38" data-clip="265.5,516.75,531.75,550.5"></span></div>
+<div class="w sp" style="left:64.4pt;width:465pt;top:559.7pt">b) 같은 입자가 서로 다른 물질을 지날 때 식 (66)을 적용하면</div>
+<div class="f" style="left:264.75pt;top:575pt"><span class="fig" data-srcpage="38" data-clip="264.75,575,531,609.75"></span></div>
+<div class="a sp" style="top:633.5pt"><p class="in"><b>(viii)</b> 식 (68)을 적용하면</p></div>
+<div class="f" style="left:186.75pt;top:650.25pt"><span class="fig" data-srcpage="38" data-clip="186.75,650.25,531.75,684.75"></span></div>
+<div class="a sp" style="top:704.0pt"><p class="in"><b>(ix)</b> 편향각의 제곱평균제곱근 식은 다음과 같다.</p></div>
+<div class="f" style="left:177.75pt;top:722.25pt"><span class="fig" data-srcpage="38" data-clip="177.75,722.25,531.75,755.25"></span></div>
+<div class="a sp" style="top:760.8pt">여기서</div>
+<span class="fig pn" data-srcpage="38" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 39 -->
+<div class="page">
+<span class="fig hd" data-srcpage="39" data-clip="50,47,532,89"></span>
+<div class="bl sp" style="top:115.2pt"><span class="k">$\bullet$</span>$\beta=v/c$는 입사 입자의 속도이다.</div>
+<div class="bl sp" style="top:139.6pt"><span class="k">$\bullet$</span>$c$는 빛의 속력이다.</div>
+<div class="bl sp" style="top:164.0pt"><span class="k">$\bullet$</span>$p$는 입자의 운동량이다.</div>
+<div class="bl sp" style="top:188.4pt"><span class="k">$\bullet$</span>$z$는 입자의 전하(원자 번호)이다.</div>
+<div class="bl sp" style="top:212.8pt"><span class="k">$\bullet$</span>$\Delta x$는 지나온 두께이다.</div>
+<div class="bl sp" style="top:239.0pt"><span class="k">$\bullet$</span><p>$X_0$는 복사 길이로, 높은 에너지 광자가 쌍생성을 일으키는 평균 자유 거리의 7/9와 같다.</p></div>
+<div class="a sp" style="top:276.1pt">$\theta_0$는 무거운 입자나 운동 에너지가 큰 입자일수록 작다.</div>
+<div class="a sp" style="top:290.5pt"><p class="ni">이 공식은 물질의 두께가 얇거나 밀도가 매우 낮은 물질에서 유효하며, 이때 MCS로 인한 에너지 손실은 무시할 수 있다.</p></div>
+<div class="a sp" style="top:332.6pt"><p class="in"><b>(x)</b> 공기는 밀도가 매우 낮은 물질이므로 문항 (ix)의 공식을 적용하면</p></div>
+<div class="f" style="left:136.5pt;top:355.5pt"><span class="fig" data-srcpage="39" data-clip="136.5,355.5,531.75,387.75"></span></div>
+<span class="fig pn" data-srcpage="39" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 40 (problem paper p13): Astrophysics -->
+<div class="page">
+<span class="fig hd" data-srcpage="40" data-clip="50,47,532,89"></span>
+<h2><span class="n">8</span>원시행성계 원반의 천체물리학</h2>
+<div class="a" style="top:141pt"><p class="ni">별은 분자구름 속 기체의 중력 붕괴로 형성된다. 각운동량 보존의 결과로, 붕괴 과정에서 원반도 생긴다. 원반은 특정 평면(흔히 원반 중간면이라 부른다) 주위에 집중된 밀도 높은 구조로, 새로 형성된 별 주위를 회전한다. 행성은 바로 이 원반에서 형성되며, 이 때문에 이런 원반을 흔히 원시행성계 원반이라 부른다. 이 계의 기하 구조를 고려하면, 원통좌표계를 써서 기술하는 것이 편리하다.</p>
+<p class="in">중요: 원통좌표계의 반지름 $r$와 구면좌표계의 반지름 $R$의 차이에 주의하라(아래 그림 참고).</p></div>
+<div class="f" style="left:50pt;top:255.5pt"><span class="fig" data-srcpage="40" data-clip="50,255.5,486,378"></span></div>
+<div class="l2" style="top:388pt"><span class="k">i)</span><p><b>(3점)</b> 단순화를 위해 원반이 연직 방향으로 등온이라고 가정하자. 이 경우 기체 압력 $P$는 간단히 $P=c_s^2\rho$로 주어지며, 여기서 $c_s$는 기체의 음속이고 $\rho$는 기체의 밀도이다. 또한 기체가 정역학 평형에 있어서 연직 방향으로는 운동이 없다고 가정하고, 연직 밀도 분포 $\rho(z)$를 유도하여라. 이때 원반의 자체 중력은 무시하고 별만 중력에 기여한다고 가정해도 된다.</p></div>
+<div class="l2" style="top:485pt"><span class="k">ii)</span><p><b>(1점)</b> 이런 원반은 대개 기하학적으로 얇다. 즉, 두께 $H$가 반지름 좌표 $r$보다 훨씬 작다: $H\ll r$. 이 가정 아래 앞 문항에서 유도한 식을 단순화하고, 중간면의 기체 밀도 $\rho_0(r)=\rho(r,z=0)$과 원반의 표면 밀도, 즉 원반 밀도의 연직 적분으로 정의되는 $\Sigma=\int_{-\infty}^{+\infty}\rho(z)\mathrm dz$ 사이의 관계를 유도하여라.</p></div>
+<div class="l2" style="top:567pt"><span class="k">iii)</span><p><b>(3점)</b> 원반의 중간면 $z=0$만 고려하여 원반의 회전 곡선 $v_\phi(r)$을 유도하여라. 앞에서처럼 원반의 자체 중력은 무시하고 별만 중력장에 기여한다고 가정해도 된다. 중력과 더불어 기체 압력도 고려해야 한다. 단순화를 위해 중간면의 기체 밀도가 반지름 좌표의 거듭제곱 함수 $\rho_0\propto r^{-p}$라고 가정해도 된다. 마찬가지로 음속도 거듭제곱 함수 $c_s(r)\propto r^{-q}$라고 가정해도 된다.</p></div>
+<div class="l2" style="top:664pt"><span class="k">iv)</span><p><b>(1점)</b> 원시행성계 원반은 케플러 회전에 가깝게 회전한다. 앞 문항에서 유도한 식을 이용하여 회전 곡선이 케플러 회전에서 벗어나는 상대 편차를 정량화하고, 원반이 얇다면 이 편차가 실제로 작음을 보여라.</p></div>
+<div class="l2" style="top:731pt"><span class="k">v)</span><p><b>(2점)</b> 회전 곡선에 대해 유도한 식을 $z\neq0$인 경우로 일반화하여라. 문항 2에서처럼 얇은 원반 근사를 쓰고, $z/r$가 작은 경우만 고려하여라. 높은 고도의 기체는 중간면의 기체보다 빠르게 회전하는가, 느리게 회전하는가?</p></div>
+<span class="fig pn" data-srcpage="40" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 41 (problem paper p14) -->
+<div class="page">
+<span class="fig hd" data-srcpage="41" data-clip="50,47,532,89"></span>
+<div class="a" style="left:70pt;width:460pt;top:114pt"><b>힌트:</b><br>원통좌표계에서 연산자 $(\mathbf A\cdot\nabla)\mathbf B$는 다음과 같다.</div>
+<div class="f" style="left:112pt;top:150pt"><span class="fig" data-srcpage="41" data-clip="112,150,408,251"></span></div>
+<span class="fig pn" data-srcpage="41" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 42 -->
+<div class="page">
+<span class="fig hd" data-srcpage="42" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt"><p class="ni"><b>(i)</b> 밀도 분포를 구하려면 연직 방향의 정역학 평형 방정식을 풀어야 한다.</p></div>
+<div class="f" style="left:211.5pt;top:159pt"><span class="fig" data-srcpage="42" data-clip="211.5,159,531.75,189.75"></span></div>
+<div class="a sp" style="top:197.3pt"><p class="in">$P=\rho c_s^2$을 대입하고 $c_s$가 연직 방향으로 일정하다고 하면</p></div>
+<div class="f" style="left:230.25pt;top:219.75pt"><span class="fig" data-srcpage="42" data-clip="230.25,219.75,531.75,252.75"></span></div>
+<div class="a sp" style="top:262.1pt">이는 변수분리형이므로 바로 적분할 수 있다.</div>
+<div class="f" style="left:204pt;top:284.25pt"><span class="fig" data-srcpage="42" data-clip="204,284.25,531.75,317.25"></span></div>
+<div class="a sp" style="top:327.3pt">최종 식은 다음과 같다.</div>
+<div class="f" style="left:213pt;top:349.5pt"><span class="fig" data-srcpage="42" data-clip="213,349.5,531.75,382.5"></span></div>
+<div class="a sp" style="top:406.3pt"><p class="in"><b>(ii)</b> 다음 인자를 생각하자.</p></div>
+<div class="f" style="left:222.75pt;top:416.25pt"><span class="fig" data-srcpage="42" data-clip="222.75,416.25,531.75,447"></span></div>
+<div class="a sp" style="top:454.3pt">이를 $z^2/r^2$의 1차까지 쉽게 전개하면</div>
+<div class="f" style="left:250.5pt;top:476.25pt"><span class="fig" data-srcpage="42" data-clip="250.5,476.25,531.75,508.5"></span></div>
+<div class="a sp" style="top:517.2pt">이는 밀도가 다음과 같이 됨을 뜻한다.</div>
+<div class="f" style="left:226.5pt;top:538.5pt"><span class="fig" data-srcpage="42" data-clip="226.5,538.5,531.75,573"></span></div>
+<div class="a sp" style="top:582.7pt">이를 다음과 같이 쓸 수 있으며,</div>
+<div class="f" style="left:234.75pt;top:589.5pt"><span class="fig" data-srcpage="42" data-clip="234.75,589.5,531.75,621.75"></span></div>
+<div class="a sp" style="top:628.4pt"><p class="ni">이로부터 밀도 분포가 가우스 함수임이 분명해진다. 가우스 함수의 척도 높이 $H$는 다음과 같다.</p></div>
+<div class="f" style="left:232.5pt;top:653.25pt"><span class="fig" data-srcpage="42" data-clip="232.5,653.25,531.75,686.25"></span></div>
+<div class="a sp" style="top:698.0pt">여기서 $\sqrt{GM_*/r^3}$이 케플러 각진동수임을 이용하여 식을 간단히 하였다.</div>
+<div class="a sp" style="top:714.5pt"><p class="in">표면 밀도 분포는 $\hat z$ 방향으로 적분하여 얻을 수 있다.</p></div>
+<div class="f" style="left:232.5pt;top:734.25pt"><span class="fig" data-srcpage="42" data-clip="232.5,734.25,349.5,768.75"></span></div>
+<span class="fig pn" data-srcpage="42" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 43 -->
+<div class="page">
+<span class="fig hd" data-srcpage="43" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt">앞에서 구한 $\rho$의 식을 대입하면 다음을 얻는다.</div>
+<div class="f" style="left:244.5pt;top:127.5pt"><span class="fig" data-srcpage="43" data-clip="244.5,127.5,337.5,153.75"></span></div>
+<div class="a sp" style="top:178.2pt"><p class="in"><b>(iii)</b> 속도 분포를 구하려면 반지름 방향의 힘의 균형을 써야 한다. 정상 상태이고 원반이 방위각 방향으로 대칭이라고 가정하면, 0이 되지 않는 항은 다음뿐이다.</p></div>
+<div class="f" style="left:240.75pt;top:215.25pt"><span class="fig" data-srcpage="43" data-clip="240.75,215.25,531.75,247.5"></span></div>
+<div class="a sp" style="top:253.8pt">$P=c_s^2\rho$를 대입하면 다음을 얻는다.</div>
+<div class="f" style="left:135pt;top:274.5pt"><span class="fig" data-srcpage="43" data-clip="135,274.5,531.75,339.75"></span></div>
+<div class="a sp" style="top:347.0pt">그러면 속도를 다음과 같이 쓸 수 있다.</div>
+<div class="f" style="left:213.75pt;top:367.5pt"><span class="fig" data-srcpage="43" data-clip="213.75,367.5,531.75,404.25"></span></div>
+<div class="a sp" style="top:415.3pt">여기서 케플러 속도 $v_K=\sqrt{GM_*/r}$를 이용하였다.</div>
+<div class="a sp" style="top:442.9pt"><p class="in"><span style="float:right;width:0;height:28.90pt"></span><span style="float:right;clear:right;width:303.3pt;height:14.45pt"></span><b>(iv)</b> 방금 유도한 식을 원반이 얇다는 조건과 연결하기 위해, $H=c_s/\Omega_K$라는 사실로부터 $c_s/v_K=H/R$임에 주목하자. 따라서 방위각 방향 속도는 다음과 같다.</p></div>
+<div class="f" style="left:202.5pt;top:482.25pt"><span class="fig" data-srcpage="43" data-clip="202.5,482.25,531.75,523.25"></span></div>
+<div class="a sp" style="top:529.0pt"><p class="ni"><span style="float:right;width:0;height:14.45pt"></span><span style="float:right;clear:right;width:298.3pt;height:14.45pt"></span>$H\ll r$이면 둘째 항은 작다. 이 경우 식을 다음과 같이 전개할 수 있으며,</p></div>
+<div class="f" style="left:207pt;top:551.25pt"><span class="fig" data-srcpage="43" data-clip="207,551.25,531.75,589.75"></span></div>
+<div class="a sp" style="top:596.7pt">케플러 회전에서 벗어나는 상대 편차는 $\frac{1}{2}\left(\frac{H}{r}\right)^2(p+2q)=\mathcal O((H/r)^2)$이다.</div>
+<div class="a sp" style="top:626.9pt"><p class="in"><span style="float:right;width:0;height:28.90pt"></span><span style="float:right;clear:right;width:313.3pt;height:14.45pt"></span><b>(v)</b> 계산은 대체로 앞에서와 같이 진행되지만 다음 두 가지가 다르다. a) 중력 항은 이제 구면 거리 $R^2=r^2+z^2$에 의존한다. $(z/r)^2\ll1$인 경우에 대해 이를 전개하면 다음을 얻는다.</p></div>
+<div class="f" style="left:225pt;top:663pt"><span class="fig" data-srcpage="43" data-clip="225,663,531.75,695.25"></span></div>
+<div class="a sp" style="top:702.0pt"><p class="in">b) 항 $\frac{c_s^2}{\rho}\frac{\mathrm d\rho}{\mathrm dr}$. 도함수를 계산할 때 $\rho=\rho_0\exp(-z^2/2/H^2)$임을 염두에 두어야 하며, 따라서 다음과 같은 새로운 항이 생긴다.</p></div>
+<div class="f" style="left:207.75pt;top:741.75pt"><span class="fig" data-srcpage="43" data-clip="207.75,741.75,531.75,778.5"></span></div>
+<span class="fig pn" data-srcpage="43" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 44 -->
+<div class="page">
+<span class="fig hd" data-srcpage="44" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="ni">$z$는 $r$에 의존하지 않지만, $H=c_s/\Omega$는 $c_s$와 $\Omega$가 모두 $r$에 의존하므로 $r$에 의존한다. 따라서 연쇄 법칙을 적용해야 한다. 그러면 새로운 항이 두 개 생기는데, 그중 하나는 a)에서 유도한 항과 상쇄된다.</p></div>
+<div class="a sp" style="top:158.5pt"><p class="in">약간의 계산을 거치면 최종 결과는 다음과 같다.</p></div>
+<div class="f" style="left:171.75pt;top:180.75pt"><span class="fig" data-srcpage="44" data-clip="171.75,180.75,531.75,222"></span></div>
+<div class="a sp" style="top:240.3pt"><p class="ni">여기서 중간면에서의 값 $v_{K,mid}=\sqrt{GM_*/r}$를 정의하였다. 새로운 항은 음수이므로 $z\neq0$이면 물질은 중간면에서보다 느리게 회전한다.</p></div>
+<span class="fig pn" data-srcpage="44" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 45 (problem paper p15): Particle physics -->
+<div class="page">
+<span class="fig hd" data-srcpage="45" data-clip="50,47,532,89"></span>
+<h2><span class="n">9</span>입자물리학</h2>
+<div class="a" style="top:141pt"><p class="ni">매우 강한 자기장을 지닌 중성자별의 한 종류인 마그네타는 지금까지 관측된 가장 에너지가 높은 입자인 초고에너지 우주선의 유력한 기원 후보이다. 그러나 마그네타가 가장 높은 에너지($\sim100\ \mathrm{EeV}$)까지 입자를 가속할 수 있는 것은 생애의 아주 초기 단계뿐일 가능성이 크다. 알려진 가장 가까운 마그네타 중 하나인 SWIFT J1818.0-1607은 나이가 겨우 240년으로 추정된다. 이 마그네타는 지구에서 $4.4\ \mathrm{kpc}$ 떨어진 은하면 위에 있다. SWIFT J1818.0-1607이 탄생할 때 매우 짧은 시간 동안 우주선을 방출했으며, 이 우주선은 양성자(P), 중성자(N), 철 원자핵(I)의 세 성분으로만 이루어지고, 각 성분은 다음과 같은 고유한 방출 스펙트럼을 따른다고 하자.</p></div>
+<div class="f" style="left:120pt;top:262pt"><span class="fig" data-srcpage="45" data-clip="120,262,462,301"></span></div>
+<div class="a" style="top:307pt"><p class="ni">여기서 $E_0=10^{17}\ \mathrm{eV}$, $N_{0_P}=10^{40}$, $N_{0_N}=10^{38}$, $N_{0_I}=10^{39}$이며, $E_C=2\cdot10^{20}\ \mathrm{eV}$에서 급격한 차단이 있다고 하자.</p></div>
+<div class="l2" style="top:353pt"><span class="k">i)</span><p><b>(4점)</b> $E&gt;E_0$인 입자만 고려하자. 1783년에 지구에서 관측된 입자의 스펙트럼은 어떠했겠는가? 현재 피에르 오제 관측소(면적 $=3000\ \mathrm{km^2}$)에서는 사건이 몇 개 관측되겠는가? 어떤 에너지에서 관측되겠는가? 우리와 마그네타 사이의 은하 자기장은 균일하고 일정하며, 그 방향은 은하면에 수직이고 세기는 $1\ \mu\mathrm G$라고 하자.</p></div>
+<div class="l2" style="top:442pt"><i>힌트:</i> $\arcsin x\approx x+\frac{x^3}{6}$을 이용하여라.</div>
+<div class="l2" style="top:469pt"><span class="k">ii)</span><p><b>(3점)</b> 우주선은 지구에 도달하면 곧바로 대기와 상호작용한다. 첫 상호작용들에서는 흔히 케이온이 생성된다. 에너지가 $E=1\ \mathrm{TeV}$인 $\mathrm K^+$가 높은 대기($h=10\ \mathrm{km}$)에서 생성되었다고 하자. 이 입자는 어떤 입자들로 붕괴할 가능성이 가장 큰가? 지구 기준틀에서 딸입자들의 에너지를 계산하여라. 딸입자들은 지면에 도달할 가능성이 큰가, 아니면 다시 붕괴하겠는가? 어떤 입자들로 붕괴하는가? (가장 확률이 높은 붕괴만 고려하라)</p></div>
+<div class="l2" style="top:565pt"><span class="k">iii)</span><p><b>(3점)</b> 높은 대기(고도 $h=1000\ \mathrm m$)에서 생성된 뮤온이 그리니치 자오선의 투영점에서 적도면 위를 따라 반지름 방향으로 지구를 향해 움직인다. 지구 자기장의 값은 $0.5\ \mathrm G$이고, 일정하며, 북극을 향한다고 하자(자기 북극과 지리상 북극의 차이는 무시한다). 뮤온이 나이로비(대략 동경 $37^\circ$, 위도 $0^\circ$)에 떨어지려면 뮤온의 운동량은 얼마여야 하는가? 지구의 반지름은 $6400\ \mathrm{km}$로 하라. 뮤온의 평균 수명이 $\tau_\mu=2\cdot10^{-6}\ \mathrm s$라면, 방금 계산한 운동량을 가진 뮤온이 나이로비에 도달할 확률은 얼마인가?</p></div>
+<span class="fig pn" data-srcpage="45" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 46 -->
+<div class="page">
+<span class="fig hd" data-srcpage="46" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt"><p class="ni"><b>(i)</b> 양성자와 철 원자핵은 하전 입자이므로 자기장에 의해 휘어진다(그리고 지연된다). 따라서 마그네타가 우주선을 방출할 때 빛과 함께 지구에 도달하는 성분은 중성자 성분뿐이다. 그러나 중성자는 대략 15분의 수명으로 붕괴한다. 상대론적 시간 지연 때문에 붕괴 시간이 늘어나므로, (중성자가 $c$로 움직인다고 할 때) 평균 붕괴 거리는 다음과 같다.</p></div>
+<div class="f" style="left:193.5pt;top:216.75pt"><span class="fig" data-srcpage="46" data-clip="193.5,216.75,388.5,248.25"></span></div>
+<div class="a sp" style="top:251.9pt"><p class="in">기하학적 인자도 계산해야 한다.</p></div>
+<div class="f" style="left:213.75pt;top:271.5pt"><span class="fig" data-srcpage="46" data-clip="213.75,271.5,368.25,302.25"></span></div>
+<div class="a sp" style="top:309.3pt">따라서 최종 선속은 다음과 같다.</div>
+<div class="f" style="left:219pt;top:316.5pt"><span class="fig" data-srcpage="46" data-clip="219,316.5,363.75,351"></span></div>
+<div class="a sp" style="top:356.0pt"><p class="ni">여기서 $D$는 마그네타와 지구 사이의 거리이다. 중성자는 모두 그때 함께 도착하므로 오늘날에는 하나도 도착하지 않는다. 그러나 무작위 성분이 없는 균일하고 안정된 자기장을 생각하므로, 정확히 240년 지연되도록 하는 특정한 곡률 반지름을 가진 입자들만 지구에 도착한다. 이는 거리 D만큼 떨어진 두 점을 잇는 호를 측정하여 계산할 수 있다(그림 7 참고).</p></div>
+<div class="f" style="left:146.25pt;top:437.25pt"><span class="fig" data-srcpage="46" data-clip="146.25,437.25,436.5,595.5"></span></div>
+<div class="c sp" style="top:606.1pt">그림 7</div>
+<div class="a sp" style="top:634.8pt"><p class="in">따라서 $L_{\rm path}=r\theta$이고 $\theta=2\arcsin\frac{D}{2r}$이며, 간단히 하기 위해 이를 다음과 같이 전개한다.</p></div>
+<div class="f" style="left:235.5pt;top:656.25pt"><span class="fig" data-srcpage="46" data-clip="235.5,656.25,347.25,688.5"></span></div>
+<div class="a sp" style="top:700.2pt"><p class="ni">그 결과 $L_{\rm path}=D+\frac{D^3}{24r^2}$이고, 이로부터 $r=\left(\frac{D^3}{24(L_{\rm path}-D)}\right)^{\frac{1}{2}}$를 얻는다. 여기서 $L_{\rm path}-D=240\,\mathrm{ly}$이다. 그러면 자기장 속 입자의 반지름을 계산할 수 있다.</p></div>
+<div class="f" style="left:228pt;top:745.5pt"><span class="fig" data-srcpage="46" data-clip="228,745.5,354,776.25"></span></div>
+<span class="fig pn" data-srcpage="46" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 47 -->
+<div class="page">
+<span class="fig hd" data-srcpage="47" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="ni">이로부터 적절한 단위 변환을 거치면, 양성자는 에너지 $E_{\rm P}=6.43\cdot10^{18}\,\mathrm{eV}$, 철 원자핵은 ${E_{\rm I}=1.67\cdot10^{20}\,\mathrm{eV}}$인 입자를 받게 된다. 그러면 지금 이 순간 지구에 도착하는 에너지는 하나뿐임을 기억하고 선속을 계산할 수 있다.</p></div>
+<div class="f" style="left:234pt;top:165.75pt"><span class="fig" data-srcpage="47" data-clip="234,165.75,348,200.25"></span></div>
+<div class="a sp" style="top:211.3pt">그리고</div>
+<div class="f" style="left:231.75pt;top:218.25pt"><span class="fig" data-srcpage="47" data-clip="231.75,218.25,351,253.5"></span></div>
+<div class="a sp" style="top:258.7pt"><p class="in">오제 관측소에서 관측되는 사건 수를 구하려면 선속에 오제 관측소의 면적을 곱하기만 하면 된다.</p></div>
+<div class="f" style="left:219pt;top:294.75pt"><span class="fig" data-srcpage="47" data-clip="219,294.75,363.75,314.25"></span></div>
+<div class="a sp" style="top:326.0pt">이는 양성자의 경우이다. 또한</div>
+<div class="f" style="left:228.75pt;top:336pt"><span class="fig" data-srcpage="47" data-clip="228.75,336,353.25,355.5"></span></div>
+<div class="a sp" style="top:361.4pt">이는 철 원자핵의 경우이다.</div>
+<div class="a sp" style="top:389.0pt"><p class="in"><b>(ii)</b> 케이온은 렙톤이나 파이온으로 붕괴할 수 있다. 첫째 경우에 가장 확률이 높은 붕괴는 뮤온과 뮤온 중성미자로의 붕괴이고(나선성 때문에 전자로는 붕괴하지 않는다), 둘째 경우에는 두 파이온 $\pi^+\pi^0$으로 붕괴한다. 어느 경우든 4-벡터를 이용하여 케이온 정지 기준틀에서 딸입자의 에너지를 계산할 수 있다.</p></div>
+<div class="f" style="left:176.25pt;top:456.75pt"><span class="fig" data-srcpage="47" data-clip="176.25,456.75,405.75,472.5"></span></div>
+<div class="a sp" style="top:485.1pt"><p class="ni">그러면 $p_K=p_\mu+p_\nu$로 쓸 수 있다. 중성미자는 질량이 없으므로 뮤온을 따로 떼어 제곱하는 것이 더 쉽다. $(p_K-p_\nu)^2=p_\mu^2$로부터 $m_K^2+0-2(m_KE_\nu)=m_\mu^2$을 얻고, 이로부터 다음을 얻을 수 있다.</p></div>
+<div class="f" style="left:216pt;top:522pt"><span class="fig" data-srcpage="47" data-clip="216,522,366.75,555"></span></div>
+<div class="a sp" style="top:559.4pt">따라서</div>
+<div class="f" style="left:246.75pt;top:570pt"><span class="fig" data-srcpage="47" data-clip="246.75,570,336,594"></span></div>
+<div class="a sp" style="top:600.5pt"><p class="in">이는 케이온 정지 기준틀에서의 값이므로 실험실 기준틀로 바꾸어야 한다. 이를 위해 로런츠 변환을 적용한다.</p></div>
+<div class="f" style="left:223.5pt;top:637.5pt"><span class="fig" data-srcpage="47" data-clip="223.5,637.5,358.5,654.75"></span></div>
+<div class="a sp" style="top:667.7pt"><p class="ni">여기서 P는 질량중심계에서 입자의 전체 운동량, theta는 K의 방향에 대한 딸입자의 방출 각이며, $\gamma_K=E_K/m_K$, $\beta_K=p_K/E_K$이다. 질량중심계에서 분포는 등방적이므로, 생성물의 스펙트럼은 어떤 $E_{\min}$과 $E_{\max}$ 사이에서 평평할 것으로 예상된다. 이 둘은 각각 $\theta^*=0^\circ$과 $\theta^*=180^\circ$인 두 극단적인 경우에 해당한다.</p></div>
+<div class="a sp" style="top:740.0pt"><p class="in">그러면 $E_\nu^{\min}\sim0\ \mathrm{GeV}$, $E_\nu^{\max}\sim954\ \mathrm{GeV}$를 얻는다. 중성미자는 붕괴하지 않으므로 이 부분은 계산할 필요가 없다.</p></div>
+<span class="fig pn" data-srcpage="47" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 48 -->
+<div class="page">
+<span class="fig hd" data-srcpage="48" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="in">반면 뮤온의 경우 $E_\mu^{\min}\sim46\ \mathrm{GeV}$, $E_\mu^{\max}\sim1\ \mathrm{TeV}$이다. 뮤온은 붕괴할 수 있고, 정지 기준틀에서 붕괴 시간은 $2.2\times10^{-6}s$이다. 이로부터 $P_{survival}=exp(-h/\gamma c\tau)$를 계산할 수 있으며, 이는 최소 뮤온 에너지에서 약 97%이고 다른 에너지에서는 더 크다. 따라서 이 붕괴에서 나온 뮤온은 지면에 도달할 가능성이 크다.</p></div>
+<div class="a sp" style="top:173.0pt"><p class="in">붕괴 $K^+\to\pi^+\pi^0$의 경우도 매우 비슷하다. 운동학 계산에서 유일한 차이는 여기서는 질량이 0인 입자가 없다는 점이며, 그 결과는 다음과 같다.</p></div>
+<div class="f" style="left:234pt;top:208.5pt"><span class="fig" data-srcpage="48" data-clip="234,208.5,347.25,242.25"></span></div>
+<div class="a sp" style="top:251.9pt"><p class="ni">아래 첨자 0은 중성 파이온을, +는 하전 파이온을 나타낸다. 하전 파이온에 대한 결과는 대칭적이다. 이렇게 하여 앞에서처럼 로런츠 변환을 계산하면 $E_0^{\max}=913\ \mathrm{GeV}$, $E_0^{\min}=82\ \mathrm{GeV}$, $E_+^{\max}=918\ \mathrm{GeV}$, $E_+^{\min}=85\ \mathrm{GeV}$를 얻는다. $\pi^+$의 질량과 $\pi^0$의 질량은 같다고 근사할 수도 있다.</p></div>
+<div class="a sp" style="top:309.7pt"><p class="in">이 경우 큰 차이는 지면에 도달할 확률에 있다. 하전 파이온은 약한 상호작용으로 붕괴하고 수명이 $\tau_+=2.5\times10^{-8}s$인 반면, 중성 파이온은 전자기 붕괴를 하고 수명이 $\tau_0=8.5\times10^{-17}s$이므로 중성 파이온은 지면에 도달할 수 없다(가능한 최대 에너지로 계산해도 붕괴 거리가 아주 작다: $\gamma_0^{\max}c\tau_0=1.72\times10^{-4}\ \mathrm m$). 반면 하전 파이온의 생존 확률은 허용된 에너지 범위에서 11%에서 81%까지 변하므로, 파이온의 일부(주로 에너지가 가장 높은 것)는 지면에 도달하고 일부(주로 에너지가 가장 낮은 것)는 붕괴할 것으로 예상할 수 있다.</p></div>
+<div class="a sp" style="top:438.4pt"><p class="in"><b>(iii)</b> 지구 중심에 원점을 둔 좌표계를 잡자. $\hat x$축은 반지름 방향을 나타내고, $\hat y$축은 $\hat x$와, 남북 방향인 $\hat z$에 수직이다. 뮤온의 운동은 x-y 평면에 나타낼 수 있으므로 $\hat z$축은 고려하지 않는다. 뮤온은 점 $(x_0;0)$에서 생겨나 $\hat x$축의 음의 방향으로 나아간다(그림 8 참고).</p></div>
+<div class="f" style="left:135.75pt;top:519.75pt"><span class="fig" data-srcpage="48" data-clip="135.75,519.75,446.25,721.5"></span></div>
+<div class="c sp" style="top:734.0pt">그림 8</div>
+<span class="fig pn" data-srcpage="48" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 49 -->
+<div class="page">
+<span class="fig hd" data-srcpage="49" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="in">뮤온은 자기장에 의해 다음 곡률 반지름으로 휘어져</p></div>
+<div class="f" style="left:231.75pt;top:137.25pt"><span class="fig" data-srcpage="49" data-clip="231.75,137.25,349.5,168"></span></div>
+<div class="a sp" style="top:180.6pt"><p class="ni">나이로비 $(x_N;y_N)$을 향한다. 우리 좌표계에서 나이로비의 좌표는 다음과 같이 구할 수 있다.</p></div>
+<div class="f" style="left:209.25pt;top:207.75pt"><span class="fig" data-srcpage="49" data-clip="209.25,207.75,373.5,222.75"></span></div>
+<div class="a sp" style="top:230.5pt"><p class="ni">여기서 $R_E$는 지구의 반지름이고 $\theta$는 나이로비의 경도이다. 계의 기하로부터 곡률 반지름을 구할 수 있다.</p></div>
+<div class="f" style="left:218.25pt;top:266.25pt"><span class="fig" data-srcpage="49" data-clip="218.25,266.25,363.75,299.25"></span></div>
+<div class="a sp" style="top:309.5pt">이로부터 뮤온의 운동량을 얻을 수 있다.</div>
+<div class="f" style="left:177pt;top:333.75pt"><span class="fig" data-srcpage="49" data-clip="177,333.75,405,348.75"></span></div>
+<div class="a sp" style="top:362.3pt">생존 확률은 뮤온이 실제로 지나간 거리에 따라 달라지며, 그 거리는 다음과 같다.</div>
+<div class="f" style="left:204pt;top:381pt"><span class="fig" data-srcpage="49" data-clip="204,381,378.75,412.5"></span></div>
+<div class="a sp" style="top:422.1pt">이로부터 다음을 계산할 수 있다.</div>
+<div class="f" style="left:219.75pt;top:432pt"><span class="fig" data-srcpage="49" data-clip="219.75,432,362.25,463.5"></span></div>
+<div class="a sp" style="top:471.7pt">여기서 $m_\mu=105\ \mathrm{MeV}/c^2$, $\tau=2.2\ \mu s$, $\gamma=\frac{E}{m}$이다.</div>
+<span class="fig pn" data-srcpage="49" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 50 (problem paper p16): GR -->
+<div class="page" style="--dy:0.9pt">
+<span class="fig hd" data-srcpage="50" data-clip="50,47,532,89"></span>
+<h2><span class="n2">10</span>일반상대론</h2>
+<div class="a" style="top:141pt"><p class="ni">중력파가 만드는 민코프스키 시공간의 작은 섭동 $g_{\mu\nu}=\eta_{\mu\nu}+h_{\mu\nu}$를 생각하자.</p></div>
+<div class="l2" style="top:180pt"><span class="k">i)</span><p><b>(0.5점)</b> $n^\mu$가 민코프스키 시공간의 영벡터(null vector)이면, 섭동된 계량에서는 벡터 $s^\mu=n^\mu-\frac{1}{2}\eta^{\mu\rho}h_{\rho\lambda}n^\lambda$가 영벡터임을 보여라(언제나 $\mathcal O(h)$까지만 계산하라).</p></div>
+<div class="l2" style="top:219pt"><span class="k">ii)</span><p><b>(5점)</b> $s^\mu$가 지구에서 볼 때 방향 $\hat n$에 있는 광원이 처음 진동수 $\nu_0$로 방출한 광자의 궤적이라고 하자. TT 게이지에서 측지선 방정식을 이용하여, $z$ 방향으로 진행하는 단색 중력파 $h_{\mu\nu}=h_{\mu\nu}(t-z)$가 만드는 광자 진동수의 변화 $(\nu(t)-\nu_0)/\nu_0$을 계산하여라.</p></div>
+<div class="l2" style="top:289pt"><span class="k">iii)</span><p><b>(1점)</b> 이 결과를 임의의 중력파 진행 방향 $\hat\Omega$에 대해 일반화하여라.</p></div>
+<div class="l2" style="top:326pt"><span class="k">iv)</span><b>(1점)</b> $\hat\Omega\cdot\hat n=1$이면 어떻게 되는가? (<i>힌트: $\hat\Omega=\hat z$라고 가정하고 답하라</i>)</div>
+<div class="l2" style="top:352pt"><span class="k">v)</span><p><b>(0.5점)</b> 서로 다른 방향으로 진행하는 $N$개의 중력파에 대해 결과는 선형적인가, 즉 더해지는가?</p></div>
+<div class="l2" style="top:391pt"><span class="k">vi)</span><p><b>(1점)</b> 이제 중력파의 분산 관계가 $\omega(k)=c_sk$로 수정된다고 하자(일반상대론에서는 $c_s=1$). 이 새로운 효과는 앞에서 유도한 중력 적색편이에 어떻게 나타나겠는가?</p></div>
+<div class="l2" style="top:445pt"><span class="k">vii)</span><p><b>(1점)</b> 실제 관측에서 중력파는 완벽한 단색파가 아니다. 예를 들어 질량이 $m$으로 같은 두 천체로 이루어진 쌍성계에서, 나선 접근 단계 동안 중력파의 진동수 $f$는 시간에 따라 다음과 같이 변한다.</p></div>
+<div class="f" style="left:250pt;top:499pt"><span class="fig" data-srcpage="50" data-clip="250,499,531,534"></span></div>
+<div class="l2" style="top:543pt"><p>$m=10^{11}M_\odot$이고 $f\sim1\,\mathrm{nHz}$일 때, 중력파 진동수의 시간 변화를 무시할 수 있으려면 광원이 지구에 얼마나 가까이 있어야 하는지 어림하여라.</p></div>
+<span class="fig pn" data-srcpage="50" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 51 -->
+<div class="page">
+<span class="fig hd" data-srcpage="51" data-clip="50,47,532,89"></span>
+<div class="sh" style="top:113.8pt">풀이</div>
+<div class="a sp" style="top:137.4pt">이 풀이 전체에서 계량 텐서의 부호 규약으로는 (-,+,+,+)를 쓴다.</div>
+<div class="a sp" style="top:151.8pt"><p class="in"><b>(i)</b> $\mathcal O(h)$까지 계산하면 다음을 얻는다.</p></div>
+<div class="f" style="left:130.5pt;top:188.25pt"><span class="fig" data-srcpage="51" data-clip="130.5,188.25,451.5,237"></span></div>
+<div class="a sp" style="top:246.4pt"><p class="ni"><b>(ii)</b>와 <b>(iii)</b> 이제 측지선 방정식을 이용하여, 방출된 광자의 진동수 $\nu_0$이 시각 $t$에 지구에 도달할 때 어떻게 변하는지 조사하자. 이때 검출기는 $\nu(t)$를 측정한다. 중력파가 없으면 $\nu_0$을 측정할 것이다(우주의 팽창이나 다른 도플러 이동은 모두 무시한다). 중력파가 있으면 $s^0=\nu$에 대한 측지선 방정식은 다음과 같다.</p></div>
+<div class="f" style="left:215.25pt;top:325.5pt"><span class="fig" data-srcpage="51" data-clip="215.25,325.5,368.25,357"></span></div>
+<div class="a sp" style="top:360.5pt"><p class="ni">이 역시 $\mathcal O(h)$까지이다. 배경 벡터 $n^\mu$에 대해 위 방정식에서 $n^\mu=\nu(1,-\hat n)$으로 쓸 수 있으며, 이로부터 TT 게이지에서 다음을 얻는다.</p></div>
+<div class="f" style="left:238.5pt;top:396.75pt"><span class="fig" data-srcpage="51" data-clip="238.5,396.75,344.25,427.5"></span></div>
+<div class="a sp" style="top:443.8pt"><p class="in">더 나아가려면 중력파의 진행 방향을 정해야 한다. 임의의 $\hat\Omega$에 대한 풀이를 구하라고 했으므로 이 경우를 먼저 풀고, 그다음 $z$ 방향으로 진행하는 파동으로 범위를 좁히자. 다음을 얻는다.</p></div>
+<div class="f" style="left:135.75pt;top:494.25pt"><span class="fig" data-srcpage="51" data-clip="135.75,494.25,447.75,530.25"></span></div>
+<div class="a sp" style="top:535.2pt"><p class="ni">$\frac{dt}{d\lambda}=\nu$이고 계량 섭동이 $(t-\hat\Omega\cdot\vec x)$의 함수라는 점에 주목하면 이를 더 간단히 할 수 있으며, 그 결과 다음에 이른다.</p></div>
+<div class="f" style="left:196.5pt;top:573.75pt"><span class="fig" data-srcpage="51" data-clip="196.5,573.75,387,607.5"></span></div>
+<div class="a sp" style="top:618.0pt">여기서 마지막 등식에서는 들어오는 광자에 대해 $\frac{d\vec x}{d\lambda}=-\nu\hat n$임을 이용하였다.</div>
+<div class="a sp" style="top:632.5pt">결국 측지선 방정식은</div>
+<div class="f" style="left:212.25pt;top:642pt"><span class="fig" data-srcpage="51" data-clip="212.25,642,371.25,675"></span></div>
+<div class="a sp" style="top:681.5pt"><p class="ni"><span style="float:right;width:0;height:14.45pt"></span><span style="float:right;clear:right;width:338.3pt;height:14.45pt"></span>위 방정식을 $\mathcal O(h)$까지 적분한 다음, 해를 $\mathcal O(h)$까지 전개하면 최종적으로 다음을 얻는다.</p></div>
+<div class="f" style="left:213pt;top:703.5pt"><span class="fig" data-srcpage="51" data-clip="213,703.5,370.5,737.25"></span></div>
+<div class="a sp" style="top:746.3pt"><p class="ni">여기서 $\Delta h_{ij}\equiv h_{ij}(t_p-\hat\Omega\cdot\vec x_p)-h_{ij}(t_e-\hat\Omega\cdot\vec x_e)$는 방출 시각 $t_p$와 지구에서 수신되는 시각 $t_e$ 사이 중력파 진폭의 차이이다.</p></div>
+<span class="fig pn" data-srcpage="51" data-clip="275,787,307,804"></span>
+</div>
+
+<!-- 52 -->
+<div class="page">
+<span class="fig hd" data-srcpage="52" data-clip="50,47,532,89"></span>
+<div class="a sp" style="top:115.2pt"><p class="in">$z$ 방향으로 진행하는 파동에서는 $\hat\Omega=\hat z$이며, 계량 섭동은 다음과 같이 쓸 수 있다.</p></div>
+<div class="f" style="left:223.5pt;top:138pt"><span class="fig" data-srcpage="52" data-clip="223.5,138,358.5,196.5"></span></div>
+<div class="a sp" style="top:204.2pt">그리고</div>
+<div class="f" style="left:177pt;top:216.75pt"><span class="fig" data-srcpage="52" data-clip="177,216.75,405,231"></span></div>
+<div class="a sp" style="top:239.6pt">진동수 변화는 다음과 같이 되며,</div>
+<div class="f" style="left:125.25pt;top:261pt"><span class="fig" data-srcpage="52" data-clip="125.25,261,458.25,294.75"></span></div>
+<div class="a sp" style="top:305.3pt">이는 $\cos\theta=1$이면 0이다.</div>
+<div class="a sp" style="top:332.9pt"><p class="in"><b>(iv)</b> 이는 $\hat\Omega\cdot\hat n=1$일 때에도 여전히 참이며, 중력파가 횡파이기 때문이다.</p></div>
+<div class="a sp" style="top:374.9pt"><p class="in"><b>(v)</b> 위의 유도에서 모든 중력파가 한 방향으로 진행한다고 가정할 필요가 전혀 없었음에 주목하라. 즉 여러 파동에 대해 결과는 더해진다.</p></div>
+<div class="a sp" style="top:417.0pt"><p class="in"><b>(vi)</b> 분산 관계가 $c_s\equiv\omega/|\vec k|\neq1$로 수정된 경우, 중력파의 진행에 대한 운동 방정식은 다음과 같이 된다.</p></div>
+<div class="f" style="left:222.75pt;top:453pt"><span class="fig" data-srcpage="52" data-clip="222.75,453,359.25,487.5"></span></div>
+<div class="a sp" style="top:499.9pt"><p class="ni">그 해는 $(t-\hat\Omega\cdot\vec x/c_s)$의 함수이므로, $\hat\Omega\to\hat\Omega/c_s$로 바꾸면 앞에서 제시한 모든 결과가 그대로 적용된다.</p></div>
+<div class="a sp" style="top:541.9pt"><p class="in"><span style="float:right;width:0;height:14.45pt"></span><span style="float:right;clear:right;width:328.3pt;height:14.45pt"></span><b>(vii)</b> 본문에 제시된 계에서 신호가 변하는 전형적인 시간 척도는 대략 다음과 같다.</p></div>
+<div class="f" style="left:227.25pt;top:563.25pt"><span class="fig" data-srcpage="52" data-clip="227.25,563.25,355.5,594.75"></span></div>
+<div class="a sp" style="top:600.7pt">거리 $D$를 구하려면</div>
+<div class="f" style="left:261pt;top:612.75pt"><span class="fig" data-srcpage="52" data-clip="261,612.75,321,627.75"></span></div>
+<div class="a sp" style="top:636.1pt">이로부터 $\mathcal O(\mathrm{kpc})$ 정도의 거리를 얻는다.</div>
+<span class="fig pn" data-srcpage="52" data-clip="275,787,307,804"></span>
+</div>
+
+<script id="glue">
+/* keep particles/punctuation on the same line as the formula they follow (or precede) */
+addEventListener('load',function(){document.querySelectorAll('.katex').forEach(function(k){
+var h=k.querySelector('.katex-html');if(!h)return;var b=h.querySelectorAll(':scope>.base');if(!b.length)return;
+var w=(k.parentNode.childNodes.length==1)?k.parentNode:k;
+var n=w.nextSibling;if(n&&n.nodeType==3){var m=n.data.match(/^[^\s]+/);if(m){n.data=n.data.slice(m[0].length);var s=document.createElement('span');s.className='glue';s.textContent=m[0];b[b.length-1].appendChild(s);}}
+var p=w.previousSibling;if(p&&p.nodeType==3){var q=p.data.match(/[^\s\uac00-\ud7a3]+$/);if(q){p.data=p.data.slice(0,p.data.length-q[0].length);var t=document.createElement('span');t.className='glue';t.textContent=q[0];b[0].insertBefore(t,b[0].firstChild);}}
+});});
+</script>
+</body></html>

@@ -1,0 +1,23 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2025_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "91517072cf3a5a3616e0a929832eff41044faa8014984ba9afb32ce72e1a99a6",
+ "bytes": 3529459,
+ "pages": 38,
+ "source_file": "PLANCKS_2025_TS.pdf",
+ "source_sha256": "e5eb61c93c5b36d0913b707537287d322133f694841a29a7fb27f2b75bca064d",
+ "source_pages": 38,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 16406,
+ "html_source": "tools/ko_reflow/plancks/2025_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at 55 dpi with 100-110 dpi close-ups; baselines of every Korean line measured against the source text lines (first line of every solution block within about 1 pt, page medians within 0.25 pt; later lines of reflowed paragraphs with inline fractions drift by up to about 3 pt, as the Korean wraps differently); the 16 problem-statement pages reuse the published Korean problem paper (tools/ko_reflow/plancks/2025.html) unchanged apart from stamp page numbers, with the Problem 7 solution added below the reused statement on p25; edgecheck.py reports no stamp cutting ink; a hidden-glyph scan finds no Korean text under a stamp's white backing; check.py leaves only grey-box overlaps, text lines that sit beside an equation stamp as in the source, and invisible KaTeX range boxes reported off-page (p8, p15, p34, p36); Chrome's 594.96 x 841.92 pt media box was reset to the source's 595.276 x 841.89 pt after build; no TeX leftovers or missing glyphs",
+  "overflow_or_occlusion_observed": false
+ }
+}

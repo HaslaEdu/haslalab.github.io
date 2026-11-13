@@ -1,0 +1,409 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* PLANCKS 2026 solutions (LaTeX, Computer Modern 10pt, US letter; text x 36..576, baselineskip 13.15pt).
+   Running header "PLANCKS 2026", rules, page numbers, figures and display equations are stamped from the original;
+   the slanted running title is set in italic. Pages 13-15 (wave-function collapse, a separate LaTeX file) keep their
+   own layout; pages 16-25 are handwritten scans with their own page sizes and are stamped whole. */
+@page p605_849{size:605pt 849pt;margin:0}
+.page[data-s="p605_849"]{page:p605_849;width:605pt;height:849pt}
+@page p617_857{size:617pt 857pt;margin:0}
+.page[data-s="p617_857"]{page:p617_857;width:617pt;height:857pt}
+@page p620_860{size:620pt 860pt;margin:0}
+.page[data-s="p620_860"]{page:p620_860;width:620pt;height:860pt}
+@page p623_862{size:623pt 862pt;margin:0}
+.page[data-s="p623_862"]{page:p623_862;width:623pt;height:862pt}
+@page p630_867{size:630pt 867pt;margin:0}
+.page[data-s="p630_867"]{page:p630_867;width:630pt;height:867pt}
+@page p631_869{size:631pt 869pt;margin:0}
+.page[data-s="p631_869"]{page:p631_869;width:631pt;height:869pt}
+@page p644_876{size:644pt 876pt;margin:0}
+.page[data-s="p644_876"]{page:p644_876;width:644pt;height:876pt}
+@page p654_884{size:654pt 884pt;margin:0}
+.page[data-s="p654_884"]{page:p654_884;width:654pt;height:884pt}
+@page p680_903{size:680pt 903pt;margin:0}
+.page[data-s="p680_903"]{page:p680_903;width:680pt;height:903pt}
+body{font-size:10pt;line-height:13.15pt}
+.a{position:absolute}
+.a>p{text-indent:0}
+.c{text-align:center}
+.f{position:absolute;line-height:0}
+.k{position:absolute}
+.katex{line-height:1}
+.hr{position:absolute;left:200pt;width:376pt;top:39.1pt;text-align:right;font-style:italic;white-space:nowrap}
+.hr .n{display:inline-block;width:15pt;text-align:left}
+.t{position:absolute;left:36pt;top:66.8pt;font-size:14.3pt;line-height:17.4pt;font-weight:bold;white-space:nowrap}
+.t .n{display:inline-block;width:24.2pt}
+.g{font-style:italic}
+</style></head><body>
+<!-- 1: cover -->
+<div class="page">
+<div class="f" style="left:230pt;top:108pt"><span class="fig" data-srcpage="1" data-clip="230,108,382,128"></span></div>
+<div class="a c" style="left:36pt;top:143.19pt;width:540pt;font-size:12pt;line-height:14.5pt;font-weight:bold">풀이</div>
+<div class="f" style="left:182pt;top:209.5pt"><span class="fig" data-srcpage="1" data-clip="182,209.5,430,588"></span></div>
+</div>
+
+<!-- 2: solutions overview -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="2" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr">풀이 목록</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="2" data-clip="36,51,576,52.5"></span></div>
+<div class="t">풀이 목록</div>
+<div class="a" style="left:36pt;top:93.75pt;font-weight:bold"><span style="display:inline-block;width:14.9pt">1</span>치리오스 효과</div>
+<div class="f" style="left:569pt;top:93pt"><span class="fig" data-srcpage="2" data-clip="569,93,577,106"></span></div>
+<div class="a" style="left:36pt;top:116.85pt;font-weight:bold"><span style="display:inline-block;width:14.9pt">2</span>부분 결맞음과 3차원 영상</div>
+<div class="f" style="left:569pt;top:116pt"><span class="fig" data-srcpage="2" data-clip="569,116,577,129"></span></div>
+<div class="a" style="left:36pt;top:140.05pt;font-weight:bold"><span style="display:inline-block;width:14.9pt">3</span>목관악기</div>
+<div class="f" style="left:569pt;top:139pt"><span class="fig" data-srcpage="2" data-clip="569,139,577,152"></span></div>
+<div class="a" style="left:36pt;top:163.15pt;font-weight:bold"><span style="display:inline-block;width:14.9pt">4</span>쌍성계의 중력파</div>
+<div class="f" style="left:569pt;top:162pt"><span class="fig" data-srcpage="2" data-clip="569,162,577,175"></span></div>
+<div class="a" style="left:36pt;top:186.25pt;font-weight:bold"><span style="display:inline-block;width:14.9pt">5</span>펜로즈 과정</div>
+<div class="f" style="left:563pt;top:185pt"><span class="fig" data-srcpage="2" data-clip="563,185,577,198"></span></div>
+<div class="a" style="left:36pt;top:209.35pt;font-weight:bold"><span style="display:inline-block;width:14.9pt">6</span>광 도파의 원리</div>
+<div class="f" style="left:563pt;top:208pt"><span class="fig" data-srcpage="2" data-clip="563,208,577,221"></span></div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="2" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:302.25pt;top:738pt"><span class="fig" data-srcpage="2" data-clip="302.25,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 3: Cheerios effect (problem 1) -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="3" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">1</span>치리오스 효과</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="3" data-clip="36,51,576,52.5"></span></div>
+<div class="t"><span class="n">1</span>치리오스 효과</div>
+<div class="a" style="left:60.9pt;top:93.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">1.</span><p>치리오스에 작용하는 연직 방향 힘의 균형은 $F_g+F_b+F_{\gamma,z}=0$이며, 치리오스의 무게는 다음과 같다.</p></div>
+<div class="f" style="left:270pt;top:116.5pt"><span class="fig" data-srcpage="3" data-clip="270,116.5,362,142"></span></div>
+<div class="a" style="left:60.9pt;top:145.35pt;width:515.1pt"><p>부력은 다음과 같다.</p></div>
+<div class="f" style="left:170pt;top:159pt"><span class="fig" data-srcpage="3" data-clip="170,159,466,198"></span></div>
+<div class="a" style="left:60.9pt;top:200.05pt;width:515.1pt"><p>표면장력의 크기는 $F_\gamma=2\pi R\gamma\sin\phi_c$이며, 액체–공기 계면에 평행하게 작용한다. 따라서 그 연직 성분은 다음과 같다.</p></div>
+<div class="f" style="left:255pt;top:226pt"><span class="fig" data-srcpage="3" data-clip="255,226,380,240"></span></div>
+<div class="a" style="left:60.9pt;top:245.45pt;width:515.1pt"><p>여기서 $\alpha$는 액체–공기 계면과 음의 $z$축 사이의 각이다. 계면의 모양 $h(r)$로 나타내면 이 각은 다음과 같다.</p></div>
+<div class="f" style="left:225pt;top:270pt"><span class="fig" data-srcpage="3" data-clip="225,270,410,301.5"></span></div>
+<div class="a" style="left:60.9pt;top:307.15pt;width:515.1pt"><p>이다. 모든 힘을 합하면 다음을 얻는다.</p></div>
+<div class="f" style="left:108pt;top:322pt"><span class="fig" data-srcpage="3" data-clip="108,322,577,362"></span></div>
+<div class="a" style="left:60.9pt;top:369.55pt;width:515.1pt"><p>따라서</p></div>
+<div class="f" style="left:165pt;top:370pt"><span class="fig" data-srcpage="3" data-clip="165,370,470,410.5"></span></div>
+<div class="a" style="left:60.9pt;top:420.75pt;width:515.1pt"><span class="k" style="left:-12.7pt">2.</span><p>$h_c\ll R$이면 $h_c/R$에 선형인 항을 무시할 수 있다. 또한 $h'_c=O(h_c/R)\ll1$이므로 다음을 얻는다.</p></div>
+<div class="f" style="left:280pt;top:442pt"><span class="fig" data-srcpage="3" data-clip="280,442,360,474"></span></div>
+<div class="a" style="left:60.9pt;top:484.05pt;width:515.1pt"><p>또 삼각법으로부터 테일러 전개의 최저차에서 $\phi_c=\pi-\theta-\arctan h'_c\approx\pi-\theta$이므로, 식은 다음과 같이 된다.</p></div>
+<div class="f" style="left:200pt;top:499pt"><span class="fig" data-srcpage="3" data-clip="200,499,436,536"></span></div>
+<div class="a" style="left:60.9pt;top:540.05pt;width:515.1pt"><span class="k" style="left:-12.7pt">3.</span><p>치리오스 1이 치리오스 2의 메니스커스를 타고 올라갈 때 중력 퍼텐셜 에너지의 변화는 치리오스 1의 알짜 무게에 올라간 높이를 곱한 것이다. 치리오스 1의 알짜 무게는 (a–b)의 결과에 따라 표면장력의 연직 성분 $2\pi\gamma RB\Sigma$와 같다. 치리오스 2의 계면을 따른 연직 변위는 $h(\ell)=h'_c\sin\phi_cRK_0(\ell/L)=B\Sigma RK_0(\ell/L)$이므로 다음을 얻는다.</p></div>
+<div class="f" style="left:248pt;top:599pt"><span class="fig" data-srcpage="3" data-clip="248,599,390,630"></span></div>
+<div class="a" style="left:60.9pt;top:639.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">4.</span><p>치리오스 하나는 이웃의 메니스커스를 타고 올라가 중력 퍼텐셜 에너지를 낮출 수 있다. 그 결과 두 치리오스 사이의 수평 상호작용 힘은 인력이며, 다음과 같다.</p></div>
+<div class="f" style="left:225pt;top:670pt"><span class="fig" data-srcpage="3" data-clip="225,670,412,703"></span></div>
+<div class="a" style="left:60.9pt;top:708.05pt;width:515.1pt"><p>$K_1(x)$는 양의 값을 가지므로 상호작용 힘은 음수가 되며, 이는 인력을 뜻한다.</p></div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="3" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:302.25pt;top:738pt"><span class="fig" data-srcpage="3" data-clip="302.25,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 4 -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="4" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">1</span>치리오스 효과</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="4" data-clip="36,51,576,52.5"></span></div>
+<div class="a" style="left:60.9pt;top:70.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">5.</span><p>아니다. 압정과 치리오스는 서로 밀어낸다. 압정은 우유보다 밀도가 크므로 우유–공기 계면을 아래로 변형시킨다. 떠 있는 치리오스는 퍼텐셜 에너지를 낮추려고 위로, 즉 압정에서 멀어지는 쪽으로 움직이려 한다. 반대로 압정은 퍼텐셜 에너지를 낮추려고 아래로, 즉 치리오스에서 멀어지는 쪽으로 움직이려 한다. 이와 달리 압정 두 개는 다시 서로 끌어당긴다는 점에 유의하라. 다른 답: 압정에서는 $\Sigma&gt;1$이고 치리오스에서는 보통 $\Sigma&lt;1$이므로, $E(\ell)$이 양수가 되고 상호작용 힘도 양수, 즉 척력이 된다.</p></div>
+<div class="a" style="left:36pt;top:159.55pt;font-weight:bold">풀이 끝.</div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="4" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:302.25pt;top:738pt"><span class="fig" data-srcpage="4" data-clip="302.25,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 5: partial coherence (problem 2) -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="5" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">2</span>부분 결맞음과 3차원 영상</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="5" data-clip="36,51,576,52.5"></span></div>
+<div class="t"><span class="n">2</span>부분 결맞음과 3차원 영상</div>
+<div class="a" style="left:60.9pt;top:93.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">1.</span><p>거울 A1의 반사율이 1보다 작다면 $E_A(t)=r_1E_0(t)$로 둘 수 있다. 여기서 $r_1$은 <i>장</i> 반사 계수이며, 출력은 다음과 같다.</p></div>
+<div class="f" style="left:98pt;top:122pt"><span class="fig" data-srcpage="5" data-clip="98,122,494,147"></span></div>
+<div class="a" style="left:60.9pt;top:154.55pt;width:515.1pt"><p>간단히 $r_1$이 실수라고 가정하면, 로런츠 광원에 대해 다음을 얻는다.</p></div>
+<div class="f" style="left:98pt;top:170pt"><span class="fig" data-srcpage="5" data-clip="98,170,531,195"></span></div>
+<div class="a" style="left:60.9pt;top:207.05pt;width:515.1pt"><p>이를 거울 위치의 함수로 나타내면 $P_D\propto\{r_1^2+1+2r_1e^{-2|x|/c\tau_c}\cos(\omega_0\tfrac{2x}{c})\}$이다.</p></div>
+<div class="a" style="left:60.9pt;top:236.85pt;width:515.1pt"><p>가시도는 다음과 같다.</p></div>
+<div class="f" style="left:138pt;top:258pt"><span class="fig" data-srcpage="5" data-clip="138,258,500,288"></span></div>
+<div class="a" style="left:60.9pt;top:293.47pt;width:515.1pt;line-height:13.25pt"><p>50%의 일률 반사율은 장 반사 계수 $r_1=\sqrt{0.5}=0.707$에 해당하므로, ($\tau=0$ 부근에서) 최대 가시도는 $V(\tau=0)=\frac{4r_1}{2(r_1^2+1)}\approx0.94$이다. 이 계산에서는 무늬의 극소와 극대 사이에서 $e^{-|\tau|/\tau_c}$가 변하는 것을 무시하였는데, 결맞음 시간이 무늬의 주기보다 훨씬 길므로 이는 충분히 타당하다.</p></div>
+<div class="a" style="left:60.9pt;top:362.05pt;width:515.1pt"><p>이 최종 결과는 (통계 광학에 대한 지식 없이도) 장들의 보강 간섭과 상쇄 간섭으로부터 $\tau=0$에서의 최소 일률과 최대 일률을 계산하여 간단히 얻을 수도 있다.</p></div>
+<div class="f" style="left:198pt;top:396pt"><span class="fig" data-srcpage="5" data-clip="198,396,438,462"></span></div>
+<div class="a g" style="left:60.9pt;top:463.65pt;width:515.1pt"><p>채점: 만점을 받으려면 가시도 값을 말하고 그 값을 어떻게 유도했는지 설명해야 한다. 이 상황에 대한 가시도를 계산하려고 시도하면 부분 점수를 줄 수 있다.</p></div>
+<div class="a" style="left:60.9pt;top:497.75pt;width:515.1pt"><span class="k" style="left:-12.7pt">2.</span><p>이 경우 두 번째 거울 A2에서 반사된 장도 B에서 온 장과 간섭할 수 있다. 이는 B의 변위에 해당하는 지연이 A2에서 오는 지연과 일치할 때에만 일어나므로, $\tau=2\frac{\Delta y}{c}$에서 간섭무늬가 한 벌 더 나타날 것으로 예상된다. 형식적으로 쓰면 검출기에서의 일률은 다음과 같다.</p></div>
+<div class="f" style="left:95pt;top:542pt"><span class="fig" data-srcpage="5" data-clip="95,542,545,692"></span></div>
+<div class="a" style="left:60.9pt;top:695.55pt;width:515.1pt"><p>여기서 $t_1$은 첫 번째 계면의 장 투과 계수이다. A1과 A2 사이의 다중 반사는 무시하였고, $2\frac{\Delta y}{c}\gg\tau_c$이므로 A1과 A2에서의 반사는 서로 간섭하지 않는다는 사실을 이용하였다. 같은 이유로</p></div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="5" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:302.25pt;top:738pt"><span class="fig" data-srcpage="5" data-clip="302.25,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 6 -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="6" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">2</span>부분 결맞음과 3차원 영상</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="6" data-clip="36,51,576,52.5"></span></div>
+<div class="a" style="left:60.9pt;top:70.65pt;width:515.1pt"><p>두 벌의 간섭무늬는 서로 잘 분리되어 그림 1(b)와 같은 전체 간섭 그림을 만든다. 빛이 A2에서 반사되려면 A1을 두 번 지나야 하므로, 두 번째 간섭 그림의 가시도는 더 낮다. 이런 간섭 그림으로 여러 후방 반사체의 위치를 잴 수 있으며, 이것이 광간섭 단층 촬영의 기초라는 점을 덧붙인다.</p></div>
+<div class="a g" style="left:60.9pt;top:127.25pt;width:515.1pt"><p>채점: 만점을 받으려면 그림 1(b)와 매우 비슷한 개략도를 그려야 하며, 특히 250 mm 떨어진 두 봉우리(두 번째도 대칭)와 수십 mm의 길이 규모로 줄어드는 무늬를 보여야 한다. 또한 그 풀이의 근거를 밝혀야 한다.</p></div>
+<div class="f" style="left:36pt;top:176pt"><span class="fig" data-srcpage="6" data-clip="36,176,576,336"></span></div>
+<div class="a" style="left:36pt;top:346.05pt;width:540pt"><p>그림 1: 선폭이 10 nm인 광원에 대해 (a) 계면이 하나일 때와 (b) 둘일 때, 그리고 선폭이 1 nm인 광원에 대해 (c) 계면이 둘일 때 계산한 간섭 그림.</p></div>
+<div class="a" style="left:60.9pt;top:390.35pt;width:515.1pt"><span class="k" style="left:-12.7pt">3.</span><p>필터를 넣으면 빛의 스펙트럼이 바뀌므로 결맞음 시간과 간섭 그림도 바뀐다. 간섭은 검출기에서 일어나므로 장치에서 필터의 위치는 상관없다(즉 그림처럼 BS의 앞이나 뒤에 놓을 수 있다). (이를 납득하는 한 가지 방법은, 검출기에서의 일률 스펙트럼 밀도가 광원의 일률 스펙트럼 밀도와 간섭계 및 필터의 투과 스펙트럼의 곱이므로 그 순서는 상관없다고 생각하는 것이다.) $\Delta\lambda_{FWHM}=1$ nm이면 결맞음 시간은 $\tau_c=1.8$ ps가 되고, 이에 대응하는 경로 지연 $x_c=\frac{ct_c}{2}=270$ nm는 두 계면 사이의 거리보다 길어서 두 벌의 간섭무늬가 간섭 그림에서 섞이게 된다. 그 결과 간섭 그림은 그림 1(c)와 같은 모양이 된다.</p></div>
+<div class="a g" style="left:60.9pt;top:486.35pt;width:515.1pt"><p>채점: 만점을 받으려면 그림 1(c)와 비슷한 개략도를 그려야 하며, 특히 (b)의 경우에 비해 두 봉우리의 폭이 넓어진다는 것을 보여야 한다.</p></div>
+<div class="a" style="left:60.9pt;top:520.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">4.</span><p>c의 답은 분해능이 광원의 스펙트럼 폭에 반비례한다는 것을 보여 준다. 분해능을 높이려면 스펙트럼이 더 넓은 광원을 써야 한다.</p></div>
+<div class="a g" style="left:60.9pt;top:550.95pt;width:515.1pt"><p>채점: 만점을 받으려면 더 넓은 스펙트럼을 써야 한다는 것을 말해야 한다.</p></div>
+<div class="a" style="left:60.9pt;top:572.05pt;width:515.1pt"><span class="k" style="left:-12.7pt">5.</span><p>단일 광자 간섭은 고전적 간섭과 같은 결과를 낸다. 광자는 여러 면에서 반사된 뒤 ‘자기 자신과 간섭’하며, 거울 위치의 함수로 계수를 측정하면 (a, b, c의 경우에 계산한 것과 가시도와 $x$ 의존성이 같은) 간섭 그림을 얻는다.</p></div>
+<div class="a g" style="left:60.9pt;top:615.45pt;width:515.1pt"><p>채점: 만점을 받으려면 같은 간섭 그림이 측정된다는 것을 말해야 한다.</p></div>
+<div class="a" style="left:36pt;top:638.55pt;font-weight:bold">풀이 끝.</div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="6" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:302.25pt;top:738pt"><span class="fig" data-srcpage="6" data-clip="302.25,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 7: woodwind (problem 3) -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="7" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">3</span>목관악기</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="7" data-clip="36,51,576,52.5"></span></div>
+<div class="t"><span class="n">3</span>목관악기</div>
+<div class="a" style="left:60.9pt;top:93.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">1.</span><p>공기 덩어리의 압력을 $p=p_0+\Delta p$, 부피를 $V=V_0+\Delta V$로 나타내어 평균값과 요동을 나눈다. 또 공기 덩어리의 변위를 $\boldsymbol\xi$로 나타낸다. 단열 방정식으로부터 최저차 근사에서 다음을 얻는다.</p></div>
+<div class="f" style="left:250pt;top:136pt"><span class="fig" data-srcpage="7" data-clip="250,136,577,165"></span></div>
+<div class="a" style="left:60.9pt;top:167.25pt;width:515.1pt"><p>한편 (최저차에서) 뉴턴 법칙은 다음을 준다.</p></div>
+<div class="f" style="left:250pt;top:184pt"><span class="fig" data-srcpage="7" data-clip="250,184,577,210"></span></div>
+<div class="a" style="left:60.9pt;top:213.95pt;width:515.1pt"><p>이로부터 다음을 얻는다.</p></div>
+<div class="f" style="left:250pt;top:232pt"><span class="fig" data-srcpage="7" data-clip="250,232,577,258"></span></div>
+<div class="a" style="left:60.9pt;top:263.35pt;width:515.1pt"><p>따라서</p></div>
+<div class="f" style="left:227pt;top:280pt"><span class="fig" data-srcpage="7" data-clip="227,280,577,335"></span></div>
+<div class="a" style="left:60.9pt;top:336.35pt;width:515.1pt"><p>여기서 변위와 부피 사이의 관계 $\Delta V/V_0=\nabla\cdot\boldsymbol\xi$를 이용하였다.</p></div>
+<div class="a" style="left:60.9pt;top:352.85pt;width:515.1pt"><p>이로부터 $c=\sqrt{\gamma p_0/\rho_0}$를 얻으며, 이상 기체 법칙을 쓰면 이는 사실 온도와 전형적인 공기 입자의 질량에만 의존한다.</p></div>
+<div class="a" style="left:60.9pt;top:382.55pt;width:515.1pt"><p>채점: 최저차 단열 방정식에 .5점. 뉴턴 법칙을 올바르게 세우면 .5점. 변위와 부피 요동 사이의 관계에 .5점. 이 요소들을 결합하여 올바른 결과를 얻으면 .5점. 파동 방정식에서 분명하다면 $c$에 대한 식을 따로 쓸 필요는 없다.</p></div>
+<div class="a" style="left:60.9pt;top:428.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">2.</span><p>따라서 열전달은 $k^2=\omega^2/c^2$에 비례하고(여기서 $k$는 파수, $\omega$는 진동수), 다른 항은 $\omega$에 비례한다. 즉 진동수가 충분히 낮으면 열전달은 무시할 수 있다.</p></div>
+<div class="a" style="left:60.9pt;top:458.35pt;width:515.1pt"><p>채점: $k$와 $\omega$의 올바른 인자를 찾으면(또는 길이와 시간 규모를 논하는 등 동등한 것) .5점. $k=\omega/c$(또는 동등한 것)를 이용해 올바른 결론에 이르면 .5점.</p></div>
+<div class="a" style="left:60.9pt;top:491.35pt;width:515.1pt"><span class="k" style="left:-12.7pt">3.</span><p>플루트와 클라리넷에서는 진동수 $f=\omega/(2\pi)=kc/(2\pi)$인 간단한 정상파 해 $p(t,x)=(A\cos(kx)+B\sin(kx))\cos(\omega t+\phi)$를 얻는다.</p></div>
+<div class="a" style="left:60.9pt;top:520.95pt;width:515.1pt"><p>경계 조건을 쓰면 플루트에서는 $A=0$, $\sin(kL)=0$이므로 $k=n\pi/L$이다.</p></div>
+<div class="a" style="left:60.9pt;top:537.45pt;width:515.1pt"><p>클라리넷에서는 $B=0$, $\cos(kL)=0$이므로 $k=(2n-1)\pi/(2L)$이다.</p></div>
+<div class="a" style="left:60.9pt;top:550.65pt;width:515.1pt"><p>색소폰에서는 구대칭 파동이 $p(t,r)=A/r\sin(kr)\cos(\omega t+\phi)$로 주어짐을 확인할 수 있다. 이는 일률이 고르게 퍼지므로 $r^{-2}$로 줄어들어야 하고, 따라서 압력 요동은 $r^{-1}$로 줄어들어야 한다는 사실로부터 짐작할 수 있다. 이로써 색소폰은 실제로 위쪽이 닫혀 있게 된다는 점에 유의하라. 다른 경계 조건은 $\sin(kL)=0$을 주므로, 플루트와 마찬가지로 $k=n\pi/L$이다.</p></div>
+<div class="a" style="left:60.9pt;top:606.55pt;width:515.1pt"><p>채점: 원통 파동의 올바른 일반해에 .5점. 원뿔 파동의 올바른 일반해에 .5점. 경계 조건을 이용한 올바른 결과 하나마다 .5점(3번).</p></div>
+<div class="a" style="left:60.9pt;top:639.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">4.</span><p>처음 리드에 바람을 불면 여러 진동수가 섞이지만, 관의 공명 진동수와 맞는 진동수만 정상파를 만든다. 그러면 정상파가 양의 되먹임 고리를 만들어, 압력이 이미 높을 때는 공기를 더 들여보내고 안쪽 압력이 이미 낮을 때는 공기 흐름을 줄여 이 정상파들을 증폭한다.</p></div>
+<div class="a" style="left:60.9pt;top:695.55pt;width:515.1pt"><p>채점: 양의 되먹임 고리를 설명하면 .5점. 왜 공명 진동수만 이 고리에 들어가는지 설명하면 .5점.</p></div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="7" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:302.25pt;top:738pt"><span class="fig" data-srcpage="7" data-clip="302.25,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 8 -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="8" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">3</span>목관악기</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="8" data-clip="36,51,576,52.5"></span></div>
+<div class="a" style="left:60.9pt;top:70.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">5.</span><p>나팔(벨)이 없으면 투과 인자는 $1-(Z_{end}-Z_{tube})^2/(Z_{end}+Z_{tube})^2\approx4Z_{end}/Z_{tube}$이다.</p></div>
+<div class="a" style="left:60.9pt;top:87.85pt;width:515.1pt"><p>나팔이 있으면 임피던스가 $Z'=Z_{tube}/2$인 가운데 구간이 생긴다. 이때 직접 투과 인자는 다음과 같으며,</p></div>
+<div class="f" style="left:225pt;top:107pt"><span class="fig" data-srcpage="8" data-clip="225,107,577,140"></span></div>
+<div class="a" style="left:60.9pt;top:143.85pt;width:515.1pt"><p>이는 실제로 16/9배 강하다.</p></div>
+<div class="a" style="left:60.9pt;top:160.95pt;width:515.1pt"><p>채점: 나팔이 없을 때 올바른 최저차 결과에 .5점. 단순화한 나팔의 경우 두 투과 인자를 곱하면 .5점. 올바른 결과를 얻으면 .5점.</p></div>
+<div class="a" style="left:60.9pt;top:195.25pt;width:515.1pt"><span class="k" style="left:-12.7pt">6.</span><p>공기의 질량은 흐름에 관성을 주므로 인덕터에 해당한다. 정확히 말하면 압력 차는 가속도를 낳으므로, 이에 대응하는 소자는 전류의 도함수에 비례하는 전압 강하를 가지며, 이것이 인덕터이다.</p></div>
+<div class="a" style="left:60.9pt;top:238.75pt;width:515.1pt"><p>다른 올바른 설명도 있을 수 있다. 임피던스의 복소 위상을 보면 저항에 해당하는 것처럼 보일 수도 있지만, 그렇지 않으며 이는 규약의 차이 때문이다.</p></div>
+<div class="a" style="left:60.9pt;top:268.95pt;width:515.1pt"><p>채점: 올바른 물리적 설명이면 무엇이든 .5점.</p></div>
+<div class="a" style="left:60.9pt;top:290.15pt;width:515.1pt"><span class="k" style="left:-12.7pt">7.</span><p>여러 답이 가능하다. ‘저항’은 흐름의 양에 비례하는 압력 강하를 가져야 한다. 공기와 악기 사이의 점성 마찰이 그 분명한 예이다.</p></div>
+<div class="a" style="left:60.9pt;top:320.35pt;width:515.1pt"><p>‘축전기’는 소자로 흘러 들어간 흐름의 적분에 비례하는 압력 강하를 가져야 한다. 악기 끝에 풍선을 단 것이 그 예이다. 풍선이 차오를수록 풍선의 고무가 더 큰 압력을 만든다. 사실 관의 벽과 닫힌 키도, 용량은 매우 작지만 바깥에 대한 축전기로 볼 수 있다.</p></div>
+<div class="a" style="left:60.9pt;top:376.95pt;width:515.1pt"><p>채점: 올바른 예 하나마다 .5점(2번). 매우 <i>창의적인</i> 올바른 예에는 보너스 .5점.</p></div>
+<div class="a" style="left:60.9pt;top:398.15pt;width:515.1pt"><span class="k" style="left:-12.7pt">8.</span><p>열린 키 구멍은 인덕터에 해당한다. 따라서 낮은 진동수에서는 닫힌 회로처럼 작용하여 이상적인 경우처럼 동작하지만, 높은 진동수에서는 임피던스가 커져서 키 구멍을 지나 투과하는 양이 점점 늘어난다.</p></div>
+<div class="a" style="left:60.9pt;top:441.55pt;width:515.1pt"><p>채점: 올바른 설명에 .5점. 참가자가 전자 공학의 고역 통과 필터임을 알아보았다면, 왜 고역 통과 필터인지 설명하지 않아도 괜찮다.</p></div>
+<div class="a" style="left:36pt;top:477.85pt;font-weight:bold">풀이 끝.</div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="8" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:302.25pt;top:738pt"><span class="fig" data-srcpage="8" data-clip="302.25,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 9: gravitational waves (problem 5) -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="9" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">4</span>쌍성계의 중력파</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="9" data-clip="36,51,576,52.5"></span></div>
+<div class="t"><span class="n">4</span>쌍성계의 중력파</div>
+<div class="a" style="left:60.9pt;top:94.05pt;width:515.1pt;line-height:16.9pt"><span class="k" style="left:-12.7pt">1.</span><p>케플러 제3법칙 $\omega^2=\tfrac{GM}{a^3}$(여기서 $M=m_1+m_2$로 정의하였다)을 쓰면 $a^4=(\tfrac{GM}{\omega^2})^{\frac43}$로 다시 쓸 수 있다. 이를 대입하면 $\dot E_{GW}=\tfrac{32}{5}\tfrac{G^{7/3}}{c^5}\mu^2M^{\frac43}\omega^{\frac{10}3}$이며, 약간의 계산을 거치면 $\tfrac{32}{5}\tfrac{G^{7/3}}{c^5}(\mathcal M\pi f_{GW})^{\frac{10}{3}}$로 간단히 할 수 있다.</p></div>
+<div class="a" style="left:60.9pt;top:130.70pt;width:515.1pt;line-height:17.8pt"><span class="k" style="left:-12.7pt">2.</span><p>복사가 등방적이라고 가정하면, 파동은 반지름 $4\pi d^2$인 구면을 지나가므로 $F_{GW}=\tfrac{\dot E_{GW}}{4\pi d^2}$이고, 따라서 $F_{GW}=\tfrac85\tfrac{(\pi G)^{7/3}}{c^5}(\mathcal Mf_{GW})^{\frac{10}{3}}$이다.</p></div>
+<div class="a" style="left:60.9pt;top:171.45pt;width:515.1pt"><span class="k" style="left:-12.7pt">3.</span><p>$[E]=\mathrm{kg\,m^2\,s^{-2}}$이고 $[m]=\mathrm{kg}$, $[A]=\mathrm m$, $[f]=\mathrm s^{-1}$이다. 이로부터 $E\propto mA^2f^2$임을 쉽게 알 수 있다.</p></div>
+<div class="a" style="left:60.9pt;top:191.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">4.</span><p>줄 위의 파동에서 시공간의 파동으로 넘어갈 때 두 가지가 달라진다. 중력파는 진공을 통해 전파되며, 진폭은 차원이 없다.</p></div>
+<div class="a" style="left:60.9pt;top:221.45pt;width:515.1pt"><p>$P\sim$(매질의 성질)$\times$(진폭 변화율)$^2\times$(넓이)에서 유추하여, 중력파의 에너지 선속(에너지/넓이/시간, $[F]=MT^{-3}$)은 다음 꼴일 것으로 예상한다.</p></div>
+<div class="f" style="left:255pt;top:247pt"><span class="fig" data-srcpage="9" data-clip="255,247,380,260"></span></div>
+<div class="a" style="left:60.9pt;top:265.35pt;width:515.1pt"><p>여기서 $\kappa=G^ac^b$가 모자라는 차원을 채워야 한다.</p></div>
+<div class="f" style="left:250pt;top:284.5pt"><span class="fig" data-srcpage="9" data-clip="250,284.5,386,312"></span></div>
+<div class="a" style="left:60.9pt;top:317.95pt;width:515.1pt"><p>$[G]=M^{-1}L^3T^{-2}$, $[c]=LT^{-1}$이므로</p></div>
+<div class="f" style="left:112pt;top:338pt"><span class="fig" data-srcpage="9" data-clip="112,338,524,352"></span></div>
+<div class="a" style="left:60.9pt;top:359.25pt;width:515.1pt"><p>따라서</p></div>
+<div class="f" style="left:300pt;top:372pt"><span class="fig" data-srcpage="9" data-clip="300,372,343,399"></span></div>
+<div class="a" style="left:60.9pt;top:406.35pt;width:515.1pt;line-height:13.5pt"><span class="k" style="left:-12.7pt">5.</span><p>진동하는 변형 $h(t)=h_0\cos(\omega_{GW}t)$에 대해, $\omega_{GW}=2\pi f_{GW}$, $\dot h=-\omega_{GW}h_0\sin(\omega_{GW}t)$이고 $\langle\dot h^2\rangle=\tfrac12\omega_{GW}^2h_0^2$이다. 따라서</p></div>
+<div class="f" style="left:237pt;top:427.5pt"><span class="fig" data-srcpage="9" data-clip="237,427.5,400,456"></span></div>
+<div class="a" style="left:60.9pt;top:459.55pt;width:515.1pt"><p>이를 2번에서 구한 광원의 선속과 같게 놓고</p></div>
+<div class="f" style="left:240pt;top:479.5pt"><span class="fig" data-srcpage="9" data-clip="240,479.5,397,507"></span></div>
+<div class="a" style="left:60.9pt;top:509.05pt;width:515.1pt"><p>($\omega_{GW}=2\pi f_{GW}$, 즉 $\omega_{GW}^2=4\pi^2f_{GW}^2$을 써서) $h_0$에 대해 풀면</p></div>
+<div class="f" style="left:166pt;top:529pt"><span class="fig" data-srcpage="9" data-clip="166,529,470,558"></span></div>
+<div class="a" style="left:60.9pt;top:561.05pt;width:515.1pt"><p>제곱근을 취하면 다음을 얻는다.</p></div>
+<div class="f" style="left:147pt;top:577pt"><span class="fig" data-srcpage="9" data-clip="147,577,491,613"></span></div>
+<div class="a" style="left:48.2pt;top:621.55pt">6.</div>
+<div class="a" style="left:123.1pt;top:656.35pt">광원</div>
+<div class="f" style="left:225pt;top:656pt"><span class="fig" data-srcpage="9" data-clip="225,656,520,669"></span></div>
+<div class="f" style="left:118pt;top:670pt"><span class="fig" data-srcpage="9" data-clip="118,670,520,724"></span></div>
+<div class="f" style="left:302.25pt;top:738pt"><span class="fig" data-srcpage="9" data-clip="302.25,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 10 -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="10" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">4</span>쌍성계의 중력파</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="10" data-clip="36,51,576,52.5"></span></div>
+<div class="a" style="left:60.9pt;top:70.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">7.</span><p>변형은 $h=\Delta L/L$로 정의되므로, $h$와 (유효) 팔 길이 $L$을 알면 다음을 얻는다.</p></div>
+<div class="f" style="left:293pt;top:93pt"><span class="fig" data-srcpage="10" data-clip="293,93,345,106"></span></div>
+<div class="a" style="left:60.9pt;top:116.85pt;width:515.1pt"><p>LIGO/Virgo 검출기의 물리적인 팔 길이는 $L_{phys}=4$ km(LIGO) 또는 3 km(Virgo)이지만, 각 팔의 파브리–페로 공진기가 빛을 여러 번 오가게 하므로 유효 광경로 길이는 $L_{eff}\sim500$ km 정도가 된다.</p></div>
+<div class="a" style="left:60.9pt;top:147.15pt;width:515.1pt"><p>$h_0\approx1.5\times10^{-21}$ (GW150914)과 $L_{eff}=500\ \mathrm{km}=5\times10^5$ m를 쓰면</p></div>
+<div class="f" style="left:165pt;top:169pt"><span class="fig" data-srcpage="10" data-clip="165,169,472,183"></span></div>
+<div class="a" style="left:60.9pt;top:193.45pt;width:515.1pt"><p>이것은 양성자의 반지름($\sim0.87$ fm)보다 작다! (대신 4 km인 물리적 팔 길이를 순진하게 그대로 쓰면 $\Delta L\sim6\times10^{-18}$ m로 더 작아진다. 바로 이 때문에 접힌 공진 광경로가 꼭 필요하다. 이 광경로는 빛의 경로 길이를 늘리는 것과 같은 큰 배율로 미세한 길이 변화도 늘려 준다.)</p></div>
+<div class="a" style="left:60.9pt;top:236.85pt;width:515.1pt"><p>이를 이 간섭계에서 쓰는 레이저 빛의 파장 $\lambda\approx1064\ \mathrm{nm}=1.064\times10^{-6}$ m (Nd:YAG 레이저)와 비교하면</p></div>
+<div class="f" style="left:246pt;top:262pt"><span class="fig" data-srcpage="10" data-clip="246,262,392,290"></span></div>
+<div class="a" style="left:60.9pt;top:301.85pt;width:515.1pt"><p><b>왜 이것이 그렇게 어려운가.</b> 검출기는 간섭계 팔 길이 차이의 변화를 감지해야 하는데, 그 변화는 측정에 쓰는 빛의 파장보다 <i>약 10억 배</i> 작고, 원자핵보다도 작다. 보통의 간섭 측정은 무늬의 $10^{-4}$–$10^{-6}$ 정도까지 위상 변화를 분해한다. 파장의 $10^{-9}$–$10^{-10}$에 이르려면 서로 다른 여러 기법을 겹겹이 써야 한다.</p></div>
+<div class="a" style="left:82.8pt;top:362.45pt;width:493.2pt"><span class="k" style="left:-8.5pt">•</span><p><b>긴 유효 경로(공진기):</b> 파브리–페로 팔 공진기(와 일률/신호 재활용)는 빛이 팔을 수백 번 지나가게 하여, 물리적인 팔을 수 킬로미터 더 길게 만들지 않고도 쌓이는 위상 변화(즉 광학적으로 측정되는 $\Delta L$)를 경로 길이를 늘린 것과 같은 배율로 키운다.</p></div>
+<div class="a" style="left:82.8pt;top:405.85pt;width:493.2pt"><span class="k" style="left:-8.5pt">•</span><p><b>엄청난 순환 레이저 일률:</b> 위상 측정의 광자 계수(산탄 잡음) 정밀도는 $1/\sqrt{N_{photons}}$로 좋아지므로, (일률 재활용을 통해) 킬로와트 단위의 입력 일률을 팔 안에서 수백 킬로와트의 순환 일률로 키운다.</p></div>
+<div class="a" style="left:82.8pt;top:449.25pt;width:493.2pt"><span class="k" style="left:-8.5pt">•</span><p><b>양자 잡음 줄이기:</b> 빛의 압착 진공 상태를 주입하여 관련 진동수 대역에서 산탄 잡음을 표준 양자 한계 아래로 낮춘다.</p></div>
+<div class="a" style="left:82.8pt;top:479.55pt;width:493.2pt"><span class="k" style="left:-8.5pt">•</span><p><b>다른 모든 길이 변화 원인으로부터의 철저한 격리:</b> 여러 단의 지진 격리와 거울의 진자 현가, 초고진공 빔관, 거울 코팅과 현가의 열(브라운) 잡음 억제. 이들을 그냥 두면 모두 $\Delta L$보다 몇 자릿수나 큰 가짜 길이 변화를 만든다.</p></div>
+<div class="a" style="left:82.8pt;top:536.15pt;width:493.2pt"><span class="k" style="left:-8.5pt">•</span><p><b>정합 필터 / 긴 적분:</b> 신호는 모형화가 잘 된, 여러 주기에 걸친 처프이므로, 잡음 섞인 데이터를 이론적 파형 틀과 (그리고 독립된 두 검출기 사이에서) 교차 상관시키면 순간 변형이 한 번 측정의 잡음 바닥보다 훨씬 작은 신호도 찾아낼 수 있다.</p></div>
+<div class="a" style="left:60.9pt;top:583.55pt;width:515.1pt"><p>어느 한 가지 기법이 아니라 이 모든 것을 결합하였기에, LIGO/Virgo는 파장이 약 1마이크론인 빛으로 길이가 수 킬로미터인 팔에서 펨토미터의 몇 분의 일에 불과한 길이 변화를 일상적으로 검출할 수 있다.</p></div>
+<div class="a" style="left:36pt;top:619.85pt;font-weight:bold">풀이 끝.</div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="10" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:301.75pt;top:738pt"><span class="fig" data-srcpage="10" data-clip="301.75,738,310.75,750.75"></span></div>
+</div>
+
+<!-- 11: Penrose process (problem 6) -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="11" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">5</span>펜로즈 과정</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="11" data-clip="36,51,576,52.5"></span></div>
+<div class="t"><span class="n">5</span>펜로즈 과정</div>
+<div class="a" style="left:60.9pt;top:93.65pt;width:515.1pt"><span class="k" style="left:-12.7pt">1.</span><p>고리는 블랙홀 가까이, 작용권 안에 있으므로 블랙홀과 함께 회전할 수밖에 없다. 그 결과 축으로 고리에 연결된 자석도 회전하기 시작하여 코일을 지나는 자기 선속을 시간에 따라 변하게 만든다. 이것이 다시 전류를 유도하여 전구에 불이 켜진다.</p></div>
+<div class="a" style="left:60.9pt;top:139.45pt;width:515.1pt"><span class="k" style="left:-12.7pt">2.</span><p>전구를 켜는 에너지는 블랙홀의 회전 운동 에너지(각운동량)에서 뽑아낸다. 에너지를 뽑아낼수록 블랙홀의 스핀 매개변수 $a$는 줄어든다.</p></div>
+<div class="a" style="left:60.9pt;top:171.95pt;width:515.1pt"><span class="k" style="left:-12.7pt">3.</span><p>전환점에서 $\dot r=0$이며, 이를 이용하여 각운동량 $L^{(0)}$을 구한다.</p></div>
+<div class="f" style="left:190pt;top:187pt"><span class="fig" data-srcpage="11" data-clip="190,187,577,221"></span></div>
+<div class="a" style="left:60.9pt;top:220.75pt;width:515.1pt"><p>나중 입자들에 대해서도 같은 과정을 되풀이한다. 다만 $E^{(0)}\ne\mu_0$ 대신 $E^{(1,2)}$이고 $\mu=\mu_{fin}$이라는 점만 다르다.</p></div>
+<div class="f" style="left:158pt;top:236pt"><span class="fig" data-srcpage="11" data-clip="158,236,577,276"></span></div>
+<div class="a" style="left:60.9pt;top:275.55pt;width:515.1pt"><p>(사실 해가 두 개 있지만, $L^{(0)}&gt;0$인 것은 이것 하나뿐이다.) 이제 각운동량 보존과 에너지 보존</p></div>
+<div class="f" style="left:262pt;top:306pt"><span class="fig" data-srcpage="11" data-clip="262,306,577,338"></span></div>
+<div class="a" style="left:60.9pt;top:343.75pt;width:515.1pt"><p>을 이용하여, 각운동량 보존 법칙에서 $E^{(2)}=\mu_0-E^{(1)}$로 바꾸어 $E^{(1,2)}$를 구한다. 약간의 계산을 거치면 원하는 결과를 얻는다.</p></div>
+<div class="f" style="left:200pt;top:371pt"><span class="fig" data-srcpage="11" data-clip="200,371,577,453.5"></span></div>
+<div class="a" style="left:60.9pt;top:458.15pt;width:515.1pt"><p>(또는 이 결과를 써서 실제로 식 10–11을 만족함을 확인해도 된다.)</p></div>
+<div class="a" style="left:60.9pt;top:477.55pt;width:515.1pt"><span class="k" style="left:-12.7pt">4.</span><p>에너지를 뽑아내려면 $E^{(1)}&gt;\mu_0$이어야 한다. 에너지 식으로부터 이는 제곱근 항이 1보다 커야 함을 뜻한다.</p></div>
+<div class="f" style="left:258pt;top:500pt"><span class="fig" data-srcpage="11" data-clip="258,500,577,538.5"></span></div>
+<div class="a" style="left:60.9pt;top:541.25pt;width:515.1pt"><p>$r_0$에 대해 풀면 다음 조건을 얻는다.</p></div>
+<div class="f" style="left:262pt;top:551pt"><span class="fig" data-srcpage="11" data-clip="262,551,577,584"></span></div>
+<div class="a" style="left:60.9pt;top:585.45pt;width:515.1pt"><p>이것은 적도에서 작용권의 경계인 $2M$보다 작다는 점에 유의하라. 에너지 보존에 따라 $E^{(0)}=E^{(1)}+E^{(2)}$이어야 한다. 따라서 $E^{(1)}&gt;E^{(0)}$이면 두 번째 입자의 에너지 $E^{(2)}$는 음수여야 한다.<sup>1</sup></p></div>
+<div class="a" style="left:60.9pt;top:631.15pt;width:515.1pt"><span class="k" style="left:-12.7pt">5.</span><p>$a=M$일 때 $r_0=r_+=M$이므로 $E^{(1)}=\mu_0/2(1+\sqrt2)$이다. 이를 효율 식에 대입하고 $E^{(0)}=\mu_0$을 쓰면</p></div>
+<div class="f" style="left:262pt;top:654pt"><span class="fig" data-srcpage="11" data-clip="262,654,577,684"></span></div>
+<div class="a" style="left:36pt;top:684.35pt;font-weight:bold">풀이 끝.</div>
+<div class="a" style="left:36pt;top:695.41pt;width:540pt;font-size:8pt;line-height:13.3pt"><p style="text-indent:11.1pt"><sup>1</sup>이 음의 에너지 입자는 지평선 안으로 떨어질 운명이며, 그 결과 블랙홀의 질량과 각운동량은 줄어들지만, 블랙홀의 비가역 질량은 오히려 늘어난다!</p></div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="11" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:301.75pt;top:738pt"><span class="fig" data-srcpage="11" data-clip="301.75,738,309.75,750.75"></span></div>
+</div>
+
+<!-- 12: optical waveguiding (problem 9) -->
+<div class="page">
+<div class="f" style="left:35.25pt;top:39pt"><span class="fig" data-srcpage="12" data-clip="35.25,39,108.75,51"></span></div>
+<div class="hr"><span class="n">6</span>광 도파의 원리</div>
+<div class="f" style="left:36pt;top:51pt"><span class="fig" data-srcpage="12" data-clip="36,51,576,52.5"></span></div>
+<div class="t"><span class="n">6</span>광 도파의 원리</div>
+<div class="a" style="left:60.9pt;top:92.53pt;width:515.1pt;line-height:14.35pt"><span class="k" style="left:-12.7pt">1.</span><p>코어–클래딩 경계면에서 내부 전반사가 일어나야 한다. 스넬 법칙은 $n_0\sin\theta_0=n_f\sin\theta_f$이다. $\theta_f\ge\theta_c$이면 내부 전반사가 일어나며, 임계각은 $\sin\theta_c=\tfrac{n_1}{n_f}$이다. 최대 수용각은 내부 광선이 임계 조건 $\theta_f=\theta_c$에 있을 때 나타난다. $\sin\theta_f=\sqrt{1-\cos^2\theta_f}$이고, 코어 안의 각은 축을 기준으로 재는 반면 내부 전반사에는 경계면에서의 여각을 쓰므로 기하학적으로 $\cos\theta_f=\tfrac{n_1}{n_f}$이다. 따라서</p></div>
+<div class="f" style="left:236pt;top:153pt"><span class="fig" data-srcpage="12" data-clip="236,153,400,192"></span></div>
+<div class="a" style="left:60.9pt;top:199.15pt;width:515.1pt"><p>이를 스넬 법칙에 넣으면</p></div>
+<div class="f" style="left:264pt;top:208pt"><span class="fig" data-srcpage="12" data-clip="264,208,372,231"></span></div>
+<div class="a" style="left:60.9pt;top:234.25pt;width:515.1pt"><p>를 얻으며, 이것이 구하는 결과이다.</p></div>
+<div class="a" style="left:60.9pt;top:254.95pt;width:515.1pt;line-height:13.1pt"><span class="k" style="left:-12.7pt">2.</span><p>코어 안의 광선은 모든 경계면에서 내부 전반사 조건을 만족해야 한다. 층 $k$에 대해 $\sin\theta_c^{(k)}=\tfrac{n_k}{n_f}$이므로, 모든 층을 만족하려면 $\theta_f\ge\max_k\theta_c^{(k)}$이어야 한다. 가장 엄격한 조건은 코어 바깥에서 가장 큰 굴절률 $n_{clad,\max}=\max\{n_1,n_2,\dots,n_{N+1}\}$에서 나온다. 이 층이 가장 큰 임계각, 즉 가장 까다로운 내부 전반사 조건을 준다. 이로부터 다음을 얻는다.</p></div>
+<div class="f" style="left:258pt;top:300pt"><span class="fig" data-srcpage="12" data-clip="258,300,380,338"></span></div>
+<div class="a" style="left:60.9pt;top:344.35pt;width:515.1pt"><p>입사면에서 스넬 법칙을 적용하면 결과를 얻는다.</p></div>
+<div class="a" style="left:36pt;top:367.55pt;font-weight:bold">풀이 끝.</div>
+<div class="f" style="left:36pt;top:734.25pt"><span class="fig" data-srcpage="12" data-clip="36,734.25,576,736.5"></span></div>
+<div class="f" style="left:301.75pt;top:738pt"><span class="fig" data-srcpage="12" data-clip="301.75,738,310.75,750.75"></span></div>
+</div>
+
+<!-- 13: wave-function collapse (problem 8): separate LaTeX file with problem and answers -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="a c" style="left:36pt;top:161.78pt;width:540pt;font-size:17.2pt;line-height:20pt">PLANCKS 문제: 양자 &nbsp;Gesa Welker</div>
+<div class="a c" style="left:36pt;top:218.19pt;width:540pt;font-size:12pt;line-height:14.5pt">2026년 5월 21일</div>
+<div class="a" style="left:133.8pt;top:253.82pt;width:343.7pt"><p style="text-indent:14.9pt">전 세계의 연구자들이 양자역학의 한계를 찾으려 하고 있으며, 그 한 예가 파동함수 붕괴 모형을 실험으로 검증하는 것이다. 이러한 실험에 쓰이는 역학적 공진기를 생각하자. 이 공진기는 다음 해밀토니언으로 기술할 수 있다.</p></div>
+<div class="f" style="left:255pt;top:310pt"><span class="fig" data-srcpage="13" data-clip="255,310,478,334"></span></div>
+<div class="a" style="left:133.8pt;top:334.62pt;width:343.7pt"><p>여기서 $\Omega_m$은 공진기 기본 모드의 역학적 공진 진동수이고, $\hat b^\dagger$와 $\hat b$는 포논 생성 연산자와 소멸 연산자로서 다음과 같다.</p></div>
+<div class="f" style="left:215pt;top:366pt"><span class="fig" data-srcpage="13" data-clip="215,366,478,402"></span></div>
+<div class="a" style="left:133.8pt;top:400.32pt;width:343.7pt"><p>그리고 $\hat b^\dagger$는 그 켤레이다. $m$은 공진기의 질량이다.</p></div>
+<div class="a" style="left:158.7pt;top:419.22pt;width:318.8pt"><span class="k" style="left:-17.7pt">(a)</span><p>[3점] 파동함수 붕괴가 무엇인지 (1–2 문장으로) 정성적으로 설명하여라. 그다음 파동함수 붕괴의 가능한 원인을 2가지 들어라. 각 원인은 물리학의 기초에 어떤 결과를 가져오는가?</p></div>
+<div class="a" style="left:158.7pt;top:461.82pt;width:318.8pt"><span class="k" style="left:-18.3pt">(b)</span><p>[2점] 어떤 파동함수 붕괴 실험에서는 공진기를 양자역학적 바닥상태까지 냉각해야 한다. 에너지 등분배 정리를 이용하여, 공진기가 양자역학적 바닥상태에 있으려면 가져야 하는 유효 온도를 계산하여라.</p></div>
+<div class="a" style="left:158.7pt;top:516.33pt;width:318.8pt"><span class="k" style="left:-17.2pt">(c)</span><p>[3점] 식 2를 이용하여 공진기의 영점 요동의 진폭을 계산하여라. 이 값은 위치의 양자역학적 중첩을 측정하는 데 어떤 의미가 있는가?</p></div>
+<div class="a" style="left:158.7pt;top:558.93pt;width:318.8pt"><span class="k" style="left:-18.3pt">(d)</span><p>[2점] 일부 붕괴 모형(예를 들어 이른바 CSL 모형)에서는 파동함수 붕괴가 열을 만들고, 이 열은 공진기 변위의 추가 잡음으로 나타난다. 이 잡음은 요동할 수 있으며 진동수에 따라 다를 수 있다. 그래서 실험에서는 공진기의 역학적 잡음 스펙트럼을 측정한다. 그림 1이 그 예이다. 변위 잡음 스펙트럼 밀도는 변위 자기상관 함수의 푸리에 변환으로 정의된다.</p></div>
+<div class="f" style="left:245pt;top:652pt"><span class="fig" data-srcpage="13" data-clip="245,652,478,686"></span></div>
+<div class="f" style="left:300pt;top:694pt"><span class="fig" data-srcpage="13" data-clip="300,694,311,707"></span></div>
+</div>
+
+<!-- 14 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="f" style="left:220pt;top:125pt"><span class="fig" data-srcpage="14" data-clip="220,125,392,248"></span></div>
+<div class="a" style="left:133.8pt;top:260.82pt;width:343.7pt"><p>그림 1: 공진기의 역학적 잡음 스펙트럼. 그래프 출처: arXiv:1303.0733v1(수정함)</p></div>
+<div class="a" style="left:158.7pt;top:302.62pt;width:318.8pt"><p>식 3과 측정된 역학적 잡음 스펙트럼으로부터 역학적 변위의 분산 $\langle x^2\rangle$을 어떻게 구할 수 있는가?</p></div>
+<div class="a" style="left:148.7pt;top:348.42pt">답</div>
+<div class="a" style="left:158.7pt;top:382.32pt;width:318.8pt"><span class="k" style="left:-17.7pt">(a)</span><p>파동함수 붕괴는 여러 상태의 중첩에 있는 파동함수가 하나의 상태로 줄어드는 과정이다. 파동함수 붕괴가 실제로 무엇을 뜻하는지는 물리학 안에서 논쟁 중이다. 파동함수 붕괴의 본성에 대한 견해는 양자역학의 여러 해석과 본질적으로 얽혀 있다. 연구자들이 제안한 가능한 원인은 다음과 같다(2가지를 올바르게 언급해야 한다).</p></div>
+<div class="a" style="left:180.6pt;top:474.02pt;width:296.9pt"><span class="k" style="left:-10.7pt">–</span><p><b>측정:</b> 잘 알려진 양자역학의 코펜하겐 해석에서는 관측자가 측정하는 동안 파동함수를 붕괴시킨다. 그 결과 양자 물리학은 비결정론적이다. 또 양자계는 파동함수가 붕괴하기 전에는 어떤 실재적 성질도 갖지 않는다. 이 해석에서 붕괴는 물리적 과정이 아니다.</p></div>
+<div class="a" style="left:180.6pt;top:549.73pt;width:296.9pt"><span class="k" style="left:-10.7pt">–</span><p><b>결어긋남:</b> 엄밀히 말하면 이것은 파동함수 붕괴의 원인이 아니다. 결어긋남이 일어나는 동안 계가 환경과 얽히기 때문에 붕괴처럼 보일 뿐이다. 그 결과 파동함수를 붕괴하는 동안 사라지지 않는 실재로 다룰 수 있다. 다세계 해석은 이렇게 가정한다.</p></div>
+<div class="a" style="left:180.6pt;top:625.43pt;width:296.9pt"><span class="k" style="left:-10.7pt">–</span><p><b>중력:</b> 디오시–펜로즈(DP) 모형은 중력이 파동함수를 붕괴시킨다고 가정한다. 무거운 물체를 중첩 상태에 놓으면 서로 다른 두 시공간도 중첩해야 하기 때문이다. 이 모형이 옳다면, 일반 상대성 이론과 양자역학을 어떻게 통합할지에 대해</p></div>
+<div class="f" style="left:300pt;top:694pt"><span class="fig" data-srcpage="14" data-clip="300,694,311,707"></span></div>
+</div>
+
+<!-- 15 -->
+<div class="page" style="font-size:10.0pt;line-height:11.95pt;">
+<div class="a" style="left:180.6pt;top:126.03pt;width:296.9pt"><p>광범위한 결과를 가져올 것이다. 또 이 모형에서 파동함수 붕괴는 물리적 과정이다.</p></div>
+<div class="a" style="left:180.6pt;top:153.92pt;width:296.9pt"><span class="k" style="left:-10.7pt">–</span><p><b>중력 이외의 잡음원:</b> DP 말고도 중요한 객관적 붕괴 모형이 두 가지 더 있는데, 기라르디–리미니–웨버(GRW) 모형과 연속 자발 국소화(CSL) 모형이다. 이 모형들은 어떤 잡음원이 붕괴의 원인이라고 가정한다. 이 모형들에서도 파동함수 붕괴는 물리적 과정이다.</p></div>
+<div class="a" style="left:158.7pt;top:233.62pt;width:318.8pt"><span class="k" style="left:-18.3pt">(b)</span><p>양자역학적 바닥상태에 있다는 것은 $N=b^\dagger b=0$이라는 뜻이다. 에너지 등분배 정리에 따르면 $\frac12k_BT=\frac12\hbar\Omega_m$이다. 따라서 $T=\frac{\hbar\Omega_m}{k_B}$이다.</p></div>
+<div class="a" style="left:158.7pt;top:267.92pt;width:318.8pt"><span class="k" style="left:-17.2pt">(c)</span><p>식 2와 $\hat b^\dagger$의 정의로부터 $\hat x=\sqrt{\tfrac{\hbar}{2m\Omega_m}}(\hat a+\hat a^\dagger)$를 얻는다.</p></div>
+<div class="a" style="left:158.7pt;top:285.22pt;width:318.8pt"><p>영점 요동의 진폭은 $|0\rangle$ 상태에서 $\hat x$의 기댓값 $x_{zpf}=\sqrt{\langle\hat x^2\rangle}$이며, 다음과 같다.</p></div>
+<div class="f" style="left:157pt;top:309pt"><span class="fig" data-srcpage="15" data-clip="157,309,478,340"></span></div>
+<div class="a" style="left:158.7pt;top:337.72pt;width:318.8pt"><p>따라서 $x_{zpf}=\sqrt{\tfrac{\hbar}{2m\Omega_m}}$이다.</p></div>
+<div class="a" style="left:158.7pt;top:354.92pt;width:318.8pt"><p>위치의 양자역학적 중첩을 측정할 때, 중첩된 두 상태는 서로 $x_{zpf}$보다 더 멀리 떨어져 있어야 한다.</p></div>
+<div class="a" style="left:158.7pt;top:386.82pt;width:318.8pt"><span class="k" style="left:-18.3pt">(d)</span><p>파스발 정리를 이용하면 다음을 얻는다.</p></div>
+<div class="f" style="left:225pt;top:405pt"><span class="fig" data-srcpage="15" data-clip="225,405,478,437"></span></div>
+<div class="a" style="left:158.7pt;top:443.52pt;width:318.8pt"><p>$t=0$에서의 자기상관은 분산이므로 다음을 얻는다.</p></div>
+<div class="f" style="left:260pt;top:462pt"><span class="fig" data-srcpage="15" data-clip="260,462,478,494"></span></div>
+<div class="f" style="left:300pt;top:694pt"><span class="fig" data-srcpage="15" data-clip="300,694,311,707"></span></div>
+</div>
+
+<!-- 16: problem 4 death race pilot: handwritten scan, stamped whole -->
+<div class="page" data-s="p617_857">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="16" data-clip="0,0,617,857"></span></div>
+</div>
+
+<!-- 17: handwritten scan, stamped whole -->
+<div class="page" data-s="p644_876">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="17" data-clip="0,0,644,876"></span></div>
+</div>
+
+<!-- 18: handwritten scan, stamped whole -->
+<div class="page" data-s="p654_884">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="18" data-clip="0,0,654,884"></span></div>
+</div>
+
+<!-- 19: handwritten scan, stamped whole -->
+<div class="page" data-s="p623_862">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="19" data-clip="0,0,623,862"></span></div>
+</div>
+
+<!-- 20: handwritten scan, stamped whole -->
+<div class="page" data-s="p630_867">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="20" data-clip="0,0,630,867"></span></div>
+</div>
+
+<!-- 21: handwritten scan, stamped whole -->
+<div class="page" data-s="p680_903">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="21" data-clip="0,0,680,903"></span></div>
+</div>
+
+<!-- 22: problem 7 rotating elastic string: handwritten scan, stamped whole -->
+<div class="page" data-s="p631_869">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="22" data-clip="0,0,631,869"></span></div>
+</div>
+
+<!-- 23: handwritten scan, stamped whole -->
+<div class="page" data-s="p644_876">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="23" data-clip="0,0,644,876"></span></div>
+</div>
+
+<!-- 24: handwritten scan, stamped whole -->
+<div class="page" data-s="p620_860">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="24" data-clip="0,0,620,860"></span></div>
+</div>
+
+<!-- 25: handwritten scan, stamped whole -->
+<div class="page" data-s="p605_849">
+<div class="f" style="left:0pt;top:0pt"><span class="fig" data-srcpage="25" data-clip="0,0,605,849"></span></div>
+</div>
+</body></html>

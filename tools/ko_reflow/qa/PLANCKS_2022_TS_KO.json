@@ -1,0 +1,23 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2022_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "d8f8a9edfb3fc5bf12b67c10a4765359441cf4a8e5c9535a51617bef7f27b006",
+ "bytes": 5473542,
+ "pages": 68,
+ "source_file": "PLANCKS_2022_TS.pdf",
+ "source_sha256": "e053d308225c8e0702c95725b3b08fa03405828f78b80e49f750f9b49a40c209",
+ "source_pages": 68,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 26369,
+ "html_source": "tools/ko_reflow/plancks/2022_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "problem-statement pages (TS pp. 4-5, 7-8, 12-13, 19-21, 25, 28-30, 35-36, 39-41, 46-50, 59-62) reuse the published Korean problem paper 2022.html block for block (identical source geometry verified), with header/footer stamps regenerated for the TS page parity; every solution page was compared side by side with the source at 75 dpi with 150-300 dpi close-ups of footers and stamp edges; first-line baselines of all solution-page blocks measured against the source (all within 1 pt; 45 continuation lines of reflowed paragraphs differ by 1-3.5 pt where the source line was opened by tall inline math); no backslash or U+FFFD in the PDF text; check.py leaves 26 explained items: intended 'ov' Korean point labels over stamps (pp. 33, 37, 38), KaTeX box extents (off-page p6, p9, p40, p49, p50; p17 and p33 box overlaps with no ink overlap); page size is Chrome's A4 (594.96x841.92 vs 595.28x841.89 pt) as in all ko_reflow builds; edgecheck.py: 7 stamp crops that cut ink (p14, p16, p17, p29, p39, p49, p66) moved to the blank rows next to the display and checked visually, 0 remaining",
+  "overflow_or_occlusion_observed": false
+ }
+}

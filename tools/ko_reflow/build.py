@@ -64,7 +64,7 @@ def prepare(src, orig):
         figs.append((int(attrs.get('page', 1)) - 1, pymupdf.Rect(x0, y0, x1, y1), sc, attrs.get('srcpage')))
         extra = mo.group(1) or ''
         return (f'<span class="fig{extra}" style="width:{(x1-x0)*sc:.2f}pt;height:{(y1-y0)*sc:.2f}pt;'
-                f'background:rgb(254,{i % 250 + 1},{40 + i // 250})"></span>')
+                f'background:rgb(254,{200 + i % 50},{200 + i // 50})"></span>')   # near-white: no tint at the stamp edges
 
     html = re.sub(r'<span class="fig([^"]*)"[^>]*></span>', fig, html)
     kiturl = VENDOR.as_uri()
@@ -116,8 +116,8 @@ def main(src, orig, out):
     for pn, pg in enumerate(doc):
         for d in pg.get_drawings():
             f = d.get('fill')
-            if f and abs(f[0] - 254 / 255) < 0.003 and f[2] > 39.5 / 255 and f[1] > 0.5 / 255:
-                idx = (round(f[2] * 255) - 40) * 250 + round(f[1] * 255) - 1
+            if f and abs(f[0] - 254 / 255) < 0.003 and f[1] > 199.5 / 255 and f[2] > 199.5 / 255:
+                idx = (round(f[2] * 255) - 200) * 50 + round(f[1] * 255) - 200
                 found[idx] = (pn, pymupdf.Rect(d['rect']))
     for i, (opn, clip, sc, srcpage) in enumerate(figs):
         if i not in found:
@@ -134,6 +134,11 @@ def main(src, orig, out):
         for pn, pg in enumerate(doc):
             if over[pn].get_text('text').strip() or over[pn].get_drawings():
                 pg.show_pdf_page(pg.rect, over, pn, overlay=True)
+    if len(doc) == len(od):   # Chrome snaps page sizes to whole device pixels; restore the original's exact size
+        for pg, op in zip(doc, od):
+            w, h = op.rect.width, op.rect.height
+            if (abs(pg.rect.width - w) > 0.001 or abs(pg.rect.height - h) > 0.001) and abs(pg.rect.width - w) < 1.5 and abs(pg.rect.height - h) < 1.5:
+                pg.set_mediabox(pymupdf.Rect(0, 0, w, h))
     doc.set_metadata({'title': pathlib.Path(out).stem, 'producer': 'HaslaLab', 'creator': 'HaslaLab'})
     doc.save(out, garbage=4, deflate=True)
     print(out, len(doc), 'pages', len(figs), 'figures')
