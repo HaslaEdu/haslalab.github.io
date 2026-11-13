@@ -1,0 +1,816 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* IZhO 2023 theoretical solutions (English part = pages 25-43 of IZhO_2023_TS.pdf; Word, A4): Times New Roman 12pt,
+   text x 36..562.4, pitch 13.8pt; header Arial bold 10pt with Times bold page numbers and an underline rule (drawn as an
+   exact black box). Blocks are placed by the original's first baseline --b (pt); --l = line pitch, --fs = size. Inline
+   MathType is typed in KaTeX; display equations and figures are stamped with clips trimmed to the ink; displays holding
+   Cyrillic units (К, МΩ) or English words are retyped. Equation numbers and table points (Latin digits only) are typed
+   and placed by their baseline --n. Marking-scheme tables: the original's rules reproduced as .r boxes, Korean labels
+   typed, the formula part of each cell stamped. */
+body{font-family:'Times New Roman',KB,serif;font-size:12pt;line-height:13.8pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0;white-space:nowrap}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;left:36pt;width:526.4pt;margin:0;--l:13.8pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs))}
+.en,.nb{top:calc(var(--n)*1pt - var(--l)/2 - 0.3375*var(--fs))}
+.en{left:532.4pt;width:auto;white-space:nowrap}
+.c{text-align:center;text-indent:0}
+.h{font-weight:bold}
+.ind{text-indent:35.4pt}
+.nw,.tc{white-space:nowrap;width:auto}
+.hd{position:absolute;top:36.7pt;font-family:Arial,KG,sans-serif;font-weight:bold;font-size:9.96pt;line-height:12pt;white-space:nowrap}
+.pn{font-family:'Times New Roman',serif}
+.f{position:absolute;line-height:0}
+.r{position:absolute;background:#000;display:block}
+.ov{position:absolute;background:#fff;white-space:nowrap;line-height:1}
+</style></head><body>
+
+<!-- 1 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">1/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<p class="x c h" style="--b:76.2;--fs:16pt;--l:18.5pt"><i>이론 시험 문제 풀이</i></p>
+<p class="x c h" style="--b:111.3;--fs:14pt;--l:16.1pt">주의. 채점에서 배점은 더 나누지 않는다!</p>
+<p class="x c h" style="--b:127.3;--fs:14pt;--l:16.1pt">문제 1 (10.0점)</p>
+<p class="x c h" style="--b:143.4;--fs:14pt;--l:16.1pt">문제 1.1 (3.0점)</p>
+<p class="x ind" style="--b:157.6">열역학 제1법칙으로부터 다음이 성립한다.</p>
+<div class="f" style="left:108.5pt;top:162.7pt"><span class="fig" data-srcpage="1" data-clip="108.5,162.7,180.5,174.5"></span></div><p class="x en" style="--n:171.5">(1)</p>
+<p class="x" style="--b:187.8;--l:16.1pt">여기서 $\delta Q$는 공급된 열량, $dU$는 내부 에너지의 변화, $dA$는 기체가 한 일이다.</p>
+<p class="x ind" style="--b:217.7;--l:14.3pt">이상 기체 1몰에 대하여 이 양들은 알려진 압력 $p$에서 부피의 변화 $dV$와 온도의 변화 $dT$로 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:108.5pt;top:239.2pt"><span class="fig" data-srcpage="1" data-clip="108.5,239.2,162.5,251.2"></span></div><p class="x en" style="--n:248.3">(2)</p>
+<div class="f" style="left:108.2pt;top:256.6pt"><span class="fig" data-srcpage="1" data-clip="108.2,256.6,168.5,269.1"></span></div><p class="x en" style="--n:265.2">(3)</p>
+<p class="x ind" style="--b:282.4">열용량의 정의에 따라 다음이 성립하므로,</p>
+<div class="f" style="left:108.8pt;top:287.6pt"><span class="fig" data-srcpage="1" data-clip="108.8,287.6,152.0,314.6"></span></div><p class="x en" style="--n:304.2">(4)</p>
+<p class="x" style="--b:327.4">식 (1)–(4)로부터 다음을 얻는다.</p>
+<div class="f" style="left:108.8pt;top:332.8pt"><span class="fig" data-srcpage="1" data-clip="108.8,332.8,183.8,359.6"></span></div><p class="x en" style="--n:349.2">(5)</p>
+<p class="x" style="--b:372.5">여기서 단원자 기체의 정적 몰 열용량은 다음과 같다.</p>
+<div class="f" style="left:108.8pt;top:378.2pt"><span class="fig" data-srcpage="1" data-clip="108.8,378.2,156.5,404.4"></span></div><p class="x en" style="--n:394.4">(6)</p>
+<p class="x ind" style="--b:417.5">문제에 주어진 그래프에서 다음 온도일 때</p>
+<p class="x nw" style="--b:433.4;left:108.2pt">$T_1^*=350\ \mathrm{K}$</p><p class="x en" style="--n:433.4">(7)</p>
+<p class="x" style="--b:458.7;--l:19.5pt;margin-top:-2.5pt">열용량이 $C=C_V$이고, 따라서 $\dfrac{dV}{dT}=0$임을 알 수 있다. 이 온도를 지날 때 도함수의 부호는 +에서 −로 바뀐다. 이는 이 온도에서 기체의 부피가 극대에 이른다는 뜻이다: $T_{\max}=T_1^*=350\ \mathrm{K}$.</p>
+<p class="x ind" style="--b:514.9">다음 온도에서도</p>
+<p class="x nw" style="--b:530.7;left:108.2pt">$T_2^*=500\ \mathrm{K}$</p><p class="x en" style="--n:530.7">(8)</p>
+<p class="x" style="--b:561.0;--l:16.8pt;width:244.2pt;margin-top:-3.7pt">도함수 $\dfrac{dV}{dT}$는 0이 되며, 이 점을 지날 때 도함수의 부호는 −에서 +로 바뀐다. 이는 $T_2^*$가 부피의 극소점이라는 뜻이다: $T_{\min}=T_2^*=500\ \mathrm{K}$.</p>
+<div class="f" style="left:298.0pt;top:552.5pt"><span class="fig" data-srcpage="1" data-clip="298.0,552.5,558.0,726.0"></span></div>
+<p class="x ind" style="--b:647.4;--l:17.16pt;width:244.2pt">$T_1^*=350\ \mathrm{K}$에서 $T_2^*=500\ \mathrm{K}$까지의 구간에서 기체는 열량 $Q$를 받는데, 이 열량은 수치적으로 의존 관계 $C(T)$의 그래프 아래 넓이, 곧 도형 <b><i>ABCDE</i></b>의 넓이와 같다. 내부 에너지의 변화 $\Delta U=C_V(T_2^*-T_1^*)$는 수치적으로 직사각형 <b><i>ABDE</i></b>의 넓이와 같다.</p>
+<p class="x" style="--b:749.0;--l:15.5pt">따라서 열역학 제1법칙에 따라 $T_1^*$에서 $T_2^*$까지 기체에 해 준 일은 수치적으로 직사각형 <b><i>ABDE</i></b>와 도형 <b><i>ABCDE</i></b>의 넓이의 차, 곧 빗금 친 도형 <b><i>BDC</i></b>의 넓이와 같다:</p>
+</div>
+
+<!-- 2 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">2/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<div class="f" style="left:108.5pt;top:64.2pt"><span class="fig" data-srcpage="2" data-clip="108.5,64.2,244.8,90.5"></span></div><p class="x en" style="--n:80.5">(9)</p>
+<p class="x" style="--b:117.7"><b><i>주의:</i></b> 정확한 의존 관계 $V(T)$는 다음과 같다.</p>
+<div class="f" style="left:110.5pt;top:125.0pt"><span class="fig" data-srcpage="2" data-clip="110.5,125.0,237.5,160.5"></span></div>
+<p class="x nw" style="--b:146.7;left:239.3pt">, $T_1=300\ \mathrm{K}\le T\le T_0=400\ \mathrm{K}$이고 $\Delta T_1=100\ \mathrm{K}$일 때;</p>
+<div class="f" style="left:109.5pt;top:165.0pt"><span class="fig" data-srcpage="2" data-clip="109.5,165.0,234.8,200.8"></span></div>
+<p class="x nw" style="--b:186.9;left:236.9pt">, $T_0=400\ \mathrm{K}\le T\le T_2=600\ \mathrm{K}$이고 $\Delta T_2=200\ \mathrm{K}$일 때.</p>
+<p class="x" style="--b:214.5">기체를 가열하는 과정에서 의존 관계 $V(T)$와 $P(V)$는 아래 그림과 같다.</p>
+<div class="f" style="left:59.0pt;top:221.5pt"><span class="fig" data-srcpage="2" data-clip="59.0,221.5,328.5,365.2"></span></div>
+<div class="f" style="left:329.5pt;top:221.5pt"><span class="fig" data-srcpage="2" data-clip="329.5,221.5,536.2,364.8"></span></div>
+<!-- table p2 380-650 -->
+<!-- table cols [35.8, 465.8, 559.1] -->
+<!-- rules p2: 35 -->
+<i class="r" style="left:34.80pt;top:380.57pt;width:0.48pt;height:264.65pt"></i><i class="r" style="left:34.80pt;top:380.57pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:35.76pt;top:381.53pt;width:0.48pt;height:262.73pt"></i><i class="r" style="left:36.24pt;top:381.53pt;width:523.30pt;height:0.48pt"></i><i class="r" style="left:465.82pt;top:382.01pt;width:0.48pt;height:261.77pt"></i><i class="r" style="left:560.02pt;top:380.57pt;width:0.48pt;height:264.65pt"></i><i class="r" style="left:559.06pt;top:381.53pt;width:0.48pt;height:262.73pt"></i><i class="r" style="left:36.24pt;top:395.93pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:395.93pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:412.61pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:412.61pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:429.41pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:429.41pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:447.91pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:447.91pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:479.71pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:479.71pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:511.39pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:511.39pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:543.19pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:543.19pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:562.87pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:562.87pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:582.67pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:582.67pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:614.35pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:614.35pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:629.38pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:629.38pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:34.80pt;top:644.74pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:643.78pt;width:522.82pt;height:0.48pt"></i>
+<p class="x c h" style="--b:393.3;left:35.8pt;width:430.0pt">내용</p><p class="x nb c" style="--n:393.3;left:465.8pt;width:93.3pt"><b>배점</b></p>
+<p class="x tc" style="--b:407.7;left:40.9pt">식 (1):</p><div class="f" style="left:106.7pt;top:398.5pt"><span class="fig" data-srcpage="2" data-clip="106.7,398.5,174.5,410.3"></span></div><!--  Q = dU + dA --><p class="x nb c" style="--n:407.6;left:465.8pt;width:93.3pt">0.2</p>
+<p class="x tc" style="--b:424.4;left:40.9pt">식 (2):</p><div class="f" style="left:106.7pt;top:415.4pt"><span class="fig" data-srcpage="2" data-clip="106.7,415.4,156.0,427.4"></span></div><!--  A = pdV --><p class="x nb c" style="--n:424.2;left:465.8pt;width:93.3pt">0.2</p>
+<p class="x tc" style="--b:441.9;left:40.9pt">식 (3):</p><div class="f" style="left:106.5pt;top:433.5pt"><span class="fig" data-srcpage="2" data-clip="106.5,433.5,162.0,445.7"></span></div><!-- dU = C V dT --><p class="x nb c" style="--n:441.1;left:465.8pt;width:93.3pt">0.2</p>
+<p class="x tc" style="--b:467.6;left:40.9pt">식 (4):</p><div class="f" style="left:107.0pt;top:451.2pt"><span class="fig" data-srcpage="2" data-clip="107.0,451.2,145.2,478.0"></span></div><!-- C =  dT Q --><p class="x nb c" style="--n:459.5;left:465.8pt;width:93.3pt">0.2</p>
+<p class="x tc" style="--b:499.4;left:40.9pt">식 (5):</p><div class="f" style="left:107.0pt;top:483.0pt"><span class="fig" data-srcpage="2" data-clip="107.0,483.0,176.7,509.5"></span></div><!-- p dV dT = C − C V --><p class="x nb c" style="--n:491.3;left:465.8pt;width:93.3pt">0.4</p>
+<p class="x tc" style="--b:531.1;left:40.9pt">식 (6):</p><div class="f" style="left:107.0pt;top:515.0pt"><span class="fig" data-srcpage="2" data-clip="107.0,515.0,150.0,541.2"></span></div><!-- C V = 3 2 R --><p class="x nb c" style="--n:523.0;left:465.8pt;width:93.3pt">0.2</p>
+<p class="x tc" style="--b:556.9;left:40.9pt">식 (7):</p><p class="x nw" style="--b:556.9;left:107.3pt">$T_1^*=350\ \mathrm{K}$</p><p class="x nb c" style="--n:554.8;left:465.8pt;width:93.3pt">0.4</p>
+<p class="x tc" style="--b:576.5;left:40.9pt">식 (8):</p><p class="x nw" style="--b:576.5;left:107.3pt">$T_2^*=500\ \mathrm{K}$</p><p class="x nb c" style="--n:577.3;left:465.8pt;width:93.3pt">0.4</p>
+<p class="x tc" style="--b:602.3;left:40.9pt">식 (9):</p><div class="f" style="left:106.7pt;top:586.0pt"><span class="fig" data-srcpage="2" data-clip="106.7,586.0,200.0,612.2"></span></div><!-- A = 1 4 R ( T max − T min ) --><p class="x nb c" style="--n:603.1;left:465.8pt;width:93.3pt">0.4</p>
+<p class="x tc" style="--b:626.4;left:40.9pt">식 (9)의 수치:</p><div class="f" style="left:198.8pt;top:617.4pt"><span class="fig" data-srcpage="2" data-clip="198.8,617.4,245.3,627.2"></span></div><!-- A = 312 J --><p class="x nb c" style="--n:626.4;left:465.8pt;width:93.3pt">0.4</p>
+<p class="x tc" style="--b:641.0;left:40.9pt"><b>합계</b></p><p class="x nb c" style="--n:641.0;left:465.8pt;width:93.3pt"><b>3.0</b></p>
+<p class="x c h" style="--b:672.1;--fs:14pt;--l:16.1pt">문제 1.2 (3.0점)</p>
+<p class="x ind" style="--b:686.3;--l:16.3pt">브리지의 등가 회로는 아래 그림과 같다. 여기서 이상적이지 않은 인덕턴스 회로는 이상적인 코일 $L$과 저항 $r_L$을 직렬로 연결한 것과 같고, 누설이 있는 축전기의 등가 회로는 이상적인 축전기 $C$에 저항 $r_C$를 병렬로 연결한 것과 같다는 점을 고려하였다.</p>
+</div>
+
+<!-- 3 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">3/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<div class="f" style="left:237.8pt;top:62.8pt"><span class="fig" data-srcpage="3" data-clip="237.8,62.8,351.5,200.5"></span></div>
+<p class="x ind" style="--b:220.1"><b>풀이 1.</b> 브리지의 평형 조건을 복소수로 쓰면 다음과 같다.</p>
+<div class="f" style="left:108.2pt;top:226.5pt"><span class="fig" data-srcpage="3" data-clip="108.2,226.5,173.0,238.5"></span></div><p class="x en" style="--n:234.7">(1)</p>
+<p class="x" style="--b:251.9">여기서 임피던스는 각각 다음과 같다.</p>
+<div class="f" style="left:108.2pt;top:258.3pt"><span class="fig" data-srcpage="3" data-clip="108.2,258.3,172.5,270.1"></span></div><p class="x en" style="--n:266.6">(2)</p>
+<p class="x" style="--b:283.7">그리고</p>
+<div class="f" style="left:108.5pt;top:291.9pt"><span class="fig" data-srcpage="3" data-clip="108.5,291.9,183.5,318.6"></span></div><p class="x en" style="--n:305.6">(3)</p>
+<p class="x ind" style="--b:331.7">식 (1)–(3)을 조금 변형하면 다음을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:337.4pt"><span class="fig" data-srcpage="3" data-clip="108.5,337.4,238.8,366.6"></span></div><p class="x en" style="--n:353.6">(4)</p>
+<p class="x ind" style="--b:379.8;--l:13.9pt">진동수를 바꾸어도 이 등식이 깨지지 않으려면 등식의 양변이 모두 0이어야 한다. 따라서 다음을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:399.3pt"><span class="fig" data-srcpage="3" data-clip="108.5,399.3,203.0,432.0"></span></div><p class="x en" style="--n:415.5">(5)</p>
+<div class="f" style="left:108.8pt;top:433.5pt"><span class="fig" data-srcpage="3" data-clip="108.8,433.5,164.3,462.5"></span></div><p class="x nw" style="--b:449.5;left:166.6pt">$2\ \mathrm{M\Omega}.$</p><p class="x en" style="--n:449.7">(6)</p>
+<p class="x ind" style="--b:475.9"><b>풀이 2.</b> 축전기 양단의 전압을 다음과 같이 두자.</p>
+<div class="f" style="left:108.2pt;top:482.0pt"><span class="fig" data-srcpage="3" data-clip="108.2,482.0,183.8,494.3"></span></div><p class="x en" style="--n:490.5">(1)</p>
+<p class="x" style="--b:507.7">그러면 축전기를 지나는 전류는 다음과 같고,</p>
+<div class="f" style="left:108.5pt;top:513.6pt"><span class="fig" data-srcpage="3" data-clip="108.5,513.6,190.0,526.1"></span></div><p class="x en" style="--n:522.3">(2)</p>
+<p class="x" style="--b:539.5">축전기의 누설 저항을 지나는 전류는 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:545.1pt"><span class="fig" data-srcpage="3" data-clip="108.5,545.1,183.5,574.4"></span></div><p class="x en" style="--n:561.3">(3)</p>
+<p class="x ind" style="--b:587.6">축전기가 있는 위쪽 가지를 지나는 전체 전류는 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:594.2pt"><span class="fig" data-srcpage="3" data-clip="108.5,594.2,168.2,608.2"></span></div><p class="x en" style="--n:602.5">(4)</p>
+<p class="x" style="--b:621.5">브리지가 평형을 이루므로 같은 전류가 저항 $R_1$을 지나고, 따라서 다음이 성립한다.</p>
+<div class="f" style="left:108.5pt;top:631.4pt"><span class="fig" data-srcpage="3" data-clip="108.5,631.4,159.5,645.4"></span></div><p class="x en" style="--n:639.7">(5)</p>
+<p class="x ind" style="--b:657.8">한편, 이 전압은 인덕턴스가 있는 가지의 전압 강하와 같고,</p>
+<div class="f" style="left:108.5pt;top:664.5pt"><span class="fig" data-srcpage="3" data-clip="108.5,664.5,155.0,678.5"></span></div><p class="x en" style="--n:672.7">(6)</p>
+<p class="x" style="--b:690.9">그 전압 강하는 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:696.3pt"><span class="fig" data-srcpage="3" data-clip="108.5,696.3,194.0,723.1"></span></div><p class="x en" style="--n:712.8">(7)</p>
+<p class="x" style="--b:735.9">여기서 전류는 평형 방정식으로 정해진다.</p>
+<div class="f" style="left:108.5pt;top:741.6pt"><span class="fig" data-srcpage="3" data-clip="108.5,741.6,177.5,770.6"></span></div><p class="x en" style="--n:757.8">(8)</p>
+<p class="x" style="--b:784.1">그 까닭은 다음이 성립하기 때문이다.</p>
+<div class="f" style="left:108.5pt;top:790.7pt"><span class="fig" data-srcpage="3" data-clip="108.5,790.7,156.5,804.7"></span></div><p class="x en" style="--n:799.0">(9)</p>
+</div>
+
+<!-- 4 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">4/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<p class="x ind" style="--b:72.5">식 (1)–(9)를 모으면 다음을 얻는다.</p>
+<div class="f" style="left:108.2pt;top:77.0pt"><span class="fig" data-srcpage="4" data-clip="108.2,77.0,339.0,110.8"></span></div><p class="x en" style="--n:96.8">(10)</p>
+<p class="x ind" style="--b:124.1">이 등식으로부터 등식의 양변이 모두 0일 때 진동수와 무관한 평형 조건이 만족됨을 알 수 있다. 곧, 최종 답은 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:145.5pt"><span class="fig" data-srcpage="4" data-clip="108.5,145.5,203.0,172.5"></span></div><p class="x en" style="--n:159.5">(11)</p>
+<div class="f" style="left:108.8pt;top:178.5pt"><span class="fig" data-srcpage="4" data-clip="108.8,178.5,164.2,206.8"></span></div><p class="x nw" style="--b:193.7;left:166.6pt">$2\ \mathrm{M\Omega}.$</p><p class="x en" style="--n:193.7">(12)</p>
+<!-- table p4 216-785 -->
+<!-- table cols [35.8, 465.8, 559.1] -->
+
+<!-- rules p4: 65 -->
+
+<i class="r" style="left:34.80pt;top:222.74pt;width:0.48pt;height:554.96pt"></i><i class="r" style="left:34.80pt;top:222.74pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:35.76pt;top:223.70pt;width:0.48pt;height:553.04pt"></i><i class="r" style="left:36.24pt;top:223.70pt;width:523.30pt;height:0.48pt"></i><i class="r" style="left:465.82pt;top:224.18pt;width:0.48pt;height:552.07pt"></i><i class="r" style="left:560.02pt;top:222.74pt;width:0.48pt;height:554.96pt"></i><i class="r" style="left:559.06pt;top:223.70pt;width:0.48pt;height:553.04pt"></i><i class="r" style="left:36.24pt;top:238.10pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:238.10pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:252.38pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:252.38pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:266.69pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:266.69pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:285.17pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:285.17pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:303.65pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:303.65pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:338.45pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:338.45pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:373.13pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:373.13pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:407.93pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:407.93pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:424.61pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:424.61pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:459.31pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:459.31pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:477.91pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:477.91pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:492.19pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:492.19pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:506.47pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:506.47pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:520.75pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:520.75pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:539.23pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:539.23pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:557.71pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:557.71pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:592.51pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:592.51pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:612.31pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:612.31pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:632.02pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:632.02pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:651.82pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:651.82pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:683.50pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:683.50pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:718.30pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:718.30pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:737.98pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:737.98pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:34.80pt;top:777.22pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:776.26pt;width:522.82pt;height:0.48pt"></i>
+
+<p class="x c h" style="--b:235.5;left:35.8pt;width:430.0pt">내용</p><p class="x nb c" style="--n:235.5;left:465.8pt;width:93.3pt"><b>배점</b></p>
+
+<p class="x tc" style="--b:249.7;left:40.9pt"><b>풀이 1</b></p>
+
+<p class="x tc" style="--b:264.0;left:40.9pt">등가 회로: 모든 요소가 올바르게 연결됨</p><p class="x nb c" style="--n:264.0;left:465.8pt;width:93.3pt">0.5</p>
+
+<p class="x tc" style="--b:279.2;left:40.9pt">식 (1):</p><div class="f" style="left:106.5pt;top:270.8pt"><span class="fig" data-srcpage="4" data-clip="106.5,270.8,166.0,282.8"></span></div><!-- Z L Z C = R R 1 2 --><p class="x nb c" style="--n:278.3;left:465.8pt;width:93.3pt">0.3</p>
+
+<p class="x tc" style="--b:297.6;left:40.9pt">식 (2):</p><div class="f" style="left:106.5pt;top:289.2pt"><span class="fig" data-srcpage="4" data-clip="106.5,289.2,170.7,301.2"></span></div><!-- Z L = r L + i  L --><p class="x nb c" style="--n:296.8;left:465.8pt;width:93.3pt">0.3</p>
+
+<p class="x tc" style="--b:323.5;left:40.9pt">식 (3):</p><div class="f" style="left:106.5pt;top:310.0pt"><span class="fig" data-srcpage="4" data-clip="106.5,310.0,177.7,336.7"></span></div><!-- Z C = 1 + i  r C Cr C --><p class="x nb c" style="--n:315.4;left:465.8pt;width:93.3pt">0.3</p>
+
+<p class="x tc" style="--b:358.1;left:40.9pt">식 (4):</p><div class="f" style="left:106.7pt;top:342.0pt"><span class="fig" data-srcpage="4" data-clip="106.7,342.0,232.5,371.0"></span></div><!-- i  ( L − R R C 1 2 ) = r L − R R r 1 C 2 --><p class="x nb c" style="--n:350.1;left:465.8pt;width:93.3pt">0.4</p>
+
+<p class="x tc" style="--b:392.8;left:40.9pt">식 (5):</p><div class="f" style="left:106.7pt;top:376.7pt"><span class="fig" data-srcpage="4" data-clip="106.7,376.7,151.7,405.7"></span></div><!-- C = R R 1 L 2 --><p class="x nb c" style="--n:384.8;left:465.8pt;width:93.3pt">0.4</p>
+
+<p class="x tc" style="--b:419.6;left:40.9pt">식 (5)의 수치:</p><div class="f" style="left:199.2pt;top:411.3pt"><span class="fig" data-srcpage="4" data-clip="199.2,411.3,252.7,422.8"></span></div><!-- C = 0.5 F  --><p class="x nb c" style="--n:419.6;left:465.8pt;width:93.3pt">0.2</p>
+
+<p class="x tc" style="--b:444.3;left:40.9pt">식 (6):</p><div class="f" style="left:107.0pt;top:428.2pt"><span class="fig" data-srcpage="4" data-clip="107.0,428.2,153.0,457.2"></span></div><!-- r C = R R r 1 L 2 --><p class="x nb c" style="--n:436.2;left:465.8pt;width:93.3pt">0.4</p>
+
+<p class="x tc" style="--b:471.9;left:40.9pt">식 (6)의 수치:</p><p class="x nw" style="--b:471.9;left:199.3pt">$r_C=2\ \mathrm{M\Omega}$</p><p class="x nb c" style="--n:471.1;left:465.8pt;width:93.3pt">0.2</p>
+
+<p class="x tc" style="--b:489.5;left:40.9pt"><b>합계</b></p><p class="x nb c" style="--n:489.5;left:465.8pt;width:93.3pt"><b>3.0</b></p>
+
+<p class="x tc" style="--b:503.8;left:40.9pt"><b>풀이 2</b></p>
+
+<p class="x tc" style="--b:518.1;left:40.9pt">등가 회로: 모든 요소가 올바르게 연결됨</p><p class="x nb c" style="--n:518.1;left:465.8pt;width:93.3pt">0.5</p>
+
+<p class="x tc" style="--b:533.2;left:40.9pt">식 (1):</p><div class="f" style="left:106.5pt;top:524.8pt"><span class="fig" data-srcpage="4" data-clip="106.5,524.8,177.2,536.8"></span></div><!-- U C = U 0 cos  t --><p class="x nb c" style="--n:532.4;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:551.7;left:40.9pt">식 (2):</p><div class="f" style="left:106.7pt;top:542.8pt"><span class="fig" data-srcpage="4" data-clip="106.7,542.8,183.0,555.3"></span></div><!-- I C = − C  sin  t --><p class="x nb c" style="--n:550.9;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:577.5;left:40.9pt">식 (3):</p><div class="f" style="left:106.7pt;top:561.3pt"><span class="fig" data-srcpage="4" data-clip="106.7,561.3,177.5,590.5"></span></div><!-- I r C = U 0 cos r C  t --><p class="x nb c" style="--n:569.5;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:605.2;left:40.9pt">식 (4):</p><div class="f" style="left:106.7pt;top:596.8pt"><span class="fig" data-srcpage="4" data-clip="106.7,596.8,161.0,610.8"></span></div><!-- I 1 = I C + I r C --><p class="x nb c" style="--n:604.1;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:625.1;left:40.9pt">식 (5):</p><div class="f" style="left:106.7pt;top:616.6pt"><span class="fig" data-srcpage="4" data-clip="106.7,616.6,153.2,630.9"></span></div><!-- U R 1 = I 1 R 1 --><p class="x nb c" style="--n:624.0;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:644.7;left:40.9pt">식 (6):</p><div class="f" style="left:106.7pt;top:636.4pt"><span class="fig" data-srcpage="4" data-clip="106.7,636.4,147.5,650.4"></span></div><!-- U L = U R 1 --><p class="x nb c" style="--n:643.7;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:671.5;left:40.9pt">식 (7):</p><div class="f" style="left:106.7pt;top:655.1pt"><span class="fig" data-srcpage="4" data-clip="106.7,655.1,178.0,681.9"></span></div><!-- U L = dI dt 2 + I 2 r L --><p class="x nb c" style="--n:663.5;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:703.2;left:40.9pt">식 (8):</p><div class="f" style="left:106.7pt;top:686.8pt"><span class="fig" data-srcpage="4" data-clip="106.7,686.8,171.2,716.1"></span></div><!-- I 2 = I R 2 = U R C 2 --><p class="x nb c" style="--n:695.1;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:731.0;left:40.9pt">식 (9):</p><div class="f" style="left:106.7pt;top:722.6pt"><span class="fig" data-srcpage="4" data-clip="106.7,722.6,149.7,736.6"></span></div><!-- U R 2 = U C --><p class="x nb c" style="--n:729.9;left:465.8pt;width:93.3pt">0.1</p>
+
+<p class="x tc" style="--b:760.2;left:40.9pt">식 (10):</p><div class="f" style="left:112.5pt;top:740.3pt"><span class="fig" data-srcpage="4" data-clip="112.5,740.3,338.0,774.1"></span></div><!--    −  R L 2 + C  R 1    U 0 sin  t =    --><p class="x nb c" style="--n:749.6;left:465.8pt;width:93.3pt">0.4</p>
+</div>
+
+<!-- 5 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">5/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<!-- table p5 55-285 -->
+<!-- table cols [35.8, 465.8, 559.1] -->
+
+<!-- rules p5: 21 -->
+
+<i class="r" style="left:34.80pt;top:61.32pt;width:0.48pt;height:121.46pt"></i><i class="r" style="left:34.80pt;top:61.32pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:35.76pt;top:62.28pt;width:0.48pt;height:119.54pt"></i><i class="r" style="left:36.24pt;top:62.28pt;width:523.30pt;height:0.48pt"></i><i class="r" style="left:465.82pt;top:62.76pt;width:0.48pt;height:118.58pt"></i><i class="r" style="left:560.02pt;top:61.32pt;width:0.48pt;height:121.46pt"></i><i class="r" style="left:559.06pt;top:62.28pt;width:0.48pt;height:119.54pt"></i><i class="r" style="left:36.24pt;top:97.10pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:97.10pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:113.78pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:113.78pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:148.58pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:148.58pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:167.06pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:167.06pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:34.80pt;top:182.30pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:181.34pt;width:522.82pt;height:0.48pt"></i>
+
+<p class="x tc" style="--b:82.1;left:40.9pt">식 (11):</p><div class="f" style="left:112.7pt;top:66.1pt"><span class="fig" data-srcpage="5" data-clip="112.7,66.1,157.7,95.1"></span></div><!-- C = R R 1 L 2 --><p class="x nb c" style="--n:74.0;left:465.8pt;width:93.3pt">0.4</p>
+
+<p class="x tc" style="--b:108.7;left:40.9pt">식 (11)의 수치:</p><div class="f" style="left:205.0pt;top:100.7pt"><span class="fig" data-srcpage="5" data-clip="205.0,100.7,258.5,112.2"></span></div><!-- C = 0.5 F  --><p class="x nb c" style="--n:108.7;left:465.8pt;width:93.3pt">0.2</p>
+
+<p class="x tc" style="--b:133.5;left:40.9pt">식 (12):</p><div class="f" style="left:113.0pt;top:117.4pt"><span class="fig" data-srcpage="5" data-clip="113.0,117.4,159.0,146.4"></span></div><!-- r C = R R r 1 L 2 --><p class="x nb c" style="--n:125.4;left:465.8pt;width:93.3pt">0.4</p>
+
+<p class="x tc" style="--b:161.1;left:40.9pt">식 (12)의 수치:</p><p class="x nw" style="--b:161.1;left:205.3pt">$r_C=2\ \mathrm{M\Omega}$</p><p class="x nb c" style="--n:160.2;left:465.8pt;width:93.3pt">0.2</p>
+
+<p class="x tc" style="--b:178.7;left:40.9pt"><b>합계</b></p><p class="x nb c" style="--n:178.7;left:465.8pt;width:93.3pt"><b>3.0</b></p>
+<p class="x c h" style="--b:209.7;--fs:14pt;--l:16.1pt">문제 1.3 (4.0점)</p>
+<p class="x ind" style="--b:223.9;--l:14.2pt">질량이 $m$인 행성이 태양 둘레를 반지름 $R$인 원 궤도를 따라 속력 $v$로 돈다고 하자. 그러면 지름 방향으로 사영한 행성의 운동 방정식은 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:108.5pt;top:244.0pt"><span class="fig" data-srcpage="5" data-clip="108.5,244.0,186.2,275.0"></span></div><p class="x en" style="--n:265.2">(1)</p>
+<p class="x" style="--b:288.4">이로부터 다음을 얻는다.</p>
+<div class="f" style="left:108.2pt;top:293.3pt"><span class="fig" data-srcpage="5" data-clip="108.2,293.3,170.0,327.8"></span></div><p class="x en" style="--n:316.6">(2)</p>
+<p class="x" style="--b:340.7">여기서 $G$는 중력 상수이다.</p>
+<p class="x ind" style="--b:355.0">식 (2)를 목성(첨자 <i>J</i>)과 지구(첨자 <i>E</i>)에 대하여 쓰고 서로 나누면 다음을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:360.0pt"><span class="fig" data-srcpage="5" data-clip="108.5,360.0,163.5,397.2"></span></div><p class="x en" style="--n:383.1">(3)</p>
+<p class="x" style="--b:410.2">한편, 공전 주기의 비에 대한 케플러 제3법칙에 따라 다음이 성립한다.</p>
+<div class="f" style="left:108.5pt;top:415.9pt"><span class="fig" data-srcpage="5" data-clip="108.5,415.9,156.0,446.9"></span></div><p class="x en" style="--n:433.8">(4)</p>
+<p class="x ind" style="--b:460.0">목성의 운동은 분광기로 검출할 수 없지만 태양의 운동은 검출할 수 있다. 태양도 태양–목성계의 질량 중심 둘레를 돌기 때문이다. 태양의 속력은 다음 식에서 쉽게 구할 수 있다.</p>
+<div class="f" style="left:108.2pt;top:493.0pt"><span class="fig" data-srcpage="5" data-clip="108.2,493.0,167.5,522.5"></span></div><p class="x en" style="--n:509.5">(5)</p>
+<p class="x ind" style="--b:535.7">태양은 계의 공통 질량 중심 둘레를 돌고 관측자는 같은 평면 안에 있으므로, 도플러 효과 공식에 따라 검출 조건은 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:554.9pt"><span class="fig" data-srcpage="5" data-clip="108.5,554.9,162.0,581.7"></span></div><p class="x en" style="--n:571.4">(6)</p>
+<p class="x ind" style="--b:594.5">식 (3)–(6)을 종합하면 최종 답을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:599.4pt"><span class="fig" data-srcpage="5" data-clip="108.5,599.4,274.0,634.2"></span></div><p class="x en" style="--n:620.3">(7)</p>
+<p class="x ind" style="--b:647.4">이 정도의 분해능은 여러 나라에서 만드는 많은 현대 분광기로 얻을 수 있다.</p>
+<!-- table p5 670-795 -->
+<!-- table cols [35.8, 465.8, 559.1] -->
+
+<!-- rules p5: 18 -->
+
+<i class="r" style="left:34.80pt;top:677.62pt;width:0.48pt;height:92.76pt"></i><i class="r" style="left:34.80pt;top:677.62pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:35.76pt;top:678.58pt;width:0.48pt;height:90.84pt"></i><i class="r" style="left:36.24pt;top:678.58pt;width:523.30pt;height:0.48pt"></i><i class="r" style="left:465.82pt;top:679.06pt;width:0.48pt;height:89.87pt"></i><i class="r" style="left:560.02pt;top:677.62pt;width:0.48pt;height:92.76pt"></i><i class="r" style="left:559.06pt;top:678.58pt;width:0.48pt;height:90.84pt"></i><i class="r" style="left:36.24pt;top:692.98pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:692.98pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:125.17pt;top:754.06pt;width:1.16pt;height:1.64pt"></i><i class="r" style="left:36.24pt;top:729.94pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:729.94pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:34.80pt;top:769.90pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:768.94pt;width:522.82pt;height:0.48pt"></i>
+
+<p class="x c h" style="--b:690.3;left:35.8pt;width:430.0pt">내용</p><p class="x nb c" style="--n:690.3;left:465.8pt;width:93.3pt"><b>배점</b></p>
+
+<p class="x tc" style="--b:717.9;left:40.9pt">식 (1):</p><div class="f" style="left:106.7pt;top:696.8pt"><span class="fig" data-srcpage="5" data-clip="106.7,696.8,178.7,727.6"></span></div><!-- mv R 2 = G mM R 2 S --><p class="x nb c" style="--n:715.9;left:465.8pt;width:93.3pt">0.2</p>
+
+<p class="x tc" style="--b:756.0;left:40.9pt">식 (2):</p><div class="f" style="left:106.5pt;top:732.5pt"><span class="fig" data-srcpage="5" data-clip="106.5,732.5,163.7,767.0"></span></div><!-- v = G M R S --><p class="x nb c" style="--n:753.9;left:465.8pt;width:93.3pt">0.2</p>
+</div>
+
+<!-- 6 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">6/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<!-- table p6 55-432 -->
+<!-- table cols [35.8, 465.8, 559.1] -->
+
+<!-- rules p6: 34 -->
+
+<i class="r" style="left:132.76pt;top:88.30pt;width:1.12pt;height:1.75pt"></i><i class="r" style="left:34.80pt;top:61.32pt;width:0.48pt;height:220.37pt"></i><i class="r" style="left:34.80pt;top:61.32pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:35.76pt;top:62.28pt;width:0.48pt;height:218.45pt"></i><i class="r" style="left:36.24pt;top:62.28pt;width:523.30pt;height:0.48pt"></i><i class="r" style="left:465.82pt;top:62.76pt;width:0.48pt;height:217.49pt"></i><i class="r" style="left:560.02pt;top:61.32pt;width:0.48pt;height:220.37pt"></i><i class="r" style="left:559.06pt;top:62.28pt;width:0.48pt;height:218.45pt"></i><i class="r" style="left:36.24pt;top:104.30pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:104.30pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:140.90pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:140.90pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:175.58pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:175.58pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:207.38pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:207.38pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:246.86pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:246.86pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:265.85pt;width:429.58pt;height:0.48pt"></i><i class="r" style="left:466.30pt;top:265.85pt;width:92.76pt;height:0.48pt"></i><i class="r" style="left:34.80pt;top:281.21pt;width:525.70pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:280.25pt;width:522.82pt;height:0.48pt"></i>
+
+<p class="x tc" style="--b:88.3;left:40.9pt">식 (3):</p><div class="f" style="left:106.7pt;top:65.1pt"><span class="fig" data-srcpage="6" data-clip="106.7,65.1,157.2,102.4"></span></div><!-- v v E J = R R E J --><p class="x nb c" style="--n:87.9;left:465.8pt;width:93.3pt">0.2</p>
+
+<p class="x tc" style="--b:125.9;left:40.9pt">식 (4):</p><div class="f" style="left:106.7pt;top:107.9pt"><span class="fig" data-srcpage="6" data-clip="106.7,107.9,149.2,139.1"></span></div><!-- T T E J 2 2 = R R E J 3 3 --><p class="x nb c" style="--n:127.1;left:465.8pt;width:93.3pt">0.4</p>
+
+<p class="x tc" style="--b:160.6;left:40.9pt">식 (5):</p><div class="f" style="left:106.5pt;top:144.5pt"><span class="fig" data-srcpage="6" data-clip="106.5,144.5,161.2,173.7"></span></div><!-- v S = v J M M S J --><p class="x nb c" style="--n:152.5;left:465.8pt;width:93.3pt">1.0</p>
+
+<p class="x tc" style="--b:195.3;left:40.9pt">식 (6):</p><div class="f" style="left:106.7pt;top:178.9pt"><span class="fig" data-srcpage="6" data-clip="106.7,178.9,155.5,205.7"></span></div><!--    = 2 c v S --><p class="x nb c" style="--n:187.2;left:465.8pt;width:93.3pt">1.0</p>
+
+<p class="x tc" style="--b:230.9;left:40.9pt">식 (7):</p><div class="f" style="left:106.7pt;top:210.2pt"><span class="fig" data-srcpage="6" data-clip="106.7,210.2,215.2,245.0"></span></div><!-- R min = M M S J    T T E J    1/3 2 c v E --><p class="x nb c" style="--n:219.0;left:465.8pt;width:93.3pt">0.5</p>
+
+<p class="x tc" style="--b:259.8;left:40.9pt">식 (7)의 수치:</p><div class="f" style="left:198.8pt;top:249.9pt"><span class="fig" data-srcpage="6" data-clip="198.8,249.9,271.3,263.9"></span></div><!-- R min = 1.20  10 7 --><p class="x nb c" style="--n:258.5;left:465.8pt;width:93.3pt">0.5</p>
+
+<p class="x tc" style="--b:277.5;left:40.9pt"><b>합계</b></p><p class="x nb c" style="--n:277.5;left:465.8pt;width:93.3pt"><b>4.0</b></p>
+<p class="x c h" style="--b:308.6;--fs:14pt;--l:16.1pt">문제 2. 페르미 가속 (10.0점)</p>
+<p class="x c h" style="--b:322.7">왜 마주 오는 차가 추월하는 차보다 많을까?</p>
+<p class="x" style="--b:336.5;--l:14.2pt"><b>2.1</b> 시간 $t$ 동안 차로 <b><i>B</i></b>의 차는 거리가 다음 값보다 멀지 않은 곳에 있는 차들만 추월한다.</p>
+<div class="f" style="left:108.5pt;top:354.1pt"><span class="fig" data-srcpage="6" data-clip="108.5,354.1,227.5,369.8"></span></div><p class="x en" style="--n:365.8">(1)</p>
+<p class="x ind" style="--b:382.0">따라서 그러한 차의 수는 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:387.9pt"><span class="fig" data-srcpage="6" data-clip="108.5,387.9,216.0,400.4"></span></div><p class="x en" style="--n:396.6">(2)</p>
+<p class="x ind" style="--b:413.8">추월 사이의 시간은 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:419.5pt"><span class="fig" data-srcpage="6" data-clip="108.5,419.5,230.2,445.0"></span></div><p class="x en" style="--n:434.5">(3)</p>
+<p class="x" style="--b:457.6"><b>2.2</b> 비슷하게 추론하면 추월 횟수와 추월 사이의 시간이 그대로라는 결론에 이른다. 곧,</p>
+<div class="f" style="left:108.5pt;top:477.3pt"><span class="fig" data-srcpage="6" data-clip="108.5,477.3,231.0,520.3"></span></div><p class="x en" style="--n:486.1">(4)</p><p class="x en" style="--n:510.1">(5)</p>
+<p class="x" style="--b:533.2"><b>2.3</b> 마주 오는 차를 향해 달릴 때, 차의 수와 연이은 두 마주침 사이의 시간은 다음 식으로 계산한다.</p>
+<div class="f" style="left:108.5pt;top:549.9pt"><span class="fig" data-srcpage="6" data-clip="108.5,549.9,286.5,600.7"></span></div><p class="x en" style="--n:578.1">(6)</p>
+<p class="x" style="--b:612.3">수치 계산을 하면 다음 값을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:618.2pt"><span class="fig" data-srcpage="6" data-clip="108.5,618.2,220.8,649.0"></span></div><p class="x en" style="--n:636.0">(7)</p>
+<p class="x c h" style="--b:662.1">탄성 충돌</p>
+<p class="x" style="--b:675.9"><b>2.4</b> 운동량 보존 법칙을 다음과 같이 쓰고,</p>
+<div class="f" style="left:108.2pt;top:684.1pt"><span class="fig" data-srcpage="6" data-clip="108.2,684.1,234.8,694.8"></span></div><p class="x en" style="--n:691.1">(8)</p>
+<p class="x" style="--b:707.3">운동 에너지 보존 법칙도 함께 쓰자.</p>
+<div class="f" style="left:108.2pt;top:712.7pt"><span class="fig" data-srcpage="6" data-clip="108.2,712.7,245.2,740.9"></span></div><p class="x en" style="--n:730.9">(9)</p>
+</div>
+
+<!-- 7 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">7/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<div class="f" style="left:201.2pt;top:67.8pt"><span class="fig" data-srcpage="7" data-clip="201.2,67.8,395.2,146.0"></span></div>
+<p class="x ind" style="--b:163.6">이 방정식들을 다음 꼴로 다시 쓰고</p>
+<div class="f" style="left:108.2pt;top:171.7pt"><span class="fig" data-srcpage="7" data-clip="108.2,171.7,240.2,200.7"></span></div><p class="x en" style="--n:187.2">(10)</p>
+<p class="x" style="--b:213.4">서로 나누면 다음 관계를 얻는다.</p>
+<div class="f" style="left:108.5pt;top:221.5pt"><span class="fig" data-srcpage="7" data-clip="108.5,221.5,190.8,232.3"></span></div><p class="x en" style="--n:228.5">(11)</p>
+<p class="x ind" style="--b:246.0;--l:16.2pt">이 등식에서 $u_2=v_1+u_1-v_2$로 나타내어 운동량 보존 방정식에 대입하면</p>
+<div class="f" style="left:108.5pt;top:265.6pt"><span class="fig" data-srcpage="7" data-clip="108.5,265.6,277.2,281.4"></span></div><p class="x en" style="--n:277.4">(12)</p>
+<p class="x" style="--b:293.6">이로부터 다음이 나온다.</p>
+<div class="f" style="left:108.5pt;top:299.2pt"><span class="fig" data-srcpage="7" data-clip="108.5,299.2,250.8,327.7"></span></div><p class="x en" style="--n:314.7">(13)</p>
+<p class="x ind" style="--b:340.9">둘째 공의 속력은 식 (13)에서 첨자 “1”과 “2”를 서로 바꾸면 쉽게 얻을 수 있다.</p>
+<div class="f" style="left:108.5pt;top:360.1pt"><span class="fig" data-srcpage="7" data-clip="108.5,360.1,250.8,388.6"></span></div><p class="x en" style="--n:375.8">(14)</p>
+<p class="x" style="--b:401.9"><b>2.5</b> 식 (13)을 이용하면 구하려는 매개변수 사이의 의존 관계를 명시적인 꼴로 얻는다.</p>
+<div class="f" style="left:108.2pt;top:410.6pt"><span class="fig" data-srcpage="7" data-clip="108.2,410.6,357.5,503.3"></span></div><p class="x en" style="--n:457.9">(15)</p>
+<p class="x ind" style="--b:516.1;--l:16.07pt">얻은 식에서 알 수 있듯이, 질량비 $\mu$가 어떤 값이든 의존 관계는 선형이다. 곧, 그래프는 직선이다. 이 직선들이 모두 점 $\eta_1=1;\ \eta_2=1$을 지난다는 것도 어렵지 않게 알 수 있다. $\mu\to0$일 때 기울기는 0에 가까워진다. 곧, 의존 관계의 그래프는 수평 직선 $\eta_1=1$에 가까워진다. $\mu\to\infty$일 때 구하려는 의존 관계는 다음에 가까워진다.</p>
+<div class="f" style="left:108.5pt;top:574.0pt"><span class="fig" data-srcpage="7" data-clip="108.5,574.0,176.2,586.7"></span></div><p class="x en" style="--n:582.8">(16)</p>
+<p class="x ind" style="--b:599.0">식 (15)의 그래프들은 아래 그림과 같다.</p>
+<div class="f" style="left:196.0pt;top:605.0pt"><span class="fig" data-srcpage="7" data-clip="196.0,605.0,398.5,784.8"></span></div>
+</div>
+
+<!-- 8 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">8/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<p class="x" style="--b:72.5"><b>2.6</b> 충돌 뒤 공의 속도의 크기가 충돌 전 속도의 크기보다 커지면, 곧 다음 부등식이 성립하면 공의 운동 에너지가 커진다.</p>
+<div class="f" style="left:108.5pt;top:118.8pt"><span class="fig" data-srcpage="8" data-clip="108.5,118.8,220.2,152.6"></span></div><p class="x en" style="--n:139.1">(17)</p>
+<p class="x ind" style="--b:167.5">식 (15)를 $\eta_1$에 대입하면 다음 두 부등식을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:174.7pt"><span class="fig" data-srcpage="8" data-clip="108.5,174.7,220.8,240.4"></span></div><p class="x en" style="--n:210.0">(18)</p>
+<p class="x ind" style="--b:253.2">이 부등식들의 해는 다음 관계이다.</p>
+<p class="x nb" style="--n:267.0">a)</p>
+<div class="f" style="left:107.0pt;top:273.4pt"><span class="fig" data-srcpage="8" data-clip="107.0,273.4,142.5,300.9"></span></div>
+<p class="x" style="--b:312.2">곧, 이 조건을 만족하려면 둘째 공이 첫째 공을 따라잡아야 한다;</p>
+<p class="x nb" style="--n:326.0">b)</p>
+<div class="f" style="left:108.2pt;top:331.6pt"><span class="fig" data-srcpage="8" data-clip="108.2,331.6,155.5,360.4"></span></div><p class="x en" style="--n:347.6">(20)</p>
+<p class="x" style="--b:372.8">이 경우 둘째 공은 첫째 공을 향해 움직여야 하고, 그 속도의 크기는 위에서 정한 값보다 커야 한다.</p>
+<p class="x" style="--b:401.2"><b>2.7</b> 극한의 경우 $m_2\gg m_1$에서 충돌 뒤 첫째 공의 속력은 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:410.4pt"><span class="fig" data-srcpage="8" data-clip="108.5,410.4,179.5,423.4"></span></div><p class="x en" style="--n:419.6">(21)</p>
+<p class="x" style="--b:435.8">곧, 첫째 공의 속도는 부호가 바뀌고(공이 반사되고) 그 크기는 둘째 공, 곧 무거운 공의 속력의 두 배만큼 달라진다.</p>
+<p class="x ind" style="--b:463.4">가벼운 공은 다음 경우에 속력이, 따라서 운동 에너지가 커진다.</p>
+<p class="x" style="--b:478.5">a) 무거운 공이 가벼운 공을 따라잡을 때(뒤에서 부딪칠 때) $v_2>1$;</p>
+<p class="x" style="--b:496.0">b) 무거운 공이 가벼운 공을 향해 움직일 때 $v_2<0$.</p>
+<p class="x c h" style="--b:512.2">가장 간단한 페르미 가속 모형</p>
+<p class="x" style="--b:526.0"><b>2.8</b> 판의 운동 법칙을 흔히 쓰는 꼴로 쓰면</p>
+<div class="f" style="left:108.5pt;top:529.4pt"><span class="fig" data-srcpage="8" data-clip="108.5,529.4,188.0,545.2"></span></div><p class="x en" style="--n:541.2">(22)</p>
+<p class="x" style="--b:557.3">속도의 시간에 따른 의존 관계는 다음 함수로 나타난다.</p>
+<div class="f" style="left:108.5pt;top:560.7pt"><span class="fig" data-srcpage="8" data-clip="108.5,560.7,201.8,576.5"></span></div><p class="x en" style="--n:572.3">(23)</p>
+<p class="x" style="--b:588.5">따라서 판의 최대 속력은 다음과 같다.</p>
+<div class="f" style="left:108.0pt;top:594.2pt"><span class="fig" data-srcpage="8" data-clip="108.0,594.2,193.2,619.4"></span></div><p class="x en" style="--n:609.2">(24)</p>
+<p class="x" style="--b:632.5"><b>2.9</b> 주어진 질문에 답하려면 판의 진동 한 주기만 생각하면 충분하다. 판의 좌표의 시간 의존 관계 (22)를 그래프로 그리고, 같은 그래프 위에 들어오는 입자들의 좌표의 시간 의존 관계, 곧 직선 $x=x_0-ut$를 그리자.</p>
+</div>
+
+<!-- 9 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">9/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<div class="f" style="left:170.2pt;top:63.8pt"><span class="fig" data-srcpage="9" data-clip="170.2,63.8,417.2,241.8"></span></div>
+<p class="x ind" style="--b:255.3;--l:18.9pt">그림은 $u>V_0$인 경우를 나타낸다. 충돌의 결과로, 판이 축의 양의 방향으로 움직이는 순간에 판과 충돌한 공들은 속력이 커지는데, 이러한 충돌은 $\frac{T}{2}$에서 $T$까지의 시간 구간에서 일어나야 한다. 그런데 충돌 시각은 무작위하고 균일하게 분포하지 않고, 판 자체에 다가오는 시각이 균일하게 분포한다. 그래서 다가오는 시각이 모두 같은 확률을 갖는 평면 $x=A$를 생각한다. 시각 $t=\frac{T}{2}$에 판과 충돌하는 공의 운동 법칙을 나타내는 직선(그림의 굵은 선)을 그리자. 이 공이 평면 $x=A$를 지나는 시각을 $t_1$이라 하자. 이 시각 뒤에 판과 충돌하는 공들은 속력과 에너지가 커진다. 그런데 이 공들은 $t_1$에서 $T$까지의 시간 구간에 평면을 지나므로, 이러한 입자의 비율은 다음과 같다.</p>
+<div class="f" style="left:108.2pt;top:415.0pt"><span class="fig" data-srcpage="9" data-clip="108.2,415.0,161.2,440.2"></span></div><p class="x en" style="--n:430.1">(25)</p>
+<p class="x ind" style="--b:454.6">시각 $t_1$은 공의 운동 법칙에서 쉽게 구할 수 있다.</p>
+<div class="f" style="left:108.5pt;top:462.5pt"><span class="fig" data-srcpage="9" data-clip="108.5,462.5,170.5,487.8"></span></div><p class="x en" style="--n:477.7">(26)</p>
+<p class="x" style="--b:500.8">그러면 가속되는 입자의 비율은 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:506.2pt"><span class="fig" data-srcpage="9" data-clip="108.5,506.2,257.2,531.8"></span></div><p class="x en" style="--n:521.5">(27)</p>
+<p class="x ind" style="--b:551.5;--l:24pt">여기서 식 (24)에서 나오는 관계 $\dfrac{2A}{T}=\dfrac{V_0}{\pi}$를 이용하였다. 주어진 수치 $u=1.5V_0$을 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:108.2pt;top:584.4pt"><span class="fig" data-srcpage="9" data-clip="108.2,584.4,205.8,610.9"></span></div><p class="x en" style="--n:600.7">(28)</p>
+<p class="x ind" style="--b:624.7">$u&lt;V_0$일 때는 조금 다른 상황이 나타나며, 아래 그림과 같다.</p>
+<div class="f" style="left:199.0pt;top:632.0pt"><span class="fig" data-srcpage="9" data-clip="199.0,632.0,401.2,771.0"></span></div>
+</div>
+
+<!-- 10 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">10/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<p class="x ind" style="--b:73.8;--l:16.2pt">이 경우 가속되는 공과 감속되는 공 사이의 “경계 시각” $t_1$은 아래 그림과 같이 판의 운동 법칙의 그래프에 접하는 직선으로 정해진다.</p>
+<div class="f" style="left:190.2pt;top:96.0pt"><span class="fig" data-srcpage="10" data-clip="190.2,96.0,405.0,260.0"></span></div>
+<p class="x ind" style="--b:275.9;--l:16.2pt">두 함수의 그래프가 시각 $t_2$에 접할 때, 두 함수의 값뿐 아니라 그 도함수, 곧 판과 공의 속도도 같아진다. 따라서</p>
+<div class="f" style="left:108.5pt;top:295.5pt"><span class="fig" data-srcpage="10" data-clip="108.5,295.5,205.5,311.3"></span></div><p class="x en" style="--n:307.2">(29)</p>
+<p class="x" style="--b:323.5">이로부터 다음을 얻는다.</p>
+<div class="f" style="left:108.2pt;top:329.1pt"><span class="fig" data-srcpage="10" data-clip="108.2,329.1,317.2,397.1"></span></div><p class="x en" style="--n:344.6">(30)</p><p class="x en" style="--n:382.6">(31)</p>
+<p class="x ind" style="--b:410.1">이 식들로 평면 $x=A$에 다가오는 시각을 구할 수 있다.</p>
+<div class="f" style="left:108.5pt;top:415.5pt"><span class="fig" data-srcpage="10" data-clip="108.5,415.5,364.8,456.3"></span></div><p class="x en" style="--n:438.6">(32)</p>
+<p class="x ind" style="--b:468.8">이 시간과 진동 주기의 비가 판을 따라잡아 충돌하여 에너지가 줄어드는 입자의 비율을 정한다.</p>
+<div class="f" style="left:108.2pt;top:487.5pt"><span class="fig" data-srcpage="10" data-clip="108.2,487.5,339.2,528.3"></span></div><p class="x en" style="--n:510.7">(33)</p>
+<p class="x" style="--b:540.8">따라서 충돌 뒤 에너지가 커지는 공의 비율은 다음과 같다.</p>
+<div class="f" style="left:108.2pt;top:546.4pt"><span class="fig" data-srcpage="10" data-clip="108.2,546.4,152.2,557.9"></span></div><p class="x en" style="--n:554.6">(34)</p>
+<p class="x" style="--b:570.8"><b>2.10</b> 진동 한 주기 동안 판은 거리 $4A$를 움직이므로, 판의 속력의 크기는 다음과 같다.</p>
+<div class="f" style="left:108.0pt;top:576.4pt"><span class="fig" data-srcpage="10" data-clip="108.0,576.4,151.2,601.7"></span></div><p class="x en" style="--n:591.4">(35)</p>
+<p class="x" style="--b:614.7"><b>2.11</b> 공의 속력이 판의 속력보다 클 때, 충돌의 결과로 에너지가 커지는 공의 비율은 식 (27)과 비슷한 식으로 계산한다.</p>
+<div class="f" style="left:114.5pt;top:633.9pt"><span class="fig" data-srcpage="10" data-clip="114.5,633.9,263.5,659.7"></span></div><p class="x en" style="--n:649.2">(36)</p>
+<p class="x" style="--b:672.3">이에 해당하는 그림은 아래와 같다.</p>
+</div>
+
+<!-- 11 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">11/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<div class="f" style="left:196.8pt;top:62.8pt"><span class="fig" data-srcpage="11" data-clip="196.8,62.8,396.5,206.8"></span></div>
+<p class="x ind" style="--b:220.3">판의 속도의 크기가 일정하다고 가정하였으므로, 충돌 뒤 공의 속도의 크기는 다음과 같아진다.</p>
+<div class="f" style="left:108.5pt;top:240.3pt"><span class="fig" data-srcpage="11" data-clip="108.5,240.3,169.8,253.0"></span></div><p class="x en" style="--n:249.3">(37)</p>
+<p class="x ind" style="--b:266.8">0에서 $t_1$까지의 시간 구간에 판과 충돌하는 공의 속도는 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:275.5pt"><span class="fig" data-srcpage="11" data-clip="108.5,275.5,169.8,286.5"></span></div><p class="x en" style="--n:284.3">(38)</p>
+<p class="x ind" style="--b:300.5">따라서 충돌 뒤 공의 평균 에너지는 다음과 같아진다.</p>
+<div class="f" style="left:108.5pt;top:305.2pt"><span class="fig" data-srcpage="11" data-clip="108.5,305.2,474.2,379.7"></span></div><p class="x en" style="--n:345.2">(39)</p>
+<p class="x" style="--b:392.3">따라서 평균 에너지가 커지는 배율은 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:398.2pt"><span class="fig" data-srcpage="11" data-clip="108.5,398.2,207.0,430.0"></span></div><p class="x en" style="--n:417.4">(40)</p>
+<p class="x ind" style="--b:442.6;--l:14.4pt">공의 속력이 판의 속력보다 작으면, 모든 공은 판이 반대 방향으로 움직일 때 판과 충돌하므로 모든 공의 속력과 에너지가 커진다. 충돌 뒤 입자의 속도는 $u_+=u+2V$가 되고, 그 에너지는 다음과 같다.</p>
+<div class="f" style="left:108.8pt;top:479.6pt"><span class="fig" data-srcpage="11" data-clip="108.8,479.6,275.0,511.3"></span></div><p class="x en" style="--n:498.9">(41)</p>
+<p class="x" style="--b:524.1">따라서 충돌 뒤와 충돌 전 공의 에너지의 비는 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:529.8pt"><span class="fig" data-srcpage="11" data-clip="108.5,529.8,213.5,561.5"></span></div><p class="x en" style="--n:549.2">(42)</p>
+<!-- table p11 570-790 -->
+<!-- table cols [37.1, 80.2, 453.8, 523.9, 557.9] -->
+
+<!-- rules p11: 32 -->
+
+<i class="r" style="left:36.12pt;top:577.03pt;width:0.48pt;height:190.46pt"></i><i class="r" style="left:36.12pt;top:577.03pt;width:523.18pt;height:0.48pt"></i><i class="r" style="left:37.08pt;top:577.99pt;width:0.48pt;height:188.55pt"></i><i class="r" style="left:37.56pt;top:577.99pt;width:520.78pt;height:0.48pt"></i><i class="r" style="left:80.18pt;top:578.47pt;width:0.48pt;height:187.59pt"></i><i class="r" style="left:453.82pt;top:578.47pt;width:0.48pt;height:187.59pt"></i><i class="r" style="left:558.82pt;top:577.03pt;width:0.48pt;height:190.46pt"></i><i class="r" style="left:557.86pt;top:577.99pt;width:0.48pt;height:188.55pt"></i><i class="r" style="left:37.56pt;top:592.39pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:592.39pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:592.39pt;width:103.56pt;height:0.48pt"></i><i class="r" style="left:523.90pt;top:592.87pt;width:0.48pt;height:173.19pt"></i><i class="r" style="left:80.66pt;top:610.87pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:610.87pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:630.22pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:630.22pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:660.70pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:660.70pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:680.02pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:680.02pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:680.02pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:680.02pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:698.50pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:698.50pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:716.98pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:716.98pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:747.46pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:747.46pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:36.12pt;top:767.02pt;width:523.18pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:766.06pt;width:520.30pt;height:0.48pt"></i>
+
+<p class="x c h" style="--b:589.7;left:80.2pt;width:373.6pt">내용</p><p class="x nb c" style="--n:589.7;left:453.8pt;width:104.1pt"><b>배점</b></p>
+
+<p class="x tc" style="--b:604.9;left:85.8pt">식 (2):</p><div class="f" style="left:151.3pt;top:596.5pt"><span class="fig" data-srcpage="11" data-clip="151.3,596.5,198.6,608.7"></span></div><!-- N 1 = n  vt --><p class="x nb c" style="--n:604.0;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x tc" style="--b:623.4;left:85.8pt">식 (2)의 수치:</p><div class="f" style="left:243.9pt;top:615.0pt"><span class="fig" data-srcpage="11" data-clip="243.9,615.0,288.9,627.2"></span></div><!-- N 1  0.83 --><p class="x nb c" style="--n:622.5;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x nb c" style="--n:640.7;left:37.1pt;width:43.1pt"><b>2.1</b></p><p class="x tc" style="--b:648.7;left:85.8pt">식 (3):</p><div class="f" style="left:151.6pt;top:633.3pt"><span class="fig" data-srcpage="11" data-clip="151.6,633.3,193.3,659.1"></span></div><!--  1 = n  1 v --><p class="x nb c" style="--n:641.9;left:453.8pt;width:70.1pt">0.1</p><p class="x nb c" style="--n:640.7;left:523.9pt;width:34.0pt"><b>0.4</b></p>
+
+<p class="x tc" style="--b:673.2;left:85.8pt">식 (3)의 수치:</p><div class="f" style="left:243.9pt;top:664.3pt"><span class="fig" data-srcpage="11" data-clip="243.9,664.3,327.6,676.8"></span></div><!--  1 = 0.02 h = 72 s --><p class="x nb c" style="--n:672.3;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x tc" style="--b:692.5;left:85.8pt">식 (4):</p><div class="f" style="left:151.6pt;top:683.9pt"><span class="fig" data-srcpage="11" data-clip="151.6,683.9,200.8,696.1"></span></div><!-- N 2 = n  vt --><p class="x nb c" style="--n:691.7;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x tc" style="--b:711.0;left:85.8pt">식 (4)의 수치:</p><div class="f" style="left:243.9pt;top:702.3pt"><span class="fig" data-srcpage="11" data-clip="243.9,702.3,290.6,714.6"></span></div><!-- N 2  0.83 --><p class="x nb c" style="--n:710.1;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x nb c" style="--n:727.5;left:37.1pt;width:43.1pt"><b>2.2</b></p><p class="x tc" style="--b:735.5;left:85.8pt">식 (5):</p><div class="f" style="left:151.6pt;top:720.1pt"><span class="fig" data-srcpage="11" data-clip="151.6,720.1,195.1,745.8"></span></div><!--  2 = n  1 v --><p class="x nb c" style="--n:728.6;left:453.8pt;width:70.1pt">0.1</p><p class="x nb c" style="--n:727.5;left:523.9pt;width:34.0pt"><b>0.4</b></p>
+
+<p class="x tc" style="--b:760.1;left:85.8pt">식 (5)의 수치:</p><div class="f" style="left:243.9pt;top:751.3pt"><span class="fig" data-srcpage="11" data-clip="243.9,751.3,328.9,763.5"></span></div><!--  2 = 0.02 h = 72 s --><p class="x nb c" style="--n:759.2;left:453.8pt;width:70.1pt">0.1</p>
+<!-- /table -->
+</div>
+
+<!-- 12 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">12/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<!-- table p12 55-790 -->
+<!-- table cols [37.1, 80.2, 453.8, 523.9, 557.9] -->
+
+<!-- rules p12: 97 -->
+
+<i class="r" style="left:36.12pt;top:61.32pt;width:0.48pt;height:721.18pt"></i><i class="r" style="left:36.12pt;top:61.32pt;width:523.18pt;height:0.48pt"></i><i class="r" style="left:37.08pt;top:62.28pt;width:0.48pt;height:719.26pt"></i><i class="r" style="left:37.56pt;top:62.28pt;width:520.78pt;height:0.48pt"></i><i class="r" style="left:80.18pt;top:62.76pt;width:0.48pt;height:718.30pt"></i><i class="r" style="left:453.82pt;top:62.76pt;width:0.48pt;height:718.30pt"></i><i class="r" style="left:523.90pt;top:62.76pt;width:0.48pt;height:718.30pt"></i><i class="r" style="left:558.82pt;top:61.32pt;width:0.48pt;height:721.18pt"></i><i class="r" style="left:557.86pt;top:62.28pt;width:0.48pt;height:719.26pt"></i><i class="r" style="left:80.66pt;top:118.58pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:118.58pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:155.18pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:155.18pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:155.18pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:155.18pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:173.18pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:173.18pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:206.66pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:206.66pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:240.62pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:240.62pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:274.61pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:274.61pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:274.61pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:274.61pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:308.09pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:308.09pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:336.29pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:336.29pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:354.29pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:354.29pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:372.77pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:372.77pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:390.77pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:390.77pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:167.41pt;top:422.12pt;width:0.00pt;height:14.43pt"></i><i class="r" style="left:179.28pt;top:422.12pt;width:0.00pt;height:14.43pt"></i><i class="r" style="left:37.56pt;top:409.73pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:409.73pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:409.73pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:409.73pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:448.75pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:448.75pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:466.75pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:466.75pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:500.23pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:500.23pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:500.23pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:500.23pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:518.23pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:518.23pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:536.23pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:536.23pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:554.23pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:554.23pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:554.23pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:554.23pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:572.23pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:572.23pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:590.23pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:590.23pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:620.74pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:620.74pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:620.74pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:620.74pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:651.22pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:651.22pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:681.70pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:681.70pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:712.30pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:712.30pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:728.98pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:728.98pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:746.97pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:746.97pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:36.12pt;top:782.02pt;width:523.18pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:781.06pt;width:520.30pt;height:0.48pt"></i>
+
+<p class="x nb c" style="--n:113.3;left:37.1pt;width:43.1pt"><b>2.3</b></p><p class="x tc" style="--b:93.6;left:85.8pt">식 (6):</p><div class="f" style="left:158.3pt;top:65.1pt"><span class="fig" data-srcpage="12" data-clip="158.3,65.1,246.8,117.1"></span></div><!--  N 3,4 3,4 = = n n ( ( 2 2 v v 1   v v ) ) t --><p class="x nb c" style="--n:74.0;left:453.8pt;width:70.1pt">0.4</p><p class="x nb c" style="--n:113.3;left:523.9pt;width:34.0pt"><b>0.8</b></p>
+
+<p class="x tc" style="--b:140.2;left:85.8pt">식 (7)의 수치:</p><div class="f" style="left:248.3pt;top:122.4pt"><span class="fig" data-srcpage="12" data-clip="248.3,122.4,355.6,153.2"></span></div><!-- N N 3 3 = = 14.2; 15.8;   3 3 = = 3.8 s. 4.2 s; --><p class="x nb c" style="--n:130.3;left:453.8pt;width:70.1pt">0.4</p>
+
+<p class="x tc" style="--b:168.1;left:85.8pt">식 (8):</p><div class="f" style="left:151.1pt;top:161.3pt"><span class="fig" data-srcpage="12" data-clip="151.1,161.3,277.8,172.0"></span></div><!-- m 1 v 1 + m 2 v 2 = m 1 u 1 + m 2 u 2 --><p class="x nb c" style="--n:166.8;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x tc" style="--b:194.7;left:85.8pt">식 (9):</p><div class="f" style="left:151.3pt;top:176.5pt"><span class="fig" data-srcpage="12" data-clip="151.3,176.5,283.3,204.8"></span></div><!-- m v 1 2 1 2 + m v 2 2 2 2 = m u 1 2 1 2 + m u 2 2  --><p class="x nb c" style="--n:184.8;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x nb c" style="--n:219.4;left:37.1pt;width:43.1pt"><b>2.4</b></p><p class="x tc" style="--b:225.6;left:85.8pt">식 (13):</p><div class="f" style="left:157.3pt;top:210.2pt"><span class="fig" data-srcpage="12" data-clip="157.3,210.2,294.8,238.5"></span></div><!-- u 1 = m m 1 1 + − m m 2 2 v 1 + m 1 2 + m 2 m 2 v  --><p class="x nb c" style="--n:218.3;left:453.8pt;width:70.1pt">0,2</p><p class="x nb c" style="--n:219.4;left:523.9pt;width:34.0pt"><b>0.6</b></p>
+
+<p class="x tc" style="--b:259.6;left:85.8pt">식 (14):</p><div class="f" style="left:157.3pt;top:244.2pt"><span class="fig" data-srcpage="12" data-clip="157.3,244.2,295.3,272.4"></span></div><!-- u 2 = m 1 2 + m 1 m 2 v 1 + m m 1 2 + − m m 2 1 v  --><p class="x nb c" style="--n:252.3;left:453.8pt;width:70.1pt">0,2</p>
+
+<p class="x tc" style="--b:294.0;left:85.8pt">식 (15):</p><div class="f" style="left:157.1pt;top:277.9pt"><span class="fig" data-srcpage="12" data-clip="157.1,277.9,250.1,306.9"></span></div><!-- 1 = 1 1 + −   + 1 2 +    2 --><p class="x nb c" style="--n:286.2;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x tc" style="--b:319.8;left:85.8pt">그래프에 직선만 있다. 그렇지 않으면 그래프는 채점하지 않는다</p><p class="x nb c" style="--n:319.8;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x nb c" style="--n:346.7;left:37.1pt;width:43.1pt"><b>2.5</b></p><p class="x tc" style="--b:349.2;left:85.8pt">모든 직선이 다음 점을 지난다:</p><div class="f" style="left:240.8pt;top:340.4pt"><span class="fig" data-srcpage="12" data-clip="240.8,340.4,302.5,353.1"></span></div><!-- 1 = ;1  2 = 1 --><p class="x nb c" style="--n:347.9;left:453.8pt;width:70.1pt">0.4</p><p class="x nb c" style="--n:346.7;left:523.9pt;width:34.0pt"><b>1.6</b></p>
+
+<p class="x tc" style="--b:366.8;left:85.8pt">다음 직선이 있다:</p><div class="f" style="left:197.7pt;top:358.4pt"><span class="fig" data-srcpage="12" data-clip="197.7,358.4,224.2,370.4"></span></div><!-- 1 = 1 --><p class="x nb c" style="--n:365.9;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x tc" style="--b:385.7;left:85.8pt">다음 직선이 있다:</p><div class="f" style="left:197.9pt;top:376.9pt"><span class="fig" data-srcpage="12" data-clip="197.9,376.9,260.4,389.6"></span></div><!-- 1 = − 1 + 2  2 --><p class="x nb c" style="--n:384.4;left:453.8pt;width:70.1pt">0.4</p>
+
+<p class="x tc" style="--b:403.7;left:85.8pt">모든 직선이 $\eta_1=1$과 $\eta_1=-1+2\eta_2$ 사이에 있다</p><!--  1 = 1 and  1 = − 1 + 2  2 --><p class="x nb c" style="--n:402.4;left:453.8pt;width:70.1pt">0,2</p>
+
+<p class="x tc" style="--b:432.8;left:85.8pt">부등식 (7):</p><div class="f" style="left:166.5pt;top:412.6pt"><span class="fig" data-srcpage="12" data-clip="166.5,412.6,273.5,446.1"></span></div><!--  1  1       1 1   1 − 1 --><p class="x nb c" style="--n:421.4;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x nb c" style="--n:459.4;left:37.1pt;width:43.1pt"><b>2.6</b></p><p class="x tc" style="--b:461.7;left:85.8pt">부등식 (19):</p><div class="f" style="left:165.7pt;top:452.8pt"><span class="fig" data-srcpage="12" data-clip="165.7,452.8,194.5,465.6"></span></div><!--  2  1 --><p class="x nb c" style="--n:460.4;left:453.8pt;width:70.1pt">0.1</p><p class="x nb c" style="--n:459.4;left:523.9pt;width:34.0pt"><b>0.4</b></p>
+
+<p class="x tc" style="--b:486.2;left:85.8pt">부등식 (20):</p><div class="f" style="left:165.5pt;top:470.1pt"><span class="fig" data-srcpage="12" data-clip="165.5,470.1,208.2,498.8"></span></div><!--  2  −  1 --><p class="x nb c" style="--n:478.4;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x tc" style="--b:513.2;left:85.8pt">식 (21):</p><div class="f" style="left:157.3pt;top:503.8pt"><span class="fig" data-srcpage="12" data-clip="157.3,503.8,224.3,517.1"></span></div><!-- u ~ 1 = − v 1 + 2 v 2 --><p class="x nb c" style="--n:511.9;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x nb c" style="--n:531.7;left:37.1pt;width:43.1pt"><b>2.7</b></p><p class="x tc" style="--b:531.2;left:85.8pt">부등식 a):</p><div class="f" style="left:154.6pt;top:522.3pt"><span class="fig" data-srcpage="12" data-clip="154.6,522.3,181.8,535.1"></span></div><!-- v 2  1 --><p class="x nb c" style="--n:529.9;left:453.8pt;width:70.1pt">0.1</p><p class="x nb c" style="--n:531.7;left:523.9pt;width:34.0pt"><b>0.3</b></p>
+
+<p class="x tc" style="--b:549.2;left:85.8pt">부등식 b):</p><div class="f" style="left:155.6pt;top:540.3pt"><span class="fig" data-srcpage="12" data-clip="155.6,540.3,185.3,553.1"></span></div><!-- v 2  0 --><p class="x nb c" style="--n:547.9;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x tc" style="--b:567.2;left:85.8pt">식 (22):</p><div class="f" style="left:157.3pt;top:555.3pt"><span class="fig" data-srcpage="12" data-clip="157.3,555.3,233.3,571.1"></span></div><!-- x ( ) t = A cos (  t ) --><p class="x nb c" style="--n:565.9;left:453.8pt;width:70.1pt">0.1</p>
+
+<p class="x nb c" style="--n:591.9;left:37.1pt;width:43.1pt"><b>2.8</b></p><p class="x tc" style="--b:585.2;left:85.8pt">식 (23):</p><div class="f" style="left:157.3pt;top:573.3pt"><span class="fig" data-srcpage="12" data-clip="157.3,573.3,246.6,589.1"></span></div><!-- v ( ) t = − A  sin (  t ) --><p class="x nb c" style="--n:583.9;left:453.8pt;width:70.1pt">0.1</p><p class="x nb c" style="--n:591.9;left:523.9pt;width:34.0pt"><b>0.4</b></p>
+
+<p class="x tc" style="--b:608.7;left:85.8pt">식 (24):</p><div class="f" style="left:156.8pt;top:593.6pt"><span class="fig" data-srcpage="12" data-clip="156.8,593.6,237.8,618.8"></span></div><!-- V 0 = A  = 2  T A --><p class="x nb c" style="--n:601.9;left:453.8pt;width:70.1pt">0,2</p>
+
+<p class="x tc" style="--b:639.2;left:85.8pt">식 (25):</p><div class="f" style="left:157.3pt;top:624.1pt"><span class="fig" data-srcpage="12" data-clip="157.3,624.1,205.6,649.3"></span></div><!-- = T T − t 1 --><p class="x nb c" style="--n:632.4;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x tc" style="--b:669.7;left:85.8pt">식 (26):</p><div class="f" style="left:157.3pt;top:654.6pt"><span class="fig" data-srcpage="12" data-clip="157.3,654.6,214.8,679.8"></span></div><!-- t 1 = T 2 − 2 u A --><p class="x nb c" style="--n:662.9;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x nb c" style="--n:705.3;left:37.1pt;width:43.1pt"><b>2.9</b></p><p class="x tc" style="--b:700.3;left:85.8pt">식 (27):</p><div class="f" style="left:157.3pt;top:685.0pt"><span class="fig" data-srcpage="12" data-clip="157.3,685.0,209.8,710.5"></span></div><!-- = 1 2 +  V u 0 --><p class="x nb c" style="--n:693.5;left:453.8pt;width:70.1pt">0.3</p><p class="x nb c" style="--n:705.3;left:523.9pt;width:34.0pt"><b>2.7</b></p>
+
+<p class="x tc" style="--b:724.1;left:85.8pt">식 (28)의 수치:</p><div class="f" style="left:249.7pt;top:715.4pt"><span class="fig" data-srcpage="12" data-clip="249.7,715.4,289.2,727.4"></span></div><!--   0.71 --><p class="x nb c" style="--n:723.9;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x tc" style="--b:741.9;left:85.8pt">식 (29):</p><div class="f" style="left:157.6pt;top:730.1pt"><span class="fig" data-srcpage="12" data-clip="157.6,730.1,250.1,745.8"></span></div><!-- − A  sin (  t 2 ) = − u --><p class="x nb c" style="--n:740.6;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x tc" style="--b:765.9;left:85.8pt">식 (30):</p><div class="f" style="left:157.3pt;top:750.6pt"><span class="fig" data-srcpage="12" data-clip="157.3,750.6,238.1,779.1"></span></div><!-- t 2 = 2 T  arcsin V u 0 --><p class="x nb c" style="--n:758.6;left:453.8pt;width:70.1pt">0.2</p>
+<!-- /table -->
+</div>
+
+<!-- 13 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">13/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<!-- table p13 55-500 -->
+<!-- table cols [37.1, 80.2, 453.8, 523.9, 557.9] -->
+
+<!-- rules p13: 68 -->
+
+<i class="r" style="left:188.95pt;top:86.90pt;width:1.17pt;height:1.69pt"></i><i class="r" style="left:36.12pt;top:61.32pt;width:0.48pt;height:432.79pt"></i><i class="r" style="left:36.12pt;top:61.32pt;width:523.18pt;height:0.48pt"></i><i class="r" style="left:37.08pt;top:62.28pt;width:0.48pt;height:430.87pt"></i><i class="r" style="left:37.56pt;top:62.28pt;width:520.78pt;height:0.48pt"></i><i class="r" style="left:80.18pt;top:62.76pt;width:0.48pt;height:429.91pt"></i><i class="r" style="left:453.82pt;top:62.76pt;width:0.48pt;height:429.91pt"></i><i class="r" style="left:523.90pt;top:62.76pt;width:0.48pt;height:429.91pt"></i><i class="r" style="left:558.82pt;top:61.32pt;width:0.48pt;height:432.79pt"></i><i class="r" style="left:557.86pt;top:62.28pt;width:0.48pt;height:430.87pt"></i><i class="r" style="left:287.12pt;top:128.80pt;width:1.14pt;height:1.77pt"></i><i class="r" style="left:80.66pt;top:101.90pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:101.90pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:301.59pt;top:173.67pt;width:1.14pt;height:1.77pt"></i><i class="r" style="left:80.66pt;top:146.90pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:146.90pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:191.78pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:191.78pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:208.58pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:208.58pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:208.58pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:208.58pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:239.06pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:239.06pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:239.06pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:239.06pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:269.57pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:269.57pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:287.57pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:287.57pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:305.57pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:305.57pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:339.05pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:339.05pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:376.01pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:376.01pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:393.17pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:393.17pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:424.25pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:424.25pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:461.23pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:461.23pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:478.39pt;width:42.62pt;height:0.48pt"></i><i class="r" style="left:80.66pt;top:478.39pt;width:373.15pt;height:0.48pt"></i><i class="r" style="left:454.30pt;top:478.39pt;width:69.60pt;height:0.48pt"></i><i class="r" style="left:524.38pt;top:478.39pt;width:33.48pt;height:0.48pt"></i><i class="r" style="left:36.12pt;top:493.63pt;width:523.18pt;height:0.48pt"></i><i class="r" style="left:37.56pt;top:492.67pt;width:520.30pt;height:0.48pt"></i>
+
+<p class="x tc" style="--b:85.9;left:85.8pt">식 (31):</p><div class="f" style="left:157.3pt;top:64.6pt"><span class="fig" data-srcpage="13" data-clip="157.3,64.6,226.8,100.6"></span></div><!-- x 2 = A 1 − V u 0 2 2 --><p class="x nb c" style="--n:74.0;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x tc" style="--b:127.9;left:85.8pt">식 (32):</p><div class="f" style="left:157.3pt;top:104.5pt"><span class="fig" data-srcpage="13" data-clip="157.3,104.5,336.6,145.7"></span></div><!-- t 1 = 2 T      arcsin V u 0 − V u 0     1 --><p class="x nb c" style="--n:113.5;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x tc" style="--b:172.8;left:85.8pt">식 (33):</p><div class="f" style="left:157.1pt;top:149.5pt"><span class="fig" data-srcpage="13" data-clip="157.1,149.5,351.1,190.5"></span></div><!-- 1 −  = 2 1      arcsin V u 0 − V u 0     --><p class="x nb c" style="--n:158.5;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x tc" style="--b:203.5;left:85.8pt">식 (34)의 수치:</p><div class="f" style="left:249.7pt;top:195.4pt"><span class="fig" data-srcpage="13" data-clip="249.7,195.4,289.7,206.9"></span></div><!--   0.96 --><p class="x nb c" style="--n:203.5;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x nb c" style="--n:228.3;left:37.1pt;width:43.1pt"><b>2.10</b></p><p class="x tc" style="--b:227.1;left:85.8pt">식 (35):</p><div class="f" style="left:156.8pt;top:211.9pt"><span class="fig" data-srcpage="13" data-clip="156.8,211.9,195.1,237.4"></span></div><!-- V = 4 T A --><p class="x nb c" style="--n:220.2;left:453.8pt;width:70.1pt">0.2</p><p class="x nb c" style="--n:228.3;left:523.9pt;width:34.0pt"><b>0.2</b></p>
+
+<p class="x tc" style="--b:257.5;left:85.8pt">식 (36):</p><div class="f" style="left:157.3pt;top:242.4pt"><span class="fig" data-srcpage="13" data-clip="157.3,242.4,208.6,267.9"></span></div><!-- = 1 2 + 2 V u --><p class="x nb c" style="--n:250.7;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x tc" style="--b:282.5;left:85.8pt">식 (37):</p><div class="f" style="left:157.6pt;top:273.7pt"><span class="fig" data-srcpage="13" data-clip="157.6,273.7,214.6,286.4"></span></div><!-- u + = u + 2 V --><p class="x nb c" style="--n:281.2;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x tc" style="--b:300.5;left:85.8pt">식 (38):</p><div class="f" style="left:157.6pt;top:291.7pt"><span class="fig" data-srcpage="13" data-clip="157.6,291.7,214.3,302.7"></span></div><!-- u − = u − 2 V --><p class="x nb c" style="--n:299.2;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x tc" style="--b:327.0;left:85.8pt">식 (39):</p><div class="f" style="left:157.6pt;top:308.9pt"><span class="fig" data-srcpage="13" data-clip="157.6,308.9,273.3,337.2"></span></div><!-- E =  mu 2 + 2 + ( 1 −  ) mu 2 − 2 --><p class="x nb c" style="--n:317.2;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x nb c" style="--n:363.2;left:37.1pt;width:43.1pt"><b>2.11</b></p><p class="x tc" style="--b:362.0;left:85.8pt">식 (40):</p><div class="f" style="left:157.3pt;top:342.6pt"><span class="fig" data-srcpage="13" data-clip="157.3,342.6,222.8,374.4"></span></div><!--  = 1 + 8    V u    2 --><p class="x nb c" style="--n:350.7;left:453.8pt;width:70.1pt">0.3</p><p class="x nb c" style="--n:363.2;left:523.9pt;width:34.0pt"><b>2.2</b></p>
+
+<p class="x tc" style="--b:387.6;left:85.8pt">식 (40)의 수치:</p><div class="f" style="left:249.9pt;top:379.1pt"><span class="fig" data-srcpage="13" data-clip="249.9,379.1,284.2,388.3"></span></div><!--   4.6 --><p class="x nb c" style="--n:387.6;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x tc" style="--b:412.1;left:85.8pt">식 (41):</p><div class="f" style="left:157.6pt;top:399.2pt"><span class="fig" data-srcpage="13" data-clip="157.6,399.2,234.6,422.2"></span></div><!-- E = m 2 ( u + 2 V ) 2 --><p class="x nb c" style="--n:404.8;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x tc" style="--b:447.2;left:85.8pt">식 (42):</p><div class="f" style="left:157.3pt;top:427.8pt"><span class="fig" data-srcpage="13" data-clip="157.3,427.8,224.1,459.6"></span></div><!--  =    1 + 2 V u    2 --><p class="x nb c" style="--n:435.9;left:453.8pt;width:70.1pt">0.3</p>
+
+<p class="x tc" style="--b:472.9;left:85.8pt">식 (42)의 수치:</p><div class="f" style="left:249.9pt;top:464.3pt"><span class="fig" data-srcpage="13" data-clip="249.9,464.3,289.4,473.6"></span></div><!--  = 25.0 --><p class="x nb c" style="--n:472.9;left:453.8pt;width:70.1pt">0.2</p>
+
+<p class="x nb c" style="--n:490.0;left:37.1pt;width:43.1pt"><b>합계</b></p><p class="x nb c" style="--n:490.0;left:523.9pt;width:34.0pt"><b>10.0</b></p>
+<!-- /table -->
+<p class="x c h" style="--b:521.0;--fs:14pt;--l:16.1pt">문제 3. 마그네트론</p>
+<p class="x c h" style="--b:535.2">전기장과 자기장 속 전자의 운동</p>
+<p class="x" style="--b:549.0"><b>3.1</b> 균일한 전기장의 작용으로 전자는 다음과 같은 일정한 가속도로 움직이는데,</p>
+<div class="f" style="left:108.5pt;top:554.6pt"><span class="fig" data-srcpage="13" data-clip="108.5,554.6,146.5,579.9"></span></div><p class="x en" style="--n:569.6">(1)</p>
+<p class="x" style="--b:592.9;--l:14.1pt">이 가속도는 $x$축의 음의 방향을 향하므로, 도달하는 좌표의 최댓값은 다음 식으로 정해진다.</p>
+<div class="f" style="left:108.2pt;top:612.9pt"><span class="fig" data-srcpage="13" data-clip="108.2,612.9,194.2,643.4"></span></div><p class="x en" style="--n:633.2">(2)</p>
+<p class="x" style="--b:656.4"><b>3.2</b> 균일한 자기장 속에서 움직일 때 전자에는 다음과 같은 로런츠 힘이 작용하고,</p>
+<div class="f" style="left:108.8pt;top:662.5pt"><span class="fig" data-srcpage="13" data-clip="108.8,662.5,160.8,674.5"></span></div><p class="x en" style="--n:671.0">(3)</p>
+<p class="x" style="--b:688.3">전자는 원을 따라 움직이며, 그 반지름 $R$은 뉴턴 제2법칙으로 정해진다.</p>
+<div class="f" style="left:108.2pt;top:693.7pt"><span class="fig" data-srcpage="13" data-clip="108.2,693.7,159.8,721.9"></span></div><p class="x en" style="--n:711.8">(4)</p>
+<p class="x" style="--b:735.0">이로부터 다음을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:743.1pt"><span class="fig" data-srcpage="13" data-clip="108.5,743.1,154.8,767.1"></span></div><p class="x en" style="--n:756.8">(5)</p>
+<p class="x ind" style="--b:780.1">이 경우 좌표의 최댓값은 분명히 다음과 같다.</p>
+</div>
+
+<!-- 14 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">14/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<div class="f" style="left:108.2pt;top:66.9pt"><span class="fig" data-srcpage="14" data-clip="108.2,66.9,186.5,90.9"></span></div><p class="x en" style="--n:80.5">(6)</p>
+<p class="x" style="--b:103.8"><b>3.3</b> 이 문제는 실험실 기준계에서 가장 쉽게 풀린다. 이 기준계에서 전자는 식 (5)로 정해지는 다음 진동수로 원을 따라 움직인다.</p>
+<div class="f" style="left:108.5pt;top:123.3pt"><span class="fig" data-srcpage="14" data-clip="108.5,123.3,173.0,149.8"></span></div><p class="x en" style="--n:139.5">(7)</p>
+<p class="x ind" style="--b:162.6">전자에 작은 추가 속도를 주면, 전자는 처음 원에 가깝고 그 원과 지름의 양 끝 두 점에서 만나는 원을 따라 움직이기 시작한다. 이는 다음 주기를 갖는 닫힌 2차원 궤도를 따르는 운동으로 볼 수 있다.</p>
+<div class="f" style="left:108.2pt;top:195.9pt"><span class="fig" data-srcpage="14" data-clip="108.2,195.9,185.0,222.4"></span></div><p class="x en" style="--n:212.1">(8)</p>
+<p class="x" style="--b:235.2;--l:14.2pt"><b>3.4</b> 좌표 $x$가 최대인 순간에 입자의 속도 $u$는 $z$축 방향을 향하고, 에너지 보존 법칙에 따라 그 크기는 다음과 같다.</p>
+<div class="f" style="left:108.2pt;top:269.5pt"><span class="fig" data-srcpage="14" data-clip="108.2,269.5,178.8,298.0"></span></div><p class="x en" style="--n:288.0">(9)</p>
+<p class="x ind" style="--b:311.5">$z$축에 사영하면 운동 방정식은 유한 차분 꼴로 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:108.2pt;top:316.8pt"><span class="fig" data-srcpage="14" data-clip="108.2,316.8,178.0,343.5"></span></div><p class="x en" style="--n:333.3">(10)</p>
+<p class="x" style="--b:357.3">이 식은 $\Delta x=u_x\Delta t$를 고려하면 다음 관계가 된다.</p>
+<div class="f" style="left:108.2pt;top:367.2pt"><span class="fig" data-srcpage="14" data-clip="108.2,367.2,178.0,380.2"></span></div><p class="x en" style="--n:376.0">(11)</p>
+<p class="x" style="--b:393.2">구하려는 순간에 이 관계는 다음 꼴이 된다.</p>
+<div class="f" style="left:108.2pt;top:399.5pt"><span class="fig" data-srcpage="14" data-clip="108.2,399.5,171.0,412.0"></span></div><p class="x en" style="--n:408.2">(12)</p>
+<p class="x ind" style="--b:425.8">식 (9)와 (12)를 연립하여 풀면 최종적으로 다음을 얻는다.</p>
+<div class="f" style="left:108.2pt;top:431.5pt"><span class="fig" data-srcpage="14" data-clip="108.2,431.5,170.0,458.0"></span></div><p class="x en" style="--n:447.7">(13)</p>
+<p class="x" style="--b:470.8"><b>3.5</b> 자기장은 일을 하지 않으므로, 전자의 속력은 일정하게 유지되며 처음 값과 같다.</p>
+<div class="f" style="left:108.5pt;top:492.5pt"><span class="fig" data-srcpage="14" data-clip="108.5,492.5,180.5,503.5"></span></div><p class="x en" style="--n:500.0">(14)</p>
+<p class="x ind" style="--b:518.0;--l:18.2pt">전체 속도를 지름 방향 성분 $u_r=dr/dt$와 방위각 방향 성분 $u_\varphi=rd\varphi/dt$로 나누자. 원점에 대한 전자의 각운동량은 분명히 다음과 같고,</p>
+<div class="f" style="left:108.5pt;top:542.5pt"><span class="fig" data-srcpage="14" data-clip="108.5,542.5,158.0,556.2"></span></div><p class="x en" style="--n:551.0">(15)</p>
+<p class="x" style="--b:569.0">같은 점에 대한 로런츠 힘의 돌림힘은 다음과 같다.</p>
+<div class="f" style="left:108.2pt;top:575.2pt"><span class="fig" data-srcpage="14" data-clip="108.2,575.2,166.2,587.8"></span></div><p class="x en" style="--n:584.0">(16)</p>
+<p class="x ind" style="--b:601.5">돌림힘 방정식에 따라 다음이 성립하고,</p>
+<div class="f" style="left:108.2pt;top:607.2pt"><span class="fig" data-srcpage="14" data-clip="108.2,607.2,152.5,634.2"></span></div><p class="x en" style="--n:624.0">(17)</p>
+<p class="x" style="--b:648.0">이 식에 $u_r=dr/dt$를 함께 쓰면 다음 관계를 얻는다.</p>
+<div class="f" style="left:108.5pt;top:656.2pt"><span class="fig" data-srcpage="14" data-clip="108.5,656.2,201.5,672.2"></span></div><p class="x en" style="--n:667.1">(18)</p>
+<p class="x ind" style="--b:685.5">$z$축까지의 거리가 최대인 순간에는 지름 방향 속도가 0이 되고, 식 (14)에 따라 방위각 방향 속도는 처음 속도와 같다. 따라서 관계식 (18)을 적분하면 다음 방정식을 얻는다.</p>
+<div class="f" style="left:108.2pt;top:718.5pt"><span class="fig" data-srcpage="14" data-clip="108.2,718.5,196.0,747.3"></span></div><p class="x en" style="--n:737.3">(19)</p>
+<p class="x" style="--b:760.5">이로부터 최종적으로 다음을 얻는다.</p>
+<div class="f" style="left:108.8pt;top:765.2pt"><span class="fig" data-srcpage="14" data-clip="108.8,765.2,179.0,797.2"></span></div><p class="x en" style="--n:785.6">(20)</p>
+</div>
+
+<!-- 15 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">15/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<p class="x" style="--b:72.5;--l:14.6pt"><b>3.6</b> 전자는 늘 원을 따라 움직이므로, 식 (5)에 따라 궤도에서 자기장 $B_0$이 커지면 운동량의 도함수는 다음 법칙에 따라 변한다.</p>
+<div class="f" style="left:108.5pt;top:95.8pt"><span class="fig" data-srcpage="15" data-clip="108.5,95.8,172.2,122.5"></span></div><p class="x en" style="--n:112.3">(21)</p>
+<p class="x ind" style="--b:135.6">전자는 소용돌이 전기장 때문에 움직이기 시작하며, 그 세기 $E$는 다음 관계로 정해진다.</p>
+<div class="f" style="left:108.8pt;top:155.1pt"><span class="fig" data-srcpage="15" data-clip="108.8,155.1,174.8,183.6"></span></div><p class="x en" style="--n:173.5">(22)</p>
+<p class="x" style="--b:196.7">여기에는 패러데이 법칙에 따라 전자 궤도를 지나는 자기 선속이 들어가며, 그 값은 다음과 같다.</p>
+<div class="f" style="left:108.2pt;top:216.8pt"><span class="fig" data-srcpage="15" data-clip="108.2,216.8,195.2,248.0"></span></div><p class="x en" style="--n:234.3">(23)</p>
+<p class="x ind" style="--b:261.5">궤도를 도는 전자의 가속도에 대한 뉴턴 제2법칙의 방정식은 다음 꼴이다.</p>
+<div class="f" style="left:108.2pt;top:266.9pt"><span class="fig" data-srcpage="15" data-clip="108.2,266.9,152.2,292.6"></span></div><p class="x en" style="--n:282.4">(24)</p>
+<p class="x ind" style="--b:305.6">식 (21)–(24)를 연립하여 풀면 자기장에 대한 다음 등식을 얻는데, 이를 사이클로트론 조건이라고 한다.</p>
+<div class="f" style="left:108.5pt;top:325.8pt"><span class="fig" data-srcpage="15" data-clip="108.5,325.8,218.8,357.2"></span></div><p class="x en" style="--n:343.4">(25)</p>
+<p class="x ind" style="--b:371.0;--l:15.9pt">식 (25)로부터, 이 조건은 전자가 자기 유도가 $B_0=B_2$인 자기장 영역에서 움직이는 경우에만 만족될 수 있다는 결론을 얻는다. 따라서 문제에서 거리의 함수로 주어진 자기 유도를 적분하면 다음 관계를 얻는다.</p>
+<div class="f" style="left:108.5pt;top:407.9pt"><span class="fig" data-srcpage="15" data-clip="108.5,407.9,257.5,422.4"></span></div><p class="x en" style="--n:418.4">(26)</p>
+<p class="x" style="--b:435.5">그 해는 다음 꼴이다.</p>
+<div class="f" style="left:108.5pt;top:441.2pt"><span class="fig" data-srcpage="15" data-clip="108.5,441.2,169.0,472.7"></span></div><p class="x en" style="--n:459.7">(27)</p>
+<p class="x ind" style="--b:486.7;--l:18pt">전자가 원을 따라 움직이는 것은 자기 유도가 $B_2$인 영역, 곧 $r_1&lt;r&lt;r_2$에서만 가능하다. 따라서 구하려는 비는 다음 구간에 있어야 한다.</p>
+<div class="f" style="left:108.5pt;top:513.3pt"><span class="fig" data-srcpage="15" data-clip="108.5,513.3,185.0,543.3"></span></div><p class="x en" style="--n:530.3">(28)</p>
+<p class="x c h" style="--b:556.6">원통형 마그네트론</p>
+<p class="x" style="--b:570.8;--l:14.3pt"><b>3.7</b> 원통형 음극과 양극의 단위 길이에 전하 $\lambda$가 있고, 전극의 전체 길이를 $l$이라 하자. 그러면 가우스 정리에 따라 음극과 양극 사이 공간의 전기장의 세기는 다음 방정식으로 정해진다.</p>
+<div class="f" style="left:108.5pt;top:604.3pt"><span class="fig" data-srcpage="15" data-clip="108.5,604.3,170.5,630.5"></span></div><p class="x en" style="--n:617.2">(29)</p>
+<p class="x" style="--b:643.5">이로부터 곧바로 다음을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:648.9pt"><span class="fig" data-srcpage="15" data-clip="108.5,648.9,163.0,678.4"></span></div><p class="x en" style="--n:665.4">(30)</p>
+<p class="x" style="--b:691.5">여기서 $r$는 마그네트론의 축까지의 거리이다.</p>
+<p class="x ind" style="--b:705.3">전위차가 거리 $r$에 따라 달라지는 관계는 정의에 따라 다음 적분으로 쓴다.</p>
+<div class="f" style="left:108.2pt;top:711.8pt"><span class="fig" data-srcpage="15" data-clip="108.2,711.8,222.2,742.8"></span></div><p class="x en" style="--n:729.1">(31)</p>
+<p class="x" style="--b:756.7">특히 $r=b$일 때 이로부터 다음을 얻는다.</p>
+<div class="f" style="left:108.0pt;top:762.3pt"><span class="fig" data-srcpage="15" data-clip="108.0,762.3,181.8,791.8"></span></div><p class="x en" style="--n:778.9">(32)</p>
+</div>
+
+<!-- 16 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">16/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<p class="x ind" style="--b:72.5">식 (31)과 (32)를 연립하여 풀면 다음을 얻는다.</p>
+<div class="f" style="left:108.0pt;top:78.1pt"><span class="fig" data-srcpage="16" data-clip="108.0,78.1,229.8,106.9"></span></div><p class="x en" style="--n:94.6">(33)</p>
+<p class="x" style="--b:119.8;--l:16pt"><b>3.8</b> 전류 $j$가 흐르는 반지름 $R$인 얇은 고리를 생각하고, 고리의 축 위에서 고리 중심으로부터 거리 $z$만큼 떨어진 점의 자기 유도의 크기를 계산하자. 고리를 작은 요소 $dl$로 나누면, 자기 유도는 다음 비오–사바르 법칙으로 정해진다.</p>
+<div class="f" style="left:108.2pt;top:219.2pt"><span class="fig" data-srcpage="16" data-clip="108.2,219.2,190.8,247.7"></span></div><p class="x en" style="--n:237.1">(34)</p>
+<p class="x" style="--b:263.7;--l:14.2pt">여기서 벡터 $\vec r$는 전류 요소 $dl$의 위치에서 자기 유도를 구하려는 점 $O$까지 그은 벡터이다.</p>
+<p class="x ind" style="--b:291.7">기하학적 관계로부터 다음이 나오고,</p>
+<div class="f" style="left:108.5pt;top:299.6pt"><span class="fig" data-srcpage="16" data-clip="108.5,299.6,175.2,310.3"></span></div><p class="x en" style="--n:308.1">(35)</p>
+<p class="x" style="--b:322.2">합성 자기 유도는 고리의 축 방향을 향하므로</p>
+<div class="f" style="left:108.5pt;top:328.1pt"><span class="fig" data-srcpage="16" data-clip="108.5,328.1,182.0,340.6"></span></div><p class="x en" style="--n:336.4">(36)</p>
+<p class="x" style="--b:353.8">기하학적 관계 $R=r\sin\alpha$를 이용하면 최종적으로 다음을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:359.5pt"><span class="fig" data-srcpage="16" data-clip="108.5,359.5,184.5,385.2"></span></div><p class="x en" style="--n:375.0">(37)</p>
+<div class="f" style="left:235.0pt;top:389.5pt"><span class="fig" data-srcpage="16" data-clip="235.0,389.5,356.5,538.0"></span></div>
+<p class="x ind" style="--b:552.5">식 (37)에 들어 있는 거리들이 일정하고</p>
+<div class="f" style="left:108.8pt;top:557.7pt"><span class="fig" data-srcpage="16" data-clip="108.8,557.7,170.0,570.2"></span></div><p class="x en" style="--n:567.7">(38)</p>
+<p class="x" style="--b:581.5">임을 고려하여 고리의 모든 요소에 대해 더하면 다음을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:586.9pt"><span class="fig" data-srcpage="16" data-clip="108.5,586.9,214.8,616.6"></span></div><p class="x en" style="--n:604.4">(39)</p>
+<p class="x ind" style="--b:629.6">이제 솔레노이드 중심에서 자기장의 자기 유도를 계산하자. 마그네트론 관이 바로 그곳에 있기 때문이다. 이를 위해 중심에서 $z$부터 $z+dz$까지의 거리에 있는 감긴 도선들을 생각하자. 이 도선들에는 다음 전류가 흐른다.</p>
+<div class="f" style="left:108.5pt;top:663.6pt"><span class="fig" data-srcpage="16" data-clip="108.5,663.6,163.8,688.9"></span></div><p class="x en" style="--n:678.7">(40)</p>
+<p class="x ind" style="--b:702.0">이 감긴 도선들은 하나의 고리로 볼 수 있고, 그 자기 유도는 식 (39)로 정해지므로 다음과 같다.</p>
+<div class="f" style="left:108.2pt;top:721.1pt"><span class="fig" data-srcpage="16" data-clip="108.2,721.1,236.5,750.8"></span></div><p class="x en" style="--n:738.6">(41)</p>
+<p class="x" style="--b:763.8">이를 적분하면 최종 식을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:768.2pt"><span class="fig" data-srcpage="16" data-clip="108.5,768.2,325.5,800.8"></span></div><p class="x en" style="--n:786.9">(42)</p>
+</div>
+
+<!-- 17 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">17/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<p class="x" style="--b:72.5">여기서 지름에 대해 $D=2R$이라는 식을 썼다.</p>
+<p class="x ind" style="--b:86.3">마그네트론 속 전자의 운동에 대해서는 식 (18)과 비슷한 다음 꼴의 식이 성립한다.</p>
+<div class="f" style="left:108.5pt;top:106.2pt"><span class="fig" data-srcpage="17" data-clip="108.5,106.2,193.5,120.0"></span></div><p class="x en" style="--n:114.9">(43)</p>
+<p class="x" style="--b:132.9">자기 유도가 일정하고 $a\ll b$인 조건에서 이를 적분하면 다음을 얻는다.</p>
+<div class="f" style="left:108.2pt;top:138.8pt"><span class="fig" data-srcpage="17" data-clip="108.2,138.8,181.0,165.2"></span></div><p class="x en" style="--n:155.2">(44)</p>
+<p class="x ind" style="--b:178.3">한편, 에너지 보존 법칙에서 다음이 나온다.</p>
+<div class="f" style="left:108.2pt;top:186.7pt"><span class="fig" data-srcpage="17" data-clip="108.2,186.7,192.5,210.5"></span></div><p class="x en" style="--n:200.2">(45)</p>
+<p class="x ind" style="--b:223.5">전류가 임계값에 이르는 순간, 양극 근처의 자기 유도는 전자의 지름 방향 속도가 0이 되는 값이 되며, 이로부터 다음 조건을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:243.4pt"><span class="fig" data-srcpage="17" data-clip="108.5,243.4,221.8,256.4"></span></div><p class="x en" style="--n:252.6">(46)</p>
+<p class="x" style="--b:269.8">식 (44)와 (45)를 이용하면 이로부터 자기장의 임계값을 얻는다.</p>
+<div class="f" style="left:108.5pt;top:274.5pt"><span class="fig" data-srcpage="17" data-clip="108.5,274.5,169.0,306.5"></span></div><p class="x en" style="--n:295.0">(47)</p>
+<p class="x" style="--b:319.1">식 (42)를 이용하면 이에 해당하는 솔레노이드의 전류를 구할 수 있다.</p>
+<div class="f" style="left:108.5pt;top:323.9pt"><span class="fig" data-srcpage="17" data-clip="108.5,323.9,315.2,357.4"></span></div><p class="x en" style="--n:344.0">(48)</p>
+<p class="x" style="--b:370.1"><b>3.9</b> 관 속 음극 근처 전자의 처음 에너지는 음극 자체의 온도로 정해지며, 그 크기는 대략 다음과 같다.</p>
+<div class="f" style="left:108.5pt;top:389.8pt"><span class="fig" data-srcpage="17" data-clip="108.5,389.8,157.0,401.8"></span></div><p class="x en" style="--n:398.1">(49)</p>
+<p class="x" style="--b:415.2">이 에너지는 분명히 양극 근처 전자의 에너지보다 훨씬 작아야 한다. 곧,</p>
+<div class="f" style="left:108.8pt;top:421.6pt"><span class="fig" data-srcpage="17" data-clip="108.8,421.6,154.5,433.4"></span></div><p class="x en" style="--n:429.4">(50)</p>
+<p class="x" style="--b:447.4">여기서 $E_0=eV_0$이다. 이로부터 구하려는 어림값을 얻는다.</p>
+<div class="f" style="left:108.2pt;top:456.2pt"><span class="fig" data-srcpage="17" data-clip="108.2,456.2,160.5,484.8"></span></div><p class="x nw" style="--b:472.0;left:162.4pt">$8.70\cdot10^5\ \mathrm{K},$</p><p class="x en" style="--n:471.9">(51)</p>
+<p class="x" style="--b:498.1">이는 사용한 근사가 실제로 적용될 수 있음을 뜻한다. 음극의 온도는 보통 이보다 적어도 두 자릿수 낮기 때문이다.</p>
+<!-- table p17 520-795 -->
+<!-- table cols [34.9, 77.9, 453.2, 524.6, 560.0] -->
+
+<!-- rules p17: 41 -->
+
+<i class="r" style="left:33.96pt;top:528.31pt;width:0.48pt;height:263.30pt"></i><i class="r" style="left:33.96pt;top:528.31pt;width:527.50pt;height:0.48pt"></i><i class="r" style="left:34.92pt;top:529.27pt;width:0.48pt;height:261.38pt"></i><i class="r" style="left:35.40pt;top:529.27pt;width:525.10pt;height:0.48pt"></i><i class="r" style="left:77.90pt;top:529.75pt;width:0.48pt;height:260.43pt"></i><i class="r" style="left:453.22pt;top:529.75pt;width:0.48pt;height:260.43pt"></i><i class="r" style="left:560.98pt;top:528.31pt;width:0.48pt;height:263.30pt"></i><i class="r" style="left:560.02pt;top:529.27pt;width:0.48pt;height:261.38pt"></i><i class="r" style="left:35.40pt;top:543.55pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:543.55pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:543.55pt;width:106.32pt;height:0.48pt"></i><i class="r" style="left:524.62pt;top:544.03pt;width:0.48pt;height:246.15pt"></i><i class="r" style="left:78.38pt;top:574.87pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:574.87pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:610.87pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:610.87pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:610.87pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:525.10pt;top:610.87pt;width:34.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:629.38pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:629.38pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:663.10pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:663.10pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:694.90pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:694.90pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:726.58pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:726.58pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:726.58pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:525.10pt;top:726.58pt;width:34.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:758.38pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:758.38pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:33.96pt;top:791.13pt;width:527.50pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:790.18pt;width:524.62pt;height:0.48pt"></i>
+
+<p class="x c h" style="--b:540.9;left:77.9pt;width:375.3pt">내용</p><p class="x nb c" style="--n:540.9;left:453.2pt;width:106.8pt"><b>배점</b></p>
+
+<p class="x tc" style="--b:562.7;left:83.5pt">식 (1):</p><div class="f" style="left:149.1pt;top:547.1pt"><span class="fig" data-srcpage="17" data-clip="149.1,547.1,182.3,573.1"></span></div><!-- a = eE m --><p class="x nb c" style="--n:563.7;left:453.2pt;width:71.4pt">0.1</p>
+
+<p class="x nb c" style="--n:581.7;left:34.9pt;width:43.0pt"><b>3.1</b></p><p class="x tc" style="--b:598.9;left:83.5pt">식 (2):</p><div class="f" style="left:149.1pt;top:578.5pt"><span class="fig" data-srcpage="17" data-clip="149.1,578.5,203.3,609.2"></span></div><!-- x max = mu 2 eE 0 2 --><p class="x nb c" style="--n:597.3;left:453.2pt;width:71.4pt">0.1</p><p class="x nb c" style="--n:581.7;left:524.6pt;width:35.4pt"><b>0.2</b></p>
+
+<p class="x tc" style="--b:623.4;left:83.5pt">식 (3):</p><div class="f" style="left:149.3pt;top:615.2pt"><span class="fig" data-srcpage="17" data-clip="149.3,615.2,197.1,627.2"></span></div><!-- F L = eu 0 B --><p class="x nb c" style="--n:624.6;left:453.2pt;width:71.4pt">0.1</p>
+
+<p class="x tc" style="--b:651.1;left:83.5pt">식 (4):</p><div class="f" style="left:149.1pt;top:632.7pt"><span class="fig" data-srcpage="17" data-clip="149.1,632.7,196.6,661.2"></span></div><!-- m u R 0 2 = F L --><p class="x nb c" style="--n:650.7;left:453.2pt;width:71.4pt">0.1</p>
+
+<p class="x nb c" style="--n:673.3;left:34.9pt;width:43.0pt"><b>3.2</b></p><p class="x tc" style="--b:682.8;left:83.5pt">식 (5):</p><div class="f" style="left:149.1pt;top:669.2pt"><span class="fig" data-srcpage="17" data-clip="149.1,669.2,191.1,693.2"></span></div><!-- R = mu eB 0 --><p class="x nb c" style="--n:683.5;left:453.2pt;width:71.4pt">0.1</p><p class="x nb c" style="--n:673.3;left:524.6pt;width:35.4pt"><b>0.4</b></p>
+
+<p class="x tc" style="--b:714.6;left:83.5pt">식 (6):</p><div class="f" style="left:149.1pt;top:701.0pt"><span class="fig" data-srcpage="17" data-clip="149.1,701.0,222.8,725.0"></span></div><!-- x max = R = mu eB 0 --><p class="x nb c" style="--n:715.3;left:453.2pt;width:71.4pt">0.1</p>
+
+<p class="x tc" style="--b:746.4;left:83.5pt">식 (7):</p><div class="f" style="left:149.3pt;top:730.4pt"><span class="fig" data-srcpage="17" data-clip="149.3,730.4,208.8,756.7"></span></div><!--  = u R 0 = eB m --><p class="x nb c" style="--n:747.0;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x nb c" style="--n:762.9;left:34.9pt;width:43.0pt"><b>3.3</b></p><p class="x tc" style="--b:778.1;left:83.5pt">식 (8):</p><div class="f" style="left:148.8pt;top:761.7pt"><span class="fig" data-srcpage="17" data-clip="148.8,761.7,221.1,788.5"></span></div><!-- T = 2   = 2  eB m --><p class="x nb c" style="--n:778.8;left:453.2pt;width:71.4pt">0.2</p><p class="x nb c" style="--n:762.9;left:524.6pt;width:35.4pt"><b>0.4</b></p>
+<!-- /table -->
+</div>
+
+<!-- 18 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">18/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<!-- table p18 55-795 -->
+<!-- table cols [34.9, 77.9, 453.2, 524.6, 560.0] -->
+
+<!-- rules p18: 86 -->
+
+<i class="r" style="left:33.96pt;top:61.32pt;width:0.48pt;height:720.46pt"></i><i class="r" style="left:33.96pt;top:61.32pt;width:527.50pt;height:0.48pt"></i><i class="r" style="left:34.92pt;top:62.28pt;width:0.48pt;height:718.54pt"></i><i class="r" style="left:35.40pt;top:62.28pt;width:525.10pt;height:0.48pt"></i><i class="r" style="left:77.90pt;top:62.76pt;width:0.48pt;height:717.57pt"></i><i class="r" style="left:453.22pt;top:62.76pt;width:0.48pt;height:717.57pt"></i><i class="r" style="left:524.62pt;top:62.76pt;width:0.48pt;height:717.57pt"></i><i class="r" style="left:560.98pt;top:61.32pt;width:0.48pt;height:720.46pt"></i><i class="r" style="left:560.02pt;top:62.28pt;width:0.48pt;height:718.54pt"></i><i class="r" style="left:78.38pt;top:96.38pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:96.38pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:128.06pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:128.06pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:147.38pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:147.38pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:166.58pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:166.58pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:198.38pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:198.38pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:198.38pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:525.10pt;top:198.38pt;width:34.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:217.58pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:217.58pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:237.14pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:237.14pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:256.34pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:256.34pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:288.65pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:288.65pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:309.65pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:309.65pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:185.04pt;top:366.04pt;width:1.12pt;height:1.53pt"></i><i class="r" style="left:78.38pt;top:343.61pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:343.61pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:379.61pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:379.61pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:379.61pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:525.10pt;top:379.61pt;width:34.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:411.41pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:411.41pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:445.39pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:445.39pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:483.19pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:483.19pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:513.91pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:513.91pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:552.19pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:552.19pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:571.63pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:571.63pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:608.71pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:608.71pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:645.34pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:645.34pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:645.34pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:525.10pt;top:645.34pt;width:34.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:676.06pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:676.06pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:710.86pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:710.86pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:745.54pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:745.54pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:33.96pt;top:781.30pt;width:527.50pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:780.34pt;width:524.62pt;height:0.48pt"></i>
+
+<p class="x tc" style="--b:84.4;left:83.5pt">식 (9):</p><div class="f" style="left:149.1pt;top:65.9pt"><span class="fig" data-srcpage="18" data-clip="149.1,65.9,214.3,94.4"></span></div><!-- eEx max = mu 2 2 --><p class="x nb c" style="--n:83.9;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:116.1;left:83.5pt">식 (10):</p><div class="f" style="left:155.1pt;top:100.0pt"><span class="fig" data-srcpage="18" data-clip="155.1,100.0,220.3,126.5"></span></div><!-- m   u t z = eBu x --><p class="x nb c" style="--n:116.8;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x nb c" style="--n:134.9;left:34.9pt;width:43.0pt"><b>3.4</b></p><p class="x tc" style="--b:141.4;left:83.5pt">식 (11):</p><div class="f" style="left:155.1pt;top:132.4pt"><span class="fig" data-srcpage="18" data-clip="155.1,132.4,220.1,145.6"></span></div><!-- m  u z = eB  x --><p class="x nb c" style="--n:142.2;left:453.2pt;width:71.4pt">0.2</p><p class="x nb c" style="--n:134.9;left:524.6pt;width:35.4pt"><b>1.0</b></p>
+
+<p class="x tc" style="--b:160.6;left:83.5pt">식 (12):</p><div class="f" style="left:154.8pt;top:151.7pt"><span class="fig" data-srcpage="18" data-clip="154.8,151.7,212.6,164.5"></span></div><!-- mu = eBx max --><p class="x nb c" style="--n:161.5;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:186.3;left:83.5pt">식 (13):</p><div class="f" style="left:155.1pt;top:170.2pt"><span class="fig" data-srcpage="18" data-clip="155.1,170.2,211.6,196.7"></span></div><!-- x max = 2 eB mE 2 --><p class="x nb c" style="--n:187.0;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:211.6;left:83.5pt">식 (14):</p><div class="f" style="left:155.1pt;top:204.2pt"><span class="fig" data-srcpage="18" data-clip="155.1,204.2,222.8,215.5"></span></div><!-- u = u 0 = const --><p class="x nb c" style="--n:212.5;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:230.2;left:83.5pt">식 (15):</p><div class="f" style="left:155.1pt;top:221.9pt"><span class="fig" data-srcpage="18" data-clip="155.1,221.9,199.8,235.7"></span></div><!-- L = mru  --><p class="x nb c" style="--n:231.9;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:250.3;left:83.5pt">식 (16):</p><div class="f" style="left:154.8pt;top:241.5pt"><span class="fig" data-srcpage="18" data-clip="154.8,241.5,208.1,254.0"></span></div><!-- M = eBu r r --><p class="x nb c" style="--n:251.3;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:276.6;left:83.5pt">식 (17):</p><div class="f" style="left:155.1pt;top:259.9pt"><span class="fig" data-srcpage="18" data-clip="155.1,259.9,193.1,286.9"></span></div><!-- dL dt = M --><p class="x nb c" style="--n:277.0;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x nb c" style="--n:293.6;left:34.9pt;width:43.0pt"><b>3.5</b></p><p class="x tc" style="--b:302.7;left:83.5pt">식 (18):</p><div class="f" style="left:155.3pt;top:291.7pt"><span class="fig" data-srcpage="18" data-clip="155.3,291.7,243.3,307.7"></span></div><!-- d ( mru  ) = e  r 2 dr --><p class="x nb c" style="--n:303.6;left:453.2pt;width:71.4pt">0.2</p><p class="x nb c" style="--n:293.6;left:524.6pt;width:35.4pt"><b>1.4</b></p>
+
+<p class="x tc" style="--b:331.6;left:83.5pt">식 (19):</p><div class="f" style="left:155.1pt;top:313.2pt"><span class="fig" data-srcpage="18" data-clip="155.1,313.2,237.6,342.0"></span></div><!-- mr max u 0 = e  r max 3 3 --><p class="x nb c" style="--n:331.1;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:366.6;left:83.5pt">식 (20):</p><div class="f" style="left:155.3pt;top:346.2pt"><span class="fig" data-srcpage="18" data-clip="155.3,346.2,220.6,378.2"></span></div><!-- r max = 3 mu e  0 --><p class="x nb c" style="--n:366.2;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:399.3;left:83.5pt">식 (21):</p><div class="f" style="left:155.1pt;top:382.9pt"><span class="fig" data-srcpage="18" data-clip="155.1,382.9,213.8,409.7"></span></div><!-- dp dt = er dB dt 0 --><p class="x nb c" style="--n:400.0;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:433.4;left:83.5pt">식 (22):</p><div class="f" style="left:155.3pt;top:415.0pt"><span class="fig" data-srcpage="18" data-clip="155.3,415.0,216.3,443.5"></span></div><!-- E = 2  1 r d dt  --><p class="x nb c" style="--n:432.9;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:467.1;left:83.5pt">식 (23):</p><div class="f" style="left:158.1pt;top:449.7pt"><span class="fig" data-srcpage="18" data-clip="158.1,449.7,240.6,481.0"></span></div><!-- =  0 r B ( r )2  rdr --><p class="x nb c" style="--n:468.8;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:501.9;left:83.5pt">식 (24):</p><div class="f" style="left:158.1pt;top:486.3pt"><span class="fig" data-srcpage="18" data-clip="158.1,486.3,197.3,512.0"></span></div><!-- dp dt = eE --><p class="x nb c" style="--n:503.1;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x nb c" style="--n:517.0;left:34.9pt;width:43.0pt"><b>3.6</b></p><p class="x tc" style="--b:536.1;left:83.5pt">식 (25):</p><div class="f" style="left:158.1pt;top:518.2pt"><span class="fig" data-srcpage="18" data-clip="158.1,518.2,264.1,550.0"></span></div><!--  0 r B ( r )2  rdr = 2  r 2 B 0 --><p class="x nb c" style="--n:537.5;left:453.2pt;width:71.4pt">0.2</p><p class="x nb c" style="--n:517.0;left:524.6pt;width:35.4pt"><b>1.6</b></p>
+
+<p class="x tc" style="--b:565.6;left:83.5pt">식 (26):</p><div class="f" style="left:158.1pt;top:555.0pt"><span class="fig" data-srcpage="18" data-clip="158.1,555.0,302.8,569.5"></span></div><!-- B 1  r 1 2 + B 2  ( r 2 − r 1 2 ) = 2  r 2 B 2 --><p class="x nb c" style="--n:566.5;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:593.7;left:83.5pt">식 (27):</p><div class="f" style="left:158.1pt;top:575.2pt"><span class="fig" data-srcpage="18" data-clip="158.1,575.2,213.3,606.7"></span></div><!-- B B 1 2 = 1 + r r 1 2 2 --><p class="x nb c" style="--n:594.7;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:628.9;left:83.5pt">식 (28):</p><div class="f" style="left:158.3pt;top:611.8pt"><span class="fig" data-srcpage="18" data-clip="158.3,611.8,230.1,641.8"></span></div><!-- 2  B B 1 2 + 1 r r 1 2 2 2 --><p class="x nb c" style="--n:631.5;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:661.1;left:83.5pt">식 (29):</p><div class="f" style="left:158.3pt;top:648.2pt"><span class="fig" data-srcpage="18" data-clip="158.3,648.2,214.8,674.4"></span></div><!-- E 2  rl =   0 l --><p class="x nb c" style="--n:665.3;left:453.2pt;width:71.4pt">0.1</p>
+
+<p class="x tc" style="--b:695.9;left:83.5pt">식 (30):</p><div class="f" style="left:158.3pt;top:679.1pt"><span class="fig" data-srcpage="18" data-clip="158.3,679.1,207.8,708.9"></span></div><!-- E = 2   0 r --><p class="x nb c" style="--n:698.0;left:453.2pt;width:71.4pt">0.1</p>
+
+<p class="x nb c" style="--n:717.3;left:34.9pt;width:43.0pt"><b>3.7</b></p><p class="x tc" style="--b:730.5;left:83.5pt">식 (31):</p><div class="f" style="left:157.8pt;top:714.2pt"><span class="fig" data-srcpage="18" data-clip="157.8,714.2,223.8,743.7"></span></div><!-- V = 2   0 ln a r --><p class="x nb c" style="--n:732.7;left:453.2pt;width:71.4pt">0.2</p><p class="x nb c" style="--n:717.3;left:524.6pt;width:35.4pt"><b>1.0</b></p>
+
+<p class="x tc" style="--b:765.3;left:83.5pt">식 (32):</p><div class="f" style="left:157.6pt;top:748.6pt"><span class="fig" data-srcpage="18" data-clip="157.6,748.6,226.6,778.4"></span></div><!-- V 0 = 2   0 ln b a --><p class="x nb c" style="--n:767.5;left:453.2pt;width:71.4pt">0.2</p>
+<!-- /table -->
+</div>
+
+<!-- 19 -->
+<div class="page">
+<div class="hd" style="left:36pt">XIX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.9pt">쪽 <span class="pn">19/19</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.42pt;height:1.08pt"></i>
+<!-- table p19 55-795 -->
+<!-- table cols [34.9, 77.9, 453.2, 524.6, 560.0] -->
+
+<!-- rules p19: 84 -->
+
+<i class="r" style="left:33.96pt;top:61.32pt;width:0.48pt;height:595.06pt"></i><i class="r" style="left:33.96pt;top:61.32pt;width:527.50pt;height:0.48pt"></i><i class="r" style="left:34.92pt;top:62.28pt;width:0.48pt;height:593.14pt"></i><i class="r" style="left:35.40pt;top:62.28pt;width:525.10pt;height:0.48pt"></i><i class="r" style="left:77.90pt;top:62.76pt;width:0.48pt;height:592.18pt"></i><i class="r" style="left:453.22pt;top:62.76pt;width:0.48pt;height:592.18pt"></i><i class="r" style="left:524.62pt;top:62.76pt;width:0.48pt;height:592.18pt"></i><i class="r" style="left:560.98pt;top:61.32pt;width:0.48pt;height:595.06pt"></i><i class="r" style="left:560.02pt;top:62.28pt;width:0.48pt;height:593.14pt"></i><i class="r" style="left:78.38pt;top:96.86pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:96.86pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:111.86pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:111.86pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:111.86pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:525.10pt;top:111.86pt;width:34.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:144.14pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:144.14pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:161.30pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:161.30pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:179.30pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:179.30pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:210.14pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:210.14pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:225.74pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:225.74pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:260.42pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:260.42pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:291.29pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:291.29pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:187.45pt;top:352.87pt;width:1.19pt;height:0.71pt"></i><i class="r" style="left:78.38pt;top:325.97pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:325.97pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:360.05pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:360.05pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:379.49pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:379.49pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:411.29pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:411.29pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:442.99pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:442.99pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:178.90pt;top:484.72pt;width:1.12pt;height:1.54pt"></i><i class="r" style="left:78.38pt;top:462.31pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:462.31pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:187.98pt;top:520.48pt;width:1.11pt;height:1.52pt"></i><i class="r" style="left:78.38pt;top:498.31pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:498.31pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:535.99pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:535.99pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:554.47pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:554.47pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:554.47pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:525.10pt;top:554.47pt;width:34.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:572.47pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:572.47pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:590.47pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:590.47pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:624.58pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:624.58pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:640.54pt;width:42.50pt;height:0.48pt"></i><i class="r" style="left:78.38pt;top:640.54pt;width:374.83pt;height:0.48pt"></i><i class="r" style="left:453.70pt;top:640.54pt;width:70.92pt;height:0.48pt"></i><i class="r" style="left:525.10pt;top:640.54pt;width:34.92pt;height:0.48pt"></i><i class="r" style="left:33.96pt;top:655.90pt;width:527.50pt;height:0.48pt"></i><i class="r" style="left:35.40pt;top:654.94pt;width:524.62pt;height:0.48pt"></i>
+
+<p class="x tc" style="--b:82.3;left:83.5pt">식 (33):</p><div class="f" style="left:157.6pt;top:65.9pt"><span class="fig" data-srcpage="19" data-clip="157.6,65.9,229.3,94.6"></span></div><!-- V = V 0 ln( ln( b r / / a a ) ) --><p class="x nb c" style="--n:84.1;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:108.9;left:83.5pt">식 (33)의 수치:</p><div class="f" style="left:247.3pt;top:99.9pt"><span class="fig" data-srcpage="19" data-clip="247.3,99.9,300.8,109.7"></span></div><!-- V = 57.6 V --><p class="x nb c" style="--n:108.9;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:132.1;left:83.5pt">식 (34):</p><div class="f" style="left:158.1pt;top:114.2pt"><span class="fig" data-srcpage="19" data-clip="158.1,114.2,235.3,142.7"></span></div><!-- dB =  4  0 j dl r  3 r --><p class="x nb c" style="--n:132.5;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:158.3;left:83.5pt">식 (35):</p><div class="f" style="left:158.1pt;top:150.0pt"><span class="fig" data-srcpage="19" data-clip="158.1,150.0,219.8,159.5"></span></div><!-- dl  r = dl  r --><p class="x nb c" style="--n:157.2;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:173.3;left:83.5pt">식 (36):</p><div class="f" style="left:158.1pt;top:165.1pt"><span class="fig" data-srcpage="19" data-clip="158.1,165.1,226.8,177.6"></span></div><!-- dB z = dB sin  --><p class="x nb c" style="--n:174.9;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:198.1;left:83.5pt">식 (37):</p><div class="f" style="left:158.3pt;top:182.9pt"><span class="fig" data-srcpage="19" data-clip="158.3,182.9,229.6,208.6"></span></div><!-- dB z =  4  0 j Rdl r 3 --><p class="x nb c" style="--n:199.2;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:223.1;left:83.5pt">식 (38):</p><div class="f" style="left:158.3pt;top:213.2pt"><span class="fig" data-srcpage="19" data-clip="158.3,213.2,215.1,225.2"></span></div><!-- r 2 = R 2 + z 2 --><p class="x nb c" style="--n:222.4;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:246.4;left:83.5pt">식 (39):</p><div class="f" style="left:158.1pt;top:229.1pt"><span class="fig" data-srcpage="19" data-clip="158.1,229.1,259.6,258.6"></span></div><!-- B z =  2 0 j ( R 2 + R z 2 2 ) 3/2 --><p class="x nb c" style="--n:247.6;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:279.3;left:83.5pt">식 (40):</p><div class="f" style="left:158.1pt;top:264.0pt"><span class="fig" data-srcpage="19" data-clip="158.1,264.0,209.3,289.5"></span></div><!-- dj = NI L dz --><p class="x nb c" style="--n:280.4;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:311.9;left:83.5pt">식 (41):</p><div class="f" style="left:158.1pt;top:294.6pt"><span class="fig" data-srcpage="19" data-clip="158.1,294.6,281.1,324.1"></span></div><!-- dB =  2 0 NI L ( R 2 + R z 2 2 ) 3/2 dz --><p class="x nb c" style="--n:313.1;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x nb c" style="--n:337.7;left:34.9pt;width:43.0pt"><b>3.8</b></p><p class="x tc" style="--b:345.0;left:83.5pt">식 (42):</p><div class="f" style="left:158.3pt;top:329.6pt"><span class="fig" data-srcpage="19" data-clip="158.3,329.6,244.6,358.8"></span></div><!-- B = L 1  + 0 D NI 2 / L 2 --><p class="x nb c" style="--n:347.6;left:453.2pt;width:71.4pt">0.2</p><p class="x nb c" style="--n:337.7;left:524.6pt;width:35.4pt"><b>3.2</b></p>
+
+<p class="x tc" style="--b:372.5;left:83.5pt">식 (43):</p><div class="f" style="left:158.1pt;top:364.1pt"><span class="fig" data-srcpage="19" data-clip="158.1,364.1,238.8,377.9"></span></div><!-- d ( mru  ) = eBrdr --><p class="x nb c" style="--n:374.2;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:399.2;left:83.5pt">식 (44):</p><div class="f" style="left:157.8pt;top:382.8pt"><span class="fig" data-srcpage="19" data-clip="157.8,382.8,226.1,409.1"></span></div><!-- mru  = 1 2 eBr 2 --><p class="x nb c" style="--n:399.9;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:431.0;left:83.5pt">식 (45):</p><div class="f" style="left:158.1pt;top:417.4pt"><span class="fig" data-srcpage="19" data-clip="158.1,417.4,237.1,441.1"></span></div><!-- m 2 ( u r 2 + u  2 ) = eV --><p class="x nb c" style="--n:431.7;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:456.2;left:83.5pt">식 (46):</p><div class="f" style="left:158.1pt;top:446.8pt"><span class="fig" data-srcpage="19" data-clip="158.1,446.8,266.3,459.8"></span></div><!-- u r = 0, r = b , V = V 0 --><p class="x nb c" style="--n:457.1;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:485.3;left:83.5pt">식 (47):</p><div class="f" style="left:158.1pt;top:464.9pt"><span class="fig" data-srcpage="19" data-clip="158.1,464.9,215.1,496.9"></span></div><!-- B = 8 eb mV 2 0 --><p class="x nb c" style="--n:484.7;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:521.0;left:83.5pt">식 (48):</p><div class="f" style="left:158.1pt;top:500.9pt"><span class="fig" data-srcpage="19" data-clip="158.1,500.9,309.1,534.4"></span></div><!-- I min = 8 mV e 0 (1 + D 2 / L 2 )  0 L Nb --><p class="x nb c" style="--n:521.7;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:548.5;left:83.5pt">식 (48)의 수치:</p><div class="f" style="left:247.6pt;top:539.8pt"><span class="fig" data-srcpage="19" data-clip="247.6,539.8,315.6,552.1"></span></div><!-- I min = 0,701 А --><p class="x nb c" style="--n:549.8;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:566.5;left:83.5pt">식 (49):</p><div class="f" style="left:158.3pt;top:558.1pt"><span class="fig" data-srcpage="19" data-clip="158.3,558.1,202.1,570.1"></span></div><!-- E T = k B T --><p class="x nb c" style="--n:568.0;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x tc" style="--b:584.5;left:83.5pt">식 (50):</p><div class="f" style="left:158.3pt;top:576.6pt"><span class="fig" data-srcpage="19" data-clip="158.3,576.6,199.6,588.3"></span></div><!-- E T E 0 --><p class="x nb c" style="--n:586.0;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x nb c" style="--n:602.0;left:34.9pt;width:43.0pt"><b>3.9</b></p><p class="x tc" style="--b:609.5;left:83.5pt">식 (51):</p><div class="f" style="left:157.8pt;top:594.1pt"><span class="fig" data-srcpage="19" data-clip="157.8,594.1,200.3,622.6"></span></div><!-- T eE k B 0 --><p class="x nb c" style="--n:612.1;left:453.2pt;width:71.4pt">0.2</p><p class="x nb c" style="--n:602.0;left:524.6pt;width:35.4pt"><b>0.8</b></p>
+
+<p class="x tc" style="--b:637.5;left:83.5pt">식 (51)의 수치:</p><p class="x nw" style="--b:637.5;left:247.3pt">$T\ll 8.70\cdot10^5\ \mathrm{K}$</p><p class="x nb c" style="--n:637.1;left:453.2pt;width:71.4pt">0.2</p>
+
+<p class="x nb c" style="--n:652.2;left:34.9pt;width:43.0pt"><b>합계</b></p><p class="x nb c" style="--n:652.2;left:524.6pt;width:35.4pt"><b>10.0</b></p>
+<!-- /table -->
+</div>
+</body></html>
