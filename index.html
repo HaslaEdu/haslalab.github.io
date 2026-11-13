@@ -54,7 +54,7 @@
   if((route==="monthly"||route==="weekly")&&section==="p"&&/^\d+$/.test(item||""))path="/problems/"+Number(item)+"?lang="+language;
   else if((route==="monthly"||route==="weekly")&&section!=="p"&&section!=="admin")path="/"+route+"?lang="+language+periodQuery(section);
   else if(route==="rank")path="/rank?scope="+(section==="all"?"all":section==="week"?"week":"month")+periodQuery(section);
-  else if(route==="me")path="/me/overview";
+  else if(route==="me"&&token)path="/me/overview";
   else if(route==="community"&&(!section||["all","free","qna","sim","study","best","hot"].includes(section))){
     const options=new URLSearchParams(hash.split("?")[1]||""),query=new URLSearchParams({page:Math.max(1,parseInt(item)||1),lang:language,sort:options.get("sort")||(section==="hot"?"hot":"new")});
     if(["free","qna","sim","study"].includes(section))query.set("board",section);
@@ -9996,7 +9996,9 @@ function setDocTitle(first, second){
   }
   else if(first==="comps")       parts.push(d.hComps);
   else if(first==="community")   parts.push(d.navComm);
-  else if(["monthly","weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
+  else if(first==="me")          parts.push(CMT[lang].account);
+  else if(first==="login"||first==="signup") parts.push(CMT[lang][first]);
+  else if(["monthly","weekly","rank"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn"&&second==="physics"&&location.hash.split("?")[0]==="#/learn/physics/search") parts.push(lang==="ko"?"학습 — 물리 — 문제 검색":"Learn — Physics — Search problems");
   else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);

@@ -70,3 +70,28 @@ test('the code this window asked for is redeemed once and its nonce is cleared',
   assert.deepEqual(e.calls, []);
   assert.match(e.root.innerHTML, /로그인을 취소했습니다/);
 });
+
+test('#/me signed out goes to the sign-in form without asking the server for the account', async () => {
+  const a = app({hash: '#/me'});
+  await a.context.arMount();
+  assert.deepEqual(a.calls, [], 'no /me/overview request (it could only answer 401)');
+  assert.equal(a.location.hash, '#/login');
+  assert.equal(a.store.get('hlCmBack'), '#/me', 'after signing in the visitor comes back');
+  // and the early request in <head> is not made without a token either
+  const early = index.slice(index.indexOf('const hash=location.hash,parts='), index.indexOf('if(!path)return;'));
+  assert.match(early, /route==="me"&&token\)path="\/me\/overview"/);
+});
+
+test('the account, sign-in and sign-up pages have their own tab titles', () => {
+  const start = index.indexOf('const SITE = "HaslaLab";'), end = index.indexOf('\n/* side ads', start);
+  const cmt = index.slice(index.indexOf('const CMT = {'), index.indexOf('\n};', index.indexOf('const CMT = {')) + 3);
+  for (const [lang, want] of [['ko', {me: '내 정보', login: '로그인', signup: '회원가입', monthly: '월별문제', rank: '월별문제'}], ['en', {me: 'Profile', login: 'Log in', signup: 'Sign up'}]]) {
+    const context = {lang, document: {title: ''}, location: {hash: ''}, window: {}, UI: {ko: {navWeekly: '월별문제'}, en: {navWeekly: 'Monthly'}}, DATA: {}, LEARN: {}};
+    vm.createContext(context);
+    vm.runInContext(cmt + '\n' + index.slice(start, end), context);
+    for (const [route, title] of Object.entries(want)) {
+      context.location.hash = '#/' + route; context.setDocTitle(route);
+      assert.equal(context.document.title, `${title} · HaslaLab`, route);
+    }
+  }
+});

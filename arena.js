@@ -251,6 +251,8 @@ async function arMount() {
     if(shop)bootstrap.shop=await shop;
     if(!alive())return;cm.me=bootstrap.user;cm.meChecked=true;ar.health=bootstrap.health||ar.health;
   }else if(a==='me'){
+    /* signed out: no account request (it could only answer 401); the sign-in form, then back here */
+    if(!cmTok()){try{sessionStorage.setItem('hlCmBack','#/me');}catch(_){}location.hash='#/login';return;}
     bootstrap=await arMeOverview();if(!alive())return;ar.health=bootstrap.health||ar.health;
   }else if(primary){
     const health=Promise.resolve(ar.health||cmHealth());health.then(h=>{if(alive())ar.health=h;},()=>{});
