@@ -1,0 +1,1232 @@
+<!doctype html><html><head><meta name="page" content="595.28,841.89">
+<style>
+/* IChO 2024 theoretical exam, Korean, 62 pages on the original layout. Built from four parts (classes prefixed a- .. d-), joined by join2024.py. */
+/* IChO 2024 theoretical exam, part a (original pages 1-17: G0-1..G0-4, Problem 1 Q1/A1, Problem 2 Q2/A2).
+   A4 LaTeX PDF (official IChO template): body Noto Sans 9.96pt, pitch 11.955pt, justified, x 56.7..538.6;
+   math Latin Modern Math. Noto Sans (Latin) is not installed, Noto Sans KR is: Hangul and Latin come out in
+   Noto Sans KR. Blocks are placed by the original's first baseline --b (pt), --l = pitch, --fs = size,
+   --k = baseline factor measured on the build.
+   Header: "Theory" -> 이론 and "English (Official)" -> 한국어 번역 typed; logo and big page code stamped;
+   2pt rule as .a-r. Question boxes: frame rules as .a-r, number/points typed, command verb bold-underlined (.a-cv).
+   Answer boxes: stamped whole (only formulas/units/tick boxes inside), Korean labels as .a-ov where English. */
+.a-x{position:absolute;left:56.7pt;width:481.9pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Noto Sans','Noto Sans KR',KG,sans-serif;--fs:9.96pt;--l:11.955pt;--k:0.375;font-size:var(--fs);
+  line-height:var(--l);top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.a-x i,.a-x em,.a-ov i{font-family:KG,'Noto Sans','Noto Sans KR',sans-serif}
+.a-x .katex .text{font-family:KaTeX_Main,'Noto Sans KR',sans-serif}
+.a-x .katex{white-space:nowrap}
+.a-x sup{vertical-align:0.51em}
+.a-x sub{vertical-align:-0.36em}
+.a-ss{display:inline-block;line-height:0;font-size:70%;vertical-align:baseline}
+.a-ss>span{display:block;line-height:0;position:relative}
+.a-ss>span:first-child{top:-0.51em}
+.a-ss>span:last-child{top:0.36em}
+.a-th{--fs:14.17pt;--k:0.436;font-weight:bold;white-space:nowrap}
+.a-tl{width:479.3pt;text-align:right;white-space:nowrap}
+.a-h1{--fs:15.94pt;--l:19pt;--k:0.434;font-weight:bold;color:#0000b3;white-space:nowrap}
+.a-h2{--fs:10.96pt;--k:0.42;font-weight:bold;color:#0000b3;white-space:nowrap}
+.a-c{text-align:center}
+.a-rt{text-align:right}
+.a-nw{white-space:nowrap}
+.a-jl{text-align-last:justify}
+.a-bl{left:81.6pt;width:457pt}
+.a-bu{position:absolute;left:-8.7pt;top:0}
+.a-li{left:81.6pt;width:457pt}
+.a-ln{position:absolute;left:-13.3pt;top:0}
+.a-q{left:114.7pt;width:365.9pt}
+.a-qn{position:absolute;left:-36.1pt;top:0;font-weight:bold}
+.a-qp{position:absolute;left:380.7pt;top:0;white-space:nowrap}
+.a-ab{left:139.6pt;width:341pt}
+.a-an{position:absolute;right:100%;top:0;padding-right:5pt;white-space:nowrap}
+.a-t{position:absolute;top:0;white-space:nowrap}
+.a-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:0.4pt;text-underline-offset:1.25pt}
+.a-b{font-weight:bold}
+.a-f{position:absolute;line-height:0}
+.a-r{position:absolute;background:#000;display:block}
+.a-ov{position:absolute;background:#fff;white-space:nowrap;font-family:'Noto Sans','Noto Sans KR',KG,sans-serif;
+  font-size:9.96pt;line-height:12pt;height:12pt;text-indent:0;padding:0 1pt}
+/* IChO 2024 theoretical exam, part b (original pages 18-31: Problem 3 Q3/A3, Problem 4 Q4/A4).
+   Same look as part a (see W/ICHO2024-style.md), classes prefixed b-. Body Noto Sans 9.96pt -> Noto Sans KR,
+   pitch 11.955pt, justified, x 56.7..538.6. Blocks placed by the original's first baseline --b.
+   Header: 이론 / 한국어 번역 typed, logo and page code stamped, 2pt rule as .b-r.
+   Question boxes: frame rules as .b-r, number/points typed, command verb bold-underlined (.b-cv).
+   Tables: rules as .b-r, Korean header cells typed, number rows stamped. Answer boxes stamped whole. */
+.b-x{position:absolute;left:56.7pt;width:481.9pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Noto Sans','Noto Sans KR',KG,sans-serif;--fs:9.96pt;--l:11.955pt;--k:0.375;font-size:var(--fs);
+  line-height:var(--l);top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.b-x i,.b-x em,.b-ov i{font-family:KG,'Noto Sans','Noto Sans KR',sans-serif}
+.b-x .katex .text{font-family:KaTeX_Main,'Noto Sans KR',sans-serif}
+.b-x .katex{white-space:nowrap}
+.b-x sup{vertical-align:0.51em}
+.b-x sub{vertical-align:-0.36em}
+.b-th{--fs:14.17pt;--k:0.436;font-weight:bold;white-space:nowrap}
+.b-tl{width:479.3pt;text-align:right;white-space:nowrap}
+.b-h1{--fs:15.94pt;--l:19pt;--k:0.434;font-weight:bold;color:#0000b3;white-space:nowrap}
+.b-nw{white-space:nowrap}
+.b-tc{text-align:left}
+.b-q{left:114.7pt;width:365.9pt}
+.b-qn{position:absolute;left:-36.1pt;top:0;font-weight:bold}
+.b-qp{position:absolute;left:380.7pt;top:0;white-space:nowrap}
+.b-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:0.4pt;text-underline-offset:1.25pt}
+.b-f{position:absolute;line-height:0}
+.b-r{position:absolute;background:#000;display:block}
+.b-ov{position:absolute;background:#fff;white-space:nowrap;font-family:'Noto Sans','Noto Sans KR',KG,sans-serif;
+  font-size:9.96pt;line-height:12pt;height:12pt;text-indent:0;padding:0 1pt;font-weight:bold;text-align:center}
+/* IChO 2024 theoretical exam, part c (original pages 32-49: Problem 5 Q5/A5, Problem 6 Q6/A6, Problem 7 Q7/A7).
+   Look copied from part a (ICHO2024-style.md) with prefix c-. A4 LaTeX PDF: body Noto Sans 9.96pt, pitch 11.955pt,
+   justified, x 56.7..538.6. Blocks placed by first baseline --b. Header: 이론 / 한국어 번역 typed, logo and page code
+   stamped, 2pt rule as .c-r. Question boxes: frame rules as .c-r, command verb bold-underlined (.c-cv).
+   Answer boxes stamped whole; English words inside them as white .c-ov labels. Schemes/structures stamped. */
+.c-x{position:absolute;left:56.7pt;width:481.9pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Noto Sans','Noto Sans KR',KG,sans-serif;--fs:9.96pt;--l:11.955pt;--k:0.375;font-size:var(--fs);
+  line-height:var(--l);top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.c-x i,.c-x em,.c-ov i{font-family:KG,'Noto Sans','Noto Sans KR',sans-serif}
+.c-x .katex .text{font-family:KaTeX_Main,'Noto Sans KR',sans-serif}
+.c-x .katex{white-space:nowrap}
+.c-x sup{vertical-align:0.51em}
+.c-x sub{vertical-align:-0.36em}
+.c-th{--fs:14.17pt;--k:0.436;font-weight:bold;white-space:nowrap}
+.c-tl{width:479.3pt;text-align:right;white-space:nowrap}
+.c-h1{--fs:15.94pt;--l:19pt;--k:0.434;font-weight:bold;color:#0000b3;white-space:nowrap}
+.c-c{text-align:center}
+.c-nw{white-space:nowrap}
+.c-jl{text-align-last:justify}
+.c-bl{left:81.6pt;width:457pt}
+.c-bu{position:absolute;left:-8.7pt;top:0}
+.c-q{left:114.7pt;width:365.9pt}
+.c-qn{position:absolute;left:-36.1pt;top:0;font-weight:bold}
+.c-qp{position:absolute;left:380.7pt;top:0;white-space:nowrap}
+.c-t{position:absolute;top:0;white-space:nowrap}
+.c-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:0.4pt;text-underline-offset:1.25pt}
+.c-u{text-decoration:underline;text-decoration-thickness:0.4pt;text-underline-offset:1.25pt}
+.c-b{font-weight:bold}
+.c-f{position:absolute;line-height:0}
+.c-r{position:absolute;background:#000;display:block}
+.c-ov{position:absolute;background:#fff;white-space:nowrap;font-family:'Noto Sans','Noto Sans KR',KG,sans-serif;
+  font-size:9.96pt;line-height:12pt;height:12pt;text-indent:0;padding:0 1pt}
+/* IChO 2024 theoretical exam, part d (original pages 50-62: Problem 8 Q8/A8, Problem 9 Q9/A9).
+   Shared look from part a (ICHO2024-style.md), prefix d-. Body Noto Sans 9.96pt, pitch 11.955pt, justified,
+   x 56.7..538.6. Blocks placed by the original's first baseline --b. Header: 이론 / 한국어 번역 typed, logo and
+   page code stamped. Question boxes: frame rules as .d-r, command verb bold-underlined (.d-cv) at the end.
+   Schemes, structures, MO diagram stamped; answer boxes stamped whole. */
+.d-x{position:absolute;left:56.7pt;width:481.9pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Noto Sans','Noto Sans KR',KG,sans-serif;--fs:9.96pt;--l:11.955pt;--k:0.375;font-size:var(--fs);
+  line-height:var(--l);top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.d-x i,.d-x em,.d-ov i{font-family:KG,'Noto Sans','Noto Sans KR',sans-serif}
+.d-x .katex .text{font-family:KaTeX_Main,'Noto Sans KR',sans-serif}
+.d-x .katex{white-space:nowrap}
+.d-x sup{vertical-align:0.51em}
+.d-x sub{vertical-align:-0.36em}
+.d-ss{display:inline-block;line-height:0;font-size:70%;vertical-align:baseline}
+.d-ss>span{display:block;line-height:0;position:relative}
+.d-ss>span:first-child{top:-0.51em}
+.d-ss>span:last-child{top:0.36em}
+.d-th{--fs:14.17pt;--k:0.436;font-weight:bold;white-space:nowrap}
+.d-tl{width:479.3pt;text-align:right;white-space:nowrap}
+.d-h1{--fs:15.94pt;--l:19pt;--k:0.434;font-weight:bold;color:#0000b3;white-space:nowrap}
+.d-h2{--fs:10.96pt;--k:0.42;font-weight:bold;color:#0000b3;white-space:nowrap}
+.d-c{text-align:center}
+.d-rt{text-align:right}
+.d-nw{white-space:nowrap}
+.d-jl{text-align-last:justify}
+.d-bl{left:81.6pt;width:457pt}
+.d-bu{position:absolute;left:-8.7pt;top:0}
+.d-q{left:114.7pt;width:365.9pt}
+.d-qn{position:absolute;left:-36.1pt;top:0;font-weight:bold}
+.d-qp{position:absolute;left:380.7pt;top:0;white-space:nowrap}
+.d-t{position:absolute;top:0;white-space:nowrap}
+.d-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:0.4pt;text-underline-offset:1.25pt}
+.d-b{font-weight:bold}
+.d-f{position:absolute;line-height:0}
+.d-r{position:absolute;background:#000;display:block}
+.d-ov{position:absolute;background:#fff;white-space:nowrap;font-family:'Noto Sans','Noto Sans KR',KG,sans-serif;
+  font-size:9.96pt;line-height:12pt;height:12pt;text-indent:0;padding:0 1pt}
+.d-ovs{text-align:center;padding:0}
+</style></head><body>
+<!-- ===== part a: original pages from 1 ===== -->
+<!-- 1: G0-1 general instructions -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="1" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="1" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x a-h2" style="--b:176.4;left:56.3pt">일반 지침</p>
+<p class="a-x a-bl" style="--b:208.2"><span class="a-bu">•</span>이 시험은 <b>9개 문제</b>로 이루어져 있으며 두 권의 책자로 제공된다. 이 문제지는 <b>29쪽</b>이며, 선택한 언어로 번역된 문제와 번호가 매겨진 문항이 실려 있다. 답안지는 <b>28쪽</b>이며, 각 문항에 해당하는 번호가 매겨진 답안 칸이 있다. 답안지에는 언어와 무관한 기호와 수식만 쓰여 있다.</p>
+<p class="a-x a-bl" style="--b:263.0"><span class="a-bu">•</span><b>START</b> 명령이 주어지면 바로 시작할 수 있다. 시험 시간은 <b>5시간</b>이다.</p>
+<p class="a-x a-bl" style="--b:293.9"><span class="a-bu">•</span>모든 결과는 <b>답안지</b>의 해당 답안 칸에 펜으로 써야 한다. 지정된 칸 밖에 써야 한다면 칸 안에 <span class="a-cv">메모를 남겨라</span>. 답은 같은 쪽에 써라.</p>
+<p class="a-x a-bl" style="--b:336.8"><span class="a-bu">•</span>답안지만 수거한다. 스테이플러로 묶인 답안지의 쪽을 <span class="a-cv">분리하지 마라</span>.</p>
+<p class="a-x a-bl" style="--b:356.7"><span class="a-bu">•</span>답안지 뒷면에는 쓰지 마라! 채점자는 답안지의 인쇄된 면만 본다. 연습용 종이가 필요하면 문제지 뒷면을 사용하라. QR 코드 안이나 그 가까이에는 아무것도 <b>그리지 마라</b>.</p>
+<p class="a-x a-bl" style="--b:399.6"><span class="a-bu">•</span>필요하면 관련 계산 과정을 해당 칸에 써라. 계산 과정을 제시한 경우에만 정답에 만점을 준다.</p>
+<p class="a-x a-bl" style="--b:430.5"><span class="a-bu">•</span>객관식 문항에서 <b>답을 바꾸고 싶으면</b> 표시한 칸을 완전히 칠한 다음 <b>그 옆에 새 칸을 그려라</b>.</p>
+<p class="a-x a-bl" style="--b:461.4"><span class="a-bu">•</span>제공된 펜과 계산기만 사용하라.</p>
+<p class="a-x a-bl" style="--b:480.3"><span class="a-bu">•</span>이 시험의 공식 영어판은 내용을 확인하는 용도로만, 요청하면 제공된다.</p>
+<p class="a-x a-bl" style="--b:499.2"><span class="a-bu">•</span>화장실에 가야 하거나 도움이 필요할 때, 또는 공식 영어판을 보고 싶을 때에는 손을 들어라.</p>
+<p class="a-x a-bl" style="--b:530.1"><span class="a-bu">•</span>감독관은 <b>STOP</b> 명령 <b>30분</b> 전에 종료를 예고한다. <b>STOP</b> 명령이 주어지면 <b>즉시 작업을 멈추어야 한다</b>. 쓰기를 멈추지 않으면 시험이 무효 처리될 수 있다.</p>
+<p class="a-x a-bl" style="--b:572.9"><span class="a-bu">•</span>감독관이 지시하면 <b>답안지만</b> 봉투에 다시 넣어라. 문제지는 가져가도 된다. 봉투를 밀봉<b>하지 마라</b>.</p>
+<p class="a-x a-c a-b" style="--b:616.8">행운을 빈다!</p>
+</div>
+
+<!-- 2: G0-2 constants, NMR chart -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="2" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="2" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="a-r" style="left:56.69pt;top:155.91pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:156.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:177.47pt;top:156.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:298.26pt;top:156.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:419.04pt;top:156.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:539.82pt;top:156.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:56.69pt;top:180.21pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:180.61pt;width:0.4pt;height:35.86pt"></i><i class="a-r" style="left:177.47pt;top:180.61pt;width:0.4pt;height:35.86pt"></i><i class="a-r" style="left:298.26pt;top:180.61pt;width:0.4pt;height:35.86pt"></i><i class="a-r" style="left:419.04pt;top:180.61pt;width:0.4pt;height:35.86pt"></i><i class="a-r" style="left:539.82pt;top:180.61pt;width:0.4pt;height:35.86pt"></i><i class="a-r" style="left:56.69pt;top:216.48pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:216.88pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:177.47pt;top:216.88pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:298.26pt;top:216.88pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:419.04pt;top:216.88pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:539.82pt;top:216.88pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:56.69pt;top:240.79pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:241.19pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:177.47pt;top:241.19pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:298.26pt;top:241.19pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:419.04pt;top:241.19pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:539.82pt;top:241.19pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:56.69pt;top:265.1pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:265.49pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:177.47pt;top:265.49pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:298.26pt;top:265.49pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:419.04pt;top:265.49pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:539.82pt;top:265.49pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:474.05pt;top:279.54pt;width:4.93pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:289.4pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:289.8pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:177.47pt;top:289.8pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:298.26pt;top:289.8pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:419.04pt;top:289.8pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:539.82pt;top:289.8pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:56.69pt;top:313.71pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:314.11pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:298.26pt;top:314.11pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:419.04pt;top:314.11pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:539.82pt;top:314.11pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:507.8pt;top:334.14pt;width:14.07pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:349.98pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:350.38pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:177.47pt;top:350.38pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:298.26pt;top:350.38pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:419.04pt;top:350.38pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:539.82pt;top:350.38pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:254.34pt;top:370.4pt;width:13.41pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:386.24pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:386.64pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:177.47pt;top:386.64pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:298.26pt;top:386.64pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:419.04pt;top:386.64pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:539.82pt;top:386.64pt;width:0.4pt;height:35.87pt"></i><i class="a-r" style="left:56.69pt;top:422.51pt;width:483.53pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:422.9pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:177.47pt;top:422.9pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:298.26pt;top:422.9pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:298.65pt;top:422.9pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:539.82pt;top:422.9pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:239.13pt;top:436.95pt;width:8.17pt;height:0.4pt"></i><i class="a-r" style="left:411.59pt;top:436.95pt;width:12.06pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:446.81pt;width:483.53pt;height:0.4pt"></i>
+<div class="a-f" style="left:178.1pt;top:156.35pt"><span class="fig" data-srcpage="2" data-clip="178.1,156.35,298.0,180.17"></span></div>
+<div class="a-f" style="left:419.5pt;top:156.35pt"><span class="fig" data-srcpage="2" data-clip="419.5,156.35,539.8,180.17"></span></div>
+<div class="a-f" style="left:178.1pt;top:180.65pt"><span class="fig" data-srcpage="2" data-clip="178.1,180.65,298.0,216.44"></span></div>
+<div class="a-f" style="left:419.5pt;top:180.65pt"><span class="fig" data-srcpage="2" data-clip="419.5,180.65,539.8,216.44"></span></div>
+<div class="a-f" style="left:178.1pt;top:216.92pt"><span class="fig" data-srcpage="2" data-clip="178.1,216.92,298.0,240.75"></span></div>
+<div class="a-f" style="left:419.5pt;top:216.92pt"><span class="fig" data-srcpage="2" data-clip="419.5,216.92,539.8,240.75"></span></div>
+<div class="a-f" style="left:178.1pt;top:241.23pt"><span class="fig" data-srcpage="2" data-clip="178.1,241.23,298.0,265.05"></span></div>
+<div class="a-f" style="left:419.5pt;top:241.23pt"><span class="fig" data-srcpage="2" data-clip="419.5,241.23,539.8,265.05"></span></div>
+<div class="a-f" style="left:178.1pt;top:265.53pt"><span class="fig" data-srcpage="2" data-clip="178.1,265.53,298.0,289.36"></span></div>
+<div class="a-f" style="left:419.5pt;top:265.53pt"><span class="fig" data-srcpage="2" data-clip="419.5,265.53,539.8,289.36"></span></div>
+<div class="a-f" style="left:178.1pt;top:289.84pt"><span class="fig" data-srcpage="2" data-clip="178.1,289.84,298.0,313.67"></span></div>
+<div class="a-f" style="left:419.5pt;top:289.84pt"><span class="fig" data-srcpage="2" data-clip="419.5,289.84,539.8,313.67"></span></div>
+<div class="a-f" style="left:57.3pt;top:314.15pt"><span class="fig" data-srcpage="2" data-clip="57.3,314.15,298.0,349.94"></span></div>
+<div class="a-f" style="left:419.5pt;top:314.15pt"><span class="fig" data-srcpage="2" data-clip="419.5,314.15,539.8,349.94"></span></div>
+<div class="a-f" style="left:178.1pt;top:350.42pt"><span class="fig" data-srcpage="2" data-clip="178.1,350.42,298.0,386.2"></span></div>
+<div class="a-f" style="left:419.5pt;top:350.42pt"><span class="fig" data-srcpage="2" data-clip="419.5,350.42,539.8,386.2"></span></div>
+<div class="a-f" style="left:178.1pt;top:386.68pt"><span class="fig" data-srcpage="2" data-clip="178.1,386.68,298.0,422.46"></span></div>
+<div class="a-f" style="left:419.5pt;top:386.68pt"><span class="fig" data-srcpage="2" data-clip="419.5,386.68,539.8,422.46"></span></div>
+<div class="a-f" style="left:178.1pt;top:422.94pt"><span class="fig" data-srcpage="2" data-clip="178.1,422.94,298.0,446.77"></span></div>
+<div class="a-f" style="left:299.2pt;top:422.94pt"><span class="fig" data-srcpage="2" data-clip="299.2,422.94,434.6,446.77"></span></div>
+<div class="a-f" style="left:452.3pt;top:422.94pt"><span class="fig" data-srcpage="2" data-clip="452.3,422.94,539.8,446.77"></span></div>
+<p class="a-x a-nw" style="--b:173.0;left:63.1pt;width:112pt">아보가드로 상수:</p>
+<p class="a-x a-nw" style="--b:173.0;left:304.6pt;width:112pt">기체 상수:</p>
+<p class="a-x a-nw" style="--b:197.4;left:63.1pt;width:112pt">물의 이온곱<br>(298.15 K):</p>
+<p class="a-x a-nw" style="--b:197.4;left:304.6pt;width:112pt">섭씨 온도의<br>영점:</p>
+<p class="a-x a-nw" style="--b:233.6;left:63.1pt;width:112pt">패러데이 상수:</p>
+<p class="a-x a-nw" style="--b:233.6;left:304.6pt;width:112pt">플랑크 상수:</p>
+<p class="a-x a-nw" style="--b:257.9;left:63.1pt;width:112pt">빛의 속력:</p>
+<p class="a-x a-nw" style="--b:257.9;left:304.6pt;width:112pt">표준 압력:</p>
+<p class="a-x a-nw" style="--b:282.2;left:63.1pt;width:112pt">이상 기체 법칙:</p>
+<p class="a-x a-nw" style="--b:282.2;left:304.6pt;width:112pt">비어–람베르트 법칙:</p>
+<p class="a-x a-nw" style="--b:306.5;left:63.1pt;width:112pt">엔탈피:</p>
+<p class="a-x a-nw" style="--b:306.5;left:304.6pt;width:112pt">깁스 에너지:</p>
+<p class="a-x a-nw" style="--b:330.8;left:304.6pt;width:112pt">헨더슨–<br>하셀바흐 식:</p>
+<p class="a-x a-nw" style="--b:373.1;left:63.1pt;width:112pt">아레니우스 식:</p>
+<p class="a-x a-nw" style="--b:367.1;left:304.6pt;width:112pt">0차 반응의<br>적분 속도식:</p>
+<p class="a-x a-nw" style="--b:409.4;left:63.1pt;width:112pt">구의 겉넓이:</p>
+<p class="a-x a-nw" style="--b:403.4;left:304.6pt;width:112pt">1차 반응의<br>적분 속도식:</p>
+<p class="a-x a-nw" style="--b:439.6;left:63.1pt;width:112pt">구의 부피:</p>
+<p class="a-x a-nw" style="--b:439.6;left:435.2pt;width:16pt">단,</p>
+<p class="a-x a-c a-b" style="--b:487.3"><sup>1</sup>H NMR 화학적 이동(ppm/TMS)</p>
+<div class="a-f" style="left:56pt;top:527pt"><span class="fig" data-srcpage="2" data-clip="56,527,540,728.2"></span></div>
+<span class="a-ov ov a-rt" style="left:146.6pt;top:578.8pt;width:40.6pt;font-size:10.7pt">알켄</span>
+<span class="a-ov ov" style="left:447.6pt;top:665.2pt;width:40pt;font-size:10.7pt">케톤</span>
+<p class="a-x a-c" style="--b:739.9">영역 이름의 번역</p>
+</div>
+
+<!-- 3: G0-3 periodic table -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="3" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="3" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x a-h2 a-c" style="--b:165.9">주기율표</p>
+<div class="a-f" style="left:56pt;top:199.6pt"><span class="fig" data-srcpage="3" data-clip="56,199.6,540,539"></span></div>
+</div>
+
+<!-- 4: G0-4 problems and grading -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="4" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="4" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x a-h2 a-c" style="--b:165.9">문제 및 채점 안내</p>
+<i class="a-r" style="left:64.8pt;top:203.6pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:203.99pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:203.99pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:203.99pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:203.99pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:203.99pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:203.99pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:203.99pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:227.9pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:228.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:228.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:228.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:228.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:228.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:228.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:228.3pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:252.21pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:252.61pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:252.61pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:252.61pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:252.61pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:252.61pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:252.61pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:252.61pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:276.52pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:276.92pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:276.92pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:276.92pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:276.92pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:276.92pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:276.92pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:276.92pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:300.83pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:301.23pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:301.23pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:301.23pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:301.23pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:301.23pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:301.23pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:301.23pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:325.14pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:325.54pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:325.54pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:325.54pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:325.54pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:325.54pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:325.54pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:325.54pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:349.45pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:349.85pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:349.85pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:349.85pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:349.85pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:349.85pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:349.85pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:349.85pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:373.76pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:374.16pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:374.16pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:374.16pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:374.16pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:374.16pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:374.16pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:374.16pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:398.07pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:398.46pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:398.46pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:398.46pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:398.46pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:398.46pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:398.46pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:398.46pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:422.37pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:422.77pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:82.85pt;top:422.77pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:215.67pt;top:422.77pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:305.13pt;top:422.77pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:394.59pt;top:422.77pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:422.77pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:422.77pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:446.68pt;width:465.68pt;height:0.4pt"></i><i class="a-r" style="left:64.8pt;top:447.08pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:461.07pt;top:447.08pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:530.08pt;top:447.08pt;width:0.4pt;height:23.91pt"></i><i class="a-r" style="left:64.8pt;top:470.99pt;width:465.68pt;height:0.4pt"></i>
+<p class="a-x a-b" style="--b:220.7;left:71.2pt;width:452.9pt"><span class="a-t" style="left:18pt">제목</span><span class="a-t" style="left:150.9pt">문제지 쪽수</span><span class="a-t" style="left:240.3pt">답안지 쪽수</span><span class="a-t" style="right:69pt">총점</span><span class="a-t" style="right:0">비율</span></p>
+<p class="a-x" style="--b:245.0;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">1</span><span class="a-t" style="left:18pt">암모니아</span><span class="a-t" style="left:150.9pt">3</span><span class="a-t" style="left:240.3pt">5</span><span class="a-t" style="right:69pt">24</span><span class="a-t" style="right:0">7.5</span></p>
+<p class="a-x" style="--b:269.3;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">2</span><span class="a-t" style="left:18pt">전자 코</span><span class="a-t" style="left:150.9pt">3</span><span class="a-t" style="left:240.3pt">2</span><span class="a-t" style="right:69pt">12</span><span class="a-t" style="right:0">6</span></p>
+<p class="a-x" style="--b:293.7;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">3</span><span class="a-t" style="left:18pt">타이로시네이스</span><span class="a-t" style="left:150.9pt">4</span><span class="a-t" style="left:240.3pt">4</span><span class="a-t" style="right:69pt">31</span><span class="a-t" style="right:0">7.5</span></p>
+<p class="a-x" style="--b:318.0;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">4</span><span class="a-t" style="left:18pt">칼륨</span><span class="a-t" style="left:150.9pt">2</span><span class="a-t" style="left:240.3pt">3</span><span class="a-t" style="right:69pt">21</span><span class="a-t" style="right:0">6</span></p>
+<p class="a-x" style="--b:342.3;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">5</span><span class="a-t" style="left:18pt">미지 물질</span><span class="a-t" style="left:150.9pt">2</span><span class="a-t" style="left:240.3pt">3</span><span class="a-t" style="right:69pt">44</span><span class="a-t" style="right:0">6</span></p>
+<p class="a-x" style="--b:366.6;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">6</span><span class="a-t" style="left:18pt">페니실린</span><span class="a-t" style="left:150.9pt">3</span><span class="a-t" style="left:240.3pt">2</span><span class="a-t" style="right:69pt">38</span><span class="a-t" style="right:0">6</span></p>
+<p class="a-x" style="--b:390.9;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">7</span><span class="a-t" style="left:18pt">SABIC</span><span class="a-t" style="left:150.9pt">5</span><span class="a-t" style="left:240.3pt">3</span><span class="a-t" style="right:69pt">23</span><span class="a-t" style="right:0">7.5</span></p>
+<p class="a-x" style="--b:415.2;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">8</span><span class="a-t" style="left:18pt">홍화</span><span class="a-t" style="left:150.9pt">3</span><span class="a-t" style="left:240.3pt">2</span><span class="a-t" style="right:69pt">38</span><span class="a-t" style="right:0">6</span></p>
+<p class="a-x" style="--b:439.5;left:71.2pt;width:452.9pt"><span class="a-t" style="left:0">9</span><span class="a-t" style="left:18pt">포르피린 착물</span><span class="a-t" style="left:150.9pt">4</span><span class="a-t" style="left:240.3pt">4</span><span class="a-t" style="right:69pt">35</span><span class="a-t" style="right:0">7.5</span></p>
+<p class="a-x a-b" style="--b:463.8;left:71.2pt;width:452.9pt"><span class="a-t" style="right:69pt">합계</span><span class="a-t" style="right:0">60</span></p>
+</div>
+
+<!-- 5: Q1-1 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="5" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="5" data-clip="405,74.5,456,131.8"></span></div>
+<div class="a-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="5" data-clip="456,74.5,540,125"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x a-h1" style="--b:168.0">문제 1 암모니아</p>
+<p class="a-x" style="--b:199.9">질소와 수소로 암모니아를 생산하는 하버–보슈 공정은 역사상 가장 큰 영향을 끼친 산업 공정 중 하나로, 오늘날 인구의 약 절반을 부양하는 것으로 추정된다. 이 공정은 보통 일정한 온도와 압력, 각각 400&thinsp;°C와 100&thinsp;bar에서 진행된다. 반응기 안에서는 철 기반 촉매 위에서 반응물과 생성물 사이의 평형이 이루어진다.</p>
+<p class="a-x" style="--b:267.6">N<sub>2</sub>, H<sub>2</sub>, NH<sub>3</sub>의 표준 기체상 열화학 자료가 아래에 나와 있다. 반응의 엔탈피와 엔트로피는 온도와 무관하다고 가정하라.</p>
+<div class="a-f" style="left:103.6pt;top:316.8pt"><span class="fig" data-srcpage="5" data-clip="103.6,316.8,491.6,365.6"></span></div>
+<i class="a-r" style="left:56.69pt;top:390.44pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:390.64pt;width:0.4pt;height:64.16pt"></i><i class="a-r" style="left:538.18pt;top:390.64pt;width:0.4pt;height:64.16pt"></i><i class="a-r" style="left:56.69pt;top:454.6pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:407.4"><span class="a-qn">1.1</span><span class="a-qp">7 pt</span>생산 조건에서 질소와 수소의 화학량론적 혼합물로부터 암모니아로 전환되는 질소의 몰 전환율(%)을 <span class="a-cv">구하라</span>. 부분 점수를 받으려면 계산 과정을 제시하라. <i>결과를 구하지 못했다면 이후 계산에서 66%를 사용하라.</i></p>
+<p class="a-x" style="--b:491.9">하버–보슈 공정의 반응물 중 하나인 수소는 주로 메테인의 수증기 개질로 생산된다. 두 단계로 이루어진 이 공정은 CH<sub>4</sub>가 물과 반응하여 H<sub>2</sub>와 CO를 만드는 것으로 시작한다. 이어지는 단계에서는 CO가 물과 반응하여 CO<sub>2</sub>와 추가의 수소를 만든다.</p>
+<i class="a-r" style="left:56.69pt;top:531.71pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:531.91pt;width:0.4pt;height:42.09pt"></i><i class="a-r" style="left:538.18pt;top:531.91pt;width:0.4pt;height:42.09pt"></i><i class="a-r" style="left:56.69pt;top:573.8pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:548.7"><span class="a-qn">1.2</span><span class="a-qp">2 pt</span>두 단계를 합친 전체 과정의 전체 반응식을 <span class="a-cv">써라</span>. H<sub>2</sub> 1.0&thinsp;kg당 이 반응에서 생성되는 CO<sub>2</sub>의 질량(<i>m</i><sub>CO<sub>2</sub></sub>)을 <span class="a-cv">제시하라</span>.</p>
+<p class="a-x" style="--b:611.1">실제로 수증기 개질에서는 수소 1.0&thinsp;kg당 이산화 탄소 7.0&thinsp;kg이 생성된다. 생산된 암모니아는 CO<sub>2</sub>의 처리 방식에 따라 분류된다. “회색” 암모니아에서는 CO<sub>2</sub>를 대기로 방출하고, “청색” 암모니아에서는 이를 포집하여 저장한다. “녹색” 암모니아는 탄소 배출 없이 생산한 수소로 만든다.</p>
+<i class="a-r" style="left:56.69pt;top:662.87pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:663.07pt;width:0.4pt;height:76.17pt"></i><i class="a-r" style="left:538.18pt;top:663.07pt;width:0.4pt;height:76.17pt"></i><i class="a-r" style="left:56.69pt;top:739.03pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:679.9"><span class="a-qn">1.3</span><span class="a-qp">3 pt</span>“청색” 암모니아 40,000&thinsp;kg을 생산하기 위해 포집해야 하는 이산화 탄소의 질량(<span class="a-nw"><i>m</i><sub>CO<sub>2</sub>, blue</sub></span>)을 <span class="a-cv">계산하라</span>. 이산화 탄소는 실제 수증기 개질 공정에서만 나온다고 가정하라. 또한 암모니아는 질소와 수소의 화학량론적 혼합물로부터 평형 상태에서 생산된다고 가정하라.</p>
+<p class="a-x a-jl" style="--b:776.3">값싼 재생 가능 수소를 이용하여 포집한 CO<sub>2</sub>를 메탄올로 전환하는 방안은 매우 유망해 보인다. 그러나 이 과정에는</p>
+</div>
+
+<!-- 6: Q1-2 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="6" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="6" data-clip="405,74.5,456,131.8"></span></div>
+<div class="a-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="6" data-clip="456,74.5,540,125"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x" style="--b:165.9">CO를 생성하는 경쟁 반응이 있다:</p>
+<div class="a-f" style="left:197pt;top:188pt"><span class="fig" data-srcpage="6" data-clip="197,188,399.5,203"></span></div>
+<div class="a-f" style="left:211.5pt;top:219pt"><span class="fig" data-srcpage="6" data-clip="211.5,219,385.5,235"></span></div>
+<p class="a-x" style="--b:261.5">250&thinsp;°C, 50&thinsp;bar로 유지되는 반응기에 CO<sub>2</sub>&thinsp;:&thinsp;H<sub>2</sub>의 몰비가 1&thinsp;:&thinsp;4인 혼합물을 공급한다. 두 반응이 평형에 도달했을 때 CO<sub>2</sub>의 전환율은 30%, H<sub>2</sub>의 전환율은 18.5%인 것으로 나타났다. 다른 과정은 고려할 필요가 없다.</p>
+<i class="a-r" style="left:56.69pt;top:301.36pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:301.56pt;width:0.4pt;height:38.59pt"></i><i class="a-r" style="left:538.18pt;top:301.56pt;width:0.4pt;height:38.59pt"></i><i class="a-r" style="left:56.69pt;top:339.95pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:318.9"><span class="a-qn">1.4</span><span class="a-qp">5 pt</span>두 반응의 열역학적 평형 상수(250&thinsp;°C에서)를 <span class="a-cv">계산하라</span>.</p>
+<p class="a-x" style="--b:377.2">CO<sub>2</sub>의 수소화에는 구리를 포함한 불균일 촉매가 흔히 쓰인다. 구리를 포함한 특정 촉매 두 가지(<i>A</i>와 <i>B</i>)가 CO<sub>2</sub>를 메탄올로 전환하는 데 유망한 것으로 나타났다. 이 두 촉매는 촉매 반응 속도뿐 아니라 표면적, 구리 함량, 구리 분산도(촉매 속 전체 구리에 대한 표면 구리의 비)에서도 서로 다르다.</p>
+<p class="a-x" style="--b:445.0">CO<sub>2</sub> 수소화에서는 표면에 있는 구리 화학종만 활성이 있으므로 구리 분산도가 중요하다. 이 가정에 따르면 활성점 1몰은 표면 구리 1몰에 해당한다. 이 활성점들의 효율은 전환 빈도(<i>TOF</i>, 주어진 시간 동안 활성점 1몰당 생성된 생성물의 몰수)로 나타낸다.</p>
+</div>
+
+<!-- 7: Q1-3 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="7" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="7" data-clip="405,74.5,456,131.8"></span></div>
+<div class="a-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="7" data-clip="456,74.5,540,125"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x" style="--b:165.9">아래 <b>표</b>에 두 촉매의 성능(주어진 시간 동안 전체 촉매 질량당 생성된 메탄올의 질량으로 나타냄)과 비표면적이 나와 있다. 촉매의 구리 함량과 분산도도 다음과 같이 측정하였다:</p>
+<p class="a-x a-li" style="--b:221.7"><span class="a-ln">1.</span>처음에 (미리 산화시킨) 촉매 속의 구리는 모두 Cu(II)로 존재하며, 이를 수소로 완전히 환원하여 Cu(0)로 만들었다. 촉매 속에서 산화 구리 외의 다른 화학종은 수소와 반응하지 않았다.</p>
+<p class="a-x a-li" style="--b:264.5"><span class="a-ln">2.</span>환원된 시료에 상온에서 N<sub>2</sub>O를 주입하였다. 이 온도에서 N<sub>2</sub>O는 표면의 활성점만 Cu(I)로 산화한다.</p>
+<p class="a-x a-li" style="--b:295.4"><span class="a-ln">3.</span>Cu(I)인 표면 활성점을 수소로 다시 환원하여 Cu(0)로 만들었다.</p>
+<div class="a-f" style="left:80pt;top:332pt"><span class="fig" data-srcpage="7" data-clip="80,332,515,414"></span></div>
+<i class="a-r" style="left:56.69pt;top:463.47pt;width:505.5pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:463.86pt;width:0.4pt;height:39.45pt"></i><i class="a-r" style="left:126.87pt;top:463.86pt;width:0.4pt;height:39.45pt"></i><i class="a-r" style="left:235.6pt;top:463.86pt;width:0.4pt;height:39.45pt"></i><i class="a-r" style="left:344.33pt;top:463.86pt;width:0.4pt;height:39.45pt"></i><i class="a-r" style="left:453.06pt;top:463.86pt;width:0.4pt;height:39.45pt"></i><i class="a-r" style="left:561.79pt;top:463.86pt;width:0.4pt;height:39.45pt"></i><i class="a-r" style="left:56.69pt;top:503.32pt;width:505.5pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:503.72pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:126.87pt;top:503.72pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:235.6pt;top:503.72pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:344.33pt;top:503.72pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:453.06pt;top:503.72pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:561.79pt;top:503.72pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:56.69pt;top:519.26pt;width:505.5pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:519.66pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:126.87pt;top:519.66pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:235.6pt;top:519.66pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:344.33pt;top:519.66pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:453.06pt;top:519.66pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:561.79pt;top:519.66pt;width:0.4pt;height:15.54pt"></i><i class="a-r" style="left:56.69pt;top:535.2pt;width:505.5pt;height:0.4pt"></i>
+<p class="a-x a-c" style="--b:480.7;left:127.1pt;width:108.5pt">촉매 성능</p>
+<p class="a-x a-c" style="--b:480.7;left:235.8pt;width:108.5pt">비표면적</p>
+<p class="a-x a-c" style="--b:480.7;left:344.5pt;width:108.5pt">1단계 H<sub>2</sub> 소모량</p>
+<p class="a-x a-c" style="--b:480.7;left:453.3pt;width:108.5pt">3단계 H<sub>2</sub> 소모량</p>
+<div class="a-f" style="left:145.3pt;top:483.6pt"><span class="fig" data-srcpage="7" data-clip="145.4,489.6,217.5,502.6"></span></div>
+<div class="a-f" style="left:270.3pt;top:483.6pt"><span class="fig" data-srcpage="7" data-clip="270.3,483.6,310.1,498.5"></span></div>
+<div class="a-f" style="left:372.2pt;top:483.3pt"><span class="fig" data-srcpage="7" data-clip="387.8,483.3,441,498.6"></span></div>
+<div class="a-f" style="left:481pt;top:483.3pt"><span class="fig" data-srcpage="7" data-clip="387.8,483.3,441,498.6"></span></div>
+<p class="a-x" style="--b:514.6;left:69.3pt;width:492pt">촉매 <i>A</i><span class="a-t a-c" style="left:57.8pt;width:108.5pt">0.80</span><span class="a-t a-c" style="left:166.5pt;width:108.5pt">100</span><span class="a-t a-c" style="left:275.2pt;width:108.5pt">5.0</span><span class="a-t a-c" style="left:384pt;width:108.5pt">0.30</span></p>
+<p class="a-x" style="--b:530.5;left:69.3pt;width:492pt">촉매 <i>B</i><span class="a-t a-c" style="left:57.8pt;width:108.5pt">0.90</span><span class="a-t a-c" style="left:166.5pt;width:108.5pt">120</span><span class="a-t a-c" style="left:275.2pt;width:108.5pt">4.0</span><span class="a-t a-c" style="left:384pt;width:108.5pt">0.70</span></p>
+<i class="a-r" style="left:56.69pt;top:560.73pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:560.93pt;width:0.4pt;height:41.28pt"></i><i class="a-r" style="left:538.18pt;top:560.93pt;width:0.4pt;height:41.28pt"></i><i class="a-r" style="left:56.69pt;top:602.0pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:623.32pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:623.52pt;width:0.4pt;height:53.23pt"></i><i class="a-r" style="left:538.18pt;top:623.52pt;width:0.4pt;height:53.23pt"></i><i class="a-r" style="left:56.69pt;top:676.55pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:697.87pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:698.07pt;width:0.4pt;height:64.16pt"></i><i class="a-r" style="left:538.18pt;top:698.07pt;width:0.4pt;height:64.16pt"></i><i class="a-r" style="left:56.69pt;top:762.03pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:578.7"><span class="a-qn">1.5</span><span class="a-qp">3 pt</span>촉매 <i>A</i>와 <i>B</i>에 대하여 구리의 전체 질량당 메탄올 생성 속도(단위: <span class="a-nw">g<sub>MeOH</sub>&thinsp;g<span class="a-ss"><span>−1</span><span>Cu</span></span>&thinsp;h<sup>−1</sup></span>)를 <span class="a-cv">구하라</span>.</p>
+<p class="a-x a-q" style="--b:641.3"><span class="a-qn">1.6</span><span class="a-qp">3 pt</span>촉매 <i>A</i>와 <i>B</i>의 <i>TOF</i>(단위: h<sup>−1</sup>)를 <span class="a-cv">구하라</span>.<br><i>결과를 구하지 못했다면 이후 계산에서 TOF</i><sub>촉매&nbsp;A</sub>&nbsp;=&nbsp;100&thinsp;h<sup>−1</sup><i>과 TOF</i><sub>촉매&nbsp;B</sub>&nbsp;=&nbsp;1&thinsp;h<sup>−1</sup><i>을 사용하라.</i></p>
+<p class="a-x a-q" style="--b:714.8"><span class="a-qn">1.7</span><span class="a-qp">1 pt</span>답안지에서 옳은 설명을 <span class="a-cv">표시하라</span>.</p>
+<p class="a-x a-ab" style="--b:726.8"><span class="a-an">a.</span>촉매 <i>A</i>의 활성점이 더 효율적이다.</p>
+<p class="a-x a-ab" style="--b:738.7"><span class="a-an">b.</span>촉매 <i>B</i>의 활성점이 더 효율적이다.</p>
+<p class="a-x a-ab" style="--b:750.7"><span class="a-an">c.</span>두 촉매의 활성점 효율은 같다.</p>
+</div>
+
+<!-- 8: A1-1 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="8" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="8" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x a-h1" style="--b:168.0">문제 1 암모니아</p>
+<div class="a-f" style="left:56.4pt;top:173.7pt"><span class="fig" data-srcpage="8" data-clip="56.4,173.7,538.9,710.9"></span></div>
+</div>
+
+<!-- 9: A1-2 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="9" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="9" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="a-f" style="left:56.4pt;top:159.6pt"><span class="fig" data-srcpage="9" data-clip="56.4,159.6,538.9,471.4"></span></div>
+</div>
+
+<!-- 10: A1-3 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="10" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="10" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="a-f" style="left:56.4pt;top:159.6pt"><span class="fig" data-srcpage="10" data-clip="56.4,159.6,538.9,471.4"></span></div>
+</div>
+
+<!-- 11: A1-4 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="11" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="11" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="a-f" style="left:56.4pt;top:159.6pt"><span class="fig" data-srcpage="11" data-clip="56.4,159.6,538.9,468.9"></span></div>
+<div class="a-f" style="left:56.4pt;top:474.6pt"><span class="fig" data-srcpage="11" data-clip="56.4,474.6,538.9,756.4"></span></div>
+</div>
+
+<!-- 12: A1-5 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="12" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="12" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="a-f" style="left:56.4pt;top:159.6pt"><span class="fig" data-srcpage="12" data-clip="56.4,159.6,538.9,440.5"></span></div>
+<div class="a-f" style="left:56.4pt;top:446.2pt"><span class="fig" data-srcpage="12" data-clip="56.4,446.2,538.9,495.1"></span></div>
+</div>
+
+<!-- 13: Q2-1 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="13" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="13" data-clip="405,74.5,456,131.8"></span></div>
+<div class="a-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="13" data-clip="456,74.5,540,125"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x a-h1" style="--b:168.0">문제 2 전자 코</p>
+<p class="a-x" style="--b:199.9">저항형 기체 센서, 특히 반도체 금속 산화물(SMOX)을 사용하는 센서가 점점 더 널리 쓰이고 있다. 이 센서는 극미량의 불순물을 검출할 수 있고, 작고 안정적이며, 만들고 사용하기도 쉽다. 이러한 특징 덕분에 SMOX 센서는 서로 다른 물리적·화학적 원리로 작동하는 여러 종류의 기체 센서 가운데에서도 돋보인다.</p>
+<p class="a-x" style="--b:267.6">정스피넬 결정 구조 A<sup>2+</sup>B<span class="a-ss"><span>3+</span><span>2</span></span>O<span class="a-ss"><span>2−</span><span>4</span></span>를 갖는 혼합 산화물 <b>X</b>는 이러한 SMOX 물질의 한 예이다. <b>X</b>는 금속 <b>Z</b>의 결정성 수화 옥살산염 <b>Z</b>C<sub>2</sub>O<sub>4</sub>&thinsp;·&thinsp;kH<sub>2</sub>O를 공기 중에서 분해하여 얻을 수 있다. 이 결정성 수화물을 140&thinsp;°C로 가열하면 질량의 19.7%를 잃는다. 공기 중에서 더 가열하면 500&thinsp;°C에서 검은색 <b>X</b> 2.407&thinsp;g이 생성되고, 101325&thinsp;Pa에서 이산화 탄소 3.8&thinsp;dm<sup>3</sup>이 생성된다.</p>
+<i class="a-r" style="left:56.69pt;top:333.32pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:333.52pt;width:0.4pt;height:28.41pt"></i><i class="a-r" style="left:538.18pt;top:333.52pt;width:0.4pt;height:28.41pt"></i><i class="a-r" style="left:56.69pt;top:361.74pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:350.3"><span class="a-qn">2.1</span><span class="a-qp">4 pt</span><b>X</b>의 화학식과 <b>Z</b>C<sub>2</sub>O<sub>4</sub>&thinsp;·&thinsp;<i>k</i>H<sub>2</sub>O에서 <b><i>k</i></b>의 값을 <span class="a-cv">결정하라</span>.</p>
+<p class="a-x" style="--b:399.0">스피넬 구조에서 산소 원자는 면심 입방(FCC) 격자를 이룬다. 정스피넬에서는 A<sup>2+</sup> 양이온이 사면체 격자 자리의 일부를, B<sup>3+</sup> 양이온이 팔면체 격자 자리의 일부를 차지한다.</p>
+<i class="a-r" style="left:56.69pt;top:428.75pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:428.95pt;width:0.4pt;height:40.37pt"></i><i class="a-r" style="left:538.18pt;top:428.95pt;width:0.4pt;height:40.37pt"></i><i class="a-r" style="left:56.69pt;top:469.12pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:445.7"><span class="a-qn">2.2</span><span class="a-qp">2 pt</span>정스피넬 A<sup>2+</sup>B<span class="a-ss"><span>3+</span><span>2</span></span>O<span class="a-ss"><span>2−</span><span>4</span></span>의 경우, 사면체 자리 중 점유된 자리의 백분율을 <span class="a-cv">계산하라</span>.</p>
+<p class="a-x" style="--b:506.4">정스피넬 외에, 일반식 M<span class="a-ss"><span>′</span><span>2</span></span>O<sub>4</sub>로 나타내는 구조에는 역스피넬과 혼합 스피넬 구조도 있다. 여기서 M은 사면체 배위된 양이온, M′은 팔면체 배위된 양이온이지만, 정스피넬과 달리 특정 양이온이 한 가지 격자 자리에만 한정되지 않는다. 역스피넬 구조의 한 가지 특징은 M′ 자리 양이온의 전자 배치가 d<sup>0</sup>, d<sup>5</sup> 또는 d<sup>10</sup>이라는 점이다.</p>
+<i class="a-r" style="left:56.69pt;top:560.04pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:560.24pt;width:0.4pt;height:40.44pt"></i><i class="a-r" style="left:538.18pt;top:560.24pt;width:0.4pt;height:40.44pt"></i><i class="a-r" style="left:56.69pt;top:600.48pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:577.0"><span class="a-qn">2.3</span><span class="a-qp">1 pt</span>주어진 화학식 Fe<sub>3</sub>O<sub>4</sub>, NiFe<sub>2</sub>O<sub>4</sub>, Mn<sub>3</sub>O<sub>4</sub>, FeCr<sub>2</sub>O<sub>4</sub> 중에서 역스피넬 구조에 해당하는 두 가지를 답안지에서 <span class="a-cv">골라라</span>.</p>
+<p class="a-x" style="--b:637.7">반도체는 궤도에 전자가 약간 남거나 모자라서 각각 음전하 또는 양전하(정공)를 띠게 되는 물질이다. 이 전하들은 반도체 속을 이동할 수 있으므로 반도체에 전기가 통하게 된다. 화학 반응은 반도체의 전하를 늘리거나 줄여 그 전도도를 바꿀 수 있다.</p>
+<p class="a-x" style="--b:705.5"><b>X</b>는 양전하(정공)가 전기를 운반하는 반도체의 한 예이다. <b>X</b>를 기반으로 한 저항형 기체 센서에서는 센서 위로 기체를 흘려 보내면서 시간 <i>t</i>에 따른 저항 <i>R</i>을 측정한다. 이때 기체와 반도체 표면 사이에 산화·환원 반응이 일어나며, 이 반응은 기체의 주개/받개 성질에 따라 센서의 저항을 변화시킨다. <b>그림 1</b>은 이렇게 얻은 두 가지 신호 유형을 보여 준다.</p>
+</div>
+
+<!-- 14: Q2-2 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="14" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="14" data-clip="405,74.5,456,131.8"></span></div>
+<div class="a-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="14" data-clip="456,74.5,540,125"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="a-f" style="left:58pt;top:155pt"><span class="fig" data-srcpage="14" data-clip="58,155,537,332"></span></div>
+<p class="a-x" style="--b:342.7;left:80.8pt;width:457.8pt">그림 1: 가능한 두 가지 신호 유형 (a)와 (b)에 대한 시간에 따른 저항 그래프.</p>
+<p class="a-x" style="--b:366.6;left:80.8pt;width:457.8pt">회색 막대 = 공기, 흰색 막대 = 공기 + 분석 대상 기체.</p>
+<i class="a-r" style="left:56.69pt;top:394.1pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:394.3pt;width:0.4pt;height:40.44pt"></i><i class="a-r" style="left:538.18pt;top:394.3pt;width:0.4pt;height:40.44pt"></i><i class="a-r" style="left:56.69pt;top:434.54pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:411.1"><span class="a-qn">2.4</span><span class="a-qp">2 pt</span>분석 대상 기체(H<sub>2</sub>S, O<sub>3</sub>, NO<sub>2</sub>, NH<sub>3</sub>)를 저농도에서 검출할 때 <b>X</b> 기반 센서에서 얻어지는 신호 유형(a 또는 b)을 각 기체와 <span class="a-cv">대응시켜라</span>.</p>
+<p class="a-x" style="--b:471.8"><b>X</b>의 비전도도($\sigma$)가 온도에 따라 변하는 관계는 아레니우스 식 $\sigma(T) = \sigma_0 exp(-E_a/(RT))$로 나타내며, 여기서 $E_a$는 전도의 활성화 에너지이다. 온도 범위에 따라 세 가지 전도 유형을 구별할 수 있다:</p>
+<p class="a-x" style="--b:527.6">이온화(I): 444–570&thinsp;K, 불순물(II): 585–765&thinsp;K, 고유(III): 800–905&thinsp;K.</p>
+<p class="a-x" style="--b:559.5">아래 개략도는 세 온도 범위에서 전도도와 온도의 관계를 보여 준다.</p>
+</div>
+
+<!-- 15: Q2-3 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="15" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="15" data-clip="405,74.5,456,131.8"></span></div>
+<div class="a-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="15" data-clip="456,74.5,540,125"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="a-f" style="left:116pt;top:155pt"><span class="fig" data-srcpage="15" data-clip="116,155,479,439"></span></div>
+<i class="a-r" style="left:56.69pt;top:462.86pt;width:481.89pt;height:0.4pt"></i><i class="a-r" style="left:56.69pt;top:463.06pt;width:0.4pt;height:40.39pt"></i><i class="a-r" style="left:538.18pt;top:463.06pt;width:0.4pt;height:40.39pt"></i><i class="a-r" style="left:56.69pt;top:503.25pt;width:481.89pt;height:0.4pt"></i>
+<p class="a-x a-q" style="--b:479.8"><span class="a-qn">2.5</span><span class="a-qp">3 pt</span>위의 개략도를 바탕으로, 각 전도 유형에 해당하는 활성화 에너지 $E_a(I)$, $E_a(II)$, <span class="a-nw">$E_a(III)$를</span> 큰 것부터 작은 것 순으로 <span class="a-cv">나열하라</span>.</p>
+</div>
+
+<!-- 16: A2-1 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="16" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="16" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="a-x a-h1" style="--b:168.0">문제 2 전자 코</p>
+<div class="a-f" style="left:56.4pt;top:173.7pt"><span class="fig" data-srcpage="16" data-clip="56.4,173.7,538.9,613.6"></span></div>
+<span class="a-ov ov" style="left:74.4pt;top:553.2pt;width:66pt"><b>X</b>의 화학식:</span>
+<span class="a-ov ov" style="left:74.4pt;top:585.7pt;width:52pt"><i>k</i>의 값:</span>
+<div class="a-f" style="left:56.4pt;top:619.3pt"><span class="fig" data-srcpage="16" data-clip="56.4,619.3,538.9,777.2"></span></div>
+</div>
+
+<!-- 17: A2-2 -->
+<div class="page">
+<p class="a-x a-th" style="--b:78.3">이론</p>
+<div class="a-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="17" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="a-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="17" data-clip="408,81,540,129.6"></span></div>
+<p class="a-x a-tl" style="--b:139.4">한국어 번역</p>
+<i class="a-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="a-f" style="left:56.4pt;top:159.6pt"><span class="fig" data-srcpage="17" data-clip="56.4,159.6,538.9,228.6"></span></div>
+<div class="a-f" style="left:56.4pt;top:234pt"><span class="fig" data-srcpage="17" data-clip="56.4,234,538.9,390.6"></span></div>
+<div class="a-f" style="left:56.4pt;top:396pt"><span class="fig" data-srcpage="17" data-clip="56.4,396,538.9,470.6"></span></div>
+</div>
+
+<!-- ===== part b: original pages from 18 ===== -->
+<!-- 1: Q3-1 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="18" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="18" data-clip="405,74.5,456,131.8"></span></div>
+<div class="b-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="18" data-clip="456,74.5,540,125"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="b-x b-h1" style="--b:168.0">문제 3 타이로시네이스</p>
+<p class="b-x" style="--b:199.9">타이로신 3-모노옥시제네이스 효소는 신경 전달 물질인 도파민 생합성의 첫 단계이자 속도 결정 단계를 촉매하므로 생물학적으로 중요한 역할을 한다. 이 첫 단계에서는 용존 산소, 테트라하이드로폴산, 철(II) 이온이 있을 때 아미노산 L-타이로신(Tyr)으로부터 L-DOPA가 생성된다. 이어지는 단계에서는 다른 효소가 L-DOPA를 도파민으로 바꾼다.</p>
+<div class="b-f" style="left:106pt;top:275pt"><span class="fig" data-srcpage="18" data-clip="106,275,489,349"></span></div>
+<span class="b-ov ov" style="left:134.4pt;top:336.7pt;width:56pt">L-타이로신</span>
+<span class="b-ov ov" style="left:415.5pt;top:336.7pt;width:54pt">도파민</span>
+<p class="b-x" style="--b:393.0">타이로신 3-모노옥시제네이스 효소의 활성은 효소 작용의 가장 간단한 모형인 미카엘리스–멘텐 식으로 잘 설명된다. 이 식은 L-DOPA의 생성 속도(<i>r</i>)를 효소(E)와 기질 Tyr(S)의 농도의 함수로 다음과 같이 나타낸다:</p>
+<div class="b-f" style="left:268pt;top:448pt"><span class="fig" data-srcpage="18" data-clip="268,448,326,476"></span></div>
+<p class="b-x" style="--b:508.5">이 문제에서는 필요하면 효소의 전환 빈도 값(<i>k</i>&nbsp;=&nbsp;250&thinsp;min<sup>−1</sup>)과 미카엘리스 상수 값(<span class="b-nw"><i>K</i><sub>M</sub>&nbsp;=&nbsp;0.49&thinsp;mmol&thinsp;dm<sup>−3</sup></span>)을 사용할 수 있다.</p>
+<p class="b-x" style="--b:552.4">카테콜(1,2-다이하이드록시벤젠)은 타이로신 3-모노옥시제네이스 효소를 비활성 형태로 바꾸어 비가역적으로 비활성화한다. 신중하게 정제한 카테콜 시료를 용존 산소를 배제한 상태에서 효소와 섞으면 아무 변화도 나타나지 않는다. 따라서 카테콜과 용존 산소의 반응, 곧 <i>o</i>-퀴논을 생성하는 반응이 중요한 것이 틀림없다.</p>
+<div class="b-f" style="left:227pt;top:627pt"><span class="fig" data-srcpage="18" data-clip="227,627,368,685"></span></div>
+<span class="b-ov ov" style="left:231.3pt;top:673.1pt;width:47.5pt">카테콜</span>
+<span class="b-ov ov" style="left:316.4pt;top:673.1pt;width:55pt"><i>o</i>-퀴논</span>
+<p class="b-x" style="--b:729.7">이 과정은 효소가 없는 상태에서도 연구할 수 있다. 외부 공기와 접촉하지 않는 반응기에서 37&thinsp;°C, pH 7.5로 수행한 시험 실험에서 다음과 같은 반응 속도 자료를 얻었다:</p>
+</div>
+
+<!-- 2: Q3-2 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="19" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="19" data-clip="405,74.5,456,131.8"></span></div>
+<div class="b-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="19" data-clip="456,74.5,540,125"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="b-r" style="left:75.15pt;top:155.91pt;width:444.97pt;height:0.4pt"></i><i class="b-r" style="left:75.15pt;top:156.3pt;width:0.4pt;height:29.35pt"></i><i class="b-r" style="left:135.7pt;top:156.3pt;width:0.4pt;height:29.35pt"></i><i class="b-r" style="left:263.71pt;top:156.3pt;width:0.4pt;height:29.35pt"></i><i class="b-r" style="left:391.72pt;top:156.3pt;width:0.4pt;height:29.35pt"></i><i class="b-r" style="left:519.73pt;top:156.3pt;width:0.4pt;height:29.35pt"></i><i class="b-r" style="left:75.15pt;top:185.65pt;width:444.97pt;height:0.4pt"></i><i class="b-r" style="left:75.15pt;top:186.05pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:135.7pt;top:186.05pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:263.71pt;top:186.05pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:391.72pt;top:186.05pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:519.73pt;top:186.05pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:75.15pt;top:201.59pt;width:444.97pt;height:0.4pt"></i><i class="b-r" style="left:75.15pt;top:201.99pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:135.7pt;top:201.99pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:263.71pt;top:201.99pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:391.72pt;top:201.99pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:519.73pt;top:201.99pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:75.15pt;top:217.53pt;width:444.97pt;height:0.4pt"></i><i class="b-r" style="left:75.15pt;top:217.93pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:135.7pt;top:217.93pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:263.71pt;top:217.93pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:391.72pt;top:217.93pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:519.73pt;top:217.93pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:75.15pt;top:233.47pt;width:444.97pt;height:0.4pt"></i><i class="b-r" style="left:75.15pt;top:233.87pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:135.7pt;top:233.87pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:263.71pt;top:233.87pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:391.72pt;top:233.87pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:519.73pt;top:233.87pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:75.15pt;top:249.41pt;width:444.97pt;height:0.4pt"></i><i class="b-r" style="left:75.15pt;top:249.81pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:135.7pt;top:249.81pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:263.71pt;top:249.81pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:391.72pt;top:249.81pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:519.73pt;top:249.81pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:75.15pt;top:265.35pt;width:444.97pt;height:0.4pt"></i><i class="b-r" style="left:75.15pt;top:265.75pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:135.7pt;top:265.75pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:263.71pt;top:265.75pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:391.72pt;top:265.75pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:519.73pt;top:265.75pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:75.15pt;top:281.29pt;width:444.97pt;height:0.4pt"></i>
+<p class="b-x b-tc" style="--b:167.2;left:81.5pt;width:52pt">시간<br>(min)</p>
+<p class="b-x b-tc" style="--b:167.2;left:142.1pt;width:118pt">카테콜 농도<br>(mmol&thinsp;dm<sup>−3</sup>)</p>
+<p class="b-x b-tc" style="--b:167.2;left:270.1pt;width:118pt">산소 농도<br>(mmol&thinsp;dm<sup>−3</sup>)</p>
+<p class="b-x b-tc" style="--b:167.2;left:398.1pt;width:118pt"><i>o</i>-퀴논 농도<br>(μmol&thinsp;dm<sup>−3</sup>)</p>
+<div class="b-f" style="left:75.1pt;top:186.1pt"><span class="fig" data-srcpage="19" data-clip="75.1,186.1,520.3,281.4"></span></div>
+<i class="b-r" style="left:56.69pt;top:306.83pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:307.02pt;width:0.4pt;height:51.05pt"></i><i class="b-r" style="left:538.18pt;top:307.02pt;width:0.4pt;height:51.05pt"></i><i class="b-r" style="left:56.69pt;top:357.88pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:323.8"><span class="b-qn">3.1</span><span class="b-qp">5.0 pt</span>유일한 부산물(위 표에 나온 분자가 아닌 것)을 <span class="b-cv">밝혀라</span>. 또한 반응 속도 자료를 바탕으로 이 과정의 균형 반응식을 분자식으로 <span class="b-cv">써라</span>.</p>
+<i class="b-r" style="left:56.69pt;top:379.2pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:379.4pt;width:0.4pt;height:40.3pt"></i><i class="b-r" style="left:538.18pt;top:379.4pt;width:0.4pt;height:40.3pt"></i><i class="b-r" style="left:56.69pt;top:419.5pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:396.2"><span class="b-qn">3.2</span><span class="b-qp">2.0 pt</span>이 실험에서 <i>o</i>-퀴논의 초기 생성 속도(<i>r</i><sub>0</sub>)를 적절한 단위와 함께 <span class="b-cv">계산하라</span>.</p>
+<p class="b-x" style="--b:456.8">반응물의 초기 농도를 바꾸어 이 과정의 속도 법칙을 결정하였다. 산소 농도를 바꾸어도 이 과정의 초기 속도는 영향을 받지 않았다. 카테콜 농도를 달리하였을 때 <i>o</i>-퀴논의 초기 생성 속도는 다음과 같았다:</p>
+<i class="b-r" style="left:140.52pt;top:518.16pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:518.56pt;width:0.4pt;height:29.35pt"></i><i class="b-r" style="left:273.34pt;top:518.56pt;width:0.4pt;height:29.35pt"></i><i class="b-r" style="left:454.36pt;top:518.56pt;width:0.4pt;height:29.35pt"></i><i class="b-r" style="left:140.52pt;top:547.91pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:548.31pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:273.34pt;top:548.31pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:548.31pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:563.85pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:564.25pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:273.34pt;top:564.25pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:564.25pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:579.79pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:580.19pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:273.34pt;top:580.19pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:580.19pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:595.73pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:596.13pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:273.34pt;top:596.13pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:596.13pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:611.67pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:612.07pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:273.34pt;top:612.07pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:612.07pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:627.61pt;width:314.24pt;height:0.4pt"></i>
+<p class="b-x b-tc" style="--b:529.4;left:146.9pt;width:122pt">카테콜 농도<br>(mmol&thinsp;dm<sup>−3</sup>)</p>
+<p class="b-x b-tc" style="--b:529.4;left:279.7pt;width:170pt"><i>o</i>-퀴논의 초기 생성 속도<br>(μmol&thinsp;dm<sup>−3</sup>&thinsp;min<sup>−1</sup>)</p>
+<div class="b-f" style="left:140.5pt;top:548.3pt"><span class="fig" data-srcpage="19" data-clip="140.5,548.3,454.8,627.8"></span></div>
+<i class="b-r" style="left:56.69pt;top:653.14pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:653.34pt;width:0.4pt;height:52.26pt"></i><i class="b-r" style="left:538.18pt;top:653.34pt;width:0.4pt;height:52.26pt"></i><i class="b-r" style="left:56.69pt;top:705.4pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:670.1"><span class="b-qn">3.3</span><span class="b-qp">5.0 pt</span><i>o</i>-퀴논을 생성하는 카테콜과 산소 사이 반응의 속도 법칙을 <span class="b-cv">결정하라</span>. 이 과정의 속도 상수(<i>k</i><sub>catechol</sub>)를 적절한 단위와 함께 <span class="b-cv">계산하라</span>.</p>
+<p class="b-x" style="--b:742.7">별도의 실험에서 <i>o</i>-퀴논과 부산물은 각각 단독으로도, 함께 있어도 효소를 비활성화하지 않는다는 것을 확인하였다.</p>
+</div>
+
+<!-- 3: Q3-3 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="20" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="20" data-clip="405,74.5,456,131.8"></span></div>
+<div class="b-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="20" data-clip="456,74.5,540,125"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="b-x" style="--b:165.9">그러나 용존 산소가 있는 상태에서 효소를 카테콜과 반응시킨 실험에서는 비활성화가 나타났다.</p>
+<p class="b-x" style="--b:209.7">이 실험은 열린 용기에서 수행하여, 과정 중 소모되는 산소가 공기로부터 계속 보충될 수 있게 하였다. 효소의 초기 농도는 4.2&thinsp;nmol&thinsp;dm<sup>−3</sup>, 카테콜의 초기 농도는 2.00&thinsp;mmol&thinsp;dm<sup>−3</sup>였으며, 온도는 37&thinsp;°C, pH는 7.5였다.</p>
+<p class="b-x" style="--b:269.2">효소–카테콜 반응 혼합물에서 일정한 간격으로 시료를 채취하고 L-타이로신, 테트라하이드로폴산, 철(II) 이온을 넣어 효소의 활성을 분석하였다. 효소 활성을 측정할 때 넣은 L-타이로신의 농도는 10.0&thinsp;mmol&thinsp;dm<sup>−3</sup>였고, 각 분석 시료의 L-DOPA 농도는 2.0분 뒤에 측정하였다. 다음과 같은 결과를 얻었다:</p>
+<div class="b-f" style="left:152pt;top:343pt"><span class="fig" data-srcpage="20" data-clip="152,343,443,550"></span></div>
+<i class="b-r" style="left:56.69pt;top:599.13pt;width:482.9pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:599.53pt;width:0.4pt;height:29.48pt"></i><i class="b-r" style="left:213.61pt;top:599.53pt;width:0.4pt;height:29.48pt"></i><i class="b-r" style="left:539.19pt;top:599.53pt;width:0.4pt;height:29.48pt"></i><i class="b-r" style="left:56.69pt;top:629.02pt;width:482.9pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:629.42pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:213.61pt;top:629.42pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:539.19pt;top:629.42pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:56.69pt;top:644.96pt;width:482.9pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:645.36pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:213.61pt;top:645.36pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:539.19pt;top:645.36pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:56.69pt;top:660.9pt;width:482.9pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:661.3pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:213.61pt;top:661.3pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:539.19pt;top:661.3pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:56.69pt;top:676.84pt;width:482.9pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:677.24pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:213.61pt;top:677.24pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:539.19pt;top:677.24pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:56.69pt;top:692.78pt;width:482.9pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:693.18pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:213.61pt;top:693.18pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:539.19pt;top:693.18pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:56.69pt;top:708.72pt;width:482.9pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:709.12pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:213.61pt;top:709.12pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:539.19pt;top:709.12pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:56.69pt;top:724.66pt;width:482.9pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:725.06pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:213.61pt;top:725.06pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:539.19pt;top:725.06pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:56.69pt;top:740.6pt;width:482.9pt;height:0.4pt"></i>
+<p class="b-x b-tc" style="--b:610.4;left:63.1pt;width:148pt">비활성화 반응 시간<br><i>t</i> (min)</p>
+<p class="b-x b-tc" style="--b:610.4;left:220pt;width:316pt">분석 시작 2.0분 뒤의 L-DOPA 농도<br>[DOPA] (μmol&thinsp;dm<sup>−3</sup>)</p>
+<div class="b-f" style="left:56.7pt;top:629.4pt"><span class="fig" data-srcpage="20" data-clip="56.7,629.4,539.6,740.6"></span></div>
+</div>
+
+<!-- 4: Q3-4 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="21" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="21" data-clip="405,74.5,456,131.8"></span></div>
+<div class="b-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="21" data-clip="456,74.5,540,125"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="b-r" style="left:56.69pt;top:159.89pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:160.09pt;width:0.4pt;height:52.32pt"></i><i class="b-r" style="left:538.18pt;top:160.09pt;width:0.4pt;height:52.32pt"></i><i class="b-r" style="left:56.69pt;top:212.22pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:176.9"><span class="b-qn">3.4</span><span class="b-qp">4.0 pt</span>이 실험 자료로부터 활성 효소의 실제 농도([E])를 계산할 수 있는 식을 <i>k</i>&nbsp;(=&nbsp;250&thinsp;min<sup>−1</sup>), <span class="b-nw"><i>K</i><sub>M</sub>&nbsp;(=&nbsp;0.49&thinsp;mmol&thinsp;dm<sup>−3</sup>)</span> 및/또는 시약의 농도로 나타내어 <span class="b-cv">유도하라</span>.</p>
+<p class="b-x" style="--b:249.5">시간에 따른 활성 효소 농도의 변화는 포물선(<span class="b-nw">$[\mathrm{E}] = [\mathrm{E}]_0 - k_\mathrm{obs}t^2$</span>)으로 잘 나타난다. 여기서 <i>k</i><sub>obs</sub>는 관측 속도 상수(즉, 나중에 기본 반응의 속도 상수들과 초기 농도의 조합으로 나타낼 수 있는 상수)이고, [E]<sub>0</sub>는 효소의 초기 농도이다.</p>
+<i class="b-r" style="left:56.69pt;top:289.33pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:289.53pt;width:0.4pt;height:28.48pt"></i><i class="b-r" style="left:538.18pt;top:289.53pt;width:0.4pt;height:28.48pt"></i><i class="b-r" style="left:56.69pt;top:317.81pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:306.3"><span class="b-qn">3.5</span><span class="b-qp">3.0 pt</span><i>k</i><sub>obs</sub>의 값을 적절한 단위와 함께 <span class="b-cv">제시하라</span>.</p>
+<i class="b-r" style="left:56.69pt;top:339.13pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:339.33pt;width:0.4pt;height:52.39pt"></i><i class="b-r" style="left:538.18pt;top:339.33pt;width:0.4pt;height:52.39pt"></i><i class="b-r" style="left:56.69pt;top:391.52pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:356.1"><span class="b-qn">3.6</span><span class="b-qp">3.0 pt</span>효소 비활성화 반응의 첫 반감기를 <span class="b-cv">결정하라</span>. 첫 반감기를 효소의 초기 농도와 <i>k</i><sub>obs</sub>의 함수로 나타내는 식을 <span class="b-cv">유도하라</span>.</p>
+<p class="b-x" style="--b:428.8">카테콜의 초기 농도를 바꾸어 효소 비활성화의 첫 반감기를 측정하였다. 이 경우에도 시간에 따른 활성 효소 농도의 변화는 포물선으로 매우 잘 나타났다.</p>
+<i class="b-r" style="left:140.52pt;top:487.93pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:488.33pt;width:0.4pt;height:27.5pt"></i><i class="b-r" style="left:297.44pt;top:488.33pt;width:0.4pt;height:27.5pt"></i><i class="b-r" style="left:454.36pt;top:488.33pt;width:0.4pt;height:27.5pt"></i><i class="b-r" style="left:140.52pt;top:515.83pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:516.22pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:297.44pt;top:516.22pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:516.22pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:531.77pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:532.16pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:297.44pt;top:532.16pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:532.16pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:547.71pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:548.1pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:297.44pt;top:548.1pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:548.1pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:563.65pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:564.05pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:297.44pt;top:564.05pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:564.05pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:579.59pt;width:314.24pt;height:0.4pt"></i><i class="b-r" style="left:140.52pt;top:579.98pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:297.44pt;top:579.98pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:454.36pt;top:579.98pt;width:0.4pt;height:15.54pt"></i><i class="b-r" style="left:140.52pt;top:595.53pt;width:314.24pt;height:0.4pt"></i>
+<p class="b-x b-tc" style="--b:499.2;left:146.9pt;width:146pt">카테콜 농도<br>(mmol&thinsp;dm<sup>−3</sup>)</p>
+<p class="b-x b-tc" style="--b:499.2;left:303.8pt;width:146pt">첫 반감기<br>(min)</p>
+<div class="b-f" style="left:140.5pt;top:516.2pt"><span class="fig" data-srcpage="21" data-clip="140.5,516.2,454.8,595.5"></span></div>
+<i class="b-r" style="left:56.69pt;top:621.06pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:621.26pt;width:0.4pt;height:40.3pt"></i><i class="b-r" style="left:538.18pt;top:621.26pt;width:0.4pt;height:40.3pt"></i><i class="b-r" style="left:56.69pt;top:661.36pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:638.0"><span class="b-qn">3.7</span><span class="b-qp">6.0 pt</span>모든 실험 관찰 결과와 일치하는 효소 비활성화 과정의 속도식을 <span class="b-cv">유도하라</span>.</p>
+</div>
+
+<!-- 5: Q3-5 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="22" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="22" data-clip="405,74.5,456,131.8"></span></div>
+<div class="b-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="22" data-clip="456,74.5,540,125"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="b-r" style="left:56.69pt;top:159.89pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:160.09pt;width:0.4pt;height:136.01pt"></i><i class="b-r" style="left:538.18pt;top:160.09pt;width:0.4pt;height:136.01pt"></i><i class="b-r" style="left:56.69pt;top:295.9pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:176.9"><span class="b-qn">3.8</span><span class="b-qp">3.0 pt</span>효소 비활성화 과정의 속도 결정 단계에 참여하는 반응물은 무엇인가? 답안지에서 옳은 선택지 <b>단 하나</b>를 <span class="b-cv">골라라</span>.</p>
+<p class="b-x b-q" style="--b:200.8">A) 카테콜 + O<sub>2</sub> →...</p>
+<p class="b-x b-q" style="--b:212.7">B) 카테콜 + <i>o</i>-퀴논 →...</p>
+<p class="b-x b-q" style="--b:224.7">C) <i>o</i>-퀴논 + O<sub>2</sub> →...</p>
+<p class="b-x b-q" style="--b:236.7">D) 효소 + 2 카테콜 →...</p>
+<p class="b-x b-q" style="--b:248.6">E) 효소 + O<sub>2</sub> →...</p>
+<p class="b-x b-q" style="--b:260.6">F) 2 카테콜 + O<sub>2</sub> →...</p>
+<p class="b-x b-q" style="--b:272.5">G) 효소 + 카테콜 →...</p>
+<p class="b-x b-q" style="--b:284.5">H) 효소 + 부산물 →...</p>
+</div>
+
+<!-- 6: A3-1 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="23" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="23" data-clip="408,81,540,129.6"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="b-x b-h1" style="--b:168.0">문제 3 타이로시네이스</p>
+<div class="b-f" style="left:56.4pt;top:173.9pt"><span class="fig" data-srcpage="23" data-clip="56.4,173.9,538.9,302.1"></span></div>
+<div class="b-f" style="left:56.4pt;top:307.8pt"><span class="fig" data-srcpage="23" data-clip="56.4,307.8,538.9,466.3"></span></div>
+<div class="b-f" style="left:56.4pt;top:472.1pt"><span class="fig" data-srcpage="23" data-clip="56.4,472.1,538.9,754.1"></span></div>
+</div>
+
+<!-- 7: A3-2 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="24" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="24" data-clip="408,81,540,129.6"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="b-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="24" data-clip="56.4,159.8,538.9,468.4"></span></div>
+<div class="b-f" style="left:56.4pt;top:474.2pt"><span class="fig" data-srcpage="24" data-clip="56.4,474.2,538.9,754.3"></span></div>
+</div>
+
+<!-- 8: A3-3 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="25" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="25" data-clip="408,81,540,129.6"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="b-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="25" data-clip="56.4,159.8,538.9,418.9"></span></div>
+</div>
+
+<!-- 9: A3-4 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="26" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="26" data-clip="408,81,540,129.6"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="b-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="26" data-clip="56.4,159.8,538.9,621.1"></span></div>
+<div class="b-f" style="left:56.4pt;top:626.9pt"><span class="fig" data-srcpage="26" data-clip="56.4,626.9,538.9,655.4"></span></div>
+</div>
+
+<!-- 10: Q4-1 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="27" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="27" data-clip="405,74.5,456,131.8"></span></div>
+<div class="b-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="27" data-clip="456,74.5,540,125"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="b-x b-h1" style="--b:168.0">문제 4 칼륨</p>
+<p class="b-x" style="--b:199.9">칼륨 홑원소 물질은 전기 분해로 합성된 최초의 금속이다(1807). 험프리 데이비는 볼타 전지와, 용융 KOH에 담근 전극을 사용하였다.</p>
+<i class="b-r" style="left:56.69pt;top:227.79pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:227.99pt;width:0.4pt;height:39.49pt"></i><i class="b-r" style="left:538.18pt;top:227.99pt;width:0.4pt;height:39.49pt"></i><i class="b-r" style="left:56.69pt;top:267.28pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:244.8"><span class="b-qn">4.1</span><span class="b-qp">2 pt</span>음극(1)과 양극(2)에서 일어나는 과정의 균형 반응식을 <span class="b-cv">제시하라</span>.</p>
+<p class="b-x" style="--b:304.5">잘 알려지지 않은 사실이지만, 데이비보다 불과 1년 뒤에 프랑스 화학자들은 화학적 환원으로 칼륨을 만들었다. 그 방법 중 하나에서는 탄산 칼륨과 곱게 간 탄소 가루의 혼합물을 사용하였다. 이 혼합물을 총열 안에서 매우 높은 온도로 가열하였다. 일산화 탄소와 칼륨 증기가 총열 끝으로 빠져나왔고, 그곳에서 금속을 응축시켜 고체로 얻을 수 있었다.</p>
+<i class="b-r" style="left:56.69pt;top:356.34pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:356.54pt;width:0.4pt;height:38.05pt"></i><i class="b-r" style="left:538.18pt;top:356.54pt;width:0.4pt;height:38.05pt"></i><i class="b-r" style="left:56.69pt;top:394.39pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:373.3"><span class="b-qn">4.2</span><span class="b-qp">1 pt</span>이 두 생성물만 생기는 반응의 균형 반응식을 <span class="b-cv">써라</span>.</p>
+<p class="b-x" style="--b:431.7">칼륨의 화학적 제조는 수득률이 낮았다. 조건에 따라 상당한 양의 불그스름한 페이스트가 총열 안에 남았다. 그멜린은 1825년에 이 잔류물을 물에서 재결정하여 흥미로운 화합물(<b>X</b>)을 분리하였다. 이 부산물 <b>X</b>의 정확한 구조는 그로부터 150년도 더 지나서야 밝혀졌다.</p>
+<p class="b-x" style="--b:499.4"><b>X</b>는 수화된 염(물 2&thinsp;mol : 염 1&thinsp;mol)으로, 황금빛 노란색 결정을 이룬다. 그 음이온은 (진동 스펙트럼으로 확인된) 매우 대칭적이고 안정한 평면 고리 구조를 갖는다.</p>
+<p class="b-x" style="--b:543.2">염 <b>X</b>로부터 만들 수 있는 이양성자산(<b>Y</b>)은 (적어도 피상적으로 보기에는) 놀라울 만큼 낮은 pK<sub><i>a</i></sub> 값 0.8과 2.2를 갖는다.</p>
+<i class="b-r" style="left:56.69pt;top:571.13pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:571.33pt;width:0.4pt;height:28.35pt"></i><i class="b-r" style="left:538.18pt;top:571.33pt;width:0.4pt;height:28.35pt"></i><i class="b-r" style="left:56.69pt;top:599.48pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:588.1"><span class="b-qn">4.3</span><span class="b-qp">3 pt</span>녹아 있는 산 <b>Y</b> 전체의 95%가 중성 산 형태로 존재하는 pH를 <span class="b-cv">제시하라</span>.</p>
+<i class="b-r" style="left:56.69pt;top:620.8pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:621.0pt;width:0.4pt;height:31.28pt"></i><i class="b-r" style="left:538.18pt;top:621.0pt;width:0.4pt;height:31.28pt"></i><i class="b-r" style="left:56.69pt;top:652.08pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:640.7"><span class="b-qn">4.4</span><span class="b-qp">4 pt</span>순수한 물에 염 <b>X</b>를 녹인 0.01&thinsp;mol&thinsp;dm<sup>−3</sup> 용액의 pH를 <span class="b-cv">계산하라</span>.</p>
+<p class="b-x" style="--b:689.3"><b>X</b>의 구조 규명에서 핵심 단계는 무수 염을 아이오도메테인으로 처리하는 것이었다. 이 염은 아이오도메테인 2당량과 반응하였다. 얻어진 다소 휘발성인 화합물의 몰 질량은 170.12&thinsp;g/mol이었다(질량 분석기로 측정).</p>
+<p class="b-x" style="--b:745.1">혼합물에서는 이와 유사한 염 여러 가지도 더 적은 양으로 확인되었다. 해당 칼륨염을 MeI 2당량으로 처리하자 몰 질량이 142.11&thinsp;g/mol, 114.10&thinsp;g/mol, 198.13&thinsp;g/mol인 유도체가 얻어졌다.</p>
+</div>
+
+<!-- 11: Q4-2 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="28" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="28" data-clip="405,74.5,456,131.8"></span></div>
+<div class="b-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="28" data-clip="456,74.5,540,125"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="b-r" style="left:56.69pt;top:159.89pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:160.09pt;width:0.4pt;height:28.35pt"></i><i class="b-r" style="left:538.18pt;top:160.09pt;width:0.4pt;height:28.35pt"></i><i class="b-r" style="left:56.69pt;top:188.24pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:176.9"><span class="b-qn">4.5</span><span class="b-qp">4 pt</span>그멜린 화합물 <b>X</b>의 실험식을 <span class="b-cv">제시하라</span>.</p>
+<i class="b-r" style="left:56.69pt;top:209.56pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:209.76pt;width:0.4pt;height:28.27pt"></i><i class="b-r" style="left:538.18pt;top:209.76pt;width:0.4pt;height:28.27pt"></i><i class="b-r" style="left:56.69pt;top:237.82pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:226.5"><span class="b-qn">4.6</span><span class="b-qp">3 pt</span>자유 산 <b>Y</b>의 구조를 <span class="b-cv">그려라</span>.</p>
+<p class="b-x" style="--b:275.1">X와 유사한 염들에 들어 있는 일련의 음이온이 매우 안정한 까닭은 전자의 비편재화에 있다고 볼 수 있다.</p>
+<i class="b-r" style="left:56.69pt;top:302.98pt;width:481.89pt;height:0.4pt"></i><i class="b-r" style="left:56.69pt;top:303.18pt;width:0.4pt;height:38.05pt"></i><i class="b-r" style="left:538.18pt;top:303.18pt;width:0.4pt;height:38.05pt"></i><i class="b-r" style="left:56.69pt;top:341.03pt;width:481.89pt;height:0.4pt"></i>
+<p class="b-x b-q" style="--b:320.0"><span class="b-qn">4.7</span><span class="b-qp">4 pt</span>네 가지 염 각각의 음이온에 대하여 기여도가 큰 공명 구조를 하나씩 <span class="b-cv">그려라</span>.</p>
+</div>
+
+<!-- 12: A4-1 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="29" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="29" data-clip="408,81,540,129.6"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="b-x b-h1" style="--b:168.0">문제 4 칼륨</p>
+<div class="b-f" style="left:56.4pt;top:173.9pt"><span class="fig" data-srcpage="29" data-clip="56.4,173.9,538.9,242.0"></span></div>
+<div class="b-f" style="left:56.4pt;top:247.8pt"><span class="fig" data-srcpage="29" data-clip="56.4,247.8,538.9,306.2"></span></div>
+<div class="b-f" style="left:56.4pt;top:312.0pt"><span class="fig" data-srcpage="29" data-clip="56.4,312.0,538.9,539.8"></span></div>
+</div>
+
+<!-- 13: A4-2 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="30" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="30" data-clip="408,81,540,129.6"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="b-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="30" data-clip="56.4,159.8,538.9,437.3"></span></div>
+<div class="b-f" style="left:56.4pt;top:443.1pt"><span class="fig" data-srcpage="30" data-clip="56.4,443.1,538.9,720.6"></span></div>
+</div>
+
+<!-- 14: A4-3 -->
+<div class="page">
+<p class="b-x b-th" style="--b:78.3">이론</p>
+<div class="b-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="31" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="b-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="31" data-clip="408,81,540,129.6"></span></div>
+<p class="b-x b-tl" style="--b:139.4">한국어 번역</p>
+<i class="b-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="b-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="31" data-clip="56.4,159.8,538.9,337.8"></span></div>
+<div class="b-f" style="left:56.4pt;top:343.5pt"><span class="fig" data-srcpage="31" data-clip="56.4,343.5,538.9,690.4"></span></div>
+</div>
+
+<!-- ===== part c: original pages from 32 ===== -->
+<!-- 1: Q5-1 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="32" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="32" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="32" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="c-x c-h1" style="--b:168.0">문제 5 미지 물질</p>
+<p class="c-x" style="--b:199.9">금속을 포함하는 염 <b>A</b>는 뚜렷하게 다른 색을 띠는 두 화합물 <b>B</b>와 <b>C</b>의 차가운 포화 수용액을 화학량론적 비율로 섞는 간단한 교환 반응으로 만들 수 있다. <b>B</b> 10.00&thinsp;g을 녹인 용액을 <b>C</b> 12.86&thinsp;g을 녹인 용액과 섞고 즉시 2&thinsp;°C로 냉각하면 고체 <b>A</b> 4.90&thinsp;g이 얻어진다. <b>A</b>의 수득률은 32.6%이다.</p>
+<p class="c-x" style="--b:267.6"><b>A</b>의 조성을 결정하기 위해 먼저 아이오딘 적정을 한다. 질량을 정확히 아는 <b>A</b>를 적정 플라스크에 넣고 황산으로 산성화한 다음, KI를 과량 넣으면 침전이 생긴다. 몇 분 뒤 침전이 없어질 때까지 시트르산 나트륨 용액을 넣는다. 시트르산 이온은 혼합물 속에 있는 한 금속 이온과 강한 착물을 형성하여, 침전을 만든 반응을 완전히 되돌린다. 이 혼합물을 싸이오황산 나트륨 용액으로 적정한다(반응 1에 의한 적정 I). 적정이 끝난 파란색 용액에 황산을 한 번 더(처음 양보다 훨씬 많이) 넣어 시트르산 이온을 양성자화한다. 그러면 앞에서 생겼던 고체 침전이 다시 생긴다[반응 2]. 이 혼합물을 같은 싸이오황산 용액으로 적정한다(반응 1에 의한 적정 II).</p>
+<p class="c-x" style="--b:384.4;--l:13.8pt"><b>A</b> 100.0&thinsp;mg을 5.000&thinsp;·&thinsp;10<sup>−2</sup>&thinsp;mol&thinsp;dm<sup>−3</sup> 싸이오황산 용액으로 적정할 때 평균 부피는 적정 I에서 54.12&thinsp;cm<sup>3</sup>, 적정 II에서 5.41&thinsp;cm<sup>3</sup>이다.</p>
+<p class="c-x" style="--b:430.1"><b>A</b>의 수용액을 가열하면 파란색 침전 <b>D</b>가 생기는 것을 관찰할 수 있다[반응 3]. <b>D</b> 위의 액체에서 화합물 <b>E</b>를 결정으로 얻을 수 있다. <b>A</b>를 합성할 때 온도를 낮게 유지하는 것은 <b>E</b>에 의한 오염을 피하기 위해 중요하다.</p>
+<i class="c-r" style="left:56.69pt;top:469.92pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:470.12pt;width:0.4pt;height:28.35pt"></i><i class="c-r" style="left:538.18pt;top:470.12pt;width:0.4pt;height:28.35pt"></i><i class="c-r" style="left:56.69pt;top:498.27pt;width:481.89pt;height:0.4pt"></i>
+<p class="c-x c-q" style="--b:486.9"><span class="c-qn">5.1</span><span class="c-qp">4.0 pt</span>반응 [1]과 [2]의 균형 반응식을 <span class="c-cv">써라</span>.</p>
+<p class="c-x" style="--b:535.5">화합물 <b>A</b>의 열분해를 자세히 연구하였다. 순수한 <b>A</b>를 천천히 가열하면 약 75&thinsp;°C에서 이미 폭발한다. 이 화합물을 산화 알루미늄에 분산시킨 혼합물을 가열하면 바탕 물질이 여분의 열을 흡수하므로 폭발을 피할 수 있다. 이때 두 단계의 분해가 관찰된다. 첫 단계(65&thinsp;°C)에서는 14.1%의 질량 감소와 함께 두 성분으로 된 고체 잔류물이 생긴다[반응 4]. 이 잔류물의 성분들은 쉽게 분리할 수 있는데, <b>F</b>는 물에 잘 녹지만 <b>G</b>는 전혀 녹지 않기 때문이다. <b>F</b>&thinsp;:&thinsp;<b>G</b>의 질량비는 <span class="c-nw">1.00&thinsp;:&thinsp;2.97</span>이다. 더 가열하면 <b>F</b>는 고체 잔류물을 남기지 않고 분해된다[반응 5]. 즉, 순수한 <b>G</b>가 <b>A</b>의 최종 고체 분해 생성물이다. <b>G</b>는 산소 27.0&thinsp;wt% 외에 다른 두 원소를 포함한다. 첫 번째 분해 단계에서 생기는 기체 혼합물의 두 성분 중 하나는 산 용액에 흡수시키면 쉽게 정량할 수 있다.</p>
+<p class="c-x" style="--b:663.0"><span class="c-u">몇 가지 힌트</span></p>
+<p class="c-x c-bl" style="--b:694.9"><span class="c-bu">•</span>화합물 <b>A</b>는 산소를 내놓지 않고 분해된다.</p>
+<p class="c-x c-bl" style="--b:711.9"><span class="c-bu">•</span>화합물 <b>A</b>에는 서로 다른 두 금속이 들어 있다.</p>
+<p class="c-x c-bl" style="--b:728.8"><span class="c-bu">•</span>화합물 <b>A</b>와 <b>B</b>에는 모두 착이온이 들어 있다.</p>
+<p class="c-x c-bl" style="--b:745.7"><span class="c-bu">•</span><b>C</b>는 화학을 배우는 학생이라면 누구나 잘 아는 화합물이다.</p>
+<p class="c-x c-bl" style="--b:762.7"><span class="c-bu">•</span>화합물 <b>F</b>에는 금속이 전혀 들어 있지 않다.</p>
+</div>
+
+<!-- 2: Q5-2 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="33" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="33" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="33" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="c-r" style="left:56.69pt;top:159.89pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:160.09pt;width:0.4pt;height:54.46pt"></i><i class="c-r" style="left:538.18pt;top:160.09pt;width:0.4pt;height:54.46pt"></i><i class="c-r" style="left:56.69pt;top:214.35pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:235.67pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:235.87pt;width:0.4pt;height:37.51pt"></i><i class="c-r" style="left:538.18pt;top:235.87pt;width:0.4pt;height:37.51pt"></i><i class="c-r" style="left:56.69pt;top:273.18pt;width:481.89pt;height:0.4pt"></i>
+<p class="c-x c-q" style="--b:181.3"><span class="c-qn">5.2</span><span class="c-qp" style="top:-4.8pt;left:381.2pt">28.0 pt</span><b>A</b>–<b>G</b>의 화학식을 <span class="c-cv">제시하라</span>. 계산 과정을 보일 필요는 없지만, 화합물이 틀렸더라도 계산이 옳으면 부분 점수를 받을 수 있다.</p>
+<p class="c-x c-q" style="--b:257.1"><span class="c-qn">5.3</span><span class="c-qp" style="top:-4.8pt;left:381.2pt">12.0 pt</span>반응 [3]–[5]의 균형 반응식을 <span class="c-cv">써라</span>.</p>
+</div>
+
+<!-- 3: A5-1 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="34" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="34" data-clip="408,81,540,129.6"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="c-x c-h1" style="--b:168.0">문제 5 미지 물질</p>
+<div class="c-f" style="left:56.4pt;top:173.9pt"><span class="fig" data-srcpage="34" data-clip="56.4,173.9,538.9,276.9"></span></div>
+<div class="c-f" style="left:56.4pt;top:282.7pt"><span class="fig" data-srcpage="34" data-clip="56.4,282.7,538.9,709.7"></span></div>
+</div>
+
+<!-- 4: A5-2 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="35" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="35" data-clip="408,81,540,129.6"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="c-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="35" data-clip="56.4,159.8,538.9,713.0"></span></div>
+<span class="c-ov ov c-b" style="left:67.6pt;top:167.5pt;width:52pt">5.2 (계속)</span>
+</div>
+
+<!-- 5: A5-3 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="36" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="36" data-clip="408,81,540,129.6"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="c-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="36" data-clip="56.4,159.8,538.9,286.3"></span></div>
+</div>
+
+<!-- 6: Q6-1 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="37" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="37" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="37" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="c-x c-h1" style="--b:168.0">문제 6 페니실린</p>
+<p class="c-x" style="--b:199.9">페니실린은 발견된 이래 의학에서 결정적인 역할을 해 온 항생제 계열이다.</p>
+<div class="c-f" style="left:226pt;top:218pt"><span class="fig" data-srcpage="37" data-clip="226,218,369,313"></span></div>
+<i class="c-r" style="left:56.69pt;top:337.83pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:338.03pt;width:0.4pt;height:50.01pt"></i><i class="c-r" style="left:538.18pt;top:338.03pt;width:0.4pt;height:50.01pt"></i><i class="c-r" style="left:56.69pt;top:387.84pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:409.16pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:409.36pt;width:0.4pt;height:37.91pt"></i><i class="c-r" style="left:538.18pt;top:409.36pt;width:0.4pt;height:37.91pt"></i><i class="c-r" style="left:56.69pt;top:447.07pt;width:481.89pt;height:0.4pt"></i>
+<p class="c-x c-q" style="--b:354.8"><span class="c-qn">6.1.</span><span class="c-qp">6 pt</span>답안지의 페니실린 VK 구조에서 입체 발생 탄소 중심을 <span class="c-cv">표시하라</span>. 답안지에서 각 중심 옆에 해당하는 <i>R</i>/<i>S</i> 입체 배치 기호를 <span class="c-cv">써라</span>.</p>
+<p class="c-x c-q" style="--b:426.1"><span class="c-qn">6.2.</span><span class="c-qp">2 pt</span>페니실린 VK에서 가능한 입체 이성질체의 총수를 <span class="c-cv">제시하라</span>.</p>
+<p class="c-x" style="--b:484.3">페니실린 VK를 얻는 여러 합성법 중 하나는, 이 문제의 다음 쪽 반응 도식에 나타낸 것처럼 아미노산인 발린에서 출발한다.</p>
+<p class="c-x" style="--b:528.2">힌트:</p>
+<p class="c-x c-bl" style="--b:572.0"><span class="c-bu">•</span>화합물 <b>A</b>의 <sup>1</sup>H NMR 스펙트럼에는 여러 신호 가운데 적분값이 각각 3H인 신호 두 개가 있다. 이 두 신호는 모두 이중선이다.</p>
+<p class="c-x c-bl" style="--b:602.9"><span class="c-bu">•</span>화합물 <b>A</b>와 <b>D</b>는 열린 사슬 화합물이고, <b>B</b>와 <b>E</b>는 (PhthN기에 있는 고리 외에) 각각 5원자 고리를 하나씩 가진다.</p>
+<p class="c-x c-bl" style="--b:633.8"><span class="c-bu">•</span>브루신은 키랄 분할에 쓰인다.</p>
+</div>
+
+<!-- 7: Q6-2 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="38" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="38" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="38" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="c-f" style="left:89.5pt;top:157pt"><span class="fig" data-srcpage="38" data-clip="89.5,157,506,699"></span></div>
+<p class="c-x" style="--b:743.4">*<b>(+)-C</b>가 생성되는 단계에서 “Separation”이라는 단어는 <span class="c-cv">분리</span>를 뜻한다.</p>
+<p class="c-x" style="--b:775.3">**Conc. HCl은 <span class="c-cv">진한</span> HCl을 뜻한다.</p>
+</div>
+
+<!-- 8: Q6-3 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="39" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="39" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="39" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="c-r" style="left:56.69pt;top:159.89pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:160.09pt;width:0.4pt;height:181.37pt"></i><i class="c-r" style="left:538.18pt;top:160.09pt;width:0.4pt;height:181.37pt"></i><i class="c-r" style="left:56.69pt;top:341.26pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:362.58pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:362.78pt;width:0.4pt;height:49.86pt"></i><i class="c-r" style="left:538.18pt;top:362.78pt;width:0.4pt;height:49.86pt"></i><i class="c-r" style="left:56.69pt;top:412.45pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:433.77pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:433.96pt;width:0.4pt;height:133.55pt"></i><i class="c-r" style="left:538.18pt;top:433.96pt;width:0.4pt;height:133.55pt"></i><i class="c-r" style="left:56.69pt;top:567.32pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:588.64pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:588.84pt;width:0.4pt;height:145.51pt"></i><i class="c-r" style="left:538.18pt;top:588.84pt;width:0.4pt;height:145.51pt"></i><i class="c-r" style="left:56.69pt;top:734.14pt;width:481.89pt;height:0.4pt"></i>
+<p class="c-x c-q" style="--b:176.9"><span class="c-qn">6.3.</span><span class="c-qp">8 pt</span>답안지에서 번호가 매겨진 각 단계(1–4)에 알맞은 시약을 <span class="c-cv">골라라</span>.</p>
+<p class="c-x c-q" style="--b:200.8">a) 2&thinsp;M HCl<sub>(aq)</sub></p>
+<p class="c-x c-q" style="--b:224.7">b) SO<sub>3</sub>, H<sub>2</sub>SO<sub>4</sub></p>
+<p class="c-x c-q" style="--b:248.6">c) NaOH<sub>(aq)</sub></p>
+<p class="c-x c-q" style="--b:272.5">d) HCO<sub>2</sub>H, Ac<sub>2</sub>O</p>
+<p class="c-x c-q" style="--b:296.4">e) i) N<sub>2</sub>H<sub>4</sub><span class="c-t" style="left:55.8pt">ii) HCl<sub>(aq)</sub>, AcOH</span></p>
+<p class="c-x c-q" style="--b:320.3">f) i) H<sub>2</sub>S, Na, CH<sub>3</sub>OH<span class="c-t" style="left:102.4pt">ii) H<sub>2</sub>O</span></p>
+<p class="c-x c-q c-jl" style="--b:379.6"><span class="c-qn">6.4.</span><span class="c-qp">18 pt</span>답안지에 <b>A</b>, <b>B</b>, <b>(+)-C</b>, <b>D</b>, <b>E</b>, <b>F</b>의 구조를 <span class="c-cv">그려라</span>. 필요하면 쐐기–점선 표기법</p>
+<p class="c-x c-q c-nw" style="--b:391.5">(<span style="display:inline-block;width:66.1pt"></span>)으로 입체 구조를 <span class="c-cv">나타내라</span>.</p>
+<div class="c-f" style="left:118.6pt;top:384pt"><span class="fig" data-srcpage="39" data-clip="325.5,384,390.6,397"></span></div>
+<p class="c-x c-q" style="--b:450.8"><span class="c-qn">6.5.</span><span class="c-qp">2 pt</span>답안지에서 <b>B</b>로 이어지는 단계에서 아세톤의 역할을 <span class="c-cv">골라라</span>.</p>
+<p class="c-x c-q" style="--b:474.7">a) 용매</p>
+<p class="c-x c-q" style="--b:498.6">b) 촉매</p>
+<p class="c-x c-q" style="--b:522.5">c) 친전자체</p>
+<p class="c-x c-q" style="--b:546.4">d) 친핵체</p>
+<p class="c-x c-q" style="--b:605.6"><span class="c-qn">6.6.</span><span class="c-qp">2 pt</span>답안지에서 <b>F</b>가 페니실린 VK로 되는 단계에서 DCC의 역할을 <span class="c-cv">골라라</span>.</p>
+<p class="c-x c-q" style="--b:641.5">a) 산화제</p>
+<p class="c-x c-q" style="--b:665.4">b) 촉매</p>
+<p class="c-x c-q" style="--b:689.3">c) 짝지음 시약</p>
+<p class="c-x c-q" style="--b:713.2">d) 라디칼 개시제</p>
+</div>
+
+<!-- 9: A6-1 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="40" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="40" data-clip="408,81,540,129.6"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="c-x c-h1" style="--b:168.0">문제 6. 페니실린 답안지</p>
+<div class="c-f" style="left:56.4pt;top:173.9pt"><span class="fig" data-srcpage="40" data-clip="56.4,173.9,538.9,384.3"></span></div>
+<div class="c-f" style="left:56.4pt;top:390.1pt"><span class="fig" data-srcpage="40" data-clip="56.4,390.1,538.9,466.5"></span></div>
+<div class="c-f" style="left:56.4pt;top:472.3pt"><span class="fig" data-srcpage="40" data-clip="56.4,472.3,538.9,638.9"></span></div>
+</div>
+
+<!-- 10: A6-2 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="41" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="41" data-clip="408,81,540,129.6"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="c-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="41" data-clip="56.4,159.8,538.9,631.1"></span></div>
+<div class="c-f" style="left:56.4pt;top:636.9pt"><span class="fig" data-srcpage="41" data-clip="56.4,636.9,538.9,689.3"></span></div>
+<div class="c-f" style="left:56.4pt;top:695.1pt"><span class="fig" data-srcpage="41" data-clip="56.4,695.1,538.9,747.4"></span></div>
+</div>
+
+<!-- 11: Q7-1 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="42" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="42" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="42" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="c-x c-h1" style="--b:168.0">문제 7 SABIC</p>
+<p class="c-x" style="--b:199.9">사우디 기초 산업 공사(SABIC)는 사우디아라비아의 경제 다각화 계획의 일환으로 1970년대 중반에 설립되었다. 오늘날 SABIC은 해마다 6,900만 톤의 제품을 생산하는 세계적인 거대 화학 기업이다.</p>
+<p class="c-x c-b" style="--b:255.7">파트 A</p>
+<p class="c-x" style="--b:287.6">SABIC 고유의 에텐 올리고머화 기술(올리고머는 단위체 수가 적은 중합체이다)은 수많은 산업 분야에 쓰이는 선형 알파 올레핀(1-알켄)을 생산한다.</p>
+<p class="c-x" style="--b:331.4">선형 알파 올레핀은 에텐의 촉매 올리고머화로 생산되며, 그 결과 여러 사슬 길이가 일정한 분포를 이룬다. 촉매에 따라 생성물의 분포가 다양하게 달라질 수 있다.</p>
+<p class="c-x" style="--b:375.2">기하 분포, 즉 슐츠–플로리 분포에서는 각 올리고머 분획이 바로 앞 분획과 <span class="c-nw">$T_{n+1} = \alpha T_n$</span>의 관계를 가진다. 여기서 $T_n$은 에텐 단위 $n$개로 이루어진 올리고머의 몰수이고, $\alpha$는 사슬 성장 확률이라는 상수이다. 단위체인 에텐은 이 계열에 속하지 않는다($n \ge 2$).</p>
+<p class="c-x" style="--b:443.0">한 촉매 올리고머화 과정은 비교적 간단한 다음 메커니즘으로 나타낼 수 있다:</p>
+<div class="c-f" style="left:200pt;top:479pt"><span class="fig" data-srcpage="42" data-clip="200,479,395,660"></span></div>
+<p class="c-x" style="--b:702.0">최종 생성물이 순환 안에서 만들어지지 않으므로 이 메커니즘은 고전적인 연쇄 반응은 아니지만, 연쇄 반응의 일반적인 속도론적 취급을 적용할 수 있다. 나타낸 세 과정(<b>1–3</b>)은 모두 사슬 성장 단계이다. R은 순환할 때마다 길어진다.</p>
+<p class="c-x" style="--b:757.8">세 반응은 모두 사슬 운반체에 대하여 1차이다. 에텐에 대해서는 미지의 반응 차수 $\rho$를 사용하며, 이 값은 나중에 결정한다.</p>
+</div>
+
+<!-- 12: Q7-2 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="43" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="43" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="43" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="c-r" style="left:56.69pt;top:159.89pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:160.09pt;width:0.4pt;height:40.3pt"></i><i class="c-r" style="left:538.18pt;top:160.09pt;width:0.4pt;height:40.3pt"></i><i class="c-r" style="left:56.69pt;top:200.19pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:253.39pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:253.59pt;width:0.4pt;height:40.3pt"></i><i class="c-r" style="left:538.18pt;top:253.59pt;width:0.4pt;height:40.3pt"></i><i class="c-r" style="left:56.69pt;top:293.7pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:315.02pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:315.21pt;width:0.4pt;height:64.21pt"></i><i class="c-r" style="left:538.18pt;top:315.21pt;width:0.4pt;height:64.21pt"></i><i class="c-r" style="left:56.69pt;top:379.23pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:532.06pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:532.26pt;width:0.4pt;height:28.27pt"></i><i class="c-r" style="left:538.18pt;top:532.26pt;width:0.4pt;height:28.27pt"></i><i class="c-r" style="left:56.69pt;top:560.32pt;width:481.89pt;height:0.4pt"></i>
+<p class="c-x c-q" style="--b:176.9"><span class="c-qn">7.1</span><span class="c-qp">1 pt</span>각 반응의 속도 상수로 $k_1, k_2, k_3$을 사용하여 반응 <b>1–3</b>의 속도식을 <span class="c-cv">써라</span>. 이 속도 상수들은 탄소 사슬 길이와 무관하다.</p>
+<p class="c-x" style="--b:237.5">올리고머를 생성하는 사슬 종결 단계는 반응 <b>1</b>과 경쟁하는 1차 반응이다.</p>
+<p class="c-x c-q" style="--b:270.4"><span class="c-qn">7.2</span><span class="c-qp">2 pt</span>종결 단계의 i) 화학 반응식과 ii) 속도식을 <span class="c-cv">써라</span>. 해당 속도 상수로는 $k_t$를 사용하라.</p>
+<p class="c-x c-q" style="--b:332.0"><span class="c-qn">7.3</span><span class="c-qp">4 pt</span>닫힌계에서 반응을 진행할 때 올레핀 생성물 혼합물이 슐츠–플로리 분포에 맞는 생성물 비를 나타내게 하는 $\rho$의 값을 <span class="c-cv">구하라</span>. 이 경우에 $\alpha$를 속도 상수의 함수로 나타내는 식을 <span class="c-cv">유도하라</span>.</p>
+<p class="c-x" style="--b:416.5">알킬 알루미늄은 에텐 올리고머화 공정에서 조촉매로 쓰인다. 이들은 올리고머화에 쓰이는 방향족 용매의 프리델–크래프츠 알킬화도 촉매하는 것으로 밝혀졌다.</p>
+<p class="c-x" style="--b:460.3">톨루엔을 용매로 하는 전형적인 에텐 올리고머화 반응의 복잡한 반응 혼합물에서 알킬화된 방향족 화합물 <b>Q</b>를 분리하였다. 알킬화된 방향족 화합물 <b>Q</b>의 분자식은 C<sub>11</sub>H<sub>16</sub>이고, <sup>1</sup>H NMR 스펙트럼에는 다음 피크들이 나타난다.</p>
+<p class="c-x c-nw" style="--b:512.5"><b>Q</b>의 <sup>1</sup>H NMR: $\delta$ 0.9 (<i>t</i>, 3H); 1.35 (<i>m</i>, 2H); 1.59 (<i>m</i>, 2H); 2.34 (<i>s</i>, 3H), 2.60 (<i>t</i>, 2H); 7.18 (<i>d</i>, 2H); 7.22 (<i>d</i>, 2H).</p>
+<p class="c-x c-q" style="--b:549.0"><span class="c-qn">7.4</span><span class="c-qp">3 pt</span><b>Q</b>의 구조를 <span class="c-cv">그려라</span>.</p>
+</div>
+
+<!-- 13: Q7-3 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="44" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="44" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="44" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="c-x c-b" style="--b:165.9">파트 B</p>
+<p class="c-x" style="--b:197.7">비트리머는 “가역적인” 공유 결합을 가진 적응성 고분자로, 특정 조건에서 모양이 바뀌거나 스스로 치유될 수 있다. 이 소문제에서는 SABIC의 고분자 연구에서 중요한 주제인 비트리머 화학의 원리를 살펴본다.</p>
+<p class="c-x" style="--b:253.5">최근 밝혀진, 다이옥사보롤레인이 관여하는 빠르고 가역적인 반응은 이러한 적응성 고분자 그물 구조의 화학적 바탕이 될 수 있다. 아래의 두 다이옥사보롤레인은 각각 페닐보론산과 1,2-뷰테인다이올의 반응, 그리고 3,5-다이메틸페닐보론산과 1,2-프로페인다이올의 반응으로 만들었다.</p>
+<div class="c-f" style="left:152pt;top:326pt"><span class="fig" data-srcpage="44" data-clip="152,326,443,421"></span></div>
+<p class="c-x" style="--b:462.3">이들은 모형 복분해(교환) 반응에 참여한다. 조심스럽게 정제한 두 화합물을 용매 없이 섞고, 혼합물을 60&thinsp;°C에서 2시간 동안 유지하였다. 흥미롭게도, 유지 기간의 처음과 끝에 얻은 혼합물의 기체 크로마토그램에는 아래의 피크들만 나타났으며, 각 성분의 양은 같은 몰수였다. 이 계에서 피크는 몰 질량과 상관관계가 있는 방식으로 분리된다. 즉, 질량이 <b>작은</b> 화합물일수록 <b>이른</b> 용리 시간에 나타난다.</p>
+<div class="c-f" style="left:152pt;top:547pt"><span class="fig" data-srcpage="44" data-clip="152,547,443,598"></span></div>
+<p class="c-x" style="--b:639.9">혼합물에서는 촉매, 물, 다이올, 산이 전혀 검출되지 않았다.</p>
+<i class="c-r" style="left:56.69pt;top:655.82pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:656.02pt;width:0.4pt;height:28.29pt"></i><i class="c-r" style="left:538.18pt;top:656.02pt;width:0.4pt;height:28.29pt"></i><i class="c-r" style="left:56.69pt;top:684.11pt;width:481.89pt;height:0.4pt"></i>
+<p class="c-x c-q" style="--b:672.8"><span class="c-qn">7.5</span><span class="c-qp">2 pt</span>크로마토그램의 피크 I–IV에 해당하는 화합물을 <span class="c-cv">그려라</span>.</p>
+<p class="c-x" style="--b:721.4">고분자 사슬에 기능성 단위를 연결하는 것을 그래프팅이라 하고, 이 기능성 단위를 그래프팅제라 한다. 여기서는 다이옥사보롤레인 단위를 말레이미드기를 통해 라디칼 과정으로 고분자 사슬에 연결하는데, 이 과정에서 말레이미드기 하나가 고분자 사슬의 임의의 탄소 원자에 결합한다. 아래 반응 도식은 비트리머에 쓰이는 다이옥사보롤레인 말레이미드 그래프팅제의 유연한 합성 경로를 보여 준다.</p>
+</div>
+
+<!-- 14: Q7-4 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="45" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="45" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="45" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="c-f" style="left:152pt;top:155pt"><span class="fig" data-srcpage="45" data-clip="152,155,443,279"></span></div>
+<i class="c-r" style="left:56.69pt;top:302.66pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:302.86pt;width:0.4pt;height:28.27pt"></i><i class="c-r" style="left:538.18pt;top:302.86pt;width:0.4pt;height:28.27pt"></i><i class="c-r" style="left:56.69pt;top:330.93pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:352.25pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:352.45pt;width:0.4pt;height:185.35pt"></i><i class="c-r" style="left:538.18pt;top:352.45pt;width:0.4pt;height:185.35pt"></i><i class="c-r" style="left:56.69pt;top:537.6pt;width:481.89pt;height:0.4pt"></i>
+<p class="c-x c-q" style="--b:319.7"><span class="c-qn">7.6</span><span class="c-qp">3 pt</span><b>A</b>–<b>C</b>의 구조를 <span class="c-cv">그려라</span>.</p>
+<p class="c-x c-q" style="--b:369.2"><span class="c-qn">7.7</span><span class="c-qp">1 pt</span>다이옥사보롤레인 말레이미드 단위를 <b>폴리에틸렌</b>에 연결하는 데 적절한 시약 및/또는 조건을 답안지에서 <span class="c-cv">골라라</span>.</p>
+<div class="c-f" style="left:132pt;top:398pt"><span class="fig" data-srcpage="45" data-clip="132,398,463,515"></span></div>
+<p class="c-x" style="--b:574.9">비트리머는 다음과 같이 만들었다:</p>
+<p class="c-x c-bl" style="--b:606.7"><span class="c-bu">•</span>폴리에틸렌에 다이옥사보롤레인 말레이미드를 그래프팅한다. 다이옥사보롤레인 말레이미드 화합물들 사이에는 부반응이 없다고 가정하라.</p>
+<p class="c-x c-bl" style="--b:637.6"><span class="c-bu">•</span>고분자에서 시약을 제거한다.</p>
+<p class="c-x c-bl" style="--b:656.5"><span class="c-bu">•</span>가교가 일어날 수 있도록 프로페인다이올로 작용기화된 비스-다이옥사보롤레인을 넣는다.</p>
+<div class="c-f" style="left:236pt;top:693pt"><span class="fig" data-srcpage="45" data-clip="236,693,359,734"></span></div>
+<p class="c-x c-bl" style="--b:776.1"><span class="c-bu">•</span>복분해(교환) 반응이 일어나도록 혼합물을 조심스럽게 가열한다.</p>
+</div>
+
+<!-- 15: Q7-5 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="46" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="46" data-clip="405,74.5,456,131.8"></span></div>
+<div class="c-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="46" data-clip="456,74.5,540,125"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="c-x" style="--b:165.9">비트리머의 그래프팅 정도와 가교 정도를 결정하기 위해, 복분해 반응이 매우 느린 상온에서 적외선(IR) 분광법을 사용하였다. 비트리머는 균일하다고 가정하라.</p>
+<p class="c-x c-bl" style="--b:209.7"><span class="c-bu">•</span>작은 분자는 모두 고분자에서 제거한다.</p>
+<p class="c-x c-bl" style="--b:228.6"><span class="c-bu">•</span>얇은 고분자 필름의 IR 스펙트럼을 측정한다.</p>
+<p class="c-x c-bl" style="--b:247.6"><span class="c-bu">•</span>IR 스펙트럼에는 특정 작용기에 해당하는 흡수 피크가 나타난다.</p>
+<p class="c-x c-bl" style="--b:266.5"><span class="c-bu">•</span>비어–람베르트 법칙을 이용하여 이 작용기들의 농도를 정량할 수 있다.</p>
+<p class="c-x" style="--b:298.4">주어진 자료 표에는 관련된 특성 피크의 파장, (지정한 작용기에 대한) 몰 흡수 계수와 함께 비트리머 시료의 흡광도가 나와 있다.</p>
+<i class="c-r" style="left:62.06pt;top:359.77pt;width:471.16pt;height:0.4pt"></i><i class="c-r" style="left:62.06pt;top:360.17pt;width:0.4pt;height:29.35pt"></i><i class="c-r" style="left:218.98pt;top:360.17pt;width:0.4pt;height:29.35pt"></i><i class="c-r" style="left:375.9pt;top:360.17pt;width:0.4pt;height:29.35pt"></i><i class="c-r" style="left:532.82pt;top:360.17pt;width:0.4pt;height:29.35pt"></i><i class="c-r" style="left:62.06pt;top:389.52pt;width:471.16pt;height:0.4pt"></i><i class="c-r" style="left:62.06pt;top:389.92pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:218.98pt;top:389.92pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:375.9pt;top:389.92pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:532.82pt;top:389.92pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:62.06pt;top:419.19pt;width:471.16pt;height:0.4pt"></i><i class="c-r" style="left:62.06pt;top:419.59pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:218.98pt;top:419.59pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:375.9pt;top:419.59pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:532.82pt;top:419.59pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:62.06pt;top:448.87pt;width:471.16pt;height:0.4pt"></i><i class="c-r" style="left:62.06pt;top:449.27pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:218.98pt;top:449.27pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:375.9pt;top:449.27pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:532.82pt;top:449.27pt;width:0.4pt;height:29.28pt"></i><i class="c-r" style="left:62.06pt;top:478.55pt;width:471.16pt;height:0.4pt"></i><i class="c-r" style="left:62.06pt;top:478.95pt;width:0.4pt;height:29.35pt"></i><i class="c-r" style="left:218.98pt;top:478.95pt;width:0.4pt;height:29.35pt"></i><i class="c-r" style="left:375.9pt;top:478.95pt;width:0.4pt;height:29.35pt"></i><i class="c-r" style="left:532.82pt;top:478.95pt;width:0.4pt;height:29.35pt"></i><i class="c-r" style="left:62.06pt;top:508.29pt;width:471.16pt;height:0.4pt"></i>
+<p class="c-x c-nw" style="--b:372.0;--l:11.9pt;left:68.4pt;width:148pt">진동 파수와<br>해당 작용기</p>
+<p class="c-x c-nw c-c" style="--b:371.0;--l:13.9pt;left:219.4pt;width:156.5pt">몰 흡수 계수, $\epsilon$<br>(dm<sup>3</sup>&thinsp;mol<sup>−1</sup>&thinsp;μm<sup>−1</sup>)</p>
+<p class="c-x c-nw c-c" style="--b:372.0;--l:11.9pt;left:376.4pt;width:156.5pt">이 파수에서 시료의<br>흡광도, <i>A</i></p>
+<p class="c-x c-nw" style="--b:400.8;--l:13.7pt;left:68.4pt;width:148pt">이미드기 띠<br>1710&thinsp;cm<sup>−1</sup></p>
+<p class="c-x c-nw" style="--b:430.5;--l:13.7pt;left:68.4pt;width:148pt">일치환 벤젠 고리 띠<br>1600&thinsp;cm<sup>−1</sup></p>
+<p class="c-x c-nw" style="--b:460.1;--l:13.8pt;left:68.4pt;width:148pt">이치환 벤젠 고리 띠<br>1520&thinsp;cm<sup>−1</sup></p>
+<p class="c-x c-nw" style="--b:489.8;--l:13.8pt;left:68.4pt;width:148pt">폴리에틸렌의 CH<sub>2</sub>기 띠<br>1470&thinsp;cm<sup>−1</sup></p>
+<p class="c-x c-nw" style="--b:407.7;left:219.4pt;width:313.5pt"><span class="c-t c-c" style="left:0;width:156.5pt">2.67</span><span class="c-t c-c" style="left:157pt;width:156.5pt">0.451</span></p>
+<p class="c-x c-nw" style="--b:437.3;left:219.4pt;width:313.5pt"><span class="c-t c-c" style="left:0;width:156.5pt">0.28</span><span class="c-t c-c" style="left:157pt;width:156.5pt">0.022</span></p>
+<p class="c-x c-nw" style="--b:467.0;left:219.4pt;width:313.5pt"><span class="c-t c-c" style="left:0;width:156.5pt">0.68</span><span class="c-t c-c" style="left:157pt;width:156.5pt">0.042</span></p>
+<p class="c-x c-nw" style="--b:496.7;left:219.4pt;width:313.5pt"><span class="c-t c-c" style="left:0;width:156.5pt">0.021</span><span class="c-t c-c" style="left:157pt;width:156.5pt">0.904</span></p>
+<i class="c-r" style="left:56.69pt;top:533.82pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:534.02pt;width:0.4pt;height:40.3pt"></i><i class="c-r" style="left:538.18pt;top:534.02pt;width:0.4pt;height:40.3pt"></i><i class="c-r" style="left:56.69pt;top:574.12pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:595.44pt;width:481.89pt;height:0.4pt"></i><i class="c-r" style="left:56.69pt;top:595.64pt;width:0.4pt;height:40.45pt"></i><i class="c-r" style="left:538.18pt;top:595.64pt;width:0.4pt;height:40.45pt"></i><i class="c-r" style="left:56.69pt;top:635.89pt;width:481.89pt;height:0.4pt"></i>
+<p class="c-x c-q" style="--b:550.8"><span class="c-qn">7.8</span><span class="c-qp">3 pt</span>측정 결과를 바탕으로 폴리에틸렌의 그래프팅 밀도($X_g$)를 <span class="c-cv">계산하라</span>. 그래프팅 밀도는 에틸렌 단위 수에 대한 그래프팅된 기의 수의 비이다.</p>
+<p class="c-x c-q" style="--b:612.4"><span class="c-qn">7.9</span><span class="c-qp">4 pt</span>그래프팅된 기 가운데 가교에 참여하지 않은 기의 백분율($p_{nc}$)을 <span class="c-cv">계산하라</span>.</p>
+</div>
+
+<!-- 16: A7-1 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="47" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="47" data-clip="408,81,540,129.6"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="c-x c-h1" style="--b:168.0">문제 7 SABIC</p>
+<div class="c-f" style="left:56.4pt;top:173.9pt"><span class="fig" data-srcpage="47" data-clip="56.4,173.9,538.9,287.6"></span></div>
+<div class="c-f" style="left:56.4pt;top:293.4pt"><span class="fig" data-srcpage="47" data-clip="56.4,293.4,538.9,390.0"></span></div>
+<div class="c-f" style="left:56.4pt;top:395.7pt"><span class="fig" data-srcpage="47" data-clip="56.4,395.7,538.9,752.0"></span></div>
+</div>
+
+<!-- 17: A7-2 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="48" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="48" data-clip="408,81,540,129.6"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="c-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="48" data-clip="56.4,159.8,538.9,301.5"></span></div>
+<div class="c-f" style="left:56.4pt;top:307.3pt"><span class="fig" data-srcpage="48" data-clip="56.4,307.3,538.9,473.6"></span></div>
+<div class="c-f" style="left:56.4pt;top:479.4pt"><span class="fig" data-srcpage="48" data-clip="56.4,479.4,538.9,681.5"></span></div>
+<div class="c-f" style="left:56.4pt;top:687.3pt"><span class="fig" data-srcpage="48" data-clip="56.4,687.3,538.9,716.2"></span></div>
+</div>
+
+<!-- 18: A7-3 -->
+<div class="page">
+<p class="c-x c-th" style="--b:78.3">이론</p>
+<div class="c-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="49" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="c-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="49" data-clip="408,81,540,129.6"></span></div>
+<p class="c-x c-tl" style="--b:139.4">한국어 번역</p>
+<i class="c-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="c-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="49" data-clip="56.4,159.8,538.9,420.7"></span></div>
+<div class="c-f" style="left:56.4pt;top:426.5pt"><span class="fig" data-srcpage="49" data-clip="56.4,426.5,538.9,783.3"></span></div>
+</div>
+
+<!-- ===== part d: original pages from 50 ===== -->
+<!-- 1: Q8-1 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="50" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="50" data-clip="405,74.5,456,131.8"></span></div>
+<div class="d-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="50" data-clip="456,74.5,540,125"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="d-x d-h1" style="--b:168.1">문제 8 홍화</p>
+<p class="d-x" style="--b:200.0">사우디 문화에서 홍화 음료는 진정 효과 때문에 마시는 전통적인 민간요법이다.</p>
+<div class="d-f" style="left:224pt;top:236pt"><span class="fig" data-srcpage="50" data-clip="224,236,371,307"></span></div>
+<p class="d-x" style="--b:349.0">건강에 이로운 성분 중 하나가 캠페롤이다. 다음 반응 도식은 캠페롤의 전합성을 보여 준다.</p>
+<div class="d-f" style="left:82pt;top:388pt"><span class="fig" data-srcpage="50" data-clip="82,388,514,598"></span></div>
+<span class="d-ov ov d-ovs" style="left:414.6pt;top:559.8pt;width:45.5pt;height:10.6pt;line-height:10.6pt;font-size:8.7pt">캠페롤</span>
+<p class="d-x" style="--b:642.1">힌트:</p>
+<p class="d-x d-bl" style="--b:674.0"><span class="d-bu">•</span><b>C</b>는 삼환 고리계를 갖는다. 또한 <b>C</b>는 바로 앞 화합물과 하이드록시기의 수가 같다.</p>
+<p class="d-x d-bl" style="--b:703.8"><span class="d-bu">•</span><b>C</b>에서 <b>D</b>로 가는 단계는 DMDO와 원하지 않는 반응이 일어나지 않게 하려고 필요하다.</p>
+<p class="d-x d-bl" style="--b:721.8"><span class="d-bu">•</span>DMDO는 하이드록시화 시약이다.</p>
+<i class="d-r" style="left:56.69pt;top:737.71pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:737.91pt;width:0.4pt;height:28.35pt"></i><i class="d-r" style="left:538.18pt;top:737.91pt;width:0.4pt;height:28.35pt"></i><i class="d-r" style="left:56.69pt;top:766.06pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:754.7"><span class="d-qn">8.1.</span><span class="d-qp">15 pt</span>화합물 <b>A</b>–<b>E</b>의 구조를 <span class="d-cv">그려라</span>.</p>
+</div>
+
+<!-- 2: Q8-2 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="51" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="51" data-clip="405,74.5,456,131.8"></span></div>
+<div class="d-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="51" data-clip="456,74.5,540,125"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="d-x" style="--b:165.9">홍화에서 발견되는 독특한 오환식 인돌 알칼로이드인 세로토베닌은 항균 작용을 한다. 세로토베닌의 전합성은 다음과 같다:</p>
+<div class="d-f" style="left:58pt;top:217pt"><span class="fig" data-srcpage="51" data-clip="58,217,537,588"></span></div>
+<span class="d-ov ov d-ovs" style="left:161.5pt;top:555pt;width:65.5pt;height:13pt;line-height:13pt;font-size:10.8pt">세로토베닌</span>
+<p class="d-x" style="--b:632.8">힌트:</p>
+<p class="d-x d-bl" style="--b:664.6"><span class="d-bu">•</span><b>G</b>는 두 고리 중 하나가 헤테로고리인 이환식 화합물이다.</p>
+<p class="d-x d-bl" style="--b:682.6"><span class="d-bu">•</span><b>H</b>는 아민 염기가 있을 때 가열하면 이성질화한다.</p>
+<p class="d-x d-bl" style="--b:700.5"><span class="d-bu">•</span><b>K</b>는 <b>J</b>에서 새로 생긴 작용기가 산화적으로 절단되어 생긴 생성물이다. <b>K</b>는 <sup>1</sup>H NMR 스펙트럼의 12 ppm에서 신호를 나타낸다.</p>
+<i class="d-r" style="left:56.69pt;top:728.4pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:728.6pt;width:0.4pt;height:28.35pt"></i><i class="d-r" style="left:538.18pt;top:728.6pt;width:0.4pt;height:28.35pt"></i><i class="d-r" style="left:56.69pt;top:756.75pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:745.4"><span class="d-qn">8.2.</span><span class="d-qp">18 pt</span>화합물 <b>F</b>–<b>K</b>의 구조를 <span class="d-cv">그려라</span>.</p>
+</div>
+
+<!-- 3: Q8-3 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="52" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="52" data-clip="405,74.5,456,131.8"></span></div>
+<div class="d-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="52" data-clip="456,74.5,540,125"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="d-x" style="--b:165.9">카르타민은 홍화에 붉은색을 띠게 하는 물질이다.</p>
+<div class="d-f" style="left:190pt;top:205pt"><span class="fig" data-srcpage="52" data-clip="190,205,405,319"></span></div>
+<span class="d-ov ov d-ovs" style="left:280.3pt;top:309.6pt;width:36pt;height:9.2pt;line-height:9.2pt;font-size:7.6pt">카르타민</span>
+<p class="d-x" style="--b:362.9">카르타민의 전합성에서는 조립 과정을 모델 기질 <b>L</b>로 먼저 시험해 보았다. <b>M</b>은 카르타민의 핵심 구조와 닮았다는 점에 유의하라.</p>
+<div class="d-f" style="left:154pt;top:412pt"><span class="fig" data-srcpage="52" data-clip="154,412,441,509"></span></div>
+<i class="d-r" style="left:56.69pt;top:536.39pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:536.59pt;width:0.4pt;height:51.44pt"></i><i class="d-r" style="left:538.18pt;top:536.59pt;width:0.4pt;height:51.44pt"></i><i class="d-r" style="left:56.69pt;top:587.83pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:553.4"><span class="d-qn">8.3.</span><span class="d-qp">5 pt</span>화합물 <b>M</b>의 구조를 입체화학을 포함하여 <span class="d-cv">그려라</span>. (힌트: 메탄올-<i>d</i><sub>4</sub>에서 <b>L</b>은 11개, <b>M</b>은 10개의 서로 다른 양성자 신호를 <sup>1</sup>H NMR 스펙트럼에 나타낸다.)</p>
+</div>
+
+<!-- 4: A8-1 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="53" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="53" data-clip="408,81,540,129.6"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="d-x d-h1" style="--b:168.1">문제 8 홍화</p>
+<div class="d-f" style="left:56.4pt;top:174pt"><span class="fig" data-srcpage="53" data-clip="56.4,174,538.9,544.3"></span></div>
+</div>
+
+<!-- 5: A8-2 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="54" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="54" data-clip="408,81,540,129.6"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="d-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="54" data-clip="56.4,159.8,538.9,506.2"></span></div>
+<div class="d-f" style="left:56.4pt;top:512pt"><span class="fig" data-srcpage="54" data-clip="56.4,512,538.9,597.9"></span></div>
+</div>
+
+<!-- 6: Q9-1 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="55" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="55" data-clip="405,74.5,456,131.8"></span></div>
+<div class="d-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="55" data-clip="456,74.5,540,125"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="d-x d-h1" style="--b:168.0">문제 9 포르피린 착물</p>
+<p class="d-x d-h2" style="--b:189.7;left:56.3pt">파트 A. 석유 속의 금속</p>
+<p class="d-x" style="--b:221.6">주로 탄화수소로 이루어진 사우디아라비아 석유에는 바나듐 같은 원소가 포르피린 착물 형태로 들어 있는데, 이는 석유가 생물에서 유래했음을 시사한다.</p>
+<p class="d-x" style="--b:265.4">바나듐 착물 <b>B</b>는 석유 속에서 다음 반응 도식에 따라 엽록소로부터 생성되는 것으로 추정된다:</p>
+<div class="d-f" style="left:57pt;top:294pt"><span class="fig" data-srcpage="55" data-clip="57,294,537,435"></span></div>
+<i class="d-r" style="left:188.71pt;top:444.33pt;width:217.87pt;height:0.4pt"></i><i class="d-r" style="left:188.7pt;top:444.73pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:249.25pt;top:444.73pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:406.17pt;top:444.73pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:188.71pt;top:460.27pt;width:217.87pt;height:0.4pt"></i><i class="d-r" style="left:188.7pt;top:460.67pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:249.25pt;top:460.67pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:406.17pt;top:460.67pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:188.71pt;top:476.21pt;width:217.87pt;height:0.4pt"></i><i class="d-r" style="left:188.7pt;top:476.61pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:249.25pt;top:476.61pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:406.17pt;top:476.61pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:188.71pt;top:492.15pt;width:217.87pt;height:0.4pt"></i><i class="d-r" style="left:188.7pt;top:492.55pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:249.25pt;top:492.55pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:406.17pt;top:492.55pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:188.71pt;top:508.09pt;width:217.87pt;height:0.4pt"></i><i class="d-r" style="left:188.7pt;top:508.49pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:249.25pt;top:508.49pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:406.17pt;top:508.49pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:188.71pt;top:524.03pt;width:217.87pt;height:0.4pt"></i><i class="d-r" style="left:188.7pt;top:524.43pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:249.25pt;top:524.43pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:406.17pt;top:524.43pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:188.71pt;top:539.97pt;width:217.87pt;height:0.4pt"></i><i class="d-r" style="left:188.7pt;top:540.37pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:249.25pt;top:540.37pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:406.17pt;top:540.37pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:188.71pt;top:555.91pt;width:217.87pt;height:0.4pt"></i><i class="d-r" style="left:188.7pt;top:556.31pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:249.25pt;top:556.31pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:406.17pt;top:556.31pt;width:0.4pt;height:15.54pt"></i><i class="d-r" style="left:188.71pt;top:571.85pt;width:217.87pt;height:0.4pt"></i>
+<p class="d-x d-c d-b" style="--b:455.6;left:188.9pt;width:60.5pt">단계</p>
+<p class="d-x d-c d-b" style="--b:455.6;left:249.4pt;width:157pt">이름</p>
+<p class="d-x d-c" style="--b:471.5;left:188.9pt;width:60.5pt">1)</p>
+<p class="d-x d-c" style="--b:471.5;left:249.4pt;width:157pt">탈금속화</p>
+<p class="d-x d-c" style="--b:487.5;left:188.9pt;width:60.5pt">2)</p>
+<p class="d-x d-c" style="--b:487.5;left:249.4pt;width:157pt">가수분해</p>
+<p class="d-x d-c" style="--b:503.4;left:188.9pt;width:60.5pt">3)</p>
+<p class="d-x d-c" style="--b:503.4;left:249.4pt;width:157pt">탈메톡시카보닐화</p>
+<p class="d-x d-c" style="--b:519.4;left:188.9pt;width:60.5pt">4)</p>
+<p class="d-x d-c" style="--b:519.4;left:249.4pt;width:157pt">환원</p>
+<p class="d-x d-c" style="--b:535.3;left:188.9pt;width:60.5pt">5)</p>
+<p class="d-x d-c" style="--b:535.3;left:249.4pt;width:157pt">방향족화</p>
+<p class="d-x d-c" style="--b:551.2;left:188.9pt;width:60.5pt">6)</p>
+<p class="d-x d-c" style="--b:551.2;left:249.4pt;width:157pt">탈카복실화</p>
+<p class="d-x d-c" style="--b:567.2;left:188.9pt;width:60.5pt">7)</p>
+<p class="d-x d-c" style="--b:567.2;left:249.4pt;width:157pt">금속 킬레이트화</p>
+<i class="d-r" style="left:56.69pt;top:597.38pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:597.58pt;width:0.4pt;height:38.05pt"></i><i class="d-r" style="left:538.18pt;top:597.58pt;width:0.4pt;height:38.05pt"></i><i class="d-r" style="left:56.69pt;top:635.43pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:656.75pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:656.95pt;width:0.4pt;height:52.26pt"></i><i class="d-r" style="left:538.18pt;top:656.95pt;width:0.4pt;height:52.26pt"></i><i class="d-r" style="left:56.69pt;top:709.01pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:730.33pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:730.53pt;width:0.4pt;height:28.27pt"></i><i class="d-r" style="left:538.18pt;top:730.53pt;width:0.4pt;height:28.27pt"></i><i class="d-r" style="left:56.69pt;top:758.6pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:614.4"><span class="d-qn">9.1</span><span class="d-qp">4.0 pt</span>(답안지에 주어진) 분자식 <b>a</b>–<b>e</b>를 중간체 <b>I</b>–<b>V</b>에 <span class="d-cv">대응시켜라</span>.</p>
+<p class="d-x d-q" style="--b:673.7"><span class="d-qn">9.2</span><span class="d-qp">7.0 pt</span>미리 그려진 포르피린 골격을 사용하여 중간체 <b>A</b>와 바나듐 착물 <b>B</b>의 구조를 <span class="d-cv">그려라</span>. (<i>구조를 다시 그릴 새 틀이 필요하면 감독관에게 요청하라.</i>)</p>
+<p class="d-x d-q" style="--b:747.3"><span class="d-qn">9.3</span><span class="d-qp">1.0 pt</span><b>B</b>에서 바나듐의 산화 상태를 <span class="d-cv">표시하라</span>.</p>
+</div>
+
+<!-- 7: Q9-2 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="56" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="56" data-clip="405,74.5,456,131.8"></span></div>
+<div class="d-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="56" data-clip="456,74.5,540,125"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="d-x d-h2" style="--b:165.9;left:56.3pt">파트 B. 포르피린 비금속 착물</p>
+<p class="d-x" style="--b:197.7">포르피린은 금속뿐 아니라 일부 비금속, 예를 들어 붕소나 인과도 킬레이트형 착물을 형성하는 것으로 알려져 있다. 옥타에틸포르피린(H<sub>2</sub>OEP)은 천연 포르피린의 모델로, 그리고 포르피린 착물을 연구하는 데 자주 쓰인다. H<sub>2</sub>OEP는 다음과 같은 구조를 가지며, 다음과 같이 간단히 나타낼 수 있다:</p>
+<div class="d-f" style="left:217pt;top:278pt"><span class="fig" data-srcpage="56" data-clip="217,278,395,373"></span></div>
+<p class="d-x" style="--b:419.3">평면형 2가 양이온 붕소 포르피린 착물 [<b>X3</b>]<sup>2+</sup>를 만들 때 BCl<sub>3</sub>나 다른 이성분 화합물 <b>X1</b>을 전구체로 사용할 수 있다:</p>
+<div class="d-f" style="left:106pt;top:471pt"><span class="fig" data-srcpage="56" data-clip="106,471,489,562"></span></div>
+<i class="d-r" style="left:56.69pt;top:585.17pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:585.36pt;width:0.4pt;height:31.24pt"></i><i class="d-r" style="left:538.18pt;top:585.36pt;width:0.4pt;height:31.24pt"></i><i class="d-r" style="left:56.69pt;top:616.41pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:604.9"><span class="d-qn">9.4</span><span class="d-qp">3.0 pt</span><b>X1</b>, 중간체 착물 <b>X2</b>, 생성물 [<b>X3</b>]<sup>2+</sup>의 구조를 <span class="d-cv">그려라</span>.</p>
+<p class="d-x" style="--b:653.7">인은 포르피린 양이온 착물 [<b>Y1</b>]<sup><i>n</i>+</sup>, [<b>Y2</b>]<sup><i>n</i>+</sup>, [<b>Y3</b>]<sup><i>n</i>+</sup>를 형성한다. 착물 [<b>Y3</b>]<sup><i>n</i>+</sup>는 [<b>Y1</b>]<sup><i>n</i>+</sup>와 [<b>Y2</b>]<sup><i>n</i>+</sup>보다 대칭면이 하나 적다(대칭성을 따질 때 OEP 리간드의 에틸 치환기는 무시하라). 여기서 피리딘(Py)은 염기성 용매로 쓰이며, “Hal”은 할로젠 F, Cl, Br 중 하나이다:</p>
+<div class="d-f" style="left:58pt;top:726pt"><span class="fig" data-srcpage="56" data-clip="58,726,541,788"></span></div>
+</div>
+
+<!-- 8: Q9-3 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="57" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="57" data-clip="405,74.5,456,131.8"></span></div>
+<div class="d-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="57" data-clip="456,74.5,540,125"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="d-r" style="left:56.69pt;top:159.89pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:160.09pt;width:0.4pt;height:40.4pt"></i><i class="d-r" style="left:538.18pt;top:160.09pt;width:0.4pt;height:40.4pt"></i><i class="d-r" style="left:56.69pt;top:200.29pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:221.61pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:221.81pt;width:0.4pt;height:30.26pt"></i><i class="d-r" style="left:538.18pt;top:221.81pt;width:0.4pt;height:30.26pt"></i><i class="d-r" style="left:56.69pt;top:251.87pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:176.9"><span class="d-qn">9.5</span><span class="d-qp">2.0 pt</span>a) 인 포르피린 착물의 전하 “<i>n</i>+”와 b) 착물 [<b>Y1</b>]<sup><i>n</i>+</sup>가 갖는 대칭면의 수 <span class="d-nw"><i>N</i>(<i>σ</i>)</span>를 <span class="d-cv">표시하라</span>.</p>
+<p class="d-x d-q" style="--b:240.3"><span class="d-qn">9.6</span><span class="d-qp">4.0 pt</span>[<b>Y1</b>]<sup><i>n</i>+</sup>, [<b>Y2</b>]<sup><i>n</i>+</sup>, [<b>Y3</b>]<sup><i>n</i>+</sup>의 구조를 <span class="d-cv">그려라</span>.</p>
+<p class="d-x d-h2" style="--b:297.6;left:56.3pt">파트 C. 포르피린 샌드위치</p>
+<p class="d-x" style="--b:329.5">여러 개의 포르피린 고리가 서로 나란히 배열되면 샌드위치형 포르피린 착물이 생긴다. Zr(OEP)<sub>2</sub>, Eu<sub>2</sub>(OEP)<sub>3</sub>, Bi<sub>2</sub>(OEP)<sub>2</sub>Cl<sub>2</sub>가 그 예이며, 각각 적어도 3개의 대칭면을 갖는다. OEP 리간드의 구멍 크기는 약 4.0&thinsp;Å이고, 이 착물들에서 평균 금속–N 거리는 각각 2.4, 2.5, 2.3&thinsp;Å이라는 점에 유의하라.</p>
+<i class="d-r" style="left:56.69pt;top:381.32pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:381.52pt;width:0.4pt;height:41.35pt"></i><i class="d-r" style="left:538.18pt;top:381.52pt;width:0.4pt;height:41.35pt"></i><i class="d-r" style="left:56.69pt;top:422.67pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:398.3"><span class="d-qn">9.7</span><span class="d-qp">3.0 pt</span>Zr(OEP)<sub>2</sub>, Eu<sub>2</sub>(OEP)<sub>3</sub>, Bi<sub>2</sub>(OEP)<sub>2</sub>Cl<sub>2</sub>의 구조를 <span class="d-cv">제안하라</span>. OEP 리간드는 간략하게 나타내어도 된다.</p>
+<p class="d-x" style="--b:459.9">샌드위치형 포르피린 착물의 또 다른 유형으로 금속–금속 단일 결합이나 다중 결합을 갖는 금속–포르피린 이량체가 있다. 예를 들어 [Ru(OEP)]<sub>2</sub>에는 Ru−Ru 이중 결합이 있다(d 전자만 고려할 때). 아래는 [M(포르피린)]<sub>2</sub> 유형의 겹친형 이량체에 대한 분자 궤도함수 도표이다(d<sub><i>x</i><sup>2</sup>−<i>y</i><sup>2</sup></sub> 사이의 상호작용은 이 궤도함수들의 에너지가 높으므로 고려하지 않는다):</p>
+<div class="d-f" style="left:190pt;top:535pt"><span class="fig" data-srcpage="57" data-clip="190,535,405,772"></span></div>
+</div>
+
+<!-- 9: Q9-4 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="58" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:405pt;top:74.5pt"><span class="fig" data-srcpage="58" data-clip="405,74.5,456,131.8"></span></div>
+<div class="d-f" style="left:456pt;top:74.5pt"><span class="fig" data-srcpage="58" data-clip="456,74.5,540,125"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<i class="d-r" style="left:56.69pt;top:159.89pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:160.09pt;width:0.4pt;height:40.25pt"></i><i class="d-r" style="left:538.18pt;top:160.09pt;width:0.4pt;height:40.25pt"></i><i class="d-r" style="left:56.69pt;top:200.14pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:221.46pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:221.66pt;width:0.4pt;height:40.4pt"></i><i class="d-r" style="left:538.18pt;top:221.66pt;width:0.4pt;height:40.4pt"></i><i class="d-r" style="left:56.69pt;top:261.86pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:176.8"><span class="d-qn">9.8</span><span class="d-qp">4.0 pt</span>주어진 좌표계에 따라 <span class="d-nw"><i>σ</i>(d<sub><i>z</i><sup>2</sup></sub>+d<sub><i>z</i><sup>2</sup></sub>)</span>, <span class="d-nw"><i>π</i>(d<sub><i>xz</i></sub>+d<sub><i>xz</i></sub>)</span>, <span class="d-nw"><i>π</i>(d<sub><i>yz</i></sub>+d<sub><i>yz</i></sub>)</span>, <span class="d-nw"><i>δ</i>(d<sub><i>xy</i></sub>+d<sub><i>xy</i></sub>)</span> 결합 궤도함수를 <span class="d-cv">그려라</span>.</p>
+<p class="d-x d-q" style="--b:238.4"><span class="d-qn">9.9</span><span class="d-qp">3.0 pt</span>겹친형 배치인 착물 [Mo(OEP)]<sub>2</sub>, [Ir(OEP)]<sub>2</sub>, <span class="d-nw">[Re(OEP)]<span class="d-ss"><span>+</span><span>2</span></span></span>의 금속–금속 결합 차수를 <span class="d-cv">계산하라</span>.</p>
+<p class="d-x" style="--b:299.1">d 전자가 7, 8, 9개인 금속–포르피린 이량체에서는 일반적으로 겹친형 배치가 선호된다. 그 밖의 경우에는 포르피린 고리들이 서로 45°&nbsp;회전해 있는 엇갈린형 배치에서 이 착물들이 더 안정하다.</p>
+<i class="d-r" style="left:56.69pt;top:338.97pt;width:481.89pt;height:0.4pt"></i><i class="d-r" style="left:56.69pt;top:339.17pt;width:0.4pt;height:99.21pt"></i><i class="d-r" style="left:538.18pt;top:339.17pt;width:0.4pt;height:99.21pt"></i><i class="d-r" style="left:56.69pt;top:438.18pt;width:481.89pt;height:0.4pt"></i>
+<p class="d-x d-q" style="--b:355.8"><span class="d-qn">9.10</span><span class="d-qp">4.0 pt</span>겹친형 배치가 엇갈린형 배치로 바뀔 때, 궤도함수 상호작용의 각 유형에 대하여 갈라짐(즉, 반결합 궤도함수와 결합 궤도함수 사이의 에너지 차)이 어떻게 변하는지 <span class="d-cv">골라라</span>:</p>
+<p class="d-x d-q" style="--b:391.8">a) 증가한다;</p>
+<p class="d-x d-q" style="--b:403.7">b) 변하지 않는다;</p>
+<p class="d-x d-q" style="--b:415.7">c) 감소한다(0이 되지는 않는다);</p>
+<p class="d-x d-q" style="--b:427.6">d) 0까지 감소한다.</p>
+</div>
+
+<!-- 10: A9-1 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="59" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="59" data-clip="408,81,540,129.6"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<p class="d-x d-h1" style="--b:168.0">문제 9 포르피린 착물</p>
+<div class="d-f" style="left:56.4pt;top:173.9pt"><span class="fig" data-srcpage="59" data-clip="56.4,173.9,538.9,305.1"></span></div>
+<div class="d-f" style="left:56.4pt;top:310.9pt"><span class="fig" data-srcpage="59" data-clip="56.4,310.9,538.9,600.3"></span></div>
+<div class="d-f" style="left:56.4pt;top:606.1pt"><span class="fig" data-srcpage="59" data-clip="56.4,606.1,538.9,688.7"></span></div>
+</div>
+
+<!-- 11: A9-2 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="60" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="60" data-clip="408,81,540,129.6"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="d-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="60" data-clip="56.4,159.8,538.9,377.1"></span></div>
+<div class="d-f" style="left:56.4pt;top:382.9pt"><span class="fig" data-srcpage="60" data-clip="56.4,382.9,538.9,465.5"></span></div>
+<div class="d-f" style="left:56.4pt;top:471.2pt"><span class="fig" data-srcpage="60" data-clip="56.4,471.2,538.9,702.1"></span></div>
+</div>
+
+<!-- 12: A9-3 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="61" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="61" data-clip="408,81,540,129.6"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="d-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="61" data-clip="56.4,159.8,538.9,429.1"></span></div>
+<div class="d-f" style="left:56.4pt;top:434.9pt"><span class="fig" data-srcpage="61" data-clip="56.4,434.9,538.9,605.7"></span></div>
+<div class="d-f" style="left:56.4pt;top:611.5pt"><span class="fig" data-srcpage="61" data-clip="56.4,611.5,538.9,718.4"></span></div>
+</div>
+
+<!-- 13: A9-4 -->
+<div class="page">
+<p class="d-x d-th" style="--b:78.3">이론</p>
+<div class="d-f" style="left:56.2pt;top:82.3pt"><span class="fig" data-srcpage="62" data-clip="56.2,82.3,207.4,139.9"></span></div>
+<div class="d-f" style="left:408pt;top:81pt"><span class="fig" data-srcpage="62" data-clip="408,81,540,129.6"></span></div>
+<p class="d-x d-tl" style="--b:139.4">한국어 번역</p>
+<i class="d-r" style="left:56.69pt;top:142.95pt;width:481.89pt;height:1.99pt"></i>
+<div class="d-f" style="left:56.4pt;top:159.8pt"><span class="fig" data-srcpage="62" data-clip="56.4,159.8,538.9,266.7"></span></div>
+</div>
+</body></html>
