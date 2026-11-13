@@ -49,8 +49,13 @@ function browserCache(response, request, url, diagnostic) {
   return 'no-store';
 }
 
+// The origin's API security headers (index.js apiHeaders). A cache hit is rebuilt from the stored copy, which keeps only
+// its type and bookmarks, so they are set here on every answer the gateway gives (a miss already has them).
+const SECURITY_HEADERS = { 'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'",
+  'X-Frame-Options': 'DENY', 'Referrer-Policy': 'no-referrer', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains' };
 function finish(response, request, env, started, state, { hit = false, diagnostic = false } = {}) {
   const headers = new Headers(response.headers), url = new URL(request.url), elapsed = Date.now() - started;
+  if (/^application\/(?:json|[\w.+-]+\+json)/i.test(headers.get('Content-Type') || '')) for (const [k, v] of Object.entries(SECURITY_HEADERS)) if (!headers.has(k)) headers.set(k, v);
   const originalCache = headers.get('X-Edge-Cache');
   if (originalCache && !hit) headers.set('X-Origin-Edge-Cache', originalCache);
   headers.set('X-Edge-Cache', state);
