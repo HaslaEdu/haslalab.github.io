@@ -1,0 +1,174 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* IZhO 2012 theoretical problems. The official English pdf is a text-only export (no figures, no formulas, no header,
+   no instruction page), so this edition is laid out on the official Russian paper (IZhO_2012_T_RU.pdf, same 6 A4 pages,
+   Word): Times New Roman 12pt, text x 72..555.8, pitch 13.8pt; header Arial bold 10pt with an underline rule (stamped).
+   Blocks are placed by the original's first baseline --b (pt); --l = line pitch, --fs = size. Figures and pure-math
+   displays are stamped from the Russian paper; formulas with Russian units are retyped in KaTeX. */
+body{font-family:'Times New Roman',KB,serif;font-size:12pt;line-height:13.8pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;left:72pt;width:483.8pt;margin:0;--l:13.8pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs))}
+.c{text-align:center;text-indent:0}
+.h{font-weight:bold}
+.ind{text-indent:35.4pt}
+.li{padding-left:17.9pt}
+.it{left:91.6pt;width:464.2pt}
+.bu{left:90pt;width:465.8pt;padding-left:18pt}
+.n{position:absolute;left:0;text-indent:0}
+.nw{white-space:nowrap;width:auto}
+.hd{position:absolute;top:35.1pt;font-family:Arial,KG,sans-serif;font-weight:bold;font-size:10pt;line-height:12pt;white-space:nowrap}
+.f{position:absolute;line-height:0}
+.rule{position:absolute;left:72pt;top:45.72pt;width:477pt;height:1.08pt;background:#000}
+.nb{white-space:nowrap}
+.ov{position:absolute;background:#fff;white-space:nowrap;line-height:1}
+.s0{float:left;width:0.01pt}
+.s1{float:left;clear:left}
+</style></head><body>
+
+<!-- 1 -->
+<div class="page">
+<div class="hd" style="left:72pt">VIII 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:43.8pt">쪽 1/6</div>
+<div class="rule"></div>
+<p class="x c h" style="--b:85.2;--fs:16pt;--l:19pt">이론 시험</p>
+<p class="x c h" style="--b:111.0;--fs:14pt;--l:17pt">2012년 1월 17일</p>
+<p class="x c h" style="--b:141.0;--fs:14pt;--l:17pt">먼저 다음을 읽으시오:</p>
+<p class="x li" style="--b:168.7"><span class="n">1.</span>이론 시험은 세 문제로 이루어져 있다. 시험 시간은 4시간이다.</p>
+<p class="x li" style="--b:188.5"><span class="n">2.</span>제공된 펜만 사용하시오.</p>
+<p class="x li" style="--b:208.3"><span class="n">3.</span>계산에는 자신의 계산기를 사용할 수 있다. 계산기가 없으면 올림피아드 주최 측에 요청할 수 있다.</p>
+<p class="x li" style="--b:241.9"><span class="n">4.</span>백지와 <b><i>답안지</i></b>(<b><i>Writing sheets</i></b>)가 제공된다. 백지는 초안용으로 자유롭게 사용할 수 있으며 채점하지 않는다. 채점받을 풀이는 <b><i>답안지</i></b>에 써야 한다. 풀이에서 말로 하는 설명은 되도록 줄이고, 주로 식, 수, 문자 기호, 그림, 그래프를 사용하시오.</p>
+<p class="x li" style="--b:330.7"><span class="n">5.</span><b><i>답안지</i></b>의 앞면만 사용하시오. 쓸 때 표시된 테두리 밖으로 나가지 마시오.</p>
+<p class="x li" style="--b:364.3"><span class="n">6.</span>문제마다 새 <b><i>답안지</i></b>에서 풀이를 시작하시오.</p>
+<p class="x li" style="--b:384.1"><span class="n">7.</span>사용한 각 <b><i>답안지</i></b>의 지정된 칸에 국가<b>(<i>Country</i>)</b>, 학생 코드<b>(<i>Student Code</i>)</b>, 문제 번호<b>(<i>Question Number</i>)</b>, 각 용지의 일련번호<b>(<i>Page Number</i>)</b>, 모든 문제의 풀이에 사용한 용지의 총 매수<b>(<i>Total Number of Pages</i>)</b>를 적으시오. 사용한 <b><i>답안지</i></b> 가운데 답안에 포함하고 싶지 않은 것이 있다면, 그 용지 전체에 큰 X 표시를 하고 총 매수를 셀 때 포함하지 마시오.</p>
+<p class="x li" style="--b:486.7"><span class="n">8.</span>시험이 끝나면 모든 용지를 다음 순서로 정리하시오.</p>
+<p class="x" style="--b:501.5;left:144pt;width:411.8pt;padding-left:18pt"><span class="n">•</span>순서대로 번호를 매긴 <b><i>답안지</i></b></p>
+<p class="x" style="--b:516.1;left:144pt;width:411.8pt;padding-left:18pt"><span class="n">•</span>초안 용지</p>
+<p class="x" style="--b:530.8;left:144pt;width:411.8pt;padding-left:18pt"><span class="n">•</span>사용하지 않은 용지</p>
+<p class="x" style="--b:545.4;left:144pt;width:411.8pt;padding-left:18pt"><span class="n">•</span>인쇄된 문제지</p>
+<p class="x" style="--b:559.1;left:90pt;width:465.8pt">모든 용지를 봉투에 넣어 책상 위에 두시오. 시험실 밖으로 <i>어떤</i> 용지도 가져갈 수 없다.</p>
+</div>
+
+<!-- 2 -->
+<div class="page">
+<div class="hd" style="left:72pt">VIII 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:43.8pt">쪽 2/6</div>
+<div class="rule"></div>
+<p class="x c h" style="--b:69.6;--fs:14pt;--l:17pt">문제 1 (10점)</p>
+<p class="x c" style="--b:83.6">이 문제는 서로 관련 없는 세 부분으로 이루어져 있다.</p>
+<p class="x h nw" style="--b:113.4;--fs:14pt;--l:17pt;left:99pt">문제 1.A. 2012 (4점)</p>
+<div class="f" style="left:341.7pt;top:110.7pt"><span class="fig" data-srcpage="2" data-clip="341.7,110.7,562.3,251.3"></span></div>
+<p class="x" style="--b:141.1;width:264pt;text-indent:27pt">질량을 무시할 수 있는 단단한 막대의 한쪽 끝은 경첩으로 고정되어 있고, 다른 쪽 끝에는 질량을 무시할 수 있는 도르래에 걸친 실로 질량 $m$인 추가 매달려 있다. 질량이 각각 $20m$과 $12m$인 두 추는 막대를 삼등분하는 두 점에 실로 매달려 있다(그림 참고). 모든 실은 질량이 없고 늘어나지 않는다. 막대를 수평으로 붙잡고 있다가 놓는다. 막대를 놓은 직후 각 추의 가속도를 구하여라.</p>
+<p class="x h nw" style="--b:308.9;--fs:14pt;--l:17pt;left:99pt">문제 1.B. 그리고 다이오드…(2.5점)</p>
+<div class="f" style="left:368.7pt;top:317.7pt"><span class="fig" data-srcpage="2" data-clip="368.7,317.7,549.5,426.3"></span></div>
+<p class="x ind" style="--b:336.6;width:290pt;--l:14.4pt">별도 용지에 다이오드 한 개의 전류-전압 특성 곡선(다이오드에 걸린 전압에 따라 다이오드에 흐르는 전류의 그래프 $I_0(U)$)이 주어져 있다.</p>
+<p class="x ind" style="--b:382.2;width:290pt">이와 같은 다이오드 다섯 개를 그림과 같이 연결하였다.</p>
+<p class="x ind" style="--b:409.8;width:290pt;--l:14pt">전원의 전압 $U$가 0에서 3&thinsp;V까지 변할 때, 회로에 흐르는 전류의 세기가 전원 전압에 따라 어떻게 달라지는지 그래프로 그려라.</p>
+<p class="x c h" style="--b:465.6"><i>그래프는 나누어 준 별도 용지에 그려라.</i></p>
+<p class="x c h" style="--b:479.4"><i>그 용지를 반드시 제출하라!</i></p>
+<p class="x h nw" style="--b:508.9;--fs:14pt;--l:17pt;left:107.4pt">문제 1.C. 평평한 렌즈 (3.5점)</p>
+<div class="f" style="left:341.7pt;top:549.7pt"><span class="fig" data-srcpage="2" data-clip="341.7,549.7,543.3,662.3"></span></div>
+<p class="x ind" style="--b:537.0;width:264pt">두께가 $h$인 둥글고 투명한 평행 평판이 있다. 평판 물질의 굴절률은 평판의 중심축으로부터의 거리 $r$에 따라 다음 법칙으로 달라진다.</p>
+<div class="f" style="left:178.7pt;top:581.6pt"><span class="fig" data-srcpage="2" data-clip="178.7,581.6,336.5,600.8"></span></div>
+<p class="x" style="--b:612.5;width:264pt;--l:15.45pt">여기서 $n_0, \beta$는 주어진 양의 상수이다. 평판은 굴절률이 $n = 1$인 공기 중에 놓여 있다.</p>
+<p class="x ind" style="--b:657.6;width:264pt;--l:14.3pt">평판의 축 위, 평판으로부터 거리 $a$ $(a \gg h)$인 곳에 점광원 $S$가 있다.</p>
+<p class="x" style="--b:685.7;--l:14.15pt">평판이 일종의 렌즈임을, 즉 광원의 상을 만든다는 것을 보여라. 광원 $S$의 상이 평판으로부터 얼마나 떨어진 거리 $b$에 생기는지 구하여라. 이 렌즈의 초점 거리는 얼마인가?</p>
+</div>
+
+<!-- 3 -->
+<div class="page">
+<div class="hd" style="left:72pt">VIII 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:43.8pt">쪽 3/6</div>
+<div class="rule"></div>
+<p class="x c h" style="--b:69.6;--fs:14pt;--l:17pt">문제 2</p>
+<p class="x c h" style="--b:85.8;--fs:14pt;--l:17pt">피스톤의 모험 (10점)</p>
+<div class="f" style="left:72pt;top:102pt"><span class="fig" data-srcpage="3" data-clip="72,102,227,282"></span></div>
+<div class="ov" style="left:106pt;top:106pt;width:68pt;height:15pt;text-align:center;font-size:10.5pt;font-weight:bold;padding-top:1.5pt">대기</div>
+<div class="ov" style="left:175pt;top:139pt;width:52pt;height:14pt;text-align:center;font-size:10.5pt;font-weight:bold;padding-top:1.5pt">피스톤</div>
+<div class="ov" style="left:117pt;top:228pt;width:40pt;height:14pt;text-align:center;font-size:10.5pt;font-weight:bold;padding-top:1.5pt">공기</div>
+<p class="x" style="--b:113.9;left:235.8pt;width:320pt;--l:13.95pt">높이가 $H = 30.0\ \mathrm{cm}$, 단면적이 $S = 50.0\ \mathrm{cm^2}$인 열린 원통형 용기에 표준 상태, 즉 대기압 $p_0 = 1.01\times10^5\ \mathrm{Pa}$, 온도 $T_0 = 273\ \mathrm{K}$인 대기의 공기가 들어 있다. 이 용기에 위에서 얇고 무거운 질량 $M = 50.0\ \mathrm{kg}$인 피스톤을 조심스럽게 넣는다. 용기의 벽과 피스톤은 열을 매우 잘 전달하지 않는 물질로 만들어져 있다. 공기는 평균 몰질량이 $\mu = 29.0\ \mathrm{g/mol}$인 이상 이원자 기체로 생각하라. 중력 가속도는 $g = 9.80\ \mathrm{m/s^2}$, 보편 기체 상수는 $R = 8.31\ \mathrm{J/(mol\cdot K)}$이다. 피스톤과 용기의 열용량, 그리고 피스톤과 벽 사이의 마찰은 완전히 무시하라.</p>
+<p class="x ind" style="--b:304.6;--l:13.97pt">피스톤을 놓는다. 최종 평형에 이르는 과정은 두 단계로 진행된다. 첫째 단계에서 피스톤은 진동하며, 이때 기체의 변화 과정은 평형 과정으로 볼 수 없다. 비평형성 때문에 피스톤의 진동은 감쇠한다. 즉, 역학적 에너지가 소산된다. 소산된 에너지의 절반은 용기 속 기체에, 나머지 절반은 대기로 전달된다고 하자. 이 단계에서도 용기와 피스톤의 열전도는 무시할 수 있다. 진동이 멈춘 뒤 피스톤은 높이 $H_1$에서 정지한다.</p>
+<p class="x ind" style="--b:405.4;--l:14.8pt">둘째 단계는 느리게 진행된다. 즉, 얼마 동안 피스톤이 움직이다가 마지막에 높이 $H_2$에서 정지한다.</p>
+<p class="x it" style="--b:438.2;--l:18pt">2.1 <b>[0.5점]</b> 첫째 단계가 끝날 때 용기 속 공기의 압력 $p_1$은 얼마인가? 답을 대기압 $p_0$, 단열 지수 $\gamma$, 매개변수 $\alpha = Mg/p_0S$로 나타내어라. $p_1$의 수치를 구하여라.</p>
+<p class="x it" style="--b:492.2;--l:18pt">2.2 <b>[1.5점]</b> 첫째 단계가 끝날 때 공기의 온도 $T_1$은 얼마인가? 답을 $T_0, \gamma$와 $\alpha = Mg/p_0S$로 나타내어라. $T_1$의 수치를 구하여라.</p>
+<p class="x it" style="--b:528.2;--l:18pt">2.3 <b>[0.5점]</b> 높이 $H_1$을 구하여라. 답을 $H, \gamma$와 $\alpha = Mg/p_0S$로 나타내어라. $H_1$의 수치를 구하여라.</p>
+<p class="x it" style="--b:564.2;--l:18pt">2.4 <b>[0.5점]</b> 둘째 단계가 끝날 때 용기 속 공기의 압력 $p_2$는 얼마인가? 답을 $p_0$과 $\alpha = Mg/p_0S$로 나타내어라. $p_2$의 수치를 구하여라.</p>
+<p class="x it" style="--b:600.2">2.5 <b>[0.5점]</b> 둘째 단계가 끝날 때 공기의 온도 $T_2$는 얼마인가?</p>
+<p class="x it" style="--b:618.2;--l:18pt">2.6 <b>[0.5점]</b> 높이 $H_2$를 구하여라. 답을 $H$와 $\alpha = Mg/p_0S$로 나타내어라. $H_2$의 수치를 구하여라.</p>
+<p class="x it" style="--b:653.4;--l:16.55pt">2.7 <b>[2점]</b> 과정이 준정적이고 단열적이라고 보고, 평형 위치 $H_2$ 근처에서 피스톤이 하는 작은 진동의 각진동수 $\omega$를 구하여라. 답을 $g, H, \gamma$와 $\alpha = Mg/p_0S$로 나타내어라. $\omega$의 수치를 구하여라.</p>
+<p class="x ind" style="--b:717.1;--l:15.6pt">둘째 단계가 끝난 뒤 용기 바닥에 많은 구멍을 뚫었는데, 구멍의 전체 넓이는 <span class="nb">$S_o = 5.00\times10^{-4}\ \mathrm{cm^2}$이고</span>, 각 구멍의 크기는 분자의 평균 자유 행로보다 훨씬 작다. 얼마 뒤 피스톤은 일정한 속력 $u$로 움직이기 시작한다.</p>
+</div>
+
+<!-- 4 -->
+<div class="page">
+<div class="hd" style="left:72pt">VIII 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:43.8pt">쪽 4/6</div>
+<div class="rule"></div>
+<p class="x ind" style="--b:69.6">단위 시간 동안 단위 넓이의 면에 부딪치는 분자의 평균 개수 $N$은 다음과 같다고 알려져 있다.</p>
+<div class="f" style="left:186.7pt;top:88.2pt"><span class="fig" data-srcpage="4" data-clip="186.7,88.2,556.3,118.2"></span></div>
+<p class="x" style="--b:131.4;--l:15.35pt">여기서 $\bar v = \sqrt{8RT/\pi\mu}$는 이른바 분자의 평균 열운동 속력이고, $R$는 보편 기체 상수이다. 구멍으로 들어가는 분자들의 병진 운동의 평균 운동 에너지는 다음과 같다.</p>
+<div class="f" style="left:185pt;top:167.8pt"><span class="fig" data-srcpage="4" data-clip="185,167.8,556.3,183.4"></span></div>
+<p class="x" style="--b:196.1">여기서 $k_B$는 볼츠만 상수이다.</p>
+<p class="x ind" style="--b:212.9">벽과 피스톤을 통한 열의 흐름은 무시할 수 있을 만큼 작다고 보고, 다음 물음에 답하여라.</p>
+<p class="x it" style="--b:241.7;--l:18pt">2.8 <b>[1점]</b> 피스톤 아래 공기의 정상 상태 압력은 $p_3 = Af(\alpha)$의 꼴이다. 여기서 $A$는 $p_0$에 따라 정해지는 상수이고, $f(\alpha)$는 $\alpha$의 함수이다. $A$와 $f(\alpha)$를 구하여라. $p_3$의 수치를 구하여라.</p>
+<p class="x it" style="--b:294.8;--l:17.2pt">2.9 <b>[2점]</b> 피스톤의 정상 상태 속력은 $u = Bg(\alpha)$의 꼴이다. 여기서 $B$는 $d, S, R, T_0, \mu$에 따라 정해지는 상수이고, $g(\alpha)$는 $\alpha$의 함수이다. $B$와 $g(\alpha)$를 구하여라. $u$의 수치를 구하여라.</p>
+<p class="x it" style="--b:346.1;--l:18pt">2.10 <b>[1점]</b> 피스톤 아래 기체의 정상 상태 온도는 $T_3 = Ch(\alpha)$의 꼴이다. 여기서 $C$는 $T_0$에 따라 정해지는 상수이고, $h(\alpha)$는 $\alpha$의 함수이다. $C$와 $h(\alpha)$를 구하여라. $T_3$의 수치를 구하여라.</p>
+<p class="x c h" style="--b:414.8;--fs:14pt;--l:16.1pt">문제 3 (10점)<br>핵 액적</p>
+<p class="x ind" style="--b:444.8;--l:13.97pt">이 문제에서는 원자핵의 주요 특성과 안정 조건을 다룬다. 원자핵에 핵자가 $A$개($A$는 원소의 원자량), 즉 양성자가 $Z$개($Z$는 주기율표에서 원소의 번호), 중성자가 $N = A - Z$개 들어 있다고 하자. 이때 핵의 전체 에너지는 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:151.1pt;top:492.4pt"><span class="fig" data-srcpage="4" data-clip="151.1,492.4,556.3,509"></span></div>
+<p class="x" style="--b:523.7;--l:18.9pt">여기서 $M$은 핵의 질량, $m_p$는 자유 양성자의 질량, $m_n$은 자유 중성자의 질량, $c$는 빛의 속력, $E_p$는 핵 속 핵자들의 상호 작용 퍼텐셜 에너지이다.</p>
+<p class="x ind" style="--b:560.5">핵자 사이 상호 작용의 퍼텐셜 에너지는 다음과 같은 바이츠제커(Weizsäcker)의 반경험식으로 나타낼 수 있다.</p>
+<div class="f" style="left:151.1pt;top:580pt"><span class="fig" data-srcpage="4" data-clip="151.1,580,556.3,611"></span></div>
+<p class="x" style="--b:622.3">여기서 $a_1 = 15.8\ \mathrm{MeV},\; a_2 = 16.8\ \mathrm{MeV},\; a_3 = 0.72\ \mathrm{MeV},\; a_4 = 23.5\ \mathrm{MeV}$이다.</p>
+<p class="x ind" style="--b:639.1;--l:13.88pt">바이츠제커의 반경험식은 원자핵의 가장 단순한 모형 가운데 하나인, 이른바 구형 액체 방울 모형에 해당한다. 이 모형은 원자핵과 보통 액체 방울 사이의 유사성에 바탕을 둔다. 이 모형에서 핵의 질량과 전하는 어떤 반지름의 공 안에 고르게 분포한다고 보며, 핵자 액체는 액체의 표면 장력 계수에 해당하는 어떤 매개변수 $\sigma$로 특징지어진다.</p>
+<p class="x ind" style="--b:723.5">퍼텐셜 에너지 $E_p$의 식에서는 다음 기여들을 고려하였다.</p>
+<p class="x bu" style="--b:742.2"><span class="n">•</span>액체 방울 모형에서 핵물질의 표면 장력을 나타내는 표면 에너지;</p>
+<p class="x bu" style="--b:770.8"><span class="n">•</span>핵 속 양성자들 사이의 쿨롱 반발 에너지;</p>
+</div>
+
+<!-- 5 -->
+<div class="page">
+<div class="hd" style="left:72pt">VIII 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:43.8pt">쪽 5/6</div>
+<div class="rule"></div>
+<p class="x bu" style="--b:68.4;--l:14.2pt"><span class="n">•</span>$N = Z$인 핵이 안정해지려는 경향을 나타내는 교환 상호 작용 에너지;</p>
+<p class="x bu" style="--b:97.3"><span class="n">•</span>핵력 때문에 핵자 수 $A$에 정비례하는 항.</p>
+<p class="x ind" style="--b:111.0">또한 바이츠제커는 이 반경험식을 유도할 때 실험으로 알려진, 핵자 수에 따른 원자핵 반지름의 다음 관계를 이용하였다.</p>
+<div class="f" style="left:151.1pt;top:130pt"><span class="fig" data-srcpage="5" data-clip="151.1,130,556.3,146"></span></div>
+<p class="x" style="--b:158.9">여기서 $R_0$은 상수이다.</p>
+<p class="x ind" style="--b:175.7">위의 모든 내용을 바탕으로 다음 물음에 답하여라.</p>
+<p class="x" style="--b:190.6;--l:15.9pt">3.1 <b>[2점]</b> 전하 $Q$가 부피 전체에 고르게 분포한, 반지름 $R$인 공의 정전기 에너지 $E_C$를 구하여라. 답을 전하 $Q$, 진공의 유전율 $\varepsilon_0$, 공의 반지름 $R$로 나타내어라.</p>
+<p class="x" style="--b:240.4">3.2 <b>[1점]</b> 식 (3)의 계수 $R_0$의 수치를 구하여라.</p>
+<p class="x" style="--b:258.4">3.3 <b>[1점]</b> 핵물질의 밀도 $\rho_m$의 수치를 구하여라.</p>
+<p class="x" style="--b:275.5;--l:13.9pt">3.4 <b>[1점]</b> 핵자 액체의 표면 장력 계수 $\sigma$의 수치를 구하여라.</p>
+<p class="x ind" style="--b:303.6;--l:15pt">이제 핵이 원자량이 각각 $kA$와 $(1-k)A$인 두 조각으로 쪼개진다고 하자. 여기서 $0 &lt; k &lt; 1$이다. 핵의 전하와 중성자 수도 원자량과 같은 비율로 두 조각에 나뉜다고 볼 수 있다.</p>
+<p class="x" style="--b:347.4;--l:16pt">3.5 <b>[2점]</b> 핵분열은 $Z^2/A &gt; f(k)$일 때 에너지 면에서 유리해진다. 함수 $f(k)$의 식을 구하고, 그 그래프의 개형을 그려라.</p>
+<p class="x" style="--b:381.4;--l:16.9pt">3.6 <b>[0.5점]</b> 자발 핵분열이 이론적으로 가능해지는 한계값 $(Z^2/A)_0$을 유효숫자 두 자리까지 구하여라.</p>
+<div class="f" style="left:72pt;top:443.7pt"><span class="fig" data-srcpage="5" data-clip="72,443.7,180,550.3"></span></div>
+<p class="x ind" style="--b:412.1"><span class="s0" style="height:42.6pt"></span><span class="s1" style="width:117pt;height:48pt"></span>3.5의 조건이 만족되어도 핵은 꽤 오랫동안 존재할 수 있다. 예를 들어 우라늄-235 핵의 반감기는 7억 1300만 년이다. 따라서 핵이 곧바로 분열하는 것을 막는 어떤 에너지 장벽이 있으며, 이 장벽은 어떤 임계값 $(Z^2/A)_\mathrm{critical}$에서 사라진다. 실제로 핵은 그 모양이 구에서 크게 벗어나야 비로소 분열한다.</p>
+<p class="x ind" style="--b:500.0;left:189pt;width:366.8pt">간단히 하기 위해, 구형 핵이 변형되어 그 표면이 회전 장타원체의 표면이 된다고 하자. 이 표면은 직교 좌표계에서 다음 식으로 나타내어진다.</p>
+<div class="f" style="left:263.3pt;top:546.7pt"><span class="fig" data-srcpage="5" data-clip="263.3,546.7,556.3,578.2"></span></div>
+<p class="x" style="--b:588.6">여기서 $a$는 짧은 반축, $b$는 긴 반축이다.</p>
+<p class="x ind" style="--b:602.4">회전 장타원체의 부피는 다음과 같고</p>
+<div class="f" style="left:261.2pt;top:607.5pt"><span class="fig" data-srcpage="5" data-clip="261.2,607.5,556.3,637"></span></div>
+<p class="x" style="--b:647.2">그 겉넓이는 다음 식으로 계산할 수 있다.</p>
+<div class="f" style="left:151pt;top:653.3pt"><span class="fig" data-srcpage="5" data-clip="151,653.3,556.3,693.6"></span></div>
+<p class="x ind" style="--b:705.4;--l:16.2pt">구형 핵이 $b = R(1+\varepsilon)$, $a = R(1-\lambda)$가 되도록 변형된다고 하자. 여기서 $\varepsilon, \lambda \ll 1$이고, <span class="nb">$R$은</span> 핵 액적의 처음 반지름이다.</p>
+<p class="x" style="--b:737.8">3.7 <b>[0.5점]</b> $\varepsilon$과 $\lambda$ 사이의 관계를 구하여라.</p>
+</div>
+
+<!-- 6 -->
+<div class="page">
+<div class="hd" style="left:72pt">VIII 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:43.8pt">쪽 6/6</div>
+<div class="rule"></div>
+<p class="x ind" style="--b:67.4;--l:21pt;text-align:left">계산에 따르면 변형된 핵 속 양성자들의 정전기 상호 작용 에너지는 대략 <span class="nw">$E_C^\mathit{deformed} = E_C\left(1-\dfrac{1}{6}\varepsilon(\varepsilon+\lambda)\right)$이다.</span></p>
+<p class="x" style="--b:117.5">3.8 <b>[2점]</b> $(Z^2/A)_\mathrm{critical}$의 식을 구하고, 그 수치를 구하여라.</p>
+<p class="x" style="--b:148.1"><i>다음 물리 상수가 주어져 있다.</i></p>
+<p class="x" style="--b:164.0">기본 전하</p><p class="x nw" style="--b:164.0;left:286pt">$e = 1.609\times10^{-19}\ \mathrm{C}$</p>
+<p class="x" style="--b:180.0">진공의 유전율</p><p class="x nw" style="--b:180.0;left:285pt">$\varepsilon_0 = 8.85\times10^{-12}\ \mathrm{F/m}$</p>
+<p class="x" style="--b:199.1">핵자(양성자 또는 중성자)의 질량</p><p class="x nw" style="--b:199.1;left:286pt">$m_p \approx m_n \approx m = 1.67\times10^{-27}\ \mathrm{kg}$</p>
+<p class="x nw" style="--b:219.0">$1\ \mathrm{eV} = e\times1\ \mathrm{V} = 1.609\times10^{-19}\ \mathrm{J}$</p>
+<p class="x c" style="--b:246.7;left:107.4pt;width:448.4pt"><i>이 문제들을 풀 때 다음 공식을 이용해도 된다.</i></p>
+<p class="x nw" style="--b:276.5;left:259.8pt">$\arcsin(x) \approx x,\quad |x| \ll 1$일 때</p>
+<p class="x nw" style="--b:294.2;left:310.9pt">.</p>
+<p class="x nw" style="--b:310.4;left:220.3pt">$(1+x)^\alpha \approx 1+\alpha x+\dfrac{\alpha(\alpha-1)}{2}x^2,\quad |x| \ll 1$일 때</p>
+</div>
+
+</body></html>

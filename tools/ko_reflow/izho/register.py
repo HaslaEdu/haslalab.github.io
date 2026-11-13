@@ -15,11 +15,14 @@ import pymupdf
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 RANGES = {}   # name: (first, last) source pages when the Korean edition covers only part of the original
+# the 2012 English paper is a text-only export without figures, formulas or the instructions page; the Korean edition
+# follows the official Russian paper (also 6 A4 pages)
+SOURCES = {'2012_T': 'IZhO_2012_T_RU.pdf'}
 
 
 def edition(name):
     year, part = name.split('_')
-    src = f'IZhO_{year}_T_EN.pdf' if part == 'T' else f'IZhO_{year}_TS.pdf'
+    src = SOURCES.get(name) or (f'IZhO_{year}_T_EN.pdf' if part == 'T' else f'IZhO_{year}_TS.pdf')
     return f'IZhO_{year}_{part}_KO.pdf', src, ('paper' if part == 'T' else 'sol'), int(year)
 
 
