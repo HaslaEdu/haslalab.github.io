@@ -450,8 +450,10 @@ function makeTruth(seed){
   return {
     seed, L, d_out:dOut, d_in:dOut-0.0030, m, M, z, g,
     holes, x_cm:xcm, I_cm:Icm, r, R_min:Rmin, d_ball:0.0130,
-    /* the air of the hall (Bangkok in July, ~30 °C) and the thin steel pin the tube turns on */
-    rho_air:1.16, nu_air:1.60e-5, r_pin:0.00050, mu_pin:0.18,
+    /* the air of the hall (Bangkok in July, ~30 °C) and the thin steel pin the tube turns on: the hole is wider than the
+       pin, so it rolls on it (rolling-resistance lever arm a few µm), it does not slide (μ r_pin = 90 µm would stop the
+       swing at the holes near the centre of mass within ten periods, and the official analysis times twenty and more) */
+    rho_air:1.16, nu_air:1.60e-5, r_pin:0.00050, roll_pin:5.0e-6,
     /* height of the bench top below the pin: clear of the longest swing */
     bench_y: Math.max(0.300, L - holes[0] + 0.012)
   };
@@ -841,9 +843,11 @@ function makeRig(truth){
      Air: every slice ds of the tube at a distance s from the pin (s<0 above it) moves across its axis at v = ω s and
      feels ½ ρ C_d(Re) d v|v| ds, C_d of a long cylinder in cross flow from Re = |v| d / ν (White: 1 + 10 Re^-2/3, which
      goes over to Stokes-like drag as the swing dies down); its torque is summed slice by slice, so the short stub
-     above the pin and the long part below each do their share.  Pin: the hole rides on a 1 mm steel pin, a dry
-     friction torque μ N r_pin with N the weight plus the centripetal pull, smoothed through zero so the swing settles
-     instead of chattering. */
+     above the pin and the long part below each do their share.  Pin: the hole rolls on a 1 mm steel pin, a
+     rolling-resistance torque δ N (δ = roll_pin) with N the weight plus the centripetal pull, smoothed through zero so
+     the swing settles instead of chattering.  (A sliding torque μ N r_pin is about 18 times larger: near the centre of
+     mass it killed the swing in a few periods, the smoothing then crawled through zero and the periods read 5–20 % long,
+     so g from method (a) came out 6 % high.) */
   const AIR_N = 24;
   function dragTorque(om){
     const top = -truth.holes[R.hole_index], ds = truth.L / AIR_N, d = truth.d_out;
@@ -861,7 +865,7 @@ function makeRig(truth){
     const Rr = truth.x_cm - truth.holes[R.hole_index], Mt = truth.M+truth.m;
     const Ip = truth.I_cm + Mt*Rr*Rr;
     const Wg = Mt*truth.g*Rr;
-    const fric = (th,om)=>{ const N = Mt*(truth.g*Math.cos(th) + om*om*Rr); return -truth.mu_pin*Math.abs(N)*truth.r_pin*Math.tanh(om/0.02); };
+    const fric = (th,om)=>{ const N = Mt*(truth.g*Math.cos(th) + om*om*Rr); return -truth.roll_pin*Math.abs(N)*Math.tanh(om/0.02); };
     const acc = (th,om)=>(-Wg*Math.sin(th) + dragTorque(om) + fric(th,om))/Ip;
     /* RK4 */
     const k1v = acc(R.theta, R.omega),                     k1x = R.omega;
