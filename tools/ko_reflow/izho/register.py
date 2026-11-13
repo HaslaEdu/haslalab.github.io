@@ -14,7 +14,10 @@ import hashlib, json, pathlib, re, sys
 import pymupdf
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
-RANGES = {}   # name: (first, last) source pages when the Korean edition covers only part of the original
+RANGES = {   # name: (first, last) source pages when the Korean edition covers only part of the original
+    # 2023 and 2024 publish one file with the English, Kazakh and Russian versions; the Korean follows the English part
+    '2023_T': (1, 6), '2023_TS': (25, 43), '2024_T': (1, 6), '2024_TS': (1, 14),
+}
 # the 2012 English paper is a text-only export without figures, formulas or the instructions page; the Korean edition
 # follows the official Russian paper (also 6 A4 pages)
 SOURCES = {'2012_T': 'IZhO_2012_T_RU.pdf'}
