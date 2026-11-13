@@ -9,6 +9,8 @@ Elements with class "ov" (e.g. a Korean label on a white box) are drawn on top o
 """
 import os, re, subprocess, sys, tempfile, pathlib
 import pymupdf
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import slant
 
 KIT = pathlib.Path(__file__).resolve().parent
 VENDOR = KIT.parents[1] / "vendor"   # repo vendor/katex
@@ -23,6 +25,10 @@ CSS = """
 @font-face{font-family:KB;font-weight:bold;src:url(file:///C:/Windows/Fonts/HANBatangB.ttf);size-adjust:94%}
 @font-face{font-family:KG;src:url(file:///C:/Windows/Fonts/malgun.ttf)}
 @font-face{font-family:KG;font-weight:bold;src:url(file:///C:/Windows/Fonts/malgunbd.ttf)}
+@font-face{font-family:KB;font-style:italic;src:url(SLANT_HANBatang);size-adjust:94%}
+@font-face{font-family:KB;font-style:italic;font-weight:bold;src:url(SLANT_HANBatangB);size-adjust:94%}
+@font-face{font-family:KG;font-style:italic;src:url(SLANT_malgun)}
+@font-face{font-family:KG;font-style:italic;font-weight:bold;src:url(SLANT_malgunbd)}
 @page{size:PWpt PHpt;margin:0}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -64,6 +70,8 @@ def prepare(src, orig):
     kiturl = VENDOR.as_uri()
     html = html.replace('KITURL', kiturl)
     css = CSS.replace('KITURL', kiturl).replace('PW', pw).replace('PH', ph)
+    for face in ('HANBatangB', 'HANBatang', 'malgunbd', 'malgun'):   # Hangul italics: a gentle slant, not Chrome's shear
+        css = css.replace(f'SLANT_{face})', slant.slanted(f'C:/Windows/Fonts/{face}.ttf').as_uri() + ')')
     head = (f'<meta charset="utf-8"><link rel="stylesheet" href="{kiturl}/katex/katex.min.css">'
             f'<style>{css}</style>')
     tail = (f'<script src="{kiturl}/katex/katex.min.js"></script>'
