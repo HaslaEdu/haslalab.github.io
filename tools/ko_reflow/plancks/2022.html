@@ -272,7 +272,7 @@ p.in{text-indent:10.9pt}
 <div class="page">
 <div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="15" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:109.0pt;top:763.8pt"><span class="fig" data-srcpage="15" data-clip="109.0,763.8,539.5,780.0"></span></div><div class="f" style="left:55.8pt;top:763.8pt"><span class="fig" data-srcpage="15" data-clip="55.8,763.8,109.0,766.2"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 6</div>
 <div class="a" style="top:104.2pt"><p><b>b)</b> [2점] Shannon 엔트로피로부터 얻는 미시 바른틀 앙상블과 바른틀 앙상블<br>미시 바른틀 앙상블의 상수 분포는 다음과 같이 유도된다. 경계 조건 $\int\mathrm{d}x\,p(x)=1$ 아래에서 $S$를 최대로 만드는 분포를 구한다. 이로부터 다음 변분을 얻는다.</p></div>
-<div class="f" style="left:105.3pt;top:168.6pt"><span class="fig" data-srcpage="15" data-clip="105.3,168.6,538.5,191.0"></span></div>
+<div class="f" style="left:105.3pt;top:168.6pt"><span class="fig" data-srcpage="15" data-clip="105.30,168.60,538.50,195.84"></span></div>
 <div class="a" style="top:203.2pt"><p>여기서 $\lambda$는 라그랑주 승수이다. 해는 $p(x)=e^{(\lambda-1)}=\mathrm{const}$이며, $\lambda$는 원리적으로 $\int\mathrm{d}x\,p(x)=1$로부터 정할 수 있다. 따라서 상수 분포가 $S$를 최대로 만들며, 위상 공간 $x$에 걸쳐 계들이 고르게 분포한 것이 바로 미시 바른틀 앙상블이다! 식 (6.6)을 풀고 $p(x)=e^{(\lambda-1)}=\mathrm{const}$가 해임을 확인하여라.</p>
 <p class="in">이제 볼츠만 인자를 구해 보자: (두 번째 라그랑주 승수 $\mu$로 부과한) 추가 경계 조건 $\int\mathrm{d}x\,p(x)\epsilon(x)=\epsilon$ 아래에서 $S$를 최대로 만드는 분포 $p(x)$를 유도하여라. 여기서 $\epsilon(x)$는 주어진 계 좌표 $x$에 대한 에너지를 주는 함수이며, 이 함수의 정확한 꼴은 이 문제와 무관하다. 또한 다음을 보여라.</p></div>
 <div class="f" style="left:214.8pt;top:320.3pt"><span class="fig" data-srcpage="15" data-clip="214.8,320.3,538.5,347.7"></span></div>
@@ -329,7 +329,7 @@ p.in{text-indent:10.9pt}
 <div class="f" style="left:56.3pt;top:49.0pt"><span class="fig" data-srcpage="19" data-clip="56.3,49.0,131.2,62.7"></span></div><div class="f" style="left:109.0pt;top:763.8pt"><span class="fig" data-srcpage="19" data-clip="109.0,763.8,539.5,780.0"></span></div><div class="f" style="left:55.8pt;top:763.8pt"><span class="fig" data-srcpage="19" data-clip="55.8,763.8,109.0,766.2"></span></div><div class="ft" style="left:56.7pt;top:769.3pt">문제 8</div>
 <div class="box" style="top:88.1pt">문제 8</div>
 <div class="t" style="top:115.9pt">양자 합성곱 신경망</div>
-<div class="f" style="left:56.3pt;top:145.6pt"><span class="fig" data-srcpage="19" data-clip="56.3,145.6,546.0,171.4"></span></div>
+<div class="f" style="left:56.3pt;top:145.6pt"><span class="fig" data-srcpage="19" data-clip="56.30,145.60,548.64,171.40"></span></div>
 <div class="f" style="left:55.8pt;top:183.8pt"><span class="fig" data-srcpage="19" data-clip="55.8,183.8,60.5,369.9"></span></div>
 <div class="b" style="top:183.0pt"><p><span class="s">배경</span>&ensp;합성곱 신경망은 이미지 인식에 활용할 수 있는 인공 신경망이다. 합성곱 신경망은 래스터화된 이미지를 처리하여, 예를 들어 어떤 이미지에 <i>고양이</i>가 그려져 있는지 <i>개</i>가 그려져 있는지 분류할 수 있다. 양자 합성곱 신경망(QCNN)은 고전적인 합성곱 신경망에 대응하는 것으로, 먼 거리 양자 상관으로 특징지어지는 물질의 양자 상을 인식하도록 설계되어 있다. QCNN은 양자 상태를 처리하여 그 상태가 주어진 양자 상에 속하는지 판정한다. 여기서는 큐비트 네 개의 양자 상태를 처리하는 최소한의 QCNN 예를 생각한다. 각 큐비트의 힐베르트 공간은 $i=1,2,3,4$에 대해 두 양자 상태 $|0\rangle_i$와 $|1\rangle_i$로 생성된다. QCNN은 그림 8.1의 양자 회로에 바탕을 두며, 이 회로는 합성곱(C) 층, 풀링(P) 층, 그리고 회로 끝에서의 큐비트 1과 4의 측정으로 이루어진다. C 층에서는 이웃한 큐비트 사이의 CZ 게이트로 이루어진, 병진 불변인 유니타리 변환 $U_C$를 수행한다. P 층에서는 CNOT 게이트 두 개로 이루어진 유니타리 변환 $U_P$를 수행하고, 큐비트 2와 3을 버려서 회로 끝에서는 큐비트 1과 4만 측정한다.</p></div>
 <div class="f" style="left:163.8pt;top:403.6pt"><span class="fig" data-srcpage="19" data-clip="163.8,403.6,431.4,563.5"></span></div>
@@ -442,7 +442,7 @@ p.in{text-indent:10.9pt}
 <div class="a" style="top:401.6pt"><p><b>h)</b> [1점] 블랙홀이 있을 때, 질량과 스핀이 없는 양자를 갖는 스칼라 양자장 $\Psi_0(t,r)$의 모드는 휘어진 시공간에서의 클라인–고든 방정식으로 결정할 수 있다. 각운동량이 0인 구면 대칭 파동에 대해, 블랙홀 근처에서 클라인–고든 방정식은 다음 꼴이다.</p></div>
 <div class="f" style="left:234.6pt;top:452.1pt"><span class="fig" data-srcpage="25" data-clip="234.6,452.1,538.5,480.7"></span></div>
 <div class="a" style="top:483.7pt"><p>여기서 $t$는 시간이고 반지름은 $r&gt;r_s$이며, 슈바르츠실트 반지름 $r_s=2GM/c^2$은 중력 상수 $G$, 빛의 속력 $c$, 블랙홀의 질량 $M$으로 정해진다. 또한 다음 레제–휠러 거북 좌표를 도입하였다.</p></div>
-<div class="f" style="left:241.8pt;top:534.3pt"><span class="fig" data-srcpage="25" data-clip="241.8,534.3,538.5,568.0"></span></div>
+<div class="f" style="left:241.8pt;top:534.3pt"><span class="fig" data-srcpage="25" data-clip="241.80,534.30,538.50,566.28"></span></div>
 <div class="a" style="top:567.6pt;line-height:13.4pt"><p class="in">식 (9.16)에서 변수 분리 $\Psi_0(t,r)=q(t)R_0(r)$를 이용하여, 시간 영역의 함수 $q(t)$와 지름 영역의 함수 $rR_0(r)$에 대한 상미분 방정식을 구하여라. 두 방정식은 분리 상수 $\Omega^2$으로 연결되며, 진동수 $\Omega=ck$는 해당 파수 $k$에 선형으로 의존한다. 고정된 $k$ 값에 대해 지름 방정식의 선형 독립인 두 해 $R^\pm_{0,k}(r)$를 구하고, 이 모드들이 $r=r_s$에 있는 블랙홀의 사건 지평선에서 나타나는 <i>로그 특이점</i>을 가짐을 보여라.</p></div>
 <div class="a" style="top:650.3pt"><p><b>i)</b> [1점] 블랙홀의 사건 지평선에서 호킹 복사가 방출되는 데 핵심은, <i>크루스칼–세케레시 좌표</i> $u$와 $v$에서 진동수 $\omega$인 평면파를, 사건 지평선 $r=r_s$에서 로그 특이점을 보이며 <i>슈바르츠실트 좌표</i> $t$와 $r^*$에 연관된 진동수 $\Omega$의 모드들로 전개하는 것이다. 특히 다음 분해가 존재한다.</p></div>
 <div class="f" style="left:186.8pt;top:710.3pt"><span class="fig" data-srcpage="25" data-clip="186.8,710.3,538.5,737.7"></span></div>

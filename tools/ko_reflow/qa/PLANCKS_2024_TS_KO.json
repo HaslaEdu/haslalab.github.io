@@ -1,0 +1,23 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2024_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "eae9b993f825aab7f95d2da60c4007b5e88b529cf0bcbb3c482ba982e146075b",
+ "bytes": 1411645,
+ "pages": 38,
+ "source_file": "PLANCKS_2024_TS.pdf",
+ "source_sha256": "136d3990251f02eb4959f1e6b08211adfd889f3cc5d52f7755fd2fb9cc39fe1b",
+ "source_pages": 38,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 12508,
+ "html_source": "tools/ko_reflow/plancks/2024_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at 55 dpi with 80-200 dpi close-ups; first-line baselines of every Korean line measured against the source text lines (solution pages median offset within 0.4 pt, first lines of all blocks within 1 pt); the 16 problem-statement pages reuse the published Korean problem paper (tools/ko_reflow/plancks/2024.html) unchanged apart from stamp page numbers; check.py leaves only the intended grey-box frames behind the problem text, Korean labels laid on white boxes over stamped equation/table labels (p24, p26, p32, p36), one pre-existing problem-paper item (p7) and text lines that sit beside, not on, an equation stamp exactly as in the source (p8, p10, p32); no TeX leftovers or missing glyphs",
+  "overflow_or_occlusion_observed": false
+ }
+}

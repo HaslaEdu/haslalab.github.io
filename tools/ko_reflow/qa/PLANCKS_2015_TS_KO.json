@@ -1,0 +1,23 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2015_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "bc05490928614490eb84dadcf995d589b50496ca75426a70c315163bcaa29e4b",
+ "bytes": 1574562,
+ "pages": 24,
+ "source_file": "PLANCKS_2015_TS.pdf",
+ "source_sha256": "98d9b8ad6c81c2dd5611d00510ce7490230092d9e3fbcda86ae762ac1720f9e5",
+ "source_pages": 24,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 5948,
+ "html_source": "tools/ko_reflow/plancks/2015_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at 60 dpi with 70-200 dpi close-ups (cover patch, p20 operator equations); first-line baselines of every Korean block measured against the source on all pages (all within 1.0 pt except the cover title, which is display lettering on a gradient patch); edgecheck.py clean (the p20 photon-operator lines were retyped in KaTeX instead of split crops); check.py reports only full-width line-box artefacts beside stamps, the full-page stamps of the cover/blank/back-cover pages, and a KaTeX strut box on p20 (9.6) that extends past the margin without visible ink",
+  "overflow_or_occlusion_observed": false
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2026_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "c886efb63adf5800c46e2400a30736ed8ac1a15feb97fe90fee8fad0c46eae6c",
+ "bytes": 1570643,
+ "pages": 25,
+ "source_file": "PLANCKS_2026_TS.pdf",
+ "source_sha256": "da70601cf4e510c72a9e6a499d7ac0d7edf2a58d0376dbed6f484e427cfd3086",
+ "source_pages": 25,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "page_size_note": "pages 1-15 US letter; pages 16-25 (handwritten scans) keep their own sizes through named @page rules (data-s), Chrome-snapped to within 0.12 pt of the source",
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 6245,
+ "html_source": "tools/ko_reflow/plancks/2026_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at 50-75 dpi with 110-150 dpi close-ups of dense math; first-line baselines of every Korean block measured against the source (131 blocks, median offset +0.21 pt; items over 1 pt are lines whose inline KaTeX fractions/roots open the leading, by 2-3 pt, on p9 and p15, plus overview/heading rows at +1.0-1.3 pt); pages 16-25 are handwritten scans (problems 4 and 7, solutions written by hand, English) stamped whole, their OCR text layer is carried along by the stamp; check.py reports only the whole-page scan stamps (off-page by their own size), stamp boxes touching an adjacent prose line on p3/p11/p12 and two tight inline-root lines on p15, none visible as overlap; after a stamp-integrity pass (every stamp's rendered pixels compared with the source crop at 150 dpi and every crop edge tested for ink continuing past it) 18 crops were widened (p1 cover drawing, p3 x4, p7, p9 x7 incl. the [kappa] display and the boxed kappa ~ c^3/G whose tops had been cut, p10/p11/p12 page numbers, p11 x2); no stamp is clipped or covered",
+  "overflow_or_occlusion_observed": false
+ }
+}

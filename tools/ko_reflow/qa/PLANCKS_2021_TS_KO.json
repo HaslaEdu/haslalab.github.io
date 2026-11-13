@@ -1,0 +1,23 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "PLANCKS_2021_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "5cffa9f67f1e2b9a1bb2386c687b39b32eede23206879e1157bf611e4c025155",
+ "bytes": 9607180,
+ "pages": 89,
+ "source_file": "PLANCKS_2021_TS.pdf",
+ "source_sha256": "9d1d2eab7fb929cedfa1fccf8fdcc92cd342800d057140d7cea0b825d676ea90",
+ "source_pages": 89,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 22493,
+ "html_source": "tools/ko_reflow/plancks/2021_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "the 41 problem pages are the published Korean problem paper (2021.html) with stamps re-pointed to the identical-geometry pages of the solutions PDF (image/drawing boxes verified identical), spot-checked side by side; every one of the 47 solution pages compared side by side with the source at 50-60 dpi, with 100-288 dpi close-ups of English words inside equation lines (covered by Korean overlay labels on p69 and p85); first-line baselines of every prose block measured against the source's outlined-glyph ink baselines (first lines within about 1 pt after calibration, a few continuation lines under tall inline fractions within 2.8 pt; mean offset +0.17 pt over 508 lines); edgecheck clean except the intentionally split logo halves on p4/p12/p21; check.py leaves only cover-photo backgrounds, overlay labels sitting on their stamps, logo/equation stamp overlap on p57 (same source pixels), the full-page stamp of the blank last page and box-only overlaps without visible collision; no TeX leftovers or replacement characters in the PDF text",
+  "overflow_or_occlusion_observed": false
+ }
+}
