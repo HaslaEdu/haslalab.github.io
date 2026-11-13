@@ -1,0 +1,1297 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* IChO 2019 theoretical exam, Korean, 60 pages on the original layout. Built from five parts (classes prefixed a- .. e-), joined by join2019.py. */
+/* IChO 2019 theoretical exam, part a (original pages 1-12: cover, instructions, contents, constants, periodic table,
+   NMR/IR tables, problem T1). A4 Word PDF: body Times New Roman 11pt (pitch 14.6pt), text x 70.8..527.0;
+   headings Arial bold; header "Candidate: AAA-1" Calibri 11pt right-aligned to 527.0 at baseline 45.8;
+   footer Arial 11pt at baseline 792.2. Blocks are placed by the original's first baseline --b (pt), --l = pitch,
+   --fs = size, --k = baseline factor measured on the build (TNR+KB 0.31, Arial+KG bold 0.28 at 11pt / 0.30 at
+   16pt, Arial+KG regular footer 0.285, Calibri+KG header 0.31).
+   Answer boxes holding only formulas, figures, structures, the periodic table and logos are stamped; table and
+   frame rules are .a-r boxes with class "ov" (drawn above the stamps); Korean cells are typed. */
+.a-x{position:absolute;left:70.8pt;width:456.2pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Times New Roman',KB,serif;--fs:11pt;--l:14.6pt;--k:0.31;font-size:var(--fs);line-height:var(--l);
+  top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.a-x .katex{white-space:nowrap}
+.a-x .katex .text{font-family:KaTeX_Main,KB,serif}
+.a-ar{font-family:Arial,KG,sans-serif;--k:0.3465}
+.a-h{font-family:Arial,KG,sans-serif;--k:0.28;font-weight:bold;white-space:nowrap}
+.a-c{text-align:center}
+.a-rt{text-align:right}
+.a-l{text-align:left}
+.a-nw{white-space:nowrap}
+.a-q{left:90.6pt;width:436.4pt}
+.a-n{position:absolute;left:-19.8pt;top:0}
+.a-t{position:absolute;top:0;white-space:nowrap}
+.a-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:1pt;text-underline-offset:1.6pt}
+.a-hl{background:#ff0}
+.a-bu{left:-18pt;font-family:Symbol}
+.a-hd{position:absolute;right:68.3pt;top:calc(45.8pt - 6.5pt - var(--k)*11pt);--k:0.31;margin:0;
+  font-family:Calibri,KG,sans-serif;font-size:11pt;line-height:13pt;white-space:nowrap;text-indent:0}
+.a-ft{left:70.8pt;width:456.8pt;--b:792.2;font-family:Arial,KG,sans-serif;--k:0.285;white-space:nowrap}
+.a-pn{position:absolute;right:0;top:0}
+.a-f{position:absolute;line-height:0}
+.a-r{position:absolute;background:#000;display:block}
+.a-ov{position:absolute;background:#fff;white-space:nowrap;font-family:'Times New Roman',KB,serif;font-size:11pt;
+  line-height:13.5pt;height:13.5pt;text-indent:0;padding:0 2pt}
+/* IChO 2019 theoretical exam, part b (original pages 13-23: problems T2 and T3). Same look as part a
+   (see ICHO2019-style.md): body Times New Roman 11pt (pitch 14.6pt), text x 70.8..527.0; headings Arial bold;
+   header Calibri 11pt; footer Arial 11pt. Blocks placed by the original's first baseline --b with the measured
+   --k factors of part a. Answer boxes: empty or formula-only boxes stamped whole; boxes with English labels are
+   drawn as .b-r ov rules with the Korean label typed and only the formula parts (eta = , K = , s = ...) stamped. */
+.b-x{position:absolute;left:70.8pt;width:456.2pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Times New Roman',KB,serif;--fs:11pt;--l:14.6pt;--k:0.31;font-size:var(--fs);line-height:var(--l);
+  top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.b-x .katex{white-space:nowrap}
+.b-x .katex .text{font-family:KaTeX_Main,KB,serif}
+.b-x i sub{font-style:normal}
+.b-up{font-style:normal}
+.b-st{left:0;width:595.32pt;--fs:10pt;--l:11.5pt;white-space:nowrap}
+.b-h{font-family:Arial,KG,sans-serif;--k:0.28;font-weight:bold;white-space:nowrap}
+.b-c{text-align:center}
+.b-l{text-align:left}
+.b-nw{white-space:nowrap}
+.b-q{left:90.6pt;width:436.4pt}
+.b-q8{left:88.8pt;width:438.2pt}
+.b-n{position:absolute;left:-19.8pt;top:0}
+.b-q8 .b-n{left:-18pt}
+.b-t{position:absolute;top:0;white-space:nowrap}
+.b-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:1pt;text-underline-offset:1.6pt}
+.b-u{text-decoration:underline;text-decoration-thickness:0.5pt;text-underline-offset:1.6pt}
+.b-wd{font-family:Wingdings}
+.b-hd{position:absolute;right:68.3pt;top:calc(45.8pt - 6.5pt - var(--k)*11pt);--k:0.31;margin:0;
+  font-family:Calibri,KG,sans-serif;font-size:11pt;line-height:13pt;white-space:nowrap;text-indent:0}
+.b-ft{left:70.8pt;width:456.8pt;--b:792.2;font-family:Arial,KG,sans-serif;--k:0.285;white-space:nowrap}
+.b-pn{position:absolute;right:0;top:0}
+.b-f{position:absolute;line-height:0}
+.b-r{position:absolute;background:#000;display:block}
+.b-ov7{position:absolute;background:#fff;white-space:nowrap;font-family:'Calibri Light',Calibri,KG,sans-serif;font-size:7pt;
+  line-height:8.5pt;height:8.5pt;text-indent:0;padding:0 1pt}
+/* IChO 2019 theoretical exam, part c (original pages 24-38: problems T4 and T5). Same look as part a
+   (see ICHO2019-style.md): body Times New Roman 11pt (pitch 14.6pt), text x 70.8..527.0; headings Arial bold;
+   header Calibri 11pt right-aligned to 527.0 at baseline 45.8; footer Arial 11pt at baseline 792.2.
+   Blocks are placed by the original's first baseline --b; --k = baseline factor measured on the build.
+   Answer boxes holding only formulas/units, figures, the reaction scheme, tables of numbers are stamped;
+   frames of boxes with an English label are .c-r rules (class "ov") with the Korean label typed. */
+.c-x{position:absolute;left:70.8pt;width:456.2pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Times New Roman',KB,serif;--fs:11pt;--l:14.6pt;--k:0.31;font-size:var(--fs);line-height:var(--l);
+  top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.c-x .katex{white-space:nowrap}
+.c-x .katex .text{font-family:KaTeX_Main,KB,serif}
+.c-h{font-family:Arial,KG,sans-serif;--k:0.28;font-weight:bold;white-space:nowrap}
+.c-c{text-align:center}
+.c-l{text-align:left}
+.c-nw{white-space:nowrap}
+.c-q{left:90.6pt;width:436.4pt}
+.c-q1{left:88.8pt;width:438.2pt}
+.c-n{position:absolute;left:-19.8pt;top:0}
+.c-q1 .c-n{left:-18pt}
+.c-t{position:absolute;top:0;white-space:nowrap}
+.c-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:1pt;text-underline-offset:1.6pt}
+.c-hd{position:absolute;right:68.3pt;top:calc(45.8pt - 6.5pt - var(--k)*11pt);--k:0.31;margin:0;
+  font-family:Calibri,KG,sans-serif;font-size:11pt;line-height:13pt;white-space:nowrap;text-indent:0}
+.c-ft{left:70.8pt;width:456.8pt;--b:792.2;font-family:Arial,KG,sans-serif;--k:0.285;white-space:nowrap}
+.c-pn{position:absolute;right:0;top:0}
+.c-f{position:absolute;line-height:0}
+.c-r{position:absolute;background:#000;display:block}
+.c-ov{position:absolute;background:#fff;white-space:nowrap;font-family:'Times New Roman',KB,serif;font-size:11pt;
+  line-height:13.5pt;height:13.5pt;text-indent:0;padding:0 2pt}
+.c-bk{position:absolute;background:#fff;white-space:nowrap;font-family:'Times New Roman',KB,serif;text-align:center;
+  text-indent:0;margin:0;overflow:hidden}
+.c-sc{position:absolute;background:#fff;white-space:nowrap;font-family:Arial,KG,sans-serif;font-size:8pt;
+  line-height:10pt;text-align:center;text-indent:0;margin:0}
+/* IChO 2019 theoretical exam, part d (original pages 39-51: problems T6 and T7). Same look as part a
+   (see 2019_T_a.html / ICHO2019-style.md), every class prefixed d-. A4 Word PDF: body Times New Roman 11pt,
+   text x 70.8..527.0; headings Arial bold; header Calibri 11pt; footer Arial 11pt at baseline 792.2.
+   Blocks are placed by the original's first baseline --b (pt), --l = pitch, --fs = size, --k = measured baseline
+   factor. Structures, spectra, graphs and answer boxes holding only formulas/structures are stamped; frames of
+   boxes with English labels and table rules are .d-r boxes with class "ov"; Korean labels typed.
+   Check boxes: Wingdings U+F0A8 as in the original. */
+.d-x{position:absolute;left:70.8pt;width:456.2pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Times New Roman',KB,serif;--fs:11pt;--l:14.6pt;--k:0.31;font-size:var(--fs);line-height:var(--l);
+  top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.d-x .katex{white-space:nowrap}
+.d-x .katex .text{font-family:KaTeX_Main,KB,serif}
+.d-h{font-family:Arial,KG,sans-serif;--k:0.28;font-weight:bold;white-space:nowrap}
+.d-c{text-align:center}
+.d-rt{text-align:right}
+.d-l{text-align:left}
+.d-nw{white-space:nowrap}
+.d-q{left:90.6pt;width:436.4pt}
+.d-n{position:absolute;left:-19.8pt;top:0}
+.d-t{position:absolute;top:0;white-space:nowrap}
+.d-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:1pt;text-underline-offset:1.6pt}
+.d-u{text-decoration:underline;text-decoration-thickness:0.6pt;text-underline-offset:1.6pt}
+.d-cb{font-family:Wingdings}
+.d-cbx{font-family:Wingdings;display:inline-block;width:18pt}
+.d-hd{position:absolute;right:68.3pt;top:calc(45.8pt - 6.5pt - var(--k)*11pt);--k:0.31;margin:0;
+  font-family:Calibri,KG,sans-serif;font-size:11pt;line-height:13pt;white-space:nowrap;text-indent:0}
+.d-ft{left:70.8pt;width:456.8pt;--b:792.2;font-family:Arial,KG,sans-serif;--k:0.285;white-space:nowrap}
+.d-pn{position:absolute;right:0;top:0}
+.d-f{position:absolute;line-height:0}
+.d-r{position:absolute;background:#000;display:block}
+.d-ov{position:absolute;background:#fff;white-space:nowrap;font-family:'Times New Roman',KB,serif;font-size:11pt;
+  line-height:13.5pt;height:13.5pt;text-indent:0;padding:0 2pt}
+.d-o12{font-size:12pt;--fs:12pt;--l:13.8pt}
+/* IChO 2019 theoretical exam, part e (original pages 52-60: problems T8 and T9). Shared look of part a
+   (see ICHO2019-style.md): body Times New Roman 11pt (pitch 14.6pt), text x 70.8..527.0; headings Arial bold;
+   header Calibri 11pt right-aligned at baseline 45.8; footer Arial 11pt at baseline 792.2. Blocks placed by the
+   original's first baseline --b (pt), --l = pitch, --fs = size, --k = measured baseline factor.
+   Organic structures, schemes, the NMR spectrum and answer boxes holding only labels/formulas are stamped;
+   empty answer frames and check-box frames are .e-r rules with class "ov"; check-box glyphs are stamped and the
+   options typed in Korean. Korean labels over stamped schemes are white .e-ov boxes. */
+.e-x{position:absolute;left:70.8pt;width:456.2pt;margin:0;text-indent:0;text-align:justify;word-break:keep-all;
+  font-family:'Times New Roman',KB,serif;--fs:11pt;--l:14.6pt;--k:0.31;font-size:var(--fs);line-height:var(--l);
+  top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs))}
+.e-x .katex{white-space:nowrap}
+.e-x .katex .text{font-family:KaTeX_Main,KB,serif}
+.e-h{font-family:Arial,KG,sans-serif;--k:0.28;font-weight:bold;white-space:nowrap}
+.e-c{text-align:center}
+.e-nw{white-space:nowrap}
+.e-q{left:90.6pt;width:436.4pt}
+.e-n{position:absolute;left:-19.8pt;top:0}
+.e-cv{font-weight:bold;text-decoration:underline;text-decoration-thickness:1pt;text-underline-offset:1.6pt}
+.e-u{text-decoration:underline;text-decoration-thickness:0.5pt;text-underline-offset:1.6pt}
+.e-sc{font-size:9pt}
+.e-o{left:88.7pt;width:430pt;white-space:nowrap}
+.e-o12{--fs:12pt;--l:13.8pt}
+.e-o11{--l:12.7pt}
+.e-hd{position:absolute;right:68.3pt;top:calc(45.8pt - 6.5pt - var(--k)*11pt);--k:0.31;margin:0;
+  font-family:Calibri,KG,sans-serif;font-size:11pt;line-height:13pt;white-space:nowrap;text-indent:0}
+.e-ft{left:70.8pt;width:456.8pt;--b:792.2;font-family:Arial,KG,sans-serif;--k:0.285;white-space:nowrap}
+.e-pn{position:absolute;right:0;top:0}
+.e-f{position:absolute;line-height:0}
+.e-r{position:absolute;background:#000;display:block}
+.e-ov{position:absolute;background:#fff;white-space:nowrap;font-family:Arial,KG,sans-serif;font-size:9pt;
+  text-indent:0;text-align:center;margin:0;padding:0}
+</style></head><body>
+<!-- ===== part a: original pages from 1 ===== -->
+<!-- 1: cover -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<p class="a-x a-ar a-c" style="--b:102.6;--fs:34pt;--l:40pt;--k:0.33">이론</p>
+<p class="a-x a-ar a-c" style="--b:147.7;--fs:34pt;--l:40pt;--k:0.33">시험</p>
+<div class="a-f" style="left:164pt;top:205pt"><span class="fig" data-srcpage="1" data-clip="164,205,438,357"></span></div>
+<p class="a-x a-ar a-c" style="--b:378.5;--fs:20pt;--l:24pt;--k:0.32;left:150.4pt;width:300pt">함께 과학을 만들자!</p>
+<div class="a-f" style="left:261pt;top:420pt"><span class="fig" data-srcpage="1" data-clip="261,420,338,441"></span></div>
+<div class="a-f" style="left:246pt;top:519pt"><span class="fig" data-srcpage="1" data-clip="246,519,348,639"></span></div>
+<div class="a-f" style="left:141pt;top:652pt"><span class="fig" data-srcpage="1" data-clip="141,652,459,712"></span></div>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">1</span></p>
+</div>
+
+<!-- 2: general instructions -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<p class="a-x a-h" style="--b:85.6;--fs:16pt;--l:19pt;--k:0.30">일반 지침</p>
+<p class="a-x a-q" style="--b:114.7;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>이 이론 시험 문제지는 <span class="a-hl">60</span>쪽으로 이루어져 있다.</p>
+<p class="a-x a-q" style="--b:139.1;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>Start 명령이 주어지면 바로 답안 작성을 시작할 수 있다.</p>
+<p class="a-x a-q" style="--b:163.3;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>시험 시간은 5시간이다.</p>
+<p class="a-x a-q" style="--b:187.7;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>모든 결과와 답은 시험지의 해당 지정 영역 안에 펜으로 알아보기 쉽게 써야 한다. 답안 칸 밖에 쓴 답은 채점하지 않는다.</p>
+<p class="a-x a-q" style="--b:226.6;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>연습용 종이가 필요하면 시험지 뒷면을 사용하라. 지정 영역 밖에 쓴 내용은 채점하지 않는다는 점을 명심하라.</p>
+<p class="a-x a-q" style="--b:265.5;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>제공된 펜과 계산기만 사용하라.</p>
+<p class="a-x a-q" style="--b:289.8;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>요청하면 시험 문제지의 공식 영어판을 받을 수 있으며, 이는 내용을 확인하는 용도로만 쓴다.</p>
+<p class="a-x a-q" style="--b:328.7;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>시험실을 나가야 할 때(화장실을 이용하거나 간식을 먹을 때)에는 해당 IChO 카드를 흔들어라. 시험 감독관이 와서 동행할 것이다.</p>
+<p class="a-x a-q" style="--b:367.6;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>객관식 문항: 답을 바꾸고 싶으면 이미 표시한 답안 칸을 완전히 칠한 뒤 그 옆에 새 빈 답안 칸을 그려라.</p>
+<p class="a-x a-q" style="--b:407.4;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>감독관은 Stop 명령 30분 전에 시험 종료를 예고한다.</p>
+<p class="a-x a-q" style="--b:431.8;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>Stop 명령이 주어지면 즉시 작업을 멈추어야 한다. ½분 이상 계속 쓰면 이론 시험이 무효 처리된다.</p>
+<p class="a-x a-q" style="--b:470.7;left:88.8pt;width:438.2pt"><span class="a-n a-bu">&#xF0B7;</span>Stop 명령이 주어진 뒤에는 시험 문제지를 시험용 봉투에 다시 넣고 자리에서 기다려라. 시험 감독관이 와서 수험생이 보는 앞에서 봉투를 밀봉하고 수거할 것이다.</p>
+<p class="a-x a-h a-c" style="--b:620.6;--fs:14pt;--l:17pt;left:208.6pt;width:200pt">행운을 빈다!</p>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">2</span></p>
+</div>
+
+<!-- 3: table of contents -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<p class="a-x a-h" style="--b:85.6;--fs:16pt;--l:19pt;--k:0.30">목차</p>
+<p class="a-x" style="--b:138.5">이 이론 시험은 다음과 같이 서로 독립적인 9개의 문제로 이루어져 있다. 각 문제의 배점 비율은 괄호 안에 표시되어 있다.</p>
+<p class="a-x a-nw" style="--b:197.8;--fs:12pt">문제 T1: 무한 우물과 뷰타다이엔<span class="a-t" style="left:331.6pt">(6%)</span><span class="a-t" style="left:423.7pt">p. 8</span></p>
+<p class="a-x a-nw" style="--b:225.6;--fs:12pt">문제 T2: 물 분해를 통한 수소 생산<span class="a-t" style="left:331.6pt">(7%)</span><span class="a-t" style="left:423.7pt">p. 13</span></p>
+<p class="a-x a-nw" style="--b:253.6;--fs:12pt">문제 T3: 염화 은에 대하여<span class="a-t" style="left:331.6pt">(5%)</span><span class="a-t" style="left:423.7pt">p. 19</span></p>
+<p class="a-x a-nw" style="--b:281.4;--fs:12pt">문제 T4: 흑색 화약에서 아이오딘의 발견까지<span class="a-t" style="left:331.6pt">(7%)</span><span class="a-t" style="left:423.7pt">p. 24</span></p>
+<p class="a-x a-nw" style="--b:309.4;--fs:12pt">문제 T5: 나노 기계를 만들기 위한 착물<span class="a-t" style="left:331.6pt">(8%)</span><span class="a-t" style="left:423.7pt">p. 30</span></p>
+<p class="a-x a-nw" style="--b:336.5;--fs:12pt">문제 T6: 블록 공중합체의 특성 분석<span class="a-t" style="left:331.6pt">(8%)</span><span class="a-t" style="left:423.7pt">p. 39</span></p>
+<p class="a-x a-nw" style="--b:367.6;--fs:12pt">문제 T7: [2]카테네인에서 고리의 운동<span class="a-t" style="left:331.6pt">(6%)</span><span class="a-t" style="left:423.7pt">p. 47</span></p>
+<p class="a-x a-nw" style="--b:395.6;--fs:12pt">문제 T8: 이노시톨의 동정과 합성<span class="a-t" style="left:331.6pt">(6%)</span><span class="a-t" style="left:423.7pt">p. 52</span></p>
+<p class="a-x a-nw" style="--b:423.4;--fs:12pt">문제 T9: 레보부피바카인의 합성<span class="a-t" style="left:331.6pt">(7%)</span><span class="a-t" style="left:423.7pt">p. 57</span></p>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">3</span></p>
+</div>
+
+<!-- 4: physical constants and equations -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<p class="a-x a-h" style="--b:81.0">물리 상수와 방정식</p>
+<p class="a-x" style="--b:105.4;--l:14.5pt">이 문제들에서는 모든 수용액 화학종의 활동도를 각각의 농도(단위 mol L<sup>−1</sup>)로 충분히 근사할 수 있다고 가정한다. 식과 표현을 더 간단히 하기 위해 표준 농도 <i>c</i>° = 1 mol L<sup>−1</sup>은 생략한다.</p>
+<div class="a-f" style="left:299pt;top:147pt"><span class="fig" data-srcpage="4" data-clip="299,147,495,521"></span></div>
+<p class="a-x a-nw" style="--b:159.9;--fs:12pt">아보가드로 상수:</p>
+<p class="a-x a-nw" style="--b:173.7;--fs:12pt">기체 상수:</p>
+<p class="a-x a-nw" style="--b:187.5;--fs:12pt">표준 압력:</p>
+<p class="a-x a-nw" style="--b:201.3;--fs:12pt">대기압:</p>
+<p class="a-x a-nw" style="--b:215.1;--fs:12pt">섭씨 온도의 영점:</p>
+<p class="a-x a-nw" style="--b:228.9;--fs:12pt">패러데이 상수:</p>
+<p class="a-x a-nw" style="--b:242.7;--fs:12pt">와트:</p>
+<p class="a-x a-nw" style="--b:256.5;--fs:12pt">킬로와트시:</p>
+<p class="a-x a-nw" style="--b:270.9;--fs:12pt">플랑크 상수:</p>
+<p class="a-x a-nw" style="--b:285.3;--fs:12pt">진공에서 빛의 속력:</p>
+<p class="a-x a-nw" style="--b:299.1;--fs:12pt">기본 전하:</p>
+<p class="a-x a-nw" style="--b:312.9;--fs:12pt">전자볼트</p>
+<p class="a-x a-nw" style="--b:326.9;--fs:12pt">전력:</p>
+<p class="a-x a-nw" style="--b:341.1;--fs:12pt">전력 효율:</p>
+<p class="a-x a-nw" style="--b:356.0;--fs:12pt">플랑크–아인슈타인 관계식:</p>
+<p class="a-x a-nw" style="--b:370.8;--fs:12pt">이상 기체 방정식:</p>
+<p class="a-x a-nw" style="--b:385.0;--fs:12pt">깁스 자유 에너지:</p>
+<p class="a-x a-nw" style="--b:445.5;--fs:12pt">다음 반응의 반응 지수 <i>Q</i>:</p>
+<div class="a-f" style="left:70pt;top:449pt"><span class="fig" data-srcpage="4" data-clip="70,449,264,463"></span></div>
+<p class="a-x a-nw" style="--b:485.9;--fs:12pt">헨더슨–하셀바흐 식:</p>
+<p class="a-x a-nw" style="--b:511.1;--fs:12pt">네른스트–피터슨 식:</p>
+<p class="a-x a-nw a-l" style="--b:528.3;--fs:12pt;--l:13.8pt;left:99.1pt;width:200pt">여기서 <i>Q</i>는 환원 반쪽 반응의<br>반응 지수이다.</p>
+<p class="a-x a-nw a-rt" style="--b:535.3;--fs:12pt;left:270pt;width:58.5pt">단,</p>
+<div class="a-f" style="left:331pt;top:520pt"><span class="fig" data-srcpage="4" data-clip="331,520,475,545"></span></div>
+<p class="a-x a-nw" style="--b:555.9;--fs:12pt">베르–람베르트 법칙:</p>
+<div class="a-f" style="left:349pt;top:545pt"><span class="fig" data-srcpage="4" data-clip="349,545,446,760"></span></div>
+<p class="a-x a-nw" style="--b:583.5;--fs:12pt">적분 속도식:</p>
+<p class="a-x a-nw" style="--b:597.3;--fs:12pt">- 0차 반응:</p>
+<p class="a-x a-nw" style="--b:611.1;--fs:12pt">- 1차 반응:</p>
+<p class="a-x a-nw" style="--b:624.9;--fs:12pt">- 2차 반응:</p>
+<p class="a-x a-nw" style="--b:650.9;--fs:12pt">1차 과정의 반감기:</p>
+<p class="a-x a-nw" style="--b:685.2;--fs:12pt">수 평균 몰 질량 <i>M</i><sub>n</sub>:</p>
+<p class="a-x a-nw" style="--b:716.0;--fs:12pt">질량 평균 몰 질량 <i>M</i><sub>w</sub>:</p>
+<p class="a-x a-nw" style="--b:746.5;--fs:12pt">다분산 지수 <i>I</i><sub>p</sub>:</p>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">4</span></p>
+</div>
+
+<!-- 5: periodic table -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<p class="a-x a-h" style="--b:98.9">주기율표</p>
+<div class="a-f" style="left:68pt;top:181pt"><span class="fig" data-srcpage="5" data-clip="68,181,527,504"></span></div>
+<div class="a-f" style="left:417pt;top:551pt"><span class="fig" data-srcpage="5" data-clip="417,551,528,622"></span></div>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">5</span></p>
+</div>
+
+<!-- 6: 1H NMR -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<div class="a-f" style="left:70pt;top:69pt"><span class="fig" data-srcpage="6" data-clip="70,69,115,85"></span></div>
+<p class="a-x a-h" style="--b:110.1">수소의 화학적 이동 (단위: ppm / TMS)</p>
+<div class="a-f" style="left:67pt;top:153pt"><span class="fig" data-srcpage="6" data-clip="67,153,562,371"></span></div>
+<span class="a-ov ov a-rt" style="left:78.6pt;width:42pt;top:153.1pt">페놀:</span>
+<span class="a-ov ov a-rt" style="left:221.6pt;width:44pt;top:178.4pt">알코올:</span>
+<span class="a-ov ov a-rt" style="left:162pt;width:39pt;top:203.6pt">알켄:</span>
+<span class="a-ov ov a-rt" style="left:366.8pt;width:40pt;top:203.6pt">알카인:</span>
+<span class="a-ov ov a-rt" style="left:286.1pt;width:38pt;top:228.9pt">아민:</span>
+<span class="a-ov ov a-rt" style="left:84pt;width:100pt;top:254.2pt">아마이드 NH—COR:</span>
+<span class="a-ov ov a-l" style="left:183.6pt;width:79.6pt;top:279.6pt">:카복실산</span>
+<span class="a-ov ov a-l" style="left:156.5pt;width:58pt;top:304.9pt">:알데하이드</span>
+<span class="a-ov ov a-l" style="left:469.5pt;width:41.5pt;top:304.9pt">:케톤</span>
+<span class="a-ov ov a-rt" style="left:157.1pt;width:58pt;top:330.2pt">방향족:</span>
+<span class="a-ov ov a-rt" style="left:296pt;width:107pt;top:330.2pt">벤질 자리 CH<sub>n</sub>—C<sub>6</sub>H<sub>5</sub>:</span>
+<p class="a-x a-h" style="--b:427.4">H-H 짝지음 상수 (단위: Hz)</p>
+<i class="a-r ov" style="left:65.16pt;top:456.29pt;width:489.46pt;height:0.48pt"></i><i class="a-r ov" style="left:65.16pt;top:456.77pt;width:0.48pt;height:213.77pt"></i><i class="a-r ov" style="left:309.77pt;top:456.77pt;width:0.48pt;height:213.77pt"></i><i class="a-r ov" style="left:554.14pt;top:456.77pt;width:0.48pt;height:213.77pt"></i><i class="a-r ov" style="left:65.64pt;top:476.71pt;width:244.13pt;height:0.48pt"></i><i class="a-r ov" style="left:310.25pt;top:476.71pt;width:243.89pt;height:0.48pt"></i><i class="a-r ov" style="left:65.64pt;top:497.11pt;width:244.13pt;height:0.48pt"></i><i class="a-r ov" style="left:310.25pt;top:497.11pt;width:243.89pt;height:0.48pt"></i><i class="a-r ov" style="left:65.64pt;top:552.79pt;width:244.13pt;height:0.48pt"></i><i class="a-r ov" style="left:310.25pt;top:552.79pt;width:243.89pt;height:0.48pt"></i><i class="a-r ov" style="left:65.64pt;top:580.87pt;width:244.13pt;height:0.48pt"></i><i class="a-r ov" style="left:310.25pt;top:580.87pt;width:243.89pt;height:0.48pt"></i><i class="a-r ov" style="left:65.64pt;top:608.95pt;width:244.13pt;height:0.48pt"></i><i class="a-r ov" style="left:310.25pt;top:608.95pt;width:243.89pt;height:0.48pt"></i><i class="a-r ov" style="left:65.64pt;top:629.35pt;width:244.13pt;height:0.48pt"></i><i class="a-r ov" style="left:310.25pt;top:629.35pt;width:243.89pt;height:0.48pt"></i><i class="a-r ov" style="left:65.64pt;top:649.63pt;width:244.13pt;height:0.48pt"></i><i class="a-r ov" style="left:310.25pt;top:649.63pt;width:243.89pt;height:0.48pt"></i><i class="a-r ov" style="left:65.64pt;top:670.06pt;width:244.13pt;height:0.48pt"></i><i class="a-r ov" style="left:310.25pt;top:670.06pt;width:243.89pt;height:0.48pt"></i>
+<p class="a-x a-c" style="--b:470.7;left:65.6pt;width:244.2pt;font-weight:bold">수소의 유형</p>
+<div class="a-f" style="left:65.7pt;top:477.3pt"><span class="fig" data-srcpage="6" data-clip="65.7,477.3,309.7,670"></span></div>
+<div class="a-f" style="left:310.3pt;top:457pt"><span class="fig" data-srcpage="6" data-clip="310.3,457,554.1,497"></span></div>
+<p class="a-x a-c" style="--b:508.4;--fs:12pt;--l:13.8pt;left:310.2pt;width:243.9pt">2-12<br>자유롭게 회전할 때: 6-8<br>ax-ax (사이클로헥세인): 8-12<br>ax-eq 또는 eq-eq (사이클로헥세인): 2-5</p>
+<p class="a-x a-c" style="--b:564.1;--fs:12pt;--l:13.8pt;left:310.2pt;width:243.9pt">자유롭게 회전할 때: &lt; 0.1<br>그 밖의 경우(고정됨): 1-8</p>
+<div class="a-f" style="left:310.3pt;top:581.4pt"><span class="fig" data-srcpage="6" data-clip="310.3,581.4,554.1,670"></span></div>
+<p class="a-x a-rt a-nw" style="--b:680.5;left:300pt;width:227.3pt">eq = 적도 방향, ax = 축 방향</p>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">6</span></p>
+</div>
+
+<!-- 7: IR table -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<p class="a-x a-h" style="--b:80.9">IR 분광 자료표</p>
+<i class="a-r ov" style="left:65.16pt;top:109.94pt;width:489.46pt;height:0.48pt"></i><i class="a-r ov" style="left:65.16pt;top:110.42pt;width:0.48pt;height:393.53pt"></i><i class="a-r ov" style="left:299.09pt;top:110.42pt;width:0.48pt;height:393.53pt"></i><i class="a-r ov" style="left:426.67pt;top:110.42pt;width:0.48pt;height:393.53pt"></i><i class="a-r ov" style="left:554.14pt;top:110.42pt;width:0.48pt;height:393.53pt"></i><i class="a-r ov" style="left:65.64pt;top:130.34pt;width:233.45pt;height:0.48pt"></i><i class="a-r ov" style="left:299.57pt;top:130.34pt;width:127.10pt;height:0.48pt"></i><i class="a-r ov" style="left:427.15pt;top:130.34pt;width:126.98pt;height:0.48pt"></i><i class="a-r ov" style="left:65.64pt;top:503.47pt;width:233.45pt;height:0.48pt"></i><i class="a-r ov" style="left:299.57pt;top:503.47pt;width:127.10pt;height:0.48pt"></i><i class="a-r ov" style="left:427.15pt;top:503.47pt;width:126.98pt;height:0.48pt"></i>
+<div class="a-f" style="left:299.6pt;top:110.5pt"><span class="fig" data-srcpage="7" data-clip="299.6,110.5,426.6,503.4"></span></div>
+<p class="a-x a-c" style="--b:124.2;left:65.6pt;width:233.5pt;font-weight:bold">진동 형태</p>
+<p class="a-x a-c" style="--b:124.2;left:427.2pt;width:127pt;font-weight:bold">세기</p>
+<p class="a-x a-c" style="--b:145.1;--fs:12pt;--l:13.8pt;left:65.6pt;width:233.5pt">알코올 O—H (신축)<br>카복실산 O—H (신축)<br>N—H (신축)</p>
+<p class="a-x a-c" style="--b:199.1;--fs:12pt;--l:13.8pt;left:65.6pt;width:233.5pt">≡C—H (신축)<br>=C—H (신축)<br>C—H (신축)<br>–(CO)—H (신축)</p>
+<p class="a-x a-c" style="--b:266.9;--fs:12pt;--l:13.8pt;left:65.6pt;width:233.5pt">C≡N (신축)<br>C≡C (신축)</p>
+<p class="a-x a-c" style="--b:307.2;--fs:12pt;--l:13.8pt;left:65.6pt;width:233.5pt">알데하이드 C=O (신축)<br>산 무수물 C=O (신축)<br>에스터 C=O (신축)<br>케톤 C=O (신축)<br>아마이드 C=O (신축)</p>
+<p class="a-x a-c" style="--b:388.8;--fs:12pt;--l:13.8pt;left:65.6pt;width:233.5pt">알켄 C=C (신축)<br>방향족 C=C (신축)</p>
+<p class="a-x a-c" style="--b:429.2;--fs:12pt;--l:13.8pt;left:65.6pt;width:233.5pt">CH<sub>2</sub> (굽힘)<br>CH<sub>3</sub> (굽힘)</p>
+<p class="a-x a-c" style="--b:469.4;--fs:12pt;--l:13.8pt;left:65.6pt;width:233.5pt">C—O—C (신축)<br>C—OH (신축)<br>NO<sub>2</sub> (신축)</p>
+<p class="a-x a-c" style="--b:141.6;--fs:12pt;--l:13.8pt;left:427.2pt;width:127pt">강함<br>강함<br>강함</p>
+<p class="a-x a-c" style="--b:196.8;--fs:12pt;--l:13.8pt;left:427.2pt;width:127pt">강함<br>약함<br>약함<br>약함</p>
+<p class="a-x a-c" style="--b:265.8;--fs:12pt;--l:13.8pt;left:427.2pt;width:127pt">강함<br>다양함</p>
+<p class="a-x a-c" style="--b:307.2;--fs:12pt;--l:13.8pt;left:427.2pt;width:127pt">강함<br>약함; 강함<br>강함<br>강함<br>강함</p>
+<p class="a-x a-c" style="--b:390.0;--fs:12pt;--l:13.8pt;left:427.2pt;width:127pt">약함<br>약함</p>
+<p class="a-x a-c" style="--b:431.4;--fs:12pt;--l:13.8pt;left:427.2pt;width:127pt">중간<br>중간</p>
+<p class="a-x a-c" style="--b:472.9;--fs:12pt;--l:13.8pt;left:427.2pt;width:127pt">강함<br>강함<br>강함</p>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">7</span></p>
+</div>
+
+<!-- 8: T1 start -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<i class="a-r ov" style="left:110.18pt;top:70.80pt;width:374.96pt;height:0.48pt"></i><i class="a-r ov" style="left:110.18pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:161.90pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:216.65pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:236.81pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:257.09pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:277.37pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:298.13pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:318.41pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:338.71pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:358.99pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:382.27pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:405.55pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:428.23pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:451.03pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:484.66pt;top:71.28pt;width:0.48pt;height:57.86pt"></i><i class="a-r ov" style="left:162.38pt;top:90.12pt;width:322.27pt;height:0.48pt"></i><i class="a-r ov" style="left:162.38pt;top:109.34pt;width:322.27pt;height:0.48pt"></i><i class="a-r ov" style="left:110.66pt;top:128.66pt;width:374pt;height:0.48pt"></i>
+<p class="a-x a-c" style="--b:91.9;--fs:10pt;--l:11.55pt;left:110.7pt;width:51.2pt;font-weight:bold">문제<br>T1<br>6%</p>
+<p class="a-x a-c" style="--b:84.2;--fs:10pt;--l:11.5pt;left:162.4pt;width:54.2pt;font-weight:bold">문항</p>
+<p class="a-x a-c" style="--b:84.2;--fs:10pt;--l:11.5pt;left:451.5pt;width:33.2pt;font-weight:bold">합계</p>
+<p class="a-x a-c" style="--b:103.2;--fs:10pt;--l:11.5pt;left:162.4pt;width:54.2pt">배점</p>
+<p class="a-x a-c" style="--b:122.5;--fs:10pt;--l:11.5pt;left:162.4pt;width:54.2pt">점수</p>
+<div class="a-f" style="left:217.4pt;top:71.6pt"><span class="fig" data-srcpage="8" data-clip="217.4,71.6,450.8,89.8"></span></div>
+<div class="a-f" style="left:217.4pt;top:90.9pt"><span class="fig" data-srcpage="8" data-clip="217.4,90.9,484.4,109"></span></div>
+<p class="a-x a-h" style="--b:155.9;--fs:16pt;--l:19pt;--k:0.30">문제 T1: 무한 우물과 뷰타다이엔</p>
+<p class="a-x" style="--b:184.2">뷰타-1,3-다이엔 분자는 흔히 CH<sub>2</sub>=CH–CH=CH<sub>2</sub>로 쓰며, 이 표기에서는 단일 결합과 이중 결합이 번갈아 나타난다. 그러나 이 분자의 화학 반응성은 이러한 설명과 맞지 않으며, π 전자는 세 결합 전체에 걸쳐 분포한다고 설명하는 편이 더 적절하다.</p>
+<div class="a-f" style="left:234pt;top:228pt"><span class="fig" data-srcpage="8" data-clip="234,228,361,259"></span></div>
+<p class="a-x" style="--b:280.2">이 계는 전자가 자유롭게 움직이는 1차원 상자(즉, 무한 우물)로 모형화할 수 있다.</p>
+<p class="a-x" style="--b:299.7;--l:20pt">길이가 <i>L</i>인 무한 우물 속 전자의 에너지는 $E_n=\frac{n^2h^2}{8m_eL^2}$이며, 여기서 <i>n</i>은 <b>0이 아닌</b> 양의 정수이다.</p>
+<p class="a-x a-q" style="--b:330.9"><span class="a-n">1.</span>서로 다른 두 모형을 살펴본다. 각 모형 안에서, 그리고 두 모형 사이에서 에너지 준위가 상대적으로 어떻게 다른지 드러나도록, 적어도 가장 낮은 세 에너지 준위 <i>E</i><sub>n</sub>을 <span class="a-cv">각 모형에 대하여</span> 해당 그림에 <span class="a-cv">그려라</span>.</p>
+<i class="a-r ov" style="left:65.16pt;top:370.61pt;width:470.98pt;height:0.48pt"></i><i class="a-r ov" style="left:65.16pt;top:371.09pt;width:0.48pt;height:381.65pt"></i><i class="a-r ov" style="left:535.66pt;top:371.09pt;width:0.48pt;height:381.65pt"></i><i class="a-r ov" style="left:65.64pt;top:752.26pt;width:470.02pt;height:0.48pt"></i>
+<div class="a-f" style="left:98.1pt;top:371.1pt"><span class="fig" data-srcpage="8" data-clip="98.1,371.1,503.2,660.3"></span></div>
+<p class="a-x" style="--b:682.7;--l:15.15pt;width:231.2pt"><b>모형 1 (« 편재화 »)</b>: π 전자는 양 끝 결합에 편재되어 있으며, 길이가 <i>d</i>인 분리된 두 무한 퍼텐셜 우물 속에서 움직인다.</p>
+<p class="a-x" style="--b:682.7;--l:15.05pt;left:310.2pt;width:223.1pt"><b>모형 2 (« 비편재화 »)</b>: π 전자는 분자 전체에 비편재화되어 있으며, 길이가 3<i>d</i>인 하나의 무한 퍼텐셜 우물 속에서 움직인다.</p>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">8</span></p>
+</div>
+
+<!-- 9: T1 questions 2-5, model 3 -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<p class="a-x a-q" style="--b:80.8"><span class="a-n">2.</span>모형 1에 대하여 앞의 그림에 π 전자들을 <span class="a-cv">배치하고</span>, 모형 1에서 π 전자계의 총 에너지를 <i>h</i>, <i>m</i><sub>e</sub>, <i>d</i>의 함수로 <span class="a-cv">나타내라</span>.</p>
+<div class="a-f" style="left:64pt;top:105pt"><span class="fig" data-srcpage="9" data-clip="64,105,531,208"></span></div>
+<p class="a-x a-q" style="--b:229.1"><span class="a-n">3.</span>모형 2에 대하여 앞의 그림에 π 전자들을 <span class="a-cv">배치하고</span>, 모형 2에서 π 전자계의 총 에너지를 <i>h</i>, <i>m</i><sub>e</sub>, <i>d</i>의 함수로 <span class="a-cv">나타내라</span>.</p>
+<div class="a-f" style="left:64pt;top:253pt"><span class="fig" data-srcpage="9" data-clip="64,253,531,370"></span></div>
+<p class="a-x" style="--b:396.8">공액 에너지는 실제 π 전자계의 총 에너지에서, 전자 수가 같은 에틸렌 분자들의 에너지 합을 뺀 값이다.</p>
+<p class="a-x a-q" style="--b:437.8"><span class="a-n">4.</span>뷰타다이엔의 공액 에너지 Δ<i>E</i><sub>c</sub>를 <i>h</i>, <i>m</i><sub>e</sub>, <i>d</i>의 함수로 <span class="a-cv">나타내라</span>.</p>
+<div class="a-f" style="left:64pt;top:447pt"><span class="fig" data-srcpage="9" data-clip="64,447,531,533"></span></div>
+<p class="a-x" style="--b:560.3">모형 1과 2는 지나치게 단순하다. 이제부터 새로운 모형을 자세히 다룬다.</p>
+<p class="a-x a-q" style="--b:586.8"><span class="a-n">5.</span>루이스 표기법을 사용하여 뷰타다이엔의 다른 공명 구조 세 가지를 <span class="a-cv">그려라</span>.</p>
+<div class="a-f" style="left:64pt;top:596pt"><span class="fig" data-srcpage="9" data-clip="64,596,531,643"></span></div>
+<p class="a-x a-nw" style="--b:670.1">탄소 원자의 크기를 고려하기 위해, 모형 2를 다음과 같이 모형 3으로 수정한다.</p>
+<p class="a-x a-nw" style="--b:684.6">- 우물의 새 길이는 <i>L</i>이고, 우물은 가로 좌표 0과 <i>L</i> 사이에 있다;</p>
+<p class="a-x a-nw" style="--b:699.2">- 탄소 원자들은 가로 좌표 <i>L</i>/8, 3<i>L</i>/8, 5<i>L</i>/8, 7<i>L</i>/8에 있다.</p>
+<p class="a-x a-nw" style="--b:713.7">각 준위 <i>n</i>에 대하여 π 파동함수는 다음과 같다.</p>
+<div class="a-f" style="left:242pt;top:726pt"><span class="fig" data-srcpage="9" data-clip="242,726,356,754"></span></div>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">9</span></p>
+</div>
+
+<!-- 10: T1 questions 6-8 -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<p class="a-x a-nw" style="--b:80.8">그리고 π 전자가 <i>N</i>개인 계의 π 전자 밀도는 다음과 같다.</p>
+<div class="a-f" style="left:246pt;top:85pt"><span class="fig" data-srcpage="10" data-clip="246,85,353,127"></span></div>
+<p class="a-x" style="--b:136.6">π 전자계의 분자 궤도함수에 해당하는 네 π 파동함수가 아래에 그려져 있다(<b>순서는 임의적임</b>).</p>
+<div class="a-f" style="left:95.9pt;top:160.7pt"><span class="fig" data-srcpage="10" data-clip="95.9,160.7,498.9,442.8"></span></div>
+<p class="a-x a-q" style="--b:466.6"><span class="a-n">6.</span>네 π 파동함수의 에너지(<i>E</i><sub>A</sub>, <i>E</i><sub>B</sub>, <i>E</i><sub>C</sub>, <i>E</i><sub>D</sub>)를 크기 순서대로 <span class="a-cv">나열하라</span>.</p>
+<div class="a-f" style="left:64pt;top:476pt"><span class="fig" data-srcpage="10" data-clip="64,476,531,523"></span></div>
+<p class="a-x a-q" style="--b:543.7"><span class="a-n">7.</span>뷰타다이엔에서 전자로 채워진 궤도함수의 기호(A, B, C 또는 D)를 <span class="a-cv">제시하라</span>.</p>
+<div class="a-f" style="left:64pt;top:553pt"><span class="fig" data-srcpage="10" data-clip="64,553,531,600"></span></div>
+<p class="a-x a-q" style="--b:620.8"><span class="a-n">8.</span>모형 3에서, <i>n</i> = 1과 <i>n</i> = 2에 대하여 위치 0, <i>L</i>/4, <i>L</i>/2에서 점유된 준위의 π 파동함수 $\psi_\mathrm{n}$의 값을 <i>L</i>의 함수로 <span class="a-cv">제시하라</span>.</p>
+<div class="a-f" style="left:64pt;top:645pt"><span class="fig" data-srcpage="10" data-clip="64,645,531,747"></span></div>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">10</span></p>
+</div>
+
+<!-- 11: T1 answer boxes 8, question 9 -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<div class="a-f" style="left:64pt;top:70pt"><span class="fig" data-srcpage="11" data-clip="64,70,531,568"></span></div>
+<p class="a-x a-q" style="--b:589.3"><span class="a-n">9.</span>모형 3에서, 위치 0, <i>L</i>/4, <i>L</i>/2에서 π 전자 밀도의 값을 <span class="a-cv">제시하라</span>.</p>
+<div class="a-f" style="left:64pt;top:599pt"><span class="fig" data-srcpage="11" data-clip="64,599,531,756"></span></div>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">11</span></p>
+</div>
+
+<!-- 12: T1 questions 10-11 -->
+<div class="page">
+<p class="a-hd">수험 번호: AAA-1</p>
+<div class="a-f" style="left:64pt;top:70pt"><span class="fig" data-srcpage="12" data-clip="64,70,531,130"></span></div>
+<p class="a-x a-q" style="--b:150.7"><span class="a-n">10.</span>0과 <i>L</i> 사이의 π 전자 밀도를 <span class="a-cv">그려라</span>.</p>
+<div class="a-f" style="left:64pt;top:160pt"><span class="fig" data-srcpage="12" data-clip="64,160,531,377"></span></div>
+<p class="a-x a-q" style="--b:398.3"><span class="a-n">11.</span>다음 CC 결합(B1, B2, …, B5)을 짧은 것부터 <span class="a-cv">나열하라</span>. 기호 = 또는 &lt;를 사용하라.</p>
+<p class="a-x a-q a-nw" style="--b:418.8;left:141.6pt;width:385pt"><span class="a-n" style="left:-51pt">B1:</span>뷰타다이엔 분자의 C1C2</p>
+<p class="a-x a-q a-nw" style="--b:433.4;left:141.6pt;width:385pt"><span class="a-n" style="left:-51pt">B2 :</span>뷰타다이엔 분자의 C2C3</p>
+<p class="a-x a-q a-nw" style="--b:448.0;left:141.6pt;width:385pt"><span class="a-n" style="left:-51pt">B3 :</span>뷰타다이엔 분자의 C3C4</p>
+<p class="a-x a-q a-nw" style="--b:462.5;left:141.6pt;width:385pt"><span class="a-n" style="left:-51pt">B4 :</span>에테인 분자의 CC</p>
+<p class="a-x a-q a-nw" style="--b:477.1;left:141.6pt;width:385pt"><span class="a-n" style="left:-51pt">B5 :</span>에텐 분자의 CC</p>
+<div class="a-f" style="left:64pt;top:487pt"><span class="fig" data-srcpage="12" data-clip="64,487,531,547"></span></div>
+<p class="a-x a-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="a-pn">12</span></p>
+</div>
+
+<!-- ===== part b: original pages from 13 ===== -->
+<!-- 13: T2 start -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<i class="b-r ov" style="left:98.06pt;top:70.80pt;width:399.20pt;height:0.48pt"></i><i class="b-r ov" style="left:98.06pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:150.62pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:205.97pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:231.41pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:256.85pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:282.29pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:307.73pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:333.31pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:358.75pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:384.19pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:409.63pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:435.07pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:460.63pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:496.78pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="b-r ov" style="left:151.10pt;top:86.28pt;width:54.86pt;height:0.48pt"></i><i class="b-r ov" style="left:206.45pt;top:86.28pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:231.89pt;top:86.28pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:257.33pt;top:86.28pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:282.77pt;top:86.28pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:308.21pt;top:86.28pt;width:25.10pt;height:0.48pt"></i><i class="b-r ov" style="left:333.79pt;top:86.28pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:359.23pt;top:86.28pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:384.67pt;top:86.28pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:410.11pt;top:86.28pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:435.55pt;top:86.28pt;width:25.08pt;height:0.48pt"></i><i class="b-r ov" style="left:461.11pt;top:86.28pt;width:35.66pt;height:0.48pt"></i><i class="b-r ov" style="left:151.10pt;top:101.78pt;width:54.86pt;height:0.48pt"></i><i class="b-r ov" style="left:206.45pt;top:101.78pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:231.89pt;top:101.78pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:257.33pt;top:101.78pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:282.77pt;top:101.78pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:308.21pt;top:101.78pt;width:25.10pt;height:0.48pt"></i><i class="b-r ov" style="left:333.79pt;top:101.78pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:359.23pt;top:101.78pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:384.67pt;top:101.78pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:410.11pt;top:101.78pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:435.55pt;top:101.78pt;width:25.08pt;height:0.48pt"></i><i class="b-r ov" style="left:461.11pt;top:101.78pt;width:35.66pt;height:0.48pt"></i><i class="b-r ov" style="left:98.54pt;top:117.26pt;width:52.08pt;height:0.48pt"></i><i class="b-r ov" style="left:151.10pt;top:117.26pt;width:54.86pt;height:0.48pt"></i><i class="b-r ov" style="left:206.45pt;top:117.26pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:231.89pt;top:117.26pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:257.33pt;top:117.26pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:282.77pt;top:117.26pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:308.21pt;top:117.26pt;width:25.10pt;height:0.48pt"></i><i class="b-r ov" style="left:333.79pt;top:117.26pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:359.23pt;top:117.26pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:384.67pt;top:117.26pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:410.11pt;top:117.26pt;width:24.96pt;height:0.48pt"></i><i class="b-r ov" style="left:435.55pt;top:117.26pt;width:25.08pt;height:0.48pt"></i><i class="b-r ov" style="left:461.11pt;top:117.26pt;width:35.66pt;height:0.48pt"></i>
+<p class="b-x b-c" style="--b:86.3;--fs:10pt;--l:11.5pt;left:98.5pt;width:52.1pt;font-weight:bold">문제<br>T2<br>7%</p>
+<p class="b-x b-st" style="--b:82.3;font-weight:bold"><span class="b-t b-c" style="left:151.1pt;width:54.9pt">문항</span><span class="b-t b-c" style="left:206.4pt;width:25.0pt">1</span><span class="b-t b-c" style="left:231.9pt;width:25.0pt">2</span><span class="b-t b-c" style="left:257.3pt;width:25.0pt">3</span><span class="b-t b-c" style="left:282.8pt;width:25.0pt">4</span><span class="b-t b-c" style="left:308.2pt;width:25.1pt">5</span><span class="b-t b-c" style="left:333.8pt;width:25.0pt">6</span><span class="b-t b-c" style="left:359.2pt;width:25.0pt">7</span><span class="b-t b-c" style="left:384.7pt;width:25.0pt">8</span><span class="b-t b-c" style="left:410.1pt;width:25.0pt">9</span><span class="b-t b-c" style="left:435.6pt;width:25.1pt">10</span><span class="b-t b-c" style="left:461.1pt;width:35.7pt">합계</span></p>
+<p class="b-x b-st" style="--b:97.6"><span class="b-t b-c" style="left:151.1pt;width:54.9pt">배점</span><span class="b-t b-c" style="left:206.4pt;width:25.0pt">1</span><span class="b-t b-c" style="left:231.9pt;width:25.0pt">4</span><span class="b-t b-c" style="left:257.3pt;width:25.0pt">2</span><span class="b-t b-c" style="left:282.8pt;width:25.0pt">3</span><span class="b-t b-c" style="left:308.2pt;width:25.1pt">3</span><span class="b-t b-c" style="left:333.8pt;width:25.0pt">6</span><span class="b-t b-c" style="left:359.2pt;width:25.0pt">4</span><span class="b-t b-c" style="left:384.7pt;width:25.0pt">1</span><span class="b-t b-c" style="left:410.1pt;width:25.0pt">8</span><span class="b-t b-c" style="left:435.6pt;width:25.1pt">2</span><span class="b-t b-c" style="left:461.1pt;width:35.7pt">34</span></p>
+<p class="b-x b-c" style="--b:112.9;--fs:10pt;--l:11.5pt;left:151.1pt;width:54.9pt">점수</p>
+<p class="b-x b-h" style="--b:144.5;--fs:16pt;--l:19pt;--k:0.30">문제 T2: 물 분해를 통한 수소 생산</p>
+<p class="b-x b-h" style="--b:180.0;--fs:12pt;--l:14pt;--k:0.285">자료:</p>
+<i class="b-r ov" style="left:161.66pt;top:194.78pt;width:271.97pt;height:0.48pt"></i><i class="b-r ov" style="left:161.66pt;top:195.26pt;width:0.48pt;height:22.44pt"></i><i class="b-r ov" style="left:253.85pt;top:195.26pt;width:0.48pt;height:22.44pt"></i><i class="b-r ov" style="left:298.49pt;top:195.26pt;width:0.48pt;height:22.44pt"></i><i class="b-r ov" style="left:346.87pt;top:195.26pt;width:0.48pt;height:22.44pt"></i><i class="b-r ov" style="left:395.23pt;top:195.26pt;width:0.48pt;height:22.44pt"></i><i class="b-r ov" style="left:433.15pt;top:195.26pt;width:0.48pt;height:22.44pt"></i>
+<p class="b-x b-st" style="--b:210.1;--fs:11pt;--l:13pt"><span class="b-t b-c" style="left:162.1pt;width:91.7pt">화합물</span><span class="b-t b-c" style="left:254.3pt;width:44.2pt">H<sub>2</sub>(g)</span><span class="b-t b-c" style="left:299.0pt;width:47.9pt">H<sub>2</sub>O(l)</span><span class="b-t b-c" style="left:347.4pt;width:47.9pt">H<sub>2</sub>O(g)</span><span class="b-t b-c" style="left:395.7pt;width:37.4pt">O<sub>2</sub>(g)</span></p>
+<div class="b-f" style="left:161.1pt;top:217.6pt"><span class="fig" data-srcpage="13" data-clip="161.1,217.6,434.2,261.9"></span></div>
+<p class="b-x" style="--b:277.3">분자 수소(H<sub>2</sub>)는 이산화 탄소를 배출하는 연료의 대안으로 사용될 수 있다. 따라서 수소 생산의 비용과 환경 영향을 줄이는 것은 중요한 과제이다. 이 분야에서 물 분해는 유망한 후보 기술이다.</p>
+<p class="b-x b-q b-q8" style="--b:332.9"><span class="b-n">1.</span><span class="b-u">물의 화학량론 계수를 1로 하여</span> 액체 물이 분해되는 반응의 균형 반응식을 <span class="b-cv">써라</span>.</p>
+<div class="b-f" style="left:64.4pt;top:357.6pt"><span class="fig" data-srcpage="13" data-clip="64.4,357.6,530.9,416.8"></span></div>
+<p class="b-x b-q" style="--b:438.3"><span class="b-n">2.</span>주어진 열역학 자료만 사용하여, 이 반응이 298 K에서 열역학적으로 유리한지 <span class="b-cv">수치로 근거를 제시하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:463.37pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:463.85pt;width:0.48pt;height:176.18pt"></i><i class="b-r ov" style="left:529.90pt;top:463.85pt;width:0.48pt;height:176.18pt"></i><i class="b-r ov" style="left:65.40pt;top:639.55pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:474.8">계산:</p>
+<p class="b-x" style="--b:590.5">열역학적으로 유리한 반응인가?</p>
+<p class="b-x b-nw" style="--b:609.4;left:231.5pt;width:200pt"><span class="b-wd">&#xF0A8;</span> 예<span class="b-t" style="left:106.3pt"><span class="b-wd">&#xF0A8;</span> 아니오</span></p>
+<p class="b-x" style="--b:668.0">물 분해는 산성 수용액 속에 넣은 두 전극을 전원 장치에 연결하여 전기화학적으로 수행할 수 있다(그림 1). 두 전극 모두에서 기체 방울이 생긴다.</p>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">13</span></p>
+</div>
+
+<!-- 14: T2 questions 3-4 -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<div class="b-f" style="left:212pt;top:69pt"><span class="fig" data-srcpage="14" data-clip="212,69,386,255"></span></div>
+<p class="b-x b-c" style="--b:263.8"><i>그림 1 – 물 분해 전기화학 전지.</i></p>
+<p class="b-x b-q b-q8" style="--b:290.2"><span class="b-n">3.</span>각 전극에서 일어나는 알짜 전기화학 반쪽 반응의 균형 반응식을 <span class="b-cv">써라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:300.89pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:301.37pt;width:0.48pt;height:67.80pt"></i><i class="b-r ov" style="left:529.90pt;top:301.37pt;width:0.48pt;height:67.80pt"></i><i class="b-r ov" style="left:65.40pt;top:368.69pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:313.2;--fs:12pt;--l:14pt">전극 (1)에서:</p>
+<p class="b-x" style="--b:340.8;--fs:12pt;--l:14pt">전극 (2)에서:</p>
+<p class="b-x b-q" style="--b:391.0;--l:14.9pt"><span class="b-n">4.</span>주어진 열역학 자료만(또는 문항 2의 결과를) 사용하여, 모든 반응물과 생성물이 표준 상태에 있을 때 이 과정이 298 K에서 열역학적으로 유리하기 위해 전극 사이에 가하는 전압 Δ<i>E</i><sub>applied</sub>가 만족해야 할 조건을 Δ<i>E</i><sub>th</sub> 값(이 값을 <span class="b-cv">구하라</span>)과 비교하여 <span class="b-cv">유도하라</span>. 옳은 조건에 <span class="b-cv">표시하고</span>, 수치를 소수점 아래 셋째 자리까지 <span class="b-cv">제시하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:446.21pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:446.69pt;width:0.48pt;height:161.78pt"></i><i class="b-r ov" style="left:529.90pt;top:446.69pt;width:0.48pt;height:161.78pt"></i><i class="b-r ov" style="left:65.40pt;top:607.99pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:457.6">계산:</p>
+<div class="b-f" style="left:70pt;top:531pt"><span class="fig" data-srcpage="14" data-clip="70,531,182,582"></span></div>
+<p class="b-x b-nw" style="--b:560.2;--fs:14pt;--l:16pt;left:190pt;width:58pt">, 여기서</p>
+<div class="b-f" style="left:249pt;top:548pt"><span class="fig" data-srcpage="14" data-clip="249,548,345,565"></span></div>
+<p class="b-x b-nw" style="--b:577.4;--fs:12pt;--l:14pt;left:283.2pt;width:240pt">(결과는 소수점 아래 셋째 자리까지 쓸 것)</p>
+<p class="b-x b-c" style="--b:591.7;--l:12.7pt"><i><span class="b-up">Δ</span><i>E</i><sub>th</sub>를 계산하지 못했다면, 1.200 V 값을<br>문제의 나머지 부분에서 사용할 수 있다.</i></p>
+<p class="b-x" style="--b:636.3;--l:15.1pt">실험적으로는 물 분해를 관찰하려면 더 높은 전압이 필요하다. 주어진 Pt 음극에 대하여, 물 분해를 관찰하는 데 필요한 최소 전압 Δ<i>E</i><sub>min</sub>은 아래 표와 같이 양극의 종류에 따라 달라진다.</p>
+<i class="b-r ov" style="left:226.61pt;top:681.10pt;width:142.10pt;height:0.48pt"></i><i class="b-r ov" style="left:226.61pt;top:681.58pt;width:0.48pt;height:15.48pt"></i><i class="b-r ov" style="left:290.81pt;top:681.58pt;width:0.48pt;height:15.48pt"></i><i class="b-r ov" style="left:368.23pt;top:681.58pt;width:0.48pt;height:15.48pt"></i>
+<p class="b-x b-c" style="--b:692.0;left:227.1pt;width:63.7pt">양극</p>
+<div class="b-f" style="left:308pt;top:682pt"><span class="fig" data-srcpage="14" data-clip="308,682,355,696.6"></span></div>
+<div class="b-f" style="left:225.6pt;top:697.0pt"><span class="fig" data-srcpage="14" data-clip="225.6,697.0,369.2,757.2"></span></div>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">14</span></p>
+</div>
+
+<!-- 15: T2 question 5, figure 2 -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<p class="b-x" style="--b:81.6">Δ<i>E</i><sub>min</sub>과 Δ<i>E</i><sub>th</sub>의 차이는 장치에서 일어나는 손실의 원인이다.</p>
+<p class="b-x b-q" style="--b:109.1;--l:15pt"><span class="b-n">5.</span>장치의 전력 효율 <i>η</i><sub>elec</sub>(물 분해에 쓰이는 전력의 비율)를 Δ<i>E</i><sub>th</sub>와 Δ<i>E</i><sub>min</sub>의 함수로 나타낸 식을 <span class="b-cv">제시하라</span>. 전류 값 <i>I</i>가 같다고 가정하고, Pt 음극과 Fe<sub>2</sub>O<sub>3</sub> 양극을 사용할 때 물 전기분해의 전력 효율을 <span class="b-cv">계산하라</span>. 가장 효율적인 양극을 <span class="b-cv">제시하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:164.42pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:164.90pt;width:0.48pt;height:229.47pt"></i><i class="b-r ov" style="left:529.90pt;top:164.90pt;width:0.48pt;height:229.47pt"></i><i class="b-r ov" style="left:65.40pt;top:393.89pt;width:464.50pt;height:0.48pt"></i>
+<div class="b-f" style="left:70pt;top:167pt"><span class="fig" data-srcpage="15" data-clip="70,167,107,182"></span></div>
+<p class="b-x" style="--b:249.1;--fs:12pt;--l:14pt">Pt와 Fe<sub>2</sub>O<sub>3</sub> 전극을 사용할 때의 전력 효율:</p>
+<div class="b-f" style="left:69pt;top:310pt"><span class="fig" data-srcpage="15" data-clip="69,310,112,329"></span></div>
+<div class="b-f" style="left:176pt;top:310pt"><span class="fig" data-srcpage="15" data-clip="176,310,207,328"></span></div>
+<p class="b-x" style="--b:353.8;--fs:12pt;--l:14pt">가장 효율적인 양극:</p>
+<p class="b-x b-c" style="--b:377.6;--l:12.7pt"><i><i>η</i><sub>elec</sub>를 계산하지 못했다면, <i>η</i><sub>elec</sub> = 75% 값을<br>문제의 나머지 부분에서 사용할 수 있다.</i></p>
+<p class="b-x" style="--b:422.2">물 전기분해의 대안으로 직접 광촉매 물 분해가 있다. 이 방법에서는 빛을 흡수하여 활성화될 수 있는 반도체를 사용한다.</p>
+<div class="b-f" style="left:82pt;top:450pt"><span class="fig" data-srcpage="15" data-clip="82,450,546,728"></span></div>
+<p class="b-ov7 ov" style="left:348.5pt;top:662.1pt;width:71pt">반도체 이름</p>
+<p class="b-ov7 ov" style="left:343.6pt;top:671.7pt;width:91pt">등가 음극의 전위</p>
+<p class="b-ov7 ov" style="left:332.2pt;top:692.6pt;width:92.7pt">활성화에 필요한 최소 빛 에너지</p>
+<p class="b-ov7 ov" style="left:344.3pt;top:709.4pt;width:85.6pt">등가 양극의 전위</p>
+<p class="b-x b-c" style="--b:739.8"><i>그림 2 – 여러 반도체의 활성화 조건과 등가 전극 전위. 점선은 물의 산화 전위와 환원 전위에 해당한다. SHE = 표준 수소 전극</i></p>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">15</span></p>
+</div>
+
+<!-- 16: figure 3, question 6 -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<div class="b-f" style="left:70pt;top:94pt"><span class="fig" data-srcpage="16" data-clip="70,94,528,415"></span></div>
+<p class="b-x b-c" style="--b:436.7;--l:14.7pt;left:78pt;width:442pt"><i>그림 3 – 왼쪽 축: 태양 광자 플럭스 ϕ의 스펙트럼 분포. 광자 플럭스는 단위 시간 동안 단위 면적의 반도체에 도달하는 광자의 수이다. 오른쪽 축과 점선: 누적 광자 플럭스(즉, 더 짧은 파장을 갖는 광자가 광자 플럭스에서 차지하는 비율).</i></p>
+<p class="b-x b-q" style="--b:492.4"><span class="b-n">6.</span>다음 반도체들을 활성화할 수 있는 태양 광자 플럭스의 비율을 <span class="b-cv">추정하라</span>: TiO<sub>2</sub>, CdS, Si. 계산에 사용한 식과 단위를 명시적으로 <span class="b-cv">밝혀라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:517.75pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:518.23pt;width:0.48pt;height:250.83pt"></i><i class="b-r ov" style="left:529.90pt;top:518.23pt;width:0.48pt;height:250.83pt"></i><i class="b-r ov" style="left:65.40pt;top:768.58pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:530.1;--fs:12pt;--l:14pt">설명 / 계산:</p>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">16</span></p>
+</div>
+
+<!-- 17: T2 questions 7-9 -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<div class="b-f" style="left:64.4pt;top:70.3pt"><span class="fig" data-srcpage="17" data-clip="64.4,70.3,530.9,187.1"></span></div>
+<i class="b-r ov" style="left:265.25pt;top:187.10pt;width:0.48pt;height:38.5pt"></i><i class="b-r ov" style="left:368.23pt;top:187.10pt;width:0.48pt;height:38.5pt"></i>
+<p class="b-x b-c" style="--b:197.1;--l:14.5pt;left:265.7pt;width:102.5pt">대략적인<br>비율</p>
+<div class="b-f" style="left:226pt;top:225.6pt"><span class="fig" data-srcpage="17" data-clip="226,225.6,369.2,297.3"></span></div>
+<p class="b-x" style="--b:324.3">반도체가 활성화되면 표면 전위가 변하므로, 반도체를 전위가 서로 다른 두 전극으로 볼 수 있다.</p>
+<p class="b-x b-q" style="--b:365.2"><span class="b-n">7.</span>그림 2의 자료를 이용하여, 다음 목록에서 활성화되었을 때 물 분해 반응의 양극과 음극 역할을 모두 할 수 있는 반도체를 모두 <span class="b-cv">골라라</span>.</p>
+<div class="b-f" style="left:64.4pt;top:389.9pt"><span class="fig" data-srcpage="17" data-clip="64.4,389.9,530.9,431.6"></span></div>
+<p class="b-x b-q" style="--b:452.9"><span class="b-n">8.</span>음극과 양극으로 함께 사용할 때, 주어진 태양광 조사 조건에서 물 분해에 가장 효율적일 것으로 예상되는 반도체를 <span class="b-cv">제시하라</span>.</p>
+<div class="b-f" style="left:64.4pt;top:477.6pt"><span class="fig" data-srcpage="17" data-clip="64.4,477.6,530.9,521.6"></span></div>
+<p class="b-x" style="--b:548.9;--l:14.9pt">최근 <i>T</i> = 25 °C, <i>p</i><sub>atm</sub>에서 모의 태양광을 비춘 반도체로부터 H<sub>2</sub>와 O<sub>2</sub>가 발생하는 과정이 연구되었다. 입사광의 출력 <i>P</i> = 1.0 kW m<sup>−2</sup>, 광전극의 표면적 <i>S</i> = 16 mm<sup>2</sup>인 조건에서, 반응 Δ<i>t</i> = 1시간 후 H<sub>2</sub>(g) <span class="b-nw"><i>V</i> = 0.37 cm<sup>3</sup>가</span> 생성된 것으로 측정되었다.</p>
+<p class="b-x b-q" style="--b:620.9"><span class="b-n">9.</span>이 전환의 전력 효율 <i>η</i><sub>direct</sub>를 <span class="b-cv">계산하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:631.75pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:632.23pt;width:0.48pt;height:142.23pt"></i><i class="b-r ov" style="left:529.90pt;top:632.23pt;width:0.48pt;height:142.23pt"></i><i class="b-r ov" style="left:65.40pt;top:773.98pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:643.1">계산:</p>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">17</span></p>
+</div>
+
+<!-- 18: T2 question 10 -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<i class="b-r ov" style="left:64.92pt;top:70.80pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:71.28pt;width:0.48pt;height:223.49pt"></i><i class="b-r ov" style="left:529.90pt;top:71.28pt;width:0.48pt;height:223.49pt"></i><i class="b-r ov" style="left:65.40pt;top:294.29pt;width:464.50pt;height:0.48pt"></i>
+<div class="b-f" style="left:69pt;top:242pt"><span class="fig" data-srcpage="18" data-clip="69,242,137,261"></span></div>
+<div class="b-f" style="left:211pt;top:242pt"><span class="fig" data-srcpage="18" data-clip="211,242,229,260"></span></div>
+<p class="b-x b-c" style="--b:277.9;--l:12.8pt"><i><i>η</i><sub>direct</sub>를 계산하지 못했다면, <i>η</i><sub>direct</sub> = 10% 값을<br>문제의 나머지 부분에서 사용할 수 있다.</i></p>
+<p class="b-x" style="--b:322.6;--l:15pt">따라서 태양 에너지를 수소로 전환하는 두 방식, 즉 직접 광촉매 방식과 광전지 패널을 전해조와 결합한 간접 광전기분해 방식을 비교할 수 있다. 시판되는 광전지 패널의 효율은 약 <i>η</i><sub>panels</sub> = 20%이다.</p>
+<p class="b-x b-q" style="--b:380.1"><span class="b-n">10.</span>전기분해에 Fe<sub>2</sub>O<sub>3</sub> 전극과 Pt 전극을 사용할 때, 두 방식의 전력 효율 <i>η</i><sub>direct</sub>와 <i>η</i><sub>indirect</sub>를 <span class="b-cv">비교하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:405.41pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:405.89pt;width:0.48pt;height:184.22pt"></i><i class="b-r ov" style="left:529.90pt;top:405.89pt;width:0.48pt;height:184.22pt"></i><i class="b-r ov" style="left:65.40pt;top:589.63pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:416.8">계산:</p>
+<div class="b-f" style="left:70pt;top:561pt"><span class="fig" data-srcpage="18" data-clip="70,561,430,576"></span></div>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">18</span></p>
+</div>
+
+<!-- 19: T3 start -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<i class="b-r ov" style="left:65.16pt;top:70.80pt;width:464.98pt;height:0.48pt"></i><i class="b-r ov" style="left:65.16pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:117.14pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:171.74pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:197.30pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:223.01pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:250.73pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:276.41pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:302.81pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:328.49pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:354.67pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:380.83pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:406.03pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:432.79pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:460.15pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:489.70pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:529.66pt;top:71.28pt;width:0.48pt;height:49.58pt"></i><i class="b-r ov" style="left:117.62pt;top:86.28pt;width:54.12pt;height:0.48pt"></i><i class="b-r ov" style="left:172.22pt;top:86.28pt;width:25.08pt;height:0.48pt"></i><i class="b-r ov" style="left:197.78pt;top:86.28pt;width:25.22pt;height:0.48pt"></i><i class="b-r ov" style="left:223.49pt;top:86.28pt;width:27.24pt;height:0.48pt"></i><i class="b-r ov" style="left:251.21pt;top:86.28pt;width:25.20pt;height:0.48pt"></i><i class="b-r ov" style="left:276.89pt;top:86.28pt;width:25.92pt;height:0.48pt"></i><i class="b-r ov" style="left:303.29pt;top:86.28pt;width:25.20pt;height:0.48pt"></i><i class="b-r ov" style="left:328.97pt;top:86.28pt;width:25.70pt;height:0.48pt"></i><i class="b-r ov" style="left:355.15pt;top:86.28pt;width:25.68pt;height:0.48pt"></i><i class="b-r ov" style="left:381.31pt;top:86.28pt;width:24.72pt;height:0.48pt"></i><i class="b-r ov" style="left:406.51pt;top:86.28pt;width:26.28pt;height:0.48pt"></i><i class="b-r ov" style="left:433.27pt;top:86.28pt;width:26.88pt;height:0.48pt"></i><i class="b-r ov" style="left:460.63pt;top:86.28pt;width:29.06pt;height:0.48pt"></i><i class="b-r ov" style="left:490.18pt;top:86.28pt;width:39.48pt;height:0.48pt"></i><i class="b-r ov" style="left:117.62pt;top:101.78pt;width:54.12pt;height:0.48pt"></i><i class="b-r ov" style="left:172.22pt;top:101.78pt;width:25.08pt;height:0.48pt"></i><i class="b-r ov" style="left:197.78pt;top:101.78pt;width:25.22pt;height:0.48pt"></i><i class="b-r ov" style="left:223.49pt;top:101.78pt;width:27.24pt;height:0.48pt"></i><i class="b-r ov" style="left:251.21pt;top:101.78pt;width:25.20pt;height:0.48pt"></i><i class="b-r ov" style="left:276.89pt;top:101.78pt;width:25.92pt;height:0.48pt"></i><i class="b-r ov" style="left:303.29pt;top:101.78pt;width:25.20pt;height:0.48pt"></i><i class="b-r ov" style="left:328.97pt;top:101.78pt;width:25.70pt;height:0.48pt"></i><i class="b-r ov" style="left:355.15pt;top:101.78pt;width:25.68pt;height:0.48pt"></i><i class="b-r ov" style="left:381.31pt;top:101.78pt;width:24.72pt;height:0.48pt"></i><i class="b-r ov" style="left:406.51pt;top:101.78pt;width:26.28pt;height:0.48pt"></i><i class="b-r ov" style="left:433.27pt;top:101.78pt;width:26.88pt;height:0.48pt"></i><i class="b-r ov" style="left:460.63pt;top:101.78pt;width:29.06pt;height:0.48pt"></i><i class="b-r ov" style="left:490.18pt;top:101.78pt;width:39.48pt;height:0.48pt"></i><i class="b-r ov" style="left:65.64pt;top:120.38pt;width:51.50pt;height:0.48pt"></i><i class="b-r ov" style="left:117.62pt;top:120.38pt;width:54.12pt;height:0.48pt"></i><i class="b-r ov" style="left:172.22pt;top:120.38pt;width:25.08pt;height:0.48pt"></i><i class="b-r ov" style="left:197.78pt;top:120.38pt;width:25.22pt;height:0.48pt"></i><i class="b-r ov" style="left:223.49pt;top:120.38pt;width:27.24pt;height:0.48pt"></i><i class="b-r ov" style="left:251.21pt;top:120.38pt;width:25.20pt;height:0.48pt"></i><i class="b-r ov" style="left:276.89pt;top:120.38pt;width:25.92pt;height:0.48pt"></i><i class="b-r ov" style="left:303.29pt;top:120.38pt;width:25.20pt;height:0.48pt"></i><i class="b-r ov" style="left:328.97pt;top:120.38pt;width:25.70pt;height:0.48pt"></i><i class="b-r ov" style="left:355.15pt;top:120.38pt;width:25.68pt;height:0.48pt"></i><i class="b-r ov" style="left:381.31pt;top:120.38pt;width:24.72pt;height:0.48pt"></i><i class="b-r ov" style="left:406.51pt;top:120.38pt;width:26.28pt;height:0.48pt"></i><i class="b-r ov" style="left:433.27pt;top:120.38pt;width:26.88pt;height:0.48pt"></i><i class="b-r ov" style="left:460.63pt;top:120.38pt;width:29.06pt;height:0.48pt"></i><i class="b-r ov" style="left:490.18pt;top:120.38pt;width:39.48pt;height:0.48pt"></i>
+<p class="b-x b-c" style="--b:87.8;--fs:10pt;--l:11.55pt;left:65.6pt;width:51.5pt;font-weight:bold">문제<br>T3<br>5%</p>
+<p class="b-x b-st" style="--b:82.3;font-weight:bold"><span class="b-t b-c" style="left:117.6pt;width:54.1pt">문항</span><span class="b-t b-c" style="left:172.2pt;width:25.1pt">1</span><span class="b-t b-c" style="left:197.8pt;width:25.2pt">2</span><span class="b-t b-c" style="left:223.5pt;width:27.2pt">3</span><span class="b-t b-c" style="left:251.2pt;width:25.2pt">4</span><span class="b-t b-c" style="left:276.9pt;width:25.9pt">5</span><span class="b-t b-c" style="left:303.3pt;width:25.2pt">6</span><span class="b-t b-c" style="left:329.0pt;width:25.7pt">7</span><span class="b-t b-c" style="left:355.2pt;width:25.7pt">8</span><span class="b-t b-c" style="left:381.3pt;width:24.7pt">9</span><span class="b-t b-c" style="left:406.5pt;width:26.3pt">10</span><span class="b-t b-c" style="left:433.3pt;width:26.9pt">11</span><span class="b-t b-c" style="left:460.6pt;width:29.1pt">12</span><span class="b-t b-c" style="left:490.2pt;width:39.5pt">합계</span></p>
+<p class="b-x b-st" style="--b:97.6"><span class="b-t b-c" style="left:117.6pt;width:54.1pt">배점</span><span class="b-t b-c" style="left:172.2pt;width:25.1pt">1</span><span class="b-t b-c" style="left:197.8pt;width:25.2pt">3</span><span class="b-t b-c" style="left:223.5pt;width:27.2pt">3</span><span class="b-t b-c" style="left:251.2pt;width:25.2pt">3</span><span class="b-t b-c" style="left:276.9pt;width:25.9pt">4</span><span class="b-t b-c" style="left:303.3pt;width:25.2pt">2</span><span class="b-t b-c" style="left:329.0pt;width:25.7pt">7</span><span class="b-t b-c" style="left:355.2pt;width:25.7pt">2</span><span class="b-t b-c" style="left:381.3pt;width:24.7pt">2</span><span class="b-t b-c" style="left:406.5pt;width:26.3pt">3</span><span class="b-t b-c" style="left:433.3pt;width:26.9pt">4</span><span class="b-t b-c" style="left:460.6pt;width:29.1pt">6</span><span class="b-t b-c" style="left:490.2pt;width:39.5pt">40</span></p>
+<p class="b-x b-c" style="--b:114.6;--fs:10pt;--l:11.5pt;left:117.6pt;width:54.1pt">점수</p>
+<p class="b-x b-h" style="--b:147.6;--fs:16pt;--l:19pt;--k:0.30">문제 T3: 염화 은에 대하여</p>
+<p class="b-x" style="--b:182.3"><b>298 K에서의 자료:</b></p>
+<div class="b-f" style="left:70pt;top:193pt"><span class="fig" data-srcpage="19" data-clip="70,193,245,206"></span></div>
+<p class="b-x b-nw b-l" style="--b:217.9">착물 [Ag(NH<sub>3</sub>)<sub>n</sub>]<sup>+</sup>의 형성 상수: <i>β</i><sub>n</sub> = 10<sup>7.2</sup><br>표준 수소 전극에 대한 전위:<br>Ag<sup>+</sup>/Ag(s)의 표준 전위: <i>E</i>°(Ag<sup>+</sup>/Ag(s)) = 0.80 V<br>O<sub>2</sub>(aq)/HO<sup>−</sup>(aq)의 겉보기 전위(바닷물에서): <i>E'</i>(O<sub>2</sub>(aq)/HO<sup>−</sup>(aq)) = 0.75 V</p>
+<p class="b-x" style="--b:294.5"><b>파트 A: 루이 조제프 게이뤼삭의 화학 강의 인용문</b></p>
+<p class="b-x" style="--b:318.9">루이 조제프 게이뤼삭(프랑스의 화학자이자 물리학자, 1778–1850)의 화학 강의에서 가져온 다음 인용문들은 염화 은의 몇 가지 성질을 다룬다.</p>
+<p class="b-x" style="--b:365.9"><b>인용 A:</b> “이제 유백색 고체인 염화 은에 대해 이야기하겠다. 이 물질은 질산 은 수용액에 염산을 부으면 쉽게 얻을 수 있다.”</p>
+<p class="b-x" style="--b:395.0"><b>인용 B:</b> “이 염은 녹지 않으므로 맛이 없다.”</p>
+<p class="b-x" style="--b:409.6"><b>인용 C:</b> “이 화합물은 알코올에 전혀 녹지 않으며 산에도 녹지 않는다. 단, 진한 염산에는 쉽게 녹는다.”</p>
+<p class="b-x" style="--b:438.6"><b>인용 D:</b> “한편, 염화 은은 암모니아 수용액에 매우 잘 녹는다.”</p>
+<p class="b-x" style="--b:453.2"><b>인용 E:</b> “그런 다음, 암모니아와 반응하는 산을 가하면 염화 은이 다시 나타나게 할 수 있다.”</p>
+<p class="b-x" style="--b:482.3"><b>인용 F:</b> “은으로 만든 그릇에 짠 바닷물을 넣고 증발시키면, 유백색 고체가 섞인 불순한 염화 나트륨을 얻게 된다.”</p>
+<p class="b-x b-q" style="--b:523.4"><span class="b-n">1.</span><b>인용 A:</b> AgCl(s)를 합성하는 균형 화학 반응식을 <span class="b-cv">써라</span>.</p>
+<div class="b-f" style="left:64.4pt;top:533.5pt"><span class="fig" data-srcpage="19" data-clip="64.4,533.5,530.9,591.2"></span></div>
+<p class="b-x b-q" style="--b:612.5"><span class="b-n">2.</span><b>인용 B:</b> 298 K에서 물에 대한 AgCl(s)의 용해도 <i>s</i>를 mol L<sup>−1</sup> 단위로 <span class="b-cv">계산하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:623.23pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:623.71pt;width:0.48pt;height:118.11pt"></i><i class="b-r ov" style="left:529.90pt;top:623.71pt;width:0.48pt;height:118.11pt"></i><i class="b-r ov" style="left:65.40pt;top:741.34pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:634.6">계산:</p>
+<div class="b-f" style="left:346pt;top:722pt"><span class="fig" data-srcpage="19" data-clip="346,722,501,740.8"></span></div>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">19</span></p>
+</div>
+
+<!-- 20: T3 questions 3-5 -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<p class="b-x b-q" style="--b:80.8"><span class="b-n">3.</span><b>인용 C:</b> 염화 이온의 농도가 매우 높은 용액에서는 화학량론이 1:2인 일정한 조성의 착물이 생성된다. 다음 정성적 축(pCl은 왼쪽에서 오른쪽으로 증가한다)의 각 영역에 우세한(고체의 경우에는 존재하는) 은 함유 화학종을 <span class="b-cv">배치하라</span>. 경계에서의 pCl 값은 요구하지 않는다.</p>
+<div class="b-f" style="left:64.4pt;top:134.5pt"><span class="fig" data-srcpage="20" data-clip="64.4,134.5,530.9,198.9"></span></div>
+<p class="b-x" style="--b:226.2"><b>인용 D:</b> 염화 은에 암모니아를 가하면 화학량론이 <i>n</i>인 일정한 조성의 착물이 생성된다.</p>
+<p class="b-x b-q" style="--b:267.4"><span class="b-n">4.</span>염화 은으로부터 착물 [Ag(NH<sub>3</sub>)<sub>n</sub>]<sup>+</sup>가 합성되는 균형 반응식을 <span class="b-cv">쓰고</span>, 그 반응의 평형 상수를 <span class="b-cv">계산하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:292.61pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:293.09pt;width:0.48pt;height:197.18pt"></i><i class="b-r ov" style="left:529.90pt;top:293.09pt;width:0.48pt;height:197.18pt"></i><i class="b-r ov" style="left:65.40pt;top:489.79pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:305.0;--fs:12pt;--l:14pt">반응식:</p>
+<p class="b-x" style="--b:346.2;--fs:12pt;--l:14pt">계산:</p>
+<div class="b-f" style="left:382pt;top:432pt"><span class="fig" data-srcpage="20" data-clip="382,432,406,445"></span></div>
+<p class="b-x b-c" style="--b:472.0;--fs:12pt;--l:13.8pt;left:150pt;width:301pt"><i><i>K</i>를 계산하지 못했다면, 문제의 나머지 부분에서<br>다음 값을 사용할 수 있다: <i>K</i> = 10<sup>−3</sup></i></p>
+<p class="b-x b-q" style="--b:512.1"><span class="b-n">5.</span>염화 은 0.1 mol이 들어 있는 물 1 L에 마지막 고체 알갱이가 사라질 때까지 암모니아를 가한다. 이때 [NH<sub>3</sub>] = 1.78 mol L<sup>−1</sup>이다. 희석 효과를 무시하고 착물의 화학량론을 <span class="b-cv">결정하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:551.95pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:552.43pt;width:0.48pt;height:216.39pt"></i><i class="b-r ov" style="left:529.90pt;top:552.43pt;width:0.48pt;height:216.39pt"></i><i class="b-r ov" style="left:65.40pt;top:768.34pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:563.3">계산:</p>
+<div class="b-f" style="left:382pt;top:744pt"><span class="fig" data-srcpage="20" data-clip="382,744,409,760"></span></div>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">20</span></p>
+</div>
+
+<!-- 21: T3 questions 6-8, part B -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<p class="b-x b-q" style="--b:80.8"><span class="b-n">6.</span><b>인용 E</b>에 해당하는 균형 화학 반응식을 <span class="b-cv">써라</span>.</p>
+<div class="b-f" style="left:64.4pt;top:90.9pt"><span class="fig" data-srcpage="21" data-clip="64.4,90.9,530.9,150.2"></span></div>
+<p class="b-x b-q" style="--b:171.6"><span class="b-n">7.</span>바닷물이 약한 염기성이고 산소(O<sub>2</sub>)가 풍부하며, 이러한 조건에서 금속 은이 산소를 환원시킬 수 있다고 가정하자. <b>인용 F</b>에서 언급된 고체가 생성되는 균형 화학 반응식을 <span class="b-cv">써라</span>. <span class="b-u">산소의 화학량론 계수는 1로 한다.</span> 이 반응의 298 K에서의 평형 상수를 <span class="b-cv">계산하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:225.74pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:226.22pt;width:0.48pt;height:368.33pt"></i><i class="b-r ov" style="left:529.90pt;top:226.22pt;width:0.48pt;height:368.33pt"></i><i class="b-r ov" style="left:65.40pt;top:594.07pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:238.1;--fs:12pt;--l:14pt">반응식:</p>
+<p class="b-x" style="--b:327.8;--fs:12pt;--l:14pt">계산:</p>
+<div class="b-f" style="left:417pt;top:566pt"><span class="fig" data-srcpage="21" data-clip="417,566,440,580"></span></div>
+<p class="b-x" style="--b:622.8"><b>파트 B: 모어법</b></p>
+<p class="b-x" style="--b:654.9">모어법은 크로뮴산 칼륨(2K<sup>+</sup>, CrO<sub>4</sub><sup>2−</sup>)이 있는 상태에서 Cl<sup>−</sup>을 Ag<sup>+</sup>로 적정하는 비색 적정에 바탕을 둔다. 약 7.76∙10<sup>−3</sup> mol L<sup>−1</sup>의 K<sub>2</sub>CrO<sub>4</sub> 용액 세 방울(~ 0.5 mL)을 농도 <i>C</i><sub>Cl</sub>를 모르는 염화 나트륨 용액 V<sub>0</sub> = 20.00 mL에 가한다. 이 용액을 <i>C</i><sub>Ag</sub> = 0.050 mol L<sup>−1</sup>의 질산 은(Ag<sup>+</sup>, NO<sub>3</sub><sup>−</sup>)으로 적정하면 곧바로 고체 <b>A</b>가 생성된다. <i>V</i><sub>Ag</sub> = 4.30 mL에서 붉은 침전(고체 <b>B</b>)이 나타난다.</p>
+<p class="b-x b-q" style="--b:739.7"><span class="b-n">8.</span>실험 중에 일어나는 두 반응의 균형 반응식을 <span class="b-cv">쓰고</span>, 각 반응의 평형 상수를 <span class="b-cv">계산하라</span>.</p>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">21</span></p>
+</div>
+
+<!-- 22: T3 questions 9-11 -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<div class="b-f" style="left:64.4pt;top:70.3pt"><span class="fig" data-srcpage="22" data-clip="64.4,70.3,530.9,200.8"></span></div>
+<p class="b-x b-q" style="--b:222.3"><span class="b-n">9.</span>각 고체가 무엇인지 <span class="b-cv">밝혀라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:232.94pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:233.42pt;width:0.48pt;height:70.35pt"></i><i class="b-r ov" style="left:529.90pt;top:233.42pt;width:0.48pt;height:70.35pt"></i><i class="b-r ov" style="left:65.40pt;top:303.29pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:255.5;--fs:12pt;--l:14pt;left:88.8pt;width:300pt">고체 <b>A</b>:</p>
+<p class="b-x" style="--b:283.1;--fs:12pt;--l:14pt;left:88.8pt;width:300pt">고체 <b>B</b>:</p>
+<p class="b-x b-q" style="--b:325.7"><span class="b-n">10.</span>염화 나트륨 용액에 들어 있는 염화 이온의 미지 농도 <i>C</i><sub>Cl</sub>를 <span class="b-cv">계산하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:336.29pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:336.77pt;width:0.48pt;height:143.42pt"></i><i class="b-r ov" style="left:529.90pt;top:336.77pt;width:0.48pt;height:143.42pt"></i><i class="b-r ov" style="left:65.40pt;top:479.71pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:347.7">계산:</p>
+<div class="b-f" style="left:377pt;top:423pt"><span class="fig" data-srcpage="22" data-clip="377,423,528,441"></span></div>
+<p class="b-x b-c" style="--b:463.4;--l:12.7pt"><i><i>C</i><sub>Cl</sub>를 계산하지 못했다면, <i>C</i><sub>Cl</sub> = 0.010 mol L<sup>−1</sup> 값을<br>문제의 나머지 부분에서 사용할 수 있다.</i></p>
+<p class="b-x b-q" style="--b:502.0"><span class="b-n">11.</span>AgCl(s)가 침전하는 최소 부피 <i>V</i><sub>Ag</sub>(min)를 <span class="b-cv">계산하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:512.71pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:513.19pt;width:0.48pt;height:244.71pt"></i><i class="b-r ov" style="left:529.90pt;top:513.19pt;width:0.48pt;height:244.71pt"></i><i class="b-r ov" style="left:65.40pt;top:757.42pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:524.1">계산:</p>
+<div class="b-f" style="left:172pt;top:739pt"><span class="fig" data-srcpage="22" data-clip="172,739,364,757"></span></div>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">22</span></p>
+</div>
+
+<!-- 23: T3 question 12 -->
+<div class="page">
+<p class="b-hd">수험 번호: AAA-1</p>
+<p class="b-x b-q" style="--b:80.8"><span class="b-n">12.</span>크로뮴산 은이 침전하기 시작할 때 염화 이온의 잔류 농도 [Cl<sup>−</sup>]<sub>res</sub>를 <span class="b-cv">계산하라</span>. 두 값을 비교하여 CrO<sub>4</sub><sup>2−</sup>가 좋은 적정 종말점 지시약인 이유를 <span class="b-cv">설명하라</span>.</p>
+<i class="b-r ov" style="left:64.92pt;top:105.98pt;width:465.46pt;height:0.48pt"></i><i class="b-r ov" style="left:64.92pt;top:106.46pt;width:0.48pt;height:391.25pt"></i><i class="b-r ov" style="left:529.90pt;top:106.46pt;width:0.48pt;height:391.25pt"></i><i class="b-r ov" style="left:65.40pt;top:497.23pt;width:464.50pt;height:0.48pt"></i>
+<p class="b-x" style="--b:118.3;--fs:12pt;--l:14pt">계산:</p>
+<div class="b-f" style="left:276pt;top:381pt"><span class="fig" data-srcpage="23" data-clip="276,381,471,401"></span></div>
+<p class="b-x" style="--b:424.1;--fs:12pt;--l:14pt">CrO<sub>4</sub><sup>2−</sup>가 좋은 적정 종말점 지시약인 이유:</p>
+<p class="b-x b-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="b-pn">23</span></p>
+</div>
+
+<!-- ===== part c: original pages from 24 ===== -->
+<!-- 24: T4 start, question 1 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<i class="c-r ov" style="left:100.58pt;top:70.80pt;width:394.16pt;height:0.48pt"></i><i class="c-r ov" style="left:100.58pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:155.42pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:212.21pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:243.05pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:273.89pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:304.61pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:335.47pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:366.31pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:397.03pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:427.87pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:458.71pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:494.26pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:155.90pt;top:86.28pt;width:338.36pt;height:0.48pt"></i><i class="c-r ov" style="left:155.90pt;top:101.78pt;width:338.36pt;height:0.48pt"></i><i class="c-r ov" style="left:101.06pt;top:117.26pt;width:393.20pt;height:0.48pt"></i>
+<p class="c-x c-c" style="--b:86.3;--fs:10pt;--l:11.5pt;left:101.1pt;width:54.3pt;font-weight:bold">문제<br>T4<br>7%</p>
+<p class="c-x c-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:155.9pt;width:56.3pt;font-weight:bold">문항</p>
+<p class="c-x c-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:459.2pt;width:35.1pt;font-weight:bold">합계</p>
+<p class="c-x c-c" style="--b:97.6;--fs:10pt;--l:11.5pt;left:155.9pt;width:56.3pt">배점</p>
+<p class="c-x c-c" style="--b:112.9;--fs:10pt;--l:11.5pt;left:155.9pt;width:56.3pt">점수</p>
+<div class="c-f" style="left:213.2pt;top:71.6pt"><span class="fig" data-srcpage="24" data-clip="213.2,71.6,458.4,85.9"></span></div>
+<div class="c-f" style="left:213.2pt;top:87.1pt"><span class="fig" data-srcpage="24" data-clip="213.2,87.1,494,101.4"></span></div>
+<p class="c-x c-h" style="--b:144.5;--fs:16pt;--l:19pt;--k:0.30">문제 T4: 흑색 화약에서 아이오딘의 발견까지</p>
+<p class="c-x" style="--b:172.8">19세기에 프랑스의 사업가 B. 쿠르투아는 화약에 쓰이는 질산염 <b>A</b>(<b>M</b><sub><b>A</b></sub>(NO<sub>3</sub>)<sub><i>m</i></sub>)의 생산을 전문으로 하였다. 처음에는 아시아에서 수입하던 <b>A</b>를 나중에는 질산염 <b>B</b>(<b>M</b><sub><b>B</b></sub>(NO<sub>3</sub>)<sub><i>n</i></sub>)와 해조류에서 얻은 화합물 <b>C</b>의 교환 반응으로 생산하였다.</p>
+<p class="c-x c-q c-q1" style="--b:228.5"><span class="c-n">1.</span>질산염 <b>A</b>와 <b>B</b>는 알칼리 금속 또는 알칼리 토금속(<b>M</b><sub><b>A</b></sub>와 <b>M</b><sub><b>B</b></sub>)의 무수 염이다. 두 질산염 중 하나는 비금속 불순물을 1 w% 이하로 포함하고, 다른 하나는 불순물을 9 ± 3 w% 포함한다. 시료 속 금속 <b>M</b><sub><b>A</b></sub>와 <b>M</b><sub><b>B</b></sub>의 함량은 각각 38.4 w%와 22.4 w%이다. 질산염 <b>A</b>와 <b>B</b>의 화학식을 <span class="c-cv">구하고</span>, 계산으로 답을 <span class="c-cv">뒷받침하라</span>.</p>
+<i class="c-r ov" style="left:64.92pt;top:282.75pt;width:465.46pt;height:0.50pt"></i><i class="c-r ov" style="left:64.92pt;top:283.25pt;width:0.48pt;height:485.45pt"></i><i class="c-r ov" style="left:529.90pt;top:283.25pt;width:0.48pt;height:485.45pt"></i><i class="c-r ov" style="left:65.40pt;top:768.22pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:763.9;--fs:14pt;--l:16pt;left:276.6pt;width:200pt"><b>A</b>:<span class="c-t" style="left:106.3pt">및 <b>B</b>:</span></p>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">24</span></p>
+</div>
+
+<!-- 25: question 2 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<p class="c-x" style="--b:80.8"><b>A</b>를 얻기 위해, <b>B</b> 442.8 g이 들어 있는 용액에 고체 화합물 <b>C</b> 262.2 g을 넣었다. 이때 <b>B</b>는 과량이다. 그 결과 흰색 침전 <b>D</b> 190.0 g이 생성되었고, 이를 걸러서 제거하였다. 거른 액을 증발시켜 얻은 고체 혼합물 <b>E</b>를 시료의 질량이 일정해질 때까지 가열하였다(이때 시료에는 아질산염 NO<sub>2</sub><sup>−</sup>만 들어 있다). 기체 생성물은 산소(O<sub>2</sub>)뿐이었으며, 그 부피는 0 °C, 1 atm에서 60.48 L였다(산소는 이상 기체로 볼 수 있다).</p>
+<p class="c-x c-q" style="--b:165.6"><span class="c-n">2.</span>혼합물 <b>E</b>에는 화합물 <b>A</b>와 <b>B</b>만 들어 있고 다른 불순물은 없으며, <b>C</b>는 순수한 무수 상태로 사용하였다고 보고, 혼합물 <b>E</b>의 조성(w%)을 <span class="c-cv">계산하라</span>.</p>
+<i class="c-r ov" style="left:64.92pt;top:190.70pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:191.18pt;width:0.48pt;height:564.56pt"></i><i class="c-r ov" style="left:529.90pt;top:191.18pt;width:0.48pt;height:564.56pt"></i><i class="c-r ov" style="left:65.40pt;top:755.26pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:751.7;--fs:12pt;--l:14pt;left:276.6pt;width:220pt"><b>A</b>의 w%:<span class="c-t" style="left:106.3pt">및 <b>B</b>의 w%:</span></p>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">25</span></p>
+</div>
+
+<!-- 26: question 3 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<p class="c-x c-q" style="--b:80.8"><span class="c-n">3.</span>화합물 <b>C</b>와 <b>D</b>의 화학식을 <span class="c-cv">결정하고</span>, <b>B</b>와 <b>C</b> 사이의 균형 맞춘 반응식을 <span class="c-cv">써라</span>.</p>
+<i class="c-r ov" style="left:64.92pt;top:106.00pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:106.48pt;width:0.48pt;height:623.46pt"></i><i class="c-r ov" style="left:529.90pt;top:106.48pt;width:0.48pt;height:623.46pt"></i><i class="c-r ov" style="left:65.40pt;top:729.46pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:649.1;--fs:14pt;--l:16pt;left:205.9pt;width:220pt"><b>C</b>:<span class="c-t" style="left:141.6pt">및 <b>D</b>:</span></p>
+<p class="c-x c-nw" style="--b:679.5;--fs:12pt;--l:14pt"><b>B</b>와 <b>C</b> 사이의 반응:</p>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">26</span></p>
+</div>
+
+<!-- 27: discovery of iodine, question 4, triiodide equilibrium, titration scheme -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<p class="c-x" style="--b:80.8">1811년에 해조류의 재를 다루던 쿠르투아는 구리 용기가 평소보다 빨리 닳는 것을 관찰하였다. 그가 이 현상을 연구하던 중 그의 고양이가 실험실에 들어와 진한 황산 용액을 마른 해조류 재 위에 엎질렀는데, 그러자 곧바로 용기에서 보라색 증기가 피어올랐다(<b>1</b>, 황산이 산화제이다). 아이오딘(I<sub>2</sub>)이 막 발견된 것이다! 아이오딘은 구리 부식의 원인이었다<b>(2)</b>. 한편 아이오딘의 의약 용도 때문에 쿠르투아는 해조류를 염소와 반응시켜 아이오딘을 생산하는 새 공장을 열었다(<b>3</b>).</p>
+<p class="c-x" style="--b:168.1">오늘날에는 반응물 조합 (NO<sub>3</sub><sup>−</sup>, I<sup>−</sup>, H<sup>+</sup>) (<b>4</b>) 또는 (IO<sub>3</sub><sup>−</sup>, I<sup>−</sup>, H<sup>+</sup>) (<b>5</b>)로부터 아이오딘을 제조한다.</p>
+<p class="c-x c-q" style="--b:194.5"><span class="c-n">4.</span>반응 <b>1–5</b>의 균형 맞춘 반응식을 <span class="c-cv">써라</span>.</p>
+<div class="c-f" style="left:64.9pt;top:204.9pt"><span class="fig" data-srcpage="27" data-clip="64.9,204.9,532,378"></span></div>
+<p class="c-x" style="--b:405.5">아이오딘은 물에 대한 용해도가 매우 낮지만, 아이오딘화 이온을 넣으면 용해도가 크게 증가한다. 두 화학종은 함께 삼아이오딘화 이온 I<sub>3</sub><sup>−</sup>과 같은 이온을 형성한다.</p>
+<div class="c-f" style="left:219pt;top:423pt"><span class="fig" data-srcpage="27" data-clip="219,423,379,438"></span></div>
+<p class="c-x" style="--b:449.1">평형 (<b>6</b>)은 다이클로로메테인으로 I<sub>2</sub>를 추출하여 연구할 수 있다. 실제로 I<sup>−</sup>와 I<sub>3</sub><sup>−</sup>은 유기 용매에 녹지 않지만 I<sub>2</sub>는 녹으며, 추출되었을 때 다이클로로메테인 속 I<sub>2</sub>의 농도는 물 속 농도의 15배가 된다.</p>
+<p class="c-x" style="--b:492.8">다음과 같은 실험을 수행하였다. 초기 용액을 만들기 위해 고체 아이오딘 결정 몇 개를 아이오딘화 포타슘 수용액(0.1112 g) 50.0 mL에 녹였다. 그다음 다이클로로메테인 50.0 mL를 넣고, 평형에 이를 때까지 혼합물을 세게 흔들었다. 두 상을 분리한 뒤, 녹말이 있는 상태에서 각 상을 싸이오황산 소듐 오수화물 표준 수용액(용액 1.000 L에 14.9080 g)으로 적정하였더니 16.20 mL(유기상)와 8.00 mL(수용액상)가 소비되었다. 이 과정을 도식으로 나타내면 다음과 같다.</p>
+<div class="c-f" style="left:70pt;top:572pt"><span class="fig" data-srcpage="27" data-clip="70,572,528,719"></span></div>
+<p class="c-sc ov" style="left:72.2pt;top:633.6pt;width:35.6pt;height:22.2pt">초기<br>용액</p>
+<p class="c-sc ov" style="left:202.5pt;top:616.0pt;width:48.1pt;height:23.2pt">상<br>분리</p>
+<p class="c-sc ov" style="left:280.2pt;top:600.0pt;width:43.8pt;height:23.2pt">종말점<br>직전까지</p>
+<p class="c-sc ov" style="left:279.7pt;top:696.0pt;width:43.6pt;height:23.2pt">종말점<br>직전까지</p>
+<p class="c-sc ov" style="left:384.1pt;top:572.4pt;width:28.7pt;height:21.4pt">녹말<br>첨가</p>
+<p class="c-sc ov" style="left:387.1pt;top:667.6pt;width:28.7pt;height:21.4pt">녹말<br>첨가</p>
+<p class="c-sc ov" style="left:486.7pt;top:586.7pt;width:42.1pt;height:21.4pt">종말점까지<br>적정</p>
+<p class="c-sc ov" style="left:479.7pt;top:685.5pt;width:42.1pt;height:21.4pt">종말점까지<br>적정</p>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">27</span></p>
+</div>
+
+<!-- 28: beakers, questions 5-7 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<div class="c-f" style="left:72pt;top:71.5pt"><span class="fig" data-srcpage="28" data-clip="72,71.5,524,163"></span></div>
+<p class="c-bk ov" style="left:84.0pt;top:111.7pt;width:21.7pt;height:7.6pt;font-size:6pt;line-height:6.2pt;padding-top:0.7pt;box-sizing:border-box">갈색</p>
+<p class="c-bk ov" style="left:135.6pt;top:103.8pt;width:19.9pt;height:8.7pt;font-size:7pt;line-height:7.3pt;padding-top:0.7pt;box-sizing:border-box">청색</p>
+<p class="c-bk ov" style="left:135.6pt;top:115.5pt;width:19.7pt;height:8.6pt;font-size:7pt;line-height:7.2pt;padding-top:0.7pt;box-sizing:border-box">분홍</p>
+<p class="c-bk ov" style="left:186.6pt;top:104.3pt;width:18.1pt;height:7.6pt;font-size:6pt;line-height:6.2pt;padding-top:0.7pt;box-sizing:border-box">짙은</p>
+<p class="c-bk ov" style="left:186.6pt;top:113.7pt;width:18.1pt;height:7.7pt;font-size:6pt;line-height:6.3pt;padding-top:0.7pt;box-sizing:border-box">청색</p>
+<p class="c-bk ov" style="left:232.6pt;top:105.6pt;width:28.4pt;height:8.5pt;font-size:7pt;line-height:7.1pt;padding-top:0.7pt;box-sizing:border-box">갈색</p>
+<p class="c-bk ov" style="left:242.7pt;top:116.9pt;width:19.0pt;height:8.5pt;font-size:6.5pt;line-height:7.1pt;padding-top:0.7pt;box-sizing:border-box">보라</p>
+<p class="c-bk ov" style="left:290.6pt;top:115.6pt;width:17.0pt;height:7.2pt;font-size:5.5pt;line-height:5.8pt;padding-top:0.7pt;box-sizing:border-box">보라</p>
+<p class="c-bk ov" style="left:378.2pt;top:105.1pt;width:28.6pt;height:6.5pt;font-size:5pt;line-height:5.1pt;padding-top:0.7pt;box-sizing:border-box">노르스름</p>
+<p class="c-bk ov" style="left:382.6pt;top:116.2pt;width:19.8pt;height:8.6pt;font-size:7pt;line-height:7.2pt;padding-top:0.7pt;box-sizing:border-box">분홍</p>
+<p class="c-bk ov" style="left:431.7pt;top:103.9pt;width:26.5pt;height:8.8pt;font-size:7pt;line-height:7.4pt;padding-top:0.7pt;box-sizing:border-box">노르-</p>
+<p class="c-bk ov" style="left:434.9pt;top:115.3pt;width:20.3pt;height:8.7pt;font-size:7pt;line-height:7.3pt;padding-top:0.7pt;box-sizing:border-box">스름</p>
+<p class="c-bk ov" style="left:114.6pt;top:153.4pt;width:46.0pt;height:9.6pt;font-size:7.5pt;line-height:7.4pt;padding-top:0.7pt;box-sizing:border-box;text-align:left">무색</p>
+<p class="c-bk ov" style="left:191.7pt;top:153.8pt;width:19.0pt;height:9.6pt;font-size:7.5pt;line-height:7.4pt;padding-top:0.7pt;box-sizing:border-box;text-align:left">짙은</p>
+<i class="c-r ov" style="left:261.7pt;top:117.6pt;width:0.9pt;height:7pt;background:#333"></i>
+<p class="c-x c-q" style="--b:190.1"><span class="c-n">5.</span>도식의 단계(<b>1</b>–<b>9</b>)와 각 단계를 나타낸 그림(<b>a</b>–<b>i</b>) 사이의 대응 관계를 <span class="c-cv">찾아라</span>.</p>
+<i class="c-r ov" style="left:198.14pt;top:215.42pt;width:199.01pt;height:0.48pt"></i><i class="c-r ov" style="left:198.14pt;top:215.90pt;width:0.48pt;height:16.32pt"></i><i class="c-r ov" style="left:297.41pt;top:215.90pt;width:0.48pt;height:16.32pt"></i><i class="c-r ov" style="left:396.67pt;top:215.90pt;width:0.48pt;height:16.32pt"></i>
+<p class="c-x c-c" style="--b:226.8;--fs:12pt;--l:14pt;left:198.6pt;width:98.8pt">단계</p>
+<p class="c-x c-c" style="--b:226.8;--fs:12pt;--l:14pt;left:297.9pt;width:98.8pt">그림</p>
+<div class="c-f" style="left:197.9pt;top:231.7pt"><span class="fig" data-srcpage="28" data-clip="197.9,231.7,397.4,403.6"></span></div>
+<p class="c-x c-q" style="--b:425.3"><span class="c-n">6.</span>적정하는 동안 수용액상에서 아이오딘 화학종과 싸이오황산 소듐 사이에 일어날 수 있는 두 화학 반응의 균형 맞춘 반응식을 <span class="c-cv">써라</span>.</p>
+<div class="c-f" style="left:64.6pt;top:450.3pt"><span class="fig" data-srcpage="28" data-clip="64.6,450.3,530.7,511.3"></span></div>
+<p class="c-x c-q" style="--b:533.0"><span class="c-n">7.</span>초기 용액을 만드는 데 사용한 아이오딘의 질량을 <span class="c-cv">계산하라</span>.</p>
+<div class="c-f" style="left:64.6pt;top:543.3pt"><span class="fig" data-srcpage="28" data-clip="64.6,543.3,530.7,749.7"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">28</span></p>
+</div>
+
+<!-- 29: answer box 7, question 8 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<div class="c-f" style="left:64.6pt;top:70.5pt"><span class="fig" data-srcpage="29" data-clip="64.6,70.5,530.7,204.7"></span></div>
+<p class="c-x c-q" style="--b:226.3"><span class="c-n">8.</span>반응 (<b>6</b>)의 평형 상수 <i>K</i>°를 <span class="c-cv">계산하라</span>.</p>
+<div class="c-f" style="left:64.6pt;top:236.6pt"><span class="fig" data-srcpage="29" data-clip="64.6,236.6,530.7,739.4"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">29</span></p>
+</div>
+
+<!-- 30: T5 start, questions 1-2 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<i class="c-r ov" style="left:72.02pt;top:70.80pt;width:451.28pt;height:0.48pt"></i><i class="c-r ov" style="left:72.02pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:128.78pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:195.50pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:219.77pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:244.01pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:268.37pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:292.61pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:316.85pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:341.11pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:365.35pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:389.59pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:413.95pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:438.19pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:462.43pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:486.82pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:522.82pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="c-r ov" style="left:129.26pt;top:86.28pt;width:393.56pt;height:0.48pt"></i><i class="c-r ov" style="left:129.26pt;top:101.78pt;width:393.56pt;height:0.48pt"></i><i class="c-r ov" style="left:72.50pt;top:117.26pt;width:450.32pt;height:0.48pt"></i>
+<p class="c-x c-c" style="--b:86.3;--fs:10pt;--l:11.5pt;left:72.5pt;width:56.3pt;font-weight:bold">문제<br>T5<br>8%</p>
+<p class="c-x c-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:129.3pt;width:66.2pt;font-weight:bold">문항</p>
+<p class="c-x c-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:487.3pt;width:35.5pt;font-weight:bold">합계</p>
+<p class="c-x c-c" style="--b:97.6;--fs:10pt;--l:11.5pt;left:129.3pt;width:66.2pt">배점</p>
+<p class="c-x c-c" style="--b:112.9;--fs:10pt;--l:11.5pt;left:129.3pt;width:66.2pt">점수</p>
+<div class="c-f" style="left:196.3pt;top:71.6pt"><span class="fig" data-srcpage="30" data-clip="196.3,71.6,486.5,85.9"></span></div>
+<div class="c-f" style="left:196.3pt;top:87.1pt"><span class="fig" data-srcpage="30" data-clip="196.3,87.1,522.5,101.4"></span></div>
+<p class="c-x c-h" style="--b:144.5;--fs:16pt;--l:21.1pt;--k:0.30">문제 T5: 나노 기계를 만들기 위한<br>아조벤젠–β-사이클로덱스트린 착물</p>
+<p class="c-x" style="--b:193.9">나노 기계는 에너지원의 에너지를 나노 규모의 운동으로 바꿀 수 있게 해 주는 분자 집합체로, 약물 전달 등에 응용된다. 많은 나노 기계는 빛을 쬘 때 아조 화합물(R–N=N−R’)이 이성질화되는 현상을 이용한다.</p>
+<p class="c-x c-q c-q1" style="--b:249.6"><span class="c-n">1.</span>아조벤젠(H<sub>5</sub>C<sub>6</sub>–N=N–C<sub>6</sub>H<sub>5</sub>)의 입체 이성질체들을 <span class="c-cv">그려라</span>. 또한 각 구조에서 서로 가장 멀리 떨어진 두 탄소 원자를 잇는 선을 <span class="c-cv">그어라</span>. 이 두 거리(<i>d</i><sub>trans</sub>와 <i>d</i><sub>cis</sub>)를 <span class="c-cv">비교하라</span>.</p>
+<i class="c-r ov" style="left:80.78pt;top:274.82pt;width:433.76pt;height:0.48pt"></i><i class="c-r ov" style="left:80.78pt;top:275.31pt;width:0.48pt;height:259.12pt"></i><i class="c-r ov" style="left:297.41pt;top:275.31pt;width:0.48pt;height:224.80pt"></i><i class="c-r ov" style="left:514.06pt;top:275.31pt;width:0.48pt;height:259.12pt"></i><i class="c-r ov" style="left:81.26pt;top:499.63pt;width:432.79pt;height:0.48pt"></i><i class="c-r ov" style="left:81.26pt;top:533.95pt;width:432.79pt;height:0.48pt"></i>
+<div class="c-f" style="left:176pt;top:478pt"><span class="fig" data-srcpage="30" data-clip="176,478,206,492"></span></div>
+<div class="c-f" style="left:398pt;top:478pt"><span class="fig" data-srcpage="30" data-clip="398,478,416,492"></span></div>
+<p class="c-x c-nw" style="--b:523.0;left:86.4pt;width:120pt">비교:</p>
+<div class="c-f" style="left:224pt;top:512pt"><span class="fig" data-srcpage="30" data-clip="224,512,253,527"></span></div>
+<div class="c-f" style="left:341pt;top:512pt"><span class="fig" data-srcpage="30" data-clip="341,512,365,527"></span></div>
+<div class="c-f" style="left:70.8pt;top:534.9pt"><span class="fig" data-srcpage="30" data-clip="70.8,534.9,476.6,671.3"></span></div>
+<p class="c-x c-c" style="--b:693.2"><i>그림 1 – <b>M</b>의 합성에 쓸 수 있는 반응물 후보.</i></p>
+<p class="c-x c-q" style="--b:719.7"><span class="c-n">2.</span><b>M</b>은 간단한 반응물로부터 두 단계를 거쳐 합성할 수 있다(그림 1). 제시된 반응물(<b>N</b>~<b>Q</b>) 중에서 매우 높은 위치 선택성으로 <b>M</b>을 만들 수 있는 것들을 <span class="c-cv">골라라</span>. 합성의 첫 단계에서는 차가운 염산 수용액 속의 아질산 소듐(NaNO<sub>2</sub>)을 시약으로 사용한다.</p>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">30</span></p>
+</div>
+
+<!-- 31: answer box 2, determination of Kt, question 3 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<i class="c-r ov" style="left:64.92pt;top:70.80pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:71.28pt;width:0.48pt;height:46.34pt"></i><i class="c-r ov" style="left:529.90pt;top:71.28pt;width:0.48pt;height:46.34pt"></i><i class="c-r ov" style="left:65.40pt;top:117.14pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:97.0;--fs:12pt;--l:14pt;width:240pt">반응물:<span class="c-t" style="left:183.6pt">및</span></p>
+<p class="c-x c-h" style="--b:145.7">회합 상수 <i>K</i><sub>t</sub>의 결정</p>
+<p class="c-x" style="--b:184.6;text-indent:19.8pt">β-사이클로덱스트린(<b>C</b>, 그림 2)은 포도당의 고리형 7량체로, 아조 화합물과 포접 착물을 형성할 수 있다. 문항 3~6에서는 분광법을 이용하여, 그림 2와 같이 포접 착물 CM<sub>trans</sub>가 형성되는 반응의 회합 상수 <i>K</i><sub>t</sub>를 구한다.</p>
+<div class="c-f" style="left:74.8pt;top:230.3pt"><span class="fig" data-srcpage="31" data-clip="74.8,230.3,520.3,373.8"></span></div>
+<p class="c-x c-c" style="--b:386.2"><i>그림 2 – <b>CM<sub>trans</sub></b> 포접 착물의 형성.</i></p>
+<p class="c-x" style="--b:418.6"><b>C</b>와 <b>M<sub>trans</sub></b>를 서로 다른 비율로 섞어 초기 농도가 [<b>C</b>]<sub>0</sub>와 [<b>M<sub>trans</sub></b>]<sub>0</sub>인 여러 용액을 만든다. [<b>M<sub>trans</sub></b>]<sub>0</sub>는 모든 용액에서 같고, [<b>C</b>]<sub>0</sub>만 달라진다. 고정된 파장에서, 각 용액의 흡광도와 순수한 <b>M<sub>trans</sub></b> 용액의 흡광도 사이의 차이 Δ<i>A</i>가 어떻게 변하는지 관찰한다. <b>CM<sub>trans</sub></b>와 <b>M<sub>trans</sub></b>의 몰 흡광 계수를 각각 <i>ε</i><sub>CMtrans</sub>와 <i>ε</i><sub>Mtrans</sub>로 나타낸다. <i>L</i>은 빛이 시료를 지나는 경로의 길이이다. <b>C</b>의 흡광도(<i>ε</i><sub>C</sub>)는 무시할 수 있다.</p>
+<p class="c-x c-q" style="--b:519.8"><span class="c-n">3.</span>Δ<i>A</i> = <i>α</i>·[<b>CM<sub>trans</sub></b>]임을 <span class="c-cv">증명하고</span>, <i>α</i>를 알려진 상수로 <span class="c-cv">나타내라</span>.</p>
+<i class="c-r ov" style="left:64.92pt;top:530.47pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:530.95pt;width:0.48pt;height:234.15pt"></i><i class="c-r ov" style="left:529.90pt;top:530.95pt;width:0.48pt;height:234.15pt"></i><i class="c-r ov" style="left:65.40pt;top:764.62pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:541.9">증명:</p>
+<div class="c-f" style="left:276pt;top:732pt"><span class="fig" data-srcpage="31" data-clip="276,732,303,748"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">31</span></p>
+</div>
+
+<!-- 32: questions 4-5 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<p class="c-x c-q" style="--b:80.8"><span class="c-n">4.</span><b>C</b>가 <b>M<sub>trans</sub></b>에 비해 크게 과량일 때(즉, [<b>C</b>]<sub>0</sub> &gt;&gt; [<b>M<sub>trans</sub></b>]<sub>0</sub>), <b>C</b>의 농도를 <span class="c-nw">[<b>C</b>]&thinsp;$\simeq$&thinsp;[<b>C</b>]<sub>0</sub></span>로 일정하다고 볼 수 있음을 <span class="c-cv">증명하라</span>.</p>
+<i class="c-r ov" style="left:64.92pt;top:106.20pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:106.68pt;width:0.48pt;height:253.25pt"></i><i class="c-r ov" style="left:529.90pt;top:106.68pt;width:0.48pt;height:253.25pt"></i><i class="c-r ov" style="left:65.40pt;top:359.45pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:117.6">증명:</p>
+<p class="c-x c-q" style="--b:381.9;--l:18.5pt"><span class="c-n">5.</span><b>C</b>가 <b>M<sub>trans</sub></b>에 비해 크게 과량일 때(즉, [<b>C</b>]<sub>0</sub> &gt;&gt; [<b>M<sub>trans</sub></b>]<sub>0</sub>), $\Delta A=\alpha\cdot\frac{\beta\cdot[\mathbf{C}]_0}{1+K_\mathrm{t}\cdot[\mathbf{C}]_0}$임을 <span class="c-cv">증명하고</span>, <i>β</i>를 상수와 초기 농도로 <span class="c-cv">나타내라</span>.</p>
+<i class="c-r ov" style="left:64.92pt;top:415.73pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:416.21pt;width:0.48pt;height:334.85pt"></i><i class="c-r ov" style="left:529.90pt;top:416.21pt;width:0.48pt;height:334.85pt"></i><i class="c-r ov" style="left:65.40pt;top:750.58pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:427.1">증명:</p>
+<div class="c-f" style="left:382pt;top:720pt"><span class="fig" data-srcpage="32" data-clip="382,720,402,736"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">32</span></p>
+</div>
+
+<!-- 33: question 6 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<p class="c-x c-q" style="--b:80.8"><span class="c-n">6.</span>다음 실험 곡선(그림 3)을 이용하여 <i>K</i><sub>t</sub>를 <span class="c-cv">결정하라</span>.</p>
+<div class="c-f" style="left:120.7pt;top:97.4pt"><span class="fig" data-srcpage="33" data-clip="120.7,97.4,473.9,374.9"></span></div>
+<p class="c-x c-c" style="--b:387.0"><i>그림 3 – 1/[<b>C</b>]<sub>0</sub>에 따른 1/Δ<i>A</i>의 변화.</i></p>
+<i class="c-r ov" style="left:64.92pt;top:401.69pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:402.17pt;width:0.48pt;height:365.93pt"></i><i class="c-r ov" style="left:529.90pt;top:402.17pt;width:0.48pt;height:365.93pt"></i><i class="c-r ov" style="left:65.40pt;top:767.62pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:414.0;--fs:12pt;--l:14pt">계산:</p>
+<div class="c-f" style="left:381pt;top:737pt"><span class="fig" data-srcpage="33" data-clip="381,737,410,754"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">33</span></p>
+</div>
+
+<!-- 34: determination of Kc, question 7 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<p class="c-x c-h" style="--b:80.9">회합 상수 <i>K</i><sub>c</sub>의 결정</p>
+<p class="c-x" style="--b:113.3">문항 7~9에서는 반응 속도 연구를 이용하여, <b>M<sub>cis</sub></b>와의 포접 착물 <b>CM<sub>cis</sub></b>가 형성되는 반응의 회합 상수 <i>K</i><sub>c</sub>를 구한다. <b>M<sub>trans</sub></b>만 들어 있는 시료에 빛을 쬐어 알려진 양의 <b>M<sub>cis</sub></b>, 즉 [<b>M<sub>cis</sub></b>]<sub>0</sub>를 만든다. 그러면 <b>M<sub>cis</sub></b>(자유 상태이거나 포접 착물 안에 있는 것)는 열에 의해 <b>M<sub>trans</sub></b>로 이성질화된다. <b>C</b>가 없을 때 이 이성질화는 속도 상수가 <i>k</i><sub>1</sub>인 1차 반응 속도론을 따른다. 모든 착물 형성 평형은 이성질화 과정보다 빠르게 이루어진다. 이 실험에 해당하는 반응 속도 도식은 그림 4에 나타나 있다.</p>
+<div class="c-f" style="left:99.7pt;top:202.7pt"><span class="fig" data-srcpage="34" data-clip="99.7,202.7,495.3,454.7"></span></div>
+<p class="c-x c-c" style="--b:466.6"><i>그림 4 – <b>C</b>가 있을 때 <b>M<sub>cis</sub></b>의 이성질화에 대한 반응 속도 도식.</i></p>
+<p class="c-x" style="--b:499.0"><b>M<sub>cis</sub></b>(자유 상태와 착물 상태)의 총량이 사라지는 속도 <i>r</i>는 다음과 같이 정의된다.</p>
+<div class="c-f" style="left:245pt;top:504pt"><span class="fig" data-srcpage="34" data-clip="245,504,350,518"></span></div>
+<p class="c-x" style="--b:542.8">실험에 따르면 <i>r</i>는 겉보기 속도 상수가 <i>k</i><sub>obs</sub>인 겉보기 1차 속도 법칙을 따른다.</p>
+<div class="c-f" style="left:242pt;top:547pt"><span class="fig" data-srcpage="34" data-clip="242,547,349,561"></span></div>
+<p class="c-x c-q" style="--b:587.5;--l:20pt"><span class="c-n">7.</span>$k_\mathrm{obs}=\frac{\gamma+\delta\cdot k_2[\mathbf{C}]}{1+K_\mathrm{c}[\mathbf{C}]}$임을 <span class="c-cv">증명하고</span>, <i>γ</i>와 <i>δ</i>를 알려진 상수로 <span class="c-cv">나타내라</span>.</p>
+<i class="c-r ov" style="left:64.92pt;top:602.95pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:603.43pt;width:0.48pt;height:166.95pt"></i><i class="c-r ov" style="left:529.90pt;top:603.43pt;width:0.48pt;height:166.95pt"></i><i class="c-r ov" style="left:65.40pt;top:769.90pt;width:464.50pt;height:0.48pt"></i>
+<p class="c-x c-nw" style="--b:614.3">증명:</p>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">34</span></p>
+</div>
+
+<!-- 35: answer box 7, questions 8-9 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<i class="c-r ov" style="left:64.92pt;top:70.80pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:71.28pt;width:0.48pt;height:154.34pt"></i><i class="c-r ov" style="left:529.90pt;top:71.28pt;width:0.48pt;height:154.34pt"></i><i class="c-r ov" style="left:65.40pt;top:225.14pt;width:464.50pt;height:0.48pt"></i>
+<div class="c-f" style="left:173pt;top:197pt"><span class="fig" data-srcpage="35" data-clip="173,197,198,211"></span></div>
+<p class="c-x c-nw" style="--b:207.4;--fs:12pt;--l:14pt;left:325.5pt;width:40pt">및</p>
+<div class="c-f" style="left:385pt;top:197pt"><span class="fig" data-srcpage="35" data-clip="385,197,405,211"></span></div>
+<p class="c-x c-q" style="--b:247.6;--l:18.2pt"><span class="c-n">8.</span>[<b>C</b>]<sub>0</sub> &gt;&gt; [<b>M<sub>cis</sub></b>]<sub>0</sub>일 때, <i>k</i><sub>obs</sub>에 해당하는 반감기 <i>t</i><sub>1/2</sub>를 $t_{1/2}=\frac{\ln 2}{\gamma}\,(1+K_\mathrm{c}[\mathbf{C}]_0)$로 나타낼 수 있는 조건(들)을 <span class="c-cv">골라라</span>. 답의 근거를 수학적으로 <span class="c-cv">제시하라</span>.</p>
+<i class="c-r ov" style="left:64.92pt;top:280.94pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:281.43pt;width:0.48pt;height:244.12pt"></i><i class="c-r ov" style="left:529.90pt;top:281.43pt;width:0.48pt;height:244.12pt"></i><i class="c-r ov" style="left:65.40pt;top:525.07pt;width:464.50pt;height:0.48pt"></i>
+<div class="c-f" style="left:70pt;top:283pt"><span class="fig" data-srcpage="35" data-clip="70,283,84,338"></span></div>
+<p class="c-x c-nw" style="--b:293.3;--fs:12pt;--l:13.8pt;left:106.2pt;width:400pt">사이클로덱스트린 안에서 <b>M<sub>cis</sub></b>의 이성질화가 매우 느림<br>자유 상태 <b>M<sub>cis</sub></b>의 이성질화가 매우 느림<br><b>CM<sub>cis</sub></b>가 매우 안정함<br><b>CM<sub>trans</sub></b>가 매우 안정함</p>
+<p class="c-x c-nw" style="--b:369.3;--fs:12pt;--l:14pt">증명:</p>
+<p class="c-x c-q" style="--b:547.5"><span class="c-n">9.</span>문항 8의 조건(들)이 충족된다고 가정하고, 아래 자료를 선형 회귀하여 <i>K</i><sub>c</sub>를 <span class="c-cv">결정하라</span>. 계산기를 사용하거나 그래프를 그려도 된다.</p>
+<div class="c-f" style="left:70.4pt;top:572.2pt"><span class="fig" data-srcpage="35" data-clip="70.4,572.2,524.9,640.2"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">35</span></p>
+</div>
+
+<!-- 36: answer box 9 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<i class="c-r ov" style="left:64.92pt;top:70.80pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:71.28pt;width:0.48pt;height:686.50pt"></i><i class="c-r ov" style="left:529.90pt;top:71.28pt;width:0.48pt;height:686.50pt"></i><i class="c-r ov" style="left:65.40pt;top:757.30pt;width:464.50pt;height:0.48pt"></i>
+<div class="c-f" style="left:91.4pt;top:72.3pt"><span class="fig" data-srcpage="36" data-clip="91.4,72.3,503.3,484.8"></span></div>
+<p class="c-x c-nw" style="--b:503.7;--fs:12pt;--l:14pt">선형 회귀식:</p>
+<div class="c-f" style="left:417pt;top:733pt"><span class="fig" data-srcpage="36" data-clip="417,733,444,750"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">36</span></p>
+</div>
+
+<!-- 37: formation of nanomachines, questions 10-11 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<p class="c-x c-nw" style="--b:81.0;font-weight:bold">나노 기계의 형성</p>
+<div class="c-f" style="left:70.8pt;top:85.4pt"><span class="fig" data-srcpage="37" data-clip="70.8,85.4,529.1,220.9"></span></div>
+<p class="c-ov ov" style="left:147.5pt;top:189.3pt;width:72pt;height:11pt;line-height:11pt;font-size:9.5pt;padding:0">아조벤젠 (trans)</p>
+<p class="c-ov ov" style="left:147.5pt;top:200.4pt;width:72pt;height:11pt;line-height:11pt;font-size:9.5pt;padding:0">아조벤젠 (cis)</p>
+<p class="c-x c-c" style="--b:230.9;left:84.5pt;width:426.3pt"><i>그림 5 – 빛으로 유도된 이성질화에 의해 아조벤젠–사이클로덱스트린 포접 착물이 해리되어 염료(회색 원)가 전달되는 과정.</i></p>
+<p class="c-x" style="--b:270.0">또 다른 아조벤젠 화합물(<i>K</i><sub>c</sub> &lt;&lt; <i>K</i><sub>t</sub>)을 처음에 <i>trans</i> 형태로 실리카에 공유 결합으로 붙인다(그림 5). 실리카의 기공은 염료(로다민 B, 그림 5의 회색 원)로 채워져 있다. <b>C</b>를 넣으면 포접 착물이 형성되어 기공을 막고 염료가 방출되지 못하게 한다.</p>
+<p class="c-x c-q" style="--b:340.1"><span class="c-n">10.</span><b>C</b>가 있을 때 처음에는 기공이 막혀 있고, 빛을 쬐면 염료가 방출될 수 있도록 하는 가장 적절한 조건을 <span class="c-cv">골라라</span>(하나만 고를 것).</p>
+<i class="c-r ov" style="left:64.92pt;top:365.33pt;width:465.46pt;height:0.48pt"></i><i class="c-r ov" style="left:64.92pt;top:365.81pt;width:0.48pt;height:71.52pt"></i><i class="c-r ov" style="left:529.90pt;top:365.81pt;width:0.48pt;height:71.52pt"></i><i class="c-r ov" style="left:65.40pt;top:436.85pt;width:464.50pt;height:0.48pt"></i>
+<div class="c-f" style="left:70pt;top:369pt"><span class="fig" data-srcpage="37" data-clip="70,369,84,436"></span></div>
+<div class="c-f" style="left:105pt;top:367pt"><span class="fig" data-srcpage="37" data-clip="105,367,145,382"></span></div>
+<p class="c-x c-nw" style="--b:391.5;--fs:12pt;--l:27.6pt;left:106.2pt;width:300pt"><i>K</i><sub>t</sub> &gt;&gt; 1이고 <i>K</i><sub>c</sub> &lt;&lt; 1<br><i>K</i><sub>t</sub> &gt;&gt; 1이고 <i>K</i><sub>c</sub> &gt;&gt; 1</p>
+<div class="c-f" style="left:105pt;top:395pt"><span class="fig" data-srcpage="37" data-clip="105,395,165,409"></span></div>
+<div class="c-f" style="left:105pt;top:423pt"><span class="fig" data-srcpage="37" data-clip="105,423,150,436.3"></span></div>
+<p class="c-x" style="--b:457.2">염료가 채워진 이 아조벤젠–실리카 분말을 큐벳의 구석에 두어(그림 6) 분말이 용액 속으로 이동하지 못하게 한다. 분말에 파장 <i>λ</i><sub>1</sub>의 빛을 쬐어 기공에서 염료가 방출되게 한다(그림 5). 이 방출을 흡광 분광법으로 관찰하기 위해 파장 <i>λ</i><sub>2</sub>에서 용액의 흡광도를 측정한다.</p>
+<div class="c-f" style="left:87.8pt;top:530.3pt"><span class="fig" data-srcpage="37" data-clip="87.8,530.3,262.3,648.8"></span></div>
+<div class="c-f" style="left:283pt;top:505.5pt"><span class="fig" data-srcpage="37" data-clip="283,505.5,523.8,673.6"></span></div>
+<p class="c-x c-c" style="--b:683.6;left:77.3pt;width:440.6pt"><i>그림 6 – 왼쪽: 염료의 방출을 관찰하는 데 사용한 실험 장치. 오른쪽: trans-아조벤젠(실선), cis-아조벤젠(점선), 로다민 B(파선)의 흡수 스펙트럼.</i></p>
+<p class="c-x c-q" style="--b:724.7"><span class="c-n">11.</span><i>λ</i><sub>1</sub>을 <span class="c-cv">결정하라</span>.</p>
+<div class="c-f" style="left:64.6pt;top:735pt"><span class="fig" data-srcpage="37" data-clip="64.6,735,530.7,770.8"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">37</span></p>
+</div>
+
+<!-- 38: question 12 -->
+<div class="page">
+<p class="c-hd">수험 번호: AAA-1</p>
+<p class="c-x c-q" style="--b:80.8"><span class="c-n">12.</span><i>λ</i><sub>2</sub>를 <span class="c-cv">결정하라</span>.</p>
+<div class="c-f" style="left:64.6pt;top:91.1pt"><span class="fig" data-srcpage="38" data-clip="64.6,91.1,530.7,126.9"></span></div>
+<p class="c-x c-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="c-pn">38</span></p>
+</div>
+
+<!-- ===== part d: original pages from 39 ===== -->
+<!-- 39: T6 start -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<i class="d-r ov" style="left:87.14pt;top:70.80pt;width:420.92pt;height:0.48pt"></i><i class="d-r ov" style="left:87.14pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:155.66pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:226.61pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:253.37pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:280.25pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:307.01pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:333.91pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:360.79pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:387.55pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:414.43pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:441.19pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:468.10pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:507.58pt;top:71.28pt;width:0.48pt;height:46.70pt"></i><i class="d-r ov" style="left:156.14pt;top:86.40pt;width:351.44pt;height:0.48pt"></i><i class="d-r ov" style="left:156.14pt;top:102.02pt;width:351.44pt;height:0.48pt"></i><i class="d-r ov" style="left:87.62pt;top:117.50pt;width:419.96pt;height:0.48pt"></i>
+<p class="d-x d-c" style="--b:84.0;--fs:10pt;--l:13.2pt;left:87.6pt;width:68pt;font-weight:bold">문제<br>T6<br>8%</p>
+<p class="d-x d-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:156.1pt;width:70.5pt;font-weight:bold">문항</p>
+<p class="d-x d-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:468.6pt;width:39pt;font-weight:bold">합계</p>
+<p class="d-x d-c" style="--b:97.7;--fs:10pt;--l:11.5pt;left:156.1pt;width:70.5pt">배점</p>
+<p class="d-x d-c" style="--b:113.3;--fs:10pt;--l:11.5pt;left:156.1pt;width:70.5pt">점수</p>
+<div class="d-f" style="left:227.4pt;top:71.6pt"><span class="fig" data-srcpage="39" data-clip="227.4,71.6,467.8,86.1"></span></div>
+<div class="d-f" style="left:227.4pt;top:87.0pt"><span class="fig" data-srcpage="39" data-clip="227.4,87.0,507.3,101.7"></span></div>
+<p class="d-x d-h" style="--b:144.7;--fs:16pt;--l:19pt;--k:0.30">문제 T6: 블록 공중합체의 특성 분석</p>
+<p class="d-x" style="--b:173.2;--l:14.5pt">서로 다른 고분자(블록)를 연결하여 얻은 블록 공중합체는 자기 조립 능력과 같은 독특한 성질을 지닌다. 이 문제에서는 이러한 거대 분자의 합성과 특성 분석을 다룬다.</p>
+<p class="d-x d-h" style="--b:235.9;--fs:12pt;--l:14pt">첫 번째 블록의 연구</p>
+<div class="d-f" style="left:241pt;top:254pt"><span class="fig" data-srcpage="39" data-clip="241,254,360,298"></span></div>
+<p class="d-x" style="--b:306.6">첫 부분에서는 수용성 단일 중합체 <b>1</b>(α-메톡시-ω-아미노폴리에틸렌글라이콜)을 다룬다.</p>
+<p class="d-x" style="--b:335.7"><b>1</b>의 <sup>1</sup>H NMR 스펙트럼(DMSO-<i>d</i><sub>6</sub>, 60 °C, 500 MHz)에는 다음 신호들이 나타난다.</p>
+<i class="d-r ov" style="left:193.70pt;top:350.33pt;width:207.89pt;height:0.48pt"></i><i class="d-r ov" style="left:193.70pt;top:350.81pt;width:0.48pt;height:99.84pt"></i><i class="d-r ov" style="left:239.81pt;top:350.81pt;width:0.48pt;height:99.84pt"></i><i class="d-r ov" style="left:301.85pt;top:350.81pt;width:0.48pt;height:99.84pt"></i><i class="d-r ov" style="left:401.11pt;top:350.81pt;width:0.48pt;height:99.84pt"></i><i class="d-r ov" style="left:194.18pt;top:370.73pt;width:206.93pt;height:0.48pt"></i>
+<p class="d-x d-c" style="--b:364.6;left:194.2pt;width:45.6pt;font-weight:bold">기호<span class="d-t d-c" style="left:46.1pt;width:61.6pt">δ (ppm)</span><span class="d-t d-c" style="left:108.1pt;width:98.8pt">피크 면적</span></p>
+<div class="d-f" style="left:193pt;top:371.3pt"><span class="fig" data-srcpage="39" data-clip="193,371.3,402,451"></span></div>
+<p class="d-x d-c" style="--b:472.6"><i>표 1, *D<sub>2</sub>O가 있으면 2.7 ppm의 신호가 사라진다.</i></p>
+<p class="d-x d-q" style="--b:499.1;left:88.8pt;width:438.2pt"><span class="d-n" style="left:-18pt">1.</span>표 1의 <sup>1</sup>H NMR 신호(a, b, c, d)를 각각 해당하는 양성자와 <span class="d-cv">짝지어라</span>.</p>
+<div class="d-f" style="left:64pt;top:509pt"><span class="fig" data-srcpage="39" data-clip="64,509,531,668"></span></div>
+<p class="d-x d-q" style="--b:688.7"><span class="d-n">2.</span>반복 단위의 NMR 피크 면적 <i>A</i><sub>OC2H4</sub>와 메틸 말단기의 NMR 피크 면적 <i>A</i><sub>OCH3</sub>의 함수로 평균 중합도 <i>n</i>을 <span class="d-cv">나타내라</span>. <i>n</i>을 <span class="d-cv">계산하라</span>.</p>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">39</span></p>
+</div>
+
+<!-- 40: answer box 2, diblock copolymer, question 3 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<i class="d-r ov" style="left:64.92pt;top:70.80pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:71.28pt;width:0.48pt;height:139.46pt"></i><i class="d-r ov" style="left:529.90pt;top:71.28pt;width:0.48pt;height:139.46pt"></i><i class="d-r ov" style="left:65.40pt;top:210.26pt;width:464.50pt;height:0.48pt"></i>
+<div class="d-f" style="left:420pt;top:156pt"><span class="fig" data-srcpage="40" data-clip="420,156,458,172"></span></div>
+<p class="d-x d-c" style="--b:193.8;--l:12.7pt;left:150pt;width:298pt"><i><i>n</i>을 계산하지 못했다면, 이후 문제에서는<br><i>n</i> = 100을 사용해도 된다.</i></p>
+<p class="d-x d-h" style="--b:227.8;--fs:12pt;--l:14pt">이중 블록 공중합체의 연구</p>
+<p class="d-x" style="--b:246.5;--l:12.6pt">공중합체의 두 번째 블록은 <b>1</b>과 <b>2</b>(ε-(벤질옥시카보닐)-라이신 <i>N</i>-카복시무수물)의 반응으로 합성한다. 그 결과 블록 공중합체 <b>3</b>이 얻어진다.</p>
+<div class="d-f" style="left:98pt;top:276pt"><span class="fig" data-srcpage="40" data-clip="98,276,502,442"></span></div>
+<p class="d-x d-q" style="--b:460.7;--l:12.6pt"><span class="d-n">3.</span><b>1</b>을 <b>2</b>에 첨가하는 첫 단계에서 생성되는 반응 중간체를 <span class="d-cv">그려라</span>. 메커니즘의 두 번째 단계에서는 기체 분자 <b>G</b>가 생성된다. 그 구조를 <span class="d-cv">그려라</span>.</p>
+<div class="d-f" style="left:87pt;top:489pt"><span class="fig" data-srcpage="40" data-clip="87,489,520,556"></span></div>
+<div class="d-f" style="left:64pt;top:564pt"><span class="fig" data-srcpage="40" data-clip="64,564,531,759"></span></div>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">40</span></p>
+</div>
+
+<!-- 41: questions 4-5 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x d-q" style="--b:80.8;--l:12.7pt"><span class="d-n">4.</span>화합물들의 특성을 분석하기 위해 적외선(IR) 측정을 하였다. 세 IR 스펙트럼을 화합물 <b>1</b>, <b>2</b>, <b>3</b>과 <span class="d-cv">짝지어라</span>.</p>
+<div class="d-f" style="left:64pt;top:101pt"><span class="fig" data-srcpage="41" data-clip="64,101,531,437"></span></div>
+<span class="d-ov ov" style="left:411pt;width:72pt;top:117.6pt;height:17pt;line-height:17pt;font-family:Calibri,KG,sans-serif;font-size:14pt">화합물:</span>
+<span class="d-ov ov" style="left:410.1pt;width:72pt;top:220.2pt;height:17pt;line-height:17pt;font-family:Calibri,KG,sans-serif;font-size:14pt">화합물:</span>
+<span class="d-ov ov" style="left:410.1pt;width:72pt;top:330.8pt;height:17pt;line-height:17pt;font-family:Calibri,KG,sans-serif;font-size:14pt">화합물:</span>
+<p class="d-x d-q" style="--b:450.4;--l:12.63pt"><span class="d-n">5.</span>공중합체 <b>3</b>의 <sup>1</sup>H NMR 스펙트럼(DMSO-<i>d</i><sub>6</sub>, 60 °C, 500 MHz)을 그림 1에 나타내었다. 표 2에 면적이 주어진 NMR 신호의 일부 또는 전부를 이용하고 문항 2의 <i>n</i>을 고려하여, 이 공중합체의 수평균 몰질량 <i>M</i><sub>n</sub>을 <span class="d-cv">계산하라</span>. 계산에 사용한 원자단에 원을 <span class="d-cv">그리고</span>, 그에 해당하는 기호(α, β …)를 <span class="d-cv">제시하라</span>.</p>
+<div class="d-f" style="left:70pt;top:508pt"><span class="fig" data-srcpage="41" data-clip="70,508,417,702"></span></div>
+<p class="d-x d-c" style="--b:521.5;left:431.8pt;width:85pt"><i>표 2</i></p>
+<i class="d-r ov" style="left:430.87pt;top:532.15pt;width:0.96pt;height:142.83pt"></i><i class="d-r ov" style="left:431.83pt;top:532.15pt;width:85.47pt;height:0.96pt"></i><i class="d-r ov" style="left:471.70pt;top:533.11pt;width:0.96pt;height:141.87pt"></i><i class="d-r ov" style="left:516.34pt;top:532.15pt;width:0.96pt;height:142.83pt"></i><i class="d-r ov" style="left:431.83pt;top:555.79pt;width:84.51pt;height:0.96pt"></i>
+<p class="d-x d-c" style="--b:548.1;left:431.8pt;width:39.9pt">피크<span class="d-t d-c" style="left:40.9pt;width:43.6pt">면적</span></p>
+<div class="d-f" style="left:431pt;top:556.8pt"><span class="fig" data-srcpage="41" data-clip="431,556.8,517,676"></span></div>
+<p class="d-x d-c" style="--b:713.0;width:345pt"><i>그림 1 – *로 표시한 신호는 용매와 물에 해당한다.</i></p>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">41</span></p>
+</div>
+
+<!-- 42: answer box 5 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<i class="d-r ov" style="left:64.92pt;top:70.80pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:71.28pt;width:0.48pt;height:671.02pt"></i><i class="d-r ov" style="left:529.90pt;top:71.28pt;width:0.48pt;height:671.02pt"></i><i class="d-r ov" style="left:65.40pt;top:741.82pt;width:464.50pt;height:0.48pt"></i>
+<div class="d-f" style="left:229pt;top:76pt"><span class="fig" data-srcpage="42" data-clip="229,76,405,227"></span></div>
+<div class="d-f" style="left:366pt;top:709pt"><span class="fig" data-srcpage="42" data-clip="366,709,528,728"></span></div>
+<p class="d-x d-rt" style="--b:738.0;--fs:12pt;--l:13.8pt;width:456.7pt">답은 소수점 아래 둘째 자리까지 나타내라.</p>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">42</span></p>
+</div>
+
+<!-- 43: SEC, question 6 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x" style="--b:80.8">40 °C에서 <b>1</b>과 <b>2</b>를 반응시켜 20 h 후에 공중합체 <b>3a</b>, 25 h 후에 <b>3b</b>, 30 h 후에 <b>3c</b>를 얻었다. 크기 배제 크로마토그래피(SEC) 실험 결과를 그림 2에 나타내었다.</p>
+<div class="d-f" style="left:103pt;top:125pt"><span class="fig" data-srcpage="43" data-clip="103,125,495,359"></span></div>
+<p class="d-x d-c" style="--b:367.8"><i>그림 2 – 용리 부피 <i>V</i><sub>e</sub>에 따른 <b>3a</b>, <b>3b</b>, <b>3c</b>의 SEC 크로마토그램.</i></p>
+<p class="d-x d-q" style="--b:394.4"><span class="d-n">6.</span>그림 2의 신호를 공중합체 <b>3a</b>, <b>3b</b>, <b>3c</b>와 <span class="d-cv">짝지어라</span>.</p>
+<div class="d-f" style="left:64pt;top:404pt"><span class="fig" data-srcpage="43" data-clip="64,404,531,450"></span></div>
+<p class="d-x" style="--b:477.4;--l:14.5pt">크로마토그램을 보정하기 위해 몰질량을 알고 있는 표준 고분자(3, 30, 130, 700, 7000 kg mol<sup>−1</sup>)의 혼합물을 분석하였다(그림 3).</p>
+<p class="d-x" style="--b:506.5"><span class="d-u">몰질량의 로그값은 용리 부피 <i>V</i><sub>e</sub>의 선형 함수이다.</span></p>
+<div class="d-f" style="left:107pt;top:522pt"><span class="fig" data-srcpage="43" data-clip="107,522,491,759"></span></div>
+<p class="d-x d-c" style="--b:767.6"><i>그림 3 – 표준 물질 혼합물의 SEC 크로마토그램.</i></p>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">43</span></p>
+</div>
+
+<!-- 44: question 7 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x d-q" style="--b:80.8;--l:14.55pt"><span class="d-n">7.</span>그림 2와 3의 SEC 곡선을 바탕으로 곡선 <i>X</i>에 해당하는 고분자의 <i>V</i><sub>e</sub>를 <span class="d-cv">구하고</span>, 이를 이용하여 이 고분자의 두 번째 블록의 중합도 <i>m</i>을 <span class="d-cv">추정하라</span>. 계산 과정을 <span class="d-cv">자세히 제시하라</span>. 계산기를 사용하거나 그래프를 그려도 된다.</p>
+<div class="d-f" style="left:64pt;top:120pt"><span class="fig" data-srcpage="44" data-clip="64,120,531,757"></span></div>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">44</span></p>
+</div>
+
+<!-- 45: triblock copolymer, questions 8-9 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x d-h" style="--b:82.1;--fs:12pt;--l:14pt">삼중 블록 공중합체의 합성</p>
+<p class="d-x" style="--b:114.6;--l:14.7pt">미셀 형성을 수반하는 생물학적 응용을 위해, 단위체 <b>5</b>를 사용하여 중간 블록 <b>B</b>를 도입함으로써 삼중 블록 공중합체 <b>9</b>를 합성할 수 있다.</p>
+<div class="d-f" style="left:99pt;top:148pt"><span class="fig" data-srcpage="45" data-clip="99,148,502,366"></span></div>
+<span class="d-ov ov d-c" style="left:266pt;width:36pt;top:156.3pt;height:10pt;line-height:10pt;font-family:Arial,KG,sans-serif;font-size:8.5pt">촉매</span>
+<p class="d-x d-q" style="--b:386.8"><span class="d-n">8.</span><b>5</b>, <b>7</b>, <b>8</b>의 구조를 <span class="d-cv">그려라</span>.</p>
+<i class="d-r ov" style="left:64.92pt;top:397.49pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:397.97pt;width:0.48pt;height:263.21pt"></i><i class="d-r ov" style="left:529.90pt;top:397.97pt;width:0.48pt;height:263.21pt"></i><i class="d-r ov" style="left:65.40pt;top:660.70pt;width:464.50pt;height:0.48pt"></i>
+<p class="d-x d-o12" style="--b:409.8"><b>5</b> (<b>6:A-B</b> 이외의 생성물은 얻어지지 않는다)</p>
+<p class="d-x d-o12" style="--b:502.6"><b>7</b> (마지막 단계에서 기체가 생성된다)</p>
+<div class="d-f" style="left:70pt;top:575pt"><span class="fig" data-srcpage="45" data-clip="70,575,81,589"></span></div>
+<p class="d-x d-q" style="--b:683.1"><span class="d-n">9.</span><b>9: A-B-C</b>와 같은 양친매성 블록 공중합체는 물(pH = 7)에서 자기 조립하여 미셀을 이루며, 이 미셀은 약물 운반체로 쓰일 수 있어 의학적으로 응용될 수 있다. 공중합체의 각 블록에 해당하는 성질을 <span class="d-cv">지정하라</span>. 고분자 사슬 4개만으로 이루어진 미셀의 모식도를 <span class="d-cv">그려라</span>.</p>
+<i class="d-r ov" style="left:64.92pt;top:722.86pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:723.34pt;width:0.48pt;height:40.08pt"></i><i class="d-r ov" style="left:529.90pt;top:723.34pt;width:0.48pt;height:40.08pt"></i><i class="d-r ov" style="left:65.40pt;top:762.94pt;width:464.50pt;height:0.48pt"></i>
+<p class="d-x d-o12 d-nw" style="--b:735.2;--l:23.9pt"><b>A</b>:<br><b>B</b>:<span class="d-t" style="left:70.8pt"><span class="d-cb">&#xF0A8;</span> 소수성<br><span class="d-cb">&#xF0A8;</span> 소수성</span><span class="d-t" style="left:212.4pt"><span class="d-cb">&#xF0A8;</span> 친수성<br><span class="d-cb">&#xF0A8;</span> 친수성</span></p>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">45</span></p>
+</div>
+
+<!-- 46: answer box 9 continued -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<i class="d-r ov" style="left:64.92pt;top:70.80pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:71.28pt;width:0.48pt;height:398.57pt"></i><i class="d-r ov" style="left:529.90pt;top:71.28pt;width:0.48pt;height:398.57pt"></i><i class="d-r ov" style="left:65.40pt;top:469.37pt;width:464.50pt;height:0.48pt"></i>
+<p class="d-x d-o12 d-nw" style="--b:83.2"><b>C</b>:<span class="d-t" style="left:70.8pt"><span class="d-cb">&#xF0A8;</span> 소수성</span><span class="d-t" style="left:212.4pt"><span class="d-cb">&#xF0A8;</span> 친수성</span></p>
+<div class="d-f" style="left:70pt;top:95pt"><span class="fig" data-srcpage="46" data-clip="70,95,529,445"></span></div>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">46</span></p>
+</div>
+
+<!-- 47: T7 start, question 1 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x d-h" style="--b:85.6;--fs:16pt;--l:19pt;--k:0.30">문제 T7: [2]카테네인에서 고리의 운동</p>
+<i class="d-r ov" style="left:83.78pt;top:104.06pt;width:427.76pt;height:0.48pt"></i><i class="d-r ov" style="left:83.78pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:136.22pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:191.42pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:217.25pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:242.93pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:268.73pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:294.41pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:320.21pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:346.03pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:371.83pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:397.51pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:423.31pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:449.11pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:474.94pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:511.06pt;top:104.54pt;width:0.48pt;height:46.32pt"></i><i class="d-r ov" style="left:136.70pt;top:119.42pt;width:374.36pt;height:0.48pt"></i><i class="d-r ov" style="left:136.70pt;top:134.90pt;width:374.36pt;height:0.48pt"></i><i class="d-r ov" style="left:84.26pt;top:150.38pt;width:426.80pt;height:0.48pt"></i>
+<p class="d-x d-c" style="--b:119.4;--fs:10pt;--l:11.55pt;left:84.3pt;width:51.9pt;font-weight:bold">문제<br>T7<br>6%</p>
+<p class="d-x d-c" style="--b:115.5;--fs:10pt;--l:11.5pt;left:136.7pt;width:54.7pt;font-weight:bold">문항</p>
+<p class="d-x d-c" style="--b:115.5;--fs:10pt;--l:11.5pt;left:475.4pt;width:35.6pt;font-weight:bold">합계</p>
+<p class="d-x d-c" style="--b:130.7;--fs:10pt;--l:11.5pt;left:136.7pt;width:54.7pt">배점</p>
+<p class="d-x d-c" style="--b:146.2;--fs:10pt;--l:11.5pt;left:136.7pt;width:54.7pt">점수</p>
+<div class="d-f" style="left:192.2pt;top:105pt"><span class="fig" data-srcpage="47" data-clip="192.2,105,474.7,119.1"></span></div>
+<div class="d-f" style="left:192.2pt;top:120.2pt"><span class="fig" data-srcpage="47" data-clip="192.2,120.2,510.8,134.6"></span></div>
+<p class="d-x" style="--b:172.8;--l:14.55pt">2016년 노벨 화학상은 <i>“분자 기계의 설계와 합성”</i>에 대한 공로로 J.-P. 소바주, J. F. 스토더트 경, B. L. 페링하에게 수여되었다. 그 한 예가 서로 맞물린 두 고리로 이루어진 분자인 [2]카테네인이다. 이 계에서 한 거대 고리는 페난트롤린(두 자리) 리간드 하나만을 가지고, 다른 거대 고리는 페난트롤린 리간드 하나와 터피리딘(세 자리) 리간드 하나, 모두 두 개의 리간드를 가진다. 구리 이온에는 각 거대 고리의 리간드가 하나씩 배위한다. 구리의 산화 상태(+I 또는 +II)에 따라 두 가지 배치가 얻어진다(그림 1).</p>
+<div class="d-f" style="left:123pt;top:262pt"><span class="fig" data-srcpage="47" data-clip="123,262,477,349"></span></div>
+<p class="d-x d-c" style="--b:358.2"><i>그림 1 – [2]카테네인에서 고리의 다중 안정성.</i></p>
+<p class="d-x" style="--b:382.8">거대 고리의 합성 과정은 다음과 같다.</p>
+<div class="d-f" style="left:72pt;top:400pt"><span class="fig" data-srcpage="47" data-clip="72,400,528,631"></span></div>
+<p class="d-x d-q" style="--b:651.8"><span class="d-n">1.</span><b>B</b>의 구조를 <span class="d-cv">그려라</span>.</p>
+<div class="d-f" style="left:64pt;top:662pt"><span class="fig" data-srcpage="47" data-clip="64,662,531,751"></span></div>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">47</span></p>
+</div>
+
+<!-- 48: questions 2-5 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x d-q" style="--b:80.8"><span class="d-n">2.</span><b>E</b>, <b>F</b>, <b>G</b>의 구조를 <span class="d-cv">그려라</span>.</p>
+<div class="d-f" style="left:64pt;top:90pt"><span class="fig" data-srcpage="48" data-clip="64,90,531,495"></span></div>
+<p class="d-x d-q" style="--b:515.5"><span class="d-n">3.</span>다음 반응 조건 중에서 <b>D</b>로부터 <b>E</b>를 만들 수 있는 것을 모두 <span class="d-cv">골라라</span>.</p>
+<div class="d-f" style="left:64pt;top:525pt"><span class="fig" data-srcpage="48" data-clip="64,525,531,585"></span></div>
+<p class="d-x d-q" style="--b:606.3"><span class="d-n">4.</span>이 합성 전략에서 MsCl은 다음 중 무엇을 얻기 위해 사용되는가?</p>
+<i class="d-r ov" style="left:64.92pt;top:616.87pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:617.35pt;width:0.48pt;height:57.75pt"></i><i class="d-r ov" style="left:529.90pt;top:617.35pt;width:0.48pt;height:57.75pt"></i><i class="d-r ov" style="left:65.40pt;top:674.62pt;width:464.50pt;height:0.48pt"></i>
+<p class="d-x d-o12 d-nw" style="--b:629.2;--l:13.83pt"><span class="d-cbx">&#xF0A8;</span>이탈기<br><span class="d-cbx">&#xF0A8;</span>보호기<br><span class="d-cbx">&#xF0A8;</span>비활성화기<br><span class="d-cbx">&#xF0A8;</span>지향기</p>
+<p class="d-x d-q" style="--b:697.1"><span class="d-n">5.</span><b>G</b>는 <b>F</b>와 LiBr을 아세톤 속에서 반응시켜 얻는다. 이 반응은 다음 중 무엇인가?</p>
+<i class="d-r ov" style="left:64.92pt;top:707.62pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:708.10pt;width:0.48pt;height:57.72pt"></i><i class="d-r ov" style="left:529.90pt;top:708.10pt;width:0.48pt;height:57.72pt"></i><i class="d-r ov" style="left:65.40pt;top:765.34pt;width:464.50pt;height:0.48pt"></i>
+<p class="d-x d-o12 d-nw" style="--b:720.0;--l:13.8pt"><span class="d-cbx">&#xF0A8;</span>친전자성 방향족 치환<br><span class="d-cbx">&#xF0A8;</span>친핵성 방향족 치환<br><span class="d-cbx">&#xF0A8;</span>S<sub>N</sub>1<br><span class="d-cbx">&#xF0A8;</span>S<sub>N</sub>2</p>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">48</span></p>
+</div>
+
+<!-- 49: questions 6-7 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x d-q" style="--b:80.8;--l:14.55pt"><span class="d-n">6.</span>반응 <b>F</b> → <b>G</b>의 속도 결정 단계의 전이 상태를 3차원 기하 구조가 드러나도록 <span class="d-cv">그려라</span>. 반응 중심은 하나만 나타내라. 주 탄소 사슬은 R기로 나타내도 된다.</p>
+<i class="d-r ov" style="left:64.92pt;top:120.50pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:120.98pt;width:0.48pt;height:139.80pt"></i><i class="d-r ov" style="left:529.90pt;top:120.98pt;width:0.48pt;height:139.80pt"></i><i class="d-r ov" style="left:65.40pt;top:260.30pt;width:464.50pt;height:0.48pt"></i>
+<p class="d-x" style="--b:132.0">전이 상태:</p>
+<p class="d-x" style="--b:288.8">[2]카테네인 <b>L</b>의 합성에는 구리 착물의 주형 효과가 이용된다.</p>
+<div class="d-f" style="left:133pt;top:306pt"><span class="fig" data-srcpage="49" data-clip="133,306,466,551"></span></div>
+<p class="d-x d-q" style="--b:571.5"><span class="d-n">7.</span>바닥 상태에 있는 Cu(0)의 전체 전자 배치를 <span class="d-cv">써라</span>. 착물 <b>J</b>에서 Cu의 산화 상태를 제시하고, <b>J</b>에 해당하는 자유 이온 상태에서 Cu의 전자 배치를 써라.</p>
+<i class="d-r ov" style="left:64.92pt;top:596.71pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:597.19pt;width:0.48pt;height:165.75pt"></i><i class="d-r ov" style="left:529.90pt;top:597.19pt;width:0.48pt;height:165.75pt"></i><i class="d-r ov" style="left:65.40pt;top:659.11pt;width:464.50pt;height:0.48pt"></i><i class="d-r ov" style="left:65.40pt;top:704.50pt;width:464.50pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:762.94pt;width:465.46pt;height:0.48pt"></i>
+<p class="d-x" style="--b:608.1">Cu(0)의 전자 배치:</p>
+<p class="d-x" style="--b:670.5"><b>J</b>에서 Cu의 산화 상태:</p>
+<p class="d-x" style="--b:715.9"><b>J</b>에서 Cu의 전자 배치:</p>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">49</span></p>
+</div>
+
+<!-- 50: questions 8-9 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x d-q" style="--b:80.8;--l:14.55pt"><span class="d-n">8.</span><b>L</b>에서 구리 이온의 기하 구조를 <span class="d-cv">골라라</span>. 구리 중심 주위의 리간드가 이상적인 기하 구조를 이룬다고 가정하고, 결정장의 영향을 받는 d 궤도함수의 전자 에너지 준위를 <span class="d-cv">그려라</span>. 궤도함수 도표를 <span class="d-cv">채워라</span>. 이 착물의 스핀의 최댓값(<i>S</i>)을 <span class="d-cv">제시하라</span>.</p>
+<i class="d-r ov" style="left:64.92pt;top:120.50pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:120.98pt;width:0.48pt;height:207.87pt"></i><i class="d-r ov" style="left:529.90pt;top:120.98pt;width:0.48pt;height:207.87pt"></i><i class="d-r ov" style="left:65.40pt;top:328.37pt;width:464.50pt;height:0.48pt"></i>
+<p class="d-x d-o12 d-nw" style="--b:132.9"><b>L</b>에서 Cu의 기하 구조:<br><span class="d-cbx">&#xF0A8;</span>팔면체<br><span class="d-cbx">&#xF0A8;</span>사면체<br><span class="d-cbx">&#xF0A8;</span>평면 사각형<br><span class="d-cbx">&#xF0A8;</span>삼각쌍뿔</p>
+<p class="d-x d-o12" style="--b:215.8">d 궤도함수의 갈라짐과 전자 채우기:</p>
+<div class="d-f" style="left:105pt;top:300pt"><span class="fig" data-srcpage="50" data-clip="105,300,129,314"></span></div>
+<p class="d-x d-q" style="--b:350.8"><span class="d-n">9.</span>다음 화합물 중에서 <b>L</b>의 구리 이온을 제거하여 자유 [2]카테네인을 얻을 수 있는 것을 모두 <span class="d-cv">골라라</span>.</p>
+<div class="d-f" style="left:64pt;top:375pt"><span class="fig" data-srcpage="50" data-clip="64,375,531,463"></span></div>
+<p class="d-x" style="--b:489.7">[2]카테네인 <b>L</b>에서 구리 이온은 두 가지 산화 상태(+I 또는 +II)로 존재할 수 있으며, 각 상태는 서로 다른 배위권(각각 4배위 또는 5배위)을 가진다.</p>
+<div class="d-f" style="left:113pt;top:520pt"><span class="fig" data-srcpage="50" data-clip="113,520,486,737"></span></div>
+<p class="d-x d-c" style="--b:745.7"><i>그림 2 – [2]카테네인 <b>L</b>의 상태</i></p>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">50</span></p>
+</div>
+
+<!-- 51: questions 10-11 -->
+<div class="page">
+<p class="d-hd">수험 번호: AAA-1</p>
+<p class="d-x" style="--b:80.8">Cu(I) 착물의 안정성은 그 전자 구조를 비활성 기체의 전자 구조와 비교하여 추론할 수 있다.</p>
+<p class="d-x d-q" style="--b:121.8"><span class="d-n">10.</span>빈칸에 숫자를 쓰거나 체크 표시를 하여 <span class="d-cv">채워라</span>.</p>
+<i class="d-r ov" style="left:64.92pt;top:132.50pt;width:465.46pt;height:0.48pt"></i><i class="d-r ov" style="left:64.92pt;top:132.98pt;width:0.48pt;height:64.68pt"></i><i class="d-r ov" style="left:529.90pt;top:132.98pt;width:0.48pt;height:64.68pt"></i><i class="d-r ov" style="left:65.40pt;top:197.18pt;width:464.50pt;height:0.48pt"></i>
+<p class="d-x d-o12 d-nw" style="--b:144.9;--l:20.75pt">Cu<sup>I</sup>N<sub>4</sub> 착물의 금속 배위권에는 전자가 &nbsp; … &nbsp; 개 있다.<br>Cu<sup>I</sup>N<sub>5</sub> 착물의 금속 배위권에는 전자가 &nbsp; … &nbsp; 개 있다.<br>Cu<sup>I</sup>N<sub>4</sub> 착물은 Cu<sup>I</sup>N<sub>5</sub> 착물보다 <span class="d-cb">&#xF0A8;</span> 더 / <span class="d-cb">&#xF0A8;</span> 덜 안정하다.</p>
+<p class="d-x d-q" style="--b:219.6;--l:14.5pt"><span class="d-n">11.</span>그림 2에 나온 해당 착물의 기호로 실선 상자를 <span class="d-cv">채우고</span>, 점선 상자에는 아래 표기를 사용하여 이 계를 전기화학적으로 제어하는 순서를 <span class="d-cv">완성하라</span>.</p>
+<div class="d-f" style="left:156pt;top:239pt"><span class="fig" data-srcpage="51" data-clip="156,239,176,257"></span></div>
+<p class="d-x d-q d-nw" style="--b:256.6">표기:<span class="d-t" style="left:85.7pt">(회전); + e<sup>‒</sup> ; ‒ e<sup>‒</sup>.</span></p>
+<div class="d-f" style="left:64pt;top:266pt"><span class="fig" data-srcpage="51" data-clip="64,266,531,561"></span></div>
+<p class="d-x d-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="d-pn">51</span></p>
+</div>
+
+<!-- ===== part e: original pages from 52 ===== -->
+<!-- 1 (52): T8 start -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<i class="e-r ov" style="left:65.16pt;top:70.80pt;width:464.98pt;height:0.48pt"></i><i class="e-r ov" style="left:65.16pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:116.66pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:171.14pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:191.78pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:212.69pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:233.45pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:255.89pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:276.65pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:297.41pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:318.29pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:339.07pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:359.83pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:382.27pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:404.71pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:427.15pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:449.59pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:472.06pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:494.50pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:529.66pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:117.14pt;top:86.28pt;width:54.00pt;height:0.48pt"></i><i class="e-r ov" style="left:171.62pt;top:86.28pt;width:20.16pt;height:0.48pt"></i><i class="e-r ov" style="left:192.26pt;top:86.28pt;width:20.42pt;height:0.48pt"></i><i class="e-r ov" style="left:213.17pt;top:86.28pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:233.93pt;top:86.28pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:256.37pt;top:86.28pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:277.13pt;top:86.28pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:297.89pt;top:86.28pt;width:20.40pt;height:0.48pt"></i><i class="e-r ov" style="left:318.77pt;top:86.28pt;width:20.30pt;height:0.48pt"></i><i class="e-r ov" style="left:339.55pt;top:86.28pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:360.31pt;top:86.28pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:382.75pt;top:86.28pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:405.19pt;top:86.28pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:427.63pt;top:86.28pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:450.07pt;top:86.28pt;width:21.98pt;height:0.48pt"></i><i class="e-r ov" style="left:472.54pt;top:86.28pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:494.98pt;top:86.28pt;width:34.68pt;height:0.48pt"></i><i class="e-r ov" style="left:117.14pt;top:101.78pt;width:54.00pt;height:0.48pt"></i><i class="e-r ov" style="left:171.62pt;top:101.78pt;width:20.16pt;height:0.48pt"></i><i class="e-r ov" style="left:192.26pt;top:101.78pt;width:20.42pt;height:0.48pt"></i><i class="e-r ov" style="left:213.17pt;top:101.78pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:233.93pt;top:101.78pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:256.37pt;top:101.78pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:277.13pt;top:101.78pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:297.89pt;top:101.78pt;width:20.40pt;height:0.48pt"></i><i class="e-r ov" style="left:318.77pt;top:101.78pt;width:20.30pt;height:0.48pt"></i><i class="e-r ov" style="left:339.55pt;top:101.78pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:360.31pt;top:101.78pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:382.75pt;top:101.78pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:405.19pt;top:101.78pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:427.63pt;top:101.78pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:450.07pt;top:101.78pt;width:21.98pt;height:0.48pt"></i><i class="e-r ov" style="left:472.54pt;top:101.78pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:494.98pt;top:101.78pt;width:34.68pt;height:0.48pt"></i><i class="e-r ov" style="left:65.64pt;top:117.26pt;width:51.02pt;height:0.48pt"></i><i class="e-r ov" style="left:117.14pt;top:117.26pt;width:54.00pt;height:0.48pt"></i><i class="e-r ov" style="left:171.62pt;top:117.26pt;width:20.16pt;height:0.48pt"></i><i class="e-r ov" style="left:192.26pt;top:117.26pt;width:20.42pt;height:0.48pt"></i><i class="e-r ov" style="left:213.17pt;top:117.26pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:233.93pt;top:117.26pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:256.37pt;top:117.26pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:277.13pt;top:117.26pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:297.89pt;top:117.26pt;width:20.40pt;height:0.48pt"></i><i class="e-r ov" style="left:318.77pt;top:117.26pt;width:20.30pt;height:0.48pt"></i><i class="e-r ov" style="left:339.55pt;top:117.26pt;width:20.28pt;height:0.48pt"></i><i class="e-r ov" style="left:360.31pt;top:117.26pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:382.75pt;top:117.26pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:405.19pt;top:117.26pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:427.63pt;top:117.26pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:450.07pt;top:117.26pt;width:21.98pt;height:0.48pt"></i><i class="e-r ov" style="left:472.54pt;top:117.26pt;width:21.96pt;height:0.48pt"></i><i class="e-r ov" style="left:494.98pt;top:117.26pt;width:34.68pt;height:0.48pt"></i>
+<p class="e-x e-c" style="--b:86.3;--fs:10pt;--l:11.5pt;left:65.6pt;width:51.1pt;font-weight:bold">문제<br>T8<br>6%</p>
+<p class="e-x e-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:117.1pt;width:54pt;font-weight:bold">문항</p>
+<p class="e-x e-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:495pt;width:34.7pt;font-weight:bold">합계</p>
+<p class="e-x e-c" style="--b:97.6;--fs:10pt;--l:11.5pt;left:117.1pt;width:54pt">배점</p>
+<p class="e-x e-c" style="--b:112.9;--fs:10pt;--l:11.5pt;left:117.1pt;width:54pt">점수</p>
+<div class="e-f" style="left:171.7pt;top:71.4pt"><span class="fig" data-srcpage="52" data-clip="171.7,71.4,494.4,86.2"></span></div>
+<div class="e-f" style="left:171.7pt;top:86.8pt"><span class="fig" data-srcpage="52" data-clip="171.7,86.8,529.6,101.7"></span></div>
+<p class="e-x e-h" style="--b:144.5;--fs:16pt;--l:19pt;--k:0.30">문제 T8: 이노시톨의 동정과 합성</p>
+<p class="e-x" style="--b:172.8">이 문제에서 “<span class="e-u">3D 구조</span>”와 “<span class="e-u">투시식</span>”은 다음 그림의 β-글루코스에 나타낸 방식으로 정의한다.</p>
+<div class="e-f" style="left:205pt;top:193pt"><span class="fig" data-srcpage="52" data-clip="205,193,410,277"></span></div>
+<p class="e-ov ov" style="left:229.5pt;top:266.4pt;width:48pt;height:9.6pt;line-height:9.6pt">3D 구조</p>
+<p class="e-ov ov" style="left:327.4pt;top:266.3pt;width:75pt;height:9.8pt;line-height:9.8pt">투시식</p>
+<p class="e-x" style="--b:304.4">이노시톨은 사이클로헥세인-1,2,3,4,5,6-헥솔이다. 이러한 6원자 탄소 고리 화합물 가운데 일부, 특히 <i>myo</i>-이노시톨은 여러 생물학적 과정에 관여한다.</p>
+<p class="e-x e-h" style="--b:352.7;--fs:12pt;--l:14pt"><i>myo</i>-이노시톨의 구조</p>
+<p class="e-x e-q" style="--b:379.2"><span class="e-n">1.</span>입체 화학적 세부 사항 없이 이노시톨의 구조식을 <span class="e-cv">그려라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:389.93pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:390.41pt;width:0.48pt;height:111.62pt"></i><i class="e-r ov" style="left:529.90pt;top:390.41pt;width:0.48pt;height:111.62pt"></i><i class="e-r ov" style="left:65.40pt;top:501.55pt;width:464.50pt;height:0.48pt"></i>
+<p class="e-x" style="--b:530.0">이 분자 계열에는 거울상 이성질체를 포함하여 서로 다른 입체 이성질체 9가지가 있다.</p>
+<p class="e-x e-q" style="--b:556.4"><span class="e-n">2.</span>광학 활성인 입체 이성질체의 3D 구조를 모두 <span class="e-cv">그려라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:567.07pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:567.55pt;width:0.48pt;height:114.63pt"></i><i class="e-r ov" style="left:529.90pt;top:567.55pt;width:0.48pt;height:114.63pt"></i><i class="e-r ov" style="left:65.40pt;top:681.70pt;width:464.50pt;height:0.48pt"></i>
+<p class="e-x" style="--b:710.0">여기서는 <i>myo</i>-이노시톨이라는 특정한 이노시톨의 구조를 다룬다. 이 화합물의 의자형 형태 이성질체 가운데 하나만이 우세하며, 그 구조는 <sup>1</sup>H NMR 스펙트럼으로부터 추론할 수 있다. 아래 스펙트럼은 D<sub>2</sub>O에서 600 MHz로 얻은 것이다. 이 화합물의 다른 신호는 스펙트럼에서 관찰되지 않았다. 적분값은 스펙트럼의 각 신호 아래에 표시되어 있다.</p>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">52</span></p>
+</div>
+
+<!-- 2 (53): NMR spectrum, questions 3-5 -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<div class="e-f" style="left:91pt;top:74pt"><span class="fig" data-srcpage="53" data-clip="91,74,510,286"></span></div>
+<p class="e-x e-q" style="--b:306.6"><span class="e-n">3.</span>이 시료에서 <i>myo</i>-이노시톨로부터 유래한 우세한 화합물로서, <sup>1</sup>H NMR 스펙트럼에서 관찰된 양성자 수와 부합하는 화합물의 분자식을 <span class="e-cv">제시하라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:331.85pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:332.33pt;width:0.48pt;height:40.20pt"></i><i class="e-r ov" style="left:529.90pt;top:332.33pt;width:0.48pt;height:40.20pt"></i><i class="e-r ov" style="left:65.40pt;top:372.05pt;width:464.50pt;height:0.48pt"></i>
+<p class="e-x e-q" style="--b:394.4"><span class="e-n">4.</span>양성자 신호의 수와 적분값을 바탕으로, 이 분자에 존재하는 대칭면의 수를 <span class="e-cv">제시하라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:419.57pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:420.05pt;width:0.48pt;height:43.92pt"></i><i class="e-r ov" style="left:529.90pt;top:420.05pt;width:0.48pt;height:43.92pt"></i><i class="e-r ov" style="left:65.40pt;top:463.49pt;width:464.50pt;height:0.48pt"></i>
+<p class="e-x e-q" style="--b:485.9"><span class="e-n">5.</span><i>myo</i>-이노시톨의 가장 안정한 형태에 대한 다음 투시도를 <span class="e-cv">완성하라</span>. 그다음 위의 NMR 스펙트럼에 따라 각 수소에 해당하는 문자(<b>a</b>, <b>b</b>, <b>c</b> 또는 <b>d</b>)를 <span class="e-cv">표시하라</span>. 양성자 <b>a</b>는 아래 그림의 탄소 <b>a</b>에 있어야 한다. 이 화합물의 3D 구조를 <span class="e-cv">그려라</span>.</p>
+<i class="e-r ov" style="left:65.16pt;top:540.19pt;width:466.66pt;height:0.48pt"></i><i class="e-r ov" style="left:65.16pt;top:540.68pt;width:0.48pt;height:204.98pt"></i><i class="e-r ov" style="left:65.64pt;top:745.18pt;width:466.18pt;height:0.48pt"></i><i class="e-r ov" style="left:332.83pt;top:540.68pt;width:0.48pt;height:204.50pt"></i><i class="e-r ov" style="left:531.34pt;top:540.68pt;width:0.48pt;height:204.50pt"></i>
+<div class="e-f" style="left:108pt;top:542pt"><span class="fig" data-srcpage="53" data-clip="108,542,296,727"></span></div>
+<p class="e-x e-nw" style="--b:571.3;--fs:12pt;left:338.6pt;width:180pt">3D 구조:</p>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">53</span></p>
+</div>
+
+<!-- 3 (54): synthesis of inositols, question 6, scheme -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<p class="e-x e-h" style="--b:82.0;--fs:12pt;--l:14pt">이노시톨의 합성</p>
+<p class="e-x" style="--b:114.6">의약 용도로 쓰기 위해 일부 이노시톨 인산염을 대량으로 합성할 수 있으면 유용하다. 여기서는 브로모다이올 <b>1</b>로부터 이노시톨 <b>2</b>를 합성하는 과정을 다룬다.</p>
+<div class="e-f" style="left:116pt;top:148pt"><span class="fig" data-srcpage="54" data-clip="116,148,479,251"></span></div>
+<p class="e-x e-q" style="--b:273.7"><span class="e-n">6.</span><b>2</b>와 <b>3</b> 사이의 올바른 구조적 관계를 모두 <span class="e-cv">골라라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:284.45pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:284.93pt;width:0.48pt;height:57.72pt"></i><i class="e-r ov" style="left:529.90pt;top:284.93pt;width:0.48pt;height:57.72pt"></i><i class="e-r ov" style="left:65.40pt;top:342.17pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:286pt"><span class="fig" data-srcpage="54" data-clip="70,286,82,341.5"></span></div>
+<p class="e-x e-o e-o12" style="--b:296.8">거울상 이성질체</p>
+<p class="e-x e-o e-o12" style="--b:310.6">에피머</p>
+<p class="e-x e-o e-o12" style="--b:324.3">부분입체 이성질체</p>
+<p class="e-x e-o e-o12" style="--b:338.2">회전장애 이성질체</p>
+<p class="e-x" style="--b:370.6">이노시톨 <b>2</b>는 화합물 <b>1</b>로부터 7단계를 거쳐 얻을 수 있다.</p>
+<div class="e-f" style="left:84pt;top:389pt"><span class="fig" data-srcpage="54" data-clip="84,389,516,767"></span></div>
+<p class="e-ov ov" style="left:128pt;top:602.8pt;width:38pt;height:9.8pt;line-height:9.8pt">아세톤</p>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">54</span></p>
+</div>
+
+<!-- 4 (55): questions 7-11 -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<p class="e-x e-q" style="--b:80.8"><span class="e-n">7.</span><b>4</b>의 3D 구조를 <span class="e-cv">그려라</span>.</p>
+<div class="e-f" style="left:64.9pt;top:91.4pt"><span class="fig" data-srcpage="55" data-clip="64.9,91.4,530.4,190.7"></span></div>
+<p class="e-x e-q" style="--b:212.7"><span class="e-n">8.</span><b>5</b>를 생성하는 반응은 전자 밀도가 가장 높은 이중 결합에서 일어난다. 아래에 <b>4</b>의 부분 구조인 1-브로모-1,3-사이클로헥사다이엔의 구조가 있다. 전자 밀도가 가장 높은 이중 결합에 <span class="e-cv">동그라미를 쳐라</span>. 브로민에 의한 모든 전자 효과를 <span class="e-cv">나타내라</span>.</p>
+<div class="e-f" style="left:64.9pt;top:266.9pt"><span class="fig" data-srcpage="55" data-clip="64.9,266.9,530.4,359"></span></div>
+<p class="e-x e-q" style="--b:380.9"><span class="e-n">9.</span>주된 부분입체 이성질체 <b>5</b>의 3D 구조를 <span class="e-cv">그려라</span>.</p>
+<div class="e-f" style="left:64.9pt;top:391.5pt"><span class="fig" data-srcpage="55" data-clip="64.9,391.5,530.4,495.8"></span></div>
+<p class="e-x e-q" style="--b:517.8"><span class="e-n">10.</span>거울상 이성질체로 순수한 화합물 <b>1</b>에서 출발할 때, 이 합성으로 얻을 수 있는 <b>5</b>의 입체 이성질체의 총수를 <span class="e-cv">제시하라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:542.95pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:543.43pt;width:0.48pt;height:43.92pt"></i><i class="e-r ov" style="left:529.90pt;top:543.43pt;width:0.48pt;height:43.92pt"></i><i class="e-r ov" style="left:65.40pt;top:586.87pt;width:464.50pt;height:0.48pt"></i>
+<p class="e-x e-q" style="--b:609.3"><span class="e-n">11.</span><b>5</b> → <b>6</b> 단계에서는 분자식이 같은 또 다른 생성물 <b>6’</b>이 생길 수 있다. <b>6</b>과 <b>6’</b>의 3D 구조를 <span class="e-cv">그려라</span>.</p>
+<div class="e-f" style="left:65.1pt;top:634.4pt"><span class="fig" data-srcpage="55" data-clip="65.1,634.4,530.2,762.5"></span></div>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">55</span></p>
+</div>
+
+<!-- 5 (56): questions 12-15 -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<p class="e-x e-q" style="--b:80.8"><span class="e-n">12.</span>주된 부분입체 이성질체 <b>8</b>과 <b>9</b>의 3D 구조를 <span class="e-cv">그려라</span>.</p>
+<div class="e-f" style="left:65.1pt;top:97.3pt"><span class="fig" data-srcpage="56" data-clip="65.1,97.3,531.9,243.7"></span></div>
+<p class="e-x e-q" style="--b:265.6"><span class="e-n">13.</span><b>2</b>를 얻기 위한 올바른 조건 <b>A</b>를 모두 <span class="e-cv">골라라</span>.</p>
+<div class="e-f" style="left:64.9pt;top:276.2pt"><span class="fig" data-srcpage="56" data-clip="64.9,276.2,530.4,334.5"></span></div>
+<p class="e-x e-q" style="--b:356.4"><span class="e-n">14.</span>화합물 <b>1</b>에 브로민이 없다면, <b>2</b> 외에 또 다른 입체 이성질체가 얻어질 것이다. 합성 과정에서 일어나는 반응들의 입체 선택성은 변하지 않고, 이후 단계들에서 쓰는 당량 수도 <b>2</b>의 경우와 같다고 할 때, 이 입체 이성질체의 3D 구조를 <span class="e-cv">그리고</span> <b>2</b>와의 관계를 <span class="e-cv">제시하라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:410.57pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:411.05pt;width:0.48pt;height:181.94pt"></i><i class="e-r ov" style="left:529.90pt;top:411.05pt;width:0.48pt;height:181.94pt"></i><i class="e-r ov" style="left:65.40pt;top:592.51pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:537pt"><span class="fig" data-srcpage="56" data-clip="70,537,82,592"></span></div>
+<p class="e-x e-o e-o12" style="--b:547.2">거울상 이성질체</p>
+<p class="e-x e-o e-o12" style="--b:560.9">에피머</p>
+<p class="e-x e-o e-o12" style="--b:574.8">부분입체 이성질체</p>
+<p class="e-x e-o e-o12" style="--b:588.7">회전장애 이성질체</p>
+<p class="e-x e-q" style="--b:614.9"><span class="e-n">15.</span><b>1</b>로부터 <b>2</b>를 합성하는 과정에서 <span class="e-u">보호기 또는 지향기</span>를 제거하는 단계를 모두 <span class="e-cv">골라라</span>.</p>
+<div class="e-f" style="left:64.9pt;top:625.5pt"><span class="fig" data-srcpage="56" data-clip="64.9,625.5,530.4,725.2"></span></div>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">56</span></p>
+</div>
+
+<!-- 6 (57): T9 start, questions 1-3 -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<i class="e-r ov" style="left:90.14pt;top:70.80pt;width:415.04pt;height:0.48pt"></i><i class="e-r ov" style="left:90.14pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:141.62pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:196.22pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:216.05pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:235.85pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:255.65pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:275.45pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:295.25pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:318.17pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:338.23pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:358.15pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:377.71pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:400.63pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:423.55pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:446.47pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:469.42pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:504.70pt;top:71.28pt;width:0.48pt;height:46.46pt"></i><i class="e-r ov" style="left:142.10pt;top:86.28pt;width:54.12pt;height:0.48pt"></i><i class="e-r ov" style="left:196.70pt;top:86.28pt;width:19.34pt;height:0.48pt"></i><i class="e-r ov" style="left:216.53pt;top:86.28pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:236.33pt;top:86.28pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:256.13pt;top:86.28pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:275.93pt;top:86.28pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:295.73pt;top:86.28pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:318.65pt;top:86.28pt;width:19.58pt;height:0.48pt"></i><i class="e-r ov" style="left:338.71pt;top:86.28pt;width:19.44pt;height:0.48pt"></i><i class="e-r ov" style="left:358.63pt;top:86.28pt;width:19.08pt;height:0.48pt"></i><i class="e-r ov" style="left:378.19pt;top:86.28pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:401.11pt;top:86.28pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:424.03pt;top:86.28pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:446.95pt;top:86.28pt;width:22.46pt;height:0.48pt"></i><i class="e-r ov" style="left:469.90pt;top:86.28pt;width:34.80pt;height:0.48pt"></i><i class="e-r ov" style="left:142.10pt;top:101.78pt;width:54.12pt;height:0.48pt"></i><i class="e-r ov" style="left:196.70pt;top:101.78pt;width:19.34pt;height:0.48pt"></i><i class="e-r ov" style="left:216.53pt;top:101.78pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:236.33pt;top:101.78pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:256.13pt;top:101.78pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:275.93pt;top:101.78pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:295.73pt;top:101.78pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:318.65pt;top:101.78pt;width:19.58pt;height:0.48pt"></i><i class="e-r ov" style="left:338.71pt;top:101.78pt;width:19.44pt;height:0.48pt"></i><i class="e-r ov" style="left:358.63pt;top:101.78pt;width:19.08pt;height:0.48pt"></i><i class="e-r ov" style="left:378.19pt;top:101.78pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:401.11pt;top:101.78pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:424.03pt;top:101.78pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:446.95pt;top:101.78pt;width:22.46pt;height:0.48pt"></i><i class="e-r ov" style="left:469.90pt;top:101.78pt;width:34.80pt;height:0.48pt"></i><i class="e-r ov" style="left:90.62pt;top:117.26pt;width:51.00pt;height:0.48pt"></i><i class="e-r ov" style="left:142.10pt;top:117.26pt;width:54.12pt;height:0.48pt"></i><i class="e-r ov" style="left:196.70pt;top:117.26pt;width:19.34pt;height:0.48pt"></i><i class="e-r ov" style="left:216.53pt;top:117.26pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:236.33pt;top:117.26pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:256.13pt;top:117.26pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:275.93pt;top:117.26pt;width:19.32pt;height:0.48pt"></i><i class="e-r ov" style="left:295.73pt;top:117.26pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:318.65pt;top:117.26pt;width:19.58pt;height:0.48pt"></i><i class="e-r ov" style="left:338.71pt;top:117.26pt;width:19.44pt;height:0.48pt"></i><i class="e-r ov" style="left:358.63pt;top:117.26pt;width:19.08pt;height:0.48pt"></i><i class="e-r ov" style="left:378.19pt;top:117.26pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:401.11pt;top:117.26pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:424.03pt;top:117.26pt;width:22.44pt;height:0.48pt"></i><i class="e-r ov" style="left:446.95pt;top:117.26pt;width:22.46pt;height:0.48pt"></i><i class="e-r ov" style="left:469.90pt;top:117.26pt;width:34.80pt;height:0.48pt"></i>
+<p class="e-x e-c" style="--b:86.3;--fs:10pt;--l:11.5pt;left:90.6pt;width:51pt;font-weight:bold">문제<br>T9<br>7%</p>
+<p class="e-x e-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:142.1pt;width:54.1pt;font-weight:bold">문항</p>
+<p class="e-x e-c" style="--b:82.3;--fs:10pt;--l:11.5pt;left:469.9pt;width:34.8pt;font-weight:bold">합계</p>
+<p class="e-x e-c" style="--b:97.6;--fs:10pt;--l:11.5pt;left:142.1pt;width:54.1pt">배점</p>
+<p class="e-x e-c" style="--b:112.9;--fs:10pt;--l:11.5pt;left:142.1pt;width:54.1pt">점수</p>
+<div class="e-f" style="left:196.8pt;top:71.4pt"><span class="fig" data-srcpage="57" data-clip="196.8,71.4,469.3,86.2"></span></div>
+<div class="e-f" style="left:196.8pt;top:86.8pt"><span class="fig" data-srcpage="57" data-clip="196.8,86.8,504.6,101.7"></span></div>
+<p class="e-x e-h" style="--b:144.5;--fs:16pt;--l:19pt;--k:0.30">문제 T9: 레보부피바카인의 합성</p>
+<p class="e-x e-h" style="--b:174.0;--fs:12pt;--l:14pt">파트 I.</p>
+<p class="e-x" style="--b:194.7;--l:14.55pt">국소 마취제 부피바카인(상품명 Marcaine)은 세계보건기구(WHO)의 필수 의약품 목록에 올라 있다. 이 약물은 현재 라세미 혼합물로 쓰이지만, 부피바카인의 한 거울상 이성질체인 레보부피바카인이 심장 독성이 더 낮아서 라세미체보다 안전하다는 것이 밝혀졌다. 레보부피바카인은 천연 아미노산인 <span class="e-sc">L</span>-라이신으로부터 합성할 수 있다.</p>
+<div class="e-f" style="left:254pt;top:245pt"><span class="fig" data-srcpage="57" data-clip="254,245,362,302"></span></div>
+<p class="e-ov ov" style="left:254.8pt;top:291.4pt;width:97.6pt;height:9.8pt;line-height:9.8pt"><span style="font-size:7.5pt">L</span>-라이신 염산염</p>
+<p class="e-x e-q" style="--b:317.8"><span class="e-n">1.</span><span class="e-sc">L</span>-라이신 염산염에 있는 입체 중심의 절대 배치를 <span class="e-cv">지정하고</span>, 치환기를 우선순위 순서대로 분류하여 답의 <span class="e-cv">근거를 제시하라</span>.</p>
+<i class="e-r ov" style="left:63.48pt;top:342.89pt;width:461.26pt;height:0.48pt"></i><i class="e-r ov" style="left:63.48pt;top:343.37pt;width:0.48pt;height:73.44pt"></i><i class="e-r ov" style="left:63.96pt;top:416.33pt;width:460.78pt;height:0.48pt"></i><i class="e-r ov" style="left:176.90pt;top:343.37pt;width:0.48pt;height:72.96pt"></i><i class="e-r ov" style="left:524.26pt;top:343.37pt;width:0.48pt;height:72.96pt"></i>
+<p class="e-x e-nw" style="--b:353.4;left:69.1pt;width:100pt">배치:</p>
+<div class="e-f" style="left:68pt;top:364pt"><span class="fig" data-srcpage="57" data-clip="68,364,92,402"></span></div>
+<p class="e-x e-nw" style="--b:353.4;left:182.7pt;width:300pt">우선순위 1 &gt; 2 &gt; 3 &gt; 4:</p>
+<div class="e-f" style="left:231pt;top:365pt"><span class="fig" data-srcpage="57" data-clip="231,365,476,407"></span></div>
+<p class="e-x e-q" style="--b:438.8"><span class="e-n">2.</span><span class="e-sc">L</span>-라이신의 접두사 <span class="e-sc">L</span>은 상대 배치를 나타낸다. 옳은 설명을 모두 <span class="e-cv">골라라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:449.33pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:449.81pt;width:0.48pt;height:53.06pt"></i><i class="e-r ov" style="left:529.90pt;top:449.81pt;width:0.48pt;height:53.06pt"></i><i class="e-r ov" style="left:65.40pt;top:502.39pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:451pt"><span class="fig" data-srcpage="57" data-clip="70,451,81.5,502"></span></div>
+<p class="e-x e-o e-o11" style="--b:460.7">모든 천연 <span class="e-sc">L</span>-아미노산은 좌선성이다.</p>
+<p class="e-x e-o e-o11" style="--b:473.5">천연 <span class="e-sc">L</span>-아미노산은 좌선성일 수도 있고 우선성일 수도 있다.</p>
+<p class="e-x e-o e-o11" style="--b:486.1">모든 천연 <span class="e-sc">L</span>-아미노산은 (<i>S</i>) 배치이다.</p>
+<p class="e-x e-o e-o11" style="--b:498.8">모든 천연 <span class="e-sc">L</span>-아미노산은 (<i>R</i>) 배치이다.</p>
+<p class="e-x" style="--b:530.8;--l:14.6pt"><span class="e-sc">L</span>-라이신의 두 아미노기 중 하나만 반응시키고 싶을 때가 많다. 과량의 수산화 이온 수용액과 함께 Cu<sup>2+</sup> 염을 쓰면 두 아미노기 중 하나의 반응성을 선택적으로 가릴 수 있다. 착물이 형성된 뒤에는 착물을 이루지 않은 NH<sub>2</sub> 기만 반응할 수 있다.</p>
+<p class="e-x e-q" style="--b:586.4"><span class="e-n">3.</span><span class="e-sc">L</span>-라이신이 두 자리 리간드로 작용하며, 수산화 이온 수용액이 있을 때 <span class="e-sc">L</span>-라이신 두 분자가 Cu<sup>2+</sup> 이온 하나에 배위한다는 점을 고려하여, 중간체 착물의 구조를 <span class="e-cv">그려라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:611.71pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:612.19pt;width:0.48pt;height:135.27pt"></i><i class="e-r ov" style="left:529.90pt;top:612.19pt;width:0.48pt;height:135.27pt"></i><i class="e-r ov" style="left:65.40pt;top:746.98pt;width:464.50pt;height:0.48pt"></i>
+<p class="e-x e-nw" style="--b:623.1;width:200pt">착물</p>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">57</span></p>
+</div>
+
+<!-- 7 (58): scheme, questions 4-5 -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<p class="e-x" style="--b:80.8">다행히 아래에 나타낸 레보부피바카인 합성에서는 Cu<sup>2+</sup> 염이 없어도 같은 아미노기가 반응한다.</p>
+<div class="e-f" style="left:70pt;top:112pt"><span class="fig" data-srcpage="58" data-clip="70,112,526,492"></span></div>
+<p class="e-ov ov" style="left:108.6pt;top:154.6pt;width:69pt;height:23.4pt;line-height:11.7pt;font-weight:bold"><span style="font-size:7.5pt">L</span>-라이신<br>염산염</p>
+<p class="e-ov ov" style="left:363.6pt;top:142.4pt;width:51pt;height:10.8pt;line-height:10.8pt;text-align:left">묽은 HCl</p>
+<p class="e-ov ov" style="left:363.6pt;top:154.2pt;width:70pt;height:10.8pt;line-height:10.8pt;text-align:left">완충 수용액</p>
+<p class="e-ov ov" style="left:185.9pt;top:326.6pt;width:36pt;height:10.8pt;line-height:10.8pt;text-align:right">시약</p>
+<p class="e-ov ov" style="left:108.4pt;top:372.6pt;width:96pt;height:9.6pt;line-height:9.6pt">반응성 중간체</p>
+<p class="e-ov ov" style="left:427pt;top:336pt;width:84pt;height:10.8pt;line-height:10.8pt;font-weight:bold">레보부피바카인</p>
+<p class="e-ov ov" style="left:103.4pt;top:466.2pt;width:131pt;height:11.2pt;line-height:11.2pt">(벤질옥시카보닐 클로라이드)</p>
+<p class="e-ov ov" style="left:238pt;top:465.8pt;width:162pt;height:11.2pt;line-height:11.2pt;font-size:8.5pt">(<i>N</i>,<i>N</i>′-다이사이클로헥실카보다이이미드)</p>
+<p class="e-ov ov" style="left:401.7pt;top:465.4pt;width:124.2pt;height:11.2pt;line-height:11.2pt">(<i>p</i>-톨루엔설포닐 클로라이드)</p>
+<p class="e-x" style="--b:513.4">이제부터는 위 반응 도식에 제시된 약어를 사용해도 된다.</p>
+<p class="e-x e-q" style="--b:539.9"><span class="e-n">4.</span>적절한 입체 화학을 포함하여 화합물 <b>A</b>의 구조를 <span class="e-cv">그려라</span>.</p>
+<div class="e-f" style="left:64.9pt;top:550.6pt"><span class="fig" data-srcpage="58" data-clip="64.9,550.6,530.4,694"></span></div>
+<p class="e-x e-q" style="--b:715.8"><span class="e-n">5.</span><span class="e-sc">L</span>-라이신에서 <b>A</b>로의 변환은 다음에 해당한다(알맞은 답을 모두 <span class="e-cv">골라라</span>).</p>
+<i class="e-r ov" style="left:64.92pt;top:726.46pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:726.94pt;width:0.48pt;height:43.92pt"></i><i class="e-r ov" style="left:529.90pt;top:726.94pt;width:0.48pt;height:43.92pt"></i><i class="e-r ov" style="left:65.40pt;top:770.38pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:728pt"><span class="fig" data-srcpage="58" data-clip="70,728,82,770"></span></div>
+<p class="e-x e-o e-o12" style="--b:738.8">거울상 선택적 반응.</p>
+<p class="e-x e-o e-o12" style="--b:752.5">거울상 특이적 반응.</p>
+<p class="e-x e-o e-o12" style="--b:766.4">위치 선택적 반응.</p>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">58</span></p>
+</div>
+
+<!-- 8 (59): questions 6-8 -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<p class="e-x e-q" style="--b:80.8"><span class="e-n">6.</span>적절한 입체 화학을 포함하여 화합물 <b>B</b>–<b>F</b>의 구조를 <span class="e-cv">그려라</span>.</p>
+<div class="e-f" style="left:70.8pt;top:91.4pt"><span class="fig" data-srcpage="59" data-clip="70.8,91.4,524.5,606.5"></span></div>
+<p class="e-x e-q" style="--b:628.4"><span class="e-n">7.</span><b>C</b> → <b>D</b> 변환에서 DCC의 역할은 무엇인가?</p>
+<i class="e-r ov" style="left:64.92pt;top:639.07pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:639.55pt;width:0.48pt;height:40.47pt"></i><i class="e-r ov" style="left:529.90pt;top:639.55pt;width:0.48pt;height:40.47pt"></i><i class="e-r ov" style="left:65.40pt;top:679.54pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:641pt"><span class="fig" data-srcpage="59" data-clip="70,641,81.5,679"></span></div>
+<p class="e-x e-o e-o11" style="--b:650.5">아미노기의 보호기.</p>
+<p class="e-x e-o e-o11" style="--b:663.1">하이드록시기의 보호기.</p>
+<p class="e-x e-o e-o11" style="--b:675.8">아마이드 결합 형성을 위한 활성화제.</p>
+<p class="e-x e-q" style="--b:702.0"><span class="e-n">8.</span>이 합성에서 TsCl을 쓰는 목적은 다음을 가능하게 하는 것이다:</p>
+<i class="e-r ov" style="left:64.92pt;top:712.54pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:713.02pt;width:0.48pt;height:53.16pt"></i><i class="e-r ov" style="left:529.90pt;top:713.02pt;width:0.48pt;height:53.16pt"></i><i class="e-r ov" style="left:65.40pt;top:765.70pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:714pt"><span class="fig" data-srcpage="59" data-clip="70,714,81.5,765.3"></span></div>
+<p class="e-x e-o e-o11" style="--b:723.9">아미노기의 친핵성 치환.</p>
+<p class="e-x e-o e-o11" style="--b:736.7">아미노기의 친전자성 치환.</p>
+<p class="e-x e-o e-o11" style="--b:749.3">하이드록시기의 친핵성 치환.</p>
+<p class="e-x e-o e-o11" style="--b:762.0">하이드록시기의 친전자성 치환.</p>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">59</span></p>
+</div>
+
+<!-- 9 (60): questions 9-10, part II, questions 11-13 -->
+<div class="page">
+<p class="e-hd">수험 번호: AAA-1</p>
+<p class="e-x e-q" style="--b:80.8"><span class="e-n">9.</span>시약 <b>H</b>로 쓸 수 있는 시약을 모두 <span class="e-cv">표시하라</span>:</p>
+<i class="e-r ov" style="left:64.92pt;top:91.44pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:91.92pt;width:0.48pt;height:53.06pt"></i><i class="e-r ov" style="left:529.90pt;top:91.92pt;width:0.48pt;height:53.06pt"></i><i class="e-r ov" style="left:65.40pt;top:144.50pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:93pt"><span class="fig" data-srcpage="60" data-clip="70,93,81.5,144.2"></span></div>
+<div class="e-f" style="left:318pt;top:93pt"><span class="fig" data-srcpage="60" data-clip="318,93,329.5,144.2"></span></div>
+<div class="e-f" style="left:81.5pt;top:106pt"><span class="fig" data-srcpage="60" data-clip="81.5,106,117,120"></span></div>
+<div class="e-f" style="left:81.5pt;top:131.5pt"><span class="fig" data-srcpage="60" data-clip="81.5,131.5,115,144.2"></span></div>
+<div class="e-f" style="left:329.5pt;top:93pt"><span class="fig" data-srcpage="60" data-clip="329.5,93,369,106"></span></div>
+<div class="e-f" style="left:329.5pt;top:106pt"><span class="fig" data-srcpage="60" data-clip="329.5,106,364,120"></span></div>
+<div class="e-f" style="left:329.5pt;top:131.5pt"><span class="fig" data-srcpage="60" data-clip="329.5,131.5,355,144.2"></span></div>
+<p class="e-x e-nw" style="--b:102.9;left:83.5pt;width:200pt">묽은 HCl</p>
+<p class="e-x e-nw" style="--b:128.2;left:83.5pt;width:200pt">묽은 KMnO<sub>4</sub></p>
+<p class="e-x e-nw" style="--b:128.2;left:331.3pt;width:190pt">묽은 NaOH</p>
+<p class="e-x e-q" style="--b:166.9"><span class="e-n">10.</span>적절한 입체 화학을 포함하여 레보부피바카인의 구조를 <span class="e-cv">그려라</span>.</p>
+<i class="e-r ov" style="left:64.92pt;top:177.50pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:177.98pt;width:0.48pt;height:118.23pt"></i><i class="e-r ov" style="left:529.90pt;top:177.98pt;width:0.48pt;height:118.23pt"></i><i class="e-r ov" style="left:65.40pt;top:295.73pt;width:464.50pt;height:0.48pt"></i>
+<p class="e-x e-nw" style="--b:188.9;width:300pt">레보부피바카인 C<sub>18</sub>H<sub>28</sub>N<sub>2</sub>O</p>
+<p class="e-x e-h" style="--b:313.2;--fs:12pt;--l:14pt">파트 II.</p>
+<p class="e-x" style="--b:326.0;--l:12.6pt">레보부피바카인을 합성하려면 거울상 이성질체로 순수한 <span class="e-sc">L</span>-라이신을 사용해야 한다. 아미노산의 거울상 이성질체 순도를 확인하는 일반적인 방법은 모셔산(아래의 (<i>S</i>) 이성질체 구조 참조)을 사용하여 아미노산을 아마이드로 변환하는 것이다.</p>
+<div class="e-f" style="left:255pt;top:362pt"><span class="fig" data-srcpage="60" data-clip="255,362,346,432"></span></div>
+<p class="e-ov ov" style="left:255pt;top:414.6pt;width:91pt;height:13pt;line-height:13pt;font-size:10pt">(<i>S</i>)-모셔산</p>
+<p class="e-x e-q" style="--b:445.1"><span class="e-n">11.</span><span class="e-sc">L</span>-라이신의 α-아미노기를 (<i>S</i>)-모셔산으로 유도체화할 때 생성되는 아마이드의 구조를 <span class="e-cv">그려라</span>. 각 키랄 중심의 입체 화학을 명확하게 나타내라.</p>
+<i class="e-r ov" style="left:64.92pt;top:470.21pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:470.69pt;width:0.48pt;height:96.26pt"></i><i class="e-r ov" style="left:529.90pt;top:470.69pt;width:0.48pt;height:96.26pt"></i><i class="e-r ov" style="left:65.40pt;top:566.47pt;width:464.50pt;height:0.48pt"></i>
+<p class="e-x e-q" style="--b:588.9;word-break:normal"><span class="e-n">12.</span>라세미 라이신과 (<i>S</i>)-모셔산을 반응시키면 <span class="e-cv">몇 가지 생성물</span>이 생기는가(라이신의 α-아미노기만 유도체화된다고 가정하라)?</p>
+<i class="e-r ov" style="left:64.92pt;top:613.99pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:614.47pt;width:0.48pt;height:53.19pt"></i><i class="e-r ov" style="left:529.90pt;top:614.47pt;width:0.48pt;height:53.19pt"></i><i class="e-r ov" style="left:65.40pt;top:667.18pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:615.5pt"><span class="fig" data-srcpage="60" data-clip="70,615.5,81.5,666.8"></span></div>
+<p class="e-x e-o e-o11" style="--b:625.4">부분입체 이성질체 두 가지.</p>
+<p class="e-x e-o e-o11" style="--b:638.1">부분입체 이성질체 네 가지.</p>
+<p class="e-x e-o e-o11" style="--b:650.7">두 거울상 이성질체의 라세미 혼합물.</p>
+<p class="e-x e-o e-o11" style="--b:663.5">네 가지 화합물: 거울상 이성질체 두 가지와 부분입체 이성질체 두 가지.</p>
+<p class="e-x e-q" style="--b:689.6"><span class="e-n">13.</span>(<i>S</i>)-모셔산으로 유도체화한 뒤 라이신의 거울상 이성질체 순도를 정량적으로 결정하는 데 쓸 수 있는 방법을 모두 <span class="e-cv">골라라</span>:</p>
+<i class="e-r ov" style="left:64.92pt;top:714.70pt;width:465.46pt;height:0.48pt"></i><i class="e-r ov" style="left:64.92pt;top:715.18pt;width:0.48pt;height:53.16pt"></i><i class="e-r ov" style="left:529.90pt;top:715.18pt;width:0.48pt;height:53.16pt"></i><i class="e-r ov" style="left:65.40pt;top:767.86pt;width:464.50pt;height:0.48pt"></i>
+<div class="e-f" style="left:70pt;top:716pt"><span class="fig" data-srcpage="60" data-clip="70,716,81.5,767.5"></span></div>
+<p class="e-x e-o e-o11" style="--b:726.1">NMR 분광법.</p>
+<p class="e-x e-o e-o11" style="--b:738.8">액체 크로마토그래피.</p>
+<p class="e-x e-o e-o11" style="--b:751.4">질량 분석법.</p>
+<p class="e-x e-o e-o11" style="--b:764.1">UV-vis 분광법.</p>
+<p class="e-x e-ft" style="--b:792.2">제51회 IChO – 이론 시험<span class="e-pn">60</span></p>
+</div>
+</body></html>
