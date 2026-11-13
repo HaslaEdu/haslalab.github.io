@@ -345,6 +345,32 @@ export async function retainSeat(db, store, round, seat, w, t, purge = false) {
     .bind(kept, t, why.length ? 1 : 0, why.length ? 1 : 0, round, seat.user_id, seat.track).run();
   return { candidate_no: seat.candidate_no, kept, deleted };
 }
+/* account deletion: a member's HPhO entries, seats, phones, events and mail records, and every proctoring photo,
+   recording and answer page kept under their candidate numbers (privacy.html: kept only until the account is deleted).
+   The stored files go first, while the candidate numbers can still be read; the returned statements delete the rows
+   (run them in the same batch as the rest of the account). */
+const HPHO_USER_TABLES = ['hpho_events', 'hpho_mail', 'hpho_phones', 'hpho_seats', 'hpho_sessions', 'hpho_entries'];
+export async function hphoForgetUser(db, store, userId) {
+  /* only the tables this database has (one that never ran HPhO has none, and none is made for it here) */
+  const have = new Set(((await db.prepare(`SELECT name FROM sqlite_master WHERE type='table' AND name IN (${HPHO_USER_TABLES.map(() => '?').join(',')})`)
+    .bind(...HPHO_USER_TABLES).all()).results || []).map(r => r.name));
+  const rows = [];
+  for (const table of ['hpho_entries', 'hpho_sessions', 'hpho_seats', 'hpho_phones']) if (have.has(table))
+    rows.push(...((await db.prepare(`SELECT DISTINCT round_id, candidate_no FROM ${table} WHERE user_id=?`).bind(userId).all()).results || []));
+  const prefixes = new Set();
+  for (const { round_id: round, candidate_no: no } of rows) {
+    if (!round || !no || String(round).includes('/') || String(no).includes('/')) continue;
+    prefixes.add(`hpho/${round}/${no}/`);
+    for (const track of TRACKS) { prefixes.add(`hpho-rec/${round}/${track}/${no}/`); prefixes.add(`hpho-answers/${round}/${track}/${no}/`); }
+  }
+  if (store?.list) {
+    const keys = [];                     /* listed in full first: deleting between pages could move the listing's cursor */
+    for (const prefix of prefixes) { let cursor;
+      do { const l = await store.list({ prefix, cursor, limit: 1000 }); keys.push(...(l.objects || []).map(o => o.key).filter(k => k.startsWith(prefix))); cursor = l.truncated ? l.cursor : null; } while (cursor); }
+    for (let i = 0; i < keys.length; i += 100) await store.delete(keys.slice(i, i + 100));
+  }
+  return HPHO_USER_TABLES.filter(table => have.has(table)).map(table => db.prepare(`DELETE FROM ${table} WHERE user_id=?`).bind(userId));
+}
 /* the cron's step: seats whose upload closed more than an hour ago and were not decided yet (a few at a time) */
 export async function hphoRetainTick(env, { now: at = Date.now(), scope = e => e.DB, limit = 20 } = {}) {
   const db = scope(env), store = env.HPHO_SNAPS || env.LAB_PAGES, t = Math.floor(at / 1000);

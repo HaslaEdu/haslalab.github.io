@@ -48,6 +48,8 @@ test('invariant public GET cache crosses auth while canonical queries and caller
   const hit = await h.request('/api/posts?case=public&board=free&lang=ko', { headers: { Authorization: 'Bearer second', Origin: OTHER } });
   assert.equal(h.calls.length, 1);
   assert.equal(hit.headers.get('X-Edge-Cache'), 'hit');
+  // A hit is rebuilt from the stored copy: it must still carry the API's security headers.
+  for (const h of ['X-Content-Type-Options','Content-Security-Policy','X-Frame-Options','Referrer-Policy','Strict-Transport-Security']) assert.ok(hit.headers.get(h), h + ' on a cache hit');
   assert.equal(hit.headers.get('Access-Control-Allow-Origin'), OTHER);
   assert.match(hit.headers.get('Server-Timing'), /db;desc="0 queries";dur=0/);
   assert.deepEqual(await hit.json(), { posts: [{ id: 1 }] });

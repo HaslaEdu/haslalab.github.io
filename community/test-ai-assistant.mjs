@@ -392,3 +392,22 @@ test('the teacher runs on DeepSeek\'s own API, thinking off, when the Worker hol
     assert.equal(calls[0].body.max_tokens, 8192);
   } finally { globalThis.fetch = real; }
 });
+
+test('AI_GUEST_LIMIT=0 (or below) turns the assistant off for visitors from the first message; members are unaffected', async () => {
+  class HttpError extends Error { constructor(status, code) { super(code); this.status = status; } }
+  /* like the Worker's limiter: a key's first request is always let in, later ones while the count is below max */
+  const counts = {};
+  const limit = async (env, key, max) => { if (key in counts && counts[key] >= max) throw new HttpError(429, 'rate_limited'); counts[key] = (counts[key] || 0) + 1; };
+  const route = createAiAssistantRouter({HttpError, currentUser: async req => req.headers.get('Authorization') ? {id: 7} : null,
+    needUser: u => { if (!u) throw new HttpError(401, 'login_required'); return u; }, clientIp: () => '203.0.113.10', trainAllowed: async () => false, limit});
+  const post = auth => new Request('https://x/api/ai/chat', {method: 'POST', headers: auth ? {Authorization: 'Bearer t'} : {}, body: JSON.stringify({messages: [{role: 'user', content: 'hi'}]})});
+  for (const off of ['0', '-1', 'off', 0]) {
+    const env = {AI: ai({intent: 'chat', reply: '안녕하세요'}), DB: d1(), AI_GUEST_LIMIT: off};
+    for (let i = 0; i < 2; i++) await assert.rejects(route(post(false), env), e => e.status === 429 && e.message === 'guest_limit', String(off));
+    assert.equal((await route(post(true), env)).answer, '안녕하세요', 'members still get answers');
+  }
+  for (const k of Object.keys(counts)) delete counts[k];
+  const one = {AI: ai({intent: 'chat', reply: '안녕하세요'}), DB: d1(), AI_GUEST_LIMIT: '1'};
+  assert.equal((await route(post(false), one)).answer, '안녕하세요');
+  await assert.rejects(route(post(false), one), e => e.message === 'guest_limit');
+});

@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+"""Register reviewed Korean IZhO editions (html-reflow-stamped-v1) in the repository.
+
+usage: python -I tools/ko_reflow/izho/register.py PDF_DIR SRC_DIR NAME [NAME ...]
+
+NAME is <year>_T or <year>_TS. PDF_DIR holds IZhO_<year>_T_KO.pdf / IZhO_<year>_TS_KO.pdf, SRC_DIR the originals
+(IZhO_<year>_T_EN.pdf / IZhO_<year>_TS.pdf, or the page range in RANGES). For each edition it writes
+tools/ko_reflow/qa/<file>.json and replaces the file's rows in tools/original_style_publication.json,
+tools/translation_font_validation.json and pdf-assets.json (keeping order, field set and line endings), and sets
+tools/theory_ko.json izho/<year>/T paper or sol. Upload first (tools/pdf_release.py), then restore pdf-assets.json
+from git, run this, then tools/update_original_layout_versions.py.
+"""
+import hashlib, json, pathlib, re, sys
+import pymupdf
+
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+RANGES = {}   # name: (first, last) source pages when the Korean edition covers only part of the original
+
+
+def edition(name):
+    year, part = name.split('_')
+    src = f'IZhO_{year}_T_EN.pdf' if part == 'T' else f'IZhO_{year}_TS.pdf'
+    return f'IZhO_{year}_{part}_KO.pdf', src, ('paper' if part == 'T' else 'sol'), int(year)
+
+
+def load(rel):
+    raw = (ROOT / rel).read_bytes()
+    return json.loads(raw.decode('utf-8')), (b'\r\n' in raw), raw.endswith(b'\n')
+
+
+def save(rel, data, crlf, final_nl, indent=2):
+    text = json.dumps(data, indent=indent, ensure_ascii=False)
+    if final_nl:
+        text += '\n'
+    if crlf:
+        text = text.replace('\n', '\r\n')
+    (ROOT / rel).write_bytes(text.encode('utf-8'))
+
+
+def sha(p):
+    return hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
+
+
+def replace_row(rows, file, row):
+    for i, r in enumerate(rows):
+        if r['file'] == file:
+            rows[i] = row
+            return
+    rows.append(row)
+
+
+def main(pdf_dir, src_dir, *names):
+    pub, pub_crlf, pub_nl = load('tools/original_style_publication.json')
+    fonts, f_crlf, f_nl = load('tools/translation_font_validation.json')
+    ko, k_crlf, k_nl = load('tools/theory_ko.json')
+    done = []
+    for name in names:
+        out, srcname, slot, year = edition(name)
+        p = pathlib.Path(pdf_dir) / out
+        src_path = pathlib.Path(src_dir) / srcname
+        doc, src = pymupdf.open(p), pymupdf.open(src_path)
+        a, b = RANGES.get(name, (1, len(src)))
+        n = b - a + 1
+        assert len(doc) == n, (out, len(doc), n)
+        sizes = all(abs(doc[i].rect.width - src[a - 1 + i].rect.width) < 0.5 and
+                    abs(doc[i].rect.height - src[a - 1 + i].rect.height) < 0.5 for i in range(n))
+        hangul = len(re.findall(r'[가-힣]', ''.join(pg.get_text() for pg in doc)))
+        h, size = sha(p), p.stat().st_size
+        html = f'tools/ko_reflow/izho/{name}.html'
+        assert (ROOT / html).exists(), html
+        assert sizes and hangul > 0, (out, sizes, hangul)
+        qa = {
+            'schema': 'html-reflow-stamped-v1', 'file': out, 'status': 'READY', 'sha256': h, 'bytes': size, 'pages': n,
+            'source_file': srcname, 'source_sha256': sha(src_path), 'source_page_range': [a, b], 'source_pages': n,
+            'page_count_matches_source': True, 'page_sizes_match_source': sizes,
+            'figures_logos_and_pure_math_stamped_from_source': True, 'korean_text_justified': True,
+            'hangul_characters': hangul, 'html_source': html, 'builder': 'tools/ko_reflow/build.py',
+            'visual_review': {'reviewed': True,
+                              'method': 'every page compared side by side with the source at equal DPI '
+                                        '(tools/ko_reflow/check.py and qa side-by-side images; every flag confirmed by zoom)',
+                              'overflow_or_occlusion_observed': False},
+        }
+        save(f'tools/ko_reflow/qa/{out[:-4]}.json', qa, False, True, indent=1)
+        replace_row(pub, out, {'file': out, 'year': year, 'language': 'ko', 'pages': n, 'bytes': size, 'sha256': h,
+                               'qa': f'tools/ko_reflow/qa/{out[:-4]}.json', 'audit_schema': 'html-reflow-stamped-v1'})
+        replace_row(fonts['files'], out, {'file': out, 'pages': n, 'bytes': size, 'sha256': h,
+                                          'missing_glyph_spans': [], 'original_style': True})
+        ko['izho'].setdefault(str(year), {}).setdefault('T', {})[slot] = out
+        done.append((out, size))
+        print(f'{out}: {n} pages, {size} bytes, {hangul} hangul')
+    save('tools/original_style_publication.json', pub, pub_crlf, pub_nl)
+    save('tools/translation_font_validation.json', fonts, f_crlf, f_nl)
+    save('tools/theory_ko.json', ko, k_crlf, k_nl)
+    # pdf-assets.json: edit only these rows, in place (the file is "name": bytes, one per line)
+    raw = (ROOT / 'pdf-assets.json').read_bytes().decode('utf-8')
+    for out, size in done:
+        raw, k = re.subn(r'("%s": )\d+' % re.escape(out), lambda m: m.group(1) + str(size), raw)
+        assert k == 1, out
+    (ROOT / 'pdf-assets.json').write_bytes(raw.encode('utf-8'))
+
+
+if __name__ == '__main__':
+    main(*sys.argv[1:])

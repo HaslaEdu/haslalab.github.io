@@ -38,7 +38,7 @@ import { monthlySubmissionView, assessMonthlyAuthorship } from './monthly-policy
 import { monthlyPublicPresentation } from './monthly-presentation.js';
 import { createMonthlyPhotoRouter, prepareMonthlyPhotoSubmission, monthlyPhotoAttachments, monthlyPhotoDeletion, boundedForm } from './monthly-photos.js';
 import { createHphoRouter } from './hpho.js';
-import { createHphoExamRouter, hphoRetainTick, hphoMailTick } from './hpho-exam.js';
+import { createHphoExamRouter, hphoRetainTick, hphoMailTick, hphoForgetUser } from './hpho-exam.js';
 import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMonthlyCaptureSchema, monthlyCaptureDeletion, readMonthlyCapturePage } from './monthly-capture.js';
 import { settleMonthlyRewards, monthlyRewardSummary } from './monthly-rewards.js';
 import { createMonthlyExperimentRouter, attachMonthlyExperimentEvidence, ensureMonthlyExperimentSchema, monthlyExperimentDeletion, getMonthlyExperimentReference } from './monthly-experiment.js';
@@ -141,14 +141,13 @@ function corsHeaders(req, env) {
   if (allowed.includes(origin)) h["Access-Control-Allow-Origin"] = origin;
   return h;
 }
+/* an API answer is data only: never rendered, framed, sniffed or sent on with a referrer (a fresh answer and one served
+   from the edge cache alike) */
+const apiHeaders = (cors, extra = {}) => ({ "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
+  "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'", "X-Frame-Options": "DENY", "Referrer-Policy": "no-referrer",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains", ...extra, ...cors });
 function json(data, status, cors) {
-  return new Response(JSON.stringify(data), {
-    status: status || 200,
-    /* an API answer is data only: never rendered, framed, sniffed or sent on with a referrer */
-    headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
-      "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'", "X-Frame-Options": "DENY", "Referrer-Policy": "no-referrer",
-      "Strict-Transport-Security": "max-age=31536000; includeSubDomains", ...cors },
-  });
+  return new Response(JSON.stringify(data), { status: status || 200, headers: apiHeaders(cors) });
 }
 
 /* ── rate limiting: fixed window per key ────────────────────── */
@@ -236,8 +235,10 @@ async function guardInjection(env, me, source, text) {
   if (await suspendForInjection(env, me.id, source, suspend, env[DB_SCOPE] || env.DB) || await isSuspended(env, me.id)) throw new HttpError(403, "account_suspended");
 }
 const RECENT_LOGIN_SEC = 900;
-function needRecentLogin(u, maxAgeSec = RECENT_LOGIN_SEC) {
-  needUser(u);
+/* pendingOk: also an account still waiting for its username (a social sign-up), for deleting the account only */
+function needRecentLogin(u, maxAgeSec = RECENT_LOGIN_SEC, { pendingOk = false } = {}) {
+  if (pendingOk) { if (!u) throw new HttpError(401, "login_required"); }
+  else needUser(u);
   if (!Number.isFinite(u.sessionCreatedAt) || u.sessionCreatedAt < now() - maxAgeSec) throw new HttpError(403, "recent_login_required");
   return u;
 }
@@ -450,7 +451,8 @@ async function handle(req, env, url, ctx) {
   }
   if (p === "/api/me" && m === "DELETE") {
     // Irreversible: a stolen long-lived token alone must not delete the account (the UI asks to sign in again).
-    needRecentLogin(me);
+    // A social sign-up that has not chosen its username yet can delete itself too.
+    needRecentLogin(me, RECENT_LOGIN_SEC, { pendingOk: true });
     await ensureAccountSecuritySchema(env.DB);
     await ensureUsernameClaimSchema(env.DB,env[DB_SCOPE]||env.DB);
     await ensureOmrSchema(env);
@@ -463,7 +465,10 @@ async function handle(req, env, url, ctx) {
     await labR2Drop(env, "session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)", me.id);
     // the AI conversations the member let the assistant learn from (ai-memory.js)
     await forgetMember(env.DB, me.id);
+    // HPhO entries, seats and phones, and the proctoring photos, recordings and answer pages kept in R2 (files first)
+    const hphoRows = await hphoForgetUser(env.DB, env.HPHO_SNAPS || env.LAB_PAGES, me.id);
     await env.DB.batch([
+      ...hphoRows,
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
       env.DB.prepare("DELETE FROM sessions WHERE user_id=?").bind(me.id),
@@ -894,7 +899,7 @@ const worker = {
     const ckey = shared ? new Request("https://edge.cache" + url.pathname + url.search) : null;
     const refreshCache=wantsFresh(req);
     if (shared&&!refreshCache) { const hit = await caches.default.match(ckey);
-      if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": cacheSeconds(url.pathname) === 300 ? 'public, max-age=300' : 'no-store', "X-Edge-Cache": "hit", ...cors } }); }
+      if (hit) return new Response(hit.body, { headers: apiHeaders(cors, { "Cache-Control": cacheSeconds(url.pathname) === 300 ? 'public, max-age=300' : 'no-store', "X-Edge-Cache": "hit" }) }); }
     try {
       const data = await handle(req, env, url, ctx);
       if (data instanceof Response) {
@@ -5167,6 +5172,23 @@ async function freeNick(env, raw) {
   }
   return "user" + Date.now() % 1e9;
 }
+/* login CSRF: the page that starts a sign-in keeps a random nonce (sessionStorage) and sends it here; it comes back with
+   the one-time code (#/oauth?c=...&n=...) and the page redeems only a code whose nonce it holds, so a link carrying
+   someone else's code cannot sign this browser into that account. Added to oauth_states without a migration step. */
+const OAUTH_NONCE_RE = /^[A-Za-z0-9_-]{22,128}$/;
+const oauthNonceReady = new WeakMap();
+function ensureOauthNonce(db) {
+  let pending = oauthNonceReady.get(db);
+  if (!pending) {
+    pending = (async () => {
+      const columns = (await db.prepare("PRAGMA table_info(oauth_states)").all()).results || [];
+      if (!columns.some(c => c.name === "nonce")) try { await db.prepare("ALTER TABLE oauth_states ADD COLUMN nonce TEXT").run(); }
+      catch (e) { if (!/duplicate column/i.test(String(e && e.message || e))) throw e; }
+    })().catch(e => { oauthNonceReady.delete(db); throw e; });
+    oauthNonceReady.set(db, pending);
+  }
+  return pending;
+}
 async function oauthRoute(req, env, url) {
   const [, , , prov, step] = url.pathname.split("/"), P = OAUTH[prov], keys = oauthKeys(env, prov);
   const redirectUri = oauthRedirectOrigin(env, prov, url) + `/api/oauth/${prov}/callback`;
@@ -5186,9 +5208,11 @@ async function oauthRoute(req, env, url) {
     }
     const state = b64u(crypto.getRandomValues(new Uint8Array(24)));
     const verifier = P.pkce ? b64u(crypto.getRandomValues(new Uint8Array(32))) : null;
+    const nonce = intent ? null : (OAUTH_NONCE_RE.test(url.searchParams.get("nonce") || "") ? url.searchParams.get("nonce") : null);
+    await ensureOauthNonce(env.DB);
     await env.DB.batch([
       env.DB.prepare("DELETE FROM oauth_states WHERE created_at<?").bind(now() - 600),
-      env.DB.prepare("INSERT INTO oauth_states(state,provider,verifier,return_to,link_user,created_at) VALUES(?,?,?,?,?,?)").bind(state, prov, verifier, ret, linkUser, now()),
+      env.DB.prepare("INSERT INTO oauth_states(state,provider,verifier,return_to,link_user,created_at,nonce) VALUES(?,?,?,?,?,?,?)").bind(state, prov, verifier, ret, linkUser, now(), nonce),
     ]);
     const q = new URLSearchParams({ client_id: keys.id, redirect_uri: redirectUri, response_type: "code", state });
     if (P.scope) q.set("scope", P.scope);
@@ -5197,6 +5221,7 @@ async function oauthRoute(req, env, url) {
     return new Response(null, { status: 302, headers: { Location: (env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(P.auth).pathname : P.auth) + "?" + q, "Cache-Control": "no-store" } });
   }
   /* callback */
+  await ensureOauthNonce(env.DB);
   const st = await env.DB.prepare("DELETE FROM oauth_states WHERE state=? AND provider=? RETURNING *").bind(url.searchParams.get("state") || "", prov).first();
   if (!st || st.created_at < now() - 600) return new Response("This sign-in link has expired. Please try again.", { status: 400 });
   /* from here the browser always goes back to the site with a reason, never to a bare error page on the Worker's address */
@@ -5225,8 +5250,15 @@ async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
   if (!mr.ok || !sub) { const why = oauthWhy("profile", mr.status, mj); console.error("oauth profile", prov, why); return oauthBack(env,st.return_to, "e=oauth_failed&d=" + why); }
   const name = prov === "google" ? (prof.name || prof.given_name) : prov === "discord" ? (prof.global_name || prof.username)
     : prov === "github" ? (prof.name || prof.login) : prov === "kakao" ? ((prof.kakao_account || {}).profile || prof.properties || {}).nickname : (prof.nickname || prof.name);
-  const found = await env.DB.prepare("SELECT i.user_id FROM identities i JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=? AND u.deleted=0").bind(prov, sub).first();
+  /* whatever the account's state: a suspended account answers as its password sign-in does (account_suspended) and nothing
+     is made; a link left behind by a deleted account is dropped, so the person can sign up afresh */
+  let found = await env.DB.prepare("SELECT i.user_id, u.deleted FROM identities i LEFT JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=?").bind(prov, sub).first();
+  if (found && found.deleted !== 0 && found.deleted !== SUSPENDED) {
+    await env.DB.prepare("DELETE FROM identities WHERE provider=? AND sub=? AND user_id=?").bind(prov, sub, found.user_id).run();
+    found = null;
+  }
   let userId, fresh = 0;
+  if (found && found.deleted === SUSPENDED && (!st.link_user || found.user_id === st.link_user)) return oauthBack(env, st.return_to, "e=account_suspended");
   if (st.link_user) {
     if (found && found.user_id !== st.link_user) return oauthBack(env,st.return_to, "e=oauth_in_use");
     if (!found) await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, st.link_user, now()).run();
@@ -5243,5 +5275,5 @@ async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
   if(st.return_to.startsWith('desktop:'))return desktopOAuth.finish(env,st.return_to,userId,fresh);
   const one = b64u(crypto.getRandomValues(new Uint8Array(24)));
   await env.DB.prepare("INSERT INTO oauth_codes(code_hash,user_id,fresh,created_at) VALUES(?,?,?,?)").bind(await sha256(one), userId, fresh, now()).run();
-  return backTo(st.return_to, "c=" + one + (st.link_user ? "&linked=" + prov : ""));
+  return backTo(st.return_to, "c=" + one + (st.nonce ? "&n=" + st.nonce : "") + (st.link_user ? "&linked=" + prov : ""));
 }
