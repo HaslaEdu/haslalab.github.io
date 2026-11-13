@@ -657,7 +657,11 @@ export function createAiAssistantRouter({HttpError, currentUser, needUser, limit
       catch (e) { throw e?.status === 429 ? new HttpError(429, 'daily_limit') : e; }
     }
     if (!me) {
-      try { await limit(env, `ai:g:${clientIp(req)}`, env.AI_GUEST_LIMIT == null || env.AI_GUEST_LIMIT === '' ? GUEST_PER_DAY : Math.max(0, +env.AI_GUEST_LIMIT || 0), 86400); }
+      /* AI_GUEST_LIMIT=0 (or below, or not a number) switches the assistant off for visitors: the rate limiter always lets a
+         key's first request in, so a limit of 0 must not reach it */
+      const guestMax = env.AI_GUEST_LIMIT == null || env.AI_GUEST_LIMIT === '' ? GUEST_PER_DAY : +env.AI_GUEST_LIMIT || 0;
+      if (!(guestMax > 0)) throw new HttpError(429, 'guest_limit');
+      try { await limit(env, `ai:g:${clientIp(req)}`, guestMax, 86400); }
       catch (e) { throw e?.status === 429 ? new HttpError(429, 'guest_limit') : e; }
     }
     const opts = {lang: body?.lang === 'en' ? 'en' : 'ko', style: body?.style};
