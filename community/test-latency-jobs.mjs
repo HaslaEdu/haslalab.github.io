@@ -177,3 +177,17 @@ test('when many wait, page reads go before gradings, each sitting gets a turn, a
   assert.equal(pending.length,2,'only two bench runs at once, and only once the candidates are served');
   sql.exec('DELETE FROM lab_jobs');sql.exec('PRAGMA foreign_keys=ON');pending.length=0;
 });
+
+test('an answer served from the edge cache carries the same security headers as a fresh one',async()=>{
+  cache.clear();const queued=[];
+  for(const path of ['/posts?lang=ko&case=headers','/health']){
+    const miss=await api(path,{id:null,context:{waitUntil:p=>queued.push(p)}});await Promise.all(queued);
+    const hit=await api(path,{id:null,headers:{Origin:'https://haslalab.org'}});
+    assert.equal(hit.headers.get('X-Edge-Cache'),'hit',path);assert.equal(miss.headers.get('X-Edge-Cache'),null,path);
+    for(const name of ['Content-Type','X-Content-Type-Options','Content-Security-Policy','X-Frame-Options','Referrer-Policy','Strict-Transport-Security']){
+      assert.ok(miss.headers.get(name),name+' on a miss');assert.equal(hit.headers.get(name),miss.headers.get(name),name+' on a hit: '+path);
+    }
+    assert.equal(hit.headers.get('Access-Control-Allow-Origin'),'https://haslalab.org','CORS still comes last');
+    assert.deepEqual(hit.data,miss.data);
+  }
+});

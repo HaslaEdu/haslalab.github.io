@@ -141,14 +141,13 @@ function corsHeaders(req, env) {
   if (allowed.includes(origin)) h["Access-Control-Allow-Origin"] = origin;
   return h;
 }
+/* an API answer is data only: never rendered, framed, sniffed or sent on with a referrer (a fresh answer and one served
+   from the edge cache alike) */
+const apiHeaders = (cors, extra = {}) => ({ "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
+  "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'", "X-Frame-Options": "DENY", "Referrer-Policy": "no-referrer",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains", ...extra, ...cors });
 function json(data, status, cors) {
-  return new Response(JSON.stringify(data), {
-    status: status || 200,
-    /* an API answer is data only: never rendered, framed, sniffed or sent on with a referrer */
-    headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
-      "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'", "X-Frame-Options": "DENY", "Referrer-Policy": "no-referrer",
-      "Strict-Transport-Security": "max-age=31536000; includeSubDomains", ...cors },
-  });
+  return new Response(JSON.stringify(data), { status: status || 200, headers: apiHeaders(cors) });
 }
 
 /* ── rate limiting: fixed window per key ────────────────────── */
@@ -900,7 +899,7 @@ const worker = {
     const ckey = shared ? new Request("https://edge.cache" + url.pathname + url.search) : null;
     const refreshCache=wantsFresh(req);
     if (shared&&!refreshCache) { const hit = await caches.default.match(ckey);
-      if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": cacheSeconds(url.pathname) === 300 ? 'public, max-age=300' : 'no-store', "X-Edge-Cache": "hit", ...cors } }); }
+      if (hit) return new Response(hit.body, { headers: apiHeaders(cors, { "Cache-Control": cacheSeconds(url.pathname) === 300 ? 'public, max-age=300' : 'no-store', "X-Edge-Cache": "hit" }) }); }
     try {
       const data = await handle(req, env, url, ctx);
       if (data instanceof Response) {
