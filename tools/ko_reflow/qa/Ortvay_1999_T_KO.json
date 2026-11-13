@@ -2,11 +2,11 @@
  "schema": "html-reflow-stamped-v1",
  "file": "Ortvay_1999_T_KO.pdf",
  "status": "READY",
- "sha256": "9fbc1a5e35bb452fae130943b0a4f8bf908f65dcbe7c9c3f34c1b264bc2aa397",
- "bytes": 370041,
+ "sha256": "a25ad7ba6f0cc87214c184cdd03e7e824c055ea7bfe3cd4520194a71ec8efc10",
+ "bytes": 369926,
  "pages": 8,
  "source_file": "Ortvay_1999_T_EN.pdf",
- "source_sha256": "ec34e97e76fa91d3116cd3e820a56bc423be808dd997e55976c0a4ace99bdef5",
+ "source_sha256": "b49ac5172df5d360ea6dbac81fcc151ebeb2e89bfcdd1cf1232218499fd42de9",
  "source_pages": 8,
  "page_count_matches_source": true,
  "page_sizes_match_source": true,
@@ -19,5 +19,10 @@
   "reviewed": true,
   "method": "every page compared side by side with the source at equal DPI",
   "overflow_or_occlusion_observed": false
+ },
+ "source_adjustment": {
+  "official_sha256": "ec34e97e76fa91d3116cd3e820a56bc423be808dd997e55976c0a4ace99bdef5",
+  "mediabox_raised_pt": 36,
+  "reason": "the official booklet is printed ~3.6pt high, clipping the first line of every page"
  }
 }
