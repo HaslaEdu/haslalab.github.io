@@ -1,0 +1,973 @@
+<!doctype html><html><head><meta name="page" content="595.2,841.92">
+<style>
+/* IZhO 2024 theoretical solutions (English part of the trilingual original, pages 1-14; Word, A4 595.2pt wide):
+   Times New Roman 12pt, text x 36..562.2, pitch ~13.9pt; header Arial bold 10pt with Times bold page numbers and an
+   underline rule (drawn as an exact black box). Blocks are placed by the original's first baseline --b (pt); --l = line
+   pitch, --fs = size. Inline Cambria Math is typed in KaTeX; display equations (Word equations), figures and value
+   tables are stamped with clips trimmed to the ink; equation numbers are typed. Marking-scheme grids: the original's
+   thin rule rectangles reproduced as .r boxes, Korean labels typed, formula parts of cells stamped. */
+body{font-family:'Times New Roman',KB,serif;font-size:12pt;line-height:13.8pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0;white-space:nowrap}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;left:36pt;width:526.2pt;margin:0;--l:13.8pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs))}
+.c{text-align:center;text-indent:0}
+.h{font-weight:bold}
+.ind{text-indent:35.3pt}
+.tc{white-space:nowrap;width:auto}
+.en2{white-space:nowrap;width:auto}
+.hd{position:absolute;top:36.1pt;font-family:Arial,KG,sans-serif;font-weight:bold;font-size:10pt;line-height:12pt;white-space:nowrap}
+.pn{font-family:'Times New Roman',serif}
+.f{position:absolute;line-height:0}
+.r{position:absolute;background:#000;display:block}
+.ov{position:absolute;background:#fff;white-space:nowrap;line-height:1}
+.x.ov{background:none;white-space:normal;line-height:var(--l)}   /* text printed over the stamps (their white margins must not erase it) */
+</style></head><body>
+
+<!-- 1 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">1/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<p class="x ov c h" style="--b:74.4;--fs:14pt;--l:16.1pt"><i>이론 시험 문제 풀이</i></p>
+<p class="x ov c h" style="--b:90.5;--fs:14pt;--l:16.1pt">주의. 채점에서 배점은 더 나누지 않는다!</p>
+<p class="x ov c h" style="--b:106.6;--fs:14pt;--l:16.1pt">문제 1 (10.0점)</p>
+<p class="x ov c h" style="--b:122.6;--fs:14pt;--l:16.1pt">문제 1.1 (3.0점)</p>
+<p class="x ov ind" style="--b:137.3;--l:13.92pt">쌍원뿔은 레일 위를 미끄러지지 않고 구르므로, 병진 운동의 속력 $v$와 회전 각속도 $\omega$는 굴림 반지름 $r$을 통해 다음 관계로 이어진다.</p>
+<p class="x en2" style="--b:165.4;left:532.3pt">(1)</p>
+<div class="f" style="left:107.0pt;top:159.2pt"><span class="fig" data-srcpage="1" data-clip="107.0,159.2,146.7,166.1"></span></div>
+<p class="x ov ind" style="--b:179.0">쌍원뿔의 병진 운동 에너지는 다음과 같고</p>
+<p class="x en2" style="--b:197.8;left:532.3pt">(2)</p>
+<div class="f" style="left:107.0pt;top:183.0pt"><span class="fig" data-srcpage="1" data-clip="107.0,183.0,159.0,204.3"></span></div>
+<p class="x ov" style="--b:215.0">이에 대응하는 회전 운동 에너지는 다음과 같이 쓸 수 있다.</p>
+<p class="x en2" style="--b:233.8;left:532.3pt">(3)</p>
+<div class="f" style="left:107.0pt;top:219.0pt"><span class="fig" data-srcpage="1" data-clip="107.0,219.0,154.6,240.3"></span></div>
+<p class="x ov" style="--b:250.8">여기서 쌍원뿔의 관성 모멘트는 다음과 같다.</p>
+<div class="f" style="left:106.7pt;top:255.4pt"><span class="fig" data-srcpage="1" data-clip="106.7,255.4,165.8,274.5"></span></div>
+<p class="x en2" style="--b:267.8;left:532.3pt">(4)</p>
+<p class="x ov ind" style="--b:285.1">운동하는 동안 쌍원뿔의 퍼텐셜 에너지 변화는 다음과 같고</p>
+<p class="x en2" style="--b:302.9;left:532.3pt">(5)</p>
+<div class="f" style="left:107.0pt;top:290.4pt"><span class="fig" data-srcpage="1" data-clip="107.0,290.4,215.1,309.9"></span></div>
+<p class="x ov" style="--b:320.4">에너지 보존 법칙에 따라 다음 관계가 성립해야 한다.</p>
+<div class="f" style="left:107.0pt;top:326.4pt"><span class="fig" data-srcpage="1" data-clip="107.0,326.4,193.2,339.1"></span></div>
+<p class="x en2" style="--b:334.3;left:532.3pt">(6)</p>
+<p class="x ov ind" style="--b:349.9;--l:13.68pt">기하학적 관계로부터 굴림 반지름 $r$과 좌표 $x$ 사이의 관계를 다음 꼴로 얻는다.</p>
+<p class="x en2" style="--b:381.6;left:532.3pt">(7)</p>
+<div class="f" style="left:106.7pt;top:369.1pt"><span class="fig" data-srcpage="1" data-clip="106.7,369.1,206.1,388.6"></span></div>
+<p class="x ov" style="--b:399.1">따라서 식 (1)-(7)을 모두 종합하면 다음을 얻는다.</p>
+<div class="f" style="left:107.0pt;top:408.1pt"><span class="fig" data-srcpage="1" data-clip="107.0,408.1,255.8,444.3"></span></div>
+<p class="x en2" style="--b:426.7;left:532.3pt">(8)</p>
+<p class="x ov ind" style="--b:455.8">특히 $x_0=50.0\ \mathrm{cm}$일 때 계산하면</p>
+<div class="f" style="left:107.0pt;top:460.2pt"><span class="fig" data-srcpage="1" data-clip="107.0,460.2,229.5,472.9"></span></div>
+<p class="x en2" style="--b:469.9;left:532.3pt">(9)</p>
+<p class="x ov ind" style="--b:483.6;--l:13.68pt">같은 식 (1)-(7)로부터 회전 각속도의 제곱이 굴림 반지름에 따라 어떻게 달라지는지 다음과 같이 구할 수 있으며,</p>
+<p class="x en2" style="--b:520.6;left:535.4pt">(10)</p>
+<div class="f" style="left:107.0pt;top:502.0pt"><span class="fig" data-srcpage="1" data-clip="107.0,502.0,220.5,536.0"></span></div>
+<p class="x ov" style="--b:547.0">이 값은 $r=0$에서 최댓값을 가지고, 그 값은 다음과 같다.</p>
+<div class="f" style="left:107.0pt;top:557.1pt"><span class="fig" data-srcpage="1" data-clip="107.0,557.1,241.0,579.8"></span></div>
+<p class="x en2" style="--b:569.5;left:532.3pt">(11)</p>
+<p class="x ov" style="--b:589.9;--l:13.68pt">흥미롭게도 이 위치에서 쌍원뿔은 실제로 제자리에서 회전한다. 즉, 식 (1)에 따라 병진 운동의 속력이 실제로 0이 된다.</p>
+<!-- table p1 620.2-777.8 -->
+<i class="r" style="left:41.76pt;top:621.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:621.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:621.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:621.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:621.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:636.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:636.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:636.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:636.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:636.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:650.64pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:40.80pt;top:650.64pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:461.76pt;top:650.64pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:553.92pt;top:650.64pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:552.96pt;top:650.64pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:41.76pt;top:673.20pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:40.80pt;top:673.20pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:461.76pt;top:673.20pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:553.92pt;top:673.20pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:552.96pt;top:673.20pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:41.76pt;top:696.00pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:40.80pt;top:696.00pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:461.76pt;top:696.00pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:553.92pt;top:696.00pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:552.96pt;top:696.00pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:41.76pt;top:716.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:40.80pt;top:716.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:461.76pt;top:716.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:553.92pt;top:716.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:552.96pt;top:716.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:41.76pt;top:738.72pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:40.80pt;top:738.72pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:461.76pt;top:738.72pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:553.92pt;top:738.72pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:552.96pt;top:738.72pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:41.76pt;top:754.80pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:40.80pt;top:754.80pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:461.76pt;top:754.80pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:553.92pt;top:754.80pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:552.96pt;top:754.80pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.24pt;top:620.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:621.12pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:620.16pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:621.12pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:635.52pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:635.52pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:650.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:650.16pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:672.72pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:672.72pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:695.52pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:695.52pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:716.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:716.16pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:738.24pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:738.24pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:754.32pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:754.32pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:777.36pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:776.40pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:777.36pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:776.40pt;width:89.76pt;height:0.48pt"></i>
+<p class="x c h" style="--b:632.9;left:201.1pt;width:101.4pt">내용</p>
+<p class="x c h" style="--b:632.9;left:462.0pt;width:92.3pt">점수</p>
+<p class="x tc" style="--b:647.3;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:647.5;left:47.0pt">식 (1):</p>
+<div class="f" style="left:111.4pt;top:641.8pt"><span class="fig" data-srcpage="1" data-clip="111.4,641.8,148.2,648.7"></span></div>
+<p class="x tc" style="--b:665.8;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:666.7;left:47.0pt">식 (2):</p>
+<div class="f" style="left:111.4pt;top:652.3pt"><span class="fig" data-srcpage="1" data-clip="111.4,652.3,160.8,672.4"></span></div>
+<p class="x tc" style="--b:688.6;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:689.3;left:47.0pt">식 (3):</p>
+<div class="f" style="left:111.4pt;top:674.8pt"><span class="fig" data-srcpage="1" data-clip="111.4,674.8,156.4,695.2"></span></div>
+<p class="x tc" style="--b:709.9;left:47.0pt">식 (4):</p>
+<div class="f" style="left:111.0pt;top:697.5pt"><span class="fig" data-srcpage="1" data-clip="111.0,697.5,166.2,715.9"></span></div>
+<p class="x tc" style="--b:710.2;left:500.4pt">0.5</p>
+<p class="x tc" style="--b:731.5;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:731.8;left:47.0pt">식 (5):</p>
+<div class="f" style="left:111.4pt;top:719.3pt"><span class="fig" data-srcpage="1" data-clip="111.4,719.3,215.8,737.9"></span></div>
+<p class="x tc" style="--b:750.0;left:47.0pt">식 (6):</p>
+<div class="f" style="left:111.7pt;top:742.5pt"><span class="fig" data-srcpage="1" data-clip="111.7,742.5,193.9,754.0"></span></div>
+<p class="x tc" style="--b:750.7;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:769.7;left:500.4pt">0.5</p>
+<p class="x tc" style="--b:769.9;left:47.0pt">식 (7):</p>
+<div class="f" style="left:111.0pt;top:757.5pt"><span class="fig" data-srcpage="1" data-clip="111.0,757.5,207.2,776.1"></span></div>
+</div>
+
+<!-- 2 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">2/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<!-- table p2 61.4-216.0 -->
+<i class="r" style="left:41.76pt;top:62.88pt;width:0.48pt;height:42.48pt"></i><i class="r" style="left:40.80pt;top:62.88pt;width:0.48pt;height:42.48pt"></i><i class="r" style="left:461.76pt;top:62.88pt;width:0.48pt;height:42.48pt"></i><i class="r" style="left:553.92pt;top:62.88pt;width:0.48pt;height:42.48pt"></i><i class="r" style="left:552.96pt;top:62.88pt;width:0.48pt;height:42.48pt"></i><i class="r" style="left:41.76pt;top:105.84pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:105.84pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:105.84pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:105.84pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:105.84pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:120.48pt;width:0.48pt;height:35.28pt"></i><i class="r" style="left:40.80pt;top:120.48pt;width:0.48pt;height:35.28pt"></i><i class="r" style="left:461.76pt;top:120.48pt;width:0.48pt;height:35.28pt"></i><i class="r" style="left:553.92pt;top:120.48pt;width:0.48pt;height:35.28pt"></i><i class="r" style="left:552.96pt;top:120.48pt;width:0.48pt;height:35.28pt"></i><i class="r" style="left:41.76pt;top:156.24pt;width:0.48pt;height:29.52pt"></i><i class="r" style="left:40.80pt;top:156.24pt;width:0.48pt;height:29.52pt"></i><i class="r" style="left:461.76pt;top:156.24pt;width:0.48pt;height:29.52pt"></i><i class="r" style="left:553.92pt;top:156.24pt;width:0.48pt;height:29.52pt"></i><i class="r" style="left:552.96pt;top:156.24pt;width:0.48pt;height:29.52pt"></i><i class="r" style="left:41.76pt;top:186.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:186.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:186.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:186.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:186.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:200.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:200.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:200.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:200.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:200.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.24pt;top:61.44pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:62.40pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:61.44pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:62.40pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:105.36pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:105.36pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:120.00pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:120.00pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:155.76pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:155.76pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:185.76pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:185.76pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:200.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:200.16pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:215.52pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:214.56pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:215.52pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:214.56pt;width:89.76pt;height:0.48pt"></i>
+<p class="x tc" style="--b:87.8;left:47.0pt">식 (8):</p>
+<div class="f" style="left:111.4pt;top:65.4pt"><span class="fig" data-srcpage="2" data-clip="111.4,65.4,254.7,105.1"></span></div>
+<p class="x tc" style="--b:88.3;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:117.1;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:117.4;left:47.0pt">식 (9):</p>
+<div class="f" style="left:111.4pt;top:108.7pt"><span class="fig" data-srcpage="2" data-clip="111.4,108.7,185.2,119.7"></span></div>
+<p class="x tc" style="--b:140.9;left:47.0pt">식 (10):</p>
+<div class="f" style="left:117.4pt;top:122.4pt"><span class="fig" data-srcpage="2" data-clip="117.4,122.4,228.3,155.5"></span></div>
+<p class="x tc" style="--b:142.3;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:175.2;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:176.2;left:47.0pt">식 (11):</p>
+<div class="f" style="left:117.4pt;top:158.4pt"><span class="fig" data-srcpage="2" data-clip="117.4,158.4,185.1,185.5"></span></div>
+<p class="x tc" style="--b:197.3;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:197.5;left:47.0pt">식 (11)의 수치:</p>
+<div class="f" style="left:209.5pt;top:189.2pt"><span class="fig" data-srcpage="2" data-clip="209.5,189.2,300.7,199.9"></span></div>
+<p class="x h" style="--b:211.7;--l:13.80pt;left:47.0pt;width:413.0pt">합계</p>
+<p class="x tc h" style="--b:211.7;left:500.4pt">3.0</p>
+<p class="x ov c h" style="--b:242.9;--fs:14pt;--l:16.1pt">문제 1.2 (4.0점)</p>
+<p class="x ov ind" style="--b:257.0;--l:13.68pt">1) 온도가 같아지는 과정에서 계 전체의 내부 에너지는 변하지 않는다. 계는 외부에 일을 하지 않고, 계에 열이 공급되지도 않기 때문이다. 즉,</p>
+<p class="x en2" style="--b:284.9;left:532.3pt">(1)</p>
+<div class="f" style="left:107.4pt;top:276.6pt"><span class="fig" data-srcpage="2" data-clip="107.4,276.6,146.7,287.8"></span></div>
+<p class="x ov ind" style="--b:298.6">이로부터 칸막이가 움직일 때, 이 준정적 과정에서 서로 같은 용기 각 부분의 기체 압력은 변하지 않음을 알 수 있다. 실제로 계의 처음 내부 에너지는 다음과 같고</p>
+<p class="x en2" style="--b:343.2;left:532.3pt">(2)</p>
+<div class="f" style="left:107.4pt;top:330.7pt"><span class="fig" data-srcpage="2" data-clip="107.4,330.7,180.6,349.9"></span></div>
+<p class="x ov" style="--b:360.2">여기서</p>
+<div class="f" style="left:107.0pt;top:365.1pt"><span class="fig" data-srcpage="2" data-clip="107.0,365.1,152.8,383.8"></span></div>
+<p class="x en2" style="--b:377.5;left:532.3pt">(3)</p>
+<p class="x ov ind" style="--b:394.6">임의의 시각에 내부 에너지는 다음과 같다.</p>
+<p class="x en2" style="--b:411.6;left:532.3pt">(4)</p>
+<div class="f" style="left:107.4pt;top:399.1pt"><span class="fig" data-srcpage="2" data-clip="107.4,399.1,182.4,418.3"></span></div>
+<p class="x ov" style="--b:428.9">여기서 $P$는 용기 두 부분의 기체 압력이며, 식 (1)-(4)로부터 다음을 얻는다.</p>
+<div class="f" style="left:106.7pt;top:435.1pt"><span class="fig" data-srcpage="2" data-clip="106.7,435.1,144.9,446.0"></span></div>
+<p class="x en2" style="--b:443.0;left:532.3pt">(5)</p>
+<p class="x ov" style="--b:456.7">즉, 기체에서 일어나는 과정은 등압 과정이다.</p>
+<p class="x ov ind" style="--b:470.6;--l:13.68pt">처음 시각에 용기 각 부분에 대한 이상 기체의 상태 방정식을 다음과 같이 쓰자.</p>
+<p class="x en2" style="--b:498.5;left:532.3pt">(6)</p>
+<div class="f" style="left:106.7pt;top:490.5pt"><span class="fig" data-srcpage="2" data-clip="106.7,490.5,178.4,505.4"></span></div>
+<div class="f" style="left:106.7pt;top:504.3pt"><span class="fig" data-srcpage="2" data-clip="106.7,504.3,178.8,515.6"></span></div>
+<p class="x en2" style="--b:512.6;left:532.3pt">(7)</p>
+<p class="x ov" style="--b:526.6">여기서 $\nu_1$과 $\nu_2$는 각각 용기 각 절반에 들어 있는 질소의 몰수이다.</p>
+<p class="x ov ind" style="--b:540.7">나중 상태에서 기체는 어떤 온도 $T_0$에 있고, 그 상태 방정식은 다음 꼴이다.</p>
+<p class="x en2" style="--b:554.9;left:532.3pt">(8)</p>
+<div class="f" style="left:106.7pt;top:546.2pt"><span class="fig" data-srcpage="2" data-clip="106.7,546.2,180.2,557.8"></span></div>
+<p class="x ov" style="--b:568.6">여기서 용기 안 질소의 전체 몰수는 다음과 같다.</p>
+<div class="f" style="left:106.7pt;top:575.5pt"><span class="fig" data-srcpage="2" data-clip="106.7,575.5,168.3,585.7"></span></div>
+<p class="x en2" style="--b:582.7;left:532.3pt">(9)</p>
+<p class="x ov ind" style="--b:596.4">식 (6)-(9)로부터 용기 안 기체의 나중 온도를 구하면</p>
+<p class="x en2" style="--b:613.2;left:532.3pt">(10)</p>
+<div class="f" style="left:107.0pt;top:600.7pt"><span class="fig" data-srcpage="2" data-clip="107.0,600.7,159.7,621.7"></span></div>
+<p class="x ov ind" style="--b:632.4;--l:13.68pt">과정이 등압 과정이므로, 용기의 두 부분 사이에서 교환되는 열량 $Q$는 다음과 같다.</p>
+<div class="f" style="left:107.0pt;top:650.7pt"><span class="fig" data-srcpage="2" data-clip="107.0,650.7,290.4,671.2"></span></div>
+<p class="x en2" style="--b:663.1;left:532.3pt">(11)</p>
+<p class="x tc" style="--b:663.1;left:293.8pt">$70.0\ \mathrm{J}$,</p>
+<p class="x ov" style="--b:681.8">여기서</p>
+<p class="x en2" style="--b:696.0;left:532.3pt">(12)</p>
+<div class="f" style="left:107.0pt;top:687.3pt"><span class="fig" data-srcpage="2" data-clip="107.0,687.3,172.6,700.7"></span></div>
+<p class="x ov ind" style="--b:711.1">2) 칸막이를 처음 위치로 되돌릴 때 외력이 하는 일이 최소가 되려면, 용기의 두 부분 사이의 열평형을 깨뜨리지 않고 천천히 준평형적으로 움직여야 한다. 이때</p>
+<p class="x en2" style="--b:752.9;left:532.3pt">(13)</p>
+<div class="f" style="left:107.0pt;top:743.9pt"><span class="fig" data-srcpage="2" data-clip="107.0,743.9,170.8,756.2"></span></div>
+<p class="x ov" style="--b:766.6;--l:13.92pt">즉, 앞의 경우와 달리 용기의 두 부분에서 압력은 같지 않지만 온도는 같으며, 다만 그 온도는 변한다.</p>
+<p class="x ov ind" style="--b:794.2">용기 각 부분의 처음 부피는 게이뤼삭 법칙으로 정해지며, 다음과 같다.</p>
+</div>
+
+<!-- 3 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">3/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<p class="x en2" style="--b:75.6;left:532.3pt">(14)</p>
+<div class="f" style="left:107.0pt;top:63.1pt"><span class="fig" data-srcpage="3" data-clip="107.0,63.1,159.0,87.2"></span></div>
+<div class="f" style="left:107.0pt;top:85.0pt"><span class="fig" data-srcpage="3" data-clip="107.0,85.0,159.0,105.5"></span></div>
+<p class="x en2" style="--b:97.4;left:532.3pt">(15)</p>
+<p class="x ov ind" style="--b:116.6;--l:13.92pt">용기 각 부분의 압력을 $P_1$과 $P_2$, 이에 대응하는 부피를 $V_1$과 $V_2$라고 하자. 상태 방정식에 따라 임의의 시각에 다음 관계가 성립해야 한다.</p>
+<div class="f" style="left:106.7pt;top:150.7pt"><span class="fig" data-srcpage="3" data-clip="106.7,150.7,173.7,165.5"></span></div>
+<p class="x en2" style="--b:158.6;left:532.3pt">(16)</p>
+<p class="x en2" style="--b:172.6;left:532.3pt">(17)</p>
+<div class="f" style="left:106.7pt;top:164.3pt"><span class="fig" data-srcpage="3" data-clip="106.7,164.3,174.4,175.5"></span></div>
+<p class="x ov ind" style="--b:186.2">이 과정에서 계 안 기체의 내부 에너지 변화는 다음과 같고</p>
+<div class="f" style="left:107.0pt;top:191.6pt"><span class="fig" data-srcpage="3" data-clip="107.0,191.6,174.1,203.6"></span></div>
+<p class="x en2" style="--b:200.6;left:532.3pt">(18)</p>
+<p class="x ov" style="--b:214.6;--l:13.68pt">기체가 외부 물체에 일 $\delta A$를 한다면, 열역학 제1법칙에 따라, 용기 전체가 단열된 조건에서 공급되는 열량은 0이 된다.</p>
+<p class="x en2" style="--b:242.4;left:532.3pt">(19)</p>
+<div class="f" style="left:107.0pt;top:233.4pt"><span class="fig" data-srcpage="3" data-clip="107.0,233.4,206.5,245.0"></span></div>
+<p class="x ov ind" style="--b:256.1;--l:13.92pt">준정적 과정에서 기체 전체가 하는 일은 용기 각 부분의 기체가 하는 일의 합이다.</p>
+<p class="x en2" style="--b:284.2;left:532.3pt">(20)</p>
+<div class="f" style="left:107.0pt;top:275.1pt"><span class="fig" data-srcpage="3" data-clip="107.0,275.1,213.7,287.1"></span></div>
+<p class="x ov ind" style="--b:297.8">식 (18)-(20)을 함께 쓰고 식 (3), (6), (7), (9), (10), (14), (15)-(17)을 이용하면 다음을 얻으며,</p>
+<p class="x en2" style="--b:314.9;left:532.3pt">(21)</p>
+<div class="f" style="left:106.3pt;top:302.4pt"><span class="fig" data-srcpage="3" data-clip="106.3,302.4,261.2,323.0"></span></div>
+<p class="x ov" style="--b:333.8">이를 적분하면 나중 온도를 얻는다.</p>
+<p class="x en2" style="--b:358.6;left:532.3pt">(22)</p>
+<div class="f" style="left:107.0pt;top:338.0pt"><span class="fig" data-srcpage="3" data-clip="107.0,338.0,267.3,366.9"></span></div>
+<p class="x ov ind" style="--b:377.5;--l:13.68pt">칸막이를 움직이기 위해 외력이 칸막이에 하는 일은 기체 자신이 하는 일과 부호가 반대이므로, 식 (16)과 (17)로부터 일을 다음과 같이 쉽게 구할 수 있다.</p>
+<p class="x en2" style="--b:409.0;left:496.8pt">(23)</p>
+<div class="f" style="left:106.3pt;top:395.5pt"><span class="fig" data-srcpage="3" data-clip="106.3,395.5,382.9,417.2"></span></div>
+<p class="x ov ind" style="--b:427.9;--l:13.68pt">2) 다른 풀이. 칸막이를 처음 위치로 되돌리는 과정은 단열 과정이다. 즉, 엔트로피의 변화 없이 일어난다.</p>
+<p class="x en2" style="--b:456.0;left:532.3pt">(24)</p>
+<div class="f" style="left:106.7pt;top:447.7pt"><span class="fig" data-srcpage="3" data-clip="106.7,447.7,161.1,457.1"></span></div>
+<p class="x ov ind" style="--b:469.7">용기 두 부분의 이상 기체의 전체 엔트로피 변화는 다음과 같다.</p>
+<p class="x en2" style="--b:487.2;left:532.3pt">(25)</p>
+<div class="f" style="left:106.7pt;top:473.8pt"><span class="fig" data-srcpage="3" data-clip="106.7,473.8,391.9,495.4"></span></div>
+<p class="x ov" style="--b:506.2">이로부터 식 (6), (7), (10), (14), (15)를 이용하여 계의 나중 온도를 얻는다.</p>
+<div class="f" style="left:107.0pt;top:510.6pt"><span class="fig" data-srcpage="3" data-clip="107.0,510.6,267.3,539.4"></span></div>
+<p class="x en2" style="--b:531.1;left:532.3pt">(26)</p>
+<p class="x ov ind" style="--b:549.8">외력이 한 일은 기체의 내부 에너지를 바꾸는 데 쓰인다.</p>
+<p class="x en2" style="--b:567.6;left:532.3pt">(27)</p>
+<div class="f" style="left:106.3pt;top:554.2pt"><span class="fig" data-srcpage="3" data-clip="106.3,554.2,390.8,575.8"></span></div>
+<!-- table p3 589.2-800.9 -->
+<i class="r" style="left:41.76pt;top:590.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:590.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:590.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:590.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:590.64pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:605.04pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:605.04pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:605.04pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:605.04pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:605.04pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:619.68pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:40.80pt;top:619.68pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:461.76pt;top:619.68pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:553.92pt;top:619.68pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:552.96pt;top:619.68pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:41.76pt;top:640.32pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:40.80pt;top:640.32pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:461.76pt;top:640.32pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:553.92pt;top:640.32pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:552.96pt;top:640.32pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:41.76pt;top:661.44pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:40.80pt;top:661.44pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:461.76pt;top:661.44pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:553.92pt;top:661.44pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:552.96pt;top:661.44pt;width:0.48pt;height:20.16pt"></i><i class="r" style="left:41.76pt;top:682.08pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:682.08pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:682.08pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:682.08pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:682.08pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:696.72pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:696.72pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:696.72pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:696.72pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:696.72pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:711.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:711.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:711.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:711.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:711.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:725.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:725.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:725.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:725.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:725.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:740.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:740.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:740.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:740.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:740.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:755.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:40.80pt;top:755.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:461.76pt;top:755.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:553.92pt;top:755.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:552.96pt;top:755.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:41.76pt;top:777.36pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:40.80pt;top:777.36pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:461.76pt;top:777.36pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:553.92pt;top:777.36pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:552.96pt;top:777.36pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:42.24pt;top:589.20pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:590.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:589.20pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:590.16pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:604.56pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:604.56pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:619.20pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:619.20pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:639.84pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:639.84pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:660.96pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:660.96pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:681.60pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:681.60pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:696.24pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:696.24pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:710.88pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:710.88pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:725.28pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:725.28pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:739.92pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:739.92pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:754.56pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:754.56pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:776.88pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:776.88pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:800.40pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:799.44pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:800.40pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:799.44pt;width:89.76pt;height:0.48pt"></i>
+<p class="x c h" style="--b:601.9;left:201.1pt;width:101.4pt">내용</p>
+<p class="x c h" style="--b:601.9;left:462.0pt;width:92.3pt">점수</p>
+<p class="x tc" style="--b:616.1;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:616.6;left:47.0pt">식 (1):</p>
+<div class="f" style="left:111.7pt;top:609.1pt"><span class="fig" data-srcpage="3" data-clip="111.7,609.1,147.4,618.9"></span></div>
+<p class="x tc" style="--b:630.7;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:633.8;left:47.0pt">식 (2):</p>
+<div class="f" style="left:111.7pt;top:621.4pt"><span class="fig" data-srcpage="3" data-clip="111.7,621.4,180.9,639.5"></span></div>
+<p class="x tc" style="--b:651.6;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:655.0;left:47.0pt">식 (3):</p>
+<div class="f" style="left:111.4pt;top:642.5pt"><span class="fig" data-srcpage="3" data-clip="111.4,642.5,153.9,660.7"></span></div>
+<p class="x tc" style="--b:672.5;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:675.6;left:47.0pt">식 (4):</p>
+<div class="f" style="left:111.7pt;top:663.1pt"><span class="fig" data-srcpage="3" data-clip="111.7,663.1,183.1,681.3"></span></div>
+<p class="x tc" style="--b:693.1;left:500.4pt">0.4</p>
+<p class="x tc" style="--b:693.6;left:47.0pt">식 (5):</p>
+<div class="f" style="left:111.0pt;top:686.1pt"><span class="fig" data-srcpage="3" data-clip="111.0,686.1,145.6,695.9"></span></div>
+<p class="x tc" style="--b:707.8;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:708.2;left:47.0pt">식 (6):</p>
+<div class="f" style="left:111.0pt;top:700.7pt"><span class="fig" data-srcpage="3" data-clip="111.0,700.7,179.1,710.6"></span></div>
+<p class="x tc" style="--b:722.4;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:722.6;left:47.0pt">식 (7):</p>
+<div class="f" style="left:111.0pt;top:715.1pt"><span class="fig" data-srcpage="3" data-clip="111.0,715.1,179.8,725.0"></span></div>
+<p class="x tc" style="--b:736.8;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:737.3;left:47.0pt">식 (8):</p>
+<div class="f" style="left:111.0pt;top:729.8pt"><span class="fig" data-srcpage="3" data-clip="111.0,729.8,181.3,739.6"></span></div>
+<p class="x tc" style="--b:751.4;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:751.9;left:47.0pt">식 (9):</p>
+<div class="f" style="left:111.0pt;top:744.7pt"><span class="fig" data-srcpage="3" data-clip="111.0,744.7,169.0,754.3"></span></div>
+<p class="x tc" style="--b:766.1;left:500.4pt">0.4</p>
+<p class="x tc" style="--b:769.2;left:47.0pt">식 (10):</p>
+<div class="f" style="left:117.4pt;top:756.7pt"><span class="fig" data-srcpage="3" data-clip="117.4,756.7,167.8,776.6"></span></div>
+<p class="x tc" style="--b:788.4;left:500.4pt">0.4</p>
+<p class="x tc" style="--b:791.5;left:47.0pt">식 (11):</p>
+<div class="f" style="left:117.4pt;top:779.1pt"><span class="fig" data-srcpage="3" data-clip="117.4,779.1,203.1,799.1"></span></div>
+</div>
+
+<!-- 4 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">4/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<!-- table p4 61.4-511.9 -->
+<i class="r" style="left:41.76pt;top:62.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:62.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:62.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:62.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:62.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:77.28pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:40.80pt;top:77.28pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:461.76pt;top:77.28pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:553.92pt;top:77.28pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:552.96pt;top:77.28pt;width:0.48pt;height:15.60pt"></i><i class="r" style="left:41.76pt;top:93.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:93.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:93.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:93.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:93.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:108.00pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:40.80pt;top:108.00pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:461.76pt;top:108.00pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:553.92pt;top:108.00pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:552.96pt;top:108.00pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:41.76pt;top:130.32pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:40.80pt;top:130.32pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:461.76pt;top:130.32pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:553.92pt;top:130.32pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:552.96pt;top:130.32pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:41.76pt;top:152.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:152.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:152.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:152.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:152.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:167.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:167.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:167.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:167.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:167.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:181.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:181.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:181.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:181.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:181.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:196.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:196.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:196.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:196.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:196.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:210.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:210.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:210.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:210.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:210.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:225.60pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:40.80pt;top:225.60pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:461.76pt;top:225.60pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:553.92pt;top:225.60pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:552.96pt;top:225.60pt;width:0.48pt;height:22.32pt"></i><i class="r" style="left:41.76pt;top:248.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:40.80pt;top:248.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:461.76pt;top:248.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:553.92pt;top:248.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:552.96pt;top:248.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:41.76pt;top:278.64pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:40.80pt;top:278.64pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:461.76pt;top:278.64pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:553.92pt;top:278.64pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:552.96pt;top:278.64pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:41.76pt;top:302.16pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:302.16pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:302.16pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:302.16pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:302.16pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:316.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:316.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:316.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:316.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:316.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:330.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:330.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:330.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:330.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:330.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:345.60pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:40.80pt;top:345.60pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:461.76pt;top:345.60pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:553.92pt;top:345.60pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:552.96pt;top:345.60pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:41.76pt;top:367.92pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:40.80pt;top:367.92pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:461.76pt;top:367.92pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:553.92pt;top:367.92pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:552.96pt;top:367.92pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:41.76pt;top:390.48pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:390.48pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:390.48pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:390.48pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:390.48pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:404.88pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:40.80pt;top:404.88pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:461.76pt;top:404.88pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:553.92pt;top:404.88pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:552.96pt;top:404.88pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:41.76pt;top:428.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:40.80pt;top:428.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:461.76pt;top:428.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:553.92pt;top:428.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:552.96pt;top:428.40pt;width:0.48pt;height:29.76pt"></i><i class="r" style="left:41.76pt;top:458.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:40.80pt;top:458.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:461.76pt;top:458.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:553.92pt;top:458.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:552.96pt;top:458.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:41.76pt;top:481.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:481.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:481.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:481.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:481.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:496.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:496.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:496.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:496.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:496.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.24pt;top:61.44pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:62.40pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:61.44pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:62.40pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:76.80pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:76.80pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:92.88pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:92.88pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:107.52pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:107.52pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:129.84pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:129.84pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:152.40pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:152.40pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:166.80pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:166.80pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:181.44pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:181.44pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:196.08pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:196.08pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:210.48pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:210.48pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:225.12pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:225.12pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:247.92pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:247.92pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:278.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:278.16pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:301.68pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:301.68pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:316.08pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:316.08pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:330.48pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:330.48pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:345.12pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:345.12pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:367.44pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:367.44pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:390.00pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:390.00pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:404.40pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:404.40pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:427.92pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:427.92pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:458.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:458.16pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:481.44pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:481.44pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:496.08pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:496.08pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:511.44pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:510.48pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:511.44pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:510.48pt;width:89.76pt;height:0.48pt"></i>
+<p class="x tc" style="--b:73.9;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:74.2;left:47.0pt">식 (11)의 수치:</p>
+<div class="f" style="left:209.5pt;top:65.5pt"><span class="fig" data-srcpage="4" data-clip="209.5,65.5,264.0,76.5"></span></div>
+<p class="x tc" style="--b:88.6;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:88.8;left:47.0pt">식 (12):</p>
+<div class="f" style="left:117.4pt;top:81.3pt"><span class="fig" data-srcpage="4" data-clip="117.4,81.3,179.7,92.6"></span></div>
+<p class="x tc" style="--b:104.4;left:500.4pt">0.4</p>
+<p class="x tc" style="--b:104.9;left:47.0pt">식 (13):</p>
+<div class="f" style="left:117.4pt;top:97.4pt"><span class="fig" data-srcpage="4" data-clip="117.4,97.4,177.6,107.2"></span></div>
+<p class="x tc" style="--b:119.0;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:122.2;left:47.0pt">식 (14):</p>
+<div class="f" style="left:117.4pt;top:109.7pt"><span class="fig" data-srcpage="4" data-clip="117.4,109.7,166.8,129.5"></span></div>
+<p class="x tc" style="--b:141.4;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:144.5;left:47.0pt">식 (15):</p>
+<div class="f" style="left:117.4pt;top:132.0pt"><span class="fig" data-srcpage="4" data-clip="117.4,132.0,166.8,152.1"></span></div>
+<p class="x tc" style="--b:163.9;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:164.2;left:47.0pt">식 (16):</p>
+<div class="f" style="left:117.0pt;top:156.7pt"><span class="fig" data-srcpage="4" data-clip="117.0,156.7,181.2,166.5"></span></div>
+<p class="x tc" style="--b:178.3;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:178.8;left:47.0pt">식 (17):</p>
+<div class="f" style="left:117.0pt;top:171.3pt"><span class="fig" data-srcpage="4" data-clip="117.0,171.3,174.3,181.1"></span></div>
+<p class="x tc" style="--b:193.0;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:193.4;left:47.0pt">식 (18):</p>
+<div class="f" style="left:117.4pt;top:185.9pt"><span class="fig" data-srcpage="4" data-clip="117.4,185.9,181.5,195.8"></span></div>
+<p class="x tc" style="--b:207.6;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:207.8;left:47.0pt">식 (19):</p>
+<div class="f" style="left:117.4pt;top:200.3pt"><span class="fig" data-srcpage="4" data-clip="117.4,200.3,213.6,210.2"></span></div>
+<p class="x tc" style="--b:222.2;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:222.5;left:47.0pt">식 (20):</p>
+<div class="f" style="left:117.4pt;top:215.0pt"><span class="fig" data-srcpage="4" data-clip="117.4,215.0,220.0,224.8"></span></div>
+<p class="x tc" style="--b:236.6;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:240.0;left:47.0pt">식 (21):</p>
+<div class="f" style="left:116.6pt;top:227.5pt"><span class="fig" data-srcpage="4" data-clip="116.6,227.5,268.3,247.6"></span></div>
+<p class="x tc" style="--b:259.4;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:270.5;left:47.0pt">식 (22):</p>
+<div class="f" style="left:117.4pt;top:250.0pt"><span class="fig" data-srcpage="4" data-clip="117.4,250.0,227.6,277.9"></span></div>
+<p class="x tc" style="--b:289.7;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:293.5;left:47.0pt">식 (23):</p>
+<div class="f" style="left:116.6pt;top:280.1pt"><span class="fig" data-srcpage="4" data-clip="116.6,280.1,282.3,301.4"></span></div>
+<p class="x tc" style="--b:313.2;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:313.4;left:47.0pt">식 (23)의 수치:</p>
+<div class="f" style="left:208.8pt;top:304.8pt"><span class="fig" data-srcpage="4" data-clip="208.8,304.8,266.5,314.6"></span></div>
+<p class="x" style="--b:327.6;--l:13.80pt;left:47.0pt;width:413.0pt">2)의 다른 풀이</p>
+<p class="x tc" style="--b:342.0;left:500.4pt">0.4</p>
+<p class="x tc" style="--b:342.5;left:47.0pt">식 (13):</p>
+<div class="f" style="left:117.4pt;top:335.0pt"><span class="fig" data-srcpage="4" data-clip="117.4,335.0,177.6,344.8"></span></div>
+<p class="x tc" style="--b:356.6;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:359.8;left:47.0pt">식 (14):</p>
+<div class="f" style="left:117.4pt;top:347.3pt"><span class="fig" data-srcpage="4" data-clip="117.4,347.3,166.8,367.1"></span></div>
+<p class="x tc" style="--b:379.0;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:382.1;left:47.0pt">식 (15):</p>
+<div class="f" style="left:117.4pt;top:369.6pt"><span class="fig" data-srcpage="4" data-clip="117.4,369.6,166.8,389.7"></span></div>
+<p class="x tc" style="--b:401.5;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:401.8;left:47.0pt">식 (24):</p>
+<div class="f" style="left:117.0pt;top:393.1pt"><span class="fig" data-srcpage="4" data-clip="117.0,393.1,171.4,402.5"></span></div>
+<p class="x tc" style="--b:415.9;left:500.4pt">0.4</p>
+<p class="x tc" style="--b:419.8;left:47.0pt">식 (25):</p>
+<div class="f" style="left:117.0pt;top:406.3pt"><span class="fig" data-srcpage="4" data-clip="117.0,406.3,399.0,427.6"></span></div>
+<p class="x tc" style="--b:439.4;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:450.5;left:47.0pt">식 (26):</p>
+<div class="f" style="left:117.4pt;top:430.0pt"><span class="fig" data-srcpage="4" data-clip="117.4,430.0,227.6,457.9"></span></div>
+<p class="x tc" style="--b:469.7;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:473.5;left:47.0pt">식 (27):</p>
+<div class="f" style="left:116.6pt;top:460.1pt"><span class="fig" data-srcpage="4" data-clip="116.6,460.1,282.3,481.1"></span></div>
+<p class="x tc" style="--b:493.0;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:493.4;left:47.0pt">식 (27)의 수치:</p>
+<div class="f" style="left:208.8pt;top:484.8pt"><span class="fig" data-srcpage="4" data-clip="208.8,484.8,266.5,494.6"></span></div>
+<p class="x h" style="--b:507.6;--l:13.80pt;left:47.0pt;width:413.0pt">합계</p>
+<p class="x tc h" style="--b:507.6;left:500.4pt">4.0</p>
+<p class="x ov c h" style="--b:538.6;--fs:14pt;--l:16.1pt">문제 1.3 (3.0점)</p>
+<p class="x ov ind" style="--b:552.7;--l:14.04pt">배터리의 일률은 짐을 들어 올리는 역학적 일과, 배터리의 내부 저항 $r$과 전동기 권선의 저항 $R$에서 생기는 열손실의 일률에 쓰인다. 질량 $m_1=m$인 짐을 일정한 속력으로 들어 올리는 데 필요한 돌림힘이 $M$이고, 축이 각속도 $\omega_1=\varphi/t_1$로 회전한다면(여기서 $\varphi$는 짐을 높이 $h$까지 들어 올릴 때 축이 회전하는 각도이다), 에너지 보존 법칙에 따라 다음이 성립한다.</p>
+<div class="f" style="left:107.4pt;top:613.3pt"><span class="fig" data-srcpage="4" data-clip="107.4,613.3,225.9,626.3"></span></div>
+<p class="x en2" style="--b:623.0;left:532.3pt">(1)</p>
+<p class="x ov" style="--b:637.2;--l:14.16pt">여기서 $U$는 배터리의 기전력이고, $I$는 질량 $m$인 짐을 들어 올리는 데 필요한 돌림힘을 만드는 전류의 세기이다.</p>
+<p class="x ov ind" style="--b:665.0">돌림힘이 전류의 세기에 비례함을 고려하면</p>
+<p class="x en2" style="--b:679.2;left:532.3pt">(2)</p>
+<div class="f" style="left:106.7pt;top:671.3pt"><span class="fig" data-srcpage="4" data-clip="106.7,671.3,147.8,682.1"></span></div>
+<p class="x ov" style="--b:693.1">여기서 $\alpha$는 비례 계수이며, 식 (1)은 다음 꼴로 다시 쓸 수 있다.</p>
+<p class="x en2" style="--b:707.3;left:532.3pt">(3)</p>
+<div class="f" style="left:107.4pt;top:698.6pt"><span class="fig" data-srcpage="4" data-clip="107.4,698.6,212.6,710.6"></span></div>
+<p class="x ov ind" style="--b:721.4;--l:17.5pt">질량 $m_2=2m$인 짐을 일정한 속력으로 들어 올리려면 분명히 두 배의 돌림힘이, 따라서 두 배의 전류가 필요하다. 축의 회전 속력이 $\omega_2=\frac{\varphi}{t_2}$이고, 여기서 $t_2=t_1+\Delta t$가 짐 $m_2$를 들어 올리는 데 걸리는 시간이라면, 이에 대응하는 방정식은 다음 꼴이다.</p>
+<!-- SKIP inline math: 𝜑 -->
+<!-- SKIP inline text: 𝑡2, where 𝑡2 = 𝑡1 + Δ𝑡 is the time of lifting  -->
+<p class="x en2" style="--b:770.4;left:532.3pt">(4)</p>
+<div class="f" style="left:107.4pt;top:761.4pt"><span class="fig" data-srcpage="4" data-clip="107.4,761.4,219.4,773.3"></span></div>
+</div>
+
+<!-- 5 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">5/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<p class="x ov ind" style="--b:72.7;--l:15pt">질량이 $m_n=nm$인 짐을 일정한 속력으로 들어 올리는 데 필요한 전류는 $I_n=nI$이다. 이 짐을 시간 $t_n$ 동안 속력 $\omega_n=\frac{\varphi}{t_n}$로 들어 올린다면, 이에 대응하는 방정식은 다음과 같다.</p>
+<!-- SKIP inline math: 𝜑 -->
+<!-- SKIP inline text: 𝑡𝑛, then the corresponding equation looks like this:  -->
+<p class="x en2" style="--b:107.8;left:532.3pt">(5)</p>
+<div class="f" style="left:107.4pt;top:98.7pt"><span class="fig" data-srcpage="5" data-clip="107.4,98.7,220.2,110.7"></span></div>
+<p class="x ov ind" style="--b:121.7">식 (3)-(5)로부터 $\omega_n$을 $\omega_1, \omega_2$로 쉽게 나타낼 수 있다.</p>
+<div class="f" style="left:107.0pt;top:126.8pt"><span class="fig" data-srcpage="5" data-clip="107.0,126.8,258.0,138.8"></span></div>
+<p class="x en2" style="--b:135.8;left:532.3pt">(6)</p>
+<p class="x ov" style="--b:150.0">따라서 질량 $m_n$인 짐을 들어 올리는 시간은 다음과 같다.</p>
+<p class="x en2" style="--b:166.6;left:532.3pt">(7)</p>
+<div class="f" style="left:107.0pt;top:154.1pt"><span class="fig" data-srcpage="5" data-clip="107.0,154.1,269.8,174.7"></span></div>
+<p class="x ov ind" style="--b:185.5">다음 조건으로부터</p>
+<p class="x en2" style="--b:199.7;left:532.3pt">(8)</p>
+<div class="f" style="left:107.0pt;top:191.4pt"><span class="fig" data-srcpage="5" data-clip="107.0,191.4,142.8,206.5"></span></div>
+<!-- SKIP inline math: 𝑡2 -->
+<p class="x ov" style="--b:216.5">$n&lt;\frac{t_2}{\Delta t}+1$을 얻으며, 이는 짐의 개수 $n$이 다음 값을 넘지 않아야 함을 뜻한다.</p>
+<!-- SKIP inline text: Δ𝑡+ 1, which means that the number of loads 𝑛 should not exceed  -->
+<p class="x en2" style="--b:237.4;left:532.3pt">(9)</p>
+<div class="f" style="left:106.7pt;top:224.9pt"><span class="fig" data-srcpage="5" data-clip="106.7,224.9,332.5,244.4"></span></div>
+<p class="x ov ind" style="--b:255.4">$n=n_{max}$개의 짐을 들어 올리는 시간은 다음과 같다.</p>
+<div class="f" style="left:107.0pt;top:260.2pt"><span class="fig" data-srcpage="5" data-clip="107.0,260.2,366.0,281.1"></span></div>
+<p class="x en2" style="--b:272.6;left:532.3pt">(10)</p>
+<!-- table p5 294.5-524.4 -->
+<i class="r" style="left:41.76pt;top:295.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:295.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:295.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:295.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:295.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:310.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:310.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:310.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:310.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:310.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:324.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:324.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:324.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:324.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:324.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:339.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:339.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:339.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:339.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:339.36pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:354.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:354.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:354.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:354.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:354.00pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:368.64pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:368.64pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:368.64pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:368.64pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:368.64pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:383.28pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:383.28pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:383.28pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:383.28pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:383.28pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:397.68pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:40.80pt;top:397.68pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:461.76pt;top:397.68pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:553.92pt;top:397.68pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:552.96pt;top:397.68pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:41.76pt;top:420.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:420.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:420.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:420.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:420.24pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:434.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:40.80pt;top:434.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:461.76pt;top:434.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:553.92pt;top:434.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:552.96pt;top:434.64pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:41.76pt;top:456.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:456.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:456.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:456.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:456.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.76pt;top:471.12pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:40.80pt;top:471.12pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:461.76pt;top:471.12pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:553.92pt;top:471.12pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:552.96pt;top:471.12pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:41.76pt;top:494.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.80pt;top:494.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:461.76pt;top:494.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:494.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:552.96pt;top:494.40pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.76pt;top:509.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.80pt;top:509.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:461.76pt;top:509.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:509.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.96pt;top:509.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.24pt;top:294.48pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:295.44pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:294.48pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:295.44pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:309.84pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:309.84pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:324.48pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:324.48pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:338.88pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:338.88pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:353.52pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:353.52pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:368.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:368.16pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:382.80pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:382.80pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:397.20pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:397.20pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:419.76pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:419.76pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:434.16pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:434.16pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:456.24pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:456.24pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:470.64pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:470.64pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:493.92pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:493.92pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:508.56pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:462.24pt;top:508.56pt;width:90.72pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:523.92pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:42.24pt;top:522.96pt;width:419.52pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:523.92pt;width:89.76pt;height:0.48pt"></i><i class="r" style="left:463.20pt;top:522.96pt;width:89.76pt;height:0.48pt"></i>
+<p class="x c h" style="--b:307.0;left:201.1pt;width:101.4pt">내용</p>
+<p class="x c h" style="--b:307.0;left:462.0pt;width:92.3pt">점수</p>
+<p class="x tc" style="--b:321.4;left:500.4pt">0.3</p>
+<p class="x tc" style="--b:321.8;left:47.0pt">식 (1):</p>
+<div class="f" style="left:111.7pt;top:312.0pt"><span class="fig" data-srcpage="5" data-clip="111.7,312.0,226.6,324.2"></span></div>
+<p class="x tc" style="--b:336.0;left:500.4pt">0.1</p>
+<p class="x tc" style="--b:336.2;left:47.0pt">식 (2):</p>
+<div class="f" style="left:111.0pt;top:328.7pt"><span class="fig" data-srcpage="5" data-clip="111.0,328.7,148.9,337.1"></span></div>
+<p class="x tc" style="--b:350.6;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:350.9;left:47.0pt">식 (3):</p>
+<div class="f" style="left:111.7pt;top:343.4pt"><span class="fig" data-srcpage="5" data-clip="111.7,343.4,213.7,353.2"></span></div>
+<p class="x tc" style="--b:365.3;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:365.5;left:47.0pt">식 (4):</p>
+<div class="f" style="left:111.7pt;top:358.0pt"><span class="fig" data-srcpage="5" data-clip="111.7,358.0,220.5,367.9"></span></div>
+<p class="x tc" style="--b:379.7;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:380.2;left:47.0pt">식 (5):</p>
+<div class="f" style="left:111.7pt;top:372.7pt"><span class="fig" data-srcpage="5" data-clip="111.7,372.7,221.2,382.5"></span></div>
+<p class="x tc" style="--b:394.3;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:394.6;left:47.0pt">식 (6):</p>
+<div class="f" style="left:111.4pt;top:387.1pt"><span class="fig" data-srcpage="5" data-clip="111.4,387.1,258.7,396.9"></span></div>
+<p class="x tc" style="--b:408.7;left:500.4pt">0.2</p>
+<p class="x tc" style="--b:411.6;left:47.0pt">식 (7):</p>
+<div class="f" style="left:111.4pt;top:399.1pt"><span class="fig" data-srcpage="5" data-clip="111.4,399.1,272.0,419.5"></span></div>
+<p class="x tc" style="--b:431.3;left:500.4pt">0.4</p>
+<p class="x tc" style="--b:431.5;left:47.0pt">식 (8):</p>
+<div class="f" style="left:111.4pt;top:424.0pt"><span class="fig" data-srcpage="5" data-clip="111.4,424.0,144.2,433.9"></span></div>
+<p class="x tc" style="--b:445.7;left:500.4pt">0.4</p>
+<p class="x tc" style="--b:449.5;left:47.0pt">식 (9):</p>
+<div class="f" style="left:111.0pt;top:437.1pt"><span class="fig" data-srcpage="5" data-clip="111.0,437.1,244.6,455.9"></span></div>
+<p class="x tc" style="--b:467.8;left:500.4pt">0,2</p>
+<p class="x tc" style="--b:468.0;left:47.0pt">식 (9)의 수치:</p>
+<div class="f" style="left:203.2pt;top:460.5pt"><span class="fig" data-srcpage="5" data-clip="203.2,460.5,258.0,470.3"></span></div>
+<p class="x tc" style="--b:482.4;left:500.4pt">0,4</p>
+<p class="x tc" style="--b:486.0;left:47.0pt">식 (10):</p>
+<div class="f" style="left:117.4pt;top:473.5pt"><span class="fig" data-srcpage="5" data-clip="117.4,473.5,301.0,493.6"></span></div>
+<p class="x tc" style="--b:505.4;left:500.4pt">0,2</p>
+<p class="x tc" style="--b:505.9;left:47.0pt">식 (10)의 수치:</p>
+<div class="f" style="left:209.5pt;top:496.1pt"><span class="fig" data-srcpage="5" data-clip="209.5,496.1,305.4,508.3"></span></div>
+<p class="x h" style="--b:520.1;--l:13.80pt;left:47.0pt;width:413.0pt">합계</p>
+<p class="x tc h" style="--b:520.1;left:500.4pt">3.0</p>
+<p class="x ov c h" style="--b:549.4">문제 2. 라그랑주 점 (10.0점)</p>
+<p class="x ov c h" style="--b:563.0">이체 문제</p>
+<p class="x ov" style="--b:577.0;--l:13.68pt"><b>2.1</b> 두 물체의 궤도 반지름은 두 물체에서 질량 중심까지의 거리와 같으며, 다음 방정식으로 정해진다.</p>
+<p class="x en2" style="--b:604.8;left:532.3pt">(1)</p>
+<div class="f" style="left:106.7pt;top:596.5pt"><span class="fig" data-srcpage="5" data-clip="106.7,596.5,178.0,611.7"></span></div>
+<p class="x en2" style="--b:619.0;left:532.3pt">(2)</p>
+<div class="f" style="left:106.7pt;top:610.7pt"><span class="fig" data-srcpage="5" data-clip="106.7,610.7,181.6,621.9"></span></div>
+<p class="x ov" style="--b:632.6">이로부터 구하려는 궤도 반지름을 얻는다.</p>
+<p class="x en2" style="--b:648.5;left:532.3pt">(3)</p>
+<div class="f" style="left:106.7pt;top:637.1pt"><span class="fig" data-srcpage="5" data-clip="106.7,637.1,183.8,660.0"></span></div>
+<p class="x en2" style="--b:669.4;left:532.3pt">(4)</p>
+<div class="f" style="left:106.7pt;top:657.9pt"><span class="fig" data-srcpage="5" data-clip="106.7,657.9,184.2,677.8"></span></div>
+<p class="x ov" style="--b:688.3;--l:13.68pt"><b>2.2</b> 두 물체의 회전 각속도 $\omega_0$을 구하기 위하여, 한 물체(예를 들어 첫 번째 물체)에 대한 뉴턴의 제2법칙을 다음 꼴로 쓰면</p>
+<div class="f" style="left:106.7pt;top:706.4pt"><span class="fig" data-srcpage="5" data-clip="106.7,706.4,202.5,726.7"></span></div>
+<p class="x en2" style="--b:717.8;left:532.3pt">(5)</p>
+<p class="x ov" style="--b:737.3">식 (3)을 고려하여 다음을 얻는다.</p>
+<div class="f" style="left:107.0pt;top:746.2pt"><span class="fig" data-srcpage="5" data-clip="107.0,746.2,189.6,770.3"></span></div>
+<p class="x en2" style="--b:758.6;left:532.3pt">(6)</p>
+<p class="x ov c h" style="--b:780.5">삼체계의 라그랑주 점</p>
+</div>
+
+<!-- 6 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">6/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<p class="x ov" style="--b:72.7;--l:13.68pt"><b>2.3</b> 작은 물체 $m_0$에 작용하는 힘의 사영에 대한 식은 뉴턴의 만유인력 법칙으로부터 얻어지며, 힘의 방향을 고려하면 다음과 같다.</p>
+<div class="f" style="left:106.7pt;top:90.8pt"><span class="fig" data-srcpage="6" data-clip="106.7,90.8,337.2,110.4"></span></div>
+<p class="x en2" style="--b:102.2;left:532.3pt">(7)</p>
+<p class="x ov ind" style="--b:121.0;--l:13.92pt">문제에 주어진 무차원 관계를 고려하면, 상대 단위로 나타낸 힘의 사영에 대한 식을 얻는다.</p>
+<p class="x en2" style="--b:151.7;left:532.3pt">(8)</p>
+<div class="f" style="left:106.3pt;top:139.2pt"><span class="fig" data-srcpage="6" data-clip="106.3,139.2,326.7,160.1"></span></div>
+<p class="x ov ind" style="--b:170.4">작은 물체에 대한 뉴턴의 제2법칙의 방정식은 다음과 같고</p>
+<div class="f" style="left:107.4pt;top:175.0pt"><span class="fig" data-srcpage="6" data-clip="107.4,175.0,183.1,188.0"></span></div>
+<p class="x en2" style="--b:185.0;left:532.3pt">(9)</p>
+<p class="x ov" style="--b:198.7;--l:14.16pt">이를 주어진 값으로 무차원화하면, 좌표 $x$를 구하는 데 필요한 방정식을 얻는다.</p>
+<p class="x en2" style="--b:229.7;left:532.3pt">(10)</p>
+<div class="f" style="left:107.4pt;top:217.2pt"><span class="fig" data-srcpage="6" data-clip="107.4,217.2,332.1,238.1"></span></div>
+<p class="x ov" style="--b:248.4;--l:13.92pt"><b>2.4</b> 함수 (8)의 그래프를 그리려면, 물체 $m_1$으로 끌리는 힘을 나타내는 함수의 그래프($x=-0.2$에 점근선이 있는 두 갈래 – 그림의 그래프 1)와 물체 $m_2$로 끌리는 힘을 나타내는 함수의 그래프($x=0.8$에 점근선이 있는 두 갈래 – 그림의 그래프 2)를 그리고 이 둘을 더하면 된다(그림의 그래프 3). 이 그래프는 세 갈래로 이루어진다.</p>
+<div class="f" style="left:62.8pt;top:294.2pt"><span class="fig" data-srcpage="6" data-clip="62.8,294.2,532.7,546.7"></span></div>
+<p class="x ov" style="--b:565.4;--l:13.92pt"><b>2.5</b> 그린 그래프 위에 방정식 $f_x=-x$로 나타내어지는 직선을 긋는다. 이 직선과 의존 관계 $f_x(x)$의 그래프가 만나는 점들의 좌표는 방정식 (10)의 실근, 즉 $X$축 위에 있는 라그랑주 점들의 좌표이다. 그래프에서 알 수 있듯이 이런 점은 정확히 3개이다.</p>
+<p class="x ov" style="--b:621.1"><b>2.6</b> 방정식 (10)은 5차 방정식이므로 해석적으로 풀 수 없다. 그러나 문제에서는 작은 오차로 수치를 계산하도록 요구한다. 이를 위해서는 작은 물체에 작용하는 힘의 수치를 $x$의 변화 간격 0.1로 계산하여, 해당하는 근이 놓인 구간을 정하면 충분하다.</p>
+<p class="x ov ind" style="--b:676.8;--l:14.16pt">물체 $m_1$과 $m_2$ 사이에 있는 라그랑주 점 $L_1$의 좌표값을 계산하자. 이 점에 대하여 방정식 (10)은 다음과 같이 다시 쓸 수 있다.</p>
+<p class="x en2" style="--b:707.8;left:532.3pt">(11)</p>
+<div class="f" style="left:106.7pt;top:695.3pt"><span class="fig" data-srcpage="6" data-clip="106.7,695.3,215.1,716.2"></span></div>
+<p class="x ov ind" style="--b:727.2">아래 표는 $\mu=0.20$일 때 방정식 (11)의 좌변과 우변의 값을 나타낸다.</p>
+<div class="f" style="left:176.4pt;top:729.8pt"><span class="fig" data-srcpage="6" data-clip="176.4,729.8,418.6,762.5"></span></div>
+<p class="x ov ind" style="--b:772.8">표로부터 방정식의 근은 0.4에서 0.5 사이의 구간에 있음을 알 수 있다. 즉,</p>
+<p class="x en2" style="--b:787.0;left:532.3pt">(12)</p>
+<div class="f" style="left:106.7pt;top:777.9pt"><span class="fig" data-srcpage="6" data-clip="106.7,777.9,159.0,789.9"></span></div>
+<p class="x ov ind" style="--b:800.9">물체 $m_2$ 뒤쪽에 있는 점 $L_2$의 좌표에 대해서는 다음 방정식을 얻는다.</p>
+</div>
+
+<!-- 7 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">7/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<p class="x en2" style="--b:75.4;left:532.3pt">(13)</p>
+<div class="f" style="left:106.7pt;top:62.9pt"><span class="fig" data-srcpage="7" data-clip="106.7,62.9,215.1,83.8"></span></div>
+<p class="x ov" style="--b:94.3">다음 표에 이 방정식의 좌변과 우변의 값을 계산하였다.</p>
+<div class="f" style="left:180.5pt;top:97.2pt"><span class="fig" data-srcpage="7" data-clip="180.5,97.2,414.7,130.1"></span></div>
+<p class="x ov ind" style="--b:139.9;--l:13.68pt">이 표의 자료로부터 이 방정식의 근은 1.2와 1.3 사이의 구간에 있음을 알 수 있다. 즉,</p>
+<p class="x en2" style="--b:167.8;left:532.3pt">(14)</p>
+<div class="f" style="left:106.7pt;top:159.1pt"><span class="fig" data-srcpage="7" data-clip="106.7,159.1,159.3,170.7"></span></div>
+<p class="x ov ind" style="--b:181.9;--l:13.68pt">마지막으로, 물체 $m_1$ 뒤쪽에 있는 점 $L_3$에 대해서는 다음 방정식을 얻으며(여기서는 축의 방향을 바꾸었다),</p>
+<p class="x en2" style="--b:212.4;left:532.3pt">(15)</p>
+<div class="f" style="left:106.7pt;top:199.9pt"><span class="fig" data-srcpage="7" data-clip="106.7,199.9,215.1,220.9"></span></div>
+<p class="x ov" style="--b:231.4">다음 표는 비슷한 계산의 결과를 보여 준다.</p>
+<div class="f" style="left:180.5pt;top:234.2pt"><span class="fig" data-srcpage="7" data-clip="180.5,234.2,414.7,266.9"></span></div>
+<p class="x ov" style="--b:277.0;--l:14.16pt">이로부터 방정식 (15)의 근은 1.0에서 1.1 사이의 구간에 있으며, 따라서 라그랑주 점 $L_3$의 좌표는 다음과 같다.</p>
+<div class="f" style="left:106.7pt;top:296.4pt"><span class="fig" data-srcpage="7" data-clip="106.7,296.4,159.3,308.0"></span></div>
+<p class="x en2" style="--b:305.0;left:532.3pt">(16)</p>
+<div class="f" style="left:424.7pt;top:314.6pt"><span class="fig" data-srcpage="7" data-clip="424.7,314.6,560.9,424.1"></span></div>
+<p class="x ov" style="--b:318.7;--l:14.16pt;width:370.8pt"><b>2.7</b> 정삼각형의 꼭짓점이 라그랑주 점 $L_4$임을 증명하기 위하여, 질량이 작은 물체 $m_0$에 작용하는 합력의 식을 벡터 꼴로 쓰자.</p>
+<div class="f" style="left:106.7pt;top:351.3pt"><span class="fig" data-srcpage="7" data-clip="106.7,351.3,240.7,371.9"></span></div>
+<p class="x en2" style="--b:363.1;left:355.0pt">(17)</p>
+<p class="x ov ind" style="--b:382.8;--l:13.68pt;width:370.6pt">식 (17)의 우변은 질량 중심의 위치 벡터를 이용하여 나타낼 수 있으므로</p>
+<div class="f" style="left:106.7pt;top:401.3pt"><span class="fig" data-srcpage="7" data-clip="106.7,401.3,255.1,413.9"></span></div>
+<p class="x en2" style="--b:410.6;left:355.0pt">(18)</p>
+<p class="x ov" style="--b:424.3;--l:14.16pt;width:370.6pt">이 물체에 대한 뉴턴의 제2법칙의 방정식을 벡터 $\vec{r}_C$의 방향으로 사영하면 다음 꼴이 된다.</p>
+<div class="f" style="left:106.7pt;top:442.9pt"><span class="fig" data-srcpage="7" data-clip="106.7,442.9,255.4,463.2"></span></div>
+<p class="x en2" style="--b:454.3;left:532.3pt">(19)</p>
+<p class="x ov ind" style="--b:474.2">이 방정식으로부터 물체 $m_0$의 각속도는 다음과 같다.</p>
+<p class="x en2" style="--b:495.4;left:532.3pt">(20)</p>
+<div class="f" style="left:107.0pt;top:482.9pt"><span class="fig" data-srcpage="7" data-clip="107.0,482.9,214.4,507.1"></span></div>
+<p class="x ov" style="--b:517.2;--l:13.92pt">이는 무거운 물체들의 회전 각속도 (6)과 일치하므로, 물체 $m_0$의 위치는 무거운 물체들에 대하여 변하지 않는다. 따라서 정삼각형의 꼭짓점은 실제로 라그랑주 점이다.</p>
+<p class="x ov c h" style="--b:558.7">태양계의 라그랑주 점</p>
+<p class="x ov" style="--b:572.6;--l:14.04pt"><b>2.8</b> SOHO 우주선이 지구와 태양에 대하여 변하지 않는 위치에 머물려면 라그랑주 점 $L_1$에 있어야 한다. 그 위치를 정하려면 방정식 (11)을 풀어야 한다. 먼저 태양-지구계에 대한 매개변수 $\mu$의 값을 계산한다.</p>
+<div class="f" style="left:106.7pt;top:605.1pt"><span class="fig" data-srcpage="7" data-clip="106.7,605.1,232.8,626.0"></span></div>
+<p class="x en2" style="--b:617.5;left:532.3pt">(21)</p>
+<p class="x ov ind" style="--b:637.0;--l:18pt">이 값은 1보다 매우 작으므로, 우주선에서 지구까지의 거리 $l$은 지구 궤도의 반지름보다 매우 작다. 사용하는 단위계에서 $z=\frac{l}{R_0}=1-\mu-x$로 놓으면, 방정식 (11)로부터 다음을 얻는다.</p>
+<!-- SKIP inline math: 𝑙 -->
+<!-- SKIP inline text: 𝑅0 = 1 −𝜇−𝑥, then from  -->
+<p class="x en2" style="--b:689.8;left:532.3pt">(22)</p>
+<div class="f" style="left:107.4pt;top:677.3pt"><span class="fig" data-srcpage="7" data-clip="107.4,677.3,224.5,697.9"></span></div>
+<!-- SKIP inline math: 1 -->
+<p class="x ov ind" style="--b:711.4;--l:20pt">$z, \mu\ll1$이므로 전개식 $\frac{1}{(1-z)^2}\approx1+2z$를 쓸 수 있으며, 이 경우 방정식 (22)는 크게 간단해지고 그 해는 $z=(\mu/3)^{1/3}$으로 얻어진다. 즉, 구하려는 거리는 다음과 같다.</p>
+<!-- SKIP inline text: (1−𝑧)2 ≈1 + 2𝑧  and in this case equation (22) is significantly  -->
+<div class="f" style="left:107.0pt;top:740.7pt"><span class="fig" data-srcpage="7" data-clip="107.0,740.7,256.9,764.1"></span></div>
+<p class="x en2" style="--b:753.1;left:532.3pt">(23)</p>
+<p class="x ov" style="--b:774.7;--l:13.68pt"><b>2.9</b> 제임스 웹 망원경은 분명히 라그랑주 점 $L_2$에 있으므로, 그 위치를 정하려면 2.8과 비슷한 방법으로 방정식 (13)을 풀어야 한다.</p>
+</div>
+
+<!-- 8 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">8/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<p class="x en2" style="--b:75.6;left:532.3pt">(24)</p>
+<div class="f" style="left:107.4pt;top:63.1pt"><span class="fig" data-srcpage="8" data-clip="107.4,63.1,203.2,83.7"></span></div>
+<p class="x ov" style="--b:94.1">즉, 우주 망원경은 지구에서 같은 거리에 (다만 반대쪽에) 있다.</p>
+<p class="x en2" style="--b:115.7;left:532.3pt">(25)</p>
+<div class="f" style="left:107.0pt;top:103.2pt"><span class="fig" data-srcpage="8" data-clip="107.0,103.2,261.2,126.7"></span></div>
+<p class="x ov" style="--b:137.5"><b>2.10</b> 소행성이 우연히 목성-태양계의 라그랑주 점 $L_4$나 이와 대칭인 점 $L_5$에 들어가면, 목성과 태양에 대한 소행성의 위치는 오랫동안 변하지 않는다. 다른 점에 있는 소행성들은 목성과 태양에 대한 위치가 끊임없이 바뀐다. 따라서 트로이 소행성 무리의 중심은 옆쪽의 라그랑주 점에 있다. 그러므로 목성에서 이 점들까지의 거리는 목성에서 태양까지의 거리와 같다. 목성의 질량은 태양의 질량보다 매우 작으므로, 두 천체 사이의 거리는 목성 궤도의 반지름과 거의 같으며, 이는 케플러 제3법칙을 이용하여 구할 수 있다.</p>
+<div class="f" style="left:107.0pt;top:224.9pt"><span class="fig" data-srcpage="8" data-clip="107.0,224.9,267.3,249.4"></span></div>
+<p class="x en2" style="--b:241.2;left:532.3pt">(26)</p>
+<p class="x ov" style="--b:260.6">여기서 $T_0=1.00$년은 지구가 태양 둘레를 도는 공전 주기이다.</p>
+<!-- table p8 277.0-787.9 -->
+<i class="r" style="left:42.96pt;top:278.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.00pt;top:278.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:84.96pt;top:278.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:450.00pt;top:278.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.48pt;top:278.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:551.52pt;top:278.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.96pt;top:292.80pt;width:0.48pt;height:18.24pt"></i><i class="r" style="left:42.00pt;top:292.80pt;width:0.48pt;height:18.24pt"></i><i class="r" style="left:84.96pt;top:292.80pt;width:0.48pt;height:18.24pt"></i><i class="r" style="left:450.00pt;top:292.80pt;width:0.48pt;height:18.24pt"></i><i class="r" style="left:518.40pt;top:292.80pt;width:0.48pt;height:18.24pt"></i><i class="r" style="left:552.48pt;top:292.80pt;width:0.48pt;height:18.24pt"></i><i class="r" style="left:551.52pt;top:292.80pt;width:0.48pt;height:18.24pt"></i><i class="r" style="left:42.96pt;top:311.52pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:42.00pt;top:311.52pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:84.96pt;top:311.52pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:450.00pt;top:311.52pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:518.40pt;top:311.52pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:552.48pt;top:311.52pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:551.52pt;top:311.52pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:42.96pt;top:327.36pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:42.00pt;top:327.36pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:84.96pt;top:327.36pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:450.00pt;top:327.36pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:518.40pt;top:327.36pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:552.48pt;top:327.36pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:551.52pt;top:327.36pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:42.96pt;top:348.72pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:42.00pt;top:348.72pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:84.96pt;top:348.72pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:450.00pt;top:348.72pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:518.40pt;top:348.72pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:552.48pt;top:348.72pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:551.52pt;top:348.72pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:42.96pt;top:369.84pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.00pt;top:369.84pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:84.96pt;top:369.84pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:450.00pt;top:369.84pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:518.40pt;top:369.84pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:552.48pt;top:369.84pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:551.52pt;top:369.84pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.96pt;top:391.92pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:42.00pt;top:391.92pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:84.96pt;top:391.92pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:450.00pt;top:391.92pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:518.40pt;top:391.92pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:552.48pt;top:391.92pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:551.52pt;top:391.92pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:42.96pt;top:421.68pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:42.00pt;top:421.68pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:84.96pt;top:421.68pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:450.00pt;top:421.68pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:518.40pt;top:421.68pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:552.48pt;top:421.68pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:551.52pt;top:421.68pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:42.96pt;top:443.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:42.00pt;top:443.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:84.96pt;top:443.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:450.00pt;top:443.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:518.40pt;top:443.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:552.48pt;top:443.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:551.52pt;top:443.04pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:42.96pt;top:465.36pt;width:0.48pt;height:16.56pt"></i><i class="r" style="left:42.00pt;top:465.36pt;width:0.48pt;height:16.56pt"></i><i class="r" style="left:84.96pt;top:465.36pt;width:0.48pt;height:16.56pt"></i><i class="r" style="left:450.00pt;top:465.36pt;width:0.48pt;height:16.56pt"></i><i class="r" style="left:518.40pt;top:465.36pt;width:0.48pt;height:16.56pt"></i><i class="r" style="left:552.48pt;top:465.36pt;width:0.48pt;height:16.56pt"></i><i class="r" style="left:551.52pt;top:465.36pt;width:0.48pt;height:16.56pt"></i><i class="r" style="left:42.96pt;top:482.40pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:42.00pt;top:482.40pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:84.96pt;top:482.40pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:450.00pt;top:482.40pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:518.40pt;top:482.40pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:552.48pt;top:482.40pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:551.52pt;top:482.40pt;width:0.48pt;height:21.84pt"></i><i class="r" style="left:42.96pt;top:504.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.00pt;top:504.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:84.96pt;top:504.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:450.00pt;top:504.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:518.40pt;top:504.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.48pt;top:504.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:551.52pt;top:504.72pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.96pt;top:519.12pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:42.00pt;top:519.12pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:84.96pt;top:519.12pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:450.00pt;top:519.12pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:518.40pt;top:519.12pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:552.48pt;top:519.12pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:551.52pt;top:519.12pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:42.96pt;top:533.28pt;width:0.48pt;height:17.76pt"></i><i class="r" style="left:42.00pt;top:533.28pt;width:0.48pt;height:17.76pt"></i><i class="r" style="left:84.96pt;top:533.28pt;width:0.48pt;height:17.76pt"></i><i class="r" style="left:450.00pt;top:533.28pt;width:0.48pt;height:17.76pt"></i><i class="r" style="left:518.40pt;top:533.28pt;width:0.48pt;height:17.76pt"></i><i class="r" style="left:552.48pt;top:533.28pt;width:0.48pt;height:17.76pt"></i><i class="r" style="left:551.52pt;top:533.28pt;width:0.48pt;height:17.76pt"></i><i class="r" style="left:42.96pt;top:551.52pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:42.00pt;top:551.52pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:84.96pt;top:551.52pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:450.00pt;top:551.52pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:518.40pt;top:551.52pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:552.48pt;top:551.52pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:551.52pt;top:551.52pt;width:0.48pt;height:13.68pt"></i><i class="r" style="left:42.96pt;top:565.68pt;width:0.48pt;height:46.32pt"></i><i class="r" style="left:42.00pt;top:565.68pt;width:0.48pt;height:46.32pt"></i><i class="r" style="left:84.96pt;top:565.68pt;width:0.48pt;height:46.32pt"></i><i class="r" style="left:450.00pt;top:565.68pt;width:0.48pt;height:46.32pt"></i><i class="r" style="left:518.40pt;top:565.68pt;width:0.48pt;height:46.32pt"></i><i class="r" style="left:552.48pt;top:565.68pt;width:0.48pt;height:46.32pt"></i><i class="r" style="left:551.52pt;top:565.68pt;width:0.48pt;height:46.32pt"></i><i class="r" style="left:42.96pt;top:612.48pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:42.00pt;top:612.48pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:84.96pt;top:612.48pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:450.00pt;top:612.48pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:518.40pt;top:612.48pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:552.48pt;top:612.48pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:551.52pt;top:612.48pt;width:0.48pt;height:22.08pt"></i><i class="r" style="left:42.96pt;top:635.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.00pt;top:635.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:84.96pt;top:635.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:450.00pt;top:635.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:518.40pt;top:635.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.48pt;top:635.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:551.52pt;top:635.04pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.96pt;top:649.44pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.00pt;top:649.44pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:84.96pt;top:649.44pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:450.00pt;top:649.44pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:518.40pt;top:649.44pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:552.48pt;top:649.44pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:551.52pt;top:649.44pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.96pt;top:671.52pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:42.00pt;top:671.52pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:84.96pt;top:671.52pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:450.00pt;top:671.52pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:518.40pt;top:671.52pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:552.48pt;top:671.52pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:551.52pt;top:671.52pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:42.96pt;top:701.28pt;width:0.48pt;height:16.80pt"></i><i class="r" style="left:42.00pt;top:701.28pt;width:0.48pt;height:16.80pt"></i><i class="r" style="left:84.96pt;top:701.28pt;width:0.48pt;height:16.80pt"></i><i class="r" style="left:450.00pt;top:701.28pt;width:0.48pt;height:16.80pt"></i><i class="r" style="left:518.40pt;top:701.28pt;width:0.48pt;height:16.80pt"></i><i class="r" style="left:552.48pt;top:701.28pt;width:0.48pt;height:16.80pt"></i><i class="r" style="left:551.52pt;top:701.28pt;width:0.48pt;height:16.80pt"></i><i class="r" style="left:42.96pt;top:718.56pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.00pt;top:718.56pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:84.96pt;top:718.56pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:450.00pt;top:718.56pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:518.40pt;top:718.56pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:552.48pt;top:718.56pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:551.52pt;top:718.56pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.96pt;top:740.64pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:42.00pt;top:740.64pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:84.96pt;top:740.64pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:450.00pt;top:740.64pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:518.40pt;top:740.64pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:552.48pt;top:740.64pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:551.52pt;top:740.64pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:42.96pt;top:770.40pt;width:0.48pt;height:16.08pt"></i><i class="r" style="left:42.00pt;top:770.40pt;width:0.48pt;height:16.08pt"></i><i class="r" style="left:84.96pt;top:770.40pt;width:0.48pt;height:16.08pt"></i><i class="r" style="left:450.00pt;top:770.40pt;width:0.48pt;height:16.08pt"></i><i class="r" style="left:518.40pt;top:770.40pt;width:0.48pt;height:16.08pt"></i><i class="r" style="left:552.48pt;top:770.40pt;width:0.48pt;height:16.08pt"></i><i class="r" style="left:551.52pt;top:770.40pt;width:0.48pt;height:16.08pt"></i><i class="r" style="left:43.44pt;top:276.96pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:277.92pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:86.40pt;top:276.96pt;width:363.60pt;height:0.48pt"></i><i class="r" style="left:86.40pt;top:277.92pt;width:363.60pt;height:0.48pt"></i><i class="r" style="left:451.44pt;top:276.96pt;width:100.08pt;height:0.48pt"></i><i class="r" style="left:451.44pt;top:277.92pt;width:100.08pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:292.32pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:292.32pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:292.32pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:292.32pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:311.04pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:311.04pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:326.88pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:326.88pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:348.24pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:348.24pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:369.36pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:369.36pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:369.36pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:369.36pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:391.44pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:391.44pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:421.20pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:421.20pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:421.20pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:421.20pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:442.56pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:442.56pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:464.88pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:464.88pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:481.92pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:481.92pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:504.24pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:504.24pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:504.24pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:504.24pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:518.64pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:518.64pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:532.80pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:532.80pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:532.80pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:532.80pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:551.04pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:551.04pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:565.20pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:565.20pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:565.20pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:565.20pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:612.00pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:612.00pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:612.00pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:612.00pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:634.56pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:634.56pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:648.96pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:648.96pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:671.04pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:671.04pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:700.80pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:700.80pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:700.80pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:700.80pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:718.08pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:718.08pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:740.16pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:740.16pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:769.92pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:769.92pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:787.44pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:786.48pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:86.40pt;top:787.44pt;width:363.60pt;height:0.48pt"></i><i class="r" style="left:86.40pt;top:786.48pt;width:363.60pt;height:0.48pt"></i><i class="r" style="left:451.44pt;top:787.44pt;width:66.96pt;height:0.48pt"></i><i class="r" style="left:451.44pt;top:786.48pt;width:66.96pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:787.44pt;width:31.68pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:786.48pt;width:31.68pt;height:0.48pt"></i>
+<p class="x c h" style="--b:289.7;left:217.2pt;width:101.4pt">내용</p>
+<p class="x c h" style="--b:289.7;left:455.3pt;width:92.3pt">점수</p>
+<p class="x tc" style="--b:303.8;left:477.1pt">0.1</p>
+<p class="x tc" style="--b:304.3;left:90.7pt">식 (1):</p>
+<div class="f" style="left:155.0pt;top:296.8pt"><span class="fig" data-srcpage="8" data-clip="155.0,296.8,222.4,307.3"></span></div>
+<p class="x tc" style="--b:322.6;left:477.1pt">0.1</p>
+<p class="x tc" style="--b:323.0;left:90.7pt">식 (2):</p>
+<div class="f" style="left:155.0pt;top:315.5pt"><span class="fig" data-srcpage="8" data-clip="155.0,315.5,226.0,326.0"></span></div>
+<p class="x tc h" style="--b:335.3;left:56.6pt">2.1</p>
+<p class="x tc h" style="--b:335.3;left:528.0pt">0.4</p>
+<p class="x tc" style="--b:338.4;left:477.1pt">0.1</p>
+<p class="x tc" style="--b:340.6;left:90.7pt">식 (3):</p>
+<div class="f" style="left:155.0pt;top:329.1pt"><span class="fig" data-srcpage="8" data-clip="155.0,329.1,228.6,347.9"></span></div>
+<p class="x tc" style="--b:359.8;left:477.1pt">0.1</p>
+<p class="x tc" style="--b:361.7;left:90.7pt">식 (4):</p>
+<div class="f" style="left:155.0pt;top:349.9pt"><span class="fig" data-srcpage="8" data-clip="155.0,349.9,228.6,369.1"></span></div>
+<p class="x tc" style="--b:381.1;left:477.1pt">0.1</p>
+<p class="x tc" style="--b:383.0;left:90.7pt">식 (5):</p>
+<div class="f" style="left:155.0pt;top:371.6pt"><span class="fig" data-srcpage="8" data-clip="155.0,371.6,248.4,391.1"></span></div>
+<p class="x tc h" style="--b:399.8;left:56.6pt">2.2</p>
+<p class="x tc h" style="--b:399.8;left:528.0pt">0.2</p>
+<p class="x tc" style="--b:403.0;left:477.1pt">0.1</p>
+<p class="x tc" style="--b:410.4;left:90.7pt">식 (6):</p>
+<div class="f" style="left:155.0pt;top:394.4pt"><span class="fig" data-srcpage="8" data-clip="155.0,394.4,235.8,420.9"></span></div>
+<p class="x tc" style="--b:432.7;left:477.1pt">0.5</p>
+<p class="x tc" style="--b:434.9;left:90.7pt">식 (7):</p>
+<div class="f" style="left:161.4pt;top:423.5pt"><span class="fig" data-srcpage="8" data-clip="161.4,423.5,389.0,442.3"></span></div>
+<p class="x tc" style="--b:454.1;left:477.1pt">0.5</p>
+<p class="x tc" style="--b:457.2;left:90.7pt">식 (8):</p>
+<div class="f" style="left:161.0pt;top:444.7pt"><span class="fig" data-srcpage="8" data-clip="161.0,444.7,378.2,464.6"></span></div>
+<p class="x tc h" style="--b:467.0;left:56.6pt">2.3</p>
+<p class="x tc h" style="--b:467.0;left:528.0pt">2.0</p>
+<p class="x tc" style="--b:476.4;left:477.1pt">0.5</p>
+<p class="x tc" style="--b:477.1;left:90.7pt">식 (9):</p>
+<div class="f" style="left:162.1pt;top:467.1pt"><span class="fig" data-srcpage="8" data-clip="162.1,467.1,234.6,480.4"></span></div>
+<p class="x tc" style="--b:493.4;left:477.1pt">0.5</p>
+<p class="x tc" style="--b:496.6;left:90.7pt">식 (10):</p>
+<div class="f" style="left:161.4pt;top:484.1pt"><span class="fig" data-srcpage="8" data-clip="161.4,484.1,382.9,503.9"></span></div>
+<p class="x" style="--b:515.8;--l:13.80pt;left:90.7pt;width:357.3pt">그래프 위 수직 점근선의 위치</p>
+<p class="x tc" style="--b:515.8;left:477.1pt">0.2</p>
+<p class="x tc h" style="--b:523.0;left:56.6pt">2.4</p>
+<p class="x tc h" style="--b:523.0;left:528.0pt">0.8</p>
+<p class="x" style="--b:530.2;--l:13.80pt;left:90.7pt;width:357.3pt">그래프의 세 갈래</p>
+<p class="x tc" style="--b:530.2;left:460.1pt">3x0.2=0,6</p>
+<p class="x tc" style="--b:544.3;left:477.1pt">0.2</p>
+<p class="x" style="--b:548.4;--l:13.80pt;left:90.7pt;width:357.3pt">그래프 위의 직선 $f_x=-x$</p>
+<p class="x tc h" style="--b:553.4;left:56.6pt">2.5</p>
+<p class="x tc h" style="--b:553.4;left:528.0pt">0.3</p>
+<p class="x" style="--b:562.6;--l:13.80pt;left:90.7pt;width:357.3pt">3개의 라그랑주 점에 해당하는 세 교점을 표시함</p>
+<p class="x tc" style="--b:562.6;left:477.1pt">0.1</p>
+<p class="x" style="--b:576.7;--l:13.80pt;left:90.7pt;width:357.3pt">각 점에 대하여:<br>- 위치를 표시함;<br>- 수치를 구함.</p>
+<p class="x tc" style="--b:576.7;left:456.2pt">3x(0.1+0.2)</p>
+<p class="x tc" style="--b:590.6;left:473.5pt">=0.9</p>
+<p class="x tc h" style="--b:593.0;left:56.6pt">2.6</p>
+<p class="x tc h" style="--b:593.0;left:528.0pt">0.9</p>
+<p class="x tc" style="--b:623.5;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:625.9;left:90.7pt">식 (17):</p>
+<div class="f" style="left:160.7pt;top:614.1pt"><span class="fig" data-srcpage="8" data-clip="160.7,614.1,292.2,634.3"></span></div>
+<p class="x tc" style="--b:646.1;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:646.3;left:90.7pt">식 (18):</p>
+<div class="f" style="left:160.7pt;top:638.8pt"><span class="fig" data-srcpage="8" data-clip="160.7,638.8,306.1,648.7"></span></div>
+<p class="x tc" style="--b:660.5;left:477.1pt">0.3</p>
+<p class="x tc h" style="--b:660.7;left:56.6pt">2.7</p>
+<p class="x tc h" style="--b:660.7;left:528.0pt">1.0</p>
+<p class="x tc" style="--b:662.6;left:90.7pt">식 (19):</p>
+<div class="f" style="left:160.7pt;top:650.9pt"><span class="fig" data-srcpage="8" data-clip="160.7,650.9,306.2,670.7"></span></div>
+<p class="x tc" style="--b:682.6;left:477.1pt">0.3</p>
+<p class="x tc" style="--b:690.0;left:90.7pt">식 (20):</p>
+<div class="f" style="left:161.0pt;top:673.7pt"><span class="fig" data-srcpage="8" data-clip="161.0,673.7,264.4,700.5"></span></div>
+<p class="x tc" style="--b:712.3;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:712.8;left:90.7pt">식 (21)의 수치:</p>
+<div class="f" style="left:256.2pt;top:703.0pt"><span class="fig" data-srcpage="8" data-clip="256.2,703.0,334.0,716.0"></span></div>
+<p class="x tc" style="--b:729.6;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:732.7;left:90.7pt">정확한 방정식 (22):</p>
+<div class="f" style="left:192.4pt;top:720.3pt"><span class="fig" data-srcpage="8" data-clip="192.4,720.3,307.3,739.9"></span></div>
+<p class="x tc h" style="--b:748.1;left:56.6pt">2.8</p>
+<p class="x tc h" style="--b:748.1;left:528.0pt">1.6</p>
+<p class="x tc" style="--b:751.7;left:477.1pt">0.7</p>
+<p class="x tc" style="--b:759.6;left:90.7pt">식 (23):</p>
+<div class="f" style="left:161.0pt;top:742.9pt"><span class="fig" data-srcpage="8" data-clip="161.0,742.9,225.6,769.6"></span></div>
+<p class="x tc" style="--b:781.4;left:477.1pt">0.5</p>
+<p class="x tc" style="--b:781.9;left:90.7pt">식 (23)의 수치:</p>
+<div class="f" style="left:253.2pt;top:771.9pt"><span class="fig" data-srcpage="8" data-clip="253.2,771.9,348.3,784.9"></span></div>
+</div>
+
+<!-- 9 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">9/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<!-- table p9 61.4-187.4 -->
+<i class="r" style="left:42.96pt;top:62.88pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.00pt;top:62.88pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:84.96pt;top:62.88pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:450.00pt;top:62.88pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:518.40pt;top:62.88pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:552.48pt;top:62.88pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:551.52pt;top:62.88pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:42.96pt;top:84.96pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:42.00pt;top:84.96pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:84.96pt;top:84.96pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:450.00pt;top:84.96pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:518.40pt;top:84.96pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:552.48pt;top:84.96pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:551.52pt;top:84.96pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:42.96pt;top:114.72pt;width:0.48pt;height:14.40pt"></i><i class="r" style="left:42.00pt;top:114.72pt;width:0.48pt;height:14.40pt"></i><i class="r" style="left:84.96pt;top:114.72pt;width:0.48pt;height:14.40pt"></i><i class="r" style="left:450.00pt;top:114.72pt;width:0.48pt;height:14.40pt"></i><i class="r" style="left:518.40pt;top:114.72pt;width:0.48pt;height:14.40pt"></i><i class="r" style="left:552.48pt;top:114.72pt;width:0.48pt;height:14.40pt"></i><i class="r" style="left:551.52pt;top:114.72pt;width:0.48pt;height:14.40pt"></i><i class="r" style="left:42.96pt;top:129.60pt;width:0.48pt;height:26.16pt"></i><i class="r" style="left:42.00pt;top:129.60pt;width:0.48pt;height:26.16pt"></i><i class="r" style="left:84.96pt;top:129.60pt;width:0.48pt;height:26.16pt"></i><i class="r" style="left:450.00pt;top:129.60pt;width:0.48pt;height:26.16pt"></i><i class="r" style="left:518.40pt;top:129.60pt;width:0.48pt;height:26.16pt"></i><i class="r" style="left:552.48pt;top:129.60pt;width:0.48pt;height:26.16pt"></i><i class="r" style="left:551.52pt;top:129.60pt;width:0.48pt;height:26.16pt"></i><i class="r" style="left:42.96pt;top:156.24pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:42.00pt;top:156.24pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:84.96pt;top:156.24pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:450.00pt;top:156.24pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:518.40pt;top:156.24pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:552.48pt;top:156.24pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:551.52pt;top:156.24pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:42.96pt;top:172.08pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:42.00pt;top:172.08pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:84.96pt;top:172.08pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:450.00pt;top:172.08pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:518.40pt;top:172.08pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:552.48pt;top:172.08pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:551.52pt;top:172.08pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:43.44pt;top:61.44pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:62.40pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:86.40pt;top:61.44pt;width:363.60pt;height:0.48pt"></i><i class="r" style="left:86.40pt;top:62.40pt;width:363.60pt;height:0.48pt"></i><i class="r" style="left:451.44pt;top:61.44pt;width:66.96pt;height:0.48pt"></i><i class="r" style="left:451.44pt;top:62.40pt;width:66.96pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:61.44pt;width:31.68pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:62.40pt;width:31.68pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:84.48pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:84.48pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:114.24pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:114.24pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:129.12pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:129.12pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:129.12pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:129.12pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:155.76pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:155.76pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:171.60pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:85.44pt;top:171.60pt;width:364.56pt;height:0.48pt"></i><i class="r" style="left:450.48pt;top:171.60pt;width:67.92pt;height:0.48pt"></i><i class="r" style="left:518.88pt;top:171.60pt;width:32.64pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:186.96pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:43.44pt;top:186.00pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:86.40pt;top:186.96pt;width:363.60pt;height:0.48pt"></i><i class="r" style="left:86.40pt;top:186.00pt;width:363.60pt;height:0.48pt"></i><i class="r" style="left:451.44pt;top:186.96pt;width:66.96pt;height:0.48pt"></i><i class="r" style="left:451.44pt;top:186.00pt;width:66.96pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:186.96pt;width:31.68pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:186.00pt;width:31.68pt;height:0.48pt"></i>
+<p class="x tc" style="--b:73.9;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:77.0;left:90.7pt">식 (24):</p>
+<div class="f" style="left:161.4pt;top:64.6pt"><span class="fig" data-srcpage="9" data-clip="161.4,64.6,255.1,84.2"></span></div>
+<p class="x tc" style="--b:96.0;left:477.1pt">0.7</p>
+<p class="x tc h" style="--b:100.1;left:56.6pt">2.9</p>
+<p class="x tc h" style="--b:100.1;left:528.0pt">1.4</p>
+<p class="x tc" style="--b:103.9;left:90.7pt">식 (25):</p>
+<div class="f" style="left:161.0pt;top:86.9pt"><span class="fig" data-srcpage="9" data-clip="161.0,86.9,229.5,113.9"></span></div>
+<p class="x tc" style="--b:125.8;left:477.1pt">0.5</p>
+<p class="x tc" style="--b:126.2;left:90.7pt">식 (25)의 수치:</p>
+<div class="f" style="left:253.2pt;top:116.5pt"><span class="fig" data-srcpage="9" data-clip="253.2,116.5,351.9,128.8"></span></div>
+<p class="x tc" style="--b:140.6;left:477.1pt">1.0</p>
+<p class="x tc" style="--b:147.8;left:90.7pt">식 (26):</p>
+<div class="f" style="left:161.0pt;top:131.5pt"><span class="fig" data-srcpage="9" data-clip="161.0,131.5,234.2,155.5"></span></div>
+<p class="x tc h" style="--b:154.8;left:53.5pt">2.10</p>
+<p class="x tc h" style="--b:154.8;left:528.0pt">1.4</p>
+<p class="x tc" style="--b:167.3;left:477.1pt">0.4</p>
+<p class="x tc" style="--b:167.8;left:90.7pt">식 (26)의 수치:</p>
+<div class="f" style="left:253.2pt;top:157.7pt"><span class="fig" data-srcpage="9" data-clip="253.2,157.7,344.7,171.3"></span></div>
+<p class="x c h" style="--b:183.1;left:43.0pt;width:42.0pt">합계</p>
+<p class="x tc h" style="--b:183.1;left:524.2pt">10.0</p>
+<p class="x ov c h" style="--b:212.4">문제 3. 기하 광학과 광검출기 (10.0점)</p>
+<p class="x ov" style="--b:226.1"><b>3.1</b> 빛의 반사 법칙에 따라 다음 관계가 성립한다.</p>
+<div class="f" style="left:107.0pt;top:231.2pt"><span class="fig" data-srcpage="9" data-clip="107.0,231.2,140.2,243.2"></span></div>
+<p class="x en2" style="--b:240.2;left:532.3pt">(1)</p>
+<p class="x ov" style="--b:253.9"><b>3.2</b> 빛의 굴절에 관한 스넬의 법칙에 따라 다음 관계도 성립한다.</p>
+<p class="x en2" style="--b:268.1;left:532.3pt">(2)</p>
+<div class="f" style="left:107.0pt;top:259.4pt"><span class="fig" data-srcpage="9" data-clip="107.0,259.4,184.2,271.4"></span></div>
+<p class="x ov" style="--b:281.8"><b>3.3</b> 각이 작을 때는 사인 값을 각 자체로 바꿀 수 있으므로 다음 식을 얻는다.</p>
+<div class="f" style="left:107.0pt;top:286.9pt"><span class="fig" data-srcpage="9" data-clip="107.0,286.9,147.4,298.9"></span></div>
+<p class="x en2" style="--b:295.9;left:532.3pt">(3)</p>
+<p class="x ov" style="--b:309.6"><b>3.4</b> 램프는 모든 방향으로 고르게 빛을 내므로, 구하려는 복사 일률은 다음과 같다.</p>
+<p class="x en2" style="--b:325.7;left:532.3pt">(4)</p>
+<div class="f" style="left:107.0pt;top:313.9pt"><span class="fig" data-srcpage="9" data-clip="107.0,313.9,165.1,332.0"></span></div>
+<p class="x ov ind" style="--b:342.7">따라서 어떤 방향으로 나가는 램프의 복사 일률은 그에 해당하는 각으로 정해진다.</p>
+<p class="x ov c h" style="--b:356.4">얇은 판</p>
+<p class="x ov" style="--b:370.3"><b>3.5</b> 문제를 풀기 위하여 아래와 같은 그림을 그리자.</p>
+<div class="f" style="left:209.7pt;top:379.8pt"><span class="fig" data-srcpage="9" data-clip="209.7,379.8,389.0,561.3"></span></div>
+<p class="x ov ind" style="--b:577.4">여기서 각에 대해서는 다음 표기를 사용하며, 각이 작으면 다음 관계로 구할 수 있다.</p>
+<p class="x en2" style="--b:593.3;left:532.3pt">(5)</p>
+<div class="f" style="left:107.0pt;top:581.9pt"><span class="fig" data-srcpage="9" data-clip="107.0,581.9,142.8,603.8"></span></div>
+<div class="f" style="left:107.0pt;top:600.5pt"><span class="fig" data-srcpage="9" data-clip="107.0,600.5,154.3,618.5"></span></div>
+<p class="x en2" style="--b:612.2;left:532.3pt">(6)</p>
+<p class="x ov ind" style="--b:629.5;--l:13.68pt">3.4에 따라 검출기가 받는 복사 일률은 각에 비례하므로, 밀리암미터 눈금을 계산하는 식은 다음 꼴이 되고</p>
+<p class="x en2" style="--b:661.2;left:532.3pt">(7)</p>
+<div class="f" style="left:106.7pt;top:648.5pt"><span class="fig" data-srcpage="9" data-clip="106.7,648.5,272.7,668.3"></span></div>
+<p class="x tc" style="--b:661.2;left:322.6pt">$-\frac{a}{2}&lt;x&lt;\frac{a}{2}$일 때,</p>
+<p class="x ov" style="--b:678.7">다음도 분명하다.</p>
+<div class="f" style="left:106.7pt;top:686.1pt"><span class="fig" data-srcpage="9" data-clip="106.7,686.1,157.9,696.9"></span></div>
+<p class="x en2" style="--b:694.3;left:532.3pt">(8)</p>
+<p class="x tc" style="--b:694.3;left:322.6pt">$x&lt;-\frac{a}{2}$일 때,</p>
+<p class="x ov" style="--b:711.6">그리고</p>
+<p class="x en2" style="--b:727.2;left:532.3pt">(9)</p>
+<div class="f" style="left:106.7pt;top:719.0pt"><span class="fig" data-srcpage="9" data-clip="106.7,719.0,196.8,730.2"></span></div>
+<p class="x tc" style="--b:727.2;left:322.6pt">$x&gt;\frac{a}{2}$일 때.</p>
+<p class="x ov ind" style="--b:744.5;--l:13.68pt">해당하는 함수의 그래프는 아래 그림과 같으며, 그래프의 두 특징적인 점의 좌표는 다음과 같다.</p>
+<div class="f" style="left:106.7pt;top:763.7pt"><span class="fig" data-srcpage="9" data-clip="106.7,763.7,178.4,778.4"></span></div>
+<p class="x en2" style="--b:772.3;left:532.3pt">(10)</p>
+<p class="x tc" style="--b:772.3;left:322.6pt">$x=-2.50\ \mathrm{cm}$일 때,</p>
+<p class="x en2" style="--b:786.5;left:532.3pt">(11)</p>
+<div class="f" style="left:106.7pt;top:778.2pt"><span class="fig" data-srcpage="9" data-clip="106.7,778.2,187.4,787.6"></span></div>
+<p class="x tc" style="--b:786.5;left:322.6pt">$x=2.50\ \mathrm{cm}$일 때.</p>
+</div>
+
+<!-- 10 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">10/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<div class="f" style="left:180.2pt;top:61.4pt"><span class="fig" data-srcpage="10" data-clip="180.2,61.4,415.6,217.2"></span></div>
+<p class="x ov c h" style="--b:228.5">두꺼운 판</p>
+<p class="x ov" style="--b:242.6;--l:13.68pt"><b>3.6</b> 그래프에 점 $x_1$이 나타나는 것은 빛이 판의 수평면에서 추가로 반사되기 시작하기 때문이며, 램프에서 슬릿의 가장자리까지 가는 광선의 경로는 아래 그림과 같다.</p>
+<div class="f" style="left:206.9pt;top:277.2pt"><span class="fig" data-srcpage="10" data-clip="206.9,277.2,386.7,445.4"></span></div>
+<p class="x ov ind" style="--b:460.8">반사할 때 두 각이 같으므로, 구하려는 값을 다음과 같이 쉽게 구할 수 있다.</p>
+<p class="x en2" style="--b:478.1;left:532.3pt">(12)</p>
+<div class="f" style="left:106.7pt;top:465.6pt"><span class="fig" data-srcpage="10" data-clip="106.7,465.6,177.0,484.7"></span></div>
+<p class="x ov" style="--b:495.1"><b>3.7</b> 첫 번째 최댓값은 판의 수평면에서 반사된 빛이 모두 슬릿을 지나 검출기에 들어갈 때 나타난다. 광선의 경로는 아래 그림과 같으며, 이에 해당하는 좌표값은 분명히 다음과 같다.</p>
+<p class="x en2" style="--b:538.6;left:532.3pt">(13)</p>
+<div class="f" style="left:106.7pt;top:527.2pt"><span class="fig" data-srcpage="10" data-clip="106.7,527.2,153.2,545.2"></span></div>
+<div class="f" style="left:192.8pt;top:551.4pt"><span class="fig" data-srcpage="10" data-clip="192.8,551.4,399.5,717.5"></span></div>
+<p class="x ov" style="--b:733.0"><b>3.8</b> 점 $x_2$에서의 $\Delta I_{max}$ 값은 다음 관계로부터 구한다.</p>
+<div class="f" style="left:106.7pt;top:738.3pt"><span class="fig" data-srcpage="10" data-clip="106.7,738.3,216.9,757.7"></span></div>
+<p class="x en2" style="--b:750.7;left:532.3pt">(14)</p>
+<p class="x ov" style="--b:768.7">여기서 각 $\alpha$는 여전히 식 (5)로 정해지고, 각 $\theta$는 다음과 같다.</p>
+<div class="f" style="left:107.0pt;top:772.8pt"><span class="fig" data-srcpage="10" data-clip="107.0,772.8,161.1,792.7"></span></div>
+<p class="x en2" style="--b:784.3;left:532.3pt">(15)</p>
+</div>
+
+<!-- 11 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">11/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<p class="x ov" style="--b:72.5">이로부터 최종적으로 다음을 얻는다.</p>
+<div class="f" style="left:106.7pt;top:77.1pt"><span class="fig" data-srcpage="11" data-clip="106.7,77.1,188.5,97.6"></span></div>
+<p class="x en2" style="--b:89.5;left:532.3pt">(16)</p>
+<p class="x ov" style="--b:109.0;--l:13.68pt"><b>3.9</b> 좌표 $x_3$은 판에서 굴절된 광선이 처음으로 슬릿의 아래쪽 가장자리에 닿는다는 조건으로 정해진다. 광선의 경로는 아래 그림과 같다.</p>
+<div class="f" style="left:206.7pt;top:129.2pt"><span class="fig" data-srcpage="11" data-clip="206.7,129.2,386.4,297.4"></span></div>
+<p class="x ov ind" style="--b:313.4">그림으로부터 각은 다음과 같고</p>
+<div class="f" style="left:107.0pt;top:317.5pt"><span class="fig" data-srcpage="11" data-clip="107.0,317.5,167.2,346.4"></span></div>
+<p class="x en2" style="--b:329.0;left:532.3pt">(17)</p>
+<p class="x en2" style="--b:356.4;left:532.3pt">(18)</p>
+<div class="f" style="left:106.7pt;top:342.0pt"><span class="fig" data-srcpage="11" data-clip="106.7,342.0,152.5,362.9"></span></div>
+<p class="x ov" style="--b:373.4">굴절 법칙에 따라</p>
+<p class="x en2" style="--b:387.6;left:532.3pt">(19)</p>
+<div class="f" style="left:107.0pt;top:379.3pt"><span class="fig" data-srcpage="11" data-clip="107.0,379.3,146.0,390.9"></span></div>
+<p class="x ov ind" style="--b:401.3">그러면 식 (17)-(19)로부터 최종적으로 다음을 얻는다.</p>
+<div class="f" style="left:106.7pt;top:406.6pt"><span class="fig" data-srcpage="11" data-clip="106.7,406.6,205.0,434.0"></span></div>
+<p class="x en2" style="--b:419.0;left:532.3pt">(20)</p>
+<p class="x ov" style="--b:444.7"><b>3.10</b> 좌표 $x_3$에서 0까지의 그래프 구간은 빛이 일부는 슬릿을 직접 지나고, 일부는 판에 들어가 굴절하고 반사되어 지나기 때문에 생긴다. 광선의 경로는 아래 그림과 같다.</p>
+<div class="f" style="left:211.9pt;top:480.4pt"><span class="fig" data-srcpage="11" data-clip="211.9,480.4,382.3,647.2"></span></div>
+<p class="x ov ind" style="--b:663.6;--l:13.68pt">각 $\alpha$는 여전히 식 (5)로 정해지고, 그림에 나타낸 해당 각들은 다음과 같다.</p>
+<p class="x en2" style="--b:692.9;left:532.3pt">(21)</p>
+<div class="f" style="left:107.0pt;top:681.1pt"><span class="fig" data-srcpage="11" data-clip="107.0,681.1,156.4,703.4"></span></div>
+<p class="x en2" style="--b:713.8;left:532.3pt">(22)</p>
+<div class="f" style="left:106.7pt;top:702.0pt"><span class="fig" data-srcpage="11" data-clip="106.7,702.0,237.8,728.7"></span></div>
+<p class="x ov" style="--b:739.9">그러면 값 $\Delta I(x)$는 다음 꼴이 되고</p>
+<p class="x en2" style="--b:757.7;left:532.3pt">(23)</p>
+<div class="f" style="left:106.7pt;top:745.0pt"><span class="fig" data-srcpage="11" data-clip="106.7,745.0,251.5,764.8"></span></div>
+<p class="x ov" style="--b:775.2">이로부터 기울기를 얻는다.</p>
+<p class="x en2" style="--b:793.0;left:532.3pt">(24)</p>
+<div class="f" style="left:106.3pt;top:780.3pt"><span class="fig" data-srcpage="11" data-clip="106.3,780.3,201.4,801.2"></span></div>
+</div>
+
+<!-- 12 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">12/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<p class="x ov" style="--b:72.7;--l:13.92pt"><b>3.11</b> 문제에 주어진 그래프로부터 $x_1=-2.50\ \mathrm{cm}$, $x_2=-2.00\ \mathrm{cm}$, $x_3=-1.75\ \mathrm{cm}$, $\Delta I_{max}=10.0\ \mathrm{mA}$, $d\Delta I(x)/dx=-1.20\ \mathrm{mA/cm}$이므로, 구하려는 매개변수의 값은 다음과 같다.</p>
+<div class="f" style="left:107.0pt;top:106.4pt"><span class="fig" data-srcpage="12" data-clip="107.0,106.4,165.8,120.8"></span></div>
+<p class="x en2" style="--b:114.7;left:532.3pt">(25)</p>
+<p class="x en2" style="--b:128.9;left:532.3pt">(26)</p>
+<div class="f" style="left:106.7pt;top:120.2pt"><span class="fig" data-srcpage="12" data-clip="106.7,120.2,149.0,135.0"></span></div>
+<p class="x en2" style="--b:142.8;left:532.3pt">(27)</p>
+<div class="f" style="left:106.7pt;top:134.5pt"><span class="fig" data-srcpage="12" data-clip="106.7,134.5,153.6,148.9"></span></div>
+<p class="x en2" style="--b:157.0;left:532.3pt">(28)</p>
+<div class="f" style="left:106.7pt;top:148.3pt"><span class="fig" data-srcpage="12" data-clip="106.7,148.3,175.9,163.9"></span></div>
+<p class="x en2" style="--b:170.9;left:532.3pt">(29)</p>
+<div class="f" style="left:106.7pt;top:162.2pt"><span class="fig" data-srcpage="12" data-clip="106.7,162.2,160.8,174.2"></span></div>
+<p class="x ov" style="--b:184.6;--l:14.40pt"><b>3.12</b> 완전한 그래프를 그리려면, 아래 그림에 $x_1, x_2, x_3, x_4, x_5, x_6$으로 나타낸 그래프의 모든 특징적인 점을 정해야 한다.</p>
+<div class="f" style="left:209.4pt;top:206.2pt"><span class="fig" data-srcpage="12" data-clip="209.4,206.2,383.8,373.0"></span></div>
+<p class="x ov ind" style="--b:390.0;--l:13.68pt">점 $x_1, x_2, x_3$의 좌표는 위에서 정하였으므로, 나머지 특징적인 점들의 좌표를 정해야 한다. 이를 위해 판을 음의 값에서 양의 값으로 차츰 움직이면서 그래프의 여러 갈래가 나타나는 모습을 설명하자.</p>
+<!-- table p12 433.9-646.1 -->
+<i class="r" style="left:35.76pt;top:434.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:227.28pt;top:434.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:558.72pt;top:434.40pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:35.76pt;top:448.80pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:227.28pt;top:448.80pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:558.72pt;top:448.80pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:35.76pt;top:463.20pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:227.28pt;top:463.20pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:558.72pt;top:463.20pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:35.76pt;top:491.28pt;width:0.48pt;height:27.84pt"></i><i class="r" style="left:227.28pt;top:491.28pt;width:0.48pt;height:27.84pt"></i><i class="r" style="left:558.72pt;top:491.28pt;width:0.48pt;height:27.84pt"></i><i class="r" style="left:35.76pt;top:519.60pt;width:0.48pt;height:41.28pt"></i><i class="r" style="left:227.28pt;top:519.60pt;width:0.48pt;height:41.28pt"></i><i class="r" style="left:558.72pt;top:519.60pt;width:0.48pt;height:41.28pt"></i><i class="r" style="left:35.76pt;top:561.36pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:227.28pt;top:561.36pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:558.72pt;top:561.36pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:35.76pt;top:589.44pt;width:0.48pt;height:41.52pt"></i><i class="r" style="left:227.28pt;top:589.44pt;width:0.48pt;height:41.52pt"></i><i class="r" style="left:558.72pt;top:589.44pt;width:0.48pt;height:41.52pt"></i><i class="r" style="left:35.76pt;top:631.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:227.28pt;top:631.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:558.72pt;top:631.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:36.24pt;top:433.92pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:433.92pt;width:330.96pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:448.32pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:448.32pt;width:330.96pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:462.72pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:462.72pt;width:330.96pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:490.80pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:490.80pt;width:330.96pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:519.12pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:519.12pt;width:330.96pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:560.88pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:560.88pt;width:330.96pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:588.96pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:588.96pt;width:330.96pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:630.96pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:630.96pt;width:330.96pt;height:0.48pt"></i><i class="r" style="left:36.24pt;top:645.60pt;width:191.04pt;height:0.48pt"></i><i class="r" style="left:227.76pt;top:645.60pt;width:330.96pt;height:0.48pt"></i>
+<p class="x c h" style="--b:445.4;left:36.0pt;width:192.0pt">그래프 구간의 좌표</p>
+<p class="x c h" style="--b:445.4;left:228.0pt;width:331.0pt">물리적 과정</p>
+<p class="x" style="--b:459.8;--l:13.80pt;left:232.8pt;width:324.2pt">빛이 모두 슬릿으로 직접 들어간다.</p>
+<p class="x c" style="--b:460.1;left:36.0pt;width:192.0pt">$-\infty$부터 $x_1$까지</p>
+<p class="x" style="--b:474.2;--l:13.92pt;left:232.8pt;width:324.2pt">빛이 모두 슬릿으로 직접 들어간다; 판의 수평면에서 반사된다.</p>
+<p class="x c" style="--b:474.7;left:36.0pt;width:192.0pt">$x_1$부터 $x_2$까지</p>
+<p class="x" style="--b:502.6;--l:13.68pt;left:232.8pt;width:324.2pt">빛이 일부만 슬릿으로 직접 들어간다; 판의 수평면에서 반사된다.</p>
+<p class="x c" style="--b:502.8;left:36.0pt;width:192.0pt">$x_2$부터 $x_3$까지</p>
+<p class="x" style="--b:530.6;--l:13.80pt;left:232.8pt;width:324.2pt">빛이 일부만 슬릿으로 직접 들어간다; 판의 수평면에서 반사된다(위에서 직접, 그리고 아래에서 판을 지나); 굴절하며 판을 지난다.</p>
+<p class="x c" style="--b:530.9;left:36.0pt;width:192.0pt">$x_3$부터 $x_4$까지</p>
+<p class="x" style="--b:572.4;--l:13.92pt;left:232.8pt;width:324.2pt">빛이 모두 슬릿으로 직접 들어가며 판을 지난다; 판을 지나 아래쪽 수평면에서 반사된다.</p>
+<p class="x c" style="--b:572.9;left:36.0pt;width:192.0pt">$x_4$부터 $x_5$까지</p>
+<p class="x" style="--b:600.5;--l:13.80pt;left:232.8pt;width:324.2pt">빛이 모두 슬릿으로 직접 들어가며 판을 지난다; 판을 지나 아래쪽 수평면에서 일부 반사된다.</p>
+<p class="x c" style="--b:601.0;left:36.0pt;width:192.0pt">$x_5$부터 $x_6$까지</p>
+<p class="x" style="--b:642.5;--l:13.80pt;left:232.8pt;width:324.2pt">빛이 모두 슬릿으로 직접 들어가며 판을 지난다.</p>
+<p class="x c" style="--b:642.7;left:36.0pt;width:192.0pt">$x_6$부터 $+\infty$까지</p>
+<p class="x ov ind" style="--b:671.3;--l:13.68pt">해당하는 특징적인 점들의 좌표를 구하자. 좌표 $x_4$는 쉽게 구할 수 있으며, 다음과 같다.</p>
+<p class="x en2" style="--b:702.0;left:532.3pt">(30)</p>
+<div class="f" style="left:106.7pt;top:689.5pt"><span class="fig" data-srcpage="12" data-clip="106.7,689.5,210.4,708.7"></span></div>
+<p class="x ov" style="--b:719.3">이때 밀리암미터 눈금은 다음 식으로 정해진다.</p>
+<div class="f" style="left:106.7pt;top:724.3pt"><span class="fig" data-srcpage="12" data-clip="106.7,724.3,277.0,743.8"></span></div>
+<p class="x en2" style="--b:737.0;left:532.3pt">(31)</p>
+<p class="x ov ind" style="--b:755.0">좌표 $x_5$는 다음과 같이 얻어지고</p>
+<div class="f" style="left:106.7pt;top:759.1pt"><span class="fig" data-srcpage="12" data-clip="106.7,759.1,151.8,777.2"></span></div>
+<p class="x tc" style="--b:770.6;left:155.3pt">$2.0\ \mathrm{cm}$,</p>
+<p class="x en2" style="--b:770.6;left:532.3pt">(32)</p>
+<p class="x ov" style="--b:787.7">이때 밀리암미터 눈금은 다음 식으로 정해진다.</p>
+</div>
+
+<!-- 13 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">13/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<div class="f" style="left:106.7pt;top:63.3pt"><span class="fig" data-srcpage="13" data-clip="106.7,63.3,289.3,93.5"></span></div>
+<p class="x en2" style="--b:83.0;left:532.3pt">(33)</p>
+<p class="x ov ind" style="--b:105.8">그림에 나타낸 각들은 다음과 같고</p>
+<p class="x en2" style="--b:121.7;left:532.3pt">(34)</p>
+<div class="f" style="left:107.0pt;top:110.3pt"><span class="fig" data-srcpage="13" data-clip="107.0,110.3,150.0,132.2"></span></div>
+<p class="x en2" style="--b:146.9;left:532.3pt">(35)</p>
+<div class="f" style="left:107.0pt;top:129.0pt"><span class="fig" data-srcpage="13" data-clip="107.0,129.0,152.1,153.5"></span></div>
+<p class="x ov" style="--b:164.2">이 각들은 다음 방정식으로 이어진다.</p>
+<div class="f" style="left:107.0pt;top:169.3pt"><span class="fig" data-srcpage="13" data-clip="107.0,169.3,147.4,181.3"></span></div>
+<p class="x en2" style="--b:178.3;left:532.3pt">(36)</p>
+<p class="x ov ind" style="--b:192.5">따라서 점 $x_6$의 좌표는 다음과 같으며,</p>
+<p class="x en2" style="--b:210.0;left:532.3pt">(37)</p>
+<div class="f" style="left:106.7pt;top:197.5pt"><span class="fig" data-srcpage="13" data-clip="106.7,197.5,243.2,224.9"></span></div>
+<p class="x ov" style="--b:235.4">이때 밀리암미터 눈금은 다음 식으로 정해진다.</p>
+<div class="f" style="left:106.7pt;top:240.5pt"><span class="fig" data-srcpage="13" data-clip="106.7,240.5,273.8,260.0"></span></div>
+<p class="x en2" style="--b:253.2;left:532.3pt">(38)</p>
+<p class="x ov ind" style="--b:270.7">전체 의존 관계 그래프는 아래 그림과 같다.</p>
+<div class="f" style="left:171.0pt;top:287.4pt"><span class="fig" data-srcpage="13" data-clip="171.0,287.4,425.3,455.5"></span></div>
+<!-- table p13 469.4-800.9 -->
+<i class="r" style="left:41.04pt;top:470.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.08pt;top:470.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:83.04pt;top:470.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:449.52pt;top:470.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:554.88pt;top:470.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:470.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.04pt;top:485.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:485.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:485.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:485.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:485.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:485.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:485.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:499.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.08pt;top:499.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:83.04pt;top:499.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:449.52pt;top:499.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:519.36pt;top:499.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:554.88pt;top:499.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:499.92pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.04pt;top:514.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:514.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:514.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:514.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:514.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:514.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:514.32pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:528.96pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:40.08pt;top:528.96pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:83.04pt;top:528.96pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:449.52pt;top:528.96pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:519.36pt;top:528.96pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:554.88pt;top:528.96pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:553.92pt;top:528.96pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:41.04pt;top:548.64pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:40.08pt;top:548.64pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:83.04pt;top:548.64pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:449.52pt;top:548.64pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:519.36pt;top:548.64pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:554.88pt;top:548.64pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:553.92pt;top:548.64pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:41.04pt;top:568.08pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:40.08pt;top:568.08pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:83.04pt;top:568.08pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:449.52pt;top:568.08pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:519.36pt;top:568.08pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:554.88pt;top:568.08pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:553.92pt;top:568.08pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:41.04pt;top:587.76pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:40.08pt;top:587.76pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:83.04pt;top:587.76pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:449.52pt;top:587.76pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:519.36pt;top:587.76pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:554.88pt;top:587.76pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:553.92pt;top:587.76pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:41.04pt;top:609.84pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:40.08pt;top:609.84pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:83.04pt;top:609.84pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:449.52pt;top:609.84pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:519.36pt;top:609.84pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:554.88pt;top:609.84pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:553.92pt;top:609.84pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:41.04pt;top:629.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:40.08pt;top:629.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:83.04pt;top:629.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:449.52pt;top:629.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:519.36pt;top:629.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:554.88pt;top:629.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:553.92pt;top:629.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:41.04pt;top:648.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.08pt;top:648.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:83.04pt;top:648.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:449.52pt;top:648.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:519.36pt;top:648.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:554.88pt;top:648.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:648.96pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.04pt;top:663.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.08pt;top:663.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:83.04pt;top:663.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:449.52pt;top:663.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:519.36pt;top:663.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:554.88pt;top:663.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:663.36pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.04pt;top:677.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:677.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:677.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:677.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:677.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:677.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:677.76pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:692.40pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:40.08pt;top:692.40pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:83.04pt;top:692.40pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:449.52pt;top:692.40pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:519.36pt;top:692.40pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:554.88pt;top:692.40pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:553.92pt;top:692.40pt;width:0.48pt;height:20.64pt"></i><i class="r" style="left:41.04pt;top:713.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:40.08pt;top:713.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:83.04pt;top:713.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:449.52pt;top:713.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:519.36pt;top:713.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:554.88pt;top:713.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:553.92pt;top:713.52pt;width:0.48pt;height:18.96pt"></i><i class="r" style="left:41.04pt;top:732.96pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:40.08pt;top:732.96pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:83.04pt;top:732.96pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:449.52pt;top:732.96pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:519.36pt;top:732.96pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:554.88pt;top:732.96pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:553.92pt;top:732.96pt;width:0.48pt;height:21.60pt"></i><i class="r" style="left:41.04pt;top:755.04pt;width:0.48pt;height:21.12pt"></i><i class="r" style="left:40.08pt;top:755.04pt;width:0.48pt;height:21.12pt"></i><i class="r" style="left:83.04pt;top:755.04pt;width:0.48pt;height:21.12pt"></i><i class="r" style="left:449.52pt;top:755.04pt;width:0.48pt;height:21.12pt"></i><i class="r" style="left:519.36pt;top:755.04pt;width:0.48pt;height:21.12pt"></i><i class="r" style="left:554.88pt;top:755.04pt;width:0.48pt;height:21.12pt"></i><i class="r" style="left:553.92pt;top:755.04pt;width:0.48pt;height:21.12pt"></i><i class="r" style="left:41.04pt;top:776.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:40.08pt;top:776.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:83.04pt;top:776.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:449.52pt;top:776.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:519.36pt;top:776.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:554.88pt;top:776.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:553.92pt;top:776.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:41.52pt;top:469.44pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:470.40pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:84.48pt;top:469.44pt;width:365.04pt;height:0.48pt"></i><i class="r" style="left:84.48pt;top:470.40pt;width:365.04pt;height:0.48pt"></i><i class="r" style="left:450.96pt;top:469.44pt;width:102.96pt;height:0.48pt"></i><i class="r" style="left:450.96pt;top:470.40pt;width:102.96pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:484.80pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:484.80pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:484.80pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:484.80pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:499.44pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:499.44pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:499.44pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:499.44pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:513.84pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:513.84pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:513.84pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:513.84pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:528.48pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:528.48pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:528.48pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:528.48pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:548.16pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:548.16pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:548.16pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:548.16pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:567.60pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:567.60pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:587.28pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:587.28pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:609.36pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:609.36pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:629.04pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:629.04pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:648.48pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:648.48pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:662.88pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:662.88pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:677.28pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:677.28pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:691.92pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:691.92pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:691.92pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:691.92pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:713.04pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:713.04pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:713.04pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:713.04pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:732.48pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:732.48pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:732.48pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:732.48pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:754.56pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:754.56pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:776.16pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:776.16pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:800.40pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:799.44pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:84.48pt;top:800.40pt;width:365.04pt;height:0.48pt"></i><i class="r" style="left:84.48pt;top:799.44pt;width:365.04pt;height:0.48pt"></i><i class="r" style="left:450.96pt;top:800.40pt;width:68.40pt;height:0.48pt"></i><i class="r" style="left:450.96pt;top:799.44pt;width:68.40pt;height:0.48pt"></i><i class="r" style="left:520.80pt;top:800.40pt;width:33.12pt;height:0.48pt"></i><i class="r" style="left:520.80pt;top:799.44pt;width:33.12pt;height:0.48pt"></i>
+<p class="x c h" style="--b:481.9;left:203.3pt;width:126.5pt">내용</p>
+<p class="x c h" style="--b:481.9;left:453.6pt;width:96.7pt">점수</p>
+<p class="x tc h" style="--b:496.6;left:54.5pt">3.1</p>
+<p class="x tc" style="--b:496.6;left:477.1pt">0.2</p>
+<p class="x tc h" style="--b:496.6;left:529.4pt">0.2</p>
+<p class="x tc" style="--b:496.8;left:88.6pt">식 (1):</p>
+<div class="f" style="left:152.9pt;top:489.3pt"><span class="fig" data-srcpage="13" data-clip="152.9,489.3,183.2,499.1"></span></div>
+<p class="x tc h" style="--b:511.0;left:54.5pt">3.2</p>
+<p class="x tc" style="--b:511.0;left:477.1pt">0.2</p>
+<p class="x tc h" style="--b:511.0;left:529.4pt">0.2</p>
+<p class="x tc" style="--b:511.2;left:88.6pt">식 (2):</p>
+<div class="f" style="left:152.9pt;top:503.7pt"><span class="fig" data-srcpage="13" data-clip="152.9,503.7,226.4,513.5"></span></div>
+<p class="x tc h" style="--b:525.6;left:54.5pt">3.3</p>
+<p class="x tc" style="--b:525.6;left:477.1pt">0.2</p>
+<p class="x tc h" style="--b:525.6;left:529.4pt">0.2</p>
+<p class="x tc" style="--b:525.8;left:88.6pt">식 (3):</p>
+<div class="f" style="left:152.9pt;top:518.3pt"><span class="fig" data-srcpage="13" data-clip="152.9,518.3,190.0,528.2"></span></div>
+<p class="x tc" style="--b:542.2;left:88.6pt">식 (4):</p>
+<div class="f" style="left:153.2pt;top:530.7pt"><span class="fig" data-srcpage="13" data-clip="153.2,530.7,208.8,547.9"></span></div>
+<p class="x tc h" style="--b:542.6;left:54.5pt">3.4</p>
+<p class="x tc" style="--b:542.6;left:477.1pt">0.4</p>
+<p class="x tc h" style="--b:542.6;left:529.4pt">0.4</p>
+<p class="x tc" style="--b:561.6;left:88.6pt">식 (5):</p>
+<div class="f" style="left:152.9pt;top:550.2pt"><span class="fig" data-srcpage="13" data-clip="152.9,550.2,186.3,567.3"></span></div>
+<p class="x tc" style="--b:562.3;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:581.3;left:88.6pt">식 (6):</p>
+<div class="f" style="left:153.2pt;top:569.5pt"><span class="fig" data-srcpage="13" data-clip="153.2,569.5,198.0,587.0"></span></div>
+<p class="x tc" style="--b:581.8;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:602.6;left:477.1pt">0.4</p>
+<p class="x tc" style="--b:602.9;left:88.6pt">식 (7):</p>
+<div class="f" style="left:152.9pt;top:590.2pt"><span class="fig" data-srcpage="13" data-clip="152.9,590.2,318.6,609.1"></span></div>
+<p class="x tc" style="--b:602.9;left:348.5pt">$-\frac{a}{2}\le x\le\frac{a}{2}$일 때</p>
+<p class="x tc" style="--b:622.8;left:88.6pt">식 (8):</p>
+<div class="f" style="left:152.9pt;top:614.6pt"><span class="fig" data-srcpage="13" data-clip="152.9,614.6,203.7,625.1"></span></div>
+<p class="x tc" style="--b:622.8;left:348.5pt">$x&lt;-\frac{a}{2}$일 때</p>
+<p class="x tc" style="--b:623.5;left:477.1pt">0.4</p>
+<p class="x tc h" style="--b:624.5;left:54.5pt">3.5</p>
+<p class="x tc h" style="--b:624.5;left:529.4pt">3.5</p>
+<p class="x tc" style="--b:642.5;left:88.6pt">식 (9):</p>
+<div class="f" style="left:152.9pt;top:634.3pt"><span class="fig" data-srcpage="13" data-clip="152.9,634.3,243.0,645.5"></span></div>
+<p class="x tc" style="--b:642.5;left:348.5pt">$x&gt;\frac{a}{2}$일 때</p>
+<p class="x tc" style="--b:643.2;left:477.1pt">0.4</p>
+<p class="x" style="--b:660.0;--l:13.80pt;left:88.6pt;width:359.4pt">그래프: 수치가 맞는 직선 하나마다 0.5</p>
+<p class="x tc" style="--b:660.0;left:477.1pt">1.5</p>
+<p class="x tc" style="--b:674.4;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:674.6;left:88.6pt">식 (10):</p>
+<div class="f" style="left:158.5pt;top:666.0pt"><span class="fig" data-srcpage="13" data-clip="158.5,666.0,230.2,675.4"></span></div>
+<p class="x tc" style="--b:674.6;left:245.0pt">$x=-2.50\ \mathrm{cm}$일 때</p>
+<p class="x tc" style="--b:689.0;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:689.3;left:88.6pt">식 (11):</p>
+<div class="f" style="left:158.5pt;top:680.6pt"><span class="fig" data-srcpage="13" data-clip="158.5,680.6,232.4,690.4"></span></div>
+<p class="x tc" style="--b:689.3;left:246.5pt">$x=2.50\ \mathrm{cm}$일 때</p>
+<p class="x tc h" style="--b:706.8;left:54.5pt">3.6</p>
+<p class="x tc" style="--b:706.8;left:477.1pt">0.2</p>
+<p class="x tc h" style="--b:706.8;left:529.4pt">0.2</p>
+<p class="x tc" style="--b:707.0;left:88.6pt">식 (12):</p>
+<div class="f" style="left:158.5pt;top:694.6pt"><span class="fig" data-srcpage="13" data-clip="158.5,694.6,226.3,712.7"></span></div>
+<p class="x tc" style="--b:726.5;left:88.6pt">식 (13):</p>
+<div class="f" style="left:158.5pt;top:715.1pt"><span class="fig" data-srcpage="13" data-clip="158.5,715.1,202.9,732.2"></span></div>
+<p class="x tc h" style="--b:727.2;left:54.5pt">3.7</p>
+<p class="x tc" style="--b:727.2;left:477.1pt">0.1</p>
+<p class="x tc h" style="--b:727.2;left:529.4pt">0.1</p>
+<p class="x tc" style="--b:748.1;left:88.6pt">식 (14):</p>
+<p class="x tc" style="--b:748.1;left:477.1pt">0.1</p>
+<div class="f" style="left:158.5pt;top:735.6pt"><span class="fig" data-srcpage="13" data-clip="158.5,735.6,265.5,754.3"></span></div>
+<p class="x tc" style="--b:768.0;left:88.6pt">식 (15):</p>
+<div class="f" style="left:158.9pt;top:756.6pt"><span class="fig" data-srcpage="13" data-clip="158.9,756.6,210.8,775.9"></span></div>
+<p class="x tc" style="--b:769.7;left:477.1pt">0.1</p>
+<p class="x tc h" style="--b:770.4;left:54.5pt">3.8</p>
+<p class="x tc h" style="--b:770.4;left:529.4pt">0.4</p>
+<p class="x tc" style="--b:787.7;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:791.0;left:88.6pt">식 (16):</p>
+<div class="f" style="left:158.5pt;top:778.6pt"><span class="fig" data-srcpage="13" data-clip="158.5,778.6,238.2,799.1"></span></div>
+</div>
+
+<!-- 14 -->
+<div class="page">
+<div class="hd" style="left:36pt">XX 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:33.5pt">쪽 <span class="pn">14/14</span></div>
+<i class="r" style="left:36.00pt;top:46.32pt;width:523.20pt;height:0.96pt"></i>
+<!-- table p14 61.4-505.0 -->
+<i class="r" style="left:41.04pt;top:62.88pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:40.08pt;top:62.88pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:83.04pt;top:62.88pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:449.52pt;top:62.88pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:519.36pt;top:62.88pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:554.88pt;top:62.88pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:553.92pt;top:62.88pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:41.04pt;top:86.16pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:40.08pt;top:86.16pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:83.04pt;top:86.16pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:449.52pt;top:86.16pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:519.36pt;top:86.16pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:554.88pt;top:86.16pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:553.92pt;top:86.16pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:41.04pt;top:111.84pt;width:0.48pt;height:15.12pt"></i><i class="r" style="left:40.08pt;top:111.84pt;width:0.48pt;height:15.12pt"></i><i class="r" style="left:83.04pt;top:111.84pt;width:0.48pt;height:15.12pt"></i><i class="r" style="left:449.52pt;top:111.84pt;width:0.48pt;height:15.12pt"></i><i class="r" style="left:519.36pt;top:111.84pt;width:0.48pt;height:15.12pt"></i><i class="r" style="left:554.88pt;top:111.84pt;width:0.48pt;height:15.12pt"></i><i class="r" style="left:553.92pt;top:111.84pt;width:0.48pt;height:15.12pt"></i><i class="r" style="left:41.04pt;top:127.44pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:40.08pt;top:127.44pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:83.04pt;top:127.44pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:449.52pt;top:127.44pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:519.36pt;top:127.44pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:554.88pt;top:127.44pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:553.92pt;top:127.44pt;width:0.48pt;height:29.28pt"></i><i class="r" style="left:41.04pt;top:157.20pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:40.08pt;top:157.20pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:83.04pt;top:157.20pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:449.52pt;top:157.20pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:519.36pt;top:157.20pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:554.88pt;top:157.20pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:553.92pt;top:157.20pt;width:0.48pt;height:20.88pt"></i><i class="r" style="left:41.04pt;top:178.56pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:40.08pt;top:178.56pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:83.04pt;top:178.56pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:449.52pt;top:178.56pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:519.36pt;top:178.56pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:554.88pt;top:178.56pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:553.92pt;top:178.56pt;width:0.48pt;height:27.60pt"></i><i class="r" style="left:41.04pt;top:206.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:40.08pt;top:206.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:83.04pt;top:206.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:449.52pt;top:206.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:519.36pt;top:206.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:554.88pt;top:206.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:553.92pt;top:206.64pt;width:0.48pt;height:22.80pt"></i><i class="r" style="left:41.04pt;top:229.92pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:40.08pt;top:229.92pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:83.04pt;top:229.92pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:449.52pt;top:229.92pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:519.36pt;top:229.92pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:554.88pt;top:229.92pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:553.92pt;top:229.92pt;width:0.48pt;height:23.04pt"></i><i class="r" style="left:41.04pt;top:253.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:253.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:253.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:253.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:253.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:253.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:253.44pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:268.08pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:40.08pt;top:268.08pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:83.04pt;top:268.08pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:449.52pt;top:268.08pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:519.36pt;top:268.08pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:554.88pt;top:268.08pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:553.92pt;top:268.08pt;width:0.48pt;height:15.36pt"></i><i class="r" style="left:41.04pt;top:283.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:283.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:283.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:283.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:283.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:283.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:283.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:298.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.08pt;top:298.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:83.04pt;top:298.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:449.52pt;top:298.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:519.36pt;top:298.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:554.88pt;top:298.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:298.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.04pt;top:312.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:312.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:312.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:312.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:312.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:312.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:312.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:327.60pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:327.60pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:327.60pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:327.60pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:327.60pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:327.60pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:327.60pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:342.24pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:342.24pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:342.24pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:342.24pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:342.24pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:342.24pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:342.24pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:356.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.08pt;top:356.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:83.04pt;top:356.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:449.52pt;top:356.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:519.36pt;top:356.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:554.88pt;top:356.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:356.88pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.04pt;top:371.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:371.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:371.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:371.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:371.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:371.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:371.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:385.92pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:40.08pt;top:385.92pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:83.04pt;top:385.92pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:449.52pt;top:385.92pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:519.36pt;top:385.92pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:554.88pt;top:385.92pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:553.92pt;top:385.92pt;width:0.48pt;height:19.20pt"></i><i class="r" style="left:41.04pt;top:405.60pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:40.08pt;top:405.60pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:83.04pt;top:405.60pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:449.52pt;top:405.60pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:519.36pt;top:405.60pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:554.88pt;top:405.60pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:553.92pt;top:405.60pt;width:0.48pt;height:25.20pt"></i><i class="r" style="left:41.04pt;top:431.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:431.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:431.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:431.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:431.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:431.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:431.28pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:445.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:445.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:445.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:445.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:445.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:445.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:445.92pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:460.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.08pt;top:460.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:83.04pt;top:460.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:449.52pt;top:460.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:519.36pt;top:460.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:554.88pt;top:460.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:460.56pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.04pt;top:474.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:40.08pt;top:474.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:83.04pt;top:474.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:449.52pt;top:474.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:519.36pt;top:474.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:554.88pt;top:474.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:553.92pt;top:474.96pt;width:0.48pt;height:14.16pt"></i><i class="r" style="left:41.04pt;top:489.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:40.08pt;top:489.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:83.04pt;top:489.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:449.52pt;top:489.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:519.36pt;top:489.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:554.88pt;top:489.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:553.92pt;top:489.60pt;width:0.48pt;height:13.92pt"></i><i class="r" style="left:41.52pt;top:61.44pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:62.40pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:84.48pt;top:61.44pt;width:365.04pt;height:0.48pt"></i><i class="r" style="left:84.48pt;top:62.40pt;width:365.04pt;height:0.48pt"></i><i class="r" style="left:450.96pt;top:61.44pt;width:68.40pt;height:0.48pt"></i><i class="r" style="left:450.96pt;top:62.40pt;width:68.40pt;height:0.48pt"></i><i class="r" style="left:520.80pt;top:61.44pt;width:33.12pt;height:0.48pt"></i><i class="r" style="left:520.80pt;top:62.40pt;width:33.12pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:85.68pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:85.68pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:111.36pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:111.36pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:126.96pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:126.96pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:156.72pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:156.72pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:156.72pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:156.72pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:178.08pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:178.08pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:206.16pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:206.16pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:229.44pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:229.44pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:252.96pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:252.96pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:252.96pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:252.96pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:267.60pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:267.60pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:283.44pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:283.44pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:298.08pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:298.08pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:312.48pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:312.48pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:327.12pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:327.12pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:327.12pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:327.12pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:341.76pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:341.76pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:356.40pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:356.40pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:370.80pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:370.80pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:385.44pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:385.44pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:405.12pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:405.12pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:430.80pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:430.80pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:445.44pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:445.44pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:460.08pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:460.08pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:474.48pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:474.48pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:489.12pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:83.52pt;top:489.12pt;width:366.00pt;height:0.48pt"></i><i class="r" style="left:450.00pt;top:489.12pt;width:69.36pt;height:0.48pt"></i><i class="r" style="left:519.84pt;top:489.12pt;width:34.08pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:504.48pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:41.52pt;top:503.52pt;width:41.52pt;height:0.48pt"></i><i class="r" style="left:84.48pt;top:504.48pt;width:365.04pt;height:0.48pt"></i><i class="r" style="left:84.48pt;top:503.52pt;width:365.04pt;height:0.48pt"></i><i class="r" style="left:450.96pt;top:504.48pt;width:68.40pt;height:0.48pt"></i><i class="r" style="left:450.96pt;top:503.52pt;width:68.40pt;height:0.48pt"></i><i class="r" style="left:520.80pt;top:504.48pt;width:33.12pt;height:0.48pt"></i><i class="r" style="left:520.80pt;top:503.52pt;width:33.12pt;height:0.48pt"></i>
+<p class="x tc" style="--b:73.9;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:75.8;left:88.6pt">식 (17):</p>
+<div class="f" style="left:158.9pt;top:64.1pt"><span class="fig" data-srcpage="14" data-clip="158.9,64.1,216.6,83.9"></span></div>
+<p class="x tc" style="--b:97.2;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:105.4;left:88.6pt">식 (18):</p>
+<div class="f" style="left:158.5pt;top:87.8pt"><span class="fig" data-srcpage="14" data-clip="158.5,87.8,201.8,111.1"></span></div>
+<p class="x tc h" style="--b:114.0;left:54.5pt">3.9</p>
+<p class="x tc h" style="--b:114.0;left:529.4pt">0.8</p>
+<p class="x tc" style="--b:122.9;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:123.4;left:88.6pt">식 (19):</p>
+<div class="f" style="left:158.9pt;top:115.9pt"><span class="fig" data-srcpage="14" data-clip="158.9,115.9,195.0,126.7"></span></div>
+<p class="x tc" style="--b:138.5;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:142.3;left:88.6pt">식 (20):</p>
+<div class="f" style="left:158.5pt;top:129.9pt"><span class="fig" data-srcpage="14" data-clip="158.5,129.9,254.4,156.4"></span></div>
+<p class="x tc" style="--b:168.2;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:170.2;left:88.6pt">식 (21):</p>
+<div class="f" style="left:158.9pt;top:158.4pt"><span class="fig" data-srcpage="14" data-clip="158.9,158.4,205.8,177.8"></span></div>
+<p class="x tc" style="--b:189.6;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:191.5;left:88.6pt">식 (22):</p>
+<div class="f" style="left:158.5pt;top:180.1pt"><span class="fig" data-srcpage="14" data-clip="158.5,180.1,287.5,205.9"></span></div>
+<p class="x tc h" style="--b:209.3;left:51.4pt">3.10</p>
+<p class="x tc h" style="--b:209.3;left:529.4pt">0.8</p>
+<p class="x tc" style="--b:217.7;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:221.8;left:88.6pt">식 (23):</p>
+<div class="f" style="left:158.5pt;top:209.1pt"><span class="fig" data-srcpage="14" data-clip="158.5,209.1,300.1,228.9"></span></div>
+<p class="x tc" style="--b:241.0;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:245.0;left:88.6pt">식 (24):</p>
+<div class="f" style="left:158.2pt;top:232.3pt"><span class="fig" data-srcpage="14" data-clip="158.2,232.3,251.1,252.7"></span></div>
+<p class="x tc" style="--b:264.5;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:265.0;left:88.6pt">식 (25)의 수치:</p>
+<div class="f" style="left:251.0pt;top:256.3pt"><span class="fig" data-srcpage="14" data-clip="251.0,256.3,307.3,265.7"></span></div>
+<p class="x tc" style="--b:279.1;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:279.6;left:88.6pt">식 (26)의 수치:</p>
+<div class="f" style="left:250.7pt;top:272.1pt"><span class="fig" data-srcpage="14" data-clip="250.7,272.1,289.6,280.8"></span></div>
+<p class="x tc h" style="--b:294.5;left:51.4pt">3.11</p>
+<p class="x tc h" style="--b:294.5;left:529.4pt">1.0</p>
+<p class="x tc" style="--b:295.0;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:295.4;left:88.6pt">식 (27)의 수치:</p>
+<div class="f" style="left:250.7pt;top:287.9pt"><span class="fig" data-srcpage="14" data-clip="250.7,287.9,294.7,296.6"></span></div>
+<p class="x tc" style="--b:309.6;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:309.8;left:88.6pt">식 (28)의 수치:</p>
+<div class="f" style="left:250.7pt;top:301.5pt"><span class="fig" data-srcpage="14" data-clip="250.7,301.5,317.4,312.2"></span></div>
+<p class="x tc" style="--b:324.2;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:324.5;left:88.6pt">식 (29)의 수치:</p>
+<div class="f" style="left:250.7pt;top:317.0pt"><span class="fig" data-srcpage="14" data-clip="250.7,317.0,301.9,326.8"></span></div>
+<p class="x tc" style="--b:338.6;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:339.1;left:88.6pt">식 (30)의 수치:</p>
+<div class="f" style="left:250.7pt;top:330.5pt"><span class="fig" data-srcpage="14" data-clip="250.7,330.5,312.0,341.5"></span></div>
+<p class="x tc" style="--b:353.3;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:353.8;left:88.6pt">식 (31)의 수치:</p>
+<div class="f" style="left:250.7pt;top:345.5pt"><span class="fig" data-srcpage="14" data-clip="250.7,345.5,328.9,356.1"></span></div>
+<p class="x tc" style="--b:367.9;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:368.2;left:88.6pt">식 (32)의 수치:</p>
+<div class="f" style="left:250.7pt;top:359.9pt"><span class="fig" data-srcpage="14" data-clip="250.7,359.9,312.0,370.5"></span></div>
+<p class="x tc" style="--b:382.3;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:382.8;left:88.6pt">식 (33)의 수치:</p>
+<div class="f" style="left:250.7pt;top:374.1pt"><span class="fig" data-srcpage="14" data-clip="250.7,374.1,320.2,385.1"></span></div>
+<p class="x tc" style="--b:397.0;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:399.1;left:88.6pt">식 (34):</p>
+<div class="f" style="left:158.9pt;top:387.3pt"><span class="fig" data-srcpage="14" data-clip="158.9,387.3,198.6,404.8"></span></div>
+<p class="x tc h" style="--b:412.6;left:51.4pt">3.12</p>
+<p class="x tc h" style="--b:412.6;left:529.4pt">2.2</p>
+<p class="x tc" style="--b:416.6;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:424.8;left:88.6pt">식 (35):</p>
+<div class="f" style="left:158.9pt;top:406.9pt"><span class="fig" data-srcpage="14" data-clip="158.9,406.9,203.6,430.5"></span></div>
+<p class="x tc" style="--b:442.3;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:442.8;left:88.6pt">식 (36):</p>
+<div class="f" style="left:158.9pt;top:435.3pt"><span class="fig" data-srcpage="14" data-clip="158.9,435.3,196.4,445.1"></span></div>
+<p class="x tc" style="--b:457.0;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:457.4;left:88.6pt">식 (37)의 수치:</p>
+<div class="f" style="left:250.7pt;top:449.1pt"><span class="fig" data-srcpage="14" data-clip="250.7,449.1,312.0,459.8"></span></div>
+<p class="x tc" style="--b:471.6;left:477.1pt">0.2</p>
+<p class="x tc" style="--b:471.8;left:88.6pt">식 (38)의 수치:</p>
+<div class="f" style="left:250.7pt;top:463.5pt"><span class="fig" data-srcpage="14" data-clip="250.7,463.5,326.7,474.2"></span></div>
+<p class="x tc" style="--b:486.2;left:471.1pt">4x0.1</p>
+<p class="x" style="--b:486.5;--l:13.80pt;left:88.6pt;width:359.4pt">$0.00$부터 $3.00\ \mathrm{cm}$까지 그래프의 올바른 직선 4개</p>
+<p class="x c h" style="--b:500.6;left:41.0pt;width:42.0pt">합계</p>
+<p class="x tc h" style="--b:500.6;left:526.6pt">10.0</p>
+</div>
+
+</body></html>

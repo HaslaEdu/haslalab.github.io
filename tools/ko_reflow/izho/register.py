@@ -3,7 +3,7 @@
 
 usage: python -I tools/ko_reflow/izho/register.py PDF_DIR SRC_DIR NAME [NAME ...]
 
-NAME is <year>_T or <year>_TS. PDF_DIR holds IZhO_<year>_T_KO.pdf / IZhO_<year>_TS_KO.pdf, SRC_DIR the originals
+NAME is <year>_T or <year>_TS (IZhO), or icho:<year>_T (IChO theoretical paper, source IChO_<year>_T_EN.pdf). PDF_DIR holds IZhO_<year>_T_KO.pdf / IZhO_<year>_TS_KO.pdf, SRC_DIR the originals
 (IZhO_<year>_T_EN.pdf / IZhO_<year>_TS.pdf, or the page range in RANGES). For each edition it writes
 tools/ko_reflow/qa/<file>.json and replaces the file's rows in tools/original_style_publication.json,
 tools/translation_font_validation.json and pdf-assets.json (keeping order, field set and line endings), and sets
@@ -24,9 +24,15 @@ SOURCES = {'2012_T': 'IZhO_2012_T_RU.pdf'}
 
 
 def edition(name):
+    """(korean file, source file, catalogue slot, year, comp, html source) for NAME = <year>_T|_TS or icho:<year>_T."""
+    if name.startswith('icho:'):   # IChO theoretical exam paper (tools/ko_reflow/icho/<year>_T.html)
+        year, part = name[5:].split('_')
+        return (f'IChO_{year}_{part}_KO.pdf', f'IChO_{year}_T_EN.pdf', 'paper', int(year), 'icho',
+                f'tools/ko_reflow/icho/{year}_{part}.html')
     year, part = name.split('_')
     src = SOURCES.get(name) or (f'IZhO_{year}_T_EN.pdf' if part == 'T' else f'IZhO_{year}_TS.pdf')
-    return f'IZhO_{year}_{part}_KO.pdf', src, ('paper' if part == 'T' else 'sol'), int(year)
+    return (f'IZhO_{year}_{part}_KO.pdf', src, ('paper' if part == 'T' else 'sol'), int(year), 'izho',
+            f'tools/ko_reflow/izho/{name}.html')
 
 
 def load(rel):
@@ -61,7 +67,7 @@ def main(pdf_dir, src_dir, *names):
     ko, k_crlf, k_nl = load('tools/theory_ko.json')
     done = []
     for name in names:
-        out, srcname, slot, year = edition(name)
+        out, srcname, slot, year, comp, html = edition(name)
         p = pathlib.Path(pdf_dir) / out
         src_path = pathlib.Path(src_dir) / srcname
         doc, src = pymupdf.open(p), pymupdf.open(src_path)
@@ -72,7 +78,6 @@ def main(pdf_dir, src_dir, *names):
                     abs(doc[i].rect.height - src[a - 1 + i].rect.height) < 0.5 for i in range(n))
         hangul = len(re.findall(r'[가-힣]', ''.join(pg.get_text() for pg in doc)))
         h, size = sha(p), p.stat().st_size
-        html = f'tools/ko_reflow/izho/{name}.html'
         assert (ROOT / html).exists(), html
         assert sizes and hangul > 0, (out, sizes, hangul)
         qa = {
@@ -91,7 +96,7 @@ def main(pdf_dir, src_dir, *names):
                                'qa': f'tools/ko_reflow/qa/{out[:-4]}.json', 'audit_schema': 'html-reflow-stamped-v1'})
         replace_row(fonts['files'], out, {'file': out, 'pages': n, 'bytes': size, 'sha256': h,
                                           'missing_glyph_spans': [], 'original_style': True})
-        ko['izho'].setdefault(str(year), {}).setdefault('T', {})[slot] = out
+        ko[comp].setdefault(str(year), {}).setdefault('T', {})[slot] = out
         done.append((out, size))
         print(f'{out}: {n} pages, {size} bytes, {hangul} hangul')
     save('tools/original_style_publication.json', pub, pub_crlf, pub_nl)
