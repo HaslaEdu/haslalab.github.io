@@ -169,3 +169,72 @@ test('login CSRF: the nonce the page sent to the start comes back with the one-t
   assert.equal(q.get('n'),'M'.repeat(32));assert.ok(old.sql.prepare('PRAGMA table_info(oauth_states)').all().some(c=>c.name==='nonce'));
  }finally{old.close()}
 });
+const codeOf=back=>new URLSearchParams(back.hash.split('?')[1]).get('c');
+test('a social sign-up that has not chosen a username can still delete its account (and only that)',async()=>{
+ const s=setup();try{
+  const signed=await s.api('POST','/oauth/redeem',{code:codeOf(await s.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'),'changed-mind'))});
+  const token=signed.data.token,id=signed.data.user.id;assert.equal(signed.data.user.username_required,true);
+  assert.equal((await s.api('PATCH','/me',{nickname:'Other name'},token)).data.error,'username_required','other account changes still wait for the username');
+  s.sql.prepare('UPDATE sessions SET created_at=? WHERE user_id=?').run(Math.floor(Date.now()/1000)-901,id);
+  assert.equal((await s.api('DELETE','/me',undefined,token)).data.error,'recent_login_required','a stale session still cannot delete');
+  s.sql.prepare('UPDATE sessions SET created_at=? WHERE user_id=?').run(Math.floor(Date.now()/1000),id);
+  const gone=await s.api('DELETE','/me',undefined,token);assert.equal(gone.status,200);assert.equal(gone.data.ok,true);
+  assert.equal(s.sql.prepare('SELECT deleted FROM users WHERE id=?').get(id).deleted,1);
+  assert.equal(s.sql.prepare('SELECT count(*) n FROM identities WHERE user_id=?').get(id).n,0);
+  assert.equal(s.sql.prepare('SELECT count(*) n FROM sessions WHERE user_id=?').get(id).n,0);
+  assert.equal((await s.api('DELETE','/me')).status,401);
+  const again=await s.api('POST','/oauth/redeem',{code:codeOf(await s.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'),'changed-mind'))});
+  assert.equal(again.data.fresh,true);assert.notEqual(again.data.user.id,id,'the same Google account can sign up afresh');
+ }finally{s.close()}
+});
+test('a suspended social account is answered with account_suspended and nothing is created',async()=>{
+ const s=setup();try{
+  const signIn=async()=>s.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'),'suspended-sub');
+  const first=await s.api('POST','/oauth/redeem',{code:codeOf(await signIn())});const id=first.data.user.id;
+  await s.api('POST','/me/username',{username:'suspended_one',consent:{terms:true,privacy:true,age14:true}},first.data.token);
+  s.sql.prepare('UPDATE users SET deleted=2 WHERE id=?').run(id);
+  const count=()=>s.sql.prepare('SELECT (SELECT count(*) FROM users) u,(SELECT count(*) FROM identities) i,(SELECT count(*) FROM oauth_codes) c').get();
+  const before=count();
+  for(let i=0;i<3;i++){const back=await signIn(),q=new URLSearchParams(back.hash.split('?')[1]);assert.equal(back.origin,origin);assert.equal(q.get('e'),'account_suspended');assert.equal(q.get('c'),null);assert.equal(q.get('d'),null);}
+  assert.deepEqual({...count()},{...before},'no pending user, identity or code');
+  assert.equal(s.sql.prepare("SELECT count(*) n FROM users WHERE username LIKE '~pending_%'").get().n,0);
+  // a link left behind by a deleted account does not block a new sign-up
+  const dead=Number(s.sql.prepare("INSERT INTO users(username,nickname,pw,created_at,deleted) VALUES('deleted_x','deleted_x',NULL,?,1)").run(Math.floor(Date.now()/1000)).lastInsertRowid);
+  s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','orphan-sub',?,?)").run(dead,Math.floor(Date.now()/1000));
+  const orphan=await s.api('POST','/oauth/redeem',{code:codeOf(await s.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'),'orphan-sub'))});
+  assert.equal(orphan.status,200);assert.equal(orphan.data.fresh,true);assert.notEqual(orphan.data.user.id,dead);
+ }finally{s.close()}
+});
+test('deleting the account removes the HPhO entries, seats, phones, events and their stored proctoring files',async()=>{
+ const s=setup();try{
+  const {HPHO_SCHEMA}=await import('./src/hpho.js'),{HPHO_EXAM_SCHEMA}=await import('./src/hpho-exam.js');for(const q of [...HPHO_SCHEMA,...HPHO_EXAM_SCHEMA])s.sql.exec(q);
+  const objects=new Map();s.env.HPHO_SNAPS={async put(k,v){objects.set(k,v)},async delete(keys){for(const k of [].concat(keys))objects.delete(k)},
+   async list({prefix,cursor}){const all=[...objects.keys()].filter(k=>k.startsWith(prefix)).sort(),at=cursor?Number(cursor):0,page=all.slice(at,at+2);return{objects:page.map(key=>({key})),truncated:at+2<all.length,cursor:String(at+2)}}};
+  const owner=await s.api('POST','/signup',await s.coded({username:'hpho_owner',nickname:'HPhO owner',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}}));
+  const other=await s.api('POST','/signup',await s.coded({username:'hpho_other',nickname:'HPhO other',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}}));
+  const me=owner.data.user.id,them=other.data.user.id,t=Math.floor(Date.now()/1000);
+  for(const [user,no] of [[me,'H0007'],[them,'H00071']]){
+   s.sql.prepare("INSERT INTO hpho_entries(round_id,user_id,candidate_no,country,level,birth_year,created_at) VALUES('2027-1',?,?,'KR','high',2008,?)").run(user,no,t);
+   for(const track of ['theory','experiment']){
+    s.sql.prepare("INSERT INTO hpho_seats(round_id,user_id,track,candidate_no,checked_in_at,ends_at,last_beat) VALUES('2027-1',?,?,?,?,?,?)").run(user,track,no,t,t+60,t);
+    s.sql.prepare("INSERT INTO hpho_phones(round_id,user_id,track,candidate_no,code_hash,created_at) VALUES('2027-1',?,?,?,?,?)").run(user,track,no,'hash-'+user+track,t);
+    s.sql.prepare("INSERT INTO hpho_mail(round_id,user_id,track,kind,sent_at) VALUES('2027-1',?,?,'eve',?)").run(user,track,t);
+    for(const key of [`hpho-rec/2027-1/${track}/${no}/${t}-webcam.webm`,`hpho-answers/2027-1/${track}/${no}/001.jpg`])objects.set(key,'x');
+   }
+   s.sql.prepare("INSERT INTO hpho_events(round_id,user_id,seq,at,kind) VALUES('2027-1',?,1,?,'focus_lost')").run(user,t);
+   s.sql.prepare("INSERT INTO hpho_sessions(round_id,user_id,candidate_no,started_at,ends_at,last_beat) VALUES('2026-2',?,?,?,?,?)").run(user,no,t,t,t);
+   for(let i=0;i<5;i++)objects.set(`hpho/2027-1/${no}/${t+i}-webcam-random.jpg`,'x');
+   objects.set(`hpho/2026-2/${no}/${t}-screen-random.jpg`,'x');
+  }
+  objects.set('hpho-docs/2027-1/theory/paper-ko.pdf','x');
+  const gone=await s.api('DELETE','/me',undefined,owner.data.token);assert.equal(gone.status,200);
+  for(const table of ['hpho_entries','hpho_seats','hpho_phones','hpho_events','hpho_mail','hpho_sessions']){
+   assert.equal(s.sql.prepare(`SELECT count(*) n FROM ${table} WHERE user_id=?`).get(me).n,0,table);
+   assert.ok(s.sql.prepare(`SELECT count(*) n FROM ${table} WHERE user_id=?`).get(them).n>0,table+' of another member stays');
+  }
+  const left=[...objects.keys()];
+  assert.deepEqual(left.filter(k=>k.includes('/H0007/')),[],'every file under the deleted candidate number is gone');
+  assert.equal(left.filter(k=>k.includes('/H00071/')).length,10,"a longer candidate number sharing the prefix is someone else's");
+  assert.ok(left.includes('hpho-docs/2027-1/theory/paper-ko.pdf'),'the papers themselves stay');
+ }finally{s.close()}
+});

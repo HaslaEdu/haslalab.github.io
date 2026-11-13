@@ -9894,6 +9894,17 @@ function cmAccountUsername(root,done){
     cmInvalidate();cm.me=updated;cm.meChecked=true;cmMeP=null;cmBootstrapP=null;cmOverviewP=null;
     if(typeof arChip==='function')arChip();else cmAccountChip();done?.();
   }});
+  /* changed one's mind before choosing a username: the half-made account can still be deleted */
+  if(cm.me?.username_required===true&&!root.parentNode?.querySelector?.("[data-cancel-signup]")){
+    const T=CMT[lang],box=document.createElement("p");box.className="cmnote";box.dataset.cancelSignup="";
+    box.innerHTML=`<button type="button" class="cmbtn">${lang==="ko"?"가입 취소(계정 삭제)":"Cancel sign-up (delete this account)"}</button>`;
+    box.querySelector("button").onclick=async()=>{
+      if(!confirm(T.confirmDelAcc))return;
+      try{await cmApi("DELETE","/me");cmTok(null);cm.me=null;box.remove();location.hash="#/";}
+      catch(e){cmToast(cmErr(e));}
+    };
+    root.after(box);
+  }
 }
 function cmAccountSecurity(root,{lazy=false}={}){
   if(!root)return;

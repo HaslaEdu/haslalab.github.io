@@ -38,7 +38,7 @@ import { monthlySubmissionView, assessMonthlyAuthorship } from './monthly-policy
 import { monthlyPublicPresentation } from './monthly-presentation.js';
 import { createMonthlyPhotoRouter, prepareMonthlyPhotoSubmission, monthlyPhotoAttachments, monthlyPhotoDeletion, boundedForm } from './monthly-photos.js';
 import { createHphoRouter } from './hpho.js';
-import { createHphoExamRouter, hphoRetainTick, hphoMailTick } from './hpho-exam.js';
+import { createHphoExamRouter, hphoRetainTick, hphoMailTick, hphoForgetUser } from './hpho-exam.js';
 import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMonthlyCaptureSchema, monthlyCaptureDeletion, readMonthlyCapturePage } from './monthly-capture.js';
 import { settleMonthlyRewards, monthlyRewardSummary } from './monthly-rewards.js';
 import { createMonthlyExperimentRouter, attachMonthlyExperimentEvidence, ensureMonthlyExperimentSchema, monthlyExperimentDeletion, getMonthlyExperimentReference } from './monthly-experiment.js';
@@ -236,8 +236,10 @@ async function guardInjection(env, me, source, text) {
   if (await suspendForInjection(env, me.id, source, suspend, env[DB_SCOPE] || env.DB) || await isSuspended(env, me.id)) throw new HttpError(403, "account_suspended");
 }
 const RECENT_LOGIN_SEC = 900;
-function needRecentLogin(u, maxAgeSec = RECENT_LOGIN_SEC) {
-  needUser(u);
+/* pendingOk: also an account still waiting for its username (a social sign-up), for deleting the account only */
+function needRecentLogin(u, maxAgeSec = RECENT_LOGIN_SEC, { pendingOk = false } = {}) {
+  if (pendingOk) { if (!u) throw new HttpError(401, "login_required"); }
+  else needUser(u);
   if (!Number.isFinite(u.sessionCreatedAt) || u.sessionCreatedAt < now() - maxAgeSec) throw new HttpError(403, "recent_login_required");
   return u;
 }
@@ -450,7 +452,8 @@ async function handle(req, env, url, ctx) {
   }
   if (p === "/api/me" && m === "DELETE") {
     // Irreversible: a stolen long-lived token alone must not delete the account (the UI asks to sign in again).
-    needRecentLogin(me);
+    // A social sign-up that has not chosen its username yet can delete itself too.
+    needRecentLogin(me, RECENT_LOGIN_SEC, { pendingOk: true });
     await ensureAccountSecuritySchema(env.DB);
     await ensureUsernameClaimSchema(env.DB,env[DB_SCOPE]||env.DB);
     await ensureOmrSchema(env);
@@ -463,7 +466,10 @@ async function handle(req, env, url, ctx) {
     await labR2Drop(env, "session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)", me.id);
     // the AI conversations the member let the assistant learn from (ai-memory.js)
     await forgetMember(env.DB, me.id);
+    // HPhO entries, seats and phones, and the proctoring photos, recordings and answer pages kept in R2 (files first)
+    const hphoRows = await hphoForgetUser(env.DB, env.HPHO_SNAPS || env.LAB_PAGES, me.id);
     await env.DB.batch([
+      ...hphoRows,
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
       env.DB.prepare("DELETE FROM sessions WHERE user_id=?").bind(me.id),
@@ -5245,8 +5251,15 @@ async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
   if (!mr.ok || !sub) { const why = oauthWhy("profile", mr.status, mj); console.error("oauth profile", prov, why); return oauthBack(env,st.return_to, "e=oauth_failed&d=" + why); }
   const name = prov === "google" ? (prof.name || prof.given_name) : prov === "discord" ? (prof.global_name || prof.username)
     : prov === "github" ? (prof.name || prof.login) : prov === "kakao" ? ((prof.kakao_account || {}).profile || prof.properties || {}).nickname : (prof.nickname || prof.name);
-  const found = await env.DB.prepare("SELECT i.user_id FROM identities i JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=? AND u.deleted=0").bind(prov, sub).first();
+  /* whatever the account's state: a suspended account answers as its password sign-in does (account_suspended) and nothing
+     is made; a link left behind by a deleted account is dropped, so the person can sign up afresh */
+  let found = await env.DB.prepare("SELECT i.user_id, u.deleted FROM identities i LEFT JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=?").bind(prov, sub).first();
+  if (found && found.deleted !== 0 && found.deleted !== SUSPENDED) {
+    await env.DB.prepare("DELETE FROM identities WHERE provider=? AND sub=? AND user_id=?").bind(prov, sub, found.user_id).run();
+    found = null;
+  }
   let userId, fresh = 0;
+  if (found && found.deleted === SUSPENDED && (!st.link_user || found.user_id === st.link_user)) return oauthBack(env, st.return_to, "e=account_suspended");
   if (st.link_user) {
     if (found && found.user_id !== st.link_user) return oauthBack(env,st.return_to, "e=oauth_in_use");
     if (!found) await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, st.link_user, now()).run();
