@@ -2,8 +2,8 @@
  "schema": "html-reflow-stamped-v1",
  "file": "PLANCKS_2025_T_KO.pdf",
  "status": "READY",
- "sha256": "691671d36e19ee5126adf68dc03507f12ebc7c1954b9390b9281b156399d4935",
- "bytes": 2561489,
+ "sha256": "1faf13853752fbe2fa5d2051c3515b061f39d0daa052ccda0ce469ac456148d9",
+ "bytes": 2582315,
  "pages": 16,
  "source_file": "PLANCKS_2025_T_EN.pdf",
  "source_sha256": "0826b0fbf06de7bc4ad91e2085c75e0ab3c65402506204143236f8b2bd983aea",
@@ -17,7 +17,7 @@
  "builder": "tools/ko_reflow/build.py",
  "visual_review": {
   "reviewed": true,
-  "method": "every page compared side by side with the source at equal DPI",
+  "method": "all 16 pages compared side by side with the source at 70-72 dpi, with crops at 120-200 dpi for headers, headings, contents leaders, italics and boxed text; line baselines of every page compared numerically with the source (PyMuPDF); check.py shows only grey-box-behind-content overlaps and invisible KaTeX range boxes past the margin (no extracted word beyond x=553 pt)",
   "overflow_or_occlusion_observed": false
  }
 }
