@@ -17,10 +17,15 @@ ROOT = pathlib.Path(__file__).resolve().parents[3]
 RANGES = {   # name: (first, last) source pages when the Korean edition covers only part of the original
     # 2023 and 2024 publish one file with the English, Kazakh and Russian versions; the Korean follows the English part
     '2023_T': (1, 6), '2023_TS': (25, 43), '2024_T': (1, 6), '2024_TS': (1, 14),
+    '2023_S': (1, 7), '2024_E': (1, 4), '2024_S': (1, 7),
 }
 # the 2012 English paper is a text-only export without figures, formulas or the instructions page; the Korean edition
 # follows the official Russian paper (also 6 A4 pages)
-SOURCES = {'2012_T': 'IZhO_2012_T_RU.pdf'}
+SOURCES = {'2012_T': 'IZhO_2012_T_RU.pdf',
+           # the 2013 experimental round exists only in Russian on the server
+           '2013_E': 'IZhO_2013_E_RU.pdf', '2013_S': 'IZhO_2013_S_RU.pdf'}
+# experimental round: E = problems (IZhO_<year>_E_EN.pdf), S = solutions (IZhO_<year>_S.pdf); linked from index.html
+EXP = {'E': '_E_EN.pdf', 'S': '_S.pdf'}
 
 
 def edition(name):
@@ -30,6 +35,9 @@ def edition(name):
         return (f'IChO_{year}_{part}_KO.pdf', f'IChO_{year}_T_EN.pdf', 'paper', int(year), 'icho',
                 f'tools/ko_reflow/icho/{year}_{part}.html')
     year, part = name.split('_')
+    if part in EXP:
+        return (f'IZhO_{year}_{part}_KO.pdf', SOURCES.get(name) or f'IZhO_{year}{EXP[part]}', None, int(year), 'izho',
+                f'tools/ko_reflow/izho/{name}.html')
     src = SOURCES.get(name) or (f'IZhO_{year}_T_EN.pdf' if part == 'T' else f'IZhO_{year}_TS.pdf')
     return (f'IZhO_{year}_{part}_KO.pdf', src, ('paper' if part == 'T' else 'sol'), int(year), 'izho',
             f'tools/ko_reflow/izho/{name}.html')
@@ -96,18 +104,22 @@ def main(pdf_dir, src_dir, *names):
                                'qa': f'tools/ko_reflow/qa/{out[:-4]}.json', 'audit_schema': 'html-reflow-stamped-v1'})
         replace_row(fonts['files'], out, {'file': out, 'pages': n, 'bytes': size, 'sha256': h,
                                           'missing_glyph_spans': [], 'original_style': True})
-        ko[comp].setdefault(str(year), {}).setdefault('T', {})[slot] = out
+        if slot:
+            ko[comp].setdefault(str(year), {}).setdefault('T', {})[slot] = out
         done.append((out, size))
         print(f'{out}: {n} pages, {size} bytes, {hangul} hangul')
     save('tools/original_style_publication.json', pub, pub_crlf, pub_nl)
     save('tools/translation_font_validation.json', fonts, f_crlf, f_nl)
     save('tools/theory_ko.json', ko, k_crlf, k_nl)
-    # pdf-assets.json: edit only these rows, in place (the file is "name": bytes, one per line)
-    raw = (ROOT / 'pdf-assets.json').read_bytes().decode('utf-8')
+    # pdf-assets.json: set only these rows (new files are added); the file is json indent 0, sorted, CRLF
+    raw = (ROOT / 'pdf-assets.json').read_bytes()
+    assets = json.loads(raw)
     for out, size in done:
-        raw, k = re.subn(r'("%s": )\d+' % re.escape(out), lambda m: m.group(1) + str(size), raw)
-        assert k == 1, out
-    (ROOT / 'pdf-assets.json').write_bytes(raw.encode('utf-8'))
+        assets[out] = size
+    text = json.dumps(dict(sorted(assets.items())), indent=0, ensure_ascii=False) + '\n'
+    if b'\r\n' in raw:
+        text = text.replace('\n', '\r\n')
+    (ROOT / 'pdf-assets.json').write_bytes(text.encode('utf-8'))
 
 
 if __name__ == '__main__':
