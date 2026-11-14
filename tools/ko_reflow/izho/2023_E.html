@@ -1,0 +1,105 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* IZhO 2023 experimental problem (English part = pages 1-4 of IZhO_2023_E_EN.pdf): a SCAN without a text layer, US
+   Letter 612x792; the A4 Word original is printed at 94% (Times New Roman 12pt -> 11.29pt, pitch 13.8 -> 13.0pt;
+   headings 14 -> 13.17pt; header Arial bold ~9.4pt with a Times bold page number, underlined across the text width).
+   Text x 60..552.5. Blocks are placed by the baselines measured from the scan's ink rows (--b, pt); --l = line pitch.
+   The interferometer drawing, the photograph of the recorded signal and display formula (1) are stamped from the scan;
+   inline formulas are typed in KaTeX. */
+body{font-family:'Times New Roman',KB,serif;font-size:11.29pt;line-height:13pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0;white-space:nowrap}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;left:60pt;width:492.5pt;margin:0;--l:13pt;--fs:11.29pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs))}
+.c{text-align:center;text-indent:0}
+.h{font-weight:bold}
+.ind{text-indent:29.7pt}
+.ind2{text-indent:33.5pt}
+.li{padding-left:17pt;width:475.5pt}
+.n{position:absolute;left:0;text-indent:0}
+.en{width:auto;white-space:nowrap}
+.hd{position:absolute;top:34.1pt;font-family:Arial,KG,sans-serif;font-weight:bold;font-size:9.4pt;line-height:12pt;white-space:nowrap}
+.pn{font-family:'Times New Roman',serif}
+.f{position:absolute;line-height:0}
+.r{position:absolute;background:#000;display:block}
+</style></head><body>
+
+<!-- 1 -->
+<div class="page">
+<div class="hd" style="left:60pt">XIX 국제 자우티코프 올림피아드/실험 시험</div><div class="hd" style="right:59.5pt"><span class="pn">1/4</span></div>
+<i class="r" style="left:60pt;top:43pt;width:492.5pt;height:0.8pt"></i>
+<p class="x c h" style="--b:83.2;--fs:13.17pt;--l:15.2pt">2023년 2월 3일</p>
+<p class="x c h" style="--b:113.5;--fs:13.17pt;--l:15.2pt">먼저 이것을 읽으시오:</p>
+<p class="x li" style="--b:140.0"><span class="n">1.</span>실험 시험 시간은 4시간이다. 문제는 하나이다.</p>
+<p class="x li" style="--b:158.5"><span class="n">2.</span>수치 계산에는 자신의 계산기를 사용할 수 있다.</p>
+<p class="x li" style="--b:177.2"><span class="n">3.</span>풀이의 초안을 쓸 흰 종이가 제공되지만, 이 종이는 채점하지 않는다. 최종 풀이는 반드시 <b><i>답안용지</i></b>(Writing sheets)에만 써야 한다. 식, 수치, 문자를 사용하여 아주 짧게 설명을 쓸 수 있다.</p>
+<p class="x li" style="--b:222.0"><span class="n">4.</span><b><i>답안용지</i></b>의 앞면만 사용하시오<b>.</b> 테두리 안쪽에만 쓰시오.</p>
+<p class="x li" style="--b:240.5"><span class="n">5.</span>그래프는 <b><i>답안용지</i></b>의 모눈종이 영역 안에 그려야 한다. 모든 그림은 연필이 아니라 펜으로 그려야 한다! 모눈종이가 있는 <b><i>답안용지</i></b>가 더 필요하면 답안지 묶음의 끝에서 찾을 수 있다.</p>
+<p class="x li" style="--b:285.2"><span class="n">6.</span>각 <b><i>답안용지</i></b> 위쪽의 칸에 국가(<b>Country</b>), 학생 코드(<b>Student Code</b>), 문제 번호(<b>Question Number</b>), 각 <b><i>답안용지</i></b>의 일련번호(<b>Page Number</b>), 사용한 <b><i>답안용지</i></b>의 총 매수(<b>Total Number of Pages</b>)를 적으시오. 채점받고 싶지 않은 빈 <b><i>답안용지</i></b>를 사용했다면, 그 용지 전체에 큰 X 표시를 하고 번호를 매길 때 포함하지 마시오.</p>
+</div>
+
+<!-- 2 -->
+<div class="page">
+<div class="hd" style="left:60pt">XIX 국제 자우티코프 올림피아드/실험 시험</div><div class="hd" style="right:59.5pt"><span class="pn">2/4</span></div>
+<i class="r" style="left:60pt;top:43pt;width:492.5pt;height:0.8pt"></i>
+<p class="x c h" style="--b:68.0;--fs:13.17pt;--l:15.2pt">푸리에 분광기 <sup style="font-size:7.5pt">1</sup></p>
+<p class="x c h" style="--b:83.0;--fs:13.17pt;--l:15.2pt">도입</p>
+<p class="x ind" style="--b:96.5">푸리에 분광기의 주요 부분은 마이컬슨 간섭계이다.</p>
+<p class="x ind" style="--b:109.5">어떤 파장의 결맞는 광원이 있다고 하자. 수신기에 도달하는 두 빛살의 경로차가 반파장의 배수이면, 곧 두 빛살이 반대 위상으로 오면, 검출된 세기는 0에 가깝다. 간섭계의 거울 하나를 움직이면 광선의 경로차가 바뀌므로 수신기에 기록되는 빛의 세기도 달라진다. 경로차가 파장의 정수배일 때 세기가 최대가 된다는 것은 잘 알려져 있다.</p>
+<p class="x ind" style="--b:187.2">간섭계의 거울 하나가 일정한 속력으로 움직이면 수신기의 출력에서 사인꼴 신호가 관측된다. 사인꼴 신호의 진폭은 빛의 세기에 비례하고, 그 주기는 파장에 따라 달라진다.</p>
+<div class="f" style="left:363pt;top:214pt"><span class="fig" data-srcpage="2" data-clip="363,214,553,403"></span></div>
+<p class="x ind" style="--b:226.2;width:293pt">그림은 마이컬슨 간섭계의 구성을 보여 준다. 광원 1에서 나온 빛은 렌즈에 의해 평행한 빛살이 되어 빔 분할기 2로 향한다. 빛의 일부(세기의 절반)는 판을 통과하여 고정 거울 3에 닿고, 거기서 완전히 반사된 뒤 다시 판 2에 닿아 반사되어 광검출기 5가 있는 스크린에 닿는다. 광원에서 나온 빛의 나머지 절반은 빔 분할 판 2에서 반사되어 움직이는 거울 4에 닿고, 거기서 반사된 뒤 판 2를 통과하여 광검출기 5가 있는 스크린에 닿는다. 따라서 거울 3과 4에서 반사된 두 결맞는 파동이 스크린에 떨어진다. 이 파동들은 서로 간섭하며, 수신기는 스크린에서 생기는 빛의 세기를 시간의 함수로 기록한다. 이 함수는 이후 처리를 위해 컴퓨터의 메모리에 기록된다.</p>
+<p class="x ind2" style="--b:421.2">예로서, 앞에서 말한 논문에 실린 기록된 신호의 사진을 보인다.</p>
+<div class="f" style="left:60pt;top:437pt"><span class="fig" data-srcpage="2" data-clip="60,437,553,647"></span></div>
+<p class="x ind" style="--b:669.5">이제 거울 4가 고르지 않게 움직이거나, 광원이 단색광이 아니어서 여러 파장을 포함한다고 상상해 보자. 그러면 출력에서는 사인꼴보다 복잡한 신호가 검출된다. 적절한 수학적 신호 처리를 하면 거울 4의 운동 법칙이나 광원의 스펙트럼, 곧 여러 파장에서의 빛의 세기를 얻을 수 있다.</p>
+<p class="x ind" style="--b:721.5">문제를 풀 때는 다음의 단순화 가정과 기호를 사용하시오.</p>
+<i class="r" style="left:59.8pt;top:742.5pt;width:135.4pt;height:0.6pt"></i>
+<p class="x" style="--b:758.0;--fs:9.4pt;--l:11pt"><sup style="font-size:6pt">1</sup> 이 문제는 논문 « <b>Homemade Fourier spectrometer</b>»(<span style="color:#00f;text-decoration:underline">https://habr.com/ru/post/253947/</span>)를 바탕으로 만들었다.</p>
+</div>
+
+<!-- 3 -->
+<div class="page">
+<div class="hd" style="left:60pt">XIX 국제 자우티코프 올림피아드/실험 시험</div><div class="hd" style="right:59.5pt"><span class="pn">3/4</span></div>
+<i class="r" style="left:60pt;top:43pt;width:492.5pt;height:0.8pt"></i>
+<p class="x ind" style="--b:66.2">1) 광검출기가 기록하는 전압은 빛의 세기에 비례하며, 광검출기의 감도는 빛의 파장에 의존하지 않는다. 전자 회로로 신호의 일정한 성분을 잘라 내므로 그래프에는 변하는 성분만 나타난다;</p>
+<p class="x ind" style="--b:105.5;--l:15.3pt">2) 움직이는 거울은 진동수 20 Hz, 일정한 진폭으로 조화 법칙 $x(t)$에 따라 진동한다. $x=0$일 때 간섭하는 두 파동의 경로차는 0이라고 가정한다;</p>
+<p class="x ind" style="--b:134.2">3) 수신기에서 간섭하는 두 파동의 세기는 같다;</p>
+<p class="x ind" style="--b:147.0">4) 신호 기록의 시작은 움직이는 거울의 운동과 맞추어져 있으며, 언제나 거울의 같은 위치에서 시작한다;</p>
+<p class="x ind" style="--b:173.2">5) 신호는 같은 시간 간격의 순간마다 기록되어 메모리 칸에 저장되며, 이 칸에는 정수 값 $t$로 번호가 매겨진다. 사실상 기록 시각 $t$는 상대 단위로 기록된다.</p>
+<p class="x ind" style="--b:212.5;--l:14.2pt">6) 문제의 모든 그림은 기록된 전압이 메모리 칸의 번호에 따라 어떻게 달라지는지를 보여 준다. 풀이를 쉽게 하기 위해 각 그래프에는 표가 딸려 있으며, 표에는 기록된 신호의 극값(극대와 극소)의 위치 $t_m$이 나와 있고, 극값 자체에는 문자 $m$으로 번호가 매겨져 있다.</p>
+<p class="x ind2" style="--b:268.8"><b>주의!</b> 따로 주어진 <b><i>답안용지</i></b>에 기록된 신호가 광검출기 전압의 시간에 대한 의존성의 꼴로 주어져 있으며, 여러분은 이를 처리해야 한다. 신호의 일부만 주어져 있다는 점에 유의하시오. 이 문제를 풀 때 주어진 수치 데이터를 모두 사용할 필요는 없다. 구하는 값을 계산하는 데 필요하다고 생각하는 데이터만 사용하시오. 그래프를 그릴 때는 적당한 양의 데이터(10–15개의 점)를 사용하되, 사용하는 데이터의 수가 늘어날수록 계산의 정확도가 높아진다는 점을 기억하시오. 풀이에는 어떤 데이터를 사용했는지 반드시 밝히고, 계산에 사용한 식을 반드시 쓰시오. 계산할 때는 <b><i>답안용지</i></b>에 준비된 표를 <b>반드시 사용해야 한다</b>. 그래프를 그릴 때는 같은 <b><i>답안용지</i></b>에 주어진 양식을 사용하시오. <b><i>답안용지</i>만 채점한다는 점에 유의하시오</b>. 초안에는 흰 종이를 사용할 수 있지만, 채점하지 않는다!</p>
+<p class="x c h" style="--b:400.3;--fs:13.17pt;--l:15.2pt">문제</p>
+<p class="x c h" style="--b:413.8">1. 이론 부분</p>
+<p class="x ind2" style="--b:426.8">간섭계에 파장이 $\lambda$인 단색광을 비춘다.</p>
+<p class="x" style="--b:441.0;--l:16.8pt"><b>1.</b> 간섭하는 각 파동의 세기를 $I_0$, 두 파동 사이의 위상차를 $\Delta\varphi$라고 하자. 합성된 파동의 세기 $I$에 대한 식을 쓰시오.</p>
+<p class="x" style="--b:473.2;--l:15.3pt"><b>1.2</b> 수신기에서 파동의 세기 $I(x)$를 움직이는 거울의 위치 $x$의 함수로 나타내는 식을 쓰시오.</p>
+<p class="x" style="--b:502.5;--l:16.3pt"><b>1.3</b> 거울의 위치 $x_m$이 어떤 값일 때 스크린에서 빛의 세기가 각각 최대 또는 최소가 되는지 나타내는 식을 쓰시오.</p>
+<p class="x" style="--b:532.5;--l:16.1pt"><b>1.4</b> 스크린에서 빛의 세기가 극값이 되는 거울의 좌표 $x_m$을 정하는 일반식을 쓰시오.</p>
+<p class="x c h" style="--b:561.8">2. 파장을 아는 단색광을 이용한 장치의 보정</p>
+<p class="x ind" style="--b:574.8;--l:15.6pt">그림 1은 간섭계에 파장이 $\lambda_0=0.640\ \mu\mathrm{m}$인 단색광을 비출 때 빛의 세기가 시간에 따라 어떻게 달라지는지를 보여 준다. 표 1에는 빛의 세기가 극값(극대와 극소)이 되는 시각 $t_m$과 그 시각의 신호 값 $U_m$이 나와 있다.</p>
+<p class="x" style="--b:634.5"><b>2.1</b> 장치의 눈금 한 칸 $\Delta t=1$의 값을 밀리초 단위로 구하시오.</p>
+<p class="x ind" style="--b:648.0">이후 모든 계산은 장치 눈금의 단위로만 해야 한다.</p>
+<p class="x" style="--b:660.8"><b>2.2</b> 주어진 실험 데이터를 바탕으로 거울의 운동이 다음 함수로 기술될 수 있음을 보이시오.</p>
+<div class="f" style="left:240pt;top:677.5pt"><span class="fig" data-srcpage="3" data-clip="240,677.5,354.5,707"></span></div><p class="x en" style="--b:695.4;left:540pt">(1)</p>
+<p class="x" style="--b:719.2;--l:13.8pt">이 함수의 매개변수, 곧 장치 눈금 단위의 주기 $T$, 마이크로미터 단위의 진동 진폭 $A$, $x=0$이 되는 시각 $t_0$의 값을 구하시오. 의존성 (1)의 선형화된 그래프를 그리고,</p>
+</div>
+
+<!-- 4 -->
+<div class="page">
+<div class="hd" style="left:60pt">XIX 국제 자우티코프 올림피아드/실험 시험</div><div class="hd" style="right:59.5pt"><span class="pn">4/4</span></div>
+<i class="r" style="left:60pt;top:43pt;width:492.5pt;height:0.8pt"></i>
+<p class="x" style="--b:66.2;--l:13.3pt">위의 식이 거울의 진동을 기술하는 데 적용될 수 있음을 보이시오. 진동의 진폭을 구할 때의 오차 $\Delta A$를 추정하시오.</p>
+<p class="x ind" style="--b:92.5">문제의 다음 부분을 풀 때는 구한 매개변수 값을 넣은 함수 (1)을 사용해야 한다.</p>
+<p class="x c h" style="--b:118.2">3. 파장을 모르는 단색광</p>
+<p class="x ind" style="--b:131.5">간섭계에 파장을 모르는 단색광을 비춘다. 여러분은 이 파장을 구해야 한다.</p>
+<p class="x ind" style="--b:157.5">그림 2는 이 경우에 빛의 세기가 시간에 따라 어떻게 달라지는지를 보여 준다. 표 2에는 이 경우의 극값 좌표 값이 나와 있다.</p>
+<p class="x" style="--b:184.2;--l:16pt"><b>3.1</b> 세기가 극값이 되는 거울의 좌표 $x_m$을 극값의 번호의 함수로 그래프를 그리시오.</p>
+<p class="x" style="--b:213.5;--l:13.3pt"><b>3.2</b> 그린 그래프를 이용하여 광원의 파장 $\lambda$의 값을 가능한 한 정확하게 구하시오. 얻은 값의 오차 $\Delta\lambda$를 추정하시오.</p>
+<p class="x c h" style="--b:240.0">4. 두 단색광</p>
+<p class="x ind" style="--b:253.0;--l:14pt">간섭계에 두 단색광이 섞인 빛을 비춘다. 그중 하나의 파장은 $\lambda_1=0.640\ \mu\mathrm{m}$이고, 두 번째 빛의 파장 $\lambda_2$는 모른다.</p>
+<p class="x ind" style="--b:283.0">그림 3은 스크린에서 빛의 세기가 시간의 함수로 어떻게 달라지는지를 보여 준다. 표 3에는 이 경우의 극값 값이 나와 있다.</p>
+<p class="x" style="--b:310.0;--l:16.8pt"><b>4.1</b> 주어진 데이터를 이용하여 두 번째 스펙트럼 성분의 파장 $\lambda_2$를 가능한 한 정확하게 구하시오. 구한 파장 값의 오차 $\Delta\lambda_2$를 추정하시오.</p>
+<p class="x" style="--b:343.8"><b>4.2</b> 두 번째 파동과 첫 번째 파동의 세기의 비 $I_2/I_1$을 구하시오.</p>
+</div>
+</body></html>

@@ -1,0 +1,27 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "IZhO_2023_S_KO.pdf",
+ "status": "READY",
+ "sha256": "21f64cb9b16cb1749991c836c5ed762e306cf0c490fa06849b5e898059e2ff34",
+ "bytes": 612975,
+ "pages": 7,
+ "source_file": "IZhO_2023_S.pdf",
+ "source_sha256": "011dd2287cc2464b4c40c72447e9e9ec52ad7ea0c50f772e8045ecab84010997",
+ "source_page_range": [
+  1,
+  7
+ ],
+ "source_pages": 7,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 2317,
+ "html_source": "tools/ko_reflow/izho/2023_S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/check.py and qa side-by-side images; every flag confirmed by zoom)",
+  "overflow_or_occlusion_observed": false
+ }
+}
