@@ -1,0 +1,108 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2010 (XLIV = 제44회), 10학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: a SCAN (no text layer) of the printed booklet, A4 landscape sheets 842x595 holding two A5 booklet pages
+   each: sheet 1 = pages 4 (blank, page number only) | 5, sheet 2 = pages 6 | 7. LaTeX Computer Modern Cyrillic 10pt.
+   Coordinates were measured on the scan (360 dpi image) with a text-line profile and gridded crops.
+   Left page text column x 40.2..397.2, right page column x 457.2..812.8; paragraph indent ~15pt;
+   line pitch 11.6..12.0pt (the scan is slightly uneven: each block carries its measured --l).
+   The Korean page is white: only figures are stamped from the scan; header rules are drawn (.rule).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:40.2pt;width:357pt;--l:11.9pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.rc{left:457.2pt;width:355.6pt}            /* right page of the sheet */
+.i{text-indent:15pt}                       /* first-line paragraph indent */
+.c{text-align:center}
+/* running header (italic) above a drawn rule */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.rule{position:absolute;height:0;border-top:0.6pt solid #000}
+/* page number (booklet numbering) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "10학년" (bold 12pt) and problem titles (bold 10pt), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: a float reserves the figure's room for the first N lines */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* an inline formula and the Korean particle after it must never be split over two lines */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+/* .w: label on a white box covering a Russian label of the scanned figure */
+.ov.w{width:auto;background:#fff;padding:1.5pt 1.8pt 0.8pt;margin:-1.5pt 0 0 -1.8pt}
+.ov.w.t{padding:0 0.6pt;margin:0}           /* letter inside a circle: keep the circle */
+</style></head><body>
+
+<!-- sheet 1: booklet pages 4 (blank) and 5 -->
+<div class="page">
+<p class="x pn" style="--b:565.8;left:37pt">4</p>
+
+<p class="x rc hd r" style="--b:23.5">결선. 이론 시험</p>
+<div class="rule" style="left:456.5pt;width:356.2pt;top:26.9pt"></div>
+<p class="x rc g" style="--b:40.8;margin-top:-1pt">10학년</p>
+<p class="x rc h" style="--b:61.0">문제 1. 판 위에서 미끄러지는 물체</p>
+<p class="x rc i" style="--b:75.5;--l:11.75pt">길고 매끄러운 수평 탁자 위에 질량이 <span class="nw">$m_2$이고</span> 길이가 <span class="nw">$L$인</span> 판이 놓여 있고, 판의 왼쪽 끝에 질량이 <span class="nw">$m_1$인</span> 물체가 있다. 물체와 판 사이의 마찰 계수는 <span class="nw">$\mu$이다</span>. 판과 탁자 사이에는 마찰이 없다. 물체 <span class="nw">$m_1$은</span> 질량을 무시할 수 있는 도르래에 걸친, 질량을 무시할 수 있는 긴 실로 물체 <span class="nw">$M$과</span> 연결되어 있다(그림&nbsp;5). 계는 정지 상태에서 움직이기 시작한다.</p>
+<p class="x rc i" style="--b:137.2;--l:11.8pt">1. 마찰 계수 <span class="nw">$\mu$가</span> 어떤 값일 때 물체 <span class="nw">$m_1$과</span> 판 <span class="nw">$m_2$가</span> 한 덩어리로(미끄러지지 않고) 함께 움직이는가?</p>
+<p class="x rc i" style="--b:164.0;--l:11.5pt">2. 미끄러지지 않고 움직일 수 있는 마찰 계수의 최솟값 <span class="nw">$\mu_\mathrm{min}$을</span> 구하여라.</p>
+<p class="x rc i" style="--b:190.8;--l:11.5pt">3. $\mu = \mu_\mathrm{min}/2$라고 하자. 이 경우 물체 <span class="nw">$m_1$과</span> 판 <span class="nw">$m_2$는</span> 서로 다른 가속도로 움직인다. 운동을 시작하고 얼마의 시간 <span class="nw">$t$가</span> 지난 뒤 물체가 판에서 미끄러져 떨어지는가?</p>
+<p class="x rc i" style="--b:229.5;--l:11.5pt">$m_1 = M = 1\,\mathrm{kg}$, <span class="nw">$m_2 = 2\,\mathrm{kg}$이라고</span> 하여라. 판의 길이 <span class="nw">$L$은</span> <span class="nw">$1\,\mathrm{m}$로</span> 하여라. 물체의 길이는 <span class="nw">$L$보다</span> 훨씬 짧다고 알려져 있다. 중력 가속도는 <span class="nw">$g = 10\,\mathrm{m/s^2}$으로</span> 하여라.</p>
+<div class="f" style="left:463.5pt;top:267.5pt"><span class="fig" data-srcpage="1" data-clip="463.5,267.5,807,324.5"></span></div>
+<p class="x cap" style="--b:335.5;left:615.1pt">그림 5</p>
+<p class="x rc h" style="--b:368.8">문제 2. 해리</p>
+<p class="x rc i" style="--b:383.5;--l:11.96pt">보통 조건에서 산소는 이원자 분자 <span class="nw">$\mathrm{O_2}$로</span> 이루어져 있다. 온도가 올라가면 분자의 일부가 해리될 수 있으며, 그 결과 <span class="nw">$\mathrm{O_2}$</span> 분자 하나마다 원자 O가 두 개씩 생긴다. 그림&nbsp;6에는 좌표 <span class="nw">$(\rho, p)$에서</span> 똑같은 두 순환 과정 1과 2가 나타나 있다. 여기서 <span class="nw">$\rho$는</span> 기체의 밀도, <span class="nw">$p$는</span> 압력이다. 두 축에는 차원이 없는 양 <span class="nw">$p/p_0$과</span> <span class="nw">$\rho/\rho_0$이</span> 나타나 있으며, <span class="nw">$p_0$과</span> <span class="nw">$\rho_0$은</span> 어떤 척도 계수이다. 첫 번째 실험에서는 분자 상태의 산소 <span class="nw">$\mathrm{O_2}$가</span> 작동 물질이었다(낮은 온도). 두 번째 실험은 훨씬 더 높은 온도에서 하였다. 이때 산소의 일부는 분자 <span class="nw">$(\mathrm{O_2})$</span> 상태, 나머지는 원자 (O) 상태였고, 해리도는 실험하는 동안 변하지 않았다. 두 실험에서 기체의 질량은 같았다. 두 실험에서 최고 온도의 비는 <span class="nw">$k_\mathrm{max} = T_{2,\mathrm{max}}/T_{1,\mathrm{max}} = 5.0$이다</span>.</p>
+<p class="x rc pn r" style="--b:561.8">5</p>
+</div>
+
+<!-- sheet 2: booklet pages 6 and 7 -->
+<div class="page">
+<p class="x hd" style="--b:28.3">제44회 전러시아 학생 물리 올림피아드</p>
+<div class="rule" style="left:38.5pt;width:358pt;top:32.2pt"></div>
+<div class="f" style="left:113.5pt;top:39pt"><span class="fig" data-srcpage="2" data-clip="113.5,39,327.5,227.5"></span></div>
+<p class="x cap" style="--b:240.2;left:198.2pt">그림 6</p>
+<p class="x i" style="--b:262.0;--l:11.8pt">1. 두 번째 실험에서 산소 분자의 해리도 <span class="nw">$\alpha$(해리된</span> 분자의 비율)를 구하여라.</p>
+<p class="x i" style="--b:285.8;--l:11.4pt">2. 두 실험에서 최저 온도의 비 <span class="nw">$k_\mathrm{min}$을</span> 구하여라.</p>
+<p class="x h" style="--b:309.8">문제 3. 경사면 위의 퍽</p>
+<div class="f" style="left:40pt;top:317pt"><span class="fig" data-srcpage="2" data-clip="40,317,106,363"></span></div>
+<p class="x cap" style="--b:374.2;left:52pt">그림 7</p>
+<p class="x" style="--b:322.0;left:125pt;width:272.4pt;--l:11.8pt;text-indent:4.5pt">작은 퍽을 경사각이 <span class="nw">$\alpha$인</span> 경사면을 따라 처음 속력 <span class="nw">$v_0$으로</span> 위쪽으로 밀어 올렸다(그림&nbsp;7).</p>
+<p class="x" style="--b:346.0;left:125pt;width:272.4pt;--l:11.8pt;text-indent:4.5pt">1. 마찰이 없을 때 퍽은 얼마의 시간 <span class="nw">$t_0$</span> 뒤에 처음 위치로 돌아오는가?</p>
+<p class="x" style="--b:370.2;left:125pt;width:272.4pt;--l:11.6pt;text-indent:4.5pt">2. 마찰 계수 <span class="nw">$\mu$가</span> 어떤 값일 때 퍽이 아래로 되돌아오는가?</p>
+<p class="x i" style="--b:394.2;--l:11.6pt">3. 마찰이 있을 때 퍽이 처음 위치로 돌아오는 데 걸리는 시간 <span class="nw">$t_\mu$를</span> 구하여라.</p>
+<p class="x i" style="--b:418.5;--l:11.7pt">4. 마찰 계수 <span class="nw">$\mu$가</span> 얼마일 때 시간 <span class="nw">$t_\mu$가</span> 마찰이 없을 때 퍽이 돌아오는 시간 <span class="nw">$t_0$과</span> 같아지는가?</p>
+<p class="x h" style="--b:448.8">문제 4. 바리스터</p>
+<div class="f" style="left:40.3pt;top:454.5pt"><span class="fig" data-srcpage="2" data-clip="40.3,454.5,160,521.5"></span></div>
+<p class="x ov w" style="--b:497.7;left:108.6pt;--l:9pt;padding-right:0.2pt">$R_\mathrm{L}$</p>
+<p class="x ov w t" style="--b:499.2;left:145.9pt;--l:8pt">V</p>
+<p class="x cap" style="--b:533.8;left:79.7pt">그림 8</p>
+<p class="x i wl wn" style="--b:461.5;--l:11.75pt;--fw:129.8pt;--fh:81.2pt">어떤 경우에는 전기 기기를 입력 전압의 큰 변화로부터 보호하기 위하여 비선형 반도체 소자인 바리스터를 기기와 병렬로 연결하여 사용한다. 그림&nbsp;8에서는 부하 저항 <span class="nw">$R_\mathrm{L}$이</span> 그 기기의 역할을 한다. 여기서 <span class="nw">$R_\mathrm{L} = 10\,\Omega$이고</span>, <span class="nw">$R = 10\,\Omega$은</span> 밸러스트 저항, V는 바리스터이며, 바리스터의 전압-전류 특성 곡선은</p>
+<p class="x pn" style="--b:566.8">6</p>
+
+<p class="x rc hd r" style="--b:25.8">결선. 이론 시험</p>
+<div class="rule" style="left:457.5pt;width:356pt;top:28.2pt"></div>
+<p class="x rc" style="--b:42.5;--l:11.5pt">그림&nbsp;9에 나타나 있다. <span class="nw">$I$는</span> 전류계 A의 측정값, <span class="nw">$\mathscr{E}$는</span> 입력 전압이다. 정격 상태에서 전류계는 전류 <span class="nw">$I = I_0 = 1.0\,\mathrm{A}$를</span> 가리킨다.</p>
+<p class="x rc i" style="--b:66.2;--l:11.6pt">1. 정격 상태에서의 입력 전압 <span class="nw">$\mathscr{E}_1$과</span>, 바리스터에 걸리는 전압 <span class="nw">$U_\mathrm{V1}$</span> 및 바리스터를 흐르는 전류 <span class="nw">$I_\mathrm{V1}$을</span> 구하여라.</p>
+<p class="x rc i" style="--b:89.5;--l:11.65pt">2. 입력 전압이 2배로 커져서 <span class="nw">$\mathscr{E}_2 = 2\mathscr{E}_1$이</span> 되었다고 하자. 부하에 걸리는 전압은 얼마나 커졌고, 바리스터를 흐르는 전류는 얼마나 변하였는지 구하여라.</p>
+<div class="f" style="left:517pt;top:125.3pt"><span class="fig" data-srcpage="2" data-clip="517,125.3,789,345.5"></span></div>
+<p class="x ov w" style="--b:135.3;left:532.4pt;--l:9.5pt;padding-left:0.5pt;margin-left:-0.5pt;padding-right:2.5pt">$I_\mathrm{V}$, A</p>
+<p class="x ov w" style="--b:328.0;left:737.2pt;--l:9.5pt;padding-left:0.8pt;margin-left:-0.8pt">$U_\mathrm{V}$, V</p>
+<p class="x cap" style="--b:357.0;left:615.7pt">그림 9</p>
+<p class="x rc h" style="--b:383.0">문제 5. 축전기 두 개가 있는 회로</p>
+<div class="f" style="left:712.5pt;top:389.5pt"><span class="fig" data-srcpage="2" data-clip="712.5,389.5,814,447"></span></div>
+<p class="x cap" style="--b:458.2;left:742.2pt">그림 10</p>
+<p class="x rc i" style="--b:394.8;width:232.6pt;--l:11.88pt">1. 기전력이 <span class="nw">$\mathscr{E}$인</span> 축전지, 전기 용량이 각각 <span class="nw">$2C$와</span> <span class="nw">$C$인</span> 축전기 두 개, 그리고 어떤 저항값을 가진 저항으로 이루어진 전기 회로에서(그림&nbsp;10) 스위치 <span class="nw">$\mathrm{K}_1$을</span> 닫는다. 축전기들은 얼마의 전압까지 충전되는가? 축전지의 내부 저항은 무시하여라.</p>
+<p class="x rc i wr wn" style="--b:466.2;--l:11.9pt;--fw:74pt;--fh:10.9pt">2. 축전기들이 완전히 충전된 뒤 스위치 <span class="nw">$\mathrm{K}_2$를</span> 닫고, 축전지를 흐르는 전류가 스위치 <span class="nw">$\mathrm{K}_2$를</span> 닫은 직후의 전류에 비해 2배 작아졌을 때 이 스위치를 연다. 스위치 <span class="nw">$\mathrm{K}_2$를</span> 닫은 순간부터 연 순간까지 회로에서 발생한 열량 <span class="nw">$Q$를</span> 구하여라.</p>
+<p class="x rc pn r" style="--b:564.0">7</p>
+</div>
+</body></html>

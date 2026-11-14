@@ -1,0 +1,89 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2010 (XLIV = 제44회), 9학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: a SCAN (no text layer) of the LaTeX booklet, printed as A4 landscape sheets 842x595 with two A5 pages each:
+   sheet 1 = (blank) | booklet page 3, sheet 2 = booklet page 4 | (blank). The scan is slightly skewed (~0.4 deg) and
+   scaled: line pitch measured 11.7pt (TeX 11.955pt x 0.979), so the body font is 9.963 x 0.979 = 9.75pt.
+   Right page text column x 457.2..814.5, left page column x 36.4..394.7; paragraph indent 15.3pt.
+   The Korean page is white: only the figures are stamped from the scan; the header rules are drawn (.rl).
+
+   PLACEMENT: every block is placed by the scan's first baseline --b (pt, measured on gridded 300-400 dpi crops):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). */
+body{font-family:CM,KB,serif;font-size:9.75pt;line-height:11.7pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:457.2pt;width:357.3pt;--l:11.7pt;--fs:9.75pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.lc{left:36.4pt;width:358.3pt}             /* left page of the sheet */
+.i{text-indent:15.3pt}                     /* first-line paragraph indent */
+.c{text-align:center}
+/* running header (italic) above the header rule */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.rl{position:absolute;height:0;border-top:0.6pt solid #000}
+/* page number (booklet numbering) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "9학년" (bold 12pt) and problem titles (bold 10pt), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.7pt}
+.h{text-align:center;font-weight:bold}
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+/* .ov.wb: Korean label on a white box that hides a Russian word inside a stamped scan figure */
+.wb{position:absolute;background:#fff}
+</style></head><body>
+
+<!-- sheet 1: (blank) | booklet page 3 -->
+<div class="page">
+<p class="x hd r" style="--b:26.6">결선. 이론 시험</p>
+<div class="rl" style="left:457.2pt;top:29.0pt;width:357.3pt"></div>
+<p class="x g" style="--b:43.4">9학년</p>
+<p class="x h" style="--b:63.8">문제 1. 기름의 밀도</p>
+<p class="x i" style="--b:77.3">심하게 오염된 저수지에서 수면 위에 뜬 기름층의 두께는 <span class="nw">$d = 1.0\,\mathrm{cm}$이다</span>. 이 저수지의 수면에 질량 $m = 4.0\,\mathrm{g}$, 밑면의 넓이 <span class="nw">$S = 25\,\mathrm{cm^2}$인</span> 가벼운 원통형 컵을 띄웠다. 처음에 컵은 비어 있었고, 컵의 바닥은 기름층 두께의 한가운데보다 위에 있었다. 그다음 컵 안에 기름을 부어 컵 안과 밖의 기름 높이가 같아지게 하였다. 두 경우 모두 컵의 바닥은 물의 경계면으로부터 같은 거리 <span class="nw">$a$에</span> 있었다(그림&nbsp;1). 물의 밀도가 <span class="nw">$\rho_0 = 1.0\,\mathrm{g/cm^3}$일</span> 때, 기름의 밀도 <span class="nw">$\rho_1$을</span> 구하여라.</p>
+<p class="x h" style="--b:180.4;margin-top:-1pt">문제 2. 배의 기동</p>
+<p class="x i" style="--b:194.1">두 배가 크기가 같은 일정한 속력 <span class="nw">$v_1 = v_2 = v$로</span> 움직이고 있다. 어느 순간 두 배 사이의 거리는 <span class="nw">$L$이었고</span>, 두 배의 상대적인 위치는 그림&nbsp;2에 나타낸 것과 같았다.</p>
+<p class="x i" style="--b:229.3">1.&nbsp;이후의 운동에서 두 배 사이의 최소 거리를 구하여라.</p>
+<p class="x i" style="--b:253.8">2.&nbsp;두 배가 서로 가장 가까운 거리에 이르기까지 걸리는 시간 <span class="nw">$\tau$를</span> 구하여라.</p>
+<p class="x i" style="--b:280.3">3.&nbsp;배 <span class="nw">$B$가</span> 배 <span class="nw">$A$의</span> 진행 경로를 가로지르는 순간, 배 <span class="nw">$A$에서</span> 보트가 출발한다. 이 보트는 중요한 메시지가 담긴 꾸러미를 배 <span class="nw">$B$에</span> 전달해야 한다. 보트의 속력 <span class="nw">$u$도</span> <span class="nw">$v$와</span> 같을 때, 보트가 출발한 뒤 꾸러미가 배 <span class="nw">$B$에</span> 전달되기까지 걸리는 최소 시간 <span class="nw">$\Delta t$를</span> 구하여라.</p>
+<p class="x h" style="--b:347.2">문제 3. 얼음의 융해</p>
+<p class="x i wn" style="--b:360.7">온도가 $0\,{}^\circ\mathrm{C}$인 크고 평평한 얼음판에 부피 <span class="nw">$V_0 = 1000\,\mathrm{cm^3}$인</span> 구덩이를 파고, 작은 구멍이 뚫린 스티로폼(단열재) 뚜껑으로 덮었다(그림&nbsp;3). 온도가 $100\,{}^\circ\mathrm{C}$인 물을 구멍을 통해 조금씩 구덩이에 부을 때, 부을 수 있는 물의 최대 질량 <span class="nw">$m$은</span> 얼마인가?<br>물의 비열은 <span class="nw">$c_0 = 4.19\,\mathrm{kJ/(kg\cdot{}^\circ C)}$,</span> 물의 밀도는 <span class="nw">$\rho_0 = 1.00\cdot10^3\,\mathrm{kg/m^3}$,</span><br>얼음의 밀도는 <span class="nw">$\rho_\mathrm{i} = 0.90\cdot10^3\,\mathrm{kg/m^3}$이고</span>, 얼음의 융해열은 <span class="nw">$\lambda = 334\,\mathrm{kJ/kg}$이다</span>.</p>
+<div class="f" style="left:472.4pt;top:448.3pt"><span class="fig" data-srcpage="1" data-clip="472.4,448.3,597.1,533.0"></span></div>
+<div class="f" style="left:628.8pt;top:451.6pt"><span class="fig" data-srcpage="1" data-clip="628.8,451.6,678.8,523.3"></span></div>
+<div class="f" style="left:709.8pt;top:485.5pt"><span class="fig" data-srcpage="1" data-clip="709.8,485.5,803.8,534.2"></span></div>
+<div class="ov wb" style="left:710.6pt;top:488.4pt;width:37.4pt;height:8.2pt"></div>
+<div class="ov wb" style="left:758.3pt;top:485.6pt;width:45.6pt;height:7.2pt"></div>
+<div class="ov wb" style="left:711.6pt;top:504.6pt;width:17.6pt;height:9.3pt"></div>
+<p class="x ov c" style="--b:494.5;left:710.6pt;width:37.4pt;--fs:8.5pt;--l:8.5pt">뚜껑</p>
+<p class="x ov c" style="--b:491.6;left:758.3pt;width:45.6pt;--fs:8.5pt;--l:8.5pt">구멍</p>
+<p class="x ov c" style="--b:512.4;left:711.6pt;width:17.6pt;--fs:8.5pt;--l:8.5pt">얼음</p>
+<p class="x cap" style="--b:545.5;left:512.0pt">그림 1</p>
+<p class="x cap" style="--b:545.5;left:636.0pt">그림 2</p>
+<p class="x cap" style="--b:545.5;left:738.0pt">그림 3</p>
+<p class="x pn r" style="--b:565.4;left:774.5pt;width:37.5pt">3</p>
+</div>
+
+<!-- sheet 2: booklet page 4 | (blank) -->
+<div class="page">
+<p class="x lc hd" style="--b:28.0">제44회 전러시아 학생 물리 올림피아드</p>
+<div class="rl" style="left:35.3pt;top:32.2pt;width:357.8pt"></div>
+<p class="x lc h" style="--b:45.8">문제 4. 전기 레인지</p>
+<p class="x lc i" style="--b:57.5">전기 레인지에는 코일(발열체)이 두 개 있는데, 코일을 하나씩 따로 전원에 연결할 수도 있고, 두 코일을 직렬이나 병렬로 연결할 수도 있다. 코일의 저항은 온도에 따라 변하지 않는다고 가정한다.</p>
+<p class="x lc i" style="--b:104.5">첫 번째 코일만 전원에 연결하면 전기 레인지는 온도 <span class="nw">$t_1 = 180\,{}^\circ\mathrm{C}$까지</span> 가열되고, 두 번째 코일만 연결하면 온도 <span class="nw">$t_2 = 220\,{}^\circ\mathrm{C}$까지</span> 가열된다는 것을 알았다.</p>
+<p class="x lc i" style="--b:139.7">다음 경우에 전기 레인지는 몇 도까지 가열되는가?</p>
+<p class="x lc i" style="--b:151.5">1.&nbsp;두 코일을 직렬로 연결할 때,</p>
+<p class="x lc i" style="--b:163.4">2.&nbsp;두 코일을 병렬로 연결할 때.</p>
+<p class="x lc i" style="--b:176.3"><i>힌트.</i> 전기 레인지에서 주변으로 흘러 나가는 열의 흐름은 전기 레인지와 방 안 공기 사이의 온도 차에 비례한다. 공기의 온도는 일정하며 <span class="nw">$t_0 = 20\,{}^\circ\mathrm{C}$라고</span> 생각하여라.</p>
+<p class="x lc h" style="--b:223.8">문제 5. 전기 브리지</p>
+<p class="x lc i wn" style="--b:235.9">전기 회로는 저항기 다섯 개와 이상적인 전류계 두 개로 이루어져 있다(그림&nbsp;4). 저항기의 저항 $R_0$, <span class="nw">$R_1$과</span> <span class="nw">$R_2$는</span> 주어져 있고, 저항 <span class="nw">$R_3$은</span> 알려져 있지 않다. 전류계 <span class="nw">$\mathrm{A}_1$을</span> 흐르는 전류 <span class="nw">$I_1$을</span> 알 때, 전류계 <span class="nw">$\mathrm{A}_2$가</span> 가리키는 값을 구하여라.</p>
+<div class="f" style="left:166.4pt;top:283.1pt"><span class="fig" data-srcpage="2" data-clip="166.4,283.1,264.0,388.4"></span></div>
+<p class="x cap" style="--b:399.8;left:195.8pt">그림 4</p>
+<p class="x lc pn" style="--b:565.2">4</p>
+</div>
+</body></html>
