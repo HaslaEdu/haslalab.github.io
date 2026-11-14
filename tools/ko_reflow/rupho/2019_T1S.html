@@ -1,0 +1,195 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2019 (LIII = 제53회), 9학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 419.5x595.3pt, booklet pages 18-23
+   (figures are numbered on through the booklet: 그림 16-25).
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20pt; baselineskip 12 TeX pt = 11.955pt.
+   Running headers: even pages "Всероссийская олимпиада по физике 2019 г." (left), odd pages "Заключительный этап"
+   (right), italic, baseline 38.9, rule at y 42.72; page numbers centred, baseline 563.8.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   A line holding a tall inline fraction grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   A block whose FIRST line holds a fraction grows upward: push it down with padding-top (~1.2pt) until qa.py meets --b.
+   Display equations whose only Russian is a connecting word (или, и, откуда) are stamped in two parts with the
+   Korean word typed between them; a unit (м/с, Н) at the end of a display is typed in KaTeX after the stamped part. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}                       /* first-line paragraph indent (48.3 - 28.3); continuation blocks have none */
+.c{text-align:center}
+.rt{text-align:right}                      /* equation numbers (1)-(3) at the right edge of the column */
+/* running header (italic, baseline 38.9) above the stamped rule (y 42.72); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 563.8), centred on the column */
+.pn{text-align:center}
+/* "풀이 예시" and "이론 시험" (SFBX1440, 14.346pt bold), grade line "9학년" (SFBX1200 = 11.955pt bold),
+   problem titles (SFBX1000 bold, author credit SFTI1000 italic) — all centred on the column */
+.t{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+.au{font-weight:normal;font-style:italic}
+/* all-Hangul bold lines (HANBatangB) sit 1.1pt low with the +0.7pt rule (qa BASELINE): use -0.4pt instead */
+.g,.h{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 391.2 - right edge of the original's short lines, --fh = N x 11.955pt - 1pt */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* numbered items with a hanging number (number at 40.5, text at 53.3) */
+.li{padding-left:25pt}
+.n{position:absolute;left:12.2pt;text-indent:0}
+/* figure captions "그림 N" (SFRM0900, 8.966pt): centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt;--fs:8.966pt}
+/* stamps cut from the scrubbed original; .ov = label put back where scrub.py removed a Russian word or a
+   Cyrillic letter (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+.lt{font-family:CM,KB,serif}
+</style></head><body>
+
+<!-- page 18 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2019년 전러시아 물리 올림피아드</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="1" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x t" style="--b:60.6">풀이 예시</p>
+<p class="x t" style="--b:87.5">이론 시험</p>
+<p class="x g" style="--b:103.0">9학년</p>
+<p class="x h" style="--b:126.3">문제 1. 항해 <span class="au">(E. A. Podolyako)</span></p>
+<p class="x li" style="--b:144.8"><span class="n">1.</span>보트들이 만났을 때 배는 다시 부두에서 거리 <span class="nw">$L$인</span> 곳에 있었다. 점 <span class="nw">$B$를</span> 중심으로 하고 반지름이 <span class="nw">$AB$인</span> 원(원 1)을 그린다. 시간 <span class="nw">$2\tau$가</span> 지난 뒤 배는 이 원 위의 어딘가에 있어야 한다.</p>
+<p class="x li" style="--b:194.0"><span class="n">2.</span>배와 보트의 속력 비를 고려하면, 시간 <span class="nw">$\tau$</span> 동안 배가 간 거리와 두 보트가 함께 간 거리의 비는 4&thinsp;:&thinsp;3이다.</p>
+<p class="x li" style="--b:219.2"><span class="n">3.</span>보트들이 출발하기 전과 출발한 뒤에 배가 움직인 시간이 같으므로, 보트들이 움직인 직선은 배의 처음 위치 <span class="nw">$A$,</span> 부두 <span class="nw">$B$,</span> 배의 나중 위치를 꼭짓점으로 하는 이등변 삼각형의 높이이다. 따라서 배의 처음 위치 <span class="nw">$A$,</span> 부두 <span class="nw">$B$,</span> 보트가 배에서 출발한 곳을 꼭짓점으로 하는 삼각형은 직각 삼각형이다.</p>
+<p class="x li" style="--b:292.2"><span class="n">4.</span>피타고라스 정리를 적용하면, 보트들이 만날 때까지 간 거리는 <span class="nw">$3\,\mathrm{km}$이고</span>, 그동안 배가 간 거리는 <span class="nw">$4\,\mathrm{km}$이다</span>.</p>
+<p class="x li" style="--b:317.4"><span class="n">5.</span>점 <span class="nw">$B$를</span> 중심으로 하는 반지름 <span class="nw">$3\,\mathrm{km}$인</span> 원(원 2)과 점 <span class="nw">$A$를</span> 중심으로 하는 반지름 <span class="nw">$4\,\mathrm{km}$인</span> 원(원 3)을 그려 두 원의 교점(점&nbsp;$C$)을 구하면, 배에서 출발한 보트의 출발 지점을 찾을 수 있다(그림&nbsp;16).</p>
+<div class="f" style="left:105pt;top:350pt"><span class="fig" data-srcpage="1" data-clip="105,350,322,484"></span></div>
+<p class="x ov lt" style="--b:386.0;left:243.9pt;--fs:9pt;font-style:italic">K</p>
+<p class="x ov lt" style="--b:408.6;left:180.7pt;--fs:9pt;font-style:italic">C</p>
+<p class="x ov lt" style="--b:431.7;left:201.8pt;--fs:9pt;font-style:italic">O</p>
+<p class="x ov lt" style="--b:449.8;left:118.4pt;--fs:9pt;font-style:italic">A</p>
+<p class="x ov lt" style="--b:449.8;left:216.1pt;--fs:9pt;font-style:italic">B</p>
+<p class="x ov lt" style="--b:473.1;left:159.6pt;--fs:9pt">5 km</p>
+<p class="x cap" style="--b:498.9;left:189.8pt">그림 16</p>
+<p class="x li" style="--b:526.6"><span class="n">6.</span>직선 <span class="nw">$AC$를</span> 원 1과 만날 때까지 연장하면, 보트들이 만난 순간 배의 위치(점&nbsp;$K$)를 얻는다.</p>
+<p class="x pn" style="--b:563.8">18</p>
+</div>
+
+<!-- page 19 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="2" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x li" style="--b:66.7"><span class="n">7.</span>보트들은 선분 <span class="nw">$CB$의</span> 중점(점&nbsp;$O$)에서 만났으므로, 각 보트가 간 거리는 <span class="nw">$1.5\,\mathrm{km}$이다</span>.</p>
+<p class="x h" style="--b:102.3">문제 2. 안전거리 <span class="au">(M. Yu. Zamyatnin)</span></p>
+<p class="x i" style="--b:113.0">자동차들이 완전히 멈출 때까지 만나지 않는다면, 두 자동차 사이의 안전거리는 완전히 멈출 때까지의 두 제동 거리의 차와, 뒤 자동차가 일정한 속력으로 달리는 구간의 길이를 더한 것이다. 이러한 경우는 더 작은 가속도 <span class="nw">$a_1$로</span> 감속하는 자동차가 뒤에서 달릴 때 틀림없이 일어난다(두 자동차의 순간 속력 <span class="nw">$u$를</span> 시간 <span class="nw">$t$의</span> 함수로 나타낸 그래프(그림&nbsp;17)를 보아라). 이때 안전거리는 더 큰 값(<span class="nw">$L_2$)을</span> 가진다.</p>
+<div class="f" style="left:97pt;top:193pt"><span class="fig" data-srcpage="2" data-clip="97,193,191,221"></span></div>
+<p class="x ov" style="--b:209.9;left:200pt">또는</p>
+<div class="f" style="left:227pt;top:193pt"><span class="fig" data-srcpage="2" data-clip="227,193,321,221"></span></div>
+<div class="f" style="left:47pt;top:224pt"><span class="fig" data-srcpage="2" data-clip="47,224,367,336"></span></div>
+<p class="x cap" style="--b:345.4;left:109.9pt">그림 17</p>
+<p class="x cap" style="--b:344.9;left:276.5pt">그림 18</p>
+<p class="x i" style="--b:356.5">뒤 자동차가 제동을 더 늦게 시작하지만 그 뒤 더 큰 가속도로 감속하여, 앞 자동차가 아직 멈추기 전에 따라잡는 경우도 있을 수 있다(그림&nbsp;18).</p>
+<p class="x i" style="--b:392.3">이 경우가 일어나려면 다음 조건이 성립해야 한다.</p>
+<div class="f" style="left:123pt;top:398pt"><span class="fig" data-srcpage="2" data-clip="123,398,183,424"></span></div>
+<p class="x ov" style="--b:413.1;left:200pt">또는</p>
+<div class="f" style="left:237pt;top:398pt"><span class="fig" data-srcpage="2" data-clip="237,398,296,424"></span></div>
+<p class="x rt" style="--b:413.1">(1)</p>
+<p class="x i wn" style="--b:437.6">그러면 안전거리는 식 <span class="nw">$L_1 = \frac12\tau(v - v_1)$로</span> 계산되며, 여기에 관계식 <span class="nw">$v - v_1 = a_1t$와</span> <span class="nw">$v - v_1 = a_2(t - \tau)$를</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:106pt;top:459pt"><span class="fig" data-srcpage="2" data-clip="106,459,187,486"></span></div>
+<p class="x ov" style="--b:474.6;left:196.3pt">따라서</p>
+<div class="f" style="left:235pt;top:458pt"><span class="fig" data-srcpage="2" data-clip="235,458,313,485"></span></div>
+<p class="x i" style="--b:498.8"><span class="nw">$v$에</span> 대한 이차 방정식 <span class="nw">$v^2\tau^2 + 4L_1v\tau - 4L_1L_2 = 0$을</span> 풀면 다음을 얻는다.</p>
+<div class="f" style="left:130pt;top:512pt"><span class="fig" data-srcpage="2" data-clip="130,512,244.5,542"></span></div>
+<p class="x" style="--b:531.1;left:246.1pt;width:auto">$= 20\,\mathrm{m/s}.$</p>
+<p class="x rt" style="--b:531.1">(2)</p>
+<p class="x pn" style="--b:563.8">19</p>
+</div>
+
+<!-- page 20 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2019년 전러시아 물리 올림피아드</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="3" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7">첫 번째 자동차가 멈춘 뒤에 두 자동차가 만난다고 가정하면 답은 <span class="nw">$v = \frac{L_1 + L_2}{2\tau} = 22.5\,\mathrm{m/s}$가</span> 되는데, 이것은 문제에 주어진 거리에 대해서는 원리적으로 틀린 답이다.</p>
+<div class="f" style="left:112pt;top:100pt"><span class="fig" data-srcpage="3" data-clip="112,100,307,203"></span></div>
+<p class="x cap" style="--b:219.1;left:189.8pt">그림 19</p>
+<p class="x i wn" style="--b:245.3"><span class="nw">$\frac{a_1a_2}{a_2 - a_1} = \frac{2L_1}{\tau^2}$이므로</span>, 조건 (1)은 <span class="nw">$v > 2L_1/\tau$로</span> 쓸 수 있다는 점에 주목하자. 이 부등식을 식 (2)와 비교하면, 자동차들이 멈추기 전에 만나는 경우가 일어나기 위한 조건을 간단한 식(<span class="nw">$L_2/L_1 > 3$)으로</span> 얻는다. 그림&nbsp;19에 이 부등식을 그래프로 해석하여 나타내었다.</p>
+<p class="x h" style="--b:303.2">문제 3. 접이식 사다리 <span class="au">(M. Yu. Zamyatnin)</span></p>
+<p class="x i" style="--b:314.7">사다리 전체에 작용하는 외력을 생각하자(그림&nbsp;20). 오른쪽 아래 끝점에 대한 돌림힘 규칙에서 관계식 <span class="nw">$\mathrm{tg}\,\gamma = 2\,\mathrm{tg}\,\beta$를</span> 고려하면 <span class="nw">$3N_1 = mg$를</span> 얻는다. 따라서 <span class="nw">$N_1 = \frac13mg$이고</span> <span class="nw">$N_2 = \frac23mg$이다</span>.</p>
+<div class="f" style="left:79pt;top:343.6pt"><span class="fig" data-srcpage="3" data-clip="79,343.6,354,431"></span></div>
+<p class="x ov lt" style="--b:424.9;left:122.2pt;--fs:5.83pt">fr</p>
+<p class="x ov lt" style="--b:424.9;left:137.6pt;--fs:5.83pt">fr</p>
+<p class="x ov lt" style="--b:422.4;left:287.7pt;--fs:5.83pt">fr</p>
+<p class="x cap" style="--b:443.4;left:109.9pt">그림 20</p>
+<p class="x cap" style="--b:443.4;left:276.5pt">그림 21</p>
+<p class="x i" style="--b:454.6">경첩이 받침대에 작용하는 힘은 받침대를 따르는 방향으로만 향할 수 있다(그림&nbsp;21). 그렇지 않으면 받침대의 아래 끝점에 대해 상쇄되지 않는 돌림힘이 생긴다. 따라서</p>
+<div class="f" style="left:146pt;top:487pt"><span class="fig" data-srcpage="3" data-clip="146,487,236,513"></span></div>
+<p class="x" style="--b:502.5;left:237.8pt;width:auto">$= 71\,\mathrm{N}.$</p>
+<p class="x i" style="--b:526.6">수평 방향 힘의 합이 0이므로 두 마찰력은 같다. 그런데 가벼운 받침대에는 더 작은 수직 항력이 작용하므로, 가벼운 받침대가 먼저</p>
+<p class="x pn" style="--b:563.8">20</p>
+</div>
+
+<!-- page 21 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="4" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7">미끄러진다. 마찰 계수의 최솟값은 다음과 같다.</p>
+<div class="f" style="left:174pt;top:80pt"><span class="fig" data-srcpage="4" data-clip="174,80,246,92"></span></div>
+<p class="x h" style="--b:124.0">문제 4. 원기둥 네 개로 데우기 <span class="au">(A. N. Apolonsky)</span></p>
+<p class="x i" style="--b:138.1">원기둥의 질량을 <span class="nw">$M$이라</span> 하자. 원기둥을 담근 뒤 열량계에서 액체가 넘쳐흐르지 않는 경우, 열평형 방정식은 <span class="nw">$cM(T - t) = c_0m_0t$이다</span>. 여기서 <span class="nw">$t$는</span> 열량계에서 이루어진 평형 온도이다. 이로부터 다음을 얻는다.</p>
+<div class="f" style="left:121pt;top:185pt"><span class="fig" data-srcpage="4" data-clip="121,185,189,211"></span></div>
+<p class="x ov" style="--b:200.2;left:198pt">및</p>
+<div class="f" style="left:216pt;top:185pt"><span class="fig" data-srcpage="4" data-clip="216,185,297,210"></span></div>
+<p class="x rt" style="--b:200.2">(3)</p>
+<p class="x i" style="--b:228.1"><span class="nw">$y = \frac1t$와</span> <span class="nw">$x = \frac1M$</span> 사이의 관계는 기울기가 <span class="nw">$k_1 = \frac{c_0m_0}{cT}$이고</span> 절편이 <span class="nw">$b_1 = \frac1T$인</span> 일차 관계이다.</p>
+<p class="x i" style="--b:252.1">원기둥을 담글 때 액체의 일부가 넘쳐흐르는 경우, 곧 원기둥의 부피가 열량계에서 액체가 차지하지 않은 부분의 부피 <span class="nw">$\Delta V$보다</span> 큰 경우를 생각하자. 이때 열평형 방정식은 다음과 같다.</p>
+<div class="f" style="left:120pt;top:288pt"><span class="fig" data-srcpage="4" data-clip="120,288,300,313"></span></div>
+<div class="f" style="left:130pt;top:322pt"><span class="fig" data-srcpage="4" data-clip="130,322,287,352"></span></div>
+<div class="f" style="left:239.5pt;top:354pt"><span class="fig" data-srcpage="4" data-clip="239.5,354,392,464"></span></div>
+<p class="x ov lt" style="--b:362.5;left:288.3pt;--fs:6.9pt">C</p>
+<p class="x cap" style="--b:481.8;left:300.4pt">그림 22</p>
+<p class="x i" style="--b:364.1">역수에 대해서는 다음과 같다.</p>
+<div class="f" style="left:43pt;top:376pt"><span class="fig" data-srcpage="4" data-clip="43,376,240,402"></span></div>
+<p class="x" style="--b:418.9">여기서 <span class="nw">$\Delta m = \rho_0\Delta V$이다</span>.</p>
+<p class="x i wr wn" style="--b:430.9;--fw:151.7pt;--fh:82.7pt">좌표평면 <span class="nw">$(y, x)$</span> 위에 문제의 자료를 나타내자. 여기서 <span class="nw">$y = \frac1t$,</span> <span class="nw">$x = \frac{m}{M}$이다</span>. 편의를 위해 알맞은 눈금을 골랐다(그림&nbsp;22). 그림에서 알 수 있듯이, 문제의 자료에 해당하는 점들은 서로 다른 두 관계에 속한다. 점 1과 점 2는 관계 (3)(원기둥의 부피가 <span class="nw">$\Delta V$보다</span> 작은 경우)에, 점 3과 점 4는 관계 (4)(원기둥의 부피가 <span class="nw">$\Delta V$보다</span> 큰 경우)에 속한다.</p>
+<p class="x i" style="--b:526.6">첫 번째와 두 번째 원기둥에 대해 식 (3)을 두 번 적용하면, 원기둥들의 처음 온도 <span class="nw">$T = 90\,{}^\circ\mathrm{C}$를</span> 얻는다.</p>
+<p class="x pn" style="--b:563.8">21</p>
+</div>
+
+<!-- page 22 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2019년 전러시아 물리 올림피아드</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="5" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x i" style="--b:66.7">두 관계의 기울기를 비교하면</p>
+<div class="f" style="left:163pt;top:82pt"><span class="fig" data-srcpage="5" data-clip="163,82,258,109"></span></div>
+<p class="x" style="--b:130.2">이므로, 컵의 부피 가운데 액체가 차지하는 비율은 <span class="nw">$\gamma = \frac23$이다</span>.</p>
+<p class="x i wn" style="--b:144.5">두 그래프의 교점 <span class="nw">$m/M = 0.5$는</span> 액체가 넘쳐흐르기 시작하는 순간에 해당한다. 이때 원기둥의 질량은 <span class="nw">$2m = 6\rho_0V/3$이다</span>. 그런데 컵 속 액체의 질량은 $m_0 = \rho_02V/3$이므로, <span class="nw">$m = \frac32m_0 = 300\,\mathrm{g}$이다</span>. <span class="nw">$T$와</span> <span class="nw">$m$의</span> 값을 첫 번째 원기둥에 대한 식 (3)에 대입하면 <span class="nw">$c_0/c = 12$를</span> 얻는다.</p>
+<p class="x h" style="--b:219.3">문제 5. 삼각기둥 <span class="au">(V. P. Slobodyanin)</span></p>
+<p class="x i" style="--b:242.5">1) 마디 <span class="nw">$A$와</span> <span class="nw">$A_1$에</span> 연결하면 등가 회로는 그림&nbsp;23과 같다.</p>
+<div class="f" style="left:125pt;top:258pt"><span class="fig" data-srcpage="5" data-clip="125,258,296,405"></span></div>
+<p class="x ov lt" style="--b:316.0;left:226.6pt;--fs:8pt;font-style:italic">C</p>
+<p class="x cap" style="--b:421.3;left:189.8pt">그림 23</p>
+<p class="x i" style="--b:455.5">마디 <span class="nw">$A$와</span> <span class="nw">$B_1$을</span> 끊으면 그림&nbsp;24의 회로를 얻는데, 이 회로는 저항기의 단순한 병렬 연결과 직렬 연결의 조합으로 바꿀 수 있다.</p>
+<div class="f" style="left:148pt;top:487pt"><span class="fig" data-srcpage="5" data-clip="148,487,271,516"></span></div>
+<p class="x i" style="--b:538.6">따라서 <span class="nw">$R_{AA_1} = \frac{5}{12}R = 5\,\Omega$이다</span>.</p>
+<p class="x pn" style="--b:563.8">22</p>
+</div>
+
+<!-- page 23 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="6" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<div class="f" style="left:125pt;top:52pt"><span class="fig" data-srcpage="6" data-clip="125,52,296,192"></span></div>
+<p class="x ov lt" style="--b:109.8;left:226.6pt;--fs:8pt;font-style:italic">C</p>
+<p class="x cap" style="--b:207.3;left:189.8pt">그림 24</p>
+<p class="x i" style="--b:234.5">2) 마디 <span class="nw">$C$와</span> <span class="nw">$A_1$에</span> 연결하면 등가 회로는 평형을 이룬 브리지가 된다(그림&nbsp;25). 마디 <span class="nw">$A$,</span> <span class="nw">$B$,</span> <span class="nw">$C_1$,</span> <span class="nw">$B_1$</span> 사이에 연결된 저항기에는 전류가 흐르지 않으며, <span class="nw">$R_{CA_1} = \frac12R = 6\,\Omega$이다</span>.</p>
+<div class="f" style="left:125pt;top:270pt"><span class="fig" data-srcpage="6" data-clip="125,270,296,397"></span></div>
+<p class="x ov lt" style="--b:328.6;left:282.8pt;--fs:8pt;font-style:italic">C</p>
+<p class="x cap" style="--b:411.5;left:189.8pt">그림 25</p>
+<p class="x pn" style="--b:563.8">23</p>
+</div>
+</body></html>

@@ -1,0 +1,95 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2019 (LIII = 제53회), 10학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 419.5x595.3pt, booklet pages 5-6.
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20.0pt; baselineskip 12 TeX pt = 11.955pt.
+   Running header (italic SFTI1000) at baseline 38.9 above the stamped rule (y 42.7); page numbers centred, baseline 563.8.
+   The header carries no Roman numeral: "Vserossiyskaya olimpiada po fizike 2019 g." ->"2019년 전러시아 물리 올림피아드".
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}                       /* first-line paragraph indent (48.3 - 28.3) */
+.c{text-align:center}
+/* running header (italic, baseline 38.9) above the stamped rule (y 42.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* grade line "10학년" (SFBX1440 = 14.346pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:14.346pt;margin-top:-1.1pt}   /* bold lines sit 1.1pt low (qa BASELINE) */
+.h{text-align:center;font-weight:bold;margin-top:-1.1pt}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 391.2 - right edge of the short lines, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* numbered items with a hanging number (number at 40.5, text at 53.3) */
+.li{padding-left:25pt}
+.n{position:absolute;left:12.2pt;text-indent:0}
+/* figure captions "그림 N" (SFRM0900 = 8.966pt): centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt;--fs:8.966pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 5 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="1" data-clip="28.3,42.4,391.2,43.0"></span></div>
+<p class="x g" style="--b:61.5">10학년</p>
+<p class="x h" style="--b:79.4">문제 1. 아령</p>
+<div class="f" style="left:305pt;top:80pt"><span class="fig" data-srcpage="1" data-clip="305,80,391,129"></span></div>
+<p class="x cap" style="--b:146.0;left:328.7pt">그림 4</p>
+<p class="x i wr" style="--b:89.4;--fw:95.1pt;--fh:82.7pt">매끄러운 수평 탁자 위에 아령이 놓여 있다. 아령은 크기가 작은 원판(퍽) 두 개로 이루어져 있다. 두 원판의 질량은 <span class="nw">$m_1$과</span> <span class="nw">$m_2$이고</span>, 두 원판은 길이 <span class="nw">$L$인</span> 가볍고 단단한 막대로 연결되어 있다(막대의 변형은 막대의 크기에 비해 작다). 시각 <span class="nw">$t = 0$에</span> 질량 <span class="nw">$m_1$인</span> 원판에 크기가 일정한 수평 방향의 힘 <span class="nw">$F$가</span> 작용하기 시작한다. 힘의 방향은 막대와 언제나 같은 예각 <span class="nw">$\alpha$를</span> 이룬다(그림&nbsp;4). 이러한 운동에서 막대의 각가속도는 일정하다고 생각하여라.</p>
+<p class="x i" style="--b:197.0">힘이 작용하기 시작하고 어떤 시간 <span class="nw">$\tau$가</span> 지난 순간, 막대는 순간적으로 힘을 받지 않는 상태(곧, 압축되지도 늘어나지도 않은 상태)가 되었다.</p>
+<p class="x li" style="--b:222.2"><span class="n">1.</span>시각 <span class="nw">$\tau$에</span> 막대가 회전하는 각속도 <span class="nw">$\omega$를</span> 구하여라.</p>
+<p class="x li" style="--b:235.4"><span class="n">2.</span>막대의 각가속도 <span class="nw">$d\omega/dt$를</span> 구하여라.</p>
+<p class="x li" style="--b:248.6"><span class="n">3.</span>시간 간격 <span class="nw">$\tau$는</span> 얼마인가?</p>
+<p class="x li" style="--b:261.9"><span class="n">4.</span>시각 <span class="nw">$\tau$까지</span> 막대가 회전한 각을 구하여라.</p>
+<p class="x h" style="--b:283.3">문제 2. 홈 속의 운동</p>
+<div class="f" style="left:298pt;top:284pt"><span class="fig" data-srcpage="1" data-clip="298,284,393,354"></span></div>
+<p class="x cap" style="--b:370.9;left:324.4pt">그림 5</p>
+<p class="x i" style="--b:293.3;width:259.4pt">서로 직각으로 교차하는 좁고 곧은 두 홈이 수평면 위에 놓여 있다. 질량이 <span class="nw">$m$으로</span> 같고 전하가 각각 <span class="nw">$q$와</span> <span class="nw">$-q$인</span> 작은 입자 두 개가 이 홈 속을 마찰 없이 움직인다(그림&nbsp;5). 이때 이후의 운동 과정에서 두 입자 사이의 거리 <span class="nw">$R$이</span> 변하지 않는다는 것이 밝혀졌다.</p>
+<p class="x i" style="--b:365.0;width:259.4pt">두 입자의 운동 에너지의 합을 구하여라.</p>
+<p class="x h" style="--b:385.1;width:259.4pt">문제 3. 켈빈 경의 기록 보관소</p>
+<div class="f" style="left:249pt;top:383pt"><span class="fig" data-srcpage="1" data-clip="249,383,392,497"></span></div>
+<p class="x cap" style="--b:510.8;left:300.4pt">그림 6</p>
+<p class="x i wr wn" style="--b:395.1;--fw:151.8pt;--fh:130.5pt">켈빈 경의 기록 보관소에서, 일정한 양의 단원자 이상 기체가 겪은 순환 과정의 그래프가 발견되었다(그림&nbsp;6). 시간이 지나면서 잉크가 바래어, 몇몇 과정의 방향에 대한 정보가 사라졌다. 가로축에 무엇을 나타냈는지에 대한 정보도 사라졌다. 가로축에 나타낸 양이 부피, 압력, 온도, 밀도 가운데 하나이고, 눈금은 임의 단위로 되어 있다는 것만 알려져 있다. 세로축에는 기체의 몰 열용량 <span class="nw">$C$를</span> 나타내었다. 이 순환 과정의 효율이 가질 수 있는 최댓값을 구하여라.</p>
+<p class="x c" style="--b:563.8">5</p>
+</div>
+
+<!-- page 6 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2019년 전러시아 물리 올림피아드</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="2" data-clip="28.3,42.4,391.2,43.0"></span></div>
+<p class="x h" style="--b:66.7">문제 4. 대전된 판</p>
+<p class="x i wn" style="--b:79.9">유전체로 된 얇고 평평한 마름모 모양의 판이 있다. 마름모의 한 변은 <span class="nw">$a$이고</span> 예각은 <span class="nw">$60^\circ$이며</span>, 판은 표면 전하 밀도 <span class="nw">$\sigma$로</span> 균일하게 대전되어 있다. 마름모의 예각 꼭짓점의 전위는 <span class="nw">$\varphi_1$이고</span>, 둔각 꼭짓점의 전위는 <span class="nw">$\varphi_2$이다</span>(그림&nbsp;7). 같은 유전체로 한 변이 <span class="nw">$2a$인</span> 정삼각형 <span class="nw">$ABC$</span> 모양의 얇은 판을 잘라 내어, 같은 표면 전하 밀도로 대전시킨다(그림&nbsp;8).</p>
+<div class="f" style="left:48pt;top:145pt"><span class="fig" data-srcpage="2" data-clip="48,145,395,246"></span></div>
+<p class="x cap" style="--b:258.0;left:82.7pt">그림 7</p>
+<p class="x cap" style="--b:257.2;left:197.4pt">그림 8</p>
+<p class="x cap" style="--b:257.7;left:319.4pt">그림 9</p>
+<p class="x li" style="--b:283.1"><span class="n">1.</span>삼각형 판의 점 <span class="nw">$C$에서의</span> 전위를 구하여라.</p>
+<p class="x li" style="--b:296.3"><span class="n">2.</span>삼각형 판의 한 변의 중점에 있는 점 <span class="nw">$D$에서의</span> 전위를 구하여라.</p>
+<p class="x i" style="--b:323.4">이제 삼각형 판 <span class="nw">$ABC$에서</span> 한 변이 <span class="nw">$a$인</span> 정삼각형을 잘라 낸다(그림&nbsp;9).</p>
+<p class="x li" style="--b:350.5"><span class="n">3.</span>“구멍 뚫린” 판의 점 <span class="nw">$D'$에서의</span> 전위를 구하여라.</p>
+<p class="x li" style="--b:363.7"><span class="n">4.</span>“구멍 뚫린” 판의 점 <span class="nw">$C'$에서의</span> 전위를 구하여라.</p>
+<p class="x i" style="--b:378.8"><i>참고.</i> 모든 판은 서로 멀리 떨어져 있고, 다른 물체들로부터도 멀리 떨어져 있다.</p>
+<p class="x h" style="--b:405.8">문제 5. 어림하고 증명하여라</p>
+<div class="f" style="left:320pt;top:419pt"><span class="fig" data-srcpage="2" data-clip="320,419,392,492"></span></div>
+<p class="x cap" style="--b:508.7;left:335.8pt">그림 10</p>
+<p class="x i wn" style="--b:419.0;width:282pt">정사각형 칸으로 이루어진 무한 격자가 똑같은 저항들로 만들어져 있다. 마디 <span class="nw">$A$로</span> 바깥에서 전류 <span class="nw">$I$가</span> 흘러 들어온다(그림&nbsp;10). 가지 <span class="nw">$BC$에</span> 흐르는 전류의 세기를 오차 10% 이내로 어림하여라. 여러분이 어림한 값의 오차가 10%를 넘지 않음을 증명하여라.</p>
+<p class="x c" style="--b:563.8">6</p>
+</div>
+</body></html>

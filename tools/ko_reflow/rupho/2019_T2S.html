@@ -1,0 +1,132 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2019 (LIII = 제53회), 10학년 이론 풀이 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 419.5x595.3pt, booklet pages 24-27
+   (figures are numbered on through the booklet: 그림 26-30).
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20.0pt; baselineskip 12 TeX pt = 11.955pt.
+   Running header (italic SFTI1000) at baseline 38.9 above the stamped rule (y 42.7); page numbers centred, baseline 563.8.
+   The header carries no Roman numeral: "Vserossiyskaya olimpiada po fizike 2019 g." ->"2019년 전러시아 물리 올림피아드".
+   Subscripts of the original that are Russian abbreviations are retyped: dL_poper -> dL_\perp (displacement across
+   the rod), Q_pol -> Q_+ (heat received by the gas).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line).
+   A line holding a tall inline fraction grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~1.36em x 9.963pt = 13.6pt for a \dfrac with capital/ascender numerator).
+   A block whose FIRST line holds a \dfrac grows upward: push it down with padding-top (~1.2pt) until qa.py meets --b. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}                       /* first-line paragraph indent (48.3 - 28.3); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* running header (italic, baseline 38.9) above the stamped rule (y 42.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* grade line "10학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold, author in SFTI italic) */
+.g{text-align:center;font-weight:bold;--fs:11.955pt;margin-top:-1.1pt}   /* bold lines sit 1.1pt low (qa BASELINE) */
+.h{text-align:center;font-weight:bold;margin-top:-1.1pt}
+.ln{display:block}                         /* one short paragraph (own first-line indent) inside a shared block */
+.h i{font-weight:normal}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 391.2 - right edge of the original's short lines, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* figure captions "그림 N" (SFRM0900 = 8.966pt): centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt;--fs:8.966pt}
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 24 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2019년 전러시아 물리 올림피아드</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="1" data-clip="28.3,42.4,391.2,43.0"></span></div>
+<p class="x g" style="--b:61.5">10학년</p>
+<p class="x h" style="--b:82.6">문제 1. 아령 <i>(S. D. Varlamov)</i></p>
+<p class="x i wn" style="--b:95.8">시각 <span class="nw">$\tau$를</span> 생각하자. 막대가 힘을 받지 않으므로 질량 <span class="nw">$m_2$인</span> 물체의 가속도는 0이다. 이 순간 이 원판(<span class="nw">$m_2$)의</span> 속도가 0인 관성 기준계를 택하면, 이 순간 질량 <span class="nw">$m_1$인</span> 원판은 곡률 반지름이 <span class="nw">$L$인</span> 궤적을 따라 움직인다. 이 순간 원판 <span class="nw">$m_1$의</span> 가속도의 막대 방향 성분은 <span class="nw">$\frac{F\cos\alpha}{m_1}$이고</span>, 이 성분은 <span class="nw">$\omega^2L$과도</span> 같다. 따라서 이 순간 막대의 회전 각속도는 <span class="nw">$\omega =$</span> <span class="nw">$\sqrt{\frac{F\cos\alpha}{Lm_1}}$이다</span>.</p>
+<p class="x i" style="--b:187.3">각가속도를 구하자. 힘이 작용하기 시작한 뒤 짧은 시간 동안, 힘을 받는 원판은 처음 막대가 놓여 있던 방향에 수직인 방향으로 다음과 같은 작은 거리만큼 이동한다.</p>
+<p class="x c d" style="--b:240.9;--a:15.1pt">$dL_\perp = \dfrac{F\sin\alpha}{m_1}\dfrac{t^2}{2}.$</p>
+<p class="x i" style="--b:262.6">따라서 막대는 다음과 같은 작은 각만큼 회전한다.</p>
+<p class="x c d" style="--b:289.6;--a:15.2pt">$d\varphi = \dfrac{dL_\perp}{L} = \dfrac{F\sin\alpha}{m_1L}\dfrac{t^2}{2}.$</p>
+<p class="x wn" style="--b:314.9;padding-top:1.8pt">문제의 조건에서 막대의 각가속도가 일정하다고 하였으므로 <span class="nw">$d\varphi = \beta\frac{t^2}{2}$이고</span>, 이로부터 각가속도 <span class="nw">$\beta = \frac{F\sin\alpha}{Lm_1}$을</span> 얻는다. 각가속도가 일정하므로 <span class="nw">$\omega = \beta\tau$이고</span>, 이로부터 <span class="nw">$\tau = \sqrt{\frac{Lm_1\cos\alpha}{F\sin^2\alpha}}$이다</span>. 시각 <span class="nw">$\tau$까지</span> 막대가 회전한 각은 <span class="nw">$\varphi = \frac{\beta\tau^2}{2} = \frac{\mathrm{ctg}\,\alpha}{2}$이다</span>.</p>
+<p class="x h" style="--b:387.4">문제 2. 홈 속의 운동 <i>(I. I. Vorobyev)</i></p>
+<div class="f" style="left:248pt;top:391pt"><span class="fig" data-srcpage="1" data-clip="248,391,392,523"></span></div>
+<p class="x cap" style="--b:538.2;left:300.4pt">그림 26</p>
+<p class="x i wn" style="--b:400.6;width:211.2pt">두 홈의 교차점 <span class="nw">$O$를</span> 원점으로 하고 두 홈을 따라 향하는 좌표축 <span class="nw">$XY$를</span> 잡자(그림&nbsp;26). 두 입자의 좌표를 <span class="nw">$x$와</span> <span class="nw">$y$라</span> 하면, 둘 사이의 거리가 변하지 않으므로 다음이 성립한다.</p>
+<div class="f" style="left:103pt;top:457pt"><span class="fig" data-srcpage="1" data-clip="103,457,165,473"></span></div>
+<p class="x i wn" style="--b:490.8;width:211.2pt">거리가 변하지 않으므로 퍼텐셜 에너지도 변하지 않고, 에너지 보존 법칙에 따라 두 공의 속력의 제곱의 합은 변하지 않는다.</p>
+<div class="f" style="left:175pt;top:528pt"><span class="fig" data-srcpage="1" data-clip="175,528,245,544"></span></div>
+<p class="x c" style="--b:563.8">24</p>
+</div>
+
+<!-- page 25 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="2" data-clip="28.3,42.4,391.2,43.0"></span></div>
+<p class="x i" style="--b:66.7">뉴턴 제2법칙과 쿨롱 법칙으로부터 두 공의 가속도는 다음과 같다.</p>
+<p class="x c" style="--b:89.1">$a_x = -kq^2x/(mR^3)\quad\text{그리고}\quad a_y = -kq^2y/(mR^3)$</p>
+<p class="x wn" style="--b:111.6">이는 홈에 수직인 쿨롱 힘의 성분이 받침면의 수직 항력과 평형을 이루고, 마찰력은 없기 때문이다.</p>
+<p class="x i" style="--b:135.7">평면 <span class="nw">$XY$에서</span> 움직이는 질량 <span class="nw">$m$인</span> 가상의 “준입자”를 생각하자. 이 입자의 좌표가 두 공의 좌표 <span class="nw">$x$,</span> <span class="nw">$y$와</span> 같다고 하자. 이 입자에는 크기가 <span class="nw">$kq^2/R^2$이고</span> 점 <span class="nw">$O$를</span> 향하는 힘이 작용한다고 하자. “준입자”의 가속도의 <span class="nw">$X$축</span> 성분과 <span class="nw">$Y$축</span> 성분은 원래 입자들의 가속도 <span class="nw">$a_x$,</span> <span class="nw">$a_y$와</span> 정확히 같다는 점에 주목하자. “준입자”의 좌표도 원래 입자들의 좌표와 같다는 것을 고려하면, “준입자”가 반지름 <span class="nw">$R$인</span> 원을 따라 움직이는 운동은 원래 입자들의 운동과 동등하다는 것을 알 수 있다. 또한 <span class="nw">$v^2 = v_x^2 + v_y^2$이므로</span>, 준입자가 원을 따라 움직이는 속력 <span class="nw">$v$는</span> 일정하다는 점에 주목하자.</p>
+<p class="x i" style="--b:243.6">가속도 성분에 대한 식으로부터 준입자의 구심 가속도에 대해 다음을 얻는다.</p>
+<div class="f" style="left:165pt;top:258pt"><span class="fig" data-srcpage="2" data-clip="165,258,254,271"></span></div>
+<p class="x" style="--b:287.0">따라서 구하는 운동 에너지는 다음과 같다.</p>
+<div class="f" style="left:131pt;top:299pt"><span class="fig" data-srcpage="2" data-clip="131,299,289,315"></span></div>
+<p class="x h" style="--b:346.5">문제 3. 켈빈 경의 기록 보관소 <i>(L. M. Koldunov, A. N. Zhigar)</i></p>
+<p class="x i" style="--b:361.5">순환 과정은 열용량이 <span class="nw">$\frac52R$,</span> <span class="nw">$\frac32R$,</span> <span class="nw">$2R$인</span> 세 과정으로 이루어져 있으므로, 처음 두 과정은 각각 등적 과정과 등압 과정이다. 열용량이 <span class="nw">$2R$인</span> 과정이 어떤 과정인지 알아보자.</p>
+<div class="f" style="left:118pt;top:397pt"><span class="fig" data-srcpage="2" data-clip="118,397,302,428"></span></div>
+<p class="x wn" style="--b:442.4">이로부터 <span class="nw">$PdV = VdP$,</span> 곧 <span class="nw">$\frac{P}{V} = \frac{dP}{dV}$를</span> 얻는다. 이는 압력이 부피에 비례하는 과정에 해당한다.</p>
+<p class="x i" style="--b:466.6">문제의 그래프에서 등적 과정은 점으로 나타나 있다는 점에 주목하자. 이는 가로축에 부피나 밀도를 나타냈다는 뜻이다. 가로축에 부피를 나타낸 경우를 생각하자. 과정 가운데 하나가 등압 팽창이고, 등적 과정은 등압선 위에서 부피가 가장 작은 값에서 일어난다는 사실을 이용하면, 순환 과정은 다음과 같은 모양이 된다(그림&nbsp;27).</p>
+<p class="x i" style="--b:538.6">최소 압력과 최소 부피를 각각 <span class="nw">$P_0$,</span> <span class="nw">$V_0$으로</span> 나타내고 이 순환 과정의 효율을 구하자.</p>
+<p class="x c" style="--b:563.8">25</p>
+</div>
+
+<!-- page 26 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2019년 전러시아 물리 올림피아드</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="3" data-clip="28.3,42.4,391.2,43.0"></span></div>
+<p class="x c d" style="--b:83.4;--a:15.95pt">$\eta = \dfrac{A}{Q_+} = \dfrac{\frac12\cdot2P_0\cdot2V_0}{\frac32(3P_0\cdot3V_0 - P_0V_0) + 3P_0\cdot2V_0} = \dfrac{2P_0V_0}{18P_0V_0} = 1/9$</p>
+<p class="x i" style="--b:109.4">문제의 그래프에서 가로축에 <span class="nw">$\rho$</span> 또는 <span class="nw">$\frac1V$를</span> 나타냈다면, 해당하는 과정의 그래프는 그림과 같다(그림&nbsp;28).</p>
+<div class="f" style="left:48pt;top:125.5pt"><span class="fig" data-srcpage="3" data-clip="48,125.5,397,235"></span></div>
+<p class="x ov" style="--b:231.6;left:195.6pt;--fs:8.966pt">상대 단위</p>
+<p class="x ov" style="--b:231.6;left:364.5pt;--fs:8.966pt">상대 단위</p>
+<p class="x cap" style="--b:246.3;left:109.9pt">그림 27</p>
+<p class="x cap" style="--b:246.3;left:276.5pt">그림 28</p>
+<p class="x i" style="--b:263.2">이 경우의 효율을 계산하자.</p>
+<p class="x c d" style="--b:291.6;--a:15.7pt">$\eta = \dfrac{A}{Q_+} = \dfrac{\frac12\cdot2P_0\cdot2V_0}{\frac32(3P_0\cdot3V_0 - P_0V_0) + \frac{P_0+3P_0}{2}\cdot2V_0} = \dfrac{2P_0V_0}{16P_0V_0} = 1/8.$</p>
+<p class="x" style="--b:321.0">따라서 순환 과정의 최대 효율은 1/8이다.</p>
+<p class="x h" style="--b:345.6">문제 4. 대전된 판 <i>(A. M. Apolonsky)</i></p>
+<div class="f" style="left:277pt;top:347pt"><span class="fig" data-srcpage="3" data-clip="277,347,394,455"></span></div>
+<p class="x cap" style="--b:471.9;left:314.5pt">그림 29</p>
+<p class="x i" style="--b:359.3;width:239.5pt">중첩 원리에 따라, 전위 <span class="nw">$\varphi_2$는</span> 한 변이 <span class="nw">$a$이고</span> 표면 전하 밀도가 <span class="nw">$\sigma$인</span> 정삼각형 판의 꼭짓점 전위의 두 배와 같다.</p>
+<p class="x i wr wn" style="--b:407.1;--fw:123.4pt;--fh:82.7pt">표면 전하 밀도를 그대로 두고 판의 크기를 2배로 늘리면, 각 점의 전위도 2배가 된다. 이 사실을 증명하려면 처음 판을 점전하로 볼 수 있는 작은 조각들로 나누어 보면 된다. 크기를 늘리면 각 조각의 넓이는 4배가 되므로 전하도 4배가 되고, 각 조각까지의 거리는 2배가 된다. 점전하의 전위가 <span class="nw">$\frac{kq}{r}$임을</span> 고려하면, 각 작은 조각이 만드는 전위는 2배가 되고, 따라서 전체 전위도 두 배가 된다. 그러므로 점 <span class="nw">$C$의</span> 전위는 한 변이 <span class="nw">$a$인</span> 판의 꼭짓점 전위의 2배, 곧 <span class="nw">$\varphi_C = \varphi_2$이다</span>.</p>
+<p class="x c" style="--b:563.8">26</p>
+</div>
+
+<!-- page 27 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="4" data-clip="28.3,42.4,391.2,43.0"></span></div>
+<p class="x i" style="--b:66.7">점 <span class="nw">$D$의</span> 전위를 구하자. 이를 위해 삼각형을 한 변이 <span class="nw">$a$인</span> 삼각형 4개로 나누어 생각하자. <span class="nw">$AEDF$는</span> 처음의 마름모이고, 이 마름모가 점 <span class="nw">$D$에</span> 만드는 전위는 <span class="nw">$\varphi_1$이라는</span> 점에 주목하자. 여기에 삼각형 <span class="nw">$BDE$와</span> <span class="nw">$DFC$가</span> 만드는 전위를 더해야 한다(그림&nbsp;29). 이 삼각형들이 각각 꼭짓점에 만드는 전위는 <span class="nw">$\varphi_2/2$이다</span>. 따라서 <span class="nw">$\varphi_D = \varphi_1 + \varphi_2$이다</span>.</p>
+<p class="x i" style="--b:126.4">가운데 삼각형을 잘라 내면 점 <span class="nw">$D$의</span> 전위는 <span class="nw">$\varphi_2/2$만큼</span> 줄어들어 <span class="nw">$\varphi'_D = \varphi_1 + \varphi_2/2$가</span> 된다.</p>
+<p class="x i" style="--b:150.3">“구멍 뚫린” 판의 점 <span class="nw">$C$의</span> 전위를 구하려면, 삼각형 <span class="nw">$DEF$가</span> 그 점에 만들던 전위를 알아야 한다. 마름모 <span class="nw">$CFED$를</span> 생각하자. 이 마름모가 점 <span class="nw">$C$에</span> 만드는 전위는 <span class="nw">$\varphi_1$이고</span>, 이것은 삼각형 <span class="nw">$DEF$가</span> 만드는 전위와 삼각형 <span class="nw">$FDC$가</span> 만드는 전위 <span class="nw">$\varphi_2/2$의</span> 합이다. 따라서 삼각형 <span class="nw">$DEF$가</span> 점 <span class="nw">$C$에</span> 만드는 전위는 <span class="nw">$\varphi_1 - \varphi_2/2$이다</span>. 그러므로 가운데 삼각형을 잘라 내면 점 <span class="nw">$C$의</span> 전위는 <span class="nw">$\varphi'_C = \varphi_2 - \left(\varphi_1 - \frac{\varphi_2}{2}\right) = \frac32\varphi_2 - \varphi_1$이</span> 된다.</p>
+<p class="x h" style="--b:247.0">문제 5. 어림하고 증명하여라 <i>(R. Yu. Kompaneets)</i></p>
+<div class="f" style="left:277pt;top:251pt"><span class="fig" data-srcpage="4" data-clip="277,251,392,376"></span></div>
+<p class="x cap" style="--b:392.4;left:314.5pt">그림 30</p>
+<p class="x i wn" style="--b:260.9;width:239.5pt">대칭성으로부터, 마디 <span class="nw">$A$에서</span> 전류는 가능한 4 방향으로 똑같이 나뉘어 흐른다는 것이 분명하다(그림&nbsp;30). 따라서 <span class="nw">$I_1 = I/4$이다</span>. 마디 <span class="nw">$B$에서</span> 전류는 세 갈래로 나뉜다. 대칭성으로부터 오른쪽으로 흐르는 전류는 왼쪽으로 흐르는 전류와 같다는 것을 알 수 있다. 이 전류를 <span class="nw">$I_2$라</span> 하고, 나머지 전류를 <span class="nw">$I_3$이라</span> 하자. 직선 <span class="nw">$AC$에</span> 대한 대칭성으로부터 가지 <span class="nw">$FC$에도</span> 전류 <span class="nw">$I_2$가</span> 흐른다. 또한 대칭성으로부터 마디 <span class="nw">$C$에서</span> 위쪽과 오른쪽으로 흘러 나가는 전류는 서로 같다. 마디 <span class="nw">$C$로</span> 전류 <span class="nw">$2I_2$가</span> 흘러 들어오므로, 흘러 나가는 전류도 각각 <span class="nw">$I_2$이다</span>.</p>
+<!-- seven short paragraphs, one per line group, as in the original (404.4 ... 513.2); kept in ONE block because
+     their inline fractions make the lines grow (as in LaTeX), so separately pinned blocks would collide -->
+<p class="x" style="--b:404.4"><span class="ln i">마디 <span class="nw">$B$에</span> 대해: <span class="nw">$I_1 = \frac{I}{4} = 2I_2 + I_3 \Rightarrow I_3 = \frac{I}{4} - 2I_2$.</span></span><span class="ln i">마디 <span class="nw">$B$와</span> <span class="nw">$E$</span> 사이의 전압은 두 가지 방법으로 계산할 수 있다: <span class="nw">$I_3R + I_4R =$</span> <span class="nw">$I_2R + I_2R \Rightarrow$</span> <span class="nw">$I_4 = 2I_2 - I_3$.</span></span><span class="ln i">마디 <span class="nw">$D$에</span> 대해: <span class="nw">$I_3 = 2I_4 + I_5$.</span> <span class="nw">$I_5 > 0$이므로</span> <span class="nw">$I_3 > 2I_4$이다</span>.</span><span class="ln i">식을 변형하면 <span class="nw">$I_3 > 2(2I_2 - I_3) \Rightarrow$</span> <span class="nw">$3I_3 > 4I_2 \Rightarrow$</span> <span class="nw">$3(\frac{I}{4} - 2I_2) > 4I_2 \Rightarrow$</span> <span class="nw">$3I - 24I_2 >$</span> <span class="nw">$16I_2 \Rightarrow I_2 < \frac{3}{40}I$.</span></span><span class="ln i">한편 <span class="nw">$I_4 > 0 \Rightarrow 2I_2 - I_3 > 0 \Rightarrow 2I_2 - \frac{I}{4} + 2I_2 > 0 \Rightarrow I_2 > \frac{I}{16}$.</span></span><span class="ln i">따라서 <span class="nw">$\frac{1}{16}I < I_2 < \frac{3}{40}I$,</span> 곧 <span class="nw">$\frac{10}{160}I < I_2 < \frac{12}{160}I$.</span></span><span class="ln i">결국 <span class="nw">$I_2 = \left(\frac{11}{160} \pm \frac{1}{160}\right)I$를</span> 얻는다. 어림값의 오차는 1/11&thinsp;=&thinsp;9%이다.</span></p>
+<p class="x c" style="--b:563.8">27</p>
+</div>
+</body></html>
