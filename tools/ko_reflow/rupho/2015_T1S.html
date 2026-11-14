@@ -1,0 +1,214 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2015 (XLIX = 제49회), 9학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 10-16
+   (figures are numbered on through the booklet: 그림 11-15; equations numbered (1)-(19), then (1)-(2) again in problem 4).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+   In this booklet even pages carry "결선. 이론 시험" and the page number at the RIGHT, odd pages "제49회 ..." and the
+   page number at the LEFT; page numbers sit on baseline 573.6.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction.
+   A line holding a tall inline fraction (\dfrac) grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~13.6pt for a \dfrac with capital/ascender numerator).
+   Equation numbers "(n)" of retyped displays: separate right-aligned block on the same baseline (.en).
+   A block whose FIRST line holds a \dfrac grows upward: push it down with padding-top (~1.2pt) until qa.py meets --b. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.en{text-align:right}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.6) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* "풀이 예시" (SFRM1440, 14.346pt regular), grade line "9학년" (SFBX1200 = 11.955pt bold),
+   problem titles (SFBX1000 bold) — all centred on the column */
+.t{text-align:center;--fs:14.346pt;--l:17.2pt}
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* answer block of problem 4: two columns at x 91.6 (formula) and 223.7 (condition) */
+.al{left:91.6pt;width:125pt}
+.ar{left:223.7pt;width:150pt}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 10 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x t" style="--b:51.5">풀이 예시</p>
+<p class="x g" style="--b:69.7">9학년</p>
+<p class="x h" style="--b:85.7">문제 1. 열차의 가속</p>
+<p class="x i" style="--b:98.0"><b>첫 번째 방법(‘시간을 쓰는’ 해석적 방법).</b> 이웃한 두 지지대 사이의 거리를 $L$, 전동차의 가속도를 <span class="nw">$a$라고</span> 하자. 문제의 조건에 따라, 각각 지지대 1, 2, 3 사이에 있는 이웃한 두 구간 1–2와 2–3을 생각하자(그림&nbsp;11). 구간 1–2에서의 평균 속력을 $v_1$, 구간 2–3에서의 평균 속력을 <span class="nw">$v_2$라고</span> 하자. 첫 번째 지지대를 지나는 순간의 순간 속력을 <span class="nw">$u_1$이라</span> 하고, 전동차가 구간 1–2를 지나는 데 걸리는 시간을 $t_1$, 구간 2–3을 지나는 데 걸리는 시간을 <span class="nw">$t_2$라고</span> 하자.</p>
+<div class="f" style="left:98pt;top:180pt"><span class="fig" data-srcpage="1" data-clip="98,180,323,246"></span></div>
+<p class="x cap" style="--b:257.9;left:190.2pt">그림 11</p>
+<p class="x i" style="--b:279.0">그러면 평균 속력의 정의로부터 구간의 길이를 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:174pt;top:295pt"><span class="fig" data-srcpage="1" data-clip="174,295,388,309"></span></div>
+<p class="x i" style="--b:322.7">한편, 운동은 등가속도 운동이므로 다음이 성립한다.</p>
+<div class="f" style="left:175pt;top:335pt"><span class="fig" data-srcpage="1" data-clip="175,335,388,410"></span></div>
+<p class="x i" style="--b:423.8">식 (2)의 각 항에 <span class="nw">$v_1/t_1$을</span>, 식 (3)의 각 항에 <span class="nw">$v_2/t_2$를</span> 곱한 다음, (2)와 (3)에 (1)에서 얻은 $t_1$, <span class="nw">$t_2$와</span> (4)에서 얻은 <span class="nw">$u_1$을</span> 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:132pt;top:453pt"><span class="fig" data-srcpage="1" data-clip="132,453,289,474"></span></div>
+<p class="x i" style="--b:485.1"><span class="nw">$L$을</span> 소거하면 속력 <span class="nw">$u$를</span> 나타낼 수 있고, 그 값을 구하면 다음과 같다.</p>
+<p class="x c d" style="--b:514.0;--a:13.6pt">$u = \dfrac{v_1^2 + v_2^2}{v_1 + v_2} = 26\,\mathrm{km/h}.$</p>
+<p class="x en" style="--b:514.0">(5)</p>
+<p class="x i" style="--b:537.9"><b>두 번째 방법(그래프를 이용한 방법).</b> 첫 번째 방법의 기호와 함께 등식 (1)을 이용한다.</p>
+<p class="x pn r" style="--b:573.6">10</p>
+</div>
+
+<!-- page 11 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.6">전동차의 속력을 시간에 대한 그래프로 나타내자. 등식 (1)과 속력의 수치를 고려하면, 구간 1–2에서의 운동은 구간 2–3에서보다 1.5배 오래 걸린다(예를 들어 <span class="nw">$6\tau$와</span> $4\tau$).</p>
+<div class="f" style="left:97pt;top:85pt"><span class="fig" data-srcpage="2" data-clip="97,85,333,249"></span></div>
+<p class="x ov" style="--b:98.3;left:130.1pt;--fs:9pt">km</p>
+<p class="x ov" style="--b:98.3;left:147.2pt">h</p>
+<p class="x cap" style="--b:258.8;left:190.2pt">그림 12</p>
+<p class="x i" style="--b:280.0">등가속도 운동에서는 어느 구간에서나 평균 속력이 그 시간 간격의 한가운데 순간의 순간 속력과 같다. 그래프로부터 순간 속력이 <span class="nw">$20\,\mathrm{km/h}$에서</span> <span class="nw">$30\,\mathrm{km/h}$로</span> 바뀌는 데 시간 <span class="nw">$5\tau$가</span> 걸렸음을 알 수 있다. 따라서 $3\tau$ 동안의 속력 변화는 <span class="nw">$6\,\mathrm{km/h}$이다</span>. 그러므로 구하는 속력은 <span class="nw">$26\,\mathrm{km/h}$이다</span>.</p>
+<p class="x i" style="--b:340.1"><b>세 번째 방법(‘시간을 쓰지 않는’ 해석적 방법).</b> 첫 번째 방법의 기호를 사용한다. 구간 2–3의 끝에서의 속력을 <span class="nw">$u_3$이라고</span> 하자. 등가속도 운동에서 평균 속력은 다음과 같다.</p>
+<div class="f" style="left:181pt;top:375pt"><span class="fig" data-srcpage="2" data-clip="181,375,388,400"></span></div>
+<div class="f" style="left:181pt;top:407pt"><span class="fig" data-srcpage="2" data-clip="181,407,388,432"></span></div>
+<p class="x" style="--b:443.3">두 구간에서의 변위는 다음과 같다.</p>
+<div class="f" style="left:180pt;top:457pt"><span class="fig" data-srcpage="2" data-clip="180,457,388,483"></span></div>
+<div class="f" style="left:180pt;top:486pt"><span class="fig" data-srcpage="2" data-clip="180,486,388,513"></span></div>
+<p class="x" style="--b:524.7">(8)과 (9)로부터 다음을 얻는다.</p>
+<div class="f" style="left:169pt;top:539pt"><span class="fig" data-srcpage="2" data-clip="169,539,389,559"></span></div>
+<p class="x pn" style="--b:573.6">11</p>
+</div>
+
+<!-- page 12 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:49.1">(6), (7), (10)을 <span class="nw">$u$에</span> 대하여 연립하여 풀면 다음을 얻는다.</p>
+<p class="x c d" style="--b:77.0;--a:13.6pt">$u = \dfrac{v_1^2 + v_2^2}{v_1 + v_2} = 26\,\mathrm{km/h}.$</p>
+<p class="x en" style="--b:77.0">(11)</p>
+<p class="x h" style="--b:107.7">문제 2. 눌렀다가 놓기</p>
+<p class="x i" style="--b:119.7">힘 <span class="nw">$F$가</span> 작용하는 동안 나무토막이 이동한 거리를 $s$, 용수철이 가장 많이 압축된 길이를 <span class="nw">$x$라고</span> 하자. 나무토막이 처음 위치에서 멈추려면, 이 이동 동안 마찰력이 한 일이 변위 <span class="nw">$s$에서</span> 힘 <span class="nw">$F$가</span> 한 일과 같아야 한다.</p>
+<div class="f" style="left:187pt;top:171pt"><span class="fig" data-srcpage="3" data-clip="187,171,389,183"></span></div>
+<p class="x i" style="--b:197.1">용수철이 가장 많이 압축된 순간 나무토막의 속도가 0이라는 사실로부터 다음이 나온다.</p>
+<div class="f" style="left:174pt;top:222pt"><span class="fig" data-srcpage="3" data-clip="174,222,389,247"></span></div>
+<p class="x i" style="--b:257.9">여기서 <span class="nw">$k$는</span> 용수철 상수이다. (12)를 고려하면 식 (13)으로부터 다음을 얻는다.</p>
+<div class="f" style="left:190pt;top:273pt"><span class="fig" data-srcpage="3" data-clip="190,273,389,285"></span></div>
+<p class="x i" style="--b:299.6">(12)와 (14)로부터 다음을 얻는다.</p>
+<div class="f" style="left:189pt;top:312pt"><span class="fig" data-srcpage="3" data-clip="189,312,388,338"></span></div>
+<p class="x i" style="--b:347.9">수레가 벽을 누르는 힘은 용수철의 변형이 가장 클 때 최대가 된다(이때 탄성력은 최대이고, 마찰력은 아직 방향을 바꾸지 않았다). 따라서 힘 <span class="nw">$F$의</span> 작용이 멈춘 순간과 누르는 힘이 최대인 순간에 수레가 벽을 누르는 힘은 각각 다음과 같다.</p>
+<div class="f" style="left:158pt;top:408pt"><span class="fig" data-srcpage="3" data-clip="158,408,389,450"></span></div>
+<p class="x h" style="--b:471.2">문제 3. 냉장고 속의 더위</p>
+<p class="x i" style="--b:483.0">주위 환경과의 열교환으로 들어오는 열의 일률을 $P$, 즉 $P = \alpha(t - t_0)$, 냉장고가 작동하여 빼내는 열의 일률을 $P_0$, 내용물을 포함한 냉장고의 열용량을 <span class="nw">$C$라고</span> 하자.</p>
+<p class="x i" style="--b:518.9">1. 냉장고의 온도를 <span class="nw">$\Delta t$만큼</span> 높이는 데에는 시간 $T$(쉬는 시간)가 걸린다.</p>
+<div class="f" style="left:160pt;top:530pt"><span class="fig" data-srcpage="3" data-clip="160,530,389,560"></span></div>
+<p class="x pn r" style="--b:573.6">12</p>
+</div>
+
+<!-- page 13 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.5">그다음 모터가 켜지고, 시간 $\tau$(작동 시간) 동안 냉장고 안의 온도가 <span class="nw">$\Delta t$만큼</span> 내려간다.</p>
+<div class="f" style="left:143pt;top:72pt"><span class="fig" data-srcpage="4" data-clip="143,72,389,102"></span></div>
+<p class="x i" style="--b:109.1">처음에 냉장고 안의 온도가 <span class="nw">$t = t_1$이었다고</span> 하자. 이때 <span class="nw">$\tau = 2T$이므로</span>, (18)과 (19)를 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:178pt;top:132pt"><span class="fig" data-srcpage="4" data-clip="178,132,243,158"></span></div>
+<p class="x i" style="--b:167.8">두 번째 경우에는 <span class="nw">$t = t_2$일</span> 때 <span class="nw">$2\tau = T$이므로</span>, (18)과 (19)로부터 다음을 얻는다.</p>
+<div class="f" style="left:180pt;top:183pt"><span class="fig" data-srcpage="4" data-clip="180,183,240,205"></span></div>
+<p class="x i" style="--b:214.5">그러면 <span class="nw">$\theta = t_2 - t_1 = P_0/(3\alpha)$이므로</span></p>
+<p class="x c" style="--b:238.4">$t_1 = t_0 - 2\theta = 12\,{}^\circ\mathrm{C},\qquad t_2 = t_0 - \theta = 21\,{}^\circ\mathrm{C}.$</p>
+<p class="x i" style="--b:255.3">2. 냉장고 모터가 빼내는 열의 일률이 주위 환경에서 들어오는 열의 일률보다 작거나 같으면, 냉장고 모터는 쉬지 않고 작동한다.</p>
+<p class="x c d" style="--b:303.9;--a:13.6pt">$P_0 \leqslant \alpha(t_0 - t),\quad\text{따라서}\quad t \leqslant t_0 - \dfrac{P_0}{\alpha},$</p>
+<p class="x" style="--b:324.0">그러므로</p>
+<p class="x c d" style="--b:340.5;--a:13.6pt">$t_m = t_0 - \dfrac{P_0}{\alpha} = t_0 - 3\theta = 3\,{}^\circ\mathrm{C}.$</p>
+<p class="x i" style="--b:360.2">3. 문항 1의 풀이에서, 냉장고가 잇달아 두 번 켜지는 사이의 시간이 다음과 같음을 보였다.</p>
+<div class="f" style="left:90pt;top:382pt"><span class="fig" data-srcpage="4" data-clip="90,382,330,412"></span></div>
+<p class="x" style="--b:422.1">냉장고가 켜지는 빈도는 <span class="nw">$y = \alpha(t_0 - t)(P_0 - \alpha(t_0 - t))$가</span> 최대일 때 최대이다. 편의상 <span class="nw">$(t_0 - t)$를</span> <span class="nw">$x$로</span> 나타내자. 그래프 <span class="nw">$y(x) = \alpha P_0x - \alpha^2x^2$은</span> 아래로 향하는(위로 볼록한) 포물선이므로, <span class="nw">$y$는</span> 포물선의 꼭짓점에서 최대가 된다. 포물선 꼭짓점의 좌표는 <span class="nw">$x_\mathrm{v} = P_0/(2\alpha)$이므로</span></p>
+<p class="x c d" style="--b:495.2;--a:13.6pt">$t_3 = t_0 - \dfrac{P_0}{2\alpha} = t_0 - \dfrac32\theta = 16.5\,{}^\circ\mathrm{C}.$</p>
+<p class="x h" style="--b:525.9">문제 4. 이상적이지 않은 다이오드</p>
+<p class="x i" style="--b:537.9">전원의 «+»가 점 A에 연결된 경우를 생각하자. 이 경우 전압 <span class="nw">$U_\mathrm{AB}$를</span> 양으로 본다. 다이오드에 걸린 전압이</p>
+<p class="x pn" style="--b:573.6">13</p>
+</div>
+
+<!-- page 14 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="5" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:49.1"><span class="nw">$U_0$보다</span> 작으면 다이오드에 전류가 흐르지 않는다(다이오드가 닫혀 있다). <span class="nw">$U_\mathrm{AB}$가</span> 작을 때에는 세 다이오드가 모두 닫혀 있고, 저항을 흐르는 전류는 다음과 같다.</p>
+<p class="x c d" style="--b:99.6;--a:13.6pt">$I_A = \dfrac{U_\mathrm{AB}}{3R}.$</p>
+<p class="x en" style="--b:99.6">(1)</p>
+<p class="x" style="--b:120.2">이 전류는 <span class="nw">$D$에서</span> <span class="nw">$C$로</span> 흐른다. 그래프 <span class="nw">$I_\mathrm{A}(U_\mathrm{AB})$를</span> 그릴 때 이 전류 방향을 양으로 정한다. 관계식 (1)은 다이오드 <span class="nw">$D_1$에</span> 걸린 전압이 <span class="nw">$U_0$에</span> 이르기 전까지, 즉 다음 조건에서 성립한다.</p>
+<div class="f" style="left:163pt;top:159pt"><span class="fig" data-srcpage="5" data-clip="163,159,257,176"></span></div>
+<p class="x d" style="--b:191.9;--a:13.6pt">즉 <span class="nw">$U_\mathrm{AB} < \dfrac32U_0$이다</span>. 따라서 <span class="nw">$U_\mathrm{AB} < \dfrac32U_0$일</span> 때 <span class="nw">$I_A = \dfrac{U_\mathrm{AB}}{3R}$이다</span>.</p>
+<p class="x i" style="--b:207.3"><span class="nw">$U_{AB} = 3U_0/2$일</span> 때 다이오드 <span class="nw">$D_1$이</span> 열리고, 다이오드의 전류-전압 특성에서 알 수 있듯이 <span class="nw">$U_{AB} > 3U_0/2$인</span> 모든 전압에서 구간 DB의 전압은 <span class="nw">$U_0$이</span> 된다. 따라서 다이오드 <span class="nw">$D_2$와</span> <span class="nw">$D_3$이</span> 열리기 전까지 전류계를 흐르는 전류는 양수이며 그 값은 다음과 같다.</p>
+<div class="f" style="left:193pt;top:253pt"><span class="fig" data-srcpage="5" data-clip="193,253,227,279"></span></div>
+<p class="x i" style="--b:291.8">다이오드 <span class="nw">$D_2$와</span> <span class="nw">$D_3$은</span> 구간 AC의 전압이 <span class="nw">$2U_0$이</span> 될 때 열린다. 그런데 다이오드 <span class="nw">$D_1$이</span> 열려 있을 때 구간 CB의 전압은 <span class="nw">$U_0/2$이므로</span>, 다이오드 <span class="nw">$D_2$와</span> <span class="nw">$D_3$은</span> 전압 <span class="nw">$U_{AB} = 2U_0 + U_0/2 = 5U_0/2$에서</span> 열린다. 이때 구간 AC의 전위차는 <span class="nw">$2U_0$이고</span>, 구간 DB의 전위차는 <span class="nw">$U_0$이다</span>. 따라서 다이오드가 열려 있을 때 전압 <span class="nw">$U_{DC}$는</span> 다음과 같다.</p>
+<div class="f" style="left:45pt;top:364pt"><span class="fig" data-srcpage="5" data-clip="45,364,376,380"></span></div>
+<p class="x" style="--b:392.9">여기서 $\varphi_A$, $\varphi_B$, $\varphi_C$, <span class="nw">$\varphi_D$는</span> 각각 점 A, B, C, D의 전위이다. 따라서 다이오드가 열려 있을 때 전류계를 흐르는 전류는 다음과 같다.</p>
+<div class="f" style="left:169pt;top:415pt"><span class="fig" data-srcpage="5" data-clip="169,415,388,444"></span></div>
+<p class="x" style="--b:454.1">전압 <span class="nw">$U_{AB} = 5U_0/2$에서</span> 전류 (2)는 다이오드 <span class="nw">$D_2$와</span> <span class="nw">$D_3$이</span> 열리기 전의 전류와 같다. 이는 <span class="nw">$U_{AB} > 5U_0/2$일</span> 때 전류계를 흐르는 전류가 <span class="nw">$U_{AB}$에</span> 대하여 선형으로 감소하는 함수이고, 점 <span class="nw">$U_{AB} = 5U_0/2$에서</span> 끊어지지 않으며, 기울기의 크기가 구간 <span class="nw">$U < 3U_0/2$에서보다</span> 세 배 크다는 것을 뜻한다.</p>
+<p class="x i" style="--b:513.9">전원의 «+»가 <span class="nw">$B$에</span> 연결된 경우, 즉 <span class="nw">$U_\mathrm{AB} < 0$이면</span> 모든 다이오드가 닫혀 있고, 전류는 직렬로 연결된 저항 세 개를 지나 흐른다. 그 크기는 <span class="nw">$I_A = \frac{U_\mathrm{AB}}{3R}$이고</span>, 이때 <span class="nw">$I_A < 0$이다</span>. <span class="nw">$U_{AB}$에</span> 대한 <span class="nw">$I_A$의</span> 그래프는 그림&nbsp;13과 같다.</p>
+<p class="x pn r" style="--b:573.6">14</p>
+</div>
+
+<!-- page 15 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="6" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<div class="f" style="left:88pt;top:41pt"><span class="fig" data-srcpage="6" data-clip="88,41,342,143"></span></div>
+<p class="x cap" style="--b:152.7;left:190.2pt">그림 13</p>
+<p class="x i" style="--b:172.6">답:</p>
+<p class="x d al" style="--b:209.2;--a:13.6pt">$I_A = \dfrac{U_\mathrm{AB}}{3R}$</p>
+<p class="x d ar" style="--b:209.2;--a:13.6pt"><span class="nw">$U_\mathrm{AB} < \dfrac32U_0$일</span> 때,</p>
+<p class="x d al" style="--b:233.6;--a:13.6pt">$I_A = \dfrac{U_0}{2R}$</p>
+<p class="x d ar" style="--b:233.6;--a:13.6pt"><span class="nw">$\dfrac32U_0 < U_\mathrm{AB} < \dfrac52U_0$일</span> 때,</p>
+<p class="x d al" style="--b:257.9;--a:13.6pt">$I_A = \dfrac{3U_0 - U_\mathrm{AB}}{R}$</p>
+<p class="x d ar" style="--b:257.9;--a:13.6pt"><span class="nw">$U_\mathrm{AB} > \dfrac52U_0$일</span> 때.</p>
+<p class="x h" style="--b:291.8">문제 5. 충가창가</p>
+<p class="x i" style="--b:303.8">체부라시카와 게나에게는 태양이 동쪽에서 서쪽으로 다음 각속도로 움직이는 것으로 보인다.</p>
+<p class="x c d" style="--b:332.4;--a:13.6pt">$\omega = \dfrac{360^\circ}{24\,\mathrm{h}} = 15^\circ/\mathrm{h}.$</p>
+<p class="x i" style="--b:353.2">그림 14에서 알 수 있듯이, 악어 게나의 창문에서는 태양이 천정에 있는 정오부터 태양이 체부라시카네 건물 뒤로 숨을 때까지 태양이 보인다. 그동안 태양은 다음 각만큼 움직인다.</p>
+<div class="f" style="left:176pt;top:387pt"><span class="fig" data-srcpage="6" data-clip="176,387,245,404"></span></div>
+<p class="x" style="--b:421.0">마찬가지로, 체부라시카의 창문에 햇빛이 비치는 동안 태양이 움직인 각은 다음과 같다.</p>
+<div class="f" style="left:176pt;top:433pt"><span class="fig" data-srcpage="6" data-clip="176,433,245,450"></span></div>
+<p class="x i" style="--b:463.1">한 층의 높이를 $h$, 체부라시카가 사는 층의 번호를 $n$, 적도를 따라 잰 두 건물 사이의 거리를 <span class="nw">$L$이라고</span> 하자. 그러면 그림 14로부터 다음 두 식을 쓸 수 있다.</p>
+<div class="f" style="left:149pt;top:498pt"><span class="fig" data-srcpage="6" data-clip="149,498,273,554"></span></div>
+<p class="x pn" style="--b:573.6">15</p>
+</div>
+
+<!-- page 16 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="7" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.6">이로부터 체부라시카가 묵은 층의 번호를 구하면 다음과 같다.</p>
+<div class="f" style="left:154pt;top:60pt"><span class="fig" data-srcpage="7" data-clip="154,60,266,85"></span></div>
+<div class="f" style="left:37pt;top:98pt"><span class="fig" data-srcpage="7" data-clip="37,98,212,249"></span></div>
+<div class="f" style="left:230pt;top:95pt"><span class="fig" data-srcpage="7" data-clip="230,95,392,249"></span></div>
+<p class="x ov" style="--b:233.3;left:64.3pt">체부라시카네 건물</p>
+<p class="x ov" style="--b:245.0;left:147pt">게나네 건물</p>
+<p class="x ov" style="--b:233.3;left:232.5pt">체부라시카네 건물</p>
+<p class="x ov" style="--b:245.0;left:315pt">게나네 건물</p>
+<p class="x cap" style="--b:258.0;left:106.2pt">그림 14</p>
+<p class="x cap" style="--b:258.0;left:283.3pt">그림 15</p>
+<p class="x i" style="--b:278.4">정오(12시)에 태양은 정확히 천정에 있다는 점에 주목하자. 얼마의 시간 <span class="nw">$t_1$이</span> 지난 뒤 게나네 건물의 창문이 체부라시카에게 금빛으로 보이기 시작했다. 이것은 게나네 건물 맨 위층의 창문에서 반사된 직사광선이 체부라시카의 창문에 들어왔을 때 일어났다(그림&nbsp;15). 시간 $t_1$ 동안 태양은 다음을 만족하는 각 <span class="nw">$\varphi_1$만큼</span> 내려왔다.</p>
+<p class="x c d" style="--b:352.7;--a:13.6pt">$\mathrm{tg}\,\varphi_1 = \dfrac{L}{30h} = \sqrt3,\quad\text{따라서}\quad\varphi_1 = 60^\circ.$</p>
+<p class="x" style="--b:377.9">그러므로 <span class="nw">$t_1 = \varphi_1/\omega = 4\,\mathrm{h}$이고</span>, 게나네 건물의 창문이 금빛으로 보이기 시작한 순간 체부라시카의 시계는 16시를 가리켰다.</p>
+<p class="x i" style="--b:401.8">정오가 지나고 시간 <span class="nw">$t_2$가</span> 흐른 뒤 창문이 더 이상 금빛으로 보이지 않게 되었다고 하자. 이 순간 게나네 건물에서 반사되어 체부라시카의 창문에 들어오는 햇빛은 체부라시카네 건물의 가장자리를 지난다. 이 순간 태양이 연직선과 이루는 각 <span class="nw">$\varphi_2$를</span> 구하자.</p>
+<p class="x c d" style="--b:464.2;--a:13.6pt">$\mathrm{tg}\,\varphi_2 = \dfrac{L}{15h} = 2\sqrt3,\quad\text{따라서}\quad\varphi_2 \approx 73.9^\circ.$</p>
+<p class="x" style="--b:489.4">그러므로 <span class="nw">$t_2 = \varphi_2/\omega \approx 4.93\,\mathrm{h}$이다</span>. 게나네 건물의 창문은 체부라시카에게 56분 동안 금빛으로 보였다.</p>
+<p class="x pn r" style="--b:573.6">16</p>
+</div>
+</body></html>

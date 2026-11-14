@@ -1,0 +1,190 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2015 (XLIX = 제49회), 11학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 23-28
+   (figures are numbered on through the booklet: 그림 21-26). This booklet section has no "풀이 예시" title line.
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   A line holding a tall inline fraction (\dfrac) grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~1.36em x 9.963pt = 13.6pt for a \dfrac with capital/ascender numerator).
+   A block whose FIRST line holds a \dfrac grows upward: push it down with padding-top (~1.2pt) until qa.py meets --b. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); odd pages left-aligned, even right */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.6): odd pages at the left edge, even at the right */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "11학년" (SFBX1200 = 11.955pt bold), problem titles (SFBX1000 bold) — centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: a float reserves the figure's room for the first N lines
+   --fw = room taken by the figure, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* Korean words standing between two stamped halves of a display line ("для нижней точки", "отсюда", "или" ...) */
+.w{width:auto;white-space:nowrap}
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span>
+   (a long one that leaves wide gaps: reword the sentence) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 23 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">11학년</p>
+<p class="x h" style="--b:61.4">문제 1. 진동</p>
+<div class="f" style="left:33pt;top:66pt"><span class="fig" data-srcpage="1" data-clip="33,66,183,185"></span></div>
+<p class="x cap" style="--b:194.3;left:84.6pt">그림 21</p>
+<p class="x wn" style="--b:73.4;left:186pt;width:201.5pt;text-indent:15pt">균일하게 대전된 구 내부에서 정전기장의 세기가 0이라는 것은 잘 알려져 있다. 어떤 점 <span class="nw">$A$에서의</span> 장은 구의 위쪽 절반과 아래쪽 절반이 만드는 장의 합이다.</p>
+<div class="f" style="left:247pt;top:130pt"><span class="fig" data-srcpage="1" data-clip="247,130,388,148"></span></div>
+<p class="x wl wn" style="--b:164.2;--fw:152.9pt;--fh:46.8pt">구의 중심에 대하여 점 <span class="nw">$A$와</span> 대칭인 점을 <span class="nw">$B$라고</span> 하자(그림&nbsp;21). 대칭성에 따라, 구의 아래쪽 절반이 점 <span class="nw">$A$에</span> 만드는 장의 세기는 구의 위쪽 절반이 점 <span class="nw">$B$에</span> 만드는 장과 크기가 같고 방향이 반대이다: <span class="nw">$\vec E'_1 = -\vec E_1$</span>. 그러면 식 (1)에 따라 <span class="nw">$\vec E'_1 = \vec E_2$를</span> 얻는다. 즉 균일하게 대전된 반구가 그 중심에 대하여 대칭인 두 점에 만드는 장의 세기는 서로 같다.</p>
+<div class="f" style="left:50pt;top:260pt"><span class="fig" data-srcpage="1" data-clip="50,260,372,388"></span></div>
+<p class="x cap" style="--b:398.8;left:100pt">그림 22</p>
+<p class="x cap" style="--b:398.8;left:277.1pt">그림 23</p>
+<p class="x i" style="--b:418.2">점 <span class="nw">$A$에서</span> 진자의 실에 수직인 장의 성분의 방향을 구하자(그림&nbsp;22). 진자의 실에 수직이면서 구의 왼쪽 가장자리를 지나는 평면을 그린다. 그러면 구의 부분 <span class="nw">$MN$은</span> 진자의 실에 평행한 장을 만든다. 진자의 실에 수직인 장의 성분은 반구의 나머지 부분만이 만들므로, 이 장을 만드는 전하의 대부분은 반구 가운데 점 <span class="nw">$A$에서</span> 더 먼 부분에 있다. 따라서 장의 이 성분은 진자가 변위한 방향을 향한다.</p>
+<p class="x i" style="--b:513.9">공의 전하를 바꾼 뒤에는 공의 평형 위치가 매단 점보다 위에 있어야 한다. 그렇지 않으면 이전 주기와 새 주기가 같을 수 없기 때문이다. 공이 매단 점보다 위에 있을 때, 공이 평형 위치에서 벗어나면 되돌리는 힘이 생길 수 있는 것은 오직 정전기적 상호작용</p>
+<p class="x pn" style="--b:573.6">23</p>
+</div>
+
+<!-- page 24 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.0">때문이다. 따라서 <span class="nw">$q_2 > 0$이어야</span> 한다(그림&nbsp;23).</p>
+<p class="x i" style="--b:72.0">아래쪽 점에서 진자를 평형 위치로부터 작은 각 <span class="nw">$\varphi$만큼</span> 기울이면 되돌리는 힘 <span class="nw">$f_1$이</span> 생긴다. 이 힘 가운데 전하와 그릇 사이의 전기적 상호작용에 의한 기여는 전하의 크기와 기울어진 각에 비례하므로 다음과 같다.</p>
+<div class="f" style="left:169pt;top:121pt"><span class="fig" data-srcpage="2" data-clip="169,121,252,138"></span></div>
+<p class="x" style="--b:151.2">위쪽 점(공의 전하 <span class="nw">$q_2$)에서</span> 되돌리는 힘은 다음과 같다.</p>
+<div class="f" style="left:165pt;top:164pt"><span class="fig" data-srcpage="2" data-clip="165,164,256,179"></span></div>
+<p class="x i" style="--b:194.6">이에 해당하는 진동 방정식은 다음과 같다(여기서 <span class="nw">$l$은</span> 진자의 실의 길이이다).</p>
+<div class="f" style="left:111pt;top:220pt"><span class="fig" data-srcpage="2" data-clip="111,220,212,247"></span></div>
+<p class="x w" style="--b:228.2;left:220.9pt">아래쪽 점에 대하여,</p>
+<p class="x w" style="--b:243.2;left:220.9pt">위쪽 점에 대하여.</p>
+<p class="x" style="--b:264.8">그러면 아래쪽과 위쪽 평형 위치 근처에서 진동의 각진동수는 각각 다음과 같다.</p>
+<div class="f" style="left:173pt;top:288pt"><span class="fig" data-srcpage="2" data-clip="173,288,248,321"></span></div>
+<p class="x" style="--b:336.3">여기서 <span class="nw">$\omega_0^2 = g/l$은</span> 대전되지 않은 반구 속에서의 진동수이고, <span class="nw">$\beta = \alpha/(ml)$은</span> 상수이다.</p>
+<p class="x i" style="--b:360.2">문제의 조건은 <span class="nw">$q_1 > 0$과</span> <span class="nw">$q_1 < 0$의</span> 두 경우에 실현될 수 있다. 두 경우 모두 공은 처음에는 아래쪽 평형 위치 근처에서, 그다음에는 위쪽 평형 위치 근처에서 진동한다.</p>
+<p class="x i" style="--b:396.0"><b>경우 1</b></p>
+<p class="x i" style="--b:408.0"><span class="nw">$q_1 > 0$인</span> 경우를 생각하자. 그러면 <span class="nw">$q_2 = 2q_1$이다</span>.</p>
+<p class="x i" style="--b:419.9">조건에 따라 <span class="nw">$\omega_1 = \omega_2 = \omega$이므로</span> 다음을 얻는다.</p>
+<div class="f" style="left:97pt;top:435pt"><span class="fig" data-srcpage="2" data-clip="97,435,205,455"></span></div>
+<p class="x w" style="--b:445.7;left:226pt">따라서</p>
+<div class="f" style="left:275pt;top:431pt"><span class="fig" data-srcpage="2" data-clip="275,431,323,456"></span></div>
+<p class="x" style="--b:471.8">따라서 <span class="nw">$\omega^2 = \frac13\omega_0^2$이고</span>, 진동 주기는 다음과 같다.</p>
+<p class="x c d" style="--b:499.0;--a:13.6pt">$T = \dfrac{2\pi}{\omega} = T_0\sqrt3 = 1.73\,\mathrm{s}.$</p>
+<p class="x" style="--b:525.9">여기서 <span class="nw">$T_0 = 2\pi\sqrt{l/g}$는</span> 대전되지 않은 반구 속에서 진자의 진동 주기이다.</p>
+<p class="x i" style="--b:537.9"><b>경우 2</b></p>
+<p class="x i" style="--b:549.8"><span class="nw">$q_1 < 0$인</span> 경우를 생각하자. 그러면 <span class="nw">$q_2 = -2q_1$이다</span>.</p>
+<p class="x pn r" style="--b:573.6">24</p>
+</div>
+
+<!-- page 25 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.5">경우 1과 마찬가지로 각진동수 <span class="nw">$\omega_1$과</span> <span class="nw">$\omega_2$의</span> 값을 같게 놓으면 <span class="nw">$\beta q_1 = -2\omega_0^2$을</span> 얻는다. 이로부터 <span class="nw">$\omega^2 = 3\omega_0^2$이고</span>, 진동 주기는 다음과 같다.</p>
+<p class="x c d" style="--b:87.2;--a:13.6pt">$T = \dfrac{2\pi}{\omega} = \dfrac{T_0}{\sqrt3} = 0.58\,\mathrm{s}.$</p>
+<p class="x h" style="--b:123.5">문제 2. 도체 정육면체</p>
+<p class="x i" style="--b:135.5">꼭짓점 B의 전위를 0으로 잡자. 꼭짓점 A와 B를 통해 전류 <span class="nw">$I$를</span> 흘리면, 대칭성으로부터 점 M의 전위는 다음과 같다.</p>
+<div class="f" style="left:168pt;top:160pt"><span class="fig" data-srcpage="3" data-clip="168,160,252,186"></span></div>
+<p class="x" style="--b:193.5">또한 전위차는 다음과 같다.</p>
+<div class="f" style="left:90pt;top:204pt"><span class="fig" data-srcpage="3" data-clip="90,204,331,230"></span></div>
+<p class="x" style="--b:244.2">꼭짓점 B로 전류 <span class="nw">$I$를</span> 반대 방향으로 흘려 넣어 B에서 나가는 전류 <span class="nw">$I$를</span> 상쇄시키고, 이 전류를 꼭짓점 C로 빼내자. 이를 위해서는 꼭짓점 C에 다음과 같은 전위를 걸어 주어야 한다.</p>
+<p class="x c d" style="--b:295.5;--a:14.5pt">$\varphi_C = -\left(\dfrac12Ir + U\right).$</p>
+<p class="x" style="--b:322.7"><span class="nw">$\varphi_B = 0$임을</span> 다시 떠올리자. 꼭짓점 A와 C 사이의 전위차는 다음과 같이 된다.</p>
+<div class="f" style="left:116pt;top:337pt"><span class="fig" data-srcpage="3" data-clip="116,337,305,362"></span></div>
+<p class="x" style="--b:375.4">중첩 원리에 따라 전류 <span class="nw">$I$는</span> 꼭짓점 A로 들어가서 꼭짓점 C로 나간다(꼭짓점 B로는 전류가 나가지도 들어오지도 않는다). 옴의 법칙에 따라 다음을 얻는다.</p>
+<p class="x c d" style="--b:414.3;--a:13.6pt">$R_{AC} = \dfrac{U_{AC}}{I} = \dfrac{2U}{I} + r = 36\,\mathrm{k\Omega}.$</p>
+<p class="x" style="--b:439.0">정육면체 모서리의 길이를 <span class="nw">$a$,</span> 판의 두께를 <span class="nw">$d$라고</span> 하자. 정육면체의 저항은 $R \sim L/S \sim a/ad =$ <span class="nw">$1/d$로</span>, 정사각형의 변의 길이 <span class="nw">$a$에</span> 관계없다는 점에 주목하자. 여기서 <span class="nw">$L \sim a$는</span> 특성 길이이고, <span class="nw">$S \sim ad$는</span> 정육면체의 저항을 계산할 때 판의 특성 단면적이다. 따라서 정사각형 판의 변의 길이를 바꾸고 두께 <span class="nw">$d$는</span> 그대로 두면 판의 저항은 변하지 않는다.</p>
+<p class="x pn" style="--b:573.6">25</p>
+</div>
+
+<!-- page 26 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.6">문제 3. 제트 관</p>
+<p class="x i" style="--b:60.5">가열기가 달린 이러한 관은 제트 엔진이며, 그 작동 원리는 물 분사 추진 보트의 작동 원리와 비슷하다. 실제로 공기가 가열되어 팽창하기 때문에, 관의 출구에서 뜨거운 공기의 속력은 관의 입구에서 차가운 공기의 속력보다 커진다. 그 결과 관을 가속시키는 반작용 힘이 생긴다. 이 반작용 추력에 대한 식을 구하자. 관과 함께 움직이는 기준계에서 공기 흐름은 작은 속력으로 그물 모양의 가열기가 달린 관을 지나간다. (참고로, 이것은 일정한 압력에서 기체의 열용량 <span class="nw">$C_p$를</span> 측정하는 표준 실험 장치이다.) 공기의 온도 변화를 구하자. 공기 흐름의 운동 에너지 변화를 무시하고, 단위 시간 동안 관을 지나가는 질량 <span class="nw">$m$인</span> 기체에 대하여 에너지 보존 법칙을 쓰자. 이 공기가 차가운 상태에서 부피 <span class="nw">$V_1$을</span>, 뜨거운 상태에서 부피 <span class="nw">$V_2$를</span> 차지했다면, 열역학 제1법칙에 따라 단위 시간 동안 기체에 공급된 열 <span class="nw">$q$는</span> 내부 에너지의 변화 <span class="nw">$\Delta U = U_2 - U_1$과</span> 외부 압력에 맞서 기체가 한 일 <span class="nw">$A = P(V_2 - V_1)$에</span> 쓰인다: <span class="nw">$q = \Delta U + A$</span>, 즉</p>
+<div class="f" style="left:85pt;top:255pt"><span class="fig" data-srcpage="4" data-clip="85,255,335,295"></span></div>
+<p class="x" style="--b:308.0">여기서 <span class="nw">$C_V = 5R/2$는</span> 일정한 부피에서 공기의 몰 열용량, <span class="nw">$C_P = C_V + R = 7R/2$는</span> 일정한 압력에서 공기의 몰 열용량, <span class="nw">$R = 8.31\,\mathrm{J/(mol{\cdot}K)}$은</span> 보편 기체 상수이고, <span class="nw">$T_2$와</span> <span class="nw">$T_1$은</span> 각각 관의 출구와 입구에서 공기의 온도이다. 차가운 공기의 속력이 <span class="nw">$v$이고</span> 공기 흐름의 속력 변화가 <span class="nw">$\Delta v$이면</span>, 반작용 힘은 다음과 같다.</p>
+<div class="f" style="left:110pt;top:379pt"><span class="fig" data-srcpage="4" data-clip="110,379,311,406"></span></div>
+<p class="x i" style="--b:416.4">추력은 관이 움직이는 속력에 비례한다. 비례 계수는 다음과 같다.</p>
+<p class="x c d" style="--b:452.3;--a:11.3pt">$\beta = \dfrac{\mu q}{C_PT} = 6.8\cdot10^{-5}\,\mathrm{kg/s}.$</p>
+<p class="x" style="--b:478.5">뉴턴 법칙에 따라 다음이 성립한다.</p>
+<div class="f" style="left:78pt;top:492pt"><span class="fig" data-srcpage="4" data-clip="78,492,201,504"></span></div>
+<p class="x w" style="--b:500.3;left:229pt">따라서</p>
+<div class="f" style="left:287pt;top:492pt"><span class="fig" data-srcpage="4" data-clip="287,492,342,504"></span></div>
+<p class="x" style="--b:530.0;padding-top:1.2pt">최종적으로 <span class="nw">$v = v_0 + \dfrac{\beta S}{M} = 9\,\mathrm{cm/s}$이다</span>.</p>
+<p class="x pn r" style="--b:573.6">26</p>
+</div>
+
+<!-- page 27 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="5" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.6">문제 4. 우주 물체</p>
+<p class="x i" style="--b:60.6">물체의 운동 방향과 관측자를 향하는 방향 사이의 각이 <span class="nw">$\varphi$일</span> 때, 시간 <span class="nw">$T_0$</span> 간격으로 보낸 펄스를 관측자는 시간 간격 <span class="nw">$T = T_0(1 + (v/c)\cos\varphi)$로</span> 받는다. 여기서 <span class="nw">$v$는</span> 물체의 속력이다.</p>
+<p class="x i" style="--b:108.5">실제로 점 A에서 첫 번째 펄스를 보냈다면, 다음 펄스는 시간 <span class="nw">$T_0$</span> 뒤에 거리 <span class="nw">$vT_0$만큼</span> 떨어진 점 B에서 보낸다. 관측자까지의 두 경로는 거의 평행하며, 두 경로의 차는 선분 $BC = AB\cos\varphi =$ <span class="nw">$vT_0\cos\varphi$이다</span>(그림&nbsp;24). 이 거리를 지나는 데 추가로 시간 <span class="nw">$(vT_0\cos\varphi)/c$가</span> 걸린다. 여기서 <span class="nw">$c$는</span> 빛의 속력이다. 이를 <span class="nw">$T_0$에</span> 더하면 바로 <span class="nw">$T$에</span> 대한 식이 나온다. 각 <span class="nw">$\varphi$를</span> 거의 일정하다고 볼 수 있는 동안에는, 신호를 보낼 때의 임의의 시간 간격 <span class="nw">$\Delta t_0$과</span> 받을 때의 시간 간격 <span class="nw">$\Delta t$에</span> 대해서도 같은 관계가 성립한다.</p>
+<div class="f" style="left:152pt;top:194pt"><span class="fig" data-srcpage="5" data-clip="152,194,268,206"></span></div>
+<div class="f" style="left:60pt;top:222pt"><span class="fig" data-srcpage="5" data-clip="60,222,360,283"></span></div>
+<p class="x cap" style="--b:291.4;left:101.7pt">그림 24</p>
+<p class="x cap" style="--b:291.4;left:278.9pt">그림 25</p>
+<p class="x i" style="--b:311.4">이제 각 <span class="nw">$\varphi$가</span> <span class="nw">$\Delta\varphi$만큼</span> 바뀔 때 받는 주기의 증가량을 계산하자(점 N(관측자)에서 우주 물체를 향하는 방향이 각 <span class="nw">$\Delta\varphi$만큼</span> 돌아갔다면, 처음 각은 <span class="nw">$\varphi - \Delta\varphi$가</span> 된다(그림&nbsp;25)).</p>
+<p class="x c d" style="--b:363.4;--a:15pt">$\Delta T = \left|\dfrac{dT}{d\varphi}\right|\Delta\varphi = T_0\dfrac{v}{c}\sin\varphi\Delta\varphi$</p>
+<p class="x" style="--b:391.4">(<span class="nw">$v\sin\varphi$는</span> 위치 벡터에 수직인 속도 성분이다.)</p>
+<p class="x i" style="--b:403.4">그러면 관측 시간 <span class="nw">$\Delta t$에</span> 해당하는 이동 시간 <span class="nw">$\Delta t_0$</span> 동안 $\Delta\varphi =$ <span class="nw">$v\Delta t_0\sin\varphi/r$이다</span>. 여기서 <span class="nw">$r$은</span> 구하려는 거리이다. <span class="nw">$\Delta T$에</span> 대한 식에서 속력을 소거하면 다음을 얻는다.</p>
+<div class="f" style="left:124pt;top:439pt"><span class="fig" data-srcpage="5" data-clip="124,439,296,454"></span></div>
+<p class="x" style="--b:471.4"><span class="nw">$T_0/T = \Delta t_0/\Delta t$이기</span> 때문이다. 최종적으로 다음을 얻는다.</p>
+<div class="f" style="left:181pt;top:483pt"><span class="fig" data-srcpage="5" data-clip="181,483,240,509"></span></div>
+<p class="x i" style="--b:525.9">관측자의 기준계에서만 고찰하였으므로, 이 결과는 물체의 속력이 <span class="nw">$v \ll c$일</span> 때뿐만 아니라 일반적인 경우에도 성립한다.</p>
+<p class="x pn" style="--b:573.6">27</p>
+</div>
+
+<!-- page 28 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="6" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.6">문제 5. «밀리자동차»</p>
+<div class="f" style="left:62pt;top:58pt"><span class="fig" data-srcpage="6" data-clip="62,58,360,151"></span></div>
+<p class="x cap" style="--b:161.6;left:190.3pt">그림 26</p>
+<p class="x i" style="--b:179.3">광원 <span class="nw">$S$에서</span> 렌즈의 앞 초점까지의 거리가 <span class="nw">$x$이고</span>, 광원의 상에서 뒤 초점까지의 거리가 <span class="nw">$y$이면</span>, 뉴턴 형식의 얇은 렌즈 공식(<span class="nw">$xy = f^2$)으로부터</span> 작은 변위 <span class="nw">$\Delta x$와</span> <span class="nw">$\Delta y$에</span> 대하여 다음을 얻는다.</p>
+<div class="f" style="left:96pt;top:213pt"><span class="fig" data-srcpage="6" data-clip="96,213,324,241"></span></div>
+<p class="x" style="--b:254.1">이로부터 자동차의 속력은 <span class="nw">$v = -v_0f^2/y^2$이다</span>. «−» 부호는 자동차가 초점에서 멀어지면(<span class="nw">$x$가</span> 커지면, 즉 <span class="nw">$v > 0$)</span> 그 상은 초점에 가까워진다(<span class="nw">$y$가</span> 작아진다, <span class="nw">$v_0 < 0$)는</span> 것을 뜻한다. 자동차의 가속도는 다음과 같다.</p>
+<div class="f" style="left:125pt;top:288pt"><span class="fig" data-srcpage="6" data-clip="125,288,295,314"></span></div>
+<p class="x" style="--b:328.1">이 가속도는 (크기가) <span class="nw">$a_{max} = \mu g$를</span> 넘을 수 없다. 따라서 다음 부등식을 얻는다.</p>
+<div class="f" style="left:114pt;top:352pt"><span class="fig" data-srcpage="6" data-clip="114,352,174,379"></span></div>
+<p class="x w" style="--b:368.7;left:194pt">이로부터</p>
+<div class="f" style="left:243pt;top:350pt"><span class="fig" data-srcpage="6" data-clip="243,350,308,381"></span></div>
+<p class="x" style="--b:395.8">즉, 자동차는 초점에서 <span class="nw">$f\sqrt[3]{\frac{\mu gf}{2v_0^2}}$보다</span> 먼 거리까지 멀어질 수 없다. 따라서 자동차에서 렌즈까지의 거리 <span class="nw">$l$은</span> 다음 범위에서 바뀔 수 있다.</p>
+<div class="f" style="left:71pt;top:432pt"><span class="fig" data-srcpage="6" data-clip="71,432,178,466"></span></div>
+<p class="x w" style="--b:450.9;left:202pt">또는</p>
+<div class="f" style="left:237pt;top:432pt"><span class="fig" data-srcpage="6" data-clip="237,432,350,466"></span></div>
+<p class="x" style="--b:479.1">상은 허상일 수도 있고(<span class="nw">$l < f$)</span>, 실상일 수도 있다(<span class="nw">$l > f$)</span>.</p>
+<p class="x i" style="--b:495.3"><span class="nw">$v_0 < \sqrt{\frac{\mu gf}{2}}$이면</span> 다음과 같다.</p>
+<div class="f" style="left:105pt;top:519pt"><span class="fig" data-srcpage="6" data-clip="105,519,147,531"></span></div>
+<p class="x w" style="--b:527.6;left:167pt">또는</p>
+<div class="f" style="left:202pt;top:509pt"><span class="fig" data-srcpage="6" data-clip="202,509,315,540"></span></div>
+<p class="x pn r" style="--b:573.6">28</p>
+</div>
+</body></html>

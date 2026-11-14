@@ -1,0 +1,96 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2016 (L = 제50회), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 7-8
+   (figures numbered on through the booklet: 그림 11-14).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 584.3): odd pages at the right edge, even at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "11학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 387.5 - right edge of the short lines (+ nothing: keep the original's edge), --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* numbered items with a hanging number (number at 48.7, text at 61.4) */
+.li{padding-left:28.3pt}
+.n{position:absolute;left:15.6pt;text-indent:0}
+/* figure captions "그림 N" and sub-figure letters: centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span>
+   (a long one that leaves wide gaps: reword the sentence) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 7 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">11학년</p>
+<p class="x h" style="--b:62.8">문제 1. 마찰 전동</p>
+<div class="f" style="left:260pt;top:69pt"><span class="fig" data-srcpage="1" data-clip="260,69,387,124"></span></div>
+<p class="x cap" style="--b:147.0;left:304pt">그림 11</p>
+<p class="x i wr" style="--b:76.1;--fw:137pt;--fh:70.7pt">반지름 <span class="nw">$R_0$인</span> 긴 원기둥 롤러가 자신의 축을 중심으로 각속도 <span class="nw">$\omega_0$로</span> 회전하고 있다. 이 롤러를, 축에 고정되어 자유롭게(축에서의 마찰 없이) 회전할 수 있는 반지름 <span class="nw">$R$인</span> 원판에 눌러 붙인다. 원판과 롤러가 맞닿는 선은 원판의 반지름과 일치한다(그림&nbsp;11).</p>
+<p class="x i wr" style="--b:149.2;--fw:137pt;--fh:10.9pt">1. 롤러와 원판 사이의 마찰이 건조 마찰일 때, 정상 상태에서 원판이 회전하는 각속도 <span class="nw">$\omega_\mu$를</span> 구하여라.</p>
+<p class="x i" style="--b:174.5">2. 마찰이 점성 마찰일 때, 정상 상태에서 원판이 회전하는 각속도 <span class="nw">$\omega_\eta$를</span> 구하여라. 접촉선의 단위 길이에 작용하는 점성 마찰력의 크기는 서로 맞닿은 롤러 표면과 원판 표면의 상대 속력에 비례한다고 생각하여라.</p>
+<p class="x i" style="--b:223.7">3. 비 <span class="nw">$k = \omega_\eta/\omega_\mu$를</span> 구하여라.</p>
+<p class="x h" style="--b:241.4">문제 2. 순환 과정</p>
+<div class="f" style="left:217pt;top:246pt"><span class="fig" data-srcpage="1" data-clip="217,246,388,349"></span></div>
+<p class="x ov" style="--b:344.6;left:283.7pt">$-$</p><!-- the minus of "V0 − ΔV" is lost in the scrub copy: put back -->
+<p class="x cap" style="--b:356.7;left:282.5pt">그림 12</p>
+<p class="x i wr wn" style="--b:254.7;--fw:179.8pt;--fh:106.6pt">다원자 이상 기체 1&thinsp;mol이 순환 과정을 거친다. 이 과정을 <span class="nw">$p,V$</span> 도표에 나타내면 적당한 축척에서 원 모양이 된다. 원의 중심의 좌표는 <span class="nw">$(p_0, V_0)$이고</span>, 압력 축 방향의 지름은 <span class="nw">$2\Delta p$,</span> 부피 축 방향의 지름은 <span class="nw">$2\Delta V$이다</span>.</p>
+<p class="x i wr" style="--b:363.6;--fw:179.8pt;--fh:10.9pt">1. 원 위에서 지름의 양 끝에 놓인 두 점 가운데 열용량이 서로 같은 점의 쌍을 모두 찾아라. 그리고 그 열용량을 계산하여라.</p>
+<p class="x i" style="--b:401.0">2. 원의 제2사분면과 제4사분면(그림&nbsp;12)에 있으면서 지름의 양 끝을 이루는 임의의 두 점에서 열용량을 비교하여라. 다시 말해, 두 점 가운데 어느 점에서 열용량이 더 크며 그 까닭은 무엇인지 밝혀라.</p>
+<p class="x i" style="--b:438.2"><b>참고.</b> 기체의 정적 열용량은 <span class="nw">$T$에</span> 의존하지 않는다고 생각하여라.</p>
+<p class="x h" style="--b:463.5">문제 3. 교류 별형 회로</p>
+<div class="f" style="left:323pt;top:470pt"><span class="fig" data-srcpage="1" data-clip="323,470,388,537"></span></div>
+<p class="x cap" style="--b:546.5;left:335.5pt">그림 13</p>
+<p class="x i wr" style="--b:476.8;--fw:73.6pt;--fh:82.7pt">저항, 축전기, 코일 가운데 어느 것이든 될 수 있는 세 소자가 별 모양으로 연결되어 있다(그림&nbsp;13). 교류 전압원을 회로의 단자 1과 2에 연결하면, 단자 1과 3에 연결한 교류 전압계는 <span class="nw">$80\,\mathrm{V}$를</span> 가리킨다. 전압계를 단자 2와 3에 연결하면 <span class="nw">$45\,\mathrm{V}$를</span> 가리킨다. 같은 전압원을 단자 1과 3에 연결하면, 전압계는 단자 2와 3 사이에서 <span class="nw">$21\,\mathrm{V}$,</span> 단자 1과 2 사이에서 <span class="nw">$28\,\mathrm{V}$를</span> 가리킨다. 전압원을</p>
+<p class="x pn r" style="--b:584.3">7</p>
+</div>
+
+<!-- page 8 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.5">단자 2와 3에 연결하면, 전압계는 단자 1과 2 사이에서 <span class="nw">$21\,\mathrm{V}$,</span> 단자 1과 3 사이에서 <span class="nw">$28\,\mathrm{V}$를</span> 가리킨다.</p>
+<p class="x li" style="--b:73.8"><span class="n">1.</span>전압원의 전압을 구하여라.</p>
+<p class="x li" style="--b:85.8"><span class="n">2.</span>별의 각 가지에 해당하는 회로 소자를 밝혀라. 회로 소자의 종류를 하나로 정할 수 있는가?</p>
+<p class="x li" style="--b:109.7"><span class="n">3.</span>전압원을 단자 1과 2, 1과 3, 2와 3에 연결할 때, 전압원을 지나는 전류의 비 <span class="nw">$I_{12} : I_{13} : I_{23}$을</span> 구하여라.</p>
+<p class="x" style="--b:135.2">전압원, 전압계, 모든 회로 소자는 이상적이라고 생각해도 된다.</p>
+<p class="x h" style="--b:149.6">문제 4. MHD 펌프</p>
+<div class="f" style="left:300pt;top:153pt"><span class="fig" data-srcpage="2" data-clip="300,153,389,296.5"></span></div>
+<p class="x cap" style="--b:304.1;left:325.6pt">그림 14</p>
+<p class="x i wr" style="--b:161.6;--fw:93.6pt;--fh:154.4pt">자기유체역학(MHD) 펌프는 극판의 크기가 <span class="nw">$h \times a$이고</span> 극판 사이의 거리가 $b$($h \gg b$, $a \gg b$)인 평행판 축전기이다. 축전기의 옆쪽 끝면은 부도체 벽으로 막혀 있다. 축전기의 극판에는 전압이 <span class="nw">$U$인</span> 이상적인 전압원이 연결되어 있다(극성은 그림&nbsp;14에 나타내었다). 축전기의 극판 사이에는 자기 유도가 <span class="nw">$B$인</span> 균일한 자기장이 만들어져 있으며, 그 벡터는 수평이고 도체 극판에 나란하다. 축전기의 아래쪽 가장자리는 밀도가 <span class="nw">$\rho_0$이고</span> 비저항이 <span class="nw">$\lambda$인</span> 전기가 약하게 통하는 액체의 표면에 닿아 있다. 축전기의 위쪽에는 부도체 덮개가 빈틈없이 붙어 있다. 축전기 한가운데 높이 <span class="nw">$h/2$인</span> 곳에 부피가 <span class="nw">$V$이고</span> 밀도가 <span class="nw">$\rho > \rho_0$인</span> 작은 부도체 공이 가는 실에 매달려 있다. 실의 장력 <span class="nw">$T(U)$가</span> 전압원의 전압에 따라 어떻게 달라지는지 구하여라. 이 관계의 정성적인 그래프를 그리고, 그래프 위에 특징적인 점들을 표시하여라. 덮개의 위쪽과 전도성 액체의 표면은 대기와 통해 있다.</p>
+<p class="x h" style="--b:379.2">문제 5. 태양 돛</p>
+<p class="x i" style="--b:391.1">태양 돛은 질량이 <span class="nw">$m = 1.660\,\mathrm{g}$이고</span> 넓이가 <span class="nw">$S = 1.000\,\mathrm{m}^2$인</span> 평면 거울이다. 돛은 햇빛에 수직하게 놓여 있으며, 태양의 중심과 거울의 중심을 지나는 직선을 따라 움직인다. 처음 순간에 돛은 태양으로부터 거리 <span class="nw">$R_0 = 1\,\mathrm{AU}$인</span> 곳에 있다. 돛이 일정하지만 알려지지 않은 속력 <span class="nw">$v \ll c$로</span> 움직였다면, 비행을 시작하고 <span class="nw">$t_1 = 1\,\mathrm{h}$가</span> 지났을 때 돛은 태양으로부터 얼마나 떨어진 거리 <span class="nw">$R_1$에</span> 있겠는가?</p>
+<p class="x i" style="--b:462.9">1&thinsp;천문단위(AU)는 지구에서 태양까지의 거리 <span class="nw">$R_0 = 150.0\cdot10^6\,\mathrm{km} = 1\,\mathrm{AU}$와</span> 같다. 광자의 운동량 <span class="nw">$p$와</span> 에너지 <span class="nw">$E$는</span> 관계식 <span class="nw">$pc = E$로</span> 이어져 있다. 여기서 <span class="nw">$c = 2.998\cdot10^8\,\mathrm{m/s}$는</span> 빛의 속력이다. 태양에서 나오는 양성자, 중성자 및 그 밖의 입자의 흐름은 고려하지 않는다. 태양 상수 <span class="nw">$W_0 = 1.367\,\mathrm{kW/m^2}$는</span> 태양으로부터 1&thinsp;AU 떨어진 곳에서 흐름에 수직으로 놓인 단위 넓이의 면을 단위 시간 동안 지나는 태양 복사의 전체 흐름이다.</p>
+<p class="x i" style="--b:546.5"><i>참고.</i> 1년의 길이가 0.5&thinsp;%의 정확도로 <span class="nw">$\pi\cdot10^7\,\mathrm{s}$와</span> 같다는 것을 알고 있는가?</p>
+<p class="x pn" style="--b:584.3">8</p>
+</div>
+</body></html>

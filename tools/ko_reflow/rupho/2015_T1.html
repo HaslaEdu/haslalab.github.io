@@ -1,0 +1,104 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2015 (XLIX = 제49회), 9학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 3-5.
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+   In this booklet odd pages carry the header "제49회 ..." and the page number at the LEFT, even pages "결선. 이론 시험"
+   and the page number at the RIGHT; page numbers sit on baseline 573.6.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.6) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "9학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: a float reserves the figure's room for the first N lines
+   --fw = room taken by the figure, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where a Russian word was removed */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 3 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">9학년</p>
+<p class="x h" style="--b:64.4">문제 1. 열차의 가속</p>
+<p class="x i" style="--b:76.4">기관사는 전동차의 탑재 컴퓨터가, 가공 전차선을 받치는 이웃한 두 지지대 사이에서 지나온 구간의 평균 속력 <span class="nw">$v$를</span> 표시하도록 설정해 두었다. 이웃한 어느 두 지지대 사이의 거리도 모두 같다. 전동차는 «노보다치나야» 승강장을 출발하여 일정한 가속도로 속력을 높인다. 얼마 뒤 기관사는 컴퓨터가 속력 <span class="nw">$v_1 = 20\,\mathrm{km/h}$를</span> 표시하는 것을 보았다. 그다음 구간에서는 속력이 <span class="nw">$v_2 = 30\,\mathrm{km/h}$였다</span>. 첫 번째 구간과 두 번째 구간의 경계에서 전동차의 순간 속력 <span class="nw">$u$는</span> 얼마였는가?</p>
+<div class="f" style="left:135pt;top:172pt"><span class="fig" data-srcpage="1" data-clip="135,172,286,224"></span></div>
+<p class="x cap" style="--b:236.0;left:190.2pt">그림 1</p>
+<p class="x h" style="--b:261.8">문제 2. 눌렀다가 놓기</p>
+<p class="x i" style="--b:273.6">수레가 단단한 막대로 벽에 연결되어 있다. 수레의 멈춤턱에는 용수철이 붙어 있고, 용수철의 다른 끝은 나무토막에 연결되어 있다(그림&nbsp;2). 처음에 용수철은 변형되어 있지 않다. 나무토막에 얼마 동안 수레의 길이 방향을 따라 일정한 수평 방향의 힘 <span class="nw">$F$가</span> 작용한다. 이 힘의 작용이 멈춘 뒤에도 나무토막은 얼마 동안 멈춤턱 쪽으로 계속 움직이다가 되돌아와서 처음 위치에 멈춘다. 수레가 나무토막에 작용하는 마찰력은 <span class="nw">$f$이다</span>. 바퀴 축의 마찰은 고려하지 않는다.</p>
+<p class="x i" style="--b:369.3">1. 힘 <span class="nw">$F$의</span> 작용이 멈춘 순간 수레는 막대를 얼마의 힘 <span class="nw">$N$으로</span> 눌렀는가?</p>
+<p class="x i" style="--b:393.3">2. 수레가 막대를 누르는 힘의 최댓값 <span class="nw">$N_\mathrm{max}$을</span> 구하여라.</p>
+<div class="f" style="left:150pt;top:425.3pt"><span class="fig" data-srcpage="1" data-clip="150,425.3,270,481"></span></div>
+<div class="f" style="left:181pt;top:423pt"><span class="fig" data-srcpage="1" data-clip="181,423,184.5,425.3"></span></div>
+<p class="x ov" style="--b:422.8;left:170.7pt;--fs:8pt">멈춤턱</p>
+<p class="x cap" style="--b:494.1;left:190.2pt">그림 2</p>
+<p class="x pn" style="--b:573.6">3</p>
+</div>
+
+<!-- page 4 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 3. 냉장고 속의 더위</p>
+<p class="x i" style="--b:60.5">무더운 여름날 방 안의 온도가 <span class="nw">$t_0 = 30\,{}^\circ\mathrm{C}$로</span> 일정하게 유지되고 있을 때, 실험가 글류크는 냉장고 모터의 작동 시간이 쉬는 시간의 두 배로 늘어났다는 것을 알아차렸다. 냉장고 작동을 최적화하기로 한 실험가는 조절기로 냉장고 안의 온도를 <span class="nw">$\Delta\theta = 9\,{}^\circ\mathrm{C}$만큼</span> 바꾸었다. 그 결과 쉬는 시간이 작동 시간의 두 배가 되었다. 다음을 구하여라.</p>
+<p class="x i" style="--b:132.3">1. 실험을 시작할 때와 끝낼 때 조절기는 각각 어떤 온도 $t_1$과 <span class="nw">$t_2$로</span> 설정되어 있었는가?</p>
+<p class="x i" style="--b:156.2">2. 냉장고 모터가 쉬지 않고 작동하게 하려면 조절기를 어떤 내부 온도 <span class="nw">$t_m$으로</span> 설정해야 하는가?</p>
+<p class="x i" style="--b:180.0">3. 조절기를 어떤 온도 <span class="nw">$t_3$으로</span> 설정할 때 냉장고가 켜지는 빈도가 가장 커지는가?</p>
+<p class="x i" style="--b:203.9"><b>힌트:</b> 조절기는 냉장고 안의 온도 <span class="nw">$t$를</span> 좁은 구간 <span class="nw">$t\pm\Delta t/2$로</span> 유지한다. 안의 온도가 <span class="nw">$t+\Delta t/2$가</span> 되면 냉장고 모터가 켜지고, <span class="nw">$t-\Delta t/2$로</span> 내려가면 꺼진다. 다음과 같이 생각하여라.</p>
+<p class="x i" style="--b:251.8">1) 들어오는 열의 일률은 냉장고 안과 주위 환경의 온도 차에 비례하고, 내부 온도 구간 <span class="nw">$t\pm\Delta t/2$</span> 전체에서 일정하다.</p>
+<p class="x i" style="--b:287.7">2) 모터가 작동하는 동안 냉장고 내부 공간에서 빼앗는 열의 일률은 온도에 무관하다.</p>
+<p class="x i" style="--b:311.6">3) 방 안의 온도 변화는 무시할 수 있다.</p>
+<p class="x h" style="--b:329.4">문제 4. 이상적이지 않은 다이오드</p>
+<p class="x i" style="--b:341.4">그림&nbsp;3에 회로도가 나타나 있는 전기 회로에는 저항값이 <span class="nw">$R_1 = R_2 = R_3 = R$인</span> 똑같은 저항 세 개와 똑같은 다이오드 세 개 $D_1$, $D_2$, <span class="nw">$D_3$이</span> 들어 있다. 다이오드를 흐르는 전류와 다이오드에 걸린 전압 사이의 관계는 그림&nbsp;4에 나타나 있다. 점 A와 B 사이의 전압 <span class="nw">$U_\mathrm{AB}$에</span> 따라 전류계를 흐르는 전류 <span class="nw">$I_\mathrm{A}$를</span> 구하여라. 전류계는 이상적이다. <span class="nw">$U_\mathrm{AB}$에</span> 대한 <span class="nw">$I_\mathrm{A}$의</span> 그래프를 그리고, 특징적인 점(예를 들어 최댓값, 최솟값, 꺾이는 점)에서 전류와 전압의 값을 나타내어라.</p>
+<div class="f" style="left:75pt;top:435pt"><span class="fig" data-srcpage="2" data-clip="75,435,174,523"></span></div>
+<div class="f" style="left:258pt;top:452pt"><span class="fig" data-srcpage="2" data-clip="258,452,344,523"></span></div>
+<p class="x cap" style="--b:534.0;left:104.4pt">그림 3</p>
+<p class="x cap" style="--b:534.0;left:281.5pt">그림 4</p>
+<p class="x pn r" style="--b:573.6">4</p>
+</div>
+
+<!-- page 5 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 5. 충가창가</p>
+<div class="f" style="left:39pt;top:55pt"><span class="fig" data-srcpage="3" data-clip="39,55,117,119"></span></div>
+<p class="x ov" style="--b:116.0;left:66pt">적도</p>
+<p class="x cap" style="--b:128.4;left:57.6pt">그림 5</p>
+<p class="x i wl" style="--b:60.5;--fw:98.9pt;--fh:82.7pt">체부라시카와 악어 게나는 봄에 충가창가 섬에 있는 우정 캠프에 갔다. 섬은 적도 위에 있다. 캠프 안에는 똑같은 모양의 100층짜리 건물 두 동(직육면체 모양)이 세워져 있는데, 한 동은 다른 동의 정확히 동쪽에 있다. 두 건물은 서로 나란하고 적도에 수직으로 놓여 있다(그림&nbsp;5). 체부라시카는 서쪽 건물에, 악어 게나는 동쪽 건물의 10층에 묵게 되었다. 두 사람 방의 창문은 서로 마주 보고 있었다. 춘분인 3월 21일, 햇빛은 게나의 창문에 <span class="nw">$T_1 = 2$시간</span> 동안, 체부라시카의 창문에 <span class="nw">$T_2 = 4$시간</span> 동안 비쳤다.</p>
+<p class="x i" style="--b:192.0">1. 체부라시카는 몇 층에 사는가?</p>
+<p class="x i" style="--b:203.9">2. 체부라시카의 눈에 게나네 건물의 창문이 처음으로 금빛으로 보였을 때, 그의 시계는 몇 시를 가리켰는가?</p>
+<p class="x i" style="--b:227.9">3. 게나네 건물의 창문은 체부라시카에게 얼마 동안 금빛으로 보였는가?</p>
+<p class="x i" style="--b:251.8"><i>참고.</i> 창문에 태양이 비쳐 보일 때 창문은 금빛으로 보인다. 여러 번 일어나는 반사는 고려하지 않는다. 12시에 태양은 천정에 있었다.</p>
+<p class="x pn" style="--b:573.6">5</p>
+</div>
+</body></html>

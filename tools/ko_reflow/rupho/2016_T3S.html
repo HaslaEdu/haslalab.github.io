@@ -1,0 +1,183 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2016 (L = 제50회), 11학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 18-23
+   (figures are numbered on through the booklet: 그림 25-26).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   A line holding a tall inline fraction (\dfrac) grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~1.36em x 9.963pt = 13.6pt for a \dfrac with capital/ascender numerator).
+   A block whose FIRST line holds a \dfrac grows upward: push it down with padding-top (~1.2pt) until qa.py meets --b.
+   Cyrillic subscripts of the original, retyped: F_т -> F_g (gravity), F_амп -> F_amp (Ampere force),
+   F_арх -> F_arch (Archimedes/buoyancy), U_кр -> U_cr (critical voltage). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 584.3): odd pages at the right edge, even at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "11학년" (SFBX1200 = 11.955pt bold), problem titles (SFBX1000 bold) — centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 387.5 - right edge of the original's short lines, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* figure captions "그림 N" and sub-figure letters: centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span>
+   (a long one that leaves wide gaps: reword the sentence) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 18 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">11학년</p>
+<p class="x h" style="--b:61.4">문제 1. 마찰 전동</p>
+<p class="x i" style="--b:73.4">마찰력은 원판의 중심에서 거리 <span class="nw">$r_0 = \omega_0R_0/\omega$인</span> 곳에서 부호가 바뀐다. 정상 상태에서는 마찰력의 전체 돌림힘이 0이다.</p>
+<p class="x i" style="--b:97.2">건조 마찰인 경우:</p>
+<div class="f" style="left:128pt;top:108pt"><span class="fig" data-srcpage="1" data-clip="128,108,293,147"></span></div>
+<p class="x ov" style="--b:164.2;left:121.7pt">따라서</p>
+<div class="f" style="left:171pt;top:149pt"><span class="fig" data-srcpage="1" data-clip="171,149,300,176"></span></div>
+<p class="x" style="--b:189.6">점성 마찰인 경우 마찰력의 돌림힘은 다음과 같다.</p>
+<div class="f" style="left:85pt;top:200pt"><span class="fig" data-srcpage="1" data-clip="85,200,191,238"></span></div>
+<p class="x ov" style="--b:222.4;left:209.4pt">$\omega r_0 = \omega_0R_0$이므로</p>
+<div class="f" style="left:119pt;top:241pt"><span class="fig" data-srcpage="1" data-clip="119,241,301,270"></span></div>
+<p class="x ov" style="--b:298.0;left:99pt">따라서</p>
+<div class="f" style="left:150pt;top:280pt"><span class="fig" data-srcpage="1" data-clip="150,280,322,308"></span></div>
+<p class="x i" style="--b:322.6">각속도의 비는 다음과 같다.</p>
+<div class="f" style="left:161pt;top:333pt"><span class="fig" data-srcpage="1" data-clip="161,333,260,363"></span></div>
+<p class="x" style="--b:374.2">따라서 점성 마찰인 경우 원판의 정상 상태 회전 각속도 <span class="nw">$\omega_\eta$는</span> 건조 마찰인 경우 원판의 정상 상태 회전 각속도 <span class="nw">$\omega_\mu$보다</span> 6&thinsp;% 크다.</p>
+<p class="x h" style="--b:418.1">문제 2. 순환 과정</p>
+<p class="x i" style="--b:430.1">이상 기체 1&thinsp;mol을 생각하자. 정의에 따라 그 열용량은 다음과 같다.</p>
+<div class="f" style="left:160pt;top:440pt"><span class="fig" data-srcpage="1" data-clip="160,440,388,465"></span></div>
+<p class="x" style="--b:478.2">이상 기체에서는</p>
+<div class="f" style="left:132pt;top:490pt"><span class="fig" data-srcpage="1" data-clip="132,490,288,504"></span></div>
+<p class="x" style="--b:519.0">열용량을 나타내면 다음과 같다.</p>
+<div class="f" style="left:114pt;top:529pt"><span class="fig" data-srcpage="1" data-clip="114,529,306,567"></span></div>
+<p class="x pn" style="--b:584.3">18</p>
+</div>
+
+<!-- page 19 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.6">지름의 양 끝에 있는 임의의 두 점 <span class="nw">$A$와</span> <span class="nw">$B$에서</span> 원의 접선은 같은 기울기를 가진다.</p>
+<div class="f" style="left:166pt;top:64pt"><span class="fig" data-srcpage="2" data-clip="166,64,388,99"></span></div>
+<p class="x" style="--b:113.2">따라서 두 점의 열용량이 같을 수 있는 경우는 <span class="nw">$dp/dV$가</span> 0이 되거나 무한대가 될 때(각각 <span class="nw">$C = C_p$와</span> <span class="nw">$C = C_V$에</span> 해당한다)이거나, 다음 조건이 성립할 때이다.</p>
+<div class="f" style="left:172pt;top:141pt"><span class="fig" data-srcpage="2" data-clip="172,141,248,154"></span></div>
+<p class="x" style="--b:166.1">즉 점 $A$, $B$와 원의 중심이 원점을 지나는 한 직선 위에 있을 때이다. 따라서 다음이 성립한다.</p>
+<div class="f" style="left:174pt;top:190pt"><span class="fig" data-srcpage="2" data-clip="174,190,246,204"></span></div>
+<div class="f" style="left:96pt;top:219pt"><span class="fig" data-srcpage="2" data-clip="96,219,326,368"></span></div>
+<div class="f" style="left:96pt;top:368pt"><span class="fig" data-srcpage="2" data-clip="96,368,190,372"></span></div>
+<div class="f" style="left:228pt;top:368pt"><span class="fig" data-srcpage="2" data-clip="228,368,326,372"></span></div>
+<p class="x cap" style="--b:378.0;left:190.2pt">그림 25</p>
+<p class="x i" style="--b:397.4">과정을 차원이 없는 좌표축 위에 다시 그리자(그림&nbsp;25). 점 <span class="nw">$A$와</span> <span class="nw">$B$를</span> 지나는 직선을 긋고, 점 <span class="nw">$B$에서</span> 그래프에 접선을 그린다. 이 접선은 직선 <span class="nw">$AB$에</span> 수직이다. 따라서 직선 <span class="nw">$AB$의</span> 기울기가 <span class="nw">$k$이면</span> 접선의 기울기는 <span class="nw">$k' = -1/k$이고</span>, 다음을 얻는다.</p>
+<div class="f" style="left:82pt;top:458pt"><span class="fig" data-srcpage="2" data-clip="82,458,176,484"></span></div>
+<p class="x ov" style="--b:473.7;left:195pt">따라서</p>
+<div class="f" style="left:246pt;top:451pt"><span class="fig" data-srcpage="2" data-clip="246,451,340,484"></span></div>
+<p class="x" style="--b:499.5">열용량 <span class="nw">$C$는</span> 다음과 같다.</p>
+<div class="f" style="left:141pt;top:509pt"><span class="fig" data-srcpage="2" data-clip="141,509,288,547"></span></div>
+<p class="x" style="--b:560.4"><span class="nw">$p_0/V_0 = \Delta p/\Delta V$이면</span> <span class="nw">$c = \pm\infty$이다</span>. 이때 접점은 등온선 위에 있다.</p>
+<p class="x pn r" style="--b:584.3">19</p>
+</div>
+
+<!-- page 20 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.5">제2사분면과 제4사분면에 각각 있는 점 <span class="nw">$C$와</span> <span class="nw">$D$에서</span> 열용량을 비교하자. 다음이 성립하므로</p>
+<div class="f" style="left:155pt;top:62pt"><span class="fig" data-srcpage="3" data-clip="155,62,266,97"></span></div>
+<p class="x" style="--b:110.3">열용량은 비 <span class="nw">$V/p$가</span> 더 작은 점에서 더 크다.</p>
+<div class="f" style="left:173pt;top:121pt"><span class="fig" data-srcpage="3" data-clip="173,121,247,134"></span></div>
+<p class="x" style="--b:148.1">따라서 이 경우에는 <span class="nw">$C_C > C_D$이다</span>.</p>
+<p class="x h" style="--b:164.9">문제 3. 교류 별형 회로</p>
+<p class="x i" style="--b:176.8">직렬로 연결된 두 소자를 교류 전압원에 연결하면, 두 소자에 걸리는 전압은 벡터처럼 더해진다. 이 벡터의 크기는 전압계가 가리키는 전압과 같다. 저항에 대해서는 가로축과 이 벡터 사이의 각을 <span class="nw">$0^\circ$로</span> 잡자. 그러면 축전기에 대해서는 이 각이 <span class="nw">$+90^\circ$,</span> 코일에 대해서는 <span class="nw">$90^\circ$가</span> 된다. 전체 전압은 언제나 각 전압의 합을 넘지 않는다는 점에 주의하자.</p>
+<p class="x i" style="--b:248.6">소자 1과 2 가운데 하나는 코일이고 다른 하나는 축전기라고 가정하자. 그러면 두 소자에 걸리는 전체 전압은 <span class="nw">$U_{12} = 80\,\mathrm{V} - 45\,\mathrm{V} = 35\,\mathrm{V}$이고</span>, 이는 전압원의 전압과 같다. <span class="nw">$21^2 + 28^2 = 35^2$이므로</span>, 전압의 합성 규칙에 따라 소자 3은 저항이다.</p>
+<p class="x i" style="--b:308.3">이러한 회로에서는 소자 1과 2 가운데 어느 것이 축전기이고 어느 것이 코일인지 구별할 수 없다. 임피던스를 그대로 둔 채 두 소자의 자리를 바꾸어도 전압이 달라지지 않기 때문이다. 나머지 경우를 모두 살펴보자. 소자 1과 2에 걸리는 전체 전압은 각 소자에 걸리는 전압의 합(1과 2가 같은 종류의 소자인 경우)이거나, 각 소자에 걸리는 전압의 제곱의 합의 제곱근(하나는 저항이고 다른 하나는 축전기나 코일인 경우)이다. 그러면 전압원의 전압과 같은 이 전체 전압은 어느 경우에나 적어도 <span class="nw">$80\,\mathrm{V}$보다</span> 크다. 그런데 이는 전압원을 단자 1과 2에 연결한 경우의 전압의 합보다 크다. 이 모순으로부터 두 소자 가운데 하나는 축전기이고 다른 하나는 코일임을 알 수 있다.</p>
+<p class="x i" style="--b:451.8">임피던스도 전압과 같은 방식으로 더해진다. 직렬로 연결된 두 소자의 임피던스 크기의 비는 그 소자들에 걸리는 전압의 비와 같으므로, <span class="nw">$Z_1 : Z_3 = 4 : 3$(전압원을</span> 단자 1과 3에 연결한 회로에서), <span class="nw">$Z_3 : Z_2 = 4 : 3$(전압원을</span> 단자 2와 3에 연결한 회로에서)이다. 상대 단위로 $Z_2 = 9$, $Z_3 = 12$, <span class="nw">$Z_1 = 16$이라</span> 하자. 그러면 임피던스의 합성 규칙을 이용하여 $Z_{12} = 7$, $Z_{13} = 20$, <span class="nw">$Z_{23} = 15$를</span> 얻는다. 전류의 비는 임피던스의 비에 반비례하므로 다음을 얻는다.</p>
+<div class="f" style="left:119pt;top:543pt"><span class="fig" data-srcpage="3" data-clip="119,543,301,569"></span></div>
+<p class="x pn" style="--b:584.3">20</p>
+</div>
+
+<!-- page 21 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 4. MHD 펌프</p>
+<p class="x i" style="--b:60.5">도체 극판 사이의 공간에 들어온 부피 <span class="nw">$V$인</span> 작은 공 모양의 액체 덩어리와 그것에 작용하는 힘들을 생각하자.</p>
+<p class="x i" style="--b:96.4">중력:</p>
+<p class="x c" style="--b:108.3">$F_\mathrm{g} = \rho_0gV.$</p>
+<p class="x i" style="--b:125.6">도체 극판 사이에 있는 액체의 어느 점에서나 전류 밀도가 같으므로(작은 공은 전류 분포에 영향을 주지 않는다), 그 안에서 부피가 같은 액체 요소에는 모두 같은 힘이 작용한다. 따라서 부피 <span class="nw">$V$인</span> 공에 작용하는 힘은 다음과 같다.</p>
+<p class="x c d" style="--b:188.9;--a:13.6pt">$F_\mathrm{amp} = \dfrac{BIb}{abh}\cdot V = \dfrac{BI}{ah}\cdot V,$</p>
+<p class="x" style="--b:221.4;padding-top:1.2pt">여기서 <span class="nw">$I = \dfrac{Uah}{\lambda b}$이다</span>. 액체가 위로 올라가려면</p>
+<p class="x c d" style="--b:253.8;--a:13.6pt">$F_\mathrm{amp} > F_\mathrm{g}\qquad\text{따라서}\qquad\dfrac{BU}{\lambda b} > \rho_0g\qquad\text{이고}\qquad U > U_\mathrm{cr} = \dfrac{\rho_0g\lambda b}{B}.$</p>
+<div class="f" style="left:250pt;top:270pt"><span class="fig" data-srcpage="4" data-clip="250,270,387,342"></span></div>
+<p class="x ov" style="--b:338.9;left:336pt;--fs:6.974pt">cr</p>
+<p class="x cap" style="--b:350.2;left:298.4pt">그림 26</p>
+<p class="x i wr wn" style="--b:277.2;--fw:147.8pt;--fh:58.8pt"><span class="nw">$U > U_\mathrm{cr}$일</span> 때, 극판 사이에 있는 작은 액체 공에는 나머지 액체로부터 아래쪽을 향하는 부력 <span class="nw">$F_\mathrm{arch}$가</span> 작용한다. 이 공은 평형 상태에 있으므로</p>
+<p class="x c d" style="--b:354.2;--a:15.8pt;width:206.4pt">$F_\mathrm{arch} = F_\mathrm{amp} - F_\mathrm{g} = \left(-\rho_0g + \dfrac{BU}{\lambda b}\right)\cdot V.$</p>
+<p class="x" style="--b:383.2">부도체 공에도 액체로부터 크기가 같은 부력이 작용하고, 실의 장력 <span class="nw">$T(U)$와</span> 중력도 작용한다. 따라서 평형 상태에서는 다음이 성립한다.</p>
+<p class="x c" style="--b:419.1">$T(U) = F_\mathrm{arch} + \rho gV$</p>
+<p class="x" style="--b:436.2">이로부터 <span class="nw">$U > U_\mathrm{cr}$일</span> 때 구하려는 실의 장력을 얻는다.</p>
+<div class="f" style="left:90pt;top:448pt"><span class="fig" data-srcpage="4" data-clip="90,448,331,477"></span></div>
+<p class="x i" style="--b:495.4">최종적인 관계는 다음과 같다.</p>
+<p class="x c d" style="--b:527.8;--a:21pt">$T(U) = \begin{cases}\rho gV & U \leqslant \rho_0g\lambda b/B\text{일 때},\\[4pt] (\rho - \rho_0)\,gV + \dfrac{BV}{\lambda b}U & U > \rho_0g\lambda b/B\text{일 때}.\end{cases}$</p>
+<p class="x" style="--b:560.4">이 관계의 대략적인 그래프를 그림&nbsp;26에 나타내었다.</p>
+<p class="x pn r" style="--b:584.3">21</p>
+</div>
+
+<!-- page 22 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="5" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 5. 태양 돛</p>
+<p class="x i" style="--b:61.1">광자가 돛의 거울에서 반사되는 과정을 생각하자. 거울의 속도를 $v$, 충돌하기 전 광자의 운동량을 $p_1$, 충돌한 뒤의 운동량을 <span class="nw">$p_2$라</span> 하자. 이러한 충돌 한 번으로 거울의 속도가 변하는 양을 <span class="nw">$\Delta v \ll v$라</span> 하자. 거울–광자 계에 대하여 운동량 보존 법칙과 에너지 보존 법칙을 쓰면 다음과 같다.</p>
+<div class="f" style="left:138pt;top:124pt"><span class="fig" data-srcpage="5" data-clip="138,124,388,165"></span></div>
+<p class="x i" style="--b:181.2">이 식들을 변형하고 <span class="nw">$\Delta v \ll v$임을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:166pt;top:196pt"><span class="fig" data-srcpage="5" data-clip="166,196,388,227"></span></div>
+<p class="x" style="--b:242.6">이로부터 한 번의 충돌로 거울의 운동량이 변하는 양을 나타내면 다음과 같다.</p>
+<div class="f" style="left:135pt;top:253pt"><span class="fig" data-srcpage="5" data-clip="135,253,285,279"></span></div>
+<p class="x i" style="--b:292.4">정지한 면에 단위 시간 동안 <span class="nw">$n$번의</span> 충돌이 일어나고, 거울 쪽으로 날아오는 광자 하나의 에너지가 <span class="nw">$E_1$이라</span> 하자. 그러면 <span class="nw">$WS = nE_1$이다</span>. 태양이 내보내는 에너지의 양은 주어진 입체각 안에서 일정하다. 그 입체각에 걸쳐 있고 크기가 태양까지의 거리보다 훨씬 작은 면의 단면적은 태양까지의 거리의 제곱에 정비례하므로 <span class="nw">$W \propto 1/R^2$,</span> 즉 <span class="nw">$W = W_0R_0^2/R^2$이다</span>.</p>
+<p class="x i" style="--b:376.7">돛이 속력 <span class="nw">$v$로</span> 움직이므로, 단위 시간당 충돌 횟수는 <span class="nw">$n_1 = n\Delta t(c - v)/c$로</span> 줄어든다. 시간 $\Delta t$ 동안 전달되는 운동량은 <span class="nw">$n_1\Delta t\Delta p$이다</span>. 거울에 작용하는 빛의 압력에 의한 힘은 다음과 같고</p>
+<div class="f" style="left:86pt;top:411pt"><span class="fig" data-srcpage="5" data-clip="86,411,333,440"></span></div>
+<p class="x" style="--b:457.0">이 힘은 태양에서 멀어지는 쪽을 향한다.</p>
+<p class="x i" style="--b:469.6">중력에 의해 끌어당기는 힘은 다음과 같다.</p>
+<div class="f" style="left:151pt;top:480pt"><span class="fig" data-srcpage="5" data-clip="151,480,270,509"></span></div>
+<p class="x" style="--b:524.6">여기서 <span class="nw">$T$는</span> 지구가 태양 둘레를 도는 주기이다. 물체가 일정한 속도로 움직이려면 물체에 작용하는 힘의 합이 0이어야 한다. <span class="nw">$F_G$와</span> <span class="nw">$F_W$는</span> 모두 <span class="nw">$1/R^2$에</span> 비례하므로, 태양까지의 거리가 얼마이든 일정한 속도의 운동이 가능하다. 두 힘 <span class="nw">$F_G$와</span> <span class="nw">$F_W$가</span> 같다는 조건으로부터</p>
+<p class="x pn" style="--b:584.3">22</p>
+</div>
+
+<!-- page 23 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="6" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.5">속도 <span class="nw">$v$를</span> 구하자.</p>
+<div class="f" style="left:147pt;top:58pt"><span class="fig" data-srcpage="6" data-clip="147,58,275,86"></span></div>
+<p class="x c d" style="--b:102.8;--a:14.8pt">$\text{따라서}\qquad v = \dfrac{W_0ST^2 - 2\pi^2R_0mc}{W_0ST^2 + 2\pi^2R_0mc}\,c = -1.19\cdot10^7\,\mathrm{m/s},$</p>
+<p class="x" style="--b:128.8">즉 거울의 속도는 태양 쪽을 향한다. 비행을 시작하고 1시간이 지나면 물체에서 태양까지의 거리는 <span class="nw">$R_1 = R_0 - |v|t = 1.07\cdot10^{11}\,\mathrm{m} = 0.72\,\mathrm{AU}$가</span> 된다.</p>
+<p class="x pn r" style="--b:584.3">23</p>
+</div>
+</body></html>
