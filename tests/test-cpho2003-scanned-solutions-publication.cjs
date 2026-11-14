@@ -2,9 +2,10 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const validate=require('./helpers/cpho2003-scanned-solutions-publication.cjs'),root=path.resolve(__dirname,'..');
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8')),clone=x=>JSON.parse(JSON.stringify(x)),sha=x=>crypto.createHash('sha256').update(x).digest('hex');
-const items=read('tools/original_style_publication.json').filter(r=>r.audit_schema==='cpho2003-scanned-solutions-original-v1');assert.equal(items.length,2);let positives=0;const rejected=[];
+const items=read('tools/original_style_publication.json').filter(r=>r.audit_schema==='cpho2003-scanned-solutions-original-v1');assert.equal(items.length,1);  // the Korean solutions are now an html-reflow-stamped-v1 edition (tools/ko_reflow/cpho/2003_TS.html)
+let positives=0;const rejected=[];
 for(const item of items){assert.equal(validate(root,read(item.qa),item).passed,true);positives++;}
-const item=items.find(i=>i.language==='ko'),original=read(item.qa),reject=(label,fn)=>{assert.throws(fn,undefined,label);rejected.push(label);};
+const item=items.find(i=>i.language==='en'),original=read(item.qa),reject=(label,fn)=>{assert.throws(fn,undefined,label);rejected.push(label);};
 for(const[k,v]of [['original_math_retyped',true],['original_math_y_changed',true],['translated_point_sizes_fitted',true],['original_math_resampled',true],['original_figures_redrawn',true],['added_editorial_notes',1],['pages',6],['source_original_sha256','0'.repeat(64)],['original_source_page_groups_retained',false],['source_O_label_before_P_equations_retained',false]]){const q=clone(original);q[k]=v;reject(k,()=>validate(root,q,item));}
 {const q=clone(original);q.page_proofs.pop();reject('drop final hybrid source page and its blank area',()=>validate(root,q,item));}
 {const q=clone(original);q.page_proofs[0]=q.page_proofs[1];reject('swap original physical pages',()=>validate(root,q,item));}
