@@ -1,0 +1,141 @@
+<!doctype html><html><head><meta name="page" content="411.024,609.449">
+<style>
+/* RuPhO 2018 (LII = 제52회), 9학년 이론 문제 풀이 — Korean edition on the original layout.
+   ORIGINAL: book layout (not LaTeX), body SchoolBookWeb 10pt -> 'Times New Roman',KB,serif; formulas MMCentury;
+   page 411.0x609.4pt, booklet pages 5-10. Text column: odd pages x 48.2..362.3, even pages x 51.0..365.2;
+   paragraph indent 11.8pt; line pitch 12pt. Running header 9pt on baseline 52.0, page number 10pt on baseline 53.0,
+   rule at y 55.84 (stamped). Odd pages: "제52회 ... 이론 시험" left + page number right (edge 360.0);
+   even pages: page number left + "9학년" right (edge 362.8).
+   Subscripts printed upright in the original (h_i, u_i, v_k, p_x, w_y, R_z ...) are typed upright (\mathrm).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3375*fs   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em)
+   Single-line blocks holding a \dfrac use .d: line-height 0, top = b - --a (--a = height of the formula above
+   its baseline). */
+body{font-family:'Times New Roman',KB,serif;font-size:10pt;line-height:12pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:48.2pt;width:314.1pt;--l:12pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs));text-align:justify}
+.e{left:51pt;width:314.2pt}                /* even pages: column shifted right */
+.i{text-indent:11.8pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* running header (9pt) and page number (10pt) */
+.hd{--fs:9pt;width:311.8pt;text-align:left}
+.hd.r{text-align:right}
+.pn{width:311.8pt;text-align:right}
+.pn.l{text-align:left}
+/* section title (bold sans) */
+.g{font-family:Arial,KG,sans-serif;font-weight:bold}
+.wn{word-break:normal}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+</style></head><body>
+
+<!-- page 5 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:52.0">제52회 전러시아 물리 올림피아드. <i>이론 시험</i></p>
+<p class="x pn" style="--b:53.0">5</p>
+<div class="f" style="left:48.19pt;top:55.5pt"><span class="fig" data-srcpage="1" data-clip="48.19,55.5,360.0,56.2"></span></div>
+<p class="x g" style="--b:83.7">문제 풀이와 채점 기준</p>
+<p class="x wn" style="--b:107.7"><b>9.1.</b> (Zamyatnin M.) 바람의 방향은 그래프의 처음 부분에 그은 접선으로 어림할 수 있다. 바람은 철로에서 북동쪽으로, 자오선에 대하여 약 <span class="nw">$30^\circ$의</span> 각을 이루며 분다. 속도 덧셈 법칙으로부터, 기관차가 북쪽에서 남쪽으로 움직인다면 기관차가 가속하는 동안 연기 자취와 철로 사이의 각이 줄어들어야 한다는 것을 쉽게 알 수 있다. 그런데 이 각은 커지므로, 기관차는 남쪽에서 북쪽으로 움직인다.</p>
+<p class="x i" style="--b:203.7">기관차의 운동은 정지 상태에서 시작하는 등가속도 운동이므로, 기관차의 속력은 시간에 따라 <span class="nw">$u(t) = at$로</span> 변한다. 좌표계를 도입하여 <span class="nw">$OX$축은</span> 철로에 수직으로, <span class="nw">$OY$축은</span> 철로를 따라 잡고, 원점은 연기 자취의 처음 점에 둔다. 바람의 기준계에서 기관차 속도의 <span class="nw">$OX$축과</span> <span class="nw">$OY$축</span> 방향 성분은 다음과 같다.</p>
+<div class="f" style="left:162pt;top:267pt"><span class="fig" data-srcpage="1" data-clip="162,267,248,290.6"></span></div>
+<p class="x i" style="--b:299.7">(바람의 기준계에서) 기관차의 좌표는 시간에 따라 다음과 같이 변한다.</p>
+<p class="x d" style="--b:323.7;--a:15.5pt;left:86.5pt;width:270pt">$y(t) = v_0\cos\alpha\,t + \dfrac{at^2}{2}$ (그래프 $w_\mathrm{y}(t)$ 아래의 넓이)</p>
+<div class="f" style="left:171pt;top:339pt"><span class="fig" data-srcpage="1" data-clip="171,339,239,350.6"></span></div>
+<p class="x i wn" style="--b:359.7">한 기준계에서 다른 기준계로 옮겨 가도 연기 자취의 모양은 변하지 않으므로, 바람의 기준계에서 기관차의 궤적 방정식은 연기의 궤적 방정식과 같으며 다음과 같은 꼴이다.</p>
+<div class="f" style="left:153pt;top:393pt"><span class="fig" data-srcpage="1" data-clip="153,393,255,417"></span></div>
+<p class="x i" style="--b:431.7">이것은 포물선의 방정식이며, 꼭짓점의 좌표 $x_0$과 <span class="nw">$y_0$은</span> 다음과 같다.</p>
+<p class="x d c" style="--b:455.7;--a:15.5pt">$x_0 = \dfrac{v_0^2}{a}\sin\alpha\cos\alpha$&ensp;및&ensp;$y_0 = \dfrac{v_0^2}{2a}\cos^2\alpha$</p>
+<p class="x d i" style="--b:479.7;--a:14.2pt">그림에서 <span class="nw">$y_0 = 750\,\mathrm{m}$,</span> <span class="nw">$x_0 = 870\,\mathrm{m}$를</span> 읽어 내면 <span class="nw">$y_0 = \dfrac{x_0\,\mathrm{ctg}\,\alpha}{2}$이므로,</span></p>
+<p class="x" style="--b:491.7"><span class="nw">$\mathrm{ctg}\,\alpha = 1.72$</span> <span class="nw">($\alpha = 30^\circ$)임을</span> 확인할 수 있다.</p>
+<p class="x i" style="--b:503.7">각을 알면 바람의 속력을 구할 수 있다: <span class="nw">$v_0 = \sqrt{2ay_0}/\cos\alpha = 10\,\mathrm{m/s}$.</span></p>
+<p class="x wn" style="--b:515.7">(<span class="nw">$x$축</span> 방향으로) 포물선의 양 끝점 사이의 거리는 <span class="nw">$\Delta x = 2000\,\mathrm{m}$임에</span> 주목하자. 그런데 <span class="nw">$\Delta x = v_0\tau\sin\alpha$이고</span>, 여기서 <span class="nw">$\tau$는</span> 기관차가 움직인 전체 시간이다. 따라서 <span class="nw">$\tau = \Delta x/v_0\sin\alpha = 400\,\mathrm{s}$이고</span>, 기관차가 지나간 거리는 $s = a\tau^2/2 = {}$<span class="nw">$4000\,\mathrm{m}$이다</span>. 원칙적으로 이 거리는 연기 자취의 처음 부분에 그은 접선을 철로와 만날 때까지</p>
+</div>
+
+<!-- page 6 of the booklet -->
+<div class="page">
+<p class="x e pn l" style="--b:53.0">6</p>
+<p class="x e hd r" style="--b:52.1">9학년</p>
+<div class="f" style="left:51.02pt;top:55.5pt"><span class="fig" data-srcpage="2" data-clip="51.02,55.5,362.83,56.2"></span></div>
+<p class="x e" style="--b:83.7">연장하여 기관차가 출발한 점의 위치를 정하는 방법으로도 구할 수 있다. 기관차에 대한 바람의 최소 속력은 <span class="nw">$v_\mathrm{min} = v_0\sin\alpha = 5\,\mathrm{m/s}$이다</span>.</p>
+<p class="x e wn" style="--b:131.7"><b>9.2.</b> (Apolonskiy A.) 액체의 부피는 변하지 않으므로, 피스톤들은 서로 반대 방향으로만 움직일 수 있다. 피스톤 <span class="nw">$S_2$는</span> 위로, <span class="nw">$S_1$은</span> 아래로 움직인다. 지레를 <span class="nw">$h$만큼</span> 위로 옮길 때 오른쪽 피스톤이 <span class="nw">$x$만큼</span> 올라가고 왼쪽 피스톤이 <span class="nw">$y$만큼</span> 내려갔다고 하자. 그러면 액체는 압축되지 않으므로 <span class="nw">$y = xS_2/S_1$이다</span>. 실의 연직 부분 $AB$, $CD$, <span class="nw">$EF$의</span> 길이 변화를 생각하자. <span class="nw">$AB$의</span> 길이는 <span class="nw">$\Delta l_1 = h + y$만큼</span> 늘어나고, $CD$와 <span class="nw">$EF$</span> 부분의 길이는 <span class="nw">$\Delta l_2 = x - h$만큼</span> 줄어든다. 실의 길이는 변하지 않으므로 <span class="nw">$\Delta l_1 = 2\Delta l_2$이다</span>. 따라서 <span class="nw">$h + y = 2x - 2h$이고</span>, 이로부터 다음을 얻는다.</p>
+<p class="x e d" style="--b:251.7;--a:14.2pt;left:168.2pt;width:197pt">$x = \dfrac{3hS_1}{(2S_1 - S_2)}$,&ensp;$y = \dfrac{3hS_2}{(2S_1 - S_2)}$.</p>
+<div class="f" style="left:56pt;top:265pt"><span class="fig" data-srcpage="2" data-clip="56,265,157,382"></span></div>
+<p class="x e wn" style="--b:275.7;left:171pt;width:194.2pt">피스톤에는 실의 장력(왼쪽 피스톤에는 힘 $T$, 오른쪽 피스톤에는 힘 $2T$), 대기의 압력에 의한 힘, 그리고 액체 쪽에서 작용하는 압력에 의한 힘이 작용한다. 왼쪽 원통의 피스톤 아래 액체의 압력을 <span class="nw">$p_1$이라고</span> 하자. 오른쪽 피스톤 아래의 압력은 다음과 같다.</p>
+<p class="x e nw" style="--b:359.7;left:183.3pt;width:182pt">$p_2 = p_1 - \rho g(x + y) = p_1 - \rho gx(1 + S_2/S_1).$</p>
+<p class="x e i wn" style="--b:371.7;left:171pt;width:194.2pt">왼쪽 피스톤의 평형 조건: <span class="nw">$T + p_1S_1 = p_0S_1$.</span> 오른쪽 피스톤: <span class="nw">$2T + p_2S_2 = p_0S_2$.</span> 이로부터</p>
+<div class="f" style="left:126pt;top:404pt"><span class="fig" data-srcpage="2" data-clip="126,404,285,452"></span></div>
+<p class="x e d" style="--b:467.7;--a:14.2pt">지레에 가해지는 힘 <span class="nw">$F$는</span> 다음과 같다: <span class="nw">$F = 3T = 9\rho gh\dfrac{S_1 + S_2}{(2S_1 - S_2)^2}$.</span></p>
+<p class="x e i wn" style="--b:491.7"><span class="nw">$S_2 = 2S_1$이면</span> 오른쪽 피스톤에 작용하는 압력에 의한 힘과 장력은 왼쪽 피스톤에 작용하는 것보다 두 배 크므로, 피스톤들은 서로 반대 방향으로 움직일 수 없다. 따라서 피스톤은 액체 표면에서 떨어져야만 움직일 수 있다. 지레를 옮기는 동안 힘들은 변하지 않으며 <span class="nw">$T = p_0S_1$,</span> <span class="nw">$F = 3T = 3p_0S_1$이다</span>.</p>
+</div>
+
+<!-- page 7 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:52.0">제52회 전러시아 물리 올림피아드. <i>이론 시험</i></p>
+<p class="x pn" style="--b:53.0">7</p>
+<div class="f" style="left:48.19pt;top:55.5pt"><span class="fig" data-srcpage="3" data-clip="48.19,55.5,360.0,56.2"></span></div>
+<p class="x" style="--b:83.7"><b>9.3.</b> (Zamyatnin M.) 높이 <span class="nw">$h_\mathrm{i}$에서</span> 자유 낙하하는 찰흙은</p>
+<p class="x d" style="--b:107.7;--a:16pt">시간 <span class="nw">$\tau_\mathrm{i} = \sqrt{\dfrac{2h_\mathrm{i}}{g}}$</span> 동안 속력 <span class="nw">$u_\mathrm{i} = \sqrt{2gh_\mathrm{i}}$를</span> 얻는다.</p>
+<p class="x i wn" style="--b:131.7">충돌 전에 나무토막은 등속 운동을 하므로, 끄는 외력은 <span class="nw">$F = \mu mg$이다</span>. 두 물체가 달라붙는 순간 계에는 두 가지 외부 충격력, 곧 마찰력과 바닥의 수직 항력이 작용하고, 두 가지 일정한 외력, 곧 중력과 끄는 힘이 작용한다. 무한히 짧은 충돌 시간 동안 계의 운동량 변화에서 일정한 힘들의 역할은 무시할 수 있다. 충격력을 고려하여 계의 운동량 변화를 쓰자(충격량 꼴로 나타낸 질량 중심의 운동 정리). 수평 축 방향으로는 <span class="nw">$\Delta p_\mathrm{x} = -\mu N\Delta t$,</span> 연직 축 방향으로는 <span class="nw">$\Delta p_\mathrm{y} = N\Delta t$이다</span>. 달라붙는 동안 나무토막의 미끄러짐이 멈추지 않는다는 것을 고려하면 <span class="nw">$\Delta p_\mathrm{x} = -\mu\Delta p_\mathrm{y}$,</span> 곧 <span class="nw">$2mv_\mathrm{k} - mv_0 = -\mu mu$이고</span>, 이로부터 달라붙은 직후 계의 속력은 <span class="nw">$v_\mathrm{k} = (v_0 - \mu u)/2$이다</span>.</p>
+<p class="x i wn" style="--b:263.7">달라붙은 뒤의 계에 대하여 쓴 뉴턴 제2법칙 <span class="nw">$2ma = F - 2\mu mg$로부터</span>, 끄는 외력의 작용을 받는 계는 가속도 <span class="nw">$a = \mu g/2$로</span> 등감속 운동을 한다는 것을 알 수 있다. 결국 계의 속력은 시간에 따라 $v = v_\mathrm{k} - a(t - \tau) = (v_0 - \mu u - \mu g(t - \tau))/2 = {}$<span class="nw">$(v_0 - \mu gt)/2$의</span> 꼴로 변한다. 속력은 찰흙이 떨어진 처음 높이에 의존하지 않는다! 얻은 관계는 <span class="nw">$t &gt; \tau$인</span> 시간에 대하여 성립한다. 그러므로 <span class="nw">$h_1 = 5\,\mathrm{m}$보다</span> 높은 곳에서 떨어지면 1&thinsp;s 뒤 나무토막의 속력은 변하지 않고 4&thinsp;m/s이지만, 더 낮은 곳에서 떨어지면 그 속력은 $v = (v_0 - \mu gt_1)/2 = {}$<span class="nw">$1\,\mathrm{m/s}$가</span> 된다.</p>
+<p class="x i wn" style="--b:383.7">찰흙이 떨어진 높이와 관계없이, 나무토막의 속력은 시각 $t_0 = v_0/\mu g = {}$<span class="nw">$2\,\mathrm{s}$일</span> 때 0이 된다.</p>
+<p class="x i wn" style="--b:407.7">계의 속력에 대한 답은 짐작할 수 있다는 점에 주의해야 한다. 문제의 풀이가 존재한다는 것에 근거하여 계의 나중 속력이 찰흙이 떨어진 높이에 의존하지 않는다고 가정하면, 구체적으로 처음 높이를 0으로 잡을 수 있다. 그러면 곧바로 답 <span class="nw">$v = (v_0 - \mu gt)/2$를</span> 쓸 수 있다. 그러나 이러한 풀이는 퇴화된 경우에 대하여 얻은 것이고 일반화된다는 보장이 없으므로, 올바른 풀이로 인정할 수 없다.</p>
+<p class="x i wn" style="--b:491.7">위의 풀이는 충돌하는 순간 나무토막이 멈추지 않는다(끼어서 멈추지 않는다)는 가정 아래 얻은 것이다. 주어진 수치에서는 찰흙이 $h = v_0^2/(2\mu^2g) = {}$<span class="nw">$20\,\mathrm{m}$보다</span> 높은 곳에서 떨어지면 나무토막이 끼어서 멈출 수 있다.</p>
+<p class="x i" style="--b:539.7">시간에 따른 나무토막의 속력 그래프는 충돌 전 나무토막의 일정한 속력과 위에서 유도한 관계를, 충돌하는 동안의 불연속적인 도약으로 이어 붙여서 얻는다.</p>
+</div>
+
+<!-- page 8 of the booklet -->
+<div class="page">
+<p class="x e pn l" style="--b:53.0">8</p>
+<p class="x e hd r" style="--b:52.1">9학년</p>
+<div class="f" style="left:51.02pt;top:55.5pt"><span class="fig" data-srcpage="4" data-clip="51.02,55.5,362.83,56.2"></span></div>
+<div class="f" style="left:68pt;top:79pt"><span class="fig" data-srcpage="4" data-clip="68,79,343,204"></span></div>
+<p class="x ov" style="--b:103.0;left:79.5pt;--fs:9pt">= 4&thinsp;m/s</p>
+<p class="x ov" style="--b:148.6;left:80.4pt;--fs:9pt">= 2&thinsp;m/s</p>
+<p class="x ov" style="--b:199.6;left:183.0pt;--fs:9pt">= 1.4&thinsp;s</p>
+<p class="x ov" style="--b:199.6;left:263.1pt;--fs:9pt">= 2.0&thinsp;s</p>
+<p class="x ov" style="--b:199.6;left:308.8pt;--fs:9pt">= 2.2&thinsp;s</p>
+<p class="x e" style="--b:227.7"><b>9.4.</b> (Zikratskiy G.) 시간 $\tau_1$ 동안에 대하여 열평형 방정식을 쓰자.</p>
+<div class="f" style="left:152pt;top:243pt"><span class="fig" data-srcpage="4" data-clip="152,243,262,257"></span></div>
+<div class="f" style="left:146pt;top:260pt"><span class="fig" data-srcpage="4" data-clip="146,260,266,284"></span></div>
+<p class="x e i" style="--b:299.7">최고 온도 <span class="nw">$t_\mathrm{max}$는</span> 분모가 0이 될 때 얻어지며, 그 값은 다음과 같다.</p>
+<div class="f" style="left:159pt;top:322pt"><span class="fig" data-srcpage="4" data-clip="159,322,259,343"></span></div>
+<p class="x e i" style="--b:359.7">가열을 시작하고 시간 <span class="nw">$\tau$가</span> 지난 뒤, 실온의 물 <span class="nw">$\mu\Delta\tau$가</span> 계로 들어오는 짧은 시간 간격 <span class="nw">$\Delta\tau$를</span> 생각하자. 열평형 방정식으로부터</p>
+<p class="x e c" style="--b:395.7">$N\Delta\tau = (m + \mu\tau)c\Delta t + \mu\Delta\tau c(t + \Delta t - t_0)$, 따라서</p>
+<div class="f" style="left:167pt;top:405pt"><span class="fig" data-srcpage="4" data-clip="167,405,247,429"></span></div>
+<p class="x e" style="--b:443.7"><span class="nw">$\tau = \tau_1$이고</span> 눈금의 크기를 고려하면, 구하는 속력은 다음과 같다.</p>
+<p class="x e d" style="--b:467.7;--a:14.2pt;left:126.9pt;width:238pt">$v = \dfrac{Nml}{(t_1 - t_0)c(m + \mu\tau)^2} = 0.32\,\mathrm{mm/s}.$</p>
+</div>
+
+<!-- page 9 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:52.0">제52회 전러시아 물리 올림피아드. <i>이론 시험</i></p>
+<p class="x pn" style="--b:53.0">9</p>
+<div class="f" style="left:48.19pt;top:55.5pt"><span class="fig" data-srcpage="5" data-clip="48.19,55.5,360.0,56.2"></span></div>
+<p class="x wn" style="--b:83.7"><b>9.5.</b> (Kireev A.) 비선형 소자 <span class="nw">$Z$에</span> 연결했을 때 저항계의 측정값은 $R_\mathrm{z} = U_\mathrm{z}/I_\mathrm{z} = {}$<span class="nw">$0.8\,\mathrm{k\Omega}$이며</span>, 이는 비선형 소자에 흐르는 전류 <span class="nw">$I_\mathrm{z} = 7.5\,\mathrm{mA}$와</span> 소자에 걸린 전압 <span class="nw">$U_\mathrm{z} = 6\,\mathrm{V}$에</span> 해당한다(그림의 점 $A$).</p>
+<p class="x i wn" style="--b:131.7">비선형 소자 <span class="nw">$Z$와</span> 저항기 <span class="nw">$R$을</span> 병렬로 연결한 회로 부분의 전류-전압 특성 곡선은 그림과 같은 꼴이다(곡선 1. 두 소자를 병렬로 연결하면 두 소자에 공통인 것은 전압이고, 회로 부분에 흐르는 전류는 각 소자에 흐르는 전류의 합이라는 것을 고려하여 그릴 수 있다). 이때 저항계의 측정값은 $R_1 = U_1/I_1 = {}$<span class="nw">$0.4\,\mathrm{k\Omega}$이며</span>, 이는 회로 부분에 흐르는 전류 <span class="nw">$I_1 = 10\,\mathrm{mA}$와</span> 전압 <span class="nw">$U_1 = 4\,\mathrm{V}$에</span> 해당한다(그림의 점 $B$).</p>
+<p class="x i" style="--b:239.7">저항계는 직류 전압원과 저항을 포함하므로, 저항계에 대하여 부하 직선을 그릴 수 있다(그림 참고). 이 직선은 점 $A$와 <span class="nw">$B$를</span> 지나야 하며 다음 식으로 주어진다.</p>
+<div class="f" style="left:172pt;top:274pt"><span class="fig" data-srcpage="5" data-clip="172,274,249,296"></span></div>
+<p class="x i" style="--b:311.7">부하 직선과 좌표축의 교점으로부터 전원의 전압 <span class="nw">$U_0 = 12\,\mathrm{V}$($I = 0$일</span> 때)와 저항 <span class="nw">$r = U_0/I = 0.8\,\mathrm{k\Omega}$($U = 0$일</span> 때)을 구한다.</p>
+<p class="x i" style="--b:347.7">비선형 소자 <span class="nw">$Z$와</span> 저항기 <span class="nw">$R$을</span> 직렬로 연결한 회로 부분의 전류-전압 특성 곡선은 그림과 같은 꼴이다(곡선 2. 두 소자를 직렬로 연결하면 두 소자에 공통인 것은 전류이고, 회로 부분에 걸린 전압은 각 소자에 걸린 전압의 합이라는 것을 고려하여 그릴 수 있다). 저항계의 측정값은 부하 직선과 곡선 2의 교점 <span class="nw">$C$의</span> 좌표로부터 구할 수 있다: <span class="nw">$R_2 = U_2/I_2 = 1.6\,\mathrm{k\Omega}$.</span></p>
+</div>
+
+<!-- page 10 of the booklet -->
+<div class="page">
+<p class="x e pn l" style="--b:53.0">10</p>
+<p class="x e hd r" style="--b:52.1">9학년</p>
+<div class="f" style="left:51.02pt;top:55.5pt"><span class="fig" data-srcpage="6" data-clip="51.02,55.5,362.83,56.2"></span></div>
+<div class="f" style="left:69pt;top:76pt"><span class="fig" data-srcpage="6" data-clip="69,76,339,380"></span></div>
+<p class="x ov" style="--b:84.2;left:93.3pt;--fs:9pt">, mA</p>
+<p class="x ov" style="--b:362.7;left:332.6pt;--fs:9pt">, V</p>
+<p class="x ov" style="--b:126.3;left:233.8pt;--fs:9pt">병렬</p>
+<p class="x ov" style="--b:281.1;left:271.0pt;--fs:9pt">직렬</p>
+<p class="x ov" style="--b:313.4;left:262.5pt;--fs:9pt">부하</p>
+<p class="x ov" style="--b:324.2;left:264.7pt;--fs:9pt">직선</p>
+</div>
+</body></html>

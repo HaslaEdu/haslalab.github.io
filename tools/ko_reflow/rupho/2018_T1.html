@@ -1,0 +1,108 @@
+<!doctype html><html><head><meta name="page" content="411.024,609.449">
+<style>
+/* RuPhO 2018 (LII = 제52회), 9학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: book layout (not LaTeX), body SchoolBookWeb 10pt -> 'Times New Roman',KB,serif; page 411.0x609.4pt,
+   booklet pages 1-4. Text column: odd pages x 48.2..362.3, even pages x 51.0..365.2 (width ~314.1pt);
+   paragraph indent 11.8pt; line pitch 12pt. Running header 9pt on baseline 52.0, page number 10pt on baseline 53.0,
+   rule at y 55.84 (stamped). Odd pages: "제52회 ... 이론 시험" left + page number right (edge 360.0);
+   even pages: page number left + "9학년" right (edge 362.8).
+   Cyrillic subscripts: h_а, h_б -> h_a, h_b.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3375*fs   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em) */
+body{font-family:'Times New Roman',KB,serif;font-size:10pt;line-height:12pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:48.2pt;width:314.1pt;--l:12pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs));text-align:justify}
+.e{left:51pt;width:314.2pt}                /* even pages: column shifted right */
+.i{text-indent:11.8pt}
+.c{text-align:center}
+/* running header (9pt) and page number (10pt) */
+.hd{--fs:9pt;width:311.8pt;text-align:left}
+.hd.r{text-align:right}
+.pn{width:311.8pt;text-align:right}
+.pn.l{text-align:left}
+/* grade line (bold sans) and problem titles (bold) */
+.g{font-family:Arial,KG,sans-serif;font-weight:bold}
+.h{font-weight:bold}
+/* text beside a figure on the right: --fw = column right edge - right edge of the short lines, --fh = N x 12pt - 1pt */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* numbered items with a hanging number */
+.li{padding-left:var(--pl)}
+.n{position:absolute;left:var(--nl);text-indent:0}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.oc{text-align:center;width:40pt}
+</style></head><body>
+
+<!-- page 1 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:52.0">제52회 전러시아 물리 올림피아드. <i>이론 시험</i></p>
+<p class="x pn" style="--b:53.0">1</p>
+<div class="f" style="left:48.19pt;top:55.5pt"><span class="fig" data-srcpage="1" data-clip="48.19,55.5,360.0,56.2"></span></div>
+<p class="x g" style="--b:83.7">9학년</p>
+<p class="x h" style="--b:107.7">9.1. 증기 기관차</p>
+<p class="x wn" style="--b:119.7">항공 사진 촬영을 하는 동안, 정지 상태에서 출발하여 곧은 철로 구간을 따라 일정한 가속도 <span class="nw">$a = 0.05\,\mathrm{m/s^2}$으로</span> 움직이기 시작한 증기 기관차의 연기 자취가 사진에 찍혔다. 사진에는 기관차가 움직이기 시작한 바로 그 처음부터의 연기 자취 전체가 보인다. 격자 한 칸은 거리 200&thinsp;m에 해당한다. 바람의 속도가 일정하다고 보고, 다음을 구하여라.</p>
+<p class="x li" style="--b:191.7;--pl:31.6pt;--nl:18.3pt"><span class="n">1.</span>기관차는 어느 방향으로 움직였는가?</p>
+<p class="x li" style="--b:203.7;--pl:31.6pt;--nl:18.3pt"><span class="n">2.</span>바람은 철로에 대하여 어떤 각 <span class="nw">$\alpha$로</span> 불었는가?</p>
+<p class="x li" style="--b:215.7;--pl:31.6pt;--nl:18.3pt"><span class="n">3.</span>바람의 속력 $v_0$.</p>
+<p class="x li" style="--b:227.7;--pl:31.6pt;--nl:18.3pt"><span class="n">4.</span>기관차에 대한 바람의 최소 속력 $v_\mathrm{min}$.</p>
+<p class="x li" style="--b:239.7;--pl:31.6pt;--nl:18.3pt"><span class="n">5.</span>기관차가 움직이기 시작한 때부터 촬영 순간까지 기관차가 움직인 시간 $\tau$.</p>
+<p class="x li" style="--b:263.7;--pl:31.6pt;--nl:18.3pt"><span class="n">6.</span>기관차가 움직이기 시작한 때부터 촬영 순간까지 기관차가 지나간 거리 $s$.</p>
+<div class="f" style="left:48pt;top:283pt"><span class="fig" data-srcpage="1" data-clip="48,283,347,522"></span></div>
+<p class="x ov" style="--b:283.2;left:305.4pt">200&thinsp;m</p>
+<p class="x ov" style="--b:333.6;left:332.6pt">200&thinsp;m</p>
+<p class="x ov oc" style="--b:318.9;left:257.1pt">북</p>
+<p class="x ov oc" style="--b:387.0;left:255.7pt">남</p>
+</div>
+
+<!-- page 2 of the booklet -->
+<div class="page">
+<p class="x e pn l" style="--b:53.0">2</p>
+<p class="x e hd r" style="--b:52.1">9학년</p>
+<div class="f" style="left:51.02pt;top:55.5pt"><span class="fig" data-srcpage="2" data-clip="51.02,55.5,362.83,56.2"></span></div>
+<div class="f" style="left:53pt;top:72pt"><span class="fig" data-srcpage="2" data-clip="53,72,136,221"></span></div>
+<p class="x ov" style="--b:82.5;left:122.4pt;--fs:9pt">$P$</p>
+<p class="x h" style="--b:83.7;left:151.6pt;width:213.6pt">9.2. 도르래와 원통</p>
+<p class="x wn" style="--b:95.7;left:151.2pt;width:214pt">연결된 두 그릇에 밀도 <span class="nw">$\rho$인</span> 액체가 들어 있고, 두 그릇의 단면적은 각각 $S_1$과 <span class="nw">$S_2$이다</span>. 그릇은 피스톤으로 밀폐되어 있으며, 피스톤은 지레 <span class="nw">$P$에</span> 연결된 도르래 장치와 늘어나지 않는 실의 작용으로 움직일 수 있다(그림 참고). 처음에 실은 팽팽하지도 늘어지지도 않고, 피스톤은 액체에 닿아 있다. 지레를 작은 거리 <span class="nw">$h$만큼</span> 천천히 위로 옮기는데, 이때 지레는 수평을, 실은 연직을 유지한다.</p>
+<p class="x e li" style="--b:239.7;--pl:22.7pt;--nl:10pt"><span class="n">1.</span><span class="nw">$S_1 &gt; S_2$라고</span> 가정하고, 피스톤들이 어느 방향으로 얼마만큼 움직이는지 구하여라. 거리 <span class="nw">$h$만큼</span> 옮긴 뒤 지레를 그 자리에 붙잡아 두려면 지레에 얼마의 힘 <span class="nw">$F_1$을</span> 가해야 하는가?</p>
+<p class="x e li wn" style="--b:287.7;--pl:22.7pt;--nl:10pt"><span class="n">2.</span><span class="nw">$S_2 = 2S_1$일</span> 때 지레를 거리 <span class="nw">$h$만큼</span> 위로 옮기려면 얼마의 힘 <span class="nw">$F_2$가</span> 필요한가?</p>
+<p class="x e wn" style="--b:311.7">지레, 도르래, 실, 피스톤의 질량은 무시할 수 있다. 마찰은 없다. 그릇은 받침대에서 떨어지지 않는다. 액체의 증기압은 대기압 <span class="nw">$p_0$보다</span> 훨씬 작다. 중력 가속도는 <span class="nw">$g$이다</span>.</p>
+<p class="x e h" style="--b:371.7">9.3. 날아온 찰흙</p>
+<p class="x e wn" style="--b:383.7">질량 <span class="nw">$m$인</span> 찰흙 덩어리가 어떤 높이에서 처음 속도 없이 떨어져, 일정한 수평 방향의 힘을 받아 수평면 위를 일정한 속력 <span class="nw">$v_0 = 4\,\mathrm{m/s}$로</span> 움직이는, 질량이 같은 나무토막에 달라붙었다. 나무토막과 면 사이의 마찰 계수는 <span class="nw">$\mu = 0.2$이다</span>. 찰흙이 떨어지기 시작하고 시간 <span class="nw">$t_1 = 1\,\mathrm{s}$가</span> 지났을 때 나무토막의 속력 <span class="nw">$v_1$을</span> 구하여라. 다음 두 경우에 대하여, 찰흙이 떨어지기 시작한 뒤의 시간 <span class="nw">$t$에</span> 따른 나무토막의 속력 <span class="nw">$v$의</span> 그래프를 그리고, 그래프에 특징적인 점들의 좌표를 나타내어라: (가) 높이 <span class="nw">$h_\mathrm{a} = 10\,\mathrm{m}$에서</span> 떨어질 때; (나) 높이 <span class="nw">$h_\mathrm{b} = 25\,\mathrm{m}$에서</span> 떨어질 때.</p>
+<p class="x e i" style="--b:503.7">중력 가속도는 <span class="nw">$g = 10\,\mathrm{m/s^2}$이다</span>. 공기 저항은 무시한다.</p>
+</div>
+
+<!-- page 3 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:52.0">제52회 전러시아 물리 올림피아드. <i>이론 시험</i></p>
+<p class="x pn" style="--b:53.0">3</p>
+<div class="f" style="left:48.19pt;top:55.5pt"><span class="fig" data-srcpage="3" data-clip="48.19,55.5,360.0,56.2"></span></div>
+<p class="x h" style="--b:83.7">9.4. 물줄기로 데우기</p>
+<p class="x wn" style="--b:95.7">비어 있는 단열 그릇에 온도 <span class="nw">$t_0 = 20\,{}^\circ\mathrm{C}$인</span> 물을 질량 유량 <span class="nw">$\mu = 2.0\,\mathrm{g/s}$의</span> 가는 물줄기로 붓는다. 그릇 안의 물이 <span class="nw">$m = 100\,\mathrm{g}$이</span> 되었을 때, 그릇 안에서 일률 <span class="nw">$N = 200\,\mathrm{W}$인</span> 가열기가 켜진다. 그릇 안 내용물의 온도는 그 안에 넣어 둔 수은 온도계로 측정한다.</p>
+<p class="x" style="--b:155.7">다음을 구하여라.</p>
+<p class="x li" style="--b:167.7;--pl:25pt;--nl:12.3pt"><span class="n">1.</span>가열기를 켠 순간부터 얼마의 시간 <span class="nw">$\tau_1$이</span> 지나면 그릇 안 물의 온도가 <span class="nw">$t_1 = 30\,{}^\circ\mathrm{C}$까지</span> 올라가는가?</p>
+<p class="x li" style="--b:191.7;--pl:25pt;--nl:12.3pt"><span class="n">2.</span>그릇 안의 내용물은 최대 몇 도의 온도 <span class="nw">$t_\mathrm{max}$까지</span> 데워질 수 있는가?</p>
+<p class="x wn" style="--b:215.7">온도계 눈금에서 $t_0$과 <span class="nw">$t_1$</span> 눈금 사이의 거리가 <span class="nw">$l = 2.0\,\mathrm{cm}$일</span> 때, 가열기를 켠 순간부터의 시간 <span class="nw">$\tau$에</span> 따라 온도계의 수은 기둥이 올라가는 속력 <span class="nw">$v$가</span> 어떻게 변하는지 그 식을 유도하여라. 온도가 <span class="nw">$t_1$일</span> 때 수은 기둥이 올라가는 속력을 구하여라.</p>
+<p class="x wn" style="--b:263.7">물의 비열은 <span class="nw">$c = 4200\,\mathrm{J/(kg\cdot{}^\circ C)}$이다</span>. 열교환 과정은 빠르게 일어나며, 온도계와 그릇의 열용량은 작다.</p>
+<p class="x h" style="--b:311.7">9.5. 비선형 측정값</p>
+<div class="f" style="left:266pt;top:303pt"><span class="fig" data-srcpage="3" data-clip="266,303,355,375"></span></div>
+<p class="x wr wn" style="--b:323.7;--fw:113.4pt;--fh:71pt">단순화한 모형에서 저항계는 이상적인 직류 전압원 $U_0$, 저항 <span class="nw">$r$인</span> 저항기, 이상적인 전류계를 직렬로 연결한 것이다(그림 참고). 저항계에 저항 <span class="nw">$R_x$인</span> 저항기를 연결하면 전류계의 측정값이 자동으로 환산되어, 계기의 디지털 표시창에 연결된 저항기의 저항값이 나타난다.</p>
+<p class="x i wn" style="--b:431.7">아래에 전류-전압 특성 곡선이 주어진 비선형 소자 <span class="nw">$Z$에</span> 저항계를 연결하면, 저항계는 저항 <span class="nw">$R_z = 800\,\Omega$을</span> 가리킨다. 소자 <span class="nw">$Z$에</span> 저항 <span class="nw">$R = 1.0\,\mathrm{k\Omega}$인</span> 저항기를 병렬로 연결하면, 저항계는 <span class="nw">$R_1 = 400\,\Omega$을</span> 가리킨다. 저항계 전원의 전압 <span class="nw">$U_0$과</span> 저항계의 저항 <span class="nw">$r$을</span> 구하여라. 비선형 소자 <span class="nw">$Z$와</span> 저항 <span class="nw">$R$인</span> 저항기를 직렬로 연결하여 저항계에 연결했을 때 저항계의 측정값 <span class="nw">$R_2$를</span> 구하여라.</p>
+<p class="x i" style="--b:527.7"><i>참고</i>: 풀이에 필요한 작도는 따로 나누어 준 용지에 하고, 그 용지를 답안과 함께 제출하여라.</p>
+</div>
+
+<!-- page 4 of the booklet -->
+<div class="page">
+<p class="x e pn l" style="--b:53.0">4</p>
+<p class="x e hd r" style="--b:52.1">9학년</p>
+<div class="f" style="left:51.02pt;top:55.5pt"><span class="fig" data-srcpage="4" data-clip="51.02,55.5,362.83,56.2"></span></div>
+<div class="f" style="left:69pt;top:83pt"><span class="fig" data-srcpage="4" data-clip="69,83,344,279"></span></div>
+<p class="x ov" style="--b:90.3;left:93.3pt;--fs:9pt">, mA</p>
+<p class="x ov" style="--b:262.7;left:331.1pt;--fs:9pt">, V</p>
+</div>
+</body></html>

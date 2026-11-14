@@ -1,0 +1,164 @@
+<!doctype html><html><head><meta name="page" content="411.02,609.45">
+<style>
+/* RuPhO 2018 (LII = 제52회), 11학년 이론 문제 풀이 — Korean edition on the original layout.
+   ORIGINAL: SchoolBookWeb 10pt (heading "solutions of the problems" in TextBookBoldCyrillic = sans bold), formulas in MM fonts, page 411x609.4pt,
+   booklet pages 4-9. Text column: odd pages x 48.2..362.3, even pages x 51.0..365.2 (width 314.1pt);
+   paragraph indent 11.5pt; line pitch 12pt. Running header 9pt on baseline 52.0, page number 10pt on baseline 53.0,
+   rule (stamped) at y 55.8. Odd pages: "제52회 전러시아 물리 올림피아드. 이론 시험" + number at the right;
+   even pages: number at the left + "11학년" at the right.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3375*fs
+   0.3375 = (ascent - descent)/2 of Times New Roman (0.891 / 0.216 em), the first font of the stack.
+   --x0 = left edge of the text column of the page (set on the page div).
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a (--a = height of the formula above its baseline). */
+body{font-family:'Times New Roman',KB,serif;font-size:10pt;line-height:12pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:var(--x0,48.2pt);width:314.1pt;--l:12pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs))}
+.i{text-indent:11.5pt}                     /* first-line paragraph indent */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* running header (9pt; "이론 시험" italic as in the original) */
+.hd{--fs:9pt;text-align:left;width:311.8pt}
+.hd.r{text-align:right}
+/* page number (10pt): odd pages right edge 360.0, even pages left edge 51.0 */
+.pn{text-align:left;width:311.8pt}
+.pn.r{text-align:right}
+/* heading "문제 풀이" (sans bold, as the original's TextBookBoldCyrillic) */
+.g{font-family:Arial,KG,sans-serif;font-weight:bold}
+/* text running beside a figure: a float reserves the figure's room for the first N lines, --fh = N x 12pt - 1pt */
+.wr::before,.wl::before{content:"";width:var(--fw);height:var(--fh)}
+.wr::before{float:right}
+.wl::before{float:left}
+.wn{word-break:normal}
+/* an inline formula and the Korean particle after it must never be split over two lines */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;width:auto}
+</style></head><body>
+
+<!-- page 4 of the booklet -->
+<div class="page" style="--x0:51pt">
+<p class="x pn" style="--b:53.0">4</p>
+<p class="x hd r" style="--b:52.1">11학년</p>
+<div class="f" style="left:50.8pt;top:55.4pt"><span class="fig" data-srcpage="1" data-clip="50.8,55.4,363,56.3"></span></div>
+<p class="x g" style="--b:83.7">문제 풀이</p>
+<p class="x wn" style="--b:107.7"><b>11.1.</b>&nbsp; (Didin M.) <b>1.</b> 원통에는 중력, 수직 항력, 마찰력이 작용한다. 원통이 처음 위치로 되돌아왔으므로, 마찰력은 경사면을 따라 위쪽을 향한다. 이는 원통이 시계 방향으로 회전한다는 뜻이다. 처음에 원통은 가속도 <span class="nw">$a_1 = g\sin\varphi$로</span> 아래로 미끄러지기 시작한다. 거친 면과의 경계에서 원통의 속력은 $v_0 = {}$<span class="nw">$\sqrt{2gh}$에</span> 이른다. 원통이 더 아래로 움직이면 원통에 위쪽을 향하는 마찰력 <span class="nw">$F_\mathrm{fr} = \mu g\cos\varphi$가</span> 작용하기 시작한다. (거친 면에서 원통이 시계 방향으로 회전하기를 멈추면, 원통은 아래로 굴러 내려가 버린다. 즉 처음 지점으로 되돌아오지 못한다.) 원통이 위로 굴러 올라가는 동안 마찰력은 <span class="nw">$\mu g\cos\varphi$를</span> 넘지 않고, 올라갈 때의 가속도 <span class="nw">$a_2$는</span> 내려갈 때의 가속도보다 크지 않다. 따라서 경계에서의 속력은 <span class="nw">$v_0$보다</span> 크지 않고, 원통은 출발 지점에서 멈춘다(위로 올라가는 운동은 멈추지만 회전은 계속할 수 있다). 거친 면에서 원통의 가속도는 일정하며 <span class="nw">$a_2 = g(\mu\cos\varphi - \sin\varphi)$와</span> 같다. 올라가는 데 걸리는 시간은 다음과 같다.</p>
+<div class="f" style="left:85.7pt;top:298.4pt"><span class="fig" data-srcpage="1" data-clip="85.7,298.4,328,440.4"></span></div>
+<p class="x i wn" style="--b:455.7"><span class="nw">$\mu = 0.1$이므로</span> <span class="nw">$\varphi \ll 1$이고</span>, 따라서 <span class="nw">$\cos\varphi = 1$,</span> <span class="nw">$\sin\varphi = \varphi = 0.05$이다</span>.</p>
+<p class="x i wn" style="--b:467.7"><span class="nw">$h = 0.1\,\mathrm{m}$이므로</span> <span class="nw">$v_0 = \sqrt{2gh} = 1.4\,\mathrm{m/s}$이다</span>.</p>
+<p class="x i wn" style="--b:479.7">그러므로 <span class="nw">$t_\mathrm{min} = 11.3\,\mathrm{s}$를</span> 얻는다. 운동 방정식과, 원통 중심에 대한 동역학의 기본 방정식(회전 운동 방정식)을 쓰면 다음과 같다.</p>
+<div class="f" style="left:139.4pt;top:501.6pt"><span class="fig" data-srcpage="1" data-clip="139.4,501.6,285.7,545.9"></span></div>
+</div>
+
+<!-- page 5 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:52.0">제52회 전러시아 물리 올림피아드. <i>이론 시험</i></p>
+<p class="x pn r" style="--b:53.0">5</p>
+<div class="f" style="left:48pt;top:55.4pt"><span class="fig" data-srcpage="2" data-clip="48,55.4,360.2,56.3"></span></div>
+<p class="x i wn" style="--b:83.7">한 식을 다른 식으로 나누자.</p>
+<div class="f" style="left:123.2pt;top:86.3pt"><span class="fig" data-srcpage="2" data-clip="123.2,86.3,296.3,115.2"></span></div>
+<p class="x i wn" style="--b:131.7">경사면의 경계선을 연속으로 두 번 지나는 사이에 속력의 변화는 <span class="nw">$\Delta v = 2v_0$이다</span>.</p>
+<p class="x i wn" style="--b:155.7">가능한 가장 작은 각속도에서는 미끄러짐이 정확히 경사면의 경계선에서 멈춘다.</p>
+<p class="x c d" style="--b:179.7;--a:12.6pt;left:150pt;width:120pt">$\Delta\omega = \dfrac{v_0}{R} - \omega_0$</p>
+<p class="x i wn" style="--b:191.7">이로부터 얻는다.</p>
+<div class="f" style="left:144.2pt;top:186.8pt"><span class="fig" data-srcpage="2" data-clip="144.2,186.8,276.9,209.2"></span></div>
+<p class="x wn" style="--b:227.7"><b>11.2.</b>&nbsp; (Vorobyev I.) <b>방법 1</b></p>
+<p class="x i wn" style="--b:239.7"><span class="nw">$pV$</span> 평면을 $p$축 방향으로 <span class="nw">$k$배</span> 압축하고 $V$축 방향으로 같은 비율만큼 늘이는 변환을 생각하자. 이 변환에서는 모든 도형의 넓이가 보존되므로, 온도(<span class="nw">$T = pV/R$</span>), 일(<span class="nw">$\mathrm{d}A = p\mathrm{d}V$</span>), 열용량(<span class="nw">$\mathrm{C = dQ/dT = dU/dT + dA}$</span>)이 보존된다. 점 <span class="nw">$A$로부터</span> <span class="nw">$k = 2$를</span> 정하고 두 번째 과정의 그래프를 그린다. 그것은 점 <span class="nw">$(2;\ 3.5)$에서</span> 점 <span class="nw">$(16;\ 7)$까지의</span> 선분이다. 이 구간 밖에서는 두 번째 과정을 복원할 수 없다.</p>
+<p class="x i wn" style="--b:335.7"><b>방법 2</b></p>
+<p class="x i wn" style="--b:347.7">열역학 제1법칙으로부터 열용량에 대하여 다음을 얻는다.</p>
+<p class="x wn" style="--b:359.7">$C = \mathrm{d}Q/\mathrm{d}T = \mathrm{d}U/\mathrm{d}T + p\mathrm{d}V/\mathrm{d}T.$</p>
+<p class="x i wn" style="--b:371.7">내부 에너지는 <span class="nw">$U = \nu C_\mathrm{V}T$이고</span> 압력은 <span class="nw">$p = \nu RT/V$이므로</span> $C = \nu C_\mathrm{V} + {}$<span class="nw">$(\nu RT/V)\mathrm{d}V/\mathrm{d}T$이다</span>.</p>
+<p class="x i wn" style="--b:395.7"><span class="nw">$V_1(T)$과</span> <span class="nw">$V_2(T)$를</span> 과정 1과 2에서 온도 <span class="nw">$T$일</span> 때의 부피라고 하자. 열용량이 같으므로 같은 $T$와 <span class="nw">$\mathrm{d}T$에서</span> $\mathrm{d}V_2/V_2 = {}$<span class="nw">$\mathrm{d}V_1/V_1$이고</span>, 따라서 다음 관계가 성립한다: <span class="nw">$(V_2 + \mathrm{d}V_2)/(V_1 + \mathrm{d}V_1) = V_2/V_2$.</span> 온도 <span class="nw">$T + \mathrm{d}T$에서의</span> 부피의 비는 온도 <span class="nw">$T$에서의</span> 부피의 비와 같다. 곧 이 비는 모든 온도에서 같고, $V_2(T) = {}$<span class="nw">$kV_1(T)$이다</span>. 여기서 <span class="nw">$k$는</span> 상수이다.</p>
+<p class="x i wn" style="--b:467.7">같은 온도에서 <span class="nw">$p_2V_2 = p_1V_1$이므로</span>, 같은 온도에서 압력의 비는 $p_2/p_1 = {}$<span class="nw">$1/k$이다</span>.</p>
+<p class="x i wn" style="--b:491.7">점 <span class="nw">$A$에서</span> <span class="nw">$p_\mathrm{A}V_\mathrm{A} = 16$</span> 임의 단위이다(가로 방향의 한 칸은 부피 한 단위이고, 세로 방향의 한 칸은 압력 한 단위이다). 그러면 같은 온도에서 첫 번째 과정은 <span class="nw">$p_1V_1 = 16$이고</span>, 선분으로 주어진 압력과 부피의 관계는 $p_1 = 6 + {}$<span class="nw">$V_1$이다</span>. 이로부터 점 <span class="nw">$A$의</span> 온도에 해당하는 <span class="nw">$V_1$에</span> 대한 방정식 $(6 + V_1)V_1 = {}$<span class="nw">$16$을</span> 얻는다. 양의 근 <span class="nw">$V_1 = 2$를</span> 고르면 <span class="nw">$k = V_\mathrm{A}/V_1 = 2$를</span> 얻는다.</p>
+</div>
+
+<!-- page 6 of the booklet -->
+<div class="page" style="--x0:51pt">
+<p class="x pn" style="--b:53.0">6</p>
+<p class="x hd r" style="--b:52.1">11학년</p>
+<div class="f" style="left:50.8pt;top:55.4pt"><span class="fig" data-srcpage="3" data-clip="50.8,55.4,363,56.3"></span></div>
+<p class="x i wn" style="--b:83.7">두 번째 과정의 그래프의 기울기 <span class="nw">$\mathrm{d}p_2/\mathrm{d}V_2 = (\mathrm{d}p_1/\mathrm{d}V_1)k^2 = 0.25$는</span> 일정하다. 점 <span class="nw">$A$가</span> 그래프 위에 있다는 사실로부터 두 번째 과정의 압력과 부피의 관계 <span class="nw">$p_2 = 3 + V_2/4$를</span> 얻으며, 따라서 그래프는 직선이다.</p>
+<div class="f" style="left:51.4pt;top:132.1pt"><span class="fig" data-srcpage="3" data-clip="51.4,132.1,214.4,284.9"></span></div>
+<p class="x i wl wn" style="--b:131.7;--fw:178pt;--fh:167pt">첫 번째 과정에서 남아 있는 선분 밖의 구간에서는 압력과 부피의 관계가 다를 수 있다. 그러므로 두 번째 과정의 그래프는 남아 있는 선분의 시작점 <span class="nw">$V_1 = 1$;</span> <span class="nw">$p_1 = 7$과</span> 끝점 <span class="nw">$V_1 = 8$;</span> <span class="nw">$p_1 = 14$에</span> 해당하는 범위 안에서만 하나로 정해지게 복원할 수 있다. 위에서 구한 계수 <span class="nw">$k = 2$를</span> 쓰면 두 번째 과정의 그래프는 시작점에서 <span class="nw">$V_2 = 2$;</span> <span class="nw">$p_2 = 3.5$이고</span>, 끝점에서 <span class="nw">$V_2 = 16$;</span> <span class="nw">$p_2 = 7$이다</span>. 이 범위에서 복원한 두 번째 과정의 그래프를 위의 그림에 나타내었다.</p>
+<p class="x wn" style="--b:347.7"><b>11.3.</b>&nbsp; (Kutelev K.) 행성 안에 있는 관찰자가 볼 수 있는 범위는 전반사 효과로 제한된다. 관찰자가 볼 수 없는 것은 행성에 가까운 물체뿐이라는 점에 주목하자.</p>
+<div class="f" style="left:51.2pt;top:384.6pt"><span class="fig" data-srcpage="3" data-clip="51.2,384.6,155.4,455.9"></span></div>
+<p class="x i wn" style="--b:395.7;left:169.1pt;width:196.1pt">행성 표면에서의 입사각 <span class="nw">$\gamma$는</span> 사인 법칙을 써서 각 <span class="nw">$\alpha$와</span> 관련지을 수 있다.</p>
+<div class="f" style="left:220pt;top:430.8pt"><span class="fig" data-srcpage="3" data-clip="220,430.8,326.4,451.6"></span></div>
+<p class="x i wn" style="--b:467.7;left:169.1pt;width:196.1pt">주어진 위치 <span class="nw">$x$에서</span> 입사각의 최댓값은</p>
+<p class="x wn" style="--b:479.7"><span class="nw">$\alpha = 90^\circ$일</span> 때 얻어진다:<span class="nw">$\sin\gamma_\mathrm{max} = \frac{x}{R}$.</span></p>
+<p class="x i wn" style="--b:491.7">전반사는 조건 <span class="nw">$n\sin(\gamma_\mathrm{max}) = 1$이</span> 성립하는 거리 <span class="nw">$x$에서</span> 나타난다.</p>
+<p class="x i wn" style="--b:515.7">이로부터 행성의 반지름 <span class="nw">$R = xn$을</span> 구할 수 있다.</p>
+<p class="x i wn" style="--b:527.7">질량 <span class="nw">$m$인</span> 인공위성은 반지름 <span class="nw">$R$인</span> 가장 낮은 궤도를 따라 제1 우주 속도로 움직인다.</p>
+<div class="f" style="left:151.8pt;top:543.6pt"><span class="fig" data-srcpage="3" data-clip="151.8,543.6,276.6,563.8"></span></div>
+</div>
+
+<!-- page 7 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:52.0">제52회 전러시아 물리 올림피아드. <i>이론 시험</i></p>
+<p class="x pn r" style="--b:53.0">7</p>
+<div class="f" style="left:48pt;top:55.4pt"><span class="fig" data-srcpage="4" data-clip="48,55.4,360.2,56.3"></span></div>
+<p class="x i wn" style="--b:83.7">반지름을 대입하면 다음을 얻는다.</p>
+<p class="x c d" style="--b:107.7;--a:15.5pt">$v = xn\sqrt{\dfrac{4}{3}\pi G\rho} = 2.1\,\mathrm{km/s}.$</p>
+<p class="x wn" style="--b:131.7"><b>11.4.</b>&nbsp; (Apolonsky A.) 막대가 자기장 속에서 움직이면, 레일을 따라 미끄러지는 막대의 두 끝 사이에 기전력 <span class="nw">$\varepsilon_\mathrm{i} = Bvl$이</span> 생긴다. 여기서 <span class="nw">$v$는</span> 막대의 속력이다. 막대의 속력은, 막대에 전류 <span class="nw">$I$가</span> 흐를 때 막대에 작용하는 앙페르 힘 <span class="nw">$F_\mathrm{a} = IBl$</span> 때문에 변한다. 같은 전류가 (막대가 움직이는 방향에 따라) 축전기를 충전하거나 방전시킨다.</p>
+<p class="x i wn" style="--b:215.7">막대에 대한 뉴턴 제2법칙은 다음과 같다.</p>
+<div class="f" style="left:188.2pt;top:220pt"><span class="fig" data-srcpage="4" data-clip="188.2,220,231.2,228.6"></span></div>
+<div class="f" style="left:182.6pt;top:238.2pt"><span class="fig" data-srcpage="4" data-clip="182.6,238.2,236.8,257.8"></span></div>
+<p class="x wn" style="--b:275.7"><span class="nw">$m\Delta v = I\Delta tBl = -\Delta qBl$,</span> 여기서 <span class="nw">$\Delta q$는</span> 축전기 전하량의 변화이다.</p>
+<p class="x i wn" style="--b:287.7">막대가 정지 상태에서 속력 <span class="nw">$v_1$까지</span> 가속되는 동안에는</p>
+<div class="f" style="left:131.4pt;top:296.7pt"><span class="fig" data-srcpage="4" data-clip="131.4,296.7,288.2,326.4"></span></div>
+<p class="x wn" style="--b:335.7;left:195pt;width:auto">그러면</p>
+<div class="f" style="left:116pt;top:345.3pt"><span class="fig" data-srcpage="4" data-clip="116,345.3,299.6,377.2"></span></div>
+<p class="x i wn ov" style="--b:383.7;width:314.1pt;white-space:normal">벽과의 <span class="nw">$n$번째</span> 충돌을 생각하자. 막대는 속력 <span class="nw">$v_\mathrm{n}$으로</span> 벽에 부딪힌다. 이때 축전기의 전하량은 <span class="nw">$q_\mathrm{n} = CBlv_\mathrm{n}$이다</span>.</p>
+<p class="x i wn" style="--b:407.7">충돌한 뒤 막대는 같은 속력 <span class="nw">$v_\mathrm{n}$으로</span> 반대 방향으로 움직이는데, 이 속력은 이제 반대 부호로 바뀐 축전기 전하에 대응한다.</p>
+<p class="x i wn" style="--b:443.7">재충전 과정에서 막대의 속력 변화는 다음과 같다.</p>
+<div class="f" style="left:155pt;top:453.2pt"><span class="fig" data-srcpage="4" data-clip="155,453.2,267.8,472.8"></span></div>
+<p class="x i wn" style="--b:491.7">여기서 <span class="nw">$v_\mathrm{n+1}$과</span> <span class="nw">$q_\mathrm{n+1}$은</span> 충돌한 뒤 유도 기전력과 축전기의 전압이 서로 맞추어졌을 때의 속력과 축전기 전하량의 크기이다. 이때 축전기 전하의 부호가 바뀌었으므로 <span class="nw">$\Delta q = q_\mathrm{n} + q_\mathrm{n+1}$임을</span> 고려하였다.</p>
+<div class="f" style="left:147.8pt;top:536.4pt"><span class="fig" data-srcpage="4" data-clip="147.8,536.4,271.7,556.8"></span></div>
+</div>
+
+<!-- page 8 of the booklet -->
+<div class="page" style="--x0:51pt">
+<p class="x pn" style="--b:53.0">8</p>
+<p class="x hd r" style="--b:52.1">11학년</p>
+<div class="f" style="left:50.8pt;top:55.4pt"><span class="fig" data-srcpage="5" data-clip="50.8,55.4,363,56.3"></span></div>
+<p class="x i wn" style="--b:83.7">이로부터</p>
+<div class="f" style="left:167.2pt;top:85.1pt"><span class="fig" data-srcpage="5" data-clip="167.2,85.1,258,123.4"></span></div>
+<p class="x i wn ov" style="--b:131.7"><span class="nw">$n$번</span> 충돌한 뒤의 속력은 다음과 같다.</p>
+<div class="f" style="left:104.4pt;top:131.2pt"><span class="fig" data-srcpage="5" data-clip="104.4,131.2,320.8,173.2"></span></div>
+<div class="f" style="left:50.8pt;top:175.7pt"><span class="fig" data-srcpage="5" data-clip="50.8,175.7,162.6,278.9"></span></div>
+<p class="x wn" style="--b:191.7;left:176.1pt;width:189.1pt"><b>11.5.</b>&nbsp; (Apolonsky A.) <b>방법 1</b></p>
+<p class="x wl wn" style="--b:203.7;--fw:125.2pt;--fh:95pt">공이 오랜 시간이 지난 뒤에 갖게 될 속도(바닥이 없다면 도달할 일정한 속도) <span class="nw">$(w_\mathrm{x}, w_\mathrm{y})$로</span> 움직이는 관성 기준계로 옮겨 가자. 이 기준계의 원점은 던지는 순간 점 <span class="nw">$O$에</span> 둔다. 이 기준계에서 강물은 $OX$축 방향으로 움직이지 않고, $OY$축 방향의 강물의 운동은 중력을 상쇄한다. 따라서 (이 기준계에서) 작은 공에 작용하는 알짜힘은 속도에 정비례한다: <span class="nw">$\vec a = -k\vec u$,</span> 여기서 <span class="nw">$u$는</span> 이 기준계에서 공의 속도이다. 그러므로 이 기준계에서 공은 직선을 따라 움직이고, 속도의 변화는 같은 기준계에서의 변위에 같은 계수로 비례한다. 계수 <span class="nw">$k$의</span> 값은 처음 조건, 곧 처음 속도 없이 놓은 공의 가속도의 연직 성분 <span class="nw">$g = kw_\mathrm{y}$로부터</span> 구한다. 두 번째 공이 점 <span class="nw">$C$에</span> 떨어지는 순간, 원점은 점 <span class="nw">$O'$에</span> 있다(그림 참고). 두 번째 공이 바닥에 떨어지는 데 걸리는 시간이 지났을 때 첫 번째 공이 있는 점 <span class="nw">$E$를</span> 생각하자. 두 공의 처음 속도의 $OX$ 성분이 같으므로 이 점은 점 <span class="nw">$C$의</span> 바로 위에 있다. $\triangle EBC \propto {}$<span class="nw">$\triangle EO'D$이므로</span> <span class="nw">$O'D = Lw_\mathrm{y}/v$이다</span>. 바닥에 떨어지는 순간의 수평 속력은 다음과 같다.</p>
+<div class="f" style="left:142.4pt;top:465.3pt"><span class="fig" data-srcpage="5" data-clip="142.4,465.3,274.6,486.4"></span></div>
+<p class="x wn" style="--b:491.7"><b>방법 2</b></p>
+<p class="x i wn" style="--b:503.7">$OX$축은 강물의 속도와 같은 방향이고, $OY$축은 연직 아래 방향이다.</p>
+<p class="x wn" style="--b:527.7"><span class="nw">$w_\mathrm{x}$를</span> 강물이 흐르는 속력이라 하고, <span class="nw">$w_\mathrm{y} = g/k$로</span> 놓자. 그러면</p>
+<div class="f" style="left:166.7pt;top:535.3pt"><span class="fig" data-srcpage="5" data-clip="166.7,535.3,247,560.9"></span></div>
+</div>
+
+<!-- page 9 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:52.0">제52회 전러시아 물리 올림피아드. <i>이론 시험</i></p>
+<p class="x pn r" style="--b:53.0">9</p>
+<div class="f" style="left:48pt;top:55.4pt"><span class="fig" data-srcpage="6" data-clip="48,55.4,360.2,56.3"></span></div>
+<p class="x wn" style="--b:83.7">아래 첨자가 없는 식은 두 성분 모두에 대하여 성립한다.</p>
+<div class="f" style="left:133pt;top:94.6pt"><span class="fig" data-srcpage="6" data-clip="133,94.6,195.5,112.8"></span></div>
+<p class="x wn" style="--b:107.7;left:196.7pt;width:auto">, 따라서</p>
+<div class="f" style="left:115.3pt;top:123.1pt"><span class="fig" data-srcpage="6" data-clip="115.3,123.1,293,134.4"></span></div>
+<p class="x wn" style="--b:155.7">다음과 같이 정의하자.</p>
+<div class="f" style="left:158.2pt;top:163pt"><span class="fig" data-srcpage="6" data-clip="158.2,163,253.3,190.6"></span></div>
+<p class="x wn" style="--b:203.7">그러면 $OX$축 방향의 변위는 다음과 같다.</p>
+<div class="f" style="left:140.4pt;top:210.6pt"><span class="fig" data-srcpage="6" data-clip="140.4,210.6,271.2,262.6"></span></div>
+<p class="x wn" style="--b:275.7">여기서 <span class="nw">$H$는</span> 강의 깊이이다.</p>
+<p class="x wn" style="--b:287.7">두 번째 경우에 떨어지는 데 걸리는 시간은 <span class="nw">$t_2$이다</span>.</p>
+<div class="f" style="left:62.5pt;top:294.6pt"><span class="fig" data-srcpage="6" data-clip="62.5,294.6,349,346.6"></span></div>
+<p class="x wn" style="--b:359.7">각 축에 대하여 쓴 식들을 짝지어 빼면 다음을 얻는다.</p>
+<div class="f" style="left:128.4pt;top:362.8pt"><span class="fig" data-srcpage="6" data-clip="128.4,362.8,279.3,397"></span></div>
+<p class="x wn" style="--b:407.7">구하려는 속력 <span class="nw">$w$는</span> 다음과 같다는 점에 주목하면 된다.</p>
+<div class="f" style="left:134pt;top:417.3pt"><span class="fig" data-srcpage="6" data-clip="134,417.3,277.5,437"></span></div>
+</div>
+</body></html>
