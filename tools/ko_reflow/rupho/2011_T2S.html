@@ -1,0 +1,253 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2011 (XLV = 제45회), 10학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic 10pt (= 9.963 PostScript pt), printed as rotated 2-up A4 spreads:
+   sheets 1-3 = 842x595 (booklet pages 19 | 20, 21 | 22, 23 | 24), sheet 4 = 425x595 (booklet page 25 only: the left
+   half of a spread, the rest hidden by a CropBox). Figures are numbered on through the booklet (그림 19-21),
+   equations (13)-(27). Coordinates are those of the visible (de-rotated) sheet.
+   Left page text column x 32.6..387.0, right page column x 453.6..808.0 (width 354.4pt); paragraph indent 14.9pt;
+   baselineskip 12 TeX pt = 11.955pt. Left pages carry "결선. 이론 시험" and the page number at the RIGHT, right pages
+   "제45회 ..." and the page number at the LEFT; page numbers sit on baseline 573.7.
+   The fourth sheet has its own size through a named @page rule (.page[data-s="sm"]).
+   STAMPING COPY: scrub/<file>.pdf was re-made from a normalized copy (MediaBox = the original CropBox, rotation
+   removed, content at the origin), with the inline images of the hidden spread half removed (render pixel-identical)
+   before scrub.py; the scrub copy has 0 new dark pixels against the original.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a.
+   Equation numbers "(n)": separate right-aligned block on the same baseline (.en).
+   Cyrillic subscripts are retyped: в (water) -> w, внеш -> ext, п (potential) -> p, э (electric energy) -> e.
+   Marking criteria: text + dot leader + points (.k). */
+@page sm{size:425pt 595pt;margin:0}
+.page[data-s="sm"]{page:sm;width:425pt;height:595pt}
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:32.6pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.rc{left:453.6pt}                          /* right page of the spread (+421pt) */
+.i{text-indent:14.9pt}                     /* first-line paragraph indent; continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.en{text-align:right}
+/* running header (italic, baseline 31.8) above the stamped rule (35.3..35.8) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.7) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "10학년" (11.955pt bold), problem titles (bold), "채점 기준" (italic) — centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+.ct{text-align:center;font-style:italic}
+/* marking criteria: item, dot leader, points at the right margin */
+.k{display:flex;align-items:baseline;text-align:left}
+.k .ld{flex:1;min-width:0;overflow:hidden;white-space:nowrap;margin:0 2pt 0 3pt}
+.k .ld::after{content:". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."}
+/* text running beside a figure: a float reserves the figure's room for the first N lines
+   --fw = room taken by the figure, --fh = N x 11.955pt - 1pt */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.jl{text-align-last:justify}               /* one line of a paragraph split into separately placed lines */
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- sheet 1: booklet pages 19 (left) and 20 (right) -->
+<div class="page">
+<p class="x hd r" style="--b:31.8">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="32.6,35.2,387.0,35.9"></span></div>
+<p class="x g" style="--b:49.6">10학년</p>
+<p class="x h" style="--b:70.6">문제 1. 물이 든 그릇 속의 공</p>
+<p class="x i" style="--b:82.6">물, 나무 공, 금속 공의 밀도를 각각 $\rho$, $\rho_1$, <span class="nw">$\rho_2$라</span> 하고, 두 공의 부피를 $V_1$, $V_2$, 회전축에서 나무 공까지의 거리를 $R$, 위쪽 실과 아래쪽 실의 장력을 $T_1$, $T_2$, 회전 각속도를 <span class="nw">$\omega$라</span> 하자.</p>
+<p class="x i" style="--b:132.6">1. 나무 공 대신 물로 된 공이 있다고 생각해 보자. 두 공에는 똑같은 부력이 작용한다(그림&nbsp;19).</p>
+<div class="f" style="left:116pt;top:157pt"><span class="fig" data-srcpage="1" data-clip="116,157,313,252"></span></div>
+<p class="x ov c" style="--b:165.2;left:121.4pt;width:70pt">물로 된 공</p>
+<p class="x ov c" style="--b:165.2;left:232.4pt;width:70pt">나무 공</p>
+<p class="x cap" style="--b:263.5;left:189.8pt">그림 19</p>
+<p class="x i" style="--b:281.6">두 공의 가속도는 <span class="nw">$a = \omega^2R$이다</span>. 수평 방향과 연직 방향의 성분으로 나타낸 뉴턴의 제2법칙은 다음과 같다.</p>
+<div class="f" style="left:95pt;top:300pt"><span class="fig" data-srcpage="1" data-clip="95,300,325,337"></span></div>
+<p class="x i" style="--b:346.0">따라서</p>
+<div class="f" style="left:145pt;top:346pt"><span class="fig" data-srcpage="1" data-clip="145,346,274,375"></span></div>
+<p class="x i" style="--b:384.8">즉 <span class="nw">$\gamma = \alpha$이므로</span> 첫 번째 질문의 답을 얻는다. 부력은 연직선과 각 <span class="nw">$\alpha$를</span> 이루는 방향, 즉 실을 따르는 방향으로 작용한다.</p>
+<p class="x i wn" style="--b:411.0;width:212.5pt">2. 두 공에 작용하는 부력의 수평 성분과 연직 성분을 구하자(그림&nbsp;20).</p>
+<div class="f" style="left:252pt;top:403pt"><span class="fig" data-srcpage="1" data-clip="252,403,386,547"></span></div>
+<p class="x cap" style="--b:558.0;left:301pt">그림 20</p>
+<div class="f" style="left:62pt;top:441pt"><span class="fig" data-srcpage="1" data-clip="62,441,215,478"></span></div>
+<p class="x i" style="--b:487.3;width:212.5pt">뉴턴의 제2법칙에 따르면</p>
+<div class="f" style="left:43pt;top:493pt"><span class="fig" data-srcpage="1" data-clip="43,493,234,559"></span></div>
+<p class="x pn r" style="--b:573.7">19</p>
+
+<p class="x rc hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="453.6,35.2,808.0,35.9"></span></div>
+<p class="x rc i" style="--b:48.6">위의 식들로부터 다음을 얻는다.</p>
+<div class="f" style="left:539pt;top:58pt"><span class="fig" data-srcpage="1" data-clip="539,58,721,124"></span></div>
+<p class="x rc i" style="--b:137.8">따라서</p>
+<p class="x rc c d" style="--b:156.2;--a:13.9pt">$3\,\mathrm{tg}\,\alpha = \dfrac{x\sin\alpha + \cos\alpha}{x\cos\alpha - \sin\alpha},\quad\text{여기서}\quad x = \dfrac{T_1}{T_2}.$</p>
+<p class="x rc i" style="--b:178.6"><span class="nw">$\alpha$를</span> 알면 다음을 얻는다.</p>
+<div class="f" style="left:600pt;top:181pt"><span class="fig" data-srcpage="1" data-clip="600,181,661,208"></span></div>
+<p class="x rc ct" style="--b:219.7">채점 기준</p>
+<p class="x rc" style="--b:231.7">나무 공에 작용하는 부력의 방향:</p>
+<p class="x rc k" style="--b:243.7;padding-left:6.6pt;width:347.8pt"><span>설명을 제시하였다</span><span class="ld"></span><span>2</span></p>
+<p class="x rc k" style="--b:255.7;padding-left:6.6pt;width:347.8pt"><span>방향을 구하였다</span><span class="ld"></span><span>1</span></p>
+<p class="x rc k" style="--b:267.6"><span>계의 운동을 나타내는 뉴턴의 운동 방정식을 세웠다</span><span class="ld"></span><span>4</span></p>
+<p class="x rc k" style="--b:279.6"><span>장력의 비를 구하였다</span><span class="ld"></span><span>3</span></p>
+<p class="x rc h" style="--b:303.7">문제 2. 열기관</p>
+<p class="x rc i" style="--b:315.7">1. 카르노 정리에 따르면</p>
+<div class="f" style="left:553pt;top:329pt"><span class="fig" data-srcpage="1" data-clip="553,329,710,355"></span></div>
+<p class="x rc i" style="--b:367.6">여기서 <span class="nw">$Q_1$과</span> <span class="nw">$Q_2$는</span> 각각 가열기에서 받는 열량과 냉각기에 내주는 열량이다.</p>
+<div class="f" style="left:560pt;top:395pt"><span class="fig" data-srcpage="1" data-clip="560,395,702,408"></span></div>
+<p class="x rc i" style="--b:421.6">따라서</p>
+<p class="x rc c d" style="--b:452.2;--a:16.1pt">$A_{max} = mq\left(\dfrac{T_1}{T_2} - 1\right) = 2.45\cdot10^{13}\,\mathrm{J}.$</p>
+<p class="x rc i" style="--b:486.7">2. 이 경우에 <span class="nw">$Q_2$를</span> 열펌프가 보일러로 퍼 올린 열량, <span class="nw">$Q_1$을</span> 멕시코 만류에서 받는 열량이라 하자.</p>
+<p class="x rc c d" style="--b:527.6;--a:14.9pt">$\dfrac{Q_2}{T_0} = \dfrac{Q_1}{T_1},\qquad Q_2 = \lambda m_\mathrm{w},\qquad Q_1 = Q_2 - A_{max}.$</p>
+<p class="x rc i" style="--b:549.8">따라서</p>
+<p class="x rc pn" style="--b:573.7">20</p>
+</div>
+
+<!-- sheet 2: booklet pages 21 (left) and 22 (right) -->
+<div class="page">
+<p class="x hd r" style="--b:31.8">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="32.6,35.2,387.0,35.9"></span></div>
+<p class="x c d" style="--b:58.7;--a:15.1pt">$\dfrac{\lambda m_\mathrm{w}}{T_1} - \dfrac{\lambda m_\mathrm{w}}{T_0} = \dfrac{A_{max}}{T_1},\qquad T_1 \lt T_0.$</p>
+<p class="x" style="--b:78.0">따라서</p>
+<p class="x c d" style="--b:95.6;--a:14.2pt">$m_\mathrm{w} = \dfrac{A_{max}}{\lambda\left(1 - \dfrac{T_1}{T_0}\right)} = 5.12\cdot10^7\,\mathrm{kg}.$</p>
+<p class="x ct" style="--b:136.2">채점 기준</p>
+<p class="x k" style="--b:148.1"><span>첫 번째 경우에 대해 카르노 정리를 썼다</span><span class="ld"></span><span>3</span></p>
+<p class="x k" style="--b:160.1"><span>첫 번째 경우의 최대 일을 구하였다</span><span class="ld"></span><span>2</span></p>
+<p class="x k" style="--b:172.1"><span>두 번째 경우에 대해 카르노 정리를 썼다</span><span class="ld"></span><span>3</span></p>
+<p class="x k" style="--b:184.0"><span>두 번째 경우에 증발한 물의 최대 질량을 구하였다</span><span class="ld"></span><span>2</span></p>
+<p class="x h" style="--b:204.2">문제 3. 단열 과정</p>
+<div class="f" style="left:282pt;top:210pt"><span class="fig" data-srcpage="2" data-clip="282,210,388,306"></span></div>
+<p class="x i wn" style="--b:216.1;width:245.4pt">그릇을 기체로 채울 때, 바깥에서 전에 부피 <span class="nw">$V$를</span> 차지하던 기체가 그릇 안으로 옮겨 갔다고 하자(그림&nbsp;21). 이 부피를 안으로 “밀어 넣을” 때 바깥 압력이 하는 일은 <span class="nw">$A_\mathrm{ext} = P_0V$이다</span>.</p>
+<p class="x i wn" style="--b:264.0;width:245.4pt">계 ‘그릇 속 기체 — 부피 <span class="nw">$V$인</span> “바깥” 기체 — 피스톤’에 대한 에너지 보존 법칙은 다음과 같다.</p>
+<p class="x c" style="--b:299.9;width:245.4pt">$U_1 + U_2 + A_\mathrm{ext} = U + \Delta E_\mathrm{p},$</p>
+<p class="x en" style="--b:299.9;width:245.5pt">(13)</p>
+<p class="x cap" style="--b:323.0;left:317.5pt">그림 21</p>
+<p class="x wr" style="--b:315.0;--fw:72pt;--fh:22.9pt">여기서 <span class="nw">$U_1$은</span> 그릇 속 처음 기체의 내부 에너지, <span class="nw">$U_2$는</span> 부피 <span class="nw">$V$의</span> “바깥” 기체의 에너지, <span class="nw">$U$는</span> 채운 뒤 그릇 속 기체의 에너지, <span class="nw">$\Delta E_\mathrm{p}$는</span> 피스톤의 퍼텐셜 에너지 변화이다.</p>
+<div class="f" style="left:112pt;top:347pt"><span class="fig" data-srcpage="2" data-clip="112,347,307,373"></span></div>
+<p class="x en" style="--b:363.0">(14)</p>
+<p class="x c d" style="--b:391.9;--a:14.9pt">$\Delta E_\mathrm{p} = mg\Delta h = \dfrac{P_0}{2}S\Delta h = \dfrac{P_0}{2}V_0.$</p>
+<p class="x en" style="--b:391.9">(15)</p>
+<p class="x i" style="--b:410.4">식 (14)와 (15)를 식 (13)에 대입하고 정리하면 다음을 얻는다.</p>
+<div class="f" style="left:172pt;top:419pt"><span class="fig" data-srcpage="2" data-clip="172,419,249,445"></span></div>
+<p class="x en" style="--b:435.1">(16)</p>
+<div class="f" style="left:185pt;top:448pt"><span class="fig" data-srcpage="2" data-clip="185,448,234,474"></span></div>
+<p class="x en" style="--b:464.0">(17)</p>
+<p class="x i jl" style="--b:490.9">처음에 그릇 속에 있던 기체의 몰수는 <span class="nw">$\nu_1 = \dfrac{P_0V_0}{2RT_0}$이고</span>, 들어온 “바깥” 기체의 몰수는</p>
+<p class="x" style="--b:516.1"><span class="nw">$\nu_2 = \dfrac{11}{10}\dfrac{P_0V_0}{RT_0}$이므로</span> <span class="nw">$\nu = \nu_1 + \nu_2 = \dfrac{8}{5}\dfrac{P_0V_0}{RT_0}$이다</span>. 상태 방정식으로부터</p>
+<div class="f" style="left:170pt;top:531pt"><span class="fig" data-srcpage="2" data-clip="170,531,250,557"></span></div>
+<p class="x en" style="--b:546.5">(18)</p>
+<p class="x pn r" style="--b:573.7">21</p>
+
+<p class="x rc hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="453.6,35.2,808.0,35.9"></span></div>
+<p class="x rc" style="--b:46.1">따라서</p>
+<div class="f" style="left:609pt;top:49pt"><span class="fig" data-srcpage="2" data-clip="609,49,652,76"></span></div>
+<p class="x rc en" style="--b:65.4">(19)</p>
+<p class="x rc ct" style="--b:86.8">채점 기준</p>
+<p class="x rc k" style="--b:99.0"><span>에너지 보존 법칙을 썼다</span><span class="ld"></span><span>2</span></p>
+<p class="x rc" style="--b:111.1">$U_1$, $U_2$, <span class="nw">$U$와</span> <span class="nw">$\Delta E_\mathrm{p}$에</span> 대한 식을 얻었다</p>
+<p class="x rc k" style="--b:123.1"><span>(식 하나마다 1점)</span><span class="ld"></span><span>4</span></p>
+<p class="x rc k" style="--b:135.2"><span>들어온 기체의 부피 <span class="nw">$V$를</span> 구하였다</span><span class="ld"></span><span>1</span></p>
+<p class="x rc" style="--b:147.4">평형이 이루어진 뒤 그릇 속에 있는 기체에 대한</p>
+<p class="x rc k" style="--b:159.4"><span>상태 방정식을 썼다</span><span class="ld"></span><span>2</span></p>
+<p class="x rc k" style="--b:171.5"><span>기체의 나중 온도 <span class="nw">$T$를</span> 구하였다</span><span class="ld"></span><span>1</span></p>
+<p class="x rc h" style="--b:196.3">문제 4. 층으로 된 유전체</p>
+<p class="x rc i" style="--b:208.4">1. <span class="nw">$E_1$과</span> <span class="nw">$E_2$를</span> 각각 위쪽 층과 아래쪽 층의 균일한 전기장의 세기라 하자. 그러면</p>
+<div class="f" style="left:593pt;top:232pt"><span class="fig" data-srcpage="2" data-clip="593,232,669,258"></span></div>
+<p class="x rc en" style="--b:247.3">(20)</p>
+<p class="x rc i" style="--b:273.2">여기서 <span class="nw">$E_1d/2$와</span> <span class="nw">$E_2d/2$는</span> 각 층에서의 전압 강하이다. 옴의 법칙에 따라</p>
+<div class="f" style="left:549pt;top:286pt"><span class="fig" data-srcpage="2" data-clip="549,286,712,312"></span></div>
+<p class="x rc en" style="--b:301.2">(21)</p>
+<p class="x rc" style="--b:327.7">여기서 <span class="nw">$I_1 = I_2$는</span> 첫 번째 층과 두 번째 층을 흐르는 전류, <span class="nw">$S$는</span> 축전기 극판의 넓이이다. 두 관계식을 변끼리 나누면 다음을 얻는다.</p>
+<div class="f" style="left:609pt;top:351pt"><span class="fig" data-srcpage="2" data-clip="609,351,653,377"></span></div>
+<p class="x rc en" style="--b:366.6">(22)</p>
+<p class="x rc i" style="--b:394.0">두 식 (20)과 (22)를 연립하여 풀면 다음을 얻는다.</p>
+<div class="f" style="left:536pt;top:404pt"><span class="fig" data-srcpage="2" data-clip="536,404,725,432"></span></div>
+<p class="x rc en" style="--b:421.6">(23)</p>
+<p class="x rc" style="--b:449.0">이제 축전기 극판 위의 표면 전하 밀도를 구하자.</p>
+<div class="f" style="left:495pt;top:458pt"><span class="fig" data-srcpage="2" data-clip="495,458,766,486"></span></div>
+<p class="x rc en" style="--b:476.0">(24)</p>
+<p class="x rc i" style="--b:503.6">2. 극판의 전하와 두 층의 접촉면의 전하를 모두 포함한 축전기의 전체 전하는 0이다. 접촉면의 표면 전하 밀도를 <span class="nw">$\sigma$라</span> 하자. 전체 전하가 0이라는 조건은 다음과 같다.</p>
+<div class="f" style="left:594pt;top:541pt"><span class="fig" data-srcpage="2" data-clip="594,541,668,555"></span></div>
+<p class="x rc en" style="--b:549.8">(25)</p>
+<p class="x rc pn" style="--b:573.7">22</p>
+</div>
+
+<!-- sheet 3: booklet pages 23 (left) and 24 (right) -->
+<div class="page">
+<p class="x hd r" style="--b:31.8">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="32.6,35.2,387.0,35.9"></span></div>
+<p class="x i" style="--b:48.6">따라서</p>
+<div class="f" style="left:46pt;top:59pt"><span class="fig" data-srcpage="3" data-clip="46,59,356,89"></span></div>
+<p class="x en" style="--b:76.8">(26)</p>
+<p class="x i" style="--b:105.8">또는 <span class="nw">$\sigma$를</span> 비저항으로 나타내면</p>
+<div class="f" style="left:165pt;top:117pt"><span class="fig" data-srcpage="3" data-clip="165,117,254,148"></span></div>
+<p class="x en" style="--b:135.8">(27)</p>
+<p class="x ct" style="--b:164.2">채점 기준</p>
+<p class="x" style="--b:176.6">축전기 안의 전기장의 세기와 축전기에 걸린 전압 사이의</p>
+<p class="x k" style="--b:188.6"><span>관계를 나타내었다</span><span class="ld"></span><span>1</span></p>
+<p class="x" style="--b:201.2">유전체 층에서의 전기장의 세기 <span class="nw">$E_1$과</span> <span class="nw">$E_2$</span> 사이의</p>
+<p class="x k" style="--b:213.1"><span>관계를 구하였다</span><span class="ld"></span><span>1</span></p>
+<p class="x k" style="--b:225.7"><span>전도율이 <span class="nw">$\lambda_1$인</span> 층의 전기장의 세기 <span class="nw">$E_1$을</span> 구하였다</span><span class="ld"></span><span>1</span></p>
+<p class="x k" style="--b:238.3"><span>전도율이 <span class="nw">$\lambda_2$인</span> 층의 전기장의 세기 <span class="nw">$E_2$를</span> 구하였다</span><span class="ld"></span><span>1</span></p>
+<p class="x k" style="--b:250.8"><span>표면 전하 밀도 <span class="nw">$\sigma_1$을</span> 구하였다</span><span class="ld"></span><span>2</span></p>
+<p class="x k" style="--b:263.4"><span>표면 전하 밀도 <span class="nw">$\sigma_2$를</span> 구하였다</span><span class="ld"></span><span>2</span></p>
+<p class="x k" style="--b:275.9"><span>두 층의 접촉면의 표면 전하 밀도를 구하였다</span><span class="ld"></span><span>2</span></p>
+<p class="x h" style="--b:302.9">문제 5. 축전기의 재충전</p>
+<p class="x i" style="--b:315.4">1. 첫 번째 주기에서 축전기들이 재충전되는 과정을 살펴보자.</p>
+<div class="f" style="left:95pt;top:329pt"><span class="fig" data-srcpage="3" data-clip="95,329,325,357"></span></div>
+<div class="f" style="left:148pt;top:364pt"><span class="fig" data-srcpage="3" data-clip="148,364,272,382"></span></div>
+<div class="f" style="left:59pt;top:389pt"><span class="fig" data-srcpage="3" data-clip="59,389,360,429"></span></div>
+<div class="f" style="left:170pt;top:432pt"><span class="fig" data-srcpage="3" data-clip="170,432,249,454"></span></div>
+<div class="f" style="left:36pt;top:455pt"><span class="fig" data-srcpage="3" data-clip="36,455,384,485"></span></div>
+<div class="f" style="left:138pt;top:493pt"><span class="fig" data-srcpage="3" data-clip="138,493,281,521"></span></div>
+<div class="f" style="left:128pt;top:526pt"><span class="fig" data-srcpage="3" data-clip="128,526,293,557"></span></div>
+<p class="x pn r" style="--b:573.7">23</p>
+
+<p class="x rc hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="453.6,35.2,808.0,35.9"></span></div>
+<p class="x rc i jl" style="--b:48.7">따라서 주기가 한 번 끝날 때마다, 두 축전기 사이의 전압 차는 이전 값의</p>
+<p class="x rc jl" style="--b:69.1"><span class="nw">$\left(\dfrac{1}{A}\right)$분의</span> 1로 줄어든다. <span class="nw">$n$번의</span> 주기가 지난 뒤에는 축전기의 전압 차가</p>
+<p class="x rc" style="--b:100.4"><span class="nw">$\left(\dfrac{1}{A}\right)^{n}$분의</span> 1로 줄어든다. 문제의 조건에 따르면</p>
+<div class="f" style="left:497pt;top:121pt"><span class="fig" data-srcpage="3" data-clip="497,121,765,154"></span></div>
+<p class="x rc i" style="--b:173.6">보다시피 부등식 $C \ll C_1$, <span class="nw">$C \ll C_2$가</span> 성립해야 한다. <span class="nw">$C/C_1$과</span> <span class="nw">$C/C_2$에</span> 대한 2차 미소항을 무시하면 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:560pt;top:200pt"><span class="fig" data-srcpage="3" data-clip="560,200,703,229"></span></div>
+<p class="x rc" style="--b:242.2"><span class="nw">$C_1$과</span> <span class="nw">$C_2$의</span> 값을 대입하면 다음을 얻는다.</p>
+<p class="x rc c" style="--b:264.1">$C = 1\,\mu\mathrm{F}.$</p>
+<p class="x rc i" style="--b:286.0">2. 많은 주기가 지난 뒤에는 모든 축전기의 전압이 <span class="nw">$(U_\infty)$로</span> 같아지고, 축전기들을 병렬로 연결할 수 있다. 이때 축전기 묶음의 전하는 축전기들의 처음 전하와 같다.</p>
+<div class="f" style="left:537pt;top:323pt"><span class="fig" data-srcpage="3" data-clip="537,323,724,337"></span></div>
+<p class="x rc c d" style="--b:361.1;--a:14.9pt">$U_\infty = \dfrac{C_1U_1 + C_2U_2 + CU_2}{C_1 + C_2 + C} = \dfrac{9U_1 + 10U_2}{19} = 136\,\mathrm{V}.$</p>
+<p class="x rc i" style="--b:400.0">3.</p>
+<p class="x d" style="--b:400.0;--a:17pt;left:481pt;width:330pt;white-space:nowrap;text-align:left">$(W_\mathrm{e})_0 = \dfrac{C_1U_1^2}{2} + \dfrac{(C_2 + C)\,U_2^2}{2} = \dfrac{18\cdot(76)^2}{2}\cdot10^{-6} + \dfrac{20\cdot(190)^2}{2}\cdot10^{-6} =$</p>
+<p class="x rc" style="--b:414.6">$= 0.413\,\mathrm{J}.$</p>
+<p class="x rc c d" style="--b:443.4;--a:15.5pt">$(W_\mathrm{e})_\infty = \dfrac{(C_1 + C_2 + C)\,U_\infty^2}{2} = \dfrac{38\cdot(136)^2}{2}\cdot10^{-6} = 0.351\,\mathrm{J}.$</p>
+<p class="x rc i" style="--b:464.0">저항에서 발생하는 열에너지는 <span class="nw">$Q = \Delta W_\mathrm{e}$이다</span>.</p>
+<p class="x rc c" style="--b:486.0">$Q = \Delta W_\mathrm{e} = (W_\mathrm{e})_0 - (W_\mathrm{e})_\infty = 0.062\,\mathrm{J}.$</p>
+<p class="x rc pn" style="--b:573.7">24</p>
+</div>
+
+<!-- sheet 4: booklet page 25 (425pt wide) -->
+<div class="page" data-s="sm">
+<p class="x hd r" style="--b:31.8">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="32.6,35.2,387.0,35.9"></span></div>
+<p class="x ct" style="--b:48.6">채점 기준</p>
+<p class="x k" style="--b:60.6"><span><span class="nw">$U'_1$에</span> 대한 식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x k" style="--b:72.5"><span><span class="nw">$U'_2$에</span> 대한 식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x k" style="--b:84.5"><span><span class="nw">$\Delta U'$과</span> <span class="nw">$\Delta U$를</span> 잇는 관계식을 얻었다</span><span class="ld"></span><span>2</span></p>
+<p class="x k" style="--b:96.4"><span>축전기의 전기 용량 <span class="nw">$C$를</span> 구하였다</span><span class="ld"></span><span>2</span></p>
+<p class="x k" style="--b:108.4"><span>정상 전압에 대하여 전하 보존 법칙을 썼다</span><span class="ld"></span><span>2</span></p>
+<p class="x k" style="--b:120.4"><span>정상 전압을 구하였다</span><span class="ld"></span><span>1</span></p>
+<p class="x k" style="--b:132.2"><span>저항 <span class="nw">$R$에서</span> 발생한 열에너지를 구하였다</span><span class="ld"></span><span>1</span></p>
+<p class="x pn r" style="--b:573.7">25</p>
+</div>
+</body></html>
