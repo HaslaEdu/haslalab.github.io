@@ -1,0 +1,27 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "CPhO_2003_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "6a10280381c88d4deba5f50c5b10f59bd79863d562aee8aae0383380cfe5ee51",
+ "bytes": 3010717,
+ "pages": 7,
+ "source_file": "CPhO_2003_TS.pdf",
+ "source_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+ "source_page_range": [
+  4,
+  10
+ ],
+ "source_pages": 7,
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": false,
+ "hangul_characters": 3180,
+ "html_source": "tools/ko_reflow/cpho/2003_TS.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/cpho/review.py, 0 collisions)",
+  "overflow_or_occlusion_observed": false
+ }
+}
