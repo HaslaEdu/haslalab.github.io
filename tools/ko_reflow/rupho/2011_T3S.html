@@ -1,0 +1,262 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2011 (XLV = 제45회), 11학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic 10pt (9.963pt), baselineskip 11.955pt, rotated 2-up A4 spreads:
+   PDF page 1 = booklet page 26 alone (425x595: the RIGHT 425pt of a spread, the left half hidden by a CropBox),
+   PDF pages 2-4 = booklet pages 27|28, 29|30, 31|32 (842x595). Coordinates are those of the visible (de-rotated) sheet.
+   Page 1 text column x 36.6..391.0; spread columns x 32.6..387.0 (left) and 453.6..808.0 (right), width 354.4pt;
+   paragraph indent 14.9pt. Figures are numbered on through the booklet (그림 22-24), equations too ((28)-(39)).
+   STAMPING COPY: W/scrub/RuPhO_2011_T3S.pdf was made from a normalized copy (rotation 0, MediaBox = visible page,
+   invisible inline images of the hidden spread halves removed), so its coordinates equal the visible page.
+   Cyrillic subscripts retyped: ρ_р (ртуть) -> ρ_Hg, W_э/w_э -> W_e/w_e (as in the paper), p_снизу/p_сверху ->
+   p_아래/p_위, R_кривизны -> R_곡률, φ_пред -> φ_cr, F_л (figure 23) -> F_L.
+   Marking criteria ("채점 기준"): one block per original line, dotted leader and points at the column's right edge.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   Retyped display formulas with a fraction use .d: line-height 0, top = b - --a. */
+@page narrow{size:425pt 595pt;margin:0}   /* booklet page 26 is a 425pt-wide page */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:32.6pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.R{left:453.6pt}                           /* right half of a spread */
+.Q{left:36.6pt}                            /* booklet page 26 (PDF page 1) */
+.i{text-indent:14.9pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.en{text-align:right}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.pn{text-align:left}
+.pn.r{text-align:right}
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.cap{text-align:center;width:40pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+/* marking-criteria line: text, dotted leader, points */
+.cr{display:flex;align-items:baseline;white-space:nowrap}
+.cr .ld{flex:1;overflow:hidden;margin:0 1.5pt;direction:rtl}   /* dots flush right, cut at the left */
+.cr .ld::before{content:". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."}
+/* closing advert heading (14.3pt bold) */
+.t{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+</style></head><body>
+
+<!-- page 26 of the booklet -->
+<div class="page" style="page:narrow;width:425pt">
+<p class="x Q hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:36.6pt;top:35.3pt"><span class="fig" data-srcpage="1" data-clip="36.6,35.3,391.0,35.8"></span></div>
+<p class="x Q g" style="--b:49.6">11학년</p>
+<p class="x Q h" style="--b:75.1">문제 1. 삼선 진자</p>
+<div class="f" style="left:33pt;top:78pt"><span class="fig" data-srcpage="1" data-clip="33,78,157,307"></span></div>
+<p class="x cap" style="--b:317.3;left:74.1pt">그림 22</p>
+<p class="x i wn" style="--b:87.4;left:161.5pt;width:229.5pt">1.&ensp;고리를 축 <span class="nw">$OO'$에</span> 대하여 작은 각 <span class="nw">$\varphi$만큼</span> 돌리자(그림&nbsp;22). 그러면 모든 실이 어떤 작은 각 <span class="nw">$\alpha$만큼</span> 기울어진다. 그림에서 다음을 알 수 있다.</p>
+<p class="x c" style="--b:133.9;left:161.5pt;width:229.5pt">$L\cdot\alpha = R\cdot\varphi$, 여기서 <span class="nw">$R$은</span> 고리의 반지름이다.</p>
+<p class="x i" style="--b:156.8;left:161.5pt;width:229.5pt">이때 고리가 올라가는 높이는</p>
+<div class="f" style="left:202pt;top:167pt"><span class="fig" data-srcpage="1" data-clip="202,167,350,196"></span></div>
+<p class="x i wn" style="--b:211.8;left:161.5pt;width:229.5pt">이 위치에서 고리의 모든 점이 속력 <span class="nw">$v = R\dot\varphi$로</span> 움직인다고 하자. 그러면 고리의 전체 에너지는 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:171pt;top:247pt"><span class="fig" data-srcpage="1" data-clip="171,247,392,277"></span></div>
+<p class="x i wn" style="--b:297.7;left:161.5pt;width:229.5pt">마찰이 없이 진동할 때 전체 에너지는 보존된다. 식 (28)을 시간에 대하여 미분하면 다음을 얻는다.</p>
+<div class="f" style="left:182pt;top:335pt"><span class="fig" data-srcpage="1" data-clip="182,335,245,364"></span></div>
+<p class="x Q i" style="--b:376.7">이것은 자유 진동의 방정식이다. 단진자와 비교하면 <span class="nw">$\omega_0 = \sqrt{g/L}$로</span> 쓸 수 있는데, 이 식은 길이가 <span class="nw">$L$인</span> 단진자의 각진동수에 대한 식과 정확히 같다.</p>
+<p class="x Q i" style="--b:412.9">결국 다음을 얻는다.</p>
+<div class="f" style="left:173pt;top:425pt"><span class="fig" data-srcpage="1" data-clip="173,425,254,456"></span></div>
+<p class="x Q i" style="--b:475.1">2.&ensp;고리의 중심에 질점이 있어도 계의 운동 에너지에 대한 식은 바뀌지 않지만, 퍼텐셜 에너지에 대한 식에는 이제 질량의 합 <span class="nw">$(M + m)$이</span> 들어가야 한다. 비틀림 진동의 방정식은 다음과 같이 된다.</p>
+<div class="f" style="left:66pt;top:529pt"><span class="fig" data-srcpage="1" data-clip="66,529,171,559"></span></div>
+<p class="x" style="--b:545.4;left:189.5pt;width:65.5pt;text-align:center">따라서</p>
+<div class="f" style="left:274pt;top:524pt"><span class="fig" data-srcpage="1" data-clip="274,524,361,556"></span></div>
+<p class="x Q pn" style="--b:573.7">26</p>
+</div>
+
+<!-- pages 27 | 28 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.8">결선. 이론 시험</p>
+<p class="x R hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:32pt;top:34pt"><span class="fig" data-srcpage="2" data-clip="32,34,388,37"></span></div>
+<div class="f" style="left:453pt;top:34pt"><span class="fig" data-srcpage="2" data-clip="453,34,809,37"></span></div>
+
+<!-- booklet page 27 -->
+<p class="x i" style="--b:50.9"><span class="nw">$m = M$이면</span> 진동의 진동수는 $\sqrt2$배로 커지고, 따라서 주기는 같은 비율로 줄어든다.</p>
+<p class="x c" style="--b:75.2"><i>채점 기준</i></p>
+<p class="x" style="--b:87.7">고리의 회전각 <span class="nw">$\varphi$와</span></p>
+<p class="x cr" style="--b:99.6"><span>실이 연직선과 이루는 각 $\alpha$ 사이의 관계식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x" style="--b:112.1">고리가 올라간 높이 <span class="nw">$x$와</span></p>
+<p class="x cr" style="--b:124.1"><span>고리의 회전각 $\varphi$ 사이의 관계식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:136.4"><span>에너지 보존 법칙을 썼다</span><span class="ld"></span><span>2</span></p>
+<p class="x cr" style="--b:148.9"><span>고리의 작은 진동에 대한 미분 방정식을 얻었다</span><span class="ld"></span><span>2</span></p>
+<p class="x cr" style="--b:161.4"><span>고리의 작은 진동의 주기를 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x" style="--b:173.8">고리의 중심에 질점을 달았을 때</p>
+<p class="x cr" style="--b:185.8"><span>운동 방정식이 어떻게 바뀌는지 밝혔다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:198.2"><span>이 경우의 진동의 각진동수를 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:210.6"><span>진동 주기가 몇 배로 바뀌었는지 구했다</span><span class="ld"></span><span>1</span></p>
+
+<p class="x h" style="--b:237.0">문제 2. 솔레노이드 안의 대전 입자</p>
+<p class="x i" style="--b:249.5">1.&ensp;솔레노이드 안의 자기장 <span class="nw">$B$는</span> 다음 관계식으로 구한다.</p>
+<p class="x c" style="--b:272.4">$B = \mu_0I\cdot n = 4\pi\cdot10^{-7}\cdot1\cdot500 = 6.28\cdot10^{-4}\,\mathrm{T}.$</p>
+<div class="f" style="left:257pt;top:286pt"><span class="fig" data-srcpage="2" data-clip="257,286,388,389"></span></div>
+<p class="x ov" style="--b:354.6;left:334.6pt;--fs:6.974pt">L</p>
+<p class="x cap" style="--b:398.6;left:304pt">그림 23</p>
+<p class="x i wn" style="--b:295.7;width:218.4pt">자기장 벡터의 방향은 오른나사 법칙으로 알 수 있다. 이 경우 벡터 <span class="nw">$\vec B$는</span> 그림의 평면에 수직으로, 읽는 사람에게서 멀어지는 쪽을 향한다.</p>
+<p class="x i wn" style="--b:344.0;width:218.4pt">자기장 속에서 움직이는 대전 입자에는 로런츠 힘이 작용하며, 그 방향은 왼손 법칙으로 알 수 있다. 입자가 오른쪽으로 휘므로 입자의 전하는 <span class="nw">$q &lt; 0$이다</span>.</p>
+<p class="x i wr" style="--b:407.8;--fw:136pt;--fh:10.9pt">2.&ensp;균일한 자기장 속에서 대전 입자는 원호를 따라 움직인다(그림&nbsp;23). 이때 속도 벡터의 크기는 변하지 않는다.</p>
+<p class="x c d" style="--b:461.4;--a:14.8pt">$\dfrac{mv^2}{R} = |q|Bv,\qquad\text{또는}\qquad R = R_\text{곡률} = \dfrac{mv}{|q|B}.$</p>
+<p class="x i" style="--b:490.1">곡률 반지름은 기하학적으로 구할 수 있다. 점 <span class="nw">$A$와</span> <span class="nw">$C$는</span> 반지름이 <span class="nw">$r$과</span> <span class="nw">$R$인</span> 두 원의 교점에 있다. 대칭성에 따라 점 <span class="nw">$A$에서와</span> 마찬가지로 점 <span class="nw">$C$에서도</span> 입자의 속도 벡터는 코일의 반지름 방향을 향한다. 따라서 입자가 따라 움직이는 원의 중심(궤도의 곡률 중심)은 점 <span class="nw">$A$와</span> <span class="nw">$C$에서</span> 그은 접선들의 교점에 있다.</p>
+<p class="x pn r" style="--b:573.7">27</p>
+
+<!-- booklet page 28 -->
+<p class="x R i" style="--b:48.6">그림에서 다음을 알 수 있다.</p>
+<p class="x R c d" style="--b:78.6;--a:13.6pt">$R = r\dfrac{1 + \cos\alpha}{\sin\alpha} = \sqrt3\,r = 17.3\,\mathrm{cm}.$</p>
+<p class="x R i" style="--b:117.8">3.&ensp;입자의 속력 <span class="nw">$v$는</span> 에너지 보존 법칙으로 구한다.</p>
+<div class="f" style="left:532pt;top:129pt"><span class="fig" data-srcpage="2" data-clip="532,129,731,162"></span></div>
+<p class="x R i" style="--b:183.5">따라서</p>
+<p class="x R c d" style="--b:219.8;--a:14.8pt">$\dfrac{|q|}{m} = \dfrac{2U}{R^2B^2} = \dfrac{2\cdot10^3}{(17.3)^2\cdot10^{-4}\cdot(6.28)^2\cdot10^{-8}} \approx 1.7\cdot10^{11}\,\dfrac{\mathrm{C}}{\mathrm{kg}}.$</p>
+<p class="x R i d" style="--b:257.3;--a:14.8pt"><i>참고:</i> 전자의 경우 <span class="nw">$\dfrac{e}{m} = 1.76\cdot10^{11}\,\dfrac{\mathrm{C}}{\mathrm{kg}}$이다.</span></p>
+<p class="x R c" style="--b:272.5"><i>채점 기준</i></p>
+<p class="x R cr" style="--b:285.0"><span>솔레노이드 안의 자기장 $B$를 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x R cr" style="--b:297.6"><span>입자 전하의 부호를 밝혔다</span><span class="ld"></span><span>2</span></p>
+<p class="x R cr" style="--b:310.2"><span>회전 운동에 대한 뉴턴 방정식을 썼다</span><span class="ld"></span><span>2</span></p>
+<p class="x R cr" style="--b:322.7"><span>솔레노이드 안에서 입자 궤도의 곡률 반지름을 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x R cr" style="--b:335.3"><span>전자가 가속되는 과정에 대한 에너지 보존 법칙을 썼다</span><span class="ld"></span><span>2</span></p>
+<p class="x R cr" style="--b:347.9"><span>입자의 비전하를 구했다</span><span class="ld"></span><span>2</span></p>
+
+<p class="x R h" style="--b:374.8">문제 3. 피스톤의 안정성</p>
+<p class="x R i wn" style="--b:387.4">1.&ensp;아래 원통의 단면적을 <span class="nw">$S$라고</span> 하자. 그러면 헬륨이 차지하는 부피는 <span class="nw">$V = (L - h)\,S$이다</span>. 멘델레예프-클라페이론 방정식을 쓰면 다음과 같다.</p>
+<div class="f" style="left:557pt;top:417pt"><span class="fig" data-srcpage="2" data-clip="557,417,809,432"></span></div>
+<p class="x R i" style="--b:445.4">온도 <span class="nw">$T = const$이고</span> 넓이 <span class="nw">$S = const$이므로</span>, <span class="nw">$p\,(L - h) = const$이다</span>. 따라서 다른 평형 위치는 다음 식으로 구할 수 있다.</p>
+<div class="f" style="left:573pt;top:472pt"><span class="fig" data-srcpage="2" data-clip="573,472,689,487"></span></div>
+<p class="x R" style="--b:503.6">여기서 <span class="nw">$p_1 = p_0 + \rho_\mathrm{Hg}gh_1$,</span> <span class="nw">$p_2 = p_0 + \rho_\mathrm{Hg}gh_2$이다</span>.</p>
+<p class="x R c" style="--b:526.7">$(p_0 + \rho_\mathrm{Hg}gh_1)\,(L - h_1) = (p_0 + \rho_\mathrm{Hg}gh_2)\,(L - h_2)\,.$</p>
+<p class="x R en" style="--b:526.7">(30)</p>
+<p class="x R" style="--b:549.8">이 이차 방정식을 풀면 <span class="nw">$h_2 = 360\,\mathrm{mm}$를</span> 얻는다.</p>
+<p class="x R pn" style="--b:573.7">28</p>
+</div>
+
+<!-- pages 29 | 30 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.8">결선. 이론 시험</p>
+<p class="x R hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:32pt;top:34pt"><span class="fig" data-srcpage="3" data-clip="32,34,388,37"></span></div>
+<div class="f" style="left:453pt;top:34pt"><span class="fig" data-srcpage="3" data-clip="453,34,809,37"></span></div>
+
+<!-- booklet page 29 -->
+<p class="x i" style="--b:48.6">2.&ensp;평형 위치들이 안정한지 조사하자. 이를 위해 피스톤 아래의 압력 <span class="nw">$(p_\text{아래})$과</span> 피스톤 위의 압력 <span class="nw">$(p_\text{위})$을</span> <span class="nw">$h$에</span> 대하여 미분한 값을 비교한다. 다음 조건이 성립하면 평형은 안정하다.</p>
+<p class="x c d" style="--b:102.1;--a:13.6pt">$\dfrac{dp_\text{아래}}{dh} &gt; \dfrac{dp_\text{위}}{dh}.$</p>
+<p class="x en" style="--b:102.1">(31)</p>
+<p class="x i d" style="--b:137.2;--a:14.8pt">$p_\text{위} = p_0 + \rho_\mathrm{Hg}gh$, 따라서 <span class="nw">$\dfrac{dp_\text{위}}{dh} = \rho_\mathrm{Hg}g$.</span></p>
+<p class="x i d" style="--b:161.3;--a:14.8pt">$p_\text{아래}\,(L - h) = const$, 따라서 <span class="nw">$\dfrac{dp_\text{아래}}{dh}(L - h) - p_\text{아래} = 0$.</span></p>
+<p class="x i" style="--b:176.4">그러므로</p>
+<p class="x c d" style="--b:196.2;--a:13.6pt">$\dfrac{dp_\text{아래}}{dh} = \dfrac{p_\text{아래}}{(L - h)}.$</p>
+<p class="x i" style="--b:221.9">구한 도함수들을 식 (31)에 대입하자.</p>
+<p class="x c d" style="--b:252.0;--a:13.6pt">$\dfrac{p_\text{아래}}{(L - h)} &gt; \rho_\mathrm{Hg}g.$</p>
+<p class="x c d" style="--b:290.5;--a:13.6pt">$\dfrac{p_0 + \rho_\mathrm{Hg}gh}{(L - h)} &gt; \rho_\mathrm{Hg}g.$</p>
+<p class="x en" style="--b:290.5">(32)</p>
+<p class="x i" style="--b:315.5">따라서 다음 조건에서 평형은 안정하다.</p>
+<p class="x c d" style="--b:345.1;--a:13.6pt">$L &lt; \dfrac{p_0}{\rho_\mathrm{Hg}g} + 2h.$</p>
+<p class="x en" style="--b:345.1">(33)</p>
+<p class="x i wn" style="--b:374.2"><span class="nw">$h_1 = 380\,\mathrm{mm}$이면</span> <span class="nw">$L &lt; 1.52\,\mathrm{m}$이므로</span> 평형은 안정하고, <span class="nw">$h_2 = 360\,\mathrm{mm}$이면</span> <span class="nw">$L &lt; 1.48\,\mathrm{m}$가</span> 되어야 하므로 평형은 불안정하다.</p>
+<p class="x c" style="--b:398.5"><i>채점 기준</i></p>
+<p class="x cr" style="--b:410.9"><span>피스톤 아래의 압력과 높이 $h$ 사이의 관계를 얻었다</span><span class="ld"></span><span>2</span></p>
+<p class="x cr" style="--b:423.4"><span>두 번째 평형 위치 $h_2$를 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x cr" style="--b:435.7"><span>평형 위치의 안정성 조건(식 (5))을 얻었다</span><span class="ld"></span><span>4</span></p>
+<p class="x cr" style="--b:448.2"><span>위쪽 평형 위치의 안정성을 밝혔다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:460.6"><span>아래쪽 평형 위치의 안정성을 밝혔다</span><span class="ld"></span><span>1</span></p>
+
+<p class="x h" style="--b:486.7">문제 4. 전류가 새는 축전기</p>
+<p class="x i wn" style="--b:499.2">1.&ensp;정상 상태에서 전류의 세기 <span class="nw">$I = const$는</span> <span class="nw">$x$의</span> 값에 관계없이 같다. 매질에서 두께가 <span class="nw">$dx$인</span> 층 <span class="nw">$x$,&thinsp;$dx$를</span> 생각하자. 옴의 법칙에 따르면</p>
+<div class="f" style="left:137pt;top:524pt"><span class="fig" data-srcpage="3" data-clip="137,524,388,553"></span></div>
+<p class="x pn r" style="--b:573.7">29</p>
+
+<!-- booklet page 30 -->
+<p class="x R i" style="--b:48.6">여기서 <span class="nw">$S$는</span> 축전기 극판의 넓이이다.</p>
+<p class="x R c d" style="--b:77.3;--a:15pt">$U_0 = \displaystyle\int dU = \dfrac{2I\rho_0d}{S} = \dfrac{2I\rho_0\varepsilon_0}{C_0}\quad\Bigl(C_0 = \dfrac{\varepsilon_0S}{d}\text{이므로}\Bigr).$</p>
+<p class="x R i" style="--b:103.6">따라서 다음을 얻는다.</p>
+<div class="f" style="left:606pt;top:106pt"><span class="fig" data-srcpage="3" data-clip="606,106,809,133"></span></div>
+<p class="x R i" style="--b:155.3">2.&ensp;아래 극판 <span class="nw">$(E_1)$과</span> 위 극판 <span class="nw">$(E_2)$</span> 가까이에서 전기장의 세기를 구하자. 식 (34)와 (35)에서 다음을 얻는다.</p>
+<div class="f" style="left:523pt;top:182pt"><span class="fig" data-srcpage="3" data-clip="523,182,809,208"></span></div>
+<p class="x R i d" style="--b:237.2;--a:14.8pt"><span class="nw">$x = 0$일</span> 때 <span class="nw">$E_1 = \dfrac{C_0U_0}{2\varepsilon_0S}$,</span></p>
+<div class="f" style="left:569pt;top:256pt"><span class="fig" data-srcpage="3" data-clip="569,256,809,283"></span></div>
+<p class="x R i d" style="--b:306.0;--a:14.8pt"><span class="nw">$x = d$일</span> 때 <span class="nw">$E_2 = \dfrac{3C_0U_0}{2\varepsilon_0S}$,</span></p>
+<div class="f" style="left:555pt;top:325pt"><span class="fig" data-srcpage="3" data-clip="555,325,809,351"></span></div>
+<p class="x R i" style="--b:377.9">3.&ensp;두 극판의 전하와 두 극판 사이 매질의 전하를 모두 합한 축전기의 전체 전하량은 0이다.</p>
+<div class="f" style="left:596pt;top:403pt"><span class="fig" data-srcpage="3" data-clip="596,403,666,417"></span></div>
+<p class="x R i" style="--b:433.7">이 관계식에서 다음을 얻는다.</p>
+<div class="f" style="left:607pt;top:447pt"><span class="fig" data-srcpage="3" data-clip="607,447,809,460"></span></div>
+<p class="x R i wn" style="--b:492.4">4.&ensp;축전기에 저장된 전기 에너지는 부피 에너지 밀도 <span class="nw">$w_\mathrm{e} = \varepsilon_0E^2/2$를</span> 이용하여 구한다.</p>
+<p class="x d" style="--b:539.2;--a:15pt;left:452pt;width:100.5pt;text-align:right">$W_\mathrm{e} = \displaystyle\int w_\mathrm{e}dV =$</p>
+<div class="f" style="left:553pt;top:516pt"><span class="fig" data-srcpage="3" data-clip="553,516,780,555"></span></div>
+<p class="x R pn" style="--b:573.7">30</p>
+</div>
+
+<!-- pages 31 | 32 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.8">결선. 이론 시험</p>
+<p class="x R hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:32pt;top:34pt"><span class="fig" data-srcpage="4" data-clip="32,34,388,37"></span></div>
+<div class="f" style="left:453pt;top:34pt"><span class="fig" data-srcpage="4" data-clip="453,34,809,37"></span></div>
+
+<!-- booklet page 31 -->
+<p class="x c" style="--b:48.6"><i>채점 기준</i></p>
+<p class="x cr" style="--b:61.0"><span>두께가 $dx$인 층에서의 전압 강하 $dU$에 대한 식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:73.4"><span>축전기에 걸린 전체 전압에 대한 식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:85.8"><span>전류의 세기에 대한 식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x" style="--b:98.2">전기장의 세기가 좌표에 따라 어떻게 변하는지</p>
+<p class="x cr" style="--b:110.2"><span>나타내는 식 $E(x)$를 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:122.5"><span>아래 극판의 전하량에 대한 식을 유도했다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:135.0"><span>위 극판의 전하량에 대한 식을 유도했다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:147.4"><span>전하량의 합에 대한 식을 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:159.8"><span>축전기 극판 사이에 있는 전하량에 대한 식을 유도했다</span><span class="ld"></span><span>1</span></p>
+<p class="x" style="--b:172.2">부피 에너지 밀도를 이용하여</p>
+<p class="x cr" style="--b:184.2"><span>축전기의 에너지에 대한 식을 얻었다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:196.6"><span>축전기의 에너지 값을 구했다</span><span class="ld"></span><span>1</span></p>
+
+<p class="x h" style="--b:222.7">문제 5. 평판 광도파로</p>
+<div class="f" style="left:292pt;top:229pt"><span class="fig" data-srcpage="4" data-clip="292,229,390,299"></span></div>
+<p class="x cap" style="--b:311.0;left:319.5pt">그림 24</p>
+<p class="x i" style="--b:235.1;width:250pt">광원에서 나온 빛이 판의 왼쪽 끝면에서 굴절하는 것을 생각하자(그림&nbsp;24). 왼쪽 끝면에서의 최대 굴절각 <span class="nw">$\beta_{max}$는</span> 입사각 <span class="nw">$\alpha = 90^\circ$에</span> 해당한다.</p>
+<div class="f" style="left:125pt;top:283pt"><span class="fig" data-srcpage="4" data-clip="125,283,189,308"></span></div>
+<p class="x i" style="--b:324.0">옆면에서의 최소 입사각은 다음과 같다.</p>
+<div class="f" style="left:165pt;top:335pt"><span class="fig" data-srcpage="4" data-clip="165,335,254,353"></span></div>
+<p class="x i" style="--b:369.6">판 안에서 빛이 지나가는 길은 <span class="nw">$\varphi_{min}$과</span> <span class="nw">$\varphi_\mathrm{cr}$(전반사의</span> 임계각) 사이의 대소 관계에 따라 달라진다.</p>
+<p class="x d" style="--b:413.3;--a:10.5pt"><b>경우 1</b>&emsp;$\varphi_{min} \geqslant \varphi_\mathrm{cr}$, 또는 <span class="nw">$\sin\varphi_{min} \geqslant \sin\varphi_\mathrm{cr} = \frac1n$.</span></p>
+<p class="x i wn" style="--b:425.8">이 경우에는 판의 옆면에 닿는 모든 빛이 전반사되므로, 판 밖으로 나가는 빛은 하나도 없다.</p>
+<div class="f" style="left:69pt;top:457pt"><span class="fig" data-srcpage="4" data-clip="69,457,351,491"></span></div>
+<p class="x i" style="--b:503.9">마주 보는 두 면에서 이웃한 두 반사 지점 사이의 최소 거리 <span class="nw">$(\Delta l)$은</span> 다음과 같다.</p>
+<div class="f" style="left:63pt;top:525pt"><span class="fig" data-srcpage="4" data-clip="63,525,357,556"></span></div>
+<p class="x pn r" style="--b:573.7">31</p>
+
+<!-- booklet page 32 -->
+<p class="x R i" style="--b:49.2">최대 반사 횟수 <span class="nw">$N_1 = (N_1)_{max}$은</span> 다음과 같다.</p>
+<div class="f" style="left:535pt;top:62pt"><span class="fig" data-srcpage="4" data-clip="535,62,727,95"></span></div>
+<p class="x R" style="--b:111.5">항 $1/2$이 생기는 까닭은, 빛이 첫 번째 반사를 하기 전에 관을 따라 <span class="nw">$\Delta l/2$의</span> 거리를 지나기 때문이다.</p>
+<p class="x R i" style="--b:135.5"><span class="nw">$n = n_1 = 1.73$이면</span> <span class="nw">$N_1 = 71$이다</span>.</p>
+<p class="x R d" style="--b:171.7;--a:14.8pt"><b>경우 2</b>&emsp;$\varphi_{min} \leqslant \varphi_\mathrm{cr}$, 또는 <span class="nw">$\sin\varphi_{min} \leqslant \sin\varphi_\mathrm{cr} = \dfrac1n$;&ensp;$\dfrac1n\sqrt{n^2 - 1} \leqslant \dfrac1n$.</span></p>
+<p class="x R i" style="--b:186.5">이 경우에는</p>
+<p class="x R c d" style="--b:203.3;--a:13.7pt">$(\Delta l)_{min} = H\,\mathrm{tg}\,\varphi_\mathrm{cr} = \dfrac{H}{\sqrt{n^2 - 1}}.$</p>
+<p class="x R i" style="--b:226.8"><span class="nw">$\varphi_{min}$에서</span> <span class="nw">$\varphi_\mathrm{cr}$까지의</span> 각으로 옆면에 입사하는 빛의 일부는 부분 반사만 하므로 판의 오른쪽 끝면까지 이르지 못한다.</p>
+<p class="x R i" style="--b:262.8">최대 반사 횟수 <span class="nw">$N_2 = (N_2)_{max}$는</span> 다음과 같다.</p>
+<div class="f" style="left:535pt;top:278pt"><span class="fig" data-srcpage="4" data-clip="535,278,726,305"></span></div>
+<p class="x R" style="--b:324.2"><span class="nw">$n = n_2 = 1.3$이면</span>&ensp;<span class="nw">$N_2 = 100\cdot0.83 = 83$이다.</span></p>
+<p class="x R c" style="--b:336.4"><i>채점 기준</i></p>
+<p class="x R cr" style="--b:348.4"><span>전반사각에 대한 식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x R" style="--b:360.5">어느 경우에 빛의 일부가 판의 옆면으로</p>
+<p class="x R cr" style="--b:372.4"><span>빠져나가는지 밝혔다</span><span class="ld"></span><span>2</span></p>
+<p class="x R" style="--b:384.5">첫 번째 경우에 어떤 빛이 가장 많이</p>
+<p class="x R cr" style="--b:396.4"><span>반사되는지 밝혔다</span><span class="ld"></span><span>1</span></p>
+<p class="x R" style="--b:408.5">두 번째 경우에 어떤 빛이 가장 많이</p>
+<p class="x R cr" style="--b:420.5"><span>반사되는지 밝혔다</span><span class="ld"></span><span>1</span></p>
+<p class="x R cr" style="--b:432.5"><span>첫 번째 경우에 $(\Delta l)_{min}$의 식을 얻었다</span><span class="ld"></span><span>1</span></p>
+<p class="x R cr" style="--b:444.5"><span>두 번째 경우에 $(\Delta l)_{min}$의 식을 얻었다</span><span class="ld"></span><span>1</span></p>
+<p class="x R cr" style="--b:456.6"><span>첫 번째 경우에 $N_{max}$의 답을 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x R cr" style="--b:468.6"><span>두 번째 경우에 $N_{max}$의 답을 구했다</span><span class="ld"></span><span>1</span></p>
+<div class="f" style="left:453pt;top:510pt"><span class="fig" data-srcpage="4" data-clip="453,510,809,513"></span></div>
+<p class="x R t" style="--b:549.8">«피즈테흐-크니가» 서점</p>
+<p class="x R pn" style="--b:573.7">32</p>
+</div>
+</body></html>

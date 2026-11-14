@@ -1,0 +1,116 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2011 (XLV = 제45회), 10학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic 10pt (= 9.963 PostScript pt), printed as rotated 2-up A4 spreads:
+   sheet 1 = 425x595 (booklet page 6 only: the right half of a spread, the rest hidden by a CropBox),
+   sheet 2 = 842x595 (booklet pages 7 | 8). Figures are numbered on through the booklet (그림 5-10).
+   Coordinates are those of the visible (de-rotated) sheet.
+   Sheet 1 text column x 36.6..391.0; sheet 2 left page column x 32.6..387.0, right page column x 453.6..808.0
+   (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt. Booklet page numbers on baseline 573.7.
+   The first sheet has its own size through a named @page rule (.page[data-s="sm"]).
+   STAMPING COPY: scrub/<file>.pdf was re-made from a copy whose MediaBox = the original CropBox (so sheet 1 is the
+   visible 425x595 page in the same coordinates), with the inline images of the hidden spread half removed
+   (render pixel-identical) before scrub.py; the scrub copy has 0 new dark pixels against the original.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). */
+@page sm{size:425pt 595pt;margin:0}
+.page[data-s="sm"]{page:sm;width:425pt;height:595pt}
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:32.6pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.q{left:36.6pt}                            /* sheet 1 (booklet page 6) column */
+.rc{left:453.6pt}                          /* right page of the spread (+421pt) */
+.i{text-indent:14.9pt}                     /* first-line paragraph indent */
+.c{text-align:center}
+/* running header (italic, baseline 31.8) above the stamped rule (35.3..35.8) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.7) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "10학년" (bold 12pt) and problem titles (bold 10pt), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: a float reserves the figure's room for the first N lines
+   --fw = room taken by the figure, --fh = N x 11.955pt - 1pt */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.jl{text-align-last:justify}               /* paragraph continued on the next page */
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where a Russian word was removed */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- sheet 1: booklet page 6 (425pt wide) -->
+<div class="page" data-s="sm">
+<p class="x q hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:36.6pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="36.6,35.2,391.0,35.9"></span></div>
+<p class="x q g" style="--b:49.6">10학년</p>
+<p class="x q h" style="--b:71.2">문제 1. 물이 든 그릇 속의 공</p>
+<div class="f" style="left:36pt;top:77pt"><span class="fig" data-srcpage="1" data-clip="36,77,152,267"></span></div>
+<p class="x cap" style="--b:277.1;left:74.1pt">그림 5</p>
+<p class="x i wn" style="--b:83.2;left:161.5pt;width:229.5pt">나무 공과 금속 공이 실로 서로 연결되어 있고, 또 하나의 실로 물이 든 그릇의 바닥에 매여 있다. 그릇은 연직 축 <span class="nw">$OO'$을</span> 중심으로 일정한 각속도로 회전한다(그림&nbsp;5).</p>
+<p class="x i wn" style="--b:130.9;left:161.5pt;width:229.5pt">그 결과 두 공은 완전히 물속에 잠긴 채 그림과 같은 위치에 자리를 잡았다. 나무 공(1)은 금속 공(2)보다 회전축으로부터 세 배 가까운 거리에 있다. 위쪽 실은 연직선과 각 <span class="nw">$\alpha$($\sin\alpha = 4/5$)를</span> 이룬다. 두 실 사이의 각은 <span class="nw">$90^\circ$이다</span>. 공의 크기는 공에서 회전축까지의 거리에 비해 작다.</p>
+<p class="x i wn" style="--b:229.0;left:161.5pt;width:229.5pt">3. 나무 공에 작용하는 부력은 연직선과 어떤 각을 이루는 방향으로 작용하는가? 그 이유를 설명하여라.</p>
+<p class="x i wn" style="--b:267.2;left:161.5pt;width:229.5pt">4. 위쪽 실과 아래쪽 실의 장력의 비를 구하여라.</p>
+<p class="x q h" style="--b:300.8">문제 2. 열기관</p>
+<p class="x q i" style="--b:312.8">질량 $m = 9\cdot10^8\,\mathrm{kg}$($100\times100\times100\,\mathrm{m^3}$인 정육면체)이고 온도가 <span class="nw">$T_2 = 273\,\mathrm{K}$인</span> 거대한 빙산이, 물의 온도가 <span class="nw">$T_1 = 295\,\mathrm{K}$인</span> 멕시코 만류를 따라 떠내려가고 있다.</p>
+<p class="x q i" style="--b:351.1">1. 빙산과 따뜻한 물 사이의 직접적인 열 교환을 무시할 때, 멕시코 만류를 가열기로, 빙산을 냉각기로 사용하는 열기관이 빙산 전체가 다 녹을 때까지 할 수 있는 최대 일을 구하여라(그림&nbsp;6).</p>
+<div class="f" style="left:68pt;top:402pt"><span class="fig" data-srcpage="1" data-clip="68,402,359,510"></span></div>
+<p class="x ov c" style="--b:434.0;left:77.7pt;width:60pt">멕시코 만류</p>
+<p class="x ov c" style="--b:443.6;left:189.5pt;width:50pt">열기관</p>
+<p class="x ov c" style="--b:434.0;left:294.1pt;width:50pt">빙산</p>
+<p class="x cap" style="--b:520.3;left:193.7pt">그림 6</p>
+<p class="x q i jl" style="--b:538.0">2. 첫 번째 문항에서 구한 크기의 일을, 멕시코 만류의 열에너지를 보일러로 “퍼 올리는” 열펌프에 사용한다고 하자. 보일러의 온도가 <span class="nw">$T_0 = 373\,\mathrm{K}$일</span> 때</p>
+<p class="x q pn" style="--b:573.7">6</p>
+</div>
+
+<!-- sheet 2: booklet pages 7 (left) and 8 (right) -->
+<div class="page">
+<p class="x hd r" style="--b:31.8">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="32.6,35.2,387.0,35.9"></span></div>
+<p class="x" style="--b:48.7">(그림&nbsp;7), 보일러에서 물을 얼마나 증발시킬 수 있는지 구하여라.</p>
+<div class="f" style="left:64pt;top:72pt"><span class="fig" data-srcpage="2" data-clip="64,72,355,180"></span></div>
+<p class="x ov c" style="--b:133.7;left:73.7pt;width:60pt">멕시코 만류</p>
+<p class="x ov c" style="--b:143.3;left:185.5pt;width:50pt">열펌프</p>
+<p class="x ov c" style="--b:133.7;left:285.6pt;width:50pt">보일러</p>
+<p class="x cap" style="--b:191.9;left:189.7pt">그림 7</p>
+<p class="x i" style="--b:214.8">얼음의 융해열은 $q = 3.35\cdot10^5\,\mathrm{J/kg}$, 물의 기화열은 <span class="nw">$\lambda = 2.26\cdot10^6\,\mathrm{J/kg}$이다</span>.</p>
+<p class="x h" style="--b:252.4">문제 3. 단열 과정</p>
+<div class="f" style="left:306pt;top:255pt"><span class="fig" data-srcpage="2" data-clip="306,255,391,345.5"></span></div>
+<p class="x cap" style="--b:357.6;left:326.9pt">그림 8</p>
+<p class="x i wn" style="--b:264.7;width:264.4pt">부피가 <span class="nw">$2V_0$인</span> 원통형 그릇 안에 무거운 피스톤이 있고, 피스톤 아래에는 온도 $T_0$, 압력 <span class="nw">$P_0/2$인</span> 단원자 이상 기체가 부피 <span class="nw">$V_0$을</span> 차지하고 있다(그림&nbsp;8). 피스톤 위는 진공이다. 그릇 아래쪽에는 밸브로 막힌 작은 구멍이 있다. 그릇 바깥 공간은 압력 $P_0$, 온도 <span class="nw">$T_0$인</span> 같은 기체로 채워져 있다. 그릇은 단열되어 있다.</p>
+<p class="x i wr" style="--b:348.7;--fw:90pt;--fh:22.9pt">밸브를 조금 열어 피스톤이 천천히 위로 올라가게 하고, 그릇 안과 밖의 압력이 같아지면 밸브를 닫는다. 밸브를 닫은 뒤 기체의 온도를 구하여라.</p>
+<p class="x h" style="--b:410.3">문제 4. 층으로 된 유전체</p>
+<div class="f" style="left:250pt;top:414pt"><span class="fig" data-srcpage="2" data-clip="250,414,384,478"></span></div>
+<p class="x cap" style="--b:487.6;left:298.9pt">그림 9</p>
+<p class="x i wn" style="--b:422.5;width:208.4pt">극판 사이의 거리가 <span class="nw">$d$인</span> 평행판 축전기가 기전력이 <span class="nw">$\mathscr{E}$인</span> 직류 전원에 연결되어 있다(그림&nbsp;9).</p>
+<p class="x i wr" style="--b:458.8;--fw:146pt;--fh:46.8pt">축전기 안은 전도율이 $\lambda_1$, <span class="nw">$\lambda_2$로</span> 서로 다른, 전류가 약하게 흐르는 두 매질 층으로 채워져 있다. 두 층은 서로 전기적으로 접촉해 있고 축전기 극판과도 접촉해 있다. 각 층의 두께는 <span class="nw">$d/2$이고</span>, 두 층의 유전율은 <span class="nw">$\varepsilon_1 = \varepsilon_2 = 1$이다</span>. 다음을 구하여라.</p>
+<p class="x i" style="--b:534.2">1. 축전기 극판 위의 표면 전하 밀도 <span class="nw">$\sigma_1$과</span> $\sigma_2$.</p>
+<p class="x i" style="--b:549.8">2. 두 층의 접촉면에 있는 표면 전하 밀도 $\sigma$.</p>
+<p class="x pn r" style="--b:573.7">7</p>
+
+<p class="x rc hd" style="--b:31.8">제45회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="453.6,35.2,808.0,35.9"></span></div>
+<p class="x rc i" style="--b:48.7"><i>참고:</i> 전도율은 비저항의 역수인 양이다: $\lambda = 1/\rho$.</p>
+<p class="x rc h" style="--b:84.6">문제 5. 축전기의 재충전</p>
+<div class="f" style="left:454pt;top:88pt"><span class="fig" data-srcpage="2" data-clip="454,88,550,172"></span></div>
+<p class="x cap" style="--b:185.5;left:481.1pt">그림 10</p>
+<p class="x i wn" style="--b:96.5;left:558.5pt;width:249.5pt">전기 용량이 <span class="nw">$C_1 = 18\,\mu\mathrm{F}$와</span> <span class="nw">$C_2 = 19\,\mu\mathrm{F}$인</span> 충전된 축전기 두 개가 있다. 두 축전기의 전압은 각각 <span class="nw">$U_1 = 76\,\mathrm{V}$와</span> <span class="nw">$U_2 = 190\,\mathrm{V}$이다</span>. 전기 용량을 모르는 세 번째 축전기 <span class="nw">$C$가</span> 축전기 <span class="nw">$C_2$에</span> 연결되어 있다(그림&nbsp;10). 스위치 <span class="nw">$K$를</span> 오른쪽 위치에서 왼쪽 위치로 바꾸고, 축전기들의 재충전이 끝나면 다시 처음 위치로 되돌린다.</p>
+<p class="x rc i wl" style="--b:192.1;--fw:105pt;--fh:10.9pt">이러한 주기를 44번 반복한 뒤 전압 차 <span class="nw">$(U_2 - U_1)_{44}$는</span> 처음 전압 차 <span class="nw">$(U_2 - U_1)_0$의</span> <span class="nw">$1\%$가</span> 되었다.</p>
+<p class="x rc i" style="--b:219.1">1. 축전기 <span class="nw">$C$의</span> 전기 용량은 얼마인가?</p>
+<p class="x rc i" style="--b:234.0">2. 많은 주기가 지난 뒤 축전기들에 걸리게 되는 전압 <span class="nw">$U_\infty$는</span> 얼마인가?</p>
+<p class="x rc i" style="--b:260.9">3. 많은 주기가 지나는 동안 저항 <span class="nw">$R$에서</span> 발생하는 열에너지는 얼마인가?</p>
+<p class="x rc pn" style="--b:573.7">8</p>
+</div>
+</body></html>

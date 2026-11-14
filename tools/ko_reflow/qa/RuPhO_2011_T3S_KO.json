@@ -1,0 +1,29 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "RuPhO_2011_T3S_KO.pdf",
+ "status": "READY",
+ "sha256": "945e3d2160e270060a46c99f6bdc505ff5ee9513761afd12435304be54364057",
+ "bytes": 301512,
+ "pages": 4,
+ "source_file": "RuPhO_2011_T3S.pdf",
+ "source_sha256": "e7c05113d8b7186b489cf40bae5970964474f25058a71c23b10a6fee04253988",
+ "source_page_range": [
+  1,
+  4
+ ],
+ "source_pages": 4,
+ "source_language": "ru",
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 2157,
+ "cyrillic_characters": 0,
+ "html_source": "tools/ko_reflow/rupho/2011_T3S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/check.py and qa side-by-side images; every flag confirmed by zoom)",
+  "overflow_or_occlusion_observed": false
+ }
+}
