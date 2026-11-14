@@ -1,0 +1,190 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2012 (XLVI = 제46회), 11학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), booklet pages 20-26, /Rotate 90:
+     PDF page 1 = a strip 425x228pt cut (CropBox) from the top of booklet page 20 (header, grade line, start of problem 1);
+     PDF pages 2-4 = 2-up A4 spreads 842x595pt, booklet pages 21|22, 23|24, 25|26.
+   The coordinates below are those of the VISIBLE page (pymupdf remove_rotation() mishandles the CropBox offset of
+   these files, so they were read from a normalized copy: rotation 0, MediaBox = visible page, pixel-identical render).
+   Strip page 20: column x 36.6..391.0 (header and its rule x 42.7..397.1, as printed); page number on baseline 206.7.
+   Spreads: left (odd) page column x 32.6..387.0, header "결선. 이론 시험" and page number at the RIGHT;
+            right (even) page column x 453.6..808.0, header "제46회 ..." and page number at the LEFT.
+   Width 354.4pt; paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt; page numbers on baseline 573.7.
+   Figures numbered on through the booklet (그림 29-31). Cyrillic subscript: ЭДС индукции E_и -> E_ind.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction.
+   A line holding a tall inline fraction (\dfrac) grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~13.6pt for a \dfrac with capital/ascender numerator). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+/* PDF page 1 is a 425x228pt strip: a named page of its own size */
+@page strip{size:425pt 228pt;margin:0}
+#strip{page:strip;width:425pt;height:228pt}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:32.6pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.rt{left:453.6pt}                          /* right half of a spread (even page) */
+.st{left:36.6pt}                           /* strip page 20 */
+.i{text-indent:14.9pt}                     /* first-line paragraph indent; continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* running header (italic, baseline 31.7; 51.5 on the strip) above the stamped rule */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "11학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: --fw = room taken by the figure, --fh = N x 11.955pt - 1pt; .wl = figure on the LEFT */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+/* .wn: allow breaks between Hangul syllables where keep-all + long inline formulas would leave wide gaps */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean/Latin label put back where scrub.py removed a Russian word */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- PDF page 1: strip from the top of booklet page 20 -->
+<div class="page" id="strip">
+<p class="x hd" style="--b:51.5;left:42.7pt">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:42.7pt;top:55.0pt"><span class="fig" data-srcpage="1" data-clip="42.7,55.0,397.1,55.5"></span></div>
+<p class="x st g" style="--b:92.8">11학년</p>
+<p class="x st h" style="--b:117.5">문제 1. 밀가루 봉지</p>
+<p class="x st i" style="--b:129.6">봉지의 질량을 <span class="nw">$m$이라고</span> 하자.</p>
+<p class="x st i" style="--b:141.7">충돌 직전 봉지의 속력은 <span class="nw">$v = \sqrt{2gh}$이다</span>. 충돌은 완전 비탄성 충돌이다. 따라서 충돌 직후 봉지와 접시의 속도는 같으며 그 크기는 다음과 같다.</p>
+<div class="f" style="left:181pt;top:165pt"><span class="fig" data-srcpage="1" data-clip="181,165,246,190"></span></div>
+<p class="x st pn" style="--b:206.7">20</p>
+</div>
+
+<!-- PDF page 2: booklet pages 21 | 22 -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x" style="--b:48.7">충돌 전에는 용수철에 접시만 매달려 있었으므로, 용수철이 늘어난 길이는 다음과 같았다.</p>
+<div class="f" style="left:187pt;top:62pt"><span class="fig" data-srcpage="2" data-clip="187,62,233,87"></span></div>
+<p class="x" style="--b:97.4">바늘이 가장 많이 움직인 순간에 용수철이 늘어난 길이는 다음과 같다.</p>
+<div class="f" style="left:170pt;top:108pt"><span class="fig" data-srcpage="2" data-clip="170,108,249,134"></span></div>
+<p class="x i" style="--b:147.2">충돌 직후의 순간과 바늘이 가장 많이 움직인 순간에 대하여 에너지 보존 법칙을 쓰자.</p>
+<div class="f" style="left:102pt;top:169pt"><span class="fig" data-srcpage="2" data-clip="102,169,319,197"></span></div>
+<p class="x i" style="--b:210.3">평형 상태에 이르고 나면 저울은 밀가루가 든 봉지의 질량을 가리키게 된다. 따라서 <span class="nw">$m = m_0$이다</span>.</p>
+<div class="f" style="left:33pt;top:242pt"><span class="fig" data-srcpage="2" data-clip="33,242,388,279"></span></div>
+<p class="x i" style="--b:292.4">정리하면 다음을 얻는다.</p>
+<p class="x c d" style="--b:320.2;--a:13.6pt">$M = \dfrac{2km_0^2h}{m_1g(m_1 - 2m_0)} - m_0 = 2\,\mathrm{kg}.$</p>
+<p class="x h" style="--b:354.4">문제 2. 자기 현상</p>
+<div class="f" style="left:291pt;top:360pt"><span class="fig" data-srcpage="2" data-clip="291,360,393,436"></span></div>
+<p class="x cap" style="--b:445.3;left:316.9pt">그림 29</p>
+<p class="x i wr" style="--b:366.3;--fw:109.8pt;--fh:94.6pt">막대와 레일로 이루어진 회로 <span class="nw">$ABCD$의</span> 넓이가 변하면 유도 기전력이 생겨 계에 전류가 흐른다(그림&nbsp;29). 앙페르 힘은 막대 <span class="nw">$AB$를</span> 감속시키고 <span class="nw">$CD$를</span> 가속시키도록 작용한다. 두 속도 $v_{AB}$와 <span class="nw">$v_{CD}$가</span> 같아지면 회로 <span class="nw">$ABCD$를</span> 지나는 자기 선속이 더 이상 변하지 않으므로, 유도 기전력과 유도 전류가 사라지고 그와 함께 앙페르 힘도 사라진다. 이 순간부터 두 막대는 크기와 방향이 같은 속도로 움직인다.</p>
+<p class="x i" style="--b:485.9">짧은 시간 <span class="nw">$\Delta t$</span> 동안 회로의 넓이 변화는 다음과 같다.</p>
+<div class="f" style="left:158pt;top:499pt"><span class="fig" data-srcpage="2" data-clip="158,499,262,515"></span></div>
+<p class="x" style="--b:528.5">자기 선속의 변화는 다음과 같다.</p>
+<div class="f" style="left:135pt;top:541pt"><span class="fig" data-srcpage="2" data-clip="135,541,284,558"></span></div>
+<p class="x pn r" style="--b:573.7">21</p>
+
+<p class="x rt hd" style="--b:31.7">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="453.6,35.2,808.0,35.7"></span></div>
+<p class="x rt" style="--b:48.5">유도 기전력은 다음과 같다.</p>
+<p class="x rt c d" style="--b:68.0;--a:13.6pt">$|\mathscr{E}_\mathrm{ind}| = \dfrac{\Delta\Phi}{\Delta t} = B(v_{AB} - v_{CD})l,$</p>
+<p class="x rt" style="--b:86.7">회로에 흐르는 전류는 다음과 같다.</p>
+<p class="x rt c d" style="--b:106.1;--a:13.6pt">$I_{AB} = I_{CD} = \dfrac{|\mathscr{E}_\mathrm{ind}|}{2R} = \dfrac{B(v_{AB} - v_{CD})l}{2R},$</p>
+<p class="x rt" style="--b:127.5">앙페르 힘은 다음과 같다.</p>
+<div class="f" style="left:557pt;top:129pt"><span class="fig" data-srcpage="2" data-clip="557,129,705,157"></span></div>
+<p class="x rt" style="--b:167.9">막대들의 가속도는 방향이 서로 반대이고 크기는 다음과 같다.</p>
+<div class="f" style="left:580pt;top:179pt"><span class="fig" data-srcpage="2" data-clip="580,179,681,207"></span></div>
+<p class="x rt" style="--b:222.2">가속도의 방향을 고려하면 다음과 같다.</p>
+<div class="f" style="left:567pt;top:233pt"><span class="fig" data-srcpage="2" data-clip="567,233,696,262"></span></div>
+<div class="f" style="left:570pt;top:268pt"><span class="fig" data-srcpage="2" data-clip="570,268,692,297"></span></div>
+<p class="x rt" style="--b:308.2">두 식의 양변에 <span class="nw">$\Delta t$를</span> 곱하고, <span class="nw">$(v_{AB} - v_{CD})\Delta t = \Delta d$가</span> 막대 사이 거리의 변화라는 것을 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:587pt;top:331pt"><span class="fig" data-srcpage="2" data-clip="587,331,675,360"></span></div>
+<div class="f" style="left:590pt;top:366pt"><span class="fig" data-srcpage="2" data-clip="590,366,671,395"></span></div>
+<p class="x rt" style="--b:405.5">그러면 다음과 같다.</p>
+<div class="f" style="left:584pt;top:407pt"><span class="fig" data-srcpage="2" data-clip="584,407,677,435"></span></div>
+<div class="f" style="left:595pt;top:438pt"><span class="fig" data-srcpage="2" data-clip="595,438,667,466"></span></div>
+<p class="x rt" style="--b:477.2">두 속도가 같아질 때</p>
+<div class="f" style="left:575pt;top:488pt"><span class="fig" data-srcpage="2" data-clip="575,488,686,517"></span></div>
+<p class="x rt" style="--b:528.8">이고, 따라서</p>
+<div class="f" style="left:602pt;top:532pt"><span class="fig" data-srcpage="2" data-clip="602,532,660,558"></span></div>
+<p class="x rt pn" style="--b:573.7">22</p>
+</div>
+
+<!-- PDF page 3: booklet pages 23 | 24 -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x" style="--b:48.5">최종적으로 정해지는 막대 사이의 거리는 다음과 같다.</p>
+<div class="f" style="left:153pt;top:60pt"><span class="fig" data-srcpage="3" data-clip="153,60,267,86"></span></div>
+<p class="x" style="--b:99.7">이때 두 막대의 속도는 다음과 같다.</p>
+<div class="f" style="left:167pt;top:103pt"><span class="fig" data-srcpage="3" data-clip="167,103,253,116"></span></div>
+<p class="x" style="--b:128.8">계에서 발생하는 열은 다음과 같다.</p>
+<div class="f" style="left:141pt;top:138pt"><span class="fig" data-srcpage="3" data-clip="141,138,278,166"></span></div>
+<p class="x h" style="--b:190.6">문제 3. 전기장 속의 쌍극자</p>
+<p class="x i" style="--b:202.6">전기장이 쌍극자에 작용하는 힘은 전하 $+q$와 <span class="nw">$-q$에</span> 작용하는 힘의 합이다. 쌍극자 중심의 좌표를 <span class="nw">$x$라고</span> 하면 다음과 같다.</p>
+<div class="f" style="left:83pt;top:237pt"><span class="fig" data-srcpage="3" data-clip="83,237,337,262"></span></div>
+<p class="x" style="--b:275.5">쌍극자에 대한 뉴턴 제2법칙을 쓰자.</p>
+<div class="f" style="left:156pt;top:286pt"><span class="fig" data-srcpage="3" data-clip="156,286,264,311"></span></div>
+<p class="x" style="--b:324.4">얻은 식은 각진동수가 <span class="nw">$\omega$인</span> 조화 진동의 방정식 꼴이다.</p>
+<div class="f" style="left:179pt;top:337pt"><span class="fig" data-srcpage="3" data-clip="179,337,241,364"></span></div>
+<p class="x" style="--b:374.8">그 해는 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:100pt;top:387pt"><span class="fig" data-srcpage="3" data-clip="100,387,319,402"></span></div>
+<p class="x" style="--b:416.3">상수 $A$와 <span class="nw">$\omega$는</span> 초기 조건으로부터 구한다.</p>
+<div class="f" style="left:99pt;top:425pt"><span class="fig" data-srcpage="3" data-clip="99,425,323,460.8"></span></div>
+<p class="x" style="--b:469.3">운동 방정식을 알면 쌍극자의 최대 속력을 구할 수 있다.</p>
+<div class="f" style="left:147pt;top:480pt"><span class="fig" data-srcpage="3" data-clip="147,480,273,508"></span></div>
+<p class="x" style="--b:522.1">쌍극자가 전기장 영역을 떠나는 순간의 진동 위상은 삼각법으로 구한다.</p>
+<div class="f" style="left:164pt;top:533pt"><span class="fig" data-srcpage="3" data-clip="164,533,256,558"></span></div>
+<p class="x pn r" style="--b:573.7">23</p>
+
+<p class="x rt hd" style="--b:31.7">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="453.6,35.2,808.0,35.7"></span></div>
+<p class="x rt" style="--b:48.7">처음 위상과 나중 위상을 알면 통과 시간을 구할 수 있다.</p>
+<div class="f" style="left:553pt;top:60pt"><span class="fig" data-srcpage="3" data-clip="553,60,709,85"></span></div>
+<p class="x rt h" style="--b:112.9">문제 4. 선형 과정</p>
+<div class="f" style="left:454pt;top:117pt"><span class="fig" data-srcpage="3" data-clip="454,117,571,211"></span></div>
+<p class="x rt cap" style="--b:219.9;left:493.1pt">그림 30</p>
+<p class="x rt i wl wn" style="--b:125.0;--fw:128.9pt;--fh:112pt">선형 과정 <span class="nw">$BD$의</span> 방정식을 $p(V) = p_D + k(V - V_D)$의 꼴로 쓰자. 여기서 $p_D$와 <span class="nw">$V_D$는</span> 각각 상태 <span class="nw">$D$에서의</span> 기체의 압력과 부피이다. 따라서 $k = -\dfrac{p_D}{V_0 - V_D}$이고, 여기서 <span class="nw">$V_0$은</span> 직선 <span class="nw">$BD$와</span> 부피 축의 교점이다. 과정은 이 직선에 단열선이 접하는 점 <span class="nw">$D$에서</span> 끝난다(그때까지 열은 공급된다)(그림&nbsp;30). 단열선과 직선이 접할 조건은 점 <span class="nw">$D$에서</span> 두 기울기가 같다는 것이다.</p>
+<p class="x rt" style="--b:243.7">단열선의 방정식은 다음과 같다.</p>
+<div class="f" style="left:597pt;top:243pt"><span class="fig" data-srcpage="3" data-clip="597,243,664,260"></span></div>
+<p class="x rt" style="--b:274.5">단열선의 방정식을 미분하여 점 <span class="nw">$D$에서의</span> 기울기를 구하자.</p>
+<div class="f" style="left:603pt;top:286pt"><span class="fig" data-srcpage="3" data-clip="603,286,658,314"></span></div>
+<div class="f" style="left:564pt;top:316pt"><span class="fig" data-srcpage="3" data-clip="564,316,697,346"></span></div>
+<p class="x rt" style="--b:358.7"><span class="nw">$p'(V_D) = k$로</span> 놓으면, <span class="nw">$\gamma = 4/3$</span>(다원자 기체)일 때 <span class="nw">$V_D = 4V_0/7$을</span> 얻는다.</p>
+<p class="x rt i" style="--b:382.9">일이 최대가 되려면 직선 <span class="nw">$BD$를</span> 되도록 완만하게 그어야 한다. 그 극한은 점 <span class="nw">$B$에서</span> 등온선에 그은 접선이다. 같은 방법으로 다음을 구한다.</p>
+<div class="f" style="left:609pt;top:419pt"><span class="fig" data-srcpage="3" data-clip="609,419,652,444"></span></div>
+<p class="x rt" style="--b:455.1">또한</p>
+<div class="f" style="left:571pt;top:456pt"><span class="fig" data-srcpage="3" data-clip="571,456,691,483"></span></div>
+<p class="x rt i" style="--b:494.6">최대 일은 다음과 같다.</p>
+<p class="x rt c d" style="--b:529.0;--a:13.6pt">$A_m = \dfrac{1}{2}(p_B + p_D)(V_D - V_B) = \dfrac{1}{2}p_BV_B\left(1 + \dfrac{6}{7}\right)\left(\dfrac{8}{7} - 1\right) = \dfrac{13}{98}RT_B = 540.15\,\mathrm{J},$</p>
+<p class="x rt" style="--b:549.8">여기서 <span class="nw">$T_B = 490\,\mathrm{K}$이다</span>.</p>
+<p class="x rt pn" style="--b:573.7">24</p>
+</div>
+
+<!-- PDF page 4: booklet pages 25 | 26 -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 5. 원 위에 놓인 렌즈들</p>
+<p class="x i wn" style="--b:89.0">1. 조건에 따라 렌즈들의 평면은 정다각형을 이룬다. 중심 <span class="nw">$C$에서</span> 두 반직선($CD$와 $CE$)을 긋는데, 이 반직선들은 가장 가까운 직선($CA$와 $CB$)과 각 <span class="nw">$\alpha = 2\pi/N$을</span> 이룬다. 이것이 바로 렌즈 평면을 그림 평면에 투영한 것이다.</p>
+<p class="x i" style="--b:165.4">2. 초점 <span class="nw">$F$가</span> 왼쪽 렌즈에 속한다고 하자. <span class="nw">$F$를</span> 지나고 이 렌즈에 수직인 선을 긋는다(그림&nbsp;31). 이 수선과 렌즈 평면의 교점이 그 렌즈의 광학 중심 <span class="nw">$O$의</span> 위치이다. 나머지 평면들 위에도 렌즈의 광학 중심을 표시한다.</p>
+<p class="x i" style="--b:241.7">3. 다각형이 정다각형이므로, 렌즈 평면에 대하여 빛살의 경로는 대칭이다. 얇은 볼록 렌즈의 공식으로부터, 이러한 경로에서 빛살은 렌즈의 주축과 초점 거리의 두 배인 곳에서 만난다. 렌즈가 오목 렌즈라면, 초점 거리의 두 배인 점을 지나는 것은 빛살의 가상의 연장선이다. 각 렌즈의 주축 위에 초점 거리의 두 배인 거리를 잡는다. <span class="nw">$ACB$</span> 안쪽에 있는 이중 초점들을 지나는 빛살은 점 <span class="nw">$C$에</span> 대하여 렌즈의 광학 중심보다 먼 곳을 지난다. 이것은 볼록 렌즈에 해당한다. <span class="nw">$ACB$</span> 바깥쪽에 있는 이중 초점들을 지나는 빛살은 점 <span class="nw">$C$에</span> 대하여 렌즈의 광학 중심보다 가까운 곳을 지난다. 이것은 오목 렌즈에 해당한다. 이 빛살들이 렌즈 평면($CA$와 $CB$)과 만나는 점을 각각 $A_1$, $B_1$과 $A_2$, <span class="nw">$B_2$라고</span> 하자. 중심 <span class="nw">$C$에서</span> 길이가 <span class="nw">$CB_1$인</span> 선분을 잡으면, 렌즈가 볼록 렌즈일 때 구하는 빛살이 지나는 점들을 복원할 수 있다. 중심 <span class="nw">$C$에서</span> 길이가 <span class="nw">$CB_2$인</span> 선분을 잡으면, 렌즈가 오목 렌즈일 때 구하는 빛살이 지나는 점들을 복원할 수 있다. 두 경우 모두 빛살이 렌즈를 통과한다는 것(렌즈의 반지름은 <span class="nw">$D/2$이다</span>)을 확인할 수 있다.</p>
+<p class="x i" style="--b:461.5">4. 이번에는 초점 <span class="nw">$F$가</span> 오른쪽 렌즈에 속한다고 하자. 앞의 경우와 같은 방법으로 모든 작도를 하면, 빛살이 렌즈를 비켜 지나간다(렌즈의 반지름 <span class="nw">$D/2$보다</span> 먼 거리에서)는 것을 확인할 수 있다.</p>
+<p class="x i" style="--b:525.9">5. 따라서 두 가지 경우가 가능하다. 렌즈는 볼록 렌즈일 수도 있고 오목 렌즈일 수도 있다. 초점 <span class="nw">$F$는</span> 왼쪽 렌즈에 속한다.</p>
+<p class="x pn r" style="--b:573.7">25</p>
+
+<p class="x rt hd" style="--b:31.7">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="453.6,35.2,808.0,35.7"></span></div>
+<div class="f" style="left:454pt;top:41pt"><span class="fig" data-srcpage="4" data-clip="454,41,832,249"></span></div>
+<p class="x rt cap" style="--b:257.7;left:621.7pt">그림 31</p>
+<p class="x rt pn" style="--b:573.7">26</p>
+</div>
+</body></html>

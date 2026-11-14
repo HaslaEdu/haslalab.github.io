@@ -1,0 +1,171 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2012 (XLVI = 제46회), 10학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic 10pt (= 9.963 PostScript pt), booklet pages 16-20 printed on rotated
+   A4 sheets: sheet 1 = page 16 alone (cropped to 425x415pt, column x 36.6..391.1, header baseline 49.3),
+   sheets 2-3 = 2-up spreads 842x595pt (pages 17|18, 19|20). Left-hand column x 32.6..387.0, right-hand column
+   x 453.6..808.0 (.rc; width 354.4pt); paragraph indent 14.9pt; baselineskip 11.955pt.
+   Figures are numbered on through the booklet (그림 22-28), equations too ((16)-(22)).
+   Sheet 1 has its own size through a named @page rule (.page[data-s="hs"]).
+   NOTE: W/scrub/RuPhO_2012_T2S.pdf was rebuilt from a copy whose MediaBox = CropBox (pymupdf remove_rotation
+   ignores the CropBox of the cropped sheet); clips are visible-page coordinates.
+   The Cyrillic subscript "E" (= element) of I, U is written \text{소} (소자 = element); the friction subscript → fr.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). Override --l / --fs per block when a block has another size.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a (--a = height above the baseline). */
+@page hs{size:425pt 415pt;margin:0}
+.page[data-s="hs"]{page:hs;width:425pt;height:415pt}
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:32.6pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.x.rc{left:453.6pt}                        /* right-hand page of the spread */
+.page[data-s="hs"] .x{left:36.6pt}                       /* sheet 1 (page 16): column 36.6..391.1 */
+.i{text-indent:14.9pt}                     /* first-line paragraph indent */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.tg{text-align:right}                      /* equation number at the column's right edge */
+/* running header (italic) above the stamped rule; odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering): odd pages at the right edge, even at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "10학년" (12pt bold) and problem titles (10pt bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: --fw = room taken by the figure, --fh = N x 11.955pt - 1pt */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;width:auto}
+</style></head><body>
+
+<!-- sheet 1: booklet page 16 -->
+<div class="page" data-s="hs">
+<p class="x hd" style="--b:49.3">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:36.6pt;top:52.8pt"><span class="fig" data-srcpage="1" data-clip="36.6,52.8,391.0,53.3"></span></div>
+<p class="x g" style="--b:97.1">10학년</p>
+<p class="x h" style="--b:120.9">문제 1. 플랫폼</p>
+<div class="f" style="left:36pt;top:124pt"><span class="fig" data-srcpage="1" data-clip="36,124,198,194"></span></div>
+<p class="x ov" style="--b:169.3;left:43.4pt;--fs:6.97pt;--l:8pt">fr</p>
+<p class="x cap" style="--b:205.7;left:97.1pt">그림 22</p>
+<p class="x i wl" style="--b:132.8;--fw:170.9pt;--fh:82.7pt">플랫폼에 고정된 기준계에서 문제를 풀자(그림&nbsp;22). 이 기준계에서 벽은 일정한 속력 <span class="nw">$v$로</span> 플랫폼에서 멀어지고, 물체는 플랫폼 위를 속력 <span class="nw">$v_a = v/\cos\alpha$로</span> 움직인다. 점 <span class="nw">$A$의</span> 속도를 실의 선분 <span class="nw">$AO$</span> 위로 사영한 성분이 <span class="nw">$v$와</span> 같기 때문이다. 물체가 플랫폼 위에서 움직이는 가속도를 구하자. 점 <span class="nw">$O$에</span> 대해 점 <span class="nw">$A$는</span> 반지름이 <span class="nw">$l = h/\sin\alpha$인</span> 원 위를 속력 <span class="nw">$v'_A = v_A\cdot\sin\alpha = v\cdot\mathrm{tg}\,\alpha$로</span> 움직인다. 점 <span class="nw">$A$의</span> 구심 가속도는 <span class="nw">$AO$를</span> 따라 점 <span class="nw">$O$를</span> 향하고, 그 크기는 <span class="nw">$a_n = v^2\mathrm{tg}^2\alpha/l$이다</span>. 점 <span class="nw">$A$의</span> 전체 가속도는 수평 방향이고, 그 크기는 다음과 같다.</p>
+<div class="f" style="left:145pt;top:274pt"><span class="fig" data-srcpage="1" data-clip="145,274,282,302"></span></div>
+<p class="x i" style="--b:316.1">이제 물체에 작용하는 힘들을 살펴보자. 수평축 방향의 성분으로 쓰면</p>
+<div class="f" style="left:169pt;top:332pt"><span class="fig" data-srcpage="1" data-clip="169,332,258,347"></span></div>
+<p class="x" style="--b:357.9">연직축 방향의 성분으로 쓰면</p>
+<div class="f" style="left:164pt;top:361pt"><span class="fig" data-srcpage="1" data-clip="164,361,264,376"></span></div>
+<p class="x pn" style="--b:393.7">16</p>
+</div>
+
+<!-- sheet 2: booklet pages 17 (left) and 18 (right) -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x i" style="--b:48.5">이로부터</p>
+<div class="f" style="left:117pt;top:51pt"><span class="fig" data-srcpage="2" data-clip="117,51,303,78"></span></div>
+<div class="f" style="left:153pt;top:82pt"><span class="fig" data-srcpage="2" data-clip="153,82,267,107"></span></div>
+<p class="x i" style="--b:119.1"><span class="nw">$\alpha \leqslant \mathrm{arctg}(a/g)$일</span> 때에만 물체가 플랫폼에서 떨어지지 않고 그 위를 움직일 수 있다는 점을 바로 짚어 두자.</p>
+<p class="x i" style="--b:143.0">플랫폼에 가해야 하는 힘은</p>
+<div class="f" style="left:156pt;top:156pt"><span class="fig" data-srcpage="2" data-clip="156,156,263,171"></span></div>
+<p class="x i" style="--b:185.6"><span class="nw">$N$과</span> <span class="nw">$T$를</span> 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:63pt;top:195pt"><span class="fig" data-srcpage="2" data-clip="63,195,357,226"></span></div>
+<p class="x h" style="--b:250.7">문제 2. 회전하는 관</p>
+<div class="f" style="left:297pt;top:254pt"><span class="fig" data-srcpage="2" data-clip="297,254,387,317"></span></div>
+<p class="x cap" style="--b:325.6;left:322pt">그림 23</p>
+<p class="x i wr" style="--b:262.7;--fw:100pt;--fh:82.7pt">회전축으로부터 거리 <span class="nw">$l$에</span> 있는 길이 <span class="nw">$\Delta l$인</span> 작은 수은 부분을 생각하자(그림&nbsp;23). 이 부분의 질량은 <span class="nw">$\Delta m = \rho\Delta lS$이고</span>, 여기서 <span class="nw">$S$는</span> 관의 단면적이다. 이 부분의 오른쪽 경계에서 수은의 압력을 <span class="nw">$p_1$</span>, 왼쪽 경계에서의 압력을 <span class="nw">$p_2$라</span> 하고, <span class="nw">$\Delta p = p_2 - p_1$이라</span> 하자. 이 부분은 구심 가속도 <span class="nw">$a = \omega^2 l$로</span> 운동한다. 뉴턴 제2법칙에 따르면</p>
+<p class="x c" style="--b:355.7">$\Delta m\,\omega^2 l = (p_2 - p_1)\,S = \Delta pS,\qquad$따라서$\qquad\Delta p = \rho\omega^2 l\Delta l.$</p>
+<div class="f" style="left:268pt;top:364pt"><span class="fig" data-srcpage="2" data-clip="268,364,385,444"></span></div>
+<p class="x cap" style="--b:452.9;left:307pt">그림 24</p>
+<p class="x i wr" style="--b:377.0;--fw:130pt;--fh:46.8pt">그림&nbsp;24는 회전축까지의 거리 <span class="nw">$l$에</span> 따른 <span class="nw">$\Delta p/\Delta l$의</span> 그래프이다. <span class="nw">$l = 0$에서</span> <span class="nw">$l = r$까지</span> 이동할 때 압력의 변화는 이 그래프 아래 삼각형의 넓이와 같다.</p>
+<div class="f" style="left:96pt;top:423pt"><span class="fig" data-srcpage="2" data-clip="96,423,258,449"></span></div>
+<p class="x" style="--b:462.2">회전시킨 뒤 공기의 압력은 <span class="nw">$p = np_0$이다</span>. 공기의 온도가 그대로 유지되므로 <span class="nw">$pr = p_0R$이다</span>. 여기서 <span class="nw">$r$는</span> 회전 중심에서 공기와 수은의 경계까지의 새로운 거리이다. 이 조건들을 식 (16)에 대입하면 다음을 얻는다.</p>
+<p class="x c d" style="--b:529.3;--a:19pt">$(n - 1)\,p_0 = \dfrac12\rho\omega^2\dfrac{R^2}{n^2},\qquad$따라서$\qquad\omega = \dfrac{n}{R}\sqrt{\dfrac{2p_0(n - 1)}{\rho}}.$</p>
+<p class="x pn r" style="--b:573.7">17</p>
+
+<p class="x rc hd" style="--b:31.7">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="453.6,35.2,808.0,35.7"></span></div>
+<p class="x rc h" style="--b:48.5">문제 3. 단조 과정</p>
+<div class="f" style="left:453pt;top:53pt"><span class="fig" data-srcpage="2" data-clip="453,53,577,148.0"></span></div>
+<p class="x cap" style="--b:157.2;left:495.6pt">그림 25</p>
+<p class="x i" style="--b:60.5;left:587.6pt;width:220.4pt">선형 과정의 방정식은 다음과 같다.</p>
+<div class="f" style="left:653pt;top:74pt"><span class="fig" data-srcpage="2" data-clip="653,74,742,90"></span></div>
+<p class="x" style="--b:104.3;left:587.6pt;width:220.4pt">여기서 <span class="nw">$\beta$는</span> 직선의 기울기의 절댓값이다.</p>
+<div class="f" style="left:664pt;top:132pt"><span class="fig" data-srcpage="2" data-clip="664,132,732,144"></span></div>
+<div class="f" style="left:595pt;top:155pt"><span class="fig" data-srcpage="2" data-clip="595,155,667,185"></span></div>
+<p class="x rc i" style="--b:193.3">따라서</p>
+<div class="f" style="left:585pt;top:195pt"><span class="fig" data-srcpage="2" data-clip="585,195,637,221.5"></span></div>
+<div class="f" style="left:637pt;top:195pt"><span class="fig" data-srcpage="2" data-clip="637,195,809,228.5"></span></div>
+<p class="x rc" style="--b:231.8">멘델레예프-클라페이롱 방정식을 쓰면</p>
+<div class="f" style="left:555pt;top:244pt"><span class="fig" data-srcpage="2" data-clip="555,244,809,274"></span></div>
+<p class="x rc" style="--b:286.5">온도가 부피에 다음과 같이 의존함을 알 수 있다.</p>
+<div class="f" style="left:577pt;top:300pt"><span class="fig" data-srcpage="2" data-clip="577,300,809,316"></span></div>
+<p class="x rc" style="--b:330.3">여기서 비례 계수는 <span class="nw">$k = p_1/(4(V_2 - V_1))$이다</span>. 식 (19)는 꼭짓점이 <span class="nw">$b = (4V_2 - 3V_1)/2$인</span> 포물선이다(그림&nbsp;25). 조건에 따라 온도는 단조롭게 변해야 한다. 가능한 경우는 두 가지로, 과정 전체에 걸쳐 온도가 증가하는 경우와 감소하는 경우이다.</p>
+<p class="x rc i" style="--b:378.2">온도가 증가하는 경우를 생각하자. 이는 부피 <span class="nw">$V_1$과</span> <span class="nw">$V_2$가</span> 구간 <span class="nw">$[0; b]$에</span> 속한다는 뜻이다.</p>
+<div class="f" style="left:575pt;top:403pt"><span class="fig" data-srcpage="2" data-clip="575,403,688,430"></span></div>
+<div class="f" style="left:604pt;top:435pt"><span class="fig" data-srcpage="2" data-clip="604,435,658,449"></span></div>
+<p class="x rc" style="--b:462.5">온도가 감소하는 경우에는 부피 <span class="nw">$V_1$과</span> <span class="nw">$V_2$가</span> 구간 <span class="nw">$[b; 2b]$에</span> 속한다.</p>
+<div class="f" style="left:556pt;top:476pt"><span class="fig" data-srcpage="2" data-clip="556,476,707,502"></span></div>
+<div class="f" style="left:592pt;top:508pt"><span class="fig" data-srcpage="2" data-clip="592,508,669,522"></span></div>
+<p class="x rc pn" style="--b:573.7">18</p>
+</div>
+
+<!-- sheet 3: booklet pages 19 (left) and 20 (right) -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 4. 서로 멀어지는 세 대전 입자</p>
+<div class="f" style="left:226pt;top:51pt"><span class="fig" data-srcpage="3" data-clip="226,51,392,172"></span></div>
+<p class="x cap" style="--b:180.5;left:286.5pt">그림 26</p>
+<p class="x i wr wn" style="--b:60.5;--fw:171pt;--fh:130.5pt">입자들의 배치는 서로 닮은 삼각형이므로, 입자 사이 거리의 비 <span class="nw">$r_1 : r_2 : r_3$는</span> 어느 순간에나 처음 거리의 비 <span class="nw">$R_1 : R_2 : R_3$와</span> 같다. 같은 이유로 꼭짓점 <span class="nw">$m_1$</span>, <span class="nw">$m_2$</span>, <span class="nw">$m_3$에서의</span> 각 <span class="nw">$\alpha_1$</span>, <span class="nw">$\alpha_2$</span>, <span class="nw">$\alpha_3$도</span> 변하지 않는다(그림&nbsp;26). 두 삼각형의 대응변, 예를 들어 <span class="nw">$R_3$와</span> <span class="nw">$r_3$를</span> 생각하자. 이 변들에 수선 <span class="nw">$ON$을</span> 긋는다. 입자 <span class="nw">$m_1$과</span> <span class="nw">$m_2$의</span> 속도와 가속도를 <span class="nw">$ON$</span> 위로 사영한 성분이 같으면 두 변은 평행하다. 이는 질량이 <span class="nw">$m_1$과</span> <span class="nw">$m_2$인</span> 입자들이 질량 <span class="nw">$m_3$인</span> 입자의 전하하고만 상호 작용한다는 사실에서 비롯된다. 쿨롱 법칙과 뉴턴 제2법칙으로부터 가속도와 그 사영 성분에 대한 식을 얻을 수 있다.</p>
+<div class="f" style="left:127pt;top:237pt"><span class="fig" data-srcpage="3" data-clip="127,237,292,267"></span></div>
+<p class="x i" style="--b:279.5">변 <span class="nw">$r_3$에</span> 내린 삼각형의 높이 <span class="nw">$h$는</span> 다음과 같다.</p>
+<div class="f" style="left:156pt;top:293pt"><span class="fig" data-srcpage="3" data-clip="156,293,264,307"></span></div>
+<p class="x" style="--b:323.7">따라서 앞의 등식으로부터 다음이 성립한다.</p>
+<div class="f" style="left:177pt;top:335pt"><span class="fig" data-srcpage="3" data-clip="177,335,244,361"></span></div>
+<p class="x" style="--b:374.7">이로부터</p>
+<div class="f" style="left:170pt;top:376pt"><span class="fig" data-srcpage="3" data-clip="170,376,250,393"></span></div>
+<p class="x i" style="--b:404.9">같은 방법으로 질량비 <span class="nw">$m_2 : m_3 = r_2^3 : r_3^3$을</span> 구할 수 있다. 따라서 세 입자의 질량비는 $m_1 : m_2 : m_3 =$ <span class="nw">$r_1^3 : r_2^3 : r_3^3$이다</span>.</p>
+<p class="x h" style="--b:441.1">문제 5. 비선형 소자</p>
+<p class="x i" style="--b:453.2">전류계를 흐르는 전류가 <span class="nw">$I$이고</span> 회로의 입력 전압이 <span class="nw">$U_{AB} = U$일</span> 때, 소자를 흐르는 전류와 소자에 걸린 전압을 구하자.</p>
+<p class="x i" style="--b:477.1">그림&nbsp;27에서 <span class="nw">$U_{DB} = U_3$</span>, <span class="nw">$U_{CB} = U_1$</span>, <span class="nw">$U_{AD} = U_2 = U - U_3$</span>, <span class="nw">$U_{CD} = IR$이라</span> 하자. 그러면 마디 <span class="nw">$D$에서</span> 전류의 합에 대해 다음이 성립한다.</p>
+<div class="f" style="left:175pt;top:505pt"><span class="fig" data-srcpage="3" data-clip="175,505,245,521"></span></div>
+<p class="x" style="--b:531.3">이로부터</p>
+<div class="f" style="left:170pt;top:533pt"><span class="fig" data-srcpage="3" data-clip="170,533,251,558"></span></div>
+<p class="x pn r" style="--b:573.7">19</p>
+
+<p class="x rc hd" style="--b:31.7">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="453.6,35.2,808.0,35.7"></span></div>
+<div class="f" style="left:598pt;top:40pt"><span class="fig" data-srcpage="3" data-clip="598,40,809,66"></span></div>
+<p class="x rc i" style="--b:77.2">식 (20)을 고려하면 소자를 흐르는 전류는 다음과 같다.</p>
+<p class="x rc c d" style="--b:104.5;--a:13.6pt">$I_\text{소} = I + I_1 = I + \dfrac{U_1}{R} = I + \dfrac{IR + U_3}{R} = \dfrac52 I + \dfrac{U}{2R}.$</p>
+<p class="x rc tg" style="--b:104.5">(21)</p>
+<div class="f" style="left:454pt;top:124pt"><span class="fig" data-srcpage="3" data-clip="454,124,580,255"></span></div>
+<p class="x ov" style="--b:133.8;left:490.3pt;--fs:6.5pt;--l:8pt">소</p>
+<p class="x ov" style="--b:148.4;left:485.6pt;--fs:6.4pt;--l:8pt">소자</p>
+<p class="x cap" style="--b:279.4;left:496.6pt">그림 27</p>
+<p class="x" style="--b:129.4;left:589.6pt;width:218.4pt">소자에 걸린 전압은 다음과 같다.</p>
+<p class="x c d" style="--b:156.2;--a:13.6pt;left:589.6pt;width:218.4pt">$U_\text{소} = U - IR - U_3 = \dfrac{U - 3IR}{2}.$</p>
+<p class="x rc tg" style="--b:156.2">(22)</p>
+<p class="x i wn" style="--b:182.0;left:589.6pt;width:218.4pt">전압이 <span class="nw">$U = 0\,\mathrm{V}$에서</span> <span class="nw">$U = 5.5\,\mathrm{V}$까지인</span> 구간에서 <span class="nw">$I(U)$를</span> 생각하자. 이 구간에서 비선형 소자의 전류는 전압에 선형적으로 의존하고 관계식 (20)과 (21)도 선형이므로, 그래프 <span class="nw">$I_\text{소}(U_\text{소})$는</span> 직선이다. 직선을 그리려면 두 점이면 충분하다.</p>
+<p class="x c" style="--b:275.9;left:589.6pt;width:218.4pt">$U = 0\,\mathrm{V},\quad I_\text{소} = 0\,\mathrm{A},\quad U_\text{소} = 0\,\mathrm{V}$</p>
+<p class="x rc c" style="--b:298.6">$U = 5.5\,\mathrm{V},\quad I_\text{소} = 4\,\mathrm{A},\quad U_\text{소} = 2\,\mathrm{V}.$</p>
+<p class="x rc i" style="--b:317.2"><span class="nw">$U = 5.5\,\mathrm{V}$에서</span> <span class="nw">$U = 10.5\,\mathrm{V}$까지의</span> 구간에 대해서도 같은 방법으로 생각할 수 있다. 식 (22)에 따르면 <span class="nw">$U_\text{소} = 6\,\mathrm{V}$까지</span> 전류는 전압에 의존하지 않는다.</p>
+<p class="x rc i" style="--b:341.2">결국 <span class="nw">$I_\text{소}(U_\text{소})$의</span> 그래프는 다음과 같다(그림&nbsp;28).</p>
+<div class="f" style="left:566pt;top:353pt"><span class="fig" data-srcpage="3" data-clip="566,353,694,428"></span></div>
+<p class="x ov" style="--b:361.7;left:575.4pt">A</p>
+<p class="x ov" style="--b:424.1;left:686.4pt">V</p>
+<p class="x cap" style="--b:438.3;left:610.8pt">그림 28</p>
+<div class="f" style="left:736pt;top:500pt"><span class="fig" data-srcpage="3" data-clip="736,500,754,502"></span></div>
+<p class="x rc pn" style="--b:573.7">20</p>
+</div>
+</body></html>

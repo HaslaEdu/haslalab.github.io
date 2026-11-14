@@ -1,0 +1,123 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2012 (XLVI = 제46회), 9학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic 10pt (= 9.963 PostScript pt), booklet pages 3-6 printed as two rotated
+   2-up A4 spreads 842x595pt (pages 3|4, 5|6). Left-hand column x 32.6..387.0, right-hand column x 453.6..808.0
+   (.rc; width 354.4pt); paragraph indent 14.9pt; baselineskip 11.955pt. Left-hand (odd) pages carry "결선. 이론 시험"
+   and the page number at the RIGHT, right-hand (even) pages "제46회 ..." and the page number at the LEFT.
+   NOTE: the original holds eight stray 88.8x0.5pt rule images (p1 y 97.0 / 239.4 / 470.2 x2, p2 y 102.0 / 195.7 x2 /
+   444.9) that are invisible there but printed black after scrub.py (and bled into nearby stamps at screen
+   resolution); they were redacted from W/scrub/RuPhO_2012_T1_RU.pdf (images only, text and line art kept).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). Override --l / --fs per block when a block has another size. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:32.6pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.x.rc{left:453.6pt}                        /* right-hand page of the spread */
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (47.5 - 32.6) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.7) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "9학년" (12pt bold) and problem titles (10pt bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: --fw = room taken by the figure, --fh = N x 11.955pt - 1pt;
+   .wr = figure on the right, .wl = figure on the left */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean/Latin label put back where scrub.py removed a Russian word */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;width:auto}
+</style></head><body>
+
+<!-- sheet 1: booklet pages 3 | 4 -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x g" style="--b:49.5">9학년</p>
+<p class="x h" style="--b:73.4">문제 1. 로켓 속의 부표</p>
+<p class="x i" style="--b:85.4">발사 준비를 마친 로켓 안에 커다란 수조가 있고, 수조의 일부는 밀도 <span class="nw">$\rho_0$인</span> 물로 채워져 있다. 수조 안에는 밀도가 <span class="nw">$\rho$이고</span> 단면적이 <span class="nw">$S$인</span> 가는 원기둥 모양의 부표가 들어 있으며, 이 부표는 용수철 상수가 <span class="nw">$k$인</span> 가벼운 용수철로 수조 바닥에 연결되어 있다. 로켓이 발사되기 전에 용수철은 <span class="nw">$x_0$만큼</span> 늘어나 있고, 부표의 일부는 물 위로 나와 있다.</p>
+<p class="x i" style="--b:145.1">1. 계가 위쪽을 향하는 일정한 가속도로 운동하기 시작하면, 부표가 물 위로 나온 부분의 높이가 커지는지 작아지는지 판단하여라. 답의 근거를 설명하여라.</p>
+<p class="x i" style="--b:181.0">2. 로켓의 가속도가 <span class="nw">$a$에</span> 이르렀을 때 부표가 물 위로 나온 부분의 높이가 <span class="nw">$x$만큼</span> 변하였다. <span class="nw">$x$를</span> <span class="nw">$a$의</span> 함수로 나타내는 해석적인 관계식을 구하여라.</p>
+<p class="x i" style="--b:204.9">3. 다음과 같은 값들에 대하여 <span class="nw">$x$의</span> 값을 계산하여라: <span class="nw">$k = 10\,\mathrm{N/m}$,</span> <span class="nw">$x_0 = 1\,\mathrm{cm}$,</span> <span class="nw">$\rho_0 = 1000\,\mathrm{kg/m^3}$,</span> <span class="nw">$S = 10^{-4}\,\mathrm{m^2}$,</span> <span class="nw">$g = 10\,\mathrm{m/s^2}$,</span> <span class="nw">$a = 3g$.</span></p>
+<p class="x h" style="--b:240.8">문제 2. 용수철과 공</p>
+<div class="f" style="left:214pt;top:244pt"><span class="fig" data-srcpage="1" data-clip="214,244,397,386"></span></div>
+<p class="x ov" style="--b:254.1;left:236.2pt">J</p>
+<p class="x ov" style="--b:381.7;left:388.4pt">m</p>
+<p class="x cap" style="--b:395.7;left:281.9pt">그림 1</p>
+<p class="x i wr wn" style="--b:252.7;--fw:180pt;--fh:154.4pt">수평인 탁자 위에 길고 매끄러운 관이 연직으로 고정되어 있고, 관 안에는 가벼운 용수철이 들어 있다. 관 안에서 탁자로부터 높이 <span class="nw">$H = 2\,\mathrm{m}$인</span> 곳에서 공 하나가 처음 속력 없이 떨어지기 시작한다. 공은 용수철의 맨 위 고리에 닿으면 그 고리에 달라붙는다. 그림&nbsp;1은 떨어지는 공의 운동 에너지 <span class="nw">$E_k$를</span> 탁자 면으로부터 공의 높이 <span class="nw">$h$의</span> 함수로 나타낸 그래프이다. 변형되지 않은 용수철의 길이 <span class="nw">$L_0$,</span> 용수철 상수 <span class="nw">$k$,</span> 공의 질량 <span class="nw">$m$을</span> 구하여라. 공이 용수철의 맨 위 고리에 닿는 순간에 역학적 에너지의 손실은 없으며, 훅 법칙은 용수철이 어떻게 변형되더라도 성립한다고 생각하여라. <span class="nw">$g = 10\,\mathrm{m/s^2}$으로</span> 하여라.</p>
+<p class="x i" style="--b:455.9"><i>참고.</i> 계산할 때에는 따로 나누어 준 확대된 그림&nbsp;1을 사용하여라.</p>
+<p class="x pn r" style="--b:573.7">3</p>
+
+<p class="x rc hd" style="--b:31.7">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="453.6,35.2,808.0,35.7"></span></div>
+<p class="x rc h" style="--b:48.5">문제 3. 예열</p>
+<div class="f" style="left:454pt;top:50pt"><span class="fig" data-srcpage="1" data-clip="454,50,598,149"></span></div>
+<p class="x ov" style="--b:61.7;left:533.1pt">전기 가열기</p>
+<p class="x ov" style="--b:135.9;left:502.6pt">C</p>
+<p class="x ov" style="--b:138.7;left:534.6pt">항온조</p>
+<p class="x cap" style="--b:157.6;left:502.6pt">그림 2</p>
+<p class="x rc i wl" style="--b:60.7;--fw:148pt;--fh:106.6pt">실험가 글류크의 실험실에는 젓개가 달린 전기 가열기, 항온조, 그리고 얇은 벽으로 된 화학용 비커 두 개가 있었는데, 두 비커의 선형 크기는 2배 차이가 났다(비커의 벽 두께는 같다). 항온조 안은 일정한 온도 <span class="nw">$t_1 = 20\,{}^\circ\mathrm{C}$로</span> 유지되었다(그림&nbsp;2). 글류크는 비커 속 액체의 온도가 시간에 따라 어떻게 변하는지 조사하기로 하였다(젓개는 비커 전체 부피에서 온도를 빨리 고르게 하는 데 필요하다).</p>
+<p class="x rc i" style="--b:180.4">먼저 그는 더 작은 비커를 사용하였다. 이 비커를 온도가 <span class="nw">$t_1 = 20\,{}^\circ\mathrm{C}$인</span> 조사할 액체로 채우고 항온조 안에 넣었다. 전기 가열기를 켜자, 글류크는 처음 <span class="nw">$\tau_1 = 10\,\mathrm{s}$</span> 동안 계의 온도가 <span class="nw">$\Delta t_1 = 1\,{}^\circ\mathrm{C}$만큼</span> 올라간 것을 알아냈다. 오랜 시간이 지난 뒤 액체의 온도는 <span class="nw">$t_2 = 40\,{}^\circ\mathrm{C}$에서</span> 더 이상 변하지 않게 되었다.</p>
+<p class="x rc i" style="--b:240.4">두 번째 실험에서 그는 더 큰 비커를 가져와, 온도 <span class="nw">$t_3 = 35\,{}^\circ\mathrm{C}$로</span> 데운 같은 액체로 채우고 같은 가열기를 전원에 연결하였다. 얼마 뒤 시간 <span class="nw">$\tau_2$가</span> 지났을 때, 그는 비커 속 내용물의 온도가 <span class="nw">$\Delta t_2 = 0.5\,{}^\circ\mathrm{C}$만큼</span> 낮아졌다는 것을 발견하고 놀랐다.</p>
+<p class="x rc i" style="--b:288.4">비커의 열용량은 그 안에 담긴 액체의 열용량에 비해 작다고 생각하여라.</p>
+<p class="x rc i" style="--b:312.5">1. 오랜 시간이 지난 뒤 비커 안에서 자리 잡게 될 온도 <span class="nw">$t_4$를</span> 구하여라.</p>
+<p class="x rc i" style="--b:336.7">2. 시간 <span class="nw">$\tau_2$를</span> 계산하여라.</p>
+<p class="x rc i" style="--b:348.9"><i>참고.</i> 물질의 층(비커의 벽)을 통해 단위 시간에 흐르는 에너지는 층의 양쪽 경계면의 온도 차와 층의 표면 넓이에 정비례한다는 것이 알려져 있다.</p>
+<p class="x rc h" style="--b:397.7">문제 4. 다이오드</p>
+<p class="x rc i" style="--b:409.9">반도체 다이오드는 전류를 한 방향으로만 흐르게 하는 소자이다(그림&nbsp;3). 다이오드를 반대 방향으로 연결하면(그림&nbsp;4) 다이오드를 통해 전류가 흐르지 않는다. 이상적인 다이오드의 전류-전압 특성(다이오드에 걸린 전압에 따라 다이오드를 흐르는 전류가 어떻게 달라지는지를 나타낸 관계)은 그래프(그림&nbsp;5)에 주어져 있다.</p>
+<div class="f" style="left:494pt;top:471pt"><span class="fig" data-srcpage="1" data-clip="494,471,770,546"></span></div>
+<p class="x cap" style="--b:554.8;left:524.7pt">그림 3</p>
+<p class="x cap" style="--b:554.8;left:701.8pt">그림 4</p>
+<p class="x rc pn" style="--b:573.7">4</p>
+</div>
+
+<!-- sheet 2: booklet pages 5 | 6 -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<div class="f" style="left:228.5pt;top:41pt"><span class="fig" data-srcpage="2" data-clip="228.5,41,388,154"></span></div>
+<p class="x ov" style="--b:50.0;left:236.9pt">mA</p>
+<p class="x ov" style="--b:149.9;left:379.5pt">V</p>
+<p class="x ov" style="--b:150.1;left:324.9pt">V</p>
+<p class="x cap" style="--b:162.5;left:287.4pt">그림 5</p>
+<p class="x i wr wn" style="--b:48.7;--fw:169pt;--fh:70.7pt">1. 그림&nbsp;6은 여러 갈래로 갈라진 전기 회로의 일부를 나타낸 것이다. 저항기의 저항은 <span class="nw">$R_1 = 6\,\mathrm{k\Omega}$,</span> <span class="nw">$R_2 = 5\,\mathrm{k\Omega}$이다</span>. 다이오드에 걸린 전압 강하와 밀리암페어계를 흐르는 전류를 구하여라.</p>
+<p class="x i wr wn" style="--b:120.4;--fw:169pt;--fh:58.8pt">2. 다이오드를 반대 극성으로 회로에 연결하였다(그림&nbsp;7). 저항기의 저항은 바뀌지 않았다. 이 경우에 다이오드에 걸린 전압 강하와 밀리암페어계를 흐르는 전류를 구하여라. 두 경우 모두 밀리암페어계는 이상적이라고 생각하여라.</p>
+<div class="f" style="left:50pt;top:191pt"><span class="fig" data-srcpage="2" data-clip="50,191,232,306"></span></div>
+<div class="f" style="left:233pt;top:191pt"><span class="fig" data-srcpage="2" data-clip="233,191,410,306"></span></div>
+<p class="x ov" style="--b:213.8;left:160.0pt">mA</p>
+<p class="x ov" style="--b:293.0;left:103.5pt">mA</p>
+<p class="x ov" style="--b:292.8;left:213.5pt">mA</p>
+<p class="x ov" style="--b:213.8;left:337.2pt">mA</p>
+<p class="x ov" style="--b:293.0;left:280.7pt">mA</p>
+<p class="x ov" style="--b:292.8;left:390.6pt">mA</p>
+<p class="x cap" style="--b:316.0;left:101.2pt">그림 6</p>
+<p class="x cap" style="--b:316.0;left:278.4pt">그림 7</p>
+<p class="x h" style="--b:346.6">문제 5. 잃어버린 거울</p>
+<div class="f" style="left:191.5pt;top:350pt"><span class="fig" data-srcpage="2" data-clip="191.5,350,392,509"></span></div>
+<p class="x cap" style="--b:516.6;left:268.9pt">그림 8</p>
+<p class="x i wr wn" style="--b:358.5;--fw:206pt;--fh:154.4pt">스넬리우스의 기록 보관소에서 도면 한 장이 발견되었다. 이 도면에는 이면각 <span class="nw">$\varphi$를</span> 이루는 두 평면거울 $M_1$과 <span class="nw">$M_2$,</span> 점광원 <span class="nw">$S$,</span> 그리고 광원의 두 상을 동시에 볼 수 있는 영역 $AOB$(빗금으로 표시됨)가 그려져 있었다. 세월이 흘러 잉크가 바래는 바람에, 거울 <span class="nw">$M_2$와</span> 점광원 <span class="nw">$S$가</span> 어디에 있었는지 알아볼 수 없게 되었다(그림&nbsp;8).</p>
+<p class="x i wr wn" style="--b:513.9;--fw:206pt;--fh:10.9pt">주어진 자료를 이용해 컴퍼스와 눈금 없는 자만으로 거울 <span class="nw">$M_2$의</span> 위치와, 광원 <span class="nw">$S$가</span> 있을 수 있는 점들의 자취를 작도하여라. 두 거울은 반무한 평면이라고 생각하여라.</p>
+<p class="x pn r" style="--b:573.7">5</p>
+
+<p class="x rc hd" style="--b:31.7">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="453.6,35.2,808.0,35.7"></span></div>
+<p class="x rc i" style="--b:48.7"><span class="nw">$\angle AOB = \angle\alpha = 30^\circ$일</span> 때 두 거울 면 사이의 각 <span class="nw">$\varphi$를</span> 계산하여라.</p>
+<p class="x rc pn" style="--b:573.7">6</p>
+</div>
+</body></html>

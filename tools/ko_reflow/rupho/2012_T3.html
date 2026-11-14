@@ -1,0 +1,101 @@
+<!doctype html><html><head><meta name="page" content="425,595">
+<style>
+/* RuPhO 2012 (XLVI = 제46회), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), booklet pages 10-11, each cut
+   (CropBox + /Rotate 90) from a 2-up A4 spread: visible page 425x595pt.
+   The coordinates below are those of the VISIBLE page (pymupdf remove_rotation() mishandles the CropBox offset of
+   these files, so they were read from a normalized copy: rotation 0, MediaBox = visible page, pixel-identical render).
+   Page 10 (even): text column x 36.6..391.0, header "제46회 ..." and page number at the LEFT.
+   Page 11 (odd):  text column x 32.6..387.0, header "결선. 이론 시험" and page number at the RIGHT.
+   Width 354.4pt; paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt; page numbers on baseline 573.7.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction.
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:36.6pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.o{left:32.6pt}                            /* odd page 11: column 32.6..387.0 */
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (51.5 - 36.6) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.7) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "11학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: a float reserves the figure's room for the first N lines
+   --fw = room taken by the figure, --fh = N x 11.955pt - 1pt; .wl = figure on the LEFT (figures 15, 16) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where a Russian word was removed */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+/* .wb: white patch over a stray rule fragment that apply_redactions in scrub.py exposed next to figures 17, 18
+   (an image hidden in the original shows in the scrubbed copy; nothing of the figure lies under the patch) */
+.wb{position:absolute;background:#fff}
+</style></head><body>
+
+<!-- page 10 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제46회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:36.6pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="36.6,35.2,391.0,35.7"></span></div>
+<p class="x g" style="--b:49.5">11학년</p>
+<p class="x h" style="--b:66.9">문제 1. 밀가루 봉지</p>
+<p class="x i" style="--b:78.9">밀가루가 든 종이 봉지가 높이 <span class="nw">$h = 4\,\mathrm{cm}$에서</span> 처음 속도 없이 용수철저울의 접시 위로 떨어진다. 저울의 바늘은 눈금 <span class="nw">$m_1 = 6\,\mathrm{kg}$까지</span> 움직였고, 진동이 멈춘 뒤에는 질량 <span class="nw">$m_0 = 2\,\mathrm{kg}$을</span> 가리키게 되었다. 용수철의 용수철 상수는 <span class="nw">$k = 1.5\,\mathrm{kN/m}$이다</span>. 접시의 질량 <span class="nw">$M$을</span> 구하여라.</p>
+<p class="x i" style="--b:126.7"><i>참고.</i> 중력 가속도는 <span class="nw">$g = 10\,\mathrm{m/s^2}$으로</span> 하여라.</p>
+<p class="x h" style="--b:149.6">문제 2. 자기 현상</p>
+<div class="f" style="left:39pt;top:155pt"><span class="fig" data-srcpage="1" data-clip="39,155,146,238"></span></div>
+<p class="x cap" style="--b:246.4;left:69.2pt">그림 15</p>
+<p class="x i wl" style="--b:161.5;--fw:115pt;--fh:94.6pt">서로 <span class="nw">$l$만큼</span> 떨어져 있는 두 평행한 수평 레일(그림&nbsp;15) 위에서 두 금속 막대 $AB$와 <span class="nw">$CD$가</span> 마찰 없이 움직일 수 있다. 각 막대의 질량은 $m$, 전기 저항은 <span class="nw">$R$이다</span>. 세기가 <span class="nw">$B$인</span> 균일한 자기장이 레일이 놓인 평면에 수직인 방향으로 걸려 있다. 처음 순간에 두 막대는 서로 <span class="nw">$d$만큼</span> 떨어져 있으며 레일에 수직이다. 막대 <span class="nw">$CD$는</span> 정지해 있고, 막대 <span class="nw">$AB$에는</span> 레일에 평행하면서 <span class="nw">$CD$에서</span> 멀어지는 방향으로 속력 <span class="nw">$v_0$을</span> 준다.</p>
+<p class="x i" style="--b:293.0">1. 충분히 긴 시간이 지난 뒤 두 막대 사이의 거리는 얼마가 되겠는가?</p>
+<p class="x i" style="--b:317.0">2. 충분히 긴 시간이 지나는 동안 이 계에서 발생하는 열은 얼마인가?</p>
+<p class="x i" style="--b:340.9">레일의 저항은 무시해도 된다.</p>
+<p class="x h" style="--b:363.8">문제 3. 전기장 속의 쌍극자</p>
+<div class="f" style="left:37pt;top:369pt"><span class="fig" data-srcpage="1" data-clip="37,369,229,442"></span></div>
+<p class="x cap" style="--b:450.7;left:112.1pt">그림 16</p>
+<p class="x i wl wn" style="--b:375.7;--fw:200.9pt;--fh:82.7pt">쌍극자는 서로 <span class="nw">$l$만큼</span> 떨어진 곳에 고정된 두 점전하 $+q$와 <span class="nw">$-q$로</span> 이루어져 있다. 쌍극자의 질량은 <span class="nw">$m$이다</span>. 쌍극자는 <span class="nw">$x$축</span> 방향으로 놓여 있으며, 속력 <span class="nw">$v_0$으로</span> 길이가 <span class="nw">$2L \gg l$인</span> 영역에 들어간다(그림&nbsp;16). 이 영역에서 전기장의 세기 벡터 <span class="nw">$\overrightarrow{E}$는</span> 어디서나 <span class="nw">$x$축</span> 방향을 향하고, 그 크기는 <span class="nw">$E(x) = E_0\left(1 - \dfrac{x^2}{L^2}\right)$에</span> 따라 변한다. 쌍극자에 작용하는 힘 <span class="nw">$F$를</span> 쌍극자의 좌표 <span class="nw">$x$의</span> 함수로 구하고, 쌍극자의 최대 속력과 쌍극자가 영역 <span class="nw">$2L$을</span> 지나는 데 걸리는 시간을 구하여라. 공간에서 쌍극자의 방향은 바뀌지 않는다고 생각하여라.</p>
+<p class="x i" style="--b:537.9"><i>참고.</i> 이러한 전기장은 평행판 축전기의 두 판 사이에 부피 전하를 분포시켜 만들 수 있다.</p>
+<p class="x pn" style="--b:573.7">10</p>
+</div>
+
+<!-- page 11 of the booklet -->
+<div class="page">
+<p class="x o hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x o h" style="--b:48.5">문제 4. 선형 과정</p>
+<div class="f" style="left:268pt;top:52pt"><span class="fig" data-srcpage="2" data-clip="268,52,386,146"></span></div>
+<div class="ov wb" style="left:265.5pt;top:81.6pt;width:4pt;height:3.2pt"></div>
+<p class="x o cap" style="--b:155.5;left:307.5pt">그림 17</p>
+<p class="x o i" style="--b:60.5;width:225.4pt">이상 다원자 기체 1몰을 온도가 <span class="nw">$t_B = 217\,{}^\circ\mathrm{C}$인</span> 상태 <span class="nw">$B$에서</span> 상태 <span class="nw">$D$로</span> 옮긴다. 이때 압력은 부피에 대하여 선형으로 변하고, 온도는 단조롭게 감소하며, 과정 전체에 걸쳐 기체에 열이 공급된다(그림&nbsp;17).</p>
+<p class="x o i" style="--b:132.3;width:225.4pt">이러한 과정에서 이 기체가 할 수 있는 일의 최댓값 <span class="nw">$A_m$을</span> 구하여라.</p>
+<p class="x o h" style="--b:180.1">문제 5. 원 위에 놓인 렌즈들</p>
+<p class="x o i" style="--b:192.1">스넬리우스의 기록 보관소에서 원고가 하나 발견되었다고 한다. 그 원고에는 똑같은 렌즈 <span class="nw">$N$개로</span> 이루어진 계를 빛살이 어떻게 지나갈 수 있는지가 논의되어 있었다. 렌즈들의 광학 중심은 한 원 위에 있고, 렌즈의 평면은 이 원에 수직이며 원의 중심을 지난다. 시간이 지나 잉크가 바래서, 그림에는 이웃한 두 렌즈의 평면 흔적과 그중 한 렌즈의 초점만 남아 있다(그림&nbsp;18). 원고의 내용으로부터, 빛살은 각 렌즈에서 굴절하면서 정<span class="nw">$N$각형의</span> 변을 따라 나아간다는 것을 알 수 있었다. 렌즈의 모양과 지름 <span class="nw">$D$는</span> 그림&nbsp;19에 나타나 있다.</p>
+<p class="x o i" style="--b:287.7">1. 이 렌즈들은 볼록 렌즈와 오목 렌즈 가운데 어느 것일 수 있었는가?</p>
+<p class="x o i" style="--b:299.6">작도로(컴퍼스와 눈금 없는 자를 사용하여) 다음을 복원하여라.</p>
+<p class="x o i" style="--b:311.6">2. 렌즈 두 개의 위치(그림에 나타난 렌즈 평면의 왼쪽과 오른쪽에 하나씩 더 있는 렌즈);</p>
+<p class="x o i" style="--b:335.5">3. 이렇게 얻은 네 렌즈의 광학 중심이 있을 수 있는 위치;</p>
+<p class="x o i" style="--b:347.5">4. 이 렌즈들을 지나는 빛살의 가능한 경로.</p>
+<p class="x o i" style="--b:359.3">답의 근거를 설명하여라.</p>
+<div class="f" style="left:81.1pt;top:372pt"><span class="fig" data-srcpage="2" data-clip="81.1,372,173,498"></span></div>
+<div class="ov wb" style="left:79.5pt;top:469.4pt;width:4pt;height:3.2pt"></div>
+<p class="x o cap" style="--b:507.3;left:106.9pt">그림 18</p>
+<div class="f" style="left:278pt;top:454pt"><span class="fig" data-srcpage="2" data-clip="278,454,339,496"></span></div>
+<p class="x o cap" style="--b:507.3;left:284.2pt">그림 19</p>
+<p class="x o pn r" style="--b:573.7">11</p>
+</div>
+</body></html>
