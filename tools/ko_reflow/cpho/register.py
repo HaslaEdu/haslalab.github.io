@@ -14,6 +14,10 @@ import pymupdf
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 # name: (output file, source pdf in SRC_DIR, first, last, catalogue source file name, slots)
 EDITIONS = {
+    '2003_TS': ('CPhO_2003_TS_KO.pdf', '2003.pdf', 4, 10, 'CPhO_2003_TS.pdf', ['sol']),
+    '2004_TS': ('CPhO_2004_TS_KO.pdf', '2004.pdf', 5, 18, 'CPhO_2004_TS.pdf', ['sol']),
+    '2005_TS': ('CPhO_2005_TS_KO.pdf', '2005.pdf', 4, 16, 'CPhO_2005_Chinese_original.pdf', ['sol']),
+    '2013_TS': ('CPhO_2013_TS_KO.pdf', '2013_S_EN.pdf', 1, 15, 'CPhO_2013_TS.pdf', ['sol']),
     '2011_TS': ('CPhO_2011_TS_KO.pdf', '2011_S.pdf', 1, 21, 'CPhO_2011_TS.pdf', ['sol']),
     '2012_T': ('CPhO_2012_T_KO.pdf', '2012.pdf', 1, 3, 'CPhO_2012_T_ZH.pdf', ['paper']),
     '2012_TS': ('CPhO_2012_TS_KO.pdf', '2012.pdf', 4, 20, 'CPhO_2012_TS.pdf', ['sol']),
