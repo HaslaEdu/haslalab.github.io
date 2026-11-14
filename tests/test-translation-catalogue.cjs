@@ -115,6 +115,8 @@ function collectFiles(value) {
   else if (value && typeof value === 'object') Object.values(value).forEach(collectFiles);
 }
 collectFiles(window.THEORY);
+// experimental-round editions are linked from the problem archive in index.html (pdf/sol {ko, en|ru})
+for (const match of html.matchAll(/"pdf\/([^"\/]+\.pdf)"/g)) catalogueFiles.add(match[1]);
 for (const item of JSON.parse(read('tools/original_style_publication.json'))) {
   assert.ok([item.file, ...(item.aliases || [])].some(file => catalogueFiles.has(file)),
     `Audited translation is not linked in the catalogue: ${item.file}`);
