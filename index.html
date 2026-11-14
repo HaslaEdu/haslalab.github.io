@@ -4836,9 +4836,8 @@ const PATREON="https://www.patreon.com/cw/HaslaEdu";
 const patreonLink=()=>`<a class="sns-ig" href="${PATREON}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="15" cy="9.5" r="6"/><rect x="3" y="3.5" width="3.6" height="17"/></svg><span>${lang==="ko"?"패트리온에서 후원하기":"Support us on Patreon"}</span></a>`;
 const instaLink=(url=INSTAGRAM,handle="hasla_edu",label=true)=>`<a class="sns-ig" href="${url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg><span>${label?(lang==="ko"?"인스타그램 ":"Instagram "):""}@${handle}</span></a>`;
 
-/* ads run on the Korean site only: the English site shows none */
+/* ads run on the Korean and the English site alike; only the label is in the page's language */
 function adFitBanner(placement){
-  if(lang!=="ko") return "";
   const size=placement==="secondary" ? " adfit-banner--secondary" : "";
   const ad=lang==="ko" ? {aria:"광고",label:"광고"} : {aria:"Advertisement",label:"Ad"};
   return `<aside class="adfit-banner${size}" aria-label="${ad.aria}">
@@ -10023,7 +10022,7 @@ function setDocTitle(first, second){
   document.title = parts.length ? `${parts[0]} \u00b7 ${SITE}` : `${SITE} \u2014 ${tail}`;
 }
 
-/* side ads: a 160×600 AdFit unit in each margin when the window is wide enough for it beside the page (desktop, Korean site only). The unit ids come from
+/* side ads: a 160×600 AdFit unit in each margin when the window is wide enough for it beside the page (desktop, Korean and English site). The unit ids come from
    the AdFit dashboard (광고 단위 추가 → 160×600); an empty id shows nothing on that side. */
 const ADFIT_SIDE_UNITS={left:"DAN-qczrGPkgs3ATsrwt",right:"DAN-zyPVmJAPTSmPDSUC"};
 /* AdFit calls these with the <ins>: the card shows once an ad has loaded and fades out again when none comes */
@@ -10044,7 +10043,7 @@ function mountHaslaAdFitSides(){
      learning tools widen to the whole window, and those pages carry an ad in the flow of the page instead */
   const route=!/^#\/(lab|community)\b|^#\/archive\b.*[?&](source|problem|school)=|^#\/learn\/[^/]+\/(studio|search)\b|\/(exam|review)(\/|$)/.test(location.hash)
     &&!document.querySelector('#view .archive-reading');
-  const why=lang!=="ko"?"English site (no ads)":!matchMedia("(hover:hover)").matches?"touch screen":!route?"exam, community or reading page":
+  const why=!matchMedia("(hover:hover)").matches?"touch screen":!route?"exam, community or reading page":
     innerHeight<700?`window shorter than 700 px`:"";
   const on=!why;
   /* where the page content starts and ends, once it has made room */
@@ -10059,8 +10058,8 @@ function mountHaslaAdFitSides(){
     const id="adfitSide-"+side,unit=ADFIT_SIDE_UNITS[side];let box=document.getElementById(id);
     if(!fits||!unit){ if(box) box.hidden=true; continue; }
     if(!box){
-      box=document.createElement("aside");box.id=id;box.dataset.side=side;box.className="adfit-side adfit-side--"+side;box.setAttribute("aria-label","광고");
-      box.innerHTML='<span class="adfit-banner-label">광고</span>';
+      box=document.createElement("aside");box.id=id;box.dataset.side=side;box.className="adfit-side adfit-side--"+side;box.setAttribute("aria-label",lang==="ko"?"광고":"Advertisement");
+      box.innerHTML='<span class="adfit-banner-label">'+(lang==="ko"?"광고":"Ad")+'</span>';
       const ins=document.createElement("ins");ins.className="kakao_ad_area";ins.style.display="none";ins.dataset.adUnit=unit;ins.dataset.adWidth="160";ins.dataset.adHeight="600";ins.dataset.adOnload="hlAdSideLoad";ins.dataset.adOnfail="hlAdSideFail";box.append(ins);
       document.body.append(box); AD_SIDE_STATE[side]="waiting for AdFit";
       /* a fallback for the load callback: anything AdFit puts in the slot shows the card */
@@ -10070,6 +10069,8 @@ function mountHaslaAdFitSides(){
       document.body.append(script);
     }
     box.hidden=false;
+    /* the label follows the language when it is switched after the card was made */
+    box.setAttribute("aria-label",lang==="ko"?"광고":"Advertisement"); const tag=box.querySelector(".adfit-banner-label"); if(tag) tag.textContent=lang==="ko"?"광고":"Ad";
     /* centred in its margin, and in the window below the header */
     const x=Math.round((room-SIDE_CARD)/2), y=Math.max(80,Math.round((innerHeight-616)/2+28));
     box.style.top=y+"px"; box.style.left=side==="left"?x+"px":""; box.style.right=side==="right"?x+"px":"";
