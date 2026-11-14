@@ -1,0 +1,185 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2014 (XLVIII = 제48회), 9학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 9-14
+   (figures are numbered on through the booklet: 그림 12-16; equations (1)-(5)).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+   In this booklet odd pages carry "결선. 이론 시험" and the page number at the RIGHT, even pages "제48회 ..." and the
+   page number at the LEFT; page numbers sit on baseline 573.7.
+   Cyrillic subscripts: v_ср -> v_avg, I_ср -> I_avg, v_к (final speed, problem 1) -> v_f,
+   v_к (threshold speed, problem 2) -> v_cr, F_с (resistance force) -> F_r.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction.
+   A line holding a tall inline fraction (\dfrac) grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~13.6pt for a \dfrac with capital/ascender numerator).
+   Equation numbers "(n)" of retyped displays: separate right-aligned block on the same baseline (.en). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.en{text-align:right}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.7) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* "풀이 예시" (SFRM1440, 14.346pt regular), grade line "9학년" (SFBX1200 = 11.955pt bold),
+   problem titles (SFBX1000 bold) — all centred on the column */
+.t{text-align:center;--fs:14.346pt;--l:17.2pt}
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: --fw = 387.5 - right edge of the short lines, --fh = N x 11.955pt - 1pt */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: allow breaks between Hangul syllables where keep-all + long inline formulas would leave wide gaps */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean/Latin label put back where scrub.py removed a Russian word */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+/* right-aligned axis labels of figure 12 (right edge 274.5) */
+.ra{width:40pt;text-align:right}
+/* vertical axis label (reads bottom to top): rotated about its top-left corner (left,top);
+   baseline x = left + 8.4pt, text starts at y = top */
+.rot{position:absolute;margin:0;font-size:9.963pt;line-height:11.955pt;transform:rotate(-90deg);transform-origin:0 0}
+</style></head><body>
+
+<!-- page 9 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x t" style="--b:51.5">풀이 예시</p>
+<p class="x g" style="--b:70.6">9학년</p>
+<p class="x h" style="--b:88.0">문제 1. 극한의 레이스</p>
+<div class="f" style="left:274pt;top:91pt"><span class="fig" data-srcpage="1" data-clip="274,91,388,187"></span></div>
+<p class="x ov ra" style="--b:108.6;left:234.5pt">$2v_\mathrm{avg}$</p>
+<p class="x ov ra" style="--b:142.4;left:234.5pt">$v_\mathrm{avg}$</p>
+<p class="x ov" style="--b:184.5;left:379pt;--fs:6.974pt">avg</p>
+<p class="x cap" style="--b:195.7;left:301pt">그림 12</p>
+<p class="x i wr wn" style="--b:100.7;--fw:143pt;--fh:70.7pt"><b>그래프를 이용한 풀이.</b> 자동차가 움직인 시간은 <span class="nw">$t_0 = L/v_\mathrm{avg}$이고</span>, 여기서 <span class="nw">$L$은</span> 구간의 길이이다. <span class="nw">$v(t)$</span> 그래프에서 자동차가 움직일 수 있는 여러 방식은 기울기(가속도)가 서로 다른 직선으로 나타나며, 이때 그래프 아래의 넓이(이동 거리)는 모두 같다(그림&nbsp;12).</p>
+<p class="x i wr wn" style="--b:173.2;--fw:143pt;--fh:34.9pt"><span class="nw">$t'$을</span> 자동차가 경로의 한가운데에 있는 순간이라고 하자. 그래프에서 이 시각은 그 왼쪽과 오른쪽의 그래프 아래 넓이가 같아지는 곳에 있다. 가속도의 크기 <span class="nw">$a$가</span> 커지면 <span class="nw">$t'$의</span> 값은 속력이 큰 쪽으로 옮겨 가고, 경로 한가운데에서의 속력 <span class="nw">$v$는</span> 커진다는 것에 주목하자.</p>
+<p class="x i" style="--b:245.7">가장 작은 속력 <span class="nw">$v_\mathrm{min}$은</span> <span class="nw">$a = 0$일</span> 때 얻어지며 평균 속력 <span class="nw">$v_\mathrm{avg}$와</span> 같고, 가장 큰 속력 <span class="nw">$v_\mathrm{max}$는</span> 가속도가 최대이고 처음(또는 나중) 속력이 0인 운동에서 얻어진다. 이러한 운동에서 나중 속력은 <span class="nw">$v_\mathrm{f} = 2v_\mathrm{avg}$이다</span>. 측정 구간의 길이는 다음과 같다.</p>
+<p class="x c d" style="--b:312.7;--a:15.0pt">$L = \dfrac{v_\mathrm{f}^2}{2a},$</p>
+<p class="x" style="--b:336.8;left:48pt;width:339.5pt">경로의 절반은 다음과 같다.</p>
+<div class="f" style="left:188pt;top:340pt"><span class="fig" data-srcpage="1" data-clip="188,340,234,368"></span></div>
+<p class="x i" style="--b:381.2">따라서 측정 구간 한가운데에서의 최대 속력은 <span class="nw">$v_\mathrm{max} = v_\mathrm{f}/\sqrt2 = \sqrt2\,v_\mathrm{avg}$이다</span>.</p>
+<p class="x i" style="--b:405.8"><b>해석적 풀이.</b> 자동차의 처음 속력을 $v_0$, 운동하는 동안의 가속도를 <span class="nw">$a$라고</span> 하자. 그러면 측정 구간의 길이는 다음과 같다.</p>
+<p class="x c d" style="--b:448.0;--a:13.6pt">$L = \dfrac{v_\mathrm{f}^2 - v_0^2}{2a},$</p>
+<p class="x en" style="--b:448.0">(1)</p>
+<p class="x" style="--b:472.0;left:48pt;width:339.5pt">경로의 절반은 다음과 같다.</p>
+<div class="f" style="left:182pt;top:475pt"><span class="fig" data-srcpage="1" data-clip="182,475,388,503"></span></div>
+<p class="x i" style="--b:517.3">(1)과 (2)로부터 경로 한가운데에서의 속력에 대한 식을 얻는다.</p>
+<p class="x c d" style="--b:548.0;--a:14.6pt">$v^2 = \dfrac{v_\mathrm{f}^2 + v_0^2}{2}.$</p>
+<p class="x pn r" style="--b:573.7">9</p>
+</div>
+
+<!-- page 10 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.5">운동이 등가속도 운동이므로, 평균 속력 <span class="nw">$v_\mathrm{avg}$는</span> $v_\mathrm{f}$와 <span class="nw">$v_0$으로</span> 다음과 같이 나타낼 수 있다.</p>
+<p class="x c d" style="--b:90.9;--a:14.8pt">$v_\mathrm{avg} = \dfrac{L}{t} = \dfrac{v_0t + at^2/2}{t} = v_0 + \dfrac{v_\mathrm{f} - v_0}{2} = \dfrac{v_0 + v_\mathrm{f}}{2}.$</p>
+<p class="x i wn" style="--b:118.0">처음 속력과 나중 속력은 음수가 아니므로, 처음 속력에 대하여 다음 조건이 성립한다: <span class="nw">$0 &lt; v_0 &lt; 2v_\mathrm{avg}$.</span></p>
+<p class="x i" style="--b:142.7">경로 한가운데에서의 속력 <span class="nw">$v$를</span> $v_0$과 <span class="nw">$v_\mathrm{avg}$로</span> 나타내자.</p>
+<p class="x c" style="--b:166.4">$v^2 = 2v_\mathrm{avg}^2 - 2v_0v_\mathrm{avg} + v_0^2 = (v_\mathrm{avg} - v_0)^2 + v_\mathrm{avg}^2.$</p>
+<p class="x i" style="--b:190.7">최소 속력 <span class="nw">$v_\mathrm{min}$은</span> <span class="nw">$v_0 = v_\mathrm{avg}$일</span> 때 얻어지며 <span class="nw">$v_\mathrm{avg}$와</span> 같다. 최대 속력 <span class="nw">$v_\mathrm{max}$는</span> <span class="nw">$v_0 = 0$</span> 또는 <span class="nw">$v_0 = 2v_\mathrm{avg}$일</span> 때 얻어지며 <span class="nw">$\sqrt2\,v_\mathrm{avg}$와</span> 같다.</p>
+<p class="x h" style="--b:223.1">문제 2. 발코니에서</p>
+<p class="x i" style="--b:236.0">물체의 운동 에너지의 변화율은 물체에 작용하는 힘들의 일률이다. 공에는 중력과 공기의 저항력이 작용한다. 조건에 따라 저항력은 속도에 비례한다.</p>
+<p class="x c" style="--b:283.4">$\vec F_\mathrm{r} = -\alpha\vec v.$</p>
+<p class="x" style="--b:307.0">공에 작용하는 힘들의 일률의 합은 다음과 같다.</p>
+<p class="x c" style="--b:330.7">$N = (m\vec g + \vec F_\mathrm{r})\cdot\vec v = mgv - \alpha v^2,$</p>
+<p class="x en" style="--b:330.7">(3)</p>
+<p class="x" style="--b:354.2">여기서 <span class="nw">$v$는</span> 공의 속도 <span class="nw">$\vec v$를</span> 연직 아래 방향의 축에 정사영한 성분이다.</p>
+<p class="x i wn" style="--b:367.0">떨어지는 동안 공은 저항력이 중력과 평형을 이룰 때까지 가속된다. 일정한 속력으로 움직일 때의 속력 <span class="nw">$v_2$를</span> 알고 있으므로, 연직 아래 방향의 축에 대하여 공의 뉴턴 제2법칙을 쓰고 가속도를 0으로 놓으면 계수 <span class="nw">$\alpha$를</span> 구할 수 있다.</p>
+<p class="x c d" style="--b:428.5;--a:13.6pt">$0 = mg - \alpha v_2,\quad\text{따라서}\quad\alpha = \dfrac{mg}{v_2}.$</p>
+<p class="x" style="--b:456.2">운동하는 동안 <span class="nw">$v$는</span> <span class="nw">$-v_0$에서</span> <span class="nw">$v_2$까지</span> 변한다.</p>
+<p class="x i" style="--b:469.0">일률에 대한 식 (3)은 다음과 같이 바꾸어 쓸 수 있다.</p>
+<div class="f" style="left:147pt;top:482pt"><span class="fig" data-srcpage="2" data-clip="147,482,274,509"></span></div>
+<p class="x" style="--b:525.9">이 관계의 그래프는 꼭짓점이 <span class="nw">$v_1 = mg/(2\alpha)$인</span> 포물선이며, 그림&nbsp;13에 나타나 있다.</p>
+<p class="x pn" style="--b:573.7">10</p>
+</div>
+
+<!-- page 11 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<div class="f" style="left:102pt;top:41pt"><span class="fig" data-srcpage="3" data-clip="102,41,318,200"></span></div>
+<p class="x cap" style="--b:211.7;left:190.3pt">그림 13</p>
+<p class="x i wn" style="--b:232.4">그래프에서 알 수 있듯이, 운동 에너지 변화율의 (크기의) 최댓값은 <span class="nw">$v = v_1$일</span> 때 또는 <span class="nw">$v = -v_0$일</span> 때 얻어진다. 이때 일률은 첫 번째 경우에 <span class="nw">$N_1 = \dfrac{(mg)^2}{4\alpha}$이고</span>, 두 번째 경우에 <span class="nw">$N_2 = \dfrac{(mg)^2}{4\alpha} - \alpha\left(v_0 + \dfrac{mg}{2\alpha}\right)^2$이다</span>. $N_1$과 <span class="nw">$N_2$를</span> 비교하면, <span class="nw">$v_0 &lt; v_\mathrm{cr} = \dfrac{\left(\sqrt2 - 1\right)mg}{2\alpha}$일</span> 때 <span class="nw">$N_1 &gt; N_2$이고</span> 따라서 <span class="nw">$v_\mathrm{max} = v_1$이며</span>, <span class="nw">$v_0 &gt; v_\mathrm{cr}$일</span> 때 <span class="nw">$N_2 &gt; N_1$이고</span> <span class="nw">$v_\mathrm{max} = v_0$이다</span>. <span class="nw">$v_0 = v_\mathrm{cr}$일</span> 때에는 두 답이 모두 맞다.</p>
+<p class="x h" style="--b:331.1">문제 3. 수중 작업</p>
+<p class="x i wn" style="--b:343.1">잠수종 안의 공기 부피의 변화를 계산하기 위하여 보일-마리오트 법칙을 이용하자. <span class="nw">$pV = (p + \Delta p)(V - \Delta V)$이고</span>, 이로부터 공기의 부피는 다음만큼 줄어든다.</p>
+<p class="x c d" style="--b:394.5;--a:13.6pt">$\Delta V = V\left(\dfrac{\Delta p}{p + \Delta p}\right) = 0.0133\,\mathrm{m^3}.$</p>
+<p class="x i" style="--b:422.1">«잠수종&nbsp;+ 추&nbsp;+ 잠수종 안의 물기둥»으로 이루어진 계의 평형을 생각하자. 이 계에는 다음과 같은 외력이 작용한다: 중력, 케이블의 장력 $F_1$, 그리고 계의 윗면과 아랫면에 작용하는 정수압에 의한 힘(그림&nbsp;14에 모든 힘이 나타나 있지는 않다). 추를 들어 올리면 공기의 부피가 줄어들고, 비게 된 부피 <span class="nw">$\Delta V$는</span> 질량 <span class="nw">$\rho\Delta V$인</span> 물이 차지한다. 이때 계에 작용하는 모든 외력 가운데 케이블의 장력과 잠수종 안의 물에 작용하는 중력만 바뀐다. 따라서 케이블의 장력은 다음만큼 줄어든다.</p>
+<p class="x c" style="--b:527.8">$\Delta F = \rho\Delta Vg = 133\,\mathrm{N}.$</p>
+<p class="x pn r" style="--b:573.7">11</p>
+</div>
+
+<!-- page 12 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<div class="f" style="left:105pt;top:39pt"><span class="fig" data-srcpage="4" data-clip="105,39,318,187"></span></div>
+<p class="x cap" style="--b:196.7;left:190.3pt">그림 14</p>
+<p class="x i" style="--b:215.0">잠수종에는 중력, 정수압에 의한 힘, 공기의 압력에 의한 힘, 그리고 케이블과 밧줄의 장력이 작용한다. 이 가운데 추를 들어 올릴 때 바뀌는 것은 장력들과 공기의 압력에 의한 힘이다. 장력은 아래쪽으로, 공기의 압력에 의한 힘은 위쪽으로 향한다. 압력은 커지고 케이블의 장력은 줄어들므로 밧줄의 장력은 커지며, 그 변화는 다음과 같다.</p>
+<p class="x c" style="--b:294.8">$\Delta T = T_2 - T_1 = \Delta pS + \Delta F = 1000\,\mathrm{N} + 133\,\mathrm{N} = 1133\,\mathrm{N}.$</p>
+<p class="x h" style="--b:320.0">문제 4. 실에 매달린 고드름</p>
+<p class="x i" style="--b:332.0">어떤 순간 공의 온도를 $t$, 통로의 깊이를 <span class="nw">$h$라고</span> 하자. 열평형 방정식을 쓰면 다음과 같다.</p>
+<div class="f" style="left:156pt;top:356pt"><span class="fig" data-srcpage="4" data-clip="156,356,388,372"></span></div>
+<p class="x" style="--b:384.1">여기서 <span class="nw">$m$은</span> 녹은 얼음의 질량이다. 이 식으로부터 공의 처음 온도를 구할 수 있다.</p>
+<p class="x c d" style="--b:420.7;--a:13.6pt">$t_1 = t_0 + \dfrac{SH\rho\lambda}{C} = 100\,{}^\circ\mathrm{C}.$</p>
+<p class="x i" style="--b:443.3">열전달의 일률은 공과 얼음 사이의 온도 차에 비례한다. 한편, 고드름이 내려가는 속력도 공에서 빠져나가는 열의 일률과 관계가 있다.</p>
+<div class="f" style="left:171pt;top:479pt"><span class="fig" data-srcpage="4" data-clip="171,479,388,494"></span></div>
+<p class="x" style="--b:507.3">여기서 <span class="nw">$\alpha$는</span> 차원을 갖는 상수 계수이다. 식 (4)에서 온도 <span class="nw">$t$를</span> 구하여 식 (5)에 대입하자.</p>
+<p class="x c d" style="--b:545.3;--a:13.6pt">$\lambda\rho Sv = \alpha\left(t_1 - \dfrac{\lambda\rho Sh}{C} - t_0\right),\quad\text{따라서}\quad v = \alpha\left(\dfrac{t_1 - t_0}{\lambda\rho S} + \dfrac{h}{C}\right),$</p>
+<p class="x pn" style="--b:573.7">12</p>
+</div>
+
+<!-- page 13 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="5" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.1">즉 고드름의 속력은 고드름이 내려간 거리에 대하여 선형으로 변한다(그림&nbsp;15).</p>
+<div class="f" style="left:131pt;top:71pt"><span class="fig" data-srcpage="5" data-clip="131,71,290,216"></span></div>
+<p class="x cap" style="--b:229.0;left:190.3pt">그림 15</p>
+<p class="x i" style="--b:248.0">그러므로 실험 초기에 고드름의 속력은 <span class="nw">$v_0 = 3v_2 = 0.3\,\mathrm{mm/s}$이다</span>.</p>
+<p class="x h" style="--b:265.1">문제 5. 컴퓨터가 달린 전원</p>
+<p class="x i" style="--b:277.1">1) 전원을 통해 흐른 전하량이 시간에 따라 어떻게 변하는지 얻기 위하여, 문제에서 주어진 평균 전류의 정의를 이용하자.</p>
+<p class="x c d" style="--b:311.1;--a:12.3pt">$I_\mathrm{avg} = \dfrac{q}{t} \Rightarrow q = I_\mathrm{avg}t$</p>
+<p class="x" style="--b:333.9">시간 $t$ 동안 전원을 통해 흐른 전하량은 수치상으로 직사각형의 넓이 <span class="nw">$q = I_\mathrm{avg}t$와</span> 같다. 여러 점(15개 이상)에 대하여 흐른 전하량을 구하여 <span class="nw">$q(t)$</span> 그래프를 그린다(그림&nbsp;16).</p>
+<p class="x i wn" style="--b:369.8">2) 구간 OA는 직선이므로, 시각 <span class="nw">$t_\mathrm{A}$에서의</span> 전류는 다음과 같이 구할 수도 있다.</p>
+<p class="x c d" style="--b:403.9;--a:12.5pt">$I_\mathrm{avg} = \dfrac{q}{t} = \alpha t \to q = \alpha t^2$</p>
+<p class="x c d" style="--b:434.7;--a:13.6pt">$I = \dfrac{\Delta q}{\Delta t} = \alpha\dfrac{(t + \Delta t)^2 - t^2}{\Delta t} \approx \alpha\dfrac{2t\Delta t}{\Delta t} = 2\alpha t = 2I_\mathrm{avg}t$</p>
+<p class="x i" style="--b:454.9">점 $A$에 대하여: <span class="nw">$I_A = 2t_A\cdot I_\mathrm{avg}(t_A) = 6\,\mathrm{mA}$</span></p>
+<p class="x i" style="--b:466.7">저항기의 저항 <span class="nw">$R$은</span> 줄-렌츠 법칙으로부터 구한다.</p>
+<p class="x c d" style="--b:491.3;--a:13.6pt">$R = \dfrac{N_A}{I_A^2} = 4.44\,\mathrm{k\Omega}$</p>
+<p class="x i" style="--b:517.7">3) 최대 전류에는 <span class="nw">$q(t)$</span> 그래프에서 기울기가 가장 큰 점 <span class="nw">$B$가</span> 대응한다(여기서는 변곡점).</p>
+<p class="x c" style="--b:549.8">$t_B = 3\,\mathrm{s}\qquad I_{max} = 8.25\,\mathrm{mA}$</p>
+<p class="x pn r" style="--b:573.7">13</p>
+</div>
+
+<!-- page 14 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="6" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.5">다시 줄-렌츠 법칙을 이용하자.</p>
+<p class="x c" style="--b:70.5">$N_{max} = RI_{max}^2 = 0.3025\,\mathrm{W}$</p>
+<p class="x i" style="--b:92.3">최대 전류와 최대 <b>평균</b> 전류는 같은 순간에 얻어지지 않는다는 것에 주목하자.</p>
+<div class="f" style="left:68pt;top:115pt"><span class="fig" data-srcpage="6" data-clip="68,115,361,336"></span></div>
+<p class="rot ov" style="left:54.9pt;top:239.8pt">$q$, mC</p>
+<p class="x ov" style="--b:332.5;left:212.4pt">s</p>
+<p class="x cap" style="--b:345.2;left:190.3pt">그림 16</p>
+<p class="x pn" style="--b:573.7">14</p>
+</div>
+</body></html>

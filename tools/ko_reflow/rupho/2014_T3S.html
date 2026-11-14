@@ -1,0 +1,230 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2014 (XLVIII = 제48회), 11학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 22-28
+   (figures are numbered on through the booklet: 그림 23-30; equations (20)-(22)).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+   In this booklet even pages carry "제48회 ..." and the page number at the LEFT, odd pages "결선. 이론 시험" and the
+   page number at the RIGHT; page numbers sit on baseline 573.7.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction.
+   A line holding a tall inline fraction (\dfrac) grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~13.6pt for a \dfrac with capital/ascender numerator).
+   Display formulas without Russian are stamped; a Russian word or unit inside a stamped display (따라서, 또는,
+   cm, kV, s, the Cyrillic C of C_V, the subscript el) is put back with an .ov label at its place. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.7) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "11학년" (SFBX1200 = 11.955pt bold), problem titles (SFBX1000 bold) — centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* numbered items: the number at the column edge, the text after a fixed gap (original x 33.1 / ~50.8) */
+.n{display:inline-block;width:17.7pt;text-indent:0}
+/* text running beside a figure: a float reserves the figure's room for the first N lines
+   --fw = room taken by the figure, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* a paragraph continued on the next page: its last line on this page is justified */
+.cont{text-align-last:justify}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 22 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">11학년</p>
+<p class="x h" style="--b:61.4">문제 1. 용수철의 늘어남</p>
+<p class="x i" style="--b:73.4">길이가 <span class="nw">$l$인</span> 용수철 전체의 용수철 상수가 <span class="nw">$k$이면</span>, 추의 세로 진동의 주기는 다음 식으로 구할 수 있다.</p>
+<div class="f" style="left:181pt;top:92pt"><span class="fig" data-srcpage="1" data-clip="181,92,239,117"></span></div>
+<p class="x" style="--b:126.7">여기서 <span class="nw">$m$은</span> 추의 질량이다.</p>
+<p class="x i" style="--b:138.7">가로 방향으로 추의 운동 방정식은 다음과 같다.</p>
+<div class="f" style="left:84pt;top:148pt"><span class="fig" data-srcpage="1" data-clip="84,148,337,173"></span></div>
+<p class="x ov" style="--b:164.0;left:145.3pt;--fs:7pt">$\mathrm{el}$</p>
+<p class="x" style="--b:185.3">각진동수가 <span class="nw">$\omega_\perp^2 = (4k\Delta l)/(ml)$인</span> 조화 진동의 방정식을 얻었다. 그 주기는 다음과 같다.</p>
+<div class="f" style="left:130pt;top:208pt"><span class="fig" data-srcpage="1" data-clip="130,208,291,234"></span></div>
+<p class="x i" style="--b:248.3">주기의 비는 다음과 같다.</p>
+<div class="f" style="left:112pt;top:256pt"><span class="fig" data-srcpage="1" data-clip="112,256,309,287"></span></div>
+<p class="x ov" style="--b:273.8;left:208pt">따라서</p>
+<p class="x" style="--b:301.4"><span class="nw">$\Delta x = \Delta l_2 - \Delta l_1$이므로</span> 다음과 같다.</p>
+<div class="f" style="left:115pt;top:310pt"><span class="fig" data-srcpage="1" data-clip="115,310,307,343"></span></div>
+<p class="x" style="--b:349.4">따라서</p>
+<div class="f" style="left:135pt;top:358pt"><span class="fig" data-srcpage="1" data-clip="135,358,285,445"></span></div>
+<p class="x ov" style="--b:374.8;left:269.3pt">$\mathrm{cm}$</p>
+<p class="x ov" style="--b:401.9;left:242.3pt">$\mathrm{cm}$</p>
+<p class="x ov" style="--b:429.1;left:246.2pt">$\mathrm{cm}$</p>
+<p class="x h" style="--b:459.2">문제 2. 나노 융해</p>
+<p class="x i" style="--b:471.2">나노 물체에서 녹는점이 낮아지는 것은 (부피가 작아짐에 따라) 내부 원자에 비해 여분의 에너지 <span class="nw">$\Delta U$를</span> 가진 표면 근처 원자의 비율이 커지기 때문이다. 시료의 모양이 다르면 이 비율도 달라진다. 알갱이의 경우, 두께가 <span class="nw">$\delta$인</span> 표면층에 있는 원자의 비율은 다음과 같다.</p>
+<div class="f" style="left:114pt;top:527pt"><span class="fig" data-srcpage="1" data-clip="114,527,307,556"></span></div>
+<p class="x pn" style="--b:573.7">22</p>
+</div>
+
+<!-- page 23 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.7">표면층의 두께를 어림해 보자. 주석 원자 하나가 차지하는 부피는 다음과 같다.</p>
+<div class="f" style="left:188pt;top:63pt"><span class="fig" data-srcpage="2" data-clip="188,63,233,90"></span></div>
+<p class="x" style="--b:103.1">따라서 특징적인 원자 사이 거리는 <span class="nw">$a = \sqrt[3]{v} \approx 1.86\,\mathrm{nm}$이다</span>. 이 경우 표면층의 크기는 4–6&thinsp;nm 정도로, 20&thinsp;nm보다 상당히 작다.</p>
+<p class="x i" style="--b:138.9">융해열은 표면 근처에 있는 모든 원자의 여분의 에너지만큼 줄어든다.</p>
+<div class="f" style="left:142pt;top:164pt"><span class="fig" data-srcpage="2" data-clip="142,164,279,178"></span></div>
+<p class="x" style="--b:194.7">새로운 융해열은 다음과 같다.</p>
+<div class="f" style="left:142pt;top:208pt"><span class="fig" data-srcpage="2" data-clip="142,208,279,222"></span></div>
+<p class="x" style="--b:238.6">원자 하나당으로 환산하면 다음과 같다.</p>
+<div class="f" style="left:156pt;top:242pt"><span class="fig" data-srcpage="2" data-clip="156,242,264,254"></span></div>
+<p class="x" style="--b:268.5"><span class="nw">$q/N = \alpha T_d$,</span> <span class="nw">$q_0/N = \alpha T_0$</span>(<span class="nw">$\alpha$는</span> 비례 계수)임을 고려하면, 덩어리 시료에 비해 나노 알갱이의 녹는점이 상대적으로 낮아지는 정도는 다음과 같다.</p>
+<div class="f" style="left:169pt;top:305pt"><span class="fig" data-srcpage="2" data-clip="169,305,252,331"></span></div>
+<p class="x" style="--b:347.3">넓이가 <span class="nw">$S$인</span> 포일에서 두께가 <span class="nw">$\delta$인</span> 표면층에 있는 원자의 비율은 다음과 같다.</p>
+<div class="f" style="left:123pt;top:360pt"><span class="fig" data-srcpage="2" data-clip="123,360,298,386"></span></div>
+<p class="x" style="--b:400.7">따라서 포일의 녹는점이 상대적으로 낮아지는 정도는 다음과 같다.</p>
+<div class="f" style="left:131pt;top:414pt"><span class="fig" data-srcpage="2" data-clip="131,414,289,440"></span></div>
+<p class="x" style="--b:455.6">이 관계는 실험으로 잘 확인된다.</p>
+<p class="x c" style="--b:477.5">$\Delta T_h = 1/3\,\Delta T_d \approx 8.30\,{}^\circ\mathrm{C} \to t_h = t_0 - \Delta T_h \approx 223.7\,{}^\circ\mathrm{C}.$</p>
+<p class="x pn r" style="--b:573.7">23</p>
+</div>
+
+<!-- page 24 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 3. 켈빈 경의 8자</p>
+<div class="f" style="left:32pt;top:53pt"><span class="fig" data-srcpage="3" data-clip="32,53,152,138"></span></div>
+<p class="x cap" style="--b:149.5;left:72.6pt">그림 23</p>
+<p class="x wn" style="--b:60.5;left:162pt;width:225.5pt;text-indent:15pt">익숙한 <span class="nw">$(p, V)$</span> 좌표에서 이 과정을 정성적으로 그려 보자(그림&nbsp;23). 그래프는 네 개의 폴리트로프로 이루어져 있다. 과정 <span class="nw">$ab$에는</span> 과정 12가, <span class="nw">$ef$에는</span> 23이, <span class="nw">$cb$에는</span> 34가, <span class="nw">$ed$에는</span> 41이 대응한다. 또한 점 2와 4가 같은 등온선 위에 있다는 점<span class="nw">($T_2 = T_4 = T_b$)도</span> 중요하다.</p>
+<p class="x wl wn" style="--b:132.3;--fw:128.9pt;--fh:34.9pt"><span class="n">1.</span>열용량이 일정한 과정에서 기체에 전달된 열은 <span class="nw">$Q = C\Delta T$이므로</span>, <span class="nw">$CT$</span> 좌표에서 과정의 열은 수치적으로 그래프 아래의 넓이와 같다. 그래프에서 알 수 있듯이, 구간 12와 23에서는 열이 공급되고, 구간 34와 41에서는 열이 방출된다. 공급된 전체 열 <span class="nw">$Q_+$와</span> 방출된 열 <span class="nw">$Q_-$는</span> 다음과 같다.</p>
+<p class="x c" style="--b:213.9">$Q_+ = Q_{12} + Q_{23} = C_a(T_2 - T_1) + C_d(T_3 - T_2) = 271.5\,\mathrm{J}.$</p>
+<p class="x c" style="--b:228.9">$Q_- = Q_{34} + Q_{41} = -C_a(T_3 - T_2) - C_d(T_2 - T_1) = -243\,\mathrm{J}.$</p>
+<p class="x" style="--b:250.7">열역학 제1법칙에 따라 순환 과정에서 출입한 전체 열은 기체가 한 일과 같다.</p>
+<p class="x c d" style="--b:289.1;--a:13.6pt">$A = Q_+ + Q_- = 28.5\,\mathrm{J},\qquad\text{그러면}\qquad \eta = \dfrac{A}{Q_+} = 0.105.$</p>
+<p class="x" style="--b:316.7"><span class="n">2.</span>폴리트로프 방정식과 이상 기체의 상태 방정식 <span class="nw">$pV/T = \mathrm{const}$로부터</span> $T$와 <span class="nw">$V$</span> 사이의 관계가 나온다.</p>
+<div class="f" style="left:108pt;top:337pt"><span class="fig" data-srcpage="3" data-clip="108,337,389,370"></span></div>
+<p class="x ov" style="--b:359.5;left:202pt">또는</p>
+<p class="x" style="--b:387.4">네 과정에 대해 (20)을 쓰면 다음과 같다.</p>
+<div class="f" style="left:39pt;top:399pt"><span class="fig" data-srcpage="3" data-clip="39,399,382,429"></span></div>
+<p class="x" style="--b:445.9">모든 등식을 서로 곱하자.</p>
+<div class="f" style="left:79pt;top:456pt"><span class="fig" data-srcpage="3" data-clip="79,456,389,488"></span></div>
+<p class="x ov" style="--b:478.1;left:208pt">따라서</p>
+<p class="x" style="--b:506.0"><span class="nw">$T_2 = T_1 + T_0$,</span> <span class="nw">$T_3 = T_1 + 3T_0$</span>(여기서 <span class="nw">$T_0 = 100\,\mathrm{K}$)을</span> (21)에 넣자.</p>
+<div class="f" style="left:97pt;top:517pt"><span class="fig" data-srcpage="3" data-clip="97,517,323,533"></span></div>
+<p class="x ov" style="--b:527.9;left:235.5pt">따라서</p>
+<p class="x" style="--b:549.8">이렇게 하여 <span class="nw">$T_1 = 100\,\mathrm{K}$,</span> <span class="nw">$T_2 = 200\,\mathrm{K}$,</span> <span class="nw">$T_3 = 400\,\mathrm{K}$을</span> 얻는다.</p>
+<p class="x pn" style="--b:573.7">24</p>
+</div>
+
+<!-- page 25 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<div class="f" style="left:71pt;top:41pt"><span class="fig" data-srcpage="4" data-clip="71,41,169,126"></span></div>
+<div class="f" style="left:247pt;top:42pt"><span class="fig" data-srcpage="4" data-clip="247,42,349,128"></span></div>
+<p class="x cap" style="--b:136.6;left:100.2pt">그림 24</p>
+<p class="x cap" style="--b:136.6;left:277.4pt">그림 25</p>
+<p class="x" style="--b:155.7"><span class="n">3.</span>폴리트로프 지수 <span class="nw">$n$과</span> 열용량 <span class="nw">$C$</span> 사이의 관계를 구하자. (20)을 미분하면 증분 <span class="nw">$\Delta V$와</span> <span class="nw">$\Delta T$</span> 사이의 관계를 얻는다.</p>
+<div class="f" style="left:65pt;top:178pt"><span class="fig" data-srcpage="4" data-clip="65,178,356,207"></span></div>
+<p class="x ov" style="--b:193.5;left:236pt">따라서</p>
+<p class="x i" style="--b:217.9">열역학 제1법칙을 쓰자.</p>
+<div class="f" style="left:72pt;top:228pt"><span class="fig" data-srcpage="4" data-clip="72,228,347,257"></span></div>
+<p class="x ov" style="--b:243.3;left:188.5pt">$\mathrm{C}$</p>
+<p class="x ov" style="--b:243.3;left:264.9pt">$\mathrm{C}$</p>
+<div class="f" style="left:130pt;top:259pt"><span class="fig" data-srcpage="4" data-clip="130,259,291,288"></span></div>
+<p class="x" style="--b:295.3">따라서</p>
+<div class="f" style="left:147pt;top:297pt"><span class="fig" data-srcpage="4" data-clip="147,297,274,325"></span></div>
+<p class="x i" style="--b:333.3">폴리트로프 방정식에 로그를 취하면 다음을 얻는다.</p>
+<div class="f" style="left:157pt;top:343pt"><span class="fig" data-srcpage="4" data-clip="157,343,264,369"></span></div>
+<p class="x" style="--b:384.8">따라서 $x = \ln V/V_0$, <span class="nw">$y = \ln p/p_0$인</span> $xy$ 좌표에서 폴리트로프의 그래프는 기울기가 <span class="nw">$-n$인</span> 직선이다. 그러므로 순환 과정 전체의 그래프는 평행사변형이 되며, 그 점 2와 4는 직선 $x + y = \mathrm{const}$ 위에 있다(그림&nbsp;24). 조건 <span class="nw">$p_1/p_3 = V_1/V_3$으로부터</span> 점 1과 3은 직선 $x - y = \mathrm{const}$ 위에 있음을 알 수 있다. 따라서 평행사변형의 두 대각선은 서로 수직이고, 순환 과정의 그래프는 마름모이다. 마름모의 대각선 13은 각의 이등분선이므로 폴리트로프들의 기울어진 각의 합은 <span class="nw">$90^\circ$이고</span>, 이로부터 기울기의 곱이 1임을 알 수 있다.</p>
+<div class="f" style="left:32pt;top:479pt"><span class="fig" data-srcpage="4" data-clip="32,479,388,509"></span></div>
+<p class="x ov" style="--b:493.9;left:195pt">따라서</p>
+<p class="x" style="--b:518.8">여기서 $c_p$와 <span class="nw">$c_V$는</span> 몰열용량이다. 최종적으로 다음을 얻는다.</p>
+<p class="x c d" style="--b:545.1;--a:13.6pt">$\nu = \dfrac{C_a + C_d}{c_p + c_V} = 34.4\,\mathrm{mmol}.$</p>
+<p class="x pn r" style="--b:573.7">25</p>
+</div>
+
+<!-- page 26 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="5" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.5"><span class="nw">$C_a = \nu c_v$,</span> <span class="nw">$C_d = \nu c_p$임에</span> 주목하자. 따라서 이 순환 과정은 두 개의 등압 과정과 두 개의 등적 과정으로 이루어져 있다(그림&nbsp;25).</p>
+<p class="x h" style="--b:79.5">문제 4. 전기 충격</p>
+<p class="x" style="--b:91.7"><span class="n">1.</span>각 구슬의 진동 주기는 <span class="nw">$T = 2\pi\sqrt{l/g} = 2.0\,\mathrm{s}$이다</span>.</p>
+<p class="x" style="--b:104.1"><span class="n">2.</span>구슬은 점전하로 생각한다. 도선이 연직선에서 서로 가까워지는 쪽으로 작은 각 <span class="nw">$\alpha$만큼</span>(<span class="nw">$\sin\alpha \approx \mathrm{tg}\,\alpha \approx \alpha$)</span> 기울어졌을 때, 쿨롱 인력 <span class="nw">$F_q = kq^2/(d-2\alpha l)^2$은</span> 중력과 도선 장력의 합력 <span class="nw">$F_\mathrm{r} = mg\alpha$와</span> 평형을 이룬다.</p>
+<div class="f" style="left:95pt;top:152pt"><span class="fig" data-srcpage="5" data-clip="95,152,326,180"></span></div>
+<p class="x" style="--b:198.4">함수 <span class="nw">$f(\alpha) = \alpha(d-2\alpha l)^2$은</span> <span class="nw">$\alpha_0 = d/(6l)$에서</span> 최댓값을 가진다. 이 값에 구슬 전하의 최댓값이 대응한다.</p>
+<div class="f" style="left:79pt;top:223pt"><span class="fig" data-srcpage="5" data-clip="79,223,342,251"></span></div>
+<p class="x" style="--b:266.8">구슬을 <span class="nw">$\alpha_0$보다</span> 큰 각으로, 충돌할 때까지 기울이는 데에는 더 작은 전하가 필요하다. 따라서 전하가 <span class="nw">$q_\mathrm{max}$를</span> 아주 조금이라도 넘어서면 구슬들은 쿨롱 상호 작용 때문에 꽤 빠르게 (시간 <span class="nw">$T$를</span> 넘지 않는 사이에) 서로 끌려가 부딪치고, 서로 방전된 뒤 다시 떨어져서, 충돌에 필요한 임계 전하 <span class="nw">$q_\mathrm{max}$를</span> 다시 얻을 때까지 떨어져 있다. 전하가 <span class="nw">$q_\mathrm{max}$일</span> 때 구슬 사이의 전위차는 구슬들이 충돌하게 되는 전원 전압의 최솟값과 같다.</p>
+<div class="f" style="left:68pt;top:363pt"><span class="fig" data-srcpage="5" data-clip="68,363,353,391"></span></div>
+<p class="x ov" style="--b:381.1;left:335.4pt">$\mathrm{kV}$</p>
+<p class="x" style="--b:407.2"><span class="n">3.</span><span class="nw">$U_\mathrm{min} \ll U_0 = 1\,\mathrm{MV}$이므로</span> 충전 전류는 일정한 <span class="nw">$I = U_0/R$로</span> 볼 수 있고, 전하가 <span class="nw">$q_\mathrm{max}$에</span> 이르기까지 충전되는 시간은 다음 식으로 계산할 수 있다.</p>
+<div class="f" style="left:145pt;top:432pt"><span class="fig" data-srcpage="5" data-clip="145,432,276,457"></span></div>
+<p class="x ov" style="--b:446.8;left:267.6pt">$\mathrm{s}$</p>
+<p class="x h" style="--b:477.4">문제 5. 스넬리우스의 자료 보관소에서</p>
+<div class="f" style="left:70pt;top:483pt"><span class="fig" data-srcpage="5" data-clip="70,483,201,553"></span></div>
+<p class="x cap" style="--b:564.7;left:98.7pt">그림 26</p>
+<p class="x wn" style="--b:489.7;left:214.1pt;width:173.5pt;text-indent:14.9pt">먼저 렌즈가 어디에 있을 수 있고 어떤 렌즈일 수 있는지를 정성적으로 분석해 보자.</p>
+<p class="x wn cont" style="--b:525.9;left:214.1pt;width:173.5pt;text-indent:14.9pt"><b>오목 렌즈.</b> 오목 렌즈에 의한 상은 언제나 허상이고, 렌즈에 대해 광원과 같은 쪽에 생기며, 이때 렌즈에서 상까지의 거리는</p>
+<p class="x pn" style="--b:573.7">26</p>
+</div>
+
+<!-- page 27 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="6" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x wl wn" style="--b:46.0;--fw:181pt;--fh:10.9pt">렌즈에서 광원까지의 거리보다 짧다. 따라서 조건을 만족하는 것은 <span class="nw">$S_1$보다</span> 오른쪽에 있는 오목 렌즈이다(그림&nbsp;26).</p>
+<p class="x i" style="--b:94.4"><b>볼록 렌즈.</b> 상은 허상일 수도 있고 실상일 수도 있다. (확대된) 허상은 언제나 광원보다 렌즈에서 더 멀리 있으므로, 허상을 만드는 렌즈는 <span class="nw">$S_0$의</span> 왼쪽에 있다(그림&nbsp;27).</p>
+<div class="f" style="left:40pt;top:143pt"><span class="fig" data-srcpage="6" data-clip="40,143,378,208"></span></div>
+<p class="x cap" style="--b:219.7;left:93.2pt">그림 27</p>
+<p class="x cap" style="--b:219.7;left:221.8pt">그림 28</p>
+<p class="x cap" style="--b:219.7;left:318.9pt">그림 29</p>
+<p class="x i" style="--b:242.3">렌즈가 광원 <span class="nw">$S_0$과</span> 상 <span class="nw">$S_1$</span> 사이에 있으면 상은 실상이다. 렌즈에는 초점이 두 개 있으므로, 점 <span class="nw">$F$는</span> 렌즈의 오른쪽(그림&nbsp;28)에 있을 수도 있고 왼쪽(그림&nbsp;29)에 있을 수도 있다.</p>
+<p class="x i" style="--b:278.8">따라서 해는 네 가지이다!</p>
+<p class="x i" style="--b:291.3">이제 이 렌즈들의 광학 중심의 정확한 좌표를 구하고 작도를 해 보자. 광원에서 초점까지의 거리를 $d$, 상까지의 거리를 $L$, 렌즈까지의 거리를 <span class="nw">$x$라고</span> 하자. 얇은 렌즈 공식을 쓰면 다음과 같다.</p>
+<div class="f" style="left:156pt;top:329pt"><span class="fig" data-srcpage="6" data-clip="156,329,389,358"></span></div>
+<p class="x" style="--b:373.4">여기서 좌변의 더하기 부호는 실상에, 빼기 부호는 허상에 해당한다. 한편 렌즈의 굴절력 앞의 더하기 부호는 볼록 렌즈에, 빼기 부호는 오목 렌즈에 해당한다.</p>
+<p class="x i" style="--b:409.7">문제에 주어진 점 $S_0$, <span class="nw">$F$,</span> <span class="nw">$S_1$은</span> 광축을 네 구간으로 나누며, 각 구간에서 식 (22)의 절댓값 기호는 서로 다른 부호로 풀린다.</p>
+<p class="x i" style="--b:446.2">식 (22)의 모든 해를 구하자. 구간 <span class="nw">$S_0F$에서</span> 절댓값 기호를 풀자. 앞에서 보았듯이 이 구간에는 볼록 렌즈만 있을 수 있으므로 다음과 같다.</p>
+<div class="f" style="left:112pt;top:475pt"><span class="fig" data-srcpage="6" data-clip="112,475,309,508"></span></div>
+<p class="x c" style="--b:518.2">$x^2 - 2Lx + Ld = 0 \to L - x = \mp\sqrt{L(L-d)},$</p>
+<p class="x" style="--b:537.9">이때 빼기 부호인 해가 우리가 살펴보는 구간에 속한다.</p>
+<p class="x pn r" style="--b:573.7">27</p>
+</div>
+
+<!-- page 28 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="7" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:49.1">나머지 세 구간에서도 같은 방법으로 식 (22)를 풀면, 볼록 렌즈 두 개가 더 점 <span class="nw">$x = \pm\sqrt{Ld}$에</span> 있고, 점 <span class="nw">$L - x = \sqrt{L(L-d)}$에</span> 오목 렌즈가 있음을 알 수 있다.</p>
+<p class="x i" style="--b:85.0">이 문제의 작도는 모두 선분 길이의 곱의 제곱근을 작도하는 것으로 귀결된다. 기하학에서 증명하듯이, 직각삼각형의 직각인 꼭짓점에서 내린 높이는 두 직각변을 빗변에 정사영한 두 선분의 기하 평균이다. 따라서 <span class="nw">$\sqrt{S_0S_1\cdot FS_1}$과</span> <span class="nw">$\sqrt{S_0S_1\cdot S_0F}$를</span> 구하고, 얻은 선분을 각각 점 <span class="nw">$S_0$에서</span> 오른쪽으로, 점 <span class="nw">$S_1$에서</span> 양쪽으로 잡는다.</p>
+<p class="x i" style="--b:156.8">작도의 단계별 순서(그림&nbsp;30):</p>
+<p class="x" style="--b:168.8"><span class="n">1.</span>광축 위에 점 <span class="nw">$S_1$에서</span> 오른쪽으로 길이가 <span class="nw">$S_0S_1 = L$인</span> 선분을 잡는다. 그 끝점을 <span class="nw">$M_1$이라</span> 하자.</p>
+<p class="x" style="--b:192.7"><span class="n">2.</span><span class="nw">$FS_1 = L - d$와</span> <span class="nw">$L$의</span> 기하 평균을 구한다. 이를 위해 <span class="nw">$FM_1$을</span> 지름으로 하는 원을 그린다. <span class="nw">$S_1$을</span> 지나는 광축의 수선과 원의 교점을 <span class="nw">$P_1$이라</span> 하자. 선분 <span class="nw">$S_1P_1$의</span> 길이는 <span class="nw">$\sqrt{L(L-d)}$이다</span>.</p>
+<p class="x" style="--b:240.5"><span class="n">3.</span>길이가 <span class="nw">$S_1P_1$인</span> 선분을 광축 위에서 <span class="nw">$S_1$의</span> 왼쪽(<span class="nw">$O_1$)과</span> 오른쪽(<span class="nw">$O_2$)으로</span> 잡는다. 왼쪽 렌즈는 볼록 렌즈, 오른쪽 렌즈는 오목 렌즈가 된다.</p>
+<p class="x" style="--b:264.4"><span class="n">4.</span>광축 위에 점 <span class="nw">$S_0$에서</span> 왼쪽으로 길이가 <span class="nw">$S_0S_1 = L$인</span> 선분을 잡는다. 그 끝점을 <span class="nw">$M_0$이라</span> 하자.</p>
+<p class="x" style="--b:288.3"><span class="n">5.</span>2단계와 같은 방법으로 <span class="nw">$M_0F$를</span> 지름으로 하는 원과 수선 <span class="nw">$S_0P_0$을</span> 그린다. 그 길이는 <span class="nw">$\sqrt{Ld}$이다</span>.</p>
+<p class="x" style="--b:312.2"><span class="n">6.</span>길이가 <span class="nw">$S_0P_0$인</span> 선분을 광축 위에서 점 <span class="nw">$S_0$의</span> 오른쪽(<span class="nw">$O_3$)과</span> 왼쪽(<span class="nw">$O_4$)으로</span> 잡는다. 이 렌즈들은 볼록 렌즈이다.</p>
+<div class="f" style="left:38pt;top:340pt"><span class="fig" data-srcpage="7" data-clip="38,340,380,518"></span></div>
+<p class="x cap" style="--b:526.0;left:190.3pt">그림 30</p>
+<p class="x pn" style="--b:573.7">28</p>
+</div>
+</body></html>

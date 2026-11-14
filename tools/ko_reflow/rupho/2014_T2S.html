@@ -1,0 +1,209 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2014 (XLVIII = 제48회), 10학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 15-21
+   (figures are numbered on through the booklet: 그림 17-22; equations numbered (6)-(19)).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+   Odd pages carry "결선. 이론 시험" and the page number at the RIGHT, even pages "제48회 ..." and the page number at
+   the LEFT; page numbers sit on baseline 573.7.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~13.6pt for a \dfrac with capital/ascender numerator).
+   Equation numbers "(n)" of retyped displays: separate right-aligned block on the same baseline (.en).
+   Retyped formulas: Cyrillic subscripts тр -> fr (friction), п (полёт) -> 비행, отн -> rel. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.en{text-align:right}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.7) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "10학년" (SFBX1200 = 11.955pt bold), problem titles (SFBX1000 bold) — centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* problem 1: paragraph and formula (8) beside figure 17 use the column 33.1..270.5 */
+.nc{width:237.4pt}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean/Latin label put back where scrub.py removed a Russian word */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 15 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">10학년</p>
+<p class="x h" style="--b:67.4">문제 1. 투석기</p>
+<p class="x i" style="--b:79.4">투석기에서 각 <span class="nw">$\varphi$로</span> 쏜 공이 날아가는 수평 거리는 다음과 같다.</p>
+<div class="f" style="left:140pt;top:90pt"><span class="fig" data-srcpage="1" data-clip="140,90,388,117"></span></div>
+<p class="x" style="--b:133.6">처음 속력이 같은 두 공이 같은 지점에 떨어지므로, 두 공을 쏘는 각, 곧 수평면에 대한 각 <span class="nw">$\varphi_1$과</span> <span class="nw">$\varphi_2$는</span> 조건 <span class="nw">$2\varphi_1 = 180^\circ - 2\varphi_2$를</span> 만족한다. 이것은 다음 식과 같다.</p>
+<div class="f" style="left:178pt;top:171pt"><span class="fig" data-srcpage="1" data-clip="178,171,388,186"></span></div>
+<p class="x i nc" style="--b:199.4">두 공의 처음 속도 벡터는 수평면과 <span class="nw">$45^\circ$를</span> 이루는 반직선에 대하여 대칭이다(그림&nbsp;17). 두 공이 모두 공중에 있는 시간은 아래쪽 공의 비행 시간으로 정해진다(위쪽 공이 더 오래 날아간다).</p>
+<div class="f" style="left:279pt;top:192pt"><span class="fig" data-srcpage="1" data-clip="279,192,388,272"></span></div>
+<p class="x cap" style="--b:282.3;left:314pt">그림 17</p>
+<p class="x c d nc" style="--b:286.9;--a:13.6pt">$t_\text{비행} = \dfrac{2v_0\sin(45^\circ - \alpha)}{g}.$</p>
+<p class="x en nc" style="--b:286.9">(8)</p>
+<p class="x" style="--b:313.4">이제 원점이 아래쪽 공과 함께 움직이고, 비행하는 동안 내내 좌표축의 방향이 공간에서 바뀌지 않는 기준계로 옮겨 가자. 이 기준계에서 위쪽 공은 다음 속도로 등속 직선 운동을 한다.</p>
+<div class="f" style="left:176pt;top:353pt"><span class="fig" data-srcpage="1" data-clip="176,353,388,366"></span></div>
+<p class="x" style="--b:379.1">시간 <span class="nw">$t_\text{비행}$</span> 동안 위쪽 공은 다음 거리만큼 멀어진다.</p>
+<p class="x c d" style="--b:406.9;--a:13.6pt">$L = \Delta v\,t_\text{비행} = \dfrac{4v_0^2}{g}\sin\alpha\sin(45^\circ - \alpha) = \dfrac{2v_0^2}{g}(\cos(2\alpha - 45^\circ) - \cos 45^\circ).$</p>
+<p class="x en" style="--b:406.9">(10)</p>
+<p class="x" style="--b:434.1">이 식은 <span class="nw">$\cos(2\alpha - 45^\circ) = 1$일</span> 때, 곧 <span class="nw">$\alpha = 22.5^\circ$일</span> 때 최대가 된다. 따라서</p>
+<div class="f" style="left:156pt;top:446pt"><span class="fig" data-srcpage="1" data-clip="156,446,264,475"></span></div>
+<p class="x" style="--b:487.0">이로부터 처음 속력은 다음과 같다.</p>
+<p class="x c d" style="--b:518.3;--a:16.5pt">$v_0 = \sqrt{\dfrac{L_\mathrm{max}\,g}{2 - \sqrt2}} = 18\,\mathrm{m/s}.$</p>
+<p class="x pn r" style="--b:573.7">15</p>
+</div>
+
+<!-- page 16 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 2. 도선이 감긴 실패</p>
+<p class="x i" style="--b:62.3"><i>풀이 1.</i></p>
+<p class="x i" style="--b:76.1"><span class="nw">$R$을</span> 실패의 바깥 반지름, <span class="nw">$r$를</span> 안쪽 반지름, <span class="nw">$\mu$를</span> 막대와 실패 사이의 마찰 계수, <span class="nw">$\vec Q$를</span> 받침의 전체 반작용력이라고 하자. <span class="nw">$\vec Q$는</span> 받침의 수직 항력 <span class="nw">$\vec N$과</span> 미끄럼 마찰력 <span class="nw">$\vec F_\mathrm{fr}$의</span> 합으로 나타낼 수 있다(<span class="nw">$\vec Q = \vec F_\mathrm{fr} + \vec N$</span>).</p>
+<p class="x i" style="--b:125.8">그림 18과 19는 힘 <span class="nw">$F$의</span> 작용으로 실패가 일정하게 풀려 나가는 동안 실패에 작용하는 힘들을 나타낸 것이다.</p>
+<p class="x i" style="--b:151.5">실패의 안쪽 면과 막대 사이에는 마찰력이 작용하며, 두 힘 <span class="nw">$F_\mathrm{fr}$와</span> <span class="nw">$Q$의</span> 크기의 비는 마찰 계수에만 관계되고 힘 <span class="nw">$F$에는</span> 관계되지 않는다는 점에 주목하자. 따라서</p>
+<p class="x c d" style="--b:205.5;--a:13.6pt">$\dfrac{F_\mathrm{fr1}}{F_\mathrm{fr2}} = \dfrac{Q_1}{Q_2}.$</p>
+<p class="x" style="--b:236.7">실패의 중심에 대한 힘의 모멘트가 같다는 조건</p>
+<p class="x c" style="--b:262.3">$FR = F_\mathrm{fr}r.$</p>
+<p class="x" style="--b:287.8">으로부터 다음을 얻는다.</p>
+<p class="x c d" style="--b:309.8;--a:13.6pt">$\dfrac{F_\mathrm{fr1}}{F_\mathrm{fr2}} = \dfrac{F_1}{F_2}.$</p>
+<p class="x i" style="--b:340.5">또한 다음이 성립한다.</p>
+<div class="f" style="left:180pt;top:350pt"><span class="fig" data-srcpage="2" data-clip="180,350,240,363"></span></div>
+<p class="x" style="--b:381.4">그리고</p>
+<div class="f" style="left:172pt;top:389pt"><span class="fig" data-srcpage="2" data-clip="172,389,249,409"></span></div>
+<p class="x i" style="--b:429.3">얻은 연립 방정식을 풀면 다음을 얻는다.</p>
+<div class="f" style="left:172pt;top:446pt"><span class="fig" data-srcpage="2" data-clip="172,446,249,476"></span></div>
+<p class="x" style="--b:491.8">이로부터 구하는 질량은 다음과 같다.</p>
+<div class="f" style="left:171pt;top:506pt"><span class="fig" data-srcpage="2" data-clip="171,506,249,540"></span></div>
+<p class="x pn" style="--b:573.7">16</p>
+</div>
+
+<!-- page 17 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<div class="f" style="left:44pt;top:40pt"><span class="fig" data-srcpage="3" data-clip="44,40,374,229"></span></div>
+<p class="x ov" style="--b:107.7;left:146.1pt;--fs:6.974pt">fr</p>
+<p class="x ov" style="--b:107.7;left:298.4pt;--fs:6.974pt">fr</p>
+<p class="x cap" style="--b:239.9;left:98.1pt">그림 18</p>
+<p class="x cap" style="--b:239.9;left:275.3pt">그림 19</p>
+<p class="x i" style="--b:261.1"><i>풀이 2(‘정면으로 풀기’).</i> 힘 <span class="nw">$N_1$의</span> 방향과 수평선 사이의 각을 <span class="nw">$\alpha$라고</span> 하자. 모든 힘의 합력이 0이라는 조건을 수평축에 사영하면 다음과 같다.</p>
+<div class="f" style="left:159pt;top:299pt"><span class="fig" data-srcpage="3" data-clip="159,299,389,312"></span></div>
+<p class="x" style="--b:329.3">또 연직축에 사영하면</p>
+<div class="f" style="left:142pt;top:343pt"><span class="fig" data-srcpage="3" data-clip="142,343,389,356"></span></div>
+<p class="x" style="--b:373.6">실패의 중심에 대한 힘의 모멘트가 같다는 조건은 다음과 같다.</p>
+<div class="f" style="left:180pt;top:387pt"><span class="fig" data-srcpage="3" data-clip="180,387,389,399"></span></div>
+<p class="x" style="--b:418.0">(11)과 (12)를 제곱하여 더하자.</p>
+<div class="f" style="left:152pt;top:428pt"><span class="fig" data-srcpage="3" data-clip="152,428,389,446"></span></div>
+<p class="x i" style="--b:462.4">실을 수평으로 당기는 경우를 생각하자(그림&nbsp;19). 받침의 반작용력 <span class="nw">$N_2$와</span> 수평선 사이의 각을 기호 <span class="nw">$\beta$로</span> 나타내자. 두 번째 경우에 (11)&thinsp;—&thinsp;(14)와 비슷한 방정식은 다음과 같다.</p>
+<div class="f" style="left:154pt;top:500pt"><span class="fig" data-srcpage="3" data-clip="154,500,389,513"></span></div>
+<div class="f" style="left:152pt;top:523pt"><span class="fig" data-srcpage="3" data-clip="152,523,389,538"></span></div>
+<div class="f" style="left:180pt;top:541pt"><span class="fig" data-srcpage="3" data-clip="180,541,240,553"></span></div>
+<p class="x pn r" style="--b:573.7">17</p>
+</div>
+
+<!-- page 18 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:49.1">얻은 연립 방정식 (15)와 (16)을 같은 방법으로 풀면 다음을 얻는다.</p>
+<div class="f" style="left:155pt;top:58pt"><span class="fig" data-srcpage="4" data-clip="155,58,389,77"></span></div>
+<p class="x" style="--b:92.9">식 (14)를 (17)로 나누면 다음을 얻는다.</p>
+<div class="f" style="left:160pt;top:104pt"><span class="fig" data-srcpage="4" data-clip="160,104,262,134"></span></div>
+<p class="x" style="--b:146.9">이로부터 답은 다음과 같다.</p>
+<div class="f" style="left:171pt;top:148pt"><span class="fig" data-srcpage="4" data-clip="171,148,249,182"></span></div>
+<p class="x i wn" style="--b:189.1"><i>참고: 형식적으로는 <span class="nw">$P = 0$도</span> 해 가운데 하나이다. 그러나 그렇다면 반작용력과 마찰력의 합력이 힘 <span class="nw">$F_1$과</span> 반대 방향이고 같은 직선 위에 있어야 한다. 이것은 <span class="nw">$R = r$인</span> 경우에만 가능하다.</i></p>
+<p class="x h" style="--b:242.8">문제 3. 헬륨의 냉각</p>
+<p class="x i wn" style="--b:254.7">열역학 제1법칙에 따라 <span class="nw">$Q = \Delta U + A$이다</span>. 냉각의 첫 단계에서 기체가 한 일은 그래프 아래의 넓이를 계산하여 구한다(그림&nbsp;20).</p>
+<div class="f" style="left:99pt;top:280pt"><span class="fig" data-srcpage="4" data-clip="99,280,321,306"></span></div>
+<div class="f" style="left:127pt;top:316pt"><span class="fig" data-srcpage="4" data-clip="127,316,293,434"></span></div>
+<p class="x cap" style="--b:444.8;left:190.3pt">그림 20</p>
+<p class="x" style="--b:464.5">따라서 냉각 과정의 처음에 열용량은 다음과 같았다.</p>
+<div class="f" style="left:124pt;top:477pt"><span class="fig" data-srcpage="4" data-clip="124,477,296,505"></span></div>
+<p class="x" style="--b:517.7">따라서 이 과정의 열용량은 다음과 같다.</p>
+<div class="f" style="left:185pt;top:531pt"><span class="fig" data-srcpage="4" data-clip="185,531,389,557"></span></div>
+<p class="x pn" style="--b:573.7">18</p>
+</div>
+
+<!-- page 19 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="5" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x i" style="--b:48.7">기체가 최소 부피(그림&nbsp;21의 점&nbsp;$C$)에 이를 때까지 기체가 한 일은 음수이다. 이 점에서 <span class="nw">$\Delta V = 0$이고</span>, 따라서 열용량은</p>
+<div class="f" style="left:144pt;top:73pt"><span class="fig" data-srcpage="5" data-clip="144,73,389,100"></span></div>
+<p class="x" style="--b:110.5">(19)를 (18)과 같다고 놓으면, 기체의 부피가 최소가 되는 온도 <span class="nw">$T_c$를</span> 얻는다.</p>
+<div class="f" style="left:188pt;top:125pt"><span class="fig" data-srcpage="5" data-clip="188,125,232,152"></span></div>
+<p class="x i wn" style="--b:161.7">기체가 한 일의 합이 0이므로, 양의 일 $A_+$(그래프의 $CX$ 구간 아래 넓이)는 음의 일 $A_-$(그래프의 $OC$ 구간 아래 넓이)와 크기가 같다. 열역학 제1법칙을 이용하여 구하는 기체의 일을 구하자. 이 법칙에 따르면 <span class="nw">$Q_{OC} = \Delta U + A_{OC}$이다</span>. 여기서 <span class="nw">$Q_{OC}$는</span> 구간 <span class="nw">$OC$에서</span> 기체가 받은 열이다. 이 열은 그래프 <span class="nw">$C(T)$</span> 아래의 넓이로 구한다. 그래프가 직선이므로</p>
+<div class="f" style="left:135pt;top:232pt"><span class="fig" data-srcpage="5" data-clip="135,232,286,260"></span></div>
+<p class="x i" style="--b:275.1">같은 구간에서 내부 에너지의 변화는</p>
+<div class="f" style="left:119pt;top:285pt"><span class="fig" data-srcpage="5" data-clip="119,285,301,311"></span></div>
+<p class="x d" style="--b:331.7;--a:13.6pt">따라서 <span class="nw">$A_{OC} = Q_{OC} - \Delta U = -\dfrac{RT_0}{16}$이다</span>. 구하는 일은 <span class="nw">$A_{CX} = -A_{OC} = \dfrac{RT_0}{16}$이다</span>.</p>
+<div class="f" style="left:93pt;top:342pt"><span class="fig" data-srcpage="5" data-clip="93,342,344,477.5"></span></div>
+<p class="x cap" style="--b:486.5;left:190.3pt">그림 21</p>
+<p class="x i" style="--b:506.1">일이 0이 되는 온도 <span class="nw">$T_x$를</span> 구하자.</p>
+<div class="f" style="left:45pt;top:531pt"><span class="fig" data-srcpage="5" data-clip="45,531,375,557"></span></div>
+<p class="x pn r" style="--b:573.7">19</p>
+</div>
+
+<!-- page 20 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="6" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:49.1">따라서 <span class="nw">$T_x/T_0 = 1/2$이다</span>.</p>
+<p class="x h" style="--b:66.4">문제 4. 안정성의 원천</p>
+<p class="x i" style="--b:78.4">저항 <span class="nw">$R$에</span> 흐르는 전류의 세기를 $I$, 저항 <span class="nw">$r$에</span> 흐르는 전류의 세기를 $J$, 스위치를 닫은 뒤 저항 <span class="nw">$R$을</span> 지나간 전하량(축전기의 전하량)을 <span class="nw">$q$라고</span> 하자. 저항 <span class="nw">$R$에</span> 걸린 전압의 변화를 무시할 수 있을 만큼 충분히 짧은 시간 동안 저항에서 발생하는 열은 이 전압과 지나간 전하량의 곱과 같다.</p>
+<div class="f" style="left:165pt;top:138pt"><span class="fig" data-srcpage="6" data-clip="165,138,256,150"></span></div>
+<p class="x" style="--b:166.7">따라서 전체 열량은, 저항 <span class="nw">$R$을</span> 지나간 전하량 <span class="nw">$q$에</span> 대한 저항 <span class="nw">$R$의</span> 전류 <span class="nw">$I$의</span> 그래프 아래 넓이에 <span class="nw">$R$을</span> 곱한 값과 수치가 같다. 이 관계를 구하자. 다음 방정식</p>
+<div class="f" style="left:145pt;top:202pt"><span class="fig" data-srcpage="6" data-clip="145,202,276,228"></span></div>
+<p class="x" style="--b:237.9">으로부터 다음을 얻는다.</p>
+<div class="f" style="left:165pt;top:241pt"><span class="fig" data-srcpage="6" data-clip="165,241,255,267"></span></div>
+<p class="x" style="--b:276.9">따라서 <span class="nw">$I(q)$의</span> 그래프는 두 축과 점 $(I_0r)/(r + R)$, <span class="nw">$CI_0r$에서</span> 만나는 직선이다. 이 그래프 아래의 넓이는</p>
+<div class="f" style="left:141pt;top:298pt"><span class="fig" data-srcpage="6" data-clip="141,298,280,327"></span></div>
+<p class="x i" style="--b:341.8">이로부터 답을 얻는다.</p>
+<div class="f" style="left:164pt;top:351pt"><span class="fig" data-srcpage="6" data-clip="164,351,256,379"></span></div>
+<p class="x h" style="--b:399.4">문제 5. 멀어질까, 아닐까?</p>
+<p class="x i" style="--b:411.3">뉴턴 제2법칙으로부터 질량 <span class="nw">$m$인</span> 점의 가속도를 구하면</p>
+<div class="f" style="left:167pt;top:422pt"><span class="fig" data-srcpage="6" data-clip="167,422,252,448"></span></div>
+<p class="x" style="--b:460.3">질량 <span class="nw">$M$인</span> 점의 가속도는</p>
+<div class="f" style="left:169pt;top:471pt"><span class="fig" data-srcpage="6" data-clip="169,471,252,497"></span></div>
+<p class="x" style="--b:509.9">여기서 <span class="nw">$r$는</span> 두 점 사이의 거리이고, <span class="nw">$k = 1/(4\pi\varepsilon_0)$이며</span>, <span class="nw">$m$에서</span> <span class="nw">$M$을</span> 향하는 방향을 양의 방향으로 잡았다. 두 점의 상대 가속도를 구하자.</p>
+<p class="x c d" style="--b:548.0;--a:14.6pt">$a_\mathrm{rel} = a_2 - a_1 = k\dfrac{q^2}{r^2}\dfrac{M + m}{Mm} - qE\dfrac{M - m}{Mm}.$</p>
+<p class="x pn" style="--b:573.7">20</p>
+</div>
+
+<!-- page 21 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="7" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.5">이와 같은 방정식은 질량이 <span class="nw">$\mu = (M + m)/(Mm)$인</span> 점전하 <span class="nw">$q$가</span> 고정된 점전하 <span class="nw">$q$의</span> 전기장과 균일한 전기장 <span class="nw">$-E_1 = -E(M - m)/(M + m)$</span> 속에서 하는 운동도 나타낸다. 이와 동등한 이 문제를 생각하자. 전하의 퍼텐셜 에너지는</p>
+<div class="f" style="left:166pt;top:97pt"><span class="fig" data-srcpage="7" data-clip="166,97,255,122"></span></div>
+<div class="f" style="left:131pt;top:131pt"><span class="fig" data-srcpage="7" data-clip="131,131,292,263"></span></div>
+<p class="x cap" style="--b:274.0;left:190.3pt">그림 22</p>
+<p class="x i" style="--b:294.4"><span class="nw">$U(r)$의</span> 그래프(그림&nbsp;22)로부터, 전하의 운동은 제한된 영역 <span class="nw">$l_1 \leqslant r \leqslant l_2$에서</span> 일어남을 알 수 있다. <span class="nw">$l_1$과</span> <span class="nw">$l_2$는</span> 다음 방정식의 근이다.</p>
+<div class="f" style="left:171pt;top:319pt"><span class="fig" data-srcpage="7" data-clip="171,319,250,344"></span></div>
+<p class="x" style="--b:356.1">또는</p>
+<div class="f" style="left:163pt;top:356pt"><span class="fig" data-srcpage="7" data-clip="163,356,258,381"></span></div>
+<p class="x wn" style="--b:394.6">비에트 정리(근과 계수의 관계)에 따라 두 근의 곱은 <span class="nw">$U_0$에</span> 관계없이 <span class="nw">$l_1l_2 = l_0^2$이다</span>. 여기서 <span class="nw">$l_0 = \sqrt{kq/E_1}$이다</span>. 따라서 처음 거리 <span class="nw">$l$이</span> <span class="nw">$l_0$보다</span> 작으면, 두 전하 사이의 거리는 최댓값 <span class="nw">$l_0^2/l$까지</span> 늘어났다가 그 뒤 줄어든다. 반면 <span class="nw">$l < l_0$이면</span> 처음 거리가 곧 최대 거리이다. <span class="nw">$l = l_0$이면</span> 두 전하 사이의 거리는 변하지 않는다.</p>
+<p class="x i wn" style="--b:466.3">답: <span class="nw">$l \geqslant \sqrt{kq/E_1}$이면</span> 두 전하 사이의 최대 거리는 <span class="nw">$l$이고</span>, <span class="nw">$l < \sqrt{kq/E_1}$이면</span> 최대 거리는 <span class="nw">$kq/lE_1$이다</span>.</p>
+<p class="x pn r" style="--b:573.7">21</p>
+</div>
+</body></html>
