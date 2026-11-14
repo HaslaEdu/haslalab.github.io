@@ -1,0 +1,211 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2010 (XLIV = 제44회), 11학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: a SCAN (no text layer) of the LaTeX booklet, A4 landscape sheets 842x595 with two A5 pages each:
+   sheet 1 = booklet pages 24 | 25, sheet 2 = 26 | 27, sheet 3 = 28 | front cover of the booklet.
+   Page 24 starts with problem 2: the top of the page (end of the solution of problem 1) is blank in the scan and
+   the scan has no solution of problem 1 at all. Measured line pitch ~11.85pt, body font 9.87pt (as the paper).
+   The halves are shifted/skewed against each other by the scan, so most blocks carry their own left/width.
+   The Korean page is white: only figures and display formulas without Russian are stamped from the scan.
+   Formulas with Russian words: retyped in KaTeX (F_тр -> F_fr, ν_пред -> ν_lim, кВт -> kW, мВ -> mV, об/мин -> rev/min),
+   or, where only a joining word is Russian (то, при, откуда, то есть), stamped in pieces with the Korean word between.
+   Header rules are drawn (.rl). Criteria lines: text, dotted leader, points (.cr).
+
+   PLACEMENT: every block is placed by the scan's first baseline --b (pt, measured on 360 dpi row profiles):
+       top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:9.87pt;line-height:11.85pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:35.0pt;width:357.2pt;--l:11.85pt;--fs:9.87pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.A{left:457.2pt;width:355.6pt}             /* booklet page 25 */
+.B{left:36.2pt;width:356.0pt}              /* booklet page 26 */
+.C{left:461.6pt;width:355.0pt}             /* booklet page 27 */
+.i{text-indent:15pt}
+.c{text-align:center}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.rl{position:absolute;height:0;border-top:0.6pt solid #000}
+.pn{text-align:left}
+.pn.r{text-align:right}
+.h{text-align:center;font-weight:bold}
+.k{text-align:center;font-style:italic}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.cap{text-align:center;width:40pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+.wb{position:absolute;background:#fff}
+/* marking-criteria line: text, dotted leader, points */
+.cr{display:flex;align-items:baseline;white-space:nowrap}
+.cr .ld{flex:1;overflow:hidden;margin:0 1.5pt;direction:rtl}
+.cr .ld::before{content:". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."}
+/* front cover (right half of sheet 3), centred on x = 644.5 */
+.cv{left:494.5pt;width:300pt;text-align:center}
+</style></head><body>
+
+<!-- sheet 1: booklet pages 24 | 25 -->
+<div class="page">
+<!-- booklet page 24 (no running header in the scan; its top part is blank) -->
+<p class="x h" style="--b:202.0">문제 2. 미끄러지지 않는 운동</p>
+<p class="x i" style="--b:215.0">추, 판자, 나무토막에 대해 뉴턴 제2법칙을 쓰자.</p>
+<p class="x c" style="--b:237.0">$T - F_\mathrm{fr} = m_1a_1,$</p>
+<p class="x c" style="--b:259.4">$Mg - T = Ma_1,$</p>
+<p class="x c" style="--b:278.4">$F_\mathrm{fr} - kx = m_2a_2.$</p>
+<p class="x" style="--b:297.0">여기서 <span class="nw">$T$는</span> 실의 장력, <span class="nw">$F_\mathrm{fr}$는</span> 마찰력, <span class="nw">$x$는</span> 용수철이 늘어난 길이이다.</p>
+<p class="x i wn" style="--b:309.0"><span class="nw">$F_\mathrm{fr} &lt; \mu m_2g$인</span> 동안에는 미끄러짐이 일어나지 않는다. 구하는 거리 <span class="nw">$L$은</span> 조건 $a_1 = a_2$, 즉 다음 식으로부터 구한다.</p>
+<div class="f" style="left:150pt;top:331pt"><span class="fig" data-srcpage="1" data-clip="150,331,276,357"></span></div>
+<p class="x" style="--b:372.8">따라서</p>
+<div class="f" style="left:116pt;top:374pt"><span class="fig" data-srcpage="1" data-clip="116,374,312,398"></span></div>
+<p class="x" style="--b:410.0">만약</p>
+<div class="f" style="left:139pt;top:410.5pt"><span class="fig" data-srcpage="1" data-clip="139,410.5,276,435"></span></div>
+<p class="x" style="--b:448.0">이면 미끄러짐은 곧바로 시작된다. 즉 <span class="nw">$L = 0$이다</span>.</p>
+<p class="x i wn" style="--b:460.4">마찰 계수 <span class="nw">$\mu$가</span> 충분히 크면, 계는 그대로 놓아 두었을 때 진폭이 <span class="nw">$A = Mg/k$인</span> 진동 운동을 하게 된다. 용수철이 늘어나는 최대 길이는 <span class="nw">$2A$이다</span>. 그러면 조건 <span class="nw">$L_\mathrm{max} = 2A$로부터</span> 미끄러짐이 일어나지 않는 최소 마찰 계수 <span class="nw">$\mu_0$을</span> 구할 수 있다.</p>
+<div class="f" style="left:150pt;top:518pt"><span class="fig" data-srcpage="1" data-clip="150,518,276,543"></span></div>
+<p class="x pn" style="--b:559.4">24</p>
+
+<!-- booklet page 25 -->
+<p class="x A hd r" style="--b:30.6">결선. 이론 시험</p>
+<div class="rl" style="left:455.6pt;top:33.8pt;width:355.8pt"></div>
+<p class="x A i" style="--b:47.2">결국 <span class="nw">$\mu &gt; \mu_0$이면</span> <span class="nw">$L \to \infty$이다</span>.</p>
+<p class="x A i" style="--b:59.0">만약</p>
+<div class="f" style="left:525pt;top:58.5pt"><span class="fig" data-srcpage="1" data-clip="525,58.5,743,83"></span></div>
+<p class="x A" style="--b:91.8">이면</p>
+<div class="f" style="left:537pt;top:90.5pt"><span class="fig" data-srcpage="1" data-clip="537,90.5,731,113.5"></span></div>
+<p class="x A" style="--b:124.8">만약</p>
+<div class="f" style="left:533pt;top:123.5pt"><span class="fig" data-srcpage="1" data-clip="533,123.5,664,149.5"></span></div>
+<p class="x ov" style="--b:139.8;left:673pt;width:28pt;text-align:left">이면</p>
+<div class="f" style="left:702pt;top:128pt"><span class="fig" data-srcpage="1" data-clip="702,128,735,142"></span></div>
+<p class="x A" style="--b:161.4;width:228pt"><span class="nw">$L$이</span> <span class="nw">$\mu$에</span> 따라 어떻게 달라지는지 그림&nbsp;25에 나타내었다.</p>
+<p class="x A i" style="--b:173.2;width:228pt">이제 미끄러짐이 시작될 때까지 나무토막이 움직이는 시간을 구하자. 이때 계는 조화 법칙에 따라 운동한다.</p>
+<div class="f" style="left:519pt;top:207pt"><span class="fig" data-srcpage="1" data-clip="519,207,616,231"></span></div>
+<div class="f" style="left:689pt;top:153pt"><span class="fig" data-srcpage="1" data-clip="689,153,815,178"></span></div>
+<div class="f" style="left:690.5pt;top:178pt"><span class="fig" data-srcpage="1" data-clip="690.5,178,815,237"></span></div>
+<p class="x cap" style="--b:245.4;left:730.2pt">그림 25</p>
+<p class="x A" style="--b:247.8;width:272pt">여기서 <span class="nw">$\omega^2 = k/(m_1 + m_2 + M)$이다</span>. 이로부터 다음을 얻는다.</p>
+<div class="f" style="left:462pt;top:258.5pt"><span class="fig" data-srcpage="1" data-clip="462,258.5,678,288"></span></div>
+<div class="f" style="left:700pt;top:266pt"><span class="fig" data-srcpage="1" data-clip="733,266,765.5,282"></span></div>
+<p class="x ov" style="--b:276.8;left:735pt;width:40pt;text-align:left">일 때,</p>
+<p class="x A" style="--b:302.6">그리고 <span class="nw">$\mu &gt; \mu_0$이면</span> 미끄러짐은 결코 시작되지 않는다.</p>
+<p class="x A k" style="--b:314.6">채점 기준</p>
+<p class="x A cr" style="--b:326.4"><span>움직이는 모든 물체에 대해 뉴턴 제2법칙을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x A cr" style="--b:338.2"><span><span class="nw">$\mu_\mathrm{min}$을</span> 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x A cr" style="--b:349.8"><span><span class="nw">$\mu_0$을</span> 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x A cr" style="--b:361.8"><span><span class="nw">$\mu &gt; \mu_0$일</span> 때 운동의 성격을 밝혔다</span><span class="ld"></span><span>1</span></p>
+<p class="x A cr" style="--b:373.8"><span><span class="nw">$\mu_\mathrm{min} &lt; \mu &lt; \mu_0$일</span> 때 이동 거리를 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x A cr" style="--b:385.6"><span>나무토막이 움직이는 시간을 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x A h" style="--b:409.2">문제 3. 열기관</p>
+<p class="x A i" style="--b:421.0">시간 <span class="nw">$\Delta t = 1\,\mathrm{s}$</span> 동안 열기관이 하는 일을 생각하자. 카르노 순환의 효율 <span class="nw">$\eta$에</span> 대한 식을 쓰면 다음과 같다.</p>
+<div class="f" style="left:557pt;top:442.5pt"><span class="fig" data-srcpage="1" data-clip="557,442.5,714,468"></span></div>
+<p class="x A" style="--b:483.8">여기서 <span class="nw">$P$는</span> 기관의 유효 일률, <span class="nw">$P_2$는</span> 냉각기로 전달되는 열의 일률이다. 이 식으로부터 다음을 얻는다.</p>
+<div class="f" style="left:600pt;top:505.5pt"><span class="fig" data-srcpage="1" data-clip="600,505.5,671,529"></span></div>
+<p class="x A" style="--b:545.8">문제의 조건에 따라 <span class="nw">$P_2 = (Q_2)_{\Delta t = 1\,\mathrm{s}} = \alpha(T - T_2)$이다</span>.</p>
+<p class="x A pn r" style="--b:568.4">25</p>
+</div>
+
+<!-- sheet 2: booklet pages 26 | 27 -->
+<div class="page">
+<!-- booklet page 26 -->
+<p class="x B hd" style="--b:25.0">제44회 전러시아 학생 물리 올림피아드</p>
+<div class="rl" style="left:35.4pt;top:28.4pt;width:357.8pt"></div>
+<p class="x B i" style="--b:41.0">이 관계식들로부터 다음을 얻는다.</p>
+<div class="f" style="left:89pt;top:49pt"><span class="fig" data-srcpage="2" data-clip="89,49,340,77"></span></div>
+<p class="x B wn" style="--b:88.0;--l:12pt">양 <span class="nw">$(T + T_1T_2/T)$는</span> <span class="nw">$T = T_m = \sqrt{T_1T_2} = 489.9\,\mathrm{K} \approx 490\,\mathrm{K}$일</span> 때 최소이다. <span class="nw">따라서</span></p>
+<p class="x c" style="--b:128.3;left:77.6pt;width:273.8pt">$P_\mathrm{max} = \alpha\Big[T_1 + T_2 - 2\sqrt{T_1T_2}\Big] = \alpha\Big[\sqrt{T_1} - \sqrt{T_2}\Big]^2 \approx 120\,\mathrm{kW},$</p>
+<p class="x B" style="--b:142.2">이때</p>
+<div class="f" style="left:160pt;top:144pt"><span class="fig" data-srcpage="2" data-clip="160,144,269,169.5"></span></div>
+<p class="x B k" style="--b:184.6">채점 기준</p>
+<p class="x B cr" style="--b:197.2"><span>$T_1$, $T_2$, <span class="nw">$T$로</span> 나타낸 <span class="nw">$P$의</span> 식을 얻었다</span><span class="ld"></span><span>4</span></p>
+<p class="x B cr" style="--b:209.0"><span>일률이 최대가 되는 온도를 구했다</span><span class="ld"></span><span>3</span></p>
+<p class="x B cr" style="--b:221.0"><span>최대 일률을 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x B cr" style="--b:233.0"><span>효율을 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x B h" style="--b:253.8">문제 4. 대전 입자의 운동</p>
+<div class="f" style="left:38pt;top:256.5pt"><span class="fig" data-srcpage="2" data-clip="38,256.5,173.5,387"></span></div>
+<p class="x cap" style="--b:397.6;left:81.6pt">그림 26</p>
+<p class="x i wn" style="--b:266.2;--l:11.6pt;left:178.3pt;width:214pt">1. 대칭성 때문에 모든 질점은 같은 궤적을 따라 움직이며, 매 순간 어떤 변하는 반지름 <span class="nw">$r(t)$인</span> 원 위에서 한 변의 길이가 <span class="nw">$a = \sqrt2\,r(t)$인</span> 정사각형의 꼭짓점에 있다.</p>
+<p class="x i wn" style="--b:336.0;--l:12pt;left:178.3pt;width:214pt">질점 하나를 생각하자. 이 질점에는 나머지 입자들로부터 힘 $\vec F_1$, $\vec F_2$, <span class="nw">$\vec F_3$이</span> 작용한다(그림&nbsp;26). 쿨롱 법칙에 따라 이 힘들의 크기는 다음과 같다.</p>
+<div class="f" style="left:176pt;top:375.6pt"><span class="fig" data-srcpage="2" data-clip="176,375.6,376,409.5"></span></div>
+<p class="x B i" style="--b:418.7">합력은 항상 중심(점&nbsp;$O$)을 향하며, 그 크기는 다음과 같다.</p>
+<div class="f" style="left:90pt;top:433.5pt"><span class="fig" data-srcpage="2" data-clip="90,433.5,336,466.5"></span></div>
+<p class="x B wn" style="--b:475.1">따라서 각 질점은 마치 중심에 있는, 부호가 반대이고 절댓값이 다음과 같은 전하에 끌리는 것처럼 움직인다.</p>
+<div class="f" style="left:163pt;top:507pt"><span class="fig" data-srcpage="2" data-clip="163,507,262,545.5"></span></div>
+<p class="x B pn" style="--b:561.6">26</p>
+
+<!-- booklet page 27 -->
+<p class="x C hd r" style="--b:35.0">결선. 이론 시험</p>
+<div class="rl" style="left:462.0pt;top:36.9pt;width:355.5pt"></div>
+<p class="x C i wn" style="--b:50.4;--l:11.7pt"><span class="nw">$F(r)$에</span> 대한 식은 쿨롱 법칙(또는 만유인력 법칙)과 같은 꼴인데, <span class="nw">$F(r) \sim 1/r^2$이기</span> 때문이다. 따라서 질점들의 궤적은 장축의 길이가 <span class="nw">$R_0 + R_1$인</span> 타원이다. 점 <span class="nw">$O$는</span> 이 타원들의 초점 중 하나에 있다.</p>
+<p class="x C i wn" style="--b:85.6;--l:11.6pt">2. 특성 시간은 타원 궤도를 한 바퀴 도는 주기 <span class="nw">$T$이다</span>. 이 주기는 케플러 제3법칙으로 구할 수 있다.</p>
+<p class="x C i wn" style="--b:109.2;--l:11.6pt">먼저 힘 <span class="nw">$F(r)$의</span> 작용으로 반지름 <span class="nw">$R_0$인</span> 원 궤도를 도는 질점 <span class="nw">$m$의</span> 주기 <span class="nw">$T_0$을</span> 구하자.</p>
+<div class="f" style="left:519pt;top:134pt"><span class="fig" data-srcpage="2" data-clip="519,134,759,167"></span></div>
+<p class="x C" style="--b:182.0">이 관계식들로부터 다음을 얻는다.</p>
+<div class="f" style="left:582pt;top:194pt"><span class="fig" data-srcpage="2" data-clip="582,194,696,227"></span></div>
+<p class="x C" style="--b:244.4;--l:11pt">질점들이 반지름 <span class="nw">$R_0$인</span> 원을 따라 움직이려면 이러한 속력을 주어야 한다. 그러면</p>
+<div class="f" style="left:582pt;top:266.5pt"><span class="fig" data-srcpage="2" data-clip="582,266.5,695,299"></span></div>
+<p class="x C i" style="--b:315.0">케플러 제3법칙에 따라</p>
+<div class="f" style="left:498pt;top:326pt"><span class="fig" data-srcpage="2" data-clip="498,326,607.5,357"></span></div>
+<p class="x ov" style="--b:345.4;left:626.4pt;width:40pt;text-align:left">따라서</p>
+<div class="f" style="left:674pt;top:326pt"><span class="fig" data-srcpage="2" data-clip="674,326,781,357"></span></div>
+<p class="x C" style="--b:372.8">이 식에 <span class="nw">$T_0$의</span> 식을 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:573pt;top:384pt"><span class="fig" data-srcpage="2" data-clip="573,384,704,417"></span></div>
+<p class="x C k" style="--b:439.6">채점 기준</p>
+<p class="x C cr" style="--b:451.8"><span>점들의 운동의 성격에 대한 결론을 내렸다</span><span class="ld"></span><span>1</span></p>
+<p class="x C cr" style="--b:463.4"><span>각 점에 작용하는 힘을 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x C cr" style="--b:475.6"><span><span class="nw">$F(r)$에</span> 대한 식을 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x C cr" style="--b:487.4"><span>유효 전하 <span class="nw">$Q$를</span> 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x C cr" style="--b:499.0"><span>점들이 타원을 따라 움직이는 이유를 설명했다</span><span class="ld"></span><span>1</span></p>
+<p class="x C cr" style="--b:510.6"><span>케플러 제3법칙을 이용했다</span><span class="ld"></span><span>1</span></p>
+<p class="x C cr" style="--b:522.4"><span>질점의 운동 방정식을 썼다</span><span class="ld"></span><span>1</span></p>
+<p class="x C cr" style="--b:534.2"><span>주기 <span class="nw">$T_0$을</span> 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x C cr" style="--b:546.0"><span><span class="nw">$T$에</span> 대한 식을 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x C pn r" style="--b:572.2">27</p>
+</div>
+
+<!-- sheet 3: booklet page 28 | front cover -->
+<div class="page">
+<!-- booklet page 28 (the scan is skewed: the left margin runs from x 46.8 at the top to 51.0 at the bottom) -->
+<p class="x hd" style="--b:30.8;left:44.6pt;width:357pt">제44회 전러시아 학생 물리 올림피아드</p>
+<div class="rl" style="left:44.6pt;top:32.6pt;width:357pt"></div>
+<p class="x h" style="--b:46.8;left:46.4pt;width:357pt">문제 5. 단극 유도기</p>
+<div class="f" style="left:43pt;top:50.5pt"><span class="fig" data-srcpage="3" data-clip="43,50.5,124,120"></span></div>
+<p class="x cap" style="--b:131.0;left:64.9pt">그림 27</p>
+<p class="x i wl wn" style="--b:58.6;--l:11.75pt;left:47.0pt;width:356.4pt;--fw:85.8pt;--fh:81.2pt">1. 원판이 회전할 때 도체층 안의 자유 전자에는 로런츠 힘 <span class="nw">$F_\mathrm{L} = evB$가</span> 작용한다. 여기서 <span class="nw">$e &lt; 0$은</span> 전자의 전하, <span class="nw">$v = \omega r$는</span> 선속력이다. 그림&nbsp;27에 표시된 자기장의 방향과 원판의 회전 방향에서는 로런츠 힘이 원판의 중심을 향한다. 그 결과 전하의 재분포가 일어난다. 전자는 중심 쪽으로 이동하고, 옆면에는 보상되지 않은 양전하가 생긴다. 이로 인해 반지름을 따라 중심을 향하는 전기장 <span class="nw">$\vec E$가</span> 생긴다. 도체층의 각 점에서 쿨롱 힘이 로런츠 힘을 상쇄하게 되면 평형에 이른다.</p>
+<div class="f" style="left:126pt;top:184.5pt"><span class="fig" data-srcpage="3" data-clip="126,184.5,214,198.5"></span></div>
+<p class="x ov" style="--b:194.2;left:232.2pt;width:30pt;text-align:left">즉</p>
+<div class="f" style="left:283pt;top:184.5pt"><span class="fig" data-srcpage="3" data-clip="283,184.5,324,198.5"></span></div>
+<p class="x" style="--b:212.4;left:47.4pt;width:356pt">원판의 옆면 <span class="nw">$(r = r_0)$과</span> 중심 <span class="nw">$(r = 0)$</span> 사이의 전위차 <span class="nw">$\Delta\varphi$는</span> 다음과 같다.</p>
+<div class="f" style="left:173pt;top:226.5pt"><span class="fig" data-srcpage="3" data-clip="173,226.5,278,263"></span></div>
+<p class="x" style="--b:274.2;left:48.2pt;width:356pt">바로 이 전위차가 전압계로 측정된다.</p>
+<p class="x c" style="--b:294.1;left:76.4pt;width:300pt">$V = \Delta\varphi = \dfrac12\omega r_0^2B = \pi\nu r_0^2B = 62.8\,\mathrm{mV},$</p>
+<p class="x" style="--b:315.8;left:48.6pt;width:356pt">이때 원판의 중심이 음극(−), 옆면이 양극(+)이다.</p>
+<p class="x i wn" style="--b:327.4;--l:11.97pt;left:49.2pt;width:355.2pt">2. 원판은 반지름 방향으로 흐르는 전류와 원판의 자기장의 상호 작용으로 생기는 앙페르 힘의 돌림힘에 의해 가속된다. 왼손 법칙에 따라 원판은 그림&nbsp;27에서와 같은 방향, 즉 위에서 볼 때 시계 반대 방향으로 회전한다. 전류의 세기가 0이 될 때, 즉 로런츠 힘의 작용으로 생기는 전위차 <span class="nw">$\Delta\varphi$(1번</span> 참고)가 전지의 기전력과 같아질 때 원판의 가속이 멈춘다.</p>
+<p class="x c" style="--b:416.4;left:77.7pt;width:300pt">$\Delta\varphi = \mathscr{E},\qquad\text{또는}\qquad \pi\nu_\mathrm{lim}r_0^2B = \mathscr{E},$</p>
+<p class="x" style="--b:434.2;left:50.0pt;width:355pt">따라서 <span class="nw">$\nu_\mathrm{lim} = \mathscr{E}/(\pi r_0^2B) = 7.2\cdot10^4\,\mathrm{rev/min}$이다</span>.</p>
+<p class="x k" style="--b:449.8;left:50.2pt;width:355pt">채점 기준</p>
+<p class="x cr" style="--b:462.0;left:50.4pt;width:354.4pt"><span>전위차가 생기는 원인을 설명했다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:474.0;left:50.4pt;width:354.4pt"><span>평형 조건을 썼다</span><span class="ld"></span><span>2</span></p>
+<p class="x cr" style="--b:485.8;left:50.6pt;width:354.4pt"><span><span class="nw">$\Delta\varphi$를</span> 구했다</span><span class="ld"></span><span>2</span></p>
+<p class="x cr" style="--b:497.6;left:50.8pt;width:354.2pt"><span><span class="nw">$V$의</span> 수치를 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:509.2;left:51.0pt;width:354.2pt"><span>원판이 회전하는 원인을 설명했다</span><span class="ld"></span><span>1</span></p>
+<p class="x cr" style="--b:521.0;left:51.0pt;width:354.4pt"><span>원판의 가속이 멈추는 조건을 썼다</span><span class="ld"></span><span>2</span></p>
+<p class="x cr" style="--b:532.6;left:51.0pt;width:354.2pt"><span><span class="nw">$\nu_\mathrm{lim}$의</span> 수치를 구했다</span><span class="ld"></span><span>1</span></p>
+<p class="x pn" style="--b:567.8;left:51.4pt">28</p>
+
+<!-- front cover of the booklet -->
+<p class="x cv" style="--b:44.8;font-weight:bold">전러시아 학생 올림피아드</p>
+<p class="x cv" style="--b:56.8;font-weight:bold">중앙 조직 위원회 산하</p>
+<p class="x cv" style="--b:68.2;font-weight:bold">물리 교수법 위원회</p>
+<p class="x cv" style="--b:97.8;--fs:15pt;--l:16.2pt">제44회 전러시아</p>
+<p class="x cv" style="--b:114.0;--fs:15pt;--l:16.2pt">학생 물리 올림피아드</p>
+<p class="x cv" style="--b:144.0;--fs:12.5pt;--l:14pt">결선</p>
+<p class="x cv" style="--b:170.3;--fs:11.5pt;--l:13pt;font-weight:bold">이론 시험</p>
+<p class="x cv" style="--b:210.0;--fs:9pt;--l:11pt;font-weight:bold">지도 자료</p>
+<div class="f" style="left:484pt;top:226pt"><span class="fig" data-srcpage="3" data-clip="484,226,792,514"></span></div>
+<!-- the artist's handwritten date "1998г" in the drawing: the Cyrillic "г" is hidden by a white box -->
+<div class="ov wb" style="left:758.3pt;top:499.2pt;width:7.6pt;height:7.0pt"></div>
+<p class="x cv" style="--b:537.9;left:498pt;font-weight:bold">벨고로드, 2010년</p>
+</div>
+</body></html>
