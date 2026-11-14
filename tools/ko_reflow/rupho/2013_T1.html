@@ -1,0 +1,113 @@
+<!doctype html><html><head><meta name="page" content="842,595">
+<style>
+/* RuPhO 2013 (XLVII = 제47회), 9학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic 10pt (= 9.963 PostScript pt; text fonts are Type3 with a Windows-1251 map),
+   printed as rotated 2-up A4 spreads: sheet 1 = 842x595 (booklet pages 3 | 4), sheet 2 = 432x595 (booklet page 5 plus
+   an 11pt sliver of the blank margin of the next page). Coordinates are those of the visible (de-rotated) sheet.
+   Left page text column x 33.1..387.5, right page column x 454.1..808.5 (width 354.4pt); paragraph indent 14.9pt;
+   baselineskip 12 TeX pt = 11.955pt. Left pages carry "제47회 ..." and the page number at the LEFT, right pages
+   "결선. 이론 시험" and the page number at the RIGHT; page numbers sit on baseline 573.5.
+   The second sheet has its own size through a named @page rule (.page[data-s="sm"]).
+   STAMPING COPY: the second sheet of the original has a CropBox (only the left 432pt of the spread are visible);
+   scrub/<file>.pdf was re-made from a copy with CropBox = MediaBox, so its sheet 2 is the whole 842x595 spread in the
+   same coordinates as the visible page (x 0..432 identical).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). */
+@page sm{size:432pt 595pt;margin:0}
+.page[data-s="sm"]{page:sm;width:432pt;height:595pt}
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.rc{left:454.1pt}                          /* right page of the spread (+421pt) */
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.5) */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "9학년" (bold 12pt) and problem titles (bold 10pt), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: a float reserves the figure's room for the first N lines
+   --fw = room taken by the figure, --fh = N x 11.955pt - 1pt */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where a Russian word was removed */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- sheet 1: booklet pages 3 (left) and 4 (right) -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제47회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x g" style="--b:49.5">9학년</p>
+<p class="x h" style="--b:75.3">문제 1. 상대성 이론</p>
+<div class="f" style="left:33pt;top:80pt"><span class="fig" data-srcpage="1" data-clip="33,80,87,134"></span></div>
+<p class="x cap" style="--b:142.5;left:40.6pt">그림 1</p>
+<p class="x i" style="--b:87.5;left:99.0pt;width:288.5pt">두 입자가 한 점에서 서로 수직인 방향으로 운동을 시작하였다(그림&nbsp;1). 첫 번째 입자는 처음 속력 <span class="nw">$3v$와</span>, 처음 속도와 같은 방향인 일정한 가속도 <span class="nw">$3a$로</span> 움직이고, 다른 입자는 속력 <span class="nw">$4v$와</span>, 처음 속도와 반대 방향인 일정한 가속도 <span class="nw">$4a$로</span> 움직인다.</p>
+<p class="x i" style="--b:159.7">수치는 $a = 0.538\,\mathrm{m/s^2}$, <span class="nw">$v = 10\,\mathrm{m/s}$이다</span>.</p>
+<p class="x i" style="--b:172.0">두 입자의 상대 속도의 크기가 다시 처음 상대 속도의 크기와 같아지는 순간, 두 입자 사이의 거리 <span class="nw">$L$은</span> 얼마인가? 입자들의 상대 속력의 최솟값 <span class="nw">$v_\mathrm{rel}$은</span> 얼마인가?</p>
+<p class="x h" style="--b:215.0">문제 2. 관이 문제다!</p>
+<p class="x i" style="--b:227.3">단열된 원통 안에 쉽게 움직이는 열전도성 피스톤 두 개가 서로 <span class="nw">$L_1 = 80\,\mathrm{cm}$</span> 떨어져 있다. 두 피스톤 사이의 공간은 물로 채워져 있고, 바깥쪽에서는 피스톤에 대기압이 작용한다(그림&nbsp;2).</p>
+<div class="f" style="left:127pt;top:276pt"><span class="fig" data-srcpage="1" data-clip="127,276,292,331"></span></div>
+<p class="x cap" style="--b:340.5;left:189.8pt">그림 2</p>
+<p class="x i" style="--b:362.1">왼쪽 피스톤의 왼쪽에는 일정한 온도 <span class="nw">$t_1 = -40\,{}^\circ\mathrm{C}$를</span> 유지하는 냉각기를, 오른쪽 피스톤의 오른쪽에는 일정한 온도 <span class="nw">$t_2 = 16\,{}^\circ\mathrm{C}$를</span> 유지하는 가열기를 켰다. 얼마 뒤 계는 정상 상태에 이르렀고, 피스톤 사이의 거리는 <span class="nw">$L_2$가</span> 되었다.</p>
+<p class="x i" style="--b:422.1">그 뒤 피스톤의 바깥쪽을 단열하고, 원통 안에서 열평형이 이루어질 때까지 기다렸다. 피스톤 사이의 거리는 <span class="nw">$L_3$이</span> 되었다. 거리 <span class="nw">$L_2$와</span> <span class="nw">$L_3$을</span> 구하여라. 얼음의 밀도는 $\rho_\mathrm{i} = 900\,\mathrm{kg/m^3}$, 물의 밀도는 $\rho_\mathrm{w} = 1000\,\mathrm{kg/m^3}$, 물의 비열은 $c_\mathrm{w} = 4200\,\mathrm{J/(kg\cdot{}^\circ C)}$, 얼음의 비열은 $c_\mathrm{i} = 2100\,\mathrm{J/(kg\cdot{}^\circ C)}$, 얼음의 융해열은 <span class="nw">$\lambda = 330\,\mathrm{kJ/kg}$이고</span>, 얼음의 열전도율은 물의 열전도율의 4배이다.</p>
+<p class="x i" style="--b:506.3"><i>힌트.</i> 양 끝면 사이에 일정한 온도 차 <span class="nw">$\Delta t$가</span> 유지되는 원통을 따라 흐르는 열의 일률 <span class="nw">$P$는</span> 다음과 같다고 생각하여라.</p>
+<div class="f" style="left:184pt;top:533pt"><span class="fig" data-srcpage="1" data-clip="184,533,236,558"></span></div>
+<p class="x pn" style="--b:573.5">3</p>
+
+<p class="x rc hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:453.6pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="453.6,35.2,808.0,35.7"></span></div>
+<p class="x rc" style="--b:48.7">여기서 <span class="nw">$k$는</span> 매질의 열전도율, <span class="nw">$S$는</span> 원통 끝면의 넓이, <span class="nw">$L$은</span> 원통의 길이이다.</p>
+<p class="x rc h" style="--b:78.5">문제 3. 고리 위의 구슬</p>
+<div class="f" style="left:710pt;top:81pt"><span class="fig" data-srcpage="1" data-clip="710,81,808,156"></span></div>
+<p class="x cap" style="--b:168.0;left:740.1pt">그림 3</p>
+<p class="x rc i wn" style="--b:90.5;width:248.5pt">질량이 <span class="nw">$M$인</span> 가는 철사 고리가 수평면 위에 서 있다(그림&nbsp;3). 질량이 각각 <span class="nw">$m$인</span> 똑같은 구슬 두 개가 고리를 따라 마찰 없이 미끄러질 수 있다. 처음 순간 구슬들은 고리의 맨 꼭대기 근처에 있다. 두 구슬을 동시에 놓으면 구슬들은 대칭적으로 움직이기 시작한다. 질량비 <span class="nw">$n = m/M$이</span> 얼마일 때 고리가 수평면에서 떨어지는가?</p>
+<p class="x rc h" style="--b:192.1">문제 4. 레이저를 쬔 얼음</p>
+<div class="f" style="left:686pt;top:196pt"><span class="fig" data-srcpage="1" data-clip="686,196,808,433"></span></div>
+<p class="x cap" style="--b:445.0;left:729.9pt">그림 4</p>
+<p class="x rc i wn" style="--b:204.1;width:228pt">얼음의 성질을 조사하려고 실험실에서 스탠드에 도르래와 실로 장치를 꾸미고, 여기에 질량이 서로 다른 얼음 조각 네 개를 매달아 물이 든 원통형 컵에 넣었다. 무거운 얼음 조각들은 물에 일부 잠기고, 가장 가벼운 질량 <span class="nw">$m$의</span> 얼음 조각은 공기 중에 매달린 채로 계가 평형에 이르렀다(그림&nbsp;4).</p>
+<p class="x rc i wn" style="--b:287.7;width:228pt">실험을 진행하면서 공기 중에 매달린 얼음 조각에 레이저 빛을 비추었더니 얼음 조각이 녹기 시작하였다. 이때 녹은 물은 컵 안으로 흘러내렸다.</p>
+<p class="x rc i wn" style="--b:323.6;width:228pt">얼음 조각에 열량 <span class="nw">$Q = 825\,\mathrm{J}$을</span> 공급한 뒤 컵 속 물의 높이가 <span class="nw">$\Delta h_1 = 1\,\mathrm{cm}$만큼</span> 변하였다. 매달린 얼음 조각이 완전히 녹은 뒤에는, 처음과 비교한 수면 높이의 변화가 <span class="nw">$\Delta h_2 = 3\,\mathrm{cm}$였다</span>.</p>
+<p class="x rc" style="--b:383.3;width:228pt">1.&nbsp;&nbsp;컵 속 물의 높이는 높아지는가, 낮아지는가?</p>
+<p class="x rc" style="--b:407.3;width:228pt">2.&nbsp;&nbsp;컵 바닥의 넓이를 구하여라.</p>
+<p class="x rc" style="--b:419.2;width:228pt">3.&nbsp;&nbsp;질량 <span class="nw">$6m$인</span> 얼음 조각을 붙잡고 있는 실의 장력은 어떤 범위에서 변하였는가?</p>
+<p class="x rc i wr" style="--b:443.2;--fw:126.5pt;--fh:10.9pt">매달린 얼음 조각 <span class="nw">$m$은</span> 완전히 녹을 때까지 물에 닿지 않고 실에 매달려 있었다고 생각하여라. 도르래와 실의 질량은 무시한다. 실험을 시작할 때와 실험하는 동안 얼음과 물의 온도는 실온 <span class="nw">$t_\mathrm{r} = 0\,{}^\circ\mathrm{C}$와</span> 같았다. 얼음의 밀도는 $\rho_\mathrm{i} = 900\,\mathrm{kg/m^3}$, 물의 밀도는 <span class="nw">$\rho = 1000\,\mathrm{kg/m^3}$이다</span>. 얼음의 융해열은 <span class="nw">$\lambda = 330\,\mathrm{kJ/kg}$이다</span>. 중력 가속도는 <span class="nw">$g = 10\,\mathrm{m/s^2}$이다</span>.</p>
+<p class="x rc pn r" style="--b:573.5">4</p>
+</div>
+
+<!-- sheet 2: booklet page 5 (432pt wide) -->
+<div class="page" data-s="sm">
+<p class="x hd" style="--b:31.7">제47회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:32.6pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="32.6,35.2,387.0,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 5. 가변 저항기</p>
+<p class="x i" style="--b:60.5">실험가 글류크가 그림&nbsp;5에 회로도가 나타나 있는 전기 회로로 실험을 한다. 회로는 전압을 모르는 전원 $U_0$, 저항 $R_3 = 1\,\mathrm{M\Omega}$, 저항값을 모르는 저항 <span class="nw">$R_1$과</span> $R_2$, 이상적인 전류계 두 개, 그리고 가변 저항기 1–2로 이루어져 있다. 가변 저항기 1–2는 단면이 일정한 도체이고, 여기에 접점 3이 연결되어 있다. 가변 저항기의 길이는 <span class="nw">$L = 1\,\mathrm{m}$이고</span>, 저항은 <span class="nw">$r = 1\,\mathrm{k\Omega}$이다</span>. 글류크는 가변 저항기의 접점 위치를 바꾸어 가며, 전류계 <span class="nw">$\mathrm{A}_1$을</span> 흐르는 전류 <span class="nw">$I_A$를</span> 가변 저항기 구간 1–3의 길이 <span class="nw">$x$에</span> 대한 그래프로 나타내었다(그림&nbsp;6).</p>
+<p class="x" style="--b:156.0">1.&nbsp;&nbsp;저항값의 비 <span class="nw">$R_1 : R_2$를</span> 구하여라.</p>
+<p class="x" style="--b:168.0">2.&nbsp;&nbsp;전류계 <span class="nw">$\mathrm{A}_2$를</span> 흐르는 전류 <span class="nw">$I_0$을</span> 가변 저항기 구간 1–3의 길이 <span class="nw">$x$에</span> 대한 그래프로 대략 그려라.</p>
+<p class="x" style="--b:192.0">3.&nbsp;&nbsp;저항 $R_1$, <span class="nw">$R_2$의</span> 저항값과 전원의 전압 <span class="nw">$U_0$을</span> 구하여라.</p>
+<p class="x i" style="--b:204.0"><i>참고.</i> 모든 값은 $0.1\%$ 이하의 오차로 계산해도 된다.</p>
+<div class="f" style="left:50pt;top:231pt"><span class="fig" data-srcpage="2" data-clip="50,231,157,344"></span></div>
+<p class="x ov" style="--b:274.5;left:98.4pt">A</p>
+<p class="x ov" style="--b:328.0;left:103.5pt">A</p>
+<div class="f" style="left:192pt;top:228pt"><span class="fig" data-srcpage="2" data-clip="192,228,374,341"></span></div>
+<p class="x ov" style="--b:237.5;left:226.5pt">$\mu\mathrm{A}$</p>
+<p class="x ov" style="--b:291.5;left:364.8pt">m</p>
+<p class="x cap" style="--b:353.0;left:83.3pt">그림 5</p>
+<p class="x cap" style="--b:353.0;left:260.4pt">그림 6</p>
+<p class="x pn" style="--b:573.5">5</p>
+</div>
+</body></html>
