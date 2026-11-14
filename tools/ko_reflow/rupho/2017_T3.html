@@ -1,0 +1,97 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* RuPhO 2017 (LI = 제51회), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic 12pt (= 11.955 PostScript pt, fonts with a Windows-1251 map),
+   US Letter 612x792pt, booklet pages 53-54. Text column x 72.0..539.6 (width 467.6pt); paragraph indent 17.6pt;
+   baselineskip 14.44pt. Bold header and "이론 시험" centred on the column; page number centred at baseline 720.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   (2016 pilot formula: 0.3155 = (ascent - descent)/2 of CM = KaTeX_Main; +0.7pt = Chrome pixel-snapping correction). */
+body{font-family:CM,KB,serif;font-size:11.955pt;line-height:14.44pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:72pt;width:467.6pt;--l:14.44pt;--fs:11.955pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.i{text-indent:17.6pt}                     /* first-line paragraph indent (89.6 - 72.0) */
+.c{text-align:center}
+.b{font-weight:bold}
+/* text beside a figure on the right: narrower column (page 1: lines end at 487.3 beside Fig. 11.1; page 2: 387.6 beside Fig. 11.2) */
+.n1{width:415.3pt}
+.n2{width:315.6pt}
+/* text running beside a figure on the right for its first N lines: --fw = column right edge - right edge of the short lines,
+   --fh = N x 14.44pt - 1pt */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* numbered items with a hanging number (number at 86.3, text at 101.3) */
+.li{padding-left:29.3pt;box-sizing:border-box}
+.n{position:absolute;left:14.3pt;text-indent:0}
+/* figure captions "그림 N" centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:60pt}
+/* an inline formula and the Korean particle after it must never be split over two lines */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+/* stamps cut from the scrubbed original; .ov = label put back where scrub.py removed a Cyrillic-font glyph */
+.ov{white-space:nowrap;width:auto;text-align:left}
+/* .wb: Korean label on a white box that hides a Russian word drawn inside the raster figure 11.3 */
+.wb{position:absolute;background:#fff;text-align:center;font-size:8.6pt;line-height:8.4pt;white-space:nowrap;padding-top:0;box-sizing:border-box}
+</style></head><body>
+
+<!-- booklet page 53 -->
+<div class="page">
+<p class="x c b" style="--b:84.0">11학년 문제, 풀이 예시와 채점 기준</p>
+<p class="x c b" style="--b:111.7">이론 시험</p>
+
+<div class="f" style="left:500.3pt;top:162.9pt"><span class="fig" data-srcpage="1" data-clip="500.3,162.9,537.2,374.6"></span></div>
+<p class="x cap" style="--b:407.6;left:490.55pt">그림 11.1</p>
+
+<p class="x n1" style="--b:143.3"><b>문제 1. 슬링키</b>&emsp;“슬링키” 용수철의 맨 위 고리를 잡아, 맨 아래 고리가 바닥에서 높이 <span class="nw">$h = 1\,\mathrm{m}$인</span> 곳에 있도록 한다. 이때 자체 무게 때문에 늘어난 용수철 자체의 길이는 <span class="nw">$l = 1.5\,\mathrm{m}$이다</span>. 용수철을 놓는다. 용수철은 얼마의 시간 <span class="nw">$\tau$가</span> 지난 뒤에 바닥에 떨어지는가? 늘어나지 않은 상태에서 용수철의 고리들은 서로 빈틈없이 맞닿아 있지만 서로 압력을 작용하지는 않으며, 이때 용수철의 길이는 <span class="nw">$l_0 = 6\,\mathrm{cm}$이다</span>. 고리는 얇다. 용수철이 오므라들 때 고리들은 서로 비탄성 충돌을 하며, 용수철은 바닥에 떨어지기 전에 완전히 오므라든다. 답은 <span class="nw">$0.02\,\mathrm{s}$의</span> 정확도로 구하여라.</p>
+
+<p class="x n1" style="--b:290.3"><b>문제 2. 나는 구름, 구름, 구름…</b>&emsp;단열 대기 근사에서 다음을 어림하여라.</p>
+<p class="x n1 li" style="--b:332.6"><span class="n">1.</span>지구 대기의 높이 <span class="nw">$H$;</span></p>
+<p class="x n1 li" style="--b:357.2"><span class="n">2.</span>구름 아래쪽 경계의 높이 <span class="nw">$h_0$;</span></p>
+<p class="x n1 i" style="--b:385.0">지구 표면의 온도는 <span class="nw">$t_0 = 27\,{}^\circ\mathrm{C}$이고</span>, 공기의 상대 습도는 <span class="nw">$\varphi = 80\%$이다</span>. $h_0 \ll{}$<span class="nw">$H$라고</span> 생각하여라.</p>
+<p class="x i wr" style="--b:414.0;--fw:52.3pt;--fh:13.4pt"><i>힌트:</i> 기체 덩어리가 열 교환 없이 연직 방향으로 움직이면서도 항상 역학적 평형 상태에 머물러 있는 대기를 단열 대기라고 한다.</p>
+
+<p class="x c" style="--b:469.5">표 11.1</p>
+<p class="x" style="--b:492.0">온도에 따른 포화 수증기압</p>
+<div class="f" style="left:71.7pt;top:495.2pt"><span class="fig" data-srcpage="1" data-clip="71.7,495.2,585.7,525.5"></span></div>
+<p class="x ov" style="--b:505.8;left:90.2pt">$\mathrm{C}$</p>
+<p class="x ov" style="--b:520.8;left:101pt">$\mathrm{mmHg}$</p>
+
+<p class="x i" style="--b:551.9"><i>참고:</i> 공기는 몰 질량이 <span class="nw">$\mu = 29\,\mathrm{g/mol}$인</span> 이상 이원자 기체로 생각하여라.</p>
+
+<p class="x" style="--b:597.8"><b>문제 3. 구슬</b>&emsp;반지름 <span class="nw">$R$,</span> 길이 <span class="nw">$H$인</span> 고정된 얇은 벽의 유전체 관 표면에 전하 <span class="nw">$Q$가</span> 고르게 분포되어 있다. 관의 가운데 단면(양 끝면에서 같은 거리에 있는 단면)의 지름과 일치하도록 놓인, 전기가 통하지 않는 가는 살을 따라 같은 부호의 전하를 띤 구슬이 자유롭게 미끄러질 수 있다.</p>
+<p class="x i" style="--b:655.7">평형 위치를 중심으로 하는 구슬의 작은 진동의 주기 <span class="nw">$T$를</span> 구하여라. 구슬의 비전하 <span class="nw">$\gamma = q/m$은</span> 알려져 있다고 생각하여라.</p>
+
+<p class="x c" style="--b:720.0">53</p>
+</div>
+
+<!-- booklet page 54 -->
+<div class="page">
+<div class="f" style="left:398.2pt;top:89.7pt"><span class="fig" data-srcpage="2" data-clip="398.2,89.7,540,144"></span></div>
+<p class="x cap" style="--b:177.0;left:439pt">그림 11.2</p>
+<p class="x n2" style="--b:84.0"><b>문제 4. 또다시 MHD</b>&emsp;모터보트 바닥 아래에 설치된 해양 자기유체역학(MHD) 엔진의 모형(그림&nbsp;11.2)은 직사각형 관로 <span class="nw">($a = 1.0\,\mathrm{m}$,</span> <span class="nw">$l = 2\,\mathrm{m}$,</span> <span class="nw">$h = 10\,\mathrm{cm}$)이다</span>. 전기가 잘 통하는 면 <span class="nw">$hl$에</span> 기전력이 <span class="nw">$\mathscr{E} = 100\,\mathrm{V}$인</span> 이상적인 직류 전원이 연결되어 있다. 자기장 <span class="nw">$B = 1\,\mathrm{T}$가</span> 전기가 통하지 않는 면 <span class="nw">$al$에</span> 수직으로 관로를 관통한다. 이런 엔진을 단 보트가 일정한 속력 <span class="nw">$u$로</span> 움직일 때, 보트에 대하여 흘러나가는 물의 속력은 <span class="nw">$v = 10\,\mathrm{m/s}$이다</span>.</p>
+<p class="x i" style="--b:228.4">바닷물의 비저항은 <span class="nw">$\rho = 1.0\cdot10^{-2}\,\Omega\cdot\mathrm{m}$,</span> 밀도는 <span class="nw">$\rho_\mathrm{w} = 1000\,\mathrm{kg/m^3}$이다</span>.</p>
+<p class="x i" style="--b:257.3">보트의 속력, 추진력, 엔진의 유효 일률과 효율을 구하여라.</p>
+
+<p class="x" style="--b:302.9"><b>문제 5. 월식</b>&emsp;잘 알려져 있듯이 태양은 점광원이 아니며, (지구에서 볼 때) 작은 시지름 <span class="nw">$2\delta = 0.52^\circ$를</span> 가진다. 이 사실 때문에 지구 뒤쪽의 본그림자 영역은 유한한 길이를 가진다.</p>
+
+<div class="f" style="left:206.7pt;top:348pt"><span class="fig" data-srcpage="2" data-clip="206.7,348,405.3,434.1"></span></div>
+<div class="ov wb" style="left:205.8pt;top:350.4pt;width:35.6pt;height:9.2pt">태양</div>
+<div class="ov wb" style="left:296.6pt;top:358.6pt;width:25pt;height:9.2pt">지구</div>
+<div class="ov wb" style="left:339.4pt;top:363.8pt;width:37pt;height:9.2pt">반그림자</div>
+<div class="ov wb" style="left:387.2pt;top:366.2pt;width:37pt;height:9.2pt">본그림자</div>
+<div class="ov wb" style="left:339.8pt;top:395.4pt;width:37pt;height:10.6pt">반그림자</div>
+<div class="ov wb" style="left:283pt;top:413.2pt;width:19.8pt;height:9.2pt">달</div>
+<p class="x cap" style="--b:454.1;left:275.9pt">그림 11.3</p>
+
+<p class="x li" style="--b:497.5"><span class="n">1.</span>대기 굴절(지구 대기에서 햇빛이 굴절하는 현상)이 없다고 하자. 지구에서 얼마나 떨어진 거리 <span class="nw">$L_1$까지</span> 본그림자가 관측되는가? 이 경우 개기 월식이 지속되는 시간을 구하여라.</p>
+<p class="x li" style="--b:550.8"><span class="n">2.</span>실제로는 대기 굴절이 본그림자 영역의 크기에 큰 영향을 준다. 지구 대기의 환산 높이가 <span class="nw">$h = 8\,\mathrm{km}$,</span> 평균 굴절률이 <span class="nw">$n = 1.00028$이라고</span> 하자.</p>
+<p class="x" style="--b:599.1;left:101.3pt;width:438.3pt">그림자의 경계는 지구 표면에 접하며 지나가는 광선들이 만든다고 보고, 이제 본그림자가 관측되는 최대 거리 <span class="nw">$L_2$를</span> 구하여라. 달 원반 넓이의 몇 분의 몇이 그림자에 가려지는가?</p>
+<p class="x i" style="--b:655.4">지구의 반지름은 <span class="nw">$R = 6400\,\mathrm{km}$,</span> 중력 가속도는 <span class="nw">$g = 9.8\,\mathrm{m/s^2}$이고</span>, 달의 시지름은 태양의 시지름 <span class="nw">$2\delta$와</span> 같으며, 달이 지구 둘레를 도는 공전 주기는 <span class="nw">$T_0 = 27.3$일이다</span>.</p>
+
+<p class="x c" style="--b:720.0">54</p>
+</div>
+</body></html>

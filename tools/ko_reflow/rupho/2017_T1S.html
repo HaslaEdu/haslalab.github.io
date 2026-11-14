@@ -1,0 +1,306 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* RuPhO 2017 (LI = 제51회), 9학년 이론 풀이 예시와 채점 기준 — Korean edition on the original layout.
+   ORIGINAL: LaTeX 12pt (CMR12, Cyrillic text in Windows-1251-mapped fonts), US letter 612x792pt,
+   booklet pages 7-21 (figures numbered on through the booklet: 그림 9.10-9.18, equations (9.1)-(9.20)).
+   Text column x 72.0..540.0 (width 468pt); paragraph indent 17.6pt; baselineskip 14.45pt.
+   No running headers; page numbers centred on baseline 720.0.
+   Russian subscripts in retyped formulas: крит -> cr (critical), л/п (left/right element) -> L/R,
+   з (light spot, "зайчик") -> s.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   Retyped one-line DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a (--a = height above baseline).
+   Marking-criteria lines: .k = text + dot leader + points (flex), as in the original. */
+body{font-family:CM,KB,serif;font-size:12pt;line-height:14.45pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:72pt;width:468pt;--l:14.45pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   text-align:justify;top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:17.6pt}
+.c{text-align:center}
+.l{text-align:left}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.n{width:468pt;text-align:right}          /* equation number at the right margin */
+.h{text-align:center;font-weight:bold}
+/* a line holding bold text (titles, bold item numbers) sits ~0.8pt low in Chrome: lift it */
+.h,.x:not(.d):has(b){margin-top:-0.8pt}
+/* marking criteria: text, dot leader, points */
+.k{display:flex;text-align:left;align-items:baseline}
+.k>span:first-child{white-space:nowrap}
+.k .ld{flex:1;overflow:hidden;white-space:nowrap;margin:0 2pt 0 3pt}
+.k .ld::after{content:". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."}
+.k.d>span{line-height:var(--l)}           /* criteria line with a \dfrac: keep the leader visible */
+.bu{display:inline-block;width:11.9pt}
+.b1{left:89.4pt;width:389.1pt}             /* bullet line (bullet at 89.4, leader ends at 478.5) */
+.b2{left:114.4pt;width:364.1pt}            /* dash line */
+.wn{word-break:normal}
+.sk{display:inline-block;transform:skewX(-11deg)}   /* italic Hangul (the slanted HANBatang face did not apply here) */
+.cap{text-align:center;width:80pt}         /* "그림 N": left = centre - 40pt */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+/* white patch with a Korean/Latin label over Russian words drawn INSIDE raster graphs (scrub cannot remove them) */
+.wb{position:absolute;background:#fff;font-family:Arial,KG,sans-serif;color:#222;text-align:left}
+</style></head><body>
+
+<!-- page 7 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시와 채점 기준</p>
+<p class="x h" style="--b:109.0">풀이 예시 T-9-1</p>
+<p class="x i" style="--b:139.1;margin-top:-6.2pt">속력 <span class="nw">$v$로</span> 움직일 때 보트는 거리 <span class="nw">$L$을</span> 시간 $\tau = \dfrac{L}{v}$ 동안 지나간다. 이때 저항력의 일률은 <span class="nw">$N = Fv = kv^2$이고,</span> 여기서 <span class="nw">$k$는</span> 차원이 있는 계수이다. 문제의 조건에 따라 연료의 질량 소비율은 저항력의 일률에 대해 선형으로 <span class="nw">$\mu = \mu_0 + \alpha N$과</span> 같이 변하므로(여기서 <span class="nw">$\mu_0$과</span> <span class="nw">$\alpha$는</span> 차원이 있는 계수이다), 거리당 연료 소비량은 <span class="nw">$\lambda = \dfrac{\mu\tau}{L} = \alpha v + \dfrac{\mu_0}{v}$이다.</span></p>
+<div class="f" style="left:157pt;top:223pt"><span class="fig" data-srcpage="1" data-clip="157,223,455,440"></span></div>
+<div class="ov wb" style="left:190.5pt;top:230pt;width:21pt;height:8.5pt;font-size:8pt;line-height:8.5pt">g/km</div>
+<div class="ov wb" style="left:440.8pt;top:418.6pt;width:10.8pt;height:4.8pt;font-size:4.2pt;line-height:4.8pt">km/h</div>
+<p class="x cap" style="--b:459.1;left:266pt">그림 9.10</p>
+<p class="x i" style="--b:485.5">알려진 값 $v_1$, $\lambda_1$, $v_2$, <span class="nw">$\lambda_2$로부터</span> 상수 <span class="nw">$\alpha$와</span> <span class="nw">$\mu_0$을</span> 구하자. 이를 위해 거리당 소비량에 대한 식 <span class="nw">$\lambda_1 = \alpha v_1 + \dfrac{\mu_0}{v_1}$과</span> <span class="nw">$\lambda_2 = \alpha v_2 + \dfrac{\mu_0}{v_2}$를</span> 쓴다. 이 연립 방정식을 풀면 $\alpha = \dfrac{\lambda_1v_1 - \lambda_2v_2}{v_1^2 - v_2^2} = 2.5\,\dfrac{\mathrm{g\cdot h}}{\mathrm{km^2}}$, <span class="nw">$\mu_0 = \dfrac{v_1v_2(v_1\lambda_2 - v_2\lambda_1)}{v_1^2 - v_2^2} = 37.5\,\dfrac{\mathrm{g}}{\mathrm{h}}$를</span> 얻는다. 구한 차원 있는 계수를 넣으면 거리당 소비량의 식은 <span class="nw">$\lambda = 2.5v + \dfrac{37.5}{v}$가</span> 된다. 이 관계의 그래프를 그림&nbsp;9.10에 나타내었다.</p>
+<p class="x i" style="--b:587.0;margin-top:-6.1pt">공회전 상태에서 정지한 모형의 엔진은 $\tau_x = \dfrac{M}{\mu_0} = 160\,\mathrm{min}$ 동안 작동할 수 있다. 구한 <span class="nw">$\lambda$의</span> 식에 <span class="nw">$v$를</span> 곱하면 (앞에서 구한 차원 있는 계수를 넣은) 다음 이차 방정식을 얻는다.</p>
+<div class="f" style="left:248pt;top:636pt"><span class="fig" data-srcpage="1" data-clip="248,636,541,655"></span></div>
+<p class="x" style="--b:675.7">이 방정식의 판별식은 <span class="nw">$\lambda_0 = 19.4\,\mathrm{g/km}$일</span> 때 0이 되며, 이는 <span class="nw">$v_0 = 3.87\,\mathrm{km/h}$에</span> 해당한다.</p>
+<p class="x c" style="--b:720.0">7</p>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<div class="f" style="left:138pt;top:71pt"><span class="fig" data-srcpage="2" data-clip="138,71,474,296"></span></div>
+<div class="ov wb" style="left:162.6pt;top:73pt;width:7.6pt;height:6pt;font-size:5pt;line-height:6pt">km</div>
+<div class="ov wb" style="left:450pt;top:264.5pt;width:13pt;height:5pt;font-size:5pt;line-height:5pt">km/h</div>
+<p class="x cap" style="--b:314.7;left:266pt">그림 9.11</p>
+<p class="x i" style="--b:350.9;margin-top:-5.9pt">최적의 속력으로 움직일 때 모형이 갈 수 있는 최대 거리는 <span class="nw">$L_0 = \dfrac{M}{\lambda_0} = 5.2\,\mathrm{km}$이고,</span> 이 거리를 가는 데 걸리는 시간은 <span class="nw">$\tau_0 = \dfrac{L_0}{v_0} = 80\,\mathrm{min}$이다.</span> 속력에 따른 최대 주행 거리를 그림&nbsp;9.11에 나타내었다.</p>
+<p class="x i" style="--b:430.9">요구되는 거리 <span class="nw">$L_1 = 3\,\mathrm{km}$는</span> 최대 주행 거리 <span class="nw">$L_0$보다</span> 짧으므로, 모형은 최적 전략을 따를 필요가 없고 더 빠르게 또는 더 느리게 갈 수 있다. 앞에서 얻은 이차 방정식 $2.5v^2 - \lambda v + 37.5 = 0$에 <span class="nw">$\lambda = \dfrac{M}{L_1} = \dfrac{100}{3}\,\mathrm{g/km}$를</span> 넣는다. 방정식을 풀어 큰 근을 고르면, 주어진 거리 <span class="nw">$L_1$을</span> 가기에 연료가 아직 충분한 최대 허용 속력 <span class="nw">$v_{11} = 12.1\,\mathrm{km/h}$를</span> 얻고, 이에 해당하는 가능한 최소 주행 시간 <span class="nw">$15\,\mathrm{min}$을</span> 얻는다. 더 큰 근 <span class="nw">$v_{12} = 1.24\,\mathrm{km/h}$에는</span> 가능한 최대 주행 시간 <span class="nw">$145\,\mathrm{min}$이</span> 해당한다. 결국 <span class="nw">$\tau_1 \in [15\,\mathrm{min};\,145\,\mathrm{min}]$을</span> 얻는다.</p>
+<p class="x c" style="--b:720.0">8</p>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x h" style="--b:84.0">채점 기준 T-9-1</p>
+<p class="x k" style="--b:110.9"><span><b>1.</b> 속력으로 나타낸 엔진의 일률 식</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:125.3"><span><b>2.</b> 속력에 따른 거리당 소비량의 일반적인 관계를 얻었다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b1" style="--b:149.4"><span><span class="bu">•</span>$\mu = \lambda v$</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k b1 d" style="--b:177.8;--a:13.5pt"><span><span class="bu">•</span>$\lambda = \dfrac{\mu_0}{\nu} + \alpha v$</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:205.6"><span><b>3.</b> <span class="nw">$\lambda(v)$</span> 관계의 계수 값을 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b1" style="--b:229.7"><span><span class="bu">•</span><span class="nw">$\mu_0$의</span> 수치</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k b2" style="--b:254.0"><span>– <span class="nw">$\mu_0$의</span> 식은 있으나 수치가 없는 경우</span><span class="ld"></span><span>0.3점</span></p>
+<p class="x k b1" style="--b:278.3"><span><span class="bu">•</span><span class="nw">$\alpha$의</span> 수치</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k b2" style="--b:302.5"><span>– <span class="nw">$\alpha$의</span> 식은 있으나 수치가 없는 경우</span><span class="ld"></span><span>0.3점</span></p>
+<p class="x k" style="--b:326.8"><span><b>4.</b> 공회전 상태의 최대 작동 시간을 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b1" style="--b:350.9"><span><span class="bu">•</span><span class="nw">$\tau_x$의</span> 식은 있으나 수치가 없는 경우</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:375.0"><span><b>5.</b> 최소 거리당 소비량과 최적 속력을 구하였다</span><span class="ld"></span><span>3점</span></p>
+<p class="x k b1" style="--b:399.0"><span><span class="bu">•</span>구하는 방법의 아이디어</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b1" style="--b:423.3"><span><span class="bu">•</span><span class="nw">$\lambda_0$의</span> 수치</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b2" style="--b:447.6"><span>– <span class="nw">$\lambda_0$의</span> 식은 있으나 수치가 없는 경우</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k b1" style="--b:471.9"><span><span class="bu">•</span><span class="nw">$v_0$의</span> 수치</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b2" style="--b:496.2"><span>– <span class="nw">$v_0$의</span> 식은 있으나 수치가 없는 경우</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:520.5"><span><b>6.</b> 최대 거리와 그 거리까지의 주행 시간을 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b1" style="--b:544.6"><span><span class="bu">•</span><span class="nw">$L_0$의</span> 수치</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k b2" style="--b:568.9"><span>– <span class="nw">$L_0$의</span> 식은 있으나 수치가 없는 경우</span><span class="ld"></span><span>0.3점</span></p>
+<p class="x k b1" style="--b:593.2"><span><span class="bu">•</span><span class="nw">$\tau_0$의</span> 수치</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k b2" style="--b:617.5"><span>– <span class="nw">$\tau_0$의</span> 식은 있으나 수치가 없는 경우</span><span class="ld"></span><span>0.3점</span></p>
+<p class="x k" style="--b:641.8"><span><b>7.</b> 주어진 거리를 가는 주행 시간의 범위를 얻었다</span><span class="ld"></span><span>2점</span></p>
+<p class="x k b1" style="--b:665.8"><span><span class="bu">•</span>범위를 구하는 방법의 아이디어</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b2" style="--b:690.1"><span>– 아이디어가 <span class="nw">$\tau_1$의</span> 모든 값에 대한 것은 아닌 경우</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x c" style="--b:720.0">9</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x k b1" style="--b:84.0"><span><span class="bu">•</span>주행 시간의 범위를 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k b2" style="--b:108.4"><span>– <span class="nw">$\tau_1$의</span> 값을 모두 구하지는 못한 경우</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x" style="--b:132.8"><i class="sk">참고.</i> 근거 없이 지나치게 높은 정밀도로(유효 숫자를 너무 많이 써서) 수치 답을 쓰면 0.1점을 감점한다.</p>
+<p class="x c" style="--b:720.0">10</p>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시 T-9-2</p>
+<p class="x i" style="--b:110.3">기관차가 점 <span class="nw">$B$에</span> 있고 연기 자취가 그보다 서쪽에 있으므로, 동풍이 (서쪽으로) 분다고 결론지을 수 있다.</p>
+<p class="x" style="--b:139.2">따라서 남북 방향으로 잰 점 <span class="nw">$A$와</span> $B$ 사이의 거리(16칸 $= 800\,\mathrm{m}$)가 원형 선로의 지름이다(반지름 <span class="nw">$R = 400\,\mathrm{m}$).</span></p>
+<div class="f" style="left:140pt;top:205pt"><span class="fig" data-srcpage="5" data-clip="140,205,472,432"></span></div>
+<div class="ov wb" style="left:192pt;top:210.5pt;width:22pt;height:8pt;font-size:7.5pt;line-height:8pt;font-style:italic">북쪽</div>
+<div class="ov wb" style="left:431pt;top:324pt;width:30pt;height:7.5pt;font-size:7.5pt;line-height:7.5pt;font-style:italic">동쪽</div>
+<p class="x cap" style="--b:487.6;left:266pt">그림 9.12</p>
+<p class="x i" style="--b:516.8">점 <span class="nw">$D$에서</span> 연기 자취에 그은 접선은 북쪽에서 남쪽으로 향한다. 속도 덧셈 법칙에 따르면 이것은 기관차의 기준계에서 바람의 속도 <span class="nw">$w$가</span> 자오선을 따라 향할 때 가능하다. 점 <span class="nw">$D$는</span> 점 <span class="nw">$A$보다</span> <span class="nw">$R/2$만큼</span> 남쪽에 있으므로 각 <span class="nw">$\alpha = 30^\circ$이고</span> <span class="nw">$v = 2u$이다.</span></p>
+<p class="x i" style="--b:574.5;width:317pt">속도 덧셈 법칙을 적용하자. 직선 선로를 따라 움직이는 기관차에서 나오는 연기 자취는 기관차에 대한 바람의 속도를 따라 향한다. 그런데 기관차 자체는 두 가지 서로 다른 방향으로 움직일 수 있다.</p>
+<p class="x i" style="--b:632.3;width:317pt">임의의 점에서 서쪽 방향으로 연기 자취와 만날 때까지 선분을 긋는다(점&nbsp;$L$). 이것이 바람의 속도 벡터 <span class="nw">$u$이다.</span> 점 <span class="nw">$O$를</span> 중심으로 반지름이 그 두 배인 원을 그리면, 이 원과 연기 자취의 교점 <span class="nw">$K$가</span> 지면에 대한 기차의</p>
+<div class="f" style="left:426pt;top:595pt"><span class="fig" data-srcpage="5" data-clip="426,595,542,687"></span></div>
+<p class="x c" style="--b:720.0">11</p>
+<p class="x cap" style="--b:720.4;left:429.7pt">그림 9.13</p>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x" style="--b:84.0;width:317pt">속도 <span class="nw">$v = 2u$의</span> 벡터 방향 <span class="nw">$KO$를</span> 정한다. 기관차의 기준계에서 바람의 속도는 연기 자취를 따라 향한다.</p>
+<div class="f" style="left:174pt;top:142pt"><span class="fig" data-srcpage="6" data-clip="174,142,438,325"></span></div>
+<div class="ov wb" style="left:211pt;top:148.5pt;width:18pt;height:6pt;font-size:6pt;line-height:6pt;font-style:italic">북쪽</div>
+<div class="ov wb" style="left:400pt;top:238.5pt;width:24.5pt;height:6pt;font-size:6pt;line-height:6pt;font-style:italic">동쪽</div>
+<div class="ov wb" style="left:376pt;top:148.5pt;width:18pt;height:6.5pt;font-size:6pt;line-height:6.5pt">경로 1</div>
+<div class="ov wb" style="left:243pt;top:207.5pt;width:19pt;height:7pt;font-size:6pt;line-height:7pt">경로 2</div>
+<p class="x cap" style="--b:372.7;left:266pt">그림 9.14</p>
+<p class="x c" style="--b:720.0">12</p>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x h" style="--b:84.0;left:130.45pt;width:200pt">채점 기준 T-9-2</p>
+<p class="x k" style="--b:111.4"><span><b>1.</b> 바람의 방향을 정하였다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:125.8"><span><b>2.</b> 원형 철로의 반지름을 구하였다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x l" style="--b:140.2"><b>3-5</b> 기차와 바람의 속력의 비 구하기:</p>
+<p class="x l" style="--b:164.7;left:89.4pt;width:450pt"><span class="bu">•</span>경로의 비를 이용한 풀이:</p>
+<p class="x k" style="--b:179.1;left:101.3pt;width:437pt"><span><b>3.</b> 연기의 경로를 구하였다;</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:193.5;left:101.3pt;width:437pt"><span><b>4.</b> 기관차의 경로를 구하였다;</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:208.0;left:101.3pt;width:437pt"><span><b>5.</b> 속력의 비를 구하였다 $(1.93 \pm 0.05)$;</span><span class="ld"></span><span>1점</span></p>
+<p class="x l" style="--b:232.4;left:89.4pt;width:450pt"><span class="bu">•</span>속도 덧셈 법칙을 이용한 풀이:</p>
+<p class="x l" style="--b:246.8;left:101.3pt;width:437pt"><b>3.</b> 연기 자취의 방향과 기관차 기준계에서의 바람의 속도 사이의</p>
+<p class="x k" style="--b:261.3;left:101.3pt;width:437pt"><span>관계를 이용하였다;</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:275.7;left:101.3pt;width:437pt"><span><b>4.</b> 점 $C$ 또는 <span class="nw">$D$에</span> 대해 속도 덧셈 법칙을 이용하였다;</span><span class="ld"></span><span>1점</span></p>
+<p class="x k d" style="--b:292.3;--a:13.5pt;left:101.3pt;width:437pt"><span><b>5.</b> 속력의 비 <span class="nw">$\dfrac{v}{u} = 2$를</span> 구하였다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x l" style="--b:320.4"><b>6.</b> (속도 덧셈 법칙에 근거하여) 기관차의 직선 선로 방향을 구하는 작도를</p>
+<p class="x k" style="--b:334.9"><span>올바르게 설명하였다.</span><span class="ld"></span><span>2점</span></p>
+<p class="x l" style="--b:349.3"><b>7.</b> 기관차의 직선 선로 방향을 구하였다.</p>
+<p class="x k" style="--b:373.7;left:89.4pt;width:449pt"><span><span class="bu">•</span>한 방향만 올바르게 구하였다;</span><span class="ld"></span><span>1.5점</span></p>
+<p class="x k" style="--b:398.1;left:89.4pt;width:449pt"><span><span class="bu">•</span>두 방향을 모두 올바르게 구하였다.</span><span class="ld"></span><span>3점</span></p>
+<p class="x c" style="--b:720.0">13</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시 T-9-3</p>
+<p class="x i" style="--b:111.4">줄-렌츠 법칙에 따르면 코일에서 발생하는 열의 일률은 다음과 같다.</p>
+<div class="f" style="left:238pt;top:125pt"><span class="fig" data-srcpage="8" data-clip="238,125,541,158"></span></div>
+<p class="x i" style="--b:176.6">복사와 열전달은 고려하지 않으므로, 짧은 시간 $\Delta\tau$ 동안 발생한 열은 코일의 온도를 $\Delta t$도만큼 올리는 데 쓰인다.</p>
+<div class="f" style="left:272pt;top:210pt"><span class="fig" data-srcpage="8" data-clip="272,210,541,224"></span></div>
+<p class="x" style="--b:240.8">그러므로</p>
+<div class="f" style="left:264pt;top:242pt"><span class="fig" data-srcpage="8" data-clip="264,242,541,274"></span></div>
+<p class="x i" style="--b:286.3">관계 <span class="nw">$R(t) = R_0 + \alpha(t - t_0)$의</span> 그래프를 이용하여 <span class="nw">$t_1$까지</span> 가열되는 시간을 구하자. (9.4)에 따르면 이 시간은 그래프 아래의 넓이에 비례하기 때문이다.</p>
+<div class="f" style="left:202pt;top:315pt"><span class="fig" data-srcpage="8" data-clip="202,315,541,346"></span></div>
+<p class="x" style="--b:404.0;width:317pt">마찬가지로 <span class="nw">$t_2$까지</span> 가열하는 경우:</p>
+<div class="f" style="left:127pt;top:417pt"><span class="fig" data-srcpage="8" data-clip="127,417,391,449"></span></div>
+<div class="f" style="left:399pt;top:397pt"><span class="fig" data-srcpage="8" data-clip="399,397,554,516"></span></div>
+<p class="x" style="--b:467.0;width:317pt">(9.5)로부터 다음을 얻는다.</p>
+<p class="x d l" style="--b:500.5;--a:17.6pt;left:96.6pt;width:250pt">$C = \dfrac{2U^2\tau_1}{2R_0(t_1 - t_0) + \alpha(t_1 - t_0)^2} = 7.2\cdot10^{-3}\,\dfrac{\mathrm{J}}{{}^\circ\mathrm{C}}$</p>
+<p class="x" style="--b:500.5;left:300pt;width:89.5pt;text-align:right">(9.7)</p>
+<p class="x" style="--b:533.6;width:317pt">(9.5), (9.6)에서 <span class="nw">$C$를</span> 소거하면 이차 방정식을 얻는다.</p>
+<p class="x cap" style="--b:535.5;left:429.7pt">그림 9.15</p>
+<div class="f" style="left:148pt;top:544pt"><span class="fig" data-srcpage="8" data-clip="148,544,541,575"></span></div>
+<p class="x" style="--b:588.2">따라서</p>
+<p class="x l" style="--b:602.6;left:276.9pt;width:150pt">$t_2 = 188\,{}^\circ\mathrm{C}$</p>
+<p class="x n" style="--b:602.6">(9.9)</p>
+<p class="x" style="--b:623.6">(음의 근은 물리적 의미가 없다)</p>
+<p class="x c" style="--b:720.0">14</p>
+</div>
+
+<!-- page 15 -->
+<div class="page">
+<p class="x h" style="--b:84.0">채점 기준 T-9-3</p>
+<p class="x k" style="--b:111.4"><span><b>1.</b> 식 (9.2)를 얻었다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:125.8"><span><b>2.</b> 식 <span class="nw">$Q = c\Delta t$를</span> 얻었다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:140.2"><span><b>3.</b> 열량이 같다는 아이디어.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:154.7"><span><b>4.</b> 식 (9.4)를 얻었다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:169.1"><span><b>5.</b> 그래프 아래의 넓이를 구하는 아이디어.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:183.6"><span><b>6.</b> 식 (9.5) 또는 (9.6)을 얻었다.</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:198.0"><span><b>7.</b> <span class="nw">$C$의</span> 값.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:212.5"><span><b>8.</b> <span class="nw">$t_2$의</span> 값.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:226.9"><span><b>9.</b> 두 번째 근을 버렸다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x c" style="--b:720.0">15</p>
+</div>
+
+<!-- page 16 -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시 T-9-4</p>
+<p class="x i" style="--b:112.5"><b>1.</b> 가변 저항기의 접점이 양 끝에 있을 때, 두 소자 <span class="nw">$X$</span> 중 하나에 걸리는 전압은 0이고 다른 하나에는 <span class="nw">$10\,\mathrm{V}$이다.</span> 그래프에서 이때 두 번째 소자에 흐르는 전류는 <span class="nw">$(200 \pm 2)\,\mathrm{mA}$임을</span> 알 수 있으므로, 전체 일률은 <span class="nw">$W_1 = (0 + 10\cdot0.2)\,\mathrm{W} = (2.00 \pm 0.02)\,\mathrm{W}$이다.</span></p>
+<p class="x i wn" style="--b:170.4"><b>2.</b> 접점이 가운데에 있으면 회로가 대칭이므로, 각 소자 <span class="nw">$X$에</span> 걸리는 전압은 <span class="nw">$5\,\mathrm{V}$이다.</span> 그래프에서 전류는 <span class="nw">$(60 \pm 3)\,\mathrm{mA}$이고,</span> 전체 일률은 $W_2 = (2\cdot5\cdot0.06)\,\mathrm{W} = {}$<span class="nw">$(0.60 \pm 0.03)\,\mathrm{W}$이다.</span></p>
+<p class="x i" style="--b:213.9"><b>3.</b> 1번과 2번의 결과로부터, 최소 일률은 가변 저항기의 접점이 가운데에 있을 때 나타난다고 추측하는 것이 자연스럽다. 접점을 가운데에서 왼쪽으로 옮기자. 이때 왼쪽 소자의 전압이 <span class="nw">$U'$만큼</span> 줄어서 <span class="nw">$\dfrac{U_0}{2} - U'$이</span> 되었다면, 오른쪽 소자의 전압은 <span class="nw">$\dfrac{U_0}{2} + U'$이</span> 된다. 왼쪽 소자의 전류는 <span class="nw">$I_0 + \Delta I_\mathrm{L}$,</span> 오른쪽 소자의 전류는 <span class="nw">$I_0 + \Delta I_\mathrm{R}$이</span> 되었다고 하자. 여기서 <span class="nw">$I_0$은</span> 접점이 가운데에 있을 때 소자 X에 흐르는 전류이다.</p>
+<p class="x i" style="--b:319.9">접점이 가운데에 있을 때와 비교한 일률의 변화를 나타내면 다음과 같다.</p>
+<p class="x d l" style="--b:367.4;--a:17.3pt;left:72pt;width:475pt;white-space:nowrap">$\Delta P = \left(\dfrac{U_0}{2} - U'\right)(I_0{+}\Delta I_\mathrm{L}){+}\left(\dfrac{U_0}{2} + U'\right)(I_0{+}\Delta I_\mathrm{R}){-}U_0{\cdot}I_0 = \dfrac{U_0}{2}(\Delta I_\mathrm{L}{+}\Delta I_\mathrm{R}){+}U'(\Delta I_\mathrm{R}{-}\Delta I_\mathrm{L}).$</p>
+<p class="x i" style="--b:400.6"><span class="nw">$\Delta I_\mathrm{R} > 0$이고</span> <span class="nw">$\Delta I_\mathrm{L} < 0$임에</span> 주목하자. 또한 전압-전류 특성 그래프는 전압이 커질수록 점점 더 빠르게 증가하므로 <span class="nw">$|\Delta I_\mathrm{R}| > |\Delta I_\mathrm{L}|$이고,</span> 따라서 모든 <span class="nw">$U'$에</span> 대해 <span class="nw">$\Delta P > 0$이다.</span> 즉 가변 저항기의 접점이 가운데에 있을 때 일률이 최소이다. 곧 <span class="nw">$W_{min} = W_2$이다.</span></p>
+<p class="x i" style="--b:458.5"><b>4.</b> 등가 회로를 그리자.</p>
+<p class="x" style="--b:473.0;width:317pt">왼쪽 저항의 저항값은 <span class="nw">$R_1 = 25\,\Omega$,</span> 오른쪽 저항은 <span class="nw">$R_2 = 75\,\Omega$이다.</span> 왼쪽 저항에 걸리는 전압을 <span class="nw">$U$,</span> 두 저항에 흐르는 전류를 <span class="nw">$I_1$과</span> <span class="nw">$I_2$,</span> 소자 <span class="nw">$X$에</span> 흐르는 전류를 <span class="nw">$I_3$과</span> <span class="nw">$I_4$라고</span> 하자. 그러면 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:416pt;top:465pt"><span class="fig" data-srcpage="10" data-clip="416,465,521,556"></span></div>
+<div class="f" style="left:176pt;top:531pt"><span class="fig" data-srcpage="10" data-clip="176,531,272,606"></span></div>
+<p class="x d l i" style="--b:629.6;--a:17pt">따라서 <span class="nw">$I_4 - I_3 = U\left(\dfrac{1}{R_1} + \dfrac{1}{R_2}\right) - \dfrac{U_0}{R_2} = U\cdot0.053\,\Omega^{-1} - 133\,\mathrm{mA}$를</span> 얻는다.</p>
+<p class="x" style="--b:658.2">얻은 식으로부터, <span class="nw">$U$가</span> 0에서 <span class="nw">$\dfrac{U_0}{2}$까지</span> 커지는 동안 전류의 차는 단조 증가함을 알 수 있다. 한편 전압-전류 특성으로부터 전류의 차를 구하면, <span class="nw">$U$가</span> 커질수록 전류의 차는 단조 감소한다.</p>
+<p class="x c" style="--b:720.0">16</p>
+</div>
+
+<!-- page 17 -->
+<div class="page">
+<p class="x i wn" style="--b:84.0">축차 근사로 위의 식과 전압-전류 특성을 모두 만족하는 <span class="nw">$U$를</span> 찾으면 <span class="nw">$U = (3.5 \pm 0.2)\,\mathrm{V}$이다.</span> 그러면 그래프에서 소자 <span class="nw">$X$에</span> 흐르는 전류는 각각 약 <span class="nw">$I_3 = (35 \pm 4)\,\mathrm{mA},$</span> <span class="nw">$I_4 = (87 \pm 5)\,\mathrm{mA}$이다.</span> 발생하는 전체 일률은 다음과 같다.</p>
+<p class="x l" style="--b:153.7;left:101pt;width:440pt">$W = I_3\cdot U + I_4(U_0 - U) = (0.035\cdot3.5 + 0.087\cdot(10 - 3.5))\,\mathrm{W} = (0.7 \pm 0.1)\,\mathrm{W}.$</p>
+<p class="x c" style="--b:720.0">17</p>
+</div>
+
+<!-- page 18 -->
+<div class="page">
+<p class="x h" style="--b:84.0">채점 기준 T-9-4</p>
+<p class="x l" style="--b:111.4"><b>문항 1.</b></p>
+<p class="x l i" style="--b:125.8"><b>1.</b> 전류가 어떻게 흐르는지 이해하고 있음을 보였고,</p>
+<p class="x k" style="--b:140.2"><span>소자 <span class="nw">$X$에</span> 걸리는 전압을 구하였다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:154.7;left:89.6pt;width:449.4pt"><span><b>2.</b> 일률의 값 <span class="nw">$(2.00 \pm 0.02)\,\mathrm{W}$.</span></span><span class="ld"></span><span>1점</span></p>
+<p class="x l" style="--b:169.1"><b>문항 2.</b></p>
+<p class="x l i" style="--b:183.6"><b>3.</b> 전류가 어떻게 흐르는지 이해하고 있음을 보였고,</p>
+<p class="x k" style="--b:198.0"><span>소자 <span class="nw">$X$에</span> 걸리는 전압을 구하였다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:212.5;left:89.6pt;width:449.4pt"><span><b>4.</b> 일률의 값 <span class="nw">$(0.60 \pm 0.03)\,\mathrm{W}$.</span></span><span class="ld"></span><span>1점*</span></p>
+<p class="x l" style="--b:226.9"><b>문항 3.</b></p>
+<p class="x l i" style="--b:241.4"><b>5.</b> 최소 일률은 가변 저항기의 접점이 가운데에 있을 때 나타남을</p>
+<p class="x k" style="--b:255.8"><span>지적하였다.</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:270.3;left:89.6pt;width:449.4pt"><span><b>6.</b> 일률이 최소임을 올바르게 증명하였다.</span><span class="ld"></span><span>2점</span></p>
+<p class="x l" style="--b:284.7"><b>문항 4.</b></p>
+<p class="x l i" style="--b:299.1"><b>7.</b> 소자 <span class="nw">$X$에</span> 흐르는 전류를 구할 수 있는 올바른 방법을</p>
+<p class="x k" style="--b:313.6"><span>제시하였다.</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:328.0;left:89.6pt;width:449.4pt"><span><b>8.</b> 일률의 값 <span class="nw">$(0.7 \pm 0.1)\,\mathrm{W}$.</span></span><span class="ld"></span><span>1점*</span></p>
+<p class="x i" style="--b:342.5">* 수치 값에 대한 점수는 올바른 방법을 사용한 경우에만 준다. 수치 값이 이중 “허용 범위” 안에 들면 0.5점을 준다.</p>
+<p class="x c" style="--b:720.0">18</p>
+</div>
+
+<!-- page 19 -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시 T-9-5</p>
+<p class="x i" style="--b:113.0"><b>1.</b> 레이저 광선의 굴절에 대한 스넬의 법칙을 이용하자.</p>
+<div class="f" style="left:255pt;top:130pt"><span class="fig" data-srcpage="13" data-clip="255,130,541,146"></span></div>
+<p class="x i wn" style="--b:167.5;width:317pt">공기의 굴절률이 1임을 고려하여 전반사 조건을 구하면 다음과 같다.</p>
+<p class="x d l" style="--b:213.7;--a:15.8pt;left:196.9pt;width:150pt">$\sin\alpha_\mathrm{cr} = \dfrac{1}{n}$</p>
+<p class="x" style="--b:213.7;left:300pt;width:89.5pt;text-align:right">(9.11)</p>
+<div class="f" style="left:404pt;top:174pt"><span class="fig" data-srcpage="13" data-clip="404,174,535,298"></span></div>
+<p class="x ov" style="--b:196.7;--fs:8.8pt;left:459pt;width:20pt;text-align:left;font-family:Arial,KG,sans-serif">cr</p>
+<p class="x d l" style="--b:258.3;--a:16.2pt;left:158pt;width:200pt">$\alpha_\mathrm{cr} = \omega\tau = \arcsin\dfrac{1}{n} \approx 49^\circ$</p>
+<p class="x" style="--b:258.3;left:300pt;width:89.5pt;text-align:right">(9.12)</p>
+<div class="f" style="left:192pt;top:279pt"><span class="fig" data-srcpage="13" data-clip="192,279,390,309"></span></div>
+<p class="x cap" style="--b:318.3;left:429.7pt">그림 9.16</p>
+<p class="x i" style="--b:322.5;width:317pt"><b>2.</b> 시간 <span class="nw">$1.5\tau$가</span> 지났을 때 각은 다음과 같다.</p>
+<div class="f" style="left:263pt;top:337pt"><span class="fig" data-srcpage="13" data-clip="263,337,541,354"></span></div>
+<div class="f" style="left:253pt;top:380pt"><span class="fig" data-srcpage="13" data-clip="253,380,541,396"></span></div>
+<p class="x i" style="--b:413.9;width:317pt"><span class="nw">$\gamma < 180^\circ$이므로</span> 레이저 광선은 그릇 면의 검게 칠한 절반에 닿기 전에 여러 번 반사된다. 반사 횟수 <span class="nw">$n$을</span> 세어 보자. 삼각형 $\triangle AA_1O$, $\triangle AA_2O$, ..., <span class="nw">$\triangle AA_nO$를</span> 생각하자. 반사 조건으로부터 각 <span class="nw">$\angle A_{k-1}A_kO$와</span> <span class="nw">$\angle A_kA_{k+1}O$</span> <span class="nw">$(k = 1,...,n)$는</span> 같다. 이로부터 이 삼각형들은 이등변 삼각형이고 밑각이 같으므로 모두 합동이다. 반사 횟수에 대한 조건은 다음과 같다.</p>
+<div class="f" style="left:166pt;top:547pt"><span class="fig" data-srcpage="13" data-clip="166,547,390,563"></span></div>
+<div class="f" style="left:399pt;top:420pt"><span class="fig" data-srcpage="13" data-clip="399,420,547,553"></span></div>
+<p class="x cap" style="--b:572.7;left:429.7pt">그림 9.17</p>
+<div class="f" style="left:265pt;top:586pt"><span class="fig" data-srcpage="13" data-clip="265,586,541,600"></span></div>
+<p class="x i" style="--b:618.2">따라서 반사 횟수는 <span class="nw">$n = 5$이다.</span> 그러면 <span class="nw">$t = 1.5\tau$</span> 부근에서 ‘빛 반점’의 각좌표의 시간에 따른 변화 <span class="nw">$\phi(t)$는</span> 다음과 같다.</p>
+<div class="f" style="left:82pt;top:662pt"><span class="fig" data-srcpage="13" data-clip="82,662,541,678"></span></div>
+<p class="x c" style="--b:720.0">19</p>
+</div>
+
+<!-- page 20 -->
+<div class="page">
+<p class="x i wn" style="--b:84.0;width:317pt">이로부터 좌표가 시간에 따라 선형으로 변함을 알 수 있으므로, 각속도와 선속도의 크기를 구하면 다음과 같다.</p>
+<p class="x l" style="--b:127.3;left:207.5pt;width:120pt">$\omega_\mathrm{s} = 12\omega$</p>
+<p class="x" style="--b:127.3;left:300pt;width:89.5pt;text-align:right">(9.19)</p>
+<p class="x l" style="--b:162.7;left:203.4pt;width:120pt">$\upsilon_\mathrm{s} = 12\omega R$</p>
+<p class="x" style="--b:162.7;left:300pt;width:89.5pt;text-align:right">(9.20)</p>
+<div class="f" style="left:399pt;top:76pt"><span class="fig" data-srcpage="14" data-clip="399,76,540,209"></span></div>
+<p class="x cap" style="--b:228.8;left:429.7pt">그림 9.18</p>
+<p class="x c" style="--b:720.0">20</p>
+</div>
+
+<!-- page 21 -->
+<div class="page">
+<p class="x h" style="--b:84.0;left:130.45pt;width:200pt">채점 기준 T-9-5</p>
+<p class="x k" style="--b:111.4;left:86.3pt;width:302.7pt"><span><span class="bu" style="width:15pt">1.</span>전반사 조건 (9.11)</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:150.2;left:86.3pt;width:302.7pt"><span><span class="bu" style="width:15pt">2.</span><span class="nw">$\alpha_\mathrm{cr}$와</span> <span class="nw">$\tau$를</span> 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:174.6;left:86.3pt;width:302.7pt"><span><span class="bu" style="width:15pt">3.</span>여러 번 반사된다는 아이디어</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:199.0;left:86.3pt;width:302.7pt"><span><span class="bu" style="width:15pt">4.</span><span class="nw">$t = 1.5\tau$일</span> 때의 반사 횟수를 구하였다</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:223.4;left:86.3pt;width:302.7pt"><span><span class="bu" style="width:15pt">5.</span>좌표의 시간에 따른 변화 <span class="nw">$\phi(t)$를</span> 썼다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:262.3;left:86.3pt;width:302.7pt"><span><span class="bu" style="width:15pt">6.</span>선속도 및/또는 각속도를 구하였다</span><span class="ld"></span><span>2점</span></p>
+<p class="x c" style="--b:720.0">21</p>
+</div>
+</body></html>
