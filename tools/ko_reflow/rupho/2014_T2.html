@@ -1,0 +1,76 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2014 (XLVIII = 제48회), 10학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 5-6
+   (figures are numbered on through the booklet: 그림 4-6).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.7): odd pages at the right edge, even at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "10학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 387.5 - right edge of the short lines, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 5 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">10학년</p>
+<p class="x h" style="--b:67.4">문제 1. 투석기</p>
+<p class="x i" style="--b:79.4">장난감 투석기는 공 두 개를 한꺼번에 쏠 수 있다. 두 공의 처음 속도는 크기가 <span class="nw">$v_0$으로</span> 같지만, 수평면과 이루는 각은 서로 다르다. 두 공 가운데 한 공을 쏘는 각은 마음대로 바꿀 수 있다. 투석기는 수평면에서 쏜 두 공이 언제나 이 평면의 같은 지점에 떨어지도록 만들어져 있다. 여러 번 시험해 본 결과, 두 공이 모두 공중에 있는 동안 두 공 사이의 거리가 가질 수 있는 최댓값은 <span class="nw">$L_\mathrm{max} = 19\,\mathrm{m}$였다</span>. 공의 처음 속력 <span class="nw">$v_0$을</span> 구하여라. <span class="nw">$g = 10\,\mathrm{m/s^2}$으로</span> 하여라.</p>
+<p class="x h" style="--b:198.9">문제 2. 도선이 감긴 실패</p>
+<div class="f" style="left:307pt;top:205pt"><span class="fig" data-srcpage="1" data-clip="307,205,388,268"></span></div>
+<p class="x cap" style="--b:285.8;left:326.9pt">그림 4</p>
+<p class="x i" style="--b:210.9;width:263.4pt">가벼운 도선이 원통 모양의 실패에 감겨 있고, 이 실패는 수평 막대에 끼워져 있다(그림&nbsp;4). 실패가 막대에 끼워진 채로 일정한 빠르기로 돌게 하려면, 도선의 끝을 연직 아래로 힘 <span class="nw">$F_1$으로</span> 당기거나, 실패의 아래쪽 가장자리에 접하는 수평 방향으로 힘 <span class="nw">$F_2$로</span> 당겨야 한다. 실패의 질량 <span class="nw">$m$은</span> 얼마인가?</p>
+<p class="x h" style="--b:312.5">문제 3. 헬륨의 냉각</p>
+<p class="x i" style="--b:324.4">헬륨 1몰을 처음 온도 <span class="nw">$T_0$에서</span> 어떤 나중 온도 <span class="nw">$T_x$까지</span> 냉각하였다. 이 과정에서 열용량 <span class="nw">$C$는</span> 온도 <span class="nw">$T$에</span> 정비례하였고, 기체가 한 일은 0이었다. 냉각 과정의 맨 처음에는 기체의 압력이 부피에 정비례하여 변하였다. 이 과정에서 기체가 한 양(+)의 일의 크기와 비 <span class="nw">$T_x/T_0$을</span> 구하여라.</p>
+<p class="x h" style="--b:402.2">문제 4. 안정성의 원천</p>
+<div class="f" style="left:247pt;top:404pt"><span class="fig" data-srcpage="1" data-clip="247,404,386,470"></span></div>
+<p class="x cap" style="--b:481.0;left:297.4pt">그림 5</p>
+<p class="x i wr" style="--b:414.1;--fw:149.9pt;--fh:82.7pt">안정화 전류원은 연결된 부하에 관계없이 일정한 전류 <span class="nw">$I_0$을</span> 내보낼 수 있다. 이 전류원을 그림&nbsp;5와 같은 회로에 연결하였다. 회로의 모든 소자는 이상적이라고 볼 수 있으며, 각 소자의 값은 그림에 나타나 있다. 스위치를 닫기 전에 축전기는 충전되어 있지 않았다. 어느 순간 스위치를 닫았다. 스위치를 닫은 뒤 저항 <span class="nw">$R$에서</span> 발생한 열량 <span class="nw">$Q$는</span> 얼마인가?</p>
+<p class="x pn r" style="--b:573.7">5</p>
+</div>
+
+<!-- page 6 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제48회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.7">문제 5. 멀어질까, 아닐까?</p>
+<div class="f" style="left:33pt;top:54pt"><span class="fig" data-srcpage="2" data-clip="33,54,135,136"></span></div>
+<p class="x cap" style="--b:147.5;left:63pt">그림 6</p>
+<p class="x i" style="--b:60.5;left:143.1pt;width:244.4pt">질량이 각각 <span class="nw">$m$과</span> $M$($M > m$)이고 같은 양전하 <span class="nw">$q$를</span> 띤 두 질점이, 균일한 전기장 <span class="nw">$E$</span> 속에서 서로 <span class="nw">$l$만큼</span> 떨어져 있다. 전기장은 <span class="nw">$m$에서</span> <span class="nw">$M$을</span> 향한다(그림&nbsp;6). 처음 순간 두 점의 속도는 0이다. 그 뒤 운동하는 동안 두 점 사이의 최대 거리를 구하여라. 두 점은 언제나 한 직선을 따라 움직인다고 보아라.</p>
+<p class="x pn" style="--b:573.7">6</p>
+</div>
+</body></html>
