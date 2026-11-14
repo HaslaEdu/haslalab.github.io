@@ -1,0 +1,75 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2015 (XLIX = 제49회), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 8-9.
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); in this booklet page 8 is right-aligned, page 9 left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.6): page 8 at the right edge, page 9 at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "11학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 387.5 - right edge of the short lines (+ nothing: keep the original's edge), --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span>
+   (a long one that leaves wide gaps: reword the sentence) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 8 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">11학년</p>
+<p class="x h" style="--b:63.4">문제 1. 진동</p>
+<div class="f" style="left:245pt;top:66pt"><span class="fig" data-srcpage="1" data-clip="245,66,389,154"></span></div>
+<p class="x cap" style="--b:163.4;left:293.9pt">그림 9</p>
+<p class="x i wr" style="--b:75.4;--fw:157.1pt;--fh:106.6pt">고정된 유전체 반구의 표면에 양전하가 균일하게 분포되어 있다. 반구의 대칭축은 연직이다. 반구의 곡률 중심과 일치하는 점 O에 단진자가 고정되어 있다. 진자는 실에 매달린 작은 공으로 이루어져 있으며, 공의 전하는 <span class="nw">$q_1$이고</span>, 실의 길이는 반구의 반지름보다 짧다(그림&nbsp;9). 실이 연직인 평형 위치 근처에서 공의 조화 진동의 주기는 <span class="nw">$T$이다</span>. 공의 전하를 <span class="nw">$q_2$로</span> 바꾸었는데, 이때 <span class="nw">$|q_2/q_1| = 2$이다</span>. 그러자 실이 역시 연직인 새로운 평형 위치 근처에서 공의 조화 진동의 주기가 다시 <span class="nw">$T$가</span> 되었다. 대전되지 않은 그릇 속에서 진자의 조화 진동의 주기가 <span class="nw">$T_0 = 1.0\,\mathrm{s}$임을</span> 알 때, <span class="nw">$T$의</span> 수치를 구하여라. 분극 전하가 만드는 장은 고려하지 않는다.</p>
+<p class="x h" style="--b:270.8">문제 2. 도체 정육면체</p>
+<div class="f" style="left:250pt;top:275pt"><span class="fig" data-srcpage="1" data-clip="250,275,388,394"></span></div>
+<p class="x cap" style="--b:402.3;left:298.9pt">그림 10</p>
+<p class="x i wr" style="--b:282.8;--fw:146.9pt;--fh:130.5pt">작은 정육면체가 똑같은 도체 판 여섯 장으로 이루어져 있고, 각 판의 중심에는 똑같은 구멍이 뚫려 있다. 정육면체의 꼭짓점에는 전기가 잘 통하는 똑같은 작은 공이 끼워져 있어서, 여기에 도선을 연결할 수 있다. 구멍의 지름은 이웃한 두 꼭짓점 A와 B 사이에서 잰 정육면체의 전기 저항 <span class="nw">$R_{AB}$가</span> <span class="nw">$r = 32\,\mathrm{k\Omega}$이</span> 되도록 정해져 있다. 이 두 꼭짓점을 통해 그림에 표시된 방향으로 전류 <span class="nw">$I = 1\,\mathrm{mA}$를</span> 흘리면, 점 M(모서리 AB의 중점)과 꼭짓점 C 사이의 전위차는 $U_{MC} = \varphi_M - \varphi_C =$ <span class="nw">$U = 2.0\,\mathrm{V}$가</span> 된다. 두 점 A와 C 사이의 저항 <span class="nw">$R_{AC}$를</span> 구하여라. 판의 두께는 그대로 두고 판의 크기와 구멍의 크기를 2배로 늘리면 저항 <span class="nw">$R_{AB}$와</span> <span class="nw">$R_{AC}$는</span> 어떻게 변하는가?</p>
+<p class="x h" style="--b:478.0">문제 3. 제트 관</p>
+<p class="x i" style="--b:490.0">양 끝이 열린 긴 관의 가운데에, 관의 축에 수직으로 얇은 텅스텐 그물 모양의 가열기가 고정되어 있다. 이 장치는 온도 <span class="nw">$t = 20\,{}^\circ\mathrm{C}$인</span> 공기 속에 있으며, 전체 질량은 <span class="nw">$M = 17\,\mathrm{g}$이다</span>. 처음 순간에 관에 축 방향으로 속력 <span class="nw">$v_0 = 1\,\mathrm{cm/s}$를</span> 주고, 가열기에 일률 <span class="nw">$q = 20\,\mathrm{W}$를</span> 공급하기 시작하자 관이 가속되기 시작한다. 관이 가속 거리 <span class="nw">$S = 20\,\mathrm{m}$를</span> 지나는 동안 어떤 속력에 이르는가?</p>
+<p class="x pn r" style="--b:573.6">8</p>
+</div>
+
+<!-- page 9 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.6">공기 저항은 무시하여라. 관 안의 압력은 어디서나 같다고 보고, 중력과 관 벽을 통한 열교환은 고려하지 않는다. 공기 흐름이 그물을 지날 때 운동 에너지의 변화는 내부 에너지의 변화에 비해 작다고 보아라. 공기는 몰 질량이 <span class="nw">$\mu = 29\,\mathrm{g/mol}$인</span> 이원자 기체로 보아라.</p>
+<p class="x h" style="--b:114.4">문제 4. 우주 물체</p>
+<p class="x i" style="--b:126.3">어떤 직선을 따라 일정한 속도로 움직이는 우주 물체가 주기적으로 전파 펄스를 내보낸다. 한 천문학자는 관측 시간 $\Delta t$ 동안 이 물체가 보이는 방향이 작은 각 <span class="nw">$\Delta\varphi$만큼</span> 바뀌고, 전파 펄스가 도착하는 시각 사이의 주기가 <span class="nw">$T$에서</span> <span class="nw">$T + \Delta T$로</span> 바뀐 것을 알아냈다. 여기서 <span class="nw">$\Delta T \ll T$이다</span>. 관측자에서 물체까지의 거리를 구하여라. 전파 펄스의 속력은 빛의 속력 <span class="nw">$c$와</span> 같다.</p>
+<p class="x h" style="--b:204.0">문제 5. «밀리자동차»</p>
+<p class="x i" style="--b:216.0">개미만 한 크기의 아주 작은 자동차가 평평한 수평면 위에서 초점 거리가 <span class="nw">$f$인</span> 볼록 렌즈의 광축을 따라 달린다. 자동차의 지붕에는 점광원 <span class="nw">$S$가</span> 고정되어 있으며, 이 광원은 렌즈의 광축 위에 있다. 자동차의 속력은 점광원 <span class="nw">$S$의</span> 상 <span class="nw">$S_1$의</span> 속력이 일정하게 <span class="nw">$v_0$으로</span> 유지되도록 변한다. 렌즈로부터 어떤 거리 범위에서 «자동차»가 이렇게 움직일 수 있는지 구하여라. 자동차 바퀴와 도로 사이의 마찰 계수는 <span class="nw">$\mu$이다</span>.</p>
+<p class="x pn" style="--b:573.6">9</p>
+</div>
+</body></html>

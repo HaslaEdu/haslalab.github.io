@@ -1,0 +1,151 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2016 (L = 제50회), 9학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 9-13
+   (figures are numbered on through the booklet: 그림 15-23).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   A line holding a tall inline fraction (\dfrac) grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~1.36em x 9.963pt = 13.6pt for a \dfrac with capital/ascender numerator).
+   A block whose FIRST line holds a \dfrac grows upward: push it down with padding-top (~1.2pt) until qa.py meets --b. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 584.3): odd pages at the right edge, even at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* "풀이 예시" (SFRM1440, 14.346pt regular), grade line "9학년" (SFBX1200 = 11.955pt bold),
+   problem titles (SFBX1000 bold) — all centred on the column */
+.t{text-align:center;--fs:14.346pt;--l:17.2pt}
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 387.5 - right edge of the original's short lines, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* figure captions "그림 N" and sub-figure letters: centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span>
+   (a long one that leaves wide gaps: reword the sentence) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 9 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x t" style="--b:51.5">풀이 예시</p>
+<p class="x g" style="--b:70.4">9학년</p>
+<p class="x h" style="--b:85.8">문제 1. 바퀴에 박힌 돌</p>
+<div class="f" style="left:272pt;top:92pt"><span class="fig" data-srcpage="1" data-clip="272,92,387.5,156"></span></div>
+<p class="x cap" style="--b:168.0;left:310pt">그림 15</p>
+<p class="x i wr" style="--b:98.1;--fw:124.8pt;--fh:70.7pt">두 바퀴는 크기가 같고 미끄러지지 않으므로 같은 각속도 <span class="nw">$\omega = v/R$로</span> 회전한다. 따라서 바퀴 중심에 대한 두 돌의 위치 벡터 <span class="nw">$\vec r_1$과</span> $\vec r_2$ 사이의 각은 어느 순간에나 <span class="nw">$90^\circ$이다</span>(그림&nbsp;15).</p>
+<p class="x i wr" style="--b:170.2;--fw:124.8pt;--fh:10.9pt">첫 번째 돌에 대한 두 번째 돌의 위치 벡터 <span class="nw">$\vec r_{21}$은</span> 다음 벡터 등식으로 구할 수 있다.</p>
+<div class="f" style="left:169pt;top:196pt"><span class="fig" data-srcpage="1" data-clip="169,196,251,213"></span></div>
+<p class="x" style="--b:227.1">여기서 <span class="nw">$\vec r_0$은</span> 뒷바퀴 중심에 대한 앞바퀴 중심의 위치 벡터이다. 벡터 <span class="nw">$\vec r_1$과</span> $\vec r_2$ 사이의 각은 언제나 <span class="nw">$90^\circ$이므로</span>, 벡터 <span class="nw">$\vec r_2 - \vec r_1$의</span> 길이는 <span class="nw">$\sqrt2R$이고</span>, 이 벡터는 바퀴의 각속도와 같은 일정한 각속도로 회전한다. 따라서 첫 번째 돌에 대한 두 번째 돌의 위치 벡터는 (자전거가 움직이는 동안 변하지 않는) 벡터 <span class="nw">$\vec r_0$과</span>, 길이가 <span class="nw">$\sqrt2R$이고</span> 각속도 <span class="nw">$\omega$로</span> 회전하는 벡터의 합으로 구할 수 있다. 이 두 벡터의 합을 그림&nbsp;16에 나타내었다. 이때 벡터 <span class="nw">$\vec r_2 - \vec r_1$과</span> <span class="nw">$\vec r_{21}$의</span> 끝점은 벡터 <span class="nw">$\vec r_0$의</span> 끝점을 중심으로 하는 반지름 <span class="nw">$\sqrt2R$인</span> 원 위에 있다.</p>
+<p class="x i" style="--b:335.0">그림 16에서 알 수 있듯이, 벡터 <span class="nw">$\vec r_{21}$의</span> 길이는 벡터 <span class="nw">$\vec r_2 - \vec r_1$이</span> 벡터 <span class="nw">$\vec r_0$과</span> 반대 방향을 향하는 순간에 가장 짧고, 벡터 <span class="nw">$\vec r_2 - \vec r_1$이</span> 벡터 <span class="nw">$\vec r_0$과</span> 같은 방향을 향하는 순간에 가장 길다. 따라서</p>
+<div class="f" style="left:139pt;top:379pt"><span class="fig" data-srcpage="1" data-clip="139,379,282,414"></span></div>
+<div class="f" style="left:61pt;top:441pt"><span class="fig" data-srcpage="1" data-clip="61,441,177,504"></span></div>
+<div class="f" style="left:250pt;top:433pt"><span class="fig" data-srcpage="1" data-clip="250,433,351,506"></span></div>
+<p class="x ov" style="--b:457.0;left:222pt">(가)</p>
+<p class="x ov" style="--b:485.3;left:222pt">(나)</p>
+<p class="x cap" style="--b:515.2;left:99pt">그림 16</p>
+<p class="x cap" style="--b:515.2;left:276.1pt">그림 17</p>
+<p class="x i" style="--b:536.6">이 두 경우를 각각 그림&nbsp;17의 (가)와 (나)에 나타내었다. 벡터 <span class="nw">$\vec r_{21}$의</span> 길이는 벡터 <span class="nw">$\vec r_2$가</span> 처음 위치에 비해 각 <span class="nw">$\pi/4$만큼</span> 회전했을 때 최대가 된다. 이로부터 두 돌 사이의 거리가 최댓값에 이르는 시각 <span class="nw">$t$를</span> 구하면</p>
+<p class="x pn r" style="--b:584.3">9</p>
+</div>
+
+<!-- page 10 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:46.0">다음과 같다.</p>
+<div class="f" style="left:178pt;top:54pt"><span class="fig" data-srcpage="2" data-clip="178,54,243,80"></span></div>
+<p class="x h" style="--b:98.9">문제 2. 뜻밖의 회전</p>
+<div class="f" style="left:308pt;top:103pt"><span class="fig" data-srcpage="2" data-clip="308,103,397,226"></span></div>
+<p class="x cap" style="--b:237.9;left:327.4pt">그림 18</p>
+<p class="x i wr" style="--b:110.9;--fw:89.6pt;--fh:22.9pt">확실히 하기 위해, 처음 순간에 힘 벡터가 오른쪽을 향한다고 하자.</p>
+<p class="x i wr" style="--b:134.8;--fw:89.6pt;--fh:58.8pt">짧은 시간 간격 $\Delta t$ 동안 입자의 속도 변화를 생각하자. 이를 위해서는 운동량 변화에 대한 벡터 방정식 <span class="nw">$m(\vec u - \vec v) = \sum\vec F_i\Delta t$를</span> 기하학적으로 해석하는 것이 편리하다. 여기서 <span class="nw">$\vec F_i$는</span> 임의의 순간의 힘 <span class="nw">$F$의</span> 벡터이다.</p>
+<p class="x i wr" style="--b:194.6;--fw:89.6pt;--fh:58.8pt">그림에서 알 수 있듯이, 입자의 운동량의 전체 변화 <span class="nw">$\Delta\vec p$는</span> 입자의 처음 속도와 반대 방향을 향한다(처음 속도에 수직인 방향의 운동량 변화는 힘이 $180^\circ$ 회전하는 동안 서로 상쇄된다).</p>
+<p class="x i" style="--b:254.3">운동량 변화의 크기들이 이루는 반원호의 길이는 <span class="nw">$\sum F\Delta t = F\sum\Delta t = F\tau$이다</span>. 여기서 <span class="nw">$\tau$는</span> 힘 벡터가 회전하는 시간이다. 호의 길이로부터 원의 지름 <span class="nw">$\Delta p = \dfrac{2F\tau}{\pi}$를</span> 구할 수 있다. 따라서 <span class="nw">$u = v - \dfrac{2F\tau}{m\pi}$이다</span>.</p>
+<p class="x i" style="--b:326.1;padding-top:1.3pt">$v > \dfrac{2F\tau}{m\pi}$이면 <span class="nw">$u$의</span> 방향은 <span class="nw">$v$의</span> 방향과 같고, 그렇지 않으면 방향이 반대가 된다.</p>
+<p class="x i" style="--b:350.1">처음에 힘 벡터가 왼쪽을 향하는 두 번째 경우도 문제의 조건에 어긋나지 않는다는 점에 주의하자. 이때 속도 변화는 <span class="nw">$v$의</span> 방향과 같고 <span class="nw">$u = v + \dfrac{2F\tau}{m\pi}$이다</span>. 이 경우 <span class="nw">$u$는</span> 언제나 <span class="nw">$v$와</span> 같은 방향을 향한다.</p>
+<p class="x h" style="--b:409.7">문제 3. 벤치 옮기기</p>
+<div class="f" style="left:201pt;top:413pt"><span class="fig" data-srcpage="2" data-clip="201,413,388,493"></span></div>
+<p class="x cap" style="--b:503.6;left:274.5pt">그림 19</p>
+<p class="x i wr wn" style="--b:421.7;--fw:195.9pt;--fh:94.6pt">앞다리가 거친 구역에 들어선 벤치를 일정한 속도로 움직이는 데 필요한 힘을 구하자. 이를 위해 벤치가 정지해 있는 동반 관성 기준계에서 점 <span class="nw">$O$에</span> 대한 돌림힘 평형 조건을 쓰면 <span class="nw">$\mu N_1h + mg\dfrac{L}{2} = N_1L$이다</span>. 여기서 <span class="nw">$F_1 = \mu N_1$을</span> 이용하였다. 따라서 <span class="nw">$F_1 = \dfrac{\mu mgL}{2(L - \mu h)}$이다</span>.</p>
+<p class="x i" style="--b:548.4">두 다리가 모두 거친 구역에 들어섰을 때에는 힘 <span class="nw">$F_2 = \mu mg$를</span> 가해야 한다. 거친 면 위에서 뒷다리만</p>
+<p class="x pn" style="--b:584.3">10</p>
+</div>
+
+<!-- page 11 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.5;padding-top:1.2pt">움직일 때에는 첫 번째 경우와 같은 방법으로 힘 <span class="nw">$F_3 = \dfrac{\mu mgL}{2(L + \mu h)}$을</span> 구할 수 있다. 벤치를 옮기는 데 드는 전체 일은 세 구간에서 한 일의 합으로 나타낼 수 있다.</p>
+<div class="f" style="left:32pt;top:92pt"><span class="fig" data-srcpage="3" data-clip="32,92,388.5,127"></span></div>
+<div class="f" style="left:221pt;top:128pt"><span class="fig" data-srcpage="3" data-clip="221,128,388,206"></span></div>
+<p class="x cap" style="--b:216.0;left:280.4pt">그림 20</p>
+<p class="x i wr wn" style="--b:137.1;--fw:183.8pt;--fh:94.6pt">얻은 답이 성립하는 허용 범위를 따져 보는 것이 중요하다. 얼핏 보면 조건 <span class="nw">$L > \mu h$만</span> 만족하면 될 것 같지만, 그렇지 않다. 더 엄격하면서 드러나지 않은 제약이 있다. 위의 답은 두 다리가 모두 바닥면과 접촉을 유지한다는 가정 아래에서 얻은 것이다. 어떤 조건에서 벤치가 앞다리를 축으로 넘어지기 시작하는지 알아보자. 넘어지기 직전에는 힘 <span class="nw">$N_2$가</span> 0이 되고, <span class="nw">$N_1$은</span> <span class="nw">$mg$와</span> 같아진다. 그러면 점 <span class="nw">$A$에</span> 대한 돌림힘 평형 조건에서 <span class="nw">$\mu hN_1 = \dfrac{L}{2}N_1$을</span> 얻는다. 즉 접촉이 유지되려면 <span class="nw">$L > 2\mu h$이어야</span> 한다.</p>
+<p class="x h" style="--b:296.8">문제 4. 우유를 넣은 커피</p>
+<p class="x i" style="--b:308.8">정상 상태에서 관을 따라 온도는 선형으로 변한다. 이는 관을 따라 조금 이동할 때의 온도 변화를 살펴보면 보일 수 있다. 열평형 방정식으로부터 두 액체의 온도 변화가 같다는 것이 나온다(같은 시간 동안 같은 질량의 액체가 열을 주고받는다는 점을 고려하였다). 다시 말해, 열교환기의 어떤 곳에서 커피와 우유의 온도가 각각 <span class="nw">$t_\text{커피}$와</span> <span class="nw">$t_\text{우유}$이면</span>, 작은 거리 <span class="nw">$\Delta x$만큼</span> 떨어진 곳에서는 온도가 <span class="nw">$t_\text{커피} + \Delta t$와</span> <span class="nw">$t_\text{우유} + \Delta t$가</span> 되며, 이때 온도 차와 열교환 일률은 그대로 유지된다. 이 과정을 한 단계씩 되풀이하여 열교환기의 다른 쪽 끝까지 갈 수 있다. 관을 따른 온도 분포를 그래프로 나타내면 그림&nbsp;21과 같다.</p>
+<p class="x c" style="--b:438.3">$\Delta t_1 = t_3 - t_1 = 50\,{}^\circ\mathrm{C}.$</p>
+<p class="x" style="--b:460.1">온도 변화가 같으므로, 출구에서 커피의 온도는 다음과 같다.</p>
+<p class="x c" style="--b:482.0">$t_4 = t_2 - \Delta t_1 = 40\,{}^\circ\mathrm{C}.$</p>
+<p class="x" style="--b:503.8">온도가 같은 두 관 구간 사이의 거리 <span class="nw">$s$는</span> 닮은 삼각형으로부터 구할 수 있다.</p>
+<p class="x c d" style="--b:542.2;--a:13.6pt">$\dfrac{s}{L} = \dfrac{t_2 - \Delta t_1 - t_1}{\Delta t_1},\qquad\text{따라서}\qquad s = 3\,\mathrm{m}.$</p>
+<p class="x pn r" style="--b:584.3">11</p>
+</div>
+
+<!-- page 12 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<div class="f" style="left:211pt;top:40pt"><span class="fig" data-srcpage="4" data-clip="211,40,387,165"></span></div>
+<p class="x cap" style="--b:174.5;left:279pt">그림 21</p>
+<p class="x i wr wn" style="--b:48.5;--fw:186.9pt;--fh:22.9pt">주고받은 열의 일률 사이의 관계를 쓰면 다음과 같다.</p>
+<div class="f" style="left:59pt;top:76pt"><span class="fig" data-srcpage="4" data-clip="59,76,175,93"></span></div>
+<p class="x wr wn" style="--b:109.0;--fw:186.9pt;--fh:58.8pt">여기서 <span class="nw">$\alpha$는</span> 안쪽 관과 액체의 열전도 성질과 관련된 어떤 상수이다. 액체의 유량을 <span class="nw">$\mu' = 2\mu$로</span> 바꾸면 관계식은 다음과 같이 된다.</p>
+<div class="f" style="left:56pt;top:169pt"><span class="fig" data-srcpage="4" data-clip="56,169,177,190"></span></div>
+<p class="x" style="--b:205.4">여기서 온도 차가 줄어들어 일률이 달라진다는 점을 고려하였다. 새로운 온도 변화 <span class="nw">$\Delta t'_1$에</span> 대하여 연립 방정식을 풀면 <span class="nw">$\Delta t'_1 = 36.4\,{}^\circ\mathrm{C}$를</span> 얻는다. 따라서 출구 온도는 우유가 $t'_3 = 46.4\,{}^\circ\mathrm{C}$, 커피가 <span class="nw">$t'_4 = 53.6\,{}^\circ\mathrm{C}$이다</span>.</p>
+<p class="x h" style="--b:266.9">문제 5. 계기가 달린 사면체</p>
+<p class="x i" style="--b:280.1">전류계가 달린 사면체에서 마디에 이름을 붙이고, 전류계의 저항이 0이라는 점을 고려하여 등가 회로를 그린다. 옴의 법칙에 따라 병렬 가지의 전류가 저항에 반비례한다는 점과 마디에서의 전하 보존 법칙을 고려하여 등가 회로에 전류를 나타낸다. 그런 다음 구한 전류를 원래 회로에 표시한다.</p>
+<div class="f" style="left:49pt;top:339pt"><span class="fig" data-srcpage="4" data-clip="49,339,372,446"></span></div>
+<p class="x cap" style="--b:455.0;left:190.2pt">그림 22</p>
+<p class="x i" style="--b:480.8">가지 <span class="nw">$ab$에</span> 대하여 <span class="nw">$U_0 = 3I_1R$을</span> 쓰면, 전류계를 지나는 전류는 다음과 같다.</p>
+<div class="f" style="left:173pt;top:494pt"><span class="fig" data-srcpage="4" data-clip="173,494,248,520"></span></div>
+<p class="x" style="--b:536.6">저항이 무한히 큰 전압계가 달린 사면체에 대해서도 위와 같은 과정을 되풀이한다.</p>
+<p class="x pn" style="--b:584.3">12</p>
+</div>
+
+<!-- page 13 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="5" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<div class="f" style="left:49pt;top:41pt"><span class="fig" data-srcpage="5" data-clip="49,41,372,146"></span></div>
+<p class="x cap" style="--b:155.7;left:190.2pt">그림 23</p>
+<p class="x i" style="--b:175.5">마디 <span class="nw">$a$와</span> $b$ 사이의 전압은 <span class="nw">$U_0 = 3I_2R + 2I_2R$이고</span>, 따라서 전압계가 가리키는 값은 <span class="nw">$U = 4I_2R = (4/5)U_0$이다</span>. 구하려는 양을 나타내면 다음과 같다.</p>
+<p class="x c d" style="--b:214.5;--a:13.6pt">$U_0 = \dfrac54U = 15\,\mathrm{V}\qquad\text{이고}\qquad R = \dfrac53\,\dfrac{U}{I_A} = 10\,\Omega.$</p>
+<p class="x pn r" style="--b:584.3">13</p>
+</div>
+</body></html>

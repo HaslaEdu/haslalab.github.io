@@ -1,0 +1,83 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2015 (XLIX = 제49회), 10학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 6-7.
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); in this booklet page 6 is right-aligned,
+   page 7 left-aligned (as printed) */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 573.6): page 6 at the right edge, page 7 at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "10학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure: a float reserves the figure's room for the first N lines
+   --fw = room taken by the figure, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wl::before{content:"";float:left;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 6 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">10학년</p>
+<p class="x h" style="--b:63.4">문제 1. 탄성 시스템</p>
+<div class="f" style="left:223pt;top:66pt"><span class="fig" data-srcpage="1" data-clip="223,66,388,142"></span></div>
+<p class="x ov" style="--b:77.2;left:341.2pt">P</p>
+<p class="x cap" style="--b:154.4;left:285.4pt">그림 6</p>
+<p class="x i wr wn" style="--b:75.4;--fw:174pt;--fh:94.6pt">매끄러운 수평면 위에 그림&nbsp;6과 같은 장치가 놓여 있다(위에서 본 모습). 용수철 상수가 <span class="nw">$k_1$인</span> 용수철의 한쪽 끝은 질량 <span class="nw">$m$인</span> 물체에, 다른 쪽 끝은 막대 P에 연결되어 있다. 용수철 상수가 <span class="nw">$k_2$인</span> 용수철은 한쪽 끝이 움직이지 않게 고정되어 있고, 다른 쪽 끝은 같은 막대 P에 연결되어 있다. 막대에는 무슨 일이 일어나든 크기와 방향이 일정하게 유지되는 힘 <span class="nw">$F$가</span> 언제나 작용한다. 처음에는 물체 <span class="nw">$m$을</span> 움직이지 않게 붙잡고 있다가, 밀지 않고 가만히 놓는다.</p>
+<p class="x i" style="--b:206.9">1. 물체의 최대 속력을 구하여라.</p>
+<p class="x i" style="--b:218.9">2. 첫 번째 용수철의 길이가 가장 짧아지는 순간, 이 용수철의 늘어난 길이를 구하여라.</p>
+<p class="x i" style="--b:242.8">용수철과 막대의 질량은 0이고, 변형되지 않은 상태에서 두 용수철의 길이는 같으며, 물체를 놓는 순간 두 용수철이 늘어난 길이도 같다고 생각하여라. 힘 <span class="nw">$F$는</span> 막대가 병진 운동을 하도록(움직이는 동안 회전하지 않도록) 막대에 가해지며, 마찰은 없다.</p>
+<p class="x h" style="--b:306.6">문제 2. 행성 탐사</p>
+<p class="x i" style="--b:318.5">착륙선이 어느 낯선 행성의 표면에 내려앉고 있다. 하강하는 동안 행성 표면까지의 거리 <span class="nw">$z$에</span> 따른 행성 대기의 압력 <span class="nw">$p$를</span> 측정하였다(그래프는 별지에 있다). 높이 <span class="nw">$z_1 = 5\,\mathrm{km}$에서</span> 잰 온도는 <span class="nw">$T_1 = 250\,\mathrm{K}$였다</span>. 행성 표면에서의 온도 <span class="nw">$T_0$를</span> 계산하여라. 행성의 반지름 <span class="nw">$R$은</span> <span class="nw">$R \gg z_1$이라고</span> 생각하여라. 대기는 이산화 탄소로 이루어져 있다.</p>
+<p class="x i" style="--b:402.3"><i>참고.</i> 별지의 그래프는 반드시 여러분의 풀이와 함께 제출하여야 한다.</p>
+<p class="x h" style="--b:430.2">문제 3. 열전기역학</p>
+<div class="f" style="left:288pt;top:436pt"><span class="fig" data-srcpage="1" data-clip="288,436,388,492"></span></div>
+<p class="x cap" style="--b:504.2;left:317.9pt">그림 7</p>
+<p class="x i wr wn" style="--b:442.2;--fw:109pt;--fh:70.7pt">전하 <span class="nw">$q$와</span> <span class="nw">$-q$가</span> 각각 고르게 분포된 원판 두 개가, 수평으로 놓인 길고 단열된 부도체 원통 안에서 마찰 없이 움직일 수 있다(그림&nbsp;7). 두 원판 사이의 거리는 원판의 반지름보다 훨씬 작다. 두 원판 사이에는 약간의 헬륨이 들어 있고, 원판 바깥쪽에는 기체가 없으며, 계는 평형 상태에 있다. 두 원판의 전하를 순간적으로 절반으로 줄인 다음, 계가 다시 평형에 이를 때까지 기다린다. 열교환을 무시하고, 기체의 온도와 두 원판 사이의 거리가 각각 몇 배로 변하는지 구하여라.</p>
+<p class="x pn r" style="--b:573.6">6</p>
+</div>
+
+<!-- page 7 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제49회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 4. 구멍 뚫린 벽</p>
+<div class="f" style="left:33pt;top:52pt"><span class="fig" data-srcpage="2" data-clip="33,52,165,104"></span></div>
+<p class="x cap" style="--b:115.5;left:79.1pt">그림 8</p>
+<p class="x i wl wn" style="--b:60.5;--fw:142pt;--fh:70.7pt">똑같은 나무토막 세 개가 같은 속도 <span class="nw">$\vec v$로</span> 움직인다. 첫 번째와 두 번째 나무토막을 잇는 길고 가벼운 탄성 고무줄이 육중한 벽에 뚫린 구멍을 지나, 세 번째 나무토막에 붙어 있는 가벼운 도르래에 걸쳐 있다(그림&nbsp;8). 처음 순간에 고무줄은 늘어나 있지 않다. 첫 번째 나무토막이 벽과 탄성 충돌한 뒤, 고무줄이 다음과 같이 되는 순간 나무토막들의 속도를 구하여라.</p>
+<p class="x i" style="--b:168.0">1. 최대로 늘어났을 때;</p>
+<p class="x i" style="--b:180.0">2. 다시 느슨해졌을 때.</p>
+<p class="x i" style="--b:192.0">계의 마찰은 고려하지 않는다. 고무줄이 다시 느슨해질 때까지 물체 2는 도르래와 부딪치지 않고, 물체 1은 벽에 부딪치지 않는다고 생각하여라.</p>
+<p class="x h" style="--b:233.8">문제 5. 비선형성</p>
+<p class="x i" style="--b:245.8">전기 회로의 어떤 소자들은 비선형이다. 곧 소자를 지나는 전류가 걸어 준 전압에 비례하지 않는다. 전류 <span class="nw">$I_\mathrm{L}$이</span> <span class="nw">$\sqrt{U_\mathrm{L}}$에</span> 비례하는 백열전구, 전류 <span class="nw">$I_\mathrm{D}$가</span> <span class="nw">$U_\mathrm{D}^2$에</span> 비례하는 다이오드, 그리고 직류 전압원이 있다고 하자. 이때 전구와 다이오드는 같은 성질을 가진다. 두 소자 가운데 어느 것을 전원에 부하로 연결하더라도, 부하에서 열로 소모되는 전력은 이 전원에서 얻을 수 있는 최댓값이 된다. 전구와 다이오드를 직렬로 연결하여 전원에 연결하면, 이 부하에서 소모되는 전력은 <span class="nw">$P_1 = 7.2\,\mathrm{W}$이다</span>. 전구와 다이오드를 병렬로 연결한 것을 부하로 전원에 연결하면 전력은 얼마가 되는가?</p>
+<p class="x pn" style="--b:573.6">7</p>
+</div>
+</body></html>

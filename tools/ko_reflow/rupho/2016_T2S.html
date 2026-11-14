@@ -1,0 +1,166 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2016 (L = 제50회), 10학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 14-17
+   (figures are numbered on through the booklet: 그림 24).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   A line holding a tall inline fraction (\dfrac) grows by itself, as in LaTeX; only the FIRST line of a block is pinned.
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a, where --a = the formula's height above
+   its baseline (pt; ~1.36em x 9.963pt = 13.6pt for a \dfrac with capital/ascender numerator).
+   A block whose FIRST line holds a \dfrac grows upward: push it down with padding-top (~1.2pt) until qa.py meets --b. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1); continuation blocks have none */
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* a block that ends at the foot of a page and runs on overleaf: justify its last line too */
+.j{text-align-last:justify}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 584.3): odd pages at the right edge, even at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* "풀이 예시" (SFRM1440, 14.346pt regular), grade line "10학년" (SFBX1200 = 11.955pt bold),
+   problem titles (SFBX1000 bold) — all centred on the column */
+.t{text-align:center;--fs:14.346pt;--l:17.2pt}
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 387.5 - right edge of the original's short lines, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* figure captions "그림 N" and sub-figure letters: centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span>
+   (a long one that leaves wide gaps: reword the sentence) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 14 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">10학년</p>
+<p class="x h" style="--b:67.5">문제 1. 구면 언덕</p>
+<p class="x i" style="--b:79.5">임의의 각 <span class="nw">$\alpha$에서</span> 원판에는 수직 항력 <span class="nw">$N$과</span> 마찰력이 작용한다. 마찰력은 다음과 같다.</p>
+<p class="x c" style="--b:103.4">$F_\mathrm{fr} = \mu N = N\,\mathrm{tg}\,\alpha.$</p>
+<p class="x" style="--b:121.4">반작용력 <span class="nw">$Q$의</span> 벡터는 힘 <span class="nw">$N$에</span> 대하여 <span class="nw">$\mathrm{tg}\,\beta = F_\mathrm{fr}/N = \mathrm{tg}\,\alpha$를</span> 만족하는 각 <span class="nw">$\beta$만큼</span> 기울어진 방향을 향한다. 따라서 <span class="nw">$\beta = \alpha$이고</span>, 반작용력 <span class="nw">$Q$는</span> 연직 방향을 향한다. 그러므로 속도의 수평 성분은 변하지 않고 <span class="nw">$v_0$으로</span> 일정하다.</p>
+<p class="x i" style="--b:169.2">1. 운동 시간은 다음과 같다.</p>
+<div class="f" style="left:154pt;top:178pt"><span class="fig" data-srcpage="1" data-clip="154,178,267,208"></span></div>
+<p class="x i" style="--b:224.2">2. 수평면에 도달하는 순간 원판의 속력은 <span class="nw">$v_1 = \sqrt2v_0$이다</span>. 에너지 보존 법칙에 따라 다음이 성립한다.</p>
+<p class="x c d" style="--b:263.9;--a:13.6pt">$\dfrac{mv_0^2}{2} + mgR + A_\mathrm{fr} = \dfrac{mv_1^2}{2} + mgR\cos\dfrac{\pi}{4}.$</p>
+<p class="x" style="--b:288.5">따라서 최종적으로</p>
+<p class="x c d" style="--b:307.0;--a:17.5pt">$A_\mathrm{fr} = -m\left(gR\dfrac{\sqrt2 - 1}{\sqrt2} - \dfrac{v_0^2}{2}\right).$</p>
+<p class="x i" style="--b:333.4">3. 언덕 면에 수직인 축 방향으로 뉴턴 제2법칙을 쓰면 다음과 같다.</p>
+<div class="f" style="left:142pt;top:346pt"><span class="fig" data-srcpage="1" data-clip="142,346,285,372.5"></span></div>
+<p class="x" style="--b:385.1"><span class="nw">$N = 0$일</span> 때 원판이 언덕에서 떨어지며, 이때 <span class="nw">$v_0^2 = gR\cos^3\alpha$이다</span>. <span class="nw">$0 \leqslant \alpha \leqslant \pi/4$이므로</span>, <span class="nw">$v_0 \leqslant \sqrt{gR/(2\sqrt2)}$이면</span> 원판은 떨어지지 않는다. 이러한 <span class="nw">$v_0$</span> 값에서 일 <span class="nw">$A_\mathrm{fr}$는</span> 언제나 음수이며, 이는 소산력이 하는 일이라면 마땅히 그래야 하는 결과이다.</p>
+<p class="x h" style="--b:444.8">문제 2. 알갱이</p>
+<p class="x i" style="--b:456.8">문제에서 주어진 관의 두 구간에서 알갱이의 농도를 <span class="nw">$n_1$,</span> <span class="nw">$n_2$,</span> 흐름의 속력을 <span class="nw">$u_1$,</span> <span class="nw">$u_2$라고</span> 하면 <span class="nw">$\nu = n_1u_1S$이고</span> <span class="nw">$\nu = n_2u_2S$이다</span>. 액체가 압축되지 않는다는 사실은 부피 유량이 일정하다는 식으로 나타낼 수 있다.</p>
+<p class="x c" style="--b:502.6">$u_1S(1 - n_1V) = u_2S\big(1 - n_2(V + \Delta V)\big).$</p>
+<p class="x" style="--b:524.6">이로부터 두 구간 사이에서 흐름의 속력이 늘어난 양은 <span class="nw">$\Delta u = u_2 - u_1 = \nu\Delta V/S$이다</span>.</p>
+<p class="x i" style="--b:548.4">두 구간 사이에 있는 현탁액 토막이 시간 <span class="nw">$dt$</span> 동안 이동하는 것을 생각하자. 토막의 뒤쪽 경계는 오른쪽으로 <span class="nw">$u_1dt$만큼</span>, 앞쪽 경계는 <span class="nw">$u_2dt$만큼</span> 이동한다.</p>
+<p class="x pn" style="--b:584.3">14</p>
+</div>
+
+<!-- page 15 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.6">두 위치가 겹치는 구역에서는 흐름의 모습이 그대로이다. 처음 토막의 뒤쪽에서는 질량이 <span class="nw">$dm = \mu dt$인</span> 조각 <span class="nw">$u_1dt$가</span> «잘려 나가고», 앞쪽에서는 같은 질량의 조각 <span class="nw">$u_2dt$가</span> 더해진다. 운동량 변화를 이용하여 현탁액 토막에 작용하는 알짜힘을 구하자.</p>
+<div class="f" style="left:110pt;top:94pt"><span class="fig" data-srcpage="2" data-clip="110,94,310,150"></span></div>
+<p class="x ov" style="--b:134.8;left:136.3pt">따라서</p>
+<p class="x h" style="--b:164.1">문제 3. 물과 얼음</p>
+<p class="x i" style="--b:176.1">1. 압력 <span class="nw">$p_1$에서의</span> 온도 구하기</p>
+<p class="x c d" style="--b:202.8;--a:13.0pt">$t_1 = -\dfrac{p_1 - p_0}{133\,\mathrm{atm}/{}^\circ\mathrm{C}} = -1.50\,{}^\circ\mathrm{C}.$</p>
+<p class="x i" style="--b:228.2">열평형 방정식</p>
+<p class="x c" style="--b:252.0">$q\Delta m_\mathrm{i} = c_\mathrm{w}m_0(t_0 - t_1).$</p>
+<p class="x i" style="--b:268.7">얼음 질량의 변화</p>
+<p class="x c d" style="--b:295.2;--a:14.0pt">$\Delta m_\mathrm{i} = \dfrac{c_\mathrm{w}m_0(t_0 - t_1)}{q} = 18.7\,\mathrm{g}.$</p>
+<p class="x i" style="--b:320.4">2. 계의 부피 변화는 물의 압축(<span class="nw">$\Delta V_1$</span>)과 얼음의 생성(<span class="nw">$\Delta V_2$</span>) 때문에 일어난다. 압축에 의한 변화는 다음과 같다.</p>
+<p class="x c d" style="--b:359.8;--a:14.0pt">$\Delta V_1 = GV(p_1 - p_0) = \dfrac{Gm_0(p_1 - p_0)}{\rho_\mathrm{w}} = 9.95\,\mathrm{cm^3} \approx 10.0\,\mathrm{cm^3}.$</p>
+<p class="x i" style="--b:384.5">압축률이 작다는 점을 고려하면, 얼음의 생성에 의한 변화는 다음과 같다.</p>
+<p class="x c d" style="--b:412.8;--a:15.5pt">$\Delta V_2 = \Delta m_\mathrm{i}\left(\dfrac{1}{\rho_\mathrm{i}} - \dfrac{1}{\rho_\mathrm{w}}\right) \approx 2.1\,\mathrm{cm^3}.$</p>
+<p class="x i" style="--b:441.2">계의 부피 변화</p>
+<p class="x c" style="--b:461.2">$\Delta V = \Delta V_1 + \Delta V_2 = 12.1\,\mathrm{cm^3}.$</p>
+<p class="x i" style="--b:481.1">3. 압력이 부피 변화에 선형으로 관계된다고 보면, 계가 한 일은 다음과 같다.</p>
+<p class="x c d" style="--b:511.8;--a:13.0pt">$A_1 = p_\mathrm{avg}\Delta V = \dfrac{p_0 + p_1}{2}\Delta V \approx 121\,\mathrm{J}.$</p>
+<p class="x h" style="--b:536.6">문제 4. 다이오드 사슬</p>
+<p class="x i j" style="--b:548.4">1. 주어진 <span class="nw">$U_0 = 4.4\,\mathrm{V}$에서는</span> 처음 4개의 다이오드만 열려 있으므로, «열린» 다이오드 각각에는 <span class="nw">$U_d = 1\,\mathrm{V}$와</span> 같은 전압이 걸린다. 전원이 연결된 곳에서 가장 먼 저항에는</p>
+<p class="x pn r" style="--b:584.3">15</p>
+</div>
+
+<!-- page 16 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="3" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.3"><span class="nw">$1\,\mathrm{A}$보다</span> 작은 전류가 흐른다.</p>
+<p class="x i" style="--b:72.3">저항에 흐르는 전류는 다음과 같다.</p>
+<p class="x c" style="--b:92.3">$I_{R_1} = 3.4\,\mathrm{A},\quad I_{R_2} = 2.4\,\mathrm{A}\quad I_{R_3} = 1.4\,\mathrm{A}\quad I_{R_4} = 0.4\,\mathrm{A}.$</p>
+<p class="x i" style="--b:112.5">다이오드에 흐르는 전류는 다음과 같다.</p>
+<p class="x c" style="--b:132.5">$I_{D_1} = 7.6\,\mathrm{A},\quad I_{D_2} = 4.2\,\mathrm{A},\quad I_{D_3} = 1.8\,\mathrm{A},\quad I_{D_4} = 0.4\,\mathrm{A}.$</p>
+<div class="f" style="left:271pt;top:146pt"><span class="fig" data-srcpage="3" data-clip="271,146,388,260"></span></div>
+<p class="x cap" style="--b:270.5;left:309.5pt">그림 24</p>
+<p class="x i wr" style="--b:152.6;--fw:126pt;--fh:46.8pt">2. 전압이 <span class="nw">$U_{AB} &lt; 1\,\mathrm{V}$일</span> 때에는 회로에 전류가 전혀 흐르지 않는다. 전압 <span class="nw">$U_{AB}$가</span> <span class="nw">$1\,\mathrm{V}$에서</span> <span class="nw">$2\,\mathrm{V}$</span> 사이일 때에는 첫 번째 다이오드와 첫 번째 저항으로 전류가 흐른다. 이때 전류의 세기는 다음과 같다.</p>
+<p class="x c d" style="--b:215.4;--a:13.6pt;width:228.4pt">$I = \dfrac{U_{AB} - 1\,\mathrm{V}}{1\,\Omega}.$</p>
+<p class="x i wr" style="--b:238.1;--fw:126pt;--fh:58.8pt"><span class="nw">$2\,\mathrm{V}$에서</span> <span class="nw">$3\,\mathrm{V}$까지의</span> 범위에서는 첫 번째와 두 번째 다이오드가 열리고 두 저항으로 전류가 흐른다. 전압이 <span class="nw">$1\,\mathrm{V}$</span> 커질 때마다 다이오드가 하나씩 더 열린다. 전류-전압 특성은 그림과 같은 모양이다(그림&nbsp;24).</p>
+<p class="x i" style="--b:298.0">3. <span class="nw">$N$개의</span> 다이오드가 열려 있고 <span class="nw">$N$개의</span> 저항으로 전류가 흐르며, 마지막 저항에 흐르는 전류의 세기는 <span class="nw">$I &lt; 1\,\mathrm{A}$라고</span> 하자. 이 경우 전압 <span class="nw">$U_{AB}$는</span> <span class="nw">$N\cdot(1\,\mathrm{V}) + I\cdot(1\,\Omega)$이다</span>. 회로 전체의 전류(곧 첫 번째 다이오드를 지나는 전류)는 다음과 같이 더하여 구한다.</p>
+<p class="x c d" style="--b:361.2;--a:14.0pt">$I_N = NI + (1 + 2 + 3 + \dots + N - 1)\cdot(1\,\mathrm{A}) = NI + \dfrac{(N - 1)N}{2}\,(\mathrm{A}).$</p>
+<p class="x" style="--b:384.0"><span class="nw">$I$의</span> 값이 가장 큰 <span class="nw">$I = 1\,\mathrm{A}$일</span> 때 최대 전류는 다음과 같다.</p>
+<p class="x c d" style="--b:411.0;--a:13.6pt">$I_{N,\ \mathrm{max}} = \dfrac{N(N + 1)}{2}\,(\mathrm{A}),$</p>
+<p class="x" style="--b:433.7">한편 <span class="nw">$I$의</span> 값이 가장 작은 <span class="nw">$I = 0\,\mathrm{A}$일</span> 때 최소 전류는 다음과 같다.</p>
+<p class="x c d" style="--b:460.7;--a:13.6pt">$I_{N,\ \mathrm{min}} = \dfrac{N(N - 1)}{2}\,(\mathrm{A}).$</p>
+<p class="x" style="--b:483.5"><span class="nw">$N = 5$일</span> 때 최댓값은 <span class="nw">$I_\mathrm{max} = 15\,\mathrm{A}$,</span> 최솟값은 <span class="nw">$I_\mathrm{min} = 10\,\mathrm{A}$이다</span>. 전류 <span class="nw">$14\,\mathrm{A}$는</span> 이 범위 안에 있다. 따라서 <span class="nw">$N = 5$이고</span> <span class="nw">$I = (4\,\mathrm{A})/5 = 0.8\,\mathrm{A}$이다</span>. 즉 전압은 <span class="nw">$U_{AB} = 5.8\,\mathrm{V}$이다</span>.</p>
+<p class="x h" style="--b:524.6">문제 5. 데자뷔</p>
+<p class="x i" style="--b:536.6">1. 축전기를 충전하는 전류의 세기를 <span class="nw">$I_C$,</span> 축전기와 병렬로 연결된 저항 <span class="nw">$R_2$에</span> 흐르는 전류의 세기를 <span class="nw">$I_R$,</span> 전원을 지나는 전류를 <span class="nw">$I$,</span> 저항 <span class="nw">$R_2$를</span> 지나간 전하를 <span class="nw">$q_R$,</span> 축전기의 전하를 <span class="nw">$q_C$,</span> 전원을 지나간 전하를 <span class="nw">$q$,</span> 축전기와 저항 <span class="nw">$R_2$에</span> 걸린 전압을 <span class="nw">$U$라고</span> 하자.</p>
+<p class="x pn" style="--b:584.3">16</p>
+</div>
+
+<!-- page 17 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="4" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x" style="--b:48.5">그러면 다음이 성립한다.</p>
+<div class="f" style="left:149pt;top:64pt"><span class="fig" data-srcpage="4" data-clip="149,64,271,90"></span></div>
+<p class="x" style="--b:96.6">이로부터 다음을 얻는다.</p>
+<div class="f" style="left:62pt;top:99.5pt"><span class="fig" data-srcpage="4" data-clip="62,99.5,300,130"></span></div>
+<div class="f" style="left:300pt;top:97pt"><span class="fig" data-srcpage="4" data-clip="300,97,358,130"></span></div>
+<p class="x" style="--b:141.6">축전기 에너지의 변화율은 축전기에 걸린 전압에 대하여 다음과 같은 이차식이다.</p>
+<div class="f" style="left:121pt;top:151pt"><span class="fig" data-srcpage="4" data-clip="121,151,300,185.5"></span></div>
+<p class="x" style="--b:196.0">이 이차식의 최댓값은 두 근의 한가운데에 있다.</p>
+<div class="f" style="left:136pt;top:200pt"><span class="fig" data-srcpage="4" data-clip="136,200,284,229"></span></div>
+<p class="x" style="--b:239.1">이 순간 전원을 지나는 전류는 다음과 같고,</p>
+<div class="f" style="left:116pt;top:243pt"><span class="fig" data-srcpage="4" data-clip="116,243,304,270.5"></span></div>
+<p class="x" style="--b:279.5">구하려는 전원의 일률은 다음과 같다.</p>
+<div class="f" style="left:152pt;top:288pt"><span class="fig" data-srcpage="4" data-clip="152,288,200,314"></span></div>
+<div class="f" style="left:200pt;top:285.2pt"><span class="fig" data-srcpage="4" data-clip="200,285.2,268,314"></span></div>
+<p class="x i" style="--b:332.6">저항이 들어 있는 회로에 대하여 키르히호프 제2법칙을 쓰면(<span class="nw">$R_1 = R_2 = R$</span>) 다음과 같다.</p>
+<div class="f" style="left:143pt;top:346pt"><span class="fig" data-srcpage="4" data-clip="143,346,278,361"></span></div>
+<p class="x" style="--b:371.4">이 식의 양변에 <span class="nw">$\Delta t$를</span> 곱하면</p>
+<div class="f" style="left:123pt;top:378pt"><span class="fig" data-srcpage="4" data-clip="123,378,298,393"></span></div>
+<p class="x" style="--b:405.6">이고, 이를 <span class="nw">$0$부터</span> <span class="nw">$t_0$까지</span> 시간에 대하여 더하면 다음과 같다.</p>
+<div class="f" style="left:101pt;top:412pt"><span class="fig" data-srcpage="4" data-clip="101,412,320,429"></span></div>
+<p class="x" style="--b:439.8">여기에 다음 관계를 고려하면</p>
+<div class="f" style="left:136pt;top:442.8pt"><span class="fig" data-srcpage="4" data-clip="136,442.8,284,468"></span></div>
+<p class="x" style="--b:473.2"><span class="nw">$q$를</span> 구할 수 있다.</p>
+<div class="f" style="left:160pt;top:475pt"><span class="fig" data-srcpage="4" data-clip="160,475,260,500.5"></span></div>
+<p class="x" style="--b:511.0">에너지 보존 법칙으로부터 스위치 <span class="nw">$K$가</span> 닫혀 있는 동안 회로에서 발생한 열량 <span class="nw">$Q$를</span> 구하면 다음과 같다.</p>
+<div class="f" style="left:109pt;top:528pt"><span class="fig" data-srcpage="4" data-clip="109,528,312,556"></span></div>
+<p class="x pn r" style="--b:584.3">17</p>
+</div>
+</body></html>

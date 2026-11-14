@@ -1,0 +1,97 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2016 (L = 제50회), 10학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 5-6
+   (figures numbered on through the booklet: 그림 6-10).
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 584.3): odd pages at the right edge, even at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "10학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 387.5 - right edge of the short lines (+ nothing: keep the original's edge), --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* numbered items with a hanging number (number at 48.7, text at 61.4) */
+.li{padding-left:28.3pt}
+.n{position:absolute;left:15.6pt;text-indent:0}
+/* figure captions "그림 N" and sub-figure letters: centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span>
+   (a long one that leaves wide gaps: reword the sentence) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 5 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">10학년</p>
+<p class="x h" style="--b:61.7">문제 1. 구면 언덕</p>
+<div class="f" style="left:286pt;top:66pt"><span class="fig" data-srcpage="1" data-clip="286,66,389,128"></span></div>
+<p class="x cap" style="--b:137.0;left:317.4pt">그림 6</p>
+<p class="x i wr" style="--b:74.0;--fw:110pt;--fh:82.7pt">수평면 위로 구면 모양의 언덕이 솟아 있고, 언덕의 단면은 반지름 <span class="nw">$R$인</span> 사분원이다. 언덕의 꼭대기에 질량 <span class="nw">$m$인</span> 작은 원판을 올려놓고, 원판에 수평 방향의 처음 속도 <span class="nw">$v_0$을</span> 주었다(그림&nbsp;6). 언덕과 원판 사이의 마찰 계수는 각 <span class="nw">$\alpha$에</span> 따라 <span class="nw">$\mu = \mathrm{tg}\,\alpha$라는</span> 법칙으로 달라진다.</p>
+<p class="x li" style="--b:158.0"><span class="n">1.</span>원판이 언덕에서 떨어지지 않고 미끄러져 내려갈 때, 물체가 수평면에 도달하는 데 걸리는 시간 <span class="nw">$\tau$는</span> 얼마인가?</p>
+<p class="x li" style="--b:181.8"><span class="n">2.</span>그 순간까지 마찰력이 한 일 <span class="nw">$A_\mathrm{fr}$는</span> 얼마인가?</p>
+<p class="x li" style="--b:193.8"><span class="n">3.</span><span class="nw">$v_0$이</span> 어떤 값일 때 원판이 언덕 면에서 떨어지지 않는가?</p>
+<p class="x h" style="--b:212.7">문제 2. 알갱이</p>
+<div class="f" style="left:294pt;top:218pt"><span class="fig" data-srcpage="1" data-clip="294,218,390,269"></span></div>
+<p class="x cap" style="--b:279.9;left:321.4pt">그림 7</p>
+<p class="x i wr wn" style="--b:224.9;--fw:102pt;--fh:70.7pt">단면적이 <span class="nw">$S$인</span> 관 속으로 현탁액, 곧 압축될 수 있는 작은 알갱이들을 실어 나르는 액체가 흐른다(그림&nbsp;7). 압력이 <span class="nw">$p$인</span> 구간에서 알갱이 하나의 부피는 <span class="nw">$V$이고</span>, 압력이 <span class="nw">$p - \Delta p$로</span> 낮아진 구간에서 알갱이의 부피는 <span class="nw">$V + \Delta V$이다</span>. 관의 어느 단면에서나 단위 시간 동안 지나가는 알갱이의 수는 <span class="nw">$\nu$이다</span>. 흐름이 정상 상태일 때 단위 시간 동안 관을 지나가는 현탁액의 질량 <span class="nw">$\mu$를</span> 구하여라. 관 벽과의 마찰은 없고, 액체와 알갱이의 속도는 단면 전체에서 같다. 액체의 밀도 변화는 무시하여라.</p>
+<p class="x h" style="--b:351.4">문제 3. 물과 얼음</p>
+<p class="x i" style="--b:363.6">잘 알려져 있듯이, 대기압에서 물은 온도 <span class="nw">$t_0 = 0\,{}^\circ\mathrm{C}$에서</span> 얼기 시작하고 얼음은 녹기 시작한다. 대기압보다 높은 압력에서는 물이 더 낮은 온도에서도 액체 상태로 있을 수 있다. 압력이 <span class="nw">$133\,\mathrm{atm}$</span> 높아지면 얼음의 녹는점은 <span class="nw">$1\,{}^\circ\mathrm{C}$</span> 낮아진다. 처음 상태에서 질량 <span class="nw">$m_0 = 1\,\mathrm{kg}$인</span> 물과 아주 적은 양의 얼음이 단열 용기 속에서 압력 <span class="nw">$p_1 = 200\,\mathrm{atm}$</span> 아래 평형을 이루고 있다. 단열 과정으로 압력을 대기압 <span class="nw">$p_0 = 1\,\mathrm{atm}$까지</span> 천천히 낮춘다.</p>
+<p class="x li" style="--b:461.9"><span class="n">1.</span>얼음 질량의 변화 <span class="nw">$\Delta m_\mathrm{i}$를</span> 구하여라.</p>
+<p class="x li" style="--b:473.8"><span class="n">2.</span>물 + 얼음 계의 부피 변화를 구하여라.</p>
+<p class="x li" style="--b:485.8"><span class="n">3.</span>압력이 <span class="nw">$p_1$에서</span> <span class="nw">$p_0$으로</span> 줄어드는 동안 계가 외부 압력에 맞서 한 일은 얼마인가?</p>
+<p class="x wn" style="--b:512.3">물의 비열은 <span class="nw">$c_\mathrm{w} = 4.2\,\mathrm{J/g}$이고</span> 얼음의 비열은 <span class="nw">$c_\mathrm{i} = 2.1\,\mathrm{J/g}$이다</span>. 얼음의 융해열은 <span class="nw">$q = 336\,\mathrm{J/g}$이다</span>. 대기압에서 물과 얼음의 밀도는 <span class="nw">$\rho_\mathrm{w} = 1\,\mathrm{g/cm^3}$,</span> <span class="nw">$\rho_\mathrm{i} = 0.9\,\mathrm{g/cm^3}$이다</span>.</p>
+<p class="x i" style="--b:548.4">물의 압축률은 <span class="nw">$G = -\frac{1}{V}\frac{\Delta V}{\Delta P} = 5\cdot10^{-10}\,\mathrm{Pa^{-1}}$이고</span>, 얼음의 압축률은 물의 압축률보다 작다.</p>
+<p class="x pn r" style="--b:584.3">5</p>
+</div>
+
+<!-- page 6 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.5">문제 4. 다이오드 사슬</p>
+<p class="x i" style="--b:60.5">전기 회로(그림&nbsp;8)는 똑같은 다이오드와 저항으로 이루어진 마디 2016개로 구성되어 있다. 다이오드의 전류-전압 특성은 그림&nbsp;9에 나타내었으며, 전압은 <span class="nw">$U_d = 1\,\mathrm{V}$이다</span>. 각 저항의 저항값은 <span class="nw">$R = 1\,\Omega$이다</span>. 회로의 입력 단자에는 일정한 전압 <span class="nw">$U_0$이</span> 걸린다.</p>
+<div class="f" style="left:74pt;top:106pt"><span class="fig" data-srcpage="2" data-clip="74,106,192,181"></span></div>
+<div class="f" style="left:270pt;top:106pt"><span class="fig" data-srcpage="2" data-clip="270,106,348,181"></span></div>
+<p class="x cap" style="--b:189.3;left:111.4pt">그림 8</p>
+<p class="x cap" style="--b:189.3;left:288.6pt">그림 9</p>
+<p class="x li" style="--b:211.0"><span class="n">1.</span>입력 전압이 <span class="nw">$U_0 = 4.4\,\mathrm{V}$일</span> 때 다이오드와 저항에 흐르는 전류의 세기를 구하여라.</p>
+<p class="x li" style="--b:234.9"><span class="n">2.</span><span class="nw">$0\,\mathrm{V}$에서</span> <span class="nw">$3\,\mathrm{V}$까지의</span> 범위에서 회로의 전류-전압 특성(<span class="nw">$U_0$에</span> 따른 전류 <span class="nw">$I_0$의</span> 관계)을 그려라.</p>
+<p class="x li" style="--b:258.9"><span class="n">3.</span>회로를 흐르는 전류가 <span class="nw">$I_0 = 14\,\mathrm{A}$가</span> 되는 입력 전압 <span class="nw">$U_0$을</span> 구하여라.</p>
+<p class="x h" style="--b:296.7">문제 5. 데자뷔</p>
+<div class="f" style="left:270pt;top:300pt"><span class="fig" data-srcpage="2" data-clip="270,300,390,408"></span></div>
+<p class="x cap" style="--b:418.6;left:305.4pt">그림 10</p>
+<p class="x i wr wn" style="--b:308.7;--fw:134pt;--fh:58.8pt">전기 회로(그림&nbsp;10)의 모든 소자는 이상적이라고 볼 수 있다. 처음에 전기 용량이 <span class="nw">$C$인</span> 축전기는 충전되어 있지 않다. 스위치 <span class="nw">$K$를</span> 닫았다가, 축전기의 에너지 변화율이 최대에 이르는 순간 스위치를 연다.</p>
+<p class="x li wr wn" style="--b:368.4;--fw:134pt;--fh:34.9pt"><span class="n">1.</span>스위치를 여는 순간 직류 전압원이 내는 일률 <span class="nw">$N$을</span> 구하여라.</p>
+<p class="x li wr wn" style="--b:404.3;--fw:134pt;--fh:22.9pt"><span class="n">2.</span>두 저항의 저항값이 <span class="nw">$R_1 = R_2 = R$라고</span> 하자. 이 경우 축전기의 에너지 변화율이 최대에 이르는 시간은 <span class="nw">$t_0 = CR\ln\sqrt2$이다</span>(이 시간은 해당하는 미분 방정식을 풀어서 구할 수 있지만, 여러분이 그 방정식을 풀 필요는 없다). 스위치 <span class="nw">$K$가</span> 닫혀 있는 동안 회로에서 발생하는 열량 <span class="nw">$Q$를</span> 구하여라.</p>
+<p class="x pn" style="--b:584.3">6</p>
+</div>
+</body></html>

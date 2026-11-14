@@ -1,0 +1,94 @@
+<!doctype html><html><head><meta name="page" content="421,595">
+<style>
+/* RuPhO 2016 (L = 제50회), 9학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 421x595pt, booklet pages 3-4.
+   Text column x 33.1..387.5 (width 354.4pt); paragraph indent 14.9pt; baselineskip 12 TeX pt = 11.955pt.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:33.1pt;width:354.4pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:14.9pt}                     /* first-line paragraph indent (48.0 - 33.1) */
+.c{text-align:center}
+/* running header (italic, baseline 31.7) above the stamped rule (35.2..35.7); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 584.3): odd pages at the right edge, even at the left */
+.pn{text-align:left}
+.pn.r{text-align:right}
+/* grade line "9학년" (SFBX1200 = 11.955pt bold) and problem titles (SFBX1000 bold), centred on the column */
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 387.5 - right edge of the short lines (+ nothing: keep the original's edge), --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* numbered items with a hanging number (number at 48.7, text at 61.4) */
+.li{padding-left:28.3pt}
+.n{position:absolute;left:15.6pt;text-indent:0}
+/* figure captions "그림 N" and sub-figure letters: centred on the original caption's centre (left = centre - width/2) */
+.cap{text-align:center;width:40pt}
+/* stamps cut from the scrubbed original; .ov = Korean label put back where scrub.py removed a Russian word
+   (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span>
+   (a long one that leaves wide gaps: reword the sentence) */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 3 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:31.7">결선. 이론 시험</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="1" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x g" style="--b:49.5">9학년</p>
+<p class="x h" style="--b:61.4">문제 1. 바퀴에 박힌 돌</p>
+<div class="f" style="left:244pt;top:67pt"><span class="fig" data-srcpage="1" data-clip="244,67,388,154"></span></div>
+<p class="x cap" style="--b:165.3;left:295.9pt">그림 1</p>
+<p class="x i wr" style="--b:73.4;--fw:152.9pt;--fh:106.6pt">자전거의 두 바퀴는 반지름 <span class="nw">$R$이</span> 같고, 두 바퀴 중심 사이의 거리는 <span class="nw">$l = 3R$이다</span>. 앞바퀴와 뒷바퀴 타이어의 접지면(트레드)에 작은 돌이 하나씩 박혀 있다. 처음 순간에 뒷바퀴의 돌은 땅에 닿아 있고, 앞바퀴의 돌은 바퀴의 가장 앞쪽 위치에 있다(그림&nbsp;1). 자전거는 속력 <span class="nw">$v$로</span> 직선 위를 달리며, 바퀴는 길 위에서 미끄러지지 않고, 돌은 타이어에서 떨어지지 않는다.</p>
+<p class="x i" style="--b:192.9">1. 자전거가 움직이는 동안 두 돌 사이 거리의 최댓값 <span class="nw">$L_\mathrm{max}$과</span> 최솟값 <span class="nw">$L_\mathrm{min}$을</span> 구하여라.</p>
+<p class="x i" style="--b:216.9">2. 운동을 시작하고 나서 두 돌 사이의 거리가 처음으로 최댓값에 이르기까지 걸리는 최소 시간 <span class="nw">$t$를</span> 구하여라.</p>
+<p class="x h" style="--b:243.8">문제 2. 뜻밖의 회전</p>
+<div class="f" style="left:284pt;top:249pt"><span class="fig" data-srcpage="1" data-clip="284,249,388,310"></span></div>
+<p class="x cap" style="--b:321.6;left:315.9pt">그림 2</p>
+<p class="x i wr" style="--b:255.6;--fw:112.6pt;--fh:82.7pt">속도 <span class="nw">$v$로</span> 움직이는 질량 <span class="nw">$m$인</span> 입자에 크기가 일정한 힘 <span class="nw">$F$가</span> 작용하기 시작한다. 이 힘의 벡터는 작용하는 시간 $\tau$ 동안 일정한 각속도로 <span class="nw">$180^\circ$만큼</span> 회전한다(그림&nbsp;2). 입자의 속도 벡터와 힘 벡터는 언제나 그림의 평면 안에 있다. 처음 순간에 힘 <span class="nw">$F$와</span> 입자의 속도 사이의 각은 <span class="nw">$90^\circ$였다</span>. 힘 <span class="nw">$F$가</span> 작용하기 시작하고 시간 <span class="nw">$\tau$가</span> 지났을 때, 입자의 나중 속도 <span class="nw">$u$의</span> 크기와 방향을 구하여라. 다른 힘의 영향은 무시한다.</p>
+<p class="x h" style="--b:375.3">문제 3. 벤치 옮기기</p>
+<div class="f" style="left:183pt;top:380pt"><span class="fig" data-srcpage="1" data-clip="183,380,382,430"></span></div>
+<p class="x cap" style="--b:439.1;left:265pt">그림 3</p>
+<p class="x i wr wn" style="--b:387.2;--fw:214.9pt;--fh:70.7pt">질량이 <span class="nw">$m$이고</span> 길이가 <span class="nw">$L$인</span> 벤치를 수평 방향의 힘 $F$(크기는 알려져 있지 않고, 반드시 일정한 것도 아니다)로 밀어서, 매끄러운 수평면 위에 있는 폭 $S$($S > L$)인 거친 구역을 일정한 속도로 지나가게 한다. 힘 <span class="nw">$F$는</span> 무게중심과 같은 높이, 곧 바닥면에서 높이 <span class="nw">$h$인</span> 곳에 작용한다(그림&nbsp;3). 벤치 다리와 거친 구역 사이의 마찰 계수는 <span class="nw">$\mu$이다</span>. 다리가 수평면에서 떨어지지 않는다고 할 때, 벤치가 거친 구역을 지나가는 동안 힘 <span class="nw">$F$가</span> 한 일을 구하여라. 매개변수 $L$, $\mu$, $h$ 사이에 어떤 관계가 있을 때 이러한 운동이 가능한가?</p>
+<p class="x i" style="--b:530.7">벤치는 균일하고, 다리의 질량은 무시할 수 있다고 생각하여라.</p>
+<p class="x pn r" style="--b:584.3">3</p>
+</div>
+
+<!-- page 4 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:31.7">제50회 전러시아 학생 물리 올림피아드</p>
+<div class="f" style="left:33.1pt;top:35.2pt"><span class="fig" data-srcpage="2" data-clip="33.1,35.2,387.5,35.7"></span></div>
+<p class="x h" style="--b:48.6">문제 4. 우유를 넣은 커피</p>
+<div class="f" style="left:252pt;top:51pt"><span class="fig" data-srcpage="2" data-clip="252,51,387,107"></span></div>
+<p class="x ov" style="--b:59.6;left:256pt">우유</p>
+<p class="x ov" style="--b:77.8;left:255pt">커피</p>
+<p class="x cap" style="--b:119.6;left:299.4pt">그림 4</p>
+<p class="x i wr" style="--b:60.5;--fw:146pt;--fh:70.7pt">열교환기는 얇은 동축 관 두 개로 이루어져 있고, 길이는 <span class="nw">$L = 5\,\mathrm{m}$이다</span>. 안쪽 관으로는 커피가, 바깥쪽 관으로는 우유가 서로 반대 방향으로 흐른다(그림&nbsp;4). 우유는 열교환기에 온도 <span class="nw">$t_1 = 10\,{}^\circ\mathrm{C}$로</span> 들어오고, 커피는 반대쪽 끝에서 온도 <span class="nw">$t_2 = 90\,{}^\circ\mathrm{C}$로</span> 들어온다. 단위 시간 동안 열교환기의 관을 따라 각 방향으로 흐르는 액체의 질량이 <span class="nw">$\mu$로</span> 같으면, 우유는 열교환기의 출구에 이를 때까지 온도 <span class="nw">$t_3 = 60\,{}^\circ\mathrm{C}$로</span> 데워진다.</p>
+<p class="x li" style="--b:168.2"><span class="n">1.</span>열교환기 출구에서 커피의 온도 <span class="nw">$t_4$를</span> 구하여라.</p>
+<p class="x li" style="--b:180.2"><span class="n">2.</span>커피와 우유의 온도가 같은 두 관 구간은 서로 얼마만큼 떨어져 있는가? 그 거리 <span class="nw">$s$를</span> 구하여라.</p>
+<p class="x li" style="--b:204.0"><span class="n">3.</span>들어오는 온도는 그대로 두고 두 흐름의 속력을 두 배로 늘리면, 열교환기에서 흘러나오는 우유의 온도 <span class="nw">$t'_3$과</span> 커피의 온도 <span class="nw">$t'_4$는</span> 얼마가 되는가?</p>
+<p class="x i" style="--b:239.9"><i>힌트:</i> 안쪽 관의 작은 면을 통해 열이 전달되는 일률은 그 면에 맞닿은 두 액체의 온도 차에 비례한다. 주위와의 열교환은 무시할 수 있다. 커피와 우유의 밀도와 비열은 같다고 보아라.</p>
+<p class="x h" style="--b:299.7">문제 5. 계기가 달린 사면체</p>
+<p class="x i" style="--b:311.7">사면체 모양의 전기 회로에 똑같은 저항 4개, 이상적인 직류 전압원, 그리고 이상적인 전류계가 들어 있다. 전류계는 전류 <span class="nw">$I = 2\,\mathrm{A}$를</span> 가리킨다(그림&nbsp;5(가)). 전류계를 이상적인 전압계로 바꾸면, 전압계는 전압 <span class="nw">$U = 12\,\mathrm{V}$를</span> 가리킨다(그림&nbsp;5(나)). 전원의 전압 <span class="nw">$U_0$과</span> 저항 하나의 저항값 <span class="nw">$R$을</span> 구하여라.</p>
+<div class="f" style="left:124pt;top:372pt"><span class="fig" data-srcpage="2" data-clip="124,372,297,458"></span></div>
+<p class="x cap" style="--b:470.9;left:131pt">(가)</p>
+<p class="x cap" style="--b:470.9;left:224.5pt">(나)</p>
+<p class="x cap" style="--b:483.4;left:190.2pt">그림 5</p>
+<p class="x pn" style="--b:584.3">4</p>
+</div>
+</body></html>
