@@ -2,7 +2,8 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),helper=require('./helpers/cpho-2004-source-native-design.cjs'),bridge=require('./helpers/cpho2004-native-bilingual-publication.cjs');
 const sha=x=>crypto.createHash('sha256').update(x).digest('hex'),clone=x=>JSON.parse(JSON.stringify(x));
-const items=JSON.parse(fs.readFileSync(path.join(root,'tools/original_style_publication.json'),'utf8')).filter(i=>i.audit_schema==='cpho2004-native-bilingual-original-v1');assert.equal(items.length,4);
+const items=JSON.parse(fs.readFileSync(path.join(root,'tools/original_style_publication.json'),'utf8')).filter(i=>i.audit_schema==='cpho2004-native-bilingual-original-v1');assert.equal(items.length,3);  // CPhO_2004_TS_KO.pdf is now an html-reflow-stamped-v1 edition (tools/ko_reflow/cpho/2004_TS.html)
+
 const qa=JSON.parse(fs.readFileSync(path.join(root,items[0].qa),'utf8')),link=qa.source_native_contract;
 const base=JSON.parse(bridge.readBound(root,link).toString('utf8')),paths=new Map(link.artifact_bindings.map(a=>[a.id,a])),cache=new Map();
 let cachedBytes=0;const cacheLimit=16*1024*1024;
