@@ -1,0 +1,100 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* IZhO 2021 experimental problem (computer experiment; Word, A4): Times New Roman 12pt, text x 36..562.3, pitch 13.8pt;
+   header Arial bold 10pt with a Times bold page number and an underline rule (drawn as an exact black box). Blocks are
+   placed by the original's first baseline --b (pt); --l = line pitch, --fs = size. Inline MathType is typed in KaTeX;
+   the display formulas and the two pendulum drawings are stamped; text beside the drawings is narrowed. */
+body{font-family:'Times New Roman',KB,serif;font-size:12pt;line-height:13.8pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0;white-space:nowrap}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;left:36pt;width:526.3pt;margin:0;--l:13.8pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs))}
+.c{text-align:center;text-indent:0}
+.h{font-weight:bold}
+.ind{text-indent:28.3pt}
+.en{width:auto;white-space:nowrap}
+.hd{position:absolute;top:37.3pt;font-family:Arial,KG,sans-serif;font-weight:bold;font-size:10pt;line-height:12pt;white-space:nowrap}
+.pn{font-family:'Times New Roman',serif;font-size:10pt}
+.f{position:absolute;line-height:0}
+.r{position:absolute;background:#000;display:block}
+</style></head><body>
+
+<!-- 1 -->
+<div class="page">
+<div class="hd" style="left:36pt">XVII 국제 자우티코프 올림피아드/실험 시험</div><div class="hd" style="right:36.07pt"><span class="pn">1/3</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.32pt;height:1.08pt"></i>
+<p class="x c h" style="--b:60.6;--fs:14pt;--l:16.1pt">2021년 1월 9일</p>
+<p class="x c h" style="--b:74.8">컴퓨터 실험:</p>
+<p class="x c h" style="--b:88.6">수학 진자, 또는 어느 정도의 각을 충분히 작다고 볼 수 있을까 ...</p>
+<p class="x ind" style="--b:102.4">물리학은 본질적으로 실험 과학이며, 이것은 분명히 물리학의 강점이다. 그러나 수많은 실험 사실을 이해하지 않는다면 물리학은 엄청나게 많은 현상과 과정을 기술하는 것으로 전락하고 말 것이다. 먼 옛날 물리 법칙과 그에 해당하는 모형은 이렇게, 곧 다루는 대상의 중요하지 않은 특징을 무시함으로써 생겨났다. 최근 수십 년 동안 컴퓨터 모형화, 흔히 하는 말로 컴퓨터 실험이라는 분야가 빠르게 발전하였다. 요점은 만들어 낸 물리 모형을 컴퓨터에서 계산 과정의 꼴로 직접 구현하여, 관심 있는 규칙성을 순수한 형태로 철저히 조사할 수 있다는 것이다. 이번 시험에서는 잘 알려진 계인 수학 진자에 대하여 이러한 컴퓨터 실험을 해야 한다.</p>
+<p class="x ind" style="--b:226.7;--l:14.7pt">중력 가속도 $g$로 특징지어지는 지구의 균일한 중력장 속에 있는 길이 $l$인 수학 진자의 진동 주기에 대한 식은 잘 알려져 있다. 그러나 이 식은 흔들림 각이 충분히 작을 때에만 쓸 수 있다. 이 계산 실험을 하면서 답해야 할 주요 질문은 다음과 같다. <b><i>“어느 정도의 흔들림 각을 작다고 볼 수 있을까?”</i></b></p>
+<p class="x ind" style="--b:284.6;--l:14pt">실험 실습에 관한 교육 문헌에서는 최대 흔들림 각이 $1^\circ$, $2^\circ$, $5^\circ$ 등을 넘지 말아야 한다는 지침을 볼 수 있다. 위의 질문에는 이 컴퓨터 실험을 바탕으로 답해야 한다! 곧 수학 진자의 진동 주기가 진폭, 곧 연직선에서 벗어난 최대 각에 따라 어떻게 변하는지 조사해야 한다.</p>
+<p class="x ind" style="--b:340.3">컴퓨터 실험을 수행하고 그 결과를 처리하는 순서는 실제 실험의 순서와 크게 다르지 않다. 따라서 이 문제의 각 부분은 실제 물리 실험의 주요 단계에 그대로 대응한다.</p>
+<p class="x c h" style="--b:381.7">1. 이론 모형 세우기.</p>
+<div class="f" style="left:448.8pt;top:384.6pt"><span class="fig" data-srcpage="1" data-clip="448.8,384.6,559.6,513.4"></span></div>
+<p class="x ind" style="--b:395.5;width:406.8pt;--l:14.7pt">늘어나지 않는 길이 $l$인 실에 매달린 작고 무거운 공으로 이루어진 수학 진자를 생각하자. 진자는 자유 낙하 가속도가 $g$인 중력장 속에 있다. 아래에서는 공기 저항을 완전히 무시한다.</p>
+<p class="x" style="--b:459.6;width:406.8pt"><b>1.1</b> 수학 진자의 작은 진동의 주기 $T$에 대한 식을 써라.</p>
+<p class="x ind" style="--b:494.0;width:406.8pt;--l:18pt">처음 순간 $t_0=0$에 실이 연직선과 이루는 각은 $\varphi_0$이고, 공의 처음 속도는 0이라고 하자.</p>
+<p class="x" style="--b:529.2">공은 원호를 따라 움직이므로, 공의 위치는 실이 연직선과 이루는 각 $\varphi$로 정해지고, 이 각이 시간에 따라 변하는 빠르기는 각속도 $\omega=\tfrac{d\varphi}{dt}$로 정해진다.</p>
+<p class="x" style="--b:595.7;--l:15pt"><b>1.2</b> 주어진 각진폭 $\varphi_0$과 알려진 $l, g$ 값에 대하여, 진자의 각속도가 흔들림 각에 따라 변하는 관계 $\omega(\varphi)$를 나타내는 정확한 식을 구하여라.</p>
+<p class="x ind" style="--b:633.8;--l:15.5pt">진자의 운동은 연직선에 대하여 대칭이므로, 진동 주기를 계산하려면 최대 흔들림에서 흔들림이 0이 될 때까지 움직이는 시간 $t_1$만 구하면 된다.</p>
+<p class="x" style="--b:685.8;--l:17.3pt"><b>1.3</b> 각속도가 흔들림 각에 따라 변하는 알려진 관계 $\omega(\varphi)$로부터 시간 $t_1$을 계산하는 정확한 식을 써라.</p>
+<p class="x" style="--b:720.5"><b>1.4</b> 진동 주기 $T$를 시간 $t_1$으로 나타내어라.</p>
+<p class="x ind" style="--b:742.6">컴퓨터 실험에서 계산을 할 때에는 실제 차원이 있는 양을 쓰는 일이 드물다. 그런 양은 크기 정도가 매우 다를 수 있어 몹시 불편하기 때문이다. 보통 모든 양을 무차원으로 만들거나, 주어진 문제에 특징적인 어떤 값으로 나누어 줄인다. 예를 들어 이 연구에서는 진동 주기가 특징적인 시간이므로, 다음 식으로 정의되는 무차원 시간 $\tau$를 도입하는 것이 편리하다.</p>
+</div>
+
+<!-- 2 -->
+<div class="page">
+<div class="hd" style="left:36pt">XVII 국제 자우티코프 올림피아드/실험 시험</div><div class="hd" style="right:36.07pt"><span class="pn">2/3</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.32pt;height:1.08pt"></i>
+<div class="f" style="left:273pt;top:50pt"><span class="fig" data-srcpage="2" data-clip="273,50,325,83"></span></div>
+<p class="x" style="--b:107.3;--l:23.3pt;margin-top:-2.4pt"><b>1.5</b> 무차원 단위로 나타낸 각속도 $\tilde\omega=\dfrac{d\varphi}{d\tau}$를 앞에서 정의한 각속도 $\omega$와 잇는 식을 써라.</p>
+<p class="x" style="--b:147.1"><b>1.6</b> 무차원 시간 단위로 나타낸 수학 진자의 작은 진동의 주기 $\tilde T$를 구하여라.</p>
+<p class="x" style="--b:175.8"><b>1.7</b> 각속도 $\tilde\omega$가 흔들림 각 $\varphi$에 따라 변하는 관계 $\tilde\omega(\varphi)$를 구하여라.</p>
+<p class="x h" style="--b:192.0;--l:16.7pt">주의! 아래에서는 앞에서 도입한 무차원 양, 곧 시간 $\tau$, 주기 $\tilde T$, 각속도 $\tilde\omega$를 어디에서나 쓰며, 이를 각각 $t$, $T$, $\omega$로 나타낸다.</p>
+<p class="x c h" style="--b:222.8">2. 실험 장치 설계와 실험 계획.</p>
+<div class="f" style="left:390.9pt;top:225.8pt"><span class="fig" data-srcpage="2" data-clip="390.9,225.8,559.3,394.1"></span></div>
+<p class="x ind" style="--b:236.6;width:348.8pt">컴퓨터 실험에서 이 단계는 계산 알고리즘을 개발하는 것에 해당한다. 이 경우 수치(컴퓨터) 계산의 주요 착상은 운동 경로를 작은 구간으로 나누고, 각 구간에서 운동을 근사적으로 기술하는 것이다.</p>
+<p class="x ind" style="--b:292.7;width:348.8pt;--l:16.5pt">$\varphi=\varphi_0$에서 $\varphi=0$까지의 운동 구간을 폭이 $\Delta\varphi$인 같은 구간 $N$개로 나눈다. 나누는 점을 $\varphi_k$, $k=0, 1, \ldots, N$으로, 이 점들에서의 각속도를 $\omega_k$로 나타내자. 이후 계산에 쓰는 주요 근사는 $\varphi_k$에서 $\varphi_{k+1}$까지의 각 구간에서 진자의 운동을 등가속도 운동으로 보는 것이다. 나누는 구간의 수 $N$이 커질수록 계산의 정확도가 높아지리라고 기대하는 것이 자연스럽다.</p>
+<p class="x ind" style="--b:405.7;--l:15.9pt">이 근사의 틀 안에서는 진자가 $\varphi_0$에서 0까지 움직이는 시간을 쉽게 구할 수 있다. 주어진 진폭 $\varphi_0$과 나누는 구간의 수 $N$에 대하여, 계산 알고리즘은 다음 질문에 차례로 답하면서 드러난다.</p>
+<p class="x" style="--b:457.8"><b>2.1</b> 나누는 구간 $\Delta\varphi$를 구하여라.</p>
+<p class="x" style="--b:474.8"><b>2.2</b> 나누는 점의 좌표 $\varphi_k$를 구하여라.</p>
+<p class="x" style="--b:492.8;--l:24.5pt"><b>2.3</b> 임의의 처음 흔들림 각 $\varphi_0$에 대하여 점 $\varphi_k$에서의 각속도 $\omega_k$를 나타내어라. 이 식을 $\varphi_0=\dfrac{\pi}{2}$인 특별한 경우에 대하여 써라.</p>
+<p class="x" style="--b:541.3"><b>2.4</b> $\varphi_{k-1}$에서 $\varphi_k$까지 $k$번째 구간을 지나는 시간 $\Delta t_k$를 구하여라.</p>
+<p class="x" style="--b:559.3;--l:18pt"><b>2.5</b> 공이 각 $\varphi_k$에 이르는 데 걸리는 시간 $t_k$에 대한 식을 구하여라. 간단히 하기 위해, 바로 앞의 각 $\varphi_{k-1}$까지 가는 데 걸린 시간 $t_{k-1}$로 나타내어라.</p>
+<p class="x" style="--b:595.3"><b>2.6</b> 주어진 구간 나누기에 대한 진동 주기 $T_N$의 식을 써라.</p>
+<p class="x c h" style="--b:612.5">3. 시험 실험, 오차 추정.</p>
+<p class="x ind" style="--b:626.3">이 단계에서는 장치가 작동하는지, 곧 이 경우에는 위에서 개발한 알고리즘에 따라 계산을 할 수 있는지 확인하고, 결과가 요구되는 정확도에 이르는지 평가해야 한다.</p>
+<p class="x ind" style="--b:667.8;--l:14.2pt">앞에서 말했듯이 계산 오차는 나누는 구간의 수 $N$에 따라 달라진다. 이 문제에서는 컴퓨터가 아니라 계산기를 써서 “손으로” 계산해야 한다. $N$이 커지면 계산 오차는 줄어들지만 계산하는 데 걸리는 시간은 늘어난다. 따라서 $N$의 최적값, 곧 요구되는 정확도를 얻는 최솟값을 고르는 것이 중요하다. 이 단계에서는 모든 계산을 $\varphi_0=\tfrac{\pi}{2}$에서 하여라.</p>
+<p class="x ind h" style="--b:754.3"><i>주의! 이제부터 계산은 소수 넷째 자리까지의 정확도로 해야 한다. 시간을 아끼려면 계산의 전체 순서를 잘 생각하여라. 앞에서 계산한 값을 이용하고, 식에 나오는 필요한 상수를 미리 정해 두고(여러 번 다시 계산하지 않도록), 중간 계산의 결과를 가장 편리한 꼴로 적어 두어라.</i></p>
+</div>
+
+<!-- 3 -->
+<div class="page">
+<div class="hd" style="left:36pt">XVII 국제 자우티코프 올림피아드/실험 시험</div><div class="hd" style="right:36.07pt"><span class="pn">3/3</span></div>
+<i class="r" style="left:36pt;top:46.44pt;width:523.32pt;height:1.08pt"></i>
+<p class="x" style="--b:59.5;--l:17.6pt"><b>3.1</b> $N=1, 2, 4, 8, 16, 32$에 대하여 각 $\varphi_k$인 점들까지의 이동 시간 $t_k$를 계산하여라. 주어진 $N$에 대하여 계산한 진동 주기의 근삿값 $T_N$을 구하여라. 결과는 표 1에 정리해야 한다.</p>
+<p class="x" style="--b:108.5;--l:16.3pt"><b>3.2</b> $N=16$일 때의 계산 결과를 바탕으로 진자의 4분의 1 주기 동안의 운동 법칙 $\varphi(t)$를 그래프 1에 그려라.</p>
+<p class="x" style="--b:139.0;--l:16.2pt"><b>3.3</b> 같은 그래프 1에 진동이 작다고 가정한 운동 법칙 $\varphi(t)$를 그려라. 운동 법칙의 계산 결과는 표 2에 나타내야 한다.</p>
+<p class="x ind" style="--b:175.1">$N$개의 구간으로 나누었을 때 진동 주기 계산의 상대 오차의 추정값으로 다음 양을 쓴다.</p>
+<div class="f" style="left:262pt;top:193pt"><span class="fig" data-srcpage="3" data-clip="262,193,337,225"></span></div>
+<p class="x" style="--b:237.5">여기서 $T_{32}$는 참값에 가장 가까운, $N=32$일 때 계산한 주기이다.</p>
+<p class="x ind" style="--b:255.5;--l:17.1pt">계산의 상대 오차 $\varepsilon_N$이 나누는 구간의 수 $N$에 따라 변하는 관계는 다음 근사식으로 나타낼 수 있다.</p>
+<div class="f" style="left:274pt;top:277pt"><span class="fig" data-srcpage="3" data-clip="274,277,326,307"></span></div>
+<p class="x" style="--b:317.0">여기서 $C$와 $\gamma$는 어떤 상수이다.</p>
+<p class="x" style="--b:340.1"><b>3.4</b> 주기를 구할 때의 상대 오차 $\varepsilon_N$을 계산하여라. 결과는 표 3에 나타내야 한다.</p>
+<p class="x" style="--b:357.2"><b>3.5</b> 위의 상대 오차 식을 쓸 수 있음을 그래프 2로 보이고, 매개변수 $C$와 $\gamma$의 값을 구하여라.</p>
+<p class="x" style="--b:388.3;--l:16.2pt"><b>3.6</b> 주기 계산의 상대 오차가 0.2%를 넘지 않는 최솟값 $N_\mathrm{min}$을 구하여라.</p>
+<p class="x ind" style="--b:425.4">이후 계산에서는 나누는 구간의 수로 앞에서 구한 값 $N_\mathrm{min}$만 써라.</p>
+<p class="x c h" style="--b:441.7">4. 실험: 주기와 진폭의 관계.</p>
+<p class="x ind" style="--b:455.5;--l:14.7pt">컴퓨터 실험의 이 단계에서는 수학 진자의 진동 주기가 진폭에 따라 변하는 관계 $T(\varphi_0)$을 구한다. 이 관계는 다음 식으로 나타낸다.</p>
+<div class="f" style="left:248pt;top:479pt"><span class="fig" data-srcpage="3" data-clip="248,479,351,514"></span></div>
+<p class="x" style="--b:526.6">여기서 $T_0$은 진자의 작은 진동의 주기이고, $a, b$는 상수이다.</p>
+<p class="x" style="--b:549.7;--l:14.7pt"><b>4.1</b> 다음 진폭들에 대하여 수학 진자의 진동 주기를 계산하여라. $\varphi_0$: $15^\circ, 30^\circ, 45^\circ, 60^\circ, 75^\circ$, 그리고 이미 구한 $90^\circ$.</p>
+<p class="x" style="--b:581.5"><b>4.2</b> 진자의 진동 주기가 진폭에 따라 변하는 관계에 대한 위의 식을 쓸 수 있음을 그래프 3으로 보여라.</p>
+<p class="x" style="--b:609.1"><b>4.3</b> 매개변수 $a, b$의 값을 구하여라.</p>
+<p class="x ind" style="--b:631.3">실제 실험에서 진자의 진동 주기를 측정하는 오차가 약 5%라고 하자.</p>
+<p class="x" style="--b:668.2;--l:17.1pt"><b>4.4</b> 도(°)로 나타낸 각 $\varphi_0$이 얼마일 때 수학 진자의 진동을 작다고 볼 수 있는지 구하여라.</p>
+</div>
+</body></html>
