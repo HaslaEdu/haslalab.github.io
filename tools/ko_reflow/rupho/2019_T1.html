@@ -1,0 +1,101 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2019 (LIII = 제53회), 9학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 419.5x595.3pt, booklet pages 3-4.
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20pt; baselineskip 12 TeX pt = 11.955pt.
+   Running headers: odd page "Заключительный этап" (right), even page "Всероссийская олимпиада по физике 2019 г." (left),
+   italic, baseline 38.9, rule at y 42.72; page numbers centred, baseline 563.8.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   l = line pitch (--l), fs = font size (--fs). 0.3155 = (ascent - descent)/2 of the first font in the stack,
+   CM = KaTeX_Main (hhea 0.903 / 0.272 em); +0.7pt = measured correction (Chrome's pixel snapping puts the baseline
+   ~0.7pt higher than the metric formula; checked against qa.py BASELINE on the 2016 pilot, residue within +-0.5pt).
+   Override --l / --fs per block when a block has another size (titles, grade line). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}                       /* first-line paragraph indent (48.3 - 28.3) */
+.c{text-align:center}
+/* running header (italic, baseline 38.9) above the stamped rule (y 42.72); odd pages right-aligned, even left */
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+/* page number (booklet numbering, baseline 563.8), centred on the column */
+.pn{text-align:center}
+/* "이론 시험" (SFBX1440, 14.346pt bold), grade line "9학년" (SFBX1200 = 11.955pt bold),
+   problem titles (SFBX1000 bold) — all centred on the column */
+.t{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.g{text-align:center;font-weight:bold;--fs:11.955pt}
+.h{text-align:center;font-weight:bold}
+/* all-Hangul bold lines (HANBatangB) sit 1.1pt low with the +0.7pt rule (qa BASELINE): use -0.4pt instead */
+.g,.h{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+/* text running beside a figure on the right: a float reserves the figure's room for the first N lines
+   --fw = 391.2 - right edge of the short lines, --fh = N x 11.955pt - 1pt (exactly N lines would also narrow line N+1) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+/* .wn: a column narrower than ~180pt beside a figure: allow breaks between Hangul syllables (keep-all would leave wide gaps) */
+.wn{word-break:normal}
+/* list items with a hanging mark: bullets at 43.3 / numbers at 40.5, text at 53.3 */
+.li{padding-left:25pt}
+.n{position:absolute;left:15pt;text-indent:0}
+.n.k{left:12.2pt}
+/* figure captions "그림 N" (SFRM0900, 8.966pt): centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt;--fs:8.966pt}
+/* stamps cut from the scrubbed original; .ov = label put back where scrub.py removed a Russian word or a
+   Cyrillic letter (transparent: the drawing under it stays visible; drawn on top of the stamps by build.py) */
+/* an inline formula and the Korean particle after it must never be split over two lines: <span class="nw">$s$를</span> */
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+.lt{font-family:CM,KB,serif}
+</style></head><body>
+
+<!-- page 3 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="1" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x t" style="--b:59.5">이론 시험</p>
+<p class="x g" style="--b:74.2">9학년</p>
+<p class="x h" style="--b:92.9">문제 1. 항해</p>
+<div class="f" style="left:246pt;top:95.5pt"><span class="fig" data-srcpage="1" data-clip="246,95.5,400,171"></span></div>
+<p class="x ov lt" style="--b:139.0;left:258.2pt;--fs:8.86pt;font-style:italic">A</p>
+<p class="x ov lt" style="--b:139.3;left:354.8pt;--fs:8.86pt;font-style:italic">B</p>
+<p class="x ov lt" style="--b:163.1;left:302.6pt;--fs:8.86pt;font-weight:bold">5 km</p>
+<p class="x cap" style="--b:187.3;left:300.4pt">그림 1</p>
+<p class="x i wr" style="--b:103.7;--fw:151.7pt;--fh:94.6pt">등속 직선 운동을 하는 배가 부두 <span class="nw">$B$에서</span> 거리 <span class="nw">$L = 5\,\mathrm{km}$인</span> 점 <span class="nw">$A$를</span> 지났다(그림&nbsp;1). 그로부터 어떤 시간 <span class="nw">$\tau$가</span> 지난 뒤, 배와 부두에서 보트 두 척이 서로를 향해 출발하였다. 그림을 답안지에 옮겨 그리고, 컴퍼스와 눈금 없는 자를 이용한 작도로 보트들이 만난 순간에 배가 있던 점을 찾아라. 다음 사실이 알려져 있다.</p>
+<p class="x li" style="--b:212.5"><span class="n">$\bullet$</span>보트들은 직선을 따라 같은 속력으로 움직였으며, 그 속력은 배의 속력의 <span class="nw">$3/8$이었다</span>.</p>
+<p class="x li" style="--b:237.7"><span class="n">$\bullet$</span>보트들이 출발하여 만날 때까지 걸린 시간도 <span class="nw">$\tau$이다</span>.</p>
+<p class="x li" style="--b:251.0"><span class="n">$\bullet$</span>보트들이 만났을 때 배는 다시 부두에서 거리 <span class="nw">$L$인</span> 곳에 있었다.</p>
+<p class="x" style="--b:264.2">작도 순서를 설명하고, 보트가 시간 <span class="nw">$\tau$</span> 동안 가는 거리를 (킬로미터 단위로) 구하여라. 바람과 물의 흐름은 없다.</p>
+<p class="x i" style="--b:288.1"><i>참고:</i> 그림에서 거리 <span class="nw">$AB$는</span> 5개의 같은 간격으로 나뉘어 있다.</p>
+<p class="x h" style="--b:311.2">문제 2. 안전거리</p>
+<p class="x i" style="--b:323.7">곧은 도로 구간을 자동차 두 대가 같은 속력 <span class="nw">$v$로</span> 앞뒤로 줄지어 달리고 있다. 두 자동차 가운데 한 대는 제동할 때 가속도 <span class="nw">$a_1$로</span> 감속하고, 다른 한 대는 가속도 <span class="nw">$a_2$로</span> 감속한다. 앞 자동차의 운전자가 제동을 시작하면, 뒤 자동차의 운전자는 곧바로가 아니라 <span class="nw">$\tau = 1.0\,\mathrm{s}$만큼</span> 늦게 반응하여 브레이크 페달을 밟는다. 어느 자동차가 앞에서 달리느냐에 따라, 두 자동차의 충돌을 피할 수 있는 최소 안전거리는 <span class="nw">$L_1 = 5\,\mathrm{m}$</span> 또는 <span class="nw">$L_2 = 40\,\mathrm{m}$가</span> 된다. 자동차들이 달리는 속력을 구하여라.</p>
+<p class="x h" style="--b:430.5">문제 3. 접이식 사다리</p>
+<div class="f" style="left:315pt;top:433pt"><span class="fig" data-srcpage="1" data-clip="315,433,401,500.5"></span></div>
+<p class="x ov" style="--b:447.2;left:322.5pt;--fs:6.88pt">가벼운</p>
+<p class="x ov" style="--b:456.2;left:323.2pt;--fs:6.88pt">받침대</p>
+<p class="x cap" style="--b:510.6;left:335.8pt">그림 2</p>
+<p class="x i wr" style="--b:442.9;--fw:80.9pt;--fh:82.7pt">그림&nbsp;2는 접이식 사다리를 단순하게 나타낸 모형이다. 이 사다리는 경첩으로 연결된 가벼운 받침대와 무거운 부분으로 이루어져 있으며, 이들은 연직선에 대해 각각 <span class="nw">$\beta = 20^\circ$와</span> <span class="nw">$\gamma$만큼</span> 기울어져 있다($\mathrm{tg}\,\gamma = 2\,\mathrm{tg}\,\beta$).사다리의 질량은 <span class="nw">$m = 20\,\mathrm{kg}$이다</span>. 사다리의 두 부분이 서로 주고받는 힘의 크기를 구하여라. 경첩에는 마찰이 없다. 바닥과, 바닥에 닿아 있는 사다리 각 부분 사이의 마찰 계수 <span class="nw">$\mu$는</span> 같다. 마찰 계수 <span class="nw">$\mu$가</span> 최소 얼마일 때 사다리의 두 부분이 미끄러져 벌어지지 않는가? 중력 가속도는 <span class="nw">$g = 10\,\mathrm{m/s^2}$이다</span>.</p>
+<p class="x pn" style="--b:563.8">3</p>
+</div>
+
+<!-- page 4 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2019년 전러시아 물리 올림피아드</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="2" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x h" style="--b:66.7">문제 4. 원기둥 네 개로 데우기</p>
+<p class="x i" style="--b:80.6">열량계의 원통형 컵에 밀도 <span class="nw">$\rho_0$,</span> 온도 <span class="nw">$t_0 = 0\,{}^\circ\mathrm{C}$인</span> 액체 <span class="nw">$m_0 = 200\,\mathrm{g}$이</span> 들어 있다. 알 수 없는 온도 <span class="nw">$T$로</span> 유지되는 항온조 안에, 밀도가 <span class="nw">$\rho = 6\rho_0$인</span> 같은 금속으로 만든 균일한 원기둥 여러 개가 들어 있다. 모든 원기둥의 지름은 같고, 컵의 지름과 거의 같다(아주 조금 작다). 질량 <span class="nw">$m$인</span> 원기둥을 열량계에 담그면 온도 <span class="nw">$t_1 = 10\,{}^\circ\mathrm{C}$에서</span> 열평형이 이루어진다. 첫 번째 원기둥 대신 질량 <span class="nw">$1.6m$인</span> 원기둥을 열량계에 담갔다면 온도는 <span class="nw">$t_2 = 15\,{}^\circ\mathrm{C}$가</span> 되었을 것이다. 질량 <span class="nw">$3m$인</span> 원기둥을 담갔다면 온도는 <span class="nw">$t_3 = 30\,{}^\circ\mathrm{C}$,</span> 질량 <span class="nw">$4m$인</span> 원기둥이라면 온도는 <span class="nw">$t_4 = 45\,{}^\circ\mathrm{C}$가</span> 되었을 것이다. 원기둥을 담글 때 원기둥의 축은 연직이다. 다음을 구하여라.</p>
+<p class="x li" style="--b:213.4"><span class="n k">1.</span>원기둥의 온도 <span class="nw">$T$;</span></p>
+<p class="x li" style="--b:226.6"><span class="n k">2.</span>열량계 컵의 부피 가운데 액체가 차지하는 비율 <span class="nw">$\gamma$;</span></p>
+<p class="x li" style="--b:239.9"><span class="n k">3.</span>첫 번째 원기둥의 질량 <span class="nw">$m$;</span></p>
+<p class="x li" style="--b:253.1"><span class="n k">4.</span>액체의 비열 <span class="nw">$c_0$과</span> 금속의 비열 <span class="nw">$c$의</span> 비.</p>
+<p class="x h" style="--b:282.3">문제 5. 삼각기둥</p>
+<p class="x i" style="--b:296.3">옆면에 대각선이 있는 삼각기둥 모양의 전기 회로(그림&nbsp;3)는 길이에 관계없이 저항이 모두 <span class="nw">$R = 12\,\Omega$로</span> 같은 도선들로 이루어져 있다.</p>
+<p class="x i" style="--b:332.1">다음 두 마디 사이의 회로의 저항을 구하여라. 1) <span class="nw">$A$와</span> <span class="nw">$A_1$;</span> 2) <span class="nw">$C$와</span> <span class="nw">$A_1$.</span></p>
+<div class="f" style="left:149pt;top:345pt"><span class="fig" data-srcpage="2" data-clip="149,345,272,462"></span></div>
+<p class="x cap" style="--b:479.2;left:189.8pt">그림 3</p>
+<p class="x pn" style="--b:563.8">4</p>
+</div>
+</body></html>
