@@ -18,11 +18,8 @@
       const pick = document.getElementById("hl-lang");
       if (pick) banner.after(pick);
     }
-    /* the English simulators show no ad: the banner is hidden there, and the ad is only fetched once Korean is chosen */
-    const ko = isKorean();
-    banner.style.display = ko ? "" : "none";
-    if (!ko) return;
-    banner.setAttribute("aria-label", "광고");
+    /* the ad shows in Korean and in English alike; only its label follows the language */
+    banner.setAttribute("aria-label", isKorean() ? "광고" : "Advertisement");
     banner.querySelector("span").textContent = label();
     if (mounted) return;
 
