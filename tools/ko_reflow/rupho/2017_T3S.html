@@ -1,0 +1,295 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* RuPhO 2017 (LI = 제51회), 11학년 이론 시험 풀이 예시와 채점 기준 — Korean edition on the original layout.
+   ORIGINAL: LaTeX 12pt (CMR12 Cyrillic with a Windows-1251 map, = 11.955 PostScript pt), US Letter 612x792pt,
+   booklet pages 60-72 (equation numbers (11.N) restart in every problem; figures 그림 11.4-11.6).
+   Text column x 72.0..539.8 (width 467.8pt); paragraph indent 17.6pt; baselineskip 14.5 TeX pt = 14.45pt.
+   No running header; page number centred on baseline 720.0.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a (--a = height above the baseline).
+   Displays with Cyrillic (units, subscripts в/пол/З/осн/бок, "откуда") are retyped in KaTeX; their equation numbers
+   are stamped. Subscripts: ρ_в -> ρ_w (water), P_пол -> P_유효 (useful power), M_З -> M_E (Earth),
+   Φ_осн / Φ_бок -> Φ_밑면 / Φ_옆면.
+   Marking criteria ("채점 기준"): .k = one line, text + dot leader + points (flex). */
+body{font-family:CM,KB,serif;font-size:11.955pt;line-height:14.45pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch (fractions still do) */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:72pt;width:467.8pt;--l:14.45pt;--fs:11.955pt;font-size:var(--fs);line-height:var(--l);
+   text-align:justify;top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:17.6pt}                     /* first-line paragraph indent (89.6 - 72.0) */
+.c{text-align:center}
+.l{text-align:left}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* headings (CMBX12 bold): centred titles, left run-in method headings */
+.h{text-align:center;font-weight:bold}
+.hl{font-weight:bold;text-align:left}
+/* page number (booklet numbering), centred, baseline 720.0 */
+.pn{text-align:center}
+/* marking criteria: number + text, dot leader, points; items x 86.3..538.5, bullets x 115.2..510 */
+.k{display:flex;text-align:left;left:86.3pt;width:452.2pt}
+.k>span:first-child{white-space:nowrap}
+.k .ld{flex:1;overflow:hidden;white-space:nowrap;margin:0 2pt 0 3pt}
+.k .ld::after{content:". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ."}
+.k.bl{left:115.2pt;width:395pt}
+.k.n10{left:80.5pt;width:458pt}
+.it{left:86.3pt;width:452.2pt}             /* first line of a two-line criterion (left aligned, no leader) */
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 30pt) */
+.cap{text-align:center;width:60pt}
+.nw{white-space:nowrap}
+.wn{word-break:normal}                     /* allow breaks inside Hangul words where a long inline formula leaves wide gaps */
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 60 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시와 채점 기준</p>
+<p class="x h" style="--b:111.4;margin-top:-1.1pt">풀이 예시 T-11-1</p>
+<p class="x i" style="--b:138.8">질량 중심의 운동에 관한 정리에 따라, 용수철이 떨어지는 시간은 높이 <span class="nw">$H = h + h_c$에서</span> 물체가 떨어지는 시간과 같다. 여기서 <span class="nw">$h_c$는</span> 매달린 용수철의 맨 아래 고리에 대한 질량 중심의 높이이다. 이 높이를 구하자. 용수철 고리 하나의 용수철 상수를 $k$, 고리 하나의 질량을 $m$, 용수철의 고리 수를 <span class="nw">$N$이라</span> 하자. 그러면 <span class="nw">$i$번째</span> 고리의 평형 조건으로부터 다음을 얻는다.</p>
+<div class="f" style="left:259pt;top:200pt"><span class="fig" data-srcpage="1" data-clip="259,200,541,216"></span></div>
+<p class="x" style="--b:231.9"><span class="nw">$i$번째</span> 고리의 좌표는 다음과 같다.</p>
+<div class="f" style="left:237pt;top:246pt"><span class="fig" data-srcpage="1" data-clip="237,246,541,285"></span></div>
+<p class="x" style="--b:304.7">고리 수가 <span class="nw">$N \gg 1$임을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:220pt;top:318pt"><span class="fig" data-srcpage="1" data-clip="220,318,541,349"></span></div>
+<p class="x" style="--b:366.9">질량 중심의 좌표를 계산하자.</p>
+<div class="f" style="left:93pt;top:382pt"><span class="fig" data-srcpage="1" data-clip="93,382,541,420"></span></div>
+<p class="x" style="--b:439.9">용수철이 떨어지는 시간은 다음과 같다.</p>
+<p class="x c d" style="--b:479.0;--a:23pt">$\tau = \sqrt{\dfrac{2H}{g}} = \sqrt{\dfrac{2\bigl(h + \frac{l}{3}\bigr)}{g}} \approx 0.55\,\mathrm{s}$</p>
+<div class="f" style="left:509pt;top:469pt"><span class="fig" data-srcpage="1" data-clip="509,469,541,483"></span></div>
+<p class="x" style="--b:514.1">압축된 상태의 용수철 길이를 고려하면, 질량 중심의 위치에 대한 보정은 <span class="nw">$l_0$을</span> 넘지 않으며, 따라서 떨어지는 시간에 대한 보정은 다음과 같다.</p>
+<p class="x c d" style="--b:560.3;--a:16.3pt">$\dfrac{\Delta\tau}{\tau} \approx \dfrac{1}{2}\dfrac{\Delta H}{H} \approx \dfrac{l_0}{2\bigl(h + \frac{l}{3}\bigr)} \approx 2\% \Rightarrow \Delta\tau = 0.01\,\mathrm{s}$</p>
+<div class="f" style="left:509pt;top:550pt"><span class="fig" data-srcpage="1" data-clip="509,550,541,564"></span></div>
+<p class="x pn" style="--b:720.0">60</p>
+</div>
+
+<!-- page 61 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">채점 기준 T-11-1</p>
+<p class="x k" style="--b:111.4"><span>1. 질량 중심의 운동에 관한 정리를 적용한다는 아이디어</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:135.8"><span>2. 용수철의 질량 중심 위치를 구하였다</span><span class="ld"></span><span>4점</span></p>
+<p class="x k bl" style="--b:160.2"><span>$\bullet$&ensp;용수철 한 부분의 늘어난 길이를 계산하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k bl" style="--b:179.6"><span>$\bullet$&ensp;용수철 한 부분의 좌표</span><span class="ld"></span><span>1점</span></p>
+<p class="x k bl" style="--b:199.0"><span>$\bullet$&ensp;질량 중심의 좌표</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:223.4"><span>3. <span class="nw">$l_0$을</span> 고려하지 않고 용수철이 떨어지는 시간 <span class="nw">$\tau$를</span> 구하였다</span><span class="ld"></span><span>3점</span></p>
+<p class="x k" style="--b:247.8"><span>4. 떨어지는 시간에 대한 <span class="nw">$l_0$의</span> 영향을 어림하였거나, <span class="nw">$l_0$을</span> 올바르게 고려하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x pn" style="--b:720.0">61</p>
+</div>
+
+<!-- page 62 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시 T-11-2</p>
+<p class="x i" style="--b:112.8">대기 속에서 공기 1몰로 이루어진 덩어리의 이동을 생각하자. 단열 근사에서 에너지 보존 법칙에 따라, 이 공기 덩어리에 대하여 외부의 압력이 한 일은 내부 에너지 <span class="nw">$U$와</span> 퍼텐셜 에너지 <span class="nw">$\mu gz$의</span> 변화에 쓰인다. 그러면</p>
+<div class="f" style="left:210pt;top:173pt"><span class="fig" data-srcpage="3" data-clip="210,173,541,189"></span></div>
+<p class="x" style="--b:210.1">항들을 다시 묶으면 다음을 얻는다.</p>
+<div class="f" style="left:264pt;top:227pt"><span class="fig" data-srcpage="3" data-clip="264,227,541,242"></span></div>
+<p class="x" style="--b:264.1">따라서 높이에 따른 온도는 다음과 같다.</p>
+<div class="f" style="left:234pt;top:277pt"><span class="fig" data-srcpage="3" data-clip="234,277,541,309"></span></div>
+<p class="x" style="--b:329.1">대기의 높이는 공기의 온도가 절대 영도가 되는 높이로 어림할 수 있다.</p>
+<p class="x c d" style="--b:363.4;--a:16.3pt">$H \approx \dfrac{7RT_0}{2\mu g} \approx 30\,\mathrm{km}$</p>
+<div class="f" style="left:509pt;top:353pt"><span class="fig" data-srcpage="3" data-clip="509,353,541,367"></span></div>
+<p class="x i" style="--b:390.6">구름의 아래쪽 경계는 이슬점에서, 곧 수증기의 부분 압력이 포화 수증기의 압력 <span class="nw">$P(z)$와</span> 같아지는 높이 <span class="nw">$h_0$에서</span> 생긴다. 이때 지표면에서 수증기의 압력이 <span class="nw">$P_0 = \phi P_H(T_0)$임을</span> 고려한다.</p>
+<p class="x i" style="--b:434.1">유체 정역학 법칙에 따라 수증기의 부분 압력은 높이에 따라 다음과 같이 변한다.</p>
+<div class="f" style="left:278pt;top:450pt"><span class="fig" data-srcpage="3" data-clip="278,450,541,481"></span></div>
+<p class="x i" style="--b:493.8"><span class="nw">$h_0 \ll H$이므로</span> 공기의 온도와 압력의 변화는 작다고 볼 수 있다. 따라서 그 밀도는 거의 일정하며 <span class="nw">$\rho \approx P_0\mu_{H_2O}/RT_0$이다</span>. 그러면 압력은 다음과 같이 선형으로 변한다.</p>
+<div class="f" style="left:184pt;top:537pt"><span class="fig" data-srcpage="3" data-clip="184,537,541,568"></span></div>
+<p class="x i" style="--b:588.8">온도에 따른 포화 수증기압의 표와 높이에 따른 온도를 이용하여, 높이에 따른 포화 수증기압 <span class="nw">$P_H(z)/P_H(T_0)$의</span> 그래프를 그린다. 같은 좌표 평면에 수증기의 부분 압력 <span class="nw">$P(z)/P_H(T_0)$의</span> 그래프를 그린다. 두 그래프가 만나는 점의 가로 좌표가 구하려는 높이이다.</p>
+<p class="x i" style="--b:661.2">그래프로부터 <span class="nw">$h_0 \approx 0.43\,\mathrm{km}$를</span> 얻는다. 이 높이에서 수증기의 부분 압력은 지표면에서의 압력에 비해 약 6% 낮아지고, 온도는 2%도 채 낮아지지 않는다는 점에 주목하자. 이는 우리의 근사를 충분히 정당화한다.</p>
+<p class="x pn" style="--b:720.0">62</p>
+</div>
+
+<!-- page 63 of the booklet -->
+<div class="page">
+<div class="f" style="left:107pt;top:71pt"><span class="fig" data-srcpage="4" data-clip="107,71,505,371"></span></div>
+<p class="x c" style="--b:389.7">그림 11.4</p>
+<p class="x c" style="--b:404.2">높이에 따른 압력</p>
+<p class="x" style="--b:435.3"><b>다른 풀이</b>&emsp;단면적이 <span class="nw">$S$인</span> 반무한 공기 기둥을 잡자. 높이 <span class="nw">$z$에서</span> <span class="nw">$z + dz$까지의</span> 작은 공기 덩어리를 생각하자. 이 덩어리의 평형 조건을 쓰면 다음과 같다.</p>
+<div class="f" style="left:187pt;top:475pt"><span class="fig" data-srcpage="4" data-clip="187,475,541,490"></span></div>
+<p class="x" style="--b:507.5">멘델레예프-클라페이롱 방정식과 <span class="nw">$\rho^{1-\gamma}T = const$</span> 꼴의 푸아송 방정식으로부터, (1)을 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:265pt;top:523pt"><span class="fig" data-srcpage="4" data-clip="265,523,541,554"></span></div>
+<p class="x" style="--b:563.7">적분하면 높이에 따른 공기의 온도를 얻는다.</p>
+<div class="f" style="left:266pt;top:572pt"><span class="fig" data-srcpage="4" data-clip="266,572,541,602"></span></div>
+<p class="x" style="--b:614.7">이후의 풀이는 기본 풀이와 완전히 같다</p>
+<p class="x i" style="--b:629.1"><i>참고:</i> 높이에 따른 압력 역시 푸아송 방정식으로 구한 다음, 높이 <span class="nw">$H$에서</span> 압력을 0으로 놓아 어림할 수도 있다. 이때 <span class="nw">$P(z)$는</span> 다음과 같다.</p>
+<div class="f" style="left:230pt;top:666pt"><span class="fig" data-srcpage="4" data-clip="230,666,380,699"></span></div>
+<p class="x pn" style="--b:720.0">63</p>
+</div>
+
+<!-- page 64 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">채점 기준 T-11-2</p>
+<p class="x k" style="--b:111.4"><span>1. 에너지 보존 법칙 또는 뉴턴 제2법칙을 썼다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:135.8"><span>2. 높이에 따른 온도 또는 압력을 구하였다</span><span class="ld"></span><span>1.5점</span></p>
+<p class="x k" style="--b:160.2"><span>3. 대기의 높이를 어림하였다</span><span class="ld"></span><span>1.5점</span></p>
+<p class="x k" style="--b:184.6"><span>4. 구름의 아래쪽 경계가 생기는 원인을 설명하는 아이디어</span><span class="ld"></span><span>1.5점</span></p>
+<p class="x k" style="--b:209.0"><span>5. 높이에 따른 수증기의 부분 압력을 구하였다</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:233.4"><span>6. 높이의 값 <span class="nw">$h_0 = 0.4 - 0.5\,\mathrm{km}$를</span> 구하였다(그래프 또는 시행착오로)</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:257.8"><span>7. 사용한 근사를 확인하였다</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x pn" style="--b:720.0">64</p>
+</div>
+
+<!-- page 65 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시 T-11-3</p>
+<p class="x i wn" style="--b:111.4">평형 위치 근처에서 <span class="nw">$E_r(r)$을</span> 구하기 위해 가우스 정리를 이용하자. 대전된 원통과 축이 같은 작은 원통(밑면의 반지름 $r$, 높이 $2x$ <span class="nw">$(x \ll r \ll R,H)$의</span> 표면을 지나는 벡터 <span class="nw">$\vec E$의</span> 선속은 0이다. 먼저 <span class="nw">$E_x(x)$를</span> 구하자. 이것은 원통에서 현재 점으로부터 먼 쪽 끝에 놓인, 높이가 <span class="nw">$2x$인</span> 균일하게 대전된 고리의 전기장이다. 고리의 전하량은 <span class="nw">$2xQ/H$이다</span>. 관측점까지의 거리는 대략 다음과 같다: <span class="nw">$L \approx \sqrt{R^2 + H^2/4}$.</span> 그러면 축 위에서 고리의 전기장은 다음과 같다.</p>
+<div class="f" style="left:195pt;top:199pt"><span class="fig" data-srcpage="6" data-clip="195,199,417,230"></span></div>
+<p class="x" style="--b:248.7">선속의 크기를 계산하자. 가우스 원통의 밑면을 지나는 선속 <span class="nw">$\Phi_\text{밑면}$과</span> 옆면을 지나는 선속 <span class="nw">$\Phi_\text{옆면}$은</span> 다음과 같다.</p>
+<p class="x l d" style="--b:294.7;--a:16.3pt;left:150.9pt;width:150pt">$\Phi_\text{밑면} = \dfrac{1}{4\pi\varepsilon_0}\dfrac{Q}{L^3}x\cdot\pi r^2,$</p>
+<p class="x l d" style="--b:294.7;--a:12pt;left:343.8pt;width:190pt">$\Phi_\text{옆면} = 2\pi r\cdot 2x\cdot E_r(r).$</p>
+<p class="x" style="--b:325.9">가우스 정리에 따라 <span class="nw">$2\Phi_\text{밑면} + \Phi_\text{옆면} = 0$이므로</span></p>
+<div class="f" style="left:209pt;top:339pt"><span class="fig" data-srcpage="6" data-clip="209,339,403,370"></span></div>
+<p class="x" style="--b:388.6">따라서 고리의 평면에서 중심으로부터 <span class="nw">$r$만큼</span> 벗어났을 때 전기장 세기 벡터의 크기는 변위에 비례한다.</p>
+<div class="f" style="left:251pt;top:416pt"><span class="fig" data-srcpage="6" data-clip="251,416,361,447"></span></div>
+<p class="x" style="--b:465.7">구슬의 운동 방정식:</p>
+<div class="f" style="left:230pt;top:479pt"><span class="fig" data-srcpage="6" data-clip="230,479,382,510"></span></div>
+<p class="x" style="--b:528.4">조화 진동의 진동수</p>
+<div class="f" style="left:215pt;top:543pt"><span class="fig" data-srcpage="6" data-clip="215,543,397,576"></span></div>
+<p class="x" style="--b:594.1">주기</p>
+<div class="f" style="left:235pt;top:599pt"><span class="fig" data-srcpage="6" data-clip="235,599,377,632"></span></div>
+<p class="x pn" style="--b:720.0">65</p>
+</div>
+
+<!-- page 66 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">채점 기준 T-11-3</p>
+<p class="x hl" style="--b:115.1;margin-top:-1.15pt">방법 «가우스»</p>
+<p class="x k" style="--b:139.5"><span>1. 중심 둘레의 작은 원통에 가우스 법칙을 이용함</span><span class="ld"></span><span>3점</span></p>
+<p class="x k" style="--b:163.9"><span>2. 축 방향 전기장 세기를 구함(아이디어+계산)</span><span class="ld"></span><span>1+2점</span></p>
+<p class="x k" style="--b:188.4"><span>3. 지름 방향 전기장 세기를 구함</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:212.8"><span>4. 진동 방정식(3번 항목이 맞을 때)</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:237.2"><span>5. 답</span><span class="ld"></span><span>2점</span></p>
+<p class="x hl" style="--b:268.3">방법 «적분해 보자»</p>
+<p class="x k" style="--b:292.7"><span>1. 선분의 전기장을 구함(그것으로 이후에 무엇을 할지에 대한 아이디어가 있을 때</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:317.2"><span>2. 선형화한 전기장의 전개(작은 양 다루기)</span><span class="ld"></span><span>3점</span></p>
+<p class="x k" style="--b:341.6"><span>3. 지름 방향 전기장 세기를 구함</span><span class="ld"></span><span>3점</span></p>
+<p class="x k" style="--b:366.0"><span>4. 진동 방정식(3번 항목이 맞을 때)</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:390.4"><span>5. 답</span><span class="ld"></span><span>2점</span></p>
+<p class="x hl" style="--b:421.6">방법 «말굽»</p>
+<p class="x k" style="--b:446.0"><span>1. 아이디어+그림: 원통에서 «서로 상쇄되는» 부분을 나타낸 그림</span><span class="ld"></span><span>3점</span></p>
+<p class="x k" style="--b:470.4"><span>2. 전하 밀도가 변하는 반원을 따라 적분한다는 아이디어</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:494.8"><span>3. 지름 방향 전기장 세기를 구함</span><span class="ld"></span><span>3점</span></p>
+<p class="x k" style="--b:519.2"><span>4. 진동 방정식(3번 항목이 맞을 때)</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:543.6"><span>5. 답</span><span class="ld"></span><span>2점</span></p>
+<p class="x pn" style="--b:720.0">66</p>
+</div>
+
+<!-- page 67 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시 T-11-4</p>
+<p class="x" style="--b:117.7"><b>풀이 예시 1. 에너지 방법.</b>&emsp;보트가 정지해 있는 기준계로 옮겨 가자. 이 기준계에서 보트로부터 멀리 떨어진 곳의 물의 속력은 $u$이고, 엔진에서 흘러나오는 물의 속력은 <span class="nw">$v$이다</span>. 관로를 지나간 물에 대한 에너지 보존 법칙을 쓰면 다음과 같다.</p>
+<p class="x c d" style="--b:195.1;--a:17.5pt">$\dfrac{\rho_w u^2}{2} + jBl = \dfrac{\rho_w v^2}{2},$</p>
+<div class="f" style="left:509pt;top:185pt"><span class="fig" data-srcpage="8" data-clip="509,185,541,199"></span></div>
+<p class="x" style="--b:226.5">여기서 <span class="nw">$j = I/(hl)$은</span> 관로를 가로질러 흐르는 전류의 밀도이다.</p>
+<p class="x i" style="--b:241.3">관로에는 전원의 기전력과 반대 방향의 유도 기전력이 생기므로, 관로를 가로지르는 전체 전류는 다음과 같다.</p>
+<div class="f" style="left:228pt;top:270pt"><span class="fig" data-srcpage="8" data-clip="228,270,541,301"></span></div>
+<p class="x" style="--b:322.4">(2)를 (1)에 대입하면 다음을 얻는다.</p>
+<p class="x c d" style="--b:362.1;--a:25.6pt">$u = \sqrt{v^2 - \dfrac{2Bl}{\rho\rho_w a}(\mathscr{E} - vBa)} = 8\,\mathrm{m/s}.$</p>
+<p class="x" style="--b:398.4">엔진의 추진력은 관로를 지나간 물의 운동량 변화와 같다.</p>
+<p class="x c d" style="--b:431.1;--a:16.3pt">$T = \dfrac{\Delta m}{\Delta t}(v - u) = \rho_w ahv(v - u) = 2\,\mathrm{kN}.$</p>
+<p class="x" style="--b:461.8">유효 일률:</p>
+<p class="x c" style="--b:477.5">$P_\text{유효} = Tu = 16\,\mathrm{kW}.$</p>
+<p class="x" style="--b:499.8">효율:</p>
+<p class="x c d" style="--b:532.6;--a:16.3pt">$\eta = \dfrac{P_\text{유효}}{\mathscr{E}I} = \dfrac{\rho Tua}{lh\mathscr{E}(\mathscr{E} - vBa)} \approx 9\%.$</p>
+<p class="x" style="--b:572.3"><b>풀이 예시 2. 동역학 방법.</b>&emsp;관로에는 전원의 기전력과 반대 방향의 유도 기전력이 생긴다. 관로를 가로지르는 전체 전류는 다음과 같다.</p>
+<div class="f" style="left:228pt;top:601pt"><span class="fig" data-srcpage="8" data-clip="228,601,384,632"></span></div>
+<p class="x" style="--b:652.7">추진력은 이 전류에 작용하는 앙페르 힘과 같다.</p>
+<p class="x c d" style="--b:685.6;--a:16.3pt">$T = F_A = IBa = \dfrac{lhB}{\rho}(\mathscr{E} - vBa) = 1.8\,\mathrm{kN}.$</p>
+<div class="f" style="left:509pt;top:676pt"><span class="fig" data-srcpage="8" data-clip="509,676,541,690"></span></div>
+<p class="x pn" style="--b:720.0">67</p>
+</div>
+
+<!-- page 68 of the booklet -->
+<div class="page">
+<p class="x" style="--b:84.0">한편, 엔진의 추진력은 단위 시간 동안 관로를 지나간 물의 운동량 변화와 같다.</p>
+<p class="x c d" style="--b:129.9;--a:16.3pt">$T = \dfrac{\Delta m}{\Delta t}(v - u) = \rho_w ahv(v - u).$</p>
+<div class="f" style="left:509pt;top:120pt"><span class="fig" data-srcpage="9" data-clip="509,120,541,134"></span></div>
+<p class="x" style="--b:160.0">(1)과 (2)를 같다고 놓으면 다음을 얻는다.</p>
+<p class="x c d" style="--b:192.4;--a:16.3pt">$u = v - \dfrac{T}{\rho_w ahv} = \dfrac{lB}{\rho\rho_w av}(\mathscr{E} - vBa) = 8.2\,\mathrm{m/s}.$</p>
+<p class="x" style="--b:224.1">유효 일률:</p>
+<p class="x c" style="--b:238.5">$P_\text{유효} = Tu = 14.76\,\mathrm{kW}.$</p>
+<p class="x" style="--b:259.5">효율:</p>
+<p class="x c d" style="--b:291.0;--a:16.3pt">$\eta = \dfrac{P_\text{유효}}{\mathscr{E}I} = \dfrac{\rho Tua}{lh\mathscr{E}(\mathscr{E} - vBa)} \approx 8.2\%.$</p>
+<p class="x wn" style="--b:323.4"><i>동역학 방법에 대한 참고.</i> 이 풀이에서 사용한 <span class="nw">$T = F_A$라는</span> 가정은 사실 운동량 보존 법칙을 아주 올바르지는 않게 사용한 것과 같다. 실제로, 유량이 <span class="nw">$\frac{\Delta m}{\Delta t} = \rho ahv$인</span> 관로를 지나는 물의 흐름은 보트에서 멀리 떨어진 곳에서 (보트에 고정된 기준계에서) <span class="nw">$u\cdot S = vah$,</span> 즉 <span class="nw">$S = ah\frac{v}{u}$를</span> 만족하는 유효 단면적 <span class="nw">$S$를</span> 가진다. 그러면 시간 $\Delta t$ 동안 $S$를 지나는 운동량 <span class="nw">$(\rho uS\Delta t)\cdot u$는</span> 앙페르 힘의 충격량 <span class="nw">$IBa\Delta t$만큼</span> 늘어나고, 나중 운동량은 $\rho ahv\Delta tv = {}$<span class="nw">$(\rho u\frac{v}{u}ah\Delta t)u + IBa\Delta t$이며</span>, $v^2 = vu + \frac{IB}{\rho h} \Rightarrow {}$<span class="nw">$u = v - \frac{IB}{\rho hv}$로,</span> 이는 <span class="nw">$T = F_A$로</span> 얻은 값과 정확히 같다. 그러나 이러한 추론에서는 관로를 지나지 않는 물의 운동량 변화를 고려하지 않았다. 그 물에서는 단면적이 커지기 때문에 속력이 <span class="nw">$u$보다</span> 작아지며, 곧 운동량의 일부가 «사라진다»(흐름 속에 압력 기울기가 있고, 다른 풀이에서 운동량 보존 법칙을 적용하는 계가 닫혀 있지 않다는 것은 분명하다).</p>
+<p class="x pn" style="--b:720.0">68</p>
+</div>
+
+<!-- page 69 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">채점 기준 T-11-4</p>
+<p class="x hl" style="--b:115.1;margin-top:-1.15pt">에너지 방법 (10점)</p>
+<p class="x k" style="--b:139.5"><span>1. 물에 대한 에너지 보존 법칙</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:163.9"><span>2. 유도 기전력을 고려한 전류의 식</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:188.4"><span>3. 보트의 속력에 대한 방정식</span><span class="ld"></span><span>1.5점</span></p>
+<p class="x k" style="--b:212.8"><span>4. 보트의 속력에 대한 공식</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:237.2"><span>5. 보트 속력의 수치</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:261.6"><span>6. 보트의 추진력에 대한 공식</span><span class="ld"></span><span>1.5점</span></p>
+<p class="x k" style="--b:286.0"><span>7. 보트 추진력의 수치</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:310.4"><span>8. 유효 일률을 구하였다</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:334.8"><span>9. 효율을 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x hl" style="--b:366.0">동역학 방법 (8점)</p>
+<p class="x k" style="--b:390.4"><span>1. <span class="nw">$T = F_A$라는</span> 가정 또는 관로를 지나는 흐름에 대한 운동량 보존 법칙을 사용하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:414.8"><span>2. 유도 기전력을 고려한 전류의 식</span><span class="ld"></span><span>2점</span></p>
+<p class="x l it" style="--b:439.2">3. 속력의 차이를 이용한 보트의 추진력에 대한 방정식 또는 운동량 보존 법칙으로부터 얻은</p>
+<p class="x k" style="--b:453.6;left:101.3pt;width:437.2pt"><span>보트의 속력에 대한 방정식</span><span class="ld"></span><span>2점</span></p>
+<p class="x k" style="--b:478.1"><span>4. 보트의 속력에 대한 공식</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:502.5"><span>5. 보트 속력의 수치</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:526.9"><span>6. 보트 추진력의 수치</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:551.3"><span>7. 유효 일률을 구하였다</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x k" style="--b:575.7"><span>8. 효율을 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x pn" style="--b:720.0">69</p>
+</div>
+
+<!-- page 70 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">풀이 예시 T-11-5</p>
+<p class="x i" style="--b:110.0">1. 대기 굴절이 없으면 광선은 지구에서 태양을 보는 각과 같은 각, 곧 <span class="nw">$2\delta$로</span> 모이므로 <span class="nw">$L_1 = R/\delta \approx 1.4\cdot10^6\,\mathrm{km}$이다</span>. 각속도 <span class="nw">$\omega_0$으로</span> 반지름 <span class="nw">$R_0$인</span> 궤도를 도는 달의 운동에 대한 뉴턴 제2법칙으로부터</p>
+<p class="x c d" style="--b:187.4;--a:18.2pt">$\omega_0 = \dfrac{2\pi}{T_0} = \sqrt{\dfrac{GM_E}{R_0^3}} = \sqrt{\dfrac{gR^2}{R_0^3}},\qquad\text{따라서}\qquad R_0 = \sqrt[3]{\dfrac{gT_0^2R^2}{4\pi^2}} \approx 384\cdot10^3\,\mathrm{km}.$</p>
+<p class="x i" style="--b:222.9">따라서 달의 지름은 <span class="nw">$D = 2\delta R_0 \approx 3.45\cdot10^3\,\mathrm{km}$이고</span>, 달의 위치에서 어두운 부분의 지름은 다음과 같다(그림&nbsp;2).</p>
+<div class="f" style="left:223pt;top:251pt"><span class="fig" data-srcpage="11" data-clip="223,251,389,282"></span></div>
+<p class="x i" style="--b:300.8">그러면 개기 월식이 지속되는 시간은 다음과 같다.</p>
+<p class="x c d" style="--b:331.1;--a:16.3pt">$T = \dfrac{D_1 - D_2}{\omega_0R_0} = T_0\dfrac{D_1 - D_2}{2\pi R_0} \approx 1.6\,\mathrm{h}$</p>
+<div class="f" style="left:129pt;top:353pt"><span class="fig" data-srcpage="11" data-clip="129,353,301,463"></span></div>
+<div class="f" style="left:311pt;top:364pt"><span class="fig" data-srcpage="11" data-clip="311,364,483,463"></span></div>
+<p class="x cap" style="--b:476.0;left:184.9pt">그림 11.5</p>
+<p class="x cap" style="--b:476.0;left:366.7pt">그림 11.6</p>
+<p class="x i" style="--b:501.1">2. 대기와의 경계에서 광선이 굴절할 때의 스넬 법칙을 쓰자.</p>
+<div class="f" style="left:236pt;top:511pt"><span class="fig" data-srcpage="11" data-clip="236,511,376,541"></span></div>
+<p class="x" style="--b:558.4"><span class="nw">$n = 1 + \Delta n$이고</span> <span class="nw">$\Delta n = 2.8\cdot10^{-4} \ll 1$임을</span> 고려하고, 작은 각 근사를 이용하여 식을 다시 쓰면 다음과 같다.</p>
+<div class="f" style="left:227pt;top:585pt"><span class="fig" data-srcpage="11" data-clip="227,585,385,616"></span></div>
+<p class="x wn" style="--b:637.1">3차 미소항을 무시하고 괄호를 풀면 <span class="nw">$(\gamma^2 - \phi^2)/2 = \Delta n$을</span> 얻는다. 이 식을 다시 근사적으로 <span class="nw">$\gamma(\gamma - \phi) = {}$</span><span class="nw">$\Delta n$으로</span> 쓸 수 있다. 따라서 광선이 꺾이는 각은 다음과 같다.</p>
+<div class="f" style="left:255pt;top:667pt"><span class="fig" data-srcpage="11" data-clip="255,667,357,697"></span></div>
+<p class="x pn" style="--b:720.0">70</p>
+</div>
+
+<!-- page 71 of the booklet -->
+<div class="page">
+<p class="x i" style="--b:84.0">그림 11.6에서 알 수 있듯이 <span class="nw">$\cos\gamma = R/(R + h)$이고</span>, 따라서</p>
+<div class="f" style="left:183pt;top:95pt"><span class="fig" data-srcpage="12" data-clip="183,95,429,135"></span></div>
+<p class="x i" style="--b:157.4">광선은 대기에 들어갈 때와 대기에서 나올 때, 똑같은 크기로 두 번 꺾인다. 따라서 전체 꺾인 각은 <span class="nw">$2\Delta\phi$이다</span>. 그러므로 대기 굴절이 있을 때 태양 광선이 모이는 각 <span class="nw">$\psi$는</span> <span class="nw">$\psi = 2\delta + 4\phi$이다</span>.</p>
+<p class="x i" style="--b:215.2">최종적으로 다음을 얻는다.</p>
+<p class="x c d" style="--b:246.7;--a:16.3pt">$L_2 = \dfrac{2R}{2\delta + 4\Delta\phi} = \dfrac{R}{\delta + \Delta n\sqrt{2R/h}} \approx 408\cdot10^3\,\mathrm{km}.$</p>
+<p class="x" style="--b:281.4">따라서 달에서 어두운 부분의 지름은</p>
+<p class="x c d" style="--b:314.0;--a:17.3pt">$D_2 = 2R\left(1 - \dfrac{R_0}{L_2}\right) \approx 753\,\mathrm{km}$</p>
+<p class="x" style="--b:347.8">이고, 구하려는 넓이의 비는 <span class="nw">$\varepsilon = (D_2/D)^2 \approx 4.8\,\%$이다</span>.</p>
+<p class="x pn" style="--b:720.0">71</p>
+</div>
+
+<!-- page 72 of the booklet -->
+<div class="page">
+<p class="x h" style="--b:84.0">채점 기준 T-11-5</p>
+<p class="x k" style="--b:111.4"><span>1. 거리 <span class="nw">$L_1 = \frac{R}{\delta} = 1.4\cdot10^6\,\mathrm{km}$를</span> 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:135.8"><span>2. 달까지의 거리에 대한 올바른 공식을 얻었다</span><span class="ld"></span><span>0.5점</span></p>
+<p class="x l it" style="--b:160.2">3. 기하 문제를 풀었다: $D_2 = 2\delta R_0$ 또는 $D_1/R_0$</p>
+<p class="x k" style="--b:174.6;left:101.3pt;width:437.2pt"><span>$D_1 = 2\delta(L_1 - R_0) = 2R(1 - R_0/L_1)$</span><span class="ld"></span><span>1.5점</span></p>
+<p class="x k" style="--b:199.0"><span>4. 월식 시간 <span class="nw">$T = \frac{D_1 - D_2}{\omega_0R_0} = 1.6\,\mathrm{h}$를</span> 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:225.4"><span>5. 광선 경로의 기하를 올바르게 그리고 <span class="nw">$\cos\gamma = \frac{R}{R + h}$를</span> 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:249.8"><span>6. 5번 항목의 조건에서 스넬 법칙을 썼다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:274.2"><span>7. <span class="nw">$\theta = 2\delta\beta$라는</span> 아이디어</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:298.6"><span>8. <span class="nw">$L_2 = \frac{R}{\delta + 2\beta\delta} = 389\cdot10^3\,\mathrm{km}$를</span> 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k" style="--b:324.2"><span>9. 그림자의 크기 <span class="nw">$D_2 = 2R(1 - R_0/L_2)$를</span> 얻었다</span><span class="ld"></span><span>1점</span></p>
+<p class="x k n10" style="--b:348.6"><span>10. 넓이의 비 <span class="nw">$\varepsilon = (D_2/D)^2 = 0.0024$를</span> 구하였다</span><span class="ld"></span><span>1점</span></p>
+<p class="x pn" style="--b:720.0">72</p>
+</div>
+</body></html>

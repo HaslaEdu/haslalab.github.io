@@ -1,0 +1,95 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* RuPhO 2017 (LI = 제51회), 9학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX article, Computer Modern 12pt (CMR12 = 11.955 PostScript pt, Cyrillic in Windows-1251-mapped fonts),
+   US Letter 612x792pt, 3 pages. The paper itself carries no olympiad numeral, date or place.
+   Text column x 72.0..540.0 (width 468pt); paragraph indent 17.6pt; baselineskip 14.45pt.
+   Bullet items: bullet at 89.4, text at 101.3. Numbered items "1." at 89.6 (= paragraph indent), continuation at 72.
+   Cyrillic subscripts: none in this paper.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with paras.py / lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:11.955pt;line-height:14.45pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}                      /* inline math must not stretch the line pitch */
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:72pt;width:468pt;--l:14.45pt;--fs:11.955pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.i{text-indent:17.6pt}                     /* first-line paragraph indent (89.6 - 72.0) */
+.c{text-align:center}
+.x b{line-height:0}                        /* bold runs (CM bold / HANBatangB) must not push the first baseline down */
+/* bullet items: bullet at 89.4, text and continuation lines at 101.3 */
+.li{padding-left:29.3pt}                   /* border-box: the 468pt width includes the padding */
+.n{position:absolute;left:17.4pt;text-indent:0}
+/* text beside fig. 9.4 (lines end at 389.4) */
+.nr{width:317.4pt}
+/* figure captions "그림 9.N": centred on the original caption's centre (left = centre - 30) */
+.cap{text-align:center;width:60pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+/* white box over a raster (image) label that carries Russian; the Korean label is laid on top */
+.wb{position:absolute;background:#fff}
+.sl{font-family:Arial,KG,sans-serif;font-style:italic}
+.tn{font-family:'Times New Roman',KB,serif}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<p class="x c" style="--b:84.0"><b>9학년 문제의 조건, 풀이 예시와 채점 기준</b></p>
+<p class="x c" style="--b:112.7"><b>이론 시험</b></p>
+<p class="x" style="--b:145.0"><b>문제 1. 천천히 가면…</b>&emsp;바람이 없는 날 호수에서 휘발유 엔진을 단 무선 조종 모형 보트의 시험 운항을 여러 차례 하였다. 그 결과 속력이 <span class="nw">$v_1 = 5.00\,\mathrm{km/h}$일</span> 때 주행 거리당 연료 소비량은 <span class="nw">$\lambda_1 = 20.0\,\mathrm{g/km}$이고</span>, 속력이 <span class="nw">$v_2 = 15.0\,\mathrm{km/h}$일</span> 때 소비량은 <span class="nw">$\lambda_2 = 40.0\,\mathrm{g/km}$임을</span> 알아냈다. 모형에 실린 연료의 양은 <span class="nw">$M = 100\,\mathrm{g}$이다</span>.</p>
+<p class="x li" style="--b:228.1"><span class="n">$\bullet$</span>거리당 연료 소비량 <span class="nw">$\lambda$가</span> 속력 <span class="nw">$v$에</span> 따라 어떻게 달라지는지 그 관계식을 유도하여라.</p>
+<p class="x li" style="--b:253.5"><span class="n">$\bullet$</span>모형이 정지해 있을 때 엔진이 작동할 수 있는 최대 시간 <span class="nw">$\tau_x$는</span> 얼마인가?</p>
+<p class="x li" style="--b:278.8"><span class="n">$\bullet$</span>속력 <span class="nw">$v_0$가</span> 얼마일 때 거리당 연료 소비량이 최소가 되며, 최솟값 <span class="nw">$\lambda_0$는</span> 얼마인가? 얻은 결과는 오차가 1%를 넘지 않도록 구해야 한다.</p>
+<p class="x li" style="--b:333.1"><span class="n">$\bullet$</span>모형이 갈 수 있는 최대 거리 <span class="nw">$L_0$와</span> 그 거리를 가는 데 걸리는 시간 <span class="nw">$\tau_0$를</span> 구하여라.</p>
+<p class="x li" style="--b:358.4"><span class="n">$\bullet$</span>모형이 거리 <span class="nw">$L_1 = 3\,\mathrm{km}$를</span> 지나가는 데 걸리는 시간 <span class="nw">$\tau_1$은</span> 어떤 값을 가질 수 있는가?</p>
+<p class="x" style="--b:398.2"><i>참고.</i> 엔진이 작동할 때 연료의 질량 소비율 $\mu$&thinsp;(g/s)는 저항력의 일률에 <b>선형적으로</b> 의존하고, 저항력은 물에 대한 모형의 속력에 <b>비례한다</b>고 생각하여라. 모형은 등속으로 움직이며, 어떤 속력에서도 흘수(물에 잠기는 깊이)는 변하지 않는다.</p>
+<p class="x" style="--b:488.3"><b>문제 2. 연기를 내뿜으며</b>&emsp;항공 촬영을 하는 동안 증기 기관차 두 대가 내뿜은 연기 자취 두 개가 보이는 사진을 얻었다(그림&nbsp;9.1). 사진의 격자 한 칸은 지상에서 50&thinsp;m에 해당한다. 한 기관차는 원형 철로 구간 위를 일정한 속력으로 움직였고, 다른 기관차는 같은 속력으로 직선 철로 위를 움직였다는 것이 알려져 있다.</p>
+<p class="x" style="--b:560.6">다음을 구하여라.</p>
+<p class="x li" style="--b:585.9"><span class="n">$\bullet$</span>바람 속도의 방향;</p>
+<p class="x li" style="--b:611.3"><span class="n">$\bullet$</span>원형 철로의 반지름 $R$;</p>
+<p class="x li" style="--b:636.6"><span class="n">$\bullet$</span>바람의 속력 <span class="nw">$u$에</span> 대한 기관차의 속력 <span class="nw">$v$의</span> 비;</p>
+<p class="x li" style="--b:662.0"><span class="n">$\bullet$</span>직선 철로의 방향(컴퍼스와 자를 사용하여 작도하여라).</p>
+<p class="x c" style="--b:720.0">1</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="f" style="left:102pt;top:71pt"><span class="fig" data-srcpage="2" data-clip="102,71,510,340"></span></div>
+<div class="ov wb" style="left:165pt;top:74.5pt;width:30pt;height:11pt"></div>
+<div class="ov wb" style="left:459pt;top:213.5pt;width:39pt;height:12pt"></div>
+<p class="x ov sl" style="--b:83.2;left:167pt;--fs:9.5pt">북쪽</p>
+<p class="x ov sl" style="--b:223.2;left:466pt;--fs:9.5pt">동쪽</p>
+<p class="x cap" style="--b:359.4;left:275.9pt">그림 9.1</p>
+<p class="x" style="--b:395.8"><b>문제 3. 비선형 코일</b>&emsp;코일의 저항 <span class="nw">$R$은</span> 온도에 따라 <span class="nw">$R = R_0 + \alpha(t - t_0)$의</span> 법칙으로 변한다. 여기서 <span class="nw">$t$는</span> 코일의 온도이고, $R_0 = 10\,\Omega$, $\alpha = 40.0\cdot 10^{-3}\,\Omega/{}^\circ\mathrm{C}$, <span class="nw">$t_0 = 20\,{}^\circ\mathrm{C}$이다</span>. 코일에 전압 <span class="nw">$U = 220\,\mathrm{V}$를</span> 걸었더니 시간 <span class="nw">$\tau_1 = 100\,\mu\mathrm{s}$</span> 동안 코일의 온도가 <span class="nw">$t_0$에서</span> <span class="nw">$t_1 = 80\,{}^\circ\mathrm{C}$까지</span> 올라갔다.</p>
+<p class="x li" style="--b:464.0"><span class="n">$\bullet$</span>전압을 걸기 시작한 순간부터 시간 <span class="nw">$\tau_2 = 334\,\mu\mathrm{s}$가</span> 지나면 코일의 온도 <span class="nw">$t_2$는</span> 몇 도까지 올라가는가?</p>
+<p class="x li" style="--b:503.3"><span class="n">$\bullet$</span>코일의 열용량을 구하여라.</p>
+<p class="x" style="--b:528.1">주어진 온도와 시간 범위에서는 복사와 주위로의 열전달을 무시할 수 있다.</p>
+<p class="x" style="--b:574.3"><b>문제 4. 두 비선형 소자</b>&emsp;전기 회로는 똑같은 비선형 소자 <span class="nw">$X$</span> 두 개, 고정 단자 사이의 저항이 <span class="nw">$R = 100\,\Omega$인</span> 전위차계, 그리고 전압이 <span class="nw">$U_0 = 10\,\mathrm{V}$인</span> 이상적인 전지로 이루어져 있다(그림&nbsp;9.2). 소자 <span class="nw">$X$의</span> 전류-전압 특성 곡선은 그림&nbsp;9.3에 주어져 있다.</p>
+<p class="x i" style="--b:632.2">다음을 구하여라.</p>
+<p class="x i" style="--b:646.7"><b>1.</b> 전위차계의 슬라이더(미끄럼 접점)가 양 끝에 있을 때 두 비선형 소자에서 발생하는 전체 일률.</p>
+<p class="x i" style="--b:675.7"><b>2.</b> 전위차계의 슬라이더가 가운데에 있을 때 두 비선형 소자에서 발생하는 전체 일률.</p>
+<p class="x c" style="--b:720.0">2</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="f" style="left:157pt;top:100pt"><span class="fig" data-srcpage="3" data-clip="157,100,262,191"></span></div>
+<p class="x cap" style="--b:211.8;left:180.4pt">그림 9.2</p>
+<div class="f" style="left:315pt;top:72pt"><span class="fig" data-srcpage="3" data-clip="315,72,493,221"></span></div>
+<p class="x ov tn" style="--b:81.5;left:349.1pt;--fs:9.963pt">mA</p>
+<p class="x ov tn" style="--b:200.5;left:482.3pt;--fs:9.963pt">V</p>
+<p class="x cap" style="--b:239.5;left:371.5pt">그림 9.3</p>
+<p class="x i" style="--b:288.6"><b>3.</b> 두 비선형 소자에서 발생하는 전체 일률의 최솟값. 전위차계의 슬라이더가 어느 위치에 있을 때 이 일률이 되는가? 답의 근거를 대어라.</p>
+<p class="x i" style="--b:332.0"><b>4.</b> 전위차계 왼쪽 부분의 저항이 25&thinsp;Ω이 되는 위치에 슬라이더가 있을 때 두 비선형 소자에서 발생하는 전체 일률.</p>
+<div class="f" style="left:399pt;top:383pt"><span class="fig" data-srcpage="3" data-clip="399,383,543,515"></span></div>
+<p class="x cap" style="--b:534.0;left:439.7pt">그림 9.4</p>
+<p class="x nr" style="--b:377.6"><b>문제 5. 용기 속의 레이저</b>&emsp;반지름 <span class="nw">$R$인</span> 얇은 유리 원통형 용기 안, 벽 가까이의 점 <span class="nw">$A$에</span> 크기가 <span class="nw">$R$보다</span> 훨씬 작은 초소형 레이저가 놓여 있다. 용기는 물로 채워져 있고, 바깥은 공기이다. 용기 안쪽 면의 절반, 곧 호 <span class="nw">$ACB$에</span> 해당하는 부분은 검게 칠해져 있어 빛을 흡수한다. 처음에 레이저 빛은 점 <span class="nw">$B$를</span> 향한다.</p>
+<p class="x i nr" style="--b:478.7">레이저가 점 <span class="nw">$A$를</span> 지나는 축을 중심으로 그림의 평면에서 시계 반대 방향으로 일정한 각속도 <span class="nw">$\omega$로</span> 회전하기 시작한다(그림&nbsp;9.4). 물의 굴절률은 <span class="nw">$n = 4/3$이다</span>.</p>
+<p class="x li" style="--b:546.5"><span class="n">$\bullet$</span>얼마의 시간 <span class="nw">$\tau$가</span> 지나면 빛이 더 이상 용기 밖으로 나가지 않게 되는가?</p>
+<p class="x li" style="--b:570.9"><span class="n">$\bullet$</span>‘빛 반점’이 검게 칠한 원통 면 위에서 움직이는 속력은, 레이저가 움직이기 시작한 때부터 시간 <span class="nw">$1.5\tau$가</span> 지난 순간에 얼마인가?</p>
+<p class="x" style="--b:609.7"><i>참고.</i> 스넬의 법칙이 필요할 수 있다: $n_1\sin\varphi_1 = n_2\sin\varphi_2$. 여기서 <span class="nw">$n_1$과</span> <span class="nw">$n_2$는</span> 첫 번째 매질과 두 번째 매질에서 빛의 굴절률, <span class="nw">$\varphi_1$과</span> <span class="nw">$\varphi_2$는</span> 입사각과 굴절각이다.</p>
+<p class="x c" style="--b:720.0">3</p>
+</div>
+</body></html>
