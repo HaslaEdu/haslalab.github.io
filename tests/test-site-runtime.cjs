@@ -55,6 +55,24 @@ function enableReadState(a,saved=new Map()){
   a.run(earlyMain);return saved;
 }
 
+test('the olympiad archive loads practical papers and their alternate language on deep links',()=>{
+  const a=app();
+  a.load('theory:ieso');
+  const first=plain(a.run('DATA.ieso.years.find(y=>y.y===2008).problems'));
+  a.load('theory:ieso');
+  assert.deepEqual(plain(a.run('DATA.ieso.years.find(y=>y.y===2008).problems')),first);
+  const p7=first.find(p=>p.id==='P7');
+  assert.match(p7.files.pdf.en,/^https:\/\/.+#page=11$/);
+  assert.match(p7.files.pdf.ko,/Xieso_IESO_2008_P_KO\.pdf#page=9$/);
+  const dmt=anchors(a.run('lang="ko"; track="thy"; viewYear("ieso",2024)'));
+  assert.ok(dmt.some(link=>link.url.endsWith('Xieso_IESO_2024_DMT_KO.pdf')));
+  assert.ok(dmt.some(link=>/DMT/i.test(link.url)&&link.label.includes('English')));
+  const partial=anchors(a.run('viewYear("ieso",2009)'));
+  assert.ok(partial.some(link=>link.url.endsWith('Xieso_IESO_2009_T_KO.pdf')&&link.label.includes('부분')));
+  const field=anchors(a.run('lang="en"; track="exp"; viewYear("ieso",2026)'));
+  assert.ok(field.some(link=>/map/i.test(link.label)&&/^https:\/\//.test(link.url)));
+});
+
 test('compact metadata preserves all competition names, subject counts and home totals before any paper loads',()=>{
   const lean=app(),full=app({preload:true});
   for(const subject of ['phys','chem','bio','earth','astro','sci','math','info'])assert.equal(lean.run(`viewComps('${subject}')`),full.run(`viewComps('${subject}')`),subject);
