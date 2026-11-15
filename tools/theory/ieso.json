@@ -437,6 +437,14 @@
      "direct": true,
      "title": {"ko": "공기", "en": "Air"},
      "source_pages": [18, 32],
+     "supplements": [
+      {
+       "title": {"ko": "영어 심사위원 원본 (색상 표시 포함)", "en": "English jury original (colored markings)"},
+       "url": "pdfx/ieso/IESO_2019_T2_Jury_EN.pdf",
+       "source_url": "https://web.archive.org/web/20230509113616id_/http://petit-tomato.online/ieso/wp-content/uploads/2021/10/JURY_IESO-2019-written2_Air_final_0828_1500am.pdf",
+       "sha256": "5ed55b73fe2809b4378221a86c60375328a65320b4a53265f07b31582927b9fe"
+      }
+     ],
      "bytes": 7462899
     },
     {
@@ -455,11 +463,19 @@
      "part": "T4",
      "kind": "paper",
      "lang": "EN",
-     "url": "https://eu-central-1.linodeobjects.com/socgeol-files/production/opg_documents_iesos/8/original.pdf",
+     "url": "https://web.archive.org/web/20230509105633id_/http://petit-tomato.online/ieso/wp-content/uploads/2021/10/JURY_IESO-2019_Written4_Fire_final_0828_1000am.pdf",
+     "local": "pdfx/ieso/IESO_2019_T4_Jury_EN.pdf",
      "direct": true,
      "title": {"ko": "불: 열과 에너지", "en": "Fire: Heat and Energy"},
-     "source_pages": [53, 64],
-     "bytes": 7462899
+     "source_type": "official_jury",
+     "bytes": 1211948,
+     "sha256": "af08d555652021a5b64761f08e88fd3f43ba53357636523185a2da9c0f67b4bc",
+     "supplements": [
+      {
+       "title": {"ko": "영어 편집본", "en": "English compilation"},
+       "url": "https://eu-central-1.linodeobjects.com/socgeol-files/production/opg_documents_iesos/8/original.pdf#page=53"
+      }
+     ]
     },
     {
      "file": "IESO_2019_P1_EN.pdf",
@@ -550,7 +566,7 @@
      "bytes": 1869189
     }
    ],
-   "note": "The available English collection from USESO assembles four subject tests into one PDF. Exam instructions are on pages 1 and 33."
+   "note": "The archived IGEO index lists the contemporaneous English jury PDFs for Written Test 2 (Air, with colored markings) and Written Test 4 (Fire, with colored editorial text). The USESO English compilation is used for Written Tests 1 and 3 and as the clean practice paper for Written Test 2."
   },
   {
    "y": 2018,
