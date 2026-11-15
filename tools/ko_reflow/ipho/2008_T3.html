@@ -1,0 +1,127 @@
+<!doctype html><html><head><meta name="page" content="595.22,842">
+<style>
+/* IPhO 2008 Theory Problem 3, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:11.2pt;line-height:17.4pt}
+.a{position:absolute}
+.flow{position:absolute;left:91pt;width:434pt}
+h1{font-size:11.6pt;font-weight:bold;text-align:center;margin:0 0 14pt}
+h2{font-size:11.2pt;font-weight:bold;margin:12pt 0 0}
+p{margin:0;text-align:justify;text-indent:0}
+p.i{text-indent:22pt}
+.pn{position:absolute;left:0;width:595pt;top:792pt;text-align:center;font-size:10pt}
+.ov{position:absolute;background:#fff;font-size:9pt;line-height:11pt;font-weight:bold}
+.cap{text-align:center}
+.eq{text-align:center;margin:2pt 0}
+table.t{border-collapse:collapse;margin:0 0 0 7pt;font-size:10.6pt;line-height:17.7pt}
+table.t td{border:.6pt solid #000;padding:0 8pt;text-align:center;width:63pt}
+ul{margin:0;padding-left:40pt}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:85pt;top:30pt"><span class="fig" data-srcpage="1" data-clip="85,30,530,68"></span></div>
+<div class="pn">1</div>
+<div class="flow" style="top:88pt">
+<h1>고도에 따른 기온의 변화,<br>대기의 안정성과 대기 오염</h1>
+<p class="i">공기의 연직 운동은 구름과 강수의 형성, 대기 오염 물질의 확산 등 많은 대기 과정을 지배한다. 대기가 안정하면 연직 운동이 제한되어, 대기 오염 물질은 퍼져서 희석되지 않고 배출된 곳 주변에 쌓이는 경향이 있다. 반면 불안정한 대기에서는 공기의 연직 운동이 대기 오염 물질의 연직 확산을 돕는다. 따라서 오염 물질의 농도는 배출원의 세기뿐 아니라 대기의 안정성에도 의존한다.</p>
+<p class="i">기상학의 공기 덩어리(air parcel) 개념을 이용하여 대기의 안정성을 판단하고, 대기 속에서 단열적으로 올라가거나 내려가는 공기 덩어리의 온도를 주변 공기의 온도와 비교할 것이다. 많은 경우 대기 오염 물질을 품고 지면에서 올라가는 공기 덩어리는 혼합 높이(mixing height)라 부르는 어떤 고도에서 멈추게 됨을 보게 될 것이다. 혼합 높이가 클수록 대기 오염 물질의 농도는 낮다. 고도 119 m 위에서 기온 역전(고도에 따라 기온이 높아짐) 때문에 연직 혼합이 제한되는 아침 출근 시간 상황에서, 하노이 대도시 지역의 오토바이가 배출하는 일산화탄소의 농도와 혼합 높이를 구할 것이다.</p>
+<p class="i">공기는 몰질량 $\mu=29$ g/mol인 이원자 이상 기체로 생각한다.</p>
+<p class="i">준평형 단열 변화는 식 $pV^\gamma=\text{const}$를 따른다. 여기서 $\gamma=\dfrac{c_p}{c_V}$는 기체의 등압 열용량과 등적 열용량의 비이다.</p>
+<p class="i">필요하면 다음 자료를 사용해도 된다.</p>
+<p class="i">보편 기체 상수는 $R=8.31$ J/(mol·K)이다.</p>
+<p class="i">지면에서의 대기압은 $p_0=101.3$ kPa이다.</p>
+<p class="i">중력 가속도는 일정하며 $g=9.81\ \mathrm{m/s^2}$이다.</p>
+<p class="i">공기의 몰 등압 열용량은 $c_p=\dfrac72R$이다.</p>
+<p class="i">공기의 몰 등적 열용량은 $c_V=\dfrac52R$이다.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:85pt;top:30pt"><span class="fig" data-srcpage="2" data-clip="85,30,530,68"></span></div>
+<div class="pn">2</div>
+<div class="flow" style="top:88pt">
+<p><b>수학 힌트</b></p>
+<p>a. $\displaystyle\int\frac{dx}{A+Bx}=\frac1B\int\frac{d(A+Bx)}{A+Bx}=\frac1B\ln(A+Bx)$</p>
+<p>b. 미분 방정식 $\dfrac{dx}{dt}+Ax=B$($A$와 $B$는 상수)의 해는 $x(t)=x_1(t)+\dfrac BA$이며, 여기서 $x_1(t)$는 미분 방정식 $\dfrac{dx}{dt}+Ax=0$의 해이다.</p>
+<p>c. $\displaystyle\lim_{x\to\infty}\left(1+\frac1x\right)^x=e$</p>
+<h2>1. 고도에 따른 압력의 변화</h2>
+<p class="i">1.1. 대기의 온도가 균일하게 $T_0$라고 가정한다. 대기압 $p$를 고도 $z$의 함수로 나타내는 식을 써라.</p>
+<p class="i">1.2. 대기의 온도가 고도에 따라 다음 관계로 변한다고 가정한다.</p>
+<div class="eq">$T(z)=T(0)-\Lambda z$</div>
+<p>여기서 $\Lambda$는 대기의 기온 감률(lapse rate)이라 부르는 상수이다(온도의 연직 기울기는 $-\Lambda$이다).</p>
+<p class="i">1.2.1. 대기압 $p$를 고도 $z$의 함수로 나타내는 식을 써라.</p>
+<p class="i">1.2.2. 공기의 밀도가 고도에 따라 커질 때 자유 대류라 부르는 과정이 일어난다. $\Lambda$가 어떤 값일 때 자유 대류가 일어나는가?</p>
+<h2>2. 연직 운동하는 공기 덩어리의 온도 변화</h2>
+<p class="i">대기 속에서 위아래로 움직이는 공기 덩어리를 생각하자. 공기 덩어리는 독립된 열역학적 대상으로 다룰 수 있을 만큼 충분히 크면서(지름 수 미터), 온도가 균일하다고 볼 수 있을 만큼 작은 공기 덩어리이다. 공기 덩어리의 연직 운동은 준단열 과정, 즉 주변 공기와의 열 교환을 무시할 수 있는 과정으로 다룰 수 있다. 공기 덩어리가 대기 속에서 올라가면 팽창하며 식는다. 반대로 내려가면 커지는 바깥 압력이 덩어리 속 공기를 압축하여 온도가 올라간다.</p>
+<p class="i">덩어리의 크기가 크지 않으므로, 덩어리 경계의 여러 점에서 대기압은</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:85pt;top:30pt"><span class="fig" data-srcpage="3" data-clip="85,30,530,68"></span></div>
+<div class="pn">3</div>
+<div class="flow" style="top:88pt">
+<p>같은 값 $p(z)$를 가진다고 볼 수 있다. 여기서 $z$는 덩어리 중심의 고도이다. 덩어리 속 온도는 균일하며 $T_{\rm parcel}(z)$이고, 이는 일반적으로 주변 공기의 온도 $T(z)$와 다르다. 2.1과 2.2에서는 $T(z)$의 꼴에 대해 아무것도 가정하지 않는다.</p>
+<p class="i">2.1. 고도에 따른 덩어리 온도 $T_{\rm parcel}$의 변화를 $\dfrac{dT_{\rm parcel}}{dz}=-G$로 정의한다. $G(T,T_{\rm parcel})$의 식을 유도하라.</p>
+<p class="i">2.2. 임의의 고도 $z$에서 대기의 온도 $T$가 덩어리의 온도 $T_{\rm parcel}$과 같은, 즉 $T(z)=T_{\rm parcel}(z)$인 특별한 대기 조건을 생각하자. $T=T_{\rm parcel}$일 때의 $G$의 값을 $\Gamma$로 나타낸다. 즉 $\Gamma=-\dfrac{dT_{\rm parcel}}{dz}$($T=T_{\rm parcel}$일 때)이다. $\Gamma$를 건조 단열 감률이라 한다.</p>
+<p class="i">2.2.1. $\Gamma$의 식을 유도하라.</p>
+<p class="i">2.2.2. $\Gamma$의 수치를 계산하라.</p>
+<p class="i">2.2.3. 대기의 온도 $T(z)$를 고도의 함수로 나타내는 식을 유도하라.</p>
+<p class="i">2.3. 대기의 온도가 고도에 따라 $T(z)=T(0)-\Lambda z$($\Lambda$는 상수)의 관계로 변한다고 가정한다. 덩어리의 온도 $T_{\rm parcel}(z)$가 고도 $z$에 어떻게 의존하는지 구하라.</p>
+<p class="i">2.4. $\Lambda z\ll T(0)$이고 $T(0)\approx T_{\rm parcel}(0)$일 때 $T_{\rm parcel}(z)$의 근사식을 써라.</p>
+<h2>3. 대기의 안정성</h2>
+<p class="i">이 부분에서는 $T$가 고도에 따라 선형적으로 변한다고 가정한다.</p>
+<p class="i">3.1. 처음에 고도 $z_0$에서 주변 공기와 평형을 이루는, 즉 주변 공기와 같은 온도 $T(z_0)$를 가진 공기 덩어리를 생각하자.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:85pt;top:30pt"><span class="fig" data-srcpage="4" data-clip="85,30,530,68"></span></div>
+<div class="pn">4</div>
+<div class="flow" style="top:88pt">
+<p>덩어리를 (예를 들어 대기의 난류로) 조금 위아래로 움직이면 다음 세 경우 가운데 하나가 일어날 수 있다.</p>
+<p class="i">- 공기 덩어리가 원래 고도 $z_0$로 돌아온다. 덩어리의 평형은 안정하다. 이때 대기가 안정하다고 한다.</p>
+<p class="i">- 덩어리가 원래 방향으로 계속 움직인다. 덩어리의 평형은 불안정하다. 대기는 불안정하다.</p>
+<p class="i">- 공기 덩어리가 새 위치에 머문다. 덩어리의 평형은 중립이다. 이때 대기가 중립이라고 한다.</p>
+<p>대기가 안정, 불안정, 중립이 되는 $\Lambda$에 대한 조건은 무엇인가?</p>
+<p class="i">3.2. 어떤 덩어리의 지면에서의 온도 $T_{\rm parcel}(0)$가 주변 공기의 온도 $T(0)$보다 높다. 부력 때문에 덩어리는 올라간다. 대기가 안정한 경우, 덩어리가 도달할 수 있는 최대 고도에 대한 식을 $\Lambda$와 $\Gamma$로 유도하라.</p>
+<h2>4. 혼합 높이</h2>
+<p class="i">4.1. 표 1은 하노이의 11월 어느 날 오전 7시에 라디오존데 풍선으로 기록한 기온이다. 고도에 따른 온도 변화는 세 층 $0&lt;z&lt;96$ m, $96\ \mathrm{m}&lt;z&lt;119$ m, $119\ \mathrm{m}&lt;z&lt;215$ m에서 서로 다른 감률 $\Lambda$를 가진 식 $T(z)=T(0)-\Lambda z$로 근사적으로 나타낼 수 있다.</p>
+<p class="i">온도가 $T_{\rm parcel}(0)=22\ ^\circ$C인 공기 덩어리가 지면에서 올라간다고 하자. 표 1의 자료와 위의 선형 근사를 이용하여 고도 96 m와 119 m에서 덩어리의 온도를 계산하라.</p>
+<p class="i">4.2. 덩어리가 도달할 수 있는 최대 고도 $H$와 그때 덩어리의 온도 $T_{\rm parcel}(H)$를 구하라.</p>
+<p class="i">$H$를 혼합 높이라 한다. 지면에서 배출된 대기 오염 물질은 (예를 들어 바람, 난류, 확산에 의해) 이 층 안에서 대기 중의 공기와 섞여 희석될 수 있다.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:85pt;top:30pt"><span class="fig" data-srcpage="5" data-clip="85,30,530,68"></span></div>
+<div class="pn">5</div>
+<div class="flow" style="top:88pt">
+<p><b>표 1</b></p>
+<p>하노이의 11월 어느 날 오전 7시에 라디오존데 풍선으로 기록한 자료.</p>
+<table class="t"><tr><td>고도, m</td><td>온도, °C</td></tr><tr><td>5</td><td>21.5</td></tr><tr><td>60</td><td>20.6</td></tr><tr><td>64</td><td>20.5</td></tr><tr><td>69</td><td>20.5</td></tr><tr><td>75</td><td>20.4</td></tr><tr><td>81</td><td>20.3</td></tr><tr><td>90</td><td>20.2</td></tr><tr><td>96</td><td>20.1</td></tr><tr><td>102</td><td>20.1</td></tr><tr><td>109</td><td>20.1</td></tr><tr><td>113</td><td>20.1</td></tr><tr><td>119</td><td>20.1</td></tr><tr><td>128</td><td>20.2</td></tr><tr><td>136</td><td>20.3</td></tr><tr><td>145</td><td>20.4</td></tr><tr><td>153</td><td>20.5</td></tr><tr><td>159</td><td>20.6</td></tr><tr><td>168</td><td>20.8</td></tr><tr><td>178</td><td>21.0</td></tr><tr><td>189</td><td>21.5</td></tr><tr><td>202</td><td>21.8</td></tr><tr><td>215</td><td>22.0</td></tr><tr><td>225</td><td>22.1</td></tr><tr><td>234</td><td>22.2</td></tr><tr><td>246</td><td>22.3</td></tr><tr><td>257</td><td>22.3</td></tr></table>
+<h2 style="margin-top:20pt">5. 하노이의 아침 오토바이 출근 시간 동안 일산화탄소(CO) 오염의 어림</h2>
+<p class="i">하노이 대도시 지역은 그림과 같이 밑변의 크기가 $L$과 $W$인 직사각형으로 근사할 수 있으며, 한 변은 홍강(Red River)의 남서쪽 강변을 따라 놓여 있다.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:85pt;top:30pt"><span class="fig" data-srcpage="6" data-clip="85,30,530,68"></span></div>
+<div class="pn">6</div>
+<div class="a" style="left:190pt;top:90pt"><span class="fig" data-srcpage="6" data-clip="190,90,423,329"></span></div>
+<div class="ov" style="left:388pt;top:107pt;width:26pt;font-size:10pt">북쪽</div>
+<div class="ov" style="left:363pt;top:134pt;width:15pt;height:44pt;font-size:10pt;writing-mode:vertical-rl">홍강</div>
+<div class="flow" style="top:336pt">
+<p class="i">아침 출근 시간인 오전 7시부터 8시까지 도로에는 $8\times10^5$대의 오토바이가 있으며, 각 오토바이는 평균 5 km를 달리고 킬로미터당 12 g의 CO를 배출한다고 어림된다. CO 오염 물질은 출근 시간 동안 시간에 대해 균일하게, 즉 일정한 비율 $M$으로 배출된다고 근사적으로 본다. 같은 시간에 깨끗한 북동풍이 홍강에 수직으로(즉 직사각형의 변 $L$에 수직으로) 속도 $u$로 불어 같은 속도로 도시를 지나가며, CO로 오염된 공기의 일부를 도시 대기 밖으로 실어 간다.</p>
+<p class="i">또한 다음과 같은 대략적인 근사 모형을 사용한다.</p>
+<ul>
+<li>CO는 하노이 대도시 지역 위의 혼합층 전체 부피로 빠르게 퍼지므로, 시각 $t$에서 CO의 농도 $C(t)$는 크기가 $L$, $W$, $H$인 직육면체 상자 전체에서 일정하다고 볼 수 있다.</li>
+<li>바람이 불어오는 쪽에서 상자로 들어오는 공기는 깨끗하며, 바람에 나란한 옆면을 통해 상자에서 오염 물질이 빠져나가지 않는다고 가정한다.</li>
+<li>오전 7시 이전에 대기의 CO 농도는 무시할 수 있다.</li>
+</ul>
+<p class="i">5.1. CO 오염 물질의 농도 $C(t)$를 시간의 함수로 정하는 미분 방정식을 유도하라.</p>
+<p class="i">5.2. 그 방정식의 해 $C(t)$를 써라.</p>
+<p class="i">5.3. 오전 8시의 농도 $C(t)$의 수치를 계산하라.</p>
+<p class="i">$L=15$ km, $W=8$ km, $u=1$ m/s로 주어진다.</p>
+</div>
+</div>
+</body></html>
