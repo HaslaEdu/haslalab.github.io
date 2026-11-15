@@ -10,8 +10,8 @@ def ov(x0, y0, x1, y1, sz, ko):
     bold = ko.startswith('^') or sz >= 13.5
     ko = ko.lstrip('^')
     if bold and ko: ko = f'<b>{ko}</b>'
-    return (f'<div class="ov" style="left:{x0-1:.1f}pt;top:{y0-0.5:.1f}pt;min-width:{x1-x0+2:.1f}pt;height:{y1-y0+1:.1f}pt;'
-            f'font-size:{sz*fs:.1f}pt;line-height:{y1-y0+1:.1f}pt{c}">{ko}</div>')
+    return (f'<div class="ov" style="left:{x0-1:.1f}pt;top:{y0+1:.1f}pt;min-width:{x1-x0+2:.1f}pt;height:{y1-y0:.1f}pt;'
+            f'font-size:{sz*fs:.1f}pt;line-height:{y1-y0-2:.1f}pt{c}">{ko}</div>')
 for pn in cfg['pages']:
     p = d[pn-1]; W, H = p.rect.width, p.rect.height
     out = ['<div class="page">', f'<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="{pn}" data-clip="0,0,{W:g},{H:g}"></span></div>']
