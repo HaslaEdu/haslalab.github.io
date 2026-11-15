@@ -1164,7 +1164,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
-<script src="site-catalogue.js?v=2dd5fbed0020"></script>
+<script src="site-catalogue.js?v=8e610866c9bc"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=98ca4974b734"></script>
@@ -5578,9 +5578,16 @@ function theoryHtml(key,yr){
   const simRun=code=>{ const p=sims[code]; return p?`<a class="btn" href="${esc(simHref(p.files.sim))}&lang=${lang}">${d.actRun}</a>`:""; };
   const sheetDocs=(code,A,on)=>{
     if(!on||!t.f[code]||key==="kmo"||key==="kmchc") return [];
+    const practice=t.f[code].practiceSheets;
     const h=sheetsHref(theoryHref(key,yr,[code]));
-    return [A[0]?a(A[0],ko?"답안지":"Answer sheet",false,A[1]):sheetBtn(sheetKind(h,"answer"),ko?"답안지":"Answer sheet"),
-      ko&&t.wk?a(t.wk,"워킹시트"):!ko&&t.we?a(t.we,"Working sheet"):sheetBtn(sheetKind(h,"working"),ko?"워킹시트":"Working sheet")];
+    const docs=A[0]?[a(A[0],ko?"답안지":"Answer sheet",false,A[1])]:[];
+    if(practice?.answer) docs.push(a(practice.answer,ko?"연습용 답안지 (하슬라랩)":"Practice answer sheet (HaslaLab)"));
+    else if(!A[0]) docs.push(sheetBtn(sheetKind(h,"answer"),ko?"답안지":"Answer sheet"));
+    const working=ko?t.wk:t.we;
+    if(working) docs.push(a(working,ko?"워킹시트":"Working sheet"));
+    if(practice?.working) docs.push(a(practice.working,ko?"연습용 풀이용지 (하슬라랩)":"Practice working sheet (HaslaLab)"));
+    else if(!working) docs.push(sheetBtn(sheetKind(h,"working"),ko?"워킹시트":"Working sheet"));
+    return docs;
   };
   const card=(code,probs,f,k,head,docs)=>{
     const archive=f.archive, archiveLabels={restored:ko?"비공식 복구본":"Restored copy",translation:ko?"영문 재수록":"English reprint",publisher:ko?"출판사 부분 재수록":"Publisher excerpt",reprint:ko?"전신 대회 재수록":"Predecessor reprint"};

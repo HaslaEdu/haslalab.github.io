@@ -100,6 +100,8 @@ def load(practical=None):
                     for prop in ('title', 'supplements'):
                         if f.get(prop):
                             slot[prop] = f[prop]
+                    if f.get('practice_sheets'):
+                        slot['practiceSheets'] = f['practice_sheets']
                     if f.get('contains_solutions'):
                         slot['containsSolutions'] = True
                     else:
