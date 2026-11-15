@@ -1,0 +1,531 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2022 (LVI = 제56회; the paper prints only "2022 г."), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.5x595.3pt, booklet pages 9-13.
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20pt; baselineskip 11.955pt; list items 13.2pt apart.
+   Running headers italic, baseline 38.9, rule at y 43: odd page "Всероссийская олимпиада по физике 2022 г., Заключительный этап"
+   (left), even page "Теоретический тур" (right); page numbers centred, baseline 563.8.
+   Grade line SFBX1440 (14.346pt bold), problem titles SFBX1000 bold, captions SFRM0900.
+   "НЭ" (нелинейный элемент) inside the circuit symbols is relabelled "NE" (introduced in the text as 비선형 소자(NE)).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b:  top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.pn{text-align:center}
+.g{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.g,.h{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.li{padding-left:25pt}
+.n{position:absolute;left:12.2pt;text-indent:0}
+.cap{text-align:center;width:40pt;--fs:8.966pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.wb{position:absolute;background:#fff}
+</style>
+<style>
+/* 2024_T3SA extra — RuPhO 2024 (LVIII; no numeral printed) grade 11 solutions, pages 1-13 of RuPhO_2024_T3S.pdf,
+   problems 11-T1 .. 11-T3 (11-T3 continues in 2024_T3SB). Text column x 28.3..396.8 (368.5pt), indent 20pt, pitch 11.955pt.
+   Header italic, baseline 37.6, rule y 41.4 (stamped); no page numbers. Page 1 is a cropped sheet 419.528 x 466.276pt
+   (no header) -> named @page a-p1.
+   Subscripts: p_ср -> p_avg, F_давл (figure labels) -> F_p, S_к (контакт) -> S_c. Body paragraphs justified (.a-j).
+   Retyped display fractions: .a-d (line-height 0, top = baseline - --a). */
+.a-j{text-align:justify}
+.a-d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+@page a-p1{size:419.528pt 466.276pt;margin:0}
+.page[data-s="a-p1"]{page:a-p1;height:466.276pt}
+.x.a-w{width:368.5pt}
+</style>
+<style>
+/* 2024_T3SB extra */
+/* RuPhO 2024 (LVIII; the original prints no numeral or year: header "Zaklyuchitelnyi etap Vserossiiskoi olimpiady
+   po fizike" -> "2024년 전러시아 물리 올림피아드, 결선" as in conv_2024.md), 11학년 풀이 예시, second half:
+   pages 14-25 of RuPhO_2024_T3S.pdf (= this file's pages 1-12): end of solution 11-T3 (원뿔대), solutions 11-T4, 11-T5.
+   ORIGINAL: LaTeX CM 10pt (SFRM1000), A5; text column x 28.3..396.8 (width 368.5pt); indent 20pt; baselineskip 11.955pt;
+   running header italic, left, baseline 37.6, rule at y 41.4 (x 28.3..391.2); no page numbers.
+   Pages of this half carry data-s="b" (wider column). All display equations and figures are stamped (Latin/Greek only). */
+.page[data-s="b"] .x{width:368.5pt}
+.page[data-s="b"] .x.ov{width:auto}
+.b-n1{width:216.8pt!important}
+.b-n2{width:245.2pt!important}
+</style></head><body>
+
+<!-- page 1 (cropped sheet, no header) -->
+<div class="page" data-s="a-p1">
+<p class="x h" style="--b:69.5">문제 11-T1. 두 개의 원</p>
+<p class="x i a-w a-j" style="--b:84.0;margin-top:-1.57pt">1. 자기장 <span class="nw">$\vec B$</span> 속에서 고무줄에 매달린 구슬의 운동 방정식은 다음과 같은 꼴이다.</p>
+<div class="f" style="left:162.2pt;top:94.6pt"><span class="fig" data-srcpage="1" data-clip="162.2,94.6,263.0,107.5"></span></div>
+<p class="x a-w a-j" style="--b:124.7">즉 (문제의 조건에서도 언급했듯이) 이 방정식은 운동 법칙 <span class="nw">$\vec r(t)$에</span> 대하여 <i>선형</i>이고 <i>동차</i>인 방정식이다(구슬의 평형 위치로부터 잰 위치 벡터 자체와 그 도함수인 속도와 가속도는 방정식에 1차로만 들어 있다). 반지름 <span class="nw">$r_0$인</span> 원을 따라 운동할 때 구슬의 구심 가속도는 고무줄의 탄성력과 로런츠 힘에 의해 생기며, 회전 방향에 따라 로런츠 힘은 원의 중심을 향하거나 중심에서 멀어지는 방향을 향한다. 따라서 이러한 운동에서 구슬의 각속도의 크기는 다음 방정식으로부터 구할 수 있다.</p>
+<div class="f" style="left:109.3pt;top:217.9pt"><span class="fig" data-srcpage="1" data-clip="109.3,217.9,315.9,243.4"></span></div>
+<p class="x a-w a-j" style="--b:265.5;--l:13pt">이제 <span class="nw">$\Omega \equiv \frac{qB}{2m}$,</span> <span class="nw">$\omega_0^2 \equiv \frac{k}{m}$이라고</span> 놓자. 그러면 각 경우에 양의 근을 택하여, 시계 방향으로 회전할 때 각속도의 크기(회전의 각진동수)는 다음과 같다는 결론을 얻는다.</p>
+<div class="f" style="left:116.6pt;top:303.8pt"><span class="fig" data-srcpage="1" data-clip="116.6,303.8,308.6,331.5"></span></div>
+<p class="x i a-w a-j" style="--b:341.3">반시계 방향으로 회전할 때는 각속도의 크기가 다음과 같다.</p>
+<div class="f" style="left:104.6pt;top:353.5pt"><span class="fig" data-srcpage="1" data-clip="104.6,353.5,320.6,381.2"></span></div>
+<p class="x i a-w a-j" style="--b:391.6"><i>참고:</i> 두 경우 모두 각속도는 원의 반지름에 무관하다! 그러므로 선속도의 크기는 구슬이 그리는 원의 반지름에 비례한다.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="2" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:112.2pt;top:53.6pt"><span class="fig" data-srcpage="2" data-clip="112.2,53.6,312.4,253.9"></span></div>
+<p class="x i a-w a-j" style="--b:281.2">2. 이제 <span class="nw">$\vec r_1(t)$을</span> 반지름 <span class="nw">$r_0$인</span> 원을 따라 시계 방향으로 회전하는 구슬의 운동 법칙, <span class="nw">$\vec r_2(t)$를</span> 같은 원을 따라 반시계 방향으로 회전하는 구슬의 운동 법칙이라고 하자. 이 두 운동에서 구슬의 속력은 서로 다르다. <span class="nw">$|\vec v_1| = \omega_1r_0$,</span> <span class="nw">$|\vec v_2| = \omega_2r_0$임을</span> 쉽게 알 수 있다. 이 운동 법칙들의 <i>중첩</i>을 다음과 같은 꼴로 쓰면</p>
+<div class="f" style="left:129.9pt;top:336.0pt"><span class="fig" data-srcpage="2" data-clip="129.9,336.0,295.3,363.0"></span></div>
+<p class="x a-w a-j" style="--b:376.3;--l:14pt">운동 방정식의 선형성과 동차성에 따라 (그리고 문제의 조건에 들어 있는 &laquo;힌트&raquo;에 따라) 이 운동 법칙도 운동 방정식을 만족한다. 이 법칙이 어떤 처음 조건에 해당하는지는 쉽게 알 수 있다. <span class="nw">$\vec r_1(0) = \vec r_2(0) \equiv \vec r_0$이고,</span> 회전 방향이 다를 때 <span class="nw">$|\vec v_1(0)| = \omega_1r_0 = \frac{\omega_1}{\omega_2}|\vec v_2(0)|$이므로</span> <span class="nw">$\vec r(0) = \vec r_0$,</span> <span class="nw">$\vec v(0) = 0$이다</span>. 따라서 이 운동 법칙은 구멍으로부터 거리 <span class="nw">$r_0$인</span> 곳에서 처음 속도 없이 놓아 준 구슬의 운동을 나타낸다! 이러한 구슬의 위치 벡터는 어느 순간에나, 길이가 <span class="nw">$\frac{\omega_2}{\omega_1+\omega_2}r_0$으로</span> 일정하며 각속도 <span class="nw">$\omega_1$로</span> 시계 방향으로 회전하는 벡터 <span class="nw">$\frac{\omega_2}{\omega_1+\omega_2}\vec r_1(t)$와,</span> 길이가 <span class="nw">$\frac{\omega_1}{\omega_1+\omega_2}r_0$으로</span> 일정하며 같은 처음 위치에서부터 각속도 <span class="nw">$\omega_2$로</span> 반시계 방향으로 회전하는 벡터 <span class="nw">$\frac{\omega_1}{\omega_1+\omega_2}\vec r_2(t)$의</span> 합으로 구할 수 있음을 알게 되었다</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="3" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-w a-j" style="--b:64.0">(그림 참고). 시각 <span class="nw">$t$에서</span> 이 두 벡터 사이의 각은 <span class="nw">$\varphi(t) = (\omega_1 + \omega_2)t$임에</span> 주목하자. 그러므로 코사인 법칙에 따라, 이 순간 구슬에서 구멍까지의 거리는 다음 식을 만족한다.</p>
+<div class="f" style="left:27.3pt;top:94.5pt"><span class="fig" data-srcpage="3" data-clip="27.3,94.5,397.9,127.4"></span></div>
+<p class="x a-w" style="--b:141.7">그러므로</p>
+<div class="f" style="left:98.0pt;top:143.8pt"><span class="fig" data-srcpage="3" data-clip="98.0,143.8,327.2,171.9"></span></div>
+<p class="x a-w a-j" style="--b:180.2;margin-top:-1.33pt">따라서 구슬에서 평형 위치까지의 거리가 변하는 각진동수는 <span class="nw">$\omega_1 + \omega_2 = 2\sqrt{\omega_0^2 + \Omega^2}$이며,</span> 거리는 다음 최솟값을</p>
+<div class="f" style="left:138.7pt;top:203.0pt"><span class="fig" data-srcpage="3" data-clip="138.7,203.0,286.0,232.9"></span></div>
+<p class="x i a-w a-j" style="--b:251.7;--l:13pt">시각 <span class="nw">$t_n = \frac{\pi}{\sqrt{\omega^2 + \Omega^2}}\left(n + \frac{1}{2}\right)$</span> (여기서 <span class="nw">$n = 0, 1, 2, \ldots$)에</span> 갖는다. <span class="nw">$r_{\min}$을</span> 구하기 위해 반드시 거리 <span class="nw">$r(t)$의</span> 변화 법칙을 조사할 필요는 없다. 구멍에서 구슬까지의 거리는 우리 중첩의 &laquo;성분&raquo; 벡터들이 서로 반대 방향을 향할 때 최소라는 것을 이해하면 충분하다. 그러면 <span class="nw">$r_{\min}$은</span> 두 벡터의 크기의 차와 같음이 분명하다.</p>
+<p class="x i a-w a-j" style="--b:332.4;--l:13pt">3. <span class="nw">$r(t)$의</span> 식으로부터 구슬에서 구멍까지의 최대 거리는 처음 거리 <span class="nw">$r_{\max} = r_0$과</span> 같고, 이 거리는 시각 <span class="nw">$t'_n = \frac{\pi}{\sqrt{\omega_0^2 + \Omega^2}}n$</span> (여기서 <span class="nw">$n = 0, 1, 2, \ldots$)에</span> 이루어짐을 알 수 있다. 보다시피 놓아 준 뒤 처음으로 이렇게 되는 시각은 다음과 같다.</p>
+<div class="f" style="left:179.2pt;top:394.3pt"><span class="fig" data-srcpage="3" data-clip="179.2,394.3,246.2,424.8"></span></div>
+<p class="x i a-w a-j" style="--b:433.1;--l:13pt">앞 문항에서와 마찬가지로, <span class="nw">$r(t)$를</span> 구하지 않고도 이 답을 얻을 수 있다. 운동을 머릿속에 그려 보는 것으로 충분하다. 그러면 서로 반대 방향으로 회전하는 중첩의 &laquo;성분&raquo; 벡터들이 만날 때 거리가 최대이며, <span class="nw">$\tau = \frac{2\pi}{\omega_1 + \omega_2} = \frac{\pi}{\sqrt{\omega_0^2 + \Omega^2}}$임이</span> 분명하다.</p>
+<p class="x i a-w a-j" style="--b:497.1;margin-top:-1.0pt">4. 이러한 매개변수 비에서는 <span class="nw">$\Omega^2 = \omega_0^2/8$이므로</span> <span class="nw">$\omega_1 = \omega\cdot\sqrt2$,</span> <span class="nw">$\omega_2 = \omega_0/\sqrt2$이다</span>. 따라서 각속도의 비는 <span class="nw">$\omega_1 : \omega_2 = 2 : 1$이다</span>. 즉 전체 운동은 주기적이며 궤적은 닫힌 곡선이 된다. 이 경우</p>
+<div class="f" style="left:159.6pt;top:527.1pt"><span class="fig" data-srcpage="3" data-clip="159.6,527.1,265.6,552.6"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="4" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-w a-j" style="--b:64.0">이고, 더해서 <span class="nw">$\vec r(t)$를</span> 이루는 두 벡터의 길이는 <span class="nw">$r_0/3$과</span> <span class="nw">$2r_0/3$이며,</span> 거리의 변화 법칙은 다음과 같다.</p>
+<div class="f" style="left:148.4pt;top:78.3pt"><span class="fig" data-srcpage="4" data-clip="148.4,78.3,276.8,104.7"></span></div>
+<p class="x a-w a-j" style="--b:115.7">운동의 주기는 두 성분 운동의 주기들의 최소공배수이며, 이 경우 그것은 더 작은 진동수 <span class="nw">$\omega_2$에</span> 해당하는 주기와 같음이 분명하다.</p>
+<div class="f" style="left:112.0pt;top:149.7pt"><span class="fig" data-srcpage="4" data-clip="112.0,149.7,313.0,350.8"></span></div>
+<p class="x i a-w a-j" style="--b:372.7">그러므로 놓아 준 뒤 구슬이 처음으로 출발점에 다시 오는 것은 다음 시간이 지난 뒤이다.</p>
+<div class="f" style="left:149.5pt;top:390.2pt"><span class="fig" data-srcpage="4" data-clip="149.5,390.2,275.9,424.9"></span></div>
+<p class="x i a-w a-j" style="--b:434.7">구멍으로부터의 거리가 변하는 주기는 다음과 같다.</p>
+<div class="f" style="left:146.6pt;top:444.6pt"><span class="fig" data-srcpage="4" data-clip="146.6,444.6,278.6,472.4"></span></div>
+<p class="x a-w a-j" style="--b:484.7">그러므로 운동의 한 주기 동안 구슬은 최대 거리 <span class="nw">$r_0$에</span> 세 번, 최소 거리 <span class="nw">$r_0/3$에</span> 세 번 이른다. 따라서 궤적은 구멍의 축 둘레를 &laquo;한 바퀴 도는&raquo; 동안 반지름 <span class="nw">$r_0$인</span> 원에서 반지름 <span class="nw">$r_0/3$인</span> 원까지 갔다가 되돌아오기를 세 번 하며, 큰 원과 만나는 점 근처에서는 구슬이 반지름을 따라 움직이고(궤적이 반지름에 접한다), 작은 원과 만나는 점에서는 구슬의 반지름 방향 속도가</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="5" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-w a-j" style="--b:64.0">0이 되지만 각속도는 0이 아니다. 즉 구슬은 반지름에 수직으로 움직이며, 궤적은 만나는 점에서 작은 원에 접한다. 이러한 정보로 궤적의 모양을 꽤 정확하게 그릴 수 있다(그림 참고). 궤적을 조사하는 다른 방법은 구슬의 운동 법칙을 직교 좌표 <span class="nw">$(x, y)$로</span> 쓰는 것이다. 좌표의 원점을 구멍의 축에 두고, <span class="nw">$x$축은</span> 구슬의 처음 위치를 지나도록 잡는 것이 편리하다. 운동 법칙을 이 축들에 사영하면 다음을 얻는다.</p>
+<div class="f" style="left:129.5pt;top:145.4pt"><span class="fig" data-srcpage="5" data-clip="129.5,145.4,289.5,184.2"></span></div>
+<p class="x a-w a-j" style="--b:199.0;--l:12.5pt">그러면 몇 가지 특징적인 <span class="nw">$\omega_2t$</span> 값을 골라 궤적을 &laquo;점을 찍어 가며&raquo; 그릴 수 있다. 그런데 이 경우에도 먼저 구슬이 구멍으로부터 최대 거리와 최소 거리에 있는 순간들, 즉 <span class="nw">$\omega_2t = 0, \frac{\pi}{3}, \frac{2\pi}{3}, \pi, \frac{4\pi}{3}, \frac{5\pi}{3}$에</span> 해당하는 점들의 위치를 그리는 것이 편리하다.</p>
+<p class="x h" style="--b:263.0">문제 11-T2. 납작한 수은 방울</p>
+<p class="x i a-w a-j" style="--b:277.4">1. 문제의 조건에 있는 부등식으로부터 수은의 윗면은 사실상 평평하고, 수은 &laquo;방울&raquo;의 수평 반지름은 그 두께보다 훨씬 크다고 볼 수 있다. 그러므로 문제를 2차원 문제로 다루어 수은 층의 두께 <span class="nw">$h$를</span> 구할 수 있다. 수은이 원통 밑면의 넓이 전체를 채웠지만 원통의 옆면으로는 넘어가지 않았다고 하자.</p>
+<div class="f" style="left:258.2pt;top:356.4pt"><span class="fig" data-srcpage="5" data-clip="258.2,356.4,397.1,435.6"></span></div>
+<p class="x ov" style="--b:395.4;left:353.9pt;--fs:6.97pt;--l:7pt">p</p>
+<p class="x i a-j wn" style="--b:349.1;width:216.8pt">폭이 <span class="nw">$L$인</span> 액체 층의 한 부분과, 수평한 <span class="nw">$x$축</span> 방향으로 이 부분의 평형 조건을 살펴보자(이 부분에 수평 방향으로 작용하는 힘들은 그림에 나타내었다).</p>
+<p class="x nw" style="--b:417.1;width:236pt;--fs:9.4pt">$F_x = F\cos\theta{-}F{+}p_{\mathrm{avg}}Lh = \sigma L\cos\theta{-}\sigma L{+}p_{\mathrm{avg}}Lh = 0,$</p>
+<p class="x a-j" style="--b:437.4;width:216.8pt">여기서 <span class="nw">$p_{\mathrm{avg}}$는</span> 높이에 대해 평균한 수은의 정수압으로, <span class="nw">$p_{\mathrm{avg}} = \rho gh/2$이다</span>. 그러면 다음을 얻는다.</p>
+<div class="f" style="left:106.3pt;top:460.6pt"><span class="fig" data-srcpage="5" data-clip="106.3,460.6,319.9,490.5"></span></div>
+<p class="x a-w a-j" style="--b:508.0">수은이 원통 밑면 전체를 채울 때, 수은의 부피는 다음과 같다.</p>
+<div class="f" style="left:148.1pt;top:518.3pt"><span class="fig" data-srcpage="5" data-clip="148.1,518.3,277.1,548.2"></span></div>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="6" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i a-w a-j" style="--b:64.0">2. 수은 위에 질량 <span class="nw">$m$인</span> 원통을 올려놓으면, 액체 속 모든 점에서 정수압이 <span class="nw">$mg/S_{\mathrm c}$만큼</span> 커진다. 여기서 <span class="nw">$S_{\mathrm c}$는</span> 수은과 그 위에 올려놓은 원통의 접촉 넓이이다. 이 경우 수은 층 속의 평균 정수압은 다음과 같다.</p>
+<p class="x c a-w a-d" style="--b:128.6;--a:14.6pt">$p_{\mathrm{avg}} = \dfrac{\rho gh}{2} + \dfrac{mg}{S_{\mathrm c}}.$</p>
+<p class="x i a-j wn" style="--b:154.7;width:188.5pt">단위 폭의 수은 부분에 작용하는 힘들의 <span class="nw">$x$축</span> 방향 평형 조건(그림 참고)은 다음과 같다.</p>
+<div class="f" style="left:244.1pt;top:159.7pt"><span class="fig" data-srcpage="6" data-clip="244.1,159.7,382.9,241.9"></span></div>
+<p class="x ov" style="--b:201.8;left:339.7pt;--fs:6.97pt;--l:7pt">p</p>
+<p class="x c a-d" style="--b:219.0;--a:14.6pt;width:188.5pt">$\sigma(1 - \cos\theta) = \dfrac{\rho gh^2}{2} + \dfrac{mgh}{S_{\mathrm c}}.$</p>
+<p class="x wr a-w a-j wn" style="--b:245.8;--fw:180pt;--fh:10.9pt"><span class="nw">$h = V/S_{\mathrm c}$임에</span> 주목하자. 수은의 윗면은 평평하다고 볼 수 있기 때문이다(원통을 올려놓은 뒤에는 이 근사가 더욱 잘 맞는다). <span class="nw">$h$에</span> 대한 식을 대입하면 다음을 얻는다.</p>
+<p class="x c a-w a-d" style="--b:300.4;--a:14.6pt">$\sigma(1 - \cos\theta) = \dfrac{\rho gV^2}{2S_{\mathrm c}^2} + \dfrac{mgV}{S_{\mathrm c}^2}.$</p>
+<p class="x a-w a-j" style="--b:323.5"><span class="nw">$S_{\mathrm c} = S$일</span> 때 수은이 두 원통 사이의 틈을 완전히 채우므로, 다음을 얻는다.</p>
+<div class="f" style="left:152.1pt;top:334.7pt"><span class="fig" data-srcpage="6" data-clip="152.1,334.7,273.1,362.2"></span></div>
+<p class="x i a-w a-j" style="--b:378.9"><i>참고: 수은의 압력에 대한 식에서 <span class="nw">$\rho gh \ll mg/S$라고</span> 볼 수 없다는 점에 주의하자. 이 두 양은 같은 크기 정도일 수 있기 때문이다!</i></p>
+<p class="x i a-w a-j" style="--b:414.7">3. 수은의 경계가 아래 원통의 밑면에서 옆면으로 넘어가는 과정에서 수은 표면의 접선 방향은 <span class="nw">$90^\circ$만큼</span> 돌아간다. 정수압에 의한 힘이 표면 장력의 수평 성분이 가질 수 있는 최댓값보다 커지면 수은이 두 원통 사이의 틈에서 흘러나오기 시작한다. 이론적으로 이 최댓값은 접선이 수평이 되는 위치에 해당하지만, 주어진 접촉각 <span class="nw">$\theta$에서는</span> 이 위치가 실현될 수 없을 수도 있다.</p>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="7" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i a-w" style="--b:64.0">두 경우를 살펴보자.</p>
+<p class="x i a-w" style="--b:76.0"><b>첫 번째 경우:</b> <span class="nw">$\theta &lt; \pi/2$.</span></p>
+<p class="x i a-j wn" style="--b:88.0;width:216.8pt">이 경우 액체 표면의 접선은 결코 수평이 되지 않으므로, 표면 장력의 수평 성분은 접선이 원통의 옆면과 각 <span class="nw">$\theta$를</span> 이룰 때 최대가 된다(그림 참고). 그러면</p>
+<div class="f" style="left:283.3pt;top:92.9pt"><span class="fig" data-srcpage="7" data-clip="283.3,92.9,368.7,173.3"></span></div>
+<p class="x ov" style="--b:135.0;left:325.5pt;--fs:6.97pt;--l:7pt">p</p>
+<div class="f" style="left:163.9pt;top:162.9pt"><span class="fig" data-srcpage="7" data-clip="163.9,162.9,261.3,176.3"></span></div>
+<p class="x a-w a-j" style="--b:189.6">평형 조건을 쓰면 다음을 얻는다.</p>
+<div class="f" style="left:146.8pt;top:200.8pt"><span class="fig" data-srcpage="7" data-clip="146.8,200.8,278.4,228.3"></span></div>
+<p class="x a-w" style="--b:240.2">따라서</p>
+<div class="f" style="left:152.6pt;top:241.5pt"><span class="fig" data-srcpage="7" data-clip="152.6,241.5,272.6,269.0"></span></div>
+<p class="x i a-w" style="--b:282.2"><b>두 번째 경우:</b> <span class="nw">$\theta \geqslant \pi/2$.</span></p>
+<p class="x i a-j wn" style="--b:294.2;width:216.8pt">이 경우 액체 표면의 접선은 수평이 될 수 있다(그림 참고). 그러면 표면 장력의 수평 성분의 최댓값은 다음과 같다.</p>
+<div class="f" style="left:107.4pt;top:345.2pt"><span class="fig" data-srcpage="7" data-clip="107.4,345.2,166.1,358.6"></span></div>
+<div class="f" style="left:267.7pt;top:299.1pt"><span class="fig" data-srcpage="7" data-clip="267.7,299.1,371.7,374.9"></span></div>
+<p class="x ov" style="--b:341.2;left:328.5pt;--fs:6.97pt;--l:7pt">p</p>
+<p class="x a-w a-j" style="--b:371.9">이 경우 평형 조건을 쓰면 다음을 얻는다.</p>
+<div class="f" style="left:166.2pt;top:383.1pt"><span class="fig" data-srcpage="7" data-clip="166.2,383.1,259.0,410.6"></span></div>
+<p class="x a-w" style="--b:422.5">따라서</p>
+<div class="f" style="left:172.0pt;top:423.8pt"><span class="fig" data-srcpage="7" data-clip="172.0,423.8,253.2,451.3"></span></div>
+<p class="x a-d" style="--b:487.3;--a:28.3pt;left:108.2pt;width:260pt">$m_2 = \begin{cases} \dfrac{\sigma S^2(1 + \sin\theta)}{gV} - \dfrac{\rho V}{2}, &amp; \theta &lt; \pi/2\text{일 때},\\[8pt] \dfrac{2\sigma S^2}{gV} - \dfrac{\rho V}{2}, &amp; \theta \geqslant \pi/2\text{일 때}.\end{cases}$</p>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="8" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x h" style="--b:64.0">문제 11-T3. 원뿔대</p>
+<p class="x i a-w" style="--b:79.1">1. <b>첫 번째 방법:</b></p>
+<p class="x i a-w a-j" style="--b:91.0">계의 축대칭성으로부터, 원뿔의 축 위의 모든 점에서 전기장 세기 벡터는 축에 평행하다. 원뿔을 거의 평평한 똑같은 사다리꼴 <span class="nw">$2N$개로</span> 잘랐다고 생각하자. <span class="nw">$N$이</span> 커지면 휘어진 사다리꼴 조각의 넓이는 평평한 사다리꼴의 넓이에 가까워지므로, <span class="nw">$N$이</span> 충분히 크면 조각들을 평평하다고 볼 수 있다.</p>
+<div class="f" style="left:148.6pt;top:153.7pt"><span class="fig" data-srcpage="8" data-clip="148.6,153.7,280.0,331.2"></span></div>
+<p class="x i a-w a-j" style="--b:353.0">사다리꼴의 긴 밑변 <span class="nw">$\Delta c$는</span> 반지름이 가장 큰 단면 원의 중심각 <span class="nw">$\Delta\beta$로,</span> 또는 사다리꼴을 연장하여 얻는 삼각형의 꼭지각 <span class="nw">$\Delta\phi$로</span> <span class="nw">$\Delta c = l\Delta\beta = 2l\Delta\phi$와</span> 같이 나타낼 수 있다. <span class="nw">$\Delta\beta$가</span> 충분히 작으면 <span class="nw">$\Delta c \ll l$이</span> 성립하므로, 1차 근사에서 각 사다리꼴을 어떤 유효 선전하 밀도 <span class="nw">$\lambda(x)$를</span> 갖는 가는 막대로 나타낼 수 있다.</p>
+<div class="f" style="left:153.8pt;top:425.9pt"><span class="fig" data-srcpage="8" data-clip="153.8,425.9,274.7,490.2"></span></div>
+<p class="x i a-w a-j" style="--b:511.4"><span class="nw">$\lambda(x)$를</span> 구하자. 사다리꼴을 연장하여 얻는 삼각형의 작은 넓이에 있는 전하를 나타내면 다음과 같다.</p>
+<div class="f" style="left:116.7pt;top:535.7pt"><span class="fig" data-srcpage="8" data-clip="116.7,535.7,308.5,547.6"></span></div>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="9" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x ov" style="--b:64.0;left:48.3pt">그러면 다음을 얻는다.</p>
+<div class="f" style="left:127.3pt;top:64.8pt"><span class="fig" data-srcpage="9" data-clip="127.3,64.8,297.9,90.3"></span></div>
+<p class="x a-w a-j" style="--b:100.8">길이가 <span class="nw">$l$이고</span> 선전하 밀도 <span class="nw">$\lambda$로</span> 균일하게 대전된 가는 유전체 막대를 생각하자. 막대를 포함하는 직선 위에서 막대로부터 거리 <span class="nw">$l$인</span> 점 O에서 전기장의 세기를 구하자. 이는 퍼텐셜 차를 이용하는 방법으로 구한다. 점 O에서 거리 <span class="nw">$\Delta x \ll l$만큼</span> 옮겨 가면 다음을 얻는다.</p>
+<div class="f" style="left:120.9pt;top:147.9pt"><span class="fig" data-srcpage="9" data-clip="120.9,147.9,303.3,174.5"></span></div>
+<p class="x a-w a-j" style="--b:190.5">그러면 축 방향으로의 사영을 고려하여 <span class="nw">$\Delta\beta$를</span> 0부터 <span class="nw">$2\pi$까지</span> 더하면, 합성 전기장 세기에 원뿔의 옆면이 기여하는 몫을 얻는다.</p>
+<div class="f" style="left:178.3pt;top:206.9pt"><span class="fig" data-srcpage="9" data-clip="178.3,206.9,245.9,241.6"></span></div>
+<p class="x i a-w a-j" style="--b:256.5">균일하게 대전된 평평한 면이 만드는 전기장의 법선 성분은 공간의 임의의 점에서, 그 점에서 면을 바라본 입체각으로 나타낼 수 있다. 평평한 층에 면전하 밀도 <span class="nw">$\sigma$로</span> 전하가 균일하게 분포하면, 점 <span class="nw">$A$에서</span> 층에 수직인 전기장 성분이 다음과 같음을 보이자.</p>
+<div class="f" style="left:187.9pt;top:316.4pt"><span class="fig" data-srcpage="9" data-clip="187.9,316.4,237.5,343.5"></span></div>
+<p class="x a-w a-j" style="--b:358.3">여기서 <span class="nw">$\Omega_A$는</span> 점 <span class="nw">$A$에서</span> 평평한 층을 바라본 입체각이다. <i>증명:</i> 넓이가 <span class="nw">$dS$인</span> 평평한 층의 요소를 생각하자. <span class="nw">$\vec e_n$을</span> 층의 표면에 수직이고 점 <span class="nw">$A$를</span> 향하는 단위 법선 벡터, <span class="nw">$\vec r$를</span> 층의 요소에서 점 <span class="nw">$A$까지</span> 그은 위치 벡터라고 하자. 그러면 층의 요소가 만드는 전기장의 법선 성분은 다음과 같다.</p>
+<div class="f" style="left:138.6pt;top:419.3pt"><span class="fig" data-srcpage="9" data-clip="138.6,419.3,286.8,446.6"></span></div>
+<p class="x a-w a-j" style="--b:464.3;--l:13pt">벡터 <span class="nw">$\vec r$와</span> <span class="nw">$d\vec S$의</span> 방향을 반대로 바꾸면, 양 <span class="nw">$\left(\vec r\cdot d\vec S\right)/r^3$은</span> 정의에 따라 점 <span class="nw">$A$에서</span> 평평한 층의 요소를 바라본 입체각 요소 <span class="nw">$d\Omega_A$가</span> 된다. 따라서</p>
+<div class="f" style="left:151.5pt;top:502.4pt"><span class="fig" data-srcpage="9" data-clip="151.5,502.4,273.9,529.5"></span></div>
+<p class="x a-w" style="--b:544.5">이로써 증명이 끝났다.</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="10" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i a-w a-j" style="--b:64.0">두 밑면은 점 O에서 같은 입체각으로 보이고 <span class="nw">$\sigma_1 = -\sigma_2$이므로,</span> 면에 수직인 전기장 세기를 입체각으로 나타내는 정리로부터 합성 전기장 세기에 두 밑면이 기여하는 몫의 합은 다음과 같다.</p>
+<div class="f" style="left:188.7pt;top:101.3pt"><span class="fig" data-srcpage="10" data-clip="188.7,101.3,236.5,116.8"></span></div>
+<p class="x i a-w" style="--b:153.7">그러므로</p>
+<div class="f" style="left:182.8pt;top:158.5pt"><span class="fig" data-srcpage="10" data-clip="182.8,158.5,241.4,193.3"></span></div>
+<p class="x i a-w" style="--b:204.7;margin-top:-1.1pt"><b>두 번째 방법:</b></p>
+<p class="x i a-w" style="--b:216.6">옆면을 고리 모양의 띠로 나누어 적분하자.</p>
+<div class="f" style="left:85.0pt;top:227.0pt"><span class="fig" data-srcpage="10" data-clip="85.0,227.0,339.2,268.5"></span></div>
+<p class="x i a-w a-j" style="--b:284.7"><span class="nw">$y$를</span> <span class="nw">$\sigma_0$으로</span> 대전된 원판의 중심에서 그 축을 따라 잰 거리라고 하자. 원판의 반지름은 <span class="nw">$R$이다</span>. 반지름에 대해 적분하자.</p>
+<div class="f" style="left:88.8pt;top:308.4pt"><span class="fig" data-srcpage="10" data-clip="88.8,308.4,336.4,348.2"></span></div>
+<p class="x i a-w" style="--b:364.4">이 경우</p>
+<div class="f" style="left:166.5pt;top:359.2pt"><span class="fig" data-srcpage="10" data-clip="166.5,359.2,257.7,411.1"></span></div>
+<p class="x i a-w a-j" style="--b:424.4">그러면 <span class="nw">$\sigma_1 = -\sigma_2$이므로</span> 두 밑면에 의한 전기장 세기의 합은 다음과 같다.</p>
+<div class="f" style="left:188.7pt;top:435.7pt"><span class="fig" data-srcpage="10" data-clip="188.7,435.7,236.5,451.3"></span></div>
+<div class="f" style="left:182.8pt;top:461.1pt"><span class="fig" data-srcpage="10" data-clip="182.8,461.1,241.4,495.8"></span></div>
+<p class="x i a-w" style="--b:507.2">2. <b>첫 번째 방법:</b></p>
+<p class="x i a-w a-j" style="--b:519.2">마주 보는 막대 한 쌍을 생각하자. 이 두 막대는 밑변이 <span class="nw">$l$,</span> <span class="nw">$2l$이고</span> 옆변이 <span class="nw">$l$인</span> 등변사다리꼴을 이룬다.</p>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="11" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i a-w a-j" style="--b:64.0">균일하게 대전된 막대 BC에 대하여, 막대 위에 있지 않은 임의의 점 W에서 전기장 세기는 각 <span class="nw">$\angle\mathrm{BWC}$의</span> 이등분선을 따라 향함에 주목하자.</p>
+<p class="x i a-w a-j" style="--b:99.9"><i>증명:</i> 막대의 길이 <span class="nw">$\Delta l$인</span> 작은 요소를 생각하자. 이 요소가 점 <span class="nw">$W$에</span> 만드는 전기장 세기는 점전하 <span class="nw">$\Delta q = \lambda\Delta l$이</span> 만드는 전기장 세기와 같다.</p>
+<div class="f" style="left:128.3pt;top:138.0pt"><span class="fig" data-srcpage="11" data-clip="128.3,138.0,293.5,229.9"></span></div>
+<p class="x ov" style="--b:251.0;left:51.6pt">쿨롱 법칙에 따라</p>
+<div class="f" style="left:167.0pt;top:262.0pt"><span class="fig" data-srcpage="11" data-clip="167.0,262.0,257.2,288.8"></span></div>
+<p class="x ov" style="--b:297.9;left:51.6pt">다음에 주목하자.</p>
+<div class="f" style="left:168.6pt;top:309.0pt"><span class="fig" data-srcpage="11" data-clip="168.6,309.0,257.4,334.5"></span></div>
+<p class="x ov" style="--b:343.6;left:51.6pt">그러면 <span class="nw">$\Delta E_W$의</span> 식은 다음과 같이 된다.</p>
+<div class="f" style="left:176.2pt;top:354.7pt"><span class="fig" data-srcpage="11" data-clip="176.2,354.7,248.7,380.2"></span></div>
+<p class="x a-w a-j" style="--b:389.1;text-indent:24.7pt">이는 선전하 밀도 <span class="nw">$\lambda$로</span> 대전된 반지름 <span class="nw">$h$인</span> 원호에서 길이가 <span class="nw">$h\Delta\theta$인</span> 작은 요소가 만드는 전기장 세기와 정확히 같다. 원호의 경우 대칭성에 따라 점 <span class="nw">$W$에서</span> 합성 전기장 세기는 중심각의 이등분선을 따라 향하므로, 막대에 대해서도 같은 결론이 성립한다. 이로써 증명이 끝났다.</p>
+<p class="x i a-w a-j" style="--b:448.8;margin-top:-1.4pt">따라서 사다리꼴의 대각선의 교점 F에서 옆변이 만드는 전기장 세기 <span class="nw">$\vec E_{\mathrm F}$는</span> 각 <span class="nw">$\theta$의</span> 이등분선을 따라 향한다.</p>
+<p class="x i a-w a-j" style="--b:472.7">원뿔대의 옆면이 만드는 전기장 세기의 합이 0이 되는 <span class="nw">점 $\mathrm{F}'$이</span> 점 F와 일치함에 주목하자.</p>
+<p class="x i a-w" style="--b:496.7">실제로 그러하다.</p>
+<p class="x i a-w a-j" style="--b:508.6">각들 사이의 관계를 살펴보자. <span class="nw">$\gamma_1 = \gamma_2$</span> &ndash; 맞꼭지각이므로, <span class="nw">$\gamma_2 = \gamma_3$</span> &ndash; 밑면의 삼각형이 이등변 삼각형이므로, <span class="nw">$\varphi_1 + \gamma_1 = \pi/2$,</span> <span class="nw">$\varphi_2 + \gamma_3 = \pi/2$</span> &ndash; 옆변이 만드는 전기장 세기는 원뿔의 높이에 수직이어야 하므로.</p>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="12" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:96.6pt;top:57.0pt"><span class="fig" data-srcpage="12" data-clip="96.6,57.0,328.6,284.4"></span></div>
+<p class="x i a-w a-j" style="--b:315.8">따라서 <span class="nw">$\varphi_1 = \varphi_2$를</span> 얻는다. 즉 각 <span class="nw">$\theta$의</span> 이등분선은 원뿔의 높이에 수직이다. 대각선의 교점에서 옆변이 만드는 전기장 세기는 원뿔의 높이에 수직이므로, 점 F와 <span class="nw">$\mathrm{F}'$은</span> 일치한다.</p>
+<p class="x i a-w a-j" style="--b:351.7">면에 수직인 전기장 세기를 입체각으로 나타내는 정리에 따라, <span class="nw">$\sigma_1 = \sigma_2$이므로</span> 사다리꼴의 대각선의 교점 F에서 원뿔의 두 밑면이 만드는 전기장 세기의 합은 <span class="nw">$\sigma_0$의</span> 값에 관계없이 0이다.</p>
+<p class="x i a-w" style="--b:399.5">삼각형의 닮음으로부터 다음을 얻는다.</p>
+<div class="f" style="left:194.0pt;top:409.4pt"><span class="fig" data-srcpage="12" data-clip="194.0,409.4,231.2,435.8"></span></div>
+<div class="f" style="left:177.6pt;top:440.1pt"><span class="fig" data-srcpage="12" data-clip="177.6,440.1,247.5,466.6"></span></div>
+<p class="x a-w" style="--b:477.2">따라서</p>
+<div class="f" style="left:170.0pt;top:477.8pt"><span class="fig" data-srcpage="12" data-clip="170.0,477.8,255.2,504.8"></span></div>
+<p class="x ov" style="--b:521.6"><span class="nw">$r_1 = \frac{l}{2}$,</span> <span class="nw">$r_2 = l$일</span> 때 다음을 얻는다.</p>
+<div class="f" style="left:197.3pt;top:527.1pt"><span class="fig" data-srcpage="12" data-clip="197.3,527.1,227.7,552.6"></span></div>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="13" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:69.5pt;top:57.0pt"><span class="fig" data-srcpage="13" data-clip="69.5,57.0,355.7,318.4"></span></div>
+<div class="f" style="left:69.4pt;top:328.1pt"><span class="fig" data-srcpage="13" data-clip="69.4,328.1,355.8,476.5"></span></div>
+<p class="x a-w" style="--b:507.2">원뿔에서</p>
+<div class="f" style="left:184.2pt;top:505.6pt"><span class="fig" data-srcpage="13" data-clip="184.2,505.6,240.0,531.2"></span></div>
+<p class="x a-w" style="--b:544.2">따라서 다음을 얻는다.</p>
+</div>
+
+
+<!-- booklet page 14 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="14" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:184pt;top:57pt"><span class="fig" data-srcpage="14" data-clip="184,57,241,91"></span></div>
+<p class="x i" style="--b:100.6"><b>두 번째 방법:</b></p>
+<p class="x i" style="--b:112.6">점 O를 원점으로 하고 대칭축 방향을 향하는 좌표축 <span class="nw">$z$를</span> 도입하자. 원뿔대의 옆면을 작은 고리들로 나누고, 전기장의 세기를 구하기 위해 고리 하나의 기여를 좌표 <span class="nw">$x$의</span> 변화 범위, 즉 <span class="nw">$l$부터</span> <span class="nw">$2l$까지</span> 적분하자.</p>
+<div class="f" style="left:92pt;top:160pt"><span class="fig" data-srcpage="14" data-clip="92,160,333,248"></span></div>
+<p class="x" style="--b:263.6">새로운 변수를 도입하자.</p>
+<div class="f" style="left:183pt;top:268pt"><span class="fig" data-srcpage="14" data-clip="183,268,242,302"></span></div>
+<p class="x i" style="--b:312.1">그러면 식은 다음과 같은 꼴이 된다.</p>
+<div class="f" style="left:52pt;top:321pt"><span class="fig" data-srcpage="14" data-clip="52,321,373,373"></span></div>
+<p class="x" style="--b:387.5">이 적분들을 계산할 때 오일러 치환이나 체비쇼프 치환, 또는 삼각 치환을 쓸 수 있지만, 원시 함수는 쉽게 짐작할 수 있다.</p>
+<div class="f" style="left:60pt;top:419pt"><span class="fig" data-srcpage="14" data-clip="60,419,365,458"></span></div>
+<p class="x" style="--b:475.0">적분 한계를 대입하고 통분하면 다음을 얻는다.</p>
+<div class="f" style="left:83pt;top:480pt"><span class="fig" data-srcpage="14" data-clip="83,480,342,517"></span></div>
+<p class="x" style="--b:532.5">다음 조건으로부터</p>
+<div class="f" style="left:181pt;top:534pt"><span class="fig" data-srcpage="14" data-clip="181,534,245,548"></span></div>
+</div>
+
+<!-- booklet page 15 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="15" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">유일한 근을 얻는다.</p>
+<div class="f" style="left:190pt;top:74pt"><span class="fig" data-srcpage="15" data-clip="190,74,236,101"></span></div>
+<p class="x" style="--b:118.2">이제 <span class="nw">$E^{bases}(z)$에</span> 대한 식을 구하자.</p>
+<p class="x i" style="--b:130.2"><span class="nw">$\sigma_0$으로</span> 대전된 원판의 축 위에서 원판 중심으로부터의 거리를 <span class="nw">$y$라</span> 하자. 원판의 반지름은 <span class="nw">$R$이다.</span> 반지름에 대해 적분하자.</p>
+<div class="f" style="left:89pt;top:154pt"><span class="fig" data-srcpage="15" data-clip="89,154,336,193"></span></div>
+<p class="x" style="--b:209.3">여기서 전기장의 세기는 <span class="nw">$y$의</span> 양의 방향을 향할 때 양수이다.</p>
+<p class="x i" style="--b:233.2">이 경우에는</p>
+<div class="f" style="left:160pt;top:228pt"><span class="fig" data-srcpage="15" data-clip="160,228,265,280"></span></div>
+<p class="x" style="--b:292.8">밑면들이 축 위의 전기장 세기에 주는 기여는 다음과 같다.</p>
+<div class="f" style="left:81pt;top:299pt"><span class="fig" data-srcpage="15" data-clip="81,299,345,336"></span></div>
+<p class="x" style="--b:353.1">그러면 다음 조건으로부터</p>
+<div class="f" style="left:180pt;top:354pt"><span class="fig" data-srcpage="15" data-clip="180,354,245,370"></span></div>
+<p class="x" style="--b:382.8">유일한 근을 얻는다.</p>
+<div class="f" style="left:180pt;top:383pt"><span class="fig" data-srcpage="15" data-clip="180,383,245,410"></span></div>
+<p class="x" style="--b:423.5"><span class="nw">$E^{sides}(z_0) = E^{bases}(z_0) = 0$이므로</span> <span class="nw">$z_0$이</span> 구하는 평형 위치이다.</p>
+<div class="f" style="left:184pt;top:428pt"><span class="fig" data-srcpage="15" data-clip="184,428,241,462"></span></div>
+<p class="x i" style="--b:472.7"><b>3. 첫 번째 방법:</b></p>
+<p class="x i" style="--b:484.7">시험 전하가 평형 위치 F로부터 거리 <span class="nw">$z$만큼</span> 떨어진 점 G로 옮겨졌다고 하자. 여기서 <span class="nw">$z \ll l$이다.</span></p>
+<p class="x i" style="--b:508.6">점 G에서 원뿔의 옆면이 전기장의 세기 <span class="nw">$E_\mathrm{G}$에</span> 주는 기여를 계산하자.</p>
+<p class="x i" style="--b:532.5">점 G가 새로 생긴 사다리꼴의 평형 위치가 되도록 사다리꼴의 윗부분을 잘라 내자. 그러면 시험 전하에는</p>
+</div>
+
+<!-- booklet page 16 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="16" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:70pt;top:57pt"><span class="fig" data-srcpage="16" data-clip="70,57,355,329"></span></div>
+<p class="x" style="--b:358.5">잘라 낸 고리(그림에서 파란색으로 표시) 쪽에서 힘이 작용하며, 이 힘은 복원력이 된다. 그러므로 평형 위치는 안정하다.</p>
+<div class="f" style="left:181pt;top:385pt"><span class="fig" data-srcpage="16" data-clip="181,385,243,398"></span></div>
+<div class="f" style="left:148pt;top:403pt"><span class="fig" data-srcpage="16" data-clip="148,403,277,416"></span></div>
+<p class="x i" style="--b:428.9"><span class="nw">$(*)$를</span> 이용하면 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:184pt;top:439pt"><span class="fig" data-srcpage="16" data-clip="184,439,239,468"></span></div>
+<p class="x i" style="--b:481.5">따라서</p>
+<div class="f" style="left:182pt;top:480pt"><span class="fig" data-srcpage="16" data-clip="182,480,242,507"></span></div>
+<div class="f" style="left:181pt;top:509pt"><span class="fig" data-srcpage="16" data-clip="181,509,243,524"></span></div>
+<div class="f" style="left:165pt;top:527pt"><span class="fig" data-srcpage="16" data-clip="165,527,260,553"></span></div>
+</div>
+
+<!-- booklet page 17 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="17" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:117pt;top:53pt"><span class="fig" data-srcpage="17" data-clip="117,53,308,80"></span></div>
+<p class="x" style="--b:88.7">여기서</p>
+<div class="f" style="left:191pt;top:83pt"><span class="fig" data-srcpage="17" data-clip="191,83,234,117"></span></div>
+<p class="x" style="--b:124.9"><span class="nw">$\Delta\beta$를</span> <span class="nw">$0$부터</span> <span class="nw">$2\pi$까지</span> 더하자.</p>
+<div class="f" style="left:168pt;top:125pt"><span class="fig" data-srcpage="17" data-clip="168,125,257,160"></span></div>
+<p class="x i" style="--b:170.2">점 G에서 원뿔의 밑면들이 전기장의 세기 <span class="nw">$E_\mathrm{G}$에</span> 주는 기여를 계산하자. 첫 번째 문항에서 언급한 정리를 이용하자. 그러면 상쇄되지 않은 전하는 원뿔대의 아래 밑면에 고리 모양(그림에서 파란색으로 표시)으로 분포한다.</p>
+<div class="f" style="left:70pt;top:221pt"><span class="fig" data-srcpage="17" data-clip="70,221,355,497"></span></div>
+<p class="x i" style="--b:517.8">삼각형의 닮음으로부터</p>
+<div class="f" style="left:135pt;top:523pt"><span class="fig" data-srcpage="17" data-clip="135,523,291,552"></span></div>
+</div>
+
+<!-- booklet page 18 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="18" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">이때</p>
+<div class="f" style="left:144pt;top:67pt"><span class="fig" data-srcpage="18" data-clip="144,67,282,81"></span></div>
+<div class="f" style="left:181pt;top:95pt"><span class="fig" data-srcpage="18" data-clip="181,95,243,111"></span></div>
+<div class="f" style="left:146pt;top:123pt"><span class="fig" data-srcpage="18" data-clip="146,123,279,150"></span></div>
+<p class="x" style="--b:161.6">여기서</p>
+<div class="f" style="left:188pt;top:156pt"><span class="fig" data-srcpage="18" data-clip="188,156,237,190"></span></div>
+<p class="x i" style="--b:200.6">그러면 G에서 밑면들이 전기장의 세기에 주는 기여는 다음과 같다.</p>
+<div class="f" style="left:164pt;top:205pt"><span class="fig" data-srcpage="18" data-clip="164,205,261,240"></span></div>
+<p class="x" style="--b:255.5">최종적으로, 축을 따라 움직이는 시험 전하의 운동 방정식은 다음과 같은 꼴이 된다.</p>
+<div class="f" style="left:140pt;top:260pt"><span class="fig" data-srcpage="18" data-clip="140,260,285,295"></span></div>
+<p class="x" style="--b:311.4">따라서 다음 경우에 평형 위치가 안정함이 분명하다.</p>
+<div class="f" style="left:195pt;top:322pt"><span class="fig" data-srcpage="18" data-clip="195,322,229,348"></span></div>
+<p class="x i" style="--b:358.6">이때 진동 주기는 다음과 같다.</p>
+<div class="f" style="left:136pt;top:371pt"><span class="fig" data-srcpage="18" data-clip="136,371,288,402"></span></div>
+<p class="x i" style="--b:415.8"><b>두 번째 방법:</b></p>
+<p class="x i" style="--b:427.7">다음과 같이 두자.</p>
+<div class="f" style="left:171pt;top:431pt"><span class="fig" data-srcpage="18" data-clip="171,431,254,444"></span></div>
+<p class="x i" style="--b:457.6">다음을 고려하면</p>
+<div class="f" style="left:153pt;top:466pt"><span class="fig" data-srcpage="18" data-clip="153,466,272,483"></span></div>
+<p class="x" style="--b:501.4">다음을 얻는다.</p>
+<div class="f" style="left:152pt;top:496pt"><span class="fig" data-srcpage="18" data-clip="152,496,273,531"></span></div>
+</div>
+
+<!-- booklet page 19 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="19" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">밑면들에 대해서도 같은 과정을 거치면 다음을 얻는다.</p>
+<div class="f" style="left:150pt;top:69pt"><span class="fig" data-srcpage="19" data-clip="150,69,275,104"></span></div>
+<p class="x i" style="--b:118.9">최종적으로, 축을 따라 움직이는 시험 전하의 운동 방정식은 다음과 같은 꼴이 된다.</p>
+<div class="f" style="left:142pt;top:124pt"><span class="fig" data-srcpage="19" data-clip="142,124,284,158"></span></div>
+<p class="x i" style="--b:174.8">따라서 다음 경우에 평형 위치가 안정함이 분명하다.</p>
+<div class="f" style="left:195pt;top:186pt"><span class="fig" data-srcpage="19" data-clip="195,186,229,211"></span></div>
+<p class="x i" style="--b:222.0">이때 진동 주기는 다음과 같다.</p>
+<div class="f" style="left:136pt;top:234pt"><span class="fig" data-srcpage="19" data-clip="136,234,288,266"></span></div>
+<p class="x h" style="--b:281.1">문제 11-T4. 사각 고리와 도선</p>
+<p class="x i wr wn" style="--b:296.8;--fw:151.7pt;--fh:118.5pt">도선에 평행한 사각 고리의 변의 길이를 <span class="nw">$a$,</span> 이에 수직인 변의 길이를 <span class="nw">$b$라</span> 하자. 도선 위에 원점을 두고 도선에 수직하게 사각 고리를 향하는 축 <span class="nw">$Ox$를</span> 도입하자(그림 1 참고). 이후 <span class="nw">$x$는</span> 언제나 도선과 도선에 가장 가까운 사각 고리의 변 사이의 거리를 나타내며, 처음에 이 거리는 <span class="nw">$x_0$이었다.</span> 도선에 흐르는 전류의 세기를 <span class="nw">$I$라</span> 하자. 그러면 도선이 만드는 자기장은 도선으로부터 거리 <span class="nw">$r$인</span> 곳에서 수평면에 수직하게 읽는 사람 쪽을 향하며, 그 크기는 다음과 같다.</p>
+<div class="f" style="left:273pt;top:302pt"><span class="fig" data-srcpage="19" data-clip="273,302,379,394"></span></div>
+<div class="f" style="left:179pt;top:429pt"><span class="fig" data-srcpage="19" data-clip="179,429,246,455"></span></div>
+<p class="x" style="--b:467.0">여기서 <span class="nw">$\mu_0$은</span> 자기 상수이다.</p>
+<p class="x i b-n1 wn" style="--b:478.9">위에서 볼 때 시계 반대 방향으로 사각 고리에 흐르는 전류의 세기를 <span class="nw">$I_1$이라</span> 하자. 사각 고리에 작용하는 앙페르 힘의 합력은 다음과 같다.</p>
+<div class="f" style="left:273pt;top:484pt"><span class="fig" data-srcpage="19" data-clip="273,484,379,576"></span></div>
+<div class="f" style="left:61pt;top:528pt"><span class="fig" data-srcpage="19" data-clip="61,528,213,541"></span></div>
+</div>
+
+<!-- booklet page 20 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="20" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">사각 고리는 가는 철사로 만들어져 있고 <span class="nw">$a$와</span> <span class="nw">$b$는</span> <span class="nw">$x_0$보다</span> 훨씬 작으므로, <span class="nw">$F_x$에</span> 대한 식을 다음과 같이 근사할 수 있다.</p>
+<div class="f" style="left:133pt;top:87pt"><span class="fig" data-srcpage="20" data-clip="133,87,292,115"></span></div>
+<p class="x i" style="--b:134.2">사각 고리의 저항을 <span class="nw">$R$,</span> 사각 고리를 관통하는 자기장의 선속을 <span class="nw">$\Phi$라</span> 하자. 사각 고리의 인덕턴스는 무시할 수 있으므로, 패러데이의 전자기 유도 법칙으로부터 전류 <span class="nw">$I_1$은</span> 다음과 같다.</p>
+<div class="f" style="left:191pt;top:168pt"><span class="fig" data-srcpage="20" data-clip="191,168,234,197"></span></div>
+<p class="x" style="--b:210.1">사각 고리는 가는 철사로 만들어져 있고 <span class="nw">$a$와</span> <span class="nw">$b$는</span> <span class="nw">$x_0$보다</span> 훨씬 작으므로, 도선이 만드는 자기장은 사각 고리의 둘레를 경계로 하는 면 전체에서 일정하고 <span class="nw">$B(x)$와</span> 같다고 볼 수 있다. 따라서 <span class="nw">$\Phi \approx B(x)ab$이다.</span> 그러면 다음을 얻는다.</p>
+<div class="f" style="left:137pt;top:257pt"><span class="fig" data-srcpage="20" data-clip="137,257,288,286"></span></div>
+<p class="x" style="--b:302.2">따라서</p>
+<div class="f" style="left:151pt;top:303pt"><span class="fig" data-srcpage="20" data-clip="151,303,274,335"></span></div>
+<p class="x i" style="--b:350.1">도선의 전류가 증가하는 과정을 생각하자. 이 증가는 매우 빠르게 일어나므로, 도선의 전류가 최댓값까지 증가하는 동안 사각 고리의 운동과 변위는 무시할 수 있다. 그러면 <span class="nw">$F_x$는</span> 다음과 같다.</p>
+<div class="f" style="left:161pt;top:387pt"><span class="fig" data-srcpage="20" data-clip="161,387,264,418"></span></div>
+<p class="x" style="--b:433.5">사각 고리의 질량과 사각 고리 속도의 <span class="nw">$x$축</span> 성분을 각각 <span class="nw">$m$과</span> <span class="nw">$v_x$라</span> 하자. 사각 고리에 대한 운동량 변화 법칙으로부터 다음을 얻는다.</p>
+<div class="f" style="left:154pt;top:455pt"><span class="fig" data-srcpage="20" data-clip="154,455,271,487"></span></div>
+<p class="x" style="--b:505.8">사각 고리에 대한 운동량 변화 법칙에 <span class="nw">$dt$를</span> 곱하자.</p>
+<div class="f" style="left:161pt;top:513pt"><span class="fig" data-srcpage="20" data-clip="161,513,265,547"></span></div>
+</div>
+
+<!-- booklet page 21 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="21" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">도선에 흐르는 전류의 최댓값을 <span class="nw">$I_0$으로</span> 나타내고, 얻은 식을 적분하자.</p>
+<div class="f" style="left:92pt;top:87pt"><span class="fig" data-srcpage="21" data-clip="92,87,334,128"></span></div>
+<p class="x" style="--b:143.8">사각 고리는 도선의 전류가 최댓값에 이른 뒤에 도선으로부터 멀어지기 시작한다는 점에 주목하자.</p>
+<p class="x i" style="--b:167.7">사각 고리의 이후 운동을 분석하자. 이를 위해 도선의 전류가 일정한 값 <span class="nw">$I = I_0$일</span> 때 힘 <span class="nw">$F_x$에</span> 대한 식을 구하자.</p>
+<div class="f" style="left:91pt;top:191pt"><span class="fig" data-srcpage="21" data-clip="91,191,334,222"></span></div>
+<p class="x" style="--b:242.3">사각 고리에 대한 운동량 변화 법칙을 쓰자.</p>
+<div class="f" style="left:146pt;top:253pt"><span class="fig" data-srcpage="21" data-clip="146,253,279,285"></span></div>
+<p class="x" style="--b:304.9">사각 고리에 대한 운동량 변화 법칙에 <span class="nw">$dt$를</span> 곱하자.</p>
+<div class="f" style="left:151pt;top:314pt"><span class="fig" data-srcpage="21" data-clip="151,314,274,347"></span></div>
+<p class="x" style="--b:367.5">사각 고리가 도선으로부터 무한히 멀어진다고 가정하고, 도선으로부터 무한히 멀리 떨어졌을 때 사각 고리 속도의 <span class="nw">$x$축</span> 성분을 <span class="nw">$v_{1x}$로</span> 나타내어 얻은 식을 적분하자. 사각 고리의 속력은 감소하므로, 이 가정은 <span class="nw">$v_{1x}$가</span> 양수로 나오는 경우에 타당하다. 다음을 얻는다.</p>
+<div class="f" style="left:60pt;top:423pt"><span class="fig" data-srcpage="21" data-clip="60,423,365,464"></span></div>
+<p class="x" style="--b:480.2">따라서</p>
+<div class="f" style="left:193pt;top:482pt"><span class="fig" data-srcpage="21" data-clip="193,482,232,509"></span></div>
+<p class="x" style="--b:519.2"><span class="nw">$v_{1x} &gt; 0$이므로,</span> 도선의 전류가 최댓값에 이른 뒤 사각 고리는 운동하는 동안 한 번도 멈추지 않았으며, 따라서 얻은 값이 문제의 답이다. 만약 <span class="nw">$v_{1x}$가</span></p>
+</div>
+
+<!-- booklet page 22 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="22" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">음수로 나왔다면, 사각 고리의 속력과 사각 고리와 도선 사이의 거리는 각각 점근적으로 0과 일정한 값에 가까워졌을 것이다. 따라서 답은 다음과 같다.</p>
+<div class="f" style="left:195pt;top:100pt"><span class="fig" data-srcpage="22" data-clip="195,100,230,127"></span></div>
+<p class="x h" style="--b:138.1">문제 11-T5. 프리즘 속의 불균일성</p>
+<p class="x i b-n2 wn" style="--b:152.5">1. 빛살은 입사하는 프리즘 면의 법선 방향으로 향하므로, 프리즘에 들어갈 때 굴절하지 않는다. 프리즘 내부에서 광선의 경로를 조사하자. 광선의 진행 방향과 <span class="nw">$y$축</span> 사이의 각을 <span class="nw">$\varphi$,</span> 광선이 프리즘에 들어가는 점의 좌표를 <span class="nw">$x_0$이라</span> 하자. 이때 매질의 경계면에 대한 입사각은 <span class="nw">$90 - \varphi$이므로,</span> 스넬 법칙으로부터 다음이 성립한다.</p>
+<div class="f" style="left:296pt;top:158pt"><span class="fig" data-srcpage="22" data-clip="296,158,384,248"></span></div>
+<div class="f" style="left:111pt;top:247pt"><span class="fig" data-srcpage="22" data-clip="111,247,315,288"></span></div>
+<p class="x" style="--b:301.1"><b>첫 번째 풀이:</b></p>
+<p class="x i" style="--b:313.1">다음 관계에 주목하자.</p>
+<div class="f" style="left:79pt;top:324pt"><span class="fig" data-srcpage="22" data-clip="79,324,196,350"></span></div>
+<div class="f" style="left:268pt;top:318pt"><span class="fig" data-srcpage="22" data-clip="268,318,383,489.6"></span></div>
+<p class="x ov" style="--b:490.7;left:300.0pt">$x$</p>
+<p class="x wr wn" style="--b:365.1;--fw:151.7pt;--fh:130.5pt">광선 경로 위의 어떤 점 <span class="nw">$T$를</span> 지나고 그 점에서의 진행 방향에 수직인 직선을 <span class="nw">$x_P = 2h$인</span> 점 <span class="nw">$P$까지</span> 긋자. 점 <span class="nw">$P$와</span> <span class="nw">$T$</span> 사이의 거리는 <span class="nw">$2h - x_0$과</span> 같은 일정한 값임에 주목하자. 빛은 <span class="nw">$PT$에</span> 수직인 방향으로 진행하고 <span class="nw">$PT = 2h - x_0 = const$,</span> <span class="nw">$x_P = 2h = const$이므로,</span> 점 <span class="nw">$P$의</span> 위치는 일정하다. 왜냐하면 점 <span class="nw">$P$의</span> 이동은 <span class="nw">$PT$와</span> <span class="nw">$x$축에</span> 동시에 수직이어야 하는데, 이는 불가능하기 때문이다. 그러므로 프리즘 단면의 변 <span class="nw">$AB$와</span> <span class="nw">$OB$에</span> 닿기 전까지 광선의 경로는 점 <span class="nw">$P$를</span> 중심으로 하는 원이다. 굴절 직후 모든 광선은 <span class="nw">$y$축을</span> 따라 진행하므로, 각 광선에 대해 원의 중심은 <span class="nw">$x_P = 2h$,</span> <span class="nw">$y_P = 0$인</span> 점 <span class="nw">$P$에</span> 있음에 주목하자. 최종적으로 다음을 얻는다.</p>
+</div>
+
+<!-- booklet page 23 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="23" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:150pt;top:63pt"><span class="fig" data-srcpage="23" data-clip="150,63,276,80"></span></div>
+<p class="x i" style="--b:93.9"><b>두 번째 풀이:</b></p>
+<p class="x i" style="--b:105.9">스넬 법칙으로부터 얻은 식을 미분하자.</p>
+<div class="f" style="left:159pt;top:119pt"><span class="fig" data-srcpage="23" data-clip="159,119,266,132"></span></div>
+<p class="x" style="--b:149.7">좌표의 변화 <span class="nw">$dx$와</span> <span class="nw">$dy$는</span> 각 <span class="nw">$\varphi$를</span> 이용하여 연결할 수 있다.</p>
+<div class="f" style="left:189pt;top:162pt"><span class="fig" data-srcpage="23" data-clip="189,162,236,188"></span></div>
+<p class="x" style="--b:205.1">각 <span class="nw">$\varphi$가</span> <span class="nw">$d\varphi$만큼</span> 변할 때 좌표 <span class="nw">$y$의</span> 변화 <span class="nw">$dy$를</span> 구하자.</p>
+<div class="f" style="left:78pt;top:218pt"><span class="fig" data-srcpage="23" data-clip="78,218,347,231"></span></div>
+<p class="x" style="--b:248.9"><span class="nw">$y = 0$에는</span> <span class="nw">$\varphi = 0$이</span> 대응한다. 그러면 다음을 얻는다.</p>
+<div class="f" style="left:113pt;top:259pt"><span class="fig" data-srcpage="23" data-clip="113,259,313,299"></span></div>
+<p class="x" style="--b:315.4">이제 <span class="nw">$y$와</span> <span class="nw">$x$를</span> 연결하는 식을 구하자.</p>
+<div class="f" style="left:102pt;top:326pt"><span class="fig" data-srcpage="23" data-clip="102,326,324,359"></span></div>
+<p class="x" style="--b:375.4">따라서</p>
+<div class="f" style="left:150pt;top:386pt"><span class="fig" data-srcpage="23" data-clip="150,386,276,403"></span></div>
+<p class="x i" style="--b:417.3"><b>세 번째 풀이:</b></p>
+<p class="x i" style="--b:429.2">광선의 경로에 대한 <span class="nw">$y(x)$</span> 관계를 구하자. 이를 위해 각 <span class="nw">$\varphi$를</span> 소거하자.</p>
+<div class="f" style="left:189pt;top:444pt"><span class="fig" data-srcpage="23" data-clip="189,444,236,470"></span></div>
+<p class="x" style="--b:482.5"><span class="nw">$\varphi &gt; 0$이므로</span></p>
+<div class="f" style="left:107pt;top:495pt"><span class="fig" data-srcpage="23" data-clip="107,495,318,528"></span></div>
+</div>
+
+<!-- booklet page 24 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="24" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0"><span class="nw">$2h &gt; x$임을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:75pt;top:76pt"><span class="fig" data-srcpage="24" data-clip="75,76,350,116"></span></div>
+<p class="x" style="--b:133.2">따라서</p>
+<div class="f" style="left:72pt;top:144pt"><span class="fig" data-srcpage="24" data-clip="72,144,353,161"></span></div>
+<p class="x i" style="--b:175.0"><b>네 번째 풀이:</b></p>
+<p class="x i b-n2 wn" style="--b:187.0">광선 경로의 곡률 반지름 <span class="nw">$\rho$는</span> 다음과 같다.</p>
+<div class="f" style="left:278pt;top:192pt"><span class="fig" data-srcpage="24" data-clip="278,192,395,302"></span></div>
+<div class="f" style="left:133pt;top:199pt"><span class="fig" data-srcpage="24" data-clip="133,199,169,226"></span></div>
+<p class="x b-n2 wn" style="--b:242.4">여기서 <span class="nw">$dl$은</span> 광선이 지나간 경로의 요소이다. 그런데 <span class="nw">$dl = dx/\sin\varphi$이므로</span></p>
+<div class="f" style="left:97pt;top:267pt"><span class="fig" data-srcpage="24" data-clip="97,267,205,294"></span></div>
+<p class="x" style="--b:310.2">스넬 법칙으로부터 얻은 식을 미분하자.</p>
+<div class="f" style="left:141pt;top:323pt"><span class="fig" data-srcpage="24" data-clip="141,323,284,349"></span></div>
+<p class="x" style="--b:365.6">따라서 각 광선의 경로의 곡률 반지름은 일정하다. 즉, 프리즘 단면의 변 <span class="nw">$AB$와</span> <span class="nw">$OB$에</span> 닿기 전까지 광선의 경로는 반지름이 <span class="nw">$2h - x_0$인</span> 원호이다. 굴절 직후 모든 광선은 <span class="nw">$y$축을</span> 따라 진행하므로, 각 광선에 대해 원의 중심은 <span class="nw">$x_P = 2h - x_0 + x_0 = 2h$,</span> <span class="nw">$y_P = 0$인</span> 점 <span class="nw">$P$에</span> 있음에 주목하자. 최종적으로 다음을 얻는다.</p>
+<div class="f" style="left:150pt;top:436pt"><span class="fig" data-srcpage="24" data-clip="150,436,276,453"></span></div>
+<p class="x i b-n2 wn" style="--b:467.2">2. 첫 번째 문항의 풀이로부터, 프리즘 단면의 변 <span class="nw">$AB$와</span> <span class="nw">$OB$에</span> 닿기 전까지 프리즘 내부의 모든 광선의 경로는 그림의 평면에 놓인 원호이고, 이 원들의 중심은 <span class="nw">$x_P = 2h$,</span> <span class="nw">$y_P = 0$인</span> 점 <span class="nw">$P$에</span> 있다. 좌표 <span class="nw">$x_0$이</span> 커질수록 원의 반지름은 작아진다는 점에 주목하자.</p>
+<div class="f" style="left:294pt;top:475pt"><span class="fig" data-srcpage="24" data-clip="294,475,386,568"></span></div>
+</div>
+
+<!-- booklet page 25 -->
+<div class="page" data-s="b">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="25" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">점 <span class="nw">$P$로부터</span> 원호와 <span class="nw">$OB$의</span> 교점까지의 거리는 원호가 해당 면에 접할 때까지 감소한다. 좌표 <span class="nw">$x_0$이</span> 더 커지면 원호는 <span class="nw">$OB$와</span> 만나지 않는다. 따라서 원호와의 접점이 없다는 조건에서 광선은 <span class="nw">$OB$의</span> 모든 점에 도달하며, 이는 각 <span class="nw">$\angle PBO$가</span> 예각이 아니어야 함을 뜻한다. 삼각형 <span class="nw">$OPB$는</span> 이등변 삼각형이므로 다음을 얻는다.</p>
+<div class="f" style="left:153pt;top:147pt"><span class="fig" data-srcpage="25" data-clip="153,147,273,161"></span></div>
+<p class="x" style="--b:179.6">따라서</p>
+<div class="f" style="left:193pt;top:193pt"><span class="fig" data-srcpage="25" data-clip="193,193,232,207"></span></div>
+<p class="x i b-n2 wn" style="--b:221.5">3. 좌표 <span class="nw">$x_0$이</span> 커질수록 <span class="nw">$OB$에</span> 대한 광선의 입사각은 프리즘 물질의 굴절률과 마찬가지로 커진다는 점에 주목하자. 그러면 <span class="nw">$OB$에</span> 도달한 모든 광선이 공기 중으로 나가기 위한 조건은 점 <span class="nw">$B$</span> 근처에서 <span class="nw">$OB$에</span> 도달한 광선이 전반사되지 않는 것이다. 처음에 이 광선들은 <span class="nw">$OB$에</span> 대해 각 <span class="nw">$\alpha$로</span> 진행하고 원호를 따라 움직이는 동안 각 <span class="nw">$\alpha$만큼</span> 방향이 바뀌므로, <span class="nw">$OB$에</span> 도달하는 순간 광선의 입사각은 <span class="nw">$2\alpha$이다.</span> 그러면 다음을 얻는다.</p>
+<div class="f" style="left:300pt;top:229pt"><span class="fig" data-srcpage="25" data-clip="300,229,384,368"></span></div>
+<div class="f" style="left:94pt;top:342pt"><span class="fig" data-srcpage="25" data-clip="94,342,208,354"></span></div>
+<p class="x" style="--b:372.9">따라서</p>
+<div class="f" style="left:162pt;top:385pt"><span class="fig" data-srcpage="25" data-clip="162,385,263,412"></span></div>
+</div>
+</body></html>

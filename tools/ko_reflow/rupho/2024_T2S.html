@@ -1,0 +1,632 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2022 (LVI = 제56회; the paper prints only "2022 г."), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.5x595.3pt, booklet pages 9-13.
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20pt; baselineskip 11.955pt; list items 13.2pt apart.
+   Running headers italic, baseline 38.9, rule at y 43: odd page "Всероссийская олимпиада по физике 2022 г., Заключительный этап"
+   (left), even page "Теоретический тур" (right); page numbers centred, baseline 563.8.
+   Grade line SFBX1440 (14.346pt bold), problem titles SFBX1000 bold, captions SFRM0900.
+   "НЭ" (нелинейный элемент) inside the circuit symbols is relabelled "NE" (introduced in the text as 비선형 소자(NE)).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b:  top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.pn{text-align:center}
+.g{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.g,.h{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.li{padding-left:25pt}
+.n{position:absolute;left:12.2pt;text-indent:0}
+.cap{text-align:center;width:40pt;--fs:8.966pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.wb{position:absolute;background:#fff}
+</style>
+<style>
+/* 2024_T2SA extra — RuPhO 2024 10학년 풀이 예시, pages 1-14 of RuPhO_2024_T2S.pdf (problems 10-T1, 10-T2, start of 10-T3).
+   ORIGINAL: LaTeX SFRM1000 10pt, A5; text column x 28.3..396.8 (width 368.5pt), indent 20pt, baselineskip 11.955pt.
+   Page 1 is a cropped sheet (visible 419.5x408.3pt, no running header). Running header (SFTI1000 italic) at baseline 37.6,
+   rule y 41.4 (x 28.3..391.2) stamped; no page numbers. Section words bold inline ("Первое решение:" -> 첫 번째 풀이:).
+   Retyped displays (Cyrillic subscripts): .a-d = line-height 0, top = baseline - --a.
+   Subscripts: Г -> G, Б -> B, отн -> rel, F_с -> F_r, бусинка a_б -> a_b, груз a_г -> a_w, u_бц -> u_bc, u_бг -> u_bw,
+   p_в -> p_air, p_р -> p_Hg, x_кр -> x_cr; мм -> mm (also re-labelled on the raster graph of page 14). */
+@page a-p1{size:419.528pt 408.276pt;margin:0}
+.page[data-s="a-p1"]{page:a-p1;width:419.528pt;height:408.276pt}
+.x:not(.ov){width:368.5pt}
+.a-j{text-align:justify}
+.a-d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.a-m{--fs:7.6pt;--l:9pt;margin-top:-1.17pt}
+</style>
+<style>
+/* 2024_T2SB extra */
+/* RuPhO 2024 (no numeral printed; header "Заключительный этап Всероссийской олимпиады по физике" on every page,
+   left, italic, baseline 37.6, rule at y 41.4), 10학년 풀이 예시, second half: pages 15-28 of RuPhO_2024_T2S.pdf
+   (= this file's pages 1-14): end of solution 10-T3, solutions 10-T4 and 10-T5. No page numbers, no marking criteria.
+   Body text column here is x 28.3..396.8 (width 368.5pt, wider than the header rule): pages carry data-s="b-p".
+   Beside the circuit figures (pages 6, 7) the text column is 28.3..245.1 (216.8pt).
+   Retyped displays: .b-d (line-height 0; top = b - --a, --a = height of the formula above its main baseline).
+   Subscripts (as in 2024_T2SA): x_кр -> x_cr, p_в -> p_air, p_р -> p_Hg; r_С (Cyrillic С) -> r_C;
+   I_2а, I_2б, r_а, r_б (cases а)/б) of question 2) -> \text{가}, \text{나} (cases (가)/(나)).
+   Raster graph on page 2: its "мм" axis units are covered with white boxes and relabelled "mm". */
+.page[data-s="b-p"] .x:not(.ov){width:368.5pt}
+.page[data-s="b-p"] .x b{line-height:0}
+.b-d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+</style></head><body>
+
+<!-- page 1 (cropped sheet) -->
+<div class="page" data-s="a-p1">
+<p class="x h" style="--b:62.6">문제 10-T1. 심연으로의 낙하</p>
+<p class="x i a-j" style="--b:77.8;margin-top:-1.2pt">1. 공의 질량을 <span class="nw">$m$,</span> 중력 가속도를 <span class="nw">$\vec g$라</span> 하고, 공에 작용하는 공기 저항력이 <span class="nw">$\vec F_{\mathrm r} = -k\vec v$로</span> 주어진다고 하자. 여기서 <span class="nw">$\vec v$는</span> 공의 속도이다. 공 하나에 대해 뉴턴 제2법칙을 쓰면 다음과 같다.</p>
+<div class="f" style="left:178pt;top:117pt"><span class="fig" data-srcpage="1" data-clip="178,117,247,129"></span></div>
+<p class="x a-j" style="--b:143.1">이 식을 수평한 <span class="nw">$x$축에</span> 사영하면 다음을 얻는다.</p>
+<div class="f" style="left:149pt;top:155pt"><span class="fig" data-srcpage="1" data-clip="149,155,276,181"></span></div>
+<p class="x a-j" style="--b:195.0">여기서 <span class="nw">$\Delta x$는</span> 처음 속도의 수평 성분이 <span class="nw">$v_{0x}$인</span> 공이 정상 상태에 이를 때까지 이동한 수평 거리이다. <span class="nw">$v_{0x} = v_0$이면</span> (여기서 <span class="nw">$v_0$은</span> 공을 던질 때의 처음 속력) <span class="nw">$\Delta x = S$이다</span>. 그러면 수평면과 각 <span class="nw">$\alpha$를</span> 이루며 던진 공에 대해 다음을 얻는다.</p>
+<div class="f" style="left:182pt;top:234pt"><span class="fig" data-srcpage="1" data-clip="182,234,244,246"></span></div>
+<p class="x a-j" style="--b:260.4">글류크와 바그가 동시에 각각 수평으로, 그리고 수평면과 <span class="nw">$\alpha = 60^\circ$의</span> 각을 이루며 (문제의 그림&nbsp;2와 같이) 던진 공들은 정상 상태에서 같은 연직선을 따라 움직인다. 그러므로 두 절벽면 사이의 거리 <span class="nw">$l = L\cos\varphi = L\sqrt3/2$는</span> 던진 공들의 수평 변위의 크기의 합과 같다. 따라서 다음을 얻는다.</p>
+<div class="f" style="left:165pt;top:320pt"><span class="fig" data-srcpage="1" data-clip="165,320,261,346"></span></div>
+<p class="x a-j" style="--b:357.5">따라서</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="2" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:190pt;top:58pt"><span class="fig" data-srcpage="2" data-clip="190,58,235,79"></span></div>
+<p class="x i" style="--b:93.3">2. <b>첫 번째 풀이:</b></p>
+<p class="x i a-j" style="--b:105.3">글류크와 바그가 던진 공에 대해 뉴턴 제2법칙을 쓰자.</p>
+<p class="x c" style="--b:126.1">$m\vec a_{\mathrm G} = m\vec g - k\vec v_{\mathrm G}, \qquad m\vec a_{\mathrm B} = m\vec g - k\vec v_{\mathrm B}.$</p>
+<p class="x a-j" style="--b:147.0">바그의 공에 대한 글류크의 공의 가속도를 구하자.</p>
+<p class="x c a-d" style="--b:174.8;--a:16.0pt">$\vec a_{\mathrm G} - \vec a_{\mathrm B} = \vec a_{\mathrm{rel}} = -\dfrac{k\bigl(\vec v_{\mathrm G} - \vec v_{\mathrm B}\bigr)}{m} = -\dfrac{k\vec v_{\mathrm{rel}}}{m} \Rightarrow \vec a_{\mathrm{rel}} = -\dfrac{k\vec v_{\mathrm{rel}}}{m}.$</p>
+<div class="f" style="left:286pt;top:204pt"><span class="fig" data-srcpage="2" data-clip="286,204,391,304"></span></div>
+<p class="x ov" style="--b:289.9;left:324.6pt;--fs:6.974pt;--l:8pt">rel</p>
+<p class="x i wr a-j wn" style="--b:198.4;--fw:123.4pt;--fh:118.5pt">공들의 상대 가속도는 상대 속도와 반대 방향이므로, 공들의 상대 속도는 방향을 그대로 유지한다. 그러므로 공들의 상대 운동은 직선 운동이며, 두 공이 같은 연직선 위에 놓이면 상대 운동이 멈춘다. 바그의 공에 대한 글류크의 공의 궤적을 그려 보자. 글류크와 바그를 잇는 직선은 연직선과 각 <span class="nw">$90^\circ - \varphi = 60^\circ$를</span> 이룬다는 점에 주목하자. 상대 속도의 방향은 수평면과 각 <span class="nw">$\alpha/2$를</span> 이루므로, 공들의 상대 변위의 방향과 글류크와 바그를 잇는 직선 사이의 각은 <span class="nw">$\varphi + \alpha/2 = 60^\circ$이다</span>. 따라서 그림에 나타낸 삼각형은 정삼각형이다. 그러면 정상 상태에서 공들 사이의 거리 <span class="nw">$S_\infty$는</span> 다음과 같다.</p>
+<div class="f" style="left:193pt;top:369pt"><span class="fig" data-srcpage="2" data-clip="193,369,232,382"></span></div>
+<p class="x a-j" style="--b:395.0">또는</p>
+<div class="f" style="left:187pt;top:401pt"><span class="fig" data-srcpage="2" data-clip="187,401,239,423"></span></div>
+<p class="x i a-j wn" style="--b:436.2;width:245.1pt">공들 사이의 최소 거리 <span class="nw">$S_{min}$은</span> 공들의 상대 속도가 두 공을 잇는 직선에 수직일 때 이루어진다. 그림으로부터 다음을 얻는다.</p>
+<div class="f" style="left:113pt;top:482pt"><span class="fig" data-srcpage="2" data-clip="113,482,189,498"></span></div>
+<p class="x a-j" style="--b:513.8">또는</p>
+<div class="f" style="left:186pt;top:526pt"><span class="fig" data-srcpage="2" data-clip="186,526,239,553"></span></div>
+<div class="f" style="left:286pt;top:441pt"><span class="fig" data-srcpage="2" data-clip="286,441,391,541"></span></div>
+<p class="x ov" style="--b:527.8;left:324.6pt;--fs:6.974pt;--l:8pt">rel</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="3" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0"><b>두 번째 풀이:</b></p>
+<p class="x i a-j" style="--b:76.0">좌표계 <span class="nw">$xOy$를</span> 도입하자. 원점 <span class="nw">$O$는</span> 글류크가 있는 곳에 두고, <span class="nw">$x$축은</span> 오른쪽으로, <span class="nw">$y$축은</span> 연직 위로 향하게 한다. 공 하나의 변위의 수평 성분 <span class="nw">$\Delta x$와</span> 연직 성분 <span class="nw">$\Delta y$가</span> 시간에 따라 어떻게 변하는지 구하자. 공의 운동 방정식을 수평한 <span class="nw">$x$축에</span> 사영하면 다음과 같다.</p>
+<div class="f" style="left:131pt;top:136pt"><span class="fig" data-srcpage="3" data-clip="131,136,295,163"></span></div>
+<p class="x a-j" style="--b:178.6">공의 처음 속도의 <span class="nw">$x$축</span> 성분을 <span class="nw">$v_{x0}$이라</span> 하자. 적분하면 다음을 얻는다.</p>
+<div class="f" style="left:113pt;top:191pt"><span class="fig" data-srcpage="3" data-clip="113,191,312,232"></span></div>
+<p class="x a-j" style="--b:248.5">한 번 더 적분하면 다음을 얻는다.</p>
+<div class="f" style="left:104pt;top:260pt"><span class="fig" data-srcpage="3" data-clip="104,260,321,299"></span></div>
+<p class="x a-j" style="--b:315.8">따라서 바그의 공과 글류크의 공의 <span class="nw">$x$좌표의</span> 차는 다음과 같다.</p>
+<p class="x c a-d" style="--b:344.6;--a:14.6pt">$\Delta x_{\mathrm{rel}}(t) = x_{\mathrm B}(t) - x_{\mathrm G}(t) = L\cos\varphi - \dfrac{v_0(1 + \cos\alpha)}{\beta}(1 - e^{-\beta t}).$</p>
+<p class="x a-j" style="--b:371.8">관계식 <span class="nw">$S = v_0/\beta$를</span> 고려하면 다음을 얻는다.</p>
+<p class="x c" style="--b:393.7">$\Delta x_{\mathrm{rel}}(t) = L\cos\varphi - S(1 + \cos\alpha)(1 - e^{-\beta t}).$</p>
+<p class="x a-j" style="--b:415.6">공의 운동 방정식을 연직 위로 향하는 <span class="nw">$y$축에</span> 사영하자.</p>
+<div class="f" style="left:107pt;top:430pt"><span class="fig" data-srcpage="3" data-clip="107,430,318,471"></span></div>
+<p class="x a-j" style="--b:481.7">공의 처음 속도의 <span class="nw">$y$축</span> 성분을 <span class="nw">$v_{y0}$이라</span> 하자. 적분하면 다음을 얻는다.</p>
+<div class="f" style="left:47pt;top:495pt"><span class="fig" data-srcpage="3" data-clip="47,495,379,543"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="4" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-j" style="--b:64.0"><span class="nw">$\Delta y(t)$에</span> 대해 다음을 얻는다.</p>
+<div class="f" style="left:93pt;top:72pt"><span class="fig" data-srcpage="4" data-clip="93,72,332,112"></span></div>
+<p class="x a-j" style="--b:121.6">따라서</p>
+<div class="f" style="left:116pt;top:123pt"><span class="fig" data-srcpage="4" data-clip="116,123,309,152"></span></div>
+<p class="x a-j" style="--b:166.0">따라서 바그의 공과 글류크의 공의 <span class="nw">$y$좌표의</span> 차는 다음과 같다.</p>
+<p class="x c a-d" style="--b:190.8;--a:14.6pt">$\Delta y_{\mathrm{rel}}(t) = y_{\mathrm B}(t) - y_{\mathrm G}(t) = L\sin\varphi + \dfrac{v_0\sin\alpha}{\beta}(1 - e^{-\beta t}).$</p>
+<p class="x a-j" style="--b:214.2">관계식 <span class="nw">$S = v_0/\beta$를</span> 고려하면 다음을 얻는다.</p>
+<p class="x c" style="--b:232.2">$\Delta y_{\mathrm{rel}}(t) = L\sin\varphi + S\sin\alpha(1 - e^{-\beta t}).$</p>
+<p class="x a-j" style="--b:250.3"><span class="nw">$t \to \infty$일</span> 때 다음을 얻는다.</p>
+<p class="x c" style="--b:268.3">$\Delta x_{\mathrm{rel}}(\infty) = L\cos\varphi - S(1 + \cos\alpha) = 0.$</p>
+<p class="x c" style="--b:287.4">$\Delta y_{\mathrm{rel}}(\infty) = L\sin\varphi + S\sin\alpha = S\sqrt3.$</p>
+<p class="x a-j" style="--b:303.0">따라서 <span class="nw">$S_\infty = \Delta y_{\mathrm{rel}}(\infty)$이며,</span> 그러므로 다음을 얻는다.</p>
+<div class="f" style="left:186pt;top:309pt"><span class="fig" data-srcpage="4" data-clip="186,309,239,331"></span></div>
+<p class="x i a-j" style="--b:342.5"><span class="nw">$(1 - e^{-\beta t}) = z$라</span> 하자. 그러면 공들 사이의 거리 <span class="nw">$r(z)$는</span> 다음과 같다.</p>
+<p class="x c" style="--b:365.9;left:22pt;width:381pt;margin-top:1.1pt">$r(z) = \sqrt{\Delta x^2_{\mathrm{rel}}(z) + \Delta y^2_{\mathrm{rel}}(z)} = \sqrt{\bigl(L\cos\varphi - zS(1 + \cos\alpha)\bigr)^2 + (L\sin\varphi + zS\sin\alpha)^2}.$</p>
+<p class="x a-j" style="--b:384.0">괄호를 풀면 다음을 얻는다.</p>
+<div class="f" style="left:59pt;top:390pt"><span class="fig" data-srcpage="4" data-clip="59,390,366,405"></span></div>
+<p class="x a-j" style="--b:420.1">각 $\alpha$, <span class="nw">$\varphi$와</span> 거리 <span class="nw">$L$을</span> 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:158pt;top:426pt"><span class="fig" data-srcpage="4" data-clip="158,426,267,441"></span></div>
+<p class="x a-j" style="--b:456.2">거리는 근호 안의 식이 최솟값을 가질 때 최소가 되며, 이는 포물선의 꼭짓점에 해당한다.</p>
+<div class="f" style="left:191pt;top:477pt"><span class="fig" data-srcpage="4" data-clip="191,477,235,503"></span></div>
+<p class="x a-j" style="--b:513.8">따라서</p>
+<div class="f" style="left:186pt;top:526pt"><span class="fig" data-srcpage="4" data-clip="186,526,239,553"></span></div>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="5" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x h" style="--b:64.0">문제 10-T2. 가는 막대 위의 충돌</p>
+<p class="x i a-j" style="--b:76.8">1. 원통들은 질량이 없으므로, 원통에 작용하는 힘들의 합력은 어느 순간에나 0이어야 한다. 가는 막대와 원통 사이에 마찰이 없으므로, 막대는 원통에 막대에 수직인 방향, 즉 연직 방향으로 힘을 작용한다. 원통들이 충돌하기 전까지 원통에는 실의 장력과 막대의 수직 항력만 작용한다. 그러면 원통에 작용하는 힘들의 합력이 0이라는 조건은, 원통을 구슬 및 추와 잇는 실의 부분들이 어느 순간에나 연직 방향일 때에만 성립할 수 있다. 이로부터 원통들의 충돌은 구슬, 추, 원통들이 사실상 하나의 연직선 위에 놓이는 순간에 일어난다는 것을 알 수 있다.</p>
+<p class="x i a-j wn" style="--b:196.3">추의 속도는 어느 순간에나 수평 방향임에 주목하자. 원통들이 충돌하는 순간에는 구슬의 속도도 수평 방향이다. 원통들이 충돌하는 순간 구슬과 추의 상대 운동의 속력을 <span class="nw">$v_{\mathrm{rel}}$이라</span> 하자. 역학적 에너지 보존 법칙으로부터 <span class="nw">$v_{\mathrm{rel}}$을</span> 구하자. 실이 늘어나지 않으므로, 이 순간까지 구슬의 연직 변위는 아래 방향이고 그 크기는 <span class="nw">$L/2$이다</span>. 계는 막대 방향으로 닫혀 있으므로 이 방향의 운동량은 0이다. 이로부터 원통들이 충돌하는 순간 구슬과 추의 속력 <span class="nw">$v_1$과</span> <span class="nw">$v_2$를</span> 상대 속력 <span class="nw">$v_{\mathrm{rel}}$로</span> 나타낼 수 있다.</p>
+<p class="x c a-d" style="--b:329.0;--a:14.6pt">$v_1 = \dfrac{m_2v_{\mathrm{rel}}}{m_1 + m_2}, \qquad v_2 = \dfrac{m_1v_{\mathrm{rel}}}{m_1 + m_2} \Rightarrow E_k = \dfrac{m_1v_1^2}{2} + \dfrac{m_2v_2^2}{2} = \dfrac{m_1m_2v_{\mathrm{rel}}^2}{2(m_1 + m_2)}.$</p>
+<p class="x a-j" style="--b:352.5">역학적 에너지 보존 법칙을 쓰자.</p>
+<p class="x c a-d" style="--b:379.2;--a:14.6pt">$E_k = \dfrac{m_1m_2v_{\mathrm{rel}}^2}{2(m_1 + m_2)} = -\Delta W_p = \dfrac{m_1gL}{2} \Rightarrow v_{\mathrm{rel}}^2 = gL\left(1 + \dfrac{m_1}{m_2}\right).$</p>
+<p class="x a-j" style="--b:405.8">원통들이 충돌하기 직전 구슬과 추의 속력 <span class="nw">$v_1$과</span> <span class="nw">$v_2$를</span> 각각 구하면 다음과 같다.</p>
+<div class="f" style="left:109pt;top:430pt"><span class="fig" data-srcpage="5" data-clip="109,430,316,461"></span></div>
+<p class="x i a-j" style="--b:472.7">2. 원통들이 충돌하는 순간 구슬과 추에 작용하는 힘은 모두 연직 방향이다. 추는 수평으로만 움직일 수 있으므로, 이 순간 추의 가속도는 0이다.</p>
+<p class="x i a-j" style="--b:508.6">원통들이 충돌하는 순간 구슬의 가속도를 연직 위로 향하는 축에 사영한 값을 <span class="nw">$a_1$이라</span> 하자. 구슬과 추에 대한 뉴턴 제2법칙으로부터 다음을 얻는다.</p>
+<div class="f" style="left:128pt;top:536pt"><span class="fig" data-srcpage="5" data-clip="128,536,297,549"></span></div>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="6" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-j" style="--b:64.0">따라서</p>
+<div class="f" style="left:111pt;top:67pt"><span class="fig" data-srcpage="6" data-clip="111,67,314,93"></span></div>
+<p class="x a-j" style="--b:103.5">따라서 문제를 풀려면 <span class="nw">$a_1$을</span> 구해야 한다. 이제부터는 여러 가지 방법으로 풀 수 있다.</p>
+<p class="x i" style="--b:127.4;margin-top:-1.1pt"><b>첫 번째 방법:</b></p>
+<p class="x i a-j" style="--b:139.4">실험실 기준계에 대한 구슬과 추의 가속도를 각각 <span class="nw">$\vec a_{\mathrm b}$와</span> <span class="nw">$\vec a_{\mathrm w}$라</span> 하고, 추에 고정된 기준계에서 구슬의 가속도를 <span class="nw">$\vec a_{\mathrm{rel}}$이라</span> 하자. 그러면 구슬의 가속도는 다음과 같이 나타낼 수 있다.</p>
+<p class="x c" style="--b:185.2">$\vec a_{\mathrm b} = \vec a_{\mathrm w} + \vec a_{\mathrm{rel}}.$</p>
+<p class="x a-j" style="--b:207.0">이 순간 추의 가속도는 0임에 주목하자. 그러므로 이 순간 추에 고정된 기준계에서 구슬의 가속도는 연직 위 방향이고 그 크기는 <span class="nw">$a_1$이다</span>. 이제부터 추에 고정된 기준계에서 문제를 풀자. 원통들이 충돌하기 직전 구슬과 추의 상대 속도는 수평 방향이므로 다음이 성립한다.</p>
+<p class="x c a-d" style="--b:295.5;--a:14.6pt">$a_1 = a_{\mathrm{rel}} = \dfrac{v_{\mathrm{rel}}^2}{\rho},$</p>
+<p class="x a-j" style="--b:322.1">여기서 <span class="nw">$\rho$는</span> 추의 기준계에서 운동하는 구슬의 궤적의 곡률 반지름이다.</p>
+<div class="f" style="left:294pt;top:351pt"><span class="fig" data-srcpage="6" data-clip="294,351,387,429"></span></div>
+<p class="x i a-j wn" style="--b:346.0;width:246.5pt">구슬과 추의 상대 운동의 궤적을 분석하자. 추의 기준계에서 구슬의 상대 궤적의 가장 낮은 점을 원점으로 하는 좌표계 <span class="nw">$xOy$를</span> 도입하자(그림 참고). 실&nbsp;1의 길이가 일정하다는 조건을 쓰면 다음과 같다.</p>
+<div class="f" style="left:49pt;top:406pt"><span class="fig" data-srcpage="6" data-clip="49,406,253,439"></span></div>
+<p class="x a-j" style="--b:460.8">따라서 추의 기준계에서 구슬의 궤적은 포물선이다.</p>
+<p class="x i a-j wn" style="--b:484.7">중력장 속에서 질점이 자유롭게 날아가는 운동과의 비유를 이용하여, 포물선의 꼭짓점에서 곡률 반지름 <span class="nw">$\rho$를</span> 구하자.</p>
+<p class="x i a-j" style="--b:508.6">어떤 순간 질점의 속도의 크기가 <span class="nw">$v_0$이고</span> 방향이 수평이라고 하자. 질점은 연직 아래로 향하는 중력 가속도 <span class="nw">$g$를</span> 받으며 균일한 중력장 속에서 움직인다. 좌표계 <span class="nw">$xOy$를</span> 도입하자. 여기서 <span class="nw">$O$는</span> 이 순간 질점의 위치이고, <span class="nw">$x$축은</span></p>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="7" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-j" style="--b:64.0">수평 방향을, <span class="nw">$y$축은</span> 연직 아래 방향을 향한다. 그러면 이 순간부터 시간 <span class="nw">$t$가</span> 지난 뒤 다음이 성립한다.</p>
+<div class="f" style="left:129pt;top:87pt"><span class="fig" data-srcpage="7" data-clip="129,87,296,115"></span></div>
+<p class="x a-j" style="--b:129.2">값 <span class="nw">$p$를</span> 포물선의 초점 매개변수라고 한다. 포물선의 꼭짓점에서 질점의 궤적의 곡률 반지름 <span class="nw">$\rho_0$을</span> 구하자. 이 순간에 대한 뉴턴 제2법칙으로부터 다음을 얻는다.</p>
+<div class="f" style="left:154pt;top:163pt"><span class="fig" data-srcpage="7" data-clip="154,163,272,191"></span></div>
+<p class="x i a-j" style="--b:205.6">이제 원통들이 충돌하는 순간 추의 기준계에서 구슬의 궤적의 곡률 반지름을 구하는 문제로 돌아가자. 구슬의 상대 운동의 궤적인 포물선의 초점 매개변수는 <span class="nw">$L$이므로,</span> 이 순간 구슬의 상대 운동의 궤적의 곡률 반지름은 다음과 같다.</p>
+<div class="f" style="left:198pt;top:257pt"><span class="fig" data-srcpage="7" data-clip="198,257,228,269"></span></div>
+<p class="x i a-j" style="--b:282.4"><i>참고:</i> 구슬과 추의 상대 운동의 궤적을 나타내는 곡선을 직접 분석하여 같은 결과를 얻을 수도 있다.</p>
+<p class="x i a-j" style="--b:318.3">함수 <span class="nw">$y(x)$로</span> 주어진 임의의 곡선을 생각하자. 곡선의 접선의 기울기 각을 <span class="nw">$\varphi$라</span> 하면 다음이 성립한다.</p>
+<div class="f" style="left:105pt;top:340pt"><span class="fig" data-srcpage="7" data-clip="105,340,322,368"></span></div>
+<p class="x a-j" style="--b:382.6">임의의 평면 곡선의 곡률 반지름은 다음 식으로 정의된다.</p>
+<div class="f" style="left:191pt;top:392pt"><span class="fig" data-srcpage="7" data-clip="191,392,234,428"></span></div>
+<p class="x a-j wn" style="--b:440.3">여기서 <span class="nw">$dl$은</span> 곡선의 길이 요소이고, <span class="nw">$d\varphi$는</span> 이 요소의 양 끝에서 곡선에 그은 접선 사이의 각이다. 그런데 <span class="nw">$dl = dx/\cos\varphi$이므로</span></p>
+<div class="f" style="left:124pt;top:463pt"><span class="fig" data-srcpage="7" data-clip="124,463,302,499"></span></div>
+<p class="x a-j" style="--b:511.8">그런데 <span class="nw">$1/\cos^2\varphi = 1 + \operatorname{tg}^2\varphi = 1 + y'^2$이므로</span></p>
+<div class="f" style="left:176pt;top:524pt"><span class="fig" data-srcpage="7" data-clip="176,524,250,550"></span></div>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="8" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-j" style="--b:64.0">얻은 식을 추에 대한 구슬의 궤적에 적용하자. <span class="nw">$y'$과</span> <span class="nw">$y''$을</span> 구하면 다음과 같다.</p>
+<div class="f" style="left:168pt;top:89pt"><span class="fig" data-srcpage="8" data-clip="168,89,257,112"></span></div>
+<p class="x a-j" style="--b:124.3">그러면 좌표가 <span class="nw">$x = 0$인</span> 점에서 다음을 얻는다.</p>
+<div class="f" style="left:198pt;top:135pt"><span class="fig" data-srcpage="8" data-clip="198,135,228,147"></span></div>
+<p class="x i a-j" style="--b:163.1">따라서</p>
+<p class="x c a-d" style="--b:183.4;--a:14.6pt">$a_1 = \dfrac{v_{\mathrm{rel}}^2}{L} = g\left(1 + \dfrac{m_1}{m_2}\right).$</p>
+<p class="x i" style="--b:208.2"><b>두 번째 방법:</b></p>
+<p class="x i a-j" style="--b:220.2">이 순간 구슬의 접선 가속도는 0이므로, 구슬의 가속도 <span class="nw">$a_1$은</span> 다음 식으로 주어진다.</p>
+<div class="f" style="left:193pt;top:241pt"><span class="fig" data-srcpage="8" data-clip="193,241,232,269"></span></div>
+<p class="x a-j" style="--b:282.5">여기서 <span class="nw">$\rho_1$은</span> 이 순간 구슬의 궤적의 곡률 반지름이다. 실험실 기준계에서 구슬의 궤적을 분석하자. 구슬의 궤적의 가장 낮은 점을 원점으로 하는 좌표계 <span class="nw">$xOy$를</span> 도입하자. 좌표축의 방향은 첫 번째 방법의 그림에서 도입한 것과 같다. 계의 질량 중심은 <span class="nw">$x$축을</span> 따라 움직이지 않으므로 다음이 성립한다.</p>
+<div class="f" style="left:136pt;top:340pt"><span class="fig" data-srcpage="8" data-clip="136,340,289,367"></span></div>
+<p class="x a-j" style="--b:380.1">실&nbsp;1의 길이가 일정하다는 조건을 쓰자.</p>
+<div class="f" style="left:113pt;top:390pt"><span class="fig" data-srcpage="8" data-clip="113,390,312,423"></span></div>
+<p class="x a-j" style="--b:441.9">이로부터</p>
+<div class="f" style="left:64pt;top:452pt"><span class="fig" data-srcpage="8" data-clip="64,452,362,478"></span></div>
+<p class="x a-j wn" style="--b:490.0">따라서 실험실 기준계에서 구슬의 궤적은 포물선이다. 포물선의 꼭짓점에서의 곡률 반지름은 첫 번째 풀이에서 이미 구했으므로 다음을 얻는다.</p>
+<div class="f" style="left:168pt;top:524pt"><span class="fig" data-srcpage="8" data-clip="168,524,257,551"></span></div>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="9" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i a-j" style="--b:64.0">따라서</p>
+<div class="f" style="left:128pt;top:75pt"><span class="fig" data-srcpage="9" data-clip="128,75,297,104"></span></div>
+<p class="x i" style="--b:123.2"><b>세 번째 방법:</b></p>
+<p class="x i a-j" style="--b:135.2;width:245.2pt">실험실 기준계에 대한 구슬과 추의 가속도를 각각 <span class="nw">$\vec a_{\mathrm b}$와</span> <span class="nw">$\vec a_{\mathrm w}$라</span> 하고, 추에 고정된 기준계에서 구슬의 가속도를 <span class="nw">$\vec a_{\mathrm{rel}}$이라</span> 하자. 그러면 구슬의 가속도는 다음과 같이 나타낼 수 있다.</p>
+<p class="x c" style="--b:195.0;width:245.2pt">$\vec a_{\mathrm b} = \vec a_{\mathrm w} + \vec a_{\mathrm{rel}}.$</p>
+<div class="f" style="left:291pt;top:140pt"><span class="fig" data-srcpage="9" data-clip="291,140,391,239"></span></div>
+<p class="x ov" style="--b:236.0;left:351.7pt;--fs:6.974pt;--l:8pt">rel</p>
+<p class="x wr a-j wn" style="--b:212.5;--fw:123.3pt;--fh:34.9pt">이 순간 추의 가속도는 0임에 주목하자. 그러므로 이 순간 추에 고정된 기준계에서 구슬의 가속도는 연직 위 방향이고 그 크기는 <span class="nw">$a_1$이다</span>. 이제부터 추에 고정된 기준계에서 문제를 풀자. 실&nbsp;1의 길이가 일정하다는 조건을 생각하자. 어떤 순간 구슬과 추를 잇는 실&nbsp;1의 부분이 연직선과 각 <span class="nw">$\varphi$를</span> 이룬다고 하자. 추에 대한 구슬의 속도의 방향과 수평면 사이의 각 <span class="nw">$\theta$를</span> 구하자. 원통들의 속도는 수평 방향이므로, 구슬과 원통을 잇는 실&nbsp;1의 연직 부분의 길이는 다음과 같은 속력 <span class="nw">$u_{\mathrm{bc}}$로</span> 변한다.</p>
+<p class="x c" style="--b:344.0">$u_{\mathrm{bc}} = v_{\mathrm{rel}}\sin\theta.$</p>
+<p class="x a-j" style="--b:361.5">구슬과 추를 잇는 실&nbsp;1의 부분의 길이는 다음과 같은 속력 <span class="nw">$u_{\mathrm{bw}}$로</span> 변한다.</p>
+<p class="x c" style="--b:385.4">$u_{\mathrm{bw}} = v\cos(\varphi + 90 - \theta) = v_{\mathrm{rel}}\sin(\theta - \varphi).$</p>
+<p class="x a-j" style="--b:402.9">실&nbsp;1의 길이는 일정하게 유지되므로 다음을 얻는다.</p>
+<p class="x c a-d" style="--b:430.9;--a:13.0pt">$u_{\mathrm{bc}} + u_{\mathrm{bw}} = 0 \Rightarrow \sin\theta = \sin(\varphi - \theta) \Rightarrow \theta = \dfrac{\varphi}{2}.$</p>
+<p class="x a-j wn" style="--b:454.8">이 결과는 구슬의 속도가 실&nbsp;1의 두 부분 사이의 외각의 이등분선을 따라 향한다는 조건으로부터도 얻을 수 있다(그림 참고). 이는 포물선의 광학적 성질의 결과이다.</p>
+<p class="x i a-j wn" style="--b:490.7">이 순간 이 기준계에서 구슬의 접선 가속도는 0이므로, 구슬의 가속도를 연직 위로 향하는 축에 사영한 값 <span class="nw">$a_1$에</span> 대해 다음을 얻는다.</p>
+<p class="x c a-d" style="--b:542.6;--a:14.6pt">$a_1 = -v_{\mathrm{rel}}\dfrac{d\theta}{dt} = -\dfrac{v_{\mathrm{rel}}\dot\varphi}{2}.$</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="10" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-j" style="--b:64.0"><span class="nw">$\dot\varphi$를</span> 구하자. 이 순간 구슬과 추 사이의 거리는 <span class="nw">$L/2$이므로</span> 다음이 성립한다.</p>
+<p class="x c a-d" style="--b:105.3;--a:14.6pt">$v_{\mathrm{rel}} = -\dfrac{L\dot\varphi}{2} \Rightarrow \dot\varphi = -\dfrac{2v_{\mathrm{rel}}}{L}.$</p>
+<p class="x a-j" style="--b:129.9"><span class="nw">$\dot\varphi$를</span> <span class="nw">$a_1$의</span> 식에 대입하면 다음을 얻는다.</p>
+<p class="x c a-d" style="--b:160.2;--a:14.6pt">$a_1 = \dfrac{v_{\mathrm{rel}}^2}{L} = g\left(1 + \dfrac{m_1}{m_2}\right).$</p>
+<p class="x i" style="--b:190.5;margin-top:-1.1pt"><b>네 번째 방법:</b></p>
+<div class="f" style="left:320pt;top:207pt"><span class="fig" data-srcpage="10" data-clip="320,207,388,290"></span></div>
+<p class="x i a-j wn" style="--b:202.5;width:273.5pt">구슬의 &lsquo;연직 아래&rsquo; 방향 변위를 <span class="nw">$y$,</span> 원통 사이의 거리를 <span class="nw">$x$,</span> 추와 구슬을 잇는 실&nbsp;1의 부분의 길이를 <span class="nw">$r$라</span> 하자. 어떤 순간 추와 구슬을 잇는 실&nbsp;1의 부분이 연직선과 이루는 각을 <span class="nw">$\varphi$라</span> 하면, <span class="nw">$y = x\operatorname{ctg}\varphi$이고</span> <span class="nw">$r = x/\sin\varphi$이다</span>. 실이 늘어나지 않는다는 조건으로부터 다음을 얻는다.</p>
+<div class="f" style="left:151pt;top:275pt"><span class="fig" data-srcpage="10" data-clip="151,275,274,302"></span></div>
+<p class="x a-j" style="--b:318.1">이로부터</p>
+<div class="f" style="left:142pt;top:320pt"><span class="fig" data-srcpage="10" data-clip="142,320,284,347"></span></div>
+<p class="x i a-j wn" style="--b:359.1">이 순간 <span class="nw">$\varphi = 0$이다</span>. 이제부터 아래 첨자 0은 이 순간을 나타낸다. 이 순간 구슬의 가속도를 연직 위로 향하는 축에 사영한 값은 <span class="nw">$a_1 = -d^2y_0/dt^2$로</span> 주어진다. <span class="nw">$y$를</span> 시간에 대해 미분하면 다음을 얻는다.</p>
+<div class="f" style="left:81pt;top:408pt"><span class="fig" data-srcpage="10" data-clip="81,408,345,434"></span></div>
+<p class="x a-j" style="--b:452.0"><span class="nw">$dy/dt$를</span> 시간에 대해 미분하자.</p>
+<div class="f" style="left:102pt;top:461pt"><span class="fig" data-srcpage="10" data-clip="102,461,325,492"></span></div>
+<p class="x a-j" style="--b:508.7">이 순간 <span class="nw">$\varphi = 0$이므로</span> 다음을 얻는다.</p>
+<div class="f" style="left:189pt;top:520pt"><span class="fig" data-srcpage="10" data-clip="189,520,236,547"></span></div>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="11" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-j" style="--b:64.0"><span class="nw">$\dot\varphi_0$을</span> 구하자. 이를 위해 <span class="nw">$x$의</span> 식을 시간에 대해 미분하자.</p>
+<div class="f" style="left:113pt;top:74pt"><span class="fig" data-srcpage="11" data-clip="113,74,314,105"></span></div>
+<p class="x a-j" style="--b:118.5">이 순간 <span class="nw">$\varphi = 0$이고</span> <span class="nw">$dx/dt = -v_{\mathrm{rel}}$이다</span>. 그러면</p>
+<p class="x c a-d" style="--b:147.8;--a:14.6pt">$-v_{\mathrm{rel}} = \dfrac{L\dot\varphi_0}{2} \Rightarrow \dot\varphi_0 = -\dfrac{2v_{\mathrm{rel}}}{L}.$</p>
+<p class="x a-j" style="--b:172.5">따라서</p>
+<p class="x c a-d" style="--b:192.9;--a:14.6pt">$a_1 = \dfrac{v_{\mathrm{rel}}^2}{L} = g\left(1 + \dfrac{m_1}{m_2}\right).$</p>
+<p class="x i a-j" style="--b:219.1"><span class="nw">$a_1$을</span> <span class="nw">$T_1$과</span> <span class="nw">$T_2$의</span> 식에 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:92pt;top:231pt"><span class="fig" data-srcpage="11" data-clip="92,231,333,260"></span></div>
+<p class="x h" style="--b:277.8">문제 10-T3. 중앙 출제 위원회 자료실에서</p>
+<p class="x i a-j" style="--b:293.4">1. 과정이 시작될 때 피스톤 아래 공기의 압력과 대기압의 차를 <span class="nw">$\Delta p$라</span> 하자. 수은이 피스톤에 가하는 압력이 피스톤 아래 공기의 초과 압력과 같아질 때 피스톤이 움직이기 시작한다. 따라서</p>
+<div class="f" style="left:138pt;top:330pt"><span class="fig" data-srcpage="11" data-clip="138,330,287,356"></span></div>
+<p class="x a-j" style="--b:372.6">피스톤 아래 공기의 온도는 일정하다고 볼 수 있다. 관의 아래쪽이 막혀 있으므로 피스톤 아래 공기의 양도 일정하게 유지된다. 그러면 피스톤 아래 공기의 압력을 <span class="nw">$p_{\mathrm{air}}$라</span> 할 때, 이 압력이 <span class="nw">$x$에</span> 따라 어떻게 변하는지는 보일&ndash;마리오트 법칙으로 정해진다.</p>
+<p class="x c a-d" style="--b:437.2;--a:14.6pt">$p_{\mathrm{air}}V = const \Rightarrow p_{\mathrm{air}} = \dfrac{(p_0 + \Delta p)L}{L - x}.$</p>
+<p class="x a-j" style="--b:462.8">용기 안 수은의 높이를 <span class="nw">$h$라</span> 하자. 그러면 수은이 피스톤에 가하는 압력 <span class="nw">$p_{\mathrm{Hg}}$는</span> 다음과 같다.</p>
+<p class="x c" style="--b:486.7">$p_{\mathrm{Hg}} = p_0 + \rho g(h + x).$</p>
+<p class="x a-j" style="--b:504.6">평형 상태에서 피스톤 아래 공기의 압력은 수은이 피스톤에 가하는 압력과 같으므로 다음이 성립한다.</p>
+<div class="f" style="left:147pt;top:519pt"><span class="fig" data-srcpage="11" data-clip="147,519,279,545"></span></div>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="12" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-j" style="--b:64.0">용기 안 수은의 높이가 최댓값 <span class="nw">$h_{max}$에</span> 이를 때 <span class="nw">$x = x_{max}$이므로</span> 다음을 얻는다.</p>
+<div class="f" style="left:97pt;top:88pt"><span class="fig" data-srcpage="12" data-clip="97,88,329,116"></span></div>
+<p class="x a-j" style="--b:137.2">또는 <span class="nw">$p_0/(\rho g) = h_0$을</span> 고려하면</p>
+<p class="x c a-d" style="--b:166.0;--a:14.6pt">$h_1 = \dfrac{(h_0 + h_{max} + x_{max})(L - x_{max})}{L} - h_0 = 380\,\mathrm{mm}.$</p>
+<p class="x i a-j" style="--b:186.6">2. 피스톤의 평형 조건을 다음과 같이 다시 쓰자.</p>
+<div class="f" style="left:137pt;top:200pt"><span class="fig" data-srcpage="12" data-clip="137,200,288,213"></span></div>
+<p class="x a-j" style="--b:230.5">괄호를 풀면 다음을 얻는다.</p>
+<div class="f" style="left:132pt;top:239pt"><span class="fig" data-srcpage="12" data-clip="132,239,293,257"></span></div>
+<p class="x a-j" style="--b:274.3"><span class="nw">$h &gt; h_1$일</span> 때 얻은 이차 방정식의 상수항은 음수이며, 근과 계수의 관계(비에트 정리)로부터 이 방정식은 양의 근을 정확히 하나 가진다는 점에 주목하자. 그런데 피스톤이 멈춤턱보다 위에 있을 수는 없으므로, <span class="nw">$h &gt; h_1$일</span> 때 피스톤의 평형 위치는 하나뿐이다. <span class="nw">$\Delta h \ll h_1$이므로</span> 상수항을 0으로 볼 수 있다. 해 <span class="nw">$x = 0$을</span> 약분하여 없애면 다음을 얻는다.</p>
+<div class="f" style="left:173pt;top:347pt"><span class="fig" data-srcpage="12" data-clip="173,347,252,361"></span></div>
+<p class="x a-j" style="--b:377.9">또는</p>
+<p class="x c a-d" style="--b:406.7;--a:14.6pt">$x_1 = L - \dfrac{(h_0 + h_{max} + x_{max})(L - x_{max})}{L} = 1900\,\mathrm{mm}.$</p>
+<p class="x i a-j" style="--b:427.3">3. 용기 안 수은의 높이가 관의 위쪽 끝보다 낮아진 뒤에는 피스톤의 평형 위치가 더 이상 변하지 않는다. <span class="nw">$h = 0$일</span> 때 피스톤의 평형 조건으로부터 얻는 이차 방정식을 풀자.</p>
+<p class="x c a-d" style="--b:480.9;--a:16.3pt">$x_{2(1,2)} = \dfrac{L - h_0 \pm \sqrt{(L - h_0)^2 - 4Lh_1}}{2} = 0.76\,\mathrm{m},\ 1.52\,\mathrm{m}.$</p>
+<p class="x a-j" style="--b:505.6">따라서 용기 안 수은의 높이가 사실상 0까지 낮아지면, 피스톤은 두 개의 평형 위치를 가지며 그중 안정한 위치에 자리 잡게 된다. 구한 두 평형 위치의 안정성을 분석하자.</p>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="13" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i a-j" style="--b:64.0">피스톤과 멈춤턱 사이의 거리가 늘어날 때 피스톤 아래 공기의 압력이 수은이 피스톤에 가하는 압력보다 커지면, 피스톤의 평형 위치는 안정하다. 피스톤과 멈춤턱 사이의 거리가 작은 값 <span class="nw">$\Delta x$만큼</span> 늘어났다면, 피스톤의 평형 위치가 안정할 조건은 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:132pt;top:123pt"><span class="fig" data-srcpage="13" data-clip="132,123,293,149"></span></div>
+<p class="x a-j" style="--b:164.4">평형 조건을 이용하면 다음을 얻는다.</p>
+<div class="f" style="left:59pt;top:177pt"><span class="fig" data-srcpage="13" data-clip="59,177,367,203"></span></div>
+<p class="x a-j" style="--b:218.6"><span class="nw">$\Delta x$가</span> 작다는 것을 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:62pt;top:231pt"><span class="fig" data-srcpage="13" data-clip="62,231,364,257"></span></div>
+<p class="x a-j" style="--b:274.4">피스톤의 평형 위치가 안정한 <span class="nw">$x$의</span> 값을 구하자.</p>
+<p class="x c a-d" style="--b:319.1;--a:15.7pt">$L &gt; x &gt; L - \sqrt{\dfrac{(p_0 + \Delta p)L}{\rho g}} = L - \sqrt{(h_0 + h_1)L} = x_{\mathrm{cr}} \approx 1178\,\mathrm{mm}.$</p>
+<p class="x a-j" style="--b:347.4">따라서 평형 위치 <span class="nw">$x_{2(1)} = 760\,\mathrm{mm}$는</span> 불안정하고, <span class="nw">$x_{2(2)} = 1520\,\mathrm{mm}$는</span> 안정하다. <span class="nw">$h = 0$일</span> 때 위치 <span class="nw">$x = 0$도</span> 평형 위치임을 언급해 둔다. 이 위치에서는 피스톤 아래 공기의 압력이, 대기압과 같은 수은의 압력보다 크기 때문이다. 그러나 피스톤이 멈춤턱으로부터 거리 <span class="nw">$x = x_{\mathrm{cr}}$인</span> 곳에 이르기 전까지 피스톤은 언제나 안정한 평형 위치에 있게 된다. 이때 <span class="nw">$x$의</span> 값은 용기 안 수은의 높이 <span class="nw">$h$가</span> 커질수록 단조롭게 증가한다. <span class="nw">$h = 0$일</span> 때 구한 값이 <span class="nw">$x_{2(2)} &gt; x_{\mathrm{cr}}$이므로,</span> 용기 안 수은의 높이가 낮아지는 동안 피스톤은 언제나 안정한 평형 위치에 있으며 그 위치를 벗어날 수 없다. 따라서 피스톤의 최종 위치에 해당하는 <span class="nw">$x_2$의</span> 값은 다음과 같다.</p>
+<p class="x c a-d" style="--b:506.7;--a:16.4pt">$x_2 = \dfrac{L - h_0 + \sqrt{(L + h_0)^2 - 4(h_0 + h_{max} + x_{max})(L - x_{max})}}{2} = 1520\,\mathrm{mm}.$</p>
+<p class="x i a-j wn" style="--b:531.3"><i>참고:</i> 피스톤의 평형 위치의 안정성은 해석적으로뿐만 아니라 그래프를 이용하여 조사할 수도 있다. 이를 위해</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="14" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x a-j" style="--b:64.0"><span class="nw">$p_{\mathrm{air}}(x)$의</span> 그래프(그림의 검은 선)를 그리고, 그 위에 여러 <span class="nw">$h$</span> 값에 대한 직선 <span class="nw">$p_{\mathrm{Hg}}(x)$를</span> 그리자. 여기서 압력은 수은 기둥의 밀리미터로 나타낸다. 함수 <span class="nw">$p_{\mathrm{air}}(x)$와</span> <span class="nw">$p_{\mathrm{Hg}}(x)$의</span> 그래프의 교점은 피스톤의 평형 위치에 해당한다. 교점 근처에서 <span class="nw">$x$가</span> 커질 때 함수 <span class="nw">$p_{\mathrm{air}}(x)$가</span> 함수 <span class="nw">$p_{\mathrm{Hg}}(x)$보다</span> 더 많이 증가하면, 피스톤이 조금 변위될 때 피스톤에 작용하는 힘들의 합력은 변위와 반대 방향을 향하며, 따라서 평형 위치는 안정하다. 반대로 교점 근처에서 <span class="nw">$x$가</span> 커질 때 함수 <span class="nw">$p_{\mathrm{air}}(x)$가</span> 함수 <span class="nw">$p_{\mathrm{Hg}}(x)$보다</span> 더 적게 증가하면, 피스톤이 조금 변위될 때 피스톤에 작용하는 힘들의 합력은 변위 방향을 향하며, 따라서 피스톤의 평형 위치는 불안정하다. 그림으로부터 <span class="nw">$h &gt; h_1$일</span> 때는 피스톤의 평형 위치가 모두 안정하고, <span class="nw">$h = h_1$일</span> 때 평형 위치 <span class="nw">$x = 0$은</span> 불안정함을 알 수 있다. <span class="nw">$h = 0$인</span> 경우(그래프의 빨간 직선)를 살펴보면, 교점 <span class="nw">$x_{2(1)} = 760\,\mathrm{mm}$는</span> 불안정한 평형 위치에, <span class="nw">$x_{2(2)} = 1520\,\mathrm{mm}$는</span> 안정한 평형 위치에 해당한다.</p>
+<div class="f" style="left:57pt;top:258pt"><span class="fig" data-srcpage="14" data-clip="57,258,369,481"></span></div>
+<div class="wb ov" style="left:120.6pt;top:261.8pt;width:12.4pt;height:4.4pt"></div>
+<p class="x ov a-m" style="--b:265.4;left:121.1pt">mm</p>
+<div class="wb ov" style="left:354.9pt;top:303.6pt;width:12.7pt;height:6.3pt"></div>
+<p class="x ov a-m" style="--b:309.0;left:355.5pt;color:#3a32c0">mm</p>
+<div class="wb ov" style="left:339.0pt;top:339.0pt;width:12.4pt;height:4.6pt"></div>
+<p class="x ov a-m" style="--b:343.0;left:339.5pt;color:#3a32c0">mm</p>
+<div class="wb ov" style="left:325.5pt;top:358.0pt;width:11.8pt;height:5.4pt"></div>
+<p class="x ov a-m" style="--b:362.9;left:326.0pt;color:#d0405a">mm</p>
+<div class="wb ov" style="left:317.6pt;top:455.4pt;width:12.4pt;height:5.2pt"></div>
+<p class="x ov a-m" style="--b:460.0;left:318.1pt">mm</p>
+<p class="x i a-j" style="--b:502.2">4. 1번 문항의 풀이 결과를 이용하여, 피스톤이 움직이기 시작하는 <span class="nw">$h_1$의</span> 값을 구하자.</p>
+<p class="x c a-d" style="--b:542.6;--a:14.6pt">$h_1 = \dfrac{(h_0 + h_{max} + x_{max})(L - x_{max})}{L} - h_0 = 1140\,\mathrm{mm}.$</p>
+</div>
+
+
+<!-- page 1 (booklet page 15) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="15" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">피스톤의 평형 조건을 쓰면 다음과 같다.</p>
+<div class="f" style="left:132pt;top:73pt"><span class="fig" data-srcpage="15" data-clip="132,73,293,90"></span></div>
+<p class="x" style="--b:107.9">해 <span class="nw">$x = 0$에는</span> <span class="nw">$h = h_1$이</span> 대응한다. 그런데 2번 문항을 풀 때 우리는 <span class="nw">$h = h_1$일</span> 때 피스톤에 멈춤턱으로부터 거리 <span class="nw">$x_1$인</span> 곳에 두 번째 평형 위치가 존재함을 얻었다. 이 거리는 다음과 같다.</p>
+<p class="x c b-d" style="--b:160.5;--a:15.4pt">$x_1 = L - \dfrac{(h_0 + h_{max} + x_{max})(L - x_{max})}{L} = 1140\,\mathrm{mm}.$</p>
+<p class="x" style="--b:185.1">이 위치는 안정하다. 이는 4번 문항을 풀 때 얻은 평형 위치의 안정성 판정 기준을 이용하여 보일 수 있다.</p>
+<p class="x c" style="--b:221.0">$x &gt; L - \sqrt{(h_0 + h_1)L} = x_\mathrm{cr} \approx 637\,\mathrm{mm}.$</p>
+<p class="x" style="--b:238.9">이 조건은 <span class="nw">$x = x_1$에서</span> 성립하므로, 용기 속 수은 면을 낮추는 과정에서 <span class="nw">$h = h_1$일</span> 때 피스톤은 멈춤턱에 닿지 않는다.</p>
+<p class="x i" style="--b:262.8">이후 용기 속 수은 면을 더 낮추면 피스톤에는 두 개의 평형 위치가 있는데, 하나는 안정하고 다른 하나는 불안정하다. 피스톤과 멈춤턱 사이의 거리 <span class="nw">$x$가</span> 조건 <span class="nw">$x &gt; x_\mathrm{cr}$을</span> 만족하는 동안 피스톤은 안정 평형 위치에 있다. 피스톤과 멈춤턱 사이의 거리가 <span class="nw">$x = x_\mathrm{cr}$이</span> 되면, 하나는 안정하고 다른 하나는 불안정한 피스톤의 두 평형 위치가 일치하여, 멈춤턱 쪽으로의 변위에 대해 불안정한 하나의 평형 위치가 된다. 이 위치는 이 문제 4번 문항 풀이의 참고에 제시된 그래프 <span class="nw">$p_\mathrm{air}(x)$와</span> <span class="nw">$p_\mathrm{Hg}(x)$가</span> 서로 접하는 경우에 해당한다. 같은 그래프로부터 피스톤의 이 평형 위치가 멈춤턱 쪽으로의 변위에 대해 불안정함을 알 수 있다.</p>
+<p class="x i" style="--b:394.3">따라서 어떤 값 <span class="nw">$h = h_2$에서</span> 피스톤이 위치 <span class="nw">$x = x_\mathrm{cr}$에</span> 오게 되면, 이 <span class="nw">$h$</span> 값에서는 <span class="nw">$x = x_\mathrm{cr}$을</span> 제외한 모든 위치에서 피스톤 아래 공기의 압력이 수은이 피스톤에 작용하는 압력보다 크다(아래 그림 참고). 그러므로 피스톤은 멈춤턱 쪽으로 갑자기 이동하며, 이후 용기 속 수은 면을 더 낮추어도 멈춤턱에서 떨어지지 않는다.</p>
+<p class="x i" style="--b:454.1">그래프가 서로 접한다는 것은 피스톤의 평형 조건에서 얻는 이차 방정식이 단 하나의 근을 가진다는 것에 해당함을 고려하자. 비에트 정리를 이용하면 다음을 얻는다.</p>
+<p class="x c" style="--b:490.0">$2x_\mathrm{cr} = L - h_0 - h_2.$</p>
+<p class="x" style="--b:507.9"><span class="nw">$x_\mathrm{cr}$의</span> 식에 <span class="nw">$h_1$을</span> 대입하면 다음을 얻는다.</p>
+<p class="x c" style="--b:531.8">$h_2 = 2\sqrt{(h_0 + h_{max} + x_{max})(L - x_{max})} - (L + h_0) \approx 1007\,\mathrm{mm}.$</p>
+</div>
+
+<!-- page 2 (booklet page 16) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="16" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:56.6pt;top:54pt"><span class="fig" data-srcpage="16" data-clip="56.6,54,368.6,305.5"></span></div>
+<div class="wb ov" style="left:129.2pt;top:58.2pt;width:13.6pt;height:6.2pt"></div>
+<p class="x ov" style="--b:63.5;left:130pt">mm</p>
+<div class="wb ov" style="left:351.9pt;top:278pt;width:13.6pt;height:6.0pt"></div>
+<p class="x ov" style="--b:283.1;left:352.6pt">mm</p>
+<p class="x h" style="--b:326.3">문제 10-T4. 막대의 비행</p>
+<p class="x i" style="--b:342.9">1. 두 번째 실험에서 구와 막대 사이의 척력 <span class="nw">$F_{r2}$를</span> 막대의 끝 <span class="nw">$A$와</span> 구의 중심 사이의 거리 <span class="nw">$r_A$의</span> 함수로 구하자.</p>
+<p class="x i" style="--b:378.7"><b>첫 번째 방법:</b></p>
+<p class="x i" style="--b:390.7">가상 변위의 방법을 이용하자.</p>
+<div class="f" style="left:182pt;top:402pt"><span class="fig" data-srcpage="16" data-clip="182,402,243,429"></span></div>
+<p class="x" style="--b:443.5">여기서 <span class="nw">$r_A$는</span> 구의 중심과 막대의 끝 <span class="nw">$A$</span> 사이의 거리이다. 구의 중심과 막대의 끝 <span class="nw">$A$</span> 사이의 거리를 <span class="nw">$dr_A$만큼</span> 바꾸면, 퍼텐셜 에너지의 변화는 길이 <span class="nw">$dr_A$인</span> 막대 조각을 막대의 끝 <span class="nw">$A$에</span> 해당하는 위치에서 막대의 끝 <span class="nw">$B$에</span> 해당하는 위치로 옮길 때 그 조각의 퍼텐셜 에너지의 변화와 같다. 그러면 <span class="nw">$dW_p$는</span> 다음과 같다.</p>
+<div class="f" style="left:160pt;top:506pt"><span class="fig" data-srcpage="16" data-clip="160,506,265,520"></span></div>
+<p class="x" style="--b:532.5">여기서 <span class="nw">$\varphi_A$와</span> <span class="nw">$\varphi_B$는</span> 각각 막대의 끝 <span class="nw">$A$와</span> <span class="nw">$B$에서</span> 구가 만드는 정전기장의 전위이다. 이때 막대가 매우 길므로 <span class="nw">$\varphi_B \approx 0$이다.</span></p>
+</div>
+
+<!-- page 3 (booklet page 17) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="17" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">따라서 다음을 얻는다.</p>
+<div class="f" style="left:187pt;top:67pt"><span class="fig" data-srcpage="17" data-clip="187,67,238,81"></span></div>
+<p class="x" style="--b:91.7">구는 표면에 균일하게 대전되어 있으므로, 구 내부에서 정전기장의 세기는 0이고 구 외부의 전기장은 구의 중심에 놓인 점전하 <span class="nw">$Q$의</span> 전기장과 같다. 따라서 다음을 얻는다.</p>
+<p class="x c b-d" style="--b:151.3;--a:28.5pt">$\varphi_A(r) = \begin{cases} \dfrac{Q}{4\pi\varepsilon_0R} \quad r_A \le R\text{일 때;}\\[9pt] \dfrac{Q}{4\pi\varepsilon_0r_A} \quad r_A &gt; R\text{일 때,}\end{cases} \Rightarrow F_{r2}(r_A) = \begin{cases} \dfrac{Q\lambda}{4\pi\varepsilon_0R} \quad r_A \le R\text{일 때;}\\[9pt] \dfrac{Q\lambda}{4\pi\varepsilon_0r_A} \quad r_A &gt; R\text{일 때.}\end{cases}$</p>
+<p class="x i" style="--b:187.1"><b>두 번째 방법:</b></p>
+<p class="x i" style="--b:199.1">구가 만드는 정전기장의 세기 <span class="nw">$E_r$는</span> 구 내부에서 0이고, 구 외부에서는 구의 중심에 놓인 전하 <span class="nw">$Q$가</span> 만드는 정전기장의 세기와 같다. 따라서 <span class="nw">$E_r(r)$는</span> 다음과 같다.</p>
+<p class="x c b-d" style="--b:254.4;--a:21.1pt">$E_r(r) = \begin{cases} 0 \quad r \le R\text{일 때;}\\[2pt] \dfrac{Q}{4\pi\varepsilon_0r^2} \quad r &gt; R\text{일 때.}\end{cases}$</p>
+<p class="x" style="--b:285.3">막대의 길이는 구의 반지름 <span class="nw">$R$보다</span> 훨씬 크므로 막대가 무한히 길다고 보자. 그러면 힘 <span class="nw">$F_{r2}$는</span> 다음과 같다.</p>
+<div class="f" style="left:171pt;top:303pt"><span class="fig" data-srcpage="17" data-clip="171,303,254,343"></span></div>
+<p class="x" style="--b:356.2">막대의 끝 <span class="nw">$A$가</span> 구 안에 있으면, 구 안에 놓인 막대 부분에 구의 정전기장이 작용하는 힘은 0이다. 따라서 다음을 얻는다.</p>
+<div class="f" style="left:153pt;top:386pt"><span class="fig" data-srcpage="17" data-clip="153,386,272,426"></span></div>
+<p class="x" style="--b:438.9">막대의 끝 <span class="nw">$A$가</span> 구 밖에 있으면 다음과 같다.</p>
+<div class="f" style="left:151pt;top:445pt"><span class="fig" data-srcpage="17" data-clip="151,445,274,485"></span></div>
+<p class="x" style="--b:498.2">따라서 다음을 얻는다.</p>
+<p class="x c b-d" style="--b:527.8;--a:28.5pt">$F_{r2}(r_A) = \begin{cases} \dfrac{Q\lambda}{4\pi\varepsilon_0R} \quad r_A \le R\text{일 때;}\\[9pt] \dfrac{Q\lambda}{4\pi\varepsilon_0r_A} \quad r_A &gt; R\text{일 때.}\end{cases}$</p>
+</div>
+
+<!-- page 4 (booklet page 18) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="18" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">막대의 끝 <span class="nw">$A$가</span> 구 안에 있는 동안 막대는 일정한 가속도 <span class="nw">$a = Q\lambda/(4\pi\varepsilon_0mR)$로</span> 운동함에 주목하자. 막대는 처음 속력 없이 운동을 시작하므로, 운동 시간 <span class="nw">$T_1$과</span> 막대가 구에서 빠져나오는 순간 막대의 속력 <span class="nw">$V_1$은</span> 다음과 같다.</p>
+<div class="f" style="left:136pt;top:110pt"><span class="fig" data-srcpage="18" data-clip="136,110,289,142"></span></div>
+<p class="x" style="--b:155.4">또는</p>
+<div class="f" style="left:131pt;top:167pt"><span class="fig" data-srcpage="18" data-clip="131,167,294,199"></span></div>
+<p class="x i" style="--b:211.8">2. 막대가 구에서 빠져나온 뒤, 막대는 막대의 끝 <span class="nw">$A$에서</span> 구의 중심까지의 거리에 반비례하는 힘의 장 속에서 운동한다. 두 번째 실험에서 막대와 구의 상호 작용 퍼텐셜 에너지를 <span class="nw">$W_2(r_A)$라</span> 하자. 막대의 끝 <span class="nw">$A$와</span> 구의 중심 사이의 거리가 <span class="nw">$r_A$일</span> 때 막대의 속력의 제곱 <span class="nw">$V^2(r)$를</span> 구하자.</p>
+<div class="f" style="left:44pt;top:269pt"><span class="fig" data-srcpage="18" data-clip="44,269,383,297"></span></div>
+<p class="x" style="--b:310.0">그러면 속력 <span class="nw">$V_2$는</span> 다음과 같다.</p>
+<div class="f" style="left:125pt;top:321pt"><span class="fig" data-srcpage="18" data-clip="125,321,300,352"></span></div>
+<p class="x" style="--b:368.6">차 <span class="nw">$W_2(R) - W_2(l)$을</span> 구하기 위해 첫 번째 실험을 살펴보자. 구와 막대 사이의 상호 작용 힘은 막대와 구의 중심에 놓인 점전하 <span class="nw">$Q$</span> 사이의 상호 작용 힘과 같다. 막대의 중심과 구의 중심 사이의 거리를 <span class="nw">$r_C$라</span> 하자. 막대가 매우 길므로 막대의 전기장은 무한히 긴 막대의 전기장으로 계산할 수 있다. 가우스 법칙으로부터 다음을 얻는다.</p>
+<p class="x c b-d" style="--b:447.2;--a:15.3pt">$\Phi = 2\pi r_CLE_r(r) = \dfrac{q}{\varepsilon_0} = \dfrac{\lambda L}{\varepsilon_0} \Rightarrow E_r(r_C) = \dfrac{\lambda}{2\pi\varepsilon_0r_C}.$</p>
+<p class="x" style="--b:468.5">첫 번째 실험에서 막대와 구 사이의 상호 작용 힘은 다음과 같다.</p>
+<div class="f" style="left:170pt;top:483pt"><span class="fig" data-srcpage="18" data-clip="170,483,255,510"></span></div>
+<p class="x" style="--b:520.6"><span class="nw">$r_A$와</span> <span class="nw">$r_C$의</span> 값이 같을 때, 첫 번째 실험에서 막대와 구의 상호 작용 힘은 두 번째 실험에서 막대와 구의 상호 작용 힘의 두 배임에 주목하자. 그러면 첫 번째 실험에서 막대와 구의 상호 작용 퍼텐셜 에너지를 <span class="nw">$W_1(r_C)$라</span></p>
+</div>
+
+<!-- page 5 (booklet page 19) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="19" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">할 때 다음이 성립한다.</p>
+<div class="f" style="left:131pt;top:77pt"><span class="fig" data-srcpage="19" data-clip="131,77,294,90"></span></div>
+<p class="x" style="--b:107.9">한편 첫 번째 실험에서 에너지 보존 법칙으로부터 다음을 얻는다.</p>
+<div class="f" style="left:55pt;top:119pt"><span class="fig" data-srcpage="19" data-clip="55,119,371,147"></span></div>
+<p class="x" style="--b:161.3">따라서 다음을 얻는다.</p>
+<div class="f" style="left:179pt;top:163pt"><span class="fig" data-srcpage="19" data-clip="179,163,246,190"></span></div>
+<p class="x" style="--b:198.0">따라서</p>
+<div class="f" style="left:178pt;top:210pt"><span class="fig" data-srcpage="19" data-clip="178,210,247,242"></span></div>
+<p class="x i" style="--b:255.2">3. 두 번째 실험에서 막대가 구에서 빠져나온 순간부터 잰 시간으로, 막대의 끝 <span class="nw">$A$가</span> 구의 중심으로부터 거리 <span class="nw">$S$인</span> 곳에 도달할 때까지 걸리는 시간을 <span class="nw">$t$라</span> 하자. 이때 서로 다른 논리에 바탕을 둔 두 가지 풀이가 가능하다.</p>
+<p class="x i" style="--b:303.0"><b>첫 번째 풀이:</b></p>
+<p class="x i" style="--b:314.9">두 번째 실험에서 막대가 구에서 빠져나온 뒤의 운동을 살펴보자. 첫 번째와 두 번째 실험에서 막대가 운동하는 힘의 장은 서로 닮은꼴이고 두 배만큼 차이가 난다. 이는 처음 속력의 제곱의 비가 <span class="nw">$v^2/V_1^2 = 2$이면,</span> 임의의 <span class="nw">$r = r_A = r_C$에</span> 대해 비 <span class="nw">$v_1^2(r)/V^2(r) = 2$가</span> 유지된다는 뜻이다. 여기서 <span class="nw">$v_1(r)$은</span> 첫 번째 실험에서 막대의 속력이다. 실제로 다음이 성립한다.</p>
+<div class="f" style="left:57pt;top:387pt"><span class="fig" data-srcpage="19" data-clip="57,387,369,413"></span></div>
+<p class="x" style="--b:428.2">그러면 두 번째 실험에서 임의의 무한히 작은 구간 <span class="nw">$dr$를</span> 지나는 데 걸리는 시간 <span class="nw">$dt$는</span> 첫 번째 실험에서 막대가 같은 구간 <span class="nw">$dr$를</span> 지나는 데 걸리는 시간 <span class="nw">$d\tau$의</span> <span class="nw">$\sqrt2$배이다.</span> 따라서 다음을 얻는다.</p>
+<div class="f" style="left:134pt;top:456pt"><span class="fig" data-srcpage="19" data-clip="134,456,292,478"></span></div>
+<p class="x i" style="--b:495.9"><b>두 번째 풀이:</b></p>
+<p class="x i" style="--b:507.9">두 번째 실험에서 막대가 구에서 빠져나온 뒤의 운동을 살펴보자. 첫 번째와 두 번째 실험에서 막대가 운동하는 힘의 장은 서로 닮은꼴이고 두 배만큼 차이가 난다. 첫 번째 실험에서 의존성 <span class="nw">$\tau(v)$를</span> 나타내는 그래프 <span class="nw">$y(x)$는</span> 매개변수 <span class="nw">$Q$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$m$,</span> <span class="nw">$R$이</span> 바뀌어도</p>
+</div>
+
+<!-- page 6 (booklet page 20) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="20" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">그 모양이 변하지 않음에 주목하자. 곱 <span class="nw">$Q\lambda$의</span> 값을 절반으로 줄이면, 의존성 <span class="nw">$y(x)$는</span> 구 표면에서의 막대의 속력 <span class="nw">$V_1$에</span> 대한 시간 <span class="nw">$t$의</span> 의존성을 나타낸다. 여기서 <span class="nw">$y = t/t_0$,</span> <span class="nw">$x = V_1/V_0$이고,</span> <span class="nw">$t_0 = \sqrt2\tau_0$,</span> <span class="nw">$V_0 = v_0/\sqrt2$이다.</span> 그러면 시간 <span class="nw">$t$는</span> 다음과 같다.</p>
+<div class="f" style="left:135pt;top:105pt"><span class="fig" data-srcpage="20" data-clip="135,105,290,126"></span></div>
+<p class="x i" style="--b:143.7">첫 번째 실험 시리즈에 대해 주어진 그래프에서 좌표 <span class="nw">$x$를</span> 구하자.</p>
+<div class="f" style="left:177pt;top:150pt"><span class="fig" data-srcpage="20" data-clip="177,150,248,186"></span></div>
+<p class="x" style="--b:197.5">이때 <span class="nw">$y(2) \approx 0.43$이다.</span> 그러면 다음을 얻는다.</p>
+<div class="f" style="left:169pt;top:210pt"><span class="fig" data-srcpage="20" data-clip="169,210,256,240"></span></div>
+<p class="x" style="--b:257.9">막대의 전체 운동 시간 <span class="nw">$T$는</span> <span class="nw">$T_1$과</span> <span class="nw">$t$의</span> 합이므로 다음을 얻는다.</p>
+<div class="f" style="left:155pt;top:269pt"><span class="fig" data-srcpage="20" data-clip="155,269,271,300"></span></div>
+<p class="x" style="--b:315.2">또는</p>
+<div class="f" style="left:131pt;top:332pt"><span class="fig" data-srcpage="20" data-clip="131,332,294,358"></span></div>
+<p class="x h" style="--b:373.8">문제 10-T5. 전기 사면체</p>
+<p class="x i" style="--b:389.1">1. <b>첫 번째 풀이:</b></p>
+<p class="x i wn" style="--b:401.0;width:216.8pt">첫 번째 전원을 지나는 전류의 세기를 구하기 위해 등가 전원의 방법을 이용하자. 첫 번째 전원의 단자 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 연결된 사면체의 나머지 부분 전체는 내부 저항이 <span class="nw">$r_{0(1)}$이고</span> 기전력이 <span class="nw">$\mathcal{E}_{0(1)}$인</span> 하나의 등가 전원으로 바꿀 수 있다. 이때 첫 번째 전원을 지나는 전류의 세기를 구하기 위한 등가 회로는 그림&nbsp;1과 같다.</p>
+<div class="f" style="left:256pt;top:408pt"><span class="fig" data-srcpage="20" data-clip="256,408,395,514"></span></div>
+<p class="x c" style="--b:523.8;left:322pt;width:40pt">그림&nbsp;1</p>
+<p class="x i wr wn" style="--b:520.6;--fw:151.7pt;--fh:11pt">먼저 마디 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 연결된 등가 전원의 저항 <span class="nw">$r_{0(1)}$을</span> 구하자. 이를 위해 두 번째 전원을 이상적인 단락 도선으로 바꾸고, 마디 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이의 브리지 저항을</p>
+</div>
+
+<!-- page 7 (booklet page 21) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="21" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">계산하자.</p>
+<div class="f" style="left:135pt;top:67pt"><span class="fig" data-srcpage="21" data-clip="135,67,290,94"></span></div>
+<p class="x" style="--b:104.9">첫 번째 전원을 지나는 전류의 세기 <span class="nw">$I_1$은</span> 다음 식으로 주어진다.</p>
+<div class="f" style="left:178pt;top:117pt"><span class="fig" data-srcpage="21" data-clip="178,117,248,145"></span></div>
+<p class="x" style="--b:158.5">위 첨자 <span class="nw">$(-)$는</span> 전원의 연결 극성을 반대로 바꾸었을 때 그 전원을 지나는 전류의 세기를 나타낸다고 하자. 그러면 다음을 얻는다.</p>
+<div class="f" style="left:176pt;top:183pt"><span class="fig" data-srcpage="21" data-clip="176,183,249,210"></span></div>
+<p class="x" style="--b:227.4">이 식으로부터, 첫 번째 전원을 지나는 전류의 세기가 그 전원의 연결 극성과 무관하려면 <span class="nw">$\mathcal{E}_{0(1)} = 0$이어야</span> 함을 알 수 있다. 이것이 어떤 조건에서 가능한지 알아보자. 등가 전원의 기전력 <span class="nw">$\mathcal{E}_{0(1)}$은</span> 첫 번째 전원 대신 마디 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 연결한 이상적인 전압계의 측정값과 같다. 저항이 <span class="nw">$R_1$,</span> <span class="nw">$R_2$,</span> <span class="nw">$R_3$,</span> <span class="nw">$R_4$인</span> 저항기들로 이루어진 브리지가 평형을 이루면 전압계의 측정값은 0이 되며, 이로부터 저항기들의 저항 사이의 관계를 얻는다.</p>
+<div class="f" style="left:192pt;top:312pt"><span class="fig" data-srcpage="21" data-clip="192,312,235,339"></span></div>
+<p class="x" style="--b:354.6">따라서 첫 번째 전원을 지나는 전류의 세기는 <span class="nw">$I_1 = \mathcal{E}_1/r_{0(1)}$이다.</span></p>
+<p class="x i wn" style="--b:366.6;width:216.8pt">이제 다시 등가 전원의 방법을 이용하여 두 번째 전원을 지나는 전류의 세기를 구하자. 두 번째 전원의 단자 <span class="nw">$C$와</span> <span class="nw">$D$에</span> 연결된 사면체의 나머지 부분 전체(첫 번째 전원 포함)를 내부 저항이 <span class="nw">$r_{0(2)}$이고</span> 기전력이 <span class="nw">$\mathcal{E}_{0(2)}$인</span> 등가 전원으로 바꾸자. 이때 두 번째 전원을 지나는 전류의 세기를 구하기 위한 등가 회로는 그림&nbsp;2와 같다.</p>
+<div class="f" style="left:256pt;top:374pt"><span class="fig" data-srcpage="21" data-clip="256,374,395,479"></span></div>
+<p class="x c" style="--b:490.1;left:322pt;width:40pt">그림&nbsp;2</p>
+<p class="x i" style="--b:486.1;width:216.8pt">두 번째 전원을 지나는 전류의 세기 <span class="nw">$I_2$는</span> 다음 식으로 주어진다.</p>
+<div class="f" style="left:178pt;top:510pt"><span class="fig" data-srcpage="21" data-clip="178,510,248,538"></span></div>
+</div>
+
+<!-- page 8 (booklet page 22) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="22" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">첫 번째 전원의 연결 극성을 바꾸었을 때 두 번째 전원을 지나는 전류의 세기를 <span class="nw">$I_2'$이라</span> 하자. <span class="nw">$\mathcal{E}_{0(2)} \sim \mathcal{E}_1$이므로</span> <span class="nw">$I_2'$은</span> 다음 식으로 주어진다.</p>
+<div class="f" style="left:178pt;top:90pt"><span class="fig" data-srcpage="22" data-clip="178,90,248,118"></span></div>
+<p class="x" style="--b:130.9">먼저 마디 <span class="nw">$C$와</span> <span class="nw">$D$에</span> 연결된 등가 전원의 저항 <span class="nw">$r_{0(2)}$를</span> 구하자. 이를 위해 첫 번째 전원을 이상적인 단락 도선으로 바꾸고 마디 <span class="nw">$C$와</span> <span class="nw">$D$</span> 사이의 브리지 저항을 계산하자.</p>
+<div class="f" style="left:135pt;top:167pt"><span class="fig" data-srcpage="22" data-clip="135,167,290,195"></span></div>
+<p class="x" style="--b:209.6">등가 전원의 기전력 <span class="nw">$\mathcal{E}_{0(2)}$는</span> 두 번째 전원 대신 마디 <span class="nw">$C$와</span> <span class="nw">$D$에</span> 연결한 이상적인 전압계의 측정값과 같다. 두 번째 전원 대신 전압계를 연결한 경우에도 브리지가 평형을 이루므로 전압계의 측정값은 0이다. 실제로 다음이 성립한다.</p>
+<div class="f" style="left:164pt;top:258pt"><span class="fig" data-srcpage="22" data-clip="164,258,262,285"></span></div>
+<p class="x" style="--b:300.4">따라서 두 번째 전원을 지나는 전류의 세기 <span class="nw">$I_2 = \mathcal{E}_2/r_{0(2)}$는</span> 첫 번째 전원의 연결 극성에 의존하지 않으며, 그러므로 다음을 얻는다.</p>
+<p class="x c" style="--b:348.2">$I_2' = I_2 = 2\,\mathrm{A}.$</p>
+<p class="x i" style="--b:366.2"><b>두 번째 풀이:</b></p>
+<p class="x i" style="--b:378.1">전류의 중첩 방법을 이용하자. 회로의 각 가지에 흐르는 전류의 세기를, 한 전원만의 작용으로 그 가지에 흐르는 전류들의 중첩으로 구한다. 이때 다른 전원은 이상적이므로 이상적인 단락 도선으로 바꾼다.</p>
+<p class="x i" style="--b:426.0">두 번째 전원을 단락 도선으로 바꾸었다고 하자. 이때 첫 번째와 두 번째 전원을 지나는 전류의 세기를 각각 <span class="nw">$I_{1(1)}$과</span> <span class="nw">$I_{2(1)}$이라</span> 하자(그림&nbsp;3 참고). 그러면 첫 번째 전원의 연결 극성을 바꿀 때 그 전원을 지나는 전류 <span class="nw">$I_{1(1)}$의</span> 방향은 반대로 바뀌지만 전류의 세기는 변하지 않는다.</p>
+<p class="x i" style="--b:485.7">이제 첫 번째 전원을 단락 도선으로 바꾸자. 이때 첫 번째와 두 번째 전원을 지나는 전류의 세기를 각각 <span class="nw">$I_{1(2)}$와</span> <span class="nw">$I_{2(2)}$라</span> 하자(그림&nbsp;4 참고).</p>
+<p class="x i" style="--b:521.6">두 번째 전원의 작용으로 단락 도선에 흐르는 전류의 세기 <span class="nw">$I_{1(2)}$가</span> 0이 아니면, 첫 번째 전원의 극성을 바꿀 때 그 전원을 지나는 전체</p>
+</div>
+
+<!-- page 9 (booklet page 23) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="23" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:123pt;top:55pt"><span class="fig" data-srcpage="23" data-clip="123,55,303,214"></span></div>
+<p class="x c" style="--b:225.9;left:192.7pt;width:40pt">그림&nbsp;3</p>
+<div class="f" style="left:123pt;top:242pt"><span class="fig" data-srcpage="23" data-clip="123,242,303,388"></span></div>
+<p class="x c" style="--b:412.4;left:192.7pt;width:40pt">그림&nbsp;4</p>
+<p class="x" style="--b:444.5">전류의 세기가 보존될 수 없다. 그러므로 두 번째 전원의 작용으로 단락 도선 <span class="nw">$AB$에</span> 흐르는 전류의 세기 <span class="nw">$I_{1(2)}$는</span> 0이다. 이는 브리지가 평형을 이룰 때에만 가능하다. 그러면 저항들 사이에 다음 관계가 성립한다.</p>
+<div class="f" style="left:192pt;top:491pt"><span class="fig" data-srcpage="23" data-clip="192,491,235,519"></span></div>
+<p class="x" style="--b:532.5">이 조건은 두 번째 전원을 단락 도선 <span class="nw">$CD$로</span> 바꾸었을 때 첫 번째 전원이 연결된 브리지의 평형 조건이기도 함에</p>
+</div>
+
+<!-- page 10 (booklet page 24) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="24" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">주목하자. 그러므로 첫 번째 전원의 작용으로 단락 도선 <span class="nw">$CD$에</span> 흐르는 전류의 세기 <span class="nw">$I_{2(1)}$도</span> 0이다. 이로부터 첫 번째와 두 번째 전원을 지나는 전류의 세기는 오직 해당 전원의 기전력의 크기와 연결 극성에 의해서만 정해진다고 결론지을 수 있다. 따라서 첫 번째 전원의 연결 극성을 바꿀 때 두 번째 전원을 지나는 전류의 세기 <span class="nw">$I_2'$은</span> 다음과 같다.</p>
+<p class="x c" style="--b:147.7">$I_2' = I_2 = 2\,\mathrm{A}.$</p>
+<p class="x i" style="--b:165.7"><b>세 번째 풀이:</b></p>
+<p class="x i" style="--b:177.6">전하 보존 법칙을 고려하여 처음 회로에 전류를 표시하자. 이 회로에는 독립적인 전류가 3개 있으므로 전류의 세기 <span class="nw">$I_1$,</span> <span class="nw">$I_2$,</span> <span class="nw">$I_3$의</span> 3개만 도입하면 충분하다(그림&nbsp;5 참고).</p>
+<div class="f" style="left:58pt;top:217pt"><span class="fig" data-srcpage="24" data-clip="58,217,367,376"></span></div>
+<p class="x c" style="--b:387.8;left:192pt;width:40pt">그림&nbsp;5</p>
+<p class="x i" style="--b:412.5">닫힌 회로 <span class="nw">$CDGE$에</span> 키르히호프 제2법칙을 적용하자.</p>
+<div class="f" style="left:123pt;top:426pt"><span class="fig" data-srcpage="24" data-clip="123,426,302,439"></span></div>
+<p class="x" style="--b:456.3">닫힌 회로 <span class="nw">$CDHF$에</span> 키르히호프 제2법칙을 적용하자.</p>
+<div class="f" style="left:115pt;top:469pt"><span class="fig" data-srcpage="24" data-clip="115,469,310,497"></span></div>
+<p class="x" style="--b:511.3">닫힌 회로 <span class="nw">$ABGDH$에</span> 키르히호프 제2법칙을 적용하자.</p>
+<div class="f" style="left:156pt;top:524pt"><span class="fig" data-srcpage="24" data-clip="156,524,269,538"></span></div>
+</div>
+
+<!-- page 11 (booklet page 25) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="25" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0"><span class="nw">$I_3$을</span> 소거하면 <span class="nw">$I_1$과</span> <span class="nw">$I_2$에</span> 대한 다음 연립 방정식을 얻는다.</p>
+<div class="f" style="left:92pt;top:75pt"><span class="fig" data-srcpage="25" data-clip="92,75,322,127"></span></div>
+<p class="x" style="--b:140.0">연립 방정식의 첫 번째 식에서 <span class="nw">$I_2$를</span> 구해 두 번째 식에 대입하자.</p>
+<div class="f" style="left:52pt;top:151pt"><span class="fig" data-srcpage="25" data-clip="52,151,373,213"></span></div>
+<p class="x" style="--b:224.0">따라서</p>
+<div class="f" style="left:78pt;top:234pt"><span class="fig" data-srcpage="25" data-clip="78,234,347,264"></span></div>
+<p class="x" style="--b:281.2">마찬가지로 연립 방정식의 첫 번째 식에서 <span class="nw">$I_1$을</span> 구해 두 번째 식에 대입하자.</p>
+<div class="f" style="left:41pt;top:292pt"><span class="fig" data-srcpage="25" data-clip="41,292,384,320"></span></div>
+<p class="x" style="--b:334.0">따라서</p>
+<div class="f" style="left:78pt;top:344pt"><span class="fig" data-srcpage="25" data-clip="78,344,347,374"></span></div>
+<p class="x" style="--b:391.3">전류의 세기 <span class="nw">$I_1$의</span> 식을 살펴보자. 첫 번째 전원의 연결 극성을 바꾸어도 그 전원을 지나는 전류의 세기는 변하지 않으므로 <span class="nw">$\mathcal{E}_2$의</span> 계수는 0이다. 따라서 다음을 얻는다.</p>
+<div class="f" style="left:140pt;top:426pt"><span class="fig" data-srcpage="25" data-clip="140,426,287,454"></span></div>
+<p class="x" style="--b:467.1">전류의 세기 <span class="nw">$I_2$의</span> 식에서 <span class="nw">$\mathcal{E}_1$의</span> 계수도 0임에 주목하자. 실제로 다음이 성립한다.</p>
+<div class="f" style="left:108pt;top:490pt"><span class="fig" data-srcpage="25" data-clip="108,490,319,518"></span></div>
+<p class="x" style="--b:532.5">따라서 첫 번째 전원의 연결 극성을 바꿀 때 두 번째 전원을 지나는 전류의 세기 <span class="nw">$I_2'$은</span> 다음과 같다.</p>
+</div>
+
+<!-- page 12 (booklet page 26) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="26" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x c" style="--b:76.0">$I_2' = I_2 = 2\,\mathrm{A}.$</p>
+<p class="x i" style="--b:93.9">2. <b>첫 번째 풀이:</b></p>
+<p class="x i" style="--b:105.9">(가)와 (나)의 경우 전류의 세기 <span class="nw">$I_{2\text{가}}$와</span> <span class="nw">$I_{2\text{나}}$는</span> 각각 두 번째 전원의 단자 <span class="nw">$C$와</span> <span class="nw">$D$에</span> 연결된 브리지의 저항으로 정해진다.</p>
+<p class="x c b-d" style="--b:146.6;--a:15.4pt">$I_{2\text{가}} = \dfrac{\mathcal{E}_2}{r_\text{가}}, \qquad I_{2\text{나}} = \dfrac{\mathcal{E}_2}{r_\text{나}}.$</p>
+<p class="x" style="--b:168.8">브리지가 평형을 이루므로 단락 도선 <span class="nw">$AB$를</span> 없애도 마디 <span class="nw">$C$와</span> <span class="nw">$D$</span> 사이의 브리지 저항은 변하지 않는다. 그러면 브리지 저항 <span class="nw">$r_\text{가}$와</span> <span class="nw">$r_\text{나}$는</span> 서로 같고, 1번 문항을 풀 때 구한 등가 전원의 저항 <span class="nw">$r_{0(2)}$와</span> 같다. 즉 <span class="nw">$I_{2\text{가}} = I_{2\text{나}}$이다.</span> 그러면 <span class="nw">$I_2 = \mathcal{E}_2/r_{0(2)}$이므로</span> 다음을 얻는다.</p>
+<p class="x c" style="--b:240.6">$I_{2\text{가}} = I_{2\text{나}} = I_2 = 2\,\mathrm{A}.$</p>
+<p class="x i" style="--b:258.5"><b>두 번째 풀이:</b></p>
+<p class="x i" style="--b:270.5">(가)와 (나)의 경우 전류의 세기 <span class="nw">$I_{2\text{가}}$와</span> <span class="nw">$I_{2\text{나}}$는</span> 각각 두 번째 전원의 단자 <span class="nw">$C$와</span> <span class="nw">$D$에</span> 연결된 브리지의 저항으로 정해진다.</p>
+<p class="x c b-d" style="--b:311.2;--a:15.4pt">$I_{2\text{가}} = \dfrac{\mathcal{E}_2}{r_\text{가}}, \qquad I_{2\text{나}} = \dfrac{\mathcal{E}_2}{r_\text{나}}.$</p>
+<p class="x" style="--b:333.4">브리지가 평형을 이루므로 단락 도선 <span class="nw">$AB$를</span> 없애도 마디 <span class="nw">$C$와</span> <span class="nw">$D$</span> 사이의 브리지 저항은 변하지 않는다. 그러면 브리지 저항 <span class="nw">$r_\text{가}$와</span> <span class="nw">$r_\text{나}$는</span> 서로 같으므로 <span class="nw">$I_{2\text{가}} = I_{2\text{나}}$이다.</span> 1번 문항의 풀이로부터 다음이 성립한다.</p>
+<div class="f" style="left:158pt;top:372pt"><span class="fig" data-srcpage="26" data-clip="158,372,268,386"></span></div>
+<p class="x" style="--b:399.2">그러면 첫 번째 전원을 단락 도선으로 바꾸어도 전류의 세기 <span class="nw">$I_2$는</span> 변하지 않는다. <span class="nw">$I_{2(2)}$는</span> (나)의 경우에 살펴보라고 한 회로에 대해 구한 값이기 때문이다(그림&nbsp;4 참고). 따라서 다음을 얻는다.</p>
+<p class="x c" style="--b:447.0">$I_{2\text{가}} = I_{2\text{나}} = I_2 = 2\,\mathrm{A}.$</p>
+<p class="x i" style="--b:464.9"><b>세 번째 풀이:</b></p>
+<p class="x i" style="--b:476.9">처음 회로에서 전원을 지나는 전류의 세기는 다음 식으로 주어진다.</p>
+<div class="f" style="left:155pt;top:491pt"><span class="fig" data-srcpage="26" data-clip="155,491,270,534"></span></div>
+</div>
+
+<!-- page 13 (booklet page 27) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="27" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">(가)와 (나)의 경우 전류의 세기 <span class="nw">$I_{2\text{가}}$와</span> <span class="nw">$I_{2\text{나}}$는</span> 각각 두 번째 전원의 단자 <span class="nw">$C$와</span> <span class="nw">$D$에</span> 연결된 브리지의 저항으로 정해진다.</p>
+<p class="x c b-d" style="--b:104.7;--a:15.4pt">$I_{2\text{가}} = \dfrac{\mathcal{E}_2}{r_\text{가}}, \qquad I_{2\text{나}} = \dfrac{\mathcal{E}_2}{r_\text{나}}.$</p>
+<p class="x" style="--b:130.8">저항 <span class="nw">$r_\text{나}$는</span> 다음 식으로 주어진다.</p>
+<p class="x c b-d" style="--b:159.6;--a:15.3pt">$r_\text{나} = \dfrac{R_2R_4}{R_2 + R_4} + \dfrac{R_1R_3}{R_1 + R_3},$</p>
+<p class="x" style="--b:185.7">따라서 <span class="nw">$I_{2\text{나}} = I_2$이다.</span> <span class="nw">$R_1R_4 = R_2R_3$이므로,</span> 두 번째 전원을 마디 <span class="nw">$C$와</span> <span class="nw">$D$에</span> 연결하면 단락 도선 <span class="nw">$AB$가</span> 있을 때 브리지는 평형을 이룬다. 그러면 단락 도선 <span class="nw">$AB$를</span> 없애도 마디 <span class="nw">$C$와</span> <span class="nw">$D$</span> 사이의 저항은 변하지 않는다. 즉 <span class="nw">$r_\text{가} = r_\text{나}$이다.</span> 따라서 다음을 얻는다.</p>
+<p class="x c" style="--b:245.4">$I_{2\text{가}} = I_{2\text{나}} = I_2 = 2\,\mathrm{A}.$</p>
+<p class="x i" style="--b:263.4">3. 첫 번째와 두 번째 전원을 지나는 전류의 세기 <span class="nw">$I_1$과</span> <span class="nw">$I_2$는</span> 각각 다음 식으로 주어진다.</p>
+<div class="f" style="left:61pt;top:287pt"><span class="fig" data-srcpage="27" data-clip="61,287,364,317"></span></div>
+<p class="x" style="--b:336.0">두 가지 기호를 도입하자.</p>
+<div class="f" style="left:156pt;top:349pt"><span class="fig" data-srcpage="27" data-clip="156,349,270,363"></span></div>
+<p class="x" style="--b:379.8">그러면 <span class="nw">$R_3 = \alpha kR_2$이고,</span> 첫 번째와 두 번째 전원을 지나는 전류의 세기 <span class="nw">$I_1$과</span> <span class="nw">$I_2$는</span> 각각 다음과 같다.</p>
+<div class="f" style="left:118pt;top:404pt"><span class="fig" data-srcpage="27" data-clip="118,404,307,431"></span></div>
+<p class="x" style="--b:447.6">이 두 등식을 변끼리 곱하면 다음을 얻는다.</p>
+<div class="f" style="left:126pt;top:458pt"><span class="fig" data-srcpage="27" data-clip="126,458,299,486"></span></div>
+<p class="x" style="--b:501.3">문제의 조건으로부터 다음이 성립함에 주목하자.</p>
+<div class="f" style="left:194pt;top:514pt"><span class="fig" data-srcpage="27" data-clip="194,514,233,541"></span></div>
+</div>
+
+<!-- page 14 (booklet page 28) -->
+<div class="page" data-s="b-p">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="28" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">그러면 이 관계식과 <span class="nw">$I_1$,</span> <span class="nw">$I_2$의</span> 식으로부터 다음을 얻는다.</p>
+<div class="f" style="left:101pt;top:75pt"><span class="fig" data-srcpage="28" data-clip="101,75,325,101"></span></div>
+<p class="x" style="--b:115.2">괄호를 풀면 다음과 같다.</p>
+<div class="f" style="left:56pt;top:125pt"><span class="fig" data-srcpage="28" data-clip="56,125,369,139"></span></div>
+<p class="x" style="--b:155.9"><span class="nw">$\alpha k = 4$임을</span> 고려하면 <span class="nw">$k = \alpha = 2$이다.</span> 그러면 다음을 얻는다.</p>
+<p class="x c" style="--b:179.9">$R_1 = R_4 = 2R_2 = 6\,\Omega, \qquad R_3 = 4R_2 = 12\,\Omega.$</p>
+</div>
+
+</body></html>
