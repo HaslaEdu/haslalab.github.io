@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta name="page" content="595,842">
+<style>
+/* APhO 2007 theory, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:10.8pt;line-height:20.6pt}
+.a{position:absolute}
+.flow{position:absolute;left:90pt;width:418.3pt;top:72pt}
+p{margin:0;text-align:justify;text-indent:0}
+p.in{text-indent:24pt}
+h1{font-size:12.5pt;font-weight:bold;text-decoration:underline;text-align:left;margin:0 0 4pt;line-height:18pt}
+.li{position:relative;padding-left:18pt;text-align:justify}
+.li>span.k{position:absolute;left:0;top:0}
+.sub{padding-left:18pt;text-align:justify}
+.pt{float:right;padding-left:8pt}
+.r{text-align:right}
+.eq{text-align:center;margin:2pt 0}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:8.5pt;line-height:10pt;text-align:left}
+</style></head>
+<body>
+<div class="page">
+<div class="flow" style="top:70pt;line-height:20.8pt">
+<h1>이론 문제 3</h1>
+<h1>3A. 부피가 일정할 때 자유 전자 기체의 비열에 대한 전자 하나의 평균 기여 (5점)</h1>
+<p class="in">1. 고전 물리학에 따르면 금속 속의 전도 전자는 이상 기체와 같은 자유 전자 기체를 이룬다. 열평형 상태에서 전자의 평균 에너지는 온도와 관계가 있으므로 전자는 비열에 기여한다. 부피가 일정할 때 자유 전자 기체의 비열에 대한 전자 하나의 평균 기여는 다음과 같이 정의된다.</p>
+<div style="position:relative;height:38pt;padding-left:54pt;line-height:38pt">$c_V=\dfrac{d\overline E}{dT}$ ,<span style="position:absolute;right:12pt;top:0">(1)</span></div>
+<p>여기서 $\overline E$는 전자 하나의 평균 에너지이다. 그런데 부피가 일정할 때의 비열 값은 온도와 관계없는 상수이다. $\overline E$와, 부피가 일정할 때 비열에 대한 전자 하나의 평균 기여 $c_V$를 계산하라.</p>
+<div class="r">(1.0점)</div>
+<p class="in">2. 실험에 따르면 금속에서 부피가 일정할 때 전도 전자의 비열은 온도에 따라 달라지며, 상온에서의 실험값은 고전적인 값보다 약 두 자릿수 작다. 이는 전자가 고전 통계가 아니라 양자 통계를 따르기 때문이다. 양자 이론에 따르면, 금속 물질에서 전도 전자의 상태 밀도(단위 부피, 단위 에너지당 전자 상태의 수)는 전자 에너지 $E$의 제곱근에 비례하므로, 부피가 $V$인 금속에서 에너지 범위 $dE$ 안에 있는 상태의 수는 다음과 같이 쓸 수 있다.</p>
+<div style="position:relative;height:24pt;padding-left:160pt;line-height:24pt">$dS=CVE^{1/2}dE$<span style="position:absolute;right:12pt;top:0">(2)</span></div>
+<p>여기서 $C$는 계의 전체 전자 수로 정해지는 규격화 상수이다.</p>
+<p class="in" style="text-indent:12pt">에너지가 $E$인 상태를 전자가 차지할 확률은 다음과 같다.</p>
+<div style="position:relative;height:48pt;padding-left:54pt;line-height:48pt">$f(E)=\dfrac{1}{1+\exp\!\left(\dfrac{E-E_F}{k_BT}\right)}$ ,<span style="position:absolute;right:12pt;top:0">(3)</span></div>
+<p>여기서 $k_B=1.381\times10^{-23}\,{\rm J\cdot K^{-1}}$은 볼츠만 상수이고 $T$는 절대</p>
+</div>
+</div>
+
+<div class="page">
+<div class="flow" style="top:70pt;line-height:24pt">
+<p>온도이며, $E_F$는 페르미 준위라고 한다. 금속 물질에서 상온의 $E_F$는 보통 수 eV 정도이다(1eV$=1.602\times10^{-19}$ J). $f(E)$는 페르미 분포 함수라고 하며, 아래 그림에 개략적으로 나타나 있다.</p>
+</div>
+<div class="a" style="left:119pt;top:140pt"><span class="fig" data-srcpage="2" data-clip="119,140,376,302"></span></div>
+<div class="flow" style="top:327pt;line-height:21.5pt">
+<p>(1) $f(E)$에 따라 상온에서 $c_V$를 계산하라. <span class="pt">(3.5점)</span></p>
+<p>(2) 고전적인 결과가 양자 이론의 결과에서 벗어나는 까닭을 타당하게 설명하라. <span class="pt">(0.5점)</span></p>
+<p class="in" style="text-indent:13pt"><b>참고</b>: 계산에서 온도에 따른 페르미 준위 $E_F$의 변화는 무시할 수 있다. 즉 $E_F=E_F^0$으로 가정한다. 여기서 $E_F^0$은 0K에서의 페르미 준위이다. 또한 페르미 분포 함수는 $E_F$ 주위의 에너지 범위 $2k_BT$ 안에서는 선형으로 감소하는 함수로, 그 밖에서는 0 또는 1로 단순화할 수 있다. 즉</p>
+<div style="padding-left:30pt;margin:4pt 0">$f(E)=\left\{\begin{array}{lcl}\qquad 1 &amp; \qquad &amp; E&lt;E_F-k_BT\\ \text{선형으로 감소하는 함수} &amp; &amp; E_F-k_BT&lt;E&lt;E_F+k_BT\\ \qquad 0 &amp; &amp; E&gt;E_F+k_BT\end{array}\right\}$</div>
+<p>상온에서는 $k_BT\ll E_F$이므로 그에 따라 계산을 단순화할 수 있다. 또한 전체 전자 수는 0K에서 계산할 수 있다.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="flow" style="top:70pt;line-height:20.7pt;width:426pt">
+<h1>3B. 역 콤프턴 산란 (5점)</h1>
+<p class="in">상대론적인 고에너지 전자와 충돌하여 광자가 고에너지 전자로부터 에너지를 얻을 수 있다. 즉 충돌 때문에 광자의 에너지와 진동수가 증가한다. 이것을 역 콤프턴 산란이라고 한다. 이러한 현상은 천체 물리학에서 매우 중요하며, 예를 들어 우주에서 $X$선과 γ선을 만드는 중요한 메커니즘이 된다.</p>
+<div class="li" style="margin-top:22pt"><span class="k">1.</span>전체 에너지가 $E$인 고에너지 전자(운동 에너지가 정지 에너지보다 큼)와 진동수가 $\nu$인 저에너지 광자(에너지가 전자의 정지 에너지보다 작음)가 서로 반대 방향으로 움직여 충돌한다. 아래 그림과 같이 충돌로 광자가 산란되어, 산란된 광자는 처음 입사 방향과 각 $\theta$를 이루는 방향으로 움직인다(산란된 전자는 그림에 나타내지 않았다). 산란된 광자의 에너지를 $E,\nu,\theta$와 전자의 정지 에너지 $E_0$로 나타내어 계산하라. 산란된 광자의 에너지가 최대가 되는 $\theta$의 값과 이 최대 에너지의 값을 구하라. (2.4점)</div>
+</div>
+<div class="a" style="left:170pt;top:432pt"><span class="fig" data-srcpage="3" data-clip="170,432,356,512"></span></div>
+<div class="flow" style="top:550pt;line-height:20.7pt;width:426pt">
+<div class="li"><span class="k">2.</span>입사 전자의 에너지 $E$가 정지 에너지 $E_0$보다 훨씬 커서 $E=\gamma E_0,\ \gamma\gg1$로 나타낼 수 있고, 입사 광자의 에너지가 $E_0/\gamma$보다 훨씬 작다고 가정하자. 산란된 광자의 최대 에너지에 대한 근사식을 구하라. $\gamma=200$이고 입사하는 가시광선 광자의 파장이 $\lambda=500\,{\rm nm}$일 때, 산란된 광자의 근사적인 최대 에너지와 그에 해당하는 파장을 계산하라.<br>
+<b><u>매개변수</u></b>: 전자의 정지 에너지 $E_0=0.511\,{\rm MeV}$, 플랑크 상수 $h=6.63\times10^{-34}\,{\rm J\cdot s}$, $hc=1.24\times10^3\,{\rm eV\cdot nm}$. 여기서 $c$는 진공에서 빛의 속력이다. <span class="pt">(1.2점)</span></div>
+</div>
+</div>
+
+<div class="page">
+<div class="flow" style="top:70pt;line-height:20.7pt;width:426pt">
+<div class="li"><span class="k">3.</span>(1) 전체 에너지가 $E$인 상대론적 고에너지 전자와 광자가 서로 반대 방향으로 움직여 충돌한다. 광자가 입사 전자로부터 최대 에너지를 얻을 수 있는 입사 광자의 에너지를 구하라. 이 경우 산란된 광자의 에너지를 계산하라. <span class="pt">(0.7점)</span><br>
+(2) 전체 에너지가 $E$인 상대론적 고에너지 전자와 광자가 서로 수직인 방향으로 움직여 충돌한다. 광자가 입사 전자로부터 최대 에너지를 얻을 수 있는 입사 광자의 에너지를 구하라. 이 경우 산란된 광자의 에너지를 계산하라. <span class="pt">(0.7점)</span></div>
+</div>
+</div>
+</body></html>
