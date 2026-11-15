@@ -224,6 +224,27 @@
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
+    "fipho": {
+      "original": "logo/fipho.png",
+      "light": "logo/light/fipho.svg",
+      "dark": "logo/dark/fipho.svg",
+      "sourceWidth": 800,
+      "sourceHeight": 692,
+      "viewBox": [
+        0,
+        0,
+        800,
+        692
+      ],
+      "aspectRatio": 1.156069,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "7e59262ecb35233d09d2777456a054c4059d4fc9fcbbde71c00b445216c33c62",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
     "gpho": {
       "original": "logo/gpho.png",
       "light": "logo/light/gpho.svg",
