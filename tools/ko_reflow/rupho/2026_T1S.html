@@ -1,0 +1,398 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2026 (cover prints "LIX" = 제59회, kept as printed), 9학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: 17 pages (p1 = booklet cover), LaTeX, Computer Modern Cyrillic (Type3, Windows-1251 map) 10pt (= 9.963pt),
+   A5 419.528x595.276pt (CropBox = MediaBox, no rotation). Text column x 28.3..396.8 (width 368.5pt); paragraph
+   indent 20pt; baselineskip 11.955pt. Running header (pages 2-17, italic, baseline 37.6):
+   left "Заключительный этап ВсОШ по физике" -> "2026년 전러시아 물리 올림피아드, 결선", right "Теоретический тур"
+   -> "이론 시험" (conv_2026.md); rule y 41.4 (stamped). No page numbers, no marking criteria in this booklet.
+   Figures: vector drawings (stamped); Russian labels inside them restored as .ov labels.
+   Russian subscripts in retyped formulas: отн -> rel; эф -> eff (as the booklet itself writes g_eff);
+   х (cold mixture) -> c; г (hot water) -> h; л (ice) -> i; в (water) -> w (conv_2026.md). "цм" -> 질량중심.
+   Units Latin SI, decimal points in everything retyped.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   Lines/displays holding a \dfrac use .d: line-height 0, top = b - --a (--a = height above the baseline). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:368.5pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   text-align:justify;top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.l{text-align:left}
+.r{text-align:right}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right;width:361.2pt}
+/* "풀이 예시" (bold 14.346pt), problem titles (bold) centred; bold run-in heads (.bh) */
+.t{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.bh{font-weight:bold;text-align:left;left:48.3pt;width:348.5pt}
+.t,.h,.bh{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+/* cover page */
+.cv{text-align:center;font-weight:bold}
+.cv{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+.cvn{text-align:center}
+/* equation numbers at the right margin */
+.en{left:356.8pt;width:40pt;text-align:right}
+/* text beside a figure: float keeps the first lines narrow */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* figure labels (drawn over the stamps) */
+.lb{text-align:left;white-space:nowrap;width:auto}
+.lr{text-align:right;white-space:nowrap}
+.cap{text-align:center;width:40pt;--fs:9pt;--l:11pt;margin-top:-0.7pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+.wb{position:absolute;background:#fff}
+</style></head><body>
+
+<!-- page 1: booklet cover -->
+<div class="page">
+<p class="x cv" style="--b:64.0">러시아 연방 교육부</p>
+<p class="x cv" style="--b:76.0">전러시아 학생 물리 올림피아드</p>
+<p class="x cv" style="--b:87.9">중앙 교과 교수법 위원회</p>
+<p class="x cvn" style="--b:116.9;margin-top:-1.1pt;--fs:17.215pt;--l:16.3pt">제59회 전러시아</p>
+<p class="x cvn" style="--b:133.2;margin-top:-1.1pt;--fs:17.215pt;--l:16.3pt">학생 물리 올림피아드</p>
+<p class="x cv" style="--b:152.2;--fs:11.955pt;--l:14pt">결선</p>
+<p class="x cv" style="--b:171.2;--fs:11.955pt;--l:14pt">이론 시험</p>
+<div class="f" style="left:56pt;top:193pt"><span class="fig" data-srcpage="1" data-clip="56,193,370,503"></span></div>
+<!-- the artist's handwritten date "1998г" in the drawing: the Cyrillic "г" is hidden by a white box -->
+<div class="ov wb" style="left:351.5pt;top:485.6pt;width:8.9pt;height:9.4pt"></div>
+<p class="x cv" style="--b:532.6">노비우렌고이, 2026년</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="2" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x t" style="--b:64.0">풀이 예시</p>
+<p class="x h" style="--b:84.0">문제 9-1. 사진</p>
+<p class="x i" style="--b:99.6">두 공이 처음에 함께 있던 위치를 <span class="nw">$O$라</span> 하고, 사진을 찍은 순간 <span class="nw">$t$에</span> 공 1과 공 2의 위치를 각각 <span class="nw">$A$와</span> <span class="nw">$B$라</span> 하자. 공 1과 공 2에 준 속도 벡터를 각각 <span class="nw">$\vec v_1$과</span> <span class="nw">$\vec v_2$라</span> 하자. 그러면 시간 <span class="nw">$t$까지</span> 두 공의 변위 벡터는 다음과 같이 나타난다.</p>
+<div class="f" style="left:141pt;top:146pt"><span class="fig" data-srcpage="2" data-clip="141,146,284,173"></span></div>
+<p class="x" style="--b:187.8">두 공은 같은 점에서 운동을 시작하였으므로, 두 공의 상대 변위 벡터는 다음과 같다.</p>
+<p class="x c" style="--b:211.8">$\vec r_\mathrm{rel} = \vec s_1 - \vec s_2 = (\vec v_1 - \vec v_2)t.$</p>
+<div class="f" style="left:105pt;top:231pt"><span class="fig" data-srcpage="2" data-clip="105,231,320,454"></span></div>
+<p class="x ov lb" style="--b:335.3;left:196.4pt;--fs:7pt;--l:8pt">rel</p>
+<p class="x cap" style="--b:472.0;left:192.6pt">그림 1</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="3" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">원의 중심에서 수평면에 수선을 내리면 최댓값 <span class="nw">$OP_\mathrm{max}$를</span> 얻는다(그림 2 참고).</p>
+<div class="f" style="left:88pt;top:89pt"><span class="fig" data-srcpage="3" data-clip="88,89,338,352"></span></div>
+<p class="x cap" style="--b:369.5;left:192.6pt">그림 2</p>
+<p class="x i" style="--b:393.7">주어진 축척으로부터 다음을 얻는다.</p>
+<p class="x c" style="--b:414.4">$OP_\mathrm{max} \approx 2.5\,\mathrm{m}.$</p>
+<p class="x" style="--b:435.1">그러면 공 1의 비행 시간은 다음과 같다.</p>
+<p class="x d c" style="--b:466.7;--a:16.3pt">$t = \sqrt{\dfrac{2OP_\mathrm{max}}{g}} = \sqrt{\dfrac{2\cdot 2.5}{9.8}} \approx 0.71\,\mathrm{s}.$</p>
+<p class="x i" style="--b:491.4"><span class="nw">$AP$와</span> <span class="nw">$BP$를</span> 구하자.</p>
+<p class="x c" style="--b:503.4">$AP \approx 4.3\,\mathrm{m}, \quad BP \approx 7.1\,\mathrm{m}.$</p>
+<p class="x" style="--b:520.6"><span class="nw">$v_1 = AP/t$,</span> <span class="nw">$v_2 = BP/t$임을</span> 고려하면 다음을 얻는다.</p>
+<p class="x c" style="--b:544.5">$v_1 \approx 6.0\,\mathrm{m/s}, \quad v_2 \approx 10.0\,\mathrm{m/s}.$</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="4" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x h" style="--b:64.0">문제 9-2. 바큇살</p>
+<p class="x bh" style="--b:81.7">방법 1</p>
+<p class="x" style="--b:93.7">두 추와 실로 이루어진 계를 생각하자. 이 계에는 세 힘, 즉 중력 <span class="nw">$3m\vec g$,</span> 철사의 연직 부분이 작용하는 수직 항력 <span class="nw">$\vec N_1$,</span> 반원 부분이 작용하는 수직 항력 <span class="nw">$\vec N_2$가</span> 작용한다. 힘 <span class="nw">$\vec N_1$과</span> <span class="nw">$3m\vec g$의</span> 작용선은 점 <span class="nw">$O$에서</span> 만난다. 따라서 평행하지 않은 세 힘에 관한 정리에 따라 힘 <span class="nw">$\vec N_2$의</span> 작용선도 점 <span class="nw">$O$를</span> 지난다(그림 1 참고).</p>
+<p class="x i" style="--b:154.6;margin-top:-1.5pt">힘 <span class="nw">$\vec N_2$는</span> 원의 접선에 수직이므로 원의 중심을 향한다. 따라서 반원의 중심은 힘 <span class="nw">$\vec N_2$의</span> 작용점과 점 <span class="nw">$O$를</span> 지나는 직선 위에 있다.</p>
+<div class="f" style="left:53pt;top:192pt"><span class="fig" data-srcpage="4" data-clip="53,192,372,452"></span></div>
+<p class="x ov lb" style="--b:208.9;left:270.7pt">cm</p>
+<p class="x ov lr" style="--b:326.6;left:160pt;width:49pt;--fs:8pt;--l:9pt">질량중심</p>
+<p class="x cap" style="--b:468.8;left:192.6pt">그림 1</p>
+<p class="x i" style="--b:494.0;margin-top:-1.2pt">질량이 <span class="nw">$2m$인</span> 추의 위치에 해당하는 점을 지나는 원의 접선(<span class="nw">$\vec N_2$에</span> 수직인 직선)을 긋자. 이 접선이 철사의 연직 부분과 만나는 점을 <span class="nw">$B$라</span> 하자(그림 2 참고).</p>
+<p class="x i" style="--b:541.9">이렇게 얻은 점 <span class="nw">$B$는</span> <span class="nw">$2m$과</span> 철사가 꺾인 점 <span class="nw">$A$로부터</span> 같은 거리에 있다.</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="5" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">컴퍼스나 자를 이용하여 선분 <span class="nw">$AB$를</span> 위쪽으로 옮겨 점 <span class="nw">$A$를</span> 복원하자. 그다음 점 <span class="nw">$2m$을</span> 지나는 접선에 수직인 직선과 점 <span class="nw">$A$(철사의</span> 두 부분이 이어지는 점)를 지나는 수평선의 교점을 구하면 반원의 중심을 얻는다. 이로써 반원 전체의 위치를 복원할 수 있다.</p>
+<div class="f" style="left:70pt;top:125pt"><span class="fig" data-srcpage="5" data-clip="70,125,355,481"></span></div>
+<p class="x ov lb" style="--b:278.3;left:225.4pt">cm</p>
+<p class="x ov lr" style="--b:390.3;left:131.7pt;width:49pt;--fs:8pt;--l:9pt">질량중심</p>
+<p class="x cap" style="--b:498.5;left:192.6pt">그림 2</p>
+<p class="x bh" style="--b:523.8">방법 2</p>
+<p class="x" style="--b:535.7">세 힘에 관한 정리를 쓴 다음에는 원의 중심을 기하학적으로 작도하지 않고,</p>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="6" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">닮음 관계를 쓸 수도 있다.</p>
+<div class="f" style="left:188pt;top:65pt"><span class="fig" data-srcpage="6" data-clip="188,65,236,90"></span></div>
+<div class="f" style="left:70pt;top:106pt"><span class="fig" data-srcpage="6" data-clip="70,106,355,462"></span></div>
+<p class="x ov lr" style="--b:370.8;left:131.7pt;width:49pt;--fs:8pt;--l:9pt">질량중심</p>
+<p class="x cap" style="--b:479.0;left:192.6pt">그림 3</p>
+<p class="x i" style="--b:501.8">선분 $x$, $y$, <span class="nw">$z$의</span> 길이는 그림에서 구할 수 있다: <span class="nw">$x = 3\,\mathrm{cm}$,</span> <span class="nw">$y = 3\sqrt5/2\,\mathrm{cm}$,</span> <span class="nw">$z = 1.5\,\mathrm{cm}$.</span> 따라서</p>
+<div class="f" style="left:181pt;top:525pt"><span class="fig" data-srcpage="6" data-clip="181,525,245,551"></span></div>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="7" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x bh" style="--b:64.0">방법 3</p>
+<p class="x" style="--b:76.0">그림 4와 같이 힘을 표시하고 좌표계를 도입하자. 이 좌표계에서 축척으로 구한 추 <span class="nw">$m$과</span> <span class="nw">$2m$의</span> 좌표는 각각 <span class="nw">$(0; -y_1) = (0; -3\,\mathrm{cm})$와</span> <span class="nw">$(x_2; 0) = (4.5\,\mathrm{cm}; 0)$이다.</span> 실과 연직선 사이의 각을 <span class="nw">$\alpha$,</span> 힘 <span class="nw">$\vec N_2$와</span> 연직선 사이의 각을 <span class="nw">$\varphi$라</span> 하자.</p>
+<div class="f" style="left:70pt;top:126pt"><span class="fig" data-srcpage="7" data-clip="70,126,355,493"></span></div>
+<p class="x cap" style="--b:509.7;left:192.6pt">그림 4</p>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="8" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">질량이 <span class="nw">$m$인</span> 추의 평형 조건을 쓰자.</p>
+<div class="f" style="left:172pt;top:77pt"><span class="fig" data-srcpage="8" data-clip="172,77,253,90"></span></div>
+<p class="x en" style="--b:85.8">(1)</p>
+<p class="x" style="--b:107.5">그리고 계 전체의 평형 조건은 다음과 같다.</p>
+<div class="f" style="left:167pt;top:111pt"><span class="fig" data-srcpage="8" data-clip="167,111,258,124"></span></div>
+<p class="x en" style="--b:119.5">(2)</p>
+<p class="x" style="--b:137.3">해당하는 힘의 삼각형(그림 5 참고)으로부터 다음을 얻는다.</p>
+<div class="f" style="left:185pt;top:148pt"><span class="fig" data-srcpage="8" data-clip="185,148,240,173"></span></div>
+<div class="f" style="left:115pt;top:191pt"><span class="fig" data-srcpage="8" data-clip="115,191,310,312"></span></div>
+<p class="x cap" style="--b:328.7;left:192.6pt">그림 5</p>
+<p class="x i" style="--b:351.6">한편,</p>
+<p class="x d c" style="--b:377.5;--a:14.5pt">$\operatorname{tg}\alpha = \dfrac{x_2}{y_1} \Rightarrow \operatorname{tg}\varphi = \dfrac{x_2}{3y_1} = \dfrac{4.5}{9} = 0.5.$</p>
+<p class="x" style="--b:403.9">따라서</p>
+<div class="f" style="left:186pt;top:404pt"><span class="fig" data-srcpage="8" data-clip="186,404,240,431"></span></div>
+<p class="x" style="--b:442.9">원의 기하학적 관계로부터</p>
+<div class="f" style="left:172pt;top:446pt"><span class="fig" data-srcpage="8" data-clip="172,446,253,460"></span></div>
+<p class="x" style="--b:472.7">따라서</p>
+<p class="x d c" style="--b:498.8;--a:14.5pt">$R = \dfrac{4.5}{1 - \frac{1}{\sqrt5}} \approx 8.1\,\mathrm{cm},$</p>
+<p class="x" style="--b:522.7">그리고 원의 중심의 좌표는 다음과 같다.</p>
+<p class="x c" style="--b:544.5">$(R; R\cos\varphi) \approx (8.1\,\mathrm{cm}; 7.3\,\mathrm{cm}).$</p>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="9" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0;margin-top:-1.4pt">작은 고리에 작용하는 받침의 전체 반작용력 <span class="nw">$\vec Q$는</span> 장력 <span class="nw">$\vec T$를</span> 완전히 상쇄한다. 이때 <span class="nw">$\vec Q$는</span> 원의 중심을 향하는 수직 항력 <span class="nw">$\vec N$과</span> 각 <span class="nw">$\beta$를</span> 이룬다(그림 6 참고). 그러면 마찰을 고려한 평형 조건은 다음과 같다.</p>
+<div class="f" style="left:166pt;top:111pt"><span class="fig" data-srcpage="9" data-clip="166,111,260,126"></span></div>
+<div class="f" style="left:70pt;top:145pt"><span class="fig" data-srcpage="9" data-clip="70,145,355,501"></span></div>
+<p class="x cap" style="--b:518.4;left:192.6pt">그림 6</p>
+<p class="x i" style="--b:543.7">추 <span class="nw">$m$의</span> 위치를 점 <span class="nw">$L$,</span> 작은 고리의 위치를 점 <span class="nw">$D$라</span> 하자. 코사인 법칙을</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="10" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">삼각형 <span class="nw">$\triangle ODL$에</span> 적용하면 다음을 얻는다.</p>
+<div class="f" style="left:150pt;top:73pt"><span class="fig" data-srcpage="10" data-clip="150,73,275,89"></span></div>
+<p class="x" style="--b:107.9">각 <span class="nw">$\beta$에</span> 대한 제한을 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:141pt;top:115pt"><span class="fig" data-srcpage="10" data-clip="141,115,285,134"></span></div>
+<p class="x" style="--b:151.7">피타고라스 정리에 따라</p>
+<div class="f" style="left:106pt;top:159pt"><span class="fig" data-srcpage="10" data-clip="106,159,319,178"></span></div>
+<p class="x" style="--b:195.5">그런데</p>
+<div class="f" style="left:169pt;top:194pt"><span class="fig" data-srcpage="10" data-clip="169,194,256,221"></span></div>
+<p class="x" style="--b:232.2">이므로 다음을 얻는다.</p>
+<div class="f" style="left:146pt;top:244pt"><span class="fig" data-srcpage="10" data-clip="146,244,279,274"></span></div>
+<p class="x h" style="--b:293.3">문제 9-3. 언덕 넘기</p>
+<p class="x bh" style="--b:310.9">방법 1</p>
+<p class="x i wn" style="--b:322.9;width:216.1pt;margin-top:-1.3pt">구슬은 외력의 합 <span class="nw">$\vec F + m\vec g$의</span> 작용을 받아 운동한다. 유효 중력 가속도의 장 안에서 일어나는 운동을 생각하자.</p>
+<div class="f" style="left:104pt;top:362pt"><span class="fig" data-srcpage="10" data-clip="104,362,169,388"></span></div>
+<p class="x wr wn" style="--b:398.5;--fw:152.4pt;--fh:10.9pt">언덕을 넘으려면 궤적의 모든 점에서 퍼텐셜 에너지가 출발점에서보다 작아야 한다.</p>
+<div class="f" style="left:254pt;top:316pt"><span class="fig" data-srcpage="10" data-clip="254,316,396,402.5"></span></div>
+<p class="x ov lb" style="--b:362.5;left:304.6pt;--fs:7pt;--l:8pt"><i>eff</i></p>
+<p class="x i" style="--b:434.3">임계 경우에는 유효 중력 가속도에 수직인 직선이 두 번째 4분원에 접한다. 그러면 기하학적 관계로부터 <span class="nw">$\theta = 2\operatorname{arctg}1/2$이다.</span></p>
+<div class="f" style="left:158pt;top:469pt"><span class="fig" data-srcpage="10" data-clip="158,469,267,494"></span></div>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="11" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x bh" style="--b:64.0">방법 2</p>
+<p class="x i wn" style="--b:76.0;width:230.2pt">구슬이 언덕을 넘었다는 것은 매 순간 외력이 한 일이 다음을 만족한다는 뜻이다.</p>
+<p class="x c" style="--b:109.9;width:230.2pt">$A_F \geq \Pi,$</p>
+<p class="x wn" style="--b:131.8;width:230.2pt">여기서 <span class="nw">$\Pi$는</span> 퍼텐셜 에너지이다. 부등식의 양변을 <span class="nw">$mg$로</span> 나누고 <span class="nw">$A_F = F\cdot x$를</span> 대입하자.</p>
+<div class="f" style="left:122pt;top:155pt"><span class="fig" data-srcpage="11" data-clip="122,155,167,180"></span></div>
+<div class="f" style="left:289pt;top:57pt"><span class="fig" data-srcpage="11" data-clip="289,57,385,157"></span></div>
+<p class="x ov lb" style="--b:113.1;left:351.4pt">$\Pi$</p>
+<p class="x" style="--b:196.8">두 양을 <span class="nw">$x$의</span> 함수로 나타낸 그래프를 생각하자. 임계 경우에 두 그래프는 접한다. 그러면 직선의 기울기의 탄젠트는 다음과 같다.</p>
+<div class="f" style="left:177pt;top:220pt"><span class="fig" data-srcpage="11" data-clip="177,220,248,245"></span></div>
+<p class="x" style="--b:257.8">따라서 다음을 얻는다.</p>
+<div class="f" style="left:158pt;top:268pt"><span class="fig" data-srcpage="11" data-clip="158,268,267,294"></span></div>
+<p class="x bh" style="--b:304.6">방법 1</p>
+<p class="x i wn" style="--b:316.5;width:216.8pt;margin-top:-1.7pt">힘의 크기는 벡터 <span class="nw">$\vec F/m$이</span> 벡터 <span class="nw">$\vec g_{eff}$에</span> 수직일 때 최소가 된다. 힘 <span class="nw">$F$의</span> 방향은 언덕의 접선 방향이며, 수평과 각 <span class="nw">$\theta$를</span> 이룬다.</p>
+<div class="f" style="left:256pt;top:310pt"><span class="fig" data-srcpage="11" data-clip="256,310,396,400"></span></div>
+<p class="x ov lb" style="--b:354.2;left:316.4pt;--fs:7pt;--l:8pt"><i>eff</i></p>
+<div class="f" style="left:81pt;top:363pt"><span class="fig" data-srcpage="11" data-clip="81,363,193,389"></span></div>
+<div class="f" style="left:75pt;top:391pt"><span class="fig" data-srcpage="11" data-clip="75,391,199,403"></span></div>
+<p class="x bh" style="--b:417.7">방법 2</p>
+<p class="x" style="--b:429.7">다시 부등식을 쓰자.</p>
+<p class="x c" style="--b:441.6">$A_F \geq \Pi.$</p>
+<p class="x" style="--b:459.6;left:35pt;width:361.8pt"><span class="nw">$A_F = F_x\cdot x + F_y\cdot h$를</span> 대입하자.</p>
+<div class="f" style="left:163pt;top:473pt"><span class="fig" data-srcpage="11" data-clip="163,473,262,486"></span></div>
+<div class="f" style="left:164pt;top:494pt"><span class="fig" data-srcpage="11" data-clip="164,494,261,508"></span></div>
+<div class="f" style="left:174pt;top:511pt"><span class="fig" data-srcpage="11" data-clip="174,511,252,538"></span></div>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="12" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">앞 문항과 마찬가지로 다음을 얻는다.</p>
+<div class="f" style="left:167pt;top:74pt"><span class="fig" data-srcpage="12" data-clip="167,74,260,101"></span></div>
+<div class="f" style="left:172pt;top:107pt"><span class="fig" data-srcpage="12" data-clip="172,107,253,133"></span></div>
+<p class="x" style="--b:144.1"><span class="nw">$F^2 = F_x^2 + F_y^2$임을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:55pt;top:156pt"><span class="fig" data-srcpage="12" data-clip="55,156,370,181"></span></div>
+<p class="x" style="--b:195.0">이 이차 함수는 다음에서 최솟값을 가진다.</p>
+<div class="f" style="left:185pt;top:205pt"><span class="fig" data-srcpage="12" data-clip="185,205,240,230"></span></div>
+<p class="x" style="--b:244.0">그러면</p>
+<div class="f" style="left:119pt;top:255pt"><span class="fig" data-srcpage="12" data-clip="119,255,306,282"></span></div>
+<p class="x" style="--b:291.9">따라서 답은 다음과 같다.</p>
+<div class="f" style="left:180pt;top:326pt"><span class="fig" data-srcpage="12" data-clip="180,326,245,352"></span></div>
+<p class="x i" style="--b:362.1">수평과 이루는 각:</p>
+<div class="f" style="left:161pt;top:373pt"><span class="fig" data-srcpage="12" data-clip="161,373,263,399"></span></div>
+<p class="x i wn" style="--b:410.3;width:216pt">구슬이 언덕을 넘었다는 것은 매 순간 외력이 한 일의 합이 다음을 만족한다는 뜻이다.</p>
+<div class="f" style="left:103pt;top:437pt"><span class="fig" data-srcpage="12" data-clip="103,437,171,451"></span></div>
+<div class="f" style="left:254pt;top:416pt"><span class="fig" data-srcpage="12" data-clip="254,416,402,498"></span></div>
+<p class="x wr wn" style="--b:463.6;--fw:152.5pt;--fh:46.8pt">힘 <span class="nw">$F$가</span> 하는 일을 최대로 하려면 이 힘은 항상 궤적을 따르는 방향을 향해야 한다. 구슬이 두 번째 4분원 위에서 멈추며 한계점에 도달하는 임계 경우를 생각하자. 이 점의 위치를 각 <span class="nw">$\alpha$로</span> 나타내자. 임계 경우에 이 점은 평형 위치이다.</p>
+<div class="f" style="left:181pt;top:536pt"><span class="fig" data-srcpage="12" data-clip="181,536,244,548"></span></div>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="13" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">힘들이 한 일의 합은 0이다.</p>
+<div class="f" style="left:111pt;top:75pt"><span class="fig" data-srcpage="13" data-clip="111,75,315,100"></span></div>
+<div class="f" style="left:125pt;top:106pt"><span class="fig" data-srcpage="13" data-clip="125,106,300,132"></span></div>
+<div class="f" style="left:149pt;top:134pt"><span class="fig" data-srcpage="13" data-clip="149,134,276,160"></span></div>
+<p class="x" style="--b:173.3"><span class="nw">$F = mg\cos\alpha$를</span> 고려하면</p>
+<div class="f" style="left:104pt;top:187pt"><span class="fig" data-srcpage="13" data-clip="104,187,321,214"></span></div>
+<p class="x" style="--b:234.5"><span class="nw">$F = mg/2$일</span> 때</p>
+<div class="f" style="left:158pt;top:244pt"><span class="fig" data-srcpage="13" data-clip="158,244,267,272"></span></div>
+<p class="x h" style="--b:289.3">문제 9-4. 열교환기</p>
+<p class="x i" style="--b:306.9">혼합물 안에 얼음이 남아 있는 동안 혼합물의 온도는 <span class="nw">$0\,{}^\circ\mathrm{C}$이다.</span> 뜨거운 물에서 나오는 열은 모두 얼음을 녹이는 데 쓰인다.</p>
+<p class="x i" style="--b:330.9">이제부터 모든 양이 <span class="nw">$x$축을</span> 따라 어떻게 변하는지 살펴보자. 혼합물의 속력을 일정하다고 볼 수 있을 만큼 아주 짧은 길이 <span class="nw">$\Delta x$의</span> 관 요소를 잡자. 시간 <span class="nw">$\Delta\tau$</span> 동안 이 부피 안에서 얼음의 질량은 다음만큼 변한다.</p>
+<p class="x c" style="--b:378.7">$\Delta m_\mathrm{i} = \mu_\mathrm{c}\Delta\tau\,\Delta\alpha.$</p>
+<p class="x" style="--b:396.6">뜨거운 물의 내부 에너지 변화는 다음과 같다.</p>
+<p class="x c" style="--b:418.5">$\delta Q_2 = -c\mu_\mathrm{h}\Delta\tau\,\Delta T_\mathrm{h}.$</p>
+<p class="x" style="--b:440.4">주위로의 열 손실과 관 벽의 열용량을 무시할 수 있고 흐름이 정상 상태이므로, 이 요소의 내부 에너지 변화는 0이다.</p>
+<p class="x c" style="--b:486.3">$\Delta U = 0;\ -\lambda\mu_\mathrm{c}\Delta\alpha - c\mu_\mathrm{h}\Delta T_\mathrm{h} = 0.$</p>
+<p class="x en" style="--b:486.3">(1)</p>
+<p class="x" style="--b:508.2">식 (1)로부터 다음이 성립한다.</p>
+<p class="x d c" style="--b:535.3;--a:14.5pt">$\dfrac{\Delta T_\mathrm{h}}{\Delta\alpha} = -\dfrac{\lambda\mu_\mathrm{c}}{c\mu_\mathrm{h}} = const.$</p>
+<p class="x en" style="--b:535.3">(2)</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="14" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">따라서 다음이 성립한다.</p>
+<p class="x d c" style="--b:88.9;--a:14.6pt">$T_\mathrm{h}(L) - T_\mathrm{h}(0) = \dfrac{\mu_\mathrm{c}\lambda}{\mu_\mathrm{h}c}\big(\alpha(0) - \alpha(L)\big),$</p>
+<p class="x" style="--b:114.3">여기서 <span class="nw">$\alpha(0) = 0.4$,</span> <span class="nw">$\alpha(L) = 0.1$이다.</span></p>
+<p class="x i" style="--b:126.3">따라서</p>
+<p class="x d c" style="--b:142.5;--a:14.5pt">$T_\mathrm{h}(0) = T_\mathrm{h}(L) - \dfrac{\mu_\mathrm{c}\lambda}{\mu_\mathrm{h}c}\big(\alpha(0) - \alpha(L)\big),$</p>
+<p class="x" style="--b:161.5">즉</p>
+<p class="x c" style="--b:185.4">$T_\mathrm{h}(0) = 26.5\,{}^\circ\mathrm{C}.$</p>
+<p class="x i wn" style="--b:202.3;width:188.4pt">식 (2) 좌변의 분자와 분모를 <span class="nw">$\Delta x$로</span> 나누면 다음을 얻는다.</p>
+<p class="x d c" style="--b:257.9;--a:14.5pt;width:188.4pt">$\dfrac{\Delta T_\mathrm{h}}{\Delta x} = -\dfrac{\lambda\mu_\mathrm{c}}{c\mu_\mathrm{h}}\dfrac{\Delta\alpha}{\Delta x} = 6.7\,{}^\circ\mathrm{C/m}.$</p>
+<p class="x" style="--b:275.8">그러면</p>
+<p class="x c" style="--b:296.0;width:188.4pt">$T(x) = 26.5\,{}^\circ\mathrm{C} + 6.7x.$</p>
+<p class="x wn" style="--b:316.2;width:188.4pt">뜨거운 물의 온도 <span class="nw">$T_\mathrm{h}(x)$를</span> 좌표의 함수로 나타낸 그래프는 그림과 같다.</p>
+<div class="f" style="left:232pt;top:200pt"><span class="fig" data-srcpage="14" data-clip="232,200,391,320"></span></div>
+<p class="x ov lb" style="--b:211.6;left:257.6pt;--fs:7pt;--l:8pt">h</p>
+<p class="x ov lb" style="--b:299.5;left:383.8pt">m</p>
+<p class="x i" style="--b:352.1">길이 <span class="nw">$\Delta x$인</span> 관 요소를 생각하자. 혼합물의 부피는 다음과 같다.</p>
+<p class="x c" style="--b:372.2">$\Delta V = \Delta V_\mathrm{i} + \Delta V_\mathrm{w},$</p>
+<p class="x" style="--b:392.4">여기서 <span class="nw">$\Delta V_\mathrm{i}$와</span> <span class="nw">$\Delta V_\mathrm{w}$는</span> 고체상과 액체상의 부피이다. 그러면</p>
+<p class="x d c" style="--b:417.8;--a:14.7pt">$\Delta V = \dfrac{\alpha(x)\,\Delta m}{\rho_\mathrm{i}} + \dfrac{(1 - \alpha(x))\,\Delta m}{\rho_\mathrm{w}}.$</p>
+<p class="x" style="--b:442.6">혼합물의 밀도는 다음과 같다.</p>
+<p class="x d c" style="--b:460.1;--a:17.2pt">$\rho(x) = \dfrac{\Delta m}{\Delta V} = \left(\dfrac{\alpha(x)}{\rho_\mathrm{i}} + \dfrac{1 - \alpha(x)}{\rho_\mathrm{w}}\right)^{-1}.$</p>
+<p class="x" style="--b:482.3">질량 유량은 일정하다.</p>
+<div class="f" style="left:177pt;top:494pt"><span class="fig" data-srcpage="14" data-clip="177,494,248,506"></span></div>
+<p class="x" style="--b:522.6">따라서</p>
+<p class="x d c" style="--b:540.0;--a:14.7pt">$v(x) = \dfrac{\mu_\mathrm{c}}{S\,\rho(x)} = \dfrac{\mu_\mathrm{c}}{S}\left(\dfrac{\alpha(x)}{\rho_\mathrm{i}} + \dfrac{1 - \alpha(x)}{\rho_\mathrm{w}}\right).$</p>
+</div>
+
+<!-- page 15 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="15" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">다음을 고려하면</p>
+<p class="x c" style="--b:76.0">$\alpha(x) = 0.4 - 0.06x,$</p>
+<p class="x d c" style="--b:103.3;--a:12.9pt">$v(x) = \dfrac{\mu_\mathrm{c}}{S\rho_\mathrm{w}\rho_\mathrm{i}}\big(0.6\rho_\mathrm{i} + 0.4\rho_\mathrm{w} - 0.06x(\rho_\mathrm{w} - \rho_\mathrm{i})\big).$</p>
+<p class="x h" style="--b:125.4">문제 9-5. 브리지</p>
+<div class="f" style="left:286pt;top:120pt"><span class="fig" data-srcpage="15" data-clip="286,120,395,226"></span></div>
+<p class="x cap" style="--b:244.4;left:320.2pt">그림 1</p>
+<p class="x i wn" style="--b:138.7;width:245.1pt">절점 전위법을 이용하자. 저항 <span class="nw">$R_1$과</span> <span class="nw">$R_2$에서</span> 소비되는 일률이 0인 경우를 생각하자. 그러면 이 저항들에 걸린 전압은 0이다.</p>
+<p class="x i wn" style="--b:186.6;width:245.1pt"><span class="nw">$\varphi_C = 0$이라</span> 하면 <span class="nw">$\varphi_D = U_0$이다</span>(그림 1 참고). <span class="nw">$R_1$과</span> <span class="nw">$R_2$에</span> 흐르는 전류가 0이므로 다음을 얻는다.</p>
+<div class="f" style="left:121pt;top:207pt"><span class="fig" data-srcpage="15" data-clip="121,207,181,221"></span></div>
+<p class="x" style="--b:233.6">그리고</p>
+<div class="f" style="left:116pt;top:237pt"><span class="fig" data-srcpage="15" data-clip="116,237,186,250"></span></div>
+<p class="x" style="--b:260.9">따라서 점 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 연결한 전원의 전압은 다음과 같다.</p>
+<div class="f" style="left:179pt;top:276pt"><span class="fig" data-srcpage="15" data-clip="179,276,247,289"></span></div>
+<p class="x bh" style="--b:300.1">방법 1</p>
+<p class="x wn" style="--b:312.0;width:216.7pt">중첩의 원리를 이용하자. (<span class="nw">$A$와</span> <span class="nw">$B$에</span> 연결한) 전원의 극성을 반대로 한 회로를, 앞에서 살펴본 회로와 <span class="nw">$\varphi_B - \varphi_A = -2U_0$인</span> 전원을 가진 회로의 중첩으로 생각하자. 앞에서 살펴본 회로에서는 <span class="nw">$R_1$과</span> <span class="nw">$R_2$에</span> 흐르는 전류가 0이다. 따라서 두 번째 회로에서 저항 <span class="nw">$R_1$과</span> <span class="nw">$R_2$에</span> 흐르는 전류 <span class="nw">$I_1$과</span> <span class="nw">$I_2$만</span> 구하면 된다. 옴의 법칙을 고려하여 두 번째 회로의 전류를 표시하자(그림 2 참고). 전하 보존 법칙으로부터 다음을 얻는다.</p>
+<div class="f" style="left:271pt;top:308pt"><span class="fig" data-srcpage="15" data-clip="271,308,380,424"></span></div>
+<p class="x cap" style="--b:442.9;left:306pt">그림 2</p>
+<div class="f" style="left:159pt;top:438pt"><span class="fig" data-srcpage="15" data-clip="159,438,266,464"></span></div>
+<div class="f" style="left:183pt;top:465pt"><span class="fig" data-srcpage="15" data-clip="183,465,243,492"></span></div>
+<p class="x" style="--b:501.4">이 저항들에서의 일률 <span class="nw">$P_1 = I_1^2R_1$과</span> <span class="nw">$P_2 = I_2^2R_2$가</span> 같으므로 다음을 얻는다.</p>
+<div class="f" style="left:125pt;top:506pt"><span class="fig" data-srcpage="15" data-clip="125,506,301,538"></span></div>
+</div>
+
+<!-- page 16 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="16" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x bh" style="--b:64.0">방법 2</p>
+<p class="x wn" style="--b:76.0;width:216pt">전하 보존 법칙을 고려하여 저항에 흐르는 전류를 표시하자(그림 3 참고). 전위차를 두 가지 방법으로 쓰자.</p>
+<div class="f" style="left:87pt;top:112pt"><span class="fig" data-srcpage="16" data-clip="87,112,187,125"></span></div>
+<div class="f" style="left:62pt;top:144pt"><span class="fig" data-srcpage="16" data-clip="62,144,211,158"></span></div>
+<div class="f" style="left:80pt;top:161pt"><span class="fig" data-srcpage="16" data-clip="80,161,194,175"></span></div>
+<p class="x" style="--b:187.2;left:35pt;width:100pt">따라서</p>
+<div class="f" style="left:177pt;top:188pt"><span class="fig" data-srcpage="16" data-clip="177,188,248,222"></span></div>
+<div class="f" style="left:258pt;top:59pt"><span class="fig" data-srcpage="16" data-clip="258,59,393,187"></span></div>
+<p class="x cap" style="--b:205.8;left:306pt">그림 3</p>
+<p class="x" style="--b:233.7">일률이 같다는 조건 <span class="nw">$I_1^2R_1 = I_2^2R_2$로부터</span> 다음을 얻는다.</p>
+<div class="f" style="left:139pt;top:247pt"><span class="fig" data-srcpage="16" data-clip="139,247,287,285"></span></div>
+<p class="x" style="--b:301.8">얻은 식들로부터 <span class="nw">$r$을</span> 나타내자.</p>
+<div class="f" style="left:184pt;top:341pt"><span class="fig" data-srcpage="16" data-clip="184,341,241,354"></span></div>
+<p class="x bh" style="--b:366.7">방법 1</p>
+<p class="x wn" style="--b:378.6;width:188.2pt">등가 전원의 방법을 이용하자. 회로 전체를 전압이 <span class="nw">$U^*$이고</span> 내부 저항이 <span class="nw">$r^*$인</span> 전원으로 바꾸자. 등가 전압은 외부 전류가 없을 때 절점 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이의 전위차로 구한다(그림 4 참고).</p>
+<div class="f" style="left:27pt;top:460pt"><span class="fig" data-srcpage="16" data-clip="27,460,219,488"></span></div>
+<div class="f" style="left:237pt;top:365pt"><span class="fig" data-srcpage="16" data-clip="237,365,387,466"></span></div>
+<p class="x cap" style="--b:483.7;left:291.9pt">그림 4</p>
+<p class="x wn" style="--b:500.7;width:188.2pt">등가 저항은 전원이 있는 가지를 도선으로 바꾸어 구한다.</p>
+<div class="f" style="left:138pt;top:526pt"><span class="fig" data-srcpage="16" data-clip="138,526,287,553"></span></div>
+</div>
+
+<!-- page 17 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p><p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="17" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">따라서 2단자 회로 <span class="nw">$AB$는</span> 저항값이 <span class="nw">$\sqrt{R_1R_2}$인</span> 저항 하나와 같다. 그러므로 이 2단자 회로에 연결한 저항계는 극성과 관계없이 <span class="nw">$R = \sqrt{R_1R_2}$를</span> 나타낸다.</p>
+<p class="x bh" style="--b:99.9">방법 2</p>
+<p class="x" style="--b:111.9">조건 <span class="nw">$r^2 = R_1R_2$는</span> 브리지의 평형 조건 <span class="nw">$r/R_1 = R_2/r$과</span> 같다는 데 주목하자. 저항계 안의 전원 <span class="nw">$\mathcal{E}_0$을</span> 도선으로 바꾼 회로를 생각하자. 저항계의 내부 저항 <span class="nw">$r_0$은</span> 평형 브리지의 대각선 위에 있으므로 여기에는 전류가 흐르지 않는다. 그러면</p>
+<div class="f" style="left:153pt;top:157pt"><span class="fig" data-srcpage="17" data-clip="153,157,273,176"></span></div>
+<p class="x" style="--b:191.0">전원 <span class="nw">$U_0$을</span> 도선으로 바꾼 회로를 생각하자. 브리지가 평형이므로 이 도선에도 전류가 흐르지 않는다. 그러면</p>
+<div class="f" style="left:79pt;top:213pt"><span class="fig" data-srcpage="17" data-clip="79,213,346,240"></span></div>
+<p class="x" style="--b:253.5">두 회로를 중첩하자. 저항계 단자 사이의 최종 전위차는</p>
+<div class="f" style="left:108pt;top:265pt"><span class="fig" data-srcpage="17" data-clip="108,265,318,282"></span></div>
+<p class="x" style="--b:294.8;left:35pt;width:361.8pt">이고, 전류는 다음과 같다.</p>
+<div class="f" style="left:145pt;top:293pt"><span class="fig" data-srcpage="17" data-clip="145,293,281,318"></span></div>
+<p class="x" style="--b:328.4;left:35pt;width:361.8pt">그러면 저항계의 눈금은 다음과 같다.</p>
+<div class="f" style="left:100pt;top:338pt"><span class="fig" data-srcpage="17" data-clip="100,338,325,365"></span></div>
+<p class="x" style="--b:378.9">전원 <span class="nw">$U_0$에</span> 의한 전류는 저항계에 흐르지 않음을 알았다. 따라서 저항계는 연결 극성과 관계없이 등가 저항 <span class="nw">$r^*$를</span> 나타낸다.</p>
+<div class="f" style="left:183pt;top:418pt"><span class="fig" data-srcpage="17" data-clip="183,418,242,431"></span></div>
+</div>
+</body></html>
