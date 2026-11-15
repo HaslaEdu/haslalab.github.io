@@ -1,0 +1,366 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2026 (the title page prints "LIX" = 제59회, as printed; the 2026 paper agent notes 2026 should be LX), 10학년 이론 풀이 예시
+   — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern (Cyrillic in Windows-1251-mapped Type3 fonts F37-F40/F53/F58/F59) 10pt (= 9.963pt),
+   A5 419.5x595.3pt, 15 pages, no page numbers, no marking criteria.
+   Page 1 is a cropped sheet (MediaBox = CropBox, visible 419.5x397.3pt); its body column is x 21.1..389.5 (shifted 7.2pt left).
+   Other pages: text column x 28.3..396.8 (width 368.5pt); header + rule x 28.3..391.2; indent 20pt; baselineskip 11.955pt.
+   Running header italic, baseline 37.6, rule y 41.4 (stamped) on every page:
+   "Заключительный этап ВсОШ по физике" / "Теоретический тур" -> "2026년 전러시아 물리 올림피아드, 결선" / "이론 시험" (as the 2026_T2 paper).
+   Subscripts: ρ_в (water) -> w; V_в, m_в (upper part) -> u; μ_р -> d; P_кр, V_в кр, V_2 кр -> cr; v_п (piston) -> p;
+   E_п (field in the cavity) -> c; φ_р -> eq; F_кул (Coulomb) -> C. Units Latin; decimal points in typed text.
+   Retyped displays: .d (line-height 0; top = b - --a, --a = formula height above its baseline).
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b:  top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:368.5pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.i{text-indent:20pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left;width:362.9pt}
+.hd.r{text-align:right;width:361.2pt}
+.h{text-align:center;font-weight:bold;margin-top:-1.1pt}
+.t{text-align:center;--fs:17.215pt;--l:16pt}
+.x b{line-height:0}
+.t2{text-align:center;font-weight:bold;--fs:11.955pt;--l:14pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.wb{position:absolute;background:#fff}
+@page p1{size:419.528pt 397.2507pt;margin:0}
+.page[data-s="p1"]{page:p1;width:419.528pt;height:397.2507pt}
+.page[data-s="p1"] .x{left:21.1pt;width:368.4pt}
+</style></head><body>
+
+<!-- page 1 (cropped sheet) -->
+<div class="page" data-s="p1">
+<p class="x hd" style="--b:37.6;left:28.3pt;width:362.9pt">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6;left:28.3pt;width:361.2pt">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="1" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x t" style="--b:90.9;left:21.1pt;width:386.6pt">제59회 전러시아 학생</p>
+<p class="x t" style="--b:107.2;margin-top:-1.1pt;left:21.1pt;width:386.6pt">물리 올림피아드</p>
+<p class="x t2" style="--b:126.2;left:21.1pt;width:385.3pt">결선</p>
+<p class="x t2" style="--b:145.2;left:21.1pt;width:385.3pt">이론 시험</p>
+<p class="x h" style="--b:180.3;left:21.1pt;width:371.8pt">문제 10-1. 떠오르는 나무토막</p>
+<p class="x i" style="--b:195.2">먼저 나무토막이 바닥에 닿지 않고 자신의 길이 방향 축을 중심으로 각 <span class="nw">$\alpha$만큼</span> 회전한 채 떠 있는 상황을 생각하자(그림에는 나무토막의 단면이 나타나 있다). 재료의 밀도가 물의 밀도의 50%이므로 나무토막은 부피의 절반이 물에 잠기고, 따라서 수면은 나무토막의 길이 방향 대칭축(그림의 점 <span class="nw">$O$)을</span> 지난다. 점 <span class="nw">$O$에</span> 작용하는 중력 외에 나무토막에는 아르키메데스의 힘(부력)이 작용한다. 계산의 편의를 위해, 그림에 나타낸 단면의 잠긴 부분을 선분 <span class="nw">$CD$로</span> 두 도형, 즉 삼각형 <span class="nw">$ECD$와</span> 나머지 직사각형으로 나누고 각 도형의 질량 중심을 구하자. 첫 번째 도형의 중심은 <span class="nw">$\triangle ECD$의</span> 중선들의 교점(점 <span class="nw">$A$)에</span> 있고, 두 번째 도형의 중심은 직사각형의 대각선들이 만나는 점 <span class="nw">$B$에</span> 있다.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="2" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:78pt;top:68pt"><span class="fig" data-srcpage="2" data-clip="78,68,313,293"></span></div>
+<p class="x i" style="--b:313.0"><span class="nw">$CD = a$,</span> <span class="nw">$EC = a\operatorname{tg}\alpha$,</span> <span class="nw">$CF = (b - a\operatorname{tg}\alpha)/2$임을</span> 고려하고 나무토막의 길이를 <span class="nw">$L$로</span> 나타내면, 점 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 각각 작용하는 부력의 성분 <span class="nw">$F_1$과</span> <span class="nw">$F_2$는</span> 다음과 같다.</p>
+<p class="x c d" style="--b:372.0;--a:13.6pt">$F_1 = \rho_\mathrm{w} gL\cdot\dfrac12 a\cdot a\operatorname{tg}\alpha = \dfrac12\rho_\mathrm{w} ga^2L\operatorname{tg}\alpha, \qquad F_2 = \rho_\mathrm{w} gaL\cdot\dfrac{b - a\operatorname{tg}\alpha}{2}.$</p>
+<p class="x i" style="--b:395.1">여러 기하학 정리를 이용하면 선분 <span class="nw">$AO$와</span> <span class="nw">$BO$의</span> 길이를 다음과 같이 구할 수 있다.</p>
+<div class="f" style="left:63pt;top:427pt"><span class="fig" data-srcpage="2" data-clip="63,427,362,452"></span></div>
+<p class="x" style="--b:465.3">이제 나무토막이 평형을 이루는, 0이 아닌 각 <span class="nw">$\alpha$의</span> 값을 구하자. 이를 위해 점 <span class="nw">$O$에</span> 대한 돌림힘 평형 조건을 쓰면 다음과 같다.</p>
+<div class="f" style="left:113pt;top:491pt"><span class="fig" data-srcpage="2" data-clip="113,491,312,506"></span></div>
+<p class="x c d" style="--b:542.6;--a:15.0pt">$\Rightarrow\qquad \dfrac12\rho_\mathrm{w} ga^2L\operatorname{tg}\alpha\cdot\dfrac{a\cos2\alpha}{6\cos\alpha} = \rho_\mathrm{w} gaL\cdot\dfrac{b^2 - a^2\operatorname{tg}^2\alpha}{8}\cdot\sin\alpha\qquad\Rightarrow$</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="3" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:96pt;top:59pt"><span class="fig" data-srcpage="3" data-clip="96,59,329,124"></span></div>
+<p class="x" style="--b:137.4">이 평형 상태는 안정하다. <span class="nw">$\alpha &gt; 30^\circ$이면</span> 힘 <span class="nw">$F_1$의</span> 돌림힘이 힘 <span class="nw">$F_2$의</span> 돌림힘보다 커서 나무토막이 시계 방향으로 회전하기(각 <span class="nw">$\alpha$가</span> 줄어들기) 때문이다. 반대로 <span class="nw">$\alpha &lt; 30^\circ$이면</span> 힘 <span class="nw">$F_2$의</span> 돌림힘이 더 커서 나무토막은 시계 반대 방향으로 회전한다(<span class="nw">$\alpha$가</span> 커진다). 게다가 이것은 <span class="nw">$0^\circ$에</span> 가까운 작은 각에 대해서도 성립한다. 따라서 물이 높이 <span class="nw">$b/2$에</span> 이르면 나무토막의 처음 위치(<span class="nw">$\alpha = 0^\circ$)는</span> 더 이상 안정하지 않게 되고, 나무토막의 한쪽 모서리(왼쪽인지 오른쪽인지는 우연에 달려 있다)가 위로 들리기 시작한다. 수면이 계속 높아지면 나무토막의 회전은 각 <span class="nw">$\alpha$가</span> <span class="nw">$30^\circ$에</span> 이를 때까지 계속된다. 수면이 더 높아지면 나무토막은 그릇 바닥에서 떨어져 이 (안정한!) 자세로 떠 있게 된다. 나무토막이 바닥에서 떨어질 때의 수면 높이를 구하자.</p>
+<div class="f" style="left:79pt;top:282pt"><span class="fig" data-srcpage="3" data-clip="79,282,346,308"></span></div>
+<p class="x h" style="--b:337.6">문제 10-2. 바람을 거스르는 둘</p>
+<p class="x i" style="--b:355.0"><b>방법 1</b></p>
+<p class="x i" style="--b:366.9">공들의 상대 운동을 생각하자. 각 공에 대해 뉴턴 제2법칙을 쓰면</p>
+<div class="f" style="left:161pt;top:391pt"><span class="fig" data-srcpage="3" data-clip="161,392,264,420"></span></div>
+<p class="x" style="--b:437.1">이고, 얻은 두 식을 서로 빼면 다음을 얻는다.</p>
+<div class="f" style="left:183pt;top:450pt"><span class="fig" data-srcpage="3" data-clip="183,450,242,463"></span></div>
+<p class="x" style="--b:480.5">여기서 <span class="nw">$\vec a_r = \vec a_2 - \vec a_1$은</span> 공들의 상대 가속도이고, <span class="nw">$\vec v_r = \vec v_2 - \vec v_1$은</span> 공들의 상대 속도이다. 이 등식으로부터, 상대 속도의 작은 변화 <span class="nw">$d\vec v_r$와</span> 첫 번째 공에 대한 두 번째 공의 변위 벡터의 작은 변화 <span class="nw">$d\vec l$은</span> 다음 관계로 연결된다.</p>
+<div class="f" style="left:183pt;top:527pt"><span class="fig" data-srcpage="3" data-clip="183,527,242,553"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="4" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">이 관계는 어느 순간에나 성립하므로, 상대 속도의 전체 변화 <span class="nw">$\Delta\vec v_r$와</span> 변위 벡터의 전체 변화 <span class="nw">$\Delta\vec l$도</span> 같은 방식으로 연결된다.</p>
+<div class="f" style="left:180pt;top:87pt"><span class="fig" data-srcpage="4" data-clip="180,87,246,113"></span></div>
+<p class="x" style="--b:123.2">조건에 따르면, 충분히 긴 시간이 지난 뒤 공들의 상대 속도는 무시할 수 있을 만큼 작아지고(<span class="nw">$\vec v_r = \vec 0$),</span> 두 공 사이의 변위 벡터 <span class="nw">$\vec l = \vec L$은</span> 연직 위쪽을 향하며 길이가 <span class="nw">$L$이다</span>. 따라서</p>
+<div class="f" style="left:146pt;top:159pt"><span class="fig" data-srcpage="4" data-clip="146,159,279,209"></span></div>
+<p class="x" style="--b:223.6">이 등식을 수평축에 사영하여 쓰면</p>
+<div class="f" style="left:154pt;top:236pt"><span class="fig" data-srcpage="4" data-clip="154,236,271,250"></span></div>
+<p class="x" style="--b:267.0">따라서</p>
+<p class="x c d" style="--b:281.0;--a:11.2pt">$v_{20} = v_{10}\dfrac{\cos\alpha_1}{\cos\alpha_2} \approx 12.26\,\mathrm{m/s}.$</p>
+<p class="x i" style="--b:303.0"><b>방법 2</b></p>
+<p class="x i" style="--b:314.9">첫 번째 공에 대해 뉴턴 제2법칙을 수평 오른쪽을 향하는 <span class="nw">$OX$축에</span> 사영하여 쓰면</p>
+<div class="f" style="left:162pt;top:338pt"><span class="fig" data-srcpage="4" data-clip="162,338,263,363"></span></div>
+<p class="x" style="--b:377.6">이로부터 직접 적분하고 처음 조건(<span class="nw">$x_1(0) = 0$과</span> <span class="nw">$v_{1x}(0) = v_{10}\cos\alpha_1$)을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:118pt;top:400pt"><span class="fig" data-srcpage="4" data-clip="118,400,308,442"></span></div>
+<p class="x" style="--b:456.2">마찬가지로,</p>
+<div class="f" style="left:118pt;top:466pt"><span class="fig" data-srcpage="4" data-clip="118,466,308,508"></span></div>
+<p class="x" style="--b:522.8">조건으로부터 <span class="nw">$x_1(\infty) = x_2(\infty)$이므로</span></p>
+<div class="f" style="left:163pt;top:536pt"><span class="fig" data-srcpage="4" data-clip="163,536,262,549"></span></div>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="5" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">따라서</p>
+<p class="x c d" style="--b:78.0;--a:11.2pt">$v_{20} = v_{10}\dfrac{\cos\alpha_1}{\cos\alpha_2} \approx 12.26\,\mathrm{m/s}.$</p>
+<p class="x i" style="--b:99.7"><b>방법 1</b></p>
+<p class="x i" style="--b:111.7;margin-top:-1.7pt">두 번째 공이 더 늦게 떨어졌으므로 벡터 <span class="nw">$\vec L$은</span> 위쪽을 향한다는 점에 주목하자. 앞에서 얻은 벡터 등식 <span class="nw">$\vec v_{20} - \vec v_{10} = (k/m)\vec L$을</span> 연직축에 사영하여 쓰면</p>
+<div class="f" style="left:149pt;top:146pt"><span class="fig" data-srcpage="5" data-clip="149,146,276,171"></span></div>
+<p class="x" style="--b:185.4">이로부터</p>
+<p class="x c d" style="--b:201.5;--a:13.6pt">$\dfrac mk = \dfrac{L}{v_{20}\sin\alpha_2 - v_{10}\sin\alpha_1} = 0.75\,\mathrm s.$</p>
+<p class="x i" style="--b:223.2">이제 첫 번째 공의 운동을 따로 생각하자. 이 공에 대해 뉴턴 제2법칙을 연직축 <span class="nw">$OY$에</span> 사영하여 쓰면</p>
+<div class="f" style="left:89pt;top:246pt"><span class="fig" data-srcpage="5" data-clip="89,246,336,271"></span></div>
+<p class="x" style="--b:285.0">여기서 <span class="nw">$y_1$은</span> 첫 번째 공의 연직 좌표이다. 충분히 긴 시간이 지나면 속도의 연직 성분이 <span class="nw">$-mg/k$가</span> 된다는 것을 쉽게 알 수 있다. 앞에서 상대 속도와 공들 사이의 변위 벡터에 대해 했던 것처럼 유한한 증분으로 넘어가면 다음을 얻는다.</p>
+<div class="f" style="left:141pt;top:331pt"><span class="fig" data-srcpage="5" data-clip="141,331,285,357"></span></div>
+<p class="x" style="--b:370.6">이로부터</p>
+<p class="x c d" style="--b:394.9;--a:14.2pt">$H = \dfrac mk(g\tau - v_{10}\sin\alpha_1) - \dfrac{m^2}{k^2}g = 30.83\,\mathrm m.$</p>
+<p class="x i" style="--b:408.3"><b>방법 2</b></p>
+<p class="x i" style="--b:420.3">첫 번째 공에 대해 뉴턴 제2법칙을 연직 위쪽을 향하는 <span class="nw">$OY$축에</span> 사영하여 쓰면</p>
+<div class="f" style="left:162pt;top:443pt"><span class="fig" data-srcpage="5" data-clip="162,443,263,469"></span></div>
+<p class="x" style="--b:479.7">이로부터 처음 조건(<span class="nw">$y(0) = 0$과</span> <span class="nw">$v_{1y}(0) = v_{10}\sin\alpha_1$)을</span> 고려하여 적분하면 다음을 얻는다.</p>
+<div class="f" style="left:104pt;top:500pt"><span class="fig" data-srcpage="5" data-clip="104,500,321,548"></span></div>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="6" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">마찬가지로,</p>
+<div class="f" style="left:104pt;top:73pt"><span class="fig" data-srcpage="6" data-clip="104,73,321,120"></span></div>
+<p class="x" style="--b:135.3">조건으로부터 <span class="nw">$y_2(\infty) - y_1(\infty) = L$이므로</span></p>
+<div class="f" style="left:146pt;top:144pt"><span class="fig" data-srcpage="6" data-clip="146,144,280,169"></span></div>
+<p class="x" style="--b:183.6">이로부터</p>
+<p class="x c d" style="--b:199.8;--a:13.6pt">$\dfrac mk = \dfrac{L}{v_{20}\sin\alpha_2 - v_{10}\sin\alpha_1} = 0.75\,\mathrm s.$</p>
+<p class="x" style="--b:221.7">조건에 따르면</p>
+<p class="x c d" style="--b:245.7;--a:13.6pt">$H = -y_1(\tau) = \dfrac{mg}{k}\tau - \dfrac mk\left(v_{10}\sin\alpha_1 + \dfrac{mg}{k}\right)\bigl(1 - e^{-\frac km\tau}\bigr) = 30.84\,\mathrm m.$</p>
+<p class="x i" style="--b:270.0"><b>방법 1</b></p>
+<p class="x i" style="--b:282.0">공들로 이루어진 계를 하나의 전체로서 운동하는 것으로 생각하자. 질량 중심의 가속도 <span class="nw">$\vec a_c = (\vec a_1 + \vec a_2)/2$는</span> 외력과 다음 식으로 연결된다.</p>
+<div class="f" style="left:91pt;top:307pt"><span class="fig" data-srcpage="6" data-clip="91,307,334,320"></span></div>
+<p class="x" style="--b:337.1">여기서 <span class="nw">$\vec v_c = (\vec v_1 + \vec v_2)/2$는</span> 질량 중심의 속도이다. <span class="nw">$\vec v_f = \vec u + m\vec g/k$로</span> 나타내자. 이것이 두 공 각각의 정상 상태 속도라는 것은 쉽게 보일 수 있다. 그러면 다음을 얻는다.</p>
+<div class="f" style="left:170pt;top:362pt"><span class="fig" data-srcpage="6" data-clip="170,362,255,388"></span></div>
+<p class="x" style="--b:398.3">일정한 속도 <span class="nw">$\vec v_f$로</span> 움직이는 기준틀로 옮겨 가자. 이 기준틀에서 질량 중심의 가속도와 속도를 각각 <span class="nw">$\vec a'_c$와</span> <span class="nw">$\vec v'_c$로</span> 나타내자. 그러면</p>
+<div class="f" style="left:185pt;top:423pt"><span class="fig" data-srcpage="6" data-clip="185,423,240,448"></span></div>
+<p class="x" style="--b:459.0">이 방정식은 직선 운동을 나타낸다! 그런데 질량 중심은 점 <span class="nw">$O$를</span> 두 번 지났고, 이 점은 선택한 기준틀에서 일정한 속도 <span class="nw">$-\vec v_f$로</span> 움직인다. 따라서 <span class="nw">$\vec v'_c \parallel \vec v_f$이다</span>. 그런데 <span class="nw">$\vec v'_c = \vec v_c - \vec v_f$이므로</span></p>
+<div class="f" style="left:195pt;top:498pt"><span class="fig" data-srcpage="6" data-clip="195,498,231,511"></span></div>
+<p class="x" style="--b:524.5">즉</p>
+<div class="f" style="left:158pt;top:524pt"><span class="fig" data-srcpage="6" data-clip="158,524,267,550"></span></div>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="7" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">이것은 처음 순간을 포함하여 어느 순간에나 성립한다. 따라서</p>
+<div class="f" style="left:143pt;top:76pt"><span class="fig" data-srcpage="7" data-clip="143,76,283,103"></span></div>
+<p class="x" style="--b:114.6"><span class="nw">$v_{20}\cos\alpha_2 = v_{10}\cos\alpha_1$을</span> 고려하면 이로부터 다음을 얻는다.</p>
+<p class="x c d" style="--b:140.6;--a:13.6pt">$u = \dfrac mk\dfrac{2g}{\operatorname{tg}\alpha_1 + \operatorname{tg}\alpha_2} \approx 10.96\,\mathrm{m/s}.$</p>
+<p class="x i" style="--b:167.2"><b>방법 2</b></p>
+<p class="x i" style="--b:179.2">공들이 시각 <span class="nw">$t_1$에</span> 점 <span class="nw">$O$로부터</span> 거리 <span class="nw">$h$인</span> 곳에서 <span class="nw">$OY$축을</span> 지난다고 하자. 그러면 다음이 성립한다.</p>
+<div class="f" style="left:106pt;top:199pt"><span class="fig" data-srcpage="7" data-clip="106,199,320,269"></span></div>
+<p class="x" style="--b:284.0">이 연립 방정식에서 <span class="nw">$t_1$과</span> <span class="nw">$h$를</span> 소거하면</p>
+<div class="f" style="left:143pt;top:295pt"><span class="fig" data-srcpage="7" data-clip="143,295,282,322"></span></div>
+<p class="x" style="--b:336.1"><span class="nw">$v_{20}\cos\alpha_2 = v_{10}\cos\alpha_1$을</span> 고려하면 이로부터 다음을 얻는다.</p>
+<p class="x c d" style="--b:362.2;--a:13.6pt">$u = \dfrac mk\dfrac{2g}{\operatorname{tg}\alpha_1 + \operatorname{tg}\alpha_2} \approx 10.96\,\mathrm{m/s}.$</p>
+<p class="x h" style="--b:388.7">문제 10-3. 피스톤 아래의 탄산수</p>
+<p class="x i" style="--b:406.4"><span class="nw">$V_\mathrm{u}$를</span> 용기 위쪽 부분의 부피, <span class="nw">$V_1$과</span> <span class="nw">$V_2$를</span> 각각 용기 아래쪽 부분에 있는 기체와 탄산수의 부피라 하자. 물이 일정한 유량으로 들어오고 용기 전체의 부피가 <span class="nw">$2V_0$이므로</span></p>
+<p class="x c" style="--b:452.2">$V_2 = qt, \qquad V_1 = 2V_0 - V_\mathrm{u} - qt.$</p>
+<p class="x" style="--b:474.2">물이 아직 용기 아래쪽 부분을 다 채우지 않은 경우(<span class="nw">$V_1 &gt; 0$)를</span> 생각하자. 용기를 나누는 피스톤은 가볍고 마찰 없이 움직이므로, 피스톤 양쪽의 이산화 탄소 압력 <span class="nw">$P$는</span> 같다. 헨리 법칙에 따르면 물에 녹은 <span class="nw">$CO_2$의</span> 질량은 다음과 같다.</p>
+<p class="x c" style="--b:531.9">$m_2 = \mu_\mathrm{d}V_2 = kPV_2 = kPqt.$</p>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="8" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">처음 순간에 용기 위쪽 부분과 아래쪽 부분의 기체 질량은 같으므로, 어떤 시각 <span class="nw">$t$에</span> 피스톤 아래에 있는 기체의 질량은</p>
+<p class="x c" style="--b:96.0">$m_1 = m_\mathrm{u} - m_2 = m_\mathrm{u} - kPqt,$</p>
+<p class="x" style="--b:96.0;text-align:right">(*)</p>
+<p class="x" style="--b:115.9">이다. 여기서 <span class="nw">$m_\mathrm{u}$는</span> 용기 위쪽 부분에 있는 이산화 탄소의 질량이다. 이제 피스톤 양쪽에 있는 기체에 대해 멘델레예프–클라페이롱 방정식을 쓰고, 그로부터 질량을 나타내어 식 <span class="nw">$(\ast)$에</span> 대입하자.</p>
+<p class="x c d" style="--b:165.8;--a:12.4pt">$\left\{\begin{aligned}&amp;PV_\mathrm{u} = m_\mathrm{u}RT_0/M,\\ &amp;PV_1 = m_1RT_0/M\end{aligned}\right.\qquad\Rightarrow\qquad \dfrac{PV_1M}{RT_0} = \dfrac{PV_\mathrm{u}M}{RT_0} - kPqt\qquad\Rightarrow$</p>
+<p class="x c d" style="--b:198.0;--a:13.6pt">$\Rightarrow\qquad V_1 = V_\mathrm{u} - \dfrac{kRT_0}{M}\cdot qt.$</p>
+<p class="x" style="--b:217.4">이로부터 연립 방정식을 풀면 다음을 얻는다.</p>
+<p class="x c d" style="--b:242.8;--a:14.6pt">$V_\mathrm{u} = V_0 + \dfrac{qt}{2}\left(\dfrac{kRT_0}{M} - 1\right), \qquad V_1 = V_0 - \dfrac{qt}{2}\left(\dfrac{kRT_0}{M} + 1\right).$</p>
+<p class="x" style="--b:242.8;text-align:right">(**)</p>
+<p class="x" style="--b:268.1">그런데</p>
+<div class="f" style="left:120pt;top:267pt"><span class="fig" data-srcpage="8" data-clip="120,267,307,296"></span></div>
+<p class="x" style="--b:307.9">이므로, <span class="nw">$(\ast\ast)$의</span> 첫 번째 식으로부터 <span class="nw">$V_\mathrm{u}$는</span> 일정한 속도로 커지고 피스톤은 아래로 움직인다. 피스톤이 움직이는 속력은 다음과 같다.</p>
+<p class="x c d" style="--b:345.7;--a:14.6pt">$v_\mathrm{p} = \dfrac{\Delta V_\mathrm{u}}{S\Delta t} = \dfrac{q}{2S}\left(\dfrac{kRT_0}{M} - 1\right) = \dfrac{4\,\mathrm{cm^3/s}}{256\,\mathrm{cm^2}}\,(1.64 - 1) \approx 0.01\,\mathrm{cm/s}.$</p>
+<p class="x i" style="--b:371.6"><span class="nw">$(\ast\ast)$의</span> 두 번째 식으로부터, 용기 아래쪽 부분에서 수면 위에 있는 기체의 부피는 계속 줄어들어 다음 시각에</p>
+<p class="x c d" style="--b:408.1;--a:13.6pt">$t_1 = \dfrac{2V_0}{q(kRT_0/M + 1)} = \dfrac{2\cdot6.6\,\mathrm L}{0.004\,\mathrm{L/s}\cdot(1.64 + 1)} \approx 1250\,\mathrm s$</p>
+<p class="x" style="--b:430.7">0이 되고, 기체는 모두 액체에 녹으며 액체가 피스톤에 닿게 된다. 그 뒤로는 들어오는 물이 피스톤을 밀어 올리고, 용기 위쪽 부분의 기체 부피는 줄어들기 시작한다. 피스톤 위의 기체에서 일어나는 과정은 등온 과정이므로, 최소 압력 <span class="nw">$P_{min}$은</span> <span class="nw">$V_\mathrm{u}$가</span> 최대일 때, 즉 펌프를 켜고 시간 <span class="nw">$t = t_1$이</span> 지났을 때 도달한다.</p>
+<p class="x i" style="--b:502.5">용기 위쪽 부분의 부피는 시각 <span class="nw">$t_1$에</span> 최대가 된다. <span class="nw">$t_1$에</span> 대한 식을 <span class="nw">$(\ast\ast)$의</span> 첫 번째 식에 대입하여 이 부피를 구하자.</p>
+<p class="x c d" style="--b:540.1;--a:13.6pt">$V_{\mathrm u\,max} = 2V_0\cdot\dfrac{kRT_0/M}{kRT_0/M + 1} \approx 8.2\,\mathrm L.$</p>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="9" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">보일–마리오트 법칙에 따르면 이 순간 피스톤 위 기체의 압력은 다음과 같다.</p>
+<p class="x c d" style="--b:92.5;--a:13.6pt">$P_{min} = \dfrac{P_0V_0}{V_{\mathrm u\,max}} \approx 132\,\mathrm{kPa}.$</p>
+<p class="x i" style="--b:114.7">펌프가 꺼지는 순간 피스톤 위 기체의 압력은 <span class="nw">$P_\mathrm{cr}$이고,</span> 용기 위쪽 부분의 부피는 다음과 같다.</p>
+<p class="x c d" style="--b:153.1;--a:13.6pt">$V_{\mathrm{u\,cr}} = \dfrac{P_0V_0}{P_\mathrm{cr}} = \dfrac{2V_0}{5} = 2.64\,\mathrm L.$</p>
+<p class="x" style="--b:180.7">물로 채워진 용기의 나머지 부분의 부피는 다음과 같다.</p>
+<p class="x c d" style="--b:207.1;--a:13.6pt">$V_{2\,\mathrm{cr}} = 2V_0 - V_{\mathrm{u\,cr}} = \dfrac{8V_0}{5}.$</p>
+<p class="x" style="--b:231.8">이로부터 펌프가 작동한 시간은 다음과 같다.</p>
+<p class="x c d" style="--b:258.2;--a:13.6pt">$t_2 = \dfrac{V_{2\,\mathrm{cr}}}{q} = \dfrac{8V_0}{5q} = 2640\,\mathrm s.$</p>
+<p class="x i" style="--b:284.9">앞의 문항들에서 얻은 결과로부터, <span class="nw">$V_\mathrm{u}(t)$의</span> 그래프는 두 개의 직선 구간으로 이루어진 꺾은선 모양이다. 꺾은선의 꼭짓점은 좌표가 <span class="nw">$(t_1;\,V_{\mathrm u\,max})$인</span> 점에 있고, 양 끝은 점 <span class="nw">$(0;\,V_0)$과</span> <span class="nw">$(t_2;\,V_{\mathrm{u\,cr}})$에</span> 있다. 특징적인 점들을 표시하여 함수 <span class="nw">$V_\mathrm{u}(t)$의</span> 그래프를 그리자.</p>
+<div class="f" style="left:82pt;top:348pt"><span class="fig" data-srcpage="9" data-clip="82,348,343,528"></span></div>
+<p class="x ov" style="--b:358.4;left:105.0pt;--fs:6.974pt;--l:8pt">u</p>
+<p class="x ov" style="--b:356.7;left:115.5pt">L</p>
+<p class="x ov" style="--b:377.6;left:177.0pt;color:#00f">s</p>
+<p class="x ov" style="--b:377.6;left:199.6pt;color:#00f">L</p>
+<p class="x ov" style="--b:419.9;left:110.5pt;color:#00f">s</p>
+<p class="x ov" style="--b:419.9;left:132.6pt;color:#00f">L</p>
+<p class="x ov" style="--b:473.0;left:304.3pt;color:#00f">s</p>
+<p class="x ov" style="--b:473.0;left:331.8pt;color:#00f">L</p>
+<p class="x ov" style="--b:506.0;left:330.6pt">s</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="10" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x h" style="--b:64.0">문제 10-4. 빈 공간 속의 아령</p>
+<p class="x i" style="--b:81.7">빈 공간과 원기둥의 축에 수직인 평면을 생각하자. 원기둥의 축이 이 평면과 만나는 점을 <span class="nw">$O$,</span> 빈 공간의 축과 만나는 점을 <span class="nw">$O'$이라</span> 하자(그림&nbsp;1). 빈 공간 안의 임의의 점 <span class="nw">$A$를</span> 고르자. <span class="nw">$\vec r = \overrightarrow{OA}$,</span> <span class="nw">$\vec r' = \overrightarrow{O'A}$,</span> <span class="nw">$\vec d = \overrightarrow{OO'}$이라</span> 하면 <span class="nw">$\vec r = \vec r' + \vec d$이다</span>.</p>
+<div class="f" style="left:89pt;top:138pt"><span class="fig" data-srcpage="10" data-clip="89,138,334,319"></span></div>
+<p class="x c" style="--b:336.0;--fs:8.966pt;left:192.6pt;width:40pt">그림&nbsp;1</p>
+<p class="x i" style="--b:361.3"><span class="nw">$\rho$를</span> 원기둥의 부피 전하 밀도라 하면, 빈 공간이 있는 원기둥은 부피 전하 밀도가 <span class="nw">$\rho$와</span> <span class="nw">$-\rho$인</span> 두 원기둥의 중첩으로 나타낼 수 있다. 첫 번째 원기둥은 빈 공간이 뚫린 원기둥을 꽉 찬 온전한 원기둥으로 채워 준다. 뚫린 부분 안의 전기장을, 채워진 원기둥과 전하 밀도가 <span class="nw">$-\rho$인</span> 원기둥이 만드는 전기장의 중첩으로 나타내자.</p>
+<p class="x i" style="--b:421.1">대칭성을 이용하여, 가우스 법칙으로 균일하게 대전된 원기둥 내부의 전기장 세기 <span class="nw">$E(r)$을</span> 구하자.</p>
+<p class="x c d" style="--b:457.5;--a:13.6pt">$\Phi_E = \dfrac{q_{in}}{\varepsilon_0}$, 여기서 $\Phi_E = 2\pi rlE(r),\ q_{in} = \pi r^2l\rho,$</p>
+<p class="x" style="--b:486.4;margin-top:-1.3pt">이로부터 <span class="nw">$E(r) = \rho r/(2\varepsilon_0)$,</span> 또는 벡터 형태로 <span class="nw">$\vec E(\vec r) = \bigl(\rho/(2\varepsilon_0)\bigr)\vec r$이다</span>. 그러면 임의의 점 <span class="nw">$A$에서</span> 전기장의 세기는 다음과 같다.</p>
+<div class="f" style="left:77pt;top:511pt"><span class="fig" data-srcpage="10" data-clip="77,511,348,538"></span></div>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="11" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">따라서 빈 공간 안의 전기장은 균일하고, 전기장 벡터는 수평 방향을 향하며, 그 크기는 <span class="nw">$E_\mathrm{c} = \rho R/(4\varepsilon_0)$이다</span>.</p>
+<p class="x i" style="--b:98.9;margin-top:-1.2pt">빈 공간에 놓인 질량 <span class="nw">$m$,</span> 전하 <span class="nw">$q$인</span> 대전된 공에는 힘 <span class="nw">$\vec F = \vec F_g + \vec F_E$가</span> 작용한다. 여기서 <span class="nw">$F_g = mg$는</span> 중력이고, <span class="nw">$F_E = q\rho R/(4\varepsilon_0)$는</span> 전기장이 작용하는 힘이다. 이 두 힘은 서로 수직이고 균일하므로, 공은 일정한 가속도 <span class="nw">$a = \sqrt{g^2 + \bigl(q\rho R/(4m\varepsilon_0)\bigr)^2}$으로</span> 움직인다.</p>
+<p class="x" style="--b:180.8">한편 공은 시간 <span class="nw">$\tau$</span> 동안 빈 공간의 벽까지 날아갔다. 이것은 <span class="nw">$a = 2(R/2)/\tau^2 = \sqrt2 g$라는</span> 뜻이고, 이로부터 <span class="nw">$\rho = 4\varepsilon_0mg/(qR)$이다</span>.</p>
+<p class="x i" style="--b:218.4"><span class="nw">$B$를</span> 막대의 중점, <span class="nw">$r = 3R/8$을</span> 고리의 반지름, <span class="nw">$L = \sqrt2 r$을</span> 두 구슬 사이의 거리라 하자. 구슬이 달린 막대가 움직일 때 벡터 <span class="nw">$\overrightarrow{O'B}$는</span> 그림의 평면에서 시계 반대 방향으로 회전하고, 운동학적 구속 때문에 두 구슬의 속력은 같다. 벡터 <span class="nw">$\overrightarrow{O'B}$의</span> 회전각을 <span class="nw">$\varphi$로</span> 나타내고, 구슬의 최대 속력에 해당하는 각의 값 <span class="nw">$\varphi_\mathrm{eq}$를</span> 구하자.</p>
+<p class="x i" style="--b:295.0"><b>방법 1</b></p>
+<p class="x" style="--b:306.9">운동 에너지 정리에 따르면</p>
+<div class="f" style="left:173pt;top:316pt"><span class="fig" data-srcpage="11" data-clip="173,316,254,343"></span></div>
+<p class="x" style="--b:356.6">여기서 <span class="nw">$v$는</span> 구슬의 속력이고, <span class="nw">$A_g$와</span> <span class="nw">$A_E$는</span> 각각 중력과 전기력이 한 일이다. 벡터 <span class="nw">$\overrightarrow{O'B}$가</span> 각 <span class="nw">$\varphi$만큼</span> 회전할 때 두 일에 대한 식을 쓰면</p>
+<div class="f" style="left:58pt;top:395pt"><span class="fig" data-srcpage="11" data-clip="58,395,368,409"></span></div>
+<p class="x c" style="--b:424.5">$A_E = 2qE_\mathrm{c}r(\sin(\varphi - \pi/4) + \sin(\pi/4)) + qE_\mathrm{c}r(\sin(\pi/4 + \varphi) - \sin(\pi/4)).$</p>
+<p class="x" style="--b:441.6">첫 번째 문항에서 구한 관계로부터 다음을 얻는다.</p>
+<p class="x c d" style="--b:466.7;--a:13.6pt">$qE_\mathrm{c} = q\cdot\dfrac{\rho R}{4\varepsilon_0} = mg.$</p>
+<p class="x" style="--b:491.5">이를 이용하여 전체 일에 대한 식을 쓰면</p>
+<div class="f" style="left:114pt;top:494pt"><span class="fig" data-srcpage="11" data-clip="114,494,311,517"></span></div>
+<p class="x" style="--b:532.5">구슬의 속력은 <span class="nw">$A_\Sigma$가</span> 최대가 될 때, 즉 <span class="nw">$\varphi_\mathrm{eq} = \pi/4$일</span> 때 가장 크다. 이 값을 전체 일에 대한 식에 대입하면</p>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="12" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">다음을 얻는다.</p>
+<div class="f" style="left:63pt;top:74pt"><span class="fig" data-srcpage="12" data-clip="63,74,362,102"></span></div>
+<div class="f" style="left:107pt;top:106pt"><span class="fig" data-srcpage="12" data-clip="107,106,318,142"></span></div>
+<p class="x i" style="--b:154.8"><b>방법 2</b></p>
+<p class="x" style="--b:166.7">구슬이 최대 속력에 이르는 순간 구슬의 접선 가속도는 0이다. 따라서 이 순간 점 <span class="nw">$O'$에</span> 대해 계산한 중력과 전기력의 돌림힘의 합은 0이다. 시계 반대 방향을 양의 방향으로 잡고 <span class="nw">$M_g$와</span> <span class="nw">$M_E$(각각</span> 중력의 전체 돌림힘과 전기력의 전체 돌림힘)에 대한 식을 쓰면 다음과 같다.</p>
+<div class="f" style="left:109pt;top:240pt"><span class="fig" data-srcpage="12" data-clip="109,240,316,253"></span></div>
+<p class="x c" style="--b:270.3">$M_E = 2qE_\mathrm{c}r\cos(\varphi - \pi/4) + qE_\mathrm{c}r\cos(\varphi + \pi/4).$</p>
+<p class="x" style="--b:288.3">첫 번째 문항에서 구한 관계로부터 다음을 얻는다.</p>
+<p class="x c d" style="--b:314.7;--a:13.6pt">$qE_\mathrm{c} = q\cdot\dfrac{\rho R}{4\varepsilon_0} = mg.$</p>
+<p class="x" style="--b:340.8">이를 이용하여 전체 돌림힘에 대한 식을 쓰면</p>
+<div class="f" style="left:71pt;top:354pt"><span class="fig" data-srcpage="12" data-clip="71,354,356,388"></span></div>
+<p class="x" style="--b:402.6"><span class="nw">$\varphi &lt; \pi/4$일</span> 때 전체 돌림힘은 양수이고 계는 빨라지며, <span class="nw">$M_\Sigma = 0$이</span> 되는 <span class="nw">$\varphi_\mathrm{eq} = \pi/4$에서</span> 최대 속력에 이른다. 에너지 변화의 법칙에 따르면</p>
+<p class="x c d" style="--b:454.2;--a:14.6pt">$\dfrac{3mv^2_{max}}{2} + 2mgr - 3mg\cdot\left(r - \dfrac{r}{\sqrt2}\right) = 2qE_\mathrm{c}\cdot\dfrac{r}{\sqrt2} + qE_\mathrm{c}\left(r - \dfrac{r}{\sqrt2}\right),$</p>
+<p class="x" style="--b:478.9">따라서</p>
+<div class="f" style="left:43pt;top:488pt"><span class="fig" data-srcpage="12" data-clip="43,488,383,524"></span></div>
+<p class="x i" style="--b:541.0">몇 가지 사실을 정리해 두자.</p>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="13" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">1) 막대는 질량이 없으므로 막대에 작용하는 힘의 합은 0이다.</p>
+<p class="x i" style="--b:87.9">2) 막대와 구슬은 경첩으로 연결되어 있으므로, 막대가 구슬에 작용하는 힘은 막대를 따르는 방향이다.</p>
+<p class="x i" style="--b:111.9">3) 구슬이 최대 속력에 이르는 순간 그 구슬의 접선 가속도는 0이므로, 이 구슬에 작용하는 힘들을 반지름에 수직인 축에 사영한 값은 0이다.</p>
+<div class="f" style="left:108pt;top:147pt"><span class="fig" data-srcpage="13" data-clip="108,147,313,347"></span></div>
+<p class="x ov" style="--b:192.4;left:299.5pt;--fs:6.974pt;--l:8pt">C</p>
+<p class="x ov" style="--b:344.0;left:161.8pt;--fs:6.974pt;--l:8pt">C</p>
+<p class="x ov" style="--b:229.0;left:293.5pt;--fs:6.974pt;--l:8pt">c</p>
+<p class="x ov" style="--b:313.4;left:222.8pt;--fs:6.974pt;--l:8pt">c</p>
+<p class="x c" style="--b:366.2;--fs:8.966pt;left:192.6pt;width:40pt">그림&nbsp;2</p>
+<p class="x i" style="--b:390.0">구슬들이 최대 속력에 이르는 순간, 즉 <span class="nw">$\varphi_\mathrm{eq} = \pi/4$일</span> 때 각 구슬에 작용하는 힘들을 생각하자(그림&nbsp;2). 세 번째 사실을 고려하여, 아래쪽 구슬에 대해 뉴턴 제2법칙을 수평축에 사영하여 쓰면</p>
+<p class="x c" style="--b:444.2">$0 = 2qE_\mathrm{c} - (T + F_\mathrm{C})\cos(\pi/4),$</p>
+<p class="x" style="--b:462.4">여기서 <span class="nw">$T$는</span> 막대의 반작용력이고, <span class="nw">$F_\mathrm{C} = q^2/(2\pi\varepsilon_0L^2)$은</span> 두 구슬 사이의 정전기적 척력이다.</p>
+<p class="x i" style="--b:486.4;margin-top:-1.3pt">이로부터 다음을 얻는다.</p>
+<p class="x c d" style="--b:510.5;--a:14.2pt">$T = 2\sqrt2qE_\mathrm{c} - F_\mathrm{C} = 2\sqrt2mg - \dfrac{q^2}{2\pi\varepsilon_0L^2} = 2\sqrt2mg - \dfrac{16q^2}{9\pi\varepsilon_0R^2}.$</p>
+<p class="x i" style="--b:542.6">이 순간 법선 가속도는 <span class="nw">$a_n = v^2/r = 2(2 - \sqrt2)g/3$이다</span>. 두 구슬에 대해</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="14" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">뉴턴 제2법칙을 반지름 방향의 축(아래쪽 구슬은 연직축, 위쪽 구슬은 수평축)에 사영하여 쓰면 다음과 같다.</p>
+<p class="x c" style="--b:97.7">$ma_n = -(T + F_\mathrm{C})\sin(\pi/4) - mg + N_m,$</p>
+<p class="x c" style="--b:119.4">$2ma_n = -(T + F_\mathrm{C})\sin(\pi/4) - qE_\mathrm{c} + N_{2m}.$</p>
+<p class="x" style="--b:137.2;margin-top:-1.1pt"><span class="nw">$T + F_\mathrm{C} = 2\sqrt2qE_\mathrm{c}$이므로</span></p>
+<p class="x c d" style="--b:167.3;--a:15.8pt">$N_m = mg + ma_n + 2qE_\mathrm{c} = 3mg + mg\cdot\dfrac{2(2 - \sqrt2)}{3} = mg\cdot\dfrac{13 - 2\sqrt2}{3},$</p>
+<p class="x c d" style="--b:201.3;--a:15.8pt">$N_{2m} = 2ma_n + 3qE_\mathrm{c} = 3mg + mg\cdot\dfrac{4(2 - \sqrt2)}{3} = mg\cdot\dfrac{17 - 4\sqrt2}{3}.$</p>
+<p class="x h" style="--b:225.7">문제 10-5. 서미스터, 레이저와 다이오드</p>
+<p class="x i" style="--b:243.2">다이오드가 열릴 때 다이오드와 서미스터에 걸리는 전압은 <span class="nw">$U_0$이고,</span> 다이오드에 흐르는 전류는 0이다. 따라서 저항 <span class="nw">$r$와</span> 서미스터에 흐르는 전류는 <span class="nw">$I = (\mathcal E_1 - U_0)/r$이다</span>. 한편</p>
+<div class="f" style="left:147pt;top:278pt"><span class="fig" data-srcpage="14" data-clip="147,278,278,293"></span></div>
+<p class="x" style="--b:310.5">여기서 <span class="nw">$t_1$은</span> 이 상태에서 서미스터의 온도이다. 두 식을 같게 놓으면 다음을 얻는다.</p>
+<div class="f" style="left:123pt;top:324pt"><span class="fig" data-srcpage="14" data-clip="123,324,302,355"></span></div>
+<p class="x" style="--b:369.3">서미스터에서 발생하는 열 일률은 정상 상태에서 주위 공기로 흩어져야 한다. 따라서</p>
+<div class="f" style="left:137pt;top:392pt"><span class="fig" data-srcpage="14" data-clip="137,392,289,420"></span></div>
+<p class="x" style="--b:434.8">여기서 <span class="nw">$k$는</span> 뉴턴–리히만 법칙의 계수이다. 이 식으로부터 <span class="nw">$k/\alpha$를</span> 나타내면</p>
+<p class="x c d" style="--b:474.8;--a:14.2pt">$\dfrac k\alpha = \dfrac{U_0^2}{R_0}\cdot\dfrac{(1 + \alpha(t_1 - t_0))^2}{\alpha(t_1 - t_0)} = 0.3\,\mathrm W.$</p>
+<p class="x" style="--b:501.6">이제 서미스터에 레이저를 비추는 경우를 생각하자. 서미스터에 걸리는 전압이 <span class="nw">$U$일</span> 때 일률의 평형 조건을 쓰면</p>
+<div class="f" style="left:132pt;top:524pt"><span class="fig" data-srcpage="14" data-clip="132,524,295,552"></span></div>
+</div>
+
+<!-- page 15 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2026년 전러시아 물리 올림피아드, 결선</p>
+<p class="x hd r" style="--b:37.6">이론 시험</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="15" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0"><span class="nw">$U^2$을</span> 나타내면</p>
+<div class="f" style="left:154pt;top:66pt"><span class="fig" data-srcpage="15" data-clip="154,66,269,92"></span></div>
+<p class="x" style="--b:81.2;text-align:right">(*)</p>
+<p class="x" style="--b:105.0">이고, 이 함수의 최댓값을 구하자. <span class="nw">$z = \alpha(t - t_0 - P/k)$로</span> 나타내면 다음을 얻는다.</p>
+<div class="f" style="left:116pt;top:117pt"><span class="fig" data-srcpage="15" data-clip="116,117,309,151"></span></div>
+<p class="x" style="--b:169.2">다음으로 평균에 관한 부등식을 이용하면</p>
+<div class="f" style="left:151pt;top:181pt"><span class="fig" data-srcpage="15" data-clip="151,181,274,206"></span></div>
+<p class="x" style="--b:223.6">전원의 기전력이 얼마이든 다이오드가 열리지 않는다면</p>
+<p class="x c d" style="--b:250.9;--a:15.5pt">$U_{max} \leqslant U_0\qquad\Rightarrow\qquad P \geqslant \dfrac k\alpha\cdot\left(\dfrac{R_0k/\alpha}{4U_0^2} - 1\right) = 0.0375\,\mathrm W.$</p>
+<p class="x" style="--b:278.3">따라서 어떤 <span class="nw">$\mathcal E$에서도</span> 다이오드가 닫혀 있도록 레이저가 전달해야 하는 최소 열 일률은 <span class="nw">$37.5\,\mathrm{mW}$이다</span>.</p>
+<p class="x i" style="--b:302.2">레이저를 끈 뒤 다이오드가 왜 열리지 않았는지 이해하기 위해, <span class="nw">$P = 0$일</span> 때에도 식 <span class="nw">$(\ast)$에</span> 최댓값이 있다는 점에 주목하자. 따라서 서미스터에 걸리는 전압은 전류가 작을 때(그리고 기전력이 작을 때)뿐 아니라 전류가 클 때(그리고 그에 따라 기전력이 클 때)에도 <span class="nw">$U_0$보다</span> 작을 수 있다. 식 <span class="nw">$(\ast)$에</span> <span class="nw">$U_0$,</span> <span class="nw">$R_0$,</span> <span class="nw">$k/\alpha$의</span> 값과 <span class="nw">$P = 0$을</span> 대입하면 다음 방정식을 얻는다.</p>
+<div class="f" style="left:166pt;top:362pt"><span class="fig" data-srcpage="15" data-clip="166,362,260,389"></span></div>
+<p class="x" style="--b:404.3">이 방정식에는 두 근이 있다. 첫 번째 근은 이미 알고 있는</p>
+<div class="f" style="left:175pt;top:417pt"><span class="fig" data-srcpage="15" data-clip="175,417,250,431"></span></div>
+<p class="x" style="--b:448.2">이고, 두 번째 근은 새로운</p>
+<div class="f" style="left:180pt;top:451pt"><span class="fig" data-srcpage="15" data-clip="180,451,245,465"></span></div>
+<p class="x" style="--b:478.1">이다. 다이오드에 흐르는 전류를 0으로 보고, 이 근에 대한 전원의 기전력을 계산하면</p>
+<p class="x c d" style="--b:504.5;--a:13.6pt">$\mathcal E_2 = I_2r + U_0 = \dfrac{U_0r}{R_0}(1 + \alpha(t_2 - t_0))^2 + U_0 = \dfrac{9U_0r}{R_0} + U_0 = 14\,\mathrm V.$</p>
+<p class="x" style="--b:530.7">따라서 다이오드가 다시 열리게 하려면 전원의 기전력을 <span class="nw">$14\,\mathrm V$까지</span> 줄여야 한다.</p>
+</div>
+</body></html>
