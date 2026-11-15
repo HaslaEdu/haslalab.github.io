@@ -96,11 +96,12 @@ test('individual AMC, KMO and chemistry chunks preserve paper links and scores w
 
 test('lazy chunks retain every source export, general instructions and corrected KPhE PDF versions',()=>{
   const full={window:{}};vm.runInNewContext(read('theory.js'),full);
-  assert.deepEqual(Object.keys(full.window).sort(),['GENERAL','KPHE_PDF_VERSIONS','THEORY','THEORY_META']);
+  const exports=['ARCHIVE_PRACTICAL','GENERAL','KPHE_PDF_VERSIONS','THEORY','THEORY_META'];
+  assert.deepEqual(Object.keys(full.window).sort(),exports);
   vm.runInNewContext(read('contest-exams.js'),full);
   const split={window:{}};
   for(const key of catalogue.theoryKeys)vm.runInNewContext(read(catalogue.versions['theory:'+key].split('?')[0]),split);
-  for(const key of ['THEORY','THEORY_META','GENERAL','KPHE_PDF_VERSIONS'])assert.deepEqual(plain(split.window[key]),plain(full.window[key]),key);
+  for(const key of exports)assert.deepEqual(plain(split.window[key]),plain(full.window[key]),key);
   const lean=app();lean.load('theory:ipho');lean.load('theory:kphe');
   assert.deepEqual(plain(lean.run('GENERAL.ipho')),plain(full.window.GENERAL.ipho));
   const [file,version]=Object.entries(full.window.KPHE_PDF_VERSIONS)[0];assert.equal(lean.run(`thyUrl(${JSON.stringify(file)})`),pdfxUrl(file)+'?v='+version);
