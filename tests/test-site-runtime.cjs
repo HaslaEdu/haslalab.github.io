@@ -76,7 +76,8 @@ test('the olympiad archive loads practical papers and their alternate language o
   const daegu=anchors(a.run('viewYear("ieso",2019)'));
   assert.ok(daegu.some(link=>link.url.endsWith('Xieso_IESO_2019_T2_Jury_EN.pdf')&&link.label.includes('색상')));
   assert.ok(daegu.some(link=>link.url.endsWith('Xieso_IESO_2019_T4_Jury_EN.pdf')));
-  for(const part of ['T2','T4'])assert.ok(daegu.some(link=>link.url.endsWith(`Xieso_IESO_2019_${part}_OriginalLayout_KO.pdf`)));
+  for(const part of ['T1','T2','T3','T4'])assert.ok(daegu.some(link=>link.url.endsWith(`Xieso_IESO_2019_${part}_OriginalLayout_KO.pdf`)));
+  for(const part of ['WT1','WT3'])assert.ok(daegu.some(link=>link.url.endsWith(`${part}_FRENCH_VERSION_VF.pdf`)&&link.label.includes('조판 참조')));
   for(const page of [1,2])assert.equal(daegu.filter(link=>link.url.endsWith(`Xieso_IESO_2019_T_Practice_Answer.pdf#page=${page}`)&&link.label.includes('연습용')).length,2);
   assert.equal(daegu.filter(link=>link.url.endsWith('Xieso_IESO_2019_T_Practice_Working.pdf')&&link.label.includes('풀이용지')).length,4);
   assert.equal(daegu.filter(link=>link.url.endsWith('/13thieso-wt-answer.pdf')&&link.label.includes('공식 정답')).length,4);
@@ -88,6 +89,7 @@ test('the olympiad archive loads practical papers and their alternate language o
   assert.ok(tehranLinks.some(link=>link.url.endsWith('Xijso_IJSO_2012_MC_STUDY_EN.pdf')));
   assert.ok(tehranLinks.some(link=>link.url.endsWith('Xijso_IJSO_2012_MC_Practice_Answer.pdf')&&link.label.includes('연습용')));
   assert.ok(tehranLinks.some(link=>link.url.endsWith('Xijso_IJSO_2012_MC_Practice_Working.pdf')&&link.label.includes('풀이용지')));
+  assert.ok(tehranLinks.some(link=>link.url.endsWith('Xijso_IJSO_2012_MC_Practice_Solutions_KO.pdf')&&link.label.includes('비공식')));
   assert.match(a.run('track="exp"; viewYear("ijso",2012)'),/실험 문제·답안지 합본/);
   a.run('track="thy"');
   const field=anchors(a.run('lang="en"; track="exp"; viewYear("ieso",2026)'));
