@@ -67,8 +67,8 @@ test('the olympiad archive loads practical papers and their alternate language o
   const dmt=anchors(a.run('lang="ko"; track="thy"; viewYear("ieso",2024)'));
   assert.ok(dmt.some(link=>link.url.endsWith('Xieso_IESO_2024_DMT_KO.pdf')));
   assert.ok(dmt.some(link=>/DMT/i.test(link.url)&&link.label.includes('English')));
-  const partial=anchors(a.run('viewYear("ieso",2009)'));
-  assert.ok(partial.some(link=>link.url.endsWith('Xieso_IESO_2009_T_KO.pdf')&&link.label.includes('부분')));
+  const taipei=anchors(a.run('viewYear("ieso",2009)'));
+  assert.ok(taipei.some(link=>link.url.endsWith('Xieso_IESO_2009_T_complete_KO.pdf')&&!link.label.includes('부분')));
   const field=anchors(a.run('lang="en"; track="exp"; viewYear("ieso",2026)'));
   assert.ok(field.some(link=>/map/i.test(link.label)&&/^https:\/\//.test(link.url)));
   a.load('theory:icho');
