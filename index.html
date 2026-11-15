@@ -4697,8 +4697,8 @@ function theoryGroups(key,yr){
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
   /* shortlist / backup problems (sl) are not part of the day's paper: each is its own exam, graded for 0.1 token */
   const sl=new Set(t.sl||[]);
-  const ready=x=>t.f[x]&&t.f[x].sol&&t.f[x].paper&&!t.f[x].kx&&!t.f[x].containsSolutions;
-  const parts=Object.keys(t.f).filter(x=>!sl.has(x)&&/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!t.f[x].containsSolutions&&(key!=="eotvos"||EOTVOS_TIMED.has(+yr.y))&&(!/^https?:/.test(t.f[x].paper)||key==="eotvos"&&t.f[x].paper===`https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${yr.y}.pdf`)), by={};
+  const ready=x=>t.f[x]?.sol&&!/^https?:/.test(t.f[x].sol)&&t.f[x].paper&&!t.f[x].kx&&!t.f[x].containsSolutions;
+  const parts=Object.keys(t.f).filter(x=>!sl.has(x)&&/^(T|MC)\d*[a-z]?$/.test(x)&&ready(x)&&(key!=="eotvos"||EOTVOS_TIMED.has(+yr.y))&&(!/^https?:/.test(t.f[x].paper)||key==="eotvos"&&t.f[x].paper===`https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${yr.y}.pdf`)), by={};
   /* a competition of rounds (USNCO's local exam and national parts, RuPhO's three grades …): each part its own exam */
   if(key==="ioi"||(compOf(key)&&compOf(key).omr)) return [];   /* IOI: programs; KPhE: graded on the screen (sim/omr.html) */                       /* IOI's tasks are programs, not written answers: no exam */
   if(compOf(key)&&compOf(key).rounds) return parts.sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
