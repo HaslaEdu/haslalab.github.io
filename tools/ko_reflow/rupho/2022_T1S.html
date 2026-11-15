@@ -1,0 +1,516 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2022 (LVI = 제56회), 9학년 이론 풀이 예시와 채점 기준 — Korean edition on the original layout.
+   ORIGINAL: 14 pages. Pages 1-9 = booklet pages 14-22, LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt),
+   A5 419.528x595.276pt. Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20pt; baselineskip 11.955pt.
+   Running headers italic, baseline 38.9, rule at y 42.72 (stamped); even booklet pages "Теоретический тур"
+   (right), odd pages "Всероссийская олимпиада по физике 2022 г., Заключительный этап" (left);
+   page numbers centred, baseline 563.8. Figures are raster images (Latin labels only) and are stamped.
+   Pages 10-14 = marking sheets (one per problem), A4 595.276x841.89pt (named @page a4), PT Serif 10pt
+   -> 'Times New Roman',KB,serif. The table is stamped in pieces from the scrubbed original: the number column
+   and the points/check columns as two tall strips, every horizontal rule of the description column as a 0.5pt
+   strip (the rule stroke only, so fraction glyphs crossing a rule are not sliced), and the cells that are pure
+   math without Russian (kept as printed). All other description cells are retyped (.tb).
+   Russian subscripts in retyped formulas: ц.м. -> cm (centre of mass), л (лёд, ice) -> i,
+   л/п (left/right puck) -> L/R. Units in Latin SI symbols, decimal points in everything typed.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt      (CM body, pages 1-9)
+       top = b - l/2 - 0.3375*fs              (Times New Roman, marking sheets)
+   Lines/displays holding a \dfrac use .d: line-height 0, top = b - --a (--a = height above the baseline). */
+@page a4{size:595.276pt 841.89pt;margin:0}
+.page[data-s="a4"]{page:a4;width:595.276pt;height:841.89pt}
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   text-align:justify;top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.l{text-align:left}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.pn{text-align:center}
+/* "풀이 예시" (SFBX1440 bold 14.346pt), problem titles (SFBX1000 bold) centred; bold run-in heads (.bh) */
+.t{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.bh{font-weight:bold;text-align:left}
+.t,.h,.bh{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+.wn{word-break:normal}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+/* marking sheets: Hangul at 94% (9.4pt) so it sits inside the 12.35pt rows like the PT Serif original;
+   +0.3pt measured correction (qa BASELINE) */
+.tb{font-family:'Times New Roman',KB,serif;left:78.9pt;width:368.5pt;--l:12pt;--fs:9.4pt;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 0.3pt)}
+.tt{font-family:'Times New Roman',KB,serif;left:34.3pt;width:400pt;--fs:14.35pt;--l:17.2pt;text-align:left;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 1.1pt)}
+</style></head><body>
+
+<!-- page 14 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="1" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x t" style="--b:66.7">풀이 예시</p>
+<p class="x h" style="--b:85.3">문제 9-1. 버스</p>
+<p class="x bh" style="--b:99.8;left:48.3pt;width:342.9pt">도로 기준계에서의 풀이:</p>
+<p class="x i" style="--b:111.7">시간이 최소가 된다는 조건이 성립하려면 나스탸는</p>
+<p class="x i" style="--b:123.7">가) 직선으로 움직여야 한다. 그렇지 않으면 곡선을 따라 움직일 때보다 같은 시간 동안 정류장에 더 가까운 도로 위의 점에 도달할 수 있게 되기 때문이다.</p>
+<p class="x i" style="--b:159.5">나) 도로에서 버스를 기다려서는 안 된다. 따라서 소녀와 버스는 만나는 점에 동시에 도착한다.</p>
+<div class="f" style="left:136pt;top:180pt"><span class="fig" data-srcpage="1" data-clip="136,180,283,248"></span></div>
+<p class="x i" style="--b:270.4;width:287pt">빗변이 <span class="nw">$l$인</span> 직각 삼각형에서 각 <span class="nw">$\alpha$의</span> 코사인은 다음과 같다:</p>
+<div class="f" style="left:316pt;top:247pt"><span class="fig" data-srcpage="1" data-clip="316,247,391,281"></span></div>
+<p class="x" style="--b:285.7">(그림 참고). 코사인 법칙을 쓰자.</p>
+<div class="f" style="left:147pt;top:294pt"><span class="fig" data-srcpage="1" data-clip="147,294,270,321"></span></div>
+<p class="x" style="--b:332.1">코사인 값을 이 방정식에 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:137pt;top:339pt"><span class="fig" data-srcpage="1" data-clip="137,339,282,356"></span></div>
+<p class="x bh" style="--b:371.0;left:48.3pt;width:342.9pt">버스 기준계에서의 풀이:</p>
+<p class="x i" style="--b:383.0">버스 기준계에서 소녀가 출발한 점은 시간 <span class="nw">$t$</span> 동안 도로와 나란하게 거리 <span class="nw">$at^2/2$만큼</span> 이동한다. 이 시간 동안 나스탸는 이 점에서 거리 <span class="nw">$vt$만큼</span> 멀어질 수 있다. 이 변위들을 그림에 나타내자. 소녀가 있을 수 있는 점들의 자취는 원이다. 최소 시간 <span class="nw">$t = \tau$는</span> 이 원이 버스에 접하는 경우에 해당한다.</p>
+<div class="f" style="left:136pt;top:451pt"><span class="fig" data-srcpage="1" data-clip="136,451,283,540"></span></div>
+<p class="x pn" style="--b:563.8">14</p>
+</div>
+
+<!-- page 15 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="2" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x i" style="--b:66.7">버스와 나스탸 사이의 도로를 따른 처음 거리를 <span class="nw">$L$이라</span> 하자. 피타고라스 정리를 두 번 쓰면 <span class="nw">$L^2 = l^2 - s^2$이고</span> <span class="nw">$(v\tau)^2 = (L - a\tau^2/2)^2 + s^2$이다.</span></p>
+<p class="x bh" style="--b:90.6;left:48.3pt;width:342.9pt">“탄도” 풀이</p>
+<p class="x i" style="--b:102.5">유추의 방법을 쓸 수 있다. 버스 기준계에서 소녀의 등가속도 운동은 중력 가속도가 <span class="nw">$a$인</span> 균일한 중력장에서 속력 <span class="nw">$v$로</span> 던진 물체의 운동과 같다. 그림을 보아라.</p>
+<div class="f" style="left:163pt;top:146pt"><span class="fig" data-srcpage="2" data-clip="163,146,256,274"></span></div>
+<p class="x i" style="--b:290.7">그러면 문제는 처음 속력과 가속도가 주어진 물체가 수평 거리 <span class="nw">$s$,</span> 연직 거리 <span class="nw">$\sqrt{l^2 - s^2}$인</span> 점까지 가는 시간을 구하는 문제가 된다. 최소 시간은 “낮게 깔린” 궤도를 따라 움직일 때 얻어진다. 이렇게 접근하면 허용 범위가 직관적으로 이해된다. 처음 속력이 아무 값이어도 물체가 주어진 점까지 날아갈 수 있는 것은 아니다.</p>
+<p class="x i" style="--b:362.4">시간에 대한 복이차 방정식을 풀면 다음을 얻는다.</p>
+<div class="f" style="left:111pt;top:375pt"><span class="fig" data-srcpage="2" data-clip="111,375,307,406"></span></div>
+<p class="x" style="--b:417.0">근호 안의 식은 항상 양수임을 알 수 있다. 왜냐하면</p>
+<div class="f" style="left:125pt;top:423pt"><span class="fig" data-srcpage="2" data-clip="125,423,295,438"></span></div>
+<p class="x i" style="--b:452.5">시간이 최소가 되어야 하므로 두 근 중 작은 것을 고른다. 해가 존재하려면 안쪽 근호 안의 식이 양수여야 한다: <span class="nw">$v^4 + 2v^2La - a^2s^2 > 0$.</span> 그렇지 않으면 나스탸는 빠르게 큰 속력을 얻은 버스가 지나가 버릴 도로까지 달려가지도 못한다.</p>
+<div class="f" style="left:124pt;top:510pt"><span class="fig" data-srcpage="2" data-clip="124,510,294,544"></span></div>
+<p class="x pn" style="--b:563.8">15</p>
+</div>
+
+<!-- page 16 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="3" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x h" style="--b:66.7">문제 9-2. 거북이</p>
+<p class="x i" style="--b:83.1">거북이들의 속도는 항상 한 거북이에서 다른 거북이를 향하고 크기가 일정하므로, 거북이들 사이의 거리는 각각 일정한 빠르기로 줄어든다. 거리 <span class="nw">$AB$,</span> <span class="nw">$BC$,</span> <span class="nw">$AC$가</span> 변하는 빠르기를 각각 <span class="nw">$v_{AB}$,</span> <span class="nw">$v_{BC}$,</span> <span class="nw">$v_{AC}$라</span> 하자. 이들은 다음과 같다.</p>
+<div class="f" style="left:104pt;top:126pt"><span class="fig" data-srcpage="3" data-clip="104,126,316,153"></span></div>
+<p class="x i" style="--b:167.4">따라서 다음을 얻는다.</p>
+<div class="f" style="left:195pt;top:178pt"><span class="fig" data-srcpage="3" data-clip="195,178,224,204"></span></div>
+<p class="x i" style="--b:213.9">삼각형 <span class="nw">$ABC$의</span> 각들이 일정하게 유지되므로 변들 사이의 비도 유지된다. 이는 삼각형의 변이 변하는 빠르기가 변의 길이에 비례함을 뜻한다.</p>
+<div class="f" style="left:167pt;top:245pt"><span class="fig" data-srcpage="3" data-clip="167,245,252,270"></span></div>
+<p class="x i" style="--b:283.8"><span class="nw">$v_3$을</span> 구하자.</p>
+<div class="f" style="left:151pt;top:292pt"><span class="fig" data-srcpage="3" data-clip="151,292,269,332"></span></div>
+<p class="x i" style="--b:343.2">마찬가지로 <span class="nw">$v_2$를</span> 구한다.</p>
+<div class="f" style="left:152pt;top:355pt"><span class="fig" data-srcpage="3" data-clip="152,355,269,380"></span></div>
+<p class="x i" style="--b:390.2">거북이들의 가속도는 법선 성분만 가진다. 어느 순간에나 거북이들의 속도 벡터는 같은 각속도, 곧 삼각형이 회전하는 각속도 <span class="nw">$\omega$로</span> 회전한다는 점에 주목하자. 첫 번째 거북이에 대한 두 번째 거북이의 운동을 생각하여 이 각속도를 구하자.</p>
+<div class="f" style="left:170pt;top:437pt"><span class="fig" data-srcpage="3" data-clip="170,437,249,462"></span></div>
+<p class="x i" style="--b:471.9">처음 순간에 이 값은 다음과 같다.</p>
+<div class="f" style="left:192pt;top:479pt"><span class="fig" data-srcpage="3" data-clip="192,479,227,505"></span></div>
+<p class="x" style="--b:517.9">그러면 처음 순간의 가속도는 다음과 같다.</p>
+<div class="f" style="left:135pt;top:530pt"><span class="fig" data-srcpage="3" data-clip="135,530,284,543"></span></div>
+<p class="x pn" style="--b:563.8">16</p>
+</div>
+
+<!-- page 17 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="4" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7">따라서</p>
+<div class="f" style="left:141pt;top:79pt"><span class="fig" data-srcpage="4" data-clip="141,79,278,107"></span></div>
+<p class="x i" style="--b:119.5">두 번째 거북이의 속도 벡터의 크기는 항상 첫 번째 거북이의 속도 벡터 크기의 절반이고 두 속도의 방향은 서로 수직이므로, 두 거북이의 변위 벡터 <span class="nw">$\vec{s}_1$과</span> <span class="nw">$\vec{s}_2$</span> 사이에도 같은 관계가 성립한다. 거북이들이 만났으므로 다음이 성립한다.</p>
+<div class="f" style="left:178pt;top:169pt"><span class="fig" data-srcpage="4" data-clip="178,169,242,182"></span></div>
+<div class="f" style="left:118pt;top:190pt"><span class="fig" data-srcpage="4" data-clip="118,190,301,301"></span></div>
+<p class="x i" style="--b:322.8">직각 삼각형에 피타고라스 정리를 적용하면 다음을 얻는다.</p>
+<div class="f" style="left:179pt;top:335pt"><span class="fig" data-srcpage="4" data-clip="179,335,240,362"></span></div>
+<p class="x h" style="--b:378.7">문제 9-3. 벽에 쾅</p>
+<p class="x i" style="--b:397.4">풀이에서는 벽을 향하는 <span class="nw">$x$축</span> 위로의 속도 사영을 다룬다.</p>
+<p class="x i" style="--b:409.6">퍽들의 첫 번째 충돌:</p>
+<p class="x i" style="--b:421.8">질량 중심의 속도는 <span class="nw">$u_\mathrm{cm} = u/2$이고,</span> 질량 중심 기준계(질량 중심계)에서 퍽들의 속도 사영은 <span class="nw">$u/2$와</span> <span class="nw">$-u/2$이다.</span> 충돌 뒤 질량 중심계에서 계의 에너지를 쓰자. 여기서 <span class="nw">$v$는</span> 충돌 뒤의 속력이다.</p>
+<div class="f" style="left:126pt;top:451pt"><span class="fig" data-srcpage="4" data-clip="126,451,293,471"></span></div>
+<p class="x" style="--b:490.5"><span class="nw">$\beta = \sqrt{1 - \alpha}$라</span> 하자. 실험실 기준계로 돌아가면 $u_2 = -\beta u/2 + u/2 = (1 - \beta)u/2$, $u_1 = \beta u/2 + u/2 = {}$<span class="nw">$(1 + \beta)u/2$를</span> 얻는다. 충돌 뒤 첫 번째 퍽은 벽 쪽으로 움직이고, 벽에서 탄성적으로 튕겨 나온 뒤 속도 <span class="nw">$-u_1 = -(1 + \beta)u/2$로</span> 되돌아온다.</p>
+<p class="x i" style="--b:538.6">퍽들의 두 번째 충돌:</p>
+<p class="x pn" style="--b:563.8">17</p>
+</div>
+
+<!-- page 18 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="5" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x i" style="--b:66.7">첫 번째 퍽은 속도 <span class="nw">$-(1 + \beta)u/2$로,</span> 두 번째 퍽은 이를 마주 보고 <span class="nw">$(1 - \beta)u/2$로</span> 움직인다. 질량 중심의 속도는</p>
+<p class="x d c" style="--b:104.4;--a:14.5pt;left:109.8pt;width:200pt">$u_\mathrm{cm} = \dfrac{(1 - \beta)u/2 - (1 + \beta)u/2}{2} = -\beta u/2$</p>
+<p class="x" style="--b:128.4">이고, 질량 중심계에서 퍽들의 속도는 <span class="nw">$-u/2$와</span> <span class="nw">$u/2$이다.</span> 충돌 뒤 에너지의 비율 <span class="nw">$\alpha$가</span> 소산되고, 질량 중심계에서의 속도는 <span class="nw">$\beta u/2$와</span> <span class="nw">$-\beta u/2$가</span> 된다. 실험실 기준계로 돌아가면 두 번째 퍽의 속도는 $u_2 = -\beta u/2 - \beta u/2 = -\beta u$, 첫 번째 퍽의 속도는 $u_1 = \beta u/2 - \beta u/2 = {}$<span class="nw">$0$이</span> 되므로 첫 번째 퍽은 멈춘다.</p>
+<p class="x i" style="--b:188.2">첫 번째 퍽의 운동은 세 단계로 이루어진다.</p>
+<p class="x i" style="--b:200.1">1) 속력 <span class="nw">$(1 + \beta)u/2$로</span> 벽을 향해 움직인다</p>
+<p class="x i" style="--b:212.1">2) 속력 <span class="nw">$(1 + \beta)u/2$로</span> 벽에서 멀어진다</p>
+<p class="x i" style="--b:224.1">3) 벽에서 거리 <span class="nw">$s_1$인</span> 곳에 정지해 있다</p>
+<p class="x i" style="--b:236.0">처음 두 구간의 운동 시간을 구하자. 첫 번째 충돌부터 벽에 부딪칠 때까지의 시간은 다음과 같다.</p>
+<div class="f" style="left:146pt;top:257pt"><span class="fig" data-srcpage="5" data-clip="146,257,274,283"></span></div>
+<p class="x i" style="--b:298.7">이 시간 동안 두 번째 퍽이 가는 거리는 다음과 같다.</p>
+<div class="f" style="left:108pt;top:309pt"><span class="fig" data-srcpage="5" data-clip="108,309,311,334"></span></div>
+<p class="x" style="--b:350.4">따라서 두 번째 퍽에서 벽까지의 거리, 곧 첫 번째 퍽이 벽에 부딪친 뒤 두 퍽 사이의 거리는 다음과 같다.</p>
+<div class="f" style="left:159pt;top:373pt"><span class="fig" data-srcpage="5" data-clip="159,373,260,398"></span></div>
+<p class="x" style="--b:414.1">두 퍽은 속력 <span class="nw">$(1 + \beta)u/2 + (1 - \beta)u/2 = u$로</span> 가까워진다. 두 번째 충돌은 다음 시간 뒤에 일어난다.</p>
+<div class="f" style="left:151pt;top:436pt"><span class="fig" data-srcpage="5" data-clip="151,436,267,461"></span></div>
+<p class="x" style="--b:476.6">이 결과는 더 간단하게 얻을 수도 있다. 운동량 보존 법칙에 따라 $mu_\mathrm{L} + mu_\mathrm{R} = mu \to u = v_1 + v_2$. 그러면 두 충돌 사이에 두 퍽의 전체 변위는 $2s = u_\mathrm{L}t + u_\mathrm{R}t = {}$<span class="nw">$ut$이고</span> <span class="nw">$t = \dfrac{2s}{u}$이다.</span> 첫 번째 퍽은 벽에서 다음 거리만큼 멀어진다.</p>
+<div class="f" style="left:124pt;top:518pt"><span class="fig" data-srcpage="5" data-clip="124,518,295,545"></span></div>
+<p class="x pn" style="--b:563.8">18</p>
+</div>
+
+<!-- page 19 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="6" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7">퍽은 그곳에서 멈춘다.</p>
+<p class="x i" style="--b:78.6"><span class="nw">$l(t)$</span> 그래프는 다음과 같다.</p>
+<div class="f" style="left:118pt;top:89pt"><span class="fig" data-srcpage="6" data-clip="118,89,301,223"></span></div>
+<p class="x h" style="--b:241.4">문제 9-4. 얼음 그림</p>
+<p class="x i" style="--b:256.8">문제의 첫 번째 질문에 대한 답은 상태 도표를 이용하여 바로 구할 수 있다. 얼음 <span class="nw">$0.5\,\mathrm{kg}$에</span> 대해 <span class="nw">$1/m_\mathrm{i} = 2\,\mathrm{kg^{-1}}$이다.</span> 이 질량과 온도 <span class="nw">$-10\,{}^\circ\mathrm{C}$에</span> 해당하는 점은 얼음 영역과 물 영역 사이의 영역에 놓이므로, 이 점은 <span class="nw">$0\,{}^\circ\mathrm{C}$에서</span> 평형 상태에 있는 혼합물에 해당한다.</p>
+<p class="x i" style="--b:316.6">물의 처음 질량과 온도를 구하기 위해, 얼음 영역과 물 영역의 경계를 이루는 점들의 집합에 대해 열평형 방정식을 쓰자.</p>
+<p class="x i" style="--b:352.4">얼음 영역의 오른쪽 경계 위의 모든 점은 그릇 안의 모든 것이 <span class="nw">$0\,{}^\circ\mathrm{C}$의</span> 얼음이 되는 나중 상태에 해당한다.</p>
+<p class="x c" style="--b:388.3">$m_\mathrm{i}c_\mathrm{i}(0 - t_\mathrm{i}) = mc(t - 0) + m\lambda,$</p>
+<p class="x" style="--b:404.8">따라서</p>
+<p class="x d c" style="--b:422.0;--a:14.5pt;left:107.2pt;width:200pt">$t_\mathrm{i} = -\dfrac{m(ct + \lambda)}{c_\mathrm{i}}\cdot\dfrac{1}{m_\mathrm{i}}$</p>
+<p class="x d i" style="--b:450.1;--a:14.5pt">기울기 <span class="nw">$\dfrac{m(ct + \lambda)}{c_\mathrm{i}}$는</span> 그래프에서 구한다. 그 값은 <span class="nw">$k_1 = 55\,{}^\circ\mathrm{C\cdot kg}$이다.</span></p>
+<p class="x" style="--b:466.2">물 영역의 왼쪽 경계 위의 모든 점은 그릇 안의 모든 것이 <span class="nw">$0\,{}^\circ\mathrm{C}$의</span> 물이 되는 나중 상태에 해당한다.</p>
+<p class="x c" style="--b:502.1">$m_\mathrm{i}c_\mathrm{i}(0 - t_\mathrm{i}) + m_\mathrm{i}\lambda = mc(t - 0),$</p>
+<p class="x" style="--b:518.6">따라서</p>
+<p class="x d c" style="--b:535.2;--a:14.5pt;left:109.2pt;width:200pt">$t_\mathrm{i} = \dfrac{\lambda}{c_\mathrm{i}} - \dfrac{mct}{c_\mathrm{i}}\cdot\dfrac{1}{m_\mathrm{i}}$</p>
+<p class="x pn" style="--b:563.8">19</p>
+</div>
+
+<!-- page 20 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="7" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x d i" style="--b:69.6;--a:12.8pt">기울기 <span class="nw">$\dfrac{mct}{c_\mathrm{i}}$는</span> 그래프에서 구한다. 그 값은 <span class="nw">$k_2 = 29\,{}^\circ\mathrm{C\cdot kg}$이다.</span></p>
+<p class="x i" style="--b:105.5">이제 연립 방정식을 풀면 된다:</p>
+<p class="x d l" style="--b:105.5;--a:27pt;left:221pt;width:120pt">$\begin{cases}\dfrac{m(ct + \lambda)}{c_\mathrm{i}} = k_1,\\[6pt] \dfrac{mct}{c_\mathrm{i}} = k_2\end{cases}$</p>
+<p class="x d i" style="--b:141.7;--a:14.5pt">위의 방정식을 아래 방정식으로 나누면 <span class="nw">$1 + \dfrac{\lambda}{ct} = \dfrac{k_1}{k_2}$이고,</span> 다음을 얻는다.</p>
+<p class="x" style="--b:158.1;left:48.3pt;width:200pt">$t = 88\,{}^\circ\mathrm{C}$</p>
+<p class="x i" style="--b:170.2">물의 질량은 구한 온도를 예를 들어 연립 방정식의 두 번째 식에 대입하여 구할 수 있다.</p>
+<p class="x d c" style="--b:209.5;--a:14.5pt;left:109.8pt;width:200pt">$m = \dfrac{c_\mathrm{i}k_2}{ct} = 165\,\mathrm{g}$</p>
+<p class="x i" style="--b:230.9">처음 자료를 그래프에서 읽으므로, 저자의 값에서 벗어난 값도 인정한다. 온도는 <span class="nw">$84\,{}^\circ\mathrm{C}$에서</span> <span class="nw">$92\,{}^\circ\mathrm{C}$까지,</span> 질량은 <span class="nw">$160\,\mathrm{g}$에서</span> <span class="nw">$170\,\mathrm{g}$까지의</span> 범위이다.</p>
+<p class="x bh" style="--b:266.9;left:48.3pt;width:342.9pt">“두 점을 이용한” 다른 풀이:</p>
+<p class="x i" style="--b:279.1">오른쪽 직선 위에서는 얼음의 온도가 0일 때 물이 0도까지 식으면서 얼음을 완전히 녹인다: <span class="nw">$m_\mathrm{i2}\lambda = mct$,</span> 여기서 <span class="nw">$m_\mathrm{i2} = 1/5.4\,\mathrm{kg}$.</span> 왼쪽 직선 위에서는 얼음이 0도까지 데워지면서 물을 0도까지 식히고 얼린다. 이 직선 위의 아무 점, 예를 들어 <span class="nw">$m_1 = 1/0.4\,\mathrm{kg}$,</span> <span class="nw">$t_\mathrm{i1} = -22\,{}^\circ\mathrm{C}$를</span> 잡으면 방정식은 다음과 같다.</p>
+<p class="x c" style="--b:339.4">$m_\mathrm{i1}c_\mathrm{i}t_\mathrm{i1} = mct + m\lambda$</p>
+<p class="x" style="--b:357.8">두 번째 방정식에서 첫 번째 방정식을 빼면 다음을 얻는다.</p>
+<p class="x c" style="--b:382.4">$m = 0.165\,\mathrm{kg}$</p>
+<p class="x c" style="--b:401.4">$t = 88\,{}^\circ\mathrm{C}$</p>
+<p class="x h" style="--b:424.2">문제 9-5. 전기 사이클</p>
+<p class="x i" style="--b:442.6">과정의 화살표는 상태 1에서 상태 3까지 전류의 세기가 증가하다가 그 뒤 처음 값까지 감소함을 보여 준다. 문제의 조건에 따라 이 변화는 크기가 일정한 빠르기로 일어난다.</p>
+<p class="x i" style="--b:478.6">그래프로부터 구간 <span class="nw">$1 - 2$와</span> <span class="nw">$3 - 4$에서는</span> 전류가 저항기로만 흐름을 알 수 있다. 실제로 구간 <span class="nw">$1 - 2$에서</span> 다이오드 중 하나가 열려 있었다면, 전류 <span class="nw">$I$가</span> 변해도 전압계의 눈금은 다이오드가 열리는 전압과 같고 변하지 않았을 것이다.</p>
+<p class="x i" style="--b:526.6">전압 <span class="nw">$4\,\mathrm{V}$와</span> <span class="nw">$8\,\mathrm{V}$에서</span> 다이오드가 열리고, 구간 <span class="nw">$4 - 1$과</span> <span class="nw">$2 - 3$에서는</span> 전압계 눈금이 변하지 않은 채 전류의 세기가 변한다. 따라서</p>
+<p class="x pn" style="--b:563.8">20</p>
+</div>
+
+<!-- page 21 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="8" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x c" style="--b:78.6">$U_{01} = 4\,\mathrm{V},\ U_{02} = 8\,\mathrm{V}$</p>
+<p class="x i" style="--b:95.3">구간 <span class="nw">$1 - 2$와</span> <span class="nw">$3 - 4$에서</span> 회로 부분의 저항은 서로 다르며, 이는 도표에서 두 구간의 기울기가 다르다는 데서 알 수 있다. 이때 <span class="nw">$R_{34} < R_{12}$이다.</span> 따라서</p>
+<div class="f" style="left:151pt;top:130pt"><span class="fig" data-srcpage="8" data-clip="151,130,267,157"></span></div>
+<p class="x i" style="--b:166.5">구간 <span class="nw">$2 - 3$</span> 전체에서 저항기 <span class="nw">$R_1$을</span> 지나는 전류는 변하지 않고, 전체 전류의 증가는 다이오드 <span class="nw">$D_2$를</span> 지나는 전류의 증가로 보상된다는 점에 주목하자.</p>
+<p class="x i" style="--b:202.4">또한 스위치 <span class="nw">$K_2$는</span> 구간 <span class="nw">$2 - 3$이</span> 끝나기 전에는 닫힐 수 없었다는 점에 주목하자. 전체 전류가 변하지 않을 때 스위치가 닫히면 회로 부분의 저항과 그 양단 전압이 순간적으로 줄어들기 때문이다. 그러면 다이오드가 곧바로 닫히고, 계는 구간 <span class="nw">$3 - 4$에서</span> 같은 전류에 해당하는 상태로 옮겨 갔을 것이다.</p>
+<p class="x i" style="--b:262.2">같은 추론으로 구간 <span class="nw">$4 - 1$에서도</span> 전류는 저항기 <span class="nw">$R_1$로만</span> 흐른다는 결론을 얻는다. 점 4에서 스위치 <span class="nw">$K_2$를</span> 열어 저항기 <span class="nw">$R_2$를</span> 끊지 않으면, 전체 전류가 더 줄어들 때 다이오드가 닫히고 계는 과정 <span class="nw">$3 - 4$의</span> 연장선 위에 있는 상태로 옮겨 갈 것이다.</p>
+<p class="x i" style="--b:310.0">점 1에서의 전류를 <span class="nw">$I_0$이라</span> 하자. 그러면 구간 <span class="nw">$2 - 3$에서</span> 저항기 <span class="nw">$R_1$에서</span> 발생한 열량 <span class="nw">$Q_{23}$은</span> 식 <span class="nw">$Q_{23} = 2I_0U_2t_{23}$으로</span> 구할 수 있다. 한편 시간 <span class="nw">$t_{23}$</span> 동안 전류는 <span class="nw">$2I_0$에서</span> <span class="nw">$6I_0$으로</span> 증가하였다. 따라서 <span class="nw">$4I_0 = kt_{23}$이다.</span></p>
+<p class="x i" style="--b:357.8">연립 방정식을 풀면 다음을 얻는다.</p>
+<p class="x d c" style="--b:384.5;--a:16pt;left:109.6pt;width:200pt">$I_0 = \sqrt{\dfrac{kQ_{23}}{8U_2}} = 0.01\,\mathrm{A}.$</p>
+<p class="x i" style="--b:408.6">한 사이클 동안 회로의 전류는 <span class="nw">$I_0$에서</span> <span class="nw">$6I_0$까지</span> 증가한 뒤 같은 크기만큼 감소하였다. 한 사이클의 시간은 다음과 같다.</p>
+<p class="x d c" style="--b:447.0;--a:14.5pt;left:109.8pt;width:200pt">$\tau = 2\cdot\dfrac{50\,\mathrm{mA}}{1\,\dfrac{\mathrm{mA}}{\mathrm{s}}} = 100\,\mathrm{s}.$</p>
+<p class="x i" style="--b:478.8">점 4에서 스위치 <span class="nw">$K_1$이</span> 닫히고 동시에 스위치 <span class="nw">$K_2$가</span> 열린다. 그 결과 <span class="nw">$D_1$로</span> 곧바로 전류 <span class="nw">$2I_0$이</span> 흐르고, 이 전류는 (상태 1에서) 0이 될 때까지 서서히 줄어든다. 과정 <span class="nw">$4 - 1$</span> 전체 동안 저항기 <span class="nw">$R_1$에는</span> 일정한 전류 <span class="nw">$I_0$이</span> 흐른다.</p>
+<p class="x i wn" style="--b:526.6"><span class="nw">$Q_{23}$을</span> 구한 것과 마찬가지로 <span class="nw">$Q_{41}$도</span> 구하자. $Q_{41} = {}$<span class="nw">$I_0U_1t_{41}$이고,</span> 여기서 $t_{41} = 2I_0/k = {}$<span class="nw">$20\,\mathrm{s}$이다.</span></p>
+<p class="x pn" style="--b:563.8">21</p>
+</div>
+
+<!-- page 22 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="9" data-clip="28.3,42.4,391.2,43.1"></span></div>
+<p class="x c" style="--b:78.7">$Q_{41} = 0.8\,\mathrm{J}.$</p>
+<p class="x i" style="--b:96.8">저항 <span class="nw">$R_{34}$와</span> <span class="nw">$R_{12}$는</span> 해당 직선들의 기울기로부터 계산할 수 있다. 그 결과는</p>
+<p class="x d" style="--b:113.3;--a:14.5pt">다음과 같다: <span class="nw">$R_1 = 400\,\Omega$,</span> <span class="nw">$\dfrac{R_1R_2}{R_1 + R_2} = 133\,\Omega$,</span> 따라서 <span class="nw">$R_2 = 200\,\Omega$이다.</span></p>
+<p class="x i" style="--b:129.5">주어진 모양의 사이클을 만드는 동작 순서로 다음과 같은 것을 제안할 수 있다.</p>
+<p class="x i" style="--b:153.4"><span class="nw">$1 - 2$:</span> 스위치들이 열려 있다. 전류는 <span class="nw">$R_1$로만</span> 흐른다. 두 번째 다이오드는 닫혀 있다. <span class="nw">$2 - 3$:</span> 다이오드가 열린다. 전류는 <span class="nw">$R_1$과</span> 두 번째 다이오드로 흐른다. <span class="nw">$3 - 4$:</span> 두 번째 스위치를 닫는다. 다이오드가 닫힌다. 전류를 줄이기 시작한다. <span class="nw">$4 - 1$:</span> 회로의 전압이 <span class="nw">$4\,\mathrm{V}$까지</span> 줄어들면 첫 번째 스위치를 닫고 동시에 두 번째 스위치를 연다. 첫 번째 다이오드가 열린다. 구간이 끝날 때 첫 번째 스위치를 다시 연다.</p>
+<p class="x pn" style="--b:563.8">22</p>
+</div>
+
+<!-- marking sheet T1 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-9-T1. 버스</b></p>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<div class="f" style="left:515pt;top:24pt"><span class="fig" data-srcpage="10" data-clip="515,24,563,52"></span></div>
+<div class="f" style="left:31.5pt;top:85pt"><span class="fig" data-srcpage="10" data-clip="31.5,85,73.1,269.38"></span></div>
+<div class="f" style="left:453.1pt;top:85pt"><span class="fig" data-srcpage="10" data-clip="453.1,85,563.8,269.38"></span></div>
+<div class="f" style="left:73.1pt;top:85.22pt"><span class="fig" data-srcpage="10" data-clip="73.1,85.22,453.1,85.72"></span></div>
+<div class="f" style="left:73.1pt;top:97.57pt"><span class="fig" data-srcpage="10" data-clip="73.1,97.57,453.1,98.07"></span></div>
+<div class="f" style="left:73.1pt;top:109.92pt"><span class="fig" data-srcpage="10" data-clip="73.1,109.92,453.1,110.42"></span></div>
+<div class="f" style="left:73.1pt;top:122.28pt"><span class="fig" data-srcpage="10" data-clip="73.1,122.28,453.1,122.78"></span></div>
+<div class="f" style="left:73.1pt;top:170.5pt"><span class="fig" data-srcpage="10" data-clip="73.1,170.5,453.1,171"></span></div>
+<div class="f" style="left:73.1pt;top:194.81pt"><span class="fig" data-srcpage="10" data-clip="73.1,194.81,453.1,195.31"></span></div>
+<div class="f" style="left:73.1pt;top:219.11pt"><span class="fig" data-srcpage="10" data-clip="73.1,219.11,453.1,219.61"></span></div>
+<div class="f" style="left:73.1pt;top:231.47pt"><span class="fig" data-srcpage="10" data-clip="73.1,231.47,453.1,231.97"></span></div>
+<div class="f" style="left:73.1pt;top:243.82pt"><span class="fig" data-srcpage="10" data-clip="73.1,243.82,453.1,244.32"></span></div>
+<div class="f" style="left:73.1pt;top:256.18pt"><span class="fig" data-srcpage="10" data-clip="73.1,256.18,453.1,256.68"></span></div>
+<div class="f" style="left:73.1pt;top:268.53pt"><span class="fig" data-srcpage="10" data-clip="73.1,268.53,453.1,269.03"></span></div>
+<p class="x tb" style="--b:94.0">배점 항목</p>
+<p class="x tb ov" style="--b:94.0;left:459.7pt;width:45pt">점수</p>
+<p class="x tb ov" style="--b:94.0;left:514.6pt;width:45pt">확인</p>
+<p class="x tb" style="--b:106.4">소녀가 직선으로 움직인다는 것을 논증하였다</p>
+<p class="x tb" style="--b:118.7">만날 때까지 소녀가 멈추지 않음을 근거를 들어 보였다</p>
+<p class="x tb" style="--b:131.1">설명 그림(또는 풀이에 쓰는 양들에 대한 자세한 말 설명). 참고: 소녀가 도로에 수직으로 움직여야 한다고 주장하면, 이 항목과 그 뒤의 항목들에 대해 0점을 준다.</p>
+<p class="x tb" style="--b:179.3">버스와 소녀의 상대 운동을 나타내는 운동학적 관계식(어떤 기준계에서든).</p>
+<p class="x tb wn" style="--b:203.6">처음 운동학적 관계식으로부터 이어지는 계산을 수학적으로 뒷받침하였다(코사인 법칙, 피타고라스 정리 등).</p>
+<p class="x tb" style="--b:227.9">시간에 대한 복이차 방정식을 얻었다</p>
+<p class="x tb" style="--b:240.3">방정식의 풀이</p>
+<p class="x tb" style="--b:252.6">근거를 들어 작은 근을 골랐다</p>
+<p class="x tb" style="--b:265.0">해가 존재하는 허용 범위를 고려하였다</p>
+<div class="f" style="left:294pt;top:834pt"><span class="fig" data-srcpage="10" data-clip="294,834,302,841.8"></span></div>
+</div>
+
+<!-- marking sheet T2 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-9-T2. 거북이</b></p>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<div class="f" style="left:515pt;top:24pt"><span class="fig" data-srcpage="11" data-clip="515,24,563,52"></span></div>
+<div class="f" style="left:31.5pt;top:85pt"><span class="fig" data-srcpage="11" data-clip="31.5,85,73.1,348.6"></span></div>
+<div class="f" style="left:453.1pt;top:85pt"><span class="fig" data-srcpage="11" data-clip="453.1,85,563.8,348.6"></span></div>
+<div class="f" style="left:73.1pt;top:85.22pt"><span class="fig" data-srcpage="11" data-clip="73.1,85.22,453.1,85.72"></span></div>
+<div class="f" style="left:73.1pt;top:97.57pt"><span class="fig" data-srcpage="11" data-clip="73.1,97.57,453.1,98.07"></span></div>
+<div class="f" style="left:73.1pt;top:109.92pt"><span class="fig" data-srcpage="11" data-clip="73.1,109.92,453.1,110.42"></span></div>
+<div class="f" style="left:73.1pt;top:130.82pt"><span class="fig" data-srcpage="11" data-clip="73.1,130.82,453.1,131.32"></span></div>
+<div class="f" style="left:73.1pt;top:143.17pt"><span class="fig" data-srcpage="11" data-clip="73.1,143.17,453.1,143.67"></span></div>
+<div class="f" style="left:73.1pt;top:155.52pt"><span class="fig" data-srcpage="11" data-clip="73.1,155.52,453.1,156.02"></span></div>
+<div class="f" style="left:73.1pt;top:173.78pt"><span class="fig" data-srcpage="11" data-clip="73.1,173.78,453.1,174.28"></span></div>
+<div class="f" style="left:73.1pt;top:194.48pt"><span class="fig" data-srcpage="11" data-clip="73.1,194.48,453.1,194.98"></span></div>
+<div class="f" style="left:73.1pt;top:206.83pt"><span class="fig" data-srcpage="11" data-clip="73.1,206.83,453.1,207.33"></span></div>
+<div class="f" style="left:73.1pt;top:219.18pt"><span class="fig" data-srcpage="11" data-clip="73.1,219.18,453.1,219.68"></span></div>
+<div class="f" style="left:73.1pt;top:231.54pt"><span class="fig" data-srcpage="11" data-clip="73.1,231.54,453.1,232.04"></span></div>
+<div class="f" style="left:73.1pt;top:253.62pt"><span class="fig" data-srcpage="11" data-clip="73.1,253.62,453.1,254.12"></span></div>
+<div class="f" style="left:73.1pt;top:275.7pt"><span class="fig" data-srcpage="11" data-clip="73.1,275.7,453.1,276.2"></span></div>
+<div class="f" style="left:73.1pt;top:300.22pt"><span class="fig" data-srcpage="11" data-clip="73.1,300.22,453.1,300.72"></span></div>
+<div class="f" style="left:73.1pt;top:312.57pt"><span class="fig" data-srcpage="11" data-clip="73.1,312.57,453.1,313.07"></span></div>
+<div class="f" style="left:73.1pt;top:324.92pt"><span class="fig" data-srcpage="11" data-clip="73.1,324.92,453.1,325.42"></span></div>
+<div class="f" style="left:73.1pt;top:347.75pt"><span class="fig" data-srcpage="11" data-clip="73.1,347.75,453.1,348.25"></span></div>
+<p class="x tb" style="--b:94.0">배점 항목</p>
+<p class="x tb ov" style="--b:94.0;left:459.7pt;width:45pt">점수</p>
+<p class="x tb ov" style="--b:94.0;left:514.6pt;width:45pt">확인</p>
+<p class="x tb" style="--b:106.4">변 <span class="nw">$AB$가</span> 변하는 빠르기 <span class="nw">$v_{AB}$를</span> 구하였다</p>
+<p class="x tb" style="--b:123.6">거북이들이 만나는 시간 <span class="nw">$t = \frac{l}{v}$를</span> 구하였다</p>
+<p class="x tb" style="--b:139.6">속력 <span class="nw">$v_{BC}$에</span> 대한 식을 세웠다</p>
+<p class="x tb" style="--b:152.0">속력 <span class="nw">$v_{AC}$에</span> 대한 식을 세웠다</p>
+<p class="x tb" style="--b:166.6">속력 <span class="nw">$v_2 = \frac{v}{2}$를</span> 구하였다</p>
+<p class="x tb" style="--b:185.0">속력 <span class="nw">$v_3 = \frac{v}{\sqrt{2}}$을</span> 구하였다</p>
+<p class="x tb" style="--b:203.3">전체 가속도가 법선 가속도와 같음을 근거를 들어 보였다</p>
+<p class="x tb" style="--b:215.6">벡터 <span class="nw">$v_1$,</span> <span class="nw">$v_2$,</span> <span class="nw">$v_3$이</span> 회전하는 빠르기를 구하였다</p>
+<p class="x tb" style="--b:228.0">식 <span class="nw">$a = \omega\cdot v$</span> 또는 이와 같은 식</p>
+<p class="x tb" style="--b:245.8">가속도 <span class="nw">$a_1 = \frac{v^2}{2l}$을</span> 구하였다</p>
+<p class="x tb" style="--b:268.4">가속도 <span class="nw">$a_2 = \frac{v^2}{4l}$를</span> 구하였다</p>
+<p class="x tb" style="--b:290.1">가속도 <span class="nw">$a_3 = \frac{v^2}{2\sqrt{2}l}$을</span> 구하였다</p>
+<p class="x tb" style="--b:309.0">변위의 크기의 비를 구하였다</p>
+<p class="x tb" style="--b:321.4">벡터 <span class="nw">$s_1$과</span> <span class="nw">$s_2$</span> 사이의 각이 직각임을 보였다</p>
+<p class="x tb" style="--b:338.3">거리 <span class="nw">$s = \frac{2}{\sqrt{5}}l$을</span> 구하였다</p>
+<div class="f" style="left:294pt;top:834pt"><span class="fig" data-srcpage="11" data-clip="294,834,302,841.8"></span></div>
+</div>
+
+<!-- marking sheet T3 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-9-T3. 벽에 쾅</b></p>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<div class="f" style="left:515pt;top:24pt"><span class="fig" data-srcpage="12" data-clip="515,24,563,52"></span></div>
+<div class="f" style="left:31.5pt;top:85pt"><span class="fig" data-srcpage="12" data-clip="31.5,85,73.1,558.29"></span></div>
+<div class="f" style="left:453.1pt;top:85pt"><span class="fig" data-srcpage="12" data-clip="453.1,85,563.8,558.29"></span></div>
+<div class="f" style="left:73.1pt;top:85.22pt"><span class="fig" data-srcpage="12" data-clip="73.1,85.22,453.1,85.72"></span></div>
+<div class="f" style="left:73.1pt;top:97.57pt"><span class="fig" data-srcpage="12" data-clip="73.1,97.57,453.1,98.07"></span></div>
+<div class="f" style="left:73.1pt;top:121.88pt"><span class="fig" data-srcpage="12" data-clip="73.1,121.88,453.1,122.38"></span></div>
+<div class="f" style="left:73.1pt;top:146.19pt"><span class="fig" data-srcpage="12" data-clip="73.1,146.19,453.1,146.69"></span></div>
+<div class="f" style="left:73.1pt;top:158.54pt"><span class="fig" data-srcpage="12" data-clip="73.1,158.54,453.1,159.04"></span></div>
+<div class="f" style="left:73.1pt;top:182.85pt"><span class="fig" data-srcpage="12" data-clip="73.1,182.85,453.1,183.35"></span></div>
+<div class="f" style="left:73.1pt;top:207.16pt"><span class="fig" data-srcpage="12" data-clip="73.1,207.16,453.1,207.66"></span></div>
+<div class="f" style="left:73.1pt;top:231.47pt"><span class="fig" data-srcpage="12" data-clip="73.1,231.47,453.1,231.97"></span></div>
+<div class="f" style="left:73.1pt;top:243.82pt"><span class="fig" data-srcpage="12" data-clip="73.1,243.82,453.1,244.32"></span></div>
+<div class="f" style="left:73.1pt;top:268.13pt"><span class="fig" data-srcpage="12" data-clip="73.1,268.13,453.1,268.63"></span></div>
+<div class="f" style="left:73.1pt;top:292.44pt"><span class="fig" data-srcpage="12" data-clip="73.1,292.44,453.1,292.94"></span></div>
+<div class="f" style="left:73.1pt;top:316.75pt"><span class="fig" data-srcpage="12" data-clip="73.1,316.75,453.1,317.25"></span></div>
+<div class="f" style="left:73.1pt;top:341.06pt"><span class="fig" data-srcpage="12" data-clip="73.1,341.06,453.1,341.56"></span></div>
+<div class="f" style="left:73.1pt;top:365.37pt"><span class="fig" data-srcpage="12" data-clip="73.1,365.37,453.1,365.87"></span></div>
+<div class="f" style="left:73.1pt;top:377.72pt"><span class="fig" data-srcpage="12" data-clip="73.1,377.72,453.1,378.22"></span></div>
+<div class="f" style="left:73.1pt;top:390.07pt"><span class="fig" data-srcpage="12" data-clip="73.1,390.07,453.1,390.57"></span></div>
+<div class="f" style="left:73.1pt;top:402.43pt"><span class="fig" data-srcpage="12" data-clip="73.1,402.43,453.1,402.93"></span></div>
+<div class="f" style="left:73.1pt;top:426.74pt"><span class="fig" data-srcpage="12" data-clip="73.1,426.74,453.1,427.24"></span></div>
+<div class="f" style="left:73.1pt;top:439.09pt"><span class="fig" data-srcpage="12" data-clip="73.1,439.09,453.1,439.59"></span></div>
+<div class="f" style="left:73.1pt;top:451.7pt"><span class="fig" data-srcpage="12" data-clip="73.1,451.7,453.1,452.2"></span></div>
+<div class="f" style="left:73.1pt;top:475.28pt"><span class="fig" data-srcpage="12" data-clip="73.1,475.28,453.1,475.78"></span></div>
+<div class="f" style="left:73.1pt;top:495.67pt"><span class="fig" data-srcpage="12" data-clip="73.1,495.67,453.1,496.17"></span></div>
+<div class="f" style="left:73.1pt;top:508.02pt"><span class="fig" data-srcpage="12" data-clip="73.1,508.02,453.1,508.52"></span></div>
+<div class="f" style="left:73.1pt;top:520.37pt"><span class="fig" data-srcpage="12" data-clip="73.1,520.37,453.1,520.87"></span></div>
+<div class="f" style="left:73.1pt;top:532.73pt"><span class="fig" data-srcpage="12" data-clip="73.1,532.73,453.1,533.23"></span></div>
+<div class="f" style="left:73.1pt;top:545.08pt"><span class="fig" data-srcpage="12" data-clip="73.1,545.08,453.1,545.58"></span></div>
+<div class="f" style="left:73.1pt;top:557.44pt"><span class="fig" data-srcpage="12" data-clip="73.1,557.44,453.1,557.94"></span></div>
+<div class="f" style="left:73.1pt;top:452.55pt"><span class="fig" data-srcpage="12" data-clip="73.1,452.55,453.1,474.93"></span></div>
+<div class="f" style="left:73.1pt;top:476.13pt"><span class="fig" data-srcpage="12" data-clip="73.1,476.13,453.1,495.32"></span></div>
+<p class="x tb" style="--b:94.0">배점 항목</p>
+<p class="x tb ov" style="--b:94.0;left:459.7pt;width:45pt">점수</p>
+<p class="x tb ov" style="--b:94.0;left:514.6pt;width:45pt">확인</p>
+<p class="x tb" style="--b:106.4">첫 번째 퍽이 벽과 충돌하기 전 계의 질량 중심의 속도를 구하였다</p>
+<p class="x tb" style="--b:130.7">퍽들의 첫 번째 충돌 전 질량 중심 기준계(질량 중심계)에서 퍽들의 속도를 계산하였다</p>
+<p class="x tb" style="--b:155.0">퍽들의 첫 번째 충돌 뒤 질량 중심계에서 계의 에너지를 썼다</p>
+<p class="x tb" style="--b:167.4">퍽들의 첫 번째 충돌 뒤 질량 중심 기준계에서 퍽들의 속도를 계산하였다</p>
+<p class="x tb" style="--b:191.7">퍽들의 첫 번째 충돌 뒤 실험실 기준계에서 첫 번째 퍽의 속도를 구하였다</p>
+<p class="x tb" style="--b:216.0">퍽들의 첫 번째 충돌 뒤 실험실 기준계에서 두 번째 퍽의 속도를 구하였다</p>
+<p class="x tb" style="--b:240.3">벽과 탄성 충돌한 뒤 첫 번째 퍽의 속도를 구하였다</p>
+<p class="x tb" style="--b:252.6">첫 번째 퍽이 벽과 충돌한 뒤 계의 질량 중심의 속도를 구하였다</p>
+<p class="x tb" style="--b:276.9">첫 번째 퍽이 벽과 충돌한 뒤 질량 중심 기준계에서 퍽들의 속도를 계산하였다</p>
+<p class="x tb" style="--b:301.3">퍽들의 두 번째 충돌 뒤 질량 중심 기준계에서 퍽들의 속도를 계산하였다</p>
+<p class="x tb" style="--b:325.6">퍽들의 두 번째 충돌 뒤 실험실 기준계에서 첫 번째 퍽의 속도를 구하였다(퍽이 멈춘다는 사실을 고려하였다)</p>
+<p class="x tb" style="--b:349.9">퍽들의 두 번째 충돌 뒤 실험실 기준계에서 두 번째 퍽의 속도를 구하였다(또는 이 퍽이 벽에서 멀어진다는 사실을 고려하였다)</p>
+<p class="x tb" style="--b:374.2">시간 <span class="nw">$t_1$을</span> 계산하였다</p>
+<p class="x tb" style="--b:386.5">시간 <span class="nw">$t_2$를</span> 계산하였다</p>
+<p class="x tb" style="--b:398.9">거리 <span class="nw">$s_1$을</span> 계산하였다</p>
+<p class="x tb" style="--b:411.2"><span class="nw">$l(t)$</span> 그래프. 참고: 다음 항목들은 그래프가 옳을 때에만 채점한다.</p>
+<p class="x tb" style="--b:435.6">특징적인 점들의 좌표를 표시하였다:</p>
+<p class="x tb" style="--b:448.0">$l = s_1 = s\sqrt{1 - \alpha}$</p>
+<p class="x tb" style="--b:504.5">직선들을 그렸다:</p>
+<p class="x tb" style="--b:516.8"><span class="nw">$t \in [0, t_1]$일</span> 때 <span class="nw">$l(t)$</span></p>
+<p class="x tb" style="--b:529.2"><span class="nw">$t \in [t_1, t_1 + t_2]$일</span> 때 <span class="nw">$l(t)$</span></p>
+<p class="x tb" style="--b:541.5"><span class="nw">$t > t_1 + t_2$일</span> 때 <span class="nw">$l = s_1$</span></p>
+<p class="x tb" style="--b:553.9">축의 이름을 붙였다(그래프가 옳지 않으면 이 항목은 채점하지 않는다)</p>
+<div class="f" style="left:294pt;top:834pt"><span class="fig" data-srcpage="12" data-clip="294,834,302,841.8"></span></div>
+</div>
+
+<!-- marking sheet T4 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-9-T4. 얼음 그림</b></p>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<div class="f" style="left:515pt;top:24pt"><span class="fig" data-srcpage="13" data-clip="515,24,563,52"></span></div>
+<div class="f" style="left:31.5pt;top:85pt"><span class="fig" data-srcpage="13" data-clip="31.5,85,73.1,357.05"></span></div>
+<div class="f" style="left:453.1pt;top:85pt"><span class="fig" data-srcpage="13" data-clip="453.1,85,563.8,357.05"></span></div>
+<div class="f" style="left:73.1pt;top:85.22pt"><span class="fig" data-srcpage="13" data-clip="73.1,85.22,453.1,85.72"></span></div>
+<div class="f" style="left:73.1pt;top:97.57pt"><span class="fig" data-srcpage="13" data-clip="73.1,97.57,453.1,98.07"></span></div>
+<div class="f" style="left:73.1pt;top:121.88pt"><span class="fig" data-srcpage="13" data-clip="73.1,121.88,453.1,122.38"></span></div>
+<div class="f" style="left:73.1pt;top:134.23pt"><span class="fig" data-srcpage="13" data-clip="73.1,134.23,453.1,134.73"></span></div>
+<div class="f" style="left:73.1pt;top:146.59pt"><span class="fig" data-srcpage="13" data-clip="73.1,146.59,453.1,147.09"></span></div>
+<div class="f" style="left:73.1pt;top:158.94pt"><span class="fig" data-srcpage="13" data-clip="73.1,158.94,453.1,159.44"></span></div>
+<div class="f" style="left:73.1pt;top:171.29pt"><span class="fig" data-srcpage="13" data-clip="73.1,171.29,453.1,171.79"></span></div>
+<div class="f" style="left:73.1pt;top:183.65pt"><span class="fig" data-srcpage="13" data-clip="73.1,183.65,453.1,184.15"></span></div>
+<div class="f" style="left:73.1pt;top:196pt"><span class="fig" data-srcpage="13" data-clip="73.1,196,453.1,196.5"></span></div>
+<div class="f" style="left:73.1pt;top:208.36pt"><span class="fig" data-srcpage="13" data-clip="73.1,208.36,453.1,208.86"></span></div>
+<div class="f" style="left:73.1pt;top:220.71pt"><span class="fig" data-srcpage="13" data-clip="73.1,220.71,453.1,221.21"></span></div>
+<div class="f" style="left:73.1pt;top:233.06pt"><span class="fig" data-srcpage="13" data-clip="73.1,233.06,453.1,233.56"></span></div>
+<div class="f" style="left:73.1pt;top:245.42pt"><span class="fig" data-srcpage="13" data-clip="73.1,245.42,453.1,245.92"></span></div>
+<div class="f" style="left:73.1pt;top:257.77pt"><span class="fig" data-srcpage="13" data-clip="73.1,257.77,453.1,258.27"></span></div>
+<div class="f" style="left:73.1pt;top:282.08pt"><span class="fig" data-srcpage="13" data-clip="73.1,282.08,453.1,282.58"></span></div>
+<div class="f" style="left:73.1pt;top:294.43pt"><span class="fig" data-srcpage="13" data-clip="73.1,294.43,453.1,294.93"></span></div>
+<div class="f" style="left:73.1pt;top:306.79pt"><span class="fig" data-srcpage="13" data-clip="73.1,306.79,453.1,307.29"></span></div>
+<div class="f" style="left:73.1pt;top:319.14pt"><span class="fig" data-srcpage="13" data-clip="73.1,319.14,453.1,319.64"></span></div>
+<div class="f" style="left:73.1pt;top:331.49pt"><span class="fig" data-srcpage="13" data-clip="73.1,331.49,453.1,331.99"></span></div>
+<div class="f" style="left:73.1pt;top:343.85pt"><span class="fig" data-srcpage="13" data-clip="73.1,343.85,453.1,344.35"></span></div>
+<div class="f" style="left:73.1pt;top:356.2pt"><span class="fig" data-srcpage="13" data-clip="73.1,356.2,453.1,356.7"></span></div>
+<div class="f" style="left:73.1pt;top:295.28pt"><span class="fig" data-srcpage="13" data-clip="73.1,295.28,453.1,306.44"></span></div>
+<p class="x tb" style="--b:94.0">배점 항목</p>
+<p class="x tb ov" style="--b:94.0;left:459.7pt;width:45pt">점수</p>
+<p class="x tb ov" style="--b:94.0;left:514.6pt;width:45pt">확인</p>
+<p class="x tb" style="--b:106.4">도표의 칠하지 않은 영역이 계의 두 상(相)이 함께 있는 상태에 해당함을 올바르게 해석하였다</p>
+<p class="x tb" style="--b:130.7">얼음 <span class="nw">$0.5\,\mathrm{kg}$을</span> 넣었을 때 계의 나중 온도를 구하였다</p>
+<p class="x tb" style="--b:143.1">“직선의 기울기” 방법:</p>
+<p class="x tb" style="--b:155.4"><b>M1</b> 얼음 영역 경계 위의 점들에 대한 열평형 방정식을 썼다</p>
+<p class="x tb" style="--b:167.8"><b>M1</b> 물 영역 경계 위의 점들에 대한 열평형 방정식을 썼다</p>
+<p class="x tb" style="--b:180.1"><b>M1</b> 영역 경계들의 기울기를 구하였다:</p>
+<p class="x tb" style="--b:192.5"><b>M1</b> <span class="nw">$k_1 = [52 - 58]\,{}^\circ\mathrm{C}\cdot\mathrm{kg}$</span></p>
+<p class="x tb" style="--b:204.8"><b>M1</b> <span class="nw">$k_1$의</span> 단위를 올바르게 나타내었다</p>
+<p class="x tb" style="--b:217.2"><b>M1</b> <span class="nw">$k_2 = [28 - 30]\,{}^\circ\mathrm{C}\cdot\mathrm{kg}$</span></p>
+<p class="x tb" style="--b:229.5"><b>M1</b> <span class="nw">$k_2$의</span> 단위를 올바르게 나타내었다</p>
+<p class="x tb" style="--b:241.9">“두 점을 이용한” 방법:</p>
+<p class="x tb" style="--b:254.2"><b>M2</b> 얼음 영역 경계 위의 한 점에 대한 열평형 방정식을 썼다</p>
+<p class="x tb" style="--b:266.6"><b>M2</b> 물 영역 경계 위의 한 점에 대한 열평형 방정식을 썼다</p>
+<p class="x tb" style="--b:290.9"><b>M2</b> 고른 점들의 좌표를 나타내었다(좌표 하나에 0.5점)</p>
+<p class="x tb" style="--b:315.6">물의 처음 온도 값을 구하였다: <span class="nw">$82\,{}^\circ\mathrm{C} < t < 94\,{}^\circ\mathrm{C}$</span></p>
+<p class="x tb" style="--b:328.0">$77\,{}^\circ\mathrm{C} < t < 99\,{}^\circ\mathrm{C}$</p>
+<p class="x tb" style="--b:340.3">물의 질량을 구하였다: <span class="nw">$0.155\,\mathrm{kg} < m < 0.175\,\mathrm{kg}$</span></p>
+<p class="x tb" style="--b:352.7">$0.145\,\mathrm{kg} < m < 0.185\,\mathrm{kg}$</p>
+<div class="f" style="left:294pt;top:834pt"><span class="fig" data-srcpage="13" data-clip="294,834,302,841.8"></span></div>
+</div>
+
+<!-- marking sheet T5 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-9-T5. 전기 사이클</b></p>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<div class="f" style="left:515pt;top:24pt"><span class="fig" data-srcpage="14" data-clip="515,24,563,52"></span></div>
+<div class="f" style="left:31.5pt;top:85pt"><span class="fig" data-srcpage="14" data-clip="31.5,85,73.1,603.32"></span></div>
+<div class="f" style="left:453.1pt;top:85pt"><span class="fig" data-srcpage="14" data-clip="453.1,85,563.8,603.32"></span></div>
+<div class="f" style="left:73.1pt;top:85.22pt"><span class="fig" data-srcpage="14" data-clip="73.1,85.22,453.1,85.72"></span></div>
+<div class="f" style="left:73.1pt;top:97.57pt"><span class="fig" data-srcpage="14" data-clip="73.1,97.57,453.1,98.07"></span></div>
+<div class="f" style="left:73.1pt;top:109.92pt"><span class="fig" data-srcpage="14" data-clip="73.1,109.92,453.1,110.42"></span></div>
+<div class="f" style="left:73.1pt;top:134.23pt"><span class="fig" data-srcpage="14" data-clip="73.1,134.23,453.1,134.73"></span></div>
+<div class="f" style="left:73.1pt;top:146.59pt"><span class="fig" data-srcpage="14" data-clip="73.1,146.59,453.1,147.09"></span></div>
+<div class="f" style="left:73.1pt;top:158.94pt"><span class="fig" data-srcpage="14" data-clip="73.1,158.94,453.1,159.44"></span></div>
+<div class="f" style="left:73.1pt;top:171.29pt"><span class="fig" data-srcpage="14" data-clip="73.1,171.29,453.1,171.79"></span></div>
+<div class="f" style="left:73.1pt;top:183.65pt"><span class="fig" data-srcpage="14" data-clip="73.1,183.65,453.1,184.15"></span></div>
+<div class="f" style="left:73.1pt;top:205.92pt"><span class="fig" data-srcpage="14" data-clip="73.1,205.92,453.1,206.42"></span></div>
+<div class="f" style="left:73.1pt;top:218.28pt"><span class="fig" data-srcpage="14" data-clip="73.1,218.28,453.1,218.78"></span></div>
+<div class="f" style="left:73.1pt;top:230.63pt"><span class="fig" data-srcpage="14" data-clip="73.1,230.63,453.1,231.13"></span></div>
+<div class="f" style="left:73.1pt;top:242.98pt"><span class="fig" data-srcpage="14" data-clip="73.1,242.98,453.1,243.48"></span></div>
+<div class="f" style="left:73.1pt;top:255.34pt"><span class="fig" data-srcpage="14" data-clip="73.1,255.34,453.1,255.84"></span></div>
+<div class="f" style="left:73.1pt;top:279.65pt"><span class="fig" data-srcpage="14" data-clip="73.1,279.65,453.1,280.15"></span></div>
+<div class="f" style="left:73.1pt;top:292pt"><span class="fig" data-srcpage="14" data-clip="73.1,292,453.1,292.5"></span></div>
+<div class="f" style="left:73.1pt;top:315.58pt"><span class="fig" data-srcpage="14" data-clip="73.1,315.58,453.1,316.08"></span></div>
+<div class="f" style="left:73.1pt;top:327.93pt"><span class="fig" data-srcpage="14" data-clip="73.1,327.93,453.1,328.43"></span></div>
+<div class="f" style="left:73.1pt;top:340.28pt"><span class="fig" data-srcpage="14" data-clip="73.1,340.28,453.1,340.78"></span></div>
+<div class="f" style="left:73.1pt;top:364.99pt"><span class="fig" data-srcpage="14" data-clip="73.1,364.99,453.1,365.49"></span></div>
+<div class="f" style="left:73.1pt;top:377.34pt"><span class="fig" data-srcpage="14" data-clip="73.1,377.34,453.1,377.84"></span></div>
+<div class="f" style="left:73.1pt;top:389.7pt"><span class="fig" data-srcpage="14" data-clip="73.1,389.7,453.1,390.2"></span></div>
+<div class="f" style="left:73.1pt;top:410.48pt"><span class="fig" data-srcpage="14" data-clip="73.1,410.48,453.1,410.98"></span></div>
+<div class="f" style="left:73.1pt;top:422.83pt"><span class="fig" data-srcpage="14" data-clip="73.1,422.83,453.1,423.33"></span></div>
+<div class="f" style="left:73.1pt;top:447.14pt"><span class="fig" data-srcpage="14" data-clip="73.1,447.14,453.1,447.64"></span></div>
+<div class="f" style="left:73.1pt;top:471.45pt"><span class="fig" data-srcpage="14" data-clip="73.1,471.45,453.1,471.95"></span></div>
+<div class="f" style="left:73.1pt;top:483.8pt"><span class="fig" data-srcpage="14" data-clip="73.1,483.8,453.1,484.3"></span></div>
+<div class="f" style="left:73.1pt;top:496.16pt"><span class="fig" data-srcpage="14" data-clip="73.1,496.16,453.1,496.66"></span></div>
+<div class="f" style="left:73.1pt;top:518.43pt"><span class="fig" data-srcpage="14" data-clip="73.1,518.43,453.1,518.93"></span></div>
+<div class="f" style="left:73.1pt;top:530.79pt"><span class="fig" data-srcpage="14" data-clip="73.1,530.79,453.1,531.29"></span></div>
+<div class="f" style="left:73.1pt;top:543.14pt"><span class="fig" data-srcpage="14" data-clip="73.1,543.14,453.1,543.64"></span></div>
+<div class="f" style="left:73.1pt;top:555.49pt"><span class="fig" data-srcpage="14" data-clip="73.1,555.49,453.1,555.99"></span></div>
+<div class="f" style="left:73.1pt;top:567.85pt"><span class="fig" data-srcpage="14" data-clip="73.1,567.85,453.1,568.35"></span></div>
+<div class="f" style="left:73.1pt;top:590.12pt"><span class="fig" data-srcpage="14" data-clip="73.1,590.12,453.1,590.62"></span></div>
+<div class="f" style="left:73.1pt;top:602.47pt"><span class="fig" data-srcpage="14" data-clip="73.1,602.47,453.1,602.97"></span></div>
+<div class="f" style="left:73.1pt;top:172.14pt"><span class="fig" data-srcpage="14" data-clip="73.1,172.14,453.1,183.3"></span></div>
+<div class="f" style="left:73.1pt;top:184.5pt"><span class="fig" data-srcpage="14" data-clip="73.1,184.5,453.1,205.57"></span></div>
+<div class="f" style="left:73.1pt;top:316.43pt"><span class="fig" data-srcpage="14" data-clip="73.1,316.43,453.1,327.58"></span></div>
+<div class="f" style="left:73.1pt;top:341.13pt"><span class="fig" data-srcpage="14" data-clip="73.1,341.13,453.1,364.64"></span></div>
+<div class="f" style="left:73.1pt;top:390.55pt"><span class="fig" data-srcpage="14" data-clip="73.1,390.55,453.1,410.13"></span></div>
+<div class="f" style="left:73.1pt;top:556.34pt"><span class="fig" data-srcpage="14" data-clip="73.1,556.34,453.1,567.5"></span></div>
+<div class="f" style="left:73.1pt;top:568.7pt"><span class="fig" data-srcpage="14" data-clip="73.1,568.7,453.1,589.77"></span></div>
+<p class="x tb" style="--b:94.0">배점 항목</p>
+<p class="x tb ov" style="--b:94.0;left:459.7pt;width:45pt">점수</p>
+<p class="x tb ov" style="--b:94.0;left:514.6pt;width:45pt">확인</p>
+<p class="x tb" style="--b:106.4">모든 구간에서 다이오드의 상태를 근거를 들어 밝혔다</p>
+<p class="x tb" style="--b:118.7">구간 <span class="nw">$1 - 2$와</span> <span class="nw">$3 - 4$에서</span> 다이오드가 닫혀 있음을 근거를 들어 보였다(이 구간들에서 <span class="nw">$K_1$이</span> 차단되어 있음을 지적한 것을 포함하여)</p>
+<p class="x tb" style="--b:143.1">구간 <span class="nw">$2 - 3$과</span> <span class="nw">$4 - 1$에서</span> 다이오드가 열려 있음을 근거를 들어 보였다</p>
+<p class="x tb" style="--b:155.4">다이오드가 열리는 전압을 구하였다</p>
+<p class="x tb" style="--b:167.8">기울어진 구간과 저항값의 대응</p>
+<p class="x tb" style="--b:214.7">연직 구간에서 스위치 <span class="nw">$K_2$의</span> 상태:</p>
+<p class="x tb" style="--b:227.1">스위치 <span class="nw">$K_2$가</span> 구간 <span class="nw">$2 - 3$이</span> 끝나기 전에 닫힐 수 없는 이유를 근거를 들어 밝혔다</p>
+<p class="x tb" style="--b:239.4">구간 <span class="nw">$4 - 1$에</span> 대해서도 마찬가지</p>
+<p class="x tb" style="--b:251.8"><span class="nw">$K_2$가</span> 점 3에서 닫힘을 지적하였다</p>
+<p class="x tb" style="--b:264.2">구간 <span class="nw">$2 - 3$</span> 전체에서 저항기 <span class="nw">$R_1$을</span> 지나는 전류는 변하지 않고 점 2에서의 전류 <span class="nw">$(2I_0)$와</span> 같다</p>
+<p class="x tb" style="--b:288.5">구간 <span class="nw">$2 - 3$에서</span> 열량의 계산</p>
+<p class="x tb" style="--b:305.7"><span class="nw">$Q_{23} = 2I_0U_0t_{23}$,</span> 또는 <span class="nw">$Q_{23} = \frac{U_{02}^2}{R_1}t_{23}$,</span> 또는 <span class="nw">$Q_{23} = (2I_0)^2R_1t_{23}$</span></p>
+<p class="x tb" style="--b:336.7">세로축의 눈금을 구하였다</p>
+<p class="x tb" style="--b:373.8">$I_0 = 0.01\,\mathrm{A}$</p>
+<p class="x tb" style="--b:386.2">사이클의 시간을 구하였다</p>
+<p class="x tb" style="--b:419.3">$\tau = 100\,\mathrm{s}$</p>
+<p class="x tb" style="--b:431.6">점 4에서 스위치 <span class="nw">$K_2$가</span> 열림과 동시에 스위치 <span class="nw">$K_1$이</span> 닫힘을 근거를 들어 보였다</p>
+<p class="x tb" style="--b:456.0">과정 <span class="nw">$4 - 1$</span> 전체 동안 저항기 <span class="nw">$R_1$에</span> 일정한 전류 <span class="nw">$I_0$이</span> 흐름을 근거를 들어 보였다</p>
+<p class="x tb" style="--b:480.3">저항기들의 저항값을 구하였다</p>
+<p class="x tb" style="--b:492.6">$R_1 = 400\,\Omega$</p>
+<p class="x tb" style="--b:510.2"><span class="nw">$\frac{R_1R_2}{R_1 + R_2} = 133\,\Omega$</span> 또는 <span class="nw">$\frac{R_1}{R_2} = 2$</span></p>
+<p class="x tb" style="--b:527.2">$R_2 = 200\,\Omega$</p>
+<p class="x tb" style="--b:539.6">구간 <span class="nw">$4 - 1$에서</span> 열량의 계산</p>
+<p class="x tb" style="--b:552.0"><span class="nw">$Q_{41} = I_0U_01t_{41}$</span> 또는 이와 같은 식</p>
+<p class="x tb" style="--b:598.9">$Q_{41} = 0.8\,\mathrm{J}$</p>
+<div class="f" style="left:294pt;top:834pt"><span class="fig" data-srcpage="14" data-clip="294,834,302,841.8"></span></div>
+</div>
+</body></html>
