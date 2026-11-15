@@ -1,0 +1,657 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* RuPhO 2021 (LV = 제55회), 11학년 이론 풀이 예시와 배점 — Korean edition on the original layout.
+   ORIGINAL: 15 A4 pages printed from the olympiad web site (no text layer: every glyph is a vector path).
+   Each page carries the site chrome: logo and icon (stamped), page title 풀이/배점 (Решение/Разбалловка),
+   menu links 조건/풀이/배점 (Условие/Решение/Разбалловка) with their icon letters T/S/M (stamped),
+   the gray question number with its points mark (stamped), and the English footer
+   "2020 — We are what they grow beyond." (stamped as printed).
+   The Korean page is white: text is typed at the original baselines (body pitch 9.6pt), rules, answer boxes
+   and marking tables are drawn (.rl, .ab, .tr); only Cyrillic-free formulas and figures are stamped.
+   Formulas or figure labels with Cyrillic are retyped in KaTeX or covered with .ov labels.
+   PLACEMENT: every block is placed by the original first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:6.3pt;line-height:9.6pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:43.2pt;width:510pt;--l:9.6pt;--fs:6.3pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.3pt);text-align:justify}
+.c{text-align:center}
+.l{text-align:left}
+.nw{white-space:nowrap}
+.wn{word-break:normal}
+/* site chrome */
+.tt{left:43.3pt;--fs:8.3pt;color:#181c32}
+.mn{left:55pt;width:100pt;--fs:6.5pt;font-weight:bold;text-decoration:underline;text-decoration-thickness:0.5pt;text-underline-offset:1pt;text-align:left}
+.q{left:65.6pt;width:488pt;text-align:left}
+.an{left:54.6pt;width:490pt;text-align:left}
+/* marking tables: text column and points column */
+.td{left:48.5pt;width:449pt;text-align:left}
+.pt{left:502.9pt;width:51.1pt;text-align:center}
+.rl{position:absolute;height:1pt;background:#ebedf3}
+.ab{position:absolute;border:2.16pt solid #f3f6f9;border-radius:3pt}
+.tr{position:absolute;left:42.5pt;width:511.5pt;border:0.6pt solid #e4e6ef}
+.tr::after{content:"";position:absolute;left:459.3pt;top:-0.6pt;bottom:-0.6pt;border-left:0.6pt solid #e4e6ef}
+.da{position:absolute;left:42.5pt;width:5.6pt;height:0.4pt;background:#ababab}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+.wb{position:absolute;background:#fff}
+.x .katex{font-size:1.15em!important}
+.m{--fs:6.45pt}
+.b{font-weight:bold;color:#181c32;text-align:left}
+.k{font-weight:bold}
+.big{font-size:1.17em}
+.x .katex .strut{display:none!important}
+.q2{text-indent:22.4pt;text-align:left}
+</style></head><body>
+
+<!-- ===================== page 1: 문제 1 풀이 ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="1" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="1" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:78.9">풀이</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="1" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="1" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="1" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:181pt"><span class="fig" data-srcpage="1" data-clip="46.5,181,56.5,189"></span></div>
+<p class="x q" style="--b:187.8">강과 같은 깊이의 호수에서 움직이는 보트의 경우, 공이 바닥에 떨어지는 지점까지의 거리는 얼마인가?</p>
+<div><div class="rl" style="left:42.5pt;top:198.5pt;width:511.5pt;height:1.1pt"></div></div>
+<p class="x" style="--b:212.8">물과 함께 움직이는 기준계에서 보트의 속력 <span class="nw">$v$는</span> 운동 방향과 관계없이 같으므로, 공이 바닥에 떨어지는 지점까지 지나가는 거리 <span class="nw">$l$은</span> 언제나 같다. 물속에서 공이 움직이는 시간 <span class="nw">$\tau$도</span> 모든 경우에 같다. 땅에 대한 기준계에서 공이 지나가는 거리는 다음과 같다.</p>
+<div class="f" style="left:279pt;top:240pt"><span class="fig" data-srcpage="1" data-clip="279,240,318,249.5"></span></div>
+<div class="f" style="left:278pt;top:270pt"><span class="fig" data-srcpage="1" data-clip="278,270,318,279.5"></span></div>
+<p class="x" style="--b:301.6">여기서 <span class="nw">$u$는</span> 강물의 흐름 속력이다. 따라서</p>
+<div><div class="ab" style="left:42.5pt;top:310.6pt;width:511.6pt;height:67.6pt"></div></div>
+<p class="x an" style="--b:330.8">답:</p>
+<div class="f" style="left:276pt;top:338.5pt"><span class="fig" data-srcpage="1" data-clip="276,338.5,320,359"></span></div>
+
+<div class="f" style="left:46.5pt;top:409.4pt"><span class="fig" data-srcpage="1" data-clip="46.5,409.4,56.5,417.4"></span></div>
+<p class="x q" style="--b:416.4">보트의 속력은 강물의 흐름 속력의 몇 배인가?</p>
+<div><div class="rl" style="left:42.5pt;top:427pt;width:511.5pt"></div></div>
+<p class="x" style="--b:444.0">이때 또한 <span class="nw">$u\tau = \frac{(l_1+l_2)}{2}$이다</span>. 강의 흐름에 수직인 궤적을 따라 움직일 때 거리 <span class="nw">$l_3$은</span> 코사인 법칙으로 정해진다.</p>
+<div class="f" style="left:249pt;top:453pt"><span class="fig" data-srcpage="1" data-clip="249,453,347.5,466"></span></div>
+<p class="x" style="--b:488.6">여기서 <span class="nw">$\alpha$는</span> 물에 대한 보트의 속도 벡터 방향과 강의 흐름 방향에 수직인 직선 사이의 각이다. <span class="nw">$cos\alpha = \frac{u}{v}$임을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:210pt;top:507pt"><span class="fig" data-srcpage="1" data-clip="210,507,386,529"></span></div>
+<p class="x" style="--b:550.9">따라서</p>
+<div><div class="ab" style="left:42.5pt;top:559.7pt;width:511.6pt;height:72.4pt"></div></div>
+<p class="x an" style="--b:580.1">답:</p>
+<div class="f" style="left:268pt;top:588.5pt"><span class="fig" data-srcpage="1" data-clip="268,588.5,328.5,613.5"></span></div>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="1" data-clip="27.5,808.5,145,817"></span></div>
+</div>
+
+<!-- ===================== page 2: 문제 1 배점 ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="2" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="2" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:79.1">배점</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="2" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="2" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="2" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:181pt"><span class="fig" data-srcpage="2" data-clip="46.5,181,56.5,189"></span></div>
+<p class="x q" style="--b:187.8">강과 같은 깊이의 호수에서 움직이는 보트의 경우, 공이 바닥에 떨어지는 지점까지의 거리는 얼마인가?</p>
+<div><div class="rl" style="left:42.5pt;top:198.5pt;width:511.5pt;height:1.1pt"></div></div>
+<div><div class="da" style="top:207pt"></div></div>
+<div><div class="tr" style="top:209pt;height:20.4pt"></div></div>
+<div><div class="tr" style="top:228.7pt;height:39.4pt"></div></div>
+<div><div class="tr" style="top:267.5pt;height:39.5pt"></div></div>
+<div><div class="tr" style="top:306.4pt;height:20.2pt"></div></div>
+<div><div class="tr" style="top:326pt;height:40.5pt"></div></div>
+<div><div class="tr" style="top:365.8pt;height:59.6pt"></div></div>
+<div><div class="tr" style="top:424.8pt;height:50.6pt"></div></div>
+<p class="x td" style="--b:221.3">물에 대한(또는 물 기준계에서) 보트의 운동 속력 <span class="nw">$v$는</span> 일정하다</p>
+<p class="x pt" style="--b:221.3">0.50</p>
+<p class="x td" style="--b:241.1">공을 내려놓은 순간부터 바닥에 떨어지는 순간까지 공이 움직이는 시간 <span class="nw">$\tau$는</span> 세 경우 모두 같다.</p>
+<p class="x td" style="--b:250.7">이 점수는 이 명제를 올바르게 증명한 경우에만 준다.</p>
+<p class="x td" style="--b:260.2">이후 항목의 채점에는 영향을 주지 않는다.</p>
+<p class="x pt" style="--b:241.1">0.75</p>
+<p class="x td" style="--b:279.9">물에 대한(또는 물 기준계에서) 수평면 내 공의 변위 <span class="nw">$s$의</span> 크기는 세 경우 모두 같다.</p>
+<p class="x td" style="--b:289.4">이 점수는 이 명제를 올바르게 증명한 경우에만 준다.</p>
+<p class="x td" style="--b:299.0">이후 항목의 채점에는 영향을 주지 않는다.</p>
+<p class="x pt" style="--b:279.9">0.75</p>
+<p class="x td" style="--b:318.6">공이 움직이는 동안 강둑에 대한 물의 변위 크기 <span class="nw">$u\tau$는</span> 세 경우 모두 같다</p>
+<p class="x pt" style="--b:318.6">0.50</p>
+<p class="x td" style="--b:338.3">첫 번째 경우에 공의 변위 크기 사이의 관계식을 올바르게 썼다:</p>
+<p class="x pt" style="--b:338.3">1.00</p>
+<div class="f" style="left:253.5pt;top:346.8pt"><span class="fig" data-srcpage="2" data-clip="253.5,346.8,292,355.2"></span></div>
+<p class="x td" style="--b:378.2">두 번째 경우에 공의 변위 크기 사이의 관계식을 올바르게 썼다:</p>
+<p class="x pt" style="--b:378.2">1.00</p>
+<div class="f" style="left:253.5pt;top:386.7pt"><span class="fig" data-srcpage="2" data-clip="253.5,386.7,292,395"></span></div>
+<p class="x td" style="--b:417.5">식의 우변 부호가 틀리면 이 항목은 <span class="nw">$0$점이지만</span>, 이후 항목에서는 감점하지 않는다</p>
+<p class="x td" style="--b:437.1">호수에서 움직일 때(또는 물 기준계에서 모든 경우에) 수평면 내 공의 변위에 대한 식을 얻었다:</p>
+<p class="x pt" style="--b:437.1">1.00</p>
+<div class="f" style="left:255.5pt;top:445.7pt"><span class="fig" data-srcpage="2" data-clip="255.5,445.7,289.5,463.5"></span></div>
+
+<div class="f" style="left:46.5pt;top:507pt"><span class="fig" data-srcpage="2" data-clip="46.5,507,56.5,515"></span></div>
+<p class="x q" style="--b:514.2">보트의 속력은 강물의 흐름 속력의 몇 배인가?</p>
+<div><div class="rl" style="left:42.5pt;top:524.8pt;width:511.5pt"></div></div>
+<div><div class="da" style="top:533.3pt"></div></div>
+<div><div class="tr" style="top:535.3pt;height:50.7pt"></div></div>
+<div><div class="tr" style="top:585.2pt;height:20.3pt"></div></div>
+<div><div class="tr" style="top:604.9pt;height:43.7pt"></div></div>
+<div><div class="tr" style="top:648pt;height:42pt"></div></div>
+<div><div class="tr" style="top:689.4pt;height:20.3pt"></div></div>
+<div><div class="tr" style="top:709.1pt;height:56.4pt"></div></div>
+<p class="x td" style="--b:547.6">강둑에 대한 물의 변위 크기를 구했다:</p>
+<p class="x pt" style="--b:547.6">1.00</p>
+<div class="f" style="left:251pt;top:556.1pt"><span class="fig" data-srcpage="2" data-clip="251,556.1,294,574"></span></div>
+<p class="x td" style="--b:597.5">세 번째 경우의 변위 관계를 올바르게 그렸다(또는 풀이 본문에서 설명했다)</p>
+<p class="x pt" style="--b:597.5">1.00</p>
+<p class="x td" style="--b:617.2">그림에 맞게 코사인 법칙 또는 이와 같은 뜻의 직각삼각형 관계식을 올바르게 썼다</p>
+<p class="x pt" style="--b:617.2">1.50</p>
+<div class="f" style="left:224pt;top:626pt"><span class="fig" data-srcpage="2" data-clip="224,626,321.5,637"></span></div>
+<p class="x td" style="--b:660.2">속력의 비를 해당 각의 삼각함수(사인, 코사인 또는 탄젠트)로 나타냈다</p>
+<p class="x pt" style="--b:660.2">1.00</p>
+<div class="f" style="left:252.7pt;top:669pt"><span class="fig" data-srcpage="2" data-clip="252.7,669,293,678.5"></span></div>
+<p class="x td" style="--b:701.8">속도 방향 사이의 각을 그림에 나타냈거나 말로 정의했다</p>
+<p class="x pt" style="--b:701.8">0.50</p>
+<p class="x td" style="--b:721.4">속력의 비에 대한 올바른 답을 얻었다:</p>
+<p class="x pt" style="--b:721.4">1.50</p>
+<div class="f" style="left:243pt;top:730pt"><span class="fig" data-srcpage="2" data-clip="243,730,302.6,754"></span></div>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="2" data-clip="27.5,808.5,145,817"></span></div>
+</div>
+
+<!-- ===================== page 3: 문제 2 풀이 ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="3" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="3" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:78.9">풀이</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="3" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="3" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="3" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:181pt"><span class="fig" data-srcpage="3" data-clip="46.5,181,56.5,189"></span></div>
+<p class="x q2" style="--b:187.8">반응기 안의 온도를 <span class="nw">$T &lt; T_K$로</span> 유지하는 데 필요한 공기의 부피 유량 <span class="nw">$q$를</span> 구하여라. 여기서 <span class="nw">$T_K = 100^\circ\mathrm{C}$는</span> 대기압에서 수용액의 끓는점이다. <span class="nw">$T_K - T \ll T_K$라고</span> 하자. <span class="nw">$T = 95^\circ\mathrm{C}$일</span> 때 <span class="nw">$q$의</span> 값을 구하여라.</p>
+<div><div class="rl" style="left:42.5pt;top:208pt;width:511.5pt"></div></div>
+<p class="x" style="--b:222.4">어떤 시간 간격 <span class="nw">$\tau$</span> 동안 관을 통해 공기 <span class="nw">$\nu_1$몰이</span> 지나간다.</p>
+<div class="f" style="left:279.5pt;top:231pt"><span class="fig" data-srcpage="3" data-clip="279.5,231,317,250.5"></span></div>
+<p class="x" style="--b:273.4">같은 시간 동안 기포 안으로 증발하는 수증기의 몰수 <span class="nw">$\nu_2$는</span> 반응기에서 방출된 열량으로 정해진다.</p>
+<div class="f" style="left:282pt;top:281.5pt"><span class="fig" data-srcpage="3" data-clip="282,281.5,314.5,300"></span></div>
+<p class="x" style="--b:322.9">기포 안의 압력은 대기압과 같고, 온도 <span class="nw">$T$에서의</span> 포화 수증기 압력 <span class="nw">$P_\mathrm{v}$와</span> 공기 압력 <span class="nw">$P_\mathrm{a}$의</span> 합이다. 이때</p>
+<p class="x m c" style="--b:338.8">$P_\mathrm{v} = P_0 - \alpha(T_K - T)$</p>
+<p class="x m c" style="--b:370.6">$P_\mathrm{a} = P_0 - P_\mathrm{v} = \alpha(T_K - T)$</p>
+<p class="x" style="--b:397.3">기포 속 수증기와 공기의 몰수 비는 그들의 부분 압력의 비와 같다.</p>
+<div class="f" style="left:243pt;top:405.5pt"><span class="fig" data-srcpage="3" data-clip="243,405.5,353.5,427"></span></div>
+<p class="x" style="--b:450.4">따라서</p>
+<div><div class="ab" style="left:42.5pt;top:459.4pt;width:511.6pt;height:69.6pt"></div></div>
+<p class="x an" style="--b:479.6">답:</p>
+<div class="f" style="left:224.5pt;top:487.7pt"><span class="fig" data-srcpage="3" data-clip="224.5,487.7,314.5,509.6"></span></div>
+<p class="x m l" style="--b:499.8;left:315.5pt;width:80pt">$\approx 6.5\cdot 10^{-4}\,\mathrm{m^3/s}$</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="3" data-clip="27.5,808.5,145,817"></span></div>
+</div>
+
+<!-- ===================== page 4: 문제 2 배점 ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="4" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="4" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:79.1">배점</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="4" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="4" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="4" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:181pt"><span class="fig" data-srcpage="4" data-clip="46.5,181,56.5,189"></span></div>
+<p class="x q2" style="--b:187.8">반응기 안의 온도를 <span class="nw">$T &lt; T_K$로</span> 유지하는 데 필요한 공기의 부피 유량 <span class="nw">$q$를</span> 구하여라. 여기서 <span class="nw">$T_K = 100^\circ\mathrm{C}$는</span> 대기압에서 수용액의 끓는점이다. <span class="nw">$T_K - T \ll T_K$라고</span> 하자. <span class="nw">$T = 95^\circ\mathrm{C}$일</span> 때 <span class="nw">$q$의</span> 값을 구하여라.</p>
+<div><div class="rl" style="left:42.5pt;top:208pt;width:511.5pt"></div></div>
+<div><div class="da" style="top:216.7pt"></div>
+<div class="tr" style="top:218.6pt;height:20.3pt"></div>
+<div class="tr" style="top:238.3pt;height:20.3pt"></div>
+<div class="tr" style="top:258pt;height:20.3pt"></div>
+<div class="tr" style="top:277.6pt;height:20.4pt"></div>
+<div class="tr" style="top:297.4pt;height:20.2pt"></div>
+<div class="tr" style="top:317pt;height:21.3pt"></div>
+<div class="tr" style="top:337.7pt;height:20.3pt"></div>
+<div class="tr" style="top:357.2pt;height:20.3pt"></div>
+<div class="tr" style="top:376.9pt;height:20.4pt"></div>
+<div class="tr" style="top:396.7pt;height:54.1pt"></div>
+<div class="tr" style="top:450.4pt;height:55.3pt"></div>
+<div class="tr" style="top:505.1pt;height:54.2pt"></div>
+<div class="tr" style="top:558.8pt;height:44.1pt"></div></div>
+<p class="x td" style="--b:231.0">부피 유량을 이용한 공기 부피의 식 <span class="nw">$V = q\tau$</span></p>
+<p class="x pt" style="--b:231.0">0.25</p>
+<p class="x td" style="--b:250.7"><span class="nw">$q$와</span> 공급되는 공기의 물질량 사이의 관계식을 올바르게 썼다</p>
+<p class="x pt" style="--b:250.7">1.50</p>
+<p class="x td" style="--b:270.3">온도 <span class="nw">$T$에서</span> 포화 수증기 압력을 구했다: <span class="nw">$p = p_0 - \alpha(T_K - T)$</span></p>
+<p class="x pt" style="--b:270.3">1.00</p>
+<p class="x td" style="--b:290.0">열량과 증발하는 물의 양 사이의 관계 <span class="nw">$Q = \lambda\nu$</span></p>
+<p class="x pt" style="--b:290.0">0.50</p>
+<p class="x td" style="--b:309.6">방출되는 열량을 구했다: <span class="nw">$Q = N\tau$</span></p>
+<p class="x pt" style="--b:309.6">0.25</p>
+<p class="x td" style="--b:329.3">기포의 안정 조건을 올바르게 썼다(수증기와 공기의 부분 압력의 합이 <span class="nw">$P_0 = P_\mathrm{a} + P_\mathrm{v}$와</span> 같다)</p>
+<p class="x pt" style="--b:329.3">2.00</p>
+<p class="x td" style="--b:349.9">물이 기포 안으로 증발할 때 기포 부피의 변화를 고려했다</p>
+<p class="x pt" style="--b:349.9">1.00</p>
+<p class="x td" style="--b:369.6">기포 속 공기 온도의 변화에 따른 기포 부피의 변화를 고려했다</p>
+<p class="x pt" style="--b:369.6">0.50</p>
+<p class="x td" style="--b:389.3">수증기의 상태 방정식</p>
+<p class="x pt" style="--b:389.3">0.50</p>
+<p class="x td" style="--b:408.9">물질량의 비를 부분 압력의 비로 나타냈다</p>
+<p class="x pt" style="--b:408.9">1.50</p>
+<div class="f" style="left:234.5pt;top:417.5pt"><span class="fig" data-srcpage="4" data-clip="234.5,417.5,311.5,439"></span></div>
+<p class="x td" style="--b:462.5"><span class="nw">$\alpha(T_K - T) \ll P_0$</span> 근사에서의 해석적 답</p>
+<p class="x pt" style="--b:462.5">1.00</p>
+<div class="f" style="left:235.5pt;top:471.3pt"><span class="fig" data-srcpage="4" data-clip="235.5,471.3,309,494"></span></div>
+<p class="x td" style="--b:517.3">올바른 해석적 답을 얻었다</p>
+<p class="x pt" style="--b:517.3">1.00</p>
+<div class="f" style="left:227.5pt;top:526pt"><span class="fig" data-srcpage="4" data-clip="227.5,526,317.5,547.3"></span></div>
+<p class="x td" style="--b:570.9">올바른 수치 답을 얻었다</p>
+<p class="x pt" style="--b:570.9">1.00</p>
+<p class="x m c" style="--b:588.7;left:222.8pt;width:100pt">$q \approx 6.5\cdot 10^{-4}\,\mathrm{m^3/s}$</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="4" data-clip="27.5,808.5,145,817"></span></div>
+</div>
+
+<!-- ===================== page 5: 문제 3 풀이 (1, 2.1) ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="5" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="5" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:78.9">풀이</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="5" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="5" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="5" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:180.5pt"><span class="fig" data-srcpage="5" data-clip="46.5,180.5,66,189"></span></div>
+<p class="x q" style="--b:187.8;left:70.3pt">점 <span class="nw">$A$에서의</span> 전기장의 세기를 구하여라.</p>
+<div><div class="rl" style="left:42.5pt;top:198.5pt;width:511.5pt;height:1.1pt"></div></div>
+<p class="x b" style="--b:212.9">첫 번째 방법</p>
+<p class="x" style="--b:231.0;--l:12.7pt">전기장의 세기는 퍼텐셜의 변화율로 정해진다: <span class="nw">$E = \left|\dfrac{\Delta\varphi}{\Delta h}\right|$</span>. 거리가 <span class="nw">$\Delta h$인</span> 두 점 <span class="nw">$\mathrm{A}$와</span> <span class="nw">$\mathrm{A}'$에서</span> 막대에 의한 퍼텐셜 차를 구하는 것은, 거리 <span class="nw">$\Delta h$만큼</span> 서로 떨어진 두 막대가 점 <span class="nw">$A$에</span> 만드는 퍼텐셜 차를 구하는 것과 같다.</p>
+<p class="x" style="--b:262.8;--l:14.4pt">중심에서 같은 각으로 보이는 막대의 작은 요소들이 퍼텐셜에 주는 기여를 생각하자. 점전하의 퍼텐셜은 <span class="nw">$\varphi = \dfrac{q}{4\pi\varepsilon_0 r}$로</span> 주어진다. 두 막대의 선전하 밀도가 같으므로, 이러한 요소들에 의한 퍼텐셜의 비는 <span class="nw">$\dfrac{\varphi_1}{\varphi_2} = \dfrac{l_1}{l_2}\dfrac{r_2}{r_1}$이다</span>. 삼각형의 닮음으로부터 이 비는 1과 같다. 따라서 거리 <span class="nw">$\Delta h$만큼</span> 떨어진 두 막대에 의한 퍼텐셜 차는 한 막대의 양 끝에 있는 두 부분에 의한 퍼텐셜과 같다. 각 부분의 길이는 <span class="nw">$\Delta l = \Delta h\,\mathrm{tg}\varphi$이고</span>, 점 A로부터 거리 <span class="nw">$r = \dfrac{h}{\cos\varphi}$에</span> 있다. 따라서 <span class="nw">$\Delta\varphi = \dfrac{2\lambda\Delta l}{4\pi\varepsilon_0 r} = \dfrac{\lambda\Delta h\sin\varphi}{2\pi\varepsilon_0 h}$이고</span>,</p>
+<div><div class="ab" style="left:42.5pt;top:335.5pt;width:511.6pt;height:68.7pt"></div></div>
+<p class="x an" style="--b:355.8">답:</p>
+<div class="f" style="left:276.5pt;top:364.3pt"><span class="fig" data-srcpage="5" data-clip="276.5,364.3,319.5,384.6"></span></div>
+<p class="x b" style="--b:410.6">두 번째 방법</p>
+<div class="f" style="left:392.3pt;top:419.5pt"><span class="fig" data-srcpage="5" data-clip="392.3,419.5,554,499.8"></span></div>
+<p class="x" style="--b:430.7;--l:15.4pt;width:330pt">막대의 요소가 점 <span class="nw">$A$에서</span> 각 <span class="nw">$d\theta$로</span> 보이면, 이 요소의 길이는 <span class="nw">$dl = \dfrac{rd\theta}{\cos\theta}$이다</span>. 여기서 <span class="nw">$\theta$는</span> 요소를 향한 방향과 점 A에서 막대에 내린 수선 사이의 각이고, <span class="nw">$r = \dfrac{h}{\cos\theta}$는</span> 요소에서 점 <span class="nw">$A$까지의</span> 거리이다. 그러면 이 요소가 만드는 전기장의 세기는 <span class="nw">$\dfrac{\lambda dl}{4\pi\varepsilon_0 r^2}$이고</span>, 수선 방향의 성분은 다음과 같다.</p>
+<div class="f" style="left:163pt;top:491pt"><span class="fig" data-srcpage="5" data-clip="163,491,258,513"></span></div>
+<p class="x" style="--b:536.4">모든 요소에 대해 이 성분들을 더하면 다음을 얻는다.</p>
+<div class="f" style="left:160.5pt;top:545.5pt"><span class="fig" data-srcpage="5" data-clip="160.5,545.5,260.5,568"></span></div>
+
+<div class="f" style="left:46.5pt;top:606.5pt"><span class="fig" data-srcpage="5" data-clip="46.5,606.5,66,615"></span></div>
+<p class="x q" style="--b:613.5;left:75.1pt">퍽을 놓은 직후 퍽의 가속도의 크기와 방향을 구하여라.</p>
+<div><div class="rl" style="left:42.5pt;top:624pt;width:511.5pt;height:1.1pt"></div></div>
+<div class="f" style="left:392.3pt;top:631.4pt"><span class="fig" data-srcpage="5" data-clip="392.3,631.4,554,787.2"></span></div>
+<p class="x" style="--b:638.5;--l:10.6pt;width:335pt">입자가 중심에서 벗어나 있을 때 입자와 판의 상호작용은, 입자의 위치를 중심으로 하는 가능한 한 큰 직사각형과 남은 두 개의 가는 띠와의 상호작용으로 나타낼 수 있다(그림 참조). 대칭성 때문에 직사각형은 정사각형의 평면 안에서 전기장 성분을 갖지 않으므로, 이 성분은 띠들의 전기장만으로 정해진다. 띠의 폭은 띠에 수직인 방향으로의 입자 변위의 두 배와 같다. <span class="nw">$r \ll L$이므로</span> 1부의 결과를 이용하여 띠를 선전하 밀도가 <span class="nw">$\lambda_1 = 2r\sigma\sin\alpha$와</span> <span class="nw">$\lambda_2 = 2r\sigma\cos\alpha$인</span> 막대로 바꾸자. 각 막대에 의한 전기장의 세기는 <span class="nw">$E_{1,2} = \dfrac{\lambda_{1,2}}{2\sqrt{2}\pi\varepsilon_0(L/2)}$이다</span>. 막대들이 정사각형의 중심에서 각 <span class="nw">$2\varphi = \pi/2$로</span> 보이기 때문이다. 이 두 전기장은 서로 수직이므로(각각 자기 막대에 수직), 이들을 더하면 다음을 얻는다.</p>
+<div class="f" style="left:168pt;top:745pt"><span class="fig" data-srcpage="5" data-clip="168,745,253,773.5"></span></div>
+<p class="x" style="--b:810.1;width:335pt">\noindent 비 <span class="nw">$\dfrac{E_1}{E_2} = \mathrm{tg}\alpha$로부터</span>, 합성 전기장은 변에 대해 각 <span class="nw">$\alpha$를</span> 이루며 정사각형의 중심에서 바깥쪽을 향함을 얻는다.</p>
+</div>
+
+<!-- ===================== page 6: 문제 3 풀이 (2.1 끝, 2.2) ===================== -->
+<div class="page">
+<p class="x" style="--b:21.0;width:335pt">판과 퍽의 전하는 부호가 서로 반대이므로 퍽은 중심으로 끌려간다.</p>
+<p class="x" style="--b:30.7">따라서 퍽의 가속도는 점 <span class="nw">$O$를</span> 향하며 그 크기는 다음과 같다.</p>
+<div><div class="ab" style="left:42.5pt;top:39.7pt;width:511.6pt;height:69.3pt"></div></div>
+<p class="x an" style="--b:59.9">답:</p>
+<div class="f" style="left:277pt;top:68.8pt"><span class="fig" data-srcpage="6" data-clip="277,68.8,318.5,89.2"></span></div>
+
+<div class="f" style="left:46.5pt;top:140.5pt"><span class="fig" data-srcpage="6" data-clip="46.5,140.5,66,149"></span></div>
+<p class="x q" style="--b:147.3;left:75.2pt">퍽이 처음으로 판의 중심에서 가장 가까운 거리에 있게 되는 것은 언제인가?</p>
+<div><div class="rl" style="left:42.5pt;top:157.9pt;width:511.5pt;height:1.1pt"></div></div>
+<p class="x l" style="--b:178.2">이 전기장 속에서 퍽의 운동은 용수철 상수가 <span class="nw">$k = \dfrac{\sqrt{2}\sigma q}{\pi\varepsilon_0 L}$인</span> 용수철의 작용에 의한 운동과 같다. 운동은</p>
+<p class="x l" style="--b:201.6">주기가 <span class="nw">$T = 2\pi\sqrt{\dfrac{m}{k}} = \sqrt{\dfrac{2\sqrt{2}\pi^3\varepsilon_0 mL}{\sigma q}}$인</span> 조화 운동이며, 궤적은 정사각형의 중심을 지난다.</p>
+<div><div class="ab" style="left:42.5pt;top:216.5pt;width:511.6pt;height:51.7pt"></div></div>
+<p class="x an" style="--b:244.2">답: 퍽은 시간 <span class="nw big">$t = \dfrac{T}{4} = \sqrt{\dfrac{\pi^3\varepsilon_0 mL}{4\sqrt{2}\sigma q}}$</span> 후에 처음으로 중심에 있게 된다.</p>
+<div class="f" style="left:27.5pt;top:312pt"><span class="fig" data-srcpage="6" data-clip="27.5,312,145,320.5"></span></div>
+</div>
+
+<!-- ===================== page 7: 문제 3 배점 (1, 2.1) ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="7" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="7" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:79.1">배점</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="7" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="7" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="7" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:180.5pt"><span class="fig" data-srcpage="7" data-clip="46.5,180.5,66,189"></span></div>
+<p class="x q" style="--b:187.8;left:70.3pt">점 <span class="nw">$A$에서의</span> 전기장의 세기를 구하여라.</p>
+<div><div class="rl" style="left:42.5pt;top:198.5pt;width:511.5pt;height:1.1pt"></div></div>
+<div><div class="da" style="top:207pt"></div>
+<div class="tr" style="top:209pt;height:20.4pt"></div>
+<div class="tr" style="top:228.8pt;height:51pt"></div>
+<div class="tr" style="top:279.2pt;height:41.1pt"></div>
+<div class="tr" style="top:319.6pt;height:50.5pt"></div>
+<div class="tr" style="top:369.5pt;height:20.4pt"></div>
+<div class="tr" style="top:389.3pt;height:52.1pt"></div></div>
+<p class="x td" style="--b:221.3">전기장은 막대에 수직이다</p>
+<p class="x pt" style="--b:221.3">0.10</p>
+<p class="x td" style="--b:241.1">한 요소의 전기장을 점전하의 전기장으로 썼다</p>
+<p class="x pt" style="--b:241.1">1.00</p>
+<div class="f" style="left:250pt;top:249.6pt"><span class="fig" data-srcpage="7" data-clip="250,249.6,295,268.2"></span></div>
+<p class="x td" style="--b:291.5">전기장 세기의 성분을 올바르게 구했다:</p>
+<p class="x pt" style="--b:291.5">0.30</p>
+<div class="f" style="left:247.4pt;top:300pt"><span class="fig" data-srcpage="7" data-clip="247.4,300,298.5,308.5"></span></div>
+<p class="x td" style="--b:331.9">전기장 세기 성분의 요소를 적분 변수로 올바르게 나타냈다:</p>
+<p class="x pt" style="--b:331.9">0.70</p>
+<div class="f" style="left:244pt;top:340.4pt"><span class="fig" data-srcpage="7" data-clip="244,340.4,301,359"></span></div>
+<p class="x td" style="--b:381.8">적분 구간을 올바르게 잡았다(<span class="nw">$-\varphi$부터</span> <span class="nw">$\varphi$까지</span>)</p>
+<p class="x pt" style="--b:381.8">0.40</p>
+<p class="x td" style="--b:401.5">답</p>
+<p class="x pt" style="--b:401.5">1.50</p>
+<div class="f" style="left:230pt;top:410pt"><span class="fig" data-srcpage="7" data-clip="230,410,315,429.6"></span></div>
+
+<div class="f" style="left:46.5pt;top:473.5pt"><span class="fig" data-srcpage="7" data-clip="46.5,473.5,66,482"></span></div>
+<p class="x q" style="--b:480.2;left:75.1pt">퍽을 놓은 직후 퍽의 가속도의 크기와 방향을 구하여라.</p>
+<div><div class="rl" style="left:42.5pt;top:490.8pt;width:511.5pt;height:1.1pt"></div></div>
+<div><div class="da" style="top:499.3pt"></div>
+<div class="tr" style="top:501.4pt;height:20.2pt"></div>
+<div class="tr" style="top:520.9pt;height:20.3pt"></div>
+<div class="tr" style="top:540.6pt;height:20.4pt"></div>
+<div class="tr" style="top:560.4pt;height:44pt"></div>
+<div class="tr" style="top:603.8pt;height:31pt"></div>
+<div class="tr" style="top:634.2pt;height:53.2pt"></div>
+<div class="tr" style="top:686.8pt;height:20.2pt"></div>
+<div class="tr" style="top:706.4pt;height:54.3pt"></div></div>
+<p class="x td" style="--b:513.6">정사각형의 전기장을 두 띠의 전기장으로 바꿀 수 있음을 보였다</p>
+<p class="x pt" style="--b:513.6">1.00</p>
+<p class="x td" style="--b:533.3">한 띠의 크기 <span class="nw">$2r\cos\alpha$를</span> 올바르게 구했다</p>
+<p class="x pt" style="--b:533.3">0.50</p>
+<p class="x td" style="--b:552.9">다른 띠의 크기 <span class="nw">$2r\sin\alpha$를</span> 올바르게 구했다</p>
+<p class="x pt" style="--b:552.9">0.50</p>
+<p class="x td" style="--b:572.6">띠에 의한 전기장의 세기를 구했다</p>
+<p class="x pt" style="--b:572.6">1.00</p>
+<p class="x td" style="--b:584.3;--l:11.6pt"><span class="k">설명:</span> 공식 <span class="nw">$E = \frac{\lambda\sin\varphi}{2\pi\varepsilon_0 h} = \frac{2k\lambda\sin\varphi}{h}$</span> 또는 질문 1에서 얻은 공식을 이용해야 한다. 여기에 <span class="nw">$\varphi = \pi/4$와</span> <span class="nw">$h = L/2$를</span> 대입해야 한다. 이 대입 중 하나가 틀려도 이 항목의 점수는 준다.</p>
+<p class="x td" style="--b:616.1">판의 전기장의 세기를 성분별로 구했다</p>
+<p class="x pt" style="--b:616.1">0.90</p>
+<p class="x td" style="--b:626.2"><span class="k">설명:</span> 이 항목의 점수를 받으려면 <span class="nw">$\varphi = \pi/4$와</span> <span class="nw">$h = L/2$의</span> 대입을 모두 올바르게 해야 한다.</p>
+<p class="x td" style="--b:646.4">전기장 벡터의 크기를 구했다</p>
+<p class="x pt" style="--b:646.4">0.50</p>
+<div class="f" style="left:233.4pt;top:655.2pt"><span class="fig" data-srcpage="7" data-clip="233.4,655.2,311.6,675.8"></span></div>
+<p class="x td" style="--b:699.0">전기장 벡터 또는 가속도 벡터의 방향(AO 방향)을 구했다</p>
+<p class="x pt" style="--b:699.0">0.50</p>
+<p class="x td" style="--b:718.7">가속도의 크기를 구했다(이 항목은 답이므로 모든 것이 맞아야 한다)</p>
+<p class="x pt" style="--b:718.7">0.10</p>
+<div class="f" style="left:225.3pt;top:727.5pt"><span class="fig" data-srcpage="7" data-clip="225.3,727.5,320.6,749.1"></span></div>
+
+<div class="f" style="left:46.5pt;top:792.7pt"><span class="fig" data-srcpage="7" data-clip="46.5,792.7,66,801"></span></div>
+<p class="x q" style="--b:799.5;left:75.2pt">퍽이 처음으로 판의 중심에서 가장 가까운 거리에 있게 되는 것은 언제인가?</p>
+<div><div class="rl" style="left:42.5pt;top:810.1pt;width:511.5pt;height:1.1pt"></div>
+<div class="da" style="top:818.6pt"></div>
+<div class="tr" style="top:820.7pt;height:1.9pt;border-bottom:0"></div></div>
+</div>
+
+<!-- ===================== page 8: 문제 3 배점 (2.2 계속) ===================== -->
+<div class="page">
+<div><div class="tr" style="top:20.4pt;height:17.8pt;border-top:0"></div>
+<div class="tr" style="top:49.8pt;height:20.4pt"></div>
+<div class="tr" style="top:69.6pt;height:20.4pt"></div>
+<div class="tr" style="top:89.4pt;height:58.3pt"></div></div>
+<p class="x td" style="--b:30.2">운동이 OA 방향을 따르는 조화 운동임을 지적했다</p>
+<p class="x pt" style="--b:30.2">0.80</p>
+<p class="x td" style="--b:62.2">진동 주기 또는 각진동수를 구했다</p>
+<p class="x pt" style="--b:62.2">0.60</p>
+<p class="x td" style="--b:81.9">운동 시간 <span class="nw">$t = T/4$</span></p>
+<p class="x pt" style="--b:81.9">0.60</p>
+<p class="x td" style="--b:101.7">구하는 시간을 구했다(이 항목은 답이므로 모든 것이 맞아야 한다)</p>
+<p class="x pt" style="--b:101.7">1.00</p>
+<div class="f" style="left:209.6pt;top:110.7pt"><span class="fig" data-srcpage="8" data-clip="209.6,110.7,336,136"></span></div>
+<div class="f" style="left:27.5pt;top:173.4pt"><span class="fig" data-srcpage="8" data-clip="27.5,173.4,145,181.9"></span></div>
+</div>
+
+<!-- ===================== page 9: 문제 4 풀이 ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="9" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="9" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:78.9">풀이</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="9" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="9" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="9" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:180.5pt"><span class="fig" data-srcpage="9" data-clip="46.5,180.5,66,189"></span></div>
+<p class="x q" style="--b:187.8;left:70.5pt">모든 기하학적 크기가 2배인 도선 고리의 인덕턴스를 구하여라.</p>
+<div><div class="rl" style="left:42.5pt;top:198.5pt;width:511.5pt;height:1.1pt"></div></div>
+<p class="x" style="--b:212.8;--l:10.3pt">먼저 고리의 인덕턴스가 반지름에 비례함을 알아 두자. 실제로, 공간의 각 점에서 자기장의 세기(자기 유도)는 고리의 반지름에 반비례하여 줄어들고, 넓이는 반지름의 제곱에 비례하여 커진다. 따라서 고리에 흐르는 전류가 주어져 있을 때, 고리 평면을 지나는 자기 선속은 반지름에 정비례한다. 그러므로 반지름이 <span class="nw">$\frac{R}{2}$인</span> 고리의 인덕턴스는 <span class="nw">$\frac{L}{2}$이고</span>, 반지름이 <span class="nw">$2R$인</span> 고리는 <span class="nw">$2L$이다</span>.</p>
+<div><div class="ab" style="left:42.5pt;top:252.7pt;width:511.6pt;height:55.8pt"></div></div>
+<p class="x an" style="--b:272.9">답:</p>
+<div class="f" style="left:293pt;top:281.5pt"><span class="fig" data-srcpage="9" data-clip="293,281.5,303.5,289"></span></div>
+
+<div class="f" style="left:46.5pt;top:339.5pt"><span class="fig" data-srcpage="9" data-clip="46.5,339.5,66,348"></span></div>
+<p class="x q2" style="--b:346.8;text-indent:27.3pt">반지름 <span class="nw">$R$인</span> 고리를 기하학적 크기가 두 배인 초전도 고리 안에 넣으면, 이 고리의 인덕턴스 <span class="nw">$L_2$는</span> 얼마가 되는가? 두 번째 경우에도 두 고리의 평면과 중심은 일치한다.</p>
+<div><div class="rl" style="left:42.5pt;top:366.8pt;width:511.5pt;height:1.1pt"></div></div>
+<p class="x" style="--b:382.4;--l:10.6pt">우리 고리의 안쪽 영역(영역 A), 즉 반지름이 <span class="nw">$\frac{R}{2}$인</span> 동심원을 지나는 자기 선속은 고리 평면을 지나는 전체 선속의 일부 <span class="nw">$\alpha$이다</span>.</p>
+<div class="f" style="left:280.5pt;top:401.6pt"><span class="fig" data-srcpage="9" data-clip="280.5,401.6,316.5,410"></span></div>
+<p class="x" style="--b:433.9">그러면 우리 고리 안쪽에서 안쪽 반지름이 <span class="nw">$\frac{R}{2}$이고</span> 바깥쪽 반지름이 <span class="nw">$R$인</span> 영역(영역 B)을 지나는 자기 선속은</p>
+<div class="f" style="left:270pt;top:443.6pt"><span class="fig" data-srcpage="9" data-clip="270,443.6,325,453.3"></span></div>
+<p class="x" style="--b:475.9">또한 안쪽 반지름이 <span class="nw">$R$이고</span> 바깥쪽 반지름이 <span class="nw">$2R$이며</span> 우리 고리를 바깥에서 둘러싸는 영역 C를 지나는 선속을 <span class="nw">$\Phi_C$로</span> 나타내자.</p>
+<div class="f" style="left:280.8pt;top:484.9pt"><span class="fig" data-srcpage="9" data-clip="280.8,484.9,316.1,493.9"></span></div>
+<p class="x" style="--b:516.7">첫 번째 경우(초전도 작은 고리가 안쪽에 있을 때) 초전도 회로로 둘러싸인 영역 A를 지나는 자기 선속은 0이다.</p>
+<div class="f" style="left:260pt;top:525.5pt"><span class="fig" data-srcpage="9" data-clip="260,525.5,336.6,543.3"></span></div>
+<p class="x" style="--b:565.6">여기서 <span class="nw">$I_1$은</span> 초전도 작은 고리에 생기는 전류이다. 이때 반지름 <span class="nw">$R$인</span> 고리의 평면을 지나는 전체 선속은</p>
+<div class="f" style="left:245.5pt;top:574.3pt"><span class="fig" data-srcpage="9" data-clip="245.5,574.3,350.6,592.1"></span></div>
+<p class="x" style="--b:615.0">두 번째 경우, 전류 <span class="nw">$I$가</span> 흐르는 우리 고리는 반지름이 <span class="nw">$2R$이고</span> 인덕턴스가 <span class="nw">$2L$인</span> 초전도 고리로 둘러싸인다. 바깥 고리에는 그 평면을 지나는 자기장의 전체 선속이 0이 되도록 하는 전류 <span class="nw">$I_2$가</span> 생긴다.</p>
+<div class="f" style="left:262pt;top:632.5pt"><span class="fig" data-srcpage="9" data-clip="262,632.5,334.5,641.6"></span></div>
+<p class="x" style="--b:664.5">이때 반지름 <span class="nw">$R$인</span> 고리의 평면을 지나는 전체 선속은</p>
+<div class="f" style="left:254.8pt;top:673.2pt"><span class="fig" data-srcpage="9" data-clip="254.8,673.2,341.4,681.4"></span></div>
+<p class="x" style="--b:703.8">앞의 식들로부터 다음을 얻는다.</p>
+<div class="f" style="left:222.5pt;top:712.5pt"><span class="fig" data-srcpage="9" data-clip="222.5,712.5,373.7,722.1"></span></div>
+<p class="x" style="--b:744.8">이어서</p>
+<div class="f" style="left:223.3pt;top:752.8pt"><span class="fig" data-srcpage="9" data-clip="223.3,752.8,373.5,762.5"></span></div>
+<p class="x" style="--b:785.7">따라서 <span class="nw">$L_2 = L_1$이다</span>.</p>
+<div><div class="ab" style="left:42.5pt;top:794.7pt;width:511.6pt;height:27.9pt;border-bottom:0;border-radius:3pt 3pt 0 0"></div></div>
+<p class="x an" style="--b:814.9">답:</p>
+</div>
+
+<!-- ===================== page 10: 문제 4 풀이 (계속) ===================== -->
+<div class="page">
+<div><div class="ab" style="left:42.5pt;top:20.4pt;width:511.6pt;height:27.9pt;border-top:0;border-radius:0 0 3pt 3pt"></div></div>
+<div class="f" style="left:284pt;top:20.6pt"><span class="fig" data-srcpage="10" data-clip="284,20.6,312,28.4"></span></div>
+<p class="x l" style="--b:56.7">풀이 2 (상호 인덕턴스)</p>
+<p class="x" style="--b:75.9">닮음에 의한 논의는 두 회로의 상호 인덕턴스에도 적용된다. 계의 모든 기하학적 크기를 2배로 늘리면 상호 인덕턴스 계수도 2배가 된다. 따라서 반지름이 <span class="nw">$R$과</span> <span class="nw">$R/2$인</span> 두 고리의 상호 인덕턴스 계수가 <span class="nw">$L_{12}$이면</span>, 반지름이 <span class="nw">$2R$과</span> <span class="nw">$R$인</span> 두 고리의 상호 인덕턴스 계수는 <span class="nw">$2L_{12}$이다</span>. 이를 이용하면 첫 번째 풀이의 식들은 다음과 같이 된다.</p>
+<div class="f" style="left:259.9pt;top:113.4pt"><span class="fig" data-srcpage="10" data-clip="259.9,113.4,336.7,131.1"></span></div>
+<div class="f" style="left:259.2pt;top:162.3pt"><span class="fig" data-srcpage="10" data-clip="259.2,162.3,337.1,170.6"></span></div>
+<div class="f" style="left:268.8pt;top:201.8pt"><span class="fig" data-srcpage="10" data-clip="268.8,201.8,327.8,210.5"></span></div>
+<div class="f" style="left:257.2pt;top:241.1pt"><span class="fig" data-srcpage="10" data-clip="257.2,241.1,339.1,249.9"></span></div>
+<p class="x" style="--b:272.4">이 식들로부터 또한 다음이 나온다.</p>
+<div class="f" style="left:262.7pt;top:281.1pt"><span class="fig" data-srcpage="10" data-clip="262.7,281.1,333.3,301.1"></span></div>
+<div class="f" style="left:27.5pt;top:333.6pt"><span class="fig" data-srcpage="10" data-clip="27.5,333.6,145,342.1"></span></div>
+</div>
+
+<!-- ===================== page 11: 문제 4 배점 ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="11" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="11" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:79.1">배점</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="11" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="11" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="11" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:180.5pt"><span class="fig" data-srcpage="11" data-clip="46.5,180.5,66,189"></span></div>
+<p class="x q" style="--b:187.8;left:70.5pt">모든 기하학적 크기가 2배인 도선 고리의 인덕턴스를 구하여라.</p>
+<div><div class="rl" style="left:42.5pt;top:198.5pt;width:511.5pt;height:1.1pt"></div>
+<div class="da" style="top:207pt"></div>
+<div class="tr" style="top:209pt;height:50.7pt"></div>
+<div class="tr" style="top:259.1pt;height:42.1pt"></div>
+<div class="tr" style="top:300.5pt;height:42pt"></div></div>
+<p class="x td" style="--b:221.3">공간의 모든 점에서 자기장의 세기(자기 유도)와 기하학적 크기 사이의 관계를 제시했다</p>
+<p class="x pt" style="--b:221.3">1.50</p>
+<div class="f" style="left:259.4pt;top:230.1pt"><span class="fig" data-srcpage="11" data-clip="259.4,230.1,285.5,247.5"></span></div>
+<p class="x td" style="--b:271.3">넓이와 기하학적 크기 사이의 관계를 제시했다</p>
+<p class="x pt" style="--b:271.3">0.50</p>
+<div class="f" style="left:260.1pt;top:280pt"><span class="fig" data-srcpage="11" data-clip="260.1,280,285.1,288.9"></span></div>
+<p class="x td" style="--b:312.7">크기가 두 배인 고리의 인덕턴스를 구했다</p>
+<p class="x pt" style="--b:312.7">1.00</p>
+<div class="f" style="left:243.3pt;top:321.4pt"><span class="fig" data-srcpage="11" data-clip="243.3,321.4,301.7,331.1"></span></div>
+
+<div class="f" style="left:46.5pt;top:374.5pt"><span class="fig" data-srcpage="11" data-clip="46.5,374.5,66,383"></span></div>
+<p class="x q2" style="--b:381.3;text-indent:27.3pt">반지름 <span class="nw">$R$인</span> 고리를 기하학적 크기가 두 배인 초전도 고리 안에 넣으면, 이 고리의 인덕턴스 <span class="nw">$L_2$는</span> 얼마가 되는가? 두 번째 경우에도 두 고리의 평면과 중심은 일치한다.</p>
+<div><div class="rl" style="left:42.5pt;top:401.5pt;width:511.5pt;height:1.1pt"></div>
+<div class="da" style="top:410pt"></div>
+<div class="tr" style="top:412.1pt;height:20.3pt"></div>
+<div class="tr" style="top:431.6pt;height:20.3pt"></div>
+<div class="tr" style="top:451.3pt;height:29.9pt"></div>
+<div class="tr" style="top:480.6pt;height:89.9pt"></div>
+<div class="tr" style="top:569.9pt;height:20.3pt"></div>
+<div class="tr" style="top:589.6pt;height:80.2pt"></div>
+<div class="tr" style="top:669.2pt;height:20.3pt"></div>
+<div class="tr" style="top:688.9pt;height:71.8pt"></div>
+<div class="tr" style="top:760.1pt;height:20.3pt"></div>
+<div class="tr" style="top:779.8pt;height:42.8pt;border-bottom:0"></div></div>
+<p class="x td" style="--b:424.3">초전도 고리를 지나는 선속이 0이라는 사실을 명시했거나 이용했다</p>
+<p class="x pt" style="--b:424.3">1.30</p>
+<p class="x td" style="--b:444.0">고리를 지나는 선속이 두 고리의 자기장이 만드는 선속의 합이라는 사실을 명시했거나 이용했다</p>
+<p class="x pt" style="--b:444.0">0.50</p>
+<p class="x td" style="--b:463.6">한 고리가 평면의 여러 부분을 지나게 만드는 선속들이 서로 비례한다는 사실을 명시했거나 이용했다</p>
+<p class="x pt" style="--b:463.6">1.00</p>
+<p class="x td" style="--b:492.9"><span class="k">첫 번째</span> 경우 초전도 고리의 평면을 지나는 선속 <span class="nw">$\Phi_{A1}$에</span> 대한 식을 썼다</p>
+<p class="x pt" style="--b:492.9">0.70</p>
+<div class="f" style="left:234pt;top:501.6pt"><span class="fig" data-srcpage="11" data-clip="234,501.6,311.6,519.4"></span></div>
+<div class="f" style="left:234.5pt;top:540.8pt"><span class="fig" data-srcpage="11" data-clip="234.5,540.8,311.1,559.2"></span></div>
+<p class="x td" style="--b:582.1">위 식에서 선속들을 올바르게 썼다</p>
+<p class="x pt" style="--b:582.1">0.60</p>
+<p class="x td" style="--b:601.8"><span class="k">첫 번째</span> 경우 반지름 <span class="nw">$R$인</span> 고리의 평면을 지나는 선속을 통해 선속 <span class="nw">$\Phi_1$에</span> 대한 식을 썼다</p>
+<p class="x pt" style="--b:601.8">0.70</p>
+<div class="f" style="left:233.6pt;top:610.4pt"><span class="fig" data-srcpage="11" data-clip="233.6,610.4,311.6,618.7"></span></div>
+<div class="f" style="left:220.6pt;top:640.2pt"><span class="fig" data-srcpage="11" data-clip="220.6,640.2,324.5,658.1"></span></div>
+<p class="x td" style="--b:681.5">위 식에서 선속들을 올바르게 썼다</p>
+<p class="x pt" style="--b:681.5">0.60</p>
+<p class="x td" style="--b:701.2"><span class="k">두 번째</span> 경우 초전도 고리의 평면을 지나는 선속에 대한 식을 썼다</p>
+<p class="x pt" style="--b:701.2">0.70</p>
+<div class="f" style="left:243.3pt;top:709.8pt"><span class="fig" data-srcpage="11" data-clip="243.3,709.8,302.3,718.1"></span></div>
+<div class="f" style="left:236.7pt;top:739.6pt"><span class="fig" data-srcpage="11" data-clip="236.7,739.6,309.2,749.2"></span></div>
+<p class="x td" style="--b:772.3">위 식에서 선속들을 올바르게 썼다</p>
+<p class="x pt" style="--b:772.3">0.60</p>
+<p class="x td" style="--b:792.0"><span class="k">두 번째</span> 경우 반지름 <span class="nw">$R$인</span> 고리의 평면을 지나는 선속 <span class="nw">$\Phi_2$에</span> 대한 식을 썼다</p>
+<p class="x pt" style="--b:792.0">0.70</p>
+<div class="f" style="left:231.6pt;top:800.7pt"><span class="fig" data-srcpage="11" data-clip="231.6,800.7,313.6,808.9"></span></div>
+</div>
+
+<!-- ===================== page 12: 문제 4 배점 (계속) ===================== -->
+<div class="page">
+<div><div class="tr" style="top:20.4pt;height:27.5pt;border-top:0"></div>
+<div class="tr" style="top:49.9pt;height:20.3pt"></div>
+<div class="tr" style="top:69.6pt;height:84.4pt"></div></div>
+<div class="f" style="left:229.3pt;top:27.6pt"><span class="fig" data-srcpage="12" data-clip="229.3,27.6,315.9,35.9"></span></div>
+<p class="x td" style="--b:62.2">위 식에서 선속들을 올바르게 썼다</p>
+<p class="x pt" style="--b:62.2">0.60</p>
+<p class="x td" style="--b:82.0">인덕턴스 <span class="nw">$L_2$를</span> 구했다</p>
+<p class="x pt" style="--b:82.0">1.00</p>
+<div class="f" style="left:237.2pt;top:90.7pt"><span class="fig" data-srcpage="12" data-clip="237.2,90.7,307.8,110.7"></span></div>
+<div class="f" style="left:229.5pt;top:132.8pt"><span class="fig" data-srcpage="12" data-clip="229.5,132.8,315.4,142.5"></span></div>
+<div class="f" style="left:27.5pt;top:189.2pt"><span class="fig" data-srcpage="12" data-clip="27.5,189.2,145,197.7"></span></div>
+</div>
+
+<!-- ===================== page 13: 문제 5 풀이 ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="13" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="13" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:78.9">풀이</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="13" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="13" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="13" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:181pt"><span class="fig" data-srcpage="13" data-clip="46.5,181,56.5,189"></span></div>
+<p class="x q" style="--b:187.9">구를 이루는 물질의 굴절률이 일정하며 <span class="nw">$n = 2$이다</span>.</p>
+<div><div class="rl" style="left:42.5pt;top:198.5pt;width:511.5pt;height:1.1pt"></div></div>
+<div class="f" style="left:392.3pt;top:205.8pt"><span class="fig" data-srcpage="13" data-clip="392.3,205.8,554,379.2"></span></div>
+<p class="x wn" style="--b:212.8;--l:12.3pt;width:335pt">먼저 첫 번째 경우를 생각하자. 이때 구의 표면에서 굴절된 뒤 광선은 직선을 따라 나아간다(그림 2). 광선이 빈 공간 안으로 들어가려면 두 조건이 만족되어야 한다. 굴절된 광선이 빈 공간의 표면에 닿아야 하고, 이때 입사각이 이 표면에서 전반사가 일어나는 각보다 작아야 한다. 작도로부터 두 번째 조건이 더 엄격함을 알 수 있다. 빈 공간의 표면을 스치는 ‘가장 바깥쪽’ 광선은 이 표면에 <span class="nw">$90^\circ$로</span> 입사하는 반면, 이 표면에 전반사 각 <span class="nw">$\varphi = arcsin\left(\frac{1}{n}\right)$로</span> 입사하는 광선은 더 작은 굴절각 <span class="nw">$\beta$에</span> 대응한다. 삼각형 OAB에 대한 사인 법칙으로부터 <span class="nw">$\dfrac{2R}{\sin(\pi-\varphi)} = \dfrac{R}{\sin(\beta)} = \dfrac{nR}{\sin(\alpha)}$이다</span>. 따라서 <span class="nw">$\sin(\varphi) = \dfrac{1}{n} = \dfrac{2}{n}\sin(\alpha_{max})$이다</span>. 즉 <span class="nw">$\alpha_{max} = 30^\circ$이므로</span>, 빈 공간 안으로 들어가려면 구 표면에 대한 광선의 입사각이 조건 <span class="nw">$\alpha &lt; 30^\circ$를</span> 만족해야 한다.</p>
+<div><div class="ab" style="left:42.5pt;top:385.5pt;width:511.6pt;height:36.2pt"></div></div>
+<p class="x an" style="--b:405.8">답: <span class="nw">$\alpha &lt; 30^\circ$</span></p>
+
+<div class="f" style="left:46.5pt;top:453pt"><span class="fig" data-srcpage="13" data-clip="46.5,453,56.5,461"></span></div>
+<p class="x q" style="--b:459.9">구를 이루는 물질의 굴절률이 중심으로부터의 거리 <span class="nw">$r$이</span> 커짐에 따라 선형으로 줄어든다: <span class="nw">$n(r) = 2.5 - 0.5\frac{r}{R}, R \le r \le 2R$</span>.</p>
+<div><div class="rl" style="left:42.5pt;top:470.6pt;width:511.5pt;height:1.1pt"></div></div>
+<div class="f" style="left:392.3pt;top:478pt"><span class="fig" data-srcpage="13" data-clip="392.3,478,554,571.6"></span></div>
+<p class="x wn" style="--b:484.9;--l:10.5pt;width:335pt">두 번째 경우의 분석은 광학 밀도가 변하는 구대칭 매질에서 광선 방향이 바뀌는 법칙을 세우는 것으로 시작하자. 안쪽 반지름과 바깥쪽 반지름이 각각 <span class="nw">$r_1$과</span> <span class="nw">$r_2$인</span> 얇은 구껍질 층을 광선이 지나가는 것을 생각하자. 이 층 안에서 굴절률은 일정하여 <span class="nw">$n_2$와</span> 같고, 층의 안쪽 표면 아래에서는 <span class="nw">$n_1$과</span> 같다고 하자(그림 3). 광선이 입사점 A로 그은 반지름에 대해 각 <span class="nw">$\varphi_2$로</span> 이 층에 들어간다고 하자. 그러면 층의 안쪽 표면에 대한 입사각 <span class="nw">$\beta$는</span> 다시 사인 법칙으로 구할 수 있다: <span class="nw">$\dfrac{r_2}{\sin(\pi-\beta)} = \dfrac{r_1}{\sin(\varphi_2)}$</span>, 즉 <span class="nw">$\sin(\beta) = \dfrac{r_2}{r_1}\sin(\varphi_2)$이다</span>. 다음 층으로 넘어간 뒤 반지름에 대한 광선의 기울기 각은 굴절 법칙으로 정해진다: <span class="nw">$\sin(\varphi_1) = \dfrac{n_2}{n_1}\sin(\beta) = \dfrac{n_2r_2}{n_1r_1}\sin(\varphi_2)$</span>. 이로부터 굴절률이 변하는 구대칭 매질에서 움직일 때 <span class="nw">$nr\sin(\varphi) = const$임을</span> 알 수 있다. 이 결과를 우리 문제에 적용하면 <span class="nw">$nr\sin(\varphi) = 2Rsin(\alpha)$이다</span>. 빈 공간의 표면에 대한 광선의 입사각은 전반사 각보다 작아야 하고 (<span class="nw">$\sin\left[\varphi\left(R\right)\right] &lt; \frac{1}{n(R)}$</span>), <span class="nw">$n(R)\sin[\varphi(R)] = 2sin(\alpha)$이므로</span> <span class="nw">$sin\left(\alpha\right) &lt; \frac{1}{2}$이고</span>, 빈 공간 안으로 들어가려면 구 표면에 대한 광선의 입사각이 조건 <span class="nw">$\alpha &lt; 30^\circ$를</span> 만족해야 한다.</p>
+<div class="f" style="left:392.3pt;top:641.2pt"><span class="fig" data-srcpage="13" data-clip="392.3,641.2,554,817.1"></span></div>
+<p class="x wn" style="--b:648.0;--l:10.7pt;width:335pt">그러나 이런 <span class="nw">$\alpha$에서</span> 광선이 빈 공간의 경계까지 ‘도달’하려면, 광선이 빈 공간을 비켜 지나가지 않아야 한다. 빈 공간 옆을 지나갈 때 광선과 반지름 사이의 각은 어떤 점에서 <span class="nw">$\varphi = 90^\circ$에</span> 이르러야 하고, 그러면 <span class="nw">$r$은</span> 더 이상 줄어들지 않는다는 점에 주목하자. 이 경우 광선은 원을 따라 움직이거나 ‘되돌아서’ 결국 층을 떠난다. 우리의 경우 이것이 불가능함을 보이자. 곱 <span class="nw">$f\left(r\right) = n\left(r\right)\cdot r = 2.5\cdot r - 0.5\frac{r^2}{R}$은</span> <span class="nw">$r = 2.5R$에서</span> 최댓값을 갖는 이차식이다. 구간 <span class="nw">$R &lt; r &lt; 2R$에서</span> 함수 <span class="nw">$f\left(r\right)$는</span> <span class="nw">$r$이</span> 커질수록 언제나 증가하고, <span class="nw">$f\left(r\right)sin\varphi = C$이므로</span> 중심에 가까워질수록 각 <span class="nw">$\varphi$는</span> 언제나 커진다. 최종 각이 <span class="nw">$\arcsin\left(\frac{1}{2}\right) = 30^\circ &lt; 90^\circ$보다</span> 작으므로, 더 큰 반지름에서도 각은 <span class="nw">$90^\circ$까지</span> 커질 수 없다. 결국 모든 <span class="nw">$\alpha &lt; 30^\circ$에서</span> 광선은 빈 공간의 경계에 도달하여 안으로 들어간다(그림 4).</p>
+</div>
+
+<!-- ===================== page 14: 문제 5 풀이 (답) ===================== -->
+<div class="page">
+<div><div class="ab" style="left:42.5pt;top:20.4pt;width:511.6pt;height:36.6pt"></div></div>
+<p class="x an" style="--b:41.0">답: 모든 <span class="nw">$\alpha &lt; 30^\circ$에서</span> 광선은 빈 공간의 경계에 도달하여 안으로 들어간다.</p>
+<div class="f" style="left:27.5pt;top:94.7pt"><span class="fig" data-srcpage="14" data-clip="27.5,94.7,145,103.1"></span></div>
+</div>
+
+<!-- ===================== page 15: 문제 5 배점 ===================== -->
+<div class="page">
+<div class="f" style="left:27.5pt;top:26.5pt"><span class="fig" data-srcpage="15" data-clip="27.5,26.5,52,44"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="15" data-clip="518,30.5,528.5,40.5"></span></div>
+<p class="x tt" style="--b:79.1">배점</p>
+<div><div class="rl" style="left:28.2pt;top:94.4pt;width:540.2pt;height:0.5pt"></div></div>
+<div class="f" style="left:40pt;top:109pt"><span class="fig" data-srcpage="15" data-clip="40,109,46.5,117"></span></div>
+<div class="f" style="left:40pt;top:129.2pt"><span class="fig" data-srcpage="15" data-clip="40,129.2,46.5,137.2"></span></div>
+<div class="f" style="left:40pt;top:149.4pt"><span class="fig" data-srcpage="15" data-clip="40,149.4,46.5,157.4"></span></div>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+
+<div class="f" style="left:46.5pt;top:181pt"><span class="fig" data-srcpage="15" data-clip="46.5,181,56.5,189"></span></div>
+<p class="x q" style="--b:187.9">구를 이루는 물질의 굴절률이 일정하며 <span class="nw">$n = 2$이다</span>.</p>
+<div><div class="rl" style="left:42.5pt;top:198.5pt;width:511.5pt;height:1.1pt"></div>
+<div class="da" style="top:207pt"></div>
+<div class="tr" style="top:209pt;height:20.4pt"></div>
+<div class="tr" style="top:228.7pt;height:20.3pt"></div>
+<div class="tr" style="top:248.4pt;height:20.3pt"></div>
+<div class="tr" style="top:268.1pt;height:20.3pt"></div></div>
+<p class="x td" style="--b:221.3">구 표면에서의 굴절 법칙을 올바르게 썼다(풀이에서 이용했다).</p>
+<p class="x pt" style="--b:221.3">0.50</p>
+<p class="x td" style="--b:241.1">첫 번째 경우에 굴절각과 빈 공간 표면에 대한 입사각 사이의 관계를 올바르게 썼다.</p>
+<p class="x pt" style="--b:241.1">0.50</p>
+<p class="x td" style="--b:260.6">광선이 빈 공간 안으로 들어갈 수 있는지는 전반사 현상에 의해 제한됨을 지적했다.</p>
+<p class="x pt" style="--b:260.6">2.00</p>
+<p class="x td" style="--b:280.3">첫 번째 경우에 대한 조건 <span class="nw">$\alpha &lt; 30^\circ$를</span> 얻었다.</p>
+<p class="x pt" style="--b:280.3">1.00</p>
+
+<div class="f" style="left:46.5pt;top:319.5pt"><span class="fig" data-srcpage="15" data-clip="46.5,319.5,56.5,328"></span></div>
+<p class="x q" style="--b:327.1">구를 이루는 물질의 굴절률이 중심으로부터의 거리 <span class="nw">$r$이</span> 커짐에 따라 선형으로 줄어든다: <span class="nw">$n(r) = 2.5 - 0.5\frac{r}{R}, R \le r \le 2R$</span>.</p>
+<div><div class="rl" style="left:42.5pt;top:337.7pt;width:511.5pt;height:1.1pt"></div>
+<div class="da" style="top:346.2pt"></div>
+<div class="tr" style="top:348.2pt;height:33.2pt"></div>
+<div class="tr" style="top:380.8pt;height:23.4pt"></div>
+<div class="tr" style="top:403.6pt;height:20.2pt"></div>
+<div class="tr" style="top:423.2pt;height:20.3pt"></div>
+<div class="tr" style="top:442.8pt;height:20.3pt"></div>
+<div class="tr" style="top:462.5pt;height:20.4pt"></div></div>
+<div class="f" style="left:49.5pt;top:357pt"><span class="fig" data-srcpage="15" data-clip="49.5,357,58.5,363.2"></span></div>
+<p class="x td" style="--b:362.2;--l:11.2pt;text-indent:14pt;left:48.3pt">경우 2에서, 반지름이 바뀔 때 각 구껍질 층 안에서 각 <span class="nw">$\varphi$의</span> 변화를 고려하여 각 구면에서 광선의 굴절 법칙을 이용한다는 아이디어를 사용했다.</p>
+<p class="x pt" style="--b:362.2">2.00</p>
+<div class="f" style="left:49.5pt;top:389.4pt"><span class="fig" data-srcpage="15" data-clip="49.5,389.4,59.3,395.5"></span></div>
+<p class="x td" style="--b:394.6;left:62.9pt">광선의 굴절 법칙을 적용할 때 <span class="nw">$n\cdot sin(\varphi) = const$를</span> 이용했다.</p>
+<p class="x pt" style="--b:394.6">1.00</p>
+<p class="x td" style="--b:415.9"><span class="nw">$n\cdot r\cdot\sin(\varphi) = const$와</span> 동등한 식을 근거를 들어 세웠다</p>
+<p class="x pt" style="--b:415.9">2.00</p>
+<p class="x td" style="--b:435.5"><span class="nw">$n\cdot r\cdot\sin(\varphi) = const$와</span> 동등한 식을 풀이에서 이용했다.</p>
+<p class="x pt" style="--b:435.5">1.00</p>
+<p class="x td" style="--b:455.2">두 번째 경우에 대한 조건 <span class="nw">$\alpha &lt; 30^\circ$를</span> 얻었다.</p>
+<p class="x pt" style="--b:455.2">2.00</p>
+<p class="x td" style="--b:474.9">두 번째 경우에 광선이 빈 공간의 표면에 도달함을 증명했다.</p>
+<p class="x pt" style="--b:474.9">1.00</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="15" data-clip="27.5,808.5,145,817"></span></div>
+</div>
+
+</body></html>

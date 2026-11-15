@@ -1,0 +1,925 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* RuPhO 2021 (LV = 제55회), 9학년 이론 풀이 및 배점 — Korean edition on the original layout.
+   ORIGINAL: 14 A4 pages printed from the olympiad web page (no text layer: every glyph is a vector path, figures are
+   images). Each "page" of the site shows the web chrome: logo (stamped), page heading "Решение"/"Разбалловка"
+   (풀이/배점), menu links "Условие"/"Решение"/"Разбалловка" (조건/풀이/배점, menu icons T/S/M stamped), the question
+   badge "N points" (stamped) and the English footer "2020 -- We are what they grow beyond." (stamped; typed on p13,
+   where the original prints the answer line over it).
+   Body: Open Sans ~6.9pt, line pitch 9.5pt (10.5-13.5pt where inline formulas are tall), text column x 43..554.
+   Marking tables: text x 48.5, points column centred on 528.2. Table rules, separators and answer boxes are redrawn
+   from the original's vector rectangles (.bx inside the static .dc wrapper so check.py ignores them).
+   Stamped: figures, display formulas without Cyrillic, badges, logo, footer. Retyped in KaTeX: displays with
+   F_тр (-> F_fr), C_ж (-> C_l, liquid), Russian words (малое/большое трение), answers with units м/с, В, мкА, кОм.
+   Figure labels with Cyrillic covered by white .ov labels: subscript "тр" -> fr (p3-5), "2В" -> 2V (p13),
+   "1мкА" -> 1 μA (p13).
+   PLACEMENT: every block by the original's first baseline --b (pt), top = b - l/2 - 0.3155*fs + 0.7pt. */
+body{font-family:CM,KB,serif;font-size:6.9pt;line-height:9.5pt;word-break:keep-all;color:#3f4254}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x .katex{font-size:1.15em!important}
+.x{position:absolute;margin:0;left:43pt;width:511pt;--l:9.5pt;--fs:6.9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.l{text-align:left}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hh{--fs:8.8pt;color:#181c32;text-align:left;width:200pt}          /* page heading 풀이 / 배점 */
+.mn{left:54.9pt;width:200pt;font-weight:bold;text-decoration:underline;text-align:left}   /* menu links */
+.q{left:72.7pt;width:481pt;text-align:left}                       /* question line after the badge */
+.q2{text-indent:29.8pt;text-align:left}                           /* two-line question: continuation at x 42.9 */
+.ans{left:54.6pt;width:490pt;text-align:left}                     /* "답:" inside the answer box */
+.t{left:48.5pt;width:450pt;text-align:left}                       /* marking-table cell text */
+.pt{left:503pt;width:51pt;text-align:center}                      /* marking-table points */
+.m{color:#9a9a9a;margin-right:2.5pt}                              /* grey method labels M1, M2 */
+.f{position:absolute;line-height:0}
+.ov{position:absolute;white-space:nowrap;background:#fff;color:#000;text-align:center}
+.ovf{font-family:CM,serif;font-size:7pt}
+.ovv{font-family:'Times New Roman',serif;font-weight:bold;font-size:12pt}
+.dc{position:static}
+.bx{position:absolute;box-sizing:content-box}
+.ft{position:absolute;font-family:Arial,sans-serif;font-size:6.6pt;line-height:6.6pt;color:#181c32;white-space:nowrap}
+.nw{white-space:nowrap}
+.up{margin-top:-1.25pt}                                           /* first line holds an arrow vector: it grows 1.25pt */
+</style></head><body>
+
+<!-- ============ page 1: 문제 1 풀이 ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.50pt;top:490.18pt;width:507.25pt;height:32.92pt;border:2.16pt solid #f3f6f9;border-radius:2pt"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="1" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="1" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">풀이</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="1" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="1" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="1" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="1" data-clip="46.8,181.1,63.5,188.8"></span></div>
+<p class="x q" style="--b:188">강의 유속을 구하여라.</p>
+<p class="x" style="--b:213">물과 함께 움직이는 기준계에서 뗏목은 강둑에 대해 $45^\circ$의 각도로 움직이고(이는 속도 덧셈 법칙에서 나온다), 시간 $t$ 동안 거리 <span class="nw">$OA$만큼</span> 이동한다. 같은 시간 동안 강물은 뗏목을 거리 <span class="nw">$AB = ut$만큼</span> 떠내려 보낸다. 거리 <span class="nw">$AH = OH = d$임에</span> 주목하자.</p>
+<div class="f" style="left:164.2pt;top:230.4pt"><span class="fig" data-srcpage="1" data-clip="164.2,230.4,432.3,443.4"></span></div>
+<p class="x" style="--b:455.5">피타고라스 정리 <span class="nw">$(HB)^2 = l^2 - d^2$와</span> 관계식 <span class="nw">$ut = AH + HB$를</span> 이용하면 다음을 얻는다.</p>
+<div class="f" style="left:267.6pt;top:464.8pt"><span class="fig" data-srcpage="1" data-clip="267.6,464.8,328.0,484.4"></span></div>
+<p class="x ans" style="--b:511.5">답: $u \approx 3.14\,\mathrm{m/s}$.</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="1" data-clip="27.5,808.5,144.8,816.8"></span></div>
+</div>
+
+<!-- ============ page 2: 문제 1 배점 ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:209.04pt;width:0.60pt;height:39.48pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:209.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:247.92pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:247.92pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:267.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:267.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:287.16pt;width:0.60pt;height:42.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:287.16pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:329.16pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:329.16pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:351.96pt;width:0.60pt;height:33.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:351.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:384.48pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:384.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:407.28pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:407.28pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:426.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:209.04pt;width:0.60pt;height:39.48pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:247.92pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:267.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:287.16pt;width:0.60pt;height:42.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:329.16pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:351.96pt;width:0.60pt;height:33.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:384.48pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:407.28pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:209.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:247.92pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:267.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:287.16pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:329.16pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:351.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:384.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:407.28pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:426.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:209.04pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:209.64pt;width:0.60pt;height:38.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:247.92pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:247.92pt;width:0.60pt;height:19.56pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:267.48pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:267.48pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:268.08pt;width:0.60pt;height:0.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:287.16pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:287.16pt;width:0.60pt;height:42.00pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:329.16pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:329.16pt;width:0.60pt;height:22.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:351.96pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:351.96pt;width:0.60pt;height:32.52pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:384.48pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:384.48pt;width:0.60pt;height:22.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:407.28pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:407.28pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:426.96pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="2" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="2" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">배점</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="2" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="2" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="2" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="2" data-clip="46.8,181.1,63.5,188.8"></span></div>
+<p class="x q" style="--b:188">강의 유속을 구하여라.</p>
+<div class="f" style="left:41.5pt;top:206pt"><span class="fig" data-srcpage="2" data-clip="41.5,206.0,49.1,208.4"></span></div>
+<p class="x t" style="--b:221.5">강물의 기준계로 옮겨 가는 아이디어. 단, 그것이 문제 풀이를 향한 논리적으로 올바른 변환으로 이어진 경우에 한한다.</p>
+<p class="x pt" style="--b:221.5">2.00</p>
+<p class="x t" style="--b:240.5">즉, 이후 1.2 또는 1.3 항목의 점수를 받은 경우에 점수를 준다.</p>
+<p class="x t" style="--b:260">강물의 기준계에서 뗏목의 처음 속도 방향을 구하였다</p>
+<p class="x pt" style="--b:260">1.00</p>
+<p class="x t" style="--b:280">강물의 기준계에서 뗏목의 속도 방향이 변하지 않음을 고려하였다</p>
+<p class="x pt" style="--b:280">1.00</p>
+<p class="x t" style="--b:301"><span class="m">M1</span>특수한 경우에 대한 풀이</p>
+<p class="x pt" style="--b:299.5">0.00</p>
+<p class="x t" style="--b:312">예: 마찰력이 일정, $F = kv$, $F = kv^2\ldots$</p>
+<p class="x t" style="--b:322">(이 항목에 해당하면 1.6, 1.7, 1.8 항목의 점수는 주지 않는다)</p>
+<p class="x t" style="--b:343"><span class="m">M2</span>강둑의 기준계와 강물의 기준계에서 뗏목의 변위 사이의 관계</p>
+<p class="x pt" style="--b:341.5">3.00</p>
+<p class="x t" style="--b:366"><span class="m">M2</span>피타고라스 정리 또는 삼각 관계식으로</p>
+<p class="x pt" style="--b:364.5">2.00</p>
+<p class="x t" style="--b:377">삼각형 $OAB$의 변과 높이 사이의 관계를 세운 것</p>
+<p class="x t" style="--b:398"><span class="m">M2</span>유속에 대한 식을 얻었다</p>
+<p class="x pt" style="--b:397">2.00</p>
+<p class="x t" style="--b:419.5">속력의 수치를 구하고 단위를 표시하였다</p>
+<p class="x pt" style="--b:419.5">1.00</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="2" data-clip="27.5,808.5,144.8,816.8"></span></div>
+</div>
+
+<!-- ============ page 3: 문제 2 풀이 (1) ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:821.28pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.50pt;top:688.33pt;width:507.25pt;height:69.58pt;border:2.16pt solid #f3f6f9;border-radius:2pt"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="3" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="3" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">풀이</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="3" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="3" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="3" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="3" data-clip="46.8,181.1,61.1,188.8"></span></div>
+<p class="x q" style="--b:188">탱크가 일정한 속력으로 움직이면서 반지름 $R$인 원을 따라 한 바퀴 돌 수 있는 최소 시간 <span class="nw">$\tau$는</span> 얼마인가?</p>
+<p class="x" style="--b:218;--l:13.5pt;padding-top:2pt">일정한 속력 $v$로 움직이는 탱크의 가속도는 <span class="nw">$a = \dfrac{v^2}{R}$이고,</span> 궤도의 모든 점에서 경사면을 따라 원의 중심을 향한다.</p>
+<p class="x" style="--b:247.5;--l:10.5pt">운동이 일어나는 평면 안에는 다음 힘들이 놓여 있다: 정지 마찰력 벡터 $F_\mathrm{fr}$(무한궤도는 미끄러지지 않는다), 벡터 $ma$, 그리고 경사면을 따르는 중력의 성분 <span class="nw">$F = mg\sin\alpha$.</span> 경사면에 수직인 방향으로는 탱크에 수직 항력 <span class="nw">$N = mg\cos\alpha$가</span> 작용한다.</p>
+<div class="f" style="left:197.8pt;top:266pt"><span class="fig" data-srcpage="3" data-clip="197.8,266.0,398.8,468.5"></span></div>
+<div class="ov ovf" style="left:252.8pt;top:345.4pt;width:9pt;height:7.4pt;line-height:5.6pt">fr</div>
+<p class="x" style="--b:480.5">정지 마찰력은 다음 구간의 어떤 값이든 가질 수 있다.</p>
+<p class="x c" style="--b:495">$0 < F_\mathrm{fr} < \mu mg\cos\alpha.$</p>
+<p class="x" style="--b:512">탱크의 운동 시간이 최소가 되려면 탱크는 가능한 최대 속력으로 움직여야 한다. 그러나 속력이 크면 필요한 가속도로 움직이기에 마찰력이 부족할 수 있다.</p>
+<p class="x" style="--b:537.5">뉴턴 제2법칙으로부터 마찰력을 나타내자.</p>
+<p class="x c up" style="--b:554.5">$\vec F_\mathrm{fr} = m\vec a - \vec F.$</p>
+<p class="x up" style="--b:572.5">얻은 식으로부터, 벡터 $m\vec a$와 $\vec F$의 차의 크기는 두 벡터가 서로 반대 방향일 때, 즉 궤도의 가장 낮은 점에서 최대가 된다. 따라서 탱크가 일정한 속력 $v$로 궤도 전체를 지나갈 수 있으려면 다음 조건이 성립해야 한다.</p>
+<div class="f" style="left:248.2pt;top:590.8pt"><span class="fig" data-srcpage="3" data-clip="248.2,590.8,348.0,609.3"></span></div>
+<p class="x" style="--b:632.5">이 조건이 바로 최대 속력을 결정한다.</p>
+<div class="f" style="left:248.7pt;top:641.2pt"><span class="fig" data-srcpage="3" data-clip="248.7,641.2,347.5,657.1"></span></div>
+<p class="x" style="--b:679.5">그리고 원을 따라 도는 탱크의 최소 운동 시간은 다음과 같다.</p>
+<p class="x ans" style="--b:708.5">답:</p>
+<div class="f" style="left:230.1pt;top:717.6pt"><span class="fig" data-srcpage="3" data-clip="230.1,717.6,366.0,742.6"></span></div>
+<p class="x" style="--b:768.5">물론 이 모든 것은 <span class="nw">$\mu > tg\alpha$일</span> 때 성립한다. 그렇지 않으면 탱크는 미끄러지지 않고는 제자리에 서 있을 수조차 없을 것이다.</p>
+<div class="f" style="left:46.5pt;top:803.8pt"><span class="fig" data-srcpage="3" data-clip="46.5,803.8,61.1,811.6"></span></div>
+<p class="x q" style="--b:810.5">이 운동 동안 마찰력 벡터와 탱크의 가속도 벡터 사이의 최대 각 <span class="nw">$\gamma$는</span> 얼마인가?</p>
+</div>
+
+<!-- ============ page 4: 문제 2 풀이 (2) ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+
+</div><!--/DECO-->
+<p class="x" style="--b:32.5;--l:11pt">마찰력 벡터와 탱크의 가속도 벡터 사이의 최대 각을 구하자. 벡터 $m\vec a$는 크기는 일정하지만 궤도의 점마다 방향이 다르고, 벡터 $\vec F$는 크기와 방향이 모두 일정하므로, 기하학적으로 식</p>
+<p class="x c up" style="--b:57.5">$\vec F_\mathrm{fr} = m\vec a - \vec F$</p>
+<p class="x" style="--b:84;--l:11pt">은 마찰력 벡터들의 끝점이 벡터 $m\vec a$의 크기와 같은 반지름의 원 위에 놓이고, 그 시작점은 이 원의 중심에 대해 $\vec F$만큼 이동한 점에 있음을 뜻한다(그림 참조; 벡터 한 쌍의 뺄셈만 나타내었다).</p>
+<div class="f" style="left:197.2pt;top:102.8pt"><span class="fig" data-srcpage="4" data-clip="197.2,102.8,399.9,506.2"></span></div>
+<div class="ov ovf" style="left:246.3pt;top:194.6pt;width:8.4pt;height:7.4pt;line-height:5.6pt">fr</div>
+<p class="x" style="--b:518.5">그림에서 알 수 있듯이 두 가지 경우가 가능하다.</p>
+<p class="x up" style="--b:529">1) 힘 $\vec F$의 크기가 벡터 $m\vec a$의 크기보다 크면, 즉</p>
+<p class="x c" style="--b:545">$mg\sin\alpha > mg(\mu\cos\alpha - \sin\alpha) \Rightarrow \mu < 2tg\alpha\ (\text{작은 마찰}),$</p>
+<p class="x" style="--b:570.5;--l:10.5pt">마찰력 벡터의 끝점들이 놓인 원의 이동 거리가 원의 반지름보다 크며(그림에 나타낸 것이 바로 이 경우이다), 벡터 $m\vec a$와 마찰력 벡터 사이의 각 $\gamma$(그림에 호로 표시)는 <span class="nw">$\gamma = 0^\circ$(벡터</span> $m\vec a$와 힘 $\vec F$가 같은 방향)에서 <span class="nw">$\gamma = 180^\circ$(벡터</span> $m\vec a$와 힘 $\vec F$가 반대 방향)까지 변한다.</p>
+<p class="x up" style="--b:602">반면 힘 $\vec F$의 크기가 벡터 $m\vec a$의 크기보다 작으면, 즉</p>
+<p class="x c" style="--b:618">$mg\sin\alpha < mg(\mu\cos\alpha - \sin\alpha) \Rightarrow \mu > 2tg\alpha\ (\text{큰 마찰}),$</p>
+<p class="x" style="--b:645;--l:10.5pt">벡터 $m\vec a$와 $\vec F$가 같은 방향인 경우에도, 반대 방향인 경우에도 벡터 $m\vec a$와 $\vec F$ 사이의 각은 0이 되며, 따라서 이 벡터들 사이에는 최대 각이 존재한다(벡터 $m\vec a$와 $\vec F$의 뺄셈을 그림에 나타내었다).</p>
+</div>
+
+<!-- ============ page 5: 문제 2 풀이 (3) ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:42.50pt;top:397.93pt;width:507.25pt;height:63.72pt;border:2.16pt solid #f3f6f9;border-radius:2pt"></div>
+</div><!--/DECO-->
+<div class="f" style="left:192pt;top:48.7pt"><span class="fig" data-srcpage="5" data-clip="192.0,48.7,405.2,315.0"></span></div>
+<div class="ov ovf" style="left:246.7pt;top:113.4pt;width:8.9pt;height:7.4pt;line-height:5.6pt">fr</div>
+<p class="x" style="--b:327">이 각을 구하려면 힘의 삼각형에 사인 법칙을 적용하면 된다.</p>
+<div class="f" style="left:273.8pt;top:335.9pt"><span class="fig" data-srcpage="5" data-clip="273.8,335.9,323.2,355.2"></span></div>
+<p class="x up" style="--b:379.5">여기서 $\beta$는 마찰력 벡터와 벡터 $-\vec F$ 사이의 각이다(그림 참조). 궤도의 모든 점에서 벡터 $m\vec a$와 $\vec F$의 크기는 변하지 않으므로, 각 $\beta$의 사인이 최대일 때, 즉 <span class="nw">$\beta = 90^\circ$일</span> 때 각 $\gamma$가 최대가 된다. 이 경우 마찰력 벡터와 가속도 벡터 사이의 최대 각의 사인은 다음과 같다.</p>
+<p class="x ans" style="--b:418">답:</p>
+<div class="f" style="left:240.3pt;top:426.6pt"><span class="fig" data-srcpage="5" data-clip="240.3,426.6,355.7,445.8"></span></div>
+<div class="f" style="left:27.5pt;top:624.9pt"><span class="fig" data-srcpage="5" data-clip="27.5,624.9,144.8,633.2"></span></div>
+</div>
+
+<!-- ============ page 6: 문제 2 배점 ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:209.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:228.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:228.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:248.40pt;width:0.60pt;height:29.76pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:248.40pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:277.56pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:277.56pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:297.36pt;width:0.60pt;height:21.24pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:297.36pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:318.00pt;width:0.60pt;height:29.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:318.00pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:346.68pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:346.68pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:366.36pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:366.36pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:386.04pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:386.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:405.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:455.64pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:466.32pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:466.32pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:485.88pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:486.00pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:505.56pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:505.56pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:525.24pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:525.24pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:544.80pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:544.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:564.60pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:564.60pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:584.28pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:228.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:248.40pt;width:0.60pt;height:29.76pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:277.56pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:297.36pt;width:0.60pt;height:21.24pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:318.00pt;width:0.60pt;height:29.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:346.68pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:366.36pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:386.04pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:466.32pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:485.88pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:505.56pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:525.24pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:544.80pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:564.60pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:209.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:228.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:248.40pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:277.56pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:297.36pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:318.00pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:346.68pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:366.36pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:386.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:405.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:466.32pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:486.00pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:505.56pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:525.24pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:544.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:564.60pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:584.28pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:209.04pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:209.64pt;width:0.60pt;height:19.20pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:228.72pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:228.84pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:248.40pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:248.40pt;width:0.60pt;height:29.16pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:277.56pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:277.56pt;width:0.60pt;height:19.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:297.36pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:297.36pt;width:0.60pt;height:20.64pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:318.00pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:318.00pt;width:0.60pt;height:28.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:346.68pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:346.68pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:366.36pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:366.36pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:386.04pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:386.04pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:386.64pt;width:0.60pt;height:0.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:405.72pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:466.32pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:466.92pt;width:0.60pt;height:19.08pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:485.88pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:486.00pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:505.56pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:505.56pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:525.24pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:525.24pt;width:0.60pt;height:19.56pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:544.80pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:544.80pt;width:0.60pt;height:19.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:545.40pt;width:0.60pt;height:0.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:564.60pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:564.60pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:584.28pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="6" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="6" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">배점</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="6" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="6" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="6" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="6" data-clip="46.8,181.1,61.1,188.8"></span></div>
+<p class="x q" style="--b:188">탱크가 일정한 속력으로 움직이면서 반지름 $R$인 원을 따라 한 바퀴 돌 수 있는 최소 시간 <span class="nw">$\tau$는</span> 얼마인가?</p>
+<div class="f" style="left:41.5pt;top:206pt"><span class="fig" data-srcpage="6" data-clip="41.5,206.0,49.1,208.4"></span></div>
+<p class="x t" style="--b:221.5">수직 항력의 크기를 구하였다(또는 사용하였다)</p>
+<p class="x pt" style="--b:221.5">0.50</p>
+<p class="x t" style="--b:241">경사면을 따르는 중력의 성분을 구하였다</p>
+<p class="x pt" style="--b:241">0.50</p>
+<p class="x t" style="--b:260.5">뉴턴 제2법칙의 식을 썼다<br>(또는 기하학적 해석을 제시하였다)</p>
+<p class="x pt" style="--b:261">1.00</p>
+<p class="x t" style="--b:290">구심 가속도에 대한 식을 썼다</p>
+<p class="x pt" style="--b:290">0.50</p>
+<p class="x t" style="--b:309.5">부등식 <span class="nw">$F_\mathrm{fr} \leqslant \mu N$을</span> 썼다</p>
+<p class="x pt" style="--b:309.5">0.50</p>
+<p class="x t" style="--b:335.5;padding-top:1pt">일정한 속력 $v$로 운동할 때 정지 마찰력의 최댓값을 근거 있게 구하였다. $(F_{\mathrm{fr}\,max} = \frac{mv^2}{R} + mg\sin\alpha)$</p>
+<p class="x pt" style="--b:330.5">1.00</p>
+<p class="x t" style="--b:359">최대 속력에 대한 식을 얻었다</p>
+<p class="x pt" style="--b:359">1.00</p>
+<p class="x t" style="--b:378.5">최소 시간 <span class="nw">$\tau$를</span> 구하였다</p>
+<p class="x pt" style="--b:378.5">1.00</p>
+<p class="x t" style="--b:398.5">시간에 대한 허용 범위를 고려하였다</p>
+<p class="x pt" style="--b:398.5">1.00</p>
+<div class="f" style="left:46.5pt;top:438.2pt"><span class="fig" data-srcpage="6" data-clip="46.5,438.2,61.1,446.0"></span></div>
+<p class="x q" style="--b:445">이 운동 동안 마찰력 벡터와 탱크의 가속도 벡터 사이의 최대 각 <span class="nw">$\gamma$는</span> 얼마인가?</p>
+<div class="f" style="left:41.5pt;top:463.2pt"><span class="fig" data-srcpage="6" data-clip="41.5,463.2,49.1,465.6"></span></div>
+<p class="x t" style="--b:478.5"><b>경우 1</b></p>
+<p class="x t" style="--b:498">각의 값 $180^\circ$를 구하였다</p>
+<p class="x pt" style="--b:498">1.00</p>
+<p class="x t" style="--b:518">어떤 $\mu$에서 이 경우가 실현되는지 제시하였다</p>
+<p class="x pt" style="--b:518">0.50</p>
+<p class="x t" style="--b:537.5"><b>경우 2</b></p>
+<p class="x t" style="--b:557">각 <span class="nw">$\gamma$를</span> 구하였다</p>
+<p class="x pt" style="--b:557">3 × 1.00</p>
+<p class="x t" style="--b:577">어떤 $\mu$에서 이 경우가 실현되는지 제시하였다</p>
+<p class="x pt" style="--b:577">0.50</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="6" data-clip="27.5,808.5,144.8,816.8"></span></div>
+</div>
+
+<!-- ============ page 7: 문제 3 풀이 (1) ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:730.44pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.50pt;top:624.64pt;width:507.25pt;height:52.52pt;border:2.16pt solid #f3f6f9;border-radius:2pt"></div>
+<div class="bx" style="left:42.50pt;top:753.71pt;width:507.25pt;height:52.63pt;border:2.16pt solid #f3f6f9;border-radius:2pt"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="7" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="7" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">풀이</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="7" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="7" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="7" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="7" data-clip="46.8,181.1,61.1,188.8"></span></div>
+<p class="x q" style="--b:188">오랜 시간이 지난 뒤 수조에는 어떤 온도가 자리 잡는지 구하여라.</p>
+<p class="x" style="--b:213">1. 배수관이 달린 컵은 사이펀의 원리로 작동한다. 처음에는 컵의 수위가 시간 $5\tau$ 동안 올라간다. 관의 수평 부분이 채워지면 물이 컵에서 빠르게 빠져나가고 수위는 $4h$만큼 내려간다. 이후 이 과정이 주기 $4\tau$로 반복된다.<br>따라서 처음 $5\tau$ 동안 수조에는 차가운 물만 들어오고, 첫 번째 열교환에는 뜨거운 물 $4\tau\mu$와 차가운 물 $2\tau2\mu$가 참여한다. 열평형 방정식</p>
+<div class="f" style="left:238.8pt;top:250.2pt"><span class="fig" data-srcpage="7" data-clip="238.8,250.2,357.4,259.8"></span></div>
+<p class="x" style="--b:282.5">으로부터 첫 번째 열교환 뒤 수조의 온도를 구한다.</p>
+<div class="f" style="left:262.5pt;top:291pt"><span class="fig" data-srcpage="7" data-clip="262.5,291.0,333.8,308.4"></span></div>
+<p class="x" style="--b:322">2. 다음 시간 간격 $4\tau$ 동안 수조에는 차가운 물만 들어오고, 수조 안 물의 온도는 $t_{x2}$까지 내려간다. 열평형 방정식으로부터</p>
+<div class="f" style="left:236.9pt;top:339.4pt"><span class="fig" data-srcpage="7" data-clip="236.9,339.4,359.3,349.1"></span></div>
+<div class="f" style="left:256.9pt;top:370.9pt"><span class="fig" data-srcpage="7" data-clip="256.9,370.9,339.3,388.7"></span></div>
+<p class="x" style="--b:402">3. 다음 차례의 뜨거운 물 $4\tau\mu$가 수조의 온도를 $t_{x3}$까지 올린다.</p>
+<div class="f" style="left:237pt;top:410.7pt"><span class="fig" data-srcpage="7" data-clip="237.0,410.7,359.3,420.3"></span></div>
+<div class="f" style="left:258.7pt;top:442.2pt"><span class="fig" data-srcpage="7" data-clip="258.7,442.2,337.7,459.4"></span></div>
+<p class="x" style="--b:473">4. 시각 $10\tau$까지 수조에는 차가운 물 $2\tau\mu$가 더 들어오고, 이때 수조의 온도는 $t_{x4}$가 된다.</p>
+<div class="f" style="left:237pt;top:481.8pt"><span class="fig" data-srcpage="7" data-clip="237.0,481.8,359.3,491.5"></span></div>
+<div class="f" style="left:255.1pt;top:513.2pt"><span class="fig" data-srcpage="7" data-clip="255.1,513.2,341.3,531.1"></span></div>
+<p class="x" style="--b:544.5">5. 한 주기 $4\tau$ 동안 수조에는 뜨거운 물 $4\tau\mu$와 차가운 물 $8\tau\mu$가 들어온다. 이 혼합물의 평균 온도는 $t_x$이다.</p>
+<div class="f" style="left:241.5pt;top:553.1pt"><span class="fig" data-srcpage="7" data-clip="241.5,553.1,354.6,562.7"></span></div>
+<div class="f" style="left:253.2pt;top:584.5pt"><span class="fig" data-srcpage="7" data-clip="253.2,584.5,343.2,601.9"></span></div>
+<p class="x" style="--b:615.5">따라서 수조의 온도는 더 이상 <span class="nw">$t_{x1} = 55^\circ\mathrm{C}$보다</span> 높이 올라가지 않는다.</p>
+<p class="x ans" style="--b:645">답:</p>
+<div class="f" style="left:279.7pt;top:653.1pt"><span class="fig" data-srcpage="7" data-clip="279.7,653.1,316.6,661.8"></span></div>
+<div class="f" style="left:46.5pt;top:712.9pt"><span class="fig" data-srcpage="7" data-clip="46.5,712.9,61.1,720.7"></span></div>
+<p class="x q" style="--b:719.5">수조의 온도는 최대 얼마까지 올라갔는가?</p>
+<p class="x" style="--b:745">많은 주기가 지나면 온도는 $t_x$로 자리 잡는다.</p>
+<p class="x ans" style="--b:774">답:</p>
+<div class="f" style="left:277.4pt;top:782.3pt"><span class="fig" data-srcpage="7" data-clip="277.4,782.3,318.9,791.4"></span></div>
+</div>
+
+<!-- ============ page 8: 문제 3 풀이 (2) ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:42.48pt;top:68.88pt;width:511.56pt;height:1.20pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.50pt;top:101.92pt;width:507.25pt;height:195.24pt;border:2.16pt solid #f3f6f9;border-radius:2pt"></div>
+</div><!--/DECO-->
+<div class="f" style="left:46.5pt;top:51.4pt"><span class="fig" data-srcpage="8" data-clip="46.5,51.4,61.1,59.3"></span></div>
+<p class="x q" style="--b:58.5">컵을 채우기 시작한 때부터 $3\tau$에서 $10\tau$까지의 구간에서 수조 물의 온도를 시간의 함수로 나타낸 그래프를 그려라.</p>
+<p class="x" style="--b:83.5">주기 $4\tau$ 안에서 물의 온도가 내려가는 그래프 구간들은 직선이 아니라 쌍곡선의 일부임에 주목하자. 구하는 그래프는 다음과 같다.</p>
+<p class="x ans" style="--b:122.5">답:</p>
+<div class="f" style="left:164.2pt;top:123.8pt"><span class="fig" data-srcpage="8" data-clip="164.2,123.8,432.3,289.2"></span></div>
+<div class="f" style="left:27.5pt;top:385.6pt"><span class="fig" data-srcpage="8" data-clip="27.5,385.6,144.8,394.1"></span></div>
+</div>
+
+<!-- ============ page 9: 문제 3 배점 ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:209.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:228.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:228.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:248.40pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:248.40pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:268.08pt;width:0.60pt;height:55.92pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:268.08pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:323.28pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:323.40pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:342.96pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:342.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:362.64pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:362.64pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:382.32pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:382.32pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:402.00pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:402.00pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:421.68pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:471.60pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:482.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:482.28pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:501.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:551.88pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:562.44pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:562.44pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:582.12pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:582.12pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:601.68pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:601.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:621.36pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:621.36pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:641.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:641.16pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:660.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:228.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:248.40pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:268.08pt;width:0.60pt;height:55.92pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:323.28pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:342.96pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:362.64pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:382.32pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:402.00pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:482.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:562.44pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:582.12pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:601.68pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:621.36pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:641.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:209.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:228.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:248.40pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:268.08pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:323.40pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:342.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:362.64pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:382.32pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:402.00pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:421.68pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:482.28pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:501.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:562.44pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:582.12pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:601.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:621.36pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:641.16pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:660.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:209.04pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:209.64pt;width:0.60pt;height:19.20pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:228.72pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:228.84pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:248.40pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:248.40pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:268.08pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:268.08pt;width:0.60pt;height:55.32pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:323.28pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:323.40pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:342.96pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:342.96pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:362.64pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:362.64pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:382.32pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:382.32pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:382.92pt;width:0.60pt;height:0.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:402.00pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:402.00pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:421.68pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:482.16pt;width:0.60pt;height:0.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:482.28pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:482.88pt;width:0.60pt;height:18.96pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:501.84pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:562.44pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:563.04pt;width:0.60pt;height:19.08pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:582.12pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:582.12pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:601.68pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:601.80pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:621.36pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:621.36pt;width:0.60pt;height:19.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:641.16pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:641.16pt;width:0.60pt;height:19.56pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:660.72pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:661.32pt;width:0.60pt;height:0.12pt;background:#e4e6ef"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="9" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="9" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">배점</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="9" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="9" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="9" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="9" data-clip="46.8,181.1,61.1,188.8"></span></div>
+<p class="x q" style="--b:188">오랜 시간이 지난 뒤 수조에는 어떤 온도가 자리 잡는지 구하여라.</p>
+<div class="f" style="left:41.5pt;top:206pt"><span class="fig" data-srcpage="9" data-clip="41.5,206.0,49.1,208.4"></span></div>
+<p class="x t" style="--b:221.5"><b>특성 시간의 결정</b></p>
+<p class="x t" style="--b:241">사이펀 작동의 주기성을 알아차렸다</p>
+<p class="x pt" style="--b:241">0.50</p>
+<p class="x t" style="--b:261">사이펀의 작동 주기($4\tau$)를 구하였다</p>
+<p class="x pt" style="--b:261">1.00</p>
+<p class="x t" style="--b:280.5"><b>특성 온도의 결정.</b></p>
+<p class="x t" style="--b:316"><b>참고: 열평형 방정식이 없으면 이 부분의 점수는 주지 않는다</b></p>
+<p class="x t" style="--b:335.5">사이펀이 처음 작동한 직후 수조의 온도를 구하였다 ($55^\circ\mathrm{C}$)</p>
+<p class="x pt" style="--b:335.5">1.00</p>
+<p class="x t" style="--b:355.5">사이펀을 통해 물이 두 번째로 넘어가기 직전 수조 물의 온도를 구하였다 ($37.5^\circ\mathrm{C}$)</p>
+<p class="x pt" style="--b:355.5">1.00</p>
+<p class="x t" style="--b:375">사이펀을 통해 물이 두 번째로 넘어간 직후 수조 물의 온도를 구하였다 ($48^\circ\mathrm{C}$)</p>
+<p class="x pt" style="--b:375">1.00</p>
+<p class="x t" style="--b:394.5">시간 $10\tau$가 지난 뒤 수조 물의 온도를 구하였다 ($45.5^\circ\mathrm{C}$)</p>
+<p class="x pt" style="--b:394.5">1.00</p>
+<p class="x t" style="--b:414.5">오랜 시간이 지난 뒤 수조에 자리 잡는 온도를 구하였다 ($43.3^\circ\mathrm{C}$)</p>
+<p class="x pt" style="--b:414.5">2.00</p>
+<div class="f" style="left:46.5pt;top:454.2pt"><span class="fig" data-srcpage="9" data-clip="46.5,454.2,61.1,462.0"></span></div>
+<p class="x q" style="--b:461">수조의 온도는 최대 얼마까지 올라갔는가?</p>
+<div class="f" style="left:41.5pt;top:479.2pt"><span class="fig" data-srcpage="9" data-clip="41.5,479.2,49.1,481.6"></span></div>
+<p class="x t" style="--b:494.5">수조 물의 온도가 <span class="nw">$55^\circ\mathrm{C}$를</span> 넘지 않음을 근거 있게 보였다</p>
+<p class="x pt" style="--b:494.5">2.00</p>
+<div class="f" style="left:46.5pt;top:534.5pt"><span class="fig" data-srcpage="9" data-clip="46.5,534.5,61.1,542.2"></span></div>
+<p class="x q" style="--b:541">컵을 채우기 시작한 때부터 $3\tau$에서 $10\tau$까지의 구간에서 수조 물의 온도를 시간의 함수로 나타낸 그래프를 그려라.</p>
+<div class="f" style="left:41.5pt;top:559.4pt"><span class="fig" data-srcpage="9" data-clip="41.5,559.4,49.1,561.7"></span></div>
+<p class="x t" style="--b:574.5"><b>시간에 따른 온도 그래프</b></p>
+<p class="x t" style="--b:594.5">적절한 눈금을 고르고, 축에 이름과 눈금 값을 붙였다</p>
+<p class="x pt" style="--b:594.5">0.50</p>
+<p class="x t" style="--b:614"><span class="nw">$t = 20^\circ\mathrm{C}$에서</span> $3\tau$부터 $5\tau$까지의 수평 직선</p>
+<p class="x pt" style="--b:614">0.50</p>
+<p class="x t" style="--b:634">$(5\tau; 55^\circ\mathrm{C})$에서 $(9\tau; 37.5^\circ\mathrm{C})$까지의 오목한 쌍곡선</p>
+<p class="x pt" style="--b:634">1.00</p>
+<p class="x t" style="--b:653.5">$(9\tau; 48^\circ\mathrm{C})$부터의 오목한 쌍곡선</p>
+<p class="x pt" style="--b:653.5">0.50</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="9" data-clip="27.5,808.5,144.8,816.8"></span></div>
+</div>
+
+<!-- ============ page 10: 문제 4 풀이 ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.50pt;top:498.10pt;width:507.25pt;height:31.85pt;border:2.16pt solid #f3f6f9;border-radius:2pt"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="10" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="10" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">풀이</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="10" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="10" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="10" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="10" data-clip="46.8,181.1,63.5,188.8"></span></div>
+<p class="x q" style="--b:188">글뤽의 실험실에 있던 비중계들의 처음 온도는 얼마인가?</p>
+<p class="x" style="--b:213">가) 비중계들의 온도 $t_0$이 액체의 처음 온도보다 높은 첫 번째 경우를 생각하자. 그러면 액체의 처음 온도는 (그래프에서) <span class="nw">$21.5^\circ\mathrm{C}$이고,</span> 비중계와의 열교환 결과 자리 잡은 온도는 <span class="nw">$26.5^\circ\mathrm{C}$이다.</span> $C_l$을 액체의 열용량, $C_a$를 비중계의 열용량이라 하자. 열평형 방정식을 쓰자.</p>
+<p class="x c" style="--b:248">$C_l\cdot 5^\circ\mathrm{C} = C_a(t_0 - 26.5^\circ\mathrm{C}).$</p>
+<p class="x" style="--b:274.5">두 번째 비중계를 넣은 뒤 액체의 온도는 올라가서 <span class="nw">$27.4^\circ\mathrm{C}$가</span> 된다. 두 비중계에 대한 열평형 방정식을 쓰자.</p>
+<p class="x c" style="--b:299">$C_l(27.4^\circ\mathrm{C} - 21.5^\circ\mathrm{C}) = 2C_a(t_0 - 27.4^\circ\mathrm{C}).$</p>
+<p class="x" style="--b:325.5">따라서</p>
+<div class="f" style="left:179.2pt;top:334.2pt"><span class="fig" data-srcpage="10" data-clip="179.2,334.2,417.6,356.0"></span></div>
+<p class="x" style="--b:369">나) 비중계들의 온도 $t_0$이 액체의 처음 온도보다 낮은 두 번째 경우를 생각하자. 그러면 액체의 처음 온도는 <span class="nw">$26.5^\circ\mathrm{C}$이고,</span> 첫 번째 비중계와의 열교환 결과 자리 잡은 온도는 <span class="nw">$21.5^\circ\mathrm{C}$이다.</span> 열평형 방정식을 쓰자.</p>
+<p class="x c" style="--b:393.5">$C_l\cdot 5^\circ\mathrm{C} = C_a(21.5^\circ\mathrm{C} - t_0).$</p>
+<p class="x" style="--b:420">두 번째 비중계를 넣은 뒤 액체의 온도는 내려가서 <span class="nw">$20.5^\circ\mathrm{C}$가</span> 된다. 두 비중계에 대한 방정식을 쓰자.</p>
+<p class="x c" style="--b:435.5">$C_l(26.5^\circ\mathrm{C} - 20.5^\circ\mathrm{C}) = 2C_a(20.5^\circ\mathrm{C} - t_0).$</p>
+<p class="x" style="--b:461.5">따라서</p>
+<div class="f" style="left:189.9pt;top:470.2pt"><span class="fig" data-srcpage="10" data-clip="189.9,470.2,406.8,492.0"></span></div>
+<p class="x ans" style="--b:518.5">답: $19^\circ\mathrm{C}$ 또는 $28.7^\circ\mathrm{C}$</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="10" data-clip="27.5,808.5,144.8,816.8"></span></div>
+</div>
+
+<!-- ============ page 11: 문제 4 배점 ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:209.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:228.84pt;width:0.60pt;height:29.76pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:228.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:258.00pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:258.00pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:280.80pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:280.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:300.48pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:300.60pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:321.72pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:321.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:342.96pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:342.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:364.20pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:364.20pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:393.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:393.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:413.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:413.16pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:432.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:432.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:452.40pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:452.40pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:472.20pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:472.20pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:495.00pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:495.00pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:517.80pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:517.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:537.48pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:537.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:566.76pt;width:0.60pt;height:29.76pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:566.76pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:595.92pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:228.84pt;width:0.60pt;height:29.76pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:258.00pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:280.80pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:300.48pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:321.72pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:342.96pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:364.20pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:393.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:413.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:432.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:452.40pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:472.20pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:495.00pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:517.80pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:537.48pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:566.76pt;width:0.60pt;height:29.76pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:209.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:228.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:258.00pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:280.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:300.60pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:321.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:342.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:364.20pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:393.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:413.16pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:432.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:452.40pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:472.20pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:495.00pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:517.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:537.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:566.76pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:595.92pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:209.04pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:209.64pt;width:0.60pt;height:19.20pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:228.84pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:228.84pt;width:0.60pt;height:29.16pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:258.00pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:258.00pt;width:0.60pt;height:22.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:280.80pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:280.80pt;width:0.60pt;height:19.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:300.48pt;width:0.60pt;height:21.24pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:300.60pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:321.72pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:321.72pt;width:0.60pt;height:21.24pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:342.96pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:342.96pt;width:0.60pt;height:21.24pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:364.20pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:364.20pt;width:0.60pt;height:29.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:393.48pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:393.48pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:413.16pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:413.16pt;width:0.60pt;height:19.56pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:432.72pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:432.72pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:433.32pt;width:0.60pt;height:0.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:452.40pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:452.40pt;width:0.60pt;height:19.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:472.20pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:472.20pt;width:0.60pt;height:22.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:495.00pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:495.00pt;width:0.60pt;height:22.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:517.80pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:517.80pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:537.48pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:537.48pt;width:0.60pt;height:29.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:566.76pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:566.76pt;width:0.60pt;height:29.16pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:595.92pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="11" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="11" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">배점</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="11" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="11" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="11" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="11" data-clip="46.8,181.1,63.5,188.8"></span></div>
+<p class="x q" style="--b:188">글뤽의 실험실에 있던 비중계들의 처음 온도는 얼마인가?</p>
+<div class="f" style="left:41.5pt;top:206pt"><span class="fig" data-srcpage="11" data-clip="41.5,206.0,49.1,208.4"></span></div>
+<p class="x t" style="--b:221.5">첫 번째 밀도 값은 물의 처음 온도에, 두 번째 값은 자리 잡은 온도에 해당함을 지적하였다</p>
+<p class="x pt" style="--b:221.5">1.00</p>
+<p class="x t" style="--b:241">두 가지 경우가 있음을 지적하였다: 1) 비중계의 온도가 물의 처음 온도보다 낮은 경우; 2) 비중계의 온도가 물의 처음 온도보다<br>높은 경우</p>
+<p class="x pt" style="--b:241">1.00</p>
+<p class="x t" style="--b:272"><span class="m">M1</span>두 가지 경우가 있다는 명시적인 지적이 없다</p>
+<p class="x pt" style="--b:270.5">0.00</p>
+<p class="x t" style="--b:293"><b>그래프로부터 가능한 처음 온도와 나중 온도의 결정:</b></p>
+<p class="x t" style="--b:314.5">밀도 $1.027\,\mathrm{kg/m^3}$에 해당하는 온도를 구하였다 ($t_1 = 21.5^\circ\mathrm{C}$와 $t_2 = 26.3^\circ\mathrm{C} - 26.5^\circ\mathrm{C}$)</p>
+<p class="x pt" style="--b:313">1.00</p>
+<p class="x t" style="--b:334.5">첫 번째 경우에 자리 잡은 온도를 구하였다 ($t_{y1} = 20.5^\circ\mathrm{C}$)</p>
+<p class="x pt" style="--b:334">0.50</p>
+<p class="x t" style="--b:356">두 번째 경우에 자리 잡은 온도를 구하였다 ($t_{y2} = 27.3^\circ\mathrm{C} - 27.5^\circ\mathrm{C}$)</p>
+<p class="x pt" style="--b:355.5">0.50</p>
+<p class="x t" style="--b:376.5"><b>열평형 방정식.<br>열평형 방정식을 일반적인 형태로 썼으나 1.2 항목을 수행하지 못한 경우, 한 가지 경우에 대해서만 점수를 준다</b></p>
+<p class="x t" style="--b:405.5"><b>첫 번째 경우:</b></p>
+<p class="x t" style="--b:425.5">첫 번째 열교환</p>
+<p class="x pt" style="--b:425.5">1.00</p>
+<p class="x t" style="--b:445">두 번째 열교환</p>
+<p class="x pt" style="--b:445">2.00</p>
+<p class="x t" style="--b:464.5"><b>두 번째 경우</b></p>
+<p class="x t" style="--b:486"><span class="m">M2</span>첫 번째 열교환</p>
+<p class="x pt" style="--b:484.5">1.00</p>
+<p class="x t" style="--b:509"><span class="m">M2</span>두 번째 열교환</p>
+<p class="x pt" style="--b:507">2.00</p>
+<p class="x t" style="--b:530"><b>수치 답:</b></p>
+<p class="x t" style="--b:550">첫 번째 경우<br>$t_{01} = 18.7^\circ\mathrm{C} - 19.3^\circ\mathrm{C}$</p>
+<p class="x pt" style="--b:550">1.00</p>
+<p class="x t" style="--b:579">두 번째 경우<br>$t_{02} = 28.5^\circ\mathrm{C} - 29.0^\circ\mathrm{C}$</p>
+<p class="x pt" style="--b:579">1.00</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="11" data-clip="27.5,808.5,144.8,816.8"></span></div>
+</div>
+
+<!-- ============ page 12: 문제 5 풀이 (1) ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:207.96pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="12" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="12" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">풀이</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="12" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="12" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="12" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="12" data-clip="46.8,181.1,63.5,188.8"></span></div>
+<p class="x q2" style="--b:188;--l:11pt;left:42.9pt">전압계 $V_1$과 전류계 $A_1$의 알려진 측정값($U_1 = 1\,\mathrm{V}$, $I_1 = 6\,\mu\mathrm{A}$)으로부터, 그림에 회로도가 주어진 전기 회로의 나머지 계기들의 측정값을 구하여라. 모든 전압계는 똑같고, 그 저항은 전류계의 저항보다 훨씬 크다.</p>
+<p class="x" style="--b:222.5">회로에서 전류원의 역할은 저항계가 한다. 전류계의 저항은 작고 회로에는 전압계가 없는 닫힌 경로가 없으므로, 모든 가지의 전류 크기는 전압계의 저항으로 결정되며, 전압계는 저항이 <span class="nw">$R_V$인</span> 저항기로 볼 수 있다.<br>회로의 등가 회로는 다음과 같이 나타낼 수 있다.</p>
+<div class="f" style="left:164.2pt;top:249.6pt"><span class="fig" data-srcpage="12" data-clip="164.2,249.6,432.3,339.3"></span></div>
+<p class="x" style="--b:351.5">여기서 전압계는 저항기로 나타내었고(숫자 1, 2, 3, 4, 5, 6은 전압계와 저항기의 대응을 나타낸다), 전류계는 이상적인 도선으로 바꾸었으며, 저항계는 전류원으로 나타내었고, 전류가 주어진 도선($bb$)과 전압이 주어진 전압계(3번)를 강조하여 표시하였다.<br>단순화한 회로의 가지들에 흐르는 전류 사이의 관계는 옴의 법칙과 키르히호프 제1법칙을 이용하여 구할 수 있다.<br>3번 전압계를 지나는 전류를 $I$라 하자. 그러면 4번 전압계에도 같은 전류가 흐르고, 1번과 2번 전압계에는 전류 $2I$가 흐른다.</p>
+<div class="f" style="left:177.7pt;top:388.3pt"><span class="fig" data-srcpage="12" data-clip="177.7,388.3,419.0,564.2"></span></div>
+<p class="x" style="--b:576.5">마디 $b$와 $a$ 사이의 전압이 <span class="nw">$5IR_V$이므로,</span> 5번과 6번 전압계에는 각각 전류 $5I$가 흐른다.</p>
+<div class="f" style="left:177.7pt;top:584.2pt"><span class="fig" data-srcpage="12" data-clip="177.7,584.2,419.0,773.9"></span></div>
+<p class="x" style="--b:786">키르히호프 제1법칙을 적용하여 연결 도선과 저항계를 지나는 나머지 전류를 구하자.</p>
+</div>
+
+<!-- ============ page 13: 문제 5 풀이 (2) ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:42.50pt;top:658.83pt;width:507.25pt;height:32.93pt;border:2.16pt solid #f3f6f9;border-radius:2pt"></div>
+</div><!--/DECO-->
+<div class="f" style="left:177.7pt;top:48.7pt"><span class="fig" data-srcpage="13" data-clip="177.7,48.7,419.0,224.6"></span></div>
+<p class="x" style="--b:237">저항이 같으므로 전압계의 측정값은 그것을 지나는 전류의 크기에 비례한다.</p>
+<div class="f" style="left:169.5pt;top:244.8pt"><span class="fig" data-srcpage="13" data-clip="169.5,244.8,427.5,422.8"></span></div>
+<div class="ov ovv" style="left:208pt;top:246pt;width:19.6pt;height:12pt;line-height:12pt">2V</div>
+<div class="ov ovv" style="left:371.5pt;top:246pt;width:19.6pt;height:12pt;line-height:12pt">1V</div>
+<div class="ov ovv" style="left:169.5pt;top:277.4pt;width:19.6pt;height:12pt;line-height:12pt">2V</div>
+<div class="ov ovv" style="left:258.3pt;top:314pt;width:19.6pt;height:12pt;line-height:12pt">1V</div>
+<div class="ov ovv" style="left:303.9pt;top:354.2pt;width:19.6pt;height:12pt;line-height:12pt">5V</div>
+<div class="ov ovv" style="left:408.7pt;top:354.2pt;width:19.6pt;height:12pt;line-height:12pt">5V</div>
+<p class="x" style="--b:435">마찬가지로 전류계의 측정값도 전류에 비례한다.</p>
+<div class="f" style="left:164.2pt;top:443pt"><span class="fig" data-srcpage="13" data-clip="164.2,443.0,432.3,637.6"></span></div>
+<div class="ov ovv" style="left:394.5pt;top:468.5pt;width:39pt;height:12.6pt;line-height:12.6pt">1 μA</div>
+<div class="ov ovv" style="left:310.3pt;top:503pt;width:35pt;height:12.6pt;line-height:12.6pt">6 μA</div>
+<div class="ov ovv" style="left:394.5pt;top:538.5pt;width:39pt;height:12.6pt;line-height:12.6pt">5 μA</div>
+<div class="ov ovv" style="left:201.7pt;top:560.7pt;width:44.4pt;height:12.6pt;line-height:12.6pt">10 μA</div>
+<div class="ov ovv" style="left:246.5pt;top:622pt;width:45.4pt;height:13.4pt;line-height:13.4pt">10 μA</div>
+<div class="ov ovv" style="left:352.9pt;top:622pt;width:37.8pt;height:13.4pt;line-height:13.4pt">5 μA</div>
+<p class="x" style="--b:650">저항계의 측정값은 마디 $a$와 $b$ 사이 외부 회로의 전압을 저항계를 지나는 전류로 나누어 구할 수 있다.</p>
+<p class="x ans" style="--b:680.5">답: $R_\Omega = 5\,\mathrm{V}/12\,\mu\mathrm{A} \approx 417\,\mathrm{k\Omega}$.</p>
+<div class="ft" style="left:28.5pt;top:675.3pt">2020 -- We are what they grow beyond.</div>
+</div>
+
+<!-- ============ page 14: 문제 5 배점 ============ -->
+<div class="page">
+<!--DECO--><div class="dc">
+<div class="bx" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:207.96pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.48pt;top:218.76pt;width:0.60pt;height:29.76pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:218.76pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:247.92pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:247.92pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:267.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:267.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:287.16pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:287.16pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:306.84pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:306.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:326.52pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:326.52pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:42.48pt;top:346.20pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:218.76pt;width:0.60pt;height:29.76pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:247.92pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:267.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:287.16pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:306.84pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.32pt;top:326.52pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:218.76pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:247.92pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:267.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:287.16pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:306.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:326.52pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:502.44pt;top:346.20pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:218.76pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:219.36pt;width:0.60pt;height:28.56pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:247.92pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:247.92pt;width:0.60pt;height:19.56pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:267.48pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:267.48pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:268.08pt;width:0.60pt;height:0.12pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:287.16pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:287.16pt;width:0.60pt;height:19.80pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:306.84pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:306.96pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:326.52pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:326.52pt;width:0.60pt;height:19.68pt;background:#e4e6ef"></div>
+<div class="bx" style="left:553.44pt;top:346.20pt;width:0.60pt;height:0.60pt;background:#e4e6ef"></div>
+</div><!--/DECO-->
+<div class="f" style="left:27.1pt;top:26.4pt"><span class="fig" data-srcpage="14" data-clip="27.1,26.4,52.1,44.3"></span></div>
+<div class="f" style="left:518pt;top:30.5pt"><span class="fig" data-srcpage="14" data-clip="518,30.5,528.5,40.2"></span></div>
+<p class="x hh" style="--b:79">배점</p>
+<div class="f" style="left:40.6pt;top:109.9pt"><span class="fig" data-srcpage="14" data-clip="40.6,109.9,45.5,116.6"></span></div>
+<div class="f" style="left:40.6pt;top:130.1pt"><span class="fig" data-srcpage="14" data-clip="40.6,130.1,45.5,136.8"></span></div>
+<div class="f" style="left:39.7pt;top:150.3pt"><span class="fig" data-srcpage="14" data-clip="39.7,150.3,46.4,157.0"></span></div>
+<p class="x mn" style="--b:115">조건</p>
+<p class="x mn" style="--b:135.5">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<div class="f" style="left:46.8pt;top:181.1pt"><span class="fig" data-srcpage="14" data-clip="46.8,181.1,63.5,188.8"></span></div>
+<p class="x q2" style="--b:188;--l:11pt;left:42.9pt">전압계 $V_1$과 전류계 $A_1$의 알려진 측정값($U_1 = 1\,\mathrm{V}$, $I_1 = 6\,\mu\mathrm{A}$)으로부터, 그림에 회로도가 주어진 전기 회로의 나머지 계기들의 측정값을 구하여라. 모든 전압계는 똑같고, 그 저항은 전류계의 저항보다 훨씬 크다.</p>
+<div class="f" style="left:41.5pt;top:215.7pt"><span class="fig" data-srcpage="14" data-clip="41.5,215.7,49.1,218.0"></span></div>
+<p class="x t" style="--b:231">전류계의 저항을 무시하고<br>전압계를 지나는 전류를 구한다는 아이디어</p>
+<p class="x pt" style="--b:231">1.00</p>
+<p class="x t" style="--b:260">등가 회로</p>
+<p class="x pt" style="--b:260">1.00</p>
+<p class="x t" style="--b:280">회로의 전류 사이의 관계를 뒷받침하는 기본 방정식</p>
+<p class="x pt" style="--b:280">2.00</p>
+<p class="x t" style="--b:299.5">전압계를 지나는 전류와 그 측정값을 구하였다</p>
+<p class="x pt" style="--b:299.5">2.00</p>
+<p class="x t" style="--b:319">전류계의 측정값을 구하였다</p>
+<p class="x pt" style="--b:319">2.00</p>
+<p class="x t" style="--b:339">저항계의 측정값을 구하였다</p>
+<p class="x pt" style="--b:339">4.00</p>
+<div class="f" style="left:27.5pt;top:808.5pt"><span class="fig" data-srcpage="14" data-clip="27.5,808.5,144.8,816.8"></span></div>
+</div>
+
+</body></html>

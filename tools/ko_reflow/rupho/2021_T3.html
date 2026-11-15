@@ -1,0 +1,94 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* RuPhO 2021 (LV = 제55회; the paper itself prints only "2021 god"), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX two-column layout, body PT Serif 10pt -> 'Times New Roman',KB,serif; math Computer Modern; A4 595.3x841.9pt.
+   Columns x 28.3..286.3 and 309.0..566.9 (width 258pt); paragraph indent 15pt; line pitch 11.96pt.
+   Running header italic 8pt, right edge 566.9, baseline 19.0; grade line 15.9pt centred on 293.6, baseline 43.3;
+   problem titles PT Serif Bold 13.9pt. Sub-question numbers are boxed (vector box + digit): stamped from the scrub copy.
+   Figures are raster images with Latin/Greek labels only. Units: kVt -> kW, Pa(Cyr) -> Pa, kDzh/mol -> kJ/mol, kPa(Cyr) -> kPa.
+   T_K (boiling temperature) keeps the original's Latin K.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with lines.py):
+       top = b - l/2 - 0.3375*fs   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em) */
+body{font-family:'Times New Roman',KB,serif;font-size:10pt;line-height:11.96pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:258pt;--l:11.96pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs));text-align:justify}
+.r{left:309pt;width:257.9pt}
+.i{text-indent:15pt}
+.c{text-align:center}
+.hd{--fs:8pt;left:300pt;width:266.9pt;text-align:right;font-style:italic}
+.g{--fs:15.9pt;--l:18pt;left:28.3pt;width:530.6pt;text-align:center}
+.h{--fs:13.9pt;--l:16pt;font-weight:bold;text-align:left}
+/* sub-question after a stamped box: first line starts at x 50 (left column) / 331 (right column); "2.1" boxes: 340 */
+.q{text-indent:22pt}
+.q2{text-indent:31pt}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.fl{float:right;clear:right}
+.wn{word-break:normal}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.cap{text-align:center;width:60pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<p class="x hd" style="--b:19.0">전러시아 학생 물리 올림피아드, 2021년</p>
+<p class="x g" style="--b:43.3">이론 시험, 11학년</p>
+
+<!-- left column -->
+<p class="x h" style="--b:69.1">1. 공은 어디에 떨어질까?</p>
+<p class="x i" style="--b:88.5">강물의 흐름을 따라 움직이는 보트에서 금속 공을 물속에 내려놓는다. 공은 물에 넣은 곳으로부터 수평 거리 <span class="nw">$l_1$인</span> 곳에서 강바닥에 떨어진다. 흐름을 거슬러 움직이는 보트에서 공을 물속에 내려놓으면, 공은 하류 쪽으로 거리 <span class="nw">$l_2$인</span> 곳에서 바닥에 떨어진다. 흐름에 수직인 궤적을 따라 강을 건너는 보트의 경우, 공이 바닥에 떨어지는 점까지의 거리는 <span class="nw">$l_3$이다</span>.</p>
+<div class="f" style="left:28.1pt;top:178.7pt"><span class="fig" data-srcpage="1" data-clip="28.1,178.7,45.5,192.9"></span></div>
+<p class="x q" style="--b:189.4">강과 깊이가 같은 호수에서 움직이는 보트의 경우, 공이 바닥에 떨어지는 점까지의 거리는 얼마인가?</p>
+<div class="f" style="left:28.1pt;top:219.8pt"><span class="fig" data-srcpage="1" data-clip="28.1,219.8,45.5,234"></span></div>
+<p class="x q" style="--b:230.5">보트의 속력은 강물의 흐름 속력의 몇 배인가?</p>
+<p class="x i" style="--b:258.0">공을 물에 넣을 때 공의 속도의 연직 성분은 0이고, 물속에서 움직이는 공이 받는 저항력의 법칙은 알려져 있지 않으며, 모든 거리는 공을 물에 넣은 곳에서 공이 바닥에 떨어진 곳까지 수평 방향으로 잰다. 강물의 흐름과 깊이는 어디에서나 같다. 보트의 엔진은 운동 방향에 관계없이 일정한 추력을 낸다.</p>
+
+<p class="x h" style="--b:369.7">2. &laquo;보글보글&raquo;</p>
+<div class="f" style="left:178.3pt;top:391pt"><span class="fig" data-srcpage="1" data-clip="178.3,391,286.3,502"></span></div>
+<p class="x i wr wn" style="--b:388.1;--fw:130.4pt;--fh:130.6pt">반응기 안에 있는 어떤 물질의 수용액에서 화학 반응의 결과로 일률 <span class="nw">$N = 5\,\mathrm{kW}$로</span> 열이 발생한다. 온도를 조절하기 위해, 반응기 바닥에 깔린 작은 구멍이 뚫린 관을 통해 반응기 안으로 공기를 불어 넣는다. 반응기로 들어가는 공기의 압력은 대기압 <span class="nw">$P_0 = 10^5\,\mathrm{Pa}$,</span> 온도는 실내 온도 <span class="nw">$T_0 = 22\,{}^\circ\mathrm{C}$와</span> 같다고 볼 수 있다. 반응기 안의 온도를 <span class="nw">$T &lt; T_K$로</span> 유지하는 데 필요한 공기의 부피 유량 <span class="nw">$q$를</span> 구하여라. 여기서 <span class="nw">$T_K = 100\,{}^\circ\mathrm{C}$는</span> 대기압에서 수용액의 끓는점이다. <span class="nw">$T_K - T \ll T_K$라고</span> 하자. <span class="nw">$T = 95\,{}^\circ\mathrm{C}$일</span> 때 <span class="nw">$q$의</span> 값을 구하여라.</p>
+<p class="x i" style="--b:618.8">온도 <span class="nw">$T$에서</span> 물의 몰 증발열은 <span class="nw">$\lambda = 40\,\mathrm{kJ/mol}$로</span> 알려져 있다. <span class="nw">$T_K$</span> 근처에서 포화 수증기압은 계수 <span class="nw">$\alpha = 3.5\,\mathrm{kPa/{}^\circ C}$로</span> 거의 선형적으로 변한다. 수용액 위의 포화 증기압은 포화 수증기압과 정확히 같다. 공기를 데우는 데 쓰이는 열은 무시할 수 있다. 반응기에서 기체를 내보내는 관에서의 압력 차는 무시할 만큼 작다. 반응기에 공기를 공급하지 않을 때에는 주위 환경과의 열교환이 없다.</p>
+
+<!-- right column -->
+<p class="x r h" style="--b:69.1">3. 판과 퍽</p>
+<p class="x r i" style="--b:87.5"><b>1부.</b> 유전체로 된 가는 막대가 선전하 밀도 <span class="nw">$\lambda$로</span> 고르게 대전되어 있다. 점 <span class="nw">$A$는</span> 막대에서 거리 <span class="nw">$h$인</span> 곳에 있고, 막대의 양 끝에서 같은 거리에 있다. 점 <span class="nw">$A$에서</span> 막대를 보는 각은 <span class="nw">$2\varphi$이다</span>(그림&nbsp;1). 점 <span class="nw">$A$에서</span> 전기장의 세기를 구하여라.</p>
+<div class="f" style="left:316.3pt;top:176.8pt"><span class="fig" data-srcpage="1" data-clip="316.3,176.8,421,226"></span></div>
+<div class="f" style="left:456.3pt;top:147.5pt"><span class="fig" data-srcpage="1" data-clip="456.3,147.5,557,252"></span></div>
+<p class="x cap" style="--b:247.4;left:338.2pt">그림 1</p>
+<p class="x cap" style="--b:276.7;left:477.7pt">그림 2</p>
+<p class="x r i" style="--b:292.0"><b>2부.</b> 한 변의 길이가 <span class="nw">$L$인</span> 얇은 유전체 정사각형 판이 표면 전하 밀도 <span class="nw">$\sigma &gt; 0$으로</span> 고르게 대전되어 있다. 판의 중심(점&nbsp;<span class="nw">$O$)에서</span> 판의 평면 안에서 정사각형의 변과 각 <span class="nw">$\alpha = 60^\circ$를</span> 이루는 방향으로 작은 거리 <span class="nw">$r \ll L$만큼</span> 떨어진 점 <span class="nw">$A$</span>(그림&nbsp;2)에, 질량 <span class="nw">$m$,</span> 전하 <span class="nw">$q &lt; 0$인</span> 작고 매끄러운 유전체 퍽을 놓는다. 퍽을 처음 속도 없이 놓아준다.</p>
+<div class="f" style="left:308.8pt;top:382.3pt"><span class="fig" data-srcpage="1" data-clip="308.8,382.3,334.2,396.5"></span></div>
+<p class="x r q2" style="--b:393.0">퍽을 놓은 직후 퍽의 가속도의 크기와 방향을 구하여라.</p>
+<div class="f" style="left:308.8pt;top:411.6pt"><span class="fig" data-srcpage="1" data-clip="308.8,411.6,334.2,425.8"></span></div>
+<p class="x r q2" style="--b:422.2">퍽이 처음으로 판의 중심에서 가장 가까운 거리에 오게 되는 것은 얼마 뒤인가?</p>
+<p class="x r i" style="--b:449.7">중력은 없으며, 판은 고정되어 있다.</p>
+
+<p class="x r h" style="--b:477.8">4. 고리 속의 고리</p>
+<p class="x r i" style="--b:496.1">가는 도선으로 만든 반지름 <span class="nw">$R$인</span> 고리의 인덕턴스는 <span class="nw">$L$이다</span>.</p>
+<div class="f" style="left:308.8pt;top:514.6pt"><span class="fig" data-srcpage="1" data-clip="308.8,514.6,326.1,528.8"></span></div>
+<p class="x r q" style="--b:525.3">모든 기하학적 크기가 2배인 도선 고리의 인덕턴스를 구하여라.</p>
+<p class="x r i" style="--b:552.8">반지름 <span class="nw">$R$인</span> 고리의 평면에, 기하학적 크기가 절반인 초전도 고리를 두 고리의 평면과 중심이 일치하도록 놓으면(그림&nbsp;3), 반지름 <span class="nw">$R$인</span> 고리의 인덕턴스는 <span class="nw">$L_1$이</span> 된다.</p>
+<div class="f" style="left:321pt;top:601.8pt"><span class="fig" data-srcpage="1" data-clip="321,601.8,558.3,713"></span></div>
+<p class="x cap" style="--b:734.2;left:408pt">그림 3</p>
+<div class="f" style="left:308.8pt;top:738.7pt"><span class="fig" data-srcpage="1" data-clip="308.8,738.7,326.1,752.9"></span></div>
+<p class="x r q" style="--b:749.4">반지름 <span class="nw">$R$인</span> 고리를 기하학적 크기가 2배인 초전도 고리 안에 넣으면, 이 고리의 인덕턴스 <span class="nw">$L_2$는</span> 얼마가 되는가? 두 번째 경우에도 두 고리의 평면과 중심은 일치한다.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:19.0">전러시아 학생 물리 올림피아드, 2021년</p>
+<p class="x h" style="--b:53.7">5. 투명한 층</p>
+<div class="f" style="left:178.3pt;top:76.5pt"><span class="fig" data-srcpage="2" data-clip="178.3,76.5,285.3,194"></span></div>
+<p class="x cap" style="--b:213.0;left:202.4pt">그림 4</p>
+<p class="x i wn" style="--b:72.1"><span class="fl" style="width:130.4pt;height:130.6pt"></span><span class="fl" style="width:76.3pt;height:22.9pt"></span>반지름 <span class="nw">$2R$인</span> 광학적으로 투명한 물질로 된 구 속에 반지름 <span class="nw">$R$인</span> 구형의 빈 공간이 있다. 구와 빈 공간의 중심은 일치한다. 빈 공간 안에는 공기가 있다. 바깥의 공기로부터 구의 표면으로 광선이 입사한다(그림&nbsp;4). 구의 표면에 대한 광선의 입사각 <span class="nw">$\alpha$가</span> 어떤 값일 때 광선이 빈 공간 안으로 들어가는가? 다음 두 경우를 살펴보아라.</p>
+<div class="f" style="left:28.1pt;top:222.1pt"><span class="fig" data-srcpage="2" data-clip="28.1,222.1,45.5,236.3"></span></div>
+<p class="x q" style="--b:232.8">구를 이루는 물질의 굴절률은 일정하며 <span class="nw">$n = 2$이다</span>.</p>
+<div class="f" style="left:28.1pt;top:251.2pt"><span class="fig" data-srcpage="2" data-clip="28.1,251.2,45.5,265.4"></span></div>
+<p class="x q" style="--b:261.9">구를 이루는 물질의 굴절률이 중심으로부터의 거리 <span class="nw">$r$가</span> 커질수록 선형으로 감소한다: <span class="nw">$n(r) = 2.5 - 0.5\frac{r}{R}$,</span> <span class="nw">$R \le r \le 2R$.</span></p>
+<p class="x i" style="--b:301.4">공기의 굴절률은 <span class="nw">$n_0 = 1$로</span> 본다.</p>
+</div>
+</body></html>
