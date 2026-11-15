@@ -1,0 +1,249 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2023 (LVII = 제57회; no numeral printed), 9학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: 8 pages, LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.528x595.276pt.
+   Text column x 28.3..396.8 (width 368.5pt); paragraph indent 20pt; baselineskip 11.955pt.
+   Running header (every page, italic SFTI1000, baseline 37.6): "Заключительный этап Всероссийской олимпиады по
+   физике 12 апреля 2023 г." -> left "전러시아 물리 올림피아드 결선", right "2023년 4월 12일" (as the 2023_T1 paper); rule y 41.41 (stamped).
+   No page numbers. Figures: vector drawings with Latin labels and raster images; stamped. Captions "Рисунок N" retyped.
+   Russian subscripts in retyped formulas: отн -> rel, в (вода) -> w, л (лёд) -> i, к (конечный) -> f,
+   M_в / M_н (moments about the upper / lower edge) -> M_위 / M_아래. Units Latin SI, decimal points.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   Lines/displays holding a \dfrac use .d: line-height 0, top = b - --a (--a = height above the baseline). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:368.5pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   text-align:justify;top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.l{text-align:left}
+.r{text-align:right}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right;left:200pt;width:191.2pt}
+/* "풀이 예시" (SFBX1440 bold 14.346pt), problem titles (SFBX1000 bold) centred; bold run-in heads (.bh) */
+.t{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.bh{font-weight:bold;text-align:left}
+.t,.h,.bh{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+/* narrow column (left part of the page beside a figure) */
+.n1{width:188.5pt}
+.n3{width:231pt}
+.n8{width:245.2pt}
+/* text running beside a figure on the right: a float reserves the figure's room for the first line(s) */
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+/* figure captions "그림 N": centred on the original caption's centre (left = centre - 20pt) */
+.cap{text-align:center;width:40pt;--fs:7.97pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="1" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x t" style="--b:64.0">풀이 예시</p>
+<p class="x h" style="--b:84.1">문제 9-T1. 분리</p>
+<p class="x i n1 wn" style="--b:99.9">1. 그림과 같이 좌표계 <span class="nw">$xy$를</span> 잡자. 공이 면에서 떨어지는 순간 공의 가속도를 <span class="nw">$\vec a$라</span> 하자. 떨어지는 순간 <span class="nw">$N = 0$임을</span> 고려하여, 연직축 <span class="nw">$y$에</span> 대한 성분으로 뉴턴 제2법칙을 쓰자.</p>
+<div class="f" style="left:228pt;top:98pt"><span class="fig" data-srcpage="1" data-clip="228,98,403,243"></span></div>
+<div class="f" style="left:67pt;top:183pt"><span class="fig" data-srcpage="1" data-clip="67,183,218,196"></span></div>
+<p class="x i n1 wn" style="--b:211.8">추가 가속되지 않음을 고려하여, 추 <span class="nw">$M$에</span> 대한 뉴턴 제2법칙을 <span class="nw">$y$축에</span> 대한 성분으로 쓰자.</p>
+<div class="f" style="left:164pt;top:247pt"><span class="fig" data-srcpage="1" data-clip="164,247,398,260"></span></div>
+<p class="x i" style="--b:275.8">식 (1)과 (2)에서 실의 장력 <span class="nw">$T$를</span> 소거하면 질량비를 얻는다.</p>
+<div class="f" style="left:188pt;top:296pt"><span class="fig" data-srcpage="1" data-clip="188,296,238,322"></span></div>
+<p class="x i" style="--b:336.9">2. 고려하는 순간의 공과 추의 속력을 각각 <span class="nw">$v$와</span> <span class="nw">$u$라</span> 하고, 면으로부터 도르래의 높이를 <span class="nw">$h$라</span> 하자.</p>
+<p class="x i" style="--b:360.8">실이 늘어나지 않으므로, 공의 속도 <span class="nw">$v$의</span> <span class="nw">$z$축</span> 방향 성분은 <span class="nw">$u$와</span> 같다.</p>
+<div class="f" style="left:189pt;top:369pt"><span class="fig" data-srcpage="1" data-clip="189,369,398,395"></span></div>
+<p class="x i" style="--b:404.2">계에 마찰이 없으므로 역학적 에너지 보존 법칙이 성립한다.</p>
+<div class="f" style="left:160pt;top:417pt"><span class="fig" data-srcpage="1" data-clip="160,417,398,445"></span></div>
+<p class="x" style="--b:455.1">여기서 <span class="nw">$\Delta l = h(1/\sin\alpha - 1/\sin\beta)$는</span> 실의 기울어진 부분의 길이 변화이다. 질량비 <span class="nw">$m/M$과</span> 관계식 (3)을 식 (4)에 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:116pt;top:476pt"><span class="fig" data-srcpage="1" data-clip="116,476,311,506"></span></div>
+<p class="x" style="--b:521.9">따라서</p>
+<div class="f" style="left:139pt;top:521pt"><span class="fig" data-srcpage="1" data-clip="139,521,398,551"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="2" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">이와 같이 문제는 무차원 매개변수 <span class="nw">$gh/v^2$을</span> 구하는 것으로 귀결된다. 이를 구하기 위해 공의 동역학을 분석하자.</p>
+<p class="x i" style="--b:87.9">공에 대한 뉴턴 제2법칙을 수평축 <span class="nw">$x$에</span> 대한 성분으로 쓰자.</p>
+<div class="f" style="left:110pt;top:99pt"><span class="fig" data-srcpage="2" data-clip="110,99,398,124"></span></div>
+<p class="x i" style="--b:133.9">실의 기울어진 부분을 따라 공에서 도르래를 향하는(즉, 수평선과 각 <span class="nw">$\alpha$를</span> 이루는) 축 <span class="nw">$z$를</span> 도입하자. 공의 가속도의 이 축 방향 성분은 다음과 같다.</p>
+<div class="f" style="left:160pt;top:156pt"><span class="fig" data-srcpage="2" data-clip="160,156,398,186"></span></div>
+<p class="x i" style="--b:195.0">실의 기울어진 부분이 도르래에 닿는 점 <span class="nw">$A$의</span> 기준계로 옮겨 가자. 이 기준계에서 공의 가속도 <span class="nw">$\vec a_\mathrm{rel}$은</span> 다음과 같다.</p>
+<p class="x c" style="--b:227.0">$\vec a_\mathrm{rel} = \vec a - \vec a_A.$</p>
+<p class="x i" style="--b:247.0">추의 가속도가 0이므로 점 <span class="nw">$A$의</span> 접선 가속도도 0이다. 따라서 점 <span class="nw">$A$의</span> 전체 가속도는 실의 기울어진 부분에 수직이다. 그러면 고려하는 기준계에서 다음이 성립한다.</p>
+<p class="x c" style="--b:294.8">$a_{\mathrm{rel}\,z} = a_z.$</p>
+<p class="x i" style="--b:311.5">점 <span class="nw">$A$의</span> 기준계에서 공은 실의 기울어진 부분의 길이와 같은 반지름 <span class="nw">$l = h/\sin\alpha$인</span> 원을 따라, <span class="nw">$z$축에</span> 수직인 축에 대한 공의 속도 성분과 같은 속력 <span class="nw">$v_\perp = v\sin\alpha$로</span> 움직인다. 따라서 구심 가속도의 식으로부터 다음을 얻는다.</p>
+<p class="x r" style="--b:374.5;left:120pt;width:64.5pt">$a_{\mathrm{rel}\,z}$</p>
+<div class="f" style="left:186pt;top:354pt"><span class="fig" data-srcpage="2" data-clip="186,354,264,385"></span></div>
+<div class="f" style="left:383pt;top:366pt"><span class="fig" data-srcpage="2" data-clip="383,366,398,378"></span></div>
+<p class="x i" style="--b:397.9">(7)과 (8)을 같게 놓으면 다음을 얻는다.</p>
+<div class="f" style="left:185pt;top:405pt"><span class="fig" data-srcpage="2" data-clip="185,405,398,436"></span></div>
+<p class="x i" style="--b:448.9">(9)를 (5)에 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:130pt;top:456pt"><span class="fig" data-srcpage="2" data-clip="130,456,398,487"></span></div>
+<p class="x" style="--b:500.9">따라서 각 <span class="nw">$\beta$는</span> 다음과 같다.</p>
+<div class="f" style="left:145pt;top:508pt"><span class="fig" data-srcpage="2" data-clip="145,508,280,539"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="3" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x h" style="--b:64.0">문제 9-T2. 용수철에 달린 수조</p>
+<p class="x l" style="--b:80.6;left:48.3pt;width:348.5pt">1. <b>방법 1:</b></p>
+<p class="x i" style="--b:93.7">힘을 구하기 위해 가상 변위 방법을 이용하자.</p>
+<p class="x i" style="--b:105.6">이를 위해 중력이 한 일과 같은 퍼텐셜 에너지 변화를 구하자. 액체가 위층에서 새로 생긴 공간으로 옮겨 간다고 생각하면 <span class="nw">$A_g = -\Delta\Pi \le -A_F$이다.</span> 옮겨 간 액체의 질량은 <span class="nw">$m = \rho a^2\delta x$이다.</span></p>
+<p class="x i" style="--b:141.5">압력에 의한 힘들의 합력에 대해 다음을 얻는다.</p>
+<div class="f" style="left:108pt;top:152pt"><span class="fig" data-srcpage="3" data-clip="108,152,317,179"></span></div>
+<p class="x i" style="--b:193.9">위 모서리에 대한 압력의 돌림힘을 생각하면, 액체층의 무게중심이 <span class="nw">$\frac{2a}{3}$만큼</span> 내려간다는 것을 얻는다.</p>
+<div class="f" style="left:130pt;top:218pt"><span class="fig" data-srcpage="3" data-clip="130,218,295,245"></span></div>
+<p class="x i" style="--b:259.8">아래 모서리에 대한 압력의 돌림힘을 생각하면, 액체층의 무게중심이 <span class="nw">$\frac{a}{3}$만큼</span> 내려간다는 것을 얻는다.</p>
+<div class="f" style="left:130pt;top:284pt"><span class="fig" data-srcpage="3" data-clip="130,284,295,311"></span></div>
+<div class="f" style="left:53pt;top:331pt"><span class="fig" data-srcpage="3" data-clip="53,331,371,427"></span></div>
+<p class="x bh" style="--b:456.0;left:48.3pt;width:348.5pt">방법 2:</p>
+<p class="x i n3 wn" style="--b:467.9">물이 가득 찬 수조에서 옆벽에는 물의 압력에 의한 힘 <span class="nw">$F_P = \frac{1}{2}\rho ga^3$이</span> 작용한다. 문제를 풀려면 이 힘의 작용점을 구해야 한다. 같은 높이에서는 수평 방향으로 물의 압력이 같으므로, 이 점은 분명히 가운데 연직선 위에 있다.</p>
+<div class="f" style="left:268pt;top:447pt"><span class="fig" data-srcpage="3" data-clip="268,447,398,580"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="4" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">연직 방향으로 압력은 위의 0에서 아래의 <span class="nw">$\rho ga$까지</span> 선형으로 분포한다.</p>
+<p class="x i" style="--b:87.9">삼각형의 무게중심은 중선들의 교점에 있다는 것이 알려져 있다.</p>
+<p class="x i" style="--b:111.9">이 경우의 연직 방향 압력 분포를, 이등변 삼각형을 밑변에 나란하게 같은 너비의 띠들로 잘랐다고 생각할 때 그 띠들의 질량이 높이에 따라 분포하는 모습에 비유하면, 힘의 작용점은 그릇 바닥에서 거리 <span class="nw">$a/3$인</span> 곳에 있다고 말할 수 있다.</p>
+<p class="x bh" style="--b:177.3;left:48.3pt;width:348.5pt">방법 3:</p>
+<p class="x i" style="--b:189.3">힘과 돌림힘의 엄밀한 수학적 계산은 적분을 이용하여 할 수 있다.</p>
+<p class="x i" style="--b:213.2">압력을 액체 표면으로부터의 깊이 <span class="nw">$y$의</span> 함수로 나타내자: <span class="nw">$p(y) = \rho gy$.</span></p>
+<p class="x i" style="--b:237.1">물의 압력에 의한 전체 힘은 다음과 같다.</p>
+<div class="f" style="left:159pt;top:246pt"><span class="fig" data-srcpage="4" data-clip="159,246,266,286"></span></div>
+<p class="x i" style="--b:301.0">위 가장자리에 대한 힘의 돌림힘은 다음과 같다.</p>
+<p class="x r" style="--b:332.5;left:100pt;width:81.5pt">$M_\text{위} =$</p>
+<div class="f" style="left:183pt;top:310pt"><span class="fig" data-srcpage="4" data-clip="183,310,270,350"></span></div>
+<p class="x i" style="--b:365.0">아래 가장자리에 대한 힘의 돌림힘은 다음과 같다.</p>
+<p class="x r" style="--b:396.5;left:80pt;width:89.8pt">$M_\text{아래} =$</p>
+<div class="f" style="left:171pt;top:374pt"><span class="fig" data-srcpage="4" data-clip="171,374,282,414"></span></div>
+<p class="x i" style="--b:429.0">물이 새지 않을 조건은 다음 부등식들로 쓸 수 있다.</p>
+<div class="f" style="left:47.5pt;top:431pt"><span class="fig" data-srcpage="4" data-clip="47.5,431,116.5,478"></span></div>
+<p class="x l ov" style="--b:442.6;left:108.2pt;width:288pt">(합력의 방향에 대한 조건)</p>
+<p class="x l ov" style="--b:457.7;left:115.7pt;width:280pt">(위 모서리를 축으로 회전하지 않을 조건)</p>
+<p class="x l ov" style="--b:472.8;left:120.7pt;width:275pt">(아래 모서리를 축으로 회전하지 않을 조건)</p>
+<p class="x ov" style="--b:487.8">분명히 부등식 <span class="nw">$\smash{k\Delta x \geqslant \frac{\rho ga^3}{3}}$이</span> 가장 엄격하다.</p>
+<p class="x l" style="--b:502.9;left:48.3pt;width:348.5pt">따라서 <span class="nw">$\smash{\Delta x_\mathrm{min} = \frac{\rho ga^3}{3k}}$.</span></p>
+<p class="x i" style="--b:520.6">2. 두 용수철이 같은 길이만큼 압축되므로, 용수철들이 수조의 벽을 미는 전체 힘은 물의 압력에 의한 힘의 2배가 된다는 점에 주목하자.</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="5" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">문제의 조건에서 두 용수철의 위치를 서로 바꾸면, 마지막 2개의 조건은 다음과 같이 된다.</p>
+<div class="f" style="left:47.5pt;top:77.5pt"><span class="fig" data-srcpage="5" data-clip="47.5,77.5,125.5,118.4"></span></div>
+<p class="x l ov" style="--b:89.3;left:108.2pt;width:288pt">(합력의 방향에 대한 조건)</p>
+<p class="x l ov" style="--b:101.2;left:128.2pt;width:268pt">(위 모서리를 축으로 회전하지 않을 조건)</p>
+<p class="x l ov" style="--b:113.2;left:123.2pt;width:273pt">(아래 모서리를 축으로 회전하지 않을 조건)</p>
+<div class="ov" style="position:absolute;left:120.8pt;top:116.4pt;width:5pt;height:2.6pt;background:white"></div>
+<p class="x ov" style="--b:128.3;white-space:normal">따라서 <span class="nw">$\smash{\Delta x_\mathrm{min} = \frac{\rho ga^3}{6k}}$이다.</span> 이때 용수철들이 수조의 벽을 미는 전체 힘은 압력에 의한 힘과 정확히 같다.</p>
+<p class="x h" style="--b:158.5">문제 9-T3. 냉장고</p>
+<p class="x i" style="--b:172.6">1. 열 손실 일률을 <span class="nw">$N$이라</span> 하자. 이 열 손실 때문에 짧은 시간 <span class="nw">$\Delta\tau$</span> 동안 질량 <span class="nw">$\Delta m$의</span> 얼음이 결정화된다.</p>
+<div class="f" style="left:180pt;top:187pt"><span class="fig" data-srcpage="5" data-clip="180,187,246,200"></span></div>
+<p class="x i" style="--b:213.2">이 질량이 액체 상태에서 차지하던 부피는 <span class="nw">$\Delta V_\mathrm{w}$,</span> 고체 상태에서 차지하는 부피는 <span class="nw">$\Delta V_\mathrm{i}$이다.</span></p>
+<p class="x c" style="--b:233.1">$\Delta m = \rho_\mathrm{w}\Delta V_\mathrm{w} = \rho_\mathrm{i}\Delta V_\mathrm{i}.$</p>
+<p class="x i" style="--b:253.0">따라서 질량 <span class="nw">$\Delta m$의</span> 얼음이 결정화될 때 내용물의 부피 변화는 다음과 같다.</p>
+<p class="x d l" style="--b:269.4;--a:13.6pt">$\Delta V = \Delta V_\mathrm{i} - \Delta V_\mathrm{w} = \dfrac{\Delta m}{\rho_\mathrm{i}} - \dfrac{\Delta m}{\rho_\mathrm{w}} = \Delta m\dfrac{\rho_\mathrm{w} - \rho_\mathrm{i}}{\rho_\mathrm{w}\rho_\mathrm{i}} > 0.$ 즉 피스톤은 위로 올라간다.</p>
+<p class="x" style="--b:286.1">원기둥의 옆면을 통한 열 손실 일률은 이 면의 넓이와, 물과 주위 환경 사이의 온도 차에 비례한다.</p>
+<div class="f" style="left:160pt;top:313pt"><span class="fig" data-srcpage="5" data-clip="160,313,265,327"></span></div>
+<p class="x i" style="--b:338.7">피스톤이 올라가는 속력은 다음과 같다.</p>
+<p class="x d c" style="--b:363.8;--a:13.6pt">$v = \dfrac{\Delta h}{\Delta\tau} = \dfrac{\Delta V}{\pi R^2\Delta\tau} = \dfrac{\Delta m(\rho_\mathrm{w} - \rho_\mathrm{i})}{\Delta\tau\rho_\mathrm{w}\rho_\mathrm{i}\pi R^2} = \dfrac{N(\rho_\mathrm{w} - \rho_\mathrm{i})}{\lambda\rho_\mathrm{w}\rho_\mathrm{i}\pi R^2} = \dfrac{2\alpha(\rho_\mathrm{w} - \rho_\mathrm{i})}{\lambda\rho_\mathrm{w}\rho_\mathrm{i}R}\cdot h(t_0 - t).$</p>
+<p class="x i" style="--b:388.3">속력이 일정하므로, 처음 순간의 속력 식 <span class="nw">$v = C\cdot h(t_0 - t) = C\cdot h_1(t_0 - t_1)$을</span> 이용하자. 따라서 다음을 얻는다.</p>
+<p class="x d c" style="--b:425.9;--a:13.6pt">$v = \dfrac{2\alpha(\rho_\mathrm{w} - \rho_\mathrm{i})}{\lambda\rho_\mathrm{w}\rho_\mathrm{i}R}\cdot h_1(t_0 - t_1).$</p>
+<p class="x i" style="--b:456.1">2. 피스톤의 등속 운동은 물이 모두 결정화될 때까지 계속될 수 있다. 계의 최대 부피 변화는 다음과 같다.</p>
+<p class="x d c" style="--b:491.1;--a:13.6pt">$\Delta V_0 = \Delta m_0\dfrac{\rho_\mathrm{w} - \rho_\mathrm{i}}{\rho_\mathrm{w}\rho_\mathrm{i}} = \pi R^2h_1\dfrac{\rho_\mathrm{w} - \rho_\mathrm{i}}{\rho_\mathrm{i}}.$</p>
+<p class="x i" style="--b:515.6">구하는 과정의 지속 시간은 다음과 같다.</p>
+<p class="x d c" style="--b:540.1;--a:13.6pt">$\tau_\mathrm{max} = \dfrac{\Delta V_0}{\pi R^2v} = \dfrac{\lambda\rho_\mathrm{w}R}{2\alpha(t_0 - t_1)}.$</p>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="6" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">3. 조건 <span class="nw">$h(t_0 - t) = h_1(t_0 - t_1)$과</span> <span class="nw">$h(\tau) = h_1 + v\tau$로부터</span> 구하는 관계를 얻을 수 있다.</p>
+<div class="f" style="left:156pt;top:75pt"><span class="fig" data-srcpage="6" data-clip="156,75,269,102"></span></div>
+<p class="x i" style="--b:117.7">4. <span class="nw">$\tau_\mathrm{max}$의</span> 식을 온도 변화 법칙에 대입하여, 마지막 순간의 온도를 구하자.</p>
+<p class="x d c" style="--b:152.3;--a:12.8pt">$t_\mathrm{f} = t_0 - (t_0 - t_1)\dfrac{\rho_\mathrm{i}}{\rho_\mathrm{w}}.$</p>
+<p class="x h" style="--b:177.5">문제 9-T4. 직류</p>
+<p class="x bh" style="--b:193.9;left:48.3pt;width:348.5pt">첫 번째 풀이:</p>
+<p class="x i" style="--b:205.9">회로는 중심 마디를 축으로 <span class="nw">$120^\circ$</span> 회전하면 자기 자신과 겹친다는 것에 주목하자. 모든 정전류원은 마디 하나를 공유하고, 다른 쪽 마디들은 등전위인 점들에 연결되어 있다. 따라서 정전류원들에는 같은 전류가 흐르며, <span class="nw">$R \ll r$이므로</span> 그 값은 <span class="nw">$I_0$이다.</span></p>
+<div class="f" style="left:49pt;top:256pt"><span class="fig" data-srcpage="6" data-clip="49,256,376,391"></span></div>
+<p class="x cap" style="--b:403.9;left:108pt">그림 1</p>
+<p class="x cap" style="--b:403.9;left:277.2pt">그림 2</p>
+<p class="x i" style="--b:428.2">또한 대칭성에 의해, 중심 마디로 흘러 들어가는 전류 <span class="nw">$I_1$도</span> 서로 같아야 한다.</p>
+<p class="x i" style="--b:452.1">중심 마디에서 전류의 대수적 합은 0이므로 <span class="nw">$I_1 = I_0$이다.</span></p>
+<p class="x i" style="--b:464.1">꼭짓점 <span class="nw">$A$에</span> 있는 회로 요소들에 흐르는 전류를 표시하자. 대칭성에 의해 꼭짓점 <span class="nw">$B$와</span> <span class="nw">$C$에</span> 있는 요소들에도 같은 전류가 흐른다.</p>
+<p class="x i" style="--b:499.9">나머지 회로 요소에는 각각 어떤 전류 <span class="nw">$I_2$가</span> 흐른다고 하자. 회로가 대칭이므로 마디 <span class="nw">$A$와</span> <span class="nw">$C$의</span> 전위는 같고, 따라서 전위차는 <span class="nw">$\varphi_C - \varphi_A = 0$이다.</span> 또는</p>
+<div class="f" style="left:147pt;top:536pt"><span class="fig" data-srcpage="6" data-clip="147,536,278,549"></span></div>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="7" data-clip="28.3,41,391.2,41.9"></span></div>
+<div class="f" style="left:49pt;top:55pt"><span class="fig" data-srcpage="7" data-clip="49,55,376,200"></span></div>
+<p class="x cap" style="--b:212.5;left:108pt">그림 3</p>
+<p class="x cap" style="--b:212.5;left:277.2pt">그림 4</p>
+<p class="x l" style="--b:242.4;left:48.3pt;width:348.5pt">그러면</p>
+<div class="f" style="left:124pt;top:243pt"><span class="fig" data-srcpage="7" data-clip="124,243,301,269"></span></div>
+<p class="x bh" style="--b:277.2;left:48.3pt;width:348.5pt">두 번째 풀이:</p>
+<div class="f" style="left:127pt;top:283pt"><span class="fig" data-srcpage="7" data-clip="127,283,299,434"></span></div>
+<p class="x cap" style="--b:450.6;left:192.6pt;--fs:8.966pt">그림 5</p>
+<p class="x i" style="--b:468.8">회로의 연결 도선들에 흐르는 전류를 <span class="nw">$I_1$,$I_2$,$I_3$,$I_4$,$I_5$라</span> 하자. 회로 중심점의 전위를 0으로 잡자. 마디 3과 1 사이의 전위차를 쓰자.</p>
+<div class="f" style="left:111pt;top:496pt"><span class="fig" data-srcpage="7" data-clip="111,496,314,509"></span></div>
+<p class="x i" style="--b:520.6">회로의 대칭성에 의해 <span class="nw">$\varphi_2 = \varphi_3$이다</span>(<span class="nw">$120^\circ$</span> 회전하면 회로가 자기 자신과 겹친다). 따라서</p>
+<div class="f" style="left:126pt;top:536pt"><span class="fig" data-srcpage="7" data-clip="126,536,299,549"></span></div>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="8" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">마디 1에 대한 전하 보존 법칙을 쓰자.</p>
+<div class="f" style="left:112pt;top:70pt"><span class="fig" data-srcpage="8" data-clip="112,70,314,96"></span></div>
+<p class="x h" style="--b:106.1">문제 9-T5. 돌의 올려본각</p>
+<p class="x i n8 wn" style="--b:119.2">1. 처음 속도 벡터 <span class="nw">$\vec v_0$은</span> 시선에 수직이므로, 연직선과 각 <span class="nw">$\alpha_0$을</span> 이룬다.</p>
+<div class="f" style="left:296pt;top:109pt"><span class="fig" data-srcpage="8" data-clip="296,109,386,267"></span></div>
+<!-- label alpha_1 (CMMI 11.955pt, baseline 258.3) removed by scrub's redact box of the text line beneath: restored -->
+<p class="x l ov" style="--b:258.3;left:320.2pt;width:16pt;--fs:11.955pt">$\alpha_1$</p>
+<p class="x i n8 wn" style="--b:155.1">돌의 궤도는 아래로 열린 포물선의 일부이다. 따라서 최댓값 <span class="nw">$\alpha_1 = 38^\circ$는</span> 레오폴드가 이 포물선의 바깥에 있을 때 나타나며, 시선과 수평선 사이의 각이 최댓값에 이르는 순간 <span class="nw">$t_1$에</span> 시선은 돌의 궤도에 접한다. 이는 이 순간 돌의 속도 <span class="nw">$\vec v_1$이</span> 레오폴드를 곧바로 향하며 수평선과 각 <span class="nw">$\alpha_1$을</span> 이룬다는 뜻이다.</p>
+<p class="x i wr wn" style="--b:262.7;--fw:108pt;--fh:10.9pt">시간 <span class="nw">$t_1$을</span> 구하기 위해 이 순간의 속도 벡터 삼각형을 그리자. 사인 법칙으로부터 다음을 얻는다.</p>
+<div class="f" style="left:133pt;top:283pt"><span class="fig" data-srcpage="8" data-clip="133,283,293,310"></span></div>
+<p class="x" style="--b:318.9">따라서</p>
+<div class="f" style="left:133pt;top:321pt"><span class="fig" data-srcpage="8" data-clip="133,321,251,349"></span></div>
+<p class="x l" style="--b:337.7;left:252.4pt;width:100pt">$\approx 1.24\,\mathrm{s}.$</p>
+<p class="x i n1 wn" style="--b:363.7">2. 그림과 같이 레오폴드의 눈이 있는 곳을 원점으로 하는 좌표계 <span class="nw">$xy$를</span> 잡자. 그러면 좌표 <span class="nw">$x(t)$,</span> <span class="nw">$y(t)$는</span> 다음과 같다.</p>
+<div class="f" style="left:226pt;top:355pt"><span class="fig" data-srcpage="8" data-clip="226,355,404,471"></span></div>
+<div class="f" style="left:47pt;top:415pt"><span class="fig" data-srcpage="8" data-clip="47,415,141,428"></span></div>
+<p class="x d l" style="--b:442.8;--a:14.9pt;left:48.3pt;width:170pt">$y(t) = L\,\mathrm{tg}\,\alpha_0 + v_0\cos\alpha_0t - \dfrac{gt^2}{2}.$</p>
+<p class="x i n1 wn" style="--b:457.5">그러면 순간 <span class="nw">$t_1$에서</span> 각 <span class="nw">$\alpha_1$의</span> 탄젠트는 다음과 같다.</p>
+<div class="f" style="left:110pt;top:476pt"><span class="fig" data-srcpage="8" data-clip="110,476,315,505"></span></div>
+<p class="x" style="--b:513.7">따라서</p>
+<div class="f" style="left:106pt;top:515pt"><span class="fig" data-srcpage="8" data-clip="106,515,276,544"></span></div>
+<p class="x l" style="--b:532.4;left:277.3pt;width:100pt">$\approx 24.3\,\mathrm{m}.$</p>
+</div>
+
+</body></html>

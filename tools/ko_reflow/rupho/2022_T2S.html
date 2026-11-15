@@ -1,0 +1,453 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2022 (LVI = 제56회), 10학년 이론 풀이 예시와 채점 기준 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.5x595.3pt, booklet pages 22-32; the first
+   sheet has a CropBox (visible 419.5x415.3pt, lower part of the sheet); sheets 12-16 are A4 marking schemes
+   (PT Serif 10pt, tables) -> 'Times New Roman',KB,serif, grid rules drawn as thin divs at the original rule positions.
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20.0pt; baselineskip 11.955pt.
+   Running header (italic SFTI1000) at baseline 38.9 above the stamped rule (y 42.7); page numbers centred, baseline 563.8.
+   Russian subscripts retyped: W_pot -> W_p, W_min/v_max stay (min/max), v_krit -> v_cr, a_ts -> a_c, F_in -> F_in,
+   F_tr -> F_fr, Q_l/Q_p, N_lev/N_prav -> L/R, x_v,y_v (meeting point) -> x_w,y_w, m_p1 (vapour) -> m_v1,
+   dU_zhidk -> dU_liq, V_g/V_zh -> V_g/V_l, nu_g -> nu_g, t_pl -> t_m, I_maks -> I_max.
+   PLACEMENT: top = b - l/2 - k*fs + 0.7pt  (k = 0.3155 for CM, 0.3375 for Times New Roman). */
+@page p1{size:419.528pt 415.276pt;margin:0}
+.page[data-s="p1"]{page:p1;width:419.528pt;height:415.276pt}
+@page a4{size:595.276pt 841.89pt;margin:0}
+.page[data-s="a4"]{page:a4;width:595.276pt;height:841.89pt}
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;--k:0.3155;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.h{text-align:center;font-weight:bold;margin-top:-1.1pt}
+.m{font-weight:bold;margin-top:-1.1pt}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+.wb{position:absolute;background:#fff}
+.lb{text-align:right}
+/* marking-scheme sheets (A4, PT Serif 10pt) */
+.page[data-s="a4"] .x{font-family:'Times New Roman',KB,serif;--k:0.3375;--fs:10pt;--l:11.955pt}
+.cn{left:38.2pt;width:33pt}
+.cd{left:78.9pt;width:368.5pt;text-align:justify}
+.cp{left:459.7pt;width:46pt}
+.ch{left:514.6pt;width:48pt}
+.cd.c{text-align:center}
+.tt{left:34.3pt;width:470pt;--fs:14.3pt!important;--l:17.9pt!important}
+.rh{position:absolute;left:31.79pt;width:531.7pt;height:0.4pt;background:#000}
+.rv{position:absolute;width:0.4pt;background:#000}
+</style></head><body>
+
+<!-- page 22 of the booklet (cropped sheet) -->
+<div class="page" data-s="p1">
+<p class="x h" style="--b:55.3">문제 10-1. 호랑이 세 마리</p>
+<p class="x i" style="--b:73.1">호랑이들이 이루는 삼각형의 각은 일정하게 유지되므로, 어느 순간에도 호랑이들이 이루는 삼각형은 처음 삼각형과 닮은꼴이다. 이로부터 모든 호랑이가 동시에 만난다는 것을 알 수 있다.</p>
+<p class="x i" style="--b:109.0">거리 <span class="nw">$AB$의</span> 변화율을 구하자. 호랑이들의 속력과 그 사이의 각이 일정하게 유지되므로, 구하는 변화율은 <span class="nw">$v_{AB} = v_1$이고</span> 일정하다. 첫째 호랑이와 둘째 호랑이가 만날 때까지 걸리는 시간은 <span class="nw">$t = L/v$이다.</span></p>
+<p class="x i" style="--b:156.9">거리 <span class="nw">$BC$와</span> <span class="nw">$AC$의</span> 변화율을 나타내면 다음과 같다.</p>
+<div class="f" style="left:174pt;top:169pt"><span class="fig" data-srcpage="1" data-clip="174,169,246,197"></span></div>
+<div class="f" style="left:174pt;top:206pt"><span class="fig" data-srcpage="1" data-clip="174,206,246,233"></span></div>
+<p class="x i" style="--b:245.1">삼각형 <span class="nw">$ABC$의</span> 각이 일정하게 유지되므로 변들 사이의 비도 유지된다. 이는 삼각형 변들의 변화율이 변의 길이에 비례한다는 것을 뜻한다.</p>
+<div class="f" style="left:167pt;top:282pt"><span class="fig" data-srcpage="1" data-clip="167,282,254,308"></span></div>
+<p class="x i" style="--b:322.6"><span class="nw">$v_{AC}$를</span> 구하자.</p>
+<div class="f" style="left:153pt;top:325pt"><span class="fig" data-srcpage="1" data-clip="153,325,268,365"></span></div>
+<p class="x c" style="--b:383.8">22</p>
+</div>
+
+<!-- page 23 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="2" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x i" style="--b:66.7">이제 <span class="nw">$v_{BC}$를</span> 구하자.</p>
+<div class="f" style="left:161pt;top:70pt"><span class="fig" data-srcpage="2" data-clip="161,70,260,107"></span></div>
+<p class="x i" style="--b:118.6">둘째 호랑이의 속력은 언제나 첫째 호랑이 속력의 절반이고 두 속도의 방향은 어느 순간에나 서로 수직이므로, 두 호랑이의 궤적은 닮음비 2:1로 서로 닮은꼴이 된다. 따라서 변위 벡터들도 서로 수직이고 크기는 두 배 차이가 난다.</p>
+<p class="x i" style="--b:178.7">이것은 엄밀하게 수학적으로도 증명할 수 있다. 짧은 시간 <span class="nw">$dt$를</span> 생각하자. 첫째 호랑이의 속도와 <span class="nw">$x$축</span> 사이의 각을 <span class="nw">$\alpha$라</span> 하면, 둘째 호랑이의 속도와 <span class="nw">$x$축</span> 사이의 각은 <span class="nw">$\alpha + 90^\circ$이다.</span> 짧은 시간 동안 호랑이들의 좌표 변화를 쓰면 다음과 같다.</p>
+<div class="f" style="left:171pt;top:228pt"><span class="fig" data-srcpage="2" data-clip="171,228,249,242"></span></div>
+<div class="f" style="left:172pt;top:251pt"><span class="fig" data-srcpage="2" data-clip="172,251,248,265"></span></div>
+<div class="f" style="left:120pt;top:270pt"><span class="fig" data-srcpage="2" data-clip="120,270,299,297"></span></div>
+<div class="f" style="left:133pt;top:302pt"><span class="fig" data-srcpage="2" data-clip="133,302,287,328"></span></div>
+<p class="x" style="--b:339.3">얻은 식에서 어느 순간에나 <span class="nw">$dx_1 = 2dy_2$,</span> <span class="nw">$dy_1 = -2dx_2$임을</span> 알 수 있다. 이는 전체 변위 벡터들도 크기가 두 배 차이가 나고 서로 수직이라는 것을 뜻한다.</p>
+<div class="f" style="left:270pt;top:372pt"><span class="fig" data-srcpage="2" data-clip="270,372,392,469"></span></div>
+<p class="x i wn" style="--b:375.4;width:233.2pt;margin-top:-1.2pt">호랑이들이 만났으므로 <span class="nw">$\vec S_1 = \vec{AB} + \vec S_2$이다.</span> 그러면 직각삼각형으로부터 <span class="nw">$(x_{\mathrm w}, y_{\mathrm w}) = (4L/5, 2L/5)$를</span> 얻는다.</p>
+<p class="x i wn" style="--b:411.6;width:233.2pt">호랑이들의 가속도 크기는 <span class="nw">$\mu g$를</span> 넘을 수 없다. 수평면에서 호랑이에게 작용하는 힘은 마찰력뿐이기 때문이다.</p>
+<p class="x i wr wn" style="--b:459.6;--fw:129.7pt;--fh:22.9pt">호랑이들의 가속도에는 법선 성분만 있다. 어느 순간에나 호랑이들의 속도 벡터는 같은 각속도로 회전하며, 이 각속도는 그 순간 삼각형의 회전 각속도 <span class="nw">$\omega$와</span> 같다는 점에 주목하자. 첫째 호랑이에 대한 둘째 호랑이의 상대 운동을 생각하여 이 각속도를 구하자.</p>
+<div class="f" style="left:172pt;top:520pt"><span class="fig" data-srcpage="2" data-clip="172,520,248,547"></span></div>
+<p class="x c" style="--b:563.8">23</p>
+</div>
+
+<!-- page 24 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="3" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7">그러면 가속도는 <span class="nw">$a_1 = \omega v_1$,</span> <span class="nw">$a_2 = \omega v_2$,</span> <span class="nw">$a_3 = \omega v_3$이다.</span></p>
+<p class="x i" style="--b:78.6">첫째 호랑이의 가속도 <span class="nw">$a_1$은</span> 언제나 다른 두 호랑이의 가속도보다 크므로, 이 호랑이가 가장 먼저 이 운동을 유지할 수 없게 된다. 시간 <span class="nw">$t$에</span> 따른 <span class="nw">$a_1$은</span> 다음과 같다.</p>
+<div class="f" style="left:157pt;top:104pt"><span class="fig" data-srcpage="3" data-clip="157,104,262,131"></span></div>
+<p class="x" style="--b:140.5">따라서</p>
+<div class="f" style="left:180pt;top:143pt"><span class="fig" data-srcpage="3" data-clip="180,143,239,169"></span></div>
+<p class="x i wn" style="--b:180.5">얻은 답을 분석해 보자. 마찰 계수가 작으면 호랑이들은 이러한 운동을 시작조차 할 수 없으므로, <span class="nw">$\mu \leqslant \dfrac{v^2}{2gL}$일</span> 때 <span class="nw">$\tau = 0$이고,</span> 그렇지 않으면 <span class="nw">$\mu > \dfrac{v^2}{2gL}$일</span> 때 <span class="nw">$\tau = \dfrac{L}{v} - \dfrac{v}{2\mu g}$이다.</span></p>
+<p class="x h" style="--b:235.4">문제 10-2. 원통의 전기장</p>
+<p class="x i" style="--b:250.8">금속 원통 내부의 전기장은 0이다. 따라서 전하들은 원통 표면에 분포하여, 이 전하들이 원통 내부에 만드는 전기장이 <span class="nw">$\vec E = -\vec E_0$가</span> 되도록 한다. 둘째 원통 표면의 전하 분포는 첫째 원통과 같으므로, 둘째 원통 내부에는 세기가 <span class="nw">$-\vec E_0$인</span> 균일한 전기장이 만들어진다.</p>
+<p class="x i wn" style="--b:310.5">점전하를 왼쪽 점에서 오른쪽 점으로 옮길 때 중력은 일을 하지 않는다. 퍼텐셜 에너지의 변화는 전기장이 한 일에 마이너스 부호를 붙인 것과 같다: <span class="nw">$\Delta W_{\mathrm p} = -A_E = 2qE_0R$.</span></p>
+<p class="x i m" style="--b:346.4">방법 1.</p>
+<p class="x i" style="--b:358.4">원통의 중심에 원점을 둔 데카르트 좌표계를 도입하자. <span class="nw">$x$축은</span> 수평 오른쪽으로, <span class="nw">$y$축은</span> 연직 위쪽으로 잡는다. 각 <span class="nw">$\theta$에</span> 따른 퍼텐셜 에너지 함수를 쓰자.</p>
+<p class="x c" style="--b:401.8">$W_{\mathrm p}(\theta) = mgR\sin\theta + E_0qR\cos\theta$</p>
+<p class="x" style="--b:421.4;margin-top:-1pt"><span class="nw">$A = R\sqrt{(mg)^2 + (E_0q)^2}$라</span> 놓으면</p>
+<p class="x c d" style="--b:450.5;--a:16.2pt">$W_{\mathrm p}(\theta) = A\left(\dfrac{mgR}{A}\sin\theta + \dfrac{E_0qR}{A}\cos\theta\right).$</p>
+<p class="x i" style="--b:487.4;margin-top:-5.1pt">각 <span class="nw">$\alpha = \arcsin\dfrac{mgR}{A}$를</span> 도입하자. <span class="nw">$\cos\alpha = \dfrac{E_0qR}{A}$임을</span> 쉽게 알 수 있으므로,</p>
+<p class="x" style="--b:502.7">퍼텐셜 에너지의 식은 <span class="nw">$W_{\mathrm p}(\theta) = A\cos(\theta - \alpha)$</span> 꼴이 된다.</p>
+<p class="x i wn" style="--b:514.7">속력은 에너지가 최소인 점에서 최대가 된다. 퍼텐셜 에너지의 최솟값은 <span class="nw">$W_{\min} = -A$이다.</span> 처음 퍼텐셜 에너지는 <span class="nw">$W_0 = -mgR$이다.</span></p>
+<p class="x c" style="--b:563.8">24</p>
+</div>
+
+<!-- page 25 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="4" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x i" style="--b:72.5;margin-top:-6.8pt">에너지 보존 법칙을 쓰면 <span class="nw">$W_0 + \dfrac{mv_0^2}{2} = W_{\min} + \dfrac{mv_{\max}^2}{2}$이다.</span> 따라서</p>
+<p class="x lb" style="--b:119.7;left:20pt;width:42.5pt">$v_{\max} =$</p>
+<div class="f" style="left:63pt;top:91pt"><span class="fig" data-srcpage="4" data-clip="63,91,399,133"></span></div>
+<p class="x i m" style="--b:160.5">방법 2.</p>
+<div class="f" style="left:118pt;top:175pt"><span class="fig" data-srcpage="4" data-clip="118,175,301,358"></span></div>
+<p class="x i" style="--b:382.2">중력장과 정전기장은 균일하므로, 공에는 연직선과 각 <span class="nw">$\alpha$를</span> 이루는 일정한 합력 <span class="nw">$F$가</span> 작용한다. <span class="nw">$x = \mathrm{tg}\,\alpha = \dfrac{E_0q}{mg}$,</span> <span class="nw">$F = \dfrac{mg}{\cos\alpha} = mg\sqrt{x^2+1}$.</span> 일정한 힘이 작용할 때 퍼텐셜 에너지는 <span class="nw">$W_{\mathrm p} = Fh$로</span> 정해지며, 여기서 <span class="nw">$h$축은</span> 힘의 방향과 반대로 향한다.</p>
+<p class="x i" style="--b:454.4">에너지 보존 법칙을 쓰자.</p>
+<p class="x c d" style="--b:484.7;--a:14.5pt">$W_0 + \dfrac{mv_0^2}{2} = W_{\min} + \dfrac{mv_{\max}^2}{2}.$</p>
+<p class="x" style="--b:511.1">퍼텐셜 에너지는 점 <span class="nw">$B$에서</span> 최소가 된다.</p>
+<p class="x c" style="--b:537.1">$W_0 - W_{\min} = F\cdot CB = FR(1 - \cos\alpha) = mgR\left(\sqrt{x^2+1} - 1\right)$</p>
+<p class="x c" style="--b:563.8">25</p>
+</div>
+
+<!-- page 26 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="5" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7">따라서</p>
+<p class="x lb" style="--b:105.4;left:30pt;width:53.5pt">$v_{\max} =$</p>
+<div class="f" style="left:84pt;top:77.5pt"><span class="fig" data-srcpage="5" data-clip="84,77.5,371,118"></span></div>
+<p class="x i m" style="--b:142.2">방법 1.</p>
+<p class="x i" style="--b:154.1">점전하가 한 바퀴를 완전히 돌려면 모든 점에서 속력이 0보다 커야 하고, 껍질이 작용하는 수직 항력도 0보다 커야 한다.</p>
+<p class="x i" style="--b:190.0">전하는 중력장과 전기장의 합인 균일한 힘의 장 안에 있으므로, 퍼텐셜 에너지는 장이 작용하는 합력이 원통 표면에 수직인 점에서 최대가 된다.</p>
+<p class="x i" style="--b:237.8">이탈하지 않을 조건을 쓰자.</p>
+<p class="x c d" style="--b:265.0;--a:14.2pt">$ma_{\mathrm c} = \dfrac{mv^2}{R} > \sqrt{(mg)^2 + (E_0q)^2}.$</p>
+<p class="x" style="--b:288.0">이 점에서의 운동 에너지를 나타내자.</p>
+<p class="x c d" style="--b:315.2;--a:14.2pt">$W_{\min} = \dfrac{mv^2}{2} > \dfrac{A}{2}.$</p>
+<p class="x i" style="--b:338.2">에너지 보존 법칙을 쓰자.</p>
+<p class="x c d" style="--b:365.4;--a:14.5pt">$\dfrac{mv_0^2}{2} - mgR = W_{\min} + A,$</p>
+<p class="x" style="--b:385.7">따라서</p>
+<div class="f" style="left:121pt;top:388pt"><span class="fig" data-srcpage="5" data-clip="121,388,299,420"></span></div>
+<p class="x i m" style="--b:437.8">방법 2.</p>
+<p class="x i" style="--b:449.8">점전하가 한 바퀴를 완전히 돌려면 모든 점에서 속력이 0보다 커야 하고, 껍질이 작용하는 수직 항력도 0보다 커야 한다.</p>
+<p class="x i" style="--b:485.7">퍼텐셜 에너지는 장이 작용하는 합력이 원통 표면에 수직인 점 <span class="nw">$D$에서</span> 최대가 된다. 에너지 보존 법칙을 쓰자.</p>
+<div class="f" style="left:154pt;top:519pt"><span class="fig" data-srcpage="5" data-clip="154,519,266,547"></span></div>
+<p class="x c" style="--b:563.8">26</p>
+</div>
+
+<!-- page 27 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="6" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7;margin-top:-1pt">여기서 <span class="nw">$W_D - W_0 = F\cdot CD = FR(1 + \cos\alpha) = mgR\left(\sqrt{x^2+1} + 1\right)$이다.</span></p>
+<p class="x i" style="--b:78.6">이탈하지 않을 조건을 쓰자.</p>
+<p class="x c d" style="--b:105.9;--a:14.2pt">$ma_{\mathrm c} = \dfrac{mv^2}{R} > F,$</p>
+<p class="x" style="--b:138.2;margin-top:-5pt">즉 <span class="nw">$v_0^2 = \dfrac{2}{m}(W_D - W_0) + v^2 > 2gR\left(\sqrt{x^2+1} + 1\right) + gR\sqrt{x^2+1}$</span> 또는</p>
+<div class="f" style="left:131pt;top:154pt"><span class="fig" data-srcpage="6" data-clip="131,154,289,195"></span></div>
+<p class="x h" style="--b:219.2">문제 10-3. 전동 수레</p>
+<p class="x i m" style="--b:235.4">방법 1.</p>
+<div class="f" style="left:299pt;top:244pt"><span class="fig" data-srcpage="6" data-clip="299,244,392,299"></span></div>
+<div class="ov wb" style="left:367.4pt;top:265.8pt;width:5.2pt;height:4.8pt;font:5.3pt/4.6pt CM,serif">in</div>
+<div class="ov wb" style="left:323.0pt;top:291.0pt;width:6.0pt;height:7.2pt;font:5.3pt/6.4pt CM,serif">fr</div>
+<div class="ov wb" style="left:359.2pt;top:291.0pt;width:6.0pt;height:7.2pt;font:5.3pt/6.4pt CM,serif">fr</div>
+<p class="x i wr wn" style="--b:247.4;--fw:100.7pt;--fh:70.7pt">수평 오른쪽을 향하는 <span class="nw">$x$축을</span> 도입하자. 수레가 수평 가속도 <span class="nw">$\vec a$로</span> 움직인다고 하자. 수레의 질량 중심에 고정된 비관성 기준계로 옮겨 가면, 질량 중심에 작용하는 관성력 <span class="nw">$\vec F_{\mathrm{in}} = -m\vec a$가</span> 더해진다. 또한 수레에는 중력 <span class="nw">$mg$,</span> 도로가 작용하는 수직 항력 <span class="nw">$N_1$과</span> <span class="nw">$N_2$,</span> 그리고 바퀴 아래쪽 점들의 속도와 반대 방향인 마찰력 <span class="nw">$\mu N_1$과</span> <span class="nw">$\mu N_2$가</span> 작용한다.</p>
+<p class="x i" style="--b:343.0">선택한 기준계에서 수레는 정지해 있으므로, 수레에 작용하는 힘의 합은 0이어야 하고 힘의 모멘트의 합도 0이어야 한다.</p>
+<p class="x i" style="--b:378.9">왼쪽 바퀴가 바닥에 닿는 점에 대한 힘의 모멘트의 합을 생각하자.</p>
+<div class="f" style="left:138pt;top:394pt"><span class="fig" data-srcpage="6" data-clip="138,394,281,407"></span></div>
+<p class="x" style="--b:419.9">힘 <span class="nw">$N_2$를</span> 나타내자.</p>
+<div class="f" style="left:154pt;top:422pt"><span class="fig" data-srcpage="6" data-clip="154,422,265,449"></span></div>
+<p class="x i" style="--b:458.5">오른쪽 바퀴에 대해서도 마찬가지로 하자.</p>
+<div class="f" style="left:138pt;top:470pt"><span class="fig" data-srcpage="6" data-clip="138,470,281,484"></span></div>
+<div class="f" style="left:154pt;top:490pt"><span class="fig" data-srcpage="6" data-clip="154,490,265,517"></span></div>
+<p class="x i" style="--b:526.6">수평축 방향 성분으로 뉴턴 제2법칙을 쓰자.</p>
+<p class="x" style="--b:538.6"><span class="nw">$F_{\mathrm{fr}1} - F_{\mathrm{fr}2} - ma_x = 0$.</span> 조건에 따라 바퀴들이 빠르게 회전하기 시작하므로</p>
+<p class="x c" style="--b:563.8">27</p>
+</div>
+
+<!-- page 28 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="7" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7">바퀴들은 바닥에서 미끄러진다. 이 경우 <span class="nw">$F_{\mathrm{fr}\,i} = N_i$이다.</span> 이를 고려하여 가속도를 나타내면 다음과 같다.</p>
+<div class="f" style="left:184pt;top:82pt"><span class="fig" data-srcpage="7" data-clip="184,82,235,108"></span></div>
+<p class="x" style="--b:121.1">조건에서 <span class="nw">$\mu &lt; l/h$이므로</span> <span class="nw">$a_x &lt; 0$이고,</span> 따라서 수레는 왼쪽으로 움직이며</p>
+<p class="x" style="--b:140.5;margin-top:-3.3pt">그 가속도의 크기는 <span class="nw">$a = \dfrac{\mu gx}{l - \mu h}$이다.</span></p>
+<p class="x i m" style="--b:157.4">방법 2.</p>
+<div class="f" style="left:118pt;top:169pt"><span class="fig" data-srcpage="7" data-clip="118,169,301,323"></span></div>
+<p class="x i" style="--b:345.3"><span class="nw">$\vec a$를</span> 수레의 가속도라 하자. 바퀴에 작용하는 수직 항력과 마찰력을 합쳐 전체 받침 반력 <span class="nw">$\vec Q = \vec N + \vec F$로</span> 나타내자.</p>
+<p class="x i" style="--b:369.5">수레에 고정된 기준계로 옮겨 가자. 이 기준계에서는 모든 힘을 세 힘으로 줄일 수 있다. 왼쪽과 오른쪽 바퀴 쌍에 각각 작용하는 전체 받침 반력 <span class="nw">$\vec Q_{\mathrm L}$과</span> <span class="nw">$\vec Q_{\mathrm R}$,</span> 그리고 수레의 질량 중심에 작용하는 중력과 관성력의 합력 <span class="nw">$m(\vec g - \vec a)$이다.</span></p>
+<p class="x i" style="--b:417.6">이 기준계에서 수레는 정지해 있고 세 점에 작용하는 힘들을 받으므로, 평행하지 않은 세 힘에 관한 정리에 따라 이 힘들의 작용선의 연장선은 한 점 M에서 만난다. 전체 받침 반력이 연직선과 각 <span class="nw">$\mathrm{arctg}\,\mu$를</span> 이룬다는 것을 고려하면, 이 반력들은 수레 가운데 바로 위, 바닥으로부터 높이 <span class="nw">$OM = l/\mu$인</span> 점 M에서 만난다. 이것을 그림에 나타내자.</p>
+<p class="x i" style="--b:489.6">그러면 중력과 관성력의 합력이 연직선과 이루는 각은</p>
+<p class="x" style="--b:508.4;margin-top:-3.3pt"><span class="nw">$\mathrm{arctg}\,\dfrac{x}{l/\mu - h}$이어야</span> 한다.</p>
+<p class="x i" style="--b:534.8;margin-top:-3.3pt">따라서 수레의 가속도는 <span class="nw">$a = g\,\mathrm{tg}\,\alpha = \dfrac{\alpha gx}{l - \mu h}$이고</span> 왼쪽을 향한다.</p>
+<p class="x c" style="--b:563.8">28</p>
+</div>
+
+<!-- page 29 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="8" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x i m" style="--b:66.7">방법 1.</p>
+<p class="x i" style="--b:78.7">뒤집히지 않을 조건을 구하자. 수레가 뒤집히지 않는다면 <span class="nw">$N_1, N_2 > 0$이다.</span></p>
+<p class="x i" style="--b:102.6">첫째 조건으로부터</p>
+<div class="f" style="left:151pt;top:115pt"><span class="fig" data-srcpage="8" data-clip="151,115,269,154"></span></div>
+<p class="x" style="--b:168.9"><span class="nw">$x > h - l$을</span> 얻는다.</p>
+<p class="x i" style="--b:180.9">둘째 조건을 생각하자.</p>
+<div class="f" style="left:150pt;top:193pt"><span class="fig" data-srcpage="8" data-clip="150,193,271,232"></span></div>
+<p class="x" style="--b:247.2">따라서 <span class="nw">$x &lt; l - \mu h$를</span> 얻는다.</p>
+<p class="x i" style="--b:259.2">문제의 조건에 주어진 제한을 고려하면 둘째 조건(<span class="nw">$\mu h - l &lt; 0$)은</span> 항상 만족된다는 점에 주목하자. 최종적으로 <span class="nw">$x &lt; l - \mu h$를</span> 얻는다.</p>
+<p class="x i m" style="--b:283.1">방법 2.</p>
+<p class="x i" style="--b:295.1;margin-top:-1.3pt"><span class="nw">$\vec Q_{\mathrm R}$가</span> 전동 수레의 질량 중심보다 아래를 지나면, 회전하지 않기 위해서는 왼쪽 바퀴 쌍에 작용하는 수직 항력이 음수여야 하는데 이는 불가능하다. 따라서 왼쪽 바퀴 쌍이 바닥에서 떨어진다.</p>
+<p class="x i" style="--b:343.0">바퀴들은 <span class="nw">$\mu &lt; (l - x)/h$</span> 또는 <span class="nw">$x &lt; l - \mu h$일</span> 때 떨어지지 않는다.</p>
+<p class="x h" style="--b:365.1">문제 10-4. 피스톤 아래의 미지의 액체</p>
+<p class="x i" style="--b:383.0">조건으로부터 피스톤은 받침대에서 떨어져 높이 <span class="nw">$2H$까지</span> 올라갔음을 알 수 있다. 피스톤이 받침대 위에 놓여 있지 않으면 피스톤에는 세 힘, 즉 중력, 대기압에 의한 힘, 액체 증기의 압력에 의한 힘만 작용한다. 앞의 두 힘은 일정하므로 셋째 힘도 일정하다. 그래프에서 증기의 압력이 일정한 마지막 가열 구간을 볼 수 있으므로, 이 구간에서 피스톤은 받침대 위에 놓여 있지 않다. 피스톤의 평형 조건을 쓰자.</p>
+<div class="f" style="left:163pt;top:458pt"><span class="fig" data-srcpage="8" data-clip="163,458,257,471"></span></div>
+<p class="x" style="--b:484.9">따라서</p>
+<p class="x c d" style="--b:503.8;--a:14.6pt">$M = \dfrac{p_0S}{2g} = \dfrac{10^5\cdot 0.01}{2\cdot 9.8} = 51\,\mathrm{kg}$</p>
+<p class="x i" style="--b:526.6">조건에 따르면 처음에 피스톤 아래에는 액체만 있었고, 그 뒤 열역학적 평형이 이루어졌다. 따라서 두 가지 경우가 가능하다. 피스톤 아래에 처음에</p>
+<p class="x c" style="--b:563.8">29</p>
+</div>
+
+<!-- page 30 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="9" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x" style="--b:66.7">증기만 있거나, 액체와 그 포화 증기의 혼합물이 있다. 가열 과정이 끝날 때까지 액체가 완전히 증발하지 않았다면, 내용물의 압력이 일정할 때(액체의 포화 증기압과 같을 때) 그 온도도 일정했을 것이다. 그래프를 보면 마지막 단계에서 내용물의 온도는 일정한 압력에서 증가하였다. 따라서 피스톤이 높이 <span class="nw">$2H$에</span> 도달할 때까지 액체는 모두 증발하였다. 피스톤이 높이 <span class="nw">$2H$에</span> 도달한 순간의 상태 방정식을 쓰자.</p>
+<div class="f" style="left:149pt;top:155pt"><span class="fig" data-srcpage="9" data-clip="149,155,270,181"></span></div>
+<p class="x" style="--b:193.3">따라서</p>
+<p class="x c d" style="--b:214.2;--a:14.6pt">$m_0 = \dfrac{2\mu p_0SH}{RT_0} = \dfrac{2\cdot 0.018\cdot 10^5\cdot 0.01\cdot 1}{8.31\cdot 350} = 12.4\,\mathrm{g}$</p>
+<p class="x i" style="--b:239.0">상태 방정식으로부터 피스톤이 받침대에서 떨어지는 순간 피스톤 아래에 있는 증기의 질량 <span class="nw">$m_{\mathrm v1}$을</span> 구하자.</p>
+<p class="x c d" style="--b:271.8;--a:14.6pt">$m_{\mathrm v1} = \dfrac{1.5\,p_0SH\mu}{1.1\,T_0R} = 8.4\,\mathrm{g}$</p>
+<p class="x" style="--b:296.0"><span class="nw">$m_{\mathrm v1} &lt; m_0$임에</span> 주목하자. 이는 피스톤이 올라가는 과정을 두 단계로 나눌 수 있다는 것을 뜻한다. 첫째 단계에서는 일정한 온도에서 피스톤 아래에 포화 증기가 있고 액체가 계속 증발한다. 둘째 단계에서는 원통의 내용물이 모두 기체 상태가 되어, 온도가 올라가면서 등압 팽창이 일어난다.</p>
+<p class="x i" style="--b:356.5">첫째 단계는 그래프에서 좌표가 <span class="nw">$(1.1\,T_0; 1.5\,p_0)$인</span> 한 점으로, 둘째 단계는 수평 선분으로 나타난다.</p>
+<p class="x i" style="--b:381.1">첫째 단계에서 에너지가 어디에 쓰이는지 생각하자. 액체가 증발하면서 에너지의 일부는 액체 분자 사이의 결합 에너지를 끊는 데(<span class="nw">$\Delta U_{\mathrm{liq}}$)</span> 쓰이고, 일부는 생긴 증기가 주위로 팽창하면서 하는 일 <span class="nw">$A_1 = p(V_{\mathrm g} - V_{\mathrm l})$에</span> 쓰인다. <span class="nw">$\Delta U_{\mathrm{liq}}$의</span> 값은 상전이가 일어나는 온도에 따라 달라진다. 액체 상태인 물질의 부피를 기체 상태의 부피에 비해 무시할 수 있다면, <span class="nw">$A_1$의</span> 값도 온도로 정해지며 외부 압력에 의존하지 않는다는 것을 보이자. 실제로 이 근사에서 <span class="nw">$A_1 = pV_{\mathrm g} = \nu_{\mathrm g}RT$이며,</span> 여기서 <span class="nw">$\nu_{\mathrm g}$는</span> 증발한 물질의 양이다. 정의에 따라 기화열에는 분자 사이의 결합을 끊는 데 드는 에너지와 대기 중으로 팽창하는 일을 하는 데 드는 에너지가 모두 포함된다. 첫째 단계에서 공급된 열 <span class="nw">$Q_1$은</span> 다음과 같이 나타낼 수 있다.</p>
+<p class="x c" style="--b:538.6">$Q_1 = L(m_0 - m_{\mathrm v1}).$</p>
+<p class="x c" style="--b:563.8">30</p>
+</div>
+
+<!-- page 31 -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="10" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<p class="x i" style="--b:66.7">둘째 단계에서는 증기가 온도 <span class="nw">$1.1T_0$에서</span> <span class="nw">$1.5T_0$까지</span> 등압 가열된다. 조건에 따라 증기를 다원자 기체로 볼 수 있으므로, 이 과정에서 증기의 몰 열용량은 <span class="nw">$c_p = 4R$이고,</span> 이 열용량에는 기체 내부 에너지의 변화와, 대기압에 의한 힘과 피스톤의 중력 모두에 맞서 팽창하는 일이 함께 고려되어 있다. 그러면 둘째 단계에서 공급된 열은 다음과 같이 나타낼 수 있다.</p>
+<div class="f" style="left:125pt;top:143pt"><span class="fig" data-srcpage="10" data-clip="125,143,294,169"></span></div>
+<p class="x i" style="--b:191.2">피스톤이 올라가는 과정에서 공급된 전체 열량은 다음과 같다.</p>
+<p class="x c d" style="--b:225.2;--a:17.2pt">$Q = Q_1 + Q_2 = p_0SH\left(\dfrac{7\mu L}{11RT_0} + \dfrac{16}{5}\right) = 10^3\cdot(8.7 + 3.2) = 11.9\,\mathrm{kJ}$</p>
+<p class="x h" style="--b:261.1">문제 10-5. 열에 민감한 전원</p>
+<p class="x i" style="--b:286.2">저항기에 전류 <span class="nw">$I$가</span> 흐르면 저항기는 온도 <span class="nw">$t$까지</span> 가열된다. 정상 상태에서 발생하는 전기적 일률은 열 손실 일률과 같다. 따라서 <span class="nw">$\beta(t - t_0) = I^2R_0\left(1 + \alpha(t - t_0)\right)$이며,</span> 여기서 <span class="nw">$\beta$는</span> 열 손실 계수이다. 따라서</p>
+<div class="f" style="left:165pt;top:337pt"><span class="fig" data-srcpage="10" data-clip="165,337,255,365"></span></div>
+<p class="x" style="--b:384.8">단자 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이의 정상 전압은 다음 식으로 주어진다.</p>
+<div class="f" style="left:140pt;top:402pt"><span class="fig" data-srcpage="10" data-clip="140,402,279,415"></span></div>
+<p class="x" style="--b:436.1">연립 방정식을 풀면 다음을 얻는다.</p>
+<div class="f" style="left:158pt;top:452pt"><span class="fig" data-srcpage="10" data-clip="158,452,262,479"></span></div>
+<p class="x" style="--b:499.0"><span class="nw">$I = 0$일</span> 때 <span class="nw">$U_{AB} = \mathcal E$이다.</span> 그래프에서 <span class="nw">$\mathcal E = 10\,\mathrm V$를</span> 얻는다.</p>
+<p class="x i" style="--b:512.8"><span class="nw">$I$가</span> 작을 때 식 (*)는 <span class="nw">$U_{AB} = \mathcal E - IR_0$로</span> 간단해진다.</p>
+<p class="x i" style="--b:526.6">그래프의 처음 부분에 접선을 긋자. 접선의 기울기로부터 <span class="nw">$R_0 = 10\,\Omega$을</span> 얻는다.</p>
+<p class="x c" style="--b:563.8">31</p>
+</div>
+
+<!-- page 32 -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.3pt"><span class="fig" data-srcpage="11" data-clip="28.3,42.3,391.2,43.1"></span></div>
+<div class="f" style="left:73pt;top:56pt"><span class="fig" data-srcpage="11" data-clip="73,56,347,261"></span></div>
+<div class="ov wb" style="left:116.3pt;top:57.6pt;width:6.0pt;height:9.4pt;font:12pt/9.4pt Cambria,'Times New Roman',serif"><span style="display:inline-block;transform:scaleX(.62);transform-origin:left">V</span></div>
+<p class="x i" style="--b:280.2">단자 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 저항 <span class="nw">$10\,\Omega$인</span> 저항기를 연결했을 때의 전압을 그래프로 구하자. 부하 곡선이 그려진 그래프에 저항기의 전류-전압 특성 곡선을 그리자. 두 그래프의 교점이 구하는 답 <span class="nw">$4.0\,\mathrm V$를</span> 준다.</p>
+<p class="x i" style="--b:316.1">그래프는 전류 <span class="nw">$0.5\,\mathrm A$에서</span> 가로축과 만난다. 이때</p>
+<div class="f" style="left:174pt;top:327pt"><span class="fig" data-srcpage="11" data-clip="174,327,246,354"></span></div>
+<p class="x" style="--b:368.7">따라서 <span class="nw">$\beta/\alpha = 5.0\,\mathrm W$이다.</span> 다른 점들을 대입해도 같은 값을 얻는다. 녹는점에서는</p>
+<p class="x lb" style="--b:407.7;left:100pt;width:64.5pt">$t_{\mathrm m} - t_0 =$</p>
+<div class="f" style="left:165pt;top:390pt"><span class="fig" data-srcpage="11" data-clip="165,390,303,420"></span></div>
+<p class="x" style="--b:430.8">따라서</p>
+<div class="f" style="left:164pt;top:432pt"><span class="fig" data-srcpage="11" data-clip="164,432,255,446"></span></div>
+<p class="x i" style="--b:459.7">온도에 따른 전류를 나타내자.</p>
+<div class="f" style="left:110pt;top:470pt"><span class="fig" data-srcpage="11" data-clip="110,470,310,498"></span></div>
+<p class="x" style="--b:514.7"><span class="nw">$t \to \infty$일</span> 때 <span class="nw">$I \to I_{\max} = \sqrt{\beta/(R_0\alpha)} = 0.71\,\mathrm A$이다.</span> 따라서 녹는점이 아무리 높아도 저항기는 <span class="nw">$0.71\,\mathrm A$보다</span> 큰 전류를 결코 흘려보낼 수 없다.</p>
+<p class="x c" style="--b:563.8">32</p>
+</div>
+
+<!-- marking scheme, problem 10-1 (A4) -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-10-T1. 호랑이 세 마리</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="12" data-clip="519,25,562,52"></span></div>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<i class="rh" style="top:85.27pt"></i><i class="rh" style="top:97.62pt"></i><i class="rh" style="top:109.97pt"></i><i class="rh" style="top:122.65pt"></i><i class="rh" style="top:135.00pt"></i><i class="rh" style="top:149.19pt"></i><i class="rh" style="top:163.38pt"></i><i class="rh" style="top:187.68pt"></i><i class="rh" style="top:200.04pt"></i><i class="rh" style="top:214.22pt"></i><i class="rh" style="top:228.41pt"></i><i class="rh" style="top:242.60pt"></i><i class="rh" style="top:254.95pt"></i><i class="rh" style="top:291.22pt"></i><i class="rh" style="top:327.48pt"></i><i class="rh" style="top:341.10pt"></i><i class="rh" style="top:353.45pt"></i><i class="rh" style="top:365.81pt"></i><i class="rh" style="top:378.16pt"></i><i class="rh" style="top:390.52pt"></i><i class="rh" style="top:403.19pt"></i><i class="rh" style="top:415.86pt"></i><i class="rh" style="top:440.17pt"></i><i class="rh" style="top:454.12pt"></i><i class="rh" style="top:468.06pt"></i><i class="rh" style="top:480.42pt"></i><i class="rh" style="top:494.29pt"></i><i class="rh" style="top:509.62pt"></i><i class="rv" style="left:31.79pt;top:85.47pt;height:424.35pt"></i><i class="rv" style="left:72.49pt;top:85.47pt;height:424.35pt"></i><i class="rv" style="left:453.34pt;top:85.47pt;height:424.35pt"></i><i class="rv" style="left:508.22pt;top:85.47pt;height:424.35pt"></i><i class="rv" style="left:563.09pt;top:85.47pt;height:424.35pt"></i>
+<p class="x cd" style="--b:94.0">배점 항목</p><p class="x cp" style="--b:94.0">점수</p><p class="x ch" style="--b:94.0">해당 여부</p>
+<p class="x cn" style="--b:106.4">1.1</p><p class="x cd" style="--b:106.4">1번과 2번 호랑이가 가까워지는 속력이 일정하며 다음과 같음을 보임</p><p class="x cp" style="--b:106.4">0.50</p>
+<p class="x cn" style="--b:118.9">1.2</p><p class="x cd" style="--b:119.1">만나는 시각 <span class="nw">$t = \frac{L}{v}$를</span> 구함</p><p class="x cp" style="--b:118.9">1.00</p>
+<p class="x cn" style="--b:131.4">2.1</p><p class="x cd" style="--b:131.4"><b>M1</b> 가까워지는 속력의 비가 변의 길이의 비와 같음.</p><p class="x cp" style="--b:131.4">1.00</p>
+<p class="x cn" style="--b:143.8">2.2</p><p class="x cd" style="--b:143.8"><b>M1</b> 2번과 3번 호랑이가 가까워지는 속력에 대한 식 <span class="nw">$v_{BC} = v_2 + \frac{v_3}{\sqrt2}$.</span></p><p class="x cp" style="--b:143.8">0.50</p>
+<p class="x cn" style="--b:158.0">2.3</p><p class="x cd" style="--b:158.0"><b>M1</b> 1번과 3번 호랑이가 가까워지는 속력에 대한 식 <span class="nw">$v_{AC} = v_3 + \frac{v_1}{\sqrt2}$.</span></p><p class="x cp" style="--b:158.0">0.50</p>
+<p class="x cn" style="--b:178.1">2.4</p><p class="x cd" style="--b:172.1"><b>M2</b> 삼각형의 변들이 회전하는 각속도가 서로 같음 <span class="nw">$\omega_{AB} = \omega_{BC} =$</span> <span class="nw">$\omega_{AC}$</span></p><p class="x cp" style="--b:178.1">0.50</p>
+<p class="x cn" style="--b:196.5">2.5</p><p class="x cd" style="--b:196.5"><b>M2</b> 변 AB의 회전 각속도에 대한 식 <span class="nw">$\omega_{AB} = \frac{v_2}{AB}$</span></p><p class="x cp" style="--b:196.5">0.50</p>
+<p class="x cn" style="--b:208.8">2.6</p><p class="x cd" style="--b:208.8"><b>M2</b> 변 BC의 회전 각속도에 대한 식 <span class="nw">$\omega_{BC} = \frac{v_3}{\sqrt2 BC}$</span></p><p class="x cp" style="--b:208.8">0.50</p>
+<p class="x cn" style="--b:223.0">2.7</p><p class="x cd" style="--b:223.0"><b>M2</b> 변 AC의 회전 각속도에 대한 식 <span class="nw">$\omega_{AC} = \frac{v_1}{\sqrt2 AC}$</span></p><p class="x cp" style="--b:223.0">0.50</p>
+<p class="x cn" style="--b:237.2">2.8</p><p class="x cd" style="--b:237.2">속력 <span class="nw">$v_3 = \frac{v}{\sqrt2}$를</span> 구함</p><p class="x cp" style="--b:237.2">1.00</p>
+<p class="x cn" style="--b:251.4">2.9</p><p class="x cd" style="--b:251.4">속력 <span class="nw">$v_2 = \frac{v}{2}$를</span> 구함</p><p class="x cp" style="--b:251.4">1.00</p>
+<p class="x cn" style="--b:275.7">3.1</p><p class="x cd" style="--b:263.7"><b>M1</b> 오랜 시간 동안 다음이 성립함을 언급함: - 1번과 2번 호랑이의 변위 벡터가 서로 수직임; - 변위의 크기의 비가 2:1임.</p><p class="x cp" style="--b:275.7">2×0.50</p>
+<p class="x cn" style="--b:311.9">3.2</p><p class="x cd" style="--b:300.0"><b>M1</b> 오랜 시간 동안 다음이 성립함을 근거를 들어 보임: - 1번과 2번 호랑이의 변위 벡터가 서로 수직임; - 변위의 크기의 비가 2:1임.</p><p class="x cp" style="--b:311.9">2×0.50</p>
+<p class="x cn" style="--b:336.9">3.3</p><p class="x cd" style="--b:337.5"><b>M1</b> 호랑이들이 만나는 조건 <span class="nw">$\vec S_1 = \vec{AB} + \vec S_2$를</span> 바르게 씀</p><p class="x cp" style="--b:336.9">0.50</p>
+<p class="x cn" style="--b:349.9">3.4</p><p class="x cd" style="--b:349.9"><b>M2</b> 만나는 위치를 정할 수 있게 하는 올바른 진술</p><p class="x cp" style="--b:349.9">0.50</p>
+<p class="x cn" style="--b:362.2">3.5</p><p class="x cd" style="--b:362.2"><b>M2</b> 진술의 근거가 완전함.</p><p class="x cp" style="--b:362.2">2.00</p>
+<p class="x cn" style="--b:374.6">3.6</p><p class="x cd" style="--b:374.6"><b>M2</b> 진술의 근거가 부분적임</p><p class="x cp" style="--b:374.6">1.00</p>
+<p class="x cn" style="--b:386.9">3.7</p><p class="x cd" style="--b:386.9"><b>M2</b> 진술의 근거가 없음.</p><p class="x cp" style="--b:386.9">0.00</p>
+<p class="x cn" style="--b:399.4">3.8</p><p class="x cd" style="--b:399.6">올바른 좌표 <span class="nw">$x_{\mathrm w} = \frac{4L}{5}$</span></p><p class="x cp" style="--b:399.4">0.50</p>
+<p class="x cn" style="--b:412.1">3.9</p><p class="x cd" style="--b:412.3">올바른 좌표 <span class="nw">$y_{\mathrm w} = \frac{2L}{5}$</span></p><p class="x cp" style="--b:412.1">0.50</p>
+<p class="x cn" style="--b:430.6">4.1</p><p class="x cd" style="--b:424.6">변의 회전 각속도를 써서 나타낸 호랑이들의 가속도 식<br><span class="nw">$a_i = \omega v_i$</span></p><p class="x cp" style="--b:430.6">1.00</p>
+<p class="x cn" style="--b:448.9">4.2</p><p class="x cd" style="--b:448.9">회전 각속도에 대한 식 <span class="nw">$\omega = \frac{v}{2(L - vt)}$</span></p><p class="x cp" style="--b:448.9">0.50</p>
+<p class="x cn" style="--b:462.9">4.3</p><p class="x cd" style="--b:462.9">시간에 따른 호랑이들의 가속도 식 <span class="nw">$a_i(t) = \frac{v}{2(L - vt)}v_i$</span></p><p class="x cp" style="--b:462.9">0.50</p>
+<p class="x cn" style="--b:476.8">4.4</p><p class="x cd" style="--b:476.8">어느 호랑이가 먼저 미끄러지기 시작하는지 판정함</p><p class="x cp" style="--b:476.8">0.20</p>
+<p class="x cn" style="--b:489.3">4.5</p><p class="x cd" style="--b:489.5">시간 <span class="nw">$\tau = \frac{L}{v} - \frac{v}{2\mu g}$를</span> 구함</p><p class="x cp" style="--b:489.3">0.40</p>
+<p class="x cn" style="--b:503.9">4.6</p><p class="x cd" style="--b:504.8;margin-top:-1.2pt"><span class="nw">$\mu \le \frac{v^2}{2gL}$일</span> 때 <span class="nw">$\tau = 0$인</span> 경우를 고려함</p><p class="x cp" style="--b:503.9">0.40</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 10-2 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-10-T2. 원통의 전기장</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="13" data-clip="519,25,562,52"></span></div>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<i class="rh" style="top:85.27pt"></i><i class="rh" style="top:97.62pt"></i><i class="rh" style="top:109.97pt"></i><i class="rh" style="top:123.60pt"></i><i class="rh" style="top:147.90pt"></i><i class="rh" style="top:160.26pt"></i><i class="rh" style="top:172.61pt"></i><i class="rh" style="top:196.92pt"></i><i class="rh" style="top:221.23pt"></i><i class="rh" style="top:245.54pt"></i><i class="rh" style="top:291.84pt"></i><i class="rh" style="top:316.15pt"></i><i class="rh" style="top:340.46pt"></i><i class="rh" style="top:364.77pt"></i><i class="rh" style="top:378.39pt"></i><i class="rh" style="top:402.70pt"></i><i class="rh" style="top:449.00pt"></i><i class="rh" style="top:461.35pt"></i><i class="rv" style="left:31.79pt;top:85.47pt;height:376.08pt"></i><i class="rv" style="left:72.49pt;top:85.47pt;height:376.08pt"></i><i class="rv" style="left:453.34pt;top:85.47pt;height:376.08pt"></i><i class="rv" style="left:508.22pt;top:85.47pt;height:376.08pt"></i><i class="rv" style="left:563.09pt;top:85.47pt;height:376.08pt"></i>
+<p class="x cd" style="--b:94.0">배점 항목</p><p class="x cp" style="--b:94.0">점수</p><p class="x ch" style="--b:94.0">해당 여부</p>
+<p class="x cn" style="--b:106.4">1.1</p><p class="x cd" style="--b:106.4">금속 원통 내부의 전기장이 0임</p><p class="x cp" style="--b:106.4">0.50</p>
+<p class="x cn" style="--b:119.4">1.2</p><p class="x cd" style="--b:120.0">대전되지 않은 원통 내부의 전기장이 <span class="nw">$-\vec E_0$임</span></p><p class="x cp" style="--b:119.4">0.50</p>
+<p class="x cn" style="--b:138.3">1.3</p><p class="x cd" style="--b:132.4">수평으로 옮길 때는 전기장만 일을 함</p><p class="x cp" style="--b:138.3">0.50</p>
+<p class="x cn" style="--b:156.7">1.4</p><p class="x cd" style="--b:156.7">퍼텐셜 에너지 변화의 크기 <span class="nw">$|W_{\mathrm p}| = 2qE_0R$</span></p><p class="x cp" style="--b:156.7">0.50</p>
+<p class="x cn" style="--b:169.0">1.5</p><p class="x cd" style="--b:169.0">옮길 때 퍼텐셜 에너지가 증가함: <span class="nw">$W_{\mathrm p} > 0$</span></p><p class="x cp" style="--b:169.0">0.50</p>
+<p class="x cn" style="--b:187.4">2.1</p><p class="x cd" style="--b:181.4">위치에 따른 퍼텐셜 에너지의 식을 얻었거나, 등가인 힘을 쓰고 그 방향을 정함</p><p class="x cp" style="--b:187.4">2.00</p>
+<p class="x cn" style="--b:211.7">2.2</p><p class="x cd" style="--b:205.7">최대 속력(즉 최소 퍼텐셜 에너지)에 해당하는 위치가 연직선과 이루는 각을 구함</p><p class="x cp" style="--b:211.7">1.00</p>
+<p class="x cn" style="--b:236.0">2.3</p><p class="x cd" style="--b:230.0">퍼텐셜 에너지의 최솟값, 또는 처음 점과 최소점 사이의 퍼텐셜 에너지 변화를 구함</p><p class="x cp" style="--b:236.0">0.50</p>
+<p class="x cn" style="--b:271.3">2.4</p>
+<p class="x lb" style="--b:263.2;left:78.9pt;width:80.4pt">구한 값: <span class="nw">$v_{\max} =$</span></p>
+<div class="f" style="left:159pt;top:245pt"><span class="fig" data-srcpage="13" data-clip="159,245,323,273"></span></div>
+<p class="x" style="--b:263.2;left:325.2pt;width:122.2pt"><i>참고:</i> 이 항목은 답이</p>
+<p class="x cd" style="--b:286.0">문제에 주어진 양으로 표현된 경우에만 점수를 준다</p>
+<p class="x cp" style="--b:271.3">1.00</p>
+<p class="x cn" style="--b:306.6">3.1</p><p class="x cd" style="--b:300.6">최소 속력(즉 최대 퍼텐셜 에너지)에 해당하는 위치가 연직선과 이루는 각을 구함</p><p class="x cp" style="--b:306.6">1.00</p>
+<p class="x cn" style="--b:330.9">3.2</p><p class="x cd" style="--b:324.9">퍼텐셜 에너지의 최댓값, 또는 처음 점과 최대점 사이의 퍼텐셜 에너지 변화를 구함</p><p class="x cp" style="--b:330.9">0.50</p>
+<p class="x cn" style="--b:355.2">3.3</p><p class="x cd" style="--b:349.2">한 바퀴를 완전히 돌려면 모든 점에서 <span class="nw">$N \ge 0$이어야</span> 한다는 진술을 세움</p><p class="x cp" style="--b:355.2">0.50</p>
+<p class="x cn" style="--b:374.2">3.4</p><p class="x cd" style="--b:374.8">이탈하는 점에서 뉴턴 제2법칙을 씀: <span class="nw">$m\vec a = m\vec g + q\vec E + \vec N$</span></p><p class="x cp" style="--b:374.2">0.50</p>
+<p class="x cn" style="--b:393.1">3.5</p><p class="x cd" style="--b:387.2">이탈 없이 운동하기 위해 이탈할 수 있는 점에서 가져야 할 최소 속력을 구함</p><p class="x cp" style="--b:393.1">1.00</p>
+<p class="x cn" style="--b:428.4">3.6</p>
+<p class="x lb" style="--b:424.4;left:78.9pt;width:79.6pt">구한 값: <span class="nw">$v_{\mathrm{cr}} =$</span></p>
+<div class="f" style="left:158pt;top:403.2pt"><span class="fig" data-srcpage="13" data-clip="158,403.2,311,434"></span></div>
+<p class="x" style="--b:424.4;left:313pt;width:134.4pt"><i>참고:</i> 이 항목은 답이 문제에</p>
+<p class="x cd" style="--b:445.4">주어진 양으로 표현된 경우에만 점수를 준다</p>
+<p class="x cp" style="--b:428.4">1.00</p>
+<p class="x cn" style="--b:457.8">3.7</p><p class="x cd" style="--b:457.8">$v_0 \ge v_{\mathrm{cr}}$</p><p class="x cp" style="--b:457.8">0.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 10-3 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-10-T3. 전동 수레</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="14" data-clip="519,25,562,52"></span></div>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<i class="rh" style="top:66.88pt"></i><i class="rh" style="top:79.24pt"></i><i class="rh" style="top:103.55pt"></i><i class="rh" style="top:115.90pt"></i><i class="rh" style="top:128.25pt"></i><i class="rh" style="top:140.61pt"></i><i class="rh" style="top:152.96pt"></i><i class="rh" style="top:209.15pt"></i><i class="rh" style="top:270.04pt"></i><i class="rh" style="top:328.94pt"></i><i class="rh" style="top:399.28pt"></i><i class="rh" style="top:411.63pt"></i><i class="rh" style="top:423.98pt"></i><i class="rh" style="top:448.29pt"></i><i class="rh" style="top:472.60pt"></i><i class="rh" style="top:484.95pt"></i><i class="rh" style="top:498.51pt"></i><i class="rh" style="top:510.87pt"></i><i class="rh" style="top:523.22pt"></i><i class="rh" style="top:535.57pt"></i><i class="rh" style="top:559.88pt"></i><i class="rh" style="top:618.26pt"></i><i class="rh" style="top:630.61pt"></i><i class="rh" style="top:642.97pt"></i><i class="rh" style="top:679.23pt"></i><i class="rh" style="top:727.45pt"></i><i class="rh" style="top:739.80pt"></i><i class="rh" style="top:752.16pt"></i><i class="rh" style="top:776.47pt"></i><i class="rh" style="top:788.82pt"></i><i class="rv" style="left:31.79pt;top:67.08pt;height:721.94pt"></i><i class="rv" style="left:72.49pt;top:67.08pt;height:721.94pt"></i><i class="rv" style="left:453.34pt;top:67.08pt;height:721.94pt"></i><i class="rv" style="left:508.22pt;top:67.08pt;height:721.94pt"></i><i class="rv" style="left:563.09pt;top:67.08pt;height:721.94pt"></i>
+<p class="x cd" style="--b:75.7">배점 항목</p><p class="x cp" style="--b:75.7">점수</p><p class="x ch" style="--b:75.7">해당 여부</p>
+<p class="x cn" style="--b:94.0">1.1</p><p class="x cd" style="--b:88.0">모든 힘과 가속도를 표시한 올바른 그림: 받침 반력 두 개, 마찰력 두 개, 중력, 가속도.</p><p class="x cp" style="--b:94.0">1.00</p>
+<p class="x cn" style="--b:112.3">1.2</p><p class="x cd" style="--b:112.3">그림에 요소 1개가 표시되지 않음(또는 잘못 표시됨)</p><p class="x cp" style="--b:112.3">0.80</p>
+<p class="x cn" style="--b:124.7">1.3</p><p class="x cd" style="--b:124.7">그림에 요소 2개가 표시되지 않음(또는 잘못 표시됨)</p><p class="x cp" style="--b:124.7">0.60</p>
+<p class="x cn" style="--b:137.0">1.4</p><p class="x cd" style="--b:137.0">그림에 요소 3개가 표시되지 않음(또는 잘못 표시됨)</p><p class="x cp" style="--b:137.0">0.40</p>
+<p class="x cn" style="--b:149.4">1.5</p><p class="x cd" style="--b:149.4">그림이 없거나 요소 4개 이상이 표시되지 않음(또는 잘못 표시됨)</p><p class="x cp" style="--b:149.4">0.00</p>
+<p class="x cn" style="--b:183.6">1.6</p><p class="x cd" style="--b:161.7">미끄러짐을 언급하고 다음을 씀</p><p class="x cd c" style="--b:183.6">$F_{\mathrm{fr}} = \mu N$</p><p class="x cp" style="--b:183.6">0.50</p>
+<p class="x cn" style="--b:242.2">1.7</p><p class="x cd" style="--b:217.9"><b>M1</b> 전체 반력의 기울기 각에 대한 식</p><p class="x cd c d" style="--b:244.5;--a:14.6pt">$tg(\alpha) = \dfrac{F_{\mathrm{fr}}}{N} = \mu$</p><p class="x cp" style="--b:242.2">1.00</p>
+<p class="x cn" style="--b:302.1">1.8</p><p class="x cd" style="--b:278.8"><b>M1</b> 전체 받침 반력의 작용선들이 만나는 점의 높이에 대한 식</p><div class="f" style="left:239pt;top:292pt"><span class="fig" data-srcpage="14" data-clip="239,292,288,317"></span></div><p class="x cp" style="--b:302.1">1.50</p>
+<p class="x cn" style="--b:366.7">1.9</p><p class="x cd" style="--b:337.7"><b>M1</b> 유효 중력의 작용선이 전체 받침 반력 작용선들의 교점을 지난다는 조건을 씀</p><div class="f" style="left:219pt;top:358pt"><span class="fig" data-srcpage="14" data-clip="219,358,306,384"></span></div><p class="x cp" style="--b:366.7">1.50</p>
+<p class="x cn" style="--b:408.0">1.10</p><p class="x cd" style="--b:408.0"><b>M2</b> 수평축 방향 성분으로 쓴 뉴턴 법칙 <span class="nw">$ma_x = F_{\mathrm{fr,L}} - F_{\mathrm{fr,R}}$</span></p><p class="x cp" style="--b:408.0">1.00</p>
+<p class="x cn" style="--b:420.4">1.11</p><p class="x cd" style="--b:420.4"><b>M2</b> 연직축 방향 성분으로 쓴 뉴턴 법칙 <span class="nw">$mg = N_{\mathrm R} + N_{\mathrm L}$</span></p><p class="x cp" style="--b:420.4">1.00</p>
+<p class="x cn" style="--b:438.7">1.12</p><p class="x cd" style="--b:432.8"><b>M2</b> 비관성 기준계에서, 또는 관성 기준계에서 질량 중심을 지나는 수평선 위의 점에 대한 힘의 모멘트의 평형</p><p class="x cp" style="--b:438.7">1.00</p>
+<p class="x cn" style="--b:463.0">1.13</p><p class="x cd" style="--b:457.1"><b>M2</b> 가속도를 가지고 움직이는 물체에 모멘트 규칙을 적용할 수 있는 근거</p><p class="x cp" style="--b:463.0">1.00</p>
+<p class="x cn" style="--b:481.4">1.14</p><p class="x cd" style="--b:481.4">가속도의 방향(왼쪽)을 바르게 정함</p><p class="x cp" style="--b:481.4">0.50</p>
+<p class="x cn" style="--b:493.7">1.15</p><p class="x cd" style="--b:493.7">가속도의 크기 <span class="nw">$a = \frac{\mu gx}{l - \mu h}$를</span> 바르게 정함</p><p class="x cp" style="--b:493.7">1.00</p>
+<p class="x cn" style="--b:507.3">2.1</p><p class="x cd" style="--b:507.3"><span class="nw">$N_{\mathrm L} > 0$이면</span> 왼쪽 바퀴가 떨어지지 않는다고 언급함</p><p class="x cp" style="--b:507.3">0.50</p>
+<p class="x cn" style="--b:519.6">2.2</p><p class="x cd" style="--b:519.6"><span class="nw">$N_{\mathrm R} > 0$이면</span> 오른쪽 바퀴가 떨어지지 않는다고 언급함</p><p class="x cp" style="--b:519.6">0.50</p>
+<p class="x cn" style="--b:532.0">2.3</p><p class="x cd" style="--b:532.0"><b>M1</b> 오른쪽 바퀴는 결코 떨어지지 않는다고 언급함(<span class="nw">$N_{\mathrm R}$은</span> 항상 0보다 큼)</p><p class="x cp" style="--b:532.0">1.00</p>
+<p class="x cn" style="--b:550.3">2.4</p><p class="x cd" style="--b:544.3"><b>M1</b> 질량 중심이 전체 받침 반력 <span class="nw">$Q_2$의</span> 작용선보다 오른쪽에 있을 때 <span class="nw">$N_{\mathrm L} \le 0$임을</span> 언급함</p><p class="x cp" style="--b:550.3">1.00</p>
+<p class="x cn" style="--b:591.7">2.5</p><p class="x cd" style="--b:568.7"><b>M1</b> 떨어질 조건을 씀</p><div class="f" style="left:202pt;top:577pt"><span class="fig" data-srcpage="14" data-clip="202,577,323,603"></span></div><p class="x cp" style="--b:591.7">1.00</p>
+<p class="x cn" style="--b:627.0">2.6</p><p class="x cd" style="--b:627.0"><b>M2</b> <span class="nw">$N_{\mathrm L}$에</span> 대한 식을 씀</p><p class="x cp" style="--b:627.0">1.00</p>
+<p class="x cn" style="--b:639.4">2.7</p><p class="x cd" style="--b:639.4"><b>M2</b> <span class="nw">$x > 0$일</span> 때 <span class="nw">$N_{\mathrm L} &lt; N_{\mathrm R}$임을</span> 증명했거나 <span class="nw">$N_{\mathrm R}$에</span> 대한 식을 씀</p><p class="x cp" style="--b:639.4">1.00</p>
+<p class="x cn" style="--b:663.7">2.8</p><p class="x cd" style="--b:651.7"><b>M2</b> <span class="nw">$x$에</span> 대한 제한을 부등식 <span class="nw">$x\mu h - l$과</span> <span class="nw">$xl - \mu h$</span> 꼴로 얻음:</p><p class="x cd" style="--b:663.7">- <span class="nw">$N_{\mathrm L} &lt; N_{\mathrm R}$이</span> 증명된 경우 부등식 하나; - <span class="nw">$N_{\mathrm L} &lt; N_{\mathrm R}$이</span> 증명되지 않은 경우 부등식 둘.</p><p class="x cp" style="--b:663.7">1.00</p>
+<p class="x cn" style="--b:705.9">2.9</p><p class="x cd" style="--b:688.0"><b>M2</b> <span class="nw">$x$에</span> 대한 제한을 등식 꼴로 얻음:</p><p class="x cd" style="--b:700.0">- <span class="nw">$N_{\mathrm L} &lt; N_{\mathrm R}$이</span> 증명된 경우 등식 하나; - <span class="nw">$N_{\mathrm L} &lt; N_{\mathrm R}$이</span> 증명되지 않은 경우 등식 둘.<br>(또는 <span class="nw">$N_{\mathrm L} &lt; N_{\mathrm R}$을</span> 증명하지 않고 부등식 하나를 얻은 경우)</p><p class="x cp" style="--b:705.9">0.50</p>
+<p class="x cn" style="--b:736.2">2.10</p><p class="x cd" style="--b:736.2"><b>M2</b> <span class="nw">$x$에</span> 대한 제한을 얻지 못함</p><p class="x cp" style="--b:736.2">0.00</p>
+<p class="x cn" style="--b:748.6">2.11</p><p class="x cd" style="--b:748.6">부등식 꼴의 최종 답 <span class="nw">$xl - \mu h$</span></p><p class="x cp" style="--b:748.6">1.00</p>
+<p class="x cn" style="--b:766.9">2.12</p><p class="x cd" style="--b:760.9">등식 꼴의 최종 답 <span class="nw">$x = l - \mu h$,</span> 또는 오른쪽 바퀴가 떨어지는 경우를 고려하지 않고 얻은 최종 답.</p><p class="x cp" style="--b:766.9">0.50</p>
+<p class="x cn" style="--b:785.2">2.13</p><p class="x cd" style="--b:785.2">답 없음</p><p class="x cp" style="--b:785.2">0.00</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 10-4 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-10-T4. 피스톤 아래의 미지의</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="15" data-clip="519,25,562,52"></span></div>
+<p class="x tt" style="--b:63.2"><b>액체</b></p>
+<p class="x tt" style="--b:77.7">수험 번호</p>
+<i class="rh" style="top:103.20pt"></i><i class="rh" style="top:115.55pt"></i><i class="rh" style="top:127.91pt"></i><i class="rh" style="top:142.31pt"></i><i class="rh" style="top:154.66pt"></i><i class="rh" style="top:167.01pt"></i><i class="rh" style="top:179.37pt"></i><i class="rh" style="top:193.41pt"></i><i class="rh" style="top:205.76pt"></i><i class="rh" style="top:242.03pt"></i><i class="rh" style="top:266.34pt"></i><i class="rh" style="top:280.73pt"></i><i class="rh" style="top:317.00pt"></i><i class="rh" style="top:331.04pt"></i><i class="rh" style="top:343.39pt"></i><i class="rh" style="top:367.70pt"></i><i class="rh" style="top:380.06pt"></i><i class="rh" style="top:405.21pt"></i><i class="rh" style="top:429.51pt"></i><i class="rv" style="left:31.79pt;top:103.40pt;height:326.31pt"></i><i class="rv" style="left:72.49pt;top:103.40pt;height:326.31pt"></i><i class="rv" style="left:453.34pt;top:103.40pt;height:326.31pt"></i><i class="rv" style="left:508.22pt;top:103.40pt;height:326.31pt"></i><i class="rv" style="left:563.09pt;top:103.40pt;height:326.31pt"></i>
+<p class="x cd" style="--b:112.0">배점 항목</p><p class="x cp" style="--b:112.0">점수</p><p class="x ch" style="--b:112.0">해당 여부</p>
+<p class="x cn" style="--b:124.3">1.1</p><p class="x cd" style="--b:124.3">처음에 물체(피스톤)가 받침대 위에 놓여 있다는 것의 근거(또는 이해)</p><p class="x cp" style="--b:124.3">0.50</p>
+<p class="x cn" style="--b:137.1">1.2</p><p class="x cd" style="--b:137.5">식 <span class="nw">$M = \frac{p_0S}{2g}$를</span> 구함</p><p class="x cp" style="--b:137.1">0.50</p>
+<p class="x cn" style="--b:151.1">1.3</p><p class="x cd" style="--b:151.1"><span class="nw">$M = 51\,\mathrm{kg}$을</span> 계산함</p><p class="x cp" style="--b:151.1">0.50</p>
+<p class="x cn" style="--b:163.4">2.1</p><p class="x cd" style="--b:163.4">액체가 모두 증발했다고 언급함.</p><p class="x cp" style="--b:163.4">1.00</p>
+<p class="x cn" style="--b:175.8">2.2</p><p class="x cd" style="--b:175.8">액체가 모두 증발했다는 근거</p><p class="x cp" style="--b:175.8">1.00</p>
+<p class="x cn" style="--b:188.6">2.3</p><p class="x cd" style="--b:189.0">식 <span class="nw">$m_0 = \frac{2\mu p_0SH}{RT_0}$을</span> 구함</p><p class="x cp" style="--b:188.6">0.50</p>
+<p class="x cn" style="--b:202.2">2.4</p><p class="x cd" style="--b:202.2"><span class="nw">$m_0 = 12.4\,\mathrm g$을</span> 계산함</p><p class="x cp" style="--b:202.2">0.50</p>
+<p class="x cn" style="--b:226.5">3.1</p><p class="x cd" style="--b:214.5">점 <span class="nw">$(1.5p_0; 1.1T_0)$에서</span> 기체 상태의 부피와 물질의 양이 변하는 상전이가 일어난다는 사실을 언급함. 참고: <span class="nw">$Q_A$를</span> 얻었으면 자동으로 점수를 준다.</p><p class="x cp" style="--b:226.5">1.00</p>
+<p class="x cn" style="--b:256.8">3.2</p><p class="x cd" style="--b:250.8">앞 항목의 근거. 참고: <span class="nw">$Q_A$를</span> 얻었으면 자동으로 점수를 준다.</p><p class="x cp" style="--b:256.8">1.00</p>
+<p class="x cn" style="--b:275.5">3.3</p><p class="x cd" style="--b:275.9"><span class="nw">$m_1 = \frac{1.5p_0SH\mu}{1.1T_0R} = 8.4\,\mathrm g$을</span> 구함(식만 있어도 충분함)</p><p class="x cp" style="--b:275.5">1.00</p>
+<p class="x cn" style="--b:301.5">3.4</p><p class="x cd" style="--b:289.5">상전이 열에는 내부 에너지의 변화와 기체가 팽창하며 하는 일이 모두 포함된다고 언급함. 참고: <span class="nw">$Q_A$를</span> 얻었으면 자동으로 점수를 준다.</p><p class="x cp" style="--b:301.5">1.00</p>
+<p class="x cn" style="--b:326.2">3.5</p><p class="x cd" style="--b:326.6"><span class="nw">$Q_A = \frac{7\mu Lp_0SH}{11RT_0}$를</span> 구함</p><p class="x cp" style="--b:326.2">1.00</p>
+<p class="x cn" style="--b:339.8">3.6</p><p class="x cd" style="--b:339.8">$Q_2 = \nu C_p\Delta T$</p><p class="x cp" style="--b:339.8">0.50</p>
+<p class="x cn" style="--b:358.1">3.7</p><p class="x cd" style="--b:352.2"><span class="nw">$C_p = 4R$.</span> 참가자가 이 액체를 물이라고 생각하여 이 결론을 얻었다면 이 점수는 주지 않는다</p><p class="x cp" style="--b:358.1">0.50</p>
+<p class="x cn" style="--b:376.5">3.8</p><p class="x cd" style="--b:376.5">$\Delta T = 0.4T_0$</p><p class="x cp" style="--b:376.5">0.50</p>
+<p class="x cn" style="--b:395.2">3.9</p><p class="x cd" style="--b:389.7;margin-top:-2.8pt">올바른 최종 식 <span class="nw">$Q = HSp_0\left(\frac{7\mu L}{11RT_0} + \frac{16}{5}\right)$.</span> 완전히 올바른 식에만 점수를 준다.</p><p class="x cp" style="--b:395.2">0.50</p>
+<p class="x cn" style="--b:420.0">3.10</p><p class="x cd" style="--b:414.0">올바른 수치 답 <span class="nw">$Q = 11.9\,\mathrm{kJ}$.</span> 기화열에 일을 더한 경우의 답 <span class="nw">$Q = 12.6\,\mathrm{kJ}$도</span> 인정한다.</p><p class="x cp" style="--b:420.0">0.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 10-5 -->
+<div class="page" data-s="a4">
+<p class="x tt" style="--b:45.3">문제 <b>Ru22-10-T5. 열에 민감한 전원</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="16" data-clip="519,25,562,52"></span></div>
+<p class="x tt" style="--b:59.8">수험 번호</p>
+<i class="rh" style="top:85.27pt"></i><i class="rh" style="top:97.62pt"></i><i class="rh" style="top:109.97pt"></i><i class="rh" style="top:122.33pt"></i><i class="rh" style="top:134.68pt"></i><i class="rh" style="top:158.99pt"></i><i class="rh" style="top:183.30pt"></i><i class="rh" style="top:195.65pt"></i><i class="rh" style="top:219.96pt"></i><i class="rh" style="top:232.32pt"></i><i class="rh" style="top:244.67pt"></i><i class="rh" style="top:268.98pt"></i><i class="rh" style="top:281.33pt"></i><i class="rh" style="top:293.69pt"></i><i class="rh" style="top:317.99pt"></i><i class="rh" style="top:341.07pt"></i><i class="rh" style="top:364.14pt"></i><i class="rh" style="top:376.49pt"></i><i class="rh" style="top:421.53pt"></i><i class="rh" style="top:433.88pt"></i><i class="rh" style="top:446.23pt"></i><i class="rh" style="top:458.59pt"></i><i class="rh" style="top:494.85pt"></i><i class="rv" style="left:31.79pt;top:85.47pt;height:409.58pt"></i><i class="rv" style="left:72.49pt;top:85.47pt;height:409.58pt"></i><i class="rv" style="left:453.34pt;top:85.47pt;height:409.58pt"></i><i class="rv" style="left:508.22pt;top:85.47pt;height:409.58pt"></i><i class="rv" style="left:563.09pt;top:85.47pt;height:409.58pt"></i>
+<p class="x cd" style="--b:94.0">배점 항목</p><p class="x cp" style="--b:94.0">점수</p><p class="x ch" style="--b:94.0">해당 여부</p>
+<p class="x cn" style="--b:106.4">1.1</p><p class="x cd" style="--b:106.4">전류가 0일 때 <span class="nw">$U_{AB} = \mathcal E$라는</span> 진술</p><p class="x cp" style="--b:106.4">0.20</p>
+<p class="x cn" style="--b:118.7">1.2</p><p class="x cd" style="--b:118.7">근거(근거가 있을 때에만 인정함)</p><p class="x cp" style="--b:118.7">0.50</p>
+<p class="x cn" style="--b:131.1">1.3</p><p class="x cd" style="--b:131.1">그래프에서 얻은 값 <span class="nw">$\mathcal E = 10.0\,\mathrm V$</span></p><p class="x cp" style="--b:131.1">0.30</p>
+<p class="x cn" style="--b:149.4">2.1</p><p class="x cd" style="--b:143.5"><b>M1</b> 작은 전류에서의 <span class="nw">$U_{AB}(I)$를</span> 씀: <span class="nw">$U_{AB} = \mathcal E - IR_0$</span> 또는 작은 전류에서 <span class="nw">$R \approx R_0$임을</span> 언급함</p><p class="x cp" style="--b:149.4">1.00</p>
+<p class="x cn" style="--b:173.7">2.4</p><p class="x cd" style="--b:167.8"><b>M1</b> 그래프로부터 <span class="nw">$R_0$을</span> 구하는 올바른 방법: 접선, 또는 직선 구간의 가까운 점들을 이용함</p><p class="x cp" style="--b:173.7">0.50</p>
+<p class="x cn" style="--b:192.1">2.5</p><p class="x cd" style="--b:192.1"><b>M2</b> <span class="nw">$R_0$을</span> 구할 수 있는 해석적 연립 방정식을 세움</p><p class="x cp" style="--b:192.1">1.00</p>
+<p class="x cn" style="--b:210.4">2.6</p><p class="x cd" style="--b:204.4"><b>M2</b> 좌표를 잘 읽을 수 있는 그래프 위의 점을 적어도 2개 이용함</p><p class="x cp" style="--b:210.4">0.50</p>
+<p class="x cn" style="--b:228.7">2.7</p><p class="x cd" style="--b:228.7">값 <span class="nw">$R_0 \in [9.5; 10.5]\,\Omega$</span></p><p class="x cp" style="--b:228.7">1.00</p>
+<p class="x cn" style="--b:241.1">3.1</p><p class="x cd" style="--b:241.1"><b>M1</b> 부하 곡선 위에 <span class="nw">$10\,\Omega$</span> 저항기의 전류-전압 특성 곡선을 그림</p><p class="x cp" style="--b:241.1">1.00</p>
+<p class="x cn" style="--b:259.4">3.2</p><p class="x cd" style="--b:253.4"><b>M2</b> 전류-전압 특성 곡선과 부하 곡선의 교점에 대한 해석적 방정식을 얻음</p><p class="x cp" style="--b:259.4">1.00</p>
+<p class="x cn" style="--b:277.7">3.3</p><p class="x cd" style="--b:277.7">저항기에 걸린 전압의 값 <span class="nw">$\in [3.7; 4.3]\,\mathrm V$</span></p><p class="x cp" style="--b:277.7">0.50</p>
+<p class="x cn" style="--b:290.1">4.1</p><p class="x cd" style="--b:290.1">좌표를 잘 읽을 수 있는 그래프 위의 점(들)을 이용함</p><p class="x cp" style="--b:290.1">0.50</p>
+<p class="x cn" style="--b:308.4">4.2</p><p class="x cd" style="--b:302.5">고른 점의 좌표로 <span class="nw">$\alpha$를</span> 구하는 데 필요한 방정식을 씀</p><p class="x cp" style="--b:308.4">1.00</p>
+<p class="x cn" style="--b:330.5">4.3</p><p class="x cd" style="--b:334.2">값 <span class="nw">$\alpha \in [4.80; 5.40]\cdot 10^{-3}\,\frac{1}{C}$</span></p><p class="x cp" style="--b:330.5">1.50</p>
+<p class="x cn" style="--b:353.6">4.4</p><p class="x cd" style="--b:357.3"><span class="nw">$\alpha$의</span> 값이 허용 범위에 들었으나 올바른 단위를 쓰지 않음: <span class="nw">$[\alpha] = \frac{1}{C} = \frac{1}{K}$</span></p><p class="x cp" style="--b:353.6">1.00</p>
+<p class="x cn" style="--b:372.9">4.5</p><p class="x cd" style="--b:372.9"><span class="nw">$\alpha$를</span> 구하지 못했거나 값이 허용 범위를 벗어남</p><p class="x cp" style="--b:372.9">0.00</p>
+<p class="x cn" style="--b:389.0">5.1</p>
+<p class="x cd d" style="--b:392.7;--a:14.2pt;text-align:left">의존성 <span class="nw">$I(t)$:</span> <span class="nw">$I^2 = \dfrac{\beta(t - t_0)}{R_0(1 + \alpha(t - t_0))} = \dfrac{\beta}{R_0\left(\dfrac{1}{t - t_0} + \alpha\right)}$</span> 또는 이와 같은 식</p>
+<p class="x cp" style="--b:389.0">1.00</p>
+<p class="x cn" style="--b:430.3">5.2</p><p class="x cd" style="--b:430.3"><span class="nw">$t \to \infty$라는</span> 착상 또는 가능한 <span class="nw">$I$</span> 값을 찾는다는 착상</p><p class="x cp" style="--b:430.3">0.50</p>
+<p class="x cn" style="--b:442.6">5.3</p><p class="x cd" style="--b:442.6"><span class="nw">$\beta$와</span> <span class="nw">$\alpha$</span> 사이의 관계 또는 <span class="nw">$\beta$의</span> 수치를 구함</p><p class="x cp" style="--b:442.6">1.00</p>
+<p class="x cn" style="--b:455.0">5.4</p><p class="x cd" style="--b:455.0">값 <span class="nw">$I_{\max} \in [0.67; 0.73]\,\mathrm A$</span></p><p class="x cp" style="--b:455.0">1.00</p>
+<p class="x cn" style="--b:479.3">5.5</p><p class="x cd" style="--b:467.4">허용되지 않는 전류의 전체 범위를 제시함: <span class="nw">$I \ge I_{\max}$</span> <i>참고. 허용되지 않는 전류에 대한 올바른 부등식을 명시적으로 쓴 경우에만 점수를 준다.</i></p><p class="x cp" style="--b:479.3">0.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+</body></html>

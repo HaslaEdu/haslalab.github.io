@@ -1,0 +1,381 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2023 (LVII = 제57회), 10학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.5x595.3pt, 17 pages, no page numbers,
+   no marking scheme. Text column x 28.3..396.8 (width 368.5pt); paragraph indent 20.0pt; baselineskip 11.955pt.
+   Running header (italic SFTI1000) at baseline 37.6 above the stamped rule (y 41.4), the same on every page:
+   "Zaklyuchitelny etap Vserossiyskoy olimpiady po fizike 12 aprelya 2023 g." -> left "전러시아 물리 올림피아드 결선", right "2023년 4월 12일" (as in the 2023_T2 paper).
+   Russian subscripts retyped: E_zaz (gap) -> E_gap, E_vnut -> E_in, A_ist (source) -> A_src, F_tr -> F_fr,
+   L_imp (angular momentum) -> L_ang, E_k otn -> E_k rel; ZSI/ZSE (conservation laws) -> 운동량 보존 / 에너지 보존.
+   PLACEMENT: top = b - l/2 - 0.3155*fs + 0.7pt. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:368.5pt;--l:11.955pt;--fs:9.963pt;--k:0.3155;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - var(--k)*var(--fs) + 0.7pt);text-align:justify}
+.i{text-indent:20pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.h{text-align:center;font-weight:bold;margin-top:-1.1pt}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;width:auto;text-align:left}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="1" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x h" style="--b:64.0">문제 10-T1. 피스톤의 운동학</p>
+<p class="x i" style="--b:77.8">1. 조건에 따르면 피스톤은 가볍고 용기 안에서 마찰 없이 움직인다. 따라서 어느 순간에나 피스톤 양쪽의 기체 압력은 같다. 두 칸의 부피 <span class="nw">$V_1$과</span> <span class="nw">$V_2$에</span> 대해 <span class="nw">$V_1 + V_2 = 2V_0$이</span> 성립한다. 여기서 <span class="nw">$V_0$은</span> 한 칸의 처음 부피이다. 짧은 시간 <span class="nw">$\Delta t$</span> 동안 기체에서 일어나는 과정을 생각하고, 각 칸에 대해 열역학 제1법칙을 쓰자.</p>
+<div class="f" style="left:143pt;top:132pt"><span class="fig" data-srcpage="1" data-clip="143,132,276,167"></span></div>
+<p class="x" style="--b:175.6">각 칸에 대해 멘델레예프–클라페이롱 방정식을 쓰고 온도 변화를 나타내자.</p>
+<div class="f" style="left:88pt;top:195pt"><span class="fig" data-srcpage="1" data-clip="88,195,331,221"></span></div>
+<p class="x" style="--b:234.2">이로부터 다음을 얻는다.</p>
+<div class="f" style="left:146pt;top:235pt"><span class="fig" data-srcpage="1" data-clip="146,235,273,270"></span></div>
+<p class="x" style="--b:281.0">위의 두 식을 서로 더하고 빼자.</p>
+<div class="f" style="left:121pt;top:282pt"><span class="fig" data-srcpage="1" data-clip="121,282,298,316"></span></div>
+<div class="f" style="left:383pt;top:295pt"><span class="fig" data-srcpage="1" data-clip="383,295,398,307"></span></div>
+<p class="x" style="--b:328.4">그러면 처음 순간<span class="nw">($p = p_0$,</span> <span class="nw">$V_1 = V_2 = V_0$)에</span> 대해 <span class="nw">$(q_1 + q_2)\Delta t = 5p_0\Delta V$를</span> 얻는다. 이로부터 <span class="nw">$\Delta V = Sv_0\Delta t$임을</span> 고려하면 피스톤의 처음 속력 <span class="nw">$v_0$을</span> 구할 수 있다.</p>
+<div class="f" style="left:183pt;top:352pt"><span class="fig" data-srcpage="1" data-clip="183,352,242,378"></span></div>
+<p class="x i" style="--b:393.9">2. <span class="nw">$q_1 = q_2 = q$이면</span> 문제가 간단해지며, <span class="nw">$(\ast)$의</span> 첫째 식으로부터 <span class="nw">$p = p_0 = \mathrm{const}$임을</span> 알 수 있다. <span class="nw">$(\ast)$의</span> 둘째 식으로부터 <span class="nw">$2q\Delta t = 5p_0\Delta V$를</span> 얻는다. 이는 피스톤이 일정한 속력 <span class="nw">$v = 2q/(5p_0S)$로</span> 움직인다는 것을 뜻한다.</p>
+<p class="x i" style="--b:435.4">3. 부피의 비가 <span class="nw">$V_1 : V_2 = 3 : 1$이면</span> <span class="nw">$V_1 = 3V_0/2$,</span> <span class="nw">$V_2 = V_0/2$이다.</span> 이 문항에서 피스톤은 움직이지 않으므로 두 칸의 부피는 시간에 따라 변하지 않는다. <span class="nw">$q_2$의</span> 부호를 바꾸고, 각 칸에서 등적 과정<span class="nw">($\Delta V = 0$)이</span> 일어난다는 것을 고려하여 식 <span class="nw">$(\ast)$를</span> 다시 쓰자.</p>
+<div class="f" style="left:154pt;top:472pt"><span class="fig" data-srcpage="1" data-clip="154,472,265,507"></span></div>
+<p class="x" style="--b:518.6">얻은 식들로부터 다음이 나온다.</p>
+<div class="f" style="left:142pt;top:525pt"><span class="fig" data-srcpage="1" data-clip="142,525,284,552"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="2" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x h" style="--b:64.0">문제 10-T2. 구멍에서 들판으로</p>
+<p class="x i" style="--b:79.7;width:188.5pt">1. 충돌에 대해 운동량 보존 법칙과 에너지 보존 법칙을 이용하자.</p>
+<div class="f" style="left:240pt;top:69pt"><span class="fig" data-srcpage="2" data-clip="240,69,385,216"></span></div>
+<div class="f" style="left:56pt;top:106pt"><span class="fig" data-srcpage="2" data-clip="56,106,150,145"></span></div>
+<p class="x ov" style="--b:114.6;left:163pt">운동량 보존</p>
+<p class="x ov" style="--b:134.8;left:163pt">에너지 보존</p>
+<p class="x" style="--b:159.3;width:188.5pt">운동량 보존 식을 제곱하면 다음을 얻는다.</p>
+<div class="f" style="left:72pt;top:171pt"><span class="fig" data-srcpage="2" data-clip="72,171,174,187"></span></div>
+<p class="x" style="--b:203.2;width:188.5pt">에너지 보존을 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:165pt;top:206pt"><span class="fig" data-srcpage="2" data-clip="165,206,260,220"></span></div>
+<p class="x" style="--b:233.1"><span class="nw">$v_1^2 + v_2^2 = v_0^2$이고</span> <span class="nw">$\vec v_0 = \vec v_1 + \vec v_2$이므로</span> 속도 삼각형은 직각삼각형이며 지름이 <span class="nw">$v_0$인</span> 원에 내접한다.</p>
+<p class="x i" style="--b:257.0">출발점에 좌표계 <span class="nw">$yOx$를</span> 도입하자. <span class="nw">$y$축은</span> 연직 위쪽으로, <span class="nw">$x$축은</span> 수평 방향으로 향한다. 이하에서 <span class="nw">$v_{x(i)}$와</span> <span class="nw">$v_{y(i)}$는</span> 각각 충돌 직후 <span class="nw">$i$번째</span> 공의 속도의 수평 성분과 연직 성분의 크기를 뜻한다. <span class="nw">$v_{x(1)} = v_{x(2)} = v_x$임에</span> 주목하자.</p>
+<p class="x i" style="--b:316.8"><span class="nw">$i$번째</span> 공의 비행 거리를 구하자.</p>
+<div class="f" style="left:121pt;top:327pt"><span class="fig" data-srcpage="2" data-clip="121,327,304,354"></span></div>
+<p class="x" style="--b:370.0">두 공이 떨어지는 지점 사이의 거리는 다음과 같다.</p>
+<div class="f" style="left:122pt;top:383pt"><span class="fig" data-srcpage="2" data-clip="122,383,303,409"></span></div>
+<p class="x" style="--b:425.5">따라서 두 공이 떨어지는 지점 사이의 거리는 <span class="nw">$v_x$가</span> 최대일 때, 즉 <span class="nw">$v_x$가</span> 원의 반지름 <span class="nw">$v_0/2$와</span> 같을 때 최대가 된다. 그러므로 첫째 질문의 답은 다음과 같다.</p>
+<div class="f" style="left:188pt;top:450pt"><span class="fig" data-srcpage="2" data-clip="188,450,237,477"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="3" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:229pt;top:53pt"><span class="fig" data-srcpage="3" data-clip="229,53,390,199"></span></div>
+<p class="x i wr wn" style="--b:64.0;--fw:180pt;--fh:145pt">2. 한 공의 최대 비행 거리는 곱 <span class="nw">$v_xv_{y(i)}$의</span> 최댓값에 해당하므로 두 공에 대해 같다. 곱 <span class="nw">$v_xv_y$는</span> 기하학적으로 두 변이 <span class="nw">$v_x$와</span> <span class="nw">$v_y$인</span> 직사각형의 넓이이다. 이 넓이는 다시, 같은 두 변의 길이가 <span class="nw">$v = \sqrt{v_x^2 + v_y^2}$이고</span> 밑변이 <span class="nw">$2v_x$인</span> 이등변삼각형의 넓이와 같다. 이 삼각형은 반지름이 <span class="nw">$v_0/2$인</span> 원에 내접한다. 반지름이 <span class="nw">$R$인</span> 원에 내접하는 삼각형의 넓이는 정삼각형일 때 최대이며, 그 값은 다음과 같다.</p>
+<div class="f" style="left:127pt;top:231pt"><span class="fig" data-srcpage="3" data-clip="127,231,298,265"></span></div>
+<p class="x" style="--b:273.2">따라서</p>
+<div class="f" style="left:175pt;top:268pt"><span class="fig" data-srcpage="3" data-clip="175,268,250,302"></span></div>
+<p class="x h" style="--b:316.6">문제 10-T3. 은도금한 원뿔</p>
+<div class="f" style="left:229pt;top:328pt"><span class="fig" data-srcpage="3" data-clip="229,328,398,489"></span></div>
+<p class="x i wn" style="--b:332.3;width:188.5pt">1. 원뿔의 오른쪽(그림에서) 밑면, 즉 지름이 <span class="nw">$D$인</span> 밑면에 입사하는 광선 다발을 생각하자. 원뿔의 축에 중심을 둔 지름 <span class="nw">$d$인</span> 원 안을 지나는 광선들은 아무 방해 없이 통과하여 스크린에 같은 지름 <span class="nw">$d_0 = d$의</span> 둥근 점을 만든다.</p>
+<p class="x i wr wn" style="--b:415.9;--fw:180pt;--fh:82.7pt">원뿔의 입구 단면을 통과한 나머지 광선들은 원뿔의 옆면에서 적어도 한 번 반사된다. 광학계가 축대칭이므로 이 광선들은 스크린과 원뿔 축의 교점을 중심으로 하는 고리들을 만든다. 고리의 개수와 기하학적 모양(고리의 반지름과 폭, 그리고 서로 겹칠 수 있는지)을 알아보자.</p>
+<p class="x i" style="--b:523.5">이후에는 원뿔면의 모선 하나에 입사하는 광선들을 생각하자. 처음 광선 다발의 방향과 구멍의 원뿔면 사이의 각을 <span class="nw">$\alpha_0$이라</span> 하자.</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="4" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">기하학적으로 <span class="nw">$\alpha_0 = (D - d)/2h = 3d/2h$이다.</span> 조건으로부터 <span class="nw">$\alpha_0 \ll 1$임에</span> 주목하자.</p>
+<div class="f" style="left:168pt;top:92pt"><span class="fig" data-srcpage="4" data-clip="168,92,400,247"></span></div>
+<p class="x i wn" style="--b:88.0;width:126.1pt">처음 다발 중 원뿔 출구 단면의 가장자리에 입사하고 그 전에는 반사되지 않은 광선 1을 생각하자. 이 광선은 한 번 반사된 뒤 처음 방향과 <span class="nw">$2\alpha_0$의</span> 각을 이루며 구멍에서 나온다.</p>
+<p class="x i wr wn" style="--b:195.5;--fw:242.4pt;--fh:58.8pt">이제 원뿔면 위에서 출구로부터 가장 먼 곳에 입사하면서 판을 나오기 전에 정확히 한 번 반사되는 광선 2를 생각하자. 광선이 입사하는 곳에서 판의 왼쪽 면까지의 거리 <span class="nw">$x_1$을</span> 구하자. <span class="nw">$\alpha_0 \ll 1$이므로</span> 구멍의 원뿔면과 판의 면 사이의 각은 매우 좋은 정확도로 <span class="nw">$\pi/2$로</span> 볼 수 있다. 이 경우 <span class="nw">$x_1 \approx d/\operatorname{tg}\alpha_0 = 2h/3$이다.</span></p>
+<p class="x i" style="--b:303.1">이 광선들은 (대칭성을 고려하면) 스크린에 두께 <span class="nw">$d_1 = d$인</span> 고리를 만든다. 한 번 반사된 뒤 출구의 중심에서 나오는 광선의 경로를 생각하여 고리 중심선의 반지름 <span class="nw">$R_1$을</span> 구하자. 이 광선은 원뿔 축과 <span class="nw">$\alpha_1 = 2\alpha_0$의</span> 각을 이루며 나오므로 <span class="nw">$R_1 = L\operatorname{tg}\alpha_1 = 3dL/h$이다.</span> <span class="nw">$R_1 \gg d$</span>(첫째 고리의 두께와 가운데 점의 지름)임에 주목하자. 이는 첫째 고리가 가운데 점과 겹치지 않는다는 것을 뜻한다.</p>
+<div class="f" style="left:205pt;top:370pt"><span class="fig" data-srcpage="4" data-clip="205,370,394,540"></span></div>
+<p class="x i wn" style="--b:374.9;width:160.1pt">구멍의 원뿔면에서 두 번 반사된 광선들을 생각하자. 이 광선들은 <span class="nw">$\alpha_2 = 4\alpha_0$의</span> 각으로 판에서 나와 스크린에 또 하나의 고리를 만든다. 이 무리에 속하는 경계 광선들이 처음 반사되는 두 점 사이의 거리 <span class="nw">$x_2$를</span> 구하자. <span class="nw">$\alpha_0 \ll 1$이므로</span> 매우 좋은 정확도로 <span class="nw">$x_2 = x_1 = 2h/3$이다.</span> 보다시피 판의 두께는 두 번 반사된 광선들이 출구의 전체 넓이에서 주어진 방향으로 나오기에 충분하지 않다. 경계 광선 3과 4의 경로로부터</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="5" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">둘째 고리의 두께는 <span class="nw">$d_2 = d/2$이고</span> 바깥 반지름은 <span class="nw">$R_2 = L\operatorname{tg}\alpha_2 = 6dL/h$임을</span> 알 수 있다.</p>
+<div class="f" style="left:166pt;top:88pt"><span class="fig" data-srcpage="5" data-clip="166,88,397,257.5"></span></div>
+<div class="f" style="left:164.5pt;top:257.5pt"><span class="fig" data-srcpage="5" data-clip="164.5,257.5,170,267"></span></div>
+<div class="f" style="left:228pt;top:257.5pt"><span class="fig" data-srcpage="5" data-clip="228,257.5,236,266"></span></div>
+<p class="x ov" style="--b:99.8;left:171.1pt">스크린</p>
+<p class="x i wr wn" style="--b:88.0;--fw:242.4pt;--fh:178.3pt">2. 구멍에서 나온 평행 광선 다발들은 모두 초점면에 모인다. 모이는 위치는 다음과 같이 정할 수 있다. <span class="nw">$h \ll L$이고</span> <span class="nw">$d \ll h$이므로</span> 모든 광선이 사실상 렌즈의 초점과 일치하는 한 점에서 나온다고 볼 수 있다. 그러면 굴절된 뒤 광선들은 주광축에 평행하게 나아간다. 그림에서 볼 수 있듯이 이 경우 고리들의 반지름은 절반으로 줄어든다. <span class="nw">$R_1' = R_1/2 = 3dL/(2h)$,</span> <span class="nw">$R_2' = R_2/2 = 3dL/h$.</span></p>
+<p class="x i" style="--b:291.2">고리들의 두께와 가운데 점의 지름이 어떻게 변하는지 알아보자.</p>
+<p class="x i" style="--b:303.1">가운데 점은 주광축을 따라 나아가는 평행 광선 다발이 만든다. 이상적인 렌즈는 이러한 광선들을 한 점에 모으므로, 기하 광학 근사에서 가운데 점의 크기는 <span class="nw">$d$보다</span> 훨씬 작다.</p>
+<p class="x i" style="--b:351.0">고리들도 평행 광선 다발로 이루어지며 이상적인 렌즈는 이것들을 초점면에 모으므로, 고리들의 두께도 <span class="nw">$d$보다</span> 훨씬 작아진다.</p>
+<p class="x h" style="--b:396.8">문제 10-T4. 반구 축전기</p>
+<div class="f" style="left:232pt;top:410pt"><span class="fig" data-srcpage="5" data-clip="232,410,395,505.5"></span></div>
+<p class="x i wn" style="--b:414.5;width:188.5pt">1. 전하와 반구 사이의 상호 작용 힘은 회전축을 따라 향한다. 회전축과, 반구의 중심에서 반구 위의 어떤 점까지 그은 선 사이의 각을 <span class="nw">$\alpha$라</span> 하고, 그 점 근처의 반구 표면의 작은 요소를 <span class="nw">$\mathrm dS$라</span> 하자. 그러면 다음을 얻는다.</p>
+<div class="f" style="left:27pt;top:498pt"><span class="fig" data-srcpage="5" data-clip="27,498,257,526"></span></div>
+<p class="x" style="--b:541.0">이제 두 가지 방법으로 추론할 수 있다.</p>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="6" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:112pt;top:45pt"><span class="fig" data-srcpage="6" data-clip="112,45,313,247"></span></div>
+<p class="x i" style="--b:275.7"><b>첫째 풀이:</b> 양 <span class="nw">$\mathrm dS\,\cos\alpha$는</span> 넓이 요소 <span class="nw">$\mathrm dS$를</span> 밑면에 정사영한 것이다. <span class="nw">$r$가</span> 일정하므로 합은 다음과 같이 계산된다.</p>
+<div class="f" style="left:167pt;top:305pt"><span class="fig" data-srcpage="6" data-clip="167,305,258,339"></span></div>
+<p class="x" style="--b:351.8">여기서 <span class="nw">$\sum \mathrm dS\,\cos\alpha = \pi r^2$은</span> 반구의 밑면인 원의 넓이이다.</p>
+<p class="x i" style="--b:363.8">대입하면 다음을 얻는다.</p>
+<div class="f" style="left:192pt;top:376pt"><span class="fig" data-srcpage="6" data-clip="192,376,233,403"></span></div>
+<p class="x i" style="--b:420.4"><b>둘째 풀이:</b> 전하와 가는 고리 모양 띠 사이의 상호 작용을 생각하자. 띠의 넓이 <span class="nw">$\mathrm dS$는</span> 다음과 같다.</p>
+<div class="f" style="left:182pt;top:447pt"><span class="fig" data-srcpage="6" data-clip="182,447,243,459"></span></div>
+<p class="x i" style="--b:474.2">여기서 <span class="nw">$R = r\sin\alpha$는</span> 띠의 반지름이고, <span class="nw">$\mathrm dl = r\,\mathrm d\alpha$는</span> 띠의 폭이다.</p>
+<p class="x i" style="--b:486.1">이로부터</p>
+<div class="f" style="left:116pt;top:499pt"><span class="fig" data-srcpage="6" data-clip="116,499,309,526"></span></div>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="7" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0"><span class="nw">$\cos\alpha\,\mathrm d\alpha = \mathrm d(\sin\alpha) = \mathrm dt$임을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:178pt;top:76pt"><span class="fig" data-srcpage="7" data-clip="178,76,247,116"></span></div>
+<p class="x i" style="--b:132.0">적분하면 다음을 얻는다.</p>
+<div class="f" style="left:192pt;top:145pt"><span class="fig" data-srcpage="7" data-clip="192,145,233,172"></span></div>
+<p class="x i" style="--b:188.7">2. 전원 전압이 <span class="nw">$U$일</span> 때 반구의 전하 <span class="nw">$Q$를</span> 구하자. <span class="nw">$d \ll R$이므로</span> 두 반구 사이의 틈에서 전하 <span class="nw">$q$가</span> 만드는 전기장은 크기가 일정하며 <span class="nw">$E_q = q/(4\pi\varepsilon_0R^2)$와</span> 같다고 볼 수 있다. 그러면 반구들의 전하가 만드는 전압은 다음과 같다.</p>
+<div class="f" style="left:148pt;top:237pt"><span class="fig" data-srcpage="7" data-clip="148,237,277,264"></span></div>
+<p class="x" style="--b:279.5">이 값도 일정하다는 데 주목하자. 틈에서의 전기장 <span class="nw">$E_{\mathrm{gap}}$을</span> 구하는 두 가지 방법을 설명하자.</p>
+<div class="f" style="left:239pt;top:283pt"><span class="fig" data-srcpage="7" data-clip="239,283,385,450"></span></div>
+<p class="x ov" style="--b:399.0;left:280.6pt;--fs:6.2pt">in</p>
+<p class="x ov" style="--b:408.0;left:259.4pt;--fs:6.2pt">gap</p>
+<p class="x i wn" style="--b:309.1;width:188.5pt"><b>첫째 풀이:</b> 반구들을 머릿속으로 완전한 구로 늘이고, 크기가 같고 부호가 반대인 전하 <span class="nw">$\pm 2Q$로</span> 표면을 고르게 대전시키자.</p>
+<p class="x i wn" style="--b:368.9;width:188.5pt">그러면 반지름이 <span class="nw">$R$인</span> 구 안의 모든 점에서 전기장은 0이고, 두 구 사이의 틈에서 전기장은 다음과 같다.</p>
+<p class="x c d" style="--b:433.5;--a:14.2pt;width:188.5pt">$E_{\mathrm{gap}} = \dfrac{2Q}{4\pi\varepsilon_0R^2}.$</p>
+<p class="x" style="--b:459.7"><span class="nw">$d \ll R$이므로</span> 덧붙인 반구들이 만드는 전기장은 전체 전기장 <span class="nw">$E_{\mathrm{gap}}$에</span> 비해 무시할 만큼 작다. 가장자리에서 충분히 먼 곳에서는 덧붙인 반구들이 알짜 전하가 0인 하나의 물체처럼 행동하기 때문이다.</p>
+<p class="x i" style="--b:513.2"><b>둘째 풀이:</b> 구들의 반지름이 틈의 두께에 비해 크고 계 전체의 알짜 전하가 0이므로, 두 반구 사이 틈의 전기장은 매우 좋은 정확도로 평행판 축전기 내부의 전기장으로 근사할 수 있다.</p>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="8" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">반구들의 표면 전하 밀도의 크기가 사실상 같기 때문이다. 따라서</p>
+<p class="x c d" style="--b:104.8;--a:14.2pt">$E_{\mathrm{gap}} = \dfrac{\sigma}{\varepsilon_0} = \dfrac{Q}{2\pi R^2\varepsilon_0}.$</p>
+<p class="x i" style="--b:132.6">틈의 전기장에 대한 식을 이용하면 다음을 얻는다.</p>
+<div class="f" style="left:147pt;top:145pt"><span class="fig" data-srcpage="8" data-clip="147,145,279,172"></span></div>
+<p class="x" style="--b:184.9">이로부터 다음을 얻는다.</p>
+<div class="f" style="left:170pt;top:196pt"><span class="fig" data-srcpage="8" data-clip="170,196,255,224"></span></div>
+<p class="x i" style="--b:240.1">3. 반구들의 전하는 <span class="nw">$\pm Q$이고</span> 넓이는 각각 <span class="nw">$2\pi R^2$과</span> <span class="nw">$2\pi(R + d)^2$이므로,</span> 전하 <span class="nw">$q$와</span> 반구들 사이의 정전기적 상호 작용 힘 <span class="nw">$F$는</span> 다음과 같다.</p>
+<div class="f" style="left:57pt;top:276pt"><span class="fig" data-srcpage="8" data-clip="57,276,368,308"></span></div>
+<p class="x" style="--b:330.5">운동이 시작되는 순간 <span class="nw">$F = mg$이다.</span> 이로부터 전하 <span class="nw">$q$가</span> 움직이기 시작할 때의 전하 <span class="nw">$Q_{\max}$를</span> 구한다.</p>
+<div class="f" style="left:168pt;top:354pt"><span class="fig" data-srcpage="8" data-clip="168,354,257,381"></span></div>
+<p class="x i" style="--b:393.8"><span class="nw">$Q$와</span> <span class="nw">$U$의</span> 관계를 대입하면 전압 <span class="nw">$U_{\max}$는</span> 다음과 같다.</p>
+<div class="f" style="left:134pt;top:407pt"><span class="fig" data-srcpage="8" data-clip="134,407,291,435"></span></div>
+<p class="x i" style="--b:456.1">4. 계의 정전기 에너지 변화를 구하는 데에는 두 가지 방법, 즉 에너지 변화 법칙을 쓰는 방법과 에너지의 각 성분을 계산하는 방법을 쓸 수 있다.</p>
+<p class="x i" style="--b:497.6"><b>첫째 풀이:</b> 극판 사이의 전압 <span class="nw">$U$가</span> 천천히 변하므로, 계의 정전기 에너지 변화 <span class="nw">$\Delta W$는</span> 극판 사이에서 전하를 옮기는 전원이 한 일과 같다.</p>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:226pt;top:42pt"><span class="fig" data-srcpage="9" data-clip="226,42,402,137"></span></div>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="9" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:309.5pt;top:38.5pt"><span class="fig" data-srcpage="9" data-clip="309.5,38.5,313.5,42"></span></div>
+<p class="x ov" style="--b:41.4;left:315.3pt;--fs:8.8pt">$U$</p>
+<p class="x i wr wn" style="--b:64.0;--fw:180pt;--fh:82.7pt">이를 구하기 위해 <span class="nw">$U(Q)$</span> 그래프를 그리자. 전원 전압이 0일 때 반구들의 전하는 <span class="nw">$\mp q/2$이다.</span> 전원이 한 일은 반구들의 전하가 <span class="nw">$-q/2$에서</span> <span class="nw">$Q_{\max}$까지</span> 변할 때 이 그래프 아래의 넓이와 같다. 이 넓이는 다시 두 변이 <span class="nw">$U_{\max}$와</span> <span class="nw">$Q_{\max} + q/2$인</span> 삼각형의 넓이와 같다.</p>
+<p class="x" style="--b:159.7">따라서</p>
+<p class="x c d" style="--b:180.0;--a:15.2pt">$A_{\mathrm{src}} = \dfrac{U_{\max}}{2}\left(Q_{\max} + \dfrac{q}{2}\right),$</p>
+<p class="x" style="--b:203.8">그리고 최종적으로</p>
+<div class="f" style="left:131pt;top:215pt"><span class="fig" data-srcpage="9" data-clip="131,215,294,247"></span></div>
+<p class="x i" style="--b:268.1"><b>둘째 풀이:</b> 계의 정전기 에너지는 반구들 사이의 상호 작용 에너지 <span class="nw">$W_C$와,</span> 반구들과 전하 <span class="nw">$q$의</span> 상호 작용 에너지 <span class="nw">$W_q$의</span> 합이다.</p>
+<p class="x i" style="--b:304.0">반구들의 에너지에 대한 식은 축전기의 에너지에 대한 식과 같다.</p>
+<div class="f" style="left:151pt;top:327pt"><span class="fig" data-srcpage="9" data-clip="151,327,274,355"></span></div>
+<p class="x i" style="--b:365.5">전하가 <span class="nw">$Q$이고</span> 반지름이 <span class="nw">$r$인</span> 반구 하나와 그 중심에 놓인 점전하 <span class="nw">$q$의</span> 상호 작용 에너지 <span class="nw">$W_1$은</span> 다음과 같다.</p>
+<div class="f" style="left:155pt;top:390pt"><span class="fig" data-srcpage="9" data-clip="155,390,270,417"></span></div>
+<p class="x i" style="--b:425.8">따라서</p>
+<div class="f" style="left:80pt;top:440pt"><span class="fig" data-srcpage="9" data-clip="80,440,346,467"></span></div>
+<p class="x i" style="--b:482.4">그러면 계의 정전기 에너지 <span class="nw">$W$에</span> 대한 식은 다음과 같다.</p>
+<div class="f" style="left:101pt;top:494pt"><span class="fig" data-srcpage="9" data-clip="101,494,324,522"></span></div>
+<p class="x i" style="--b:533.3"><span class="nw">$U$와</span> <span class="nw">$Q$의</span> 관계를 대입하면 다음을 얻는다.</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="10" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:127pt;top:64pt"><span class="fig" data-srcpage="10" data-clip="127,64,298,96"></span></div>
+<p class="x i" style="--b:114.3">따라서 계의 정전기 에너지 변화에 대한 식은 다음과 같다.</p>
+<div class="f" style="left:131pt;top:137pt"><span class="fig" data-srcpage="10" data-clip="131,137,294,170"></span></div>
+<p class="x i" style="--b:190.1"><b>셋째 풀이:</b> 임의의 점전하 계를 생각하자. <span class="nw">$q_i$를</span> <span class="nw">$i$번째</span> 점전하라 하고, <span class="nw">$\varphi_i$를</span> 전하 <span class="nw">$q_i$가</span> 있는 곳에 나머지 전하들이 만드는 퍼텐셜이라 하자. 그러면 나머지 전하들의 전기장 안에서 <span class="nw">$i$번째</span> 전하의 퍼텐셜 에너지는 다음과 같다.</p>
+<div class="f" style="left:188pt;top:238pt"><span class="fig" data-srcpage="10" data-clip="188,238,237,252"></span></div>
+<p class="x i" style="--b:268.2">양 <span class="nw">$W_i$를</span> 모두 더하면 그 합은 계의 정전기 에너지의 두 배 <span class="nw">$2W$와</span> 같다. 이 합에서는 각 상호 작용이 두 번씩 계산되기 때문이다. 따라서</p>
+<div class="f" style="left:181pt;top:304pt"><span class="fig" data-srcpage="10" data-clip="181,304,244,334"></span></div>
+<p class="x" style="--b:349.7">마지막 관계식을 적용하면 다음을 얻는다.</p>
+<div class="f" style="left:148pt;top:361pt"><span class="fig" data-srcpage="10" data-clip="148,361,278,388"></span></div>
+<p class="x" style="--b:401.5">여기서 <span class="nw">$\varphi_+$와</span> <span class="nw">$\varphi_-$는</span> 각각 전하가 <span class="nw">$Q$와</span> <span class="nw">$-Q$인</span> 반구들의 표면에서의 퍼텐셜이고, <span class="nw">$\varphi_q$는</span> 반구들의 중심에서 반구들이 만드는 전기장의 퍼텐셜이다.</p>
+<p class="x i" style="--b:425.4">그러면 다음과 같다.</p>
+<div class="f" style="left:86pt;top:437pt"><span class="fig" data-srcpage="10" data-clip="86,437,339,464"></span></div>
+<p class="x i" style="--b:482.4"><span class="nw">$Q$와</span> <span class="nw">$U$의</span> 관계를 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:127pt;top:494pt"><span class="fig" data-srcpage="10" data-clip="127,494,298,527"></span></div>
+<p class="x i" style="--b:544.5">그러면 정전기 에너지의 변화는 다음과 같다.</p>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="11" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:131pt;top:63pt"><span class="fig" data-srcpage="11" data-clip="131,63,294,95"></span></div>
+<p class="x h" style="--b:112.8">문제 10-T5. 벽에 부딪치기</p>
+<div class="f" style="left:273pt;top:124pt"><span class="fig" data-srcpage="11" data-clip="273,124,392,226"></span></div>
+<p class="x i wn" style="--b:128.5;width:231pt">1. 계의 질량 중심(공의 중심)에 고정된 비관성 기준계로 옮겨 가자.</p>
+<p class="x i wn" style="--b:164.4;width:231pt">강체 “막대 + 퍽 2”에 작용하는 힘들을 생각하자. 벽은 퍽에 힘 <span class="nw">$\vec R = \vec N + \vec F_{\mathrm{fr}}$를</span> 작용하며, 이 힘은 벽과의 접촉점에 작용한다. 막대의 자유로운 끝에는 퍽 1이 힘 <span class="nw">$\vec F$를</span> 작용한다. 또한 물체의 질량 중심(퍽의 중심)에 관성력이 작용한다.</p>
+<p class="x i" style="--b:248.1">에너지 보존 법칙을 쓰자. 이 기준계에서 물체의 운동 에너지는 0에 가깝다. 퍽의 중심이 정지해 있고, 퍽의 크기가 작으며, 막대는 질량이 없기 때문이다. 그러면 모든 힘이 한 일의 합, 따라서 전체 일률도 0이다.</p>
+<p class="x i" style="--b:295.9;margin-top:-1.3pt">관성력은 일을 하지 않는다(질량 중심이 움직이지 않는다). 힘 <span class="nw">$\vec F$의</span> 일률은 <span class="nw">$P_F = F_\perp\cdot\omega L$이다.</span> 여기서 <span class="nw">$\omega$는</span> 막대의 회전 각속도이다. 힘 <span class="nw">$\vec R$의</span> 일률은 <span class="nw">$P_R = -F_{\mathrm{fr}}\cdot\omega r$이다.</span> 부호는 막대가 시계 반대 방향으로 회전한다고 가정하고 쓴 것이다.</p>
+<p class="x c d" style="--b:359.4;--a:14.2pt">$F_\perp\cdot\omega L - F_{\mathrm{fr}}\cdot\omega r = 0 \Rightarrow \dfrac{F_\perp}{F_{\mathrm{fr}}} = \dfrac{r}{L} \ll 1.$</p>
+<p class="x i" style="--b:385.7;margin-top:-1.5pt">따라서 힘 <span class="nw">$\vec F$는</span> 막대를 따라 향한다고 볼 수 있다. 이제 막대만 생각하자. 막대에는 퍽 1이 작용하는 힘 <span class="nw">$\vec F$와</span> 퍽 2가 작용하는 힘 <span class="nw">$\vec F'$이</span> 작용한다. 막대는 질량이 없으므로 <span class="nw">$\vec F + \vec F' = \vec 0$이고,</span> 따라서 <span class="nw">$\vec F' = -\vec F$도</span> 막대를 따라 향한다.</p>
+<p class="x i" style="--b:439.2">2. <b>첫째 풀이:</b></p>
+<p class="x i" style="--b:451.2">막대가 퍽들에 작용하는 힘은 막대를 따라 향한다고 볼 수 있으므로, 충돌하는 동안 퍽 1의 속도는 언제나 막대를 따라 향한다. 이 사실은 퍽 2와 벽 사이의 상호 작용의 종류에 관계없이 언제나 성립한다.</p>
+<p class="x i" style="--b:499.0">이 사실은 퍽 2와 벽의 접촉점에 대한 각운동량 보존 법칙을 이용해서도 증명할 수 있다. 퍽들의 크기가 작으므로 선택한 점에 대한 퍽 2의 각운동량은 0으로 볼 수 있다. 그러면 충돌 전 선택한 점에 대한 계의 각운동량이 0이므로</p>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="12" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">다음이 성립한다.</p>
+<p class="x c" style="--b:86.0">$L_{\mathrm{ang}} = 0 = mLv_{1\perp} \Rightarrow v_{1\perp} = 0.$</p>
+<div class="f" style="left:215pt;top:106pt"><span class="fig" data-srcpage="12" data-clip="215,106,396,214"></span></div>
+<p class="x i wn" style="--b:107.9;width:174.3pt"><span class="nw">$v_1$과</span> <span class="nw">$\omega$를</span> 각각 충돌 직후 퍽 1의 속력과 막대의 회전 각속도라 하자. 막대는 강체이므로 퍽 2의 속도 중 막대를 따르는 성분도 <span class="nw">$v_1$이고,</span> 막대에 수직인 성분은 <span class="nw">$\omega L$이다.</span></p>
+<p class="x i wr wn" style="--b:203.5;--fw:194.2pt;--fh:22.9pt"><span class="nw">$m$을</span> 퍽 하나의 질량이라 하자. 퍽 2와 벽 사이에 마찰이 없으므로, 벽을 따라 향하는 수평 <span class="nw">$x$축</span> 방향으로 계의 운동량 보존 법칙이 성립한다.</p>
+<div class="f" style="left:65pt;top:252pt"><span class="fig" data-srcpage="12" data-clip="65,252,361,278"></span></div>
+<p class="x i" style="--b:294.7">충돌이 탄성 충돌이므로 계의 역학적 에너지 보존 법칙이 성립한다.</p>
+<div class="f" style="left:104pt;top:318pt"><span class="fig" data-srcpage="12" data-clip="104,318,323,345"></span></div>
+<p class="x i" style="--b:361.2"><span class="nw">$v_1^2$에</span> 대한 두 식을 같게 놓으면 다음을 얻는다.</p>
+<div class="f" style="left:126pt;top:373pt"><span class="fig" data-srcpage="12" data-clip="126,373,299,401"></span></div>
+<p class="x" style="--b:414.5">따라서</p>
+<p class="x c d" style="--b:433.3;--a:14.6pt">$\omega = \dfrac{4v_0\operatorname{tg}\alpha}{L(1 + 2\operatorname{tg}^2\alpha)} \approx 4.33\,\mathrm{rad/s}.$</p>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="13" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0"><b>둘째 풀이:</b></p>
+<p class="x i" style="--b:76.0">퍽들의 크기가 작고 막대가 퍽 2에 단단히 고정되어 있으므로, 이 계는 막대의 양 끝에 질점이 있는 강체로 볼 수 있다.</p>
+<p class="x i" style="--b:111.9">막대의 중심(이 계의 질량 중심이기도 하다)에 대한 회전 운동 방정식을 쓰자.</p>
+<div class="f" style="left:144pt;top:132pt"><span class="fig" data-srcpage="13" data-clip="144,132,281,160"></span></div>
+<p class="x" style="--b:170.9">여기서 <span class="nw">$N$은</span> 벽의 수직 항력이다.</p>
+<p class="x i" style="--b:182.8"><span class="nw">$\Delta p_y$를</span> 벽의 수직 항력의 충격량이라 하자. 그러면 다음을 얻는다.</p>
+<div class="f" style="left:180pt;top:193pt"><span class="fig" data-srcpage="13" data-clip="180,193,246,219"></span></div>
+<p class="x i" style="--b:230.2">계의 질량 중심 운동 정리를 쓰자.</p>
+<div class="f" style="left:186pt;top:240pt"><span class="fig" data-srcpage="13" data-clip="186,240,239,253"></span></div>
+<p class="x i" style="--b:267.2">이로부터 충돌하는 동안 질량 중심 속도의 <span class="nw">$x$축</span> 성분이 일정하게 유지되며 그 값이 다음과 같음을 알 수 있다.</p>
+<div class="f" style="left:180pt;top:289pt"><span class="fig" data-srcpage="13" data-clip="180,289,245,302"></span></div>
+<p class="x i" style="--b:316.2"><span class="nw">$v_{Cy}$를</span> 충돌 직후 질량 중심 속도의 <span class="nw">$y$축</span> 성분이라 하자. 그러면 질량 중심 운동 정리로부터 다음을 얻는다.</p>
+<div class="f" style="left:120pt;top:338pt"><span class="fig" data-srcpage="13" data-clip="120,338,306,351"></span></div>
+<p class="x i" style="--b:365.1">충돌이 탄성 충돌이므로 계의 운동 에너지가 보존된다. 쾨니히 정리를 이용하여 계의 운동 에너지에 대한 식을 얻자.</p>
+<p class="x c d" style="--b:405.9;--a:14.6pt">$E_k = \dfrac{Mv_C^2}{2} + E_{k\,\mathrm{rel}} \Rightarrow E_k = mv_C^2 + \dfrac{mL^2\omega^2}{4},$</p>
+<p class="x" style="--b:421.8">따라서</p>
+<div class="f" style="left:141pt;top:423pt"><span class="fig" data-srcpage="13" data-clip="141,423,284,451"></span></div>
+<p class="x i" style="--b:459.2">얻은 식들을 결합하자.</p>
+<div class="f" style="left:27.5pt;top:467pt"><span class="fig" data-srcpage="13" data-clip="27.5,467,398,498"></span></div>
+<p class="x" style="--b:512.4">따라서</p>
+<p class="x c d" style="--b:531.2;--a:14.6pt">$\omega = \dfrac{4v_0\operatorname{tg}\alpha}{L(1 + 2\operatorname{tg}^2\alpha)} \approx 4.33\,\mathrm{rad/s}.$</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="14" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">3. <b>첫째 풀이:</b></p>
+<div class="f" style="left:215pt;top:66pt"><span class="fig" data-srcpage="14" data-clip="215,66,396,163"></span></div>
+<p class="x ov" style="--b:158.7;left:227.3pt;--fs:9pt">fr</p>
+<p class="x i wn" style="--b:76.0;width:174.3pt">완전 비탄성 충돌 직후 퍽 2의 속도는 벽을 따라 향한다. 이 속도를 <span class="nw">$v_2$라</span> 하자. 막대를 따라 향하는 축에 대한 두 퍽의 속도 성분을 같게 놓으면 다음을 얻는다.</p>
+<div class="f" style="left:86pt;top:148pt"><span class="fig" data-srcpage="14" data-clip="86,148,145,161"></span></div>
+<p class="x i" style="--b:177.7">퍽 2의 속도 중 막대에 수직인 성분은 <span class="nw">$v_\perp = v_2\cos\alpha$이므로</span> 막대의 회전 각속도는 다음과 같다.</p>
+<div class="f" style="left:170pt;top:201pt"><span class="fig" data-srcpage="14" data-clip="170,201,255,227"></span></div>
+<p class="x i" style="--b:241.1"><span class="nw">$x$축과</span> <span class="nw">$y$축</span> 방향으로 계의 운동량 변화는 다음과 같다.</p>
+<div class="f" style="left:55pt;top:253pt"><span class="fig" data-srcpage="14" data-clip="55,253,370,267"></span></div>
+<p class="x i" style="--b:283.0"><span class="nw">$v_1$과</span> <span class="nw">$v_2$의</span> 관계를 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:46pt;top:291pt"><span class="fig" data-srcpage="14" data-clip="46,291,380,309"></span></div>
+<p class="x i" style="--b:324.9">퍽 2가 벽 위에서 계속 미끄러진다고 가정하고 속력 <span class="nw">$v_2$를</span> 구하자. 이 추론이 옳은지는 <span class="nw">$v_2$가</span> 음이 아닌 값인지로 판단한다.</p>
+<p class="x i" style="--b:360.8">그림의 평면에서 계에는 두 외력 <span class="nw">$N = F_y$와</span> <span class="nw">$F_{\mathrm{fr}} = \mu N = -F_x$가</span> 작용한다. 두 힘은 정비례 관계로 연결되어 있으므로 다음을 얻는다.</p>
+<p class="x c d" style="--b:401.9;--a:14.6pt">$\dfrac{\Delta p_x}{\Delta p_y} = \dfrac{F_x}{F_y} = -\dfrac{F_{\mathrm{fr}}}{N} = -\mu = \dfrac{v_2(1 + \sin^2\alpha) - 2v_0\sin\alpha}{2v_0\cos\alpha - v_2\sin\alpha\cos\alpha},$</p>
+<p class="x" style="--b:422.2">따라서</p>
+<div class="f" style="left:83pt;top:425pt"><span class="fig" data-srcpage="14" data-clip="83,425,342,452"></span></div>
+<p class="x i" style="--b:463.7"><span class="nw">$\mu \le \operatorname{tg}\alpha$이거나</span> <span class="nw">$\mu > 2\operatorname{tg}\alpha + \operatorname{ctg}\alpha$일</span> 때 <span class="nw">$v_2$는</span> 음이 아니다. <span class="nw">$\mu > 2\operatorname{tg}\alpha + \operatorname{ctg}\alpha$일</span> 때 계속 미끄러질 수 없다는 것은 순전히 물리적인 고려만으로도 분명하지만, 형식적으로도 보일 수 있다. 이러한 <span class="nw">$\mu$</span> 값에서는 앞에서 도입한 <span class="nw">$\Delta p_y$가</span> 음이 되는데, 이는 물론 불가능하다.</p>
+<p class="x i" style="--b:523.5">따라서 퍽 2가 계속 미끄러질 조건은 다음과 같다.</p>
+<div class="f" style="left:192pt;top:536pt"><span class="fig" data-srcpage="14" data-clip="192,536,233,548"></span></div>
+</div>
+
+<!-- page 15 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="15" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0"><span class="nw">$\mu_1 < \operatorname{tg}\alpha$이고</span> <span class="nw">$\mu_2 > \operatorname{tg}\alpha$임에</span> 주목하자. 그러면 마찰 계수가 <span class="nw">$\mu_1 = 0.2$일</span> 때 충돌 직후 막대의 각속도는 다음과 같다.</p>
+<p class="x c d" style="--b:104.8;--a:14.6pt">$\omega_1 = \dfrac{2v_0(\operatorname{tg}\alpha - \mu_1)}{L(1 + 2\operatorname{tg}^2\alpha - \mu_1\operatorname{tg}\alpha)} \approx 1.52\,\mathrm{rad/s}.$</p>
+<p class="x i" style="--b:127.6"><span class="nw">$\mu \ge \operatorname{tg}\alpha$이면</span> 퍽 2는 충돌 도중 어느 순간 벽을 따라 움직이기를 멈추고, 그 뒤로는 벽 위에서 미끄러지지 않는다. 이를 보이자.</p>
+<p class="x i" style="--b:151.5"><span class="nw">$F$를</span> 막대의 장력이라 하자. 퍽 2에 대해 <span class="nw">$y$축</span> 방향으로 뉴턴 제2법칙을 쓰자.</p>
+<div class="f" style="left:92pt;top:176pt"><span class="fig" data-srcpage="15" data-clip="92,176,333,189"></span></div>
+<p class="x i" style="--b:205.8"><span class="nw">$F\sin\alpha > \mu N$이면</span> 다시 미끄러지기 시작할 수 있다. 그러나 앞에서 얻은 <span class="nw">$N$에</span> 대한 식으로부터 다음이 나온다.</p>
+<div class="f" style="left:80pt;top:230pt"><span class="fig" data-srcpage="15" data-clip="80,230,345,243"></span></div>
+<p class="x" style="--b:260.2">그러므로 퍽 2는 다시 미끄러지지 않으며, 따라서 충돌 직후 퍽 2의 속도는 0이다. 그러면 <span class="nw">$\mu_2 = 0.6$일</span> 때, 앞에서 얻은 <span class="nw">$\omega$와</span> <span class="nw">$v_2$의</span> 관계로부터 다음을 얻는다.</p>
+<p class="x c" style="--b:296.0">$\omega_2 = 0\,\mathrm{rad/s}.$</p>
+<p class="x i" style="--b:319.2"><b>둘째 풀이:</b></p>
+<p class="x i" style="--b:331.2">완전 비탄성 충돌 직후 퍽 2의 속도는 벽을 따라 향한다. 이 속도를 <span class="nw">$v_2$라</span> 하자.</p>
+<p class="x i" style="--b:355.1">퍽 2의 속도 <span class="nw">$v_2$에</span> 대한 식과, 퍽 2가 벽에서 떨어지지 않고 움직일 조건을 쓰자.</p>
+<div class="f" style="left:88pt;top:379pt"><span class="fig" data-srcpage="15" data-clip="88,379,338,405"></span></div>
+<p class="x i" style="--b:418.9"><span class="nw">$x$축과</span> <span class="nw">$y$축</span> 방향으로 계의 운동량 변화는 다음과 같다.</p>
+<div class="f" style="left:87pt;top:431pt"><span class="fig" data-srcpage="15" data-clip="87,431,338,445"></span></div>
+<p class="x i" style="--b:461.3">계의 질량 중심에 대한 회전 운동 방정식을 쓰자.</p>
+<div class="f" style="left:145pt;top:474pt"><span class="fig" data-srcpage="15" data-clip="145,474,281,502"></span></div>
+<p class="x" style="--b:512.2">여기서 <span class="nw">$F_x = -F_{\mathrm{fr}}$는</span> 공 2에 작용하는 마찰력의 <span class="nw">$x$축</span> 성분이다.</p>
+<p class="x" style="--b:524.2">이로부터</p>
+<div class="f" style="left:153pt;top:526pt"><span class="fig" data-srcpage="15" data-clip="153,526,272,553"></span></div>
+</div>
+
+<!-- page 16 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="16" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">퍽 2가 벽 위에서 계속 미끄러진다고 가정하고 속력 <span class="nw">$v_2$를</span> 구하자. 이 추론이 옳은지는 <span class="nw">$v_2$가</span> 음이 아닌 값인지로 판단한다.</p>
+<p class="x i" style="--b:99.9">회전 운동 방정식과 운동학적 구속 조건 식들로부터 다음을 얻는다.</p>
+<div class="f" style="left:50pt;top:121pt"><span class="fig" data-srcpage="16" data-clip="50,121,375,147"></span></div>
+<p class="x i" style="--b:160.6">정리하면 다음을 얻는다.</p>
+<div class="f" style="left:184pt;top:172pt"><span class="fig" data-srcpage="16" data-clip="184,172,242,198"></span></div>
+<p class="x i" style="--b:211.1">미끄러짐이 멈추지 않으면 <span class="nw">$F_x = -F_{\mathrm{fr}} = -\mu N$이고,</span> 따라서</p>
+<div class="f" style="left:151pt;top:223pt"><span class="fig" data-srcpage="16" data-clip="151,223,276,251"></span></div>
+<p class="x i" style="--b:265.4">얻은 관계식과 운동학적 구속 조건 식들로부터 다음을 얻는다.</p>
+<div class="f" style="left:99pt;top:276pt"><span class="fig" data-srcpage="16" data-clip="99,276,326,304"></span></div>
+<p class="x i" style="--b:323.1">앞에서 얻은 <span class="nw">$\omega$와</span> <span class="nw">$v_2$의</span> 관계를 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:96pt;top:331pt"><span class="fig" data-srcpage="16" data-clip="96,331,329,360"></span></div>
+<p class="x" style="--b:371.0">따라서</p>
+<div class="f" style="left:82pt;top:373pt"><span class="fig" data-srcpage="16" data-clip="82,373,343,400"></span></div>
+<p class="x i" style="--b:412.0"><span class="nw">$\mu \le \operatorname{tg}\alpha$이거나</span> <span class="nw">$\mu > 2\operatorname{tg}\alpha + \operatorname{ctg}\alpha$일</span> 때 <span class="nw">$v_2$는</span> 음이 아니다. <span class="nw">$\mu > 2\operatorname{tg}\alpha + \operatorname{ctg}\alpha$일</span> 때 계속 미끄러질 수 없다는 것은 순전히 물리적인 고려만으로도 분명하지만, 형식적으로도 보일 수 있다. 이러한 <span class="nw">$\mu$</span> 값에서는 앞에서 도입한 <span class="nw">$\Delta p_y$가</span> 음이 되는데, 이는 물론 불가능하다.</p>
+<p class="x i" style="--b:471.8">따라서 퍽 2가 계속 미끄러질 조건은 다음과 같다.</p>
+<div class="f" style="left:192pt;top:483pt"><span class="fig" data-srcpage="16" data-clip="192,483,233,495"></span></div>
+<p class="x i" style="--b:512.8">그러면 <span class="nw">$\mu_1 = 0.2$일</span> 때 충돌 직후 막대의 각속도는 다음과 같다.</p>
+<p class="x c d" style="--b:540.1;--a:14.6pt">$\omega_1 = \dfrac{2v_0(\operatorname{tg}\alpha - \mu_1)}{L(1 + 2\operatorname{tg}^2\alpha - \mu_1\operatorname{tg}\alpha)} \approx 1.52\,\mathrm{rad/s}.$</p>
+</div>
+
+<!-- page 17 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p><p class="x hd r" style="--b:37.6;left:28.3pt;width:362.9pt">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="17" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0"><span class="nw">$\mu \ge \operatorname{tg}\alpha$이면</span> 퍽 2는 충돌 도중 어느 순간 벽을 따라 움직이기를 멈추고, 그 뒤로는 벽 위에서 미끄러지지 않는다. 이를 보이자.</p>
+<p class="x i" style="--b:87.9"><span class="nw">$v_{2x} = 0$이면,</span> 충돌하는 시간 동안 좌표(각)의 변화가 무시할 만큼 작다는 것을 고려할 때 다음 관계가 성립한다.</p>
+<div class="f" style="left:169pt;top:112pt"><span class="fig" data-srcpage="17" data-clip="169,112,256,139"></span></div>
+<p class="x i" style="--b:153.2">이 조건으로부터 공 2에 작용하는 마찰력 <span class="nw">$F_x$를</span> 구하자.</p>
+<div class="f" style="left:47pt;top:166pt"><span class="fig" data-srcpage="17" data-clip="47,166,380,192"></span></div>
+<p class="x i" style="--b:207.5">이로써 퍽 2의 속도 성분 <span class="nw">$v_{2x}$가</span> 0이 된 뒤에는 미끄러지지 않는다는 가정이 옳음이 증명된다.</p>
+<p class="x i" style="--b:231.4">그러면 <span class="nw">$\mu_2 = 0.6$일</span> 때, 앞에서 얻은 <span class="nw">$\omega$와</span> <span class="nw">$v_2$의</span> 관계로부터 다음을 얻는다.</p>
+<p class="x c" style="--b:253.3">$\omega_2 = 0\,\mathrm{rad/s}.$</p>
+</div>
+
+</body></html>
