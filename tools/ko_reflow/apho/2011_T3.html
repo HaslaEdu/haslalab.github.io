@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* APhO 2011 Theoretical Question 3, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:10.4pt;line-height:13.4pt}
+.a{position:absolute}
+.flow{position:absolute;left:36pt;width:521pt;top:120pt}
+p{margin:0 0 9pt;text-align:justify;text-indent:0}
+h1{font-size:10.5pt;font-weight:bold;text-align:center;margin:0 0 9pt}
+h3{font-size:10.5pt;font-weight:bold;color:#4f81bd;margin:9pt 0 2pt}
+.q{position:relative;padding-left:18pt;margin-bottom:9pt;text-align:justify}
+.q>span.k{position:absolute;left:0;top:0}
+.eq{text-align:center;margin:6pt 0}
+.figc{text-align:left;line-height:0;margin:6pt 0}
+.cap{margin:2pt 0 10pt 20pt}
+.pg{position:absolute;left:265pt;top:765pt}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:9.5pt;line-height:12pt;text-align:center}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:35.8pt;top:28.4pt"><span class="fig" data-srcpage="1" data-clip="35.8,28.4,559,110.7"></span></div>
+<div class="pg"><span class="fig" data-srcpage="1" data-clip="265,765,335,782"></span></div>
+<div class="a" style="left:423pt;top:184.2pt"><span class="fig" data-srcpage="1" data-clip="423,184.2,558,238.2"></span></div>
+<div class="a" style="left:423.5pt;top:243.1pt;width:124pt;height:27pt;border:.6pt solid #000;padding:2pt 3pt;font-size:9.5pt;line-height:12.5pt">그림 1: 반쯤 부푼 생일 풍선.</div>
+<div class="flow" style="top:122pt">
+<h1 style="margin-bottom:30pt">이론 문제 3: 생일 풍선</h1>
+<div style="float:right;width:160pt;height:100pt"></div>
+<p>그림은 생일 파티에서 인기 있는 종류의 긴 고무풍선을 보여 준다. 반쯤 부푼 풍선은 보통 반지름이 서로 다른 두 영역으로 나뉜다. 이 문제에서는 이 현상을 이해하는 데 도움이 되는 단순화된 모형을 다룬다.</p>
+<p>(양 끝을 제외하고) 길고 균일한 원통 모양이며, 풍선을 부풀릴 수 있는 주둥이가 달린 풍선을 생각하자. 모든 과정은 실온에서 등온 과정으로 본다. 풍선 안의 압력 $P$는 늘 대기압 $P_0$보다 조금만 크므로, 공기는 비압축성 유체로 다룰 수 있다. 중력과 풍선의 무게도 무시할 수 있다. 부풀리는 과정은 느리고 준정적이다. (a)–(d)에서 풍선은 길이 전체에 걸쳐 균일하게 부푼다. 부풀리기 전 풍선의 반지름과 길이를 $r_0$와 $L_0$로 나타낸다.</p>
+<div class="q"><span class="k">a.</span>(1.8점) 풍선은 주둥이로 잡혀 있고, 나머지 부분은 자유롭게 매달려 있다. 세로 표면 장력 $\sigma_L$(풍선의 축에 평행한 방향)과 가로 표면 장력 $\sigma_t$(풍선의 원형 단면에 접하는 방향)의 비 $\sigma_L/\sigma_t$를 구하라.<br>고무막의 표면 장력은 이웃한 부분이 서로에게 작용하는 경계의 단위 길이당 힘이다.</div>
+<p>훅 법칙은 작은 장력에 대한 실제 탄성의 선형 근사이다. 풍선의 길이는 $L_0$로 일정하게 유지되고, 표면 장력 $\sigma_t$는 팽창비 $r/r_0$에 선형으로 의존한다고 가정한다.</p>
+<div class="eq">$\sigma_t=k\left(\dfrac{r}{r_0}-1\right)\qquad\quad(1)$</div>
+<div class="q"><span class="k">b.</span>(1점) 이러한 가정 아래, 풍선 안의 압력 $P$가 풍선의 부피 $V$에 어떻게 의존하는지 식을 구하라. $P-P_0$를 $V$의 함수로 대략 그려라. 훅 탄성 근사에서 나오는 최대 팽창 압력 $P_{max}$는 얼마인가?</div>
+<p>실제로는 팽창비 $r/r_0$가 크므로(그림 1에서 보통 약 5인 값이 관찰된다) 고무의 비선형 거동과 풍선 길이의 변화를 고려해야 한다. 이러한 효과 때문에 (b)에서 예측한 것보다 높은 팽창 압력이 가능하다. 보통의 풍선에서 $\sigma_t(r)$의 그래프는 세 부분으로 이루어진다.</p>
+<div class="q" style="margin:0 0 0 20pt"><span class="k">1.</span>팽창비가 작으면 $\sigma_t(r)$은 훅 법칙처럼 커진다.</div>
+<div class="q" style="margin:0 0 0 20pt"><span class="k">2.</span>$r-r_0\sim r_0$에서 풍선의 길이 $L$이 늘어나기 시작하고, $\sigma_t(r)$은 매우 느리게 커지는 긴 평탄 구간에 이른다.</div>
+<div class="q" style="margin:0 0 9pt 20pt"><span class="k">3.</span>팽창비가 어느 정도 커지면 고무는 더 늘어나는 것에 강하게 저항하기 시작하여 $\sigma_t(r)$이 급격히 커진다.</div>
+<p>이 거동을 그림 2에 나타내었다.</p>
+<div class="q"><span class="k">c.</span>(1.3점) 그림 2에 따라 거동하는, 균일하게 부푼 풍선에 대해 압력 차 $P-P_0$를 $V$의 함수로 정성적으로 그려라. 그래프에 국소 극값점을 표시하라. 또</div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:35.8pt;top:28.4pt"><span class="fig" data-srcpage="2" data-clip="35.8,28.4,559,110.7"></span></div>
+<div class="pg"><span class="fig" data-srcpage="2" data-clip="265,765,335,782"></span></div>
+<div class="flow" style="top:123pt"><p style="padding-left:18pt">$r=1$ cm와 $r=2.5$ cm에 해당하는 점들을 표시하라. 이 두 점에서 $P-P_0$의 값을 10%의 정확도로 구하라.</p></div>
+<div class="a" style="left:36pt;top:161.9pt"><span class="fig" data-srcpage="2" data-clip="36,161.9,304,365.1"></span></div>
+<div class="a" style="left:305.4pt;top:161.6pt"><span class="fig" data-srcpage="2" data-clip="305.4,161.6,551.7,365"></span></div>
+<div class="a" style="left:80.6pt;top:365pt;width:203pt;height:17pt;border:.6pt solid #000;padding:2pt 4pt;font-size:9.5pt;background:#fff">그림 2: 실제 파티 풍선의 $\sigma_t(r)$.</div>
+<div class="a" style="left:354.6pt;top:365.7pt;width:151pt;height:16pt;border:.6pt solid #000;padding:2pt 4pt;font-size:9.5pt;background:#fff">그림 3: 식 (2)의 그래프.</div>
+<div class="flow" style="top:400pt">
+<p>(c)에서 찾은 거동의 결과를 알아보기 위해, 균일하게 부푼 풍선의 $P(V)$를 3차 함수로 근사한다.</p>
+<div class="eq">$P-P_0=a\big((V-u)^3-b(V-u)+c\big)\qquad\quad(2)$</div>
+<p>여기서 $a$, $b$, $c$, $u$는 양의 상수이다. 부피 $u$는 부풀리지 않은 풍선의 부피 $V_0$보다 크고, $c$는 충분히 커서 함수 (2)가 물리적 범위 $V&gt;V_0$ 전체에서 양수라고 가정한다. 그림 (3)을 보라.</p>
+<p>풍선은 압력 $P$를 조절할 수 있는 큰 공기 저장소에 연결되어 있다. $P$의 어떤 값들은 부피 $V$의 값 여러 개와 맞을 수 있다. 이러한 팽창 압력에서 잡고 있는 동안 풍선이 가끔 교란(외력에 의한 국소적인 늘어남 등)을 받으면, 풍선은 부피가 다른 상태로 뛰어오를 수 있다. 이는 풍선, 대기, 압력 $P$를 유지하는 장치로 이루어진 계 전체에 에너지적으로 유리할 때 일어난다. 압력을 $P_0$에서 천천히 높이고 매 단계마다 충분한 교란이 있다면, 두 상태 사이를 옮겨 가는 데 드는 에너지가 0인 어떤 압력 $P_c$에서 이 폭발적인 부피 도약이 일어난다. 이 압력보다 높으면 작은 부피 가지에서 큰 부피 가지로 옮겨 갈 때 에너지가 방출되고, 반대도 마찬가지이다. 이러한 불연속은 자연에서 흔히 볼 수 있으며, 때로 '상전이'라 부른다.</p>
+<div class="q"><span class="k">d.</span>(2.3점) 식 (2)를 고려하여 $P_c$의 값, 도약 전 풍선의 부피 $V_1$, 도약 후의 부피 $V_2$를 구하라. 답을 $a$, $b$, $c$, $u$로 나타내어라.</div>
+<p>생일을 맞은 아이처럼 더 현실적으로 바람을 넣는 주체는 위에서 설명한 순간적인 부피 변화에 필요한 공기를 충분히 공급할 수 없다. 대신 공기는 풍선에 서서히 들어가며, 사실상 압력이 아니라 풍선의 부피를 조절하게 된다. 이 경우에는 새로운 종류의 거동이 가능해진다. 계의 전체 에너지를 최소화하는 데 도움이 된다면, 풍선은 (충분한 교란이 있을 때) 반지름이 서로 다르고</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:35.8pt;top:28.4pt"><span class="fig" data-srcpage="3" data-clip="35.8,28.4,559,110.7"></span></div>
+<div class="pg"><span class="fig" data-srcpage="3" data-clip="265,765,335,782"></span></div>
+<div class="flow" style="top:122pt">
+<p>길이가 서서히 변하는 두 원통형 영역으로 나뉜다. 나뉘는 경계 자체에도 에너지가 들지만 이는 무시해도 된다. 또 경계층의 길이도 무시한다(이러한 가정은 매우 긴 풍선에 대해 성립한다).</p>
+<div class="q"><span class="k">e.</span>(1점) 나뉘는 것을 고려하여 압력 차 $P-P_0$를 $V$의 함수로 정성적으로 그려라. 축에 압력 $P_c-P_0$와 부피 $V_1$, $V_2$를 표시하라.</div>
+<div class="q"><span class="k">f.</span>(1.4점) 풍선이 두 영역이 함께 존재할 수 있는 부피 범위에 있다. 더 가는 영역의 길이 $L_{thin}$을 전체 공기 부피 $V$의 함수로 구하라. 답을 $V_1$, $V_2$와 더 가는 영역의 반지름 $r_1$로 나타내어라.</div>
+<div class="q"><span class="k">g.</span>(1.2점) 풍선이 두 영역이 함께 존재할 수 있는 부피 범위에 있다. 가는 영역의 단위 길이를 굵은 영역으로 바꾸기 위해 풍선에 해 주어야 하는 잠재 일 $\Delta W/\Delta L_{thin}$을 구하라. 답을 $P_c$, $V_1$, $V_2$와 더 가는 영역의 반지름 $r_1$로 나타내어라.</div>
+</div>
+</div>
+</body></html>
