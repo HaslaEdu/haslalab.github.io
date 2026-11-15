@@ -1,0 +1,95 @@
+<!doctype html><html><head><meta name="page" content="595,842">
+<style>
+/* IPhO 2005 Theory Problem 1, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:10pt;line-height:14pt}
+.a{position:absolute}
+.a>p{text-indent:0}
+p{margin:0 0 4pt;text-align:justify;text-indent:0}
+p.i{text-indent:28pt}
+h1{font-size:12pt;font-weight:bold;text-align:center;margin:0}
+h2{font-size:10pt;font-weight:bold;margin:0}
+p.q{padding-left:42pt;text-indent:-42pt;margin-bottom:6pt}
+p.q b{display:inline-block;width:42pt;text-indent:0;font-weight:normal}
+p.n{padding-left:42pt;text-indent:-28pt;margin-bottom:6pt}
+.eq{text-align:center;margin:3pt 0}
+.sm{font-size:9pt;line-height:12pt}
+.fn{font-size:8.5pt;line-height:11pt}
+.ov{position:absolute;background:#fff;white-space:nowrap}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="1" data-clip="0,0,595,62"></span></div>
+<div class="a" style="left:0;top:792pt"><span class="fig" data-srcpage="1" data-clip="0,792,595,842"></span></div>
+<div class="a" style="left:56.7pt;top:83pt;width:498pt"><h1>Th 1&nbsp;&nbsp;&nbsp; 불운한 인공위성</h1></div>
+<div class="a" style="left:393pt;top:127pt"><span class="fig" data-srcpage="1" data-clip="393,127,555,306"></span></div>
+<div class="a" style="left:56.7pt;top:128pt;width:311pt">
+<p class="i">우주선이 수행하는 가장 흔한 궤도 기동은 비행 방향을 따라 속도를 바꾸는 것, 즉 더 높은 궤도에 이르기 위한 가속이나 대기권 재진입을 시작하기 위한 감속이다. 이 문제에서는 엔진의 추력을 지름 방향으로 가했을 때의 궤도 변화를 다룬다.</p>
+<p class="i">수치를 구할 때는 지구 반지름 $R_T=6.37\cdot10^6$ m, 지표면의 중력 가속도 $g=9.81\ {\rm m/s^2}$을 사용하고, 항성일의 길이는 $T_0=24.0$ h로 둔다.</p>
+<p class="i">질량 $m$인 정지 궤도<sup>1</sup> 통신 위성이 반지름 $r_0$인 적도 원 궤도에 놓여 있다고 하자. 이러한 위성에는 최종 궤도에 이르는 데 필요한 접선 방향 추력을 내는 '원지점 엔진'이 있다.</p>
+</div>
+<div class="a sm" style="left:83.6pt;top:327pt;width:420pt"><p>배점은 각 소문항의 처음에 괄호 안에 표시되어 있다.</p></div>
+<div class="a" style="left:56.7pt;top:350pt;width:498.6pt">
+<h2 style="margin-bottom:10pt">문제 1</h2>
+<p class="q"><b>1.1</b>(0.3) $r_0$의 수치를 구하라.</p>
+<p class="q"><b>1.2</b>(0.3+0.1) 위성의 속력 $v_0$를 $g$, $R_T$, $r_0$의 함수로 나타내는 해석적 식을 구하고, 그 수치를 계산하라.</p>
+<p class="q"><b>1.3</b>(0.4+0.4) 위성의 각운동량 $L_0$와 역학적 에너지 $E_0$를 $v_0$, $m$, $g$, $R_T$의 함수로 나타내어라.</p>
+</div>
+<div class="a" style="left:445pt;top:472pt"><span class="fig" data-srcpage="1" data-clip="445,472,553,606"></span></div>
+<div class="a" style="left:56.7pt;top:481pt;width:381pt">
+<p class="i">이 정지 궤도 원 궤도에 이르러(그림 F-1 참조) 위성이 원하는 위치에서 안정화되고 임무를 수행할 준비를 하고 있을 때, 지상 관제사의 실수로 원지점 엔진이 다시 점화된다. 이때 추력은 지구를 향하고 있었고, 지상 요원이 재빨리 엔진을 껐지만 위성에는 원치 않는 속도 변화 $\Delta v$가 생겼다. 이 추진을 매개변수 $\beta=\Delta v/v_0$로 나타낸다. 엔진이 연소하는 시간은 다른 어떤 궤도 시간에 비해서도 늘 무시할 수 있으므로 순간적이라고 볼 수 있다.</p>
+</div>
+<div class="a" style="left:56.7pt;top:598pt;width:498.6pt">
+<h2 style="margin-bottom:8pt">문제 2</h2>
+<p style="padding-left:28pt">$\beta&lt;1$이라 하자.</p>
+<p class="q"><b>2.1</b>(0.4+0.5) 새 궤도<sup>2</sup>의 매개변수인 반통경 $l$과 이심률 $\varepsilon$을 $r_0$와 $\beta$로 나타내어라.</p>
+<p class="q"><b>2.2</b>(1.0) 새 궤도의 장축과 사고로 엔진이 점화된 순간의 위치 벡터 사이의 각 $\alpha$를 구하라.</p>
+<p class="q"><b>2.3</b>(1.0+0.2) 지구 중심으로부터 근지점 거리 $r_{\min}$과 원지점 거리 $r_{\max}$를 $r_0$와 $\beta$의 함수로 나타내는 해석적 식을 구하고, $\beta=1/4$일 때의 수치를 계산하라.</p>
+<p class="q"><b>2.4</b>(0.5+0.2) 새 궤도의 주기 $T$를 $T_0$와 $\beta$의 함수로 구하고, $\beta=1/4$일 때의 수치를 계산하라.</p>
+</div>
+<div class="a fn" style="left:56.7pt;top:752pt;width:300pt;border-top:.5pt solid #000;padding-top:1pt"><p><sup>1</sup> 공전 주기가 $T_0$이다.&nbsp;&nbsp;&nbsp; <sup>2</sup> '힌트'를 보라.</p></div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="2" data-clip="0,0,595,62"></span></div>
+<div class="a" style="left:0;top:792pt"><span class="fig" data-srcpage="2" data-clip="0,792,595,842"></span></div>
+<div class="a" style="left:56.7pt;top:99pt;width:498.6pt">
+<h2 style="margin-bottom:8pt">문제 3</h2>
+<p class="q"><b>3.1</b>(0.5) 위성이 지구 중력을 벗어나는 데 필요한 최소 추진 매개변수 $\beta_{\rm esc}$를 구하라.</p>
+<p class="q"><b>3.2</b>(1.0) 이 경우 새 궤도에서 위성이 지구 중심에 가장 가까이 다가가는 거리 $r'_{\min}$을 $r_0$의 함수로 구하라.</p>
+</div>
+<div class="a" style="left:428pt;top:178pt"><span class="fig" data-srcpage="2" data-clip="428,178,550,345"></span></div>
+<div class="a" style="left:56.7pt;top:198pt;width:352pt">
+<h2 style="margin-bottom:8pt">문제 4</h2>
+<p style="padding-left:28pt">$\beta&gt;\beta_{\rm esc}$라 하자.</p>
+<p class="q"><b>4.1</b>(1.0) 무한히 먼 곳에서의 잔여 속력 $v_\infty$를 $v_0$와 $\beta$의 함수로 구하라.</p>
+<p class="q"><b>4.2</b>(1.0) 점근적 탈출 방향의 '충돌 매개변수' $b$를 $r_0$와 $\beta$로 나타내어라(그림 F-2 참조).</p>
+<p class="q"><b>4.3</b>(1.0+0.2) 점근적 탈출 방향의 각 $\phi$를 $\beta$로 나타내어라. $\beta=\frac32\beta_{\rm esc}$일 때의 수치를 계산하라.</p>
+</div>
+<div class="a" style="left:56.7pt;top:445pt;width:498.6pt"><p style="text-align:center"><b>힌트</b></p></div>
+<div class="a" style="left:412pt;top:476pt"><span class="fig" data-srcpage="2" data-clip="412,476,552,616"></span></div>
+<div class="a sm" style="left:56.7pt;top:486pt;width:333pt">
+<p class="i">역제곱 법칙을 따르는 중심력을 받는 물체는 타원, 포물선 또는 쌍곡선으로 기술되는 궤적을 따라 움직인다. $m\ll M$인 근사에서 중력을 미치는 질량 $M$은 초점 중 하나에 있다. 이 초점을 원점으로 잡으면 이 곡선들의 일반적인 극좌표 방정식은 다음과 같이 쓸 수 있다(그림 F-3 참조).</p>
+<div class="eq">$r(\theta)=\dfrac{l}{1-\varepsilon\cos\theta}$</div>
+<p>여기서 $l$은 반통경이라 부르는 양의 상수이고 $\varepsilon$은 곡선의 이심률이다. 운동 상수로 나타내면 다음과 같다.</p>
+<div class="eq">$l=\dfrac{L^2}{GMm^2}$ &nbsp;&nbsp;그리고&nbsp;&nbsp; $\varepsilon=\left(1+\dfrac{2EL^2}{G^2M^2m^3}\right)^{1/2}$</div>
+</div>
+<div class="a sm" style="left:56.7pt;top:664pt;width:500pt">
+<p>여기서 $G$는 뉴턴 상수, $L$은 원점에 대한 궤도 운동하는 질량의 각운동량의 크기, $E$는 그 역학적 에너지이며 무한히 먼 곳의 퍼텐셜 에너지를 0으로 둔다.</p>
+<p style="margin-top:8pt;padding-left:28pt">다음과 같은 경우가 있을 수 있다.</p>
+<p>i) $0\le\varepsilon&lt;1$이면 곡선은 타원이다($\varepsilon=0$이면 원).</p>
+<p>ii) $\varepsilon=1$이면 곡선은 포물선이다.</p>
+<p>iii) $\varepsilon&gt;1$이면 곡선은 쌍곡선이다.</p>
+</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="3" data-clip="0,0,595,842"></span></div>
+<div class="ov" style="left:236.6pt;top:132.7pt;min-width:139.3pt;height:14.3pt;font-size:10.2pt;line-height:14.3pt;text-align:center"><b>Th 1&nbsp;&nbsp; 답안지</b></div>
+<div class="ov" style="left:62.7pt;top:187.4pt;min-width:42.9pt;height:12.1pt;font-size:8.5pt;line-height:12.1pt;text-align:center"><b>문항</b></div>
+<div class="ov" style="left:122.2pt;top:187.7pt;min-width:86.8pt;height:12.1pt;font-size:8.5pt;line-height:12.1pt;text-align:center"><b>사용한 기본</b></div>
+<div class="ov" style="left:141.5pt;top:199.7pt;min-width:48.2pt;height:12.1pt;font-size:8.5pt;line-height:12.1pt;text-align:center"><b>공식과 아이디어</b></div>
+<div class="ov" style="left:252.0pt;top:187.7pt;min-width:79.2pt;height:12.1pt;font-size:8.5pt;line-height:12.1pt;text-align:center"><b>해석적 결과</b></div>
+<div class="ov" style="left:381.2pt;top:187.7pt;min-width:80.4pt;height:12.1pt;font-size:8.5pt;line-height:12.1pt;text-align:center"><b>수치 결과</b></div>
+<div class="ov" style="left:494.4pt;top:187.7pt;min-width:42.3pt;height:12.1pt;font-size:8.5pt;line-height:12.1pt;text-align:center"><b>배점</b></div>
+<div class="ov" style="left:493.8pt;top:199.7pt;min-width:43.4pt;height:12.1pt;font-size:8.5pt;line-height:12.1pt;text-align:center"><b>&nbsp;</b></div>
+</div>
+</body></html>
