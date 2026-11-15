@@ -55,6 +55,28 @@ function enableReadState(a,saved=new Map()){
   a.run(earlyMain);return saved;
 }
 
+test('the olympiad archive loads practical papers and their alternate language on deep links',()=>{
+  const a=app();
+  a.load('theory:ieso');
+  const first=plain(a.run('DATA.ieso.years.find(y=>y.y===2008).problems'));
+  a.load('theory:ieso');
+  assert.deepEqual(plain(a.run('DATA.ieso.years.find(y=>y.y===2008).problems')),first);
+  const p7=first.find(p=>p.id==='P7');
+  assert.match(p7.files.pdf.en,/^https:\/\/.+#page=11$/);
+  assert.match(p7.files.pdf.ko,/Xieso_IESO_2008_P_KO\.pdf#page=9$/);
+  const dmt=anchors(a.run('lang="ko"; track="thy"; viewYear("ieso",2024)'));
+  assert.ok(dmt.some(link=>link.url.endsWith('Xieso_IESO_2024_DMT_KO.pdf')));
+  assert.ok(dmt.some(link=>/DMT/i.test(link.url)&&link.label.includes('English')));
+  const partial=anchors(a.run('viewYear("ieso",2009)'));
+  assert.ok(partial.some(link=>link.url.endsWith('Xieso_IESO_2009_T_KO.pdf')&&link.label.includes('부분')));
+  const field=anchors(a.run('lang="en"; track="exp"; viewYear("ieso",2026)'));
+  assert.ok(field.some(link=>/map/i.test(link.label)&&/^https:\/\//.test(link.url)));
+  a.load('theory:icho');
+  const solutions=a.run('THEORY.icho[2017].f.T.sol');
+  assert.match(solutions,/^https:\/\/eko\.ut\.ee\//);
+  assert.deepEqual(plain(a.run('theoryGroups("icho",DATA.icho.years.find(y=>y.y===2017))')),[]);
+});
+
 test('compact metadata preserves all competition names, subject counts and home totals before any paper loads',()=>{
   const lean=app(),full=app({preload:true});
   for(const subject of ['phys','chem','bio','earth','astro','sci','math','info'])assert.equal(lean.run(`viewComps('${subject}')`),full.run(`viewComps('${subject}')`),subject);
@@ -78,11 +100,12 @@ test('individual AMC, KMO and chemistry chunks preserve paper links and scores w
 
 test('lazy chunks retain every source export, general instructions and corrected KPhE PDF versions',()=>{
   const full={window:{}};vm.runInNewContext(read('theory.js'),full);
-  assert.deepEqual(Object.keys(full.window).sort(),['GENERAL','KPHE_PDF_VERSIONS','THEORY','THEORY_META']);
+  const exports=['ARCHIVE_PRACTICAL','GENERAL','KPHE_PDF_VERSIONS','THEORY','THEORY_META'];
+  assert.deepEqual(Object.keys(full.window).sort(),exports);
   vm.runInNewContext(read('contest-exams.js'),full);
   const split={window:{}};
   for(const key of catalogue.theoryKeys)vm.runInNewContext(read(catalogue.versions['theory:'+key].split('?')[0]),split);
-  for(const key of ['THEORY','THEORY_META','GENERAL','KPHE_PDF_VERSIONS'])assert.deepEqual(plain(split.window[key]),plain(full.window[key]),key);
+  for(const key of exports)assert.deepEqual(plain(split.window[key]),plain(full.window[key]),key);
   const lean=app();lean.load('theory:ipho');lean.load('theory:kphe');
   assert.deepEqual(plain(lean.run('GENERAL.ipho')),plain(full.window.GENERAL.ipho));
   const [file,version]=Object.entries(full.window.KPHE_PDF_VERSIONS)[0];assert.equal(lean.run(`thyUrl(${JSON.stringify(file)})`),pdfxUrl(file)+'?v='+version);

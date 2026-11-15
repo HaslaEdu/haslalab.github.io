@@ -34,11 +34,14 @@ from kphe_review import review_questions
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FILE = re.compile(r'^([A-Za-z]+)_(\d{4})_((?:T|MC)\d*[a-z]?)(?:_([A-Z]{2})|([SMAK]))\.pdf$')
+ARCHIVE_FILE = re.compile(r'^([A-Za-z]+)_(\d{4})_((?:DMT|ITFI|ESP|[PEF])\d*[a-z]?)(?:_([A-Z]{2})|([SMAK]))\.pdf$')
+PRACTICAL_PART = re.compile(r'^(?:ITFI|ESP|[PEF])\d*[a-z]?$')
 GENERIC = re.compile(r'^(?:problem|question|task|theory|theoretical problem|part)\s*[A-Za-z]?\d*[a-z]?\.?$', re.I)
 KINDS = {'paper': 'paper', 'solution': 'sol', 'marking': 'mark', 'answer': 'answer', 'key': 'key'}
 
 
-def load():
+def load(practical=None):
+    practical = {} if practical is None else practical
     out, bad, gen, meta = {}, [], {}, {}
     kphe_review = review_questions()
     for path in sorted(glob.glob(os.path.join(ROOT, 'tools', 'theory', '*.json'))):
@@ -52,7 +55,7 @@ def load():
                     meta[comp][field] = m[field]
         for y in m.get('years', []):
             # a year is "2026", or "2026-1" / "2026-2" for a competition sat twice a year (KPhE); file names keep the 4 digits
-            year, files, gt = str(y['y']), {}, None
+            year, files, practical_files, gt = str(y['y']), {}, {}, None
             for f in y.get('files', []):
                 if f.get('kind') == 'general' and re.match(r'^%s_%s_G[TE]\d*\.pdf$' % (prefix, year[:4]), f.get('file', '')) \
                         and re.match(r'^https?://', f.get('url', '')):
@@ -66,14 +69,15 @@ def load():
                         and f.get('part'):
                     files.setdefault(f['part'], {})['data'] = f['local']
                     continue
-                g = FILE.match(f.get('file', ''))
+                g = FILE.match(f.get('file', '')) or ARCHIVE_FILE.match(f.get('file', ''))
                 kind = KINDS.get(f.get('kind'))
                 # a file comes from its source (url, copied into a release) or is kept on the site (local: pdfx/…)
                 if not g or g.group(1) != prefix or g.group(2) != year[:4] or not kind or not (re.match(r'^https?://', f.get('url', '')) or re.match(r'^pdfx/[a-z]+/', f.get('local', ''))):
                     bad.append((path, f.get('file')))
                     continue
                 part = g.group(3)
-                slot = files.setdefault(part, {})
+                group = practical_files if PRACTICAL_PART.fullmatch(part) else files
+                slot = group.setdefault(part, {})
                 value = f['local'] if f.get('local') else f['url'] if f.get('direct') else f['file']
                 # Keep every available source language even when the default is
                 # an English edition. Practice and exam language are separate
@@ -93,6 +97,9 @@ def load():
                 # direct: linked where it is published, never copied (the organiser does not allow redistribution)
                 slot[kind] = value
                 if kind == 'paper':
+                    for prop in ('title', 'supplements'):
+                        if f.get(prop):
+                            slot[prop] = f[prop]
                     if f.get('contains_solutions'):
                         slot['containsSolutions'] = True
                     else:
@@ -103,6 +110,14 @@ def load():
                         slot.pop('sourcePages', None)
                 if kind == 'paper' and language:
                     slot['paperLang'] = language
+            if practical_files:
+                for problem in y.get('problems', []):
+                    slot = practical_files.get(problem.get('id'))
+                    if slot is not None and 'title' not in slot and problem.get('title'):
+                        slot['title'] = {'en': problem['title'], 'ko': problem.get('title_ko', problem['title'])}
+                sheets = {part: slot for part, slot in practical_files.items() if 'paper' in slot}
+                if sheets:
+                    practical.setdefault(comp, {})[year] = {'f': sheets, 'h': y.get('host'), 'cc': y.get('cc')}
             # one booklet for the whole paper and per-problem files for the rest (or the other way round): each problem
             # gets what the whole paper has, so it can be read, sat and graded on its own
             for part, slot in files.items():
@@ -121,7 +136,8 @@ def load():
                 continue
             # a title that only repeats the number («Problem A1», «Question 3») says nothing: left out
             probs = [[str(p.get('id', ''))[:8], str(p.get('title', '')).strip()[:160]] for p in y.get('problems', [])
-                     if p.get('title') and not GENERIC.match(str(p['title']).strip())]
+                     if p.get('title') and not PRACTICAL_PART.fullmatch(str(p.get('id', '')))
+                     and not GENERIC.match(str(p['title']).strip())]
             out.setdefault(comp, {})[year] = {'p': probs, 'f': files}
             # shortlist / backup problems (sl): not part of the competition's paper — sat and graded one at a time
             shortlist = [str(p['id']) for p in y.get('problems', []) if p.get('shortlist') and str(p.get('id')) in files]
@@ -157,7 +173,7 @@ def load():
             if gt:
                 out[comp][year]['g'] = {'en': gt}
     split(out)
-    korean(out, bad)
+    korean(out, bad, practical)
     # Print editions are local, checked PDFs; the source manifests retain the
     # official downloads. A key is distinct from a worked solution or blank sheet.
     print_path = os.path.join(ROOT, 'tools', 'kphe_print.json')
@@ -180,13 +196,19 @@ def load():
     return out, bad, gen, meta
 
 
-def korean(out, bad):
+def korean(out, bad, practical):
     """tools/theory_ko.json: the Korean translations, laid over the parts the originals made."""
     path = os.path.join(ROOT, 'tools', 'theory_ko.json')
     if not os.path.exists(path):
         return
     for comp, years in json.load(open(path, encoding='utf-8')).items():
         for year, parts in years.items():
+            for part, ko in parts.items():
+                if PRACTICAL_PART.fullmatch(part):
+                    practical.setdefault(comp, {}).setdefault(year, {'f': {}})['f'].setdefault(part, {})['ko'] = ko
+            parts = {part: ko for part, ko in parts.items() if not PRACTICAL_PART.fullmatch(part)}
+            if not parts:
+                continue
             t = out.get(comp, {}).get(year)
             if not t:
                 bad.append((path, '%s %s: no originals for this year' % (comp, year)))
@@ -228,6 +250,8 @@ def korean(out, bad):
                             t['f'][part].setdefault('papers', {})['en'] = en['paper']
                             t['f'][part]['paperLang'] = 'en'
                     t['f'][part]['ko'] = ko
+                    if ko.get('containsSolutions'):
+                        t['f'][part].setdefault('paperContainsSolutions', {})['ko'] = True
                 elif part == 'T':
                     t['w'] = ko           # the whole paper in Korean, where the site lists only its problems
                 elif whole and re.match(r'^T\d+$', part) and ko.get('paper'):
@@ -268,7 +292,8 @@ def split(out):
 
 
 def main():
-    data, bad, gen, meta = load()
+    practical = {}
+    data, bad, gen, meta = load(practical)
     pdf_versions = {}
     for year in data.get('kphe', {}).values():
         for files in year['f'].values():
@@ -279,6 +304,7 @@ def main():
     js = ('/* The theory papers (original problems and solutions) — generated by tools/theory_build.py from tools/theory/*.json.\n'
           '   Do not edit by hand. */\nwindow.THEORY=' + json.dumps(data, ensure_ascii=False, separators=(',', ':'), sort_keys=True) + ';\n'
           'window.GENERAL=' + json.dumps(gen, ensure_ascii=False, separators=(',', ':'), sort_keys=True) + ';\n'
+          'window.ARCHIVE_PRACTICAL=' + json.dumps(practical, ensure_ascii=False, separators=(',', ':'), sort_keys=True) + ';\n'
           'window.THEORY_META=' + json.dumps(meta, ensure_ascii=False, separators=(',', ':'), sort_keys=True) + ';\n'
           'window.KPHE_PDF_VERSIONS=' + json.dumps(pdf_versions, separators=(',', ':'), sort_keys=True) + ';\n')
     open(os.path.join(ROOT, 'theory.js'), 'w', encoding='utf-8').write(js)
