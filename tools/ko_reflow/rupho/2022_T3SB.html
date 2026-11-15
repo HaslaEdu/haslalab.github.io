@@ -1,0 +1,466 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2022 (LVI = 제56회; the paper prints only "2022 г."), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.5x595.3pt, booklet pages 9-13.
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20pt; baselineskip 11.955pt; list items 13.2pt apart.
+   Running headers italic, baseline 38.9, rule at y 43: odd page "Всероссийская олимпиада по физике 2022 г., Заключительный этап"
+   (left), even page "Теоретический тур" (right); page numbers centred, baseline 563.8.
+   Grade line SFBX1440 (14.346pt bold), problem titles SFBX1000 bold, captions SFRM0900.
+   "НЭ" (нелинейный элемент) inside the circuit symbols is relabelled "NE" (introduced in the text as 비선형 소자(NE)).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b:  top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.pn{text-align:center}
+.g{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.g,.h{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.li{padding-left:25pt}
+.n{position:absolute;left:12.2pt;text-indent:0}
+.cap{text-align:center;width:40pt;--fs:8.966pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.wb{position:absolute;background:#fff}
+</style>
+<style>
+/* 2022_T3SB extra */
+/* RuPhO 2022 (LVI), 11학년 풀이 예시와 채점 기준, second half: pages 15-29 of RuPhO_2022_T3S.pdf (= this file's pages 1-15).
+   Pages 1-6: A5 booklet pages 47-52 (end of solution 11-4, solution 11-5), same layout as the paper (CM 10pt, column 28.3..391.2).
+   Pages 7-15: A4 marking schemes (PT Serif 10pt, tables) -> 'Times New Roman',KB,serif; table rules drawn as thin
+   elements at the original rule positions; columns: item no. x 38.2, description x 78.9..447.4, points x 459.7, check x 514.6.
+   Retyped displays: .b-d (line-height 0; top = b - --a, --a = height of the formula above its main baseline).
+   Russian subscripts (as in 2022_T3SA): vz (vzaimnaya) -> mut, v (vitok) -> w, vx -> wx, s (solenoid) -> s, ist -> src,
+   bok -> side, osn -> base, N.E (nelineinyi element) -> NE, eff -> eff.
+   Stamped display (2) on booklet page 52 lost the unit "s" (Cyrillic) -> .ov "s" at its original position. */
+@page b-a4{size:595.276pt 841.89pt;margin:0}
+.page[data-s="b-a4"]{page:b-a4;width:595.276pt;height:841.89pt}
+.b-d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.page[data-s="b-a4"] .x{font-family:'Times New Roman',KB,serif;--fs:10pt;top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 0.7pt)}
+.page[data-s="b-a4"] .x.b-d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.b-cn{left:38.2pt;width:33pt}
+.b-cd{left:78.9pt;width:368.5pt}
+.b-cp{left:459.7pt;width:46pt}
+.b-ch{left:514.6pt;width:48pt}
+.b-tt{left:34.3pt;width:470pt;--fs:14.3pt!important;--l:16.3pt!important}
+.b-rh{position:absolute;left:31.79pt;width:531.7pt;height:0.4pt;background:#000}
+.b-rv{position:absolute;width:0.4pt;background:#000}
+.b-ja{text-align-last:justify}
+</style></head><body>
+
+<!-- page 47 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="1" data-clip="28.3,42.4,391.2,43.6"></span></div>
+<p class="x" style="--b:66.7">고리 도선이 솔레노이드에 작용하는 힘을 <span class="nw">$F_x$라</span> 하자. 그러면 솔레노이드를 평형 상태로 유지하기 위해 솔레노이드에 작용해야 하는 외력은 <span class="nw">$-F_x$이다.</span> 솔레노이드를 <span class="nw">$dx$만큼</span> 옮길 때 계의 에너지 변화는 다음과 같다.</p>
+<p class="x c" style="--b:112.8">$dA_{\mathrm{src}} - F_xdx = dE,$</p>
+<p class="x" style="--b:135.1">따라서</p>
+<p class="x c b-d" style="--b:154.4;--a:14.9pt">$F_x = \dfrac{dE}{dx} = -\dfrac{I^2L_{\mathrm{mut}}}{L}\dfrac{dL_{\mathrm{mut}}}{dx}.$</p>
+<p class="x" style="--b:175.6">솔레노이드를 대칭축을 따라 거리 <span class="nw">$dx$만큼</span> 옮길 때 상호 인덕턴스의 변화 <span class="nw">$dL_{\mathrm{mut}}$을</span> 구하자. 이 이동은 끝면 근처에서 솔레노이드의 감은 수를 <span class="nw">$dN = ndx$만큼</span> 더 늘리는 것과 같다. 그러면 초전도 고리 도선은 솔레노이드를 지나는 추가 자기 선속 <span class="nw">$d\Phi_1 = B_{\mathrm{w}x}SdN$을</span> 만들기 시작하므로, <span class="nw">$L_{\mathrm{mut}}$의</span> 변화는 다음과 같다.</p>
+<p class="x c b-d" style="--b:243.9;--a:15.3pt">$dL_{\mathrm{mut}} = d\left(\dfrac{\Phi_1}{I_\mathrm{w}}\right) = \dfrac{\mu_0Sndx}{2R}.$</p>
+<p class="x" style="--b:270.6">마지막 식에서는 고리 도선 중심에서의 자기장을 이용하였다. <span class="nw">$L_{\mathrm{mut}}$과</span> <span class="nw">$dL_{\mathrm{mut}}$을</span> <span class="nw">$F_x$의</span> 식에 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:153pt;top:294pt"><span class="fig" data-srcpage="1" data-clip="153,294,267,326"></span></div>
+<p class="x h" style="--b:350.3;--fs:11.955pt;--l:14.4pt">네 번째 풀이</p>
+<p class="x" style="--b:368.7;--l:20.3pt">전원이 한 일을 구하는 과정은 솔레노이드에 전류를 공급하는 도선들을 단락시켜 피할 수 있다. 그러면 솔레노이드를 관통하는 자기장의 선속 <span class="nw">$\Phi = \left(L_1 - \dfrac{L_{\mathrm{mut}}^2}{L}\right)I$는</span> 솔레노이드를 옮기는 동안 보존된다. 자기장의 에너지는 다음과 같다.</p>
+<p class="x c b-d" style="--b:440.6;--a:14.4pt">$E = \dfrac{\Phi^2}{2\left(L_1 - \dfrac{L_{\mathrm{mut}}^2}{L}\right)}.$</p>
+<p class="x" style="--b:483.7">솔레노이드를 옮길 때 계의 에너지 변화는 다음과 같다.</p>
+<p class="x c b-d" style="--b:512.7;--a:14.4pt">$dE = \dfrac{\Phi^2}{\left(L_1 - \dfrac{L_{\mathrm{mut}}^2}{L}\right)^2}\dfrac{L_{\mathrm{mut}}dL_{\mathrm{mut}}}{L} = \dfrac{I^2L_{\mathrm{mut}}dL_{\mathrm{mut}}}{L}.$</p>
+<p class="x pn" style="--b:563.8">47</p>
+</div>
+
+<!-- page 48 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="2" data-clip="28.3,42.4,391.2,43.6"></span></div>
+<p class="x" style="--b:66.7">그러면 고리 도선이 솔레노이드에 작용하는 힘은 다음과 같다.</p>
+<p class="x c b-d" style="--b:95.1;--a:14.9pt">$F_x = -\dfrac{dE}{dx} = -\dfrac{I^2L_{\mathrm{mut}}}{L}\dfrac{dL_{\mathrm{mut}}}{dx}.$</p>
+<p class="x" style="--b:120.1"><span class="nw">$L_{\mathrm{mut}}$과</span> <span class="nw">$dL_{\mathrm{mut}}$을</span>(세 번째 풀이 참고) <span class="nw">$F_x$의</span> 식에 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:153pt;top:131pt"><span class="fig" data-srcpage="2" data-clip="153,131,267,163"></span></div>
+<p class="x h" style="--b:182.5">문제 11-5. 비선형 소자와 축전기</p>
+<p class="x i" style="--b:199.9">회로에 키르히호프 제2법칙을 적용하면 다음을 얻는다.</p>
+<div class="f" style="left:167pt;top:212pt"><span class="fig" data-srcpage="2" data-clip="167,212,253,238"></span></div>
+<p class="x" style="--b:250.0">따라서</p>
+<div class="f" style="left:150pt;top:251pt"><span class="fig" data-srcpage="2" data-clip="150,251,270,267"></span></div>
+<p class="x" style="--b:279.8">이차 방정식의 근이 존재하려면 판별식이 음이 아니어야 한다. <span class="nw">$I &gt; 0$임을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:171pt;top:296pt"><span class="fig" data-srcpage="2" data-clip="171,296,249,318"></span></div>
+<p class="x i" style="--b:335.0">회로에 키르히호프 제2법칙을 적용하면 다음을 얻는다.</p>
+<div class="f" style="left:154pt;top:347pt"><span class="fig" data-srcpage="2" data-clip="154,347,266,373"></span></div>
+<p class="x" style="--b:385.1">따라서</p>
+<div class="f" style="left:154pt;top:388pt"><span class="fig" data-srcpage="2" data-clip="154,388,266,414"></span></div>
+<p class="x" style="--b:424.4">점 1에서 회로의 전류를 <span class="nw">$I_1 \approx 9.6\,\mathrm{mA}$라</span> 하자. 그러면 다음이 성립한다.</p>
+<div class="f" style="left:148pt;top:435pt"><span class="fig" data-srcpage="2" data-clip="148,435,271,451"></span></div>
+<p class="x" style="--b:467.7">축전기의 최대 전압을 <span class="nw">$U_{max} \approx 6\,\mathrm{V}$,</span> 그에 해당하는 회로의 전류를 <span class="nw">$I_2 \approx 2\,\mathrm{mA}$라</span> 하자. 축전기 전압의 최댓값은 식 <span class="nw">$IR + A/I$의</span> 최솟값에 해당하며, 이 최솟값은 두 항이 서로 같을 때, 즉 다음과 같을 때 이루어진다.</p>
+<div class="f" style="left:187pt;top:512pt"><span class="fig" data-srcpage="2" data-clip="187,512,233,544"></span></div>
+<p class="x pn" style="--b:563.8">48</p>
+</div>
+
+<!-- page 49 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="3" data-clip="28.3,42.4,391.2,43.6"></span></div>
+<p class="x" style="--b:66.7"><span class="nw">$U_{max}$는</span> 다음과 같다.</p>
+<div class="f" style="left:153pt;top:61pt"><span class="fig" data-srcpage="3" data-clip="153,61,267,83"></span></div>
+<p class="x" style="--b:95.6"><span class="nw">$U_0 - U_1 = U_{max} + 2\sqrt{AR}$를</span> <span class="nw">$I_1$에</span> 대한 방정식에 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:133pt;top:98pt"><span class="fig" data-srcpage="3" data-clip="133,98,287,121"></span></div>
+<p class="x" style="--b:136.2"><span class="nw">$I_2$에</span> 대한 식으로부터 <span class="nw">$A$를</span> 나타내어 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:160pt;top:143pt"><span class="fig" data-srcpage="3" data-clip="160,143,259,161"></span></div>
+<p class="x" style="--b:176.8">답은 다음과 같다.</p>
+<p class="x c b-d" style="--b:205.6;--a:15.3pt">$R = \dfrac{I_1U_{max}}{\left(I_1 - I_2\right)^2} \approx 997\,\Omega\quad A = \dfrac{I_1I_2^2U_{max}}{\left(I_1 - I_2\right)^2} \approx 3.99\,\mathrm{mW}$</p>
+<p class="x c b-d" style="--b:238.4;--a:13.7pt">$U_0 = U_1 + U_{max} + \dfrac{2I_1I_2U_{max}}{\left(I_1 - I_2\right)^2} \approx 11.99\,\mathrm{V}$</p>
+<p class="x i" style="--b:262.1">이제 저항에서 발생한 열량을 구하자. 짧은 시간 간격 <span class="nw">$\Delta t$</span> 동안 다음이 성립한다.</p>
+<div class="f" style="left:93pt;top:284pt"><span class="fig" data-srcpage="3" data-clip="93,284,326,299"></span></div>
+<p class="x" style="--b:314.7">여기서 <span class="nw">$S$는</span> 축전기가 충전되는 과정에서 <span class="nw">$I(U_C)$</span> 그래프 아래의 넓이이다.</p>
+<p class="x h" style="--b:340.6;--fs:11.955pt;--l:14.4pt">첫 번째 풀이</p>
+<p class="x" style="--b:357.5">점 1에서 그래프에 접선을 긋고, 사다리꼴의 넓이에서 접선과 그래프 사이 영역의 넓이를 빼서 <span class="nw">$S$를</span> 직접 계산하자. 그러면 다음을 얻는다.</p>
+<p class="x c" style="--b:401.7">$S \approx (37.1 - 38.3)\,\mathrm{mW}$</p>
+<p class="x" style="--b:422.1">따라서</p>
+<p class="x c" style="--b:446.0">$Q_R = (370 - 383)\,\mathrm{mJ}$</p>
+<p class="x h" style="--b:476.9;--fs:11.955pt;--l:14.4pt">두 번째 풀이</p>
+<p class="x" style="--b:493.9">이 결과는 해석적으로도 얻을 수 있다. 이를 위해 다음에 주목하자.</p>
+<div class="f" style="left:101pt;top:504pt"><span class="fig" data-srcpage="3" data-clip="101,504,318,545"></span></div>
+<p class="x pn" style="--b:563.8">49</p>
+</div>
+
+<!-- page 50 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="4" data-clip="28.3,42.4,391.2,43.6"></span></div>
+<p class="x" style="--b:66.7">피적분 함수에 <span class="nw">$U_C(I)$</span> 관계를 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:97pt;top:80pt"><span class="fig" data-srcpage="4" data-clip="97,80,323,120"></span></div>
+<p class="x" style="--b:137.3">적분하면 다음을 얻는다.</p>
+<div class="f" style="left:58pt;top:160pt"><span class="fig" data-srcpage="4" data-clip="58,160,362,189"></span></div>
+<p class="x c" style="--b:210.6">$Q_R \approx (376 - 377)\,\mathrm{mJ}$</p>
+<p class="x h" style="--b:244.3;--fs:11.955pt;--l:14.4pt">첫 번째 풀이</p>
+<p class="x" style="--b:263.0">계의 에너지 보존 법칙을 쓰자.</p>
+<p class="x c" style="--b:285.4">$A_{\mathrm{src}} = Q_R + Q_\mathrm{NE} + W_C,$</p>
+<p class="x" style="--b:307.9">여기서 <span class="nw">$Q_R$과</span> <span class="nw">$Q_\mathrm{NE}$는</span> 각각 저항과 비선형 소자에서 발생한 열량이다. 전원이 한 일과 축전기의 에너지는 각각 다음과 같다.</p>
+<p class="x c b-d" style="--b:359.1;--a:14.9pt">$A_{\mathrm{src}} = U_0q_C = CU_0U_{max}\qquad W_C = \dfrac{CU_{max}^2}{2}$</p>
+<p class="x" style="--b:384.3">짧은 시간 간격 <span class="nw">$dt$를</span> 생각하자. 이 시간 동안 비선형 소자에서 발생한 열량 <span class="nw">$dQ_\mathrm{NE}$는</span> 다음과 같다.</p>
+<p class="x c" style="--b:418.7">$dQ_\mathrm{NE} = U_\mathrm{NE}Idt = U_1Idt + Adt = U_1dq_C + Adt \Rightarrow Q_\mathrm{NE} = CU_1U_{max} + A\tau$</p>
+<p class="x" style="--b:441.2">최종적으로 다음을 얻는다.</p>
+<p class="x c b-d" style="--b:472.6;--a:15.3pt">$\tau = \dfrac{C}{A}\left((U_0 - U_1)U_{max} - RS - \dfrac{U_{max}^2}{2}\right) \approx 10.9 \pm 1.6\,\mathrm{s}$</p>
+<p class="x" style="--b:499.7">결과의 주된 오차는 <span class="nw">$S$를</span> 그래프로 구하는 과정에서 생긴다.</p>
+<p class="x h" style="--b:538.6;--fs:11.955pt;--l:14.4pt">두 번째 풀이</p>
+<p class="x pn" style="--b:563.8">50</p>
+</div>
+
+<!-- page 51 of the booklet -->
+<div class="page">
+<p class="x hd" style="--b:38.9">2022년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="5" data-clip="28.3,42.4,391.2,43.6"></span></div>
+<p class="x" style="--b:66.7">시간 <span class="nw">$\tau$는</span> 축전기 충전 과정의 미분 방정식으로부터 구할 수도 있다. <span class="nw">$I$에</span> 대한 이차 방정식을 풀면 다음을 얻는다.</p>
+<div class="f" style="left:101pt;top:88pt"><span class="fig" data-srcpage="5" data-clip="101,88,318,117"></span></div>
+<p class="x" style="--b:130.9"><span class="nw">$U_C(I)$</span> 그래프에 해당하는 것은 <span class="nw">$+$</span> 부호의 근이다. 변수 <span class="nw">$V = U_0 - U_1 - U_C$를</span> 도입하자. 그러면 다음과 같다.</p>
+<div class="f" style="left:162pt;top:146pt"><span class="fig" data-srcpage="5" data-clip="162,146,257,181"></span></div>
+<p class="x" style="--b:194.3">축전기의 충전 과정을 생각하자.</p>
+<div class="f" style="left:150pt;top:205pt"><span class="fig" data-srcpage="5" data-clip="150,205,270,232"></span></div>
+<p class="x" style="--b:242.4">따라서</p>
+<div class="f" style="left:146pt;top:245pt"><span class="fig" data-srcpage="5" data-clip="146,245,273,272"></span></div>
+<p class="x" style="--b:283.5">분모를 유리화하자.</p>
+<div class="f" style="left:135pt;top:295pt"><span class="fig" data-srcpage="5" data-clip="135,295,282,321"></span></div>
+<p class="x" style="--b:334.2"><span class="nw">$U_{max}$에</span> 대한 식을 고려하면 <span class="nw">$\tau$에</span> 대한 식을 얻는다.</p>
+<div class="f" style="left:128pt;top:345pt"><span class="fig" data-srcpage="5" data-clip="128,345,290,387"></span></div>
+<p class="x" style="--b:402.2">먼저 첫 번째 적분을 계산하자.</p>
+<div class="f" style="left:139pt;top:413pt"><span class="fig" data-srcpage="5" data-clip="139,413,281,455"></span></div>
+<p class="x" style="--b:479.3;padding-top:1.2pt">두 번째 적분을 계산하기 위해 변수 <span class="nw">$x = \dfrac{V}{2\sqrt{AR}}$를</span> 도입하면 다음을 얻는다.</p>
+<div class="f" style="left:106pt;top:498pt"><span class="fig" data-srcpage="5" data-clip="106,498,315,544"></span></div>
+<p class="x pn" style="--b:563.8">51</p>
+</div>
+
+<!-- page 52 of the booklet -->
+<div class="page">
+<p class="x hd r" style="--b:38.9">이론 시험</p>
+<div class="f" style="left:28.3pt;top:42.4pt"><span class="fig" data-srcpage="6" data-clip="28.3,42.4,391.2,43.6"></span></div>
+<p class="x" style="--b:66.7">이 적분은 적분표에 있는 적분으로, 다음과 같다.</p>
+<div class="f" style="left:101pt;top:71pt"><span class="fig" data-srcpage="6" data-clip="101,71,318,106"></span></div>
+<p class="x" style="--b:119.9">따라서</p>
+<div class="f" style="left:37pt;top:135pt"><span class="fig" data-srcpage="6" data-clip="37,135,392,220"></span></div>
+<p class="x i" style="--b:234.8">최종적으로 <span class="nw">$\tau$는</span> 다음과 같다.</p>
+<div class="f" style="left:37pt;top:250pt"><span class="fig" data-srcpage="6" data-clip="37,250,392,306"></span></div>
+<p class="x ov" style="--b:294.8;left:364.1pt">s</p>
+<p class="x pn" style="--b:563.8">52</p>
+</div>
+
+<!-- marking scheme, problem 11-1 -->
+<div class="page" data-s="b-a4">
+<p class="x b-tt" style="--b:45.3">문제 <b>Ru22-11-T1. 고무줄 두 개</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="7" data-clip="519,25,562,52"></span></div>
+<p class="x b-tt" style="--b:59.8">수험 번호</p>
+<i class="b-rh" style="top:85.27pt"></i><i class="b-rh" style="top:97.62pt"></i><i class="b-rh" style="top:109.97pt"></i><i class="b-rh" style="top:134.28pt"></i><i class="b-rh" style="top:146.64pt"></i><i class="b-rh" style="top:159.66pt"></i><i class="b-rh" style="top:183.97pt"></i><i class="b-rh" style="top:208.28pt"></i><i class="b-rh" style="top:232.59pt"></i><i class="b-rh" style="top:262.22pt"></i><i class="b-rh" style="top:274.57pt"></i><i class="b-rh" style="top:300.59pt"></i><i class="b-rh" style="top:324.90pt"></i><i class="b-rh" style="top:362.40pt"></i><i class="b-rh" style="top:386.71pt"></i><i class="b-rh" style="top:411.42pt"></i><i class="b-rv" style="left:31.79pt;top:85.47pt;height:326.15pt"></i><i class="b-rv" style="left:72.49pt;top:85.47pt;height:326.15pt"></i><i class="b-rv" style="left:453.34pt;top:85.47pt;height:326.15pt"></i><i class="b-rv" style="left:508.22pt;top:85.47pt;height:326.15pt"></i><i class="b-rv" style="left:563.09pt;top:85.47pt;height:326.15pt"></i>
+<p class="x b-cd" style="--b:94.0">배점 항목</p><p class="x b-cp" style="--b:94.0">점수</p><p class="x b-ch" style="--b:94.0">해당 여부</p>
+<p class="x b-cn" style="--b:106.4">1.1</p><p class="x b-cd" style="--b:106.4">마찰력을 고려하지 않은 평형 위치를 구함.</p><p class="x b-cp" style="--b:106.4">1.00</p>
+<p class="x b-cn" style="--b:124.7">1.2</p><p class="x b-cd" style="--b:124.7">합성 탄성력이 항상 평형 위치를 향함을 보임.</p><p class="x b-cp" style="--b:124.7">2.00</p>
+<p class="x b-cn" style="--b:143.1">1.3</p><p class="x b-cd" style="--b:143.1">유효 탄성 계수 <span class="nw">$k_\mathrm{eff} = 4k$를</span> 구함.</p><p class="x b-cp" style="--b:143.1">1.00</p>
+<p class="x b-cn" style="--b:155.7">1.4</p><p class="x b-cd" style="--b:156.1">퍽이 움직이기 시작하지 않을 조건을 구함. <span class="nw">$\mu mg \geqslant 2\sqrt{5}kL$.</span></p><p class="x b-cp" style="--b:155.7">0.50</p>
+<p class="x b-cn" style="--b:174.4">1.5</p><p class="x b-cd" style="--b:168.4">운동이 직선 운동이라는 진술(처음 속도가 0이라는 진술과 합력 벡터의 방향이 일정하다는 진술이 있음).</p><p class="x b-cp" style="--b:174.4">1.00</p>
+<p class="x b-cn" style="--b:198.7">1.6</p><p class="x b-cd" style="--b:198.7">운동이 직선 운동이라는 진술(처음 속도가 0이라는 진술은 없음)</p><p class="x b-cp" style="--b:198.7">0.50</p>
+<p class="x b-cn" style="--b:223.0">1.7</p><p class="x b-cd" style="--b:223.0">가속도가 0일 때 속력이 최대가 됨(또는 이와 같은 뜻의 진술)</p><p class="x b-cp" style="--b:223.0">0.50</p>
+<p class="x b-cn" style="--b:248.4">1.8</p><p class="x b-cd" style="--b:241.4">최대 속력에 이르는 순간 물체의 위치를 구함.</p><p class="x b-cd" style="--b:255.4"><span class="nw">$x_0 = \frac{\mu mg}{4k}$.</span></p><p class="x b-cp" style="--b:248.4">1.00</p>
+<p class="x b-cn" style="--b:271.0">1.9</p><p class="x b-cd" style="--b:271.0">최대 속력을 구하기 위한 에너지 변화 법칙.</p><p class="x b-cp" style="--b:271.0">1.00</p>
+<p class="x b-cn" style="--b:287.3">1.10</p><p class="x b-cd" style="--b:291.2">최대 속력을 구함. <span class="nw">$v_\mathrm{max} = \sqrt{\dfrac{5k}{m}}L - \dfrac{\mu g}{2}\sqrt{\dfrac{m}{k}}$.</span></p><p class="x b-cp" style="--b:287.3">1.00</p>
+<p class="x b-cn" style="--b:315.3">2.1</p><p class="x b-cd" style="--b:315.3">변위된 평형 위치까지의 운동이 조화 진동의 법칙으로 기술됨을 보임.</p><p class="x b-cp" style="--b:315.3">0.50</p>
+<p class="x b-cn" style="--b:343.3">2.2</p><p class="x b-cd" style="--b:333.7">이러한 진동의 각진동수(또는 그에 해당하는 주기)를 구함.</p><p class="x b-cd" style="--b:353.0"><span class="nw">$\omega = 2\sqrt{\dfrac{k}{m}}$</span> 또는 <span class="nw">$T = \pi\sqrt{\dfrac{m}{k}}$.</span></p><p class="x b-cp" style="--b:343.3">1.00</p>
+<p class="x b-cn" style="--b:377.2">2.3</p><p class="x b-cd" style="--b:377.2">최대 속력에 이르는 시간이 이러한 진동 주기의 4분의 1이라는 진술.</p><p class="x b-cp" style="--b:377.2">0.50</p>
+<p class="x b-cn" style="--b:398.7">2.4</p><p class="x b-cd" style="--b:402.0"><span class="nw">$\tau = \dfrac{\pi}{4}\sqrt{\dfrac{m}{k}}$.</span></p><p class="x b-cp" style="--b:398.7">1.00</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 11-2 -->
+<div class="page" data-s="b-a4">
+<p class="x b-tt" style="--b:45.3">문제 <b>Ru22-11-T2. 원통과 밸브</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="8" data-clip="519,25,562,52"></span></div>
+<p class="x b-tt" style="--b:59.8">수험 번호</p>
+<i class="b-rh" style="top:85.27pt"></i><i class="b-rh" style="top:97.62pt"></i><i class="b-rh" style="top:109.97pt"></i><i class="b-rh" style="top:134.28pt"></i><i class="b-rh" style="top:158.59pt"></i><i class="b-rh" style="top:194.86pt"></i><i class="b-rh" style="top:207.21pt"></i><i class="b-rh" style="top:231.52pt"></i><i class="b-rh" style="top:243.87pt"></i><i class="b-rh" style="top:256.23pt"></i><i class="b-rh" style="top:268.58pt"></i><i class="b-rh" style="top:292.89pt"></i><i class="b-rh" style="top:317.20pt"></i><i class="b-rh" style="top:353.46pt"></i><i class="b-rh" style="top:365.82pt"></i><i class="b-rh" style="top:390.12pt"></i><i class="b-rh" style="top:402.48pt"></i><i class="b-rh" style="top:414.83pt"></i><i class="b-rv" style="left:31.79pt;top:85.47pt;height:329.56pt"></i><i class="b-rv" style="left:72.49pt;top:85.47pt;height:329.56pt"></i><i class="b-rv" style="left:453.34pt;top:85.47pt;height:329.56pt"></i><i class="b-rv" style="left:508.22pt;top:85.47pt;height:329.56pt"></i><i class="b-rv" style="left:563.09pt;top:85.47pt;height:329.56pt"></i>
+<p class="x b-cd" style="--b:94.0">배점 항목</p><p class="x b-cp" style="--b:94.0">점수</p><p class="x b-ch" style="--b:94.0">해당 여부</p>
+<p class="x b-cn" style="--b:106.4">1.1</p><p class="x b-cd" style="--b:106.4">피스톤이 움직일 때 원통 안의 기체가 한 일을 구함.</p><p class="x b-cp" style="--b:106.4">1.00</p>
+<p class="x b-cn" style="--b:124.7">1.2</p><p class="x b-cd" style="--b:124.7">밸브를 통해 기체를 ‘밀어 넣을’ 때 외부 환경이 기체에 한 일을 구함.</p><p class="x b-cp" style="--b:124.7">1.00</p>
+<p class="x b-cn" style="--b:149.0">1.3</p><p class="x b-cd" style="--b:149.0">피스톤이 올라가기 시작한 순간부터 멈출 때까지 열역학 제1법칙을 씀.</p><p class="x b-cp" style="--b:149.0">1.00</p>
+<p class="x b-cn" style="--b:179.3">1.4</p><p class="x b-cd" style="--b:173.4">밸브를 통해 들어온 물질의 양과 나간 물질의 양이 같다는 식을 씀. 물질의 양을 상태 변수로 나타냄.</p><p class="x b-cp" style="--b:179.3">0.50</p>
+<p class="x b-cn" style="--b:203.6">1.5</p><p class="x b-cd" style="--b:203.6">피스톤이 멈춘 뒤의 온도를 구함 (<span class="nw">$T_1 = T_0$).</span></p><p class="x b-cp" style="--b:203.6">1.00</p>
+<p class="x b-cn" style="--b:222.0">1.6</p><p class="x b-cd" style="--b:222.0">피스톤을 놓은 순간부터 최종 평형까지 열역학 제1법칙을 씀.</p><p class="x b-cp" style="--b:222.0">1.50</p>
+<p class="x b-cn" style="--b:240.3">1.8</p><p class="x b-cd" style="--b:240.3">평형이 이루어진 뒤의 온도를 <span class="nw">$T_1$로</span> 나타냄 (<span class="nw">$T_2 = 8T_1/7$).</span></p><p class="x b-cp" style="--b:240.3">0.50</p>
+<p class="x b-cn" style="--b:252.6">1.9</p><p class="x b-cd" style="--b:252.6">평형이 이루어진 뒤의 온도를 구함 (<span class="nw">$T_2 = 8T_0/7$).</span></p><p class="x b-cp" style="--b:252.6">0.50</p>
+<p class="x b-cn" style="--b:265.0">2.1</p><p class="x b-cd" style="--b:265.0">밸브를 지난 뒤의 기체는 일을 하지 않음을 풀이에서 언급함.</p><p class="x b-cp" style="--b:265.0">0.50</p>
+<p class="x b-cn" style="--b:283.3">2.2</p><p class="x b-cd" style="--b:277.3">밸브를 통해 기체를 ‘밀어 넣을’ 때 외부 환경이 기체에 한 일을 구했거나, 그 일이 첫 번째 부분과 같음을 언급함.</p><p class="x b-cp" style="--b:283.3">0.50</p>
+<p class="x b-cn" style="--b:307.6">2.3</p><p class="x b-cd" style="--b:301.7">기체가 밸브를 통해 들어오기 시작한 순간부터 원통이 다 채워질 때까지 열역학 제1법칙을 씀.</p><p class="x b-cp" style="--b:307.6">1.00</p>
+<p class="x b-cn" style="--b:337.9">2.4</p><p class="x b-cd" style="--b:331.9">밸브를 통해 들어온 물질의 양과 나간 물질의 양이 같다는 식을 씀. 물질의 양을 상태 변수로 나타냄.</p><p class="x b-cp" style="--b:337.9">0.50</p>
+<p class="x b-cn" style="--b:362.2">2.5</p><p class="x b-cd" style="--b:362.2">원통이 채워진 뒤의 온도를 구함 (<span class="nw">$T_1' = 7T_0/5$).</span></p><p class="x b-cp" style="--b:362.2">0.50</p>
+<p class="x b-cn" style="--b:380.6">2.6</p><p class="x b-cd" style="--b:380.6">피스톤을 놓은 순간부터 최종 평형까지 열역학 제1법칙을 씀.</p><p class="x b-cp" style="--b:380.6">1.00</p>
+<p class="x b-cn" style="--b:398.9">2.7</p><p class="x b-cd" style="--b:398.9">평형이 이루어진 뒤의 온도를 <span class="nw">$T_1'$로</span> 나타냄 (<span class="nw">$T_2' = 8T_1'/7$).</span></p><p class="x b-cp" style="--b:398.9">0.50</p>
+<p class="x b-cn" style="--b:411.2">2.8</p><p class="x b-cd" style="--b:411.2">평형이 이루어진 뒤의 온도를 구함 (<span class="nw">$T_2' = 8T_0/5$).</span></p><p class="x b-cp" style="--b:411.2">0.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 11-3 -->
+<div class="page" data-s="b-a4">
+<p class="x b-tt" style="--b:45.3">문제 <b>Ru22-11-T3. 전하의 진동</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="9" data-clip="519,25,562,52"></span></div>
+<p class="x b-tt" style="--b:59.8">수험 번호</p>
+<i class="b-rh" style="top:85.27pt"></i><i class="b-rh" style="top:97.62pt"></i><i class="b-rh" style="top:133.56pt"></i><i class="b-rh" style="top:157.86pt"></i><i class="b-rh" style="top:170.22pt"></i><i class="b-rh" style="top:195.78pt"></i><i class="b-rh" style="top:208.14pt"></i><i class="b-rh" style="top:231.21pt"></i><i class="b-rh" style="top:282.93pt"></i><i class="b-rh" style="top:295.29pt"></i><i class="b-rh" style="top:307.64pt"></i><i class="b-rh" style="top:319.99pt"></i><i class="b-rh" style="top:344.30pt"></i><i class="b-rh" style="top:356.66pt"></i><i class="b-rh" style="top:380.97pt"></i><i class="b-rh" style="top:405.27pt"></i><i class="b-rh" style="top:429.58pt"></i><i class="b-rh" style="top:441.94pt"></i><i class="b-rh" style="top:466.25pt"></i><i class="b-rh" style="top:508.09pt"></i><i class="b-rh" style="top:532.40pt"></i><i class="b-rh" style="top:544.75pt"></i><i class="b-rh" style="top:569.06pt"></i><i class="b-rv" style="left:31.79pt;top:85.47pt;height:483.79pt"></i><i class="b-rv" style="left:72.49pt;top:85.47pt;height:483.79pt"></i><i class="b-rv" style="left:453.34pt;top:85.47pt;height:483.79pt"></i><i class="b-rv" style="left:508.22pt;top:85.47pt;height:483.79pt"></i><i class="b-rv" style="left:563.09pt;top:85.47pt;height:483.79pt"></i>
+<p class="x b-cd" style="--b:94.0">배점 항목</p><p class="x b-cp" style="--b:94.0">점수</p><p class="x b-ch" style="--b:94.0">해당 여부</p>
+<p class="x b-cn" style="--b:115.8">1.2</p><p class="x b-cd" style="--b:106.4">관(원통)이 만드는 전기장의 세기에 대한 식을 구했거나 명시적으로 씀</p><p class="x b-cd" style="--b:125.2"><span class="nw">$E = \dfrac{\sigma R}{\varepsilon_0 r}$</span></p><p class="x b-cp" style="--b:115.8">1.00</p>
+<p class="x b-cn" style="--b:148.3">1.3</p><p class="x b-cd" style="--b:148.3">서로 다른 두 평형 위치(연직 위치와 기울어진 위치)를 풀이에서 언급하거나 고려함</p><p class="x b-cp" style="--b:148.3">0.50</p>
+<p class="x b-cn" style="--b:166.6">1.4</p><p class="x b-cd" style="--b:166.6">실이 연직일 때 전하의 평형 조건을 씀</p><p class="x b-cp" style="--b:166.6">0.50</p>
+<p class="x b-cn" style="--b:182.7">1.5</p><p class="x b-cd" style="--b:186.5">실이 연직인 경우에 가능한 값의 범위를 구함 <span class="nw">$|q| \ge \dfrac{2\varepsilon_0 mg}{|\sigma|}$</span></p><p class="x b-cp" style="--b:182.7">0.50</p>
+<p class="x b-cn" style="--b:204.5">1.6</p><p class="x b-cd" style="--b:204.5">실이 기울어져 있을 때 전하의 평형 조건을 씀</p><p class="x b-cp" style="--b:204.5">0.50</p>
+<p class="x b-cn" style="--b:220.6">1.7</p><p class="x b-cd" style="--b:224.4">식 <span class="nw">$q\sigma = 4\varepsilon_0 mg\cos^2\dfrac{\alpha}{2}$을</span> 얻음</p><p class="x b-cp" style="--b:220.6">0.50</p>
+<p class="x b-cn" style="--b:256.8">1.8</p><p class="x b-cd" style="--b:260.6;padding-top:1.9pt">실이 기울어진 경우에 가능한 값의 범위를 구함 <span class="nw">$\dfrac{4\varepsilon_0 mg}{|\sigma|} &gt; |q| \ge \dfrac{2\varepsilon_0 mg}{|\sigma|}$</span></p><p class="x b-cp" style="--b:256.8">0.50</p>
+<p class="x b-cn" style="--b:291.7">2.1</p><p class="x b-cd" style="--b:291.7">실이 기울어져 있을 때 장력의 크기를 구함</p><p class="x b-cp" style="--b:291.7">0.50</p>
+<p class="x b-cn" style="--b:304.1">2.2</p><p class="x b-cd" style="--b:304.1">실이 연직일 때 장력의 크기를 구함</p><p class="x b-cp" style="--b:304.1">0.50</p>
+<p class="x b-cn" style="--b:316.4">2.3</p><p class="x b-cd" style="--b:316.4">답안에서 평형 위치의 안정성을 언급함</p><p class="x b-cp" style="--b:316.4">0.25</p>
+<p class="x b-cn" style="--b:334.7">2.4</p><p class="x b-cd" style="--b:334.7">연직 평형 위치와 기울어진 평형 위치의 안정성 경계를 구함</p><p class="x b-cp" style="--b:334.7">2×0.50</p>
+<p class="x b-cn" style="--b:353.1">2.5</p><p class="x b-cd" style="--b:353.1">그래프에 두 구간이 모두 올바르게 나타나 있음(각각 0.5점).</p><p class="x b-cp" style="--b:353.1">2×0.50</p>
+<p class="x b-cn" style="--b:371.4">2.6</p><p class="x b-cd" style="--b:371.4">그래프에 경계값 <span class="nw">$q_1$,</span> <span class="nw">$q_2$,</span> <span class="nw">$mg$가</span> 표시되어 있음(각각 0.25점).</p><p class="x b-cp" style="--b:371.4">3×0.25</p>
+<p class="x b-cn" style="--b:395.7">3.1</p><p class="x b-cd" style="--b:395.7">평형 위치 <span class="nw">$\alpha = 0$을</span> 고려함. 작은 변위에서 복원력의 식을 제시함</p><p class="x b-cp" style="--b:395.7">0.50</p>
+<p class="x b-cn" style="--b:420.0">3.2</p><p class="x b-cd" style="--b:420.0">진동 방정식을 올바르게 씀(차원이 맞는 산술 오류가 있으면 0.5점을 줌)</p><p class="x b-cp" style="--b:420.0">2×0.50</p>
+<p class="x b-cn" style="--b:438.4">3.3</p><p class="x b-cd" style="--b:438.4">진동 주기의 값을 구함</p><p class="x b-cp" style="--b:438.4">0.50</p>
+<p class="x b-cn" style="--b:456.7">3.4</p><p class="x b-cd" style="--b:456.7">각진동수를 올바르게 구했으나 진동 주기를 명시적으로 쓰지 않은 경우.</p><p class="x b-cp" style="--b:456.7">-0.25</p>
+<p class="x b-cn" style="--b:489.8">3.5</p><p class="x b-cd" style="--b:484.1;padding-top:1.9pt">평형 위치 <span class="nw">$\alpha = \pm\arccos\left(\frac{q\sigma}{2\varepsilon_0 mg} - 1\right)$을</span> 고려함.</p><p class="x b-cd" style="--b:504.5">작은 변위에서 복원력의 식을 제시함</p><p class="x b-cp" style="--b:489.8">0.50</p>
+<p class="x b-cn" style="--b:522.8">3.6</p><p class="x b-cd" style="--b:522.8">진동 방정식을 올바르게 씀(차원이 맞는 산술 오류가 있으면 0.5점을 줌)</p><p class="x b-cp" style="--b:522.8">2×0.50</p>
+<p class="x b-cn" style="--b:541.2">3.7</p><p class="x b-cd" style="--b:541.2">진동 주기의 값을 구함</p><p class="x b-cp" style="--b:541.2">0.50</p>
+<p class="x b-cn" style="--b:559.5">3.8</p><p class="x b-cd" style="--b:559.5">각진동수를 올바르게 구했으나 진동 주기를 명시적으로 쓰지 않은 경우.</p><p class="x b-cp" style="--b:559.5">-0.25</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 11-4, sheet 1 -->
+<div class="page" data-s="b-a4">
+<p class="x b-tt" style="--b:45.3">문제 <b>Ru22-11-T4. 솔레노이드와 고리 도선</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="10" data-clip="519,25,562,52"></span></div>
+<p class="x b-tt" style="--b:59.8">수험 번호</p>
+<i class="b-rh" style="top:85.27pt"></i><i class="b-rh" style="top:97.62pt"></i><i class="b-rh" style="top:109.97pt"></i><i class="b-rh" style="top:147.51pt"></i><i class="b-rh" style="top:213.43pt"></i><i class="b-rh" style="top:269.62pt"></i><i class="b-rh" style="top:328.88pt"></i><i class="b-rh" style="top:385.06pt"></i><i class="b-rh" style="top:409.37pt"></i><i class="b-rh" style="top:472.45pt"></i><i class="b-rh" style="top:528.64pt"></i><i class="b-rh" style="top:584.83pt"></i><i class="b-rh" style="top:674.42pt"></i><i class="b-rh" style="top:736.96pt"></i><i class="b-rh" style="top:749.32pt"></i><i class="b-rh" style="top:761.67pt"></i><i class="b-rv" style="left:31.79pt;top:85.47pt;height:676.40pt"></i><i class="b-rv" style="left:72.49pt;top:85.47pt;height:676.40pt"></i><i class="b-rv" style="left:453.34pt;top:85.47pt;height:676.40pt"></i><i class="b-rv" style="left:508.22pt;top:85.47pt;height:676.40pt"></i><i class="b-rv" style="left:563.09pt;top:85.47pt;height:676.40pt"></i>
+<p class="x b-cd" style="--b:94.0">배점 항목</p><p class="x b-cp" style="--b:94.0">점수</p><p class="x b-ch" style="--b:94.0">해당 여부</p>
+<p class="x b-cn" style="--b:106.4">1.1</p><p class="x b-cd" style="--b:106.4"><b>M1</b> 처음 솔레노이드를 무한히 긴 솔레노이드로 보완한다는 아이디어.</p><p class="x b-cp" style="--b:106.4">0.50</p>
+<p class="x b-cn" style="--b:131.3">1.3</p><p class="x b-cd" style="--b:126.0"><b>M1</b> 끝면에 대한 자기장 <span class="nw">$\vec B$와</span> <span class="nw">$\vec B_2$의</span> 대칭성에 대한 올바른 논증. (<span class="nw">$B_x$와</span> <span class="nw">$B_{1x}$가</span> 같다는 것을 증명 없이 사용하면 이 항목은 점수를 주지 않는다).</p><p class="x b-cp" style="--b:131.3">1.50</p>
+<p class="x b-cn" style="--b:183.1">1.4</p><p class="x b-cd" style="--b:156.3"><b>M1</b> 점 <span class="nw">$A$에서</span> 자기장의 성분을 구함:</p>
+<div class="f" style="left:233pt;top:169pt"><span class="fig" data-srcpage="10" data-clip="233,169,293,195"></span></div>
+<p class="x b-cd" style="--b:209.8">(논증이 올바르지 않으면 이 항목은 점수를 주지 않는다).</p><p class="x b-cp" style="--b:183.1">0.50</p>
+<p class="x b-cn" style="--b:244.1">1.5</p><p class="x b-cd" style="--b:222.2"><b>M1</b> 점 <span class="nw">$C$에서</span> 자기장의 성분을 구함:</p>
+<div class="f" style="left:242pt;top:235pt"><span class="fig" data-srcpage="10" data-clip="242,235,284,249"></span></div>
+<p class="x b-cd" style="--b:266.0">(논증이 올바르지 않으면 이 항목은 점수를 주지 않는다).</p><p class="x b-cp" style="--b:244.1">0.50</p>
+<p class="x b-cn" style="--b:301.8">1.6</p><p class="x b-cd" style="--b:278.4"><b>M2</b> 평면 층이 만드는 자기장의 평행 성분에 대한 정리를 씀:</p>
+<div class="f" style="left:226pt;top:291pt"><span class="fig" data-srcpage="10" data-clip="226,291,300,317"></span></div>
+<p class="x b-cp" style="--b:301.8">1.20</p>
+<p class="x b-cn" style="--b:359.6">1.7</p><p class="x b-cd" style="--b:337.6"><b>M2</b> 끝면 위의 점들에서 입체각은 다음과 같음:</p>
+<p class="x b-cd c" style="--b:359.6">$\Omega_{\mathrm{base}} = 2\pi.$</p><p class="x b-cp" style="--b:359.6">0.30</p>
+<p class="x b-cn" style="--b:399.8">1.8</p><p class="x b-cd" style="--b:399.8"><b>M2</b> 끝면을 포함하는 평면 위에 있으나 끝면에 속하지 않는 점들에서 입체각은 0임.</p><p class="x b-cp" style="--b:399.8">0.50</p>
+<p class="x b-cn" style="--b:443.5">1.9</p><p class="x b-cd" style="--b:418.1"><b>M2</b> 점 <span class="nw">$A$에서</span> 자기장의 성분을 구함:</p>
+<div class="f" style="left:233pt;top:431pt"><span class="fig" data-srcpage="10" data-clip="233,431,293,457"></span></div>
+<p class="x b-cp" style="--b:443.5">0.50</p>
+<p class="x b-cn" style="--b:503.1">1.10</p><p class="x b-cd" style="--b:481.2"><b>M2</b> 점 <span class="nw">$C$에서</span> 자기장의 성분을 구함:</p>
+<div class="f" style="left:242pt;top:494pt"><span class="fig" data-srcpage="10" data-clip="242,494,284,508"></span></div>
+<p class="x b-cp" style="--b:503.1">0.50</p>
+<p class="x b-cn" style="--b:559.3">2.1</p><p class="x b-cd" style="--b:537.4">고리 도선을 지나는 자기 선속이 0이라는 조건을 씀:</p>
+<p class="x b-cd c" style="--b:559.3">$\Phi_\mathrm{s} + LI_\mathrm{w} = 0.$</p><p class="x b-cp" style="--b:559.3">1.00</p>
+<p class="x b-cn" style="--b:632.2">2.2</p><p class="x b-cd" style="--b:593.6">솔레노이드의 자기장이 고리 도선을 지나는 선속이 다음과 같음을 보임:</p>
+<p class="x b-cd c b-d" style="--b:622.4;--a:14.6pt">$\Phi_\mathrm{s} = \dfrac{B_0S}{2}.$</p>
+<p class="x b-cd b-ja" style="--b:656.0">(답안에 <span class="nw">$B_{Ax} = \frac{B_0}{2}$와</span> <span class="nw">$B_{Cx} = 0$이</span> 명시되어 있거나, 상호 인덕턴스에 대한 정리를 올바르게</p>
+<p class="x b-cd" style="--b:670.8">적용한 경우에 점수를 준다).</p><p class="x b-cp" style="--b:632.2">1.00</p>
+<p class="x b-cn" style="--b:708.3">2.3</p><p class="x b-cd" style="--b:683.2">고리 도선의 전류를 구함:</p>
+<p class="x b-cd c b-d" style="--b:711.5;--a:14.6pt">$I_\mathrm{w} = -\dfrac{\pi\mu_0nIr^2}{2L}.$</p><p class="x b-cp" style="--b:708.3">1.00</p>
+<p class="x b-cn" style="--b:745.7">2.4</p><p class="x b-cd" style="--b:745.7">고리 도선 전류의 크기만 구함</p><p class="x b-cp" style="--b:745.7">0.50</p>
+<p class="x b-cn" style="--b:758.1">2.5</p><p class="x b-cd" style="--b:758.1">고리 도선 전류의 방향만 구함</p><p class="x b-cp" style="--b:758.1">0.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 11-4, sheet 2 -->
+<div class="page" data-s="b-a4">
+<i class="b-rh" style="top:37.91pt"></i><i class="b-rh" style="top:106.06pt"></i><i class="b-rh" style="top:174.20pt"></i><i class="b-rh" style="top:230.39pt"></i><i class="b-rh" style="top:306.27pt"></i><i class="b-rh" style="top:360.47pt"></i><i class="b-rh" style="top:384.78pt"></i><i class="b-rh" style="top:440.97pt"></i><i class="b-rh" style="top:500.16pt"></i><i class="b-rh" style="top:563.23pt"></i><i class="b-rh" style="top:638.37pt"></i><i class="b-rh" style="top:713.52pt"></i><i class="b-rh" style="top:788.66pt"></i><i class="b-rv" style="left:31.79pt;top:38.11pt;height:750.75pt"></i><i class="b-rv" style="left:72.49pt;top:38.11pt;height:750.75pt"></i><i class="b-rv" style="left:453.34pt;top:38.11pt;height:750.75pt"></i><i class="b-rv" style="left:508.22pt;top:38.11pt;height:750.75pt"></i><i class="b-rv" style="left:563.09pt;top:38.11pt;height:750.75pt"></i>
+<p class="x b-cn" style="--b:74.6">3.1</p><p class="x b-cd" style="--b:46.7"><b>M1</b> 두께 <span class="nw">$dh$인</span> 층에 있는 솔레노이드 도선의 요소 dl에 작용하는 앙페르 힘의 축 방향 성분에 대한 식을 얻음:</p>
+<div class="f" style="left:221pt;top:72pt"><span class="fig" data-srcpage="11" data-clip="221,72,306,85"></span></div>
+<p class="x b-cp" style="--b:74.6">0.50</p>
+<p class="x b-cn" style="--b:142.7">3.2</p><p class="x b-cd" style="--b:114.8"><b>M1</b> 솔레노이드의 옆면을 지나는 고리 도선 자기장의 선속으로 자기적 상호 작용 힘을 나타낸 식:</p>
+<p class="x b-cd c" style="--b:148.7">$F_x = -In\Phi_{\mathrm{side}}.$</p><p class="x b-cp" style="--b:142.7">2.00</p>
+<p class="x b-cn" style="--b:204.9">3.3</p><p class="x b-cd" style="--b:183.0"><b>M1</b> 자기장에 대한 가우스 정리로부터 다음을 얻음:</p>
+<p class="x b-cd c" style="--b:204.9">$\Phi_{\mathrm{side}} + \Phi_{\mathrm{base}} = 0.$</p><p class="x b-cp" style="--b:204.9">1.00</p>
+<p class="x b-cn" style="--b:270.9">3.4</p><p class="x b-cd" style="--b:239.2"><b>M1</b> 솔레노이드 끝면에서 고리 도선의 자기장을 균일하다고 볼 수 있으며 그 값이 다음과 같다고 언급함:</p>
+<p class="x b-cd c b-d" style="--b:270.0;--a:14.6pt">$B_{\mathrm{w}x} = \dfrac{\mu_0I_\mathrm{w}}{2R}.$</p>
+<p class="x b-cd" style="--b:290.7">(전류가 흐르는 고리 도선의 자기장을 축 위의 임의의 점에 대해 구한 경우에도 이 항목의 점수를 준다.)</p><p class="x b-cp" style="--b:270.9">1.00</p>
+<p class="x b-cn" style="--b:336.0">3.9</p><p class="x b-cd" style="--b:315.0"><b>M2</b> 솔레노이드에 작용하는 힘을 축으로부터 거리 <span class="nw">$R$인</span> 곳에서의 솔레노이드 자기장으로 나타냄:</p>
+<p class="x b-cd c" style="--b:339.0">$F_x = 2\pi RB_RI_\mathrm{w}.$</p>
+<p class="x b-cd" style="--b:356.9">(부호가 틀려도 점수를 준다).</p><p class="x b-cp" style="--b:336.0">1.00</p>
+<p class="x b-cn" style="--b:375.2">3.10</p><p class="x b-cd" style="--b:369.2"><b>M2</b> 끝면으로부터 거리 <span class="nw">$\rho \gg r$인</span> 곳에서 솔레노이드의 자기장이 근사적으로 자기 홀극의 자기장으로 기술된다고 언급함.</p><p class="x b-cp" style="--b:375.2">1.00</p>
+<p class="x b-cn" style="--b:415.5">3.11</p><p class="x b-cd" style="--b:393.5"><b>M2</b> ‘자기 전하’의 크기를 구함:</p>
+<div class="f" style="left:241pt;top:407pt"><span class="fig" data-srcpage="11" data-clip="241,407,284,419"></span></div>
+<p class="x b-cp" style="--b:415.5">1.00</p>
+<p class="x b-cn" style="--b:473.2">3.12</p><p class="x b-cd" style="--b:449.7"><b>M2</b> 끝면으로부터 거리 <span class="nw">$R$인</span> 곳에서 솔레노이드의 자기장에 대한 식을 얻음:</p>
+<div class="f" style="left:236pt;top:461pt"><span class="fig" data-srcpage="11" data-clip="236,461,290,489"></span></div>
+<p class="x b-cp" style="--b:473.2">1.50</p>
+<p class="x b-cn" style="--b:534.3">3.16</p><p class="x b-cd" style="--b:508.9"><b>M3</b> 계의 에너지에 대한 식을 씀:</p>
+<p class="x b-cd c b-d" style="--b:537.7;--a:14.6pt">$E = \dfrac{L_1I^2}{2} + \dfrac{LI_\mathrm{w}^2}{2} + L_{\mathrm{mut}}II_\mathrm{w}.$</p><p class="x b-cp" style="--b:534.3">0.50</p>
+<p class="x b-cn" style="--b:603.4">3.17</p><p class="x b-cd" style="--b:572.0"><b>M3</b> 고리 도선을 지나는 선속이 0임을 고려하여 계의 에너지 식을 다음 꼴로 나타냄:</p>
+<p class="x b-cd c b-d" style="--b:612.9;--a:14.6pt">$E = \dfrac{L_1I^2}{2} - \dfrac{L_{\mathrm{mut}}^2I^2}{2L}.$</p><p class="x b-cp" style="--b:603.4">0.50</p>
+<p class="x b-cn" style="--b:678.5">3.18</p><p class="x b-cd" style="--b:647.1"><b>M3</b> 솔레노이드의 전류가 일정할 때 계의 에너지 변화를 상호 인덕턴스의 변화로 나타냄:</p>
+<p class="x b-cd c b-d" style="--b:688.0;--a:14.6pt">$dE = -\dfrac{L_{\mathrm{mut}}I^2}{L}\dfrac{dL_{\mathrm{mut}}}{dx}.$</p><p class="x b-cp" style="--b:678.5">0.50</p>
+<p class="x b-cn" style="--b:753.7">3.19</p><p class="x b-cd" style="--b:722.3"><b>M3</b> 솔레노이드를 옮기는 동안 그 전류를 일정하게 유지하는 전원이 한 일을 상호 인덕턴스의 변화로 나타냄:</p>
+<p class="x b-cd c b-d" style="--b:763.2;--a:14.6pt">$dA_{\mathrm{src}} = -\dfrac{2L_{\mathrm{mut}}I^2}{L}\dfrac{dL_{\mathrm{mut}}}{dx}.$</p><p class="x b-cp" style="--b:753.7">1.00</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">2</p>
+</div>
+
+<!-- marking scheme, problem 11-4, sheet 3 -->
+<div class="page" data-s="b-a4">
+<i class="b-rh" style="top:37.91pt"></i><i class="b-rh" style="top:94.10pt"></i><i class="b-rh" style="top:155.18pt"></i><i class="b-rh" style="top:214.37pt"></i><i class="b-rh" style="top:277.44pt"></i><i class="b-rh" style="top:352.59pt"></i><i class="b-rh" style="top:376.89pt"></i><i class="b-rh" style="top:469.87pt"></i><i class="b-rh" style="top:545.01pt"></i><i class="b-rh" style="top:608.09pt"></i><i class="b-rh" style="top:669.17pt"></i><i class="b-rh" style="top:728.35pt"></i><i class="b-rh" style="top:801.53pt"></i><i class="b-rv" style="left:31.79pt;top:38.11pt;height:763.62pt"></i><i class="b-rv" style="left:72.49pt;top:38.11pt;height:763.62pt"></i><i class="b-rv" style="left:453.34pt;top:38.11pt;height:763.62pt"></i><i class="b-rv" style="left:508.22pt;top:38.11pt;height:763.62pt"></i><i class="b-rv" style="left:563.09pt;top:38.11pt;height:763.62pt"></i>
+<p class="x b-cn" style="--b:68.6">3.20</p><p class="x b-cd" style="--b:46.7"><b>M3</b> 계의 에너지 변화 법칙을 씀:</p>
+<p class="x b-cd c" style="--b:68.6">$dA_{\mathrm{src}} - F_xdx = dE.$</p><p class="x b-cp" style="--b:68.6">0.50</p>
+<p class="x b-cn" style="--b:127.2">3.21</p><p class="x b-cd" style="--b:102.9"><b>M3</b> 솔레노이드 끝면에서 고리 도선의 자기장을 균일하다고 볼 수 있으며 그 값이 다음과 같다고 언급함:</p>
+<p class="x b-cd c b-d" style="--b:133.7;--a:14.6pt">$B_{\mathrm{w}x} = \dfrac{\mu_0I_\mathrm{w}}{2R}.$</p><p class="x b-cp" style="--b:127.2">1.00</p>
+<p class="x b-cn" style="--b:187.4">3.22</p><p class="x b-cd" style="--b:163.9"><b>M3</b> 솔레노이드를 <span class="nw">$dx$만큼</span> 옮길 때 상호 인덕턴스의 변화 <span class="nw">$dL_{\mathrm{mut}}$을</span> 구함:</p>
+<p class="x b-cd c b-d" style="--b:192.9;--a:14.6pt">$dL_{\mathrm{mut}} = \dfrac{\mu_0Sndx}{2R}.$</p><p class="x b-cp" style="--b:187.4">0.50</p>
+<p class="x b-cn" style="--b:248.5">3.25</p><p class="x b-cd" style="--b:223.1"><b>M4</b> 계의 에너지에 대한 식을 씀:</p>
+<p class="x b-cd c b-d" style="--b:251.9;--a:14.6pt">$E = \dfrac{L_1I^2}{2} + \dfrac{LI_\mathrm{w}^2}{2} + L_{\mathrm{mut}}II_\mathrm{w}.$</p><p class="x b-cp" style="--b:248.5">0.50</p>
+<p class="x b-cn" style="--b:317.6">3.26</p><p class="x b-cd" style="--b:286.2"><b>M4</b> 고리 도선을 지나는 선속이 0임을 고려하여 계의 에너지 식을 다음 꼴로 나타냄:</p>
+<p class="x b-cd c b-d" style="--b:327.1;--a:14.6pt">$E = \dfrac{L_1I^2}{2} - \dfrac{L_{\mathrm{mut}}^2I^2}{2L}.$</p><p class="x b-cp" style="--b:317.6">0.50</p>
+<p class="x b-cn" style="--b:367.3">3.27</p><p class="x b-cd" style="--b:361.4"><b>M4</b> 솔레노이드에 전류를 공급하는 도선들을 단락시키면 솔레노이드를 지나는 선속이 보존된다고 언급함.</p><p class="x b-cp" style="--b:367.3">0.50</p>
+<p class="x b-cn" style="--b:426.0">3.28</p><p class="x b-cd" style="--b:385.7"><b>M4</b> 솔레노이드를 지나는 선속이 일정함을 고려하여 에너지 식을 다음 꼴로 나타냄:</p>
+<p class="x b-cd c b-d" style="--b:426.5;--a:14.6pt">$E = \dfrac{\Phi^2}{2\left(L_1 - \dfrac{L_{\mathrm{mut}}^2}{L}\right)}.$</p><p class="x b-cp" style="--b:426.0">0.50</p>
+<p class="x b-cn" style="--b:510.0">3.29</p><p class="x b-cd" style="--b:478.6"><b>M4</b> 솔레노이드를 지나는 선속이 일정할 때 계의 에너지 변화를 상호 인덕턴스의 변화로 나타냄:</p>
+<p class="x b-cd c b-d" style="--b:519.5;--a:14.6pt">$dE = \dfrac{I^2L_{\mathrm{mut}}dL_{\mathrm{mut}}}{L}.$</p><p class="x b-cp" style="--b:510.0">0.50</p>
+<p class="x b-cn" style="--b:579.1">3.30</p><p class="x b-cd" style="--b:553.8"><b>M4</b> 계의 에너지 변화 법칙을 씀:</p>
+<div class="f" style="left:237pt;top:566pt"><span class="fig" data-srcpage="12" data-clip="237,566,289,593"></span></div>
+<p class="x b-cp" style="--b:579.1">0.50</p>
+<p class="x b-cn" style="--b:641.2">3.31</p><p class="x b-cd" style="--b:616.9"><b>M4</b> 솔레노이드 끝면에서 고리 도선의 자기장을 균일하다고 볼 수 있으며 그 값이 다음과 같다고 언급함:</p>
+<p class="x b-cd c b-d" style="--b:647.6;--a:14.6pt">$B_{\mathrm{w}x} = \dfrac{\mu_0I_\mathrm{w}}{2R}.$</p><p class="x b-cp" style="--b:641.2">1.00</p>
+<p class="x b-cn" style="--b:701.4">3.32</p><p class="x b-cd" style="--b:677.9"><b>M4</b> 솔레노이드를 <span class="nw">$dx$만큼</span> 옮길 때 상호 인덕턴스의 변화 <span class="nw">$dL_{\mathrm{mut}}$을</span> 구함:</p>
+<p class="x b-cd c b-d" style="--b:706.8;--a:14.6pt">$dL_{\mathrm{mut}} = \dfrac{\mu_0Sndx}{2R}.$</p><p class="x b-cp" style="--b:701.4">0.50</p>
+<p class="x b-cn" style="--b:767.5">3.33</p><p class="x b-cd" style="--b:737.1">고리 도선이 솔레노이드에 작용하는 자기적 상호 작용 힘을 구함:</p>
+<div class="f" style="left:206pt;top:750pt"><span class="fig" data-srcpage="12" data-clip="206,750,320,782"></span></div>
+<p class="x b-cd" style="--b:797.9">(논증이 올바르지 않으면 이 항목은 점수를 주지 않는다).</p><p class="x b-cp" style="--b:767.5">1.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">3</p>
+</div>
+
+<!-- marking scheme, problem 11-4, sheet 4 -->
+<div class="page" data-s="b-a4">
+<i class="b-rh" style="top:37.91pt"></i><i class="b-rh" style="top:62.22pt"></i><i class="b-rh" style="top:86.53pt"></i><i class="b-rv" style="left:31.79pt;top:38.11pt;height:48.62pt"></i><i class="b-rv" style="left:72.49pt;top:38.11pt;height:48.62pt"></i><i class="b-rv" style="left:453.34pt;top:38.11pt;height:48.62pt"></i><i class="b-rv" style="left:508.22pt;top:38.11pt;height:48.62pt"></i><i class="b-rv" style="left:563.09pt;top:38.11pt;height:48.62pt"></i>
+<p class="x b-cn" style="--b:52.7">3.34</p><p class="x b-cd" style="--b:52.7">상호 작용 힘의 크기만 구함. (논증이 올바르지 않으면 이 항목은 점수를 주지 않는다).</p><p class="x b-cp" style="--b:52.7">1.00</p>
+<p class="x b-cn" style="--b:77.0">3.35</p><p class="x b-cd" style="--b:77.0">상호 작용 힘의 방향만 구함. (논증이 올바르지 않으면 이 항목은 점수를 주지 않는다).</p><p class="x b-cp" style="--b:77.0">0.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">4</p>
+</div>
+
+<!-- marking scheme, problem 11-5, sheet 1 -->
+<div class="page" data-s="b-a4">
+<p class="x b-tt" style="--b:45.3">문제 <b>Ru22-11-T5. 비선형 소자와</b></p>
+<p class="x b-tt" style="--b:63.2"><b>축전기</b></p>
+<div class="f" style="left:519pt;top:25pt"><span class="fig" data-srcpage="14" data-clip="519,25,562,52"></span></div>
+<p class="x b-tt" style="--b:77.7">수험 번호</p>
+<i class="b-rh" style="top:103.20pt"></i><i class="b-rh" style="top:115.55pt"></i><i class="b-rh" style="top:171.74pt"></i><i class="b-rh" style="top:184.10pt"></i><i class="b-rh" style="top:196.45pt"></i><i class="b-rh" style="top:252.64pt"></i><i class="b-rh" style="top:315.83pt"></i><i class="b-rh" style="top:372.02pt"></i><i class="b-rh" style="top:452.10pt"></i><i class="b-rh" style="top:508.29pt"></i><i class="b-rh" style="top:564.48pt"></i><i class="b-rh" style="top:635.85pt"></i><i class="b-rh" style="top:674.48pt"></i><i class="b-rh" style="top:749.29pt"></i><i class="b-rh" style="top:811.38pt"></i><i class="b-rv" style="left:31.79pt;top:103.40pt;height:708.18pt"></i><i class="b-rv" style="left:72.49pt;top:103.40pt;height:708.18pt"></i><i class="b-rv" style="left:453.34pt;top:103.40pt;height:708.18pt"></i><i class="b-rv" style="left:508.22pt;top:103.40pt;height:708.18pt"></i><i class="b-rv" style="left:563.09pt;top:103.40pt;height:708.18pt"></i>
+<p class="x b-cd" style="--b:112.0">배점 항목</p><p class="x b-cp" style="--b:112.0">점수</p><p class="x b-ch" style="--b:112.0">해당 여부</p>
+<p class="x b-cn" style="--b:146.2">1.1</p><p class="x b-cd" style="--b:124.3">전류 <span class="nw">$I$에</span> 대한 이차 방정식을 얻음:</p>
+<div class="f" style="left:203pt;top:136pt"><span class="fig" data-srcpage="14" data-clip="203,136,323,151"></span></div>
+<p class="x b-cp" style="--b:146.2">0.30</p>
+<p class="x b-cn" style="--b:180.5">1.2</p><p class="x b-cd" style="--b:180.5">이차 방정식의 판별식이 음이 아님을 언급함.</p><p class="x b-cp" style="--b:180.5">0.40</p>
+<p class="x b-cn" style="--b:192.9">1.3</p><p class="x b-cd" style="--b:192.9"><span class="nw">$I &gt; 0$이므로</span> <span class="nw">$U_0 &gt; U_1$임을</span> 언급함.</p><p class="x b-cp" style="--b:192.9">0.30</p>
+<p class="x b-cn" style="--b:227.1">1.4</p><p class="x b-cd" style="--b:205.2">회로에 전류가 흐르게 하는 <span class="nw">$U_0$의</span> 모든 값을 구함:</p>
+<div class="f" style="left:223pt;top:209pt"><span class="fig" data-srcpage="14" data-clip="223,209,304,232"></span></div>
+<p class="x b-cp" style="--b:227.1">0.50</p>
+<p class="x b-cn" style="--b:286.8">2.1</p><p class="x b-cd" style="--b:261.4">전류 <span class="nw">$I$에</span> 따른 축전기 전압 <span class="nw">$U_C$의</span> 관계를 얻음:</p>
+<div class="f" style="left:207pt;top:274pt"><span class="fig" data-srcpage="14" data-clip="207,274,319,300"></span></div>
+<p class="x b-cp" style="--b:286.8">0.30</p>
+<p class="x b-cn" style="--b:346.5">2.2</p><p class="x b-cd" style="--b:324.6">전류가 흐르기 시작하는 순간에 대해 <span class="nw">$I_1 \approx 9.6\,\mathrm{mA}$에</span> 대한 방정식을 얻음:</p>
+<div class="f" style="left:201pt;top:336pt"><span class="fig" data-srcpage="14" data-clip="201,336,325,351"></span></div>
+<p class="x b-cp" style="--b:346.5">0.50</p>
+<p class="x b-cn" style="--b:414.6">2.3</p><p class="x b-cd" style="--b:380.8">축전기의 최대 전압 <span class="nw">$U_{max} \approx 6\,\mathrm{V}$에</span> 해당하는 전류 <span class="nw">$I_2 \approx 2\,\mathrm{mA}$에</span> 대한 식을 얻음:</p>
+<div class="f" style="left:240pt;top:405pt"><span class="fig" data-srcpage="14" data-clip="240,405,286,437"></span></div>
+<p class="x b-cp" style="--b:414.6">0.70</p>
+<p class="x b-cn" style="--b:482.8">2.4</p><p class="x b-cd" style="--b:460.9"><span class="nw">$U_{max}$에</span> 대한 식을 얻음:</p>
+<div class="f" style="left:205pt;top:465pt"><span class="fig" data-srcpage="14" data-clip="205,465,321,487"></span></div>
+<p class="x b-cp" style="--b:482.8">0.50</p>
+<p class="x b-cn" style="--b:539.0">2.5</p><p class="x b-cd" style="--b:517.1">수치를 구함(각각 0.5점):</p>
+<p class="x b-cd c" style="--b:539.0">$U_0 \approx 12\,\mathrm{V}\quad R \approx 1\,\mathrm{k\Omega}\quad A \approx 4\,\mathrm{mW}.$</p><p class="x b-cp" style="--b:539.0">3×0.50</p><p class="x b-ch" style="--b:539.0">0</p>
+<p class="x b-cn" style="--b:602.8">3.1</p><p class="x b-cd" style="--b:573.2"><b>M1</b> 저항에서 발생한 열량 <span class="nw">$Q_R$에</span> 대한 식을 얻음:</p>
+<div class="f" style="left:216pt;top:587pt"><span class="fig" data-srcpage="14" data-clip="216,587,311,627"></span></div>
+<p class="x b-cp" style="--b:602.8">1.00</p>
+<p class="x b-cn" style="--b:657.8">3.2</p><p class="x b-cd" style="--b:650.4"><b>M1</b> 그래프를 이용하여 값 <span class="nw">$\int_0^{U_{max}}IdU_C = S$를</span> 구함: <span class="nw">$(37.5 - 37.9)\,\mathrm{mW}$</span> – 1.5점;</p>
+<p class="x b-cd" style="--b:670.9"><span class="nw">$(37.3 - 38.1)\,\mathrm{mW}$</span> – 1점; <span class="nw">$(37.1 - 38.3)\,\mathrm{mW}$</span> – 0.5점.</p><p class="x b-cp" style="--b:657.8">3×0.50</p><p class="x b-ch" style="--b:657.8">0</p>
+<p class="x b-cn" style="--b:714.5">3.4</p><p class="x b-cd" style="--b:683.3"><b>M2</b> <span class="nw">$Q_R$의</span> 식을 다음 꼴로 바꿈:</p>
+<div class="f" style="left:189pt;top:696pt"><span class="fig" data-srcpage="14" data-clip="189,696,337,736"></span></div>
+<p class="x b-cp" style="--b:714.5">1.00</p>
+<p class="x b-cn" style="--b:782.9">3.5</p><p class="x b-cd" style="--b:758.1"><b>M2</b> 알려진 양으로 나타낸 <span class="nw">$Q_R$의</span> 식:</p>
+<div class="f" style="left:109pt;top:769pt"><span class="fig" data-srcpage="14" data-clip="109,769,418,797"></span></div>
+<p class="x b-cp" style="--b:782.9">1.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">1</p>
+</div>
+
+<!-- marking scheme, problem 11-5, sheet 2 -->
+<div class="page" data-s="b-a4">
+<i class="b-rh" style="top:37.91pt"></i><i class="b-rh" style="top:94.10pt"></i><i class="b-rh" style="top:150.29pt"></i><i class="b-rh" style="top:206.48pt"></i><i class="b-rh" style="top:269.67pt"></i><i class="b-rh" style="top:323.86pt"></i><i class="b-rh" style="top:390.14pt"></i><i class="b-rh" style="top:414.45pt"></i><i class="b-rh" style="top:478.58pt"></i><i class="b-rh" style="top:490.94pt"></i><i class="b-rh" style="top:565.97pt"></i><i class="b-rh" style="top:642.33pt"></i><i class="b-rh" style="top:723.45pt"></i><i class="b-rh" style="top:779.64pt"></i><i class="b-rv" style="left:31.79pt;top:38.11pt;height:741.73pt"></i><i class="b-rv" style="left:72.49pt;top:38.11pt;height:741.73pt"></i><i class="b-rv" style="left:453.34pt;top:38.11pt;height:741.73pt"></i><i class="b-rv" style="left:508.22pt;top:38.11pt;height:741.73pt"></i><i class="b-rv" style="left:563.09pt;top:38.11pt;height:741.73pt"></i>
+<p class="x b-cn" style="--b:68.6">3.6</p><p class="x b-cd" style="--b:46.7"><span class="nw">$Q_R$의</span> 수치를 구함:</p>
+<p class="x b-cd c" style="--b:68.6">$Q_R = (370 - 382)\,\mathrm{mJ}.$</p><p class="x b-cp" style="--b:68.6">0.50</p>
+<p class="x b-cn" style="--b:124.8">4.1</p><p class="x b-cd" style="--b:102.9"><b>M1</b> 계의 에너지 변화 법칙을 씀:</p>
+<p class="x b-cd c" style="--b:124.8">$A_{\mathrm{src}} = Q_R + Q_\mathrm{NE} + W_C.$</p><p class="x b-cp" style="--b:124.8">0.50</p>
+<p class="x b-cn" style="--b:181.0">4.2</p><p class="x b-cd" style="--b:159.1"><b>M1</b> 전원이 한 일에 대한 식을 얻음:</p>
+<p class="x b-cd c" style="--b:181.0">$A_{\mathrm{src}} = CU_0U_{max}.$</p><p class="x b-cp" style="--b:181.0">0.30</p>
+<p class="x b-cn" style="--b:240.7">4.3</p><p class="x b-cd" style="--b:215.2"><b>M1</b> 축전기의 에너지에 대한 식을 얻음:</p>
+<div class="f" style="left:230pt;top:227pt"><span class="fig" data-srcpage="15" data-clip="230,227,296,254"></span></div>
+<p class="x b-cp" style="--b:240.7">0.20</p>
+<p class="x b-cn" style="--b:299.4">4.4</p><p class="x b-cd" style="--b:278.4"><b>M1</b> 비선형 소자에서 발생한 열량 <span class="nw">$Q_\mathrm{NE}$에</span> 대한 식을 얻음:</p>
+<p class="x b-cd c" style="--b:302.3">$Q_\mathrm{NE} = CU_1U_{max} + A\tau.$</p><p class="x b-cp" style="--b:299.4">1.00</p>
+<p class="x b-cn" style="--b:359.6">4.5</p><p class="x b-cd" style="--b:332.6"><b>M1</b> 회로에 전류가 흐르는 시간에 대한 식을 얻음:</p>
+<div class="f" style="left:165pt;top:344pt"><span class="fig" data-srcpage="15" data-clip="165,344,361,373"></span></div>
+<p class="x b-cp" style="--b:359.6">0.50</p>
+<p class="x b-cn" style="--b:404.9">4.6</p><p class="x b-cd" style="--b:404.9"><b>M1</b> <span class="nw">$\tau$의</span> 수치를 구함: <span class="nw">$(10.2 - 11.4)\,\mathrm{s}$</span> – 1.5점; <span class="nw">$(9.7 - 11.9)\,\mathrm{s}$</span> – 1점; <span class="nw">$(9.2 - 12.4)\,\mathrm{s}$</span> – 0.5점.</p><p class="x b-cp" style="--b:404.9">3×0.50</p><p class="x b-ch" style="--b:404.9">0</p>
+<p class="x b-cn" style="--b:449.1">4.7</p><p class="x b-cd" style="--b:423.2"><b>M2</b> <span class="nw">$I$에</span> 대한 이차 방정식을 풂:</p>
+<div class="f" style="left:155pt;top:434pt"><span class="fig" data-srcpage="15" data-clip="155,434,371,463"></span></div>
+<p class="x b-cp" style="--b:449.1">0.20</p>
+<p class="x b-cn" style="--b:487.4">4.8</p><p class="x b-cd" style="--b:487.4"><b>M2</b> <span class="nw">$+$</span> 부호의 근을 선택함.</p><p class="x b-cp" style="--b:487.4">0.10</p>
+<p class="x b-cn" style="--b:531.0">4.9</p><p class="x b-cd" style="--b:499.7"><b>M2</b> 시간 간격 <span class="nw">$dt$와</span> 축전기 전압의 변화 <span class="nw">$dU_C = -dV$</span> 사이의 관계를 얻음:</p>
+<div class="f" style="left:189pt;top:524pt"><span class="fig" data-srcpage="15" data-clip="189,524,335,550"></span></div>
+<p class="x b-cp" style="--b:531.0">0.30</p>
+<p class="x b-cn" style="--b:606.7">4.10</p><p class="x b-cd" style="--b:574.7"><b>M2</b> <span class="nw">$\tau$에</span> 대한 식을 얻음:</p>
+<div class="f" style="left:181pt;top:587pt"><span class="fig" data-srcpage="15" data-clip="181,587,343,629"></span></div>
+<p class="x b-cp" style="--b:606.7">0.40</p>
+<p class="x b-cn" style="--b:685.5">4.11</p><p class="x b-cd" style="--b:651.1"><b>M2</b> 알려진 양으로 나타낸 <span class="nw">$\tau$의</span> 식을 얻음:</p>
+<div class="f" style="left:78pt;top:662pt"><span class="fig" data-srcpage="15" data-clip="78,662,545,708"></span></div>
+<p class="x b-cn" style="--b:754.1">4.12</p><p class="x b-cd" style="--b:732.2"><b>M2</b> <span class="nw">$\tau$의</span> 수치를 구함:</p>
+<p class="x b-cd c" style="--b:754.1">$\tau = (10.7 - 10.9)\,\mathrm{s}$</p><p class="x b-cp" style="--b:754.1">0.50</p>
+<p class="x" style="--b:843.4;left:285pt;width:25pt;text-align:center">2</p>
+</div>
+</body></html>

@@ -1,0 +1,29 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "RuPhO_2022_T2S_KO.pdf",
+ "status": "READY",
+ "sha256": "49f260474b48203095b1766be04507dd73364ed220b95556e602408e55176bdc",
+ "bytes": 1198347,
+ "pages": 16,
+ "source_file": "RuPhO_2022_T2S.pdf",
+ "source_sha256": "36c9b459d1b1699794c7d6a7627bf856df4bb6a3fee86ccd85bdcb08cd41533e",
+ "source_page_range": [
+  1,
+  16
+ ],
+ "source_pages": 16,
+ "source_language": "ru",
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 5727,
+ "cyrillic_characters": 0,
+ "html_source": "tools/ko_reflow/rupho/2022_T2S.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/check.py and qa side-by-side images; every flag confirmed by zoom)",
+  "overflow_or_occlusion_observed": false
+ }
+}
