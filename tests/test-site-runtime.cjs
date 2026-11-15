@@ -68,7 +68,7 @@ test('the olympiad archive loads practical papers and their alternate language o
   assert.ok(dmt.some(link=>link.url.endsWith('Xieso_IESO_2024_DMT_KO.pdf')));
   assert.ok(dmt.some(link=>/DMT/i.test(link.url)&&link.label.includes('English')));
   const taipei=anchors(a.run('viewYear("ieso",2009)'));
-  assert.ok(taipei.some(link=>link.url.endsWith('Xieso_IESO_2009_T_complete_KO.pdf')&&!link.label.includes('부분')));
+  assert.ok(taipei.some(link=>link.url.endsWith('Xieso_IESO_2009_T_Layout_KO.pdf')&&!link.label.includes('부분')));
   const taipeiPractical=anchors(a.run('track="exp"; viewYear("ieso",2009)'));
   assert.equal(taipeiPractical.filter(link=>link.url.startsWith('https://www.jeso.jp/download/exam/ieso/3rdieso-answer-practice-')).length,4);
   a.run('track="thy"');
@@ -82,6 +82,8 @@ test('the olympiad archive loads practical papers and their alternate language o
   const tehranLinks=anchors(tehran);
   assert.ok(tehranLinks.some(link=>link.url.endsWith('Xijso_IJSO_2012_MC_KO.pdf')));
   assert.ok(tehranLinks.some(link=>link.url.endsWith('Xijso_IJSO_2012_MC_STUDY_EN.pdf')));
+  assert.match(a.run('track="exp"; viewYear("ijso",2012)'),/실험 문제·답안지 합본/);
+  a.run('track="thy"');
   const field=anchors(a.run('lang="en"; track="exp"; viewYear("ieso",2026)'));
   assert.ok(field.some(link=>/map/i.test(link.label)&&/^https:\/\//.test(link.url)));
   a.load('theory:icho');
