@@ -1,0 +1,370 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2025 (LIX = 제59회; nothing but the running header is printed), 10학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.5x595.3pt, 19 pages, CropBox = MediaBox, no rotation,
+   no page numbers, no marking criteria in this booklet. Text column x 28.3..396.8 (width 368.5pt); indent 20pt; baselineskip 11.955pt.
+   Running header (SFTI1000 italic) at baseline 37.6, rule y 41.4 (x 28.3..391.2) stamped:
+   "Заключительный этап Всероссийской олимпиады по физике" -> "2025년 전러시아 물리 올림피아드, 결선" (conv_2025.md).
+   Titles as in the 2025_T2 paper: 10-T1 강 건너기, 10-T2 프리즘, 10-T3 떨어지는 피스톤, 10-T4 정사각형 vs 원, 10-T5 바이 코다모!
+   Subscripts retyped: u_л (лодка) -> u_b, a_абс -> a_abs, F_тр -> F_fr, A_внеш -> A_ext, E_зел/E_син -> E_gr/E_bl, ℰ_экв/r_экв -> ℰ_eq/r_eq.
+   Retyped displays: .d = line-height 0, top = baseline - --a.
+   PLACEMENT: top = b - l/2 - 0.3155*fs + 0.7pt. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:368.5pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.i{text-indent:20pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left}
+.h{text-align:center;font-weight:bold;margin-top:-1.1pt}
+.cap{text-align:center;--fs:8.966pt}
+.wn{word-break:normal}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;width:auto;text-align:left}
+.sb{--fs:6.974pt;--l:8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="1" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x h" style="--b:64.0">문제 10-T1. 강 건너기</p>
+<div class="f" style="left:210pt;top:67pt"><span class="fig" data-srcpage="1" data-clip="210,67,394,191"></span></div>
+<p class="x i wn" style="--b:85.4;width:175pt">보트가 강물의 흐름 방향으로 출발하는 경우를 생각하자. 지점 <span class="nw">$A$를</span> 원점으로 하는 좌표계를 도입하여 <span class="nw">$x$축은</span> 흐름 속도 방향, <span class="nw">$y$축은</span> 지점 <span class="nw">$B$를</span> 향하게 잡자. 점 <span class="nw">$B$에서</span> 보트 중심까지의 거리를 <span class="nw">$r$,</span> <span class="nw">$\angle ABC = \alpha$라</span> 하자. 그러면 ‘흐름 방향’ 운동에 대해 짧은 시간 <span class="nw">$\mathrm dt$</span> 동안의 미소 변화량은 다음과 같다.</p>
+<div class="f" style="left:161pt;top:196pt"><span class="fig" data-srcpage="1" data-clip="161,196,398,242"></span></div>
+<p class="x" style="--b:255.2">보트가 맞은편 강가에 닿기 전까지는 어느 순간에나 <span class="nw">$0 \leqslant \alpha \leqslant \pi/2$이므로</span> $v_x = \mathrm dx/\mathrm dt =$ <span class="nw">$2u\cos\alpha + u \geqslant u > 0$이다.</span> 따라서 강가에 대한 보트의 속도는 강가의 선에 수직한 방향을 향할 수 없다. 이로부터 보트는 지점 <span class="nw">$A$에서</span> 흐름을 거슬러 출발했다는 결론을 얻는다.</p>
+<div class="f" style="left:224pt;top:300pt"><span class="fig" data-srcpage="1" data-clip="224,300,381,425"></span></div>
+<p class="x i wn" style="--b:316.1;width:175pt">즉, 보트는 강물의 흐름을 거슬러 출발한다. 이번에도 지점 <span class="nw">$A$를</span> 원점으로 하는 좌표계를 도입하여 <span class="nw">$x$축은</span> 흐름 속도 방향, <span class="nw">$y$축은</span> 지점 <span class="nw">$B$를</span> 향하게 잡고, 점 <span class="nw">$B$에서</span> 보트 중심까지의 거리를 <span class="nw">$r$,</span> <span class="nw">$\angle ABC = \alpha$라</span> 하자. 그러면 ‘흐름을 거스르는’ 운동에 대해 짧은 시간 <span class="nw">$\mathrm dt$</span> 동안의 미소 변화량은 다음과 같다.</p>
+<div class="f" style="left:157pt;top:423pt"><span class="fig" data-srcpage="1" data-clip="157,423,398,471"></span></div>
+<p class="x" style="--b:485.1">보트가 강가의 선에 수직으로 움직일 때는 <span class="nw">$\mathrm dx = 0$이므로,</span> 식 (5)로부터 $-2u\cos\alpha + u = 0 \implies$ $\cos\alpha = 1/2 \implies$ <span class="nw">$\alpha = 60^\circ = \pi/3$이다.</span></p>
+<p class="x i" style="--b:514.6">식 (4)에 2를 곱하고 식 (6)과 더하면 다음을 얻는다.</p>
+<div class="f" style="left:135pt;top:526pt"><span class="fig" data-srcpage="1" data-clip="135,526,290,538"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="2" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">운동이 시작되는 순간<span class="nw">($r_A = l$,</span> <span class="nw">$y_A = 0$)에</span> 이 상수를 계산하자. 따라서 $r(y) =$ <span class="nw">$l - y/2$이다.</span> 맞은편 강가에 닿는 순간에는 다음과 같다.</p>
+<div class="f" style="left:164pt;top:88pt"><span class="fig" data-srcpage="2" data-clip="164,88,262,101"></span></div>
+<p class="x i" style="--b:122.6">시각 <span class="nw">$t_1$에서</span> 기하학적으로 <span class="nw">$r\cos\alpha = l - y$라고</span> 쓸 수 있다. 여기에 <span class="nw">$r(y)$의</span> 관계식과 이 순간의 각 <span class="nw">$\alpha$의</span> 값을 대입하면 다음 방정식을 얻는다.</p>
+<div class="f" style="left:107pt;top:156pt"><span class="fig" data-srcpage="2" data-clip="107,156,319,181"></span></div>
+<p class="x i" style="--b:200.0;--l:12.18pt">경로의 곡률 반지름을 구하기 위해 필요한 점들에서 속도와 가속도를 구하자. 강가에 대한 속도는 강물의 속도 <span class="nw">$\vec u$와</span> 물에 대한 보트의 속도 <span class="nw">$\vec u_\mathrm b$의</span> 합과 같다: <span class="nw">$\vec v = \vec u + \vec u_\mathrm b$.</span> 이 식을 제곱하면 다음을 얻는다: $v = \sqrt{u^2 + \vec u_\mathrm b^{\,2} + 2(\vec u\cdot\vec u_\mathrm b)} = \sqrt{u^2 + 4u^2 + 4u^2\cos\angle(\vec u, \vec u_\mathrm b)} =$ <span class="nw">$u\sqrt{5 + 4\cos\angle(\vec u, \vec u_\mathrm b)}$.</span> 출발점에서는 <span class="nw">$\angle(\vec u, \vec u_\mathrm b) = \pi$이므로</span> 속력은 <span class="nw">$v_A = u$이다.</span> 시각 <span class="nw">$t_1$에서는</span> 두 속도 사이의 각이 <span class="nw">$\angle(\vec u, \vec u_\mathrm b) = \pi - \alpha$이므로</span> 속력은 <span class="nw">$v_1 = u\sqrt3$이다.</span></p>
+<p class="x i" style="--b:290.7">보트의 속도는 물의 흐름 속도와 물에 대한 보트의 속도의 벡터 합과 같다. 흐름의 속도는 크기도 방향도 변하지 않는다. 보트의 속도는 크기는 변하지 않지만 방향은 변한다. 보트 속도 벡터의 도함수의 크기는 벡터 <span class="nw">$\vec u_\mathrm b$가</span> 회전하는 각속도와 이 벡터의 크기의 곱과 같다. 보트의 가속도에 대한 식을 구하자.</p>
+<p class="x c d" style="--b:375.8;--a:14.6pt">$\vec a_\mathrm{abs} = \dfrac{\mathrm d}{\mathrm dt}(\vec u + \vec u_\mathrm b) = \dfrac{\mathrm d\vec u}{\mathrm dt} + \dfrac{\mathrm d\vec u_\mathrm b}{\mathrm dt} = \vec a_\mathrm b,$</p>
+<p class="x c d" style="--b:405.8;--a:14.6pt">$|\vec a_\mathrm b| = 2u\cdot\omega_\alpha = 2u\dfrac{\mathrm d\alpha}{\mathrm dt}.$</p>
+<p class="x" style="--b:425.5">각 <span class="nw">$\alpha$의</span> 도함수를 구하려면 선분 <span class="nw">$BC$에</span> 수직한 속도 성분을 거리 <span class="nw">$r$로</span> 나누어야 한다.</p>
+<div class="f" style="left:172pt;top:449pt"><span class="fig" data-srcpage="2" data-clip="172,449,253,462"></span></div>
+<div class="f" style="left:158pt;top:467pt"><span class="fig" data-srcpage="2" data-clip="158,467,268,493"></span></div>
+<p class="x" style="--b:502.8">지점 <span class="nw">$A$를</span> 떠나는 순간 각은 <span class="nw">$\alpha = 0$이므로</span> 다음을 얻는다.</p>
+<div class="f" style="left:159pt;top:512pt"><span class="fig" data-srcpage="2" data-clip="159,512,268,539"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="3" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">시각 <span class="nw">$t_1$에서</span> 각은 <span class="nw">$\alpha = \pi/3$이므로</span> 다음을 얻는다.</p>
+<div class="f" style="left:139pt;top:76pt"><span class="fig" data-srcpage="3" data-clip="139,76,287,102"></span></div>
+<p class="x" style="--b:119.4">출발 지점에서는 속도와 가속도가 서로 수직이므로 경로의 곡률 반지름을 다음과 같이 구할 수 있다.</p>
+<div class="f" style="left:179pt;top:142pt"><span class="fig" data-srcpage="3" data-clip="179,142,246,170"></span></div>
+<p class="x" style="--b:185.2;--l:13pt">시각 <span class="nw">$t_1$에</span> 대해 가속도를 운동 속도에 수직한 방향, 즉 <span class="nw">$Ox$축에</span> 사영한 성분을 구하자: <span class="nw">$a_{1x} = a_1\sin\alpha = 9u^2\sqrt3/(4l)$.</span> 그러면 이 점에서 경로의 곡률 반지름은 다음과 같다.</p>
+<div class="f" style="left:171pt;top:220pt"><span class="fig" data-srcpage="3" data-clip="171,220,255,248"></span></div>
+<p class="x h" style="--b:266.7">문제 10-T2. 프리즘</p>
+<p class="x" style="--b:288.0;left:48.3pt;width:348.5pt;font-weight:bold;margin-top:-1.1pt">첫 번째 풀이 방법</p>
+<div class="f" style="left:105pt;top:303pt"><span class="fig" data-srcpage="3" data-clip="105,303,320,399"></span></div>
+<p class="x ov sb" style="--b:388.6;left:197.2pt">fr</p>
+<p class="x c cap" style="--b:418.3">그림&nbsp;1</p>
+<p class="x i" style="--b:443.6">프리즘에 작용하는 힘들을 그리자(그림&nbsp;1). 나무토막과 프리즘 사이의 상호 작용 힘을 <span class="nw">$N$,</span> 탁자가 프리즘에 작용하는 수직 항력을 <span class="nw">$N'$,</span> 마찰력을 <span class="nw">$F_\mathrm{fr}$라</span> 하자. 그러면 다음이 성립한다.</p>
+<p class="x c" style="--b:489.4">$ma = N\sin\alpha + F(1 - \cos\alpha) - F_\mathrm{fr},$</p>
+<p class="x c" style="--b:511.3">$N' = N\cos\alpha + F\sin\alpha + mg,$</p>
+<p class="x c" style="--b:529.2">$F_\mathrm{fr} \leqslant \mu(N\cos\alpha + F\sin\alpha + mg).$</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="4" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:265pt;top:46pt"><span class="fig" data-srcpage="4" data-clip="265,46,403,133"></span></div>
+<p class="x i" style="--b:64.0;width:228.2pt">편의를 위해 탁자에 대한 나무토막의 가속도를 두 성분, 즉 프리즘의 가속도 <span class="nw">$a$와</span> 프리즘 표면에 대한 나무토막의 가속도 <span class="nw">$a'$으로</span> 분해하자. <span class="nw">$a'$은</span> 프리즘의 왼쪽 옆면에 평행한 방향을 향한다(그림&nbsp;2). 나무토막의 상대 운동 방향에 수직한 축에 대해 나무토막의 뉴턴 제2법칙을 사영하여 쓰자.</p>
+<p class="x c cap" style="--b:152.1;left:311.6pt;width:40pt">그림&nbsp;2</p>
+<div class="f" style="left:58pt;top:158pt"><span class="fig" data-srcpage="4" data-clip="58,158,368,170"></span></div>
+<p class="x" style="--b:185.7">얻은 <span class="nw">$N$의</span> 식에는 힘 <span class="nw">$F$의</span> 크기가 명시적으로 들어 있지 않고, 조건에 따르면 프리즘의 가속도는 <span class="nw">$F$에</span> 의존하지 않는다. 따라서 <span class="nw">$N$도</span> 이 힘의 크기에 의존하지 않는다.</p>
+<p class="x i" style="--b:227.3">두 경우를 생각하자: 1) 프리즘이 탁자에 대해 움직이는 경우; 2) 마찰 때문에 프리즘이 움직이지 못하는 경우.</p>
+<p class="x ov" style="--b:258.1;left:40.5pt">1.</p>
+<p class="x" style="--b:258.1;left:53.3pt;width:343.5pt">프리즘이 탁자 위에서 미끄러진다고, 즉 <span class="nw">$a > 0$이라</span> 하자. 그러면</p>
+<p class="x ov" style="--b:276.5;left:193.8pt">$F_\mathrm{fr} = \mu(N\cos\alpha + F\sin\alpha + mg)$&ensp;그리고</p>
+<p class="x ov" style="--b:291.4;left:98.3pt">$ma = N\sin\alpha + F(1 - \cos\alpha) - \mu(N\cos\alpha + F\sin\alpha + mg).$</p>
+<p class="x" style="--b:310.0;left:53.3pt;width:343.5pt">가속도 <span class="nw">$a$가</span> 힘 <span class="nw">$F$에</span> 의존하지 않으려면 <span class="nw">$F$를</span> 포함하는 모든 항이 상쇄되어야 한다. 이는 다음 경우에 가능하다.</p>
+<div class="f" style="left:95pt;top:330pt"><span class="fig" data-srcpage="4" data-clip="95,330,355,356"></span></div>
+<p class="x ov" style="--b:370.3;left:40.5pt">2.</p>
+<p class="x" style="--b:370.3;left:53.3pt;width:343.5pt">이제 프리즘이 미끄러지지 않는다고(즉 <span class="nw">$a = 0$)</span> 하자. 그러면 <span class="nw">$N = Mg\cos\alpha$이고</span></p>
+<p class="x c" style="--b:389.3;left:53.3pt;width:343.5pt">$F_\mathrm{fr} = F(1 - \cos\alpha) + Mg\sin\alpha\cos\alpha \leqslant \mu(Mg\cos^2\alpha + F\sin\alpha + mg).$</p>
+<p class="x" style="--b:408.3;left:53.3pt;width:343.5pt">얻은 부등식의 항들을 다시 묶자.</p>
+<div class="f" style="left:93pt;top:414pt"><span class="fig" data-srcpage="4" data-clip="93,414,357,431"></span></div>
+<p class="x" style="--b:446.3;left:53.3pt;width:343.5pt">이 부등식은 <span class="nw">$F$의</span> 모든 값에서(특히 <span class="nw">$F = 0$일</span> 때에도) 성립해야 하므로, 우변의 식은 음이 아니어야 하고 좌변의 식은 반대로 양이 아니어야 한다. 따라서 다음이 나온다.</p>
+<div class="f" style="left:55pt;top:489pt"><span class="fig" data-srcpage="4" data-clip="55,489,395,514"></span></div>
+<p class="x ov" style="--b:504.5;left:146pt">그리고</p>
+<p class="x" style="--b:528.7;left:53.3pt;width:343.5pt">마지막 부등식이 더 강한 조건이므로, <span class="nw">$\mu \geqslant 8/19$이면</span> 프리즘은 <span class="nw">$F$의</span> 어떤 값에서도 정지해 있다.</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="5" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">위에서 얻은 값 <span class="nw">$\mu = 1/3$을</span> 이용하여, 프리즘이 탁자 위에서 미끄러지는 경우의 가속도 <span class="nw">$a$의</span> 크기를 구하자.</p>
+<div class="f" style="left:30pt;top:89pt"><span class="fig" data-srcpage="5" data-clip="30,89,392,135"></span></div>
+<p class="x" style="--b:153.7;left:48.3pt;width:348.5pt;font-weight:bold;margin-top:-1.1pt">두 번째 풀이 방법</p>
+<p class="x i" style="--b:171.3">프리즘에 작용하는 힘들을 그리자(그림&nbsp;1). 나무토막과 프리즘 사이의 상호 작용 힘을 <span class="nw">$N$,</span> 탁자가 프리즘에 작용하는 수직 항력을 <span class="nw">$N'$,</span> 마찰력을 <span class="nw">$F_\mathrm{fr}$라</span> 하자. 그러면 연직축에 대한 뉴턴 제2법칙의 사영으로부터 다음을 얻는다.</p>
+<div class="f" style="left:148pt;top:216pt"><span class="fig" data-srcpage="5" data-clip="148,216,278,232"></span></div>
+<p class="x" style="--b:250.1">편의를 위해 탁자에 대한 나무토막의 가속도를 두 성분, 즉 프리즘의 가속도 <span class="nw">$a$와</span> 프리즘 표면에 대한 나무토막의 가속도 <span class="nw">$a'$으로</span> 분해하자. <span class="nw">$a'$은</span> 프리즘의 왼쪽 옆면에 평행한 방향을 향한다(그림&nbsp;2). 나무토막의 상대 운동 방향에 수직한 축에 대해 나무토막의 뉴턴 제2법칙을 사영하여 쓰자.</p>
+<div class="f" style="left:58pt;top:310pt"><span class="fig" data-srcpage="5" data-clip="58,310,368,323"></span></div>
+<p class="x" style="--b:340.9">얻은 <span class="nw">$N$의</span> 식에는 힘 <span class="nw">$F$의</span> 크기가 명시적으로 들어 있지 않고, 조건에 따르면 프리즘의 가속도는 <span class="nw">$F$에</span> 의존하지 않는다. 따라서 <span class="nw">$N$도</span> 이 힘의 크기에 의존하지 않는다.</p>
+<div class="f" style="left:105pt;top:377pt"><span class="fig" data-srcpage="5" data-clip="105,377,320,486"></span></div>
+<p class="x c cap" style="--b:505.5">그림&nbsp;3</p>
+<p class="x" style="--b:532.5;margin-top:-1.7pt">프리즘이 미끄러지는 경우를 생각하자. 실이 도르래에 작용하는 합력 <span class="nw">$\vec F_\Sigma$는</span> 연직선과 각 <span class="nw">$\alpha/2$를</span> 이루는 방향을 향한다(그림&nbsp;3).</p>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="6" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0"><span class="nw">$N'$과</span> <span class="nw">$F_\mathrm{fr}$</span> 대신 받침면의 전체 반작용력 벡터를 도입하자.</p>
+<p class="x c" style="--b:86.9;margin-top:-1.2pt">$\vec Q = \vec N' + \vec F_\mathrm{fr}$&thinsp;≠&thinsp;$0.$</p>
+<p class="x" style="--b:108.3;margin-top:-1.4pt">힘 <span class="nw">$\vec F_\Sigma$에</span> 수직한 축 <span class="nw">$Ox'$에</span> 대해 프리즘의 뉴턴 제2법칙을 사영하면 다음을 얻는다.</p>
+<div class="f" style="left:101pt;top:133pt"><span class="fig" data-srcpage="6" data-clip="101,133,324,146"></span></div>
+<p class="x" style="--b:163.0;margin-top:-1.2pt">위 식에서 <span class="nw">$Q_x$를</span> 제외한 모든 항은 <span class="nw">$F$에</span> 의존하지 않으므로 <span class="nw">$Q_x = 0$이다.</span> 이는 벡터 <span class="nw">$\vec Q$가</span> 축 <span class="nw">$Ox'$에</span> 수직한 방향, 즉 연직선과 각 <span class="nw">$\alpha/2$를</span> 이루는 방향을 향할 때 가능하다. 그러면 마찰 계수는 다음과 같다.</p>
+<div class="f" style="left:147pt;top:203pt"><span class="fig" data-srcpage="6" data-clip="147,203,279,229"></span></div>
+<p class="x i" style="--b:245.3"><span class="nw">$N = Mg\cos\alpha - Ma\sin\alpha$를</span> 관계식 (<i>a</i>)에 대입하여 가속도를 구하자.</p>
+<div class="f" style="left:78pt;top:258pt"><span class="fig" data-srcpage="6" data-clip="78,258,348,270"></span></div>
+<p class="x" style="--b:288.1">따라서</p>
+<div class="f" style="left:144pt;top:289pt"><span class="fig" data-srcpage="6" data-clip="144,289,281,338"></span></div>
+<div class="f" style="left:279pt;top:339pt"><span class="fig" data-srcpage="6" data-clip="279,339,391,480"></span></div>
+<p class="x i" style="--b:353.7;width:231pt">마찰 때문에 프리즘이 움직이지 못하는 경우에는 프리즘에 작용하는 힘의 합이 0이다.</p>
+<div class="f" style="left:34pt;top:390pt"><span class="fig" data-srcpage="6" data-clip="34,390,253,404"></span></div>
+<p class="x" style="--b:420.3;width:231pt">가능한 값 가운데 하나인 <span class="nw">$F_\Sigma = 0$을</span> 생각하면 다음을 얻는다.</p>
+<div class="f" style="left:53pt;top:442pt"><span class="fig" data-srcpage="6" data-clip="53,442,235,468"></span></div>
+<div class="f" style="left:60pt;top:476pt"><span class="fig" data-srcpage="6" data-clip="60,476,227,502"></span></div>
+<p class="x c cap" style="--b:499.4;left:313pt;width:40pt">그림&nbsp;4</p>
+<p class="x" style="--b:514.6;margin-top:-1.6pt">마지막 부등식은 <span class="nw">$F_\Sigma$가</span> 커질수록 연직선과 벡터 <span class="nw">$\vec Q$</span> 사이의 각이 작아진다는 것을 보여 준다. 이는 <span class="nw">$\beta$가</span> 연직선으로부터 <span class="nw">$\vec Q$가</span> 기울어질 수 있는 한계 각이라는 것, 즉 <span class="nw">$\mu \geqslant 8/19$일</span> 때 <span class="nw">$a = 0$이라는</span> 것을 뜻한다.</p>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="7" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x h" style="--b:64.0">문제 10-T3. 떨어지는 피스톤</p>
+<p class="x i" style="--b:87.4">처음에 피스톤은 평형 상태에 있으므로 <span class="nw">$P_0S = mg$,</span> 또는 <span class="nw">$P_0V_0 = mgh_0$이다.</span> 여기서 <span class="nw">$P_0$과</span> <span class="nw">$V_0$은</span> 각각 기체의 처음 압력과 처음 부피이고, <span class="nw">$S$는</span> 용기 안쪽 단면의 넓이이다.</p>
+<p class="x i" style="--b:128.9">계가 움직이는 동안 추를 얹은 피스톤의 역학적 에너지는 기체에만 전달되고(피스톤은 용기 안에서 거의 마찰 없이 움직이며 바깥은 진공이다), 기체는 주위로 열을 전달하지 않는다(조건). 이 경우 열역학 제1법칙은 다음과 같은 꼴이다.</p>
+<p class="x c" style="--b:186.7">$A_\mathrm{ext} = \Delta U,$</p>
+<p class="x" style="--b:208.6">여기서 <span class="nw">$\Delta U$는</span> 기체의 내부 에너지 변화, <span class="nw">$A_\mathrm{ext}$는</span> 외력이 기체에 한 일로, 추를 얹은 피스톤의 전체 역학적 에너지의 감소량과 같다: <span class="nw">$A_\mathrm{ext} = -\Delta E$.</span> 결과적으로 다음을 얻는다.</p>
+<div class="f" style="left:179pt;top:246pt"><span class="fig" data-srcpage="7" data-clip="179,246,246,258"></span></div>
+<p class="x i" style="--b:282.0">조건에 따르면 피스톤이 처음 위치에서 처음 멈출 때까지 움직이는 동안 기체 속의 과정은 평형 과정으로 볼 수 있다. 따라서 기체에서는 가역 단열 과정이 일어난다고 보자.</p>
+<p class="x i" style="--b:323.6">이 과정에 대해 푸아송 방정식 <span class="nw">$PV^\gamma = \mathrm{const}$가</span> 성립한다. 여기서 단원자 이상 기체에 대해 <span class="nw">$\gamma = 5/3$이고,</span> <span class="nw">$P$와</span> <span class="nw">$V$는</span> 임의의 순간의 기체의 압력과 부피이다. 우리 경우에는 <span class="nw">$PV^{5/3} = P_0{V_0}^{5/3}$,</span> 또는 다음과 같다.</p>
+<div class="f" style="left:124pt;top:356pt"><span class="fig" data-srcpage="7" data-clip="124,356,301,396"></span></div>
+<p class="x" style="--b:409.2">여기서 <span class="nw">$h$는</span> 임의의 순간에 피스톤에서 용기 바닥까지의 거리이다.</p>
+<p class="x i" style="--b:426.9">피스톤이 용기 바닥에서 거리 <span class="nw">$h_\mathrm{min}$인</span> 가장 낮은 점에 있는 순간을 생각하자. 이 순간 추를 얹은 피스톤의 속도는 0이다. 즉, <span class="nw">$\Delta E = (M + m)g(h_\mathrm{min} - h_0)$이다.</span></p>
+<p class="x i" style="--b:468.4">기체의 내부 에너지 변화는 다음과 같다.</p>
+<div class="f" style="left:32pt;top:476pt"><span class="fig" data-srcpage="7" data-clip="32,476,393,510"></span></div>
+<p class="x" style="--b:529.1">여기서 <span class="nw">$P_1$과</span> <span class="nw">$V_1$은</span> 각각 지금 생각하는 순간의 기체의 압력과 부피이다.</p>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="8" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">이들을 합치면 다음을 얻는다.</p>
+<div class="f" style="left:83pt;top:71pt"><span class="fig" data-srcpage="8" data-clip="83,71,343,105"></span></div>
+<p class="x i" style="--b:136.1"><span class="nw">$\dfrac{h_0}{h_\mathrm{min}} = 2$를</span> 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:141pt;top:151pt"><span class="fig" data-srcpage="8" data-clip="141,151,284,167"></span></div>
+<p class="x c" style="--b:185.6">$M \approx 0.762m \approx 76\,\mathrm{kg}.$</p>
+<p class="x i" style="--b:208.9">추를 얹은 피스톤을 하나의 물체로 생각하자. 추를 얹은 피스톤의 가속도의 크기는 속도가 0이고 외력의 합이 최대일 때 최대가 된다. 이 조건을 만족하는 피스톤의 위치는 두 가지이다: 처음 위치(중력이 기체가 피스톤에 작용하는 압력에 의한 힘보다 크다)와 가장 낮은 위치(기체가 피스톤에 작용하는 압력에 의한 힘이 중력보다 크다).</p>
+<p class="x i" style="--b:286.3">처음 순간 추를 얹은 피스톤의 가속도의 크기는 다음과 같다.</p>
+<div class="f" style="left:73pt;top:297pt"><span class="fig" data-srcpage="8" data-clip="73,297,352,323"></span></div>
+<p class="x i" style="--b:343.5">가장 낮은 위치에서 추를 얹은 피스톤의 가속도의 크기는 다음과 같다.</p>
+<div class="f" style="left:71pt;top:352pt"><span class="fig" data-srcpage="8" data-clip="71,352,355,417"></span></div>
+<p class="x i" style="--b:435.7">이 가운데 최댓값을 택한다.</p>
+<p class="x c d" style="--b:469.9;--a:18pt">$a_\mathrm{max} = g\left(\dfrac{m\,(h_0/h_\mathrm{min})^{5/3}}{M + m} - 1\right) \approx 0.80g = 8\,\mathrm{m/s^2}.$</p>
+<p class="x i" style="--b:499.2">피스톤은 운동의 첫 구간(가장 높은 점에서 가장 낮은 점까지)에서 최대 속력에 이른다. 속력이 최대일 때 가속도는 0이다. 즉, 중력 <span class="nw">$(M + m)g$는</span> 기체의 압력에 의한 힘 <span class="nw">$P_2S$와</span> 같다.</p>
+<div class="f" style="left:98pt;top:532pt"><span class="fig" data-srcpage="8" data-clip="98,532,327,548"></span></div>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="9" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">여기서 <span class="nw">$h_2$는</span> 이 순간 피스톤에서 용기 바닥까지의 거리이다. 얻은 방정식으로부터 <span class="nw">$h_2/h_0 = (M/m + 1)^{-3/5} \approx 0.712$를</span> 구한다.</p>
+<p class="x i" style="--b:93.6">기체에 대한 에너지 보존 법칙(열역학 제1법칙)은 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:67pt;top:110pt"><span class="fig" data-srcpage="9" data-clip="67,110,359,137"></span></div>
+<p class="x" style="--b:147.3">또는</p>
+<div class="f" style="left:56pt;top:153pt"><span class="fig" data-srcpage="9" data-clip="56,153,371,182"></span></div>
+<p class="x" style="--b:197.3">여기서 <span class="nw">$P_2$와</span> <span class="nw">$V_2$는</span> 각각 피스톤이 평형 위치를 지나는 순간의 기체의 압력과 부피이다. 따라서 다음을 얻는다.</p>
+<div class="f" style="left:104pt;top:217pt"><span class="fig" data-srcpage="9" data-clip="104,217,323,246"></span></div>
+<p class="x" style="--b:261.7"><span class="nw">$h_2/h_0$의</span> 값을 대입하면 다음과 같다.</p>
+<div class="f" style="left:184pt;top:263pt"><span class="fig" data-srcpage="9" data-clip="184,263,242,291"></span></div>
+<p class="x" style="--b:297.4">따라서 다음을 얻는다.</p>
+<p class="x c" style="--b:327.0">$v_\mathrm{max} \approx \sqrt{0.14gh_0} \approx 1.2\,\mathrm{m/s}.$</p>
+<p class="x i" style="--b:347.9">긴 시간 동안에는 기체에서 일어나는 과정이 비가역적이 된다. 즉, 역학적 에너지가 비가역적으로 내부 에너지로 바뀐다.</p>
+<p class="x i" style="--b:389.5">가역 과정에 대해 유도한 단열 방정식 <span class="nw">$PV^\gamma = \mathrm{const}$는</span> 이 경우에 적용할 수 없다.</p>
+<p class="x i" style="--b:419.1">추를 얹은 피스톤의 평형 조건을 쓰자: <span class="nw">$PS = (M + m)g$.</span> 이 경우 에너지 보존 법칙(열역학 제1법칙)은 다음과 같은 꼴이다.</p>
+<div class="f" style="left:121pt;top:438pt"><span class="fig" data-srcpage="9" data-clip="121,438,305,463"></span></div>
+<p class="x" style="--b:473.4">그러면 다음을 얻는다.</p>
+<div class="f" style="left:103pt;top:474pt"><span class="fig" data-srcpage="9" data-clip="103,474,323,500"></span></div>
+<p class="x" style="--b:507.5">새 높이를 구하면 다음과 같다.</p>
+<p class="x c d" style="--b:529.6;--a:14pt">$h = \dfrac{5m + 2M}{5(M + m)}h_0 \approx 0.74h_0 = 0.74\,\mathrm{m}.$</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="10" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x h" style="--b:64.0">문제 10-T4. 정사각형 vs 원</p>
+<p class="x i" style="--b:85.8">아래에서 다루는 <b>모든</b> 도형의 면전하 밀도는 일정하고 서로 같으며 <span class="nw">$\sigma$($\sigma > 0$)라</span> 하자.</p>
+<p class="x i" style="--b:115.3">점 <span class="nw">$O$에서</span> 거리 <span class="nw">$r$만큼</span> 떨어져 있는, 넓이가 <span class="nw">$\Delta S_1$이고</span> 전하가 <span class="nw">$\sigma\Delta S_1$인</span> 무한히 작은 대전된 조각과, 이와 기하학적으로 닮았고 같은 면전하 밀도 <span class="nw">$\sigma$로</span> 대전되었지만 거리 <span class="nw">$\lambda r$에</span> 있는 둘째 조각을 생각하자. 여기서 <span class="nw">$\lambda$는</span> 닮음비이다. 다음이 성립하므로</p>
+<div class="f" style="left:180pt;top:161pt"><span class="fig" data-srcpage="10" data-clip="180,161,246,176"></span></div>
+<p class="x" style="--b:191.8">이 조각들이 만드는 전기장 세기는 서로 같다.</p>
+<div class="f" style="left:111pt;top:201pt"><span class="fig" data-srcpage="10" data-clip="111,201,315,229"></span></div>
+<p class="x" style="--b:243.4">이제 서로 닮음비 <span class="nw">$\lambda$로</span> 기하학적으로 닮았고 그림&nbsp;1과 같이 놓인, 크기가 유한한 두 대전된 판을 생각하자. 여기서 <span class="nw">$O$는</span> 이 판들의 닮음의 중심이다<span class="nw">($\overrightarrow{OC} = \lambda\cdot\overrightarrow{OA}$,</span> <span class="nw">$\overrightarrow{OD} = \lambda\cdot\overrightarrow{OC}$</span> 등). 두 판을 무한히 작은 조각들로 나누되, 둘째 판의 각 조각이 점 <span class="nw">$O$를</span> 닮음의 중심으로 하여 첫째 판의 대응하는 조각과 닮도록 나누자. 위에서 보였듯이 이런 쌍을 이루는 무한히 작은 조각들이 점 <span class="nw">$O$에</span> 만드는 전기장 세기는 서로 같으므로, 첫째 판 전체와 둘째 판 전체가 점 <span class="nw">$O$에</span> 만드는 전기장 세기도 (크기와 방향 모두) 같다.</p>
+<div class="f" style="left:134pt;top:365pt"><span class="fig" data-srcpage="10" data-clip="134,365,295,454"></span></div>
+<p class="x c cap" style="--b:471.4">그림&nbsp;1</p>
+<p class="x i" style="--b:495.4">특히 이는 문제의 그림&nbsp;2에 그려진 도형이 점 <span class="nw">$O'$에</span> 만드는 전기장 세기도 <span class="nw">$E_0$과</span> 같다는 것을 뜻한다.</p>
+<div class="f" style="left:187pt;top:526pt"><span class="fig" data-srcpage="10" data-clip="187,526,238,542"></span></div>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="11" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0;margin-top:-1.45pt">도형의 대칭성으로부터 벡터 <span class="nw">$\vec E_A$는</span> 이 대칭축을 따라 오른쪽 위를 향한다는 것을 알 수 있다.</p>
+<p class="x i" style="--b:93.6">문항 1의 결과를 이용하면 그림&nbsp;2의 세 도형(초록색, 파란색, 회색) 각각이 점 <span class="nw">$A$에</span> 만드는 전기장 세기는 <span class="nw">$E_0$이다.</span> 따라서 문제의 그림&nbsp;3에 그려진 대전된 도형은 점 <span class="nw">$A$에</span> 세기가 <span class="nw">$3E_0$인</span> 전기장을 만든다.</p>
+<div class="f" style="left:143pt;top:144pt"><span class="fig" data-srcpage="11" data-clip="143,144,283,275"></span></div>
+<p class="x c cap" style="--b:293.2">그림&nbsp;2</p>
+<p class="x" style="--b:317.2;margin-top:-1.2pt">벡터 <span class="nw">$\vec E_A$는</span> 도형의 대칭축을 따라 오른쪽 위를 향하며, <span class="nw">$E_A = 3E_0$이다.</span></p>
+<p class="x i" style="--b:334.9;margin-top:-1.3pt">도형의 대칭성으로부터 벡터 <span class="nw">$\vec E_B$는</span> 이 대칭축을 따라 오른쪽 위를 향한다는 것을 알 수 있다.</p>
+<div class="f" style="left:252pt;top:358pt"><span class="fig" data-srcpage="11" data-clip="252,358,398,495"></span></div>
+<p class="x i" style="--b:364.5;width:211.2pt">문제의 셋째 질문에 답하기 위해 그림&nbsp;3에 그려진 대전된 판(어떤 색으로든 칠해진 영역 전체)을 생각하자. 초록색 영역과 파란색 영역이 점 <span class="nw">$B$에</span> 만드는 전기장 세기를 각각 <span class="nw">$E_\mathrm{gr}$와</span> <span class="nw">$E_\mathrm{bl}$라</span> 하자. 두 영역이 닮았으므로 <span class="nw">$E_\mathrm{gr} = E_\mathrm{bl}$이다.</span></p>
+<p class="x i" style="--b:453.8;width:211.2pt">판 전체가 점 <span class="nw">$B$에</span> 만드는 전기장 세기 <span class="nw">$E$는</span> 한편으로는 <span class="nw">$E = E_0 + E_\mathrm{bl}$이고,</span> 다른 한편으로는 <span class="nw">$E = E_B + E_\mathrm{gr}$이다.</span> 여기서 <span class="nw">$E_B$는</span> 구하려는 값으로, 문제의 그림&nbsp;4에 그려진 도형이 만드는 전기장 세기이다. 두 관계식의 우변을 같게 놓으면 다음을 얻는다.</p>
+<p class="x c cap" style="--b:512.9;left:303.2pt;width:40pt">그림&nbsp;3</p>
+<div class="f" style="left:112pt;top:536pt"><span class="fig" data-srcpage="11" data-clip="112,536,156,549"></span></div>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="12" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0;margin-top:-1.45pt">벡터 <span class="nw">$\vec E_B$는</span> 도형의 대칭축을 따라 오른쪽 위를 향하며, <span class="nw">$E_B = E_0$이다.</span></p>
+<p class="x i" style="--b:81.7">앞 문항의 방법을 이용하여 그림&nbsp;4에 그려진 대전된 판(이번에도 어떤 색으로든 칠해진 영역 전체)을 생각하자. 초록색 영역과 파란색 영역은 닮았기 때문에 점 <span class="nw">$C$에</span> 크기와 방향이 같은 전기장을 만든다. 따라서 문제에 주어진 사다리꼴이 점 <span class="nw">$C$에</span> 만드는 전기장 세기는 중심각이 <span class="nw">$30^\circ$인</span> 고리 모양 부채꼴이 같은 점에 만드는 전기장 세기와 같다.</p>
+<div class="f" style="left:105pt;top:164pt"><span class="fig" data-srcpage="12" data-clip="105,164,320,281"></span></div>
+<p class="x c cap" style="--b:299.0">그림&nbsp;4</p>
+<p class="x i" style="--b:326.2">따라서 고리 모양 부채꼴의 대칭성을 이용하면, 사다리꼴이 점 <span class="nw">$C$에</span> 만드는 전기장 세기 벡터 <span class="nw">$\vec E_C$는</span> 각 <span class="nw">$\angle C$의</span> 외각 이등분선을 따라 향한다는 결론을 얻는다(그림&nbsp;5 참고).</p>
+<div class="f" style="left:86pt;top:364pt"><span class="fig" data-srcpage="12" data-clip="86,364,338,490"></span></div>
+<p class="x c cap" style="--b:508.7">그림&nbsp;5</p>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="13" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">안쪽 반지름과 바깥쪽 반지름이 두 배 차이 나는 고리 모양 부채꼴은 (닮음을 제외하면) 문제의 그림&nbsp;4에 그려진 도형의 3분의 1이다. 앞 문항의 결과를 이용하면 다음을 얻는다(그림&nbsp;6 참고).</p>
+<div class="f" style="left:79pt;top:106pt"><span class="fig" data-srcpage="13" data-clip="79,106,346,135"></span></div>
+<div class="f" style="left:120pt;top:150pt"><span class="fig" data-srcpage="13" data-clip="120,150,301,313"></span></div>
+<p class="x c cap" style="--b:329.6">그림&nbsp;6</p>
+<p class="x i" style="--b:354.4;margin-top:-1.3pt">벡터 <span class="nw">$\vec E_C$는</span> 각 <span class="nw">$\angle C$의</span> 외각 이등분선을 따라 향하며,</p>
+<div class="f" style="left:180pt;top:362pt"><span class="fig" data-srcpage="13" data-clip="180,362,245,389"></span></div>
+<p class="x h" style="--b:406.5">문제 10-T5. 바이 코다모!</p>
+<p class="x i" style="--b:425.5">회로의 대칭성을 이용하여 각 종류의 전원의 이웃한 단자들의 퍼텐셜이 같음을 증명하자. 이를 위해 그림&nbsp;1과 같이 마디를 <span class="nw">$A_1$,</span> <span class="nw">$B_1$,</span> <span class="nw">$A_2$,</span> <span class="nw">$B_2$,</span> <span class="nw">$A_3$,</span> <span class="nw">$B_3$</span> 등으로 나타내자.</p>
+<p class="x i" style="--b:467.1">중첩의 방법을 이용하자. 먼저 나머지 모든 전원의 기전력을 ‘끈’ 상태에서 기전력이 <span class="nw">$\mathcal E$인</span> 전원들로만 이루어진 계를 생각하자(그림&nbsp;2 참고).</p>
+<p class="x i" style="--b:508.6">회로를 <span class="nw">$A_3 - A_1$</span> 방향을 따라 한 칸 옮기면 회로는 ‘자기 자신’으로 옮겨지므로 $\varphi_{A_3} - \varphi_{B_3} = \varphi_{A_2} - \varphi_{B_2} = \varphi_{A_1} - \varphi_{B_1} = \Delta\varphi$이고, 또한 $\varphi_{A_4} - \varphi_{B_3} = \varphi_{A_3} - \varphi_{B_2} = \varphi_{A_2} - \varphi_{B_1} = \Delta\varphi'$이다. 여기서 <span class="nw">$\varphi_M$은</span> 해당하는 마디 <span class="nw">$M$의</span> 퍼텐셜이다.</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="14" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:40pt;top:54pt"><span class="fig" data-srcpage="14" data-clip="40,54,385,282"></span></div>
+<p class="x c cap" style="--b:310.0">그림&nbsp;1</p>
+<p class="x i" style="--b:335.3">마디 <span class="nw">$A_3$와</span> <span class="nw">$B_2$,</span> 그리고 마디 <span class="nw">$A_2$와</span> <span class="nw">$B_3$가</span> 서로 자리를 바꾸도록 회로를 뒤집자(그림&nbsp;3 참고).</p>
+<p class="x i" style="--b:364.9">회로가 ‘자기 자신’으로 옮겨졌으므로 다음이 성립한다.</p>
+<div class="f" style="left:112pt;top:378pt"><span class="fig" data-srcpage="14" data-clip="112,378,313,414"></span></div>
+<p class="x" style="--b:426.6">따라서 <span class="nw">$\Delta\varphi = -\Delta\varphi$이고</span> <span class="nw">$\Delta\varphi' = -\Delta\varphi'$,</span> 또는 <span class="nw">$\Delta\varphi = 0$이고</span> <span class="nw">$\Delta\varphi' = 0$이다.</span> 이를 고려하면 기전력이 <span class="nw">$\mathcal E$인</span> 전원들의 계가 만드는 퍼텐셜은 이 회로의 모든 마디에서 같다.</p>
+</div>
+
+<!-- page 15 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="15" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:40pt;top:54pt"><span class="fig" data-srcpage="15" data-clip="40,54,385,282"></span></div>
+<p class="x c cap" style="--b:308.6">그림&nbsp;2</p>
+<p class="x i" style="--b:333.9">마찬가지로 나머지 모든 전원의 기전력을 ‘끈’ 상태에서 기전력이 <span class="nw">$2\mathcal E$인</span> 전원들로만 이루어진 계와 기전력이 <span class="nw">$3\mathcal E$인</span> 전원들로만 이루어진 계를 따로 생각할 수 있다. 따라서 생각한 각 계에서 회로의 임의의 두 마디 사이의 퍼텐셜 차는 0이고, 중첩의 방법에 따라 회로의 임의의 두 마디 사이의 전체 퍼텐셜 차도 0이다. 그러므로 각 종류의 전원의 (+)극과 (−)극 사이의 퍼텐셜 차는 다음과 같다.</p>
+<div class="f" style="left:182pt;top:426pt"><span class="fig" data-srcpage="15" data-clip="182,426,243,440"></span></div>
+<p class="x i" style="--b:458.8">그 사이의 회로 구간에 기전력 <span class="nw">$\mathcal E$가</span> 들어 있는 임의의 이웃한 두 마디에 대해 옴의 법칙을 쓰자.</p>
+<div class="f" style="left:165pt;top:484pt"><span class="fig" data-srcpage="15" data-clip="165,484,260,497"></span></div>
+</div>
+
+<!-- page 16 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="16" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<div class="f" style="left:40pt;top:54pt"><span class="fig" data-srcpage="16" data-clip="40,54,385,282"></span></div>
+<p class="x c cap" style="--b:308.6">그림&nbsp;3</p>
+<p class="x i" style="--b:333.3">여기서 <span class="nw">$I_1$의</span> 양의 값은 <span class="nw">$\mathcal E$가</span> 작용하는 방향으로 흐르는 전류에 해당한다. <span class="nw">$\varphi_+ - \varphi_- = 0$이므로</span> 이런 구간마다 전류는 <span class="nw">$I_1 = \mathcal E/\nabla$이다.</span> 기전력이 <span class="nw">$2\mathcal E$와</span> <span class="nw">$3\mathcal E$인</span> 구간에 대해서도 마찬가지로 다음이 성립한다.</p>
+<div class="f" style="left:162pt;top:370pt"><span class="fig" data-srcpage="16" data-clip="162,370,263,398"></span></div>
+<p class="x" style="--b:414.8">따라서</p>
+<div class="f" style="left:190pt;top:445pt"><span class="fig" data-srcpage="16" data-clip="190,445,398,489"></span></div>
+<p class="x i" style="--b:511.8">임의의 종류의 전원의 이웃한(가장 가까운) 두 단자에 연결된 무한 회로를 기전력이 <span class="nw">$\mathcal E_\mathrm{eq}$이고</span> 내부 저항이 <span class="nw">$r_\mathrm{eq}$인</span> 등가 전원으로 생각하자(그림&nbsp;4).</p>
+</div>
+
+<!-- page 17 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="17" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">임의의 이웃한 두 단자 사이의 퍼텐셜 차가 0이므로 등가 전원의 기전력은 <span class="nw">$\mathcal E_\mathrm{eq} = 0$이다.</span></p>
+<div class="f" style="left:139pt;top:88pt"><span class="fig" data-srcpage="17" data-clip="139,88,287,120"></span></div>
+<p class="x ov" style="--b:100.2;left:179.9pt;--fs:6.3pt;--l:7pt">eq</p>
+<p class="x ov" style="--b:104.4;left:236.2pt;--fs:6.3pt;--l:7pt">eq</p>
+<p class="x c cap" style="--b:146.1">그림&nbsp;4</p>
+<p class="x i" style="--b:171.4">등가 전원의 내부 저항 <span class="nw">$r_\mathrm{eq}$는</span> 기전력을 ‘끈’ 무한 격자에서 이웃한(가장 가까운) 두 마디 사이의 저항으로 정하자. 이를 위해 다시 중첩의 방법을 이용하자. 먼저 전원의 내부 저항들로 이루어진 무한 격자에서 한 마디로 세기가 <span class="nw">$I_0$인</span> 전류가 흘러 들어가 무한히 먼 곳까지 퍼져 나가는 경우를 생각하자. 이 마디에 가장 가까운 가지들에 흐르는 전류는 (대칭성 때문에) 모두 같고 <span class="nw">$I_+ = I_0/6$이다.</span> 다음으로 같은 무한 격자에서 이웃한 마디로부터 세기가 <span class="nw">$I_0$인</span> 전류가 흘러 나가는 경우를 생각하자. 마찬가지로 이 회로에서 그 마디에 가장 가까운 가지들에 흐르는 전류는 모두 같고 <span class="nw">$I_- = I_0/6$이다.</span></p>
+<p class="x i" style="--b:284.7">이제 이 두 경우의 중첩을 생각하자. 그러면 저항 <span class="nw">$r$에</span> 걸리는 전압은 <span class="nw">$(I_+ + I_-)r$이므로</span> 다음을 얻는다.</p>
+<p class="x c d" style="--b:324.3;--a:14pt">$r_\mathrm{eq} = \dfrac{(I_+ + I_-)r}{I_0} = \dfrac{r}{3}.$</p>
+<p class="x i" style="--b:356.7">따라서 임의의 이웃한(가장 가까운) 두 마디를 이용하면 회로는 저항이 <span class="nw">$r_\mathrm{eq} = r/3$인</span> 저항기처럼 행동한다. 그러므로 저항계의 측정값은 연결 극성에 의존하지 않는다. 이를 고려하면 저항계의 측정값에 대한 답은 다음과 같다.</p>
+<div class="f" style="left:192pt;top:423pt"><span class="fig" data-srcpage="17" data-clip="192,423,398,467"></span></div>
+<p class="x i" style="--b:489.6">이 결과는 저항계의 연결 극성에 의존하지 않는다.</p>
+<p class="x i" style="--b:507.2">앞 문항의 등가 전원은 기전력이 <span class="nw">$2\mathcal E$이고</span> 저항이 <span class="nw">$r$인</span> 전원(조건에 따라 다른 전원으로 바뀌는 전원)과, 회로의 나머지 부분과 등가인 기전력 <span class="nw">$\mathcal E^*$,</span> 저항 <span class="nw">$r^*$인</span> 전원의 병렬연결로 나타낼 수 있다(그림&nbsp;5 참고).</p>
+</div>
+
+<!-- page 18 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="18" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">등가 전원의 기전력이 <span class="nw">$\mathcal E_\mathrm{eq} = 0$이고</span> 저항이 <span class="nw">$r_\mathrm{eq} = r/3$임을</span> 고려하여 <span class="nw">$\mathcal E^*$와</span> <span class="nw">$r^*$를</span> 구하자.</p>
+<div class="f" style="left:139pt;top:88pt"><span class="fig" data-srcpage="18" data-clip="139,88,287,153"></span></div>
+<p class="x c cap" style="--b:179.5">그림&nbsp;5</p>
+<p class="x i" style="--b:203.1">저항들은 다음 관계식으로 연결된다.</p>
+<p class="x c d" style="--b:226.1;--a:13.4pt">$\dfrac{1}{r_\mathrm{eq}} = \dfrac{1}{r} + \dfrac{1}{r^*},$</p>
+<p class="x" style="--b:249.9">따라서 <span class="nw">$r^* = r/2$이다.</span> 앞에서 생각한 전원들의 병렬연결과 등가 전원의 단락 전류를 같게 놓으면 다음 관계식을 얻는다.</p>
+<p class="x c d" style="--b:288.4;--a:13.4pt">$\dfrac{\mathcal E^*}{r^*} - \dfrac{2\mathcal E}{r} = \dfrac{\mathcal E_\mathrm{eq}}{r_\mathrm{eq}},$</p>
+<p class="x" style="--b:308.8">따라서 <span class="nw">$\mathcal E^* = \mathcal E$를</span> 얻는다.</p>
+<p class="x i" style="--b:326.4">기전력이 <span class="nw">$2\mathcal E$이고</span> 저항이 <span class="nw">$r$인</span> 전원은 기전력이 <span class="nw">$\mathcal E$이고</span> 저항이 <span class="nw">$r/2$인</span> 전원으로 서로 다른 두 가지 방법으로 바꿀 수 있다(그림&nbsp;6과 같이 연결 극성을 다르게 하여).</p>
+<div class="f" style="left:54pt;top:363pt"><span class="fig" data-srcpage="18" data-clip="54,363,372,452"></span></div>
+<p class="x ov cap" style="--b:448.8;left:100pt">첫 번째 방법</p>
+<p class="x ov cap" style="--b:448.8;left:270pt">두 번째 방법</p>
+<p class="x c cap" style="--b:481.2">그림&nbsp;6</p>
+<p class="x i" style="--b:504.7">첫 번째 방법으로 연결하면 전체 회로에 대한 옴의 법칙에 따라 다음을 얻는다.</p>
+<div class="f" style="left:170pt;top:512pt"><span class="fig" data-srcpage="18" data-clip="170,512,255,538"></span></div>
+</div>
+
+<!-- page 19 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="19" data-clip="28.3,40.9,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">두 번째 방법으로 연결하면 전체 회로에 대한 옴의 법칙에 따라 다음을 얻는다.</p>
+<div class="f" style="left:166pt;top:71pt"><span class="fig" data-srcpage="19" data-clip="166,71,260,96"></span></div>
+<p class="x" style="--b:109.5">결국 연결 방법에 따라 다음을 얻는다.</p>
+<p class="x c" style="--b:139.0">$I = 0$&emsp;또는&emsp;$I = 2\mathcal E/r.$</p>
+</div>
+
+</body></html>
