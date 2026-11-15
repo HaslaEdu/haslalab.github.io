@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* IPhO 2002 Theory Problem 1, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:10.5pt;line-height:19pt}
+.a{position:absolute}
+.flow{position:absolute;left:111pt;width:393pt;top:66pt}
+p{margin:0 0 8pt;text-align:justify;text-indent:0}
+h1{font-size:12pt;font-weight:bold;text-align:center;margin:0 0 16pt}
+h3{font-size:10.5pt;font-weight:bold;margin:8pt 0 4pt}
+p.n{padding-left:36pt;text-indent:-18pt}
+.eq{text-align:center;margin:4pt 0;position:relative}
+.eq .no{position:absolute;right:0}
+.figc{text-align:center;margin:6pt 0;line-height:0}
+.rel{position:relative;display:inline-block}
+.cap{text-align:center;margin:4pt 30pt 10pt}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:9.5pt;line-height:13pt;text-align:center}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:85pt;top:30pt"><span class="fig" data-srcpage="1" data-clip="85,30,160,52"></span></div>
+<div class="a" style="left:295pt;top:740pt"><span class="fig" data-srcpage="1" data-clip="295,740,315,760"></span></div>
+<div class="flow" style="left:90pt;width:435pt;top:76pt;line-height:16.5pt">
+<h1 style="font-size:16pt;margin-bottom:10pt">I. 지표 투과 레이더</h1>
+<p>지표 투과 레이더(GPR)는 땅속으로 전자기파를 보내고 물체에서 반사된 파동을 받아서, 지표 가까이 땅속에 있는 물체를 탐지하고 그 위치를 알아내는 데 쓰인다. 안테나와 검출기는 지면 바로 위의 같은 지점에 있다.</p>
+<p>$z$ 방향으로 진행하는 각진동수 $\omega$인 선편광 전자기 평면파의 전기장은 다음과 같이 나타낸다.</p>
+<div class="eq">$E=E_0e^{-\alpha z}\cos(\omega t-\beta z),$<span class="no">(1)</span></div>
+<p>여기서 $E_0$는 상수이고, $\alpha$는 감쇠 계수, $\beta$는 파수이며 각각 다음과 같다.</p>
+<div class="eq">$\alpha=\omega\left\{\dfrac{\mu\varepsilon}{2}\left[\left(1+\dfrac{\sigma^2}{\varepsilon^2\omega^2}\right)^{1/2}-1\right]\right\}^{1/2},\quad\beta=\omega\left\{\dfrac{\mu\varepsilon}{2}\left[\left(1+\dfrac{\sigma^2}{\varepsilon^2\omega^2}\right)^{1/2}+1\right]\right\}^{1/2}$<span class="no">(2)</span></div>
+<p>$\mu$, $\varepsilon$, $\sigma$는 각각 투자율, 유전율, 전기 전도도를 나타낸다.</p>
+<p>물체에 도달하는 레이더 신호의 진폭이 처음 값의 $1/e$ ($\approx37\%$) 아래로 떨어지면 신호를 검출할 수 없게 된다. 탐지 범위와 분해능을 조절할 수 있도록 보통 진동수를 바꿀 수 있는(10 MHz – 1000 MHz) 전자기파를 쓴다.</p>
+<p>GPR의 성능은 분해능에 따라 달라진다. 분해능은 검출할 수 있는 이웃한 두 반사체 사이의 최소 간격으로 주어진다. 이 최소 간격에서 두 반사파는 검출기에서 최소 180°의 위상차를 가져야 한다.</p>
+<p style="margin:12pt 0 2pt"><b>문제:</b></p>
+<p>(주어진 값: $\mu_0=4\pi\times10^{-7}$ H/m, $\varepsilon_0=8.85\times10^{-12}$ F/m)</p>
+<p class="n" style="padding-left:32pt;text-indent:-18pt">1. 땅이 자성을 띠지 않고($\mu=\mu_0$) 조건 $\left(\dfrac{\sigma}{\omega\varepsilon}\right)^2\ll1$을 만족한다고 가정한다. 식 (1)과 (2)를 이용하여 전파 속력 $v$를 $\mu$와 $\varepsilon$으로 나타내는 식을 유도하라. [1.0점]</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:85pt;top:30pt"><span class="fig" data-srcpage="2" data-clip="85,30,160,52"></span></div>
+<div class="a" style="left:295pt;top:740pt"><span class="fig" data-srcpage="2" data-clip="295,740,315,760"></span></div>
+<div class="flow" style="left:90pt;width:435pt;top:70pt;line-height:16.5pt">
+<p class="n" style="padding-left:32pt;text-indent:-18pt">2. 전도도가 1.0 mS/m이고 유전율이 $9\varepsilon_0$이며 조건 $\left(\dfrac{\sigma}{\omega\varepsilon}\right)^2\ll1$을 만족하는 땅속에서 물체를 탐지할 수 있는 최대 깊이를 구하라. (S $=$ ohm<sup>−1</sup>; $\mu=\mu_0$를 사용하라.) [2.0점]</p>
+<p class="n" style="padding-left:32pt;text-indent:-18pt">3. 땅속에 수평으로 묻힌 두 평행한 도체 막대를 생각하자. 막대들은 4 m 깊이에 있다. 땅의 전도도는 1.0 mS/m, 유전율은 $9\varepsilon_0$로 알려져 있다. GPR 측정을 막대 하나의 대략 바로 위에서 한다고 하자. 점 검출기를 쓴다고 가정한다. 50 cm의 수평 분해능을 얻는 데 필요한 최소 진동수를 구하라. [3.5점]</p>
+<p class="n" style="padding-left:32pt;text-indent:-18pt">4. 같은 땅속에 묻힌 막대의 깊이 $d$를 알아내기 위해, 막대에 수직인 직선을 따라 측정을 한다. 결과는 다음 그림과 같다.</p>
+<div class="figc" style="margin-top:4pt"><span class="rel"><span class="fig" data-srcpage="2" data-clip="158,274,422,434"></span>
+<span class="ov" style="left:76pt;top:21pt;width:76pt;height:14pt">검출기 위치 $x$</span></span></div>
+<p style="text-align:center;margin:0">검출기 위치 $x$에 대한 이동 시간 $t$의 그래프, $t_{\min}=100$ ns.</p>
+<p>$t$를 $x$의 함수로 유도하고 $d$를 구하라. [3.5점]</p>
+</div>
+</div>
+</body></html>
