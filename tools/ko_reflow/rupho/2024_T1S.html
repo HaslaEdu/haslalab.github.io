@@ -1,0 +1,334 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2024 (LVIII = 제58회; no numeral printed), 9학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: 16 pages, LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.528x595.276pt
+   (CropBox = MediaBox, no rotation). Text column x 28.3..396.8 (width 368.5pt); paragraph indent 20pt;
+   baselineskip 11.955pt. Running header (every page, italic SFTI1000, baseline 37.6):
+   "Заключительный этап Всероссийской олимпиады по физике" -> "2024년 전러시아 물리 올림피아드, 결선"
+   (conv_2024.md); rule y 41.41 (stamped). No page numbers, no marking criteria in this booklet.
+   Figures: vector drawings (stamped); Russian labels inside them restored as .ov labels.
+   Russian subscripts in retyped formulas: отн -> rel; v_в (vertical component) -> v_y; x_в, y_в (vertex,
+   вершина) -> x_v, y_v; л (лёд, ice) -> i; в (вода, water) -> w; ср -> avg; Q_отд / Q_получ -> Q_out / Q_in;
+   тр -> fr; (с) скребок (scraper) -> s; (л) -> i; я (ящик, box) -> b. Units Latin SI, decimal points.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   Lines/displays holding a \dfrac use .d: line-height 0, top = b - --a (--a = height above the baseline). */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:368.5pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   text-align:justify;top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.l{text-align:left}
+.r{text-align:right}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left}
+/* "풀이 예시" (SFBX1440 bold 14.346pt), problem titles (SFBX1000 bold) centred; bold run-in heads (.bh) */
+.t{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.bh{font-weight:bold;text-align:left;left:48.3pt;width:348.5pt}
+.t,.h,.bh{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+/* lines starting at the paragraph indent (x 48.3) */
+.in{left:48.3pt;width:348.5pt;text-align:left}
+/* equation numbers at the right margin */
+.en{left:356.8pt;width:40pt;text-align:right}
+.wn{word-break:normal}
+/* figure labels (drawn over the stamps) */
+.lb{text-align:left;white-space:nowrap;width:auto}
+.lc{text-align:center;white-space:nowrap}
+.cap{text-align:center;width:40pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="1" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x t" style="--b:64.0">풀이 예시</p>
+<p class="x h" style="--b:86.0">문제 9-T1. 가속하는 거울</p>
+<p class="x i" style="--b:103.6">거울면이 수평이므로 광원 <span class="nw">$S$와</span> 그 상 <span class="nw">$S^*$는</span> 항상 같은 연직선 위에 있다. 그러면 광원의 속도의 수평축 <span class="nw">$x$</span> 방향 성분 <span class="nw">$v_x$가</span> 일정하게 유지되므로, 상의 속도의 해당 축 방향 성분은 <span class="nw">$v^*_x = v_x$이다.</span></p>
+<p class="x i" style="--b:151.4">거울과 함께 움직이는 기준계에서 광원의 가속도는 다음과 같다.</p>
+<p class="x c" style="--b:173.4">$\vec a_\mathrm{rel} = \vec g - \vec a.$</p>
+<p class="x" style="--b:195.3">거울 기준계에서 광원 <span class="nw">$S$와</span> 그 상 <span class="nw">$S^*$의</span> 궤적은 거울에 대하여 대칭이다. 따라서 거울에 대한 광원의 상의 가속도는 다음을 만족한다.</p>
+<p class="x c" style="--b:241.1">$\vec a^{\,*}_\mathrm{rel} = -\vec a_\mathrm{rel}.$</p>
+<p class="x" style="--b:263.0">실험실 기준계에서 광원의 상의 가속도는 다음과 같다.</p>
+<p class="x c" style="--b:284.9">$\vec a^{\,*} = \vec a + \vec a^{\,*}_\mathrm{rel} = 2\vec a - \vec g.$</p>
+<p class="x" style="--b:306.9">이제부터 거울의 가속도가 연직 위쪽을 향한다고 가정하자. 가속도를 구하는 여러 가지 방법을 살펴보자.</p>
+<p class="x bh" style="--b:330.8">첫 번째 방법:</p>
+<p class="x i" style="--b:342.7">같은 수평선 위에 있는 두 점 사이의 광원의 궤적을 생각하자. 광원이 두 점 사이를 움직이는 데 걸리는 시간 <span class="nw">$t$는</span> 다음과 같다.</p>
+<p class="x d c" style="--b:383.4;--a:13.6pt">$t = \dfrac{2v_y}{g},$</p>
+<p class="x" style="--b:407.4">여기서 <span class="nw">$v_y$는</span> 위의 두 위치에서 광원의 속도의 연직 성분이다. 그러면 이 시간 동안 광원의 수평 변위는 다음과 같다.</p>
+<p class="x d c" style="--b:448.1;--a:13.6pt">$\Delta x = v_xt = \dfrac{2v_xv_y}{g}.$</p>
+<p class="x" style="--b:474.8">마찬가지로 같은 수평선 위에 있는 두 점 사이의 광원의 상의 궤적을 생각하면 다음을 얻는다.</p>
+<p class="x d c" style="--b:515.5;--a:13.6pt">$\Delta x^* = \dfrac{2v_xv^*_y}{g + 2a},$</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="2" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">여기서 <span class="nw">$v^*_y$는</span> 위의 두 위치에서 광원의 상의 속도의 연직 성분이다. 여기서 등식 <span class="nw">$v^*_x = v_x$를</span> 고려하였다. 두 식을 서로 나누면 다음을 얻는다.</p>
+<p class="x d c" style="--b:118.3;--a:14.7pt">$\dfrac{\Delta x}{\Delta x^*} = \dfrac{v_y}{v^*_y}\left(1 + \dfrac{2a}{g}\right) \Rightarrow a = \dfrac{g}{2}\left(\dfrac{v^*_y}{v_y}\dfrac{\Delta x}{\Delta x^*} - 1\right)$</p>
+<p class="x" style="--b:148.5">정확도를 높이기 위해 <span class="nw">$\Delta x$와</span> <span class="nw">$\Delta x^*$의</span> 가능한 최댓값을 생각하자. 이는 그림의 왼쪽 끝에 있는 점들에 해당한다. 해당하는 속도의 연직 성분의 비는 접선의 기울기의 비로 측정한다. 그러면 다음을 얻는다.</p>
+<p class="x d c" style="--b:213.1;--a:13.6pt">$\dfrac{\Delta x}{\Delta x^*} = 0.865 \pm 0.010, \qquad \dfrac{v^*_y}{v_y} = \dfrac{k^*}{k} = 0.740 \pm 0.015 \Rightarrow a = -(1.76 \pm 0.10)\,\mathrm{m/s^2}.$</p>
+<p class="x" style="--b:239.3">따라서</p>
+<p class="x in" style="--b:251.3"><span class="nw">$a = (1.76 \pm 0.10)\,\mathrm{m/s^2}$이고,</span> 가속도는 아래쪽을 향한다.</p>
+<p class="x bh" style="--b:266.1">두 번째 방법:</p>
+<p class="x i" style="--b:278.0">직교 좌표계 <span class="nw">$Oxy$를</span> 도입하자. 두 궤적의 꼭짓점의 좌표를 구하자. 이를 위해 수평선들을 긋고 그 수직이등분선들을 작도한다. 광원의 궤적의 꼭짓점(그림에서 점 1로 표시)의 좌표는 <span class="nw">$x_\mathrm{v} = 36$</span> 임의 단위, <span class="nw">$y_\mathrm{v} = 18$</span> 임의 단위로 하나로 정해진다. 상의 궤적의 꼭짓점(점 3)의 세로축 좌표는 덜 정확하게 정해지므로 근삿값을 취한다. 즉 <span class="nw">$x^*_\mathrm{v} = 45$</span> 임의 단위, <span class="nw">$y^*_\mathrm{v} \approx 21$</span> 임의 단위이다.</p>
+<p class="x i" style="--b:361.7">점 1과 점 2 사이의 광원의 운동을 생각하자. 이 두 점 사이를 광원이 시간 <span class="nw">$t_1$</span> 동안 움직였다고 하면, 광원의 수평 변위와 연직 변위는 다음과 같다.</p>
+<div class="f" style="left:164pt;top:397pt"><span class="fig" data-srcpage="2" data-clip="164,397,261,423"></span></div>
+<p class="x" style="--b:438.6">수평 변위의 식에서 운동 시간은 <span class="nw">$t_1 = \Delta x/v_x$이다.</span> 그러면</p>
+<div class="f" style="left:165pt;top:451pt"><span class="fig" data-srcpage="2" data-clip="165,451,260,480"></span></div>
+<p class="x" style="--b:491.4">마찬가지로 점 3과 점 4 사이의 광원의 상의 궤적을 생각하고, 속도의 수평 성분이 같다는 것 <span class="nw">($v_x = v^*_x$)을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:78pt;top:515pt"><span class="fig" data-srcpage="2" data-clip="78,515,347,544"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="3" data-clip="28.3,41,391.2,41.9"></span></div>
+<div class="f" style="left:42pt;top:55pt"><span class="fig" data-srcpage="3" data-clip="42,55,384,336"></span></div>
+<p class="x" style="--b:364.2">얻은 가속도의 식들을 서로 나누자.</p>
+<div class="f" style="left:105pt;top:368pt"><span class="fig" data-srcpage="3" data-clip="105,368,321,401"></span></div>
+<p class="x" style="--b:417.1">필요한 값들은 임의 단위로 <span class="nw">$\Delta y^* = 39$,</span> <span class="nw">$\Delta x^* = 65$,</span> <span class="nw">$\Delta x = 74$,</span> <span class="nw">$\Delta y = 76$이며,</span> 모눈을 이용하여 구하였다.</p>
+<p class="x d c" style="--b:455.6;--a:14.85pt">$a = \dfrac{9.80}{2}\left(\dfrac{39\cdot 74^2}{76\cdot 65^2} - 1\right) = -1.64\,\mathrm{m/s^2}.$</p>
+<p class="x" style="--b:481.9">첫 번째 방법으로 얻은 값과의 차이는 광원의 상의 궤적의 꼭짓점 좌표를 정할 때의 오차 때문이다.</p>
+<p class="x in" style="--b:505.8"><span class="nw">$a = 1.64\,\mathrm{m/s^2}$이고,</span> 가속도는 아래쪽을 향한다.</p>
+<p class="x bh" style="--b:520.6">세 번째 방법:</p>
+<p class="x i" style="--b:532.5">거울의 가속도가 아래쪽을 향한다고 가정하자. 처음 순간에 두 궤적에 접선을 긋고, 광원과 그 상에 대한 변위 벡터 삼각형을</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="4" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">작도하자. 정확도를 높이기 위해 <span class="nw">$\vec v_0t$와</span> <span class="nw">$\vec u_0t$의</span> 가능한 최댓값을 생각한다. 여기서 <span class="nw">$\vec v_0$와</span> <span class="nw">$\vec u_0$는</span> 광원과 그 상의 속도이다. 벡터 삼각형은 광원과 상의 수평 변위가 같도록 작도한다. 그러면 두 경우에 시간 <span class="nw">$t$가</span> 같아진다.</p>
+<div class="f" style="left:42pt;top:125pt"><span class="fig" data-srcpage="4" data-clip="42,125,384,404"></span></div>
+<p class="x i" style="--b:424.7">그러면 전체 가속도의 비는 두 변위 벡터 삼각형의 대응하는 변의 길이의 비와 같다.</p>
+<div class="f" style="left:185pt;top:447pt"><span class="fig" data-srcpage="4" data-clip="185,447,242,474"></span></div>
+<p class="x" style="--b:489.1">여기서 <span class="nw">$l_1$은</span> 광원의 변위 삼각형의 연직 변의 길이(임의 단위)이고, <span class="nw">$l_2$는</span> 광원의 상의 변위 삼각형의 연직 변의 길이이다. 그러면</p>
+<p class="x d c" style="--b:540.0;--a:13.6pt">$a = \dfrac{g}{2}\left(1 - \dfrac{l_2}{l_1}\right) = \dfrac{9.80}{2}\left(1 - \dfrac{27}{42}\right) = 1.75\,\mathrm{m/s^2}.$</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="5" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x in" style="--b:64.0"><span class="nw">$a = 1.75\,\mathrm{m/s^2}$이고,</span> 가속도는 아래쪽을 향한다.</p>
+<p class="x bh" style="--b:78.8">네 번째 방법:</p>
+<p class="x i" style="--b:90.8">임의의 순간에 거울면 위의 점은 광원의 궤적 위의 점과 상의 궤적 위의 점을 잇는 연직 선분의 중점에 있다. 이를 이용하면 거울 위의 한 점의 궤적을 복원할 수 있다.</p>
+<div class="f" style="left:42pt;top:140pt"><span class="fig" data-srcpage="5" data-clip="42,140,384,418"></span></div>
+<p class="x i" style="--b:439.8">지면에 대한 거울의 가속도는 <span class="nw">$\vec a$이다.</span> 그림에서 이 가속도가 연직 아래쪽을 향함을 알 수 있다. 광원의 가속도가 <span class="nw">$\vec g$임을</span> 알고 있으므로, 포물선들의 꼭짓점의 좌표 또는 연직 및 수평 방향의 특징적인 거리를 구하면, 앞에서 설명한 풀이 방법 중 어느 것을 사용하여도 가속도의 크기를 구할 수 있다.</p>
+<p class="x in" style="--b:499.6"><span class="nw">$a = (1.80 \pm 0.02)\,\mathrm{m/s^2}$이고,</span> 가속도는 아래쪽을 향한다.</p>
+<p class="x h" style="--b:521.5">문제 9-T2. 강력한 문제</p>
+<p class="x bh" style="--b:539.2">다이오드가 닫혀 있다고 가정하자.</p>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="6" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">그러면 일정 일률 전원 <span class="nw">$P_1$에는</span> 세기가 <span class="nw">$I_R$인</span> 전류가 흐른다. 가운데 마디에서 전류의 대수적 합을 쓰면 전원들을 지나는 전류 사이의 관계를 얻는다.</p>
+<div class="f" style="left:183pt;top:99pt"><span class="fig" data-srcpage="6" data-clip="183,99,242,113"></span></div>
+<p class="x" style="--b:128.1">여기서 <span class="nw">$I_2$와</span> <span class="nw">$I_3$은</span> 각각 장치 <span class="nw">$P_2$와</span> <span class="nw">$P_3$을</span> 지나는 전류의 세기이다. 장치 <span class="nw">$P_1$과</span> <span class="nw">$P_2$에</span> 걸린 전압의 합은 전압 <span class="nw">$U_0$과</span> 같다.</p>
+<div class="f" style="left:181pt;top:151pt"><span class="fig" data-srcpage="6" data-clip="181,151,245,165"></span></div>
+<p class="x" style="--b:180.2">여기서 <span class="nw">$U_2$와</span> <span class="nw">$U_3$은</span> 각각 장치 <span class="nw">$P_2$와</span> <span class="nw">$P_3$의</span> 단자 전압이다. 두 번째 장치에는 세기가 <span class="nw">$I_2 > 1\,\mathrm{mA}$인</span> 전류가 흐른다. 그렇지 않으면 <span class="nw">$U_2 + U_3 > U_0$이</span> 되기 때문이다. 그러면</p>
+<p class="x d c" style="--b:220.3;--a:13.6pt">$\dfrac{P_2}{I_2} + \dfrac{P_3}{I_2 + I_R} = U_0 \Rightarrow I_2 = 0.22\,\mathrm{A}.$</p>
+<p class="x" style="--b:241.3">그러면 <span class="nw">$I_3 > 1\,\mathrm{A}$가</span> 되어 조건에 모순된다. 따라서 세 번째 전원의 일률은 정격 일률보다 작고, 이를 지나는 전류의 세기는 <span class="nw">$1\,\mathrm{A}$이다.</span> 두 번째 전원을 지나는 전류의 세기는 <span class="nw">$I_2 = 0.2\,\mathrm{A}$이다.</span> <span class="nw">$U_0$을</span> 지나는 전류는 왼쪽에서 오른쪽으로 흐르며, 그 세기는 $I_0 = {}$<span class="nw">$0.2\,\mathrm{A}$이다.</span> 전원들의 방향과 전류가 흐르는 방향을 고려하면, <span class="nw">$U_0$과</span> <span class="nw">$P_2$를</span> 포함하는 가지의 전압은 <span class="nw">$P_1$과</span> <span class="nw">$R$를</span> 포함하는 가지의 전압과 같다.</p>
+<p class="x d c" style="--b:325.7;--a:13.6pt">$U_0 - U_2 = -U_1 + U_R;\ U_0 - \dfrac{P_2}{I_2} = -\dfrac{P_1}{I_1} + I_RR \Rightarrow R \approx 4.1\,\Omega.$</p>
+<p class="x bh" style="--b:349.9">다이오드가 열려 있다고 가정하자.</p>
+<p class="x i" style="--b:361.9">그러면 다이오드에 전류가 흐르고, 전원 <span class="nw">$P_1$과</span> <span class="nw">$P_2$에</span> 걸린 전압은 같다. 첫 번째 전원에 세기가 <span class="nw">$I_1$인</span> 어떤 전류가 흐른다고 하자. 정격 일률의 비가 <span class="nw">$P_2/P_1 = 2$이고</span> 전원들의 단자 전압이 같으므로, 두 번째 전원에는 세기가 <span class="nw">$I_2 = 2I_1$인</span> 전류가 흐른다. 세 전원을 모두 잇는 마디에서 전류의 대수적 합은 0이어야 하므로, 장치 <span class="nw">$P_3$에는</span> 세기가 <span class="nw">$I_3 = 2I_1 + I_1 = 3I_1$인</span> 전류가 흐른다. 그러면</p>
+<div class="f" style="left:137pt;top:454pt"><span class="fig" data-srcpage="6" data-clip="137,454,289,481"></span></div>
+<p class="x" style="--b:494.1">따라서 세 전원의 단자 전압은 모두 같다. 즉 <span class="nw">$U_3 = U_2 = U_1 = U$이고,</span> 따라서 <span class="nw">$2U = U_0 \Rightarrow U = 0.5U_0 = 6\,\mathrm{V}$이다.</span> 첫 번째 전원을 지나는 전류의 세기를 구하자.</p>
+<p class="x d c" style="--b:542.6;--a:13.6pt">$I_1 = \dfrac{P_1}{U} = \dfrac{1}{6}\,\mathrm{A}.$</p>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="7" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">이러한 <span class="nw">$I_1$</span> 값에서 세 장치는 모두 정격 일률을 내는 정상 상태로 작동한다. 아래쪽 마디에서 전류의 대수적 합은 0이어야 한다.</p>
+<div class="f" style="left:182pt;top:100pt"><span class="fig" data-srcpage="7" data-clip="182,100,243,114"></span></div>
+<p class="x" style="--b:129.7">그러면 다이오드를 지나는 전류의 세기 <span class="nw">$I_D$가</span> 음수가 되어 처음 가정에 모순된다. 따라서 다이오드는 닫혀 있다.</p>
+<p class="x in" style="--b:153.6"><span class="nw">$I_1 = 0.8\,\mathrm{A}$,</span> <span class="nw">$I_2 = 0.2\,\mathrm{A}$,</span> <span class="nw">$I_3 = 1\,\mathrm{A}$,</span> <span class="nw">$I_0 = 0.2\,\mathrm{A}$,</span> <span class="nw">$R \approx 4.1\,\Omega$.</span></p>
+<p class="x h" style="--b:172.7">문제 9-T3. 비선형 그림</p>
+<p class="x in" style="--b:187.6;margin-top:-1pt">1. <b>첫 번째 방법.</b></p>
+<p class="x i" style="--b:199.5">도표에서 “얼음” 상태와 “물과 얼음의 혼합물” 상태를 나누는 점선은 녹는점 <span class="nw">$0\,{}^\circ\mathrm{C}$의</span> 얼음에 해당한다. 이 선의 방정식을 유도하자. 물이 <span class="nw">$0\,{}^\circ\mathrm{C}$까지</span> 식고 얼면서 내놓는 열량은 <span class="nw">$Q_\mathrm{out} = 2cm_\mathrm{w}t_\mathrm{w} + m_\mathrm{w}\lambda$이다.</span> 얼음을 <span class="nw">$t_\mathrm{i}$에서</span> <span class="nw">$0\,{}^\circ\mathrm{C}$까지</span> 가열할 때 얼음의 평균 비열은 <span class="nw">$c_\mathrm{avg} = \frac{c + (c + \alpha t_\mathrm{i})}{2} = c + \frac{\alpha t_\mathrm{i}}{2}$이다.</span> 그러면 얼음을 <span class="nw">$0\,{}^\circ\mathrm{C}$까지</span> 가열하는 데 필요한 열량은 <span class="nw">$Q_\mathrm{in} = c_\mathrm{avg}m_\mathrm{i}(-t_\mathrm{i})$</span><wbr><span class="nw">${}= -(c + \frac{\alpha t_\mathrm{i}}{2})m_\mathrm{i}t_\mathrm{i}$이다.</span> 열 손실이 없으므로 <span class="nw">$Q_\mathrm{out} = Q_\mathrm{in}$이다.</span> 기호 <span class="nw">$\gamma = m_\mathrm{i}/m_\mathrm{w}$와</span> <span class="nw">$\lambda = 2cT$를</span> 사용하면 구하는 관계를 얻는다.</p>
+<p class="x d c" style="--b:312.2;--a:13.6pt">$t_\mathrm{w}(t_\mathrm{i}) = -T - \dfrac{\gamma t_\mathrm{i}}{2} - \dfrac{\alpha\gamma t_\mathrm{i}^2}{4c}.$</p>
+<p class="x en" style="--b:312.2">(1)</p>
+<p class="x" style="--b:336.4">도표에서 점선이 모눈의 격자점을 잘 지나는 점 <span class="nw">$(-95; 80)$과</span> <span class="nw">$(-55; 20)$을</span> 식 (1)에 대입하면 다음을 얻는다.</p>
+<p class="x c" style="--b:369.3">$\gamma = 4.0$</p>
+<p class="x c" style="--b:390.1">$\alpha = 7.0\ \mathrm{J/(kg\cdot({}^\circ C)^2)}$</p>
+<p class="x bh" style="--b:407.5">두 번째 방법.</p>
+<p class="x i" style="--b:419.4">도표에서 “얼음” 상태와 “물과 얼음의 혼합물” 상태를 나누는 점선은 녹는점 <span class="nw">$0\,{}^\circ\mathrm{C}$의</span> 얼음에 해당한다. 점 <span class="nw">$(t_\mathrm{i}; t_\mathrm{w})$에서</span> 이 점선에 그은 접선의 기울기를 구하자. 얼음 조각의 온도를 <span class="nw">$t_\mathrm{i} - \Delta t_\mathrm{i}$</span> <span class="nw">$(\Delta t_\mathrm{i} \ll t_\mathrm{i})$로</span> 취했다고 하자. 그릇의 내용물이 <span class="nw">$0\,{}^\circ\mathrm{C}$의</span> 얼음이 되려면 물을 몇 도 <span class="nw">$(\Delta t_\mathrm{w})$만큼</span> 더 따뜻하게 해야 하는지 구하자. 얼음을 녹이는 데 필요한 추가 열량은 <span class="nw">$\Delta Q_\mathrm{i} = c_\mathrm{i}(t_\mathrm{i})m_\mathrm{i}\Delta t_\mathrm{i}$이다.</span> 이 열은 더 따뜻한 물에서 얻는다: <span class="nw">$\Delta Q_\mathrm{w} = 2cm_\mathrm{w}\Delta t_\mathrm{w}$.</span> 열 손실이 없으므로 <span class="nw">$\Delta Q_\mathrm{w} = \Delta Q_\mathrm{i}$이다.</span> 접선의 기울기의 크기는 다음과 같다.</p>
+<p class="x d c" style="--b:541.1;--a:13.6pt">$k = \dfrac{\Delta t_\mathrm{w}}{\Delta t_\mathrm{i}} = \dfrac{c_\mathrm{i}(t_\mathrm{i})m_\mathrm{i}}{2cm_\mathrm{w}} = \dfrac{\gamma}{2}(1 + \dfrac{\alpha}{c}t_\mathrm{i})$</p>
+<p class="x en" style="--b:541.1">(1*)</p>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="8" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">첫 번째 풀이 방법에서 얻은 식 (1)을 <span class="nw">$t_\mathrm{i}$에</span> 대하여 미분하여도 같은 결과를 얻을 수 있다. 점선 위의 점 $t^{(1)}_\mathrm{i} = {}$<span class="nw">$-43\,{}^\circ\mathrm{C}$와</span> $t^{(2)}_\mathrm{i} = {}$<span class="nw">$-100\,{}^\circ\mathrm{C}$에</span> 각각 그은 접선의 기울기의 크기 <span class="nw">$k_1 = |\frac{80-20}{(-90)-(-55)}| = 1.714$와</span> <span class="nw">$k_2 = |\frac{80-0}{(-95)-(-35)}| = 1.333$을</span> 식 (1*)에 대입하면 다음을 얻는다.</p>
+<p class="x c" style="--b:143.0">$\gamma = 4.0$</p>
+<p class="x c" style="--b:164.9">$\alpha = 7.0\ \mathrm{J/(kg\cdot({}^\circ C)^2)}$</p>
+<div class="f" style="left:48pt;top:185pt"><span class="fig" data-srcpage="8" data-clip="48,185,377,502"></span></div>
+<p class="x ov lb" style="--b:197.0;left:351.2pt;--fs:7pt;--l:8pt">w</p>
+<p class="x ov lb" style="--b:480.9;left:356.0pt;--fs:7pt;--l:8pt">i</p>
+<p class="x ov lc" style="--b:303.6;left:173.5pt;width:100pt">물과 얼음의 혼합물</p>
+<p class="x ov lc" style="--b:389.8;left:88pt;width:30pt">얼음</p>
+<p class="x i" style="--b:524.8">얼음의 비열이 온도에 따라 실제로 어떻게 변하는지(표에 실린 자료)는 다음과 같다(그림 참고).</p>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="9" data-clip="28.3,41,391.2,41.9"></span></div>
+<div class="f" style="left:66pt;top:56pt"><span class="fig" data-srcpage="9" data-clip="66,56,354,279"></span></div>
+<p class="x ov lb" style="--b:67.4;left:315.1pt;--fs:6.6pt;--l:7.5pt;margin-top:-1.2pt">i</p>
+<p class="x ov lc" style="--b:61.8;left:327pt;width:10pt;--fs:6.6pt;--l:7.5pt;margin-top:-1.4pt">J</p>
+<p class="x ov lb" style="--b:69.2;left:322.3pt;--fs:6.6pt;--l:7.5pt;margin-top:-1.2pt">kg</p>
+<p class="x ov lb" style="--b:69.2;left:336.2pt;--fs:6.6pt;--l:7.5pt;margin-top:-1.2pt">C</p>
+<p class="x ov lb" style="--b:257.0;left:346.3pt;--fs:9.5pt;--l:11pt">C</p>
+<p class="x i" style="--b:307.2">2. 문제의 조건에 주어진 도표에서는 얼음의 질량이 물의 질량의 4배였으므로, 그릇의 내용물의 최종 상태가 물일 수는 없었다. 이 문항에서는 그릇의 내용물의 최종 상태가 물일 수도 있다. <span class="nw">$0\,{}^\circ\mathrm{C}$의</span> 물에 해당하는 선의 방정식을 구하자. 물이 <span class="nw">$0\,{}^\circ\mathrm{C}$까지</span> 식으면서 내놓는 열량은 <span class="nw">$Q_\mathrm{out} = 2cm_\mathrm{w}t_\mathrm{w}$이다.</span> 얼음을 <span class="nw">$0\,{}^\circ\mathrm{C}$까지</span> 가열하고 녹이는 데 필요한 열량은 <span class="nw">$Q_\mathrm{in} = -(c + \frac{\alpha t_\mathrm{i}}{2})m_\mathrm{i}t_\mathrm{i}$</span><wbr><span class="nw">${}+ m_\mathrm{i}\lambda$이다.</span> 식 <span class="nw">$Q_\mathrm{out} = Q_\mathrm{in}$에서</span> 구하는 관계를 얻는다.</p>
+<p class="x d c" style="--b:408.6;--a:13.6pt">$t_\mathrm{w}(t_\mathrm{i}) = \gamma T - \dfrac{\gamma t_\mathrm{i}}{2} - \dfrac{\alpha\gamma t_\mathrm{i}^2}{4c}$</p>
+<p class="x en" style="--b:408.6">(2)</p>
+<p class="x" style="--b:428.2">식 (2)의 상수항이 물의 끓는점 <span class="nw">$100\,{}^\circ\mathrm{C}$보다</span> 작으면, 도표에 “물” 상태에 해당하는 영역이 생긴다. 이 문항이 바로 그런 경우이다. <span class="nw">$\gamma_0 = \frac{m_\mathrm{i}}{m_\mathrm{w}} = 1 < \frac{100\,{}^\circ\mathrm{C}}{80\,{}^\circ\mathrm{C}}$이기</span> 때문이다. 섭씨온도로 나타내면 식 (2)는 다음과 같다.</p>
+<p class="x d c" style="--b:481.5;--a:13.6pt">$t_\mathrm{w}(t_\mathrm{i}) = 80 - \dfrac{t_\mathrm{i}}{2} - \dfrac{t_\mathrm{i}^2}{1200}$</p>
+<p class="x en" style="--b:481.5">(2*)</p>
+<p class="x" style="--b:500.4">이 관계에 해당하는 특징적인 점들을 구하자. 한 점은 분명히 <span class="nw">$(0\,{}^\circ\mathrm{C}; 80\,{}^\circ\mathrm{C})$이다.</span> 두 번째 점은 직선 <span class="nw">$t_\mathrm{w}(t_\mathrm{i}) = 100\,{}^\circ\mathrm{C}$와의</span> 교점으로 구한다.</p>
+<p class="x d c" style="--b:542.6;--a:15.05pt">$100 = 80 - \dfrac{t_\mathrm{i}}{2} - \dfrac{t_\mathrm{i}^2}{1200}$</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="10" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">이 이차 방정식을 풀면 <span class="nw">$t_\mathrm{i} \approx -43\,{}^\circ\mathrm{C}$이다</span> (다른 근은 허용 범위 <span class="nw">$[-100\,{}^\circ\mathrm{C}; 0\,{}^\circ\mathrm{C}]$에</span> 들지 않는다). 따라서 두 번째 특징적인 점은 <span class="nw">$(-43\,{}^\circ\mathrm{C}; 100\,{}^\circ\mathrm{C})$이다.</span> 이 도표에는 “얼음” 상태가 없음을 보이자. 실제로 <span class="nw">$0\,{}^\circ\mathrm{C}$의</span> 얼음에 해당하는 선이 가로축과 만나는 조건은 다음과 같다.</p>
+<p class="x d c" style="--b:129.3;--a:15.1pt">$0 = -T - \dfrac{t_\mathrm{i}}{2} - \dfrac{\alpha t_\mathrm{i}^2}{4c}$</p>
+<p class="x" style="--b:151.5">즉 교점 <span class="nw">$t_\mathrm{i}$는</span> $-T - \frac{t_\mathrm{i}}{2} > 0 \Leftrightarrow{}$ <span class="nw">$t_\mathrm{i} < -160\,{}^\circ\mathrm{C}$를</span> 만족한다. 따라서 고려하는 범위 <span class="nw">$[-100\,{}^\circ\mathrm{C}; 0\,{}^\circ\mathrm{C}]$에는</span> 교점이 없고, 따라서 도표에 순수한 얼음 상태도 없다. 구하는 도표의 모양은 그림과 같다.</p>
+<div class="f" style="left:48pt;top:201pt"><span class="fig" data-srcpage="10" data-clip="48,201,377,518"></span></div>
+<p class="x ov lb" style="--b:212.9;left:351.0pt;--fs:7pt;--l:8pt">w</p>
+<p class="x ov lb" style="--b:497.0;left:356.0pt;--fs:7pt;--l:8pt">i</p>
+<p class="x ov lc" style="--b:234.4;left:291.4pt;width:20pt">물</p>
+<p class="x ov lc" style="--b:347.8;left:147.9pt;width:100pt">물과 얼음의 혼합물</p>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="11" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x h" style="--b:64.0">문제 9-T4. 그럼 언제 팽팽하지 않을까?</p>
+<p class="x in" style="--b:81.7;margin-top:-1pt">1. <b>첫 번째 방법:</b></p>
+<p class="x i" style="--b:93.7">작은 고리는 질량이 없으므로 어느 순간에나 고리에 작용하는 힘의 합력은 0이다. 가는 막대와 고리 사이에 마찰이 없으므로 가는 막대는 고리에 막대에 수직인 방향, 즉 연직 방향으로 힘을 작용한다. 그러면 고리에 작용하는 힘의 합력이 0이 되는 것은 고리와 구슬을 잇는 실 부분이 어느 순간에나 연직 방향일 때에만 가능하다. 실 전체의 길이가 일정하고, 구슬과 고리를 잇는 실 부분이 항상 연직을 유지하며, 조건에 따라 처음 순간에 실이 팽팽하므로, 처음 속도의 실 방향 성분들을 구할 수 있다. 연직 부분은 다음 속력으로 늘어난다.</p>
+<div class="f" style="left:181pt;top:214pt"><span class="fig" data-srcpage="11" data-clip="181,214,244,228"></span></div>
+<p class="x" style="--b:245.1">수평 부분은 다음 속력으로 줄어든다.</p>
+<div class="f" style="left:178pt;top:258pt"><span class="fig" data-srcpage="11" data-clip="178,258,247,272"></span></div>
+<p class="x" style="--b:288.9">실의 길이가 일정하게 유지되려면 속도 성분들의 크기가 같아야 한다.</p>
+<div class="f" style="left:91pt;top:309pt"><span class="fig" data-srcpage="11" data-clip="91,309,334,335"></span></div>
+<p class="x bh" style="--b:349.5">두 번째 방법:</p>
+<p class="x i" style="--b:361.5">구슬과 고리를 잇는 실 부분은 항상 연직을 유지하고, 조건에 따라 처음 순간에 실은 팽팽하다. 가는 막대에서 실의 고정점 <span class="nw">$O$까지의</span> 거리를 <span class="nw">$b$라</span> 하자. 짧은 시간 <span class="nw">$\Delta t$</span> 후의 실의 길이를 처음 길이 <span class="nw">$L + b$와</span> 같다고 놓자.</p>
+<div class="f" style="left:107pt;top:409pt"><span class="fig" data-srcpage="11" data-clip="107,409,319,427"></span></div>
+<p class="x" style="--b:445.9">여기서 <span class="nw">$v_{0x}$,</span> <span class="nw">$v_{0y}$는</span> 처음 속도의 수평 성분과 연직 성분이다.</p>
+<div class="f" style="left:29pt;top:455pt"><span class="fig" data-srcpage="11" data-clip="29,455,396,472"></span></div>
+<p class="x" style="--b:489.8">2차 미소량을 무시하자.</p>
+<div class="f" style="left:94pt;top:498pt"><span class="fig" data-srcpage="11" data-clip="94,498,331,524"></span></div>
+<p class="x" style="--b:538.9">따라서 <span class="nw">$\alpha = \pi/4$이다.</span></p>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="12" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i wn" style="--b:64.0;width:188.5pt">2. 구슬의 운동 궤적을 분석하자. 원점이 점 <span class="nw">$O$인</span> 좌표계 <span class="nw">$xy$를</span> 도입하자. 가는 막대에서 구슬의 처음 위치까지의 거리가 일정하므로, <span class="nw">$Ox$</span> 위에 있는 실 부분의 길이도 일정하며 <span class="nw">$L$과</span> 같다.</p>
+<div class="f" style="left:229pt;top:57pt"><span class="fig" data-srcpage="12" data-clip="229,57,295,165.5"></span></div>
+<div class="f" style="left:295pt;top:57pt"><span class="fig" data-srcpage="12" data-clip="295,57,360,159.5"></span></div>
+<div class="f" style="left:360pt;top:57pt"><span class="fig" data-srcpage="12" data-clip="360,57,407,165.5"></span></div>
+<p class="x i" style="--b:147.7;width:188.5pt">이를 고려하면</p>
+<p class="x d c ov" style="--b:175.5;--a:12.4pt">$L = y + \sqrt{y^2 + x^2};\, y^2 + x^2 = L^2 - 2Ly + y^2;\, y = \dfrac{L}{2} - \dfrac{x^2}{2L}.$</p>
+<p class="x" style="--b:200.2">따라서 실이 팽팽하다는 조건에서 운동 궤적은 포물선이다.</p>
+<p class="x" style="--b:224.1">이제 구슬이 가는 막대에서 멀어지는 동안 실이 팽팽하게 유지되는 구슬의 최소 처음 속력 <span class="nw">$v_{0min}$을</span> 구하자.</p>
+<p class="x bh" style="--b:250.8">첫 번째 방법:</p>
+<p class="x i" style="--b:262.8">중력장에서 자유롭게 던질 때의 궤적은 얻은 포물선에 접하는 포물선이다. 처음 속력이 최소인 경우, 중력장에서의 비행 궤적은 실이 항상 팽팽한 경우의 궤적과 일치한다. 중력장에서 자유 운동할 때의 궤적의 방정식을 구하자.</p>
+<div class="f" style="left:152pt;top:310pt"><span class="fig" data-srcpage="12" data-clip="152,310,260,342"></span></div>
+<p class="x" style="--b:355.9"><span class="nw">$\alpha = \pi/4$임을</span> 고려하면</p>
+<div class="f" style="left:57pt;top:367pt"><span class="fig" data-srcpage="12" data-clip="57,367,368,396"></span></div>
+<p class="x" style="--b:411.6">얻은 궤적의 방정식들을 비교하면 다음을 얻는다.</p>
+<div class="f" style="left:183pt;top:423pt"><span class="fig" data-srcpage="12" data-clip="183,423,242,439"></span></div>
+<p class="x bh" style="--b:455.5">두 번째 방법:</p>
+<p class="x i" style="--b:467.4">실이 팽팽하다는 조건에서 운동 궤적은 포물선이다. 중력장에서 수평과 고정된 각 <span class="nw">$\alpha = \pi/4$를</span> 이루며 자유롭게 던질 때의 비행 궤적은 실에 매달린 구슬이 따라 움직이는 포물선에 접하는 포물선들이다. 처음 속력이 최소인 경우, 중력장에서의 비행 궤적은 실이 항상 팽팽한 경우의 궤적과 일치한다.</p>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="13" data-clip="28.3,41,391.2,41.9"></span></div>
+<div class="f" style="left:46pt;top:53pt"><span class="fig" data-srcpage="13" data-clip="46,53,376,192"></span></div>
+<p class="x i" style="--b:221.0">일치하는 궤적을 따라 던지는 경우의 속도의 수평 성분을 구하자.</p>
+<div class="f" style="left:45pt;top:243pt"><span class="fig" data-srcpage="13" data-clip="45,243,380,272"></span></div>
+<p class="x bh" style="--b:285.8">세 번째 방법:</p>
+<p class="x i" style="--b:297.8">중력장에서 자유롭게 던질 때의 궤적은 얻은 포물선에 접하는 포물선이다. 처음 속력이 최소인 경우, 중력장에서의 비행 궤적은 실이 항상 팽팽한 경우의 궤적과 일치한다. “구슬+실+고리” 계에 대하여 에너지 보존 법칙을 쓰자. 실과 고리는 질량이 없으므로 그 역학적 에너지는 0이다. 고정점이 실의 끝 <span class="nw">$O$에</span> 작용하는 힘과 가는 막대가 고리에 작용하는 힘이 하는 일은 0이다. 실의 끝 <span class="nw">$O$는</span> 고정되어 움직이지 않고, 고리는 가는 막대와의 상호 작용 힘에 수직으로 움직이기 때문이다.</p>
+<div class="f" style="left:146pt;top:399pt"><span class="fig" data-srcpage="13" data-clip="146,399,266,436"></span></div>
+<p class="x" style="--b:452.7"><span class="nw">$\alpha = \frac{\pi}{4}$임을</span> 고려하면 다음을 얻는다.</p>
+<div class="f" style="left:143pt;top:465pt"><span class="fig" data-srcpage="13" data-clip="143,465,282,481"></span></div>
+<p class="x i" style="--b:496.6">처음 속력이 <span class="nw">$v_{0min}$보다</span> 클 때에도 구슬이 실에 의해 제한된 포물선을 따라 계속 움직임을 보이자. 실이 구슬에 작용하는 힘을 생각하자. 구슬의 양쪽에서 같은 크기의 장력이 작용한다. 그러면 이 두 힘의 합력은 실들이 이루는 각의 이등분선 방향을 향한다. 풀이의 첫 번째 부분과 마찬가지로,</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="14" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x" style="--b:64.0">구슬의 속도의 연직축 방향 성분과 실의 기울어진 부분을 따르는 축 방향 성분의 크기가 같음을 보일 수 있다. 이는 구슬의 속도가 실들이 이루는 외각의 이등분선 방향을 향함을 뜻한다. 외각과 내각의 이등분선은 서로 수직이므로, 속도는 항상 장력의 합력에 수직이다. 따라서 장력의 합력은 일을 하지 않으며, 최솟값보다 큰 어떤 속력에서도 구슬을 감속시키지 않는다. 처음 속력이 <span class="nw">$v_{0min}$보다</span> 크면 실은 팽팽하다. 구슬이 중력장에서의 자유 비행에 해당하는 궤적보다 곡률 반지름이 작은 곡선을 따라 움직이기 때문이다. 따라서 구슬이 가는 막대에서 멀어지는 동안 실이 팽팽하게 유지되는 조건은 다음과 같다.</p>
+<div class="f" style="left:186pt;top:183pt"><span class="fig" data-srcpage="14" data-clip="186,183,240,198"></span></div>
+<p class="x h" style="--b:215.5">문제 9-T5. 얼음판 밖으로 치우기</p>
+<p class="x i" style="--b:233.1">1. 상자의 운동에는 두 가지 방식이 가능하다. 긁개에 대하여 미끄러지지 않는 경우(그림 1)와 미끄러지는 경우(그림 2)이다.</p>
+<p class="x" style="--b:258.2;margin-top:-1.5pt">첫 번째 방식에서는 긁개의 전체 반작용력 <span class="nw">$\vec Q_\mathrm{s}$(긁개의</span> 수직 항력 <span class="nw">$\vec N_\mathrm{s}$와</span> 긁개가 상자에 작용하는 마찰력 <span class="nw">$\vec F_\mathrm{fr(s)}$의</span> 합력)가 긁개의 운동 방향을 향한다. 따라서</p>
+<p class="x c" style="--b:305.2">$F_\mathrm{fr(s)} = N_\mathrm{s}\operatorname{tg}\alpha.$</p>
+<p class="x" style="--b:327.1">정지 마찰력은 <span class="nw">$F_\mathrm{fr(s)} \leqslant \mu N_\mathrm{s}$를</span> 만족하므로, 첫 번째 방식은 다음 조건에서 일어난다.</p>
+<div class="f" style="left:192pt;top:350pt"><span class="fig" data-srcpage="14" data-clip="192,350,233,364"></span></div>
+<p class="x" style="--b:382.9">이 조건이 성립하지 않으면 두 번째 방식이 일어난다. 두 번째 방식에서는 얼음이 상자에 작용하는 마찰력 <span class="nw">$\vec F_\mathrm{fr(i)}$가</span> <span class="nw">$\vec Q_\mathrm{s}$와</span> 반대 방향을 향한다. 상자가 처음에 정지해 있기 때문이다. 이때 <span class="nw">$\vec Q_\mathrm{s}$는</span> 긁개 면의 법선과 각 <span class="nw">$\varphi = \operatorname{arctg}\mu$를</span> 이루고, 긁개의 가속도 방향과 각 <span class="nw">$\beta = \alpha - \varphi$를</span> 이룬다. 따라서 상자의 운동 방향도 긁개의 가속도 방향과 각 <span class="nw">$\beta$를</span> 이룬다.</p>
+<p class="x i" style="--b:456.9">첫 번째 상자에 대해서는 <span class="nw">$\operatorname{tg}\alpha_1 \approx 0.176 < \mu$이므로,</span> 상자는 긁개에 대하여 미끄러지지 않고 움직인다. 두 번째 상자에 대해서는 <span class="nw">$\operatorname{tg}\alpha_2 = 1 > \mu$이고,</span> 두 번째 방식이 일어난다. 그러면 첫 번째 상자가 얼음판 경계까지 가는 경로는 <span class="nw">$s_1 = L$이고,</span> 따라서 긁개의 가속도는 다음과 같다.</p>
+<p class="x d c" style="--b:519.2;--a:13.6pt">$a = \dfrac{2L}{t_1^2} = \dfrac{2\cdot 0.8}{4}\ \mathrm{m/s^2} = 0.4\,\mathrm{m/s^2}$</p>
+</div>
+
+<!-- page 15 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="15" data-clip="28.3,41,391.2,41.9"></span></div>
+<div class="f" style="left:80pt;top:54pt"><span class="fig" data-srcpage="15" data-clip="80,54,342,149"></span></div>
+<p class="x ov lb" style="--b:103.2;left:153.5pt;--fs:7pt;--l:8pt">s</p>
+<p class="x ov lb" style="--b:87.3;left:337.2pt;--fs:7pt;--l:8pt">s</p>
+<p class="x cap" style="--b:179.6;left:126.5pt">그림 1</p>
+<p class="x cap" style="--b:179.6;left:285.2pt">그림 2</p>
+<p class="x i" style="--b:202.4">2. 두 번째 상자의 운동 방향이 긁개의 가속도 방향과 각 <span class="nw">$\beta$를</span> 이루고 상자가 정지 상태에서 움직이기 시작했음을 이용하여, 두 번째 상자의 경로 <span class="nw">$L_2$를</span> 구하자.</p>
+<div class="f" style="left:179pt;top:229pt"><span class="fig" data-srcpage="15" data-clip="179,229,246,243"></span></div>
+<p class="x" style="--b:255.6">따라서 두 번째 상자와 첫 번째 상자의 경로의 비는 다음과 같다.</p>
+<p class="x d c" style="--b:282.1;--a:13.6pt">$\dfrac{L_2}{L} = \dfrac{1}{\cos\beta} = \dfrac{1}{\cos{(\alpha_2 - \varphi)}} \approx 1.14$</p>
+<p class="x i" style="--b:304.8">3. 두 번째 상자는 긁개에서 떨어지지 않고 움직이므로, 긁개 면의 법선 방향에 대한 상자와 긁개의 속도 성분은 어느 순간에나 같아야 한다.</p>
+<p class="x c" style="--b:349.7">$v_n = v_{\mathrm{b}(n)}.$</p>
+<p class="x" style="--b:370.7">그러면 상자와 긁개는 병진 운동을 하므로, 긁개 면의 법선 방향에 대한 상자와 긁개의 가속도 성분도 같아야 한다.</p>
+<p class="x c" style="--b:406.5">$a_n = a_{\mathrm{b}(n)}.$</p>
+<p class="x" style="--b:423.9">가속도 벡터 <span class="nw">$\vec a$와</span> <span class="nw">$\vec a_\mathrm{b}$는</span> 긁개 면의 법선과 각각 각 <span class="nw">$\alpha_2$와</span> <span class="nw">$\varphi$를</span> 이룬다.</p>
+<p class="x c" style="--b:447.8">$a\cos\alpha_2 = a_\mathrm{b}\cos\varphi.$</p>
+<p class="x" style="--b:465.2">그러면 두 번째 방식에서 상자가 얼음판 가장자리까지 가는 시간 <span class="nw">$t_2$는</span> 다음과 같다.</p>
+<p class="x d c" style="--b:497.2;--a:15.45pt">$t_2 = \sqrt{\dfrac{2L_2}{a_\mathrm{b}}} = \sqrt{\dfrac{2L}{a}\dfrac{\cos\varphi}{\cos\alpha_2\cos(\alpha_2 - \varphi)}} = t_1\sqrt{\dfrac{\cos\varphi}{\cos\alpha_2\cos(\alpha_2 - \varphi)}}.$</p>
+<p class="x d c" style="--b:538.7;--a:13.6pt">$t_2 = t_1\sqrt{\dfrac{\cos\varphi}{\cos\alpha_2\cos(\alpha_2 - \varphi)}} \approx 2.5\,\mathrm{s}.$</p>
+</div>
+
+<!-- page 16 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2024년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="16" data-clip="28.3,41,391.2,41.9"></span></div>
+<p class="x i" style="--b:64.0">4. 첫 번째 상자와 긁개 사이의 마찰력을 구하기 위해, 상자에 작용하는 힘들을 나타내고 긁개 면에 평행한 수평축 방향 성분으로 뉴턴 제2법칙을 쓰자.</p>
+<p class="x c" style="--b:109.2">$ma\sin\alpha_1 = F_{\mathrm{fr(s)}1} - \mu' mg\sin\alpha_1;\, F_{\mathrm{fr(s)}1} = m\sin\alpha_1\,(a + \mu' g)\,.$</p>
+<p class="x" style="--b:130.4">두 번째 상자에 대하여 긁개 면의 법선을 따르는 수평축 방향 성분으로 뉴턴 제2법칙을 쓰면 다음을 얻는다.</p>
+<p class="x c" style="--b:163.6">$ma_{\mathrm{b}(n)} = ma\cos\alpha_2 = N_\mathrm{s} - \mu' mg\cos\varphi \Rightarrow F_{\mathrm{fr(s)}2} = \mu m\,(\mu' g\cos\varphi + a\cos\alpha_2)\,.$</p>
+<p class="x" style="--b:184.8">따라서 두 방식에서 긁개와 상자 사이의 마찰력의 비는 다음과 같다.</p>
+<p class="x d c" style="--b:223.9;--a:13.6pt">$\dfrac{F_{\mathrm{fr(s)}2}}{F_{\mathrm{fr(s)}1}} = \dfrac{\mu\,(\mu' g\cos\varphi + a\cos\alpha_2)}{\sin\alpha_1\,(a + \mu' g)} \approx 1.4.$</p>
+</div>
+</body></html>
