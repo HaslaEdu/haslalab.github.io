@@ -1,0 +1,118 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* APhO 2013 Theory Question 2, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:10.6pt;line-height:14.3pt}
+.a{position:absolute}
+.flow{position:absolute;left:91pt;width:417pt;top:99pt}
+p{margin:0 0 10pt;text-align:justify;text-indent:0}
+h3{font-size:11.5pt;font-weight:bold;margin:12pt 0 6pt}
+.q{position:relative;padding-left:20pt;margin-bottom:10pt;text-align:justify}
+.q>span.k{position:absolute;left:3pt;top:0}
+.eq{text-align:center;margin:4pt 0}
+.figc{text-align:center;line-height:0;margin:6pt 0}
+.hd{position:absolute;left:172pt;top:33pt;width:256pt;height:36pt;background:#fff;text-align:center;font-weight:bold;line-height:16pt;font-size:11.5pt}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:9.5pt;line-height:12pt;text-align:center}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:0;top:15pt"><span class="fig" data-srcpage="1" data-clip="0,15,595.32,88"></span></div>
+<div class="hd ov">문제<br>GPS 위성의 상대론적 보정</div>
+<div class="flow" style="top:97pt;line-height:21pt">
+<p style="text-indent:36pt;margin:0">위성 위치 확인 시스템(GPS)은 위성에서 오는 신호를 이용하여 물체(예를 들어 비행기)의 위치를 알아내는 항법 기술이다. 그러나 위성이 궤도에서 빠르게 움직이므로 특수 상대론적 보정이 필요하고, 위성의 고도가 높으므로 일반 상대론적 보정도 필요하다. 두 보정은 모두 작아 보이지만 정밀한 위치 측정에는 매우 중요하다. 이 문제에서는 두 보정을 모두 다룬다.</p>
+<p style="text-indent:36pt;margin:0">먼저 가속되는 입자에 대한 특수 상대론적 효과를 알아본다. 두 종류의 좌표계를 생각한다. 첫 번째는 입자가 처음에 정지해 있는 <b>정지 좌표계</b>($S$ 또는 지구 좌표계라 부른다)이다. 다른 하나는 가속되는 입자와 함께 순간적으로 움직이는 좌표계인 <b>고유 좌표계</b>($S'$이라 부른다)이다. 고유 좌표계는 가속 좌표계가 아니라, 특정한 순간에 가속되는 입자와 같은 속도를 가지는 등속 좌표계라는 데 주의하라. 그 짧은 순간에 입자가 경험하는 시간의 흐름은 고유 좌표계의 시간 흐름과 <b>같다</b>. 물론 이 고유 좌표계는 무한히 짧은 시간 동안만 유효하며, 그 뒤에는 새 고유 좌표계를 정의해야 한다. 처음에 입자의 시계와 정지 좌표계의 시계를 모두 0으로 맞추어 동기화한다. 즉 $t=\tau=0$이다($t$는 정지 좌표계의 시간, $\tau$는 입자의 시계가 나타내는 시간이다).</p>
+<p style="text-indent:36pt">복잡한 계량 텐서 계산 없이 <b>등가 원리</b>를 적용하면 특수 상대론의 결과로부터 일반 상대론적 효과를 얻을 수 있다. 특수 상대론적 효과와 일반 상대론적 효과를 합하여, GPS(위성 위치 확인 시스템) 위성이 정확한 위치를 제공하는 데 필요한 보정을 계산할 수 있다.</p>
+<p style="margin:16pt 0 0 3pt;line-height:16pt">유용할 수 있는 수학 공식</p>
+<ul style="margin:2pt 0 0 20pt;padding-left:14pt;line-height:20pt">
+<li>$\sinh x=\frac{e^x-e^{-x}}{2}$</li>
+<li>$\cosh x=\frac{e^x+e^{-x}}{2}$</li>
+<li>$\tanh x=\frac{\sinh x}{\cosh x}$</li>
+<li>$1+\sinh^2x=\cosh^2x$</li>
+<li>$\sinh(x-y)=\sinh x\cosh y-\cosh x\sinh y$</li></ul>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:15pt"><span class="fig" data-srcpage="2" data-clip="0,15,595.32,88"></span></div>
+<div class="hd ov">문제<br>GPS 위성의 상대론적 보정</div>
+<div class="flow" style="top:95pt;line-height:21pt">
+<ul style="margin:0 0 0 20pt;padding-left:14pt;line-height:23pt">
+<li>$\int\frac{dx}{(1-x^2)^{3/2}}=\frac{x}{\sqrt{1-x^2}}+C$</li>
+<li>$\int\frac{dx}{1-x^2}=\ln\sqrt{\frac{1+x}{1-x}}+C$</li></ul>
+<h3 style="margin-top:18pt">파트 A. 가속되는 입자 하나 (2.8점)</h3>
+<p style="margin:0">정지 질량이 $m$인 입자가 양의 $x$ 방향을 향하는 일정하고 균일한 힘의 장 $F$(정지 좌표계에서 정의) 속에 있다. 처음에($t=\tau=0$) 입자는 원점($x=0$)에 정지해 있다.</p>
+<div class="q" style="margin:0"><span class="k">1.</span><b>(0.5점)</b> 입자의 속도가 $v$일 때, 입자의 (정지 좌표계에 대한) 가속도 $a$를 계산하라.</div>
+<div class="q" style="margin:0"><span class="k">2.</span><b>(0.5점)</b> (정지 좌표계의) 시각 $t$에서 입자의 속도 $\beta(t)=\frac{v(t)}{c}$를 $F$, $m$, $t$, $c$로 계산하라.</div>
+<div class="q" style="margin:0"><span class="k">3.</span><b>(0.3점)</b> 시각 $t$에서 입자의 위치 $x(t)$를 $F$, $m$, $t$, $c$로 계산하라.</div>
+<div class="q" style="margin:0"><span class="k">4.</span><b>(0.7점)</b> 입자의 고유 가속도 $a'\equiv g=F/m$이 상수임을 보여라. 고유 가속도는 순간 고유 좌표계에서 측정한 입자의 가속도이다.</div>
+<div class="q" style="margin:0"><span class="k">5.</span><b>(0.4점)</b> 입자가 경험한 시간이 $\tau$일 때 입자의 속도 $\beta(\tau)$를 계산하라. 답을 $g$, $\tau$, $c$로 나타내어라.</div>
+<div class="q" style="margin:0"><span class="k">6.</span><b>(0.4점)</b> 정지 좌표계의 시간 $t$도 $g$, $\tau$, $c$로 계산하라.</div>
+<h3 style="margin-top:16pt">파트 B. 비행 시간 (2.0점)</h3>
+<p style="margin:0">앞 파트에서는 정보가 관측자에게 도달하는 데 걸리는 비행 시간을 고려하지 <b>않았다</b>. 이 파트는 문제 전체에서 비행 시간을 고려하는 유일한 파트이다. 입자는 파트 A에서처럼 움직인다.</p>
+<div class="q" style="margin:0"><span class="k">1.</span><b>(1.2점)</b> 어떤 순간 입자가 경험한 시간은 $\tau$이다. 입자는 $x=0$에 있는 정지한 시계의 눈금 $t_0$를 얼마로 관측하겠는가? 오랜 시간이 지나면 관측된 눈금 $t_0$는 어떤 값에 가까워지는가? 그렇다면 그 값은 얼마인가?</div>
+<div class="q" style="margin:0"><span class="k">2.</span><b>(0.8점)</b> 이제 반대 관점을 생각하자. 처음 지점($x=0$)에 있는 관측자가 입자의 시계를 관측할 때, 관측자의 시간이</div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:15pt"><span class="fig" data-srcpage="3" data-clip="0,15,595.32,88"></span></div>
+<div class="hd ov">문제<br>GPS 위성의 상대론적 보정</div>
+<div class="flow" style="top:97pt;line-height:21pt">
+<p style="padding-left:20pt;margin:0">$t$이면 입자의 시계 눈금 $\tau_0$는 얼마인가? 오랜 시간이 지나면 이 눈금은 어떤 값에 가까워지는가? 그렇다면 그 값은 얼마인가?</p>
+<h3 style="margin-top:18pt">파트 C. 민코프스키 도표 (1.0점)</h3>
+<p style="margin:0">상대론적 사건을 민코프스키 도표라는 도표로 나타내면 매우 유용할 때가 많다. 도표를 그리려면 정지 좌표계 S와, 정지 좌표계에 대해 속도 $v=\beta c$로 움직이는 좌표계 S′ 사이의 로렌츠 변환만 쓰면 된다.</p>
+</div>
+<div class="a" style="left:112pt;top:296pt;line-height:20.5pt">$x=\gamma(x'+\beta ct'),$<br>$ct=\gamma(ct'+\beta x'),$<br>$x'=\gamma(x-\beta ct),$<br>$ct'=\gamma(ct-\beta x).$<br>$\gamma=\dfrac{1}{\sqrt{1-\frac{v^2}{c^2}}}$</div>
+<div class="a" style="left:292pt;top:292pt"><span class="fig" data-srcpage="3" data-clip="292,292,468,449"></span></div>
+<div class="flow" style="top:466pt;line-height:21pt">
+<p style="margin:0">$x$와 $ct$를 직교하는 축으로 잡자. 움직이는 좌표계 S′의 점 $(x',ct')=(1,0)$은 정지 좌표계 S에서 좌표 $(x,ct)=(\gamma,\gamma\beta)$를 가진다. 이 점과 원점을 잇는 직선이 $x'$축을 정한다. 움직이는 좌표계 S′의 다른 점 $(x',ct')=(0,1)$은 정지 좌표계 S에서 좌표 $(x,ct)=(\gamma\beta,\gamma)$를 가진다. 이 점과 원점을 잇는 직선이 $ct'$축을 정한다. $x$축과 $x'$축 사이의 각은 $\theta$이며 $\tan\theta=\beta$이다. 움직이는 좌표계 S′의 단위 길이는 정지 좌표계 S에서 $\gamma\sqrt{1+\beta^2}=\sqrt{\frac{1+\beta^2}{1-\beta^2}}$과 같다.</p>
+<p style="margin:0">민코프스키 도표를 더 잘 이해하기 위해 다음 예를 살펴보자. 움직이는 좌표계 S′에서 고유 길이가 $L$인 막대를 생각하자. 정지 좌표계 S에서 막대의 길이를 구하려 한다. 아래 그림을 보라.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:15pt"><span class="fig" data-srcpage="4" data-clip="0,15,595.32,88"></span></div>
+<div class="hd ov">문제<br>GPS 위성의 상대론적 보정</div>
+<div class="a" style="left:208pt;top:98pt"><span class="fig" data-srcpage="4" data-clip="208,98,388,270"></span></div>
+<div class="flow" style="top:278pt;line-height:21pt">
+<p style="margin:0">막대는 선분 AC로 나타난다. S 좌표계에서 길이 AC는 $\sqrt{\frac{1+\beta^2}{1-\beta^2}}L$과 같다. S 좌표계에서 막대의 길이는 선분 AB로 나타난다.</p>
+<div style="padding-left:178pt;line-height:20pt;margin:2pt 0">$\mathrm{AB}=\mathrm{AD}-\mathrm{BD}$<br>$\phantom{\mathrm{AB}}=AC\cos\theta-AC\sin\theta\tan\theta$<br>$\phantom{\mathrm{AB}}=L\sqrt{1-\beta^2}$</div>
+<div class="q" style="margin:0"><span class="k">1.</span><b>(0.5점)</b> 민코프스키 도표를 이용하여, 정지 좌표계에서 고유 길이가 $L$인 막대를 움직이는 좌표계에서 잰 길이를 계산하라.</div>
+<div class="q" style="margin:0"><span class="k">2.</span><b>(0.5점)</b> 이제 파트 A의 경우를 생각하자. 입자의 위치 $x$에 대한 시간 $ct$를 그려라. 같은 그래프에 $\frac{gt}{c}=1$일 때의 $x'$축과 $ct'$축을 길이 척도 $x(c^2/g)$와 $ct(c^2/g)$로 그려라.</div>
+<h3 style="margin-top:16pt">파트 D. 가속되는 두 입자 (2.3점)</h3>
+<p style="margin:0">이 파트에서는 둘 다 양의 $x$ 방향으로 같은 고유 가속도 $g$를 가지는 가속되는 두 입자를 생각한다. 첫 번째 입자는 $x=0$에서, 두 번째 입자는 $x=L$에서 출발한다. 이 파트에서는 비행 시간을 고려하지 <b>마라</b>.</p>
+<div class="q" style="margin:0"><span class="k">1.</span><b>(0.3점)</b> 얼마 뒤 정지 좌표계의 관측자가 관측을 한다. 첫 번째 입자의 시계는 시간 $\tau_A$를 가리킨다. 정지 좌표계의 관측자에 따르면 두 번째 시계의 눈금 $\tau_B$는 얼마인가?</div>
+<div class="q" style="margin:0"><span class="k">2.</span><b>(1.0점)</b> 이제 첫 번째 입자의 좌표계에서 관측하는 것을 생각하자. 어떤 순간 첫 번째 입자와 함께 움직이는 관측자는</div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:15pt"><span class="fig" data-srcpage="5" data-clip="0,15,595.32,88"></span></div>
+<div class="hd ov">문제<br>GPS 위성의 상대론적 보정</div>
+<div class="flow" style="top:97pt;line-height:21pt">
+<p style="padding-left:20pt;margin:0">자기 시계의 눈금이 $\tau_1$임을 관측하였다. 같은 시각에 그는 두 번째 입자의 시계를 관측하였고 그 눈금은 $\tau_2$였다. 다음을 보여라.</p>
+<div class="eq">$\sinh\dfrac gc(\tau_2-\tau_1)=C_1\sinh\dfrac{g\tau_1}{c},$</div>
+<p style="padding-left:20pt;margin:0">여기서 $C_1$은 상수이다. $C_1$을 구하라.</p>
+<div class="q" style="margin:0"><span class="k">3.</span><b>(1.0점)</b> 첫 번째 입자는 두 번째 입자가 자신에게서 멀어지는 것을 본다. 첫 번째 입자에 따르면 두 입자 사이 거리의 변화율이 다음과 같음을 보여라.
+<div class="eq">$\dfrac{dL'}{d\tau_1}=C_2\dfrac{\sinh\frac{g\tau_2}{c}}{\cosh\frac gc(\tau_2-\tau_1)},$</div>여기서 $C_2$는 상수이다. $C_2$를 구하라.</div>
+<h3 style="margin-top:14pt">파트 E. 균일하게 가속되는 좌표계 (2.7점)</h3>
+<p style="margin:0">이 파트에서는 각 입자에 따라 두 입자 사이의 거리가 일정하도록 입자들의 고유 가속도를 정한다. 처음에 두 입자는 모두 정지해 있고, 첫 번째 입자는 $x=0$에, 두 번째 입자는 $x=L$에 있다.</p>
+<div class="q" style="margin:0"><span class="k">1.</span><b>(0.8점)</b> 첫 번째 입자는 양의 $x$ 방향으로 고유 가속도 $g_1$을 가진다. 첫 번째 입자가 가속되는 동안, 운동 내내 첫 번째 입자에 따르면 첫 번째 입자로부터 일정한 거리에 있는 고정점이 정지 좌표계의 $x=x_p$에 존재한다. $x_p$를 구하라.</div>
+<div class="q" style="margin:0"><span class="k">2.</span><b>(1.3점)</b> 첫 번째 입자의 고유 가속도가 $g_1$일 때, 첫 번째 입자에 따르면 두 입자 사이의 거리가 일정하도록 하는 두 번째 입자의 고유 가속도 $g_2$를 구하라.</div>
+<div class="q" style="margin:0"><span class="k">3.</span><b>(0.6점)</b> 첫 번째 입자에 따르면 첫 번째 입자에 대한 두 번째 입자의 시간 흐름의 비 $\dfrac{d\tau_2}{d\tau_1}$는 얼마인가?</div>
+<h3 style="margin-top:14pt">파트 F. GPS 보정 (2.2점)</h3>
+<p style="margin:0">파트 E는 서로 상대 운동이 없더라도 고도가 다른 시계들의 시간 흐름이 같지 않다는 것을 보여 준다.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:15pt"><span class="fig" data-srcpage="6" data-clip="0,15,595.32,88"></span></div>
+<div class="hd ov">문제<br>GPS 위성의 상대론적 보정</div>
+<div class="flow" style="top:97pt;line-height:21pt">
+<p style="margin:0">일반 상대성 이론의 <b>등가 원리</b>에 따르면, 작고 닫힌 방 안의 관측자는 중력 $g$와 가속도 $g$인 가속 좌표계의 가상력을 구별할 수 없다. 따라서 중력 퍼텐셜이 다른 곳에 있는 두 시계는 흐르는 빠르기가 다르다고 결론지을 수 있다.</p>
+<p style="margin:0">이제 주기 12시간으로 지구 둘레를 도는 GPS 위성을 생각하자.</p>
+<div class="q" style="margin:0"><span class="k">1.</span><b>(0.6점)</b> 지구 표면의 중력 가속도가 $9.78\ {\rm m\,s^{-2}}$이고 지구의 반지름이 6380 km라면, GPS 위성 궤도의 반지름은 얼마인가? 위성의 속력은 얼마인가? 반지름과 속력의 수치를 계산하라.</div>
+<div class="q" style="margin:0"><span class="k">2.</span><b>(1.2점)</b> 하루가 지나면 지구 표면의 시계와 위성의 시계 눈금은 특수 상대론적 효과와 일반 상대론적 효과 때문에 달라진다. 하루 동안 각 효과에 의한 차이를 계산하라. 하루 동안의 전체 차이를 계산하라. 지구 표면의 시계와 위성의 시계 중 어느 시계가 더 빠른가?</div>
+<div class="q" style="margin:0"><span class="k">3.</span><b>(0.4점)</b> 하루가 지난 뒤 이 효과에 의한 위치 오차를 어림하라.</div>
+</div>
+</div>
+</body></html>
