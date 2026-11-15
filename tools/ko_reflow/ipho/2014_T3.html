@@ -1,0 +1,76 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* IPhO 2014 Theory Problem 3, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:11.4pt;line-height:14.6pt}
+.a{position:absolute}
+.hd{position:absolute;left:110pt;top:44.7pt;width:452pt;font-size:16pt;line-height:19.3pt;font-weight:bold}
+.hd span{float:right}
+.flow{position:absolute;left:36pt;top:73.5pt;width:526.4pt}
+h2{font-size:14pt;line-height:17pt;font-weight:bold;text-align:center;margin:0}
+p{margin:0}
+p.in{text-indent:35.4pt}
+.eq{text-align:center;margin:2pt 0}
+table.q{border-collapse:collapse;width:100%;margin:5pt 0}
+table.q td{border:.75pt solid #000;padding:1pt 4pt;vertical-align:top}
+table.q td.l{width:24pt;text-align:center;font-weight:bold}
+</style></head><body>
+
+<div class="page">
+<div class="a" style="left:37.5pt;top:35.4pt"><span class="fig" data-srcpage="1" data-clip="37.5,35.4,96.3,58.8"></span></div>
+<div class="hd">Theoretical competition. Tuesday, 15 July 2014<span>1/2</span></div>
+<div class="flow">
+<h2>문제 3. 기체 방전의 가장 간단한 모형 (10점)</h2>
+<p class="in">기체 속을 흐르는 전류를 기체 방전이라 한다. 기체 방전에는 조명등의 글로 방전, 용접의 아크 방전, 그리고 구름과 땅 사이에서 번개의 형태로 일어나는 잘 알려진 불꽃 방전 등 여러 종류가 있다.</p>
+<h2 style="margin-top:4pt">파트 A. 비자속 기체 방전 (4.8점)</h2>
+<p class="in">이 부분에서는 이른바 비자속(non-self-sustained) 기체 방전을 다룬다. 이를 유지하려면 외부 이온화 장치가 계속 작동해야 하며, 이 장치는 단위 부피, 단위 시간당 $Z_{\rm ext}$쌍의 1가 이온과 자유 전자를 부피 전체에 균일하게 만든다.</p>
+<p class="in">외부 이온화 장치를 켜면 전자와 이온의 수가 늘어나기 시작한다. 기체 속 전자와 이온의 수밀도가 한없이 늘어나지 않는 것은 자유 전자가 이온과 재결합하여 중성 원자가 되는 재결합 과정 때문이다. 기체 속에서 단위 부피, 단위 시간당 일어나는 재결합 사건의 수 $Z_{\rm rec}$는 다음과 같다.</p>
+<div class="eq">$Z_{\rm rec}=rn_en_i,$</div>
+<p>여기서 $r$은 재결합 계수라 부르는 상수이고, $n_e$, $n_i$는 각각 전자와 이온의 수밀도이다.</p>
+<p class="in">시각 $t=0$에 외부 이온화 장치를 켜고, 기체 속 전자와 이온의 처음 수밀도는 모두 0이라 하자. 그러면 전자 수밀도 $n_e(t)$는 시간 $t$에 따라 다음과 같이 변한다.</p>
+<div class="eq">$n_e(t)=n_0+a\tanh bt,$</div>
+<p>여기서 $n_0$, $a$, $b$는 어떤 상수이고, $\tanh x$는 쌍곡탄젠트이다.</p>
+<table class="q"><tr><td class="l">A1</td><td>$n_0$, $a$, $b$를 구하고 이를 $Z_{\rm ext}$와 $r$로 나타내어라. <b>(1.8점)</b></td></tr></table>
+<p class="in">외부 이온화 장치가 두 개 있다고 하자. 첫 번째 장치를 켜면 기체 속 전자 수밀도가 평형값 $n_{e1}=12\cdot10^{10}\ \mathrm{cm^{-3}}$에 이른다. 두 번째 외부 이온화 장치를 켜면 전자 수밀도가 평형값 $n_{e2}=16\cdot10^{10}\ \mathrm{cm^{-3}}$에 이른다.</p>
+<table class="q"><tr><td class="l">A2</td><td>두 외부 이온화 장치를 동시에 켰을 때 평형 상태의 전자 수밀도 $n_e$를 구하라. <b>(0.6점)</b></td></tr></table>
+<p class="in"><b>주의!</b> <i>이후에는 외부 이온화 장치가 충분히 오래 켜져 있어서 모든 과정이 정상 상태에 이르러 시간에 의존하지 않는다고 가정한다. 전하 운반자에 의한 전기장은 완전히 무시한다.</i></p>
+<p class="in">면적이 $S$이고 서로 $L\ll\sqrt S$만큼 떨어진 두 평행 도체판 사이의 관을 기체가 채우고 있다고 하자. 두 판 사이에 전압 $U$를 걸어 판 사이에 전기장을 만든다. 두 종류의 전하 운반자의 수밀도는 관을 따라 거의 일정하게 유지된다고 가정한다.</p>
+<p class="in">전자(아래 첨자 $e$로 표시)와 이온(아래 첨자 $i$로 표시)이 모두 전기장의 세기 $E$에 의해 다음과 같이 같은 정렬 속력 $v$를 얻는다고 가정한다.</p>
+<div class="eq">$v=\beta E,$</div>
+<p>여기서 $\beta$는 전하 이동도라 부르는 상수이다.</p>
+<table class="q">
+<tr><td class="l">A3</td><td>관 속의 전류 $I$를 $U$, $\beta$, $L$, $S$, $Z_{\rm ext}$, $r$, 그리고 기본 전하 $e$로 나타내어라. <b>(1.7점)</b></td></tr>
+<tr><td class="l">A4</td><td>걸어 준 전압이 충분히 작을 때 기체의 비저항 $\rho_{\rm gas}$를 구하고 이를 $\beta$, $L$, $Z_{\rm ext}$, $r$, $e$로 나타내어라. <b>(0.7점)</b></td></tr>
+</table>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:37.5pt;top:35.4pt"><span class="fig" data-srcpage="2" data-clip="37.5,35.4,96.3,58.8"></span></div>
+<div class="hd">Theoretical competition. Tuesday, 15 July 2014<span>2/2</span></div>
+<div class="a" style="left:336.4pt;top:162.9pt"><span class="fig" data-srcpage="2" data-clip="336.4,162.9,560.0,307.2"></span></div>
+<div class="flow">
+<h2>파트 B. 자속 기체 방전 (5.2점)</h2>
+<p class="in">이 부분에서는 자속(self-sustained) 기체 방전의 점화를 다루어, 관 속의 전류가 어떻게 스스로 유지되는지 보인다.</p>
+<p class="in"><b>주의!</b> <i>이후에는 외부 이온화 장치가 같은 비율 $Z_{\rm ext}$로 계속 작동하고, 전하 운반자에 의한 전기장은 무시하여 전기장이 관을 따라 균일하며, 재결합은 완전히 무시할 수 있다고 가정한다.</i></p>
+<p class="in" style="margin-right:232pt">자속 기체 방전에는 앞에서 다루지 않은 중요한 과정이 두 가지 있다. 첫째는 이차 전자 방출이고, 둘째는 전자 사태의 형성이다. 이차 전자 방출은 이온이 음극(cathode)이라 부르는 음의 전극에 부딪힐 때 일어나며, 이때 튀어나온 전자들은 양극(anode)이라 부르는 양의 전극을 향해 움직인다. 단위 시간당 튀어나오는 전자 수 $\dot N_e$와 단위 시간당 음극에 부딪히는 이온 수 $\dot N_i$의 비를 이차 전자 방출 계수 $\gamma=\dot N_e/\dot N_i$라 한다.</p>
+<p>전자 사태의 형성은 다음과 같이 설명된다. 전기장이 자유 전자를 가속하면, 전자는 기체 원자에 부딪혀 이온화할 수 있을 만큼 큰 운동 에너지를 얻는다. 그 결과 양극을 향해 움직이는 자유 전자의 수가 크게 늘어난다. 이 과정은 타운센드 계수 $\alpha$로 기술되며, $\alpha$는 $N_e$개의 전자가 거리 $dl$을 지날 때 늘어나는 전자 수 $dN_e$를 나타낸다. 즉</p>
+<div class="eq">$\frac{dN_e}{dl}=\alpha N_e.$</div>
+<p class="in">기체 관의 임의의 단면을 지나는 전체 전류 $I$는 이온 전류 $I_i(x)$와 전자 전류 $I_e(x)$로 이루어지며, 정상 상태에서 이들은 위 그림에 나타낸 좌표 $x$에 의존한다. 전자 전류 $I_e(x)$는 $x$축을 따라 다음 식에 따라 변한다.</p>
+<div class="eq">$I_e(x)=C_1e^{A_1x}+A_2,$</div>
+<p>여기서 $A_1$, $A_2$, $C_1$은 어떤 상수이다.</p>
+<table class="q"><tr><td class="l">B1</td><td>$A_1$, $A_2$를 구하고 이를 $Z_{\rm ext}$, $\alpha$, $e$, $L$, $S$로 나타내어라. <b>(2점)</b></td></tr></table>
+<p class="in">이온 전류 $I_i(x)$는 $x$축을 따라 다음 식에 따라 변한다.</p>
+<div class="eq">$I_i(x)=C_2+B_1e^{B_2x},$</div>
+<p>여기서 $B_1$, $B_2$, $C_2$는 어떤 상수이다.</p>
+<table class="q">
+<tr><td class="l">B2</td><td>$B_1$, $B_2$를 구하고 이를 $Z_{\rm ext}$, $\alpha$, $e$, $L$, $S$, $C_1$로 나타내어라. <b>(0.6점)</b></td></tr>
+<tr><td class="l">B3</td><td>$x=L$에서 $I_i(x)$에 대한 조건을 써라. <b>(0.3점)</b></td></tr>
+<tr><td class="l">B4</td><td>$x=0$에서 $I_i(x)$와 $I_e(x)$에 대한 조건을 써라. <b>(0.6점)</b></td></tr>
+<tr><td class="l">B5</td><td>전체 전류 $I$를 구하고 이를 $Z_{\rm ext}$, $\alpha$, $\gamma$, $e$, $L$, $S$로 나타내어라. 전류는 유한하다고 가정한다. <b>(1.2점)</b></td></tr>
+</table>
+<p class="in">타운센드 계수 $\alpha$가 일정하다고 하자. 관의 길이가 어떤 임계값보다 커지면, 즉 $L&gt;L_{\rm cr}$이면 외부 이온화 장치를 꺼도 방전이 스스로 유지된다.</p>
+<table class="q"><tr><td class="l">B6</td><td>$L_{\rm cr}$을 구하고 이를 $Z_{\rm ext}$, $\alpha$, $\gamma$, $e$, $L$, $S$로 나타내어라. <b>(0.5점)</b></td></tr></table>
+</div>
+</div>
+
+</body></html>

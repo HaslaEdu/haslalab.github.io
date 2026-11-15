@@ -14,7 +14,22 @@ import slant
 
 KIT = pathlib.Path(__file__).resolve().parent
 VENDOR = KIT.parents[1] / "vendor"   # repo vendor/katex
-CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+CHROME = os.environ.get('HASLA_CHROME') or next((c for c in (r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+          "/opt/pw-browsers/chromium-1243/chrome-linux64/chrome", "/opt/pw-browsers/chromium/chrome-linux64/chrome")
+          if pathlib.Path(c).exists()), "chromium")
+# Korean faces: Batang / Malgun Gothic where Windows has them, else Noto Serif KR / Noto Sans KR (tools/ko/fonts or ~/.fonts)
+_ALT = {'HANBatang': 'NotoSerifKR-Regular.ttf', 'HANBatangB': 'NotoSerifKR-Bold.ttf',
+        'malgun': 'NotoSansKR-Regular.ttf', 'malgunbd': 'NotoSansKR-Bold.ttf'}
+
+
+def font_file(face):
+    win = pathlib.Path(f'C:/Windows/Fonts/{face}.ttf')
+    if win.exists():
+        return win
+    for d in (KIT.parents[0] / 'ko' / 'fonts', pathlib.Path.home() / '.fonts', pathlib.Path('/usr/share/fonts/truetype/noto')):
+        if (d / _ALT[face]).exists():
+            return d / _ALT[face]
+    sys.exit(f'no font for {face}: put {_ALT[face]} in tools/ko/fonts or ~/.fonts')
 
 CSS = """
 @font-face{font-family:CM;src:url(KITURL/katex/fonts/KaTeX_Main-Regular.woff2)}
@@ -71,7 +86,8 @@ def prepare(src, orig):
     html = html.replace('KITURL', kiturl)
     css = CSS.replace('KITURL', kiturl).replace('PW', pw).replace('PH', ph)
     for face in ('HANBatangB', 'HANBatang', 'malgunbd', 'malgun'):   # Hangul italics: a gentle slant, not Chrome's shear
-        css = css.replace(f'SLANT_{face})', slant.slanted(f'C:/Windows/Fonts/{face}.ttf').as_uri() + ')')
+        css = css.replace(f'url(file:///C:/Windows/Fonts/{face}.ttf)', f'url({font_file(face).as_uri()})')
+        css = css.replace(f'SLANT_{face})', slant.slanted(font_file(face)).as_uri() + ')')
     head = (f'<meta charset="utf-8"><link rel="stylesheet" href="{kiturl}/katex/katex.min.css">'
             f'<style>{css}</style>')
     tail = (f'<script src="{kiturl}/katex/katex.min.js"></script>'
@@ -88,7 +104,11 @@ def print_pdf(html):
     hp.write_text(html, encoding='utf-8')
     raw = tmpdir / 'raw.pdf'
     try:
+        if not CHROME.endswith('.exe'):   # Linux: Playwright's Chromium (its command-line printing hangs headless)
+            subprocess.run(['node', str(KIT / 'print_pw.cjs'), str(hp), str(raw)], check=True, capture_output=True, timeout=180)
+            return pymupdf.open(stream=raw.read_bytes(), filetype='pdf')
         subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--no-pdf-header-footer',
+                        *(['--no-sandbox'] if os.name != 'nt' else []),
                         '--allow-file-access-from-files', '--virtual-time-budget=8000',
                         '--disk-cache-size=1', '--disable-extensions', '--no-first-run',
                         f'--user-data-dir={tmpdir / "profile"}',
