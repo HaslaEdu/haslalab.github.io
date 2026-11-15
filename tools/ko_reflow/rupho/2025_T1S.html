@@ -1,0 +1,426 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2025 (LIX = 제59회; the booklet prints no numeral and no year), 9학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.5x595.3pt, 20 pages, no page numbers,
+   no marking scheme. Text column x 28.3..396.8 (width 368.5pt); paragraph indent 20pt; baselineskip 11.955pt.
+   Running header italic (SFTI1000), baseline 37.6, rule at y 41.4 on every page:
+   "Заключительный этап Всероссийской олимпиады по физике" -> "2025년 전러시아 물리 올림피아드, 결선" (conv_2025.md).
+   Russian subscripts retyped (conv_2025.md + T1S section): g_эф -> g_eff, F_тр/F_тр1 -> F_fr/F_fr1, r_цм -> r_cm,
+   v_окр -> v_circ, N_ср -> N_avg, N_мгн -> N_inst, I_л/U_л/R_л -> I_L/U_L/R_L, I_д/U_д/R_д -> I_D/U_D/R_D;
+   units Вт -> W, мин -> min, с -> s; ЛСО -> 실험실 기준틀.
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b:  top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:368.5pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.i{text-indent:20pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left;width:362.9pt}
+.g{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.g,.h{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+.sb{font-weight:bold;text-align:left;left:48.3pt;width:348.5pt;top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.1pt)}
+.bu{left:53.3pt;width:343.5pt}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.nr{width:216.9pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.wb{position:absolute;background:#fff}
+.cap{--fs:8.966pt;text-align:center}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="1" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x g" style="--b:64.0">풀이 예시</p>
+<p class="x h" style="--b:90.0">문제 9-T1. 마하의 실수</p>
+<p class="x i" style="--b:111.8">문제의 조건에 따르면 점 <span class="nw">$B$의</span> 마이크는 비행기가 점 <span class="nw">$C$에</span> 있을 때 낸 소리 신호를 감지하였다. 직선 <span class="nw">$CB$를</span> 긋고, 점 <span class="nw">$B$를</span> 지나며 이 직선에 수직인 직선을 작도하자. 이로써 고려하는 순간에 마하 원뿔의 모선의 위치를 정할 수 있다.</p>
+<p class="x i" style="--b:165.3">비행기가 등속으로 움직였으므로 마하 원뿔의 모선과 원뿔의 축 사이의 각은 어느 순간에나 일정하다. 마이크 <span class="nw">$A$가</span> 신호를 감지하는 순간에 소리가 들리는 영역의 경계를 찾기 위해, 점 <span class="nw">$A$를</span> 지나며 <span class="nw">$BS_2$에</span> 평행한 직선을 긋자.</p>
+<p class="x i" style="--b:218.7">점 <span class="nw">$A$의</span> 마이크는 비행기가 이 점 위를 지나가고 시간 <span class="nw">$t$가</span> 지난 뒤에 신호를 감지하였고, 감지가 시작되고 같은 시간이 지난 뒤에 소리가 마이크 <span class="nw">$B$에</span> 도달하였다. 점 <span class="nw">$A$</span> 위에 있던 비행기의 위치를 복원하기 위해, <span class="nw">$A$에서</span> 수평으로 왼쪽으로 거리 <span class="nw">$AB$만큼</span> 떨어진 곳에 <span class="nw">$BS_2$에</span> 평행한 직선을 하나 더 긋고, 이 직선이 점 <span class="nw">$A$를</span> 지나는 연직선과 만나는 점(점 <span class="nw">$D$)을</span> 찾자.</p>
+<p class="x i" style="--b:296.2">비행기는 직선을 따라 움직였으므로, 점 <span class="nw">$C$와</span> <span class="nw">$D$를</span> 지나는 직선을 그어 비행 경로를 복원하자. 따라서 점 <span class="nw">$S_1$은</span> 마이크 <span class="nw">$A$가</span> 소리를 감지하는 순간의 비행기 위치에 해당하고, 점 <span class="nw">$S_2$는</span> 마이크 <span class="nw">$B$가</span> 감지하는 순간의 위치에 해당한다.</p>
+<div class="f" style="left:91pt;top:345pt"><span class="fig" data-srcpage="1" data-clip="91,345,334,539"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="2" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x h" style="--b:64.0">문제 9-T2. 특이점</p>
+<p class="x sb" style="--b:83.1">첫 번째 방법</p>
+<p class="x i" style="--b:100.7;width:273.5pt">왼쪽으로 가속도 <span class="nw">$\vec a$로</span> 움직이는 비관성 기준틀로 옮겨 가자. 이 기준틀에서 원기둥은 정지해 있고, 원기둥에는 다음과 같은 유효 중력이 작용한다.</p>
+<p class="x c" style="--b:142.2;width:273.5pt">$M\vec g_{\mathrm{eff}} = M\vec g - M\vec a.$</p>
+<p class="x" style="--b:159.8;width:273.5pt">가속도 <span class="nw">$a$가</span> 커지면 연직선과 벡터 <span class="nw">$M\vec g_{\mathrm{eff}}$</span> 사이의 각 <span class="nw">$\gamma$가</span> 커진다는 것에 주목하자.</p>
+<div class="f" style="left:321pt;top:95pt"><span class="fig" data-srcpage="2" data-clip="321,95,387,177"></span></div>
+<p class="x ov" style="--b:132.0;left:376.8pt;--fs:6.974pt">eff</p>
+<div class="f" style="left:98pt;top:184pt"><span class="fig" data-srcpage="2" data-clip="98,184,318,301"></span></div>
+<p class="x ov" style="--b:296.1;left:186.9pt;--fs:6.974pt">eff</p>
+<p class="x i" style="--b:323.6">이 기준틀에서 원기둥에 작용하는 힘들을 표시하자.</p>
+<p class="x ov" style="--b:342.5;left:43.3pt">•</p>
+<p class="x bu" style="--b:342.5">수평면이 작용하는 반작용 힘 <span class="nw">$Q$는</span> 연직선과 각 <span class="nw">$\varphi$를</span> 이루며 향한다. 미끄러짐이 있는 운동이 일어나므로 <span class="nw">$\operatorname{tg}\varphi = \mu$이다.</span></p>
+<p class="x ov" style="--b:378.4;left:43.3pt">•</p>
+<p class="x bu" style="--b:378.4">판자가 작용하는 반작용 힘 <span class="nw">$Q_1$은</span> 접점으로 그은 반지름과 어떤 각 <span class="nw">$\alpha$를</span> 이루며 향한다.</p>
+<p class="x" style="--b:409.3"><b>경우 1:</b> <span class="nw">$\mu < \sqrt{3}$이면</span> 힘 <span class="nw">$Q$의</span> 작용선은 원기둥과 판자의 접점(점 <span class="nw">$A$)보다</span> 왼쪽을 지난다. 원기둥이 평형을 이루려면 힘 <span class="nw">$Q$,</span> <span class="nw">$Q_1$,</span> <span class="nw">$Mg_{\mathrm{eff}}$가</span> 한 점에서 만나야 한다(평행하지 않은 세 힘에 관한 정리). 각 <span class="nw">$\varphi$는</span> 고정되어 있고, 각 <span class="nw">$\alpha$는</span> 가속도 <span class="nw">$a$가</span> 작아질수록 커진다. 각 <span class="nw">$\alpha$의</span> 최댓값은 <span class="nw">$\varphi$와</span> 같다.</p>
+<div class="f" style="left:190pt;top:466pt"><span class="fig" data-srcpage="2" data-clip="190,466,236,479"></span></div>
+<p class="x i" style="--b:498.0">문제의 기하학적 관계로부터 <span class="nw">$\alpha = \varphi$일</span> 때 유효 중력과 연직선 사이의 각은 <span class="nw">$30^\circ$이다.</span> 따라서 다음을 얻는다.</p>
+<div class="f" style="left:164pt;top:514pt"><span class="fig" data-srcpage="2" data-clip="164,514,262,541"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="3" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">가속도 <span class="nw">$a$가</span> 커지면 각 <span class="nw">$\alpha$는</span> 작아지다가, 마침내 <span class="nw">$Mg_{\mathrm{eff}}$와</span> <span class="nw">$Q_1$이</span> 한 직선을 따라 향하게 된다. <span class="nw">$a$가</span> 더 커지면 평형이 깨지고, 원기둥은 판자 위로 굴러 올라가기 시작한다. 이때 반작용 힘 <span class="nw">$Q$는</span> 0이 된다. 따라서 다음을 얻는다.</p>
+<div class="f" style="left:163pt;top:104pt"><span class="fig" data-srcpage="3" data-clip="163,104,262,126"></span></div>
+<div class="f" style="left:177pt;top:130pt"><span class="fig" data-srcpage="3" data-clip="177,130,249,159"></span></div>
+<p class="x i" style="--b:178.8"><b>경우 2:</b> <span class="nw">$\mu > \sqrt{3}$.</span> 힘 <span class="nw">$Q$의</span> 작용선은 원기둥과 판자의 접점보다 아래쪽을 지난다.</p>
+<div class="f" style="left:93pt;top:204pt"><span class="fig" data-srcpage="3" data-clip="93,204,324,354"></span></div>
+<p class="x ov" style="--b:350.6;left:194.4pt;--fs:6.974pt">eff</p>
+<div class="f" style="left:93pt;top:370pt"><span class="fig" data-srcpage="3" data-clip="93,370,324,493"></span></div>
+<p class="x ov" style="--b:447.5;left:242.0pt;--fs:6.974pt">eff</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="4" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0"><span class="nw">$0 < \alpha \leqslant \varphi$임을</span> 고려하여 평행하지 않은 세 힘에 관한 정리를 적용하면, 세 힘이 한 점에서 만나게 되는 각 <span class="nw">$\gamma$의</span> 범위로 다음 두 가지가 가능하다.</p>
+<p class="x ov" style="--b:106.9;left:43.3pt">•</p>
+<p class="x bu" style="--b:106.9"><span class="nw">$\gamma \in [0; 30^\circ]$이고</span> 벡터 <span class="nw">$Q$는</span> 세 힘의 교점을 향한다.</p>
+<p class="x ov" style="--b:118.8;left:43.3pt">•</p>
+<p class="x bu" style="--b:118.8"><span class="nw">$\gamma \in (60^\circ; 90^\circ)$이고</span> 벡터 <span class="nw">$Q$를</span> 반대 방향으로 연장한 선이 세 힘의 교점을 지난다(그림 참고).</p>
+<p class="x" style="--b:149.7"><span class="nw">$\gamma \in [0^\circ; 30^\circ]$이면</span> 세 힘의 벡터가 모두 같은 반평면 쪽을 향하므로, 그 합은 0이 될 수 없다. 그러므로 이 경우에는 평형이 불가능하다. <span class="nw">$\gamma \in (60^\circ; 90^\circ)$에</span> 대해서는 첫째 경우와 마찬가지로 다음을 얻는다.</p>
+<div class="f" style="left:169pt;top:179pt"><span class="fig" data-srcpage="4" data-clip="169,179,256,200"></span></div>
+<p class="x i" style="--b:224.2"><b>경우 3:</b> $\mu = \sqrt{3}$</p>
+<div class="f" style="left:93pt;top:237pt"><span class="fig" data-srcpage="4" data-clip="93,237,324,360"></span></div>
+<p class="x ov" style="--b:308.8;left:186.7pt;--fs:6.974pt">eff</p>
+<p class="x i" style="--b:385.4"><span class="nw">$\varphi = 60^\circ$이고,</span> 힘 <span class="nw">$Q$의</span> 작용선은 점 <span class="nw">$A$를</span> 지난다. 그러면 힘 <span class="nw">$Q$와</span> <span class="nw">$Q_1$의</span> 작용선은 일치하거나 점 <span class="nw">$A$에서</span> 만난다. 앞의 경우는 불가능하다. 그 경우에 평형 조건이 성립하려면 <span class="nw">$Mg_{\mathrm{eff}}$가</span> <span class="nw">$Q$,</span> <span class="nw">$Q_1$과</span> 평행해야 하는데, 이는 있을 수 없기 때문이다. 그러므로 힘 <span class="nw">$Q$와</span> <span class="nw">$Q_1$의</span> 작용선은 점 <span class="nw">$A$에서</span> 만난다. 그러면 평행하지 않은 세 힘에 관한 정리에 따라 <span class="nw">$Mg_{\mathrm{eff}}$도</span> 점 <span class="nw">$A$를</span> 향하며, 따라서 가속도의 값이 하나로 정해진다.</p>
+<div class="f" style="left:192pt;top:457pt"><span class="fig" data-srcpage="4" data-clip="192,457,233,478"></span></div>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="5" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x sb" style="--b:64.0">두 번째 방법</p>
+<p class="x i" style="--b:81.7">원기둥에 작용하는 힘들을 표시하고, 원기둥에 대해 질량 중심의 운동 정리를 수평 방향과 연직 방향의 성분으로 쓰자.</p>
+<div class="f" style="left:98pt;top:119pt"><span class="fig" data-srcpage="5" data-clip="98,119,318,236"></span></div>
+<p class="x ov" style="--b:214.2;left:184.1pt;--fs:6.974pt">fr</p>
+<p class="x ov" style="--b:225.6;left:165.3pt;--fs:6.974pt">fr1</p>
+<p class="x c d" style="--b:282.2;--a:20.5pt">$\begin{cases} Oy\colon\quad N_1 + N\sin\alpha - F_{\mathrm{fr}}\cos\alpha - Mg = 0;\\ Ox\colon\quad N\cos\alpha + F_{\mathrm{fr}}\sin\alpha - F_{\mathrm{fr}1} = Ma.\end{cases}$</p>
+<p class="x" style="--b:305.6">문제의 조건으로부터 각 <span class="nw">$\alpha$를</span> 구할 수 있다.</p>
+<div class="f" style="left:136pt;top:316pt"><span class="fig" data-srcpage="5" data-clip="136,316,289,342"></span></div>
+<p class="x" style="--b:356.7">원기둥이 수평면 위에서 미끄러지므로, 이에 따라 마찰력은 다음과 같다.</p>
+<p class="x c" style="--b:380.6">$F_{\mathrm{fr}1} = \mu N_1$</p>
+<p class="x" style="--b:398.6">원기둥이 회전하지 않으려면 원기둥의 중심에 대한 모멘트 규칙이 성립해야 한다.</p>
+<p class="x c" style="--b:432.4">$F_{\mathrm{fr}}R = F_{\mathrm{fr}1}R \implies F_{\mathrm{fr}} = F_{\mathrm{fr}1} = \mu N_1.$</p>
+<p class="x" style="--b:454.3">엄밀히 말하면 앞의 식은 원기둥의 질량 중심 기준틀에서 써야 한다. 그러나 비관성 기준틀로 옮겨 갈 때 관성력은 물체의 질량 중심에 작용하므로, 질량 중심에 대한 힘의 모멘트를 만들지 않는다. 마찰력의 값을 연립 방정식에 대입하자.</p>
+<div class="f" style="left:110pt;top:502pt"><span class="fig" data-srcpage="5" data-clip="110,502,304,533"></span></div>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="6" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">원기둥이 회전하지 않고 등가속도 운동을 하려면 다음 관계가 성립해야 한다.</p>
+<p class="x c d" style="--b:107.8;--a:20.5pt">$\begin{cases} N_1 > 0,\\ F_{\mathrm{fr}} \leqslant \mu N \implies N_1 \leqslant N.\end{cases}$</p>
+<p class="x" style="--b:133.6">첫째 조건은 원기둥이 수평면과 접촉하고 있음을 보장하고, 둘째 조건은 원기둥과 판자 사이에 미끄러짐이 없음을 보장한다. 연직 축에 대한 식에서 <span class="nw">$N_1$을</span> 나타내자.</p>
+<div class="f" style="left:167pt;top:167pt"><span class="fig" data-srcpage="6" data-clip="167,167,259,193"></span></div>
+<p class="x" style="--b:207.6"><span class="nw">$N_1$의</span> 값을 수평 축에 대한 식에 대입하자.</p>
+<div class="f" style="left:113pt;top:217pt"><span class="fig" data-srcpage="6" data-clip="113,217,313,242"></span></div>
+<p class="x" style="--b:257.6"><span class="nw">$N$이</span> 들어 있는 항들을 등식의 한쪽으로 모으자.</p>
+<div class="f" style="left:83pt;top:268pt"><span class="fig" data-srcpage="6" data-clip="83,268,342,293"></span></div>
+<p class="x" style="--b:309.9">등식의 양변에 <span class="nw">$(1 - \mu\cos\alpha)$를</span> 곱하자.</p>
+<div class="f" style="left:46pt;top:317pt"><span class="fig" data-srcpage="6" data-clip="46,317,380,334"></span></div>
+<p class="x" style="--b:350.8">따라서 <span class="nw">$N$의</span> 값에 대한 식을 얻는다.</p>
+<div class="f" style="left:129pt;top:361pt"><span class="fig" data-srcpage="6" data-clip="129,361,297,387"></span></div>
+<p class="x" style="--b:401.7">각의 값 <span class="nw">$\alpha = 30^\circ$를</span> 대입하면 다음과 같다.</p>
+<div class="f" style="left:156pt;top:405pt"><span class="fig" data-srcpage="6" data-clip="156,405,269,440"></span></div>
+<p class="x" style="--b:455.1">이 식을 힘 <span class="nw">$N_1$의</span> 식에 대입하면 다음과 같다.</p>
+<div class="f" style="left:173pt;top:458pt"><span class="fig" data-srcpage="6" data-clip="173,458,252,493"></span></div>
+<p class="x" style="--b:508.6">이제 <span class="nw">$a$의</span> 가능한 값을 얻으려면 부등식 <span class="nw">$0 < N_1 < N$을</span> 분석해야 한다. <span class="nw">$N$과</span> <span class="nw">$N_1$의</span> 분모에는 마찰 계수의 특정한 값 <span class="nw">$\mu = \sqrt{3}$에서</span> <b>특이점</b>이 있음을 알 수 있다. 세 경우를 따로 살펴보자.</p>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="7" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0"><b>경우 1:</b> $\mu < \sqrt{3}$</p>
+<div class="f" style="left:132pt;top:76pt"><span class="fig" data-srcpage="7" data-clip="132,76,293,98"></span></div>
+<p class="x" style="--b:110.3">$N_1 < N$:</p>
+<div class="f" style="left:62pt;top:113pt"><span class="fig" data-srcpage="7" data-clip="62,113,364,148"></span></div>
+<p class="x d" style="--b:168.4;--a:13.6pt;text-align:left">따라서 <span class="nw">$a > \dfrac{1}{\sqrt{3}}g$를</span> 얻는다.</p>
+<div class="f" style="left:177pt;top:174pt"><span class="fig" data-srcpage="7" data-clip="177,174,249,203"></span></div>
+<p class="x i" style="--b:221.5"><b>경우 2:</b> $\mu > \sqrt{3}$</p>
+<div class="f" style="left:132pt;top:233pt"><span class="fig" data-srcpage="7" data-clip="132,233,293,256"></span></div>
+<p class="x" style="--b:267.7">$N_1 < N$:</p>
+<div class="f" style="left:62pt;top:270pt"><span class="fig" data-srcpage="7" data-clip="62,270,364,305"></span></div>
+<p class="x d" style="--b:325.8;--a:13.6pt;text-align:left">따라서 다음을 얻는다: <span class="nw">$a > \dfrac{1}{\sqrt{3}}g$.</span> 첫째 조건이 둘째 조건보다 더 엄격하므로,</p>
+<p class="x" style="--b:340.3">다음 답을 얻는다.</p>
+<div class="f" style="left:193pt;top:352pt"><span class="fig" data-srcpage="7" data-clip="193,352,232,373"></span></div>
+<p class="x i" style="--b:392.3"><b>경우 3:</b> $\mu = \sqrt{3}$</p>
+<p class="x i" style="--b:409.9">이 경우는 분모가 0이 되므로, 앞에서 얻은 식으로부터 바로 분석할 수 없다. 이 경우의 답을 얻기 위해 처음의 연립 방정식으로 돌아가서 각의 값 <span class="nw">$\alpha = 30^\circ$와</span> 마찰 계수 <span class="nw">$\mu = \sqrt{3}$을</span> 대입하자.</p>
+<div class="f" style="left:134pt;top:454pt"><span class="fig" data-srcpage="7" data-clip="134,454,280,502"></span></div>
+<p class="x" style="--b:514.8">연립 방정식의 첫째 식으로부터 다음을 얻는다.</p>
+<div class="f" style="left:176pt;top:526pt"><span class="fig" data-srcpage="7" data-clip="176,526,249,539"></span></div>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="8" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">이 식을 연립 방정식의 둘째 식에 대입하자.</p>
+<div class="f" style="left:122pt;top:67pt"><span class="fig" data-srcpage="8" data-clip="122,67,304,101"></span></div>
+<p class="x" style="--b:110.5">따라서 연립 방정식의 유일한 해를 구한다.</p>
+<div class="f" style="left:192pt;top:122pt"><span class="fig" data-srcpage="8" data-clip="192,122,233,143"></span></div>
+<p class="x h" style="--b:165.7">문제 9-T3. 삼체 문제</p>
+<p class="x sb" style="--b:186.9">첫 번째 방법</p>
+<div class="f" style="left:260pt;top:171pt"><span class="fig" data-srcpage="8" data-clip="260,171,380,345"></span></div>
+<p class="x i nr wn" style="--b:204.6">우주선이 점 <span class="nw">$M$에</span> 있다고 하자. 직각삼각형의 꼭짓점 <span class="nw">$A$,</span> <span class="nw">$B$,</span> <span class="nw">$C$에서</span> 이 점까지의 거리는 각각 <span class="nw">$\vec r_1$,</span> <span class="nw">$\vec r_2$,</span> <span class="nw">$\vec r_3$이다.</span> 다음 벡터를 도입하자.</p>
+<div class="f" style="left:80pt;top:251pt"><span class="fig" data-srcpage="8" data-clip="80,251,194,265"></span></div>
+<p class="x nr wn" style="--b:280.2">평형 위치에서 우주선에 작용하는 알짜힘은 0이다.</p>
+<div class="f" style="left:60pt;top:303pt"><span class="fig" data-srcpage="8" data-clip="60,303,210,337"></span></div>
+<p class="x" style="--b:348.6"><span class="nw">$\vec r_1$과</span> <span class="nw">$\vec r_2$를</span> <span class="nw">$\vec r_3$으로</span> 나타내어 위의 식에 대입하자.</p>
+<div class="f" style="left:59pt;top:357pt"><span class="fig" data-srcpage="8" data-clip="59,357,367,383"></span></div>
+<p class="x sb" style="--b:400.9">두 번째 방법</p>
+<div class="f" style="left:271pt;top:385pt"><span class="fig" data-srcpage="8" data-clip="271,385,380,558"></span></div>
+<p class="x i nr wn" style="--b:418.6">예각인 꼭짓점에 있는 두 정거장이 함께 미치는 작용은, 빗변의 중점에 있고 힘 계수가 <span class="nw">$2P$인</span> 정거장 하나의 작용과 같음을 보이자. 그림에서 이 두 정거장은 점 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 있고, 우주선은 점 <span class="nw">$K$에</span> 있다. 정거장 <span class="nw">$A$와</span> <span class="nw">$B$가</span> 물체에 작용하는 힘은 다음과 같이 나타난다.</p>
+<div class="f" style="left:89pt;top:525pt"><span class="fig" data-srcpage="8" data-clip="89,525,184,539"></span></div>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="9" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">다음을 고려하여</p>
+<div class="f" style="left:120pt;top:73pt"><span class="fig" data-srcpage="9" data-clip="120,73,305,87"></span></div>
+<p class="x" style="--b:100.3">이 식들을 힘의 식에 대입하자.</p>
+<div class="f" style="left:95pt;top:108pt"><span class="fig" data-srcpage="9" data-clip="95,108,330,126"></span></div>
+<p class="x i" style="--b:147.1">얻은 식으로부터 합력은 선분 <span class="nw">$AB$의</span> 중점에 있고 계수가 <span class="nw">$2P$인</span> 정거장이 만드는 힘과 정확히 같다. 따라서 앞으로는 우주선에 다음 두 정거장이 작용한다고 생각할 수 있다.</p>
+<p class="x ov" style="--b:201.8;left:43.3pt">•</p>
+<p class="x bu" style="--b:201.8">하나는 계수가 <span class="nw">$2P$이고</span> 직각인 꼭짓점에 있다(정거장 <span class="nw">$C$).</span></p>
+<p class="x ov" style="--b:213.8;left:43.3pt">•</p>
+<p class="x bu" style="--b:213.8">다른 하나는 계수가 <span class="nw">$2P$이고</span> 빗변의 중점에 있다(정거장 <span class="nw">$O$).</span></p>
+<div class="f" style="left:275pt;top:219pt"><span class="fig" data-srcpage="9" data-clip="275,219,376,370"></span></div>
+<p class="x i nr wn" style="--b:232.7">다음으로 이 정거장들의 작용을, 변형되지 않은 상태의 길이가 무시할 수 있을 만큼 작고(0과 같고) 용수철 상수가 <span class="nw">$2P$인</span> 용수철들의 작용으로 바꿀 수 있다(그림 참고). 등가 용수철들의 용수철 상수를 고려하면 우주선의 평형 위치를 쉽게 정할 수 있다. 그것은 중선 <span class="nw">$CO$를</span> 이등분하는 점이다.</p>
+<p class="x sb" style="--b:368.7">세 번째 방법</p>
+<p class="x i" style="--b:386.3">평형 위치를 찾기 위해 삼각형의 꼭짓점에 놓인 세 질점으로 이루어진 계를 생각하자. 예각인 꼭짓점에는 각각 질량 <span class="nw">$m$,</span> 직각인 꼭짓점에는 질량 <span class="nw">$2m$이</span> 있다. 그러면 임의의 점 <span class="nw">$M$에서</span> 질량 중심까지 그은 위치 벡터는 다음 식으로 정해진다.</p>
+<p class="x c" style="--b:440.3">$4m\vec r_{\mathrm{cm}} = m\vec r_1 + m\vec r_2 + 2m\vec r_3.$</p>
+<p class="x" style="--b:458.4"><span class="nw">$M$이</span> 계의 질량 중심이면</p>
+<p class="x c" style="--b:476.5">$\vec r_{\mathrm{cm}} = 0 \implies \vec r_1 + \vec r_2 + 2\vec r_3 = 0,$</p>
+<p class="x" style="--b:494.6">이는 우주선의 평형 조건에서 얻은 식과 일치한다. 꼭짓점 <span class="nw">$C$를</span> 원점으로 잡고 계의 질량 중심의 좌표를 구하자.</p>
+<p class="x c d" style="--b:531.5;--a:15.2pt">$y_{\mathrm{cm}} = \dfrac{ml\cos 30^\circ}{4m} = \dfrac{\sqrt{3}l}{8};\quad x_{\mathrm{cm}} = \dfrac{ml\sin 30^\circ}{4m} = \dfrac{l}{8}.$</p>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="10" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">다음으로 피타고라스 정리로 평형 위치에서 각 정거장까지의 거리를 구한다.</p>
+<div class="f" style="left:132pt;top:86pt"><span class="fig" data-srcpage="10" data-clip="132,86,293,120"></span></div>
+<p class="x i" style="--b:134.8">처음 순간에 우주선은 정지해 있고, 정거장들이 우주선에 작용하는 알짜힘은 선분 <span class="nw">$CO$를</span> 따라 향한다. 이는 우주선의 가속도도 <span class="nw">$CO$를</span> 따라 향한다는 것을 뜻하며, 따라서 우주선은 이 선분을 따라 직선 운동을 하고 평형 위치에서 최대 속력에 도달한다.</p>
+<p class="x sb" style="--b:200.2">첫 번째 방법</p>
+<p class="x i" style="--b:215.5">우주선이 평형 위치에서 벡터 <span class="nw">$\overrightarrow{MK}$만큼</span> 벗어난 경우를 살펴보자. 정거장들이 작용하는 알짜힘의 변화는 다음과 같다.</p>
+<div class="f" style="left:61pt;top:241pt"><span class="fig" data-srcpage="10" data-clip="61,241,364,273"></span></div>
+<p class="x" style="--b:285.3">그러므로 우주선에는 점 <span class="nw">$M$과</span> <span class="nw">$K$</span> 사이에 늘어나 있고 자연 길이가 0이며 탄성 계수가 <span class="nw">$4P$인</span> 용수철이 작용하는 것과 같은 힘이 작용한다. 그러면 우주선이 빗변의 중점에서 점 <span class="nw">$M$까지</span> 움직이는 동안 이 용수철이 우주선에 하는 일은 다음과 같다.</p>
+<div class="f" style="left:153pt;top:324pt"><span class="fig" data-srcpage="10" data-clip="153,324,273,370"></span></div>
+<p class="x sb" style="--b:387.5">두 번째 방법</p>
+<p class="x i" style="--b:405.1">두 용수철과의 유사성을 이용하여 에너지 보존 법칙을 쓰자.</p>
+<div class="f" style="left:122pt;top:416pt"><span class="fig" data-srcpage="10" data-clip="122,416,305,448"></span></div>
+<p class="x sb" style="--b:462.5">세 번째 방법</p>
+<p class="x i" style="--b:480.2">어떤 정거장이 작용하는 힘이 하는 미소 일은 다음 식으로 정해진다.</p>
+<div class="f" style="left:81pt;top:499pt"><span class="fig" data-srcpage="10" data-clip="81,499,345,539"></span></div>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="11" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">우주선은 평형 위치를 지날 때 최대 속력에 도달한다. 이 경우에 대해 에너지 보존 법칙을 쓰자.</p>
+<div class="f" style="left:66pt;top:84pt"><span class="fig" data-srcpage="11" data-clip="66,84,360,122"></span></div>
+<p class="x" style="--b:136.1">세 방법 중 어느 것으로도 다음 답을 얻는다.</p>
+<div class="f" style="left:181pt;top:154pt"><span class="fig" data-srcpage="11" data-clip="181,154,243,181"></span></div>
+<p class="x sb" style="--b:198.2">첫 번째 방법</p>
+<div class="f" style="left:271pt;top:183pt"><span class="fig" data-srcpage="11" data-clip="271,183,380,350"></span></div>
+<p class="x i nr wn" style="--b:215.9">앞에서 보였듯이 우주선에 작용하는 힘은 점 <span class="nw">$M$에</span> 한쪽 끝이 있는 용수철이 작용하는 힘과 같다.</p>
+<p class="x i nr wn" style="--b:257.4">그러면 우주선의 운동은 선분 <span class="nw">$CO$를</span> 따르는 진동이다. 우주선은 점 <span class="nw">$M$을</span> 지나 점 <span class="nw">$C$</span> 쪽으로 날아가 그 근처에서 멈춘다.</p>
+<p class="x sb" style="--b:341.5">두 번째 방법</p>
+<p class="x i" style="--b:359.1">두 용수철의 작용으로 움직이는 우주선은 선분 <span class="nw">$CO$를</span> 따라 움직이며, 점 <span class="nw">$O$와</span> 점 <span class="nw">$X$에서</span> 멈춘다. 점 <span class="nw">$X$는</span> 용수철 계의 퍼텐셜 에너지가 우주선이 점 <span class="nw">$O$에</span> 있을 때의 에너지와 같아지는 점이다. 이 조건을 다음 식으로 쓸 수 있다.</p>
+<div class="f" style="left:134pt;top:401pt"><span class="fig" data-srcpage="11" data-clip="134,401,293,447"></span></div>
+<p class="x" style="--b:461.0">여기서 <span class="nw">$x$는</span> 점 <span class="nw">$C$에서</span> 점 <span class="nw">$X$까지의</span> 거리이다. 얻은 식은 다음 이차 방정식으로 정리된다.</p>
+<div class="f" style="left:183pt;top:472pt"><span class="fig" data-srcpage="11" data-clip="183,472,242,488"></span></div>
+<p class="x" style="--b:502.4">이를 풀면 두 근을 얻는다.</p>
+<div class="f" style="left:174pt;top:513pt"><span class="fig" data-srcpage="11" data-clip="174,513,251,538"></span></div>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="12" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">근 <span class="nw">$x = l/2$는</span> 처음 순간에 우주선이 있던 빗변의 중점에 해당한다. 따라서 우주선과 점 <span class="nw">$C$</span> 사이의 최소 거리는 0이다.</p>
+<p class="x i" style="--b:101.4">문항 2의 풀이에서 보였듯이 우주선에 작용하는 힘은 <span class="nw">$\vec F = -4P\cdot\overrightarrow{MK}$이다.</span> 여기서 <span class="nw">$M$은</span> 꼭짓점 <span class="nw">$A$,</span> <span class="nw">$B$,</span> <span class="nw">$C$에</span> 놓인 질점들 <span class="nw">$(m, m, 2m)$으로</span> 이루어진 계의 질량 중심이다. 앞의 문항들과 달리 점 <span class="nw">$M$은</span> 정지해 있지 않다. 질량 중심의 성질에 따라 다음이 성립한다.</p>
+<div class="f" style="left:137pt;top:154pt"><span class="fig" data-srcpage="12" data-clip="137,154,288,179"></span></div>
+<p class="x" style="--b:193.6">따라서 점 <span class="nw">$M$의</span> 속도는 방향이 일정하고, 크기는 <span class="nw">$v_{\max}$와</span> 같다.</p>
+<p class="x i" style="--b:223.2">계를 최종적으로 단순화하기 위해 점 <span class="nw">$M$의</span> 관성 기준틀로 옮겨 가자.</p>
+<div class="f" style="left:297pt;top:243pt"><span class="fig" data-srcpage="12" data-clip="297,243,384,352"></span></div>
+<p class="x i wn" style="--b:252.8;width:245.2pt">이 기준틀에서 점 <span class="nw">$K$의</span> 처음 속도 <span class="nw">$v_{\max}$는</span> 용수철에 수직으로 향한다. <span class="nw">$v_{\max}$는</span> 힘 <span class="nw">$4P\cdot MK$를</span> 받아 반지름 <span class="nw">$MK = l/4$인</span> 원 위를 움직이는 운동의 속력임에 주목하자.</p>
+<div class="f" style="left:104pt;top:300pt"><span class="fig" data-srcpage="12" data-clip="104,300,199,327"></span></div>
+<p class="x c d" style="--b:350.0;--a:15.2pt;width:245.2pt">$\dfrac{mv_{\mathrm{circ}}^2}{MK} = 4P\cdot MK.$</p>
+<p class="x c" style="--b:367.7;width:245.2pt">$v_{\max} = v_{\mathrm{circ}}$</p>
+<p class="x" style="--b:385.5">따라서 점 <span class="nw">$M$의</span> 기준틀에서 우주선은 반지름 <span class="nw">$l/4$인</span> 원 위를 문항 2에서 구한 속력 <span class="nw">$v_{\max}$로</span> 등속 운동한다.</p>
+<p class="x i" style="--b:415.0">우주선이 점 <span class="nw">$M$</span> 둘레를 한 바퀴 돌면, 실험실 기준틀에서 우주선의 속도가 처음으로 0이 된다. 이는 다음 시간이 지난 뒤에 일어난다.</p>
+<div class="f" style="left:149pt;top:439pt"><span class="fig" data-srcpage="12" data-clip="149,439,276,472"></span></div>
+<p class="x" style="--b:489.8">점 <span class="nw">$M$의</span> 기준틀에서 한 주기 동안 우주선의 변위는 0이다. 그러므로 실험실 기준틀에서 우주선은 점 <span class="nw">$M$과</span> 같은 거리만큼 이동하였다.</p>
+<div class="f" style="left:174pt;top:512pt"><span class="fig" data-srcpage="12" data-clip="174,512,251,538"></span></div>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="13" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">원 운동과 그 중심의 등속 운동이 겹쳐진 우주선의 운동 경로는 그림에 나타낸 것처럼 사이클로이드라는 점에 주목하자.</p>
+<div class="f" style="left:35pt;top:103pt"><span class="fig" data-srcpage="13" data-clip="35,103,393,451"></span></div>
+<p class="x ov" style="--b:288.8;left:249.0pt">우주선의 경로</p>
+<p class="x ov" style="--b:396.5;left:94.0pt">외계인 정거장의 경로</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="14" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x h" style="--b:64.0">문제 9-T4. 뜨겁다–차갑다</p>
+<p class="x sb" style="--b:87.4">첫 번째 방법</p>
+<div class="f" style="left:35pt;top:100pt"><span class="fig" data-srcpage="14" data-clip="35,100,390,389"></span></div>
+<div class="ov wb" style="left:57.6pt;top:100.6pt;width:35.6pt;height:12.4pt"></div>
+<p class="x ov" style="--b:109.0;left:57.9pt">$N_\mathrm{avg},\,\mathrm{W}$</p>
+<p class="x cap" style="--b:408.2">그림 1</p>
+<p class="x i" style="--b:433.5">은 덩어리를 처음 온도 <span class="nw">$t_0$에서</span> 온도 <span class="nw">$t$까지</span> 가열하려면 다음과 같은 총 열량을 공급해야 한다.</p>
+<div class="f" style="left:177pt;top:466pt"><span class="fig" data-srcpage="14" data-clip="177,466,248,479"></span></div>
+<p class="x i" style="--b:498.6">한편 열량 <span class="nw">$Q$는</span> 평균 일률 <span class="nw">$N_{\mathrm{avg}}$와</span> 열 교환 시간 <span class="nw">$\tau$로</span> 나타낼 수 있다.</p>
+<p class="x c" style="--b:540.1">$Q = N_{\mathrm{avg}}\tau.$</p>
+</div>
+
+<!-- page 15 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="15" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x" style="--b:64.0">문제의 조건에 따르면 상태 <span class="nw">$A$와</span> <span class="nw">$B$에서</span> 온도가 같으므로, 시각 <span class="nw">$\tau_A$와</span> <span class="nw">$\tau_B$까지</span> 덩어리에 공급된 총 열량도 같다. 이는 그래프에서 이 과정들에 해당하는 직사각형들의 넓이가 같다는 것을 뜻한다(그림 1 참고). 넓이는 열량에 비례하기 때문이다. 따라서 다음 등식이 성립한다.</p>
+<p class="x c" style="--b:141.4">$N_{A\mathrm{avg}}\tau_A = N_{B\mathrm{avg}}\tau_B.$</p>
+<p class="x" style="--b:157.8">시간 축을 복원하려면 그래프에서 한 방향으로 빗금을 친 두 직사각형의 넓이가 같아지도록 해야 한다.</p>
+<p class="x sb" style="--b:187.3">두 번째 방법</p>
+<p class="x i" style="--b:205.0">문제의 조건에 따르면 상태 <span class="nw">$A$와</span> <span class="nw">$B$에서</span> 온도가 같으므로, 이 두 점은 같은 쌍곡선 위에 있다. 직사각형의 두 꼭짓점이 같은 쌍곡선 위에 있으면, 나머지 두 꼭짓점을 지나는 직선은 원점을 지나야 한다. 이는 이 직선과 좌표축들이 만드는 삼각형들의 닮음으로부터 나온다(그림 2 참고).</p>
+<div class="f" style="left:54pt;top:259pt"><span class="fig" data-srcpage="15" data-clip="54,259,371,517"></span></div>
+<div class="ov wb" style="left:75.9pt;top:259.8pt;width:35.6pt;height:12.4pt"></div>
+<p class="x ov" style="--b:268.2;left:76.2pt">$N_\mathrm{avg},\,\mathrm{W}$</p>
+<p class="x cap" style="--b:536.0">그림 2</p>
+</div>
+
+<!-- page 16 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="16" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0"><span class="nw">$\tau_B - \tau_A = 2.2\,\mathrm{min}$임을</span> 알고 그래프를 복원하자.</p>
+<div class="f" style="left:57pt;top:71pt"><span class="fig" data-srcpage="16" data-clip="57,71,368,298"></span></div>
+<div class="ov wb" style="left:73.0pt;top:71.6pt;width:35.6pt;height:12.4pt"></div>
+<p class="x ov" style="--b:80.0;left:73.3pt">$N_\mathrm{avg},\,\mathrm{W}$</p>
+<div class="ov wb" style="left:334.6pt;top:268.6pt;width:30.6pt;height:11.6pt"></div>
+<p class="x ov" style="--b:276.9;left:335.1pt">$\tau,\,\mathrm{min}$</p>
+<p class="x cap" style="--b:313.5">그림 3</p>
+<p class="x i" style="--b:338.8">그래프로부터 <span class="nw">$N_{A\mathrm{avg}} = 2\,\mathrm{W}$이고</span> <span class="nw">$\tau_A = 1.8\,\mathrm{min} = 108\,\mathrm{s}$이다.</span> 그러면</p>
+<p class="x c d" style="--b:366.1;--a:14.6pt">$N_{A\mathrm{avg}}\tau_A = cm(t_A - t_0) \implies t_0 = t_A - \dfrac{N_{A\mathrm{avg}}\tau_A}{cm}.$</p>
+<div class="f" style="left:188pt;top:381pt"><span class="fig" data-srcpage="16" data-clip="188,381,237,396"></span></div>
+<p class="x wn" style="--b:409.2">그래프로부터 점 <span class="nw">$C$에서는</span> $N_{C\mathrm{avg}} \approx 2.2\,\mathrm{W}$, <span class="nw">$\tau_C = 2.4\,\mathrm{min} = 144\,\mathrm{s}$이고,</span> 점 <span class="nw">$D$에서는</span> $N_{D\mathrm{avg}} = 2\,\mathrm{W}$, <span class="nw">$\tau_D = 3\,\mathrm{min} = 180\,\mathrm{s}$이다.</span> 그러면</p>
+<p class="x c" style="--b:443.1">$N_{C\mathrm{avg}}\tau_C = cm(t_C - t_0);\qquad N_{D\mathrm{avg}}\tau_D = cm(t_D - t_0).$</p>
+<p class="x c" style="--b:465.0">$N_{C\mathrm{avg}} \approx 2.2\,\mathrm{W};\qquad N_{D\mathrm{avg}} = 2\,\mathrm{W};$</p>
+<p class="x c d" style="--b:488.4;--a:14.6pt">$t_C = t_0 + \dfrac{N_{C\mathrm{avg}}\tau_C}{cm} \approx 48.4\,{}^\circ\mathrm{C};$</p>
+<p class="x c d" style="--b:515.7;--a:14.6pt">$t_D = t_0 + \dfrac{N_{D\mathrm{avg}}\tau_D}{cm} = 52\,{}^\circ\mathrm{C}.$</p>
+</div>
+
+<!-- page 17 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="17" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">임의의 순간의 순간 일률을 구할 수 있게 해 주는 식을 얻자. 이를 위해 짧은 시간 간격 <span class="nw">$\Delta\tau \to 0$을</span> 생각하자. 이 시간 간격 동안의 열량 <span class="nw">$\Delta Q$는</span> 순간 일률 <span class="nw">$N_{\mathrm{inst}}$로</span> 나타낼 수 있다.</p>
+<p class="x c" style="--b:121.8">$\Delta Q = N_{\mathrm{inst}}\Delta\tau.$</p>
+<p class="x" style="--b:143.7">한편 <span class="nw">$\Delta Q$는</span> <span class="nw">$N_{\mathrm{avg}}(\tau)$</span> 그래프에서 직사각형 넓이의 변화로 나타낼 수 있다.</p>
+<p class="x c" style="--b:177.6">$\Delta Q = (N_{\mathrm{avg}} + \Delta N_{\mathrm{avg}})(\tau + \Delta\tau) - N_{\mathrm{avg}}\tau = \Delta N_{\mathrm{avg}}\tau + N_{\mathrm{avg}}\Delta\tau + \Delta N_{\mathrm{avg}}\Delta\tau.$</p>
+<p class="x" style="--b:199.5">2차 미소량을 무시하면 <span class="nw">$(\Delta N_{\mathrm{avg}}\Delta\tau \approx 0)$</span> 다음을 얻는다.</p>
+<p class="x c" style="--b:221.4">$\Delta Q \approx \Delta N_{\mathrm{avg}}\tau + N_{\mathrm{avg}}\Delta\tau.$</p>
+<p class="x" style="--b:243.4"><span class="nw">$\Delta Q$에</span> 대한 두 식을 같게 놓으면 다음을 얻는다.</p>
+<p class="x c" style="--b:265.3">$N_{\mathrm{inst}}\Delta\tau = \Delta N_{\mathrm{avg}}\tau + N_{\mathrm{avg}}\Delta\tau.$</p>
+<p class="x" style="--b:287.2"><span class="nw">$\Delta\tau$로</span> 나누면 순간 일률에 대한 식을 얻는다.</p>
+<p class="x c d" style="--b:313.6;--a:14.6pt">$N_{\mathrm{inst}} = \dfrac{\Delta N_{\mathrm{avg}}}{\Delta\tau}\tau + N_{\mathrm{avg}},$</p>
+<p class="x" style="--b:339.6">여기서 <span class="nw">$k = \frac{\Delta N_{\mathrm{avg}}}{\Delta\tau}$는</span> 그래프 <span class="nw">$N_{\mathrm{avg}}(\tau)$의</span> 접선의 기울기에 비례하는 값이다. 미분을 이용해도 같은 식을 얻을 수 있다.</p>
+<p class="x c d" style="--b:382.3;--a:14.6pt">$N_{\mathrm{inst}} = \dfrac{\mathrm{d}Q}{\mathrm{d}\tau} = \dfrac{\mathrm{d}(N_{\mathrm{avg}}\tau)}{\mathrm{d}\tau} = \dfrac{\mathrm{d}N_{\mathrm{avg}}}{\mathrm{d}\tau}\tau + N_{\mathrm{avg}}.$</p>
+<p class="x" style="--b:403.0">점 <span class="nw">$C$와</span> <span class="nw">$D$에서</span> 그래프에 접선을 긋고, 그 기울기를 계산하자.</p>
+<p class="x c d" style="--b:441.0;--a:14.0pt">$k_C = 0\,\mathrm{W/s},\quad k_D = -\dfrac{2}{3}\,\mathrm{W/s}.$</p>
+</div>
+
+<!-- page 18 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="18" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<div class="f" style="left:38pt;top:53pt"><span class="fig" data-srcpage="18" data-clip="38,53,387,306"></span></div>
+<div class="ov wb" style="left:54.9pt;top:53.4pt;width:35.6pt;height:12.4pt"></div>
+<p class="x ov" style="--b:61.8;left:55.2pt">$N_\mathrm{avg},\,\mathrm{W}$</p>
+<div class="ov wb" style="left:353.6pt;top:275.9pt;width:30.6pt;height:11.6pt"></div>
+<p class="x ov" style="--b:284.2;left:354.1pt">$\tau,\,\mathrm{min}$</p>
+<p class="x cap" style="--b:321.3">그림 4</p>
+<p class="x i" style="--b:344.4">다른 풀이 방법도 가능하다.</p>
+<p class="x i wn" style="--b:362.1"><span class="nw">$N_{\mathrm{avg}}(\tau)$를</span> 알고 있으므로, 시각 <span class="nw">$\tau \in [0; 4]\,\mathrm{min}$에</span> 대해 <span class="nw">$Q(\tau) = N_{\mathrm{avg}}\cdot\tau$의</span> 그래프를 그리고, 매끄러운 곡선으로 이은 다음 주어진 시각에서 <span class="nw">$Q(\tau)$</span> 그래프에 접선을 긋자. 접선의 기울기는 순간 일률과 같다.</p>
+<p class="x c d" style="--b:424.5;--a:14.6pt">$N_{\mathrm{inst}} = \dfrac{\mathrm{d}Q}{\mathrm{d}\tau}.$</p>
+<p class="x i" style="--b:454.7">그러면</p>
+<p class="x c" style="--b:484.3">$N_{C\mathrm{inst}} = k_C\tau_C + N_{C\mathrm{avg}} \approx 2.2\,\mathrm{W};$</p>
+<p class="x c" style="--b:502.3">$N_{D\mathrm{inst}} = k_D\tau_D + N_{D\mathrm{avg}} = 0\,\mathrm{W}.$</p>
+</div>
+
+<!-- page 19 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="19" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x h" style="--b:64.0">문제 9-T5. 진공관이 아닌 다이오드</p>
+<p class="x i" style="--b:87.2">전원의 전류를 <span class="nw">$I_0$이라</span> 하자. 브리지가 평형을 이룰 때 전류계의 눈금은 0이며, 이때 저항 <span class="nw">$R_2$를</span> 지나는(그리고 점 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 연결된 비선형 소자를 지나는) 전류는 다음과 같다.</p>
+<div class="f" style="left:171pt;top:122pt"><span class="fig" data-srcpage="19" data-clip="171,122,254,149"></span></div>
+<p class="x" style="--b:163.8">저항 <span class="nw">$R_1$과</span> <span class="nw">$R_3$을</span> 지나는 전류는 다음과 같다.</p>
+<div class="f" style="left:164pt;top:174pt"><span class="fig" data-srcpage="19" data-clip="164,174,261,202"></span></div>
+<p class="x" style="--b:215.9">그러면 점 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이의 전압은 다음과 같다.</p>
+<div class="f" style="left:170pt;top:227pt"><span class="fig" data-srcpage="19" data-clip="170,227,255,254"></span></div>
+<p class="x" style="--b:268.1">점 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 연결된 비선형 소자의 정적 저항을 도입하자.</p>
+<div class="f" style="left:182pt;top:279pt"><span class="fig" data-srcpage="19" data-clip="182,279,243,305"></span></div>
+<p class="x" style="--b:316.5">여기서 <span class="nw">$I_{AB}$는</span> 점 <span class="nw">$A$와</span> <span class="nw">$B$에</span> 연결된 소자들을 지나는 전류이다. 이 경우 <span class="nw">$R_{AB}R_3 = R_1R_2$이면</span> 전류계의 눈금은 0이다. 전구와 다이오드의 전류-전압 특성은 다음 관계식으로 주어진다.</p>
+<p class="x c" style="--b:363.3">$I_{\mathrm{L}} = \alpha U_{\mathrm{L}}^{2/3},\quad I_{\mathrm{D}} = \beta U_{\mathrm{D}}^2,$</p>
+<p class="x" style="--b:383.9">또는 전압을 전류로 나타내면 다음과 같다.</p>
+<p class="x c d" style="--b:413.7;--a:16.5pt">$U_{\mathrm{L}} = \dfrac{I_{\mathrm{L}}^{3/2}}{\alpha^{3/2}},\quad U_{\mathrm{D}} = \dfrac{\sqrt{I_{\mathrm{D}}}}{\sqrt{\beta}}.$</p>
+<p class="x" style="--b:440.6">전구와 다이오드의 정적 저항은 각각 다음과 같다.</p>
+<p class="x c d" style="--b:470.4;--a:16.5pt">$R_{\mathrm{L}} = \dfrac{U_{\mathrm{L}}}{I_{\mathrm{L}}} = \dfrac{I_{\mathrm{L}}^{1/2}}{\alpha^{3/2}};\quad R_{\mathrm{D}} = \dfrac{U_{\mathrm{D}}}{I_{\mathrm{D}}} = \dfrac{1}{\sqrt{I_{\mathrm{D}}\beta}}.$</p>
+<p class="x" style="--b:499.2">그러면 이들을 직렬로 연결했을 때의 저항은 다음과 같이 나타난다.</p>
+<p class="x c d" style="--b:529.3;--a:17.0pt">$R_{AB} = R_{\mathrm{L}} + R_{\mathrm{D}} = \dfrac{\sqrt{I_{AB}}}{\alpha^{3/2}} + \dfrac{1}{\sqrt{\beta I_{AB}}}.$</p>
+</div>
+
+<!-- page 20 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.8pt"><span class="fig" data-srcpage="20" data-clip="28.3,40.8,391.2,42.0"></span></div>
+<p class="x i" style="--b:64.0">이 식은 이차 방정식으로 정리되며, 이를 풀기 위해 비에트 정리를 이용하자.</p>
+<div class="f" style="left:136pt;top:78pt"><span class="fig" data-srcpage="20" data-clip="136,78,289,105"></span></div>
+<div class="f" style="left:97pt;top:110pt"><span class="fig" data-srcpage="20" data-clip="97,110,328,137"></span></div>
+<p class="x" style="--b:149.4">다음이 성립하므로</p>
+<div class="f" style="left:118pt;top:148pt"><span class="fig" data-srcpage="20" data-clip="118,148,307,175"></span></div>
+<p class="x" style="--b:183.5">따라서</p>
+<div class="f" style="left:68pt;top:177pt"><span class="fig" data-srcpage="20" data-clip="68,177,358,212"></span></div>
+<p class="x" style="--b:224.1">전구의 정적 저항이 <span class="nw">$R_{AB} = R_1R_2/R_3$이</span> 되는 것은 전구를 지나는 전류가 다음과 같을 때이다.</p>
+<p class="x c d" style="--b:250.6;--a:14.6pt">$I_{\mathrm{L}} = \dfrac{R_3}{R_2 + R_3}\left(\sqrt{I_{01}} + \sqrt{I_{02}}\right)^2.$</p>
+<p class="x" style="--b:272.7">그러면 전원의 전류는 다음과 같다.</p>
+<div class="f" style="left:161pt;top:289pt"><span class="fig" data-srcpage="20" data-clip="161,289,263,310"></span></div>
+<p class="x i wn" style="--b:331.4">다이오드의 정적 저항이 <span class="nw">$R_{AB} = R_1R_2/R_3$이</span> 되는 것은 다이오드를 지나는 전류가 다음과 같을 때이다.</p>
+<p class="x c d" style="--b:359.9;--a:14.6pt">$I_{\mathrm{D}} = \dfrac{R_3}{R_2 + R_3}\,\dfrac{I_{01}I_{02}}{\left(\sqrt{I_{01}} + \sqrt{I_{02}}\right)^2}.$</p>
+<p class="x" style="--b:386.6">그러면 전원의 전류는 다음과 같다.</p>
+<div class="f" style="left:162pt;top:403pt"><span class="fig" data-srcpage="20" data-clip="162,403,263,433"></span></div>
+</div>
+
+</body></html>

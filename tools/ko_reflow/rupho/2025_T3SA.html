@@ -1,0 +1,309 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2022 (LVI = 제56회; the paper prints only "2022 г."), 11학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963pt), A5 419.5x595.3pt, booklet pages 9-13.
+   Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20pt; baselineskip 11.955pt; list items 13.2pt apart.
+   Running headers italic, baseline 38.9, rule at y 43: odd page "Всероссийская олимпиада по физике 2022 г., Заключительный этап"
+   (left), even page "Теоретический тур" (right); page numbers centred, baseline 563.8.
+   Grade line SFBX1440 (14.346pt bold), problem titles SFBX1000 bold, captions SFRM0900.
+   "НЭ" (нелинейный элемент) inside the circuit symbols is relabelled "NE" (introduced in the text as 비선형 소자(NE)).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b:  top = b - l/2 - 0.3155*fs + 0.7pt */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.hd{font-style:italic;text-align:left}
+.hd.r{text-align:right}
+.pn{text-align:center}
+.g{text-align:center;font-weight:bold;--fs:14.346pt;--l:17.2pt}
+.h{text-align:center;font-weight:bold}
+.g,.h{top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) - 0.4pt)}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.li{padding-left:25pt}
+.n{position:absolute;left:12.2pt;text-indent:0}
+.cap{text-align:center;width:40pt;--fs:8.966pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.wb{position:absolute;background:#fff}
+</style>
+<style>
+/* 2025_T3SA extra — RuPhO 2025 (LIX = 제59회; no numeral or year printed), 11학년 풀이, RuPhO_2025_T3S.pdf pages 1-14
+   (problems 11-T1, 11-T2, 11-T3 up to the polar-coordinate integration). Same LaTeX CM layout as 2022, but the text
+   column is x 28.3..396.8 (width 368.5pt; header rule 28.3..391.2 at y 41.4); running header italic, baseline 37.6,
+   "Zaklyuchitel'nyi etap Vserossiiskoi olimpiady po fizike" on every page except page 1; no page numbers.
+   Page 1 starts at y 154 (the first half of the sheet belongs to the 10th-grade booklet).
+   Section headings ("Graficheskii/Analiticheskii metod resheniya", "Pervyi/Vtoroi metod/sposob", ...) SFBX1000 at x 48.3.
+   No Cyrillic subscripts in this half. */
+.a-j{text-align:justify;width:368.5pt}
+.a-w{width:368.5pt}
+.a-b{margin-top:-1.1pt}                       /* bold section heads: bold-Hangul baseline correction */
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<p class="x h a-w" style="--b:162.5">문제 11-T1. 두 개의 돌</p>
+<p class="x i a-w a-b" style="--b:181.8"><b>작도를 이용한 풀이</b></p>
+<p class="x i a-j" style="--b:199.4">각 돌에 대해 공통의 시작점 <span class="nw">$O$를</span> 갖는 속도 벡터 삼각형을 그리자. 편의를 위해 삼각형의 꼭짓점에 글자를 붙이자. 그림에서 <span class="nw">$\overrightarrow{OA}$,</span> <span class="nw">$\overrightarrow{OM}$은</span> 처음 속도 벡터이고, <span class="nw">$\overrightarrow{OB}$,</span> <span class="nw">$\overrightarrow{ON}$은</span> 한 돌이 땅에 떨어지기 직전의 속도 벡터이다.</p>
+<div class="f" style="left:124pt;top:250pt"><span class="fig" data-srcpage="1" data-clip="124,250,302,452"></span></div>
+<p class="x i a-j" style="--b:472.6"><span class="nw">$\triangle AOB$와</span> <span class="nw">$\triangle MON$에</span> 사인 법칙을 적용하면 다음을 얻는다.</p>
+<div class="f" style="left:138pt;top:479pt"><span class="fig" data-srcpage="1" data-clip="138,479,289,504"></span></div>
+<p class="x i a-j wn" style="--b:520.6">등식 <span class="nw">$\sin\angle AOB = \sin\angle MON$은,</span> 조건에 따라 두 돌이 서로 다른 각도로 던져졌으므로 <span class="nw">$\angle AOB + \angle MON = 180^\circ$임을</span> 뜻한다. 그러면 <span class="nw">$\angle BON = 90^\circ$이고,</span> 두 돌은 연직선과 같은 각 <span class="nw">$\alpha = \angle BON/2 = 45^\circ$를</span> 이루며 움직인다.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="2" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-j" style="--b:64.0">구하는 수평면과의 각은 <span class="nw">$\varphi = 90^\circ - \alpha = 45^\circ$이다</span>.</p>
+<p class="x i a-j" style="--b:83.1;margin-top:-4.2pt">에너지 보존 법칙으로부터 <span class="nw">$|\overrightarrow{ON}| = v_1 = \sqrt{v^2 + 2gh}$이다</span>.</p>
+<p class="x i a-j" style="--b:100.7">이 순간 두 돌사이의 거리를 구하기 위해 운동 시간을 구하자. <span class="nw">$\triangle MON$에</span> 코사인 법칙을 적용하면</p>
+<div class="f" style="left:105pt;top:120pt"><span class="fig" data-srcpage="2" data-clip="105,120,321,136"></span></div>
+<p class="x i a-j" style="--b:158.6">얻은 이차 방정식을 풀면 두 근을 얻는다.</p>
+<div class="f" style="left:147pt;top:167pt"><span class="fig" data-srcpage="2" data-clip="147,167,278,197"></span></div>
+<p class="x i a-j" style="--b:216.6">처음에 두 돌이 모두 땅에서 멀어진다는 조건을 고려하면 부호 <span class="nw">$+$를</span> 택해야 한다. 구한 시간에 두 돌의 상대 속력 <span class="nw">$v = \sqrt2 v$를</span> 곱하면, 이 순간 두 돌사이의 거리에 대한 식을 얻는다.</p>
+<div class="f" style="left:126pt;top:267pt"><span class="fig" data-srcpage="2" data-clip="126,267,299,292"></span></div>
+<p class="x i a-w a-b" style="--b:308.9"><b>해석적 풀이</b></p>
+<p class="x i a-j" style="--b:326.5">각 <span class="nw">$\gamma$로</span> 던진 돌이 먼저 떨어진다고 하자. 이 돌이 땅에 떨어지기 직전의 순간에</p>
+<div class="f" style="left:152pt;top:345pt"><span class="fig" data-srcpage="2" data-clip="152,345,273,372"></span></div>
+<p class="x a-j" style="--b:381.6">따라서 운동 시간은 다음과 같다.</p>
+<div class="f" style="left:132pt;top:391pt"><span class="fig" data-srcpage="2" data-clip="132,391,293,421"></span></div>
+<p class="x i a-j" style="--b:444.2">두 돌의 운동 방정식으로부터 속도의 성분을 구하자.</p>
+<div class="f" style="left:144pt;top:455pt"><span class="fig" data-srcpage="2" data-clip="144,455,281,488"></span></div>
+<p class="x i a-j" style="--b:505.6">두 돌의 속도 벡터가 수평면과 같은 각을 이루는 순간에는 다음이 성립한다.</p>
+<div class="f" style="left:172pt;top:516pt"><span class="fig" data-srcpage="2" data-clip="172,516,253,542"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="3" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-j" style="--b:64.0">이 관계식으로부터 두 방정식이 나온다.</p>
+<div class="f" style="left:168pt;top:75pt"><span class="fig" data-srcpage="3" data-clip="168,75,257,100"></span></div>
+<div class="f" style="left:150pt;top:108pt"><span class="fig" data-srcpage="3" data-clip="150,108,276,134"></span></div>
+<p class="x i a-j" style="--b:152.0"><span class="nw">$t_1$에</span> 대한 식을 이용하여 이 방정식들을 변형하자.</p>
+<div class="f" style="left:153pt;top:162pt"><span class="fig" data-srcpage="3" data-clip="153,162,272,192"></span></div>
+<div class="f" style="left:85pt;top:199pt"><span class="fig" data-srcpage="3" data-clip="85,199,340,229"></span></div>
+<p class="x a-j" style="--b:244.5">두 번째 방정식에서 <span class="nw">$\sqrt{v^2\sin^2\gamma + 2gh}$를</span> 구하여 첫 번째 방정식에 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:189pt;top:257pt"><span class="fig" data-srcpage="3" data-clip="189,257,237,270"></span></div>
+<p class="x a-j" style="--b:288.3">구하는 수평면과의 각은 <span class="nw">$\varphi = 45^\circ$이다</span>.</p>
+<p class="x i a-j" style="--b:310.4"><span class="nw">$\tan\varphi = -1$을</span> 이용하면 <span class="nw">$\tan\varphi = -\frac{\sqrt{v^2\sin^2\gamma + 2gh}}{v\cos\gamma}$로부터</span> 다음을 얻는다.</p>
+<div class="f" style="left:172pt;top:325pt"><span class="fig" data-srcpage="3" data-clip="172,325,253,353"></span></div>
+<div class="f" style="left:172pt;top:361pt"><span class="fig" data-srcpage="3" data-clip="172,361,253,388"></span></div>
+<p class="x i a-j" style="--b:405.2">그러면 시간 <span class="nw">$t_1$은</span></p>
+<div class="f" style="left:137pt;top:407pt"><span class="fig" data-srcpage="3" data-clip="137,407,288,436"></span></div>
+<p class="x i a-j" style="--b:459.7">구한 시간에 두 돌의 상대 속력 <span class="nw">$v = \sqrt2 v$를</span> 곱하면, 이 순간 두 돌사이의 거리에 대한 식을 얻는다.</p>
+<div class="f" style="left:126pt;top:486pt"><span class="fig" data-srcpage="3" data-clip="126,486,299,511"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="4" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x h a-w" style="--b:64.0">문제 11-T2. 평범한 순환 과정</p>
+<p class="x i a-w a-b" style="--b:86.8"><b>첫 번째 방법</b></p>
+<p class="x i a-j" style="--b:104.4">과정 2−3과 4−1에서 기체에 공급된 열량은 0이므로, 이 과정들은 단열 과정이고, <span class="nw">$(T,V)$</span> 좌표에서 그 방정식은 다음과 같은 꼴이다.</p>
+<div class="f" style="left:178pt;top:127pt"><span class="fig" data-srcpage="4" data-clip="178,127,247,143"></span></div>
+<p class="x a-j" style="--b:157.8">과정 1−2와 3−4의 방정식을 구하자. <span class="nw">$\Delta T$,</span> <span class="nw">$\Delta V$를</span> 온도와 부피의 무한히 작은 변화라고 하면, 내부 에너지의 변화는</p>
+<div class="f" style="left:179pt;top:182pt"><span class="fig" data-srcpage="4" data-clip="179,182,246,194"></span></div>
+<p class="x a-j" style="--b:212.4">이고 기체가 한 일은 <span class="nw">$\delta A = p\Delta V$이므로,</span> 이 과정에서는 다음 관계가 성립한다.</p>
+<div class="f" style="left:168pt;top:223pt"><span class="fig" data-srcpage="4" data-clip="168,223,257,248"></span></div>
+<p class="x a-j" style="--b:262.3">공통 인수를 약분하고 변수를 분리하면</p>
+<div class="f" style="left:183pt;top:273pt"><span class="fig" data-srcpage="4" data-clip="183,273,242,298"></span></div>
+<p class="x a-j" style="--b:311.8">따라서 적분하면 이 과정의 방정식을 얻는다.</p>
+<div class="f" style="left:175pt;top:320pt"><span class="fig" data-srcpage="4" data-clip="175,320,250,336"></span></div>
+<p class="x a-j" style="--b:354.4">과정 4−1의 단열 방정식을 이용하여 점 1에서 기체의 부피를 구하자.</p>
+<div class="f" style="left:173pt;top:365pt"><span class="fig" data-srcpage="4" data-clip="173,365,252,382"></span></div>
+<p class="x a-j" style="--b:398.4">따라서 온도 값 <span class="nw">$T_1 = 2T_4 = 2T_0$을</span> 고려하면 <span class="nw">$V_1 = V_0/8$을</span> 얻는다. 마찬가지로 과정 3−4의 방정식을 이용하면</p>
+<div class="f" style="left:167pt;top:421pt"><span class="fig" data-srcpage="4" data-clip="167,421,259,438"></span></div>
+<p class="x a-j" style="--b:454.4"><span class="nw">$V_3 = 8V_0$을</span> 얻는다. 또한 과정 1−2와 2−3의 방정식을 쓰자.</p>
+<div class="f" style="left:123pt;top:465pt"><span class="fig" data-srcpage="4" data-clip="123,465,303,482"></span></div>
+<p class="x a-j" style="--b:498.4">두 번째 방정식을 첫 번째 방정식으로 나누고 등식 <span class="nw">$T_1 = T_3$을</span> 고려하면</p>
+<div class="f" style="left:156pt;top:509pt"><span class="fig" data-srcpage="4" data-clip="156,509,269,526"></span></div>
+<p class="x a-j" style="--b:544.5;margin-top:-2.5pt">이므로 <span class="nw">$V_2 = V_0$이다</span>. 그러면 온도는 <span class="nw">$T_2 = T_1V_1^{-1/3}V_2^{1/3} = 4T_0$이다</span>.</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="5" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-w a-b" style="--b:64.0"><b>두 번째 방법</b></p>
+<p class="x i a-j" style="--b:81.7"><span class="nw">$TS$</span> 좌표로 풀자. 과정 2−3과 4−1에서 기체에 공급된 열량은 0이므로 이 과정들은 단열 과정이고, 이 과정들에서는 엔트로피가 보존된다. 따라서</p>
+<p class="x c a-w" style="--b:126.3">$S_2 = S_3\ \ \text{및}\ \ S_1 = S_4.$</p>
+<p class="x a-j" style="--b:147.1">과정 1−2와 3−4에서 엔트로피의 변화를 구하자.</p>
+<div class="f" style="left:146pt;top:157pt"><span class="fig" data-srcpage="5" data-clip="146,157,279,183"></span></div>
+<div class="f" style="left:108pt;top:187pt"><span class="fig" data-srcpage="5" data-clip="108,187,317,214"></span></div>
+<p class="x a-j" style="--b:224.1">온도 사이의 관계를 얻는다.</p>
+<div class="f" style="left:192pt;top:234pt"><span class="fig" data-srcpage="5" data-clip="192,234,234,260"></span></div>
+<div class="f" style="left:188pt;top:266pt"><span class="fig" data-srcpage="5" data-clip="188,266,235,292"></span></div>
+<div class="f" style="left:192pt;top:294pt"><span class="fig" data-srcpage="5" data-clip="192,294,233,307"></span></div>
+<p class="x i a-j" style="--b:325.4"><span class="nw">$(p,V)$</span> 좌표에서 단열 과정의 방정식은 <span class="nw">$pV^{4/3} = \mathrm{const}$</span> 꼴이므로, 로그 좌표에서 이 과정의 그래프는 직선이다.</p>
+<div class="f" style="left:150pt;top:347pt"><span class="fig" data-srcpage="5" data-clip="150,347,275,374"></span></div>
+<p class="x a-j wn" style="--b:388.7">마찬가지로 <span class="nw">$(p,V)$</span> 좌표에서 과정 1−2와 3−4의 방정식은 앞 문항에서 구한 식과 상태 방정식 <span class="nw">$pV/T = \mathrm{const}$로부터</span> <span class="nw">$pV^{2/3} = \mathrm{const}$로</span> 얻어지며, 로그 좌표에서 역시 직선을 얻는다.</p>
+<div class="f" style="left:150pt;top:422pt"><span class="fig" data-srcpage="5" data-clip="150,422,275,449"></span></div>
+<p class="x a-j wn" style="--b:463.4">따라서 점 1, 2, 3, 4의 좌표만 계산하면 된다. 부피는 앞 문항에서 이미 구했다. 상태 방정식을 이용하면 <span class="nw">$p_1 = 16p_0$,</span> <span class="nw">$p_2 = 4p_0$,</span> <span class="nw">$p_3 = p_0/4$를</span> 얻는다.</p>
+<p class="x i a-j wn" style="--b:510.1;--l:17.2pt">그러면 가로축이 <span class="nw">$\log_2\frac{V}{V_0}$,</span> 세로축이 <span class="nw">$\log_2\frac{p}{p_0}$인</span> 좌표에서 과정들의 경계점의 좌표는 1 <span class="nw">$(-3,\,4)$,</span> 2 <span class="nw">$(0,\,2)$,</span> 3 <span class="nw">$(3,\,-2)$,</span> 4 <span class="nw">$(0,\,0)$이다</span>. 과정의 그래프는 평행사변형 모양이다.</p>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="6" data-clip="28.3,40.9,391.2,42"></span></div>
+<div class="f" style="left:108pt;top:54pt"><span class="fig" data-srcpage="6" data-clip="108,54,331,292"></span></div>
+<p class="x i a-w a-b" style="--b:312.6"><b>첫 번째 방법</b></p>
+<p class="x i a-j" style="--b:330.2">단열 과정에서는 열이 방출되지도 공급되지도 않는다. 나머지 두 과정에서 공급된 열은 <span class="nw">$Q = \Delta U + A$이고,</span> <span class="nw">$A = \Delta U$이므로</span> <span class="nw">$Q = 2\Delta U = 2C_V\Delta T$이다</span>. 여기서 <span class="nw">$C_V$는</span> 기체의 정적 열용량이다. 그러면 구간 1−2에서는 열 <span class="nw">$Q_+ = 2C_V(T_2 - T_1) = 4C_VT_0$이</span> 공급되고, 구간 3−4에서는 열 <span class="nw">$Q_- = 2C_V(T_3 - T_4) = 2C_VT_0$이</span> 방출되므로, 효율은</p>
+<div class="f" style="left:169pt;top:389pt"><span class="fig" data-srcpage="6" data-clip="169,389,256,416"></span></div>
+<p class="x i a-w a-b" style="--b:437.6"><b>두 번째 방법</b></p>
+<p class="x i a-j" style="--b:455.2">과정 1−2와 3−4에 대해 <span class="nw">$T$와</span> <span class="nw">$S$의</span> 관계 <span class="nw">$T(S)$를</span> 구하자.</p>
+<div class="f" style="left:148pt;top:467pt"><span class="fig" data-srcpage="6" data-clip="148,467,278,494"></span></div>
+<div class="f" style="left:122pt;top:502pt"><span class="fig" data-srcpage="6" data-clip="122,502,303,529"></span></div>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="7" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-j" style="--b:64.0">이를 효율의 식에 대입하자.</p>
+<div class="f" style="left:76pt;top:73pt"><span class="fig" data-srcpage="7" data-clip="76,73,349,133"></span></div>
+<p class="x h a-w" style="--b:151.9">문제 11-T3. 정전기 공중 부양</p>
+<p class="x i a-j" style="--b:172.3">원기둥 축에 대한 계의 대칭성으로부터, 원기둥과 원판 사이의 정전기 상호 작용의 힘은 언제나 이 축 방향이다. 수직 항력이 0이고 원판이 정지해 있으므로, 힘 <span class="nw">$F_0$은</span> 중력과 완전히 평형을 이룬다. 즉 <span class="nw">$F_0 = mg$이다</span>. 원판의 질량은 원판의 밀도 <span class="nw">$D$와</span> 크기로 다음과 같이 나타낼 수 있다.</p>
+<div class="f" style="left:182pt;top:228pt"><span class="fig" data-srcpage="7" data-clip="182,228,243,242"></span></div>
+<p class="x a-j" style="--b:257.9">이로부터 다음을 얻는다.</p>
+<div class="f" style="left:168pt;top:259pt"><span class="fig" data-srcpage="7" data-clip="168,259,258,287"></span></div>
+<p class="x a-j" style="--b:293.5">따라서 밀도는 다음과 같다.</p>
+<div class="f" style="left:184pt;top:310pt"><span class="fig" data-srcpage="7" data-clip="184,310,240,338"></span></div>
+<p class="x i a-j" style="--b:353.4">원판이 원기둥 면에서 멀어지면 원판에 작용하는 정전기 척력이 줄어들므로, 원기둥 쪽을 향하는 알짜힘이 생긴다. 이 힘은 여러 가지 방법으로 구할 수 있다.</p>
+<p class="x i a-w a-b" style="--b:406.9"><b>첫 번째 방법</b></p>
+<p class="x i a-j" style="--b:424.5">대칭축과 일치하고 원점이 원기둥 끝면의 중심에 있는 좌표축 <span class="nw">$Oz$를</span> 도입하자. 그러면 공간에서 얇은 원판의 위치는 원판 아랫면 중심의 좌표 <span class="nw">$z$로</span> 정해진다. 원판이 축을 따라 작은 거리 <span class="nw">$z \ll R$만큼</span> 옮겨졌다고 하자. 원판과 원기둥 사이의 빈 공간을 모두 원기둥의 물질로 채웠다고 생각하자. 그러면 원판에 작용하는 힘 <span class="nw">$F_0$은</span> 원판이 원기둥 끝면에 바로 붙어 있을 때와 같다. 따라서 힘은 두 얇은 원판, 즉 처음 원판과 높이가 <span class="nw">$z$이고</span> 전하 밀도가 <span class="nw">$\rho$인</span> 보조 원판 사이의 상호 작용의 힘만큼 <span class="nw">$F_0$보다</span> 줄어든다.</p>
+<div class="f" style="left:165pt;top:529pt"><span class="fig" data-srcpage="7" data-clip="165,529,260,542"></span></div>
+</div>
+
+<!-- page 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="8" data-clip="28.3,40.9,391.2,42"></span></div>
+<div class="f" style="left:105pt;top:54pt"><span class="fig" data-srcpage="8" data-clip="105,54,317,266"></span></div>
+<p class="x i a-j" style="--b:285.7">서로 빈틈없이 맞닿은 두 얇은 원판 사이의 상호 작용의 힘을 계산하자. 한 원판에서 가장자리로부터 멀리 떨어진 모든 점에 대해서는 다른 원판을 근사적으로 무한 평면으로 볼 수 있다. 따라서 전기장 세기의 수직 성분은 전하 밀도가 <span class="nw">$\sigma = \rho z$인</span> 무한 평면의 전기장과 같다.</p>
+<div class="f" style="left:189pt;top:340pt"><span class="fig" data-srcpage="8" data-clip="189,340,236,367"></span></div>
+<p class="x a-j" style="--b:380.4">이 근사는 원판 가장자리로부터 <span class="nw">$z$</span> 정도의 거리에 있는 점들에서만 성립하지 않으므로, <span class="nw">$z$가</span> 작을 때는 이 점들을 무시할 수 있다. 이 전기장이 다른 원판의 전하에 작용한다. 그러면</p>
+<div class="f" style="left:143pt;top:414pt"><span class="fig" data-srcpage="8" data-clip="143,414,283,441"></span></div>
+<p class="x i a-w a-b" style="--b:460.8"><b>두 번째 방법</b></p>
+<p class="x i a-j" style="--b:478.4">면전하 밀도가 <span class="nw">$\sigma$인</span> 작은 평면 조각 <span class="nw">$\Delta S$에</span> 작용하는 힘의 수직 성분은 이 조각을 지나는 전기 선속 <span class="nw">$\Delta\Phi = E_n\Delta S$와</span> 다음과 같은 관계가 있다(아래 첨자 <span class="nw">$n$은</span> 조각에 수직인 성분을 뜻한다).</p>
+<div class="f" style="left:159pt;top:526pt"><span class="fig" data-srcpage="8" data-clip="159,526,266,539"></span></div>
+</div>
+
+<!-- page 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="9" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-j" style="--b:64.0">이 문제에서 면전하 밀도는 일정하며 다음과 같다.</p>
+<div class="f" style="left:195pt;top:77pt"><span class="fig" data-srcpage="9" data-clip="195,77,230,89"></span></div>
+<p class="x a-j" style="--b:107.9">따라서 원판 면의 여러 부분에 작용하는 힘을 모두 더하면 전체 힘을 얻는다.</p>
+<div class="f" style="left:165pt;top:123pt"><span class="fig" data-srcpage="9" data-clip="165,123,260,136"></span></div>
+<p class="x a-j" style="--b:149.7">여기서 <span class="nw">$\Phi$는</span> 원판 면을 지나는 전기 선속이다.</p>
+<p class="x i a-j" style="--b:167.3">원판이 축을 따라 움직이면 원판을 지나는 선속도 변하므로, 선속과 힘은 좌표의 함수이다. 즉</p>
+<div class="f" style="left:138pt;top:192pt"><span class="fig" data-srcpage="9" data-clip="138,192,288,204"></span></div>
+<p class="x a-j" style="--b:223.1">선속의 변화를 계산하기 위해 가우스 정리를 이용하자. 반지름이 <span class="nw">$R$이고</span> 높이가 <span class="nw">$z \ll R$이며,</span> 끝면이 무한 원기둥의 끝면과 맞닿아 있고 그와 같은 축을 갖는 원기둥 <span class="nw">$\Gamma$를</span> 생각하자. 원판이 없을 때 <span class="nw">$\Gamma$</span> 안에는 전하가 없으므로, <span class="nw">$\Gamma$를</span> 지나는 전체 선속은 0이어야 한다. 원기둥 <span class="nw">$\Gamma$</span> 안으로 들어가는 방향을 선속의 양의 방향으로 택하자. 원기둥에 맞닿은 끝면으로는 선속 <span class="nw">$\Phi(0)$이</span> 들어오고, 반대쪽 끝면으로는 선속 <span class="nw">$\Phi(z)$가</span> 나가며, 옆면으로는 선속 <span class="nw">$E_r\cdot 2\pi Rz$가</span> 나간다. 여기서 <span class="nw">$E_r$는</span> 중심에서 거리 <span class="nw">$R$인</span> 곳에서 반무한 원기둥이 만드는 전기장 세기의 지름 방향 성분이다. 따라서 원기둥 <span class="nw">$\Gamma$에</span> 대한 가우스 정리는 다음과 같이 쓰인다.</p>
+<div class="f" style="left:150pt;top:332pt"><span class="fig" data-srcpage="9" data-clip="150,332,276,345"></span></div>
+<p class="x a-j" style="--b:362.6">따라서</p>
+<div class="f" style="left:158pt;top:366pt"><span class="fig" data-srcpage="9" data-clip="158,366,267,379"></span></div>
+<div class="f" style="left:114pt;top:394pt"><span class="fig" data-srcpage="9" data-clip="114,394,311,531"></span></div>
+</div>
+
+<!-- page 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="10" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-j" style="--b:64.0"><span class="nw">$E_r$의</span> 값을 계산하자. 무한 원기둥의 나머지 절반을 덧붙이면, 전하 밀도가 <span class="nw">$\rho$이고</span> 높이 <span class="nw">$2z$인</span> 틈이 있는, 양쪽으로 무한한 원기둥이 된다는 점에 주목하자. 이 틈 때문에 생기는 지름 방향 전기장 세기의 보정은 원판의 변위 <span class="nw">$z$에</span> 비례하며, 작은 진동 <span class="nw">$(z \ll R)$의</span> 범위에서는 무시할 수 있을 만큼 작다. 따라서 1차 근사에서 <span class="nw">$E_r$는</span> 전하 밀도가 <span class="nw">$\rho$이고</span> 양쪽으로 무한한 원기둥이 만드는 전기장 세기 <span class="nw">$E$의</span> 절반이며, <span class="nw">$E$는</span> 가우스 정리를 적용하여 구할 수 있다.</p>
+<div class="f" style="left:103pt;top:144pt"><span class="fig" data-srcpage="10" data-clip="103,144,322,172"></span></div>
+<p class="x a-j" style="--b:184.8">결국 힘에 대해 같은 식을 얻는다.</p>
+<div class="f" style="left:117pt;top:193pt"><span class="fig" data-srcpage="10" data-clip="117,193,308,221"></span></div>
+<p class="x a-j" style="--b:232.5">즉 앞에서와 같은 답이다.</p>
+<p class="x i a-j" style="--b:250.1">뉴턴 제2법칙에 따라 원판의 운동 방정식을 쓰자.</p>
+<div class="f" style="left:137pt;top:259pt"><span class="fig" data-srcpage="10" data-clip="137,259,287,286"></span></div>
+<p class="x a-j" style="--b:296.7">또는</p>
+<div class="f" style="left:172pt;top:296pt"><span class="fig" data-srcpage="10" data-clip="172,296,253,323"></span></div>
+<p class="x a-j" style="--b:333.2">여기에 정전기력으로 나타낸 원기둥의 질량 <span class="nw">$M = F_0/g$를</span> 대입하면 다음을 얻는다.</p>
+<div class="f" style="left:178pt;top:346pt"><span class="fig" data-srcpage="10" data-clip="178,346,247,372"></span></div>
+<p class="x a-j" style="--b:381.1">이는 각진동수가 다음과 같은 조화 진동의 방정식과 일치한다.</p>
+<div class="f" style="left:182pt;top:392pt"><span class="fig" data-srcpage="10" data-clip="182,392,244,418"></span></div>
+<p class="x a-j" style="--b:431.2">그러나 원판과 원기둥의 탄성 충돌을 고려하는 것이 중요하다. 충돌 때문에 주기가 절반으로 줄어들기 때문이다. 완전한 진동의 절반만 일어나고, 그와 대칭인 나머지 절반은 원판이 원기둥과 충돌할 때 순간적으로 방향을 바꾸기 때문에 없어진다. 따라서 원판의 안정 평형 위치가 점 <span class="nw">$z = 0$에</span> 있고 영역 <span class="nw">$z &lt; 0$에서의</span> 운동은 불가능하므로, 답은 <span class="nw">$v_0$의</span> 크기에 의존하지 않는다. 결국</p>
+<div class="f" style="left:180pt;top:509pt"><span class="fig" data-srcpage="10" data-clip="180,509,245,538"></span></div>
+</div>
+
+<!-- page 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="11" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-j" style="--b:64.0">원판의 반지름이 바뀌면 운동을 일으키는 두 힘, 즉 중력과 정전기력이 모두 바뀐다. 중력의 변화는 다음과 같다.</p>
+<div class="f" style="left:92pt;top:82pt"><span class="fig" data-srcpage="11" data-clip="92,82,333,98"></span></div>
+<p class="x a-j" style="--b:114.2">여기서 <span class="nw">$\Delta R \ll R$을</span> 고려하였다.</p>
+<p class="x i a-j" style="--b:131.8">이제 정전기력의 변화를 계산하자. 처음 원판에 작용하는 힘은 폭이 <span class="nw">$\Delta R$인</span> 고리와 반지름이 <span class="nw">$R'$인</span> 원판에 작용하는 힘의 합과 같다. 따라서 반지름이 <span class="nw">$R'$인</span> 원판에 작용하는 힘의 크기는 원기둥이 고리를 밀어내는 정전기 척력 <span class="nw">$\Delta F$만큼</span> 작다.</p>
+<div class="f" style="left:181pt;top:183pt"><span class="fig" data-srcpage="11" data-clip="181,183,245,196"></span></div>
+<p class="x a-j" style="--b:207.8">따라서 폭이 <span class="nw">$\Delta R$인</span> 고리와 반무한 원기둥 사이의 상호 작용의 힘을 구해야 한다. 이는 여러 가지 방법으로 할 수 있다.</p>
+<p class="x i a-w a-b" style="--b:237.4"><b>직접 적분</b></p>
+<p class="x i a-j" style="--b:255.0">계는 원기둥의 <span class="nw">$z$축에</span> 대해 대칭이므로, 고리에 작용하는 힘도 <span class="nw">$z$축</span> 방향이다. 반무한 원기둥이 그 경계 위의 어떤 점에 만드는 전기장의 성분 <span class="nw">$E_z$를</span> 구하자. 이를 위해 원기둥 안의 어떤 부피 <span class="nw">$\mathrm{d}V$를</span> 택하자. 이 부피가 전기장 세기에 기여하는 양은 다음과 같다.</p>
+<div class="f" style="left:133pt;top:308pt"><span class="fig" data-srcpage="11" data-clip="133,308,292,336"></span></div>
+<p class="x a-j" style="--b:350.2;margin-top:-1.3pt">여기서 부피 요소는 <span class="nw">$\mathrm{d}V = \mathrm{d}z\,\mathrm{d}S$이고,</span> <span class="nw">$\vec r$에</span> 대한 적분은 원판 <span class="nw">$|\vec r| &lt; R$</span> 위에서 하며, <span class="nw">$\vec R$는</span> 원판 가장자리에 있는, 고려하는 점의 위치 벡터이다. 그러면 전기장은 다음과 같다.</p>
+<div class="f" style="left:115pt;top:383pt"><span class="fig" data-srcpage="11" data-clip="115,383,310,422"></span></div>
+<p class="x a-j" style="--b:436.5">이제 <span class="nw">$z$에</span> 대한 적분은 간단히 계산할 수 있다.</p>
+<div class="f" style="left:27pt;top:445pt"><span class="fig" data-srcpage="11" data-clip="27,445,407,489"></span></div>
+<p class="x a-j" style="--b:502.7">따라서 원판 넓이에 대한 적분을 계산하는 일만 남는다.</p>
+<div class="f" style="left:160pt;top:504pt"><span class="fig" data-srcpage="11" data-clip="160,504,266,538"></span></div>
+</div>
+
+<!-- page 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="12" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-j" style="--b:64.0">그러면 구하는 힘은 다음과 같다.</p>
+<div class="f" style="left:185pt;top:77pt"><span class="fig" data-srcpage="12" data-clip="185,77,240,90"></span></div>
+<p class="x a-j" style="--b:107.9">여기서 <span class="nw">$q_1 = 2\pi\rho R\Delta Rd$는</span> 고리의 전하이다.</p>
+<p class="x i a-w a-b" style="--b:125.5"><b>에너지 방법</b></p>
+<p class="x i a-j" style="--b:143.1">가상 변위 방법을 이용하자. 먼저 원기둥 끝면에 붙어 있는 반지름 <span class="nw">$R$인</span> 처음 원판을 생각하고, 이 원판을 축을 따라 거리 <span class="nw">$\delta l$만큼</span> 옮긴다고 생각하자. 그러면 우리는 일을 하게 되는데, 이 일을 다음과 같이 나타내자.</p>
+<div class="f" style="left:187pt;top:182pt"><span class="fig" data-srcpage="12" data-clip="187,182,239,195"></span></div>
+<p class="x a-j" style="--b:208.9">이 일은 계의 퍼텐셜 에너지를 바꾸는 데 쓰인다. 비게 된 부피</p>
+<div class="f" style="left:188pt;top:222pt"><span class="fig" data-srcpage="12" data-clip="188,222,237,236"></span></div>
+<p class="x a-j" style="--b:250.7">를 원기둥의 물질로 채웠다고 생각하면, 계의 처음 퍼텐셜 에너지를 얻는다. 따라서 상호 작용 에너지가 다음만큼 줄어들었다고 결론지을 수 있다.</p>
+<div class="f" style="left:188pt;top:276pt"><span class="fig" data-srcpage="12" data-clip="188,276,237,288"></span></div>
+<p class="x a-j" style="--b:306.5">이는 서로 빈틈없이 맞닿은, 반지름이 <span class="nw">$R$와</span> <span class="nw">$R$인</span> 두 얇은 원판의 상호 작용 에너지와 같다.</p>
+<div class="f" style="left:105pt;top:332pt"><span class="fig" data-srcpage="12" data-clip="105,332,318,521"></span></div>
+</div>
+
+<!-- page 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="13" data-clip="28.3,40.9,391.2,42"></span></div>
+<p class="x i a-j" style="--b:64.0">이제 마찬가지로 더 작은 반지름 <span class="nw">$R'$인</span> 원판에 가상 변위 방법을 적용하자. 이 원판을 축을 따라 거리 <span class="nw">$\delta l$만큼</span> 옮길 때 우리가 한 일이 다음과 같다고 하자.</p>
+<div class="f" style="left:109pt;top:97pt"><span class="fig" data-srcpage="13" data-clip="109,97,316,114"></span></div>
+<p class="x a-j" style="--b:131.8">마찬가지로 이 일의 크기는 두 원판, 즉 반지름이 <span class="nw">$R$이고</span> 높이가 <span class="nw">$\delta l$인</span> 원판과 반지름이 <span class="nw">$R'$이고</span> 높이가 <span class="nw">$d$인</span> 원판의 상호 작용 에너지 <span class="nw">$\Delta E'$과</span> 같다는 점에 주목하자.</p>
+<div class="f" style="left:105pt;top:158pt"><span class="fig" data-srcpage="13" data-clip="105,158,318,340"></span></div>
+<p class="x i a-j" style="--b:360.0"><span class="nw">$\Delta F$를</span> 계산하기 위해, 가상 변위 방법으로 얻은 두 식을 서로 빼자.</p>
+<div class="f" style="left:146pt;top:381pt"><span class="fig" data-srcpage="13" data-clip="146,381,279,397"></span></div>
+<p class="x a-j" style="--b:415.8">에너지의 차</p>
+<div class="f" style="left:188pt;top:427pt"><span class="fig" data-srcpage="13" data-clip="188,427,237,441"></span></div>
+<p class="x a-j wn" style="--b:459.6">는 반지름이 <span class="nw">$R$이고</span> 높이가 <span class="nw">$\delta l$인</span> 원판과, 높이가 <span class="nw">$d$이고</span> 안쪽 반지름과 바깥쪽 반지름이 각각 <span class="nw">$R'$와</span> <span class="nw">$R$인</span> 고리의 상호 작용 에너지와 같다는 점에 주목하자. 이 에너지는 직접 계산할 수 있다. <span class="nw">$\Delta R \ll R$이므로</span> 고리의 모든 점은 사실상 원판의 경계에 있으며, 문제는 균일하게 대전된 원판의 가장자리에서 전위를 계산하는 문제로 바뀐다.</p>
+</div>
+
+<!-- page 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">2025년 전러시아 물리 올림피아드, 결선</p>
+<div class="f" style="left:28.3pt;top:40.9pt"><span class="fig" data-srcpage="14" data-clip="28.3,40.9,391.2,42"></span></div>
+<div class="f" style="left:105pt;top:54pt"><span class="fig" data-srcpage="14" data-clip="105,54,318,235"></span></div>
+<p class="x i a-j" style="--b:255.4">면전하 밀도가 <span class="nw">$\sigma$인</span> 원판에서 넓이가 <span class="nw">$dS$인</span> 부분이 전위에 기여하는 양은 다음과 같다.</p>
+<div class="f" style="left:171pt;top:278pt"><span class="fig" data-srcpage="14" data-clip="171,278,254,306"></span></div>
+<p class="x a-j" style="--b:319.1">전위 자체는 다음 적분으로 나타난다.</p>
+<div class="f" style="left:168pt;top:323pt"><span class="fig" data-srcpage="14" data-clip="168,323,257,357"></span></div>
+<p class="x a-j" style="--b:373.3">문제가 첫 번째 방법에서와 정확히 같은 적분으로 바뀌었다는 점에 주목하자.</p>
+<p class="x i a-j wn" style="--b:402.9">극좌표에서 적분하자. 원판 가장자리의 한 점을 원점으로 하고, 원판 단면의 원에 접하는 방향을 처음 방향(각이 0인 방향)으로 택하자. 원판 위의 점의 위치는 두 좌표, 즉 위치 벡터 <span class="nw">$r$와</span> 처음 방향에 대한 위치 벡터의 회전각 <span class="nw">$\theta$로</span> 나타난다. 작은 증가량 <span class="nw">$\mathrm{d}r$와</span> <span class="nw">$\mathrm{d}\theta$로</span> 나타내면 넓이 요소는 다음과 같이 쓰인다.</p>
+<div class="f" style="left:183pt;top:475pt"><span class="fig" data-srcpage="14" data-clip="183,475,242,487"></span></div>
+<p class="x a-j" style="--b:505.4">그러면 이 넓이 요소(전하)에 의한 전위의 증가량은 다음과 같이 쓸 수 있다.</p>
+<div class="f" style="left:115pt;top:516pt"><span class="fig" data-srcpage="14" data-clip="115,516,310,542"></span></div>
+</div>
+</body></html>
