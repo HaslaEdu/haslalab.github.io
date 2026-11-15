@@ -78,12 +78,13 @@ const modelTestExams=buildModelTestCatalogue(DATA,{...scope.catalogueGroups,cont
 const modelTestVersion=digest(JSON.stringify(modelTestExams)+read('pdf-assets.json'));
 outputs.set('community/src/model-test-catalog.js',generated+'export const MODEL_TEST_CATALOGUE_VERSION='+JSON.stringify(modelTestVersion)+';\n'+
   'export const MODEL_TEST_EXAMS='+JSON.stringify(modelTestExams)+';\n');
-const dataKeys=[...new Set([...Object.keys(THEORY),...Object.keys(window.THEORY_META||{}),...Object.keys(window.GENERAL||{})])];
+const dataKeys=[...new Set([...Object.keys(THEORY),...Object.keys(window.THEORY_META||{}),...Object.keys(window.GENERAL||{}),...Object.keys(window.ARCHIVE_PRACTICAL||{})])];
 for(const key of dataKeys){
   const name='catalogue/theory-'+key+'.js';
   const source=generated+'window.THEORY=window.THEORY||{};Object.assign(window.THEORY,'+JSON.stringify(Object.hasOwn(THEORY,key)?{[key]:THEORY[key]}:{})+');\n'+
     'window.THEORY_META=window.THEORY_META||{};Object.assign(window.THEORY_META,'+JSON.stringify(window.THEORY_META?.[key]?{[key]:window.THEORY_META[key]}:{})+');\n'+
     (window.GENERAL?.[key]?'window.GENERAL=window.GENERAL||{};Object.assign(window.GENERAL,'+JSON.stringify({[key]:window.GENERAL[key]})+');\n':'')+
+    (window.ARCHIVE_PRACTICAL?.[key]?'window.ARCHIVE_PRACTICAL=window.ARCHIVE_PRACTICAL||{};Object.assign(window.ARCHIVE_PRACTICAL,'+JSON.stringify({[key]:window.ARCHIVE_PRACTICAL[key]})+');\n':'')+
     (key==='kphe'&&window.KPHE_PDF_VERSIONS?'window.KPHE_PDF_VERSIONS=Object.assign(window.KPHE_PDF_VERSIONS||{},'+JSON.stringify(window.KPHE_PDF_VERSIONS)+');\n':'');
   outputs.set(name,source);versions['theory:'+key]=name+'?v='+digest(source);
 }
