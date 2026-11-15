@@ -1,0 +1,1094 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* RuPhO 2021 (LV = 제55회), 10학년 이론 풀이 — Korean edition on the original layout.
+   ORIGINAL: pages printed from the olympiad's web site (A4 595.3x841.9, 20 pages). No text layer: every glyph is a
+   vector path (plus raster figures), so the scrub copy equals the original. Per problem the site shows a "Решение"
+   page (solution) and a "Разбалловка" page (marking scheme) with the web chrome: logo (stamped), menu links
+   "Условие / Решение / Разбалловка" -> 조건 / 풀이 / 배점, grey question numbers (stamped), the English footer
+   "2020 -- We are what they grow beyond." (stamped as printed).
+   Body text of the site: sans 7pt, line pitch 9.6pt, colour #3f4254; math is KaTeX at 1.21em.
+   The Korean page is white: light-grey rules, table borders and answer boxes are redrawn as divs (.rl/.bx) from the
+   original's own geometry; figures and display formulas WITHOUT Cyrillic are stamped; displays with Cyrillic
+   (subscripts тр, кр, мин, изм, отн, и, к, Б, units см, кОм, В) are retyped in KaTeX:
+   тр -> fr (friction), кр -> cr (critical), мин -> min, изм -> meas (measured), отн -> rel (relative),
+   F_и -> F_in (inertial force), v_к -> v_f (final), I_кз -> I_sc (short circuit), Б (battery) -> b.
+   PLACEMENT: every block is placed by the original's first baseline --b: top = b - l/2 - 0.3155*fs + 0.7pt.
+   Retyped display fractions use .d: line-height 0, top = b - --a. */
+body{font-family:CM,KB,serif;font-size:7.5pt;line-height:9.6pt;word-break:keep-all;color:#3f4254}
+body .katex{font-size:1.13em!important}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:42.5pt;width:511.5pt;--l:9.6pt;--fs:7.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);text-align:justify}
+.c{text-align:center}
+.l{text-align:left}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+/* page heading "풀이"/"배점" (8pt) and the three underlined menu links */
+.hn{--fs:9pt;left:43.3pt;text-align:left}
+.mn{left:54.7pt;width:100pt;text-align:left;font-weight:bold;text-decoration:underline;text-underline-offset:1.2pt}
+/* question line: the grey number is stamped, the text starts at x 65.7 */
+.q{text-indent:23.2pt}
+/* answer boxes: "답:" at x 54.6 */
+.a{left:54.6pt;width:490pt}
+/* table cells of the marking scheme: text column x 48.5..498, points column centred on 528.2 */
+.t{left:48.5pt;width:449pt}
+.pt{left:508.2pt;width:40pt;text-align:center}
+.rl{position:absolute}
+.bx{position:absolute;border-radius:1.8pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap;position:absolute;background:#fff;line-height:1;font-family:'Times New Roman',KB,serif;color:#000}
+</style></head><body>
+
+<!-- ===== page 1: problem 1 (crawling strip), solution ===== -->
+<div class="page">
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:654.9pt;width:511.6pt;height:36.2pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:749.52pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:757.0pt;width:511.6pt;height:67.5pt;border:2.16pt solid #f3f6f9"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="1" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:46.6pt;top:722.6pt"><span class="fig" data-srcpage="1" data-clip="46.6,722.6,56.2,730.1"></span></div>
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="1" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="1" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="1" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="1" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="1" data-clip="40.2,150.4,46.0,157.0"></span></div>
+<p class="x hn" style="--b:78.9">풀이</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">많은 횟수의 순환을 거치면 띠는 어느 방향(<span class="nw">$AB$ 또는 $BA$)으로</span> 이동하는가?</p>
+<p class="x" style="--b:212.8;width:322pt">띠의 길이가 가열 또는 냉각으로 변할 때 띠의 여러 부분은 책상에 대해 서로 반대 방향으로 움직인다. 이때 책상에 대해 움직이지 않는 점이 존재한다. 이 점의 위치는 띠에 작용하는 알짜 마찰력이 0이라는 조건으로부터 정해진다. 띠의 왼쪽 끝에서 이 점까지의 거리를 가열할 때(점 <span class="nw">$C_1$)</span> <span class="nw">$x_1$,</span> 냉각할 때(점 <span class="nw">$C_2$)</span> <span class="nw">$x_2$라</span> 하자(그림&nbsp;2).</p>
+<div class="f" style="left:391.5pt;top:205.0pt"><span class="fig" data-srcpage="1" data-clip="391.5,205.0,554.8,313.2"></span></div>
+<div class="ov" style="left:447.8pt;top:247.8pt;width:12.6pt;height:7.6pt;font-size:5.2pt;padding-top:1.8pt">fr2</div>
+<div class="ov" style="left:521.6pt;top:247.8pt;width:12.2pt;height:7.6pt;font-size:5.2pt;padding-top:1.8pt">fr1</div>
+<div class="ov" style="left:437.8pt;top:303.8pt;width:11.4pt;height:7.8pt;font-size:5.2pt;padding-top:0.6pt">fr2</div>
+<div class="ov" style="left:518.1pt;top:304.0pt;width:11.2pt;height:7.6pt;font-size:5.2pt;padding-top:0.6pt">fr1</div>
+<p class="x" style="--b:270.3">가열할 때</p>
+<p class="x c" style="--b:286.2;left:110.7pt;width:200pt">$F_{\mathrm{fr}1}{}' = F_{\mathrm{fr}2}{}'$</p>
+<div class="f" style="left:170.4pt;top:311.4pt"><span class="fig" data-srcpage="1" data-clip="170.4,311.4,251.3,329.6"></span></div>
+<div class="f" style="left:186.4pt;top:351.5pt"><span class="fig" data-srcpage="1" data-clip="186.4,351.5,235.4,369.4"></span></div>
+<p class="x" style="--b:392.5">가열로 온도가 $\Delta T$만큼 오르면 띠의 왼쪽 끝(점 <span class="nw">$A$)은</span> 왼쪽으로 다음 거리만큼 이동한다.</p>
+<div class="f" style="left:188.9pt;top:401.4pt"><span class="fig" data-srcpage="1" data-clip="188.9,401.4,232.3,410.2"></span></div>
+<p class="x" style="--b:432.9">냉각할 때도 마찬가지로</p>
+<p class="x c" style="--b:448.8;left:110.7pt;width:200pt">$F_{\mathrm{fr}1}{}'' = F_{\mathrm{fr}2}{}''$</p>
+<div class="f" style="left:170.4pt;top:474.6pt"><span class="fig" data-srcpage="1" data-clip="170.4,474.6,251.3,492.2"></span></div>
+<div class="f" style="left:186.4pt;top:514.1pt"><span class="fig" data-srcpage="1" data-clip="186.4,514.1,235.4,532.0"></span></div>
+<p class="x" style="--b:555.1">그리고 띠의 왼쪽 끝은 오른쪽으로 다음만큼 이동한다.</p>
+<div class="f" style="left:189.3pt;top:564.0pt"><span class="fig" data-srcpage="1" data-clip="189.3,564.0,232.8,572.8"></span></div>
+<p class="x" style="--b:595.4">가열-냉각 한 순환 동안 왼쪽 끝과 띠 전체는 왼쪽으로 다음 거리만큼 이동한다.</p>
+<div class="f" style="left:159.7pt;top:605.6pt"><span class="fig" data-srcpage="1" data-clip="159.7,605.6,262.4,622.8"></span></div>
+<p class="x" style="--b:645.9"><span class="nw">$\mu_2 &lt; \mu_1$이므로</span> <span class="nw">$\Delta x &gt; 0$을</span> 얻는다. 즉 띠는 왼쪽으로 이동한다.</p>
+<p class="x a" style="--b:675.1">답: 왼쪽으로</p>
+<p class="x q" style="--b:729.3">가열-냉각 순환 $N$번 동안 띠는 얼마나 이동하는가? 한 순환에서 최고 온도와 최저 온도의 차는 <span class="nw">$\Delta T$이다</span>. 답을 식으로 써라.</p>
+<p class="x a" style="--b:777.1">답: $N$번의 순환 동안 띠의 변위는 다음과 같다.</p>
+<div class="f" style="left:245.5pt;top:787.3pt"><span class="fig" data-srcpage="1" data-clip="245.5,787.3,351.4,804.5"></span></div>
+</div>
+
+<!-- ===== page 2 ===== -->
+<div class="page">
+<div class="bx" style="left:42.5pt;top:-5.0pt;width:511.6pt;height:26.6pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:80.88pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:88.4pt;width:511.6pt;height:36.9pt;border:2.16pt solid #f3f6f9"></div>
+<div class="f" style="left:46.6pt;top:53.4pt"><span class="fig" data-srcpage="2" data-clip="46.6,53.4,56.2,60.9"></span></div>
+<p class="x q" style="--b:60.1">길이 $l = 20\,\mathrm{cm}$인 띠의 온도를 $\Delta T = 80\,{}^\circ\mathrm{C}$만큼 바꾸는 가열-냉각 순환을 $N = 100$번 할 때 띠가 얼마나 이동하는지 계산하여라. 마찰 계수의 값은 <span class="nw">$\mu_1 = 0.15$,</span> <span class="nw">$\mu_2 = 0.05$이다</span>.</p>
+<p class="x a" style="--b:109.3">답: $\Delta X = 16\,\mathrm{cm}$</p>
+<div class="f" style="left:27.7pt;top:162.9pt"><span class="fig" data-srcpage="2" data-clip="27.7,162.9,144.6,170.9"></span></div>
+</div>
+
+<!-- ===== page 3 ===== -->
+<div class="page">
+<p class="x hn" style="--b:79.1">배점</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">많은 횟수의 순환을 거치면 띠는 어느 방향(<span class="nw">$AB$ 또는 $BA$)으로</span> 이동하는가?</p>
+<p class="x t" style="--b:221.3">가열과 냉각 때 실험실 기준계에서 정지해 있는 점이 존재함을 언급하거나 이용하였다</p>
+<p class="x pt" style="--b:221.3">0.50</p>
+<p class="x t" style="--b:241.1">정지한 점이 띠의 가운데도 아니고 끝도 아님을 언급하거나 이용하였다.</p>
+<p class="x t" style="--b:250.7">주석: 동시에 여러 점이 정지해 있다고 하면 이 항목은 0점.</p>
+<p class="x t" style="--b:260.2">주석: 이 항목이 0점이면 이후의 기준은 인정하지 않는다</p>
+<p class="x pt" style="--b:241.1">0.50</p>
+<p class="x t" style="--b:280.3">마찰력이 같다는 식(두 과정 중 적어도 하나에서), 예: <span class="nw">$F'_{\mathrm{fr}1} = F'_{\mathrm{fr}2}$.</span></p>
+<p class="x t d" style="--b:296.3;--a:11pt">주석: 곧바로 <span class="nw">$\mu_1m\dfrac{l - x_1}{l}g = \mu_2m\dfrac{x_1}{l}g$를</span> 썼으면 자동으로 인정한다</p>
+<p class="x pt" style="--b:280.3">2.00</p>
+<p class="x t" style="--b:320.1">마찰력을 길이로 나타내었다:</p>
+<p class="x pt" style="--b:320.1">2 × 0.50</p>
+<p class="x t c d" style="--b:342.5;--a:11pt">$F'_{\mathrm{fr}1} = \mu_1m\dfrac{l - x_1}{l}g,$</p>
+<p class="x t c d" style="--b:371.7;--a:9.1pt">$F'_{\mathrm{fr}2} = \mu_2m\dfrac{x_1}{l}g$</p>
+<p class="x t" style="--b:394.6">.</p>
+<p class="x t d" style="--b:408.4;--a:11.7pt">주석: 곧바로 <span class="nw">$\mu_1m\dfrac{l - x_1}{l}g = \mu_2m\dfrac{x_1}{l}g$를</span> 썼으면 자동으로 인정한다.</p>
+<p class="x t" style="--b:422.2">주석: 마찰 계수를 서로 바꾸어 쓴 경우 이 항목과 방향에 대한 답은 인정하지 않고, 나머지 항목은 채점한다.</p>
+<p class="x t" style="--b:441.4">주석: 일이 같다는 논리에 근거한 풀이라면 이 항목은 점수를 받을 수 있으나, 이후의 항목은 모두 0점.</p>
+<p class="x t" style="--b:462.1">가열: 정지한 점은 왼쪽 끝에서 <span class="nw">$\frac{\mu_1}{\mu_1 + \mu_2}l$,</span> 오른쪽 끝에서 $\frac{\mu_2}{\mu_1 + \mu_2}l$ 떨어져 있다</p>
+<p class="x pt" style="--b:462.1">1.00</p>
+<p class="x t" style="--b:484.4">가열: 왼쪽 끝의 변위 <span class="nw">$\frac{\mu_1}{\mu_1 + \mu_2}l\alpha\Delta T$,</span> 또는 오른쪽 끝의 변위 <span class="nw">$\frac{\mu_2}{\mu_1 + \mu_2}l\alpha\Delta T$,</span> 또는 중심의 변위</p>
+<p class="x pt" style="--b:484.4">0.50</p>
+<p class="x t" style="--b:506.8">냉각: 정지한 점은 왼쪽 끝에서 <span class="nw">$\frac{\mu_2}{\mu_1 + \mu_2}l$,</span> 오른쪽 끝에서 $\frac{\mu_1}{\mu_1 + \mu_2}l$ 떨어져 있다</p>
+<p class="x pt" style="--b:506.8">1.00</p>
+<p class="x t" style="--b:529.0">냉각: 왼쪽 끝의 변위 <span class="nw">$\frac{\mu_2}{\mu_1 + \mu_2}l\alpha\Delta T$,</span> 또는 오른쪽 끝의 변위 <span class="nw">$\frac{\mu_1}{\mu_1 + \mu_2}l\alpha\Delta T$,</span> 또는 중심의 변위.</p>
+<p class="x t" style="--b:540.2">주석: 조건에 정의된 $\alpha$를 부정확하게 사용하여 생기는 <span class="nw">$(1 \pm \alpha\Delta T)$배의</span> 오차는 허용한다.</p>
+<p class="x pt" style="--b:529.0">0.50</p>
+<p class="x t" style="--b:560.4">옳은 답: 왼쪽으로 이동한다.</p>
+<p class="x t" style="--b:570.0">주석: 정성적 또는 정량적 근거가 필요하다</p>
+<p class="x pt" style="--b:560.4">2.00</p>
+<p class="x t" style="--b:591.2">옳은 답: 띠의 변위 <span class="nw">$\Delta X = N\frac{\mu_1 - \mu_2}{\mu_1 + \mu_2}l\alpha\Delta T$.</span></p>
+<p class="x t" style="--b:602.9">주석: 방향의 부호 오류만 허용하며, 최종 식에 그 밖의 오류가 있으면 이 항목은 인정하지 않는다</p>
+<p class="x pt" style="--b:591.2">2.00</p>
+<p class="x t" style="--b:624.1">옳은 식 <span class="nw">$\Delta x = \frac{\mu_1 - \mu_2}{\mu_1 + \mu_2}l\alpha\Delta T$를</span> 얻었으나 답에 인수 $N$을 넣지 않았다</p>
+<p class="x pt" style="--b:624.1">-0.50</p>
+<p class="x t" style="--b:646.4">옳은 수치 답: <span class="nw">$\Delta X = 16\,\mathrm{cm}$.</span></p>
+<p class="x t" style="--b:656.0">주석: 문자식 답이 인정된 경우에만 인정한다</p>
+<p class="x pt" style="--b:646.4">1.00</p>
+<p class="x q" style="--b:702.8">가열-냉각 순환 $N$번 동안 띠는 얼마나 이동하는가? 한 순환에서 최고 온도와 최저 온도의 차는 <span class="nw">$\Delta T$이다</span>. 답을 식으로 써라.</p>
+<p class="x q" style="--b:756.4">길이 $l = 20\,\mathrm{cm}$인 띠의 온도를 $\Delta T = 80\,{}^\circ\mathrm{C}$만큼 바꾸는 가열-냉각 순환을 $N = 100$번 할 때 띠가 얼마나 이동하는지 계산하여라. 마찰 계수의 값은 <span class="nw">$\mu_1 = 0.15$,</span> <span class="nw">$\mu_2 = 0.05$이다</span>.</p>
+<div class="f" style="left:27.7pt;top:809.3pt"><span class="fig" data-srcpage="3" data-clip="27.7,809.3,144.6,817.2"></span></div>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:502.44pt;top:663.36pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:633.72pt;width:0.60pt;height:30.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:663.36pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:633.72pt;width:0.60pt;height:30.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:633.72pt;width:0.60pt;height:30.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:633.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:610.32pt;width:0.60pt;height:24.00pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:633.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:610.32pt;width:0.60pt;height:24.00pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:610.32pt;width:0.60pt;height:24.00pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:610.20pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:577.32pt;width:0.60pt;height:33.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:610.20pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:577.32pt;width:0.60pt;height:33.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:577.32pt;width:0.60pt;height:33.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:577.32pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:548.04pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:577.32pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:548.04pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:548.04pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:548.04pt;width:51.60pt;height:0.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:515.64pt;width:0.60pt;height:33.12pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:548.04pt;width:460.44pt;height:0.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:515.64pt;width:0.60pt;height:33.12pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:515.64pt;width:0.60pt;height:33.12pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:515.64pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:493.32pt;width:0.60pt;height:22.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:515.64pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:493.32pt;width:0.60pt;height:22.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:493.32pt;width:0.60pt;height:22.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:493.44pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:471.12pt;width:0.60pt;height:22.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:493.44pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:471.12pt;width:0.60pt;height:22.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:471.12pt;width:0.60pt;height:22.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:471.12pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:448.68pt;width:0.60pt;height:23.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:471.12pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:448.68pt;width:0.60pt;height:23.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:448.68pt;width:0.60pt;height:23.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:448.68pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:307.92pt;width:0.60pt;height:141.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:448.68pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:307.92pt;width:0.60pt;height:141.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:307.92pt;width:0.60pt;height:141.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:307.92pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:267.48pt;width:0.60pt;height:41.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:307.92pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:267.48pt;width:0.60pt;height:41.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:267.48pt;width:0.60pt;height:41.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:267.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:228.72pt;width:0.60pt;height:39.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:267.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:228.72pt;width:0.60pt;height:39.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:228.72pt;width:0.60pt;height:39.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:209.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:228.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:209.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:228.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:723.00pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:776.52pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="3" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:41.7pt;top:206.2pt"><span class="fig" data-srcpage="3" data-clip="41.7,206.2,46.2,208.2"></span></div><!--grey-->
+<div class="f" style="left:46.6pt;top:696.1pt"><span class="fig" data-srcpage="3" data-clip="46.6,696.1,56.2,703.6"></span></div>
+<div class="f" style="left:46.6pt;top:749.7pt"><span class="fig" data-srcpage="3" data-clip="46.6,749.7,56.2,757.2"></span></div>
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="3" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="3" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="3" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="3" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="3" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 4 ===== -->
+<div class="page">
+<!--T4-->
+</div>
+
+<!-- ===== page 5 ===== -->
+<div class="page">
+<p class="x hn" style="--b:78.9">풀이</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">관의 출구에서 기체의 밀도 $\rho_2$와 속력 <span class="nw">$v_2$;</span></p>
+<p class="x" style="--b:212.9">계가 정상 상태에 있으므로 관 속 기체의 질량은 어느 순간에나 일정하다. 따라서 짧은 시간 $dt$ 동안 관으로 흘러 들어오는 기체의 질량은 흘러 나가는 기체의 질량과 같아야 한다.</p>
+<div class="f" style="left:255.2pt;top:231.1pt"><span class="fig" data-srcpage="5" data-clip="255.2,231.1,341.1,239.7"></span></div>
+<p class="x" style="--b:262.8">여기서 $\mu$는 기체의 질량 유량이다.</p>
+<p class="x" style="--b:272.3">\newline</p>
+<p class="x" style="--b:281.9">관의 단면적이 일정하고 점성 마찰이 작으므로, 관 속 기체의 운동량은 관의 양 끝면에 작용하는 주위 기체의 압력에 의해서만 변한다. 관 속 기체의 운동량 변화를 기체의 운동 방향을 향하는 $x$축 성분으로 쓰자.</p>
+<div class="f" style="left:261.3pt;top:300.3pt"><span class="fig" data-srcpage="5" data-clip="261.3,300.3,334.9,309.6"></span></div>
+<p class="x" style="--b:332.4">한편 관의 어느 단면에서나 기체의 속력은 일정하게 유지되므로, 관 속 기체의 운동량 변화는 짧은 시간 $dt$ 동안 관에서 나간 기체 부분의 운동량과 같은 시간 동안 관으로 들어온 기체 부분의 운동량의 차로 계산할 수 있다.</p>
+<div class="f" style="left:265.5pt;top:350.8pt"><span class="fig" data-srcpage="5" data-clip="265.5,350.8,331.1,360.1"></span></div>
+<p class="x" style="--b:382.9">$dp_x$에 대한 두 식을 같게 놓고 $\mu$에 대한 식을 이용하면 다음을 얻는다.</p>
+<div class="f" style="left:224.6pt;top:392.0pt"><span class="fig" data-srcpage="5" data-clip="224.6,392.0,370.3,416.6"></span></div>
+<div class="f" style="left:234.4pt;top:439.0pt"><span class="fig" data-srcpage="5" data-clip="234.4,439.0,360.7,459.0"></span></div>
+<p class="x q" style="--b:497.6">관의 출구와 입구에서 기체의 온도 비 <span class="nw">$T_2/T_1$;</span></p>
+<p class="x" style="--b:522.6">관의 입구와 출구에서 기체 부분에 대해 쓴 이상 기체 상태 방정식으로부터 다음을 얻는다.</p>
+<div class="f" style="left:263.4pt;top:531.4pt"><span class="fig" data-srcpage="5" data-clip="263.4,531.4,333.2,551.1"></span></div>
+<p class="x" style="--b:574.2">따라서</p>
+<p class="x a" style="--b:603.5">답:</p>
+<div class="f" style="left:194.3pt;top:612.2pt"><span class="fig" data-srcpage="5" data-clip="194.3,612.2,401.4,632.2"></span></div>
+<p class="x q" style="--b:690.0">관이 주위로 방출하는 열의 일률 <span class="nw">$N$.</span></p>
+<p class="x" style="--b:715.0">짧은 시간 $dt$를 생각하여 관 속 기체에 대한 에너지 보존 법칙을 쓰자. 이 시간 동안 외부의 압력이 기체에 일을 하고, 기체의 운동 에너지와 내부 에너지가 변하며, 에너지의 일부는 주위로 방출된다.</p>
+<div class="f" style="left:201.3pt;top:733.4pt"><span class="fig" data-srcpage="5" data-clip="201.3,733.4,394.9,753.8"></span></div>
+<p class="x" style="--b:777.1">여기서 $M$은 기체의 몰 질량이다.</p>
+<p class="x" style="--b:796.4">그러므로</p>
+<div class="f" style="left:231.0pt;top:805.2pt"><span class="fig" data-srcpage="5" data-clip="231.0,805.2,364.2,825.5"></span></div>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:508.32pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:583.2pt;width:511.6pt;height:68.6pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:700.56pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="5" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:46.6pt;top:491.0pt"><span class="fig" data-srcpage="5" data-clip="46.6,491.0,56.2,498.5"></span></div>
+<div class="f" style="left:46.6pt;top:683.3pt"><span class="fig" data-srcpage="5" data-clip="46.6,683.3,56.2,690.8"></span></div>
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="5" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="5" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="5" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="5" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="5" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 6 ===== -->
+<div class="page">
+<div class="f" style="left:269.5pt;top:2.7pt"><span class="fig" data-srcpage="6" data-clip="269.5,2.7,364.2,22.7"></span></div>
+<p class="x" style="--b:46.1">앞에서 얻은 관계식들을 대입하면 최종적으로 다음을 얻는다.</p>
+<p class="x a" style="--b:70.1">답:</p>
+<div class="f" style="left:162.8pt;top:78.9pt"><span class="fig" data-srcpage="6" data-clip="162.8,78.9,432.1,103.4"></span></div>
+<div class="f" style="left:164.8pt;top:126.3pt"><span class="fig" data-srcpage="6" data-clip="164.8,126.3,431.7,150.9"></span></div>
+<div class="f" style="left:27.7pt;top:213.3pt"><span class="fig" data-srcpage="6" data-clip="27.7,213.3,144.6,221.3"></span></div>
+<div class="bx" style="left:42.5pt;top:49.9pt;width:511.6pt;height:121.1pt;border:2.16pt solid #f3f6f9"></div>
+</div>
+
+<!-- ===== page 7 ===== -->
+<div class="page">
+<p class="x hn" style="--b:79.1">배점</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">관의 출구에서 기체의 밀도 $\rho_2$와 속력 <span class="nw">$v_2$;</span></p>
+<p class="x q" style="--b:231.9">관의 출구와 입구에서 기체의 온도 비 <span class="nw">$T_2/T_1$;</span></p>
+<p class="x q" style="--b:276.0">관이 주위로 방출하는 열의 일률 <span class="nw">$N$.</span></p>
+<div class="f" style="left:27.7pt;top:808.7pt"><span class="fig" data-srcpage="7" data-clip="27.7,808.7,144.6,816.6"></span></div>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:242.64pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:286.68pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="7" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:46.6pt;top:225.3pt"><span class="fig" data-srcpage="7" data-clip="46.6,225.3,56.2,232.8"></span></div>
+<div class="f" style="left:46.6pt;top:269.4pt"><span class="fig" data-srcpage="7" data-clip="46.6,269.4,56.2,276.9"></span></div>
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="7" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="7" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="7" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="7" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="7" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 8 ===== -->
+<div class="page">
+<p class="x hn" style="--b:78.9">풀이</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">옴미터 내부 전원의 전압 $\mathcal{E}$의 크기;</p>
+<p class="x" style="--b:212.8">옴미터의 단자에 저항을 연결하면 옴미터는 흐르는 전류의 크기로부터 다음 식에 따라 저항값을 계산한다.</p>
+<p class="x c d" style="--b:233.0;--a:11pt">$R_{\mathrm{meas}} = \dfrac{\mathcal{E}}{I} - r.$</p>
+<p class="x" style="--b:262.2">옴미터의 단자에 다른 어떤 전기 소자를 연결해도 계산은 같은 식으로 이루어진다(옴미터는 무엇이 연결되었는지 정확히 알 수 없으므로 저항이 연결되었다고 가정한다).</p>
+<p class="x" style="--b:290.9">다이오드를 순방향으로 연결하면 다이오드에 흐르는 전류의 크기는</p>
+<div class="f" style="left:274.8pt;top:299.6pt"><span class="fig" data-srcpage="8" data-clip="274.8,299.6,321.3,317.3"></span></div>
+<p class="x" style="--b:340.3">한편 같은 전류를 옴미터의 표시값으로 나타낼 수 있다.</p>
+<div class="f" style="left:274.0pt;top:349.0pt"><span class="fig" data-srcpage="8" data-clip="274.0,349.0,322.2,367.7"></span></div>
+<p class="x" style="--b:390.8">따라서 다음을 얻는다.</p>
+<div class="f" style="left:267.2pt;top:399.5pt"><span class="fig" data-srcpage="8" data-clip="267.2,399.5,329.4,418.3"></span></div>
+<p class="x" style="--b:441.4">저항을 연결한 다이오드에 대해서도 비슷한 관계식을 얻는다.</p>
+<div class="f" style="left:267.2pt;top:450.6pt"><span class="fig" data-srcpage="8" data-clip="267.2,450.6,329.8,469.2"></span></div>
+<p class="x" style="--b:491.9">앞의 두 관계식을 서로 나누면 다음을 얻는다.</p>
+<div class="f" style="left:267.6pt;top:500.7pt"><span class="fig" data-srcpage="8" data-clip="267.6,500.7,329.0,519.7"></span></div>
+<p class="x" style="--b:542.3">따라서</p>
+<p class="x c d" style="--b:562.4;--a:11.7pt">$r = \dfrac{RR_D}{R_1 - R_D - R} = 30\,\mathrm{k\Omega};$</p>
+<div class="f" style="left:233.3pt;top:591.9pt"><span class="fig" data-srcpage="8" data-clip="233.3,591.9,363.0,610.5"></span></div>
+<p class="x" style="--b:633.7">건전지를 연결한 경우를 생각하자. 옴미터 화면의 저항값이 음수가 되는 원인은 두 가지가 있을 수 있다.</p>
+<p class="x" style="--b:652.8">가) 건전지가 전원과 같은 방향으로 연결된 경우(건전지의 (−)극이 전원의 (+)극에 연결됨). 이때 회로의 전류는 단락 전류보다 커지고, 옴미터에 내장된 식으로 계산한 결과는 음수가 된다; \newline</p>
+<p class="x" style="--b:671.9">나)건전지가 옴미터의 내부 전원과 반대 방향으로 연결된 경우. 이때 건전지의 전압은 전원의 전압보다 크고, 전류는 보통의 저항을 잴 때의 “올바른” 방향과 반대로 흐른다. 이 두 경우는 따로 살펴보아야 한다</p>
+<p class="x" style="--b:700.7">경우 «가»:</p>
+<p class="x c d" style="--b:722.4;--a:11.6pt">$I_{\mathrm{b}} = \dfrac{\mathcal{E} + U_{\mathrm{b}}}{r} = \dfrac{\mathcal{E}}{r + R_{\mathrm{b}}},$</p>
+<p class="x" style="--b:754.3">따라서</p>
+<p class="x c d" style="--b:776.1;--a:11.7pt">$\mathcal{E} = -U_{\mathrm{b}}\dfrac{r + R_{\mathrm{b}}}{R_{\mathrm{b}}} = 9\,\mathrm{V},$</p>
+<p class="x" style="--b:808.0">그러면</p>
+<div class="f" style="left:291.8pt;top:817.2pt"><span class="fig" data-srcpage="8" data-clip="291.8,817.2,297.5,824.3"></span></div>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="8" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="8" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="8" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="8" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="8" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="8" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 9 ===== -->
+<div class="page">
+<div class="f" style="left:271.9pt;top:14.3pt"><span class="fig" data-srcpage="9" data-clip="271.9,14.3,319.6,31.6"></span></div>
+<p class="x l" style="--b:25.8;left:319.8pt;width:12pt">$\mathrm{V}$</p>
+<p class="x" style="--b:75.7">극성을 바꾸어 건전지를 연결하면</p>
+<p class="x c d" style="--b:97.5;--a:11.8pt">$\dfrac{\mathcal{E} - U_{\mathrm{b}}}{r} = \dfrac{\mathcal{E}}{r + R_{\mathrm{b}_1}},$</p>
+<p class="x" style="--b:130.0">따라서</p>
+<p class="x c d" style="--b:151.7;--a:11.6pt">$R_{\mathrm{b}_1} = r\dfrac{U_{\mathrm{b}}}{\mathcal{E} - U_{\mathrm{b}}} = 15\,\mathrm{k\Omega}$</p>
+<p class="x" style="--b:183.7">경우 «나»:</p>
+<p class="x c d" style="--b:205.9;--a:11pt">$I_{\mathrm{b}} = \dfrac{\mathcal{E} - U_{\mathrm{b}}}{r} = \dfrac{\mathcal{E}}{r + R_{\mathrm{b}}},$</p>
+<p class="x" style="--b:237.9">따라서</p>
+<p class="x c d" style="--b:259.6;--a:11pt">$\mathcal{E} = U_{\mathrm{b}}\dfrac{r + R_{\mathrm{b}}}{R_{\mathrm{b}}} = -9\,\mathrm{V}.$</p>
+<p class="x" style="--b:291.5">그러므로 경우 «나»는 실현되지 않으며, 남는 연결 방법은 경우 «가»에서 살펴본 것 하나뿐이다.</p>
+<p class="x a" style="--b:320.7">답:</p>
+<p class="x c d" style="--b:342.5;--a:11pt">$\mathcal{E} = -U_{\mathrm{b}}\dfrac{r + R_{\mathrm{b}}}{R_{\mathrm{b}}} = 9\,\mathrm{V},$</p>
+<p class="x q" style="--b:413.1">옴미터의 내부 저항 $r$의 크기;</p>
+<p class="x a" style="--b:452.0">답:</p>
+<p class="x c d" style="--b:472.1;--a:11pt">$r = \dfrac{RR_D}{R_1 - R_D - R} = 30\,\mathrm{k\Omega};$</p>
+<p class="x q" style="--b:536.9">다이오드가 열리는 전압 <span class="nw">$U_0$;</span></p>
+<p class="x a" style="--b:575.3">답:</p>
+<p class="x c d" style="--b:596.0;--a:11pt">$U_0 = \dfrac{\mathcal{E}}{6} = 1.5\,\mathrm{V}$</p>
+<p class="x q" style="--b:659.7">같은 건전지를 극성을 바꾸어 연결했을 때 옴미터의 표시값 <span class="nw">$R_{\mathrm{b}1}$.</span></p>
+<p class="x a" style="--b:698.1">답:</p>
+<p class="x c d" style="--b:719.7;--a:11pt">$R_{\mathrm{b}_1} = r\dfrac{U_{\mathrm{b}}}{\mathcal{E} - U_{\mathrm{b}}} = 15\,\mathrm{k\Omega}$</p>
+<div class="f" style="left:27.7pt;top:786.3pt"><span class="fig" data-srcpage="9" data-clip="27.7,786.3,144.6,794.4"></span></div>
+<div class="bx" style="left:42.5pt;top:300.5pt;width:511.6pt;height:70.7pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:424.32pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:431.8pt;width:511.6pt;height:66.9pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:547.68pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:555.1pt;width:511.6pt;height:66.5pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:670.32pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:677.8pt;width:511.6pt;height:71.3pt;border:2.16pt solid #f3f6f9"></div>
+<div class="f" style="left:46.6pt;top:407.1pt"><span class="fig" data-srcpage="9" data-clip="46.6,407.1,56.2,414.6"></span></div>
+<div class="f" style="left:46.6pt;top:530.3pt"><span class="fig" data-srcpage="9" data-clip="46.6,530.3,56.2,537.8"></span></div>
+<div class="f" style="left:46.6pt;top:653.1pt"><span class="fig" data-srcpage="9" data-clip="46.6,653.1,56.2,660.6"></span></div>
+</div>
+
+<!-- ===== page 10 ===== -->
+<div class="page">
+<p class="x hn" style="--b:79.1">배점</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">옴미터 내부 전원의 전압 $\mathcal{E}$의 크기;</p>
+<p class="x t" style="--b:221.3">옴미터의 표시값과 옴미터에 흐르는 전류 사이의 관계를 썼다</p>
+<p class="x pt" style="--b:221.3">1.00</p>
+<p class="x t c d" style="--b:241.6;--a:11.7pt">$R_{\mathrm{meas}} = \dfrac{\mathcal{E}}{I} - r$</p>
+<p class="x t" style="--b:270.7">또는</p>
+<p class="x t c d" style="--b:291.0;--a:11.5pt">$I = \dfrac{\mathcal{E}}{r + R_{\mathrm{meas}}}$</p>
+<p class="x t" style="--b:322.9">또는 이와 동등한 식</p>
+<p class="x t" style="--b:342.5">다이오드에 흐르는 전류의 식</p>
+<p class="x pt" style="--b:342.5">1.00</p>
+<div class="f" style="left:250.3pt;top:351.7pt"><span class="fig" data-srcpage="10" data-clip="250.3,351.7,294.3,368.9"></span></div>
+<p class="x t" style="--b:391.9">또는 이와 동등한 식</p>
+<p class="x t" style="--b:411.6">저항을 연결한 다이오드에 흐르는 전류의 식</p>
+<p class="x pt" style="--b:411.6">1.00</p>
+<div class="f" style="left:250.3pt;top:420.8pt"><span class="fig" data-srcpage="10" data-clip="250.3,420.8,294.3,438.5"></span></div>
+<p class="x t" style="--b:461.6">또는 이와 동등한 식</p>
+<p class="x t" style="--b:481.3">$r$을 구하였다(식)</p>
+<p class="x pt" style="--b:481.3">0.50</p>
+<div class="f" style="left:241.7pt;top:490.0pt"><span class="fig" data-srcpage="10" data-clip="241.7,490.0,303.4,508.5"></span></div>
+<p class="x t" style="--b:532.8">수치 <span class="nw">$r = 30\,\mathrm{k\Omega}$을</span> 구하였다</p>
+<p class="x pt" style="--b:532.8">0.50</p>
+<p class="x t" style="--b:551.8">주석: 최종 식을 얻는 과정을 거치지 않고 수치적 또는</p>
+<p class="x t" style="--b:561.4">그래프 방법으로 값을 얻었더라도 식에 대한 점수를 준다</p>
+<p class="x t" style="--b:581.0">$r$의 단위가 없다</p>
+<p class="x pt" style="--b:581.0">-0.20</p>
+<p class="x t" style="--b:601.3">경우 «가»의 존재 <span class="nw">$(I &gt; I_{\mathrm{sc}})$</span></p>
+<p class="x pt" style="--b:601.3">0.50</p>
+<p class="x t" style="--b:622.6">경우 «가»에서 건전지에 흐르는 전류의 식</p>
+<p class="x pt" style="--b:622.6">1.00</p>
+<p class="x t c d" style="--b:644.9;--a:11.3pt">$I_{\mathrm{b}} = \dfrac{\mathcal{E} + U_{\mathrm{b}}}{r}$</p>
+<p class="x t" style="--b:674.2">경우 «가»에서 $\mathcal{E}$를 구하였다(식)</p>
+<p class="x pt" style="--b:674.2">0.50</p>
+<p class="x t c d" style="--b:695.8;--a:11.7pt">$\mathcal{E} = -U_{\mathrm{b}}\dfrac{r + R_{\mathrm{b}}}{R_{\mathrm{b}}}$</p>
+<p class="x t" style="--b:728.8">경우 «가»에서 수치 <span class="nw">$\mathcal{E} = 9\,\mathrm{V}$를</span> 구하였다</p>
+<p class="x pt" style="--b:728.8">0.50</p>
+<p class="x t" style="--b:757.4">주석: 최종 식을 얻는 과정을 거치지 않고 수치적 또는</p>
+<p class="x t" style="--b:767.0">그래프 방법으로 값을 얻었더라도 식에 대한 점수를 준다</p>
+<p class="x t" style="--b:786.8">경우 «가»에서 $\mathcal{E}$의 단위가 없다</p>
+<p class="x pt" style="--b:786.8">-0.20</p>
+<p class="x t" style="--b:806.5"><span class="nw">$R_{\mathrm{b}_1}$을</span> 구하였다(식)</p>
+<p class="x pt" style="--b:806.5">0.50</p>
+<p class="x l" style="--b:822.5;left:281.3pt;width:20pt">$U_{\mathrm{b}}$</p>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:553.44pt;top:794.04pt;width:0.60pt;height:28.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:794.04pt;width:0.60pt;height:28.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:794.04pt;width:0.60pt;height:28.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:794.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:774.36pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:794.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:774.36pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:774.36pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:774.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:715.92pt;width:0.60pt;height:59.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:774.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:715.92pt;width:0.60pt;height:59.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:715.92pt;width:0.60pt;height:59.04pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:715.92pt;width:51.60pt;height:0.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:661.80pt;width:0.60pt;height:54.84pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:715.92pt;width:460.44pt;height:0.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:661.80pt;width:0.60pt;height:54.84pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:661.80pt;width:0.60pt;height:54.84pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:661.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:609.72pt;width:0.60pt;height:52.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:661.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:609.72pt;width:0.60pt;height:52.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:609.72pt;width:0.60pt;height:52.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:609.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:588.48pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:609.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:588.48pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:588.48pt;width:0.60pt;height:21.84pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:588.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:568.80pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:588.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:568.80pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:568.80pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:568.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:519.96pt;width:0.60pt;height:49.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:568.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:519.96pt;width:0.60pt;height:49.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:519.96pt;width:0.60pt;height:49.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:519.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:468.96pt;width:0.60pt;height:51.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:519.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:468.96pt;width:0.60pt;height:51.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:468.96pt;width:0.60pt;height:51.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:468.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:399.36pt;width:0.60pt;height:70.20pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:468.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:399.36pt;width:0.60pt;height:70.20pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:399.36pt;width:0.60pt;height:70.20pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:399.36pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:330.24pt;width:0.60pt;height:69.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:399.36pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:330.24pt;width:0.60pt;height:69.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:330.24pt;width:0.60pt;height:69.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:209.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:330.24pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:209.04pt;width:0.60pt;height:121.80pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:209.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:330.24pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:209.04pt;width:0.60pt;height:121.80pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:209.04pt;width:0.60pt;height:121.80pt;background:#e4e6ef"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="10" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:41.7pt;top:206.2pt"><span class="fig" data-srcpage="10" data-clip="41.7,206.2,46.2,208.2"></span></div><!--grey-->
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="10" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="10" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="10" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="10" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="10" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 11 ===== -->
+<div class="page">
+<p class="x l" style="--b:21.0;left:286.3pt;width:10pt;font-size:5.3pt">b</p>
+<p class="x t c d" style="--b:26.4;--a:11.6pt">$R_{\mathrm{b}_1} = r\dfrac{\phantom{U}}{\mathcal{E} - U_{\mathrm{b}}}$</p>
+<p class="x t" style="--b:62.5">수치 <span class="nw">$R_{\mathrm{b}_1} = 15\,\mathrm{k\Omega}$을</span> 구하였다</p>
+<p class="x pt" style="--b:62.5">0.50</p>
+<p class="x t" style="--b:83.2">주석: 최종 식을 얻는 과정을 거치지 않고 수치적 또는</p>
+<p class="x t" style="--b:92.8">그래프 방법으로 값을 얻었더라도 식에 대한 점수를 준다</p>
+<p class="x t" style="--b:112.5"><span class="nw">$R_{\mathrm{b}_1}$의</span> 단위가 없다</p>
+<p class="x pt" style="--b:112.5">-0.20</p>
+<p class="x t" style="--b:133.3">경우 «나»가 존재함을 언급하였다</p>
+<p class="x pt" style="--b:133.3">0.50</p>
+<p class="x t" style="--b:153.4">경우 «나»에서 건전지에 흐르는 전류의 식</p>
+<p class="x pt" style="--b:153.4">1.00</p>
+<p class="x t c d" style="--b:175.6;--a:11.7pt">$I_{\mathrm{b}} = \dfrac{\mathcal{E} - U_{\mathrm{b}}}{r}$</p>
+<p class="x t" style="--b:204.9">경우 «나»에서 $\mathcal{E}$를 구하였다(식)</p>
+<p class="x pt" style="--b:204.9">0.50</p>
+<p class="x t c d" style="--b:226.7;--a:11pt">$\mathcal{E} = U_{\mathrm{b}}\dfrac{r + R_{\mathrm{b}}}{R_{\mathrm{b}}}$</p>
+<p class="x t" style="--b:259.7">경우 «나»에서 수치 <span class="nw">$\mathcal{E} = -9\,\mathrm{V}$를</span> 구하였다</p>
+<p class="x pt" style="--b:259.7">0.50</p>
+<p class="x t" style="--b:288.4">주석: 최종 식을 얻는 과정을 거치지 않고 수치적 또는</p>
+<p class="x t" style="--b:298.0">그래프 방법으로 값을 얻었더라도 식에 대한 점수를 준다</p>
+<p class="x t" style="--b:317.1">주석: 부등식 <span class="nw">$|R_{\mathrm{b}_1}| &gt; r$과</span> 문제의 조건 사이의 모순을 지적해도 동등한 진술로 본다.</p>
+<p class="x t" style="--b:338.4">경우 «나»에서 $\mathcal{E}$의 단위가 없다</p>
+<p class="x pt" style="--b:338.4">-0.20</p>
+<p class="x t" style="--b:358.1">경우 "나"는 실현되지 않는다는 결론을 내렸다</p>
+<p class="x pt" style="--b:358.1">1.00</p>
+<p class="x t" style="--b:377.7"><span class="nw">$U_0$을</span> 구하였다(식)</p>
+<p class="x pt" style="--b:377.7">0.50</p>
+<div class="f" style="left:259.2pt;top:386.9pt"><span class="fig" data-srcpage="11" data-clip="259.2,386.9,285.9,403.6"></span></div>
+<p class="x t" style="--b:428.2">수치 <span class="nw">$U_0 = 1.5\,\mathrm{V}$를</span> 구하였다</p>
+<p class="x pt" style="--b:428.2">0.50</p>
+<p class="x t" style="--b:447.3">주석: 최종 식을 얻는 과정을 거치지 않고 수치적 또는</p>
+<p class="x t" style="--b:456.9">그래프 방법으로 값을 얻었더라도 식에 대한 점수를 준다</p>
+<p class="x t" style="--b:476.5"><span class="nw">$U_0$의</span> 단위가 없다</p>
+<p class="x pt" style="--b:476.5">-0.20</p>
+<p class="x q" style="--b:554.1">옴미터의 내부 저항 $r$의 크기;</p>
+<p class="x q" style="--b:598.2">다이오드가 열리는 전압 <span class="nw">$U_0$;</span></p>
+<p class="x q" style="--b:642.4">같은 건전지를 극성을 바꾸어 연결했을 때 옴미터의 표시값 <span class="nw">$R_{\mathrm{b}1}$.</span></p>
+<div class="f" style="left:27.7pt;top:685.6pt"><span class="fig" data-srcpage="11" data-clip="27.7,685.6,144.6,693.5"></span></div>
+<div class="rl" style="left:502.44pt;top:483.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:464.28pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:483.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:464.28pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:464.28pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:464.28pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:415.32pt;width:0.60pt;height:49.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:464.28pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:415.32pt;width:0.60pt;height:49.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:415.32pt;width:0.60pt;height:49.56pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:415.44pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:365.40pt;width:0.60pt;height:50.64pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:415.44pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:365.40pt;width:0.60pt;height:50.64pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:365.40pt;width:0.60pt;height:50.64pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:365.40pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:345.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:365.40pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:345.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:345.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:345.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:326.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:345.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:326.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:326.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:326.16pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:246.84pt;width:0.60pt;height:79.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:326.16pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:246.84pt;width:0.60pt;height:79.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:246.84pt;width:0.60pt;height:79.92pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:246.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:192.72pt;width:0.60pt;height:54.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:246.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:192.72pt;width:0.60pt;height:54.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:192.72pt;width:0.60pt;height:54.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:192.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:140.64pt;width:0.60pt;height:52.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:192.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:140.64pt;width:0.60pt;height:52.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:140.64pt;width:0.60pt;height:52.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:140.64pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:120.96pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:140.64pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:120.96pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:120.96pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:120.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:100.20pt;width:0.60pt;height:21.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:120.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:100.20pt;width:0.60pt;height:21.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:100.20pt;width:0.60pt;height:21.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:49.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:100.20pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:49.80pt;width:0.60pt;height:51.00pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:49.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:100.20pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:49.80pt;width:0.60pt;height:51.00pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:49.80pt;width:0.60pt;height:51.00pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:47.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:20.40pt;width:0.60pt;height:27.24pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:47.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:20.40pt;width:0.60pt;height:27.24pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:20.40pt;width:0.60pt;height:27.24pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:564.72pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:608.88pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:652.92pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="f" style="left:46.6pt;top:547.5pt"><span class="fig" data-srcpage="11" data-clip="46.6,547.5,56.2,555.0"></span></div>
+<div class="f" style="left:46.6pt;top:591.6pt"><span class="fig" data-srcpage="11" data-clip="46.6,591.6,56.2,599.1"></span></div>
+<div class="f" style="left:46.6pt;top:635.7pt"><span class="fig" data-srcpage="11" data-clip="46.6,635.7,56.2,643.2"></span></div>
+</div>
+
+<!-- ===== page 12 ===== -->
+<div class="page">
+<p class="x hn" style="--b:78.9">풀이</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">원통의 중심에 가깝고 좌표가 $(x;0)$과 $(0;y)$인 점들에서 원통의 전기장 세기 벡터를 구하여라. <span class="nw">$x, y \ll R$이라고</span> 보아라.</p>
+<p class="x" style="--b:212.8">원통의 전기장은 일정한 선전하 밀도로 대전된 무한히 길고 가는 실(좁은 띠)들의 전기장의 합으로 나타낼 수 있다. 장의 대칭성과 가우스 정리를 이용하여 선전하 밀도가 $\lambda$인 실로부터 거리 $r$인 곳의 전기장을 구하자.</p>
+<div class="f" style="left:255.9pt;top:231.1pt"><span class="fig" data-srcpage="12" data-clip="255.9,231.1,340.0,249.9"></span></div>
+<p class="x" style="--b:272.9">따라서 다음이 성립한다.</p>
+<div class="f" style="left:276.3pt;top:281.1pt"><span class="fig" data-srcpage="12" data-clip="276.3,281.1,319.7,300.4"></span></div>
+<p class="x" style="--b:322.9">좌표가 $(x;0)$인 점에서 전기장의 세기를 구하자. 그림에 표시한 원통의 작은 두 부분을 생각하자.</p>
+<div class="f" style="left:164.4pt;top:331.6pt"><span class="fig" data-srcpage="12" data-clip="164.4,331.6,432.1,560.7"></span></div>
+<p class="x" style="--b:573.1">이 두 부분은 선전하 밀도가 각각 $\sigma dL_1$과 $\sigma dL_2$인 두 실처럼 서로 반대 방향의 전기장을 만든다. 삼각형의 닮음으로부터 다음을 얻는다.</p>
+<div class="f" style="left:276.8pt;top:591.4pt"><span class="fig" data-srcpage="12" data-clip="276.8,591.4,320.3,610.1"></span></div>
+<p class="x" style="--b:633.2">그러므로</p>
+<div class="f" style="left:244.0pt;top:641.4pt"><span class="fig" data-srcpage="12" data-clip="244.0,641.4,352.2,660.7"></span></div>
+<p class="x" style="--b:683.6">이 두 전기장은 서로 상쇄된다. 이로부터 원통이 이 점에 만드는 전기장은 표시한 두 띠(각각 너비 $dS$)가 만드는 전기장의 합과 같음이 분명하며, 이 두 띠의 전기장은 상쇄되지 않는다(그림 참조).</p>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="12" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="12" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="12" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="12" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="12" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="12" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 13 ===== -->
+<div class="page">
+<div class="f" style="left:164.4pt;top:48.9pt"><span class="fig" data-srcpage="13" data-clip="164.4,48.9,432.1,306.2"></span></div>
+<p class="x" style="--b:318.6">이때</p>
+<div class="f" style="left:279.8pt;top:327.3pt"><span class="fig" data-srcpage="13" data-clip="279.8,327.3,316.5,336.9"></span></div>
+<p class="x" style="--b:360.0">각 띠가 만드는 전기장은 다음과 같다.</p>
+<div class="f" style="left:276.1pt;top:368.7pt"><span class="fig" data-srcpage="13" data-clip="276.1,368.7,319.9,389.1"></span></div>
+<p class="x" style="--b:412.1">이 띠들의 전기장은 $y$축 방향으로 서로 상쇄되므로 <span class="nw">$E_y = 0$이고,</span> 전기장의 $x$축 성분은 다음과 같다.</p>
+<div class="f" style="left:255.0pt;top:421.0pt"><span class="fig" data-srcpage="13" data-clip="255.0,421.0,340.9,441.6"></span></div>
+<p class="x" style="--b:464.7">따라서 합성 전기장은 원통의 축을 향한다.</p>
+<p class="x" style="--b:483.8">점 $(0,y)$에서의 전기장을 구하기 위해, 처음의 원통을 표면 전하 밀도 $+\sigma$로 전체가 대전된 원통과 표면 전하 밀도가 $-\sigma$인 두 사분 조각의 겹침으로 나타내자(그림 참조).</p>
+<div class="f" style="left:164.4pt;top:501.5pt"><span class="fig" data-srcpage="13" data-clip="164.4,501.5,432.1,822.7"></span></div>
+</div>
+
+<!-- ===== page 14 ===== -->
+<div class="page">
+<p class="x" style="--b:32.2">음전하로 대전된 두 사분 조각이 만드는 전기장 $E_1$은 첫 번째 경우에 구한 것과 비슷하므로, 이미 얻은 결과를 그대로 이용할 수 있다.</p>
+<div class="f" style="left:262.6pt;top:49.4pt"><span class="fig" data-srcpage="14" data-clip="262.6,49.4,333.7,66.7"></span></div>
+<p class="x" style="--b:89.9">점 $(y,0)$에서 균일하게 대전된 원통이 만드는 전기장은 대칭성과 가우스 정리에 따라 0이다. 따라서 중첩 원리에 의해 구하려는 점에서 합성 전기장 $E'$의 성분은 다음과 같다.</p>
+<div class="f" style="left:261.8pt;top:108.5pt"><span class="fig" data-srcpage="14" data-clip="261.8,108.5,334.2,125.9"></span></div>
+<div class="f" style="left:27.7pt;top:106.6pt"><span class="fig" data-srcpage="14" data-clip="27.7,106.6,144.6,114.6"></span></div>
+<p class="x" style="--b:149.1">전기장 $E'$은 원통의 축에서 멀어지는 방향이다.</p>
+<p class="x a" style="--b:178.5">답:</p>
+<div class="f" style="left:261.8pt;top:186.9pt"><span class="fig" data-srcpage="14" data-clip="261.8,186.9,334.2,204.4"></span></div>
+<div class="bx" style="left:42.5pt;top:158.1pt;width:511.6pt;height:66.2pt;border:2.16pt solid #f3f6f9"></div>
+</div>
+
+<!-- ===== page 15 ===== -->
+<div class="page">
+<p class="x hn" style="--b:79.1">배점</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">원통의 중심에 가깝고 좌표가 $(x;0)$과 $(0;y)$인 점들에서 원통의 전기장 세기 벡터를 구하여라. <span class="nw">$x, y \ll R$이라고</span> 보아라.</p>
+<p class="x t" style="--b:221.3">산술 오류나 무차원 계수의 누락이 있을 때마다, 점수는 그 오류가 있는 항목에서만 깎는다</p>
+<p class="x pt" style="--b:221.3">None</p>
+<p class="x t" style="--b:250.7">무한히 긴 대전된 실의 전기장에 대한 식이 있다</p>
+<p class="x pt" style="--b:250.7">1.00</p>
+<div class="f" style="left:253.2pt;top:259.4pt"><span class="fig" data-srcpage="15" data-clip="253.2,259.4,291.7,278.0"></span></div>
+<p class="x t" style="--b:301.6">앞의 식에서 수치 계수가 틀렸다</p>
+<p class="x pt" style="--b:301.6">-0.50</p>
+<p class="x t" style="--b:321.3">원통의 축에서 전기장은 0이다</p>
+<p class="x pt" style="--b:321.3">1.00</p>
+<p class="x t" style="--b:342.5;left:62.6pt;width:435pt">점 $(x,0)$에 대하여 대전된 면의 대부분에서 오는 전기장이 상쇄됨을 언급하였다</p>
+<p class="x pt" style="--b:340.1">1.00</p>
+<p class="x t" style="--b:365.3;left:62.6pt;width:435pt">앞 항목의 진술을 정당화하였다</p>
+<p class="x pt" style="--b:362.9">1.00</p>
+<p class="x t" style="--b:388.1;left:62.6pt;width:435pt">상쇄되지 않는 면의 크기를 구하였다</p>
+<p class="x pt" style="--b:385.7">1.00</p>
+<p class="x t" style="--b:411.0;left:62.6pt;width:435pt">점 $(x,0)$에서 전기장 세기에 대한 옳은 적분을 썼다</p>
+<p class="x pt" style="--b:408.6">1.00</p>
+<p class="x t" style="--b:433.9;left:62.6pt;width:435pt">적분을 옳게 계산하였다</p>
+<p class="x pt" style="--b:431.5">2.00</p>
+<p class="x t" style="--b:456.8;left:62.6pt;width:435pt">점 $(0,y)$에서의 전기장을 통해 점 $(x,0)$의 전기장을 구하는 데 대전된 원통들의 겹침을 옳게 이용하였다</p>
+<p class="x pt" style="--b:454.4">3.00</p>
+<p class="x t" style="--b:478.0">점 $(x,0)$에서 전기장의 방향을 정하였다</p>
+<p class="x pt" style="--b:478.0">1.00</p>
+<p class="x t" style="--b:497.7">성분 $E_x$를 구하였다:</p>
+<p class="x pt" style="--b:497.7">1.00</p>
+<div class="f" style="left:249.4pt;top:506.2pt"><span class="fig" data-srcpage="15" data-clip="249.4,506.2,295.4,523.5"></span></div>
+<p class="x t" style="--b:546.1">주석: 방법이 틀리면 이 항목은 채점하지 않는다</p>
+<p class="x t" style="--b:565.6">앞의 식에서 수치 계수가 틀렸거나 부호를 빠뜨렸다</p>
+<p class="x pt" style="--b:565.6">-0.50</p>
+<p class="x t" style="--b:585.4">방법 1: 점 $(0,y)$에 대하여 대전된 면의 대부분에서 오는 전기장이 상쇄됨을 언급하였다</p>
+<p class="x pt" style="--b:585.4">1.00</p>
+<p class="x t" style="--b:605.1">방법 1: 앞 항목의 진술을 정당화하였다</p>
+<p class="x pt" style="--b:605.1">1.00</p>
+<p class="x t" style="--b:624.6">방법 1: 상쇄되지 않는 면의 크기를 구하였다</p>
+<p class="x pt" style="--b:624.6">1.00</p>
+<p class="x t" style="--b:644.4">방법 2: 점 $(0,y)$에서 전기장 세기에 대한 옳은 적분을 썼다</p>
+<p class="x pt" style="--b:644.4">1.00</p>
+<p class="x t" style="--b:663.9">방법 2: 적분을 옳게 계산하였다</p>
+<p class="x pt" style="--b:663.9">2.00</p>
+<p class="x t" style="--b:683.6">방법 3: 점 $(x,0)$에서의 전기장을 통해 점 $(0,y)$의 전기장을 구하는 데 대전된 원통들의 겹침을 옳게 이용하였다</p>
+<p class="x pt" style="--b:683.6">3.00</p>
+<p class="x t" style="--b:703.4">점 $(0,y)$에서 전기장의 방향을 정하였다</p>
+<p class="x pt" style="--b:703.4">1.00</p>
+<p class="x t" style="--b:722.9">성분 $E_y$를 구하였다:</p>
+<p class="x pt" style="--b:722.9">1.00</p>
+<div class="f" style="left:252.5pt;top:732.0pt"><span class="fig" data-srcpage="15" data-clip="252.5,732.0,292.3,749.3"></span></div>
+<p class="x t" style="--b:772.3">주석: 방법이 틀리면 이 항목은 채점하지 않는다</p>
+<p class="x t" style="--b:792.0">앞의 식에서 수치 계수가 틀렸거나 부호를 빠뜨렸다</p>
+<p class="x pt" style="--b:792.0">-0.50</p>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:502.44pt;top:799.32pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:779.76pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:799.32pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:779.76pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:779.76pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:779.76pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:710.64pt;width:0.60pt;height:69.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:779.76pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:710.64pt;width:0.60pt;height:69.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:710.64pt;width:0.60pt;height:69.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:710.64pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:690.96pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:710.64pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:690.96pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:690.96pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:690.96pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:671.40pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:690.96pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:671.40pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:671.40pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:671.40pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:651.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:671.40pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:651.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:651.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:651.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:631.92pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:651.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:631.92pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:631.92pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:632.04pt;width:51.60pt;height:0.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:612.36pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:632.04pt;width:460.44pt;height:0.72pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:612.36pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:612.36pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:612.36pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:592.68pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:612.36pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:592.68pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:592.68pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:592.68pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:573.12pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:592.68pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:573.12pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:573.12pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:573.12pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:553.44pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:573.12pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:553.44pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:553.44pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:553.44pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:485.40pt;width:0.60pt;height:68.64pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:553.44pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:485.40pt;width:0.60pt;height:68.64pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:485.40pt;width:0.60pt;height:68.64pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:485.40pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:465.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:485.40pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:465.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:465.72pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:465.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:442.92pt;width:0.60pt;height:23.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:465.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:442.92pt;width:0.60pt;height:23.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:442.92pt;width:0.60pt;height:23.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:442.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:420.00pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:442.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:420.00pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:420.00pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:420.00pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:397.20pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:420.00pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:397.20pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:397.20pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:397.20pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:374.28pt;width:0.60pt;height:23.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:397.20pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:374.28pt;width:0.60pt;height:23.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:374.28pt;width:0.60pt;height:23.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:374.28pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:351.48pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:374.28pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:351.48pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:351.48pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:351.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:328.68pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:351.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:328.68pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:328.68pt;width:0.60pt;height:23.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:328.68pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:309.00pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:328.68pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:309.00pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:309.00pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:309.00pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:289.20pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:309.00pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:289.20pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:289.20pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:289.32pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:238.32pt;width:0.60pt;height:51.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:289.32pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:238.32pt;width:0.60pt;height:51.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:238.32pt;width:0.60pt;height:51.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:209.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:238.32pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:209.04pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:209.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:238.32pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:209.04pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:209.04pt;width:0.60pt;height:29.88pt;background:#e4e6ef"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="15" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:41.7pt;top:206.2pt"><span class="fig" data-srcpage="15" data-clip="41.7,206.2,46.2,208.2"></span></div><!--grey-->
+<div class="f" style="left:49.6pt;top:337.6pt"><span class="fig" data-srcpage="15" data-clip="49.6,337.6,59.1,343.3"></span></div>
+<div class="f" style="left:49.6pt;top:360.4pt"><span class="fig" data-srcpage="15" data-clip="49.6,360.4,59.1,366.1"></span></div>
+<div class="f" style="left:49.6pt;top:383.3pt"><span class="fig" data-srcpage="15" data-clip="49.6,383.3,59.1,389.0"></span></div>
+<div class="f" style="left:49.6pt;top:406.1pt"><span class="fig" data-srcpage="15" data-clip="49.6,406.1,59.1,411.8"></span></div>
+<div class="f" style="left:49.6pt;top:428.9pt"><span class="fig" data-srcpage="15" data-clip="49.6,428.9,59.1,434.6"></span></div>
+<div class="f" style="left:49.6pt;top:451.8pt"><span class="fig" data-srcpage="15" data-clip="49.6,451.8,59.1,457.5"></span></div>
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="15" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="15" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="15" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="15" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="15" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 16 ===== -->
+<div class="page">
+<div class="f" style="left:27.7pt;top:35.6pt"><span class="fig" data-srcpage="16" data-clip="27.7,35.6,144.6,43.8"></span></div>
+</div>
+
+<!-- ===== page 17 ===== -->
+<div class="page">
+<p class="x hn" style="--b:78.9">풀이</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">엔진을 켜지 않았다면 <span class="nw">$x = x_{\mathrm{cr}}$이</span> 어떤 값일 때 탐사선들이 충돌하겠는가?</p>
+<p class="x" style="--b:212.8">탐사선들이 동시에 궤도의 교점에 있게 되면 충돌한다. 엔진을 켜지 않으면 탐사선들은 등속 운동을 하므로</p>
+<p class="x c d" style="--b:241.0;--a:13.0pt">$\dfrac{x_{\mathrm{cr}}}{v} = 3\dfrac{\sqrt{L^2 - x_{\mathrm{cr}}{}^2}}{v},$</p>
+<p class="x" style="--b:269.8">따라서</p>
+<p class="x a" style="--b:299.0">답:</p>
+<p class="x c d" style="--b:319.1;--a:11pt">$x_{\mathrm{cr}} = \dfrac{3L}{\sqrt{10}}$</p>
+<p class="x q" style="--b:386.1"><span class="nw">$x = x_{\mathrm{cr}}$일</span> 때 탐사선들이 충돌하지 않는 추력의 최솟값 <span class="nw">$F_{\min}$을</span> 구하여라.</p>
+<p class="x" style="--b:411.0"><span class="nw">$x = x_{\mathrm{cr}}$이므로</span> 엔진을 켜는 순간 첫 번째 탐사선에 대한 두 번째 탐사선의 상대 속도 벡터 <span class="nw">$\vec v_{\mathrm{rel}} = \vec v_2 - \vec v_1$은</span> 정확히 첫 번째 탐사선을 향한다.</p>
+<p class="x" style="--b:431.2">첫 번째 탐사선에 고정된 기준계로 옮겨 가자. 이 기준계에서 두 번째 탐사선에는 엔진의 추력과 다음과 같은 관성력이 작용한다.</p>
+<p class="x c d" style="--b:453.6;--a:14.1pt">$\vec F_{\mathrm{in}} = m_2\dfrac{-\vec F}{m_1}.$</p>
+<p class="x" style="--b:483.8">이로부터 두 번째 탐사선은 직선 운동을 함을 알 수 있다.</p>
+<p class="x" style="--b:502.9">탐사선 사이의 거리가 $S$가 되는 순간 두 번째 탐사선의 속력의 크기를 구하자. 운동 에너지 변화의 법칙을 쓰자.</p>
+<p class="x c d" style="--b:527.3;--a:13.2pt">$\dfrac{m_2v^2_{\mathrm{rel}}}{2} - \dfrac{m_2v^2_{\mathrm{rel}_0}}{2} = A_F + A_{F_{\mathrm{in}}} = \left(-\vec F + \vec F_{\mathrm{in}}\right)\Delta\vec r_{\mathrm{rel}},$</p>
+<p class="x" style="--b:556.7">따라서</p>
+<p class="x c d" style="--b:581.1;--a:13.4pt">$\dfrac{m_2v^2_{\mathrm{rel}}}{2} - \dfrac{m_2v^2_{\mathrm{rel}_0}}{2} = -F\left(1 + \dfrac{m_2}{m_1}\right)(L - S).$</p>
+<p class="x" style="--b:612.4">탐사선 사이의 거리가 <span class="nw">$S = 0$일</span> 때 상대 속도가 0이 되면 가능한 최소의 힘이 된다. 따라서</p>
+<p class="x c d" style="--b:637.4;--a:13.4pt">$F_{min} = \dfrac{m_1m_2}{m_1 + m_2}\cdot\dfrac{v^2_{\mathrm{rel}_0}}{2L} = \dfrac{4mv^2}{9L}.$</p>
+<p class="x a" style="--b:670.9">답:</p>
+<div class="f" style="left:274.8pt;top:679.7pt"><span class="fig" data-srcpage="17" data-clip="274.8,679.7,321.4,697.9"></span></div>
+<p class="x q" style="--b:756.4">엔진의 추력이 <span class="nw">$F = F_{\min} + dF$</span> <span class="nw">$(dF \ll F_{\min})$이고</span> <span class="nw">$x = x_{\mathrm{cr}}$이라</span> 하자. 첫 번째 탐사선의 나중 속도 <b>벡터</b>를 $\alpha\vec v_1 + \beta\vec v_2$의 꼴로 구하여라.</p>
+<p class="x" style="--b:781.4">조건에서 <span class="nw">$dF \ll F_{min}$이므로</span> <span class="nw">$F = F_{min}$으로</span> 보자. 운동 에너지 변화의 법칙 (1)에 $F_{min}$의 식을 대입하면 다음을 얻는다.</p>
+<p class="x c d" style="--b:805.8;--a:13.0pt">$\dfrac{m_2v^2_{\mathrm{rel}}}{2} = FS\left(1 + \dfrac{m_2}{m_1}\right).$</p>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:278.7pt;width:511.6pt;height:69.1pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:396.72pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:650.6pt;width:511.6pt;height:67.5pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:767.04pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="17" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:46.6pt;top:379.4pt"><span class="fig" data-srcpage="17" data-clip="46.6,379.4,56.2,386.9"></span></div>
+<div class="f" style="left:46.6pt;top:749.7pt"><span class="fig" data-srcpage="17" data-clip="46.6,749.7,56.2,757.2"></span></div>
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="17" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="17" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="17" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="17" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="17" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 18 ===== -->
+<div class="page">
+<p class="x" style="--b:33.8">이로부터 탐사선 사이의 거리가 <span class="nw">$S = 2L$인</span> 순간</p>
+<p class="x c" style="--b:57.1;margin-top:-1pt">$|v_{\mathrm{rel}}| = \sqrt2|v_{\mathrm{rel}_0}|.$</p>
+<p class="x" style="--b:83.8">상대 속도의 방향은 반대로 바뀌므로</p>
+<p class="x c" style="--b:100.2;margin-top:-1.05pt">$\vec v_{\mathrm{rel}} = -\sqrt2\vec v_{\mathrm{rel}_0}.$</p>
+<p class="x" style="--b:127.3">처음 기준계로 돌아가자.</p>
+<p class="x" style="--b:146.5">두 탐사선으로 이루어진 계에 작용하는 알짜힘은 0이므로, 계의 질량 중심은 다음과 같은 일정한 속도로 움직인다.</p>
+<div class="f" style="left:272.2pt;top:155.1pt"><span class="fig" data-srcpage="18" data-clip="272.2,155.1,323.9,172.9"></span></div>
+<p class="x" style="--b:195.9">이로부터 질량 중심에 대한 첫 번째 탐사선의 속도 <span class="nw">$\vec v_{1_{\mathrm{rel}C}}$는</span> 다음과 같다.</p>
+<p class="x c d" style="--b:218.7;--a:11pt">$\vec v_{1_{\mathrm{rel}C}} = \vec v_1 - \vec v_C = \dfrac45(\vec v_1 - \vec v_2) = -\dfrac45\vec v_{\mathrm{rel}}.$</p>
+<p class="x" style="--b:248.1">여기서 <span class="nw">$\vec v_{\mathrm{rel}} = \vec v_2 - \vec v_1$이다</span>.</p>
+<p class="x" style="--b:268.2">두 번째 탐사선의 나중 속도 벡터에 대한 최종 식을 얻자.</p>
+<p class="x c d" style="--b:290.0;--a:13.5pt">$\vec v_{\mathrm{f}} = \vec v_C + \vec v_{1_{\mathrm{rel}C}} = \vec v_C - \dfrac{4\sqrt2}{5}\vec v_{\mathrm{rel}_0} = \dfrac15\vec v_1\left(1 - 4\sqrt2\right) + \dfrac45\vec v_2\left(1 + \sqrt2\right)$</p>
+<p class="x a" style="--b:323.0">답:</p>
+<p class="x c d" style="--b:343.1;--a:11pt">$\vec v_{\mathrm{f}} = \dfrac15\vec v_1\left(1 - 4\sqrt2\right) + \dfrac45\vec v_2\left(1 + \sqrt2\right)$</p>
+<p class="x q" style="--b:399.0">엔진의 추력이 $F$이고 <span class="nw">$x = x_1$</span> <span class="nw">$(x_1 &gt; x_{\mathrm{cr}})$이라</span> 하자. 두 번째 탐사선에 대한 첫 번째 탐사선의 나중 속도의 <b>크기</b>를 구하여라.</p>
+<p class="x" style="--b:424.0">다시 첫 번째 탐사선에 고정된 기준계로 옮겨 가자. $x$가 임의의 값일 때에는 두 번째 탐사선의 상대 운동이 더 이상 직선 운동이 아님을 고려하자. <span class="nw">$\vec v_{\mathrm{rel}_0}$이</span> 더 이상 첫 번째 탐사선을 향하지 않으므로, 상대 가속도는 처음 상대 속도와 나란하지 않게 된다.</p>
+<p class="x" style="--b:463.7">탐사선들의 작은 상대 변위에 대해 운동 에너지 변화의 법칙을 쓰자.</p>
+<p class="x c d" style="--b:484.0;--a:12.2pt">$dE_k = \left(-\vec F + \vec F_{\mathrm{in}}\right)d\vec r_{\mathrm{rel}} = -\vec F\left(1 + \dfrac{m_2}{m_1}\right)d\vec r_{\mathrm{rel}} = -F\left(1 + \dfrac{m_2}{m_1}\right)dS,$</p>
+<p class="x" style="--b:515.3">추력 벡터는 언제나 다른 탐사선을 향하는 방향과 반대이기 때문이다. 얻은 식은 $x$의 어떤 값에서도 적용되며 궤적의 모양에 의존하지 않는다. 따라서 두 번째 질문을 풀 때 <span class="nw">$S = 2L$에</span> 대해 얻은 결과를 이용하면</p>
+<p class="x c d" style="--b:548.8;--a:14.2pt">$v_{\mathrm{rel}} = \sqrt{v^2_{\mathrm{rel}_0} + \dfrac{2FL(m_1 + m_2)}{m_1m_2}} = \sqrt{\dfrac{10v^2}{9} + \dfrac{5FL}{2m}}.$</p>
+<p class="x a" style="--b:585.5">답:</p>
+<p class="x c d" style="--b:607.3;--a:14.2pt">$v_{\mathrm{rel}} = \sqrt{\dfrac{10v^2}{9} + \dfrac{5FL}{2m}}.$</p>
+<div class="f" style="left:27.7pt;top:671.3pt"><span class="fig" data-srcpage="18" data-clip="27.7,671.3,144.6,679.2"></span></div>
+<div class="bx" style="left:42.5pt;top:302.7pt;width:511.6pt;height:66.0pt;border:2.16pt solid #f3f6f9"></div>
+<div class="rl" style="left:42.48pt;top:409.56pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="bx" style="left:42.5pt;top:565.3pt;width:511.6pt;height:68.5pt;border:2.16pt solid #f3f6f9"></div>
+<div class="f" style="left:46.6pt;top:392.3pt"><span class="fig" data-srcpage="18" data-clip="46.6,392.3,56.2,399.8"></span></div>
+</div>
+
+<!-- ===== page 19 ===== -->
+<div class="page">
+<p class="x hn" style="--b:79.1">배점</p>
+<p class="x mn" style="--b:115.1">조건</p>
+<p class="x mn" style="--b:135.3">풀이</p>
+<p class="x mn" style="--b:155.5">배점</p>
+<p class="x q" style="--b:187.8">엔진을 켜지 않았다면 <span class="nw">$x = x_{\mathrm{cr}}$이</span> 어떤 값일 때 탐사선들이 충돌하겠는가?</p>
+<p class="x t" style="--b:221.5">충돌 조건을 썼다.</p>
+<p class="x pt" style="--b:221.5">1.00</p>
+<p class="x t" style="--b:241.1">첫 번째 질문의 답을 얻었다</p>
+<p class="x pt" style="--b:241.1">1.00</p>
+<p class="x t c d" style="--b:261.2;--a:11.6pt">$x_{\mathrm{cr}} = \dfrac{Lv_1}{\sqrt{v_1^2 + v_2^2}} = \dfrac{3L}{\sqrt{10}} \approx 0.95L.$</p>
+<p class="x q" style="--b:327.1"><span class="nw">$x = x_{\mathrm{cr}}$일</span> 때 탐사선들이 충돌하지 않는 추력의 최솟값 <span class="nw">$F_{\min}$을</span> 구하여라.</p>
+<p class="x t" style="--b:360.6"><span class="nw">$x = x_{\mathrm{cr}}$일</span> 때 추력의 방향이 바뀌지 않음을 정당화하였다.</p>
+<p class="x pt" style="--b:360.6">1.00</p>
+<p class="x t" style="--b:381.3">계의 동역학을 옳게 기술하였다.</p>
+<p class="x pt" style="--b:381.3">0.50</p>
+<p class="x t" style="--b:400.9">옳은 답을 얻었다</p>
+<p class="x pt" style="--b:400.9">0.50</p>
+<p class="x t c d" style="--b:425.9;--a:13.4pt">$F_{min} = \dfrac{m_1m_2}{m_1 + m_2}\cdot\dfrac{v^2_{\mathrm{rel}_0}}{2L} = \dfrac{4mv^2}{9L}.$</p>
+<p class="x q" style="--b:483.3">엔진의 추력이 <span class="nw">$F = F_{\min} + dF$</span> <span class="nw">$(dF \ll F_{\min})$이고</span> <span class="nw">$x = x_{\mathrm{cr}}$이라</span> 하자. 첫 번째 탐사선의 나중 속도 <b>벡터</b>를 $\alpha\vec v_1 + \beta\vec v_2$의 꼴로 구하여라.</p>
+<p class="x t" style="--b:516.9">운동하는 동안 상대 속도 벡터의 방향이 바뀜을 언급하였다.</p>
+<p class="x pt" style="--b:516.9">0.50</p>
+<p class="x t" style="--b:536.4">계의 동역학을 옳게 기술하였다.</p>
+<p class="x pt" style="--b:536.4">0.50</p>
+<p class="x pt" style="--b:556.1">0.50</p>
+<p class="x t c d" style="--b:568.3;--a:13.5pt">$v_{\mathrm{rel}} = \sqrt2v_{\mathrm{rel}_0} = \dfrac{\sqrt{20}v}{3} = \approx 1.49v,$</p>
+<p class="x t" style="--b:597.6">또는</p>
+<div class="f" style="left:232.2pt;top:606.5pt"><span class="fig" data-srcpage="19" data-clip="232.2,606.5,313.0,631.3"></span></div>
+<p class="x t" style="--b:654.5">여기서 $\tau$는 엔진이 작동한 시간이다.</p>
+<p class="x t" style="--b:674.2">탐사선들의 운동량의 벡터 합이 일정함을 언급하였다. 또는</p>
+<p class="x pt" style="--b:674.2">0.50</p>
+<div class="f" style="left:225.5pt;top:683.0pt"><span class="fig" data-srcpage="19" data-clip="225.5,683.0,319.9,703.0"></span></div>
+<p class="x t" style="--b:726.2">여기서 $x$축과 $y$축은 각각 $\vec v_1$과 $\vec v_2$를 따라 놓여 있다.</p>
+<p class="x pt" style="--b:745.9">1.00</p>
+<div class="f" style="left:230.9pt;top:745.2pt"><span class="fig" data-srcpage="19" data-clip="230.9,745.2,314.2,764.2"></span></div>
+<p class="x pt" style="--b:787.8">1.00</p>
+<div class="f" style="left:231.1pt;top:787.2pt"><span class="fig" data-srcpage="19" data-clip="231.1,787.2,314.0,806.8"></span></div>
+<div class="rl" style="left:28.20pt;top:94.44pt;width:540.24pt;height:0.48pt;background:#ebedf3"></div>
+<div class="rl" style="left:42.48pt;top:198.48pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:502.44pt;top:287.64pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:228.72pt;width:0.60pt;height:59.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:287.64pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:228.72pt;width:0.60pt;height:59.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:228.72pt;width:0.60pt;height:59.52pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:209.04pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:228.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:209.04pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:228.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:209.04pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:337.68pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:502.44pt;top:443.88pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:388.68pt;width:0.60pt;height:55.80pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:443.88pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:388.68pt;width:0.60pt;height:55.80pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:388.68pt;width:0.60pt;height:55.80pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:388.68pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:369.00pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:388.68pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:369.00pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:369.00pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:348.24pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:369.00pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:348.36pt;width:0.60pt;height:21.24pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:348.24pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:369.00pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:348.36pt;width:0.60pt;height:21.24pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:348.36pt;width:0.60pt;height:21.24pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:493.92pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:502.44pt;top:818.64pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:775.44pt;width:0.60pt;height:43.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:818.64pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:775.44pt;width:0.60pt;height:43.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:775.44pt;width:0.60pt;height:43.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:775.44pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:733.56pt;width:0.60pt;height:42.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:775.44pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:733.56pt;width:0.60pt;height:42.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:733.56pt;width:0.60pt;height:42.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:733.56pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:661.80pt;width:0.60pt;height:72.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:733.56pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:661.80pt;width:0.60pt;height:72.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:661.80pt;width:0.60pt;height:72.36pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:661.80pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:543.72pt;width:0.60pt;height:118.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:661.80pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:543.72pt;width:0.60pt;height:118.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:543.72pt;width:0.60pt;height:118.68pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:543.84pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:524.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:543.84pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:524.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:524.16pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:504.48pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:524.16pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:504.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:504.48pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:524.16pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:504.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:504.48pt;width:0.60pt;height:20.28pt;background:#e4e6ef"></div>
+<div class="f" style="left:46.6pt;top:181.2pt"><span class="fig" data-srcpage="19" data-clip="46.6,181.2,56.2,188.7"></span></div>
+<div class="f" style="left:41.7pt;top:206.2pt"><span class="fig" data-srcpage="19" data-clip="41.7,206.2,46.2,208.2"></span></div><!--grey-->
+<div class="f" style="left:46.6pt;top:320.4pt"><span class="fig" data-srcpage="19" data-clip="46.6,320.4,56.2,327.9"></span></div>
+<div class="f" style="left:41.7pt;top:345.4pt"><span class="fig" data-srcpage="19" data-clip="41.7,345.4,46.2,347.5"></span></div><!--grey-->
+<div class="f" style="left:46.6pt;top:476.6pt"><span class="fig" data-srcpage="19" data-clip="46.6,476.6,56.2,484.1"></span></div>
+<div class="f" style="left:41.7pt;top:501.6pt"><span class="fig" data-srcpage="19" data-clip="41.7,501.6,46.2,503.7"></span></div><!--grey-->
+<div class="f" style="left:27.5pt;top:26.8pt"><span class="fig" data-srcpage="19" data-clip="27.5,26.8,51.7,43.9"></span></div>
+<div class="f" style="left:518.0pt;top:30.3pt"><span class="fig" data-srcpage="19" data-clip="518.0,30.3,528.4,40.4"></span></div>
+<div class="f" style="left:40.2pt;top:110.0pt"><span class="fig" data-srcpage="19" data-clip="40.2,110.0,46.0,116.6"></span></div>
+<div class="f" style="left:40.2pt;top:130.2pt"><span class="fig" data-srcpage="19" data-clip="40.2,130.2,46.0,136.8"></span></div>
+<div class="f" style="left:40.2pt;top:150.4pt"><span class="fig" data-srcpage="19" data-clip="40.2,150.4,46.0,157.0"></span></div>
+</div>
+
+<!-- ===== page 20 ===== -->
+<div class="page">
+<p class="x q" style="--b:58.4">엔진의 추력이 $F$이고 <span class="nw">$x = x_1$</span> <span class="nw">$(x_1 &gt; x_{\mathrm{cr}})$이라</span> 하자. 두 번째 탐사선에 대한 첫 번째 탐사선의 나중 속도의 <b>크기</b>를 구하여라.</p>
+<p class="x t" style="--b:91.9">추력과 관성력이 한 일의 합에 대한 옳은 식.</p>
+<p class="x pt" style="--b:91.9">1.00</p>
+<p class="x t c" style="--b:106.8">$A = A_{\vec F} + A_{\vec F_{\mathrm{in}}} = 5FL,$</p>
+<p class="x t" style="--b:135.6">또는 추력이 한 일의 합에 대해</p>
+<div class="f" style="left:258.8pt;top:144.2pt"><span class="fig" data-srcpage="20" data-clip="258.8,144.2,286.7,151.3"></span></div>
+<p class="x t" style="--b:175.0">필요한 근거를 갖추어 일의 식을 얻었다.</p>
+<p class="x pt" style="--b:175.0">2.00</p>
+<p class="x pt" style="--b:194.7">1.00</p>
+<p class="x t c d" style="--b:209.6;--a:14.4pt">$v_{\mathrm{rel}} = \sqrt{v^2_{\mathrm{rel}_0} + \dfrac{2FL(m_1 + m_2)}{m_1m_2}} = \sqrt{\dfrac{10v^2}{9} + \dfrac{5FL}{2m}}.$</p>
+<p class="x t" style="--b:243.2"><b>참고</b>: 잘못된 논리로 얻은 답은 모두 0점으로 채점한다.</p>
+<p class="x pt" style="--b:243.2">None</p>
+<div class="f" style="left:27.7pt;top:298.3pt"><span class="fig" data-srcpage="20" data-clip="27.7,298.3,144.6,306.3"></span></div>
+<div class="rl" style="left:42.48pt;top:69.00pt;width:511.56pt;height:1.08pt;background:#ebedf3"></div>
+<div class="rl" style="left:502.44pt;top:250.56pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:230.28pt;width:0.60pt;height:20.88pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:250.56pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:230.28pt;width:0.60pt;height:20.88pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:230.28pt;width:0.60pt;height:20.88pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:230.28pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:182.40pt;width:0.60pt;height:48.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:230.28pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:182.40pt;width:0.60pt;height:48.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:182.40pt;width:0.60pt;height:48.48pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:182.52pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:162.72pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:182.52pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:162.72pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:162.72pt;width:0.60pt;height:20.40pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:79.56pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.44pt;top:162.72pt;width:51.60pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:553.44pt;top:79.56pt;width:0.60pt;height:83.76pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:79.56pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:162.72pt;width:460.44pt;height:0.60pt;background:#e4e6ef"></div>
+<div class="rl" style="left:42.48pt;top:79.56pt;width:0.60pt;height:83.76pt;background:#e4e6ef"></div>
+<div class="rl" style="left:502.32pt;top:79.56pt;width:0.60pt;height:83.76pt;background:#e4e6ef"></div>
+<div class="f" style="left:46.6pt;top:51.7pt"><span class="fig" data-srcpage="20" data-clip="46.6,51.7,56.2,59.2"></span></div>
+<div class="f" style="left:41.7pt;top:76.7pt"><span class="fig" data-srcpage="20" data-clip="41.7,76.7,46.2,78.7"></span></div><!--grey-->
+</div>
+</body></html>
