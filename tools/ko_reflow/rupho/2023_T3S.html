@@ -1,0 +1,463 @@
+<!doctype html><html><head><meta name="page" content="419.528,595.276">
+<style>
+/* RuPhO 2023 (LVII = 제57회; the 2023 booklet prints no numeral, its running header reads "Zaklyuchitelny etap
+   Vserossiyskoy olimpiady po fizike 12 aprelya 2023 g."), 11학년 이론 풀이 예시 — Korean edition on the original layout.
+   ORIGINAL: LaTeX, Computer Modern Cyrillic SFRM1000 10pt (= 9.963 PostScript pt), A5 419.5x595.3pt, 20 sheets, no page
+   numbers. Text column x 28.3..391.2 (width 362.9pt); paragraph indent 20pt; baselineskip 11.955pt.
+   Running header (italic SFTI1000) at baseline 37.6, rule y 41.4 (stamped).
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt, read with lines.py):
+       top = b - l/2 - 0.3155*fs + 0.7pt
+   Retyped DISPLAY formulas with a fraction use .d: line-height 0, top = b - --a (--a = height above the baseline,
+   measured on the original display).
+   Subscripts retyped from Cyrillic: E_ind (induktsii) -> E_ind, A_ist -> A_src, Phi_osn/Phi_bok -> Phi_base/Phi_side,
+   Omega_d/Omega_k (disk/kol'tso) -> Omega_disk/Omega_ring, C_nas/Q_nas -> C_sat/Q_sat, eps_p(n.p) -> eps_p(sat),
+   F_tr -> F_fr, A_tyazh/A_tr -> A_g/A_fr. Problem titles and header as in 2023_T3.html. */
+body{font-family:CM,KB,serif;font-size:9.963pt;line-height:11.955pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:28.3pt;width:362.9pt;--l:11.955pt;--fs:9.963pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.i{text-indent:20pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.hd{font-style:italic;text-align:left;width:260pt}
+.hd.r{text-align:right;left:271.2pt;width:120pt}
+.h{text-align:center;font-weight:bold;margin-top:-0.8pt}
+.bh{margin-top:-0.9pt}
+.li{padding-left:25pt}
+.n{position:absolute;left:12.2pt;text-indent:0}
+.nc{width:188.5pt}
+.wr::before{content:"";float:right;width:var(--fw);height:var(--fh)}
+.wn{word-break:normal}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{white-space:nowrap}
+.wb{position:absolute;background:#fff}
+.en{left:384.1pt;width:12.8pt}
+</style></head><body>
+
+<!-- sheet 1 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="1" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x h" style="--b:64.0">문제 11-T1. 카시니 간극</p>
+<p class="x i" style="--b:81.7">1. 원뿔의 오른쪽(그림 기준) 밑면, 즉 지름이 <span class="nw">$D$인</span> 밑면에 입사하는 광선 다발을 생각하자. 원뿔의 축에 중심을 둔 지름 <span class="nw">$d$인</span> 원 안을 지나는 광선들은 아무런 방해 없이 통과하여 스크린 위에 같은 지름의 둥근 반점을 만든다.</p>
+<p class="x i" style="--b:129.5">원뿔의 입구 단면을 통과한 나머지 광선들은 원뿔 옆면에서 적어도 한 번 반사된다. 광학계가 축대칭이므로, 반사된 이 광선들은 원뿔의 축과 스크린의 교점을 중심으로 하는 고리들을 만든다. 이 고리들의 개수와 기하적 모양(고리의 반지름과 폭, 그리고 고리끼리 겹칠 가능성)을 알아보자.</p>
+<p class="x i bh" style="--b:206.9"><b>첫 번째 풀이:</b></p>
+<p class="x i" style="--b:218.9">원뿔 입구 단면의 맨 가장자리에 입사하는 광선을 생각하자. 이 광선은 스크린에 닿기 전까지 원뿔 옆면에서 가장 많은 횟수로 반사된다. 거울면에서 한 번 반사될 때마다 광선과 원뿔 축 사이의 각은 <span class="nw">$2\alpha$만큼</span> 커진다. 여기서 <span class="nw">$\mathrm{tg}\alpha = \dfrac{D - d}{2h} = \dfrac{3d}{2h}$이다.</span></p>
+<p class="x i" style="--b:274.0">반사 횟수를 구하기 위해 광학에서 잘 알려진 방법을 쓰자. 광선이 면에서 반사되어 방향을 바꾸는 것으로 보는 대신, 광선은 직선 그대로 두고 그 대신 공간 영역을 경계면에 대하여 반사시켜 생각하는 방법이다. 그러면 꺾인 선과, 원뿔의 축 단면에 해당하는 등변사다리꼴 대신에 하나의 직선 광선과 사다리꼴들의 계를 얻는다(그림 참조).</p>
+<p class="x i" style="--b:333.8">이때 사다리꼴들의 짧은 밑변과 긴 밑변은 두 동심원에 내접한 다각형의 변과 거의 일치한다.</p>
+<p class="x i" style="--b:357.7">안쪽 원의 반지름 ($r$)과 바깥쪽 원의 반지름 ($R$)은 관계식 <span class="nw">$d = 2r\sin\alpha$와</span> <span class="nw">$D = 2R\sin\alpha$로</span> 정해진다. 따라서 두 원의 반지름의 비는 원뿔의 대응하는 지름의 비와 같다: <span class="nw">$R = 4r$.</span> 또한 다음 관계식도 쉽게 얻을 수 있다: <span class="nw">$h = (R - r)\cos\alpha = 3r\cos\alpha$.</span></p>
+<p class="x i" style="--b:405.5">선택한 광선이 안쪽 원과 만나는 점에서 그 점의 반지름과 이루는 각을 <span class="nw">$\beta$라</span> 하면 <span class="nw">$\sin\beta = 4\sin\alpha$이다.</span> 구하는 광선의 반사 횟수는 다음 비의 정수 부분과 같다.</p>
+<div class="f" style="left:187pt;top:440pt"><span class="fig" data-srcpage="1" data-clip="187,440,238,466"></span></div>
+<p class="x i" style="--b:480.7">조건 <span class="nw">$D \ll h$를</span> 적용하면 <span class="nw">$\beta \ll 1$을</span> 얻으므로 <span class="nw">$\beta \approx 4\alpha$이고</span> <span class="nw">$x \approx 2.5$이다.</span> <span class="nw">$x$의</span> 수치는 고리의 개수와 폭을 구하는 데 쓸 수 있다. 정수 부분은 폭이 <span class="nw">$d$인</span> 완전한 고리의 개수(지름이 <span class="nw">$d$인</span> 가운데 반점 포함)에 해당한다. 소수 부분은 관측되는 마지막 고리, 즉 반지름이 가장 큰 불완전한 고리의 폭(<span class="nw">$d$를</span> 단위로 한 값)에 해당한다.</p>
+</div>
+
+<!-- sheet 2 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="2" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:117pt;top:55pt"><span class="fig" data-srcpage="2" data-clip="117,55,294,308"></span></div>
+<p class="x i" style="--b:329.2">따라서 <span class="nw">$x = 2.5$일</span> 때 스크린에는 가운데 반점 외에 고리 두 개가 더 보인다. 첫 번째 고리는 폭이 <span class="nw">$d$(완전한</span> 고리)이고 중심선의 반지름은 <span class="nw">$R_1 = 2\alpha L = \dfrac{3dL}{h}$이다</span>(그림 참조). 두 번째 고리는 폭이 <span class="nw">$d/2$인데,</span> 이는 <span class="nw">$x$의</span> 소수 부분에 대한 근사의 범위에서 성립하며, 바깥 경계의 반지름은 <span class="nw">$R_2 = 4\alpha L = \dfrac{6dL}{h}$이다.</span></p>
+<p class="x i bh" style="--b:410.0"><b>두 번째 풀이:</b></p>
+<p class="x i" style="--b:421.9">‘원뿔 거울’이 그 축에 나란한 광선 다발에 미치는 영향을 생각하자. 원뿔 축에 대한 회전에 관하여 그림이 대칭인 것은 분명하므로, 원뿔의 축 단면 하나와, 그 단면에서 얻은 사다리꼴의 한쪽 옆변에만 입사하는 광선들을 생각하자.</p>
+<p class="x i" style="--b:474.4">원뿔의 반꼭지각을 <span class="nw">$\alpha$라</span> 하자. 기하로부터 $\mathrm{tg}\alpha = \dfrac{D - d}{2h} =$ <span class="nw">$\dfrac{3d}{2h}$를</span> 얻는다. <span class="nw">$D \ll h$이므로</span> <span class="nw">$\alpha$와</span> 같은 차수의 모든 각은 작다고 볼 수 있다. 그러면 <span class="nw">$\alpha = \dfrac{3d}{2h}$이다.</span></p>
+</div>
+
+<!-- sheet 3 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="3" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:226pt;top:56pt"><span class="fig" data-srcpage="3" data-clip="226,56,398,210"></span></div>
+<p class="x i nc wn" style="--b:64.0">원뿔 면에서 반사되지 않은 광선은 계속 축에 나란히 나아가 스크린 위에 지름이 <span class="nw">$d$인</span> 둥근 반점을 만드는 것이 분명하다.</p>
+<p class="x i nc wn" style="--b:111.9">한 번 반사된 뒤 출구 구멍으로 들어간 광선은 축과 <span class="nw">$\alpha_1 = 2\alpha$의</span> 각을 이루며 나아간다. 이 광선들의 반사 영역(<span class="nw">$x_1$)은</span> ‘가장자리’ 광선 2의 반사점으로 정해진다(그림 참조). 각이 작다는 것을 고려하면 이 영역의 폭을 쉽게 구할 수 있다.</p>
+<div class="f" style="left:36pt;top:195pt"><span class="fig" data-srcpage="3" data-clip="36,195,209,220"></span></div>
+<p class="x i" style="--b:234.9">이 광선 무리는 스크린 위에 축에 중심을 둔 폭 <span class="nw">$d$의</span> 고리를 만들며, 이 고리의 중심선의 반지름은 <span class="nw">$R_1 = \alpha_1L = \dfrac{3dL}{h}$이다.</span></p>
+<div class="f" style="left:168pt;top:267pt"><span class="fig" data-srcpage="3" data-clip="168,267,399,427"></span></div>
+<p class="x i wr wn" style="--b:266.1;--fw:236.8pt;--fh:166.4pt">더 나아가 같은 방식으로 생각하면, 반사가 한 번 더해질 때마다 광선이 축에 대해 기울어진 각이 <span class="nw">$2\alpha$씩</span> 더 커진다는 것을 알 수 있다. 구멍의 원뿔 면에서 두 번 반사된 광선들을 생각하자. 이 광선들은 판에서 <span class="nw">$\alpha_2 = 4\alpha$의</span> 각으로 나와 스크린 위에 다음 고리를 만든다. 이 무리에 속하는 경계 광선들의 첫 번째 반사점 사이의 거리 <span class="nw">$x_2$를</span> 구하자. <span class="nw">$\alpha \ll 1$이므로</span> 아주 정확하게 <span class="nw">$x_2 = x_1 = 2h/3$이다.</span> <span class="nw">$x_1 + x_2 = 4h/3 > h$임에</span> 주목하자. 이는 두 번 반사된 광선들이 출구 구멍의 넓이 전체를 지나지는 않는다는 뜻이다. 이 무리의 가장자리 광선들(3과 4)로부터 두 번째 고리의 폭 <span class="nw">$d_2 = d/2$와</span> 바깥 경계의 반지름 <span class="nw">$R_2 = \alpha_2 = \dfrac{6dL}{h}$를</span> 구할 수 있다.</p>
+</div>
+
+<!-- sheet 4 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="4" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:120pt;top:49pt"><span class="fig" data-srcpage="4" data-clip="120,49,312,229"></span></div>
+<div class="f" style="left:166pt;top:242pt"><span class="fig" data-srcpage="4" data-clip="166,242,396,425"></span></div>
+<p class="x ov" style="--b:254.3;--fs:7.5pt;--l:9pt;left:171.6pt;width:30pt">스크린</p>
+<p class="x i wr wn" style="--b:254.4;--fw:236.8pt;--fh:178.3pt">2. 판과 스크린 사이의 한가운데에 얇은 렌즈를 놓자. 조건에 따라 <span class="nw">$L = 2F$이므로</span> 스크린 평면은 렌즈의 초점면이며, 나란한 광선 다발들은 한 점에 모인다. 가운데 반점은 ‘점’이 된다(수학적인 의미가 아니라 물리적인 의미에서의 점이다. 회절 현상이 초점 영역의 최소 크기를 원리적으로 제한하기 때문이다). 그리고 고리들은 ‘원’이 된다. ‘원’(이전의 고리)의 반지름은 절반으로 줄어든다.</p>
+<p class="x" style="--b:450.9;margin-top:1.3pt">$R_1' = \alpha L = \dfrac{3dL}{2h}$, &nbsp;$R_2' = 2\alpha L = \dfrac{3dL}{h}$.</p>
+</div>
+
+<!-- sheet 5 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="5" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:108pt;top:49pt"><span class="fig" data-srcpage="5" data-clip="108,49,317,258"></span></div>
+<p class="x h" style="--b:281.5">문제 11-T2. 토성 닮은꼴</p>
+<p class="x i" style="--b:298.4;margin-top:-1.2pt">1. <span class="nw">$\vec R$를</span> 구의 중심에서 구 표면의 한 점까지 그은 위치 벡터라 하자. 그러면 구 표면에서 구가 만드는 전기장은 다음과 같다.</p>
+<div class="f" style="left:183pt;top:323pt"><span class="fig" data-srcpage="5" data-clip="183,323,242,350"></span></div>
+<p class="x i" style="--b:364.8">이제 원통 좌표 <span class="nw">$r$,</span> <span class="nw">$z$를</span> 쓰자. 좌표의 원점은 고리와 구의 중심에 있고, <span class="nw">$z$축은</span> 계의 회전축을 따라 향하며, <span class="nw">$r$는</span> 고려하는 점에서 <span class="nw">$z$축까지의</span> 거리를 나타낸다.</p>
+<p class="x i" style="--b:400.7">고리의 회전축 위에서 고리의 전기장을 구하자.</p>
+<p class="x i bh" style="--b:418.3"><b>첫 번째 방법:</b></p>
+<div class="f" style="left:250pt;top:424pt"><span class="fig" data-srcpage="5" data-clip="250,424,373,543"></span></div>
+<p class="x i nc wn" style="--b:430.3">반지름이 <span class="nw">$r'$이고</span> 전하 <span class="nw">$\mathrm dq$가</span> 둘레를 따라 고르게 분포한 원을 생각하자. 그러면 이 원의 회전축 위의 좌표 <span class="nw">$z$인</span> 점에서 전기장은 다음과 같다.</p>
+<div class="f" style="left:67pt;top:490pt"><span class="fig" data-srcpage="5" data-clip="67,490,178,517"></span></div>
+<p class="x i nc wn" style="--b:532.5"><span class="nw">$z &lt; R \ll r_1, r_2$이므로</span> <span class="nw">$z$의</span> 어떤 값에 대해서도</p>
+</div>
+
+<!-- sheet 6 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="6" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">다음 근사가 성립한다.</p>
+<div class="f" style="left:178pt;top:65pt"><span class="fig" data-srcpage="6" data-clip="178,65,247,92"></span></div>
+<p class="x i" style="--b:103.7">고리에 대해서는 <span class="nw">$\mathrm dq = 2\pi r'\,\mathrm dr'\,\sigma$임을</span> 고려하면, <span class="nw">$z$축</span> 위에서 고리의 전기장은 다음과 같다.</p>
+<div class="f" style="left:133pt;top:116pt"><span class="fig" data-srcpage="6" data-clip="133,116,292,156"></span></div>
+<p class="x i bh" style="--b:174.3"><b>두 번째 방법:</b></p>
+<p class="x i" style="--b:186.3">고리의 축 위에서 고리의 전기장은 입체각 정리를 이용하여 구할 수도 있다. 평평한 층에 전하가 면전하 밀도 <span class="nw">$\sigma$로</span> 고르게 분포해 있으면, 점 <span class="nw">$A$에서</span> 층에 수직인 전기장 성분이 다음과 같음을 보이자.</p>
+<div class="f" style="left:187pt;top:235pt"><span class="fig" data-srcpage="6" data-clip="187,235,239,262"></span></div>
+<p class="x" style="--b:277.0">여기서 <span class="nw">$\Omega_A$는</span> 점 <span class="nw">$A$에서</span> 평평한 층을 바라본 입체각이다.</p>
+<p class="x i" style="--b:294.6"><i>증명:</i> 넓이가 <span class="nw">$\mathrm dS$인</span> 평평한 층의 요소를 생각하자. <span class="nw">$\vec e_n$을</span> 층의 표면에 수직이고 점 <span class="nw">$A$를</span> 향하는 단위 법선 벡터라 하고, <span class="nw">$\vec r$를</span> 층의 요소에서 점 <span class="nw">$A$로</span> 그은 위치 벡터라 하자. 그러면 층의 요소가 만드는 전기장의 법선 성분은 다음과 같다.</p>
+<div class="f" style="left:137pt;top:344pt"><span class="fig" data-srcpage="6" data-clip="137,344,288,371"></span></div>
+<p class="x i" style="--b:389.4;margin-top:-1.5pt">벡터 <span class="nw">$\vec r$와</span> <span class="nw">$\mathrm d\vec S$의</span> 방향을 반대로 바꾸면, 양 <span class="nw">$\big(\vec r\cdot\mathrm d\vec S\big)/r^3$은</span> 정의에 따라 점 <span class="nw">$A$에서</span> 평평한 층의 요소를 바라본 입체각 요소 <span class="nw">$\mathrm d\Omega_A$가</span> 된다. 따라서</p>
+<div class="f" style="left:148pt;top:426pt"><span class="fig" data-srcpage="6" data-clip="148,426,277,453"></span></div>
+<p class="x" style="--b:468.2">이것으로 증명이 끝났다.</p>
+</div>
+
+<!-- sheet 7 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="7" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:229pt;top:50pt"><span class="fig" data-srcpage="7" data-clip="229,50,388,202"></span></div>
+<p class="x i nc wn" style="--b:64.0">원판의 축 위에 있는 점에서 원판을 바라본 입체각을 구하자. 이 입체각은 구의 중심에서 구의 일부를 바라본 입체각과 같은데, 이 부분은 꼭짓점이 구의 중심과 일치하고 꼭지각이 <span class="nw">$2\alpha$인</span> 원뿔로 잘라 낸 부분이다.</p>
+<div class="f" style="left:56pt;top:148pt"><span class="fig" data-srcpage="7" data-clip="56,148,190,175"></span></div>
+<div class="f" style="left:30pt;top:182pt"><span class="fig" data-srcpage="7" data-clip="30,182,215,208"></span></div>
+<p class="x" style="--b:219.4">여기서 <span class="nw">$h = R(1 - \cos\alpha)$이다.</span></p>
+<p class="x i" style="--b:231.4">이로부터</p>
+<div class="f" style="left:171pt;top:234pt"><span class="fig" data-srcpage="7" data-clip="171,234,254,247"></span></div>
+<p class="x i" style="--b:261.3">그러면 원판의 회전축 위에서 중심으로부터 거리 <span class="nw">$z$인</span> 점에서 반지름 <span class="nw">$r$인</span> 원판을 바라본 입체각은 다음과 같다.</p>
+<p class="x c d" style="--b:303.5;--a:15.9pt">$\Omega_{\mathrm{disk}} = 2\pi\left(1 - \dfrac{z}{\sqrt{r^2 + z^2}}\right).$</p>
+<p class="x i" style="--b:333.8">회전축 위의 좌표 <span class="nw">$z$인</span> 점에서 고리를 바라본 입체각은 반지름이 <span class="nw">$r_2$와</span> <span class="nw">$r_1$인</span> 두 원판을 바라본 입체각의 차로 얻을 수 있다.</p>
+<p class="x c d" style="--b:387.6;--a:17.7pt">$\Omega_{\mathrm{ring}} = 2\pi\left(\dfrac{z}{\sqrt{z^2 + r_1^2}} - \dfrac{z}{\sqrt{z^2 + r_2^2}}\right) \approx 2\pi z\left(\dfrac{1}{r_1} - \dfrac{1}{r_2}\right) \Rightarrow E_z = \dfrac{\sigma z}{2\varepsilon_0}\left(\dfrac{1}{r_1} - \dfrac{1}{r_2}\right).$</p>
+<p class="x i" style="--b:417.9">마지막으로, 고리 평면에 수직인 고리의 전기장 성분은 고리의 회전축 근처에서 사실상 일정하다는 점에 주목하자. 이는 더해지는 전기장 성분들의 방향이 같고, 회전축에서 조금 벗어나도 고리의 각 대전 요소까지의 거리 역시 아주 조금만 변하기 때문이다.</p>
+<p class="x i" style="--b:489.6">따라서</p>
+<div class="f" style="left:131pt;top:501pt"><span class="fig" data-srcpage="7" data-clip="131,501,294,531"></span></div>
+</div>
+
+<!-- sheet 8 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="8" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">다음으로 고리의 회전축에 수직인 고리의 전기장 성분 <span class="nw">$E_r$를</span> 구하자. 고리 평면 근처에서 이 전기장 성분의 크기는 사실상 일정하다. <span class="nw">$E_z$</span> 성분의 경우와 마찬가지로, 고리 평면에서 조금 벗어나도 더해지는 벡터 성분들의 방향은 변하지 않고 거리 역시 아주 조금만 변하기 때문이다.</p>
+<p class="x i" style="--b:135.8">따라서</p>
+<div class="f" style="left:172pt;top:139pt"><span class="fig" data-srcpage="8" data-clip="172,139,253,152"></span></div>
+<p class="x i bh" style="--b:171.3"><b>첫 번째 방법:</b></p>
+<div class="f" style="left:215pt;top:171pt"><span class="fig" data-srcpage="8" data-clip="215,171,398,264"></span></div>
+<div class="f" style="left:300pt;top:264pt"><span class="fig" data-srcpage="8" data-clip="300,264,398,268.8"></span></div>
+<p class="x ov" style="--b:277.9;--fs:11.2pt;--l:12pt;left:338.3pt;width:20pt">$E_z$</p>
+<p class="x i wn" style="--b:183.3;width:174.3pt">고리와 축이 같은, 반지름이 <span class="nw">$r$이고</span> 높이가 <span class="nw">$2h$인</span> 원통에 대하여 가우스 정리를 쓰자.</p>
+<p class="x c" style="--b:229.1;width:174.3pt">$\Phi = \Phi_{\mathrm{base}} + \Phi_{\mathrm{side}} = 0,$</p>
+<p class="x wn" style="--b:251.0;width:174.3pt">여기서 <span class="nw">$\Phi_{\mathrm{base}}$와</span> <span class="nw">$\Phi_{\mathrm{side}}$는</span> 각각 원통의 밑면과 옆면을 지나는 고리의 전기장 선속이다.</p>
+<p class="x i wr" style="--b:286.9;--fw:62pt;--fh:2pt">고리의 전기장 성분 <span class="nw">$E_z$는</span> <span class="nw">$r$에</span> 거의 의존하지 않고, 고리의 전기장 성분 <span class="nw">$E_r$는</span> <span class="nw">$z$에</span> 거의 의존하지 않으므로</p>
+<p class="x c d" style="--b:327.6;--a:15.2pt">$\Phi_{\mathrm{base}} = 2\cdot\pi r^2E_z \qquad \Phi_{\mathrm{base}} = 2\pi r\cdot 2h\cdot E_r \Rightarrow E_r = -\dfrac{E_zr}{2z}.$</p>
+<p class="x i" style="--b:348.3">앞에서 얻은 <span class="nw">$E_z$의</span> 식을 대입하면</p>
+<div class="f" style="left:160pt;top:360pt"><span class="fig" data-srcpage="8" data-clip="160,360,265,389"></span></div>
+<p class="x i bh" style="--b:414.6"><b>두 번째 방법:</b></p>
+<div class="f" style="left:236pt;top:399pt"><span class="fig" data-srcpage="8" data-clip="236,399,388,551"></span></div>
+<p class="x i nc wn" style="--b:426.5">반지름이 <span class="nw">$r'$이고</span> 둘레를 따라 전하 <span class="nw">$q$가</span> 고르게 분포한 원을 생각하자. 원의 중심에서 거리 <span class="nw">$r \ll r'$인</span> 점에서 전기장은 원의 중심과 그 점을 잇는 직선을 따라 향한다.</p>
+<p class="x i nc wn" style="--b:510.2"><span class="nw">$\varphi$를</span> ‘점–원의 중심’ 직선과</p>
+</div>
+
+<!-- sheet 9 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="9" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">‘전하 요소–원의 중심’ 직선 사이에서 잰 각이라 하자. 그러면 전기장의 요소 성분 <span class="nw">$\mathrm dE_r$는</span> 다음과 같다.</p>
+<div class="f" style="left:127pt;top:83pt"><span class="fig" data-srcpage="9" data-clip="127,83,298,114"></span></div>
+<p class="x i" style="--b:129.7"><span class="nw">$\mathrm dq = q\cdot\mathrm d\varphi/(2\pi)$임을</span> 고려하고 매개변수 <span class="nw">$a = r/r'$을</span> 도입하자.</p>
+<div class="f" style="left:125pt;top:141pt"><span class="fig" data-srcpage="9" data-clip="125,141,300,168"></span></div>
+<p class="x i" style="--b:183.4"><span class="nw">$a \ll 1$을</span> 고려하여 얻은 식을 간단히 하자.</p>
+<div class="f" style="left:54pt;top:194pt"><span class="fig" data-srcpage="9" data-clip="54,194,372,221"></span></div>
+<p class="x i" style="--b:236.5">여기서 1차보다 높은 차수의 작은 양은 모두 무시하였다.</p>
+<p class="x i" style="--b:248.5">그러면 다음을 얻는다.</p>
+<div class="f" style="left:43pt;top:258pt"><span class="fig" data-srcpage="9" data-clip="43,258,382,298"></span></div>
+<p class="x i" style="--b:313.1">여기서 삼각함수를 한 주기에 걸쳐 적분하면 0이 된다는 것을 이용하였다.</p>
+<p class="x i" style="--b:337.0">적분을 계속하면</p>
+<div class="f" style="left:115pt;top:347pt"><span class="fig" data-srcpage="9" data-clip="115,347,311,387"></span></div>
+<p class="x i" style="--b:401.5">따라서 <span class="nw">$E_r$는</span> 다음과 같다.</p>
+<div class="f" style="left:177pt;top:404pt"><span class="fig" data-srcpage="9" data-clip="177,404,248,431"></span></div>
+<p class="x i" style="--b:441.8">원래의 고리로 넘어가면 <span class="nw">$E_r \to dE_r$,</span> <span class="nw">$q \to dq = 2\pi r'dr'\sigma$이다.</span> 그러면 고리의 전기장 성분 <span class="nw">$E_r$는</span> 다음과 같다.</p>
+<div class="f" style="left:126pt;top:462pt"><span class="fig" data-srcpage="9" data-clip="126,462,299,503"></span></div>
+<p class="x i" style="--b:520.6;margin-top:-1.6pt">고리 평면과 위치 벡터 <span class="nw">$\vec R$</span> 사이의 각 <span class="nw">$\alpha$를</span> 도입하자. 그러면 <span class="nw">$r$와</span> <span class="nw">$z$는</span> 다음과 같다.</p>
+<div class="f" style="left:152pt;top:536pt"><span class="fig" data-srcpage="9" data-clip="152,536,273,548"></span></div>
+</div>
+
+<!-- sheet 10 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="10" data-clip="28.3,41,391.2,41.8"></span></div>
+<div class="f" style="left:137pt;top:49pt"><span class="fig" data-srcpage="10" data-clip="137,49,288,201"></span></div>
+<p class="x i" style="--b:225.3">구 표면에서 전기장의 성분들은 다음과 같다.</p>
+<div class="f" style="left:36pt;top:238pt"><span class="fig" data-srcpage="10" data-clip="36,238,389,266"></span></div>
+<p class="x i" style="--b:286.4;margin-top:-1.0pt">전기장의 크기는 식 <span class="nw">$E = \sqrt{E_z^2 + E_r^2}$로</span> 정해지며, <span class="nw">$\alpha = 0, \pi/2$에서</span> 극값을 가진다. 고리와 구의 전하가 양이므로 다음을 얻는다.</p>
+<div class="f" style="left:27pt;top:323pt"><span class="fig" data-srcpage="10" data-clip="27,323,398,356"></span></div>
+<p class="x i" style="--b:368.9"><span class="nw">$E_1 &lt; E_2$이므로</span> 최종적으로 다음을 얻는다.</p>
+<div class="f" style="left:83pt;top:381pt"><span class="fig" data-srcpage="10" data-clip="83,381,343,416"></span></div>
+<p class="x i" style="--b:430.7">2. 전기장이 계의 회전축 <span class="nw">$z$를</span> 따라 향한다고 볼 수 있으려면 전기장의 <span class="nw">$E_r$</span> 성분이 0이 되어야 한다. 이에 해당하는 <span class="nw">$\sigma$의</span> 값은 하나뿐이며 다음과 같다.</p>
+<div class="f" style="left:175pt;top:466pt"><span class="fig" data-srcpage="10" data-clip="175,466,250,494"></span></div>
+<p class="x i" style="--b:508.6">이 값의 <span class="nw">$\sigma$에서</span> <span class="nw">$E_z$</span> 성분은 고리 평면에서 멀리 떨어진 점들에서는 0이 되지 않는다는 점에 주목하자. 고리 평면 근처에서는 전기장의 <span class="nw">$E_z$</span> 성분이 정확히 0으로 다가가고, 전기장의 <span class="nw">$E_r$</span> 성분에 대해 우리가 얻은 근사는</p>
+</div>
+
+<!-- sheet 11 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="11" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">(얻은 <span class="nw">$\sigma$에</span> 대하여) 더는 적용할 수 없게 된다. 전개의 더 높은 차수 항들을 고려하지 않았기 때문이다. 따라서 고리 평면 근처의 점들에서는 꽤 짧은 구간에서 전기장이 고리 평면을 따라 향하게 된다.</p>
+<div class="f" style="left:175pt;top:112pt"><span class="fig" data-srcpage="11" data-clip="175,112,250,140"></span></div>
+<p class="x h" style="--b:152.7">문제 11-T3. 돌아가는 원판</p>
+<p class="x i" style="--b:167.3">원판이 각속도 <span class="nw">$\omega$로</span> 시계 반대 방향으로 돈다고 하자. 원판의 축에서 거리 <span class="nw">$r$에</span> 있는 전하 운반자들은 원판의 축에 수직인 집단 속도 <span class="nw">$\omega r$를</span> 가지며, 그에 따라 (모든 운반자에 대해 더해도 상쇄되지 않는) 똑같은 로런츠 힘 성분이 나타난다. 이 힘은 운반자들을 반지름 방향으로 재분포시켜 정상 상태에 이르게 하는데, 이 상태에서 원판의 축으로부터 거리 <span class="nw">$r$와</span> <span class="nw">$r + \mathrm dr$인</span> 점들 사이의 전위차는 <span class="nw">$\mathrm d\varphi = \omega B\,r\mathrm dr$이다.</span></p>
+<p class="x i" style="--b:251.0">따라서 자기장이 있으면 회전하는 원판에 다음과 같은 유도 기전력이 생긴다.</p>
+<p class="x c d" style="--b:295.7;--a:21.5pt">$\displaystyle\mathcal E_{\mathrm{ind}} = \omega B\int\limits_0^R r\mathrm dr = \dfrac{\omega BR^2}{2},$</p>
+<p class="x en" style="--b:295.7">(1)</p>
+<p class="x" style="--b:327.8">이 기전력은 전원의 기전력과 부호가 반대이다.</p>
+<p class="x i" style="--b:339.8">전기 회로의 폐회로에 대하여 키르히호프 제2법칙을 쓰자.</p>
+<p class="x c d" style="--b:367.1;--a:16.5pt">$\mathcal E + \mathcal E_{\mathrm{ind}} = \mathcal E - \dfrac{\omega BR^2}{2} = L\ddot q + \dfrac{q}{C},$</p>
+<p class="x en" style="--b:367.1">(2)</p>
+<p class="x" style="--b:387.7">여기서 <span class="nw">$q$는</span> 축전기의 전하이다.</p>
+<p class="x i" style="--b:399.6">다음으로 자기장이 일을 하지 않는다는 것을 고려하여 전기 회로에서 에너지 변화의 법칙을 쓰자.</p>
+<p class="x c" style="--b:432.1">$A_{\mathrm{src}} = \mathcal E\cdot\Delta q = \Delta W_C + \Delta W_L + \Delta E_k,$</p>
+<p class="x" style="--b:452.6">여기서 <span class="nw">$W_C$와</span> <span class="nw">$W_L$은</span> 각각 축전기와 코일의 에너지이고, <span class="nw">$E_k$는</span> 테두리의 회전 운동 에너지이다. 이들의 식은 다음과 같다.</p>
+<div class="f" style="left:116pt;top:474pt"><span class="fig" data-srcpage="11" data-clip="116,474,309,502"></span></div>
+<p class="x i" style="--b:515.3">에너지 보존 법칙을 시간에 대해 미분하면 다음을 얻는다.</p>
+<div class="f" style="left:155pt;top:526pt"><span class="fig" data-srcpage="11" data-clip="155,526,398,553"></span></div>
+</div>
+
+<!-- sheet 12 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="12" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">식 (2)에 <span class="nw">$\dot q$를</span> 곱하고 거기서 식 (3)을 빼면 <span class="nw">$\dot\omega$와</span> <span class="nw">$\dot q$</span> 사이의 다음 관계를 얻는다.</p>
+<div class="f" style="left:153pt;top:83pt"><span class="fig" data-srcpage="12" data-clip="153,83,398,113"></span></div>
+<p class="x i" style="--b:125.0">마지막 단계에서는 다음 초기 조건을 이용하였다.</p>
+<div class="f" style="left:164pt;top:136pt"><span class="fig" data-srcpage="12" data-clip="164,136,262,148"></span></div>
+<p class="x i" style="--b:170.1"><i>참고:</i> <span class="nw">$\omega$와</span> <span class="nw">$q$의</span> 관계는 점 <span class="nw">$O$에</span> 대한 원판의 회전 운동 방정식으로부터도 얻을 수 있다. 실제로</p>
+<div class="f" style="left:160pt;top:194pt"><span class="fig" data-srcpage="12" data-clip="160,194,265,220"></span></div>
+<p class="x i" style="--b:232.3">원판에 생기는 전류에 작용하는 앙페르 힘의 돌림힘을 구하자.</p>
+<div class="f" style="left:124pt;top:255pt"><span class="fig" data-srcpage="12" data-clip="124,255,301,269"></span></div>
+<p class="x" style="--b:283.8">여기서 <span class="nw">$r$는</span> 점 <span class="nw">$O$까지의</span> 거리이다.</p>
+<p class="x i" style="--b:295.7">점 <span class="nw">$O$를</span> 중심으로 하는 임의의 반지름의 원을 지나 세기 <span class="nw">$I$인</span> 전류가 흐르므로, 돌림힘 <span class="nw">$\vec M_O$는</span> 다음과 같다.</p>
+<div class="f" style="left:130pt;top:317pt"><span class="fig" data-srcpage="12" data-clip="130,317,296,357"></span></div>
+<p class="x i" style="--b:371.2">따라서</p>
+<div class="f" style="left:139pt;top:374pt"><span class="fig" data-srcpage="12" data-clip="139,374,286,401"></span></div>
+<p class="x i" style="--b:410.6">이와 같이 두 물리 법칙을 조합하여 문제를 푸는 방법은 세 가지가 가능하다.</p>
+<p class="x li" style="--b:435.8"><span class="n">1.</span>전자기 유도 법칙과 에너지 보존 법칙;</p>
+<p class="x li" style="--b:447.8"><span class="n">2.</span>회전 운동 방정식과 전자기 유도 법칙;</p>
+<p class="x li" style="--b:471.7"><span class="n">3.</span>회전 운동 방정식과 에너지 보존 법칙.</p>
+<p class="x i" style="--b:484.9">최대 각속도를 구하기 위해, 각속도는 회로의 전류가 0이 되는 순간에 최대에 이른다는 점에 주목하자. 그러면 에너지 변화의 법칙으로부터 다음을 얻는다.</p>
+<div class="f" style="left:80pt;top:519pt"><span class="fig" data-srcpage="12" data-clip="80,519,346,547"></span></div>
+</div>
+
+<!-- sheet 13 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="13" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x" style="--b:64.0">따라서</p>
+<div class="f" style="left:163pt;top:66pt"><span class="fig" data-srcpage="13" data-clip="163,66,262,93"></span></div>
+<p class="x i" style="--b:104.6">식 (2)와 (4)를 결합하면 다음을 얻는다.</p>
+<div class="f" style="left:136pt;top:117pt"><span class="fig" data-srcpage="13" data-clip="136,117,398,145"></span></div>
+<p class="x i" style="--b:166.0">변수 <span class="nw">$\omega' = \omega - 2BC\mathcal E/(4m + B^2R^2C)$를</span> 도입하면 조화 진동 방정식을 얻는다.</p>
+<div class="f" style="left:27pt;top:188pt"><span class="fig" data-srcpage="13" data-clip="27,188,407,219"></span></div>
+<p class="x i" style="--b:238.9">초기 조건으로부터 <span class="nw">$A$와</span> <span class="nw">$\varphi_0$을</span> 구하자.</p>
+<div class="f" style="left:55pt;top:251pt"><span class="fig" data-srcpage="13" data-clip="55,251,370,290"></span></div>
+<p class="x i" style="--b:307.1">최종적으로 <span class="nw">$\omega(t)$는</span> 다음과 같다.</p>
+<div class="f" style="left:94pt;top:319pt"><span class="fig" data-srcpage="13" data-clip="94,319,398,351"></span></div>
+<p class="x i" style="--b:373.6">각속도는 <span class="nw">$\cos\Omega_0\tau = -1$일</span> 때, 즉 <span class="nw">$\omega_0\tau = \pi$일</span> 때 처음으로 <span class="nw">$\omega_{\max}$</span> 값에 이른다. 그러면 <span class="nw">$\tau$는</span> 다음과 같다.</p>
+<div class="f" style="left:168pt;top:398pt"><span class="fig" data-srcpage="13" data-clip="168,398,257,441"></span></div>
+<p class="x h" style="--b:453.0">문제 11-T4. 단열 이방성</p>
+<p class="x i" style="--b:468.3">1. 피스톤 아래의 물질에 대하여 열역학 제1법칙을 쓰자.</p>
+<div class="f" style="left:98pt;top:481pt"><span class="fig" data-srcpage="13" data-clip="98,481,327,493"></span></div>
+<p class="x i" style="--b:511.1">다음으로 이상 기체의 내부 에너지 식과 멘델레예프–클라페이롱 방정식을 이용하자.</p>
+<div class="f" style="left:153pt;top:536pt"><span class="fig" data-srcpage="13" data-clip="153,536,272,549"></span></div>
+</div>
+
+<!-- sheet 14 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="14" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">용기 안의 물질은 모두 기체 상태로 남아 있으므로</p>
+<div class="f" style="left:176pt;top:77pt"><span class="fig" data-srcpage="14" data-clip="176,77,249,89"></span></div>
+<p class="x i" style="--b:107.0">그러면 다음을 얻는다.</p>
+<div class="f" style="left:101pt;top:120pt"><span class="fig" data-srcpage="14" data-clip="101,120,324,133"></span></div>
+<p class="x" style="--b:150.0">여기서 <span class="nw">$C_p = C_V + R = 4R$는</span> 이상 다원자 기체의 등압 몰 열용량이다.</p>
+<p class="x i" style="--b:173.9">변수 <span class="nw">$(p, T)$로</span> 나타낸 이상 기체의 열용량은 다음과 같다.</p>
+<div class="f" style="left:70pt;top:186pt"><span class="fig" data-srcpage="14" data-clip="70,186,356,215"></span></div>
+<p class="x i" style="--b:230.2">그러면 포화 증기의 몰 열용량은 다음과 같다.</p>
+<p class="x c" style="--b:254.1">$C_{\mathrm{sat}} = C_p - \alpha R = R(4 - \alpha) = -93.9\,\mathrm{J/(mol\cdot K)}.$</p>
+<p class="x i" style="--b:277.5">2. 용기의 부피가 변할 때에는 원리적으로 서로 다른 두 가지 물리 과정이 가능하다.</p>
+<p class="x li" style="--b:302.7"><span class="n">1.</span>같은 상대 온도 변화에서 피스톤 아래 수증기 압력의 상대 변화가 포화 증기의 상대 압력 변화보다 작으면, 즉 <span class="nw">$\varepsilon_p &lt; \varepsilon_{p(\mathrm{sat})} = \alpha\varepsilon_T$이면,</span> 용기 안의 물질은 모두 기체 상태로 남고 증기는 더 이상 포화 상태가 아니게 된다.</p>
+<p class="x li" style="--b:364.9"><span class="n">2.</span>같은 상대 온도 변화에서 압력의 상대 변화에 대한 위 조건이 성립하지 않으면, 용기 안의 증기는 포화 상태를 유지하면서 일부가 응결한다.</p>
+<p class="x i" style="--b:414.0">증기가 모두 기체 상태로 남는다고 보고, 피스톤 아래 증기 압력의 상대 변화를 구하자.</p>
+<p class="x i" style="--b:438.0">멘델레예프–클라페이롱 방정식으로부터 다음을 얻는다.</p>
+<div class="f" style="left:72pt;top:450pt"><span class="fig" data-srcpage="14" data-clip="72,450,353,476"></span></div>
+<p class="x i" style="--b:490.4">열역학 제1법칙을 쓰자.</p>
+<div class="f" style="left:76pt;top:502pt"><span class="fig" data-srcpage="14" data-clip="76,502,349,530"></span></div>
+<p class="x i" style="--b:544.5"><span class="nw">$\varepsilon_V &lt; 0$이므로</span> <span class="nw">$\varepsilon_T &gt; 0$임에</span> 주목하자.</p>
+</div>
+
+<!-- sheet 15 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="15" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">이제 다음을 구한다.</p>
+<div class="f" style="left:96pt;top:78pt"><span class="fig" data-srcpage="15" data-clip="96,78,329,104"></span></div>
+<p class="x i" style="--b:129.5">따라서 피스톤 아래의 물질은 모두 기체 상태로 남는다.</p>
+<p class="x i" style="--b:141.4">그러면 앞에서 얻은 <span class="nw">$\varepsilon_T$의</span> 식을 적용할 수 있으며, 온도는 다음만큼 높아진다.</p>
+<p class="x c d" style="--b:182.2;--a:15.3pt">$\Delta T = T_0\cdot\dfrac{\beta}{C_V/R} = \dfrac{\beta T_0}{3} \approx 5.6\,\mathrm K.$</p>
+<p class="x i" style="--b:211.0">3. 2번의 풀이로부터, 응결 없이 부피가 늘어나면 용기 안의 온도는 낮아져야 한다. 그러면 용기 안의 증기는 포화 상태를 유지하면서 일부가 응결한다. 그렇지 않으면 용기 안의 증기 압력이 같은 온도에서의 포화 증기압보다 높아지게 되는데, 이것은 불가능하기 때문이다.</p>
+<p class="x i" style="--b:270.7">용기 안 기체 상태 물질의 양이 변하는 것을 고려하여 멘델레예프–클라페이롱 방정식을 미분하자.</p>
+<div class="f" style="left:87pt;top:296pt"><span class="fig" data-srcpage="15" data-clip="87,296,338,309"></span></div>
+<p class="x" style="--b:326.2">고려하는 과정에서는 <span class="nw">$\varepsilon_p = \alpha\varepsilon_T$이기</span> 때문이다.</p>
+<p class="x i" style="--b:338.2">열역학 제1법칙으로부터</p>
+<p class="x c" style="--b:360.0">$\delta Q_{\mathrm{sat}} + L\,\mathrm dm = 0,$</p>
+<p class="x" style="--b:381.8">여기서 <span class="nw">$Q_{\mathrm{sat}}$은</span> 응결하지 않는 포화 증기가 받은 열량이고, <span class="nw">$\mathrm dm = \mu\,\mathrm d\nu$는</span> 수증기의 질량 변화이다.</p>
+<p class="x i" style="--b:405.7">응결하지 않는 수증기의 상태는 <span class="nw">$(p, T)$</span> 좌표에서 상평형 곡선으로 기술되므로, 그 열용량은 1번의 풀이에서 얻은 열용량 <span class="nw">$C_{\mathrm{sat}}$과</span> 같다. 따라서 열량 <span class="nw">$\delta Q_{\mathrm{sat}}$은</span> 다음과 같다.</p>
+<p class="x c" style="--b:453.5">$\delta Q_{\mathrm{sat}} = C_{\mathrm{sat}}\,\mathrm dT.$</p>
+<p class="x i" style="--b:477.0"><i>참고:</i> 다음 식</p>
+<p class="x c" style="--b:498.8">$\delta Q_{\mathrm{sat}} = C_V\,\mathrm dT + p\,\mathrm dV,$</p>
+<p class="x" style="--b:520.6">(여기서 <span class="nw">$\mathrm dV$는</span> 용기의 부피 변화)은 옳지 않다. 상전이 때문에 <span class="nw">$\mathrm dV$가</span> 응결하지 않는 수증기가 차지하는 부피의 변화와 같지 않기 때문이다.</p>
+</div>
+
+<!-- sheet 16 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="16" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">계에 대한 열역학 제1법칙으로 돌아가면 다음을 얻는다.</p>
+<p class="x c d" style="--b:90.7;--a:15.3pt">$\nu C_{\mathrm{sat}}\,\mathrm dT + \lambda\mu\,\mathrm d\nu = 0 \Rightarrow = \varepsilon_\nu = -\dfrac{C_{\mathrm{sat}}T\varepsilon_T}{\mu\lambda}.$</p>
+<p class="x i" style="--b:115.1">이로부터</p>
+<p class="x c d" style="--b:133.6;--a:15.3pt">$\varepsilon_T(\alpha - 1) + \varepsilon_V = -\dfrac{C_{\mathrm{sat}}T\varepsilon_T}{\mu\lambda}.$</p>
+<p class="x i" style="--b:154.8">최종적으로 다음을 얻는다.</p>
+<p class="x c d" style="--b:191.5;--a:15.3pt">$\Delta T = -T_0\cdot\dfrac{\beta}{\alpha - 1 + \dfrac{(C_p - \alpha R)T_0}{\mu\lambda}} = -T_0\cdot\dfrac{\beta}{\alpha - 1 + \dfrac{(4 - \alpha)R}{\mu\lambda}} \approx -1.2\,\mathrm K.$</p>
+<p class="x h" style="--b:230.7">문제 11-T5. 갔다 오기</p>
+<div class="f" style="left:218pt;top:232pt"><span class="fig" data-srcpage="16" data-clip="218,232,401,439"></span></div>
+<p class="x ov" style="--b:427.3;--fs:10.46pt;--l:12pt;left:306.3pt;width:16pt">fr</p>
+<p class="x i nc wn" style="--b:244.7">1. <span class="nw">$m$을</span> 퍽의 질량이라 하자. 판의 평면 안에서 퍽에는 중력의 성분 <span class="nw">$mg\sin\alpha$,</span> 그리고 마찰력 <span class="nw">$F_{\mathrm{fr}} = \mu mg\cos\alpha$가</span> 작용한다. 이때 <span class="nw">$\mu = \tan\alpha$이므로</span></p>
+<p class="x c nc" style="--b:312.3">$F_{\mathrm{fr}} = mg\sin\alpha.$</p>
+<p class="x i nc wn" style="--b:332.1">퍽의 속도 방향과 <span class="nw">$y$축</span> 사이의 각 <span class="nw">$\varphi$에</span> 해당하는 중력 성분과 마찰력을 그림에 나타내자. 그림으로부터 중력 성분과 마찰력의 합력 <span class="nw">$R$는</span> 다음과 같다.</p>
+<div class="f" style="left:70pt;top:403pt"><span class="fig" data-srcpage="16" data-clip="70,403,175,415"></span></div>
+<p class="x i nc wn" style="--b:431.5">따라서 가속도 <span class="nw">$a_0$과</span> <span class="nw">$a_1$은</span> 다음과 같다.</p>
+<p class="x c" style="--b:451.4">$a_0 = 2g\sin\alpha\cos(\varphi_0/2) \approx 8.49\,\mathrm{m/s^2}, \qquad a_1 = 2g\sin\alpha\cos(\varphi_1/2) \approx 1.76\,\mathrm{m/s^2}.$</p>
+<p class="x i" style="--b:476.8;margin-top:-1.3pt">2. <b>첫 번째 풀이:</b></p>
+<p class="x i" style="--b:488.8">중력 성분과 마찰력의 합력은 속도 방향과 <span class="nw">$y$축</span> 사이의 각 <span class="nw">$\varphi$의</span> 이등분선을 따라 향한다. 따라서 퍽의 접선 가속도와 퍽의 가속도의 <span class="nw">$y$축</span> 방향 성분은 서로 같다: <span class="nw">$a_\tau = a_y$.</span> 그러므로</p>
+<div class="f" style="left:109pt;top:536pt"><span class="fig" data-srcpage="16" data-clip="109,536,316,549"></span></div>
+</div>
+
+<!-- sheet 17 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="17" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i bh" style="--b:64.0"><b>두 번째 풀이:</b></p>
+<p class="x i" style="--b:76.0">가속도의 접선 성분과 법선 성분의 식을 쓰자.</p>
+<div class="f" style="left:88pt;top:91pt"><span class="fig" data-srcpage="17" data-clip="88,91,337,105"></span></div>
+<p class="x i" style="--b:117.6">이로부터</p>
+<div class="f" style="left:144pt;top:120pt"><span class="fig" data-srcpage="17" data-clip="144,120,282,146"></span></div>
+<p class="x i" style="--b:159.0">변수를 분리하면 다음을 얻는다.</p>
+<div class="f" style="left:175pt;top:171pt"><span class="fig" data-srcpage="17" data-clip="175,171,251,197"></span></div>
+<p class="x i" style="--b:214.8">얻은 식을 적분하자 (<span class="nw">$\theta = \varphi/2$).</span></p>
+<div class="f" style="left:47pt;top:228pt"><span class="fig" data-srcpage="17" data-clip="47,228,377,269"></span></div>
+<p class="x i" style="--b:286.3">로그를 없애면 다음을 얻는다.</p>
+<div class="f" style="left:116pt;top:297pt"><span class="fig" data-srcpage="17" data-clip="116,297,310,326"></span></div>
+<p class="x i" style="--b:342.3">궤적의 가장 높은 점에서 <span class="nw">$\varphi = 90^\circ$이므로,</span> 속력 <span class="nw">$u$와</span> <span class="nw">$v_1$은</span> 다음과 같다.</p>
+<p class="x c d" style="--b:380.7;--a:15.4pt">$u = v_0(1 - \cos\varphi_0) \approx 4.00\,\mathrm{m/s}, \qquad v_1 = \dfrac{v_0(1 - \cos\varphi_0)}{1 - \cos\varphi_1} \approx 2.07\,\mathrm{m/s}.$</p>
+<p class="x i" style="--b:412.6">3. <b>첫 번째 풀이:</b></p>
+<p class="x i" style="--b:424.6">2번에서 구한 불변량으로부터 다음이 나온다는 점에 주목하자.</p>
+<div class="f" style="left:160pt;top:437pt"><span class="fig" data-srcpage="17" data-clip="160,437,265,451"></span></div>
+<p class="x i" style="--b:467.8">시간에 대해 적분하면 다음을 얻는다.</p>
+<div class="f" style="left:155pt;top:480pt"><span class="fig" data-srcpage="17" data-clip="155,480,270,493"></span></div>
+<p class="x" style="--b:510.9">여기서 <span class="nw">$\Delta y$와</span> <span class="nw">$S$는</span> 각각 퍽의 <span class="nw">$y$좌표</span> 변화와 퍽이 지나간 경로의 길이이다. 퍽이 판의 밑변에 도달하는 순간 <span class="nw">$\Delta y = 0$이므로</span></p>
+<div class="f" style="left:168pt;top:536pt"><span class="fig" data-srcpage="17" data-clip="168,536,257,548"></span></div>
+</div>
+
+<!-- sheet 18 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="18" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">경로의 길이 <span class="nw">$S$를</span> 구하기 위해 운동 에너지 변화의 법칙을 이용하자.</p>
+<p class="x c d" style="--b:104.7;--a:16.5pt">$\Delta E_k = \dfrac{mv^2}{2} - \dfrac{mv_0^2}{2} = A_{\mathrm g} + A_{\mathrm{fr}} = -mg\sin\alpha\Delta y - mg\sin\alpha S.$</p>
+<p class="x i" style="--b:129.3">판의 밑변에 도달할 때 <span class="nw">$\Delta y = 0$이므로</span></p>
+<div class="f" style="left:114pt;top:141pt"><span class="fig" data-srcpage="18" data-clip="114,141,311,157"></span></div>
+<p class="x" style="--b:173.2">따라서</p>
+<p class="x c d" style="--b:196.5;--a:18.1pt">$t = \dfrac{v_0}{2g\sin\alpha(1 - \cos\varphi_0)}\left(1 - \left(\dfrac{1 - \cos\varphi_0}{1 - \cos\varphi_1}\right)^2\right) \approx 1.52\,\mathrm s$</p>
+<p class="x i bh" style="--b:231.4"><b>두 번째 풀이:</b></p>
+<p class="x i" style="--b:243.4">얻은 의존성 <span class="nw">$v(\varphi)$를</span> 고려하면, 시간 <span class="nw">$t$는</span> 예를 들어 퍽의 가속도의 법선 성분에 대한 식으로부터 구할 수 있다.</p>
+<div class="f" style="left:52pt;top:268pt"><span class="fig" data-srcpage="18" data-clip="52,268,374,294"></span></div>
+<p class="x i" style="--b:311.2">반각 변수로 바꾸자.</p>
+<div class="f" style="left:121pt;top:324pt"><span class="fig" data-srcpage="18" data-clip="121,324,304,351"></span></div>
+<p class="x i" style="--b:368.4">표준적인 삼각 치환 <span class="nw">$z = \tan(\varphi/2)$를</span> 이용하자. 그러면 다음을 얻는다.</p>
+<div class="f" style="left:112pt;top:393pt"><span class="fig" data-srcpage="18" data-clip="112,393,314,420"></span></div>
+<p class="x i" style="--b:436.3"><span class="nw">$\mathrm d\varphi$와</span> <span class="nw">$\mathrm dz$의</span> 관계를 구하자.</p>
+<div class="f" style="left:48pt;top:449pt"><span class="fig" data-srcpage="18" data-clip="48,449,377,475"></span></div>
+<p class="x i" style="--b:492.1">이로부터 다음을 얻는다.</p>
+<div class="f" style="left:127pt;top:503pt"><span class="fig" data-srcpage="18" data-clip="127,503,298,531"></span></div>
+</div>
+
+<!-- sheet 19 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="19" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">변수 <span class="nw">$z_0 = \tan(\varphi_0/2)$와</span> <span class="nw">$z_1 = \tan(\varphi_1/2)$을</span> 도입하면 시간 <span class="nw">$t$는</span> 다음과 같다.</p>
+<div class="f" style="left:70pt;top:75pt"><span class="fig" data-srcpage="19" data-clip="70,75,355,115"></span></div>
+<p class="x i" style="--b:131.0">적분하면 다음을 얻는다.</p>
+<div class="f" style="left:116pt;top:144pt"><span class="fig" data-srcpage="19" data-clip="116,144,310,173"></span></div>
+<p class="x i" style="--b:190.3">원래 변수로 돌아가면 시간 <span class="nw">$t$는</span> 다음과 같다.</p>
+<p class="x c d" style="--b:220.0;--a:15.1pt">$t = \dfrac{v_0(1 - \cos\varphi_0)}{2g\sin\alpha}\left(\dfrac{1}{1 - \cos\varphi_0} - \dfrac{1}{1 - \cos\varphi_1} + \ln\left(\dfrac{\tan(\varphi_1/2)}{\tan(\varphi_1/2)}\right)\right) \approx 1.52\,\mathrm s.$</p>
+<p class="x i" style="--b:255.4"><i>참고 1:</i> 엄밀히 말하면 이 문제는 조건이 지나치게 많이 주어져 있다. <span class="nw">$\varphi_1$의</span> 값은 <span class="nw">$\varphi_0$의</span> 값으로 유일하게 정해지기 때문이다. 그러나 그런 형태로 제시하면 문제가 너무 어려워진다. 참가자들은 <span class="nw">$\varphi_1$과</span> <span class="nw">$t$를</span> 잇는 식 하나만 얻으면 충분했다. <span class="nw">$\varphi_1$의</span> 값이 주어지지 않으면, 3번을 풀려면 위에서 설명한 첫 번째 풀이와 두 번째 풀이를 결합해야 한다. 수치 <span class="nw">$\varphi_1 = 159.3^\circ$는</span> <span class="nw">$t$에</span> 대한 두 식을 같게 놓고 얻은 방정식을 수치적으로 풀어서 구할 수 있다.</p>
+<div class="f" style="left:49pt;top:338pt"><span class="fig" data-srcpage="19" data-clip="49,338,377,368"></span></div>
+<p class="x i" style="--b:392.3"><i>참고 2:</i> 두 풀이를 결합하면 변위 <span class="nw">$\Delta y$와</span> 경로의 길이 <span class="nw">$S$가</span> 각 <span class="nw">$\varphi$에</span> 따라 어떻게 달라지는지도 명시적으로 얻을 수 있다.</p>
+<div class="f" style="left:46pt;top:416pt"><span class="fig" data-srcpage="19" data-clip="46,416,380,445"></span></div>
+<div class="f" style="left:49pt;top:456pt"><span class="fig" data-srcpage="19" data-clip="49,456,376,485"></span></div>
+<p class="x i" style="--b:500.0">이 밖에도 경사면의 밑변을 따라 향하는 <span class="nw">$x$축</span> 방향의 변위가 각 <span class="nw">$\varphi$에</span> 따라 어떻게 달라지는지도 구할 수 있다.</p>
+<div class="f" style="left:59pt;top:520pt"><span class="fig" data-srcpage="19" data-clip="59,520,366,550"></span></div>
+</div>
+
+<!-- sheet 20 -->
+<div class="page">
+<p class="x hd" style="--b:37.6">전러시아 물리 올림피아드 결선</p>
+<p class="x hd r" style="--b:37.6">2023년 4월 12일</p>
+<div class="f" style="left:28.3pt;top:41pt"><span class="fig" data-srcpage="20" data-clip="28.3,41,391.2,41.8"></span></div>
+<p class="x i" style="--b:64.0">다시 변수 <span class="nw">$z = \tan(\varphi/2)$로</span> 바꾸면 다음을 얻는다.</p>
+<div class="f" style="left:37pt;top:75pt"><span class="fig" data-srcpage="20" data-clip="37,75,388,116"></span></div>
+<p class="x i" style="--b:132.2">적분하면 다음을 얻는다.</p>
+<div class="f" style="left:105pt;top:144pt"><span class="fig" data-srcpage="20" data-clip="105,144,320,175"></span></div>
+<p class="x i" style="--b:192.8">변수 <span class="nw">$\varphi$로</span> 돌아가면</p>
+<div class="f" style="left:33pt;top:204pt"><span class="fig" data-srcpage="20" data-clip="33,204,392,234"></span></div>
+<p class="x i" style="--b:253.4">따라서 <span class="nw">$\Delta y(\varphi)$와</span> <span class="nw">$\Delta x(\varphi)$가</span> 알려진 해석 함수이므로, 퍽의 궤적을 매개변수 형태로 해석적으로 얻을 수 있다.</p>
+<p class="x i" style="--b:289.3">주어진 <span class="nw">$v_0$,</span> <span class="nw">$\varphi_0$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$</span> 값에 대한 궤적을 아래 그림에 나타내었다.</p>
+<div class="f" style="left:56pt;top:312pt"><span class="fig" data-srcpage="20" data-clip="56,312,370,452"></span></div>
+<div class="ov wb" style="left:79.6pt;top:314.6pt;width:5.8pt;height:5.4pt"></div>
+<p class="x ov" style="--b:319.3;--fs:8.5pt;--l:9pt;left:79.8pt;width:10pt">m</p>
+<div class="ov wb" style="left:360.0pt;top:433.9pt;width:6.6pt;height:5.2pt"></div>
+<p class="x ov" style="--b:438.6;--fs:8.5pt;--l:9pt;left:360.4pt;width:10pt">m</p>
+</div>
+
+</body></html>
