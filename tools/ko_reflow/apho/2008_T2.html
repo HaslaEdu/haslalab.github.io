@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta name="page" content="612,792">
+<style>
+/* APhO 2008 theory, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:10.6pt;line-height:16.6pt}
+.a{position:absolute}
+.flow{position:absolute;left:85pt;width:471.5pt;top:160pt}
+p{margin:0 0 9pt;text-align:justify;text-indent:0}
+h1{font-size:14pt;font-weight:normal;text-align:left;margin:0 0 12pt}
+h2{font-size:13pt;font-weight:normal;margin:0 0 10pt}
+.q{position:relative;padding-left:0;margin:0 0 12pt 18pt;text-align:left}
+.q b.k{margin-right:4pt}
+.pt{float:right;padding-left:8pt}
+.q::after{content:"";display:block;clear:both}
+.eq{text-align:center;margin:4pt 0 6pt}
+.cap{text-align:center;font-style:italic;margin:4pt 0 10pt}
+ul.d{margin:0 0 9pt;padding-left:0;list-style:none}
+ul.d li{margin:0}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:9.5pt;line-height:12pt;text-align:left}
+.foot{position:absolute;left:0;width:612pt;top:729pt;text-align:center;font-size:11pt}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="1" data-clip="0,0,612,150"></span></div>
+<div class="a" style="left:300pt;top:725pt"><span class="fig" data-srcpage="1" data-clip="300,725,342,746"></span></div>
+<div class="flow" style="top:165pt">
+<h1>문제 2: &nbsp;이온 결정, 유카와형 퍼텐셜과 파울리 원리</h1>
+<p>많은 화학 원소의 원자는 이온화 에너지가 매우 낮아 바깥 전자를 쉽게 잃는다. 반대로 다른 원소의 원자는 전자를 쉽게 받아들인다. 이러한 양이온과 음이온을 한 부피 안에 모아 두면 안정한 이온 구조로 결합할 수 있다. 많은 고체는 원자가 매우 규칙적이고 주기적인 무늬로 배열된 결정 구조를 이룬다. 이상적인 결정에서는 같은 기본 구조 단위가 공간 전체에 걸쳐 되풀이된다.</p>
+</div>
+<div class="a" style="left:85pt;top:280pt"><span class="fig" data-srcpage="1" data-clip="85,280,228,412"></span></div>
+<div class="a" style="left:236pt;top:313pt;width:320pt;line-height:15pt">그림 1<br><br>염화 나트륨(NaCl)의 면심 입방 격자.<br>원자 중심 사이의 격자 간격은 일정하며<br>매개변수 $r_0$로 주어진다.</div>
+<div class="flow" style="top:428pt">
+<p>이온 결정의 결합 에너지에 가장 크게 기여하는 것은 이온들의 정전기적 퍼텐셜 에너지이다.</p>
+<p style="margin-bottom:2pt">거리 $R$만큼 떨어진 두 점전하 $q_1$과 $q_2$ 사이에 작용하는 전기적 상호작용은 쿨롱 퍼텐셜로 잘 정의된다.</p>
+<div class="eq">$V_C(R)=k\dfrac{q_1q_2}{R}$</div>
+<p>여기서 $k=1/4\pi\varepsilon_0\approx9\cdot10^9\,[N\cdot m^2/C^2]$은 쿨롱 상수이다. 음의 힘은 인력을 뜻한다. 힘의 방향은 두 전하를 잇는 직선 방향이다. NaCl 결정의 경우 두 종류의 이온 모두 단위 전하 <b>±e</b>를 가지며, 선택한 이온에 작용하는 다른 많은 이웃 이온도 고려해야 한다. 무한히 큰 결정의 모든 양이온과 음이온을 고려하면 <b>인력</b> 퍼텐셜 에너지 $V_{att}(r)=\alpha\cdot V_C(r)$를 얻는다. 여기서 $r$는 가장 가까운 이웃 사이의 거리이고, α=1.74756은 마델룽 상수[<i>E.Madelung, Phys. Zs, 19 (1918) p542</i>]로서 결정 속 한 이온의 에너지를 구하는 데 쓰인다.</p>
+<p>인력 퍼텐셜 에너지와 함께, 파울리 배타 원리와 결정 격자에서 전자 껍질이 겹치는 것 때문에 <b>척력</b> 퍼텐셜 에너지도 있어야 한다. 쿨롱형 인력 부분과 달리 척력 퍼텐셜 에너지는 도달 거리가 매우 짧다.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="2" data-clip="0,80,612,122"></span></div>
+<div class="a" style="left:300pt;top:725pt"><span class="fig" data-srcpage="2" data-clip="300,725,342,746"></span></div>
+<div class="flow" style="top:132pt">
+<p>척력 퍼텐셜을 기술하는 서로 다른 두 가지 모형이 있다.</p>
+<p style="margin-bottom:0"><b>모형 #1.</b> 척력 퍼텐셜에 대한 적절한 근사는 지수 함수이다.</p>
+<div class="eq">$V_{rep1}(r)=\lambda\cdot e^{-r/\rho},\qquad(\lambda,\rho&gt;0)$</div>
+<p>이 식은 선택한 이온과 결정 격자 전체 사이의 척력 상호작용을 기술한다. 여기서 λ는 결합 세기이고 ρ는 도달 거리 매개변수이다.</p>
+<p style="margin-bottom:0"><b>모형 #2.</b> 척력 퍼텐셜에 대한 또 다른 좋은 근사는 거듭제곱의 역수 꼴이다.</p>
+<div class="eq">$V_{rep2}(r)=b/r^n,\qquad(b&gt;0)$</div>
+<p>여기서 $b$는 결합 세기이고 $n$은 2보다 큰 정수(보른 지수)이다. 이 매개변수들은 결정 전체와의 척력을 고려한 것이다.</p>
+<p>물리적 매개변수와 모형 퍼텐셜이 결정 격자의 종류에 따라 달라진다는 것은 분명하다.</p>
+<p>몇 가지 이온 결정에 대해 상온, 상압에서 격자 상수 $r_0$와 해리 에너지 $E_{dis}$(격자를 개별 이온으로 떼어 내는 데 필요한 에너지)의 실험 자료가 표 1에 주어져 있다.</p>
+</div>
+<div class="a" style="left:98pt;top:400pt"><span class="fig" data-srcpage="2" data-clip="98,400,280,472"></span>
+<span class="ov" style="left:4pt;top:7pt;width:41pt;height:14pt;line-height:13pt;font-size:10.5pt">결정</span></div>
+<div class="a" style="left:300pt;top:399pt;width:260pt;line-height:14pt">표 1<br>NaCl 구조를 가진 염 결정의 성질<br>[C.Kittel, "Introduction to Solid State Physics",<br>N.Y., Wiley (1976) p.92] (1몰에는 아보가드로<br>수만큼의 이온 쌍 또는 원자가 있다).</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="3" data-clip="0,66,612,108"></span></div>
+<div class="a" style="left:300pt;top:725pt"><span class="fig" data-srcpage="3" data-clip="300,725,342,746"></span></div>
+<div class="flow" style="top:146pt">
+<h1 style="font-size:15pt">문제 (총 10점):</h1>
+<div class="q" style="margin-left:0"><b class="k">Q1.</b> 그림 1의 입방 격자 중심에 있는 이온에 대한 쿨롱 퍼텐셜 $V_{C0}(r)$를 써라. 이 이온은 결정 격자에서 가장 가까운 이웃들(거리 $r=\sqrt3r_0$까지, 이 거리 포함)과만 상호작용한다고 하자. 이 근사에 해당하는 마델룽 상수 $\alpha_0$를 구하라. <span class="pt">(1.5점)</span></div>
+<div class="q" style="margin-left:0"><b class="k">Q2.</b> 모형 #1을 이용하여 이온 하나당 알짜 퍼텐셜 에너지 $V_1(r)$를 써라. $r=r_0$에 대한 평형 방정식을 구하고, 알짜 퍼텐셜 에너지 $V_1(r_0)$를 써라. <i>[$\alpha,r_0,\rho$로 나타내어라]</i> 마델룽 상수는 정확한 값 α를 사용하라. <span class="pt">(1.5점)</span></div>
+<div class="q" style="margin-left:0"><b class="k">Q3.</b> 실험 자료를 이용하여 도달 거리 매개변수 ρ를 어림하라. $N_A=6.022\cdot10^{23}\,[1/mole]$을 사용하라. <span class="pt">(2.0점)</span></div>
+<div class="q" style="margin-left:0"><b class="k">Q4.</b> 모형 #2를 이용하여 이온 하나당 알짜 퍼텐셜 에너지 $V_2(r)$를 써라. 평형 위치 $r=r_0$를 구하고, 알짜 퍼텐셜 에너지 $V_2(r_0)$를 써라. 마델룽 상수는 정확한 값 α를 사용하라. <i>[$\alpha,r,r_0,n$으로 나타내어라]</i> <span class="pt">(2.0점)</span></div>
+<div class="q" style="margin-left:0"><b class="k">Q5.</b> 실험 자료(표 1)를 이용하여 NaCl의 보른 지수 $n$을 어림하라. 평형 상태의 전체 알짜 퍼텐셜 에너지에서 쿨롱 상호작용과 파울리 배타(척력 부분)가 차지하는 비율을 어림하라. <span class="pt">(1.5점)</span></div>
+<div class="q" style="margin-left:0"><b class="k">Q6.</b> Na 원자의 이온화 에너지(원자에서 전자 하나를 떼어 내는 데 필요한 에너지)는 <b>+5.14 eV</b>이고, Cl 원자의 전자 친화도(원자가 전자 하나를 받아들이는 데 필요한 에너지)는 <b>-3.61 eV</b>이다. NaCl 결정에서 원자 하나당 전체 결합 에너지(원자를 격자 안에 붙잡아 두는 에너지)를 어림하라. 실험 결과는 $E_{\rm exp}\approx-3.28\,[{\rm eV}]$이다. <i>[eV 단위로 나타내어라]</i><br>단위 환산 $1\,[{\rm eV}]=1.602\cdot10^{-19}\,[{\rm J}]$을 사용하라. <span class="pt">(1.5점)</span></div>
+</div>
+</div>
+</body></html>
