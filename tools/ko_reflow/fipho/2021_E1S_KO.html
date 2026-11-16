@@ -1,0 +1,209 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* FiPhO 2021 experiment solutions, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:11.6pt;line-height:13.9pt;font-family:'Times New Roman','Liberation Serif',KB,serif;word-break:keep-all}
+.katex{font-family:'Times New Roman','Liberation Serif',serif;font-size:1.04em!important}
+.katex .mathnormal,.katex .mathit{font-family:'Times New Roman','Liberation Serif',serif;font-style:italic}
+.katex .mord,.katex .mbin,.katex .mrel,.katex .mopen,.katex .mclose,.katex .mpunct,.katex .mop{font-family:'Times New Roman','Liberation Serif',serif}
+.katex .mathrm,.katex .text{font-family:'Times New Roman','Liberation Serif',KB,serif}
+.a{position:absolute}
+.flow{position:absolute;left:85.1pt;width:485pt}
+p{margin:0 0 4pt;text-align:justify;text-indent:0}
+.fl{float:right;clear:right}
+p.in{text-indent:28pt}
+h1{font-size:12.5pt;font-weight:bold;margin:0 0 10pt}
+h2{font-size:11.6pt;font-weight:bold;margin:8pt 0 8pt}
+.eq{position:relative;text-align:center;margin:3pt 0;overflow:hidden}
+.eq .n{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+.foot{display:none}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:8pt;line-height:9pt;text-align:center;font-family:Arial,KG,sans-serif;font-weight:bold}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="1" data-clip="500,770,580,805"></span></div>
+<div class="a" style="left:320pt;top:117pt"><span class="fig" data-srcpage="1" data-clip="320,117,569,264"></span></div>
+<div class="a" style="left:100pt;top:448pt"><span class="fig" data-srcpage="1" data-clip="100,448,497,737"></span>
+<span class="ov" style="left:172pt;top:9.5pt;width:54pt;height:15pt;line-height:15pt;font-size:11pt">그래프 1</span>
+<span class="ov" style="left:201pt;top:265.5pt;width:28pt;height:13pt;line-height:13pt;font-size:9.5pt">m (N)</span>
+<span class="ov" style="left:8.5pt;top:129pt;width:14pt;height:31pt;line-height:14pt;font-size:9.5pt;writing-mode:vertical-rl;text-orientation:sideways;transform:rotate(180deg)">X (cm)</span></div>
+<div class="flow" style="top:54pt">
+<h1 style="font-size:15pt;margin-bottom:12pt">마찰력 연구 (해설)</h1>
+<h1 style="font-size:13pt;margin-bottom:12pt">1부. 원통형 막대에서의 마찰</h1>
+</div>
+<div class="flow" style="top:117pt;width:232pt">
+<p style="margin:0">1.1 추가 아래로 움직이다가 멈추는 순간, 힘들은 다음 관계를 만족한다.</p>
+<div class="eq" style="text-align:left;padding-left:8pt">$\begin{cases}T_0=mg\\T_1=\gamma T_0\\T_1=k\Delta x_1\end{cases}\ \Rightarrow\ k\Delta x_1=\gamma mg\,.$</div>
+<p style="margin:0">이 방정식들로부터</p>
+<div class="eq">$x_2=l_0+\gamma\dfrac{mg}k\,.$<span class="n">(1)</span></div>
+</div>
+<div class="flow" style="top:272pt">
+<p style="margin:0">추가 위로 움직일 때는 다음 방정식이 성립한다.</p>
+<div class="eq">$\begin{cases}T_1=mg\\T_1=\gamma T_0\\T_0=k\Delta x_1\end{cases}\ \Rightarrow\ \gamma k\Delta x_1=\gamma mg\,,$</div>
+<p style="margin:0">이로부터</p>
+<div class="eq">$x_1=l_0+\dfrac{mg}{\gamma k}\,.$<span class="n">(2)</span></div>
+<p style="margin:16pt 0 0">1.2 매단 추의 개수 $n$에 대한 용수철 길이 $x_1$과 $x_2$의 실험적 의존성 그래프는 그림과 같다.</p>
+</div>
+<div class="foot" style="display:none"></div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="2" data-clip="500,770,580,805"></span></div>
+<div class="flow" style="top:55pt;line-height:14.2pt">
+<p style="margin:0">1.3 계수와 그 오차는 최소제곱법으로 다음 식을 이용해 계산한다.</p>
+<div class="eq">$Y_i=aX_i+b$</div>
+<p style="margin:0">&nbsp;계수의 계산:</p>
+<p style="margin:10pt 0 0">- 실험점들의 중심을 정하는 평균값:</p>
+<div class="eq">$\langle X\rangle=\dfrac{\sum X_i}N\,;\qquad\langle Y\rangle=\dfrac{\sum Y_i}N\,;$</div>
+<p style="margin:0">&nbsp;- 분산(제곱의 평균에서 평균의 제곱을 뺀 값),</p>
+<div class="eq">$S_X^2=\dfrac{\sum X_i^2}N-\langle X\rangle^2\,;\qquad S_Y^2=\dfrac{\sum Y_i^2}N-\langle Y\rangle^2\,;$</div>
+<p style="margin:0">- 공분산 계수(곱의 평균에서 평균의 곱을 뺀 값):</p>
+<div class="eq">$R_{XY}=\dfrac{\sum X_iY_i}N-\langle X\rangle\cdot\langle Y\rangle\,;$</div>
+<p style="margin:0">-&nbsp; 계수:</p>
+<div class="eq">$a=\dfrac{R_{XY}}{S_X^2}\,;\qquad b=\langle Y\rangle-a\langle X\rangle\,;$</div>
+<p style="margin:0">- 계수의 오차:</p>
+<div class="eq">$\Delta a=t_{N-1,p}\sqrt{\dfrac1{N-2}\left(\dfrac{S_Y^2}{S_X^2}-a^2\right)}\qquad\Delta b=\Delta a\sqrt{S_X^2+\langle X\rangle^2}$</div>
+<p style="margin:22pt 0 0">그린 의존성의 계수를 계산한 결과는 다음과 같다.</p>
+<div class="eq">$a_1=(3.66\pm0.15)\,{\rm cm},\quad\varepsilon_a=0.04$<br>$b_1=(8.9\pm0.7)\,{\rm cm},\quad\varepsilon_b=0.07$<span class="n">(3)</span></div>
+<div class="eq">$a_2=(2.19\pm0.14)\,{\rm cm},\quad\varepsilon_a=0.06$<br>$b_2=(8.1\pm0.6)\,{\rm cm},\quad\varepsilon_b=0.08$<span class="n">(4)</span></div>
+<p style="margin:16pt 0 0">1.4. 구한 계수의 값을 나타낼 수 있도록 이론식을 다시 쓴다.</p>
+<div class="eq">$x_1=l_0+\dfrac{mg}{\gamma k}=l_0+\dfrac{m_{el}g}{\gamma k}n$<br>$x_2=l_0+\gamma\dfrac{mg}k=l_0+\gamma\dfrac{m_{el}g}kn$<span class="n">(5)</span></div>
+<p style="margin:0">이 식들은 실험적 의존성의 계수가 장치 매개변수로 다음과 같이 표현됨을 보여 준다.</p>
+<div class="eq">$b_1=b_2=l_0$<br>$a_1=\dfrac{m_{el}g}{\gamma k}$<br>$a_2=\gamma\dfrac{m_{el}g}k$<span class="n">(6)</span></div>
+<p style="margin:0">이 식들로 장치 매개변수의 값을 계산할 수 있다.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="3" data-clip="500,770,580,805"></span></div>
+<div class="flow" style="top:55pt;line-height:14.3pt">
+<p style="margin:0"><u>변형되지 않은 용수철의 길이</u>는 근사적으로</p>
+<div class="eq">$l_0\approx b_1\approx b_2\,.$<span class="n">(7)</span></div>
+<p style="margin:0">이 매개변수들의 실험값은 오차 범위 안에서 일치한다는 점에 유의하라. 결과를 더 정확하게 하려면 두 값의 평균을 취해야 한다.</p>
+<div class="eq">$\langle l_0\rangle=\dfrac12(b_1+b_2)=8.5\,{\rm cm}\,.$<span class="n">(8)</span></div>
+<p style="margin:0">그러면 이 값의 오차는</p>
+<div class="eq">$\Delta l_0=\dfrac12\sqrt{(\Delta b_1)^2+(\Delta b_1)^2}\approx0.5\,{\rm cm}\,.$<span class="n">(9)</span></div>
+<p style="margin:0">최종적으로</p>
+<div class="eq"><span style="border:1px solid #000;padding:1pt 3pt">$\langle l_0\rangle=(8.5\pm0.5)\,{\rm cm}$</span><span class="n">(10)</span></div>
+<p style="margin:18pt 0 0"><u>용수철 상수</u>는 다음 식으로 계산한다.</p>
+<div class="eq">$\begin{cases}a_1=\dfrac{m_{el}g}{\gamma k}\\a_2=\gamma\dfrac{m_{el}g}k\end{cases}\ \Rightarrow\ a_1\cdot a_2=\left(\dfrac{m_{el}g}k\right)^2\ \Rightarrow\ k=\dfrac{m_{el}g}{\sqrt{a_1\cdot a_2}}$<span class="n">(11)</span></div>
+<p style="margin:0">SI 단위로 수치를 대입하면</p>
+<div class="eq">$\bar k=\dfrac{m_{el}g}{\sqrt{a_1\cdot a_2}}=\dfrac{0.100\cdot9.81}{\sqrt{3.66\cdot2.19\cdot10^{-2}}}=34.65\dfrac{\rm N}{\rm m}\,.$</div>
+<p style="margin:0">구한 값의 오차는 다음 식으로 계산한다.</p>
+<div class="eq">$\Delta k=\dfrac{\bar k}2\sqrt{(\varepsilon_{a1})^2+(\varepsilon_{a2})^2}=1.3\dfrac{\rm N}{\rm m}\,.$</div>
+<p style="margin:0">따라서 최종적으로</p>
+<div class="eq"><span style="border:1px solid #000;padding:1pt 3pt">$\bar k=(34.7\pm1.3)\dfrac{\rm N}{\rm m}$</span><span class="n">(12)</span></div>
+<p style="margin:18pt 0 0">실의 장력 감소 계수는 다음 식으로 계산할 수 있다.</p>
+<div class="eq">$\begin{cases}a_1=\dfrac{m_{el}g}{\gamma k}\\a_2=\gamma\dfrac{m_{el}g}k\end{cases}\ \Rightarrow\ \dfrac{a_2}{a_1}=\gamma^2\ \Rightarrow\ \gamma=\sqrt{\dfrac{a_2}{a_1}}\,.$<span class="n">(13)</span></div>
+<p style="margin:0">이 계수의 수치는</p>
+<div class="eq">$\bar\gamma=\sqrt{\dfrac{a_2}{a_1}}=0.773\,,$</div>
+<p style="margin:0">그 오차는</p>
+<div class="eq">$\Delta\gamma=\dfrac{\bar\gamma}2\sqrt{(\varepsilon_{a1})^2+(\varepsilon_{a2})^2}=0.03\,.$<span class="n">(14)</span></div>
+<p style="margin:0">최종적으로 그 값은</p>
+<div class="eq"><span style="border:1px solid #000;padding:1pt 3pt">$\bar\gamma=0.77\pm0.03$</span><span class="n">(15)</span></div>
+<p style="margin:18pt 0 0">막대에 대한 실의 마찰 계수는 오일러 공식으로 구할 수 있다.</p>
+<div class="eq">$\gamma=\exp(-\mu\alpha)\ \Rightarrow\ \mu=-\dfrac{\ln\gamma}\alpha$<span class="n">(15)</span></div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="4" data-clip="500,770,580,805"></span></div>
+<div class="a" style="left:83pt;top:310pt"><span class="fig" data-srcpage="4" data-clip="83,310,552,384"></span>
+<span class="ov" style="left:3.2pt;top:4.4pt;width:132pt;height:16.2pt;line-height:16.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">실의 위치</span>
+<span class="ov" style="left:191.6pt;top:4.4pt;width:54pt;height:16.2pt;line-height:16.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">$a_1$, cm</span>
+<span class="ov" style="left:246.8pt;top:4.4pt;width:54pt;height:16.2pt;line-height:16.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">$a_2$, cm</span>
+<span class="ov" style="left:3.2pt;top:22.6pt;width:132pt;height:15.2pt;line-height:15.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal;text-align:left;padding-left:4pt">수평</span>
+<span class="ov" style="left:3.2pt;top:38.7pt;width:132pt;height:15.2pt;line-height:15.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal;text-align:left;padding-left:4pt">45° 기울어짐</span>
+<span class="ov" style="left:3.2pt;top:54.9pt;width:132pt;height:15.4pt;line-height:15.4pt;font-size:11.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal;text-align:left;padding-left:4pt">연직</span></div>
+<div class="a" style="left:330pt;top:400pt"><span class="fig" data-srcpage="4" data-clip="330,400,565,597"></span></div>
+<div class="flow" style="top:55pt;line-height:14.3pt">
+<p style="margin:0">실 (1)이 연직이면 막대를 감싸는 각은 $\alpha=\pi$이다. 이 값을 고려하면</p>
+<div class="eq">$\bar\mu=-\dfrac{\ln\bar\gamma}\pi=0.0818\,.$<span class="n">(20)</span></div>
+<p style="margin:0">구한 마찰 계수 값의 오차는 다음 식으로 계산해야 한다.</p>
+<div class="eq">$\Delta\bar\mu=\dfrac{\Delta\bar\gamma}{\pi\bar\gamma}=0.012\,.$<span class="n">(21)</span></div>
+<p style="margin:0">최종적으로</p>
+<div class="eq"><span style="border:1px solid #000;padding:1pt 3pt">$\bar\mu=0.082\pm0.012$</span><span class="n">(20)</span></div>
+<p style="margin:20pt 0 0;line-height:21pt">1.5. 실이 수평이면 $\alpha_1=\dfrac\pi2$이고, 실이 수평과 $\varphi=45^\circ$의 각을 이루면 $\alpha_1=\dfrac\pi2+\dfrac\pi4=\dfrac34\pi$이다. 계수 $\gamma$와 $\mu$는 식 (13)과 (15)로 계산할 수 있다. 계산 결과는 표와 같다.</p>
+</div>
+<div class="flow" style="top:394pt;width:240pt;line-height:13.8pt">
+<p style="margin:0">1.6. 오일러 공식의 적용 가능성을 확인하기 위해 이를 반로그 눈금으로 쓸 수 있다.</p>
+<div class="eq">$-\ln\gamma=\mu\alpha$<span class="n">(20)</span></div>
+<p style="margin:0">이 식이 성립하면 각 $\alpha$에 대한 양 $Y=-\ln\gamma$의 의존성은 선형이어야 하고, 그 그래프는 원점을 지나야 한다. 그림은 이 의존성의 그래프를 보여 주며, 이 경우 오일러 공식이 성립함을 확인해 준다.</p>
+<p style="margin:12pt 0 0">1.7. 마찰 계수의 값을 더 정확히 하려면, 실의 서로 다른 위치에 대해 계산한 세 값의 산술 평균을 구하면 된다.</p>
+</div>
+<div class="flow" style="top:622pt;line-height:14.3pt">
+<div class="eq">$\langle\mu\rangle=\dfrac{\mu_1+\mu_3+\mu_2}3=0.0809\,.$</div>
+<p style="margin:0">이 값의 오차는</p>
+<div class="eq">$\Delta\langle\mu\rangle=\dfrac{\Delta\bar\mu}{\sqrt3}=0.007$</div>
+<p style="margin:0">따라서 마찰 계수의 최종값은 다음과 같이 취해야 한다.</p>
+<div class="eq" style="margin-top:14pt"><span style="border:1px solid #000;padding:1pt 3pt">$\langle\mu\rangle=0.081\pm0.007$</span></div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="5" data-clip="500,770,580,805"></span></div>
+<div class="a" style="left:305pt;top:191pt"><span class="fig" data-srcpage="5" data-clip="305,191,570,425"></span></div>
+<div class="flow" style="top:55pt;line-height:14.3pt">
+<h1 style="font-size:13pt;margin-bottom:12pt">2부. 수평면 위의 미끄럼 마찰.</h1>
+<p style="margin:0">2.1. 그래프를 보면 상자는 곧바로 움직이기 시작하지 않고, 매단 추의 질량이 어떤 값을 넘을 때에만 움직인다. 그때까지 상자의 좌표는 $x_0=44.0\,{\rm cm}$이며, 이것이 이 문항의 답이다.</p>
+<p style="margin:14pt 0 0">2.2. 이 장치의 모든 물체에 대한 평형 조건을 쓰고, 측정한 정지 범위 경계의 좌표에 대한 식을 얻는 것은 어렵지 않다.</p>
+</div>
+<div class="flow" style="top:190pt;width:200pt;line-height:14pt">
+<p style="margin:0;text-indent:28pt">매단 추를 천천히 아래로 옮길 때 다음과 같이 쓸 수 있다(계 안의 실의 장력을 나타낸 그림 참조).</p>
+<div class="eq" style="text-align:left">$k(x_2-x_0)=\gamma m_1g-F\ \Rightarrow$<br>$x_2=x_0+\dfrac{\gamma m_1g-F}k$<span class="n">(21)</span></div>
+<p style="margin:0">매단 추를 천천히 위로 옮길 때 비슷한 계산을 하면 다음 결과를 얻는다.</p>
+<div class="eq" style="text-align:left">$\gamma\left(k(x_1-x_0)-F\right)=m_1g\ \Rightarrow$<br>$x_1=x_0+\dfrac{\dfrac{m_1g}\gamma+F}k$<span class="n">(22)</span></div>
+</div>
+<div class="flow" style="top:440pt;line-height:14.3pt">
+<p style="margin:0">2.3. 구하려는 장치 매개변수를 측정량(선형 의존성의 계수)으로 계산하는 식을 얻는다. 이를 위해 매단 추의 질량이 그 개수로 정해진다는 것, 즉 $m_1=m_{el}n_1$을 고려하여 이론식을 다시 쓴다.</p>
+<p style="margin:0">그러면 정지 범위의 왼쪽 경계에 대해</p>
+<div class="eq">$x_2=x_0+\dfrac{\gamma m_1g-F}k=\dfrac{\gamma m_{el}g}kn_1+x_0-\dfrac Fk\,.$<span class="n">(23)</span></div>
+<p style="margin:0">실험적 의존성을 기술하는 식</p>
+<div class="eq">$x_2=a_2n_1+b_2$</div>
+<p style="margin:0">과 비교하면, 이 의존성의 계수는</p>
+<div class="eq">$a_2=\dfrac{\gamma m_{el}g}k,\quad b_2=x_0-\dfrac Fk$<span class="n">(24)</span></div>
+<p style="margin:0">마찬가지로 정지 범위의 오른쪽 경계에 대해</p>
+<div class="eq">$x_1=\dfrac{m_{el}g}{\gamma k}n_1+\left(x_0+\dfrac Fk\right)=a_1n_1+b_1\,,$</div>
+<p style="margin:0">이로부터</p>
+<div class="eq">$a_1=\dfrac{m_{el}g}{\gamma k},\quad b_1=\left(x_0+\dfrac Fk\right)$<span class="n">(25)</span></div>
+<p style="margin:0">이제 장치 매개변수를 실험적 의존성의 계수로부터 다음과 같이 얻을 수 있음을 쉽게 알 수 있다.</p>
+<div class="eq">$k=\dfrac{m_{el}g}{\sqrt{a_1\cdot a_2}}$<span class="n">(26)</span></div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="6" data-clip="500,770,580,805"></span></div>
+<div class="a" style="left:83pt;top:178pt"><span class="fig" data-srcpage="6" data-clip="83,178,421,289"></span>
+<span class="ov" style="left:28.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">$a_1$, cm</span>
+<span class="ov" style="left:72.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">$b_1$, cm</span>
+<span class="ov" style="left:116.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">$a_2$, cm</span>
+<span class="ov" style="left:160.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">$b_2$, cm</span>
+<span class="ov" style="left:248.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">$k,\ \frac{\rm N}{\rm m}$</span>
+<span class="ov" style="left:292.0pt;top:4.8pt;width:42.4pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,KB,serif;font-weight:normal">$F$, N</span></div>
+<div class="a" style="left:296pt;top:339pt"><span class="fig" data-srcpage="6" data-clip="296,339,568,545"></span>
+<span class="ov" style="left:50pt;top:10.5pt;width:172pt;height:10pt;line-height:10pt;font-size:7.3pt">추의 개수에 따른 마찰력</span>
+<span class="ov" style="left:10.5pt;top:97pt;width:8pt;height:20pt;line-height:8pt;font-size:7pt;writing-mode:vertical-rl;transform:rotate(180deg)">F (N)</span></div>
+<div class="flow" style="top:55pt;line-height:14.3pt">
+<div class="eq">$\gamma=\sqrt{\dfrac{a_2}{a_1}}\,.$<span class="n">(27)</span></div>
+<div class="eq">$F=\dfrac{b_1-b_2}2k\,.$<span class="n">(28)</span></div>
+<p style="margin:0">2.3. 이 식들로 계산한 결과는 다음 표와 같다.</p>
+<p style="margin:12pt 0 0">문항 2.3의 표.</p>
+</div>
+<div class="flow" style="top:304pt;line-height:14.3pt">
+<p style="margin:0">2.4 매개변수 $\gamma$와 $k$를 최대한 정확히 구하려면, 얻은 모든 결과에 대해 산술 평균을 구하면 충분하다.</p>
+</div>
+<div class="flow" style="top:336pt;width:200pt;line-height:14pt">
+<div class="eq">$\langle\gamma\rangle=0.95$<br>$\langle k\rangle=33.8\dfrac{\rm N}{\rm m}\,.$<span class="n">(29)</span></div>
+<p style="margin:8pt 0 0">2.5 마찰력을 계산하기 위해, 용수철 상수의 수치를 평균값 (29)로 두고 식 (28)을 사용한다. 계산 결과는 표 2.3의 마지막 열에 있다. 얻은 의존성의 그래프는 그림과 같다.</p>
+</div>
+<div class="flow" style="top:560pt;line-height:14.3pt">
+<p style="margin:0">2.6. 얻은 의존성은 선형 $F=an_0+b$이다. 최소제곱법으로 계산한 이 의존성의 계수는</p>
+<div class="eq">$a=0.341\,{\rm N}$<br>$b=0.148$<span class="n">(30)</span></div>
+<p style="margin:0">이론적으로 상자 안 추의 개수에 대한 마찰력의 의존성은 쿨롱–아몽통 법칙으로 주어진다.</p>
+<div class="eq">$F=\mu(m_{el}n_0+m_b)g\,.$<span class="n">(31)</span></div>
+<p style="margin:0">이 식들로부터 면에 대한 상자의 마찰 계수는</p>
+<div class="eq">$\mu=\dfrac a{m_{el}g}\approx0.35\,.$<span class="n">(32)</span></div>
+<p style="margin:0">상자의 질량은</p>
+<div class="eq">$m_b=\dfrac b{\mu g}\approx43\,{\rm g}\,.$<span class="n">(33)</span></div>
+</div>
+</div>
+</body></html>
