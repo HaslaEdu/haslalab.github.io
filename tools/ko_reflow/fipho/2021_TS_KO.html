@@ -1,0 +1,440 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* FiPhO 2021 theory solutions, Korean edition on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:11.6pt;line-height:13.9pt;font-family:'Times New Roman','Liberation Serif',KB,serif;word-break:keep-all}
+.katex{font-family:'Times New Roman','Liberation Serif',serif;font-size:1.04em!important}
+.katex .mathnormal,.katex .mathit{font-family:'Times New Roman','Liberation Serif',serif;font-style:italic}
+.katex .mord,.katex .mbin,.katex .mrel,.katex .mopen,.katex .mclose,.katex .mpunct,.katex .mop{font-family:'Times New Roman','Liberation Serif',serif}
+.katex .mathrm,.katex .text{font-family:'Times New Roman','Liberation Serif',KB,serif}
+.a{position:absolute}
+.flow{position:absolute;left:85.1pt;width:485pt}
+p{margin:0 0 4pt;text-align:justify;text-indent:0}
+.fl{float:right;clear:right}
+p.in{text-indent:28pt}
+h1{font-size:12.5pt;font-weight:bold;margin:0 0 10pt}
+h2{font-size:11.6pt;font-weight:bold;margin:8pt 0 8pt}
+.eq{position:relative;text-align:center;margin:3pt 0;overflow:hidden}
+.eq .n{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+.foot{position:absolute;left:85.1pt;top:792pt;font-size:12pt}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:8pt;line-height:9pt;text-align:center;font-family:Arial,KG,sans-serif;font-weight:bold}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="1" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:405pt;top:372pt"><span class="fig" data-srcpage="1" data-clip="405,372,584,607"></span></div>
+<div class="a" style="left:425pt;top:592pt"><span class="fig" data-srcpage="1" data-clip="425,592,556,778"></span></div>
+<div class="flow" style="top:97pt">
+<h1>문제 1. 워밍업</h1>
+<h2 style="margin-top:0">문제 1.1 가라앉는 막대</h2>
+<p>막대를 내리는 동안 막대에는 다음 힘들이 작용한다.</p>
+<p style="margin:0">A) 중력: 막대의 질량중심(막대가 균일하므로 그 중점)에 작용하며 연직 아래 방향이고, 크기는</p>
+<div class="eq">$F_0=mg=\rho_0 Sl\,g$<span class="n">(1)</span></div>
+<p>$S$는 막대의 단면적이다.</p>
+<p style="margin:0">B) 부력(아르키메데스 힘): 밀려난 액체의 질량중심(길이 $z$인 잠긴 부분의 중점)에 작용하며 연직 위 방향이고, 크기는</p>
+<div class="eq">$F_A=\rho Sz\,g\,.$<span class="n">(2)</span></div>
+<p style="margin:0">C) 구하려는 실의 장력 $F$는 막대의 위쪽 끝에 작용하며 연직 위 방향이다.</p>
+<p style="margin:0">D) 막대가 바닥에 닿으면, 접촉점(막대의 아래쪽 끝)에 연직 위 방향의 바닥의 수직항력 $\vec N$이 작용한다.</p>
+<p style="margin:0">막대를 천천히 내리므로 매 순간 막대는 평형 상태에 있다고 볼 수 있다. 즉, 막대에 작용하는 힘의 합과 그 돌림힘의 합은 0이다.</p>
+<div class="fl" style="width:178pt;height:440pt"></div>
+<p style="margin:0">이제 막대를 내리는 여러 단계를 살펴보자.</p>
+<p style="margin:0;padding-left:18pt;text-indent:-14pt">1. &nbsp;막대가 연직이고 바닥에 닿지 않는 경우.</p>
+<p style="margin:0">이 경우 막대의 평형 조건은 다음과 같다.</p>
+<div class="eq">$F=mg-F_A$<span class="n">(3)</span></div>
+<p style="margin:0">잠긴 부분의 깊이는 $z=x$이다. 힘의 표현을 대입하면 실의 장력(동력계의 눈금과 같다)을 얻는다.</p>
+<div class="eq" style="text-align:left">$F=mg-F_A=\rho_0Sl\,g-\rho Sx\,g=\rho_0Sl\,g\left(1-\dfrac{\rho}{\rho_0}\dfrac xl\right)=$<br>$=F_0\left(1-\eta\dfrac xl\right)$<span class="n">(4)</span></div>
+<p style="margin:0">2. 막대가 연직선과 어떤 각 $\varphi$를 이루며 기울어져 있고 바닥에 닿지 않는 경우. 막대의 위쪽 끝에 대한 중력과 부력의 돌림힘의 합을 쓰면(그림 참조)</p>
+<div class="eq" style="text-align:left;padding-left:60pt">$M=-mg\dfrac l2\sin\varphi+F_A\left(l-\dfrac z2\right)\sin\varphi=$<br>$=-\rho_0Sl\,g\dfrac l2\sin\varphi+\rho Sz\,g\left(l-\dfrac z2\right)\sin\varphi=$<br>$=-F_0\dfrac l2\sin\varphi\left(1-\eta\dfrac zl\left(2-\dfrac zl\right)\right)$<span class="n">(5)</span></div>
+<p style="margin:0">이 식으로부터 평형 위치는 두 경우에 가능하다. $\varphi=0$일 때(막대가 연직), 그리고 다음이 성립할 때이다.</p>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="2" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:345pt;top:574pt"><span class="fig" data-srcpage="2" data-clip="345,574,568,700"></span></div>
+<div class="flow" style="top:97pt">
+<div class="eq">$1-\eta\dfrac zl\left(2-\dfrac zl\right)=0$<span class="n">(6)</span></div>
+<p style="margin:0">이 방정식은</p>
+<div class="eq">$u=\dfrac zl=1\pm\sqrt{1-\dfrac1\eta}$<span class="n">(7)</span></div>
+<p style="margin:0">라는 실근을 $\eta=\dfrac{\rho}{\rho_0}\ge1$일 때에만 갖는다. 즉 액체의 밀도가 막대의 밀도보다 커서 막대가 액체에 뜰 수 있는 경우이다. 이 방정식의 큰 근은 1보다 크므로 버릴 수 있다. 따라서 물리적 의미를 갖는 유일한 근은</p>
+<div class="eq">$u_0=\dfrac zl=1-\sqrt{1-\dfrac1\eta}$<span class="n">(7)</span></div>
+<p style="margin:0">막대의 연직 위치가 언제 안정 평형인지 알아보기 위해 돌림힘의 식 (5)로 다시 돌아가자. 막대가 깊이 $x$까지 잠겨 있고 연직에서 작은 각만큼 기울었다고 하자. 이때 잠긴 부분의 길이는 근사적으로 $z=x$이다. $M\le0$이면 연직 위치가 안정하다. 이 조건은 잠긴 깊이가 다음 조건을 만족할 때 성립한다(식 (5)의 괄호 안 표현을 분석하면 쉽게 보일 수 있다).</p>
+<div class="eq">$x&lt;u_0l$<span class="n">(8)</span></div>
+<p style="margin:0">$x&gt;u_0l$이면 연직 위치는 불안정해지고, 막대는 $x$에 따라 정해지는 어떤 각만큼 연직에서 벗어난다. 따라서 이 경우 평형 조건은 식 (6)으로 주어진다. 중요한 점은 이 방정식의 해가 $x$에 의존하지 않는다는 것이다. 그러므로 잠긴 부분의 길이는 일정하게 유지되며 식 (7)로 주어진다.</p>
+<div class="eq">$z=u_0l\,.$<span class="n">(9)</span></div>
+<p style="margin:0">따라서 부력과 실의 장력도 일정하게 유지되며, 동력계의 눈금은</p>
+<div class="eq">$F=mg-F_A=\rho_0Sl\,g-\rho Sz\,g=\rho_0Sl\,g\left(1-\dfrac{\rho}{\rho_0}\dfrac zl\right)=F_0\left(1-\eta u_0\right)$<span class="n">(10)</span></div>
+</div>
+<div class="flow" style="top:552pt"><p style="margin:0">3. 막대의 아래쪽 끝이 바닥에 닿고, 위쪽 끝은 액체 표면 위에 있는 경우.</p></div>
+<div class="flow" style="top:580pt;width:256pt">
+<p style="margin:0;text-indent:28pt">이 경우 막대가 잠긴 정도는 $x$로 정해진다. 그림으로부터 쉽게</p>
+<div class="eq">$z=\dfrac{h}{\cos\varphi},\quad\cos\varphi=\dfrac{l+h-x}{l}\,.$<span class="n">(11)</span></div>
+<p style="margin:0">를 얻는다. 따라서</p>
+<div class="eq">$z=\dfrac{lh}{l+h-x}\,.$<span class="n">(12)</span></div>
+</div>
+<div class="flow" style="top:700pt">
+<p style="margin:0;text-indent:28pt">실의 장력을 구하기 위해, 수조 바닥에 놓인 막대의 아래쪽 끝 $D$에 대한 돌림힘의 평형 조건을 쓴다.</p>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="3" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:271pt;top:302pt"><span class="fig" data-srcpage="3" data-clip="271,302,576,500"></span></div>
+<div class="a" style="left:279pt;top:601pt"><span class="fig" data-srcpage="3" data-clip="279,601,588,800"></span></div>
+<div class="flow" style="top:97pt">
+<div class="eq" style="text-align:left;padding-left:40pt">$F_A\dfrac z2\sin\varphi-mg\dfrac l2\sin\varphi+Fl\sin\varphi=0\ \ \Rightarrow$<br>$F=\dfrac12mg-\dfrac12F_A\dfrac zl=\dfrac12\rho_0Sl\,g-\dfrac12\rho Sz\dfrac zl=\dfrac12F_0\left(1-\eta\left(\dfrac zl\right)^2\right).$<span class="n">(13)</span></div>
+<p style="margin:0">4. 막대가 바닥에 닿아 있고 완전히 물속에 잠긴 경우.</p>
+<p style="margin:0">이 경우 잠긴 부분의 길이는 $z=l$이므로 식 (14)로부터</p>
+<div class="eq">$F=\dfrac12F_0(1-\eta)$<span class="n">(13)</span></div>
+<p style="margin:0">분명히 마지막 경우들은 막대가 가라앉는 $\eta&lt;1$일 때 일어난다.</p>
+<p style="margin:0">얻은 식들로 구하려는 그래프를 그릴 수 있다.</p>
+<p style="margin:0">A) 가벼운 막대($\eta=\dfrac{\rho}{\rho_0}=2$)는 처음에 연직으로 잠긴다. 실의 장력은</p>
+</div>
+<div class="flow" style="top:292pt;width:180pt">
+<p style="margin:0">식 (4)에 따라 변한다.</p>
+<div class="eq">$\dfrac F{F_0}=1-2\dfrac xl$<span class="n">(14)</span></div>
+<p style="margin:0">이는 연직 위치가 안정성을 잃을 때까지 계속된다. 이는 다음에서 일어난다.</p>
+<div class="eq" style="text-align:left">$u_0=\dfrac{x_0}l=1-\sqrt{1-\dfrac12}\approx0.29\ \Rightarrow$<br>$x_0=0.29\,{\rm m}$</div>
+<p style="margin:0">막대는 바닥에 닿지 않는다는 점에 유의하라.</p>
+<p style="margin:0">그 이후 실의 장력은 다음 값으로 일정하게 유지된다.</p>
+</div>
+<div class="flow" style="top:503pt">
+<div class="eq">$F=F_0(1-\eta u_0)\ \Rightarrow\ \dfrac F{F_0}=0.41\,.$<span class="n">(15)</span></div>
+<p style="margin:0">마지막으로 $x=l$에서 막대는 액체 표면에 수평으로 눕고, 실의 장력은 0이 된다.</p>
+<p style="margin:0">엄밀히 말하면 0으로의 전이는 불연속적인 도약이 아니라 매끄럽게 일어난다. 그러나 이 매끄러운 전이를 기술하려면 막대의 가로 크기를 고려해야 하며, 이는 이 문제의 범위를 벗어난다.</p>
+</div>
+<div class="flow" style="top:618pt;width:188pt">
+<p style="margin:0">B) 무거운 막대($\eta=\dfrac{\rho}{\rho_0}=\dfrac12$)는 아래쪽 끝이 바닥에 닿을 때까지 연직으로 잠기며, 이는 $x=h$에서 일어난다. 이 단계에서 실의 장력 변화는 다음 식으로 기술된다.</p>
+<div class="eq" style="text-align:left">$\dfrac F{F_0}=1-\dfrac12\dfrac xl$</div>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="4" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:100pt;line-height:15pt">
+<p style="margin:0">$x=h=\dfrac l2$인 이 값에서 실의 장력은 최댓값 $F_{\max}=\dfrac34F_0$부터, 막대의 연직 위치가 불안정해지는 최솟값 $F_{\min}=\dfrac7{16}F_0$까지의 값을 가질 수 있다. 이 장력 값에서 바닥은 막대에 $\dfrac5{16}F_0$의 힘을 작용한다.</p>
+<p style="margin:0">그 후 막대는 점차 기울어지며, $x=l$이 될 때까지 위쪽 끝은 물 표면 위에 있다. 이 단계에서 장력은 식 (12)–(13)으로 기술된다.</p>
+<div class="eq">$F=\dfrac12F_0\left(1-\dfrac12\left(\dfrac h{l+h-x}\right)^2\right).$</div>
+<p style="margin:0">$x\ge l$이면 막대의 위쪽 끝이 물속에 있고 $F=\dfrac14F_0$이다. 마지막으로 $x=l+h$에서 막대는 바닥에 눕고 실의 장력은 0이 된다.</p>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="5" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:430pt;top:116pt"><span class="fig" data-srcpage="5" data-clip="430,116,568,240"></span></div>
+<div class="flow" style="top:97pt;width:342pt">
+<h2 style="margin:0 0 12pt">문제 1.2 줄 위의 벌레</h2>
+<p style="margin:0;text-indent:28pt">벌레의 운동을, 반지름이 시간에 따라 커지는 원을 따라가는 운동으로 생각해 보자.</p>
+<p style="margin:0;text-indent:28pt">원의 둘레(줄의 길이와 같다)는 시간에 따라 다음과 같이 늘어난다.</p>
+<div class="eq">$L=l_0+Vt\,.$<span class="n">(1)</span></div>
+<p style="margin:0">따라서 반지름은 다음과 같이 변한다.</p>
+<div class="eq">$R(t)=\dfrac L{2\pi}=\dfrac{l_0+Vt}{2\pi}\,.$<span class="n">(2)</span></div>
+</div>
+<div class="flow" style="top:241pt">
+<p style="margin:0">짧은 시간 $dt$ 동안 벌레는 거리 $vdt$만큼 기어가므로, 다음 각만큼 회전한다.</p>
+<div class="eq">$d\varphi=\dfrac{2\pi vdt}{l_0+Vt}$<span class="n">(3)</span></div>
+<p style="margin:0">이 식을 적분하면, 벌레가 회전한 각을 시간의 함수로 얻는다.</p>
+<div class="eq">$\varphi(t)=\displaystyle\int_0^t\dfrac{2\pi vdt}{l_0+Vt}=2\pi v\int_0^t\dfrac{dt}{l_0+Vt}=2\pi\dfrac vV\ln\dfrac{l_0+Vt}{l_0}\,.$<span class="n">(4)</span></div>
+<p style="margin:0">벌레가 줄의 절반을 기어갔을 때 회전각은 $\varphi=\pi$이고, 줄의 끝에 도달했을 때 $\varphi=2\pi$이다.</p>
+<p style="margin:0;text-indent:28pt">줄을 원으로 "말아 놓는" 인위적이지만 직관적인 방법 없이도 문제를 풀 수 있다. 보다 형식적으로 진행할 수도 있다.</p>
+<p style="margin:0"><u>방법 1.</u></p>
+<p style="margin:0;text-indent:28pt">벌레의 위치를 고정된 벽으로부터의 거리인 좌표 $x$로 나타내자. 그러면 이 좌표는 다음 방정식을 만족한다.</p>
+<div class="eq">$\dfrac{dx}{dt}=V\dfrac x{l_0+Vt}+v$<span class="n">(5)</span></div>
+<p style="margin:0">이 방정식을 풀고, 벌레의 좌표를 변하는 줄의 길이와 같게 놓는 것은 어렵지 않다.</p>
+<p style="margin:6pt 0 0"><u>방법 2.</u> $\xi=\dfrac x{l_0+Vt}$를 벌레가 기어간 줄 길이의 비율이라 하자. 그러면 이 양은 다음 방정식을 만족한다.</p>
+<div class="eq">$\dfrac{d\xi}{dt}=\dfrac v{l_0+Vt}$<span class="n">(6)</span></div>
+<p style="margin:0">이 방정식은 간단한 논리적 추론으로도, 방정식 (5)의 결과로도 얻어진다. 이것은 방정식 (3)과 완전히 동등하다는 점에 유의하라.</p>
+<p style="margin:0">이 방정식의 해는</p>
+<div class="eq">$\xi=\dfrac vV\ln\dfrac{l_0+Vt}{l_0}\,.$<span class="n">(3)</span></div>
+<p style="margin:0">이로부터 구하려는 시간이 나온다.</p>
+<p style="margin:0">줄의 중간까지</p>
+<div class="eq">$\tau_{0.5}=\dfrac{l_0}V\exp\left(\dfrac12\dfrac Vv\right)\approx9.2\cdot10^{17}\ \text{년}$</div>
+<p style="margin:0">줄의 끝까지</p>
+<div class="eq">$\tau_{0.5}=\dfrac{l_0}V\exp\left(\dfrac Vv\right)\approx8.5\cdot10^{35}\ \text{년}.$</div>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="6" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:366pt;top:194pt"><span class="fig" data-srcpage="6" data-clip="366,194,569,277"></span></div>
+<div class="a" style="left:448pt;top:611pt"><span class="fig" data-srcpage="6" data-clip="448,611,567,706"></span></div>
+<div class="flow" style="top:97pt">
+<h2 style="margin:0 0 18pt;padding-left:25pt">문제 1.3. 개량된 영(Young)의 장치</h2>
+<p style="margin:0;text-indent:28pt">가운데 슬릿 $S_0$이 대칭축으로부터 거리 $x$인 스크린 위의 점 $A$에 다음 함수로 기술되는 진동을 만든다고 하자.</p>
+<div class="eq" style="text-align:left;padding-left:110pt">$E_0=A\cos(\omega t-\varphi_0)$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)</div>
+</div>
+<div class="flow" style="top:203pt;width:277pt">
+<p style="margin:0">양 $E_0$은 빛의 전기장 세기로 볼 수 있다. 그러면 양쪽 슬릿이 같은 점에 만드는 진동은 다음 함수로 기술된다.</p>
+</div>
+<div class="flow" style="top:292pt">
+<div class="eq">$E_{1,2}=A\cos(\omega t-\varphi_0\pm\Delta\varphi)\,.$<span class="n">(2)</span></div>
+<p style="margin:0">양 $\Delta\varphi$는 슬릿이 거리 $d$만큼 떨어져 있어서 생기는 추가 위상차이다. 잘 알려져 있듯이 이 위상차는 스크린 위의 점 $A$의 좌표 $x$에 비례한다.</p>
+<div class="eq">$\Delta\varphi=ax\,,$<span class="n">(3)</span></div>
+<p style="margin:6pt 0 0">여기서 $a$는 파장, 슬릿 사이의 거리, 판과 스크린 사이의 거리에 의존하는 상수이다. 문제를 푸는 데 이 상수의 정확한 표현은 필요하지 않다.</p>
+<p style="margin:8pt 0 0">1.3.1 슬릿이 두 개뿐이면, 합성 진동은 다음 함수로 기술된다.</p>
+<div class="eq">$E=A\cos(\omega t-\varphi_0-\Delta\varphi)+A\cos(\omega t-\varphi_0+\Delta\varphi)=2A\cos(\omega t-\varphi_0)\cdot\cos(\Delta\varphi)$<span class="n">(4)</span></div>
+<p style="margin:6pt 0 0;text-indent:28pt">빛의 세기는 장의 세기의 제곱의 시간 평균에 비례한다. 슬릿이 두 개뿐일 때 이 세기는</p>
+<div class="eq">$I_{(2)}=\left\langle\left(2A\cos(\omega t-\varphi_0)\cdot\cos(\Delta\varphi)\right)^2\right\rangle=2A^2\cos^2(\Delta\varphi)=4I_{(1)}\cos^2(\Delta\varphi)$<span class="n">(5)</span></div>
+<p style="margin:0">여기서 $I_{(1)}$은 광원 하나가 만드는 빛의 세기이다.</p>
+</div>
+<div class="flow" style="top:597pt;width:358pt">
+<p style="margin:0">같은 결과를 벡터(페이저) 도표 방법으로 진동을 더해서 얻을 수도 있다. 진동의 도표는 그림에 나타나 있으며, 이로부터 합성 진동의 진폭은</p>
+<div class="eq">$A_{(2)}=2A\cos\Delta\varphi$<span class="n">(6)</span></div>
+<p style="margin:0">그러면 진폭의 제곱에 비례하는 빛의 세기는</p>
+</div>
+<div class="flow" style="top:712pt">
+<div class="eq">$I_{(2)}=4I_{(1)}\cos^2\Delta\varphi=4I_{(1)}\cos^2ax\,.$<span class="n">(7)</span></div>
+<p style="margin:0">상수 $a$는 주어진 그래프로부터 쉽게 구할 수 있다. 다음과 같이 쓰는 것이 편리하다.</p>
+<div class="eq">$a=\dfrac\pi\delta\,,$<span class="n">(8)</span></div>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="7" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:422pt;top:157pt"><span class="fig" data-srcpage="7" data-clip="422,157,548,252"></span></div>
+<div class="a" style="left:78pt;top:348pt"><span class="fig" data-srcpage="7" data-clip="78,348,557,627"></span>
+<span class="ov" style="left:120pt;top:9pt;width:245pt;height:13pt;line-height:13pt;font-size:9.7pt">좌표에 따른 세기</span>
+<span class="ov" style="left:195pt;top:258.5pt;width:100pt;height:11pt;line-height:11pt;font-size:8.2pt">좌표 X (mm)</span>
+<span class="ov" style="left:8.5pt;top:87.5pt;width:11pt;height:104pt;line-height:11pt;font-size:8.2pt;writing-mode:vertical-rl;text-orientation:sideways;transform:rotate(180deg);text-align:center">세기 (임의 단위)</span></div>
+<div class="flow" style="top:97pt">
+<p style="margin:0">여기서 $\delta=2.0\,{\rm mm}$는 스크린 위 간섭무늬의 폭이다. 양 $I_{(1)}$은 1이다.</p>
+</div>
+<div class="flow" style="top:130pt;width:330pt">
+<p style="margin:0">1.3.2 슬릿이 세 개이면, 세 슬릿이 만드는 세 진동을 더해야 한다. 이 진동들의 벡터 도표는 다음 그림에 나타나 있다. 이 경우 합성 진동의 진폭은</p>
+<div class="eq">$A_{(3)}=2A\cos\Delta\varphi+A\,.$<span class="n">(9)</span></div>
+<p style="margin:0">따라서 빛의 세기는 다음 함수로 기술된다.</p>
+<div class="eq">$I_{(2)}=(2A\cos\Delta\varphi+A)^2=I_{(1)}(1+2\cos ax)^2$<span class="n">(10)</span></div>
+</div>
+<div class="flow" style="top:262pt">
+<p style="margin:0">이 함수의 매개변수는 앞의 경우와 같다: $I_{(1)}=1$, $a=\dfrac\pi\delta$, $\delta=2.0\,{\rm mm}$. 이 함수의 그래프는 "점을 찍어" 쉽게 그릴 수 있다. 결과는 그림과 같다.</p>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="8" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.6pt">
+<h1>문제 2. 팝콘의 물리</h1>
+<h2>1부. 임계 파열 압력</h2>
+<p style="margin:10pt 0 0">1.1 껍질이 터진 뒤 기체의 팽창은 매우 빠르므로 이 과정은 단열 과정으로 볼 수 있다. 단열 과정의 방정식을 쓰면</p>
+<div class="eq">$P_{cr}V_0^\gamma=P_0V_1^\gamma$<span class="n">(1)</span></div>
+<p style="margin:0">팽창은 낟알의 처음 부피 $V_0$(임계 파열 압력 $P_{cr}$과 같은 압력)에서 만들어진 팝콘의 부피 $V_1$(대기압과 같은 압력)까지 일어난다. 입자의 부피는 반지름의 세제곱에 비례하므로, 구하려는 임계 압력은</p>
+<div class="eq">$P_{cr}=P_0\left(\dfrac{V_1}{V_0}\right)^\gamma=P_0\left(\dfrac{r_1}{r_0}\right)^{3\gamma}\approx19\,{\rm atm}=19\cdot10^5\,{\rm Pa}\,.$<span class="n">(2)</span></div>
+<p style="margin:12pt 0 0">1.2 낟알의 질량 변화(즉 증발한 수분의 질량)는 무시할 수 있다. 그러면 부피의 비는 밀도의 역비와 같으므로</p>
+<div class="eq">$P_{cr}=P_0\left(\dfrac{V_1}{V_0}\right)^\gamma=P_0\left(\dfrac{\rho_0}{\rho_1}\right)^\gamma\approx16\,{\rm atm}=16\cdot10^5\,{\rm Pa}\,.$<span class="n">(3)</span></div>
+<p style="margin:12pt 0 0">1.3 낟알 내부의 최대 압력을 껍질이 견딜 수 있는 최대 역학적 응력과 연결하기 위해, 초과 압력에 대한 라플라스 공식을 쓸 수 있다. 표면장력 계수(단위 길이당 힘)에 해당하는 것은 최대 강도와 껍질 두께의 곱 $\sigma_ch$이다. 라플라스 공식에 따라 껍질 안팎의 압력 차는</p>
+<div class="eq">$\Delta P=P_{cr}-P_0=\dfrac{2\sigma_ch}{r_0}\,.$<span class="n">(4)</span></div>
+<p style="margin:0">이 식으로부터 임계 압력은 다음과 같이 추정된다.</p>
+<div class="eq">$P_{cr}=\dfrac{2\sigma_ch}{r_0}+P_0\approx11\cdot10^5\,{\rm Pa}=11\,{\rm atm}\,.$<span class="n">(5)</span></div>
+<p style="margin:12pt 0 0">1.4 얻은 세 결과 중 마지막 결과 (5)가 더 바람직하다. 앞의 계산들은 낟알과 팝콘의 잘 정의되지 않은 매개변수, 즉 가열 전후 낟알의 평균 반지름과 밀도를 사용하기 때문이다.</p>
+<h2 style="margin-top:12pt">2부. 파열 온도.</h2>
+<p style="margin:10pt 0 0">2.1 낟알의 껍질은 충분히 단단하고 거의 압축되지 않으므로, 낟알의 가열은 등적 과정으로 볼 수 있다. 이 과정에 대해</p>
+<div class="eq">$\dfrac{P_0}{T_0}=\dfrac{P_{cr}}{T_{cr}}\,.$<span class="n">(6)</span></div>
+<p style="margin:0">이로부터 낟알 내부의 건조한 공기를 가열해야 하는 온도를 구하면</p>
+<div class="eq">$T_{cr}=T_0\dfrac{P_{cr}}{P_0}=293K\dfrac{11}1=3200K\approx3000^\circ C\,.$<span class="n">(7)</span></div>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="9" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.6pt">
+<p style="margin:0">이 결과가 터무니없다는 것은 물의 증발을 고려하지 않고는 관찰된 현상을 설명할 수 없음을 보여 준다.</p>
+<p style="margin:14pt 0 0">2.2 낟알이 가열되면 그 안의 수분이 증발하며, 수증기는 포화 상태이다. 포화 수증기의 압력이 식 (4)로 주어지는 값 $\Delta P$에 도달하면 낟알이 터진다. 여기서 상온에서의 수증기 압력과 가열에 따른 건조 공기의 압력 변화는 무시한다는 점에 유의하라. 이러한 근사는 주어진 자료가 정하는 정확도 안에서 허용된다.</p>
+<p style="margin:0">문제에 주어진 식으로부터 포화 수증기의 압력이 $\Delta P\approx10\,{\rm atm}$이 되는 온도를 구하면</p>
+<div class="eq">$T_{cr}=\dfrac{T_0}{1-\dfrac{RT_0}{ML}\ln\dfrac{P_S}{P_0}}=\dfrac{T_0}{1-\dfrac{RT_0}{ML}\ln\dfrac{\Delta P}{P_0}}=450\,K\,.$<span class="n">(8)</span></div>
+<p style="margin:0">즉 $t_{cr}\approx180^\circ C$로, 매우 현실적이고 타당한 추정값이다!</p>
+<p style="margin:14pt 0 0">2.3 상온에서 포화 수증기의 압력은 표준 대기압보다 훨씬 작으므로 이 수증기의 질량은 무시할 수 있다. 즉 모든 물이 액체 상태라고 볼 수 있다. 또한 수증기는 멘델레예프–클라페이롱 상태 방정식을 따른다고 볼 수 있다.</p>
+<div class="eq">$PV=\dfrac mMRT\ ,$<span class="n">(9)</span></div>
+<p style="margin:0">여기서 $P=\Delta P\approx10\,{\rm atm}$은 낟알이 터지는 순간의 수증기 부분 압력이며, 이는 온도 $T_{cr}\approx450K$에서 일어난다. 방정식 (9)로부터 증발한 물의 질량을 구하면</p>
+<div class="eq" style="text-align:left;padding-left:20pt">$m=\dfrac{M\Delta PV}{RT_{cr}}=\dfrac{M\Delta P\frac43\pi r_0^3}{RT_{cr}}=\dfrac{18\cdot10^{-3}\frac{\rm kg}{\rm mol}\cdot10\cdot10^5\,{\rm Pa}\cdot\frac43\pi\left(3.1\cdot10^{-3}\,{\rm m}\right)^3}{8.31\frac{\rm J}{{\rm mol}\cdot{\rm K}}\cdot450\,K}\approx$<br>$\approx6.0\cdot10^{-7}\,{\rm kg}=0.60\,{\rm mg}$<span class="n">(10)</span></div>
+<h2 style="margin-top:14pt">3부. 슈퍼 팝콘</h2>
+<p style="margin:10pt 0 0">3.1 외부 압력을 $P_1$으로 낮추면 단열 과정의 방정식은 다음과 같이 된다.</p>
+<div class="eq">$P_{cr}V_0^\gamma=P_1(2V_1)^\gamma$<span class="n">(11)</span></div>
+<p style="margin:0">방정식 (1)을 이용하면</p>
+<div class="eq">$P_0V_1^\gamma=P_1(2V_1)^\gamma\ \Rightarrow\ P_1=P_0\cdot2^{-\gamma}\approx0.40\,{\rm atm}$<span class="n">(12)</span></div>
+<p style="margin:0">즉 외부 압력을 대기압보다 2.5배 낮추어야 한다.</p>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="10" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:364pt;top:131pt"><span class="fig" data-srcpage="10" data-clip="364,131,571,372"></span></div>
+<div class="flow" style="top:97pt">
+<h1>문제 3. 구 안에서</h1>
+<h2>1부. 일반적 특성</h2>
+</div>
+<div class="flow" style="top:150pt;width:262pt">
+<p style="margin:0;padding-left:12pt;text-indent:-12pt">1.1 공은 (지구 중력장에서의) 중력 퍼텐셜 에너지와 쿨롱 상호작용 에너지를 가진다(그림 참조).</p>
+<div class="eq" style="text-align:left">$U=mgR(1+\cos\theta)+\dfrac{qQ}{4\pi\varepsilon_0r}=$<br>$=2mgR\cos^2\dfrac\theta2+\dfrac{qQ}{4\pi\varepsilon_0\left(2R\cos\dfrac\theta2\right)}=$<br>$=2mgR\left(\cos^2\dfrac\theta2+\dfrac{qQ}{16\pi\varepsilon_0R^2mg}\dfrac1{\cos\dfrac\theta2}\right)=$<br>$=2mgR\left(\cos^2\dfrac\theta2+\dfrac f{\cos\dfrac\theta2}\right)$<span class="n">(1)</span></div>
+</div>
+<div class="flow" style="top:405pt">
+<p style="margin:0">이 식을 쓸 때 두 전하 사이의 거리 $|AB|$가 $r=2R\cos\dfrac\theta2$라는 사실을 이용했다. 공이 꼭대기 위치에서 벗어날 때 퍼텐셜 에너지의 변화는 다음과 같다.</p>
+<div class="eq">$\Delta U=2mgR\left(\cos^2\dfrac\theta2+\dfrac f{\cos\dfrac\theta2}-1-f\right).$<span class="n">(2)</span></div>
+<p style="margin:16pt 0 0">1.2 힘의 돌림힘은 퍼텐셜 에너지의 도함수로 계산할 수 있다.</p>
+<div class="eq">$M=-\dfrac{\partial U}{\partial\theta}\,.$<span class="n">(3)</span></div>
+<p style="margin:0">이 돌림힘들은 위 그림으로부터 직접 쉽게 나타낼 수도 있다. 중력 $m\vec g$의 팔 길이는 선분의 길이 $|CB|=R\sin\theta$이므로 그 돌림힘은</p>
+<div class="eq">$M_{mg}=mgR\sin\theta\,.$<span class="n">(4)</span></div>
+<p style="margin:0">두 전하 사이의 쿨롱 힘은</p>
+<div class="eq">$F=\dfrac{qQ}{4\pi\varepsilon_0\left(2R\cos\dfrac\theta2\right)^2}=\dfrac{qQ}{16\pi\varepsilon_0R^2}\cdot\dfrac1{\cos^2\dfrac\theta2}=mg\dfrac f{\cos^2\dfrac\theta2}\,.$<span class="n">(5)</span></div>
+<p style="margin:0">이 힘의 팔 길이는 선분 $|OD|=R\sin\dfrac\theta2$이므로,</p>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="11" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:299pt;top:226pt"><span class="fig" data-srcpage="11" data-clip="299,226,569,460"></span>
+<span class="ov" style="left:100pt;top:13.5pt;width:74pt;height:11pt;line-height:11pt;font-size:8.5pt">돌림힘</span>
+<span class="ov" style="left:15.5pt;top:58pt;width:7.5pt;height:106pt;line-height:7.5pt;font-size:6.6pt;writing-mode:vertical-rl;text-orientation:sideways;transform:rotate(180deg)">돌림힘 (Mg, Me)</span>
+<span class="ov" style="left:101pt;top:210.5pt;width:96pt;height:10pt;line-height:10pt;font-size:6.8pt">편향각 (theta)</span></div>
+<div class="a" style="left:296pt;top:532pt"><span class="fig" data-srcpage="11" data-clip="296,532,569,770"></span>
+<span class="ov" style="left:46pt;top:17.5pt;width:182pt;height:11pt;line-height:11pt;font-size:8.5pt">퍼텐셜 에너지의 변화</span>
+<span class="ov" style="left:15.5pt;top:72pt;width:8.5pt;height:85pt;line-height:8.5pt;font-size:6.6pt;writing-mode:vertical-rl;text-orientation:sideways;transform:rotate(180deg)">퍼텐셜 에너지</span>
+<span class="ov" style="left:104pt;top:213.5pt;width:96pt;height:10pt;line-height:10pt;font-size:6.8pt">편향각 (theta)</span></div>
+<div class="flow" style="top:97pt">
+<p style="margin:0">쿨롱 힘의 돌림힘은 다음과 같다.</p>
+<div class="eq">$M_e=-mgR\dfrac{f\sin\dfrac\theta2}{\cos^2\dfrac\theta2}\,.$<span class="n">(6)</span></div>
+<p style="margin:14pt 0 0">1.3 함수 (4)의 그래프는 자명하다. 사인 곡선의 일부이다.</p>
+</div>
+<div class="flow" style="top:212pt;width:205pt">
+<p style="margin:0">함수 (6)의 개략적인 그래프를 그리기 위해, 고려하는 범위에서 이 함수가 증가함수라는 점에 주목하자(쿨롱 힘의 크기와 그 팔 길이가 모두 커진다).</p>
+<p style="margin:0">다음으로 0 근처에서 이 함수들의 거동을 비교한다. 삼각함수의 근사식을 이용하면 돌림힘의 근사식을 얻는다.</p>
+<div class="eq">$M_g=mgR\sin\theta\approx mgR\cdot\theta\,.$<span class="n">(7)</span></div>
+<div class="eq">$|M_e|=mgR\dfrac{f\sin\dfrac\theta2}{\cos^2\dfrac\theta2}\approx mgRf\cdot\dfrac\theta2\,.$<span class="n">(8)</span></div>
+<p style="margin:0">이 식들은 $f&lt;2$일 때 중력의 돌림힘이 더 빨리 커짐을 보여 준다. 따라서 이 경우</p>
+</div>
+<div class="flow" style="top:458pt">
+<p style="margin:0">고려하는 함수들의 그래프는 ($\theta=0$ 이외의) 교점을 가진다. $f=2$이면 두 그래프는 0 근처에서 서로 접한다. 마지막으로 $f&gt;2$이면 쿨롱 힘의 돌림힘이 중력의 돌림힘보다 빨리 커진다.</p>
+</div>
+<div class="flow" style="top:518pt;width:202pt">
+<p style="margin:0">1.4 돌림힘 크기의 차는 퍼텐셜 에너지의 도함수(부호를 반대로 한 것)이다. 따라서 $f&lt;2$이면 편향각에 대한 퍼텐셜 에너지의 의존성 $\Delta U(\theta)$는 ($\theta=0$에서) 극대점을 가지고, 이후 감소하여 (위에서 살펴본 그래프들의 교점에서) 극소에 이른 뒤 다시 증가하기 시작한다. $f&gt;2$이면 $\Delta U(\theta)$는 $\theta=0$에서 극소점을 가지고 이후 단조 증가한다. $f=2$인 경우가 경계이다. 구하려는 그래프는 다음 그림과 같다.</p>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="12" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.4pt">
+<p style="margin:0">1.5 운동하는 동안 공이 구의 안쪽 면에서 떨어지지 않을 조건은 다음과 같이 말할 수 있다. 구의 수직항력 $\vec N$이 항상 0보다 크다. 이 조건이 성립하려면 반지름 방향에 대한 쿨롱 힘의 성분이 같은 방향에 대한 중력의 성분보다 크거나 같아야 한다. 즉</p>
+<div class="eq">$F\cos\dfrac\theta2&gt;mg\cos\theta\ \Rightarrow\ mg\dfrac f{\cos\dfrac\theta2}\ge mg\cos\theta\ \Rightarrow\ f\ge\cos\theta\cos\dfrac\theta2\,.$<span class="n">(9)</span></div>
+<p style="margin:0">코사인 곱의 최댓값은 1이므로, 구하려는 조건은 결국 다음과 같다.</p>
+<div class="eq">$f\ge1.$<span class="n">(10)</span></div>
+<p style="margin:0">다시 말해 공이 꼭대기 점에서 면을 떠나지 않으면 다른 어떤 점에서도 떠나지 않는다. 또한 공이 움직이면서 구 면의 수직항력은 커지기만 하므로, 공은 확실히 구를 떠나지 않는다.</p>
+<p style="margin:14pt 0 0">1.6 퍼텐셜 에너지 그래프의 분석이나 꼭대기 점 근처의 돌림힘 식으로부터, 꼭대기 위치는 다음 조건에서 안정하다.</p>
+<div class="eq">$f\ge2\,.$<span class="n">(10a)</span></div>
+<h2 style="margin:4pt 0 2pt">2부. $f=1$일 때 공의 운동.</h2>
+<p style="margin:0">2.1 $f=1$일 때 편향각에 대한 퍼텐셜 에너지의 의존성으로부터, 공은 구 면을 따라 미끄러지기 시작하여 관성으로 평형 위치를 지나 퍼텐셜 에너지의 변화가 0이 되는 점에서 멈춘다. 끝 위치에서의 각 $\theta_{\max}$의 값은 다음 방정식의 해로 구할 수 있다.</p>
+<div class="eq">$\Delta U=2mgR\left(\cos^2\dfrac\theta2+\dfrac f{\cos\dfrac\theta2}-1-f\right)=0\,.$<span class="n">(11)</span></div>
+<p style="margin:0">$\cos\dfrac{\theta_{\max}}2=z$로 놓으면, 이 양은 다음 방정식을 만족한다.</p>
+<div class="eq">$z^2+\dfrac fz-1-f=0\ \Rightarrow\ z^3-2z+1=0\,.$<span class="n">(12)</span></div>
+<p style="margin:0">이 방정식은 공의 꼭대기 위치(처음 위치)에 해당하는 자명한 근 $z_1=1$을 가진다. 이 근을 알면 방정식 (12)를 다음 꼴로 바꿀 수 있다.</p>
+<div class="eq">$z^3-2z+1=(z^3-z)-(z-1)=z(z^2-1)-(z-1)=(z-1)(z(z+1)-1)=0\,.$<span class="n">(13)</span></div>
+<p style="margin:0">따라서 이 방정식은 근 $z_1=1$ 외에 두 근(이차방정식의 근)을 더 가진다.</p>
+<div class="eq">$z^2+z-1=0\ \Rightarrow\ z_{2,3}=\dfrac{-1\pm\sqrt{1+4}}2\,.$<span class="n">(14)</span></div>
+<p style="margin:0">이 중 한 근은 절댓값이 1보다 크므로, 실수인 각에 대해 코사인이 그 값이 될 수 없다. 따라서 필요한 근은 $z_2=\dfrac{\sqrt{1+4}-1}2\approx0.618$이며, 이는 다음 최대 편향각에 해당한다.</p>
+<div class="eq">$\theta_{\max}\approx104^\circ\,.$<span class="n">(15)</span></div>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="13" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:419pt;top:319pt"><span class="fig" data-srcpage="13" data-clip="419,319,563,471"></span></div>
+<div class="flow" style="top:97pt;line-height:14.4pt">
+<p style="margin:0">2.2 평형 상태에서 공에 작용하는 돌림힘의 합은 0이므로</p>
+<div class="eq">$mgR\sin\theta=mgR\dfrac{f\sin\dfrac\theta2}{\cos^2\dfrac\theta2}\,.$<span class="n">(16)</span></div>
+<p style="margin:0">이 방정식으로부터</p>
+<div class="eq">$2\sin\dfrac\theta2\cos\dfrac\theta2=\dfrac{\sin\dfrac\theta2}{\cos^2\dfrac\theta2}\ \Rightarrow\ \cos^3\dfrac\theta2=\dfrac12\ \Rightarrow\ \bar\theta=2\arccos\dfrac1{\sqrt[3]2}\approx75^\circ\,.$<span class="n">(17)</span></div>
+<p style="margin:0">위에서 보였듯이 이 점에서 공의 퍼텐셜 에너지는 최소이므로, 이 평형 위치는 안정하다. 참고: 퍼텐셜 에너지의 도함수를 0으로 놓아도 같은 결과를 얻는다.</p>
+</div>
+<div class="flow" style="top:312pt;width:325pt">
+<p style="margin:0">2.3 수평 원을 따라 도는 공의 운동을 기술하려면 공이 정지해 있는 회전 좌표계로 옮겨 가는 것이 편리하다. 이 좌표계에서는 공에 작용하는 원심 관성력 $\vec F_C$를 더해야 한다. 이 힘은 회전 속력에 의존하므로 임의의 양의 값을 가질 수 있다. 이 힘의 돌림힘은 중력의 돌림힘과 방향이 같다. 따라서 평형은 쿨롱 힘의 돌림힘 크기가 중력의 돌림힘 크기보다 큰 영역에서만 가능하다. 즉</p>
+<div class="eq">$\bar\theta&lt;\theta&lt;\dfrac\pi2\,.$<span class="n">(18)</span></div>
+</div>
+<div class="flow" style="top:492pt;line-height:14.4pt">
+<h2 style="margin:0 0 14pt">3부. $f=2$일 때 공의 운동</h2>
+<p style="margin:0">매개변수 값 $f=2$는 임계값(분기점)이다. 위에서 보였듯이(식 (7)–(8) 참조) 이 값에서 복원 돌림힘의 합은 선형 근사에서 0이 된다. 그러나 이 경우에도 퍼텐셜 곡선이 꼭대기 점에서 극소를 가지므로 그 점은 안정 평형점이다. 따라서 돌림힘의 전개를 편향각 $\theta$에 대해 다음 차수까지 해야 한다. 돌림힘은 홀함수로 기술되므로 다음 차수는 3차이다. 즉 공에 작용하는 전체 돌림힘은 다음과 같이 쓸 수 있다.</p>
+<div class="eq">$M=M_g-M_e=mgR\sin\theta-2mgR\dfrac{\sin\dfrac\theta2}{\cos^2\dfrac\theta2}=-mgR\left(2\dfrac{\sin\dfrac\theta2}{\cos^2\dfrac\theta2}-\sin\theta\right)=-CmgR\cdot\theta^3\,,$<span class="n">(18)</span></div>
+<p style="margin:0">여기서 $C$는 무차원 계수이다.</p>
+<p style="margin:0">그러면 꼭대기 점 근처에서 공의 운동 방정식은</p>
+<div class="eq">$mR^2\dfrac{d^2\theta}{dt^2}=-CmgR\theta^3\ \Rightarrow\ \dfrac{d^2\theta}{dt^2}=-C\dfrac gR\theta^3$<span class="n">(19)</span></div>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="14" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.6pt">
+<p style="margin:0">이것은 비조화 진동을 기술하는 비선형 방정식이다. 문제는 진폭에 대한 진동 주기의 의존 형태만 묻고 있으므로, 방정식 (19)의 정확한 해를 찾을 필요는 없다. 이를 위해 방정식을 "무차원" 꼴로 바꾼다. 다음 변수를 도입하자.</p>
+<div class="eq">$\eta=\dfrac\theta{\theta_0}\,,$<span class="n">(20)</span></div>
+<p style="margin:0">이는 편향각과 그 진폭(최댓값)의 비이다. 또한 고유한 시간 단위 $t_0$을 도입하는데, 그 값은 나중에 정한다. $t_0$ 단위로 잰 시간과 초 단위의 시간의 관계는</p>
+<div class="eq">$\tau=\dfrac t{t_0}\,.$<span class="n">(21)</span></div>
+<p style="margin:0">이제 방정식 (19)를 도입한 단위로 다시 쓴다($\theta=\eta\theta_0,\ t=\tau t_0$).</p>
+<div class="eq">$\dfrac{\theta_0}{t_0^2}\dfrac{d^2\eta}{d\tau^2}=-C\dfrac gR\theta_0^3\cdot\eta^3\,.$<span class="n">(22)</span></div>
+<p style="margin:0">이제 이 방정식의 모든 계수가 상쇄되도록 시간 단위를 고른다. 즉</p>
+<div class="eq">$\dfrac{\theta_0}{t_0^2}=C\dfrac gR\theta_0^3\ \Rightarrow\ t_0=\dfrac1{\theta_0}\sqrt{C\dfrac Rg}\,.$<span class="n">(23)</span></div>
+<p style="margin:0">이 시간 단위에서 방정식 (22)</p>
+<div class="eq">$\dfrac{d^2\eta}{dt^2}=-\eta^3\,.$<span class="n">(24)</span></div>
+<p style="margin:0">는 매개변수를 포함하지 않는다. 게다가 변수 $\eta$는 -1과 +1 사이에서 변한다. 따라서 $t_0$ 단위의 진동 주기는 (아무것에도 의존하지 않는) 어떤 수이다. 보통의 시간 단위로 돌아가면, 진동 주기는 $t_0$에 비례한다고 결론지을 수 있으므로 주기의 식은 다음과 같이 쓸 수 있다.</p>
+<div class="eq">$T=\dfrac{C_0}{\theta_0}\sqrt{\dfrac Rg}\,.$<span class="n">(25)</span></div>
+<p style="margin:24pt 0 8pt;font-size:9.5pt"><u>3부 풀이에 대한 참고.</u></p>
+<p style="margin:0;font-size:9.5pt">1. 필요하면 돌림힘을 3차까지 정확히 전개할 수 있다.</p>
+<div class="eq" style="text-align:left;font-size:9.5pt;line-height:12pt">$|M_e|=mgR\dfrac{2\sin\dfrac\theta2}{\cos^2\dfrac\theta2}=mgR\dfrac{2\sin\dfrac\theta2}{1-\sin^2\dfrac\theta2}\approx2mgR\sin\dfrac\theta2\left(1+\sin^2\dfrac\theta2\right)\approx$<br>$\approx2mgR\left(\dfrac\theta2-\dfrac16\left(\dfrac\theta2\right)^3\right)\left(1+\left(\dfrac\theta2\right)^2\right)\approx2mgR\left(\dfrac\theta2+\left(\dfrac\theta2\right)^3-\dfrac16\left(\dfrac\theta2\right)^3\right)=2mgR\left(\dfrac\theta2+\dfrac56\left(\dfrac\theta2\right)^3\right)=$<br>$=mgR\left(\theta+\dfrac5{24}\theta^3\right);$<br>$M_g=mgR\sin\theta\approx mgR\left(\theta-\dfrac{\theta^3}6\right);$</div>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="15" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:430pt;top:605pt"><span class="fig" data-srcpage="15" data-clip="430,605,575,757"></span></div>
+<div class="flow" style="top:120pt;font-size:9.5pt;line-height:12pt">
+<p style="margin:0">2. 이 문제는 역학적 에너지 보존 법칙에 근거하여 다른 방법으로 풀 수도 있다. 이 경우 퍼텐셜 에너지 식을 작은 편향각 $\theta$에 대해 4차까지 전개해야 한다.</p>
+<div class="eq">$\Delta U=2mgR\left(\cos^2\dfrac\theta2+\dfrac2{\cos\dfrac\theta2}-3\right)\approx\dfrac C4mgR\theta^4\,.$</div>
+<p style="margin:0">여기서 $C$는 식 (18)과 같은 상수이다. 그러면 에너지 보존 법칙으로부터</p>
+<div class="eq">$\dfrac{mR^2}2\omega^2+\dfrac C4mgR\theta^4=\dfrac C4mgR\theta_0^4$</div>
+<p style="margin:0">공의 각속도를 나타내면</p>
+<div class="eq">$\omega=\sqrt{\dfrac C2\dfrac gR\left(\theta_0^4-\theta^4\right)}$</div>
+<p style="margin:0">진동 주기를 적분으로 쓰면</p>
+<div class="eq">$T=2\displaystyle\int_{-\theta_0}^{+\theta_0}\dfrac{d\theta}\omega=2\int_{-\theta_0}^{+\theta_0}\dfrac{d\theta}{\sqrt{\dfrac C2\dfrac gR\left(\theta_0^4-\theta^4\right)}}$</div>
+<p style="margin:0">피적분 함수의 변수를 $\eta=\dfrac\theta{\theta_0}$로 바꾸면</p>
+<div class="eq">$T=\dfrac2{\theta_0}\sqrt{\dfrac2C\dfrac Rg}\displaystyle\int_{-1}^{+1}\dfrac{d\eta}{\sqrt{(1-\eta^4)}}\,.$</div>
+<p style="margin:0">이 식에서 적분은 어떤 수이므로, 진동 주기는 식 (25)로 주어진다.</p>
+</div>
+<div class="flow" style="top:420pt;line-height:14.4pt">
+<h2 style="margin:0 0 14pt">4부. $f=3$일 때 공의 운동.</h2>
+<p style="margin:0">4.1 $f&gt;2$이면 작은 각에서 공에 작용하는 전체 돌림힘이 편향각에 비례하므로, 꼭대기 점 근처에서 공의 진동은 조화 진동이다. 식 (7)–(8)을 이용하여 운동 방정식을 쓰면</p>
+<div class="eq">$mR^2\dfrac{d^2\theta}{dt^2}=-mgR\left(\dfrac f2-1\right)\theta\ \Rightarrow\ \dfrac{d^2\theta}{dt^2}=-\dfrac g{2R}\theta\,,$<span class="n">(26)</span></div>
+<p style="margin:0">이는 다음 주기를 갖는 조화 진동의 방정식이다.</p>
+<div class="eq">$T=2\pi\sqrt{\dfrac{2R}g}\,.$<span class="n">(27)</span></div>
+</div>
+<div class="flow" style="top:602pt;width:340pt;line-height:14.4pt">
+<p style="margin:0">4.2 회전하는 비관성 좌표계에서 공의 평형 조건을 명시적으로 쓴다. 이 좌표계에서 원심 관성력의 돌림힘은</p>
+<div class="eq">$M_C=\dfrac{mv_1^2}{R\sin\theta}R\cos\theta\approx\dfrac{mv_1^2}\theta\,.$<span class="n">(28)</span></div>
+<p style="margin:0">그러면 돌림힘이 같을 조건은 다음 꼴이 된다.</p>
+<div class="eq">$|M_e|-M_g=M_C\ \Rightarrow\ \dfrac32mgR\theta-mgR\cdot\theta=\dfrac{mv_1^2}\theta\,.$<span class="n">(29)</span></div>
+<p style="margin:0">이 방정식으로부터 공의 선속력과 편향각은 다음 관계를 가진다.</p>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="16" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.4pt">
+<div class="eq">$v_1=\theta\sqrt{\dfrac{gR}2}\,.$<span class="n">(30)</span></div>
+<p style="margin:0">원 궤도를 따라 도는 공의 회전 주기</p>
+<div class="eq">$T=\dfrac{2\pi R\theta}{v_1}=2\pi\sqrt{\dfrac{2R}g}\,,$</div>
+<p style="margin:0">는 첫째, 편향각에 의존하지 않고, 둘째, 작은 진동의 주기와 일치한다는 점에 주목하라.</p>
+<p style="margin:0">마지막으로 최대 편향각을 공의 처음 속력으로 나타내야 한다. 이를 위해서는 에너지 보존 법칙을 이용하는 것이 편리하다. 먼저 작은 편향각에서 공의 퍼텐셜 에너지 변화에 대한 식을 얻는다. 이를 위해 퍼텐셜 에너지 함수를 각 $\theta$에 대해 2차까지 전개해야 한다.</p>
+<div class="eq" style="text-align:left;font-size:10pt">$\Delta U=2mgR\left(\cos^2\dfrac\theta2+\dfrac f{\cos\dfrac\theta2}-1-f\right)=2mgR\left(\left(1-\dfrac12\left(\dfrac\theta2\right)^2\right)^2+\dfrac f{1-\dfrac12\left(\dfrac\theta2\right)^2}-1-f\right)=$<br>$=2mgR\left(\left(1-2\dfrac12\left(\dfrac\theta2\right)^2\right)+f\left(1+\dfrac12\left(\dfrac\theta2\right)^2\right)-1-f\right)=\dfrac12mgR\left(\dfrac f2-1\right)\theta^2=\dfrac34mgR\theta^2$<span class="n">(31)</span></div>
+<p style="margin:0">에너지 보존 법칙의 방정식</p>
+<div class="eq">$\dfrac{mv_0^2}2=\dfrac34mgR\theta^2$<span class="n">(32)</span></div>
+<p style="margin:0">은 구하려는 양들 사이에 다음 관계를 준다.</p>
+<div class="eq">$\theta^2=\dfrac23\dfrac{v_0^2}{gR}\,.$<span class="n">(33)</span></div>
+<p style="margin:0">이 값을 식 (30)에 대입하면, 최종적으로 원 궤도를 따라 운동하는 속력을 얻는다.</p>
+<div class="eq">$v_1=\theta\sqrt{\dfrac{gR}2}=\dfrac{v_0}{\sqrt3}\,.$<span class="n">(34)</span></div>
+</div>
+<div class="foot">이론 라운드. 해설.</div>
+</div>
+</body></html>
