@@ -241,7 +241,8 @@
       "backgroundRemoved": null,
       "sourceSha256": "7e59262ecb35233d09d2777456a054c4059d4fc9fcbbde71c00b445216c33c62",
       "notes": [
-        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "An SVG gamma lift (0.45, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "A 0.20 per-channel additive floor and 0.80 amplitude raise pure blue/navy luminance in the reviewed dark UI; original alpha and white remain unchanged.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
