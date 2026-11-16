@@ -7,7 +7,8 @@ import worker from './src/index.js';
 import { assessMonthlyAuthorship, monthlySubmissionView } from './src/monthly-policy.js';
 
 const NOW = Date.parse('2026-11-01T12:00:00+09:00') / 1000;
-const CLOSE = Date.parse('2026-12-01T00:00:00+09:00') / 1000;
+// the November set closes at the end of December (exclusive cutoff 2027-01-01 00:00 KST)
+const CLOSE = Date.parse('2027-01-01T00:00:00+09:00') / 1000;
 const equation = '$a^2+b^2=c^2$';
 const disclosure = 'As an AI language model, I can present a derivation.';
 const metadata = 'The generated message has "role": "assistant" in its metadata.';

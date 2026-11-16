@@ -11,6 +11,8 @@ import { isProblemPeriod, isoMonth, canonicalProblemPeriod, CURRENT_MONTHLY_PERI
 const seconds = iso => Date.parse(iso) / 1000;
 const OCTOBER_NOW = seconds('2026-10-30T22:00:00+09:00');
 const NOVEMBER_END = seconds('2026-12-01T00:00:00+09:00');
+// the November set, extended to the end of December (exclusive cutoff 2027-01-01 00:00 KST)
+const EXTENDED_END = seconds('2027-01-01T00:00:00+09:00');
 
 function database() {
   const sql = new DatabaseSync(':memory:');
@@ -61,7 +63,7 @@ async function student(sql) {
   const token = 'monthly-local-student'.padEnd(48, 'x');
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('base64url');
   sql.prepare("INSERT INTO users(id,username,nickname,pw,role,created_at) VALUES(1,'monthly-student','Monthly student','local-unused','user',?)").run(OCTOBER_NOW - 86400);
-  sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,1,?,?)').run(hash, OCTOBER_NOW - 86400, NOVEMBER_END + 31 * 86400);
+  sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,1,?,?)').run(hash, OCTOBER_NOW - 86400, EXTENDED_END + 31 * 86400);
   return token;
 }
 
@@ -157,7 +159,7 @@ test('October visitors see the active November month, and legacy weekly API link
     assert.equal(monthly.data.week, '2026-11');
     assert.deepEqual(monthly.data.problems.map(p => p.id), [4, 5, 6]);
     assert.deepEqual(monthly.data.problems.map(p => p.no), [1, 2, 3], 'remaining problems use consecutive display numbers');
-    assert.ok(monthly.data.problems.every(p => p.closes_at === NOVEMBER_END && p.open));
+    assert.ok(monthly.data.problems.every(p => p.closes_at === EXTENDED_END && p.open));
     const legacy = await api(env, '/weekly?week=2026-W44&lang=ko', { token });
     assert.equal(legacy.status, 200);
     assert.equal(legacy.data.week, '2026-11');
@@ -175,13 +177,13 @@ test('October visitors see the active November month, and legacy weekly API link
   });
 });
 
-test('November 30 remains ranked through 23:59:59 KST; December begins practice and releases solutions', async t => {
-  t.mock.timers.enable({ apis: ['Date'], now: new Date((NOVEMBER_END - 1) * 1000) });
+test('December 31 remains ranked through 23:59:59 KST; January begins practice and releases solutions', async t => {
+  t.mock.timers.enable({ apis: ['Date'], now: new Date((EXTENDED_END - 1) * 1000) });
   await environment(async ({ sql, binding, env }) => {
     await publishWeeklyContent(binding);
     await migrateMonthlyPeriod(binding);
     cloneProblem(sql, {id:7,week:'2026-11',no:7});
-    sql.prepare('UPDATE problems SET closes_at=? WHERE id=7').run(NOVEMBER_END);
+    sql.prepare('UPDATE problems SET closes_at=? WHERE id=7').run(EXTENDED_END);
     const token = await student(sql);
     const before = await api(env, '/problems/7?lang=ko', { token });
     assert.equal(before.status, 200);
@@ -191,7 +193,7 @@ test('November 30 remains ranked through 23:59:59 KST; December begins practice 
     assert.equal(ranked.status, 200);
     assert.equal(ranked.data.score, 0);
     assert.equal(sql.prepare('SELECT in_week FROM submissions WHERE id=?').get(ranked.data.id).in_week, 1);
-    t.mock.timers.setTime(NOVEMBER_END * 1000);
+    t.mock.timers.setTime(EXTENDED_END * 1000);
     const closed = await api(env, '/problems/7?lang=ko', { token });
     assert.equal(closed.data.problem.open, false);
     assert.ok(closed.data.problem.solution?.length > 0);

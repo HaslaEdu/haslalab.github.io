@@ -208,13 +208,13 @@
 
   /* ── a one-off announcement on arrival: "다시 보지 않기" remembers it on this device; it ends by itself ── */
   const NOTICE_TEXT = {
-    ko: { title: "월별문제 촬영 제출, 다시 됩니다 📸",
-      body: ["답안지 사진이 판독되지 않던 오류를 고쳤습니다.", "이번 달 문제 5개, 다시 도전해 보세요!", "상위 3명에게는 토큰 9·6·3개를 드립니다 (마감 12월 1일 00:00)."],
+    ko: { title: "월별문제 마감, 12월 31일까지 연장 ⏳",
+      body: ["11월 월별문제 5개의 마감을 12월 말까지 늘렸습니다.", "답안지 사진 제출도 잘 됩니다. 다시 도전해 보세요!", "상위 3명에게는 토큰 9·6·3개를 드립니다 (마감 2027년 1월 1일 00:00)."],
       go: "월별문제 풀러 가기", close: "닫기", never: "다시 보지 않기" },
-    en: { title: "Photo answers for the Monthly Problems work again 📸",
-      body: ["We fixed the error that stopped answer-sheet photos from being read.", "Five problems this month: give them another try!", "The top 3 get 9, 6 and 3 tokens (deadline: Dec 1, 00:00 KST)."],
+    en: { title: "Monthly Problems extended to December 31 ⏳",
+      body: ["The five November Monthly Problems now close at the end of December.", "Photo answers work too: give them another try!", "The top 3 get 9, 6 and 3 tokens (deadline: Jan 1, 2027, 00:00 KST)."],
       go: "Go to the Monthly Problems", close: "Close", never: "Don't show again" } };
-  const NOTICE = { key: "hl-notice-2026-11-monthly-scan", until: Date.parse("2026-12-01T00:00:00+09:00"), href: "#/monthly" };
+  const NOTICE = { key: "hl-notice-2026-12-monthly-extended", until: Date.parse("2027-01-01T00:00:00+09:00"), href: "#/monthly" };
   let noticeShown = false;
   function notice() {
     if (noticeShown || Date.now() >= NOTICE.until) return;

@@ -36,10 +36,10 @@ DISPLAY_VECTORS = {
 DARK_GAMMA = {"cpho": 0.40, "rupho": 0.40, "ruphow": 0.40, "ruphox": 0.40,
               "ruphoy": 0.40, "iypt": 0.45, "ibo": 0.45, "ijso": 0.45,
               "useso": 0.40, "iao": 0.45, "owao": 0.45, "apho": 0.45,
-              "eupho": 0.45, "kphe": 0.45, "amc": 0.45}
+              "eupho": 0.45, "kphe": 0.45, "amc": 0.45, "fipho": 0.45}
 # Pure blue/navy retains a low luminance even after gamma. A small additive
 # floor lifts those reviewed marks on dark UI; white stays white and alpha stays.
-DARK_FLOOR = {key: 0.20 for key in ("iao", "owao", "apho", "eupho", "kphe", "amc")}
+DARK_FLOOR = {key: 0.20 for key in ("iao", "owao", "apho", "eupho", "kphe", "amc", "fipho")}
 PALE_INK = {"imcho"}  # The published IMChO mark is effectively one dark navy ink.
 # Reviewed flat-paper wordmarks: white enclosed by A/O/P/etc. is paper, not
 # white ink. Preserve the illustrated emblem to the left of these x positions.
