@@ -106,6 +106,27 @@
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
+    "bpo": {
+      "original": "logo/bpo.png",
+      "light": "logo/light/bpo.svg",
+      "dark": "logo/dark/bpo.svg",
+      "sourceWidth": 510,
+      "sourceHeight": 474,
+      "viewBox": [
+        0,
+        0,
+        510,
+        474
+      ],
+      "aspectRatio": 1.075949,
+      "mode": "monochrome-dark-ink",
+      "backgroundRemoved": null,
+      "sourceSha256": "68a7d59c46ffb5f7ed5b39cb38c74561ded261505ad40bc862062cfa573747ab",
+      "notes": [
+        "Dark display uses #ded5ee ink via an SVG luminance/alpha filter; source white holes and original transparency remain open.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
     "ceso": {
       "original": "logo/ceso.png",
       "light": "logo/light/ceso.svg",
@@ -718,6 +739,27 @@
       "sourceSha256": "750d44494bfd090a25b5a9fbd016f3132f0258530d09f7b5ccf2d639d7a5a16c",
       "notes": [
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "oibf": {
+      "original": "logo/oibf.png",
+      "light": "logo/light/oibf.svg",
+      "dark": "logo/dark/oibf.svg",
+      "sourceWidth": 606,
+      "sourceHeight": 804,
+      "viewBox": [
+        0,
+        0,
+        606,
+        804
+      ],
+      "aspectRatio": 0.753731,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "fbd018d5b40e878302baf71113cc2f818ba8ca5ed2ff850f52d13f50edf282ac",
+      "notes": [
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
