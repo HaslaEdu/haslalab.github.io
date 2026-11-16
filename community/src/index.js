@@ -64,6 +64,7 @@ import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 import { createAccountSecurityRouter, ensureAccountSecuritySchema } from './account-security.js';
 import { createSignupEmail, ensureSignupCodeSchema, CODE_HELD } from './signup-email.js';
+import { APPLE, appleConfigured, appleClientSecret, appleSubject, keepAppleToken, revokeAppleTokens } from './oauth-apple.js';
 import { setAiTrainConsent, aiTrainAllowed } from './consent.js';
 import { ensureConsentSchema, consentInfo, requestCountry, readConsent, recordConsent, consentStatus, decorateConsent, setTrainConsent, dropTrainRows, trainAllowed, CONSENT_COLUMNS, consentOf, TRAIN_KEEP_SEC } from './consent.js';
 
@@ -467,6 +468,8 @@ async function handle(req, env, url, ctx) {
     await forgetMember(env.DB, me.id);
     // HPhO entries, seats and phones, and the proctoring photos, recordings and answer pages kept in R2 (files first)
     const hphoRows = await hphoForgetUser(env.DB, env.HPHO_SNAPS || env.LAB_PAGES, me.id);
+    // Sign in with Apple: revoke this member's Apple tokens before the link goes (App Store Guideline 5.1.1(v))
+    await revokeAppleTokens(env, me.id);
     await env.DB.batch([
       ...hphoRows,
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
@@ -868,7 +871,7 @@ const worker = {
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     const url = new URL(req.url);
     if (!url.pathname.startsWith("/api/")) return json({ error: "not_found" }, 404, cors);
-    if (req.method === "GET" && /^\/api\/oauth\/(google|discord|naver|github|kakao)\/(start|callback)$/.test(url.pathname)) {
+    if (req.method === "GET" && /^\/api\/oauth\/(google|discord|naver|github|kakao|apple)\/(start|callback)$/.test(url.pathname)) {
       try { return await oauthRoute(req, env, url); }
       catch (e) { console.error(e && e.stack || e); return new Response("Sign-in failed", { status: 500 }); }
     }
@@ -5135,6 +5138,8 @@ const OAUTH = {
             me: "https://api.github.com/user", scope: "", pkce: false },
   kakao: { auth: "https://kauth.kakao.com/oauth/authorize", token: "https://kauth.kakao.com/oauth/token",
            me: "https://kapi.kakao.com/v2/user/me", scope: "profile_nickname", pkce: false },
+  // Sign in with Apple (oauth-apple.js): signed client secret, user id from the id_token, no user-info call
+  apple: APPLE,
 };
 /* every request to a provider says who it is: Discord's API (behind Cloudflare) can refuse requests that carry no
    User-Agent, and GitHub refuses them outright */
@@ -5143,7 +5148,8 @@ const OAUTH_UA = "HaslaLab (https://haslalab.org, 1.0)";
    (never a token or a secret) */
 const oauthWhy = (step, status, body) => [step, status, String((body && (body.error || body.code || body.message)) || "").toLowerCase()]
   .filter(x => x !== "").join("-").replace(/[^a-z0-9_-]+/gi, "_").slice(0, 60);
-const oauthKeys = (env, p) => ({ id: env[p.toUpperCase() + "_CLIENT_ID"], secret: env[p.toUpperCase() + "_CLIENT_SECRET"] });
+const oauthKeys = (env, p) => p === "apple" ? { id: env.APPLE_CLIENT_ID, secret: appleConfigured(env) ? "signed-per-request" : null }
+  : ({ id: env[p.toUpperCase() + "_CLIENT_ID"], secret: env[p.toUpperCase() + "_CLIENT_SECRET"] });
 function oauthProviders(env) { return Object.keys(OAUTH).filter(p => { const k = oauthKeys(env, p); return k.id && k.secret; }); }
 const mockable = (env, u) => env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(u).pathname : u;
 function allowedReturn(env, raw) {
@@ -5218,6 +5224,7 @@ async function oauthRoute(req, env, url) {
     if (P.scope) q.set("scope", P.scope);
     if (P.pkce) { q.set("code_challenge", b64u(await crypto.subtle.digest("SHA-256", enc.encode(verifier)))); q.set("code_challenge_method", "S256"); }
     if (prov === "google") q.set("prompt", "select_account");
+    if (prov === "apple") q.set("response_mode", "query");   // no scope asked for, so Apple may return by GET like the others
     return new Response(null, { status: 302, headers: { Location: (env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(P.auth).pathname : P.auth) + "?" + q, "Cache-Control": "no-store" } });
   }
   /* callback */
@@ -5235,13 +5242,18 @@ async function oauthRoute(req, env, url) {
 async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
   const code = url.searchParams.get("code");
   if (!code) return oauthBack(env,st.return_to, "e=oauth_cancelled");
-  const form = new URLSearchParams({ grant_type: "authorization_code", code, client_id: keys.id, client_secret: keys.secret, redirect_uri: redirectUri });
+  const form = new URLSearchParams({ grant_type: "authorization_code", code, client_id: keys.id, client_secret: prov === "apple" ? await appleClientSecret(env) : keys.secret, redirect_uri: redirectUri });
   if (st.verifier) form.set("code_verifier", st.verifier);
   if (prov === "naver") form.set("state", st.state);
   let tr, tj;
   try { tr = await fetch(mockable(env, P.token), { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json", "User-Agent": OAUTH_UA }, body: form }); tj = await tr.json().catch(() => ({})); }
   catch (e) { console.error("oauth token", prov, "network", String(e && e.message || e).slice(0, 120)); return oauthBack(env, st.return_to, "e=oauth_failed&d=token-network"); }
   if (!tr.ok || !tj.access_token) { const why = oauthWhy("token", tr.status, tj); console.error("oauth token", prov, why); return oauthBack(env,st.return_to, "e=oauth_failed&d=" + why); }
+  if (prov === "apple") {
+    const appleSub = appleSubject(tj.id_token, keys.id);
+    if (!appleSub) { console.error("oauth token", prov, "id_token"); return oauthBack(env, st.return_to, "e=oauth_failed&d=token-id_token"); }
+    return oauthSignIn(req, env, prov, appleSub, "", st, userId => keepAppleToken(env.DB, appleSub, userId, tj.refresh_token));
+  }
   let mr, mj;
   try { mr = await fetch(mockable(env, P.me), { headers: { Authorization: "Bearer " + tj.access_token, Accept: "application/json", "User-Agent": OAUTH_UA } }); mj = await mr.json().catch(() => ({})); }
   catch (e) { console.error("oauth profile", prov, "network", String(e && e.message || e).slice(0, 120)); return oauthBack(env, st.return_to, "e=oauth_failed&d=profile-network"); }
@@ -5250,6 +5262,11 @@ async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
   if (!mr.ok || !sub) { const why = oauthWhy("profile", mr.status, mj); console.error("oauth profile", prov, why); return oauthBack(env,st.return_to, "e=oauth_failed&d=" + why); }
   const name = prov === "google" ? (prof.name || prof.given_name) : prov === "discord" ? (prof.global_name || prof.username)
     : prov === "github" ? (prof.name || prof.login) : prov === "kakao" ? ((prof.kakao_account || {}).profile || prof.properties || {}).nickname : (prof.nickname || prof.name);
+  return oauthSignIn(req, env, prov, sub, name, st);
+}
+/* The provider has said who this is (sub): sign in, link, or make the account, then return to the site.
+   afterUser(userId) runs once the account is known (Apple keeps its refresh token for revocation). */
+async function oauthSignIn(req, env, prov, sub, name, st, afterUser = null) {
   /* whatever the account's state: a suspended account answers as its password sign-in does (account_suspended) and nothing
      is made; a link left behind by a deleted account is dropped, so the person can sign up afresh */
   let found = await env.DB.prepare("SELECT i.user_id, u.deleted FROM identities i LEFT JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=?").bind(prov, sub).first();
@@ -5272,6 +5289,7 @@ async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
     userId = res.meta.last_row_id; fresh = 1;
     await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, userId, now()).run();
   }
+  if (afterUser) await afterUser(userId);
   if(st.return_to.startsWith('desktop:'))return desktopOAuth.finish(env,st.return_to,userId,fresh);
   const one = b64u(crypto.getRandomValues(new Uint8Array(24)));
   await env.DB.prepare("INSERT INTO oauth_codes(code_hash,user_id,fresh,created_at) VALUES(?,?,?,?)").bind(await sha256(one), userId, fresh, now()).run();

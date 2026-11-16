@@ -10,6 +10,21 @@ export class StudioProvider extends WorkerEntrypoint {
   async responses(args) { useEgress(this.env); return studioResponses(this.env,args); }
   async imageEdit(args) { useEgress(this.env); return studioImageEdit(this.env,args); }
 }
+// Named service-binding RPC for the HaslaEdu Worker (haslaedu-web src/account-sync.js): which of these account ids
+// have been deleted, so a withdrawal made on haslalab.org also removes the member's Hasla Nonsul records. Only answers
+// for ids it is given (no listing of accounts), and only deleted ones (deleted=1; suspended accounts are not deleted).
+export class AccountEvents extends WorkerEntrypoint {
+  async deletedAmong(ids) {
+    const wanted = [...new Set((Array.isArray(ids) ? ids : []).filter(id => Number.isSafeInteger(id) && id > 0))].slice(0, 500);
+    const out = [];
+    for (let i = 0; i < wanted.length; i += 90) {
+      const part = wanted.slice(i, i + 90);
+      const rows = (await this.env.DB.prepare(`SELECT id FROM users WHERE deleted=1 AND id IN (${part.map(() => '?').join(',')})`).bind(...part).all()).results || [];
+      for (const row of rows) out.push(Number(row.id));
+    }
+    return out;
+  }
+}
 export default {
   fetch(request,env,ctx) {
     useEgress(env);

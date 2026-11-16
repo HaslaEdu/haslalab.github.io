@@ -95,6 +95,7 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 | 네이버 | developers.naver.com → 애플리케이션 등록 → 네이버 로그인(별명 또는 이름 제공 항목만 선택). PC 웹 서비스 URL은 `https://haslalab.org` | `https://haslalab-community.haslalab.workers.dev/api/oauth/naver/callback` | `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET` |
 | GitHub | github.com/settings/developers → OAuth Apps → New OAuth App. Homepage URL은 `https://haslalab.org` | `https://haslalab-community.haslalab.workers.dev/api/oauth/github/callback` | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` |
 | 카카오 | developers.kakao.com → 내 애플리케이션 → 앱 추가. 카카오 로그인 활성화, 동의항목에서 닉네임(`profile_nickname`) 설정, 보안에서 Client Secret 생성·사용함 | `https://haslalab-community.haslalab.workers.dev/api/oauth/kakao/callback` | `KAKAO_CLIENT_ID`(REST API 키), `KAKAO_CLIENT_SECRET` |
+| Apple | developer.apple.com → Identifiers에서 Services ID 생성, Sign In with Apple 켜고 Domains `haslaedu.kr`·Return URL 등록. Keys에서 Sign In with Apple 키 생성(.p8). 이름·이메일은 요청하지 않음(`src/oauth-apple.js`) | `https://haslaedu.kr/api/oauth/apple/callback` (`OAUTH_REDIRECT_PROVIDERS`에 `apple`) | `APPLE_CLIENT_ID`(Services ID), `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY`(.p8 내용) |
 
 키를 넣은 서비스만 버튼이 켜지고, 넣지 않은 서비스는 흐리게 「관리자가 아직 연결하지 않았습니다」로 보입니다. 로컬 시험에서는 `.dev.vars`의 `OAUTH_MOCK_BASE`로 가짜 로그인 서버를 가리킵니다.
 
