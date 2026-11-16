@@ -1,0 +1,205 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* FiPhO 2021 experiment solutions, translated on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:11.6pt;line-height:13.9pt;font-family:"Times New Roman",CM,serif}
+.a{position:absolute}
+.flow{position:absolute;left:85.1pt;width:485pt}
+p{margin:0 0 4pt;text-align:justify;text-indent:0}
+.fl{float:right;clear:right}
+p.in{text-indent:28pt}
+h1{font-size:12.5pt;font-weight:bold;margin:0 0 10pt}
+h2{font-size:11.6pt;font-weight:bold;margin:8pt 0 8pt}
+.eq{position:relative;text-align:center;margin:3pt 0;overflow:hidden}
+.eq .n{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+.foot{display:none}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:8pt;line-height:9pt;text-align:center;font-family:Arial,sans-serif;font-weight:bold}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="1" data-clip="500,770,580,805"></span></div>
+<div class="a" style="left:320pt;top:117pt"><span class="fig" data-srcpage="1" data-clip="320,117,569,264"></span></div>
+<div class="a" style="left:100pt;top:448pt"><span class="fig" data-srcpage="1" data-clip="100,448,497,737"></span>
+<span class="ov" style="left:172pt;top:9.5pt;width:54pt;height:15pt;line-height:15pt;font-size:11pt">Graph 1</span>
+<span class="ov" style="left:201pt;top:265.5pt;width:28pt;height:13pt;line-height:13pt;font-size:9.5pt">m (N)</span>
+<span class="ov" style="left:8.5pt;top:129pt;width:14pt;height:31pt;line-height:14pt;font-size:9.5pt;writing-mode:vertical-rl;transform:rotate(180deg)">X (cm)</span></div>
+<div class="flow" style="top:54pt">
+<h1 style="font-size:15pt;margin-bottom:12pt">Investigation of the friction force (Solution)</h1>
+<h1 style="font-size:13pt;margin-bottom:12pt">Part 1. Friction on a cylindrical rod</h1>
+</div>
+<div class="flow" style="top:117pt;width:232pt">
+<p style="margin:0">1.1 When the load moves down, at the moment it stops the forces satisfy the relations</p>
+<div class="eq" style="text-align:left;padding-left:8pt">$\begin{cases}T_0=mg\\T_1=\gamma T_0\\T_1=k\Delta x_1\end{cases}\ \Rightarrow\ k\Delta x_1=\gamma mg\,.$</div>
+<p style="margin:0">From these equations it follows that</p>
+<div class="eq">$x_2=l_0+\gamma\dfrac{mg}k\,.$<span class="n">(1)</span></div>
+</div>
+<div class="flow" style="top:272pt">
+<p style="margin:0">When the load moves up, we have the equations</p>
+<div class="eq">$\begin{cases}T_1=mg\\T_1=\gamma T_0\\T_0=k\Delta x_1\end{cases}\ \Rightarrow\ \gamma k\Delta x_1=\gamma mg\,,$</div>
+<p style="margin:0">from which it follows that</p>
+<div class="eq">$x_1=l_0+\dfrac{mg}{\gamma k}\,.$<span class="n">(2)</span></div>
+<p style="margin:16pt 0 0">1.2 The required graphs of the experimental dependences of the spring lengths $x_1$ and $x_2$ on the number of suspended loads $n$ are shown in the figure</p>
+</div>
+<div class="foot" style="display:none"></div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="2" data-clip="500,770,580,805"></span></div>
+<div class="flow" style="top:55pt;line-height:14.2pt">
+<p style="margin:0">1.3 The coefficients and their errors are computed by the method of least squares with the formulas:</p>
+<div class="eq">$Y_i=aX_i+b$</div>
+<p style="margin:0">&nbsp;Calculation of the coefficients:</p>
+<p style="margin:10pt 0 0">- the mean values, which define the centre of the experimental points:</p>
+<div class="eq">$\langle X\rangle=\dfrac{\sum X_i}N\,;\qquad\langle Y\rangle=\dfrac{\sum Y_i}N\,;$</div>
+<p style="margin:0">&nbsp;- the variances (the mean square minus the square of the mean),</p>
+<div class="eq">$S_X^2=\dfrac{\sum X_i^2}N-\langle X\rangle^2\,;\qquad S_Y^2=\dfrac{\sum Y_i^2}N-\langle Y\rangle^2\,;$</div>
+<p style="margin:0">- the covariance coefficient (the mean of the product minus the product of the means):</p>
+<div class="eq">$R_{XY}=\dfrac{\sum X_iY_i}N-\langle X\rangle\cdot\langle Y\rangle\,;$</div>
+<p style="margin:0">-&nbsp; the coefficients:</p>
+<div class="eq">$a=\dfrac{R_{XY}}{S_X^2}\,;\qquad b=\langle Y\rangle-a\langle X\rangle\,;$</div>
+<p style="margin:0">- the errors of the coefficients:</p>
+<div class="eq">$\Delta a=t_{N-1,p}\sqrt{\dfrac1{N-2}\left(\dfrac{S_Y^2}{S_X^2}-a^2\right)}\qquad\Delta b=\Delta a\sqrt{S_X^2+\langle X\rangle^2}$</div>
+<p style="margin:22pt 0 0">The results of the calculation of the coefficients of the dependences built are</p>
+<div class="eq">$a_1=(3.66\pm0.15)\,{\rm cm},\quad\varepsilon_a=0.04$<br>$b_1=(8.9\pm0.7)\,{\rm cm},\quad\varepsilon_b=0.07$<span class="n">(3)</span></div>
+<div class="eq">$a_2=(2.19\pm0.14)\,{\rm cm},\quad\varepsilon_a=0.06$<br>$b_2=(8.1\pm0.6)\,{\rm cm},\quad\varepsilon_b=0.08$<span class="n">(4)</span></div>
+<p style="margin:16pt 0 0">1.4. We rewrite the theoretical formulas so as to express the values of the coefficients found</p>
+<div class="eq">$x_1=l_0+\dfrac{mg}{\gamma k}=l_0+\dfrac{m_{el}g}{\gamma k}n$<br>$x_2=l_0+\gamma\dfrac{mg}k=l_0+\gamma\dfrac{m_{el}g}kn$<span class="n">(5)</span></div>
+<p style="margin:0">These formulas show that the coefficients of the experimental dependences are expressed through the parameters of the setup as follows:</p>
+<div class="eq">$b_1=b_2=l_0$<br>$a_1=\dfrac{m_{el}g}{\gamma k}$<br>$a_2=\gamma\dfrac{m_{el}g}k$<span class="n">(6)</span></div>
+<p style="margin:0">These formulas let us calculate the values of the parameters of the setup.</p>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="3" data-clip="500,770,580,805"></span></div>
+<div class="flow" style="top:55pt;line-height:14.3pt">
+<p style="margin:0"><u>The length of the undeformed spring</u> is approximately</p>
+<div class="eq">$l_0\approx b_1\approx b_2\,.$<span class="n">(7)</span></div>
+<p style="margin:0">Note that the experimental values of these parameters agree within the errors. To make the result more accurate, the mean value of the two should be taken</p>
+<div class="eq">$\langle l_0\rangle=\dfrac12(b_1+b_2)=8.5\,{\rm cm}\,.$<span class="n">(8)</span></div>
+<p style="margin:0">Then the error of this value is</p>
+<div class="eq">$\Delta l_0=\dfrac12\sqrt{(\Delta b_1)^2+(\Delta b_1)^2}\approx0.5\,{\rm cm}\,.$<span class="n">(9)</span></div>
+<p style="margin:0">Finally</p>
+<div class="eq"><span style="border:1px solid #000;padding:1pt 3pt">$\langle l_0\rangle=(8.5\pm0.5)\,{\rm cm}$</span><span class="n">(10)</span></div>
+<p style="margin:18pt 0 0"><u>The spring constant</u> is calculated with the formula</p>
+<div class="eq">$\begin{cases}a_1=\dfrac{m_{el}g}{\gamma k}\\a_2=\gamma\dfrac{m_{el}g}k\end{cases}\ \Rightarrow\ a_1\cdot a_2=\left(\dfrac{m_{el}g}k\right)^2\ \Rightarrow\ k=\dfrac{m_{el}g}{\sqrt{a_1\cdot a_2}}$<span class="n">(11)</span></div>
+<p style="margin:0">Substituting the numerical data in SI units gives</p>
+<div class="eq">$\bar k=\dfrac{m_{el}g}{\sqrt{a_1\cdot a_2}}=\dfrac{0.100\cdot9.81}{\sqrt{3.66\cdot2.19\cdot10^{-2}}}=34.65\dfrac{\rm N}{\rm m}\,.$</div>
+<p style="margin:0">The error of the value found is calculated with the formula</p>
+<div class="eq">$\Delta k=\dfrac{\bar k}2\sqrt{(\varepsilon_{a1})^2+(\varepsilon_{a2})^2}=1.3\dfrac{\rm N}{\rm m}\,.$</div>
+<p style="margin:0">Thus we finally obtain</p>
+<div class="eq"><span style="border:1px solid #000;padding:1pt 3pt">$\bar k=(34.7\pm1.3)\dfrac{\rm N}{\rm m}$</span><span class="n">(12)</span></div>
+<p style="margin:18pt 0 0">The coefficient of reduction of the tension of the thread can be calculated with the formula</p>
+<div class="eq">$\begin{cases}a_1=\dfrac{m_{el}g}{\gamma k}\\a_2=\gamma\dfrac{m_{el}g}k\end{cases}\ \Rightarrow\ \dfrac{a_2}{a_1}=\gamma^2\ \Rightarrow\ \gamma=\sqrt{\dfrac{a_2}{a_1}}\,.$<span class="n">(13)</span></div>
+<p style="margin:0">The numerical value of this coefficient</p>
+<div class="eq">$\bar\gamma=\sqrt{\dfrac{a_2}{a_1}}=0.773\,,$</div>
+<p style="margin:0">and its error</p>
+<div class="eq">$\Delta\gamma=\dfrac{\bar\gamma}2\sqrt{(\varepsilon_{a1})^2+(\varepsilon_{a2})^2}=0.03\,.$<span class="n">(14)</span></div>
+<p style="margin:0">Finally, the value</p>
+<div class="eq"><span style="border:1px solid #000;padding:1pt 3pt">$\bar\gamma=0.77\pm0.03$</span><span class="n">(15)</span></div>
+<p style="margin:18pt 0 0">The coefficient of friction of the thread on the rod can be found with the Euler formula</p>
+<div class="eq">$\gamma=\exp(-\mu\alpha)\ \Rightarrow\ \mu=-\dfrac{\ln\gamma}\alpha$<span class="n">(15)</span></div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="4" data-clip="500,770,580,805"></span></div>
+<div class="a" style="left:83pt;top:310pt"><span class="fig" data-srcpage="4" data-clip="83,310,552,384"></span>
+<span class="ov" style="left:3.2pt;top:4.4pt;width:132pt;height:16.2pt;line-height:16.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">Thread position</span>
+<span class="ov" style="left:191.6pt;top:4.4pt;width:54pt;height:16.2pt;line-height:16.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">$a_1$, cm</span>
+<span class="ov" style="left:246.8pt;top:4.4pt;width:54pt;height:16.2pt;line-height:16.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">$a_2$, cm</span>
+<span class="ov" style="left:3.2pt;top:22.6pt;width:132pt;height:15.2pt;line-height:15.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal;text-align:left;padding-left:4pt">Horizontal</span>
+<span class="ov" style="left:3.2pt;top:38.7pt;width:132pt;height:15.2pt;line-height:15.2pt;font-size:11.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal;text-align:left;padding-left:4pt">At an angle</span>
+<span class="ov" style="left:3.2pt;top:54.9pt;width:132pt;height:15.4pt;line-height:15.4pt;font-size:11.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal;text-align:left;padding-left:4pt">Vertical</span></div>
+<div class="a" style="left:330pt;top:400pt"><span class="fig" data-srcpage="4" data-clip="330,400,565,597"></span></div>
+<div class="flow" style="top:55pt;line-height:14.3pt">
+<p style="margin:0">With the thread (1) vertical, the angle of wrap around the rod is $\alpha=\pi$. Taking this value into account we get:</p>
+<div class="eq">$\bar\mu=-\dfrac{\ln\bar\gamma}\pi=0.0818\,.$<span class="n">(20)</span></div>
+<p style="margin:0">The error of the value of the friction coefficient found has to be calculated with the formula</p>
+<div class="eq">$\Delta\bar\mu=\dfrac{\Delta\bar\gamma}{\pi\bar\gamma}=0.012\,.$<span class="n">(21)</span></div>
+<p style="margin:0">Finally</p>
+<div class="eq"><span style="border:1px solid #000;padding:1pt 3pt">$\bar\mu=0.082\pm0.012$</span><span class="n">(20)</span></div>
+<p style="margin:20pt 0 0;line-height:21pt">1.5. With the thread horizontal, $\alpha_1=\dfrac\pi2$; if the thread is at an angle $\varphi=45^\circ$ to the horizontal, then $\alpha_1=\dfrac\pi2+\dfrac\pi4=\dfrac34\pi$. The coefficients $\gamma$ and $\mu$ can be calculated with formulas (13) and (15). The results of the calculations are given in the table.</p>
+</div>
+<div class="flow" style="top:394pt;width:240pt;line-height:13.8pt">
+<p style="margin:0">1.6. To check the applicability of the Euler formula, it can be written on a semi-logarithmic scale:</p>
+<div class="eq">$-\ln\gamma=\mu\alpha$<span class="n">(20)</span></div>
+<p style="margin:0">If this formula holds, the dependence of the quantity $Y=-\ln\gamma$ on the angle $\alpha$ must be linear, and its graph must pass through the origin. The figure shows the graph of this dependence, which confirms that the Euler formula holds in this case.</p>
+<p style="margin:12pt 0 0">1.7. To refine the value of the friction coefficient, the arithmetic mean of the three values calculated for the different positions of the thread can be computed.</p>
+</div>
+<div class="flow" style="top:622pt;line-height:14.3pt">
+<div class="eq">$\langle\mu\rangle=\dfrac{\mu_1+\mu_3+\mu_2}3=0.0809\,.$</div>
+<p style="margin:0">The error of this value is</p>
+<div class="eq">$\Delta\langle\mu\rangle=\dfrac{\Delta\bar\mu}{\sqrt3}=0.007$</div>
+<p style="margin:0">Therefore the final value of the friction coefficient should be taken as</p>
+<div class="eq" style="margin-top:14pt"><span style="border:1px solid #000;padding:1pt 3pt">$\langle\mu\rangle=0.081\pm0.007$</span></div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="5" data-clip="500,770,580,805"></span></div>
+<div class="a" style="left:291pt;top:191pt"><span class="fig" data-srcpage="5" data-clip="291,191,570,425"></span></div>
+<div class="flow" style="top:55pt;line-height:14.3pt">
+<h1 style="font-size:13pt;margin-bottom:12pt">Part 2. Sliding friction on a horizontal surface.</h1>
+<p style="margin:0">2.1. The graphs show that the box does not start moving at once, but only when the mass of the suspended loads exceeds a certain value. Until then the coordinate of the box is $x_0=44.0\,{\rm cm}$, which is the answer to the question of this item.</p>
+<p style="margin:14pt 0 0">2.2. It is not hard to write the equilibrium conditions of all the bodies of this setup and to obtain formulas for the measured coordinates of the boundaries of the stagnation zone.</p>
+</div>
+<div class="flow" style="top:190pt;width:200pt;line-height:14pt">
+<p style="margin:0;text-indent:28pt">When the suspended loads are slowly displaced down, we can write (see the figure, which shows the tension forces of the threads in the system)</p>
+<div class="eq" style="text-align:left">$k(x_2-x_0)=\gamma m_1g-F\ \Rightarrow$<br>$x_2=x_0+\dfrac{\gamma m_1g-F}k$<span class="n">(21)</span></div>
+<p style="margin:0">When the suspended loads are slowly displaced up, similar calculations lead to the result</p>
+<div class="eq" style="text-align:left">$\gamma\left(k(x_1-x_0)-F\right)=m_1g\ \Rightarrow$<br>$x_1=x_0+\dfrac{\dfrac{m_1g}\gamma+F}k$<span class="n">(22)</span></div>
+</div>
+<div class="flow" style="top:440pt;line-height:14.3pt">
+<p style="margin:0">2.3. We obtain the formulas for calculating the required parameters of the setup through the measured quantities (the coefficients of the linear dependences). For this we rewrite the theoretical formulas taking into account that the mass of the suspended loads is set by their number, $m_1=m_{el}n_1$.</p>
+<p style="margin:0">Then for the left boundary of the stagnation zone we obtain</p>
+<div class="eq">$x_2=x_0+\dfrac{\gamma m_1g-F}k=\dfrac{\gamma m_{el}g}kn_1+x_0-\dfrac Fk\,.$<span class="n">(23)</span></div>
+<p style="margin:0">Comparing with the formula describing the experimental dependence,</p>
+<div class="eq">$x_2=a_2n_1+b_2$</div>
+<p style="margin:0">we find that the coefficients of this dependence are</p>
+<div class="eq">$a_2=\dfrac{\gamma m_{el}g}k,\quad b_2=x_0-\dfrac Fk$<span class="n">(24)</span></div>
+<p style="margin:0">Similarly for the right boundary of the stagnation zone:</p>
+<div class="eq">$x_1=\dfrac{m_{el}g}{\gamma k}n_1+\left(x_0+\dfrac Fk\right)=a_1n_1+b_1\,,$</div>
+<p style="margin:0">from which it follows that</p>
+<div class="eq">$a_1=\dfrac{m_{el}g}{\gamma k},\quad b_1=\left(x_0+\dfrac Fk\right)$<span class="n">(25)</span></div>
+<p style="margin:0">Now it is not hard to find that the parameters of the setup can be obtained from the coefficients of the experimental dependences as</p>
+<div class="eq">$k=\dfrac{m_{el}g}{\sqrt{a_1\cdot a_2}}$<span class="n">(26)</span></div>
+</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="6" data-clip="500,770,580,805"></span></div>
+<div class="a" style="left:83pt;top:178pt"><span class="fig" data-srcpage="6" data-clip="83,178,421,289"></span>
+<span class="ov" style="left:28.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">$a_1$, cm</span>
+<span class="ov" style="left:72.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">$b_1$, cm</span>
+<span class="ov" style="left:116.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">$a_2$, cm</span>
+<span class="ov" style="left:160.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">$b_2$, cm</span>
+<span class="ov" style="left:248.0pt;top:4.8pt;width:43pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">$k,\ \frac{\rm N}{\rm m}$</span>
+<span class="ov" style="left:292.0pt;top:4.8pt;width:42.4pt;height:30.2pt;line-height:30.2pt;font-size:10.5pt;font-family:'Times New Roman',CM,serif;font-weight:normal">$F$, N</span></div>
+<div class="a" style="left:296pt;top:339pt"><span class="fig" data-srcpage="6" data-clip="296,339,568,545"></span>
+<span class="ov" style="left:50pt;top:10.5pt;width:172pt;height:10pt;line-height:10pt;font-size:7.3pt">Friction force versus the number of loads</span>
+<span class="ov" style="left:10.5pt;top:97pt;width:8pt;height:20pt;line-height:8pt;font-size:7pt;writing-mode:vertical-rl;transform:rotate(180deg)">F (N)</span></div>
+<div class="flow" style="top:55pt;line-height:14.3pt">
+<div class="eq">$\gamma=\sqrt{\dfrac{a_2}{a_1}}\,.$<span class="n">(27)</span></div>
+<div class="eq">$F=\dfrac{b_1-b_2}2k\,.$<span class="n">(28)</span></div>
+<p style="margin:0">2.3. The results of the calculations with these formulas are given in the following table.</p>
+<p style="margin:12pt 0 0">Table of item 2.3.</p>
+</div>
+<div class="flow" style="top:304pt;line-height:14.3pt">
+<p style="margin:0">2.4 To determine the parameters $\gamma$ and $k$ as accurately as possible, it is enough to compute their arithmetic means over all the results obtained:</p>
+</div>
+<div class="flow" style="top:336pt;width:200pt;line-height:14pt">
+<div class="eq">$\langle\gamma\rangle=0.95$<br>$\langle k\rangle=33.8\dfrac{\rm N}{\rm m}\,.$<span class="n">(29)</span></div>
+<p style="margin:8pt 0 0">2.5 To calculate the friction force we use formula (28), taking the numerical value of the spring constant equal to its mean value (29). The results of these calculations are given in the last column of Table 2.3. The graph of the dependence obtained is shown in the figure.</p>
+</div>
+<div class="flow" style="top:560pt;line-height:14.3pt">
+<p style="margin:0">2.6. The dependence obtained is linear, $F=an_0+b$. The coefficients of this dependence, calculated by the least-squares method, are</p>
+<div class="eq">$a=0.341\,{\rm N}$<br>$b=0.148$<span class="n">(30)</span></div>
+<p style="margin:0">Theoretically the dependence of the friction force on the number of loads in the box is given by the Coulomb–Amontons law</p>
+<div class="eq">$F=\mu(m_{el}n_0+m_b)g\,.$<span class="n">(31)</span></div>
+<p style="margin:0">From these formulas, the coefficient of friction of the box on the surface is</p>
+<div class="eq">$\mu=\dfrac a{m_{el}g}\approx0.35\,.$<span class="n">(32)</span></div>
+<p style="margin:0">And the mass of the box</p>
+<div class="eq">$m_b=\dfrac b{\mu g}\approx43\,{\rm g}\,.$<span class="n">(33)</span></div>
+</div>
+</div>
+</body></html>

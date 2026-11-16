@@ -1,0 +1,436 @@
+<!doctype html><html><head><meta name="page" content="595.32,841.92">
+<style>
+/* FiPhO 2021 theory solutions, translated on the original's pages (tools/ko_reflow/build.py) */
+body{font-size:11.6pt;line-height:13.9pt;font-family:"Times New Roman",CM,serif}
+.a{position:absolute}
+.flow{position:absolute;left:85.1pt;width:485pt}
+p{margin:0 0 4pt;text-align:justify;text-indent:0}
+.fl{float:right;clear:right}
+p.in{text-indent:28pt}
+h1{font-size:12.5pt;font-weight:bold;margin:0 0 10pt}
+h2{font-size:11.6pt;font-weight:bold;margin:8pt 0 8pt}
+.eq{position:relative;text-align:center;margin:3pt 0;overflow:hidden}
+.eq .n{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+.foot{position:absolute;left:85.1pt;top:792pt;font-size:12pt}
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:8pt;line-height:9pt;text-align:center;font-family:Arial,sans-serif;font-weight:bold}
+</style></head>
+<body>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="1" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:405pt;top:372pt"><span class="fig" data-srcpage="1" data-clip="405,372,584,607"></span></div>
+<div class="a" style="left:425pt;top:592pt"><span class="fig" data-srcpage="1" data-clip="425,592,556,778"></span></div>
+<div class="flow" style="top:97pt">
+<h1>Problem 1. Warm-up</h1>
+<h2 style="margin-top:0">Problem 1.1 The sinking rod</h2>
+<p>While the rod is being lowered, the following forces act on it:</p>
+<p style="margin:0">A) The force of gravity, applied at the centre of mass of the rod (the rod is uniform, so at its middle) and directed vertically downward, equal to</p>
+<div class="eq">$F_0=mg=\rho_0 Sl\,g$<span class="n">(1)</span></div>
+<p>$S$ is the cross-sectional area of the rod.</p>
+<p style="margin:0">B) The buoyant (Archimedes) force, applied at the centre of mass of the displaced liquid (the middle of the submerged part of the rod, of length $z$) and directed vertically upward, equal to</p>
+<div class="eq">$F_A=\rho Sz\,g\,.$<span class="n">(2)</span></div>
+<p style="margin:0">C) The required tension $F$ of the thread is applied at the upper end of the rod and directed vertically upward.</p>
+<p style="margin:0">D) If the rod touches the bottom, the normal reaction force of the bottom $\vec N$, directed vertically upward, acts at the point of contact (the lower end of the rod).</p>
+<p style="margin:0">Since the rod is lowered slowly, at every moment the rod can be taken to be in equilibrium, i.e. the sum of the forces acting on the rod and the sum of their torques are zero.</p>
+<div class="fl" style="width:178pt;height:440pt"></div>
+<p style="margin:0">Let us now consider the different stages of lowering the rod.</p>
+<p style="margin:0;padding-left:18pt;text-indent:-14pt">1. &nbsp;The rod is vertical and does not touch the bottom.</p>
+<p style="margin:0">In this case the equilibrium condition of the rod reads</p>
+<div class="eq">$F=mg-F_A$<span class="n">(3)</span></div>
+<p style="margin:0">The depth of the submerged part of the rod is $z=x$. Substituting the expressions for the forces, we obtain the tension of the thread (which equals the reading of the dynamometer)</p>
+<div class="eq" style="text-align:left">$F=mg-F_A=\rho_0Sl\,g-\rho Sx\,g=\rho_0Sl\,g\left(1-\dfrac{\rho}{\rho_0}\dfrac xl\right)=$<br>$=F_0\left(1-\eta\dfrac xl\right)$<span class="n">(4)</span></div>
+<p style="margin:0">2. The rod is tilted at some angle $\varphi$ to the vertical and does not touch the bottom. We write the sum of the torques of gravity and of the buoyant force about the upper end of the rod (see the figure):</p>
+<div class="eq" style="text-align:left;padding-left:60pt">$M=-mg\dfrac l2\sin\varphi+F_A\left(l-\dfrac z2\right)\sin\varphi=$<br>$=-\rho_0Sl\,g\dfrac l2\sin\varphi+\rho Sz\,g\left(l-\dfrac z2\right)\sin\varphi=$<br>$=-F_0\dfrac l2\sin\varphi\left(1-\eta\dfrac zl\left(2-\dfrac zl\right)\right)$<span class="n">(5)</span></div>
+<p style="margin:0">It follows from this formula that the equilibrium position can be reached in two cases: when $\varphi=0$ (the rod is vertical); and when</p>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="2" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:345pt;top:574pt"><span class="fig" data-srcpage="2" data-clip="345,574,568,700"></span></div>
+<div class="flow" style="top:97pt">
+<div class="eq">$1-\eta\dfrac zl\left(2-\dfrac zl\right)=0$<span class="n">(6)</span></div>
+<p style="margin:0">This equation has the real roots</p>
+<div class="eq">$u=\dfrac zl=1\pm\sqrt{1-\dfrac1\eta}$<span class="n">(7)</span></div>
+<p style="margin:0">only if $\eta=\dfrac{\rho}{\rho_0}\ge1$, i.e. if the density of the liquid is larger than the density of the rod, and the rod can float in the liquid. The larger root of this equation is larger than 1, so it can be discarded. Therefore the only root that has a physical meaning is</p>
+<div class="eq">$u_0=\dfrac zl=1-\sqrt{1-\dfrac1\eta}$<span class="n">(7)</span></div>
+<p style="margin:0">To determine when the vertical position of the rod corresponds to a stable equilibrium, we return once more to the expression (5) for the torques. Let the rod be immersed to a depth $x$ and deflected from the vertical by a small angle. In this case the length of the submerged part is approximately $z=x$. The vertical position is stable if $M\le0$. This condition holds when the depth of immersion of the rod satisfies the condition (this is easy to show by analysing the expression in the brackets in formula (5)):</p>
+<div class="eq">$x&lt;u_0l$<span class="n">(8)</span></div>
+<p style="margin:0">For $x&gt;u_0l$ the vertical position becomes unstable and the rod deviates from the vertical by some angle that depends on $x$. In this case the equilibrium condition is therefore given by equation (6). It is important to note that the solution of this equation does not depend on $x$: hence the length of the submerged part of the rod stays constant and is given by formula (7)</p>
+<div class="eq">$z=u_0l\,.$<span class="n">(9)</span></div>
+<p style="margin:0">Therefore the buoyant force and the tension of the thread also stay constant, and the reading of the dynamometer is</p>
+<div class="eq">$F=mg-F_A=\rho_0Sl\,g-\rho Sz\,g=\rho_0Sl\,g\left(1-\dfrac{\rho}{\rho_0}\dfrac zl\right)=F_0\left(1-\eta u_0\right)$<span class="n">(10)</span></div>
+</div>
+<div class="flow" style="top:552pt"><p style="margin:0">3. The lower end of the rod touches the bottom, and its upper end is above the surface of the liquid.</p></div>
+<div class="flow" style="top:580pt;width:256pt">
+<p style="margin:0;text-indent:28pt">In this case the depth of immersion of the rod is fixed by the quantity $x$. From the figure we easily find</p>
+<div class="eq">$z=\dfrac{h}{\cos\varphi},\quad\cos\varphi=\dfrac{l+h-x}{l}\,.$<span class="n">(11)</span></div>
+<p style="margin:0">It follows that</p>
+<div class="eq">$z=\dfrac{lh}{l+h-x}\,.$<span class="n">(12)</span></div>
+</div>
+<div class="flow" style="top:700pt">
+<p style="margin:0;text-indent:28pt">To find the tension of the thread, we write the equilibrium condition for the torques about the lower end $D$ of the rod, which rests on the bottom of the bath</p>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="3" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:271pt;top:302pt"><span class="fig" data-srcpage="3" data-clip="271,302,576,500"></span></div>
+<div class="a" style="left:279pt;top:601pt"><span class="fig" data-srcpage="3" data-clip="279,601,588,800"></span></div>
+<div class="flow" style="top:97pt">
+<div class="eq" style="text-align:left;padding-left:40pt">$F_A\dfrac z2\sin\varphi-mg\dfrac l2\sin\varphi+Fl\sin\varphi=0\ \ \Rightarrow$<br>$F=\dfrac12mg-\dfrac12F_A\dfrac zl=\dfrac12\rho_0Sl\,g-\dfrac12\rho Sz\dfrac zl=\dfrac12F_0\left(1-\eta\left(\dfrac zl\right)^2\right).$<span class="n">(13)</span></div>
+<p style="margin:0">4. The rod touches the bottom and is completely under water.</p>
+<p style="margin:0">In this case the length of the submerged part is $z=l$, so formula (14) gives</p>
+<div class="eq">$F=\dfrac12F_0(1-\eta)$<span class="n">(13)</span></div>
+<p style="margin:0">Obviously, the last cases occur for $\eta&lt;1$, when the rod sinks.</p>
+<p style="margin:0">The formulas obtained let us plot the required graphs.</p>
+<p style="margin:0">A) A light rod ($\eta=\dfrac{\rho}{\rho_0}=2$) is first immersed vertically; the tension of the thread</p>
+</div>
+<div class="flow" style="top:292pt;width:180pt">
+<p style="margin:0">changes according to formula (4):</p>
+<div class="eq">$\dfrac F{F_0}=1-2\dfrac xl$<span class="n">(14)</span></div>
+<p style="margin:0">until the vertical position loses its stability. This happens at</p>
+<div class="eq" style="text-align:left">$u_0=\dfrac{x_0}l=1-\sqrt{1-\dfrac12}\approx0.29\ \Rightarrow$<br>$x_0=0.29\,{\rm m}$</div>
+<p style="margin:0">Note that the rod does not reach the bottom.</p>
+<p style="margin:0">After that the tension of the thread stays constant and equal to:</p>
+</div>
+<div class="flow" style="top:503pt">
+<div class="eq">$F=F_0(1-\eta u_0)\ \Rightarrow\ \dfrac F{F_0}=0.41\,.$<span class="n">(15)</span></div>
+<p style="margin:0">Finally, at $x=l$ the rod lies horizontally on the surface of the liquid, and the tension of the thread becomes zero.</p>
+<p style="margin:0">Strictly speaking, the transition to zero happens smoothly rather than as a jump. But to describe this smooth transition one has to take the transverse size of the rod into account, which goes beyond this problem.</p>
+</div>
+<div class="flow" style="top:618pt;width:188pt">
+<p style="margin:0">B) A heavy rod ($\eta=\dfrac{\rho}{\rho_0}=\dfrac12$) is immersed vertically until its lower end reaches the bottom, which happens at $x=h$. The change of the tension of the thread on this stage is described by the formula</p>
+<div class="eq" style="text-align:left">$\dfrac F{F_0}=1-\dfrac12\dfrac xl$</div>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="4" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:100pt;line-height:15pt">
+<p style="margin:0">At this value $x=h=\dfrac l2$ the tension of the thread can take values from the maximum value $F_{\max}=\dfrac34F_0$ down to the minimum value at which the vertical position of the rod becomes unstable: $F_{\min}=\dfrac7{16}F_0$. At this value of the tension the bottom acts on the rod with the force $\dfrac5{16}F_0$.</p>
+<p style="margin:0">After that the rod tilts gradually, and its upper end stays above the surface of the water until $x=l$. On this stage the tension is described by formulas (12)–(13):</p>
+<div class="eq">$F=\dfrac12F_0\left(1-\dfrac12\left(\dfrac h{l+h-x}\right)^2\right).$</div>
+<p style="margin:0">For $x\ge l$ the upper end of the rod is under water, and $F=\dfrac14F_0$. Finally, at $x=l+h$ the rod lies on the bottom, and the tension of the thread becomes zero.</p>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="5" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:430pt;top:116pt"><span class="fig" data-srcpage="5" data-clip="430,116,568,240"></span></div>
+<div class="flow" style="top:97pt;width:342pt">
+<h2 style="margin:0 0 12pt">Problem 1.2 A bug on a cord</h2>
+<p style="margin:0;text-indent:28pt">Let us picture the motion of the bug as motion along a circle whose radius grows with time.</p>
+<p style="margin:0;text-indent:28pt">The circumference of the circle (equal to the length of the cord) grows with time as</p>
+<div class="eq">$L=l_0+Vt\,.$<span class="n">(1)</span></div>
+<p style="margin:0">Hence its radius changes as</p>
+<div class="eq">$R(t)=\dfrac L{2\pi}=\dfrac{l_0+Vt}{2\pi}\,.$<span class="n">(2)</span></div>
+</div>
+<div class="flow" style="top:241pt">
+<p style="margin:0">In a short time interval $dt$ the bug crawls the distance $vdt$, i.e. it turns through the angle</p>
+<div class="eq">$d\varphi=\dfrac{2\pi vdt}{l_0+Vt}$<span class="n">(3)</span></div>
+<p style="margin:0">Integrating this expression, we obtain the angle through which the bug has turned as a function of time</p>
+<div class="eq">$\varphi(t)=\displaystyle\int_0^t\dfrac{2\pi vdt}{l_0+Vt}=2\pi v\int_0^t\dfrac{dt}{l_0+Vt}=2\pi\dfrac vV\ln\dfrac{l_0+Vt}{l_0}\,.$<span class="n">(4)</span></div>
+<p style="margin:0">When the bug has crawled half of the cord, its angle of turn is $\varphi=\pi$, and when it reaches the end of the cord, $\varphi=2\pi$.</p>
+<p style="margin:0;text-indent:28pt">The problem can also be solved without the artificial, though illustrative, "rolling" of the cord into a circle. One can proceed more formally.</p>
+<p style="margin:0"><u>Option 1.</u></p>
+<p style="margin:0;text-indent:28pt">Let the position of the bug be given by its coordinate $x$, its distance from the fixed wall. This coordinate then satisfies the equation:</p>
+<div class="eq">$\dfrac{dx}{dt}=V\dfrac x{l_0+Vt}+v$<span class="n">(5)</span></div>
+<p style="margin:0">It is not hard to solve this equation and then to set the coordinate of the bug equal to the changing length of the cord.</p>
+<p style="margin:6pt 0 0"><u>Option 2.</u> Let $\xi=\dfrac x{l_0+Vt}$ be the fraction of the length of the cord that the bug has crawled. Then this quantity satisfies the equation</p>
+<div class="eq">$\dfrac{d\xi}{dt}=\dfrac v{l_0+Vt}$<span class="n">(6)</span></div>
+<p style="margin:0">This equation follows both from simple logical reasoning and as a consequence of equation (5). Note that it is fully equivalent to equation (3).</p>
+<p style="margin:0">The solution of this equation is</p>
+<div class="eq">$\xi=\dfrac vV\ln\dfrac{l_0+Vt}{l_0}\,.$<span class="n">(3)</span></div>
+<p style="margin:0">From which the required times follow:</p>
+<p style="margin:0">To the middle of the cord</p>
+<div class="eq">$\tau_{0.5}=\dfrac{l_0}V\exp\left(\dfrac12\dfrac Vv\right)\approx9.2\cdot10^{17}\ \text{years}$</div>
+<p style="margin:0">To the end of the cord</p>
+<div class="eq">$\tau_{0.5}=\dfrac{l_0}V\exp\left(\dfrac Vv\right)\approx8.5\cdot10^{35}\ \text{years}.$</div>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="6" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:366pt;top:194pt"><span class="fig" data-srcpage="6" data-clip="366,194,569,277"></span></div>
+<div class="a" style="left:448pt;top:611pt"><span class="fig" data-srcpage="6" data-clip="448,611,567,706"></span></div>
+<div class="flow" style="top:97pt">
+<h2 style="margin:0 0 18pt;padding-left:25pt">Problem 1.3. A modernized Young's scheme</h2>
+<p style="margin:0;text-indent:28pt">Let the central slit $S_0$ produce at the point $A$ of the screen, at the distance $x$ from the axis of symmetry, an oscillation described by the function</p>
+<div class="eq" style="text-align:left;padding-left:110pt">$E_0=A\cos(\omega t-\varphi_0)$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)</div>
+</div>
+<div class="flow" style="top:203pt;width:277pt">
+<p style="margin:0">The quantity $E_0$ can be regarded as the electric field strength of the light wave. Then the oscillations produced by the side slits at the same point are described by the functions</p>
+</div>
+<div class="flow" style="top:292pt">
+<div class="eq">$E_{1,2}=A\cos(\omega t-\varphi_0\pm\Delta\varphi)\,.$<span class="n">(2)</span></div>
+<p style="margin:0">The quantity $\Delta\varphi$ is the additional phase shift due to the displacement of the slits by the distance $d$. As is well known, this phase shift is proportional to the coordinate $x$ of the point $A$ on the screen</p>
+<div class="eq">$\Delta\varphi=ax\,,$<span class="n">(3)</span></div>
+<p style="margin:6pt 0 0">where $a$ is a constant that depends on the wavelength, the distance between the slits and the distance between the plate and the screen. The exact expression for this constant is not needed to solve the problem.</p>
+<p style="margin:8pt 0 0">1.3.1 With only two slits, the resulting oscillation is described by the function</p>
+<div class="eq">$E=A\cos(\omega t-\varphi_0-\Delta\varphi)+A\cos(\omega t-\varphi_0+\Delta\varphi)=2A\cos(\omega t-\varphi_0)\cdot\cos(\Delta\varphi)$<span class="n">(4)</span></div>
+<p style="margin:6pt 0 0;text-indent:28pt">The intensity of light is proportional to the time average of the square of the field strength. With only two slits this intensity is</p>
+<div class="eq">$I_{(2)}=\left\langle\left(2A\cos(\omega t-\varphi_0)\cdot\cos(\Delta\varphi)\right)^2\right\rangle=2A^2\cos^2(\Delta\varphi)=4I_{(1)}\cos^2(\Delta\varphi)$<span class="n">(5)</span></div>
+<p style="margin:0">where $I_{(1)}$ is the intensity of light produced by one source.</p>
+</div>
+<div class="flow" style="top:597pt;width:358pt">
+<p style="margin:0">The same result can be obtained by adding the oscillations with the method of vector (phasor) diagrams. The diagram of the oscillations is shown in the figure; it shows that the amplitude of the resulting oscillation is</p>
+<div class="eq">$A_{(2)}=2A\cos\Delta\varphi$<span class="n">(6)</span></div>
+<p style="margin:0">Then the intensity of light, proportional to the square of the amplitude, is</p>
+</div>
+<div class="flow" style="top:712pt">
+<div class="eq">$I_{(2)}=4I_{(1)}\cos^2\Delta\varphi=4I_{(1)}\cos^2ax\,.$<span class="n">(7)</span></div>
+<p style="margin:0">The constant $a$ is easily found from the graph given. It is convenient to write it as</p>
+<div class="eq">$a=\dfrac\pi\delta\,,$<span class="n">(8)</span></div>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="7" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:422pt;top:157pt"><span class="fig" data-srcpage="7" data-clip="422,157,548,252"></span></div>
+<div class="a" style="left:78pt;top:348pt"><span class="fig" data-srcpage="7" data-clip="78,348,557,627"></span>
+<span class="ov" style="left:120pt;top:9pt;width:245pt;height:13pt;line-height:13pt;font-size:9.7pt">Intensity versus coordinate</span>
+<span class="ov" style="left:195pt;top:258.5pt;width:100pt;height:11pt;line-height:11pt;font-size:8.2pt">Coordinate X (mm)</span>
+<span class="ov" style="left:8.5pt;top:87.5pt;width:11pt;height:104pt;line-height:11pt;font-size:8.2pt;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center">Intensity (arb. units)</span></div>
+<div class="flow" style="top:97pt">
+<p style="margin:0">where $\delta=2.0\,{\rm mm}$ is the width of an interference fringe on the screen. The quantity $I_{(1)}$ equals 1.</p>
+</div>
+<div class="flow" style="top:130pt;width:330pt">
+<p style="margin:0">1.3.2 With three slits, three oscillations produced by the three slits have to be added. The vector diagram of these oscillations is shown in the next figure. In this case the amplitude of the total oscillation is</p>
+<div class="eq">$A_{(3)}=2A\cos\Delta\varphi+A\,.$<span class="n">(9)</span></div>
+<p style="margin:0">Accordingly, the intensity of light is described by the function</p>
+<div class="eq">$I_{(2)}=(2A\cos\Delta\varphi+A)^2=I_{(1)}(1+2\cos ax)^2$<span class="n">(10)</span></div>
+</div>
+<div class="flow" style="top:262pt">
+<p style="margin:0">The parameters of this function are the same as in the previous case: $I_{(1)}=1$, $a=\dfrac\pi\delta$, $\delta=2.0\,{\rm mm}$. The graph of this function is easily built "point by point". The result is shown in the figure</p>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="8" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.6pt">
+<h1>Problem 2. Physics of popcorn</h1>
+<h2>Part 1. Critical bursting pressure</h2>
+<p style="margin:10pt 0 0">1.1 Since the expansion of the gases after the shell bursts is very fast, this process can be taken to be adiabatic. We use the equation of the adiabatic process</p>
+<div class="eq">$P_{cr}V_0^\gamma=P_0V_1^\gamma$<span class="n">(1)</span></div>
+<p style="margin:0">The expansion goes from the initial volume of the kernel $V_0$ (at a pressure equal to the critical bursting pressure $P_{cr}$) to the volume of the flake formed $V_1$ (at a pressure equal to atmospheric). Since the volumes of the particles are proportional to the cube of their radii, the required critical pressure is given by</p>
+<div class="eq">$P_{cr}=P_0\left(\dfrac{V_1}{V_0}\right)^\gamma=P_0\left(\dfrac{r_1}{r_0}\right)^{3\gamma}\approx19\,{\rm atm}=19\cdot10^5\,{\rm Pa}\,.$<span class="n">(2)</span></div>
+<p style="margin:12pt 0 0">1.2 The change of the mass of the kernel (i.e. the mass of the evaporated moisture) can be neglected. Then the ratio of the volumes equals the inverse ratio of the densities, so</p>
+<div class="eq">$P_{cr}=P_0\left(\dfrac{V_1}{V_0}\right)^\gamma=P_0\left(\dfrac{\rho_0}{\rho_1}\right)^\gamma\approx16\,{\rm atm}=16\cdot10^5\,{\rm Pa}\,.$<span class="n">(3)</span></div>
+<p style="margin:12pt 0 0">1.3 To relate the maximum pressure inside the kernel to the maximum mechanical stress the shell can withstand, we can use the Laplace formula for the excess pressure. The analogue of the surface tension coefficient (the force per unit length) is the product of the maximum strength and the thickness of the shell, $\sigma_ch$. By the Laplace formula, the pressure difference inside and outside the shell is</p>
+<div class="eq">$\Delta P=P_{cr}-P_0=\dfrac{2\sigma_ch}{r_0}\,.$<span class="n">(4)</span></div>
+<p style="margin:0">From this formula the critical pressure is estimated as</p>
+<div class="eq">$P_{cr}=\dfrac{2\sigma_ch}{r_0}+P_0\approx11\cdot10^5\,{\rm Pa}=11\,{\rm atm}\,.$<span class="n">(5)</span></div>
+<p style="margin:12pt 0 0">1.4 Of the three results obtained, the last one (5) is preferable, since the previous calculations use poorly defined parameters of the kernels and flakes: the mean radii and densities of the kernels before and after heating.</p>
+<h2 style="margin-top:12pt">Part 2. Bursting temperature.</h2>
+<p style="margin:10pt 0 0">2.1 The heating of the kernels can be taken to be isochoric, since the shell of the kernel is strong enough and hardly compressible. For this process</p>
+<div class="eq">$\dfrac{P_0}{T_0}=\dfrac{P_{cr}}{T_{cr}}\,.$<span class="n">(6)</span></div>
+<p style="margin:0">From which we find the temperature to which the dry air inside the kernel must be heated</p>
+<div class="eq">$T_{cr}=T_0\dfrac{P_{cr}}{P_0}=293K\dfrac{11}1=3200K\approx3000^\circ C\,.$<span class="n">(7)</span></div>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="9" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.6pt">
+<p style="margin:0">The absurdity of this result shows that the observed effect cannot be explained without taking the evaporation of water into account.</p>
+<p style="margin:14pt 0 0">2.2 When the kernel is heated, the moisture it contains evaporates, and the water vapour is saturated. The kernel bursts when the pressure of the saturated water vapour reaches the value $\Delta P$ given by formula (4). Note that here we neglect the pressure of the water vapour at room temperature and the change of the pressure of the dry air on heating. These approximations are acceptable within the accuracy set by the data given.</p>
+<p style="margin:0">From the formula given in the problem, we find the temperature at which the pressure of the saturated water vapour becomes $\Delta P\approx10\,{\rm atm}$:</p>
+<div class="eq">$T_{cr}=\dfrac{T_0}{1-\dfrac{RT_0}{ML}\ln\dfrac{P_S}{P_0}}=\dfrac{T_0}{1-\dfrac{RT_0}{ML}\ln\dfrac{\Delta P}{P_0}}=450\,K\,.$<span class="n">(8)</span></div>
+<p style="margin:0">Or $t_{cr}\approx180^\circ C$, a quite realistic and reasonable estimate!</p>
+<p style="margin:14pt 0 0">2.3 At room temperature the pressure of the saturated water vapour is much smaller than normal atmospheric pressure, so the mass of this vapour can be neglected, i.e. all the water can be taken to be liquid. The water vapour can also be taken to obey the Mendeleev–Clapeyron equation of state:</p>
+<div class="eq">$PV=\dfrac mMRT\ ,$<span class="n">(9)</span></div>
+<p style="margin:0">where $P=\Delta P\approx10\,{\rm atm}$ is the partial pressure of the water vapour at the moment the kernel bursts, which happens at the temperature $T_{cr}\approx450K$. From equation (9) we find the mass of evaporated water</p>
+<div class="eq" style="text-align:left;padding-left:20pt">$m=\dfrac{M\Delta PV}{RT_{cr}}=\dfrac{M\Delta P\frac43\pi r_0^3}{RT_{cr}}=\dfrac{18\cdot10^{-3}\frac{\rm kg}{\rm mol}\cdot10\cdot10^5\,{\rm Pa}\cdot\frac43\pi\left(3.1\cdot10^{-3}\,{\rm m}\right)^3}{8.31\frac{\rm J}{{\rm mol}\cdot{\rm K}}\cdot450\,K}\approx$<br>$\approx6.0\cdot10^{-7}\,{\rm kg}=0.60\,{\rm mg}$<span class="n">(10)</span></div>
+<h2 style="margin-top:14pt">Part 3. Super popcorn</h2>
+<p style="margin:10pt 0 0">3.1 At the reduced external pressure $P_1$ the equation of the adiabatic process becomes</p>
+<div class="eq">$P_{cr}V_0^\gamma=P_1(2V_1)^\gamma$<span class="n">(11)</span></div>
+<p style="margin:0">Using equation (1), we obtain</p>
+<div class="eq">$P_0V_1^\gamma=P_1(2V_1)^\gamma\ \Rightarrow\ P_1=P_0\cdot2^{-\gamma}\approx0.40\,{\rm atm}$<span class="n">(12)</span></div>
+<p style="margin:0">i.e. the external pressure must be reduced by a factor of 2.5 compared with the atmospheric pressure.</p>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="10" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:364pt;top:131pt"><span class="fig" data-srcpage="10" data-clip="364,131,571,372"></span></div>
+<div class="flow" style="top:97pt">
+<h1>Problem 3. Inside the sphere</h1>
+<h2>Part 1. General characteristics</h2>
+</div>
+<div class="flow" style="top:150pt;width:262pt">
+<p style="margin:0;padding-left:12pt;text-indent:-12pt">1.1 The ball has a gravitational energy (in the gravitational field of the earth) and an energy of Coulomb interaction (see the figure):</p>
+<div class="eq" style="text-align:left">$U=mgR(1+\cos\theta)+\dfrac{qQ}{4\pi\varepsilon_0r}=$<br>$=2mgR\cos^2\dfrac\theta2+\dfrac{qQ}{4\pi\varepsilon_0\left(2R\cos\dfrac\theta2\right)}=$<br>$=2mgR\left(\cos^2\dfrac\theta2+\dfrac{qQ}{16\pi\varepsilon_0R^2mg}\dfrac1{\cos\dfrac\theta2}\right)=$<br>$=2mgR\left(\cos^2\dfrac\theta2+\dfrac f{\cos\dfrac\theta2}\right)$<span class="n">(1)</span></div>
+</div>
+<div class="flow" style="top:405pt">
+<p style="margin:0">In writing this expression we used the fact that the distance between the charges $|AB|$ equals $r=2R\cos\dfrac\theta2$. The change of the potential energy when the ball is displaced from the top position is described by:</p>
+<div class="eq">$\Delta U=2mgR\left(\cos^2\dfrac\theta2+\dfrac f{\cos\dfrac\theta2}-1-f\right).$<span class="n">(2)</span></div>
+<p style="margin:16pt 0 0">1.2 The torques of the forces can be computed as derivatives of the potential energy</p>
+<div class="eq">$M=-\dfrac{\partial U}{\partial\theta}\,.$<span class="n">(3)</span></div>
+<p style="margin:0">These torques are also easily expressed directly from the figure above. The lever arm of gravity $m\vec g$ is the length of the segment $|CB|=R\sin\theta$, so its torque is</p>
+<div class="eq">$M_{mg}=mgR\sin\theta\,.$<span class="n">(4)</span></div>
+<p style="margin:0">The Coulomb force of interaction of the charges is</p>
+<div class="eq">$F=\dfrac{qQ}{4\pi\varepsilon_0\left(2R\cos\dfrac\theta2\right)^2}=\dfrac{qQ}{16\pi\varepsilon_0R^2}\cdot\dfrac1{\cos^2\dfrac\theta2}=mg\dfrac f{\cos^2\dfrac\theta2}\,.$<span class="n">(5)</span></div>
+<p style="margin:0">The lever arm of this force is the segment $|OD|=R\sin\dfrac\theta2$,</p>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="11" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:299pt;top:226pt"><span class="fig" data-srcpage="11" data-clip="299,226,569,460"></span>
+<span class="ov" style="left:100pt;top:13.5pt;width:74pt;height:11pt;line-height:11pt;font-size:8.5pt">Torques</span>
+<span class="ov" style="left:15.5pt;top:58pt;width:7.5pt;height:106pt;line-height:7.5pt;font-size:6.6pt;writing-mode:vertical-rl;transform:rotate(180deg)">Torques (Mg, Me)</span>
+<span class="ov" style="left:101pt;top:210.5pt;width:96pt;height:10pt;line-height:10pt;font-size:6.8pt">deflection angle (theta)</span></div>
+<div class="a" style="left:296pt;top:532pt"><span class="fig" data-srcpage="11" data-clip="296,532,569,770"></span>
+<span class="ov" style="left:46pt;top:17.5pt;width:182pt;height:11pt;line-height:11pt;font-size:8.5pt">Change of the potential energy</span>
+<span class="ov" style="left:15.5pt;top:72pt;width:8.5pt;height:85pt;line-height:8.5pt;font-size:6.6pt;writing-mode:vertical-rl;transform:rotate(180deg)">Potential energy</span>
+<span class="ov" style="left:104pt;top:213.5pt;width:96pt;height:10pt;line-height:10pt;font-size:6.8pt">deflection angle (theta)</span></div>
+<div class="flow" style="top:97pt">
+<p style="margin:0">so the torque of the Coulomb force is given by</p>
+<div class="eq">$M_e=-mgR\dfrac{f\sin\dfrac\theta2}{\cos^2\dfrac\theta2}\,.$<span class="n">(6)</span></div>
+<p style="margin:14pt 0 0">1.3 The graph of function (4) is obvious: it is a portion of a sine curve.</p>
+</div>
+<div class="flow" style="top:212pt;width:205pt">
+<p style="margin:0">To build a schematic graph of function (6), note that in the range considered this function is increasing (both the magnitude of the Coulomb force and its lever arm grow).</p>
+<p style="margin:0">Next we compare the behaviour of these functions near zero. Using the approximate formulas for trigonometric functions, we get approximate formulas for the torques:</p>
+<div class="eq">$M_g=mgR\sin\theta\approx mgR\cdot\theta\,.$<span class="n">(7)</span></div>
+<div class="eq">$|M_e|=mgR\dfrac{f\sin\dfrac\theta2}{\cos^2\dfrac\theta2}\approx mgRf\cdot\dfrac\theta2\,.$<span class="n">(8)</span></div>
+<p style="margin:0">These expressions show that for $f&lt;2$ the torque of gravity grows faster, so in this case</p>
+</div>
+<div class="flow" style="top:458pt">
+<p style="margin:0">the graphs of the functions considered have a point of intersection (other than $\theta=0$). For $f=2$ the graphs touch each other near zero. Finally, for $f&gt;2$ the torque of the Coulomb force grows faster than the torque of gravity.</p>
+</div>
+<div class="flow" style="top:518pt;width:202pt">
+<p style="margin:0">1.4 The difference of the magnitudes of the torques is the derivative (taken with the opposite sign) of the potential energy. Therefore, for $f&lt;2$ the dependence of the potential energy on the deflection angle $\Delta U(\theta)$ has a maximum point (at $\theta=0$), then decreases, reaches a minimum (at the point of intersection of the graphs considered above), and then starts to grow. For $f&gt;2$ the dependence $\Delta U(\theta)$ has a minimum point at $\theta=0$ and then grows monotonically. The case $f=2$ is the boundary one. The required graphs are shown in the next figure.</p>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="12" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.4pt">
+<p style="margin:0">1.5 The condition that the ball does not leave the inner surface of the sphere during its motion can be stated as follows: the normal reaction force $\vec N$ of the sphere is always larger than zero. For this condition to hold, the projection of the Coulomb force on the radial direction must be larger than or equal to the projection of gravity on the same direction, i.e.</p>
+<div class="eq">$F\cos\dfrac\theta2&gt;mg\cos\theta\ \Rightarrow\ mg\dfrac f{\cos\dfrac\theta2}\ge mg\cos\theta\ \Rightarrow\ f\ge\cos\theta\cos\dfrac\theta2\,.$<span class="n">(9)</span></div>
+<p style="margin:0">The maximum value of the product of the cosines is 1, so the required condition finally reads</p>
+<div class="eq">$f\ge1.$<span class="n">(10)</span></div>
+<p style="margin:0">In other words, if the ball does not leave the surface at the top point, it does not leave it at any other point. Note also that as the ball moves, the reaction force of the surface of the sphere can only grow, so the ball certainly does not leave the sphere.</p>
+<p style="margin:14pt 0 0">1.6 From the analysis of the graphs of the potential energy, or from the formulas for the torques near the top point, it follows that the top position is stable if</p>
+<div class="eq">$f\ge2\,.$<span class="n">(10a)</span></div>
+<h2 style="margin:4pt 0 2pt">Part 2. Motion of the ball for $f=1$.</h2>
+<p style="margin:0">2.1 From the dependence of the potential energy on the deflection angle at $f=1$ it follows that the ball starts to slide over the surface of the sphere, passes the equilibrium position by inertia and stops at the point where the change of its potential energy becomes zero. The value of the angle $\theta_{\max}$ at the extreme position can be found as the solution of the equation</p>
+<div class="eq">$\Delta U=2mgR\left(\cos^2\dfrac\theta2+\dfrac f{\cos\dfrac\theta2}-1-f\right)=0\,.$<span class="n">(11)</span></div>
+<p style="margin:0">Denote $\cos\dfrac{\theta_{\max}}2=z$; this quantity then satisfies the equation:</p>
+<div class="eq">$z^2+\dfrac fz-1-f=0\ \Rightarrow\ z^3-2z+1=0\,.$<span class="n">(12)</span></div>
+<p style="margin:0">This equation has one obvious root $z_1=1$, corresponding to the top position of the ball (the initial position). Knowing this root lets us transform equation (12) to the form:</p>
+<div class="eq">$z^3-2z+1=(z^3-z)-(z-1)=z(z^2-1)-(z-1)=(z-1)(z(z+1)-1)=0\,.$<span class="n">(13)</span></div>
+<p style="margin:0">So besides the root $z_1=1$ this equation has two more roots (the roots of a quadratic equation):</p>
+<div class="eq">$z^2+z-1=0\ \Rightarrow\ z_{2,3}=\dfrac{-1\pm\sqrt{1+4}}2\,.$<span class="n">(14)</span></div>
+<p style="margin:0">One of these roots exceeds 1 in magnitude, so the cosine cannot be equal to it for real values of the angle. So we need the root $z_2=\dfrac{\sqrt{1+4}-1}2\approx0.618$, which corresponds to the maximum deflection angle</p>
+<div class="eq">$\theta_{\max}\approx104^\circ\,.$<span class="n">(15)</span></div>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="13" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:419pt;top:319pt"><span class="fig" data-srcpage="13" data-clip="419,319,563,471"></span></div>
+<div class="flow" style="top:97pt;line-height:14.4pt">
+<p style="margin:0">2.2 In equilibrium the sum of the torques acting on the ball is zero, so</p>
+<div class="eq">$mgR\sin\theta=mgR\dfrac{f\sin\dfrac\theta2}{\cos^2\dfrac\theta2}\,.$<span class="n">(16)</span></div>
+<p style="margin:0">From this equation we find</p>
+<div class="eq">$2\sin\dfrac\theta2\cos\dfrac\theta2=\dfrac{\sin\dfrac\theta2}{\cos^2\dfrac\theta2}\ \Rightarrow\ \cos^3\dfrac\theta2=\dfrac12\ \Rightarrow\ \bar\theta=2\arccos\dfrac1{\sqrt[3]2}\approx75^\circ\,.$<span class="n">(17)</span></div>
+<p style="margin:0">As shown above, at this point the potential energy of the ball is minimal, so this equilibrium position is stable. Remark: the same result can be obtained by setting the derivative of the potential energy equal to zero.</p>
+</div>
+<div class="flow" style="top:312pt;width:325pt">
+<p style="margin:0">2.3 To describe the motion of the ball along a horizontal circle it is convenient to go over to a rotating frame of reference in which the ball is at rest. In this frame the centrifugal force of inertia $\vec F_C$ acting on the ball must be added. This force depends on the speed of the rotation, so it can take any positive value. The torque of this force has the same direction as the torque of gravity. Therefore equilibrium is possible only in the region where the magnitude of the torque of the Coulomb force is larger than the magnitude of the torque of gravity, i.e. for</p>
+<div class="eq">$\bar\theta&lt;\theta&lt;\dfrac\pi2\,.$<span class="n">(18)</span></div>
+</div>
+<div class="flow" style="top:492pt;line-height:14.4pt">
+<h2 style="margin:0 0 14pt">Part 3. Motion of the ball for $f=2$</h2>
+<p style="margin:0">The value of the parameter $f=2$ is critical (a bifurcation point). As shown above (see formulas (7)–(8)), at this value the sum of the restoring torques vanishes in the linear approximation. However, in this case too the top point is a point of stable equilibrium, since the potential curve has a minimum there. The expansion of the torques must therefore be carried to the next order of smallness in the deflection angle $\theta$. Since the torques are described by odd functions, the next order is the third, i.e. the total torque acting on the ball can be written as</p>
+<div class="eq">$M=M_g-M_e=mgR\sin\theta-2mgR\dfrac{\sin\dfrac\theta2}{\cos^2\dfrac\theta2}=-mgR\left(2\dfrac{\sin\dfrac\theta2}{\cos^2\dfrac\theta2}-\sin\theta\right)=-CmgR\cdot\theta^3\,,$<span class="n">(18)</span></div>
+<p style="margin:0">where $C$ is a dimensionless coefficient.</p>
+<p style="margin:0">Then the equation of motion of the ball near the top point is:</p>
+<div class="eq">$mR^2\dfrac{d^2\theta}{dt^2}=-CmgR\theta^3\ \Rightarrow\ \dfrac{d^2\theta}{dt^2}=-C\dfrac gR\theta^3$<span class="n">(19)</span></div>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="14" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.6pt">
+<p style="margin:0">This is a nonlinear equation describing anharmonic oscillations. Since the problem only asks for the form of the dependence of the period of oscillation on their amplitude, there is no need to look for the exact solution of equation (19). For this we bring the equation to a "dimensionless" form. We introduce the variable</p>
+<div class="eq">$\eta=\dfrac\theta{\theta_0}\,,$<span class="n">(20)</span></div>
+<p style="margin:0">the ratio of the deflection angle to its amplitude (maximum) value. We also introduce our own unit of time $t_0$, whose value we shall determine later. Time measured in units of $t_0$ is related to time in seconds by</p>
+<div class="eq">$\tau=\dfrac t{t_0}\,.$<span class="n">(21)</span></div>
+<p style="margin:0">We now rewrite equation (19) in the units we introduced ($\theta=\eta\theta_0,\ t=\tau t_0$):</p>
+<div class="eq">$\dfrac{\theta_0}{t_0^2}\dfrac{d^2\eta}{d\tau^2}=-C\dfrac gR\theta_0^3\cdot\eta^3\,.$<span class="n">(22)</span></div>
+<p style="margin:0">Now we choose the unit of time so that all the coefficients in this equation cancel, i.e.</p>
+<div class="eq">$\dfrac{\theta_0}{t_0^2}=C\dfrac gR\theta_0^3\ \Rightarrow\ t_0=\dfrac1{\theta_0}\sqrt{C\dfrac Rg}\,.$<span class="n">(23)</span></div>
+<p style="margin:0">With this unit of time equation (22)</p>
+<div class="eq">$\dfrac{d^2\eta}{dt^2}=-\eta^3\,.$<span class="n">(24)</span></div>
+<p style="margin:0">contains no parameters; moreover, the variable $\eta$ varies between -1 and +1. Therefore the period of oscillation in units of $t_0$ is some number (independent of anything). Going back to the usual units of time, we conclude that the period of oscillation is proportional to $t_0$, so the formula for the period can be written as</p>
+<div class="eq">$T=\dfrac{C_0}{\theta_0}\sqrt{\dfrac Rg}\,.$<span class="n">(25)</span></div>
+<p style="margin:24pt 0 8pt;font-size:9.5pt"><u>Remarks on the solution of Part 3.</u></p>
+<p style="margin:0;font-size:9.5pt">1. If needed, the exact expansion of the torques up to the third order can be carried out:</p>
+<div class="eq" style="text-align:left;font-size:9.5pt;line-height:12pt">$|M_e|=mgR\dfrac{2\sin\dfrac\theta2}{\cos^2\dfrac\theta2}=mgR\dfrac{2\sin\dfrac\theta2}{1-\sin^2\dfrac\theta2}\approx2mgR\sin\dfrac\theta2\left(1+\sin^2\dfrac\theta2\right)\approx$<br>$\approx2mgR\left(\dfrac\theta2-\dfrac16\left(\dfrac\theta2\right)^3\right)\left(1+\left(\dfrac\theta2\right)^2\right)\approx2mgR\left(\dfrac\theta2+\left(\dfrac\theta2\right)^3-\dfrac16\left(\dfrac\theta2\right)^3\right)=2mgR\left(\dfrac\theta2+\dfrac56\left(\dfrac\theta2\right)^3\right)=$<br>$=mgR\left(\theta+\dfrac5{24}\theta^3\right);$<br>$M_g=mgR\sin\theta\approx mgR\left(\theta-\dfrac{\theta^3}6\right);$</div>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="15" data-clip="0,30,597,95.5"></span></div>
+<div class="a" style="left:430pt;top:605pt"><span class="fig" data-srcpage="15" data-clip="430,605,575,757"></span></div>
+<div class="flow" style="top:120pt;font-size:9.5pt;line-height:12pt">
+<p style="margin:0">2. An alternative way to solve this problem can be based on the law of conservation of mechanical energy. In this case the formula for the potential energy has to be expanded up to the 4th order in the small deflection angle $\theta$.</p>
+<div class="eq">$\Delta U=2mgR\left(\cos^2\dfrac\theta2+\dfrac2{\cos\dfrac\theta2}-3\right)\approx\dfrac C4mgR\theta^4\,.$</div>
+<p style="margin:0">Here $C$ is the same constant as in formula (18). Then from the law of conservation of energy</p>
+<div class="eq">$\dfrac{mR^2}2\omega^2+\dfrac C4mgR\theta^4=\dfrac C4mgR\theta_0^4$</div>
+<p style="margin:0">We express the angular velocity of the ball</p>
+<div class="eq">$\omega=\sqrt{\dfrac C2\dfrac gR\left(\theta_0^4-\theta^4\right)}$</div>
+<p style="margin:0">and write the period of oscillation as an integral</p>
+<div class="eq">$T=2\displaystyle\int_{-\theta_0}^{+\theta_0}\dfrac{d\theta}\omega=2\int_{-\theta_0}^{+\theta_0}\dfrac{d\theta}{\sqrt{\dfrac C2\dfrac gR\left(\theta_0^4-\theta^4\right)}}$</div>
+<p style="margin:0">We change the variable in the integrand, $\eta=\dfrac\theta{\theta_0}$, which gives</p>
+<div class="eq">$T=\dfrac2{\theta_0}\sqrt{\dfrac2C\dfrac Rg}\displaystyle\int_{-1}^{+1}\dfrac{d\eta}{\sqrt{(1-\eta^4)}}\,.$</div>
+<p style="margin:0">In this expression the integral is a certain number, so the period of oscillation is given by formula (25).</p>
+</div>
+<div class="flow" style="top:420pt;line-height:14.4pt">
+<h2 style="margin:0 0 14pt">Part 4. Motion of the ball for $f=3$.</h2>
+<p style="margin:0">4.1 For $f&gt;2$ the oscillations of the ball near the top point are harmonic, since the total torque acting on the ball is proportional to the deflection angle at small angles. We use formulas (7)–(8) and write the equation of motion:</p>
+<div class="eq">$mR^2\dfrac{d^2\theta}{dt^2}=-mgR\left(\dfrac f2-1\right)\theta\ \Rightarrow\ \dfrac{d^2\theta}{dt^2}=-\dfrac g{2R}\theta\,,$<span class="n">(26)</span></div>
+<p style="margin:0">which is the equation of harmonic oscillations with the period</p>
+<div class="eq">$T=2\pi\sqrt{\dfrac{2R}g}\,.$<span class="n">(27)</span></div>
+</div>
+<div class="flow" style="top:602pt;width:340pt;line-height:14.4pt">
+<p style="margin:0">4.2 We write explicitly the equilibrium condition of the ball in the rotating non-inertial frame of reference. The torque of the centrifugal force of inertia in this frame is</p>
+<div class="eq">$M_C=\dfrac{mv_1^2}{R\sin\theta}R\cos\theta\approx\dfrac{mv_1^2}\theta\,.$<span class="n">(28)</span></div>
+<p style="margin:0">Then the condition that the torques are equal takes the form</p>
+<div class="eq">$|M_e|-M_g=M_C\ \Rightarrow\ \dfrac32mgR\theta-mgR\cdot\theta=\dfrac{mv_1^2}\theta\,.$<span class="n">(29)</span></div>
+<p style="margin:0">It follows from this equation that the linear speed of the ball and its deflection angle are related by</p>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+
+<div class="page">
+<div class="a" style="left:0;top:0"><span class="fig" data-srcpage="16" data-clip="0,30,597,95.5"></span></div>
+<div class="flow" style="top:97pt;line-height:14.4pt">
+<div class="eq">$v_1=\theta\sqrt{\dfrac{gR}2}\,.$<span class="n">(30)</span></div>
+<p style="margin:0">Note that the period of revolution of the ball along the circular orbit</p>
+<div class="eq">$T=\dfrac{2\pi R\theta}{v_1}=2\pi\sqrt{\dfrac{2R}g}\,,$</div>
+<p style="margin:0">first, does not depend on the deflection angle, and second, coincides with the period of small oscillations.</p>
+<p style="margin:0">Finally, the maximum deflection angle has to be expressed through the initial speed of the ball. For this it is convenient to use the law of conservation of energy. First we obtain the formula for the change of the potential energy of the ball at small deflection angles; for this the potential energy function has to be expanded up to the second order in the angle $\theta$:</p>
+<div class="eq" style="text-align:left;font-size:10pt">$\Delta U=2mgR\left(\cos^2\dfrac\theta2+\dfrac f{\cos\dfrac\theta2}-1-f\right)=2mgR\left(\left(1-\dfrac12\left(\dfrac\theta2\right)^2\right)^2+\dfrac f{1-\dfrac12\left(\dfrac\theta2\right)^2}-1-f\right)=$<br>$=2mgR\left(\left(1-2\dfrac12\left(\dfrac\theta2\right)^2\right)+f\left(1+\dfrac12\left(\dfrac\theta2\right)^2\right)-1-f\right)=\dfrac12mgR\left(\dfrac f2-1\right)\theta^2=\dfrac34mgR\theta^2$<span class="n">(31)</span></div>
+<p style="margin:0">The equation of the law of conservation of energy</p>
+<div class="eq">$\dfrac{mv_0^2}2=\dfrac34mgR\theta^2$<span class="n">(32)</span></div>
+<p style="margin:0">gives the following relation between the required quantities</p>
+<div class="eq">$\theta^2=\dfrac23\dfrac{v_0^2}{gR}\,.$<span class="n">(33)</span></div>
+<p style="margin:0">Substituting this value into formula (30), we finally obtain the speed of the motion along the circular path</p>
+<div class="eq">$v_1=\theta\sqrt{\dfrac{gR}2}=\dfrac{v_0}{\sqrt3}\,.$<span class="n">(34)</span></div>
+</div>
+<div class="foot">Theoretical round. Solutions.</div>
+</div>
+</body></html>
