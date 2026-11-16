@@ -3,7 +3,7 @@
 import reviewed from '../weekly/2026-W44.json' with { type: 'json' };
 import greenhouse from '../weekly/2026-11-greenhouse-part-d.json' with { type: 'json' };
 import pressureWave from '../weekly/2026-11-pressure-wave.json' with { type: 'json' };
-import { isProblemPeriod, CURRENT_MONTHLY_PERIOD, LEGACY_MONTHLY_PERIOD, MONTHLY_CLOSES_AT } from './problem-period.js';
+import { isProblemPeriod, CURRENT_MONTHLY_PERIOD, LEGACY_MONTHLY_PERIOD, MONTHLY_CLOSES_AT, MONTHLY_EXTENDED_CLOSES_AT } from './problem-period.js';
 import { retireIntroMonthlyProblems } from './monthly-answers.js';
 import { ensureAstronomyRevision } from './astronomy-revision.js';
 
@@ -62,6 +62,7 @@ export const GREENHOUSE_MONTHLY_CONTENT = validateContent(greenhouse);
 export const GREENHOUSE_PUBLICATION_ID = 'monthly-2026-11-greenhouse-part-d-v1';
 export const PRESSURE_WAVE_MONTHLY_CONTENT = validateContent(pressureWave);
 export const PRESSURE_WAVE_PUBLICATION_ID = 'monthly-2026-11-pressure-wave-v1';
+export const MONTHLY_EXTENSION_ID = 'monthly-2026-11-extend-2027-01-v1';
 
 export async function publishWeeklyContent(db, content = REVIEWED_WEEKLY_CONTENT, publicationId = WEEKLY_PUBLICATION_ID) {
   validateContent(content);
@@ -130,6 +131,24 @@ export async function migrateMonthlyPeriod(db) {
   return { changed: ids.length ? result[1].meta?.changes || 0 : 0, applied: !!result.at(-1).meta?.changes };
 }
 
+// One additive transition: the November set closes at the end of December instead of on December 1.
+// Only rows still on the original cutoff move, so a deadline an administrator has set by hand is kept.
+export async function extendMonthlyDeadline(db) {
+  await db.prepare(`CREATE TABLE IF NOT EXISTS weekly_publications (
+    id TEXT PRIMARY KEY, problems INTEGER NOT NULL, created_at INTEGER NOT NULL
+  )`).run();
+  if (await db.prepare('SELECT id FROM weekly_publications WHERE id=?').bind(MONTHLY_EXTENSION_ID).first()) {
+    return { changed: 0, applied: false };
+  }
+  const result = await db.batch([
+    db.prepare(`UPDATE problems SET closes_at=? WHERE week=? AND closes_at=?
+      AND NOT EXISTS(SELECT 1 FROM weekly_publications WHERE id=?)`)
+      .bind(MONTHLY_EXTENDED_CLOSES_AT, CURRENT_MONTHLY_PERIOD, MONTHLY_CLOSES_AT, MONTHLY_EXTENSION_ID),
+    db.prepare(`INSERT INTO weekly_publications(id,problems,created_at) VALUES(?,?,?) ON CONFLICT(id) DO NOTHING`)
+      .bind(MONTHLY_EXTENSION_ID, 0, Math.floor(Date.now() / 1000))]);
+  return { changed: result[0].meta?.changes || 0, applied: !!result[1].meta?.changes };
+}
+
 const initialized = new WeakMap();
 export function ensureWeeklyContent(db, cacheKey = db) {
   let promise = initialized.get(cacheKey);
@@ -138,7 +157,8 @@ export function ensureWeeklyContent(db, cacheKey = db) {
       monthly: await migrateMonthlyPeriod(db), answerSheet: await retireIntroMonthlyProblems(db, cacheKey),
       greenhouse: await publishWeeklyContent(db,GREENHOUSE_MONTHLY_CONTENT,GREENHOUSE_PUBLICATION_ID),
       astronomy: await ensureAstronomyRevision(db,cacheKey),
-      pressureWave: await publishWeeklyContent(db,PRESSURE_WAVE_MONTHLY_CONTENT,PRESSURE_WAVE_PUBLICATION_ID) }));
+      pressureWave: await publishWeeklyContent(db,PRESSURE_WAVE_MONTHLY_CONTENT,PRESSURE_WAVE_PUBLICATION_ID),
+      extension: await extendMonthlyDeadline(db) }));
     initialized.set(cacheKey, promise);
     promise.catch(() => { if (initialized.get(cacheKey) === promise) initialized.delete(cacheKey); });
   }
