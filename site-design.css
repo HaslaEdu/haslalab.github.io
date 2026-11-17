@@ -334,6 +334,19 @@ html[data-theme="dark"] body.hl-site #view input:not([type="checkbox"]):not([typ
 html[data-theme="dark"] body.hl-site #view select,
 html[data-theme="dark"] body.hl-site #view textarea{background:#141019;color:#ebe8f5;border-color:#51435f;color-scheme:dark}
 
+/* wide screens and tablets in landscape: the English labels are wider than the Korean ones and the header row is
+   capped by the page width, so it is kept compact enough for English — the KO/EN switch stays put in both languages */
+@media(min-width:1101px){
+  body.hl-site .hrow{gap:14px}
+  body.hl-site #nav{gap:16px;margin-left:2px}
+  body.hl-site #hlxSearch .kb{display:none}
+}
+@media(min-width:1101px) and (max-width:1300px){
+  body.hl-site .mark em{display:none}
+  body.hl-site #hlxSearch{width:31px;height:31px;padding:0;justify-content:center;flex:none}
+  body.hl-site #hlxSearch .t{display:none}
+  body.hl-site #nav{gap:14px}
+}
 @media(max-width:1100px){
   body.hl-site .hrow{
     display:grid;grid-template-columns:minmax(0,1fr) 31px auto auto;
