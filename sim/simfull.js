@@ -57,10 +57,14 @@
    usable); the header and the ad are hidden while it is, and Esc or the button brings the page back. */
 (() => {
   const root = document.documentElement;
-  if (!(document.fullscreenEnabled || document.webkitFullscreenEnabled)) return;
-  const isFull = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+  /* On a pad or phone the browser's own full screen puts up its "swipe down to exit" notice over the bench.
+     There the page itself fills the screen instead (header and ad hidden, same as full screen), with no notice. */
+  const touch = navigator.maxTouchPoints > 0 || matchMedia("(any-pointer: coarse)").matches;
+  if (!touch && !(document.fullscreenEnabled || document.webkitFullscreenEnabled)) return;
+  let pseudo = false;
+  const isFull = () => pseudo || !!(document.fullscreenElement || document.webkitFullscreenElement);
   const en = () => root.lang === "en";
-  const text = () => isFull() ? (en() ? "Exit full screen (Esc)" : "전체화면 끝내기 (Esc)") : (en() ? "⛶ Full screen" : "⛶ 전체화면");
+  const text = () => isFull() ? (en() ? "Exit full screen" + (touch ? "" : " (Esc)") : "전체화면 끝내기" + (touch ? "" : " (Esc)")) : (en() ? "⛶ Full screen" : "⛶ 전체화면");
 
   const style = document.createElement("style");
   style.textContent = `
@@ -85,6 +89,7 @@
   const sync = () => { const f = isFull(); root.classList.toggle("hl-full", f); btn.textContent = text();
     if (lang) { if (f && btn.parentNode !== document.body) document.body.append(btn); else if (!f && btn.parentNode !== lang) lang.append(btn); } };
   btn.addEventListener("click", () => {
+    if (touch) { pseudo = !pseudo; scrollTo(0, 0); changed(); return; }
     try {
       if (isFull()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
       else (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
@@ -92,6 +97,7 @@
   });
   /* the sims lay their canvases out again on resize; give them one once the page has settled */
   const changed = () => { sync(); setTimeout(() => dispatchEvent(new Event("resize")), 60); };
+  addEventListener("keydown", e => { if (pseudo && e.key === "Escape") { pseudo = false; changed(); } });
   document.addEventListener("fullscreenchange", changed);
   document.addEventListener("webkitfullscreenchange", changed);
   new MutationObserver(sync).observe(root, {attributes: true, attributeFilter: ["lang"]});
