@@ -6,11 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1c2027">
 <title>IPhO 2024 E1 — 구리 막대의 열전도 · Heat Conduction in a Copper Rod · HaslaLab</title>
-<meta name="description" content="IPhO 2024 실험 1번을 브라우저에서 실행합니다. AVA-T403 제어판의 스위치와 버튼으로 히터·팬·타이머를 다루고, 서미스터 7개·PT100·R9 값을 읽어 짧은 막대의 열용량·냉각 상수·띠간격, 긴 막대의 λ·h·k, 히터 3의 출력을 직접 구합니다. 계산은 대신 해주지 않습니다.">
+<meta name="description" content="IPhO 2024 실험 1번을 3D 실험대에서 실행합니다. 문제지 그림 1·3·4·5·6과 같은 금속 상자, 구리 막대, AVA-T403 제어판을 그대로 옮겼습니다. 전원 플러그를 꽂고 FAN·HEATER 스위치와 NEXT·START/STOP·PREV·LAP 버튼, θb/R9 스위치를 직접 눌러 서미스터 7개·θb·PT100·R9 값을 읽습니다. 계산은 대신 해주지 않습니다.">
 <meta property="og:site_name" content="HaslaLab">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IPhO 2024 E1 — 구리 막대의 열전도 · Heat Conduction in a Copper Rod">
-<meta property="og:description" content="IPhO 2024 실험 1번을 브라우저에서 실행합니다. 장치를 놓고 전원을 꽂은 뒤 AVA-T403의 화면과 타이머·LAP 기록을 읽습니다.">
+<meta property="og:description" content="IPhO 2024 실험 1번을 3D 실험대에서 실행합니다. 실제 장비처럼 AVA-T403의 스위치와 버튼을 눌러 측정합니다.">
 <style>
   :root{
     --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
@@ -24,61 +24,47 @@
     font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
          "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   }
-  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  .wrap{max-width:1720px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
   @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
-  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+  .tray{flex:0 0 200px;background:var(--panel);border:1px solid var(--line);
         border-radius:10px;padding:8px;position:sticky;top:12px}
   .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
            color:var(--accent);text-align:center}
   #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
-  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
-  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
-  @media (max-width:760px){ .tray{flex:1 1 100%} }
-
-  /* ── stage ── */
-  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .stage{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:10px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
-  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
-  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap}
-  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
-  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
-  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
-        font-size:13.5px;line-height:1.7;color:#d6dde2}
-  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
-  .info h4:first-child{margin-top:0}
-  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
-  .info .warn{color:#f0a79f;font-weight:600}
-
-  /* ── control panel ── */
+  .card h3{margin:0 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #bench{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;
+         background:#20252c;cursor:default}
+  #bench.dragging{cursor:grabbing}
+  #bench.hand{cursor:pointer}
   .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
          border-radius:10px;padding:12px;position:sticky;top:12px}
-  @media (max-width:1180px){ .panel{position:static} }
-  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  @media (max-width:1180px){ .panel,.tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray,.panel{flex:1 1 100%} }
   .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
             margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .panel h2:first-of-type{margin-top:0}
-  .row{display:flex;gap:5px;flex-wrap:wrap}
-  .row button{flex:1;text-align:center;min-width:0}
+  .row{display:flex;gap:6px}
+  .row button{flex:1;text-align:center}
   button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
          border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
          color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
   button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
   button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
-  button:disabled{opacity:.45;cursor:default}
-  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
-  #redBtn:hover{background:#a3322b}
-  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
-  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .benchwrap{position:relative}
+  .viewback{position:absolute;left:10px;top:10px;z-index:5;padding:6px 12px;border-radius:7px;border:1px solid #3a414a;background:rgba(20,24,29,.86);color:#e8eef2;font:600 12.5px inherit;cursor:pointer}
+  .viewback:hover{border-color:#4ec9b0;color:#4ec9b0}
+  #scrub{width:100%;margin:6px 0 2px;accent-color:var(--accent)}
+  #rewind button{font-size:12px;padding:6px 4px}
   .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
   .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
           background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
-          margin-top:12px;min-height:120px}
-  .status div + div{margin-top:8px}
-  .status .w{color:#f0a79f}
-
-  /* ── header ── */
-  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+          margin-top:10px;min-height:110px}
+  .status div + div{margin-top:9px}
+  .status .warn{color:#ff8b6a}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:200px;overflow:auto;margin-top:4px}
+  header{max-width:1720px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
   header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
   header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
@@ -86,9 +72,6 @@
   .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
                font-weight:600;color:var(--muted);text-align:center;background:transparent}
   .lang button.on{background:var(--accent);color:#1c2027}
-  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
-        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
-  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
 </style>
 </head>
 <body>
@@ -105,106 +88,83 @@
 </header>
 
 <div class="wrap">
-  <aside class="tray">
+  <aside class="tray" data-tour-ko="장비는 이미 설치되어 있습니다. 여기서 장비 이름을 클릭하면 카메라가 그 장비 앞으로 갑니다 (제어판, 아래에서 본 상자, 짧은 막대, 명판, 전원 어댑터)." data-tour-en="The apparatus is already set up. Click a name here and the camera moves to it (the panel, the box from below, the short rod, the name plate, the power supply).">
     <h3 id="t-tray"></h3>
     <canvas id="tray"></canvas>
   </aside>
 
   <div class="stage">
     <div class="card">
-      <h3 id="t-cap"></h3>
-      <canvas id="cv"></canvas>
-    </div>
-    <div class="card">
-      <h3 id="t-closecap"></h3>
-      <canvas id="closeCv"></canvas>
+      <h3 id="t-benchcap"></h3>
+      <div class="benchwrap"><canvas id="bench"></canvas><button id="viewBack" class="viewback" hidden></button></div>
     </div>
   </div>
 
   <aside class="panel">
-    <h2 id="t-h-sw"></h2>
-    <div class="disp" id="swLbl">0:00.00</div>
-    <div class="row">
-      <button id="swBtn"></button>
-      <button id="swLap"></button>
-      <button id="swReset"></button>
-    </div>
-    <div class="laps" id="laps"></div>
-
     <h2 id="t-h-time"></h2>
     <div class="row" id="speeds"></div>
-    <p class="hint" id="t-timehint"></p>
-
-    <h2 id="t-h-ava"></h2>
-    <p class="hint" id="t-avahint"></p>
+    <div class="row" id="rewind"></div>
+    <input type="range" id="scrub" min="0" max="1" step="1" value="1">
+    <div class="hint" id="t-timehint"></div>
 
     <h2 id="t-h-mem"></h2>
-    <div class="laps" id="mem" style="max-height:220px"></div>
+    <div class="laps" id="mem"></div>
+
+    <h2 id="t-h-how"></h2>
+    <div class="hint" id="t-howto"></div>
 
     <div class="status" id="status"></div>
   </aside>
 </div>
-
 <script>
 "use strict";
+/* ══════════════════════════════════════════════════════════════
+   0.  i18n  (the print on the apparatus stays English, as on the real box)
+   ══════════════════════════════════════════════════════════════ */
 const T={
   ko:{
     title:"IPhO 2024 실험 1 — 구리 막대의 열전도",
-    sub:"가상 실험실 · 장치를 놓고 전원을 연결한 뒤 AVA-T403의 스위치와 버튼을 다루고 화면을 읽으세요. 열용량·냉각 상수·띠간격·λ·h·k·히터 3의 출력은 직접 계산합니다.",
-    trayTitle:"부품함", trayTake:"클릭해서 집기", trayOut:"사용 중",
-    trayHelp:"좌클릭 집기·놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    cap:"실험대 (앞에서 본 모습) — 좌클릭 집기·놓기·꽂기·누르기 / 우클릭 되돌리기·뽑기 / 놓은 장비를 다시 클릭하면 옮기기",
-    closeCap:"확대 — 왼쪽: AVA-T403 제어판 (스위치·버튼 클릭, LAP을 5초 누르면 기록 삭제) · 오른쪽: 상자 아래에서 본 모습과 짧은 막대 (그림 3, 4)",
-    hSw:"스톱워치", start:"시작", stop:"정지", lap:"랩", reset:"리셋",
-    hTime:"시간 배속", timeHint:"막대가 데워지고 식는 데 실제로 수십 분이 걸립니다. 배속은 AVA의 타이머와 스톱워치에도 똑같이 적용됩니다.",
-    hAva:"AVA-T403",
-    avaHint:"서미스터 1–7의 온도(°C)는 왼쪽 열에, 마지막 줄에는 θb 또는 R9(Ω)가 나옵니다 — 아래 θb/R9 스위치로 바꿉니다. 오른쪽 위의 R은 PT100의 저항입니다.\nSTART/STOP: 타이머 시작·정지. 타이머가 돌 때 LAP을 누르면 화면의 값이 모두 저장되고, 멈췄을 때 누르면 타이머가 0이 됩니다 (기록은 남음). LAP을 5초 누르고 있으면 기록이 지워집니다.\nPREV/NEXT로 저장된 기록을 보고, LAP(EXIT)으로 돌아옵니다. 전원을 뽑으면 기록이 사라집니다.\n히터 1은 1.95 W, 히터 2는 명판에 P2 = 5.0 ± 0.1 W, 히터 3은 모릅니다.",
+    sub:"가상 실험실 · 문제지 그림 1·3·4·5·6의 금속 상자, 구리 막대, AVA-T403 제어판을 3D로 옮겼습니다. 화면에 나오는 값(서미스터 1–7, θb, R9, PT100의 R, 타이머)만 보이고, 열용량·냉각 상수·띠간격·λ·h·k·히터 3의 출력은 직접 계산합니다.",
+    benchcap:"실험대 — 좌클릭: 스위치·버튼 누르기, 장비를 클릭하면 그 앞으로 / 빈 곳 드래그: 돌려 보기, 우클릭·Shift 드래그: 옮겨 보기 / 휠: 확대 / 빈 곳 더블클릭·Esc: 처음 시점",
+    tray:"장비 (클릭: 보러 가기)",
+    trayItems:[["panel","AVA-T403 제어판","그림 5 · 스위치·버튼"],["below","상자 아래 (막대·팬)","그림 3 · 서미스터 1–8"],["short","짧은 구리 막대","그림 4 · 히터 1·PT100·R9"],
+               ["back","명판 (P2)","그림 6 · 상자 뒷면"],["psu","24 V 전원 어댑터","콘센트에 꽂기"],["all","실험대 전체","처음 시점"]],
+    trayHelp:"설치는 이미 되어 있습니다.\n장비를 옮기거나 선을 뽑지 마세요.",
+    hTime:"시간 배속 · 되감기", timeHint:"막대가 데워지고 식는 데 실제로 수십 분이 걸립니다. 배속은 AVA의 타이머에도 똑같이 적용됩니다. 스페이스 = 일시정지 · Ctrl+Z = 직전 조작 취소 · 아래 막대를 끌면 지나간 시점으로 돌아갑니다.",
+    rw:[["⟲ 10초",10],["⟲ 1분",60],["⟲ 10분",600]], undo:"↶ 직전 조작 취소", pause:"일시정지", run:"진행",
+    rewound:()=>"되돌렸습니다.", undone:"직전 조작을 취소했습니다.", noHist:"되돌릴 기록이 없습니다.",
     hMem:"AVA 메모리 (저장된 LAP)", memEmpty:"저장된 기록 없음",
-    items:{box:"금속 상자 · 구리 막대 · AVA-T403", psu:"24 V 전원 어댑터"},
-    lab:{heater:"HEATER", fan:"FAN", next:"NEXT", prev:"PREV", startStop:["START","STOP"], lapReset:["LAP","RESET","EXIT"],
-         below:"아래에서 본 모습 (그림 3)", short:"짧은 구리 막대 12.0 cm (그림 4)", sensor:i=>"서미스터 "+i, box8:"8 (θb, 상자 안 공기)",
-         heater1:"히터 1", heater2:"히터 2", heater3:"히터 3", pt100:"PT100", r9:"R9", styro:"스티로폼", noPower:"전원 없음",
-         outlet:"콘센트", dcjack:"24 V 입력", nameplate:"P2 = 5.0 ± 0.1 W"},
-    term:{mains:"어댑터 전원 플러그", dc:"어댑터 DC 플러그", outlet:"벽 콘센트", jack:"상자의 24 V 입력"},
-    st:{none:"부품함에서 장치를 꺼내 실험대에 놓으세요.", noPsu:"24 V 전원 어댑터를 놓고 연결하세요.", off:"AVA에 전원이 없습니다 — 어댑터를 콘센트와 상자에 꽂으세요.",
-        hot:"⚠ 화면에 \"Turn off Heater1\" — 지금 히터 1을 끄세요.", browse:"기록 보기 중 — LAP(EXIT)으로 돌아갑니다."},
-    m:{picked:n=>n+" 을(를) 집었습니다 — 놓을 곳을 클릭하세요. (우클릭: 되돌리기)", placed:n=>n+" 을(를) 놓았습니다.",
-       back:n=>n+" 을(를) 부품함에 넣었습니다.", noFit:"그곳에는 놓을 수 없습니다. 실험대 위, 다른 장비와 겹치지 않는 곳에 놓으세요.",
-       moveIt:n=>n+" 을(를) 들었습니다 — 옮길 곳을 클릭하세요. (우클릭: 제자리)", stays:"제자리에 두었습니다.",
-       plug:n=>n+" 을(를) 집었습니다 — 꽂을 곳을 클릭하세요.", plugged:n=>n+" 에 꽂았습니다.", unplugged:"플러그를 뽑았습니다.", wrong:"그 플러그는 거기에 맞지 않습니다.",
-       powerOn:"AVA가 켜졌습니다.", powerOff:"AVA의 전원이 꺼졌습니다 — 저장된 기록이 지워졌습니다.",
-       sw:(n,on)=>n+" "+(on?"켬":"끔"), start:"타이머 시작", stop:"타이머 정지", lap:n=>"LAP "+n+" 저장", reset:"타이머를 0으로 (기록은 남음)",
-       erase:"저장된 기록을 모두 지웠습니다.", hold:"LAP을 계속 누르는 중… (5초면 기록 삭제)", browse:n=>"기록 "+n+" 보기", exit:"실시간 화면으로 돌아왔습니다.", none:"저장된 기록이 없습니다.",
-       toggle:s=>"마지막 줄: "+s, noPowerBtn:"AVA에 전원이 없습니다."}
+    hHow:"조작", backAll:"← 실험대 전체",
+    howto:"· 전원: 상자 오른쪽 뒤 24 V 어댑터의 전원 플러그를 클릭하면 벽 콘센트에 꽂힙니다 (다시 클릭하면 뽑힘 — 저장된 기록이 지워집니다)\n· 장비를 클릭하면 카메라가 그 앞으로 갑니다 (Esc·빈 곳 더블클릭·「← 실험대 전체」: 돌아가기)\n· 제어판: FAN, HEATER 1·2·3 로커 스위치(I 켬 / O 끔), θb–R9 스위치, NEXT·START/STOP·PREV·LAP 버튼\n· START/STOP: 타이머 시작·정지 · 타이머가 돌 때 LAP: 화면 값 저장, 멈췄을 때 LAP: 타이머 0 · LAP을 5초 누르고 있으면 기록 삭제\n· PREV/NEXT: 저장된 기록 보기, LAP(EXIT): 실시간 화면으로\n· 화면에 \"Turn off Heater1\"이 나오면 곧바로 히터 1을 끄세요\n· 상자 옆판이나 막대를 클릭하면 아래에서 본 모습(그림 3)\n· 빈 곳 드래그: 돌려 보기 · 휠: 확대",
+    st:{off:"AVA에 전원이 없습니다 — 상자 오른쪽 뒤 24 V 어댑터의 전원 플러그를 벽 콘센트에 꽂으세요.",
+        hot:"⚠ 화면에 \"Turn off Heater1\" — 지금 히터 1을 끄세요.", browse:"기록 보기 중 — LAP(EXIT)으로 돌아갑니다.", paused:"⏸ 일시정지 중", hold:"LAP을 계속 누르는 중… (5초면 기록 삭제)"},
+    m:{plugIn:"전원 플러그를 벽 콘센트에 꽂았습니다 — AVA가 켜졌습니다.", plugOut:"전원 플러그를 뽑았습니다 — AVA가 꺼지고 저장된 기록이 지워졌습니다.",
+       sw:(n,on)=>n+" "+(on?"켬 (I)":"끔 (O)"), start:"타이머 시작", stop:"타이머 정지", lap:n=>"LAP "+n+" 저장", reset:"타이머를 0으로 (기록은 남음)",
+       erase:"저장된 기록을 모두 지웠습니다.", browse:n=>"기록 "+n+" 보기", exit:"실시간 화면으로 돌아왔습니다.", none:"저장된 기록이 없습니다.",
+       toggle:s=>"마지막 줄: "+s, noPower:"AVA에 전원이 없습니다 — 버튼이 반응하지 않습니다."},
+    tag:{s:i=>String(i), b:"8 (θb)", h2:"히터 2", h3:"히터 3", h1:"히터 1", pt:"PT100 + R9"}
   },
   en:{
     title:"IPhO 2024 Experiment 1 — Heat conduction in a copper rod",
-    sub:"Virtual laboratory · put the apparatus down, plug it in, work the switches and keys of the AVA-T403 and read its monitor. Heat capacity, cooling constant, energy gap, λ, h, k and the power of heater 3 are yours to work out.",
-    trayTitle:"Parts box", trayTake:"click to pick up", trayOut:"in use",
-    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
-    cap:"the bench (seen from the front) — L-click pick up / put down / plug / press, R-click return / unplug, click a placed item to move it",
-    closeCap:"close up — left: the AVA-T403 panel (click switches and keys; hold LAP 5 s to erase the data) · right: the box from below and the short rod (Figs. 3, 4)",
-    hSw:"Stopwatch", start:"Start", stop:"Stop", lap:"Lap", reset:"Reset",
-    hTime:"Time scale", timeHint:"Heating and cooling the rods really takes tens of minutes. The scale applies to AVA's timer and to the stopwatch alike.",
-    hAva:"AVA-T403",
-    avaHint:"The temperatures (°C) of thermistors 1–7 are in the left column, the last row shows θb or R9 (Ω) — switch with the θb/R9 toggle. R at the top right is the resistance of the PT100.\nSTART/STOP starts and stops the timer. LAP while it runs saves every displayed value; LAP while it is stopped resets the timer (the data stay). Hold LAP for 5 s to erase the data.\nPREV/NEXT show the saved data, LAP (EXIT) goes back. Unplugging erases the data.\nHeater 1 is 1.95 W, heater 2 is P2 = 5.0 ± 0.1 W on the nameplate, heater 3 is unknown.",
+    sub:"Virtual laboratory · the metal box, the copper rods and the AVA-T403 panel of Figs. 1, 3, 4, 5 and 6 in 3-D. The only numbers are the ones the monitor shows (thermistors 1–7, θb, R9, the PT100's R, the timer); heat capacity, cooling constant, energy gap, λ, h, k and the power of heater 3 are yours to work out.",
+    benchcap:"the bench — L-click: press switches and keys, click a piece of apparatus to face it / drag a bare spot: turn the view, R- or Shift-drag: move it / wheel: zoom / double-click a bare spot or Esc: back to the start view",
+    tray:"Apparatus (click: go to it)",
+    trayItems:[["panel","AVA-T403 panel","Fig. 5 · switches, keys"],["below","Box from below","Fig. 3 · thermistors 1–8"],["short","Short copper rod","Fig. 4 · heater 1, PT100, R9"],
+               ["back","Name plate (P2)","Fig. 6 · back of the box"],["psu","24 V power supply","plug it in"],["all","Whole bench","start view"]],
+    trayHelp:"The setup is already assembled.\nDo not move it or pull any wire.",
+    hTime:"Time scale · rewind", timeHint:"Heating and cooling the rods really takes tens of minutes. The scale applies to AVA's timer too. Space = pause · Ctrl+Z = undo the last action · drag the bar below to go back to an earlier moment.",
+    rw:[["⟲ 10 s",10],["⟲ 1 min",60],["⟲ 10 min",600]], undo:"↶ Undo last action", pause:"pause", run:"run",
+    rewound:()=>"Gone back.", undone:"Last action undone.", noHist:"Nothing to go back to.",
     hMem:"AVA memory (saved LAPs)", memEmpty:"no saved data",
-    items:{box:"Metal box · copper rod · AVA-T403", psu:"24 V power supply"},
-    lab:{heater:"HEATER", fan:"FAN", next:"NEXT", prev:"PREV", startStop:["START","STOP"], lapReset:["LAP","RESET","EXIT"],
-         below:"view from below (Fig. 3)", short:"short copper rod, 12.0 cm (Fig. 4)", sensor:i=>"thermistor "+i, box8:"8 (θb, air in the box)",
-         heater1:"Heater 1", heater2:"Heater 2", heater3:"Heater 3", pt100:"PT100", r9:"R9", styro:"styrofoam", noPower:"no power",
-         outlet:"outlet", dcjack:"24 V in", nameplate:"P2 = 5.0 ± 0.1 W"},
-    term:{mains:"mains plug of the supply", dc:"DC plug of the supply", outlet:"wall outlet", jack:"24 V input of the box"},
-    st:{none:"Take the apparatus out of the box and put it on the bench.", noPsu:"Put the 24 V power supply down and connect it.", off:"AVA has no power — plug the supply into the outlet and into the box.",
-        hot:"⚠ \"Turn off Heater1\" on the monitor — switch heater 1 off now.", browse:"Browsing the saved data — LAP (EXIT) goes back."},
-    m:{picked:n=>n+" picked up — click where to put it. (R-click: return)", placed:n=>n+" put down.",
-       back:n=>n+" put back in the box.", noFit:"It does not fit there: put it on the bench where it does not overlap anything.",
-       moveIt:n=>n+" picked up — click where to move it. (R-click: leave it)", stays:"Left where it was.",
-       plug:n=>n+" in hand — click where to plug it.", plugged:n=>"Plugged into the "+n+".", unplugged:"Plug pulled out.", wrong:"That plug does not fit there.",
-       powerOn:"AVA is on.", powerOff:"AVA lost power — the saved data are erased.",
-       sw:(n,on)=>n+" "+(on?"on":"off"), start:"Timer started", stop:"Timer stopped", lap:n=>"LAP "+n+" saved", reset:"Timer reset (the data stay)",
-       erase:"All saved data erased.", hold:"Holding LAP… (5 s erases the data)", browse:n=>"Saved data "+n, exit:"Back to the live display.", none:"No saved data.",
-       toggle:s=>"Last row: "+s, noPowerBtn:"AVA has no power."}
+    hHow:"How to", backAll:"← Whole bench",
+    howto:"· Power: click the mains plug of the 24 V supply behind the box (right) to plug it into the wall outlet (click again to pull it out — the saved data are erased)\n· Click a piece of apparatus and the camera faces it (Esc, double click on a bare spot or “← Whole bench”: back)\n· Panel: FAN and HEATER 1, 2, 3 rockers (I on / O off), the θb–R9 switch, the NEXT, START/STOP, PREV and LAP keys\n· START/STOP starts and stops the timer · LAP while it runs saves the display, LAP while stopped resets the timer · hold LAP 5 s to erase the data\n· PREV/NEXT browse the saved data, LAP (EXIT) goes back to the live display\n· If \"Turn off Heater1\" appears, switch heater 1 off at once\n· Click an end plate or the rod to look from below (Fig. 3)\n· Drag a bare spot: turn the view · wheel: zoom",
+    st:{off:"AVA has no power — plug the mains plug of the 24 V supply (behind the box, right) into the wall outlet.",
+        hot:"⚠ \"Turn off Heater1\" on the monitor — switch heater 1 off now.", browse:"Browsing the saved data — LAP (EXIT) goes back.", paused:"⏸ paused", hold:"Holding LAP… (5 s erases the data)"},
+    m:{plugIn:"Mains plug pushed into the wall outlet — AVA is on.", plugOut:"Mains plug pulled out — AVA is off and the saved data are erased.",
+       sw:(n,on)=>n+" "+(on?"on (I)":"off (O)"), start:"Timer started", stop:"Timer stopped", lap:n=>"LAP "+n+" saved", reset:"Timer reset (the data stay)",
+       erase:"All saved data erased.", browse:n=>"Saved data "+n, exit:"Back to the live display.", none:"No saved data.",
+       toggle:s=>"Last row: "+s, noPower:"AVA has no power — the keys do nothing."},
+    tag:{s:i=>String(i), b:"8 (θb)", h2:"heater 2", h3:"heater 3", h1:"heater 1", pt:"PT100 + R9"}
   }
 };
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
@@ -216,10 +176,11 @@ const d=()=>T[lang];
    ══════════════════════════════════════════════════════════════ */
 function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
   t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const mulberry=mulberry32;
 const rnd=mulberry32((Date.now()^0x2024e1)>>>0);
 function gauss(){ let u=0; while(!u) u=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*rnd()); }
 const KB=8.61733e-5, R0=100.00, ALPHA=0.0039083, D_FAR=44.0;
-const SX=[0,7,14,21,28,35,42];                  /* thermistors 1..7, cm from the end of heater 2 */
+const SX=[0,7,14,21,28,35,42];                  /* thermistors 1..7, cm from thermistor 1 */
 /* the apparatus of this session (the official solution is matched by the mean values) */
 const K={
   P1:1.95, P2:5.00, P3r:0.600*(1+0.010*gauss()),
@@ -230,6 +191,10 @@ const K={
 const DELAY=32, TAU_LONG=420, TAU_BOX=240;
 const gfun=x=>K.g0*(Math.exp(-K.lam*x)+Math.exp(-2*K.lam*D_FAR)*Math.exp(K.lam*x));
 const PH={ t:0, short:K.env, tb:K.room, long:SX.map(()=>K.room), hist:[] };
+/* the state of the panel and the plug */
+const ST={ plug:false, sw:{fan:false,h1:false,h2:false,h3:false}, show9:false,
+           timer:0, run:false, laps:[], view:-1, lapDown:null, lapErased:false, press:null };
+const powered=()=>ST.plug;
 function heatersOn(){ const p=powered(); return [p&&ST.sw.h1, p&&ST.sw.h2, p&&ST.sw.h3]; }
 function steadyLong(){
   const [,h2,h3]=heatersOn(), P2=h2?K.P2:0, P3=h3?K.P2*K.P3r:0;
@@ -266,344 +231,866 @@ function readAVA(){
   reading={R:q(Rpt,0.01), R9:Math.round(R9*(1+0.0015*gauss())), th:thl.map(v=>q(v+0.012*gauss(),0.01)), tb:q(thb+0.012*gauss(),0.01)};
   readT=PH.t; return reading;
 }
-
-/* ══════════════════════════════════════════════════════════════
-   2.  STATE AND GEOMETRY  (front view of the bench, 1200 × 720)
-   ══════════════════════════════════════════════════════════════ */
-const LW=1200, LH=720, TABLE_Y=560;
-const PLACE=["box","psu"];
-const SZ={box:[820,0], psu:[120,0]};             /* width on the table */
-const ST={
-  on:{box:false,psu:false}, x:{box:150,psu:1010},
-  plug:{mains:null, dc:null},                    /* null = lying on the table, else "outlet" / "jack" */
-  sw:{fan:false,h1:false,h2:false,h3:false}, show9:false,
-  timer:0, run:false, laps:[], view:-1, lapDown:null,
-  sw_t:0, swRun:false, swLaps:[]
-};
-const powered=()=>ST.on.box&&ST.on.psu&&ST.plug.mains==="outlet"&&ST.plug.dc==="jack";
-let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0}, speed=1;
-function say(key,...args){ msg={key,args,t:performance.now()}; }
-const itemName=k=>d().items[k]||d().term[k]||k;
-const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
-/* the box: 820 px wide, 300 px tall body standing on its flanges */
-const BOX={w:820, top:TABLE_Y-372, h:300};
-/* an item picked up to be moved stays on the bench, plugged and powered; it is drawn where the hand holds it */
-const moving=k=>!!(hand&&hand.move&&hand.k===k);
-const ghostX=k=>Math.round(mouse[0]-SZ[k][0]/2);
-const curX=k=>moving(k)?ghostX(k):ST.x[k];
-const bx=()=>curX("box");
-const PANEL=(x=bx())=>({x:x+245, y:BOX.top+70, s:0.55});           /* AVA panel, 600 × 360 units */
-const JACK=(x=bx())=>[x+BOX.w-26, BOX.top+BOX.h-26];
-const OUTLET=[1150,430];
-const PSU_H=46;
-function plugPos(k){
-  if(ST.plug[k]==="outlet") return OUTLET.slice();
-  if(ST.plug[k]==="jack") return JACK();
-  const x=curX("psu"); return k==="mains"? [x+SZ.psu[0]+34, TABLE_Y-6] : [x-34, TABLE_Y-6];
-}
-function overlapX(k,x){
-  const [w]=SZ[k];
-  if(x<10||x+w>LW-10) return true;
-  for(const o of PLACE){ if(o===k||!ST.on[o]) continue; const ow=SZ[o][0], ox=ST.x[o];
-    if(x<ox+ow+40&&x+w+40>ox) return true; }
-  return false;
-}
-
-/* ══════════════════════════════════════════════════════════════
-   3.  DRAWING HELPERS
-   ══════════════════════════════════════════════════════════════ */
-const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
-const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,'Courier New',monospace";
-function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
-  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
-function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
-  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
-function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
-  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
-function vgrad(y,h,stops){ const g=ctx.createLinearGradient(0,y,0,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
-function hgrad(x,w,stops){ const g=ctx.createLinearGradient(x,0,x+w,0); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
-function circ(x,y,r,fill,stroke,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
-
-/* ══════════════════════════════════════════════════════════════
-   4.  THE AVA-T403 PANEL  (Fig. 5; 600 × 360 panel units)
-   ══════════════════════════════════════════════════════════════ */
-const AVA_HIT={ fan:[30,45,50,75], h1:[30,195,48,80], h2:[84,195,48,80], h3:[138,195,48,80],
-  next:[478,72,44,84], start:[530,72,44,84], prev:[478,166,44,84], lap:[530,166,44,84], toggle:[392,288,130,42] };
-function avaHitAt(u,v){ for(const k in AVA_HIT){ const [x,y,w,h]=AVA_HIT[k]; if(u>=x&&u<=x+w&&v>=y&&v<=y+h) return k; } return null; }
-function rocker(x,y,w,h,on){
-  fillR(x,y,w,h,4,"#121214","#3a3a3e",1.2);
-  fillR(x+5,y+5,w-10,h-10,3,vgrad(y,h,on?[[0,"#141416"],[0.5,"#2b2b2f"],[1,"#3b3b40"]]:[[0,"#3b3b40"],[0.5,"#2b2b2f"],[1,"#141416"]]));
-  circ(x+w/2,y+h*0.3,5.5,null,"#eee",2);
-  ctx.strokeStyle="#eee"; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(x+w/2,y+h*0.6); ctx.lineTo(x+w/2,y+h*0.78); ctx.stroke();
-}
-function keyBtn(x,y,w,h,col,lab1,lab2,down){
-  fillR(x,y,w,h,14,"#0d0f12",col,2);
-  if(lab2) { text(lab1,x+w/2,y+16,"#e8eef2",8.5,"center","700"); text(lab2,x+w/2,y+27,"#e8eef2",8.5,"center","700"); }
-  else text(lab1,x+w/2,y+20,"#e8eef2",9,"center","700");
-  circ(x+w/2,y+h-26,11,down?"#050506":"#151618","#000",1.5); circ(x+w/2-2,y+h-28,4,down?"#111":"#2b2c30");
-}
-function drawAVA(ox,oy,s,isBench){
-  ctx.save(); ctx.translate(ox,oy); ctx.scale(s,s);
-  const t=d(), on=powered();
-  fillR(0,0,600,360,10,"#0c0d10","#2e3036",2);
-  for(const [x,y] of [[14,14],[586,14],[14,346],[586,346]]) circ(x,y,5,"#3a3c42","#111",1);
-  /* FAN */
-  text(t.lab.fan,40,30,"#e8eef2",10,"left","700");
-  rocker(...AVA_HIT.fan,ST.sw.fan); ctx.fillStyle="#32b6e8"; ctx.fillRect(34,128,42,4);
-  ctx.strokeStyle="#32b6e8"; ctx.lineWidth=2; for(let k=0;k<4;k++){ const a=k*Math.PI/2; ctx.beginPath(); ctx.arc(55+Math.cos(a)*4,148+Math.sin(a)*4,4,a,a+2); ctx.stroke(); }
-  /* the IPhO logo */
-  circ(150,80,30,null,"#cfd6e6",1.2); circ(160,80,28,null,"#8fa8d8",1); text("IPhO",160,80,"#f2f4f8",26,"center","300");
-  text("54th",206,104,"#d9b44a",8,"right","600"); text("Iran | Isfahan | 2024",160,120,"#c9ced8",7.5,"center");
-  /* HEATER */
-  text(t.lab.heater,96,184,"#e8eef2",10,"center","700");
-  fillR(26,190,166,94,4,"#18191c");
-  rocker(...AVA_HIT.h1,ST.sw.h1); rocker(...AVA_HIT.h2,ST.sw.h2); rocker(...AVA_HIT.h3,ST.sw.h3);
-  [["#e8c23a",30],["#e88a2a",84],["#e0442a",138]].forEach(([c,x],i)=>{ ctx.fillStyle=c; ctx.fillRect(x,287,48,4);
-    circ(x+24,306,9,null,c,1.6); ctx.strokeStyle=c; ctx.lineWidth=1.3;
-    for(let k=0;k<=i;k++){ const xx=x+24+(k-i/2)*4; ctx.beginPath(); ctx.moveTo(xx,301); ctx.quadraticCurveTo(xx+2,306,xx,311); ctx.stroke(); } });
-  fillR(30,322,16,12,3,"#1d5fa8"); text("Designed and produced by",54,327,"#e8eef2",8,"left","600"); text("AVA SMART WORLD",54,340,"#e8eef2",9,"left","800");
-  /* title and screen */
-  fillR(248,34,222,28,3,"#1a1b1f","#2b2d33",1); text("AVA-T403",256,48,"#f2f4f8",11,"left","800"); text("Heat Conduction in a Copper Rod",330,48,"#c9ced8",7,"left","600");
-  drawScreen(248,70,216,196,on);
-  /* keys */
-  const dn=k=>ST.press===k;
-  keyBtn(...AVA_HIT.next,"#2ab7c9",t.lab.next,null,dn("next"));
-  keyBtn(...AVA_HIT.start,"#3ccf6a",t.lab.startStop[0],t.lab.startStop[1],dn("start"));
-  keyBtn(...AVA_HIT.prev,"#2ab7c9",t.lab.prev,null,dn("prev"));
-  fillR(530,166,44,84,14,"#0d0f12","#ea7a3a",2); text(t.lab.lapReset[0],552,178,"#e8eef2",8,"center","700");
-  text(t.lab.lapReset[1],552,188,"#e8eef2",8,"center","700"); text(t.lab.lapReset[2],552,198,"#e8eef2",8,"center","700");
-  circ(552,224,11,ST.lapDown!==null?"#050506":"#151618","#000",1.5);
-  /* θb / R9 toggle */
-  fillR(...AVA_HIT.toggle,20,"#0d0f12","#e8d23a",2);
-  text("θb",408,309,"#e8eef2",13,"left","700"); text("R9",506,309,"#e8eef2",13,"right","700");
-  fillR(442,296,30,26,4,"#1d1e22","#000",1); fillR(ST.show9?457:443,298,14,22,3,"#3a3b40");
-  text("www.avasmartworld.com",586,346,"#c9ced8",8,"right","600");
-  ctx.restore();
-}
-function drawScreen(x,y,w,h,on){
-  fillR(x,y,w,h,3,"#050608","#2b2d33",1.5);
-  if(!on) return;
-  const t=d(), G="#7dff6a", O="#ff9a3c", B="#16325c";
-  ctx.fillStyle="#0b1424"; ctx.fillRect(x+3,y+3,w-6,h-6);
-  const browsing=ST.view>=0&&ST.laps[ST.view];
-  const rec=browsing? ST.laps[ST.view] : (()=>{ const r=readAVA(); return {th:r.th,tb:r.tb,R:r.R,R9:r.R9,t:Math.floor(ST.timer)}; })();
-  /* left column: NTC */
-  const cw=w*0.47, x2=x+cw+6, w2=w-cw-9;
-  ctx.fillStyle=B; ctx.fillRect(x+4,y+4,cw,12); text("NTC",x+4+cw/2,y+10,"#cfe3ff",7,"center","700");
-  const rowH=(h-22)/8;
-  for(let i=0;i<7;i++) text(("0"+(i+1))+": "+rec.th[i].toFixed(2)+"°c",x+7,y+22+rowH*(i+0.5),G,10.5,"left","700",MONO);
-  const last=ST.show9? "R9:"+String(rec.R9).padStart(6," ")+"Ω" : "θb: "+rec.tb.toFixed(2)+"°c";
-  text(last,x+7,y+22+rowH*7.5,G,10.5,"left","700",MONO);
-  /* right column: RTD, timer, status, lap count, heaters */
-  ctx.fillStyle=B; ctx.fillRect(x2,y+4,w2,12); text("RTD",x2+w2/2,y+10,"#cfe3ff",7,"center","700");
-  text("R:"+rec.R.toFixed(2)+"Ω",x2+w2/2,y+28,G,11.5,"center","700",MONO);
-  ctx.fillStyle=B; ctx.fillRect(x2,y+40,w2,11); text("Timer(Second)",x2+w2/2,y+45.5,"#cfe3ff",6.5,"center","700");
-  text(String(rec.t).padStart(5,"0"),x2+w2/2,y+63,G,15,"center","700",MONO);
-  ctx.fillStyle=B; ctx.fillRect(x2,y+78,w2/2-1,11); ctx.fillRect(x2+w2/2+1,y+78,w2/2-1,11);
-  text("Status",x2+w2/4,y+83.5,"#cfe3ff",6.5,"center","700"); text("Count Lap",x2+3*w2/4,y+83.5,"#cfe3ff",6.5,"center","700");
-  const stat=browsing?"Lap":ST.run?"Run":"Stop";
-  text(stat,x2+w2/4,y+101,browsing?"#7fd6ff":ST.run?G:"#ff5a4a",12,"center","700",MONO);
-  text(String(browsing?ST.view+1:ST.laps.length).padStart(2,"0"),x2+3*w2/4,y+101,G,12,"center","700",MONO);
-  ctx.fillStyle=B; ctx.fillRect(x2,y+116,w2,11); text("Fan and Heater's status",x2+w2/2,y+121.5,"#cfe3ff",6,"center","700");
-  if(hotWarn()&&Math.floor(performance.now()/500)%2===0){
-    text("Turn off",x2+w2/2,y+146,"#ff4a3a",11,"center","800",MONO); text("Heater1",x2+w2/2,y+162,"#ff4a3a",11,"center","800",MONO);
-  } else {
-    [["Fan",ST.sw.fan],["Heater1",ST.sw.h1],["Heater2",ST.sw.h2],["Heater3",ST.sw.h3]].forEach(([n,v],i)=>
-      text(n+": "+(v?"ON":"OFF"),x2+4,y+138+i*13,v?G:"#ff6a5a",8,"left","700",MONO));
-  }
-}
 const hotWarn=()=>powered()&&ST.sw.h1&&readAVA().R>=121;
 
 /* ══════════════════════════════════════════════════════════════
-   5.  THE BENCH  (Fig. 1 seen from the front)
+   2.  CANVASES AND 2-D HELPERS
    ══════════════════════════════════════════════════════════════ */
-function bench(){
-  ctx.fillStyle=vgrad(0,TABLE_Y,[[0,"#3a3f47"],[1,"#2c3037"]]); ctx.fillRect(0,0,LW,TABLE_Y);
-  ctx.fillStyle=vgrad(TABLE_Y,LH-TABLE_Y,[[0,"#b98d5c"],[1,"#946c42"]]); ctx.fillRect(0,TABLE_Y,LW,LH-TABLE_Y);
-  ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(0,TABLE_Y,LW,4);
-  ctx.strokeStyle="rgba(90,60,30,.25)"; ctx.lineWidth=1;
-  for(let y=TABLE_Y+18;y<LH;y+=22){ ctx.beginPath(); ctx.moveTo(0,y); ctx.bezierCurveTo(300,y+4,800,y-4,LW,y+2); ctx.stroke(); }
-  /* the wall outlet */
-  fillR(OUTLET[0]-26,OUTLET[1]-34,52,68,6,"#e9e6df","#a9a49a",1.2);
-  circ(OUTLET[0],OUTLET[1],15,"#d8d4cb","#a9a49a"); circ(OUTLET[0]-5,OUTLET[1],2.6,"#333"); circ(OUTLET[0]+5,OUTLET[1],2.6,"#333");
-  text(d().lab.outlet,OUTLET[0],OUTLET[1]+46,"#c9ced8",11,"center");
+const cv=$("bench"), ctxM=cv.getContext("2d");
+let ctx=ctxM;
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
+let CW=0, CH=0, DPR=1, TRW=180, TRH=420;
+const FONT="'Segoe UI','Malgun Gothic','Apple SD Gothic Neo',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function lerp(c1,c2,f){ f=Math.max(0,Math.min(1,f)); const a=[1,3,5].map(i=>parseInt(c1.substr(i,2),16)), b=[1,3,5].map(i=>parseInt(c2.substr(i,2),16));
+  return "#"+a.map((v,i)=>Math.round(v+(b[i]-v)*f).toString(16).padStart(2,"0")).join(""); }
+function R(x0,y0,x1,y1,fill,stroke,lw){ if(fill){ctx.fillStyle=fill;ctx.fillRect(x0,y0,x1-x0,y1-y0);}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.strokeRect(x0,y0,x1-x0,y1-y0);} }
+function O(x0,y0,x1,y1,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse((x0+x1)/2,(y0+y1)/2,Math.abs(x1-x0)/2,Math.abs(y1-y0)/2,0,0,7);
+  if(fill){ctx.fillStyle=fill;ctx.fill();} if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();} }
+function L(pts,col,w){ ctx.beginPath(); ctx.moveTo(pts[0],pts[1]); for(let i=2;i<pts.length;i+=2) ctx.lineTo(pts[i],pts[i+1]);
+  ctx.strokeStyle=col; ctx.lineWidth=w||1; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.stroke(); }
+function P(pts,fill,stroke,lw){ ctx.beginPath(); ctx.moveTo(pts[0],pts[1]); for(let i=2;i<pts.length;i+=2) ctx.lineTo(pts[i],pts[i+1]); ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();} if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();} }
+function X(s,x,y,col,size,anchor,bold,font){
+  ctx.fillStyle=col; ctx.font=(bold?"700 ":"")+size+"px "+(font||FONT);
+  ctx.textAlign=anchor==="w"?"left":anchor==="e"?"right":"center"; ctx.textBaseline="middle";
+  const lines=String(s).split("\n"), lh=size*1.15;
+  lines.forEach((l,i)=>ctx.fillText(l,x,y+(i-(lines.length-1)/2)*lh)); }
+function RR(x,y,w,h,r,fill,stroke,lw){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+/* paint onto an offscreen canvas with the helpers above */
+function paint(c,fn){ const old=ctx; ctx=c.getContext("2d"); ctx.setTransform(1,0,0,1,0,0); fn(c.width,c.height); ctx=old; }
+function mkCanvas(w,h){ const c=document.createElement("canvas"); c.width=w; c.height=h; return c; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   LAB3D — a small orthographic 3-D bench renderer for canvas
+   (the APhO 2026 bench style: a wooden desk seen from above at an
+   angle; drag to turn it round, wheel to zoom, shift-drag to pan)
+
+   World units are centimetres: x and z lie on the desk, y is up.
+   Every frame the scene is described again as a list of faces, lines,
+   texts and custom items; they are sorted far-to-near and painted.
+   ══════════════════════════════════════════════════════════════ */
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
 }
-function styro(x,y,w,h){                       /* a styrofoam sleeve seen from the front */
-  fillR(x,y,w,h,h/2,vgrad(y,h,[[0,"#ffffff"],[0.5,"#eceae4"],[1,"#c9c6be"]]),"#b8b4aa",1);
-  ctx.fillStyle="rgba(0,0,0,.05)"; for(let i=0;i<14;i++) ctx.fillRect(x+6+((i*37)%(w-12)),y+4+((i*17)%(h-8)),2,2);
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
 }
-function wire(pts,col){ ctx.strokeStyle=col; ctx.lineWidth=3.5; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(...pts[0]);
-  ctx.bezierCurveTo(...pts[1],...pts[2],...pts[3]); ctx.stroke(); ctx.lineCap="butt"; }
-function drawBox(x){
-  const y=BOX.top, w=BOX.w, h=BOX.h, t=d();
-  ctx.fillStyle="rgba(0,0,0,.35)"; ctx.fillRect(x+20,TABLE_Y-6,w-40,8);
-  /* flanges and handles */
-  for(const [fx,dir] of [[x+14,-1],[x+w-14,1]]){ ctx.fillStyle="#1a1b1e"; ctx.beginPath(); ctx.moveTo(fx-12,y+h-6); ctx.lineTo(fx+12,y+h-6); ctx.lineTo(fx+dir*34,TABLE_Y); ctx.lineTo(fx+dir*14,TABLE_Y); ctx.closePath(); ctx.fill(); }
-  for(const hx of [x+22,x+w-38]){ ctx.strokeStyle="#1a1b1e"; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(hx,y+2); ctx.lineTo(hx,y-16); ctx.lineTo(hx+16,y-16); ctx.lineTo(hx+16,y+2); ctx.stroke(); }
-  /* heater wires behind the sleeves */
-  wire([[x-28,y+150],[x-70,y+190],[x-40,y+230],[x+10,y+205]],"#d0612a");
-  wire([[x+w+28,y+150],[x+w+70,y+190],[x+w+40,y+230],[x+w-10,y+205]],"#d0612a");
-  fillR(x,y,w,h,6,vgrad(y,h,[[0,"#25262a"],[1,"#18191c"]]),"#0c0c0e",1.5);
-  for(const [sx,sy] of [[x+40,y+30],[x+w-40,y+30],[x+40,y+h-30],[x+w-40,y+h-30],[x+w/2,y+18],[x+w/2,y+h-18]]) circ(sx,sy,3,"#3a3c42");
-  /* the long rod's styrofoam ends stick out on both sides */
-  styro(x-56,y+118,130,58); styro(x+w-74,y+118,130,58);
-  /* stickers */
-  const sticker=(sx,sy,lab,arrow)=>{ fillR(sx,sy,58,22,2,"#121316","#3a3c42",1); circ(sx+10,sy+11,5,null,"#e8a23a",1.2); text(lab,sx+18,sy+8,"#e8a23a",6.5,"left","700"); text(arrow,sx+30,sy+16,"#e8eef2",8,"center","700"); };
-  sticker(x+16,y+86,t.lab.heater,"←"); sticker(x+w-76,y+86,t.lab.heater,"→"); sticker(x+640,y+176,t.lab.heater,"↓");
-  /* the short rod in its styrofoam, right of the panel */
-  styro(x+590,y+206,160,60);
-  ctx.strokeStyle="#d0612a"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(x+746,y+232); ctx.quadraticCurveTo(x+770,y+246,x+760,y+262); ctx.stroke();
-  /* the 24 V input */
-  const [jx,jy]=JACK(x); circ(jx,jy,8,"#0a0a0b","#555",1.5); circ(jx,jy,2.5,"#888"); text(t.lab.dcjack,jx,jy-17,"#9aa3ab",9,"center");
-  const P=PANEL(x); drawAVA(P.x,P.y,P.s,true);
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
 }
-function drawPsu(x){
-  const y=TABLE_Y-PSU_H;
-  ctx.fillStyle="rgba(0,0,0,.35)"; ctx.fillRect(x+4,TABLE_Y-4,SZ.psu[0],6);
-  fillR(x,y,SZ.psu[0],PSU_H,8,vgrad(y,PSU_H,[[0,"#2b2c30"],[1,"#141517"]]),"#000",1);
-  circ(x+SZ.psu[0]-16,y+12,2.5,powered()?"#3cf06a":"#2a3a2e");
-  text("24V DC 1A",x+12,y+PSU_H/2,"#9aa3ab",9,"left","700");
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
 }
-function cable(from,to,col,plugType){
-  const mid=[(from[0]+to[0])/2,Math.max(from[1],to[1])+60];
-  ctx.strokeStyle=col; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(...from);
-  ctx.bezierCurveTo(from[0],mid[1],to[0],mid[1],to[0],to[1]); ctx.stroke();
-  if(plugType==="mains"){ fillR(to[0]-9,to[1]-12,18,24,4,"#1b1c1f","#000",1); }
-  else { fillR(to[0]-5,to[1]-5,10,10,2,"#1b1c1f","#000",1); circ(to[0],to[1],2,"#aaa"); }
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
 }
-function drawCables(){
-  if(!ST.on.psu) return;
-  const x=curX("psu"), y=TABLE_Y-PSU_H/2;
-  for(const k of ["mains","dc"]){
-    if(hand&&hand.k==="plug"&&hand.which===k) cable(k==="mains"?[x+SZ.psu[0],y]:[x,y],mouse,"#151618",k);
-    else cable(k==="mains"?[x+SZ.psu[0],y]:[x,y],plugPos(k),"#151618",k);
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
+  }
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face(orient(c1,ax.map(c=>c*sg)),cf);
   }
 }
-function drawBench(){
-  bench();
-  if(ST.on.box&&!moving("box")) drawBox(ST.x.box);
-  if(ST.on.psu&&!moving("psu")) drawPsu(ST.x.psu);
-  drawCables();
-  if(hand&&hand.move){
-    const k=hand.k, ok=!overlapX(k,ghostX(k));
-    ctx.save(); ctx.globalAlpha=ok?0.92:0.45; if(k==="box") drawBox(ghostX(k)); else drawPsu(ghostX(k)); ctx.restore(); }
-  else if(hand&&PLACE.includes(hand.k)){
-    const x=Math.round(mouse[0]-SZ[hand.k][0]/2), ok=!overlapX(hand.k,x);
-    ctx.save(); ctx.globalAlpha=ok?0.75:0.35; if(hand.k==="box") drawBox(x); else drawPsu(x); ctx.restore(); }
-  if(overBench&&!hand){ const p=PANEL(); const k=avaHitAt((mouse[0]-p.x)/p.s,(mouse[1]-p.y)/p.s);
-    if(ST.on.box&&k){ const r=AVA_HIT[k]; ctx.strokeStyle="#f2c14e"; ctx.lineWidth=1.5; ctx.strokeRect(p.x+r[0]*p.s-2,p.y+r[1]*p.s-2,r[2]*p.s+4,r[3]*p.s+4); } }
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const r1=o.r1===undefined?r:o.r1, P=(base,ang,rr)=>{ rr=rr===undefined?(base===b?r1:r):rr; return [base[0]+rr*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+rr*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+rr*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))]; };
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
 }
 
 /* ══════════════════════════════════════════════════════════════
-   6.  TRAY, LAYOUT, CLOSE UP
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
    ══════════════════════════════════════════════════════════════ */
-function icon(k,x,y,s){
-  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
-  if(k==="box"){ fillR(-26,-14,52,26,3,"#1d1e22","#000"); fillR(-33,-6,12,10,5,"#f2f0ea"); fillR(21,-6,12,10,5,"#f2f0ea"); fillR(-9,-10,18,14,2,"#0c0d10","#3a3c42"); ctx.fillStyle="#7dff6a"; ctx.fillRect(-4,-7,8,7); }
-  else if(k==="psu"){ fillR(-18,-9,36,18,4,"#202124","#000"); ctx.strokeStyle="#151618"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(18,0); ctx.quadraticCurveTo(30,12,26,18); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-18,0); ctx.quadraticCurveTo(-30,12,-26,18); ctx.stroke(); }
-  ctx.restore();
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=c;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
 }
-const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
-const TRAY_LIST=["box","psu"], TROW=46;
-let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[], P1={}, P2={};
-const trayAvail=k=>!ST.on[k]&&!(hand&&hand.k===k);
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
+  return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,q}); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   3.  THE BENCH, IN CENTIMETRES  (after Figs. 1–6 of the paper:
+       the black metal box standing on its two square end flanges,
+       the 57 cm rod across it with styrofoam on both ends, four fans
+       under the lid, the AVA-T403 panel on the front with the short
+       rod to its right, the 24 V supply lying behind it;
+       x right, y up, z towards the student)
+   ══════════════════════════════════════════════════════════════ */
+const DESK=[-62,62,-33,28], WALL_Z=-33.6;
+const BX0=-26, BX1=26, BY0=2.6, BY1=24.1, BZ0=-17, BZ1=-3, FZ=BZ1;
+const ROD_Y=14.2, ROD_Z=-10, ROD_R=0.6, ROD_X0=-28.5, ROD_X1=28.5, STY_R=2.4;
+const sensX=i=>ROD_X0+7.5+SX[i];
+const S8=[2.0,18.2,-6.6];                                           /* thermistor 8 in the air of the box */
+const FAN_X=[-19.5,-6.5,6.5,19.5], FAN_Y0=21.2, FAN_Y1=BY1-0.12, FAN_R=5.7;
+/* the AVA-T403 panel: Fig. 5 is 936 × 610 px, the panel 21.0 × 13.7 cm */
+const PAN={x0:-10.5,x1:10.5,y1:21.4}, PPC=936/21, PZ=FZ+0.32;
+PAN.y0=PAN.y1-610/PPC;
+const pan=(u,v,dz)=>[PAN.x0+u/PPC,PAN.y1-v/PPC,PZ+(dz||0)];
+const SCR_UV=[362,152,692,405];                                     /* the monitor on the panel */
+const KEY_UV={next:[806,236],start:[876,236],prev:[806,320],lap:[876,320]};
+const ROCK_UV={fan:[52,82,112,226],h1:[53,322,111,466],h2:[121,322,179,466],h3:[189,322,247,466]};
+const TOG_UV=[706,513];
+/* the short rod in its styrofoam, right of the panel (Fig. 1, 4) */
+const SHORT={x0:10.9,x1:25.2,y:8.4,z:FZ+3.1,r:2.85};
+const OUTLET=[45,15];
+const PSU={x0:33.5,x1:45.5,z0:-27,z1:-21,h:3.6};
+const JACK=[19.5,6.2,BZ0];
+const PLUG_REST=[50,0,-17];
+
+/* ---- the printed faces, painted once (the monitor whenever it changes) ---- */
+const PANELC=mkCanvas(936,610), SCRC=mkCanvas(660,506), FRONTC=mkCanvas(1040,430), TOPC=mkCanvas(1040,280),
+      BACKC=mkCanvas(1040,430), DESKC=mkCanvas(1024,640), STYC=mkCanvas(256,128);
+for(const c of [PANELC,FRONTC,TOPC,BACKC,DESKC,STYC]) c._static=true;
+SCRC._ver=0;
+function rr(x,y,w,h,r,fill,stroke,lw){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+function heaterIcon(x,y,r,n,col,lw){ ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.strokeStyle=col; ctx.lineWidth=lw; ctx.stroke();
+  for(let k=0;k<n;k++){ const xx=x+(k-(n-1)/2)*r*0.42; ctx.beginPath(); ctx.moveTo(xx,y-r*0.5);
+    ctx.bezierCurveTo(xx+r*0.22,y-r*0.2,xx-r*0.22,y+r*0.1,xx,y+r*0.5); ctx.stroke(); } }
+function screw(x,y,r){ const g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r); g.addColorStop(0,"#5a5d63"); g.addColorStop(1,"#1a1b1e");
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); ctx.strokeStyle="#0a0a0b"; ctx.lineWidth=r*0.18; ctx.stroke();
+  ctx.fillStyle="#111"; ctx.beginPath(); ctx.arc(x,y,r*0.32,0,7); ctx.fill(); }
+function paintPanel(w,h){
+  /* the black acrylic front of the AVA-T403, after Fig. 5 */
+  const g=ctx.createLinearGradient(0,0,w,h); g.addColorStop(0,"#17181b"); g.addColorStop(0.5,"#0e0f11"); g.addColorStop(1,"#141518");
+  ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle="#2b2d31"; ctx.lineWidth=3; ctx.strokeRect(1.5,1.5,w-3,h-3);
+  for(const [x,y] of [[26,48],[906,48],[26,502],[896,505]]) screw(x,y,13);
+  X("FAN",80,62,"#f2f2f2",22,"c",true,"Arial,sans-serif");
+  rr(44,74,76,160,4,"#050506","#2a2b2f",2);                       /* the rocker's bezel */
+  R(44,248,120,256,"#36c4ef");
+  /* the fan sign under it */
+  ctx.strokeStyle="#36c4ef"; ctx.lineWidth=3;
+  for(let k=0;k<4;k++){ const a=k*Math.PI/2+Math.PI/4; ctx.beginPath(); ctx.ellipse(82+Math.cos(a)*7,276+Math.sin(a)*7,7,4,a,0,7); ctx.stroke(); }
+  /* the IPhO 2024 mark */
+  ctx.lineWidth=2.2;
+  for(const [cx,cy,r,col] of [[214,150,70,"#d9dde6"],[236,150,66,"#9fb3d9"],[258,150,62,"#d9dde6"],[280,150,56,"#7f95c4"]]){
+    ctx.strokeStyle=col; ctx.beginPath(); ctx.arc(cx,cy,r,0,7); ctx.stroke(); }
+  X("IPhO",252,150,"#f6f7fb",64,"c",false,"'Segoe UI Light','Helvetica Neue',Arial,sans-serif");
+  X("54",298,192,"#c9a44a",17,"c",true,"Arial,sans-serif"); X("th",314,186,"#c9a44a",10,"w",true,"Arial,sans-serif");
+  X("International Physics Olympiad",252,213,"#d7dbe3",11,"c",false,"Arial,sans-serif");
+  X("Iran  |  Isfahan  |  2024",252,229,"#eef0f4",12.5,"c",true,"Arial,sans-serif");
+  X("HEATER",150,300,"#f2f2f2",22,"c",true,"Arial,sans-serif");
+  rr(44,314,212,160,4,"#050506","#2a2b2f",2);
+  for(const x of [116,184]) R(x,316,x+2,472,"#2a2b2f");
+  const cols=["#f2b43a","#f0862c","#e3502f"];
+  cols.forEach((c,i)=>{ R(44+i*70.7,486,44+(i+1)*70.7,494,c); heaterIcon(82+i*68,518,12,i+1,c,2.6); });
+  /* AVA's mark and the maker */
+  ctx.fillStyle="#2b9fe0"; ctx.beginPath(); ctx.moveTo(32,566); ctx.lineTo(44,552); ctx.lineTo(56,566); ctx.lineTo(44,580); ctx.closePath(); ctx.fill();
+  X("ʌʌ",44,567,"#ffffff",14,"c",true,"Arial,sans-serif");
+  X("Designed and produced by",76,566,"#f2f2f2",19,"w",false,"Arial,sans-serif");
+  X("AVA SMART WORLD",76,590,"#f2f2f2",19,"w",true,"Arial,sans-serif");
+  /* the title above the monitor */
+  rr(358,80,342,36,6,"#25272b","#34363b",1.5);
+  X("AVA-T403",372,98,"#ffffff",23,"w",true,"Arial,sans-serif");
+  X("Heat Conduction in a Copper Rod",487,98,"#e8e8ea",14.5,"w",false,"Arial,sans-serif");
+  /* the monitor's bezel (the picture itself is laid on top) */
+  R(354,144,700,413,"#b9bec4"); R(357,147,697,410,"#1a1c20");
+  /* the four keys: coloured rounded frames with their names and signs (the push buttons are 3-D) */
+  const frame=(x,y,ww,hh,col)=>rr(x,y,ww,hh,30,null,col,4);
+  frame(772,112,68,142,"#38c6ea"); frame(847,112,60,142,"#4fd26f"); frame(772,296,68,154,"#38c6ea"); frame(847,296,60,154,"#f07a3c");
+  X("NEXT",806,180,"#f4f4f4",17,"c",false,"Arial,sans-serif");
+  X("START",877,172,"#f4f4f4",16,"c",false,"Arial,sans-serif"); X("STOP",877,192,"#f4f4f4",16,"c",false,"Arial,sans-serif");
+  X("PREV",806,380,"#f4f4f4",17,"c",false,"Arial,sans-serif");
+  X("LAP",877,374,"#f4f4f4",15,"c",false,"Arial,sans-serif"); X("RESET",877,394,"#f4f4f4",15,"c",false,"Arial,sans-serif"); X("EXIT",877,414,"#f4f4f4",15,"c",false,"Arial,sans-serif");
+  /* the signs: ⏭ ⟳ ⏮ ⇆ */
+  ctx.strokeStyle="#38c6ea"; ctx.fillStyle="#38c6ea"; ctx.lineWidth=2.5;
+  P([798,124,798,140,810,132],null,"#38c6ea",2.5); L([813,124,813,140],"#38c6ea",2.5);
+  P([814,416,814,432,802,424],null,"#38c6ea",2.5); L([799,416,799,432],"#38c6ea",2.5);
+  ctx.strokeStyle="#4fd26f"; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(877,133,9,-1.1,4.3); ctx.stroke(); L([877,121,877,129],"#4fd26f",2.5);
+  ctx.strokeStyle="#f07a3c"; L([866,432,886,432],"#f07a3c",2.5); L([868,440,888,440],"#f07a3c",2.5); P([886,428,891,432,886,436],"#f07a3c"); P([868,436,863,440,868,444],"#f07a3c");
+  /* θb – R9 switch */
+  rr(628,481,160,64,32,null,"#e8d23c",4);
+  X("θ",652,513,"#f4f4f4",26,"c",false,"Arial,sans-serif"); X("b",664,520,"#f4f4f4",15,"c",false,"Arial,sans-serif");
+  X("R",750,513,"#f4f4f4",26,"c",false,"Arial,sans-serif"); X("9",764,520,"#f4f4f4",15,"c",false,"Arial,sans-serif");
+  rr(686,491,40,44,4,"#050506","#2a2b2f",2);
+  X("www.avasmartworld.com",904,592,"#e8e8ea",17,"e",false,"Arial,sans-serif");
+}
+/* the monitor (Fig. 5): NTC column on the left, RTD, timer, status, lap count and the switches on the right */
+function paintScreen(w,h){
+  const s=w/330;                                                   /* drawing in the photo's pixels */
+  ctx.setTransform(s,0,0,s,0,0);
+  if(!powered()){ const g=ctx.createLinearGradient(0,0,330,253); g.addColorStop(0,"#121418"); g.addColorStop(0.5,"#07080a"); g.addColorStop(1,"#0f1114");
+    ctx.fillStyle=g; ctx.fillRect(0,0,330,253); ctx.setTransform(1,0,0,1,0,0); return; }
+  ctx.fillStyle="#091124"; ctx.fillRect(0,0,330,253);
+  const OR="#f3a56f", GR="#69ff63", RD="#ff4a3a", HD=(x,y,ww,t)=>{ R(x,y,x+ww,y+13,OR); X(t,x+ww/2,y+6.8,"#20140c",8.5,"c",true,"Arial,sans-serif"); };
+  const browsing=ST.view>=0&&ST.laps[ST.view];
+  const r=readAVA(), rec=browsing?ST.laps[ST.view]:{th:r.th,tb:r.tb,R:r.R,R9:r.R9,t:Math.floor(ST.timer)};
+  HD(2,1,160,"NTC"); R(164,0,166,253,OR);
+  for(let i=0;i<7;i++){ X("θ",6,30+i*29,GR,17,"w",true,"Arial,sans-serif"); X((i+1)+":",16,30+i*29,GR,17,"w",true,MONO); X(rec.th[i].toFixed(2)+" °c",55,30+i*29,GR,17,"w",true,MONO); }
+  if(ST.show9){ X("R9:",6,235,GR,17,"w",true,MONO); X(String(rec.R9),55,235,GR,17,"w",true,MONO); X("Ω",142,235,GR,15,"w",true,"Arial,sans-serif"); }
+  else { X("θ",6,235,GR,17,"w",true,"Arial,sans-serif"); X("b:",16,235,GR,17,"w",true,MONO); X(rec.tb.toFixed(2)+" °c",55,235,GR,17,"w",true,MONO); }
+  HD(168,1,160,"RTD");
+  X("R:"+rec.R.toFixed(2),178,25,GR,17,"w",true,MONO); X("Ω",300,25,GR,15,"w",true,"Arial,sans-serif");
+  HD(168,40,160,"Timer(Second)");
+  X(String(Math.min(99999,rec.t)).padStart(5,"0"),248,74,GR,20,"c",true,MONO);
+  HD(168,94,79,"Status"); HD(249,94,79,"Count Lap");
+  const stat=browsing?"Lap":ST.run?"Run":"Stop";
+  X(stat,207,127,browsing?"#7fd6ff":ST.run?GR:RD,19,"c",false,"'Courier New',monospace");
+  X(String(browsing?ST.view+1:ST.laps.length).padStart(2,"0"),288,127,GR,19,"c",true,MONO);
+  HD(168,150,160,"Fan and Heater's status");
+  if(hotWarn()&&Math.floor(performance.now()/500)%2===0){
+    X("Turn off",248,195,RD,18,"c",true,MONO); X("Heater1",248,218,RD,18,"c",true,MONO);
+  } else {
+    [["Fan",ST.sw.fan],["Heater1",ST.sw.h1],["Heater2",ST.sw.h2],["Heater3",ST.sw.h3]].forEach(([n,v],i)=>
+      X(n+": "+(v?"ON":"OFF"),172,180+i*17,v?GR:RD,10.5,"w",false,"'Courier New',monospace"));
+  }
+  ctx.setTransform(1,0,0,1,0,0);
+}
+function screenSig(){ if(!powered()) return "off"; const r=readAVA();
+  return [r.R,r.R9,r.tb,r.th.join(","),Math.floor(ST.timer),ST.run,ST.laps.length,ST.view,ST.show9,Object.values(ST.sw).join(),hotWarn()?Math.floor(performance.now()/500)%2:2].join("|"); }
+let scrSig="";
+function refreshScreen(){ const s=screenSig(); if(s===scrSig) return; scrSig=s; paint(SCRC,paintScreen); SCRC._ver++; }
+/* a sticker on the front: the heater's sign, HEATER and an arrow to it (Fig. 1) */
+function sticker(x,y,n,arrow){ rr(x,y,104,52,3,"#0c0d0f","#3a3c42",2); const col=["#f2b43a","#f0862c","#e3502f"][n-1];
+  heaterIcon(x+20,y+18,10,n,col,2); X("HEATER",x+38,y+18,"#f0a84a",13,"w",true,"Arial,sans-serif");
+  ctx.strokeStyle="#f4f4f4"; ctx.lineWidth=3; const cx=x+56, cy=y+38;
+  if(arrow==="l"){ L([cx+12,cy,cx-10,cy],"#f4f4f4",3); P([cx-14,cy,cx-6,cy-5,cx-6,cy+5],"#f4f4f4"); }
+  else if(arrow==="r"){ L([cx-12,cy,cx+10,cy],"#f4f4f4",3); P([cx+14,cy,cx+6,cy-5,cx+6,cy+5],"#f4f4f4"); }
+  else { L([cx,cy-8,cx,cy+6],"#f4f4f4",3); P([cx,cy+10,cx-5,cy+3,cx+5,cy+3],"#f4f4f4"); } }
+function paintStatic(){
+  paint(PANELC,paintPanel);
+  /* the front of the box: 20 px a centimetre, x from BX0, y down from BY1 */
+  paint(FRONTC,(w,h)=>{
+    const g=ctx.createLinearGradient(0,0,0,h); g.addColorStop(0,"#1d1e21"); g.addColorStop(1,"#141517"); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    const rn=mulberry(11); for(let i=0;i<2600;i++){ ctx.fillStyle=`rgba(${rn()<0.5?"255,255,255":"0,0,0"},${0.03+rn()*0.04})`; ctx.fillRect(rn()*w,rn()*h,2,2); }
+    for(const [x,y] of [[300,22],[720,22],[300,410],[720,410],[30,200],[1010,200]]) screw(x,y,8);
+    const fx=x=>(x-BX0)*20, fy=y=>(BY1-y)*20;
+    sticker(fx(-25.4),fy(16.6),2,"l"); sticker(fx(15.4),fy(16.0),1,"d"); sticker(fx(20.7),fy(16.0),3,"r");
+  });
+  /* the lid: four round grilles over the fans (cut through, so the fans show), seen from above */
+  paint(TOPC,(w,h)=>{
+    ctx.fillStyle="#18191b"; ctx.fillRect(0,0,w,h);
+    ctx.globalCompositeOperation="destination-out";
+    for(const fx of FAN_X){ const cx=(fx-BX0)*20, cy=h/2;
+      for(let r=22;r<=FAN_R*20-6;r+=17){ ctx.lineWidth=10; ctx.beginPath(); ctx.arc(cx,cy,r,0,7); ctx.stroke(); } }
+    ctx.globalCompositeOperation="source-over";
+    for(const fx of FAN_X){ const cx=(fx-BX0)*20, cy=h/2; ctx.strokeStyle="#18191b"; ctx.lineWidth=6;
+      for(let k=0;k<4;k++){ const a=k*Math.PI/2+Math.PI/4; L([cx,cy,cx+Math.cos(a)*FAN_R*20,cy+Math.sin(a)*FAN_R*20],"#18191b",6); }
+      ctx.fillStyle="#18191b"; ctx.beginPath(); ctx.arc(cx,cy,16,0,7); ctx.fill();
+      for(const [dx,dy] of [[-1,-1],[1,-1],[-1,1],[1,1]]) screw(cx+dx*FAN_R*20*0.86,cy+dy*FAN_R*20*0.86,5); }
+    ctx.strokeStyle="#0c0c0d"; ctx.lineWidth=4; ctx.strokeRect(2,2,w-4,h-4);
+  });
+  /* the back: the name plate of Fig. 6 and the 24 V input; drawn as seen from behind */
+  paint(BACKC,(w,h)=>{
+    const g=ctx.createLinearGradient(0,0,0,h); g.addColorStop(0,"#1d1e21"); g.addColorStop(1,"#141517"); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    for(const [x,y] of [[300,22],[720,22],[300,410],[720,410]]) screw(x,y,8);
+    const bx=x=>(BX1-x)*20, by=y=>(BY1-y)*20;
+    /* the plate, 6.4 × 9.2 cm (Fig. 6) */
+    const x0=bx(16.5), y0=by(20.6), pw=128, ph=184;
+    R(x0,y0,x0+pw,y0+ph,"#f7f7f4","#c9c9c4",1.5);
+    X("MODEL : AVA-T403",x0+pw/2,y0+16,"#2a2a2a",10.5,"c",true,"Arial,sans-serif");
+    ctx.strokeStyle="#333"; ctx.lineWidth=1.3; ctx.beginPath(); ctx.arc(x0+pw/2,y0+44,13,0.3,5.9); ctx.stroke();
+    X("ʌʌ",x0+pw/2,y0+44,"#2a2a2a",12,"c",true,"Arial,sans-serif");
+    X("AVA Smart World",x0+pw/2,y0+68,"#3a3a3a",10.5,"c",false,"Arial,sans-serif");
+    X("P2=5.0 ± 0.1 W",x0+pw/2,y0+94,"#2a2a2a",12,"c",true,"Arial,sans-serif");
+    X("Power Supply:24V DC 1A",x0+pw/2,y0+114,"#2a2a2a",9,"c",true,"Arial,sans-serif");
+    X("S/N:",x0+12,y0+150,"#2a2a2a",9.5,"w",true,"Arial,sans-serif");
+    const rb=mulberry(5); let xx=x0+36; while(xx<x0+pw-10){ const ww=1+Math.floor(rb()*3); R(xx,y0+134,xx+ww,y0+160,"#111"); xx+=ww+1+Math.floor(rb()*2); }
+    X("2024500",x0+pw/2+10,y0+172,"#2a2a2a",10.5,"c",true,"Arial,sans-serif");
+    X("DC 24V",bx(JACK[0]),by(JACK[1]+1.6),"#d8dade",15,"c",true,"Arial,sans-serif");
+  });
+  /* the desk: the pale grey laminate of the exam hall (Fig. 8 of E2) */
+  paint(DESKC,(w,h)=>{
+    ctx.fillStyle="#dcdcd7"; ctx.fillRect(0,0,w,h);
+    const rn=mulberry(3); for(let i=0;i<9000;i++){ const v=rn(); ctx.fillStyle=`rgba(${v<0.5?"120,118,110":"255,255,250"},${0.05+rn()*0.07})`; ctx.fillRect(rn()*w,rn()*h,1.6,1.6); }
+    const gg=ctx.createLinearGradient(0,0,w,h); gg.addColorStop(0,"rgba(255,255,255,0.10)"); gg.addColorStop(1,"rgba(0,0,0,0.05)"); ctx.fillStyle=gg; ctx.fillRect(0,0,w,h);
+  });
+  /* styrofoam: white with its beads */
+  paint(STYC,(w,h)=>{ ctx.fillStyle="#f1efe9"; ctx.fillRect(0,0,w,h); const rn=mulberry(9);
+    for(let i=0;i<500;i++){ ctx.strokeStyle=`rgba(150,145,130,${0.10+rn()*0.15})`; ctx.lineWidth=0.8; ctx.beginPath(); ctx.arc(rn()*w,rn()*h,2+rn()*3,0,7); ctx.stroke(); } });
+  refreshScreen();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4.  THE 3-D MODEL
+   ══════════════════════════════════════════════════════════════ */
+const add3=(a,b,s)=>[a[0]+b[0]*(s===undefined?1:s),a[1]+b[1]*(s===undefined?1:s),a[2]+b[2]*(s===undefined?1:s)];
+function bez(P0,P1,P2,P3,n){ const out=[]; for(let i=0;i<=n;i++){ const t=i/n,u=1-t;
+  out.push([0,1,2].map(j=>u*u*u*P0[j]+3*u*u*t*P1[j]+3*u*t*t*P2[j]+t*t*t*P3[j])); } return out; }
+/* a wire or a cord: a ribbon as wide as it is on screen, with a lit stripe along it */
+function tube(pts,r,col,o){ o=o||{}; const lw=Math.max(1.2,2*r*CAM.k);
+  poly3(pts,col,lw,{bias:o.bias||0,cap:"round"});
+  poly3(pts,o.hi||lerp(col,"#ffffff",0.35),Math.max(0.6,lw*0.24),{bias:(o.bias||0)+6,cap:"butt"});
+  if(o.id){ const step=Math.max(1,Math.floor(pts.length/10)); for(let i=0;i<pts.length;i+=step) sphere3(pts[i],r*1.6,"rgba(0,0,0,0.004)",{id:o.id}); } }
+let fanAng=0, VIEW="all";
+function desk3(){
+  if(CAM.pitch<0.04) return;                                        /* looking up from under the box (Fig. 3) */
+  const [x0,x1,z0,z1]=DESK;
+  tex3(DESKC,0,0,DESKC.width,DESKC.height,[x0,0,z0],[x1-x0,0,0],[0,0,z1-z0],{id:"desk"});
+  box3(x0,x1,-3.0,-0.02,z0,z1,"#a9a9a3",{noTop:true});
+  face([[-90,-4,WALL_Z],[90,-4,WALL_Z],[90,70,WALL_Z],[-90,70,WALL_Z]],{fill:"#cfc9bc",flat:true,cull:true});
+  line3([-90,0.02,WALL_Z+0.02],[90,0.02,WALL_Z+0.02],"#8f8778",Math.max(1,0.3*CAM.k));
+  /* a duplex wall socket */
+  const [ox,oy]=OUTLET, zf=WALL_Z+1.1;
+  box3(ox-3.6,ox+3.6,oy-9.6,oy+2.4,WALL_Z,WALL_Z+0.7,"#eef0ee",{id:"outlet"});
+  for(const yy of [oy,oy-7.2]){ box3(ox-1.8,ox+1.8,yy-1.8,yy+1.8,WALL_Z+0.7,zf,"#e7e8e3",{id:"outlet"});
+    for(const dx of [-0.62,0.62]) cyl3("z",zf,zf+0.01,ox+dx,yy,0.24,"#26282b",{seg:10}); }
+  cyl3("z",WALL_Z+0.7,WALL_Z+0.75,ox,oy-3.6,0.22,"#bfc3c6",{seg:10});
+}
+/* the PSU brick lying behind the box, its DC lead into the back, its mains cord to the wall (or loose) */
+function psu3(){
+  const {x0,x1,z0,z1,h}=PSU;
+  box3(x0,x1,0,h,z0,z1,"#1b1c1f",{id:"psu",top:"#222327"});
+  for(let i=0;i<5;i++) line3([x0+1.5,h+0.01,z0+1+i*0.9],[x1-1.5,h+0.01,z0+1+i*0.9],"#2c2d31",Math.max(1,0.08*CAM.k));
+  text3([x0+1.2,h+0.02,z1-1.1],[1,0,0],[0,0,-1],"24V DC 1A",0.75,"#9aa0a8",{weight:"700"});
+  sphere3([x1-1.4,h+0.12,z0+1.2],0.22,powered()?"#3cf06a":"#1f3324",{});
+  /* the DC lead into the 24 V input on the back of the box */
+  const a=[x0,h/2,(z0+z1)/2], j=[JACK[0],JACK[1],BZ0-1.8];
+  tube(bez(a,[x0-5,0.4,(z0+z1)/2],[j[0]+2,0.4,BZ0-6],[j[0],j[1]-2,BZ0-3],22).concat([j]),0.22,"#121315",{id:"psu"});
+  cylAB([JACK[0],JACK[1],BZ0],[JACK[0],JACK[1],BZ0-1.9],0.45,"#18191b",{seg:12});
+  /* the mains cord and its moulded plug */
+  const b=[x1,h/2,(z0+z1)/2];
+  if(ST.plug){
+    const [ox,oy]=OUTLET, zf=WALL_Z+1.1, p=[ox,oy-7.2,zf+2.3];
+    tube(bez(b,[x1+6,0.4,z0+2],[ox,0.4,WALL_Z+6],[ox,oy-9.6,zf+2.3],26).concat([[ox,oy-7.2-1.8,zf+1.2]]),0.3,"#151618");
+    box3(ox-1.75,ox+1.75,oy-7.2-1.75,oy-7.2+1.75,zf,zf+2.3,"#1d1e20",{id:"mains",top:"#26272a"});
+  } else {
+    const e=PLUG_REST;
+    tube(bez(b,[x1+4,0.4,(z0+z1)/2],[e[0],0.4,e[2]-4],[e[0],0.9,e[2]-1.6],20),0.3,"#151618");
+    box3(e[0]-1.15,e[0]+1.15,0,1.8,e[2]-1.6,e[2]+1.4,"#1d1e20",{id:"mains",top:"#26272a"});
+    for(const dx of [-0.62,0.62]) cylAB([e[0]+dx,0.9,e[2]+1.4],[e[0]+dx,0.9,e[2]+3.2],0.2,"#c9ccd0",{seg:8,id:"mains"});
+    sphere3([e[0],0.9,e[2]],2.6,"rgba(0,0,0,0.004)",{id:"mains"});
+  }
+}
+/* one end flange: a square plate standing on a foot, a handle cut through its top (Fig. 1, 3) */
+function flange3(x,sg){
+  const xa=x, xb=x+sg*0.35, za=BZ0-1.3, zb=BZ1+1.3, id=sg<0?"endL":"endR";
+  const pl=(y0,y1,z0,z1)=>box3(Math.min(xa,xb),Math.max(xa,xb),y0,y1,z0,z1,"#1a1b1e",{id});
+  pl(0,BY1+0.4,za,zb);
+  pl(BY1+0.4,BY1+3.0,za,za+3.0); pl(BY1+0.4,BY1+3.0,zb-3.0,zb); pl(BY1+3.0,BY1+3.9,za,zb);
+  /* the foot, bent outwards */
+  box3(Math.min(x,x+sg*3.2),Math.max(x,x+sg*3.2),0,0.32,za,zb,"#1a1b1e",{id});
+  for(const z of [za+1.4,zb-1.4]) cyl3("y",0.32,0.6,x+sg*2.2,z,0.38,"#4a4c51",{seg:10});
+}
+function rod3(){
+  cyl3("x",ROD_X0,ROD_X1,ROD_Y,ROD_Z,ROD_R,"#c47a45",{seg:16,id:"rod"});
+  /* the styrofoam on both ends (7.0 cm over the rod, a little longer than it) */
+  for(const [a,b] of [[ROD_X0-1.7,ROD_X0+7.0],[ROD_X1-7.0,ROD_X1+1.7]]){
+    cyl3("x",a,b,ROD_Y,ROD_Z,STY_R,"#f1efe8",{seg:26,id:"rod",cap:"#f6f4ee"}); }
+  /* heaters 2 and 3: their red leads come out of the outer ends and go back into the box */
+  for(const sg of [-1,1]){ const x=sg<0?ROD_X0-1.7:ROD_X1+1.7, e=[x,ROD_Y-0.6,ROD_Z+0.6];
+    tube(bez(e,[x+sg*3.2,ROD_Y-1,ROD_Z+1.5],[x+sg*3.5,6,ROD_Z+3.5],[sg*26.4,5.2,BZ1-1.6],18),0.16,"#d8432c");
+    tube(bez([x,ROD_Y-0.2,ROD_Z+0.9],[x+sg*2.8,ROD_Y-0.6,ROD_Z+2.2],[x+sg*3.1,6.5,ROD_Z+4],[sg*26.4,5.8,BZ1-1.6],18),0.16,"#e0503a"); }
+  /* the thermistors in their holes, their white leads up to the bundle under the lid */
+  for(let i=0;i<7;i++){ const x=sensX(i), p=[x,ROD_Y+ROD_R+0.12,ROD_Z];
+    sphere3(p,0.26,"#2a2b2e",{id:"rod"});
+    tube(bez(p,[x,ROD_Y+3,ROD_Z],[x,19,ROD_Z-3],[x*0.92,20.3,BZ0+2.1],10),0.07,"#eceff1"); }
+  sphere3(S8,0.3,"#2a2b2e",{}); tube([S8,[S8[0],20.3,S8[2]-2],[S8[0]-1,20.4,BZ0+2.1]],0.07,"#eceff1");
+  /* the bundle along the back under the lid, into the back of the panel */
+  tube([[-24,20.4,BZ0+2.1],[24,20.4,BZ0+2.1]],0.42,"#e9ecee");
+  tube(bez([0,20.4,BZ0+2.2],[0,16,BZ0+4],[0,14,FZ-4],[0,14,FZ-0.2],14),0.38,"#e9ecee");
+  tube([[-23,21.0,BZ0+1.3],[23,21.0,BZ0+1.3]],0.16,"#cc3a2a"); tube([[-23,21.2,BZ0+1.0],[23,21.2,BZ0+1.0]],0.16,"#202124");
+}
+function fans3(){
+  for(const fx of FAN_X){ const cz=(BZ0+BZ1)/2, s=FAN_R+0.6, y0=FAN_Y0, y1=FAN_Y1;
+    box3(fx-s,fx+s,y0,y1,cz-s,cz-s+0.7,"#141517"); box3(fx-s,fx+s,y0,y1,cz+s-0.7,cz+s,"#141517");
+    box3(fx-s,fx-s+0.7,y0,y1,cz-s,cz+s,"#141517"); box3(fx+s-0.7,fx+s,y0,y1,cz-s,cz+s,"#141517");
+    cyl3("y",y0+0.2,y1,fx,cz,1.75,"#121315",{seg:20,cap:"#1b1c1f"});
+    const yb=(y0+y1)/2, a0=fanAng+fx*0.37;
+    for(let b=0;b<7;b++){ const a=a0+b*2*Math.PI/7, P=(r,t,dy)=>[fx+r*Math.cos(t),yb+dy,cz+r*Math.sin(t)];
+      face([P(1.7,a,-0.35),P(FAN_R-0.1,a+0.28,-0.2),P(FAN_R-0.1,a+0.86,0.25),P(1.7,a+0.55,0.35)],{fill:"#222327",cull:false}); }
+    for(let k=0;k<3;k++){ const a=k*2*Math.PI/3+0.5; cylAB([fx+1.7*Math.cos(a),y0+0.3,cz+1.7*Math.sin(a)],[fx+s*0.95*Math.cos(a),y0+0.3,cz+s*0.95*Math.sin(a)],0.18,"#141517",{seg:6}); }
+  }
+}
+/* a rocker on the panel: a two-faceted cap that rocks in on the I side when on (Fig. 5) */
+function rocker3(uv,on,id){
+  const a=pan(uv[0],uv[1]), b=pan(uv[2],uv[3]), x0=a[0], x1=b[0], yT=a[1], yB=b[1], yM=(yT+yB)/2;
+  box3(x0-0.1,x1+0.1,yB-0.1,yT+0.1,PZ,PZ+0.2,"#060607",{id});
+  const zb=PZ+0.2, hi=0.66, lo=0.2, zT=zb+(on?hi:lo), zB=zb+(on?lo:hi), zM=zb+0.48;
+  prism3("x",x0,x1,[[yB,zb],[yT,zb],[yT,zT],[yM,zM],[yB,zB]],"#1e1f22",{id});
+  /* the raised facet catches the light, the pressed one sits in shadow */
+  const up=on?"#34353a":"#121316", dn=on?"#121316":"#34353a";
+  face([[x0,yM,zM+0.004],[x1,yM,zM+0.004],[x1,yT,zT+0.004],[x0,yT,zT+0.004]],{fill:up,flat:true,cull:false,id});
+  face([[x0,yB,zB+0.004],[x1,yB,zB+0.004],[x1,yM,zM+0.004],[x0,yM,zM+0.004]],{fill:dn,flat:true,cull:false,id});
+  const sT=(zT-zM)/(yT-yM), sB=(zM-zB)/(yM-yB), cx=(x0+x1)/2;
+  const yO=yM+(yT-yM)*0.5, yI=yB+(yM-yB)*0.5;
+  text3([cx,yO,zM+sT*(yO-yM)+0.03],[1,0,0],[0,1,sT],"O",0.62,"#f1f1f1",{align:"center",weight:"400"});
+  text3([cx,yI,zB+sB*(yI-yB)+0.03],[1,0,0],[0,1,sB],"I",0.66,"#f1f1f1",{align:"center",weight:"400"});
+}
+function key3(k){ const [u,v]=KEY_UV[k], c=pan(u,v), dn=ST.press===k||(k==="lap"&&ST.lapDown!==null);
+  cyl3("z",PZ,PZ+0.16,c[0],c[1],0.52,"#030304",{seg:22,id:k});
+  cyl3("z",PZ+0.16,PZ+(dn?0.24:0.46),c[0],c[1],0.37,"#18191c",{seg:22,id:k,cap:dn?"#0e0f11":"#232428"}); }
+function panel3(){
+  box3(PAN.x0,PAN.x1,PAN.y0,PAN.y1,FZ,PZ,"#0c0d0f",{id:"pan"});
+  tex3(PANELC,0,0,936,610,[PAN.x0,PAN.y1,PZ+0.004],[PAN.x1-PAN.x0,0,0],[0,-(PAN.y1-PAN.y0),0],{id:"pan"});
+  const s0=pan(SCR_UV[0],SCR_UV[1],0.008);
+  tex3(SCRC,0,0,SCRC.width,SCRC.height,s0,[(SCR_UV[2]-SCR_UV[0])/PPC,0,0],[0,-(SCR_UV[3]-SCR_UV[1])/PPC,0],{id:"scr"});
+  for(const k of ["fan","h1","h2","h3"]) rocker3(ROCK_UV[k],ST.sw[k],k);
+  for(const k of ["next","start","prev","lap"]) key3(k);
+  const c=pan(TOG_UV[0],TOG_UV[1]), dx=ST.show9?0.17:-0.17;
+  box3(c[0]-0.36,c[0]+0.36,c[1]-0.42,c[1]+0.42,PZ,PZ+0.18,"#050506",{id:"tog"});
+  box3(c[0]+dx-0.15,c[0]+dx+0.15,c[1]-0.3,c[1]+0.3,PZ+0.18,PZ+0.5,"#2a2b2f",{id:"tog",top:"#35363b"});
+}
+function short3(){
+  const {x0,x1,y,z,r}=SHORT;
+  /* two brackets hold it off the face */
+  for(const x of [x0+2.5,x1-2.5]) box3(x-0.5,x+0.5,y-0.6,y+0.6,FZ,z-r+0.3,"#141517");
+  cylSeg("x",x0,x1,y,z,r,"#f1efe8",{seg:28,id:"short",cap:"#f6f4ee"},3);
+  /* PT100 and R9 come out on the left (a steel sleeve, black leads), heater 1 on the right (red leads) */
+  cyl3("x",x0-0.9,x0,y+0.2,z-0.3,0.42,"#b8bec4",{seg:12,id:"short"});
+  for(const [dy,dz] of [[0.35,-0.15],[0.1,-0.5],[0.45,-0.55]])
+    tube(bez([x0-0.9,y+dy,z+dz],[x0-2.6,y+dy,z+dz],[x0-2.4,y+1.2,FZ+1.2],[x0-1.6,y+1.4,FZ],10),0.1,"#18191b");
+  for(const dz of [-0.25,0.25]) tube(bez([x1,y,z+dz],[x1+2.6,y-0.4,z+dz],[x1+2.2,y-3.4,FZ+1.6],[x1-0.6,y-3.0,FZ],12),0.13,"#d8432c");
+}
+function box3d(){
+  const inside=VIEW==="below";
+  /* the body: front, back and lid, each a printed face outside and a plain one inside; open below */
+  tex3(FRONTC,0,0,1040,430,[BX0,BY1,FZ+0.003],[BX1-BX0,0,0],[0,-(BY1-BY0),0],{id:"front"});
+  face([[BX0,BY0,FZ-0.05],[BX1,BY0,FZ-0.05],[BX1,BY1,FZ-0.05],[BX0,BY1,FZ-0.05]],{fill:"#1a1b1e",cull:false,id:inside?"front":undefined});
+  tex3(BACKC,0,0,1040,430,[BX1,BY1,BZ0-0.003],[-(BX1-BX0),0,0],[0,-(BY1-BY0),0],{id:"back"});
+  face([[BX0,BY0,BZ0+0.05],[BX1,BY0,BZ0+0.05],[BX1,BY1,BZ0+0.05],[BX0,BY1,BZ0+0.05]],{fill:"#17181b",cull:false});
+  tex3(TOPC,0,0,1040,280,[BX0,BY1+0.003,BZ0],[BX1-BX0,0,0],[0,0,BZ1-BZ0],{id:"top"});
+  tex3(TOPC,0,0,1040,280,[BX0,BY1-0.06,BZ1],[BX1-BX0,0,0],[0,0,-(BZ1-BZ0)],{id:"top"});
+  /* the lip of the lid and the bottom edges, folded steel */
+  for(const z of [BZ0,BZ1]) box3(BX0,BX1,BY1-0.05,BY1+0.25,z-0.12,z+0.12,"#202124");
+  for(const z of [BZ0,BZ1]) box3(BX0,BX1,BY0-0.25,BY0+0.05,z-(z===BZ0?0:0.9),z+(z===BZ0?0.9:0),"#1d1e21");
+  flange3(BX0,-1); flange3(BX1,1);
+  fans3(); rod3(); panel3(); short3();
+}
+function scene3(){ desk3(); box3d(); psu3(); }
+
+/* ══════════════════════════════════════════════════════════════
+   5.  LAYOUT, CAMERA, DRAWING
+   ══════════════════════════════════════════════════════════════ */
 function layout(){
-  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
-  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
-  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
-  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
-  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
-  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
-  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.40);
-  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
-  const h=CLH-16, w1=Math.round(Math.min(CLW*0.58,h*600/360));
-  P1={x:8,y:8,w:w1,h}; P2={x:16+w1,y:8,w:CLW-24-w1,h};
+  DPR=Math.min(Math.max(window.devicePixelRatio||1,1),2);
+  const r=cv.parentElement.getBoundingClientRect();
+  CW=Math.max(320,Math.floor(r.width));
+  CH=Math.max(340,Math.min(Math.round(CW*0.62),Math.round(window.innerHeight*0.84)));
+  cv.style.height=CH+"px"; cv.width=Math.round(CW*DPR); cv.height=Math.round(CH*DPR);
+  CAM.W=CW; CAM.H=CH; CAM.dpr=DPR;
+  if(!CAM0.k||!CAM.touched){ setView(VIEW); camSave(); }
+  const tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=d().trayItems.length*TRAY_ROW+56;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
   drawTray();
 }
-function drawTray(){
-  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
-  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
-  trayCells=[]; let y=6; const wd=TRW-12;
-  for(const k of TRAY_LIST){
-    const av=trayAvail(k), sel=hand&&hand.k===k;
-    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
-    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
-    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,28,y+(TROW-4)/2,0.62); ctx.restore(); ctx=old;
-    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
-    c.fillStyle=av?"#e8eef2":"#868e96";
-    const nm=itemName(k); if(c.measureText(nm).width>wd-52){ const p=nm.split(" · "); c.font='11px "Malgun Gothic",sans-serif'; c.fillText(p.length>2?p[0]+" · "+p[1]+" ·":nm,52,y+11); if(p.length>2) c.fillText(p[2],52,y+24); }
-    else c.fillText(nm,52,y+14);
-    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
-    c.fillText(av?t.trayTake:t.trayOut,52,y+36);
-    trayCells.push([k,y,y+TROW-4]); y+=TROW;
-  }
-  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
-  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+/* the views a click flies to */
+function viewOf(v){
+  const W=CAM.W, H=CAM.H;
+  return { all:{yaw:0.30,pitch:0.42,k:Math.min(W/104,H/60),tx:8,ty:10,tz:-9,px:0,py:6},
+    panel:{yaw:0,pitch:0.03,k:Math.min(W/24,H/15.5),tx:0,ty:(PAN.y0+PAN.y1)/2,tz:PZ,px:0,py:0},
+    below:{yaw:0,pitch:-1.18,k:Math.min(W/66,H/30),tx:0,ty:ROD_Y,tz:(BZ0+BZ1)/2,px:0,py:0},
+    short:{yaw:0.32,pitch:0.22,k:Math.min(W/24,H/13),tx:(SHORT.x0+SHORT.x1)/2,ty:SHORT.y+0.6,tz:SHORT.z,px:0,py:0},
+    back:{yaw:Math.PI,pitch:0.12,k:Math.min(W/26,H/19),tx:15.5,ty:12.5,tz:BZ0,px:0,py:0},
+    top:{yaw:0,pitch:1.3,k:Math.min(W/62,H/28),tx:0,ty:BY1,tz:(BZ0+BZ1)/2,px:0,py:0},
+    psu:{yaw:0.55,pitch:0.55,k:Math.min(W/44,H/28),tx:40,ty:5,tz:-25,px:0,py:0} }[v];
 }
-let fanAng=0;
-function panelBg(P,col){ ctx.fillStyle=col; ctx.fillRect(P.x,P.y,P.w,P.h); ctx.strokeStyle="#353b43"; ctx.lineWidth=1; ctx.strokeRect(P.x+0.5,P.y+0.5,P.w-1,P.h-1); }
-function drawClose(){
-  const dpr=window.devicePixelRatio||1, old=ctx; ctx=closeCtx;
-  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.fillStyle="#15181d"; ctx.fillRect(0,0,CLW,CLH);
-  /* left: the panel */
-  panelBg(P1,"#101216");
-  if(ST.on.box){ const s=Math.min(P1.w/600,P1.h/360); P1.s=s; P1.ox=P1.x+(P1.w-600*s)/2; P1.oy=P1.y+(P1.h-360*s)/2; drawAVA(P1.ox,P1.oy,s,false); }
-  else text(d().st.none,P1.x+P1.w/2,P1.y+P1.h/2,"#69717a",12,"center");
-  /* right: the box from below and the short rod */
-  panelBg(P2,"#1a1c20");
-  if(ST.on.box) drawBelow(P2); else text("—",P2.x+P2.w/2,P2.y+P2.h/2,"#69717a",12,"center");
-  ctx=old;
+let CAMTW=null;
+function setView(v){ VIEW=v; CAMTW=null; Object.assign(CAM,viewOf(v)); renderViewBtn(); }
+function goTo(v){
+  if(v===VIEW&&!CAMTW&&!CAM.touched) return true;
+  const to=Object.assign({},viewOf(v)), from={};
+  for(const k of ["yaw","pitch","k","tx","ty","tz","px","py"]) from[k]=CAM[k];
+  to.yaw=from.yaw+((((to.yaw-from.yaw)+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI);
+  CAMTW={from,to,t0:performance.now(),dur:v==="all"?650:850}; VIEW=v; CAM.touched=false; renderViewBtn(); drawTray();
+  return true;
 }
-function drawBelow(P){
-  const t=d(), k=P.w/64, x0=P.x+4*k;          /* 1 unit = 1 cm of the rod, rod from x0 to x0+57k */
-  ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
-  text(t.lab.below,P.x+8,P.y+12,"#9aa3ab",11);
-  const yR=P.y+P.h*0.40, fanR=Math.min(6.4*k,P.h*0.17);
-  fillR(x0-2*k,yR-fanR-14,61*k,2*fanR+28,4,"#0d0e10","#2e3036",1.5);
-  for(let i=0;i<4;i++){ const fx=x0+(8.5+i*13.3)*k;
-    circ(fx,yR,fanR,"#141518","#2a2b30",1.2); ctx.save(); ctx.translate(fx,yR); ctx.rotate(fanAng+i*0.7);
-    for(let b=0;b<7;b++){ ctx.rotate(2*Math.PI/7); ctx.fillStyle="#26272c"; ctx.beginPath(); ctx.ellipse(fanR*0.55,0,fanR*0.42,fanR*0.16,0.5,0,7); ctx.fill(); }
-    ctx.restore(); circ(fx,yR,fanR*0.25,"#1c1d21","#33353b"); }
-  /* the rod, its two sleeves and the heaters inside */
-  const rr=Math.max(3,0.6*k);
-  ctx.fillStyle=vgrad(yR-rr,2*rr,[[0,"#e8a070"],[0.5,"#b8642e"],[1,"#7a3c18"]]); ctx.fillRect(x0,yR-rr,57*k,2*rr);
-  for(const [sx,lab] of [[x0-0.5*k,t.lab.heater2],[x0+50.5*k,t.lab.heater3]]){
-    fillR(sx,yR-2.2*k,7*k,4.4*k,2.2*k,"rgba(240,238,232,.93)","#b8b4aa",1);
-    ctx.fillStyle="#d43a2a"; ctx.fillRect(sx+(lab===t.lab.heater2?0.5:1.3)*k,yR-0.25*k,5.2*k,0.5*k);
-    text(lab,sx+3.5*k,yR+3.4*k,"#f0a080",10,"center","700"); }
-  /* the thermistors */
-  for(let i=0;i<7;i++){ const sx=x0+(7.5+SX[i])*k;
-    ctx.strokeStyle="#e8eef2"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(sx,yR-rr); ctx.lineTo(sx+3,yR-fanR-8); ctx.stroke();
-    circ(sx,yR,Math.max(2,rr*0.45),"#20242a","#e8eef2",1); text(String(i+1),sx,yR+rr+10,"#f2c14e",11,"center","700"); }
-  const s8=x0+29*k; ctx.strokeStyle="#e8eef2"; ctx.beginPath(); ctx.moveTo(s8,yR-fanR-14); ctx.lineTo(s8,yR-fanR*0.55); ctx.stroke();
-  circ(s8,yR-fanR*0.55,3,"#5ab0ff"); text(t.lab.box8,s8+6,yR-fanR*0.55,"#7fc4ff",9.5,"left");
-  for(let i=0;i<6;i++){ const a=x0+(7.5+SX[i])*k, b=x0+(7.5+SX[i+1])*k, yy=yR+rr+24;
-    ctx.strokeStyle="#69717a"; ctx.beginPath(); ctx.moveTo(a,yy); ctx.lineTo(b,yy); ctx.stroke(); text("7.0 cm",(a+b)/2,yy+8,"#9aa3ab",8.5,"center"); }
-  /* Fig. 4: the short rod */
-  const y4=P.y+P.h*0.80, L=Math.min(P.w*0.62,34*k), xs=P.x+(P.w-L)/2, hh=Math.max(14,P.h*0.09);
-  text(t.lab.short,P.x+8,y4-hh-14,"#9aa3ab",11);
-  ctx.fillStyle="#e8803a"; ctx.fillRect(xs,y4-hh/2,L,hh);
-  ctx.strokeStyle="rgba(120,50,10,.45)"; ctx.lineWidth=1; for(let u=0;u<L+hh;u+=8){ ctx.beginPath(); ctx.moveTo(xs+u,y4-hh/2); ctx.lineTo(xs+u-hh,y4+hh/2); ctx.stroke(); }
-  ctx.fillStyle="#e02a1e"; ctx.fillRect(xs+L*0.56,y4-hh*0.38,L*0.44,hh*0.76); text(t.lab.heater1,xs+L*0.78,y4,"#fff",10,"center","700");
-  ctx.fillStyle="#8c8f94"; ctx.fillRect(xs,y4,L*0.42,hh*0.36); text(t.lab.pt100,xs+L*0.21,y4+hh*0.18,"#111",8.5,"center","700");
-  ctx.fillStyle="#3aa04a"; ctx.fillRect(xs+L*0.18,y4-hh*0.44,L*0.08,hh*0.36); text(t.lab.r9,xs+L*0.22,y4-hh*0.26,"#fff",8,"center","700");
-  ctx.strokeStyle="#d43a2a"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(xs+L,y4-3); ctx.lineTo(xs+L+16,y4-3); ctx.moveTo(xs+L,y4+3); ctx.lineTo(xs+L+16,y4+3); ctx.stroke();
-  ctx.strokeStyle="#111"; ctx.lineWidth=1.5; for(const dy of [-hh*0.3,-hh*0.1,hh*0.15]){ ctx.beginPath(); ctx.moveTo(xs-16,y4+dy); ctx.lineTo(xs+4,y4+dy); ctx.stroke(); }
-  ctx.strokeStyle="#69717a"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(xs,y4+hh/2+10); ctx.lineTo(xs+L,y4+hh/2+10); ctx.stroke(); text("12.0 cm",xs+L/2,y4+hh/2+19,"#9aa3ab",9,"center");
-  ctx.restore();
+function stepCam(){ if(!CAMTW) return; const s=Math.min(1,(performance.now()-CAMTW.t0)/CAMTW.dur), e=s<0.5?4*s*s*s:1-Math.pow(-2*s+2,3)/2;
+  for(const k in CAMTW.to) CAM[k]=CAMTW.from[k]+(CAMTW.to[k]-CAMTW.from[k])*e;
+  if(s>=1) CAMTW=null; }
+function renderViewBtn(){ const b=$("viewBack"); if(!b) return; b.hidden=VIEW==="all"&&!CAM.touched; b.textContent=d().backAll; }
+function draw(){
+  refreshScreen();
+  ctxM.setTransform(DPR,0,0,DPR,0,0);
+  const g=ctxM.createLinearGradient(0,0,0,CH); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1a1e24"); ctxM.fillStyle=g; ctxM.fillRect(0,0,CW,CH);
+  stepCam(); begin3(); scene3(); render3(ctxM);
+  drawHud();
+}
+/* names over the sensors when the box is seen from below, as in Fig. 3 */
+function drawHud(){
+  const c=ctxM; c.setTransform(DPR,0,0,DPR,0,0); c.textAlign="center"; c.textBaseline="middle";
+  const tag=(p,s,col)=>{ const q=P3(...p); c.font="600 12px "+FONT; const w=c.measureText(s).width+10;
+    c.fillStyle="rgba(16,19,23,0.75)"; c.beginPath(); c.roundRect(q[0]-w/2,q[1]-9,w,18,5); c.fill(); c.fillStyle=col||"#e8eef2"; c.fillText(s,q[0],q[1]); };
+  if(CAM.pitch<-0.4){ const t=d().tag;
+    for(let i=0;i<7;i++) tag([sensX(i),ROD_Y-1.6,ROD_Z+2.2],t.s(i+1),"#f2c14e");
+    tag([S8[0],S8[1]-1.4,S8[2]],t.b,"#7fc4ff");
+    tag([ROD_X0+1.5,ROD_Y-3.3,ROD_Z],t.h2,"#f0a080"); tag([ROD_X1-1.5,ROD_Y-3.3,ROD_Z],t.h3,"#f0a080"); }
+  if(VIEW==="short"&&!CAMTW){ const t=d().tag; tag([SHORT.x1-3,SHORT.y+SHORT.r+1.4,SHORT.z],t.h1,"#f0a080"); tag([SHORT.x0+2.5,SHORT.y+SHORT.r+1.4,SHORT.z],t.pt,"#9fd0ff"); }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   7.  THE AVA KEYS AND SWITCHES
+   6.  THE AVA KEYS AND SWITCHES
    ══════════════════════════════════════════════════════════════ */
+let msg={k:null,a:[],t:0};
+function say(k,...a){ msg={k,a,t:performance.now()}; renderStatus(); }
 const SWNAME={fan:"FAN",h1:"HEATER 1",h2:"HEATER 2",h3:"HEATER 3"};
 function avaPress(k){
-  if(!ST.on.box) return;
   if(k in ST.sw){ ST.sw[k]=!ST.sw[k]; say("sw",SWNAME[k],ST.sw[k]); return; }
-  if(k==="toggle"){ ST.show9=!ST.show9; say("toggle",ST.show9?"R9":"θb"); return; }
-  if(!powered()){ say("noPowerBtn"); return; }
-  ST.press=k; setTimeout(()=>{ if(ST.press===k) ST.press=null; },160);
+  if(k==="tog"){ ST.show9=!ST.show9; say("toggle",ST.show9?"R9":"θb"); return; }
+  ST.press=k; setTimeout(()=>{ if(ST.press===k) ST.press=null; },180);
+  if(!powered()){ say("noPower"); return; }
   if(k==="start"){ ST.run=!ST.run; say(ST.run?"start":"stop"); return; }
   if(k==="next"||k==="prev"){
     if(!ST.laps.length){ say("none"); return; }
@@ -622,83 +1109,141 @@ function lapRelease(){
   else { ST.timer=0; say("reset"); }
 }
 function eraseLaps(){ ST.laps=[]; ST.view=-1; renderMem(); }
+function togglePlug(){
+  ST.plug=!ST.plug;
+  if(ST.plug){ readT=-1e9; reading=null; say("plugIn"); }
+  else { ST.run=false; ST.timer=0; eraseLaps(); say("plugOut"); }
+}
 
 /* ══════════════════════════════════════════════════════════════
-   8.  HANDS ON THE BENCH
+   7.  HISTORY  —  a snapshot every few simulated seconds, and one
+       before each action, so time can be wound back
    ══════════════════════════════════════════════════════════════ */
-function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
-function inItem(k,p){ if(!ST.on[k]) return false; const x=ST.x[k];
-  if(k==="box") return p[0]>=x-60&&p[0]<=x+BOX.w+60&&p[1]>=BOX.top-18&&p[1]<=TABLE_Y;
-  return p[0]>=x&&p[0]<=x+SZ.psu[0]&&p[1]>=TABLE_Y-PSU_H&&p[1]<=TABLE_Y; }
-function panelKeyAt(p){ if(!ST.on.box) return null; const P=PANEL(); return avaHitAt((p[0]-P.x)/P.s,(p[1]-P.y)/P.s); }
-function returnItem(k){
-  if(k==="box"){ if(ST.plug.dc==="jack") ST.plug.dc=null; }
-  if(k==="psu"){ ST.plug.mains=null; ST.plug.dc=null; }
-  ST.on[k]=false; say("back",itemName(k));
+let HIST=[], UNDO=[], recAt=-1e9;
+function snapshot(kind){ return {t:PH.t,kind,at:performance.now(),PH:structuredClone(PH),
+  ST:structuredClone(Object.assign({},ST,{lapDown:null,press:null})),reading:reading?structuredClone(reading):null,readT}; }
+function restore(sn){
+  Object.assign(PH,structuredClone(sn.PH)); Object.assign(ST,structuredClone(sn.ST)); reading=sn.reading?structuredClone(sn.reading):null; readT=sn.readT;
+  HIST=HIST.filter(h=>h.t<=sn.t+1e-9); UNDO=UNDO.filter(h=>h.t<=sn.t+1e-9);
+  acc=0; recAt=sn.t; scrSig=""; renderMem(); renderStatus(); syncScrub();
 }
-function returnHand(){
-  if(!hand) return;
-  if(hand.move){ ST.x[hand.k]=hand.orig; say("stays"); }
-  hand=null;
+function record(){
+  if(PH.t-recAt<5&&HIST.length) return;
+  recAt=PH.t; HIST.push(snapshot("t"));
+  if(HIST.length>1600){ const keep=[]; HIST.forEach((h,i)=>{ if(i>=800||i%2===0) keep.push(h); }); HIST=keep; }
 }
-function benchClick(p,right){
-  const t=d();
-  if(hand){
-    if(right){ returnHand(); return; }
-    if(PLACE.includes(hand.k)){ const x=Math.round(p[0]-SZ[hand.k][0]/2);
-      if(p[1]<BOX.top-40||overlapX(hand.k,x)){ say("noFit"); return; }
-      ST.x[hand.k]=x; ST.on[hand.k]=true; say("placed",itemName(hand.k)); hand=null; return; }
-    if(hand.k==="plug"){ const w=hand.which;
-      if(w==="mains"&&near(p,OUTLET,30)){ ST.plug.mains="outlet"; hand=null; say("plugged",t.term.outlet); return; }
-      if(w==="dc"&&ST.on.box&&near(p,JACK(),22)){ ST.plug.dc="jack"; hand=null; say("plugged",t.term.jack); return; }
-      if(near(p,OUTLET,30)||(ST.on.box&&near(p,JACK(),22))){ say("wrong"); return; }
-      if(p[1]>=TABLE_Y-20){ hand=null; say("unplugged"); return; }
-      say("wrong"); return; }
-    return;
+function act(kind){ UNDO.push(snapshot(kind)); if(UNDO.length>80) UNDO.shift(); }
+function rewind(sec){
+  const target=PH.t-sec; let sn=null;
+  for(let i=HIST.length-1;i>=0;i--) if(HIST[i].t<=target+1e-9){ sn=HIST[i]; break; }
+  if(!sn) sn=HIST[0];
+  if(!sn){ note(d().noHist,true); return; }
+  restore(sn); note(d().rewound());
+}
+function undo(){ const sn=UNDO.pop(); if(!sn){ note(d().noHist,true); return; } restore(sn); note(d().undone); }
+let scrubbing=false;
+function syncScrub(){ if(scrubbing) return; const s=$("scrub"); s.max=Math.max(1,HIST.length); s.value=HIST.length; }
+$("scrub").addEventListener("input",()=>{ scrubbing=true; });
+$("scrub").addEventListener("change",e=>{ scrubbing=false; const i=+e.target.value;
+  if(i<HIST.length){ restore(HIST[i]); note(d().rewound()); } syncScrub(); });
+let own=null;
+function note(s,warn){ own={s,warn:!!warn,t:performance.now()}; renderStatus(); }
+
+/* ══════════════════════════════════════════════════════════════
+   8.  THE APPARATUS LIST (left)
+   ══════════════════════════════════════════════════════════════ */
+const TRAY_ROW=48; let trayCells=[];
+function trayIcon(c,k,x,y){
+  const R2=(a,b,e,f,fill,out)=>{ if(fill){c.fillStyle=fill;c.fillRect(a,b,e-a,f-b);} if(out){c.strokeStyle=out;c.lineWidth=1;c.strokeRect(a+.5,b+.5,e-a-1,f-b-1);} };
+  if(k==="panel"){ R2(x-15,y-10,x+15,y+10,"#0c0d10","#3a3c42"); R2(x-3,y-6,x+7,y+3,"#69ff63"); R2(x-12,y-6,x-7,y+6,"#222"); c.strokeStyle="#38c6ea"; c.strokeRect(x+9.5,y-6.5,4,6); }
+  else if(k==="below"){ R2(x-16,y-8,x+16,y+8,"#1a1b1e","#3a3c42"); for(let i=0;i<4;i++){ c.strokeStyle="#55585e"; c.beginPath(); c.arc(x-12+i*8,y-1,3.5,0,7); c.stroke(); } R2(x-16,y+3,x+16,y+5,"#c47a45"); }
+  else if(k==="short"){ R2(x-14,y-6,x+12,y+6,"#f1efe8","#b8b4aa"); R2(x+12,y-1,x+17,y+1,"#d8432c"); R2(x-17,y-1,x-14,y+1,"#b8bec4"); }
+  else if(k==="back"){ R2(x-8,y-11,x+8,y+11,"#f7f7f4","#999"); R2(x-5,y+2,x+5,y+7,"#333"); R2(x-6,y-6,x+6,y-4,"#555"); }
+  else if(k==="psu"){ R2(x-12,y-6,x+8,y+6,"#1b1c1f","#3a3c42"); R2(x+8,y-1,x+13,y+1,"#151618"); R2(x+13,y-3,x+17,y+3,"#26272a"); }
+  else { R2(x-16,y+4,x+16,y+8,"#cfcfca"); R2(x-10,y-6,x+10,y+4,"#1a1b1e"); R2(x-14,y-1,x-10,y+2,"#f1efe8"); R2(x+10,y-1,x+14,y+2,"#f1efe8"); }
+}
+function drawTray(){
+  const c=trayCtx, t=d(); c.setTransform(DPR,0,0,DPR,0,0);
+  c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const [k,name,sub] of t.trayItems){
+    const sel=VIEW===k;
+    c.fillStyle=sel?"#2a2f37":"#1f242b"; c.fillRect(6,y,wd,TRAY_ROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TRAY_ROW-5);
+    trayIcon(c,k,28,y+(TRAY_ROW-4)/2);
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle="#e8eef2"; c.fillText(name,52,y+15);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#7b848d"; c.fillText(sub,52,y+31);
+    trayCells.push([k,y,y+TRAY_ROW-4]); y+=TRAY_ROW;
   }
-  if(right){
-    for(const k of ["mains","dc"]) if(ST.on.psu&&ST.plug[k]&&near(p,plugPos(k),16)){ ST.plug[k]=null; say("unplugged"); return; }
-    for(const k of ["psu","box"]) if(inItem(k,p)){ returnItem(k); return; }
-    return;
-  }
-  for(const k of ["mains","dc"]) if(ST.on.psu&&near(p,plugPos(k),16)){ ST.plug[k]=null; hand={k:"plug",which:k}; say("plug",t.term[k]); return; }
-  const key=panelKeyAt(p); if(key){ avaPress(key); return; }
-  for(const k of ["psu","box"]) if(inItem(k,p)){ hand={k,move:true,orig:ST.x[k]};
-    say("moveIt",itemName(k)); return; }
+  c.font='10.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
 }
-let trayDrag=false;
+trayCv.addEventListener("pointerdown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top;
+  for(const [k,y0,y1] of trayCells) if(y>=y0&&y<=y1){ goTo(k); drawTray(); return; }
+});
+
+/* ══════════════════════════════════════════════════════════════
+   9.  HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const LIVE=/^(fan|h[123]|tog|next|start|prev|lap|mains|outlet|pan|scr|front|back|top|end[LR]|rod|short|psu)$/;
+function clickAction(t){
+  if(!t) return false;
+  if(/^(fan|h[123]|tog|next|start|prev|lap)$/.test(t)){ act("ava"); avaPress(t); scrSig=""; return true; }
+  if(t==="mains"||(t==="outlet"&&!ST.plug)){ act("plug"); togglePlug(); scrSig=""; return true; }
+  const fly={pan:"panel",scr:"panel",front:"panel",back:"back",top:"top",endL:"below",endR:"below",rod:"below",short:"short",psu:"psu"}[t];
+  if(fly) return goTo(fly);
+  return false;
+}
+let down=null;
 cv.addEventListener("contextmenu",e=>e.preventDefault());
-cv.addEventListener("pointerenter",()=>{ overBench=true; });
-cv.addEventListener("pointerleave",()=>{ overBench=false; });
-cv.addEventListener("pointermove",e=>{ mouse=lpos(e); });
-cv.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
+cv.addEventListener("pointerdown",e=>{
+  const p=mousePos(e);
+  try{ cv.setPointerCapture(e.pointerId); }catch(_){}
+  if(e.button===1||e.button===2){ down={p0:p,last:p,pan:true,moved:false}; return; }
+  if(e.button!==0) return;
+  const t=pick3(p[0],p[1]);
+  if(t&&/^(fan|h[123]|tog|next|start|prev|lap|mains|outlet)$/.test(t)){ clickAction(t); return; }
+  down={p0:p,last:p,pan:e.shiftKey,moved:false,t};
+});
+cv.addEventListener("pointermove",e=>{
+  const p=mousePos(e), dn=down;
+  if(!dn){ const t=pick3(p[0],p[1]); cv.classList.toggle("hand",!!(t&&LIVE.test(t))); return; }
+  if(Math.hypot(p[0]-dn.p0[0],p[1]-dn.p0[1])>5) dn.moved=true;
+  if(!dn.moved) return;
+  const dx=p[0]-dn.last[0], dy=p[1]-dn.last[1]; dn.last=p;
+  CAM.touched=true; CAMTW=null; renderViewBtn();
+  if(dn.pan){ CAM.px+=dx; CAM.py+=dy; }
+  else { CAM.yaw+=dx*0.008;
+    if(CAM.pitch<0) CAM.pitch=Math.min(-0.08,Math.max(-1.45,CAM.pitch+dy*0.006));
+    else CAM.pitch=Math.min(1.45,Math.max(0.04,CAM.pitch+dy*0.006)); }
+  cv.classList.add("dragging");
+});
+cv.addEventListener("pointerup",e=>{
+  const dn=down; down=null; cv.classList.remove("dragging");
+  if(dn&&!dn.moved&&!dn.pan&&dn.t) clickAction(dn.t);
+});
 window.addEventListener("pointerup",()=>lapRelease());
-window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cv){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
-trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
-trayCv.addEventListener("mousedown",e=>{
-  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
-  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
-    const same=hand&&hand.k===k&&!hand.move; if(hand) returnHand();
-    if(!same&&trayAvail(k)){ hand={k}; say("picked",itemName(k)); } drawTray(); return; } });
-function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
-closeCv.addEventListener("contextmenu",e=>e.preventDefault());
-closeCv.addEventListener("pointerdown",e=>{ if(e.button!==0||!ST.on.box||!P1.s) return; const p=clpos(e);
-  const k=avaHitAt((p[0]-P1.ox)/P1.s,(p[1]-P1.oy)/P1.s); if(k) avaPress(k); });
-closeCv.addEventListener("pointermove",e=>{ if(!ST.on.box||!P1.s) return; const p=clpos(e);
-  closeCv.style.cursor=avaHitAt((p[0]-P1.ox)/P1.s,(p[1]-P1.oy)/P1.s)?"pointer":"default"; });
+$("viewBack").onclick=()=>goTo("all");
+cv.addEventListener("dblclick",e=>{ const p=mousePos(e), t=pick3(p[0],p[1]); if(t&&LIVE.test(t)) return; goTo("all"); });
+cv.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const p=mousePos(e), dir=e.deltaY<0?1:-1;
+  CAM.touched=true; CAMTW=null; renderViewBtn();
+  const f=dir>0?1.12:1/1.12, nk=Math.min(140,Math.max(3,CAM.k*f)), r=nk/CAM.k;
+  CAM.px=(p[0]-CAM.W/2)-(p[0]-CAM.W/2-CAM.px)*r; CAM.py=(p[1]-CAM.H/2)-(p[1]-CAM.H/2-CAM.py)*r; CAM.k=nk;
+},{passive:false});
+addEventListener("keydown",e=>{ if(e.key==="Escape") goTo("all"); });
+document.addEventListener("keydown",e=>{
+  if((e.ctrlKey||e.metaKey)&&e.code==="KeyZ"){ e.preventDefault(); undo(); return; }
+  if(e.code==="Space"&&e.target.tagName!=="INPUT"&&e.target.tagName!=="BUTTON"&&e.target.tagName!=="TEXTAREA"){ e.preventDefault(); running=!running; renderSpeeds(); } });
 
 /* ══════════════════════════════════════════════════════════════
-   9.  PANEL AND MAIN LOOP
+   10.  SIDE PANEL, LANGUAGE, MAIN LOOP
    ══════════════════════════════════════════════════════════════ */
-const fmt=t=>Math.floor(t/60)+":"+(t%60).toFixed(2).padStart(5,"0");
-$("swBtn").onclick=()=>{ ST.swRun=!ST.swRun; renderPanel(); };
-$("swLap").onclick=()=>{ ST.swLaps.unshift(fmt(ST.sw_t)); ST.swLaps=ST.swLaps.slice(0,40); renderPanel(); };
-$("swReset").onclick=()=>{ ST.sw_t=0; ST.swLaps=[]; ST.swRun=false; renderPanel(); };
-function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
-  for(const s of [1,5,20,60]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===speed?"on":"";
-    b.onclick=()=>{ speed=s; renderSpeeds(); }; box.appendChild(b); } }
-function renderPanel(){ const t=d(); $("swBtn").textContent=ST.swRun?t.stop:t.start;
-  $("laps").innerHTML=ST.swLaps.map((s,i)=>"<div>"+(ST.swLaps.length-i)+". "+s+"</div>").join(""); }
+let speed=1, running=true;
 function renderMem(){
   const box=$("mem");
   if(!ST.laps.length){ box.textContent=d().memEmpty; return; }
@@ -707,54 +1252,59 @@ function renderMem(){
   box.scrollTop=box.scrollHeight;
 }
 function renderStatus(){
-  const L=[], t=d();
-  if(!ST.on.box) L.push([t.st.none,false]);
-  else if(!ST.on.psu) L.push([t.st.noPsu,false]);
-  else if(!powered()) L.push([t.st.off,false]);
-  if(hotWarn()) L.push([t.st.hot,true]);
-  if(ST.view>=0) L.push([t.st.browse,false]);
-  if(ST.lapDown!==null&&performance.now()-ST.lapDown>600&&!ST.lapErased) L.push([t.m.hold,false]);
-  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const L_=[], t=d();
+  if(!powered()) L_.push([t.st.off,false]);
+  if(hotWarn()) L_.push([t.st.hot,true]);
+  if(ST.view>=0) L_.push([t.st.browse,false]);
+  if(ST.lapDown!==null&&performance.now()-ST.lapDown>600&&!ST.lapErased) L_.push([t.st.hold,false]);
+  if(!running) L_.push([t.st.paused,true]);
+  if(msg.k&&performance.now()-msg.t<9000){ const f=t.m[msg.k]; if(f!==undefined) L_.push(["• "+(typeof f==="function"?f(...msg.a):f),false]); }
+  if(own&&performance.now()-own.t<9000) L_.push(["• "+own.s,own.warn]);
   const box=$("status"); box.innerHTML="";
-  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+  for(const [s,w] of L_){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="warn"; box.appendChild(el); }
+}
+function renderSpeeds(){
+  const box=$("speeds"); box.innerHTML="";
+  for(const sp of [1,10,60,300]){ const b=document.createElement("button"); b.textContent="×"+sp; if(sp===speed) b.className="on";
+    b.onclick=()=>{ speed=sp; renderSpeeds(); }; box.appendChild(b); }
+  const p=document.createElement("button"); p.textContent=running?"❚❚":"▶"; p.title=running?d().pause:d().run;
+  if(!running) p.className="on"; p.onclick=()=>{ running=!running; renderSpeeds(); }; box.appendChild(p);
+}
+function renderRewind(){
+  const box=$("rewind"); box.innerHTML="";
+  for(const [lbl,sec] of d().rw){ const b=document.createElement("button"); b.textContent=lbl; b.onclick=()=>rewind(sec); box.appendChild(b); }
+  const u=document.createElement("button"); u.textContent=d().undo; u.onclick=undo; u.style.flex="1.6"; box.appendChild(u);
 }
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
-  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
-  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
-  $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
-  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
-  $("t-h-ava").textContent=t.hAva; $("t-avahint").textContent=t.avaHint; $("t-h-mem").textContent=t.hMem;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub;
+  $("t-benchcap").textContent=t.benchcap; $("t-tray").textContent=t.tray;
+  $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint; $("t-h-how").textContent=t.hHow;
+  $("t-howto").textContent=t.howto; $("t-h-mem").textContent=t.hMem;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2024 E1 — 구리 막대의 열전도 · HaslaLab":"IPhO 2024 E1 — Heat Conduction in a Copper Rod · HaslaLab";
-  renderPanel(); renderSpeeds(); renderMem(); layout();
+  drawTray(); renderSpeeds(); renderRewind(); renderMem(); renderStatus(); renderViewBtn();
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
 
-let tPrev=performance.now()/1000, frameN=0, wasPowered=false;
+let last=performance.now(), acc=0, ui=0;
 function tick(){
-  const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
-  const sdt=dt*speed;
-  physStep(sdt);
-  const pw=powered();
-  if(pw&&!wasPowered){ say("powerOn"); readT=-1e9; }
-  if(!pw&&wasPowered){ ST.run=false; ST.timer=0; if(ST.laps.length) say("powerOff"); eraseLaps(); }
-  wasPowered=pw;
-  if(pw&&ST.run) ST.timer+=sdt;
-  if(ST.swRun) ST.sw_t+=sdt;
+  const now=performance.now(); let real=(now-last)/1000; last=now; if(real>0.25) real=0.25;
+  if(running){
+    acc+=real*speed; const budget=performance.now()+20;
+    while(acc>1e-9){ const dt=Math.min(1,acc); physStep(dt); if(powered()&&ST.run) ST.timer+=dt; acc-=dt; record(); if(performance.now()>budget){ acc=0; break; } }
+  }
   if(ST.lapDown!==null&&!ST.lapErased&&performance.now()-ST.lapDown>=5000){ ST.lapErased=true; eraseLaps(); say("erase"); }
-  if(pw&&ST.sw.fan) fanAng+=dt*25;
-  ctx.clearRect(0,0,LW,LH); drawBench();
-  $("swLbl").textContent=fmt(ST.sw_t);
-  if(++frameN%2===0) drawClose();
-  if(frameN%6===0){ renderStatus(); drawTray(); }
+  if(powered()&&ST.sw.fan) fanAng+=real*(running?22:0);
+  if(CW>10) draw();
+  if(++ui%8===0){ renderStatus(); syncScrub(); }
   requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);
-applyLang(); requestAnimationFrame(tick);
+paintStatic(); layout(); applyLang(); record(); requestAnimationFrame(tick);
 </script>
-<script src="adfit.js"></script>
+  <script src="adfit.js"></script>
   <script src="simfull.js"></script>
 </body>
 </html>

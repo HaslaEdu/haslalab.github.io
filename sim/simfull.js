@@ -126,7 +126,9 @@
   function steps() {
     const T = TXT[lang()], out = [];
     const tray = document.querySelector("aside.tray"), cv = document.getElementById("cv"), panel = document.querySelector("aside.panel");
-    if (tray && tray.offsetWidth) out.push({ el: tray, t: T.tray });
+    /* a sim whose left column is not a parts box says what it is: data-tour-ko / data-tour-en on the aside */
+    if (tray && tray.offsetWidth) { const own = tray.getAttribute("data-tour-" + lang()), h = tray.querySelector("h3");
+      out.push({ el: tray, t: own ? [(h && h.textContent.trim()) || T.tray[0], own] : T.tray }); }
     if (cv && cv.offsetWidth) { const cap = (document.getElementById("t-cap") || {}).textContent; out.push({ el: cv, t: [T.bench[0], cap && cap.trim().length > 20 ? cap.trim() : T.bench[1]] }); }
     if (panel && panel.offsetWidth) out.push({ el: panel, t: T.panel });
     return out;
