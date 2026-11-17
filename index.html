@@ -648,28 +648,6 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
   .cmrail .servers button{white-space:nowrap;padding:6px}
   .cmrail a.ch{white-space:nowrap;flex:none}
 }
-/* the Physics Olympiads Discord server */
-.cmrail a.ch.dc .hash svg{width:14px;height:14px;fill:#8ea1ff;vertical-align:-2px}
-.cmrail a.ch.dc .on{margin-left:auto;font-size:11px;font-family:var(--mono);color:#57d38c}
-.dcban{display:flex;gap:16px;align-items:center;padding:22px 22px 18px;background:linear-gradient(135deg,#5865f2,#3b45b8);color:#fff}
-.dcban img{width:72px;height:72px;border-radius:20px;background:#fff2;flex:none}
-.dcban h2{margin:0;font-size:22px;letter-spacing:-.02em}
-.dcban p{margin:4px 0 0;font-size:13.5px;opacity:.9}
-.dcban .ct{display:flex;gap:14px;margin-top:8px;font-size:12.5px}
-.dcban .ct i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:#57d38c}
-.dcban .ct i.m{background:#c8ccd3}
-.dcbody{padding:18px 22px 22px;font-size:14px;color:#374151;line-height:1.7}
-.dcbody .acts{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
-.dcbody .acts a,.dcbody .acts button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;border:1px solid var(--cm-line);background:#fff;color:#1f2937;cursor:pointer;font-family:inherit}
-.dcbody .acts .join{background:#5865f2;border-color:#5865f2;color:#fff}
-.dcbody .acts .join:hover{background:#4752c4}
-.dcbody iframe{width:100%;height:620px;border:0;border-radius:10px;margin-top:6px;background:#313338}
-.dcbody ul{margin:6px 0 0 18px;padding:0}
-.dcside .in{display:flex;gap:10px;align-items:center}
-.dcside img{width:40px;height:40px;border-radius:12px;flex:none;background:#5865f2}
-.dcside .nm{font-weight:700;color:#111827;font-size:13.5px}
-.dcside .ct{font-size:12px;color:#6b7280}
-.dcside a.j{margin-left:auto;background:#5865f2;color:#fff;border-radius:7px;padding:6px 11px;font-size:12.5px;font-weight:600;white-space:nowrap}
 .cmav{width:30px;height:30px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;
   color:#fff;font-weight:700;font-size:13px;line-height:1}
 .cmav.s{width:22px;height:22px;font-size:10.5px}
@@ -1017,7 +995,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=9767d329a0e0">
+<link rel="stylesheet" href="site-design.css?v=bd9e96b91cc6">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=9afa7e19caab">
 </head>
@@ -1164,7 +1142,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
-<script src="site-catalogue.js?v=5cb217f250ec"></script>
+<script src="site-catalogue.js?v=c88e0a44260c"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
 <script src="site-design.js?v=0d613eb1488e"></script>
@@ -8890,47 +8868,6 @@ function startHero(){
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";   // Edge gateway for /community
 const CM_BOARDS = ["free","qna","sim","study"];
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
-/* The community's live chat is the real «Physics Olympiads» Discord server (olympiad students from everywhere).
-   The first server was hacked on 2 March 2026; this invite is to the new one and does not expire.  Its widget is
-   off, so the site shows the server card with live member/online counts (Discord's public invite API) and sends
-   people in with the invite.  If the server's admins ever add the WidgetBot bot, put a channel id in `embed`
-   and the chat itself is shown here. */
-const DISCORD = {name:"Physics Olympiads", invite:"SNBDY5nsgf", guild:"1477813246051356842", embed:""};
-const DC_SVG='<svg viewBox="0 0 24 24"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.3 18.3 0 0 0-5.5 0L8.7 3a19.7 19.7 0 0 0-4.9 1.5C.7 9.1-.2 13.6.3 18.1a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.1 0l.5.4c-.6.4-1.3.7-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.6-5.2-.8-9.7-3.7-13.7zM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>';
-const DCT={
-  ko:{sec:"실시간 채팅", h:"Physics Olympiads 디스코드", members:"명", online:"명 접속 중", join:"디스코드에서 참여하기", copy:"초대 링크 복사",
-      about:"게시판과 함께, 전 세계 물리 · 천문 올림피아드 준비생이 모인 <b>Physics Olympiads</b> 디스코드 서버에서 실시간으로 묻고 답할 수 있습니다.",
-      tips:["물리와 올림피아드를 주제로 이야기하는 곳이며, 대화는 모두 영어로 합니다.","처음 들어가면 <b>#rules</b> 채널의 규칙부터 읽어 주세요.","HaslaLab 계정에 Discord 로그인을 연결해 두면 같은 계정으로 들어올 수 있습니다."],
-      note:"이 서버는 HaslaLab이 운영하지 않습니다.", side:"실시간 채팅"},
-  en:{sec:"Live chat", h:"Physics Olympiads Discord", members:"members", online:"online", join:"Join on Discord", copy:"Copy invite link",
-      about:"Next to the boards, talk in real time with olympiad students from all over the world on the <b>Physics Olympiads</b> Discord server.",
-      tips:["A place to talk about physics and the olympiads. All conversation is in English.","Please read <b>#rules</b> first when you join.","Link Discord sign-in to your HaslaLab account to use the same account on both."],
-      note:"HaslaLab does not run this server.", side:"Live chat"}};
-let dcInfo=null, dcP=null;
-/* the server's icon, description and member/online counts, from Discord's public invite endpoint (CORS-open) */
-function dcLoad(){
-  return dcP||(dcP=fetch("https://discord.com/api/v10/invites/"+DISCORD.invite+"?with_counts=true")
-    .then(r=>r.ok?r.json():null).then(j=>{ if(j&&j.guild) dcInfo={members:j.approximate_member_count, online:j.approximate_presence_count, icon:j.guild.icon, desc:j.guild.description}; return dcInfo; })
-    .catch(()=>null));
-}
-const dcIcon=()=>dcInfo&&dcInfo.icon?`https://cdn.discordapp.com/icons/${DISCORD.guild}/${dcInfo.icon}.${dcInfo.icon.startsWith("a_")?"gif":"webp"}?size=128`:"";
-const dcUrl="https://discord.gg/"+DISCORD.invite;
-const dcNum=n=>n==null?"…":Number(n).toLocaleString(lang==="ko"?"ko-KR":"en-US");
-function cmDiscord(root){
-  const D=DCT[lang];
-  const paint=()=>{
-    root.innerHTML=`<div class="cmpanel"><div class="dcban">${dcIcon()?`<img src="${dcIcon()}" alt="">`:`<img alt="" style="display:grid">`}
-      <div><h2>${DISCORD.name}</h2><p>${esc(dcInfo&&dcInfo.desc||"")}</p>
-      <div class="ct"><span><i></i>${dcNum(dcInfo&&dcInfo.online)} ${D.online}</span><span><i class="m"></i>${dcNum(dcInfo&&dcInfo.members)} ${D.members}</span></div></div></div>
-      <div class="dcbody"><p style="margin-top:0">${D.about}</p>
-        <div class="acts"><a class="join" href="${dcUrl}" target="_blank" rel="noopener">${DC_SVG.replace("<svg","<svg width=\"18\" height=\"18\" fill=\"#fff\"")} ${D.join}</a><button type="button" id="dcCopy">${D.copy}</button></div>
-        ${DISCORD.embed?`<iframe src="https://e.widgetbot.io/channels/${DISCORD.guild}/${DISCORD.embed}" title="${DISCORD.name}" allow="clipboard-write; fullscreen"></iframe>`:""}
-        <ul>${D.tips.map(x=>`<li>${x}</li>`).join("")}</ul>
-        <p style="font-size:12.5px;color:#6b7280;margin-bottom:0">${D.note}</p></div></div>`;
-    const c=document.getElementById("dcCopy"); if(c) c.onclick=async()=>{ try{ await navigator.clipboard.writeText(dcUrl); }catch(e){} cmToast(CMT[lang].copied); };
-  };
-  paint(); if(!dcInfo) dcLoad().then(()=>{ if(document.body.contains(root)&&location.hash.includes("/discord")) paint(); });
-}
 const CMT = {
   ko:{
     h:"HaslaLab 커뮤니티", sub:"실험 문제, 시뮬레이터, 대회 준비 — 묻고 답하고 나누는 곳",
@@ -9364,8 +9301,6 @@ function cmRailHtml(active){
     ${ch("all",T.all,"≡")}${ch("best",T.best,"★")}${ch("hot",T.hot,"🔥")}
     <div class="sec">${T.secBoards}</div>
     ${CM_BOARDS.map(b=>ch(b,T.boards[b],"#",cnt(b))).join("")}
-    <div class="sec">${DCT[lang].sec}</div>
-    <a class="ch dc ${active==="discord"?"on":""}" href="#/community/discord"><span class="hash">${DC_SVG}</span>${DISCORD.name}<span class="on" id="dcOn">${dcInfo?"● "+dcNum(dcInfo.online):""}</span></a>
     ${me}`;
 }
 async function cmRight(where,alive=()=>true){
@@ -9375,13 +9310,8 @@ async function cmRight(where,alive=()=>true){
   el.innerHTML=`
     <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${T.boardDesc[where]||T.boardDesc.all}
       <div class="stat"><div><b>${tot.n}</b><span>${T.stPosts}</span></div><div><b>${tot.today}</b><span>${T.stToday}</span></div></div></div></div>
-    <div class="cmside dcside"><h3>💬 ${DCT[lang].side}</h3><div class="in" id="dcSide"></div></div>
     <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
     <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
-  const dcSide=()=>{ if(!alive())return; const x=document.getElementById("dcSide"); if(x) x.innerHTML=`${dcIcon()?`<img src="${dcIcon()}" alt="">`:`<img alt="">`}<div style="min-width:0"><div class="nm">${DISCORD.name}</div>
-      <div class="ct">● ${dcNum(dcInfo&&dcInfo.online)} ${DCT[lang].online}</div></div><a class="j" href="#/community/discord">${lang==="ko"?"열기":"Open"}</a>`;
-    const on=document.getElementById("dcOn"); if(on&&dcInfo) on.textContent="● "+dcNum(dcInfo.online); };
-  dcSide(); dcLoad().then(dcSide);
   try{
     const j=await cmApi("GET","/posts?sort=hot&page=1&lang="+lang+(isB?"&board="+where:""));
     const h=document.getElementById("cmHot"); if(!h||!alive()) return;
@@ -9398,7 +9328,7 @@ async function cmMount(){
   if(!cmBase()){ root.innerHTML=`<div class="cmnote">${T.off}</div>`; return; }
   const {parts,q}=cmHash();
   const [a,b]=parts;
-  const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="discord" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
+  const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
   const identity=a==="post"&&b?Promise.resolve():cmLoadMe();
   const settings=cm.v?Promise.resolve():cmHealth().then(r=>{cm.v=r.v||1;});
   const boardLang=lang;
@@ -9418,7 +9348,6 @@ async function cmMount(){
     else if(a==="login")                content=cmLogin(root);
     else if(a==="signup")               content=cmSignup(root);
     else if(a==="account")              content=cmAccount(root,alive);
-    else if(a==="discord")              content=cmDiscord(root);
     else                                content=cmList(root,{where,page:Math.max(1,parseInt(b)||1),tag:q.get("tag")||"",sort:q.get("sort")||"",q:q.get("q")||"",field:q.get("field")||""},alive);
     const right=document.getElementById("cmRight");
     if(right){if(["login","signup"].includes(a))right.innerHTML="";else cmRight(where||"all",alive);}
