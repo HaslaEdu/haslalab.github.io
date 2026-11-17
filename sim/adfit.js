@@ -55,11 +55,17 @@
     }
     @media print{#haslalab-adfit-banner{display:none}}
     /* the language buttons: always in the top right corner of the header, whatever the title and subtitle are */
-    header:has(> .lang){position:relative;padding-right:190px !important}
+    header:has(> .lang){position:relative;padding-right:calc(var(--hl-lang-w, 178px) + 24px) !important}
     header > .lang{position:absolute;top:16px;right:12px}
     @media (max-width:600px){header:has(> .lang){padding-right:12px !important;padding-top:56px !important} header > .lang{top:12px}}
   `;
   document.head.append(style);
+  /* The corner box grows when the full-screen button joins it (to about 250 px): the header keeps exactly
+     that much room on its right, so the title and subtitle never run under it (IPhO 2024 on a pad did). */
+  const fitLang = () => { for (const box of document.querySelectorAll("header > .lang"))
+    box.parentElement.style.setProperty("--hl-lang-w", Math.ceil(box.getBoundingClientRect().width) + "px"); };
+  if (window.ResizeObserver) { const ro = new ResizeObserver(fitLang); for (const box of document.querySelectorAll("header > .lang")) ro.observe(box); }
+  addEventListener("load", fitLang); fitLang();
   new MutationObserver(syncAd).observe(document.documentElement, {attributes:true, attributeFilter:["lang"]});
   document.addEventListener("click", event => {
     if (event.target.closest("#btn-ko")) requestedEnglish = false;
