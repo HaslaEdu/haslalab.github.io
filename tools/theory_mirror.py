@@ -1,96 +1,69 @@
-# -*- coding: utf-8 -*-
-"""Copy the theory papers listed in tools/theory/*.json into the GitHub releases pdf-<prefix>.
+"""Publish only manifest/hash-verified PDFs from an ephemeral staging branch."""
+from pathlib import Path, PurePosixPath
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import subprocess,hashlib,json,csv,io,tempfile,zipfile,re,sys,time,threading,os
+REPO='HaslaEdu/haslalab.github.io'
+ROOT=Path.cwd();M=json.loads((ROOT/'_translation_staging/manifest.json').read_text())
+assert sys.argv[1:]==['--publish-staged-translations'];assert M['repository']==REPO
 
-Run by .github/workflows/theory-pdfs.yml with GH_TOKEN set (the workflow's own token, contents: write); it needs the
-gh command.  For every file: skipped when the release already holds an asset of that name; otherwise downloaded from
-its source, checked to be a PDF and uploaded.  A source that fails is reported and left for the next run.
-"""
-import glob
-import json
-import os
-import subprocess
-import sys
-import tempfile
-import time
-import urllib.request
-
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-REPO = os.environ.get('GITHUB_REPOSITORY', 'HaslaEdu/haslalab.github.io')
-UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36 HaslaLab-archive'
-
-
-def gh(*args, check=True):
-    return subprocess.run(['gh', *args, '--repo', REPO], capture_output=True, text=True, check=check)
-
-
-def assets(tag, cache={}):
-    if tag not in cache:
-        r = gh('release', 'view', tag, '--json', 'assets', check=False)
-        if r.returncode:
-            gh('release', 'create', tag, '--title', tag, '--notes', 'Problem sheets and solutions (%s), served by the PDF Worker.' % tag)
-            cache[tag] = set()
-        else:
-            cache[tag] = {a['name'] for a in json.loads(r.stdout)['assets']}
-    return cache[tag]
-
-
-def fetch(url, path):
-    for i in range(3):
-        try:
-            req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': 'application/pdf,*/*'})
-            with urllib.request.urlopen(req, timeout=180) as r, open(path, 'wb') as f:
-                f.write(r.read())
-            with open(path, 'rb') as f:
-                head = f.read(1024)
-            if b'%PDF' not in head:
-                return 'not a PDF'
-            return None
-        except Exception as e:
-            err = str(e)[:160]
-            time.sleep(5 * (i + 1))
-    return err
-
-
-def main():
-    only = set(sys.argv[1:])
-    done, skipped, failed = [], 0, []
-    tmp = tempfile.mkdtemp()
-    for path in sorted(glob.glob(os.path.join(ROOT, 'tools', 'theory', '*.json'))):
-        m = json.load(open(path, encoding='utf-8'))
-        if only and m['comp'] not in only:
-            continue
-        tag = 'pdf-' + m['prefix'].lower()
-        for y in m.get('years', []):
-            for f in y.get('files', []):
-                name = f['file']
-                if f.get('local') or not f.get('url') or f.get('direct'):   # local originals/excerpts retain provenance URLs, but are already on the site
-                    continue
-                if name in assets(tag):
-                    skipped += 1
-                    continue
-                local = os.path.join(tmp, name)
-                err = fetch(f['url'], local)
-                if not err and os.path.getsize(local) > 95e6:
-                    err = 'too large'
-                if err:
-                    failed.append((name, f['url'], err))
-                    continue
-                r = gh('release', 'upload', tag, local, check=False)
-                if r.returncode:
-                    failed.append((name, f['url'], 'upload: ' + r.stderr.strip()[:160]))
-                else:
-                    assets(tag).add(name)
-                    done.append(name)
-                os.remove(local)
-    lines = ['## Theory papers', '', 'uploaded %d · already there %d · failed %d' % (len(done), skipped, len(failed)), '']
-    if failed:
-        lines += ['| file | source | why |', '|---|---|---|'] + ['| %s | %s | %s |' % x for x in failed]
-    report = '\n'.join(lines)
-    print(report)
-    if os.environ.get('GITHUB_STEP_SUMMARY'):
-        open(os.environ['GITHUB_STEP_SUMMARY'], 'a').write(report + '\n')
-    json.dump({'uploaded': done, 'failed': failed}, open(os.path.join(tmp, '..', 'theory-mirror.json'), 'w'), indent=1)
-
-
-if __name__ == '__main__':
-    main()
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open('rb')as f:
+  for b in iter(lambda:f.read(1024*1024),b''):h.update(b)
+ return h.hexdigest()
+def gh(args):return subprocess.run(['gh',*args],check=True,capture_output=True,text=True).stdout
+files=[]
+with tempfile.TemporaryDirectory()as td:
+ work=Path(td)
+ for row in M.get('files',[]):
+  p=ROOT/row['path'];assert p.is_file()and sha(p)==row['sha256'];files.append(dict(row,file=p))
+ for archive in M.get('archives',[]):
+  out=work/archive['name']
+  with out.open('wb')as dest:
+   for chunk in archive['chunks']:
+    p=ROOT/chunk['path'];assert p.stat().st_size==chunk['bytes']and sha(p)==chunk['sha256'];dest.write(p.read_bytes())
+  assert sha(out)==archive['sha256']
+  with zipfile.ZipFile(out)as z:
+   rows=list(csv.DictReader(io.StringIO(z.read('coverage.csv').decode('utf-8-sig'))))
+   selected=[r for r in rows if r['competition']==archive['competition']and r['language']==archive['language']]
+   assert len(selected)==archive['pdfs']
+   for r in selected:
+    name=PurePosixPath(r['translation']).name;assert re.fullmatch(r'(OIbF|BPO|USAPhO|OPhO)_[A-Za-z0-9_]+_(EN|KO)\.pdf',name)
+    p=work/name
+    with z.open(r['translation'])as src,p.open('wb')as dst:
+     for b in iter(lambda:src.read(1024*1024),b''):dst.write(b)
+    assert sha(p)==r['translation_sha256'];files.append(dict(file=p,name=name,tag='pdf-'+r['competition'].lower(),sha256=r['translation_sha256']))
+ assert len(files)==M['expected_pdfs'];assert len({x['name']for x in files})==len(files)
+ remote={}
+ for tag in sorted({x['tag']for x in files}):
+  d=json.loads(gh(['api',f'repos/{REPO}/releases/tags/{tag}']));remote[tag]={a['name']:a for a in d['assets']}
+ lock=threading.Lock();last=[0.]
+ def upload(x):
+  old=remote[x['tag']].get(x['name'])
+  if old:
+   digest=old.get('digest')
+   if digest:assert digest=='sha256:'+x['sha256'],f'Existing different asset: {x["name"]}'
+   else:
+    dest=work/('existing-'+x['name'])
+    with dest.open('wb')as f:subprocess.run(['gh','api',f'repos/{REPO}/releases/assets/{old["id"]}','-H','Accept: application/octet-stream'],check=True,stdout=f)
+    assert sha(dest)==x['sha256'],f'Existing different asset: {x["name"]}'
+   return dict(name=x['name'],tag=x['tag'],sha256=x['sha256'],status='VERIFIED_EXISTING')
+  with lock:
+   delay=max(0,last[0]+1.1-time.monotonic())
+   if delay:time.sleep(delay)
+   last[0]=time.monotonic()
+  gh(['release','upload',x['tag'],str(x['file']),'--repo',REPO])
+  return dict(name=x['name'],tag=x['tag'],sha256=x['sha256'],status='UPLOADED')
+ results=[]
+ with ThreadPoolExecutor(max_workers=3)as pool:
+  for task in as_completed([pool.submit(upload,x)for x in files]):
+   r=task.result();results.append(r);print(json.dumps({'done':len(results),'total':len(files),**r}),flush=True)
+ for tag in sorted(remote):
+  d=json.loads(gh(['api',f'repos/{REPO}/releases/tags/{tag}']));byname={x['name']:x for x in d['assets']}
+  for item in [x for x in files if x['tag']==tag]:
+   assert item['name']in byname
+   digest=byname[item['name']].get('digest')
+   assert digest=='sha256:'+item['sha256'],f'Uploaded asset digest unavailable/different: {item["name"]}'
+ print(json.dumps({'status':'PASS','verified_pdfs':len(files),'repository':REPO}),flush=True)
+ summary=os.environ.get('GITHUB_STEP_SUMMARY')
+ if summary:Path(summary).write_text(f'Published and verified {len(files)} approved PDF assets. No existing different assets were replaced.\n')
