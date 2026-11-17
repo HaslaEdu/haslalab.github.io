@@ -6,11 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1c2027">
 <title>IPhO 2025 E1 — 지구 자기장 측정 · Earth's Magnetic Field · HaslaLab</title>
-<meta name="description" content="IPhO 2025 실험 1번을 브라우저에서 실행합니다. 아두이노·앤티-헬름홀츠 코일·자기장 센서·힘 센서로 구이 저울을 꾸며 자석의 자기 모멘트를 재고, 철사에 매단 포드의 진동과 평형각으로 지구 자기장의 수평 성분을 구합니다. 계산은 대신 해주지 않습니다.">
+<meta name="description" content="IPhO 2025 실험 1번을 3D 실험대에서 실행합니다. 문제지 그림 1–3의 아두이노 보드(LCD·슬롯 i–vii), 앤티-헬름홀츠 코일, 자기장 센서 자, 힘 센서, 멀티미터, 9 V 전지, 스탠드와 포드를 그대로 옮겼습니다. 전지와 센서를 꽂고 전선을 연결해 자기장·힘·전류를 읽고, 포드의 진동과 평형각으로 지구 자기장을 직접 구합니다. 계산은 대신 해주지 않습니다.">
 <meta property="og:site_name" content="HaslaLab">
 <meta property="og:type" content="article">
-<meta property="og:title" content="IPhO 2025 E1 — 지구 자기장 측정 · Earth's magnetic field measurement">
-<meta property="og:description" content="IPhO 2025 실험 1번을 브라우저에서 실행합니다. 코일·센서·전지·전선을 직접 연결하고, 포드를 흔들어 주기를 재며, 각도기를 읽습니다.">
+<meta property="og:title" content="IPhO 2025 E1 — 지구 자기장 측정 · Earth's Magnetic Field">
+<meta property="og:description" content="IPhO 2025 실험 1번을 3D 실험대에서 실행합니다. 실제 장비처럼 전지·센서·전선을 꽂고 포드를 흔들어 지구 자기장을 잽니다.">
 <style>
   :root{
     --bg:#1c2027; --panel:#22262d; --ink:#e8eef2; --muted:#9aa3ab;
@@ -24,61 +24,50 @@
     font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
          "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   }
-  .wrap{max-width:1680px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
+  .wrap{max-width:1720px;margin:0 auto;padding:12px;display:flex;gap:12px;align-items:flex-start}
   @media (max-width:1180px){ .wrap{flex-wrap:wrap} }
-  .tray{flex:0 0 206px;background:var(--panel);border:1px solid var(--line);
+  .tray{flex:0 0 200px;background:var(--panel);border:1px solid var(--line);
         border-radius:10px;padding:8px;position:sticky;top:12px}
   .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
            color:var(--accent);text-align:center}
   #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
-  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
-  @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
-  @media (max-width:760px){ .tray{flex:1 1 100%} }
-
-  /* ── stage ── */
-  .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
+  .stage{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:10px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
-  .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
-  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap}
-  .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
-  .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
-  .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
-        font-size:13.5px;line-height:1.7;color:#d6dde2}
-  .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
-  .info h4:first-child{margin-top:0}
-  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
-  .info .warn{color:#f0a79f;font-weight:600}
-
-  /* ── control panel ── */
+  .card h3{margin:0 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
+  #bench{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;
+         background:#20252c;cursor:default}
+  #bench.dragging{cursor:grabbing}
+  #bench.hand{cursor:pointer}
   .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
          border-radius:10px;padding:12px;position:sticky;top:12px}
-  @media (max-width:1180px){ .panel{position:static} }
-  @media (max-width:760px){ .panel{flex:1 1 100%} }
+  @media (max-width:1180px){ .panel,.tray{position:static} .stage{flex:1 1 100%;order:-1} }
+  @media (max-width:760px){ .tray,.panel{flex:1 1 100%} }
   .panel h2{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
             margin:15px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line)}
   .panel h2:first-of-type{margin-top:0}
-  .row{display:flex;gap:5px;flex-wrap:wrap}
-  .row button{flex:1;text-align:center;min-width:0}
+  .row{display:flex;gap:6px}
+  .row button{flex:1;text-align:center}
   button{padding:7px 9px;margin:3px 0;cursor:pointer;background:var(--accent-soft);
          border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;
          color:var(--ink);text-align:center;transition:background .12s,border-color .12s}
   button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
   button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
-  button:disabled{opacity:.45;cursor:default}
-  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
-  #redBtn:hover{background:#a3322b}
-  .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
-  .chk input{accent-color:var(--accent);width:15px;height:15px}
+  .benchwrap{position:relative}
+  .viewback{position:absolute;left:10px;top:10px;z-index:5;padding:6px 12px;border-radius:7px;border:1px solid #3a414a;background:rgba(20,24,29,.86);color:#e8eef2;font:600 12.5px inherit;cursor:pointer}
+  .viewback:hover{border-color:#4ec9b0;color:#4ec9b0}
+  #scrub{width:100%;margin:6px 0 2px;accent-color:var(--accent)}
+  #rewind button{font-size:12px;padding:6px 4px}
   .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
   .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
           background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
-          margin-top:12px;min-height:120px}
-  .status div + div{margin-top:8px}
-  .status .w{color:#f0a79f}
-
-  /* ── header ── */
-  header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
+          margin-top:10px;min-height:110px}
+  .status div + div{margin-top:9px}
+  .status .warn{color:#ff8b6a}
+  .views{display:flex;flex-wrap:wrap;gap:5px}
+  .views button{flex:1 1 30%;margin:0;padding:6px 4px;font-size:12px}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:200px;overflow:auto;margin-top:4px}
+  header{max-width:1720px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
   header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
   header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
@@ -86,11 +75,7 @@
   .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
                font-weight:600;color:var(--muted);text-align:center;background:transparent}
   .lang button.on{background:var(--accent);color:#1c2027}
-  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
-        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
-  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
 </style>
-
 </head>
 <body>
 
@@ -113,42 +98,39 @@
 
   <div class="stage">
     <div class="card">
-      <h3 id="t-cap"></h3>
-      <canvas id="cv"></canvas>
-    </div>
-    <div class="card">
-      <h3 id="t-closecap"></h3>
-      <canvas id="closeCv"></canvas>
+      <h3 id="t-benchcap"></h3>
+      <div class="benchwrap"><canvas id="bench"></canvas><button id="viewBack" class="viewback" hidden></button></div>
     </div>
   </div>
 
   <aside class="panel">
-    <h2 id="t-h-sw"></h2>
-    <div class="disp" id="swLbl">0:00.00</div>
-    <div class="row">
-      <button id="swBtn"></button>
-      <button id="swLap"></button>
-      <button id="swReset"></button>
-    </div>
-    <div class="laps" id="laps"></div>
+    <h2 id="t-h-view"></h2>
+    <div class="views" id="views"></div>
 
     <h2 id="t-h-time"></h2>
     <div class="row" id="speeds"></div>
-    <p class="hint" id="t-timehint"></p>
+    <div class="hint" id="t-timehint"></div>
+
+    <h2 id="t-h-sw"></h2>
+    <div class="disp" id="swLbl">0:00.00</div>
+    <div class="row"><button id="swBtn"></button><button id="swLap"></button><button id="swReset"></button></div>
+    <div class="laps" id="laps"></div>
 
     <h2 id="t-h-ard"></h2>
-    <p class="hint" id="t-ardhint"></p>
+    <div class="hint" id="t-ardhint"></div>
     <button id="unwire" style="width:100%"></button>
 
     <h2 id="t-h-pod"></h2>
-    <p class="hint" id="t-podhint"></p>
+    <div class="hint" id="t-podhint"></div>
 
     <div class="status" id="status"></div>
   </aside>
 </div>
-
 <script>
 "use strict";
+/* ══════════════════════════════════════════════════════════════
+   0.  i18n  (the print on the apparatus stays as on the real parts)
+   ══════════════════════════════════════════════════════════════ */
 const T={
   ko:{
     title:"IPhO 2025 실험 1 — 지구 자기장 측정",
@@ -229,6 +211,24 @@ const T={
        release:"Pod released.", damp:"Pod stopped by hand.", turn:a=>"f2a turned.", L:l=>"Wire length changed.", zeroed:"The force sensor zeroed itself as it came on."}
   }
 };
+
+
+Object.assign(T.ko,{
+  sub:"가상 실험실 · 문제지 그림 1–3의 장비를 3D로 옮겼습니다. 전지와 센서를 꽂고 전선을 연결한 뒤 아두이노 화면·멀티미터·자·각도판·스톱워치를 읽으세요. 기울기·자기 모멘트·자기장은 직접 계산합니다.",
+  benchcap:"실험대 — 좌클릭: 집기·놓기·꽂기·누르기 / 우클릭: 부품함으로·뽑기·떼기 / 손잡이·센서·f2a 위 휠·위아래 드래그: 돌리기·밀기 / 포드를 좌우로 끌었다 놓기 / 빈 곳 드래그: 시점 돌리기, 우클릭·Shift 드래그: 옮겨 보기 / 휠: 확대 / Esc: 처음 시점",
+  hView:"시점", views:[["all","실험대 전체"],["ard","아두이노 (c)"],["coils","코일 (e)"],["dmm","멀티미터 (g)"],["ruler","자 (i)"],["stand","스탠드 (f)"],["f1","각도판 f1a"],["f2","f2a"],["watch","스톱워치 (k)"]],
+  backAll:"← 실험대 전체", items2:{watch:"k. 스톱워치"}, tray:"부품함",
+  ardHint:"전지 (j)를 집어 아두이노의 단자 (i)에 대면 아두이노 전원, (ii)에 대면 코일 전원입니다. 센서 케이블 끝의 흰 플러그를 집어 (iii)·(iv)에 꽂으세요.\n전선 (h): 바나나 단자 두 곳을 차례로 클릭 — 아두이노 (v) 두 관, 코일 받침의 빨강·검정 단자, 멀티미터 잭.\n스위치 (vi) 클릭, 전류 손잡이 (vii)는 휠이나 위아래 드래그. 멀티미터 다이얼은 클릭(또는 휠)으로 돌립니다.\n자기장 센서를 들고 코일을 클릭하면 축에 끼워지고, 자를 클릭하면 자 위에 놓입니다. 끼운 센서는 휠·드래그로 밉니다.",
+  podHint:"포드를 좌우로 끌었다 놓으면 진동하고, 우클릭하면 손으로 잡아 멈춥니다. 포드의 자석을 클릭하면 빠져 스탠드 옆에 놓입니다.\nf2a 위 휠: θ0 돌리기 (Shift 10°). 위 팔 위 휠·드래그: 철사 길이 L (기둥 눈금으로 읽기).\n반죽: 부품함에서 집고 휠로 크기를 고른 뒤 막대 끝이나 힘 센서 위를 클릭.\n자석은 금속·다른 자석에서 20 cm 이상 떨어져야 합니다."
+});
+Object.assign(T.en,{
+  sub:"Virtual laboratory · the apparatus of Figs. 1–3 in 3-D. Plug in the batteries and sensors, wire it up and read the Arduino display, the multimeter, the rulers, the angle disks and the chronometer. Slopes, moments and fields are yours to work out.",
+  benchcap:"the bench — L-click: pick up, put down, plug, press / R-click: back to the box, unplug, take off / wheel or drag up and down on a knob, the sensor or f2a: turn or slide it / drag the pod sideways and let go / drag a bare spot: turn the view, R- or Shift-drag: move it / wheel: zoom / Esc: start view",
+  hView:"View", views:[["all","Whole bench"],["ard","Arduino (c)"],["coils","Coils (e)"],["dmm","Multimeter (g)"],["ruler","Ruler (i)"],["stand","Stand (f)"],["f1","Disk f1a"],["f2","f2a"],["watch","Chronometer (k)"]],
+  backAll:"← Whole bench", items2:{watch:"k. Chronometer"}, tray:"Parts box",
+  ardHint:"Hold a battery (j) to pad (i) of the Arduino to power it, to (ii) to power the coils. Pick up the white plug at the end of a sensor cable and push it into (iii) or (iv).\nWires (h): click two banana terminals in turn — the two tubes (v) of the Arduino, the red and black terminals of the coil block, the multimeter jacks.\nClick the switch (vi); turn the current knob (vii) with the wheel or a drag. Click (or wheel) the multimeter dial to turn it.\nHold the field sensor and click the coils to slide it onto their axis, or the ruler to lay it there. Slide it with the wheel or a drag.",
+  podHint:"Drag the pod sideways and let go to set it swinging; R-click to stop it by hand. Click the magnet of the pod to take it out (it is put down beside the stand).\nWheel on f2a: turn θ0 (Shift 10°). Wheel or drag on the upper arm: wire length L (read it on the post scale).\nPaste: take it from the box, choose its size with the wheel, then click the end of the bar or the top of the force sensor.\nKeep the magnet at least 20 cm from metal and other magnets."
+});
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
 const $=id=>document.getElementById(id);
 const d=()=>T[lang];
@@ -275,12 +275,14 @@ const itemName=k=>d().items[k]||k;
 const near=(p,q,r)=>Math.hypot(p[0]-q[0],p[1]-q[1])<r;
 const at=(k,dx,dy)=>[ST.pos[k].x+dx,ST.pos[k].y+dy];
 /* terminals and slots, cm on the bench */
-const TERM={ "V+":()=>at("ard",-7.2,-3.2), "V-":()=>at("ard",-7.2,-0.8), "C+":()=>at("coils",-1.6,3.6), "C-":()=>at("coils",1.6,3.6),
-             "A10":()=>at("dmm",-2.7,5.6), "AmA":()=>at("dmm",-0.9,5.6), "COM":()=>at("dmm",0.9,5.6) };
+/* laid out after Fig. 1(c): the two tube sockets (v) at the left of the shield, (iii) and (iv) at the back, the 9 V pads (i)
+   at the back right and (ii) at the front left, the current knob (vii) and the switch (vi) at the front, the LCD at the right */
+const TERM={ "V+":()=>at("ard",-8.9,-1.3), "V-":()=>at("ard",-8.9,-3.5), "C+":()=>at("coils",1.0,2.75), "C-":()=>at("coils",-1.0,2.75),
+             "A10":()=>at("dmm",-2.4,5.9), "AmA":()=>at("dmm",-0.8,5.9), "COM":()=>at("dmm",0.8,5.9) };
 const TERM_OWNER={"V+":"ard","V-":"ard","C+":"coils","C-":"coils","A10":"dmm","AmA":"dmm","COM":"dmm"};
-const SLOT={ s1:()=>at("ard",7.6,-4.0), s2:()=>at("ard",-7.6,4.0), s3:()=>at("ard",-2.2,-5.0), s4:()=>at("ard",1.2,-5.0) };
-const SW=()=>at("ard",3.6,3.3), KNOB=()=>at("ard",-4.6,3.3), DIALP=()=>at("dmm",0,1.2);
-function battBody(slot){ return slot==="s1"? at("ard",11.2,-4.0) : at("ard",-11.2,4.0); }
+const SLOT={ s1:()=>at("ard",7.0,-4.1), s2:()=>at("ard",-5.4,4.3), s3:()=>at("ard",-1.2,-4.3), s4:()=>at("ard",2.8,-4.3) };
+const SW=()=>at("ard",-1.8,3.5), KNOB=()=>at("ard",-5.4,0.9), DIALP=()=>at("dmm",0,1.2);
+function battBody(slot){ return slot==="s1"? at("ard",11.6,-3.6) : at("ard",-11.4,5.0); }
 function plugXY(s){ const p=ST[s].plug; if(p) return SLOT[p](); const b=sensorTail(s); return [b[0]+2.5,b[1]+3.5]; }
 function sensorTail(s){                         /* where the cable leaves the sensor */
   if(s==="force") return ST.force.where==="coil"? at("coils",0,0) : at("force",2.5,0);
@@ -354,153 +356,7 @@ function podDamp(F){ const P=ST.pod; let th=P.th;
     let s=-f/g; if(Math.abs(s)>0.3) s=0.3*Math.sign(s); th+=s; if(Math.abs(s)<1e-9) break; }
   P.th=th; P.w=0; }
 
-/* ══════════════════════════════════════════════════════════════
-   3.  DRAWING THE BENCH
-   ══════════════════════════════════════════════════════════════ */
-const cv=$("cv"); let ctx=cv.getContext("2d"); let S=1;
-const FONT="-apple-system,'Segoe UI','Malgun Gothic',sans-serif", MONO="ui-monospace,Consolas,monospace";
-function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
-  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
-function fillR(x,y,w,h,r,fill,stroke,lw){ rrect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
-  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
-function text(s,x,y,col,size,align,weight,font){ ctx.fillStyle=col; ctx.font=(weight||"")+" "+size+"px "+(font||FONT);
-  ctx.textAlign=align||"left"; ctx.textBaseline="middle"; ctx.fillText(s,x,y); }
-function vgrad(x,y,h,stops){ const g=ctx.createLinearGradient(x,y,x,y+h); stops.forEach(([o,c])=>g.addColorStop(o,c)); return g; }
-function bench(){
-  ctx.fillStyle=vgrad(0,0,LH,[[0,"#e9e4da"],[1,"#d9d2c4"]]); ctx.fillRect(0,0,LW,LH);
-  ctx.strokeStyle="rgba(120,105,80,.12)"; ctx.lineWidth=1;
-  for(let x=0;x<=LW;x+=100){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,LH); ctx.stroke(); }
-  for(let y=0;y<=LH;y+=100){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(LW,y); ctx.stroke(); }
-}
-/* draw in cm around an item centre */
-function frame(k,fn,pos){ const p=pos||ST.pos[k]; ctx.save(); ctx.translate(p.x*PX,p.y*PX); ctx.scale(PX,PX); fn(); ctx.restore(); }
-function shadowRect(x,y,w,h){ ctx.fillStyle="rgba(60,45,25,.22)"; ctx.fillRect(x+0.3,y+0.4,w,h); }
-const T6=(s,x,y,col,sz,al,wt)=>{ ctx.save(); ctx.scale(0.1,0.1); text(s,x*10,y*10,col,sz,al,wt); ctx.restore(); };
-function drawArd(){ frame("ard",()=>{
-  shadowRect(-8.5,-5.5,17,11);
-  fillR(-8.5,-5.5,17,11,0.4,"#1d6e45","#0f3f27",0.08);
-  fillR(-8,-5,16,10,0.3,"#227a4d");
-  fillR(-3.6,-2.6,9.6,4.4,0.2,"#3a3a3a"); fillR(-3.2,-2.2,8.8,3.6,0.1,ST.batts.some(b=>b.slot==="s1"&&b.q>0)?"#9fd36a":"#5b6b4c");
-  /* (v) power posts for the coils */
-  for(const [y,c] of [[-3.2,"#c62a22"],[-0.8,"#1b1b1b"]]){ ctx.fillStyle="#b9bcc0"; ctx.beginPath(); ctx.arc(-7.2,y,0.75,0,7); ctx.fill(); ctx.fillStyle=c; ctx.beginPath(); ctx.arc(-7.2,y,0.5,0,7); ctx.fill(); }
-  T6("(v)",-5.6,-2.0,"#d8f1e2",6.5);
-  /* slots */
-  for(const [k,x,y,lab] of [["s1",7.6,-4.0,"(i)"],["s2",-7.6,4.0,"(ii)"],["s3",-2.2,-5.0,"(iii)"],["s4",1.2,-5.0,"(iv)"]]){
-    fillR(x-0.8,y-0.5,1.6,1.0,0.1,"#f2f2ee","#999",0.05); T6(lab,x,y+(y<0?1.2:-1.1),"#d8f1e2",6,"center"); }
-  /* (vi) switch with LED, (vii) knob */
-  fillR(2.6,2.6,2.0,1.4,0.15,"#ddd","#777",0.05); fillR(ST.sw?3.6:2.8,2.75,0.8,1.1,0.1,"#555");
-  ctx.fillStyle=ST.sw&&circ.ok?"#ff4a3a":"#5a2a26"; ctx.beginPath(); ctx.arc(5.4,3.3,0.35,0,7); ctx.fill();
-  T6("(vi)",3.6,4.6,"#d8f1e2",6,"center");
-  ctx.fillStyle="#1a1a1a"; ctx.beginPath(); ctx.arc(-4.6,3.3,0.95,0,7); ctx.fill();
-  const a=-2.4+ST.knob*4.8; ctx.strokeStyle="#eee"; ctx.lineWidth=0.18; ctx.beginPath(); ctx.moveTo(-4.6,3.3); ctx.lineTo(-4.6+Math.sin(a)*0.8,3.3-Math.cos(a)*0.8); ctx.stroke();
-  T6("(vii)",-4.6,4.75,"#d8f1e2",6,"center");
-}); }
-function drawBatt(b){ const p=battBody(b.slot), s=b.slot==="s1"?1:-1;
-  ctx.save(); ctx.translate(p[0]*PX,p[1]*PX); ctx.scale(PX,PX);
-  shadowRect(-1.3,-2.4,2.6,4.8); fillR(-1.3,-2.4,2.6,4.8,0.3,"#1f1f1f","#000",0.06); ctx.fillStyle="#d7b53b"; ctx.fillRect(-1.3,-0.6,2.6,1.1);
-  ctx.save(); ctx.scale(0.1,0.1); text("9V",0,14,"#eee",8,"center","700"); ctx.restore();
-  ctx.strokeStyle="#c62a22"; ctx.lineWidth=0.18; ctx.beginPath(); ctx.moveTo(-0.4,-2.4*s); ctx.quadraticCurveTo(-1.6*s,-3.2*s,-2.8*s,-0.1); ctx.stroke();
-  ctx.strokeStyle="#111"; ctx.beginPath(); ctx.moveTo(0.4,-2.4*s); ctx.quadraticCurveTo(-1.4*s,-3.0*s,-2.8*s,0.1); ctx.stroke();
-  ctx.restore(); }
-/* (e) two coils on black formers held by a grey printed block (Fig. 1e, Fig. 2): sockets on the front face */
-function drawCoils(){ frame("coils",()=>{
-  const sock=()=>{ for(const [x,c] of [[-1.6,"#c62a22"],[1.6,"#1b1b1b"]]){ ctx.fillStyle="#b9bcc0"; ctx.beginPath(); ctx.arc(x,3.6,0.7,0,7); ctx.fill(); ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,3.6,0.45,0,7); ctx.fill(); } };
-  if(ST.force.where==="coil"){                   /* turned over as in Fig. 2(iv): the block is now a wall, the top coil seen from above */
-    shadowRect(-3.6,-3.4,7.2,8);
-    ctx.fillStyle="#141518"; ctx.beginPath(); ctx.arc(0,0,3.4,0,7); ctx.fill();
-    ctx.fillStyle="#b46a2a"; ctx.beginPath(); ctx.arc(0,0,2.7,0,7); ctx.fill(); ctx.fillStyle="#141518"; ctx.beginPath(); ctx.arc(0,0,1.6,0,7); ctx.fill();
-    ctx.strokeStyle="rgba(255,220,170,.5)"; ctx.lineWidth=0.06; for(let r=1.8;r<2.7;r+=0.22){ ctx.beginPath(); ctx.arc(0,0,r,0,7); ctx.stroke(); }
-    for(const a of [0.6,2.55,4.2]){ ctx.fillStyle="#1d1e22"; ctx.save(); ctx.rotate(a); ctx.fillRect(2.4,-0.25,1.1,0.5); ctx.restore(); }   /* cable ties */
-    fillR(-3.6,2.9,7.2,1.6,0.25,vgrad(0,2.9,1.6,[[0,"#4a4d53"],[1,"#2d2f33"]]),"#141518",0.06);
-    fillR(-0.9,-0.9,1.8,1.8,0.2,"#111","#000",0.05); ctx.fillStyle="#c9cdd2"; ctx.beginPath(); ctx.arc(0,0,0.5,0,7); ctx.fill();
-    if(ST.force.paste>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(0.2,0.1,0.35+0.2*Math.cbrt(ST.force.paste),0,7); ctx.fill(); }
-  } else {                                       /* as delivered (Fig. 2 i): both coils upright, axis along x */
-    shadowRect(-3.7,-3.0,7.4,7.7);
-    fillR(-3.4,-2.4,6.8,6.9,0.4,vgrad(0,-2.4,6.9,[[0,"#4a4d53"],[1,"#33363b"]]),"#141518",0.06);
-    for(const x of [-1.5,1.5]){
-      ctx.fillStyle="#121315"; ctx.fillRect(x-0.8,-2.8,0.25,5.6); ctx.fillRect(x+0.55,-2.8,0.25,5.6);   /* former flanges */
-      ctx.fillStyle=vgrad(0,-2.3,4.6,[[0,"#d48a44"],[0.5,"#a65a22"],[1,"#d48a44"]]); ctx.fillRect(x-0.55,-2.3,1.1,4.6);
-      ctx.strokeStyle="rgba(255,225,180,.35)"; ctx.lineWidth=0.04; for(let k=-0.45;k<0.5;k+=0.18){ ctx.beginPath(); ctx.moveTo(x+k,-2.3); ctx.lineTo(x+k,2.3); ctx.stroke(); }
-      ctx.fillStyle="#1d1e22"; ctx.fillRect(x-0.85,-0.2,1.7,0.4); }                                  /* cable tie */
-    ctx.strokeStyle="rgba(255,255,255,.25)"; ctx.setLineDash([0.3,0.3]); ctx.lineWidth=0.05; ctx.beginPath(); ctx.moveTo(-6,0); ctx.lineTo(6,0); ctx.stroke(); ctx.setLineDash([]);
-  }
-  sock();
-}); }
-function drawFieldBoard(){
-  const f=ST.field; let tip;
-  if(f.where==="bench"){ if(!ST.on.field) return; tip=at("field",-6.5,0); }
-  else tip=fieldTip();
-  ctx.save(); ctx.translate(tip[0]*PX,tip[1]*PX); ctx.scale(PX,PX);
-  fillR(0,-0.7,13,1.4,0.15,"#2d8a4a","#165a2c",0.05);
-  ctx.strokeStyle="#e9f5e9"; ctx.lineWidth=0.04; for(let i=0;i<=120;i+=2){ ctx.beginPath(); ctx.moveTo(i/10,-0.7); ctx.lineTo(i/10,i%10===0?-0.2:-0.45); ctx.stroke(); }
-  ctx.fillStyle="#111"; ctx.fillRect(0.05,-0.25,0.35,0.5);
-  ctx.fillStyle="#f5f5f2"; ctx.fillRect(11.6,-0.6,1.3,1.2);
-  ctx.restore();
-}
-function drawForce(){ if(!ST.on.force||ST.force.where!=="bench") return; frame("force",()=>{
-  shadowRect(-2.5,-2,5,4); fillR(-2.5,-2,5,4,0.3,"#1c1c1e","#000",0.06); fillR(-1.8,-1.3,2.4,2.6,0.2,"#e8e8e4");
-  ctx.fillStyle="#c9cdd2"; ctx.beginPath(); ctx.arc(-0.6,0,0.6,0,7); ctx.fill(); ctx.fillStyle="#555"; ctx.beginPath(); ctx.arc(1.5,-1,0.2,0,7); ctx.arc(1.5,1,0.2,0,7); ctx.fill(); }); }
-function drawCable(s){
-  const on=s==="field"? (ST.on.field) : ST.on.force; if(!on) return;
-  if(hand&&hand.k==="plug"&&hand.s===s){ const a=sensorTail(s); ctx.strokeStyle="#3a3a3a"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a[0]*PX,a[1]*PX); ctx.lineTo(mouse[0],mouse[1]); ctx.stroke(); return; }
-  const a=sensorTail(s), b=plugXY(s);
-  ctx.strokeStyle="rgba(40,40,40,.9)"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(a[0]*PX,a[1]*PX);
-  ctx.bezierCurveTo((a[0]+3)*PX,(a[1]+4)*PX,(b[0]-1)*PX,(b[1]-5)*PX,b[0]*PX,b[1]*PX); ctx.stroke();
-  for(const [dx,c] of [[-3,"#c62a22"],[0,"#222"],[3,"#e8e8e8"]]){ ctx.fillStyle=c; ctx.fillRect(b[0]*PX+dx-1,b[1]*PX-6,2,6); }
-  fillR(b[0]*PX-6,b[1]*PX-3,12,6,1,"#f5f5f0","#888");
-}
-function drawDmm(){ frame("dmm",()=>{
-  shadowRect(-4,-7.5,8,15); fillR(-4,-7.5,8,15,0.8,"#1f2124","#000",0.08); fillR(-3.6,-7.1,7.2,14.2,0.6,"#2d3035");
-  fillR(-3,-6.4,6,2.8,0.2,"#a9b6a3","#3d443b",0.05);
-  if(dmmText()) T6(dmmText(),2.6,-5,"#1d221b",15,"right","700");
-  ctx.fillStyle="#0e0f10"; ctx.beginPath(); ctx.arc(0,1.2,2.2,0,7); ctx.fill();
-  const ang={OFF:-2.2,V:-0.8,mA:0.6,A:1.8}[ST.dial]; ctx.strokeStyle="#f0f0f0"; ctx.lineWidth=0.25; ctx.beginPath(); ctx.moveTo(0,1.2); ctx.lineTo(Math.sin(ang)*1.9,1.2-Math.cos(ang)*1.9); ctx.stroke();
-  for(const [k,a] of [["OFF",-2.2],["V",-0.8],["mA",0.6],["A",1.8]]) T6(d().dial[k],Math.sin(a)*3.0*10/10,1.2-Math.cos(a)*3.0,"#cfd6dc",5.5,"center");
-  for(const [x,c,l] of [[-2.7,"#c62a22","10A"],[-0.9,"#c62a22","mA"],[0.9,"#222","COM"],[2.7,"#c62a22","VΩ"]]){
-    ctx.fillStyle="#0b0b0c"; ctx.beginPath(); ctx.arc(x,5.6,0.55,0,7); ctx.fill(); ctx.strokeStyle=c==="#222"?"#666":c; ctx.lineWidth=0.12; ctx.stroke(); T6(l,x,6.7,"#cfd6dc",5,"center"); }
-}); }
-function drawRuler(){ frame("ruler",()=>{
-  shadowRect(-20,-1.5,40,3); ctx.fillStyle="rgba(240,244,247,.92)"; ctx.fillRect(-20,-1.5,40,3); ctx.strokeStyle="#7d8a94"; ctx.lineWidth=0.04; ctx.strokeRect(-20,-1.5,40,3);
-  ctx.strokeStyle="#3b444c"; for(let i=0;i<=400;i++){ const x=-20+i/10, L=i%10===0?0.9:i%5===0?0.6:0.35; ctx.lineWidth=0.03; ctx.beginPath(); ctx.moveTo(x,-1.5); ctx.lineTo(x,-1.5+L); ctx.stroke(); }
-  ctx.save(); ctx.scale(0.1,0.1); for(let c=0;c<=40;c+=5) text(String(c),(-20+c)*10,-2,"#2b333a",5.5,"center"); ctx.restore();
-  if(ST.magOnRuler){ fillR(-21.2,-0.7,1.2,1.4,0.2,"#c7ccd2","#666",0.05); ctx.fillStyle="#eadfb0"; ctx.fillRect(-20.1,-0.6,0.25,1.2); }
-}); }
-function drawMagnet(k){ if(!ST.on[k]||(k==="mag3"&&ST.magOnRuler)) return; frame(k,()=>{
-  ctx.fillStyle="rgba(0,0,0,.2)"; ctx.beginPath(); ctx.arc(0.15,0.2,0.6,0,7); ctx.fill();
-  ctx.fillStyle="#c7ccd2"; ctx.beginPath(); ctx.arc(0,0,0.55,0,7); ctx.fill(); ctx.strokeStyle="#6d737a"; ctx.lineWidth=0.06; ctx.stroke(); }); }
-function drawStandTop(){ frame("stand",()=>{
-  shadowRect(-8.5,-8.5,17,17); fillR(-8.5,-8.5,17,17,0.6,vgrad(0,-8.5,17,[[0,"#efd9b0"],[1,"#d9bd8c"]]),"#a88a5c",0.08);
-  ctx.save(); ctx.scale(0.1,0.1); text("iPhO",50,60,"#a07f50",12,"center","700"); ctx.restore();
-  ctx.fillStyle="#3d4046"; ctx.fillRect(-6,-6.6,1.2,1.2);
-  ctx.fillStyle="#2a2c30"; ctx.fillRect(-5.6,-6.4,5.6,0.8);
-  /* the pod under the discs */
-  const th=ST.pod.th, c=[0,1.5], R=4;
-  ctx.save(); ctx.translate(c[0],c[1]); ctx.rotate(th);
-  ctx.fillStyle="#222"; ctx.fillRect(-0.3,-R,0.6,2*R);
-  ctx.strokeStyle="#d6c08a"; ctx.lineWidth=0.12; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(4.6,0); ctx.stroke();
-  const pl=ST.pod.paste.l.reduce((a,b)=>a+b,0), pr=ST.pod.paste.r.reduce((a,b)=>a+b,0);
-  if(pl>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(0,-R,0.3+0.25*Math.cbrt(pl),0,7); ctx.fill(); }
-  if(pr>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(0,R,0.3+0.25*Math.cbrt(pr),0,7); ctx.fill(); }
-  ctx.restore();
-  ctx.fillStyle="rgba(250,250,250,.45)"; ctx.beginPath(); ctx.arc(c[0],c[1],5.5,0,7); ctx.fill(); ctx.strokeStyle="rgba(60,60,60,.6)"; ctx.lineWidth=0.06; ctx.stroke();
-  ctx.fillStyle="#2a2c30"; ctx.beginPath(); ctx.arc(c[0],c[1],1.1,0,7); ctx.fill();
-}); }
-function drawWires(){
-  const col=["#151515","#151515","#151515"];
-  ST.wires.forEach((w,i)=>wireLine(TERM[w.a](),TERM[w.b](),col[i%3]));
-  if(hand&&hand.k==="wire"&&hand.a) wireLine(TERM[hand.a](),[mouse[0]/PX,mouse[1]/PX],"#151515");
-}
-function wireLine(a,b,col){ const L=Math.hypot(a[0]-b[0],a[1]-b[1]), sag=3+L*0.15;
-  ctx.strokeStyle="rgba(0,0,0,.18)"; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(a[0]*PX+2,a[1]*PX+3);
-  ctx.bezierCurveTo((a[0]*0.7+b[0]*0.3)*PX+2,(a[1]*0.7+b[1]*0.3+sag)*PX+3,(a[0]*0.3+b[0]*0.7)*PX+2,(a[1]*0.3+b[1]*0.7+sag)*PX+3,b[0]*PX+2,b[1]*PX+3); ctx.stroke();
-  ctx.strokeStyle=col; ctx.lineWidth=2.6; ctx.beginPath(); ctx.moveTo(a[0]*PX,a[1]*PX);
-  ctx.bezierCurveTo((a[0]*0.7+b[0]*0.3)*PX,(a[1]*0.7+b[1]*0.3+sag)*PX,(a[0]*0.3+b[0]*0.7)*PX,(a[1]*0.3+b[1]*0.7+sag)*PX,b[0]*PX,b[1]*PX); ctx.stroke();
-  for(const p of [a,b]){ ctx.fillStyle="#333"; ctx.beginPath(); ctx.arc(p[0]*PX,p[1]*PX,4,0,7); ctx.fill(); }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   4.  INSTRUMENT READINGS
-   ══════════════════════════════════════════════════════════════ */
+const mulberry=mulberry32;
 let circ={I:0,coil:0,a10:0,ama:0,ok:false}, lcd=["",""], sleeping=false, zErr=0, dErr=0;
 const ardOn=()=>ST.on.ard&&ST.batts.some(b=>b.slot==="s1"&&b.q>0);
 function hallB(){
@@ -530,405 +386,1085 @@ function dmmText(){
   return (0.01*gauss()).toFixed(2);
 }
 
+
 /* ══════════════════════════════════════════════════════════════
-   5.  THE BENCH, THE TRAY AND THE CLOSE UP
+   2.  CANVASES AND 2-D HELPERS
    ══════════════════════════════════════════════════════════════ */
-function drawBench(){
-  bench();
-  if(ST.on.ruler) drawRuler();
-  if(ST.on.stand) drawStandTop();
-  if(ST.on.coils) drawCoils();
-  if(ST.on.ard) drawArd();
-  for(const b of ST.batts) if(b.slot&&ST.on.ard) drawBatt(b);
-  if(ST.on.dmm) drawDmm();
-  drawForce(); drawFieldBoard(); drawMagnet("mag3"); drawMagnet("podMag");
-  drawCable("field"); drawCable("force");
-  drawWires();
-  drawHand();
-  if(overBench&&(!hand||hand.k==="wire")){ const t=termAt(cm(mouse));
-    if(t){ const s=d().term[t]; ctx.font="12px "+FONT; const w=ctx.measureText(s).width+12;
-      fillR(mouse[0]+12,mouse[1]-26,w,19,4,"rgba(20,22,26,.85)"); text(s,mouse[0]+18,mouse[1]-16.5,"#ffe9a8",12); } }
+const cv=$("bench"), ctxM=cv.getContext("2d");
+let ctx=ctxM;
+const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
+let CW=0, CH=0, DPR=1, TRW=180, TRH=420;
+const FONT="'Segoe UI','Malgun Gothic','Apple SD Gothic Neo',sans-serif", MONO="ui-monospace,Consolas,monospace";
+function lerp(c1,c2,f){ f=Math.max(0,Math.min(1,f)); const a=[1,3,5].map(i=>parseInt(c1.substr(i,2),16)), b=[1,3,5].map(i=>parseInt(c2.substr(i,2),16));
+  return "#"+a.map((v,i)=>Math.round(v+(b[i]-v)*f).toString(16).padStart(2,"0")).join(""); }
+function R(x0,y0,x1,y1,fill,stroke,lw){ if(fill){ctx.fillStyle=fill;ctx.fillRect(x0,y0,x1-x0,y1-y0);}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.strokeRect(x0,y0,x1-x0,y1-y0);} }
+function O(x0,y0,x1,y1,fill,stroke,lw){ ctx.beginPath(); ctx.ellipse((x0+x1)/2,(y0+y1)/2,Math.abs(x1-x0)/2,Math.abs(y1-y0)/2,0,0,7);
+  if(fill){ctx.fillStyle=fill;ctx.fill();} if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();} }
+function L(pts,col,w){ ctx.beginPath(); ctx.moveTo(pts[0],pts[1]); for(let i=2;i<pts.length;i+=2) ctx.lineTo(pts[i],pts[i+1]);
+  ctx.strokeStyle=col; ctx.lineWidth=w||1; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.stroke(); }
+function P(pts,fill,stroke,lw){ ctx.beginPath(); ctx.moveTo(pts[0],pts[1]); for(let i=2;i<pts.length;i+=2) ctx.lineTo(pts[i],pts[i+1]); ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();} if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();} }
+function X(s,x,y,col,size,anchor,bold,font){
+  ctx.fillStyle=col; ctx.font=(bold?"700 ":"")+size+"px "+(font||FONT);
+  ctx.textAlign=anchor==="w"?"left":anchor==="e"?"right":"center"; ctx.textBaseline="middle";
+  const lines=String(s).split("\n"), lh=size*1.15;
+  lines.forEach((l,i)=>ctx.fillText(l,x,y+(i-(lines.length-1)/2)*lh)); }
+function RR(x,y,w,h,r,fill,stroke,lw){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); }
+  if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+/* paint onto an offscreen canvas with the helpers above */
+function paint(c,fn){ const old=ctx; ctx=c.getContext("2d"); ctx.setTransform(1,0,0,1,0,0); fn(c.width,c.height); ctx=old; }
+function mkCanvas(w,h){ const c=document.createElement("canvas"); c.width=w; c.height=h; return c; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   LAB3D — a small orthographic 3-D bench renderer for canvas
+   (the APhO 2026 bench style: a wooden desk seen from above at an
+   angle; drag to turn it round, wheel to zoom, shift-drag to pan)
+
+   World units are centimetres: x and z lie on the desk, y is up.
+   Every frame the scene is described again as a list of faces, lines,
+   texts and custom items; they are sorted far-to-near and painted.
+   ══════════════════════════════════════════════════════════════ */
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
 }
-function drawHand(){
-  if(!hand) return; const c=cm(mouse);
-  if(PLACE.includes(hand.k)){ const keep=ST.pos[hand.k], kon=ST.on[hand.k]; ST.pos[hand.k]={x:c[0],y:c[1]}; ST.on[hand.k]=true;
-    const sv={w:ST.field.where,f:ST.force.where,r:ST.magOnRuler}; if(hand.k==="field") ST.field.where="bench"; if(hand.k==="force") ST.force.where="bench"; if(hand.k==="mag3") ST.magOnRuler=false;
-    ctx.globalAlpha=0.7;
-    ({ard:drawArd,coils:drawCoils,dmm:drawDmm,ruler:drawRuler,stand:drawStandTop,field:drawFieldBoard,force:drawForce,mag3:()=>drawMagnet("mag3"),podMag:()=>drawMagnet("podMag")})[hand.k]();
-    ctx.globalAlpha=1; ST.pos[hand.k]=keep; ST.on[hand.k]=kon; ST.field.where=sv.w; ST.force.where=sv.f; ST.magOnRuler=sv.r; return; }
-  if(hand.k==="batt"){ ctx.save(); ctx.translate(mouse[0],mouse[1]); ctx.scale(PX,PX); fillR(-1.3,-2.4,2.6,4.8,0.3,"#1f1f1f"); ctx.fillStyle="#d7b53b"; ctx.fillRect(-1.3,-0.6,2.6,1.1); ctx.restore(); }
-  if(hand.k==="paste"){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(mouse[0],mouse[1],3+2.5*Math.cbrt(hand.g),0,7); ctx.fill(); ctx.strokeStyle="#b9a96a"; ctx.stroke();
-    text(d().pasteSize(hand.g.toFixed(1)),mouse[0]+14,mouse[1]+16,"#4a3f22",11); }
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
 }
-function icon(k,x,y,s){
-  ctx.save(); ctx.translate(x,y); ctx.scale(s,s);
-  switch(k){
-    case "ard": fillR(-22,-15,44,30,3,"#1d6e45"); fillR(-10,-7,26,12,2,"#9fd36a"); break;
-    case "coils": fillR(-20,-12,40,24,3,"#2d2f33"); ctx.fillStyle="#b46a2a"; ctx.fillRect(-8,-16,6,32); ctx.fillRect(2,-16,6,32); break;
-    case "field": fillR(-24,-4,48,8,2,"#2d8a4a"); ctx.fillStyle="#fff"; for(let i=-22;i<24;i+=4) ctx.fillRect(i,-4,1,3); break;
-    case "force": fillR(-12,-10,24,20,3,"#1c1c1e"); ctx.fillStyle="#c9cdd2"; ctx.beginPath(); ctx.arc(-3,0,4,0,7); ctx.fill(); break;
-    case "dmm": fillR(-11,-18,22,36,4,"#1f2124"); fillR(-8,-15,16,7,1,"#a9b6a3"); ctx.fillStyle="#000"; ctx.beginPath(); ctx.arc(0,4,6,0,7); ctx.fill(); break;
-    case "batt": fillR(-8,-14,16,28,3,"#1f1f1f"); ctx.fillStyle="#d7b53b"; ctx.fillRect(-8,-3,16,6); break;
-    case "wire": ctx.strokeStyle="#151515"; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-20,8); ctx.bezierCurveTo(-8,-16,8,16,20,-8); ctx.stroke(); break;
-    case "ruler": ctx.rotate(-0.4); ctx.fillStyle="#f0f4f7"; ctx.fillRect(-26,-5,52,10); ctx.strokeStyle="#555"; for(let i=-24;i<=24;i+=4){ ctx.beginPath(); ctx.moveTo(i,-5); ctx.lineTo(i,-1); ctx.stroke(); } break;
-    case "mag3": case "podMag": ctx.fillStyle="#c7ccd2"; ctx.fillRect(-5,-8,10,16); ctx.strokeStyle="#666"; ctx.strokeRect(-5,-8,10,16); break;
-    case "stand": fillR(-18,8,36,8,2,"#e3c99a"); ctx.fillStyle="#3d4046"; ctx.fillRect(-12,-20,3,30); ctx.fillRect(-12,-18,18,3); ctx.fillRect(-12,2,18,3); break;
-    case "paste": fillR(-14,-12,28,24,3,"#f1c232"); ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(4,4,5,0,7); ctx.fill(); break;
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.flat?1:0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]);
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
   }
-  ctx.restore();
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
 }
-const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), benchCtx=ctx;
-const TRAY_LIST=["ard","coils","field","force","dmm","batt","wire","ruler","mag3","stand","paste"], TROW=46;
-let TRW=190, TRH=600, CLW=900, CLH=300, trayCells=[];
-const battsLeft=()=>ST.batts.filter((b,i)=>!b.slot&&!(hand&&hand.k==="batt"&&hand.i===i)).length;
-const wiresLeft=()=>3-ST.wires.length-(hand&&hand.k==="wire"?1:0);
-function trayAvail(k){
-  if(hand&&hand.k===k&&k!=="batt"&&k!=="wire") return false;
-  if(k==="batt") return battsLeft()>0; if(k==="wire") return wiresLeft()>0; if(k==="paste") return true;
-  return !ST.on[k];
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
 }
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const r1=o.r1===undefined?r:o.r1, P=(base,ang,rr)=>{ rr=rr===undefined?(base===b?r1:r):rr; return [base[0]+rr*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+rr*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+rr*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))]; };
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=c;}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
+  return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.flat?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke) for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,o.stroke,undefined,"round");
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,o.col,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      G.tq.push({src:it.src,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,q}); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,null,t.a); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   3.  THE BENCH IN 3-D  (the 120 cm × 72 cm bench of the model:
+       bench point (bx, by) is the world point x = bx − 60, z = by − 36;
+       y is up, all in centimetres; the parts after Figs. 1–3)
+   ══════════════════════════════════════════════════════════════ */
+T.ko.items.watch="k. 스톱워치"; T.en.items.watch="k. Chronometer";
+const DESK=[-60,60,-36,36], WALL_Z=-37;
+const wx=b=>b-60, wz=b=>b-36;
+const WP=(p,y)=>[wx(p[0]),y||0,wz(p[1])];                      /* a bench point [bx,by] at height y */
+const POD_TOP=50.5;                                          /* the lower face of f2a, where the wire is held */
+const podY=()=>POD_TOP-ST.pod.L*100;
+const STAND_ROD=[-6.2,-6.2];                                 /* the post, from the centre of the base */
+const B={ carry:null, down:null, knob:null, pod:null, mouse:[-99,-99], mouseW:[0,0,0], trayDrag:false, wireA:null };
+ST.on.watch=false; ST.pos.watch={x:60,y:36}; SZ.watch=[6,7.5];
+let msgOwn=null;
+
+/* ---- printed faces ---- */
+const PCBC=mkCanvas(960,600), LCDC=mkCanvas(640,160), DMMC=mkCanvas(400,750), RULC=mkCanvas(1600,120), FSC=mkCanvas(1040,96),
+      DISK1=mkCanvas(800,800), DISK2=mkCanvas(700,700), WOODC=mkCanvas(680,680), WATCHC=mkCanvas(300,180), BATC=mkCanvas(480,260), DESKC=mkCanvas(1024,640);
+for(const c of [PCBC,DMMC,RULC,FSC,DISK1,DISK2,WOODC,BATC,DESKC]) c._ver=0;
+LCDC._ver=0; WATCHC._ver=0;
+const LOGO25=new Image(); LOGO25.src="data:image/png;base64,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"; LOGO25.onload=()=>paintStatic();
+function rr(x,y,w,h,r,fill,stroke,lw){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); if(fill){ ctx.fillStyle=fill; ctx.fill(); } if(stroke){ ctx.strokeStyle=stroke; ctx.lineWidth=lw||1; ctx.stroke(); } }
+/* an angle disk (f1a, f2a): white card, 1° ticks, a number every 10°, 8 radial lines; numbers go clockwise from the top seen from above */
+function paintDisk(w,h,every){ const c=w/2, r=c-4;
+  ctx.clearRect(0,0,w,h); ctx.fillStyle="#f7f7f4"; ctx.beginPath(); ctx.arc(c,c,r,0,7); ctx.fill(); ctx.strokeStyle="#333"; ctx.lineWidth=2; ctx.stroke();
+  for(let a=0;a<360;a++){ const t=a*Math.PI/180, L=a%10===0?0.1*r:a%5===0?0.065*r:0.04*r;
+    ctx.lineWidth=a%10===0?2:1.2; ctx.beginPath(); ctx.moveTo(c+Math.sin(t)*r,c-Math.cos(t)*r); ctx.lineTo(c+Math.sin(t)*(r-L),c-Math.cos(t)*(r-L)); ctx.stroke();
+    if(a%every===0){ ctx.save(); ctx.translate(c+Math.sin(t)*(r-0.17*r),c-Math.cos(t)*(r-0.17*r)); ctx.rotate(t); X(String(a),0,0,"#222",w*0.034,"c",false,"Arial,sans-serif"); ctx.restore(); } }
+  ctx.lineWidth=1.6; for(let k=0;k<8;k++){ const t=k*Math.PI/4; ctx.beginPath(); ctx.moveTo(c,c); ctx.lineTo(c+Math.sin(t)*r*0.72,c-Math.cos(t)*r*0.72); ctx.stroke(); }
+  ctx.strokeStyle="#333"; ctx.beginPath(); ctx.arc(c,c,r*0.74,0,7); ctx.stroke(); }
+function paintStatic(){
+  /* the shield (Fig. 1c): green board, its silkscreen, 60 px a centimetre over 16 × 10 cm */
+  paint(PCBC,(w,h)=>{ ctx.fillStyle="#2f6d3a"; ctx.fillRect(0,0,w,h);
+    const g=ctx.createLinearGradient(0,0,w,h); g.addColorStop(0,"rgba(255,255,255,0.06)"); g.addColorStop(1,"rgba(0,0,0,0.08)"); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    const S=v=>v*60, sx=v=>S(v+8), sz=v=>S(v+5), wt="#e9efe6";
+    ctx.strokeStyle=wt; ctx.lineWidth=2.5; ctx.strokeRect(sx(-7.5),sz(-4.8),S(5.2),S(2.4)); L([sx(-0.4),sz(-5),sx(-0.4),sz(-1.2)],wt,2); L([sx(-0.4),sz(-1.2),sx(8),sz(-1.2)],wt,2);
+    X("Bobine",sx(-6.6),sz(-3.95),wt,20,"w",false,"Arial,sans-serif"); X("-",sx(-3.4),sz(-3.95),wt,26,"c",true); X("Bobine",sx(-6.6),sz(-1.8),wt,20,"w",false,"Arial,sans-serif"); X("+",sx(-3.4),sz(-1.8),wt,26,"c",true);
+    X("Jauge",sx(2.8),sz(-2.6),wt,18,"c",false,"Arial,sans-serif"); X("de",sx(2.8),sz(-2.25),wt,18,"c",false,"Arial,sans-serif"); X("contrainte",sx(2.8),sz(-1.9),wt,18,"c",false,"Arial,sans-serif");
+    X("Pile 9V",sx(6.1),sz(-3.3),wt,18,"c",false,"Arial,sans-serif"); X("Arduino",sx(6.1),sz(-2.95),wt,18,"c",false,"Arial,sans-serif");
+    X("Ref : 678210",sx(6.6),sz(-1.55),wt,17,"c",false,"Arial,sans-serif");
+    X("Variation",sx(-4.2),sz(2.0),wt,17,"c",false,"Arial,sans-serif"); X("de",sx(-4.2),sz(2.35),wt,17,"c",false,"Arial,sans-serif"); X("courant",sx(-4.2),sz(2.7),wt,17,"c",false,"Arial,sans-serif");
+    X("Pile 9V",sx(-6.9),sz(4.6),wt,17,"c",false,"Arial,sans-serif"); X("bobines",sx(-6.9),sz(4.9),wt,17,"c",false,"Arial,sans-serif");
+    X("On",sx(-2.6),sz(2.6),wt,17,"c",false,"Arial,sans-serif"); X("Off",sx(-2.6),sz(4.5),wt,17,"c",false,"Arial,sans-serif");
+    X("(-)",sx(-6.6),sz(3.9),wt,15,"c"); X("(+)",sx(-4.2),sz(4.6),wt,15,"c");
+    for(let i=0;i<16;i++){ ctx.fillStyle="#b8a25a"; ctx.beginPath(); ctx.arc(sx(-0.2+i*0.45),sz(-1.55),6,0,7); ctx.fill(); }
+    for(const [x,z] of [[-7.6,-4.6],[7.6,-4.6],[-7.6,4.6],[7.6,4.6]]){ ctx.fillStyle="#c9b36b"; ctx.beginPath(); ctx.arc(sx(x),sz(z),11,0,7); ctx.fill(); ctx.fillStyle="#333"; ctx.beginPath(); ctx.arc(sx(x),sz(z),5,0,7); ctx.fill(); }
+    ctx.strokeStyle="rgba(200,215,190,0.35)"; ctx.lineWidth=3; for(let i=0;i<9;i++){ const y=sz(-0.4+i*0.5); L([sx(-7.6),y,sx(-6.2+i*0.3),y],"rgba(190,210,180,0.35)",3); } });
+  /* the multimeter (Fig. 1g): black, its dial ring printed, 50 px a centimetre over 8 × 15 cm */
+  paint(DMMC,(w,h)=>{ ctx.fillStyle="#19191b"; ctx.fillRect(0,0,w,h); rr(6,6,w-12,h-12,30,null,"#c0262a",10);
+    const S=v=>v*50, cx=w/2, cy=S(7.5+1.2), R=S(2.9);
+    rr(S(0.9),S(1.0),S(6.2),S(3.6),10,"#2a2c2e"); X("DIGITAL MULTIMETER",S(4),S(4.95),"#e8e8e8",15,"c",true,"Arial,sans-serif");
+    ctx.lineWidth=R*0.32; const seg=[["#2a9a4a",-150,-95],["#e6c32a",-95,-30],["#2c74c9",-30,40],["#d8343a",40,150]];
+    for(const [c,a0,a1] of seg){ ctx.strokeStyle=c; ctx.beginPath(); ctx.arc(cx,cy,R,(a0-90)*Math.PI/180,(a1-90)*Math.PI/180); ctx.stroke(); }
+    const lab=[["OFF",-145],["V⎓",-70],["mA",10],["10A",80]]; for(const [t,a] of lab){ const r=R*1.42, q=(a-90)*Math.PI/180; X(t,cx+Math.cos(q)*r,cy+Math.sin(q)*r,"#f2f2f2",21,"c",true,"Arial,sans-serif"); }
+    for(const [x,t,c] of [[-2.4,"10A","#d8343a"],[-0.8,"mA","#d8343a"],[0.8,"COM","#eeeeee"],[2.4,"VΩ","#d8343a"]]) X(t,cx+S(x),S(7.5+5.0),c,17,"c",true,"Arial,sans-serif");
+    X("CE",S(1.2),S(14.3),"#cfcfcf",15,"w",true,"Arial,sans-serif"); X("CAT III 600V",S(6.8),S(14.3),"#cfcfcf",13,"e",false,"Arial,sans-serif"); });
+  /* the 40 cm ruler (Fig. 1i): clear plastic, cm and mm, 40 px a centimetre */
+  paint(RULC,(w,h)=>{ ctx.fillStyle="rgba(236,240,243,0.92)"; ctx.fillRect(0,0,w,h);
+    for(let mm=0;mm<=400;mm++){ const x=mm*4, L=mm%10===0?34:mm%5===0?24:14; L_(x,L); if(mm%10===0) X(String(mm/10),x,48,"#1d1d1d",22,"c",false,"Arial,sans-serif"); }
+    function L_(x,L){ ctx.strokeStyle="#1d1d1d"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x+2,0); ctx.lineTo(x+2,L); ctx.stroke(); }
+    X("cm",14,48,"#1d1d1d",16,"w"); });
+  /* the field sensor's board (Fig. 1d): a green strip with a scale, 0 at the Hall probe, 80 px a centimetre over 13 cm */
+  paint(FSC,(w,h)=>{ ctx.fillStyle="#2f7a3c"; ctx.fillRect(0,0,w,h);
+    for(let mm=0;mm<=120;mm++){ const x=40+mm*8, L=mm%10===0?44:mm%5===0?30:18; ctx.strokeStyle="#e6efe2"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,h-6); ctx.lineTo(x,h-6-L); ctx.stroke(); }
+    rr(70,10,40,42,4,"#f6f6f2"); X("0",90,32,"#111",30,"c",true,"Arial,sans-serif"); ctx.fillStyle="#1d1d1d"; ctx.fillRect(4,30,26,30); });
+  paint(DISK1,(w,h)=>paintDisk(w,h,10)); paint(DISK2,(w,h)=>paintDisk(w,h,10));
+  /* the wooden base of the stand (Fig. 3, f0b): beech, the event's mark burnt in */
+  paint(WOODC,(w,h)=>{ const g=ctx.createLinearGradient(0,0,w,h); g.addColorStop(0,"#e8cfa6"); g.addColorStop(1,"#dcbf93"); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    const rn=mulberry(21); for(let i=0;i<90;i++){ const y=rn()*h; ctx.strokeStyle=`rgba(150,110,70,${0.06+rn()*0.08})`; ctx.lineWidth=1+rn()*2; ctx.beginPath();
+      for(let x=0;x<=w;x+=20){ const yy=y+Math.sin(x*0.01+i)*6; if(x) ctx.lineTo(x,yy); else ctx.moveTo(x,yy); } ctx.stroke(); }
+    if(LOGO25.complete&&LOGO25.naturalWidth){ const lw=150, lh=lw*LOGO25.naturalHeight/LOGO25.naturalWidth, oc=mkCanvas(lw,lh), o=oc.getContext("2d");
+      o.drawImage(LOGO25,0,0,lw,lh); o.globalCompositeOperation="source-in"; o.fillStyle="#6b4a2c"; o.fillRect(0,0,lw,lh); ctx.globalAlpha=0.85; ctx.drawImage(oc,w-lw-40,h-lh-40); ctx.globalAlpha=1; }
+    X("JEULIN",60,h-50,"#6b4a2c",22,"w",true,"Arial,sans-serif"); X("ref 678 210",w-60,40,"#7a5a3a",16,"e",false,"Arial,sans-serif"); });
+  /* the 9 V battery (Fig. 1j): black and silver, its maker's name */
+  paint(BATC,(w,h)=>{ const g=ctx.createLinearGradient(0,0,0,h); g.addColorStop(0,"#d8dadc"); g.addColorStop(0.5,"#9fa3a7"); g.addColorStop(1,"#cfd2d5"); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle="#141516"; ctx.beginPath(); ctx.moveTo(w*0.55,0); ctx.lineTo(w,0); ctx.lineTo(w,h); ctx.lineTo(w*0.42,h); ctx.closePath(); ctx.fill();
+    X("Energizer",w*0.32,h*0.45,"#111",62,"c",true,"'Arial Black',Arial,sans-serif"); X("9V",w*0.82,h*0.78,"#f2f2f2",40,"c",true,"Arial,sans-serif"); });
+  paint(DESKC,(w,h)=>{ ctx.fillStyle="#e2e2de"; ctx.fillRect(0,0,w,h);
+    const rn=mulberry(3); for(let i=0;i<9000;i++){ const v=rn(); ctx.fillStyle=`rgba(${v<0.5?"120,118,110":"255,255,250"},${0.04+rn()*0.06})`; ctx.fillRect(rn()*w,rn()*h,1.6,1.6); } });
+  for(const c of [PCBC,DMMC,RULC,FSC,DISK1,DISK2,WOODC,BATC,DESKC]) c._ver++;
+}
+/* the LCD (1602A, Fig. 1c): yellow-green, two lines of dark characters */
+let lcdSig="";
+function refreshLCD(){ const on=ST.on.ard&&ardOn(), s=on?lcd.join("|"):"off"; if(s===lcdSig) return; lcdSig=s;
+  paint(LCDC,(w,h)=>{ ctx.fillStyle=on?"#b9cf55":"#5c6440"; ctx.fillRect(0,0,w,h);
+    if(on){ const cw=w/16; for(let r=0;r<2;r++) for(let i=0;i<16;i++){ ctx.fillStyle="rgba(60,80,20,0.10)"; ctx.fillRect(i*cw+2,8+r*72,cw-4,64); }
+      for(let r=0;r<2;r++){ const t=(lcd[r]||"").padEnd(16," "); for(let i=0;i<16;i++) X(t[i],i*cw+cw/2,44+r*72,"#1f2a10",52,"c",true,"'Courier New',monospace"); } } });
+  LCDC._ver++; }
+let watchSig="";
+function refreshWatch(){ const t=ST.sw_t, s=Math.floor(t*100); if(String(s)===watchSig) return; watchSig=String(s);
+  paint(WATCHC,(w,h)=>{ ctx.fillStyle="#b9c2a8"; ctx.fillRect(0,0,w,h); const m=Math.floor(t/60), sec=t-m*60;
+    X(String(m)+":"+sec.toFixed(2).padStart(5,"0"),w/2,h*0.58,"#1b2216",86,"c",true,"'Courier New',monospace"); X(ST.swRun?"RUN":"",w*0.15,h*0.18,"#1b2216",24,"c",true,"Arial,sans-serif"); });
+  WATCHC._ver++; }
+let dmmSig="";
+function dmmDisplay(){ return dmmText(); }
+
+/* ══════════════════════════════════════════════════════════════
+   4.  THE 3-D MODEL
+   ══════════════════════════════════════════════════════════════ */
+const add3=(a,b,s)=>[a[0]+b[0]*(s===undefined?1:s),a[1]+b[1]*(s===undefined?1:s),a[2]+b[2]*(s===undefined?1:s)];
+function bez(P0,P1,P2,P3,n){ const out=[]; for(let i=0;i<=n;i++){ const t=i/n,u=1-t;
+  out.push([0,1,2].map(j=>u*u*u*P0[j]+3*u*u*t*P1[j]+3*u*t*t*P2[j]+t*t*t*P3[j])); } return out; }
+function tube(pts,r,col,o){ o=o||{}; const lw=Math.max(1.2,2*r*CAM.k);
+  poly3(pts,col,lw,{bias:o.bias||0,cap:"round"});
+  poly3(pts,o.hi||lerp(col,"#ffffff",0.35),Math.max(0.6,lw*0.24),{bias:(o.bias||0)+6,cap:"butt"});
+  if(o.id){ const step=Math.max(1,Math.floor(pts.length/10)); for(let i=0;i<pts.length;i+=step) sphere3(pts[i],r*1.8,"rgba(0,0,0,0.004)",{id:o.id}); } }
+const hit=(p,r,id)=>sphere3(p,r,"rgba(0,0,0,0.004)",{id});
+const DARK="#3b3d40", GREY3D="#4a4c50";
+function desk3(){
+  tex3(DESKC,0,0,DESKC.width,DESKC.height,[DESK[0],0,DESK[2]],[DESK[1]-DESK[0],0,0],[0,0,DESK[3]-DESK[2]],{id:"desk"});
+  box3(DESK[0],DESK[1],-3,-0.02,DESK[2],DESK[3],"#b3b3ad",{noTop:true});
+  face([[-110,-4,WALL_Z],[110,-4,WALL_Z],[110,80,WALL_Z],[-110,80,WALL_Z]],{fill:"#d4d0c6",flat:true,cull:true});
+}
+/* c. the Arduino under its shield, the LCD, the slots and controls */
+function ard3(bx,by,y0,ghost){
+  const x=wx(bx), z=wz(by), id="m_ard", P=(dx,dz,y)=>[x+dx,y0+(y||0),z+dz];
+  box3(x-6.9,x+3.4,y0,y0+1.4,z-4.7,z+1.5,"#1d5fa8",{id,top:"#2a6fb8"});                      /* the Arduino board beneath */
+  for(const [dx,dz] of [[-7.6,-4.6],[7.6,-4.6],[-7.6,4.6],[7.6,4.6]]) cyl3("y",y0,y0+1.6,x+dx,z+dz,0.22,"#c8ccd0",{seg:8});
+  box3(x-8,x+8,y0+1.6,y0+1.75,z-5,z+5,"#2f6d3a",{id,top:"#2f6d3a"});
+  tex3(PCBC,0,0,960,600,[x-8,y0+1.752,z-5],[16,0,0],[0,0,10],{id});
+  /* the LCD module on its own board, the header between */
+  box3(x-0.6,x+7.9,y0+1.75,y0+2.6,z-1.2,z+4.3,"#2d6a3a",{id});
+  box3(x-0.2,x+7.5,y0+2.6,y0+3.55,z-0.75,z+3.9,"#141516",{id,top:"#1d1e20"});
+  tex3(LCDC,0,0,640,160,[x+0.4,y0+3.56,z-0.15],[6.5,0,0],[0,0,1.62*1.0+1.4],{id:"lcd"});
+  /* (v): two tube sockets at the left */
+  for(const [t,dz] of [["V-",-3.5],["V+",-1.3]]){ cyl3("x",x-8.9,x-5.9,y0+2.25,z+dz,0.42,"#c9ced3",{seg:16,id:"t_"+t,cap:"#2a2c2f"}); hit([x-8.9,y0+2.25,z+dz],0.9,"t_"+t); }
+  /* (iii) and (iv): white JST sockets at the back */
+  for(const [s,dx,wd] of [["s3",-1.2,1.4],["s4",2.8,2.1]]){ box3(x+dx-wd/2,x+dx+wd/2,y0+1.75,y0+2.6,z-4.85,z-3.75,"#f1f0ea",{id:"slot_"+s,top:"#fafaf6"}); hit(P(dx,-4.3,2.2),1.0,"slot_"+s); }
+  /* (i) and (ii): the 9 V pads (bare solder pads with a red and a black lead) */
+  for(const [s,dx,dz] of [["s1",7.0,-4.1],["s2",-5.4,4.3]]){ for(const k of [-0.35,0.35]) box3(x+dx+k-0.25,x+dx+k+0.25,y0+1.75,y0+1.95,z+dz-0.35,z+dz+0.35,"#d9dadc",{id:"slot_"+s}); hit(P(dx,dz,1.9),1.0,"slot_"+s); }
+  /* (vii) the current knob on its blue potentiometer, (vi) the slide switch, the LED */
+  const kn=P(-5.4,0.9); box3(kn[0]-0.7,kn[0]+0.7,y0+1.75,y0+2.75,kn[2]-0.7,kn[2]+0.7,"#2b4e9a",{id:"knob"});
+  cyl3("y",y0+2.75,y0+4.1,kn[0],kn[2],0.55,"#151618",{seg:20,id:"knob",cap:"#1f2023"});
+  const ka=-2.4+ST.knob*4.8; line3([kn[0],y0+4.11,kn[2]],[kn[0]+0.45*Math.sin(ka),y0+4.11,kn[2]-0.45*Math.cos(ka)],"#d8dbe0",Math.max(1,0.08*CAM.k)); hit([kn[0],y0+3.4,kn[2]],1.0,"knob");
+  const sw=P(-1.8,3.5); box3(sw[0]-0.45,sw[0]+0.45,y0+1.75,y0+2.35,sw[2]-0.9,sw[2]+0.9,"#e9e9e4",{id:"sw"});
+  box3(sw[0]-0.18,sw[0]+0.18,y0+2.35,y0+2.75,sw[2]+(ST.sw?-0.55:0.15),sw[2]+(ST.sw?-0.15:0.55),"#bfc1bd",{id:"sw"}); hit([sw[0],y0+2.4,sw[2]],0.9,"sw");
+  sphere3(P(-1.8,1.9,2.0),0.2,ST.sw&&circ.ok?"#ff4a3a":"#5a2420",{});
+  if(!ghost){ for(const b of ST.batts) if(b.slot) batt3(b); }
+}
+/* j. a 9 V battery lying beside the board, its snap lead to the pads */
+function batt3(b){
+  const p=battBody(b.slot), x=wx(p[0]), z=wz(p[1]), y0=0, sl=SLOT[b.slot](), s=[wx(sl[0]),1.95,wz(sl[1])], id="batt_"+b.slot;
+  box3(x-2.4,x+2.4,y0,y0+1.7,z-1.3,z+1.3,"#141516",{id});
+  tex3(BATC,0,0,480,260,[x-2.4,y0+1.702,z-1.3],[4.8,0,0],[0,0,2.6],{id});
+  const sg=b.slot==="s1"?-1:1;
+  for(const k of [-0.6,0.6]) cyl3("x",x+sg*2.4,x+sg*2.75,y0+0.85,z+k,0.32,"#b9bcc0",{seg:10});
+  box3(Math.min(x+sg*2.75,x+sg*3.4),Math.max(x+sg*2.75,x+sg*3.4),y0+0.3,y0+1.4,z-1.1,z+1.1,"#141516",{id});
+  for(const [col,k] of [["#d43a2f",-0.35],["#1b1b1c",0.35]]) tube(bez([x+sg*3.4,y0+0.85,z+k],[x+sg*5,y0+0.4,z+k],[s[0]-sg*1.5,s[1]+1,s[2]+k],[s[0],s[1],s[2]+k],12),0.09,col);
+}
+/* e. the coils: the dark 3-D printed block, two copper coils (anti-Helmholtz), the black and red sockets at its foot;
+   turned on its side, with the force sensor standing in it, when that is inside (Fig. 2 iii–iv) */
+function coils3(bx,by,y0){
+  const x=wx(bx), z=wz(by), id="m_coils", up=ST.force.where==="coil", yA=y0+4.6;
+  box3(x-3.4,x+3.4,y0,y0+2.4,z-2.6,z+2.6,GREY3D,{id,top:"#55575b"});
+  /* sockets on the front of the foot */
+  for(const [t,dx,col] of [["C-",-1.0,"#151617"],["C+",1.0,"#c8282a"]]){ cyl3("z",z+2.6,z+3.0,y0+1.2,x+dx,0.42,col,{seg:16,id:"t_"+t,cap:"#0c0c0d"}); hit([x+dx,y0+1.2,z+2.9],0.85,"t_"+t); }
+  if(!up){
+    for(const sg of [-1,1]){ const xc=x+sg*1.5;
+      box3(xc+sg*0.45-0.3,xc+sg*0.45+0.3,y0+2.4,y0+5.4,z-3.2,z+3.2,GREY3D,{id});
+      cyl3("x",xc+sg*0.45-0.3,xc+sg*0.45+0.3,yA,z,3.2,GREY3D,{seg:32,id});
+      cyl3("x",xc-0.45,xc+0.4,yA,z,2.55,"#b8662f",{seg:36,id,caps:false});
+      for(let i=0;i<5;i++) poly3(Array.from({length:37},(_,k)=>{ const a=k/36*2*Math.PI; return [xc-0.4+i*0.18,yA+2.56*Math.sin(a),z+2.56*Math.cos(a)]; }),"#d98a4a",Math.max(1,0.05*CAM.k));
+      cyl3("x",xc-0.45,xc+0.4,yA,z,1.6,"#7a3f1a",{seg:28,id,caps:false,cull:false});
+      tube([[xc,yA+2.6,z-0.8],[xc,yA+3.0,z],[xc,yA+2.6,z+0.8]],0.12,"#121212"); }
+    /* the hole the sensor goes through, and the comb at the back */
+    for(let i=0;i<3;i++) box3(x-3.4+i*0.9,x-3.0+i*0.9,y0+2.4,y0+6.5,z-2.6,z-1.6,GREY3D,{id});
+    hit([x,yA,z],3.2,"coilAxis");
+  } else {
+    /* turned upright: the coils lie flat, one above the other, the force sensor's magnet between them */
+    box3(x-3.4,x-1.6,y0+2.4,y0+9.6,z-3.2,z+3.2,GREY3D,{id});
+    for(const yy of [y0+3.6,y0+7.4]){ cyl3("y",yy-0.4,yy+0.4,x,z,2.55,"#b8662f",{seg:36,id,caps:false}); cyl3("y",yy-0.6,yy-0.4,x,z,3.2,GREY3D,{seg:32,id});
+      for(let i=0;i<4;i++) poly3(Array.from({length:37},(_,k)=>{ const a=k/36*2*Math.PI; return [x+2.56*Math.cos(a),yy-0.3+i*0.2,z+2.56*Math.sin(a)]; }),"#d98a4a",Math.max(1,0.05*CAM.k)); }
+    force3(bx,by,y0+2.4,true);
+    hit([x,y0+5.6,z],3.0,"coilAxis");
+  }
+  if(ST.field.where==="coil"&&ST.on.field) fieldSensor3(x+(Z0_COIL*100-ST.field.z/10),yA,z,0);
+}
+/* d. the field sensor: the green board with its scale, the Hall probe at the tip, the white plug lead */
+function fieldSensor3(tipX,y,z,ang,id){
+  id=id||"fieldIn";
+  const c=Math.cos(ang||0), s=Math.sin(ang||0), P=d_=>[tipX+d_*c,y,z-d_*s];
+  const a=P(-0.5), b=P(12.5), w=0.65;
+  face([[a[0],y,a[2]-w],[b[0],y,b[2]-w],[b[0],y,b[2]+w],[a[0],y,a[2]+w]],{fill:"#2f7a3c",cull:false,id});
+  tex3(FSC,0,0,1040,96,[a[0],y+0.02,a[2]-w],[13,0,0],[0,0,2*w],{id});
+  box3(tipX-0.5,tipX-0.1,y-0.1,y+0.25,z-0.3,z+0.3,"#151617",{id});
+  box3(b[0]-0.6,b[0]+0.3,y-0.3,y+0.6,z-0.6,z+0.6,"#f1f0ea",{id});
+  hit(P(6),1.6,id);
+  return [b[0]+0.3,y+0.15,z];
+}
+/* b. the force sensor: a black printed base, the load cell, the sleeve with its magnet on top (Fig. 1b) */
+function force3(bx,by,y0,inCoil){
+  const x=inCoil?wx(bx):wx(bx), z=wz(by), id=inCoil?"forceIn":"m_force";
+  box3(x-2.4,x+2.4,y0,y0+0.6,z-1.3,z+1.3,"#1c1d1f",{id});
+  box3(x-1.6,x+1.4,y0+0.6,y0+1.4,z-0.8,z+0.8,"#c9ced3",{id,top:"#d6dadd"});
+  box3(x-2.4,x+0.2,y0+1.4,y0+2.0,z-1.3,z+1.3,"#1c1d1f",{id});
+  cyl3("y",y0+2.0,y0+4.8,x+0.9,z,0.65,"#1c1d1f",{seg:18,id});
+  cyl3("y",y0+4.8,y0+5.8,x+0.9,z,0.5,"#c4c8cc",{seg:18,id:inCoil?"forceTop":id,cap:"#e0e3e6"});
+  const g=ST.force.paste; if(g>0) sphere3([x+0.9,y0+6.0+0.1*Math.cbrt(g),z],0.3+0.25*Math.cbrt(g),"#f0e6b8",{id:"forceTop"});
+  hit([x+0.9,y0+5.4,z],0.9,inCoil?"forceTop":"forceTop");
+  return [x-2.4,y0+0.4,z];
+}
+/* the plug lead of a sensor: from its tail to its slot, or lying beside it */
+function lead3(s,tail){
+  const pl=ST[s].plug, carried=B.carry&&B.carry.k==="plug"&&B.carry.s===s;
+  let e; if(carried) e=[B.mouseW[0],2.5,B.mouseW[2]]; else if(pl){ const q=SLOT[pl](); e=[wx(q[0]),2.6,wz(q[1])]; } else { const q=plugXY(s); e=[wx(q[0]),0.5,wz(q[1])]; }
+  const cols=["#1b1b1c","#d43a2f","#e8e8e8","#1f8a5a"];
+  cols.forEach((c,i)=>tube(bez(tail,[tail[0]+2,tail[1],tail[2]],[e[0],e[1]+3,e[2]-3],[e[0],e[1]+0.4,e[2]],18).map(v=>[v[0],v[1],v[2]+(i-1.5)*0.12]),0.06,c));
+  box3(e[0]-0.5,e[0]+0.5,e[1]-0.3,e[1]+0.4,e[2]-0.4,e[2]+0.4,"#f1f0ea",{id:"plug_"+s}); hit(e,1.0,"plug_"+s);
+}
+/* g. the multimeter */
+function dmm3(bx,by,y0){
+  const x=wx(bx), z=wz(by), id="m_dmm";
+  box3(x-4,x+4,y0,y0+3,z-7.5,z+7.5,"#c0262a",{id});
+  box3(x-3.7,x+3.7,y0+0.2,y0+3.1,z-7.2,z+7.2,"#19191b",{id});
+  tex3(DMMC,0,0,400,750,[x-4,y0+3.102,z-7.5],[8,0,0],[0,0,15],{id});
+  /* the display */
+  const t=dmmDisplay(), dk=[x-3.0,y0+3.11,z-6.45];
+  if(t) text3([x+2.6,y0+3.12,z-4.6],[1,0,0],[0,0,-1],t,1.5,"#1a1f18",{align:"right",weight:"700",font:"'Courier New',monospace"});
+  face([[x-3,y0+3.106,z-6.5],[x+3,y0+3.106,z-6.5],[x+3,y0+3.106,z-3.7],[x-3,y0+3.106,z-3.7]],{fill:ST.dial!=="OFF"&&!sleeping?"#b5c2ae":"#8f9a8c",flat:true}); void dk;
+  /* the dial knob */
+  const a={OFF:-145,V:-70,mA:10,A:80}[ST.dial]*Math.PI/180, c=[x,0,z+1.2];
+  cyl3("y",y0+3.1,y0+4.0,c[0],c[2],1.9,"#141516",{seg:28,id:"dial",cap:"#1d1e20"});
+  box3(c[0]-0.3,c[0]+0.3,y0+4.0,y0+4.6,c[2]-1.8,c[2]+1.8,"#202124",{id:"dial"});
+  const tip=[c[0]+1.6*Math.sin(a),y0+4.62,c[2]-1.6*Math.cos(a)];
+  line3([c[0],y0+4.62,c[2]],tip,"#f2f2f2",Math.max(1,0.12*CAM.k)); hit([c[0],y0+4,c[2]],2.0,"dial");
+  /* the jacks */
+  for(const [t,dx,col] of [["A10",-2.4,"#c8282a"],["AmA",-0.8,"#c8282a"],["COM",0.8,"#151617"],["V",2.4,"#c8282a"]]){
+    cyl3("y",y0+2.6,y0+3.2,x+dx,z+5.9,0.45,col,{seg:16,id:t==="V"?id:"t_"+t,cap:"#0b0b0c"}); if(t!=="V") hit([x+dx,y0+3.1,z+5.9],0.8,"t_"+t); }
+}
+/* i. the 40 cm ruler, with the free magnet at its zero and the field sensor lying on it */
+function ruler3(bx,by,y0){
+  const x=wx(bx), z=wz(by), id="m_ruler";
+  box3(x-20.4,x+20.4,y0,y0+0.15,z-1.5,z+1.5,"rgba(225,232,238,0.55)",{id,cull:false});
+  tex3(RULC,0,0,1600,120,[x-20,y0+0.16,z-1.5],[40,0,0],[0,0,3],{id});
+  if(ST.magOnRuler&&ST.on.mag3){ cyl3("x",x-21.0,x-20.0,y0+0.66,z,0.5,"#c9ced3",{seg:18,id:"magRuler",cap:"#e3e6e8"}); sphere3([x-20.9,y0+0.4,z],0.45,"#f0e6b8",{}); }
+  if(ST.field.where==="ruler"&&ST.on.field) fieldSensor3(x-20+ST.field.d/10,y0+0.22,z,0);
+}
+function magnet3(bx,by,y0,id){ const x=wx(bx), z=wz(by); cyl3("y",y0,y0+1.0,x,z,0.5,"#c9ced3",{seg:18,id,cap:"#e3e6e8"}); hit([x,y0+0.5,z],0.9,id); }
+/* f. the stand: the base, the post, f1 with its disk under the pod, f2 with f2a holding the wire, the pod */
+function stand3(bx,by,y0){
+  const x=wx(bx), z=wz(by)+1.5, id="m_stand", rod=[x+STAND_ROD[0],z-1.5+STAND_ROD[1]];
+  box3(x-8.5,x+8.5,y0,y0+2,wz(by)-8.5,wz(by)+8.5,"#dcbf93",{id,top:"#e3c99a"});
+  tex3(WOODC,0,0,680,680,[x-8.5,y0+2.002,wz(by)-8.5],[17,0,0],[0,0,17],{id});
+  for(const sx of [-7.5,7.5]) for(const sz of [-7.5,7.5]) cyl3("y",y0-0.01,y0+0.02,x+sx,wz(by)+sz,0.9,"#222",{seg:12});
+  cylSeg("y",y0+2,y0+POD_TOP+3,rod[0],rod[1],0.55,"#c3c8cd",{seg:14,id},6);
+  /* the scale on the post under f2, cm, read at the wire clamp (as in the paper's set-up) */
+  for(let c=0;c<=42;c++){ const yy=y0+POD_TOP-c, L=c%5===0?0.7:0.4; line3([rod[0]+0.56,yy,rod[1]+0.1],[rod[0]+0.56+L,yy,rod[1]+0.1],"#2b333a",Math.max(1,0.04*CAM.k));
+    if(c%5===0) text3([rod[0]+1.4,yy,rod[1]+0.1],[1,0,0],[0,1,0],String(c),0.5,"#2b333a",{weight:"600"}); }
+  /* f1: arm, disk f1a, just under the pod */
+  const yp=y0+podY(), y1=yp-0.55;
+  box3(rod[0]-1,x+0.6,y1-1.0,y1,z-0.9,z+0.9,"#1d1e20",{id:"m_stand"});
+  cyl3("y",y1,y1+0.12,x,z,4.6,"#1d1e20",{seg:40});
+  tex3(DISK1,0,0,800,800,[x-4.5,y1+0.13,z-4.5],[9,0,0],[0,0,9],{id:"f1disk"});
+  /* f2: arm at the top, f2a turning in it, its disk on top */
+  const yt=y0+POD_TOP;
+  box3(rod[0]-1,x+3.2,yt+1.6,yt+2.8,z-1.0,z+1.0,"#1d1e20",{id:"f2arm"});
+  box3(rod[0]-1.6,rod[0]+1.0,yt+1.4,yt+3.0,rod[1]-1.2,rod[1]+1.2,"#1d1e20",{id:"f2arm"});
+  cyl3("x",rod[0]-2.6,rod[0]-1.6,yt+2.2,rod[1],0.25,"#111",{seg:8}); cyl3("x",rod[0]-3.0,rod[0]-2.6,yt+2.2,rod[1],0.5,"#111",{seg:12});
+  cyl3("y",yt,yt+4.0,x,z,0.75,"#1d1e20",{seg:18,id:"f2a"});
+  cyl3("y",yt+2.8,yt+3.2,x,z,3.9,"#1d1e20",{seg:36,id:"f2a"});
+  const f=ST.pod.f2a*Math.PI/180, cs=Math.cos(f), sn=Math.sin(f), D=7.4, U=[D*cs,0,D*sn], V=[-D*sn,0,D*cs];
+  tex3(DISK2,0,0,700,700,[x-U[0]/2-V[0]/2,yt+3.21,z-U[2]/2-V[2]/2],U,V,{id:"f2a"});
+  face([[x-0.25,yt+3.23,z-3.9],[x+0.25,yt+3.23,z-3.9],[x,yt+3.23,z-3.3]],{fill:"#c62a22",flat:true,cull:false});      /* the index of f2a */
+  cyl3("x",x+0.75,x+1.6,yt+0.8,z,0.25,"#111",{seg:8}); cyl3("x",x+1.6,x+1.9,yt+0.8,z,0.5,"#111",{seg:12});
+  hit([x,yt+3.3,z],3.5,"f2a");
+  /* the wire and the pod */
+  line3([x,yt,z],[x,yp+0.8,z],"#e9edf0",Math.max(1,0.03*CAM.k));
+  pod3(x,yp,z);
+}
+/* f3: the black carrier with the magnet, the inertia bar across it, the toothpick pointing along the magnet */
+function pod3(x,y,z){
+  const th=ST.pod.th, ux=Math.sin(th), uz=-Math.cos(th), vx=-uz, vz=ux, P=(a,b,dy)=>[x+a*ux+b*vx,y+(dy||0),z+a*uz+b*vz];
+  const quad=(a0,a1,b0,b1,y0,y1,col,id)=>{ const pts=[P(a0,b0),P(a1,b0),P(a1,b1),P(a0,b1)];
+    for(const yy of [y0,y1]) face(pts.map(p=>[p[0],y+yy,p[2]]),{fill:col,cull:false,id});
+    for(let i=0;i<4;i++){ const a=pts[i], b=pts[(i+1)%4]; face([[a[0],y+y0,a[2]],[b[0],y+y0,b[2]],[b[0],y+y1,b[2]],[a[0],y+y1,a[2]]],{fill:col,cull:false,id}); } };
+  quad(-0.8,0.8,-0.55,0.55,0,1.4,"#232427","pod");
+  cyl3("y",y+1.4,y+1.9,x,z,0.2,"#232427",{seg:10,id:"pod"});
+  if(ST.podMagnet){ const a=P(-1.05,0,0.7), b=P(1.05,0,0.7); cylAB(a,b,0.48,"#c9ced3",{seg:16,id:"podmag",cap:"#e3e6e8"}); }
+  /* the inertia bar crosses the carrier, its ends at r_a = 4 cm where the paste goes */
+  const ra=K.ra*100; quad(-0.18,0.18,-ra,ra,0.15,0.45,"#1b1c1e","pod");
+  for(const [s,sg] of [["l",-1],["r",1]]){ const m=ST.pod.paste[s].reduce((a,b)=>a+b,0); const e=P(0,sg*ra,0.3);
+    if(m>0) sphere3(e,0.3+0.25*Math.cbrt(m),"#f0e6b8",{id:"bar_"+s}); hit(e,0.8,"bar_"+s); }
+  /* the toothpick, pointing along the magnet over the scale of f1a */
+  line3(P(0,0,-0.08),P(4.35,0,-0.08),"#d9b77c",Math.max(1,0.09*CAM.k));
+  hit([x,y+0.7,z],1.6,"pod");
+}
+/* k. the chronometer */
+function watch3(bx,by,y0){
+  const x=wx(bx), z=wz(by), id="m_watch";
+  cyl3("y",y0,y0+1.3,x,z,3.1,"#16171a",{seg:32,id,cap:"#1d1e21"});
+  tex3(WATCHC,0,0,300,180,[x-1.9,y0+1.31,z-1.1],[3.8,0,0],[0,0,2.3],{id});
+  for(const [b,dx] of [["w_ss",-1.6],["w_lr",1.6]]){ cyl3("z",z-3.6,z-2.9,y0+0.8,x+dx,0.35,"#2b2c30",{seg:12,id:b}); hit([x+dx,y0+0.8,z-3.3],0.8,b); }
+  text3([x-1.6,y0+1.32,z-2.35],[1,0,0],[0,0,-1],"START/STOP",0.28,"#d9dde2",{align:"center"}); text3([x+1.6,y0+1.32,z-2.35],[1,0,0],[0,0,-1],"LAP/RESET",0.28,"#d9dde2",{align:"center"});
+}
+/* h. the banana leads, from terminal to terminal */
+function termW(t){ const p=TERM[t](); const y={ "V+":2.25,"V-":2.25,"C+":1.2,"C-":1.2,A10:3.2,AmA:3.2,COM:3.2 }[t]; return [wx(p[0]),y,wz(p[1])]; }
+function wires3(){
+  ST.wires.forEach((w,i)=>{ const a=termW(w.a), b=termW(w.b), L=Math.hypot(a[0]-b[0],a[2]-b[2]);
+    tube(bez(a,[a[0],0.4,a[2]+Math.min(6,L*0.3)],[b[0],0.4,b[2]+Math.min(6,L*0.3)],b,24),0.17,i%2?"#c8282a":"#151617",{id:"wire_"+i}); });
+  if(B.carry&&B.carry.k==="wire"&&B.carry.a){ const a=termW(B.carry.a), m=[B.mouseW[0],2.5,B.mouseW[2]]; tube(bez(a,[a[0],0.4,a[2]+4],[m[0],0.4,m[2]+4],m,18),0.17,"#151617"); }
+}
+function scene3(){
+  desk3(); refreshLCD(); refreshWatch();
+  const cr=B.carry, held=k=>cr&&(cr.k==="new"||cr.k==="move")&&cr.id===k, mw=B.mouseW, LIFT=1.6;
+  const at3=k=>held(k)?[mw[0]+60,mw[2]+36,LIFT]:[ST.pos[k].x,ST.pos[k].y,0];
+  const show=k=>ST.on[k]||held(k);
+  if(show("ard")){ const [a,b,y]=at3("ard"); ard3(a,b,y,held("ard")); if(ST.on.ard||held("ard")) for(const s of ["field","force"]) if(ST.on[s]&&ST[s].plug) void 0; }
+  if(show("coils")){ const [a,b,y]=at3("coils"); coils3(a,b,y); }
+  if(show("dmm")){ const [a,b,y]=at3("dmm"); dmm3(a,b,y); }
+  if(show("ruler")){ const [a,b,y]=at3("ruler"); ruler3(a,b,y); }
+  if(show("stand")){ const [a,b,y]=at3("stand"); stand3(a,b,y); }
+  if(show("watch")){ const [a,b,y]=at3("watch"); watch3(a,b,y); }
+  if((ST.on.mag3&&!ST.magOnRuler)||held("mag3")){ const [a,b,y]=at3("mag3"); magnet3(a,b,y,"m_mag3"); }
+  if(ST.on.podMag||held("podMag")){ const [a,b,y]=at3("podMag"); magnet3(a,b,y,"m_podMag"); }
+  /* the sensors, wherever they are, with their leads */
+  if(ST.on.field||held("field")){ let tail;
+    if(held("field")) tail=fieldSensor3(mw[0]-6,LIFT+0.3,mw[2],0,"m_field");
+    else if(ST.field.where==="bench") tail=fieldSensor3(wx(ST.pos.field.x)-6.5,0.2,wz(ST.pos.field.y),0,"m_field");
+    else if(ST.field.where==="coil"){ const c=ST.pos.coils; tail=[wx(c.x)+(Z0_COIL*100-ST.field.z/10)+12.8,4.75,wz(c.y)]; }
+    else { const r=ST.pos.ruler; tail=[wx(r.x)-20+ST.field.d/10+12.8,0.37,wz(r.y)]; }
+    lead3("field",tail); }
+  if(ST.on.force||held("force")){ let tail;
+    if(held("force")) tail=force3(mw[0]+60,mw[2]+36,LIFT,false);
+    else if(ST.force.where==="bench") tail=force3(ST.pos.force.x,ST.pos.force.y,0,false);
+    else { const c=ST.pos.coils; tail=[wx(c.x)-2.4,2.8,wz(c.y)]; }
+    lead3("force",tail); }
+  wires3();
+  if(cr&&cr.k==="batt"){ const m=mw; box3(m[0]-2.4,m[0]+2.4,2,3.7,m[2]-1.3,m[2]+1.3,"#141516",{}); tex3(BATC,0,0,480,260,[m[0]-2.4,3.702,m[2]-1.3],[4.8,0,0],[0,0,2.6],{}); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   5.  LAYOUT, CAMERA, DRAWING
+   ══════════════════════════════════════════════════════════════ */
+let VIEW="all", CAMTW=null;
 function layout(){
-  const w=cv.clientWidth||1000, dpr=Math.min(window.devicePixelRatio||1,2);
-  S=w/LW; cv.width=Math.round(w*dpr); cv.height=Math.round(LH*S*dpr); cv.style.height=(LH*S)+"px";
-  benchCtx.setTransform(dpr*S,0,0,dpr*S,0,0);
-  const tdpr=window.devicePixelRatio||1, tr=trayCv.parentElement.getBoundingClientRect();
-  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TROW+50;
-  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*tdpr); trayCv.height=Math.round(TRH*tdpr);
-  CLW=Math.max(300,Math.floor(closeCv.parentElement.getBoundingClientRect().width-20)); CLH=Math.round(CLW*0.42);
-  closeCv.style.height=CLH+"px"; closeCv.width=Math.round(CLW*tdpr); closeCv.height=Math.round(CLH*tdpr);
-  const h=CLH-16, w1=Math.round(CLW*0.24), w2=Math.round(CLW*0.31);
-  P1={x:8,y:8,w:w1,h}; P2={x:16+w1,y:8,w:w2,h}; P3={x:24+w1+w2,y:8,w:CLW-32-w1-w2,h};
+  DPR=Math.min(Math.max(window.devicePixelRatio||1,1),2);
+  const r=cv.parentElement.getBoundingClientRect();
+  CW=Math.max(320,Math.floor(r.width));
+  CH=Math.max(340,Math.min(Math.round(CW*0.62),Math.round(window.innerHeight*0.84)));
+  cv.style.height=CH+"px"; cv.width=Math.round(CW*DPR); cv.height=Math.round(CH*DPR);
+  CAM.W=CW; CAM.H=CH; CAM.dpr=DPR;
+  if(!CAM0.k||!CAM.touched){ Object.assign(CAM,viewOf(VIEW)||viewOf("all")); camSave(); }
+  const tr=trayCv.parentElement.getBoundingClientRect();
+  TRW=Math.max(150,Math.floor(tr.width-16)); TRH=TRAY_LIST.length*TRAY_ROW+56;
+  trayCv.style.height=TRH+"px"; trayCv.width=Math.round(TRW*DPR); trayCv.height=Math.round(TRH*DPR);
   drawTray();
 }
-let P1={},P2={},P3={};
-function drawTray(){
-  const dpr=window.devicePixelRatio||1, c=trayCtx, t=d();
-  c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
-  trayCells=[]; let y=6; const wd=TRW-12;
-  for(const k of TRAY_LIST){
-    const av=trayAvail(k), sel=hand&&hand.k===k;
-    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
-    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TROW-5);
-    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av?1:0.35; icon(k,28,y+(TROW-4)/2,0.62); ctx.restore(); ctx=old;
-    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
-    c.fillStyle=av?"#e8eef2":"#868e96"; c.fillText(itemName(k),52,y+14);
-    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
-    c.fillText(k==="batt"?t.left(battsLeft()):k==="wire"?t.left(wiresLeft()):(av?t.trayTake:t.trayOut),52,y+30);
-    trayCells.push([k,y,y+TROW-4]); y+=TROW;
-  }
-  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
-  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+function viewOf(v){
+  const W_=CAM.W, H=CAM.H, p=k=>[wx(ST.pos[k].x),wz(ST.pos[k].y)];
+  if(v==="all") return {yaw:0.18,pitch:0.68,k:Math.min(W_/118,H/72),tx:0,ty:6,tz:0,px:0,py:10};
+  if(v==="ard"&&ST.on.ard){ const [x,z]=p("ard"); return {yaw:0,pitch:1.2,k:Math.min(W_/27,H/17),tx:x,ty:2,tz:z,px:0,py:0}; }
+  if(v==="coils"&&ST.on.coils){ const [x,z]=p("coils"); return {yaw:0.35,pitch:0.32,k:Math.min(W_/26,H/16),tx:x+4,ty:4.5,tz:z,px:0,py:0}; }
+  if(v==="dmm"&&ST.on.dmm){ const [x,z]=p("dmm"); return {yaw:0,pitch:1.25,k:Math.min(W_/14,H/17),tx:x,ty:3,tz:z,px:0,py:0}; }
+  if(v==="ruler"&&ST.on.ruler){ const [x,z]=p("ruler"); return {yaw:0,pitch:1.15,k:Math.min(W_/44,H/14),tx:x,ty:0.5,tz:z,px:0,py:0}; }
+  if(v==="stand"&&ST.on.stand){ const [x,z]=p("stand"); return {yaw:0.2,pitch:0.15,k:Math.min(W_/40,H/62),tx:x-2,ty:28,tz:z,px:0,py:0}; }
+  if(v==="f1"&&ST.on.stand){ const [x,z]=p("stand"); return {yaw:0,pitch:0.95,k:Math.min(W_/12.5,H/9),tx:x,ty:podY()-0.5,tz:z+1.5,px:0,py:0}; }
+  if(v==="f2"&&ST.on.stand){ const [x,z]=p("stand"); return {yaw:0,pitch:1.45,k:Math.min(W_/11,H/10),tx:x,ty:POD_TOP+3,tz:z+1.5,px:0,py:0}; }
+  if(v==="watch"&&ST.on.watch){ const [x,z]=p("watch"); return {yaw:0,pitch:1.1,k:Math.min(W_/10,H/9),tx:x,ty:1,tz:z-0.5,px:0,py:0}; }
+  return null;
 }
-
-function drawClose(){
-  const dpr=window.devicePixelRatio||1, c=closeCtx;
-  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,CLW,CLH);
-  const old=ctx; ctx=c;
-  drawP1(); drawP2(); drawP3();
-  ctx=old;
+function goTo(v){
+  const t0=viewOf(v); if(!t0) return false;
+  const to=Object.assign({},t0), from={};
+  for(const k of ["yaw","pitch","k","tx","ty","tz","px","py"]) from[k]=CAM[k];
+  to.yaw=from.yaw+((((to.yaw-from.yaw)+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI);
+  CAMTW={from,to,t0:performance.now(),dur:v==="all"?650:850}; VIEW=v; CAM.touched=false; renderViewBtn(); renderViews();
+  return true;
 }
-function panelBg(P,col){ ctx.fillStyle=col||"#0f1115"; ctx.fillRect(P.x,P.y,P.w,P.h); }
-function msgIn(P,s){ text(s,P.x+P.w/2,P.y+P.h/2,"#69717a",11.5,"center"); }
-/* ── left: the Arduino display and the ammeter ── */
-function drawP1(){
-  const P=P1; panelBg(P);
-  if(!ST.on.ard){ msgIn(P,""); }
-  const x=P.x+8, w=P.w-16, lh=Math.min(64,P.h*0.28);
-  fillR(x,P.y+8,w,lh+26,6,"#1d6e45","#0f3f27",1);
-  fillR(x+8,P.y+16,w-16,lh+10,4,ST.on.ard&&ardOn()?"#9fd36a":"#4f5a43","#2d3528",1);
-  if(ST.on.ard&&ardOn()){ const fs=Math.min(18,(w-24)/7.4); text(lcd[0],x+14,P.y+16+lh*0.33,"#14240c",fs,"left","700",MONO); text(lcd[1],x+14,P.y+16+lh*0.76,"#14240c",fs,"left","700",MONO); }
-  else if(!ST.on.ard) text(d().noArd,x+w/2,P.y+16+lh/2,"#20281a",10.5,"center");
-  const y2=P.y+lh+48;
-  fillR(x,y2,w,P.h-(y2-P.y)-8,8,"#1f2124","#000",1);
-  fillR(x+10,y2+10,w-20,Math.min(60,(P.h-(y2-P.y))*0.45),4,"#a9b6a3","#3d443b",1);
-  const t=dmmText(); if(t) text(t,x+w-18,y2+10+Math.min(60,(P.h-(y2-P.y))*0.45)/2,"#1d221b",Math.min(30,w*0.16),"right","700",MONO);
-  if(ST.on.dmm){ text(ST.dial==="A"?"A":ST.dial==="mA"?"mA":ST.dial==="V"?"V":"",x+w-18,y2+Math.min(60,(P.h-(y2-P.y))*0.45)+20,"#9fb0a0",11,"right","600");
-    text(d().items.dmm+" · "+d().dial[ST.dial]+(sleeping?" ("+d().sleep+")":""),x+12,P.y+P.h-20,"#9aa3ab",11); }
+function stepCam(){ if(!CAMTW) return; const s=Math.min(1,(performance.now()-CAMTW.t0)/CAMTW.dur), e=s<0.5?4*s*s*s:1-Math.pow(-2*s+2,3)/2;
+  for(const k in CAMTW.to) CAM[k]=CAMTW.from[k]+(CAMTW.to[k]-CAMTW.from[k])*e; if(s>=1) CAMTW=null; }
+function renderViewBtn(){ const b=$("viewBack"); if(!b) return; b.hidden=VIEW==="all"&&!CAM.touched; b.textContent=d().backAll; }
+function deskPt(p){ const w=onPlane(p[0],p[1],0); return [Math.max(DESK[0]+1,Math.min(DESK[1]-1,w[0])),0,Math.max(DESK[2]+1,Math.min(DESK[3]-1,w[2]))]; }
+function draw(){
+  ctxM.setTransform(DPR,0,0,DPR,0,0);
+  const g=ctxM.createLinearGradient(0,0,0,CH); g.addColorStop(0,"#2a3038"); g.addColorStop(1,"#1a1e24"); ctxM.fillStyle=g; ctxM.fillRect(0,0,CW,CH);
+  stepCam(); begin3(); scene3(); render3(ctxM); drawHud();
 }
-/* ── middle: the field sensor in the coils or on the ruler, or the force sensor ── */
-let P2k=10;
-function drawP2(){
-  const P=P2; panelBg(P,"#e9e4da"); ctx.save(); ctx.beginPath(); ctx.rect(P.x,P.y,P.w,P.h); ctx.clip();
-  const f=ST.field, cy=P.y+P.h*0.5;
-  if(ST.force.where==="coil"){
-    const k=P.w/10; P2k=k; const cx=P.x+P.w/2;
-    ctx.fillStyle="#2d2f33"; ctx.fillRect(cx-4.5*k,P.y+P.h-0.8*k-10,9*k,0.8*k);
-    for(const y of [-1.5,1.5]){ ctx.fillStyle="#b46a2a"; ctx.fillRect(cx-3.2*k,cy+y*k-0.55*k,1.6*k,1.1*k); ctx.fillRect(cx+1.6*k,cy+y*k-0.55*k,1.6*k,1.1*k); }
-    ctx.fillStyle="#1c1c1e"; ctx.fillRect(cx-0.6*k,cy+0.3*k,1.2*k,3*k);
-    ctx.fillStyle="#c9cdd2"; ctx.fillRect(cx-0.5*k,cy-0.7*k,1.0*k,1.0*k);
-    if(ST.force.paste>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.ellipse(cx,cy-0.7*k-0.25*k,0.55*k,0.3*k,0,0,7); ctx.fill(); }
-    text(d().items.force,P.x+8,P.y+14,"#5d5446",11);
-  } else if(f.where==="coil"&&ST.on.coils){
-    const k=P.w/9; P2k=k; const x0=P.x+3.5*k;              /* coil centre */
-    ctx.fillStyle="#3b3d42"; ctx.fillRect(P.x,cy+2.4*k,P.w,0.6*k);
-    for(const x of [-1.5,1.5]) for(const s of [-1,1]){ ctx.fillStyle="#b46a2a"; ctx.fillRect(x0+(x-0.55)*k,cy+s*1.5*k-(s>0?0:1.4*k),1.1*k,1.4*k); }
-    const tip=x0+(Z0_COIL*100-f.z/10)*k;
-    ctx.fillStyle="#2d8a4a"; ctx.fillRect(tip,cy-0.35*k,12*k,0.7*k);
-    ctx.strokeStyle="#f1fff1"; ctx.lineWidth=1;
-    for(let s=0;s<=80;s++){ const x=tip+s/10*k, L=s%10===0?0.35*k:s%5===0?0.25*k:0.15*k; ctx.beginPath(); ctx.moveTo(x,cy-0.35*k); ctx.lineTo(x,cy-0.35*k+L); ctx.stroke();
-      if(s%10===0&&k>40) text(String(s),x,cy+0.12*k,"#f1fff1",10,"center"); }
-    ctx.fillStyle="#111"; ctx.fillRect(tip,cy-0.12*k,0.25*k,0.24*k);
-    const xf=x0+2.3*k; ctx.strokeStyle="#c62a22"; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(xf,cy-1.2*k); ctx.lineTo(xf,cy+1.2*k); ctx.stroke();
-    text("z = 0",xf+4,cy-1.0*k,"#c62a22",11);
-    text(d().items.coils+" · "+d().items.field,P.x+8,P.y+14,"#5d5446",11);
-  } else if(f.where==="ruler"&&ST.on.ruler){
-    const k=P.w/8; P2k=k; const tipD=f.d/10, xr=s=>P.x+P.w*0.35+(s-tipD)*k;
-    ctx.fillStyle="#f0f4f7"; ctx.fillRect(P.x,cy+0.3*k,P.w,1.2*k);
-    ctx.strokeStyle="#3b444c"; ctx.lineWidth=1;
-    for(let i=0;i<=400;i++){ const x=xr(i/10); if(x<P.x-5||x>P.x+P.w+5) continue; const L=i%10===0?0.5*k:i%5===0?0.35*k:0.2*k;
-      ctx.beginPath(); ctx.moveTo(x,cy+0.3*k); ctx.lineTo(x,cy+0.3*k+L); ctx.stroke(); if(i%10===0) text(String(i/10),x,cy+0.3*k+0.75*k,"#2b333a",11,"center"); }
-    if(ST.magOnRuler){ const x=xr(0); ctx.fillStyle="#c7ccd2"; ctx.fillRect(x-1.0*k,cy-0.5*k,1.0*k,1.0*k); ctx.strokeStyle="#666"; ctx.strokeRect(x-1.0*k,cy-0.5*k,1.0*k,1.0*k); }
-    const tip=xr(tipD); ctx.fillStyle="#2d8a4a"; ctx.fillRect(tip,cy-0.6*k,12*k,0.7*k); ctx.fillStyle="#111"; ctx.fillRect(tip,cy-0.37*k,0.25*k,0.24*k);
-    text(d().items.ruler+" · "+d().items.field,P.x+8,P.y+14,"#5d5446",11);
-  } else msgIn(P,d().noSensor);
-  ctx.restore();
-}
-/* ── right: the stand from the front, the dial f2a and the protractor f1a from above ── */
-let F3={};
-function drawP3(){
-  const P=P3; panelBg(P,"#eeeae2");
-  if(!ST.on.stand){ msgIn(P,d().noStand); F3={}; return; }
-  const fw=P.w*0.46, kz=(P.h-24)/47, xb=P.x+12, yb=P.y+P.h-10, xp=xb+0.18*fw, xpod=xb+fw*0.72;
-  const Y=z=>yb-z*kz, zc=44, zpod=zc-ST.pod.L*100;
-  ctx.fillStyle="#e3c99a"; ctx.fillRect(xb,yb-1.6*kz,fw-6,1.6*kz);
-  ctx.fillStyle="#9aa0a6"; ctx.fillRect(xp-0.4*kz,Y(46),0.8*kz,46*kz-1.6*kz);
-  /* the scale on the post, read from the clamp of the wire */
-  ctx.strokeStyle="#3b444c"; ctx.lineWidth=1;
-  for(let c=0;c<=42;c++){ const y=Y(zc-c), L=c%5===0?7:4; ctx.beginPath(); ctx.moveTo(xp+0.4*kz,y); ctx.lineTo(xp+0.4*kz+L,y); ctx.stroke(); if(c%5===0) text(String(c),xp+0.4*kz+9,y,"#2b333a",9.5); }
-  ctx.fillStyle="#2a2c30"; ctx.fillRect(xp,Y(zc+1.6),xpod-xp+1.5*kz,1.0*kz);
-  ctx.fillStyle="#1f2023"; ctx.fillRect(xpod-1.4*kz,Y(zc+0.6),2.8*kz,0.6*kz);
-  ctx.strokeStyle="#5a5a5a"; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(xpod,Y(zc)); ctx.lineTo(xpod,Y(zpod+0.8)); ctx.stroke();
-  const ca=Math.cos(ST.pod.th), ra=K.ra*100;
-  ctx.fillStyle="#222"; ctx.fillRect(xpod-ra*Math.abs(ca)*kz-0.15*kz,Y(zpod+0.25),2*ra*Math.abs(ca)*kz+0.3*kz,0.5*kz);
-  ctx.fillStyle="#2a2a2e"; ctx.fillRect(xpod-0.7*kz,Y(zpod+0.8),1.4*kz,1.6*kz);
-  if(ST.podMagnet){ ctx.fillStyle="#c7ccd2"; ctx.fillRect(xpod-0.45*kz,Y(zpod+0.55),0.9*kz,1.0*kz); }
-  for(const [side,sg] of [["l",-1],["r",1]]){ const m=ST.pod.paste[side].reduce((a,b)=>a+b,0); if(m>0){ ctx.fillStyle="#efe4b0";
-    ctx.beginPath(); ctx.arc(xpod+sg*ra*ca*kz,Y(zpod+0.5),(0.3+0.25*Math.cbrt(m))*kz,0,7); ctx.fill(); ctx.strokeStyle="#b9a96a"; ctx.stroke(); } }
-  ctx.fillStyle="#2a2c30"; ctx.fillRect(xp,Y(Math.max(1.8,zpod-2.2)),xpod-xp-4.8*kz,0.8*kz);
-  F3={xpod,ypod:Y(zpod),kz,ra,ca,front:[xb,P.y,fw,P.h]};
-  /* f2a seen from above */
-  const rx=P.x+fw+16, rw=P.w-fw-24, rD=Math.min(rw*0.5,(P.h-24)/4)-4, c2=[rx+rw/2,P.y+rD+10], c1=[rx+rw/2,P.y+P.h-rD-10];
-  F3.c2=c2; F3.c1=c1; F3.r=rD;
-  dial(c2,rD,ST.pod.f2a,5,30,false);
-  text("f2a",c2[0]-rD,c2[1]-rD+4,"#5d5446",11);
-  protractor(c1,rD); text("f1a",c1[0]-rD,c1[1]-rD+4,"#5d5446",11);
-}
-function dial(c,r,ang,step,lab){
-  ctx.fillStyle="#f8f8f6"; ctx.beginPath(); ctx.arc(c[0],c[1],r,0,7); ctx.fill(); ctx.strokeStyle="#333"; ctx.lineWidth=1; ctx.stroke();
-  ctx.save(); ctx.translate(c[0],c[1]); ctx.rotate(-ang*Math.PI/180);
-  for(let a=0;a<360;a+=step){ const L=a%lab===0?0.16*r:0.08*r, t=a*Math.PI/180; ctx.beginPath(); ctx.moveTo(Math.sin(t)*r,-Math.cos(t)*r); ctx.lineTo(Math.sin(t)*(r-L),-Math.cos(t)*(r-L)); ctx.stroke();
-    if(a%lab===0){ ctx.save(); ctx.rotate(t); text(String(a),0,-r+0.27*r,"#222",Math.max(8,r*0.11),"center"); ctx.restore(); } }
-  ctx.fillStyle="#2a2c30"; ctx.beginPath(); ctx.arc(0,0,0.18*r,0,7); ctx.fill(); ctx.restore();
-  ctx.fillStyle="#c62a22"; ctx.beginPath(); ctx.moveTo(c[0],c[1]-r-1); ctx.lineTo(c[0]-6,c[1]-r-11); ctx.lineTo(c[0]+6,c[1]-r-11); ctx.closePath(); ctx.fill();
-}
-function protractor(c,r){
-  ctx.fillStyle="#f8f8f6"; ctx.beginPath(); ctx.arc(c[0],c[1],r,0,7); ctx.fill(); ctx.strokeStyle="#333"; ctx.lineWidth=0.8; ctx.stroke();
-  ctx.save(); ctx.translate(c[0],c[1]);
-  for(let a=0;a<360;a++){ const L=a%10===0?0.14*r:a%5===0?0.09*r:0.05*r, t=a*Math.PI/180; ctx.beginPath(); ctx.moveTo(Math.sin(t)*r,-Math.cos(t)*r); ctx.lineTo(Math.sin(t)*(r-L),-Math.cos(t)*(r-L)); ctx.stroke();
-    if(a%30===0){ ctx.save(); ctx.rotate(t); text(String(a),0,-r+0.24*r,"#222",Math.max(7.5,r*0.09),"center"); ctx.restore(); } }
-  const th=ST.pod.th, ra=r*0.62;
-  ctx.rotate(th);
-  ctx.fillStyle="rgba(30,30,30,.85)"; ctx.fillRect(-ra,-0.035*r,2*ra,0.07*r);
-  for(const [side,sg] of [["l",-1],["r",1]]){ const m=ST.pod.paste[side].reduce((a,b)=>a+b,0); if(m>0){ ctx.fillStyle="#efe4b0"; ctx.beginPath(); ctx.arc(sg*ra,0,0.04*r+0.03*r*Math.cbrt(m),0,7); ctx.fill(); } }
-  ctx.strokeStyle="#c9a35a"; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,-0.97*r); ctx.stroke();
-  ctx.fillStyle="#2a2a2e"; ctx.fillRect(-0.07*r,-0.07*r,0.14*r,0.14*r);
-  ctx.restore();
+function drawHud(){
+  const c=ctxM; c.setTransform(DPR,0,0,DPR,0,0); c.textAlign="center"; c.textBaseline="middle";
+  const tag=(p,s,col)=>{ const q=P3(...p); c.font="600 12px "+FONT; const w=c.measureText(s).width+10;
+    c.fillStyle="rgba(16,19,23,0.75)"; c.beginPath(); c.roundRect(q[0]-w/2,q[1]-9,w,18,5); c.fill(); c.fillStyle=col||"#e8eef2"; c.fillText(s,q[0],q[1]); };
+  if(VIEW==="ard"&&ST.on.ard&&!CAMTW){ for(const [s,lab] of [["s1","(i)"],["s2","(ii)"],["s3","(iii)"],["s4","(iv)"]]){ const q=SLOT[s](); tag([wx(q[0]),3.2,wz(q[1])],lab,"#f2c14e"); }
+    const v=TERM["V+"](); tag([wx(v[0])+1,3.6,wz(v[1])-1.1],"(v)","#f2c14e"); const k=KNOB(); tag([wx(k[0]),4.8,wz(k[1])],"(vii)","#f2c14e"); const s=SW(); tag([wx(s[0])+1.4,3.2,wz(s[1])],"(vi)","#f2c14e"); }
+  const cr=B.carry; if(cr){ const m=B.mouse; let lbl=cr.k==="plug"?d().items[cr.s]+" — plug":cr.k==="wire"?d().items.wire+(cr.a?" ("+d().term[cr.a]+")":""):cr.k==="paste"?d().pasteSize(cr.g):d().items[cr.id||cr.k]||"";
+    c.textAlign="left"; c.font="700 14px "+FONT; c.fillStyle="#f2c14e"; c.fillText("⇱ "+lbl,m[0]+18,m[1]-16); }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   6.  HANDS
+   6.  TRAY
    ══════════════════════════════════════════════════════════════ */
-function lpos(e){ const r=cv.getBoundingClientRect(); return [(e.clientX-r.left)/S,(e.clientY-r.top)/S]; }
-const cm=p=>[p[0]/PX,p[1]/PX];
-function termAt(c){ for(const t in TERM) if(ST.on[TERM_OWNER[t]]&&near(c,TERM[t](),0.9)) return t; return null; }
-function slotAt(c){ if(!ST.on.ard) return null; for(const s in SLOT) if(near(c,SLOT[s](),1.3)) return s; return null; }
-function returnHand(){
-  if(!hand) return;
-  if(hand.move){ ST.pos[hand.k]=hand.orig; if(hand.where) restoreWhere(hand); }
-  hand=null;
+const TRAY_LIST=["ard","coils","field","force","dmm","batt","wire","ruler","mag3","stand","paste","watch"], TRAY_ROW=46; let trayCells=[];
+function trayAvail(k){ if(k==="batt") return ST.batts.some(b=>!b.slot)&&!(B.carry&&B.carry.k==="batt"&&ST.batts.filter(b=>!b.slot).length<=1);
+  if(k==="wire"||k==="paste") return true; return !ST.on[k]&&!(B.carry&&B.carry.id===k); }
+function trayIcon(c,k,x,y,dim){
+  const R2=(a,b,e,f,fill,out)=>{ if(fill){c.fillStyle=dim?"#474d54":fill;c.fillRect(a,b,e-a,f-b);} if(out){c.strokeStyle=out;c.lineWidth=1;c.strokeRect(a+.5,b+.5,e-a-1,f-b-1);} };
+  if(k==="ard"){ R2(x-15,y-9,x+15,y+9,"#2f6d3a"); R2(x-2,y-4,x+13,y+6,"#b9cf55","#111"); R2(x-14,y-7,x-9,y-4,"#c9ced3"); }
+  else if(k==="coils"){ R2(x-12,y+3,x+12,y+9,"#4a4c50"); R2(x-8,y-10,x-4,y+3,"#b8662f"); R2(x+4,y-10,x+8,y+3,"#b8662f"); }
+  else if(k==="field"){ R2(x-16,y-2,x+12,y+2,"#2f7a3c"); R2(x+12,y-3,x+16,y+3,"#f1f0ea"); }
+  else if(k==="force"){ R2(x-10,y+4,x+10,y+8,"#1c1d1f"); R2(x-2,y-10,x+3,y+4,"#1c1d1f"); R2(x-2,y-13,x+3,y-10,"#c9ced3"); }
+  else if(k==="dmm"){ R2(x-8,y-13,x+8,y+13,"#c0262a"); R2(x-6,y-11,x+6,y-3,"#b5c2ae"); c.fillStyle=dim?"#474d54":"#141516"; c.beginPath(); c.arc(x,y+4,5,0,7); c.fill(); }
+  else if(k==="batt"){ R2(x-10,y-6,x+10,y+6,"#141516"); R2(x-10,y-6,x-1,y+6,"#b9bcc0"); }
+  else if(k==="wire"){ c.strokeStyle=dim?"#474d54":"#151617"; c.lineWidth=3; c.beginPath(); c.moveTo(x-14,y-4); c.quadraticCurveTo(x,y+12,x+14,y-4); c.stroke(); }
+  else if(k==="ruler"){ R2(x-16,y-4,x+16,y+4,"#e8eef2","#9aa6b0"); }
+  else if(k==="mag3"){ R2(x-4,y-6,x+4,y+6,"#c9ced3","#8a9096"); }
+  else if(k==="stand"){ R2(x-12,y+6,x+12,y+11,"#dcbf93"); R2(x-8,y-13,x-6,y+6,"#c3c8cd"); R2(x-8,y-12,x+6,y-10,"#1d1e20"); R2(x-8,y+2,x+6,y+4,"#1d1e20"); }
+  else if(k==="paste"){ R2(x-10,y-10,x+10,y+10,"#f3d23a"); c.fillStyle="#2b5fc4"; c.fillRect(x-8,y-2,10,8); }
+  else if(k==="watch"){ c.fillStyle=dim?"#474d54":"#16171a"; c.beginPath(); c.arc(x,y,11,0,7); c.fill(); R2(x-7,y-4,x+7,y+4,"#b9c2a8"); }
 }
+function drawTray(){
+  const c=trayCtx, t=d(); c.setTransform(DPR,0,0,DPR,0,0);
+  c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
+  trayCells=[]; let y=6; const wd=TRW-12;
+  for(const k of TRAY_LIST){ const av=trayAvail(k), sel=B.carry&&B.carry.fromTray&&(B.carry.id===k||B.carry.k===k);
+    c.fillStyle=av?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TRAY_ROW-4);
+    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+0.5,wd-1,TRAY_ROW-5);
+    trayIcon(c,k,28,y+(TRAY_ROW-4)/2,!av);
+    c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
+    c.fillStyle=av?"#e8eef2":"#868e96"; c.fillText(t.items[k],52,y+14);
+    c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
+    c.fillText(k==="batt"?t.left(ST.batts.filter(b=>!b.slot).length):av?t.trayTake:t.trayOut,52,y+30);
+    trayCells.push([k,y,y+TRAY_ROW-4]); y+=TRAY_ROW; }
+  c.font='10.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
+  t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
+}
+trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); if(B.carry){ cancelCarry(); drawTray(); } });
+trayCv.addEventListener("pointerdown",e=>{
+  if(e.button!==0) return; const r=trayCv.getBoundingClientRect(), y=e.clientY-r.top; B.trayDrag=true;
+  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue; const same=B.carry&&B.carry.fromTray&&(B.carry.id===k||B.carry.k===k); cancelCarry();
+    if(!same&&trayAvail(k)) takeFromTray(k); drawTray(); return; } });
+function takeFromTray(k){
+  if(k==="batt"){ const i=ST.batts.findIndex(b=>!b.slot); B.carry={k:"batt",i,fromTray:true}; say("battWhere"); return; }
+  if(k==="wire"){ B.carry={k:"wire",a:null,fromTray:true}; say("wire1"); return; }
+  if(k==="paste"){ B.carry={k:"paste",g:0.5,m:null,fromTray:true}; say("picked",d().items.paste); return; }
+  B.carry={k:"new",id:k,fromTray:true}; say("picked",d().items[k]);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   7.  HANDS ON THE BENCH
+   ══════════════════════════════════════════════════════════════ */
+function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
+const benchOf=w=>({x:w[0]+60,y:w[2]+36});
+const LIVE=/^(m_|t_|slot_|plug_|batt_|wire_|knob|sw$|dial|lcd|fieldIn|forceIn|forceTop|coilAxis|f2a|f2arm|pod|podmag|bar_|f1disk|magRuler|w_)/;
+const MOVABLE=/^m_/;
+function cancelCarry(){ const cr=B.carry; if(!cr) return; B.carry=null;
+  if(cr.k==="move"){ if(cr.orig) ST.pos[cr.id]=cr.orig; ST.on[cr.id]=true; if(cr.where) restoreWhere({k:cr.id,where:cr.where}); }
+  if(cr.k==="podMagCarry"){ ST.podMagnet=true; }
+  drawTray(); }
+function startMove(t,drag){
+  const k=t.slice(2); B.carry={k:"move",id:k,orig:{...ST.pos[k]},drag};
+  if(k==="field"&&ST.field.where!=="bench"){ B.carry.where=ST.field.where; ST.field.where="bench"; }
+  ST.on[k]=false; say("moveIt",d().items[k]); drawTray();
+}
+function inPlace(k,c){ /* a part carried and let go on another: where it goes */
+  return null; }
+function placeCarry(p){
+  const cr=B.carry, id=pick3(p[0],p[1])||"", w=deskPt(p), c=[w[0]+60,w[2]+36], t=d().m;
+  if(cr.k==="batt"){ const s=id==="slot_s1"?"s1":id==="slot_s2"?"s2":null;
+    if(!s){ say("battWhere"); return; } if(ST.batts.some(b=>b.slot===s)){ say("slotBusy"); return; }
+    ST.batts[cr.i].slot=s; B.carry=null; say("battIn",s==="s1"?"(i)":"(ii)"); drawTray(); return; }
+  if(cr.k==="plug"){ const s=id==="slot_s3"?"s3":id==="slot_s4"?"s4":null;
+    if(s){ if(ST.field.plug===s||ST.force.plug===s){ say("slotBusy"); return; } ST[cr.s].plug=s; B.carry=null; say("plugged",s==="s3"?"(iii)":"(iv)"); return; }
+    B.carry=null; return; }
+  if(cr.k==="wire"){ const term=id.startsWith("t_")?id.slice(2):null; if(!term){ say("noTerm"); return; }
+    if(!cr.a){ cr.a=term; say("wire2"); return; } if(term===cr.a){ say("same"); return; }
+    ST.wires.push({a:cr.a,b:term}); say("wired",d().term[cr.a],d().term[term]); B.carry=null; return; }
+  if(cr.k==="paste"){
+    if(id==="bar_l"||id==="bar_r"){ ST.pod.paste[id[4]].push(cr.m||cr.g*(1+0.08*gauss())); cr.m=null; say("paste",id[4]); return; }
+    if(id==="forceTop"&&ST.force.where==="coil"){ if(ST.force.paste>0){ say("slotBusy"); return; } ST.force.paste=cr.m||cr.g*(1+0.08*gauss()); B.carry=null; say("pasteScale"); return; }
+    say("picked",d().items.paste); return; }
+  const k=cr.id, done=()=>{ B.carry=null; drawTray(); };
+  if(k==="field"&&ST.on.coils&&(id==="coilAxis"||id==="m_coils")){ if(ST.force.where==="coil"){ say("coilBusy"); return; }
+    ST.field.where="coil"; ST.field.z=Math.max(0,Math.min(60,(cr.where==="coil"?ST.field.z:20))); zErr=4e-4*gauss(); ST.on.field=true; done(); say("inCoil"); return; }
+  if(k==="field"&&ST.on.ruler&&(id==="m_ruler"||id==="magRuler")){ const r=ST.pos.ruler; ST.field.where="ruler"; ST.field.d=Math.max(3,Math.min(380,Math.round((c[0]-(r.x-20))*10)));
+    dErr=5e-4*gauss(); ST.on.field=true; done(); say("onRuler"); return; }
+  if(k==="force"&&ST.on.coils&&(id==="coilAxis"||id==="m_coils")){ if(ST.field.where==="coil"){ say("coilBusy"); return; } ST.force.where="coil"; ST.on.force=true; done(); say("forceIn"); return; }
+  if(k==="mag3"&&ST.on.ruler&&(id==="m_ruler")&&Math.abs(c[0]-(ST.pos.ruler.x-20))<4){ ST.magOnRuler=true; ST.on.mag3=true; done(); say("magRuler"); return; }
+  if(k==="podMag"&&ST.on.stand&&(id==="pod"||id==="m_stand"||id==="f1disk")){ ST.podMagnet=true; ST.on.podMag=false; done(); say("magIn"); return; }
+  const pos={x:c[0],y:c[1]};
+  if(overlap(k,pos)){ if(cr.k==="move"&&cr.drag){ cancelCarry(); } say("noFit"); return; }
+  ST.pos[k]=pos; ST.on[k]=true; if(k==="field") ST.field.where="bench"; if(k==="force") ST.force.where="bench"; done(); say("placed",d().items[k]);
+}
+/* knobs and sliders: the wheel, or a drag up and down */
+const KNOBS={ knob:{get:()=>ST.knob,set:v=>ST.knob=Math.max(0,Math.min(1,v)),step:0.01,fine:0.002,px:0.002,msg:"knob"},
+  fieldIn:{get:()=>ST.field.where==="coil"?ST.field.z:ST.field.d,set:v=>{ if(ST.field.where==="coil") ST.field.z=Math.max(0,Math.min(60,v)); else ST.field.d=Math.max(3,Math.min(380,v)); },step:0.5,fine:0.1,px:0.3},
+  f2a:{get:()=>ST.pod.f2a,set:v=>ST.pod.f2a=((v%360)+360)%360,step:1,fine:10,px:0.5,msg:"turn",coarseShift:true},
+  f2arm:{get:()=>ST.pod.L,set:v=>ST.pod.L=Math.max(0.10,Math.min(0.40,Math.round(v*1000)/1000)),step:0.005,fine:0.001,px:0.0005,msg:"L"} };
+function knobId(t){ if(KNOBS[t]) return t; if(t==="lcd") return null; return null; }
+function turn(id,dv){ const K_=KNOBS[id]; K_.set(K_.get()+dv); if(K_.msg) say(K_.msg); }
+function podAngle(p){ const S_=ST.pos.stand, w=onPlane(p[0],p[1],podY()); return Math.atan2(w[0]-wx(S_.x),-(w[2]-(wz(S_.y)+1.5))); }
+function clickControl(t){
+  if(t==="sw"){ if(!ST.on.ard) return true; ST.sw=!ST.sw; say("sw",ST.sw); return true; }
+  if(t==="dial"){ const seq=["OFF","V","mA","A"]; ST.dial=seq[(seq.indexOf(ST.dial)+1)%4]; ST.idle=0; if(ST.dial==="OFF") sleeping=false; say("dial",d().dial[ST.dial]); return true; }
+  if(t==="w_ss"){ ST.swRun=!ST.swRun; renderPanel(); return true; }
+  if(t==="w_lr"){ if(ST.swRun){ ST.laps.unshift(fmt(ST.sw_t)); ST.laps=ST.laps.slice(0,40); } else { ST.sw_t=0; ST.laps=[]; } renderPanel(); return true; }
+  if(t==="plug_field"||t==="plug_force"){ const s=t.slice(5); ST[s].plug=null; B.carry={k:"plug",s}; say("plug"); return true; }
+  if(t==="batt_s1"||t==="batt_s2"){ const s=t.slice(5), i=ST.batts.findIndex(b=>b.slot===s); ST.batts[i].slot=null; B.carry={k:"batt",i}; say("picked",d().items.batt); drawTray(); return true; }
+  if(t==="podmag"){ podMagOut(); return true; }
+  if(t.startsWith("t_")){ B.carry={k:"wire",a:t.slice(2)}; say("wire2"); return true; }
+  if(t==="forceIn"){ B.carry={k:"move",id:"force",orig:{...ST.pos.force},where:"coil"}; ST.force.where="bench"; ST.on.force=false; say("picked",d().items.force); return true; }
+  if(t==="magRuler"){ B.carry={k:"move",id:"mag3",orig:{...ST.pos.mag3},where:"ruler"}; ST.magOnRuler=false; ST.on.mag3=false; say("picked",d().items.mag3); return true; }
+  return false;
+}
+cv.addEventListener("contextmenu",e=>e.preventDefault());
+cv.addEventListener("pointerdown",e=>{
+  const p=mousePos(e); B.mouse=p; B.mouseW=deskPt(p);
+  try{ cv.setPointerCapture(e.pointerId); }catch(_){}
+  if(e.button===1||e.button===2){ B.down={p0:p,last:p,pan:true,btn:e.button,moved:false}; return; }
+  if(e.button!==0) return;
+  if(B.carry&&!B.carry.drag){ placeCarry(p); drawTray(); return; }
+  const t=pick3(p[0],p[1])||"";
+  if(KNOBS[t]&&(t!=="fieldIn"||ST.field.where!=="bench")){ B.knob={id:t,y:p[1],p0:p,moved:false}; return; }
+  if(t==="pod"&&ST.on.stand){ B.pod=true; ST.pod.hold=podAngle(p); return; }
+  if(t&&clickControl(t)){ drawTray(); return; }
+  if(MOVABLE.test(t)){ B.down={t,p0:p,last:p,moved:false}; return; }
+  B.down={p0:p,last:p,pan:e.shiftKey,moved:false};
+});
+cv.addEventListener("pointermove",e=>{
+  const p=mousePos(e), dn=B.down; B.mouse=p; B.mouseW=deskPt(p);
+  if(B.knob){ const K_=KNOBS[B.knob.id], dy=B.knob.y-p[1]; if(Math.hypot(p[0]-B.knob.p0[0],p[1]-B.knob.p0[1])>4) B.knob.moved=true;
+    if(Math.abs(dy)>=1){ turn(B.knob.id,dy*K_.px*(e.shiftKey?0.2:1)); B.knob.y=p[1]; } return; }
+  if(B.pod){ ST.pod.hold=podAngle(p); return; }
+  if(!dn){ const t=B.carry?null:pick3(p[0],p[1]); cv.classList.toggle("hand",!!(t&&LIVE.test(t))); return; }
+  if(Math.hypot(p[0]-dn.p0[0],p[1]-dn.p0[1])>5) dn.moved=true;
+  if(!dn.moved) return;
+  if(dn.t){ startMove(dn.t,true); B.down=null; return; }
+  const dx=p[0]-dn.last[0], dy=p[1]-dn.last[1]; dn.last=p;
+  CAM.touched=true; CAMTW=null; renderViewBtn();
+  if(dn.pan){ CAM.px+=dx; CAM.py+=dy; } else { CAM.yaw+=dx*0.008; CAM.pitch=Math.min(1.5,Math.max(0.02,CAM.pitch+dy*0.006)); }
+  cv.classList.add("dragging");
+});
+cv.addEventListener("pointerup",e=>{
+  const p=mousePos(e), dn=B.down; B.down=null; cv.classList.remove("dragging");
+  if(B.knob){ const kn=B.knob; B.knob=null;
+    if(!kn.moved&&kn.id==="fieldIn"){ B.carry={k:"move",id:"field",orig:{...ST.pos.field},where:ST.field.where}; ST.field.where="bench"; ST.on.field=false; say("picked",d().items.field); }
+    return; }
+  if(B.pod){ B.pod=false; ST.pod.th=ST.pod.hold; ST.pod.hold=null; ST.pod.w=0; say("release"); return; }
+  if(dn&&dn.btn===2&&!dn.moved){ rclick(p); return; }
+  if(dn&&dn.t&&!dn.moved){ startMove(dn.t,false); return; }
+  if(B.carry&&B.carry.drag){ B.carry.drag=false; placeCarry(p); }
+});
+function rclick(p){
+  if(B.carry){ if(B.carry.k==="wire"&&B.carry.a){ B.carry.a=null; say("wire1"); return; } cancelCarry(); return; }
+  const t=pick3(p[0],p[1])||"";
+  if(t.startsWith("wire_")){ ST.wires.splice(+t.slice(5),1); say("unwire"); return; }
+  if(t.startsWith("t_")){ const n=ST.wires.length; ST.wires=ST.wires.filter(w=>w.a!==t.slice(2)&&w.b!==t.slice(2)); if(ST.wires.length<n) say("unwire"); return; }
+  if(t==="plug_field"||t==="plug_force"){ ST[t.slice(5)].plug=null; return; }
+  if(t==="batt_s1"||t==="batt_s2"){ ST.batts.find(b=>b.slot===t.slice(5)).slot=null; say("back",d().items.batt); drawTray(); return; }
+  if(t==="pod"){ podDamp(podField()); say("damp"); return; }
+  if(t==="bar_l"||t==="bar_r"){ if(ST.pod.paste[t[4]].length){ ST.pod.paste[t[4]]=[]; say("pasteOff"); } return; }
+  if(t==="forceTop"&&ST.force.paste>0){ ST.force.paste=0; say("pasteOff"); return; }
+  if(t==="forceIn"){ returnItem("force"); drawTray(); return; }
+  if(t==="fieldIn"){ returnItem("field"); drawTray(); return; }
+  if(t==="magRuler"){ returnItem("mag3"); drawTray(); return; }
+  if(t==="m_podMag"){ ST.on.podMag=false; ST.podMagnet=true; say("magIn"); return; }
+  if(MOVABLE.test(t)){ returnItem(t.slice(2)); drawTray(); }
+}
+window.addEventListener("pointerup",e=>{ if(B.trayDrag&&B.carry&&e.target===cv){ placeCarry(mousePos(e)); drawTray(); } B.trayDrag=false; });
+window.addEventListener("pointermove",e=>{ if(B.trayDrag&&B.carry){ const r=cv.getBoundingClientRect(), p=[e.clientX-r.left,e.clientY-r.top]; B.mouse=p; B.mouseW=deskPt(p); } });
+$("viewBack").onclick=()=>goTo("all");
+cv.addEventListener("dblclick",e=>{ const p=mousePos(e), t=pick3(p[0],p[1]); if(B.carry||(t&&LIVE.test(t))) return; goTo("all"); });
+cv.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const p=mousePos(e), dir=e.deltaY<0?1:-1;
+  if(B.carry&&B.carry.k==="paste"){ B.carry.g=Math.max(0.1,Math.min(2.0,Math.round((B.carry.g+dir*0.1)*10)/10)); B.carry.m=null; return; }
+  const t=B.carry?null:pick3(p[0],p[1]);
+  if(t&&KNOBS[t]&&(t!=="fieldIn"||ST.field.where!=="bench")){ const K_=KNOBS[t]; turn(t,dir*(K_.coarseShift?(e.shiftKey?K_.fine:K_.step):(e.shiftKey?K_.fine:K_.step))); return; }
+  if(t==="dial"){ const seq=["OFF","V","mA","A"]; ST.dial=seq[Math.max(0,Math.min(3,seq.indexOf(ST.dial)+dir))]; ST.idle=0; if(ST.dial==="OFF") sleeping=false; say("dial",d().dial[ST.dial]); return; }
+  CAM.touched=true; CAMTW=null; renderViewBtn();
+  const f=dir>0?1.12:1/1.12, nk=Math.min(200,Math.max(3,CAM.k*f)), r=nk/CAM.k;
+  CAM.px=(p[0]-CAM.W/2)-(p[0]-CAM.W/2-CAM.px)*r; CAM.py=(p[1]-CAM.H/2)-(p[1]-CAM.H/2-CAM.py)*r; CAM.k=nk;
+},{passive:false});
+addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(B.carry) cancelCarry(); else goTo("all"); } });
+/* from the model: put things back, take the magnet out of the pod */
 function restoreWhere(h){ if(h.k==="field"){ ST.field.where=h.where; ST.on.field=true; } if(h.k==="force"){ ST.force.where=h.where; ST.on.force=true; } if(h.k==="mag3"&&h.where==="ruler"){ ST.magOnRuler=true; ST.on.mag3=true; } }
 function returnItem(k){
   ST.on[k]=false;
   if(k==="ard"){ for(const b of ST.batts) b.slot=null; ST.field.plug=null; ST.force.plug=null; ST.wires=ST.wires.filter(w=>TERM_OWNER[w.a]!=="ard"&&TERM_OWNER[w.b]!=="ard"); }
   if(k==="coils"||k==="dmm") ST.wires=ST.wires.filter(w=>TERM_OWNER[w.a]!==k&&TERM_OWNER[w.b]!==k);
-  if(k==="coils"){ if(ST.field.where==="coil") ST.field.where="bench", ST.on.field=false; if(ST.force.where==="coil"){ ST.force.where="bench"; ST.on.force=false; } }
+  if(k==="coils"){ if(ST.field.where==="coil"){ ST.field.where="bench"; ST.on.field=false; } if(ST.force.where==="coil"){ ST.force.where="bench"; ST.on.force=false; } }
   if(k==="ruler"){ if(ST.field.where==="ruler"){ ST.field.where="bench"; ST.on.field=false; } if(ST.magOnRuler){ ST.magOnRuler=false; ST.on.mag3=false; } }
   if(k==="field"){ ST.field.where="bench"; ST.field.plug=null; }
   if(k==="force"){ ST.force.where="bench"; ST.force.plug=null; ST.force.paste=0; }
   if(k==="mag3") ST.magOnRuler=false;
-  say("back",itemName(k));
-}
-function takeFromTray(k){
-  if(!trayAvail(k)) return;
-  if(k==="batt"){ const i=ST.batts.findIndex((b,j)=>!b.slot); hand={k,i}; say("picked",itemName(k)); return; }
-  if(k==="wire"){ hand={k,a:null}; say("wire1"); return; }
-  if(k==="paste"){ hand={k,g:0.5,m:null}; say("picked",itemName(k)); return; }
-  hand={k}; say("picked",itemName(k));
+  say("back",d().items[k]);
 }
 function podMagOut(){ ST.podMagnet=false; ST.on.podMag=true; const s=ST.pos.stand;
   const cand=[[10.5,0],[-10.5,0],[0,10.5],[0,-10.5],[10.5,10.5],[-10.5,10.5]].map(([dx,dy])=>({x:s.x+dx,y:s.y+dy}));
   ST.pos.podMag=cand.find(q=>!overlap("podMag",q))||cand[0]; say("magOut"); }
-function benchClick(p,right){
-  const c=cm(p);
-  if(hand) return handClick(c,right);
-  if(right){
-    for(let i=ST.wires.length-1;i>=0;i--){ const w=ST.wires[i], a=TERM[w.a](), b=TERM[w.b](), L=Math.hypot(a[0]-b[0],a[1]-b[1]), sag=3+L*0.15;
-      for(let s=0;s<=20;s++){ const t=s/20, m=1-t, x=m*m*m*a[0]+3*m*m*t*(a[0]*0.7+b[0]*0.3)+3*m*t*t*(a[0]*0.3+b[0]*0.7)+t*t*t*b[0],
-        y=m*m*m*a[1]+3*m*m*t*(a[1]*0.7+b[1]*0.3+sag)+3*m*t*t*(a[1]*0.3+b[1]*0.7+sag)+t*t*t*b[1];
-        if(near(c,[x,y],0.8)){ ST.wires.splice(i,1); say("unwire"); return; } } }
-    for(const b of ST.batts) if(b.slot&&near(c,battBody(b.slot),2.4)){ b.slot=null; say("back",itemName("batt")); return; }
-    for(const s of ["field","force"]) if(ST[s].plug&&near(c,plugXY(s),1.2)){ ST[s].plug=null; return; }
-    if(ST.on.podMag&&inItem("podMag",c)){ ST.on.podMag=false; ST.podMagnet=true; say("magIn"); return; }
-    if(ST.field.where!=="bench"&&ST.on.field&&near(c,fieldTip(),3)){ returnItem("field"); return; }
-    if(ST.force.where==="coil"&&near(c,at("coils",0,0),1.5)){ if(ST.force.paste>0){ ST.force.paste=0; say("pasteOff"); return; } returnItem("force"); return; }
-    if(ST.magOnRuler&&near(c,at("ruler",-20.6,0),1.5)){ returnItem("mag3"); return; }
-    for(const k of ["mag3","force","field","dmm","ard","coils","stand","ruler"]) if(inItem(k,c)&&!(k==="field"&&ST.field.where!=="bench")&&!(k==="force"&&ST.force.where!=="bench")){ returnItem(k); return; }
-    return;
-  }
-  if(ST.on.ard){
-    if(near(c,SW(),1.2)){ ST.sw=!ST.sw; say("sw",ST.sw); return; }
-    if(near(c,KNOB(),1.3)){ ST.knob=Math.max(0,Math.min(1,ST.knob+(c[0]<KNOB()[0]?-0.02:0.02))); say("knob"); return; }
-  }
-  if(ST.on.dmm&&near(c,DIALP(),2.4)){ const seq=["OFF","V","mA","A"]; ST.dial=seq[(seq.indexOf(ST.dial)+1)%4]; ST.idle=0; if(ST.dial==="OFF") sleeping=false; say("dial",d().dial[ST.dial]); return; }
-  for(const s of ["field","force"]) if(ST.on[s]&&near(c,plugXY(s),1.2)){ ST[s].plug=null; hand={k:"plug",s}; say("plug"); return; }
-  for(const [i,b] of ST.batts.entries()) if(b.slot&&near(c,battBody(b.slot),2.4)){ b.slot=null; hand={k:"batt",i}; say("picked",itemName("batt")); return; }
-  if(ST.force.where==="coil"&&near(c,at("coils",0,0),1.4)){
-    if(ST.force.paste>0){ hand={k:"paste",g:Math.round(ST.force.paste*10)/10,m:ST.force.paste}; ST.force.paste=0; say("pasteBack"); return; }
-    hand={k:"force",move:true,orig:{...ST.pos.force},where:"coil"}; ST.force.where="bench"; ST.on.force=false; say("picked",itemName("force")); return; }
-  if(ST.field.where!=="bench"&&ST.on.field&&near(c,[fieldTip()[0]+6,fieldTip()[1]],6.5)&&Math.abs(c[1]-fieldTip()[1])<1){
-    hand={k:"field",move:true,orig:{...ST.pos.field},where:ST.field.where}; ST.field.where="bench"; ST.on.field=false; say("picked",itemName("field")); return; }
-  if(ST.magOnRuler&&near(c,at("ruler",-20.6,0),1.2)){ hand={k:"mag3",move:true,orig:{...ST.pos.mag3},where:"ruler"}; ST.magOnRuler=false; ST.on.mag3=false; say("picked",itemName("mag3")); return; }
-  for(const k of ["podMag","mag3","force","field","dmm","ard","coils","stand","ruler"]){
-    if(!inItem(k,c)) continue; if((k==="field"&&ST.field.where!=="bench")||(k==="force"&&ST.force.where!=="bench")) continue;
-    hand={k,move:true,orig:{...ST.pos[k]}}; ST.on[k]=false; say("moveIt",itemName(k)); return; }
-}
-function handClick(c,right){
-  const k=hand.k;
-  if(right){
-    if(k==="wire"&&hand.a){ hand.a=null; say("wire1"); return; }
-    if(hand.move){ ST.on[k]=true; const h=hand; returnHand(); if(!h.where){} say("stays"); return; }
-    if(k==="podMag"){ hand=null; ST.podMagnet=true; say("magIn"); return; }
-    hand=null; say("back",itemName(k==="plug"?"field":k)); return;
-  }
-  if(k==="batt"){ const s=slotAt(c); if(s!=="s1"&&s!=="s2"){ say("battWhere"); return; }
-    if(ST.batts.some(b=>b.slot===s)){ say("slotBusy"); return; } ST.batts[hand.i].slot=s; hand=null; say("battIn",s==="s1"?"(i)":"(ii)"); return; }
-  if(k==="plug"){ const s=slotAt(c);
-    if(s==="s3"||s==="s4"){ if(ST.field.plug===s||ST.force.plug===s){ say("slotBusy"); return; } ST[hand.s].plug=s; hand=null; say("plugged",s==="s3"?"(iii)":"(iv)"); return; }
-    hand=null; return; }
-  if(k==="wire"){ const t=termAt(c); if(!t){ say("noTerm"); return; }
-    if(!hand.a){ hand.a=t; say("wire2"); return; } if(t===hand.a){ say("same"); return; }
-    ST.wires.push({a:hand.a,b:t}); say("wired",d().term[hand.a],d().term[t]); hand=null; return; }
-  if(k==="paste"){
-    if(ST.force.where==="coil"&&near(c,at("coils",0,0),1.6)){ if(ST.force.paste>0){ say("slotBusy"); return; }
-      ST.force.paste=hand.m||hand.g*(1+0.08*gauss()); hand=null; say("pasteScale"); return; }
-    say("picked",itemName("paste")); return; }
-  /* putting an item down */
-  if(k==="field"&&ST.on.coils&&ST.force.where!=="coil"&&Math.abs(c[1]-ST.pos.coils.y)<1.6&&Math.abs(c[0]-ST.pos.coils.x)<6){
-    ST.field.where="coil"; ST.field.z=Math.max(0,Math.min(60,Math.round((Z0_COIL*100-(c[0]-ST.pos.coils.x))*10))); zErr=4e-4*gauss(); ST.on.field=true; hand=null; say("inCoil"); return; }
-  if(k==="field"&&ST.on.ruler&&inItem("ruler",c)){ ST.field.where="ruler"; ST.field.d=Math.max(3,Math.min(380,Math.round((c[0]-(ST.pos.ruler.x-20))*10))); dErr=5e-4*gauss(); ST.on.field=true; hand=null; say("onRuler"); return; }
-  if(k==="force"&&ST.on.coils&&inItem("coils",c)){ if(ST.field.where==="coil"){ say("coilBusy"); return; } ST.force.where="coil"; ST.on.force=true; hand=null; say("forceIn"); return; }
-  if(k==="mag3"&&ST.on.ruler&&near(c,at("ruler",-20,0),3)){ ST.magOnRuler=true; ST.on.mag3=true; hand=null; say("magRuler"); return; }
-  if(k==="podMag"&&ST.on.stand&&inItem("stand",c)){ ST.podMagnet=true; ST.on.podMag=false; hand=null; say("magIn"); return; }
-  const pos={x:c[0],y:c[1]};
-  if(overlap(k,pos)){ say("noFit"); return; }
-  ST.pos[k]=pos; ST.on[k]=true; if(k==="field") ST.field.where="bench"; if(k==="force") ST.force.where="bench"; hand=null; say("placed",itemName(k));
-}
-
-const cvEl=cv;
-cvEl.addEventListener("contextmenu",e=>e.preventDefault());
-cvEl.addEventListener("pointerenter",()=>{ overBench=true; });
-cvEl.addEventListener("pointerleave",()=>{ overBench=false; });
-cvEl.addEventListener("pointermove",e=>{ mouse=lpos(e); });
-cvEl.addEventListener("pointerdown",e=>{ const p=lpos(e); mouse=p; benchClick(p,e.button===2); drawTray(); });
-let trayDrag=false;
-window.addEventListener("mouseup",e=>{ if(trayDrag&&hand&&e.target===cvEl){ const p=lpos(e); mouse=p; benchClick(p,false); drawTray(); } trayDrag=false; });
-cvEl.addEventListener("wheel",e=>{ const c=cm(lpos(e));
-  if(hand&&hand.k==="paste"){ e.preventDefault(); hand.g=Math.max(0.1,Math.min(2.0,Math.round((hand.g+(e.deltaY<0?0.1:-0.1))*10)/10)); hand.m=null; return; }
-  if(ST.on.ard&&near(c,KNOB(),1.6)){ e.preventDefault(); ST.knob=Math.max(0,Math.min(1,ST.knob+(e.deltaY<0?0.01:-0.01))); say("knob"); } },{passive:false});
-const trayEl=trayCv;
-trayEl.addEventListener("contextmenu",e=>{ e.preventDefault(); if(hand){ returnHand(); drawTray(); } });
-trayEl.addEventListener("mousedown",e=>{
-  if(e.button!==0) return; const r=trayEl.getBoundingClientRect(), y=e.clientY-r.top; trayDrag=true;
-  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
-    const same=hand&&hand.k===k&&!hand.move; if(hand) returnHand(); if(!same) takeFromTray(k); drawTray(); return; } });
-
-/* the close up: slide the sensor, turn f2a, hold and let go of the pod, change L, paste and magnet */
-let drag=null;
-function clpos(e){ const r=closeCv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
-const inP=(P,p)=>p[0]>=P.x&&p[0]<=P.x+P.w&&p[1]>=P.y&&p[1]<=P.y+P.h;
-closeCv.addEventListener("contextmenu",e=>e.preventDefault());
-closeCv.addEventListener("pointerdown",e=>{ const p=clpos(e);
-  if(inP(P2,p)&&(ST.field.where==="coil"||ST.field.where==="ruler")&&e.button===0){ drag={kind:"sensor",x:p[0],z:ST.field.z,d:ST.field.d}; closeCv.setPointerCapture(e.pointerId); return; }
-  if(inP(P3,p)&&ST.on.stand&&F3.c1){
-    if(near(p,F3.c1,F3.r)){ if(e.button===2){ podDamp(podField()); say("damp"); return; }
-      drag={kind:"pod"}; ST.pod.hold=Math.atan2(p[0]-F3.c1[0],-(p[1]-F3.c1[1])); closeCv.setPointerCapture(e.pointerId); return; }
-    if(p[0]<F3.front[0]+F3.front[2]){
-      const ends=[["l",-1],["r",1]].map(([s,sg])=>[s,[F3.xpod+sg*F3.ra*F3.ca*F3.kz,F3.ypod]]);
-      for(const [s,q] of ends) if(near(p,q,Math.max(10,0.9*F3.kz))){
-        if(e.button===2){ if(ST.pod.paste[s].length){ ST.pod.paste[s]=[]; say("pasteOff"); } return; }
-        if(hand&&hand.k==="paste"){ ST.pod.paste[s].push(hand.m||hand.g*(1+0.08*gauss())); hand.m=null; say("paste",s); drawTray(); return; } }
-      if(e.button===0&&near(p,[F3.xpod,F3.ypod],Math.max(10,1.0*F3.kz))){
-        if(hand&&hand.k==="podMag"){ ST.podMagnet=true; hand=null; say("magIn"); drawTray(); return; }
-        if(ST.podMagnet&&!hand){ podMagOut(); return; } }
-      if(e.button===0&&Math.abs(p[0]-F3.xpod)<2.5*F3.kz){ drag={kind:"L",y:p[1],L:ST.pod.L}; closeCv.setPointerCapture(e.pointerId); return; }
-    }
-  }
-});
-closeCv.addEventListener("pointermove",e=>{ if(!drag) return; const p=clpos(e);
-  if(drag.kind==="sensor"){ const dmm=(p[0]-drag.x)/P2k*10;
-    if(ST.field.where==="coil") ST.field.z=Math.max(0,Math.min(60,drag.z-dmm)); else ST.field.d=Math.max(3,Math.min(380,drag.d+dmm)); }
-  if(drag.kind==="pod") ST.pod.hold=Math.atan2(p[0]-F3.c1[0],-(p[1]-F3.c1[1]));
-  if(drag.kind==="L"){ ST.pod.L=Math.max(0.10,Math.min(0.40,Math.round((drag.L+(p[1]-drag.y)/F3.kz/100)*200)/200)); }
-});
-closeCv.addEventListener("pointerup",()=>{ if(drag&&drag.kind==="pod"){ ST.pod.th=ST.pod.hold; ST.pod.hold=null; ST.pod.w=0; say("release"); }
-  if(drag&&drag.kind==="L") say("L"); drag=null; });
-closeCv.addEventListener("wheel",e=>{ const p=clpos(e);
-  if(inP(P2,p)&&(ST.field.where==="coil"||ST.field.where==="ruler")){ e.preventDefault(); const s=e.deltaY<0?1:-1;
-    if(ST.field.where==="coil") ST.field.z=Math.max(0,Math.min(60,Math.round((ST.field.z+0.5*s)*2)/2)); else ST.field.d=Math.max(3,Math.min(380,Math.round(ST.field.d+s))); return; }
-  if(F3.c2&&near(p,F3.c2,F3.r)){ e.preventDefault(); ST.pod.f2a=((ST.pod.f2a+(e.deltaY<0?1:-1)*(e.shiftKey?10:1))%360+360)%360; say("turn"); }
-},{passive:false});
 
 /* ══════════════════════════════════════════════════════════════
-   7.  PANEL AND MAIN LOOP
+   8.  SIDE PANEL, LANGUAGE, MAIN LOOP
    ══════════════════════════════════════════════════════════════ */
 const fmt=t=>Math.floor(t/60)+":"+(t%60).toFixed(2).padStart(5,"0");
 $("swBtn").onclick=()=>{ ST.swRun=!ST.swRun; renderPanel(); };
 $("swLap").onclick=()=>{ ST.laps.unshift(fmt(ST.sw_t)); ST.laps=ST.laps.slice(0,40); renderPanel(); };
 $("swReset").onclick=()=>{ ST.sw_t=0; ST.laps=[]; ST.swRun=false; renderPanel(); };
-$("unwire").onclick=()=>{ ST.wires=[]; if(hand&&hand.k==="wire") hand=null; say("unwired"); drawTray(); };
+$("unwire").onclick=()=>{ ST.wires=[]; if(B.carry&&B.carry.k==="wire") B.carry=null; say("unwired"); drawTray(); };
+function renderViews(){ const box=$("views"); box.innerHTML="";
+  for(const [v,lbl] of d().views){ const b=document.createElement("button"); b.textContent=lbl; if(v===VIEW) b.className="on";
+    b.disabled=v!=="all"&&!viewOf(v); b.onclick=()=>goTo(v); box.appendChild(b); } }
 function renderSpeeds(){ const box=$("speeds"); box.innerHTML="";
   for(const s of [1,2,5]){ const b=document.createElement("button"); b.textContent=s+"×"; b.className=s===speed?"on":"";
     b.onclick=()=>{ speed=s; renderSpeeds(); }; box.appendChild(b); } }
 function renderPanel(){ const t=d(); $("swBtn").textContent=ST.swRun?t.stop:t.start;
   $("laps").innerHTML=ST.laps.map((s,i)=>"<div>"+(ST.laps.length-i)+". "+s+"</div>").join(""); }
 function renderStatus(F){
-  const L=[], t=d();
-  if(!PLACE.some(k=>ST.on[k])) L.push([t.st.none,false]);
-  if(ST.on.ard&&!ardOn()) L.push([t.st.noPower,false]);
-  const b2=ST.batts.find(b=>b.slot==="s2"); if(b2&&b2.q<0.15*BATT_FULL) L.push([t.st.flat,true]);
-  if(ST.force.broken) L.push([t.st.broken,true]);
-  if(ST.on.stand&&ST.podMagnet&&F.worst<0.2) L.push([t.st.near,true]);
-  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
+  const L_=[], t=d();
+  if(!PLACE.some(k=>ST.on[k])) L_.push([t.st.none,false]);
+  if(ST.on.ard&&!ardOn()) L_.push([t.st.noPower,false]);
+  const b2=ST.batts.find(b=>b.slot==="s2"); if(b2&&b2.q<0.15*BATT_FULL) L_.push([t.st.flat,true]);
+  if(ST.force.broken) L_.push([t.st.broken,true]);
+  if(ST.on.stand&&ST.podMagnet&&F&&F.worst<0.2) L_.push([t.st.near,true]);
+  if(msg.key&&performance.now()-msg.t<9000){ const f=t.m[msg.key]; if(f!==undefined) L_.push(["• "+(typeof f==="function"?f(...msg.args):f),false]); }
   const box=$("status"); box.innerHTML="";
-  for(const [s,w] of L){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="w"; box.appendChild(el); }
+  for(const [s,w] of L_){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="warn"; box.appendChild(el); }
 }
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
-  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.trayTitle;
-  $("t-cap").textContent=t.cap; $("t-closecap").textContent=t.closeCap;
+  $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.tray;
+  $("t-benchcap").textContent=t.benchcap; $("t-h-view").textContent=t.hView;
   $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
   $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
   $("t-h-ard").textContent=t.hArd; $("t-ardhint").textContent=t.ardHint; $("unwire").textContent=t.unwire;
   $("t-h-pod").textContent=t.hPod; $("t-podhint").textContent=t.podHint;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
   document.title=lang==="ko"?"IPhO 2025 E1 — 지구 자기장 측정 · HaslaLab":"IPhO 2025 E1 — Earth's Magnetic Field · HaslaLab";
-  renderPanel(); renderSpeeds(); layout();
+  renderPanel(); renderSpeeds(); renderViews(); renderViewBtn(); drawTray();
 }
 $("btn-ko").onclick=()=>{ lang="ko"; applyLang(); };
 $("btn-en").onclick=()=>{ lang="en"; applyLang(); };
-
-let tPrev=performance.now()/1000, frameN=0, lcdT=0, wasPowered=false;
+let tPrev=performance.now()/1000, frameN=0, lcdT=0, wasPowered=false, Fnow=null;
 function tick(){
   const now=performance.now()/1000, dt=Math.min(0.1,Math.max(0,now-tPrev)); tPrev=now;
   const sdt=dt*speed; ST.t+=sdt; if(ST.swRun) ST.sw_t+=sdt;
@@ -940,18 +1476,17 @@ function tick(){
   const powered=ardOn()&&ST.force.plug==="s4"&&ST.on.force;
   if(powered&&!wasPowered){ ST.force.zero=forceRaw(); say("zeroed"); } wasPowered=powered;
   if(powered&&!ST.force.broken&&Math.abs(forceRaw()-K.forceOff)>200){ ST.force.broken=true; say("broken"); }
-  const F=podField(); let left=sdt; while(left>1e-9){ const h=Math.min(left,0.002); podStep(h,F); left-=h; }
+  const F=podField(); Fnow=F; let left=sdt; while(left>1e-9){ const h=Math.min(left,0.002); podStep(h,F); left-=h; }
   lcdT-=dt; if(lcdT<=0){ lcd=readLcd(); lcdT=0.25; }
-  ctx.clearRect(0,0,LW,LH); drawBench();
+  if(CW>10) draw();
   $("swLbl").textContent=fmt(ST.sw_t);
-  if(++frameN%2===0) drawClose();
-  if(frameN%6===0){ renderStatus(F); drawTray(); }
+  if(++frameN%8===0){ renderStatus(F); renderViews(); }
   requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);
-applyLang(); requestAnimationFrame(tick);
+paintStatic(); layout(); applyLang(); requestAnimationFrame(tick);
 </script>
-<script src="adfit.js"></script>
+  <script src="adfit.js"></script>
   <script src="simfull.js"></script>
 </body>
 </html>
