@@ -1,6 +1,6 @@
 // Exam mode in a browser (Playwright): catalogue → login gate → token start → shared kit and bench → reloads, leaving
 // and a second computer (timer not reset, no second token) → time up → QR → phone scan upload → check text → submit
-// → result → #/lab, and the Discord page.  Needs `npm run dev` with .dev.vars
+// → result → #/lab, and that the community has no Discord page.  Needs `npm run dev` with .dev.vars
 //   LAB_TEST_EXAM_SEC=90  LAB_TEST_SCAN_SEC=120  LAB_TEST_GRACE_SEC=1  (+ the stand-in OCR/grader of test-lab.mjs)
 // the site served at http://localhost:8765 (python3 -m http.server 8765 in the repository root), then:
 //   node test-lab-browser.cjs     (Playwright with Chromium must be installed)
@@ -257,11 +257,9 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
   const r24 = await pg.$$eval("#xmRoot tbody tr:not(.xmset)", trs => trs.map(t => t.textContent).find(x => /^2024/.test(x.trim())));
   ok(/채점 완료/.test(r24) && /성적표/.test(r24) && /다시 응시/.test(r24) && /\d+명 응시/.test(r24), "portal row: my status, report, sit again, the number of candidates");
   await pg.screenshot({ path: OUT + "8-lab.png", fullPage: true });
-  /* 10. the community's Discord channel */
-  await pg.goto(SITE + "/#/community/discord"); await pg.waitForSelector(".dcban", { timeout: 15000 });
-  ok(/discord\.gg\/SNBDY5nsgf/.test(await pg.$eval(".dcbody a.join", a => a.href)), "Discord page links the Physics Olympiads invite");
-  ok(await pg.$("a.ch.dc") !== null, "Discord channel in the rail");
-  await pg.screenshot({ path: OUT + "9-discord.png" });
+  /* 10. the community has no Discord server channel any more: the old link falls back to the board list */
+  await pg.goto(SITE + "/#/community/discord"); await pg.waitForSelector("#cmRail a.ch", { timeout: 15000 });
+  ok(await pg.$("a.ch.dc") === null && await pg.$(".dcban") === null, "no Discord server channel or page in the community");
 
   ok(errs.length === 0, "no page errors " + JSON.stringify(errs.slice(0, 5)));
   await browser.close();
