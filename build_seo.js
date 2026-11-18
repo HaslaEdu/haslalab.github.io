@@ -48,7 +48,7 @@ const exists = p => isPdf(p) ? ASSETS.has(p.slice(4)) : fs.existsSync(path.join(
 /* PDFs under pdfx/ stay in the repository but are served by the PDF Worker too (tools/pdfx_release.py) */
 const isPdfx = p => /^pdfx\/.*\.pdf$/.test(p);
 const href = p => isPdf(p) ? PDF_BASE + p.slice(4)
-  : isPdfx(p) ? PDF_BASE + p.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_") : p;
+  : isPdfx(p) ? PDF_BASE + p.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "l/" + (d ? d + "/" : "")) : p;
 
 /* ── walk the catalogue once ── */
 const rows = [];          // one per problem
