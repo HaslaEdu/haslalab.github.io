@@ -59,6 +59,9 @@ assert.equal(JSON.parse(enLink.searchParams.get('papers')).zh[0], cpho.papers.zh
 const ruLink = link('rupho',2026,['T1','T2','T3']);
 assert.equal(ruLink.searchParams.get('pl'), 'ru');
 assert.equal(JSON.parse(ruLink.searchParams.get('papers')).ru.length,3);
+const iboKeyLink=link('ibo',2021,['T']);
+assert.equal(iboKeyLink.searchParams.get('s'),'');
+assert.equal(iboKeyLink.searchParams.get('k'),catalogue.ibo['2021'].f.T.key);
 
 const cardStart = html.indexOf('function theoryHtml(');
 const cardEnd = html.indexOf('/* the general instructions',cardStart);
