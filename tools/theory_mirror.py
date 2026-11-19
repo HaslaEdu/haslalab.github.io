@@ -16,7 +16,18 @@ files=[]
 with tempfile.TemporaryDirectory()as td:
  work=Path(td)
  for row in M.get('files',[]):
-  p=ROOT/row['path'];assert p.is_file()and sha(p)==row['sha256'];files.append(dict(row,file=p))
+  assert PurePosixPath(row['name']).name==row['name']
+  assert Path(row['path']).name==row['name']
+  p=ROOT/row['path']
+  if row.get('chunks'):
+   p=work/row['name']
+   with p.open('wb')as dest:
+    for chunk in row['chunks']:
+     piece=ROOT/chunk['path']
+     assert piece.stat().st_size==chunk['bytes']and sha(piece)==chunk['sha256']
+     dest.write(piece.read_bytes())
+  assert p.is_file()and p.stat().st_size==row['bytes']and sha(p)==row['sha256']
+  files.append(dict(row,file=p))
  for archive in M.get('archives',[]):
   out=work/archive['name']
   with out.open('wb')as dest:

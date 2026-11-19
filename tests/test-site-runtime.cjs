@@ -55,6 +55,29 @@ function enableReadState(a,saved=new Map()){
   a.run(earlyMain);return saved;
 }
 
+test('new olympiad visitors see translated theory papers and retain their explicit track choice',()=>{
+  const a=app();
+  for(const key of ['ieso','ijso','imcho','icho','ibo','ipho'])a.load('theory:'+key);
+  for(const [key,year,file] of [
+    ['ieso',2025,'IESO_2025_T1_OriginalLayout_KO.pdf'],
+    ['ijso',2025,'IJSO_2025_MC_KO.pdf'],
+    ['imcho',2025,'IMChO_2025_T1_Practice_KO.pdf'],
+    ['icho',2024,'IChO_2024_T_KO.pdf']
+  ]){
+    const page=a.run(`viewYear("${key}",${year})`);
+    assert.ok(anchors(page).some(link=>link.url.includes(file)),`${key} ${year} opens translated theory`);
+    assert.match(page,/aria-pressed="true" onclick="setTrack\('thy'\)"/);
+  }
+  assert.equal(a.run('trackOf("ipho")'),'exp');
+  const practical=a.run('viewYear("ibo",2023)');
+  assert.ok(anchors(practical).some(link=>link.url.endsWith('l/ibo/IBO_2023_P3_OriginalLayout_KO.pdf')));
+  assert.match(practical,/aria-pressed="true" onclick="setTrack\('exp'\)"/);
+  a.run('render=()=>{};setTrack("exp")');
+  assert.equal(a.store.get('hlTrack'),'exp');
+  assert.equal(a.run('trackOf("ieso")'),'exp');
+  assert.ok(!anchors(a.run('viewYear("ieso",2025)')).some(link=>link.url.includes('IESO_2025_T1_OriginalLayout_KO.pdf')));
+});
+
 test('the olympiad archive loads practical papers and their alternate language on deep links',()=>{
   const a=app();
   a.load('theory:ieso');
