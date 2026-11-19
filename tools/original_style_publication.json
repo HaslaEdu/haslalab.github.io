@@ -3127,5 +3127,115 @@
     "sha256": "c955d67c40240052d3cb0f65dd0f056169b5d6e1b5e5188751c2cf16ffa04630",
     "qa": "tools/ko_reflow/qa/IESO_2026_T4_original_layout.json",
     "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ijso/IJSO_2025_T_KO.pdf",
+    "pages": 27,
+    "bytes": 5445403,
+    "sha256": "3085a562ccae6edbf5712e8d03bd6f0995368700a52b7db51a0a848888ec6edc",
+    "language": "ko",
+    "qa": "tools/ko_reflow/qa/IJSO_2025_T_KO_font_repair.json",
+    "audit_schema": "olympiad-original-layout-v1",
+    "native_qa": "tools/ko_reflow/qa/IJSO_2025_T-reviewed.json"
+  },
+  {
+    "file": "pdfx/ijso/IJSO_2025_MC_KO.pdf",
+    "pages": 20,
+    "bytes": 3689974,
+    "sha256": "838d5f313959438425d55dbb5a01298e4221aeb39682ee53ef0e57f5af180f75",
+    "language": "ko",
+    "qa": "tools/ko_reflow/qa/IJSO_2025_MC_KO_font_repair.json",
+    "audit_schema": "olympiad-original-layout-v1",
+    "native_qa": "tools/ko_reflow/qa/IJSO_2025_MC.json"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2022_T1_Paper_KO.pdf",
+    "sha256": "897213039bd191ebda935e0451e15ee4dcc883e57728a4241b357de3347e757e",
+    "bytes": 14914875,
+    "language": "ko",
+    "pages": 75,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IBO_2022_T1_original_layout.json"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2022_T1_Key_KO.pdf",
+    "sha256": "af66f0bcddc6b51725fd2316059fbcb58a12fd1d4dff29124b686ae57cd9d645",
+    "bytes": 766448,
+    "language": "ko",
+    "pages": 2,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IBO_2022_T1_original_layout.json"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2022_T2_Paper_KO.pdf",
+    "sha256": "38fbdf69693f0be5e3c4e538156411fbe03af02a84b47e3ab1d83ffe01bafa5d",
+    "bytes": 19673905,
+    "language": "ko",
+    "pages": 79,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IBO_2022_T2_original_layout.json"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2022_T2_Key_KO.pdf",
+    "sha256": "295ae2090ccf8e491df59223751a45bc60f536dc4e17f38b743c639a7470cd72",
+    "bytes": 777004,
+    "language": "ko",
+    "pages": 2,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IBO_2022_T2_original_layout.json"
+  },
+  {
+    "file": "pdfx/ieso/IESO_2026_T1_OriginalLayout_KO.pdf",
+    "sha256": "f39f01c6c37157659e81ea03786718932220e5a75f0a3bc363c2db6b136f8c8a",
+    "bytes": 6074112,
+    "language": "ko",
+    "pages": 14,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IESO_2026_T1_original_layout.json"
+  },
+  {
+    "file": "pdfx/icho/IChO_2010_T_QUESTIONS_OriginalLayout_KO.pdf",
+    "sha256": "104185248cd921aeb7f87d29e9c7e132c9f9738a7b58748d4b4ee1e6b72ef186",
+    "bytes": 3166890,
+    "language": "ko",
+    "pages": 22,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IChO_2010_T_original_layout.json"
+  },
+  {
+    "file": "pdfx/icho/IChO_2010_P_QUESTIONS_OriginalLayout_KO.pdf",
+    "sha256": "10529796f73f034c51aeb97f5df49ae6e52091c1d70b88c29dab41b2c2b38a54",
+    "bytes": 3206027,
+    "language": "ko",
+    "pages": 23,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IChO_2010_P_original_layout.json"
+  },
+  {
+    "file": "pdfx/icho/IChO_2010_P_SHEET_OriginalLayout_KO.pdf",
+    "sha256": "35b8bfb5d91510df4f1c09387b483c919d7db33288ad88208850d3607f1a2ebc",
+    "bytes": 1625789,
+    "language": "ko",
+    "pages": 6,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IChO_2010_P_SHEET_original_layout.json"
+  },
+  {
+    "file": "pdfx/imcho/IMChO_2025_AnswerSheet_Practice_KO.pdf",
+    "sha256": "791d37c5b1bf4c80f4e9c2350bcb7182420ea10afbfcf88194327b09f091491c",
+    "bytes": 1904997,
+    "language": "ko",
+    "pages": 6,
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IMChO_2025_blank_reconstructed.json"
+  },
+  {
+    "file": "pdfx/imcho/IMChO_2025_T1S_Practice_KO.pdf",
+    "language": "ko",
+    "pages": 17,
+    "bytes": 3558573,
+    "sha256": "add2e06c9a27755f42e9390d2ba033207cd47cabefda87e281ccaacd34b15254",
+    "qa": "tools/ko_reflow/qa/IMChO_2025_T1S_original_layout.json",
+    "audit_schema": "olympiad-original-layout-v1"
   }
 ]
