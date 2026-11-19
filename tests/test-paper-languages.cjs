@@ -95,4 +95,13 @@ renderedCards.length=0;context.theoryHtml('eotvos',{y:1962});
 const koreanNative=renderedCards[0];
 assert.ok(koreanNative.main[0].includes(huOnly.paper));
 assert.ok(koreanNative.main[0].includes('Magyar'));
-console.log('Paper language catalogue, practice links, exam URLs and input validation passed.');
+// Official keys remain available for competitions that do not use the OMR interface.
+renderedCards.length=0;context.theoryHtml('ibo',{y:2022});
+for(const [index,part]of ['T1','T2'].entries()){
+  const keyFile=catalogue.ibo['2022'].f[part].ko.key;
+  const keyButton=renderedCards[index].main.find(button=>button.includes('href="'+keyFile+'"'));
+  assert.ok(keyButton,'IBO '+part+' official key must be visible beside its paper');
+  assert.match(keyButton,/>공식 정답표<\/a>/);
+  assert.ok(!keyButton.includes('>해설<'));
+}
+console.log('Paper language catalogue, practice links, official keys, exam URLs and input validation passed.');
