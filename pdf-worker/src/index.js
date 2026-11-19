@@ -11,23 +11,30 @@
  */
 const REPO = "HaslaEdu/haslalab.github.io";
 const NAME = /^\/pdf\/(([A-Za-z]+)_[A-Za-z0-9._-]+\.pdf)$/;
+/* the site's own PDFs (pdfx/<folder>/<file>.pdf) are kept as assets X<folder>_<file>.pdf in releases pdf-x<folder>
+ * (tools/pdfx_release.py).  They are asked for by their own name, /pdf/l/<folder>/<file>.pdf (/pdf/l/<file>.pdf
+ * for pdfx/ itself), so the address and the saved file carry the real name, not the storage one. */
+const LOCAL = /^\/pdf\/l\/(?:([a-z]+)\/)?([A-Za-z0-9][A-Za-z0-9._-]*\.pdf)$/;
+const STORE = /^X[a-z]+_(?=[A-Za-z0-9])/;
 const DAY = 86400;
 /* Replacing assets in place keeps their download URLs, so cached copies would
  * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
-const CACHE_V = 105;         // RuPhO 2026 Korean
+const CACHE_V = 105;         // RuPhO 2026 Korean (the cache key is the storage name, so /pdf/l/ shares it)
 
 export default {
   async fetch(req, env, ctx) {
     if (req.method !== "GET" && req.method !== "HEAD")
       return new Response("Method not allowed", { status: 405, headers: { Allow: "GET, HEAD" } });
     const url = new URL(req.url);
-    const m = NAME.exec(url.pathname);
-    if (!m) return new Response("Not found", { status: 404 });
-    const [, name, prefix] = m;
+    let name, prefix, shown;
+    const l = LOCAL.exec(url.pathname), m = l ? null : NAME.exec(url.pathname);
+    if (l) { prefix = "X" + (l[1] || "root"); name = prefix + "_" + l[2]; shown = l[2]; }
+    else if (m) { [, name, prefix] = m; shown = name.replace(STORE, ""); }
+    else return new Response("Not found", { status: 404 });
 
     /* one cached copy per file at each edge; the query string never matters */
     const cache = caches.default;
-    const key = new Request(`${url.origin}${url.pathname}?v=${CACHE_V}`, { method: "GET" });
+    const key = new Request(`${url.origin}/pdf/${name}?v=${CACHE_V}`, { method: "GET" });
     /* Cache.match slices complete entries when the lookup retains Range.
      * We do not publish validators, so If-Range must fall back to a full copy. */
     const range = req.method === "GET" && !req.headers.has("If-Range") ? req.headers.get("Range") : null;
@@ -46,7 +53,7 @@ export default {
       if (!up.ok) return new Response("Not found", { status: up.status === 404 ? 404 : 502 });
       res = new Response(up.body, { status: up.status === 206 ? 206 : 200, headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `inline; filename="${name}"`,
+        "Content-Disposition": `inline; filename="${shown}"`,
         "Cache-Control": "public, max-age=3600",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Expose-Headers": "Content-Length, Content-Range, Accept-Ranges",
@@ -61,6 +68,7 @@ export default {
       if (res.status === 200) ctx.waitUntil(cache.put(key, res.clone()));
     }
     const headers = new Headers(res.headers);
+    headers.set("Content-Disposition", `inline; filename="${shown}"`);
     headers.set("Accept-Ranges", "bytes");
     headers.set("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges");
     return new Response(req.method === "HEAD" ? null : res.body, { status: res.status, headers });

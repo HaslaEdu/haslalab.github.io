@@ -105,14 +105,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/api/problem-set-pdf",
-     "bytes": 2192151
+     "bytes": 2192151,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2026_TS.pdf",
      "part": "T",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2026-open-solutions.pdf",
-     "bytes": 2488161
+     "bytes": 2488161,
+     "round": "open",
+     "component": "theory"
     }
    ],
    "note": "problem ids: Open problems by number, Invitational theory problems as Ti1, Ti2, ... ; 2026 had a single Combined Round (no separate Invitational); the paper URL is the site's live endpoint (served as 2026_OPhO.pdf) and may be replaced when the 2027 set is posted"
@@ -284,14 +288,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2025-open.pdf",
-     "bytes": 692404
+     "bytes": 692404,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2025_TS.pdf",
      "part": "T",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2025-open-solutions.pdf",
-     "bytes": 1139164
+     "bytes": 1139164,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2025_T1i_EN.pdf",
@@ -299,14 +307,23 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2025-invitational-part-1.pdf",
-     "bytes": 480031
+     "bytes": 480031,
+     "round": "invitational",
+     "component": "theory",
+     "problem_ids": [
+      "Ti1",
+      "Ti2",
+      "Ti3"
+     ]
     },
     {
      "file": "OPhO_2025_T1iS.pdf",
      "part": "T1i",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2025-invitational-part-1-solutions.pdf",
-     "bytes": 4819213
+     "bytes": 4819213,
+     "round": "invitational",
+     "component": "theory"
     },
     {
      "file": "OPhO_2025_T2i_EN.pdf",
@@ -314,7 +331,12 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2025-invitational-part-2.pdf",
-     "bytes": 423342
+     "bytes": 423342,
+     "round": "invitational",
+     "component": "mixed",
+     "problem_ids": [
+      "Ti4"
+     ]
     }
    ],
    "note": "problem ids: Open problems by number, Invitational theory problems as Ti1, Ti2, ... ; Invitational came in two booklets: Part I (theory Q1-3, with solutions) = T1i; Part II (experimental question 'Ball Knowledge' + theory Q4 'Paradoxes', no solutions published) = T2i"
@@ -486,14 +508,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2024-open.pdf",
-     "bytes": 1461300
+     "bytes": 1461300,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2024_TS.pdf",
      "part": "T",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2024-open-solutions.pdf",
-     "bytes": 1703831
+     "bytes": 1703831,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2024_Ti_EN.pdf",
@@ -501,14 +527,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2024-invitational-theory.pdf",
-     "bytes": 506785
+     "bytes": 506785,
+     "round": "invitational",
+     "component": "theory"
     },
     {
      "file": "OPhO_2024_TiS.pdf",
      "part": "Ti",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2024-invitational-theory-solutions.pdf",
-     "bytes": 591297
+     "bytes": 591297,
+     "round": "invitational",
+     "component": "theory"
     }
    ],
    "note": "problem ids: Open problems by number, Invitational theory problems as Ti1, Ti2, ... ; the Open problem PDF's cover page says 'Open Contest Solutions' but it contains only the problems"
@@ -676,14 +706,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2023-open.pdf",
-     "bytes": 2361205
+     "bytes": 2361205,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2023_TS.pdf",
      "part": "T",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2023-open-solutions.pdf",
-     "bytes": 4402344
+     "bytes": 4402344,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2023_Ti_EN.pdf",
@@ -691,14 +725,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2023-invitational-theory.pdf",
-     "bytes": 905294
+     "bytes": 905294,
+     "round": "invitational",
+     "component": "theory"
     },
     {
      "file": "OPhO_2023_TiS.pdf",
      "part": "Ti",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2023-invitational-solutions.pdf",
-     "bytes": 1503811
+     "bytes": 1503811,
+     "round": "invitational",
+     "component": "theory"
     }
    ],
    "note": "problem ids: Open problems by number, Invitational theory problems as Ti1, Ti2, ..."
@@ -873,7 +911,9 @@
      "part": "T",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2022-open-solutions.pdf",
-     "bytes": 9136069
+     "bytes": 9136069,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2022_Ti_EN.pdf",
@@ -881,14 +921,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2022-invitational-theory.pdf",
-     "bytes": 501137
+     "bytes": 501137,
+     "round": "invitational",
+     "component": "theory"
     },
     {
      "file": "OPhO_2022_TiS.pdf",
      "part": "Ti",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2022-invitational-theory-solutions.pdf",
-     "bytes": 622793
+     "bytes": 622793,
+     "round": "invitational",
+     "component": "theory"
     }
    ],
    "note": "problem ids: Open problems by number, Invitational theory problems as Ti1, Ti2, ... ; the site posts no separate 2022 Open problem paper, only the solutions booklet (which restates every problem)"
@@ -1060,14 +1104,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2021-open.pdf",
-     "bytes": 622766
+     "bytes": 622766,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2021_TS.pdf",
      "part": "T",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2021-open-solutions.pdf",
-     "bytes": 844372
+     "bytes": 844372,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2021_Ti_EN.pdf",
@@ -1075,14 +1123,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2021-invitational-theory.pdf",
-     "bytes": 660879
+     "bytes": 660879,
+     "round": "invitational",
+     "component": "theory"
     },
     {
      "file": "OPhO_2021_TiS.pdf",
      "part": "Ti",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2021-invitational-theory-solutions.pdf",
-     "bytes": 846309
+     "bytes": 846309,
+     "round": "invitational",
+     "component": "theory"
     }
    ],
    "note": "problem ids: Open problems by number, Invitational theory problems as Ti1, Ti2, ..."
@@ -1358,14 +1410,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2020-open.pdf",
-     "bytes": 662200
+     "bytes": 662200,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2020_TS.pdf",
      "part": "T",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2020-open-solutions.pdf",
-     "bytes": 830771
+     "bytes": 830771,
+     "round": "open",
+     "component": "theory"
     },
     {
      "file": "OPhO_2020_Ti_EN.pdf",
@@ -1373,14 +1429,18 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://opho.physoly.org/archives/2020-invitational.pdf",
-     "bytes": 749483
+     "bytes": 749483,
+     "round": "invitational",
+     "component": "theory"
     },
     {
      "file": "OPhO_2020_TiS.pdf",
      "part": "Ti",
      "kind": "solution",
      "url": "https://opho.physoly.org/archives/2020-invitational-solutions.pdf",
-     "bytes": 590099
+     "bytes": 590099,
+     "round": "invitational",
+     "component": "theory"
     }
    ],
    "note": "problem ids: Open problems by number, Invitational theory problems as Ti1, Ti2, ... ; Invitational solutions are official 'partial solutions'"

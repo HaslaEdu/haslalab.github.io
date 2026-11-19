@@ -453,7 +453,7 @@ const OK_EXAM = /^[a-z]{3,8}$/.test(EX.c) && EX.tasks.length > 0 && EX.tasks.len
 const simUrl = (f, extra) => f + (f.includes("?") ? "&" : "?") + "lang=" + lang + (extra || "");
 const KEY = EX.c + EX.y;
 /* pdfx/<folder>/<name>.pdf is served by the PDF Worker as X<folder>_<name>.pdf (tools/pdfx_release.py) */
-const pdfxName = s => s.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_");
+const pdfxName = s => s.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "l/" + (d ? d + "/" : ""));
 const pdfUrl = s => !s ? "" : /^https:\/\//.test(s) ? s : /^pdfx\//.test(s) ? PDF_BASE + pdfxName(s) : PDF_BASE + s.replace(/^pdf\//, "");
 const label = () => (EX.name || EX.c.toUpperCase()) + " " + EX.y;
 /* the printable answer and working sheets (sheets.html) — the problem sheet is not among them */

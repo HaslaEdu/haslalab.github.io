@@ -197,7 +197,7 @@ export function findOlympiadProblems({query = '', comp = '', year = null} = {}, 
     competition: e.competition?.ko || e.comp, year: e.year, task: e.task, kind: e.kind, title: e.title?.ko || e.title?.en || '',
     page: `${SITE}#/${e.comp}/${e.year}`, paper: link(e.paper), solution: link(e.solution)}));
 }
-const link = f => !f ? null : /^https?:/.test(f) ? f : 'https://haslalab-pdf.haslalab.workers.dev/pdf/' + String(f).replace(/^pdf\//, '').replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => 'X' + (d || 'root') + '_');
+const link = f => !f ? null : /^https?:/.test(f) ? f : 'https://haslalab-pdf.haslalab.workers.dev/pdf/' + String(f).replace(/^pdf\//, '').replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => 'l/' + (d ? d + '/' : ''));
 
 async function searchProblemBank(env, {query = ''}) {
   if (!env.PROBLEM_BANK) return {error: 'problem bank unavailable'};

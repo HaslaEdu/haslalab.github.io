@@ -97,9 +97,11 @@ def load(practical=None):
                 # direct: linked where it is published, never copied (the organiser does not allow redistribution)
                 slot[kind] = value
                 if kind == 'paper':
-                    for prop in ('title', 'supplements'):
+                    for prop in ('title', 'supplements', 'round', 'component'):
                         if f.get(prop):
                             slot[prop] = f[prop]
+                    if f.get('problem_ids'):
+                        slot['problemIds'] = f['problem_ids']
                     if f.get('practice_sheets'):
                         slot['practiceSheets'] = f['practice_sheets']
                     if f.get('contains_solutions'):
@@ -133,7 +135,16 @@ def load(practical=None):
                                 for prop in ('papers', 'paperLang', 'containsSolutions', 'paperContainsSolutions', 'paperSourceTypes', 'paperNotes', 'sourcePages'):
                                     if prop in whole:
                                         slot[prop] = whole[prop].copy() if isinstance(whole[prop], dict) else whole[prop]
-            files = {k: v for k, v in files.items() if 'paper' in v}
+            # OPhO 2022 Open saved only an English solutions booklet, but the
+            # supplied Korean problem paper is available. Keep that source slot
+            # until korean() attaches its paper instead of dropping the round.
+            supplied = {}
+            if comp == 'opho':
+                ko_path = os.path.join(ROOT, 'tools', 'theory_ko.json')
+                if os.path.exists(ko_path):
+                    supplied = json.load(open(ko_path, encoding='utf-8')).get(comp, {}).get(year, {})
+            files = {k: v for k, v in files.items()
+                     if 'paper' in v or supplied.get(k, {}).get('paper')}
             if not files:
                 continue
             # a title that only repeats the number («Problem A1», «Question 3») says nothing: left out
@@ -207,7 +218,14 @@ def korean(out, bad, practical):
         for year, parts in years.items():
             for part, ko in parts.items():
                 if PRACTICAL_PART.fullmatch(part):
-                    practical.setdefault(comp, {}).setdefault(year, {'f': {}})['f'].setdefault(part, {})['ko'] = ko
+                    slot = practical.setdefault(comp, {}).setdefault(year, {'f': {}})['f'].setdefault(part, {})
+                    edition = dict(ko)
+                    en = edition.pop('en', None)
+                    if en:
+                        english_edition(slot, en)
+                    slot['ko'] = edition
+                    if edition.get('containsSolutions'):
+                        slot.setdefault('paperContainsSolutions', {})['ko'] = True
             parts = {part: ko for part, ko in parts.items() if not PRACTICAL_PART.fullmatch(part)}
             if not parts:
                 continue
@@ -246,11 +264,7 @@ def korean(out, bad, practical):
                     # A diagram/layout edition can accompany the Korean
                     # translation while the source manifest keeps the original.
                     if en:
-                        t['f'][part].update({k: v for k, v in en.items()
-                                             if k in ('paper', 'sol', 'mark', 'answer') and v})
-                        if en.get('paper'):
-                            t['f'][part].setdefault('papers', {})['en'] = en['paper']
-                            t['f'][part]['paperLang'] = 'en'
+                        english_edition(t['f'][part], en)
                     t['f'][part]['ko'] = ko
                     if ko.get('containsSolutions'):
                         t['f'][part].setdefault('paperContainsSolutions', {})['ko'] = True
@@ -270,6 +284,21 @@ def korean(out, bad, practical):
                     continue
                 if title:
                     t.setdefault('pk', []).append([part, title])
+
+
+def english_edition(slot, edition):
+    """Apply a reviewed English edition to either theory or practical papers."""
+    slot.update({key: value for key, value in edition.items()
+                 if key in ('paper', 'sol', 'mark', 'answer') and value})
+    if edition.get('paper'):
+        slot.setdefault('papers', {})['en'] = edition['paper']
+        slot['paperLang'] = 'en'
+        if edition.get('containsSolutions'):
+            slot.setdefault('paperContainsSolutions', {})['en'] = True
+        if edition.get('sourceType'):
+            slot.setdefault('paperSourceTypes', {})['en'] = edition['sourceType']
+    if edition.get('solutionNotice'):
+        slot['solutionNotice'] = True
 
 
 def split(out):

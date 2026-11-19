@@ -66,6 +66,7 @@
   .views{display:flex;flex-wrap:wrap;gap:5px}
   .views button{flex:1 1 30%;margin:0;padding:6px 4px;font-size:12px}
   .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .row button.off{opacity:.45}
   .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:200px;overflow:auto;margin-top:4px}
   header{max-width:1720px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
@@ -106,6 +107,7 @@
   <aside class="panel">
     <h2 id="t-h-view"></h2>
     <div class="views" id="views"></div>
+    <div class="row" style="margin-top:6px"><button id="undoBtn" style="width:100%"></button></div>
 
     <h2 id="t-h-sw"></h2>
     <div class="disp" id="swLbl">0:00.00</div>
@@ -195,14 +197,27 @@ const T={
 Object.assign(T.ko,{
   sub:"가상 실험실 · 문제지 그림 2·4·5의 장비를 3D로 옮겼습니다. 모래를 채우고 자로 고른 뒤 공을 떨어뜨리고 굴리세요. 줄자·자·스톱워치를 읽고 에너지·지수·마찰은 직접 계산합니다.",
   benchcap:"실험대 — 좌클릭: 집기·놓기·쓰기 / 우클릭: 부품함으로·내려놓기 / 막대 끝·레일 위의 공: 위아래 드래그·휠로 높이·출발점, 클릭하면 놓기 / 클램프·자: 드래그·휠 / 빈 곳 드래그: 시점 돌리기, 우클릭·Shift 드래그: 옮겨 보기 / 휠: 확대 / Esc: 처음 시점",
-  hView:"시점", views:[["all","실험대 전체"],["A","A: 옆에서 (높이)"],["crater","A: 크레이터 (자)"],["B","B: 레일 옆에서"],["track","B: 트랙 (자)"]],
-  backAll:"← 실험대 전체", tray:"부품함"
+  hView:"시점", views:[["all","실험대 전체"],["A","A: 옆에서 (높이)"],["crater","A: 크레이터 (자)"],["B","B: 레일 옆에서"],["track","B: 트랙 (자)"],["watch","스톱워치 (k)"]],
+  backAll:"← 실험대 전체", tray:"부품함",
+  swHint:"부품함에서 스톱워치 (k)를 꺼내 실험대에 놓아야 쓸 수 있습니다. 실험대 위 스톱워치의 버튼을 눌러도 되고, 스페이스 키로도 시작·정지합니다. 반응 시간은 여러분의 몫입니다.",
+  swOk:"실험대 위의 스톱워치입니다. 왼쪽 버튼(또는 스페이스 키) 시작·정지, 오른쪽 버튼 랩·리셋. 반응 시간은 여러분의 몫입니다.",
+  trayHelp:"좌클릭 집기·놓기 / 우클릭 부품함으로\n도구는 빈 책상을 클릭하면 내려놓습니다"
 });
+T.ko.items.watch="k. 스톱워치"; T.en.items.watch="k. Chronometer";
+Object.assign(T.ko.m,{ swNeed:"스톱워치가 실험대에 없습니다 — 부품함에서 꺼내 놓으세요.",
+  tool:n=>n+" 을(를) 들었습니다 — 쓸 곳을 클릭하세요. 빈 책상을 클릭하면 내려놓고, 우클릭하면 부품함으로 돌아갑니다.",
+  toolUp:n=>n+" 을(를) 다시 들었습니다." });
+Object.assign(T.en.m,{ swNeed:"The chronometer is not on the bench: take it out of the box.",
+  tool:n=>n+" in hand — click where to use it. Click a bare part of the desk to put it down, R-click returns it to the box.",
+  toolUp:n=>n+" picked up again." });
 Object.assign(T.en,{
   sub:"Virtual laboratory · the apparatus of Figs. 2, 4 and 5 in 3-D. Fill the sand, level it with the ruler, then drop and roll the balls. Read the tape, the ruler and the chronometer; energies, exponents and friction are yours to work out.",
   benchcap:"the bench — L-click: pick up, put down, use / R-click: back to the box, put down / the ball at the rod end or on the rail: drag up and down or wheel for the height or the start, click to let go / clamp, ruler: drag or wheel / drag a bare spot: turn the view, R- or Shift-drag: move it / wheel: zoom / Esc: start view",
-  hView:"View", views:[["all","Whole bench"],["A","A: side (height)"],["crater","A: crater (ruler)"],["B","B: rail side"],["track","B: track (ruler)"]],
-  backAll:"← Whole bench", tray:"Parts box"
+  hView:"View", views:[["all","Whole bench"],["A","A: side (height)"],["crater","A: crater (ruler)"],["B","B: rail side"],["track","B: track (ruler)"],["watch","Chronometer (k)"]],
+  backAll:"← Whole bench", tray:"Parts box",
+  swHint:"Take the chronometer (k) out of the box and put it on the bench to use it. Press its buttons on the bench, or the space bar to start and stop. The reaction time is yours.",
+  swOk:"The chronometer on the bench. Left button (or the space bar): start/stop, right button: lap/reset. The reaction time is yours.",
+  trayHelp:"L-click pick/place, R-click to the box\na tool is put down on a bare part of the desk"
 });
 let lang=(new URLSearchParams(location.search).get("lang")==="en")?"en":"ko";
 const $=id=>document.getElementById(id);
@@ -246,6 +261,11 @@ const ST={
   sw:0, swRun:false, laps:[]
 };
 for(const k of PLACE){ ST.on[k]=false; ST.pos[k]={x:75,y:45}; }
+/* the tools and the chronometer lie on the desk once taken out; a tool in use (the tape by the bowl or along the rail, the ruler across the crater or along the track) is not in the box either */
+const DESKT=[...TOOLS,"watch"];
+for(const k of DESKT){ ST.on[k]=false; ST.pos[k]={x:80,y:60}; }
+const inUse=k=>ST.on[k]||(k==="tape"&&(ST.tapeA||ST.tapeB))||(k==="ruler"&&(ST.bowl.ruler||ST.track.ruler));
+let LAST_ID="";                                  /* what the last click on the bench landed on */
 let hand=null, mouse=[0,0], overBench=false, msg={key:null,args:[],t:0};
 function say(key,...args){ msg={key,args,t:performance.now()}; }
 const itemName=k=>d().items[k]||k;
@@ -286,6 +306,7 @@ function returnItem(k){
   if(k==="rail"){ if(ST.held&&ST.held.where==="rail"){ ballHome(ST.held.i); ST.held=null; } ST.tapeB=false; ST.putty=0; }
   if(k==="track"){ if(ST.track.ball!==null) ballHome(ST.track.ball); ST.track={...ST.track,state:"empty",shots:0,ball:null,stop:null,ruler:false}; }
   if(k==="balls"){ for(let i=0;i<6;i++) ballHome(i); if(ST.held) ST.held=null; ST.bowl.ball=null; ST.bowl.lost=false; ST.track.ball=null; }
+  if(k==="watch"){ ST.swRun=false; }
   say("back",itemName(k));
 }
 function benchClick(p,right){
@@ -317,24 +338,28 @@ function handClick(c,right){
     if(onTrack){ if(Tr.ball!==null){ say("noUse"); return; } Object.assign(Tr,{state:"filled",shots:0,stop:null}); ST.focus="B"; say("fillT"); return; } }
   if(k==="ruler"){
     if(onBowl&&B.state!=="empty"){ ST.focus="A";
-      if(B.state==="crater"){ B.ruler=!B.ruler; if(B.ruler){ B.rulerX=-(B.D/20)-0.8; say("rulerOn"); } return; }
+      if(B.state==="crater"){ B.ruler=true; B.rulerX=-(B.D/20)-0.8; hand=null; say("rulerOn"); return; }
       B.state="level"; say("level"); return; }
     if(onTrack&&Tr.state!=="empty"){ ST.focus="B";
       if(Tr.state==="filled"){ Tr.state="level"; Tr.shots=0; Tr.stop=null; say("scrape"); return; }
-      Tr.ruler=!Tr.ruler; if(Tr.ruler) say("rulerTrack"); return; } }
+      Tr.ruler=true; hand=null; say("rulerTrack"); return; } }
   if(k==="spoon"){
     if(onBowl&&B.state!=="empty"){ if(B.ball!==null&&!B.lost){ say("noUse"); return; } Object.assign(B,{state:"mixed",shots:0,D:null,ruler:false}); say("mix"); return; }
     if(onTrack&&Tr.state!=="empty"){ if(Tr.ball!==null){ say("noUse"); return; } Tr.state="filled"; Tr.stop=null; say("mix"); return; } }
   if(k==="sieve"&&onBowl&&B.lost){ ballHome(B.ball); Object.assign(B,{state:"mixed",shots:0,D:null,ball:null,lost:false,ruler:false}); say("sieve"); return; }
-  if(k==="tape"){ if(onBowl&&aActive()){ ST.tapeA=!ST.tapeA; if(ST.tapeA) say("tapeA"); ST.focus="A"; return; }
-    if(onRail&&railMounted()){ ST.tapeB=!ST.tapeB; if(ST.tapeB) say("tapeB"); ST.focus="B"; return; } }
+  if(k==="tape"){ if(onBowl&&aActive()){ ST.tapeA=true; hand=null; say("tapeA"); ST.focus="A"; return; }
+    if(onRail&&railMounted()){ ST.tapeB=true; hand=null; say("tapeB"); ST.focus="B"; return; } }
   if(k==="putty"&&onRail){ ST.putty=Math.min(2,ST.putty+1); say("putty"); return; }
   if(k==="brush"&&(onRail||onTrack)){ say("brush"); return; }
   if(k==="funnel"){                      /* the sand goes back into the bottle: bowl or track emptied */
     if(onBowl&&B.state!=="empty"){ if(B.ball!==null&&!B.lost){ say("noUse"); return; } Object.assign(B,{state:"empty",shots:0,D:null,ruler:false}); say("funnel"); return; }
     if(onTrack&&Tr.state!=="empty"){ if(Tr.ball!==null){ say("noUse"); return; } Object.assign(Tr,{state:"empty",shots:0,stop:null,ruler:false}); say("funnel"); return; }
     if(ST.on.box&&inRect("box",c)){ say("funnel"); return; } }
-  say("noUse");
+  /* a tool (or the chronometer) let go on a bare part of the desk lies there */
+  if(DESKT.includes(k)&&LAST_ID==="desk"){
+    if(PLACE.some(o=>inRect(o,c))){ say("noFit"); return; }
+    ST.pos[k]={x:Math.max(4,Math.min(TW-4,c[0])),y:Math.max(4,Math.min(TD-4,c[1]))}; ST.on[k]=true; hand=null; say("placed",itemName(k)); return; }
+  say(k==="watch"?"noFit":"noUse");
 }
 
 
@@ -366,6 +391,14 @@ function stepMotion(dt){
 /* the rail is laid against the end of the track when it is put down close to it */
 function snapPos(k,pos){
   if(k==="rail"&&ST.on.track){ const tl=trackL(); if(Math.abs(pos.x+50-tl[0])<6&&Math.abs(pos.y-tl[1])<4) return {x:tl[0]-50,y:tl[1]}; }
+  if(k==="rail"&&ST.on.stand&&Math.abs(pos.y-ST.pos.stand.y)<4) return {x:pos.x,y:ST.pos.stand.y};
+  if(k==="stand"){
+    /* the stand put down by the bowl: its rod end comes over the middle of the bowl, the tray clear of the box */
+    if(ST.on.bowl){ const c=bowlC(); if(Math.abs(pos.x+22-c[0])<14&&Math.abs(pos.y-c[1])<12){
+      for(let dx=0;dx<=5;dx+=0.5) for(const sx of dx?[-1,1]:[1]) for(const dy of [0,-2,2,-4,4]){ const q={x:c[0]-22+sx*dx,y:c[1]+dy}; if(!overlap("stand",q)) return q; } } }
+    /* or with its rod on the line of the rail */
+    if(ST.on.rail&&Math.abs(pos.y-ST.pos.rail.y)<5&&pos.x>railUp()[0]&&pos.x<railLow()[0]) return {x:pos.x,y:ST.pos.rail.y};
+  }
   return pos;
 }
 
@@ -831,6 +864,7 @@ const B3={ carry:null, down:null, drag:null, mouse:[-99,-99], mouseW:[0,0,0], tr
 let VIEW="all", CAMTW=null, ownMsg=null;
 
 /* ---- printed faces ---- */
+const WATCHC=mkCanvas(300,180); WATCHC._ver=0;
 const SANDC=mkCanvas(512,512), TRKC=mkCanvas(800,128), RULC=mkCanvas(1500,90), TAPEC=mkCanvas(60,2200), TAPEB=mkCanvas(2000,48), WOODC=mkCanvas(640,720), DESKC=mkCanvas(1024,640), BOXC=mkCanvas(400,170);
 for(const c of [RULC,TAPEC,TAPEB,WOODC,DESKC,BOXC]) c._ver=0;
 SANDC._ver=0; TRKC._ver=0;
@@ -928,7 +962,7 @@ function bowl3(bx,by,y0){
     box3(ox,ox+30,sandY()+0.02,sandY()+0.12,oz,oz+2.0,"#c3c8cd",{id:"rulerA"}); tex3(RULC,0,0,1500,90,[ox,sandY()+0.13,oz],[30,0,0],[0,0,1.8],{id:"rulerA"}); }
   /* the tape held upright beside the bowl, 0 on the sand */
   if(ST.tapeA&&aActive()){ const tx=x+11, top=Math.max(70,ST.h+20);
-    box3(tx-1.5,tx+1.5,sandY()-4.5,sandY()-0.2,z-1.8,z+1.8,"#f1c419",{top:"#e6b800"}); cyl3("z",z+1.8,z+1.9,sandY()-2.3,tx,1.0,"#2b2b2b",{seg:16});
+    box3(tx-1.5,tx+1.5,sandY()-4.5,sandY()-0.2,z-1.8,z+1.8,"#f1c419",{top:"#e6b800"}); cyl3("z",z+1.8,z+1.9,tx,sandY()-2.3,1.0,"#2b2b2b",{seg:16});
     tex3(TAPEC,0,TAPEC.height-top*10,60,top*10,[tx-1.25,sandY()+top,z+1.95],[2.5,0,0],[0,-top,0],{id:"tapeA"}); }
 }
 /* d. the balls in their small clear box (shown open, the lid beside) */
@@ -951,7 +985,7 @@ function stand3(bx,by,y0){
   else { const onRod=sandY()+ST.h<=ROD_TOP-2; cy=onRod&&aActive()?sandY()+ST.h+0.6:aActive()?ROD_TOP-2:24; armX=22; }
   const cid=railMounted()?"clampB":"m_stand";
   box3(x-1.4,x+1.4,cy-1.0,cy+1.4,z-1.1,z+1.1,"#1e1f22",{id:cid});
-  cyl3("z",z-2.8,z-1.1,cy+0.2,x,0.22,"#c6cbd0",{seg:8}); cyl3("z",z-3.1,z-2.8,cy+0.2,x,0.7,"#1e1f22",{seg:12}); box3(x-0.9,x+0.9,cy+0.2-0.12,cy+0.2+0.12,z-3.1,z-2.8,"#c6cbd0",{});
+  cyl3("z",z-2.8,z-1.1,x,cy+0.2,0.22,"#c6cbd0",{seg:8}); cyl3("z",z-3.1,z-2.8,x,cy+0.2,0.7,"#1e1f22",{seg:12}); box3(x-0.9,x+0.9,cy+0.2-0.12,cy+0.2+0.12,z-3.1,z-2.8,"#c6cbd0",{});
   if(armX) cylSeg("x",x+1.4,x+armX,cy,z,0.42,"#9ea4aa",{seg:12,id:"rodEnd"},6);
   if(railMounted()) hit([x,cy,z],1.8,"clampB");
 }
@@ -1009,8 +1043,43 @@ function scene3(){
   if(ST.on.stand||held("stand")){ const [a,b,y]=at3("stand"); stand3(a,b,y); }
   if(ST.on.rail||held("rail")){ const [a,b,y]=at3("rail"); rail3(a,b,y,held("rail")); }
   balls3inMotion();
+  refreshWatch();
+  for(const k of DESKT){ if(ST.on[k]) tool3(k,ST.pos[k].x,ST.pos[k].y,0,"m_"+k); else if(hand&&hand.k===k) tool3(k,mw[0]+80,mw[2]+48,1.6,null); }
   if(hand&&hand.k==="ball") ball3([mw[0],2,mw[2]],hand.i,null);
   void cr;
+}
+
+/* the tools on the desk (Fig. 2): each lies where it was put down; id null while it is carried in the hand */
+function tool3(k,bx,by,y0,id){
+  const x=wx(bx), z=wz(by), o=id?{id}:{};
+  if(k==="bottle"){ cyl3("y",y0,y0+12,x,z,2.6,"#f4f4f2",{seg:24,...o}); cyl3("y",y0+12,y0+13.6,x,z,2.6,"#f1f1ee",{seg:24,r1:1.2,caps:false,...o});
+    cyl3("y",y0+13.6,y0+15.2,x,z,1.25,"#2f5fd0",{seg:16,...o}); cyl3("y",y0+3,y0+8,x,z,2.62,"#cdb17a",{seg:24,caps:false}); }
+  else if(k==="tape"){ cyl3("y",y0,y0+2.2,x,z,3.2,"#f1c419",{seg:28,...o}); cyl3("y",y0+2.2,y0+2.32,x,z,1.5,"#2b2b2b",{seg:20});
+    box3(x+3.0,x+3.7,y0,y0+0.7,z-0.8,z+0.8,"#1f1f1f",o); box3(x+2.9,x+3.15,y0+0.05,y0+0.5,z-0.75,z+0.75,"#f1c419",o);
+    text3([x,y0+2.33,z+2.3],[1,0,0],[0,0,-1],"3m",0.75,"#1b1b1b",{align:"center"}); }
+  else if(k==="sieve"){ cyl3("y",y0,y0+1.4,x,z,4.5,"#c6cbd0",{seg:32,caps:false,cull:false,...o}); cyl3("y",y0+0.3,y0+0.34,x,z,4.45,"#8d949a",{seg:32,...o});
+    cyl3("x",x+4.5,x+12,y0+1.0,z,0.35,"#c6cbd0",{seg:8,...o}); }
+  else if(k==="brush"){ cyl3("x",x-7,x+4,y0+0.5,z,0.45,"#8a1f2a",{seg:10,...o}); cyl3("x",x+4,x+5.5,y0+0.5,z,0.55,"#c9ced3",{seg:10,...o});
+    box3(x+5.5,x+8.5,y0+0.15,y0+0.85,z-0.8,z+0.8,"#d8a03a",o); }
+  else if(k==="putty"){ box3(x-3,x+3,y0,y0+0.2,z-4,z+4,"#f3d23a",o); box3(x-2.4,x+1.2,y0+0.2,y0+0.22,z-3.4,z-1.8,"#2b5fc4",{});
+    sphere3([x,y0+0.6,z+1.2],0.9,"#f2efe2",o); }
+  else if(k==="funnel"){ cyl3("y",y0,y0+4.5,x,z,4.2,"#eef2f5",{seg:28,r1:0.6,caps:false,cull:false,...o}); cyl3("y",y0+4.5,y0+7.5,x,z,0.5,"#e8eef2",{seg:10,...o}); }
+  else if(k==="spoon"){ box3(x-6,x+2,y0,y0+0.25,z-0.35,z+0.35,"#c6cbd0",o); cyl3("y",y0,y0+0.45,x+3.6,z,1.5,"#d0d5d9",{seg:20,...o}); }
+  else if(k==="ruler"){ box3(x-15,x+15,y0,y0+0.1,z-1,z+1,"#c3c8cd",o); tex3(RULC,0,0,1500,90,[x-15,y0+0.11,z-1],[30,0,0],[0,0,1.8],o); }
+  else if(k==="watch") watch3(x,z,y0,!!id);
+}
+/* k. the chronometer: its face shows the same time as the panel; START/STOP and LAP/RESET at the top */
+let watchSig="";
+function refreshWatch(){ const t=ST.sw, s=Math.floor(t*100)+(ST.swRun?"r":""); if(s===watchSig) return; watchSig=s;
+  paint(WATCHC,(w,h)=>{ ctx.fillStyle="#b9c2a8"; ctx.fillRect(0,0,w,h); const m=Math.floor(t/60), sec=t-m*60;
+    X(String(m)+":"+sec.toFixed(2).padStart(5,"0"),w/2,h*0.6,"#1b2216",62,"c",true,"'Courier New',monospace"); X(ST.swRun?"RUN":"",w*0.15,h*0.18,"#1b2216",24,"c",true,"Arial,sans-serif"); });
+  WATCHC._ver++; }
+function watch3(x,z,y0,live){
+  const id=live?"m_watch":null, o=id?{id}:{};
+  cyl3("y",y0,y0+1.3,x,z,3.1,"#16171a",{seg:32,...o});
+  tex3(WATCHC,0,0,300,180,[x-1.9,y0+1.31,z-1.1],[3.8,0,0],[0,0,2.3],o);
+  for(const [b,dx] of [["w_ss",-1.6],["w_lr",1.6]]){ cyl3("z",z-3.6,z-2.9,x+dx,y0+0.8,0.35,"#2b2c30",{seg:12,...(live?{id:b}:{})}); if(live) hit([x+dx,y0+0.8,z-3.3],0.8,b); }
+  text3([x-1.25,y0+1.32,z-1.95],[1,0,0],[0,0,-1],"START/STOP",0.24,"#d9dde2",{align:"center"}); text3([x+1.25,y0+1.32,z-1.95],[1,0,0],[0,0,-1],"LAP/RESET",0.24,"#d9dde2",{align:"center"});
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1035,6 +1104,7 @@ function viewOf(v){
   if(v==="A"&&ST.on.bowl){ const c=bowlC(), top=sandY()+Math.max(ST.h,20)+6; return {yaw:0.22,pitch:0.3,k:Math.min(W_/50,H/(top+8)),tx:wx(c[0])+2,ty:top/2,tz:wz(c[1]),px:0,py:0}; }
   if(v==="crater"&&ST.on.bowl){ const c=bowlC(), B=ST.bowl; return {yaw:0,pitch:1.42,k:Math.min(W_/9,H/6.5),tx:wx(c[0])+B.off[0],ty:sandY(),tz:wz(c[1])+B.off[1]+0.8,px:0,py:0}; }
   if(v==="B"&&ST.on.track){ const t=ST.pos.track, x0=ST.on.stand?wx(ST.pos.stand.x)-14:wx(t.x)-80; const x1=wx(t.x)+26; return {yaw:0.08,pitch:0.1,k:Math.min(W_/(x1-x0+6),H/52),tx:(x0+x1)/2,ty:20,tz:wz(t.y),px:0,py:0}; }
+  if(v==="watch"&&ST.on.watch){ const q=ST.pos.watch; return {yaw:0,pitch:1.1,k:Math.min(W_/10,H/9),tx:wx(q.x),ty:1,tz:wz(q.y)-0.5,px:0,py:0}; }
   if(v==="track"&&ST.on.track){ const t=ST.pos.track; return {yaw:0,pitch:1.35,k:Math.min(W_/54,H/16),tx:wx(t.x),ty:1,tz:wz(t.y)+1.5,px:0,py:0}; }
   return null;
 }
@@ -1068,8 +1138,8 @@ function drawHud(){
 /* ══════════════════════════════════════════════════════════════
    6.  TRAY
    ══════════════════════════════════════════════════════════════ */
-const TRAY_LIST=["box","bowl","bottle","balls","tape","stand","sieve","rail","brush","track","putty","funnel","spoon","ruler"], TRAY_ROW=42; let trayCells=[];
-const trayAvail=k=>TOOLS.includes(k)? !(hand&&hand.k===k) : !ST.on[k]&&!(hand&&hand.k===k);
+const TRAY_LIST=["box","bowl","bottle","balls","tape","stand","sieve","rail","brush","track","watch","putty","funnel","spoon","ruler"], TRAY_ROW=42; let trayCells=[];
+const trayAvail=k=>!inUse(k)&&!(hand&&hand.k===k);
 function trayIcon(c,k,x,y,dim){
   const R2=(a,b,e,f,fill,out)=>{ if(fill){c.fillStyle=dim?"#474d54":fill;c.fillRect(a,b,e-a,f-b);} if(out){c.strokeStyle=out;c.lineWidth=1;c.strokeRect(a+.5,b+.5,e-a-1,f-b-1);} };
   const C=(cx,cy,r,f)=>{ c.fillStyle=dim?"#474d54":f; c.beginPath(); c.arc(cx,cy,r,0,7); c.fill(); };
@@ -1087,8 +1157,10 @@ function trayIcon(c,k,x,y,dim){
   else if(k==="funnel"){ c.fillStyle=dim?"#474d54":"#e8eef2"; c.beginPath(); c.moveTo(x-10,y-8); c.lineTo(x+10,y-8); c.lineTo(x+2,y+3); c.lineTo(x+2,y+10); c.lineTo(x-2,y+10); c.lineTo(x-2,y+3); c.closePath(); c.fill(); }
   else if(k==="spoon"){ C(x+8,y,4,"#c6cbd0"); R2(x-14,y-1,x+5,y+1,"#c6cbd0"); }
   else if(k==="ruler"){ R2(x-16,y-3,x+16,y+3,"#d2d6da","#c0262a"); }
+  else if(k==="watch"){ C(x,y,11,"#16171a"); R2(x-7,y-4,x+7,y+4,"#b9c2a8"); }
 }
-function drawTray(){
+function drawTray(){ const was=ctx; ctx=trayCtx; try{ drawTray_(); } finally { ctx=was; } }   /* the icons' text helpers write to ctx: the tray's, not the bench's */
+function drawTray_(){
   const c=trayCtx, t=d(); c.setTransform(DPR,0,0,DPR,0,0);
   c.clearRect(0,0,TRW,TRH); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,TRH);
   trayCells=[]; let y=6; const wd=TRW-12;
@@ -1099,7 +1171,7 @@ function drawTray(){
     c.font='12px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
     c.fillStyle=av?"#e8eef2":"#868e96"; c.fillText(t.items[k],52,y+13);
     c.font='9.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.fillStyle="#69717a";
-    c.fillText(TOOLS.includes(k)?t.trayTool:av?t.trayTake:t.trayOut,52,y+28);
+    c.fillText(!av?t.trayOut:TOOLS.includes(k)?t.trayTool:t.trayTake,52,y+28);
     trayCells.push([k,y,y+TRAY_ROW-4]); y+=TRAY_ROW; }
   c.font='10.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
   t.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
@@ -1115,7 +1187,7 @@ trayCv.addEventListener("pointerdown",e=>{
    7.  HANDS ON THE BENCH  (the model's own rules, driven from the 3-D picture)
    ══════════════════════════════════════════════════════════════ */
 function mousePos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; }
-const LIVE=/^(m_|ball_|heldBall|bowlBall|trackBall|clampB|rulerA|rulerT|sandA|sandT|rodEnd|tapeA|tapeB)/;
+const LIVE=/^(m_|ball_|heldBall|bowlBall|trackBall|clampB|rulerA|rulerT|sandA|sandT|rodEnd|tapeA|tapeB|w_)/;
 /* where on the bench a click lands, for the model's rules: the thing clicked, or the desk under the pointer */
 function benchPt(p,id){
   const w=deskPt(p), c=[w[0]+80,w[2]+48];
@@ -1147,8 +1219,10 @@ cv.addEventListener("pointerdown",e=>{
   try{ cv.setPointerCapture(e.pointerId); }catch(_){}
   if(e.button===1||e.button===2){ B3.down={p0:p,last:p,pan:true,btn:e.button,moved:false}; return; }
   if(e.button!==0) return;
-  const id=pick3(p[0],p[1])||"";
+  const id=pick3(p[0],p[1])||""; LAST_ID=id;
+  if(id==="w_ss"||id==="w_lr"){ watchBtn(id); return; }         /* the chronometer's buttons work with a tool in the other hand too */
   if(hand&&!hand.drag){ handClick(benchPt(p,id),false); drawTray(); return; }
+  if((id==="tapeA"||id==="tapeB")&&!busy()){ ST.tapeA=ST.tapeB=false; hand={k:"tape"}; say("toolUp",itemName("tape")); drawTray(); return; }
   if(DRAGS[id]&&!busy()){ B3.drag={id,y:p[1],x:p[0],p0:p,moved:false,w0:onPlane(p[0],p[1],sandY())[0]}; return; }
   if(pickUpAt(id)){ drawTray(); return; }
   if(/^m_/.test(id)&&!busy()){ B3.down={t:id,p0:p,last:p,moved:false}; return; }
@@ -1170,21 +1244,24 @@ cv.addEventListener("pointermove",e=>{
 });
 cv.addEventListener("pointerup",e=>{
   const p=mousePos(e), dn=B3.down; B3.down=null; cv.classList.remove("dragging");
+  if(B3.drag&&!B3.drag.moved&&(B3.drag.id==="rulerA"||B3.drag.id==="rulerT")){   /* a click on the laid ruler takes it up again */
+    if(B3.drag.id==="rulerA") ST.bowl.ruler=false; else ST.track.ruler=false; B3.drag=null; hand={k:"ruler"}; say("toolUp",itemName("ruler")); drawTray(); return; }
   if(B3.drag){ const g=B3.drag; B3.drag=null; if(!g.moved&&g.id==="heldBall"){ if(ST.held&&ST.held.where==="stand"){ if(!aActive()){ say("notOver"); return; } dropBall(); } else rollBall(); } return; }
   if(dn&&dn.btn===2&&!dn.moved){ rclick(p); return; }
-  if(dn&&dn.t&&!dn.moved){ const k=dn.t.slice(2); hand={k,move:true,orig:{...ST.pos[k]}}; ST.on[k]=false; say("moveIt",itemName(k)); drawTray(); return; }
-  if(hand&&hand.drag){ hand.drag=false; const id=pick3(p[0],p[1])||""; const was=hand; handClick(benchPt(p,id),false); if(hand===was&&was.move){ ST.pos[was.k]=was.orig; ST.on[was.k]=true; hand=null; } drawTray(); }
+  if(dn&&dn.t&&!dn.moved){ const k=dn.t.slice(2); hand={k,move:true,orig:{...ST.pos[k]}}; ST.on[k]=false; say(TOOLS.includes(k)?"tool":"moveIt",itemName(k)); drawTray(); return; }
+  if(hand&&hand.drag){ hand.drag=false; const id=pick3(p[0],p[1])||""; LAST_ID=id; const was=hand; handClick(benchPt(p,id),false); if(hand===was&&was.move){ ST.pos[was.k]=was.orig; ST.on[was.k]=true; hand=null; } drawTray(); }
 });
 function rclick(p){
   if(hand){ handClick([0,0],true); drawTray(); return; }
   if(busy()) return;
   const id=pick3(p[0],p[1])||"";
+  if(id==="tapeA"||id==="tapeB"){ ST.tapeA=ST.tapeB=false; say("back",itemName("tape")); drawTray(); return; }
+  if(id==="rulerA"||id==="rulerT"){ if(id==="rulerA") ST.bowl.ruler=false; else ST.track.ruler=false; say("back",itemName("ruler")); drawTray(); return; }
   if(/^m_/.test(id)){ returnItem(id.slice(2)); drawTray(); }
 }
-window.addEventListener("pointerup",e=>{ if(B3.trayDrag&&hand&&e.target===cv){ const p=mousePos(e); handClick(benchPt(p,pick3(p[0],p[1])||""),false); drawTray(); } B3.trayDrag=false; });
+window.addEventListener("pointerup",e=>{ if(B3.trayDrag&&hand&&e.target===cv){ const p=mousePos(e), id=pick3(p[0],p[1])||""; LAST_ID=id; handClick(benchPt(p,id),false); drawTray(); } B3.trayDrag=false; });
 window.addEventListener("pointermove",e=>{ if(B3.trayDrag&&hand){ const r=cv.getBoundingClientRect(), p=[e.clientX-r.left,e.clientY-r.top]; B3.mouse=p; B3.mouseW=deskPt(p); } });
 $("viewBack").onclick=()=>goTo("all");
-cv.addEventListener("dblclick",e=>{ const p=mousePos(e), t=pick3(p[0],p[1]); if(hand||(t&&LIVE.test(t))) return; goTo("all"); });
 cv.addEventListener("wheel",e=>{
   e.preventDefault();
   const p=mousePos(e), dir=e.deltaY<0?1:-1, id=hand?null:pick3(p[0],p[1]);
@@ -1199,11 +1276,15 @@ addEventListener("keydown",e=>{ if(e.key==="Escape"){ if(hand) { handClick([0,0]
    8.  SIDE PANEL, LANGUAGE, MAIN LOOP
    ══════════════════════════════════════════════════════════════ */
 const fmt=t=>Math.floor(t/60)+":"+(t%60).toFixed(2).padStart(5,"0");
-function swToggle(){ ST.swRun=!ST.swRun; renderPanel(); }
+/* the chronometer works only once it is on the bench (as in the other benches): the panel mirrors its face */
+const swHere=()=>{ if(ST.on.watch) return true; say("swNeed"); renderStatus(); return false; };
+function swToggle(){ if(!swHere()) return; ST.swRun=!ST.swRun; renderPanel(); }
+function swLapReset(){ if(!swHere()) return; if(ST.swRun){ ST.laps.unshift(fmt(ST.sw)); ST.laps=ST.laps.slice(0,40); } else { ST.sw=0; ST.laps=[]; } renderPanel(); }
+function watchBtn(id){ if(id==="w_ss") swToggle(); else swLapReset(); }
 $("swBtn").onclick=swToggle;
-$("swLap").onclick=()=>{ ST.laps.unshift(fmt(ST.sw)); ST.laps=ST.laps.slice(0,40); renderPanel(); };
-$("swReset").onclick=()=>{ ST.sw=0; ST.laps=[]; ST.swRun=false; renderPanel(); };
-document.addEventListener("keydown",e=>{ if(e.code==="Space"&&e.target.tagName!=="INPUT"&&e.target.tagName!=="TEXTAREA"){ e.preventDefault(); if(!e.repeat) swToggle(); } });
+$("swLap").onclick=()=>{ if(!swHere()) return; ST.laps.unshift(fmt(ST.sw)); ST.laps=ST.laps.slice(0,40); renderPanel(); };
+$("swReset").onclick=()=>{ if(!swHere()) return; ST.sw=0; ST.laps=[]; ST.swRun=false; renderPanel(); };
+document.addEventListener("keydown",e=>{ if(e.code==="Space"&&!/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName)){ e.preventDefault(); if(!e.repeat) swToggle(); } });
 function renderPanel(){ const t=d(); $("swBtn").textContent=ST.swRun?t.stop:t.start;
   $("laps").innerHTML=ST.laps.map((s,i)=>"<div>"+(ST.laps.length-i)+". "+s+"</div>").join(""); }
 function renderViews(){ const box=$("views"); box.innerHTML="";
@@ -1221,10 +1302,34 @@ function renderStatus(){
   const box=$("status"); box.innerHTML="";
   for(const [s,w] of L_){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="warn"; box.appendChild(el); }
 }
+/* ══════════════════════════════════════════════════════════════
+   UNDO  —  the bench as it was before each action (Ctrl+Z or the button), as on the other benches.
+   The chronometer keeps running through it.
+   ══════════════════════════════════════════════════════════════ */
+Object.assign(T.ko,{undo:"↶ 직전 조작 취소 (Ctrl+Z)"}); Object.assign(T.en,{undo:"↶ Undo last action (Ctrl+Z)"});
+Object.assign(T.ko.m,{undone:"직전 조작을 취소했습니다.",noHist:"취소할 조작이 없습니다."}); Object.assign(T.en.m,{undone:"Last action undone.",noHist:"Nothing to undo."});
+const UNDO_KEEP=new Set(["sw","sw_t","swRun","laps"]);                 /* the chronometer is not put back */
+const UNDO_SKIP=new Set(["t","th","w","q","idle","hold","sw","sw_t","swRun","laps","fall","roll"]);   /* what moves by itself: not an action */
+const snapST=()=>JSON.stringify(ST);
+const sigOf=s=>JSON.stringify(JSON.parse(s),(k,v)=>UNDO_SKIP.has(k)?undefined:v);
+let UNDO=[], undoWheelT=0;
+function recUndo(){ const s=snapST(), g=sigOf(s); if(UNDO.length&&UNDO[UNDO.length-1].g===g) return; UNDO.push({s,g}); if(UNDO.length>80) UNDO.shift(); }
+function undo(){
+  const now=sigOf(snapST()); while(UNDO.length&&UNDO[UNDO.length-1].g===now) UNDO.pop();
+  const h=UNDO.pop(); if(!h){ say("noHist"); return; }
+  const o=JSON.parse(h.s); for(const k of Object.keys(ST)) if(!UNDO_KEEP.has(k)&&!(k in o)) delete ST[k];
+  for(const k in o) if(!UNDO_KEEP.has(k)) ST[k]=o[k];
+  hand=null; B3.down=null; B3.drag=null; B3.trayDrag=false;
+  say("undone"); drawTray(); renderPanel();
+}
+for(const el of [cv,trayCv]) el.addEventListener("pointerdown",()=>recUndo(),true);
+cv.addEventListener("wheel",()=>{ const n=performance.now(); if(n-undoWheelT>1500) recUndo(); undoWheelT=n; },{capture:true,passive:true});
+document.addEventListener("keydown",e=>{ if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.code==="KeyZ"&&!/^(INPUT|TEXTAREA)$/.test(e.target.tagName)){ e.preventDefault(); undo(); } });
+$("undoBtn").onclick=undo;
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
   $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.tray;
-  $("t-benchcap").textContent=t.benchcap; $("t-h-view").textContent=t.hView;
+  $("t-benchcap").textContent=t.benchcap; $("undoBtn").textContent=t.undo; $("t-h-view").textContent=t.hView;
   $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset; $("t-swhint").textContent=t.swHint;
   $("t-h-a").textContent=t.hA; $("t-ahint").textContent=t.aHint; $("t-h-b").textContent=t.hB; $("t-bhint").textContent=t.bHint;
   $("btn-ko").className=lang==="ko"?"on":""; $("btn-en").className=lang==="en"?"on":"";
@@ -1239,8 +1344,10 @@ function tick(){
   if(ST.swRun) ST.sw+=dt;
   for(let left=dt;left>1e-9;left-=0.005) stepMotion(Math.min(0.005,left));
   if(CW>10) draw();
-  $("swLbl").textContent=fmt(ST.sw);
-  if(++frameN%8===0){ renderStatus(); renderViews(); drawTray(); }
+  if(ST.tapeA&&!aActive()) ST.tapeA=false; if(ST.tapeB&&!railMounted()) ST.tapeB=false;   /* the tape falls back into the box when what held it is gone */
+  $("swLbl").textContent=ST.on.watch?fmt(ST.sw):"-:--.--"; $("swLbl").style.opacity=ST.on.watch?1:0.35;
+  if(++frameN%8===0){ renderStatus(); renderViews(); drawTray(); $("t-swhint").textContent=ST.on.watch?d().swOk:d().swHint;
+    for(const b of ["swBtn","swLap","swReset"]) $(b).classList.toggle("off",!ST.on.watch); }
   requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);

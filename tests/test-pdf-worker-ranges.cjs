@@ -88,3 +88,26 @@ test('missing releases and invalid routes retain their existing error responses'
   assert.equal(denied.status, 405); assert.equal(denied.headers.get('Allow'), 'GET, HEAD');
   assert.equal(h.upstream.length, 1); assert.equal(h.writes.length, 0);
 });
+test('a site PDF is asked for by its own name and saved under it', async () => {
+  const h = setup({ fetch: async () => new Response('%PDF', { status: 200, headers: { 'Content-Length': '4' } }) });
+  const res = await h.run(new Request('https://haslalab-pdf.haslalab.workers.dev/pdf/l/ispho/ISPhO_2025_T1_KO.pdf'));
+  assert.match(h.upstream[0][0], /\/releases\/download\/pdf-xispho\/Xispho_ISPhO_2025_T1_KO\.pdf\?/);
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('Content-Disposition'), 'inline; filename="ISPhO_2025_T1_KO.pdf"');
+  assert.match(h.lookups[0].url, /\/pdf\/Xispho_ISPhO_2025_T1_KO\.pdf\?v=/);
+  const root = setup({ fetch: async () => new Response('%PDF', { status: 200 }) });
+  await root.run(new Request('https://haslalab-pdf.haslalab.workers.dev/pdf/l/solution.pdf'));
+  assert.match(root.upstream[0][0], /\/pdf-xroot\/Xroot_solution\.pdf\?/);
+});
+test('the old storage address still works and also saves under the real name', async () => {
+  const h = setup({ fetch: async () => new Response('%PDF', { status: 200 }) });
+  const res = await h.run(new Request('https://haslalab-pdf.haslalab.workers.dev/pdf/Xapho_APhO_2003_E1_KO.pdf'));
+  assert.match(h.upstream[0][0], /\/pdf-xapho\/Xapho_APhO_2003_E1_KO\.pdf\?/);
+  assert.equal(res.headers.get('Content-Disposition'), 'inline; filename="APhO_2003_E1_KO.pdf"');
+});
+test('the new route refuses paths outside a folder name', async () => {
+  for (const p of ['/pdf/l/../x.pdf', '/pdf/l/ISPHO/a.pdf', '/pdf/l/ispho/sub/a.pdf']) {
+    const res = await setup().run(new Request('https://haslalab-pdf.haslalab.workers.dev' + p));
+    assert.equal(res.status, 404, p);
+  }
+});

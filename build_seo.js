@@ -14,6 +14,7 @@
    ───────────────────────────────────────────────────────────────────────── */
 const fs = require("fs");
 const path = require("path");
+const vm = require("vm");
 
 const ROOT = __dirname;
 const ORIGIN = "https://haslalab.org";
@@ -37,6 +38,41 @@ function loadData() {
 }
 
 const DATA = loadData();
+/* The reviewed archive editions use the same generated registry as the live
+   archive, including practical papers that have no simulator. */
+const archiveContext = {window: {}};
+vm.runInNewContext(fs.readFileSync(path.join(ROOT, "theory.js"), "utf8"), archiveContext);
+const archivePath = file => /^(?:https?:|pdfx?\/)/.test(file) ? file : "pdf/" + file;
+const reviewedArchiveCompetitions = new Set(JSON.parse(fs.readFileSync(path.join(ROOT, "tools/oibf_bpo_publication.json"), "utf8")).files.map(file => file.competition));
+for (const [key, years] of Object.entries(archiveContext.window.ARCHIVE_PRACTICAL || {})) {
+  if (!reviewedArchiveCompetitions.has(key)) continue;
+  if (!DATA[key]) {
+    const meta = archiveContext.window.THEORY_META?.[key];
+    if (!meta) continue;
+    DATA[key] = {...meta, years: []};
+  }
+  for (const [year, entry] of Object.entries(years)) {
+    let target = DATA[key].years.find(item => String(item.y) === year);
+    if (!target) { target = {y: Number(year), host: entry.h, problems: []}; DATA[key].years.push(target); }
+    for (const [id, slot] of Object.entries(entry.f)) {
+      let problem = target.problems.find(item => item.id === id);
+      if (!problem) { problem = {id, title: slot.title || {ko: "실기 시험지", en: "Practical paper"}, files: {}}; target.problems.push(problem); }
+      for (const [kind, name] of [["paper", "pdf"], ["sol", "sol"]]) {
+        if (!slot[kind] && !slot.ko?.[kind]) continue;
+        problem.files[name] = {
+          ...(typeof problem.files[name] === "string" ? {en: problem.files[name]} : problem.files[name]),
+          ...(slot[kind] ? {en: archivePath(slot[kind])} : {}),
+          ...(slot.ko?.[kind] ? {ko: archivePath(slot.ko[kind])} : {}),
+        };
+      }
+      problem.paperContainsSolutions = {
+        en: !!slot.containsSolutions || !!slot.paperContainsSolutions?.en,
+        ko: !!slot.paperContainsSolutions?.ko,
+      };
+      if (!problem.files.sol && slot.containsSolutions) problem.files.sol = problem.files.pdf;
+    }
+  }
+}
 /* The PDFs are in GitHub Releases, not in pdf/ (tools/pdf_release.py); DATA still
    names them "pdf/<name>", and pdf-assets.json lists what has been uploaded.
    They are served from the PDF Worker's own host, so they are linked from the
@@ -44,11 +80,14 @@ const DATA = loadData();
 const PDF_BASE = /const PDF_BASE = "([^"]+)"/.exec(fs.readFileSync(path.join(ROOT, "index.html"), "utf8"))[1];
 const ASSETS = new Set(Object.keys(JSON.parse(fs.readFileSync(path.join(ROOT, "pdf-assets.json"), "utf8"))));
 const isPdf = p => p.startsWith("pdf/");
-const exists = p => isPdf(p) ? ASSETS.has(p.slice(4)) : fs.existsSync(path.join(ROOT, p));
+const exists = p => isPdf(p) ? ASSETS.has(p.slice(4))
+  : /^https?:\/\//.test(p) ? true
+  : /^pdfx\/.*\.pdf$/.test(p) ? ASSETS.has(p.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_")) || fs.existsSync(path.join(ROOT, p))
+  : fs.existsSync(path.join(ROOT, p));
 /* PDFs under pdfx/ stay in the repository but are served by the PDF Worker too (tools/pdfx_release.py) */
 const isPdfx = p => /^pdfx\/.*\.pdf$/.test(p);
 const href = p => isPdf(p) ? PDF_BASE + p.slice(4)
-  : isPdfx(p) ? PDF_BASE + p.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "X" + (d || "root") + "_") : p;
+  : isPdfx(p) ? PDF_BASE + p.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => "l/" + (d ? d + "/" : "")) : p;
 
 /* ── walk the catalogue once ── */
 const rows = [];          // one per problem
@@ -86,6 +125,7 @@ for (const [key, c] of Object.entries(DATA)) {
         sim: released && simFile && exists(simFile) ? f.sim : null,
         pdf: langs(f.pdf),
         sol: langs(f.sol),
+        paperContainsSolutions: p.paperContainsSolutions,
       });
     }
   }
@@ -97,7 +137,7 @@ const urls = [
   { loc: "/problems.html", pri: "0.8", freq: "weekly" },
   { loc: "/problems-en.html", pri: "0.8", freq: "weekly" },
   ...[...simPages].sort().map(s => ({ loc: "/" + s, pri: "0.9", freq: "monthly" })),
-  ...[...docs].filter(d => !isPdf(d) && !isPdfx(d)).sort().map(d => ({ loc: "/" + d, pri: "0.5", freq: "yearly" })),
+  ...[...docs].filter(d => !isPdf(d) && !isPdfx(d) && !/^https?:\/\//.test(d)).sort().map(d => ({ loc: "/" + d, pri: "0.5", freq: "yearly" })),
 ];
 
 const enc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -191,7 +231,7 @@ function page(L) {
         const name = esc(L === "ko" ? (r.ko || r.en) : (r.en || r.ko));
         const links = [];
         if (r.sim) links.push(`<a href="${esc(r.sim)}${r.sim.includes("?") ? "&amp;" : "?"}lang=${L}">${t.run}</a>`);
-        if (r.pdf) links.push(`<a href="${esc(href(r.pdf[L]))}">${t.sheet}</a>`);
+        if (r.pdf) links.push(`<a href="${esc(href(r.pdf[L]))}">${r.paperContainsSolutions?.[L] ? (L === "ko" ? "문제·해설 합본" : "Problems & solutions") : t.sheet}</a>`);
         if (r.sol) links.push(`<a href="${esc(href(r.sol[L]))}">${t.sol}</a>`);
         const tag = r.theory ? ` <span class="tag">${t.theory}</span>` : "";
         const state = links.length ? links.join(" · ") : `<span class="soon">${t.soon}</span>`;
