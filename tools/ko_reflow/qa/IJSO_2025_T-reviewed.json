@@ -1,0 +1,188 @@
+{
+  "stem": "IJSO_2025_T",
+  "sha256": "3085a562ccae6edbf5712e8d03bd6f0995368700a52b7db51a0a848888ec6edc",
+  "unchanged_native_words_tested": 457,
+  "unselected_source_characters_tested": 1987,
+  "unmatched_unselected_character_keys": [],
+  "word_render_suspects": [
+    {
+      "page": 1,
+      "text": "G0-1",
+      "box": [
+        414.45599365234375,
+        82.91515350341797,
+        538.6134643554688,
+        139.60804748535156
+      ],
+      "missing_ink_pixels": 1257,
+      "original_ink_pixels": 19741
+    },
+    {
+      "page": 12,
+      "text": "A1-3",
+      "box": [
+        416.3940124511719,
+        82.91515350341797,
+        538.6239013671875,
+        139.60804748535156
+      ],
+      "missing_ink_pixels": 1257,
+      "original_ink_pixels": 18359
+    },
+    {
+      "page": 26,
+      "text": "A2-5",
+      "box": [
+        416.3940124511719,
+        82.91515350341797,
+        538.6239013671875,
+        139.60804748535156
+      ],
+      "missing_ink_pixels": 1257,
+      "original_ink_pixels": 20339
+    },
+    {
+      "page": 27,
+      "text": "A2-7",
+      "box": [
+        416.3940124511719,
+        82.91515350341797,
+        538.6239013671875,
+        139.60804748535156
+      ],
+      "missing_ink_pixels": 1257,
+      "original_ink_pixels": 18974
+    }
+  ],
+  "missing_unselected_character_suspects": [],
+  "manual_adjudications": [
+    {
+      "pages": [
+        1,
+        12,
+        26,
+        27
+      ],
+      "status": "false positive",
+      "reason": "The oversized code bbox includes intentionally replaced English (Official) language-label ink. Every unselected source character and baseline is retained. The actual code area was independently pixel-compared on all 27 pages.",
+      "tight_code_roi": [
+        410.0,
+        65.0,
+        545.0,
+        128.0
+      ],
+      "render_scale": 3,
+      "page_checks": [
+        {
+          "page": 1,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 2,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 3,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 4,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 5,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 6,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 7,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 8,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 9,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 10,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 11,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 12,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 13,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 14,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 15,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 16,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 17,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 18,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 19,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 20,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 21,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 22,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 23,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 24,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 25,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 26,
+          "all_code_roi_rgb_pixels_identical": true
+        },
+        {
+          "page": 27,
+          "all_code_roi_rgb_pixels_identical": true
+        }
+      ]
+    }
+  ],
+  "all_render_suspects_adjudicated": true
+}

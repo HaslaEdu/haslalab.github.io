@@ -1,9 +1,9 @@
 {
   "file": "IMChO_2025_T1S_Practice_KO.pdf",
   "pages": 17,
-  "bytes": 1595933,
-  "sha256": "4bdae4f99c85af38cbb32570a38240d7a6d8a9b70e375fa340ee6d2767448c1a",
-  "source": "Official English native 17-page theory-1 solutions; https://disk.yandex.ru/i/bkzDqDftZAZiBg",
+  "bytes": 3558573,
+  "sha256": "add2e06c9a27755f42e9390d2ba033207cd47cabefda87e281ccaacd34b15254",
+  "source": "https://disk.yandex.ru/i/bkzDqDftZAZiBg",
   "translated_regions": 207,
   "region_text_failures": [],
   "hangul_characters": 8540,
@@ -38,5 +38,12 @@
     true
   ],
   "visual_qa": "All 17 pages rendered using PyMuPDF and Poppler; contact sheet and isotope, fraction, cyanate, p13 enzyme structures inspected. Original isotope superscripts/subscripts and equation numerators preserved. All safe solution prose translated; omission zones contain Korean notices.",
-  "font_note": "Original native math, structures and Latin types retained; Korean body uses Noto Serif KR at matching original size where it fits."
+  "font_note": "Original native math, structures and Latin types retained; Korean body uses Noto Serif KR at matching original size where it fits.",
+  "global_font_subset": false,
+  "glyph_repairs_file": "T1SN_glyph_repairs.json",
+  "native_dark_pixels_checked": 174357,
+  "native_threshold_missing_pixels": 6,
+  "native_threshold_added_pixels": 3,
+  "raster_note": "All mathematical symbols and chemical diagrams are present. Remaining differences are confined to anti-aliased edges of the restored native glyphs; original glyph outlines, metrics, IDs, size, and origin were cloned.",
+  "render_directory": "C:/Users/andre/CodexWork/HaslaLab/translation-render-qa-20261120/imcho"
 }

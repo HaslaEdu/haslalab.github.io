@@ -2,8 +2,8 @@
   "pdf": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2022_T2_OriginalLayout_Combined_KO.pdf",
   "pages": 80,
   "complete": true,
-  "sha256": "907da72a4dd831b8b1a3ab96adbbf54c62a63b418e00e36d018edf2c19b814ef",
-  "bytes": 19318909,
+  "sha256": "bbb61143cd6360d6c065ae62a0668f1d6f69d574f0613632fd0931dd1b3d626d",
+  "bytes": 20080384,
   "source": "C:\\Users\\andre\\AppData\\Local\\Temp\\haslalab-ibo-ijso-originals\\bg-2022-theoretical-2-exam.pdf",
   "source_url": "https://bioguide.world/papers/ibo/2022/theoretical-2-exam.pdf",
   "new_text_runs": [
@@ -11428,5 +11428,19 @@
     "Question75 caption beta-HBDB spelling retained in note beside correct beta-HBDH.",
     "Question92 Mause row interpreted as Mouse, with visible note."
   ],
-  "visual_QA": "All80final pages inspected in9contact sheets. Enlarged pages13,28,46,51,64,66,72,74,80 checked. Poppler page46 checked for Korean and cm^-2 s^-1 glyphs; no clipping or overlap observed."
+  "native_render_audit": {
+    "part": "T2",
+    "retained_native_numeric_and_answer_font_streams_byte_identical": 4,
+    "native_original_font_streams_preserved": 14,
+    "source_fonts_used_only_in_redacted_text_may_be_removed": true,
+    "native_numeric_and_answer_glyph_regions_pixel_identical": 315,
+    "render_scale": 2,
+    "differences": [],
+    "pdf_sha256": "bbb61143cd6360d6c065ae62a0668f1d6f69d574f0613632fd0931dd1b3d626d"
+  },
+  "visual_review": {
+    "all_pages_contact_sheets_checked": true,
+    "regenerated_enlarged_page": 46,
+    "result": "New save preserves the native font bytes and every audited original numerical/key glyph pixel."
+  }
 }
