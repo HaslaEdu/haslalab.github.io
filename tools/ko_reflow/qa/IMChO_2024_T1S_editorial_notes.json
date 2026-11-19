@@ -1,0 +1,15 @@
+{
+  "source": "Official 2024 IMChO first theoretical tour solutions, 14 pages",
+  "source_language": "English",
+  "omissions": ["Problem 1 question 2: high energy pentazole synthesis equations, including native reaction graphics; numbering retained and omission explicitly printed."],
+  "corrections": [
+    {"page": 1, "original": "65.38/0.03859", "translation": "65.38/0.3859", "basis": "The question gives 38.59% Zn; 169.42 is obtained only with 0.3859."},
+    {"page": 2, "original": "0.08142 nitrogen mass fraction", "translation": "0.8142; source typo explicitly explained", "basis": "The question gives 81.42% N and the solution requires 34 N atoms."},
+    {"page": 5, "original": "Molecular formula X / structure X beneath question 4 about Y", "translation": "Molecular formula / structure; wrong repeated variable omitted", "basis": "Question 4 concerns the hydrate Y."},
+    {"page": 5, "original": "(CH2)nO2E with n=2,3,4", "translation": "C3H6O2E, C4H8O2E, C5H10O2E, with correction explicitly noted", "basis": "The next official solution item lists those three formulas; the earlier acrylic acid constraint requires at least three C."},
+    {"page": 7, "original": "Repeated A1–A6/Y 3.5-point score beneath question 4", "translation": "Wrong repeated score not repeated", "basis": "It belongs to question 2, whose original score is retained above."},
+    {"page": 9, "original": "Area of a 60 nm cube: 2.16e-14 nm2", "translation": "2.16e-14 m2; correction explicitly noted", "basis": "6*(60e-9 m)^2 = 2.16e-14 m2 and the stated aggregate area is 314 m2."},
+    {"page": 9, "original": "10–5.7=4.2 g", "translation": "10–5.7 approximately 4.3 g; correction explicitly noted", "basis": "Arithmetic. Subsequent rounded official particle sizes and masses are retained."}
+  ],
+  "font_handling": "Original font programs retained without global font subsetting. Original Times Latin/math/vector artwork preserved; Korean prose uses Noto Serif KR and original Arial diagram labels use Malgun Gothic with Arial Latin."
+}

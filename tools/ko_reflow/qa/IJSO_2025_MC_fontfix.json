@@ -1,0 +1,125 @@
+{
+  "label": "MC",
+  "sha256": "8f9b6a44cf70f3e2107425f70abe9c3ca4b4aa5f18f478d0ebfc26bcc27d579b",
+  "bytes": 1573693,
+  "pages": 20,
+  "native_font_streams_unchanged": 11,
+  "fully_replaced_source_fonts_removed": [
+    "NOQNPW+NotoSans-Italic"
+  ],
+  "original_code_roi_exact_pages": 0,
+  "original_code_lost_ink_pixels": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "unexpected_fallback_ink": [],
+  "korean_face_nonhangul": {
+    "~": 2,
+    "≥": 2,
+    "·": 5,
+    "×": 2,
+    "°": 2,
+    "…": 4,
+    "μ": 1
+  },
+  "math_S_actual_fonts": [
+    [
+      2,
+      "LatinModernMath-Regular",
+      "𝑔ℎ𝑆"
+    ],
+    [
+      2,
+      "LatinModernMath-Regular",
+      "𝑔ℎ𝑆)"
+    ],
+    [
+      2,
+      "LatinModernMath-Regular",
+      "𝑆)"
+    ],
+    [
+      2,
+      "LatinModernMath-Regular",
+      ")𝑆)"
+    ],
+    [
+      2,
+      "OriginalMath205",
+      "𝑆"
+    ],
+    [
+      5,
+      "OriginalMath205",
+      "𝑆"
+    ]
+  ],
+  "inserted_mathematical_astral_exact": {
+    "𝐶": 2,
+    "𝐸": 1,
+    "𝐾": 5,
+    "𝑅": 3,
+    "𝑇": 7,
+    "𝑎": 9,
+    "𝑏": 4,
+    "𝑔": 1,
+    "𝑝": 1,
+    "𝑞": 1,
+    "𝑡": 3,
+    "𝜌": 3,
+    "𝐴": 4,
+    "𝐷": 4,
+    "𝑃": 1,
+    "𝑑": 3,
+    "𝑓": 5,
+    "𝐵": 4,
+    "𝐼": 2,
+    "𝑆": 2,
+    "𝑉": 1,
+    "𝑐": 2,
+    "𝑛": 4,
+    "𝑣": 3
+  },
+  "native_glyphs": {
+    "stem": "IJSO_2025_MC_FONTFIX",
+    "sha256": "8f9b6a44cf70f3e2107425f70abe9c3ca4b4aa5f18f478d0ebfc26bcc27d579b",
+    "unchanged_native_words_tested": 307,
+    "unselected_source_characters_tested": 837,
+    "word_suspects": 0,
+    "missing_char_suspects": 0,
+    "missing_character_keys": 0
+  },
+  "code_roi_reviewed": {
+    "cause": "MC의 큰 코드 폰트 bbox 하단에는 새 한국어 언어 표기가 추가된다.",
+    "evidence": "20쪽 전부 원본 코드 잉크 손실 0, 원본문자 기준선 누락 0, 원본 토큰 렌더 의심 0.",
+    "actual_missing_native_glyphs": 0
+  },
+  "visual_review": {
+    "all_page_contacts": 20,
+    "high_resolution_focus_pages": [
+      2,
+      8
+    ],
+    "poppler_page": 2,
+    "poppler_source_warnings": "원본에도 같은 JP2/J2K 재시도와 빈 Fields 경고가 있으며 이미지 출력은 정상이다."
+  },
+  "render_defects_found": 0
+}
