@@ -31,6 +31,7 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://tpmso.k12ea.gov.tw/twijso/wp-content/uploads/2026/02/2025_theo_eng.pdf",
+     "local": "pdfx/ijso/IJSO_2025_T_EN.pdf",
      "bytes": 3152361,
      "direct": true,
      "title": {
@@ -54,8 +55,8 @@
    ],
    "problems": [],
    "note": {
-    "ko": "객관식 한국어판은 원문과 같은 20쪽입니다. 동영상을 사용하는 문항이 있으며, 대표단이 공개한 PDF에는 해당 영상 파일이 포함돼 있지 않습니다.",
-    "en": "The MCQ PDF includes items that used video clips in the competition; the delegation archive does not supply those clips."
+    "ko": "객관식 20쪽·이론 27쪽 한국어판은 원문의 페이지 배치와 그림·수식·수록 답란을 유지했습니다. 이론 원본에 답안지 A1-3·A2-5·A2-7만 포함돼 있습니다. 객관식 동영상 문항의 영상 파일은 공개 PDF에 포함돼 있지 않습니다.",
+    "en": "The 20-page MCQ and 27-page theory translations retain the source layout, figures, formulas and included answer fields. Only answer pages A1-3, A2-5 and A2-7 are included in the theory source. Videos required by some MCQ items are not embedded in the public PDF."
    }
   },
   {
@@ -607,11 +608,17 @@
      },
      "supplements": [
       {
-       "title": {"ko": "하슬라랩 학습용 해설 (비공식)", "en": "HaslaLab practice solutions (unofficial, Korean)"},
+       "title": {
+        "ko": "하슬라랩 학습용 해설 (비공식)",
+        "en": "HaslaLab practice solutions (unofficial, Korean)"
+       },
        "url": "pdfx/ijso/IJSO_2012_MC_Practice_Solutions_KO.pdf"
       }
      ],
-     "title": {"ko": "객관식 시험 (연습용 29문항)", "en": "Multiple Choice Exam (29 practice questions)"}
+     "title": {
+      "ko": "객관식 시험 (연습용 29문항)",
+      "en": "Multiple Choice Exam (29 practice questions)"
+     }
     },
     {
      "file": "IJSO_2012_E1_EN.pdf",
