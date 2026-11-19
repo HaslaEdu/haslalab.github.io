@@ -135,7 +135,16 @@ def load(practical=None):
                                 for prop in ('papers', 'paperLang', 'containsSolutions', 'paperContainsSolutions', 'paperSourceTypes', 'paperNotes', 'sourcePages'):
                                     if prop in whole:
                                         slot[prop] = whole[prop].copy() if isinstance(whole[prop], dict) else whole[prop]
-            files = {k: v for k, v in files.items() if 'paper' in v}
+            # OPhO 2022 Open saved only an English solutions booklet, but the
+            # supplied Korean problem paper is available. Keep that source slot
+            # until korean() attaches its paper instead of dropping the round.
+            supplied = {}
+            if comp == 'opho':
+                ko_path = os.path.join(ROOT, 'tools', 'theory_ko.json')
+                if os.path.exists(ko_path):
+                    supplied = json.load(open(ko_path, encoding='utf-8')).get(comp, {}).get(year, {})
+            files = {k: v for k, v in files.items()
+                     if 'paper' in v or supplied.get(k, {}).get('paper')}
             if not files:
                 continue
             # a title that only repeats the number («Problem A1», «Question 3») says nothing: left out
