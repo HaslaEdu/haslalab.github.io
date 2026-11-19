@@ -124,12 +124,23 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://bioguide.world/papers/ibo/2022/theoretical-1-exam.pdf",
-     "bytes": 14020010,
+     "bytes": 13822144,
      "direct": true,
      "title": {
       "ko": "이론 시험 1부",
       "en": "Theoretical Exam Part 1"
-     }
+     },
+     "local": "pdfx/ibo/IBO_2022_T1_Paper_EN.pdf",
+     "contains_solutions": false,
+     "supplements": [
+      {
+       "title": {
+        "ko": "영어 문제·정답 원본 합본",
+        "en": "English original questions and key (combined)"
+       },
+       "url": "https://bioguide.world/papers/ibo/2022/theoretical-1-exam.pdf"
+      }
+     ]
     },
     {
      "file": "IBO_2022_T2_EN.pdf",
@@ -137,12 +148,45 @@
      "kind": "paper",
      "lang": "EN",
      "url": "https://bioguide.world/papers/ibo/2022/theoretical-2-exam.pdf",
-     "bytes": 18703509,
+     "bytes": 18504143,
      "direct": true,
      "title": {
       "ko": "이론 시험 2부",
       "en": "Theoretical Exam Part 2"
-     }
+     },
+     "local": "pdfx/ibo/IBO_2022_T2_Paper_EN.pdf",
+     "contains_solutions": false,
+     "supplements": [
+      {
+       "title": {
+        "ko": "영어 문제·정답 원본 합본",
+        "en": "English original questions and key (combined)"
+       },
+       "url": "https://bioguide.world/papers/ibo/2022/theoretical-2-exam.pdf"
+      }
+     ]
+    },
+    {
+     "file": "IBO_2022_T1K.pdf",
+     "part": "T1",
+     "kind": "key",
+     "lang": "EN",
+     "url": "https://bioguide.world/papers/ibo/2022/theoretical-1-exam.pdf",
+     "local": "pdfx/ibo/IBO_2022_T1_Key_EN.pdf",
+     "direct": true,
+     "bytes": 410318,
+     "source_type": "official_answer_key"
+    },
+    {
+     "file": "IBO_2022_T2K.pdf",
+     "part": "T2",
+     "kind": "key",
+     "lang": "EN",
+     "url": "https://bioguide.world/papers/ibo/2022/theoretical-2-exam.pdf",
+     "local": "pdfx/ibo/IBO_2022_T2_Key_EN.pdf",
+     "direct": true,
+     "bytes": 409855,
+     "source_type": "official_answer_key"
     }
    ],
    "problems": [],
@@ -153,8 +197,8 @@
    "cc": "am",
    "source_page": "https://bioguide.world/papers/ibo/2022/",
    "note": {
-    "ko": "한국어 이론 1부·2부는 문항 1~100 전체를 담은 문제지 75쪽·79쪽과 각 2쪽의 공식 참·거짓 정답표를 각각 제공합니다(각 파일에 원본 이용허락 쪽 포함). 각 영문 원본의 마지막 쪽에도 정답표가 들어 있습니다. 해설이나 별도 공식 빈 답안지는 원본에 없습니다.",
-    "en": "Both Korean theory parts provide all questions 1–100 in 75-page and 79-page papers, each with a separate two-page official true/false key and source licence page. Each English source also contains the key on its final page. The sources do not supply worked explanations or a separate official blank answer sheet."
+    "ko": "이론 1부·2부의 영어·한국어 문제지 75쪽·79쪽과 각 2쪽의 공식 참·거짓 정답표를 분리해 제공합니다. 모든 파일에 원본 이용허락 쪽을 포함했습니다. 영문 문제지에서는 마지막 정답 쪽을 분리했으며, 원래 76쪽·80쪽 합본은 재수록 출처로 유지했습니다. 원본에는 풀이 해설이나 별도 공식 빈 답안지가 없습니다.",
+    "en": "Both English and Korean theory parts provide 75-page and 79-page question papers and separate two-page official T/F keys. Every file includes the original licence page. The final answer page is separated from each English question paper; the original 76-/80-page combined booklets remain linked as sources. Worked explanations and separate official blank answer sheets are not supplied by these sources."
    }
   },
   {
@@ -177,12 +221,52 @@
     {
      "file": "IBO_2021_TS.pdf",
      "part": "T",
-     "kind": "solution",
+     "kind": "key",
      "url": "https://www.ibo-info.org/files/downloads/papers/2021%20Portugal%20%28IBO%20Challenge%20II%29/IBO%20CHALLENGE%20II%20-%20Theoretical%20%28Answer%20key%29.pdf",
-     "bytes": 588019
+     "bytes": 588019,
+     "lang": "EN",
+     "source_type": "official_answer_key",
+     "title": {
+      "ko": "공식 이론 정답표",
+      "en": "Official theoretical answer key"
+     }
+    },
+    {
+     "file": "IBO_2021_E1_EN.pdf",
+     "part": "E1",
+     "kind": "paper",
+     "lang": "EN",
+     "url": "https://www.ibo-info.org/files/downloads/papers/2021%20Portugal%20%28IBO%20Challenge%20II%29/IBO%20CHALLENGE%20II%20-%20Theoretical-Practical.pdf",
+     "local": "pdfx/ibo/IBO_2021_P_EN.pdf",
+     "direct": true,
+     "title": {
+      "ko": "원격 이론·실기 통합 시험",
+      "en": "Remote theoretical-practical examination"
+     }
+    },
+    {
+     "file": "IBO_2021_E1K.pdf",
+     "part": "E1",
+     "kind": "key",
+     "lang": "EN",
+     "url": "https://www.ibo-info.org/files/downloads/papers/2021%20Portugal%20%28IBO%20Challenge%20II%29/IBO%20CHALLENGE%20II%20-%20Theoretical-Practical%20%28Answer%20key%29.pdf",
+     "local": "pdfx/ibo/IBO_2021_P_Key_EN.pdf",
+     "direct": true,
+     "title": {
+      "ko": "공식 이론·실기 정답표",
+      "en": "Official theoretical-practical answer key"
+     }
     }
    ],
-   "note": "IBO Challenge II (remote, hosted by Portugal); solution = answer key"
+   "note": {
+    "ko": "IBO Challenge II 원격 대회의 한국어 이론 문제 71쪽과 공식 정답표 14쪽을 각각 제공합니다. 정답표는 판정·정답을 담으며 별도 풀이 해설은 포함하지 않습니다. 원격 이론·실기 통합 시험의 영어 원본 54쪽·공식 정답표 16쪽도 제공합니다. 이 자료의 한국어판은 작업 중이며 원문이 언급하는 동영상은 공개 PDF에 링크·첨부가 없습니다.",
+    "en": "The remote IBO Challenge II archive provides the complete 71-page Korean theoretical paper and a separate 14-page official answer key containing answers without worked explanations. The 54-page English theoretical-practical examination and its 16-page official key are also available. Their Korean translation is in progress; videos mentioned by the source have no embedded links or attachments in the public PDF."
+   },
+   "host": {
+    "ko": "포르투갈 · 원격 대회",
+    "en": "Portugal · remote competition"
+   },
+   "cc": "pt"
   },
   {
    "y": 2020,

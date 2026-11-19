@@ -3131,22 +3131,24 @@
   {
     "file": "pdfx/ijso/IJSO_2025_T_KO.pdf",
     "pages": 27,
-    "bytes": 5445403,
-    "sha256": "3085a562ccae6edbf5712e8d03bd6f0995368700a52b7db51a0a848888ec6edc",
+    "bytes": 3350467,
+    "sha256": "aa0409a45cd978a6cb6fa6b392ad8aa42c3fabb1ff1cfa3757f27942db68ea50",
     "language": "ko",
-    "qa": "tools/ko_reflow/qa/IJSO_2025_T_KO_font_repair.json",
+    "qa": "tools/ko_reflow/qa/IJSO_2025_T_fontfix.json",
     "audit_schema": "olympiad-original-layout-v1",
-    "native_qa": "tools/ko_reflow/qa/IJSO_2025_T-reviewed.json"
+    "native_qa": "tools/ko_reflow/qa/IJSO_2025_T_fontfix.json",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ijso\\fontfix-20261120\\T\\IJSO_2025_T_KO.pdf"
   },
   {
     "file": "pdfx/ijso/IJSO_2025_MC_KO.pdf",
     "pages": 20,
-    "bytes": 3689974,
-    "sha256": "838d5f313959438425d55dbb5a01298e4221aeb39682ee53ef0e57f5af180f75",
+    "bytes": 1573693,
+    "sha256": "8f9b6a44cf70f3e2107425f70abe9c3ca4b4aa5f18f478d0ebfc26bcc27d579b",
     "language": "ko",
-    "qa": "tools/ko_reflow/qa/IJSO_2025_MC_KO_font_repair.json",
+    "qa": "tools/ko_reflow/qa/IJSO_2025_MC_fontfix.json",
     "audit_schema": "olympiad-original-layout-v1",
-    "native_qa": "tools/ko_reflow/qa/IJSO_2025_MC.json"
+    "native_qa": "tools/ko_reflow/qa/IJSO_2025_MC_fontfix.json",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ijso\\fontfix-20261120\\MC\\IJSO_2025_MC_KO.pdf"
   },
   {
     "file": "pdfx/ibo/IBO_2022_T1_Paper_KO.pdf",
@@ -3240,12 +3242,14 @@
   },
   {
     "file": "pdfx/ijso/IJSO_2025_E1_KO.pdf",
-    "sha256": "f95642e18efe2cf1b449d15fb275ca6507990ef0212b487aa97469daab4f4c8c",
-    "bytes": 5352711,
+    "sha256": "1bff5a28176a8287b4576ddac4f29d953d8754948a02c09057115191832a9cd6",
+    "bytes": 3200942,
     "pages": 45,
     "language": "ko",
-    "qa": "tools/ko_reflow/qa/IJSO_2025_E1_original_layout.json",
-    "audit_schema": "olympiad-original-layout-v1"
+    "qa": "tools/ko_reflow/qa/IJSO_2025_E1_fontfix.json",
+    "audit_schema": "olympiad-original-layout-v1",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ijso\\fontfix-20261120\\E1\\IJSO_2025_E1_KO.pdf",
+    "native_qa": "tools/ko_reflow/qa/IJSO_2025_E1_fontfix.json"
   },
   {
     "file": "pdfx/ijso/IJSO_2025_E1_Supplied_AnswerSheets_EN.pdf",
@@ -3258,12 +3262,14 @@
   },
   {
     "file": "pdfx/ijso/IJSO_2025_E1_Supplied_AnswerSheets_KO.pdf",
-    "sha256": "d66d3f0f91c91d1186c925820af898aa1dab1406ccbdae84593295249dd65ee4",
-    "bytes": 3072584,
+    "sha256": "fe08dbd55f89373799b58721eb7aeeffe47c4c2087fd23623aedf01e389307aa",
+    "bytes": 974073,
     "pages": 8,
     "language": "ko",
-    "qa": "tools/ko_reflow/qa/IJSO_2025_E1_supplied_answer_sheets.json",
-    "audit_schema": "olympiad-original-layout-v1"
+    "qa": "tools/ko_reflow/qa/IJSO_2025_E1_supplied_answer_fontfix.json",
+    "audit_schema": "olympiad-original-layout-v1",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ijso\\fontfix-20261120\\IJSO_2025_E1_Supplied_AnswerSheets_KO.pdf",
+    "native_qa": "tools/ko_reflow/qa/IJSO_2025_E1_supplied_answer_fontfix.json"
   },
   {
     "file": "pdfx/imcho/IMChO_2025_T2S_Practice_KO.pdf",
@@ -3281,6 +3287,121 @@
     "pages": 12,
     "language": "ko",
     "qa": "tools/ko_reflow/qa/IChO_2010_P_MARKING_original_layout.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/imcho/IMChO_2024_T1_Practice_KO.pdf",
+    "sha256": "57a0acbd251bf26521031f13be4829c97cf1753e80d6da09d081e8a05842da82",
+    "bytes": 2512351,
+    "pages": 9,
+    "language": "ko",
+    "qa": "tools/ko_reflow/qa/IMChO_2024_T1_original_layout.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2021_T_Paper_KO.pdf",
+    "sha256": "23e66abc771b0dcdbace40ab77a7fd8bf09491b91da72eefae9772ea2957304c",
+    "pages": 71,
+    "bytes": 19223120,
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2021_T_Paper_KO.pdf",
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IBO_2021_T_original_layout.json"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2021_T_Key_KO.pdf",
+    "sha256": "fd9de8cbd27b7c523f968022269f65abbfdd2e6052537edc19aa9d8038f3ef62",
+    "pages": 14,
+    "bytes": 634007,
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2021_T_Solutions_KO.pdf",
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IBO_2021_T_key.json"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2021_P_EN.pdf",
+    "sha256": "09cc93a24a53442ad00b3c393210101dc74ef0687ac8325a3650862cce5b7ad5",
+    "pages": 54,
+    "bytes": 6561441,
+    "language": "en",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2021_P_EN.pdf",
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/BATCH5_unmodified_english_sources.json"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2021_P_Key_EN.pdf",
+    "sha256": "cf900dfd7094150285b3fa029c95b010e5c1f6ffadc00ad728c436def36cc631",
+    "pages": 16,
+    "bytes": 578577,
+    "language": "en",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2021_PS.pdf",
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/BATCH5_unmodified_english_sources.json"
+  },
+  {
+    "file": "pdfx/imcho/IMChO_2024_T1S_Practice_KO.pdf",
+    "sha256": "cfabbb681e1b5ed5a8057667f9d91d554a21bec661e18f146a8e96a828b5fb01",
+    "pages": 14,
+    "bytes": 3383951,
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2024\\IMChO_2024_T1S_Practice_KO.pdf",
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IMChO_2024_T1S_original_layout.json"
+  },
+  {
+    "file": "pdfx/icho/IChO_2010_T_OriginalLayout_KO.pdf",
+    "sha256": "0a0e119514178f4fce1e3489fa1bbd96c5e7382145c59e397bcbeb27923b9f58",
+    "pages": 33,
+    "bytes": 4088234,
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ieso\\IChO_2010_T\\IChO_2010_T_OriginalLayout_KO.pdf",
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/IChO_2010_T_worked_original_layout.json"
+  },
+  {
+    "file": "pdfx/icho/IChO_2010_T_Worked_EN.pdf",
+    "sha256": "fbaec50edb96a259c85bcee65dade8d192896d3910cb72375c4441a5049d1626",
+    "pages": 33,
+    "bytes": 1549969,
+    "language": "en",
+    "generated_file": "D:\\CodexBuilds\\korean-live-audit-20261120\\target-sources\\IChO_2010_T_EN.pdf",
+    "audit_schema": "olympiad-original-layout-v1",
+    "qa": "tools/ko_reflow/qa/BATCH5_unmodified_english_sources.json"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2022_T1_Paper_EN.pdf",
+    "pages": 75,
+    "bytes": 13822144,
+    "sha256": "e44bd18ae34e418c867560cf306200add04019995a207665b6baa1fa41b41979",
+    "language": "en",
+    "qa": "tools/ko_reflow/qa/IBO_2022_english_native_excerpts.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2022_T1_Key_EN.pdf",
+    "pages": 2,
+    "bytes": 410318,
+    "sha256": "4c6095bdcd1605085b200ef4e827ef3ad24681f51c58eed657d98df8c168c412",
+    "language": "en",
+    "qa": "tools/ko_reflow/qa/IBO_2022_english_native_excerpts.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2022_T2_Paper_EN.pdf",
+    "pages": 79,
+    "bytes": 18504143,
+    "sha256": "0d60b126cc86681d0e089bf75c640f79fc9d8f6d310ca5512b785a5aa9bc4757",
+    "language": "en",
+    "qa": "tools/ko_reflow/qa/IBO_2022_english_native_excerpts.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2022_T2_Key_EN.pdf",
+    "pages": 2,
+    "bytes": 409855,
+    "sha256": "89532cd74e6bf7b06dbaa3361ed763ce6aa44aaec82540861b746c7bee98f0cf",
+    "language": "en",
+    "qa": "tools/ko_reflow/qa/IBO_2022_english_native_excerpts.json",
     "audit_schema": "olympiad-original-layout-v1"
   }
 ]
