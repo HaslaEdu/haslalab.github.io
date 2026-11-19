@@ -4726,6 +4726,7 @@ hydrateCatalogue();
 const THY_WHOLE=new Set([]);
 /* in Korean, the translated paper typeset as the original (ISPhO's per-problem Korean papers) rather than the English one */
 const KO_TYPESET=new Set(["ispho"]);
+const THEORY_FIRST=new Set(["imcho","icho","ibo","ijso","ieso"]);
 // These Eötvös years have both a published Hungarian paper and an archived solution report.
 const EOTVOS_TIMED=new Set([2014,2015,2016,2020]);
 /* a theory problem solved on a simulator (ISPhO 2023–2025 T1: the organisers' program, ported to the site): a year's
@@ -4760,17 +4761,17 @@ function theoryGroups(key,yr){
 const isShortlist=(key,yr,g)=>{ const t=thyOf(key,yr.y); return !!t&&g.length===1&&(t.sl||[]).includes(g[0]); };
 const thyTitle=(t,x)=>{ const p=(t.p||[]).find(q=>q[0]===x); return p?p[1]:""; };
 /* experiment | theory: which of a competition's two collections its pages show (kept in this browser) */
-let track=(()=>{ try{ return localStorage.getItem("hlTrack")==="thy"?"thy":"exp"; }catch(e){ return "exp"; } })();
+let track=(()=>{ try{ const saved=localStorage.getItem("hlTrack");return saved==="thy"||saved==="exp"?saved:null; }catch(e){ return null; } })();
 function setTrack(t){ track=t==="thy"?"thy":"exp"; try{ localStorage.setItem("hlTrack",track); }catch(e){} render(); }
 const hasExpC=c=>c.years.some(y=>y.problems.length>0);
-const trackOf=key=>{ const c=compOf(key), e=c&&hasExpC(c), t=!!THEORY[key]; return e&&t?track:t?"thy":"exp"; };
+const trackOf=(key,year)=>{ const c=compOf(key), e=year?year.problems.length>0:c&&hasExpC(c), t=year?thyCount(thyOf(key,year.y))>0:!!THEORY[key]; return e&&t?(track||(THEORY_FIRST.has(key)?"thy":"exp")):t?"thy":"exp"; };
 /* kx: a problem cut out of a Korean translation of a paper published whole — the original counts once */
 const thyParts=t=>Object.keys(t.f).filter(x=>!t.f[x].kx);
 const thyCount=t=>t?((t.p||[]).length||thyParts(t).length):0;
-function trackSwitch(key){
+function trackSwitch(key,year){
   const d=UI[lang], c=compOf(key); if(!(c&&hasExpC(c)&&THEORY[key])) return "";
   return `<div class="lang trk" role="group" aria-label="${d.trkLabel}">${[["exp",d.trkExp],["thy",d.trkThy]].map(([k,l])=>
-    `<button type="button" aria-pressed="${track===k}" onclick="setTrack('${k}')">${l}</button>`).join("")}</div>`;
+    `<button type="button" aria-pressed="${trackOf(key,year)===k}" onclick="setTrack('${k}')">${l}</button>`).join("")}</div>`;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -5429,7 +5430,7 @@ function viewComp(key,mode){
     <div class="years">
       ${c.years.map(y=>{
         const r=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;
-        const th=thyOf(key,y.y), thy=trackOf(key)==="thy", none=thy?!th:y.problems.length===0;
+        const th=thyOf(key,y.y), thy=trackOf(key,y)==="thy", none=thy?!th:y.problems.length===0;
         /* theory: a problem is out when its card opens a paper (original or Korean) */
         const rt=!th?0:THY_YEARLY.has(key)?(th.f.T&&(th.f.T.paper||(th.f.T.ko||{}).paper)?thyCount(th):0)
           :Object.keys(th.f).filter(x=>!(x==="T"&&th.f.T1)&&(th.f[x].paper||(th.f[x].ko||{}).paper)).length+(th.w?1:0);
@@ -5468,7 +5469,7 @@ function xmPortalHtml(key,x,mode="exam",year=""){
         :my?`<a class="go sec" href="#/lab/${my.id}">${d.xmReport}</a><a class="go" href="${href}">${d.xmRetry}</a>`
         :`<a class="go" href="${href}">${review?(ko?"답안 제출":"Submit answers"):d.xmGo}</a>`}<a class="go sec" target="_blank" rel="noopener" href="${sheetsHref(href)}" title="${ko?"시작·채점 전에 인쇄해 풀이를 쓰는 답안지와 워킹시트 (스캔 마커 포함)":"The answer and working sheets to print and write on before the exam or grading (with scan markers)"}">${ko?"답안지·워킹시트":"Answer & working sheets"}</a></div></td></tr>`);
   };
-  const thyT=trackOf(key)==="thy";
+  const thyT=trackOf(key,year?c.years.find(y=>String(y.y)===String(year)):undefined)==="thy";
   const setRow=(y,profile)=>{
     const same=(a,b)=>a.length===b.length&&a.every(task=>b.includes(task));
     const eg=examGroups(key,y).find(g=>!g.some(p=>p.thy)&&profile.lab.some(tasks=>same(g.map(examTask),tasks))), tg=theoryGroups(key,y).find(g=>profile.theory.some(tasks=>same(g,tasks)));
@@ -5732,7 +5733,7 @@ function viewYear(key,year,mode=""){
   if(mode&&!hasReview(c,key)) mode="";
   /* 이 해에 있는 조만 고르개에 — 다른 해에서 고른 조가 없으면 전체를 보인다 */
   const yrGroups = c.groups ? ["a","b","c"].filter(g=>yr.problems.some(p=>grpOf(c,p).includes(g))) : [];
-  const thyY = trackOf(key)==="thy";
+  const thyY = trackOf(key,yr)==="thy";
   const grpShow = yrGroups.includes(grpSel) ? grpSel : "all";
   return ruphoPage(key,`
   <div class="shell">
@@ -5740,7 +5741,7 @@ function viewYear(key,year,mode=""){
       <a href="#/">${d.crumbHome}</a><span>/</span>
       <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span>
       <a href="${compModeHref(key,mode)}">${c.abbr}</a><span>/</span><b>${yr.y}</b>
-    </div>${trackSwitch(key)}</div>
+    </div>${trackSwitch(key,yr)}</div>
     <div class="phead">
       <h1>${c.abbr} ${yr.y}</h1>
       <div class="sub subflag">${flagImg(yr.cc,"flag big",yr.org)}<span>${yr.host?yr.host[lang]:"—"}</span></div>
