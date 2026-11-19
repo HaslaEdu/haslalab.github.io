@@ -66,6 +66,7 @@
   .views{display:flex;flex-wrap:wrap;gap:5px}
   .views button{flex:1 1 30%;margin:0;padding:6px 4px;font-size:12px}
   .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .row button.off{opacity:.45}
   .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:200px;overflow:auto;margin-top:4px}
   header{max-width:1720px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
@@ -106,6 +107,7 @@
   <aside class="panel">
     <h2 id="t-h-view"></h2>
     <div class="views" id="views"></div>
+    <div class="row" style="margin-top:6px"><button id="undoBtn" style="width:100%"></button></div>
 
     <h2 id="t-h-time"></h2>
     <div class="row" id="speeds"></div>
@@ -114,6 +116,7 @@
     <h2 id="t-h-sw"></h2>
     <div class="disp" id="swLbl">0:00.00</div>
     <div class="row"><button id="swBtn"></button><button id="swLap"></button><button id="swReset"></button></div>
+    <div class="hint" id="t-swhint"></div>
     <div class="laps" id="laps"></div>
 
     <h2 id="t-h-ard"></h2>
@@ -839,6 +842,9 @@ function pick3(x,y){
        y is up, all in centimetres; the parts after Figs. 1–3)
    ══════════════════════════════════════════════════════════════ */
 T.ko.items.watch="k. 스톱워치"; T.en.items.watch="k. Chronometer";
+T.ko.m.swNeed="스톱워치가 실험대에 없습니다 — 부품함에서 꺼내 놓으세요."; T.en.m.swNeed="The chronometer is not on the bench: take it out of the box.";
+T.ko.swHint="부품함에서 스톱워치 (k)를 꺼내 실험대에 놓아야 쓸 수 있습니다."; T.en.swHint="Take the chronometer (k) out of the box and put it on the bench to use it.";
+T.ko.swOk="실험대 위의 스톱워치입니다. 왼쪽 버튼(또는 스페이스 키) 시작·정지, 오른쪽 버튼 랩·리셋."; T.en.swOk="The chronometer on the bench. Left button (or the space bar): start/stop, right button: lap/reset.";
 const DESK=[-60,60,-36,36], WALL_Z=-37;
 const wx=b=>b-60, wz=b=>b-36;
 const WP=(p,y)=>[wx(p[0]),y||0,wz(p[1])];                      /* a bench point [bx,by] at height y */
@@ -925,7 +931,7 @@ function refreshLCD(){ const on=ST.on.ard&&ardOn(), s=on?lcd.join("|"):"off"; if
 let watchSig="";
 function refreshWatch(){ const t=ST.sw_t, s=Math.floor(t*100); if(String(s)===watchSig) return; watchSig=String(s);
   paint(WATCHC,(w,h)=>{ ctx.fillStyle="#b9c2a8"; ctx.fillRect(0,0,w,h); const m=Math.floor(t/60), sec=t-m*60;
-    X(String(m)+":"+sec.toFixed(2).padStart(5,"0"),w/2,h*0.58,"#1b2216",86,"c",true,"'Courier New',monospace"); X(ST.swRun?"RUN":"",w*0.15,h*0.18,"#1b2216",24,"c",true,"Arial,sans-serif"); });
+    X(String(m)+":"+sec.toFixed(2).padStart(5,"0"),w/2,h*0.6,"#1b2216",62,"c",true,"'Courier New',monospace"); X(ST.swRun?"RUN":"",w*0.15,h*0.18,"#1b2216",24,"c",true,"Arial,sans-serif"); });
   WATCHC._ver++; }
 let dmmSig="";
 function dmmDisplay(){ return dmmText(); }
@@ -989,7 +995,7 @@ function coils3(bx,by,y0){
   const x=wx(bx), z=wz(by), id="m_coils", up=ST.force.where==="coil", yA=y0+4.6;
   box3(x-3.4,x+3.4,y0,y0+2.4,z-2.6,z+2.6,GREY3D,{id,top:"#55575b"});
   /* sockets on the front of the foot */
-  for(const [t,dx,col] of [["C-",-1.0,"#151617"],["C+",1.0,"#c8282a"]]){ cyl3("z",z+2.6,z+3.0,y0+1.2,x+dx,0.42,col,{seg:16,id:"t_"+t,cap:"#0c0c0d"}); hit([x+dx,y0+1.2,z+2.9],0.85,"t_"+t); }
+  for(const [t,dx,col] of [["C-",-1.0,"#151617"],["C+",1.0,"#c8282a"]]){ cyl3("z",z+2.6,z+3.0,x+dx,y0+1.2,0.42,col,{seg:16,id:"t_"+t,cap:"#0c0c0d"}); hit([x+dx,y0+1.2,z+2.9],0.85,"t_"+t); }
   if(!up){
     for(const sg of [-1,1]){ const xc=x+sg*1.5;
       box3(xc+sg*0.45-0.3,xc+sg*0.45+0.3,y0+2.4,y0+5.4,z-3.2,z+3.2,GREY3D,{id});
@@ -1125,8 +1131,8 @@ function watch3(bx,by,y0){
   const x=wx(bx), z=wz(by), id="m_watch";
   cyl3("y",y0,y0+1.3,x,z,3.1,"#16171a",{seg:32,id,cap:"#1d1e21"});
   tex3(WATCHC,0,0,300,180,[x-1.9,y0+1.31,z-1.1],[3.8,0,0],[0,0,2.3],{id});
-  for(const [b,dx] of [["w_ss",-1.6],["w_lr",1.6]]){ cyl3("z",z-3.6,z-2.9,y0+0.8,x+dx,0.35,"#2b2c30",{seg:12,id:b}); hit([x+dx,y0+0.8,z-3.3],0.8,b); }
-  text3([x-1.6,y0+1.32,z-2.35],[1,0,0],[0,0,-1],"START/STOP",0.28,"#d9dde2",{align:"center"}); text3([x+1.6,y0+1.32,z-2.35],[1,0,0],[0,0,-1],"LAP/RESET",0.28,"#d9dde2",{align:"center"});
+  for(const [b,dx] of [["w_ss",-1.6],["w_lr",1.6]]){ cyl3("z",z-3.6,z-2.9,x+dx,y0+0.8,0.35,"#2b2c30",{seg:12,id:b}); hit([x+dx,y0+0.8,z-3.3],0.8,b); }
+  text3([x-1.25,y0+1.32,z-1.95],[1,0,0],[0,0,-1],"START/STOP",0.24,"#d9dde2",{align:"center"}); text3([x+1.25,y0+1.32,z-1.95],[1,0,0],[0,0,-1],"LAP/RESET",0.24,"#d9dde2",{align:"center"});
 }
 /* h. the banana leads, from terminal to terminal */
 function termW(t){ const p=TERM[t](); const y={ "V+":2.25,"V-":2.25,"C+":1.2,"C-":1.2,A10:3.2,AmA:3.2,COM:3.2 }[t]; return [wx(p[0]),y,wz(p[1])]; }
@@ -1393,7 +1399,6 @@ function rclick(p){
 window.addEventListener("pointerup",e=>{ if(B.trayDrag&&B.carry&&e.target===cv){ placeCarry(mousePos(e)); drawTray(); } B.trayDrag=false; });
 window.addEventListener("pointermove",e=>{ if(B.trayDrag&&B.carry){ const r=cv.getBoundingClientRect(), p=[e.clientX-r.left,e.clientY-r.top]; B.mouse=p; B.mouseW=deskPt(p); } });
 $("viewBack").onclick=()=>goTo("all");
-cv.addEventListener("dblclick",e=>{ const p=mousePos(e), t=pick3(p[0],p[1]); if(B.carry||(t&&LIVE.test(t))) return; goTo("all"); });
 cv.addEventListener("wheel",e=>{
   e.preventDefault();
   const p=mousePos(e), dir=e.deltaY<0?1:-1;
@@ -1427,9 +1432,12 @@ function podMagOut(){ ST.podMagnet=false; ST.on.podMag=true; const s=ST.pos.stan
    8.  SIDE PANEL, LANGUAGE, MAIN LOOP
    ══════════════════════════════════════════════════════════════ */
 const fmt=t=>Math.floor(t/60)+":"+(t%60).toFixed(2).padStart(5,"0");
-$("swBtn").onclick=()=>{ ST.swRun=!ST.swRun; renderPanel(); };
-$("swLap").onclick=()=>{ ST.laps.unshift(fmt(ST.sw_t)); ST.laps=ST.laps.slice(0,40); renderPanel(); };
-$("swReset").onclick=()=>{ ST.sw_t=0; ST.laps=[]; ST.swRun=false; renderPanel(); };
+/* the chronometer works only once it is on the bench (as in the other benches): the panel mirrors its face */
+const swHere=()=>{ if(ST.on.watch) return true; say("swNeed"); renderStatus(Fnow); return false; };
+$("swBtn").onclick=()=>{ if(!swHere()) return; ST.swRun=!ST.swRun; renderPanel(); };
+$("swLap").onclick=()=>{ if(!swHere()) return; ST.laps.unshift(fmt(ST.sw_t)); ST.laps=ST.laps.slice(0,40); renderPanel(); };
+$("swReset").onclick=()=>{ if(!swHere()) return; ST.sw_t=0; ST.laps=[]; ST.swRun=false; renderPanel(); };
+document.addEventListener("keydown",e=>{ if(e.code==="Space"&&!/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName)){ e.preventDefault(); if(!e.repeat&&swHere()){ ST.swRun=!ST.swRun; renderPanel(); } } });
 $("unwire").onclick=()=>{ ST.wires=[]; if(B.carry&&B.carry.k==="wire") B.carry=null; say("unwired"); drawTray(); };
 function renderViews(){ const box=$("views"); box.innerHTML="";
   for(const [v,lbl] of d().views){ const b=document.createElement("button"); b.textContent=lbl; if(v===VIEW) b.className="on";
@@ -1450,10 +1458,34 @@ function renderStatus(F){
   const box=$("status"); box.innerHTML="";
   for(const [s,w] of L_){ const el=document.createElement("div"); el.textContent=s; if(w) el.className="warn"; box.appendChild(el); }
 }
+/* ══════════════════════════════════════════════════════════════
+   UNDO  —  the bench as it was before each action (Ctrl+Z or the button), as on the other benches.
+   The chronometer keeps running through it.
+   ══════════════════════════════════════════════════════════════ */
+Object.assign(T.ko,{undo:"↶ 직전 조작 취소 (Ctrl+Z)"}); Object.assign(T.en,{undo:"↶ Undo last action (Ctrl+Z)"});
+Object.assign(T.ko.m,{undone:"직전 조작을 취소했습니다.",noHist:"취소할 조작이 없습니다."}); Object.assign(T.en.m,{undone:"Last action undone.",noHist:"Nothing to undo."});
+const UNDO_KEEP=new Set(["sw","sw_t","swRun","laps"]);                 /* the chronometer is not put back */
+const UNDO_SKIP=new Set(["t","th","w","q","idle","hold","sw","sw_t","swRun","laps","fall","roll"]);   /* what moves by itself: not an action */
+const snapST=()=>JSON.stringify(ST);
+const sigOf=s=>JSON.stringify(JSON.parse(s),(k,v)=>UNDO_SKIP.has(k)?undefined:v);
+let UNDO=[], undoWheelT=0;
+function recUndo(){ const s=snapST(), g=sigOf(s); if(UNDO.length&&UNDO[UNDO.length-1].g===g) return; UNDO.push({s,g}); if(UNDO.length>80) UNDO.shift(); }
+function undo(){
+  const now=sigOf(snapST()); while(UNDO.length&&UNDO[UNDO.length-1].g===now) UNDO.pop();
+  const h=UNDO.pop(); if(!h){ say("noHist"); return; }
+  const o=JSON.parse(h.s); for(const k of Object.keys(ST)) if(!UNDO_KEEP.has(k)&&!(k in o)) delete ST[k];
+  for(const k in o) if(!UNDO_KEEP.has(k)) ST[k]=o[k];
+  B.carry=null; B.down=null; B.knob=null; B.pod=false; B.trayDrag=false;
+  say("undone"); drawTray(); renderPanel();
+}
+for(const el of [cv,trayCv]) el.addEventListener("pointerdown",()=>recUndo(),true);
+cv.addEventListener("wheel",()=>{ const n=performance.now(); if(n-undoWheelT>1500) recUndo(); undoWheelT=n; },{capture:true,passive:true});
+document.addEventListener("keydown",e=>{ if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.code==="KeyZ"&&!/^(INPUT|TEXTAREA)$/.test(e.target.tagName)){ e.preventDefault(); undo(); } });
+$("undoBtn").onclick=undo;
 function applyLang(){
   const t=d(); document.documentElement.lang=lang;
   $("t-title").textContent=t.title; $("t-sub").textContent=t.sub; $("t-tray").textContent=t.tray;
-  $("t-benchcap").textContent=t.benchcap; $("t-h-view").textContent=t.hView;
+  $("t-benchcap").textContent=t.benchcap; $("undoBtn").textContent=t.undo; $("t-h-view").textContent=t.hView;
   $("t-h-sw").textContent=t.hSw; $("swLap").textContent=t.lap; $("swReset").textContent=t.reset;
   $("t-h-time").textContent=t.hTime; $("t-timehint").textContent=t.timeHint;
   $("t-h-ard").textContent=t.hArd; $("t-ardhint").textContent=t.ardHint; $("unwire").textContent=t.unwire;
@@ -1479,8 +1511,10 @@ function tick(){
   const F=podField(); Fnow=F; let left=sdt; while(left>1e-9){ const h=Math.min(left,0.002); podStep(h,F); left-=h; }
   lcdT-=dt; if(lcdT<=0){ lcd=readLcd(); lcdT=0.25; }
   if(CW>10) draw();
-  $("swLbl").textContent=fmt(ST.sw_t);
-  if(++frameN%8===0){ renderStatus(F); renderViews(); }
+  if(!ST.on.watch&&ST.swRun&&!(B.carry&&B.carry.id==="watch")) ST.swRun=false;
+  $("swLbl").textContent=ST.on.watch?fmt(ST.sw_t):"-:--.--"; $("swLbl").style.opacity=ST.on.watch?1:0.35;
+  if(++frameN%8===0){ renderStatus(F); renderViews(); $("t-swhint").textContent=ST.on.watch?d().swOk:d().swHint;
+    for(const b of ["swBtn","swLap","swReset"]) $(b).classList.toggle("off",!ST.on.watch); }
   requestAnimationFrame(tick);
 }
 window.addEventListener("resize",layout);
