@@ -70,11 +70,12 @@ test('new olympiad visitors see translated theory papers and retain their explic
   }
   assert.equal(a.run('trackOf("ipho")'),'exp');
   const practical=a.run('viewYear("ibo",2023)');
-  assert.ok(anchors(practical).some(link=>link.url.endsWith('l/ibo/IBO_2023_P3_OriginalLayout_KO.pdf')));
+  assert.ok(anchors(practical).some(link=>link.url.split(/[?#]/)[0].endsWith('/l/ibo/IBO_2023_P3_OriginalLayout_KO.pdf')));
   assert.match(practical,/aria-pressed="true" onclick="setTrack\('exp'\)"/);
   a.run('render=()=>{};setTrack("exp")');
   assert.equal(a.store.get('hlTrack'),'exp');
   assert.equal(a.run('trackOf("ieso")'),'exp');
+  assert.match(a.run('viewYear("ieso",2025)'),/한국어 이론 문제지 2종/);
   assert.ok(!anchors(a.run('viewYear("ieso",2025)')).some(link=>link.url.includes('IESO_2025_T1_OriginalLayout_KO.pdf')));
 });
 
