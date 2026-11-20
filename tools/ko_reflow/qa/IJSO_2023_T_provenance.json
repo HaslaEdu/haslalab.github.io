@@ -1,0 +1,59 @@
+{
+  "file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\IJSO-2023-theory-paper\\IJSO_2023_Theory_Paper_OriginalLayout_KO.pdf",
+  "suggested_registered_filename": "IJSO_2023_T_KO.pdf",
+  "pages": 29,
+  "bytes": 6397280,
+  "sha256": "1efd4f82f446c73f829fa8658d86c73e1d043b8e148e179a84161303e6b73761",
+  "language": "ko",
+  "kind": "paper",
+  "competition": "IJSO",
+  "year": 2023,
+  "part": "T",
+  "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+  "source": {
+    "file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\IJSO-2023-theory\\IJSO_2023_T_EN.pdf",
+    "pages": 29,
+    "bytes": 8661025,
+    "sha256": "249bcbfce2997a82d6fa7c23717ec8d2fccee1cd3991ce75ba1250046794f31e",
+    "official_url": "https://ijsoweb.org/event/2023/qna/Theoretical2023-question-sheet.pdf",
+    "retrieval_url": "https://haslalab-pdf.haslalab.workers.dev/pdf/IJSO_2023_T_EN.pdf"
+  },
+  "question_counts": {
+    "physics": 8,
+    "chemistry": 3,
+    "chemistry_subquestions": 7,
+    "biology": 6,
+    "total_large_questions": 17
+  },
+  "source_design": {
+    "original_page_dimensions_and_count": true,
+    "original_figures_and_data_preserved": true,
+    "original_Latin_math_font_programs_and_roles_preserved": true,
+    "Korean_font": "Noto Sans KR regular/bold, with an oblique role where the source raster/native text is italic.",
+    "raster_source_label_fonts": "Original bitmap font programs are not recoverable; matching Korean sans weight and italic role are used inside each original label area."
+  },
+  "intentional_changes_and_retained_source_identifiers": [
+    "Translated every question, instruction, choice/row heading, descriptive native label, diagram legend and axis title directly into Korean.",
+    "Retained source scientific numbers, tables, blanks, mathematical variables, units, chemical structures, labels used as answer identifiers, artwork and original bibliographic attributions.",
+    "125 periodic-table Korean labels reuse the independently reviewed exact same decoded source image; element-cell union clips preserve every original table rule. Eight longer element names are fitted within the original cell (five characters4.1pt/six3.5pt) to preserve all Korean edges at this page rendering phase.",
+    "Original source formula glyphs are separately captured and drawn with their native fonts, glyph sizes and relative positions; the wrapped source Ka2 equation is joined on a common baseline without altering its internal pieces.",
+    "Original historical Uut/Uup/Uus/Uuo element identifiers remain unchanged.",
+    "The graph RGB image hides its xlabel unless composited with its original soft mask; the visible Durian cultivar title is translated into Korean in place. All six original source soft-mask streams remain present.",
+    "This is the question paper, with no answer content added. The distinct official20-page answer/working booklet is a separately published resource."
+  ],
+  "qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\IJSO-2023-theory-paper\\qa-final.json",
+  "additional_qa_files": [
+    "qa-geometry-final.json",
+    "native-math-qa.json",
+    "font-audit-final.json",
+    "font-audit-nimbus.json",
+    "font-style-qa.json",
+    "raster-line-loss-review.json",
+    "softmasks-and-table-rules-qa.json",
+    "periodic-korean-glyph-edges-qa.json",
+    "ocr-English-reviewed-final.json",
+    "periodic-cell-clips-shared-guards.json",
+    "page4-rebuild-other-pages-qa.json"
+  ],
+  "status": "FROZEN; do not edit these final PDF bytes after receipt."
+}

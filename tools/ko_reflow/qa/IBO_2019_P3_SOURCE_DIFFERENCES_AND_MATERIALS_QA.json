@@ -1,0 +1,61 @@
+{
+  "complete": true,
+  "source_url": "https://tpmso.k12ea.gov.tw/ibo/wp-content/uploads/2022/07/2019-3-%E6%A4%8D%E7%89%A9%E3%80%81%E5%8B%95%E7%89%A9%E5%8F%8A%E7%94%9F%E6%85%8B%E5%AD%B8.pdf",
+  "source_sha256": "365e99c4f88c5f14d0b0a13f95c7aab7ebb1367623cbb09b59481eec242a7b08",
+  "differences": [
+    {
+      "pages": [
+        4,
+        5,
+        6
+      ],
+      "issue": "Source botanical terminology",
+      "detail": "Both source languages call b/c palea and e/f outer/inner lemma. Korean follows the source correspondence with descriptive 포엽/영 and an explicit note, leaving figure labels unchanged."
+    },
+    {
+      "pages": [
+        6
+      ],
+      "issue": "Key8b palea attachment",
+      "English": "Paleas are joined to almost their mid-points or above.",
+      "Chinese": "Describes joints at the middle or above.",
+      "translation": "English instruction retained; Chinese wording explicitly noted."
+    },
+    {
+      "pages": [
+        6,
+        7
+      ],
+      "issue": "Key10a awn-length units",
+      "English": "10–20mm",
+      "Chinese": "10–20cm",
+      "translation": "English measurement retained; Chinese difference explicitly noted."
+    },
+    {
+      "pages": [
+        13
+      ],
+      "issue": "Unspecified marks in contents",
+      "source": "Both anatomy parts are followed by X MARKS.",
+      "translation": "Retains X점(원문) without inferring a numerical score."
+    },
+    {
+      "pages": [
+        23
+      ],
+      "issue": "Undefined muscle reference",
+      "source": "m6 origin note refers to m10 although the list only defines m1–m8.",
+      "translation": "m10 retained and marked as original wording."
+    },
+    {
+      "pages": [
+        26
+      ],
+      "issue": "Source structure name",
+      "source": "m7/m5 shared structure is called a ligament in both languages.",
+      "translation": "인대 retained; not silently replaced by tendon."
+    }
+  ],
+  "separate_answer_sheet_obtained": false,
+  "official_source_figures_measurements_and_answer_key_changed": false
+}
