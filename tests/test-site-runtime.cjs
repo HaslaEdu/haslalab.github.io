@@ -95,8 +95,13 @@ test('the olympiad archive loads practical papers and their alternate language o
   assert.ok(taipei.some(link=>link.url.endsWith('l/ieso/IESO_2009_T_OriginalLayout_KO.pdf')&&!link.label.includes('부분')));
   assert.ok(taipei.some(link=>link.url.endsWith('/3rdieso-answer-paper.pdf')));
   const taipeiPractical=anchors(a.run('track="exp"; viewYear("ieso",2009)'));
-  assert.equal(taipeiPractical.filter(link=>link.url.startsWith('https://www.jeso.jp/download/exam/ieso/3rdieso-answer-practice-')).length,4);
-  a.run('track="thy"');
+  for(const part of ['P2','P3']){
+    assert.ok(taipeiPractical.some(link=>link.url.includes(`IESO_2009_${part}_Official_Solutions_KO.pdf?v=`)),
+      `${part} opens the Korean marked solution booklet`);
+  }
+  const taipeiPracticalOriginals=anchors(a.run('lang="en"; viewYear("ieso",2009)'));
+  assert.equal(taipeiPracticalOriginals.filter(link=>link.url.startsWith('https://www.jeso.jp/download/exam/ieso/3rdieso-answer-practice-')).length,4);
+  a.run('lang="ko"; track="thy"');
   const daegu=anchors(a.run('viewYear("ieso",2019)'));
   assert.ok(daegu.some(link=>new URL(link.url,'https://haslalab.org').pathname.endsWith('l/ieso/IESO_2019_T2_Jury_EN.pdf')&&link.label.includes('색상')));
   assert.ok(daegu.some(link=>link.url.endsWith('l/ieso/IESO_2019_T4_Jury_EN.pdf')));
