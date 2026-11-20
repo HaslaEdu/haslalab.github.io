@@ -1,0 +1,105 @@
+{
+  "source_url": "https://disk.yandex.ru/i/V982iRaMZCIwpg",
+  "source_index_url": "https://mendeleevolympiad.org/examples-eng",
+  "official_filename": "2023_enu_tour2_sol.docx",
+  "official_docx_sha256": "f013256badb9bdc7687ea8db921130ef3486d810ade0538de88f6aab7dc9be88",
+  "source_format": "Official English DOCX converted locally to native searchable PDF",
+  "native_pdf_pages": 25,
+  "reference_scan_url": "https://hkd.hr/images/imcho/Materijali/57IMChO/57_IMChO_Teorijski_test_2_rjesenja.pdf",
+  "reference_scan_pages": 26,
+  "edition_distinction": "The official Word source uses Times New Roman with local native25-page pagination. The association scan is a distinct Arial26-page edition; that scanned layout is not claimed to match the Korean PDF.",
+  "fonts": {
+    "latin": "Retained original embedded Times New Roman source programs; Arial for original diagram labels",
+    "hangul": "Noto Serif KR matching serif body; Malgun Gothic matching sans-serif figure labels",
+    "original_global_font_subset": false
+  },
+  "original_major_problems": 15,
+  "paired_paper_numbered_subquestions": 90,
+  "paired_retained_subquestions": 88,
+  "omitted_questions": [
+    "무기화학1.6",
+    "무기화학1.7"
+  ],
+  "omitted_points_within_inorganic_problem1": 6,
+  "omission_solution_pages": [
+    10,
+    11
+  ],
+  "omission_source_paragraphs": [
+    94,
+    95,
+    96,
+    97,
+    98
+  ],
+  "source_omission_characters_removed": 955,
+  "retained_source_characters_in_omission": 0,
+  "source_vector_paths_removed": 134,
+  "retained_source_vector_paths_in_omission": 0,
+  "actual_original_images_in_omission": 0,
+  "source_conversion_repairs": [
+    "Six legacy Word EQ fraction fields converted only in rendering copy to native OMML, preserving numerator/denominator and all source sub/superscripts.",
+    "One LibreOffice-only red placeholder after(18−12)/2= removed after checking original OOXML; original has no RHS.",
+    "Official DOCX unchanged.",
+    "Two obsolete original vector bars removed narrowly in fully rewritten p15 paragraphs; intended source chemical charge and86/8 value are explicitly preserved in Korean text."
+  ],
+  "conversion_evidence": [
+    "t2s_legacy_field_repairs.json",
+    "t2s_conversion_repairs.json"
+  ],
+  "editorial_notes_page": 25,
+  "source_content_audit": "t2_pair_source_audit.json",
+  "official_grading_distinction": "Original equations and official answers retained; independently checked source anomalies labeled as editorial notes, not as revised official grading.",
+  "editorial_issues": [
+    {
+      "item": "Organic2 starting substrate",
+      "evidence": "Original reaction diagram labels sclareoloxide; solution prose calls starting substrate sclareolide Y although Y is the later lactone. Translation distinguishes these and labels correction."
+    },
+    {
+      "item": "Organic3 tetrazine aldehyde",
+      "evidence": "Unclear original4-methyl-tetrazine wording not converted into an invented positional IUPAC name. Translation uses methyl-tetrazine aldehyde K, retaining the actual native structure."
+    },
+    {
+      "item": "Physical1.5",
+      "evidence": "35°C=308.15K yields official roundedK15.4/237. Native source303.15K and positive secondΔG retained as source equations; sign/temp correction separately explained."
+    },
+    {
+      "item": "Physical3.5",
+      "evidence": "Native fraction inspected:10^-8.5 and inverse OH term generate official0.032mol. Constant-definition/sign inconsistency explicitly noted; official result not silently replaced."
+    },
+    {
+      "item": "Physical3.6",
+      "evidence": "Official18.9nM uses F0=12000 and threshold11058. Calibration convention preserved, no unsupported replacement by11.7nM."
+    },
+    {
+      "item": "Inorganic1.4",
+      "evidence": "Native source[ Tl(H2O)6 ]3+ confirmed on p10. Charge-balanced Tl(I) hydrate is+1; native equation retained with explicit note."
+    },
+    {
+      "item": "Inorganic3.3",
+      "evidence": "Native p13 source reaction has2Mn(II) and1permanganate for5Mn3 clusters. Correct balanced Mn coefficients12 and3 stated only as editorial verification; all original reaction artwork preserved."
+    },
+    {
+      "item": "Life1 Salvarsan",
+      "evidence": "As–C and As–As native cyclic structures imply As(I). Original As(III) wording identified separately. Primary reference DOI10.1002/anie.200461471."
+    },
+    {
+      "item": "Life2 legacy equation",
+      "evidence": "Original OOXML ends(18−12)/2= with no result. Only LibreOffice-inserted red placeholder removed, no invented original RHS."
+    },
+    {
+      "item": "Life3 isotope arithmetic",
+      "evidence": "181−147=34,183−147=36; H→X replacement gives M(X)=difference+1=35/37. Native source misprints shown in note, chlorine conclusion unchanged."
+    },
+    {
+      "item": "Analytical2.4d",
+      "evidence": "Native p23 source unbalanced Cu(I)/iodate equation confirmed. Charge/atom-balanced4CuCl2−+IO3−+6H+→4Cu2++ICl+7Cl−+3H2O given separately."
+    },
+    {
+      "item": "Analytical2.4e",
+      "evidence": "Source verbal precipitation/separation accompanied by dissolution equation. Both source items retained and distinguished; no silent equation reversal."
+    }
+  ],
+  "separate_official_theory_blank_answer_sheet_found": false,
+  "no_paid_or_external_translation_api_used": true
+}
