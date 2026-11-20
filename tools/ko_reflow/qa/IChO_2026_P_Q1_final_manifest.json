@@ -1,0 +1,64 @@
+{
+  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q1\\fontfix-20261120\\IChO_2026_P_Q1_OriginalLayout_KO.pdf",
+  "sha256": "41571d32cae56fbfe379219f602edf66a385ff9666a66aad32ece3dbb3293c9d",
+  "bytes": 482620,
+  "pages": 6,
+  "kind": "Q1",
+  "role": "Official practical question and equipment/chemicals packet",
+  "language": "ko",
+  "edition": "Complete unofficial Korean translation in original PDF layout",
+  "source": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-Q1.pdf",
+    "url": "https://drive.google.com/file/d/133rcrAAQD-eHuGLrf6zXWfdtd9Ab6Pk_/view",
+    "sha256": "2ce4d16d984e237a6641d0418efb0df2963597f6da7152b611e7b86654b5ec62",
+    "bytes": 317700,
+    "pages": 6
+  },
+  "official_organizer_page": "https://www.icho2026.uz/problems",
+  "retrieved_utc_date": "2026-11-20",
+  "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+  "layout_and_fonts": {
+    "original_pdf_pages_and_sizes": true,
+    "korean": "NotoSansKR 400/700; bold and underlining follow the corresponding original expressions",
+    "latin_math": "Original source NotoSans and mathematical glyphs, explicitly routed by actual source coverage and role; source Unicode maps restored only in inserted font wrappers. All used contours and new Unicode verified.",
+    "preserved_native_font_programs": true,
+    "global_pdf_font_subsetting": false,
+    "source_logo": "Unchanged original IChO 2026 branding",
+    "identifiers_retained": "Scientific formulas, units, variable symbols, question/page codes and physical reagent-bottle labels such as R1-syn/R1-an/Py-qual/Dithiz./Solvent are retained. Corresponding item descriptions and instructions are Korean."
+  },
+  "qa": {
+    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q1\\fontfix-20261120\\qa-final.json",
+    "translated_hangul_characters": 1994,
+    "protected_native_characters": 555,
+    "native_word_render_checks": 219,
+    "new_latin_math_glyphs_verified": 96,
+    "whole_original_images_rgb_identical": 8,
+    "table_header_answer_rules_rgb_identical": 316,
+    "replaced_original_prose_underline_segments": 52,
+    "underline_method": "Only isolated original textual 0.6575 pt underline strokes under replaced English prose are removed; matching Korean expressions receive native PDF underlines. Borders, scientific diagrams, formulas and blanks are excluded. Exact removed coordinates are recorded in build QA.",
+    "page_code_word_bbox_exception": "Native large page-code word bbox can include the separate language caption. Actual code region above y=130 is verified RGB-identical when this causes a false positive.",
+    "missing_native_ink": 0,
+    "untranslated_text_regions": 0,
+    "unexpected_font_fallbacks": 0,
+    "full_mupdf_render": true,
+    "full_poppler_visual_review": true,
+    "poppler_warnings": 0,
+    "all_used_korean_glyph_checks": [
+      {
+        "weight": "bold",
+        "distinct_used_hangul_glyphs": 124,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      },
+      {
+        "weight": "regular",
+        "distinct_used_hangul_glyphs": 276,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      }
+    ],
+    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold, independently of fallback names."
+  }
+}
