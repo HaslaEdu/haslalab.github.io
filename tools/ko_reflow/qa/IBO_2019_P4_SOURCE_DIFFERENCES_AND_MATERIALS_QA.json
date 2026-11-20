@@ -1,0 +1,45 @@
+{
+  "complete": true,
+  "source_url": "https://tpmso.k12ea.gov.tw/ibo/wp-content/uploads/2022/07/2019-4-%E7%94%9F%E7%89%A9%E8%B3%87%E8%A8%8A%E5%8F%8A%E7%A5%9E%E7%B6%93%E7%94%9F%E7%89%A9%E5%AD%B8.pdf",
+  "source_sha256": "7eac21c166557ef611457ffd280c6dbd0edbf5be6a42ac45a31d5c3d81a04893",
+  "source_missing_prompt": {
+    "page": 7,
+    "question": "Q4.1.3.a",
+    "visually_confirmed": "Printed question identifier and empty frame, with no English or Traditional Chinese prompt.",
+    "translation_action": "Original identifier/frame retained with an explicit Korean source-omission note. No prompt inferred from answer key.",
+    "replacement_public_prompt_obtained": false
+  },
+  "source_blank_page": 11,
+  "bilingual_differences": [
+    {
+      "page": 8,
+      "English": "Styles -> Heatmap",
+      "Chinese": "Styles -> Heatmap and Numbers",
+      "translation": "English instruction and the Chinese difference are both stated."
+    },
+    {
+      "page": 12,
+      "Chinese_additional_condition": "A few days of recovery after electrode implantation.",
+      "translation": "Retained explicitly."
+    }
+  ],
+  "source_materials_not_obtained": [
+    "Separate answer sheet.",
+    "Geneious DNA/mRNA/cDNA dataset.",
+    "Runnable examination software and neuronal recordings."
+  ],
+  "embedded_additional_information_translated": {
+    "pages": [
+      24,
+      25
+    ],
+    "groups": [
+      "A Speed cells",
+      "B Head direction cells",
+      "C Grid cells",
+      "D Border cells",
+      "E Bulk cells"
+    ]
+  },
+  "official_source_data_figures_and_answer_key_changed": false
+}
