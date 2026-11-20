@@ -3657,11 +3657,11 @@
   {
     "file": "pdfx/ibo/IBO_2020_T1_Paper_KO.pdf",
     "pages": 65,
-    "bytes": 4218222,
-    "sha256": "1822d2a796969395b56233df8b6ed2278ff4ef1718da2dd20dfe5fcd0a9acfb3",
+    "bytes": 4221877,
+    "sha256": "f052505bbdea71f6cd276586cd8c1aca80c7d7445ba49f44771f1ee781b70027",
     "language": "ko",
-    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1_Paper_KO.pdf",
-    "qa": "tools/ko_reflow/qa/IBO_2020_T1_original_layout.json",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1_Paper_KO_FONT_REPAIRED.pdf",
+    "qa": "tools/ko_reflow/qa/IBO_2020_T1_font_repaired_paper.json",
     "audit_schema": "olympiad-original-layout-v1"
   },
   {
@@ -3717,11 +3717,11 @@
   {
     "file": "pdfx/ibo/IBO_2020_T1_Solutions_KO.pdf",
     "pages": 31,
-    "bytes": 840124,
-    "sha256": "a99baf593186ea8bc48bb12512025f03ca07491b6193d1c2a55baeb5eecd27a4",
+    "bytes": 841869,
+    "sha256": "46c79701a017ad07c1bb08ae2ad6f7e0b1dce11cdd8cd47a0ba6ca86671d60ac",
     "language": "ko",
-    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1_Solutions_KO.pdf",
-    "qa": "tools/ko_reflow/qa/IBO_2020_T1_solutions_original_layout.json",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1_Solutions_KO_FONT_REPAIRED.pdf",
+    "qa": "tools/ko_reflow/qa/IBO_2020_T1_font_repaired_solutions.json",
     "audit_schema": "olympiad-original-layout-v1"
   },
   {
@@ -3992,6 +3992,96 @@
     "language": "ko",
     "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\A1\\IChO_2026_P_A1_OriginalLayout_KO.pdf",
     "qa": "tools/ko_reflow/qa/IChO_2026_P_A1_final_manifest.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ibo/IBO_2020_T2_Solutions_KO.pdf",
+    "pages": 28,
+    "bytes": 1244967,
+    "sha256": "92fa6292f83481e6544d89101a2d7ed6a1140db3ca4820fc0b740b490f2d659c",
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T2_Solutions_KO.pdf",
+    "qa": "tools/ko_reflow/qa/IBO_2020_T2S_original_layout.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/icho/IChO_2026_P_S1_OriginalLayout_KO.pdf",
+    "pages": 11,
+    "bytes": 1029611,
+    "sha256": "dc740383f7817ae17122ed833b420222abf37c4c6c34f9e6bfaa3e53a6812620",
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\IChO_2026_P_S1_OriginalLayout_KO.pdf",
+    "qa": "tools/ko_reflow/qa/IChO_2026_P_S1_final_manifest.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ieso/IESO_2018_ITFI_OriginalLayout_KO.pdf",
+    "pages": 23,
+    "bytes": 10284465,
+    "sha256": "562571b30965b4e80ccab24a29fce6c1c0361c1615862b95391f6d61b9701023",
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ieso\\remaining\\IESO_2018_ITFI\\IESO_2018_ITFI_OriginalLayout_KO.pdf",
+    "qa": "tools/ko_reflow/qa/IESO_2018_ITFI_final_manifest.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ieso/IESO_2018_ITFI_EN.pdf",
+    "pages": 23,
+    "bytes": 6330791,
+    "sha256": "7e5ac80083a2fcb51c5af46c871d7908e4ff0478d93a6c4603f67f384b676295",
+    "language": "en",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ieso\\remaining\\IESO_2018_ITFI_EN.pdf",
+    "qa": "tools/ko_reflow/qa/IESO_2018_ITFI_unmodified_source.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ieso/IESO_2018_ITFI_RubricPages_EN.pdf",
+    "pages": 2,
+    "bytes": 284640,
+    "sha256": "b1f25c939ca54eab7382fa64204f525844269748f20f18253a3e73fc671298df",
+    "language": "en",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ieso\\remaining\\IESO_2018_ITFI\\IESO_2018_ITFI_RubricPages_EN.pdf",
+    "qa": "tools/ko_reflow/qa/IESO_2018_ITFI_rubric_excerpts.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/ieso/IESO_2018_ITFI_RubricPages_KO.pdf",
+    "pages": 2,
+    "bytes": 2717477,
+    "sha256": "720c012bc8b03eee449b6f05f939592fcbdbfc9f2f84d2600ce098db989a6144",
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ieso\\remaining\\IESO_2018_ITFI\\IESO_2018_ITFI_RubricPages_KO.pdf",
+    "qa": "tools/ko_reflow/qa/IESO_2018_ITFI_rubric_excerpts.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/icho/IChO_2026_P_Q2_OriginalLayout_KO.pdf",
+    "pages": 7,
+    "bytes": 4907762,
+    "sha256": "7d7f7157074b825ee5fa76fe90a115ceccd3cc224eb988039427d874ef4a324e",
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q2\\IChO_2026_P_Q2_OriginalLayout_KO.pdf",
+    "qa": "tools/ko_reflow/qa/IChO_2026_P_Q2_final_manifest.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/icho/IChO_2026_P_A2_OriginalLayout_KO.pdf",
+    "pages": 3,
+    "bytes": 567900,
+    "sha256": "51c69fda6ccabcb89740ec4bbf9e82d22b5f66e0276a81d691984d48658eeab3",
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\A2\\IChO_2026_P_A2_OriginalLayout_KO.pdf",
+    "qa": "tools/ko_reflow/qa/IChO_2026_P_A2_final_manifest.json",
+    "audit_schema": "olympiad-original-layout-v1"
+  },
+  {
+    "file": "pdfx/icho/IChO_2026_P_S2_OriginalLayout_KO.pdf",
+    "pages": 11,
+    "bytes": 5785152,
+    "sha256": "e7d8777d961fac4d8f4954e3efef02e9b8846b340768285e2af73bbd707be644",
+    "language": "ko",
+    "generated_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S2\\IChO_2026_P_S2_OriginalLayout_KO.pdf",
+    "qa": "tools/ko_reflow/qa/IChO_2026_P_S2_final_manifest.json",
     "audit_schema": "olympiad-original-layout-v1"
   }
 ]

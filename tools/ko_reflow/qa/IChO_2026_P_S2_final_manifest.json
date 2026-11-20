@@ -1,0 +1,80 @@
+{
+  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S2\\IChO_2026_P_S2_OriginalLayout_KO.pdf",
+  "sha256": "e7d8777d961fac4d8f4954e3efef02e9b8846b340768285e2af73bbd707be644",
+  "bytes": 5785152,
+  "pages": 11,
+  "kind": "S2",
+  "role": "Official questions, solutions and marking scheme",
+  "language": "ko",
+  "edition": "Complete unofficial Korean translation in original PDF layout",
+  "source": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-S2.pdf",
+    "url": "https://drive.google.com/file/d/1nPWiAC3lhDjpau-2TaDhXh6YA8fFwaol/view",
+    "sha256": "d9a3e97b2e19f2c4d9b8f46d8fce6bf5103072f5c2d7ffabc91dfa63517ffe79",
+    "bytes": 5617474,
+    "pages": 11
+  },
+  "official_organizer_page": "https://www.icho2026.uz/problems",
+  "retrieved_utc_date": "2026-11-20",
+  "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+  "layout_and_fonts": {
+    "original_pdf_pages_and_sizes": true,
+    "korean": "NotoSansKR 400/700; bold and underlining follow the corresponding original expressions",
+    "latin_math": "Original source NotoSans and mathematical glyphs, explicitly routed by actual source coverage and role; source Unicode maps restored only in inserted font wrappers. All used contours and new Unicode verified.",
+    "preserved_native_font_programs": true,
+    "global_pdf_font_subsetting": false,
+    "source_logo": "Unchanged original IChO 2026 branding",
+    "identifiers_retained": "Scientific formulas, units, variable symbols, question/page codes and physical reagent-bottle labels such as R1-syn/R1-an/Py-qual/Dithiz./Solvent are retained. Corresponding item descriptions and instructions are Korean.",
+    "original_italic_style": "Original Latin NotoSans-Italic glyphs are retained for italic enzyme abbreviations. Korean caption and substance-list italics use explicitly prepared NotoSansKR Oblique with the matching 12-degree slant; every used Hangul cmap entry and embedded glyph outline is verified."
+  },
+  "qa": {
+    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S2\\qa-final.json",
+    "translated_hangul_characters": 2208,
+    "protected_native_characters": 363,
+    "native_word_render_checks": 148,
+    "new_latin_math_glyphs_verified": 76,
+    "whole_original_images_rgb_identical": 29,
+    "table_header_answer_rules_rgb_identical": 192,
+    "replaced_original_prose_underline_segments": 17,
+    "underline_method": "Only isolated original textual 0.6575 pt underline strokes under replaced English prose are removed; matching Korean expressions receive native PDF underlines. Borders, scientific diagrams, formulas and blanks are excluded. Exact removed coordinates are recorded in build QA.",
+    "page_code_word_bbox_exception": "Native large page-code word bbox can include the separate language caption. Actual code region above y=130 is verified RGB-identical when this causes a false positive.",
+    "missing_native_ink": 0,
+    "untranslated_text_regions": 0,
+    "unexpected_font_fallbacks": 0,
+    "full_mupdf_render": true,
+    "full_poppler_visual_review": true,
+    "poppler_warnings": 0,
+    "all_used_korean_glyph_checks": [
+      {
+        "weight": "bold",
+        "distinct_used_hangul_glyphs": 48,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      },
+      {
+        "weight": "regular",
+        "distinct_used_hangul_glyphs": 232,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      },
+      {
+        "weight": "oblique",
+        "distinct_used_hangul_glyphs": 61,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      }
+    ],
+    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold or explicitly prepared Oblique/BoldOblique, independently of fallback names.",
+    "source_image_payloads_and_positions_preserved": true,
+    "translated_diagram_label_masks": 0,
+    "diagram_changed_pixels_outside_declared_labels": 0,
+    "diagram_scientific_roi_checks": [],
+    "native_complex_equation_geometry_checks": [],
+    "noninking_fallback_whitespace_spans": []
+  },
+  "title_context": "Atlas is the Uzbek silk fabric explicitly described in the opening paragraph; the Korean title is 효소의 아틀라스.",
+  "source_marking_wording_preserved": "The E3 criterion groups the third and fourth correct answers under a 0.5-point statement; Korean retains this grouping without adding a separate score per answer."
+}

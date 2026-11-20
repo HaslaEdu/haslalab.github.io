@@ -1,0 +1,614 @@
+{
+  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\IChO_2026_P_S1_OriginalLayout_KO.pdf",
+  "sha256": "dc740383f7817ae17122ed833b420222abf37c4c6c34f9e6bfaa3e53a6812620",
+  "bytes": 1029611,
+  "pages": 11,
+  "kind": "S1",
+  "role": "Official questions, solutions and marking scheme",
+  "language": "ko",
+  "edition": "Complete unofficial Korean translation in original PDF layout",
+  "source": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-S1.pdf",
+    "url": "https://drive.google.com/file/d/10EcZo55WUORhkv7XZdydcHdCbgB667ns/view",
+    "sha256": "4a62d6356b292ce0e36fa0aefd870d433be833d3a3b913caa623c5bd2596361c",
+    "bytes": 616250,
+    "pages": 11
+  },
+  "official_organizer_page": "https://www.icho2026.uz/problems",
+  "retrieved_utc_date": "2026-11-20",
+  "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+  "layout_and_fonts": {
+    "original_pdf_pages_and_sizes": true,
+    "korean": "NotoSansKR 400/700; bold and underlining follow the corresponding original expressions",
+    "latin_math": "Original source NotoSans and mathematical glyphs, explicitly routed by actual source coverage and role; source Unicode maps restored only in inserted font wrappers. All used contours and new Unicode verified.",
+    "preserved_native_font_programs": true,
+    "global_pdf_font_subsetting": false,
+    "source_logo": "Unchanged original IChO 2026 branding",
+    "identifiers_retained": "Scientific formulas, units, variable symbols, question/page codes and physical reagent-bottle labels such as R1-syn/R1-an/Py-qual/Dithiz./Solvent are retained. Corresponding item descriptions and instructions are Korean."
+  },
+  "qa": {
+    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\qa-final.json",
+    "translated_hangul_characters": 3593,
+    "protected_native_characters": 577,
+    "native_word_render_checks": 224,
+    "new_latin_math_glyphs_verified": 150,
+    "whole_original_images_rgb_identical": 16,
+    "table_header_answer_rules_rgb_identical": 321,
+    "replaced_original_prose_underline_segments": 52,
+    "underline_method": "Only isolated original textual 0.6575 pt underline strokes under replaced English prose are removed; matching Korean expressions receive native PDF underlines. Borders, scientific diagrams, formulas and blanks are excluded. Exact removed coordinates are recorded in build QA.",
+    "page_code_word_bbox_exception": "Native large page-code word bbox can include the separate language caption. Actual code region above y=130 is verified RGB-identical when this causes a false positive.",
+    "missing_native_ink": 0,
+    "untranslated_text_regions": 0,
+    "unexpected_font_fallbacks": 0,
+    "full_mupdf_render": true,
+    "full_poppler_visual_review": true,
+    "poppler_warnings": 0,
+    "all_used_korean_glyph_checks": [
+      {
+        "weight": "bold",
+        "distinct_used_hangul_glyphs": 125,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      },
+      {
+        "weight": "regular",
+        "distinct_used_hangul_glyphs": 335,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      }
+    ],
+    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold, independently of fallback names.",
+    "source_image_payloads_and_positions_preserved": true,
+    "translated_diagram_label_masks": 24,
+    "diagram_changed_pixels_outside_declared_labels": 0,
+    "diagram_scientific_roi_checks": [
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          53,
+          15,
+          286,
+          72
+        ],
+        "description": "maximum product mass",
+        "page_box": [
+          67.29338339114466,
+          158.90486299991608,
+          113.89506537720536,
+          170.30527477264405
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          239,
+          76,
+          315,
+          115
+        ],
+        "description": "formal penalty variable Pen",
+        "page_box": [
+          104.49472609246351,
+          171.10530366897584,
+          119.69527472310992,
+          178.90558540821075
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          984,
+          92,
+          1086,
+          141
+        ],
+        "description": "total numeric score",
+        "page_box": [
+          253.50010411656316,
+          174.305419254303,
+          273.90084043664126,
+          184.10577323436738
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1087,
+          372,
+          1130,
+          421
+        ],
+        "description": "product mass variable m",
+        "page_box": [
+          274.10084765546554,
+          230.3074419975281,
+          282.70115806491026,
+          240.10779597759247
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          293,
+          484,
+          477,
+          542
+        ],
+        "description": "maximum measured mass condition",
+        "page_box": [
+          115.29511590897542,
+          252.7082510948181,
+          152.09644417264568,
+          264.30867009162904
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          13,
+          491,
+          91,
+          536
+        ],
+        "description": "zero total first",
+        "page_box": [
+          59.29309463817287,
+          254.10830166339875,
+          74.89365770646786,
+          263.1086267471313
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          13,
+          547,
+          91,
+          593
+        ],
+        "description": "zero total second",
+        "page_box": [
+          59.29309463817287,
+          265.3087062120438,
+          74.89365770646786,
+          274.5090385198593
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          13,
+          654,
+          91,
+          701
+        ],
+        "description": "zero total third",
+        "page_box": [
+          59.29309463817287,
+          286.7094791889191,
+          74.89365770646786,
+          296.10981872081754
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          307,
+          1151,
+          388,
+          1202
+        ],
+        "description": "zero total bottom",
+        "page_box": [
+          118.09521697251556,
+          386.1130695581436,
+          134.29580169728342,
+          396.3134379863739
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          91,
+          597,
+          193,
+          649
+        ],
+        "description": "left impurity penalty",
+        "page_box": [
+          74.89365770646786,
+          275.3090674161911,
+          95.29439402654594,
+          285.70944306850436
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          91,
+          707,
+          193,
+          757
+        ],
+        "description": "left appearance penalty",
+        "page_box": [
+          74.89365770646786,
+          297.30986206531526,
+          95.29439402654594,
+          307.3102232694626
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1381,
+          596,
+          1487,
+          649
+        ],
+        "description": "right melting penalty",
+        "page_box": [
+          332.90296998980824,
+          275.10906019210813,
+          354.1037351851835,
+          285.70944306850436
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          242,
+          876,
+          535,
+          940
+        ],
+        "description": "low onset temperature threshold",
+        "page_box": [
+          105.09474774893638,
+          331.11108293533323,
+          163.69686286445477,
+          343.91154527664185
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          258,
+          990,
+          520,
+          1053
+        ],
+        "description": "high onset temperature threshold",
+        "page_box": [
+          108.2948632501251,
+          353.9119064807892,
+          160.69675458209036,
+          366.5123615980148
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1079,
+          541,
+          1179,
+          592
+        ],
+        "description": "formal onset temperature",
+        "page_box": [
+          272.5007899048712,
+          264.10866286754606,
+          292.50151178730073,
+          274.3090312957764
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1648,
+          546,
+          1845,
+          587
+        ],
+        "description": "melting range accepted condition",
+        "page_box": [
+          386.30489741589497,
+          265.1086989879608,
+          425.70631952428107,
+          273.30899517536164
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1648,
+          599,
+          1845,
+          640
+        ],
+        "description": "melting range penalty condition",
+        "page_box": [
+          386.30489741589497,
+          275.709081864357,
+          425.70631952428107,
+          283.9093780517578
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1977,
+          630,
+          2393,
+          690
+        ],
+        "description": "yield formula",
+        "page_box": [
+          452.107272409088,
+          281.90930581092834,
+          535.3102754399947,
+          293.90973925590515
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1923,
+          865,
+          2100,
+          909
+        ],
+        "description": "yield upper branch condition",
+        "page_box": [
+          441.306882592576,
+          328.91100347042084,
+          476.7081603244763,
+          337.7113213300705
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          2248,
+          865,
+          2408,
+          910
+        ],
+        "description": "yield lower branch condition",
+        "page_box": [
+          506.30922871047187,
+          328.91100347042084,
+          538.3103837223591,
+          337.91132855415344
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1899,
+          1020,
+          2140,
+          1073
+        ],
+        "description": "full score formula",
+        "page_box": [
+          436.506709340793,
+          359.9121232032776,
+          484.70844907744805,
+          370.51250607967376
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          2028,
+          1144,
+          2394,
+          1197
+        ],
+        "description": "partial score formula",
+        "page_box": [
+          462.307640569127,
+          384.713018989563,
+          535.5102826588189,
+          395.3134018659592
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          997,
+          1172,
+          1126,
+          1218
+        ],
+        "description": "pure coefficient numerical value",
+        "page_box": [
+          256.10019796127904,
+          390.3132212638855,
+          281.901129189613,
+          399.51355357170104
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1465,
+          1177,
+          1823,
+          1238
+        ],
+        "description": "impure coefficient formula",
+        "page_box": [
+          349.703576371049,
+          391.31325738430024,
+          421.30616071014657,
+          403.51369805336
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          785,
+          876,
+          1270,
+          948
+        ],
+        "description": "pure temperature interval",
+        "page_box": [
+          213.6986675705285,
+          331.11108293533323,
+          310.7021687003115,
+          345.5116030693054
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 5,
+        "image_index": 1,
+        "pixel_box": [
+          1405,
+          876,
+          1846,
+          948
+        ],
+        "description": "impure temperature interval",
+        "page_box": [
+          337.7031432415913,
+          331.11108293533323,
+          425.90632674310535,
+          345.5116030693054
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 6,
+        "image_index": 1,
+        "pixel_box": [
+          70,
+          0,
+          1230,
+          1015
+        ],
+        "description": "Entire graph trace, grid, ticks, numerical values and MV identifiers",
+        "page_box": [
+          133.9420969631417,
+          204.1776123046875,
+          452.9602438548582,
+          483.31849603434557
+        ],
+        "changed_pixels": 0
+      },
+      {
+        "page": 6,
+        "image_index": 1,
+        "pixel_box": [
+          1374,
+          972,
+          1443,
+          1012
+        ],
+        "description": "Original graph comma and mL unit",
+        "page_box": [
+          492.56249657245064,
+          471.49282312757185,
+          511.5385759996303,
+          482.49344908736134
+        ],
+        "changed_pixels": 0
+      }
+    ],
+    "native_complex_equation_geometry_checks": [
+      {
+        "page": 4,
+        "equation": "DELTA",
+        "glyphs_verified": 24,
+        "relative_native_glyph_baselines_and_positions_exact": true,
+        "scale": 1.0
+      },
+      {
+        "page": 4,
+        "equation": "PC_FORMULA",
+        "glyphs_verified": 20,
+        "relative_native_glyph_baselines_and_positions_exact": true,
+        "scale": 1.0
+      }
+    ],
+    "noninking_fallback_whitespace_spans": [
+      {
+        "page": 4,
+        "font": "NotoSerif-Regular",
+        "text": " "
+      },
+      {
+        "page": 4,
+        "font": "NotoSerif-Regular",
+        "text": " "
+      },
+      {
+        "page": 4,
+        "font": "NotoSerif-Regular",
+        "text": " "
+      }
+    ]
+  },
+  "source_inconsistencies_preserved": [
+    "Original melting-range equation is Delta T = average onset temperature minus average clear temperature; the original subtraction order is preserved.",
+    "The flowchart uses T_onset <= 190 C for its zero-score branch while prose says below 190 C; both original statements are preserved.",
+    "The flowchart prints Y => 87% and summarizes the high-yield branch without the 105% limit given in the prose; the original numbers, glyphs and inequalities are preserved.",
+    "The extra SOLUTION heading after Q1.1 is present in the official source and is retained as 해설:."
+  ],
+  "diagram_font_note": "The two source diagrams are bitmap images with no recoverable embedded font metadata. Original bitmap payloads, scientific symbols, units, numerical values, traces and arrows are retained. New Korean explanatory labels use matching sans serif NotoSansKR at the original label locations.",
+  "formal_identifiers_retained": "Variables and mathematical subscripts max/aver/onset/clear/Pen/flask/aliquot/points remain as originally written. Narrative explanations, diagram headings, graph axis captions and marking instructions are Korean."
+}

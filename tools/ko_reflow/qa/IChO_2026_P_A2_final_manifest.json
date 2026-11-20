@@ -1,0 +1,74 @@
+{
+  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\A2\\IChO_2026_P_A2_OriginalLayout_KO.pdf",
+  "sha256": "51c69fda6ccabcb89740ec4bbf9e82d22b5f66e0276a81d691984d48658eeab3",
+  "bytes": 567900,
+  "pages": 3,
+  "kind": "A2",
+  "role": "Official blank answer sheet",
+  "language": "ko",
+  "edition": "Complete unofficial Korean translation in original PDF layout",
+  "source": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-A2.pdf",
+    "url": "https://drive.google.com/file/d/1BAHdlO6ght3mcOL6kbAM4dnQtKURdvee/view",
+    "sha256": "5afa37e8a64fdbe8b08e14edd53bbb34c21387afa3d3e3b60ed8b6af0ba2f70f",
+    "bytes": 545807,
+    "pages": 3
+  },
+  "official_organizer_page": "https://www.icho2026.uz/problems",
+  "retrieved_utc_date": "2026-11-20",
+  "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+  "layout_and_fonts": {
+    "original_pdf_pages_and_sizes": true,
+    "korean": "NotoSansKR 400/700; bold and underlining follow the corresponding original expressions",
+    "latin_math": "Original source NotoSans and mathematical glyphs, explicitly routed by actual source coverage and role; source Unicode maps restored only in inserted font wrappers. All used contours and new Unicode verified.",
+    "preserved_native_font_programs": true,
+    "global_pdf_font_subsetting": false,
+    "source_logo": "Unchanged original IChO 2026 branding",
+    "identifiers_retained": "Scientific formulas, units, variable symbols, question/page codes and physical reagent-bottle labels such as R1-syn/R1-an/Py-qual/Dithiz./Solvent are retained. Corresponding item descriptions and instructions are Korean."
+  },
+  "qa": {
+    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\A2\\qa-final.json",
+    "translated_hangul_characters": 39,
+    "protected_native_characters": 163,
+    "native_word_render_checks": 67,
+    "new_latin_math_glyphs_verified": 5,
+    "whole_original_images_rgb_identical": 6,
+    "table_header_answer_rules_rgb_identical": 132,
+    "replaced_original_prose_underline_segments": 0,
+    "underline_method": "Only isolated original textual 0.6575 pt underline strokes under replaced English prose are removed; matching Korean expressions receive native PDF underlines. Borders, scientific diagrams, formulas and blanks are excluded. Exact removed coordinates are recorded in build QA.",
+    "page_code_word_bbox_exception": "Native large page-code word bbox can include the separate language caption. Actual code region above y=130 is verified RGB-identical when this causes a false positive.",
+    "missing_native_ink": 0,
+    "untranslated_text_regions": 0,
+    "unexpected_font_fallbacks": 0,
+    "full_mupdf_render": true,
+    "full_poppler_visual_review": true,
+    "poppler_warnings": 0,
+    "all_used_korean_glyph_checks": [
+      {
+        "weight": "bold",
+        "distinct_used_hangul_glyphs": 17,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      },
+      {
+        "weight": "regular",
+        "distinct_used_hangul_glyphs": 8,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      }
+    ],
+    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold or explicitly prepared Oblique/BoldOblique, independently of fallback names.",
+    "source_image_payloads_and_positions_preserved": true,
+    "translated_diagram_label_masks": 0,
+    "diagram_changed_pixels_outside_declared_labels": 0,
+    "diagram_scientific_roi_checks": [],
+    "native_complex_equation_geometry_checks": [],
+    "noninking_fallback_whitespace_spans": []
+  },
+  "source_form_details_preserved": [
+    "Original aggregate score field Q2.123 (56.0 pt) is preserved.",
+    "Original repeated Q2.5 boxes and all blank answer/check boxes are preserved."
+  ]
+}

@@ -122,6 +122,12 @@ test('the olympiad archive loads practical papers and their alternate language o
   const solutions=a.run('THEORY.icho[2017].f.T.sol');
   assert.match(solutions,/^https:\/\/eko\.ut\.ee\//);
   assert.deepEqual(plain(a.run('theoryGroups("icho",DATA.icho.years.find(y=>y.y===2017))')),[]);
+  const practical2026=a.run('lang="ko";track="exp";viewYear("icho",2026)');
+  assert.match(practical2026,/74쪽/);
+  assert.ok(anchors(practical2026).some(link=>link.url.includes('IChO_2026_P_A1_OriginalLayout_KO.pdf')&&link.label.includes('답안지')&&!link.label.includes('연습용')));
+  const junior2024=a.run('viewYear("ijso",2024)');
+  assert.match(junior2024,/연습용 답안지 \(하슬라랩\)/);
+  assert.match(junior2024,/연습용 풀이용지 \(하슬라랩\)/);
 });
 
 test('compact metadata preserves all competition names, subject counts and home totals before any paper loads',()=>{
