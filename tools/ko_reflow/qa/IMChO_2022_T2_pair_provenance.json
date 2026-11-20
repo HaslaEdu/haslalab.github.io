@@ -1,0 +1,124 @@
+{
+  "status": "complete_frozen_for_publication",
+  "competition": "IMChO",
+  "year": 2022,
+  "total_pages": 43,
+  "artifacts": [
+    {
+      "part": "T2",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\IMChO_2022_T2_Practice_KO.pdf",
+      "canonical_filename": "IMChO_2022_T2_Practice_KO.pdf",
+      "pages": 16,
+      "bytes": 6607447,
+      "sha256": "2edfabc15784f34a870a7e3bcffa26cace79a95375ff138861ab83b4a65a6068",
+      "kind": "paper",
+      "language": "KO",
+      "qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\2022T2_final_qa.json",
+      "preservation_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2_final_artwork_preservation_QA.json",
+      "whole_xref_omission_image_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2_final_whole_xref_image_QA.json",
+      "image_ink_collision_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2_final_actual_image_ink_collision_QA.json",
+      "hangul_characters": 10516,
+      "translated_layout_regions": 669,
+      "native_characters_checked": 1264,
+      "native_characters_missing": 0,
+      "safe_source_image_streams_preserved": 79,
+      "source_font_programs_preserved": 25,
+      "partially_omitted_questions": [
+        "Organic2.5"
+      ],
+      "global_font_subset": false,
+      "label_ko": "한국어 학습용 · 유기 2.5 제조 설명 일부 생략"
+    },
+    {
+      "part": "T2S",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\IMChO_2022_T2S_Practice_KO_Final.pdf",
+      "canonical_filename": "IMChO_2022_T2S_Practice_KO.pdf",
+      "pages": 27,
+      "bytes": 7820850,
+      "sha256": "484c8bd655e4fa318d5c40d9b2c12a330e958c774d8613c1c5fd8205ab43dc52",
+      "kind": "solution",
+      "language": "KO",
+      "qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\2022T2S_frozen_final_qa.json",
+      "preservation_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2S_frozen_final_artwork_preservation_QA.json",
+      "whole_xref_omission_image_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2S_frozen_final_whole_xref_image_QA.json",
+      "image_ink_collision_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2S_frozen_final_actual_image_ink_collision_QA.json",
+      "hangul_characters": 12726,
+      "translated_layout_regions": 928,
+      "native_characters_checked": 5363,
+      "native_characters_missing": 0,
+      "safe_source_image_streams_preserved": 182,
+      "source_font_programs_preserved": 23,
+      "partially_omitted_questions": [
+        "Organic2.5"
+      ],
+      "global_font_subset": false,
+      "label_ko": "한국어 학습용 · 유기 2.5 제조 설명 일부 생략"
+    }
+  ],
+  "scientific_pair_audit": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\t2_pair_scientific_audit_complete.json",
+  "all_15_major_questions_audited_against_official_solutions": true,
+  "official_source_archive": "https://mendeleevolympiad.org/examples-eng",
+  "sources": [
+    {
+      "part": "T2",
+      "language": "EN",
+      "format": "DOCX",
+      "url": "https://disk.yandex.ru/i/gbvSpIN_H0KVKA"
+    },
+    {
+      "part": "T2S",
+      "language": "EN",
+      "format": "DOCX",
+      "url": "https://disk.yandex.ru/i/7P8Q-ytoI8zkBQ"
+    },
+    {
+      "part": "T2",
+      "language": "RU",
+      "format": "DOCX",
+      "url": "https://disk.yandex.ru/i/R7v9Ndld3m1jgA"
+    },
+    {
+      "part": "T2S",
+      "language": "RU",
+      "format": "DOCX",
+      "url": "https://disk.yandex.ru/i/pepm4TVAPA9grA"
+    }
+  ],
+  "layout_note_ko": "공식 영어 DOCX를 로컬 변환한 원본 양식을 기반으로 번역했으며 협회 PDF와 일부 줄·쪽 나눔이 다릅니다. 원본 수식·구조·배점을 보존하고, 원문의 수치·표기 불일치 검산은 해설 3쪽 편집주로 구분했습니다.",
+  "omission_note_ko": "유기 2.5의 고위험 전구체 제조 시약 설명과 대응 절차 라벨 두 곳만 생략했습니다. 구조 질문·구조식·나머지 해설 및 원래 배점은 유지했습니다.",
+  "omission_source_text_or_images_in_shareable_qa": false,
+  "separate_official_theory_blank_answer_sheet_acquired": false,
+  "separate_official_theory_working_sheet_acquired": false,
+  "integrated_original_working_boxes": {
+    "part": "T2",
+    "physical_page": 9
+  },
+  "editorial_notes": {
+    "part": "T2S",
+    "physical_page": 3,
+    "added_on_original_blank_page": true
+  },
+  "verification": {
+    "poppler_pages_rendered": 43,
+    "poppler_dpi": 100,
+    "poppler_warnings": 0,
+    "page_geometry_matches": true,
+    "protected_native_glyphs_missing": 0,
+    "omitted_source_text_retained": 0,
+    "omitted_source_image_or_mask_retained_in_whole_xref": 0,
+    "original_font_programs_missing": 0,
+    "safe_image_streams_missing": 0,
+    "protected_dark_pixels_missing": 0,
+    "added_antialias_edge_pixels": {
+      "T2": 46,
+      "T2S": 134
+    },
+    "added_T2S_pixels_not_adjacent_to_native_one_pixel_edge": 0,
+    "retained_structure_pixel_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2S_frozen_final_artwork_preservation_QA.json",
+    "caption_structure_pixel_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2S_frozen_caption_structure_pixel_QA.json",
+    "unchanged_page_and_safe_body_pixel_qa": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2022\\T2S_frozen_unchanged_pages_body_pixel_QA.json",
+    "no_hangul_artwork_ink_collisions": true
+  },
+  "no_external_translation_api": true,
+  "earlier_drafts_or_candidates_are_not_publication_targets": true
+}
