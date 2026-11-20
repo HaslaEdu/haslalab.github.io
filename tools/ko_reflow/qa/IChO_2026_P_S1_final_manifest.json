@@ -1,7 +1,7 @@
 {
-  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\IChO_2026_P_S1_OriginalLayout_KO.pdf",
-  "sha256": "dc740383f7817ae17122ed833b420222abf37c4c6c34f9e6bfaa3e53a6812620",
-  "bytes": 1029611,
+  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\header-align-20261120\\IChO_2026_P_S1_OriginalLayout_KO.pdf",
+  "sha256": "af0ebcd7e89e3f10f9da56e57a684ce2ae22e51a899f7f26c0ce3d8a0d1e6ee0",
+  "bytes": 1029545,
   "pages": 11,
   "kind": "S1",
   "role": "Official questions, solutions and marking scheme",
@@ -27,7 +27,7 @@
     "identifiers_retained": "Scientific formulas, units, variable symbols, question/page codes and physical reagent-bottle labels such as R1-syn/R1-an/Py-qual/Dithiz./Solvent are retained. Corresponding item descriptions and instructions are Korean."
   },
   "qa": {
-    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\qa-final.json",
+    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\header-align-20261120\\qa-final.json",
     "translated_hangul_characters": 3593,
     "protected_native_characters": 577,
     "native_word_render_checks": 224,
@@ -59,7 +59,7 @@
         "glyph_outlines_exact": true
       }
     ],
-    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold, independently of fallback names.",
+    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold or explicitly prepared Oblique/BoldOblique, independently of fallback names.",
     "source_image_payloads_and_positions_preserved": true,
     "translated_diagram_label_masks": 24,
     "diagram_changed_pixels_outside_declared_labels": 0,
@@ -601,7 +601,155 @@
         "font": "NotoSerif-Regular",
         "text": " "
       }
-    ]
+    ],
+    "header_alignment_postprocess": {
+      "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\header-align-20261120\\IChO_2026_P_S1_OriginalLayout_KO.pdf",
+      "sha256": "af0ebcd7e89e3f10f9da56e57a684ce2ae22e51a899f7f26c0ce3d8a0d1e6ee0",
+      "bytes": 1029545,
+      "pages": 11,
+      "previous_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S1\\IChO_2026_P_S1_OriginalLayout_KO.pdf",
+      "previous_sha256": "dc740383f7817ae17122ed833b420222abf37c4c6c34f9e6bfaa3e53a6812620",
+      "corrected_header_count": 2,
+      "corrections": [
+        {
+          "page": 1,
+          "header_form_xref_before_save": 79,
+          "original_origin": [
+            84.64973449707031,
+            78.45421600341797
+          ],
+          "new_origin": [
+            56.69300079345703,
+            78.45421600341797
+          ],
+          "horizontal_shift": -27.95673370361328,
+          "unchanged_font": "NotoSansKR-Bold",
+          "unchanged_size": 14.173199653625488,
+          "allowed_pixel_region": [
+            54.69300079345703,
+            62.28101348876953,
+            112.72843170166016,
+            83.28885650634766
+          ],
+          "operation": "Only the header-only Form XObject translation matrix is changed."
+        },
+        {
+          "page": 2,
+          "header_form_xref_before_save": 79,
+          "original_origin": [
+            84.64973449707031,
+            78.45421600341797
+          ],
+          "new_origin": [
+            56.69300079345703,
+            78.45421600341797
+          ],
+          "horizontal_shift": -27.95673370361328,
+          "unchanged_font": "NotoSansKR-Bold",
+          "unchanged_size": 14.173199653625488,
+          "allowed_pixel_region": [
+            54.69300079345703,
+            62.28101348876953,
+            112.72843170166016,
+            83.28885650634766
+          ],
+          "operation": "Only the header-only Form XObject translation matrix is changed."
+        }
+      ],
+      "all_page_pixel_checks": [
+        {
+          "page": 1,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.6930046081543,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 2,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.6930046081543,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 3,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 4,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 5,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 6,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 7,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 8,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 9,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 10,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 11,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.69309997558594,
+            78.45421600341797
+          ]
+        }
+      ],
+      "all_pixels_outside_corrected_headers_identical": true,
+      "original_font_programs_untouched": true,
+      "global_pdf_font_subsetting": false
+    }
   },
   "source_inconsistencies_preserved": [
     "Original melting-range equation is Delta T = average onset temperature minus average clear temperature; the original subtraction order is preserved.",
@@ -610,5 +758,6 @@
     "The extra SOLUTION heading after Q1.1 is present in the official source and is retained as 해설:."
   ],
   "diagram_font_note": "The two source diagrams are bitmap images with no recoverable embedded font metadata. Original bitmap payloads, scientific symbols, units, numerical values, traces and arrows are retained. New Korean explanatory labels use matching sans serif NotoSansKR at the original label locations.",
-  "formal_identifiers_retained": "Variables and mathematical subscripts max/aver/onset/clear/Pen/flask/aliquot/points remain as originally written. Narrative explanations, diagram headings, graph axis captions and marking instructions are Korean."
+  "formal_identifiers_retained": "Variables and mathematical subscripts max/aver/onset/clear/Pen/flask/aliquot/points remain as originally written. Narrative explanations, diagram headings, graph axis captions and marking instructions are Korean.",
+  "edition_note": "Original header left alignment restored by changing only the header-only Form translation matrix. The exact previous PDF is preserved, and every pixel outside the declared corrected header regions is unchanged."
 }
