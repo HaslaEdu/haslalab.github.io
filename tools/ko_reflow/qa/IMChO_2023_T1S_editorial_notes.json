@@ -1,0 +1,65 @@
+{
+  "source": "https://disk.yandex.ru/i/bmTPrAm4yuobCg",
+  "official_filename": "2023_enu_tour1_sol.docx",
+  "source_format": "Official Word original converted locally to native searchable PDF",
+  "reference_scan": "https://hkd.hr/images/imcho/Materijali/57IMChO/57_IMChO_Teorijski_test_1_rjesenja.pdf",
+  "reference_scan_pages": 10,
+  "local_native_pdf_pages": 9,
+  "latin_font": "Arial, matching original family",
+  "hangul_font": "Malgun Gothic, matching sans-serif Korean",
+  "original_major_problems": 8,
+  "original_subquestions": 36,
+  "retained_subquestions": 35,
+  "omitted_questions": [
+    "4.1"
+  ],
+  "omitted_points": 7,
+  "original_points": 80,
+  "retained_points": 73,
+  "section_start_pages": [
+    1,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8
+  ],
+  "editorial_notes_page": 9,
+  "omission_scope": "Same 4.1 toxic-gas production/use scope as Korean question paper; safe definitions supplied to retain 4.2. All underlying source prose and its score captions removed in that scope.",
+  "source_conversion_repairs": [
+    "Two original legacy Word EQ fields for oxygen coefficients 1/2 and 3/2 converted to native OMML fractions in a rendering copy, preserving their intended source values.",
+    "Three red operand placeholders inserted only by LibreOffice at equation-run boundaries removed after comparison with original DOCX XML and reference scan.",
+    "Official DOCX itself unchanged.",
+    "One obsolete native fraction bar in corrected problem 6.7 algebra removed; adjacent polymer and chemical diagrams unchanged."
+  ],
+  "repair_evidence": [
+    "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\t1s_legacy_field_repairs.json",
+    "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\t1s_conversion_repairs.json"
+  ],
+  "editorial_corrections": [
+    {
+      "problem": "6.1-2",
+      "original": "Terminal C2F4O4SH mass 221.115; EW about 1000; backbone polymerization degree 402.6, with 402/403 accepted.",
+      "korean_edition": "Terminal mass about 197.1 from actual elemental counts; EW 976.25 using stated rounded fragment masses; polymerization degree about 416. Original grading values also quoted as original criteria."
+    },
+    {
+      "problem": "6.3",
+      "detail": "Multiplication 7.59*0.15 corrected to division 7.59/0.15. Source 46.01 mL distinguished from rounded 46.0 mL."
+    },
+    {
+      "problem": "6.7",
+      "detail": "Missing molar-mass parentheses restored. Direct EW 32.065/0.0213 =1505 g/mol; original x=.203, intermediate mass304.54 and rounded1500 quoted."
+    },
+    {
+      "problem": "8.2",
+      "detail": "Missing coefficient2 before water restored in overall gas reaction."
+    },
+    {
+      "problem": "8.5-6",
+      "detail": "Official 0.057 M and17.3g labelled as source approximations; unphysical35000M identified as neglecting EDTA depletion, total-ligand1:1 upper bound about18.0g distinguished."
+    }
+  ],
+  "separate_official_theory_blank_answer_sheet_acquired": false
+}
