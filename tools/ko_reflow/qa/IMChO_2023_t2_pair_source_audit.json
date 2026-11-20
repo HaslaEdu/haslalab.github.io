@@ -1,0 +1,129 @@
+{
+  "status": "complete",
+  "official_paper_url": "https://disk.yandex.ru/i/PtsSdkOrkMHouw",
+  "official_solution_url": "https://disk.yandex.ru/i/V982iRaMZCIwpg",
+  "official_paper_docx_sha256": "f9796e599445c392257f58a98f634d27484b0df17c3ab87d2e17d6314698c461",
+  "official_solution_docx_sha256": "f013256badb9bdc7687ea8db921130ef3486d810ade0538de88f6aab7dc9be88",
+  "source_paragraphs_reviewed": 299,
+  "sections": [
+    "Organic problems1–3",
+    "Physical problems1–3",
+    "Inorganic problems1–3, with1.6–7 omitted from Korean practice edition",
+    "Life sciences and polymers problems1–3",
+    "Analytical problems1–3"
+  ],
+  "self_authored_paper_changes_reaudited": [
+    {
+      "item": "Physical1.2",
+      "disposition": "Corrected previous combined10% mistranslation. Source solution explicitly w(HCl)=w(H2O)=0.1; Korean says each10%."
+    },
+    {
+      "item": "Inorganic3 background",
+      "disposition": "Withdrawn false arithmetic-error judgment. Original4.45g, H2O0.45g loss, final4.40g retained. Official Mn(II)→Mn(III) oxidation takes up0.40g O2 after water loss."
+    },
+    {
+      "item": "Inorganic3.2",
+      "disposition": "Removed unsupported common-log base. Question retains unspecified logarithms; official solution natural-log difference11.29, common-log equivalent4.90 separately explained."
+    },
+    {
+      "item": "Organic1 photon",
+      "disposition": "Restored ν in hν, present in original DOCX and association scan but invisible from a bad PUA Times glyph in local conversion."
+    },
+    {
+      "item": "Physical2.7 checkboxes",
+      "disposition": "Eight planets in official DOCX, not in association scan. Undefined F0FF marks normalized to empty squares; planet choices and original positions retained."
+    },
+    {
+      "item": "Physical3.5 decimal exponent",
+      "disposition": "Entire8.5 rendered in superscript; value10^(8.5) unchanged."
+    },
+    {
+      "item": "Life3 reagent acetoacetone",
+      "disposition": "Translated acetylacetone from the actual drawn β-diketone; correction labeled in body."
+    },
+    {
+      "item": "Analytical1.4 ammonium",
+      "disposition": "Translated first typo as free amine, matching same question R3N and official solution245–246; labeled in body."
+    }
+  ],
+  "solution_source_issues_separate_from_official_grading": [
+    {
+      "item": "Organic2 starting substrate",
+      "evidence": "Original reaction diagram labels sclareoloxide; solution prose calls starting substrate sclareolide Y although Y is the later lactone. Translation distinguishes these and labels correction."
+    },
+    {
+      "item": "Organic3 tetrazine aldehyde",
+      "evidence": "Unclear original4-methyl-tetrazine wording not converted into an invented positional IUPAC name. Translation uses methyl-tetrazine aldehyde K, retaining the actual native structure."
+    },
+    {
+      "item": "Physical1.5",
+      "evidence": "35°C=308.15K yields official roundedK15.4/237. Native source303.15K and positive secondΔG retained as source equations; sign/temp correction separately explained."
+    },
+    {
+      "item": "Physical3.5",
+      "evidence": "Native fraction inspected:10^-8.5 and inverse OH term generate official0.032mol. Constant-definition/sign inconsistency explicitly noted; official result not silently replaced."
+    },
+    {
+      "item": "Physical3.6",
+      "evidence": "Official18.9nM uses F0=12000 and threshold11058. Calibration convention preserved, no unsupported replacement by11.7nM."
+    },
+    {
+      "item": "Inorganic1.4",
+      "evidence": "Native source[ Tl(H2O)6 ]3+ confirmed on p10. Charge-balanced Tl(I) hydrate is+1; native equation retained with explicit note."
+    },
+    {
+      "item": "Inorganic3.3",
+      "evidence": "Native p13 source reaction has2Mn(II) and1permanganate for5Mn3 clusters. Correct balanced Mn coefficients12 and3 stated only as editorial verification; all original reaction artwork preserved."
+    },
+    {
+      "item": "Life1 Salvarsan",
+      "evidence": "As–C and As–As native cyclic structures imply As(I). Original As(III) wording identified separately. Primary reference DOI10.1002/anie.200461471."
+    },
+    {
+      "item": "Life2 legacy equation",
+      "evidence": "Original OOXML ends(18−12)/2= with no result. Only LibreOffice-inserted red placeholder removed, no invented original RHS."
+    },
+    {
+      "item": "Life3 isotope arithmetic",
+      "evidence": "181−147=34,183−147=36; H→X replacement gives M(X)=difference+1=35/37. Native source misprints shown in note, chlorine conclusion unchanged."
+    },
+    {
+      "item": "Analytical2.4d",
+      "evidence": "Native p23 source unbalanced Cu(I)/iodate equation confirmed. Charge/atom-balanced4CuCl2−+IO3−+6H+→4Cu2++ICl+7Cl−+3H2O given separately."
+    },
+    {
+      "item": "Analytical2.4e",
+      "evidence": "Source verbal precipitation/separation accompanied by dissolution equation. Both source items retained and distinguished; no silent equation reversal."
+    }
+  ],
+  "numeric_full_overlay_flags_review": {
+    "14": "Korean words three/six retain counts",
+    "20": "Unclear positional name handled as above",
+    "24": "2.0→2 score formatting",
+    "80": "Tl(+1)→Tl(I)",
+    "83": "Tl(+3)→Tl(III)",
+    "117": "0,940→0.940 decimal punctuation",
+    "120": "four written in Korean",
+    "135": "two written in Korean",
+    "139": "D/E labels refer to original intact structures instead of repeating every formula",
+    "159": "Explicit six benzene carbons retained;86/8 stated inline instead of old native fraction; no changed quantity.",
+    "206": "3~7 retains metabolites3,4,5,6,7",
+    "214": "compound2 referenced by context",
+    "215": "source arithmetic correction explicitly disclosed",
+    "216": "source arithmetic correction explicitly disclosed",
+    "234": "11,12 retained as11·12",
+    "249": "reaction native below Korean prose preserved",
+    "250": "nine written in Korean",
+    "272": "0.05→0.0500 and10→10.00 formatting, calculation unchanged",
+    "276": "one molecule written in Korean",
+    "294": "measurement index1 contextual pH1.0; all concentrations retained",
+    "295": "measurement index3 contextual pH11; all concentrations retained"
+  },
+  "no_paid_or_external_translation_api_used": true,
+  "separate_official_theory_blank_answer_sheet_found": false,
+  "additional_layout_repairs": [
+    "Two old native equation/charge bars in fully translated p15 paragraphs removed from actual line-art objects after retyping all intended values.",
+    "Native automatic question numbers retained; duplicate typed number prefixes removed for single-line paragraphs.",
+    "All original molecule artwork beside narrow text columns preserved; affected text constrained to source column widths."
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "source_url": "https://disk.yandex.ru/i/PtsSdkOrkMHouw",
+  "source_index_url": "https://mendeleevolympiad.org/examples-eng",
+  "official_filename": "2023_enu_tour2_task.docx",
+  "official_docx_sha256": "f9796e599445c392257f58a98f634d27484b0df17c3ab87d2e17d6314698c461",
+  "source_format": "Official DOCX converted locally to native searchable PDF",
+  "local_native_pages": 14,
+  "reference_scan_url": "https://hkd.hr/images/imcho/Materijali/57IMChO/57_IMChO_Teorijski_test_2.pdf",
+  "reference_scan_pages": 16,
+  "edition_distinction": "The official Word original uses Times New Roman and local pagination is 14 pages. The association scan is a separate Arial edition with 16 pages; its layout is not claimed to match this Korean edition.",
+  "fonts": {
+    "latin": "Times New Roman matching official Word body",
+    "hangul": "Noto Serif KR matching serif body; Malgun Gothic matching original sans-serif diagram labels",
+    "original_font_subset": false
+  },
+  "original_major_problems": 15,
+  "original_numbered_subquestions": 90,
+  "retained_numbered_subquestions": 88,
+  "omitted_questions": [
+    "무기화학 1.6",
+    "무기화학 1.7"
+  ],
+  "omission_background": "Associated introductory paragraph on use of the explosive material is also omitted.",
+  "omission_page": 7,
+  "omission_rationale_source": "https://cameochemicals.noaa.gov/chemical/18051",
+  "omission_text_removal": {
+    "source_nonblank_chars": 513,
+    "retained_source_chars": 0,
+    "original_image_or_artwork_in_omission_zone": false
+  },
+  "section_start_pages": {
+    "organic": 1,
+    "physical": 4,
+    "inorganic": 7,
+    "life_sciences_and_polymers": 9,
+    "analytical": 12
+  },
+  "editorial_notes": [
+    {
+      "page": 4,
+      "item": "Physical 1.2",
+      "change": "HCl and H2O are each 10% of the initial mass, as explicitly stated in official solution w(HCl)=w(H2O)=0.1. Corrected an earlier draft that incorrectly said their combined loss was 10%."
+    },
+    {
+      "page": 1,
+      "item": "Organic 1 reagent 3",
+      "change": "Restored the photon nu in Br2/hν that was blank in LibreOffice output; checked against the official DOCX and association scan."
+    },
+    {
+      "page": 5,
+      "item": "Physical 2.7",
+      "change": "The official Word file contains eight planet choices and Symbol F0FF marks. Its undefined marks render blank; these are normalized to empty square checkboxes at the original mark origins. The association scan omits the choices entirely."
+    },
+    {
+      "page": 12,
+      "item": "Life sciences 3 background",
+      "change": "Original acetoacetone is translated as acetylacetone based on the depicted reactant and reaction; correction explicitly identified in the body."
+    },
+    {
+      "page": 13,
+      "item": "Analytical 1.4",
+      "change": "The first ammonium reference is translated as the free amine, matching the same question’s explicit R3N; correction explicitly identified in the body."
+    },
+    {
+      "page": 6,
+      "item": "Physical 3.5",
+      "change": "Stability constant 10^(8.5) is rendered with the complete decimal exponent 8.5 raised, retaining its numeric meaning."
+    },
+    {
+      "page": 8,
+      "item": "Inorganic 3.2",
+      "change": "The original question asks for logarithm differences without specifying a base. Korean does not impose base10; official solution ln difference11.29 and equivalent base10 difference4.90 are distinguished in the solution editorial notes."
+    }
+  ],
+  "diagram_checks": [
+    "Tebbe and Raney labels, sclareoloxide, S-(+)-carvone, Li excess, concentrated acid, two dichlorobenzene solvent labels, pyridine and all 110°C/120°C values checked.",
+    "Original reaction arrows, structural formulas, reagent identifiers and every numeric table cell kept.",
+    "Kapustinsky fraction, Stern–Volmer fraction, redox half-reactions, native extraction equation and chromate equilibria retained.",
+    "Intracellular hydrolase labels, mass-spectral vertical axis, NMR headings and multiplicities translated while original masses, integrals and chemical shifts are retained.",
+    "Automatic question numbers on wrapped paragraphs remain at their native source positions."
+  ],
+  "separate_official_theory_blank_answer_sheet_found": false,
+  "source_mass_condition_review": "Inorganic 3 original 4.45 g precipitate, 0.45 g H2O loss and 4.40 g final precipitate are consistent with O2 uptake on Mn(II) to Mn(III) oxidation. All original values are retained with no claim of an arithmetic error.",
+  "numeric_source_solution_review": {
+    "official_solution_url": "https://disk.yandex.ru/i/V982iRaMZCIwpg",
+    "official_solution_docx_sha256": "f013256badb9bdc7687ea8db921130ef3486d810ade0538de88f6aab7dc9be88",
+    "manual_numeric_difference_review": "All numeric differences in t2_numeric_comparison_draft.json reviewed: scientific notation / superscript extraction, a Word artifact preceding inorganic 1.1, half-reaction and extraction-equation values retained natively, and C2H5OH translated as ethanol. Physical 1.2 condition cross-checked against the official solution.",
+    "physical_1_2": "10% HCl and 10% H2O separately",
+    "physical_3_5": "K = 10^(8.5)",
+    "all_source_numeric_table_cells_retained": true
+  },
+  "pair_source_audit": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\t2_pair_source_audit.json",
+  "pair_final_qa": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\t2_pair_audit_complete.json",
+  "publication_status": "final_after_complete_paired_review"
+}

@@ -1,0 +1,85 @@
+{
+  "status": "complete",
+  "paper": {
+    "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\IMChO_2023_T2_Practice_KO.pdf",
+    "pages": 14,
+    "bytes": 4419036,
+    "sha256": "e2ddec6ef5b442ef24e6fc80aaf8c05d3338139269f390b8239c3c8cd3c86fb1",
+    "source_embedded_font_programs": 18,
+    "retained_source_font_programs": 14,
+    "all_retained_source_font_programs_byte_identical": true,
+    "pruned_unused_original_fonts": [
+      "CAAAAA+TimesNewRomanPS-BoldMT",
+      "DAAAAA+TimesNewRomanPS-BoldMT",
+      "OAAAAA+TimesNewRomanPS-BoldItalicMT",
+      "PAAAAA+TimesNewRomanPS-ItalicMT"
+    ],
+    "hazard_artwork_removal": [
+      {
+        "page": 7,
+        "original_vector_paths_in_omission": 0,
+        "original_vector_paths_retained": 0,
+        "actual_original_images_in_omission": 0
+      }
+    ],
+    "translated_regions": 279,
+    "hangul_characters": 8090,
+    "original_chars_checked": 895,
+    "missing_original_chars": 0,
+    "hazard_source_chars_removed": 513,
+    "hazard_source_chars_retained": 0,
+    "native_dark_pixels_missing_outside_translation_regions": 0,
+    "added_threshold_edge_pixels": 102,
+    "added_pixels_not_within_one_original_pixel": 0,
+    "origin_comparison_tolerance_points": 0
+  },
+  "solution": {
+    "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\IMChO_2023_T2S_Practice_KO.pdf",
+    "pages": 25,
+    "bytes": 5288009,
+    "sha256": "42f43d0118d639b73affaa38fac0c491ef121afc2828ab789419425c1be87614",
+    "source_embedded_font_programs": 19,
+    "retained_source_font_programs": 14,
+    "all_retained_source_font_programs_byte_identical": true,
+    "pruned_unused_original_fonts": [
+      "CAAAAA+TimesNewRomanPS-BoldMT",
+      "DAAAAA+TimesNewRomanPS-BoldMT",
+      "KAAAAA+TimesNewRomanPS-BoldItalicMT",
+      "LAAAAA+TimesNewRomanPS-ItalicMT",
+      "RAAAAA+TimesNewRomanPSMT"
+    ],
+    "hazard_artwork_removal": [
+      {
+        "page": 10,
+        "original_vector_paths_in_omission": 0,
+        "original_vector_paths_retained": 0,
+        "actual_original_images_in_omission": 0
+      },
+      {
+        "page": 11,
+        "original_vector_paths_in_omission": 134,
+        "original_vector_paths_retained": 0,
+        "actual_original_images_in_omission": 0
+      }
+    ],
+    "translated_regions": 555,
+    "hangul_characters": 10812,
+    "original_chars_checked": 5744,
+    "missing_original_chars": 0,
+    "hazard_source_chars_removed": 955,
+    "hazard_source_chars_retained": 0,
+    "native_dark_pixels_missing_outside_translation_regions": 0,
+    "added_threshold_edge_pixels": 458,
+    "added_pixels_not_within_one_original_pixel": 0,
+    "origin_comparison_tolerance_points": 0.01
+  },
+  "source_content_audit": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\t2_pair_source_audit.json",
+  "omission_scopes_match": true,
+  "original_condition_values_verified": true,
+  "unsupported_mass_error_note_withdrawn": true,
+  "official_theory_blank_answer_sheet_acquired": false,
+  "pdf_pages_total": 39,
+  "paper_final_qa": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\2023T2_final_qa.json",
+  "solution_final_qa": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\2023T2S_final_qa.json",
+  "root_delivery": "Both PDFs frozen together; supersedes held96113 paper. Earlier held paper drafts must not be published."
+}
