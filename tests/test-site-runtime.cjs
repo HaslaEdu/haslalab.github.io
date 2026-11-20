@@ -161,7 +161,7 @@ test('lazy chunks retain every source export, general instructions and corrected
   for(const key of exports)assert.deepEqual(plain(split.window[key]),plain(full.window[key]),key);
   const lean=app();lean.load('theory:ipho');lean.load('theory:kphe');
   assert.deepEqual(plain(lean.run('GENERAL.ipho')),plain(full.window.GENERAL.ipho));
-  const [file,version]=Object.entries(full.window.KPHE_PDF_VERSIONS)[0];assert.equal(lean.run(`thyUrl(${JSON.stringify(file)})`),pdfxUrl(file)+'?v='+version);
+  const [file,version]=Object.entries(full.window.KPHE_PDF_VERSIONS)[0];assert.equal(lean.run(`thyUrl(${JSON.stringify(file)})`),pdfxUrl(file)+'?v='+version+'&cv=2');
   const [year,entries]=Object.entries(full.window.GENERAL.ipho)[0];const links=lean.run(`genLinks('ipho',{y:${JSON.stringify(year)}})`);assert.ok(links.includes(entries[0][1]),'the year retains its general instructions link');
 });
 

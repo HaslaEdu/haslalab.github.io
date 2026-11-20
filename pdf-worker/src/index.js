@@ -19,7 +19,7 @@ const STORE = /^X[a-z]+_(?=[A-Za-z0-9])/;
 const DAY = 86400;
 /* Replacing assets in place keeps their download URLs, so cached copies would
  * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
-const CACHE_V = 105;         // RuPhO 2026 Korean (the cache key is the storage name, so /pdf/l/ shares it)
+const CACHE_V = 106;         // Retire cached assets from before file-version-aware requests.
 
 export default {
   async fetch(req, env, ctx) {
@@ -32,16 +32,21 @@ export default {
     else if (m) { [, name, prefix] = m; shown = name.replace(STORE, ""); }
     else return new Response("Not found", { status: 404 });
 
-    /* one cached copy per file at each edge; the query string never matters */
+    /* A replacement asset keeps its storage URL. Honor the site's SHA-based
+     * file version in both cache layers so a new link cannot reuse old bytes.
+     * Other query parameters keep sharing the normal per-file cache. */
+    const requestedVersion = url.searchParams.get("v");
+    const version = /^[a-f0-9]{16}(?:[a-f0-9]{48})?$/.test(requestedVersion || "")
+      ? `${CACHE_V}-${requestedVersion}` : CACHE_V;
     const cache = caches.default;
-    const key = new Request(`${url.origin}/pdf/${name}?v=${CACHE_V}`, { method: "GET" });
+    const key = new Request(`${url.origin}/pdf/${name}?v=${version}`, { method: "GET" });
     /* Cache.match slices complete entries when the lookup retains Range.
      * We do not publish validators, so If-Range must fall back to a full copy. */
     const range = req.method === "GET" && !req.headers.has("If-Range") ? req.headers.get("Range") : null;
     const lookup = range ? new Request(key, { headers: { Range: range } }) : key;
     let res = await cache.match(lookup);
     if (!res) {
-      const up = await fetch(`https://github.com/${REPO}/releases/download/pdf-${prefix.toLowerCase()}/${name}?v=${CACHE_V}`,
+      const up = await fetch(`https://github.com/${REPO}/releases/download/pdf-${prefix.toLowerCase()}/${name}?v=${version}`,
                              { redirect: "follow", headers: range ? { Range: range } : {}, cf: { cacheEverything: true, cacheTtlByStatus: { "200-299": DAY, "404": 30, "500-599": 0 } } });
       if (range && up.status === 416) {
         const headers = { "Accept-Ranges": "bytes", "Access-Control-Allow-Origin": "*", "Access-Control-Expose-Headers": "Content-Length, Content-Range, Accept-Ranges" };
