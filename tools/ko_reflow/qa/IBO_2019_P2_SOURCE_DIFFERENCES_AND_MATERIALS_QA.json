@@ -1,0 +1,29 @@
+{
+  "complete": true,
+  "source_url": "https://tpmso.k12ea.gov.tw/ibo/wp-content/uploads/2022/07/2019-2-%E8%A1%80%E7%B3%96%E7%9A%84%E6%B8%AC%E5%AE%9A%E5%8F%8A%E5%88%86%E5%AD%90%E7%94%9F%E7%89%A9%E5%AD%B8.pdf",
+  "source_sha256": "37f4fb54cba57cb350ce34d4502ece096750d1552aa8145286f4a461aeb67203",
+  "differences": [
+    {
+      "pages": [
+        7
+      ],
+      "issue": "dilution definitions differ within both source languages",
+      "procedure": "sample volume:diluent volume, ratios 1:5, 1:2, 1:1, 2:1; 300 µL each",
+      "legend_D": "volume of glucose standard:total volume",
+      "translation": "Both definitions retained; Korean translator note explicitly distinguishes them. No silent numeric correction."
+    },
+    {
+      "pages": [
+        20
+      ],
+      "issue": "Q2.2.4 identifier printed twice for START and END/TIME",
+      "translation": "Both original identifiers retained."
+    }
+  ],
+  "source_materials_not_obtained": [
+    "Separate answer sheet and graph sheet referenced in instructions.",
+    "Virtual gel image provided later by lab assistant; distinct from the PCR teaching gel already embedded on p15."
+  ],
+  "bilingual_consolidation": "The final six English equipment-list entries on p3 are represented once at the Chinese continuation list positions on p4, with full original English specifications; all21 page geometries remain.",
+  "official_key_changed": false
+}
