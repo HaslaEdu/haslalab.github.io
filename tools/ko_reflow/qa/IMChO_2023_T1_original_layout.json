@@ -1,0 +1,136 @@
+{
+  "file": "IMChO_2023_T1_Practice_KO.pdf",
+  "pages": 6,
+  "bytes": 2348430,
+  "sha256": "1aeebad8ef4769285c62ee5f547876146a75eb882526313bc6413b0407aec3bc",
+  "source": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\T1_native_EN.pdf",
+  "translated_regions": 72,
+  "region_text_failures": [],
+  "hangul_characters": 3261,
+  "original_chars_checked": 276,
+  "missing_original_chars": 0,
+  "missing_details": [],
+  "hazard_source_chars_checked": 1080,
+  "hazard_source_chars_retained": 0,
+  "omitted_questions": [
+    "4.1"
+  ],
+  "remaining_english_lines": [
+    [
+      1,
+      [
+        166.9970245361328,
+        207.00999450683594,
+        340.54473876953125,
+        240.0753173828125
+      ],
+      "k H (T )=k H (298 K )exp[−ΔH"
+    ],
+    [
+      1,
+      [
+        338.07879638671875,
+        200.53945922851562,
+        357.9873962402344,
+        215.9879913330078
+      ],
+      "odiss"
+    ],
+    [
+      1,
+      [
+        299.1000061035156,
+        565.3132934570312,
+        414.5010070800781,
+        581.2977905273438
+      ],
+      "K = 3.3∙102Мatm1,"
+    ]
+  ],
+  "global_font_subset": false,
+  "page_geometry_matches": true,
+  "pixel_qa": [
+    {
+      "page": 1,
+      "native_dark_pixels": 7383,
+      "missing_dark_pixels": 0,
+      "added_dark_pixels": 16
+    },
+    {
+      "page": 2,
+      "native_dark_pixels": 7155,
+      "missing_dark_pixels": 0,
+      "added_dark_pixels": 0
+    },
+    {
+      "page": 3,
+      "native_dark_pixels": 1525,
+      "missing_dark_pixels": 0,
+      "added_dark_pixels": 5
+    },
+    {
+      "page": 4,
+      "native_dark_pixels": 2123,
+      "missing_dark_pixels": 0,
+      "added_dark_pixels": 2
+    },
+    {
+      "page": 5,
+      "native_dark_pixels": 972,
+      "missing_dark_pixels": 0,
+      "added_dark_pixels": 0
+    },
+    {
+      "page": 6,
+      "native_dark_pixels": 7126,
+      "missing_dark_pixels": 0,
+      "added_dark_pixels": 9
+    }
+  ],
+  "render_directory": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\imcho\\2023",
+  "status": "final",
+  "retained_subquestions": 35,
+  "original_subquestions": 36,
+  "source_font_program_integrity": {
+    "source_embedded_font_programs": 14,
+    "retained_source_font_programs": 12,
+    "changed_retained_source_font_programs": 0,
+    "unused_source_fonts_pruned": [
+      "CAAAAA+Arial-BoldMT",
+      "DAAAAA+Arial-BoldMT"
+    ],
+    "all_retained_source_font_programs_byte_identical": true
+  },
+  "original_source_fonts_subset": false,
+  "manual_native_pages_inspected": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "poppler_pages_rendered": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "poppler_pages_inspected": [
+    1,
+    2,
+    6
+  ],
+  "pixel_edge_qa": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\2023T1_edge_qa.json",
+  "editorial_notes": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2023\\t1_editorial_notes.json",
+  "official_source_url": "https://disk.yandex.ru/i/s5iweSbN_LK4zQ",
+  "notes": [
+    "All six translated native pages and original DOCX render inspected at full-page scale.",
+    "Zero original dark pixels lost outside translations. 32 extra threshold pixels lie solely within one pixel of original glyph contours; zero added pixels elsewhere.",
+    "All 12 retained source embedded font programs preserved byte for byte. Two unused original title-only bold fonts were garbage-collected after their English text was replaced.",
+    "Omitted native source text checked: 1080 original characters, zero retained. No images or line art present in the removed prose regions.",
+    "Original source formula glyphs retained; source legacy-symbol ToUnicode mappings remain in native math. Korean prose searchable."
+  ]
+}
