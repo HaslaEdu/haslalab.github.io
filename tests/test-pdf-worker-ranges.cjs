@@ -111,3 +111,29 @@ test('the new route refuses paths outside a folder name', async () => {
     assert.equal(res.status, 404, p);
   }
 });
+
+test('a SHA-versioned link bypasses an older cached PDF at both cache layers', async () => {
+  const digest='6c1452e22ac42726';
+  const h=setup({
+    match:async request=>new URL(request.url).searchParams.get('v').endsWith(digest)?undefined:new Response('old PDF'),
+    fetch:async()=>new Response('new PDF')
+  });
+  const res=await h.run(new Request(`https://haslalab-pdf.haslalab.workers.dev/pdf/l/icho/IChO_2026_P_Q2_OriginalLayout_KO.pdf?v=${digest}&cv=2`));
+  assert.equal(await res.text(),'new PDF');
+  assert.equal(new URL(h.lookups[0].url).searchParams.get('v'),`106-${digest}`);
+  assert.equal(new URL(h.upstream[0][0]).searchParams.get('v'),`106-${digest}`);
+  await Promise.all(h.waits);
+  assert.equal(h.writes[0].request.url,h.lookups[0].url);
+});
+
+test('local and storage aliases share a file version while different SHA versions stay separate', async () => {
+  const h=setup({fetch:async()=>new Response('%PDF')});
+  const base='https://haslalab-pdf.haslalab.workers.dev';
+  const file='IChO_2026_P_Q2_OriginalLayout_KO.pdf';
+  for(const path of [`/pdf/l/icho/${file}?v=6c1452e22ac42726`,`/pdf/Xicho_${file}?v=6c1452e22ac42726&cv=2`,`/pdf/l/icho/${file}?v=7d7f7157074b825e`]){
+    await h.run(new Request(base+path));
+  }
+  assert.equal(h.lookups[0].url,h.lookups[1].url);
+  assert.notEqual(h.lookups[1].url,h.lookups[2].url);
+  await Promise.all(h.waits);
+});
