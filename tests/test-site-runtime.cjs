@@ -109,7 +109,10 @@ test('the olympiad archive loads practical papers and their alternate language o
   for(const part of ['WT1','WT3'])assert.ok(daegu.some(link=>link.url.endsWith(`${part}_FRENCH_VERSION_VF.pdf`)&&link.label.includes('조판 참조')));
   for(const page of [1,2])assert.equal(daegu.filter(link=>link.url.endsWith(`l/ieso/IESO_2019_T_Practice_Answer.pdf#page=${page}`)&&link.label.includes('연습용')).length,2);
   assert.equal(daegu.filter(link=>link.url.endsWith('l/ieso/IESO_2019_T_Practice_Working.pdf')&&link.label.includes('풀이용지')).length,4);
-  assert.equal(daegu.filter(link=>link.url.endsWith('/13thieso-wt-answer.pdf')&&link.label.includes('공식 정답')).length,4);
+  assert.equal(daegu.filter(link=>link.url.includes('IESO_2019_Written_Official_Keys_KO.pdf?v=')&&link.label.includes('공식 정답')).length,4);
+  const daeguOriginals=anchors(a.run('lang="en"; viewYear("ieso",2019)'));
+  assert.equal(daeguOriginals.filter(link=>link.url.endsWith('/13thieso-wt-answer.pdf')&&link.label.includes('Official answer key')).length,4);
+  a.run('lang="ko"');
   a.load('theory:ijso');
   const tehran=a.run('viewYear("ijso",2012)');
   assert.match(tehran,/29문항/);
