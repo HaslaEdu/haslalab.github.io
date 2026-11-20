@@ -98,7 +98,7 @@ test('the olympiad archive loads practical papers and their alternate language o
   assert.equal(taipeiPractical.filter(link=>link.url.startsWith('https://www.jeso.jp/download/exam/ieso/3rdieso-answer-practice-')).length,4);
   a.run('track="thy"');
   const daegu=anchors(a.run('viewYear("ieso",2019)'));
-  assert.ok(daegu.some(link=>link.url.endsWith('l/ieso/IESO_2019_T2_Jury_EN.pdf')&&link.label.includes('색상')));
+  assert.ok(daegu.some(link=>new URL(link.url,'https://haslalab.org').pathname.endsWith('l/ieso/IESO_2019_T2_Jury_EN.pdf')&&link.label.includes('색상')));
   assert.ok(daegu.some(link=>link.url.endsWith('l/ieso/IESO_2019_T4_Jury_EN.pdf')));
   for(const part of ['T1','T2','T3','T4'])assert.ok(daegu.some(link=>link.url.endsWith(`l/ieso/IESO_2019_${part}_OriginalLayout_KO.pdf`)));
   for(const part of ['WT1','WT3'])assert.ok(daegu.some(link=>link.url.endsWith(`${part}_FRENCH_VERSION_VF.pdf`)&&link.label.includes('조판 참조')));
