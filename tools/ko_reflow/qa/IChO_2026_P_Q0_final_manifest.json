@@ -1,0 +1,60 @@
+{
+  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q0\\IChO_2026_P_Q0_OriginalLayout_KO.pdf",
+  "sha256": "2ac461652ba46ddeca5f187c404f2aec46f8cc50f32b8dbec06bd96dac13795d",
+  "bytes": 298552,
+  "pages": 1,
+  "kind": "Q0",
+  "language": "ko",
+  "edition": "Complete unofficial Korean translation in original PDF layout",
+  "source": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-Q0.pdf",
+    "url": "https://drive.google.com/file/d/14tz4vWTSGjMw5E6q5s5pMHh3fMuljjvX/view",
+    "sha256": "747f4fb31df0933b92d635a6a3396ae324308663b465e78babbfe92df8edebbf",
+    "bytes": 269784,
+    "pages": 1
+  },
+  "source_role": "Official extra equipment/chemicals and safety penalty record table",
+  "official_organizer_page": "https://www.icho2026.uz/problems",
+  "retrieved_utc_date": "2026-11-20",
+  "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+  "layout_and_fonts": {
+    "original_pdf_pages_and_sizes": true,
+    "retained_original_native_font_programs_preserved": true,
+    "inserted_latin_and_math": "Original NotoSans and mathematical source glyphs; cmap restored only in inserted font wrappers; glyph contours and inserted Unicode verified",
+    "korean": "NotoSansKR 400/700; added Korean interpunct uses this Korean face when absent in original Latin subset",
+    "source_logo": "Original IChO 2026 branding retained as a complete unchanged image",
+    "global_pdf_font_subsetting": false
+  },
+  "qa": {
+    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q0\\qa-final.json",
+    "translated_hangul_characters": 82,
+    "protected_native_characters": 4,
+    "native_word_render_checks": 1,
+    "new_latin_math_glyphs_verified": 8,
+    "all_original_images_rgb_identical": 1,
+    "original_table_header_rules_rgb_identical": 63,
+    "missing_native_ink": 0,
+    "untranslated_text_regions": 0,
+    "unexpected_font_fallbacks": 0,
+    "full_mupdf_visual_review": true,
+    "full_poppler_visual_review": true,
+    "poppler_warnings": 0,
+    "all_used_korean_glyph_checks": [
+      {
+        "weight": "bold",
+        "distinct_used_hangul_glyphs": 29,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      },
+      {
+        "weight": "regular",
+        "distinct_used_hangul_glyphs": 15,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      }
+    ],
+    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold, independently of fallback names."
+  }
+}

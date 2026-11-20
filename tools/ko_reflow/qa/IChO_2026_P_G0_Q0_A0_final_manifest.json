@@ -1,0 +1,217 @@
+[
+  {
+    "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\G0\\fontfix-atlas-20261120\\IChO_2026_P_G0_OriginalLayout_KO.pdf",
+    "sha256": "a51fc52d23af173ee3cb5b8ba2e6b313faa444ca37f18658337791181e7f2027",
+    "bytes": 2505947,
+    "pages": 7,
+    "kind": "G0",
+    "language": "ko",
+    "edition": "Complete unofficial Korean translation in original PDF layout",
+    "source": {
+      "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-G0.pdf",
+      "url": "https://drive.google.com/file/d/1dpWtWl0xMnuI9hckbTg5SsxfiDTx2gFD/view",
+      "sha256": "47eeb4667b7b0a47a0a86eff160eba1b8a5f1170266b29020b3bcdcdb7fc9384",
+      "bytes": 2347869,
+      "pages": 7
+    },
+    "source_role": "Official practical general instructions, safety, periodic table and shared equipment/chemicals",
+    "official_organizer_page": "https://www.icho2026.uz/problems",
+    "retrieved_utc_date": "2026-11-20",
+    "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+    "layout_and_fonts": {
+      "original_pdf_pages_and_sizes": true,
+      "retained_original_native_font_programs_preserved": true,
+      "inserted_latin_and_math": "Original NotoSans and mathematical source glyphs; cmap restored only in inserted font wrappers; glyph contours and inserted Unicode verified",
+      "korean": "NotoSansKR 400/700; added Korean interpunct uses this Korean face when absent in original Latin subset",
+      "source_logo": "Original IChO 2026 branding retained as a complete unchanged image",
+      "global_pdf_font_subsetting": false
+    },
+    "qa": {
+      "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\G0\\fontfix-atlas-20261120\\qa-final.json",
+      "translated_hangul_characters": 2048,
+      "protected_native_characters": 684,
+      "native_word_render_checks": 180,
+      "new_latin_math_glyphs_verified": 34,
+      "all_original_images_rgb_identical": 11,
+      "original_table_header_rules_rgb_identical": 374,
+      "missing_native_ink": 0,
+      "untranslated_text_regions": 0,
+      "unexpected_font_fallbacks": 0,
+      "full_mupdf_visual_review": true,
+      "full_poppler_visual_review": true,
+      "poppler_warnings": 0,
+      "all_used_korean_glyph_checks": [
+        {
+          "weight": "bold",
+          "distinct_used_hangul_glyphs": 148,
+          "prepared_and_embedded_font_signature_identical": true,
+          "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+          "glyph_outlines_exact": true
+        },
+        {
+          "weight": "regular",
+          "distinct_used_hangul_glyphs": 309,
+          "prepared_and_embedded_font_signature_identical": true,
+          "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+          "glyph_outlines_exact": true
+        }
+      ],
+      "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold, independently of fallback names.",
+      "title_correction_outside_region_pixel_checks": [
+        {
+          "page": 1,
+          "changed_pixels_outside_title_cell": 0
+        },
+        {
+          "page": 2,
+          "changed_pixels_outside_title_cell": 0
+        },
+        {
+          "page": 3,
+          "changed_pixels_outside_title_cell": 0
+        },
+        {
+          "page": 4,
+          "changed_pixels_outside_title_cell": 0
+        },
+        {
+          "page": 5,
+          "changed_pixels_outside_title_cell": 0
+        },
+        {
+          "page": 6,
+          "changed_pixels_outside_title_cell": 0
+        },
+        {
+          "page": 7,
+          "changed_pixels_outside_title_cell": 0
+        }
+      ]
+    },
+    "source_inconsistencies_preserved": [
+      "G0 page 3 prints question packet lengths P2=6 and P3=4 pages; actual official Q2/Q3 PDFs have 7/6 pages. Printed values are preserved.",
+      "The original periodic table contains element symbols and atomic masses, with no English element names; its entire raster is unchanged."
+    ],
+    "translation_title_note": "Atlas in P2 is explicitly described in the official Q2 introduction as an Uzbek woven silk fabric. The P2 title is translated as 효소의 아틀라스 rather than the mistaken geographic sense 효소 지도."
+  },
+  {
+    "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q0\\IChO_2026_P_Q0_OriginalLayout_KO.pdf",
+    "sha256": "2ac461652ba46ddeca5f187c404f2aec46f8cc50f32b8dbec06bd96dac13795d",
+    "bytes": 298552,
+    "pages": 1,
+    "kind": "Q0",
+    "language": "ko",
+    "edition": "Complete unofficial Korean translation in original PDF layout",
+    "source": {
+      "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-Q0.pdf",
+      "url": "https://drive.google.com/file/d/14tz4vWTSGjMw5E6q5s5pMHh3fMuljjvX/view",
+      "sha256": "747f4fb31df0933b92d635a6a3396ae324308663b465e78babbfe92df8edebbf",
+      "bytes": 269784,
+      "pages": 1
+    },
+    "source_role": "Official extra equipment/chemicals and safety penalty record table",
+    "official_organizer_page": "https://www.icho2026.uz/problems",
+    "retrieved_utc_date": "2026-11-20",
+    "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+    "layout_and_fonts": {
+      "original_pdf_pages_and_sizes": true,
+      "retained_original_native_font_programs_preserved": true,
+      "inserted_latin_and_math": "Original NotoSans and mathematical source glyphs; cmap restored only in inserted font wrappers; glyph contours and inserted Unicode verified",
+      "korean": "NotoSansKR 400/700; added Korean interpunct uses this Korean face when absent in original Latin subset",
+      "source_logo": "Original IChO 2026 branding retained as a complete unchanged image",
+      "global_pdf_font_subsetting": false
+    },
+    "qa": {
+      "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q0\\qa-final.json",
+      "translated_hangul_characters": 82,
+      "protected_native_characters": 4,
+      "native_word_render_checks": 1,
+      "new_latin_math_glyphs_verified": 8,
+      "all_original_images_rgb_identical": 1,
+      "original_table_header_rules_rgb_identical": 63,
+      "missing_native_ink": 0,
+      "untranslated_text_regions": 0,
+      "unexpected_font_fallbacks": 0,
+      "full_mupdf_visual_review": true,
+      "full_poppler_visual_review": true,
+      "poppler_warnings": 0,
+      "all_used_korean_glyph_checks": [
+        {
+          "weight": "bold",
+          "distinct_used_hangul_glyphs": 29,
+          "prepared_and_embedded_font_signature_identical": true,
+          "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+          "glyph_outlines_exact": true
+        },
+        {
+          "weight": "regular",
+          "distinct_used_hangul_glyphs": 15,
+          "prepared_and_embedded_font_signature_identical": true,
+          "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+          "glyph_outlines_exact": true
+        }
+      ],
+      "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold, independently of fallback names."
+    }
+  },
+  {
+    "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\A0\\IChO_2026_P_A0_OriginalLayout_KO.pdf",
+    "sha256": "f40a46a94355871ae0028ee9f84be07f60cf9450d6f417a99f995379a5bdd476",
+    "bytes": 298088,
+    "pages": 1,
+    "kind": "A0",
+    "language": "ko",
+    "edition": "Complete unofficial Korean translation in original PDF layout",
+    "source": {
+      "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-A0.pdf",
+      "url": "https://drive.google.com/file/d/1uRBk45Ms4AS6PCa5eeUrR1fxvBJ1a1q2/view",
+      "sha256": "9edb5c969a52e88be68759360827bebab5ac94f32bba6b181935724e73f9fb47",
+      "bytes": 270111,
+      "pages": 1
+    },
+    "source_role": "Official answer-sheet version of extra equipment/chemicals and safety penalty record table",
+    "official_organizer_page": "https://www.icho2026.uz/problems",
+    "retrieved_utc_date": "2026-11-20",
+    "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+    "layout_and_fonts": {
+      "original_pdf_pages_and_sizes": true,
+      "retained_original_native_font_programs_preserved": true,
+      "inserted_latin_and_math": "Original NotoSans and mathematical source glyphs; cmap restored only in inserted font wrappers; glyph contours and inserted Unicode verified",
+      "korean": "NotoSansKR 400/700; added Korean interpunct uses this Korean face when absent in original Latin subset",
+      "source_logo": "Original IChO 2026 branding retained as a complete unchanged image",
+      "global_pdf_font_subsetting": false
+    },
+    "qa": {
+      "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\A0\\qa-final.json",
+      "translated_hangul_characters": 82,
+      "protected_native_characters": 15,
+      "native_word_render_checks": 4,
+      "new_latin_math_glyphs_verified": 8,
+      "all_original_images_rgb_identical": 1,
+      "original_table_header_rules_rgb_identical": 67,
+      "missing_native_ink": 0,
+      "untranslated_text_regions": 0,
+      "unexpected_font_fallbacks": 0,
+      "full_mupdf_visual_review": true,
+      "full_poppler_visual_review": true,
+      "poppler_warnings": 0,
+      "all_used_korean_glyph_checks": [
+        {
+          "weight": "bold",
+          "distinct_used_hangul_glyphs": 29,
+          "prepared_and_embedded_font_signature_identical": true,
+          "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+          "glyph_outlines_exact": true
+        },
+        {
+          "weight": "regular",
+          "distinct_used_hangul_glyphs": 15,
+          "prepared_and_embedded_font_signature_identical": true,
+          "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+          "glyph_outlines_exact": true
+        }
+      ],
+      "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold, independently of fallback names."
+    }
+  }
+]
