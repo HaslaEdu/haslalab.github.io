@@ -1,0 +1,81 @@
+{
+  "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\IJSO-2023-theory-solutions\\IJSO_2023_TS.pdf",
+  "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\IJSO-2023-theory-solutions\\DRAFT_IJSO_2023_Theory_Solutions_OriginalLayout_KO.pdf",
+  "source_sha256": "af371de8ae64ae1e7e4a39e3a7c88d6c0b8710ca9ad49cd311141fb95f403add",
+  "target_sha256": "4d94195c477c9c5c0c690274c02dc481ffe305bcab240b0a5207a9ef94dd1460",
+  "pages": 28,
+  "reference": "Actual MuPDF get_texttrace Unicode/GID, glyf+hmtx+unitsPerEm font identity tolerant of metadata/cmap repacking, prepared cmap and nonempty embedded glyf outlines; original source GID outlines and hmtx. Full source traces independently guard prepared original-face cmaps.",
+  "original_embedded_font_program_streams_missing": [],
+  "independent_original_source_scalar_pairs": 171,
+  "source_trace_unresolved_pairs": [
+    [
+      25,
+      "TimesNewRomanPSMT",
+      65533,
+      0
+    ],
+    [
+      25,
+      "TimesNewRomanPSMT",
+      65533,
+      0
+    ],
+    [
+      25,
+      "TimesNewRomanPSMT",
+      65533,
+      0
+    ],
+    [
+      26,
+      "TimesNewRomanPSMT",
+      65533,
+      0
+    ]
+  ],
+  "source_prepared_cmap_errors": [],
+  "distinct_used_prepared_unicode_gid_pairs": 956,
+  "distinct_used_hangul_font_codepoint_pairs": 716,
+  "glyph_errors": [
+    {
+      "page": 25,
+      "font": "TimesNewRomanPSMT",
+      "char": "�",
+      "actual_MuPDF_gid": 0,
+      "reason": "No prepared cmap matches actual Unicode/GID trace."
+    },
+    {
+      "page": 25,
+      "font": "TimesNewRomanPSMT",
+      "char": "�",
+      "actual_MuPDF_gid": 0,
+      "reason": "No prepared cmap matches actual Unicode/GID trace."
+    },
+    {
+      "page": 25,
+      "font": "TimesNewRomanPSMT",
+      "char": "�",
+      "actual_MuPDF_gid": 0,
+      "reason": "No prepared cmap matches actual Unicode/GID trace."
+    },
+    {
+      "page": 26,
+      "font": "TimesNewRomanPSMT",
+      "char": "�",
+      "actual_MuPDF_gid": 0,
+      "reason": "No prepared cmap matches actual Unicode/GID trace."
+    }
+  ],
+  "ambiguous_compatible_prepared_outlines": [],
+  "visible_unexpected_fallbacks": [],
+  "limitations": [
+    "Base14/CFF and unchanged original fonts not matching prepared TrueType assets are listed as uncovered and require the existing source/layout audit.",
+    "Native ligatures use multiple Unicode scalars per GID and require a sequence check separately.",
+    "Prepared original-face cmap characters not observed in source traces are not independently attested by MuPDF; original document maps or original base cmap provide their Unicode association."
+  ],
+  "uncovered_original_or_Base14_instances_by_font": {
+    "NimbusSans-Regular": 579,
+    "TrebuchetMS-Italic": 129
+  },
+  "coverage_explanation": "Original unmodified italic reference text is covered by source-position/ink checks; Base14 Nimbus CFF has exact embedded-program and actual579 Unicode/GID checks. Four original undefined GID0 bullet boxes are preserved, with exact source/target origin/bbox proof."
+}
