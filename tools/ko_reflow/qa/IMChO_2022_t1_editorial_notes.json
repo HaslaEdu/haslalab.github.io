@@ -1,0 +1,125 @@
+{
+  "official_source_url": "https://disk.yandex.ru/i/6HOGau9p1sAATw",
+  "official_source_index": "https://mendeleevolympiad.org/examples-eng",
+  "official_filename": "2022_enu_tour1_task.docx",
+  "official_docx_sha256": "0652190cf64b514f30cf57d6c1f9e7339bc3a3e9004b3992116cb425fa5c1541",
+  "source_format": "Official English Word source locally converted to native searchable PDF; original DOCX unchanged",
+  "source_pages": 6,
+  "reference_scan_url": "https://hkd.hr/images/imcho/Materijali/56IMChO/56_IMChO_Teorijski_test_1.pdf",
+  "reference_scan_pages": 6,
+  "fonts": {
+    "body_latin": "Times New Roman matching source family",
+    "body_hangul": "Noto Serif KR",
+    "headings_latin": "Arial matching source family",
+    "headings_and_figure_hangul": "Malgun Gothic",
+    "original_global_font_subset": false
+  },
+  "original_major_problems": 8,
+  "original_numbered_question_groups_excluding_choice_items": 43,
+  "fully_retained_question_groups": 41,
+  "partial_questions": [
+    "8.1"
+  ],
+  "omitted_questions": [
+    "7.3"
+  ],
+  "omission_background": "Associated procedural manufacture/ignition passages omitted; safe definitions supplied for retained calculations. No omitted source procedures are included in this shareable QA.",
+  "omission_page": 5,
+  "omission_original_text_characters_removed": 1280,
+  "omission_original_text_characters_retained": 0,
+  "omission_original_images": 0,
+  "omission_original_vector_paths": 0,
+  "omission_information_supplied": [
+    "Fe(II)–oxalate context and original oxygen mass fraction retained so theoretical composition/density questions remain solvable.",
+    "P and B1 definitions supplied to support retained oxyacid structure questions."
+  ],
+  "editorial_notes_page": 6,
+  "editorial_notes": [
+    {
+      "item": "4.6",
+      "detail": "Official English and Russian question originals both attach the two equal NMR signals to F. Official solution uses8H of E=C5H8O to identify cyclopentanone and depicts F=C9H16O2. Preserve original F wording and explicitly distinguish this source inconsistency without inventing a revised official condition.",
+      "russian_source": "https://disk.yandex.ru/i/KTWdi4LcsTJa2g",
+      "official_solution_source": "https://disk.yandex.ru/d/lBcDOzsbqRck6Q"
+    },
+    {
+      "item": "Original numbering",
+      "detail": "Problem3 question labels7/8 and problem7 option labels7.1–7.6 match both official Word and association scan. They are preserved, not renumbered."
+    },
+    {
+      "item": "VSEPR definition",
+      "detail": "E expressed as the central atom lone pairs, consistent with official AX2E3 answer; original English attached/bonded-pair wording clarified."
+    },
+    {
+      "item": "Constants",
+      "detail": "K_D and K_I rendered with Latin subscripts; elemental KI remains the chemical formula. E_x and E_y use actual Latin x/y, not Greek lookalikes."
+    }
+  ],
+  "conversion_repairs": {
+    "legacy_native_fraction_fields_restored": 3,
+    "latimer_diagram_chemical_labels_restored_from_original_and_reference": [
+      "NO3−",
+      "NO2",
+      "HNO2"
+    ],
+    "original_latimer_arrow_vectors_unchanged": true,
+    "evidence": "t1_conversion_repairs.json",
+    "official_docx_unchanged": true
+  },
+  "numeric_comparison_review": {
+    "flagged_paragraphs": [
+      46,
+      52,
+      64
+    ],
+    "results": [
+      "five NMR signals written in Korean words",
+      "six-membered transition state written in Korean words",
+      "four types of H written in Korean words"
+    ],
+    "source_numeric_conditions_preserved": true
+  },
+  "remaining_language": "All prose and pictured ordinary-language labels translated. Scientific chemical identifiers, SI units, instrument abbreviations and syn/anti notation retained.",
+  "separate_official_blank_answer_sheet_acquired": false,
+  "no_paid_or_external_translation_api_used": true,
+  "translator_correction": {
+    "status": "verified",
+    "official_docx_labels": [
+      "NO3−",
+      "NO2",
+      "HNO2",
+      "NO"
+    ],
+    "intermediate_species": "neutral nitrogen dioxide NO2, nitrogen oxidation state+4",
+    "electron_transfers": [
+      1,
+      1,
+      1
+    ],
+    "Ex": 0.935,
+    "Ey": 0.9566666666666667,
+    "official_solution_expected_rounded_Ex": 0.94,
+    "official_solution_expected_rounded_Ey": 0.96,
+    "source_docx_unchanged": true,
+    "corrected_translator_error": "An erroneous extra negative charge on NO2 in withdrawn527bdf draft was removed. Actual original charge restored exactly as confirmed by official DOCX text-box symbols, association scan and official solution weighted potentials.",
+    "withdrawn_sha256": "527bdfdd8af76a40eda454a55285a8511b9820ed6b9909980298237378ad63b8",
+    "other_pages_pixel_identical_to_previous_candidate": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  "handwritten_formula_reaudit": [
+    "All restored Latimer species checked against actual original Word text-box symbols and association image: nitrate−1, neutral NO2, neutral HNO2, neutral NO.",
+    "P1 constants verified: K+/K−2.93V, O2/H2O1.23V, Zn2+/Zn−0.76V, F96485,R8.314; actual Latin E_x/E_y indices.",
+    "P3 J C13H23NO and NMR/IR data checked; original molecular artwork unchanged.",
+    "P4 source formulas CxHy/RCOCl/AlCl3, NMR integrals and oxygen20.51% preserved; source E/F inconsistency explicitly labeled.",
+    "P5 M468, ratio2:3:3:9, MS difference86, metabolite+30 and m/z253/333/167 retained.",
+    "P6 I2/I3− charges, CCl4, concentrations/volumes, K_D/K_I and original fallback150 checked; VSEPR AX2E3 corroborated by official solution.",
+    "P7 safe Fe(II)–oxalate definition matches original; oxygen53.36%, gas280°C/110.8kPa/0.6507g dm−3 unchanged.",
+    "P8 supplied P and NaH2PO2 identities match official solution;18.18% water,73°C,38.10%/40.91% and all A/B label orders retained."
+  ],
+  "publication_status": "final_verified_paired_with_T1S",
+  "paired_audit": "t1_pair_audit_complete.json"
+}

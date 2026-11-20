@@ -1,0 +1,116 @@
+{
+  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S3\\IChO_2026_P_S3_OriginalLayout_KO.pdf",
+  "sha256": "f248b6ea92ef7f86aefa4506082d2fffc3052c66907b32d731250b8037aa9d78",
+  "bytes": 970165,
+  "pages": 10,
+  "kind": "S3",
+  "role": "Official questions, solutions and marking scheme",
+  "language": "ko",
+  "edition": "Complete unofficial Korean translation in original PDF layout",
+  "source": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-S3.pdf",
+    "url": "https://drive.google.com/file/d/1W-upXeQhj5JSdU3j03IwlM4JDDcuA0zg/view",
+    "sha256": "4387fbf9f9a084795cf91f35a7e296a6f8baa20663d7c365331cc5e4a9589657",
+    "bytes": 603658,
+    "pages": 10
+  },
+  "official_organizer_page": "https://www.icho2026.uz/problems",
+  "retrieved_utc_date": "2026-11-20",
+  "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+  "layout_and_fonts": {
+    "original_pdf_pages_and_sizes": true,
+    "korean": "NotoSansKR 400/700; bold and underlining follow the corresponding original expressions",
+    "latin_math": "Original source NotoSans and mathematical glyphs, explicitly routed by actual source coverage and role; source Unicode maps restored only in inserted font wrappers. All used contours and new Unicode verified.",
+    "preserved_native_font_programs": true,
+    "global_pdf_font_subsetting": false,
+    "source_logo": "Unchanged original IChO 2026 branding",
+    "identifiers_retained": "Scientific formulas, units, variable symbols, question/page codes and physical reagent-bottle labels such as R1-syn/R1-an/Py-qual/Dithiz./Solvent are retained. Corresponding item descriptions and instructions are Korean.",
+    "native_stacked_fraction": "18 original source glyphs retain exact relative coordinates and sizes as selectable native PDF text; original red fraction bar is relocated with exact geometry and width. Private layout markers are completely removed."
+  },
+  "qa": {
+    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\S3\\qa-final.json",
+    "translated_hangul_characters": 2726,
+    "protected_native_characters": 494,
+    "native_word_render_checks": 224,
+    "new_latin_math_glyphs_verified": 94,
+    "whole_original_images_rgb_identical": 19,
+    "table_header_answer_rules_rgb_identical": 289,
+    "replaced_original_prose_underline_segments": 31,
+    "underline_method": "Only isolated original textual 0.6575 pt underline strokes under replaced English prose are removed; matching Korean expressions receive native PDF underlines. Borders, scientific diagrams, formulas and blanks are excluded. Exact removed coordinates are recorded in build QA.",
+    "page_code_word_bbox_exception": "Native large page-code word bbox can include the separate language caption. Actual code region above y=130 is verified RGB-identical when this causes a false positive.",
+    "missing_native_ink": 0,
+    "untranslated_text_regions": 0,
+    "unexpected_font_fallbacks": 0,
+    "full_mupdf_render": true,
+    "full_poppler_visual_review": true,
+    "poppler_warnings": 0,
+    "all_used_korean_glyph_checks": [
+      {
+        "weight": "bold",
+        "distinct_used_hangul_glyphs": 88,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      },
+      {
+        "weight": "regular",
+        "distinct_used_hangul_glyphs": 302,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      }
+    ],
+    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold or explicitly prepared Oblique/BoldOblique, independently of fallback names.",
+    "source_image_payloads_and_positions_preserved": true,
+    "translated_diagram_label_masks": 0,
+    "diagram_changed_pixels_outside_declared_labels": 0,
+    "diagram_scientific_roi_checks": [],
+    "native_complex_equation_geometry_checks": [
+      {
+        "page": 6,
+        "equation": "FIRSTV",
+        "glyphs_verified": 18,
+        "relative_native_glyph_baselines_and_positions_exact": true,
+        "native_vector_lines_verified": 1,
+        "scale": 1.0
+      }
+    ],
+    "noninking_fallback_whitespace_spans": [
+      {
+        "page": 6,
+        "font": "NotoSerif-Regular",
+        "text": " "
+      },
+      {
+        "page": 6,
+        "font": "NotoSerif-Regular",
+        "text": " "
+      }
+    ],
+    "independent_source_unicode_glyph_validation": {
+      "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\source-unicode-gid-audit-20261120.json",
+      "all_12_source_documents_verified": true,
+      "source_scalar_characters_verified": 51759,
+      "source_ligature_glyphs_verified": 177,
+      "source_ligature_characters_verified": 532,
+      "mismatches": 0,
+      "array_bfrange_source_entries": 0,
+      "new_parser": "Tokenized arrays and UTF-16BE increments; source maps unchanged."
+    },
+    "visual_review": {
+      "all_pages": 10,
+      "renderer": "Poppler pdftoppm",
+      "page_max_dimension": 1500,
+      "warnings": 0,
+      "folder": "C:/Users/andre/CodexWork/HaslaLab/translation-render-qa-20261120/icho2026-practical/S3-final",
+      "all_pages_read_and_visually_checked": true,
+      "checked": "Colored solution and rubric paragraphs, table/answer boundaries, native chemical diagrams, p6 selectable stacked fraction with one native vector line, p7 equilibrium diagram margins and all ten headers."
+    }
+  },
+  "source_inconsistencies_and_details_preserved": [
+    "Q3.3 red solution and blue rubric differ in accepted neighboring box offsets; each original statement and point value is preserved separately. The word Box is translated as 칸, with original prime and +/- offsets retained.",
+    "The source guide prints P3 question count as 4 pages, while the standalone Q3 source has 6 pages. This S3 combined question, solution and marking packet has 10 pages, including the original mostly blank Q3.2 page.",
+    "Q3.4 reasoning distinguishes the 2:1 incremental titration volumes from the 3:2 total endpoint-volume ratio printed with the graph; all original ratios and stated x mM versus x/2 mM concentrations are retained.",
+    "Q3.5 original explanation assumes equal hydrogen-ion concentrations and unchanged pH, whereas the question statement gives pH values rounded to integers. The official reasoning is translated faithfully rather than replaced with a new proof."
+  ]
+}

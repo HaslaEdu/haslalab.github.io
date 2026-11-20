@@ -27,3 +27,6 @@ tests/helpers/cpho2010-solutions-native-publication.cjs -text whitespace=-blank-
 tests/test-cpho2010-solutions-native-publication.cjs -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 tests/helpers/cpho2011-theory-native-publication.cjs -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 tests/test-cpho2011-theory-native-publication.cjs -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+# Archive PDFs have verified byte hashes; never apply text/EOL conversion.
+pdfx/**/*.pdf -text -diff

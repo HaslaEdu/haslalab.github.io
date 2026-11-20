@@ -1,0 +1,102 @@
+{
+  "parser": "Tokenized bfchar/bfrange arrays and UTF-16BE scalar increments. Original PDF maps unchanged.",
+  "independent_reference": "MuPDF get_texttrace Unicode and native glyph identifiers, independent of Python ToUnicode parser. Original CID CFF reports CIDs; TTF uses CIDToGIDMap when present. Multi-character native ligatures checked as complete sequences.",
+  "documents": [
+    {
+      "document": "IChO2026-A0.pdf",
+      "source_fonts": 3,
+      "scalar_character_instances_checked_against_independent_MuPDF": 386,
+      "native_ligature_glyphs_checked": 2,
+      "native_ligature_characters_checked": 5,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-A1.pdf",
+      "source_fonts": 3,
+      "scalar_character_instances_checked_against_independent_MuPDF": 531,
+      "native_ligature_glyphs_checked": 3,
+      "native_ligature_characters_checked": 9,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-A2.pdf",
+      "source_fonts": 3,
+      "scalar_character_instances_checked_against_independent_MuPDF": 291,
+      "native_ligature_glyphs_checked": 3,
+      "native_ligature_characters_checked": 9,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-A3.pdf",
+      "source_fonts": 3,
+      "scalar_character_instances_checked_against_independent_MuPDF": 565,
+      "native_ligature_glyphs_checked": 8,
+      "native_ligature_characters_checked": 24,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-G0.pdf",
+      "source_fonts": 2,
+      "scalar_character_instances_checked_against_independent_MuPDF": 6193,
+      "native_ligature_glyphs_checked": 20,
+      "native_ligature_characters_checked": 48,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-Q0.pdf",
+      "source_fonts": 3,
+      "scalar_character_instances_checked_against_independent_MuPDF": 375,
+      "native_ligature_glyphs_checked": 2,
+      "native_ligature_characters_checked": 5,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-Q1.pdf",
+      "source_fonts": 4,
+      "scalar_character_instances_checked_against_independent_MuPDF": 6550,
+      "native_ligature_glyphs_checked": 29,
+      "native_ligature_characters_checked": 64,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-Q2.pdf",
+      "source_fonts": 5,
+      "scalar_character_instances_checked_against_independent_MuPDF": 4523,
+      "native_ligature_glyphs_checked": 11,
+      "native_ligature_characters_checked": 29,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-Q3.pdf",
+      "source_fonts": 4,
+      "scalar_character_instances_checked_against_independent_MuPDF": 4364,
+      "native_ligature_glyphs_checked": 8,
+      "native_ligature_characters_checked": 22,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-S1.pdf",
+      "source_fonts": 4,
+      "scalar_character_instances_checked_against_independent_MuPDF": 11518,
+      "native_ligature_glyphs_checked": 43,
+      "native_ligature_characters_checked": 99,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-S2.pdf",
+      "source_fonts": 5,
+      "scalar_character_instances_checked_against_independent_MuPDF": 7174,
+      "native_ligature_glyphs_checked": 21,
+      "native_ligature_characters_checked": 54,
+      "unicode_glyph_mismatches": []
+    },
+    {
+      "document": "IChO2026-S3.pdf",
+      "source_fonts": 4,
+      "scalar_character_instances_checked_against_independent_MuPDF": 9289,
+      "native_ligature_glyphs_checked": 27,
+      "native_ligature_characters_checked": 64,
+      "unicode_glyph_mismatches": []
+    }
+  ]
+}

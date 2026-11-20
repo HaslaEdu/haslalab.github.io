@@ -1,0 +1,195 @@
+{
+  "status": "complete",
+  "paper": {
+    "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2022\\IMChO_2022_T1_Practice_KO.pdf",
+    "pages": 6,
+    "bytes": 3287090,
+    "sha256": "42c996cb3e8fdfc10959e6d95b6fde97331326577eac7fe9da9799ad9283ed67",
+    "source_font_programs": 16,
+    "retained_source_font_programs": 11,
+    "retained_source_font_programs_byte_identical": true,
+    "unused_source_fonts_pruned": [
+      "FAAAAA+TimesNewRomanPSMT",
+      "GAAAAA+Arial-BoldMT",
+      "IAAAAA+SymbolMT",
+      "KAAAAA+TimesNewRomanPS-ItalicMT",
+      "OAAAAA+TimesNewRomanPS-BoldItalicMT"
+    ],
+    "original_image_payloads": 7,
+    "retained_original_image_payloads": 7,
+    "omission_removal": [
+      {
+        "page": 5,
+        "source_vector_paths": 0,
+        "source_images": 0,
+        "source_form_xobjects": 0,
+        "underlying_omitted_text_retained": 0
+      }
+    ],
+    "translated_regions": 249,
+    "hangul_characters": 4347,
+    "original_chars_checked": 238,
+    "original_chars_missing": 0,
+    "omitted_source_chars_removed": 1280,
+    "omitted_source_chars_retained": 0,
+    "original_pixels_missing_outside_edits": 0,
+    "new_non_native_pixels_outside_edits": 0,
+    "global_original_font_subset": false
+  },
+  "solution": {
+    "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\imcho\\2022\\IMChO_2022_T1S_Practice_KO.pdf",
+    "pages": 10,
+    "bytes": 3490623,
+    "sha256": "d9377051f2c22ebc25b15fb11788da71a97cd422b409a8033d4e5e59c67611f2",
+    "source_font_programs": 14,
+    "retained_source_font_programs": 11,
+    "retained_source_font_programs_byte_identical": true,
+    "unused_source_fonts_pruned": [
+      "CAAAAA+TimesNewRomanPSMT",
+      "DAAAAA+Arial-BoldMT",
+      "OAAAAA+TimesNewRomanPS-BoldMT"
+    ],
+    "original_image_payloads": 44,
+    "retained_original_image_payloads": 44,
+    "omission_removal": [
+      {
+        "page": 8,
+        "source_vector_paths": 0,
+        "source_images": 0,
+        "source_form_xobjects": 0,
+        "underlying_omitted_text_retained": 0
+      },
+      {
+        "page": 9,
+        "source_vector_paths": 0,
+        "source_images": 0,
+        "source_form_xobjects": 0,
+        "underlying_omitted_text_retained": 0
+      }
+    ],
+    "translated_regions": 302,
+    "hangul_characters": 4755,
+    "original_chars_checked": 946,
+    "original_chars_missing": 0,
+    "omitted_source_chars_removed": 207,
+    "omitted_source_chars_retained": 0,
+    "original_pixels_missing_outside_edits": 0,
+    "new_non_native_pixels_outside_edits": 0,
+    "global_original_font_subset": false
+  },
+  "checks": {
+    "Latimer": {
+      "original_species": [
+        "NO3−",
+        "NO2",
+        "HNO2",
+        "NO"
+      ],
+      "electron_counts": [
+        1,
+        1,
+        1
+      ],
+      "Ex": 0.935,
+      "Ey": 0.9566666666666667,
+      "conclusion": "Neutral NO2 corroborated independently by original DOCX text-box symbols, association scan, and official weighted potentials."
+    },
+    "Electrochemistry": {
+      "Ec": 0.7599999999999999,
+      "Ea": 0.5700000000000001,
+      "EMF": 0.19,
+      "battery_count": 24,
+      "standard_EMF": -0.27,
+      "standard_deltaG_J_mol": 312611.4,
+      "K": 1.6974804800935687e-55,
+      "note": "Operating pH gradient and standard-state potential are distinct; no false spontaneity correction."
+    },
+    "Adsorption": {
+      "Gamma_max_mol_m2": 6.737078958282999e-06,
+      "minimum_detectable_c_mol_L": 0.0013802909135361503,
+      "equilibrium_c_mol_L": [
+        0.018649665977929542,
+        0.041417749277048936,
+        0.06883660711492033,
+        0.10020652180478036
+      ],
+      "linearization": "c/Gamma = c/Gamma_max + 1/(Gamma_max*M)",
+      "carbon_Gamma_max_mol_g": 0.005,
+      "carbon_area_m2_g": 740
+    },
+    "Alkaloid": {
+      "artwork": "All original schemes retained as original image payloads.",
+      "molecular_formulas": "A C8H12O5; B C8H16O4; F C16H23NO5; G C12H19NO; I C13H23N; J C13H23NO",
+      "source_term": "Original aldol term is distinguished from the drawn acetal B; source structure not silently altered."
+    },
+    "Aldol_NMR": {
+      "oxygen_fraction": 0.2051,
+      "M_F": 156.02145294978058,
+      "M_E": 84,
+      "E": "C5H8O",
+      "F": "C9H16O2",
+      "source_inconsistency": "English and Russian questions attach NMR condition to F; official solution uses8H of E. Both preserved and explicitly distinguished."
+    },
+    "Mass_spectrometry": {
+      "Y_M": 468,
+      "unknown_groups_M": 131,
+      "piperazine_residue_M": 84,
+      "free_piperazine_M": 86,
+      "X_plus_Z_M": 554,
+      "X_M": 266,
+      "X1_neutral_M": 252,
+      "protonated_X1": 253,
+      "protonated_X2": 333,
+      "common_fragment": 167,
+      "metabolite_difference": 30,
+      "source_approximation": 7.0625
+    },
+    "Iodine": {
+      "saturated_c": 0.0011411617026132602,
+      "KD": 90.94800000000001,
+      "organic_c": 0.04625,
+      "aqueous_total_c": 0.17375000000000002,
+      "iodine_mass_fraction": 0.05,
+      "official_complex_constant": 793,
+      "official_fallback_KD": 150,
+      "official_fallback_complex_constant": 1309,
+      "note": "Official printed rounding and KI10% model retained; no invented9.5% replacement."
+    },
+    "Gas_theory": {
+      "measured_density_g_L": 0.6507,
+      "temperature_C": 280,
+      "pressure_kPa": 110.8,
+      "derived_M_g_mol": 27.00077300902527,
+      "safe_mole_fractions": {
+        "H2O": 0.5,
+        "CO2": 0.25,
+        "CO": 0.25
+      }
+    },
+    "Phosphorus": {
+      "hydrate_M": 198.01980198019803,
+      "anhydrous_M": 162,
+      "A2_and_A3": "H4P2O6",
+      "B6": "Na5P3O8",
+      "B7": "Na5P3O9",
+      "B8": "Na5P3O10",
+      "B6_oxygen_fraction": 0.38095238095238093,
+      "B7_oxygen_fraction": 0.4090909090909091,
+      "note": "Original variables use actual Latin subscripts. The208g/mol Na/P aggregate is described without inventing a real16+ ion."
+    }
+  },
+  "all_eight_problem_conditions_and_official_solutions_audited": true,
+  "official_EN_and_RU_NMR_condition_checked": true,
+  "all_native_pages_visually_inspected": true,
+  "all_poppler_pages_visually_inspected": true,
+  "omitted_question_ids": [
+    "7.3"
+  ],
+  "partial_question_ids": [
+    "8.1"
+  ],
+  "omission_reason": "Actual pyrophoric material manufacture/ignition and toxic-gas manufacture procedures omitted consistently in paper and solution.",
+  "shareable_qa_omitted_source_text_included": false,
+  "separate_official_theory_blank_answer_sheet_acquired": false,
+  "translation_method": "Direct Korean authoring with local PDF tools; no commercial or external translation API."
+}

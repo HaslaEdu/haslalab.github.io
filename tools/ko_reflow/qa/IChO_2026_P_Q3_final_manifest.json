@@ -1,0 +1,267 @@
+{
+  "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q3\\header-align-20261120\\IChO_2026_P_Q3_OriginalLayout_KO.pdf",
+  "sha256": "91fb2a685a26b2bd42186a398aafe7e923a0476b5597981ab8c6003bde56aabe",
+  "bytes": 586495,
+  "pages": 6,
+  "kind": "Q3",
+  "role": "Official practical question and equipment/chemicals packet",
+  "language": "ko",
+  "edition": "Complete unofficial Korean translation in original PDF layout",
+  "source": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-render-qa-20261120\\icho-gap-audit-20261120\\IChO2026-Q3.pdf",
+    "url": "https://drive.google.com/file/d/1S_uoToVm2vo-134GlPVprOd-Y4tUf3NE/view",
+    "sha256": "3f9176942bd7f43a965a6352308f82fb5dfdb6b9d7d954a42c3ee5453c20eed3",
+    "bytes": 451550,
+    "pages": 6
+  },
+  "official_organizer_page": "https://www.icho2026.uz/problems",
+  "retrieved_utc_date": "2026-11-20",
+  "translation_method": "Direct Korean translation authored by Codex without external translation APIs.",
+  "layout_and_fonts": {
+    "original_pdf_pages_and_sizes": true,
+    "korean": "NotoSansKR 400/700; bold and underlining follow the corresponding original expressions",
+    "latin_math": "Original source NotoSans and mathematical glyphs, explicitly routed by actual source coverage and role; source Unicode maps restored only in inserted font wrappers. All used contours and new Unicode verified.",
+    "preserved_native_font_programs": true,
+    "global_pdf_font_subsetting": false,
+    "source_logo": "Unchanged original IChO 2026 branding",
+    "identifiers_retained": "Scientific formulas, units, variable symbols, question/page codes and physical reagent-bottle labels such as R1-syn/R1-an/Py-qual/Dithiz./Solvent are retained. Corresponding item descriptions and instructions are Korean."
+  },
+  "qa": {
+    "report": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q3\\header-align-20261120\\qa-final.json",
+    "translated_hangul_characters": 1291,
+    "protected_native_characters": 477,
+    "native_word_render_checks": 220,
+    "new_latin_math_glyphs_verified": 63,
+    "whole_original_images_rgb_identical": 9,
+    "table_header_answer_rules_rgb_identical": 285,
+    "replaced_original_prose_underline_segments": 30,
+    "underline_method": "Only isolated original textual 0.6575 pt underline strokes under replaced English prose are removed; matching Korean expressions receive native PDF underlines. Borders, scientific diagrams, formulas and blanks are excluded. Exact removed coordinates are recorded in build QA.",
+    "page_code_word_bbox_exception": "Native large page-code word bbox can include the separate language caption. Actual code region above y=130 is verified RGB-identical when this causes a false positive.",
+    "missing_native_ink": 0,
+    "untranslated_text_regions": 0,
+    "unexpected_font_fallbacks": 0,
+    "full_mupdf_render": true,
+    "full_poppler_visual_review": true,
+    "poppler_warnings": 0,
+    "all_used_korean_glyph_checks": [
+      {
+        "weight": "bold",
+        "distinct_used_hangul_glyphs": 85,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      },
+      {
+        "weight": "regular",
+        "distinct_used_hangul_glyphs": 230,
+        "prepared_and_embedded_font_signature_identical": true,
+        "all_used_hangul_cmap_and_nonempty_contours_verified": true,
+        "glyph_outlines_exact": true
+      }
+    ],
+    "font_name_matching": "Lowercase alphanumeric normalization removes spaces, punctuation and hyphens; every Hangul span must use prepared NotoSansKR Regular/Bold or explicitly prepared Oblique/BoldOblique, independently of fallback names.",
+    "source_image_payloads_and_positions_preserved": true,
+    "translated_diagram_label_masks": 0,
+    "diagram_changed_pixels_outside_declared_labels": 0,
+    "diagram_scientific_roi_checks": [],
+    "native_complex_equation_geometry_checks": [],
+    "noninking_fallback_whitespace_spans": [],
+    "header_alignment_postprocess": {
+      "file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q3\\header-align-20261120\\IChO_2026_P_Q3_OriginalLayout_KO.pdf",
+      "sha256": "91fb2a685a26b2bd42186a398aafe7e923a0476b5597981ab8c6003bde56aabe",
+      "bytes": 586495,
+      "pages": 6,
+      "previous_file": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\icho\\2026\\practical\\Q3\\IChO_2026_P_Q3_OriginalLayout_KO.pdf",
+      "previous_sha256": "caa21729e701026db89e945b2375a3390b66dddb0b0a346cddfc0fe253099c5c",
+      "corrected_header_count": 6,
+      "corrections": [
+        {
+          "page": 1,
+          "header_form_xref_before_save": 53,
+          "original_origin": [
+            84.64973449707031,
+            78.45421600341797
+          ],
+          "new_origin": [
+            56.69300079345703,
+            78.45421600341797
+          ],
+          "horizontal_shift": -27.95673370361328,
+          "unchanged_font": "NotoSansKR-Bold",
+          "unchanged_size": 14.173199653625488,
+          "allowed_pixel_region": [
+            54.69300079345703,
+            62.28101348876953,
+            112.72843170166016,
+            83.28885650634766
+          ],
+          "operation": "Only the header-only Form XObject translation matrix is changed."
+        },
+        {
+          "page": 2,
+          "header_form_xref_before_save": 53,
+          "original_origin": [
+            84.64973449707031,
+            78.45421600341797
+          ],
+          "new_origin": [
+            56.69300079345703,
+            78.45421600341797
+          ],
+          "horizontal_shift": -27.95673370361328,
+          "unchanged_font": "NotoSansKR-Bold",
+          "unchanged_size": 14.173199653625488,
+          "allowed_pixel_region": [
+            54.69300079345703,
+            62.28101348876953,
+            112.72843170166016,
+            83.28885650634766
+          ],
+          "operation": "Only the header-only Form XObject translation matrix is changed."
+        },
+        {
+          "page": 3,
+          "header_form_xref_before_save": 53,
+          "original_origin": [
+            84.64973449707031,
+            78.45421600341797
+          ],
+          "new_origin": [
+            56.69300079345703,
+            78.45421600341797
+          ],
+          "horizontal_shift": -27.95673370361328,
+          "unchanged_font": "NotoSansKR-Bold",
+          "unchanged_size": 14.173199653625488,
+          "allowed_pixel_region": [
+            54.69300079345703,
+            62.28101348876953,
+            112.72843170166016,
+            83.28885650634766
+          ],
+          "operation": "Only the header-only Form XObject translation matrix is changed."
+        },
+        {
+          "page": 4,
+          "header_form_xref_before_save": 53,
+          "original_origin": [
+            84.64973449707031,
+            78.45421600341797
+          ],
+          "new_origin": [
+            56.69300079345703,
+            78.45421600341797
+          ],
+          "horizontal_shift": -27.95673370361328,
+          "unchanged_font": "NotoSansKR-Bold",
+          "unchanged_size": 14.173199653625488,
+          "allowed_pixel_region": [
+            54.69300079345703,
+            62.28101348876953,
+            112.72843170166016,
+            83.28885650634766
+          ],
+          "operation": "Only the header-only Form XObject translation matrix is changed."
+        },
+        {
+          "page": 5,
+          "header_form_xref_before_save": 53,
+          "original_origin": [
+            84.64973449707031,
+            78.45421600341797
+          ],
+          "new_origin": [
+            56.69300079345703,
+            78.45421600341797
+          ],
+          "horizontal_shift": -27.95673370361328,
+          "unchanged_font": "NotoSansKR-Bold",
+          "unchanged_size": 14.173199653625488,
+          "allowed_pixel_region": [
+            54.69300079345703,
+            62.28101348876953,
+            112.72843170166016,
+            83.28885650634766
+          ],
+          "operation": "Only the header-only Form XObject translation matrix is changed."
+        },
+        {
+          "page": 6,
+          "header_form_xref_before_save": 53,
+          "original_origin": [
+            84.64973449707031,
+            78.45421600341797
+          ],
+          "new_origin": [
+            56.69300079345703,
+            78.45421600341797
+          ],
+          "horizontal_shift": -27.95673370361328,
+          "unchanged_font": "NotoSansKR-Bold",
+          "unchanged_size": 14.173199653625488,
+          "allowed_pixel_region": [
+            54.69300079345703,
+            62.28101348876953,
+            112.72843170166016,
+            83.28885650634766
+          ],
+          "operation": "Only the header-only Form XObject translation matrix is changed."
+        }
+      ],
+      "all_page_pixel_checks": [
+        {
+          "page": 1,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.6930046081543,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 2,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.6930046081543,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 3,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.6930046081543,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 4,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.6930046081543,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 5,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.6930046081543,
+            78.45421600341797
+          ]
+        },
+        {
+          "page": 6,
+          "changed_pixels_outside_corrected_header": 0,
+          "actual_header_origin": [
+            56.6930046081543,
+            78.45421600341797
+          ]
+        }
+      ],
+      "all_pixels_outside_corrected_headers_identical": true,
+      "original_font_programs_untouched": true,
+      "global_pdf_font_subsetting": false
+    }
+  },
+  "edition_note": "Original header left alignment restored by changing only the header-only Form translation matrix. The exact previous PDF is preserved, and every pixel outside the declared corrected header regions is unchanged."
+}
