@@ -66,10 +66,10 @@
     "differences": []
   },
   "newly_inserted_glyph_audit": {
-    "audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1S_NEW_GLYPH_OUTLINES.json",
+    "audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1S_STYLE_REPAIR_NEW_GLYPH_OUTLINES.json",
     "all_nonspace_inserted_characters_have_true_outline": true,
     "all_actual_outlined_font_programs_embedded": true,
-    "glyph_uses": 14532,
+    "glyph_uses": 14550,
     "symbols": {
       "U+300E": [
         "SerifKR"
@@ -80,14 +80,9 @@
       "U+2032": [
         "SerifKR"
       ],
-      "U+2192": [
-        "SerifKR"
-      ],
-      "U+03C1": [
-        "SerifKR"
-      ],
       "U+2212": [
-        "Native29"
+        "Native29",
+        "Native41"
       ],
       "U+2013": [
         "Native29"
@@ -107,8 +102,8 @@
       "U+00B7": [
         "Native29"
       ],
-      "U+00D7": [
-        "SansKR"
+      "U+03C1": [
+        "Native41"
       ],
       "U+03B7": [
         "Native45"
@@ -156,6 +151,7 @@
     "all_pixels_outside_six_label_boxes_exact_at_2x": true,
     "red_annotation_and_original_blue_red_black_vectors_visually_preserved": true
   },
+  "visual_review_pending": false,
   "notes": [
     "The official file is titled Answer key, but contains a key plus detailed explanations for all 50 questions.",
     "Bibliographic citations keep original author names, titles, years, and journal details.",
@@ -168,33 +164,17 @@
     "The official English source has no separate blank answer-sheet file inside this document."
   ],
   "visual_review": {
-    "all_31_pages_contact_reviewed": true,
-    "enlarged_pages_reviewed": [
-      1,
-      2,
-      3,
-      4,
-      8,
+    "affected_pages_reviewed_in_pymupdf_and_poppler": [
       14,
-      17,
-      19,
-      21,
-      25,
-      26,
-      28,
-      29,
-      30,
       31
     ],
-    "poppler_pages_reviewed": [
-      1,
-      2,
-      14,
-      25,
-      30,
-      31
-    ],
-    "renders_directory": "C:/Users/andre/CodexWork/HaslaLab/translation-render-qa-20261120/ibo",
-    "all_visible_diagram_english_labels_translated": true
-  }
+    "all_body_content_previously_reviewed_preserved": true
+  },
+  "requested_font_style_audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1SR2_REQUESTED_FONT_STYLE_AUDIT.json",
+  "unexpected_requested_font_family_weight_italic_routes": 0,
+  "intentional_Korean_prose_range_tilde_uses_matching_Hangul_face": true,
+  "all_unaffected_pages_pixel_identical_to_previous_public_PDF_at_2x": true,
+  "pixel_isolation_qa_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1S_STYLE_REPAIR_PIXEL_ISOLATION_QA.json",
+  "pdf_sha256": "d14294dd3a1cdcf4fb29fd793b989be9a468dc3091a6c819eacd116890804471",
+  "greek_math_routing_audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_T1S_STYLE_REPAIR_GREEK_MATH_ROUTING_QA.json"
 }

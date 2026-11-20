@@ -32,10 +32,10 @@
   "individual_native_characters_pixel_identical_at_2x": 1887,
   "preserved_native_question_choice_prefix_characters": 220,
   "newly_inserted_glyph_audit": {
-    "audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_P1_NEW_GLYPH_OUTLINES.json",
+    "audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_P1_FONT_REPAIR_V2_NEW_GLYPH_OUTLINES.json",
     "all_nonspace_inserted_characters_have_true_outline": true,
     "all_actual_outlined_font_programs_embedded": true,
-    "glyph_uses": 6004,
+    "glyph_uses": 5998,
     "symbols": {
       "U+2013": [
         "SerifKR"
@@ -222,7 +222,7 @@
   "source_cover_technical_IBO_2020_vector_glyphs_retained": true,
   "server_address_list_all_53_countries_translated_and_native_URLs_IDs_preserved": true,
   "global_font_subsetting_used": false,
-  "greek_math_routing_audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_P1_GREEK_MATH_ROUTING_QA.json",
+  "greek_math_routing_audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_P1_FONT_REPAIR_V2_GREEK_MATH_ROUTING_QA.json",
   "visual_review_pending": false,
   "notes": [
     "This question paper refers to a separate answer sheet but contains no standalone blank answer sheet.",
@@ -233,21 +233,16 @@
     "Native boxed blank lettersA-D are reproduced as boxes rather than being flattened into underlines. Right-side cell identifiers retain the original underline distinction."
   ],
   "visual_review": {
-    "all_16_pages_reviewed_in_pymupdf": true,
-    "poppler_pages_reviewed": [
-      1,
+    "affected_pages_reviewed_in_pymupdf_and_poppler": [
       2,
-      3,
-      5,
-      8,
-      10,
-      12,
-      13,
       15
     ],
-    "cover_source_Latin_glyphs_native_and_Korean_titles_right_aligned": true,
-    "eight_semantic_boxes_and_right_cell_underlines_reviewed": true,
-    "all_graphics_and_countries_addresses_clear": true
+    "all_body_content_previously_reviewed_preserved": true
   },
-  "pdf_sha256": "029b205979fdbc89f1161fb36b59c12ea1690c479fadf23c0db25aee62351a1c"
+  "requested_font_style_audit_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_P1_FONT_REPAIR_V2_FONT_FAMILY_ROUTING_QA.json",
+  "unexpected_requested_font_family_weight_italic_routes": 0,
+  "intentional_Korean_prose_range_tilde_uses_matching_Hangul_face": false,
+  "all_unaffected_pages_pixel_identical_to_previous_public_PDF_at_2x": true,
+  "pixel_isolation_qa_path": "D:\\CodexBuilds\\haslalab-all-years-korean-20261120\\ibo\\IBO_2020_P1_STYLE_REPAIR_PIXEL_ISOLATION_QA.json",
+  "pdf_sha256": "97f109627b34af64cb917f1fc6c8a07ad16be4a3d127f7236351d1bd4f197b4e"
 }
