@@ -96,8 +96,11 @@ def load(practical=None):
                     continue
                 # direct: linked where it is published, never copied (the organiser does not allow redistribution)
                 slot[kind] = value
+                if f.get('supplements'):
+                    supplements = slot.setdefault('supplements', [])
+                    supplements.extend(item for item in f['supplements'] if item not in supplements)
                 if kind == 'paper':
-                    for prop in ('title', 'supplements', 'round', 'component'):
+                    for prop in ('title', 'round', 'component'):
                         if f.get(prop):
                             slot[prop] = f[prop]
                     if f.get('problem_ids'):
