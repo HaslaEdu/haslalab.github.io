@@ -519,8 +519,8 @@
     }
    ],
    "note": {
-    "ko": "2021년 대회는 아랍에미리트에서 온라인으로 진행됐습니다. 실기 영어 원본 58쪽은 문제 30쪽과 공식 빈 답안지 28쪽을 담고 있습니다. 원래 문제 30쪽과 빈 답안지 28쪽을 각각 분리해 영어와 한국어로 제공합니다. 공식 실기 풀이·채점표와 기구 목록은 영어 45쪽입니다. 별도 풀이용지는 공개 원본을 확인하지 못했습니다.",
-    "en": "The UAE hosted the 2021 competition online. The 58-page official English practical booklet contains 30 question pages and 28 blank answer pages. The extracted question and blank answer booklets are each available in English and Korean. The 45-page English official solutions contain worked answers, marking criteria and an equipment appendix. A distinct working-sheet original remains unlocated."
+    "ko": "2021년 대회는 아랍에미리트에서 온라인으로 진행됐습니다. 실기 영어 원본 58쪽은 문제 30쪽과 공식 빈 답안지 28쪽을 담고 있습니다. 원래 문제 30쪽과 빈 답안지 28쪽을 각각 분리해 영어와 한국어로 제공합니다. 공식 실기 풀이·채점표와 기구 목록은 영어와 한국어로 각각 45쪽입니다. 원래의 수기 기록과 그래프를 유지하고 가까운 칸에 한국어 설명을 적었습니다. 별도 풀이용지는 공개 원본을 확인하지 못했습니다.",
+    "en": "The UAE hosted the 2021 competition online. The 58-page official English practical booklet contains 30 question pages and 28 blank answer pages. The extracted question and blank answer booklets are each available in English and Korean. The 45-page official solutions include worked answers, marking criteria and the equipment appendix in English and Korean. Original manual annotations and graphs remain, with Korean explanations in adjacent space. A distinct working-sheet original remains unlocated."
    }
   },
   {
@@ -845,21 +845,11 @@
    },
    "cc": "ir",
    "source_page": "https://tpmso.k12ea.gov.tw/twijso/index.php/about/exam/",
-   "note": "The Taiwan delegation archive identifies the 17-page English contestant booklet for December 3, 2012. The English and Korean practice PDFs retain the question numbers and omit one question, for a total of 29 questions.",
+   "note": {
+    "ko": "객관식 영어·한국어 학습판은 29문항이며 16번 생략을 표시했습니다. 이론 14쪽과 실험 9쪽은 브라질 대표팀이 배포한 포르투갈어 대회판입니다. 실험 문제지에는 원래 빈 답안 기입란이 있습니다. 이론과 실험의 영어 원본 및 별도 공식 답안지·풀이용지는 확인하지 못했습니다.",
+    "en": "The English and Korean multiple-choice study editions contain 29 questions and mark the omission of Q16. The 14-page theory paper and nine-page practical booklet are authentic Portuguese contest editions from IJSO Brasil. The practical booklet includes its original blank response fields. English theory/practical papers and separate official answer and working booklets remain unlocated."
+   },
    "files": [
-    {
-     "file": "IJSO_2012_T_EN.pdf",
-     "part": "T",
-     "kind": "paper",
-     "lang": "EN",
-     "url": "https://tpmso.k12ea.gov.tw/twijso/wp-content/uploads/2022/04/2012_theo_cht.pdf",
-     "bytes": 1566745,
-     "direct": true,
-     "title": {
-      "ko": "이론 시험 (영어·중국어)",
-      "en": "Theoretical Exam (English and Chinese)"
-     }
-    },
     {
      "file": "IJSO_2012_MC_EN.pdf",
      "part": "MC",
@@ -888,16 +878,33 @@
      }
     },
     {
-     "file": "IJSO_2012_E1_EN.pdf",
+     "file": "IJSO_2012_E1_PT.pdf",
      "part": "E1",
      "kind": "paper",
-     "lang": "EN",
-     "url": "https://tpmso.k12ea.gov.tw/twijso/wp-content/uploads/2022/04/2012_exp_cht-eng.pdf",
-     "bytes": 735687,
-     "direct": true,
+     "lang": "PT",
+     "local": "pdfx/ijso/IJSO_2012_Practical_Brazilian_Delegation_Original_PT.pdf",
+     "url": "https://www.ijso.com.br/downloads/provas/2012/2012lab_port.pdf",
+     "pages": 9,
+     "bytes": 533216,
+     "source_type": "authentic_brazilian_delegation_contest_edition",
      "title": {
-      "ko": "실험 문제·답안지 합본 (영어·중국어)",
-      "en": "Practical Questions and Answer Sheet (English and Chinese)"
+      "ko": "실험 문제·답안지 합본 · 포르투갈어",
+      "en": "Practical questions with original response fields · Portuguese"
+     }
+    },
+    {
+     "file": "IJSO_2012_T_PT.pdf",
+     "part": "T",
+     "kind": "paper",
+     "lang": "PT",
+     "local": "pdfx/ijso/IJSO_2012_Theory_Brazilian_Delegation_Original_PT.pdf",
+     "url": "https://www.ijso.com.br/downloads/provas/2012/2012teo_port.pdf",
+     "pages": 14,
+     "bytes": 962086,
+     "source_type": "authentic_brazilian_delegation_contest_edition",
+     "title": {
+      "ko": "이론 시험 · 포르투갈어",
+      "en": "Theory questions · Portuguese"
      }
     }
    ],
