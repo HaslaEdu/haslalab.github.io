@@ -133,10 +133,19 @@ function viewHome(){
   const T=SITE_DESIGN_TEXT[lang],original=document.createElement("div");
   original.innerHTML=viewOriginalHome();
   const experiment=original.querySelector("figure.screen").outerHTML;
-  const homeText=original.querySelector(".hero > div").innerHTML;
+  const ko=lang==="ko",P=window.HL_LEARN_PATH;
+  /* the home page starts beginners on the learning path; the olympiad side keeps the former hero */
+  const homeText=`<p class="eyebrow">${ko?"물리올림피아드 입문부터 국가대표까지":"From first steps to the national team"}</p>
+    <h1>${ko?"물리올림피아드,<br>처음부터 차근차근.":"Physics olympiad,<br>one step at a time."}</h1>
+    <p class="lede">${ko?"주제와 난이도로 나뉜 문제를 내 단계에 맞게 풀고, 실험은 직접 조작해 보세요.":"Work through problems sorted by topic and difficulty at your own step, and run the experiments yourself."}</p>
+    <div class="cta"><a class="btn" href="#/learn/physics">${ko?"학습 시작하기":"Start learning"}</a><a class="btn ghost" href="#/olympiad">${ko?"올림피아드 둘러보기":"Explore the olympiad"}</a></div>`;
+  const ladder=P?`<section class="hl-home-path" aria-labelledby="homePathTitle"><h2 id="homePathTitle">${ko?"내 단계 찾기":"Find your step"}</h2><ol class="lp-stages">${P.STAGES.map(stage=>`<li class="lp-stage"><span class="lp-steps mono">${ko?"단계":"Step"} ${stage.steps[0]}–${stage.steps[1]}</span><b>${esc(stage.name[lang])}</b><span class="lp-who">${esc(stage.who[lang])}</span></li>`).join("")}</ol>
+    <div class="hl-home-tracks"><a class="comp lsubj" href="#/learn/physics"><div class="chead"><div class="abbr">${ko?"학습":"Learn"}</div></div><p class="learn-card-note">${ko?"주제별 · 단계별 문제와 문제 검색, 교재":"Problems by topic and step, search, textbooks"}</p><span class="go">→</span></a>
+    <a class="comp lsubj" href="#/olympiad"><div class="chead"><div class="abbr">${ko?"올림피아드":"Olympiad"}</div></div><p class="learn-card-note">${ko?"대회 기출, 실험 시뮬레이터, 월별 문제, 모의고사":"Past papers, experiment simulators, monthly problems, mock exams"}</p><span class="go">→</span></a></div></section>`:"";
   const updateRows=SITE_UPDATES.filter(updateShown).slice(0,4).map(item=>`<a class="hl-update" href="${item.href}"><span class="hl-update-type">${T.update}</span><b>${esc(item[lang])}</b><time datetime="${item.date}">${item.date.slice(5).replace("-",".")}</time></a>`).join("");
   return `<div class="shell hl-home">
     <section class="hl-home-cover">${experiment}<div class="hl-cover-info">${homeText}</div></section>
+    ${ladder}
     <div class="hl-dashboard"><section class="hl-panel"><div class="hl-panel-head"><h2>${T.recent}</h2><a href="#/community">${T.more} →</a></div><div id="homeLatest" aria-live="polite"><p class="hl-empty">${CMT[lang].loading}</p></div></section>
     <section class="hl-panel"><div class="hl-panel-head"><h2>${T.updates}</h2><div class="hl-panel-actions"><span id="homeNoticeWrite"></span><button type="button" class="hl-more" aria-haspopup="dialog" onclick="openSiteMailbox(this)">${T.more} →</button></div></div><div id="homeNotices"></div>${updateRows}</section></div>
     ${viewHomeStudio()}

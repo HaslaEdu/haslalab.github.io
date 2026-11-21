@@ -286,7 +286,7 @@ html[data-theme="dark"] body.hl-site .hl-cover-info .btn.ghost{background:#241d2
 
 /* Archive years, source material and exam portals share the same dark surfaces. */
 html[data-theme="dark"] body.hl-site{--paper-2:#26202f;--accent:#bca0ed}
-html[data-theme="dark"] body.hl-site :is(.comp,.subjs a,.yr,.prob,.cnote,.thy,.genlink,.modesw a,.rupho-stages a,.grpsel,.grpbar,.xm .xmbox){
+html[data-theme="dark"] body.hl-site :is(.comp,.lp-stage,.lp-area,.subjs a,.yr,.prob,.cnote,.thy,.genlink,.modesw a,.rupho-stages a,.grpsel,.grpbar,.xm .xmbox){
   background:#1b1825;border-color:#3b334a;color:#ebe8f5;
 }
 html[data-theme="dark"] body.hl-site :is(.yr.none,.prob.soon,.ritem.soon){background:transparent}
@@ -884,3 +884,8 @@ body.hl-site .hpho-phone-video.is-front{transform:scaleX(-1)}body.hl-site .hpho-
 body.hl-site .hpho-forbidden{border:2px solid #d92d20;background:#fff1f0;border-radius:10px;padding:12px 14px;margin-top:10px}
 body.hl-site .hpho-forbidden h3{margin:0 0 6px;color:#b42318;font-size:18px}body.hl-site .hpho-forbidden-item{font-size:20px;font-weight:800;margin:4px 0;color:#b42318}
 html[data-theme="dark"] body.hl-site .hpho-forbidden{background:#3a1512;border-color:#ff6b5e}html[data-theme="dark"] body.hl-site .hpho-forbidden h3,html[data-theme="dark"] body.hl-site .hpho-forbidden-item{color:#ff9a90}
+
+/* home: learning path ladder and the two tracks */
+body.hl-site .hl-home-path{margin:28px 0 8px}
+body.hl-site .hl-home-path h2{font-size:17px;margin:0 0 12px}
+body.hl-site .hl-home-tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}

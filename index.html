@@ -324,6 +324,25 @@ section{padding:58px 0}
 .learn-pending{max-width:760px;margin:0 0 48px;padding:32px;border:1px dashed var(--grid-bold);border-radius:12px}
 .learn-pending h2{margin:0;font-size:1.35rem}
 .learn-tool-copy{color:var(--graphite);font-size:13px;line-height:1.8;margin:14px 0 0;max-width:600px}
+.learn-card-note{color:var(--graphite);font-size:13px;line-height:1.6;margin:8px 0 0}
+.learn-physics{padding-bottom:36px}
+.lp-block{margin:0 0 44px}
+.lp-block h2{font-size:1.2rem;margin:0 0 14px}
+.lp-stages{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;counter-reset:none}
+.lp-stage{background:#fff;border:1px solid var(--grid-bold);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.lp-stage b{font-size:1.05rem}
+.lp-stage p{margin:4px 0 0;color:var(--ink);font-size:13px;line-height:1.6}
+.lp-steps{font-size:11.5px;color:var(--laser)}
+.lp-who,.lp-src{font-size:12px;color:var(--graphite);line-height:1.5}
+.lp-src{margin-top:auto;padding-top:6px;border-top:1px dashed var(--grid-bold)}
+.lp-areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:14px}
+.lp-area{background:#fff;border:1px solid var(--grid-bold);border-radius:10px;padding:14px 16px;min-width:0}
+.lp-area h3{margin:0 0 10px;font-size:1rem}
+.lp-topics{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.lp-topics a,.lp-topics span[data-subtopic]{display:inline-flex;color:inherit;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--grid-bold);border-radius:16px;font-size:12.5px;line-height:1.5;text-decoration:none}
+.lp-topics a:hover,.lp-topics a:focus-visible{border-color:var(--ink)}
+.lp-from{font-size:10.5px;color:var(--graphite)}
+.oly-sections{margin-bottom:10px}
 .learn-studio{padding-bottom:36px}
 .learn-studio .phead{margin-bottom:24px}
 .learn-studio-frame{display:block;width:100%;height:1050px;min-height:600px;border:0;background:transparent}
@@ -1141,6 +1160,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
+<script src="learn-path.js?v=20261121a"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
 <script src="site-catalogue.js?v=6c5160d9fd05"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
@@ -1191,7 +1211,8 @@ const pdfxUrl = p => String(p).replace(PDFX_RE, (m, sub, name) => PDF_BASE + "l/
 /* ── copy ── */
 const UI={
 ko:{
-  navHome:"홈", navComps:"아카이브", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티", navWeekly:"월별문제",
+  navHome:"홈", navComps:"아카이브", navLearn:"학습", navOly:"올림피아드", navAbout:"소개", navComm:"커뮤니티", navWeekly:"월별문제",
+  hOly:"올림피아드", olyLede:"국제 · 국내 물리올림피아드 기출, 실험 시뮬레이터, 월별 문제와 모의고사를 모았습니다.",
   ebLearn:"학습", hLearn:"학습", learnSoon:"준비중",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
   ownGuide:"HaslaLab 교재 · 학습 가이드", ownBasics:"HaslaLab 기초 실험 및 관측", soonOwn:"준비 중입니다.",
@@ -1259,7 +1280,8 @@ ko:{
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"맨 위로 ↑"
 },
 en:{
-  navHome:"Home", navComps:"Archive", navLearn:"Learn", navAbout:"About", navComm:"Community", navWeekly:"Monthly",
+  navHome:"Home", navComps:"Archive", navLearn:"Learn", navOly:"Olympiad", navAbout:"About", navComm:"Community", navWeekly:"Monthly",
+  hOly:"Olympiad", olyLede:"International and national olympiad papers, experiment simulators, monthly problems and mock exams.",
   ebLearn:"Learn", hLearn:"Learn", learnSoon:"Coming soon",
   lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
   ownGuide:"HaslaLab textbook · study guide", ownBasics:"HaslaLab basic experiments and observation", soonOwn:"In preparation.",
@@ -4990,6 +5012,21 @@ const SUBJ=[
 ];
 for(const k of Object.keys(DATA)) if(!SUBJ.some(x=>x.comps.includes(k))) SUBJ.find(x=>x.k==="sci").comps.push(k);   // a new competition, until it is filed
 const subjOf=key=>(SUBJ.find(x=>x.comps.includes(RUPHO_ARCHIVE?.isStage(key)?"rupho":key))||SUBJ[0]).k;
+/* Olympiad: the competition side of the site — the former home page with its hero and tally, then its sections. */
+function viewOlympiad(){
+  const d=UI[lang],ko=lang==="ko";
+  const cards=[
+    ["#/comps",ko?"대회 아카이브":"Competition archive",ko?"국제 · 국내 대회 기출과 해설을 연도별로":"Papers and solutions by competition and year"],
+    [ko?"problems.html":"problems-en.html",ko?"실험 시뮬레이터":"Experiment simulators",ko?"실제 장비처럼 조작하고 직접 측정":"Operate the apparatus and take the readings yourself"],
+    ["#/monthly",d.navWeekly,ko?"매달 새 문제와 채점 · 순위":"A new set each month, graded and ranked"],
+    ["#/hpho","HPhO",ko?"HaslaLab 물리올림피아드 모의고사":"The HaslaLab Physics Olympiad mock exam"],
+    ["#/lab",ko?"실전 모드":"Exam mode",ko?"시간을 재고 대회처럼 풀기":"Timed, under competition conditions"]];
+  return `<div class="shell"><div class="phead"><p class="eyebrow">${d.navOly}</p><h1>${d.hOly}</h1><p class="learn-tool-copy">${d.olyLede}</p></div>
+    <div class="comps oly-sections">${cards.map(([href,title,note])=>`<a class="comp lsubj" href="${href}"><div class="chead"><div class="abbr">${title}</div></div><p class="learn-card-note">${note}</p><span class="go">→</span></a>`).join("")}</div>
+    <p class="learn-tool-copy"><a href="#/learn/physics">${ko?"올림피아드가 처음이라면 학습에서 단계별로 시작하세요 →":"New to olympiads? Start step by step in Learn →"}</a></p>
+  </div>${viewOriginalHome()}`;
+}
+
 function viewComps(sub,limit=Infinity){
   const d=UI[lang];
   let cur=SUBJ.find(x=>x.k===sub);
@@ -5195,7 +5232,7 @@ function viewLearn(){
     <div class="comps" data-lang="${lang}">
       ${Object.entries(LEARN).map(([key,L])=>{
         return `<a class="comp lsubj" href="#/learn/${key}">
-          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"문제 제작소":"Problem Studio"):key==="astronomy"?(lang==="ko"?"아카이브":"Archive"):d.learnSoon}</span></div>
+          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"학습 경로":"Learning path"):key==="astronomy"?(lang==="ko"?"아카이브":"Archive"):d.learnSoon}</span></div>
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
@@ -5206,10 +5243,36 @@ function viewLearn(){
 function viewLearnSubject(key){
   const d=UI[lang], L=LEARN[key];
   if(!L) return viewLearn();
+  if(key==="physics"&&window.HL_LEARN_PATH) return viewLearnPhysics();
   const archive=archiveHref("books",key==="astronomy"?"astro":"phys");
   return `<div class="shell"><div class="phead"><p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p><h1>${L.name[lang]}</h1></div>
     ${key==="physics"&&cm.me?.role==="admin"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio"><div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div><p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만듭니다.":"Turn physics problem photos into text and equations, and create new problems from a topic."}</p><span class="go">→</span></a></div>`:""}
     ${["physics","astronomy"].includes(key)?`<p class="learn-tool-copy"><a href="${archive}">${lang==="ko"?"대회·교재·학교 자료는 아카이브에서 찾아볼 수 있습니다.":"Find competition, book and school materials in the archive."}</a></p>`:`<section class="learn-pending" role="status"><h2>${d.learnSoon}</h2></section>`}
+  </div>${adFitBanner("primary")}`;
+}
+
+/* Physics learning hub: five stages of ten steps, the topic map, and the tools that serve them. */
+function viewLearnPhysics(){
+  const d=UI[lang],ko=lang==="ko",P=window.HL_LEARN_PATH,L=LEARN.physics;
+  const search=(subject)=>"#/learn/physics/search"+(subject?"?subject="+encodeURIComponent(subject):"");
+  const stages=P.STAGES.map(stage=>`<li class="lp-stage" data-stage="${stage.key}">
+      <span class="lp-steps mono">${ko?"단계":"Step"} ${stage.steps[0]}–${stage.steps[1]}</span>
+      <b>${esc(stage.name[lang])}</b><span class="lp-who">${esc(stage.who[lang])}</span>
+      <p>${esc(stage.goal[lang])}</p><span class="lp-src">${esc(stage.sources[lang])}</span></li>`).join("");
+  const areas=P.AREAS.map(area=>`<section class="lp-area" data-area="${area.key}"><h3>${esc(area.name[lang])}</h3><ul class="lp-topics">${area.subtopics.map(sub=>{
+      const bank=sub.bank||area.bank,label=`${esc(sub.name[lang])}<span class="lp-from mono">${sub.from}+</span>`;
+      return `<li>${bank?`<a href="${search(bank)}" data-subtopic="${area.key}/${sub.key}">${label}</a>`:`<span data-subtopic="${area.key}/${sub.key}">${label}</span>`}</li>`;}).join("")}</ul></section>`).join("");
+  const tools=[
+    [search(""),ko?"문제 검색":"Search problems",ko?"글 · 수식 · 주제 · 난이도로 찾기":"By text, equation, topic and difficulty"],
+    [archiveHref("books","phys"),ko?"교재 아카이브":"Book archive",ko?"공개 교재와 학교 자료":"Open textbooks and school materials"],
+    [ko?"problems.html":"problems-en.html",ko?"실험 시뮬레이터":"Experiment simulators",ko?"움직임과 측정을 직접 해 보기":"See the motion, take the readings"],
+    ...(cm.me?.role==="admin"?[["#/learn/physics/studio",ko?"문제 제작소":"Problem Studio",ko?"관리자 · 문제 만들기와 디지털화":"Admin · create and digitize problems"]]:[])];
+  return `<div class="shell learn-physics"><div class="phead"><p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p><h1>${L.name[lang]}</h1>
+      <p class="learn-tool-copy">${ko?"지금 실력에 맞는 단계와 필요한 주제를 골라, 그 문제부터 공부하세요.":"Pick the step that matches you and the topic you need, and start with those problems."}</p></div>
+    <section class="lp-block" aria-labelledby="lpStages"><h2 id="lpStages">${ko?"어디서 시작할까요?":"Where to start"}</h2><ol class="lp-stages">${stages}</ol></section>
+    <section class="lp-block" aria-labelledby="lpTopics"><h2 id="lpTopics">${ko?"주제별로 공부하기":"Study by topic"}</h2>
+      <p class="learn-tool-copy">${ko?"숫자는 그 주제를 처음 다루는 단계입니다.":"The number is the step where a topic first appears."}</p><div class="lp-areas">${areas}</div></section>
+    <section class="lp-block" aria-labelledby="lpTools"><h2 id="lpTools">${ko?"도구":"Tools"}</h2><div class="comps">${tools.map(([href,title,note])=>`<a class="comp lsubj" href="${href}"${href.includes("/studio")?' data-learn-tool="studio"':""}><div class="chead"><div class="abbr">${title}</div></div><p class="learn-card-note">${note}</p><span class="go">→</span></a>`).join("")}</div></section>
   </div>${adFitBanner("primary")}`;
 }
 
@@ -5254,7 +5317,10 @@ function learnSearchHeading(){
 }
 function viewLearnSearch(){
   const label=lang==='ko'?'문제 검색':'Search problems';
-  const query=new URLSearchParams({embed:'1',lang,theme:document.documentElement.dataset.theme==='dark'?'dark':'light',v:'20261103-edu04'});
+  const query=new URLSearchParams({embed:'1',lang,theme:document.documentElement.dataset.theme==='dark'?'dark':'light',v:'20261121-learn01'});
+  const asked=new URLSearchParams(location.hash.split('?')[1]||'');
+  if(/^[a-z_]{2,40}$/.test(asked.get('subject')||''))query.set('subject',asked.get('subject'));
+  if(/^[1-5]$/.test(asked.get('stars')||''))query.set('stars',asked.get('stars'));
   return `<div class="shell learn-studio learn-search"><div class="phead">${learnSearchHeading()}</div><iframe id="learnSearchFrame" class="learn-studio-frame" src="problem-search.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
 function syncLearnSearch(){
@@ -10067,6 +10133,7 @@ const SITE = "HaslaLab";
 function setDocTitle(first, second){
   const d=UI[lang], parts=[];
   if(first==="about")            parts.push(d.hAbout);
+  else if(first==="olympiad")    parts.push(d.hOly);
   else if(first==="hpho")        parts.push("HPhO");
   else if(first==="archive"){
     const route=window.HL_ARCHIVE?.parse(location.hash),category=route?.category;
@@ -10181,9 +10248,8 @@ function paintPageChrome(active){
   const d=UI[lang];
   document.getElementById("nav").innerHTML=
     `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
-     <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
      <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
-     <a href="#/monthly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
+     <a href="#/olympiad" class="${["olympiad","comps","weekly"].includes(active)?"on":""}">${d.navOly}</a>
      <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
   document.getElementById("footL").textContent=d.footL;
@@ -10241,6 +10307,7 @@ function render(){
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
+  else if(first==="olympiad"){    html=viewOlympiad(); active="olympiad"; }
   else if(first==="learn"){       html=second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
@@ -10274,7 +10341,8 @@ function render(){
   if(studioFrame)studioFrame.addEventListener("load",()=>{studioFrame.dataset.studioReady="true";syncLearnStudio();},{once:true});
   const searchFrame=document.getElementById('learnSearchFrame');
   if(searchFrame)searchFrame.addEventListener('load',syncLearnSearch,{once:true});
-  if(active==="home"){ startHero(); mountHomeActivity(); }
+  if(active==="home"||active==="olympiad")startHero();
+  if(active==="home")mountHomeActivity();
   if(active==="community") cmMount();
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
   if((active==="weekly"&&first!=="hpho")||first==="lab") arMount();

@@ -76,7 +76,9 @@ test('monthly ranking and global navigation use the monthly vocabulary without c
   const index=fs.readFileSync(path.join(rootPath,'index.html'),'utf8');
   assert.match(index,/navWeekly:"월별문제"/);
   assert.match(index,/navWeekly:"Monthly"/);
-  assert.match(index,/<a href="#\/monthly"/);
+  /* monthly problems sit in the Olympiad section of the global navigation */
+  assert.match(index,/<a href="#\/olympiad"/);
+  assert.match(index,/\["#\/monthly",d\.navWeekly,/);
   assert.match(index,/<a href="#\/community"/);
 });
 
