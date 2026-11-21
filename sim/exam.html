@@ -214,7 +214,7 @@
 
 <script src="../vendor/qrcode/qrcode.js"></script>
 <script src="../examdur.js?v=20261030-archives"></script>
-<script src="../paper-languages.js?v=1"></script>
+<script src="../paper-languages.js?v=8fc1f58f4d5c"></script>
 <script src="result-comparison.js?v=b189a5d97ba5"></script>
 <script src="exam-network.js?v=78b6a42ed001"></script>
 <script src="xlsx-lite.js?v=e924eb9e5c2a"></script>
@@ -442,6 +442,7 @@ const EX = {
 };
 let paperOptions = {};
 try { paperOptions = window.PaperLanguages?.normalize(JSON.parse(Q.get("papers") || "{}"), EX.tasks.length) || {}; } catch (e) {}
+paperOptions = window.PaperLanguages?.archiveChoices?.(EX.c, lang, paperOptions) || paperOptions;
 let paperLanguage = Object.hasOwn(paperOptions, Q.get("pl")) ? Q.get("pl") : Object.hasOwn(paperOptions, lang) ? lang : Object.keys(paperOptions)[0] || "";
 if (paperLanguage) EX.pdfs = paperOptions[paperLanguage].slice();
 const isThy = i => THY || EX.files[i] === "-";                                 // a theory task (no simulator)
@@ -470,7 +471,7 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": 
 const hms = s => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
 function toast(msg, ms) { const d = document.createElement("div"); d.className = "toast"; d.textContent = msg; document.body.append(d); setTimeout(() => d.remove(), ms || 3500); }
 function paperLanguageHtml() {
-  const codes = Object.keys(paperOptions); if (!codes.length) return "";
+  const codes = Object.keys(paperOptions); if (!codes.length || (EX.c === "oibf" && lang === "ko")) return "";
   return `<label style="display:block;margin:14px 0">${lang === "ko" ? "문제지 언어" : "Problem paper language"} <select id="paperLanguage" style="font:inherit;padding:8px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px">${codes.map(code => `<option value="${esc(code)}"${code === paperLanguage ? " selected" : ""}>${esc(PaperLanguages.label(code, lang))}</option>`).join("")}</select></label>`;
 }
 function bindPaperLanguage() {

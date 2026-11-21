@@ -41,17 +41,24 @@
     if (Object.hasOwn(slot.paperContainsSolutions || {}, language)) return !!slot.paperContainsSolutions[language];
     return files(slot)[language] === slot.paper && !!slot.containsSolutions;
   }
-  function bundle(slots, ui) {
+  function archiveChoices(competition, ui, options) {
+    if (competition !== 'oibf') return options;
+    return Object.fromEntries(Object.entries(options).filter(([language]) => ui === 'ko' ? language === 'ko' : language !== 'ko'));
+  }
+  function supplements(items, ui) {
+    return (items || []).filter(item => !item.audience || item.audience === ui);
+  }
+  function bundle(slots, ui, competition) {
     if (!Array.isArray(slots) || !slots.length) return {papers:{}, language:''};
-    const options = slots.map(slot => Object.fromEntries(Object.entries(files(slot))
+    const options = slots.map(slot => Object.fromEntries(Object.entries(archiveChoices(competition, ui, files(slot)))
       .filter(([language]) => !containsSolutions(slot, language)))), papers = {};
     for (const language of Object.keys(options[0])) {
       if (options.every(option => option[language])) papers[language] = options.map(option => option[language]);
     }
     // A session with mixed source languages still has its published papers.
-    if (!Object.keys(papers).length && slots.every(slot => path(slot.paper) && !slot.containsSolutions)) papers.original = slots.map(slot => slot.paper);
+    if (!(competition === 'oibf' && ui === 'ko') && !Object.keys(papers).length && slots.every(slot => path(slot.paper) && !slot.containsSolutions)) papers.original = slots.map(slot => slot.paper);
     const language = papers[ui] ? ui : papers.en ? 'en' : Object.keys(papers)[0] || '';
     return {papers, language};
   }
-  return {label, files, normalize, bundle, containsSolutions};
+  return {label, files, normalize, archiveChoices, supplements, bundle, containsSolutions};
 });
