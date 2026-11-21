@@ -5054,7 +5054,7 @@ function viewArchiveDigital(route){
   const name=route.resolveLegacy?(ko?"아카이브":"Archive"):book?(ko?"교재를 고르세요":"Choose a book"):school?(ko?"학교를 고르세요":"Choose a school"):UI[lang].hComps;
   const eyebrow=book?(ko?"수록 교재":"Covered books"):school?(ko?"수록 학교":"Covered schools"):UI[lang].ebComps;
   const description=book?(ko?"분야와 교재를 고르고, 문항과 풀이를 여세요.":"Pick a field and a book, then open its problems and solutions."):school?(ko?"분야와 학교를 고르고, 강의 자료와 문항을 여세요.":"Pick a field and a school, then open its course materials and problems."):UI[lang].pComps;
-  const privateLink=book&&route.sub==="phys"&&!privateBooks&&cm.me?.role==="admin"?`<p><a href="#/archive/books/phys?view=private-textbooks">${ko?"내 비공개 교재":"My private textbooks"}</a></p>`:"";
+  const privateLink=book&&route.sub==="phys"&&!privateBooks?`<p data-archive-private-entry${cm.me?.role==="admin"?"":" hidden"}><a href="#/archive/books/phys?view=private-textbooks">${ko?"내 비공개 교재":"My private textbooks"}</a></p>`:"";
   const hideIntro=reading||privateBooks;
   return `<div class="shell${reading?' archive-reading':''}" data-archive-kind="${route.kind}">${archiveCategories(route.category,route.sub)}<div class="phead"${hideIntro?' hidden':''}>${route.resolveLegacy?"":`<p class="eyebrow">${eyebrow}</p>`}<h1>${name}</h1>${route.resolveLegacy?"":`<div class="sub">${description}</div>`}${privateLink}</div>${route.resolveLegacy?"":archiveSubjects(route.category,route.sub).replace('<nav ','<nav '+(reading?'hidden ':''))}<div id="archiveNative"><p class="archive-loading" role="status">${ko?"자료를 불러오는 중…":"Loading archive…"}</p></div></div>${adFitBanner("primary")}`;
 }
@@ -5092,6 +5092,8 @@ function mountArchiveNative(route,generation){
   const container=document.getElementById("archiveNative");if(!container)return;
   const current=()=>generation===siteRenderSeq&&document.getElementById("archiveNative")===container;
   const privateBooks=route.params.get('view')==='private-textbooks';
+  const privateEntry=container.closest(".shell")?.querySelector("[data-archive-private-entry]");
+  if(privateEntry&&cmTok())cmLoadMe().then(user=>{if(privateEntry.isConnected)privateEntry.hidden=user?.role!=="admin";});
   const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=8fbc16f6dde5"):loadArchiveModule();
   modulePromise.then(module=>{
     if(!current())return;
