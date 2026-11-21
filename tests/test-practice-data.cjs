@@ -65,3 +65,22 @@ test('every practice mode lets the learner skip a problem',()=>{
   assert.equal((js.match(/id="skip"/g)||[]).length,3,'exam, bank and contest problems each have a skip button');
   assert.match(read('practice.html'),/connect-src 'self' https:\/\/haslalab-problem-bank\.haslalab\.workers\.dev https:\/\/haslalab-pdf\.haslalab\.workers\.dev/);
 });
+
+test('transcribed competition problems have text, figures that exist, and point back to their paper',()=>{
+  const dir=path.join(root,'practice/contest');
+  if(!fs.existsSync(dir))return;
+  const list=JSON.parse(read('practice/contests.json')).contests,papers=new Map(list.flatMap(c=>c.problems.map(p=>[p.id,c.key])));
+  const figs=new Set(fs.readdirSync(path.join(dir,'fig'))),used=new Set(),ids=new Set();
+  for(const file of fs.readdirSync(dir).filter(f=>f.endsWith('.json'))){
+    const {contest,items}=JSON.parse(fs.readFileSync(path.join(dir,file),'utf8'));
+    assert.equal(list.find(c=>c.key===contest).structured,items.length,contest);
+    for(const it of items){
+      assert.ok(!ids.has(it.id),it.id);ids.add(it.id);
+      assert.equal(papers.get(it.pdf),contest,it.id);assert.ok(it.id.startsWith(it.pdf+'~'),it.id);
+      assert.ok(it.b.some(b=>b.t),it.id);
+      for(const b of it.b){if(b.f){assert.ok(figs.has(b.f),b.f);used.add(b.f);}else assert.equal(typeof b.t,'string');}
+      assert.doesNotMatch(JSON.stringify(it.b),/<script|javascript:/i);
+    }
+  }
+  assert.equal(used.size,figs.size,'only placed figures are stored');
+});

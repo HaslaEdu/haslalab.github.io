@@ -13,20 +13,20 @@
       right:'정답입니다!',wrong:'오답입니다. 정답은',up:'단계가 올랐습니다',down:'한 단계 쉬운 문제로 갑니다',
       result:'맞힌 문제',of:'/',done:'세션 완료',loading:'문제를 불러오는 중…',failed:'문제를 불러오지 못했습니다.',retry:'다시 시도',
       pdf:'원본 시험지',quit:'← 단원 목록',time:'권장 시간',sec:'초',progress:'해결',skip:'건너뛰기',skipped:'건너뜀',
-      tabExam:'수능 · 모의고사',tabBank:'교재 · 대학 문제',tabContest:'대회 도전',
+      tabExam:'수능 · 모의고사 계산',tabBank:'교재 · 대학 문제',tabContest:'대회 도전',
       bankPick:'분야와 난이도를 고르면 교재와 대학 강의 문제를 하나씩 풉니다. 풀이를 확인하고 스스로 채점하세요.',stars:'난이도',showSol:'풀이 보기',noSol:'아직 등록된 풀이가 없습니다. 커뮤니티 질문 · 답변 갤러리나 AI에게 물어보세요.',
       solvedIt:'풀었어요',missedIt:'못 풀었어요',original:'원문 보기',translated:'번역 보기',noKo:'한국어 번역이 아직 없어 원문을 보여 줍니다.',draft:'하슬라랩 작성 풀이 · 검수 전',refFig:'참고 그림',empty:'이 조건의 문제가 더 없습니다. 난이도나 분야를 바꿔 보세요.',
-      contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에만 저장됩니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에만 저장됩니다.',
+      contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에만 저장됩니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에만 저장됩니다.',
       note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에만 저장됩니다.'},
     en:{title:'Practice by unit',streak:'day streak',xp:'XP',solved:'solved',pick:'Pick a unit to solve ten problems at your step.',
       none:'No problems yet',step:'Step',start:'Start',again:'Again',units:'Units',next:'Next',finish:'See results',
       right:'Correct!',wrong:'Not quite. The answer is',up:'Step up',down:'Back one step',
       result:'Correct',of:'/',done:'Session complete',loading:'Loading problems…',failed:'Could not load the problems.',retry:'Retry',
       pdf:'Original paper',quit:'← Units',time:'Suggested time',sec:'s',progress:'solved',skip:'Skip',skipped:'skipped',
-      tabExam:'Korean exams',tabBank:'Books & university',tabContest:'Competition challenge',
+      tabExam:'Korean exam calculations',tabBank:'Books & university',tabContest:'Competition challenge',
       bankPick:'Pick a field and a difficulty to work through textbook and university course problems one at a time. Check the solution and mark yourself.',stars:'Difficulty',showSol:'Show solution',noSol:'No solution is stored yet. Ask in the community Q&A gallery or ask the AI.',
       solvedIt:'I solved it',missedIt:'I missed it',original:'Original',translated:'Translation',noKo:'',draft:'HaslaLab draft solution · not yet reviewed',refFig:'Reference figures',empty:'No more problems here. Try another difficulty or field.',
-      contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device only.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device only.',
+      contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',transcribed:'The text is transcribed from the original paper; if they differ, the PDF is authoritative.',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device only.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device only.',
       note:'Problems: Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices (Korean only), shared within the permitted web and app use. Some unit labels are automatic and under review. Progress is kept on this device only.'}
   };
   const state={lang:params.get('lang')==='en'?'en':'ko',index:null,shards:{},session:null};
@@ -241,8 +241,8 @@
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
     try{if(!state.contests){const r=await fetch('practice/contests.json');if(!r.ok)throw 0;state.contests=(await r.json()).contests;}}catch(e){failed(contestHome);return;}
     $('app').innerHTML=`<p class="pick">${tr('contestPick')}</p><div class="areas">${state.contests.map(c=>{
-      const done=c.problems.filter(p=>saved.contest.done[p.id]===1).length;
-      return `<section class="area"><button type="button" class="unit" data-contest="${c.key}"><span class="name"><b>${esc(c.name[state.lang])}</b><small>${tr('step')} ${c.step} · ${c.problems.length} ${tr('problems')} · ${done} ${tr('progress')}</small></span><span class="bar"><i style="width:${Math.round(100*done/Math.max(1,c.problems.length))}%"></i></span></button></section>`;}).join('')}</div>`;
+      const total=c.structured||c.problems.length,done=Object.entries(saved.contest.done).filter(([id,v])=>v===1&&id.startsWith(c.key+'-')&&(c.structured?id.includes('~'):!id.includes('~'))).length;
+      return `<section class="area"><button type="button" class="unit" data-contest="${c.key}"><span class="name"><b>${esc(c.name[state.lang])}</b><small>${tr('step')} ${c.step} · ${total} ${tr('problems')} · ${done} ${tr('progress')}</small></span><span class="bar"><i style="width:${Math.round(100*done/Math.max(1,total))}%"></i></span></button></section>`;}).join('')}</div>`;
     $('app').querySelectorAll('[data-contest]').forEach(b=>b.onclick=()=>contestShow(b.dataset.contest));
     reportHeight();
   }
@@ -266,25 +266,44 @@
     }catch(e){if(job===pdfJob)box.innerHTML=`<p class="src">${tr('failed')} <a href="${esc(url)}" target="_blank" rel="noopener">PDF ↗</a></p>`;}
     reportHeight();
   }
-  function contestShow(key,skipId){
+  /* a competition: problems transcribed per problem (text with LaTeX and the figures cut from the paper) when
+     practice/contest/<key>.json has them; otherwise the paper itself, drawn with pdf.js */
+  async function contestItems(key){
+    state.contestItems||={};
+    if(!(key in state.contestItems)){try{const r=await fetch('practice/contest/'+encodeURIComponent(key)+'.json');state.contestItems[key]=r.ok?(await r.json()).items:[];}catch(e){state.contestItems[key]=[];}}
+    return state.contestItems[key];
+  }
+  async function contestShow(key,skipId){
     const c=state.contests.find(x=>x.key===key);if(!c){contestHome();return;}
-    const open=c.problems.filter(p=>saved.contest.done[p.id]!==1&&p.id!==skipId),pool=open.length?open:c.problems;
-    const p=pool[Math.floor(Math.random()*pool.length)];
-    const safe=u=>PDF_HOST.test(u||'')?u:'';
+    const items=await contestItems(key);
+    const L={ko:'한국어',en:'English',hu:'Magyar'},safe=u=>PDF_HOST.test(u||'')?u:'';
+    let item=null,p;
+    if(items.length){
+      const open=items.filter(i=>saved.contest.done[i.id]!==1&&i.id!==skipId),pool=open.length?open:items;
+      item=pool[Math.floor(Math.random()*pool.length)];p=c.problems.find(x=>x.id===item.pdf);
+    }else{
+      const open=c.problems.filter(x=>saved.contest.done[x.id]!==1&&x.id!==skipId),pool=open.length?open:c.problems;
+      p=pool[Math.floor(Math.random()*pool.length)];
+    }
+    const doneId=item?item.id:p.id;
     const langs=Object.entries(p.papers).filter(([,u])=>safe(u)),pref=langs.find(([l])=>l===state.lang)||langs[0];
     const sols=Object.entries(p.sols||{}).filter(([,u])=>safe(u));
-    const L={ko:'한국어',en:'English',hu:'Magyar'};
+    const label=item?`${item.year} · ${p.key}${item.key&&item.key!==p.key?' · '+item.key:''}`:`${p.year} · ${p.key}`;
+    const title=item?.title||p.title||'';
+    const body=item?item.b.map(b=>b.f?`<figure><img src="practice/contest/fig/${encodeURIComponent(b.f)}" width="${b.w}" height="${b.h}" alt="" loading="lazy"></figure>`:textHtml(b.t)).join(''):'';
     $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(c.name[state.lang])}</span><span class="lvl">${p.year} · ${esc(p.key)}</span>${p.title?`<span>${esc(p.title)}</span>`:''}</div>
-      <div class="langrow">${tr('paper')}: ${langs.map(([l,u])=>`<button type="button" class="${l===pref[0]?'cur':''}" data-pdf="${esc(u)}">${L[l]||l}</button>`).join('')} <a href="${esc(pref[1])}" target="_blank" rel="noopener" id="openPdf">PDF ↗</a></div>
-      <div id="pdf" class="pdf" role="document" aria-label="${esc(c.name[state.lang])} ${p.year} ${esc(p.key)}"><p class="src">${tr('loading')}</p></div>
+      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(c.name[state.lang])}</span><span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}</div>
+      ${item?`<div class="q" id="qtext">${body}</div>`:''}
+      <div class="langrow">${tr('paper')}: ${langs.map(([l,u])=>`<button type="button" class="${!item&&l===pref[0]?'cur':''}" data-pdf="${esc(u)}">${L[l]||l} PDF</button>`).join('')} <a href="${esc(pref[1])}" target="_blank" rel="noopener" id="openPdf">PDF ↗</a></div>
+      <div id="pdf" class="pdf"${item?' hidden':''} role="document" aria-label="${esc(c.name[state.lang])} ${esc(label)}"><p class="src">${tr('loading')}</p></div>
       <div id="feedback"></div>
-      <div class="foot"><span class="src">${sols.length?`${tr('solution')}: `+sols.map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${L[l]||l} ↗</a>`).join(' · '):tr('noContestSol')}</span>
+      <div class="foot"><span class="src">${sols.length?`${tr('solution')}: `+sols.map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${L[l]||l} ↗</a>`).join(' · '):tr('noContestSol')}${item?' · '+tr('transcribed'):''}</span>
         <span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${tr('another')}</button></span></div></div>`;
-    $('app').querySelectorAll('[data-pdf]').forEach(b=>b.onclick=()=>{showPdf(b.dataset.pdf);$('openPdf').href=b.dataset.pdf;$('app').querySelectorAll('[data-pdf]').forEach(x=>x.classList.toggle('cur',x===b));});
-    showPdf(pref[1]);
-    $('quit').onclick=contestHome;$('skip').onclick=()=>contestShow(key,p.id);$('next').onclick=()=>contestShow(key,p.id);
-    const mark=ok=>{saved.contest.done[p.id]=ok?1:0;studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;
+    if(item)typeset($('qtext'));
+    $('app').querySelectorAll('[data-pdf]').forEach(b=>b.onclick=()=>{$('pdf').hidden=false;showPdf(b.dataset.pdf);$('openPdf').href=b.dataset.pdf;$('app').querySelectorAll('[data-pdf]').forEach(x=>x.classList.toggle('cur',x===b));});
+    if(!item)showPdf(pref[1]);
+    $('quit').onclick=contestHome;$('skip').onclick=()=>contestShow(key,doneId);$('next').onclick=()=>contestShow(key,doneId);
+    const mark=ok=>{saved.contest.done[doneId]=ok?1:0;studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;
       $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?'✓ '+tr('solvedIt'):tr('missedIt')}</p>`;reportHeight();};
     $('good').onclick=()=>mark(true);$('miss').onclick=()=>mark(false);
     reportHeight();if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
