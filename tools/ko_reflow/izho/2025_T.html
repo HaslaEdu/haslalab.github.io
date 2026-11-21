@@ -22,6 +22,16 @@ p{text-indent:0}
 .sl{font-family:'Times New Roman',serif}
 .f{position:absolute;line-height:0}
 .r{position:absolute;background:#000;display:block}
+.tb{position:absolute;border-collapse:collapse;table-layout:fixed;margin:0}
+.tb td{border:var(--tw,0.5pt) solid #000;vertical-align:top;padding:0}
+.tb td.m{vertical-align:middle}
+.tb p{position:relative!important;left:auto!important;top:auto!important;width:auto!important;margin:0;
+   font-size:var(--fs);line-height:var(--l)}
+.tb .tl{position:relative}
+.tb .tl>*{position:absolute!important;left:var(--tx)!important;top:var(--ty)!important;width:auto!important;white-space:nowrap}
+@font-face{font-family:KB0;src:url(file:///C:/Windows/Fonts/HANBatang.ttf)}
+@font-face{font-family:KB0;font-weight:bold;src:url(file:///C:/Windows/Fonts/HANBatangB.ttf)}
+.tb p{font-family:'Times New Roman',KB0,KB,serif}
 </style></head><body>
 
 <!-- 1 -->
@@ -70,17 +80,10 @@ p{text-indent:0}
 <p class="x ind" style="--b:479.7;--l:13.83pt">전기–열 유사성은 열적인 물리량을 그에 대응하는 전기적인 물리량으로 바꾸어 열 시스템을 계산하는 방법이다. 이 방법은 열물리학과 전기공학의 수학적 도구가 똑같다는 데 바탕을 둔다. 열의 전파와 전류는 같은 미분 방정식으로 기술되는데, 실제 물체의 전기적 특성을 측정하는 것은 훨씬 간단하다.</p>
 <p class="x q" style="--b:540.9;--l:14.07pt"><b>2.4</b> 아래는 열적인 물리량과 전기적인 물리량의 대응표이다. 열적인 물리량은 명시되어 있으니, 표를 풀이에 옮겨 쓰고 그 옆에 대응하는 전기적인 물리량을 적어라: 전류 밀도 $j_E$, 전기 전도도 $\sigma$, 전하 $q$, 전기 퍼텐셜 $\varphi$.</p>
 <!-- rules p3 585-670: 14 -->
-<i class="r" style="left:99.65pt;top:592.01pt;width:376.22pt;height:0.48pt"></i><i class="r" style="left:99.65pt;top:592.49pt;width:0.48pt;height:73.94pt"></i><i class="r" style="left:297.48pt;top:592.49pt;width:0.48pt;height:73.94pt"></i><i class="r" style="left:475.39pt;top:592.49pt;width:0.48pt;height:73.94pt"></i><i class="r" style="left:100.13pt;top:606.17pt;width:197.35pt;height:0.48pt"></i><i class="r" style="left:297.96pt;top:606.17pt;width:177.43pt;height:0.48pt"></i><i class="r" style="left:100.13pt;top:620.81pt;width:197.35pt;height:0.48pt"></i><i class="r" style="left:297.96pt;top:620.81pt;width:177.43pt;height:0.48pt"></i><i class="r" style="left:100.13pt;top:635.47pt;width:197.35pt;height:0.48pt"></i><i class="r" style="left:297.96pt;top:635.47pt;width:177.43pt;height:0.48pt"></i><i class="r" style="left:100.13pt;top:651.31pt;width:197.35pt;height:0.48pt"></i><i class="r" style="left:297.96pt;top:651.31pt;width:177.43pt;height:0.48pt"></i><i class="r" style="left:100.13pt;top:665.95pt;width:197.35pt;height:0.48pt"></i><i class="r" style="left:297.96pt;top:665.95pt;width:177.43pt;height:0.48pt"></i>
-<p class="x c h" style="--b:603.5;left:100.1pt;width:197.4pt">열적인 물리량</p>
-<p class="x c h" style="--b:603.5;left:298pt;width:177.4pt">전기적인 물리량</p>
-<p class="x " style="--b:617.9;left:105.2pt;width:190pt">온도 $T$</p>
-<p class="x " style="--b:632.6;left:105.2pt;width:190pt">열량 $Q$</p>
-<p class="x " style="--b:647.2;left:105.2pt;width:190pt">열류 $j_Q$</p>
-<p class="x " style="--b:662.8;left:105.2pt;width:190pt">열전도 계수 $\kappa$</p>
+<table class="tb" style="--tw:0.48pt;left:99.65pt;top:592.01pt;width:376.22pt"><colgroup><col style="width:197.83pt"><col style="width:177.91pt"></colgroup><tr><td style="padding:0.00pt 0.80pt 0.00pt 0.80pt"><p class="x c h">열적인 물리량</p></td><td style="padding:0.00pt 0.80pt 0.00pt 0.80pt"><p class="x c h">전기적인 물리량</p></td></tr><tr><td style="padding:0.00pt 5.07pt 0.00pt 5.07pt"><p class="x">온도 $T$</p></td><td style="padding:0"></td></tr><tr><td style="padding:0.00pt 5.07pt 0.00pt 5.07pt"><p class="x">열량 $Q$</p></td><td style="padding:0"></td></tr><tr><td style="padding:0.00pt 5.07pt 0.00pt 5.07pt"><p class="x">열류 $j_Q$</p></td><td style="padding:0"></td></tr><tr><td style="padding:0.00pt 5.07pt 0.00pt 5.07pt"><p class="x">열전도 계수 $\kappa$</p></td><td style="padding:0"></td></tr></table>
 <p class="x q" style="--b:696.9;--l:14.2pt"><b>2.5</b> 정육면체가 옆면이 단열된 똑같은 가는 막대들로 이루어져 있다. 정육면체의 두 꼭짓점 $A$와 $B$는 각각 일정한 온도 $t_A=20$&thinsp;℃와 $t_B=120$&thinsp;℃로 유지된다. 꼭짓점 $C$의 온도 $t_C$를 구하여라. 아래 그림 2.1을 보아라.</p>
 <p class="x q" style="--b:745.2;--l:14.07pt"><b>2.6</b> 반지름 $R$인 얇은 열전도성 구가 벽 두께 $h\ll R$인 물질로 만들어져 있다. 구의 점 $A$에 열일률 $P$가 공급되고, 구의 점 $B$에서 같은 열일률이 빠져나간다. 열 손실을 무시하고, 구의 점 $C$에서 열류의 크기를 구하여라. 아래 그림 2.2를 보아라($O$는 구의 중심, $AO\perp OB, OC\perp OA, OC\perp OB$).</p>
 </div>
-
 <!-- 4 -->
 <div class="page">
 <div class="hd" style="left:36.02pt">XXI 국제 자우티코프 올림피아드/이론 시험</div><div class="hd" style="right:35.5pt">쪽 <span class="pn">4</span><span class="sl">/</span><span class="pn">7</span></div>
