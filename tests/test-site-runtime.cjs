@@ -233,6 +233,20 @@ test('PLANCKS public resources contain only its official homepage and general ru
   }
 });
 
+test('OPhO 2020 is listed only in theory and shows both theory rounds',()=>{
+  const site=app();
+  site.load('theory:opho');
+  const experiment=site.run('track="exp";viewComp("opho")');
+  assert.doesNotMatch(experiment,/href="#\/opho\/2020"/);
+  assert.match(experiment,/href="#\/opho\/2021"/);
+  const theory=site.run('track="thy";viewComp("opho")');
+  assert.match(theory,/href="#\/opho\/2020"/);
+  const year=site.run('track="exp";viewYear("opho",2020)');
+  assert.doesNotMatch(year,/onclick="setTrack\('exp'\)"/);
+  assert.match(year,/data-opho-round="open"/);
+  assert.match(year,/data-opho-round="invitational"/);
+});
+
 test('new physics archives retain official metadata and historical context through independent lazy loads',()=>{
   const lean=app(),options={known:Object.keys(catalogue.competitions),theory:catalogue.theoryKeys,versions:catalogue.versions};
   lean.run('lang="en";track="thy"');
