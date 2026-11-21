@@ -13,7 +13,9 @@ import zipfile
 import pymupdf
 from PIL import Image
 
-PREFIX = Path("textbook-intake/2026-11-21/viewer-v1")
+INTAKE_PREFIX = Path("textbook-intake/2026-11-21")
+PREFIX = INTAKE_PREFIX / "viewer-v1"
+MEDIA_RECIPE = "verified-intake-raster-webp-v1"
 REPO = Path(__file__).resolve().parents[2]
 BATCH_SIZE = 24
 IMAGE_LIMIT = 2 * 1024 * 1024
@@ -69,6 +71,19 @@ def require_relative(path, parent):
     return resolved
 
 
+def archive_records(intake):
+    return {row["key"]: row for row in read_json(intake / "verified-records.json")}
+
+
+def verified_record(intake, records, relative):
+    receipt = records[(INTAKE_PREFIX / relative).as_posix()]
+    path = require_relative(intake / relative, intake)
+    if (receipt["verified"] is not True or not HEX.fullmatch(receipt["sha256"]) or
+            path.stat().st_size != receipt["byte_length"] or file_sha256(path) != receipt["sha256"]):
+        raise ValueError(f"Archive record differs from its verified receipt: {relative}")
+    return path, receipt["sha256"]
+
+
 def loaded_sources(intake):
     sources = {}
     for row in read_json(intake / "verified-sources.json")["sources"]:
@@ -92,13 +107,19 @@ def raster(page):
 
 
 class MediaPack:
-    def __init__(self, root, filename):
+    def __init__(self, root, filename, prior=None):
+        self.prior = prior
+        self.inherited = {}
         self.path = root / filename
         self.stream = self.path.open("wb")
         self.by_digest = {}
         self.by_item = {}
 
     def add(self, key, read):
+        if key in self.inherited:
+            attrs = self.inherited[key]
+            self.prior.use(attrs)
+            return attrs
         if key not in self.by_item:
             data = read()
             sha = digest(data)
@@ -113,6 +134,9 @@ class MediaPack:
 
     def close(self, destination):
         self.stream.close()
+        if not self.by_digest and self.inherited:
+            self.path.unlink()
+            return
         sha, size = file_sha256(self.path), self.path.stat().st_size
         if not 12 <= size <= 1024 * 1024 * 1024:
             raise ValueError("Unexpected textbook media pack size")
@@ -183,24 +207,44 @@ def svg_raster(data):
         return raster(doc[0])
 
 
-def add_media(row, intake, sources, pack, figures, overlay):
-    media = []
-    def item(attrs, kind, *, page=None, label=""):
-        media.append({"id": len(media) + 1, "kind": kind, "page": page,
-                      "label": label, "slice": attrs})
+def source_pages(row):
+    pages = list(dict.fromkeys(span["page"] for span in row.get("spans", [])))
+    if not pages and row.get("source_pdf_page"):
+        pages = [row["source_pdf_page"]]
+    if not pages:
+        raise ValueError(f"Missing original page for {row['id']}")
+    return pages
+
+
+def figure_pages(overlay):
+    if not overlay or overlay["review_status"] == "machine_draft":
+        return set()
+    return {value for entries, field in [(overlay.get("figures", []), "source_page"),
+                                         (overlay.get("figure_spans", []), "page")]
+            for entry in entries if type(value := entry.get(field)) is int}
+
+
+def check_page(pg, document, ident):
+    if type(pg) is not int or not 1 <= pg <= len(document):
+        raise ValueError(f"Invalid PDF page on {ident}")
+
+
+def media_requests(row, intake, sources, figures, overlay=None):
     source_key = row["source_object"]
     source_id, document = sources[source_key]
+    ident = row["id"]
     if source_key != f"sources/{row['source_sha256']}.pdf":
-        raise ValueError(f"Mismatched source for {row['id']}")
+        raise ValueError(f"Mismatched source for {ident}")
     for entry in row.get("question_crops", []):
         path = require_relative(intake / source_id / entry["file"], intake)
-        sha = entry["sha256"]
-        def crop():
+        sha, pg = entry["sha256"], entry["span"]["page"]
+        check_page(pg, document, ident)
+        def crop(path=path, sha=sha):
             data = path.read_bytes()
             if digest(data) != sha:
                 raise ValueError(f"Source crop hash changed: {path.name}")
             return data
-        item(pack.add(("crop", sha), crop), "question_crop", page=entry["span"]["page"])
+        yield ("crop", sha), crop, "question_crop", pg
     if figures:
         for entry in row.get("figures", []):
             path = entry["path"]
@@ -209,30 +253,24 @@ def add_media(row, intake, sources, pack, figures, overlay):
             if path in figures.NameToInfo:
                 if not 1 <= figures.getinfo(path).file_size <= IMAGE_LIMIT:
                     raise ValueError("Archived figure exceeds the raster input limit")
-                item(pack.add(("figure", path), lambda: svg_raster(figures.read(path))), "figure")
-    primary_pages = list(dict.fromkeys(span["page"] for span in row.get("spans", [])))
-    if not primary_pages and row.get("source_pdf_page"):
-        primary_pages = [row["source_pdf_page"]]
-    if not primary_pages:
-        raise ValueError(f"Missing original page for {row['id']}")
-    if overlay and overlay["review_status"] != "machine_draft":
-        extra_pages = {figure.get("source_page") for figure in overlay.get("figures", [])
-                       if isinstance(figure.get("source_page"), int)}
-        extra_pages.update(span["page"] for span in overlay.get("figure_spans", [])
-                           if isinstance(span.get("page"), int))
-        primary_pages += sorted(p for p in extra_pages if p not in primary_pages)
-    for pg in primary_pages:
-        if not isinstance(pg, int) or not 1 <= pg <= len(document):
-            raise ValueError(f"Invalid PDF page on {row['id']}")
-        item(pack.add(("page", source_key, pg), lambda: raster(document[pg - 1])), "source_page", page=pg)
+                yield ("figure", path), lambda path=path: svg_raster(figures.read(path)), "figure", None
+    primary_pages = source_pages(row)
+    for pg in primary_pages + sorted(figure_pages(overlay) - set(primary_pages)):
+        check_page(pg, document, ident)
+        yield ("page", source_key, pg), lambda pg=pg: raster(document[pg - 1]), "source_page", pg
     reference = row.get("english_reference")
     if reference:
         alt_key = reference["source_object"]
         _, alternate = sources[alt_key]
         for pg in dict.fromkeys(span["page"] for span in reference["spans"]):
-            if not isinstance(pg, int) or not 1 <= pg <= len(alternate):
-                raise ValueError(f"Invalid alternate PDF page on {row['id']}")
-            item(pack.add(("page", alt_key, pg), lambda: raster(alternate[pg - 1])), "english_page", page=pg)
+            check_page(pg, alternate, ident)
+            yield ("page", alt_key, pg), lambda pg=pg: raster(alternate[pg - 1]), "english_page", pg
+
+
+def add_media(row, intake, sources, pack, figures, overlay):
+    media = [{"id": number, "kind": kind, "page": pg, "label": "", "slice": pack.add(key, read)}
+             for number, (key, read, kind, pg) in enumerate(
+                 media_requests(row, intake, sources, figures, overlay), 1)]
     if len(media) > 100:
         raise ValueError(f"Too many media records for {row['id']}")
     return media
@@ -243,24 +281,115 @@ def flatten_media(media):
         yield {**{k: v for k, v in asset.items() if k != "slice"}, **asset["slice"]}
 
 
-def build(intake, temporary, overlays):
-    catalogue = read_json(intake / "records" / "catalog.json")
+class PriorMedia:
+    def __init__(self, root, release, legacy=False):
+        self.root = root
+        self.base = root / PREFIX / "releases" / release
+        manifest = self.read_hashed(self.base / "manifest.json", release)
+        if manifest["schema"] != "haslalab-private-textbook-viewer/v1":
+            raise ValueError("Unsupported prior viewer manifest")
+        self.books = {book["id"]: book for book in manifest["books"]}
+        self.legacy = legacy
+        wrapper = read_json(root / "viewer-object-manifest.json")
+        if wrapper["release"] != release:
+            raise ValueError("The prior pack wrapper does not describe the pinned release")
+        self.backing = wrapper.get("local_reused_media", {})
+        self.used = {}
+
+    def read_hashed(self, path, sha):
+        path = require_relative(path, self.root)
+        if not HEX.fullmatch(sha) or path.stat().st_size > JSON_LIMIT or file_sha256(path) != sha:
+            raise ValueError(f"Prior viewer file does not match its digest: {path.name}")
+        return read_json(path)
+
+    def read_rows(self, key, identity):
+        book = self.books[key]
+        actual = book.get("media_inputs")
+        if actual != identity and (actual is not None or not self.legacy):
+            raise ValueError(f"Prior viewer has different or unverified media inputs: {key}")
+        for number, sha in enumerate(book["batches"]):
+            yield from self.read_hashed(self.base / key / "batches" / f"{number}.json", sha)
+
+    def use(self, attrs):
+        sha, size = attrs["pack_sha256"], attrs["pack_size"]
+        key = (PREFIX / "media" / f"{sha}.bin").as_posix()
+        if key not in self.used:
+            path = self.root / key
+            if path.is_file():
+                source = require_relative(path, self.root)
+            else:
+                source = Path(self.backing[key])
+                suffix = Path(key).parts
+                if not source.is_absolute() or source.parts[-len(suffix):] != suffix:
+                    raise ValueError("Invalid prior media backing path")
+                source = source.resolve(strict=True)
+            if source.stat().st_size != size or file_sha256(source) != sha:
+                raise ValueError("Prior media pack does not match its digest")
+            self.used[key] = (source, sha, size)
+        elif self.used[key][2] != size:
+            raise ValueError("Conflicting prior media pack sizes")
+
+
+def collect_prior_media(prior, pack, rows, media_inputs, key, intake, sources, figures):
+    for ord_, (row, previous) in enumerate(zip(rows, prior.read_rows(key, media_inputs), strict=True), 1):
+        ident = row["id"]
+        if previous["ordinal"] != ord_ or previous["number"] != row["original_number"]:
+            raise ValueError(f"Prior viewer question order differs: {ident}")
+        mandatory = [(slot, kind, pg) for slot, _, kind, pg in media_requests(row, intake, sources, figures)]
+        old_frames = previous["media"]
+        extra_pages = []
+        mandatory_pages = set(source_pages(row))
+        for frame in old_frames:
+            pg = frame["page"]
+            if frame["kind"] == "source_page" and pg not in mandatory_pages:
+                check_page(pg, sources[row["source_object"]][1], ident)
+                extra_pages.append(pg)
+        if extra_pages != sorted(set(extra_pages)):
+            raise ValueError(f"Prior viewer has invalid additional pages: {ident}")
+        position = sum(kind != "english_page" for _, kind, _ in mandatory)
+        mandatory[position:position] = [(('page', row["source_object"], pg), 'source_page', pg) for pg in extra_pages]
+        for number, ((slot, kind, pg), frame) in enumerate(zip(mandatory, old_frames, strict=True), 1):
+            if (type(frame["id"]) is not int or type(frame["page"]) is not type(pg) or
+                    (frame["id"], frame["kind"], frame["page"]) != (number, kind, pg)):
+                raise ValueError(f"Prior viewer media layout differs: {ident}")
+            attrs = {name: frame[name] for name in ("length", "offset", "pack_sha256", "pack_size", "sha256")}
+            length, offset, size = (attrs[name] for name in ("length", "offset", "pack_size"))
+            if (any(type(value) is not int for value in (length, offset, size)) or
+                    not 12 <= length <= IMAGE_LIMIT or not 0 <= offset <= size - length or
+                    size > 1024 * 1024 * 1024 or not HEX.fullmatch(attrs["pack_sha256"]) or
+                    not HEX.fullmatch(attrs["sha256"]) or (kind == "question_crop" and slot[1] != attrs["sha256"])):
+                raise ValueError(f"Invalid prior viewer media slice: {ident}")
+            if pack.inherited.setdefault(slot, attrs) != attrs:
+                raise ValueError(f"Conflicting prior viewer media slice: {ident}")
+
+
+def build(intake, temporary, overlays, prior=None):
+    records = archive_records(intake)
+    catalogue_path, _ = verified_record(intake, records, "records/catalog.json")
+    catalogue = read_json(catalogue_path)
     sources = loaded_sources(intake)
     seen = set()
     stage = temporary / "texts"
     manifest = {"schema": "haslalab-private-textbook-viewer/v1", "books": []}
-    zip_path = intake / "savchenko/figures.zip"
-    figures = zipfile.ZipFile(require_relative(zip_path, intake)) if zip_path.exists() else None
+    zip_path, figure_archive_digest = verified_record(intake, records, "savchenko/figures.zip")
+    figures = zipfile.ZipFile(zip_path)
     try:
         for material in catalogue["materials"]:
             key = material["id"]
             if not BOOK.fullmatch(key):
                 raise ValueError("Invalid archive book identifier")
             rows, directory = [], []
-            pack = MediaPack(temporary, key + ".bin")
+            pack = MediaPack(temporary, key + ".bin", prior)
             try:
-                entries = require_relative(intake / material["records"], intake)
-                for ordinal, row in enumerate(read_jsonl(entries), 1):
+                entries, entries_digest = verified_record(intake, records, material["records"])
+                originals = list(read_jsonl(entries))
+                diagrams = figures if key == "savchenko" else None
+                media_inputs = {"recipe": MEDIA_RECIPE, "records_sha256": entries_digest}
+                if diagrams:
+                    media_inputs["figures_sha256"] = figure_archive_digest
+                if prior:
+                    collect_prior_media(prior, pack, originals, media_inputs, key, intake, sources, diagrams)
+                for ordinal, row in enumerate(originals, 1):
                     ident = row["id"]
                     if ident in seen:
                         raise ValueError(f"Repeated archive identity: {ident}")
@@ -279,7 +408,7 @@ def build(intake, temporary, overlays):
                                "has_korean": bool(versions["ko"])}
                     directory.append(summary)
                     details = {**summary, **versions, "media": add_media(
-                        row, intake, sources, pack, figures if key == "savchenko" else None, overlay
+                        row, intake, sources, pack, diagrams, overlay
                     )}
                     if key == "savchenko":
                         number = row["original_number"]
@@ -306,7 +435,7 @@ def build(intake, temporary, overlays):
             manifest["books"].append({
                 "id": key, "title": material["title"], "limitation": material.get("limitation", ""),
                 "count": len(rows), "korean_count": sum(item["has_korean"] for item in directory),
-                "index_sha256": index_hash, "batches": batches,
+                "index_sha256": index_hash, "batches": batches, "media_inputs": media_inputs,
             })
             print(key, len(rows), manifest["books"][-1]["korean_count"], flush=True)
         if overlays.keys() - seen:
@@ -328,20 +457,39 @@ def main():
     parser.add_argument("--intake", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--overlay", type=Path, action="append", default=[])
+    parser.add_argument("--reuse-media-from", type=Path, help="Reference compatible media without writing a copy")
+    parser.add_argument("--reuse-release", help="Expected SHA-256 of the prior release manifest")
+    parser.add_argument("--trust-legacy-media-inputs", action="store_true", help=(
+        "Permit an older locally built release with independently confirmed record inputs"))
     args = parser.parse_args()
     intake, output = args.intake.resolve(), args.output.resolve()
-    if intake.is_relative_to(REPO) or output.is_relative_to(REPO):
+    prior_root = args.reuse_media_from.resolve() if args.reuse_media_from else None
+    if (bool(prior_root) != bool(args.reuse_release) or
+            (args.reuse_release and not HEX.fullmatch(args.reuse_release)) or
+            (args.trust_legacy_media_inputs and not prior_root)):
+        parser.error("Media reuse requires a prior pack directory and a pinned release SHA-256")
+    if intake.is_relative_to(REPO) or output.is_relative_to(REPO) or (prior_root and prior_root.is_relative_to(REPO)):
         parser.error("Keep private source bytes and viewer packs outside the public worktree")
     if output.exists():
         parser.error("Choose a new private output directory")
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=output.parent, prefix="viewer-build-") as work:
         stage = Path(work)
-        release = build(intake, stage, read_overlays(args.overlay))
-        objects = [{"key": path.relative_to(stage).as_posix(), "sha256": file_sha256(path),
-                    "byte_length": path.stat().st_size}
-                   for path in sorted((stage / PREFIX).rglob("*")) if path.is_file()]
-        write_json(stage / "viewer-object-manifest.json", {"release": release, "objects": objects})
+        prior = PriorMedia(prior_root, args.reuse_release, args.trust_legacy_media_inputs) if prior_root else None
+        release = build(intake, stage, read_overlays(args.overlay), prior)
+        entries = {path.relative_to(stage).as_posix(): {"sha256": file_sha256(path), "byte_length": path.stat().st_size}
+                   for path in (stage / PREFIX).rglob("*") if path.is_file()}
+        backing = {}
+        if prior:
+            for key, (source, sha, size) in prior.used.items():
+                if key not in entries:
+                    entries[key] = {"sha256": sha, "byte_length": size}
+                    backing[key] = source.as_posix()
+        objects = [{"key": key, **attrs} for key, attrs in sorted(entries.items())]
+        wrapper = {"release": release, "objects": objects}
+        if backing:
+            wrapper["local_reused_media"] = backing
+        write_json(stage / "viewer-object-manifest.json", wrapper)
         output.mkdir()
         shutil.move(stage / "textbook-intake", output / "textbook-intake")
         shutil.move(stage / "viewer-object-manifest.json", output / "viewer-object-manifest.json")
