@@ -1023,7 +1023,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=6f26449c005b">
+<link rel="stylesheet" href="site-design.css?v=cf7f302892c9">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
 </head>
@@ -9653,7 +9653,7 @@ async function cmList(root, o, alive,preloaded){
   else if(cm.view==="card"){
     const card=p=>`<div class="cmcard" data-id="${p.id}">
         <div class="cmvote"><button class="up" type="button" data-v="1" aria-label="${T.up}">▲</button><b>${cmScore(p)}</b><button class="dn" type="button" data-v="-1" aria-label="${T.down}">▼</button></div>
-        <div class="bd"><div class="mt">${cmTag(p.tag)}${cmPinBadge(p)}<b>${T.boards[p.board]||p.board}</b> · ${cmAv(p.gone?"?":p.nickname,"s",p.gone?null:p.av)} ${cmName(p)} · ${cmTime(p.created_at)}${isNew(p)?'<span class="nb">N</span>':""}</div>
+        <div class="bd"><div class="mt">${cmTag(p.tag)}${cmPinBadge(p)}<b>${esc(cmBoardName(p.board))}</b> · ${cmAv(p.gone?"?":p.nickname,"s",p.gone?null:p.av)} ${cmName(p)} · ${cmTime(p.created_at)}${isNew(p)?'<span class="nb">N</span>':""}</div>
           <h3><a href="#/community/post/${p.id}">${esc(p.title)}</a></h3>
           ${p.snip?`<div class="sn">${esc(p.snip)}</div>`:""}
           <div class="ft"><span>💬 ${p.n_comments} ${T.comments}</span><span>👁 ${p.views}</span></div></div></div>`;
@@ -9723,7 +9723,7 @@ async function cmProfile(root, encodedName, q, alive){
   if(page>pages){ location.hash=cmProfileHref(profile.nickname,tab,pages); return; }
   const items=tab==="comments"?j.comments:j.posts;
   const body=items.length?items.map(item=>{
-    const meta=`<div class="meta"><span>${esc(T.boards[item.board]||item.board)}</span>${cmTag(item.tag)}<time title="${cmFull(item.created_at)}">${cmFull(item.created_at)}</time></div>`;
+    const meta=`<div class="meta"><span>${esc(cmBoardName(item.board))}</span>${cmTag(item.tag)}<time title="${cmFull(item.created_at)}">${cmFull(item.created_at)}</time></div>`;
     if(tab==="comments") return `<article>${meta}${item.parent_id?`<span class="cmtag">${T.replyActivity}</span>`:""}<div class="comment">${cmFmt(item.body)}</div><a class="source" href="#/community/post/${item.post_id}?comment=${item.id}">${T.parentPost} · ${esc(item.post_title)}</a></article>`;
     return `<article>${meta}<h3><a href="#/community/post/${item.id}">${esc(item.title)}</a>${item.n_comments?` <span class="cc">[${item.n_comments}]</span>`:""}</h3>${item.snip?`<p class="snippet">${esc(item.snip)}</p>`:""}<p class="snippet">${T.views} ${item.views} · ${T.cols.r} ${cmScore(item)} · ${T.comments} ${item.n_comments}</p></article>`;
   }).join(""):`<p class="cmempty">${tab==="comments"?T.activityEmptyComments:T.activityEmptyPosts}</p>`;
@@ -9759,10 +9759,10 @@ async function cmPost(root, id, alive){
         <div class="ops">${cm.me?`<button type="button" data-c="reply">↳ ${T.reply}</button>`:""}${c.mine?`<button type="button" data-c="edit">${T.edit}</button><button type="button" data-c="del">${T.del}</button>`:(cm.me?`<button type="button" data-c="report">${T.report}</button>`:"")}</div>
         <div class="rf"></div></div></div>`;
   const thread=()=>{ const tops=j.comments.filter(c=>!c.parent_id),list=order==="new"?[...tops].reverse():tops; return list.map(c=>cmtHtml(c,false)+kids(c.id).map(k=>cmtHtml(k,true)).join("")).join(""); };
-  const bName=T.boards[p.board]||p.board;
+  const bName=cmBoardName(p.board);
   root.innerHTML=`<div class="cmpanel">
     <article class="cmpost">
-      <div class="cmcrumb"><a href="#/community/${p.board}"># ${bName}</a>${p.tag?" › "+cmTag(p.tag):""}<span id="cmPinBadge">${cmPinBadge(p)}</span></div>
+      <div class="cmcrumb"><a href="#/community/${esc(p.board)}"># ${esc(bName)}</a>${p.tag?" › "+cmTag(p.tag):""}<span id="cmPinBadge">${cmPinBadge(p)}</span></div>
       <h2>${esc(p.title)}</h2>
       <div class="cmpm">${cmAv(p.gone?"?":p.nickname,"",p.gone?null:p.av)}<b>${cmName(p)}</b><span>${cmFull(p.created_at)}${p.updated_at?" · "+T.edited:""}</span>
         <span class="sp"></span><span>${T.views} ${p.views}</span><span>${T.cols.r} ${cmScore(p)}</span><span id="cmPostCount">${T.comments} ${j.comments.length}</span></div>
@@ -9870,7 +9870,7 @@ async function cmPost(root, id, alive){
   try{
     const l=await cmApi("GET",`/posts?board=${p.board}&page=1&lang=${p.lang||lang}`); if(!alive()) return;
     const more=document.getElementById("cmMore"); if(!more) return;
-    more.innerHTML=`<div class="cmbh" style="border-top:8px solid var(--cm-soft)"><h2 style="font-size:1rem"># ${bName} — ${T.boardList}</h2></div>
+    more.innerHTML=`<div class="cmbh" style="border-top:8px solid var(--cm-soft)"><h2 style="font-size:1rem"># ${esc(bName)} — ${T.boardList}</h2></div>
       <table class="cmtbl"><tbody>${l.posts.slice(0,10).map(x=>`<tr${x.id===p.id?' style="font-weight:700"':""}><td class="c-tag">${cmTag(x.tag)}</td>
         <td class="t"><a href="#/community/post/${x.id}">${esc(x.title)}</a>${x.n_comments?`<span class="cc">[${x.n_comments}]</span>`:""}</td>
         <td class="c-au">${cmName(x)}</td><td class="c-dt">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>`;

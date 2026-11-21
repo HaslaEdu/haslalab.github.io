@@ -44,3 +44,16 @@ test('the gallery directory escapes what members wrote',()=>{
   assert.match(a.root.innerHTML,/href="#\/community\/g-kpho"/);
   assert.match(a.root.innerHTML,/&lt;준비&gt;/);assert.doesNotMatch(a.root.innerHTML,/<준비>/);
 });
+
+test('the community is styled like DCInside only on community pages, and keeps the phone layout',()=>{
+  const css=read('site-design.css');
+  assert.match(css,/body\.hl-site\[data-site-route="community"\] \.cm\{--dc:#3b4890/);
+  assert.match(css,/@media\(min-width:1101px\)\{body\.hl-site\[data-site-route="community"\] \.cmgrid/);
+  assert.doesNotMatch(css,/@media\(max-width:1100px\)\{body\.hl-site\[data-site-route="community"\] \.cmgrid/,'the two-column rule must not reach phones');
+});
+
+test('gallery names are escaped wherever a post shows its board',()=>{
+  const html=read('index.html');
+  assert.ok(!/T\.boards\[(p|item)\.board\]\|\|/.test(html),'board labels go through cmBoardName');
+  assert.match(html,/# \$\{esc\(bName\)\}/);
+});
