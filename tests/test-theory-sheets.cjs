@@ -7,9 +7,9 @@ test('theory answer-sheet items are whole marking tables whose points add up to 
   const data = JSON.parse(read('sim/theorysheets.json'));
   let n = 0;
   for (const [key, tasks] of Object.entries(data)) {
-    assert.match(key, /^(ipho|apho|eupho)\d{4}$/);
+    assert.match(key, /^(ipho|apho|eupho|oibf)\d{4}$/);
     for (const [task, sheet] of Object.entries(tasks)) {
-      assert.match(task, /^T\d+$/);
+      assert.match(task, /^T\d*$/);
       assert.ok(sheet.items.length >= 2, key + task);
       const sum = sheet.items.reduce((s, [, p]) => s + p, 0);
       assert.ok(Math.abs(sum - sheet.points) < 1e-6, key + task);

@@ -114,14 +114,15 @@ test('the new route refuses paths outside a folder name', async () => {
 
 test('a SHA-versioned link bypasses an older cached PDF at both cache layers', async () => {
   const digest='6c1452e22ac42726';
+  const revision=source.match(/const CACHE_V = (\d+);/)[1];
   const h=setup({
     match:async request=>new URL(request.url).searchParams.get('v').endsWith(digest)?undefined:new Response('old PDF'),
     fetch:async()=>new Response('new PDF')
   });
   const res=await h.run(new Request(`https://haslalab-pdf.haslalab.workers.dev/pdf/l/icho/IChO_2026_P_Q2_OriginalLayout_KO.pdf?v=${digest}&cv=2`));
   assert.equal(await res.text(),'new PDF');
-  assert.equal(new URL(h.lookups[0].url).searchParams.get('v'),`106-${digest}`);
-  assert.equal(new URL(h.upstream[0][0]).searchParams.get('v'),`106-${digest}`);
+  assert.equal(new URL(h.lookups[0].url).searchParams.get('v'),`${revision}-${digest}`);
+  assert.equal(new URL(h.upstream[0][0]).searchParams.get('v'),`${revision}-${digest}`);
   await Promise.all(h.waits);
   assert.equal(h.writes[0].request.url,h.lookups[0].url);
 });
