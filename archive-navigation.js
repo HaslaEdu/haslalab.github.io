@@ -19,7 +19,8 @@
     const school=one('school');if(school&&/^[a-z0-9][a-z0-9-]{0,63}$/.test(school))out.set('school',school);
     const chapter=one('chapter');if(chapter!==null&&out.has('source')&&chapter.length<=240&&!/[\u0000-\u001f\u007f]/.test(chapter))out.set('chapter',chapter);
     const cursor=one('cursor');if(cursor&&cursor.length<=2800&&/^(?:q_[a-f0-9]{64}|sc_[A-Za-z0-9_-]+|o_(?:0|[1-9]\d{0,2}))$/.test(cursor))out.set('cursor',cursor);
-    if(one('view')==='web')out.set('view','web');
+    const view=one('view');
+    if(view==='web'||!legacy&&view==='private-textbooks')out.set('view',view);
     if(legacy){
       const collection=one('collection');if(Object.values(subjects).includes(collection))out.set('collection',collection);
       const kind=one('kind');if(Object.values(categories).includes(kind))out.set('kind',kind);
@@ -30,7 +31,8 @@
   function href(category='contests',subject='',params=''){
     if(!Object.hasOwn(categories,category))category='contests';
     const sub=slug(subject)|| (category==='contests'?'':'phys');
-    const tail=clean(params).toString();
+    const cleaned=scopedParams(params,category,sub);
+    const tail=cleaned.toString();
     return '#/archive/'+category+(sub?'/'+sub:'')+(tail?'?'+tail:'');
   }
   function parse(hash){
@@ -39,8 +41,15 @@
     if(parts[1]==='open')return {category:'books',kind:'book',sub:'phys',collection:'physics',params:clean(query,{legacy:true}),baseHash:'#/archive/open',resolveLegacy:true};
     const category=Object.hasOwn(categories,parts[1])?parts[1]:'contests';
     const sub=slug(Object.hasOwn(categories,parts[1])?parts[2]:parts[1])||(category==='contests'?'':'phys');
-    const params=clean(query),baseHash=href(category,sub);
+    const params=scopedParams(query,category,sub),baseHash=href(category,sub);
     return {category,kind:categories[category],sub,collection:subjects[sub]||'physics',params,baseHash,resolveLegacy:false};
+  }
+  function scopedParams(input,category,sub){
+    const params=clean(input);
+    if(params.get('view')!=='private-textbooks')return params;
+    if(category==='books'&&sub==='phys')return new URLSearchParams({view:'private-textbooks'});
+    params.delete('view');
+    return params;
   }
   function legacy(hash){
     const text=String(hash||''),[path,query='']=text.split('?'),parts=path.replace(/^#\/?/,'').split('/').filter(Boolean);
