@@ -1142,7 +1142,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
-<script src="site-catalogue.js?v=3b6827e15002"></script>
+<script src="site-catalogue.js?v=64eb907571de"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
 <script src="site-design.js?v=0d613eb1488e"></script>
@@ -4770,7 +4770,9 @@ const trackOf=(key,year)=>{ const c=compOf(key), e=year?year.problems.length>0:c
 const thyParts=t=>Object.keys(t.f).filter(x=>!t.f[x].kx);
 const thyCount=t=>t?((t.p||[]).length||thyParts(t).length):0;
 function trackSwitch(key,year){
-  const d=UI[lang], c=compOf(key); if(!(c&&hasExpC(c)&&THEORY[key])) return "";
+  const d=UI[lang], c=compOf(key);
+  if(!(c&&hasExpC(c)&&THEORY[key])) return "";
+  if(key==="opho"&&year&&(!year.problems.length||!thyCount(thyOf(key,year.y)))) return "";
   return `<div class="lang trk" role="group" aria-label="${d.trkLabel}">${[["exp",d.trkExp],["thy",d.trkThy]].map(([k,l])=>
     `<button type="button" aria-pressed="${trackOf(key,year)===k}" onclick="setTrack('${k}')">${l}</button>`).join("")}</div>`;
 }
@@ -5401,6 +5403,10 @@ function viewComp(key,mode){
   if(mode&&!hasReview(c,key)) mode="";
   const ready = c.years.reduce((n,y)=>n+y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length,0);
   const total = c.years.reduce((n,y)=>n+y.problems.length,0);
+  const ophoTrack=key==="opho"?trackOf(key):null;
+  const years=ophoTrack?c.years.filter(year=>ophoTrack==="thy"
+    ? thyCount(thyOf(key,year.y))>0
+    : year.problems.length>0):c.years;
   return ruphoPage(key,`
   <div class="shell">
     <div class="crumbrow"><div class="crumb">
@@ -5429,9 +5435,9 @@ function viewComp(key,mode){
     ${adFitBanner("secondary")}
     ${c.resources?.length&&!c.years.length?"":`<div class="shead"><h2 style="font-size:1.15rem">${d.pickYear}</h2></div>`}
     <div class="years">
-      ${c.years.map(y=>{
+      ${years.map(y=>{
         const r=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;
-        const th=thyOf(key,y.y), thy=trackOf(key,y)==="thy", none=thy?!th:y.problems.length===0;
+        const th=thyOf(key,y.y), thy=(ophoTrack||trackOf(key,y))==="thy", none=thy?!th:y.problems.length===0;
         /* theory: a problem is out when its card opens a paper (original or Korean) */
         const rt=!th?0:THY_YEARLY.has(key)?(th.f.T&&(th.f.T.paper||(th.f.T.ko||{}).paper)?thyCount(th):0)
           :Object.keys(th.f).filter(x=>!(x==="T"&&th.f.T1)&&(th.f[x].paper||(th.f[x].ko||{}).paper)).length+(th.w?1:0);
