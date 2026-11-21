@@ -98,27 +98,57 @@ test('the search page forwards only a valid topic and difficulty to the search f
   q=new URLSearchParams(src.split('?')[1]);assert.equal(q.get('subject'),null);assert.equal(q.get('stars'),null);
 });
 
-test('the navigation separates Learn and Olympiad, and competition pages light up Olympiad',()=>{
+test('the header switches between the Learn and Olympiad sections; community and about stand apart',()=>{
   const a=app('#/');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
-    a.run('paintPageChrome("comps")');
-    const nav=a.nav(),hrefs=links(nav);
-    assert.deepEqual(hrefs,['#/','#/learn','#/olympiad','#/community','#/about']);
-    assert.match(nav,/href="#\/olympiad" class="on"/);
-    a.run('paintPageChrome("weekly")');assert.match(a.nav(),/href="#\/olympiad" class="on"/);
-    a.run('paintPageChrome("learn")');assert.match(a.nav(),/href="#\/learn" class="on"/);
+    for(const [active,hash,on] of [['home','#/','#/'],['learn','#/learn/physics','#/'],['comps','#/comps','#/olympiad'],['comps','#/archive/books/phys','#/'],['weekly','#/monthly','#/olympiad'],['olympiad','#/olympiad','#/olympiad']]){
+      a.context.location.hash=hash;a.run(`paintPageChrome(${JSON.stringify(active)})`);
+      assert.deepEqual(links(a.nav()),['#/','#/olympiad','#/community','#/about'],hash);
+      assert.match(a.nav(),new RegExp(`href="${on.replace(/\//g,'\\/')}" class="on"`),hash);
+    }
+    a.context.location.hash='#/community';a.run('paintPageChrome("community")');
+    assert.doesNotMatch(a.nav(),/href="#\/(olympiad)?" class="on"/);
     assert.equal(a.run('UI[lang].navOly'),language==='ko'?'올림피아드':'Olympiad');
   }
 });
 
-test('the olympiad hub keeps the former home hero and links every competition section',()=>{
-  const a=app('#/olympiad');
+test('each section has its own bar, and the current page is marked in it',()=>{
+  const a=app('#/');
+  const bar=(section,hash)=>{a.context.location.hash=hash;return a.run(`sectionLinks(${JSON.stringify(section)}).map(([href,label,current])=>[href,current(${JSON.stringify(hash)})])`);};
+  const learn=bar('learn','#/learn/physics/search');
+  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/physics','#/archive/books/phys','#/learn/physics/search','#/learn']);
+  assert.deepEqual(Array.from(learn).filter(([,on])=>on).map(([h])=>h),['#/learn/physics/search']);
+  const oly=bar('olympiad','#/ipho/2019');
+  assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/monthly','#/hpho','#/lab']);
+  assert.deepEqual(Array.from(oly).filter(([,on])=>on).map(([h])=>h),['#/comps']);
+  assert.equal(a.run('sectionLinks(null).length'),0);
+  assert.equal(a.run('siteSection("community")'),null);assert.equal(a.run('siteSection("about")'),null);
+});
+
+test('the site opens on the Learn home; long final-round problems point to the Olympiad section',()=>{
+  const a=app('#/');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
-    const html=a.run('viewOlympiad()'),hrefs=links(html);
-    for(const href of ['#/comps','#/monthly','#/hpho','#/lab','#/learn/physics'])assert.ok(hrefs.includes(href),href);
-    assert.match(html,/id="deflect"/);
+    const html=a.run('viewHome()'),hrefs=links(html);
+    for(const href of ['#/learn/physics','#/olympiad','#/archive/books/phys','#/learn'])assert.ok(hrefs.includes(href),href);
+    assert.equal((html.match(/class="lp-stage"/g)||[]).length,P.STAGES.length);
+    assert.equal((html.match(/data-subtopic="/g)||[]).length,P.SUBTOPICS.size);
+    assert.doesNotMatch(html,/id="deflect"|homeLatest/);
+  }
+  assert.deepEqual(Runtime.routeNeeds('#/'),[]);
+});
+
+test('the Olympiad home is the former HaslaLab home with its hero and community panels',()=>{
+  const a=app('#/olympiad');
+  a.context.document.createElement=()=>{const el={_h:'',set innerHTML(v){this._h=v;},get innerHTML(){return this._h;},querySelector(sel){
+    const h=this._h;if(sel==='figure.screen'){const m=/<figure class="screen">[\s\S]*?<\/figure>/.exec(h);return{outerHTML:m[0]};}
+    if(sel==='.hero > div'){const m=/<div class="hero">\s*<div>([\s\S]*?)<\/div>\s*<figure/.exec(h);return{innerHTML:m[1]};}return null;}};return el;};
+  for(const language of ['ko','en']){
+    a.run(`lang=${JSON.stringify(language)}`);
+    const html=a.run('viewOlympiad()');
+    assert.match(html,/id="deflect"/);assert.match(html,/id="homeLatest"/);
+    assert.ok(links(html).includes('#/comps'));
   }
   assert.deepEqual(Runtime.routeNeeds('#/olympiad'),[]);
 });

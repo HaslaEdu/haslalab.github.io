@@ -889,3 +889,8 @@ html[data-theme="dark"] body.hl-site .hpho-forbidden{background:#3a1512;border-c
 body.hl-site .hl-home-path{margin:28px 0 8px}
 body.hl-site .hl-home-path h2{font-size:17px;margin:0 0 12px}
 body.hl-site .hl-home-tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+
+/* section bar under the header (Learn / Olympiad) */
+body.hl-site .section-nav a{font-family:var(--sans);letter-spacing:0;font-weight:500}
+body.hl-site .section-nav a[aria-current="page"]{color:#5c438f;border-bottom-color:#7059a4;font-weight:650}
+html[data-theme="dark"] body.hl-site .section-nav a[aria-current="page"]{color:#cfbdf2;border-bottom-color:#b09bdb}
