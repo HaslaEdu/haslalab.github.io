@@ -13,21 +13,21 @@
       right:'정답입니다!',wrong:'오답입니다. 정답은',up:'단계가 올랐습니다',down:'한 단계 쉬운 문제로 갑니다',
       result:'맞힌 문제',of:'/',done:'세션 완료',loading:'문제를 불러오는 중…',failed:'문제를 불러오지 못했습니다.',retry:'다시 시도',
       pdf:'원본 시험지',quit:'← 단원 목록',time:'권장 시간',sec:'초',progress:'해결',skip:'건너뛰기',skipped:'건너뜀',
-      tabExam:'수능 · 모의고사 계산',tabBank:'교재 · 대학 문제',tabContest:'대회 도전',
+      tabExam:'수능 · 모의고사 계산',synced:'계정에 저장됨',tabToday:'오늘의 추천',todayTitle:'오늘의 10문제',whyReview:'복습',whyWeak:'약한 단원',whyStretch:'도전',whyNew:'새 단원',focus:'집중 단원',startToday:'시작하기',mySkills:'단원별 실력',unit:'단원',accuracy:'정답률',noSkills:'문제를 풀수록 단원별 실력이 쌓이고 추천이 정확해집니다.',syncFailed:'저장 실패 · 다시 시도합니다',loginToSave:'로그인하면 기록이 계정에 저장됩니다 →',tabBank:'교재 · 대학 문제',tabContest:'대회 도전',
       bankPick:'분야와 난이도를 고르면 교재와 대학 강의 문제를 하나씩 풉니다. 풀이를 확인하고 스스로 채점하세요.',stars:'난이도',showSol:'풀이 보기',noSol:'아직 등록된 풀이가 없습니다. 커뮤니티 질문 · 답변 갤러리나 AI에게 물어보세요.',
       solvedIt:'풀었어요',missedIt:'못 풀었어요',original:'원문 보기',translated:'번역 보기',noKo:'한국어 번역이 아직 없어 원문을 보여 줍니다.',draft:'하슬라랩 작성 풀이 · 검수 전',refFig:'참고 그림',empty:'이 조건의 문제가 더 없습니다. 난이도나 분야를 바꿔 보세요.',
-      contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',figInPdf:'그림은 아래 원본 PDF에서 볼 수 있습니다.',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에만 저장됩니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에만 저장됩니다.',
-      note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에만 저장됩니다.'},
+      contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',figInPdf:'그림은 아래 원본 PDF에서 볼 수 있습니다.',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',
+      note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.'},
     en:{title:'Practice by unit',streak:'day streak',xp:'XP',solved:'solved',pick:'Pick a unit to solve ten problems at your step.',
       none:'No problems yet',step:'Step',start:'Start',again:'Again',units:'Units',next:'Next',finish:'See results',
       right:'Correct!',wrong:'Not quite. The answer is',up:'Step up',down:'Back one step',
       result:'Correct',of:'/',done:'Session complete',loading:'Loading problems…',failed:'Could not load the problems.',retry:'Retry',
       pdf:'Original paper',quit:'← Units',time:'Suggested time',sec:'s',progress:'solved',skip:'Skip',skipped:'skipped',
-      tabExam:'Korean exam calculations',tabBank:'Books & university',tabContest:'Competition challenge',
+      tabExam:'Korean exam calculations',synced:'Saved to your account',tabToday:'Today',todayTitle:'Today’s ten',whyReview:'review',whyWeak:'weak unit',whyStretch:'stretch',whyNew:'new unit',focus:'focus',startToday:'Start',mySkills:'Your units',unit:'Unit',accuracy:'Correct',noSkills:'Your unit ratings grow as you solve problems, and the picks get sharper.',syncFailed:'Not saved · retrying',loginToSave:'Log in to keep your progress on your account →',tabBank:'Books & university',tabContest:'Competition challenge',
       bankPick:'Pick a field and a difficulty to work through textbook and university course problems one at a time. Check the solution and mark yourself.',stars:'Difficulty',showSol:'Show solution',noSol:'No solution is stored yet. Ask in the community Q&A gallery or ask the AI.',
       solvedIt:'I solved it',missedIt:'I missed it',original:'Original',translated:'Translation',noKo:'',draft:'HaslaLab draft solution · not yet reviewed',refFig:'Reference figures',empty:'No more problems here. Try another difficulty or field.',
-      contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',figInPdf:'The figures are in the original PDF below.',transcribed:'The text is transcribed from the original paper; if they differ, the PDF is authoritative.',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device only.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device only.',
-      note:'Problems: Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices (Korean only), shared within the permitted web and app use. Some unit labels are automatic and under review. Progress is kept on this device only.'}
+      contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',figInPdf:'The figures are in the original PDF below.',transcribed:'The text is transcribed from the original paper; if they differ, the PDF is authoritative.',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device and, when you log in, on your account too.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device and, when you log in, on your account too.',
+      note:'Problems: Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices (Korean only), shared within the permitted web and app use. Some unit labels are automatic and under review. Progress is kept on this device and, when you log in, on your account too.'}
   };
   const state={lang:params.get('lang')==='en'?'en':'ko',index:null,shards:{},session:null};
   const tr=k=>copy[state.lang][k];
@@ -38,6 +38,52 @@
   };
   let saved=store.read();saved.solved||={};saved.level||={};saved.xp||=0;saved.days||=[];
   const save=()=>store.write(saved);
+  saved.skills||={};saved.queue||=[];saved.wrong||={};
+
+  /* ── progress on the account (community/src/practice-progress.js): the same Elo-style rating per unit is kept
+     here so guests see it too; signed-in members' attempts go to the server in batches and their state merges
+     with every other device ── */
+  const START=1300,stepRating=st=>1000+100*st,ratingStep=r=>Math.max(1,Math.min(10,Math.round((r-1000)/100)));
+  function updateRating(r,step,result){
+    if(result==='skip')return r;
+    const won=result==='right'||result==='solved'?1:0,expected=1/(1+10**((stepRating(step)-r)/400)),k=result==='right'||result==='wrong'?32:16;
+    return Math.round((r+k*(won-expected))*10)/10;
+  }
+  const API=(()=>{let o='';try{o=localStorage.getItem('hlCmApi')||'';}catch(e){}return(/^https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev\/?$/.test(o)?o:'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/,'');})();
+  const token=()=>{try{const v=localStorage.getItem('hlCmTok')||'';return /^[A-Za-z0-9_-]{20,4096}$/.test(v)?v:'';}catch(e){return '';}};
+  function record(item_id,mode,unit,step,result){
+    const at=Math.floor(Date.now()/1000);
+    if(result!=='skip'){const k=saved.skills[unit]||{unit,rating:START,n:0,right_n:0,last_at:at};k.rating=updateRating(k.rating,step,result);k.n++;if(result==='right'||result==='solved')k.right_n++;k.last_at=at;saved.skills[unit]=k;}
+    saved.queue.push({item_id,mode,unit,step,result,at});if(saved.queue.length>500)saved.queue=saved.queue.slice(-500);
+    save();scheduleSync();
+  }
+  function mergeState(a,b){
+    const A=a||{},B=b||{},obj=(x,y,f)=>{const o={...(x||{})};for(const[k,v]of Object.entries(y||{}))o[k]=k in o?f(o[k],v):v;return o;},mx=(x,y)=>Math.max(Number(x)||0,Number(y)||0);
+    return{xp:mx(A.xp,B.xp),days:[...new Set([...(A.days||[]),...(B.days||[])])].sort().slice(-400),level:obj(A.level,B.level,mx),solved:obj(A.solved,B.solved,x=>x),wrong:obj(A.wrong,B.wrong,mx),
+      bank:{done:obj(A.bank?.done,B.bank?.done,mx),stars:obj(A.bank?.stars,B.bank?.stars,(x,y)=>y??x)},contest:{done:obj(A.contest?.done,B.contest?.done,mx)}};
+  }
+  const stateOf=()=>({xp:saved.xp,days:saved.days,level:saved.level,solved:saved.solved,wrong:saved.wrong,bank:saved.bank,contest:saved.contest});
+  async function api(path,method='GET',body){
+    const r=await fetch(API+path,{method,headers:{Authorization:'Bearer '+token(),...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
+    if(!r.ok)throw new Error('api '+r.status);return r.json();
+  }
+  let syncTimer=0,syncing=false;state.sync=token()?'pending':'local';
+  function scheduleSync(){clearTimeout(syncTimer);syncTimer=setTimeout(sync,1500);}
+  async function sync(){
+    if(!token()){state.sync='local';paintStats();return;}
+    if(syncing){scheduleSync();return;}syncing=true;
+    try{
+      while(saved.queue.length){const batch=saved.queue.slice(0,50),r=await api('/api/practice/attempts','POST',{attempts:batch});saved.queue.splice(0,batch.length);for(const k of r.skills||[])saved.skills[k.unit]=k;save();}
+      const r=await api('/api/practice/state','POST',{state:stateOf()});Object.assign(saved,mergeState(stateOf(),r.state));save();state.sync='saved';
+    }catch(e){state.sync='error';setTimeout(scheduleSync,30000);}
+    syncing=false;paintStats();
+  }
+  /* on opening: the account's state and ratings join this device's, then anything queued here is sent */
+  async function pull(){
+    if(!token())return;
+    try{const r=await api('/api/practice/state');Object.assign(saved,mergeState(stateOf(),r.state));for(const k of r.skills||[])saved.skills[k.unit]=k;save();state.sync='saved';}catch(e){state.sync='error';}
+    paintStats();scheduleSync();
+  }
   const today=()=>new Date().toLocaleDateString('sv');   /* YYYY-MM-DD in local time */
   function streak(){
     const days=new Set(saved.days);let n=0;const d=new Date();
@@ -59,7 +105,8 @@
   const unitName=key=>{const e=P.SUBTOPICS.get(key);return e?e.sub.name[state.lang]:key;};
   function paintStats(){
     const solvedCount=Object.keys(saved.solved).length;
-    $('stats').innerHTML=`<span class="stat fire"><b>🔥 ${streak()}</b>${tr('streak')}</span><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span><span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>`;
+    const badge=state.sync==='saved'?`<span class="stat sync ok">☁ ${tr('synced')}</span>`:state.sync==='error'?`<span class="stat sync">⚠ ${tr('syncFailed')}</span>`:state.sync==='local'?`<a class="stat sync" href="/#/login" target="_top">${tr('loginToSave')}</a>`:'';
+    $('stats').innerHTML=`<span class="stat fire"><b>🔥 ${streak()}</b>${tr('streak')}</span><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span><span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
   }
   async function loadIndex(){
     if(!state.index){const r=await fetch('practice/index.json',{cache:'no-cache'});if(!r.ok)throw new Error('index');state.index=await r.json();}
@@ -101,6 +148,7 @@
     tellUnit(unit);next();
   }
   function pick(s){
+    if(s.fixed)return s.items.find(i=>!s.seen.has(i.id))||null;
     /* nearest step to the learner's level, unsolved and unseen first */
     const pool=s.items.filter(i=>!s.seen.has(i.id));
     const score=i=>Math.abs(i.s-s.level)*10+(saved.solved[i.id]?5:0)+Math.random();
@@ -113,16 +161,16 @@
     s.current=item;s.answered=false;s.seen.add(item.id);s.n++;
     const imageChoices=item.ch.every(c=>!c.c.length);
     $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(unitName(s.unit))}</span><span class="lvl">${tr('step')} ${item.s}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/SESSION)}%"></i></span><span>${s.n}/${SESSION}</span></div>
+      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${s.fixed?esc(tr('tabToday'))+' · ':''}${esc(unitName(s.fixed?item.u:s.unit))}</span><span class="lvl">${tr('step')} ${item.s}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/SESSION)}%"></i></span><span>${s.n}/${SESSION}</span></div>
       <div class="q">${blocks(item.b)}</div>
       <div class="choices${imageChoices?' compact':''}" role="group">${item.ch.map(c=>`<button type="button" class="choice" data-n="${c.n}"><span class="no">${'①②③④⑤'[c.n-1]}</span>${imageChoices?'':`<span>${blocks(c.c).replace(/^<p>|<\/p>$/g,'')}</span>`}</button>`).join('')}</div>
       <div id="feedback"></div>
       <div class="foot"><span class="src">${esc(item.src)} · ${esc(item.by)}${item.pdf?` · <a href="${esc(item.pdf)}" target="_blank" rel="noopener noreferrer">${tr('pdf')}</a>`:''} · ${tr('time')} ${item.sec}${tr('sec')}</span><span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=SESSION?tr('finish'):tr('next')}</button></span></div>
     </div>`;
-    $('quit').onclick=home;
+    $('quit').onclick=s.fixed?todayHome:home;
     $('app').querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.n))));
     $('next').onclick=next;
-    $('skip').onclick=()=>{if(s.answered)return;s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
+    $('skip').onclick=()=>{if(s.answered)return;record(item.id,'exam',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
     reportHeight();window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
   }
   function answer(choice){
@@ -131,12 +179,14 @@
     $('app').querySelectorAll('.choice').forEach(b=>{b.disabled=true;const n=Number(b.dataset.n);if(n===item.a)b.classList.add('right');else if(n===choice)b.classList.add('wrong');});
     let note='';
     if(ok){
-      s.right++;s.run++;const gain=10+2*item.s;s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=s.unit;
-      if(s.run>=2){const up=s.steps.find(x=>x>s.level);if(up){s.level=up;note=' · '+tr('up')+' ↑';}s.run=0;}
+      s.right++;s.run++;const gain=10+2*item.s;s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=item.u;delete saved.wrong[item.id];
+      if(s.fixed){}else if(s.run>=2){const up=s.steps.find(x=>x>s.level);if(up){s.level=up;note=' · '+tr('up')+' ↑';}s.run=0;}
     }else{
-      s.run=0;const down=[...s.steps].reverse().find(x=>x<s.level);if(down){s.level=down;note=' · '+tr('down');}
+      s.run=0;saved.wrong[item.id]=Math.floor(Date.now()/1000);
+      if(!s.fixed){const down=[...s.steps].reverse().find(x=>x<s.level);if(down){s.level=down;note=' · '+tr('down');}}
     }
-    saved.level[s.unit]=s.level;
+    if(!s.fixed)saved.level[s.unit]=s.level;
+    record(item.id,'exam',item.u,item.s,ok?'right':'wrong');
     if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
     save();paintStats();
     $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+'①②③④⑤'[item.a-1]}${note}</p>`;
@@ -144,9 +194,9 @@
   }
   function summary(){
     const s=state.session;
-    $('app').innerHTML=`<div class="session summary"><p class="eyebrow">${tr('done')}</p><p class="big">${s.right}${tr('of')}${s.n}</p><p>${tr('result')} · +${s.xp} XP · ${s.mode==='bank'?'★'.repeat(s.stars):tr('step')+' '+s.level}${s.skipped?` · ${s.skipped} ${tr('skipped')}`:''} · 🔥 ${streak()}${tr('streak')}</p>
+    $('app').innerHTML=`<div class="session summary"><p class="eyebrow">${tr('done')}</p><p class="big">${s.right}${tr('of')}${s.n}</p><p>${tr('result')} · +${s.xp} XP · ${s.mode==='bank'?'★'.repeat(s.stars):s.fixed?tr('tabToday'):tr('step')+' '+s.level}${s.skipped?` · ${s.skipped} ${tr('skipped')}`:''} · 🔥 ${streak()}${tr('streak')}</p>
       <div class="actions"><button type="button" class="primary" id="again">${tr('again')}</button><button type="button" id="units">${tr('units')}</button></div></div>`;
-    $('again').onclick=()=>s.mode==='bank'?bankStart(s.field,s.stars):start(s.unit);$('units').onclick=s.mode==='bank'?bankHome:home;reportHeight();
+    $('again').onclick=()=>s.fixed?todayHome():s.mode==='bank'?bankStart(s.field,s.stars):start(s.unit);$('units').onclick=s.fixed?todayHome:s.mode==='bank'?bankHome:home;reportHeight();
   }
 
 
@@ -157,10 +207,11 @@
     ['optics','광학','Optics'],['thermodynamics','열역학','Thermodynamics'],['statistical_mechanics','통계역학','Statistical mechanics'],['quantum_mechanics','양자역학','Quantum mechanics'],
     ['special_relativity','특수 상대성','Special relativity'],['general_relativity','일반 상대성','General relativity'],['mathematical_methods','수리물리','Mathematical methods']];
   saved.bank||={done:{},stars:{}};saved.contest||={done:{}};
+  const BANK_AREA={classical_mechanics:'mechanics',electromagnetism:'em',oscillations_waves:'waves',optics:'optics',thermodynamics:'thermal',statistical_mechanics:'thermal',quantum_mechanics:'modern',special_relativity:'modern',general_relativity:'modern',mathematical_methods:'math'};
   function studied(xp){saved.xp+=xp;if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}save();paintStats();}
   function paintTabs(){
-    $('tabs').innerHTML=[['exam',tr('tabExam')],['bank',tr('tabBank')],['contest',tr('tabContest')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
-    $('tabs').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>({exam:home,bank:bankHome,contest:contestHome})[b.dataset.mode]());
+    $('tabs').innerHTML=[['today',tr('tabToday')],['exam',tr('tabExam')],['bank',tr('tabBank')],['contest',tr('tabContest')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
+    $('tabs').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>({today:todayHome,exam:home,bank:bankHome,contest:contestHome})[b.dataset.mode]());
     $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':'note');
   }
   /* bank text: paragraphs with $…$ and $$…$$ left to KaTeX auto-render */
@@ -219,7 +270,8 @@
         <span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" id="showSol">${tr('showSol')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${s.n>=5?tr('finish'):tr('next')}</button></span></div></div>`;
     typeset($('app'));
     $('quit').onclick=bankHome;
-    $('skip').onclick=()=>{if(s.answered)return;s.skipped++;s.n--;bankNext();};
+    const bankUnit=(BANK_AREA[s.field]||'mechanics')+'/*',bankStep=P.stepFromStars(s.stars);
+    $('skip').onclick=()=>{if(s.answered)return;record(pick.id,'bank',bankUnit,bankStep,'skip');s.skipped++;s.n--;bankNext();};
     $('showSol').onclick=async()=>{
       $('showSol').disabled=true;$('sol').innerHTML=`<p class="src">${tr('loading')}</p>`;
       try{const j=await bankGet('/api/problem-bank/questions/'+pick.id+'/solutions?lang='+state.lang);
@@ -229,6 +281,7 @@
       reportHeight();
     };
     const mark=ok=>{if(s.answered)return;s.answered=true;
+      record(pick.id,'bank',bankUnit,bankStep,ok?'solved':'missed');
       if(ok){s.right++;const gain=10+5*s.stars;s.xp+=gain;saved.bank.done[pick.id]=1;studied(gain);}else{saved.bank.done[pick.id]=0;studied(2);}
       ['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;$('next').focus();
       $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?'✓ '+tr('solvedIt'):tr('missedIt')}</p>`;reportHeight();};
@@ -304,11 +357,72 @@
     if(item&&item.b.some(b=>/\[(그림|Figure)[^\]]*\]/.test(b.t||''))&&!item.b.some(b=>b.f))$('qtext').insertAdjacentHTML('beforeend',`<p class="src">${tr('figInPdf')}</p>`);
     $('app').querySelectorAll('[data-pdf]').forEach(b=>b.onclick=()=>{$('pdf').hidden=false;showPdf(b.dataset.pdf);$('openPdf').href=b.dataset.pdf;$('app').querySelectorAll('[data-pdf]').forEach(x=>x.classList.toggle('cur',x===b));});
     if(!item)showPdf(pref[1]);
-    $('quit').onclick=contestHome;$('skip').onclick=()=>contestShow(key,doneId);$('next').onclick=()=>contestShow(key,doneId);
-    const mark=ok=>{saved.contest.done[doneId]=ok?1:0;studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;
+    $('quit').onclick=contestHome;$('skip').onclick=()=>{record(doneId,'contest','contest/'+key,c.step,'skip');contestShow(key,doneId);};$('next').onclick=()=>contestShow(key,doneId);
+    const mark=ok=>{saved.contest.done[doneId]=ok?1:0;record(doneId,'contest','contest/'+key,c.step,ok?'solved':'missed');studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;
       $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?'✓ '+tr('solvedIt'):tr('missedIt')}</p>`;reportHeight();};
     $('good').onclick=()=>mark(true);$('miss').onclick=()=>mark(false);
     reportHeight();if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
+  }
+
+
+  /* ── today: ten graded problems chosen from the ratings — review of earlier mistakes, the weakest and the
+     longest-untouched units at the learner's step, and one stretch problem — plus a textbook and a competition
+     suggestion ── */
+  async function allExamItems(){
+    const index=await loadIndex(),areas=[...new Set(Object.keys(index.counts).map(u=>u.split('/')[0]))];
+    return (await Promise.all(areas.map(loadArea))).flat();
+  }
+  function unitStatus(units){
+    const nowS=Date.now()/1000;
+    return units.map(u=>{const k=saved.skills[u];const r=k?k.rating:START,days=k?(nowS-k.last_at)/86400:99;
+      /* lower is more urgent: a weak rating, few attempts, or a long gap since the last one */
+      return{u,k,r,step:ratingStep(r),urgency:r-Math.min(days,30)*4-(k?0:60)+(k&&k.n>=6&&k.right_n/k.n>0.8?80:0)};}).sort((a,b)=>a.urgency-b.urgency);
+  }
+  function chooseToday(items){
+    const byUnit={};for(const it of items)(byUnit[it.u]||=[]).push(it);
+    const status=unitStatus(Object.keys(byUnit)),chosen=[],taken=new Set();
+    const add=it=>{if(it&&!taken.has(it.id)&&chosen.length<SESSION){taken.add(it.id);chosen.push({...it,why:it.why});}};
+    const near=(u,step,why)=>{const pool=(byUnit[u]||[]).filter(i=>!taken.has(i.id)&&!saved.solved[i.id]&&!saved.wrong[i.id]);
+      pool.sort((a,b)=>Math.abs(a.s-step)-Math.abs(b.s-step)+(Math.random()-.5)*.4);return pool[0]&&{...pool[0],why};};
+    const byId=new Map(items.map(i=>[i.id,i]));
+    for(const [id] of Object.entries(saved.wrong).sort((a,b)=>a[1]-b[1]).slice(0,3)){const it=byId.get(id);if(it)add({...it,why:'review'});}
+    for(const st of status.slice(0,3)){add(near(st.u,st.step,'weak'));add(near(st.u,st.step,'weak'));}
+    const strong=[...status].filter(x=>x.k&&x.k.n>=3).sort((a,b)=>b.r-a.r)[0];
+    if(strong)add(near(strong.u,strong.step+1,'stretch'));
+    for(const st of status.slice(3)){if(chosen.length>=SESSION)break;add(near(st.u,st.step,'new'));}
+    return{chosen,status};
+  }
+  async function todayHome(){
+    state.mode='today';state.session=null;paintTabs();paintStats();tellUnit('');
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let items;try{items=await allExamItems();}catch(e){failed(todayHome);return;}
+    const {chosen,status}=chooseToday(items);
+    const why={review:tr('whyReview'),weak:tr('whyWeak'),stretch:tr('whyStretch'),new:tr('whyNew')};
+    const counts=chosen.reduce((m,i)=>(m[i.why]=(m[i.why]||0)+1,m),{});
+    const weakUnits=[...new Set(chosen.filter(i=>i.why==='weak').map(i=>i.u))];
+    /* textbook: the field whose area rating is lowest; competition: the one closest to the learner's best step */
+    const areaRating=a=>saved.skills[a+'/*']?.rating??(()=>{const ks=Object.values(saved.skills).filter(k=>k.unit.startsWith(a+'/'));return ks.length?ks.reduce((x,k)=>x+k.rating,0)/ks.length:START;})();
+    const field=[...BANK_FIELDS].sort((x,y)=>areaRating(BANK_AREA[x[0]])-areaRating(BANK_AREA[y[0]]))[0];
+    const fieldStars=Math.max(1,Math.min(5,ratingStep(areaRating(BANK_AREA[field[0]]))-3));
+    const best=Math.max(START,...Object.values(saved.skills).map(k=>k.rating)),bestStep=ratingStep(best);
+    let contests=state.contests;try{if(!contests){const r=await fetch('practice/contests.json');contests=state.contests=(await r.json()).contests;}}catch(e){contests=[];}
+    const contest=[...contests].sort((a,b)=>Math.abs(a.step-(bestStep+3))-Math.abs(b.step-(bestStep+3)))[0];
+    const top=status.filter(x=>x.k).sort((a,b)=>a.r-b.r);
+    $('app').innerHTML=`<section class="session today">
+        <h2>${tr('todayTitle')}</h2>
+        <p class="src">${Object.entries(counts).map(([k,n])=>`${why[k]} ${n}`).join(' · ')}${weakUnits.length?` · ${tr('focus')}: ${weakUnits.map(u=>esc(unitName(u))).join(', ')}`:''}</p>
+        <ol class="todaylist">${chosen.map(i=>`<li><span class="tag ${i.why}">${why[i.why]}</span> ${esc(unitName(i.u))} <small>${tr('step')} ${i.s}</small></li>`).join('')}</ol>
+        <div class="actions"><button type="button" class="primary" id="startToday"${chosen.length?'':' disabled'}>${tr('startToday')}</button></div>
+      </section>
+      <div class="areas suggest">
+        <button type="button" class="area unit" id="sugBank"><span class="name"><b>${tr('tabBank')}</b><small>${esc(state.lang==='ko'?field[1]:field[2])} · ${'★'.repeat(fieldStars)}</small></span><span>→</span></button>
+        ${contest?`<button type="button" class="area unit" id="sugContest"><span class="name"><b>${tr('tabContest')}</b><small>${esc(contest.name[state.lang])} · ${tr('step')} ${contest.step}</small></span><span>→</span></button>`:''}
+      </div>
+      ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitName(x.u))}</td><td>${x.step}</td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}`;
+    $('startToday').onclick=()=>{state.session={unit:'today',fixed:true,items:chosen,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};next();};
+    $('sugBank').onclick=()=>{state.bankField=field[0];bankStart(field[0],fieldStars);};
+    if($('sugContest'))$('sugContest').onclick=()=>{paintTabs();contestShow(contest.key);};
+    reportHeight();
   }
 
   function applyTheme(){const t=params.get('theme'),dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}
@@ -316,7 +430,7 @@
   window.addEventListener('message',event=>{
     if(!embedded||event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='hl-practice-settings')return;
     if(['light','dark'].includes(event.data.theme))document.documentElement.dataset.theme=event.data.theme;
-    if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();paintStats();paintTabs();if(!state.session)({exam:home,bank:bankHome,contest:contestHome})[state.mode||'exam']();}
+    if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();paintStats();paintTabs();if(!state.session)({today:todayHome,exam:home,bank:bankHome,contest:contestHome})[state.mode||'today']();}
   });
   addEventListener('keydown',e=>{
     const s=state.session;if(!s||s.mode==='bank'||/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||''))return;
@@ -326,6 +440,6 @@
   if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);
   document.documentElement.classList.toggle('embedded',embedded);
   applyTheme();translate();
-  const boot=()=>{const unit=params.get('unit'),mode=params.get('mode');state.mode='exam';paintTabs();if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else home();};
+  const boot=()=>{pull();const unit=params.get('unit'),mode=params.get('mode');state.mode='exam';paintTabs();if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

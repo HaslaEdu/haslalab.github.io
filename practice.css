@@ -39,3 +39,7 @@ button:disabled{opacity:.55;cursor:default}.choice:disabled{opacity:1}.choice:di
 details.alt{margin:8px 0;font-size:14px}details.alt summary{cursor:pointer;color:var(--accent)}
 .langrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;margin-bottom:8px}.langrow button{padding:5px 10px}.langrow button.cur{border-color:var(--accent);color:var(--accent);font-weight:650}.langrow a{color:var(--accent);margin-left:auto}
 .pdf{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;min-height:200px}.pdf canvas{display:block;border-bottom:1px solid var(--line)}
+.stat.sync{font-size:12px;align-self:center;text-decoration:none;color:var(--muted)}.stat.sync.ok{color:var(--ok)}
+.today h2,.skills h2{font-size:1.05rem;margin:0 0 6px}.todaylist{margin:12px 0;padding-left:22px;display:grid;gap:4px;font-size:14px}.todaylist small{color:var(--muted)}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;background:var(--surface-alt);color:var(--muted)}.tag.review{color:var(--bad);background:var(--bad-bg)}.tag.weak{color:var(--fire)}.tag.stretch{color:var(--accent);background:var(--accent-soft)}
+.suggest{margin:14px 0}.suggest .unit{margin:0}.skills{margin-top:14px}.skills table{width:100%;border-collapse:collapse;font-size:13px}.skills th,.skills td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line)}.skills small{color:var(--muted)}
