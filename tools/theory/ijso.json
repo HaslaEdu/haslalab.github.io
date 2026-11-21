@@ -301,35 +301,74 @@
      "part": "T",
      "kind": "paper",
      "lang": "EN",
-     "url": "https://ijsoweb.org/event/2022/qna/IJSO2022-Theory-Questions.pdf",
-     "bytes": 2696616
+     "url": "https://www.sofuganda.org/documents/pastpapers/junior/theory2022.pdf",
+     "bytes": 2696616,
+     "supplements": [
+      {
+       "title": {
+        "ko": "이론 공식 표시 답안·풀이·채점 기준 · 한국어 (39쪽)",
+        "en": "Official theory answers, working and marking · Korean (39 pages)"
+       },
+       "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ijso/IJSO_2022_T_Official_Marking_KO.pdf?v=2e1e85aeb8b9b792&cv=2"
+      },
+      {
+       "title": {
+        "ko": "이론 공식 표시 답안·풀이·채점 기준 · 영어 원본 (39쪽)",
+        "en": "Official theory answers, working and marking · English original (39 pages)"
+       },
+       "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ijso/IJSO_2022_T_Official_Marking_EN.pdf?v=59cf17a3b3fb5c32&cv=2"
+      },
+      {
+       "title": {
+        "ko": "시험지에 포함된 원래 기입란 · 한국어 문제지 (37쪽)",
+        "en": "Original integrated response fields · Korean questions (37 pages)"
+       },
+       "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ijso/IJSO_2022_T_Official_Paper_KO.pdf?v=a33584c58325dfff&cv=2"
+      }
+     ],
+     "direct": true,
+     "pages": 37,
+     "local": "pdfx/ijso/IJSO_2022_T_Official_Paper_EN.pdf",
+     "source_type": "official_unmarked_question_paper"
     },
     {
      "file": "IJSO_2022_TS.pdf",
      "part": "T",
      "kind": "solution",
-     "url": "https://ijsoweb.org/event/2022/qna/IJSO2022-Theory-Answer.pdf",
-     "bytes": 1391901
+     "url": "https://olimpicos.net/files/ijso/IJSO_2022_S2.pdf",
+     "bytes": 1391901,
+     "direct": true,
+     "pages": 39,
+     "source_type": "official_marked_theory_answers_with_working_and_marking",
+     "local": "pdfx/ijso/IJSO_2022_T_Official_Marking_EN.pdf"
     },
     {
      "file": "IJSO_2022_MC_EN.pdf",
      "part": "MC",
      "kind": "paper",
      "lang": "EN",
-     "url": "https://ijsoweb.org/event/2022/qna/IJSO2022_MCQ.pdf",
-     "bytes": 3564383
+     "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ijso/IJSO_2022_MCQ_Study_Edition_EN.pdf?v=2fe8a015206c6e94&cv=2",
+     "bytes": 3481437,
+     "direct": true,
+     "local": "pdfx/ijso/IJSO_2022_MCQ_Study_Edition_EN.pdf",
+     "pages": 22,
+     "source_type": "study_edition_with_omissions",
+     "title": {
+      "ko": "객관식 · 학습판",
+      "en": "Multiple choice · study edition"
+     }
     },
     {
      "file": "IJSO_2022_MCS.pdf",
      "part": "MC",
      "kind": "key",
-     "url": "https://ijsoweb.org/event/2022/qna/IJSO2022-MCQ-Answer.pdf",
-     "bytes": 39832,
+     "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ijso/IJSO_2022_MCQ_Study_Edition_Marked_Key_EN.pdf?v=80f0de59f9ab9f6e&cv=2",
+     "bytes": 108761,
      "lang": "EN",
-     "local": "pdfx/ijso/IJSO_2022_MC_Official_Marked_Key_EN.pdf",
+     "local": "pdfx/ijso/IJSO_2022_MCQ_Study_Edition_Marked_Key_EN.pdf",
      "pages": 1,
-     "retrieval_url": "https://olimpicos.net/files/ijso/IJSO_2022_S1.pdf",
-     "source_type": "official_marked_answer_sheet"
+     "source_type": "study_edition_with_omissions",
+     "direct": true
     },
     {
      "file": "IJSO_2022_E1_EN.pdf",
@@ -365,8 +404,8 @@
     }
    ],
    "note": {
-    "ko": "기존 객관식과 이론 공식 정답에는 원본의 붉은 표시가 들어 있습니다. 영어 실험 문제·답안 기입란 합본 65쪽과 공식 정답·채점 기준 59쪽을 제공합니다. 원본 표지는 60쪽으로 안내하며, 페이지 수가 다른 공개 사본의 원래 내용을 유지했습니다. 문제지 9쪽의 추가 저항값 안내는 공개 원본에 들어 있습니다. 별도 빈 실험 답안지는 아직 확보하지 못했습니다. 객관식 공식 정답 표시 답안지는 한국어로도 제공합니다. 붉은 정답 30개와 노란 추가 표시 4개를 원래 색으로 유지했습니다.",
-    "en": "The published multiple-choice and theory keys retain the original red answer marks. The English practical paper with its response fields has 65 pages. The official marking scheme has 59 pages. The unchanged public copies both give a 60-page count in their printed instructions. The question-paper addendum on page 9 appears in the public source. A separate blank practical booklet remains unlocated. The one-page marked multiple-choice key is also available in Korean. It retains all 30 red answers and four additional yellow marks."
+    "ko": "객관식 영어·한국어 학습판은 각각 22쪽이며, 13·14번의 생략과 15번의 일부 편집을 표시했습니다. 공식 표시 답안지를 바탕으로 만든 1쪽 정답표도 두 언어로 제공하며, 수록 문항의 붉은 정답 28개와 노란 표시 4개를 원문대로 유지했습니다. 이론은 빈 답안 기입란과 표가 있는 문제지 37쪽과 공식 풀이·채점 답안지 39쪽을 각각 영어와 한국어로 제공합니다. 영어 실험 문제·답안 기입란 합본은 65쪽, 공식 정답·채점 기준은 59쪽입니다. 원본 실험 표지에는 60쪽이라고 적혀 있으며, 문제지 9쪽의 추가 안내는 공개 원본에 포함됩니다. 객관식과 실험의 별도 공식 빈 답안지는 확보하지 못했습니다.",
+    "en": "The English and Korean multiple-choice study papers have 22 pages each and mark the omissions at Questions 13 and 14 and the partial edit at Question 15. Their one-page marked keys retain the 28 red answer marks and four yellow annotations from the source. The English and Korean theory booklets include a 37-page unmarked question paper with response fields and the separate 39-page worked and marked answer booklet. The English practical booklet with response fields has 65 pages and its official marking booklet has 59. The printed practical cover gives 60 pages and the public question source includes the addendum on page 9. Separate official blank multiple-choice and practical answer booklets remain unlocated."
    }
   },
   {

@@ -743,17 +743,23 @@
      "part": "T2",
      "kind": "paper",
      "lang": "EN",
-     "url": "https://www.ibo-info.org/files/downloads/papers/2018%20Iran/IBO%202018%20Theoretical%20exam%202.pdf",
-     "bytes": 2059750,
-     "local": "pdfx/ibo/IBO_2018_T2_Official_EN.pdf",
+     "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_T2_Paper_Study_EN.pdf?v=084756a1687f9e00&cv=2",
+     "bytes": 1702754,
+     "local": "pdfx/ibo/IBO_2018_T2_Paper_Study_EN.pdf",
      "pages": 62,
-     "source_page": "https://www.ibo-info.org/en/info/papers.html",
-     "source_type": "official_organizer_approved_corrected_edition",
+     "source_type": "study_edition_with_omissions",
      "title": {
-      "ko": "이론 2 · 주최 측 승인 정정판",
-      "en": "Theory 2 · Organizer-approved corrected edition"
+      "ko": "이론 2 · 학습판",
+      "en": "Theory 2 · Study edition"
      },
      "supplements": [
+      {
+       "title": {
+        "ko": "이론 2 학습판 · 영어 (62쪽, 10번 제외)",
+        "en": "Theory 2 study edition · English (62 pages, Q10 omitted)"
+       },
+       "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_T2_Paper_Study_EN.pdf?v=084756a1687f9e00&cv=2"
+      },
       {
        "title": {
         "ko": "공식 이론 1·2 정답표 (2쪽)",
@@ -761,7 +767,8 @@
        },
        "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_KEYS_Official_EN.pdf?v=f642ea2d24997ab7&cv=2"
       }
-     ]
+     ],
+     "direct": true
     },
     {
      "file": "IBO_2018_TS.pdf",
@@ -808,13 +815,6 @@
         "en": "Official blank answer sheet · English and Traditional Chinese (5 pages)"
        },
        "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_P1_BlankAnswerSheet_EN_ZH.pdf?v=d1d06e0f9c8e362d&cv=2"
-      },
-      {
-       "title": {
-        "ko": "공식 정답·채점 기준 · 영어 (6쪽)",
-        "en": "Official answers and scoring · English (6 pages)"
-       },
-       "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_P1_ScoringKey_PublicCopy_EN.pdf?v=86694a8f3b9642c3&cv=2"
       }
      ]
     },
@@ -879,13 +879,6 @@
         "en": "Official blank answer sheet · English and Traditional Chinese (5 pages)"
        },
        "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_P3_BlankAnswerSheet_EN_ZH.pdf?v=25dcb773709dcb32&cv=2"
-      },
-      {
-       "title": {
-        "ko": "공식 정답·채점 기준 · 영어 (8쪽)",
-        "en": "Official answers and scoring · English (8 pages)"
-       },
-       "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_P3_ScoringKey_PublicCopy_EN.pdf?v=63ac0d5854b03f2d&cv=2"
       }
      ]
     },
@@ -918,20 +911,49 @@
         "en": "Official blank answer sheet · English and Traditional Chinese (6 pages)"
        },
        "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_P4_BlankAnswerSheet_EN_ZH.pdf?v=bf7a44c685fd9161&cv=2"
-      },
-      {
-       "title": {
-        "ko": "공식 정답·채점 기준 · 영어 (6쪽)",
-        "en": "Official answers and scoring · English (6 pages)"
-       },
-       "url": "https://haslalab-pdf.haslalab.workers.dev/pdf/l/ibo/IBO_2018_P4_ScoringKey_PublicCopy_EN.pdf?v=1bc06cd7e6c25857&cv=2"
       }
      ]
+    },
+    {
+     "file": "IBO_2018_P1M.pdf",
+     "part": "P1",
+     "kind": "marking",
+     "lang": "EN",
+     "local": "pdfx/ibo/IBO_2018_P1_ScoringKey_PublicCopy_EN.pdf",
+     "url": "https://tpmso.k12ea.gov.tw/ibo/wp-content/uploads/2022/07/2018_Inter_Pract_1_answer.pdf",
+     "pages": 6,
+     "bytes": 593027,
+     "direct": true,
+     "source_type": "official_practical_scoring_key"
+    },
+    {
+     "file": "IBO_2018_P3M.pdf",
+     "part": "P3",
+     "kind": "marking",
+     "lang": "EN",
+     "local": "pdfx/ibo/IBO_2018_P3_ScoringKey_PublicCopy_EN.pdf",
+     "url": "https://tpmso.k12ea.gov.tw/ibo/wp-content/uploads/2022/07/2018_Inter_Pract_4_answer.pdf",
+     "pages": 8,
+     "bytes": 1354968,
+     "direct": true,
+     "source_type": "official_practical_scoring_key"
+    },
+    {
+     "file": "IBO_2018_P4M.pdf",
+     "part": "P4",
+     "kind": "marking",
+     "lang": "EN",
+     "local": "pdfx/ibo/IBO_2018_P4_ScoringKey_PublicCopy_EN.pdf",
+     "url": "https://tpmso.k12ea.gov.tw/ibo/wp-content/uploads/2022/07/2018_Inter_Pract_3_answer.pdf",
+     "pages": 6,
+     "bytes": 1036845,
+     "direct": true,
+     "source_type": "official_practical_scoring_key"
     }
    ],
    "note": {
-    "ko": "이론 1·2, 실기 1–4의 공식 영어 문제지와 이론 공식 정답표를 제공합니다. 이론 문제지는 주최 측이 승인한 2018년 12월 정정판입니다. 공식 정답표 2쪽에는 이론 1·2의 참·거짓 정답이 들어 있습니다. 실기 1의 참조 도해 일부와 실기 4의 동영상·모델 파일은 해당 공식 영어 PDF에 포함되어 있지 않습니다. 이론 공식 정답표는 한국어로도 제공합니다. 이론 1 문제지 51쪽도 한국어로 제공합니다. 승인 정정판의 47문항, 도표와 참·거짓 기입란을 유지했습니다. 이론 2와 실기 자료의 한국어판은 작업 중입니다. 대만 생물올림피아드 공개 합본에서 추출한 실기 1–4의 빈 답안지 18쪽(영어·번체중문)과 실기 1·3·4 정답 및 채점 기준 20쪽(영어)을 각 실기 카드에서 열 수 있습니다. 실기 2 정답과 실기 3의 별도 TLC 부착 양식은 아직 확보하지 못했습니다. 실기 2의 공식 빈 답안지 2쪽도 원래 응답 칸을 유지해 한국어로 제공합니다. 실기 1의 공식 빈 답안지 5쪽 한국어판에는 원래 계산 기록 표도 들어 있습니다. 실기 3 식물 실기의 공식 빈 답안지 5쪽도 한국어로 제공하며, 별도 TLC 띠 부착용 답안지 2의 원본은 확보되지 않았습니다. 실기 4 진화·생태·행동 실기의 공식 빈 답안지 6쪽도 한국어로 제공합니다. 원래 모형 수치와 기록란을 유지했습니다. 영상과 모형 코드의 별도 원본은 확보되지 않았습니다.",
-    "en": "Official English question booklets are available for Theory 1 and 2 and Practicals 1–4, along with the two-page official theory answer key. The theory papers are the corrected editions approved by the organizers in December 2018. The Practical 1 reference figures and the Practical 4 video and model files are absent from the corresponding official English PDFs. A Korean edition of the official theory key is available. The 51-page Theory 1 paper is available in Korean. All 47 questions, diagrams and true/false fields follow the organizer-approved corrected edition. Translations of Theory 2 and the practical materials are in progress. The practical cards include 18 pages of official blank answer forms in English and Traditional Chinese extracted from the Taiwan Biology Olympiad public packets, and 20 pages of English answer keys and scoring guidance for Practicals 1, 3 and 4. The Practical 2 key and the separate Practical 3 TLC mounting form remain unlocated. The two-page Practical 2 official blank answer sheet is also available in Korean, with the original response fields. The five-page Practical 1 official blank answer sheet is available in Korean, including the original calculation tables. The five-page Practical 3 plant practical blank answer form is available in Korean. The separate TLC band-mounting Answer Sheet 2 remains unlocated. The six-page Practical 4 evolution, ecology and behaviour official blank answer form is available in Korean, retaining the printed model values and response cells. The separately referenced videos and model code remain unlocated."
+    "ko": "이론 1은 주최 측 정정판의 한국어 문제지 51쪽과 공식 참·거짓 정답표를 제공합니다. 이론 2의 영어·한국어 학습판은 각각 62쪽과 50문항이며, 10번에는 생략 안내가 있습니다. 실기 1–4의 문제지는 영어로, 공식 빈 답안지 18쪽은 한국어와 영어·번체중문으로 제공합니다. 실기 1·3·4의 공식 정답·채점표 총 20쪽은 영어와 한국어로 제공하며, 실기 2의 별도 채점표는 확보하지 못했습니다. 실기 1의 참조 도해 일부, 실기 3의 TLC 띠 부착용 답안지 2, 실기 4의 동영상과 모형 코드는 아직 확보하지 못했습니다.",
+    "en": "Theory 1 includes the 51-page corrected Korean question booklet and the official true/false key. Theory 2 has 62-page study editions in English and Korean with 50 complete questions and a notice at Q10. Practicals 1–4 have official English questions and 18 pages of blank answer forms in Korean and English/Traditional Chinese. Practicals 1, 3 and 4 have 20 pages of official answers and scoring criteria in English and Korean. A separate Practical 2 scoring key, some Practical 1 reference figures, the Practical 3 TLC mounting form, and the Practical 4 videos and model code remain unlocated."
    }
   },
   {

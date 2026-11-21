@@ -43,6 +43,7 @@ test('translated theory and practical papers retain the original source-language
   for (const catalogue of [THEORY, ARCHIVE_PRACTICAL]) {
     for (const year of Object.values(catalogue.oibf)) {
       for (const slot of Object.values(year.f)) {
+        if (!slot.ko?.paper) continue;
         const options = PaperLanguages.files(slot);
         assert.ok(options.en, 'English edition');
         assert.ok(options.ko, 'Korean edition');
@@ -57,6 +58,18 @@ test('translated theory and practical papers retain the original source-language
     assert.ok(year.f.T.ko.paper.endsWith('_T_KO.pdf'));
     assert.ok(year.f.T.ko.sol.endsWith('_TS_KO.pdf'));
   }
+});
+
+test('OIbF 2026 exposes the official theory and experiment originals', () => {
+  const theory = THEORY.oibf['2026'].f.T;
+  const experiment = ARCHIVE_PRACTICAL.oibf['2026'].f.E1;
+  assert.equal(PaperLanguages.files(theory).es, 'OIbF_2026_T_ES.pdf');
+  assert.equal(theory.sol, 'OIbF_2026_TS.pdf');
+  assert.equal(PaperLanguages.files(experiment).es, 'OIbF_2026_E1_ES.pdf');
+  assert.equal(experiment.sol, 'OIbF_2026_E1S.pdf');
+  assert.equal(experiment.mark, 'OIbF_2026_E1M.pdf');
+  assert.equal(theory.supplements.length, 4);
+  assert.equal(experiment.supplements.length, 2);
 });
 
 test('embedded solutions remain disclosed for each translated language', () => {
