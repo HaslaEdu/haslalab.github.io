@@ -60,15 +60,13 @@ test('translated theory and practical papers retain the original source-language
   }
 });
 
-test('OIbF 2026 provides both theory translations and keeps the official originals available', () => {
+test('OIbF 2026 provides both translations and keeps the official originals available', () => {
   const theory = THEORY.oibf['2026'].f.T;
   const experiment = ARCHIVE_PRACTICAL.oibf['2026'].f.E1;
   const sourceRoot = 'https://haslalab-pdf.haslalab.workers.dev/pdf/';
-  assert.equal(PaperLanguages.files(experiment).es, 'OIbF_2026_E1_ES.pdf');
-  assert.equal(experiment.sol, 'OIbF_2026_E1S.pdf');
-  assert.equal(experiment.mark, 'OIbF_2026_E1M.pdf');
   for (const {slot, roles, sources, portuguese} of [
     {slot: theory, roles: {paper: 'T', sol: 'TS'}, sources: ['T_ES', 'TS'], portuguese: 4},
+    {slot: experiment, roles: {paper: 'E1', sol: 'E1S', mark: 'E1M'}, sources: ['E1S', 'E1M'], portuguese: 2},
   ]) {
     assert.equal(PaperLanguages.files(slot).es, `OIbF_2026_${roles.paper}_ES.pdf`);
     for (const [language, edition] of [['EN', slot], ['KO', slot.ko]]) {
