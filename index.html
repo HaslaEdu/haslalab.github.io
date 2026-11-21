@@ -487,7 +487,7 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
   vertical-align:1px;background:var(--laser);box-shadow:0 0 0 2.5px rgba(224,36,36,.16)}
 
 /* ═══════ problem cards ═══════ */
-.probs{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.probs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:16px}
 .prob{background:#fff;border:1px solid var(--grid-bold);border-radius:10px;padding:19px;
       display:flex;flex-direction:column;gap:11px}
 .prob.soon{border-style:dashed;background:transparent;opacity:.78}
@@ -1167,11 +1167,15 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="sim/result-comparison.js?v=b189a5d97ba5"></script>
 <script src="monthly-figures.js?v=a75f89ada7f1"></script>
 <script src="examdur.js?v=9a7cae160dd1"></script>
-<script src="paper-languages.js?v=19316d4f0648"></script>
+<script src="paper-languages.js?v=8fc1f58f4d5c"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="learn-path.js?v=15c977ce36c5"></script>
 <script src="archive-navigation.js?v=f59ccf8d9f5f"></script>
-<script src="site-catalogue.js?v=8306d95c68b9"></script>
+<<<<<<< HEAD
+<script src="site-catalogue.js?v=31d43872a346"></script>
+=======
+<script src="site-catalogue.js?v=31d43872a346"></script>
+>>>>>>> origin/main
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
 <script src="site-design.js?v=56e76d4f3c53"></script>
@@ -5713,10 +5717,11 @@ function examHref(key,yr,group){
    answer sheets travel with it (the server draws the marking scheme from the solution and the scheme together) */
 function theoryHref(key,yr,parts){
   const t=thyOf(key,yr.y), f=x=>t.f[x]||{}, all=parts.map(x=>(x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x)).map(q=>q[1]).join(" / ").slice(0,300));
-  const bundle=PaperLanguages.bundle(parts.map(f),lang);
+  const koreanOnly=key==="oibf"&&lang==="ko", edition=x=>koreanOnly?f(x).ko||{}:f(x);
+  const bundle=PaperLanguages.bundle(parts.map(f),lang,key);
   const q=new URLSearchParams({m:"t",c:key,y:yr.y,n:compOf(key).abbr,e:parts.join(","),t:all.join("|"),
     /* ISPhO: in Korean the translated paper, typeset as the original */
-    p:parts.map(x=>KO_TYPESET.has(key)&&lang==="ko"&&(f(x).ko||{}).paper||f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||f(x).key||"").join("|"),
+    p:parts.map(x=>KO_TYPESET.has(key)&&lang==="ko"&&f(x).ko?.paper||edition(x).paper||"").join("|"),s:parts.map(x=>edition(x).sol||"").join("|"),k:parts.map(x=>edition(x).mark||edition(x).key||"").join("|"),
     /* the sheets the candidate writes on: in Korean the translated answer sheets and working sheet, where there are */
     a:parts.map(x=>lang==="ko"&&(f(x).ko||{}).answer||f(x).answer||"").join("|"),...(lang==="ko"&&t.wk?{w:t.wk}:t.we?{w:t.we}:{}),lang});
   if(bundle.language){
@@ -5804,10 +5809,11 @@ function theoryHtml(key,yr){
   const card=(code,probs,f,k,head,docs)=>{
     const archive=f.archive, archiveLabels={restored:ko?"비공식 복구본":"Restored copy",translation:ko?"영문 재수록":"English reprint",publisher:ko?"출판사 부분 재수록":"Publisher excerpt",reprint:ko?"전신 대회 재수록":"Predecessor reprint"};
     const has=ko&&!!(k.paper||k.sol);
-    const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
+    const koreanOnly=ko&&key==="oibf";
+    const o=(kv,fv)=>koreanOnly?[kv,""]:ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
      const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
      const solutionLabel=(ko?k.solutionNotice:f.solutionNotice)?(ko?"해설 제공 안내":"Solution availability notice"):d.thySol;
-     const paperLanguages=PaperLanguages.files({...f,ko:k});
+     const paperLanguages=PaperLanguages.archiveChoices(key,lang,PaperLanguages.files({...f,ko:k}));
      /* in English, the English paper only, untagged, where there is one (no «Problems · 한국어» beside it) */
      if(!ko&&paperLanguages.en&&P[0]!==paperLanguages.en){ P[0]=paperLanguages.en; P[1]=""; }
      const selectedLanguage=Object.keys(paperLanguages).find(language=>paperLanguages[language]===P[0]);
@@ -5817,8 +5823,8 @@ function theoryHtml(key,yr){
      const paperDisplay=P[0]===f.paper&&f.sourcePages?.length?P[0]+"#page="+f.sourcePages[0]:P[0];
      /* (an original that also holds the solutions, e.g. a Hungarian report beside an English translation, stays) */
      const bilingualArchive=["ieso","icho","imcho","ibo","ijso"].includes(key);
-     const languageDocs=ko&&!bilingualArchive?[]:Object.entries(paperLanguages).filter(([language,file])=>file!==P[0]&&(bilingualArchive||!paperLanguages.en||f.paperContainsSolutions?.[language])).map(([language,file])=>{
-       const label=language==="ko"&&k.partial?`${d.thyPaper} (${ko?"부분":"partial"})`:f.paperContainsSolutions?.[language]?(ko?"문제·해설 합본":"Problems & solutions"):d.thyPaper;
+     const languageDocs=ko&&!bilingualArchive?[]:Object.entries(paperLanguages).filter(([language,file])=>file!==P[0]&&(key==="oibf"||bilingualArchive||!paperLanguages.en||f.paperContainsSolutions?.[language])).map(([language,file])=>{
+       const label=language==="ko"&&k.partial?`${d.thyPaper} (${ko?"부분":"partial"})`:f.paperContainsSolutions?.[language]?(ko?"문제·해설 합본":"Problems & solutions"):key==="oibf"?"Original paper":d.thyPaper;
        const start=file===f.paper&&f.sourcePages?.[0];
        return a(start?file+"#page="+start:file,key==="kphe"?d.thyPaper:`${label} · ${esc(PaperLanguages.label(language,lang))}`);
      });
@@ -5849,7 +5855,7 @@ function theoryHtml(key,yr){
       if(!parts.length) return "";
       const content=parts.map(part=>{
         const f=t.f[part], number=/^T(\d+)i$/.exec(part), suffix=number?` · Part ${number[1]==="1"?"I":number[1]==="2"?"II":number[1]}`:"";
-        const docs=(f.supplements||[]).map(({url,title})=>a(url,esc(title[lang])));
+        const docs=PaperLanguages.supplements(f.supplements,lang).map(({url,title})=>a(url,esc(title[lang])));
         return card(part,probsOf(part),f,f.ko||{},`OPhO ${yr.y} · ${round.label}${suffix}`,docs);
       }).join("");
       return `<section class="opho-round" data-opho-round="${round.key}" style="grid-column:1/-1"><h3>${round.label}</h3><div class="probs thy">${content}</div></section>`;
@@ -5863,7 +5869,7 @@ function theoryHtml(key,yr){
     cards=card("T",(t.p||[]).filter(q=>!/^Ti/.test(q[0])).concat(inv.length?(t.p||[]).filter(q=>/^Ti/.test(q[0])):[]),f,k,
                `${compOf(key).abbr} ${yr.y}`,docs);
   } else cards=order.map(x=>{
-    const f=t.f[x], docs=(f.supplements||[]).map(({url,title})=>a(url,esc(title[lang])));
+    const f=t.f[x], docs=PaperLanguages.supplements(f.supplements,lang).map(({url,title})=>a(url,esc(title[lang])));
     return card(x,probsOf(x),f,f.ko||{},undefined,docs);
   }).join("")+(t.w?card("T",[],{},t.w):"");
   const guide=t.g?(ko?t.g.ko||t.g.en:t.g.en||t.g.ko):"";
@@ -5938,8 +5944,9 @@ function viewYear(key,year,mode=""){
     <div class="probs"${c.groups?` data-show="${grpShow}"`:""}>
       ${yr.problems.map(p=>{
         const f=p.files||{};
+        const koreanOnly=key==="oibf"&&lang==="ko";
         /* 요청한 언어가 없으면 있는 것을 주되, 어느 언어인지 밝힌다 */
-        const pick=v=>typeof v==="string"?v:(v&&(v[lang]||v.ko||v.en||v.ru||Object.values(v).find(file=>typeof file==="string")));
+        const pick=v=>typeof v==="string"?v:(v&&(v[lang]||(!koreanOnly&&(v.ko||v.en||v.ru||Object.values(v).find(file=>typeof file==="string")))));
         const tag=v=>{
           if(typeof v==="string"||!v) return "";
           if(v[lang]) return "";
@@ -5962,7 +5969,7 @@ function viewYear(key,year,mode=""){
         const b=[
           (live&&f.sim) ? `<a class="btn" href="${simHref(f.sim)}&lang=${lang}">${d.actRun}</a>` : off(d.actRun,false),
           (live&&f.exe) ? `<a class="btn ghost" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>` : off(d.actExe,true)];
-        const doc=(v,lbl,blank)=> (live&&v) ? `<a class="btn ghost" href="${esc(pick(v))}"${blank?' target="_blank" rel="noopener"':""}>${lbl}${tag(v)}</a>` : off(lbl,true);
+        const doc=(v,lbl,blank)=> (live&&pick(v)) ? `<a class="btn ghost" href="${esc(pick(v))}"${blank?' target="_blank" rel="noopener"':""}>${lbl}${tag(v)}</a>` : off(lbl,true);
         const paperLanguage=typeof f.pdf==="object"?Object.keys(f.pdf).find(language=>f.pdf[language]===pick(f.pdf)):lang;
         const combined=!!p.paperContainsSolutions?.[paperLanguage];
         const paperLabel=combined?(lang==="ko"?"문제·해설 합본":"Problems & solutions"):d.actPdf;
@@ -5971,12 +5978,12 @@ function viewYear(key,year,mode=""){
         const docsOnly = mode==="paper" || !!c.soon && !f.sim;
         if(docsOnly) docs.pop();
         if(p.supplements){
-          if(typeof f.pdf==="object") for(const [language,file] of Object.entries(f.pdf)){
+          if(f.pdf&&typeof f.pdf==="object") for(const [language,file] of Object.entries(PaperLanguages.archiveChoices(key,lang,f.pdf))){
             if(file===pick(f.pdf)) continue;
-            docs.push(doc(file,`${d.actPdf} · ${esc(PaperLanguages.label(language,lang))}`,true));
+            docs.push(doc(file,`${key==="oibf"?"Original paper":d.actPdf} · ${esc(PaperLanguages.label(language,lang))}`,true));
           }
           for(const [file,label] of [[f.key,d.omrKey],[f.mark,d.thyMark],[f.answer,d.thyAns]]) if(file) docs.push(doc(file,label,true));
-          for(const {url,title} of p.supplements) docs.push(doc(url,esc(title[lang]),true));
+          for(const {url,title} of PaperLanguages.supplements(p.supplements,lang)) docs.push(doc(url,esc(title[lang]),true));
         }
         if(c.open) docs.splice(1,1);                      /* IYPT: no solution exists, so no greyed solution button */
         if(live&&f.data) docs.push(doc(f.data,d.thyData,false));   /* the tables the paper hands out (ISPhO 2024–2025 E1: Excel files) */

@@ -65,7 +65,7 @@ test('OIbF 2026 provides both translations and keeps the official originals avai
   const experiment = ARCHIVE_PRACTICAL.oibf['2026'].f.E1;
   const sourceRoot = 'https://haslalab-pdf.haslalab.workers.dev/pdf/';
   for (const {slot, roles, sources, portuguese} of [
-    {slot: theory, roles: {paper: 'T', sol: 'TS'}, sources: ['T_ES', 'TS'], portuguese: 4},
+    {slot: theory, roles: {paper: 'T', sol: 'TS'}, sources: ['TS'], portuguese: 4},
     {slot: experiment, roles: {paper: 'E1', sol: 'E1S', mark: 'E1M'}, sources: ['E1S', 'E1M'], portuguese: 2},
   ]) {
     assert.equal(PaperLanguages.files(slot).es, `OIbF_2026_${roles.paper}_ES.pdf`);
@@ -76,11 +76,26 @@ test('OIbF 2026 provides both translations and keeps the official originals avai
         assert.ok(assets[`Xoibf_${filename}`] > 0, filename);
       }
     }
+    const englishSources = PaperLanguages.supplements(slot.supplements, 'en');
     for (const source of sources) {
-      assert.ok(slot.supplements.some(({url}) => url === `${sourceRoot}OIbF_2026_${source}.pdf`));
+      assert.ok(englishSources.some(({url}) => url === `${sourceRoot}OIbF_2026_${source}.pdf`));
     }
-    assert.equal(slot.supplements.filter(({url}) => url.startsWith('https://drive.google.com/')).length, portuguese);
+    assert.equal(englishSources.filter(({url}) => url.startsWith('https://drive.google.com/')).length, portuguese);
+    assert.equal(PaperLanguages.supplements(slot.supplements, 'ko').length, 0);
   }
+});
+
+test('OIbF paper choices show Korean editions in Korean and source editions in English', () => {
+  const slot = THEORY.oibf['2026'].f.T;
+  const options = PaperLanguages.files(slot);
+  assert.deepEqual(PaperLanguages.archiveChoices('oibf', 'ko', options), {ko: slot.ko.paper});
+  assert.deepEqual(PaperLanguages.archiveChoices('oibf', 'en', options), {en: slot.paper, es: options.es});
+  assert.deepEqual(PaperLanguages.bundle([slot], 'ko', 'oibf').papers, {ko: [slot.ko.paper]});
+  assert.deepEqual(PaperLanguages.bundle([slot], 'en', 'oibf').papers, {en: [slot.paper], es: [options.es]});
+  assert.deepEqual(PaperLanguages.bundle([{paper: options.es}], 'ko', 'oibf').papers, {});
+  const historic = THEORY.oibf['2007'].f.T1.supplements;
+  assert.match(PaperLanguages.supplements(historic, 'ko')[0].url, /_KO\.pdf$/);
+  assert.match(PaperLanguages.supplements(historic, 'en')[0].url, /_EN\.pdf$/);
 });
 
 test('OIbF 2026 printable practice sheets cover the scored items from both papers', () => {
