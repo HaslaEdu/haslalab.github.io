@@ -183,3 +183,17 @@
   .al .al-photo fieldset{display:block;width:100%}
   .al .al-photo fieldset label{margin-bottom:10px}
 }
+
+/* Private textbooks use the same reader typography and controls as Books. */
+.al-private-textbooks>header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin:0 0 24px}
+.al-private-textbooks>header h2{margin:0}
+.al-private-textbooks .al-private-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin:16px 0}
+.al-private-textbooks label{display:inline-flex;align-items:center;flex-wrap:wrap;gap:8px;max-width:100%}
+.al-private-textbooks select{max-width:min(100%,540px)}
+.al-private-textbooks .al-private-prose{white-space:pre-wrap;margin:16px 0 30px}
+.al-private-textbooks .al-private-book-list{padding:0;list-style:none}
+.al-private-textbooks .al-private-book-list li{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--al-line);padding:10px 0}
+.al-private-textbooks .al-private-book-list li button{max-width:100%;text-align:left;overflow-wrap:anywhere}
+.al-private-textbooks button[aria-pressed=true]{border-color:var(--al-accent);color:var(--al-accent)}
+.al-private-textbooks .al-reader .al-meta{margin:20px 0 0}
+.al-private-textbooks .al-figures img{max-height:none}
