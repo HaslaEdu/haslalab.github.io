@@ -28,7 +28,8 @@ for(const c of list.contests){
       if(keys.has(key)){issues.push([p.id,'duplicate key '+key]);continue;}
       const blocks=[];let chars=0;
       for(const b of q.blocks||[]){
-        if(typeof b.t==='string'&&b.t.trim()){const t=b.t.trim();chars+=t.length;blocks.push({t});}
+        /* KaTeX cannot put a superscript on a space: \,^\circ becomes \,{}^\circ */
+        if(typeof b.t==='string'&&b.t.trim()){const t=b.t.trim().replace(/\\,\^\\circ/g,'\\,{}^\\circ');chars+=t.length;blocks.push({t});}
         else if(typeof b.fig==='string'){
           const f=figs.get(b.fig);if(!f){issues.push([p.id,'unknown figure '+b.fig]);continue;}
           const name=`${p.id}-${f.id}.webp`;
@@ -36,6 +37,8 @@ for(const c of list.contests){
           blocks.push({f:name,w:f.w,h:f.h});
         }
       }
+      /* problems the paper marks as removed from the exam come back as short placeholders: leave them out */
+      if(chars<300&&/삭제|제외|출제되지|빠졌|removed|deleted|excluded/i.test(blocks.map(b=>b.t||'').join(' '))){issues.push([p.id,'problem '+key+' removed from the exam']);continue;}
       if(!blocks.some(b=>b.t)||chars>MAX_TEXT){issues.push([p.id,'problem '+key+(chars>MAX_TEXT?' too long':' has no text')]);continue;}
       keys.add(key);
       items.push({id:`${p.id}~${key}`.replace(/[^\w~.-]/g,'_'),pdf:p.id,year:p.year,key,title:String(q.title||'').slice(0,120),b:blocks});
