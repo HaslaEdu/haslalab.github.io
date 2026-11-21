@@ -92,7 +92,11 @@ test('the olympiad archive loads practical papers and their alternate language o
   assert.ok(dmt.some(link=>link.url.endsWith('l/ieso/IESO_2024_DMT_KO.pdf')));
   assert.ok(dmt.some(link=>/DMT/i.test(link.url)&&link.label.includes('English')));
   const taipei=anchors(a.run('viewYear("ieso",2009)'));
-  assert.ok(taipei.some(link=>link.url.endsWith('l/ieso/IESO_2009_T_OriginalLayout_KO.pdf')&&!link.label.includes('부분')));
+  assert.ok(taipei.some(link=>{
+    const url=new URL(link.url,'https://haslalab.org');
+    return url.pathname.endsWith('l/ieso/IESO_2009_T_OriginalLayout_KO.pdf')&&
+      /^[a-f0-9]{16}$/.test(url.searchParams.get('v'))&&!link.label.includes('부분');
+  }));
   assert.ok(taipei.some(link=>link.url.endsWith('/3rdieso-answer-paper.pdf')));
   const taipeiPractical=anchors(a.run('track="exp"; viewYear("ieso",2009)'));
   for(const part of ['P2','P3']){
