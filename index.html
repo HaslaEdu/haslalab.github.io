@@ -5272,7 +5272,7 @@ function learnAreasHtml(){
 function viewLearnHome(){
   const ko=lang==="ko",P=window.HL_LEARN_PATH;
   const modes=[
-    ["#/learn/practice",ko?"단원별 문제":"Practice by unit",ko?"수능 · 모의고사 1,699문항을 단원과 단계로 나눴습니다. 하나씩 풀면 바로 채점되고, 두 번 연속 맞히면 단계가 오릅니다.":"1,699 exam problems by unit and step, graded at once; two right in a row and you step up."],
+    ["#/learn/practice",ko?"단원별 문제":"Practice by unit",ko?"수능 · 모의고사 1,699문항(바로 채점), 교재 · 대학 문제 8,700개, EuPhO · Physics Cup 같은 대회 도전. 어려운 문제는 건너뛰세요.":"1,699 Korean exam problems graded at once, 8,700 textbook and university problems, and competition challenges. Skip any you like."],
     ["#/learn/concepts",ko?"시뮬레이션으로 배우기":"Learn with simulations",ko?"도르래, 원운동, 진자, 충돌, 전기장… 움직임을 보고 값을 바꿔 보며 개념을 익힙니다.":"Pulleys, circular motion, pendulums, collisions, fields: watch, change a value, learn the idea."],
     ["#/learn/compute",ko?"계산물리":"Computational physics",ko?"백준처럼 Python으로 시뮬레이션을 짜서 제출하면, 물리 법칙으로 채점합니다.":"Like an online judge: write a simulation in Python and it is graded against the physics."],
     [archiveHref("books","phys"),ko?"교재":"Books",ko?"공개 교재와 대학 · 학교 자료":"Open textbooks, university and school materials"],
@@ -5368,7 +5368,7 @@ function viewLearnPractice(){
   const query=new URLSearchParams({embed:"1",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(window.HL_LEARN_PATH?.SUBTOPICS.has(unit))query.set("unit",unit);
   return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
-    <p class="learn-tool-copy">${ko?"단원을 고르면 내 단계에 맞는 문제를 하나씩 풀고 바로 채점합니다. 두 번 연속 맞히면 단계가 오릅니다.":"Pick a unit and solve problems at your step one at a time, graded at once. Two right in a row and you step up."}</p></div>
+    <p class="learn-tool-copy">${ko?"수능 · 모의고사(바로 채점), 교재 · 대학 강의 문제, EuPhO · BAUPC · Eötvös · Physics Cup · WoPhO · OPhO 대회 도전까지. 어려우면 건너뛰어도 됩니다.":"Korean exams (graded at once), textbook and university problems, and a challenge mode with EuPhO, BAUPC, Eötvös, Physics Cup, WoPhO and OPhO. Skip any problem you like."}</p></div>
     <iframe id="learnPracticeFrame" class="learn-studio-frame" src="practice.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
 addEventListener("message",event=>{

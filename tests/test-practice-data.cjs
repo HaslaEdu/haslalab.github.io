@@ -43,3 +43,25 @@ test('classifications cover every item and record how each was made',()=>{
   const c=JSON.parse(read('tools/practice/classifications.json'));
   for(const items of Object.values(shards))for(const it of items){assert.equal(c.units[it.id],it.u,it.id);assert.ok(['keyword','model'].includes(c.method[it.id]),it.id);}
 });
+
+test('the competition challenge lists the six competitions with papers on the PDF Worker only',()=>{
+  const c=JSON.parse(read('practice/contests.json')).contests;
+  assert.deepEqual(c.map(x=>x.key).sort(),['baupc','eotvos','eupho','opho','physcup','wopho']);
+  const ids=new Set();
+  for(const contest of c){
+    assert.ok(contest.name.ko&&contest.name.en&&contest.step>=7&&contest.step<=10,contest.key);
+    assert.ok(contest.problems.length>0,contest.key);
+    for(const p of contest.problems){
+      assert.ok(!ids.has(p.id),p.id);ids.add(p.id);
+      const urls=[...Object.values(p.papers),...Object.values(p.sols)];
+      assert.ok(Object.keys(p.papers).length>0,p.id);
+      for(const u of urls)assert.match(u,/^https:\/\/haslalab-pdf\.haslalab\.workers\.dev\/pdf\/[\w./-]+\.pdf$/,p.id);
+    }
+  }
+});
+
+test('every practice mode lets the learner skip a problem',()=>{
+  const js=read('practice.js');
+  assert.equal((js.match(/id="skip"/g)||[]).length,3,'exam, bank and contest problems each have a skip button');
+  assert.match(read('practice.html'),/connect-src 'self' https:\/\/haslalab-problem-bank\.haslalab\.workers\.dev https:\/\/haslalab-pdf\.haslalab\.workers\.dev/);
+});
