@@ -127,6 +127,9 @@ for(const file of ['../contest-exams.js','contest-review.js','contest-exam.js','
   contestHtml=contestHtml.replace(new RegExp('src="'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(source))+'"');
 }
 outputs.set('sim/contest-exam.html',contestHtml);
+let computeHtml=read('compute.html').replace(/href="compute\.css(?:\?[^"\n]*)?"/,'href="compute.css?v='+digest(read('compute.css'))+'"');
+for(const file of ['learn-path.js','compute-problems.js','compute.js'])computeHtml=computeHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+outputs.set('compute.html',computeHtml);
 const sheetModule=read('sim/monthly-answer-sheet.mjs').replace(/from '\.\.\/monthly-problems\.mjs(?:\?[^'\n]*)?'/,"from '../monthly-problems.mjs?v="+digest(read('monthly-problems.mjs'))+"'");
 outputs.set('sim/monthly-answer-sheet.mjs',sheetModule);
 outputs.set('sim/monthly-answer-sheet.html',read('sim/monthly-answer-sheet.html').replace(/src="monthly-answer-sheet\.mjs(?:\?[^"\n]*)?"/,'src="monthly-answer-sheet.mjs?v='+digest(sheetModule)+'"'));

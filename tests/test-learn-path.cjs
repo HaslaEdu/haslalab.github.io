@@ -117,7 +117,7 @@ test('each section has its own bar, and the current page is marked in it',()=>{
   const a=app('#/');
   const bar=(section,hash)=>{a.context.location.hash=hash;return a.run(`sectionLinks(${JSON.stringify(section)}).map(([href,label,current])=>[href,current(${JSON.stringify(hash)})])`);};
   const learn=bar('learn','#/learn/physics/search');
-  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/physics','#/archive/books/phys','#/learn/physics/search','#/learn']);
+  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/physics','#/learn/compute','#/archive/books/phys','#/learn/physics/search','#/learn']);
   assert.deepEqual(Array.from(learn).filter(([,on])=>on).map(([h])=>h),['#/learn/physics/search']);
   const oly=bar('olympiad','#/ipho/2019');
   assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/monthly','#/hpho','#/lab']);
@@ -151,4 +151,15 @@ test('the Olympiad home is the former HaslaLab home with its hero and community 
     assert.ok(links(html).includes('#/comps'));
   }
   assert.deepEqual(Runtime.routeNeeds('#/olympiad'),[]);
+});
+
+test('the computational physics page embeds the judge and passes on only a valid problem id',()=>{
+  const a=app('#/learn/compute?problem=kepler-orbit');
+  let src=/id="learnComputeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnCompute()'))[1];
+  assert.ok(src.startsWith('compute.html?'));assert.equal(new URLSearchParams(src.split('?')[1]).get('problem'),'kepler-orbit');
+  a.context.location.hash='#/learn/compute?problem=%22%3E%3Cscript%3E';
+  src=/id="learnComputeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnCompute()'))[1];
+  assert.equal(new URLSearchParams(src.split('?')[1]).get('problem'),null);
+  assert.ok(links(a.run('viewHome()')).includes('#/learn/compute'));
+  assert.deepEqual(Runtime.routeNeeds('#/learn/compute'),[]);
 });
