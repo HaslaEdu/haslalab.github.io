@@ -129,7 +129,10 @@ function viewHomeStudio(){
   </section>`;
 }
 
-function viewHome(){
+/* The site opens on the Learn section (index.html: viewLearnHome); the former HaslaLab home is the Olympiad home. */
+function viewHome(){ return viewLearnHome(); }
+
+function viewOlympiadHome(){
   const T=SITE_DESIGN_TEXT[lang],original=document.createElement("div");
   original.innerHTML=viewOriginalHome();
   const experiment=original.querySelector("figure.screen").outerHTML;

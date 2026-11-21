@@ -85,5 +85,9 @@
   window.addEventListener('message',event=>{if(!embedded||event.origin!==location.origin||event.source!==window.parent||!event.data||typeof event.data!=='object')return;const value=event.data;if(value.type==='hl-problem-search-settings'){if(validTheme(value.theme)){state.theme=value.theme;applyTheme();}if(Number.isFinite(value.viewportHeight))document.documentElement.style.setProperty('--search-viewport-height',Math.max(300,Math.min(3000,value.viewportHeight))+'px');if(validLang(value.lang)&&value.lang!==state.lang)changeLanguage(value.lang);reportHeight();}else if(value.type==='hl-problem-search-authchange')authChanged();else if(value.type==='hl-problem-search-reload'){bootstrap();search(true);}});
   if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);
   window.addEventListener('pagehide',()=>{++state.authEpoch;abortKind();removePhoto();for(const url of state.figureUrls)URL.revokeObjectURL(url);state.figureUrls.clear();});
-  translate();bootstrap();search(true);reportHeight();
+  translate();
+  /* the learning path links here with a topic (and a difficulty) already chosen */
+  if(subjects[launch.searchParams.get('subject')])$('subject').value=launch.searchParams.get('subject');
+  if(/^[1-5]$/.test(launch.searchParams.get('stars')||'')&&[...$('stars').options].some(option=>option.value===launch.searchParams.get('stars')))$('stars').value=launch.searchParams.get('stars');
+  bootstrap();search(true);reportHeight();
 })();
