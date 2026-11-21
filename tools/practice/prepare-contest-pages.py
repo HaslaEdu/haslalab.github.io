@@ -42,15 +42,28 @@ def figures(page):
         r = pymupdf.Rect(info["bbox"])
         if r.width > 8 and r.height > 8: rects.append(r)
     cl = [c for c in merge(rects, 10) if c.width >= 40 and c.height >= 30 and c.width * c.height < 0.92 * W * H]
-    # keep labels around the drawing: grow by text spans that touch the cluster
-    words = page.get_text("words")
+    # keep labels around the drawing (axis names, letters, captions under it) but never part of a paragraph:
+    # a text line joins only if it lies within the drawing's columns, so a line of body text that merely
+    # touches the drawing is not cut in half at the crop edge
+    # captions are transcribed as text, so only short labels (≤ 14 characters) join a figure
+    lines = [pymupdf.Rect(l["bbox"]) for b in page.get_text("dict")["blocks"] for l in b.get("lines", [])
+             if len("".join(s["text"] for s in l["spans"]).strip()) <= 14]
+    long_lines = [pymupdf.Rect(l["bbox"]) for b in page.get_text("dict")["blocks"] for l in b.get("lines", [])
+                  if len("".join(s["text"] for s in l["spans"]).strip()) > 14]
     out_r = []
     for c in cl:
         g = pymupdf.Rect(c)
-        for w in words:
-            wr = pymupdf.Rect(w[:4])
-            if (c + (-14, -14, 14, 14)).intersects(wr) and wr.width < 0.5 * W: g |= wr
-        out_r.append((g + (-4, -4, 4, 4)) & page.rect)
+        near = c + (-14, -14, 14, 14)
+        for lr in lines:
+            if not near.intersects(lr): continue
+            inside = lr.x0 >= c.x0 - 30 and lr.x1 <= c.x1 + 30
+            if inside: g |= lr
+        # a paragraph line caught at the top or bottom edge is cut off by the crop: move that edge past it
+        for lr in long_lines:
+            if not g.intersects(lr): continue
+            if lr.y1 <= g.y0 + 0.35 * g.height: g.y0 = max(g.y0, lr.y1 + 1)
+            elif lr.y0 >= g.y1 - 0.35 * g.height: g.y1 = min(g.y1, lr.y0 - 1)
+        if g.height >= 20: out_r.append((g + (-4, -4, 4, 4)) & page.rect)
     return sorted(merge(out_r, 2), key=lambda r: (r.y0, r.x0))
 
 manifest = {}
