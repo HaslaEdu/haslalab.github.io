@@ -92,7 +92,11 @@ test('the olympiad archive loads practical papers and their alternate language o
   assert.ok(dmt.some(link=>link.url.endsWith('l/ieso/IESO_2024_DMT_KO.pdf')));
   assert.ok(dmt.some(link=>/DMT/i.test(link.url)&&link.label.includes('English')));
   const taipei=anchors(a.run('viewYear("ieso",2009)'));
-  assert.ok(taipei.some(link=>link.url.endsWith('l/ieso/IESO_2009_T_OriginalLayout_KO.pdf')&&!link.label.includes('부분')));
+  assert.ok(taipei.some(link=>{
+    const url=new URL(link.url,'https://haslalab.org');
+    return url.pathname.endsWith('l/ieso/IESO_2009_T_OriginalLayout_KO.pdf')&&
+      /^[a-f0-9]{16}$/.test(url.searchParams.get('v'))&&!link.label.includes('부분');
+  }));
   assert.ok(taipei.some(link=>link.url.endsWith('/3rdieso-answer-paper.pdf')));
   const taipeiPractical=anchors(a.run('track="exp"; viewYear("ieso",2009)'));
   for(const part of ['P2','P3']){
@@ -231,6 +235,20 @@ test('PLANCKS public resources contain only its official homepage and general ru
       if(file.kind==='solution')assert.equal(published.sol,file.local,`${year.y}: solution remains available`);
     }
   }
+});
+
+test('OPhO 2020 is listed only in theory and shows both theory rounds',()=>{
+  const site=app();
+  site.load('theory:opho');
+  const experiment=site.run('track="exp";viewComp("opho")');
+  assert.doesNotMatch(experiment,/href="#\/opho\/2020"/);
+  assert.match(experiment,/href="#\/opho\/2021"/);
+  const theory=site.run('track="thy";viewComp("opho")');
+  assert.match(theory,/href="#\/opho\/2020"/);
+  const year=site.run('track="exp";viewYear("opho",2020)');
+  assert.doesNotMatch(year,/onclick="setTrack\('exp'\)"/);
+  assert.match(year,/data-opho-round="open"/);
+  assert.match(year,/data-opho-round="invitational"/);
 });
 
 test('new physics archives retain official metadata and historical context through independent lazy loads',()=>{
