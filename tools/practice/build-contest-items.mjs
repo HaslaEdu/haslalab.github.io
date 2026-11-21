@@ -17,6 +17,8 @@ for(const c of list.contests){
   for(const p of c.problems){
     const file=path.join(tDir,p.id+'.json');
     p.n=0;
+    /* a combined paper ("T") repeats the separate T1, T2… of the same year: keep the separate ones */
+    if(p.key==='T'&&c.problems.some(o=>o.year===p.year&&/^T\d+$/.test(o.key))){issues.push([p.id,'combined paper skipped (separate problems exist)']);continue;}
     if(!fs.existsSync(file)){issues.push([p.id,'no transcript']);continue;}
     let doc;try{doc=JSON.parse(fs.readFileSync(file,'utf8'));}catch(e){issues.push([p.id,'bad json']);continue;}
     const figs=new Map((manifest[p.id]?.figures||[]).map(f=>[f.id,f]));
