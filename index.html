@@ -5264,7 +5264,7 @@ function learnStagesHtml(){
 function learnAreasHtml(){
   return `<div class="lp-areas">${window.HL_LEARN_PATH.AREAS.map(area=>`<section class="lp-area" data-area="${area.key}"><h3>${esc(area.name[lang])}</h3><ul class="lp-topics">${area.subtopics.map(sub=>{
       const bank=sub.bank||area.bank,label=`${esc(sub.name[lang])}<span class="lp-from mono">${sub.from}+</span>`;
-      return `<li>${bank?`<a href="${learnSearchHref(bank)}" data-subtopic="${area.key}/${sub.key}">${label}</a>`:`<span data-subtopic="${area.key}/${sub.key}">${label}</span>`}</li>`;}).join("")}</ul></section>`).join("")}</div>`;
+      return `<li><a href="#/learn/practice?unit=${area.key}/${sub.key}" data-subtopic="${area.key}/${sub.key}">${label}</a></li>`;}).join("")}</ul></section>`).join("")}</div>`;
 }
 
 /* Learn home: the page the site opens on. Short problems by topic and step; long final-round
@@ -5272,7 +5272,7 @@ function learnAreasHtml(){
 function viewLearnHome(){
   const ko=lang==="ko",P=window.HL_LEARN_PATH;
   const modes=[
-    ["#/learn/physics",ko?"주제 · 단계별 문제":"Problems by topic and step",ko?"단원을 고르고 내 단계에 맞는 짧은 문제부터 찾아 풀어 보세요.":"Pick a unit and find short problems at your step."],
+    ["#/learn/practice",ko?"단원별 문제":"Practice by unit",ko?"수능 · 모의고사 1,699문항을 단원과 단계로 나눴습니다. 하나씩 풀면 바로 채점되고, 두 번 연속 맞히면 단계가 오릅니다.":"1,699 exam problems by unit and step, graded at once; two right in a row and you step up."],
     [ko?"problems.html":"problems-en.html",ko?"시뮬레이션으로 배우기":"Learn with simulations",ko?"장치를 움직여 보고 직접 재면서 개념을 익힙니다.":"Move the apparatus and take the readings to learn the idea."],
     ["#/learn/compute",ko?"계산물리":"Computational physics",ko?"백준처럼 Python으로 시뮬레이션을 짜서 제출하면, 물리 법칙으로 채점합니다.":"Like an online judge: write a simulation in Python and it is graded against the physics."],
     [archiveHref("books","phys"),ko?"교재":"Books",ko?"공개 교재와 대학 · 학교 자료":"Open textbooks, university and school materials"],
@@ -5281,7 +5281,7 @@ function viewLearnHome(){
     <section class="lh-hero"><p class="eyebrow">${ko?"HaslaLab 학습":"HaslaLab Learn"}</p>
       <h1>${ko?"물리올림피아드,<br>처음부터 차근차근.":"Physics olympiad,<br>one step at a time."}</h1>
       <p class="lede">${ko?"짧은 문제를 단원과 난이도별로 풀고, 시뮬레이션으로 직접 움직여 보며 배우세요. 준비가 되면 올림피아드 본선 문제로 넘어갑니다.":"Solve short problems by unit and difficulty and learn by moving simulations yourself. When you are ready, move on to olympiad final rounds."}</p>
-      <div class="cta"><a class="btn" href="#/learn/physics">${ko?"문제 풀기 시작":"Start solving"}</a><a class="btn ghost" href="#lhStages">${ko?"내 단계 찾기":"Find your step"}</a></div></section>
+      <div class="cta"><a class="btn" href="#/learn/practice">${ko?"문제 풀기 시작":"Start solving"}</a><a class="btn ghost" href="#lhStages">${ko?"내 단계 찾기":"Find your step"}</a></div></section>
     <div class="comps lh-modes">${modes.map(([href,title,note])=>`<a class="comp lsubj" href="${href}"><div class="chead"><div class="abbr">${title}</div></div><p class="learn-card-note">${note}</p><span class="go">→</span></a>`).join("")}</div>
     ${P?`<section class="lp-block" aria-labelledby="lhStages"><h2 id="lhStages">${ko?"내 단계 찾기":"Find your step"}</h2>${learnStagesHtml()}</section>
     <section class="lp-block" aria-labelledby="lhTopics"><h2 id="lhTopics">${ko?"단원별로 공부하기":"Study by unit"}</h2><p class="learn-tool-copy">${ko?"숫자는 그 단원을 처음 다루는 단계입니다.":"The number is the step where a unit first appears."}</p>${learnAreasHtml()}</section>`:""}
@@ -5340,6 +5340,25 @@ addEventListener("message",event=>{
 });
 if(typeof MutationObserver==="function")new MutationObserver(syncLearnStudio).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 addEventListener("resize",syncLearnStudio);
+
+/* Practice by unit: short exam problems one at a time, graded at once (practice.html). */
+function viewLearnPractice(){
+  const ko=lang==="ko",label=ko?"단원별 문제":"Practice by unit";
+  const unit=new URLSearchParams(location.hash.split("?")[1]||"").get("unit")||"";
+  const query=new URLSearchParams({embed:"1",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
+  if(window.HL_LEARN_PATH?.SUBTOPICS.has(unit))query.set("unit",unit);
+  return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
+    <p class="learn-tool-copy">${ko?"단원을 고르면 내 단계에 맞는 문제를 하나씩 풀고 바로 채점합니다. 두 번 연속 맞히면 단계가 오릅니다.":"Pick a unit and solve problems at your step one at a time, graded at once. Two right in a row and you step up."}</p></div>
+    <iframe id="learnPracticeFrame" class="learn-studio-frame" src="practice.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
+}
+addEventListener("message",event=>{
+  const frame=document.getElementById("learnPracticeFrame");
+  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(event.data?.type==="hl-practice-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(600,Math.min(30000,Math.ceil(event.data.height)))+"px";
+  if(event.data?.type==="hl-practice-top"){const top=frame.getBoundingClientRect().top+scrollY-120;if(scrollY>top)scrollTo({top:Math.max(0,top)});}
+  if(event.data?.type==="hl-practice-unit"&&typeof event.data.unit==="string"){const u=event.data.unit;if(!u||window.HL_LEARN_PATH?.SUBTOPICS.has(u)){try{history.replaceState(null,"","#/learn/practice"+(u?"?unit="+u:""));}catch(e){}}}
+});
+if(typeof MutationObserver==="function")new MutationObserver(()=>{document.getElementById("learnPracticeFrame")?.contentWindow?.postMessage({type:"hl-practice-settings",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"},location.origin);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","lang"]});
 
 /* Computational physics: Python simulations graded in the browser (compute.html, Pyodide in a worker). */
 function viewLearnCompute(){
@@ -10198,6 +10217,7 @@ function setDocTitle(first, second){
   else if(first==="login"||first==="signup") parts.push(CMT[lang][first]);
   else if(["monthly","weekly","rank"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
+  else if(first==="learn"&&second==="practice") parts.push(lang==="ko"?"학습 — 단원별 문제":"Learn — Practice by unit");
   else if(first==="learn"&&second==="compute") parts.push(lang==="ko"?"학습 — 계산물리":"Learn — Computational physics");
   else if(first==="learn"&&second==="physics"&&location.hash.split("?")[0]==="#/learn/physics/search") parts.push(lang==="ko"?"학습 — 물리 — 문제 검색":"Learn — Physics — Search problems");
   else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
@@ -10307,7 +10327,7 @@ function siteSection(active){
 }
 function sectionLinks(section){
   const ko=lang==="ko";
-  if(section==="learn")return [["#/",ko?"학습 홈":"Home",h=>h===""||h==="#/"],["#/learn/physics",ko?"주제 · 단계별 문제":"By topic & step",h=>h==="#/learn/physics"],
+  if(section==="learn")return [["#/",ko?"학습 홈":"Home",h=>h===""||h==="#/"],["#/learn/practice",ko?"단원별 문제":"Practice",h=>h==="#/learn/practice"],["#/learn/physics",ko?"단원 지도":"Unit map",h=>h==="#/learn/physics"],
     [ko?"problems.html":"problems-en.html",ko?"시뮬레이션":"Simulations",()=>false],["#/learn/compute",ko?"계산물리":"Computational physics",h=>h==="#/learn/compute"],[archiveHref("books","phys"),ko?"교재":"Books",h=>/^#\/archive\/(books|schools)\b/.test(h)],
     ["#/learn/physics/search",ko?"문제 검색":"Search",h=>h==="#/learn/physics/search"],["#/learn",ko?"다른 과목":"Other subjects",h=>h==="#/learn"||/^#\/learn\/(?!physics)/.test(h)]];
   if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":"Home",h=>h==="#/olympiad"],["#/comps",ko?"대회":"Competitions",h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],
@@ -10388,7 +10408,7 @@ function render(){
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
   else if(first==="olympiad"){    html=viewOlympiad(); active="olympiad"; }
-  else if(first==="learn"){       html=second==="compute"?viewLearnCompute():second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="learn"){       html=second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }

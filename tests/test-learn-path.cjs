@@ -80,7 +80,8 @@ test('the physics learning hub shows the stages, the topic map with search links
     assert.equal((html.match(/class="lp-stage"/g)||[]).length,P.STAGES.length);
     assert.equal((html.match(/data-subtopic="/g)||[]).length,P.SUBTOPICS.size);
     assert.ok(links(html).includes('#/learn'));
-    assert.ok(links(html).includes('#/learn/physics/search?subject=classical_mechanics'));
+    assert.ok(links(html).includes('#/learn/practice?unit=mechanics/momentum'));
+    assert.ok(links(html).includes('#/learn/physics/search'));
     assert.ok(links(html).includes(language==='ko'?'problems.html':'problems-en.html'));
     assert.ok(!links(html).includes('#/learn/physics/studio'),'the studio stays for administrators');
     assert.match(html,language==='ko'?/어디서 시작할까요/:/Where to start/);
@@ -117,7 +118,7 @@ test('each section has its own bar, and the current page is marked in it',()=>{
   const a=app('#/');
   const bar=(section,hash)=>{a.context.location.hash=hash;return a.run(`sectionLinks(${JSON.stringify(section)}).map(([href,label,current])=>[href,current(${JSON.stringify(hash)})])`);};
   const learn=bar('learn','#/learn/physics/search');
-  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/physics','#/learn/compute','#/archive/books/phys','#/learn/physics/search','#/learn']);
+  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/practice','#/learn/physics','#/learn/compute','#/archive/books/phys','#/learn/physics/search','#/learn']);
   assert.deepEqual(Array.from(learn).filter(([,on])=>on).map(([h])=>h),['#/learn/physics/search']);
   const oly=bar('olympiad','#/ipho/2019');
   assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/monthly','#/hpho','#/lab']);
@@ -131,7 +132,7 @@ test('the site opens on the Learn home; long final-round problems point to the O
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewHome()'),hrefs=links(html);
-    for(const href of ['#/learn/physics','#/olympiad','#/archive/books/phys','#/learn'])assert.ok(hrefs.includes(href),href);
+    for(const href of ['#/learn/practice','#/olympiad','#/archive/books/phys','#/learn','#/learn/practice?unit=em/induction'])assert.ok(hrefs.includes(href),href);
     assert.equal((html.match(/class="lp-stage"/g)||[]).length,P.STAGES.length);
     assert.equal((html.match(/data-subtopic="/g)||[]).length,P.SUBTOPICS.size);
     assert.doesNotMatch(html,/id="deflect"|homeLatest/);
@@ -162,4 +163,14 @@ test('the computational physics page embeds the judge and passes on only a valid
   assert.equal(new URLSearchParams(src.split('?')[1]).get('problem'),null);
   assert.ok(links(a.run('viewHome()')).includes('#/learn/compute'));
   assert.deepEqual(Runtime.routeNeeds('#/learn/compute'),[]);
+});
+
+test('the practice page embeds practice.html and passes on only a unit of the learning path',()=>{
+  const a=app('#/learn/practice?unit=em/induction');
+  let src=/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1];
+  assert.ok(src.startsWith('practice.html?'));assert.equal(new URLSearchParams(src.split('?')[1]).get('unit'),'em/induction');
+  a.context.location.hash='#/learn/practice?unit=../../etc';
+  src=/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1];
+  assert.equal(new URLSearchParams(src.split('?')[1]).get('unit'),null);
+  assert.deepEqual(Runtime.routeNeeds('#/learn/practice'),[]);
 });
