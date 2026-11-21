@@ -1,4 +1,5 @@
 import {problemBankRoute} from '../community/src/problem-bank.js';
+import {isPrivateTextbookRoute,privateTextbookRoute} from './private-textbooks.mjs';
 
 const PRIVATE = {'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'};
 const json=(data,status=200)=>Response.json(data,{status,headers:PRIVATE});
@@ -126,6 +127,8 @@ export const worker={async fetch(request,env){
     if(request.method==='OPTIONS')response=new Response(null,{status:204,headers:PRIVATE});
     else if(url.pathname==='/api/health'&&request.method==='GET')response=json({ok:true,service:'haslalab-problem-bank',access:'public'});
     else if(url.pathname.startsWith('/auth/'))response=await auth(request,env,url);
+    else if(isPrivateTextbookRoute(url.pathname))response=await privateTextbookRoute(request,env,url,
+      request.method==='GET'?await currentUser(request,env):null);
     else if(url.pathname.startsWith('/api/')){
       const pdf=url.pathname.match(/^\/api\/problem-bank\/sources\/(src_[a-f0-9]{64})\/pdf$/),fig=url.pathname.match(/^\/api\/problem-bank\/figures\/(f_[a-f0-9]{64})$/);
       const restricted=!!pdf||request.method==='POST'&&(/\/(?:feedback|difficulty-review)$/.test(url.pathname)||url.pathname==='/api/problem-bank/identify'&&!/^application\/json(?:;|$)/i.test(request.headers.get('Content-Type')||''));let user=null;

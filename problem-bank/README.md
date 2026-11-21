@@ -39,6 +39,53 @@ Export the current canonical routed statement bodies privately, verifying actual
 
 R2 object keys use `sources/<sha256>.pdf` or `figures/<sha256>.png|svg`. Admit a figure only after source/question/parent-asset identity, exact crop bounds, givens-only visual approval and full remote SHA readback. Raster crops retain original labels; they are not falsely described as vector redraws. SVG extraction must reject scripts, events, external references and off-crop hidden text. Keep the bucket's public development URL disabled. This bucket is separate from temporary student answer scans.
 
+## Owner-only textbook intake viewer
+
+Archive → Books → Physics has a separate owner-only reader at
+`#/archive/books/phys?view=private-textbooks`. It uses the existing Community
+session and the problem bank Worker's private textbook routes. The regular
+D1 source registry, public search, study recommendations, and public figure
+endpoints do not read these materials.
+
+Build the reader package locally from an existing private intake snapshot:
+
+```powershell
+python tools/problem-bank/pack-private-textbook-viewer.py --intake C:/private/intake --overlay C:/private/intake/bilingual-overlays/viewer-merged.jsonl --output C:/private/viewer-release
+```
+
+The intake supplies archived PDF bytes under `sources/`, their verified
+source receipt, the question catalogue and JSONL files, and existing source
+crops and licensed figures when present. Keep inputs, overlays, generated
+objects and remote readback receipts outside all public worktrees. For each
+translation overlay, provide the exact question `id`, `source_sha256`,
+`text_ko`, optional `text_en` and a review status. Source comparisons must
+include `source_image_checked: true`. Savchenko overlays may instead set
+`review_basis: "structured_english_russian"` and the SHA-256 of the
+archived English statement. The viewer distinguishes editorial source comparison,
+model source comparison and translation drafts. A source-compared version
+takes precedence over model output, and conflicting overlays with identical
+precedence fail before a release is built.
+
+`viewer-object-manifest.json` lists the release digest and every object key,
+byte length and SHA-256. The packer does not contact a server. Use the
+existing private `haslalab-problem-library` R2 bucket, with `private, no-store`
+on object uploads, and read each object back to compare its complete hash and
+byte length. Text objects are versioned under a manifest digest. Media packs
+are content addressed separately, so unchanged media can be verified and
+reused across releases. The Worker validates the manifest, text batches, and
+individual WebP slices before returning them. Images are fetched only on
+request; original PDFs and archive ZIPs are never linked.
+
+Deployment requires the main archive page and `problem-bank` Worker code.
+Configure `BANK_TEXTBOOK_RELEASE` with the verified release digest and
+`BANK_TEXTBOOK_OWNER_IDS` with the approved account IDs reported by the
+server's authenticated `/auth/me` endpoint. The API requires both the
+server-confirmed `admin` role and an explicit allowlist match. An empty
+allowlist or missing release keeps the feature unavailable. Owner IDs and
+release state belong in the Worker configuration, outside public Git. Verify
+owner access, anonymous and ordinary-member denial, a bilingual problem, and
+an original image before reporting release availability.
+
 ## Contest catalogue and reader
 
 The public catalogue uses compact source navigation and a separate reading view. Answers remain an explicit request. Plain question responses exclude solution-derived editorial review/coverage notes; explicitly marked statement-only notes may describe givens. Detailed safe review metadata is returned only by the requested solutions endpoint. Source types (`contest`, `book`, `course`), competition, year, round, theory/experiment type and bilingual titles are typed metadata, separate from source identity and difficulty. A PDF containing six independent questions stays a six-question source even when only two are digitized. A catalogue title or PDF link is not a digitized question.
