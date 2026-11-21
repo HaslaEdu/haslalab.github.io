@@ -28,6 +28,7 @@ import { ensureWeeklyContent } from './weekly-content.js';
 import { createD1Metrics, timedDB, d1Timing } from './d1-timing.js';
 import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.js';
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
+import { createGalleryRouter, activeGallery } from './galleries.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
 import { getMonthlyAnswerSheet, getMonthlyProblemRound } from '../../monthly-problems.mjs';
 import { ensureMonthlyAnswerSetup, visibleMonthlySql, normalizeMonthlyParts,
@@ -251,6 +252,9 @@ const healthData = (env, lab) => ({ ok: true, v: 5, boards: BOARDS, tags: TAGS, 
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
+const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
+/* a post goes to a built-in board of the main gallery or to an open minor gallery */
+const postBoard = async (env, board) => BOARDS.includes(board) ? board : (await activeGallery(env, board)) ? board : null;
 const modelTestRouter = createModelTestRouter({HttpError, currentUser, needUser, limit});
 const accountSecurityRouter = createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,checkPw,pwOk});
 const signupEmail = createSignupEmail({HttpError,now,limit,sha256,clientIp,scope:env => env[DB_SCOPE] || env.DB});
@@ -598,7 +602,7 @@ async function handle(req, env, url, ctx) {
   if (p === "/api/posts" && m === "POST") {
     needUser(me);
     await limit(env, "post:" + me.id, 5, 600);
-    const board = BOARDS.includes(body.board) ? body.board : bad("bad_board");
+    const board = (await postBoard(env, body.board)) || bad("bad_board");
     const tag = pickTag(body.tag, me);
     const title = text(body.title, LIMITS.title, "bad_title");
     const content = text(body.body, LIMITS.body, "bad_body");
@@ -652,7 +656,7 @@ async function handle(req, env, url, ctx) {
     if (m === "PATCH") {
       const title = text(body.title, LIMITS.title, "bad_title");
       const content = text(body.body, LIMITS.body, "bad_body");
-      const board = BOARDS.includes(body.board) ? body.board : post.board;
+      const board = body.board === undefined || body.board === post.board ? post.board : (await postBoard(env, body.board)) || bad("bad_board");
       const tag = body.tag === undefined ? post.tag : pickTag(body.tag, me);
       await env.DB.prepare("UPDATE posts SET title=?,body=?,board=?,tag=?,updated_at=? WHERE id=?")
         .bind(title, content, board, tag, now(), id).run();
@@ -749,6 +753,8 @@ async function handle(req, env, url, ctx) {
     return { ok: true };
   }
 
+  const gallery = await galleryRouter(p, m, body, me, env);
+  if (gallery !== undefined) return gallery;
   const omr = await omrRouter(p, m, body, me, req, env, url);
   if (omr !== undefined) return omr;
   const monthlyPhoto = await monthlyPhotoRouter(p, m, me, req, env, url);

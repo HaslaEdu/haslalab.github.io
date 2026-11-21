@@ -9059,11 +9059,16 @@ function startHero(){
    ══════════════════════════════════════════════════════════════ */
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";   // Edge gateway for /community
 const CM_BOARDS = ["free","qna","sim","study"];
+/* minor galleries (community/src/galleries.js): any member opens one; its posts use the board "g-<address>" */
+const CM_GALLERY_RE=/^g-[a-z0-9](?:[a-z0-9-]{1,22}[a-z0-9])$/;
+const cmIsGallery=b=>CM_GALLERY_RE.test(b||"");
+const cmIsBoard=b=>CM_BOARDS.includes(b)||cmIsGallery(b);
+const cmBoardName=b=>CMT[lang].boards[b]||cm.galleries?.[b]?.name||(cmIsGallery(b)?b.slice(2):b);
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
 const CMT = {
   ko:{
     h:"HaslaLab 커뮤니티", sub:"실험 문제, 시뮬레이터, 대회 준비 — 묻고 답하고 나누는 곳",
-    secBoards:"게시판", secMore:"모아보기", all:"전체글", best:"개념글", hot:"실시간 인기",
+    secBoards:"메인 갤러리", secMore:"모아보기", secMinor:"마이너 갤러리", allGal:"갤러리 전체 보기", newGal:"갤 만들기", galH:"마이너 갤러리", galNone:"아직 갤러리가 없습니다. 처음으로 만들어 보세요.", galAddress:"주소", galAddrHint:"영문 소문자·숫자·하이픈 3–24자 (예: kpho-2027)", galName:"이름", galIntro:"소개", galCreate:"만들기", galLead:"관심 있는 주제로 갤러리를 직접 만들 수 있습니다. 만든 사람이 갤주가 되어 이름과 소개를 관리합니다. 한 사람당 3개까지 만들 수 있습니다.", galOwner:"갤주", galPosts:"글", galClose:"갤러리 닫기", galCloseQ:"이 갤러리를 닫을까요? 새 글을 쓸 수 없고 목록에서 사라집니다(기존 글 주소는 유지).", galEdit:"소개 수정", all:"전체글", best:"개념글", hot:"실시간 인기",
     boards:{free:"자유게시판", qna:"질문 · 답변", sim:"시뮬레이터 제보", study:"스터디 · 자료"},
     boardDesc:{all:"모든 게시판의 글을 한곳에서 봅니다.", best:"추천을 받은 글만 모았습니다.", hot:"최근에 반응이 많은 글입니다.",
                free:"무엇이든 이야기하세요.", qna:"실험 문제, 측정, 오차 분석에 대한 질문과 답변.",
@@ -9115,7 +9120,8 @@ const CMT = {
       trainOn:"동의함", trainOff:"동의하지 않음", trainGive:"동의하기", trainWithdraw:"동의 철회", trainGiven:"동의했습니다. 이후 채점부터 적용됩니다.", trainWithdrawn:"철회했습니다. 모아 둔 학습용 사본도 지웠습니다.", policies:"이용약관 · 개인정보 처리방침"},
     justNow:"방금", minAgo:"분 전", hrAgo:"시간 전", dayAgo:"일 전",
     stPosts:"글", stToday:"오늘", hotH:"지금 뜨는 글", aboutH:"게시판 정보", boardList:"이 게시판의 다른 글",
-    err:{bad_image:"JPG · PNG · WebP 사진만 올릴 수 있습니다.", bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
+    err:{bad_gallery_address:"주소는 영문 소문자·숫자·하이픈 3–24자이고, 이미 쓰이는 이름(free, admin 등)은 쓸 수 없습니다.", bad_gallery_name:"이름은 2–24자입니다.", bad_gallery_intro:"소개는 200자까지입니다.", gallery_taken:"같은 주소나 이름의 갤러리가 이미 있습니다.", gallery_limit:"갤러리는 한 사람당 3개까지 만들 수 있습니다.",
+         bad_image:"JPG · PNG · WebP 사진만 올릴 수 있습니다.", bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
          bad_nickname:"닉네임은 2–16자이고, 글자 · 숫자 · _ . - 와 사이 공백만 쓸 수 있습니다.",
          nickname_reserved:"운영진으로 보일 수 있는 닉네임(admin, 관리자, 운영자 등)은 쓸 수 없습니다.", username_reserved:"운영진으로 보일 수 있는 아이디(admin 등)는 쓸 수 없습니다.",
          bad_password:"비밀번호는 8자 이상이어야 합니다.",
@@ -9138,7 +9144,7 @@ const CMT = {
   },
   en:{
     h:"HaslaLab Community", sub:"Problems, simulators, getting ready for the olympiads — ask, answer, share",
-    secBoards:"Boards", secMore:"Browse", all:"All posts", best:"Best", hot:"Trending",
+    secBoards:"Main gallery", secMore:"Browse", secMinor:"Minor galleries", allGal:"All galleries", newGal:"Open a gallery", galH:"Minor galleries", galNone:"No galleries yet. Open the first one.", galAddress:"Address", galAddrHint:"3–24 lower-case letters, digits or hyphens (e.g. kpho-2027)", galName:"Name", galIntro:"Introduction", galCreate:"Create", galLead:"Open a gallery on any topic. You become its manager and look after its name and introduction. Up to three per member.", galOwner:"Manager", galPosts:"posts", galClose:"Close gallery", galCloseQ:"Close this gallery? New posts stop and it leaves the list (existing posts keep their addresses).", galEdit:"Edit introduction", all:"All posts", best:"Best", hot:"Trending",
     boards:{free:"General", qna:"Q&A", sim:"Simulator reports", study:"Study & resources"},
     boardDesc:{all:"Posts from every board in one place.", best:"Only posts the community voted up.", hot:"What people are reacting to right now.",
                free:"Talk about anything.", qna:"Questions and answers on problems, measurement and error analysis.",
@@ -9190,7 +9196,8 @@ const CMT = {
       trainOn:"Agreed", trainOff:"Not agreed", trainGive:"Agree", trainWithdraw:"Withdraw", trainGiven:"Thanks. This applies from your next grading.", trainWithdrawn:"Withdrawn. The training copies kept so far were deleted.", policies:"Terms · Privacy"},
     justNow:"just now", minAgo:"m ago", hrAgo:"h ago", dayAgo:"d ago",
     stPosts:"posts", stToday:"today", hotH:"Trending now", aboutH:"About this board", boardList:"More from this board",
-    err:{bad_image:"Only JPG, PNG or WebP pictures can be used.", bad_username:"Usernames are 3–20 letters, digits or _.",
+    err:{bad_gallery_address:"Addresses are 3–24 lower-case letters, digits or hyphens, and reserved names (free, admin…) are taken.", bad_gallery_name:"Names are 2–24 characters.", bad_gallery_intro:"Introductions are up to 200 characters.", gallery_taken:"A gallery with that address or name already exists.", gallery_limit:"Each member can open up to three galleries.",
+         bad_image:"Only JPG, PNG or WebP pictures can be used.", bad_username:"Usernames are 3–20 letters, digits or _.",
          bad_nickname:"Display names are 2–16 characters: letters, digits, _ . - and inner spaces.",
          nickname_reserved:"Names that look like staff (admin, moderator and the like) are not allowed.", username_reserved:"Usernames that look like staff (admin and the like) are not allowed.",
          bad_password:"Passwords need at least 8 characters.",
@@ -9493,23 +9500,62 @@ function cmRailHtml(active){
     ${ch("all",T.all,"≡")}${ch("best",T.best,"★")}${ch("hot",T.hot,"🔥")}
     <div class="sec">${T.secBoards}</div>
     ${CM_BOARDS.map(b=>ch(b,T.boards[b],"#",cnt(b))).join("")}
+    <div class="sec">${T.secMinor}</div>
+    ${Object.values(cm.galleries||{}).slice(0,8).map(g=>ch(g.board,esc(g.name),"ㅁ",cnt(g.board))).join("")}
+    ${cmIsGallery(active)&&!(cm.galleries||{})[active]?ch(active,esc(cmBoardName(active)),"ㅁ",""):""}
+    ${ch("galleries",T.allGal,"▦")}${ch("new-gallery",T.newGal,"＋")}
     ${me}`;
 }
 async function cmRight(where,alive=()=>true){
   const el=document.getElementById("cmRight"); if(!el) return;
-  const T=CMT[lang], B=cm.boards||{}, isB=CM_BOARDS.includes(where);
+  const T=CMT[lang], B=cm.boards||{}, isB=cmIsBoard(where);
   const tot=isB ? (B[where]||{n:0,today:0}) : Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});
   el.innerHTML=`
-    <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${T.boardDesc[where]||T.boardDesc.all}
+    <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${cmIsGallery(where)?esc(cm.galleries?.[where]?.intro||cmBoardName(where))+(cm.galleries?.[where]?`<br><small>${T.galOwner} · ${esc(cm.galleries[where].owner)}</small>`:""):(T.boardDesc[where]||T.boardDesc.all)}
       <div class="stat"><div><b>${tot.n}</b><span>${T.stPosts}</span></div><div><b>${tot.today}</b><span>${T.stToday}</span></div></div></div></div>
     <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
     <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
+  /* the gallery's manager (or an administrator) edits its introduction or closes it */
+  const g=cmIsGallery(where)&&cm.galleries?.[where];
+  if(g&&cm.me&&(cm.me.nickname===g.owner||cm.me.role==="admin")){
+    const box=document.createElement("div");box.className="cmside";
+    box.innerHTML=`<div class="in"><button type="button" class="cmbtn sm" data-g="edit">${T.galEdit}</button> <button type="button" class="cmbtn sm" data-g="close">${T.galClose}</button></div>`;
+    el.prepend(box);
+    box.querySelector('[data-g="edit"]').onclick=async()=>{const intro=prompt(T.galIntro,g.intro||"");if(intro===null)return;try{await cmApi("PATCH","/galleries/"+where,{intro:intro.trim()});await cmLoadGalleries();cmRight(where,alive);}catch(e){cmToast(cmErr(e));}};
+    box.querySelector('[data-g="close"]').onclick=async()=>{if(!confirm(T.galCloseQ))return;try{await cmApi("DELETE","/galleries/"+where);await cmLoadGalleries();location.hash="#/community/galleries";}catch(e){cmToast(cmErr(e));}};
+  }
   try{
     const j=await cmApi("GET","/posts?sort=hot&page=1&lang="+lang+(isB?"&board="+where:""));
     const h=document.getElementById("cmHot"); if(!h||!alive()) return;
     const top=j.posts.slice(0,6);
     h.innerHTML=top.length ? top.map(p=>`<a href="#/community/post/${p.id}"><em>${cmScore(p)}</em><span>${esc(p.title)}</span></a>`).join("") : `<span>${T.empty}</span>`;
   }catch(e){ const h=document.getElementById("cmHot"); if(h) h.textContent=""; }
+}
+
+function cmLoadGalleries(){
+  return cmApi("GET","/galleries").then(r=>{cm.galleries={};cm.galleriesAt=Date.now();for(const g of r.galleries||[])if(CM_GALLERY_RE.test(g.board))cm.galleries[g.board]=g;},()=>{cm.galleries=cm.galleries||{};});
+}
+function cmGalleries(root){
+  const T=CMT[lang],list=Object.values(cm.galleries||{});
+  root.innerHTML=`<div class="cmpanel"><div class="cmbh"><h2>▦ ${T.galH}</h2><a class="cmbtn pri" href="#/community/new-gallery">＋ ${T.newGal}</a></div>
+    <p class="cmnote">${T.galLead}</p>
+    ${list.length?`<table class="cmtbl"><tbody>${list.map(g=>`<tr><td class="t"><a href="#/community/${g.board}"><b>${esc(g.name)}</b></a>${g.intro?`<div class="snippet">${esc(g.intro)}</div>`:""}</td><td class="c-dt">${T.galOwner} ${esc(g.owner)}</td><td class="c-r">${g.n} ${T.galPosts}</td></tr>`).join("")}</tbody></table>`:`<p class="cmempty">${T.galNone}</p>`}</div>`;
+}
+function cmNewGallery(root){
+  const T=CMT[lang];
+  if(!cm.me){location.hash="#/community/login";return;}
+  root.innerHTML=`<div class="cmpanel"><div class="cmbh"><h2>＋ ${T.newGal}</h2></div><p class="cmnote">${T.galLead}</p>
+    <form class="cmform" id="cmG">
+      <label>${T.galAddress} <small>${T.galAddrHint}</small><input type="text" name="address" required minlength="3" maxlength="24" pattern="[a-z0-9][a-z0-9-]{1,22}[a-z0-9]" autocapitalize="off" spellcheck="false" placeholder="kpho-2027"></label>
+      <label>${T.galName}<input type="text" name="name" required minlength="2" maxlength="24"></label>
+      <label>${T.galIntro}<textarea name="intro" rows="3" maxlength="200"></textarea></label>
+      <div class="cmfoot"><a class="cmbtn" href="#/community/galleries">${T.cancel}</a><button class="cmbtn pri" type="submit">${T.galCreate}</button></div>
+    </form></div>`;
+  const f=document.getElementById("cmG");
+  f.address.oninput=()=>{f.address.value=f.address.value.toLowerCase().replace(/[^a-z0-9-]/g,"");};
+  f.onsubmit=async e=>{e.preventDefault();const btn=f.querySelector("button[type=submit]");btn.disabled=true;
+    try{const g=await cmApi("POST","/galleries",{address:f.address.value,name:f.name.value,intro:f.intro.value});cm.galleries=null;await cmLoadGalleries();location.hash="#/community/"+g.board;}
+    catch(err){cmToast(cmErr(err));btn.disabled=false;}};
 }
 
 async function cmMount(){
@@ -9520,26 +9566,31 @@ async function cmMount(){
   if(!cmBase()){ root.innerHTML=`<div class="cmnote">${T.off}</div>`; return; }
   const {parts,q}=cmHash();
   const [a,b]=parts;
-  const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
+  const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="galleries"||a==="new-gallery" ? "" : (cmIsBoard(a)||a==="best"||a==="hot" ? a : "all");
   const identity=a==="post"&&b?Promise.resolve():cmLoadMe();
   const settings=cm.v?Promise.resolve():cmHealth().then(r=>{cm.v=r.v||1;});
   const boardLang=lang;
   if(cm.boardsLang!==boardLang){cm.boards=null;cm.boardsLang=boardLang;}
   const boards=cm.boards&&Date.now()-(cm.boardsAt||0)<30000?Promise.resolve():cmApi("GET","/boards?lang="+boardLang).then(r=>{if(lang===boardLang){cm.boards={};cm.boardsAt=Date.now();for(const x of r.boards)cm.boards[x.board]={n:x.n,today:x.today||0};}},()=>{});
+  /* the gallery list is read where it is shown: board lists and the directory (editors and posts use what is cached) */
+  const galleries=!(where||a==="galleries")||cm.galleries&&Date.now()-(cm.galleriesAt||0)<60000?Promise.resolve():cmLoadGalleries();
   const paintRail=()=>{if(!alive())return;const rail=document.getElementById("cmRail");if(rail)rail.innerHTML=cmRailHtml(where||a);cmWire(document.querySelector(".cm"));};
   paintRail();
-  Promise.allSettled([identity,settings,boards]).then(()=>{if(!alive())return;paintRail();const count=document.querySelectorAll("#cmRight .stat b"),B=cm.boards||{},isBoard=CM_BOARDS.includes(where);const total=isBoard?(B[where]||{n:0,today:0}):Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});if(count[0])count[0].textContent=total.n;if(count[1])count[1].textContent=total.today;});
-  if(["write","edit","login","signup","account"].includes(a))await identity;
+  Promise.allSettled([identity,settings,boards,galleries]).then(()=>{if(!alive())return;paintRail();const count=document.querySelectorAll("#cmRight .stat b"),B=cm.boards||{},isBoard=cmIsBoard(where);const total=isBoard?(B[where]||{n:0,today:0}):Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});if(count[0])count[0].textContent=total.n;if(count[1])count[1].textContent=total.today;});
+  if(["write","edit","login","signup","account","new-gallery"].includes(a))await identity;
+  if(cmIsGallery(a)||a==="galleries")await galleries;
   if(!alive())return;
   try{
     let content;
     if(a==="post" && b)                 content=cmPost(root,+b,alive);
     else if(a==="user")                 content=cmProfile(root,b,q,alive);
-    else if(a==="write")                content=cmWrite(root,null,CM_BOARDS.includes(b)?b:"free",q.get("tag"));
+    else if(a==="write")                content=cmWrite(root,null,cmIsBoard(b)?b:"free",q.get("tag"));
     else if(a==="edit" && b)            content=cmEdit(root,+b,alive);
     else if(a==="login")                content=cmLogin(root);
     else if(a==="signup")               content=cmSignup(root);
     else if(a==="account")              content=cmAccount(root,alive);
+    else if(a==="galleries")            content=cmGalleries(root);
+    else if(a==="new-gallery")          content=cmNewGallery(root);
     else                                content=cmList(root,{where,page:Math.max(1,parseInt(b)||1),tag:q.get("tag")||"",sort:q.get("sort")||"",q:q.get("q")||"",field:q.get("field")||""},alive);
     const right=document.getElementById("cmRight");
     if(right){if(["login","signup"].includes(a))right.innerHTML="";else cmRight(where||"all",alive);}
@@ -9570,7 +9621,7 @@ async function cmVote(id, v){
 
 async function cmList(root, o, alive,preloaded){
   const T=CMT[lang], qs=new URLSearchParams({page:o.page, lang});
-  if(CM_BOARDS.includes(o.where)) qs.set("board",o.where);
+  if(cmIsBoard(o.where)) qs.set("board",o.where);
   if(o.where==="best") qs.set("best","1");
   const sort=o.sort||(o.where==="hot"?"hot":"new"); qs.set("sort",sort);
   if(o.tag) qs.set("tag",o.tag); if(o.q){ qs.set("q",o.q); qs.set("field",o.field||"all"); }
@@ -9583,8 +9634,8 @@ async function cmList(root, o, alive,preloaded){
   };
   const j=preloaded||await cmApi("GET","/posts?"+qs,null,{onRefresh:refresh});
   if(!alive()) return;
-  const name = CM_BOARDS.includes(o.where) ? T.boards[o.where] : o.where==="best" ? T.best : o.where==="hot" ? T.hot : T.all;
-  const icon = CM_BOARDS.includes(o.where) ? "#" : o.where==="best" ? "★" : o.where==="hot" ? "🔥" : "≡";
+  const name = cmIsBoard(o.where) ? esc(cmBoardName(o.where)) : o.where==="best" ? T.best : o.where==="hot" ? T.hot : T.all;
+  const icon = cmIsGallery(o.where) ? "ㅁ" : cmIsBoard(o.where) ? "#" : o.where==="best" ? "★" : o.where==="hot" ? "🔥" : "≡";
   const href = x => cmListHref({...o, page:1, ...x});
   const isNew = p => Date.now()/1000-p.created_at < 12*3600;
   const total=j.total, notices=j.notices||[];
@@ -9614,13 +9665,13 @@ async function cmList(root, o, alive,preloaded){
   if(o.page>1) pg+=`<a href="${ph(1)}">«</a><a href="${ph(o.page-1)}">‹</a>`;
   for(let n=lo;n<=hi;n++) pg+= n===o.page?`<span>${n}</span>`:`<a href="${ph(n)}">${n}</a>`;
   if(o.page<pages) pg+=`<a href="${ph(o.page+1)}">›</a><a href="${ph(pages)}">»</a>`;
-  const writeTo = CM_BOARDS.includes(o.where) ? "/"+o.where : "";
+  const writeTo = cmIsBoard(o.where) ? "/"+o.where : "";
   root.innerHTML=`<div class="cmpanel">
     <div class="cmbh"><div><h2><span>${icon}</span> ${name}</h2><p>${T.boardDesc[o.where]||""}</p></div><span class="sp"></span>
       ${cm.me?`<a class="cmbtn cmm" href="#/community/account">${cmAv(cm.me.nickname,"s",cm.me.avatar)}</a>`:`<a class="cmbtn cmm" href="#/community/login">${T.login}</a>`}
       <a class="cmbtn pri" href="#/community/write${writeTo}">✎ ${T.write}</a></div>
     <div class="cmbar2">
-      <div class="cmseg"><a href="${cmListHref({...o,where:CM_BOARDS.includes(o.where)?o.where:"all",page:1})}" class="${o.where!=="best"?"on":""}">${T.all}</a><a href="${cmListHref({...o,where:"best",page:1})}" class="${o.where==="best"?"on":""}">★ ${T.best}</a></div>
+      <div class="cmseg"><a href="${cmListHref({...o,where:cmIsBoard(o.where)?o.where:"all",page:1})}" class="${o.where!=="best"?"on":""}">${T.all}</a><a href="${cmListHref({...o,where:"best",page:1})}" class="${o.where==="best"?"on":""}">★ ${T.best}</a></div>
       <div class="cmtags"><a href="${href({tag:""})}" class="${!o.tag?"on":""}">${T.tagAll}</a>${CM_TAGS.filter(t=>t!=="notice").map(t=>`<a href="${href({tag:t})}" class="${o.tag===t?"on":""}">${T.tags[t]}</a>`).join("")}</div>
       <span class="sp"></span>
       <select class="cmsel" id="cmSort" aria-label="sort">${Object.entries(T.sorts).map(([k,v])=>`<option value="${k}" ${sort===k?"selected":""}>${v}</option>`).join("")}</select>
@@ -9830,7 +9881,7 @@ function cmWrite(root, post, board, requestedTag){
     <div class="cmbh"><h2>✎ ${post?T.editPost:noticeMode?noticeTitle:T.newPost}</h2></div>
     <form class="cmform" id="cmW">
       ${noticeMode?`<p class="cmnote">${lang==="ko"?"등록한 공지는 홈의 공지·업데이트 목록에 표시됩니다. 등록 후 상단에 고정할 수 있습니다.":"Your notice appears in Notices & updates on the home page. You can pin it after publishing."}</p><input type="hidden" name="board" value="free"><input type="hidden" name="tag" value="notice">`:`<div class="two">
-        <label>${T.board}<select name="board">${CM_BOARDS.map(b=>`<option value="${b}" ${b===d.board?"selected":""}>${T.boards[b]}</option>`).join("")}</select></label>
+        <label>${T.board}<select name="board">${(cmIsGallery(d.board)?[d.board]:CM_BOARDS).map(b=>`<option value="${b}" ${b===d.board?"selected":""}>${esc(cmBoardName(b))}</option>`).join("")}</select></label>
         <label>${T.tag}<select name="tag">${tags.map(t=>`<option value="${t}" ${t===d.tag?"selected":""}>${T.tags[t]}</option>`).join("")}</select></label>
       </div>`}
       <label>${T.title}<input type="text" name="title" maxlength="120" required value="${esc(d.title)}" placeholder="${T.titlePh}"></label>
