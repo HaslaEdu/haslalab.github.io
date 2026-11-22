@@ -19,7 +19,7 @@ KIND = {'theory': ('Theoretical Exam', 'T'), 'experiment': ('Experimental Exam',
 
 # the template's measurements (pt): body 10 pt on 12 pt lines, 18 pt between paragraphs, bullets at 73.2, text at 81.6
 CSS = """
-@font-face{font-family:K;src:url(NotoSansKR-Regular.ttf)}
+@font-face{font-family:K;src:url(NotoSansCJKkr-Regular.otf)}
 @font-face{font-family:K;src:url(NotoSansCJKkr-Bold.otf);font-weight:bold}
 @font-face{font-family:L;src:url(NotoSans-Regular.ttf)}
 @font-face{font-family:L;src:url(NotoSans-Bold.ttf);font-weight:bold}

@@ -13,6 +13,8 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 FONTS = ROOT / 'tools/ko/fonts'
 LOGO = HERE / 'hpho-wordmark.png'          # 2400 x 850 render of logo/brand/hpho-wordmark-light.svg
+LOGO_PX = (2400, 850)
+LOGO_BOX = pymupdf.Rect(56.9, 96.8, 164.8, 142.8)   # where the source papers put their logo
 LABEL = {'ko': 'Korean (Official)', 'en': 'English (Official)'}
 CODE = re.compile(r'^[A-Z]{3}-S-\d+\b')
 HEADER_BOTTOM = 150                         # the header rule sits at y = 147.5 to 149.6 pt
@@ -30,11 +32,12 @@ def logo(page):
         for r in page.get_image_rects(xref):
             if r.y1 > HEADER_BOTTOM + 5:
                 continue
-            if 700 <= w <= 1100 and 2.0 <= w / h <= 2.8 and r.x0 < 120:      # the logo
+            if (700 <= w <= 1100 and 2.0 <= w / h <= 2.8 or (w, h) == LOGO_PX) and r.x0 < 120:   # the logo (or ours, to resize it)
+                box = LOGO_BOX if (w, h) == LOGO_PX else r
                 _remove(page, r, pymupdf.PDF_REDACT_IMAGE_REMOVE)
-                height = min(r.height * 0.86, r.width / (480 / 170))
-                page.insert_image(pymupdf.Rect(r.x0, r.y0 + (r.height - height) / 2, r.x0 + height * 480 / 170, r.y0 + (r.height + height) / 2),
-                                  filename=str(LOGO), keep_proportion=True)
+                # the source logo's box is 108 x 46 pt; the wordmark is wider, so it takes the full height and runs on
+                # to the right, well clear of the page label
+                page.insert_image(pymupdf.Rect(box.x0, box.y0, box.x0 + box.height * 480 / 170, box.y1), filename=str(LOGO), keep_proportion=True)
                 found = True
             elif abs(w - h) < 2 and r.x0 > 200:                                 # the QR code of the candidate code
                 _remove(page, r, pymupdf.PDF_REDACT_IMAGE_REMOVE)
