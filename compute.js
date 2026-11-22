@@ -21,8 +21,7 @@
       ok:'pass',bad:'fail',step:'Step',solved:'Solved',stdout:'Output',confirmReset:'Go back to the starter code? Your current code will be lost.',
       note:'Grading happens in this browser. Solved problems and drafts are kept on this device only.'}
   };
-  const LANGS=['ko','en','es','pt','id','vi','hi'];
-  /* Korean and English are written here; other languages look the English up in learn-i18n.js */
+  const LANGS=['ko','en'];
   const tx=en=>state.lang==='en'||state.lang==='ko'?en:(window.HL_I18N?.t?.(en,state.lang)??en);
   const state={lang:LANGS.includes(params.get('lang'))?params.get('lang'):'ko',worker:null,job:0,timer:0,current:null};
   window.HL_PAGE_COPY=copy;   /* the strings, for the translation catalogue (tools/i18n) */

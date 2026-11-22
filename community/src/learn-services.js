@@ -53,7 +53,8 @@ export const LEARN_SCHEMA = [
      created_at INTEGER NOT NULL,
      PRIMARY KEY (h, lang))`
 ];
-export const LANGS = ['ko', 'en', 'es', 'pt', 'id', 'vi', 'hi', 'zh', 'ja'];
+/* the site's languages: Korean and English for now */
+export const LANGS = ['ko', 'en'];
 export const LANG_NAMES = {ko: 'Korean', en: 'English', es: 'Spanish', pt: 'Brazilian Portuguese', id: 'Indonesian', vi: 'Vietnamese',
   hi: 'Hindi', zh: 'Simplified Chinese', ja: 'Japanese'};
 /* free tutor questions a day; a plan's ceiling only guards against a stolen session */

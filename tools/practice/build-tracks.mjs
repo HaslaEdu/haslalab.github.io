@@ -33,6 +33,14 @@ export const TRACKS = [
       ['u13', 'Magnetic Effects of Current and Magnetism', '전류의 자기 작용과 자성'], ['u14', 'Electromagnetic Induction and AC', '전자기 유도와 교류'], ['u15', 'Electromagnetic Waves', '전자기파'],
       ['u16', 'Optics', '광학'], ['u17', 'Dual Nature of Matter and Radiation', '물질과 빛의 이중성'], ['u18', 'Atoms and Nuclei', '원자와 핵'], ['u19', 'Electronic Devices', '전자 소자'],
       ['u20', 'Experimental Skills', '실험']]},
+  {key: 'fma', name: {en: 'F=ma', ko: 'F=ma (미국 올림피아드 1차)'}, exam: 'USAPhO', choices: 5,
+    blurb: {en: 'The first round of the US Physics Olympiad: mechanics only, five options, clever reasoning. Held in late January.', ko: '미국 물리올림피아드 1차: 역학만, 5지선다, 발상이 중요합니다. 1월 말 시험.'},
+    syl: [['u1', 'Kinematics', '운동학'], ['u2', 'Dynamics and Friction', '동역학과 마찰'], ['u3', 'Energy and Work', '에너지와 일'], ['u4', 'Momentum and Collisions', '운동량과 충돌'],
+      ['u5', 'Rotation and Angular Momentum', '회전과 각운동량'], ['u6', 'Gravitation and Orbits', '중력과 궤도'], ['u7', 'Oscillations', '진동'], ['u8', 'Statics, Fluids and Estimation', '정역학 · 유체 · 어림']]},
+  {key: 'usapho', name: {en: 'USAPhO', ko: 'USAPhO (미국 올림피아드 준결선)'}, exam: 'USAPhO',
+    blurb: {en: 'The US Physics Olympiad semifinal: long problems across all of physics, here ending in one gradeable result. Held in April.', ko: '미국 물리올림피아드 준결선: 물리 전 범위의 긴 문제를 하나의 답으로 채점하게 바꿨습니다. 4월 시험.'},
+    syl: [['u1', 'Mechanics', '역학'], ['u2', 'Rotation and Oscillations', '회전과 진동'], ['u3', 'Thermodynamics and Statistical Physics', '열 · 통계물리'],
+      ['u4', 'Electricity and Magnetism', '전자기'], ['u5', 'Waves and Optics', '파동과 광학'], ['u6', 'Modern Physics', '현대물리']]},
 ];
 
 const units = new Set(P.AREAS.flatMap(a => a.subtopics.map(s => a.key + '/' + s.key)));
@@ -48,8 +56,9 @@ export function validate(track, item) {
   if (!Array.isArray(item.hints) || item.hints.length < 1 || item.hints.length > 4 || item.hints.some(h => typeof h !== 'string' || !h.trim())) fail(id, 'bad hints');
   if (typeof item.sol !== 'string' || !item.sol.trim()) fail(id, 'bad sol');
   if (item.type === 'mc') {
-    if (!Array.isArray(item.choices) || item.choices.length !== 4 || new Set(item.choices).size !== 4) fail(id, 'bad choices');
-    if (!(Number.isInteger(item.answer) && item.answer >= 0 && item.answer < 4)) fail(id, 'bad answer');
+    const n = track.choices || 4;   /* F=ma has five options, the other exams four */
+    if (!Array.isArray(item.choices) || item.choices.length !== n || new Set(item.choices).size !== n) fail(id, 'bad choices');
+    if (!(Number.isInteger(item.answer) && item.answer >= 0 && item.answer < n)) fail(id, 'bad answer');
   } else if (item.type === 'num') {
     const a = item.answer;
     if (!a || !Number.isFinite(a.value) || !(a.tol >= 0 && a.tol <= 0.1) || typeof a.unit !== 'string') fail(id, 'bad numeric answer');
@@ -65,7 +74,9 @@ export function validate(track, item) {
 export function build() {
   const list = [], files = {};
   for (const t of TRACKS) {
-    const src = JSON.parse(fs.readFileSync(path.join(root, 'tools/practice/tracks', t.key + '.json'), 'utf8'));
+    const file = path.join(root, 'tools/practice/tracks', t.key + '.json');
+    if (!fs.existsSync(file)) continue;   /* a track whose problems are still being written and checked */
+    const src = JSON.parse(fs.readFileSync(file, 'utf8'));
     if (src.track !== t.key) fail(t.key, 'track key');
     const seen = new Set();
     const items = src.items.map(i => {

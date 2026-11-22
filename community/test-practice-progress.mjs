@@ -68,3 +68,12 @@ test('the placement test sets a starting rating only for units with no answers y
   assert.equal(s['mechanics/energy'].n,1);
   assert.equal(updateRating(START,9,'place'),START);
 });
+
+test('the first-visit profile follows the account: the newer answers win and anything else is dropped',()=>{
+  const old={region:'kr',level:'high1',goal:'school',oly:0,daily:10,at:100},neu={region:'us',level:'high2',goal:'olympiad',oly:1,daily:20,at:200};
+  assert.deepEqual(mergeState({profile:old},{profile:neu}).profile,neu);
+  assert.deepEqual(mergeState({profile:neu},{profile:old}).profile,neu);
+  assert.deepEqual(mergeState({},{profile:{...old,extra:'x',oly:9,daily:7}}).profile,{...old,oly:2,daily:10});
+  assert.equal(mergeState({profile:{region:'mars',level:'high1',goal:'school',at:1}},{}).profile,undefined);
+  assert.deepEqual(mergeState({profile:{region:'mars',at:999}},{profile:old}).profile,old,'a bad newer profile never replaces a good one');
+});

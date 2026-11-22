@@ -81,7 +81,7 @@ export function build() {
 ${it.type === 'mc' ? `<ol class="ch" type="A">${it.choices.map(c => `<li>${mathHtml(c)}</li>`).join('')}</ol>` : ''}
 <a class="cta" href="${solve}">${t.solve}</a>
 <details><summary>${t.hints}</summary>${it.hints.map((h, k) => `<p><b>${t.hint} ${k + 1}.</b> ${mathHtml(h)}</p>`).join('')}</details>
-<details><summary>${t.solution}</summary>${paras(it.sol)}<p><b>${t.answer}:</b> ${it.type === 'mc' ? 'ABCD'[it.answer] + '. ' + mathHtml(it.choices[it.answer]) : esc(`${it.answer.value} ${it.answer.unit}`.trim())}</p></details>
+<details><summary>${t.solution}</summary>${paras(it.sol)}<p><b>${t.answer}:</b> ${it.type === 'mc' ? 'ABCDE'[it.answer] + '. ' + mathHtml(it.choices[it.answer]) : esc(`${it.answer.value} ${it.answer.unit}`.trim())}</p></details>
 <p class="note">${t.orig}</p>`;
       files.set(`en/problems/${it.id}/index.html`, page({lang: 'en', title: `${title} | HaslaLab`, desc: describe(it.q), canonical: loc, body}));
       urls.push(loc);

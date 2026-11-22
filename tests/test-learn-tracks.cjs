@@ -1,4 +1,4 @@
-/* Exam tracks, the Learn translations and the static problem pages: the generated files match their sources, every
+/* Exam tracks and the static problem pages: the generated files match their sources, every
    problem validates, every formula renders, and the pages carry what a search engine needs. */
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('fs'),path=require('path'),{execFileSync}=require('child_process');
 const root=path.join(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
@@ -7,7 +7,6 @@ const run=(...a)=>execFileSync(process.execPath,a,{cwd:root,encoding:'utf8'});
 
 test('generated track data, translations and problem pages are up to date',()=>{
   assert.match(run('tools/practice/build-tracks.mjs','--check'),/up to date/);
-  assert.match(run('tools/i18n/build-learn-i18n.mjs','--check'),/up to date/);
   assert.match(run('tools/seo/build-problem-pages.mjs','--check'),/up to date/);
 });
 
@@ -31,21 +30,11 @@ test('every track problem is complete, has one right answer and only formulas th
   assert.ok(n>=190&&math>1500);
 });
 
-test('the Learn pages speak seven languages and fall back to English for anything missing',()=>{
-  const I=require(path.join(root,'learn-i18n.js'));
-  assert.deepEqual(I.LANGS,['ko','en','es','pt','id','vi','hi']);
-  const cat=JSON.parse(read('tools/i18n/learn-en.json'));
-  for(const lang of ['es','pt','id','vi','hi']){
-    const missing=cat.filter(x=>I.t(x.en,lang)===x.en&&x.en.length>12);
-    assert.ok(missing.length<8,`${lang}: ${missing.length} untranslated`);   /* names such as AP Physics C: Mechanics stay as they are */
-  }
-  assert.equal(I.t('no such string','es'),'no such string');assert.equal(I.t('Hint','xx'),'Hint');
-  for(const f of ['practice.js','concepts.js','compute.js']){
-    const src=read(f);
-    assert.match(src,/const LANGS=\['ko','en','es','pt','id','vi','hi'\]/,f);
-  }
-  for(const f of ['practice.html','concepts.html','compute.html'])assert.match(read(f),/<script defer src="learn-i18n\.js\?v=[0-9a-f]{12}"><\/script>/,f);
-  assert.match(read('index.html'),/<select id="lang-more"/);
+test('the Learn pages are in Korean and English only, for now',()=>{
+  for(const f of ['practice.js','concepts.js','compute.js'])assert.match(read(f),/const LANGS=\['ko','en'\];/,f);
+  assert.ok(!fs.existsSync(path.join(root,'learn-i18n.js')));
+  assert.doesNotMatch(read('index.html'),/lang-more|learn-i18n/);
+  assert.match(read('index.html'),/const UI_LANGS = \["ko","en"\];/);
 });
 
 test('each problem page has its own title, description, canonical link, the problem and a way into the practice page',()=>{
@@ -59,4 +48,24 @@ test('each problem page has its own title, description, canonical link, the prob
   assert.match(map,/<loc>https:\/\/haslalab\.org\/en\/problems\/jeem-u20-003\/<\/loc>/);
   assert.match(map,/<loc>https:\/\/haslalab\.org\/ko\/problems\/[a-z0-9-]+\/<\/loc>/);
   assert.match(read('robots.txt'),/Sitemap: https:\/\/haslalab\.org\/sitemap-learn\.xml/);
+});
+
+test('each region starts on its own exams: Korea the CSAT, India JEE, the US F=ma and USAPhO, elsewhere AP',()=>{
+  const P=require(path.join(root,'learn-path.js'));
+  assert.equal(P.guessRegion('ko',''),'kr');assert.equal(P.guessRegion('en','Asia/Kolkata'),'in');
+  assert.equal(P.guessRegion('en','America/Los_Angeles'),'us');assert.equal(P.guessRegion('en','Europe/Berlin'),'global');
+  assert.deepEqual(P.startExams({region:'in',goal:'exam'}),['jeem']);
+  assert.deepEqual(P.startExams({region:'us',goal:'olympiad'}),['fma','usapho']);
+  assert.deepEqual(P.startExams({region:'global',goal:'school'}),['ap1','ap2','apcm']);
+  assert.deepEqual(P.startExams({region:'kr',goal:'exam'}),['csat']);
+  assert.equal(P.startStep({level:'middle',goal:'curious'}),2);
+  assert.equal(P.startStep({level:'high2',goal:'olympiad',oly:2}),7);
+  assert.equal(P.startStep({level:'high2',goal:'exam',region:'in'}),5);
+  assert.equal(P.startStep({}),3);
+  /* every exam a region points to is a defined track (the page skips one whose problems are not published yet) */
+  const tracks=new Set(execFileSync(process.execPath,['--input-type=module','-e',"import('./tools/practice/build-tracks.mjs').then(m=>console.log(m.TRACKS.map(t=>t.key).join(',')))"],{cwd:root,encoding:'utf8'}).trim().split(','));
+  for(const r of Object.values(P.REGIONS))for(const k of [...r.exam,...r.olympiad,...r.other])assert.ok(k==='csat'||tracks.has(k),k);
+  const js=read('practice.js');
+  assert.match(js,/if\(!saved\.profile\)\{startHome\(\);return;\}/,'the first visit asks the questions before anything else');
+  assert.match(read('index.html'),/sessionStorage\.setItem\("hlCmBack","#\/learn\/practice\?mode=start"\)/,'a new member goes to the questions after signing up');
 });

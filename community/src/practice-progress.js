@@ -53,11 +53,19 @@ export async function ensurePracticeSchema(env) {
   ready.add(env.DB);
 }
 
+/* the learner's answers to the first questions (learn-path.js): kept only in this shape, the newer one wins */
+const PROFILE = {region: ['kr', 'in', 'us', 'global'], level: ['middle', 'high1', 'high2', 'uni'], goal: ['school', 'exam', 'olympiad', 'curious']};
+function profileOf(p) {
+  if (!p || typeof p !== 'object' || Object.entries(PROFILE).some(([k, ok]) => !ok.includes(p[k]))) return undefined;
+  return {region: p.region, level: p.level, goal: p.goal, oly: Math.max(0, Math.min(2, p.oly | 0)), daily: [5, 10, 20].includes(p.daily) ? p.daily : 10, at: Math.floor(Number(p.at) || 0)};
+}
+const newerProfile = (a, b) => (profileOf(b) && (Number(b.at) || 0) > (Number(a?.at) || 0)) || !profileOf(a) ? b : a;
 /* the browser's state and the account's are merged so neither device loses progress */
 export function mergeState(a, b) {
   const A = a && typeof a === 'object' ? a : {}, B = b && typeof b === 'object' ? b : {};
   const obj = (x, y, pick) => { const out = { ...(x || {}) }; for (const [k, v] of Object.entries(y || {})) out[k] = k in out ? pick(out[k], v) : v; return out; };
   return {
+    profile: profileOf(newerProfile(A.profile, B.profile)),
     xp: Math.max(Number(A.xp) || 0, Number(B.xp) || 0),
     days: [...new Set([...(A.days || []), ...(B.days || [])])].filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort().slice(-400),
     level: obj(A.level, B.level, (x, y) => Math.max(Number(x) || 0, Number(y) || 0)),

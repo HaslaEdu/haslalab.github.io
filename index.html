@@ -48,7 +48,7 @@
   try{const o=localStorage.getItem("hlCmApi")||"";base=(/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o)?o:production).replace(/\/+$/,"");token=localStorage.getItem("hlCmTok")||"";}catch(e){}
   if(base==="https://haslalab-community.haslalab.workers.dev")base=production;
   const hash=location.hash,parts=hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean),[route,section,item]=parts;
-  const language=/^(?:en|es|pt|id|vi|hi)$/.test(new URLSearchParams(location.search).get("lang")||"")?"en":"ko";
+  const language=new URLSearchParams(location.search).get("lang")==="en"?"en":"ko";
   const periodQuery=value=>/^\d{4}-(?:0[1-9]|1[0-2])$/.test(value||"")?"&month="+encodeURIComponent(value):/^\d{4}-W\d{2}$/.test(value||"")?"&week="+encodeURIComponent(value):"";
   let path="",publicRead=false;
   if((route==="monthly"||route==="weekly")&&section==="p"&&/^\d+$/.test(item||""))path="/problems/"+Number(item)+"?lang="+language;
@@ -1094,7 +1094,6 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
     <div class="lang" role="group" aria-label="Language">
       <button id="lang-ko" aria-pressed="true"><svg class="lflag ko"><use href="#flag-ko"/></svg>KO</button>
       <button id="lang-en" aria-pressed="false"><svg class="lflag en"><use href="#flag-en"/></svg>EN</button>
-      <select id="lang-more" aria-label="More languages" title="More languages"><option value="">🌐</option><option value="es">Español</option><option value="pt">Português</option><option value="id">Bahasa Indonesia</option><option value="vi">Tiếng Việt</option><option value="hi">हिन्दी</option></select>
     </div>
   </div>
 </header>
@@ -1170,8 +1169,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=8fc1f58f4d5c"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="learn-path.js?v=15c977ce36c5"></script>
-<script src="learn-i18n.js?v=ef7c726791ea"></script>
+<script src="learn-path.js?v=de9fa522561c"></script>
 <script src="archive-navigation.js?v=f59ccf8d9f5f"></script>
 <script src="site-catalogue.js?v=f587b15cc2e9"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
@@ -4818,10 +4816,10 @@ function trackSwitch(key,year){
 /* ══════════════════════════════════════════════════════════════
    LANGUAGE
    ══════════════════════════════════════════════════════════════ */
-/* The site is written in Korean and English. The Learn section also speaks the languages in UI_LANGS: their strings come
-   from learn-i18n.js, and the rest of the site shows English to them. `lang` is ko|en for the whole site; `uiLang` is the
-   reader's own language. */
-const UI_LANGS = ["ko","en","es","pt","id","vi","hi"];
+/* The site is written in Korean and English. `uiLang` is the reader's language and `lang` the site's (the same two for
+   now); LX and LP are where a further language would plug in (translated strings looked up by their English text) once
+   there is enough content to translate. */
+const UI_LANGS = ["ko","en"];
 let uiLang = new URLSearchParams(location.search).get("lang");
 if(!UI_LANGS.includes(uiLang)) uiLang = "ko";
 let lang = uiLang==="ko" ? "ko" : "en";
@@ -4833,7 +4831,6 @@ const LP = o => !o ? "" : lang==="ko" ? (o.ko ?? o.en) : LX(o.en ?? o.ko);
 function paintLang(){
   document.getElementById("lang-ko").setAttribute("aria-pressed", uiLang==="ko");
   document.getElementById("lang-en").setAttribute("aria-pressed", uiLang==="en");
-  const more=document.getElementById("lang-more"); if(more) more.value=uiLang==="ko"||uiLang==="en"?"":uiLang;
 }
 
 function setLang(next){
@@ -4852,7 +4849,6 @@ function setLang(next){
 }
 document.getElementById("lang-ko").onclick=()=>setLang("ko");
 document.getElementById("lang-en").onclick=()=>setLang("en");
-{ const more=document.getElementById("lang-more"); if(more) more.onchange=()=>{ if(more.value) setLang(more.value); }; }
 paintLang();
 
 /* a host country gets its flag; a year run by an institution gets its badge */
@@ -5408,7 +5404,7 @@ function viewLearnPractice(){
   /* a problem's own link (search pages, discussions) and the exam tracks */
   const hq=new URLSearchParams(location.hash.split("?")[1]||"");
   if(/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(hq.get("item")||""))query.set("item",hq.get("item"));
-  if(/^(?:tracks|diag|bank|contest|exam)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
+  if(/^(?:start|tracks|diag|bank|contest|exam|class)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
   if(/^[a-z0-9]{2,8}$/.test(hq.get("track")||""))query.set("track",hq.get("track"));
   return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
     <p class="learn-tool-copy">${ko?"수능 · 모의고사 계산 문제(바로 채점), 교재 · 대학 강의 문제, EuPhO · BAUPC · Eötvös · Physics Cup · WoPhO · OPhO 대회 도전까지. 어려우면 건너뛰어도 됩니다.":LX("Korean exams (graded at once), textbook and university problems, and a challenge mode with EuPhO, BAUPC, Eötvös, Physics Cup, WoPhO and OPhO. Skip any problem you like.")}</p></div>
@@ -10117,7 +10113,10 @@ function cmSignup(root){
     const email=f.email.value.trim(), code=digits(f.code.value);
     if(!email||!f.email.checkValidity()){ err.textContent=cmErr({code:"bad_email"}); f.email.focus(); return; }
     if(!/^\d{6}$/.test(code)){ err.textContent=cmErr({code:"code_required"}); f.code.focus(); return; }
-    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent,email,code})); }
+    try{ const signed=await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent,email,code});
+      /* a new member answers the Learn questions first (level, goal, exam), unless they came here from somewhere they want to go back to */
+      try{ const back=sessionStorage.getItem("hlCmBack")||""; if(!back||back==="#/"||/^#\/(community|learn\/practice)\b/.test(back)&&!/[?&]item=/.test(back)) sessionStorage.setItem("hlCmBack","#/learn/practice?mode=start"); }catch(e){}
+      cmAuthDone(signed); }
     catch(er){ err.textContent=cmErr(er);
       if(er.code==="nickname_taken"||er.code==="bad_nickname"||er.code==="nickname_reserved"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); }
       else if(/^code_/.test(er.code)) f.code.focus(); else if(er.code==="bad_email"||er.code==="email_taken"||er.code==="email_disposable") f.email.focus(); }

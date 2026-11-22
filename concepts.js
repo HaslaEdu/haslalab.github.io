@@ -7,8 +7,7 @@
   const embedded=params.get('embed')==='1'&&window.parent!==window;
   const G=9.8;
   const L=(ko,en)=>({ko,en});
-  const LANGS=['ko','en','es','pt','id','vi','hi'];
-  /* Korean and English are written here; other languages look the English up in learn-i18n.js */
+  const LANGS=['ko','en'];
   const tx=en=>state.lang==='en'||state.lang==='ko'?en:(window.HL_I18N?.t?.(en,state.lang)??en);
   const state={lang:LANGS.includes(params.get('lang'))?params.get('lang'):'ko',sim:null,s:null,p:{},running:true,last:0,graph:[],answered:false};
   const tr=v=>typeof v==='string'?v:state.lang==='ko'?v.ko:tx(v.en);

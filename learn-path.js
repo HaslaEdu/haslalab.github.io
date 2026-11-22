@@ -142,5 +142,37 @@
     const area=AREAS.find(item=>item.key===areaKey);
     return area?.subtopics.find(sub=>sub.key===subtopicKey)?.bank||area?.bank||null;
   }
-  return{VERSION:'learn-path-v1',STAGES,AREAS,SUBTOPICS,stageOf,classifyLabel,classifyLeagueTopic,stepFromCsat,stepFromStars,bankSubjectOf};
+
+  /* ── who the learner is → where they start. Each region studies for its own exams: Korea for the CSAT and KPhO, India
+     for JEE, the United States for F=ma and the USAPhO, everyone else for AP Physics. The onboarding asks for the
+     region (guessed from the language and time zone), the school level, the goal and, for olympiad learners, how far they
+     have got; startStep() turns that into the step every unit starts at, and the region's exams fill the first
+     problems. The other exams stay one tap away. ── */
+  const REGIONS={
+    kr:{name:{ko:'한국',en:'Korea'},lang:'ko',exam:['csat'],olympiad:['csat'],other:['ap1','ap2','apcm','jeem','fma','usapho'],
+      examName:{ko:'수능 · 내신',en:'Korean CSAT'},olyName:{ko:'한국물리올림피아드(KPhO)',en:'KPhO'}},
+    in:{name:{ko:'인도',en:'India'},lang:'en',exam:['jeem'],olympiad:['jeem'],other:['ap1','ap2','apcm','fma','usapho'],
+      examName:{ko:'JEE Main · Advanced',en:'JEE Main · Advanced'},olyName:{ko:'JEE Advanced · INPhO',en:'JEE Advanced · INPhO'}},
+    us:{name:{ko:'미국',en:'United States'},lang:'en',exam:['ap1','ap2','apcm'],olympiad:['fma','usapho'],other:['jeem'],
+      examName:{ko:'AP Physics',en:'AP Physics'},olyName:{ko:'F=ma · USAPhO',en:'F=ma · USAPhO'}},
+    global:{name:{ko:'그 밖의 나라',en:'Another country'},lang:'en',exam:['ap1','ap2','apcm'],olympiad:['ap1','apcm'],other:['jeem','fma','usapho'],
+      examName:{ko:'AP Physics',en:'AP Physics'},olyName:{ko:'국제 올림피아드 준비',en:'International olympiad prep'}}
+  };
+  const LEVELS=[['middle',{ko:'중학생',en:'Middle school'},2],['high1',{ko:'고1',en:'High school, first years'},3],['high2',{ko:'고2 · 고3',en:'High school, final years'},4],['uni',{ko:'대학생 · 성인',en:'University or adult'},5]];
+  const GOALS=['school','exam','olympiad','curious'];
+  /* olympiad experience: 0 first time, 1 has sat the first round, 2 has reached the national final or beyond */
+  function guessRegion(lang,timeZone){
+    if(lang==='ko'||/^Asia\/Seoul$/.test(timeZone||''))return 'kr';
+    if(/^Asia\/(Kolkata|Calcutta)$/.test(timeZone||''))return 'in';
+    if(/^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Detroit|Boise|Indiana|Kentucky|North_Dakota|Juneau|Sitka|Nome|Adak|Menominee|Metlakatla|Yakutat)|^Pacific\/Honolulu$/.test(timeZone||''))return 'us';
+    return 'global';
+  }
+  function startStep(p){
+    const level=LEVELS.find(l=>l[0]===p?.level),base=level?level[2]:3;
+    const lift=p?.goal==='olympiad'?1+Math.max(0,Math.min(2,p.oly|0)):p?.goal==='exam'&&(p.region==='in'||p.level==='uni')?1:0;
+    return Math.max(1,Math.min(9,base+lift));
+  }
+  /* the exams that fill the first problems: the goal's own, else the region's school exam */
+  function startExams(p){const r=REGIONS[p?.region]||REGIONS.global;return p?.goal==='olympiad'?r.olympiad:r.exam;}
+  return{VERSION:'learn-path-v1',STAGES,AREAS,SUBTOPICS,stageOf,classifyLabel,classifyLeagueTopic,stepFromCsat,stepFromStars,bankSubjectOf,REGIONS,LEVELS,GOALS,guessRegion,startStep,startExams};
 });

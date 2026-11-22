@@ -49,13 +49,13 @@ test('translations keep the math, are cached for everyone and fall back to the o
   assert.ok(keepsMath('Find $v$ and $$E=mc^2$$.','Encuentra $v$ y $$E=mc^2$$.'));
   assert.ok(!keepsMath('Find $v$.','Encuentra $w$.'));
   let n=0;
-  const {route,calls}=setup({ai:input=>{n++;const s=input.messages[1].content;return s.includes('broken')?'sin matemáticas':s.replace('Find','Encuentra');}});
-  const r=await route('/api/learn/translate','POST',{to:'es',texts:['Find $v_0$.','A broken $x$ here','']},null);
-  assert.deepEqual(r.texts,['Encuentra $v_0$.',null,null]);
-  const again=await route('/api/learn/translate','POST',{to:'es',texts:['Find $v_0$.']},me);
-  assert.deepEqual(again.texts,['Encuentra $v_0$.']);assert.equal(calls.length,2,'the cached text costs no second call');
-  await fails(route('/api/learn/translate','POST',{to:'xx',texts:['a']},null),'bad_lang');
-  await fails(route('/api/learn/translate','POST',{to:'es',texts:new Array(13).fill('a')},null),'bad_texts');
+  const {route,calls}=setup({ai:input=>{n++;const s=input.messages[1].content;return s.includes('broken')?'수식 없음':s.replace('Find','구하라');}});
+  const r=await route('/api/learn/translate','POST',{to:'ko',texts:['Find $v_0$.','A broken $x$ here','']},null);
+  assert.deepEqual(r.texts,['구하라 $v_0$.',null,null]);
+  const again=await route('/api/learn/translate','POST',{to:'ko',texts:['Find $v_0$.']},me);
+  assert.deepEqual(again.texts,['구하라 $v_0$.']);assert.equal(calls.length,2,'the cached text costs no second call');
+  await fails(route('/api/learn/translate','POST',{to:'es',texts:['a']},null),'bad_lang','only Korean and English for now');
+  await fails(route('/api/learn/translate','POST',{to:'ko',texts:new Array(13).fill('a')},null),'bad_texts');
   assert.match(utcDay(0),/^1970-01-01$/);
 });
 

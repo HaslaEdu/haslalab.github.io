@@ -8,7 +8,12 @@
   const embedded=params.get('embed')==='1'&&window.parent!==window;
   const SESSION=10;
   const copy={
-    ko:{tabClass:'학급',classIntro:'선생님이 알려 준 6자리 코드로 학급에 들어가면 과제가 여기에 나옵니다. 선생님은 학급을 만들어 AP · JEE 문제를 과제로 내고, 학생별 단원 실력과 과제 진행을 볼 수 있습니다.',myAssignments:'내 과제',noAssignments:'아직 과제가 없습니다.',classCode:'학급 코드',join:'참여',leave:'나가기',leaveConfirm:'이 학급에서 나갈까요?',teach:'가르치기',students:'명',className:'학급 이름',newClass:'학급 만들기',classFree:'무료: 학급 1개, 학생 30명까지. 학생은 이 학급의 학습 기록만 공유합니다.',due:'마감',shareCode:'학생에게 학급 코드를 알려 주세요. 학생이 단원별 문제의 "학급" 탭에서 코드를 입력하면 참여합니다.',student:'학생',answered:'푼 문제',lastActive:'최근 학습',remove:'내보내기',removeConfirm:'이 학생을 학급에서 내보낼까요?',noStudents:'아직 학생이 없습니다.',newAssignment:'과제 내기',allOf:'전체',assign:'과제 내기',closeClass:'학급 닫기',closeConfirm:'학급을 닫을까요? 학생들은 더 이상 과제를 볼 수 없습니다.',
+    ko:{ob_region:'어디에서 공부하나요?',ob_level:'지금 어느 단계인가요?',ob_goal:'무엇을 위해 공부하나요?',ob_oly:'올림피아드는 어디까지 해 봤나요?',ob_daily:'하루 목표를 정하세요',
+      obKr:'수능 · 내신 계산 문제, 한국물리올림피아드',obIn:'JEE Main · Advanced',obUs:'AP Physics, F=ma · USAPhO',obGlobal:'AP Physics와 국제 올림피아드 준비',
+      goSchool:'학교 공부 · 내신',goExam:'입시 시험',goOly:'물리 올림피아드',goCurious:'그냥 물리가 좋아서',oly0:'처음 준비합니다',oly1:'1차(예선) 시험을 쳐 봤습니다',oly2:'본선 이상 진출했습니다',
+      perDay:'문제',daily5:'가볍게 · 약 5분',daily10:'꾸준히 · 약 10분',daily20:'열심히 · 약 20분',back:'이전',obDone:'시작 단계',obNext:'모든 단원이 이 단계에서 시작하고, 첫 문제는 위 시험에서 나옵니다. 12문제 수준 찾기로 더 정확하게 맞출 수 있습니다.',
+      editProfile:'학습 설정',myExams:'내 시험',otherExams:'다른 시험 보기',dailyGoal:'오늘 목표',
+      tabClass:'학급',classIntro:'선생님이 알려 준 6자리 코드로 학급에 들어가면 과제가 여기에 나옵니다. 선생님은 학급을 만들어 AP · JEE 문제를 과제로 내고, 학생별 단원 실력과 과제 진행을 볼 수 있습니다.',myAssignments:'내 과제',noAssignments:'아직 과제가 없습니다.',classCode:'학급 코드',join:'참여',leave:'나가기',leaveConfirm:'이 학급에서 나갈까요?',teach:'가르치기',students:'명',className:'학급 이름',newClass:'학급 만들기',classFree:'무료: 학급 1개, 학생 30명까지. 학생은 이 학급의 학습 기록만 공유합니다.',due:'마감',shareCode:'학생에게 학급 코드를 알려 주세요. 학생이 단원별 문제의 "학급" 탭에서 코드를 입력하면 참여합니다.',student:'학생',answered:'푼 문제',lastActive:'최근 학습',remove:'내보내기',removeConfirm:'이 학생을 학급에서 내보낼까요?',noStudents:'아직 학생이 없습니다.',newAssignment:'과제 내기',allOf:'전체',assign:'과제 내기',closeClass:'학급 닫기',closeConfirm:'학급을 닫을까요? 학생들은 더 이상 과제를 볼 수 없습니다.',
       cl_bad_name:'학급 이름을 입력하세요.',cl_class_limit:'무료로는 학급을 1개까지 만들 수 있습니다.',cl_bad_code:'코드는 6자리입니다.',cl_class_not_found:'그 코드의 학급이 없습니다.',cl_own_class:'내가 만든 학급입니다.',cl_class_full:'학급 정원이 찼습니다.',cl_bad_items:'문제를 고르세요.',cl_bad_due:'마감일을 확인하세요.',cl_rate_limited:'잠시 뒤에 다시 시도하세요.',
       tabTracks:'AP · JEE 시험',trackPick:'시험과 단원을 고르면 그 시험 형식의 문제 10개를 풉니다. 하슬라랩이 직접 만든 문제입니다.',mixed:'전체 섞어서',numPh:'답 (숫자)',check:'확인',notNumber:'숫자로 입력하세요 (예: 3.2, 1.5e3, 2×10^4)',hint:'힌트',tutor:'AI 튜터',discuss:'이 문제 토론',seeDiscuss:'이 문제의 질문 보기',newDiscuss:'질문 올리기',byHasla:'하슬라랩 창작 문제',
       tutorLogin:'AI 튜터는 로그인하면 하루 5번까지 무료로 쓸 수 있습니다.',login:'로그인',tutorPh:'어디서 막혔는지 적어 보세요',tutorSend:'묻기',thinking:'생각하는 중…',tutorLimit:'오늘 무료 질문을 모두 썼습니다. 내일 다시 쓸 수 있습니다.',tutorFail:'지금은 답할 수 없습니다. 잠시 뒤에 다시 시도하세요.',tutorLeft:'오늘 남은 질문',aiNote:'AI가 만든 답변이라 틀릴 수 있습니다.',
@@ -26,7 +31,12 @@
       solvedIt:'풀었어요',missedIt:'못 풀었어요',original:'원문 보기',translated:'번역 보기',noKo:'한국어 번역이 아직 없어 원문을 보여 줍니다.',draft:'하슬라랩 작성 풀이 · 검수 전',refFig:'참고 그림',empty:'이 조건의 문제가 더 없습니다. 난이도나 분야를 바꿔 보세요.',
       contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',figInPdf:'그림은 아래 원본 PDF에서 볼 수 있습니다.',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',
       note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.'},
-    en:{tabClass:'Class',classIntro:'Join your teacher’s class with its six-letter code and your assignments appear here. Teachers can make a class, set AP and JEE problems as assignments, and see each student’s units and progress.',myAssignments:'My assignments',noAssignments:'No assignments yet.',classCode:'Class code',join:'Join',leave:'Leave',leaveConfirm:'Leave this class?',teach:'Teach',students:'students',className:'Class name',newClass:'Make a class',classFree:'Free: one class of up to 30 students. Students share only their Learn practice with the class.',due:'due',shareCode:'Give your students the class code. They enter it in the Class tab of Practice to join.',student:'Student',answered:'Answered',lastActive:'Last active',remove:'Remove',removeConfirm:'Remove this student from the class?',noStudents:'No students yet.',newAssignment:'Set an assignment',allOf:'All',assign:'Assign',closeClass:'Close class',closeConfirm:'Close this class? Students will no longer see its assignments.',
+    en:{ob_region:'Where do you study?',ob_level:'Where are you now?',ob_goal:'What are you studying for?',ob_oly:'How far have you got in olympiads?',ob_daily:'Pick a daily goal',
+      obKr:'CSAT and school exams, Korean Physics Olympiad',obIn:'JEE Main and Advanced',obUs:'AP Physics, F=ma and the USAPhO',obGlobal:'AP Physics and international olympiad prep',
+      goSchool:'School physics',goExam:'An entrance or AP exam',goOly:'Physics olympiad',goCurious:'Just curious',oly0:'Starting out',oly1:'I have sat a first round',oly2:'I have reached a national final or beyond',
+      perDay:'problems',daily5:'Casual · about 5 min',daily10:'Steady · about 10 min',daily20:'Serious · about 20 min',back:'Back',obDone:'Your starting step',obNext:'Every unit starts at this step and your first problems come from the exams above. A 12-problem level check can tune it further.',
+      editProfile:'Settings',myExams:'Your exams',otherExams:'Other exams',dailyGoal:'today',
+      tabClass:'Class',classIntro:'Join your teacher’s class with its six-letter code and your assignments appear here. Teachers can make a class, set AP and JEE problems as assignments, and see each student’s units and progress.',myAssignments:'My assignments',noAssignments:'No assignments yet.',classCode:'Class code',join:'Join',leave:'Leave',leaveConfirm:'Leave this class?',teach:'Teach',students:'students',className:'Class name',newClass:'Make a class',classFree:'Free: one class of up to 30 students. Students share only their Learn practice with the class.',due:'due',shareCode:'Give your students the class code. They enter it in the Class tab of Practice to join.',student:'Student',answered:'Answered',lastActive:'Last active',remove:'Remove',removeConfirm:'Remove this student from the class?',noStudents:'No students yet.',newAssignment:'Set an assignment',allOf:'All',assign:'Assign',closeClass:'Close class',closeConfirm:'Close this class? Students will no longer see its assignments.',
       cl_bad_name:'Enter a class name.',cl_class_limit:'A free account can have one class.',cl_bad_code:'A code has six letters.',cl_class_not_found:'No class has that code.',cl_own_class:'That is your own class.',cl_class_full:'This class is full.',cl_bad_items:'Pick problems.',cl_bad_due:'Check the due date.',cl_rate_limited:'Try again in a moment.',
       tabTracks:'AP · JEE',trackPick:'Pick an exam and a unit to solve ten problems in that exam’s style. Every problem is written by HaslaLab.',mixed:'All units mixed',numPh:'Answer (number)',check:'Check',notNumber:'Enter a number (e.g. 3.2, 1.5e3, 2×10^4)',hint:'Hint',tutor:'AI tutor',discuss:'Discuss',seeDiscuss:'Questions about this problem',newDiscuss:'Ask about it',byHasla:'Original problem by HaslaLab',
       tutorLogin:'Log in to use the AI tutor: five free questions a day.',login:'Log in',tutorPh:'Where are you stuck?',tutorSend:'Ask',thinking:'Thinking…',tutorLimit:'Today’s free questions are used up. More tomorrow.',tutorFail:'The tutor cannot answer right now. Try again in a moment.',tutorLeft:'Questions left today',aiNote:'AI answers can be wrong.',
@@ -45,9 +55,8 @@
       contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',figInPdf:'The figures are in the original PDF below.',transcribed:'The text is transcribed from the original paper; if they differ, the PDF is authoritative.',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device and, when you log in, on your account too.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device and, when you log in, on your account too.',
       note:'Problems: Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices (Korean only), shared within the permitted web and app use. Some unit labels are automatic and under review. Progress is kept on this device and, when you log in, on your account too.'}
   };
-  /* Korean and English are written here; the other languages come from learn-i18n.js, and a missing string falls back
-     to English */
-  const LANGS=['ko','en','es','pt','id','vi','hi'];
+  /* Korean and English for now; tx() is where a further language would look up the English text */
+  const LANGS=['ko','en'];
   const I18N=()=>window.HL_I18N||{};
   const state={lang:LANGS.includes(params.get('lang'))?params.get('lang'):'ko',index:null,shards:{},session:null};
   window.HL_PAGE_COPY=copy;   /* the strings, for the translation catalogue (tools/i18n) */
@@ -77,15 +86,17 @@
     const at=Math.floor(Date.now()/1000);
     if(result==='place'){const k=saved.skills[unit];if(!k||!k.n)saved.skills[unit]={unit,rating:stepRating(step),n:0,right_n:0,last_at:at};}
     else if(result!=='skip'){const k=saved.skills[unit]||{unit,rating:START,n:0,right_n:0,last_at:at};k.rating=updateRating(k.rating,step,result);k.n++;if(result==='right'||result==='solved')k.right_n++;k.last_at=at;saved.skills[unit]=k;}
+    if(result!=='skip'&&result!=='place'){const d=today();if(saved.goalDay?.d!==d)saved.goalDay={d,n:0};saved.goalDay.n++;}
     saved.queue.push({item_id,mode,unit,step,result,at});if(saved.queue.length>500)saved.queue=saved.queue.slice(-500);
     save();scheduleSync();
   }
   function mergeState(a,b){
     const A=a||{},B=b||{},obj=(x,y,f)=>{const o={...(x||{})};for(const[k,v]of Object.entries(y||{}))o[k]=k in o?f(o[k],v):v;return o;},mx=(x,y)=>Math.max(Number(x)||0,Number(y)||0);
-    return{xp:mx(A.xp,B.xp),days:[...new Set([...(A.days||[]),...(B.days||[])])].sort().slice(-400),level:obj(A.level,B.level,mx),solved:obj(A.solved,B.solved,x=>x),wrong:obj(A.wrong,B.wrong,mx),
+    const newer=(x,y)=>(Number(y?.at)||0)>(Number(x?.at)||0)?y:x||y;
+    return{profile:newer(A.profile,B.profile),xp:mx(A.xp,B.xp),days:[...new Set([...(A.days||[]),...(B.days||[])])].sort().slice(-400),level:obj(A.level,B.level,mx),solved:obj(A.solved,B.solved,x=>x),wrong:obj(A.wrong,B.wrong,mx),
       bank:{done:obj(A.bank?.done,B.bank?.done,mx),stars:obj(A.bank?.stars,B.bank?.stars,(x,y)=>y??x)},contest:{done:obj(A.contest?.done,B.contest?.done,mx)}};
   }
-  const stateOf=()=>({xp:saved.xp,days:saved.days,level:saved.level,solved:saved.solved,wrong:saved.wrong,bank:saved.bank,contest:saved.contest});
+  const stateOf=()=>({profile:saved.profile,xp:saved.xp,days:saved.days,level:saved.level,solved:saved.solved,wrong:saved.wrong,bank:saved.bank,contest:saved.contest});
   async function api(path,method='GET',body){
     const r=await fetch(API+path,{method,headers:{Authorization:'Bearer '+token(),...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
     if(!r.ok)throw new Error('api '+r.status);return r.json();
@@ -131,7 +142,7 @@
     const solvedCount=Object.keys(saved.solved).length;
     const badge=state.sync==='saved'?`<span class="stat sync ok">☁ ${tr('synced')}</span>`:state.sync==='error'?`<span class="stat sync">⚠ ${tr('syncFailed')}</span>`:state.sync==='local'?`<a class="stat sync" href="/#/login" target="_top">${tr('loginToSave')}</a>`:'';
     const tier=tierOf(saved.xp);
-    $('stats').innerHTML=`<span class="stat tier t-${tier[1].toLowerCase()}" title="${tr('tier')}"><b>◆</b>${tier[1]}</span><span class="stat fire"><b>🔥 ${streak()}</b>${tr('streak')}</span><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span><span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
+    $('stats').innerHTML=`<span class="stat tier t-${tier[1].toLowerCase()}" title="${tr('tier')}"><b>◆</b>${tier[1]}</span><span class="stat fire"><b>🔥 ${streak()}</b>${tr('streak')}</span><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span>${saved.profile?`<span class="stat goal${(saved.goalDay?.d===today()?saved.goalDay.n:0)>=saved.profile.daily?' met':''}" title="${tr('dailyGoal')}"><b>🎯 ${saved.goalDay?.d===today()?saved.goalDay.n:0}/${saved.profile.daily}</b>${tr('dailyGoal')}</span>`:''}<span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
   }
   async function loadIndex(){
     if(!state.index){const r=await fetch('practice/index.json',{cache:'no-cache'});if(!r.ok)throw new Error('index');state.index=await r.json();}
@@ -437,9 +448,10 @@
     return{chosen,status};
   }
   async function todayHome(){
+    if(!saved.profile){startHome();return;}
     state.mode='today';state.session=null;paintTabs();paintStats();tellUnit('');
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
-    let items;try{items=state.lang==='ko'?await allExamItems():await allTrackItems();}catch(e){failed(todayHome);return;}
+    let items;try{items=await startPool();}catch(e){failed(todayHome);return;}
     const {chosen,status}=chooseToday(items);
     const why={review:tr('whyReview'),weak:tr('whyWeak'),stretch:tr('whyStretch'),new:tr('whyNew')};
     const counts=chosen.reduce((m,i)=>(m[i.why]=(m[i.why]||0)+1,m),{});
@@ -452,9 +464,10 @@
     let contests=state.contests;try{if(!contests){const r=await fetch('practice/contests.json');contests=state.contests=(await r.json()).contests;}}catch(e){contests=[];}
     const contest=[...contests].sort((a,b)=>Math.abs(a.step-(bestStep+3))-Math.abs(b.step-(bestStep+3)))[0];
     const top=status.filter(x=>x.k).sort((a,b)=>a.r-b.r);
-    const placeCard=!Object.keys(saved.skills).length&&!saved.diagAt?`<section class="session diagcard"><h2>${tr('diagTitle')}</h2><p class="src">${tr('diagBody')}</p><div class="actions"><button type="button" class="primary" id="diagGo">${tr('diagStart')}</button></div></section>`:'';
+    const answers=Object.values(saved.skills).reduce((n,k)=>n+(k.n||0),0);
+    const placeCard=answers<5&&!saved.diagAt?`<section class="session diagcard"><h2>${tr('diagTitle')}</h2><p class="src">${tr('diagBody')}</p><div class="actions"><button type="button" class="primary" id="diagGo">${tr('diagStart')}</button></div></section>`:'';
     $('app').innerHTML=`${placeCard}<section class="session today">
-        <h2>${tr('todayTitle')}</h2>
+        <h2>${tr('todayTitle')} <a href="#" class="src" id="editProfile">${tr('editProfile')}</a></h2>
         <p class="src">${Object.entries(counts).map(([k,n])=>`${why[k]} ${n}`).join(' · ')}${weakUnits.length?` · ${tr('focus')}: ${weakUnits.map(u=>esc(unitName(u))).join(', ')}`:''}</p>
         <ol class="todaylist">${chosen.map(i=>`<li><span class="tag ${i.why}">${why[i.why]}</span> ${esc(unitName(i.u))} <small>${tr('step')} ${i.s}</small></li>`).join('')}</ol>
         <div class="actions"><button type="button" class="primary" id="startToday"${chosen.length?'':' disabled'}>${tr('startToday')}</button></div>
@@ -467,6 +480,7 @@
     $('startToday').onclick=()=>{state.session={unit:'today',fixed:true,items:chosen,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};next();};
     $('sugBank').onclick=()=>{state.bankField=field[0];bankStart(field[0],fieldStars);};
     if($('diagGo'))$('diagGo').onclick=diagStart;
+    $('editProfile').onclick=e=>{e.preventDefault();startHome(true);};
     if($('sugContest'))$('sugContest').onclick=()=>{paintTabs();contestShow(contest.key);};
     reportHeight();
   }
@@ -514,9 +528,14 @@
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
     let tracks;try{tracks=await loadTracks();}catch(e){failed(tracksHome);return;}
     const done=prefix=>Object.keys(saved.solved).filter(id=>id.startsWith(prefix)).length;
-    $('app').innerHTML=`<p class="pick">${tr('trackPick')}</p><div class="areas">${tracks.map(t=>`<section class="area"><h2>${esc(nameOf(t.name))}</h2><p class="src">${esc(nameOf(t.blurb))}</p>
+    /* the learner's own exams first (their region's school exam and olympiad), the rest folded away */
+    const R=P.REGIONS[saved.profile?.region]||(state.lang==='ko'?P.REGIONS.kr:P.REGIONS.global),mine=new Set([...R.exam,...R.olympiad]);
+    const card=t=>`<section class="area"><h2>${esc(nameOf(t.name))}</h2><p class="src">${esc(nameOf(t.blurb))}</p>
       ${t.syl.map(u=>{const d=done(t.key+'-'+u.key+'-');return `<button type="button" class="unit" data-track="${t.key}" data-syl="${u.key}"><span class="name">${esc(nameOf(u.name))}<small>${u.n} ${tr('problems')} · ${d} ${tr('progress')}</small></span><span class="bar"><i style="width:${Math.round(100*d/Math.max(1,u.n))}%"></i></span></button>`;}).join('')}
-      <button type="button" class="unit mixed" data-track="${t.key}" data-syl=""><span class="name"><b>${tr('mixed')}</b><small>${t.n} ${tr('problems')} · ${done(t.key+'-')} ${tr('progress')}</small></span><span>→</span></button></section>`).join('')}</div>`;
+      <button type="button" class="unit mixed" data-track="${t.key}" data-syl=""><span class="name"><b>${tr('mixed')}</b><small>${t.n} ${tr('problems')} · ${done(t.key+'-')} ${tr('progress')}</small></span><span>→</span></button></section>`;
+    const first=tracks.filter(t=>mine.has(t.key)),rest=tracks.filter(t=>!mine.has(t.key));
+    $('app').innerHTML=`<p class="pick">${tr('trackPick')}</p>${first.length?`<h3 class="trackhead">${tr('myExams')} · ${esc(pickName(R.name))}</h3><div class="areas">${first.map(card).join('')}</div>`:''}
+      ${rest.length?`<details class="alt otherexams"${first.length?'':' open'}><summary>${tr('otherExams')}</summary><div class="areas">${rest.map(card).join('')}</div></details>`:''}`;
     $('app').querySelectorAll('[data-track]').forEach(b=>b.onclick=()=>trackStart(b.dataset.track,b.dataset.syl));
     reportHeight();
   }
@@ -551,7 +570,7 @@
   const fmtNum=a=>`${a.value} ${a.unit||''}`.trim();
   function showTrack(item){
     const s=state.session;s.hints=0;s.answered=false;s.view=null;s.chat=[];
-    const L='ABCD';
+    const L='ABCDE';
     $('app').innerHTML=`<div class="session">
       ${sessionHead(s,item)}
       <div class="q" id="qtext">${textHtml(item.q)}</div><p class="src" id="trnote"></p>
@@ -612,7 +631,7 @@
     record(item.id,s.diag?'diag':'track',item.u,item.s,result);if(s.diag)diagStep(s,ok);
     if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
     save();paintStats();
-    const answerText=item.type==='mc'?'ABCD'[item.answer]+'. '+(viewOf(item).choices[item.answer]||''):fmtNum(item.answer);
+    const answerText=item.type==='mc'?'ABCDE'[item.answer]+'. '+(viewOf(item).choices[item.answer]||''):fmtNum(item.answer);
     $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+esc(answerText)}${note}${ok&&s.hints?' · '+tr('withHints'):''}</p>`;
     typeset($('feedback'));if(!s.diag)paintSolution(item);
     $('next').hidden=false;$('skip').hidden=true;$('hint').hidden=true;$('next').focus();reportHeight();
@@ -657,7 +676,7 @@
   const DIAG_AREAS=['mechanics','waves','em','thermal','optics','modern'];
   async function diagStart(){
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
-    let items;try{items=state.lang==='ko'?await allExamItems():await allTrackItems();}catch(e){failed(diagStart);return;}
+    let items;try{items=await startPool();}catch(e){failed(diagStart);return;}
     const byArea={};for(const it of items)(byArea[it.u.split('/')[0]]||=[]).push(it);
     const areas=DIAG_AREAS.filter(a=>(byArea[a]||[]).length>=2);
     state.session={mode:'diag',fixed:true,diag:{areas,byArea,i:0,first:null,res:{}},items,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};
@@ -749,7 +768,56 @@
     $('closeClass').onclick=async()=>{if(!confirm(tr('closeConfirm')))return;try{await classApi('/'+id,'DELETE');}catch(err){}classHome();};
     reportHeight();
   }
-  const MODES={today:todayHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
+  /* ── first visit (and right after sign-up): who are you? Like a language app's first questions — region, school level,
+     goal, olympiad experience, daily goal — then every unit starts at the step this suggests (learn-path.js startStep) and
+     the first problems come from the region's exams (startExams): Korea the CSAT, India JEE, the US F=ma and the USAPhO,
+     elsewhere AP Physics. The placement test can then refine it. ── */
+  const pickName=o=>o?(state.lang==='ko'?o.ko:o.en):'';
+  function startHome(edit){
+    state.mode='start';state.session=null;paintTabs();paintStats();tellUnit('');
+    const old=saved.profile||{},tz=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){return '';}})();
+    const a={region:old.region||P.guessRegion(state.lang,tz),level:old.level||'',goal:old.goal||'',oly:old.oly??0,daily:old.daily||10};
+    const steps=['region','level','goal','oly','daily'];let i=0;
+    const q=()=>{
+      const key=steps[i];if(key==='oly'&&a.goal!=='olympiad'){i+=dir;return q();}
+      const R=P.REGIONS[a.region]||P.REGIONS.global;
+      const opts={
+        region:Object.entries(P.REGIONS).map(([k,r])=>[k,pickName(r.name),k==='kr'?tr('obKr'):k==='in'?tr('obIn'):k==='us'?tr('obUs'):tr('obGlobal')]),
+        level:P.LEVELS.map(([k,n])=>[k,pickName(n),'']),
+        goal:[['school',tr('goSchool'),''],['exam',tr('goExam'),pickName(R.examName)],['olympiad',tr('goOly'),pickName(R.olyName)],['curious',tr('goCurious'),'']],
+        oly:[[0,tr('oly0'),''],[1,tr('oly1'),''],[2,tr('oly2'),'']],
+        daily:[[5,'5 '+tr('perDay'),tr('daily5')],[10,'10 '+tr('perDay'),tr('daily10')],[20,'20 '+tr('perDay'),tr('daily20')]]
+      }[key];
+      $('app').innerHTML=`<div class="session onboard"><div class="shead">${i?`<button type="button" class="back" id="obBack">← ${tr('back')}</button>`:edit?`<button type="button" class="back" id="obBack">${tr('quit')}</button>`:''}<span class="progress" aria-hidden="true"><i style="width:${Math.round(100*i/steps.length)}%"></i></span></div>
+        <h2>${tr('ob_'+key)}</h2><div class="obopts">${opts.map(([v,label,note])=>`<button type="button" class="unit${String(a[key])===String(v)?' cur':''}" data-v="${v}"><span class="name"><b>${esc(label)}</b>${note?`<small>${esc(note)}</small>`:''}</span></button>`).join('')}</div></div>`;
+      $('app').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{a[key]=key==='oly'||key==='daily'?Number(b.dataset.v):b.dataset.v;dir=1;i++;if(i>=steps.length)finish();else q();});
+      if($('obBack'))$('obBack').onclick=()=>{if(!i){todayHome();return;}dir=-1;i--;q();};
+      reportHeight();
+    };
+    let dir=1;
+    const finish=()=>{
+      const profile={...a,at:Math.floor(Date.now()/1000)},step=P.startStep(profile);
+      saved.profile=profile;
+      /* every unit with no answers yet starts at that step (the answers that follow move each one on its own) */
+      for(const area of P.AREAS)for(const sub of area.subtopics){const unit=area.key+'/'+sub.key,k=saved.skills[unit];
+        if(!k||!k.n)record('start-'+area.key,'diag',unit,step,'place');}
+      save();scheduleSync();
+      const exams=P.startExams(profile).map(k=>k==='csat'?tr('tabExam'):(state.tracks||[]).find(t=>t.key===k)?.name.en||k.toUpperCase());
+      $('app').innerHTML=`<div class="session summary onboard"><p class="eyebrow">${tr('obDone')}</p><p class="big">${tr('step')} ${step}</p>
+        <p>${tr(LEVELS[levelOf(step)])} · ${esc(exams.join(' · '))}</p><p class="src">${tr('obNext')}</p>
+        <div class="actions"><button type="button" class="primary" id="obToday">${tr('startToday')}</button><button type="button" id="obDiag">${tr('diagStart')}</button></div></div>`;
+      $('obToday').onclick=todayHome;$('obDiag').onclick=diagStart;reportHeight();
+    };
+    loadTracks().catch(()=>{}).finally(q);
+  }
+  /* the problems a learner starts on: their exams, as graded items */
+  async function startPool(){
+    const keys=P.startExams(saved.profile||{region:state.lang==='ko'?'kr':'global'});
+    const parts=await Promise.all(keys.map(k=>k==='csat'?allExamItems():trackItems(k).catch(()=>[])));
+    const items=parts.flat();
+    return items.length?items:state.lang==='ko'?allExamItems():allTrackItems();
+  }
+  const MODES={start:startHome,today:todayHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
 
   function applyTheme(){const t=params.get('theme'),dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}
   function translate(){document.documentElement.lang=state.lang;document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=tr(el.dataset.i18n);});$('note').textContent=tr('note');document.title=tr('title')+' · HaslaLab';}
@@ -760,7 +828,7 @@
   });
   addEventListener('keydown',e=>{
     const s=state.session;if(!s||s.mode==='bank'||/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||''))return;
-    if(s.current?.kind==='track'){if(!s.answered&&s.current.type==='mc'&&/^[1-4a-dA-D]$/.test(e.key))trackAnswer('abcd'.indexOf(e.key.toLowerCase())>=0?'abcd'.indexOf(e.key.toLowerCase()):Number(e.key)-1);else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}return;}
+    if(s.current?.kind==='track'){if(!s.answered&&s.current.type==='mc'&&/^[1-5a-eA-E]$/.test(e.key)){const i='abcde'.indexOf(e.key.toLowerCase());const n=i>=0?i:Number(e.key)-1;if(n<s.current.choices.length)trackAnswer(n);}else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}return;}
     if(!s.answered&&/^[1-5]$/.test(e.key))answer(Number(e.key));
     else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}
   });
@@ -770,6 +838,6 @@
   const boot=()=>{pull();loadPlan();const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
     if(item&&/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
-    else if(mode==='diag')diagStart();else if(mode==='class')classHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
+    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
