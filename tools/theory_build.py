@@ -225,6 +225,13 @@ def korean(out, bad, practical):
         return
     for comp, years in json.load(open(path, encoding='utf-8')).items():
         for year, parts in years.items():
+            practical_guide = parts.get('experimentGuide')
+            if practical_guide:
+                archive = practical.get(comp, {}).get(year)
+                if archive is None:
+                    bad.append((path, '%s %s: no experiment for general instructions' % (comp, year)))
+                else:
+                    archive['g'] = practical_guide
             for part, ko in parts.items():
                 if PRACTICAL_PART.fullmatch(part):
                     slot = practical.setdefault(comp, {}).setdefault(year, {'f': {}})['f'].setdefault(part, {})
@@ -235,7 +242,7 @@ def korean(out, bad, practical):
                     slot['ko'] = edition
                     if edition.get('containsSolutions'):
                         slot.setdefault('paperContainsSolutions', {})['ko'] = True
-            parts = {part: ko for part, ko in parts.items() if not PRACTICAL_PART.fullmatch(part)}
+            parts = {part: ko for part, ko in parts.items() if part != 'experimentGuide' and not PRACTICAL_PART.fullmatch(part)}
             if not parts:
                 continue
             t = out.get(comp, {}).get(year)
@@ -302,6 +309,8 @@ def english_edition(slot, edition):
     if edition.get('paper'):
         slot.setdefault('papers', {})['en'] = edition['paper']
         slot['paperLang'] = 'en'
+        if isinstance(edition.get('paperStart'), int) and edition['paperStart'] > 0:
+            slot['paperStart'] = edition['paperStart']
         if edition.get('containsSolutions'):
             slot.setdefault('paperContainsSolutions', {})['en'] = True
         if edition.get('sourceType'):

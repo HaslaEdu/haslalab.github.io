@@ -20,7 +20,9 @@ text=text[:start]+'''const thyUrl=f=>{
   const url=/^https?:/.test(f)?f:/^pdfx\\//.test(f)?PDF_BASE+f.replace(/^pdfx\\/(?:([a-z]+)\\/)?/,(m,d)=>"l/"+(d?d+"/":"")):PDF_BASE+f;   /* pdfx/: tools/pdfx_release.py */
   const key=(f.startsWith(PDF_BASE)?f.slice(PDF_BASE.length):f).split(/[?#]/)[0];
   const version=ORIGINAL_LAYOUT_PDF_VERSIONS[key]||(window.KPHE_PDF_VERSIONS||{})[f];
-  return version?url+(url.includes("?")?"&":"?")+"v="+encodeURIComponent(version)+"&cv="+PDF_LINK_CACHE_REVISION:url;
+  if(!version) return url;
+  const hash=url.indexOf("#"), base=hash<0?url:url.slice(0,hash);
+  return base+(base.includes("?")?"&":"?")+"v="+encodeURIComponent(version)+"&cv="+PDF_LINK_CACHE_REVISION+(hash<0?"":url.slice(hash));
 };   /* a release name, a site file, or a paper only linked */
 '''+text[end:]
 path.write_text(text,encoding='utf8')

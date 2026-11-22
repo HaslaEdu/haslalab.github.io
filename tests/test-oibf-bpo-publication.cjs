@@ -98,6 +98,31 @@ test('OIbF paper choices show Korean editions in Korean and source editions in E
   assert.match(PaperLanguages.supplements(historic, 'en')[0].url, /_EN\.pdf$/);
 });
 
+test('OIbF 2026 lists general instructions separately and opens translated papers at the first problem', () => {
+  const year = THEORY.oibf['2026'];
+  const practical = ARCHIVE_PRACTICAL.oibf['2026'];
+  const base = 'https://haslalab-pdf.haslalab.workers.dev/pdf/';
+  const start = html.indexOf('const thyUrl=');
+  const end = html.indexOf('/* Competition or organiser websites', start);
+  const versions = {'pdfx/oibf/OIbF_2026_T_KO.pdf': 'abcd1234'};
+  const url = new Function('PDF_BASE', 'ORIGINAL_LAYOUT_PDF_VERSIONS', 'PDF_LINK_CACHE_REVISION', 'window', html.slice(start, end) + 'return thyUrl;')(base, versions, 2, {});
+  for (const [language, suffix] of [['ko', 'KO'], ['en', 'EN']]) {
+    const theoryGuide = `OIbF_2026_GT_${suffix}.pdf`;
+    const experimentGuide = `OIbF_2026_GE_${suffix}.pdf`;
+    assert.equal(year.g[language], `pdfx/oibf/${theoryGuide}`);
+    assert.equal(practical.g[language], `pdfx/oibf/${experimentGuide}`);
+    assert.ok(assets[`Xoibf_${theoryGuide}`] > 0);
+    assert.ok(assets[`Xoibf_${experimentGuide}`] > 0);
+  }
+  assert.equal(year.f.T.paperStart, 2);
+  assert.equal(year.f.T.ko.paperStart, 2);
+  assert.equal(practical.f.E1.paperStart, 9);
+  assert.equal(practical.f.E1.ko.paperStart, 9);
+  const paper = new URL(url('pdfx/oibf/OIbF_2026_T_KO.pdf#page=2'));
+  assert.equal(paper.searchParams.get('v'), 'abcd1234');
+  assert.equal(paper.hash, '#page=2');
+});
+
 test('OIbF 2026 printable practice sheets cover the scored items from both papers', () => {
   for (const {file, part, groups, total} of [
     {file: 'sim/theorysheets.json', part: 'T', groups: [8, 5, 7], total: 30},
