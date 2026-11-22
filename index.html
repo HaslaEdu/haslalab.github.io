@@ -1169,7 +1169,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=8fc1f58f4d5c"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="learn-path.js?v=2fffa95fd5dc"></script>
+<script src="learn-path.js?v=647f664caa81"></script>
 <script src="archive-navigation.js?v=f59ccf8d9f5f"></script>
 <script src="site-catalogue.js?v=f587b15cc2e9"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
@@ -5324,12 +5324,15 @@ function viewLearnHome(){
         <section class="lh2-card"><h2>${ko?"더 풀기":LX("More to solve")}</h2><div class="lh2-tiles">
           ${link("#/learn/practice?mode=contest",ko?"대회 기출":"Competition problems",ko?"EuPhO · Physics Cup 등 599문제":"599 from EuPhO, Physics Cup and others")}
           ${link("#/learn/practice?mode=bank",ko?"교재 · 대학 문제":"Textbook problems",ko?"8,700문제, 난이도별":"8,700, by difficulty")}
-          ${link("#/learn/concepts",ko?"시뮬레이션":"Simulations",ko?"움직여 보며 개념 익히기":"Move it, see the idea")}
+          ${link("#/learn/concepts",ko?"시뮬레이션":"Simulations",ko?"값을 바꾸며 운동 보기":"Change a value, watch the motion")}
           ${link("#/learn/compute",ko?"계산물리":"Computational physics",ko?"Python 채점":"Python, auto-graded")}
           ${link("#/learn/practice?mode=diag",ko?"내 수준 찾기":"Find your level",ko?"12문제":"12 problems")}
           ${link("#/learn/practice?mode=class",ko?"학급":"Class",ko?"선생님 과제":"Teacher assignments")}
+          ${link(archiveHref("books","phys"),ko?"교재":"Books",ko?"공개 교재 · 대학 자료":"Open textbooks")}
+          ${link("#/learn",ko?"다른 과목":"Other subjects",ko?"화학 · 생물 · 지구과학 · 천문":"Chemistry, biology, earth science, astronomy")}
         </div></section>
         <section class="lh2-card"><h2>${ko?"올림피아드":LX("Olympiad")}</h2><div class="lh2-tiles">
+          ${link("#/olympiad",ko?"올림피아드 홈":"Olympiad home",ko?"대회 일정 · 공지":"Dates and notices")}
           ${link("#/comps",ko?"대회 아카이브":"Archive",ko?"각국 대회 · 국가대표 선발 기출":"Contests and team selection tests")}
           ${link("#/monthly",UI[lang].navWeekly,ko?"매달 새 문제":"New problems each month")}
           ${link("#/hpho","HPhO",ko?"하슬라랩 물리올림피아드":"HaslaLab olympiad")}
@@ -5341,6 +5344,7 @@ function viewLearnHome(){
         </div></section>
       </aside>
     </div>
+    ${P?`<section class="lh2-map" aria-labelledby="lh2Steps"><div class="lh2-head"><h2 id="lh2Steps">${ko?"단계":LX("Steps")}</h2></div>${learnStagesHtml()}</section>`:""}
     ${P?`<section class="lh2-map" aria-labelledby="lh2Map"><div class="lh2-head"><h2 id="lh2Map">${ko?"단원 지도":LX("Unit map")}</h2><a class="lh2-more" href="#/learn/physics">${ko?"단계별 설명":LX("Steps explained")} →</a></div>${learnAreasHtml()}</section>`:""}
   </div>${adFitBanner("home")}`;
 }
@@ -5404,7 +5408,7 @@ function viewLearnConcepts(){
   const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(/^[a-z0-9-]{2,40}$/.test(sim))query.set("sim",sim);
   return `<div class="shell learn-studio learn-concepts"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
-    <p class="learn-tool-copy">${ko?"움직임을 직접 보고 값을 바꿔 보면서 개념을 익히고, 확인 문제로 점검하세요.":LX("Watch the motion, change the values, and check yourself with one question.")}</p></div>
+    <p class="learn-tool-copy">${ko?"값을 바꾸면 운동이 어떻게 달라지는지 봅니다. 시뮬레이션마다 끝에 확인 문제가 하나 있습니다.":LX("Change a value and see how the motion changes. Each simulation ends with one question.")}</p></div>
     <iframe id="learnConceptsFrame" class="learn-studio-frame" src="concepts.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
 addEventListener("message",event=>{
@@ -5417,9 +5421,9 @@ addEventListener("message",event=>{
 });
 if(typeof MutationObserver==="function")new MutationObserver(()=>{document.getElementById("learnConceptsFrame")?.contentWindow?.postMessage({type:"hl-concepts-settings",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"},location.origin);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","lang"]});
 
-/* Practice by unit: short exam problems one at a time, graded at once (practice.html). */
+/* Practice: short exam problems one at a time, graded at once (practice.html). */
 function viewLearnPractice(){
-  const ko=lang==="ko",label=ko?"단원별 문제":LX("Practice by unit");
+  const ko=lang==="ko",label=ko?"문제 풀기":LX("Practice");
   const unit=new URLSearchParams(location.hash.split("?")[1]||"").get("unit")||"";
   const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(window.HL_LEARN_PATH?.SUBTOPICS.has(unit))query.set("unit",unit);
@@ -5429,7 +5433,7 @@ function viewLearnPractice(){
   if(/^(?:start|tracks|diag|bank|contest|exam|class)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
   if(/^[a-z0-9]{2,8}$/.test(hq.get("track")||""))query.set("track",hq.get("track"));
   return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
-    <p class="learn-tool-copy">${ko?"AP · JEE · F=ma · USAPhO 시험별 문제와 한국 시험 계산 문제(바로 채점), 교재 · 대학 강의 문제, EuPhO · BAUPC · Eötvös · Physics Cup · WoPhO · OPhO 대회 도전까지. 어려우면 건너뛰어도 됩니다.":LX("AP, JEE, F=ma and USAPhO practice and calculation problems from Korean exams (graded at once), textbook and university problems, and a challenge mode with EuPhO, BAUPC, Eötvös, Physics Cup, WoPhO and OPhO. Skip any problem you like.")}</p></div>
+    <p class="learn-tool-copy">${ko?"AP · JEE · F=ma · USAPhO 형식 문제와 한국 시험 계산 문제는 답을 내면 바로 채점합니다. 교재 · 대학 강의 문제와 EuPhO · BAUPC · Eötvös · Physics Cup · WoPhO · OPhO 기출도 풀 수 있습니다. 어려운 문제는 건너뛰어도 됩니다.":LX("AP, JEE, F=ma and USAPhO-style problems and calculation problems from Korean exams are graded as soon as you answer. You can also work through textbook and university problems, and past problems from EuPhO, BAUPC, Eötvös, Physics Cup, WoPhO and OPhO. Skip any problem you like.")}</p></div>
     <iframe id="learnPracticeFrame" class="learn-studio-frame" src="practice.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
 addEventListener("message",event=>{
@@ -5448,7 +5452,7 @@ function viewLearnCompute(){
   const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(/^[a-z0-9-]{2,40}$/.test(asked))query.set("problem",asked);
   return `<div class="shell learn-studio learn-compute"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
-    <p class="learn-tool-copy">${ko?"시뮬레이션을 Python으로 직접 짜고, 정확해 · 보존 법칙 · 기준 계산과 비교해 채점받습니다. 코드는 내 브라우저 안에서만 실행됩니다.":LX("Write simulations in Python and have them graded against exact solutions, conservation laws and reference calculations. Your code runs only in your browser.")}</p></div>
+    <p class="learn-tool-copy">${ko?"시뮬레이션을 Python으로 짜면, 문제에 따라 정확해나 보존 법칙, 기준 계산과 비교해 채점합니다. 코드는 내 브라우저 안에서만 실행됩니다.":LX("Write a simulation in Python. Depending on the problem, it is graded against an exact solution, a conservation law or a reference calculation. Your code runs only in your browser.")}</p></div>
     <iframe id="learnComputeFrame" class="learn-studio-frame" src="compute.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
 addEventListener("message",event=>{
@@ -10366,7 +10370,7 @@ function setDocTitle(first, second){
   else if(["monthly","weekly","rank"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn"&&second==="concepts") parts.push(lang==="ko"?"학습 — 개념 시뮬레이션":"Learn — Concept simulations");
-  else if(first==="learn"&&second==="practice") parts.push(lang==="ko"?"학습 — 단원별 문제":"Learn — Practice by unit");
+  else if(first==="learn"&&second==="practice") parts.push(lang==="ko"?"학습 — 문제 풀기":"Learn — Practice");
   else if(first==="learn"&&second==="compute") parts.push(lang==="ko"?"학습 — 계산물리":"Learn — Computational physics");
   else if(first==="learn"&&second==="physics"&&location.hash.split("?")[0]==="#/learn/physics/search") parts.push(lang==="ko"?"학습 — 물리 — 문제 검색":"Learn — Physics — Search problems");
   else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);

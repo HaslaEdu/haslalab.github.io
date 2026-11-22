@@ -34,11 +34,11 @@ export const TRACKS = [
       ['u16', 'Optics', '광학'], ['u17', 'Dual Nature of Matter and Radiation', '물질과 빛의 이중성'], ['u18', 'Atoms and Nuclei', '원자와 핵'], ['u19', 'Electronic Devices', '전자 소자'],
       ['u20', 'Experimental Skills', '실험']]},
   {key: 'fma', name: {en: 'F=ma', ko: 'F=ma (미국 올림피아드 1차)'}, exam: 'USAPhO', choices: 5,
-    blurb: {en: 'The first round of the US Physics Olympiad: mechanics only, five options, clever reasoning. Held in late January.', ko: '미국 물리올림피아드 1차: 역학만, 5지선다, 발상이 중요합니다. 1월 말 시험.'},
+    blurb: {en: 'The first round of the US Physics Olympiad: mechanics only, five options per question. Many questions go faster with a short argument than with long algebra. Held in late January.', ko: '미국 물리올림피아드 1차: 역학만 나오는 5지선다. 긴 계산보다 짧은 추론으로 풀리는 문제가 많습니다. 1월 말 시험.'},
     syl: [['u1', 'Kinematics', '운동학'], ['u2', 'Dynamics and Friction', '동역학과 마찰'], ['u3', 'Energy and Work', '에너지와 일'], ['u4', 'Momentum and Collisions', '운동량과 충돌'],
       ['u5', 'Rotation and Angular Momentum', '회전과 각운동량'], ['u6', 'Gravitation and Orbits', '중력과 궤도'], ['u7', 'Oscillations', '진동'], ['u8', 'Statics, Fluids and Estimation', '정역학 · 유체 · 어림']]},
   {key: 'usapho', name: {en: 'USAPhO', ko: 'USAPhO (미국 올림피아드 준결선)'}, exam: 'USAPhO',
-    blurb: {en: 'The US Physics Olympiad semifinal: long problems across all of physics, here ending in one gradeable result. Held in April.', ko: '미국 물리올림피아드 준결선: 물리 전 범위의 긴 문제를 하나의 답으로 채점하게 바꿨습니다. 4월 시험.'},
+    blurb: {en: 'The US Physics Olympiad semifinal: long problems from all of physics. Here each one ends in a single answer that can be graded. Held in April.', ko: '미국 물리올림피아드 준결선: 물리 전 범위의 긴 문제. 여기서는 답 하나로 채점할 수 있게 고쳤습니다. 4월 시험.'},
     syl: [['u1', 'Mechanics', '역학'], ['u2', 'Rotation and Oscillations', '회전과 진동'], ['u3', 'Thermodynamics and Statistical Physics', '열 · 통계물리'],
       ['u4', 'Electricity and Magnetism', '전자기'], ['u5', 'Waves and Optics', '파동과 광학'], ['u6', 'Modern Physics', '현대물리']]},
 ];

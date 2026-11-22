@@ -16,7 +16,7 @@
       sources:{ko:'중학 과학 · 통합과학 · KPhO 중등부 쉬운 문제',en:'Middle-school science · KPhO junior, easier problems'}},
     {key:'basic',steps:[3,4],name:{ko:'기초',en:'Foundations'},
       who:{ko:'고1–고2 · 고등학교 물리를 배우는 학생',en:'Grades 10–11, first physics course'},
-      goal:{ko:'뉴턴 법칙, 보존 법칙, 회로, 파동을 정량적으로 풉니다.',en:'Solve Newton’s laws, conservation laws, circuits and waves quantitatively.'},
+      goal:{ko:'뉴턴 법칙, 보존 법칙, 회로, 파동 문제를 계산해서 답을 냅니다.',en:'Work out numerical answers on Newton’s laws, conservation laws, circuits and waves.'},
       sources:{ko:'AP Physics 1 · 한국 시험 계산 문제',en:'AP Physics 1 · calculation problems from Korean exams'}},
     {key:'advanced',steps:[5,6],name:{ko:'심화',en:'Advanced'},
       who:{ko:'AP Physics 2 · C, JEE Main, 올림피아드 1차 준비',en:'AP Physics 2 and C, JEE Main, first olympiad rounds'},
@@ -24,11 +24,11 @@
       sources:{ko:'AP Physics C · JEE Main · F=ma · KPhO 1차',en:'AP Physics C · JEE Main · F=ma · KPhO first round'}},
     {key:'olympiad',steps:[7,8],name:{ko:'올림피아드',en:'Olympiad'},
       who:{ko:'KPhO 고등부 · 국가대표 선발 2차 준비',en:'KPhO senior and national selection'},
-      goal:{ko:'대학 일반물리 수준의 모델링, 실험 데이터 처리, 긴 서술형 풀이를 합니다.',en:'University-level modelling, experimental data analysis and long written solutions.'},
+      goal:{ko:'대학 일반물리 수준으로 상황을 모델링하고, 실험 데이터를 다루고, 긴 서술형 풀이를 씁니다.',en:'Model a situation at first-year university level, handle experimental data and write long solutions.'},
       sources:{ko:'KPhO · 국가대표 선발 · 각국 국내 대회',en:'KPhO · national selection · other national olympiads'}},
     {key:'national',steps:[9,10],name:{ko:'국가대표',en:'National team'},
       who:{ko:'APhO · IPhO 준비',en:'APhO and IPhO preparation'},
-      goal:{ko:'국제 대회 이론 · 실험 문제를 시간 안에 풉니다.',en:'International theory and experimental problems under time pressure.'},
+      goal:{ko:'국제 대회 이론 · 실험 문제를 시험 시간 안에 풉니다.',en:'Solve international theory and experimental problems within the exam time.'},
       sources:{ko:'APhO · IPhO · EuPhO',en:'APhO · IPhO · EuPhO'}}
   ];
   const stageOf=step=>STAGES.find(stage=>step>=stage.steps[0]&&step<=stage.steps[1])||null;

@@ -8,13 +8,13 @@
   const embedded=params.get('embed')==='1'&&window.parent!==window;
   const TIME_LIMIT=30000;
   const copy={
-    ko:{title:'계산물리',intro:'물리 시뮬레이션을 Python으로 직접 짜고, 정확해 · 보존 법칙 · 기준 계산과 비교해 채점받으세요. 코드는 이 브라우저 안에서만 실행됩니다. numpy를 쓸 수 있습니다.',
+    ko:{title:'계산물리',intro:'물리 시뮬레이션을 Python으로 짜서 제출하면, 문제에 따라 정확해나 보존 법칙, 기준 계산과 비교해 채점합니다. 코드는 이 브라우저 안에서만 실행되고 numpy를 쓸 수 있습니다.',
       code:'Python 코드',run:'실행 · 채점',reset:'처음 코드로',stop:'중지',loading:'Python을 불러오는 중… (처음 한 번은 몇 초 걸립니다)',running:'실행 중…',
       timeout:'시간 제한(30초)을 넘어 중지했습니다. 무한 루프나 너무 작은 시간 간격이 없는지 확인하세요.',stopped:'중지했습니다.',
       pass:'모두 통과했습니다',fail:'통과하지 못한 검사가 있습니다',error:'코드를 실행하다 오류가 났습니다',test:'검사',result:'결과',got:'내 값',want:'기준',
       ok:'통과',bad:'실패',step:'단계',solved:'해결',stdout:'출력',confirmReset:'처음 코드로 되돌릴까요? 지금 코드는 사라집니다.',
       note:'채점은 이 브라우저에서 합니다. 해결 기록과 작성 중인 코드는 이 기기에만 저장됩니다.'},
-    en:{title:'Computational physics',intro:'Write physics simulations in Python and have them graded against exact solutions, conservation laws and reference calculations. Your code runs only in this browser; numpy is available.',
+    en:{title:'Computational physics',intro:'Write a physics simulation in Python. Depending on the problem, it is graded against an exact solution, a conservation law or a reference calculation. Your code runs only in this browser, and numpy is available.',
       code:'Python code',run:'Run & grade',reset:'Starter code',stop:'Stop',loading:'Loading Python… (a few seconds the first time)',running:'Running…',
       timeout:'Stopped after the 30-second limit. Check for an endless loop or a time step that is too small.',stopped:'Stopped.',
       pass:'All tests passed',fail:'Some tests failed',error:'Your code raised an error',test:'Test',result:'Result',got:'Yours',want:'Reference',

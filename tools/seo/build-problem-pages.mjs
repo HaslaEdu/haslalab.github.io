@@ -20,12 +20,12 @@ const plain = t => String(t ?? '').replace(/\$\$?([^$]+)\$\$?/g, (m, x) => x.rep
 const describe = t => { const s = plain(t); return s.length > 155 ? s.slice(0, 152).replace(/\s\S*$/, '') + '…' : s; };
 
 const T = {
-  en: {site: 'HaslaLab', learn: 'Learn', all: 'All problems', solve: 'Solve it with instant grading, hints and an AI tutor →', hints: 'Hints', hint: 'Hint',
+  en: {site: 'HaslaLab', learn: 'Learn', all: 'All problems', solve: 'Solve it on HaslaLab and have your answer checked →', hints: 'Hints', hint: 'Hint',
     solution: 'Solution', answer: 'Answer', step: 'Step', choices: 'Choices', orig: 'Original problem written by HaslaLab in the style of the exam. AP and Advanced Placement are trademarks of College Board; HaslaLab is not affiliated with College Board or the NTA.',
-    indexTitle: 'Physics practice problems: AP Physics 1, 2, C and JEE Main', indexLede: 'Original practice problems in the style of each exam, with hints and worked solutions. Solve them on HaslaLab with instant grading and an AI tutor.'},
+    indexTitle: 'Physics practice problems: AP Physics 1, 2, C and JEE Main', indexLede: 'Original problems written in the style of each exam, with hints and worked solutions. On HaslaLab your answer is graded as soon as you submit it, and an AI tutor can help when you are stuck.'},
   ko: {site: 'HaslaLab', learn: '학습', all: '전체 문제', solve: '하슬라랩에서 풀고 스스로 채점하기 →', hints: '힌트', hint: '힌트', solution: '풀이', answer: '답', step: '단계', choices: '보기',
     orig: '각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.',
-    indexTitle: '물리 대회 기출 문제: EuPhO · BAUPC · Eötvös · Physics Cup · WoPhO · OPhO', indexLede: '유럽 물리올림피아드와 세계 물리 대회의 본선 문제를 문항별 글과 그림으로 옮겼습니다. 하슬라랩에서 풀고 스스로 채점하세요.'}
+    indexTitle: '물리 대회 기출 문제: EuPhO · BAUPC · Eötvös · Physics Cup · WoPhO · OPhO', indexLede: '유럽 물리올림피아드와 여러 국제 물리 대회의 본선 문제를 문항마다 글과 그림으로 옮겨 적었습니다. 하슬라랩에서 풀고 풀이를 보며 스스로 채점합니다.'}
 };
 function page({lang, title, desc, canonical, body, alternates = []}) {
   return `<!doctype html>

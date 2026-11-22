@@ -45,7 +45,7 @@
       },
       quiz:{q:L('M = 2 kg, m = 1 kg, 마찰이 없을 때 수레의 가속도는? (g = 9.8 m/s²)','With M = 2 kg, m = 1 kg and no friction, what is the cart’s acceleration? (g = 9.8 m/s²)'),
         choices:['9.8 m/s²','4.9 m/s²','3.3 m/s²','2.5 m/s²'],a:2,
-        why:L('두 물체를 한 덩어리로 보면 알짜힘은 mg, 전체 질량은 M+m이므로 a = mg/(M+m) = g/3 ≈ 3.3 m/s²입니다. 위 값으로 직접 확인해 보세요.','Treat both as one body: net force mg, total mass M+m, so a = mg/(M+m) = g/3 ≈ 3.3 m/s². Set the sliders and check.')}},
+        why:L('두 물체를 한 덩어리로 보면 알짜힘은 mg, 전체 질량은 M+m이므로 a = mg/(M+m) = g/3 ≈ 3.3 m/s²입니다. 슬라이더를 이 값에 맞추면 같은 결과가 나옵니다.','Treat both as one body: net force mg, total mass M+m, so a = mg/(M+m) = g/3 ≈ 3.3 m/s². Set the sliders to these values and you get the same number.')}},
 
     {id:'hemisphere',unit:'mechanics/circular',title:L('반구에서 미끄러지는 물체','Sliding off a hemisphere'),
       intro:L('마찰 없는 반구 꼭대기에서 물체가 출발합니다. 수직항력이 0이 되는 순간 물체는 면을 떠나 포물선 운동을 합니다. 출발 속력을 바꿔 떠나는 높이를 재 보세요.','A block starts at the top of a frictionless hemisphere. When the normal force reaches zero it leaves the surface and flies as a projectile. Change the starting speed and read the height where it leaves.'),
@@ -101,10 +101,10 @@
       },
       quiz:{q:L('공기 저항이 없을 때 같은 속력으로 가장 멀리 던지려면 몇 도로 던져야 할까요?','Without air drag, at what angle does a ball thrown at a fixed speed go farthest?'),
         choices:['30°','45°','60°','저항과 상관없이 항상 같다 / always the same'],a:1,
-        why:L('수평 거리 R = v₀² sin2θ / g는 2θ = 90°, 즉 θ = 45°에서 가장 큽니다. 저항을 켜면 가장 멀리 가는 각도가 45°보다 작아지는 것도 확인해 보세요.','The range R = v₀² sin2θ / g is largest at 2θ = 90°, θ = 45°. Turn drag on and the best angle drops below 45°.')}},
+        why:L('수평 거리 R = v₀² sin2θ / g는 2θ = 90°, 즉 θ = 45°에서 가장 큽니다. 저항을 켜면 가장 멀리 가는 각도는 45°보다 작아집니다.','The range R = v₀² sin2θ / g is largest at 2θ = 90°, θ = 45°. Turn drag on and the best angle drops below 45°.')}},
 
     {id:'pendulum',unit:'waves/shm',title:L('단진자의 주기','The period of a pendulum'),
-      intro:L('진자를 놓으면 왕복 운동을 합니다. 실제로 잰 주기와 작은 각 근사 2π√(L/g)를 비교해 보세요. 진폭이 커지면 어떻게 될까요?','Release the pendulum and it swings. Compare the measured period with the small-angle value 2π√(L/g). What happens at large amplitude?'),
+      intro:L('진자를 놓으면 왕복 운동을 합니다. 시뮬레이션에서 잰 주기를 작은 각 근사 2π√(L/g)와 비교해 보세요. 진폭을 키우면 둘이 달라집니다.','Release the pendulum and it swings. Compare the measured period with the small-angle value 2π√(L/g). At large amplitude the two differ.'),
       params:[{k:'Lp',l:L('길이 L','Length L'),min:0.2,max:3,step:0.05,v:1,u:'m'},{k:'th0',l:L('진폭 θ₀','Amplitude θ₀'),min:2,max:170,step:1,v:20,u:'°'}],
       init:(p)=>({t:0,th:p.th0*Math.PI/180,w:0,cross:[],period:null}),
       step(s,p,dt){
@@ -181,9 +181,9 @@
   ];
 
   /* ── page ── */
-  const copy={ko:{title:'개념 시뮬레이션',play:'재생',pause:'일시 정지',reset:'처음부터',check:'확인 문제',right:'정답!',wrong:'다시 생각해 보세요.',practice:'이 단원 문제 풀기 →',all:'올림피아드 실험 시뮬레이터 →',
-      note:'모든 움직임은 식을 수치 적분해서 계산합니다. 값을 바꾸면 처음부터 다시 시작합니다.'},
-    en:{title:'Concept simulations',play:'Play',pause:'Pause',reset:'Restart',check:'Check yourself',right:'Correct!',wrong:'Think again.',practice:'Practise this unit →',all:'Olympiad experiment simulators →',
+  const copy={ko:{title:'개념 시뮬레이션',play:'재생',pause:'일시 정지',reset:'처음부터',check:'확인 문제',right:'정답입니다.',wrong:'다시 생각해 보세요.',practice:'이 단원 문제 풀기 →',all:'올림피아드 실험 시뮬레이터 →',
+      note:'움직임은 모두 운동 방정식을 수치 적분해 계산합니다. 값을 바꾸면 처음부터 다시 시작합니다.'},
+    en:{title:'Concept simulations',play:'Play',pause:'Pause',reset:'Restart',check:'Check yourself',right:'Correct.',wrong:'Think again.',practice:'Practise this unit →',all:'Olympiad experiment simulators →',
       note:'Every motion is computed by integrating its equations. Changing a value restarts the run.'}};
   window.HL_PAGE_COPY=copy;   /* the strings, for the translation catalogue (tools/i18n) */
   const t=k=>copy[state.lang]?.[k]??tx(copy.en[k]);
