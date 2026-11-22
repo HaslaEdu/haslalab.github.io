@@ -12,7 +12,7 @@ test('generated track data, translations and problem pages are up to date',()=>{
 
 test('every track problem is complete, has one right answer and only formulas that KaTeX renders',()=>{
   const {tracks}=JSON.parse(read('practice/tracks.json'));
-  assert.deepEqual(tracks.map(t=>t.key),['ap1','ap2','apcm','jeem']);
+  for(const k of ['ap1','ap2','apcm','jeem','fma'])assert.ok(tracks.some(t=>t.key===k),k);
   const P=require(path.join(root,'learn-path.js')),units=new Set(P.AREAS.flatMap(a=>a.subtopics.map(s=>a.key+'/'+s.key)));
   let n=0,math=0;
   for(const t of tracks){
@@ -21,7 +21,7 @@ test('every track problem is complete, has one right answer and only formulas th
     for(const s of t.syl)assert.equal(items.filter(i=>i.syl===s.key).length,s.n);
     for(const i of items){
       n++;assert.ok(units.has(i.unit),i.id);assert.ok(i.hints.length>=1&&i.sol);
-      if(i.type==='mc'){assert.equal(i.choices.length,4);assert.ok(i.answer>=0&&i.answer<4);}
+      if(i.type==='mc'){const n=t.key==='fma'?5:4;assert.equal(i.choices.length,n,i.id);assert.ok(i.answer>=0&&i.answer<n);}
       else{assert.ok(Number.isFinite(i.answer.value));if(i.answer.tol===0)assert.ok(Number.isInteger(i.answer.value),i.id);}
       for(const s of [i.q,i.sol,...i.hints,...(i.choices||[])])for(const m of s.match(/\$\$[\s\S]+?\$\$|\$[^$]+?\$/g)||[]){
         math++;assert.doesNotThrow(()=>katex.renderToString(m.replace(/^\$\$?|\$?\$$/g,''),{throwOnError:true}),`${i.id}: ${m}`);}
