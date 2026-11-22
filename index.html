@@ -9108,11 +9108,6 @@ function startHero(){
    ══════════════════════════════════════════════════════════════ */
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";   // Edge gateway for /community
 const CM_BOARDS = ["free","qna","sim","study"];
-/* minor galleries (community/src/galleries.js): any member opens one; its posts use the board "g-<address>" */
-const CM_GALLERY_RE=/^g-[a-z0-9](?:[a-z0-9-]{1,22}[a-z0-9])$/;
-const cmIsGallery=b=>CM_GALLERY_RE.test(b||"");
-const cmIsBoard=b=>CM_BOARDS.includes(b)||cmIsGallery(b);
-const cmBoardName=b=>CMT[lang].boards[b]||cm.galleries?.[b]?.name||(cmIsGallery(b)?b.slice(2):b);
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
 const CMT = {
   ko:{
@@ -9269,6 +9264,12 @@ const CMT = {
   }
 };
 
+/* minor galleries (community/src/galleries.js): any member opens one; its posts use the board "g-<address>" */
+const CM_GALLERY_RE=/^g-[a-z0-9](?:[a-z0-9-]{1,22}[a-z0-9])$/;
+const cmIsGallery=b=>CM_GALLERY_RE.test(b||"");
+const cmIsBoard=b=>CM_BOARDS.includes(b)||cmIsGallery(b);
+/* a board's name: the fixed boards from CMT, a gallery from the list loaded on the gallery pages (cm.galleries) */
+const cmBoardName=b=>CMT[lang].boards[b]||(typeof cm!=="undefined"&&cm.galleries?.[b]?.name)||(cmIsGallery(b)?b.slice(2):b);
 const cm = { me:null, meChecked:false, seq:0, draft:{}, v:0, boards:null, view:"list" };
 try{ cm.view = localStorage.getItem("hlCmView")==="card" ? "card" : "list"; }catch(e){}
 
