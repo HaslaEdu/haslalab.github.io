@@ -28,6 +28,9 @@ const problems = ids.map(id => {
     }
     p.files[lang] = f;
   }
+  /* an experiment can have a simulator in sim/hpho-<set without dash>-<id>/ (e.g. sim/hpho-mock1-e1/) */
+  const sim = `sim/hpho-${set.replace(/-/g, '')}-${id.toLowerCase()}/index.html`;
+  if (fs.existsSync(path.join(ROOT, sim))) p.sim = sim;
   return p;
 });
 const fileOf = (lang, name) => {
