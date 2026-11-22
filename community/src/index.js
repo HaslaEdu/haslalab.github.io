@@ -5180,7 +5180,7 @@ function oauthRedirectOrigin(env, prov, url) {
   return listed && origin ? origin : url.origin;
 }
 function backTo(ret, frag) { return new Response(null, { status: 302, headers: { Location: ret + "#/oauth?" + frag, "Cache-Control": "no-store" } }); }
-function oauthBack(env,ret,frag){return ret.startsWith('desktop:')?desktopOAuth.error(env,ret,new URLSearchParams(frag).get('e')||'oauth_failed'):backTo(ret,frag)}
+function oauthBack(env,ret,frag){const f=new URLSearchParams(frag);return ret.startsWith('desktop:')?desktopOAuth.error(env,ret,f.get('e')||'oauth_failed',f.get('d')||''):backTo(ret,frag)}
 /* a provider's display name, made into a free nickname */
 async function freeNick(env, raw) {
   let base = cleanNick(String(raw || "").normalize("NFKC").replace(/[^\p{L}\p{N}_.\- ]/gu, "").replace(NICK_BLANK, "")).slice(0, 12).trim();
