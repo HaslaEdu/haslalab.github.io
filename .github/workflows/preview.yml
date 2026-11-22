@@ -1,0 +1,63 @@
+# A preview of the next update, separate from haslalab.org: every push to a work branch (ccr-*, preview/*) publishes
+# that branch's site to its own Worker with static assets, haslalab-preview, at https://haslalab-preview.<account>.workers.dev.
+# The same files as the real site (pages.yml: no tools/, community/ except community/weekly/, tests/ or pdfx PDFs), plus
+# a noindex header so search engines leave the preview alone. It is a new Worker with no secrets or variables of its own;
+# the community Worker and its secrets are not touched. The pages call the same community server as the real site.
+name: Preview site
+
+on:
+  push:
+    branches: ['ccr-*', 'preview/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/tools/
+            !/node_modules/
+            !/community/
+            /community/weekly/
+            !/tests/
+            !/pdfx/*.pdf
+            !/pdfx/*/*.pdf
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Site files
+        run: |
+          mkdir -p "$RUNNER_TEMP/preview/site"
+          rsync -a --prune-empty-dirs --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --include /community/ --include '/community/weekly/***' --exclude '/community/*' --exclude /tests/ --exclude '/pdfx/**.pdf' ./ "$RUNNER_TEMP/preview/site/"
+          printf '/*\n  X-Robots-Tag: noindex, nofollow\n' > "$RUNNER_TEMP/preview/site/_headers"
+          rm -f "$RUNNER_TEMP/preview/site/CNAME" "$RUNNER_TEMP/preview/site/wrangler.toml"
+          cat > "$RUNNER_TEMP/preview/wrangler.toml" <<'EOF'
+          name = "haslalab-preview"
+          compatibility_date = "2026-11-01"
+          workers_dev = true
+          [assets]
+          directory = "./site"
+          not_found_handling = "404-page"
+          EOF
+          du -sh "$RUNNER_TEMP/preview/site"; find "$RUNNER_TEMP/preview/site" -type f | wc -l
+      - name: Publish the preview
+        working-directory: ${{ runner.temp }}/preview
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4 deploy 2>&1 | tee deploy.log
+          url=$(grep -oE 'https://haslalab-preview\.[a-z0-9-]+\.workers\.dev' deploy.log | head -1)
+          echo "### Preview: ${url:-see the log above} (branch ${GITHUB_REF_NAME}, ${GITHUB_SHA::8})" >> "$GITHUB_STEP_SUMMARY"
