@@ -6,6 +6,7 @@
    carries the page label (Q1-2, A1-1, W1-3), the candidate code and the language, as on IPhO papers. */
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 
@@ -151,7 +152,8 @@ function render(bl, ctx) {
     }
   }).join('\n');
 }
-const parseInner = (lines, file) => parse('---\n' + lines.filter(l => !/^\s*Caption:/.test(l) && !/^\s*\|/.test(l)).join('\n'), file).blocks;
+/* the blocks inside a box (a question, an answer box, a framed note); a table or figure nested in it keeps its own rows */
+const parseInner = (lines, file) => parse('---\n' + lines.join('\n'), file).blocks;
 
 const CSS = `${FONTS}${KATEX_CSS}
 
@@ -201,9 +203,10 @@ function header({kindLabel, code, big, color, langLabel, qr}) {
   <div style="position:absolute;left:15mm;right:15mm;top:28mm;border-bottom:1px solid #999"></div></div>`;
 }
 
+let tmpSeq = 0;
 async function pdf(browser, html, opts) {
   const page = await browser.newPage();
-  const tmp = path.join(ROOT, 'tools/hpho-mock/.tmp.html');
+  const tmp = path.join(os.tmpdir(), `hpho-mock-${process.pid}-${++tmpSeq}.html`);   /* one file per page set, so builds can run side by side */
   fs.writeFileSync(tmp, `<!doctype html><meta charset="utf-8"><style>${CSS}</style><body>${html}</body>`);
   await page.goto('file://' + tmp, {waitUntil: 'load'});
   await page.evaluate(() => document.fonts.ready);
@@ -228,7 +231,7 @@ export async function build(set, only = [], langs = ['ko', 'en']) {
         const id = f.split('.')[0];
         if (only.length && !only.includes(id)) continue;
         const src = parse(fs.readFileSync(path.join(dir, f), 'utf8'), f), m = src.meta;
-        const T = m.kind === 'experiment' ? 'E' : 'T', no = m.no, code = (s) => `${L.code}-S-01 ${T}-${no} ${s}-1`;
+        const T = m.kind === 'experiment' ? 'E' : 'T', no = m.no, code = (s) => `${L.code}-S-01 ${T}-${no} ${s}-${no}`;
         const kindLabel = m.kind === 'experiment' ? L.experiment : L.theory;
         const cut = src.blocks.findIndex(b => b.t === 'answer');
         const qb = cut < 0 ? src.blocks : src.blocks.slice(0, cut), ab = cut < 0 ? [] : src.blocks.slice(cut + 1);
