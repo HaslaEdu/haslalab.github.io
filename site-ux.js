@@ -162,7 +162,7 @@
   });
 
   /* ── phones: the main menu as a bar at the bottom ── */
-  const ICONS = { "#/": '<path d="M3 8l9-4 9 4-9 4z"/><path d="M7 10v4.5c3 2 7 2 10 0V10"/>', "#/olympiad": '<circle cx="12" cy="14.5" r="5"/><path d="M8.5 4l2.5 5.5M15.5 4L13 9.5M12 12.5v4"/>', "#/comps": '<rect x="4.5" y="4" width="15" height="16" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/>',
+  const ICONS = { "#/": '<path d="M4 11l8-6.5 8 6.5v8.5H4z"/><path d="M10 19.5v-5h4v5"/>', "#/comps": '<rect x="4.5" y="4" width="15" height="16" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/>',
     "#/learn": '<path d="M3 8l9-4 9 4-9 4z"/><path d="M7 10v4.5c3 2 7 2 10 0V10"/>', "#/monthly": '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9.5h16M9 3v4M15 3v4"/>',
     "#/community": '<path d="M4.5 5h15v10.5H10L5.5 19z"/>', "#/about": '<circle cx="12" cy="12" r="8"/><path d="M12 11v5M12 8h.01"/>' };
   function tabs() {

@@ -14,7 +14,7 @@ vm.createContext(scope);
 const sourceFiles=['paper-languages.js','theory.js','contest-exams.js','iypt.js','usaco.js','rupho-selection.js','rupho-archive.js'];
 for(const f of sourceFiles)vm.runInContext(read(f),scope,{filename:f});
 const html=read('index.html'),main=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('const REL ='))[1];
-const begin=main.indexOf('const REL ='),end=main.indexOf('const UI_LANGS = [');
+const begin=main.indexOf('const REL ='),end=main.indexOf('let lang = new URLSearchParams');
 if(begin<0||end<0)throw Error('Archive bootstrap markers changed');
 vm.runInContext(main.slice(begin,end)+'\nglobalThis.catalogueData={DATA,THEORY};',scope,{filename:'catalogue-bootstrap.js'});
 const {DATA,THEORY}=scope.catalogueData,outputs=new Map(),versions={};
@@ -113,8 +113,7 @@ const metadataSource=generated+'window.HL_CATALOGUE='+JSON.stringify(metadata)+'
 let expectedHtml=html.replace(/<script src="site-catalogue\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-catalogue.js?v='+digest(metadataSource)+'"></script>')
   .replace(/<link rel="stylesheet" href="site-design\.css(?:\?[^"\n]*)?">/,'<link rel="stylesheet" href="site-design.css?v='+digest(read('site-design.css'))+'">')
   .replace(/<script src="site-runtime\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-runtime.js?v='+digest(read('site-runtime.js'))+'"></script>')
-  .replace(/<script src="site-design\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-design.js?v='+digest(read('site-design.js'))+'"></script>')
-  .replace(/<script src="learn-path\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="learn-path.js?v='+digest(read('learn-path.js'))+'"></script>');
+  .replace(/<script src="site-design\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-design.js?v='+digest(read('site-design.js'))+'"></script>');
 for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
 expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
 outputs.set('index.html',expectedHtml);
@@ -127,13 +126,6 @@ for(const file of ['../contest-exams.js','contest-review.js','contest-exam.js','
   contestHtml=contestHtml.replace(new RegExp('src="'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(source))+'"');
 }
 outputs.set('sim/contest-exam.html',contestHtml);
-let computeHtml=read('compute.html').replace(/href="compute\.css(?:\?[^"\n]*)?"/,'href="compute.css?v='+digest(read('compute.css'))+'"');
-for(const file of ['learn-path.js','compute-problems.js','compute.js'])computeHtml=computeHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
-outputs.set('compute.html',computeHtml);
-let practiceHtml=read('practice.html').replace(/href="practice\.css(?:\?[^"\n]*)?"/,'href="practice.css?v='+digest(read('practice.css'))+'"');
-for(const file of ['learn-path.js','practice.js'])practiceHtml=practiceHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
-outputs.set('practice.html',practiceHtml);
-outputs.set('concepts.html',read('concepts.html').replace(/href="concepts\.css(?:\?[^"\n]*)?"/,'href="concepts.css?v='+digest(read('concepts.css'))+'"').replace(/src="concepts\.js(?:\?[^"\n]*)?"/,'src="concepts.js?v='+digest(read('concepts.js'))+'"'));
 const sheetModule=read('sim/monthly-answer-sheet.mjs').replace(/from '\.\.\/monthly-problems\.mjs(?:\?[^'\n]*)?'/,"from '../monthly-problems.mjs?v="+digest(read('monthly-problems.mjs'))+"'");
 outputs.set('sim/monthly-answer-sheet.mjs',sheetModule);
 outputs.set('sim/monthly-answer-sheet.html',read('sim/monthly-answer-sheet.html').replace(/src="monthly-answer-sheet\.mjs(?:\?[^"\n]*)?"/,'src="monthly-answer-sheet.mjs?v='+digest(sheetModule)+'"'));
