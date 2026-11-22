@@ -15,8 +15,8 @@
       title: "HPhO", lead: "올림피아드를 실제로 겪어보는 연습 대회입니다.",
       note: "HPhO는 입시나 수상 실적을 위한 공인 대회가 아닙니다. 새로운 주제의 문제를 실전처럼 풀어보는 경험을 위해 HaslaEdu가 직접 출제합니다.",
       facts: [["개인전", "혼자 응시합니다"], ["반기 1회", "1년에 두 번 열립니다"], ["이론 + 실험", "실험은 하슬라랩 가상 실험대에서"], ["전 세계 동시", "모든 참가자가 같은 시각에 시작합니다"], ["AI 채점", "채점 후 이의신청 기간이 있습니다"]],
-      samples: { title: "예시 문제: 모의고사 1회", lead: "HPhO와 같은 형식으로 만든 연습용 시험지입니다. 이론 3문제와 실험 2문제, 문제마다 10점입니다. 문제지 파일에는 문제, 답안지, 연습지가 차례로 들어 있으니 인쇄해서 시간을 재고 풀어 보세요. 실험 문제는 실제 실험 대신 문제에 주어진 자료로 분석합니다.",
-        theory: "이론", experiment: "실험", paper: "문제지", solution: "해설 · 채점 기준", pages: "쪽", other: "English", none: "예시 문제를 불러오지 못했습니다." },
+      samples: { title: "예시 문제: 모의고사 1회", lead: "HPhO와 같은 형식으로 만든 연습용 시험지입니다. 이론 3문제와 실험 2문제, 문제마다 10점입니다. 일반 지침을 먼저 읽고, 문제지·답안지·연습지를 인쇄해 시간을 재고 풀어 보세요.",
+        guides: "일반 지침", guideT: "이론 시험", guideE: "실험 시험", theory: "이론", experiment: "실험", question: "문제지", answer: "답안지", writing: "연습지", solution: "해설지", pages: "쪽", other: "English", none: "예시 문제를 불러오지 못했습니다." },
       tracks: { theory: "이론 시험", experiment: "실험 시험" }, hours: "5시간", entryNote: "각 시험은 시작 1시간 전부터 입장할 수 있고, 시작 20분 전까지 대기실에 착석해야 합니다.",
       admin: { title: "관리자", upload: "시험 자료 올리기", track: "시험", kind: "자료", lang: "언어", file: "PDF 파일", send: "올리기", sent: "올렸습니다.", kinds: { guide: "General Guide", writing: "답안지", answer: "Answer Sheet", paper: "문제지" },
         seats: "응시 기록 검토", load: "불러오기", cols: ["수험번호", "착석", "시작", "재접속", "끊김", "답안 쪽", "제출", "판정"], review: "검토 필요", none: "아직 착석한 응시자가 없습니다.", log: "기록 보기", save: "판정 저장", verdicts: { "": "—", clear: "이상 없음", review: "검토 중", cheating: "부정행위" }, note: "메모", events: "이벤트", snaps: "감독 사진", answers: "답안 사진", clips: "녹화 (5분 단위)", purge: "검토 완료 · 기록 삭제", purgeAsk: n => `${n}의 감독 녹화와 사진을 모두 삭제합니다. 판정과 이벤트 기록은 남습니다. 되돌릴 수 없습니다. 삭제할까요?`, purged: n => `삭제됨 (${n}개)`, checkNote: "점검 미확인",
@@ -60,8 +60,8 @@
       title: "HPhO", lead: "A practice olympiad that feels like the real thing.",
       note: "HPhO is not an accredited contest and is not meant for admissions or award records. HaslaEdu writes it so you can meet new topics and sit a paper under real conditions.",
       facts: [["Individual", "You sit it on your own"], ["Twice a year", "One round each half-year"], ["Theory + experiment", "Experiments on the HaslaLab virtual bench"], ["Same time worldwide", "Everyone starts at the same moment"], ["AI-marked", "With a window for appeals"]],
-      samples: { title: "Sample paper: mock exam 1", lead: "A practice paper in the HPhO format: three theory problems and two experimental problems, 10 points each. Each problem file holds the problem, the answer sheet and the writing sheets in that order. Print it and time yourself. The experimental problems are analysed from the data given in the paper.",
-        theory: "Theory", experiment: "Experiment", paper: "Problem", solution: "Solution and marking", pages: "pp.", other: "한국어", none: "Could not load the sample paper." },
+      samples: { title: "Sample paper: mock exam 1", lead: "A practice paper in the HPhO format: three theory problems and two experimental problems, 10 points each. Read the general instructions first, then print the problem, the answer sheet and the writing sheets and time yourself.",
+        guides: "General instructions", guideT: "Theory", guideE: "Experiment", theory: "Theory", experiment: "Experiment", question: "Problem", answer: "Answer sheet", writing: "Writing sheets", solution: "Solution", pages: "pp.", other: "한국어", none: "Could not load the sample paper." },
       tracks: { theory: "Theory exam", experiment: "Experimental exam" }, hours: "5 hours", entryNote: "Each exam room opens an hour before the start; be seated in the waiting room 20 minutes before it.",
       admin: { title: "Organisers", upload: "Upload exam documents", track: "Exam", kind: "Document", lang: "Language", file: "PDF file", send: "Upload", sent: "Uploaded.", kinds: { guide: "General Guide", writing: "Writing sheet", answer: "Answer Sheet", paper: "Paper" },
         seats: "Review the exam records", load: "Load", cols: ["Candidate", "Seated", "Started", "Reconnects", "Gaps", "Pages", "Submitted", "Verdict"], review: "Needs review", none: "No candidate has been seated yet.", log: "Open record", save: "Save verdict", verdicts: { "": "—", clear: "Clear", review: "Under review", cheating: "Cheating" }, note: "Note", events: "Events", snaps: "Proctoring photos", answers: "Answer photos", clips: "Recordings (5-minute parts)", purge: "Reviewed · delete records", purgeAsk: n => `Delete every proctoring recording and photo of ${n}? The verdict and the events stay. This cannot be undone.`, purged: n => `Deleted (${n})`, checkNote: "Unverified checks",
@@ -329,11 +329,14 @@
     try { const r = await fetch("hpho/samples/mock-1/manifest.json", { cache: "no-cache" }); if (!r.ok) throw 0; m = await r.json(); }
     catch (e) { box.remove(); return; }   /* no sample published yet */
     if (!document.body.contains(box)) return;
-    const link = (f, label) => `<a href="${esc(f.href)}?v=${esc(f.v)}" target="_blank" rel="noopener">${label}</a> <small>${f.pages}${lang === "ko" ? "쪽" : " pp."}</small>`;
-    box.innerHTML = `<h2>${x.title}</h2><p>${x.lead}</p><table class="hpho-sample-table"><tbody>${m.problems.map(p => {
-      const f = p.files[lang], g = p.files[other];
+    const link = (f, label) => f ? `<a href="${esc(f.href)}?v=${esc(f.v)}" target="_blank" rel="noopener">${label}</a> <small>${f.pages}${lang === "ko" ? "쪽" : " pp."}</small>` : "";
+    const g = m.guides || {};
+    const guides = [["theory", x.guideT], ["experiment", x.guideE]].filter(([k]) => g[k]).map(([k, n]) => `${link(g[k][lang], n)} <a class="hpho-sample-alt" href="${esc(g[k][other].href)}?v=${esc(g[k][other].v)}" target="_blank" rel="noopener">${x.other}</a>`);
+    box.innerHTML = `<h2>${x.title}</h2><p>${x.lead}</p>${guides.length ? `<p class="hpho-sample-guides"><b>${x.guides}</b> ${guides.join(" · ")}</p>` : ""}<table class="hpho-sample-table"><tbody>${m.problems.map(p => {
+      const f = p.files[lang], o = p.files[other];
       return `<tr><td class="hpho-sample-code">${p.kind === "experiment" ? "E" : "T"}-${p.no}</td><td><b>${esc(p.title[lang])}</b><small>${p.kind === "experiment" ? x.experiment : x.theory} · ${p.points}${lang === "ko" ? "점" : " pt"}</small></td>
-        <td>${link(f.paper, x.paper)}</td><td>${link(f.solution, x.solution)}</td><td class="hpho-sample-other"><a href="${esc(g.paper.href)}?v=${esc(g.paper.v)}" target="_blank" rel="noopener">${x.other}</a></td></tr>`;
+        <td>${link(f.question, x.question)}</td><td>${link(f.answer, x.answer)}</td><td>${link(f.writing, x.writing)}</td><td>${link(f.solution, x.solution)}</td>
+        <td class="hpho-sample-other"><a href="${esc(o.question.href)}?v=${esc(o.question.v)}" target="_blank" rel="noopener">${x.other}</a></td></tr>`;
     }).join("")}</tbody></table>`;
   }
   let timer = 0;

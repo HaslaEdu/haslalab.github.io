@@ -56,7 +56,13 @@ def build(set_name):
                 sys.exit(f'{html_file.name}: the text does not fit on one page')
             out = out_root / lang / f'G-{kind}.pdf'
             out.parent.mkdir(parents=True, exist_ok=True)
-            doc.save(str(out), garbage=3, deflate=True)
+            doc.save(str(out), garbage=4, deflate=True)
+            # the Korean font goes in whole (28 MB); Ghostscript keeps only the glyphs used, with the same rendering
+            import shutil, subprocess
+            if shutil.which('gs'):
+                subprocess.run(['gs', '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite', '-dCompatibilityLevel=1.7', '-dSubsetFonts=true',
+                                '-dEmbedAllFonts=true', '-dPDFSETTINGS=/prepress', f'-sOutputFile={out}.gs', str(out)], check=True)
+                Path(f'{out}.gs').replace(out)
             print(out.relative_to(ROOT))
 
 

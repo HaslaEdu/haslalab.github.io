@@ -5,7 +5,7 @@
       (A: first A page; S: first page of ID's solution in original/solutions.pdf) is copied onto every page, with the
       HPhO logo, no candidate code, "English (Official)", and its own page label (Q1-1, Q1-2, ... or A1-1 ...).
   python3 -I tools/hpho-mock/stamp_en.py writing OUT.pdf ID
-      the original's writing sheets (W pages), with the English header."""
+      the Korean writing sheets (hpho/samples/mock-1/ko/ID-writing.pdf), with the English label."""
 import re
 import sys
 from pathlib import Path
@@ -62,10 +62,9 @@ def stamp(src, out, pid, kind):
 
 
 def writing(out, pid):
-    doc = pymupdf.open(str(HERE / f'original/{pid}.pdf'))
-    doc.select(pages_of(doc, 'W'))
+    """the corrected Korean writing sheets (relogo.py output) with the English label"""
+    doc = pymupdf.open(str(HERE.parents[1] / f'hpho/samples/mock-1/ko/{pid}-writing.pdf'))
     for page in doc:
-        logo(page)
         header(page, 'en')
     doc.save(out, garbage=3, deflate=True)
 
