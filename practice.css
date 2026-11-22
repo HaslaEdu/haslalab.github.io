@@ -77,3 +77,5 @@ details.alt{margin:8px 0;font-size:14px}details.alt summary{cursor:pointer;color
 /* play mode on the home page: the counters in one quiet line */
 .embedded.play .stats{gap:6px;margin:0 0 10px}.embedded.play .stat{padding:4px 10px;font-size:12px}.embedded.play .stat b{font-size:.95rem}
 @media(max-width:600px){.embedded.play .stat.tier,.embedded.play .stat:not(.fire):not(.goal):not(.tier){display:none}}
+/* the home page's problem: only the streak and today's goal above it, no notes under it */
+.embedded.play .stats .stat:not(.fire):not(.goal){display:none}.embedded.play .note{display:none}

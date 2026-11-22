@@ -118,22 +118,22 @@ test('each section has its own bar, and the current page is marked in it',()=>{
   const a=app('#/');
   const bar=(section,hash)=>{a.context.location.hash=hash;return a.run(`sectionLinks(${JSON.stringify(section)}).map(([href,label,current])=>[href,current(${JSON.stringify(hash)})])`);};
   const learn=bar('learn','#/learn/physics/search');
-  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/practice','#/learn/create','#/learn/physics','#/archive/books/phys','#/learn/physics/search','#/learn']);
+  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/practice','#/learn/roadmap','#/learn/create','#/learn/physics','#/archive/books/phys','#/learn/physics/search','#/learn']);
   assert.deepEqual(Array.from(learn).filter(([,on])=>on).map(([h])=>h),['#/learn/physics/search']);
   const oly=bar('olympiad','#/ipho/2019');
-  assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/monthly','#/hpho','#/lab']);
+  assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/olympiad/schedule','#/monthly','#/hpho','#/lab']);
   assert.deepEqual(Array.from(oly).filter(([,on])=>on).map(([h])=>h),['#/comps']);
   assert.equal(a.run('sectionLinks(null).length'),0);
   assert.equal(a.run('siteSection("community")'),null);assert.equal(a.run('siteSection("about")'),null);
 });
 
-test('the site opens on the Learn home with a problem open; the Olympiad, the unit map and the rest are one click away',()=>{
+test('the site opens on the Learn home with a problem open; the roadmap, the calendar and the rest are one click away',()=>{
   const a=app('#/');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewHome()'),hrefs=links(html);
-    /* a plain home: today's problems first, four doors, one line of links; the steps and the unit map live on #/learn/physics */
-    for(const href of ['#/learn/practice','#/learn/practice?mode=tracks','#/learn/practice?mode=contest','#/learn/create','#/community','#/olympiad','#/learn/physics','#/archive/books/phys','#/learn'])assert.ok(hrefs.includes(href),href);
+    /* a plain home: today's problems first, then six doors; the bar above carries the rest */
+    for(const href of ['#/learn/practice','#/learn/roadmap','#/learn/practice?mode=tracks','#/learn/practice?mode=contest','#/olympiad/schedule','#/learn/create','#/community'])assert.ok(hrefs.includes(href),href);
     assert.match(html,/src="practice\.html\?[^"]*mode=play/,'a problem is open on the home page');
     assert.doesNotMatch(html,/id="deflect"|homeLatest/);
   }

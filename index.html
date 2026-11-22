@@ -1023,7 +1023,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=3f34df07978b">
+<link rel="stylesheet" href="site-design.css?v=9360459927e0">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
 </head>
@@ -1171,11 +1171,12 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="learn-path.js?v=647f664caa81"></script>
 <script src="archive-navigation.js?v=f59ccf8d9f5f"></script>
-<script src="site-catalogue.js?v=f587b15cc2e9"></script>
+<script src="site-catalogue.js?v=ba1fd985f46b"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
 <script src="site-design.js?v=56e76d4f3c53"></script>
-<script src="hpho.js?v=9bcabfc8be72"></script>
+<script src="hpho.js?v=8ab427cd91b1"></script>
+<script src="guides.js?v=2b84173a2bf7"></script>
 <script src="hpho-proctor.js?v=c8b93c4e12fb"></script>
 <script src="hpho-phone.js?v=3a6015cc1217"></script>
 <script src="hpho-exam.js?v=a4e790f96370"></script>
@@ -5304,24 +5305,24 @@ function learnAreasHtml(){
 /* Learn home: the page the site opens on. Short problems by topic and step; long final-round
    problems stay in the Olympiad section's archive. */
 function viewLearnHome(){
-  /* The Learn home: today's problems in the middle of the page (practice.html in play mode; a first visit answers the
-     setup questions there), four doors under it, and one line for everything else. */
+  /* The Learn home: today's problems first (practice.html in play mode; a first visit answers the setup questions
+     there), then six doors of the same size. Nothing else. */
   const ko=lang==="ko";
   const q=new URLSearchParams({embed:"1",mode:"play",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  const door=(href,title,note,extra="")=>`<a class="lh3-door" href="${href}"><b>${title}</b><span>${note}</span>${extra}</a>`;
-  const exams=[["ap1","AP 1"],["ap2","AP 2"],["apcm","AP C"],["jeem","JEE"],["fma","F=ma"],["usapho","USAPhO"]];
+  const door=(href,icon,title,note)=>`<a class="lh3-door" href="${href}"><i aria-hidden="true">${icon}</i><b>${title}</b><span>${note}</span></a>`;
   return `<div class="shell lh3">
     <section class="lh3-play" aria-labelledby="lh3H">
       <div class="lh3-head"><h1 id="lh3H">${ko?"오늘의 문제":LX("Today's problems")}</h1><a href="#/learn/practice">${ko?"다른 문제 고르기":LX("Choose other problems")} →</a></div>
       <iframe id="learnPracticeFrame" class="learn-studio-frame lh3-frame" src="practice.html?${q}" title="${ko?"오늘의 문제":"Today's problems"}" referrerpolicy="same-origin"></iframe>
     </section>
     <nav class="lh3-doors" aria-label="${ko?"학습 메뉴":"Learn"}">
-      ${door("#/learn/practice?mode=tracks",ko?"시험별 문제":LX("Practice by exam"),ko?"AP · JEE · 미국 올림피아드 형식 262문제":"262 problems in AP, JEE and US olympiad style",`<span class="lh3-chips">${exams.map(([k,n])=>`<em>${n}</em>`).join("")}</span>`)}
-      ${door("#/learn/practice?mode=contest",ko?"대회 기출":LX("Competition problems"),ko?"EuPhO, Physics Cup 등 599문제":"599 from EuPhO, Physics Cup and others")}
-      ${door("#/learn/create",ko?"만들기":LX("Create"),ko?"회원이 만든 시뮬레이션과 계산물리 문제":"Simulations and Python problems made by members")}
-      ${door("#/community",ko?"커뮤니티":LX("Community"),ko?"질문하고 갤러리에서 이야기하기":"Ask questions, talk in the galleries")}
+      ${door("#/learn/roadmap","↗",ko?"로드맵":LX("Roadmap"),ko?"입문부터 학부까지 무엇을 어떤 순서로":"What to study, in order, from a first course to university")}
+      ${door("#/learn/practice?mode=tracks","✎",ko?"시험별 문제":LX("Practice by exam"),"AP · JEE · F=ma · USAPhO")}
+      ${door("#/learn/practice?mode=contest","★",ko?"대회 기출":LX("Competition problems"),ko?"EuPhO, Physics Cup 등 599문제":"599 from EuPhO, Physics Cup and others")}
+      ${door("#/olympiad/schedule","◷",ko?"대회 일정":LX("Contest calendar"),ko?"올림피아드와 입시 날짜":"Olympiad and exam dates")}
+      ${door("#/learn/create","◆",ko?"만들기":LX("Create"),ko?"회원이 만든 시뮬레이션과 문제":"Simulations and problems made by members")}
+      ${door("#/community","✉",ko?"커뮤니티":LX("Community"),ko?"질문과 갤러리":"Questions and galleries")}
     </nav>
-    <p class="lh3-more">${[["#/olympiad",ko?"올림피아드":"Olympiad"],["#/learn/physics",ko?"단원 지도":"Unit map"],[archiveHref("books","phys"),ko?"교재":"Books"],["#/learn/practice?mode=bank",ko?"교재 · 대학 문제":"Textbook problems"],["#/learn/practice?mode=class",ko?"학급":"Class"],["#/learn",ko?"다른 과목":"Other subjects"]].map(([h,t])=>`<a href="${h}">${t}</a>`).join("")}</p>
   </div>${adFitBanner("home")}`;
 }
 
@@ -10469,15 +10470,15 @@ let siteRenderSeq=0;
 function siteSection(active){
   if(active==="home"||active==="learn")return "learn";
   if(active==="comps"&&/^#\/archive\/(books|schools)\b/.test(location.hash))return "learn";
-  if(["olympiad","comps","weekly"].includes(active))return "olympiad";
+  if(["olympiad","comps","weekly","hpho"].includes(active))return "olympiad";
   return null;
 }
 function sectionLinks(section){
   const ko=lang==="ko";
-  if(section==="learn")return [["#/",ko?"학습 홈":LX("Home"),h=>h===""||h==="#/"],["#/learn/practice",ko?"문제 풀기":LX("Practice"),h=>h==="#/learn/practice"],["#/learn/create",ko?"만들기":LX("Create"),h=>/^#\/learn\/(create|concepts|compute)\b/.test(h)],["#/learn/physics",ko?"단원 지도":LX("Unit map"),h=>h==="#/learn/physics"],
+  if(section==="learn")return [["#/",ko?"학습 홈":LX("Home"),h=>h===""||h==="#/"],["#/learn/practice",ko?"문제 풀기":LX("Practice"),h=>h==="#/learn/practice"],["#/learn/roadmap",ko?"로드맵":LX("Roadmap"),h=>h==="#/learn/roadmap"],["#/learn/create",ko?"만들기":LX("Create"),h=>/^#\/learn\/(create|concepts|compute)\b/.test(h)],["#/learn/physics",ko?"단원 지도":LX("Unit map"),h=>h==="#/learn/physics"],
     [archiveHref("books","phys"),ko?"교재":LX("Books"),h=>/^#\/archive\/(books|schools)\b/.test(h)],
-    ["#/learn/physics/search",ko?"문제 검색":LX("Search"),h=>h==="#/learn/physics/search"],["#/learn",ko?"다른 과목":LX("Other subjects"),h=>h==="#/learn"||/^#\/learn\/(?!physics|practice|create|concepts|compute)/.test(h)]];
-  if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],
+    ["#/learn/physics/search",ko?"문제 검색":LX("Search"),h=>h==="#/learn/physics/search"],["#/learn",ko?"다른 과목":LX("Other subjects"),h=>h==="#/learn"||/^#\/learn\/(?!physics|practice|create|concepts|compute|roadmap)/.test(h)]];
+  if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],["#/olympiad/schedule",ko?"일정":LX("Calendar"),h=>h==="#/olympiad/schedule"],
     ["#/monthly",UI[lang].navWeekly,h=>/^#\/(monthly|weekly|rank)\b/.test(h)],["#/hpho","HPhO",h=>/^#\/hpho\b/.test(h)],["#/lab",ko?"실전 모드":LX("Exam mode"),h=>/^#\/lab\b/.test(h)]];
   return [];
 }
@@ -10554,14 +10555,14 @@ function render(){
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
-  else if(first==="olympiad"){    html=viewOlympiad(); active="olympiad"; }
-  else if(first==="learn"){       html=second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="create"?viewLearnCreate():second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="olympiad"){    html=second==="schedule"&&window.HL_GUIDES?HL_GUIDES.scheduleView():viewOlympiad(); active="olympiad"; }
+  else if(first==="learn"){       html=second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="create"?viewLearnCreate():second==="roadmap"&&window.HL_GUIDES?HL_GUIDES.roadmapView():second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
-  else if(first==="hpho"&&second==="phone"&&window.HL_HPHO_PHONE){ html=HL_HPHO_PHONE.view(); active="weekly"; }
+  else if(first==="hpho"&&second==="phone"&&window.HL_HPHO_PHONE){ html=HL_HPHO_PHONE.view(); active="hpho"; }
   else if(first==="hpho"&&second==="exam"&&window.HL_HPHO_EXAM){ html=HL_HPHO_EXAM.view(); active="weekly"; }
-  else if(first==="hpho"&&window.HL_HPHO){ html=HL_HPHO.view(); active="weekly"; }
+  else if(first==="hpho"&&window.HL_HPHO){ html=HL_HPHO.view(); active="hpho"; }
   else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
   else if(first && DATA[first] && !compShown(first)){ const to="#/comps/"+subjOf(first); try{history.replaceState(null,"",to);}catch(e){location.hash=to;return;} return render(); }
   else if(first && DATA[first]){  html=second==="exam"||second==="review"?viewComp(first,studyMode):second?viewYear(first,second,studyMode):viewComp(first); active="comps"; }
@@ -10580,6 +10581,8 @@ function render(){
   if(first==="hpho"&&second==="phone"&&window.HL_HPHO_PHONE) HL_HPHO_PHONE.mount(third||"");
   else if(first==="hpho"&&second==="exam"&&window.HL_HPHO_EXAM) HL_HPHO_EXAM.mount();
   else if(first==="hpho"&&window.HL_HPHO) HL_HPHO.mount();
+  else if(first==="learn"&&second==="roadmap"&&window.HL_GUIDES) HL_GUIDES.roadmapMount();
+  else if(first==="olympiad"&&second==="schedule"&&window.HL_GUIDES) HL_GUIDES.scheduleMount();
 
   buildRails();
   paintSiteTheme();

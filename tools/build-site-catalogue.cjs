@@ -115,7 +115,7 @@ let expectedHtml=html.replace(/<script src="site-catalogue\.js(?:\?[^"\n]*)?"><\
   .replace(/<script src="site-runtime\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-runtime.js?v='+digest(read('site-runtime.js'))+'"></script>')
   .replace(/<script src="site-design\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-design.js?v='+digest(read('site-design.js'))+'"></script>')
   .replace(/<script src="learn-path\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="learn-path.js?v='+digest(read('learn-path.js'))+'"></script>');
-for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
+for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
 expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
 outputs.set('index.html',expectedHtml);
 let examHtml=read('sim/exam.html');
