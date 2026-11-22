@@ -45,9 +45,10 @@ test('the gallery directory escapes what members wrote',()=>{
   assert.match(a.root.innerHTML,/&lt;준비&gt;/);assert.doesNotMatch(a.root.innerHTML,/<준비>/);
 });
 
-test('the community is styled like DCInside only on community pages, and keeps the phone layout',()=>{
+test('the community keeps the gallery layout in HaslaLab\'s own colours, only on community pages, and keeps the phone layout',()=>{
   const css=read('site-design.css');
-  assert.match(css,/body\.hl-site\[data-site-route="community"\] \.cm\{--dc:#3b4890/);
+  assert.match(css,/body\.hl-site\[data-site-route="community"\] \.cm\{--cm-ink:#263247;[^}]*--cm-acc:#7059a4/,'the site\'s ink and violet accent');
+  assert.doesNotMatch(css,/--dc:#3b4890|DCInside-style/,'no copy of another site\'s colours');
   assert.match(css,/@media\(min-width:1101px\)\{body\.hl-site\[data-site-route="community"\] \.cmgrid/);
   assert.doesNotMatch(css,/@media\(max-width:1100px\)\{body\.hl-site\[data-site-route="community"\] \.cmgrid/,'the two-column rule must not reach phones');
 });
