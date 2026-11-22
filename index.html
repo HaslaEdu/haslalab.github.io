@@ -5440,6 +5440,19 @@ addEventListener("message",event=>{
   if(event.data?.type==="hl-create-top"){const top=frame.getBoundingClientRect().top+scrollY-120;if(scrollY>top)scrollTo({top:Math.max(0,top)});}
 });
 
+function viewLearnTeach(){
+  const ko=lang==="ko",label=ko?"교사용":LX("For teachers");
+  const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
+  if(new URLSearchParams(location.hash.split("?")[1]||"").get("tab")==="vary")query.set("tab","vary");
+  return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p></div>
+    <iframe id="learnTeachFrame" class="learn-studio-frame" src="teach.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
+}
+addEventListener("message",event=>{
+  const frame=document.getElementById("learnTeachFrame");
+  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(event.data?.type==="hl-teach-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(640,Math.min(30000,Math.ceil(event.data.height)))+"px";
+});
+
 function viewLearnCompute(){
   const ko=lang==="ko",label=ko?"계산물리":LX("Computational physics");
   const asked=new URLSearchParams(location.hash.split("?")[1]||"").get("problem")||"";
@@ -10475,9 +10488,9 @@ function siteSection(active){
 }
 function sectionLinks(section){
   const ko=lang==="ko";
-  if(section==="learn")return [["#/",ko?"학습 홈":LX("Home"),h=>h===""||h==="#/"],["#/learn/practice",ko?"문제 풀기":LX("Practice"),h=>h==="#/learn/practice"],["#/learn/roadmap",ko?"로드맵":LX("Roadmap"),h=>h==="#/learn/roadmap"],["#/learn/create",ko?"만들기":LX("Create"),h=>/^#\/learn\/(create|concepts|compute)\b/.test(h)],["#/learn/physics",ko?"단원 지도":LX("Unit map"),h=>h==="#/learn/physics"],
+  if(section==="learn")return [["#/",ko?"학습 홈":LX("Home"),h=>h===""||h==="#/"],["#/learn/practice",ko?"문제 풀기":LX("Practice"),h=>h==="#/learn/practice"],["#/learn/roadmap",ko?"로드맵":LX("Roadmap"),h=>h==="#/learn/roadmap"],["#/learn/create",ko?"만들기":LX("Create"),h=>/^#\/learn\/(create|concepts|compute)\b/.test(h)],["#/learn/teach",ko?"교사용":LX("Teachers"),h=>/^#\/learn\/teach\b/.test(h)],["#/learn/physics",ko?"단원 지도":LX("Unit map"),h=>h==="#/learn/physics"],
     [archiveHref("books","phys"),ko?"교재":LX("Books"),h=>/^#\/archive\/(books|schools)\b/.test(h)],
-    ["#/learn/physics/search",ko?"문제 검색":LX("Search"),h=>h==="#/learn/physics/search"],["#/learn",ko?"다른 과목":LX("Other subjects"),h=>h==="#/learn"||/^#\/learn\/(?!physics|practice|create|concepts|compute|roadmap)/.test(h)]];
+    ["#/learn/physics/search",ko?"문제 검색":LX("Search"),h=>h==="#/learn/physics/search"],["#/learn",ko?"다른 과목":LX("Other subjects"),h=>h==="#/learn"||/^#\/learn\/(?!physics|practice|create|concepts|compute|roadmap|teach)/.test(h)]];
   if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],["#/olympiad/schedule",ko?"일정":LX("Calendar"),h=>h==="#/olympiad/schedule"],
     ["#/monthly",UI[lang].navWeekly,h=>/^#\/(monthly|weekly|rank)\b/.test(h)],["#/hpho","HPhO",h=>/^#\/hpho\b/.test(h)],["#/lab",ko?"실전 모드":LX("Exam mode"),h=>/^#\/lab\b/.test(h)]];
   return [];
@@ -10556,7 +10569,7 @@ function render(){
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
   else if(first==="olympiad"){    html=second==="schedule"&&window.HL_GUIDES?HL_GUIDES.scheduleView():viewOlympiad(); active="olympiad"; }
-  else if(first==="learn"){       html=second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="create"?viewLearnCreate():second==="roadmap"&&window.HL_GUIDES?HL_GUIDES.roadmapView():second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="learn"){       html=second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="create"?viewLearnCreate():second==="teach"?viewLearnTeach():second==="roadmap"&&window.HL_GUIDES?HL_GUIDES.roadmapView():second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }

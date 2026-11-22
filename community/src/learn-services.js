@@ -61,6 +61,9 @@ export const LANG_NAMES = {ko: 'Korean', en: 'English', es: 'Spanish', pt: 'Braz
 export const TUTOR_FREE = 5, TUTOR_PLUS = 100, TUTOR_SCHOOL = 20;
 const PLAN_KINDS = ['plus', 'teacher', 'school_seat'];
 const MAX_TRANSLATE = 12, MAX_SOURCE = 6000;
+/* problem variants for teachers (teach.html): a few runs a day free, more with a teacher or school plan; each run makes
+   up to VARIANT_MAX problems */
+export const VARIANT_FREE = 3, VARIANT_PLAN = 40, VARIANT_MAX = 5;
 /* classes: free for every teacher up to FREE_CLASSES classes of FREE_SEATS students; a teacher or school plan lifts both */
 export const FREE_CLASSES = 1, FREE_SEATS = 30, PLAN_CLASSES = 30, PLAN_SEATS = 200;
 const ITEM_ID = /^[a-z0-9]+-[a-z0-9-]{1,40}$/, CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -127,6 +130,53 @@ export function keepsMath(src, out) {
   return a.length === b.length && a.every((s, i) => s === b[i]);
 }
 
+/* A teacher's variant request: the model writes new problems from one source problem and states, for each, an
+   arithmetic expression that computes the answer from the numbers in the problem (`calc`). The page evaluates `calc`
+   with its own parser (math-input.js) and a second, independent solve (`check`) must agree before a variant is marked
+   as checked. Nothing here is trusted as correct; the teacher sees which checks passed. */
+export const VARIANT_MODES = ['numbers', 'context', 'new'], VARIANT_LEVELS = ['easier', 'same', 'harder'], VARIANT_FORMATS = ['free', 'mc'];
+export function variantMessages({source, n, mode, level, format, lang}) {
+  const language = LANG_NAMES[lang] || 'English';
+  const how = {numbers: 'Keep the situation and the question; change only the given numbers (choose values that give a clean but not trivial answer).',
+    context: 'Keep the physics and the solution method; change the situation, the objects and the numbers.',
+    new: 'Test the same idea with a different kind of question (for example ask for a different quantity, or reverse the question).'}[mode];
+  const lv = {easier: 'Make it a little easier than the source.', same: 'Keep the same difficulty.', harder: 'Make it a little harder: one more step, but the same topic.'}[level];
+  const system = `You write physics problems for a teacher's test, in ${language}. Math in LaTeX as $...$; units upright with \\mathrm{}.
+${how} ${lv}
+Write ${n} problem(s). Each must be self-contained, solvable with the data given, and have one numerical answer (or one formula answer if the source asks for a formula).
+Reply with JSON only, no prose and no code fence:
+{"variants":[{"q":"problem text","answer":"the answer as a plain number or a formula in ASCII, e.g. 4.9 or sqrt(2*g*h)","unit":"SI unit of the answer, ASCII, or empty",
+"calc":"an arithmetic expression with the problem's numbers that evaluates to the answer, ASCII: + - * / ^ sqrt sin cos tan exp ln pi (angles in radians), e.g. sqrt(2*9.8*1.5)",
+"sol":"a short worked solution, 2-6 sentences, with LaTeX"${format === 'mc' ? `,
+"choices":["4 or 5 choice texts, one of them the answer; build each wrong choice from a real mistake (sign, missing factor 2, wrong unit conversion, using the wrong formula)"],"correct":0,"why":["one short line per wrong choice: the mistake it comes from"]` : ''}}]}`;
+  const src = `Source problem:\n${clip(source.q, 4000)}${source.choices?.length ? '\nChoices: ' + source.choices.map((c, i) => `(${i + 1}) ${clip(c, 300)}`).join(' ') : ''}`
+    + `${source.answer ? '\nSource answer: ' + clip(source.answer, 300) : ''}${source.sol ? '\nSource solution: ' + clip(source.sol, 2000) : ''}`;
+  return [{role: 'system', content: system}, {role: 'user', content: src}];
+}
+export function checkMessages(q, lang) {
+  return [{role: 'system', content: `Solve the physics problem. Reply with JSON only: {"answer":"the final answer as a plain number (SI units) or an ASCII formula"}. ${lang === 'ko' ? 'The problem is in Korean.' : ''}`},
+    {role: 'user', content: clip(q, 4000)}];
+}
+export function parseJson(text) {
+  const s = String(text || '').replace(/^```(?:json)?\s*|\s*```$/g, '').trim();
+  const a = s.indexOf('{'), b = s.lastIndexOf('}');
+  if (a < 0 || b <= a) return null;
+  try { return JSON.parse(s.slice(a, b + 1)); } catch { return null; }
+}
+const str = (v, n) => typeof v === 'string' ? v.slice(0, n) : '';
+export function cleanVariant(v, format) {
+  if (!v || typeof v !== 'object') return null;
+  const out = {q: str(v.q, 4000).trim(), answer: str(v.answer, 200).trim(), unit: str(v.unit, 24).trim(), calc: str(v.calc, 400).trim(), sol: str(v.sol, 3000).trim()};
+  if (!out.q || !out.answer) return null;
+  if (format === 'mc') {
+    const ch = Array.isArray(v.choices) ? v.choices.filter(c => typeof c === 'string' && c.trim()).slice(0, 5).map(c => c.slice(0, 400)) : [];
+    const k = Number.isInteger(v.correct) && v.correct >= 0 && v.correct < ch.length ? v.correct : -1;
+    if (ch.length < 3 || k < 0) return null;
+    out.choices = ch; out.correct = k; out.why = Array.isArray(v.why) ? v.why.filter(w => typeof w === 'string').slice(0, 5).map(w => w.slice(0, 300)) : [];
+  }
+  return out;
+}
+
 export function createLearnRouter({HttpError, needUser, limit, now, bad, clientIp}) {
   return async function learnRoute(p, m, body, me, req, env) {
     if (!p.startsWith('/api/learn/')) return undefined;
@@ -135,7 +185,9 @@ export function createLearnRouter({HttpError, needUser, limit, now, bad, clientI
     if (p === '/api/learn/plan' && m === 'GET') {
       if (!me) return {plan: 'guest', ads: true, tutorLimit: 0, tutorLeft: 0};
       const plan = await planOf(env, me.id, t);
-      return {...plan, tutorLeft: Math.max(0, plan.tutorLimit - await usedToday(env, me.id, 'tutor', utcDay(t)))};
+      const vmax = plan.plan === 'free' ? VARIANT_FREE : VARIANT_PLAN;
+      return {...plan, tutorLeft: Math.max(0, plan.tutorLimit - await usedToday(env, me.id, 'tutor', utcDay(t))),
+        variantLeft: Math.max(0, vmax - await usedToday(env, me.id, 'variant', utcDay(t)))};
     }
     if (p === '/api/learn/tutor' && m === 'POST') {
       needUser(me);
@@ -178,6 +230,34 @@ export function createLearnRouter({HttpError, needUser, limit, now, bad, clientI
         }
       }
       return {to, texts: texts.map((s, i) => found.get(hashes[i]) ?? null)};
+    }
+    if (p === '/api/learn/variants' && m === 'POST') {
+      needUser(me);
+      if (!env.AI) throw new HttpError(503, 'ai_unavailable');
+      const src = body?.source;
+      if (!src || typeof src.q !== 'string' || !src.q.trim() || src.q.length > MAX_SOURCE) bad('bad_source');
+      const n = Number.isInteger(body.n) && body.n >= 1 && body.n <= VARIANT_MAX ? body.n : bad('bad_n');
+      const mode = VARIANT_MODES.includes(body.mode) ? body.mode : bad('bad_mode');
+      const level = VARIANT_LEVELS.includes(body.level) ? body.level : 'same', format = VARIANT_FORMATS.includes(body.format) ? body.format : 'free';
+      const lang = LANGS.includes(body.lang) ? body.lang : 'en';
+      await limit(env, 'variant-flood:' + me.id, 4, 60);
+      const plan = await planOf(env, me.id, t), day = utcDay(t), max = plan.plan === 'free' ? VARIANT_FREE : VARIANT_PLAN;
+      const used = await takeOne(env, me.id, 'variant', day, max);
+      if (used == null) throw new HttpError(429, 'variant_limit');
+      const source = {q: src.q, answer: str(src.answer, 300), sol: str(src.sol, 2000),
+        choices: Array.isArray(src.choices) ? src.choices.filter(c => typeof c === 'string').slice(0, 6) : []};
+      let variants = [];
+      try {
+        const out = parseJson(await generate(env, 'SOLVER', variantMessages({source, n, mode, level, format, lang}), 12000, null, {reasoning: true}));
+        variants = (Array.isArray(out?.variants) ? out.variants : []).map(v => cleanVariant(v, format)).filter(Boolean).slice(0, n);
+      } catch (e) { variants = []; }
+      if (!variants.length) { await giveBack(env, me.id, 'variant', day); throw new HttpError(503, 'ai_failed'); }
+      /* a second solve that does not see the answer */
+      for (const v of variants) {
+        try { v.check = str(parseJson(await generate(env, 'SOLVER', checkMessages(v.q + (v.choices ? '\n' + v.choices.map((c, i) => `(${i + 1}) ${c}`).join(' ') : ''), lang), 8000, null, {reasoning: true}))?.answer, 200); }
+        catch (e) { v.check = ''; }
+      }
+      return {variants, left: Math.max(0, max - used), plan: plan.plan};
     }
     if (p.startsWith('/api/learn/classes')) return classRoute(p, m, body, me, env, t);
     throw new HttpError(404, 'not_found');

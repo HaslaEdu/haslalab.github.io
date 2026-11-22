@@ -118,7 +118,7 @@ test('each section has its own bar, and the current page is marked in it',()=>{
   const a=app('#/');
   const bar=(section,hash)=>{a.context.location.hash=hash;return a.run(`sectionLinks(${JSON.stringify(section)}).map(([href,label,current])=>[href,current(${JSON.stringify(hash)})])`);};
   const learn=bar('learn','#/learn/physics/search');
-  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/practice','#/learn/roadmap','#/learn/create','#/learn/physics','#/archive/books/phys','#/learn/physics/search','#/learn']);
+  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/practice','#/learn/roadmap','#/learn/create','#/learn/teach','#/learn/physics','#/archive/books/phys','#/learn/physics/search','#/learn']);
   assert.deepEqual(Array.from(learn).filter(([,on])=>on).map(([h])=>h),['#/learn/physics/search']);
   const oly=bar('olympiad','#/ipho/2019');
   assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/olympiad/schedule','#/monthly','#/hpho','#/lab']);

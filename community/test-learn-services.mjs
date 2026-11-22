@@ -88,3 +88,35 @@ test('a teacher makes a free class, students join with its code, and the teacher
   await route(`/api/learn/classes/${c.id}`,'DELETE',null,t);
   assert.equal((await route('/api/learn/classes','GET',null,t)).teaching.length,0);
 });
+
+test('a teacher asks for variants: JSON is cleaned, each gets an independent check, the day has a limit',async()=>{
+  const {route,calls}=await import('./src/learn-services.js').then(()=>setup({ai:input=>{
+    const sys=input.messages[0].content;
+    if(sys.startsWith('Solve'))return '{"answer":"5.42"}';
+    return '<think>plan</think>```json\n{"variants":[{"q":"A ball falls from $1.5\\\\,\\\\mathrm{m}$. Speed at the floor?","answer":"5.42","unit":"m/s","calc":"sqrt(2*9.8*1.5)","sol":"$v=\\\\sqrt{2gh}$"},{"q":""}]}\n```';
+  }}));
+  await fails(route('/api/learn/variants','POST',{source:{q:'x'},n:1,mode:'numbers'},null),'login_required');
+  await fails(route('/api/learn/variants','POST',{source:{q:'x'},n:9,mode:'numbers'},me),'bad_n');
+  await fails(route('/api/learn/variants','POST',{source:{q:''},n:1,mode:'numbers'},me),'bad_source');
+  const r=await route('/api/learn/variants','POST',{source:{q:'A ball falls from 2.0 m. Find its speed at the floor.',answer:'6.3'},n:2,mode:'numbers',lang:'en'},me);
+  assert.equal(r.variants.length,1,'the empty variant is dropped');
+  assert.equal(r.variants[0].calc,'sqrt(2*9.8*1.5)');
+  assert.equal(r.variants[0].check,'5.42');
+  assert.ok(!('choices' in r.variants[0]));
+  assert.ok(calls.some(c=>c.messages?.[0]?.content.startsWith('Solve')),'the check does not see the answer');
+  assert.ok(!calls.find(c=>c.messages?.[0]?.content.startsWith('Solve')).messages[1].content.includes('5.42'));
+  await route('/api/learn/variants','POST',{source:{q:'q'},n:1,mode:'context'},me);
+  await route('/api/learn/variants','POST',{source:{q:'q'},n:1,mode:'new'},me);
+  await fails(route('/api/learn/variants','POST',{source:{q:'q'},n:1,mode:'new'},me),'variant_limit');
+  assert.equal((await route('/api/learn/plan','GET',null,me)).variantLeft,0);
+});
+
+test('multiple-choice variants need a valid correct index and keep the reasons for wrong choices',async()=>{
+  const {cleanVariant,parseJson}=await import('./src/learn-services.js');
+  assert.equal(cleanVariant({q:'q',answer:'1',choices:['1','2'],correct:0},'mc'),null);
+  assert.equal(cleanVariant({q:'q',answer:'1',choices:['1','2','3'],correct:3},'mc'),null);
+  const v=cleanVariant({q:'q',answer:'1',choices:['1','2','4','0.5'],correct:0,why:['double','squared','half']},'mc');
+  assert.deepEqual(v.why,['double','squared','half']);
+  assert.equal(parseJson('nothing'),null);
+  assert.deepEqual(parseJson('text {"a":1} more'),{a:1});
+});
