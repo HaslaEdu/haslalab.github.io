@@ -136,9 +136,10 @@ LAB_FOCUS_MODEL = "gemini-3.8-flash"
 # answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
 # reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
 LAB_KEEP_HOURS = "off"
-# Paddle checkout closed (the owner's call, 2026-11-04): no Paddle pack in the shop and no new Paddle order; paid orders
-# still complete by the webhook and refunds still work. "on" (or deleting this line) opens it again.
-PADDLE_CHECKOUT = "off"
+# Paddle checkout open again (the owner's call, 2026-11-22; it was closed on 2026-11-04). "off" closes it: no Paddle pack
+# in the shop and no new Paddle order, while paid orders still complete by the webhook and refunds still work. Kept as an
+# explicit "on" rather than deleted: with keep_vars a deleted line would leave the Worker's old "off" in place.
+PADDLE_CHECKOUT = "on"
 # DeepSeek V4 Pro (Workers AI, MIT weights) writes this many worked solutions a night for the QwQ solver's LoRA
 # (ai-eval.js teacher cases): judged correct with 8/10 or more they are approved for training at once
 AI_TEACHER_DAILY = "40"
