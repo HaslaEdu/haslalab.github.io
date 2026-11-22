@@ -37,7 +37,7 @@ const fileOf = (lang, name) => {
   return {href: `hpho/samples/${set}/${lang}/${name}`, pages: pages(buf), kb: Math.round(buf.length / 1024), v: crypto.createHash('sha256').update(buf).digest('hex').slice(0, 10)};
 };
 /* the general instructions, one booklet per exam */
-const guides = Object.fromEntries(['theory', 'experiment'].filter(k => fs.existsSync(path.join(dir, `G-${k}.ko.md`)))
+const guides = Object.fromEntries(['theory', 'experiment'].filter(k => fs.existsSync(path.join(dir, `G-${k}.ko.html`)))
   .map(k => [k, {ko: fileOf('ko', `G-${k}.pdf`), en: fileOf('en', `G-${k}.pdf`)}]));
 fs.writeFileSync(path.join(out, 'manifest.json'), JSON.stringify({set, guides, problems}, null, 1) + '\n');
 console.log(path.relative(ROOT, path.join(out, 'manifest.json')), problems.length);

@@ -26,7 +26,9 @@ const LANG = {
 };
 const font = f => 'data:font/otf;base64,' + fs.readFileSync(path.join(ROOT, 'tools/ko/fonts', f)).toString('base64');
 const FONTS = `@font-face{font-family:Paper;src:url(${font('NotoSansCJKkr-Regular.otf')});font-weight:400}
-@font-face{font-family:Paper;src:url(${font('NotoSansCJKkr-Bold.otf')});font-weight:700}`;
+@font-face{font-family:Paper;src:url(${font('NotoSansCJKkr-Bold.otf')});font-weight:700}
+@font-face{font-family:Latin;src:url(data:font/ttf;base64,${fs.readFileSync(path.join(ROOT, 'tools/ko/fonts/NotoSans-Regular.ttf')).toString('base64')});font-weight:400}
+@font-face{font-family:Latin;src:url(data:font/ttf;base64,${fs.readFileSync(path.join(ROOT, 'tools/ko/fonts/NotoSans-Bold.ttf')).toString('base64')});font-weight:700}`;
 const KATEX_CSS = fs.readFileSync(path.join(ROOT, 'vendor/katex/katex.min.css'), 'utf8')
   .replace(/url\(fonts\//g, 'url(file://' + path.join(ROOT, 'vendor/katex/fonts') + '/');
 const LOGO = 'data:image/svg+xml;base64,' + fs.readFileSync(path.join(ROOT, 'logo/brand/hpho-wordmark-light.svg')).toString('base64');
@@ -155,69 +157,64 @@ function render(bl, ctx) {
 /* the blocks inside a box (a question, an answer box, a framed note); a table or figure nested in it keeps its own rows */
 const parseInner = (lines, file) => parse('---\n' + lines.join('\n'), file).blocks;
 
+/* the author's template (original/*.pdf): Noto Sans 10 pt on 12 pt lines, titles 16 pt and headings 11 pt in #0000b3,
+   boxes ruled at 0.8 pt, a 20 mm margin left and right; the header band (152 pt) is added by stamp_en.py */
 const CSS = `${FONTS}${KATEX_CSS}
-
 *{box-sizing:border-box}
 html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-body{margin:0;font-family:Paper,sans-serif;font-size:9.6pt;line-height:1.5;color:#1a1a1a}
-.katex{font-size:1.08em}
-p{margin:0 0 7pt}
-h1{font-size:15pt;color:#1515d8;margin:0 0 8pt;font-weight:700}
-h2{font-size:10.5pt;color:#1515d8;margin:14pt 0 6pt;font-weight:700;break-after:avoid}
-h3{font-size:10pt;color:#1515d8;margin:10pt 0 5pt;font-weight:700;break-after:avoid}
-h4{font-size:9.6pt;color:#a08c0c;margin:10pt 0 5pt;font-weight:700;break-after:avoid;text-transform:uppercase}
-ul{margin:0 0 7pt;padding-left:14pt}li{margin:0 0 2pt}
+body{margin:0;padding-right:1pt;font-family:Latin,Paper,sans-serif;font-size:10pt;line-height:12pt;color:#000}
+.katex{font-size:1.0em}
+p{margin:0 0 6pt}
+h1{font-size:16pt;line-height:16pt;color:#0000b3;margin:0 0 7pt;font-weight:700}
+h2{font-size:11pt;line-height:12pt;color:#0000b3;margin:14pt 0 6pt;font-weight:700;break-after:avoid}
+h3{font-size:11pt;line-height:12pt;color:#0000b3;margin:12pt 0 6pt;font-weight:700;break-after:avoid}
+h4{font-size:10pt;color:#968d00;margin:12pt 0 6pt;font-weight:700;break-after:avoid}
+ul{margin:0 0 6pt;padding-left:25pt}li{margin:0 0 1pt}
 .eq{margin:4pt 0 8pt;text-align:center}
-.qbox{display:grid;grid-template-columns:34pt 1fr 40pt;gap:8pt;border:1px solid #333;padding:7pt 9pt 3pt;margin:8pt 0 10pt;break-inside:avoid}
+.qbox{display:grid;grid-template-columns:36pt 1fr 44pt;gap:0;border:0.8pt solid #000;padding:8pt 19pt 4pt 25.7pt;margin:8pt 0 8pt;break-inside:avoid}
 .ql{font-weight:700}.qp{text-align:right}
-.abox{border:1px solid #333;padding:6pt 9pt;margin:0 0 8pt;break-inside:avoid}
-.al{margin-bottom:6pt}.al span{font-size:9pt}.at{padding-left:8pt;color:#333}
-.tbl{margin:10pt 0 12pt;text-align:center;break-inside:avoid}
-.tbl table{margin:0 auto;border:1px solid #333;border-collapse:collapse;padding:6pt}
-.tbl td{padding:2pt 12pt;text-align:left}
-.tbl.grid td{border:1px solid #333;text-align:center}
-.cap{font-size:8.6pt;margin-top:8pt;text-align:left;padding:0 16pt}
+.abox{border:0.8pt solid #000;padding:5pt 9.4pt;margin:0 0 6pt;break-inside:avoid}
+.al{margin-bottom:12pt}.al b{font-weight:700}.al span{font-weight:400}.at{padding-left:8pt}
+.tbl{margin:12pt 0 12pt;text-align:center;break-inside:avoid}
+.tbl table{margin:0 auto;border:0.8pt solid #000;border-collapse:separate;border-spacing:0;padding:8pt 14pt}
+.tbl td{padding:2pt 14pt;text-align:left}
+.tbl.grid table{padding:0}.tbl.grid td{border:0.8pt solid #000;text-align:center}
+.cap{font-size:9pt;line-height:11pt;margin-top:10pt;text-align:center}
 .cap b:first-child{font-weight:700}
 .fig{margin:10pt 0 12pt;break-inside:avoid}
 .fig .row{display:flex;justify-content:space-around;align-items:flex-end;gap:10pt}
 .fig .cell{text-align:center}.fig img{max-width:100%;max-height:240mm}
-.fig .sub{font-size:8.6pt;margin-top:4pt}
-.box{border:1px solid #333;padding:8pt 10pt;margin:6pt 0 12pt}.bt{font-weight:700;margin-bottom:4pt}
-.small{font-size:8.4pt;color:#555}
-.intro{color:#1515d8;font-size:8.6pt}
-.mark{width:84%;margin:4pt auto 12pt;border-collapse:collapse;break-inside:avoid}
-.mark td{border:1px solid #333;padding:3pt 8pt}.mark td.mp{width:36pt;text-align:right;border-left:1px solid #333}
+.fig .sub{font-size:9pt;line-height:11pt;margin-top:4pt}
+.fig .cap{text-align:left;padding:0 20pt}
+.box{border:0.8pt solid #000;padding:6pt 13pt;margin:6pt 0 12pt}.bt{font-weight:700;margin-bottom:2pt}
+.small{font-size:8.5pt;line-height:10pt;color:#0000b3}
+.intro{color:#0000b3;font-size:8.5pt;line-height:10pt}
+.mark{width:76%;margin:4pt auto 12pt;border-collapse:collapse;break-inside:avoid}
+.mark td{border:0.8pt solid #000;padding:2pt 6pt}.mark td.mp{width:36pt;text-align:right}
 .pb{break-after:page}
-.back{position:fixed;bottom:0}
 `;
 
-function header({kindLabel, code, big, color, langLabel, qr}) {
-  return `<div style="width:100%;font-family:Paper,sans-serif;padding:0 15mm;-webkit-print-color-adjust:exact;position:relative;height:30mm;font-size:10px;color:#111">
-  <style>${FONTS}</style>
-  <div style="position:absolute;left:15mm;top:9mm;font-weight:700;font-size:15px">${esc(kindLabel)}</div>
-  <img src="${LOGO}" style="position:absolute;left:15mm;top:15.5mm;height:11.5mm">
-  ${qr ? `<img src="${qr}" style="position:absolute;left:92mm;top:2mm;height:17mm">` : ''}
-  <div style="position:absolute;left:84mm;top:21.5mm;font-size:11.5px">${esc(code)}</div>
-  <div style="position:absolute;right:15mm;top:6mm;font-weight:700;font-size:46px;line-height:1;color:${color}">${big}</div>
-  <div style="position:absolute;right:15mm;top:22mm;font-size:11px">${esc(langLabel)}</div>
-  <div style="position:absolute;left:15mm;right:15mm;top:28mm;border-bottom:1px solid #999"></div></div>`;
-}
-
 let tmpSeq = 0;
-async function pdf(browser, html, opts) {
+async function pdf(browser, html, stampArgs) {
   const page = await browser.newPage();
   const tmp = path.join(os.tmpdir(), `hpho-mock-${process.pid}-${++tmpSeq}.html`);   /* one file per page set, so builds can run side by side */
   fs.writeFileSync(tmp, `<!doctype html><meta charset="utf-8"><style>${CSS}</style><body>${html}</body>`);
   await page.goto('file://' + tmp, {waitUntil: 'load'});
   await page.evaluate(() => document.fonts.ready);
-  const buf = await page.pdf({format: 'A4', displayHeaderFooter: true, headerTemplate: opts.header, footerTemplate: opts.footer || '<span></span>',
-    margin: {top: '34mm', bottom: '16mm', left: '15mm', right: '15mm'}, printBackground: true});
+  const buf = await page.pdf({format: 'A4', displayHeaderFooter: false, margin: {top: '54.68mm', bottom: '18.34mm', left: '20mm', right: '20mm'}, printBackground: true});
   await page.close(); fs.unlinkSync(tmp);
-  return buf;
+  /* the original's header band on every page (stamp_en.py) */
+  const raw = tmp.replace(/\.html$/, '.pdf'), stamped = tmp.replace(/\.html$/, '-h.pdf');
+  fs.writeFileSync(raw, buf);
+  const {execFileSync} = await import('node:child_process');
+  execFileSync('python3', ['-I', path.join(HERE, 'stamp_en.py'), 'header', raw, stamped, ...stampArgs]);
+  const out = fs.readFileSync(stamped); fs.unlinkSync(raw); fs.unlinkSync(stamped);
+  return out;
 }
 const pageNo = '<span class="pageNumber"></span>';
 
-export async function build(set, only = [], langs = ['ko', 'en']) {
+/* English only: the Korean papers are the author's originals (relogo.py, guide.py), corrected in place */
+export async function build(set, only = [], langs = ['en']) {
   const dir = path.join(HERE, set);
   const {PDFDocument} = await import('pdf-lib').catch(() => ({}));
   const browser = await chromium.launch();
@@ -226,16 +223,6 @@ export async function build(set, only = [], langs = ['ko', 'en']) {
     for (const lang of langs) {
       const L = LANG[lang], out = path.join(ROOT, 'hpho/samples', set, lang);
       fs.mkdirSync(out, {recursive: true});
-      /* the general instructions, one booklet per exam: G-theory.<lang>.md, G-experiment.<lang>.md */
-      for (const g of fs.readdirSync(dir).filter(f => new RegExp(`^G-(theory|experiment)\\.${lang}\\.md$`).test(f)).sort()) {
-        const id = g.split('.')[0];
-        if (only.length && !only.includes(id)) continue;
-        const src = parse(fs.readFileSync(path.join(dir, g), 'utf8'), g), m = src.meta;
-        const kindLabel = m.kind === 'experiment' ? L.experiment : L.theory, T = m.kind === 'experiment' ? 'E' : 'T';
-        const buf = await pdf(browser, `<h1>${inline(m.title, g)}</h1>` + render(src.blocks, {file: g, dir}),
-          {header: header({kindLabel, code: `${L.code}-S-01 ${T}-0 G-0`, big: `G0-${pageNo}`, color: '#111', langLabel: L.label})});
-        made.push(await join([buf], path.join(out, `${id}.pdf`), PDFDocument));
-      }
       const files = fs.readdirSync(dir).filter(f => new RegExp(`^[TE]\\d+\\.${lang}\\.md$`).test(f)).sort();
       for (const f of files) {
         const id = f.split('.')[0];
@@ -248,22 +235,22 @@ export async function build(set, only = [], langs = ['ko', 'en']) {
         const title = `<h1>${inline(m.title, f)} (${esc(m.points)}${lang === 'ko' ? '점' : ' points'})</h1>`;
         const ctx = {file: f, dir};
         /* four files a problem: the problem (Q), the answer sheet (A), the writing sheets (W), the solution */
-        made.push(await join([await pdf(browser, title + render(qb, ctx), {header: header({kindLabel, code: code('Q'), big: `Q${no}-${pageNo}`, color: '#111', langLabel: L.label})})], path.join(out, `${id}-question.pdf`), PDFDocument));
+        made.push(await join([await pdf(browser, title + render(qb, ctx), [id, 'Q'])], path.join(out, `${id}-question.pdf`), PDFDocument));
         if (ab.length) {
-          const qr = QR ? await QR.toDataURL(`HPhO ${set} ${T}-${no} A`, {margin: 0, width: 160}) : null;
-          made.push(await join([await pdf(browser, title + render(ab, ctx), {header: header({kindLabel, code: code('A'), big: `A${no}-${pageNo}`, color: '#111', langLabel: L.label, qr})})], path.join(out, `${id}-answer.pdf`), PDFDocument));
+          made.push(await join([await pdf(browser, title + render(ab, ctx), [id, 'A'])], path.join(out, `${id}-answer.pdf`), PDFDocument));
         }
-        const nW = +(m.worksheets || 0);
-        if (nW) {
-          const blank = Array.from({length: nW}, (_, i) => `<div style="height:240mm"></div>${i < nW - 1 ? '<div class="pb"></div>' : ''}`).join('');
-          made.push(await join([await pdf(browser, blank, {header: header({kindLabel, code: code('W'), big: `W${no}-${pageNo}`, color: '#111', langLabel: L.label}),
-            footer: `<div style="width:100%;text-align:center;font-size:8px;color:#444;font-family:Paper,sans-serif"><style>${FONTS}</style>${esc(L.back)}</div>`})], path.join(out, `${id}-writing.pdf`), PDFDocument));
+        /* the writing sheets are the original's, with the English header */
+        {
+          const {execFileSync} = await import('node:child_process');
+          const w = path.join(out, `${id}-writing.pdf`);
+          execFileSync('python3', ['-I', path.join(HERE, 'stamp_en.py'), 'writing', w, id]);
+          made.push(w);
         }
         const sf = `${id}.sol.${lang}.md`;
         if (fs.existsSync(path.join(dir, sf))) {
           const s = parse(fs.readFileSync(path.join(dir, sf), 'utf8'), sf);
           const st = `<h1>${inline(s.meta.title || m.title, sf)} (${esc(m.points)}${lang === 'ko' ? '점' : ' points'})</h1>`;
-          const buf = await pdf(browser, st + render(s.blocks, {file: sf, dir}), {header: header({kindLabel, code: code('Q'), big: `Q${no}-${pageNo}`, color: '#8f7f0b', langLabel: L.label})});
+          const buf = await pdf(browser, st + render(s.blocks, {file: sf, dir}), [id, 'S']);
           made.push(await join([buf], path.join(out, `${id}-solution.pdf`), PDFDocument));
         }
       }
@@ -290,7 +277,7 @@ async function join(bufs, file, PDFDocument) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2), set = args[0];
   if (!set) { console.error('usage: build.mjs <set> [ids...] [--lang ko|en]'); process.exit(2); }
-  const li = args.indexOf('--lang'), langs = li >= 0 ? [args[li + 1]] : ['ko', 'en'];
+  const li = args.indexOf('--lang'), langs = li >= 0 ? [args[li + 1]] : ['en'];
   const ids = args.slice(1).filter((a, i, all) => a !== '--lang' && all[i - 1] !== '--lang');
   build(set, ids, langs).then(f => console.log(f.map(x => path.relative(ROOT, x)).join('\n'))).catch(e => { console.error(e.message); process.exit(1); });
 }
