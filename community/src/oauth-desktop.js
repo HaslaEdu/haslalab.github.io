@@ -9,7 +9,7 @@ const ready=new WeakMap();
 async function ensure(db){let pending=ready.get(db);if(!pending){pending=db.prepare(schema).run().catch(error=>{ready.delete(db);throw error});ready.set(db,pending)}await pending}
 export function createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers,newSession,pubUser,readUser}){
  const fail=code=>{throw new HttpError(400,code)};
- const callback=(row,params)=>{const url=new URL(row.callback_url),query=new URLSearchParams({state:row.client_state,...params});if(url.protocol==='https:')url.hash='/oauth?'+new URLSearchParams({...(params.code?{c:params.code}:{}),...(params.error?{e:params.error}:{}),state:row.client_state});else url.search=query.toString();return new Response(null,{status:302,headers:{Location:url.href,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}})};
+ const callback=(row,{detail,...params})=>{const url=new URL(row.callback_url),query=new URLSearchParams({state:row.client_state,...params});if(url.protocol==='https:')url.hash='/oauth?'+new URLSearchParams({...(params.code?{c:params.code}:{}),...(params.error?{e:params.error}:{}),...(detail?{d:detail}:{}),state:row.client_state});else url.search=query.toString();return new Response(null,{status:302,headers:{Location:url.href,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}})};
  return {
   async readBody(req,env){
    const origins=(env.ALLOWED_ORIGINS||'').split(',').map(value=>value.trim());
@@ -59,9 +59,12 @@ export function createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers,ne
    const claimed=await env.DB.prepare('UPDATE oauth_desktop_intents SET code_hash=?,user_id=?,fresh=? WHERE intent_hash=? AND code_hash IS NULL RETURNING intent_hash').bind(await sha256(code),userId,fresh,row.intent_hash).first();if(!claimed)return new Response('This sign-in link expired.',{status:400});
    return callback(row,{code});
   },
-  async error(env,ret,error){
+  // detail: the step and the provider's code (e.g. token-401-invalid_client), shown by the site so a broken provider
+  // setting can be told from a cancelled sign-in; never the provider's message or any secret.
+  async error(env,ret,error,detail=''){
    await ensure(env.DB);const row=await env.DB.prepare('SELECT * FROM oauth_desktop_intents WHERE intent_hash=?').bind(await sha256(ret.slice(8))).first();
-   return row?callback(row,{error}):new Response('This sign-in link expired.',{status:400});
+   const d=String(detail||'').replace(/[^a-z0-9_-]+/gi,'_').slice(0,60);
+   return row?callback(row,{error,...(d?{detail:d}:{})}):new Response('This sign-in link expired.',{status:400});
   }
  };
 }
