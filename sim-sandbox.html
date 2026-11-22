@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- A member's simulation runs here, in a frame the page opens with sandbox="allow-scripts" and no allow-same-origin:
+     it has no access to the site's storage or cookies, and this policy lets it reach nothing on the network. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'">
+<title>Simulation</title>
+<style>
+:root{color-scheme:light;--ink:#263247;--muted:#657187;--line:#d5dbe6;--accent:#7059a4}
+:root[data-theme=dark]{color-scheme:dark;--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--accent:#bca0ed}
+*{box-sizing:border-box}html,body{margin:0;background:transparent;color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+#stage{display:block;width:100%;height:360px;border:1px solid var(--line);border-radius:12px;background:#fbfcfd}
+:root[data-theme=dark] #stage{background:#15131c}
+#ui{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:10px;align-items:center}
+#ui label{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}#ui label b{color:var(--ink);font-weight:600;min-width:3.5em}
+#ui input[type=range]{width:140px;accent-color:var(--accent)}
+#ui button{font:inherit;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:5px 12px;cursor:pointer}
+#reads{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:13px;color:var(--muted)}#reads b{color:var(--ink);font-variant-numeric:tabular-nums}
+#err{white-space:pre-wrap;color:#a32f46;font:12px/1.5 ui-monospace,Menlo,monospace;margin-top:8px}
+</style>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div id="ui"></div>
+<div id="reads"></div>
+<div id="err"></div>
+<script>
+/* The helpers a simulation is written with (see create.html's reference):
+     W, H          the canvas size in CSS pixels; ctx  its 2D context
+     loop(fn)      fn(dt) every frame, dt in seconds (at most 0.05)
+     slider(label, min, max, step, value)  → a function returning the current value
+     button(label, fn)     show(label, value, unit)     clear()
+     circle(x, y, r, color)  line(x1, y1, x2, y2, color, width)  text(s, x, y, color)  arrow(x1, y1, x2, y2, color) */
+'use strict';
+let ctx,W=0,H=0;
+const stage=document.getElementById('stage'),ui=document.getElementById('ui'),reads=document.getElementById('reads'),err=document.getElementById('err');
+function fit(){const r=stage.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);stage.width=Math.round(r.width*d);stage.height=Math.round(r.height*d);ctx=stage.getContext('2d');ctx.setTransform(d,0,0,d,0,0);W=r.width;H=r.height;}
+const frames=[];let last=0,stopped=false;
+function tick(t){if(stopped)return;const dt=last?Math.min(.05,(t-last)/1000):0;last=t;for(const f of frames){try{f(dt);}catch(e){fail(e);return;}}requestAnimationFrame(tick);}
+function loop(fn){frames.push(fn);}
+function slider(label,min,max,step,value){const l=document.createElement('label'),i=document.createElement('input'),b=document.createElement('b');i.type='range';Object.assign(i,{min,max,step,value});b.textContent=value;l.append(String(label),i,b);i.oninput=()=>{b.textContent=i.value;};ui.append(l);return()=>Number(i.value);}
+function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=String(label);b.onclick=()=>{try{fn();}catch(e){fail(e);}};ui.append(b);return b;}
+const shown=new Map();
+function show(label,value,unit=''){let s=shown.get(label);if(!s){s=document.createElement('span');shown.set(label,s);reads.append(s);}const v=typeof value==='number'?(Math.abs(value)>=1e4||Math.abs(value)<1e-3&&value?value.toExponential(3):+value.toPrecision(4)):value;s.innerHTML='';s.append(String(label)+' ');const b=document.createElement('b');b.textContent=v+(unit?' '+unit:'');s.append(b);}
+function clear(){ctx.clearRect(0,0,W,H);}
+function circle(x,y,r,color='#7059a4'){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}
+function line(x1,y1,x2,y2,color='#657187',width=1.5){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();}
+function text(s,x,y,color='#263247'){ctx.fillStyle=color;ctx.font='13px system-ui,sans-serif';ctx.fillText(String(s),x,y);}
+function arrow(x1,y1,x2,y2,color='#c2410c'){line(x1,y1,x2,y2,color,2);const a=Math.atan2(y2-y1,x2-x1);ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-8*Math.cos(a-.4),y2-8*Math.sin(a-.4));ctx.lineTo(x2-8*Math.cos(a+.4),y2-8*Math.sin(a+.4));ctx.closePath();ctx.fillStyle=color;ctx.fill();}
+function fail(e){stopped=true;err.textContent=String(e&&e.stack||e).split('\n').slice(0,4).join('\n');size();}
+function size(){parent.postMessage({type:'sim-height',height:document.documentElement.scrollHeight},'*');}
+addEventListener('error',e=>fail(e.error||e.message));
+let ran=false;
+addEventListener('message',e=>{
+  if(ran||e.source!==parent||!e.data||e.data.type!=='run'||typeof e.data.code!=='string')return;ran=true;
+  document.documentElement.dataset.theme=e.data.theme==='dark'?'dark':'light';
+  fit();
+  try{new Function('ctx','W','H','loop','slider','button','show','clear','circle','line','text','arrow',e.data.code)(ctx,W,H,loop,slider,button,show,clear,circle,line,text,arrow);}catch(x){fail(x);}
+  requestAnimationFrame(tick);size();
+});
+parent.postMessage({type:'sim-ready'},'*');
+</script>
+</body>
+</html>
