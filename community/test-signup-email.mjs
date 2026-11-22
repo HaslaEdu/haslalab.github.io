@@ -170,6 +170,24 @@ test('two new accounts a day from one IP: a third is refused, another IP is not'
   }finally{s.close()}
 });
 
+test('refused sign-ups (wrong code, missing boxes) do not use up the day\'s two accounts',async()=>{
+  const s=setup();try{
+    const ip='203.0.113.20';
+    // five refused tries from one address: a wrong code, then no consent
+    await s.api('/signup/email-code',{email:'typo@example.com'},{address:ip});
+    for(let i=0;i<3;i++)assert.equal((await s.api('/signup',s.form('typo','typo@example.com','000000'),{address:ip})).status,400);
+    const noBox={...s.form('typo','typo@example.com',s.mailedCode())};delete noBox.consent;
+    for(let i=0;i<2;i++)assert.equal((await s.api('/signup',noBox,{address:ip})).data.error,'consent_required');
+    // the same person then gets both accounts of the day
+    for(const n of ['typo','typo2']){
+      await s.api('/signup/email-code',{email:n+'@example.com'},{address:ip});
+      const made=await s.api('/signup',s.form(n,n+'@example.com',s.mailedCode()),{address:ip});assert.equal(made.status,200,JSON.stringify(made.data));
+    }
+    await s.api('/signup/email-code',{email:'typo3@example.com'},{address:ip});
+    assert.equal((await s.api('/signup',s.form('typo3','typo3@example.com',s.mailedCode()),{address:ip})).status,429);
+  }finally{s.close()}
+});
+
 test('linking a provider needs a recent login: a stale session is refused, a fresh one passes',async()=>{
   const s=setup();try{
     await s.api('/signup/email-code',{email:'link@example.com'});
