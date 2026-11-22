@@ -195,7 +195,7 @@ function header({kindLabel, code, big, color, langLabel, qr}) {
   return `<div style="width:100%;font-family:Paper,sans-serif;padding:0 15mm;-webkit-print-color-adjust:exact;position:relative;height:30mm;font-size:10px;color:#111">
   <style>${FONTS}</style>
   <div style="position:absolute;left:15mm;top:9mm;font-weight:700;font-size:15px">${esc(kindLabel)}</div>
-  <img src="${LOGO}" style="position:absolute;left:15mm;top:15mm;height:13mm">
+  <img src="${LOGO}" style="position:absolute;left:15mm;top:15.5mm;height:11.5mm">
   ${qr ? `<img src="${qr}" style="position:absolute;left:92mm;top:2mm;height:17mm">` : ''}
   <div style="position:absolute;left:84mm;top:21.5mm;font-size:11.5px">${esc(code)}</div>
   <div style="position:absolute;right:15mm;top:6mm;font-weight:700;font-size:46px;line-height:1;color:${color}">${big}</div>
@@ -226,6 +226,16 @@ export async function build(set, only = [], langs = ['ko', 'en']) {
     for (const lang of langs) {
       const L = LANG[lang], out = path.join(ROOT, 'hpho/samples', set, lang);
       fs.mkdirSync(out, {recursive: true});
+      /* the general instructions, one booklet per exam: G-theory.<lang>.md, G-experiment.<lang>.md */
+      for (const g of fs.readdirSync(dir).filter(f => new RegExp(`^G-(theory|experiment)\\.${lang}\\.md$`).test(f)).sort()) {
+        const id = g.split('.')[0];
+        if (only.length && !only.includes(id)) continue;
+        const src = parse(fs.readFileSync(path.join(dir, g), 'utf8'), g), m = src.meta;
+        const kindLabel = m.kind === 'experiment' ? L.experiment : L.theory, T = m.kind === 'experiment' ? 'E' : 'T';
+        const buf = await pdf(browser, `<h1>${inline(m.title, g)}</h1>` + render(src.blocks, {file: g, dir}),
+          {header: header({kindLabel, code: `${L.code}-S-01 ${T}-0 G-0`, big: `G0-${pageNo}`, color: '#111', langLabel: L.label})});
+        made.push(await join([buf], path.join(out, `${id}.pdf`), PDFDocument));
+      }
       const files = fs.readdirSync(dir).filter(f => new RegExp(`^[TE]\\d+\\.${lang}\\.md$`).test(f)).sort();
       for (const f of files) {
         const id = f.split('.')[0];
@@ -237,19 +247,18 @@ export async function build(set, only = [], langs = ['ko', 'en']) {
         const qb = cut < 0 ? src.blocks : src.blocks.slice(0, cut), ab = cut < 0 ? [] : src.blocks.slice(cut + 1);
         const title = `<h1>${inline(m.title, f)} (${esc(m.points)}${lang === 'ko' ? '점' : ' points'})</h1>`;
         const ctx = {file: f, dir};
-        const parts = [];
-        parts.push(await pdf(browser, title + render(qb, ctx), {header: header({kindLabel, code: code('Q'), big: `Q${no}-${pageNo}`, color: '#111', langLabel: L.label})}));
+        /* four files a problem: the problem (Q), the answer sheet (A), the writing sheets (W), the solution */
+        made.push(await join([await pdf(browser, title + render(qb, ctx), {header: header({kindLabel, code: code('Q'), big: `Q${no}-${pageNo}`, color: '#111', langLabel: L.label})})], path.join(out, `${id}-question.pdf`), PDFDocument));
         if (ab.length) {
           const qr = QR ? await QR.toDataURL(`HPhO ${set} ${T}-${no} A`, {margin: 0, width: 160}) : null;
-          parts.push(await pdf(browser, title + render(ab, ctx), {header: header({kindLabel, code: code('A'), big: `A${no}-${pageNo}`, color: '#111', langLabel: L.label, qr})}));
+          made.push(await join([await pdf(browser, title + render(ab, ctx), {header: header({kindLabel, code: code('A'), big: `A${no}-${pageNo}`, color: '#111', langLabel: L.label, qr})})], path.join(out, `${id}-answer.pdf`), PDFDocument));
         }
         const nW = +(m.worksheets || 0);
         if (nW) {
           const blank = Array.from({length: nW}, (_, i) => `<div style="height:240mm"></div>${i < nW - 1 ? '<div class="pb"></div>' : ''}`).join('');
-          parts.push(await pdf(browser, blank, {header: header({kindLabel, code: code('W'), big: `W${no}-${pageNo}`, color: '#111', langLabel: L.label}),
-            footer: `<div style="width:100%;text-align:center;font-size:8px;color:#444;font-family:Paper,sans-serif"><style>${FONTS}</style>${esc(L.back)}</div>`}));
+          made.push(await join([await pdf(browser, blank, {header: header({kindLabel, code: code('W'), big: `W${no}-${pageNo}`, color: '#111', langLabel: L.label}),
+            footer: `<div style="width:100%;text-align:center;font-size:8px;color:#444;font-family:Paper,sans-serif"><style>${FONTS}</style>${esc(L.back)}</div>`})], path.join(out, `${id}-writing.pdf`), PDFDocument));
         }
-        made.push(await join(parts, path.join(out, `${id}.pdf`), PDFDocument));
         const sf = `${id}.sol.${lang}.md`;
         if (fs.existsSync(path.join(dir, sf))) {
           const s = parse(fs.readFileSync(path.join(dir, sf), 'utf8'), sf);
