@@ -17,6 +17,10 @@
     undergrad:[['#/learn/practice?mode=bank',{ko:'교재 · 대학 문제',en:'Textbook and university problems'}],['#/learn/compute',{ko:'계산물리',en:'Computational physics'}]],
     upper:[['#/learn/practice?mode=bank',{ko:'교재 · 대학 문제 (★4–5)',en:'Textbook problems (★4–5)'}]]
   };
+  const STAGE={start:{ko:'처음 배우는 물리',en:'A first physics course'},school:{ko:'고등학교 물리',en:'High-school physics'},exam:{ko:'입시: AP · JEE',en:'Entrance exams: AP, JEE'},
+    olympiad1:{ko:'올림피아드 1단계: F=ma · 국내 예선',en:'Olympiad, first round: F=ma and national qualifiers'},olympiad2:{ko:'올림피아드 2단계: USAPhO · APhO · IPhO',en:'Olympiad, final rounds: USAPhO, APhO, IPhO'},
+    undergrad:{ko:'학부 1–2학년',en:'University, years 1–2'},upper:{ko:'학부 3–4학년',en:'University, years 3–4'}};
+  const stageName=k=>STAGE[k]?(ko()?STAGE[k].ko:STAGE[k].en):k;
   const KIND={handout:{ko:'핸드아웃',en:'Handout'},book:{ko:'책',en:'Book'},course:{ko:'강의',en:'Course'},problems:{ko:'문제',en:'Problems'},video:{ko:'영상',en:'Video'},tool:{ko:'도구',en:'Tool'}};
   const pick=(o,k)=>ko()?(o[k+'_ko']||o[k]):(o[k]||o[k+'_ko']);
   function roadmapView(){
@@ -31,11 +35,11 @@
     if(!document.body.contains(box))return;
     const res=r=>{const u=safe(r.url);return `<li><span class="rk">${esc(pick(KIND[r.kind]||{ko:r.kind,en:r.kind},K?'ko':'en'))}</span>${u?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:`<b>${esc(r.title)}</b>`}${r.author?` <small>${esc(r.author)}</small>`:''}${r.free===false?` <small class="paid">${K?'유료':'paid'}</small>`:''}${pick(r,'note')?`<p>${esc(pick(r,'note'))}</p>`:''}</li>`;};
     box.innerHTML=`<ol class="rm-stages">${d.stages.map((s,i)=>`<li class="rm-stage" id="rm-${esc(s.key)}"><div class="rm-num">${i+1}</div><div class="rm-body">
-        <h2>${esc(pick(s,'name')||s.key)}</h2><p class="rm-goal">${esc(pick(s,'goal'))}</p>
+        <h2>${esc(pick(s,'name')||stageName(s.key))}</h2><p class="rm-goal">${esc(pick(s,'goal'))}</p>
         ${(s.topics||[]).length?`<p class="rm-topics">${s.topics.map(t=>`<span>${esc(typeof t==='string'?t:pick(t,'name'))}</span>`).join('')}</p>`:''}
         ${OURS[s.key]?`<p class="rm-ours"><b>${K?'하슬라랩에서 연습':'Practise on HaslaLab'}</b> ${OURS[s.key].map(([h,n])=>`<a href="${h}">${esc(K?n.ko:n.en)}</a>`).join('')}</p>`:''}
         <ul class="rm-res">${(s.resources||[]).map(res).join('')}</ul></div></li>`).join('')}</ol>
-      ${(d.math||[]).length?`<section class="rm-math"><h2>${K?'수학은 언제 무엇을':'Which math, and when'}</h2>${d.math.map(m=>`<div><h3>${esc(pick(m,'stage')||pick(m,'name')||'')}</h3><p>${esc(pick(m,'goal')||pick(m,'note')||'')}</p><ul class="rm-res">${(m.resources||[]).map(res).join('')}</ul></div>`).join('')}</section>`:''}
+      ${(d.math||[]).length?`<section class="rm-math"><h2>${K?'수학은 언제 무엇을':'Which math, and when'}</h2>${d.math.map(m=>`<div><h3>${esc(stageName(m.stage))}</h3><p>${esc(pick(m,'note'))}</p>${(m.learn||[]).length?`<p class="rm-topics">${m.learn.map(t=>`<span>${esc(t)}</span>`).join('')}</p>`:''}<ul class="rm-res">${(m.resources||[]).map(res).join('')}</ul></div>`).join('')}</section>`:''}
       <p class="note">${K?'기준일':'As of'} ${esc(d.as_of||'')}. ${K?'빠진 자료나 끊긴 링크는 커뮤니티 질문 게시판에 알려 주세요.':'Report a missing resource or a broken link on the community Q&A board.'}</p>`;
   }
 
