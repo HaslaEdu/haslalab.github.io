@@ -188,6 +188,19 @@ test('refused sign-ups (wrong code, missing boxes) do not use up the day\'s two 
   }finally{s.close()}
 });
 
+test('no hourly attempt limit: twenty wrong codes from one address still leave its sign-up open',async()=>{
+  const s=setup();try{
+    const ip='203.0.113.30';
+    // four codes, each tried wrongly five times: twenty refused sign-ups in the hour
+    for(let round=0;round<4;round++){
+      assert.equal((await s.api('/signup/email-code',{email:'many@example.com'},{address:ip})).status,200);
+      for(let i=0;i<5;i++)assert.equal((await s.api('/signup',s.form('many','many@example.com','000000'),{address:ip})).status,400);
+    }
+    await s.api('/signup/email-code',{email:'many@example.com'},{address:ip});
+    const made=await s.api('/signup',s.form('many','many@example.com',s.mailedCode()),{address:ip});assert.equal(made.status,200,JSON.stringify(made.data));
+  }finally{s.close()}
+});
+
 test('linking a provider needs a recent login: a stale session is refused, a fresh one passes',async()=>{
   const s=setup();try{
     await s.api('/signup/email-code',{email:'link@example.com'});

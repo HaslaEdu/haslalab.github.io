@@ -351,8 +351,9 @@ async function handle(req, env, url, ctx) {
     const clash = await env.DB.prepare("SELECT username,nickname FROM users WHERE username=? OR nickname=?")
       .bind(username, nickname).first();
     if (clash) throw new HttpError(409, clash.username.toLowerCase() === username.toLowerCase() ? "username_taken" : "nickname_taken");
-    // per hour, and at most SIGNUP_DAY_CAP new accounts a day from one address
-    await limit(env, "signup:" + clientIp(req), 20, 3600);
+    /* at most SIGNUP_DAY_CAP new accounts a day from one address. There is no per-hour attempt limit any more: it counted
+       refused tries (a wrong code, a missing box), so one person fixing typos was locked out for an hour, while what it
+       guarded is already bounded by the day cap, the mailed-code limits (per IP, per address) and the code's 5 tries. */
     await signupCapCheck(env, req);
     /* the mailed code last: a name taken or a box left unticked does not spend one of its tries */
     const { email, hash, t } = await signupEmail.checkCode(env, body);
@@ -5294,7 +5295,6 @@ async function oauthSignIn(req, env, prov, sub, name, st, afterUser = null) {
     userId = st.link_user;
   } else if (found) userId = found.user_id;
   else {
-    await limit(env, "signup:" + clientIp(req), 20, 3600);
     await signupCapCheck(env, req);
     const uname = '~pending_' + b64u(crypto.getRandomValues(new Uint8Array(18)));
     const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,NULL,?,?)").bind(uname, await freeNick(env, name), now(), SIGNUP_TOKENS).run();
