@@ -30,21 +30,18 @@
      "direct": true
     },
     {
-     "file": "IMChO_2026_T1S.pdf",
-     "part": "T1",
-     "kind": "solution",
-     "url": "https://file.chemistry-olympiad.com/mendeleev/2026/2026_theory1_solution_RU.pdf",
-     "bytes": 2995155,
-     "direct": true
-    },
-    {
      "file": "IMChO_2026_T2_RU.pdf",
      "part": "T2",
      "kind": "paper",
      "lang": "RU",
      "url": "https://file.chemistry-olympiad.com/mendeleev/2026/2026_theory2_question_RU.pdf",
      "bytes": 5573437,
-     "direct": true
+     "direct": true,
+     "title": {
+      "ko": "제2이론 · 러시아어 부분본 (34쪽 중 32쪽)",
+      "en": "Second theory · partial Russian copy (32 of 34 pages)"
+     },
+     "source_type": "partial_original_question_booklet"
     },
     {
      "file": "IMChO_2026_T2S.pdf",
@@ -55,7 +52,11 @@
      "direct": true
     }
    ],
-   "source_page": "https://www.chemistry-olympiad.com/chemistry/international/mendeleev_0/"
+   "source_page": "https://www.chemistry-olympiad.com/chemistry/international/mendeleev_0/",
+   "note": {
+    "ko": "제2이론 러시아어 문제지는 인쇄 번호 32/34에서 끝납니다. 기존 제1이론 해설 링크는 2025년 대회 자료로 연결됐습니다.",
+    "en": "The currently available Russian second-theory question booklet ends at printed page 32 of 34. The previous first-theory solution link pointed to a 2025 booklet."
+   }
   },
   {
    "y": 2025,
@@ -1156,9 +1157,45 @@
      "kind": "solution",
      "url": "https://chem.msu.ru/rus/olimpiad/olimp2014/enu_tour2_sol.pdf",
      "bytes": 338050
+    },
+    {
+     "file": "IMChO_2014_E_RU.pdf",
+     "part": "E",
+     "kind": "paper",
+     "lang": "RU",
+     "url": "https://cdn.bc-pf.org/olympiads/chemistry/mendel/2014/chem-3-task.pdf",
+     "bytes": 286863,
+     "pages": 12,
+     "direct": true,
+     "source_type": "original_practical_with_integrated_forms",
+     "title": {
+      "ko": "실험 시험 · 벨로우소프–자보틴스키 진동 반응",
+      "en": "Practical · Belousov–Zhabotinsky oscillating reaction"
+     },
+     "supplements": [
+      {
+       "title": {
+        "ko": "공식 빈 답안지 1–5쪽 · 러시아어 원본",
+        "en": "Official blank answer sheets 1–5 · Russian original"
+       },
+       "url": "https://cdn.bc-pf.org/olympiads/chemistry/mendel/2014/chem-3-task.pdf#page=8"
+      }
+     ]
+    },
+    {
+     "file": "IMChO_2014_EA.pdf",
+     "part": "E",
+     "kind": "answer",
+     "lang": "RU",
+     "url": "https://cdn.bc-pf.org/olympiads/chemistry/mendel/2014/chem-3-task.pdf#page=8",
+     "direct": true,
+     "source_type": "original_integrated_blank_answer_sheets"
     }
    ],
-   "note": "48th IMChO"
+   "note": {
+    "ko": "러시아어 실험 원본 12쪽과 공식 빈 답안지의 시작 위치를 연결했습니다. 계산란·관찰표·그래프가 있는 답안지 1–2쪽은 한국어로 제공하며 3–5쪽은 러시아어 원본에서 볼 수 있습니다.",
+    "en": "48th IMChO The Russian practical source is 12 pages and includes five blank response pages. The Korean edition covers answer pages 1–2, with calculation, observation and graph space. Answer pages 3–5 are in the Russian booklet."
+   }
   },
   {
    "y": 2013,
@@ -2015,7 +2052,16 @@
      "lang": "RU",
      "url": "https://file.chemistry-olympiad.com/mendeleev/2002/2002_question2.pdf",
      "bytes": 1179531,
-     "direct": true
+     "direct": true,
+     "supplements": [
+      {
+       "title": {
+        "ko": "제2이론 6번 빈 답안지 예시 · 러시아어 원본",
+        "en": "Second theory Q6 blank answer sheet sample · Russian original"
+       },
+       "url": "https://www.chem.msu.ru/rus/olimpiad/olimp2003/mend2003_03.pdf"
+      }
+     ]
     },
     {
      "file": "IMChO_2002_T2S.pdf",
@@ -2180,10 +2226,24 @@
       "ko": "실험 시험 12",
       "en": "Practical Problem 12"
      }
+    },
+    {
+     "file": "IMChO_2002_T2A.pdf",
+     "part": "T2",
+     "kind": "answer",
+     "lang": "RU",
+     "url": "https://www.chem.msu.ru/rus/olimpiad/olimp2003/mend2003_03.pdf",
+     "bytes": 86627,
+     "pages": 2,
+     "direct": true,
+     "source_type": "organizer_blank_answer_sheet_specimen_question_6_only"
     }
    ],
    "source_page": "https://www.chemistry-olympiad.com/chemistry/international/mendeleev_0/",
-   "note": "The 12 original practical problems are linked individually from Moscow State University Faculty of Chemistry."
+   "note": {
+    "ko": "제2이론 6번의 실제 빈 답안지 예시 2쪽을 러시아어 원본과 한국어판으로 제공합니다. 한국어판은 배점과 빈칸의 위치를 맞춰 작성했습니다.",
+    "en": "The 12 original practical problems are linked individually from Moscow State University Faculty of Chemistry. The two-page organizer sample is the blank response form for second theory question 6. The Korean reconstruction matches its scoring and blank field positions."
+   }
   },
   {
    "y": 2001,
@@ -2377,7 +2437,7 @@
  "missing": [
   {
    "y": 2026,
-   "why": "Both theoretical rounds are available in Russian. No public practical booklet was verified."
+   "why": "Russian first-theory questions and the second-theory solution are available. The second-theory question booklet ends at p. 32 of 34. No verified first-theory solution or standalone practical booklet is currently listed."
   },
   {
    "y": 2000,
