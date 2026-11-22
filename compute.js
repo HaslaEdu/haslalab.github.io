@@ -21,8 +21,12 @@
       ok:'pass',bad:'fail',step:'Step',solved:'Solved',stdout:'Output',confirmReset:'Go back to the starter code? Your current code will be lost.',
       note:'Grading happens in this browser. Solved problems and drafts are kept on this device only.'}
   };
-  const state={lang:params.get('lang')==='en'?'en':'ko',worker:null,job:0,timer:0,current:null};
-  const tr=k=>copy[state.lang][k];
+  const LANGS=['ko','en','es','pt','id','vi','hi'];
+  /* Korean and English are written here; other languages look the English up in learn-i18n.js */
+  const tx=en=>state.lang==='en'||state.lang==='ko'?en:(window.HL_I18N?.t?.(en,state.lang)??en);
+  const state={lang:LANGS.includes(params.get('lang'))?params.get('lang'):'ko',worker:null,job:0,timer:0,current:null};
+  window.HL_PAGE_COPY=copy;   /* the strings, for the translation catalogue (tools/i18n) */
+  const tr=k=>copy[state.lang]?.[k]??tx(copy.en[k]);
   const store={
     get(k){try{return localStorage.getItem('hlCompute:'+k);}catch(e){return null;}},
     set(k,v){try{localStorage.setItem('hlCompute:'+k,v);}catch(e){}}
@@ -40,7 +44,7 @@
   }
   function areaLabel(p){
     const area=P?.AREAS.find(a=>a.key===p.area),sub=area?.subtopics.find(s=>s.key===p.subtopic);
-    return [area?.name[state.lang],sub?.name[state.lang]].filter(Boolean).join(' · ');
+    return [area&&(state.lang==='ko'?area.name.ko:tx(area.name.en)),sub&&(state.lang==='ko'?sub.name.ko:tx(sub.name.en))].filter(Boolean).join(' · ');
   }
   /* statements: paragraphs, numbered lists and `code`, with $…$ left for KaTeX */
   function renderStatement(text){
@@ -53,12 +57,12 @@
   function paintList(){
     const done=solved();
     $('plist').innerHTML=C.PROBLEMS.map(p=>`<li><button type="button" data-id="${p.id}" aria-current="${p.id===state.current?.id}">
-      <b>${esc(p.title[state.lang])}</b><span class="meta">${tr('step')} ${p.step} · ${esc(areaLabel(p))}${done.has(p.id)?` · <span class="solved">✓ ${tr('solved')}</span>`:''}</span></button></li>`).join('');
+      <b>${esc((state.lang==='ko'?p.title.ko:tx(p.title.en)))}</b><span class="meta">${tr('step')} ${p.step} · ${esc(areaLabel(p))}${done.has(p.id)?` · <span class="solved">✓ ${tr('solved')}</span>`:''}</span></button></li>`).join('');
   }
   function select(id,{push=true}={}){
     const p=C.byId(id)||C.PROBLEMS[0];
     state.current=p;
-    $('statement').innerHTML=`<h2>${esc(p.title[state.lang])}</h2><p class="meta">${tr('step')} ${p.step} · ${esc(areaLabel(p))}</p>${renderStatement(p.statement[state.lang])}`;
+    $('statement').innerHTML=`<h2>${esc((state.lang==='ko'?p.title.ko:tx(p.title.en)))}</h2><p class="meta">${tr('step')} ${p.step} · ${esc(areaLabel(p))}</p>${renderStatement((state.lang==='ko'?p.statement.ko:tx(p.statement.en)))}`;
     if(window.renderMathInElement)renderMathInElement($('statement'),{delimiters:[{left:'$',right:'$',display:false}],throwOnError:false});
     $('code').value=store.get('code:'+p.id)||p.starter;
     $('results').innerHTML='';$('plotbox').hidden=true;$('out').hidden=true;$('status').textContent='';
@@ -160,7 +164,7 @@
   let saveTimer=0;$('code').addEventListener('input',()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>store.set('code:'+state.current.id,$('code').value),400);});
   window.addEventListener('message',event=>{
     if(!embedded||event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='hl-compute-settings')return;
-    if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();select(state.current.id,{push:false});}
+    if(LANGS.includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();select(state.current.id,{push:false});}
     if(['light','dark'].includes(event.data.theme)){document.documentElement.dataset.theme=event.data.theme;}
   });
   if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);

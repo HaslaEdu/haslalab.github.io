@@ -8,7 +8,15 @@
   const embedded=params.get('embed')==='1'&&window.parent!==window;
   const SESSION=10;
   const copy={
-    ko:{title:'단원별 문제',streak:'일 연속',xp:'XP',solved:'문제 해결',pick:'단원을 고르면 내 단계에 맞는 문제 10개를 풉니다.',
+    ko:{tabClass:'학급',classIntro:'선생님이 알려 준 6자리 코드로 학급에 들어가면 과제가 여기에 나옵니다. 선생님은 학급을 만들어 AP · JEE 문제를 과제로 내고, 학생별 단원 실력과 과제 진행을 볼 수 있습니다.',myAssignments:'내 과제',noAssignments:'아직 과제가 없습니다.',classCode:'학급 코드',join:'참여',leave:'나가기',leaveConfirm:'이 학급에서 나갈까요?',teach:'가르치기',students:'명',className:'학급 이름',newClass:'학급 만들기',classFree:'무료: 학급 1개, 학생 30명까지. 학생은 이 학급의 학습 기록만 공유합니다.',due:'마감',shareCode:'학생에게 학급 코드를 알려 주세요. 학생이 단원별 문제의 "학급" 탭에서 코드를 입력하면 참여합니다.',student:'학생',answered:'푼 문제',lastActive:'최근 학습',remove:'내보내기',removeConfirm:'이 학생을 학급에서 내보낼까요?',noStudents:'아직 학생이 없습니다.',newAssignment:'과제 내기',allOf:'전체',assign:'과제 내기',closeClass:'학급 닫기',closeConfirm:'학급을 닫을까요? 학생들은 더 이상 과제를 볼 수 없습니다.',
+      cl_bad_name:'학급 이름을 입력하세요.',cl_class_limit:'무료로는 학급을 1개까지 만들 수 있습니다.',cl_bad_code:'코드는 6자리입니다.',cl_class_not_found:'그 코드의 학급이 없습니다.',cl_own_class:'내가 만든 학급입니다.',cl_class_full:'학급 정원이 찼습니다.',cl_bad_items:'문제를 고르세요.',cl_bad_due:'마감일을 확인하세요.',cl_rate_limited:'잠시 뒤에 다시 시도하세요.',
+      tabTracks:'AP · JEE 시험',trackPick:'시험과 단원을 고르면 그 시험 형식의 문제 10개를 풉니다. 하슬라랩이 직접 만든 문제입니다.',mixed:'전체 섞어서',numPh:'답 (숫자)',check:'확인',notNumber:'숫자로 입력하세요 (예: 3.2, 1.5e3, 2×10^4)',hint:'힌트',tutor:'AI 튜터',discuss:'이 문제 토론',seeDiscuss:'이 문제의 질문 보기',newDiscuss:'질문 올리기',byHasla:'하슬라랩 창작 문제',
+      tutorLogin:'AI 튜터는 로그인하면 하루 5번까지 무료로 쓸 수 있습니다.',login:'로그인',tutorPh:'어디서 막혔는지 적어 보세요',tutorSend:'묻기',thinking:'생각하는 중…',tutorLimit:'오늘 무료 질문을 모두 썼습니다. 내일 다시 쓸 수 있습니다.',tutorFail:'지금은 답할 수 없습니다. 잠시 뒤에 다시 시도하세요.',tutorLeft:'오늘 남은 질문',aiNote:'AI가 만든 답변이라 틀릴 수 있습니다.',
+      aiTranslated:'AI 번역',showOriginal:'원문 보기',showTranslation:'번역 보기',translating:'번역하는 중…',withHints:'힌트 사용',
+      diagTitle:'내 수준 찾기',diagBody:'분야별로 두 문제씩, 12문제(약 10분)를 풀면 단원별 시작 단계를 정해 드립니다. 건너뛰고 바로 풀어도 됩니다.',diagStart:'수준 찾기 시작',diagDone:'분야별 시작 단계를 정했습니다. 이제 오늘의 추천이 이 단계에 맞춰집니다.',
+      lvBeginner:'입문',lvFamiliar:'익숙',lvProficient:'능숙',lvMaster:'마스터',tier:'XP 등급',
+      noteTracks:'AP · JEE 문제는 하슬라랩이 각 시험 형식에 맞춰 직접 만든 창작 문제입니다. AP와 Advanced Placement는 College Board의 상표이며, College Board · NTA와 관계가 없습니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장됩니다.',
+      title:'단원별 문제',streak:'일 연속',xp:'XP',solved:'문제 해결',pick:'단원을 고르면 내 단계에 맞는 문제 10개를 풉니다.',
       none:'아직 문제가 없습니다',step:'단계',start:'시작',again:'한 번 더',units:'단원 목록',next:'다음 문제',finish:'결과 보기',
       right:'정답입니다!',wrong:'오답입니다. 정답은',up:'단계가 올랐습니다',down:'한 단계 쉬운 문제로 갑니다',
       result:'맞힌 문제',of:'/',done:'세션 완료',loading:'문제를 불러오는 중…',failed:'문제를 불러오지 못했습니다.',retry:'다시 시도',
@@ -18,7 +26,15 @@
       solvedIt:'풀었어요',missedIt:'못 풀었어요',original:'원문 보기',translated:'번역 보기',noKo:'한국어 번역이 아직 없어 원문을 보여 줍니다.',draft:'하슬라랩 작성 풀이 · 검수 전',refFig:'참고 그림',empty:'이 조건의 문제가 더 없습니다. 난이도나 분야를 바꿔 보세요.',
       contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',figInPdf:'그림은 아래 원본 PDF에서 볼 수 있습니다.',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',
       note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.'},
-    en:{title:'Practice by unit',streak:'day streak',xp:'XP',solved:'solved',pick:'Pick a unit to solve ten problems at your step.',
+    en:{tabClass:'Class',classIntro:'Join your teacher’s class with its six-letter code and your assignments appear here. Teachers can make a class, set AP and JEE problems as assignments, and see each student’s units and progress.',myAssignments:'My assignments',noAssignments:'No assignments yet.',classCode:'Class code',join:'Join',leave:'Leave',leaveConfirm:'Leave this class?',teach:'Teach',students:'students',className:'Class name',newClass:'Make a class',classFree:'Free: one class of up to 30 students. Students share only their Learn practice with the class.',due:'due',shareCode:'Give your students the class code. They enter it in the Class tab of Practice to join.',student:'Student',answered:'Answered',lastActive:'Last active',remove:'Remove',removeConfirm:'Remove this student from the class?',noStudents:'No students yet.',newAssignment:'Set an assignment',allOf:'All',assign:'Assign',closeClass:'Close class',closeConfirm:'Close this class? Students will no longer see its assignments.',
+      cl_bad_name:'Enter a class name.',cl_class_limit:'A free account can have one class.',cl_bad_code:'A code has six letters.',cl_class_not_found:'No class has that code.',cl_own_class:'That is your own class.',cl_class_full:'This class is full.',cl_bad_items:'Pick problems.',cl_bad_due:'Check the due date.',cl_rate_limited:'Try again in a moment.',
+      tabTracks:'AP · JEE',trackPick:'Pick an exam and a unit to solve ten problems in that exam’s style. Every problem is written by HaslaLab.',mixed:'All units mixed',numPh:'Answer (number)',check:'Check',notNumber:'Enter a number (e.g. 3.2, 1.5e3, 2×10^4)',hint:'Hint',tutor:'AI tutor',discuss:'Discuss',seeDiscuss:'Questions about this problem',newDiscuss:'Ask about it',byHasla:'Original problem by HaslaLab',
+      tutorLogin:'Log in to use the AI tutor: five free questions a day.',login:'Log in',tutorPh:'Where are you stuck?',tutorSend:'Ask',thinking:'Thinking…',tutorLimit:'Today’s free questions are used up. More tomorrow.',tutorFail:'The tutor cannot answer right now. Try again in a moment.',tutorLeft:'Questions left today',aiNote:'AI answers can be wrong.',
+      aiTranslated:'AI translation',showOriginal:'Show original',showTranslation:'Show translation',translating:'Translating…',withHints:'with hints',
+      diagTitle:'Find your level',diagBody:'Two problems per area, twelve in all (about 10 minutes), set your starting step in every unit. You can also skip this and start right away.',diagStart:'Find my level',diagDone:'Your starting steps are set. Today’s picks now follow them.',
+      lvBeginner:'Beginner',lvFamiliar:'Familiar',lvProficient:'Proficient',lvMaster:'Master',tier:'XP tier',
+      noteTracks:'AP and JEE problems are original problems written by HaslaLab in each exam’s style. AP and Advanced Placement are trademarks of College Board; HaslaLab is not affiliated with College Board or the NTA. Progress is kept on this device and, when you log in, on your account too.',
+      title:'Practice by unit',streak:'day streak',xp:'XP',solved:'solved',pick:'Pick a unit to solve ten problems at your step.',
       none:'No problems yet',step:'Step',start:'Start',again:'Again',units:'Units',next:'Next',finish:'See results',
       right:'Correct!',wrong:'Not quite. The answer is',up:'Step up',down:'Back one step',
       result:'Correct',of:'/',done:'Session complete',loading:'Loading problems…',failed:'Could not load the problems.',retry:'Retry',
@@ -29,8 +45,14 @@
       contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',figInPdf:'The figures are in the original PDF below.',transcribed:'The text is transcribed from the original paper; if they differ, the PDF is authoritative.',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device and, when you log in, on your account too.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device and, when you log in, on your account too.',
       note:'Problems: Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices (Korean only), shared within the permitted web and app use. Some unit labels are automatic and under review. Progress is kept on this device and, when you log in, on your account too.'}
   };
-  const state={lang:params.get('lang')==='en'?'en':'ko',index:null,shards:{},session:null};
-  const tr=k=>copy[state.lang][k];
+  /* Korean and English are written here; the other languages come from learn-i18n.js, and a missing string falls back
+     to English */
+  const LANGS=['ko','en','es','pt','id','vi','hi'];
+  const I18N=()=>window.HL_I18N||{};
+  const state={lang:LANGS.includes(params.get('lang'))?params.get('lang'):'ko',index:null,shards:{},session:null};
+  window.HL_PAGE_COPY=copy;   /* the strings, for the translation catalogue (tools/i18n) */
+  const tx=en=>state.lang==='en'||state.lang==='ko'?en:(I18N().t?.(en,state.lang)??en);
+  const tr=k=>copy[state.lang]?.[k]??tx(copy.en[k]);
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const store={
     read(){try{return JSON.parse(localStorage.getItem('hlPractice')||'{}')||{};}catch(e){return {};}},
@@ -53,7 +75,8 @@
   const token=()=>{try{const v=localStorage.getItem('hlCmTok')||'';return /^[A-Za-z0-9_-]{20,4096}$/.test(v)?v:'';}catch(e){return '';}};
   function record(item_id,mode,unit,step,result){
     const at=Math.floor(Date.now()/1000);
-    if(result!=='skip'){const k=saved.skills[unit]||{unit,rating:START,n:0,right_n:0,last_at:at};k.rating=updateRating(k.rating,step,result);k.n++;if(result==='right'||result==='solved')k.right_n++;k.last_at=at;saved.skills[unit]=k;}
+    if(result==='place'){const k=saved.skills[unit];if(!k||!k.n)saved.skills[unit]={unit,rating:stepRating(step),n:0,right_n:0,last_at:at};}
+    else if(result!=='skip'){const k=saved.skills[unit]||{unit,rating:START,n:0,right_n:0,last_at:at};k.rating=updateRating(k.rating,step,result);k.n++;if(result==='right'||result==='solved')k.right_n++;k.last_at=at;saved.skills[unit]=k;}
     saved.queue.push({item_id,mode,unit,step,result,at});if(saved.queue.length>500)saved.queue=saved.queue.slice(-500);
     save();scheduleSync();
   }
@@ -102,11 +125,13 @@
       return '';
     }).join('');
   }
-  const unitName=key=>{const e=P.SUBTOPICS.get(key);return e?e.sub.name[state.lang]:key;};
+  const unitName=key=>{const e=P.SUBTOPICS.get(key);return e?(state.lang==='ko'?e.sub.name.ko:tx(e.sub.name.en)):key;};
+  const areaName=a=>state.lang==='ko'?a.name.ko:tx(a.name.en);
   function paintStats(){
     const solvedCount=Object.keys(saved.solved).length;
     const badge=state.sync==='saved'?`<span class="stat sync ok">☁ ${tr('synced')}</span>`:state.sync==='error'?`<span class="stat sync">⚠ ${tr('syncFailed')}</span>`:state.sync==='local'?`<a class="stat sync" href="/#/login" target="_top">${tr('loginToSave')}</a>`:'';
-    $('stats').innerHTML=`<span class="stat fire"><b>🔥 ${streak()}</b>${tr('streak')}</span><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span><span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
+    const tier=tierOf(saved.xp);
+    $('stats').innerHTML=`<span class="stat tier t-${tier[1].toLowerCase()}" title="${tr('tier')}"><b>◆</b>${tier[1]}</span><span class="stat fire"><b>🔥 ${streak()}</b>${tr('streak')}</span><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span><span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
   }
   async function loadIndex(){
     if(!state.index){const r=await fetch('practice/index.json',{cache:'no-cache'});if(!r.ok)throw new Error('index');state.index=await r.json();}
@@ -128,9 +153,9 @@
     $('app').innerHTML=`<p class="pick">${tr('pick')}</p><div class="areas">${P.AREAS.map(area=>{
       const units=area.subtopics.map(sub=>{const key=area.key+'/'+sub.key,c=index.counts[key];return{key,sub,total:c?Object.values(c).reduce((a,b)=>a+b,0):0,steps:c?Object.keys(c).map(Number):[]};}).filter(u=>u.total);
       if(!units.length)return '';
-      return `<section class="area"><h2>${esc(area.name[state.lang])}</h2>${units.map(u=>{
+      return `<section class="area"><h2>${esc(areaName(area))}</h2>${units.map(u=>{
         const done=solvedIn(u.key),lvl=saved.level[u.key]||Math.min(...u.steps);
-        return `<button type="button" class="unit" data-unit="${u.key}"><span class="name">${esc(u.sub.name[state.lang])}<small>${tr('step')} ${lvl} · ${done}/${u.total} ${tr('progress')}</small></span><span class="bar"><i style="width:${Math.round(100*done/u.total)}%"></i></span></button>`;}).join('')}</section>`;
+        return `<button type="button" class="unit" data-unit="${u.key}"><span class="name">${esc(unitName(u.key))}<small>${tr('step')} ${lvl} · ${done}/${u.total} ${tr('progress')}</small></span><span class="bar"><i style="width:${Math.round(100*done/u.total)}%"></i></span></button>`;}).join('')}</section>`;
     }).join('')}</div>`;
     $('app').querySelectorAll('[data-unit]').forEach(b=>b.addEventListener('click',()=>start(b.dataset.unit)));
     reportHeight();
@@ -148,6 +173,7 @@
     tellUnit(unit);next();
   }
   function pick(s){
+    if(s.first&&!s.seen.has(s.first.id))return s.first;
     if(s.fixed)return s.items.find(i=>!s.seen.has(i.id))||null;
     /* nearest step to the learner's level, unsolved and unseen first */
     const pool=s.items.filter(i=>!s.seen.has(i.id));
@@ -156,18 +182,20 @@
   }
   function next(){
     const s=state.session;
-    if(s.n>=SESSION){summary();return;}
-    const item=pick(s);if(!item){summary();return;}
+    if(s.n>=SESSION&&!s.diag){summary();return;}
+    const item=s.diag?pickDiag(s):pick(s);if(!item){summary();return;}
     s.current=item;s.answered=false;s.seen.add(item.id);s.n++;
+    if(item.kind==='track'){showTrack(item);return;}
     const imageChoices=item.ch.every(c=>!c.c.length);
     $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${s.fixed?esc(tr('tabToday'))+' · ':''}${esc(unitName(s.fixed?item.u:s.unit))}</span><span class="lvl">${tr('step')} ${item.s}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/SESSION)}%"></i></span><span>${s.n}/${SESSION}</span></div>
+      ${sessionHead(s,item)}
       <div class="q">${blocks(item.b)}</div>
       <div class="choices${imageChoices?' compact':''}" role="group">${item.ch.map(c=>`<button type="button" class="choice" data-n="${c.n}"><span class="no">${'①②③④⑤'[c.n-1]}</span>${imageChoices?'':`<span>${blocks(c.c).replace(/^<p>|<\/p>$/g,'')}</span>`}</button>`).join('')}</div>
       <div id="feedback"></div>
       <div class="foot"><span class="src">${esc(item.src)} · ${esc(item.by)}${item.pdf?` · <a href="${esc(item.pdf)}" target="_blank" rel="noopener noreferrer">${tr('pdf')}</a>`:''} · ${tr('time')} ${item.sec}${tr('sec')}</span><span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=SESSION?tr('finish'):tr('next')}</button></span></div>
     </div>`;
     $('quit').onclick=s.fixed?todayHome:home;
+    $('skip').hidden=!!s.diag;
     $('app').querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.n))));
     $('next').onclick=next;
     $('skip').onclick=()=>{if(s.answered)return;record(item.id,'exam',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
@@ -180,13 +208,13 @@
     let note='';
     if(ok){
       s.right++;s.run++;const gain=10+2*item.s;s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=item.u;delete saved.wrong[item.id];
-      if(s.fixed){}else if(s.run>=2){const up=s.steps.find(x=>x>s.level);if(up){s.level=up;note=' · '+tr('up')+' ↑';}s.run=0;}
+      if(s.fixed||s.diag){}else if(s.run>=2){const up=s.steps.find(x=>x>s.level);if(up){s.level=up;note=' · '+tr('up')+' ↑';}s.run=0;}
     }else{
       s.run=0;saved.wrong[item.id]=Math.floor(Date.now()/1000);
-      if(!s.fixed){const down=[...s.steps].reverse().find(x=>x<s.level);if(down){s.level=down;note=' · '+tr('down');}}
+      if(!s.fixed&&!s.diag){const down=[...s.steps].reverse().find(x=>x<s.level);if(down){s.level=down;note=' · '+tr('down');}}
     }
     if(!s.fixed)saved.level[s.unit]=s.level;
-    record(item.id,'exam',item.u,item.s,ok?'right':'wrong');
+    record(item.id,s.diag?'diag':'exam',item.u,item.s,ok?'right':'wrong');if(s.diag)diagStep(s,ok);
     if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
     save();paintStats();
     $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+'①②③④⑤'[item.a-1]}${note}</p>`;
@@ -194,9 +222,11 @@
   }
   function summary(){
     const s=state.session;
-    $('app').innerHTML=`<div class="session summary"><p class="eyebrow">${tr('done')}</p><p class="big">${s.right}${tr('of')}${s.n}</p><p>${tr('result')} · +${s.xp} XP · ${s.mode==='bank'?'★'.repeat(s.stars):s.fixed?tr('tabToday'):tr('step')+' '+s.level}${s.skipped?` · ${s.skipped} ${tr('skipped')}`:''} · 🔥 ${streak()}${tr('streak')}</p>
+    if(s.diag){diagSummary(s);return;}
+    $('app').innerHTML=`<div class="session summary"><p class="eyebrow">${tr('done')}</p><p class="big">${s.right}${tr('of')}${s.n}</p><p>${tr('result')} · +${s.xp} XP · ${s.mode==='bank'?'★'.repeat(s.stars):s.fixed?tr('tabToday'):tr('step')+' '+s.level+' · '+tr(LEVELS[levelOf(s.level)])}${s.skipped?` · ${s.skipped} ${tr('skipped')}`:''} · 🔥 ${streak()}${tr('streak')}</p>
       <div class="actions"><button type="button" class="primary" id="again">${tr('again')}</button><button type="button" id="units">${tr('units')}</button></div></div>`;
-    $('again').onclick=()=>s.fixed?todayHome():s.mode==='bank'?bankStart(s.field,s.stars):start(s.unit);$('units').onclick=s.fixed?todayHome:s.mode==='bank'?bankHome:home;reportHeight();
+    if(s.assignment){$('again').onclick=classHome;$('units').onclick=classHome;$('again').textContent=tr('tabClass');reportHeight();return;}
+    $('again').onclick=()=>s.fixed?todayHome():s.mode==='bank'?bankStart(s.field,s.stars):s.mode==='track'?trackStart(s.track,s.syl):start(s.unit);$('units').onclick=s.fixed?todayHome:s.mode==='bank'?bankHome:s.mode==='track'?tracksHome:home;reportHeight();
   }
 
 
@@ -210,9 +240,10 @@
   const BANK_AREA={classical_mechanics:'mechanics',electromagnetism:'em',oscillations_waves:'waves',optics:'optics',thermodynamics:'thermal',statistical_mechanics:'thermal',quantum_mechanics:'modern',special_relativity:'modern',general_relativity:'modern',mathematical_methods:'math'};
   function studied(xp){saved.xp+=xp;if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}save();paintStats();}
   function paintTabs(){
-    $('tabs').innerHTML=[['today',tr('tabToday')],['exam',tr('tabExam')],['bank',tr('tabBank')],['contest',tr('tabContest')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
-    $('tabs').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>({today:todayHome,exam:home,bank:bankHome,contest:contestHome})[b.dataset.mode]());
-    $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':'note');
+    /* the Korean exams are in Korean only: other languages get the exam tracks instead */
+    $('tabs').innerHTML=[['today',tr('tabToday')],['tracks',tr('tabTracks')],...(state.lang==='ko'?[['exam',tr('tabExam')]]:[]),['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
+    $('tabs').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>MODES[b.dataset.mode]());
+    $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':state.mode==='tracks'||state.lang!=='ko'?'noteTracks':'note');
   }
   /* bank text: paragraphs with $…$ and $$…$$ left to KaTeX auto-render */
   function textHtml(t){return esc(t||'').split(/\n{2,}/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('');}
@@ -228,7 +259,7 @@
     const field=state.bankField||BANK_FIELDS[0][0];
     $('app').innerHTML=`<p class="pick">${tr('bankPick')}</p><div class="areas">${BANK_FIELDS.map(([k,ko,en])=>{
       const st=saved.bank.stars[k]||1;
-      return `<section class="area"><h2>${esc(state.lang==='ko'?ko:en)}</h2><div class="starrow" role="group" aria-label="${tr('stars')}">${[1,2,3,4,5].map(n=>`<button type="button" class="unit star${n===st?' cur':''}" data-field="${k}" data-stars="${n}">${'★'.repeat(n)}<small>${tr('step')} ${P.stepFromStars(n)}</small></button>`).join('')}</div></section>`;}).join('')}</div>`;
+      return `<section class="area"><h2>${esc(state.lang==='ko'?ko:tx(en))}</h2><div class="starrow" role="group" aria-label="${tr('stars')}">${[1,2,3,4,5].map(n=>`<button type="button" class="unit star${n===st?' cur':''}" data-field="${k}" data-stars="${n}">${'★'.repeat(n)}<small>${tr('step')} ${P.stepFromStars(n)}</small></button>`).join('')}</div></section>`;}).join('')}</div>`;
     $('app').querySelectorAll('[data-field]').forEach(b=>b.onclick=()=>bankStart(b.dataset.field,Number(b.dataset.stars)));
     reportHeight();
   }
@@ -260,7 +291,7 @@
     const fig=a=>`<figure><img src="${BANK_API+a.url}" alt="" loading="lazy"></figure>`;
     const label=BANK_FIELDS.find(f=>f[0]===s.field);
     $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(state.lang==='ko'?label[1]:label[2])}</span><span class="lvl">${'★'.repeat(s.stars)}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/5)}%"></i></span><span>${s.n}/5</span></div>
+      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(state.lang==='ko'?label[1]:tx(label[2]))}</span><span class="lvl">${'★'.repeat(s.stars)}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/5)}%"></i></span><span>${s.n}/5</span></div>
       ${v.missing?`<p class="src">${tr('noKo')}</p>`:''}<div class="q" id="qtext">${textHtml(v.main?.text)}</div>
       ${v.alt?`<details class="alt"><summary>${tr('original')}</summary><div class="q" id="qalt">${textHtml(v.alt.text)}</div></details>`:''}
       ${figs.filter(a=>a.placement!=='reference').map(fig).join('')}
@@ -295,7 +326,7 @@
     try{if(!state.contests){const r=await fetch('practice/contests.json');if(!r.ok)throw 0;state.contests=(await r.json()).contests;}}catch(e){failed(contestHome);return;}
     $('app').innerHTML=`<p class="pick">${tr('contestPick')}</p><div class="areas">${state.contests.map(c=>{
       const total=c.structured||c.problems.length,done=Object.entries(saved.contest.done).filter(([id,v])=>v===1&&id.startsWith(c.key+'-')&&(c.structured?id.includes('~'):!id.includes('~'))).length;
-      return `<section class="area"><button type="button" class="unit" data-contest="${c.key}"><span class="name"><b>${esc(c.name[state.lang])}</b><small>${tr('step')} ${c.step} · ${total} ${tr('problems')} · ${done} ${tr('progress')}</small></span><span class="bar"><i style="width:${Math.round(100*done/Math.max(1,total))}%"></i></span></button></section>`;}).join('')}</div>`;
+      return `<section class="area"><button type="button" class="unit" data-contest="${c.key}"><span class="name"><b>${esc(nameOf(c.name))}</b><small>${tr('step')} ${c.step} · ${total} ${tr('problems')} · ${done} ${tr('progress')}</small></span><span class="bar"><i style="width:${Math.round(100*done/Math.max(1,total))}%"></i></span></button></section>`;}).join('')}</div>`;
     $('app').querySelectorAll('[data-contest]').forEach(b=>b.onclick=()=>contestShow(b.dataset.contest));
     reportHeight();
   }
@@ -345,14 +376,27 @@
     const title=item?.title||p.title||'';
     const body=item?item.b.map(b=>b.f?`<figure><img src="practice/contest/fig/${encodeURIComponent(b.f)}" width="${b.w}" height="${b.h}" alt="" loading="lazy"></figure>`:textHtml(b.t)).join(''):'';
     $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(c.name[state.lang])}</span><span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}</div>
+      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(nameOf(c.name))}</span><span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}</div>
       ${item?`<div class="q" id="qtext">${body}</div>`:''}
       <div class="langrow">${tr('paper')}: ${langs.map(([l,u])=>`<button type="button" class="${!item&&l===pref[0]?'cur':''}" data-pdf="${esc(u)}">${L[l]||l} PDF</button>`).join('')} <a href="${esc(pref[1])}" target="_blank" rel="noopener" id="openPdf">PDF ↗</a></div>
-      <div id="pdf" class="pdf"${item?' hidden':''} role="document" aria-label="${esc(c.name[state.lang])} ${esc(label)}"><p class="src">${tr('loading')}</p></div>
+      <div id="pdf" class="pdf"${item?' hidden':''} role="document" aria-label="${esc(nameOf(c.name))} ${esc(label)}"><p class="src">${tr('loading')}</p></div>
       <div id="feedback"></div>
       <div class="foot"><span class="src">${sols.length?`${tr('solution')}: `+sols.map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${L[l]||l} ↗</a>`).join(' · '):tr('noContestSol')}${item?' · '+tr('transcribed'):''}</span>
         <span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${tr('another')}</button></span></div></div>`;
     if(item)typeset($('qtext'));
+    /* the transcriptions are Korean: other readers get an AI translation, with the Korean one tap away */
+    if(item&&state.lang!=='ko'){
+      const job=state.contestJob=(state.contestJob||0)+1,texts=item.b.filter(b=>b.t).map(b=>b.t);
+      $('qtext').insertAdjacentHTML('beforebegin',`<p class="src" id="trnote">${tr('translating')}</p>`);
+      aiTranslate(texts).then(out=>{
+        if(state.contestJob!==job||!$('qtext'))return;
+        if(!out.some(Boolean)){$('trnote').textContent='';return;}
+        let orig=false;const map=new Map(texts.map((t,i)=>[t,out[i]||t]));
+        const paint=()=>{$('qtext').innerHTML=item.b.map(b=>b.f?`<figure><img src="practice/contest/fig/${encodeURIComponent(b.f)}" width="${b.w}" height="${b.h}" alt="" loading="lazy"></figure>`:textHtml(orig?b.t:map.get(b.t))).join('');typeset($('qtext'));
+          $('trnote').innerHTML=`${tr('aiTranslated')} · <a href="#" id="trtoggle">${orig?tr('showTranslation'):tr('showOriginal')}</a>`;$('trtoggle').onclick=e=>{e.preventDefault();orig=!orig;paint();};reportHeight();};
+        paint();
+      });
+    }
     /* a figure that could not be cut out is described in brackets: point to the paper */
     if(item&&item.b.some(b=>/\[(그림|Figure)[^\]]*\]/.test(b.t||''))&&!item.b.some(b=>b.f))$('qtext').insertAdjacentHTML('beforeend',`<p class="src">${tr('figInPdf')}</p>`);
     $('app').querySelectorAll('[data-pdf]').forEach(b=>b.onclick=()=>{$('pdf').hidden=false;showPdf(b.dataset.pdf);$('openPdf').href=b.dataset.pdf;$('app').querySelectorAll('[data-pdf]').forEach(x=>x.classList.toggle('cur',x===b));});
@@ -395,7 +439,7 @@
   async function todayHome(){
     state.mode='today';state.session=null;paintTabs();paintStats();tellUnit('');
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
-    let items;try{items=await allExamItems();}catch(e){failed(todayHome);return;}
+    let items;try{items=state.lang==='ko'?await allExamItems():await allTrackItems();}catch(e){failed(todayHome);return;}
     const {chosen,status}=chooseToday(items);
     const why={review:tr('whyReview'),weak:tr('whyWeak'),stretch:tr('whyStretch'),new:tr('whyNew')};
     const counts=chosen.reduce((m,i)=>(m[i.why]=(m[i.why]||0)+1,m),{});
@@ -408,38 +452,324 @@
     let contests=state.contests;try{if(!contests){const r=await fetch('practice/contests.json');contests=state.contests=(await r.json()).contests;}}catch(e){contests=[];}
     const contest=[...contests].sort((a,b)=>Math.abs(a.step-(bestStep+3))-Math.abs(b.step-(bestStep+3)))[0];
     const top=status.filter(x=>x.k).sort((a,b)=>a.r-b.r);
-    $('app').innerHTML=`<section class="session today">
+    const placeCard=!Object.keys(saved.skills).length&&!saved.diagAt?`<section class="session diagcard"><h2>${tr('diagTitle')}</h2><p class="src">${tr('diagBody')}</p><div class="actions"><button type="button" class="primary" id="diagGo">${tr('diagStart')}</button></div></section>`:'';
+    $('app').innerHTML=`${placeCard}<section class="session today">
         <h2>${tr('todayTitle')}</h2>
         <p class="src">${Object.entries(counts).map(([k,n])=>`${why[k]} ${n}`).join(' · ')}${weakUnits.length?` · ${tr('focus')}: ${weakUnits.map(u=>esc(unitName(u))).join(', ')}`:''}</p>
         <ol class="todaylist">${chosen.map(i=>`<li><span class="tag ${i.why}">${why[i.why]}</span> ${esc(unitName(i.u))} <small>${tr('step')} ${i.s}</small></li>`).join('')}</ol>
         <div class="actions"><button type="button" class="primary" id="startToday"${chosen.length?'':' disabled'}>${tr('startToday')}</button></div>
       </section>
       <div class="areas suggest">
-        <button type="button" class="area unit" id="sugBank"><span class="name"><b>${tr('tabBank')}</b><small>${esc(state.lang==='ko'?field[1]:field[2])} · ${'★'.repeat(fieldStars)}</small></span><span>→</span></button>
-        ${contest?`<button type="button" class="area unit" id="sugContest"><span class="name"><b>${tr('tabContest')}</b><small>${esc(contest.name[state.lang])} · ${tr('step')} ${contest.step}</small></span><span>→</span></button>`:''}
+        <button type="button" class="area unit" id="sugBank"><span class="name"><b>${tr('tabBank')}</b><small>${esc(state.lang==='ko'?field[1]:tx(field[2]))} · ${'★'.repeat(fieldStars)}</small></span><span>→</span></button>
+        ${contest?`<button type="button" class="area unit" id="sugContest"><span class="name"><b>${tr('tabContest')}</b><small>${esc(nameOf(contest.name))} · ${tr('step')} ${contest.step}</small></span><span>→</span></button>`:''}
       </div>
-      ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitName(x.u))}</td><td>${x.step}</td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}`;
+      ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitName(x.u))}</td><td>${x.step} <span class="lv lv${levelOf(x.step)}">${tr(LEVELS[levelOf(x.step)])}</span></td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}`;
     $('startToday').onclick=()=>{state.session={unit:'today',fixed:true,items:chosen,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};next();};
     $('sugBank').onclick=()=>{state.bankField=field[0];bankStart(field[0],fieldStars);};
+    if($('diagGo'))$('diagGo').onclick=diagStart;
     if($('sugContest'))$('sugContest').onclick=()=>{paintTabs();contestShow(contest.key);};
     reportHeight();
   }
+
+  /* ── levels: a unit's step reads as a level name; all XP together gives a tier, like a competitive-programming judge ── */
+  const LEVELS=['lvBeginner','lvFamiliar','lvProficient','lvMaster'];
+  const levelOf=step=>step<=2?0:step<=4?1:step<=6?2:3;
+  const TIERS=[[0,'Bronze'],[500,'Silver'],[2000,'Gold'],[6000,'Platinum'],[15000,'Diamond'],[40000,'Ruby']];
+  const tierOf=xp=>[...TIERS].reverse().find(t=>xp>=t[0]);
+  function sessionHead(s,item){
+    const name=s.diag?tr('diagTitle'):s.assignment?s.label:s.fixed?tr('tabToday')+' · '+unitName(item.u):s.mode==='track'?s.label:unitName(s.unit);
+    const total=s.diag?s.diag.areas.length*2:SESSION;
+    return `<div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(name)}</span><span class="lvl">${tr('step')} ${item.s}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/total)}%"></i></span><span>${s.n}/${total}</span></div>`;
+  }
+
+  /* ── the member's plan: tutor questions left today (GET /api/learn/plan) ── */
+  async function loadPlan(){if(!token()){state.plan={plan:'guest',tutorLeft:0};return;}try{state.plan=await api('/api/learn/plan');}catch(e){state.plan=null;}}
+
+  /* ── AI translation of English problem text into the learner's language: cached on the server for everyone; the
+     original is one tap away and is shown whenever a translation is missing or loses the math ── */
+  const trCache=new Map();
+  async function aiTranslate(texts){
+    const to=state.lang,keys=texts.map(t=>to+'\n'+t),need=[...new Set(texts.filter((t,i)=>t&&!trCache.has(keys[i])))];
+    for(let i=0;i<need.length;i+=12){
+      const part=need.slice(i,i+12);
+      try{const r=await fetch(API+'/api/learn/translate',{method:'POST',headers:{'content-type':'application/json',...(token()?{Authorization:'Bearer '+token()}:{})},body:JSON.stringify({to,texts:part})});
+        if(!r.ok)break;const j=await r.json();part.forEach((t,k)=>trCache.set(to+'\n'+t,j.texts?.[k]||null));}catch(e){break;}
+    }
+    return texts.map((t,i)=>trCache.get(keys[i])||null);
+  }
+
+  /* ── exam tracks: AP Physics 1 · 2 · C: Mechanics and JEE Main — original problems in each exam's style, graded at
+     once (a choice, or a number within a tolerance), with hints, a worked solution, the AI tutor and a discussion link ── */
+  async function loadTracks(){if(!state.tracks){const r=await fetch('practice/tracks.json');if(!r.ok)throw new Error('tracks');state.tracks=(await r.json()).tracks;}return state.tracks;}
+  async function trackItems(key){
+    state.trackData||={};
+    if(!state.trackData[key]){const r=await fetch('practice/track/'+encodeURIComponent(key)+'.json');if(!r.ok)throw new Error('track');state.trackData[key]=(await r.json()).items.map(i=>({...i,kind:'track',track:key,u:i.unit,s:i.step}));}
+    return state.trackData[key];
+  }
+  async function allTrackItems(){return (await Promise.all((await loadTracks()).map(t=>trackItems(t.key)))).flat();}
+  const nameOf=o=>o?(state.lang==='ko'?o.ko||o.en:tx(o.en||'')):'';
+  const sylName=(t,key)=>nameOf(t.syl.find(u=>u.key===key)?.name)||key;
+  async function tracksHome(){
+    state.mode='tracks';state.session=null;paintTabs();paintStats();tellUnit('');
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let tracks;try{tracks=await loadTracks();}catch(e){failed(tracksHome);return;}
+    const done=prefix=>Object.keys(saved.solved).filter(id=>id.startsWith(prefix)).length;
+    $('app').innerHTML=`<p class="pick">${tr('trackPick')}</p><div class="areas">${tracks.map(t=>`<section class="area"><h2>${esc(nameOf(t.name))}</h2><p class="src">${esc(nameOf(t.blurb))}</p>
+      ${t.syl.map(u=>{const d=done(t.key+'-'+u.key+'-');return `<button type="button" class="unit" data-track="${t.key}" data-syl="${u.key}"><span class="name">${esc(nameOf(u.name))}<small>${u.n} ${tr('problems')} · ${d} ${tr('progress')}</small></span><span class="bar"><i style="width:${Math.round(100*d/Math.max(1,u.n))}%"></i></span></button>`;}).join('')}
+      <button type="button" class="unit mixed" data-track="${t.key}" data-syl=""><span class="name"><b>${tr('mixed')}</b><small>${t.n} ${tr('problems')} · ${done(t.key+'-')} ${tr('progress')}</small></span><span>→</span></button></section>`).join('')}</div>`;
+    $('app').querySelectorAll('[data-track]').forEach(b=>b.onclick=()=>trackStart(b.dataset.track,b.dataset.syl));
+    reportHeight();
+  }
+  async function trackStart(key,syl){
+    state.mode='tracks';paintTabs();
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let t,items;try{t=(await loadTracks()).find(x=>x.key===key);if(!t){tracksHome();return;}items=(await trackItems(key)).filter(i=>!syl||i.syl===syl);}catch(e){failed(()=>trackStart(key,syl));return;}
+    if(!items.length){tracksHome();return;}
+    const steps=[...new Set(items.map(i=>i.s))].sort((a,b)=>a-b),lk='track:'+key+'/'+(syl||'*');
+    const own=ratingStep(saved.skills[items[0].u]?.rating??START),level=saved.level[lk]&&steps.includes(saved.level[lk])?saved.level[lk]:steps.reduce((b,x)=>Math.abs(x-own)<Math.abs(b-own)?x:b,steps[0]);
+    state.session={mode:'track',track:key,syl,levelKey:lk,label:nameOf(t.name)+(syl?' · '+sylName(t,syl):''),items,steps,level,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};
+    next();
+  }
+  /* a problem opened by its link (a search page, a discussion): that one first, then its unit */
+  async function openItem(id){
+    const key=id.split('-')[0];let items;
+    try{items=await trackItems(key);}catch(e){todayHome();return;}
+    const it=items.find(i=>i.id===id);if(!it){tracksHome();return;}
+    await trackStart(key,it.syl);const s=state.session;if(!s)return;
+    s.seen.clear();s.n=0;s.first=it;next();
+  }
+  /* "3.2e4", "3,2", "3.2×10^4", "3.2 x 10^4", "-1/2" → a number, or NaN */
+  function parseNum(raw){
+    let t=String(raw||'').trim().replace(/\s+/g,'').replace(/−/g,'-');
+    if(/^-?\d+,\d+$/.test(t))t=t.replace(',','.');
+    t=t.replace(/,/g,'');
+    let m=/^(-?\d*\.?\d+)(?:[x×*·]10\^?\(?(-?\d+)\)?)$/i.exec(t);if(m)return Number(m[1])*10**Number(m[2]);
+    m=/^(-?\d+)\/(\d+)$/.exec(t);if(m)return Number(m[1])/Number(m[2]);
+    return /^-?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(t)?Number(t):NaN;
+  }
+  const numOk=(v,a)=>a.tol>0?Math.abs(v-a.value)<=a.tol*Math.abs(a.value)+1e-12:Math.abs(v-a.value)<1e-9;
+  const fmtNum=a=>`${a.value} ${a.unit||''}`.trim();
+  function showTrack(item){
+    const s=state.session;s.hints=0;s.answered=false;s.view=null;s.chat=[];
+    const L='ABCD';
+    $('app').innerHTML=`<div class="session">
+      ${sessionHead(s,item)}
+      <div class="q" id="qtext">${textHtml(item.q)}</div><p class="src" id="trnote"></p>
+      ${item.type==='mc'?`<div class="choices" role="group">${item.choices.map((c,i)=>`<button type="button" class="choice" data-i="${i}"><span class="no">${L[i]}</span><span class="ct">${esc(c)}</span></button>`).join('')}</div>`
+        :`<form class="numrow" id="numf"><input id="num" inputmode="decimal" autocomplete="off" placeholder="${tr('numPh')}" aria-label="${tr('numPh')}"><span class="unitlbl">${esc(item.answer.unit||'')}</span><button type="submit" class="primary">${tr('check')}</button><span class="numerr" id="numerr"></span></form>`}
+      <div id="hints"></div><div id="feedback"></div><div id="sol"></div><div id="tutor"></div><div id="disc"></div>
+      <div class="foot"><span class="src">${esc(s.fixed?unitName(item.u):s.label)} · ${tr('byHasla')} · <a href="#" id="discuss">${tr('discuss')}</a></span>
+        <span class="footbtns"><button type="button" id="hint">${tr('hint')} (0/${item.hints.length})</button><button type="button" id="ask">✦ ${tr('tutor')}</button><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=SESSION||s.diag&&s.n>=s.diag.areas.length*2?tr('finish'):tr('next')}</button></span></div></div>`;
+    typeset($('qtext'));typeset($('app').querySelector('.choices')||$('app'));
+    $('quit').onclick=s.assignment?classHome:s.diag||s.fixed?todayHome:s.mode==='track'?tracksHome:home;
+    $('skip').hidden=!!s.diag;
+    if(item.type==='mc')$('app').querySelectorAll('.choice').forEach(b=>b.onclick=()=>trackAnswer(Number(b.dataset.i)));
+    else $('numf').onsubmit=e=>{e.preventDefault();const v=parseNum($('num').value);if(!Number.isFinite(v)){$('numerr').textContent=tr('notNumber');return;}trackAnswer(v);};
+    $('hint').onclick=()=>{if(s.hints>=item.hints.length)return;s.hints++;paintHints(item);$('hint').textContent=`${tr('hint')} (${s.hints}/${item.hints.length})`;if(s.hints>=item.hints.length)$('hint').disabled=true;reportHeight();};
+    $('ask').onclick=()=>openTutor(item);
+    $('skip').onclick=()=>{if(s.answered)return;record(item.id,'track',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
+    $('next').onclick=next;
+    $('discuss').onclick=e=>{e.preventDefault();discuss(item);};
+    if(state.lang!=='en')localizeTrack(item);
+    reportHeight();window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
+  }
+  const viewOf=item=>state.session?.view&&!state.session.showOriginal?state.session.view:{q:item.q,choices:item.choices||[],hints:item.hints,sol:item.sol};
+  function paintHints(item){const v=viewOf(item),s=state.session;$('hints').innerHTML=v.hints.slice(0,s.hints).map((h,i)=>`<p class="hintbox"><b>${tr('hint')} ${i+1}</b> ${esc(h)}</p>`).join('');typeset($('hints'));}
+  function paintTexts(item){
+    const v=viewOf(item),s=state.session;
+    $('qtext').innerHTML=textHtml(v.q);typeset($('qtext'));
+    $('app').querySelectorAll('.choice .ct').forEach((el,i)=>{el.textContent=v.choices[i]??'';typeset(el);});
+    paintHints(item);if(s.answered)paintSolution(item);
+    $('trnote').innerHTML=s.view?`${tr('aiTranslated')} · <a href="#" id="trtoggle">${s.showOriginal?tr('showTranslation'):tr('showOriginal')}</a>`:'';
+    if($('trtoggle'))$('trtoggle').onclick=e=>{e.preventDefault();s.showOriginal=!s.showOriginal;paintTexts(item);};
+    reportHeight();
+  }
+  async function localizeTrack(item){
+    const s=state.session;$('trnote').textContent=tr('translating');
+    const src=[item.q,...(item.choices||[]),...item.hints,item.sol],out=await aiTranslate(src);
+    if(state.session!==s||s.current!==item)return;
+    if(!out[0]){$('trnote').textContent='';return;}
+    const nc=(item.choices||[]).length,nh=item.hints.length,pickT=(i)=>out[i]||src[i];
+    s.view={q:pickT(0),choices:(item.choices||[]).map((c,i)=>pickT(1+i)),hints:item.hints.map((h,i)=>pickT(1+nc+i)),sol:pickT(1+nc+nh)};
+    paintTexts(item);
+  }
+  function paintSolution(item){const v=viewOf(item);$('sol').innerHTML=`<section class="solution"><h3>${tr('solution')}</h3>${textHtml(v.sol)}</section>`;typeset($('sol'));}
+  function trackAnswer(given){
+    const s=state.session,item=s.current;if(s.answered)return;s.answered=true;
+    const ok=item.type==='mc'?given===item.answer:numOk(given,item.answer);
+    const result=ok?(s.hints?'solved':'right'):'wrong';
+    if(item.type==='mc')$('app').querySelectorAll('.choice').forEach(b=>{b.disabled=true;const i=Number(b.dataset.i);if(i===item.answer)b.classList.add('right');else if(i===given)b.classList.add('wrong');});
+    else{$('num').disabled=true;$('numf').querySelector('button').disabled=true;$('numf').classList.add(ok?'right':'wrong');}
+    let note='';
+    if(ok){
+      s.right++;s.run++;const gain=Math.max(4,10+2*item.s-3*s.hints);s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=item.u;delete saved.wrong[item.id];
+      if(!s.fixed&&!s.diag&&s.run>=2){const up=s.steps.find(x=>x>s.level);if(up){s.level=up;note=' · '+tr('up')+' ↑';}s.run=0;}
+    }else{
+      s.run=0;saved.wrong[item.id]=Math.floor(Date.now()/1000);
+      if(!s.fixed&&!s.diag){const down=[...s.steps].reverse().find(x=>x<s.level);if(down){s.level=down;note=' · '+tr('down');}}
+    }
+    if(s.levelKey)saved.level[s.levelKey]=s.level;
+    record(item.id,s.diag?'diag':'track',item.u,item.s,result);if(s.diag)diagStep(s,ok);
+    if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
+    save();paintStats();
+    const answerText=item.type==='mc'?'ABCD'[item.answer]+'. '+(viewOf(item).choices[item.answer]||''):fmtNum(item.answer);
+    $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+esc(answerText)}${note}${ok&&s.hints?' · '+tr('withHints'):''}</p>`;
+    typeset($('feedback'));if(!s.diag)paintSolution(item);
+    $('next').hidden=false;$('skip').hidden=true;$('hint').hidden=true;$('next').focus();reportHeight();
+  }
+  function discuss(item){
+    const link=`https://haslalab.org/?lang=${state.lang}#/learn/practice?item=${item.id}`;
+    const title=`[${item.id}] `+String(item.q).replace(/\$[^$]*\$/g,'…').replace(/\s+/g,' ').slice(0,70);
+    const write='/#/community/write/qna?'+new URLSearchParams({title,body:`${link}\n\n`}),list='/#/community/qna/1?'+new URLSearchParams({q:item.id,field:'title'});
+    $('disc').innerHTML=`<div class="discuss"><a class="btnlink" href="${esc(list)}" target="_top">${tr('seeDiscuss')}</a><a class="btnlink primary" href="${esc(write)}" target="_top">${tr('newDiscuss')}</a></div>`;reportHeight();
+  }
+
+  /* ── the AI tutor beside the problem: a guiding step, never the answer before the learner has tried; free members get
+     a few questions a day (community/src/learn-services.js) ── */
+  function openTutor(item){
+    const s=state.session;
+    if(!token()){$('tutor').innerHTML=`<div class="tutor"><p class="src">${tr('tutorLogin')} <a href="/#/login" target="_top">${tr('login')}</a></p></div>`;reportHeight();return;}
+    $('tutor').innerHTML=`<div class="tutor"><div class="tutorlog" id="tutorlog">${s.chat.map(chatHtml).join('')}</div>
+      <form id="tutorf" class="tutorf"><textarea id="tutorq" rows="2" maxlength="1500" placeholder="${tr('tutorPh')}"></textarea><button type="submit" class="primary">${tr('tutorSend')}</button></form>
+      <p class="src" id="tutorleft">${leftText()}</p></div>`;
+    typeset($('tutorlog'));
+    $('tutorf').onsubmit=async e=>{
+      e.preventDefault();const q=$('tutorq').value.trim();if(!q)return;
+      const btn=$('tutorf').querySelector('button');btn.disabled=true;$('tutorleft').textContent=tr('thinking');
+      const v=viewOf(item);
+      try{
+        const r=await fetch(API+'/api/learn/tutor',{method:'POST',headers:{'content-type':'application/json',Authorization:'Bearer '+token()},
+          body:JSON.stringify({problem:v.q,choices:v.choices,question:q,lang:state.lang,solved:s.answered,hintsSeen:s.hints,history:s.chat})});
+        const j=await r.json().catch(()=>({}));
+        if(!r.ok){$('tutorleft').textContent=j.error==='tutor_limit'?tr('tutorLimit'):tr('tutorFail');if(j.error==='tutor_limit'&&state.plan)state.plan.tutorLeft=0;btn.disabled=false;return;}
+        s.chat.push({role:'user',content:q},{role:'assistant',content:j.answer});if(state.plan)state.plan.tutorLeft=j.tutorLeft;
+        $('tutorlog').innerHTML=s.chat.map(chatHtml).join('');typeset($('tutorlog'));$('tutorq').value='';$('tutorleft').textContent=leftText();
+      }catch(err){$('tutorleft').textContent=tr('tutorFail');}
+      btn.disabled=false;reportHeight();
+    };
+    reportHeight();$('tutorq').focus();
+  }
+  const chatHtml=m=>`<div class="msg ${m.role}">${m.role==='assistant'?'<b>✦</b> ':''}${textHtml(m.content)}</div>`;
+  const leftText=()=>state.plan&&Number.isFinite(state.plan.tutorLeft)?`${tr('tutorLeft')}: ${state.plan.tutorLeft} · ${tr('aiNote')}`:tr('aiNote');
+
+  /* ── placement test: two questions per area — the first at step 4, the second harder or easier after it — and each
+     area's units start at the step found (only units with no answers yet) ── */
+  const DIAG_AREAS=['mechanics','waves','em','thermal','optics','modern'];
+  async function diagStart(){
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let items;try{items=state.lang==='ko'?await allExamItems():await allTrackItems();}catch(e){failed(diagStart);return;}
+    const byArea={};for(const it of items)(byArea[it.u.split('/')[0]]||=[]).push(it);
+    const areas=DIAG_AREAS.filter(a=>(byArea[a]||[]).length>=2);
+    state.session={mode:'diag',fixed:true,diag:{areas,byArea,i:0,first:null,res:{}},items,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};
+    next();
+  }
+  function pickDiag(s){
+    const d=s.diag;if(d.i>=d.areas.length)return null;
+    const target=d.first===null?4:d.first?6:3,pool=d.byArea[d.areas[d.i]].filter(i=>!s.seen.has(i.id));
+    return pool.sort((a,b)=>Math.abs(a.s-target)-Math.abs(b.s-target)+(Math.random()-.5)*.6)[0]||null;
+  }
+  function diagStep(s,ok){
+    const d=s.diag;
+    if(d.first===null){d.first=ok;return;}
+    d.res[d.areas[d.i]]=d.first?(ok?7:5):(ok?4:2);d.first=null;d.i++;
+  }
+  function diagSummary(s){
+    const d=s.diag;saved.diagAt=Math.floor(Date.now()/1000);
+    for(const [area,step] of Object.entries(d.res)){const a=P.AREAS.find(x=>x.key===area);if(!a)continue;
+      for(const sub of a.subtopics)record('diag-'+area,'diag',area+'/'+sub.key,step,'place');}
+    save();
+    $('app').innerHTML=`<div class="session summary"><p class="eyebrow">${tr('diagTitle')}</p><p class="big">${s.right}${tr('of')}${s.n}</p><p>${tr('diagDone')}</p>
+      <table class="diagres">${Object.entries(d.res).map(([a,st])=>`<tr><td>${esc(areaName(P.AREAS.find(x=>x.key===a)))}</td><td>${tr('step')} ${st}</td><td><span class="lv lv${levelOf(st)}">${tr(LEVELS[levelOf(st)])}</span></td></tr>`).join('')}</table>
+      <div class="actions"><button type="button" class="primary" id="units">${tr('startToday')}</button></div></div>`;
+    $('units').onclick=todayHome;reportHeight();
+  }
+  /* ── classes: a teacher makes a class, students join with its six-letter code, the teacher sets exam-track problems and
+     sees each student's units and assignments (community/src/learn-services.js). Free: one class of 30. ── */
+  async function classApi(path,method='GET',body){
+    const r=await fetch(API+'/api/learn/classes'+path,{method,headers:{Authorization:'Bearer '+token(),...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error||'api'),{code:j.error});return j;
+  }
+  const classErr=e=>copy.en['cl_'+e.code]?tr('cl_'+e.code):tr('failed');
+  const day=sec=>sec?new Date(sec*1000).toLocaleDateString(state.lang):'—';
+  async function classHome(){
+    state.mode='class';state.session=null;paintTabs();paintStats();tellUnit('');
+    if(!token()){$('app').innerHTML=`<p class="pick">${tr('classIntro')}</p><p><a class="btnlink primary" href="/#/login" target="_top">${tr('login')}</a></p>`;reportHeight();return;}
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let d;try{d=await classApi('');}catch(e){failed(classHome);return;}
+    const byClass=new Map(d.joined.map(c=>[c.id,c]));
+    $('app').innerHTML=`<p class="pick">${tr('classIntro')}</p><div class="areas">
+      <section class="area"><h2>${tr('myAssignments')}</h2>
+        ${d.assignments.length?d.assignments.map(a=>`<button type="button" class="unit" data-assign="${a.id}"><span class="name"><b>${esc(a.title)}</b><small>${esc(byClass.get(a.class_id)?.name||'')} · ${a.done}/${a.items.length}${a.due_at?' · '+tr('due')+' '+day(a.due_at):''}</small></span><span class="bar"><i style="width:${Math.round(100*a.done/Math.max(1,a.items.length))}%"></i></span></button>`).join(''):`<p class="src">${tr('noAssignments')}</p>`}
+        <form id="joinf" class="numrow"><input id="joincode" maxlength="6" autocomplete="off" placeholder="${tr('classCode')}" aria-label="${tr('classCode')}"><button type="submit" class="primary">${tr('join')}</button><span class="numerr" id="joinerr"></span></form>
+        ${d.joined.length?`<p class="src">${d.joined.map(c=>`${esc(c.name)}${c.teacher?' · '+esc(c.teacher):''} <a href="#" data-leave="${c.id}">${tr('leave')}</a>`).join('<br>')}</p>`:''}
+      </section>
+      <section class="area"><h2>${tr('teach')}</h2>
+        ${d.teaching.map(c=>`<button type="button" class="unit" data-class="${c.id}"><span class="name"><b>${esc(c.name)}</b><small>${tr('classCode')} ${esc(c.code)} · ${c.n} ${tr('students')}</small></span><span>→</span></button>`).join('')}
+        <form id="newclass" class="numrow"><input id="classname" maxlength="60" autocomplete="off" placeholder="${tr('className')}" aria-label="${tr('className')}"><button type="submit">${tr('newClass')}</button><span class="numerr" id="newerr"></span></form>
+        <p class="src">${tr('classFree')}</p>
+      </section></div>`;
+    $('joinf').onsubmit=async e=>{e.preventDefault();try{await classApi('/join','POST',{code:$('joincode').value});classHome();}catch(err){$('joinerr').textContent=classErr(err);}};
+    $('newclass').onsubmit=async e=>{e.preventDefault();try{const c=await classApi('','POST',{name:$('classname').value});classView(c.id);}catch(err){$('newerr').textContent=classErr(err);}};
+    $('app').querySelectorAll('[data-leave]').forEach(a=>a.onclick=async e=>{e.preventDefault();if(!confirm(tr('leaveConfirm')))return;try{await classApi('/'+a.dataset.leave+'/leave','POST',{});}catch(err){}classHome();});
+    $('app').querySelectorAll('[data-class]').forEach(b=>b.onclick=()=>classView(Number(b.dataset.class)));
+    $('app').querySelectorAll('[data-assign]').forEach(b=>b.onclick=()=>{const a=d.assignments.find(x=>x.id===Number(b.dataset.assign));assignmentStart(a);});
+    reportHeight();
+  }
+  async function assignmentStart(a){
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let pool;try{pool=await allTrackItems();}catch(e){failed(()=>assignmentStart(a));return;}
+    const byId=new Map(pool.map(i=>[i.id,i])),items=a.items.map(id=>byId.get(id)).filter(Boolean);
+    if(!items.length){classHome();return;}
+    state.session={unit:'assignment',fixed:true,assignment:true,label:a.title,items,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};
+    next();
+  }
+  async function classView(id){
+    state.mode='class';paintTabs();
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let c,tracks;try{[c,tracks]=await Promise.all([classApi('/'+id),loadTracks()]);}catch(e){failed(()=>classView(id));return;}
+    $('app').innerHTML=`<div class="session"><div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(c.name)}</span><span class="lvl">${tr('classCode')} ${esc(c.code)}</span></div>
+      <p class="src">${tr('shareCode')}</p>
+      <div class="skills"><table><thead><tr><th>${tr('student')}</th><th>${tr('answered')}</th><th>${tr('lastActive')}</th>${c.assignments.map(a=>`<th>${esc(a.title)}</th>`).join('')}<th></th></tr></thead><tbody>
+      ${c.members.map(m=>`<tr><td>${esc(m.nickname||'#'+m.id)}<br><small>${m.units.sort((x,y)=>x.rating-y.rating).slice(0,2).map(u=>esc(unitName(u.unit))+' '+tr(LEVELS[levelOf(ratingStep(u.rating))])).join(' · ')}</small></td><td>${m.answered}</td><td>${day(m.lastAt)}</td>${c.assignments.map(a=>`<td>${m.assignments[a.id]||0}/${a.items.length}</td>`).join('')}<td><a href="#" data-remove="${m.id}">${tr('remove')}</a></td></tr>`).join('')||`<tr><td colspan="${4+c.assignments.length}">${tr('noStudents')}</td></tr>`}
+      </tbody></table></div>
+      <h3>${tr('newAssignment')}</h3>
+      <form id="assignf" class="numrow"><select id="asTrack">${tracks.map(t=>`<optgroup label="${esc(nameOf(t.name))}">${t.syl.map(u=>`<option value="${t.key}|${u.key}">${esc(nameOf(t.name))} · ${esc(nameOf(u.name))}</option>`).join('')}</optgroup>`).join('')}</select>
+        <select id="asN"><option value="5">5</option><option value="10" selected>10</option><option value="0">${tr('allOf')}</option></select>
+        <input id="asDue" type="date" aria-label="${tr('due')}"><button type="submit" class="primary">${tr('assign')}</button><span class="numerr" id="aserr"></span></form>
+      <div class="actions"><button type="button" id="closeClass">${tr('closeClass')}</button></div></div>`;
+    $('quit').onclick=classHome;
+    $('assignf').onsubmit=async e=>{
+      e.preventDefault();const [tk,syl]=$('asTrack').value.split('|'),n=Number($('asN').value);
+      try{const t=tracks.find(x=>x.key===tk),items=(await trackItems(tk)).filter(i=>i.syl===syl).sort((a,b)=>a.s-b.s);
+        const ids=(n?items.slice(0,n):items).map(i=>i.id).slice(0,40),due=$('asDue').value?Math.floor(new Date($('asDue').value+'T23:59').getTime()/1000):null;
+        await classApi('/'+id+'/assignments','POST',{title:nameOf(t.name)+' · '+nameOf(t.syl.find(u=>u.key===syl).name),items:ids,due_at:due});classView(id);}
+      catch(err){$('aserr').textContent=classErr(err);}
+    };
+    $('app').querySelectorAll('[data-remove]').forEach(a=>a.onclick=async e=>{e.preventDefault();if(!confirm(tr('removeConfirm')))return;try{await classApi('/'+id+'/members/'+a.dataset.remove,'DELETE');}catch(err){}classView(id);});
+    $('closeClass').onclick=async()=>{if(!confirm(tr('closeConfirm')))return;try{await classApi('/'+id,'DELETE');}catch(err){}classHome();};
+    reportHeight();
+  }
+  const MODES={today:todayHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
 
   function applyTheme(){const t=params.get('theme'),dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}
   function translate(){document.documentElement.lang=state.lang;document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=tr(el.dataset.i18n);});$('note').textContent=tr('note');document.title=tr('title')+' · HaslaLab';}
   window.addEventListener('message',event=>{
     if(!embedded||event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='hl-practice-settings')return;
     if(['light','dark'].includes(event.data.theme))document.documentElement.dataset.theme=event.data.theme;
-    if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();paintStats();paintTabs();if(!state.session)({today:todayHome,exam:home,bank:bankHome,contest:contestHome})[state.mode||'today']();}
+    if(LANGS.includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();paintStats();paintTabs();if(!state.session)(MODES[state.mode]||todayHome)();}
   });
   addEventListener('keydown',e=>{
     const s=state.session;if(!s||s.mode==='bank'||/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||''))return;
+    if(s.current?.kind==='track'){if(!s.answered&&s.current.type==='mc'&&/^[1-4a-dA-D]$/.test(e.key))trackAnswer('abcd'.indexOf(e.key.toLowerCase())>=0?'abcd'.indexOf(e.key.toLowerCase()):Number(e.key)-1);else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}return;}
     if(!s.answered&&/^[1-5]$/.test(e.key))answer(Number(e.key));
     else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}
   });
   if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);
   document.documentElement.classList.toggle('embedded',embedded);
   applyTheme();translate();
-  const boot=()=>{pull();const unit=params.get('unit'),mode=params.get('mode');state.mode='exam';paintTabs();if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
+  const boot=()=>{pull();loadPlan();const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
+    if(item&&/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item))openItem(item);
+    else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
+    else if(mode==='diag')diagStart();else if(mode==='class')classHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

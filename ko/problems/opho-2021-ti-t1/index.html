@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPhO 온라인 물리올림피아드 2021 T1 · 부양 | 하슬라랩</title>
+<meta name="description" content="부양(levitation)은 실생활에 폭넓게 응용되는, 널리 연구되는 물리학 분야이다. 상업용 고속 열차는 승객 수송에 자기 부양(magnetic levitation)을 사용하며, 공기역학(aerodynamics)의 물리는 비행기가 하늘을 나는 것을 돕는다. 부양 물리의…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/opho-2021-ti-t1/">
+
+<meta property="og:title" content="OPhO 온라인 물리올림피아드 2021 T1 · 부양 | 하슬라랩">
+<meta property="og:description" content="부양(levitation)은 실생활에 폭넓게 응용되는, 널리 연구되는 물리학 분야이다. 상업용 고속 열차는 승객 수송에 자기 부양(magnetic levitation)을 사용하며, 공기역학(aerodynamics)의 물리는 비행기가 하늘을 나는 것을 돕는다. 부양 물리의…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / OPhO 온라인 물리올림피아드</nav>
+<h1>OPhO 온라인 물리올림피아드 2021 T1 · 부양</h1><p class="meta">OPhO 온라인 물리올림피아드 · 2021 · 단계 7</p>
+<div class="q"><p>부양(levitation)은 실생활에 폭넓게 응용되는, 널리 연구되는 물리학 분야이다. 상업용 고속 열차는 승객 수송에 자기 부양(magnetic levitation)을 사용하며, 공기역학(aerodynamics)의 물리는 비행기가 하늘을 나는 것을 돕는다. 부양 물리의 많은 응용은 거시적 규모에 적용되지만, 이 문제에서는 미시적 규모에서의 부양의 다양한 응용도 분석한다.</p><p>광학 집게(Optical Tweezers)</p><p>광학 집게(optical tweezer, OT)는 단단히 초점을 맞춘 레이저 빔을 사용하여 물체를 세 공간 차원($x$-$y$-$z$) 모두에서 가두는 장치이다. OT를 사용하여 질량 $m$, 반지름 $R$, 상대 유전 상수(relative dielectric constant) $\varepsilon_r$인 유전체 폴리스티렌 나노구(dielectric polystyrene nanosphere)를 가두는 것을 생각하자(레이저 빔은 희박한 매질을 전파하는 단색 광파와 비슷하다). 레이저 빔은 수직 $z$ 방향으로 향한다(레이저 빔의 파장은 $\lambda$이다). 빛에 의한 $z$ 방향의 시간 평균 세기(time averaged intensity)는 가우스 분포 함수를 따른다고 볼 수 있다:</p><p>$$I(\rho,z)=I_0\left(\frac{W_0}{W(z)}\right)^2\exp\left(\frac{-2\rho^2}{W(z)^2}\right)$$</p><p>여기서 $\rho$는 빔 중심으로부터의 거리이고 $W_0$는 허리 크기(waist size), 즉 초점에서의 빔 크기 척도로 알려져 있다. 여기서 허리 길이는 일반적으로 $W(z)=W_0\sqrt{1+z^2/z_R^2}$을 따르며, $z_R=\pi W_0^2/\lambda$는 레일리 길이(Rayleigh length)를 나타낸다.</p><figure><img src="/practice/contest/fig/opho-2021-Ti-p4-f1.webp" width="250" height="308" alt="" loading="lazy"></figure><p>그림 1: 가우스 빔 안에서 중심을 벗어나 놓인 나노구.</p><figure><img src="/practice/contest/fig/opho-2021-Ti-p4-f2.webp" width="375" height="296" alt="" loading="lazy"></figure><p>그림 2: 가우스 빔 안 세기 분포의 그래픽.</p><p>OT는 세 가지 다른 힘을 통해 입자를 가둔다: 입자가 산란하거나 흡수한 빛의 운동량 변화로 생기는 산란력(scattering forces); 레이저 빔의 강한 전기장으로 만들어지는 입자의 분극(polarization)에 의한 기울기력(gradient forces); 그리고 가속하는 전하가 만드는 복사력(radiation forces). 진동수 $\omega$로 진동하는 쌍극자 모멘트 $p_0$인 전기 쌍극자가 복사하는 총 출력은 $P_R=\frac{\mu_0 p_0^2\omega^4}{12\pi c}$이며, $c$는 광속이다.</p><p>1. (6점) 레일리 영역(Rayleigh spectrum)에서, 나노구의 크기는 $\lambda\gg R$이다. 나노구를 $x$ 방향으로 거리 $d\ll W_0$만큼 약간 변위시켰을 때의 진동 진동수 $\Omega$와 평형 위치를 구하라. 이 부분에서는 산란력을 무시한다.(각주 1: $R$의 크기 차수가 $\lambda$보다 크다.)</p><p>미 영역(Mie spectrum)에서는, 입자 크기가 더 이상 파트 A에서처럼 무시할 만하지 않고 $R\gtrsim\lambda^1$를 따른다. 그 결과, 비균일 전기장이 구에 입사하고 산란력을 더 이상 무시할 수 없다. 파트 B와 C에서는 미 영역의 나노구를 다룬다.</p><p>2. (5점) 원점으로부터 거리 $x\ll W_0$의 함수로 나노구에 작용하는 산란력과 토크를 구하라. $x\sim R$로 볼 수 있다. 단순화를 위해 빛이 100% 투과된다고 가정한다.(각주 2: 실제로는 프레넬 방정식(Fresnel's equations)에 의해 일부 빛이 반사된다.) 나노구의 굴절률은 $n$이고 매질의 굴절률은 $m$이다. 필요하다면 답을 적분으로 표현해도 된다.</p><p>3. (2점) 단순화한 모델에서, 나노구에 작용하는 토크는 $\boldsymbol{\tau}=\kappa\boldsymbol{\omega}$로 나타낼 수 있는데, $\kappa$는 수치 상수이고 $\boldsymbol{\omega}$는 나노구의 각속도이다. $t=0$에서 나노구는 각속도 $\omega_0$로 정지해 있고 OT가 켜진다. 시간 $T$ 후에 OT가 꺼지고 나노구는 매질 안에 다시 떠 있게 된다. 전체 과정의 시간이 $t$일 때, 시간 $t$가 지난 후 나노구의 각속도를 구하라. 조각별 함수(piecewise function)로 표현할 수 있다.</p><p>음향 부양(Acoustic Levitation)</p><p>물체는 음파를 통해서도 가둘 수 있다. 음파를 모형화하는 가장 간단한 방법, 즉 1차원에서 생각하자. 주변 온도와 압력이 $T_0$, $P_0$인 길이 $L_0$의 원통형 관이 한쪽 끝에(각주 3: 어떤 모형에서는 피스톤 확성기의 움직이는 콘을 나타낼 수 있다.) 단면적 $S$인 피스톤으로 고정되어 있으며, 이 피스톤은 $x(t)=A\cos(2\pi ft)$로 주기적으로 움직인다. 여기서 $A\ll L_0$는 피스톤의 진폭이고 $f$는 과정의 진동수이다. 관에는 단위 부피당 질량 $m$인 단원자 입자 $n$개가 들어 있다. 피스톤이 앞뒤로 움직이면, 관 속 공기는 음파로서 압축되거나 팽창(희박해짐)한다. 관 속 분자들은 공기가 피스톤 안에서 이동함에 따라 평형 위치에 평행하게 앞뒤로 움직인다. 관 내부의 점성 마찰이나 난류 마찰은 무시한다.</p><p>4. (6점) 피스톤을 움직이는 데 필요한 평균 출력은 얼마인가? $f\gg c_s/A$와 $f\ll c_s/A$의 극한을 고려하라. 여기서 $c_s$는 음파의 속력이다.</p><p>음파에서 밀도 섭동은 매우 작으므로, $\Delta\rho\ll\rho_0$(각주 4: 이 문제에서 $\Delta\rho$를 변수로 사용할 수는 없지만, $\rho_0$는 사용할 수 있다.)로 가정할 수 있다. 여기서 $\rho_0$는 관의 원래 밀도이다. 또한, 음파의 파장은 기체 분자의 평균 자유 행로보다 훨씬 크다. 진동하는 피스톤이 만든 음파는 속력 $c_s$로 이동하며 피스톤이 준 출력을 소산시킨다.</p><p>5. (4점) 압축의 결과로, 음파 속 공기는 더 큰 온도 $\Delta T\ll T_0$를 갖는다. 온도 변화 $\Delta T$를 구하라. 문제 4를 풀지 못했다면, 피스톤을 움직이는 평균 출력을 $P$로 표현하라.</p><p>6. (2점) 압력 변화가 무시할 만한 관 속에서, 반지름 $R&lt;\sqrt{S}$이고 폭 $h\ll R$인 작은 원통형 물체를 생각하자. 음파가 통과할 때 원통에 작용하는 힘 $F$를 구하라. 관이 중력이 작용하는 수직 평면에 놓여 있다면, 원통이 어느 위치(들)에서 부양할지 정성적으로 설명하라.</p><figure><img src="/practice/contest/fig/opho-2021-Ti-p5-f1.webp" width="737" height="247" alt="" loading="lazy"></figure><p>그림 3: 피스톤의 진동을 통해 관 속 음향파가 어떻게 생성되는지에 대한 시각화.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

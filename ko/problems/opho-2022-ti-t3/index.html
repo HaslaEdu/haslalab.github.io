@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPhO 온라인 물리올림피아드 2022 T3 · 로켓 | 하슬라랩</title>
+<meta name="description" content="OPhO 운영진은 \&quot;추진력 없는\&quot; 로켓을 가지고 있는데, 단순화를 위해 질량 2M, 수평 길이 L인 2차원 직사각형 상자로 가정할 수 있다. 상자의 수평 변들은 질량이 없고, 연직 변들은 각각 질량 M을 가진다고 하자. 로켓은 처음에 정지해 있다. 이제 우리는 이…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/opho-2022-ti-t3/">
+
+<meta property="og:title" content="OPhO 온라인 물리올림피아드 2022 T3 · 로켓 | 하슬라랩">
+<meta property="og:description" content="OPhO 운영진은 \&quot;추진력 없는\&quot; 로켓을 가지고 있는데, 단순화를 위해 질량 2M, 수평 길이 L인 2차원 직사각형 상자로 가정할 수 있다. 상자의 수평 변들은 질량이 없고, 연직 변들은 각각 질량 M을 가진다고 하자. 로켓은 처음에 정지해 있다. 이제 우리는 이…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / OPhO 온라인 물리올림피아드</nav>
+<h1>OPhO 온라인 물리올림피아드 2022 T3 · 로켓</h1><p class="meta">OPhO 온라인 물리올림피아드 · 2022 · 단계 7</p>
+<div class="q"><p>OPhO 운영진은 \&quot;추진력 없는\&quot; 로켓을 가지고 있는데, 단순화를 위해 질량 $2M$, 수평 길이 $L$인 2차원 직사각형 상자로 가정할 수 있다. 상자의 수평 변들은 질량이 없고, 연직 변들은 각각 질량 $M$을 가진다고 하자. 로켓은 처음에 정지해 있다. 이제 우리는 이 로켓이 어떻게 움직이는지 그 메커니즘을 탐구할 것이다. 상자의 왼쪽과 오른쪽 변에 각각 질량 $m/N$인 $N$개의 입자가 있다고 하자. 시각 $t=0$에 상자 왼쪽 변의 $N$개 입자를 한꺼번에 속력 $\frac{v}{N}$로 오른쪽으로 발사한다. 또한 $t=0$부터 시작하여 시간 간격 $\frac{L}{v}$마다 상자의 오른쪽 변에서 왼쪽 변으로 속력 $v$인 입자 하나를 발사한다. 입자가 상자의 반대쪽 변에 도달하면 멈춰진다. 입자를 쏘고 받는 구체적인 메커니즘은 여기서 무시한다. 이 메커니즘이 에너지를 보존할 수 있다고 가정하자. 시각 $t=\frac{NL}{v}$ 이후에는 상자의 각 변에 $N$개의 입자가 있게 되어 초기 상태와 동일해진다.</p><p>(a) 부분에서만 상대론적 효과를 무시하라.</p><p>(a) (1점) 고전(뉴턴) 역학에 따르면 로켓에는 무슨 일이 일어나는가? 로켓은 움직이는가?</p><p>(b) (5점) $v\ll c$일 때, 로켓은 얼마나 멀리 움직이는가? $v/c$에 대해 0이 아닌 최저차 항으로 답하라.</p><p>(c) (10점) 로켓 계의 질량 중심은 얼마나 멀리 움직이는가? 마찬가지로 $v/c$에 대해 0이 아닌 최저차 항으로 답하라. 답을 정당화하라.</p><p>(d) (6점) 이 과정이 무한히 계속될 수 없는 이유를 설명하라. 만약 영원히 계속될 수 있다면, 우리는 추진력 없이 로켓을 무한정 움직일 수 있을 것이다.</p><p>(e) (5점) 이 과정이 얼마나 오래 지속될 수 있는지 추정하라. 이 시간 동안 로켓은 얼마나 멀리 움직이는가?</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

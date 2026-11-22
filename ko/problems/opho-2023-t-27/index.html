@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPhO 온라인 물리올림피아드 2023 27 · 최후의 카운트다운 | 하슬라랩</title>
+<meta name="description" content="저용량 화학요법(chemotherapy) 하에서의 암 종양 동역학 모형은 세 개의 음이 아닌 변수 (P,Q,R)로 구성되며, P는 암 종양 크기, Q는 종양 혈관망(vasculature network)의 (정규화된) 수용 능력, R은 면역계의 국소적 (정규화된) 활성도를…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/opho-2023-t-27/">
+
+<meta property="og:title" content="OPhO 온라인 물리올림피아드 2023 27 · 최후의 카운트다운 | 하슬라랩">
+<meta property="og:description" content="저용량 화학요법(chemotherapy) 하에서의 암 종양 동역학 모형은 세 개의 음이 아닌 변수 (P,Q,R)로 구성되며, P는 암 종양 크기, Q는 종양 혈관망(vasculature network)의 (정규화된) 수용 능력, R은 면역계의 국소적 (정규화된) 활성도를…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / OPhO 온라인 물리올림피아드</nav>
+<h1>OPhO 온라인 물리올림피아드 2023 27 · 최후의 카운트다운</h1><p class="meta">OPhO 온라인 물리올림피아드 · 2023 · 단계 7</p>
+<div class="q"><p>저용량 화학요법(chemotherapy) 하에서의 암 종양 동역학 모형은 세 개의 음이 아닌 변수 $(P,Q,R)$로 구성되며, $P$는 암 종양 크기, $Q$는 종양 혈관망(vasculature network)의 (정규화된) 수용 능력, $R$은 면역계의 국소적 (정규화된) 활성도를 나타냅니다:</p><p>$$\begin{aligned}\frac{\mathrm{d}}{\mathrm{d}t}P&amp;=\xi P\ln\frac{Q}{P}-\theta PR-\varphi_1PC,\\\frac{\mathrm{d}}{\mathrm{d}t}Q&amp;=bP-\left(\mu+dP^{2/3}\right)Q-\varphi_2QC,\\\frac{\mathrm{d}}{\mathrm{d}t}R&amp;=\alpha\left(P-\beta P^2\right)R+\gamma-\delta R+\varphi_3RC.\end{aligned}$$</p><p>여기서 $C$는 종양 부위에서 화학요법 약물의 국소 농도이며, 간단한 약동학(pharmacokinetics) 모형을 따른다고 가정할 수 있습니다:</p><p>$$\frac{\mathrm{d}}{\mathrm{d}t}C=-\frac1\tau C+U,$$</p><p>여기서 $U$는 환자 몸에 투여되는 화학요법 약물의 비율입니다. 변하지 않는 비율 $U$를 가정하고, 이를 모형의 또 다른 매개변수로 취급하십시오. 언급되지 않은 다른 모든 기호는 양의 상수 매개변수이며, 그 값은 측정 가능하고 특정 종류의 암과 치료에 따라 달라집니다. 전체적으로 14개의 매개변수가 있습니다 -- 이런 높은 복잡도는 생물물리 모형에서 매우 흔합니다. 각 매개변수 집합마다 여러 가지 가능한 정상 상태(stationary state)가 존재할 수 있으며, 이는 다양한 악성도(malignancy) 수준과 연관될 수 있습니다. 이 모형에서 한 매개변수 집합에 대해, 0이 아닌 정상 종양 크기(안정한 것과 불안정한 것 모두 포함)의 최대 개수는 얼마입니까? 이 문제는 답을 한 번만 제출할 수 있습니다.</p><figure><img src="/practice/contest/fig/opho-2023-T-p11-f1.webp" width="640" height="251" alt="" loading="lazy"></figure></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

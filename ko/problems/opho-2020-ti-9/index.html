@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPhO 온라인 물리올림피아드 2020 9 · 피스톤 총 | 하슬라랩</title>
+<meta name="description" content="이 문제에서는 기체의 팽창을 이용하여 총알을 발사하는 특정 종류의 총에 대한 모델을 살펴본다. 총알은 피스톤(piston)으로 모델링할 수 있다. 대기압은 무시할 만하다고 가정하므로, 전체 장치가 진공 속에 있다고 가정할 수 있다. 또한 총은 단열되어 있다. (40점)…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/opho-2020-ti-9/">
+
+<meta property="og:title" content="OPhO 온라인 물리올림피아드 2020 9 · 피스톤 총 | 하슬라랩">
+<meta property="og:description" content="이 문제에서는 기체의 팽창을 이용하여 총알을 발사하는 특정 종류의 총에 대한 모델을 살펴본다. 총알은 피스톤(piston)으로 모델링할 수 있다. 대기압은 무시할 만하다고 가정하므로, 전체 장치가 진공 속에 있다고 가정할 수 있다. 또한 총은 단열되어 있다. (40점)…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / OPhO 온라인 물리올림피아드</nav>
+<h1>OPhO 온라인 물리올림피아드 2020 9 · 피스톤 총</h1><p class="meta">OPhO 온라인 물리올림피아드 · 2020 · 단계 7</p>
+<div class="q"><p>이 문제에서는 기체의 팽창을 이용하여 총알을 발사하는 특정 종류의 총에 대한 모델을 살펴본다. 총알은 피스톤(piston)으로 모델링할 수 있다. 대기압은 무시할 만하다고 가정하므로, 전체 장치가 진공 속에 있다고 가정할 수 있다. 또한 총은 단열되어 있다. (40점)</p><p>초기 온도 $T_0$의 이상 단원자 기체(ideal monatomic gas)가 단면적 $A$인 긴 원통형 용기 안에 들어 있다. 용기의 한쪽은 벽이고, 다른 쪽은 마찰 없이 용기를 따라 자유롭게 미끄러질 수 있는 질량 $M$의 피스톤이다. 기체의 총 질량은 $m$이고, $N$개의 입자로 이루어져 있다. 처음에 피스톤은 정지해 있으며 반대편 벽으로부터 거리 $L_0$ 떨어져 있다. 그런 다음 피스톤을 놓는다. 시간 $t$ 후 피스톤은 속력 $v$로 움직인다. 과정 내내 입자들은 평균적으로 매우 빠르게 움직인다고 가정한다.</p><p>(a) (5점) $m$이 무시할 만하다고 가정하라. $v$를 구하라.</p><p>(b) (6점) 이제부터는 $m$이 무시할 만하다고 가정하지 마라. 피스톤 반대편 벽에서의 압력이 변하는 시각을 구하라. 또한 그 압력은 증가하는가, 감소하는가? 모든 가정을 명시하라.</p><p>(c) (14점) 이제부터 $t$가 기체 입자의 평균 자유 시간(mean free time)보다 훨씬 작고, $L_0$이 평균 자유 행로(mean free path)보다 훨씬 작다고 가정하라. (이 시간 구간 $t$ 동안, 모든 입자는 여전히 벽과 매우 여러 번 충돌하지만 서로 충돌하지는 않는다고 가정한다.) $v$를 구하라.</p><p>(d) (6점) 시간 $t$ 동안 총의 반동 충격량(recoil impulse)을 구하라.</p><p>(e) (9점) $r&gt;1$을 무차원 매개변수라 하자. 시간 $t$에서 피스톤이 벽으로부터 거리 $rL_0$ 떨어져 있다고 하자. 그런 다음 피스톤을 멈추고, 기체가 (평균 자유 시간보다 훨씬 긴 시간 후) 평형에 도달하도록 둔다. 전체 과정에 걸친 기체의 총 엔트로피 변화를 $r$로 구하고, 열역학 제2법칙을 확인하라.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

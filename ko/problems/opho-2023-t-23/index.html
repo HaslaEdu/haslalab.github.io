@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPhO 온라인 물리올림피아드 2023 23 · 음향 튀김기 | 하슬라랩</title>
+<meta name="description" content="이 문제에서는 열음향 장치(thermoacoustic device)의 간단한 모형을 고려합니다. 이 장치는 강하게 증폭된 소리를 이용해 펌프에 일을 제공하고, 그 펌프가 열을 추출할 수 있게 합니다. 음파는 양쪽이 닫힌 반지름 0.25, mm인 관 속에서…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/opho-2023-t-23/">
+
+<meta property="og:title" content="OPhO 온라인 물리올림피아드 2023 23 · 음향 튀김기 | 하슬라랩">
+<meta property="og:description" content="이 문제에서는 열음향 장치(thermoacoustic device)의 간단한 모형을 고려합니다. 이 장치는 강하게 증폭된 소리를 이용해 펌프에 일을 제공하고, 그 펌프가 열을 추출할 수 있게 합니다. 음파는 양쪽이 닫힌 반지름 0.25, mm인 관 속에서…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / OPhO 온라인 물리올림피아드</nav>
+<h1>OPhO 온라인 물리올림피아드 2023 23 · 음향 튀김기</h1><p class="meta">OPhO 온라인 물리올림피아드 · 2023 · 단계 7</p>
+<div class="q"><p>이 문제에서는 열음향 장치(thermoacoustic device)의 간단한 모형을 고려합니다. 이 장치는 강하게 증폭된 소리를 이용해 펌프에 일을 제공하고, 그 펌프가 열을 추출할 수 있게 합니다. 음파는 양쪽이 닫힌 반지름 $0.25\,\mathrm{mm}$인 관 속에서 정상파(standing wave)를 형성하며, 관 안에는 두 판으로 된 스택(stack)이 삽입되어 있습니다. 스택의 판 사이에 온도 기울기가 형성되고, 판 사이에 갇힌 기체 덩어리(parcel)는 최대 압력 $1.03\,\mathrm{MPa}$와 최소 압력 $0.97\,\mathrm{MPa}$ 사이를 사인 함수 형태로 진동합니다. 기체는 아르곤이며, 밀도는 $1.78\,\mathrm{kg/m^3}$, 단열 상수(adiabatic constant)는 $5/3$입니다. 음속은 $323\,\mathrm{m/s}$입니다. 열펌프 자체는 다음과 같이 작동합니다:</p><p>기체 덩어리는 최소 압력에서 시작합니다. 스택 판이 기체 덩어리를 단열적으로 압축하여 최대 압력으로 만들고, 더 뜨거운 스택 판보다 높은 온도로 기체를 가열합니다. 그런 다음, 기체는 더 뜨거운 스택 판의 온도까지 등압적으로 냉각됩니다. 다음으로, 판이 기체를 단열적으로 팽창시켜 최소 압력으로 되돌리고, 더 차가운 판보다 낮은 온도로 기체를 냉각합니다. 마지막으로, 기체는 더 차가운 스택 판의 온도까지 등압적으로 가열됩니다.</p><p>열음향 열펌프가 열을 방출하는 일률을 구하십시오.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

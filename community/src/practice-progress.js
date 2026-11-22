@@ -26,8 +26,9 @@ export const PRACTICE_SCHEMA = [
      state TEXT NOT NULL,
      updated_at INTEGER NOT NULL)`
 ];
-export const MODES = ['exam', 'bank', 'contest'];
-export const RESULTS = ['right', 'wrong', 'solved', 'missed', 'skip'];
+export const MODES = ['exam', 'bank', 'contest', 'track', 'diag'];
+/* 'place': the placement test's verdict for a unit — the rating starts at that step if the unit has none yet */
+export const RESULTS = ['right', 'wrong', 'solved', 'missed', 'skip', 'place'];
 const UNIT = /^(?:[a-z]+\/[a-z_]+|[a-z]+\/\*|contest\/[a-z]+)$/;
 const ITEM = /^[\w~.:-]{3,120}$/;
 const MAX_BATCH = 50, MAX_STATE = 200000;
@@ -37,7 +38,7 @@ export const START = 1300;
 export const stepRating = step => 1000 + 100 * step;
 export const ratingStep = rating => Math.max(1, Math.min(10, Math.round((rating - 1000) / 100)));
 export function updateRating(rating, step, result) {
-  if (result === 'skip') return rating;
+  if (result === 'skip' || result === 'place') return rating;
   const won = result === 'right' || result === 'solved' ? 1 : 0;
   const expected = 1 / (1 + 10 ** ((stepRating(step) - rating) / 400));
   /* graded answers count fully; marking yourself counts half */
@@ -107,14 +108,19 @@ export function createPracticeRouter({ HttpError, needUser, limit, now, bad }) {
       for (const a of clean) {
         statements.push(env.DB.prepare('INSERT INTO practice_attempts(user_id,item_id,mode,unit,step,result,created_at) VALUES(?,?,?,?,?,?,?)').bind(me.id, a.item_id, a.mode, a.unit, a.step, a.result, a.at));
         if (a.result === 'skip') continue;
+        if (a.result === 'place') {
+          const had = current.get(a.unit);
+          if (!had || !had.n) current.set(a.unit, { unit: a.unit, rating: stepRating(a.step), n: 0, right_n: 0, last_at: a.at, placed: true });
+          continue;
+        }
         const s = current.get(a.unit) || { unit: a.unit, rating: START, n: 0, right_n: 0, last_at: a.at };
         s.rating = updateRating(s.rating, a.step, a.result); s.n++; if (a.result === 'right' || a.result === 'solved') s.right_n++; s.last_at = Math.max(s.last_at, a.at);
-        current.set(a.unit, s);
+        delete s.placed; current.set(a.unit, s);
       }
-      for (const s of current.values()) if (clean.some(a => a.unit === s.unit && a.result !== 'skip'))
+      for (const s of current.values()) if (clean.some(a => a.unit === s.unit && a.result !== 'skip' && (a.result !== 'place' || s.placed)))
         statements.push(env.DB.prepare('INSERT INTO practice_skills(user_id,unit,rating,n,right_n,last_at) VALUES(?,?,?,?,?,?) ON CONFLICT(user_id,unit) DO UPDATE SET rating=excluded.rating,n=excluded.n,right_n=excluded.right_n,last_at=excluded.last_at').bind(me.id, s.unit, s.rating, s.n, s.right_n, s.last_at));
       await env.DB.batch(statements);
-      return { recorded: clean.length, skills: [...current.values()] };
+      return { recorded: clean.length, skills: [...current.values()].map(({ placed, ...s }) => s) };
     }
     throw new HttpError(404, 'not_found');
   };

@@ -30,6 +30,7 @@ import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
 import { createGalleryRouter, activeGallery } from './galleries.js';
 import { createPracticeRouter, ensurePracticeSchema } from './practice-progress.js';
+import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
 import { getMonthlyAnswerSheet, getMonthlyProblemRound } from '../../monthly-problems.mjs';
 import { ensureMonthlyAnswerSetup, visibleMonthlySql, normalizeMonthlyParts,
@@ -254,6 +255,7 @@ const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
 const practiceRouter = createPracticeRouter({HttpError, needUser, limit, now, bad});
+const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, clientIp});
 const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
 /* a post goes to a built-in board of the main gallery or to an open minor gallery */
 const postBoard = async (env, board) => BOARDS.includes(board) ? board : (await activeGallery(env, board)) ? board : null;
@@ -478,10 +480,15 @@ async function handle(req, env, url, ctx) {
     await revokeAppleTokens(env, me.id);
     // Learn section progress (practice-progress.js)
     await ensurePracticeSchema(env);
+    await ensureLearnSchema(env);
     await env.DB.batch([
       env.DB.prepare("DELETE FROM practice_attempts WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM practice_skills WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM practice_state WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM ai_usage_daily WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM entitlements WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM class_members WHERE user_id=?").bind(me.id),
+      env.DB.prepare("UPDATE classes SET closed_at=? WHERE teacher_id=? AND closed_at IS NULL").bind(now(), me.id),
       ...hphoRows,
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
@@ -762,6 +769,8 @@ async function handle(req, env, url, ctx) {
 
   const practice = await practiceRouter(p, m, body, me, env);
   if (practice !== undefined) return practice;
+  const learn = await learnRouter(p, m, body, me, req, env);
+  if (learn !== undefined) return learn;
   const gallery = await galleryRouter(p, m, body, me, env);
   if (gallery !== undefined) return gallery;
   const omr = await omrRouter(p, m, body, me, req, env, url);

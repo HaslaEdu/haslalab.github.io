@@ -7,8 +7,11 @@
   const embedded=params.get('embed')==='1'&&window.parent!==window;
   const G=9.8;
   const L=(ko,en)=>({ko,en});
-  const state={lang:params.get('lang')==='en'?'en':'ko',sim:null,s:null,p:{},running:true,last:0,graph:[],answered:false};
-  const tr=v=>typeof v==='string'?v:v[state.lang];
+  const LANGS=['ko','en','es','pt','id','vi','hi'];
+  /* Korean and English are written here; other languages look the English up in learn-i18n.js */
+  const tx=en=>state.lang==='en'||state.lang==='ko'?en:(window.HL_I18N?.t?.(en,state.lang)??en);
+  const state={lang:LANGS.includes(params.get('lang'))?params.get('lang'):'ko',sim:null,s:null,p:{},running:true,last:0,graph:[],answered:false};
+  const tr=v=>typeof v==='string'?v:state.lang==='ko'?v.ko:tx(v.en);
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const fmt=(v,d=2)=>Number.isFinite(v)?(Math.abs(v)<1e-9?'0':v.toFixed(d)):'—';
   const css=k=>getComputedStyle(document.documentElement).getPropertyValue(k).trim();
@@ -183,7 +186,8 @@
       note:'모든 움직임은 식을 수치 적분해서 계산합니다. 값을 바꾸면 처음부터 다시 시작합니다.'},
     en:{title:'Concept simulations',play:'Play',pause:'Pause',reset:'Restart',check:'Check yourself',right:'Correct!',wrong:'Think again.',practice:'Practise this unit →',all:'Olympiad experiment simulators →',
       note:'Every motion is computed by integrating its equations. Changing a value restarts the run.'}};
-  const t=k=>copy[state.lang][k];
+  window.HL_PAGE_COPY=copy;   /* the strings, for the translation catalogue (tools/i18n) */
+  const t=k=>copy[state.lang]?.[k]??tx(copy.en[k]);
   function reportHeight(){if(embedded)requestAnimationFrame(()=>window.parent.postMessage({type:'hl-concepts-height',height:Math.ceil(document.documentElement.scrollHeight)},location.origin));}
   function list(){
     $('list').innerHTML=SIMS.map(sim=>`<li><button type="button" data-id="${sim.id}" aria-current="${sim===state.sim}">${esc(tr(sim.title))}</button></li>`).join('');
@@ -235,7 +239,7 @@
   window.addEventListener('message',event=>{
     if(!embedded||event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='hl-concepts-settings')return;
     if(['light','dark'].includes(event.data.theme))document.documentElement.dataset.theme=event.data.theme;
-    if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();choose(state.sim.id,{push:false});}
+    if(LANGS.includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();choose(state.sim.id,{push:false});}
   });
   if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);
   document.documentElement.classList.toggle('embedded',embedded);

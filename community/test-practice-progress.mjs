@@ -52,3 +52,19 @@ test('the saved state merges with what another device sent, never losing progres
   await fails(route('/api/practice/state','POST',{state:'x'},me,env),'bad_state');
   assert.deepEqual(mergeState(null,{days:['bad']}).days,[]);
 });
+
+test('the placement test sets a starting rating only for units with no answers yet, and track and diagnostic attempts count',async()=>{
+  const {env,route}=setup();
+  await route('/api/practice/attempts','POST',{attempts:[{item_id:'kr-9',mode:'exam',unit:'waves/shm',step:3,result:'right'}]},me,env);
+  const before=Object.fromEntries((await route('/api/practice/state','GET',{},me,env)).skills.map(x=>[x.unit,x]))['waves/shm'].rating;
+  const r=await route('/api/practice/attempts','POST',{attempts:[
+    {item_id:'diag-mechanics',mode:'diag',unit:'mechanics/kinematics',step:6,result:'place'},
+    {item_id:'diag-waves',mode:'diag',unit:'waves/shm',step:8,result:'place'},
+    {item_id:'ap1-u3-007',mode:'track',unit:'mechanics/energy',step:4,result:'right'}]},me,env);
+  assert.equal(r.recorded,3);assert.ok(r.skills.every(s=>!('placed' in s)));
+  const s=Object.fromEntries((await route('/api/practice/state','GET',{},me,env)).skills.map(x=>[x.unit,x]));
+  assert.equal(s['mechanics/kinematics'].rating,stepRating(6));assert.equal(s['mechanics/kinematics'].n,0);
+  assert.equal(s['waves/shm'].rating,before,'a unit with answers keeps its earned rating');
+  assert.equal(s['mechanics/energy'].n,1);
+  assert.equal(updateRating(START,9,'place'),START);
+});
