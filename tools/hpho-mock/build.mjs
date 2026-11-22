@@ -149,6 +149,7 @@ function render(bl, ctx) {
       }
       case 'box': return `<div class="box"><div class="bt">${inline(b.raw, file)}</div>${inner()}</div>`;
       case 'small': return `<div class="small">${inner()}</div>`;
+      case 'credit': return `<div class="credit">${inner()}</div>`;
       case 'intro': return `<div class="intro">${inner()}</div>`;
       default: throw new Error(`${file}: unknown fence ::: ${b.kind}`);
     }
@@ -191,6 +192,7 @@ ul{margin:0 0 6pt;padding-left:25pt}li{margin:0 0 1pt}
 .intro{color:#0000b3;font-size:8.5pt;line-height:10pt}
 .mark{width:76%;margin:4pt auto 12pt;border-collapse:collapse;break-inside:avoid}
 .mark td{border:0.8pt solid #000;padding:2pt 6pt}.mark td.mp{width:36pt;text-align:right}
+.credit{font-size:7.6pt;line-height:9pt;color:#555;text-align:center;margin:-2pt 0 12pt}.credit p{margin:0}
 .pb{break-after:page}
 `;
 
