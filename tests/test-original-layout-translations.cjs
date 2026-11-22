@@ -15,7 +15,10 @@ const revisions = JSON.parse(versions[1]);
 const begin = html.indexOf('const thyUrl=');
 const end = html.indexOf('/* Competition or organiser websites', begin);
 const base = 'https://haslalab-pdf.haslalab.workers.dev/pdf/';
-const thyUrl = vm.runInNewContext(html.slice(begin, end) + '\nthyUrl;', {PDF_BASE: base, ORIGINAL_LAYOUT_PDF_VERSIONS: revisions, window: {KPHE_PDF_VERSIONS: {'pdfx/kphe/existing.pdf': 'existing'}}});
+// every PDF link also carries the page's cache revision (&cv=), bumped when the links themselves change
+const cacheRevision = Number(html.match(/const PDF_LINK_CACHE_REVISION=(\d+);/)?.[1]);
+assert.ok(Number.isInteger(cacheRevision), 'PDF_LINK_CACHE_REVISION must be a number in index.html');
+const thyUrl = vm.runInNewContext(html.slice(begin, end) + '\nthyUrl;', {PDF_BASE: base, ORIGINAL_LAYOUT_PDF_VERSIONS: revisions, PDF_LINK_CACHE_REVISION: cacheRevision, window: {KPHE_PDF_VERSIONS: {'pdfx/kphe/existing.pdf': 'existing'}}});
 assert.ok(published.length > 0);
 for (const item of published) {
   const record = read(item.qa);
@@ -37,8 +40,11 @@ for (const item of published) {
   }
   const font = fonts.find(row => row.file === item.file);
   assert.equal(revisions[item.file], item.sha256.slice(0, 16));
-  assert.equal(thyUrl(item.file), base + item.file + '?v=' + item.sha256.slice(0, 16));
-  assert.equal(thyUrl(base + item.file), thyUrl(item.file));
+  // site PDFs are linked by their real name under /pdf/l/<folder>/ (#604), with the reviewed revision
+  const linked = item.file.replace(/^pdfx\/(?:([a-z]+)\/)?/, (m, d) => 'l/' + (d ? d + '/' : ''));
+  const stamp = '?v=' + item.sha256.slice(0, 16) + '&cv=' + cacheRevision;
+  assert.equal(thyUrl(item.file), base + linked + stamp);
+  assert.equal(thyUrl(base + item.file), base + item.file + stamp, 'a full link to the file keeps the same revision');
   assert.ok(font, item.file);
   assert.equal(assets[item.file], item.bytes, 'Released bytes must match the reviewed original-layout PDF');
   assert.equal(font.bytes, item.bytes);
