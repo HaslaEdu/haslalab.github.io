@@ -107,7 +107,13 @@
     if(!token()){state.sync='local';paintStats();return;}
     if(syncing){scheduleSync();return;}syncing=true;
     try{
-      while(saved.queue.length){const batch=saved.queue.slice(0,50),r=await api('/api/practice/attempts','POST',{attempts:batch});saved.queue.splice(0,batch.length);for(const k of r.skills||[])saved.skills[k.unit]=k;save();}
+      /* a server not yet updated knows only the first three modes: the rest wait in the queue until it is */
+      const sendable=a=>!state.serverOld||(['exam','bank','contest'].includes(a.mode)&&a.result!=='place');
+      for(let batch;(batch=saved.queue.filter(sendable).slice(0,50)).length;){
+        let r;try{r=await api('/api/practice/attempts','POST',{attempts:batch});}
+        catch(e){if(!state.serverOld&&/api 400/.test(e.message)){state.serverOld=true;continue;}throw e;}
+        const sent=new Set(batch);saved.queue=saved.queue.filter(a=>!sent.has(a));for(const k of r.skills||[])if(!state.serverOld||!saved.skills[k.unit]||k.n>=saved.skills[k.unit].n)saved.skills[k.unit]=k;save();
+      }
       const r=await api('/api/practice/state','POST',{state:stateOf()});Object.assign(saved,mergeState(stateOf(),r.state));save();state.sync='saved';
     }catch(e){state.sync='error';setTimeout(scheduleSync,30000);}
     syncing=false;paintStats();
@@ -115,7 +121,7 @@
   /* on opening: the account's state and ratings join this device's, then anything queued here is sent */
   async function pull(){
     if(!token())return;
-    try{const r=await api('/api/practice/state');Object.assign(saved,mergeState(stateOf(),r.state));for(const k of r.skills||[])saved.skills[k.unit]=k;save();state.sync='saved';}catch(e){state.sync='error';}
+    try{const r=await api('/api/practice/state');Object.assign(saved,mergeState(stateOf(),r.state));for(const k of r.skills||[])if(!saved.skills[k.unit]||k.n>=saved.skills[k.unit].n)saved.skills[k.unit]=k;save();state.sync='saved';}catch(e){state.sync='error';}
     paintStats();scheduleSync();
   }
   const today=()=>new Date().toLocaleDateString('sv');   /* YYYY-MM-DD in local time */
@@ -520,7 +526,7 @@
   }
 
   /* ── the member's plan: tutor questions left today (GET /api/learn/plan) ── */
-  async function loadPlan(){if(!token()){state.plan={plan:'guest',tutorLeft:0};return;}try{state.plan=await api('/api/learn/plan');}catch(e){state.plan=null;}}
+  async function loadPlan(){if(!token()){state.plan={plan:'guest',tutorLeft:0};return;}try{state.plan=await api('/api/learn/plan');}catch(e){state.plan=null;if(/api 404/.test(e.message))state.serverOld=true;}}
 
   /* ── AI translation of English problem text into the learner's language: cached on the server for everyone; the
      original is one tap away and is shown whenever a translation is missing or loses the math ── */
