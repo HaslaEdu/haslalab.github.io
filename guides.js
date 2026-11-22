@@ -63,8 +63,13 @@
     let kind='all',country='';
     const countries=[...new Set(ev.map(e=>e.country).filter(c=>c&&c!=='intl'))].sort();
     const date=e=>{
-      if(e.start){const f=s=>`${Number(s.slice(5,7))}${K?'월 ':'/'}${Number(s.slice(8,10))}${K?'일':''}`;return `<b>${e.start.slice(0,4)}. ${f(e.start)}${e.end&&e.end!==e.start?' – '+f(e.end):''}</b>`;}
-      return `<span class="tba">${K?'미정 · 보통 ':'TBA · usually '}${esc(e.typical||'')}</span>`;
+      if(e.start){
+        const [y,m,dd]=e.start.split('-').map(Number),[y2,m2,d2]=(e.end||e.start).split('-').map(Number),one=e.end===e.start||!e.end;
+        if(K)return `<b>${y}년 ${m}월 ${dd}일${one?'':` – ${y2!==y?y2+'년 ':''}${m2!==m||y2!==y?m2+'월 ':''}${d2}일`}</b>`;
+        const M=n=>MONTHS.en[n-1].slice(0,3);
+        return `<b>${M(m)} ${dd}${one?'':` – ${m2!==m?M(m2)+' ':''}${d2}`}, ${y2}</b>`;
+      }
+      return `<span class="tba">${K?'미정 · 보통 ':'TBA · usually '}${esc(K?e.typical_ko||e.typical||'':e.typical||'')}</span>`;
     };
     const paint=()=>{
       bar.innerHTML=`<div class="seg">${KINDS.map(([k,n])=>`<button type="button" data-k="${k}" class="${k===kind?'on':''}">${K?n.ko:n.en}</button>`).join('')}</div>
@@ -74,9 +79,9 @@
       const rows=ev.filter(e=>(kind==='all'||kindOf(e)===kind)&&(!country||e.country===country||e.country==='intl'&&kind==='international'));
       rows.sort((a,b)=>(a.start||'9999')<(b.start||'9999')?-1:(a.start||'9999')>(b.start||'9999')?1:a._m-b._m);
       box.innerHTML=rows.length?`<table class="sc-table"><thead><tr><th>${K?'날짜':'Date'}</th><th>${K?'대회 · 시험':'Event'}</th><th>${K?'종류':'Kind'}</th><th>${K?'장소':'Where'}</th></tr></thead><tbody>${rows.map(e=>`<tr>
-          <td>${date(e)}</td><td>${safe(e.url)?`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(K?e.name_ko||e.name:e.name)}</a>`:esc(K?e.name_ko||e.name:e.name)}<small>${esc(e.level||'')}</small></td>
+          <td>${date(e)}</td><td>${safe(e.url)?`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(K?e.name_ko||e.name:e.name)}</a>`:esc(K?e.name_ko||e.name:e.name)}${K?'':`<small>${esc(e.level||'')}</small>`}</td>
           <td><span class="sc-kind ${kindOf(e)}">${esc((KINDS.find(k=>k[0]===kindOf(e))||[0,{ko:e.kind,en:e.kind}])[1][K?'ko':'en'])}</span></td>
-          <td>${e.country&&e.country!=='intl'&&typeof flagImg==='function'?flagImg(e.country,'sc-flag'):''} ${esc(e.host||'')}</td></tr>`).join('')}</tbody></table>`:`<p class="note">${K?'해당하는 일정이 없습니다.':'Nothing matches.'}</p>`;
+          <td>${e.country&&e.country!=='intl'&&typeof flagImg==='function'?flagImg(e.country,'sc-flag'):''} ${esc(e.host||(e.country==='intl'?'':e.country.toUpperCase()))}</td></tr>`).join('')}</tbody></table>`:`<p class="note">${K?'해당하는 일정이 없습니다.':'Nothing matches.'}</p>`;
     };
     paint();
     box.insertAdjacentHTML('afterend',`<p class="note">${K?'기준일':'As of'} ${esc(d.as_of||'')}. ${K?'날짜가 바뀌었거나 빠진 대회가 있으면 커뮤니티에 알려 주세요.':'If a date has changed or a contest is missing, tell us in the community.'}</p>`);
