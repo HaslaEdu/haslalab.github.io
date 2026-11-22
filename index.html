@@ -324,6 +324,34 @@ section{padding:58px 0}
 .learn-pending{max-width:760px;margin:0 0 48px;padding:32px;border:1px dashed var(--grid-bold);border-radius:12px}
 .learn-pending h2{margin:0;font-size:1.35rem}
 .learn-tool-copy{color:var(--graphite);font-size:13px;line-height:1.8;margin:14px 0 0;max-width:600px}
+.learn-card-note{color:var(--graphite);font-size:13px;line-height:1.6;margin:8px 0 0}
+.learn-physics{padding-bottom:36px}
+.lp-block{margin:0 0 44px}
+.lp-block h2{font-size:1.2rem;margin:0 0 14px}
+.lp-stages{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;counter-reset:none}
+.lp-stage{background:#fff;border:1px solid var(--grid-bold);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.lp-stage b{font-size:1.05rem}
+.lp-stage p{margin:4px 0 0;color:var(--ink);font-size:13px;line-height:1.6}
+.lp-steps{font-size:11.5px;color:var(--laser)}
+.lp-who,.lp-src{font-size:12px;color:var(--graphite);line-height:1.5}
+.lp-src{margin-top:auto;padding-top:6px;border-top:1px dashed var(--grid-bold)}
+.lp-areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:14px}
+.lp-area{background:#fff;border:1px solid var(--grid-bold);border-radius:10px;padding:14px 16px;min-width:0}
+.lp-area h3{margin:0 0 10px;font-size:1rem}
+.lp-topics{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.lp-topics a,.lp-topics span[data-subtopic]{display:inline-flex;color:inherit;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--grid-bold);border-radius:16px;font-size:12.5px;line-height:1.5;text-decoration:none}
+.lp-topics a:hover,.lp-topics a:focus-visible{border-color:var(--ink)}
+.lp-from{font-size:10.5px;color:var(--graphite)}
+.section-nav{border-top:1px solid var(--grid-bold)}
+.section-nav .shell{display:flex;gap:4px;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding-top:0;padding-bottom:0}
+.section-nav .shell::-webkit-scrollbar{display:none}
+.section-nav a{flex:none;padding:9px 12px;font-size:13px;color:var(--graphite);text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap}
+.section-nav a:hover{color:var(--ink)}
+.section-nav a[aria-current="page"]{color:var(--ink);font-weight:650;border-bottom-color:currentColor}
+.learn-home{padding-bottom:36px}
+.lh-hero{padding:40px 0 26px;max-width:680px}
+.lh-hero h1{font-size:clamp(1.9rem,4.5vw,2.7rem);line-height:1.2;margin:8px 0 14px}
+.lh-modes{margin-bottom:40px}
 .learn-studio{padding-bottom:36px}
 .learn-studio .phead{margin-bottom:24px}
 .learn-studio-frame{display:block;width:100%;height:1050px;min-height:600px;border:0;background:transparent}
@@ -995,7 +1023,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=bd9e96b91cc6">
+<link rel="stylesheet" href="site-design.css?v=cf7f302892c9">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
 </head>
@@ -1141,16 +1169,17 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=8fc1f58f4d5c"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
+<script src="learn-path.js?v=2fffa95fd5dc"></script>
 <script src="archive-navigation.js?v=f59ccf8d9f5f"></script>
 <script src="site-catalogue.js?v=f587b15cc2e9"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
-<script src="site-design.js?v=0d613eb1488e"></script>
+<script src="site-design.js?v=56e76d4f3c53"></script>
 <script src="hpho.js?v=9bcabfc8be72"></script>
 <script src="hpho-proctor.js?v=c8b93c4e12fb"></script>
 <script src="hpho-phone.js?v=3a6015cc1217"></script>
 <script src="hpho-exam.js?v=a4e790f96370"></script>
-<script src="site-ux.js?v=e44b8b266624"></script>
+<script src="site-ux.js?v=51373bbd8802"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="ai-chat.js?v=278f5546252e"></script>
 <script>
@@ -1191,7 +1220,8 @@ const pdfxUrl = p => String(p).replace(PDFX_RE, (m, sub, name) => PDF_BASE + "l/
 /* ── copy ── */
 const UI={
 ko:{
-  navHome:"홈", navComps:"아카이브", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티", navWeekly:"월별문제",
+  navHome:"홈", navComps:"아카이브", navLearn:"학습", navOly:"올림피아드", navAbout:"소개", navComm:"커뮤니티", navWeekly:"월별문제",
+  hOly:"올림피아드", olyLede:"국제 · 국내 물리올림피아드 기출, 실험 시뮬레이터, 월별 문제와 모의고사를 모았습니다.",
   ebLearn:"학습", hLearn:"학습", learnSoon:"준비중",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
   ownGuide:"HaslaLab 교재 · 학습 가이드", ownBasics:"HaslaLab 기초 실험 및 관측", soonOwn:"준비 중입니다.",
@@ -1259,7 +1289,8 @@ ko:{
   footL:"HaslaLab · MinGyuSong · HaslaEdu", footTop:"맨 위로 ↑"
 },
 en:{
-  navHome:"Home", navComps:"Archive", navLearn:"Learn", navAbout:"About", navComm:"Community", navWeekly:"Monthly",
+  navHome:"Home", navComps:"Archive", navLearn:"Learn", navOly:"Olympiad", navAbout:"About", navComm:"Community", navWeekly:"Monthly",
+  hOly:"Olympiad", olyLede:"International and national olympiad papers, experiment simulators, monthly problems and mock exams.",
   ebLearn:"Learn", hLearn:"Learn", learnSoon:"Coming soon",
   lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
   ownGuide:"HaslaLab textbook · study guide", ownBasics:"HaslaLab basic experiments and observation", soonOwn:"In preparation.",
@@ -4785,25 +4816,33 @@ function trackSwitch(key,year){
 /* ══════════════════════════════════════════════════════════════
    LANGUAGE
    ══════════════════════════════════════════════════════════════ */
-let lang = new URLSearchParams(location.search).get("lang");
-if(lang!=="ko" && lang!=="en") lang = "ko";
+/* The site is written in Korean and English. `uiLang` is the reader's language and `lang` the site's (the same two for
+   now); LX and LP are where a further language would plug in (translated strings looked up by their English text) once
+   there is enough content to translate. */
+const UI_LANGS = ["ko","en"];
+let uiLang = new URLSearchParams(location.search).get("lang");
+if(!UI_LANGS.includes(uiLang)) uiLang = "ko";
+let lang = uiLang==="ko" ? "ko" : "en";
+const LX = s => uiLang==="ko"||uiLang==="en" ? s : (window.HL_I18N?.t(s,uiLang) ?? s);
+const LP = o => !o ? "" : lang==="ko" ? (o.ko ?? o.en) : LX(o.en ?? o.ko);
 
 /* the toggle is painted from `lang`, never from the click, so a page opened
    straight at ?lang=en lights the right button too */
 function paintLang(){
-  document.getElementById("lang-ko").setAttribute("aria-pressed", lang==="ko");
-  document.getElementById("lang-en").setAttribute("aria-pressed", lang==="en");
+  document.getElementById("lang-ko").setAttribute("aria-pressed", uiLang==="ko");
+  document.getElementById("lang-en").setAttribute("aria-pressed", uiLang==="en");
 }
 
 function setLang(next){
-  lang = next;
-  document.documentElement.lang = lang;
+  uiLang = UI_LANGS.includes(next) ? next : "ko";
+  lang = uiLang==="ko" ? "ko" : "en";
+  document.documentElement.lang = uiLang;
   paintLang();
   /* Keep the choice in the address bar so a refresh or a shared link holds it.
      Some embedded frames refuse history writes, so this must never be able to
      stop the re-render below. */
   try{
-    const u=new URL(location); u.searchParams.set("lang",lang);
+    const u=new URL(location); u.searchParams.set("lang",uiLang);
     history.replaceState(null,"",u);
   }catch(e){}
   render();
@@ -4913,7 +4952,20 @@ const patreonLink=()=>`<a class="sns-ig" href="${PATREON}" target="_blank" rel="
 const instaLink=(url=INSTAGRAM,handle="hasla_edu",label=true)=>`<a class="sns-ig" href="${url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg><span>${label?(lang==="ko"?"인스타그램 ":"Instagram "):""}@${handle}</span></a>`;
 
 /* ads run on the Korean and the English site alike; only the label is in the page's language */
+/* a member whose plan has no ads (GET /api/learn/plan: Plus, a teacher or a school seat) sees none. The answer is kept for a
+   day so a page opens without waiting; a signed-out visitor always sees ads. */
+const hlNoAds=()=>{ try{ const v=JSON.parse(localStorage.getItem("hlPlanNoAds")||"null"); return !!(v&&v.until>Date.now()&&localStorage.getItem("hlCmTok")); }catch(e){ return false; } };
+(function refreshPlan(){
+  let token="",base="https://haslalab-community-edge.haslalab.workers.dev";
+  try{ token=localStorage.getItem("hlCmTok")||""; const o=localStorage.getItem("hlCmApi")||""; if(/^https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev\/?$/.test(o)) base=o.replace(/\/+$/,""); }catch(e){}
+  if(!/^[A-Za-z0-9_-]{20,4096}$/.test(token)||typeof fetch!=="function") return;
+  try{ const v=JSON.parse(localStorage.getItem("hlPlanNoAds")||"null"); if(v&&v.checked>Date.now()-6*3600e3) return; }catch(e){}
+  fetch(base+"/api/learn/plan",{headers:{Authorization:"Bearer "+token}}).then(r=>r.ok?r.json():null).then(p=>{
+    if(!p) return; try{ localStorage.setItem("hlPlanNoAds",JSON.stringify({until:p.ads===false?Date.now()+86400e3:0,checked:Date.now()})); }catch(e){}
+  }).catch(()=>{});
+})();
 function adFitBanner(placement){
+  if(typeof hlNoAds==="function"&&hlNoAds()) return "";
   const size=placement==="secondary" ? " adfit-banner--secondary" : "";
   const ad=lang==="ko" ? {aria:"광고",label:"광고"} : {aria:"Advertisement",label:"Ad"};
   return `<aside class="adfit-banner${size}" aria-label="${ad.aria}">
@@ -4997,6 +5049,11 @@ const SUBJ=[
 ];
 for(const k of Object.keys(DATA)) if(!SUBJ.some(x=>x.comps.includes(k))) SUBJ.find(x=>x.k==="sci").comps.push(k);   // a new competition, until it is filed
 const subjOf=key=>(SUBJ.find(x=>x.comps.includes(RUPHO_ARCHIVE?.isStage(key)?"rupho":key))||SUBJ[0]).k;
+/* Olympiad home: the former HaslaLab home (experiment hero, community and updates, studio). Its sections are in the section bar. */
+function viewOlympiad(){
+  return typeof viewOlympiadHome==="function"?viewOlympiadHome():viewOriginalHome();
+}
+
 function viewComps(sub,limit=Infinity){
   const d=UI[lang];
   let cur=SUBJ.find(x=>x.k===sub);
@@ -5210,7 +5267,7 @@ function viewLearn(){
     <div class="comps" data-lang="${lang}">
       ${Object.entries(LEARN).map(([key,L])=>{
         return `<a class="comp lsubj" href="#/learn/${key}">
-          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"문제 제작소":"Problem Studio"):key==="astronomy"?(lang==="ko"?"아카이브":"Archive"):d.learnSoon}</span></div>
+          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"학습 경로":"Learning path"):key==="astronomy"?(lang==="ko"?"아카이브":"Archive"):d.learnSoon}</span></div>
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
@@ -5221,6 +5278,7 @@ function viewLearn(){
 function viewLearnSubject(key){
   const d=UI[lang], L=LEARN[key];
   if(!L) return viewLearn();
+  if(key==="physics"&&window.HL_LEARN_PATH) return viewLearnPhysics();
   const archive=archiveHref("books",key==="astronomy"?"astro":"phys");
   return `<div class="shell"><div class="phead"><p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p><h1>${L.name[lang]}</h1></div>
     ${key==="physics"&&cm.me?.role==="admin"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio"><div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div><p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만듭니다.":"Turn physics problem photos into text and equations, and create new problems from a topic."}</p><span class="go">→</span></a></div>`:""}
@@ -5228,10 +5286,64 @@ function viewLearnSubject(key){
   </div>${adFitBanner("primary")}`;
 }
 
+/* The learning path's stages and topic map, shared by the Learn home and the physics page. */
+const learnSearchHref=subject=>"#/learn/physics/search"+(subject?"?subject="+encodeURIComponent(subject):"");
+function learnStagesHtml(){
+  const ko=lang==="ko";
+  return `<ol class="lp-stages">${window.HL_LEARN_PATH.STAGES.map(stage=>`<li class="lp-stage" data-stage="${stage.key}">
+      <span class="lp-steps mono">${ko?"단계":LX("Step")} ${stage.steps[0]}–${stage.steps[1]}</span>
+      <b>${esc(LP(stage.name))}</b><span class="lp-who">${esc(LP(stage.who))}</span>
+      <p>${esc(LP(stage.goal))}</p><span class="lp-src">${esc(LP(stage.sources))}</span></li>`).join("")}</ol>`;
+}
+function learnAreasHtml(){
+  return `<div class="lp-areas">${window.HL_LEARN_PATH.AREAS.map(area=>`<section class="lp-area" data-area="${area.key}"><h3>${esc(LP(area.name))}</h3><ul class="lp-topics">${area.subtopics.map(sub=>{
+      const bank=sub.bank||area.bank,label=`${esc(LP(sub.name))}<span class="lp-from mono">${sub.from}+</span>`;
+      return `<li><a href="#/learn/practice?unit=${area.key}/${sub.key}" data-subtopic="${area.key}/${sub.key}">${label}</a></li>`;}).join("")}</ul></section>`).join("")}</div>`;
+}
+
+/* Learn home: the page the site opens on. Short problems by topic and step; long final-round
+   problems stay in the Olympiad section's archive. */
+function viewLearnHome(){
+  const ko=lang==="ko",P=window.HL_LEARN_PATH;
+  const modes=[
+    ["#/learn/practice",ko?"단원별 문제":LX("Practice by unit"),ko?"AP Physics · JEE Main · F=ma · USAPhO 시험 문제(힌트 · AI 튜터), 한국 시험 계산 문제 461개, 교재 · 대학 문제 8,700개, EuPhO · Physics Cup 같은 대회 도전. 처음이면 '내 수준 찾기'부터.":LX("AP Physics, JEE Main, F=ma and USAPhO practice with hints and an AI tutor, 8,700 textbook and university problems, and a competition challenge with EuPhO and Physics Cup. New here? Start with “Find your level”.")],
+    ["#/learn/concepts",ko?"시뮬레이션으로 배우기":LX("Learn with simulations"),ko?"도르래, 원운동, 진자, 충돌, 전기장… 움직임을 보고 값을 바꿔 보며 개념을 익힙니다.":LX("Pulleys, circular motion, pendulums, collisions, fields: watch, change a value, learn the idea.")],
+    ["#/learn/compute",ko?"계산물리":LX("Computational physics"),ko?"백준처럼 Python으로 시뮬레이션을 짜서 제출하면, 물리 법칙으로 채점합니다.":LX("Like an online judge: write a simulation in Python and it is graded against the physics.")],
+    [archiveHref("books","phys"),ko?"교재":LX("Books"),ko?"공개 교재와 대학 · 학교 자료":LX("Open textbooks, university and school materials")],
+    ["#/olympiad",ko?"올림피아드 본선 문제":LX("Olympiad final-round problems"),ko?"긴 서술형 본선 문제와 기출은 올림피아드에서 따로 풉니다.":LX("Long written final-round problems and past papers live in the Olympiad section.")]];
+  return `<div class="shell learn-home">
+    <section class="lh-hero"><p class="eyebrow">${ko?"HaslaLab 학습":LX("HaslaLab Learn")}</p>
+      <h1>${ko?"물리올림피아드,<br>처음부터 차근차근.":LX("Physics olympiad,<br>one step at a time.")}</h1>
+      <p class="lede">${ko?"짧은 문제를 단원과 난이도별로 풀고, 시뮬레이션으로 직접 움직여 보며 배우세요. 준비가 되면 올림피아드 본선 문제로 넘어갑니다.":LX("Solve short problems by unit and difficulty and learn by moving simulations yourself. When you are ready, move on to olympiad final rounds.")}</p>
+      <div class="cta"><a class="btn" href="#/learn/practice">${ko?"문제 풀기 시작":LX("Start solving")}</a><a class="btn ghost" href="#lhStages">${ko?"내 단계 찾기":LX("Find your step")}</a></div></section>
+    <div class="comps lh-modes">${modes.map(([href,title,note])=>`<a class="comp lsubj" href="${href}"><div class="chead"><div class="abbr">${title}</div></div><p class="learn-card-note">${note}</p><span class="go">→</span></a>`).join("")}</div>
+    ${P?`<section class="lp-block" aria-labelledby="lhStages"><h2 id="lhStages">${ko?"내 단계 찾기":LX("Find your step")}</h2>${learnStagesHtml()}</section>
+    <section class="lp-block" aria-labelledby="lhTopics"><h2 id="lhTopics">${ko?"단원별로 공부하기":LX("Study by unit")}</h2><p class="learn-tool-copy">${ko?"숫자는 그 단원을 처음 다루는 단계입니다.":LX("The number is the step where a unit first appears.")}</p>${learnAreasHtml()}</section>`:""}
+    <p class="learn-tool-copy"><a href="#/learn">${ko?"화학 · 생물 · 지구과학 · 천문 학습 자료 →":LX("Chemistry, biology, earth science and astronomy →")}</a></p>
+  </div>${adFitBanner("home")}`;
+}
+
+/* Physics learning hub: five stages of ten steps, the topic map, and the tools that serve them. */
+function viewLearnPhysics(){
+  const d=UI[lang],ko=lang==="ko",L=LEARN.physics,search=learnSearchHref;
+  const tools=[
+    [search(""),ko?"문제 검색":LX("Search problems"),ko?"글 · 수식 · 주제 · 난이도로 찾기":LX("By text, equation, topic and difficulty")],
+    [archiveHref("books","phys"),ko?"교재 아카이브":LX("Book archive"),ko?"공개 교재와 학교 자료":LX("Open textbooks and school materials")],
+    [ko?"problems.html":LX("problems-en.html"),ko?"실험 시뮬레이터":LX("Experiment simulators"),ko?"움직임과 측정을 직접 해 보기":LX("See the motion, take the readings")],
+    ...(cm.me?.role==="admin"?[["#/learn/physics/studio",ko?"문제 제작소":LX("Problem Studio"),ko?"관리자 · 문제 만들기와 디지털화":LX("Admin · create and digitize problems")]]:[])];
+  return `<div class="shell learn-physics"><div class="phead"><p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p><h1>${L.name[lang]}</h1>
+      <p class="learn-tool-copy">${ko?"지금 실력에 맞는 단계와 필요한 주제를 골라, 그 문제부터 공부하세요.":LX("Pick the step that matches you and the topic you need, and start with those problems.")}</p></div>
+    <section class="lp-block" aria-labelledby="lpStages"><h2 id="lpStages">${ko?"어디서 시작할까요?":LX("Where to start")}</h2>${learnStagesHtml()}</section>
+    <section class="lp-block" aria-labelledby="lpTopics"><h2 id="lpTopics">${ko?"주제별로 공부하기":LX("Study by topic")}</h2>
+      <p class="learn-tool-copy">${ko?"숫자는 그 주제를 처음 다루는 단계입니다.":LX("The number is the step where a topic first appears.")}</p>${learnAreasHtml()}</section>
+    <section class="lp-block" aria-labelledby="lpTools"><h2 id="lpTools">${ko?"도구":LX("Tools")}</h2><div class="comps">${tools.map(([href,title,note])=>`<a class="comp lsubj" href="${href}"${href.includes("/studio")?' data-learn-tool="studio"':""}><div class="chead"><div class="abbr">${title}</div></div><p class="learn-card-note">${note}</p><span class="go">→</span></a>`).join("")}</div></section>
+  </div>${adFitBanner("primary")}`;
+}
+
 function learnStudioHeading(){
-  const ko=lang==="ko",label=ko?"문제 제작소":"Problem Studio";
+  const ko=lang==="ko",label=ko?"문제 제작소":LX("Problem Studio");
   return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/physics">${LEARN.physics.name[lang]}</a> / ${label}</p>
-    <h1>${label}</h1><p class="learn-tool-copy">${ko?"문제 제작 · 문제 디지털화 · 문제 검색":"Problem creation · Problem digitization · Problem search"}</p>`;
+    <h1>${label}</h1><p class="learn-tool-copy">${ko?"문제 제작 · 문제 디지털화 · 문제 검색":LX("Problem creation · Problem digitization · Problem search")}</p>`;
 }
 function learnStudioMode(){
   const mode=new URLSearchParams(location.hash.split("?")[1]||"").get("mode");
@@ -5263,13 +5375,78 @@ addEventListener("message",event=>{
 if(typeof MutationObserver==="function")new MutationObserver(syncLearnStudio).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 addEventListener("resize",syncLearnStudio);
 
+/* Concept simulations for beginners (concepts.html): watch the motion, change one value, answer one question. */
+function viewLearnConcepts(){
+  const ko=lang==="ko",label=ko?"개념 시뮬레이션":LX("Concept simulations");
+  const sim=new URLSearchParams(location.hash.split("?")[1]||"").get("sim")||"";
+  const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
+  if(/^[a-z0-9-]{2,40}$/.test(sim))query.set("sim",sim);
+  return `<div class="shell learn-studio learn-concepts"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
+    <p class="learn-tool-copy">${ko?"움직임을 직접 보고 값을 바꿔 보면서 개념을 익히고, 확인 문제로 점검하세요.":LX("Watch the motion, change the values, and check yourself with one question.")}</p></div>
+    <iframe id="learnConceptsFrame" class="learn-studio-frame" src="concepts.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
+}
+addEventListener("message",event=>{
+  const frame=document.getElementById("learnConceptsFrame");
+  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  const d=event.data||{};
+  if(d.type==="hl-concepts-height"&&Number.isFinite(d.height))frame.style.height=Math.max(700,Math.min(30000,Math.ceil(d.height)))+"px";
+  if(d.type==="hl-concepts-sim"&&/^[a-z0-9-]{2,40}$/.test(d.sim||"")){try{history.replaceState(null,"","#/learn/concepts?sim="+d.sim);}catch(e){}}
+  if(d.type==="hl-concepts-practice"&&window.HL_LEARN_PATH?.SUBTOPICS.has(d.unit))location.hash="#/learn/practice?unit="+d.unit;
+});
+if(typeof MutationObserver==="function")new MutationObserver(()=>{document.getElementById("learnConceptsFrame")?.contentWindow?.postMessage({type:"hl-concepts-settings",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"},location.origin);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","lang"]});
+
+/* Practice by unit: short exam problems one at a time, graded at once (practice.html). */
+function viewLearnPractice(){
+  const ko=lang==="ko",label=ko?"단원별 문제":LX("Practice by unit");
+  const unit=new URLSearchParams(location.hash.split("?")[1]||"").get("unit")||"";
+  const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
+  if(window.HL_LEARN_PATH?.SUBTOPICS.has(unit))query.set("unit",unit);
+  /* a problem's own link (search pages, discussions) and the exam tracks */
+  const hq=new URLSearchParams(location.hash.split("?")[1]||"");
+  if(/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(hq.get("item")||""))query.set("item",hq.get("item"));
+  if(/^(?:start|tracks|diag|bank|contest|exam|class)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
+  if(/^[a-z0-9]{2,8}$/.test(hq.get("track")||""))query.set("track",hq.get("track"));
+  return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
+    <p class="learn-tool-copy">${ko?"AP · JEE · F=ma · USAPhO 시험별 문제와 한국 시험 계산 문제(바로 채점), 교재 · 대학 강의 문제, EuPhO · BAUPC · Eötvös · Physics Cup · WoPhO · OPhO 대회 도전까지. 어려우면 건너뛰어도 됩니다.":LX("AP, JEE, F=ma and USAPhO practice and calculation problems from Korean exams (graded at once), textbook and university problems, and a challenge mode with EuPhO, BAUPC, Eötvös, Physics Cup, WoPhO and OPhO. Skip any problem you like.")}</p></div>
+    <iframe id="learnPracticeFrame" class="learn-studio-frame" src="practice.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
+}
+addEventListener("message",event=>{
+  const frame=document.getElementById("learnPracticeFrame");
+  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(event.data?.type==="hl-practice-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(600,Math.min(30000,Math.ceil(event.data.height)))+"px";
+  if(event.data?.type==="hl-practice-top"){const top=frame.getBoundingClientRect().top+scrollY-120;if(scrollY>top)scrollTo({top:Math.max(0,top)});}
+  if(event.data?.type==="hl-practice-unit"&&typeof event.data.unit==="string"){const u=event.data.unit;if(!u||window.HL_LEARN_PATH?.SUBTOPICS.has(u)){try{history.replaceState(null,"","#/learn/practice"+(u?"?unit="+u:""));}catch(e){}}}
+});
+if(typeof MutationObserver==="function")new MutationObserver(()=>{document.getElementById("learnPracticeFrame")?.contentWindow?.postMessage({type:"hl-practice-settings",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"},location.origin);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","lang"]});
+
+/* Computational physics: Python simulations graded in the browser (compute.html, Pyodide in a worker). */
+function viewLearnCompute(){
+  const ko=lang==="ko",label=ko?"계산물리":LX("Computational physics");
+  const asked=new URLSearchParams(location.hash.split("?")[1]||"").get("problem")||"";
+  const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
+  if(/^[a-z0-9-]{2,40}$/.test(asked))query.set("problem",asked);
+  return `<div class="shell learn-studio learn-compute"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
+    <p class="learn-tool-copy">${ko?"시뮬레이션을 Python으로 직접 짜고, 정확해 · 보존 법칙 · 기준 계산과 비교해 채점받습니다. 코드는 내 브라우저 안에서만 실행됩니다.":LX("Write simulations in Python and have them graded against exact solutions, conservation laws and reference calculations. Your code runs only in your browser.")}</p></div>
+    <iframe id="learnComputeFrame" class="learn-studio-frame" src="compute.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
+}
+addEventListener("message",event=>{
+  const frame=document.getElementById("learnComputeFrame");
+  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(event.data?.type==="hl-compute-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(700,Math.min(30000,Math.ceil(event.data.height)))+"px";
+  if(event.data?.type==="hl-compute-problem"&&/^[a-z0-9-]{2,40}$/.test(event.data.problem||"")){try{history.replaceState(null,"","#/learn/compute?problem="+event.data.problem);}catch(e){}}
+});
+if(typeof MutationObserver==="function")new MutationObserver(()=>{const frame=document.getElementById("learnComputeFrame");frame?.contentWindow?.postMessage({type:"hl-compute-settings",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"},location.origin);}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","lang"]});
+
 function learnSearchHeading(){
   const ko=lang==='ko',label=ko?'문제 검색':'Search problems';
   return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/physics">${LEARN.physics.name[lang]}</a> / ${label}</p><h1>${label}</h1><p class="learn-tool-copy">${ko?'아카이브 글·수식 검색 · 한국어와 영어':'Search archive materials by text and equations · Korean and English'}</p>`;
 }
 function viewLearnSearch(){
   const label=lang==='ko'?'문제 검색':'Search problems';
-  const query=new URLSearchParams({embed:'1',lang,theme:document.documentElement.dataset.theme==='dark'?'dark':'light',v:'20261103-edu04'});
+  const query=new URLSearchParams({embed:'1',lang,theme:document.documentElement.dataset.theme==='dark'?'dark':'light',v:'20261121-learn01'});
+  const asked=new URLSearchParams(location.hash.split('?')[1]||'');
+  if(/^[a-z_]{2,40}$/.test(asked.get('subject')||''))query.set('subject',asked.get('subject'));
+  if(/^[1-5]$/.test(asked.get('stars')||''))query.set('stars',asked.get('stars'));
   return `<div class="shell learn-studio learn-search"><div class="phead">${learnSearchHeading()}</div><iframe id="learnSearchFrame" class="learn-studio-frame" src="problem-search.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
 function syncLearnSearch(){
@@ -8931,11 +9108,16 @@ function startHero(){
    ══════════════════════════════════════════════════════════════ */
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";   // Edge gateway for /community
 const CM_BOARDS = ["free","qna","sim","study"];
+/* minor galleries (community/src/galleries.js): any member opens one; its posts use the board "g-<address>" */
+const CM_GALLERY_RE=/^g-[a-z0-9](?:[a-z0-9-]{1,22}[a-z0-9])$/;
+const cmIsGallery=b=>CM_GALLERY_RE.test(b||"");
+const cmIsBoard=b=>CM_BOARDS.includes(b)||cmIsGallery(b);
+const cmBoardName=b=>CMT[lang].boards[b]||cm.galleries?.[b]?.name||(cmIsGallery(b)?b.slice(2):b);
 const CM_TAGS = ["gen","q","info","review","bug","notice"];
 const CMT = {
   ko:{
     h:"HaslaLab 커뮤니티", sub:"실험 문제, 시뮬레이터, 대회 준비 — 묻고 답하고 나누는 곳",
-    secBoards:"게시판", secMore:"모아보기", all:"전체글", best:"개념글", hot:"실시간 인기",
+    secBoards:"메인 갤러리", secMore:"모아보기", secMinor:"마이너 갤러리", allGal:"갤러리 전체 보기", newGal:"갤 만들기", galH:"마이너 갤러리", galNone:"아직 갤러리가 없습니다. 처음으로 만들어 보세요.", galAddress:"주소", galAddrHint:"영문 소문자·숫자·하이픈 3–24자 (예: kpho-2027)", galName:"이름", galIntro:"소개", galCreate:"만들기", galLead:"관심 있는 주제로 갤러리를 직접 만들 수 있습니다. 만든 사람이 갤주가 되어 이름과 소개를 관리합니다. 한 사람당 3개까지 만들 수 있습니다.", galOwner:"갤주", galPosts:"글", galClose:"갤러리 닫기", galCloseQ:"이 갤러리를 닫을까요? 새 글을 쓸 수 없고 목록에서 사라집니다(기존 글 주소는 유지).", galEdit:"소개 수정", all:"전체글", best:"개념글", hot:"실시간 인기",
     boards:{free:"자유게시판", qna:"질문 · 답변", sim:"시뮬레이터 제보", study:"스터디 · 자료"},
     boardDesc:{all:"모든 게시판의 글을 한곳에서 봅니다.", best:"추천을 받은 글만 모았습니다.", hot:"최근에 반응이 많은 글입니다.",
                free:"무엇이든 이야기하세요.", qna:"실험 문제, 측정, 오차 분석에 대한 질문과 답변.",
@@ -8987,7 +9169,8 @@ const CMT = {
       trainOn:"동의함", trainOff:"동의하지 않음", trainGive:"동의하기", trainWithdraw:"동의 철회", trainGiven:"동의했습니다. 이후 채점부터 적용됩니다.", trainWithdrawn:"철회했습니다. 모아 둔 학습용 사본도 지웠습니다.", policies:"이용약관 · 개인정보 처리방침"},
     justNow:"방금", minAgo:"분 전", hrAgo:"시간 전", dayAgo:"일 전",
     stPosts:"글", stToday:"오늘", hotH:"지금 뜨는 글", aboutH:"게시판 정보", boardList:"이 게시판의 다른 글",
-    err:{bad_image:"JPG · PNG · WebP 사진만 올릴 수 있습니다.", bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
+    err:{bad_gallery_address:"주소는 영문 소문자·숫자·하이픈 3–24자이고, 이미 쓰이는 이름(free, admin 등)은 쓸 수 없습니다.", bad_gallery_name:"이름은 2–24자입니다.", bad_gallery_intro:"소개는 200자까지입니다.", gallery_taken:"같은 주소나 이름의 갤러리가 이미 있습니다.", gallery_limit:"갤러리는 한 사람당 3개까지 만들 수 있습니다.",
+         bad_image:"JPG · PNG · WebP 사진만 올릴 수 있습니다.", bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
          bad_nickname:"닉네임은 2–16자이고, 글자 · 숫자 · _ . - 와 사이 공백만 쓸 수 있습니다.",
          nickname_reserved:"운영진으로 보일 수 있는 닉네임(admin, 관리자, 운영자 등)은 쓸 수 없습니다.", username_reserved:"운영진으로 보일 수 있는 아이디(admin 등)는 쓸 수 없습니다.",
          bad_password:"비밀번호는 8자 이상이어야 합니다.",
@@ -9010,7 +9193,7 @@ const CMT = {
   },
   en:{
     h:"HaslaLab Community", sub:"Problems, simulators, getting ready for the olympiads — ask, answer, share",
-    secBoards:"Boards", secMore:"Browse", all:"All posts", best:"Best", hot:"Trending",
+    secBoards:"Main gallery", secMore:"Browse", secMinor:"Minor galleries", allGal:"All galleries", newGal:"Open a gallery", galH:"Minor galleries", galNone:"No galleries yet. Open the first one.", galAddress:"Address", galAddrHint:"3–24 lower-case letters, digits or hyphens (e.g. kpho-2027)", galName:"Name", galIntro:"Introduction", galCreate:"Create", galLead:"Open a gallery on any topic. You become its manager and look after its name and introduction. Up to three per member.", galOwner:"Manager", galPosts:"posts", galClose:"Close gallery", galCloseQ:"Close this gallery? New posts stop and it leaves the list (existing posts keep their addresses).", galEdit:"Edit introduction", all:"All posts", best:"Best", hot:"Trending",
     boards:{free:"General", qna:"Q&A", sim:"Simulator reports", study:"Study & resources"},
     boardDesc:{all:"Posts from every board in one place.", best:"Only posts the community voted up.", hot:"What people are reacting to right now.",
                free:"Talk about anything.", qna:"Questions and answers on problems, measurement and error analysis.",
@@ -9062,7 +9245,8 @@ const CMT = {
       trainOn:"Agreed", trainOff:"Not agreed", trainGive:"Agree", trainWithdraw:"Withdraw", trainGiven:"Thanks. This applies from your next grading.", trainWithdrawn:"Withdrawn. The training copies kept so far were deleted.", policies:"Terms · Privacy"},
     justNow:"just now", minAgo:"m ago", hrAgo:"h ago", dayAgo:"d ago",
     stPosts:"posts", stToday:"today", hotH:"Trending now", aboutH:"About this board", boardList:"More from this board",
-    err:{bad_image:"Only JPG, PNG or WebP pictures can be used.", bad_username:"Usernames are 3–20 letters, digits or _.",
+    err:{bad_gallery_address:"Addresses are 3–24 lower-case letters, digits or hyphens, and reserved names (free, admin…) are taken.", bad_gallery_name:"Names are 2–24 characters.", bad_gallery_intro:"Introductions are up to 200 characters.", gallery_taken:"A gallery with that address or name already exists.", gallery_limit:"Each member can open up to three galleries.",
+         bad_image:"Only JPG, PNG or WebP pictures can be used.", bad_username:"Usernames are 3–20 letters, digits or _.",
          bad_nickname:"Display names are 2–16 characters: letters, digits, _ . - and inner spaces.",
          nickname_reserved:"Names that look like staff (admin, moderator and the like) are not allowed.", username_reserved:"Usernames that look like staff (admin and the like) are not allowed.",
          bad_password:"Passwords need at least 8 characters.",
@@ -9365,23 +9549,62 @@ function cmRailHtml(active){
     ${ch("all",T.all,"≡")}${ch("best",T.best,"★")}${ch("hot",T.hot,"🔥")}
     <div class="sec">${T.secBoards}</div>
     ${CM_BOARDS.map(b=>ch(b,T.boards[b],"#",cnt(b))).join("")}
+    <div class="sec">${T.secMinor}</div>
+    ${Object.values(cm.galleries||{}).slice(0,8).map(g=>ch(g.board,esc(g.name),"ㅁ",cnt(g.board))).join("")}
+    ${cmIsGallery(active)&&!(cm.galleries||{})[active]?ch(active,esc(cmBoardName(active)),"ㅁ",""):""}
+    ${ch("galleries",T.allGal,"▦")}${ch("new-gallery",T.newGal,"＋")}
     ${me}`;
 }
 async function cmRight(where,alive=()=>true){
   const el=document.getElementById("cmRight"); if(!el) return;
-  const T=CMT[lang], B=cm.boards||{}, isB=CM_BOARDS.includes(where);
+  const T=CMT[lang], B=cm.boards||{}, isB=cmIsBoard(where);
   const tot=isB ? (B[where]||{n:0,today:0}) : Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});
   el.innerHTML=`
-    <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${T.boardDesc[where]||T.boardDesc.all}
+    <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${cmIsGallery(where)?esc(cm.galleries?.[where]?.intro||cmBoardName(where))+(cm.galleries?.[where]?`<br><small>${T.galOwner} · ${esc(cm.galleries[where].owner)}</small>`:""):(T.boardDesc[where]||T.boardDesc.all)}
       <div class="stat"><div><b>${tot.n}</b><span>${T.stPosts}</span></div><div><b>${tot.today}</b><span>${T.stToday}</span></div></div></div></div>
     <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
     <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
+  /* the gallery's manager (or an administrator) edits its introduction or closes it */
+  const g=cmIsGallery(where)&&cm.galleries?.[where];
+  if(g&&cm.me&&(cm.me.nickname===g.owner||cm.me.role==="admin")){
+    const box=document.createElement("div");box.className="cmside";
+    box.innerHTML=`<div class="in"><button type="button" class="cmbtn sm" data-g="edit">${T.galEdit}</button> <button type="button" class="cmbtn sm" data-g="close">${T.galClose}</button></div>`;
+    el.prepend(box);
+    box.querySelector('[data-g="edit"]').onclick=async()=>{const intro=prompt(T.galIntro,g.intro||"");if(intro===null)return;try{await cmApi("PATCH","/galleries/"+where,{intro:intro.trim()});await cmLoadGalleries();cmRight(where,alive);}catch(e){cmToast(cmErr(e));}};
+    box.querySelector('[data-g="close"]').onclick=async()=>{if(!confirm(T.galCloseQ))return;try{await cmApi("DELETE","/galleries/"+where);await cmLoadGalleries();location.hash="#/community/galleries";}catch(e){cmToast(cmErr(e));}};
+  }
   try{
     const j=await cmApi("GET","/posts?sort=hot&page=1&lang="+lang+(isB?"&board="+where:""));
     const h=document.getElementById("cmHot"); if(!h||!alive()) return;
     const top=j.posts.slice(0,6);
     h.innerHTML=top.length ? top.map(p=>`<a href="#/community/post/${p.id}"><em>${cmScore(p)}</em><span>${esc(p.title)}</span></a>`).join("") : `<span>${T.empty}</span>`;
   }catch(e){ const h=document.getElementById("cmHot"); if(h) h.textContent=""; }
+}
+
+function cmLoadGalleries(){
+  return cmApi("GET","/galleries").then(r=>{cm.galleries={};cm.galleriesAt=Date.now();for(const g of r.galleries||[])if(CM_GALLERY_RE.test(g.board))cm.galleries[g.board]=g;},()=>{cm.galleries=cm.galleries||{};});
+}
+function cmGalleries(root){
+  const T=CMT[lang],list=Object.values(cm.galleries||{});
+  root.innerHTML=`<div class="cmpanel"><div class="cmbh"><h2>▦ ${T.galH}</h2><a class="cmbtn pri" href="#/community/new-gallery">＋ ${T.newGal}</a></div>
+    <p class="cmnote">${T.galLead}</p>
+    ${list.length?`<table class="cmtbl"><tbody>${list.map(g=>`<tr><td class="t"><a href="#/community/${g.board}"><b>${esc(g.name)}</b></a>${g.intro?`<div class="snippet">${esc(g.intro)}</div>`:""}</td><td class="c-dt">${T.galOwner} ${esc(g.owner)}</td><td class="c-r">${g.n} ${T.galPosts}</td></tr>`).join("")}</tbody></table>`:`<p class="cmempty">${T.galNone}</p>`}</div>`;
+}
+function cmNewGallery(root){
+  const T=CMT[lang];
+  if(!cm.me){location.hash="#/community/login";return;}
+  root.innerHTML=`<div class="cmpanel"><div class="cmbh"><h2>＋ ${T.newGal}</h2></div><p class="cmnote">${T.galLead}</p>
+    <form class="cmform" id="cmG">
+      <label>${T.galAddress} <small>${T.galAddrHint}</small><input type="text" name="address" required minlength="3" maxlength="24" pattern="[a-z0-9][a-z0-9-]{1,22}[a-z0-9]" autocapitalize="off" spellcheck="false" placeholder="kpho-2027"></label>
+      <label>${T.galName}<input type="text" name="name" required minlength="2" maxlength="24"></label>
+      <label>${T.galIntro}<textarea name="intro" rows="3" maxlength="200"></textarea></label>
+      <div class="cmfoot"><a class="cmbtn" href="#/community/galleries">${T.cancel}</a><button class="cmbtn pri" type="submit">${T.galCreate}</button></div>
+    </form></div>`;
+  const f=document.getElementById("cmG");
+  f.address.oninput=()=>{f.address.value=f.address.value.toLowerCase().replace(/[^a-z0-9-]/g,"");};
+  f.onsubmit=async e=>{e.preventDefault();const btn=f.querySelector("button[type=submit]");btn.disabled=true;
+    try{const g=await cmApi("POST","/galleries",{address:f.address.value,name:f.name.value,intro:f.intro.value});cm.galleries=null;await cmLoadGalleries();location.hash="#/community/"+g.board;}
+    catch(err){cmToast(cmErr(err));btn.disabled=false;}};
 }
 
 async function cmMount(){
@@ -9392,26 +9615,31 @@ async function cmMount(){
   if(!cmBase()){ root.innerHTML=`<div class="cmnote">${T.off}</div>`; return; }
   const {parts,q}=cmHash();
   const [a,b]=parts;
-  const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account" ? "" : (CM_BOARDS.includes(a)||a==="best"||a==="hot" ? a : "all");
+  const where = a==="post"||a==="user"||a==="write"||a==="edit"||a==="login"||a==="signup"||a==="account"||a==="galleries"||a==="new-gallery" ? "" : (cmIsBoard(a)||a==="best"||a==="hot" ? a : "all");
   const identity=a==="post"&&b?Promise.resolve():cmLoadMe();
   const settings=cm.v?Promise.resolve():cmHealth().then(r=>{cm.v=r.v||1;});
   const boardLang=lang;
   if(cm.boardsLang!==boardLang){cm.boards=null;cm.boardsLang=boardLang;}
   const boards=cm.boards&&Date.now()-(cm.boardsAt||0)<30000?Promise.resolve():cmApi("GET","/boards?lang="+boardLang).then(r=>{if(lang===boardLang){cm.boards={};cm.boardsAt=Date.now();for(const x of r.boards)cm.boards[x.board]={n:x.n,today:x.today||0};}},()=>{});
+  /* the gallery list is read where it is shown: board lists and the directory (editors and posts use what is cached) */
+  const galleries=!(where||a==="galleries")||cm.galleries&&Date.now()-(cm.galleriesAt||0)<60000?Promise.resolve():cmLoadGalleries();
   const paintRail=()=>{if(!alive())return;const rail=document.getElementById("cmRail");if(rail)rail.innerHTML=cmRailHtml(where||a);cmWire(document.querySelector(".cm"));};
   paintRail();
-  Promise.allSettled([identity,settings,boards]).then(()=>{if(!alive())return;paintRail();const count=document.querySelectorAll("#cmRight .stat b"),B=cm.boards||{},isBoard=CM_BOARDS.includes(where);const total=isBoard?(B[where]||{n:0,today:0}):Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});if(count[0])count[0].textContent=total.n;if(count[1])count[1].textContent=total.today;});
-  if(["write","edit","login","signup","account"].includes(a))await identity;
+  Promise.allSettled([identity,settings,boards,galleries]).then(()=>{if(!alive())return;paintRail();const count=document.querySelectorAll("#cmRight .stat b"),B=cm.boards||{},isBoard=cmIsBoard(where);const total=isBoard?(B[where]||{n:0,today:0}):Object.values(B).reduce((a,b)=>({n:a.n+(b.n||0),today:a.today+(b.today||0)}),{n:0,today:0});if(count[0])count[0].textContent=total.n;if(count[1])count[1].textContent=total.today;});
+  if(["write","edit","login","signup","account","new-gallery"].includes(a))await identity;
+  if(cmIsGallery(a)||a==="galleries")await galleries;
   if(!alive())return;
   try{
     let content;
     if(a==="post" && b)                 content=cmPost(root,+b,alive);
     else if(a==="user")                 content=cmProfile(root,b,q,alive);
-    else if(a==="write")                content=cmWrite(root,null,CM_BOARDS.includes(b)?b:"free",q.get("tag"));
+    else if(a==="write")                content=cmWrite(root,null,cmIsBoard(b)?b:"free",q.get("tag"),{title:q.get("title"),body:q.get("body")});
     else if(a==="edit" && b)            content=cmEdit(root,+b,alive);
     else if(a==="login")                content=cmLogin(root);
     else if(a==="signup")               content=cmSignup(root);
     else if(a==="account")              content=cmAccount(root,alive);
+    else if(a==="galleries")            content=cmGalleries(root);
+    else if(a==="new-gallery")          content=cmNewGallery(root);
     else                                content=cmList(root,{where,page:Math.max(1,parseInt(b)||1),tag:q.get("tag")||"",sort:q.get("sort")||"",q:q.get("q")||"",field:q.get("field")||""},alive);
     const right=document.getElementById("cmRight");
     if(right){if(["login","signup"].includes(a))right.innerHTML="";else cmRight(where||"all",alive);}
@@ -9442,7 +9670,7 @@ async function cmVote(id, v){
 
 async function cmList(root, o, alive,preloaded){
   const T=CMT[lang], qs=new URLSearchParams({page:o.page, lang});
-  if(CM_BOARDS.includes(o.where)) qs.set("board",o.where);
+  if(cmIsBoard(o.where)) qs.set("board",o.where);
   if(o.where==="best") qs.set("best","1");
   const sort=o.sort||(o.where==="hot"?"hot":"new"); qs.set("sort",sort);
   if(o.tag) qs.set("tag",o.tag); if(o.q){ qs.set("q",o.q); qs.set("field",o.field||"all"); }
@@ -9455,8 +9683,8 @@ async function cmList(root, o, alive,preloaded){
   };
   const j=preloaded||await cmApi("GET","/posts?"+qs,null,{onRefresh:refresh});
   if(!alive()) return;
-  const name = CM_BOARDS.includes(o.where) ? T.boards[o.where] : o.where==="best" ? T.best : o.where==="hot" ? T.hot : T.all;
-  const icon = CM_BOARDS.includes(o.where) ? "#" : o.where==="best" ? "★" : o.where==="hot" ? "🔥" : "≡";
+  const name = cmIsBoard(o.where) ? esc(cmBoardName(o.where)) : o.where==="best" ? T.best : o.where==="hot" ? T.hot : T.all;
+  const icon = cmIsGallery(o.where) ? "ㅁ" : cmIsBoard(o.where) ? "#" : o.where==="best" ? "★" : o.where==="hot" ? "🔥" : "≡";
   const href = x => cmListHref({...o, page:1, ...x});
   const isNew = p => Date.now()/1000-p.created_at < 12*3600;
   const total=j.total, notices=j.notices||[];
@@ -9466,7 +9694,7 @@ async function cmList(root, o, alive,preloaded){
   else if(cm.view==="card"){
     const card=p=>`<div class="cmcard" data-id="${p.id}">
         <div class="cmvote"><button class="up" type="button" data-v="1" aria-label="${T.up}">▲</button><b>${cmScore(p)}</b><button class="dn" type="button" data-v="-1" aria-label="${T.down}">▼</button></div>
-        <div class="bd"><div class="mt">${cmTag(p.tag)}${cmPinBadge(p)}<b>${T.boards[p.board]||p.board}</b> · ${cmAv(p.gone?"?":p.nickname,"s",p.gone?null:p.av)} ${cmName(p)} · ${cmTime(p.created_at)}${isNew(p)?'<span class="nb">N</span>':""}</div>
+        <div class="bd"><div class="mt">${cmTag(p.tag)}${cmPinBadge(p)}<b>${esc(cmBoardName(p.board))}</b> · ${cmAv(p.gone?"?":p.nickname,"s",p.gone?null:p.av)} ${cmName(p)} · ${cmTime(p.created_at)}${isNew(p)?'<span class="nb">N</span>':""}</div>
           <h3><a href="#/community/post/${p.id}">${esc(p.title)}</a></h3>
           ${p.snip?`<div class="sn">${esc(p.snip)}</div>`:""}
           <div class="ft"><span>💬 ${p.n_comments} ${T.comments}</span><span>👁 ${p.views}</span></div></div></div>`;
@@ -9486,13 +9714,13 @@ async function cmList(root, o, alive,preloaded){
   if(o.page>1) pg+=`<a href="${ph(1)}">«</a><a href="${ph(o.page-1)}">‹</a>`;
   for(let n=lo;n<=hi;n++) pg+= n===o.page?`<span>${n}</span>`:`<a href="${ph(n)}">${n}</a>`;
   if(o.page<pages) pg+=`<a href="${ph(o.page+1)}">›</a><a href="${ph(pages)}">»</a>`;
-  const writeTo = CM_BOARDS.includes(o.where) ? "/"+o.where : "";
+  const writeTo = cmIsBoard(o.where) ? "/"+o.where : "";
   root.innerHTML=`<div class="cmpanel">
     <div class="cmbh"><div><h2><span>${icon}</span> ${name}</h2><p>${T.boardDesc[o.where]||""}</p></div><span class="sp"></span>
       ${cm.me?`<a class="cmbtn cmm" href="#/community/account">${cmAv(cm.me.nickname,"s",cm.me.avatar)}</a>`:`<a class="cmbtn cmm" href="#/community/login">${T.login}</a>`}
       <a class="cmbtn pri" href="#/community/write${writeTo}">✎ ${T.write}</a></div>
     <div class="cmbar2">
-      <div class="cmseg"><a href="${cmListHref({...o,where:CM_BOARDS.includes(o.where)?o.where:"all",page:1})}" class="${o.where!=="best"?"on":""}">${T.all}</a><a href="${cmListHref({...o,where:"best",page:1})}" class="${o.where==="best"?"on":""}">★ ${T.best}</a></div>
+      <div class="cmseg"><a href="${cmListHref({...o,where:cmIsBoard(o.where)?o.where:"all",page:1})}" class="${o.where!=="best"?"on":""}">${T.all}</a><a href="${cmListHref({...o,where:"best",page:1})}" class="${o.where==="best"?"on":""}">★ ${T.best}</a></div>
       <div class="cmtags"><a href="${href({tag:""})}" class="${!o.tag?"on":""}">${T.tagAll}</a>${CM_TAGS.filter(t=>t!=="notice").map(t=>`<a href="${href({tag:t})}" class="${o.tag===t?"on":""}">${T.tags[t]}</a>`).join("")}</div>
       <span class="sp"></span>
       <select class="cmsel" id="cmSort" aria-label="sort">${Object.entries(T.sorts).map(([k,v])=>`<option value="${k}" ${sort===k?"selected":""}>${v}</option>`).join("")}</select>
@@ -9536,7 +9764,7 @@ async function cmProfile(root, encodedName, q, alive){
   if(page>pages){ location.hash=cmProfileHref(profile.nickname,tab,pages); return; }
   const items=tab==="comments"?j.comments:j.posts;
   const body=items.length?items.map(item=>{
-    const meta=`<div class="meta"><span>${esc(T.boards[item.board]||item.board)}</span>${cmTag(item.tag)}<time title="${cmFull(item.created_at)}">${cmFull(item.created_at)}</time></div>`;
+    const meta=`<div class="meta"><span>${esc(cmBoardName(item.board))}</span>${cmTag(item.tag)}<time title="${cmFull(item.created_at)}">${cmFull(item.created_at)}</time></div>`;
     if(tab==="comments") return `<article>${meta}${item.parent_id?`<span class="cmtag">${T.replyActivity}</span>`:""}<div class="comment">${cmFmt(item.body)}</div><a class="source" href="#/community/post/${item.post_id}?comment=${item.id}">${T.parentPost} · ${esc(item.post_title)}</a></article>`;
     return `<article>${meta}<h3><a href="#/community/post/${item.id}">${esc(item.title)}</a>${item.n_comments?` <span class="cc">[${item.n_comments}]</span>`:""}</h3>${item.snip?`<p class="snippet">${esc(item.snip)}</p>`:""}<p class="snippet">${T.views} ${item.views} · ${T.cols.r} ${cmScore(item)} · ${T.comments} ${item.n_comments}</p></article>`;
   }).join(""):`<p class="cmempty">${tab==="comments"?T.activityEmptyComments:T.activityEmptyPosts}</p>`;
@@ -9572,10 +9800,10 @@ async function cmPost(root, id, alive){
         <div class="ops">${cm.me?`<button type="button" data-c="reply">↳ ${T.reply}</button>`:""}${c.mine?`<button type="button" data-c="edit">${T.edit}</button><button type="button" data-c="del">${T.del}</button>`:(cm.me?`<button type="button" data-c="report">${T.report}</button>`:"")}</div>
         <div class="rf"></div></div></div>`;
   const thread=()=>{ const tops=j.comments.filter(c=>!c.parent_id),list=order==="new"?[...tops].reverse():tops; return list.map(c=>cmtHtml(c,false)+kids(c.id).map(k=>cmtHtml(k,true)).join("")).join(""); };
-  const bName=T.boards[p.board]||p.board;
+  const bName=cmBoardName(p.board);
   root.innerHTML=`<div class="cmpanel">
     <article class="cmpost">
-      <div class="cmcrumb"><a href="#/community/${p.board}"># ${bName}</a>${p.tag?" › "+cmTag(p.tag):""}<span id="cmPinBadge">${cmPinBadge(p)}</span></div>
+      <div class="cmcrumb"><a href="#/community/${esc(p.board)}"># ${esc(bName)}</a>${p.tag?" › "+cmTag(p.tag):""}<span id="cmPinBadge">${cmPinBadge(p)}</span></div>
       <h2>${esc(p.title)}</h2>
       <div class="cmpm">${cmAv(p.gone?"?":p.nickname,"",p.gone?null:p.av)}<b>${cmName(p)}</b><span>${cmFull(p.created_at)}${p.updated_at?" · "+T.edited:""}</span>
         <span class="sp"></span><span>${T.views} ${p.views}</span><span>${T.cols.r} ${cmScore(p)}</span><span id="cmPostCount">${T.comments} ${j.comments.length}</span></div>
@@ -9683,26 +9911,28 @@ async function cmPost(root, id, alive){
   try{
     const l=await cmApi("GET",`/posts?board=${p.board}&page=1&lang=${p.lang||lang}`); if(!alive()) return;
     const more=document.getElementById("cmMore"); if(!more) return;
-    more.innerHTML=`<div class="cmbh" style="border-top:8px solid var(--cm-soft)"><h2 style="font-size:1rem"># ${bName} — ${T.boardList}</h2></div>
+    more.innerHTML=`<div class="cmbh" style="border-top:8px solid var(--cm-soft)"><h2 style="font-size:1rem"># ${esc(bName)} — ${T.boardList}</h2></div>
       <table class="cmtbl"><tbody>${l.posts.slice(0,10).map(x=>`<tr${x.id===p.id?' style="font-weight:700"':""}><td class="c-tag">${cmTag(x.tag)}</td>
         <td class="t"><a href="#/community/post/${x.id}">${esc(x.title)}</a>${x.n_comments?`<span class="cc">[${x.n_comments}]</span>`:""}</td>
         <td class="c-au">${cmName(x)}</td><td class="c-dt">${cmShort(x.created_at)}</td></tr>`).join("")}</tbody></table>`;
   }catch(e){}
 }
 
-function cmWrite(root, post, board, requestedTag){
+function cmWrite(root, post, board, requestedTag, prefill){
   const T=CMT[lang];
   if(!cm.me){ cmGoLogin(); return; }
   const noticeMode=!post&&requestedTag==="notice"&&cm.me.role==="admin";
   const noticeTitle=lang==="ko"?"공지 작성":"Write a notice";
   const key=post?"e"+post.id:noticeMode?"notice":"new";
-  const d=cm.draft[key]||(post?{board:post.board,tag:post.tag||"gen",title:post.title,body:post.body}:{board:noticeMode?"free":board,tag:noticeMode?"notice":"gen",title:"",body:""});
+  /* a practice problem's "discuss" link arrives with its title and a link back to the problem */
+  const pre=v=>typeof v==="string"?v.slice(0,v===prefill?.title?120:2000):"";
+  const d=cm.draft[key]||(post?{board:post.board,tag:post.tag||"gen",title:post.title,body:post.body}:{board:noticeMode?"free":board,tag:noticeMode?"notice":"gen",title:pre(prefill?.title),body:pre(prefill?.body)});
   const tags=CM_TAGS.filter(t=>t!=="notice"||(cm.me&&cm.me.role==="admin"));
   root.innerHTML=`<div class="cmpanel">
     <div class="cmbh"><h2>✎ ${post?T.editPost:noticeMode?noticeTitle:T.newPost}</h2></div>
     <form class="cmform" id="cmW">
       ${noticeMode?`<p class="cmnote">${lang==="ko"?"등록한 공지는 홈의 공지·업데이트 목록에 표시됩니다. 등록 후 상단에 고정할 수 있습니다.":"Your notice appears in Notices & updates on the home page. You can pin it after publishing."}</p><input type="hidden" name="board" value="free"><input type="hidden" name="tag" value="notice">`:`<div class="two">
-        <label>${T.board}<select name="board">${CM_BOARDS.map(b=>`<option value="${b}" ${b===d.board?"selected":""}>${T.boards[b]}</option>`).join("")}</select></label>
+        <label>${T.board}<select name="board">${(cmIsGallery(d.board)?[d.board]:CM_BOARDS).map(b=>`<option value="${b}" ${b===d.board?"selected":""}>${esc(cmBoardName(b))}</option>`).join("")}</select></label>
         <label>${T.tag}<select name="tag">${tags.map(t=>`<option value="${t}" ${t===d.tag?"selected":""}>${T.tags[t]}</option>`).join("")}</select></label>
       </div>`}
       <label>${T.title}<input type="text" name="title" maxlength="120" required value="${esc(d.title)}" placeholder="${T.titlePh}"></label>
@@ -9883,7 +10113,10 @@ function cmSignup(root){
     const email=f.email.value.trim(), code=digits(f.code.value);
     if(!email||!f.email.checkValidity()){ err.textContent=cmErr({code:"bad_email"}); f.email.focus(); return; }
     if(!/^\d{6}$/.test(code)){ err.textContent=cmErr({code:"code_required"}); f.code.focus(); return; }
-    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent,email,code})); }
+    try{ const signed=await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent,email,code});
+      /* a new member answers the Learn questions first (level, goal, exam), unless they came here from somewhere they want to go back to */
+      try{ const back=sessionStorage.getItem("hlCmBack")||""; if(!back||back==="#/"||/^#\/(community|learn\/practice)\b/.test(back)&&!/[?&]item=/.test(back)) sessionStorage.setItem("hlCmBack","#/learn/practice?mode=start"); }catch(e){}
+      cmAuthDone(signed); }
     catch(er){ err.textContent=cmErr(er);
       if(er.code==="nickname_taken"||er.code==="bad_nickname"||er.code==="nickname_reserved"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); }
       else if(/^code_/.test(er.code)) f.code.focus(); else if(er.code==="bad_email"||er.code==="email_taken"||er.code==="email_disposable") f.email.focus(); }
@@ -10096,6 +10329,7 @@ const SITE = "HaslaLab";
 function setDocTitle(first, second){
   const d=UI[lang], parts=[];
   if(first==="about")            parts.push(d.hAbout);
+  else if(first==="olympiad")    parts.push(d.hOly);
   else if(first==="hpho")        parts.push("HPhO");
   else if(first==="archive"){
     const route=window.HL_ARCHIVE?.parse(location.hash),category=route?.category;
@@ -10108,6 +10342,9 @@ function setDocTitle(first, second){
   else if(first==="login"||first==="signup") parts.push(CMT[lang][first]);
   else if(["monthly","weekly","rank"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
+  else if(first==="learn"&&second==="concepts") parts.push(lang==="ko"?"학습 — 개념 시뮬레이션":"Learn — Concept simulations");
+  else if(first==="learn"&&second==="practice") parts.push(lang==="ko"?"학습 — 단원별 문제":"Learn — Practice by unit");
+  else if(first==="learn"&&second==="compute") parts.push(lang==="ko"?"학습 — 계산물리":"Learn — Computational physics");
   else if(first==="learn"&&second==="physics"&&location.hash.split("?")[0]==="#/learn/physics/search") parts.push(lang==="ko"?"학습 — 물리 — 문제 검색":"Learn — Physics — Search problems");
   else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
@@ -10137,6 +10374,7 @@ function adDebug(){
 }
 const SIDE_CARD=160, SIDE_GAP=16;                     /* ad width; the least gap on each side of it */
 function mountHaslaAdFitSides(){
+  if(hlNoAds()) return;
   /* never beside an exam or in the community; nor where people read: a book, problem or school in the archive and the
      learning tools widen to the whole window, and those pages carry an ad in the flow of the page instead */
   const route=!/^#\/(lab|community)\b|^#\/archive\b.*[?&](source|problem|school)=|^#\/learn\/[^/]+\/(studio|search)\b|\/(exam|review)(\/|$)/.test(location.hash)
@@ -10206,13 +10444,39 @@ const siteDataLoader=window.HL_RUNTIME&&window.HL_CATALOGUE?window.HL_RUNTIME.cr
 }):null;
 let siteRenderSeq=0;
 
+/* Two sections, like a portal: Learn (the landing) and Olympiad, each with its own bar under the header.
+   Community and About belong to neither. */
+function siteSection(active){
+  if(active==="home"||active==="learn")return "learn";
+  if(active==="comps"&&/^#\/archive\/(books|schools)\b/.test(location.hash))return "learn";
+  if(["olympiad","comps","weekly"].includes(active))return "olympiad";
+  return null;
+}
+function sectionLinks(section){
+  const ko=lang==="ko";
+  if(section==="learn")return [["#/",ko?"학습 홈":LX("Home"),h=>h===""||h==="#/"],["#/learn/practice",ko?"단원별 문제":LX("Practice"),h=>h==="#/learn/practice"],["#/learn/physics",ko?"단원 지도":LX("Unit map"),h=>h==="#/learn/physics"],
+    ["#/learn/concepts",ko?"시뮬레이션":LX("Simulations"),h=>h==="#/learn/concepts"],["#/learn/compute",ko?"계산물리":LX("Computational physics"),h=>h==="#/learn/compute"],[archiveHref("books","phys"),ko?"교재":LX("Books"),h=>/^#\/archive\/(books|schools)\b/.test(h)],
+    ["#/learn/physics/search",ko?"문제 검색":LX("Search"),h=>h==="#/learn/physics/search"],["#/learn",ko?"다른 과목":LX("Other subjects"),h=>h==="#/learn"||/^#\/learn\/(?!physics)/.test(h)]];
+  if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],
+    ["#/monthly",UI[lang].navWeekly,h=>/^#\/(monthly|weekly|rank)\b/.test(h)],["#/hpho","HPhO",h=>/^#\/hpho\b/.test(h)],["#/lab",ko?"실전 모드":LX("Exam mode"),h=>/^#\/lab\b/.test(h)]];
+  return [];
+}
+function paintSectionBar(section){
+  let bar=document.getElementById("sectionNav");
+  const header=document.querySelector("header");
+  if(!bar&&header&&typeof document.createElement==="function"){bar=document.createElement("nav");bar.id="sectionNav";bar.className="section-nav";header.append(bar);}
+  if(!bar)return;
+  const hash=location.hash.split("?")[0],links=sectionLinks(section);
+  bar.hidden=!links.length;
+  bar.setAttribute("aria-label",section==="learn"?(lang==="ko"?"학습 메뉴":"Learn menu"):(lang==="ko"?"올림피아드 메뉴":"Olympiad menu"));
+  bar.innerHTML=links.length?`<div class="shell">${links.map(([href,label,current])=>`<a href="${href}"${current(hash)?' aria-current="page"':""}>${label}</a>`).join("")}</div>`:"";
+}
 function paintPageChrome(active){
-  const d=UI[lang];
+  const d=UI[lang],section=siteSection(active);
+  paintSectionBar(section);
   document.getElementById("nav").innerHTML=
-    `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
-     <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
-     <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
-     <a href="#/monthly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
+    `<a href="#/" class="${section==="learn"?"on":""}">${d.navLearn}</a>
+     <a href="#/olympiad" class="${section==="olympiad"?"on":""}">${d.navOly}</a>
      <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
   document.getElementById("footL").textContent=d.footL;
@@ -10270,7 +10534,8 @@ function render(){
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
-  else if(first==="learn"){       html=second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="olympiad"){    html=viewOlympiad(); active="olympiad"; }
+  else if(first==="learn"){       html=second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
@@ -10303,7 +10568,7 @@ function render(){
   if(studioFrame)studioFrame.addEventListener("load",()=>{studioFrame.dataset.studioReady="true";syncLearnStudio();},{once:true});
   const searchFrame=document.getElementById('learnSearchFrame');
   if(searchFrame)searchFrame.addEventListener('load',syncLearnSearch,{once:true});
-  if(active==="home"){ startHero(); mountHomeActivity(); }
+  if(active==="olympiad"){ startHero(); mountHomeActivity(); }
   if(active==="community") cmMount();
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
   if((active==="weekly"&&first!=="hpho")||first==="lab") arMount();

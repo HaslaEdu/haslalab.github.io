@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WoPhO 세계물리올림피아드 2012 6 · 쓰나미 | 하슬라랩</title>
+<meta name="description" content="**상수:** 중력 가속도: g=9.8, m/s2, 물의 밀도: =1000, kg/m3 쓰나미는 해저의 지진 활동으로 바닷물이 갑자기 밀려 올라가면서 생기는 거대한 바다 파도 현상이다. 쓰나미는 해안 지역에 사는 사람들에게 엄청난 피해를 준다. 최근의 예로는 인도양…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/wopho-2012-t6-6/">
+
+<meta property="og:title" content="WoPhO 세계물리올림피아드 2012 6 · 쓰나미 | 하슬라랩">
+<meta property="og:description" content="**상수:** 중력 가속도: g=9.8, m/s2, 물의 밀도: =1000, kg/m3 쓰나미는 해저의 지진 활동으로 바닷물이 갑자기 밀려 올라가면서 생기는 거대한 바다 파도 현상이다. 쓰나미는 해안 지역에 사는 사람들에게 엄청난 피해를 준다. 최근의 예로는 인도양…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / WoPhO 세계물리올림피아드</nav>
+<h1>WoPhO 세계물리올림피아드 2012 6 · 쓰나미</h1><p class="meta">WoPhO 세계물리올림피아드 · 2012 · 단계 8</p>
+<div class="q"><p>**상수:** 중력 가속도: $g=9.8\,\mathrm{m/s^2}$, 물의 밀도: $\rho=1000\,\mathrm{kg/m^3}$</p><p>쓰나미는 해저의 지진 활동으로 바닷물이 갑자기 밀려 올라가면서 생기는 거대한 바다 파도 현상이다. 쓰나미는 해안 지역에 사는 사람들에게 엄청난 피해를 준다. 최근의 예로는 인도양 쓰나미(2004)와 일본 도호쿠 쓰나미(2011)가 있으며, 각각 23만 명과 1만 5천 명이나 되는 목숨을 앗아 갔다.</p><p>이 문제에서는 쓰나미의 기본 물리를 살펴본다. 이를 통해 쓰나미의 근본적인 특성을 이해하고, 이런 재난이 닥쳤을 때 목숨을 구할 수도 있는 지식을 널리 알리는 데 도움을 얻고자 한다. 이 문제에서는 아래와 같이 인도네시아 수마트라 앞바다의 지진으로 생긴 2004년 인도양 쓰나미의 어림 자료를 쓴다.</p><figure><img src="/practice/contest/fig/wopho-2012-T6-p1-f3.webp" width="766" height="460" alt="" loading="lazy"></figure><p>그림 1: (a-c) 쓰나미가 일어나는 차례. (d) 2004년 인도양 쓰나미의 파동 구조. 빨간 파동은 서쪽으로, 파란 파동은 동쪽으로 나아간다. 점선 상자: 단층선을 따라 생긴 처음 쓰나미 파동의 유효 넓이 $L\times W$(문항 1 참조).</p><p>**파트 1. 쓰나미의 에너지**</p><p>해저의 지진 파열은 그림 1과 같이 단층선을 따라 그 위에 있는 많은 물을 갑자기 밀어 올린다. 이 넘치는 물은 주로 왼쪽과 오른쪽으로 퍼져 나가는 쓰나미 파동으로 흩어진다. 넘치는 물을 그림 2와 같이 단면이 삼각형인 간단한 모형으로 나타내자. 처음 물이 밀려 올라간 높이는 $h=5\,\mathrm{m}$이며, 길이 $L=1400\,\mathrm{km}$, 너비 $W=150\,\mathrm{km}$인 단층선의 넓은 영역을 덮는다. ($h$는 정말로 미터 단위여서 $L$이나 $W$에 비해 아주 작다는 점에 유의하라.)</p><figure><img src="/practice/contest/fig/wopho-2012-T6-p2-f2.webp" width="586" height="416" alt="" loading="lazy"></figure><p>그림 2: 쓰나미 파동의 처음 변위 모형</p><p>**1.A.** 쓰나미로 흩어질 넘치는 에너지를 계산하여라. 지진 직후 이 넘치는 물은 정지해 있다고 가정한다.</p><p>**1.B.** 이 에너지를 TNT 12500톤의 폭발과 맞먹는 히로시마 원자 폭탄과 비교하여라. TNT 1톤의 폭발은 $4.2\times10^{9}\,\mathrm{J}$의 에너지를 낸다.</p><p>**파트 2. 쓰나미의 속력**</p><p>먼 바다에서 쓰나미 파동은 진폭이 작고($a\sim5\,\mathrm{m}$), 파장이 매우 길며($\lambda\sim100\,\mathrm{km}$), 매우 깊은 바다($d\sim5\,\mathrm{km}$) 위를 나아간다. 그래서 놀랍게도 쓰나미는 $a\ll d\ll\lambda$인 '얕은 물 파동'으로 볼 수 있다. 이때 쓰나미의 속력(위상 속도)은 다음과 같다.</p><p>$$v=\sqrt{gd} \tag{1}$$</p><p>아래와 같이 쓰나미 파동의 반쪽을 물탱크로 나타낸 간단한 모형으로 쓰나미의 속력을 아주 간단히 이끌어 내 보자. 처음에 높이가 조금 어긋나 있으면 물은 왼쪽과 오른쪽으로 번갈아 기울며 출렁인다. 따라서 높이 $a$는 시간에 따라 진동한다. 물탱크의 너비는 쓰나미 파장 $\lambda$의 절반이라고 가정한다. 물탱크의 길이는 $L$이다. 참고: 쓰나미(얕은 물) 파동에 대해 $a\ll d\ll\lambda$를 가정한다.</p><figure><img src="/practice/contest/fig/wopho-2012-T6-p3-f2.webp" width="792" height="618" alt="" loading="lazy"></figure><p>그림 3: 쓰나미 파동의 속도를 어림하기 위한 물탱크 모형</p><p>**2.A.** 물 요소의 수평 속도를 수평 위치 $x$, $a$와/또는 그 도함수의 함수로 써라. 힌트: 물탱크 가장자리에서 속도는 0이다.</p><p>**2.B.** 계의 전체 운동 에너지와 퍼텐셜 에너지를 $a$와/또는 그 도함수로 나타내어라.</p><p>**2.C.** 이 계가 단순 조화 진동자임을 보여라. 물의 진동 주기 $T$를 계산하여라.</p><p>**2.D.** 쓰나미는 주기 $T$ 동안 파장 $\lambda$만큼 나아간다. 파동의 속력, 곧 '위상 속도'는 $v=\lambda/T$이다. $v\propto\sqrt{gd}$임을 보여라($\propto$는 비례한다는 뜻이다).</p><p>**파트 3. 쓰나미 경보 시스템**</p><p>위의 식 (1)로 주어진 쓰나미 속력 식을 써라.</p><p>**3.A.** 깊이 $d=4000\,\mathrm{m}$인 인도양에서 파장이 $\lambda=100\,\mathrm{km}$로 긴 쓰나미의 평균 속력과 주기를 계산하여라. 이 속력에 가깝게 움직이는 것은 무엇인가? (자전거, 자동차, 여객 제트기?)</p><figure><img src="/practice/contest/fig/wopho-2012-T6-p4-f2.webp" width="948" height="301" alt="" loading="lazy"></figure><p>그림 4: 해안 지역의 쓰나미 경보 시스템.</p><p>**3.B.** 해저 지형을 그림 4처럼 모형화할 수 있는 해안 지역 근처에 쓰나미 경보 시스템을 설치했다. 해저는 깊이가 일정한 구간 뒤에 깊이가 선형으로 줄어드는 구간이 이어진다. 쓰나미 경보 부표는 $t=0$에 쓰나미 파면을 감지할 수 있다. 쓰나미가 육지에 닿는 시간 $\Delta t$를 계산하여라.</p><p>**파트 4. 육지에 닿을 때의 쓰나미 특성**</p><p>해저 깊이가 일정한 바다(영역 I)에서 쓰나미 파동은 특성 높이 $h$를 가지며, 해저가 선형으로 높아지는 곳(영역 II)을 지나 육지로 다가온다.</p><figure><img src="/practice/contest/fig/wopho-2012-T6-p4-f3.webp" width="969" height="307" alt="" loading="lazy"></figure><p>그림 5: 육지에 닿을 때의 쓰나미 특성.</p><p>**4.A.** 쓰나미 파동이 육지로 밀려올 때 파동의 높이 $h$가 어떻게 되는지 살펴보아라. $h$를 깊이 $d$의 함수로 나타내어라. 힌트: 쓰나미 파동의 주기는 어디서나 일정하다.</p><p>**4.B.** 육지에 다가가는 쓰나미 파동을 대강 그려라.</p><p>**4.C.** 처음 파고 $5\,\mathrm{m}$, 깊이 $4000\,\mathrm{m}$인 인도양에서 와서, 마지막 깊이 $2\,\mathrm{m}$(파도가 부서지기 전)에서 아체 해안(인도네시아 수마트라)을 덮치는 쓰나미 파동의 높이를 어림하여라. 이 결과를 바탕으로 쓰나미가 왜 그토록 파괴적인지 논평하여라.</p><p>**파트 5. 쓰나미의 물빠짐 효과**</p><p>쓰나미가 다가온다는 이른 경고 신호가 '물빠짐 효과'이다. 해변 가까운 바닷물이 수백 미터나 크게 빠져나가며, 쓰나미 주기의 절반쯤(몇 분 정도) 그대로 있다. 관찰자는 다가오는 위험을 모른 채 드러난 해변으로 끌려갈 수 도 있다. (2004년 인도양 쓰나미 때 타이의 한 어린 관광객 소년이 학교에서 이 효과를 배운 덕분에 많은 사람의 목숨을 구했다.)</p><p>다음 모형으로 이 물빠짐 효과를 살펴보자. 물 표면에 그곳의 물 입자를 따라가는 시험 부표 $B$를 띄운다고 하자. 움직임은 두 가지이다. 첫째는 주기 $T=v_0/\lambda$로 위아래로 오르내리는 주기 운동이며, 여기서 $v_0$은 파동의 위상 속도이다. 둘째는 나아가는 파동에 부표가 끌려가서 생기는 수평 운동인데, 그 속력은 파동의 위상 속도 $v_0$보다 작다. 따라서 부표 $B$의 궤적을 따라가려면, 주기 $T$로 돌면서 중심은 $v_0$보다 느리게 움직이는 요요 모형을 쓸 수 있다.</p><figure><img src="/practice/contest/fig/wopho-2012-T6-p5-f2.webp" width="864" height="273" alt="" loading="lazy"></figure><p>그림 6: (a) 시험 부표 모형과 (b) '쓰나미 물빠짐 효과'를 살펴보기 위한 요요 모형</p><p>**5.A.** '요요'가 구를 때 부표 $B$의 궤적을 거리의 함수로 대강 그려라.</p><p>**5.B.** 쓰나미 '물빠짐' 효과를 설명해 주는 관찰 결과를 강조하여 밝혀라.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

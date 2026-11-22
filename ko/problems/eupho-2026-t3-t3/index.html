@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EuPhO 유럽물리올림피아드 2026 T3 · 드라이아이스 하키 | 하슬라랩</title>
+<meta name="description" content="압력 p0=100, kPa에서 고체 CO2(드라이아이스)는 T s=-78.5 C에서 승화(고체에서 기체 상태로 변환)한다. 그 포화 증기압은 클라우지우스–클라페이롱(Clausius–Clapeyron) 관계식을 따른다: dp sat dT= p satRT2, 여기서 승화…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/eupho-2026-t3-t3/">
+
+<meta property="og:title" content="EuPhO 유럽물리올림피아드 2026 T3 · 드라이아이스 하키 | 하슬라랩">
+<meta property="og:description" content="압력 p0=100, kPa에서 고체 CO2(드라이아이스)는 T s=-78.5 C에서 승화(고체에서 기체 상태로 변환)한다. 그 포화 증기압은 클라우지우스–클라페이롱(Clausius–Clapeyron) 관계식을 따른다: dp sat dT= p satRT2, 여기서 승화…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / EuPhO 유럽물리올림피아드</nav>
+<h1>EuPhO 유럽물리올림피아드 2026 T3 · 드라이아이스 하키</h1><p class="meta">EuPhO 유럽물리올림피아드 · 2026 · 단계 9</p>
+<div class="q"><p>압력 $p_0=100\,\mathrm{kPa}$에서 고체 $\mathrm{CO_2}$(드라이아이스)는 $T_\mathrm{s}=-78.5^\circ\mathrm{C}$에서 승화(고체에서 기체 상태로 변환)한다. 그 포화 증기압은 클라우지우스–클라페이롱(Clausius–Clapeyron) 관계식을 따른다:</p><p>$$\frac{\mathrm{d}p_\mathrm{sat}}{\mathrm{d}T}=\frac{\mu\lambda p_\mathrm{sat}}{RT^2},$$</p><p>여기서 승화 잠열은 $\lambda=600\,\mathrm{kJ/kg}$, 몰질량은 $\mu=0.044\,\mathrm{kg/mol}$, 기체 상수는 $R=8.3\,\mathrm{J/(mol\cdot K)}$이다. $\mathrm{CO_2}$ 기체의 열전도도는 $\kappa=10\,\mathrm{mW/(m\cdot K)}$이고 동점성도(dynamic viscosity)는 $\eta=10\,\mathrm{\mu Pa\cdot s}$이다. 드라이아이스의 밀도는 $\rho=1500\,\mathrm{kg/m^3}$이고 중력 가속도는 $g=10\,\mathrm{m/s^2}$이다.</p><figure><img src="/practice/contest/fig/eupho-2026-T3-p1-f2.webp" width="541" height="215" alt="" loading="lazy"></figure><p>반지름 $r=10\,\mathrm{mm}$인 퍽(puck)은 두께 $h=1\,\mathrm{mm}$의 드라이아이스 원판과 그 위에 놓인 질량 $M=0.01\,\mathrm{kg}$의 금속 원판으로 이루어져 있다. 퍽의 초기 온도는 $T_\mathrm{s}$이고 주위 압력은 $p_0$이다.</p><p>퍽을 일정한 온도 $T=T_\mathrm{s}+\Delta T$로 유지되는 수평 금속판 위에 놓고, 초기 수평 속도 $v=10\,\mathrm{mm/s}$를 준다. 매우 오랜 시간이 지난 후, 금속 원판의 수평 변위 $L$을 측정한다.</p><p>a) (2점) $\Delta T$가 충분히 작을 때, $L$은 무시할 수 있고 $\Delta T$에 무관하다. 그러나 $\Delta T$가 임계값 $\Delta T_\mathrm{c}$에 도달하면 함수 $L(\Delta T)$가 증가하기 시작한다. $\Delta T_\mathrm{c}$를 어림하여라.</p><p>b) (8점) 함수 $L(\Delta T)$의 최댓값 $L_\mathrm{max}$를 어림하여라.</p><p>$\mathrm{CO_2}$ 기체는 이상 기체로 취급한다. 어느 순간에도 퍽이 기울어지지 않고, 모든 표면이 완벽하게 매끄러우며, 금속, 드라이아이스, 기체의 열전도도가 $\kappa_\mathrm{metal}\gg\kappa_\mathrm{ice}\gg\kappa$를 만족한다고 가정한다.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>
