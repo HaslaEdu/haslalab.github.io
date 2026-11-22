@@ -173,6 +173,17 @@ const SIGNUP_TOKENS = 3;
    other axis: two new accounts a day from one IP (the owner's rule, 2026-11-04), password and OAuth sign-ups alike.
    SIGNUP_DAY_CAP in the environment overrides it. */
 const SIGNUP_DAY_CAP = 2;
+/* The cap counts accounts actually made (key signup-made:<ip>), not attempts: a sign-up refused for a wrong code, a
+   missing box or a taken name used to spend one of the two, so one person fixing a typo was locked out for a day.
+   signupCapCheck refuses when the day's accounts are already made; signupCapCount records one after the account exists. */
+async function signupCapCheck(env, req) {
+  const cap = Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP;
+  const row = await env.DB.prepare("SELECT start,n FROM ratelimits WHERE k=?").bind("signup-made:" + clientIp(req)).first();
+  if (row && now() - row.start < 86400 && row.n >= cap) throw new HttpError(429, "rate_limited");
+}
+async function signupCapCount(env, req) {
+  try { await limit(env, "signup-made:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400); } catch {}
+}
 const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 // letters (any script), digits, _ . -  and inner spaces; 2–16 chars
 const NICK_RE = /^[\p{L}\p{N}_.\-](?:[\p{L}\p{N}_.\- ]{0,14}[\p{L}\p{N}_.\-])?$/u;
@@ -342,7 +353,7 @@ async function handle(req, env, url, ctx) {
     if (clash) throw new HttpError(409, clash.username.toLowerCase() === username.toLowerCase() ? "username_taken" : "nickname_taken");
     // per hour, and at most SIGNUP_DAY_CAP new accounts a day from one address
     await limit(env, "signup:" + clientIp(req), 20, 3600);
-    await limit(env, "signup-day:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400);
+    await signupCapCheck(env, req);
     /* the mailed code last: a name taken or a box left unticked does not spend one of its tries */
     const { email, hash, t } = await signupEmail.checkCode(env, body);
     let res;
@@ -362,6 +373,7 @@ async function handle(req, env, url, ctx) {
     }
     if (!res[0].meta?.changes) bad("code_invalid");      // a parallel sign-up spent the code first
     const id = res[0].meta.last_row_id;
+    await signupCapCount(env, req);
     await recordConsent(env.DB, id, consent, now(), env[DB_SCOPE] || env.DB);
     const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=?").bind(id).first();
     return { token: await newSession(env, id), user: pubUser(decorateConsent(user, { consent_required: false, train_ok: consent.train })) };
@@ -5283,10 +5295,11 @@ async function oauthSignIn(req, env, prov, sub, name, st, afterUser = null) {
   } else if (found) userId = found.user_id;
   else {
     await limit(env, "signup:" + clientIp(req), 20, 3600);
-    await limit(env, "signup-day:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400);
+    await signupCapCheck(env, req);
     const uname = '~pending_' + b64u(crypto.getRandomValues(new Uint8Array(18)));
     const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,NULL,?,?)").bind(uname, await freeNick(env, name), now(), SIGNUP_TOKENS).run();
     userId = res.meta.last_row_id; fresh = 1;
+    await signupCapCount(env, req);
     await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, userId, now()).run();
   }
   if (afterUser) await afterUser(userId);
