@@ -28,9 +28,6 @@ import { ensureWeeklyContent } from './weekly-content.js';
 import { createD1Metrics, timedDB, d1Timing } from './d1-timing.js';
 import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.js';
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
-import { createGalleryRouter, activeGallery } from './galleries.js';
-import { createPracticeRouter, ensurePracticeSchema } from './practice-progress.js';
-import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
 import { getMonthlyAnswerSheet, getMonthlyProblemRound } from '../../monthly-problems.mjs';
 import { ensureMonthlyAnswerSetup, visibleMonthlySql, normalizeMonthlyParts,
@@ -254,11 +251,6 @@ const healthData = (env, lab) => ({ ok: true, v: 5, boards: BOARDS, tags: TAGS, 
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
-const practiceRouter = createPracticeRouter({HttpError, needUser, limit, now, bad});
-const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, clientIp});
-const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
-/* a post goes to a built-in board of the main gallery or to an open minor gallery */
-const postBoard = async (env, board) => BOARDS.includes(board) ? board : (await activeGallery(env, board)) ? board : null;
 const modelTestRouter = createModelTestRouter({HttpError, currentUser, needUser, limit});
 const accountSecurityRouter = createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,checkPw,pwOk});
 const signupEmail = createSignupEmail({HttpError,now,limit,sha256,clientIp,scope:env => env[DB_SCOPE] || env.DB});
@@ -478,17 +470,7 @@ async function handle(req, env, url, ctx) {
     const hphoRows = await hphoForgetUser(env.DB, env.HPHO_SNAPS || env.LAB_PAGES, me.id);
     // Sign in with Apple: revoke this member's Apple tokens before the link goes (App Store Guideline 5.1.1(v))
     await revokeAppleTokens(env, me.id);
-    // Learn section progress (practice-progress.js)
-    await ensurePracticeSchema(env);
-    await ensureLearnSchema(env);
     await env.DB.batch([
-      env.DB.prepare("DELETE FROM practice_attempts WHERE user_id=?").bind(me.id),
-      env.DB.prepare("DELETE FROM practice_skills WHERE user_id=?").bind(me.id),
-      env.DB.prepare("DELETE FROM practice_state WHERE user_id=?").bind(me.id),
-      env.DB.prepare("DELETE FROM ai_usage_daily WHERE user_id=?").bind(me.id),
-      env.DB.prepare("DELETE FROM entitlements WHERE user_id=?").bind(me.id),
-      env.DB.prepare("DELETE FROM class_members WHERE user_id=?").bind(me.id),
-      env.DB.prepare("UPDATE classes SET closed_at=? WHERE teacher_id=? AND closed_at IS NULL").bind(now(), me.id),
       ...hphoRows,
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
@@ -616,7 +598,7 @@ async function handle(req, env, url, ctx) {
   if (p === "/api/posts" && m === "POST") {
     needUser(me);
     await limit(env, "post:" + me.id, 5, 600);
-    const board = (await postBoard(env, body.board)) || bad("bad_board");
+    const board = BOARDS.includes(body.board) ? body.board : bad("bad_board");
     const tag = pickTag(body.tag, me);
     const title = text(body.title, LIMITS.title, "bad_title");
     const content = text(body.body, LIMITS.body, "bad_body");
@@ -670,7 +652,7 @@ async function handle(req, env, url, ctx) {
     if (m === "PATCH") {
       const title = text(body.title, LIMITS.title, "bad_title");
       const content = text(body.body, LIMITS.body, "bad_body");
-      const board = body.board === undefined || body.board === post.board ? post.board : (await postBoard(env, body.board)) || bad("bad_board");
+      const board = BOARDS.includes(body.board) ? body.board : post.board;
       const tag = body.tag === undefined ? post.tag : pickTag(body.tag, me);
       await env.DB.prepare("UPDATE posts SET title=?,body=?,board=?,tag=?,updated_at=? WHERE id=?")
         .bind(title, content, board, tag, now(), id).run();
@@ -767,12 +749,6 @@ async function handle(req, env, url, ctx) {
     return { ok: true };
   }
 
-  const practice = await practiceRouter(p, m, body, me, env);
-  if (practice !== undefined) return practice;
-  const learn = await learnRouter(p, m, body, me, req, env);
-  if (learn !== undefined) return learn;
-  const gallery = await galleryRouter(p, m, body, me, env);
-  if (gallery !== undefined) return gallery;
   const omr = await omrRouter(p, m, body, me, req, env, url);
   if (omr !== undefined) return omr;
   const monthlyPhoto = await monthlyPhotoRouter(p, m, me, req, env, url);

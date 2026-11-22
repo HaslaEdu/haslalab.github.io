@@ -19,7 +19,7 @@ function app(){
   return{run:code=>vm.runInContext(code,context)};
 }
 
-test('the learning overview opens the physics learning path and keeps unreleased subjects coming soon',()=>{
+test('the learning overview exposes the physics studio and keeps unreleased subjects coming soon',()=>{
   const a=app(),keys=Array.from(a.run('Object.keys(LEARN)'));
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
@@ -28,7 +28,7 @@ test('the learning overview opens the physics learning path and keeps unreleased
     assert.equal((html.match(/class="learn-state"/g)||[]).length,keys.length);
     assert.equal((html.match(language==='ko'?/준비중/g:/Coming soon/g)||[]).length,keys.length-2);
     const physicsCard=[...html.matchAll(/<a\b[^>]*href="#\/learn\/physics"[\s\S]*?<\/a>/g)][0]?.[0];
-    assert.ok(physicsCard);assert.match(physicsCard,language==='ko'?/학습 경로/:/Learning path/);
+    assert.ok(physicsCard);assert.match(physicsCard,language==='ko'?/문제 제작소/:/Problem Studio/);
     for(const key of keys){
       assert.ok(links(html).includes('#/learn/'+key));
       assert.deepEqual(Runtime.routeNeeds('#/learn/'+key),[],'learning navigation does not download archive papers');
