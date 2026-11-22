@@ -12,7 +12,7 @@ test('generated track data, translations and problem pages are up to date',()=>{
 
 test('every track problem is complete, has one right answer and only formulas that KaTeX renders',()=>{
   const {tracks}=JSON.parse(read('practice/tracks.json'));
-  for(const k of ['ap1','ap2','apcm','jeem','fma'])assert.ok(tracks.some(t=>t.key===k),k);
+  for(const k of ['ap1','ap2','apcm','jeem','fma','usapho'])assert.ok(tracks.some(t=>t.key===k),k);
   const P=require(path.join(root,'learn-path.js')),units=new Set(P.AREAS.flatMap(a=>a.subtopics.map(s=>a.key+'/'+s.key)));
   let n=0,math=0;
   for(const t of tracks){
