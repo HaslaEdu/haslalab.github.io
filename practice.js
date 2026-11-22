@@ -8,7 +8,7 @@
   const embedded=params.get('embed')==='1'&&window.parent!==window;
   const SESSION=10;
   const copy={
-    ko:{ob_region:'어디에서 공부하나요?',ob_level:'지금 어느 단계인가요?',ob_goal:'무엇을 위해 공부하나요?',ob_oly:'올림피아드는 어디까지 해 봤나요?',ob_daily:'하루 목표를 정하세요',
+    ko:{moreProblems:'10문제 더',typeNumber:'숫자로 답하세요 (예: 12.5, 3e8)',typeFormula:'식으로 답하세요 (예: 2*sqrt(gL))',answer:'답',keypad:'수식 키패드',typeHelp:'곱하기는 생략해도 됩니다(2mg). 거듭제곱은 ^, 분수는 a⁄b, 10의 거듭제곱은 ×10ⁿ.',notYet:'식을 끝까지 입력하세요',onlyNumber:'숫자만 입력하세요',unknownVar:'이 문제에 없는 문자',showChoices:'보기 보기 (힌트로 셉니다)',ob_region:'어디에서 공부하나요?',ob_level:'지금 어느 단계인가요?',ob_goal:'무엇을 위해 공부하나요?',ob_oly:'올림피아드는 어디까지 해 봤나요?',ob_daily:'하루 목표를 정하세요',
       obKr:'AP Physics와 한국 시험 계산 문제, 올림피아드',obIn:'JEE Main · Advanced',obUs:'AP Physics, F=ma · USAPhO',obGlobal:'AP Physics와 국제 올림피아드 준비',
       goSchool:'학교 공부 · 내신',goExam:'입시 시험',goOly:'물리 올림피아드',goCurious:'그냥 물리가 좋아서',oly0:'처음 준비합니다',oly1:'1차(예선) 시험을 쳐 봤습니다',oly2:'본선 이상 진출했습니다',
       perDay:'문제',daily5:'가볍게 · 약 5분',daily10:'꾸준히 · 약 10분',daily20:'열심히 · 약 20분',back:'이전',obDone:'시작 단계',obNext:'모든 단원이 이 단계에서 시작하고, 첫 문제는 위 시험에서 나옵니다. 12문제 수준 찾기로 더 정확하게 맞출 수 있습니다.',
@@ -25,13 +25,13 @@
       none:'아직 문제가 없습니다',step:'단계',start:'시작',again:'한 번 더',units:'단원 목록',next:'다음 문제',finish:'결과 보기',
       right:'정답입니다!',wrong:'오답입니다. 정답은',up:'단계가 올랐습니다',down:'한 단계 쉬운 문제로 갑니다',
       result:'맞힌 문제',of:'/',done:'세션 완료',loading:'문제를 불러오는 중…',failed:'문제를 불러오지 못했습니다.',retry:'다시 시도',
-      pdf:'원본 시험지',quit:'← 단원 목록',time:'권장 시간',sec:'초',progress:'해결',skip:'건너뛰기',skipped:'건너뜀',
+      pdf:'원본 시험지',quit:'← 목록',time:'권장 시간',sec:'초',progress:'해결',skip:'건너뛰기',skipped:'건너뜀',
       tabUnits:'단원별',calcName:'계산 문제 (한국 시험 기출)',noteUnits:'단원마다 하슬라랩 창작 문제(AP · JEE · F=ma · USAPhO 형식)와 한국 시험 기출 계산 문제(출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 · 웹·앱 배포 허가 범위 안에서 제공)를 함께 풉니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장됩니다.',synced:'계정에 저장됨',tabToday:'오늘의 추천',todayTitle:'오늘의 10문제',whyReview:'복습',whyWeak:'약한 단원',whyStretch:'도전',whyNew:'새 단원',focus:'집중 단원',startToday:'시작하기',mySkills:'단원별 실력',unit:'단원',accuracy:'정답률',noSkills:'문제를 풀수록 단원별 실력이 쌓이고 추천이 정확해집니다.',syncFailed:'저장 실패 · 다시 시도합니다',loginToSave:'로그인하면 기록이 계정에 저장됩니다 →',tabBank:'교재 · 대학 문제',tabContest:'대회 도전',
       bankPick:'분야와 난이도를 고르면 교재와 대학 강의 문제를 하나씩 풉니다. 풀이를 확인하고 스스로 채점하세요.',stars:'난이도',showSol:'풀이 보기',noSol:'아직 등록된 풀이가 없습니다. 커뮤니티 질문 · 답변 갤러리나 AI에게 물어보세요.',
       solvedIt:'풀었어요',missedIt:'못 풀었어요',original:'원문 보기',translated:'번역 보기',noKo:'한국어 번역이 아직 없어 원문을 보여 줍니다.',draft:'하슬라랩 작성 풀이 · 검수 전',refFig:'참고 그림',empty:'이 조건의 문제가 더 없습니다. 난이도나 분야를 바꿔 보세요.',
       contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',figInPdf:'그림은 아래 원본 PDF에서 볼 수 있습니다.',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',
       note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.'},
-    en:{ob_region:'Where do you study?',ob_level:'Where are you now?',ob_goal:'What are you studying for?',ob_oly:'How far have you got in olympiads?',ob_daily:'Pick a daily goal',
+    en:{moreProblems:'Ten more',typeNumber:'Type a number (e.g. 12.5, 3e8)',typeFormula:'Type a formula (e.g. 2*sqrt(gL))',answer:'Answer',keypad:'Math keypad',typeHelp:'You can leave out ×: 2mg works. ^ for powers, a⁄b for a fraction, ×10ⁿ for powers of ten.',notYet:'Finish the expression',onlyNumber:'Numbers only',unknownVar:'Not in this problem',showChoices:'Show the choices (counts as a hint)',ob_region:'Where do you study?',ob_level:'Where are you now?',ob_goal:'What are you studying for?',ob_oly:'How far have you got in olympiads?',ob_daily:'Pick a daily goal',
       obKr:'CSAT and school exams, Korean Physics Olympiad',obIn:'JEE Main and Advanced',obUs:'AP Physics, F=ma and the USAPhO',obGlobal:'AP Physics and international olympiad prep',
       goSchool:'School physics',goExam:'An entrance or AP exam',goOly:'Physics olympiad',goCurious:'Just curious',oly0:'Starting out',oly1:'I have sat a first round',oly2:'I have reached a national final or beyond',
       perDay:'problems',daily5:'Casual · about 5 min',daily10:'Steady · about 10 min',daily20:'Serious · about 20 min',back:'Back',obDone:'Your starting step',obNext:'Every unit starts at this step and your first problems come from the exams above. A 12-problem level check can tune it further.',
@@ -48,7 +48,7 @@
       none:'No problems yet',step:'Step',start:'Start',again:'Again',units:'Units',next:'Next',finish:'See results',
       right:'Correct!',wrong:'Not quite. The answer is',up:'Step up',down:'Back one step',
       result:'Correct',of:'/',done:'Session complete',loading:'Loading problems…',failed:'Could not load the problems.',retry:'Retry',
-      pdf:'Original paper',quit:'← Units',time:'Suggested time',sec:'s',progress:'solved',skip:'Skip',skipped:'skipped',
+      pdf:'Original paper',quit:'← Back',time:'Suggested time',sec:'s',progress:'solved',skip:'Skip',skipped:'skipped',
       tabUnits:'By unit',calcName:'Calculation problems from Korean exams',noteUnits:'Each unit mixes HaslaLab’s original problems (in the style of AP, JEE, F=ma and the USAPhO) with calculation problems from Korean school exams (Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices, shared within the permitted web and app use; shown in English as an AI translation). Progress is kept on this device and, when you log in, on your account too.',synced:'Saved to your account',tabToday:'Today',todayTitle:'Today’s ten',whyReview:'review',whyWeak:'weak unit',whyStretch:'stretch',whyNew:'new unit',focus:'focus',startToday:'Start',mySkills:'Your units',unit:'Unit',accuracy:'Correct',noSkills:'Your unit ratings grow as you solve problems, and the picks get sharper.',syncFailed:'Not saved · retrying',loginToSave:'Log in to keep your progress on your account →',tabBank:'Books & university',tabContest:'Competition challenge',
       bankPick:'Pick a field and a difficulty to work through textbook and university course problems one at a time. Check the solution and mark yourself.',stars:'Difficulty',showSol:'Show solution',noSol:'No solution is stored yet. Ask in the community Q&A gallery or ask the AI.',
       solvedIt:'I solved it',missedIt:'I missed it',original:'Original',translated:'Translation',noKo:'',draft:'HaslaLab draft solution · not yet reviewed',refFig:'Reference figures',empty:'No more problems here. Try another difficulty or field.',
@@ -131,8 +131,8 @@
     while(days.has(d.toLocaleDateString('sv'))){n++;d.setDate(d.getDate()-1);}
     return n;
   }
-  function reportHeight(){if(embedded)requestAnimationFrame(()=>window.parent.postMessage({type:'hl-practice-height',height:Math.ceil(document.documentElement.scrollHeight)},location.origin));}
-  function tellUnit(unit){if(embedded)window.parent.postMessage({type:'hl-practice-unit',unit:unit||''},location.origin);}
+  function reportHeight(){if(embedded)requestAnimationFrame(()=>window.parent.postMessage({type:'hl-practice-height',height:Math.ceil(document.querySelector('main').getBoundingClientRect().bottom+scrollY+12)},location.origin));}
+  function tellUnit(unit){if(embedded&&!document.documentElement.classList.contains('play'))window.parent.postMessage({type:'hl-practice-unit',unit:unit||''},location.origin);}
   function math(latex,display){try{return window.katex?katex.renderToString(latex,{displayMode:!!display,throwOnError:false,strict:false}):esc(latex);}catch(e){return esc(latex);}}
   function blocks(list){
     return list.map(b=>{
@@ -218,6 +218,13 @@
     $('skip').hidden=!!s.diag;
     if(state.lang!=='ko')localizeExam(item);
     $('app').querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.n))));
+    const free=imageChoices?null:freeOfExam(item);
+    if(free){
+      const ch=$('app').querySelector('.choices');ch.hidden=true;
+      ch.insertAdjacentHTML('afterend',answerBox(free)+`<button type="button" class="linkbtn" id="showch">${tr('showChoices')}</button>`);
+      $('showch').onclick=()=>{ch.hidden=false;$('ansbox').remove();$('showch').remove();s.usedChoices=true;reportHeight();};
+      wireAnswer(free,ok=>{answer(ok?item.a:0);$('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+freeAnswerTex(free)}</p>`;$('showch')?.remove();reportHeight();});
+    }
     $('next').onclick=next;
     $('skip').onclick=()=>{if(s.answered)return;record(item.id,'exam',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
     reportHeight();window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
@@ -266,6 +273,7 @@
     if(s.diag){diagSummary(s);return;}
     $('app').innerHTML=`<div class="session summary"><p class="eyebrow">${tr('done')}</p><p class="big">${s.right}${tr('of')}${s.n}</p><p>${tr('result')} · +${s.xp} XP · ${s.mode==='bank'?'★'.repeat(s.stars):s.fixed?tr('tabToday'):tr('step')+' '+s.level+' · '+tr(LEVELS[levelOf(s.level)])}${s.skipped?` · ${s.skipped} ${tr('skipped')}`:''} · 🔥 ${streak()}${tr('streak')}</p>
       <div class="actions"><button type="button" class="primary" id="again">${tr('again')}</button><button type="button" id="units">${tr('units')}</button></div></div>`;
+    if(s.unit==='today'&&document.documentElement.classList.contains('play')){$('again').onclick=playHome;$('units').onclick=todayHome;$('again').textContent=tr('moreProblems');reportHeight();return;}
     if(s.assignment){$('again').onclick=classHome;$('units').onclick=classHome;$('again').textContent=tr('tabClass');reportHeight();return;}
     $('again').onclick=()=>s.fixed?todayHome():s.mode==='bank'?bankStart(s.field,s.stars):s.mode==='track'?trackStart(s.track,s.syl):start(s.unit);$('units').onclick=s.fixed?todayHome:s.mode==='bank'?bankHome:s.mode==='track'?tracksHome:home;reportHeight();
   }
@@ -281,7 +289,8 @@
   const BANK_AREA={classical_mechanics:'mechanics',electromagnetism:'em',oscillations_waves:'waves',optics:'optics',thermodynamics:'thermal',statistical_mechanics:'thermal',quantum_mechanics:'modern',special_relativity:'modern',general_relativity:'modern',mathematical_methods:'math'};
   function studied(xp){saved.xp+=xp;if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}save();paintStats();}
   function paintTabs(){
-    $('tabs').innerHTML=[['today',tr('tabToday')],['exam',tr('tabUnits')],['tracks',tr('tabTracks')],['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
+    /* no unit tab: the first-visit answers already say what to practise; a unit still opens from the unit map (?unit=) */
+    $('tabs').innerHTML=[['today',tr('tabToday')],['tracks',tr('tabTracks')],['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
     $('tabs').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>MODES[b.dataset.mode]());
     $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':state.mode==='exam'?'noteUnits':'noteTracks');
   }
@@ -506,13 +515,77 @@
         ${contest?`<button type="button" class="area unit" id="sugContest"><span class="name"><b>${tr('tabContest')}</b><small>${esc(nameOf(contest.name))} · ${tr('step')} ${contest.step}</small></span><span>→</span></button>`:''}
       </div>
       ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitName(x.u))}</td><td>${x.step} <span class="lv lv${levelOf(x.step)}">${tr(LEVELS[levelOf(x.step)])}</span></td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}`;
-    $('startToday').onclick=()=>{state.session={unit:'today',fixed:true,items:chosen,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};next();};
+    $('startToday').onclick=()=>startTodaySession(chosen);
     $('sugBank').onclick=()=>{state.bankField=field[0];bankStart(field[0],fieldStars);};
     if($('diagGo'))$('diagGo').onclick=diagStart;
     $('editProfile').onclick=e=>{e.preventDefault();startHome(true);};
     if($('sugContest'))$('sugContest').onclick=()=>{paintTabs();contestShow(contest.key);};
     reportHeight();
   }
+
+  /* ── typed answers (math-input.js): a number or a formula entered on a calculator keypad, no LaTeX. A problem whose
+     correct choice is a number or a formula is answered this way; a concept question keeps its choices. The choices stay
+     one tap away as a hint. ── */
+  const MI=()=>window.HL_MATH;
+  /* tolerance: 1 %, or less when a wrong choice lies closer than 2 % to the answer */
+  function tolFor(ans,choices){
+    let tol=ans.tol??0.01;
+    for(const c of choices||[]){const d=c&&MI().answerOf(c);if(d&&d.kind==='num'&&d.value!==ans.value&&ans.value)tol=Math.min(tol,Math.abs(d.value-ans.value)/Math.abs(ans.value)/2);}
+    return tol;
+  }
+  function freeOfTrack(item){
+    if(!MI())return null;
+    if(item.type==='num')return{kind:'num',value:item.answer.value,unit:item.answer.unit||'',tol:item.answer.tol,tex:String(item.answer.value)};
+    const a=MI().answerOf(item.choices[item.answer]);if(!a)return null;
+    if(a.kind==='num')a.tol=tolFor(a,item.choices.filter((c,i)=>i!==item.answer));
+    return a;
+  }
+  const choiceText=c=>c.c.filter(b=>b.p).map(b=>segText(b.p)).join(' ');
+  function freeOfExam(item){
+    if(!MI()||item.ch.some(c=>c.c.some(b=>b.f)))return null;
+    const right=item.ch.find(c=>c.n===item.a);if(!right)return null;
+    const a=MI().answerOf(choiceText(right));if(!a)return null;
+    if(a.kind==='num')a.tol=tolFor(a,item.ch.filter(c=>c!==right).map(choiceText));
+    return a;
+  }
+  const KEYS=[['7','8','9','÷','⌫'],['4','5','6','×','('],['1','2','3','−',')'],['0','.','π','+','^'],['√','×10ⁿ','frac','←','→']];
+  const KEY_IN={'÷':'/','×':'*','−':'-','√':'sqrt(','×10ⁿ':'*10^(','π':'π','frac':')/('};
+  function answerBox(free){
+    const vs=free.kind==='expr'?free.vars:[],show=v=>{const[n,s]=v.split('_');return (MI().GREEK_CHAR[n]||n)+(s?`<sub>${esc(s)}</sub>`:'');};
+    const ins=v=>{const[n,s]=v.split('_');return (MI().GREEK_CHAR[n]||n)+(s?'_'+s:'');};
+    return `<div class="ansbox" id="ansbox">
+      <div class="ansline"><input id="ans" autocomplete="off" autocapitalize="off" spellcheck="false"${matchMedia('(pointer:coarse)').matches?' inputmode="none"':''} placeholder="${tr(free.kind==='num'?'typeNumber':'typeFormula')}" aria-label="${tr('answer')}">${free.unit?`<span class="unitlbl">${esc(free.unit)}</span>`:''}<button type="button" class="primary" id="ansgo">${tr('check')}</button></div>
+      <div class="anspreview" id="anspreview" aria-live="polite"></div>
+      <div class="keypad" role="group" aria-label="${tr('keypad')}">${vs.length?`<div class="keyrow vars">${vs.map(v=>`<button type="button" data-k="${esc(ins(v))}">${show(v)}</button>`).join('')}</div>`:''}
+        ${KEYS.map(r=>`<div class="keyrow">${r.map(k=>`<button type="button" data-k="${k}"${/[⌫←→]/.test(k)?' class="op"':''}>${k==='frac'?'a⁄b':k}</button>`).join('')}</div>`).join('')}</div>
+      <p class="src ansnote">${tr('typeHelp')}</p></div>`;
+  }
+  /* wires the box: keys insert at the caret, the typed text is shown as math, Enter or the button checks it */
+  function wireAnswer(free,onDone){
+    const inp=$('ans'),pv=$('anspreview');
+    const paint=()=>{const v=inp.value.trim();if(!v){pv.innerHTML='';return;}const t=MI().preview(v);pv.innerHTML=t?math(t):`<span class="src">${tr('notYet')}</span>`;reportHeight();};
+    const put=t=>{const a=inp.selectionStart??inp.value.length,b=inp.selectionEnd??a;inp.value=inp.value.slice(0,a)+t+inp.value.slice(b);const p=a+t.length;inp.setSelectionRange?.(p,p);paint();};
+    $('ansbox').querySelectorAll('[data-k]').forEach(btn=>btn.onclick=()=>{
+      const k=btn.dataset.k,a=inp.selectionStart??inp.value.length;
+      if(k==='⌫'){if(a>0){inp.value=inp.value.slice(0,a-1)+inp.value.slice(a);inp.setSelectionRange?.(a-1,a-1);}paint();}
+      else if(k==='←')inp.setSelectionRange?.(Math.max(0,a-1),Math.max(0,a-1));
+      else if(k==='→')inp.setSelectionRange?.(a+1,a+1);
+      else if(k==='frac'){inp.value='('+inp.value+')/(';inp.setSelectionRange?.(inp.value.length,inp.value.length);paint();}
+      else put(KEY_IN[k]??k);
+      if(!matchMedia('(pointer:coarse)').matches)inp.focus();
+    });
+    inp.oninput=paint;
+    const go=()=>{
+      const v=inp.value.trim();if(!v)return;
+      const r=MI().check(v,free,free.tol??0.01);
+      if(r.error==='syntax'){pv.innerHTML=`<span class="numerr">${tr('notYet')}</span>`;reportHeight();return;}
+      if(r.error==='vars'){pv.innerHTML=`<span class="numerr">${tr(free.kind==='num'?'onlyNumber':'unknownVar')}${r.extra?': '+esc(r.extra.join(', ')):''}</span>`;reportHeight();return;}
+      inp.disabled=true;$('ansgo').disabled=true;$('ansbox').classList.add(r.ok?'right':'wrong');$('ansbox').querySelector('.keypad').hidden=true;
+      onDone(r.ok);reportHeight();
+    };
+    $('ansgo').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();go();}};
+  }
+  const freeAnswerTex=free=>`${math(free.tex)}${free.unit?' '+esc(free.unit):''}`;
 
   /* ── levels: a unit's step reads as a level name; all XP together gives a tier, like a competitive-programming judge ── */
   const LEVELS=['lvBeginner','lvFamiliar','lvProficient','lvMaster'];
@@ -598,21 +671,27 @@
   const numOk=(v,a)=>a.tol>0?Math.abs(v-a.value)<=a.tol*Math.abs(a.value)+1e-12:Math.abs(v-a.value)<1e-9;
   const fmtNum=a=>`${a.value} ${a.unit||''}`.trim();
   function showTrack(item){
-    const s=state.session;s.hints=0;s.answered=false;s.view=null;s.chat=[];
+    const s=state.session;s.hints=0;s.answered=false;s.view=null;s.chat=[];s.free=freeOfTrack(item);
     const L='ABCDE';
     $('app').innerHTML=`<div class="session">
       ${sessionHead(s,item)}
       <div class="q" id="qtext">${textHtml(item.q)}</div><p class="src" id="trnote"></p>
-      ${item.type==='mc'?`<div class="choices" role="group">${item.choices.map((c,i)=>`<button type="button" class="choice" data-i="${i}"><span class="no">${L[i]}</span><span class="ct">${esc(c)}</span></button>`).join('')}</div>`
-        :`<form class="numrow" id="numf"><input id="num" inputmode="decimal" autocomplete="off" placeholder="${tr('numPh')}" aria-label="${tr('numPh')}"><span class="unitlbl">${esc(item.answer.unit||'')}</span><button type="submit" class="primary">${tr('check')}</button><span class="numerr" id="numerr"></span></form>`}
+      ${s.free?answerBox(s.free)+`<button type="button" class="linkbtn" id="showch">${tr('showChoices')}</button>`:''}
+      ${item.type==='mc'?`<div class="choices" role="group"${s.free?' hidden':''}>${item.choices.map((c,i)=>`<button type="button" class="choice" data-i="${i}"><span class="no">${L[i]}</span><span class="ct">${esc(c)}</span></button>`).join('')}</div>`
+        :s.free?'':`<form class="numrow" id="numf"><input id="num" inputmode="decimal" autocomplete="off" placeholder="${tr('numPh')}" aria-label="${tr('numPh')}"><span class="unitlbl">${esc(item.answer.unit||'')}</span><button type="submit" class="primary">${tr('check')}</button><span class="numerr" id="numerr"></span></form>`}
       <div id="hints"></div><div id="feedback"></div><div id="sol"></div><div id="tutor"></div><div id="disc"></div>
       <div class="foot"><span class="src">${esc(s.fixed?unitName(item.u):s.label)} · ${tr('byHasla')} · <a href="#" id="discuss">${tr('discuss')}</a></span>
         <span class="footbtns"><button type="button" id="hint">${tr('hint')} (0/${item.hints.length})</button><button type="button" id="ask">✦ ${tr('tutor')}</button><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=SESSION||s.diag&&s.n>=s.diag.areas.length*2?tr('finish'):tr('next')}</button></span></div></div>`;
     typeset($('qtext'));typeset($('app').querySelector('.choices')||$('app'));
     $('quit').onclick=s.assignment?classHome:s.diag||s.fixed?todayHome:s.mode==='track'?tracksHome:home;
     $('skip').hidden=!!s.diag;
+    if(s.free){
+      wireAnswer(s.free,ok=>trackAnswer(null,ok));
+      $('showch').onclick=()=>{if(item.type!=='mc')return;$('app').querySelector('.choices').hidden=false;$('ansbox').remove();$('showch').remove();s.free=null;s.hints++;reportHeight();};
+      if(item.type!=='mc')$('showch').remove();
+    }
     if(item.type==='mc')$('app').querySelectorAll('.choice').forEach(b=>b.onclick=()=>trackAnswer(Number(b.dataset.i)));
-    else $('numf').onsubmit=e=>{e.preventDefault();const v=parseNum($('num').value);if(!Number.isFinite(v)){$('numerr').textContent=tr('notNumber');return;}trackAnswer(v);};
+    else if(!s.free)$('numf').onsubmit=e=>{e.preventDefault();const v=parseNum($('num').value);if(!Number.isFinite(v)){$('numerr').textContent=tr('notNumber');return;}trackAnswer(v);};
     $('hint').onclick=()=>{if(s.hints>=item.hints.length)return;s.hints++;paintHints(item);$('hint').textContent=`${tr('hint')} (${s.hints}/${item.hints.length})`;if(s.hints>=item.hints.length)$('hint').disabled=true;reportHeight();};
     $('ask').onclick=()=>openTutor(item);
     $('skip').onclick=()=>{if(s.answered)return;record(item.id,'track',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
@@ -642,12 +721,13 @@
     paintTexts(item);
   }
   function paintSolution(item){const v=viewOf(item);$('sol').innerHTML=`<section class="solution"><h3>${tr('solution')}</h3>${textHtml(v.sol)}</section>`;typeset($('sol'));}
-  function trackAnswer(given){
+  function trackAnswer(given,typedOk){
     const s=state.session,item=s.current;if(s.answered)return;s.answered=true;
-    const ok=item.type==='mc'?given===item.answer:numOk(given,item.answer);
+    const ok=typedOk!==undefined?typedOk:item.type==='mc'?given===item.answer:numOk(given,item.answer);
     const result=ok?(s.hints?'solved':'right'):'wrong';
     if(item.type==='mc')$('app').querySelectorAll('.choice').forEach(b=>{b.disabled=true;const i=Number(b.dataset.i);if(i===item.answer)b.classList.add('right');else if(i===given)b.classList.add('wrong');});
-    else{$('num').disabled=true;$('numf').querySelector('button').disabled=true;$('numf').classList.add(ok?'right':'wrong');}
+    else if($('numf')){$('num').disabled=true;$('numf').querySelector('button').disabled=true;$('numf').classList.add(ok?'right':'wrong');}
+    $('showch')?.remove();
     let note='';
     if(ok){
       s.right++;s.run++;const gain=Math.max(4,10+2*item.s-3*s.hints);s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=item.u;delete saved.wrong[item.id];
@@ -660,8 +740,8 @@
     record(item.id,s.diag?'diag':'track',item.u,item.s,result);if(s.diag)diagStep(s,ok);
     if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
     save();paintStats();
-    const answerText=item.type==='mc'?'ABCDE'[item.answer]+'. '+(viewOf(item).choices[item.answer]||''):fmtNum(item.answer);
-    $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+esc(answerText)}${note}${ok&&s.hints?' · '+tr('withHints'):''}</p>`;
+    const answerText=s.free?null:item.type==='mc'?'ABCDE'[item.answer]+'. '+(viewOf(item).choices[item.answer]||''):fmtNum(item.answer);
+    $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+(s.free?freeAnswerTex(s.free):esc(answerText))}${note}${ok&&s.hints?' · '+tr('withHints'):''}</p>`;
     typeset($('feedback'));if(!s.diag)paintSolution(item);
     $('next').hidden=false;$('skip').hidden=true;$('hint').hidden=true;$('next').focus();reportHeight();
   }
@@ -835,7 +915,7 @@
       $('app').innerHTML=`<div class="session summary onboard"><p class="eyebrow">${tr('obDone')}</p><p class="big">${tr('step')} ${step}</p>
         <p>${tr(LEVELS[levelOf(step)])} · ${esc(exams.join(' · '))}</p><p class="src">${tr('obNext')}</p>
         <div class="actions"><button type="button" class="primary" id="obToday">${tr('startToday')}</button><button type="button" id="obDiag">${tr('diagStart')}</button></div></div>`;
-      $('obToday').onclick=todayHome;$('obDiag').onclick=diagStart;reportHeight();
+      $('obToday').onclick=document.documentElement.classList.contains('play')?playHome:todayHome;$('obDiag').onclick=diagStart;reportHeight();
     };
     loadTracks().catch(()=>{}).finally(q);
   }
@@ -846,7 +926,18 @@
     const items=parts.flat();
     return items.length?items:allTrackItems();
   }
-  const MODES={start:startHome,today:todayHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
+  /* the home page's own problem: today's set starts at once, one problem after another, no list in between */
+  function startTodaySession(chosen){state.session={unit:'today',fixed:true,items:chosen,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};next();}
+  async function playHome(){
+    if(!saved.profile){startHome();return;}
+    state.mode='today';state.session=null;paintTabs();paintStats();
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let items;try{items=await startPool();}catch(e){failed(playHome);return;}
+    const {chosen}=chooseToday(items);
+    if(!chosen.length){todayHome();return;}
+    startTodaySession(chosen);
+  }
+  const MODES={start:startHome,play:playHome,today:todayHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
 
   function applyTheme(){const t=params.get('theme'),dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}
   function translate(){document.documentElement.lang=state.lang;document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=tr(el.dataset.i18n);});$('note').textContent=tr('note');document.title=tr('title')+' · HaslaLab';}
@@ -857,8 +948,9 @@
   });
   addEventListener('keydown',e=>{
     const s=state.session;if(!s||s.mode==='bank'||/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||''))return;
-    if(s.current?.kind==='track'){if(!s.answered&&s.current.type==='mc'&&/^[1-5a-eA-E]$/.test(e.key)){const i='abcde'.indexOf(e.key.toLowerCase());const n=i>=0?i:Number(e.key)-1;if(n<s.current.choices.length)trackAnswer(n);}else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}return;}
-    if(!s.answered&&/^[1-5]$/.test(e.key))answer(Number(e.key));
+    if(document.activeElement?.id==='ans')return;
+    if(s.current?.kind==='track'){if(!s.answered&&!s.free&&s.current.type==='mc'&&/^[1-5a-eA-E]$/.test(e.key)){const i='abcde'.indexOf(e.key.toLowerCase());const n=i>=0?i:Number(e.key)-1;if(n<s.current.choices.length)trackAnswer(n);}else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}return;}
+    if(!s.answered&&!$('ansbox')&&/^[1-5]$/.test(e.key))answer(Number(e.key));
     else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}
   });
   if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);
@@ -867,6 +959,7 @@
   const boot=()=>{pull();loadPlan();const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
     if(item&&/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
+    else if(mode==='play'){document.documentElement.classList.add('play');playHome();}
     else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

@@ -1023,7 +1023,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=eb763b9c4310">
+<link rel="stylesheet" href="site-design.css?v=6174956991a0">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
 </head>
@@ -5304,22 +5304,44 @@ function learnAreasHtml(){
 /* Learn home: the page the site opens on. Short problems by topic and step; long final-round
    problems stay in the Olympiad section's archive. */
 function viewLearnHome(){
+  /* The Learn home opens on a problem (practice.html in play mode: today's picks, one after another; a first visit
+     answers the setup questions there). Around it, every part of the site is one click away, the way a large study
+     site's front page works. */
   const ko=lang==="ko",P=window.HL_LEARN_PATH;
-  const modes=[
-    ["#/learn/practice",ko?"단원별 문제":LX("Practice by unit"),ko?"AP Physics · JEE Main · F=ma · USAPhO 시험 문제(힌트 · AI 튜터), 한국 시험 계산 문제 461개, 교재 · 대학 문제 8,700개, EuPhO · Physics Cup 같은 대회 도전. 처음이면 '내 수준 찾기'부터.":LX("AP Physics, JEE Main, F=ma and USAPhO practice with hints and an AI tutor, 8,700 textbook and university problems, and a competition challenge with EuPhO and Physics Cup. New here? Start with “Find your level”.")],
-    ["#/learn/concepts",ko?"시뮬레이션으로 배우기":LX("Learn with simulations"),ko?"도르래, 원운동, 진자, 충돌, 전기장… 움직임을 보고 값을 바꿔 보며 개념을 익힙니다.":LX("Pulleys, circular motion, pendulums, collisions, fields: watch, change a value, learn the idea.")],
-    ["#/learn/compute",ko?"계산물리":LX("Computational physics"),ko?"백준처럼 Python으로 시뮬레이션을 짜서 제출하면, 물리 법칙으로 채점합니다.":LX("Like an online judge: write a simulation in Python and it is graded against the physics.")],
-    [archiveHref("books","phys"),ko?"교재":LX("Books"),ko?"공개 교재와 대학 · 학교 자료":LX("Open textbooks, university and school materials")],
-    ["#/olympiad",ko?"올림피아드 본선 문제":LX("Olympiad final-round problems"),ko?"긴 서술형 본선 문제와 기출은 올림피아드에서 따로 풉니다.":LX("Long written final-round problems and past papers live in the Olympiad section.")]];
-  return `<div class="shell learn-home">
-    <section class="lh-hero"><p class="eyebrow">${ko?"HaslaLab 학습":LX("HaslaLab Learn")}</p>
-      <h1>${ko?"물리올림피아드,<br>처음부터 차근차근.":LX("Physics olympiad,<br>one step at a time.")}</h1>
-      <p class="lede">${ko?"짧은 문제를 단원과 난이도별로 풀고, 시뮬레이션으로 직접 움직여 보며 배우세요. 준비가 되면 올림피아드 본선 문제로 넘어갑니다.":LX("Solve short problems by unit and difficulty and learn by moving simulations yourself. When you are ready, move on to olympiad final rounds.")}</p>
-      <div class="cta"><a class="btn" href="#/learn/practice">${ko?"문제 풀기 시작":LX("Start solving")}</a><a class="btn ghost" href="#lhStages">${ko?"내 단계 찾기":LX("Find your step")}</a></div></section>
-    <div class="comps lh-modes">${modes.map(([href,title,note])=>`<a class="comp lsubj" href="${href}"><div class="chead"><div class="abbr">${title}</div></div><p class="learn-card-note">${note}</p><span class="go">→</span></a>`).join("")}</div>
-    ${P?`<section class="lp-block" aria-labelledby="lhStages"><h2 id="lhStages">${ko?"내 단계 찾기":LX("Find your step")}</h2>${learnStagesHtml()}</section>
-    <section class="lp-block" aria-labelledby="lhTopics"><h2 id="lhTopics">${ko?"단원별로 공부하기":LX("Study by unit")}</h2><p class="learn-tool-copy">${ko?"숫자는 그 단원을 처음 다루는 단계입니다.":LX("The number is the step where a unit first appears.")}</p>${learnAreasHtml()}</section>`:""}
-    <p class="learn-tool-copy"><a href="#/learn">${ko?"화학 · 생물 · 지구과학 · 천문 학습 자료 →":LX("Chemistry, biology, earth science and astronomy →")}</a></p>
+  const q=new URLSearchParams({embed:"1",mode:"play",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
+  const link=(href,title,note)=>`<a class="lh2-link" href="${href}"><b>${title}</b>${note?`<small>${note}</small>`:""}</a>`;
+  const tracks=[["ap1","AP Physics 1",ko?"대수 기반 역학":"Algebra-based mechanics"],["ap2","AP Physics 2",ko?"열 · 전기 · 광학 · 현대물리":"Heat, electricity, optics, modern"],
+    ["apcm","AP Physics C: Mechanics",ko?"미적분 기반 역학":"Calculus-based mechanics"],["jeem","JEE Main",ko?"인도 공대 입시":"India's engineering entrance"],
+    ["fma","F=ma",ko?"미국 올림피아드 1차":"US olympiad, first round"],["usapho","USAPhO",ko?"미국 올림피아드 준결선":"US olympiad semifinal"]];
+  return `<div class="shell lh2">
+    <div class="lh2-grid">
+      <section class="lh2-play" aria-labelledby="lh2PlayH">
+        <div class="lh2-head"><h1 id="lh2PlayH">${ko?"오늘의 문제":LX("Today's problems")}</h1><a class="lh2-more" href="#/learn/practice">${ko?"전체 문제 보기":LX("All practice")} →</a></div>
+        <iframe id="learnPracticeFrame" class="learn-studio-frame lh2-frame" src="practice.html?${q}" title="${ko?"오늘의 문제":"Today's problems"}" referrerpolicy="same-origin"></iframe>
+      </section>
+      <aside class="lh2-side">
+        <section class="lh2-card"><h2>${ko?"시험별 문제":LX("Practice by exam")}</h2><div class="lh2-list">${tracks.map(([k,n,d])=>link(`#/learn/practice?mode=tracks&track=${k}`,n,d)).join("")}</div></section>
+        <section class="lh2-card"><h2>${ko?"더 풀기":LX("More to solve")}</h2><div class="lh2-tiles">
+          ${link("#/learn/practice?mode=contest",ko?"대회 기출":"Competition problems",ko?"EuPhO · Physics Cup 등 599문제":"599 from EuPhO, Physics Cup and others")}
+          ${link("#/learn/practice?mode=bank",ko?"교재 · 대학 문제":"Textbook problems",ko?"8,700문제, 난이도별":"8,700, by difficulty")}
+          ${link("#/learn/concepts",ko?"시뮬레이션":"Simulations",ko?"움직여 보며 개념 익히기":"Move it, see the idea")}
+          ${link("#/learn/compute",ko?"계산물리":"Computational physics",ko?"Python 채점":"Python, auto-graded")}
+          ${link("#/learn/practice?mode=diag",ko?"내 수준 찾기":"Find your level",ko?"12문제":"12 problems")}
+          ${link("#/learn/practice?mode=class",ko?"학급":"Class",ko?"선생님 과제":"Teacher assignments")}
+        </div></section>
+        <section class="lh2-card"><h2>${ko?"올림피아드":LX("Olympiad")}</h2><div class="lh2-tiles">
+          ${link("#/comps",ko?"대회 아카이브":"Archive",ko?"각국 대회 · 국가대표 선발 기출":"Contests and team selection tests")}
+          ${link("#/monthly",UI[lang].navWeekly,ko?"매달 새 문제":"New problems each month")}
+          ${link("#/hpho","HPhO",ko?"하슬라랩 물리올림피아드":"HaslaLab olympiad")}
+          ${link("#/lab",ko?"실전 모드":"Exam mode",ko?"시간 재고 풀기":"Timed papers")}
+        </div></section>
+        <section class="lh2-card"><h2>${ko?"커뮤니티":LX("Community")}</h2><div class="lh2-list">
+          ${link("#/community/qna",ko?"질문 · 답변":"Questions",ko?"막힌 문제 물어보기":"Ask about a problem")}
+          ${link("#/community/galleries",ko?"갤러리":"Galleries",ko?"대회 · 주제별 모임":"Groups by contest and topic")}
+        </div></section>
+      </aside>
+    </div>
+    ${P?`<section class="lh2-map" aria-labelledby="lh2Map"><div class="lh2-head"><h2 id="lh2Map">${ko?"단원 지도":LX("Unit map")}</h2><a class="lh2-more" href="#/learn/physics">${ko?"단계별 설명":LX("Steps explained")} →</a></div>${learnAreasHtml()}</section>`:""}
   </div>${adFitBanner("home")}`;
 }
 
@@ -10455,7 +10477,7 @@ function siteSection(active){
 }
 function sectionLinks(section){
   const ko=lang==="ko";
-  if(section==="learn")return [["#/",ko?"학습 홈":LX("Home"),h=>h===""||h==="#/"],["#/learn/practice",ko?"단원별 문제":LX("Practice"),h=>h==="#/learn/practice"],["#/learn/physics",ko?"단원 지도":LX("Unit map"),h=>h==="#/learn/physics"],
+  if(section==="learn")return [["#/",ko?"학습 홈":LX("Home"),h=>h===""||h==="#/"],["#/learn/practice",ko?"문제 풀기":LX("Practice"),h=>h==="#/learn/practice"],["#/learn/physics",ko?"단원 지도":LX("Unit map"),h=>h==="#/learn/physics"],
     ["#/learn/concepts",ko?"시뮬레이션":LX("Simulations"),h=>h==="#/learn/concepts"],["#/learn/compute",ko?"계산물리":LX("Computational physics"),h=>h==="#/learn/compute"],[archiveHref("books","phys"),ko?"교재":LX("Books"),h=>/^#\/archive\/(books|schools)\b/.test(h)],
     ["#/learn/physics/search",ko?"문제 검색":LX("Search"),h=>h==="#/learn/physics/search"],["#/learn",ko?"다른 과목":LX("Other subjects"),h=>h==="#/learn"||/^#\/learn\/(?!physics)/.test(h)]];
   if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],
