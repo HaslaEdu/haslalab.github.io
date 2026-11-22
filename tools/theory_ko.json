@@ -5082,6 +5082,28 @@
         "sourcePage": 2,
         "sol": "pdfx/icho/IChO_1991_PS_IIC_OriginalLayout_KO.pdf"
       }
+    },
+    "1990": {
+      "P1": {
+        "paper": "pdfx/icho/IChO_1990_P_IIC_OriginalLayout_KO.pdf",
+        "sourcePage": 1,
+        "sol": "pdfx/icho/IChO_1990_PS_IIC_OriginalLayout_KO.pdf"
+      },
+      "P2": {
+        "paper": "pdfx/icho/IChO_1990_P_IIC_OriginalLayout_KO.pdf",
+        "sourcePage": 3,
+        "sol": "pdfx/icho/IChO_1990_PS_IIC_OriginalLayout_KO.pdf"
+      },
+      "P3": {
+        "paper": "pdfx/icho/IChO_1990_P_IIC_OriginalLayout_KO.pdf",
+        "sourcePage": 4,
+        "sol": "pdfx/icho/IChO_1990_PS_IIC_OriginalLayout_KO.pdf"
+      },
+      "P4": {
+        "paper": "pdfx/icho/IChO_1990_P_IIC_OriginalLayout_KO.pdf",
+        "sourcePage": 7,
+        "sol": "pdfx/icho/IChO_1990_PS_IIC_OriginalLayout_KO.pdf"
+      }
     }
   },
   "eotvos": {
@@ -5374,6 +5396,16 @@
         "sourceType": "study_edition_with_omissions",
         "solutionNotice": true
       }
+    },
+    "2002": {
+      "T2": {
+        "answer": "pdfx/imcho/IMChO_2002_T2_Q6_ANSWER_KO.pdf"
+      }
+    },
+    "2014": {
+      "E": {
+        "answer": "pdfx/imcho/IMChO_2014_E_ANSWER_P1-2_KO.pdf"
+      }
     }
   },
   "ibo": {
@@ -5532,6 +5564,32 @@
         "mark": "pdfx/ibo/IBO_2010_P1_Official_Marking_Key_OriginalLayout_KO.pdf",
         "paper": "pdfx/ibo/IBO_2010_P1_Official_Question_Paper_OriginalLayout_KO.pdf"
       }
+    },
+    "1997": {
+      "T": {
+        "key": "pdfx/ibo/IBO_1997_Official_Combined_Practical_Theory_Answer_Key_OriginalLayout_KO.pdf"
+      }
+    },
+    "1996": {
+      "T": {
+        "key": "pdfx/ibo/IBO_1996_Official_Theory_Answer_Key_OriginalLayout_KO.pdf"
+      }
+    },
+    "1995": {
+      "T": {
+        "key": "pdfx/ibo/IBO_1995_Official_Theory_I_II_Answer_Key_OriginalLayout_KO.pdf"
+      },
+      "T2": {
+        "paper": "pdfx/ibo/IBO_1995_Official_Theory_II_Question_Paper_OriginalLayout_KO.pdf"
+      }
+    },
+    "1994": {
+      "T": {
+        "key": "pdfx/ibo/IBO_1994_Official_Theory_A_B_Answer_Key_OriginalLayout_KO.pdf"
+      },
+      "T2": {
+        "paper": "pdfx/ibo/IBO_1994_Official_Theory_B_Question_Paper_OriginalLayout_KO.pdf"
+      }
     }
   },
   "ijso": {
@@ -5556,6 +5614,10 @@
       },
       "T": {
         "paper": "pdfx/ijso/IJSO_2012_Theory_Brazilian_Delegation_OriginalLayout_KO.pdf"
+      },
+      "MC1": {
+        "paper": "pdfx/ijso/IJSO_2012_MCQ_AYIMI_Official_Reprint_OriginalLayout_KO.pdf",
+        "partial": true
       }
     },
     "2024": {
@@ -5624,6 +5686,17 @@
       "E1": {
         "paper": "pdfx/ijso/IJSO_2013_Experiment_TaskA_Official_Question_Pages_OriginalLayout_KO.pdf",
         "mark": "pdfx/ijso/IJSO_2013_Experiment_TaskA_Official_Marking_Scheme_OriginalLayout_KO.pdf"
+      }
+    },
+    "2017": {
+      "MC21": {
+        "paper": "pdfx/ijso/IJSO_2017_MCQ_Physics_21_30_Questions_OriginalLayout_KO.pdf",
+        "sol": "pdfx/ijso/IJSO_2017_MCQ_Physics_21_30_Official_Solutions_OriginalLayout_KO.pdf",
+        "partial": true
+      },
+      "E3": {
+        "answer": "pdfx/ijso/IJSO_2017_Practical_Blue_Energy_Official_Blank_Answer_Sheets_OriginalLayout_KO.pdf",
+        "paper": "pdfx/ijso/IJSO_2017_Practical_Blue_Energy_Questions_OriginalLayout_KO.pdf"
       }
     }
   },
@@ -6087,8 +6160,10 @@
         "en": {
           "paper": "pdfx/oibf/OIbF_2026_T_EN.pdf",
           "sol": "pdfx/oibf/OIbF_2026_TS_EN.pdf",
-          "sourceType": "unofficial_translation"
-        }
+          "sourceType": "unofficial_translation",
+          "paperStart": 2
+        },
+        "paperStart": 2
       },
       "E1": {
         "paper": "pdfx/oibf/OIbF_2026_E1_KO.pdf",
@@ -6098,8 +6173,18 @@
           "paper": "pdfx/oibf/OIbF_2026_E1_EN.pdf",
           "sol": "pdfx/oibf/OIbF_2026_E1S_EN.pdf",
           "mark": "pdfx/oibf/OIbF_2026_E1M_EN.pdf",
-          "sourceType": "unofficial_translation"
-        }
+          "sourceType": "unofficial_translation",
+          "paperStart": 9
+        },
+        "paperStart": 9
+      },
+      "guide": {
+        "ko": "pdfx/oibf/OIbF_2026_GT_KO.pdf",
+        "en": "pdfx/oibf/OIbF_2026_GT_EN.pdf"
+      },
+      "experimentGuide": {
+        "ko": "pdfx/oibf/OIbF_2026_GE_KO.pdf",
+        "en": "pdfx/oibf/OIbF_2026_GE_EN.pdf"
       }
     },
     "1991": {

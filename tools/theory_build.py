@@ -96,6 +96,10 @@ def load(practical=None):
                     continue
                 # direct: linked where it is published, never copied (the organiser does not allow redistribution)
                 slot[kind] = value
+                if kind == 'key' and f.get('standalone_key') is True:
+                    slot['keyOnly'] = True
+                    if f.get('title'):
+                        slot['title'] = f['title']
                 if f.get('supplements'):
                     supplements = slot.setdefault('supplements', [])
                     supplements.extend(item for item in f['supplements'] if item not in supplements)
@@ -103,6 +107,8 @@ def load(practical=None):
                     for prop in ('title', 'round', 'component'):
                         if f.get(prop):
                             slot[prop] = f[prop]
+                    if f.get('study_only') is True:
+                        slot['kx'] = 1
                     if f.get('problem_ids'):
                         slot['problemIds'] = f['problem_ids']
                     if f.get('practice_sheets'):
@@ -130,7 +136,7 @@ def load(practical=None):
             for part, slot in files.items():
                 g = re.match(r'^(T|MC)(\d+)([a-z]?)$', part)
                 whole = files.get(g.group(1) + g.group(3)) if g else None
-                if whole:
+                if whole and not slot.get('keyOnly') and not slot.get('kx'):
                     for k in ('paper', 'sol', 'mark', 'answer'):
                         if k not in slot and k in whole:
                             slot[k] = whole[k]
@@ -147,7 +153,7 @@ def load(practical=None):
                 if os.path.exists(ko_path):
                     supplied = json.load(open(ko_path, encoding='utf-8')).get(comp, {}).get(year, {})
             files = {k: v for k, v in files.items()
-                     if 'paper' in v or supplied.get(k, {}).get('paper')}
+                     if 'paper' in v or v.get('keyOnly') or supplied.get(k, {}).get('paper')}
             if not files:
                 continue
             # a title that only repeats the number («Problem A1», «Question 3») says nothing: left out
@@ -219,6 +225,13 @@ def korean(out, bad, practical):
         return
     for comp, years in json.load(open(path, encoding='utf-8')).items():
         for year, parts in years.items():
+            practical_guide = parts.get('experimentGuide')
+            if practical_guide:
+                archive = practical.get(comp, {}).get(year)
+                if archive is None:
+                    bad.append((path, '%s %s: no experiment for general instructions' % (comp, year)))
+                else:
+                    archive['g'] = practical_guide
             for part, ko in parts.items():
                 if PRACTICAL_PART.fullmatch(part):
                     slot = practical.setdefault(comp, {}).setdefault(year, {'f': {}})['f'].setdefault(part, {})
@@ -229,7 +242,7 @@ def korean(out, bad, practical):
                     slot['ko'] = edition
                     if edition.get('containsSolutions'):
                         slot.setdefault('paperContainsSolutions', {})['ko'] = True
-            parts = {part: ko for part, ko in parts.items() if not PRACTICAL_PART.fullmatch(part)}
+            parts = {part: ko for part, ko in parts.items() if part != 'experimentGuide' and not PRACTICAL_PART.fullmatch(part)}
             if not parts:
                 continue
             t = out.get(comp, {}).get(year)
@@ -296,6 +309,8 @@ def english_edition(slot, edition):
     if edition.get('paper'):
         slot.setdefault('papers', {})['en'] = edition['paper']
         slot['paperLang'] = 'en'
+        if isinstance(edition.get('paperStart'), int) and edition['paperStart'] > 0:
+            slot['paperStart'] = edition['paperStart']
         if edition.get('containsSolutions'):
             slot.setdefault('paperContainsSolutions', {})['en'] = True
         if edition.get('sourceType'):
