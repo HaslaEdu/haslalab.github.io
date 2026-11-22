@@ -69,7 +69,8 @@ const newCode = () => [...crypto.getRandomValues(new Uint8Array(6))].map(b => CO
 const ready = new WeakSet();
 export async function ensureLearnSchema(env) {
   if (ready.has(env.DB)) return;
-  await env.DB.batch(LEARN_SCHEMA.map(sql => env.DB.prepare(sql)));
+  /* one statement at a time: an index is prepared only after its table exists */
+  for (const sql of LEARN_SCHEMA) await env.DB.prepare(sql).run();
   ready.add(env.DB);
 }
 /* the learner's day in UTC: one boundary for everyone, wherever they are */

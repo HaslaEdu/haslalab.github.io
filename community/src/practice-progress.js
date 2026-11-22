@@ -49,7 +49,8 @@ export function updateRating(rating, step, result) {
 const ready = new WeakSet();
 export async function ensurePracticeSchema(env) {
   if (ready.has(env.DB)) return;
-  await env.DB.batch(PRACTICE_SCHEMA.map(sql => env.DB.prepare(sql)));
+  /* one statement at a time: an index is prepared only after its table exists */
+  for (const sql of PRACTICE_SCHEMA) await env.DB.prepare(sql).run();
   ready.add(env.DB);
 }
 
