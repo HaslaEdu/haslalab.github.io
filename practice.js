@@ -9,13 +9,13 @@
   const SESSION=10;
   const copy={
     ko:{ob_region:'어디에서 공부하나요?',ob_level:'지금 어느 단계인가요?',ob_goal:'무엇을 위해 공부하나요?',ob_oly:'올림피아드는 어디까지 해 봤나요?',ob_daily:'하루 목표를 정하세요',
-      obKr:'수능 · 내신 계산 문제, 한국물리올림피아드',obIn:'JEE Main · Advanced',obUs:'AP Physics, F=ma · USAPhO',obGlobal:'AP Physics와 국제 올림피아드 준비',
+      obKr:'AP Physics와 한국 시험 계산 문제, 올림피아드',obIn:'JEE Main · Advanced',obUs:'AP Physics, F=ma · USAPhO',obGlobal:'AP Physics와 국제 올림피아드 준비',
       goSchool:'학교 공부 · 내신',goExam:'입시 시험',goOly:'물리 올림피아드',goCurious:'그냥 물리가 좋아서',oly0:'처음 준비합니다',oly1:'1차(예선) 시험을 쳐 봤습니다',oly2:'본선 이상 진출했습니다',
       perDay:'문제',daily5:'가볍게 · 약 5분',daily10:'꾸준히 · 약 10분',daily20:'열심히 · 약 20분',back:'이전',obDone:'시작 단계',obNext:'모든 단원이 이 단계에서 시작하고, 첫 문제는 위 시험에서 나옵니다. 12문제 수준 찾기로 더 정확하게 맞출 수 있습니다.',
       editProfile:'학습 설정',myExams:'내 시험',otherExams:'다른 시험 보기',dailyGoal:'오늘 목표',
       tabClass:'학급',classIntro:'선생님이 알려 준 6자리 코드로 학급에 들어가면 과제가 여기에 나옵니다. 선생님은 학급을 만들어 AP · JEE 문제를 과제로 내고, 학생별 단원 실력과 과제 진행을 볼 수 있습니다.',myAssignments:'내 과제',noAssignments:'아직 과제가 없습니다.',classCode:'학급 코드',join:'참여',leave:'나가기',leaveConfirm:'이 학급에서 나갈까요?',teach:'가르치기',students:'명',className:'학급 이름',newClass:'학급 만들기',classFree:'무료: 학급 1개, 학생 30명까지. 학생은 이 학급의 학습 기록만 공유합니다.',due:'마감',shareCode:'학생에게 학급 코드를 알려 주세요. 학생이 단원별 문제의 "학급" 탭에서 코드를 입력하면 참여합니다.',student:'학생',answered:'푼 문제',lastActive:'최근 학습',remove:'내보내기',removeConfirm:'이 학생을 학급에서 내보낼까요?',noStudents:'아직 학생이 없습니다.',newAssignment:'과제 내기',allOf:'전체',assign:'과제 내기',closeClass:'학급 닫기',closeConfirm:'학급을 닫을까요? 학생들은 더 이상 과제를 볼 수 없습니다.',
       cl_bad_name:'학급 이름을 입력하세요.',cl_class_limit:'무료로는 학급을 1개까지 만들 수 있습니다.',cl_bad_code:'코드는 6자리입니다.',cl_class_not_found:'그 코드의 학급이 없습니다.',cl_own_class:'내가 만든 학급입니다.',cl_class_full:'학급 정원이 찼습니다.',cl_bad_items:'문제를 고르세요.',cl_bad_due:'마감일을 확인하세요.',cl_rate_limited:'잠시 뒤에 다시 시도하세요.',
-      tabTracks:'AP · JEE 시험',trackPick:'시험과 단원을 고르면 그 시험 형식의 문제 10개를 풉니다. 하슬라랩이 직접 만든 문제입니다.',mixed:'전체 섞어서',numPh:'답 (숫자)',check:'확인',notNumber:'숫자로 입력하세요 (예: 3.2, 1.5e3, 2×10^4)',hint:'힌트',tutor:'AI 튜터',discuss:'이 문제 토론',seeDiscuss:'이 문제의 질문 보기',newDiscuss:'질문 올리기',byHasla:'하슬라랩 창작 문제',
+      tabTracks:'시험별',trackPick:'시험과 단원을 고르면 그 시험 형식의 문제 10개를 풉니다. 하슬라랩이 직접 만든 문제입니다.',mixed:'전체 섞어서',numPh:'답 (숫자)',check:'확인',notNumber:'숫자로 입력하세요 (예: 3.2, 1.5e3, 2×10^4)',hint:'힌트',tutor:'AI 튜터',discuss:'이 문제 토론',seeDiscuss:'이 문제의 질문 보기',newDiscuss:'질문 올리기',byHasla:'하슬라랩 창작 문제',
       tutorLogin:'AI 튜터는 로그인하면 하루 5번까지 무료로 쓸 수 있습니다.',login:'로그인',tutorPh:'어디서 막혔는지 적어 보세요',tutorSend:'묻기',thinking:'생각하는 중…',tutorLimit:'오늘 무료 질문을 모두 썼습니다. 내일 다시 쓸 수 있습니다.',tutorFail:'지금은 답할 수 없습니다. 잠시 뒤에 다시 시도하세요.',tutorLeft:'오늘 남은 질문',aiNote:'AI가 만든 답변이라 틀릴 수 있습니다.',
       aiTranslated:'AI 번역',showOriginal:'원문 보기',showTranslation:'번역 보기',translating:'번역하는 중…',withHints:'힌트 사용',
       diagTitle:'내 수준 찾기',diagBody:'분야별로 두 문제씩, 12문제(약 10분)를 풀면 단원별 시작 단계를 정해 드립니다. 건너뛰고 바로 풀어도 됩니다.',diagStart:'수준 찾기 시작',diagDone:'분야별 시작 단계를 정했습니다. 이제 오늘의 추천이 이 단계에 맞춰집니다.',
@@ -26,7 +26,7 @@
       right:'정답입니다!',wrong:'오답입니다. 정답은',up:'단계가 올랐습니다',down:'한 단계 쉬운 문제로 갑니다',
       result:'맞힌 문제',of:'/',done:'세션 완료',loading:'문제를 불러오는 중…',failed:'문제를 불러오지 못했습니다.',retry:'다시 시도',
       pdf:'원본 시험지',quit:'← 단원 목록',time:'권장 시간',sec:'초',progress:'해결',skip:'건너뛰기',skipped:'건너뜀',
-      tabExam:'수능 · 모의고사 계산',synced:'계정에 저장됨',tabToday:'오늘의 추천',todayTitle:'오늘의 10문제',whyReview:'복습',whyWeak:'약한 단원',whyStretch:'도전',whyNew:'새 단원',focus:'집중 단원',startToday:'시작하기',mySkills:'단원별 실력',unit:'단원',accuracy:'정답률',noSkills:'문제를 풀수록 단원별 실력이 쌓이고 추천이 정확해집니다.',syncFailed:'저장 실패 · 다시 시도합니다',loginToSave:'로그인하면 기록이 계정에 저장됩니다 →',tabBank:'교재 · 대학 문제',tabContest:'대회 도전',
+      tabUnits:'단원별',calcName:'계산 문제 (한국 시험 기출)',noteUnits:'단원마다 하슬라랩 창작 문제(AP · JEE · F=ma · USAPhO 형식)와 한국 시험 기출 계산 문제(출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 · 웹·앱 배포 허가 범위 안에서 제공)를 함께 풉니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장됩니다.',synced:'계정에 저장됨',tabToday:'오늘의 추천',todayTitle:'오늘의 10문제',whyReview:'복습',whyWeak:'약한 단원',whyStretch:'도전',whyNew:'새 단원',focus:'집중 단원',startToday:'시작하기',mySkills:'단원별 실력',unit:'단원',accuracy:'정답률',noSkills:'문제를 풀수록 단원별 실력이 쌓이고 추천이 정확해집니다.',syncFailed:'저장 실패 · 다시 시도합니다',loginToSave:'로그인하면 기록이 계정에 저장됩니다 →',tabBank:'교재 · 대학 문제',tabContest:'대회 도전',
       bankPick:'분야와 난이도를 고르면 교재와 대학 강의 문제를 하나씩 풉니다. 풀이를 확인하고 스스로 채점하세요.',stars:'난이도',showSol:'풀이 보기',noSol:'아직 등록된 풀이가 없습니다. 커뮤니티 질문 · 답변 갤러리나 AI에게 물어보세요.',
       solvedIt:'풀었어요',missedIt:'못 풀었어요',original:'원문 보기',translated:'번역 보기',noKo:'한국어 번역이 아직 없어 원문을 보여 줍니다.',draft:'하슬라랩 작성 풀이 · 검수 전',refFig:'참고 그림',empty:'이 조건의 문제가 더 없습니다. 난이도나 분야를 바꿔 보세요.',
       contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',figInPdf:'그림은 아래 원본 PDF에서 볼 수 있습니다.',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',
@@ -38,7 +38,7 @@
       editProfile:'Settings',myExams:'Your exams',otherExams:'Other exams',dailyGoal:'today',
       tabClass:'Class',classIntro:'Join your teacher’s class with its six-letter code and your assignments appear here. Teachers can make a class, set AP and JEE problems as assignments, and see each student’s units and progress.',myAssignments:'My assignments',noAssignments:'No assignments yet.',classCode:'Class code',join:'Join',leave:'Leave',leaveConfirm:'Leave this class?',teach:'Teach',students:'students',className:'Class name',newClass:'Make a class',classFree:'Free: one class of up to 30 students. Students share only their Learn practice with the class.',due:'due',shareCode:'Give your students the class code. They enter it in the Class tab of Practice to join.',student:'Student',answered:'Answered',lastActive:'Last active',remove:'Remove',removeConfirm:'Remove this student from the class?',noStudents:'No students yet.',newAssignment:'Set an assignment',allOf:'All',assign:'Assign',closeClass:'Close class',closeConfirm:'Close this class? Students will no longer see its assignments.',
       cl_bad_name:'Enter a class name.',cl_class_limit:'A free account can have one class.',cl_bad_code:'A code has six letters.',cl_class_not_found:'No class has that code.',cl_own_class:'That is your own class.',cl_class_full:'This class is full.',cl_bad_items:'Pick problems.',cl_bad_due:'Check the due date.',cl_rate_limited:'Try again in a moment.',
-      tabTracks:'AP · JEE',trackPick:'Pick an exam and a unit to solve ten problems in that exam’s style. Every problem is written by HaslaLab.',mixed:'All units mixed',numPh:'Answer (number)',check:'Check',notNumber:'Enter a number (e.g. 3.2, 1.5e3, 2×10^4)',hint:'Hint',tutor:'AI tutor',discuss:'Discuss',seeDiscuss:'Questions about this problem',newDiscuss:'Ask about it',byHasla:'Original problem by HaslaLab',
+      tabTracks:'By exam',trackPick:'Pick an exam and a unit to solve ten problems in that exam’s style. Every problem is written by HaslaLab.',mixed:'All units mixed',numPh:'Answer (number)',check:'Check',notNumber:'Enter a number (e.g. 3.2, 1.5e3, 2×10^4)',hint:'Hint',tutor:'AI tutor',discuss:'Discuss',seeDiscuss:'Questions about this problem',newDiscuss:'Ask about it',byHasla:'Original problem by HaslaLab',
       tutorLogin:'Log in to use the AI tutor: five free questions a day.',login:'Log in',tutorPh:'Where are you stuck?',tutorSend:'Ask',thinking:'Thinking…',tutorLimit:'Today’s free questions are used up. More tomorrow.',tutorFail:'The tutor cannot answer right now. Try again in a moment.',tutorLeft:'Questions left today',aiNote:'AI answers can be wrong.',
       aiTranslated:'AI translation',showOriginal:'Show original',showTranslation:'Show translation',translating:'Translating…',withHints:'with hints',
       diagTitle:'Find your level',diagBody:'Two problems per area, twelve in all (about 10 minutes), set your starting step in every unit. You can also skip this and start right away.',diagStart:'Find my level',diagDone:'Your starting steps are set. Today’s picks now follow them.',
@@ -49,7 +49,7 @@
       right:'Correct!',wrong:'Not quite. The answer is',up:'Step up',down:'Back one step',
       result:'Correct',of:'/',done:'Session complete',loading:'Loading problems…',failed:'Could not load the problems.',retry:'Retry',
       pdf:'Original paper',quit:'← Units',time:'Suggested time',sec:'s',progress:'solved',skip:'Skip',skipped:'skipped',
-      tabExam:'Korean exam calculations',synced:'Saved to your account',tabToday:'Today',todayTitle:'Today’s ten',whyReview:'review',whyWeak:'weak unit',whyStretch:'stretch',whyNew:'new unit',focus:'focus',startToday:'Start',mySkills:'Your units',unit:'Unit',accuracy:'Correct',noSkills:'Your unit ratings grow as you solve problems, and the picks get sharper.',syncFailed:'Not saved · retrying',loginToSave:'Log in to keep your progress on your account →',tabBank:'Books & university',tabContest:'Competition challenge',
+      tabUnits:'By unit',calcName:'Calculation problems from Korean exams',noteUnits:'Each unit mixes HaslaLab’s original problems (in the style of AP, JEE, F=ma and the USAPhO) with calculation problems from Korean school exams (Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices, shared within the permitted web and app use; shown in English as an AI translation). Progress is kept on this device and, when you log in, on your account too.',synced:'Saved to your account',tabToday:'Today',todayTitle:'Today’s ten',whyReview:'review',whyWeak:'weak unit',whyStretch:'stretch',whyNew:'new unit',focus:'focus',startToday:'Start',mySkills:'Your units',unit:'Unit',accuracy:'Correct',noSkills:'Your unit ratings grow as you solve problems, and the picks get sharper.',syncFailed:'Not saved · retrying',loginToSave:'Log in to keep your progress on your account →',tabBank:'Books & university',tabContest:'Competition challenge',
       bankPick:'Pick a field and a difficulty to work through textbook and university course problems one at a time. Check the solution and mark yourself.',stars:'Difficulty',showSol:'Show solution',noSol:'No solution is stored yet. Ask in the community Q&A gallery or ask the AI.',
       solvedIt:'I solved it',missedIt:'I missed it',original:'Original',translated:'Translation',noKo:'',draft:'HaslaLab draft solution · not yet reviewed',refFig:'Reference figures',empty:'No more problems here. Try another difficulty or field.',
       contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',figInPdf:'The figures are in the original PDF below.',transcribed:'The text is transcribed from the original paper; if they differ, the PDF is authoritative.',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device and, when you log in, on your account too.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device and, when you log in, on your account too.',
@@ -159,10 +159,13 @@
     state.mode='exam';paintTabs();
     state.session=null;tellUnit('');paintStats();
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
-    let index;try{index=await loadIndex();}catch(e){failed(home);return;}
+    let index,tracked;try{[index,tracked]=await Promise.all([loadIndex(),allTrackItems()]);}catch(e){failed(home);return;}
+    /* a unit's problems: the Korean exams' calculation problems and the exam tracks' problems together */
+    const counts={};for(const [u,c] of Object.entries(index.counts))counts[u]={...c};
+    for(const i of tracked){const c=counts[i.u]||={};c[i.s]=(c[i.s]||0)+1;}
     const solvedIn=unit=>Object.entries(saved.solved).filter(([,u])=>u===unit).length;
     $('app').innerHTML=`<p class="pick">${tr('pick')}</p><div class="areas">${P.AREAS.map(area=>{
-      const units=area.subtopics.map(sub=>{const key=area.key+'/'+sub.key,c=index.counts[key];return{key,sub,total:c?Object.values(c).reduce((a,b)=>a+b,0):0,steps:c?Object.keys(c).map(Number):[]};}).filter(u=>u.total);
+      const units=area.subtopics.map(sub=>{const key=area.key+'/'+sub.key,c=counts[key];return{key,sub,total:c?Object.values(c).reduce((a,b)=>a+b,0):0,steps:c?Object.keys(c).map(Number):[]};}).filter(u=>u.total);
       if(!units.length)return '';
       return `<section class="area"><h2>${esc(areaName(area))}</h2>${units.map(u=>{
         const done=solvedIn(u.key),lvl=saved.level[u.key]||Math.min(...u.steps);
@@ -175,8 +178,8 @@
   /* ── a session ── */
   async function start(unit){
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
-    let index,items;
-    try{index=await loadIndex();items=(await loadArea(unit.split('/')[0])).filter(i=>i.u===unit);}catch(e){failed(()=>start(unit));return;}
+    let items;
+    try{const [kr,tracked]=await Promise.all([loadArea(unit.split('/')[0]).catch(()=>[]),allTrackItems()]);items=[...kr,...tracked].filter(i=>i.u===unit);}catch(e){failed(()=>start(unit));return;}
     if(!items.length){home();return;}
     const steps=[...new Set(items.map(i=>i.s))].sort((a,b)=>a-b);
     const level=saved.level[unit]&&steps.includes(saved.level[unit])?saved.level[unit]:steps[0];
@@ -207,10 +210,31 @@
     </div>`;
     $('quit').onclick=s.fixed?todayHome:home;
     $('skip').hidden=!!s.diag;
+    if(state.lang!=='ko')localizeExam(item);
     $('app').querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.n))));
     $('next').onclick=next;
     $('skip').onclick=()=>{if(s.answered)return;record(item.id,'exam',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
     reportHeight();window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
+  }
+  /* the Korean exams' calculation problems for English readers: each paragraph and choice goes to the cached AI
+     translation as text with its math in $…$, figures stay; the Korean is one tap away */
+  const segText=p=>p.map(x=>x.m!==undefined?'$'+x.m+'$':(x.t||'')).join('');
+  async function localizeExam(item){
+    const s=state.session,paras=item.b.filter(b=>b.p).map(b=>segText(b.p)),words=t=>/[^\s\d.,()+\-=]/.test(t.replace(/\$[^$]*\$/g,'')),
+      chs=item.ch.map(c=>{const t=c.c.filter(b=>b.p).map(b=>segText(b.p)).join(' ');return words(t)?t:'';});   /* a choice that is only math needs no translation */
+    if(!paras.length)return;
+    const q=$('app').querySelector('.q');q.insertAdjacentHTML('afterend',`<p class="src" id="trnote">${tr('translating')}</p>`);
+    const out=await aiTranslate([...paras,...chs]);
+    if(state.session!==s||s.current!==item||!out.some(Boolean)){if($('trnote')&&s.current===item)$('trnote').textContent='';return;}
+    const korean={q:q.innerHTML,ch:[...$('app').querySelectorAll('.choice')].map(b=>b.lastElementChild?.innerHTML)};let orig=false;
+    const paint=()=>{
+      if(orig)q.innerHTML=korean.q;
+      else{let n=0;q.innerHTML=item.b.map(b=>{if(!b.p)return blocks([b]);const i=n++;return textHtml(out[i]||paras[i]);}).join('');typeset(q);}
+      $('app').querySelectorAll('.choice').forEach((b,i)=>{const span=b.lastElementChild;if(!span||!chs[i]||span.classList.contains('no'))return;
+        if(orig)span.innerHTML=korean.ch[i];else{span.innerHTML=textHtml(out[paras.length+i]||chs[i]).replace(/^<p>|<\/p>$/g,'');typeset(span);}});
+      $('trnote').innerHTML=`${tr('aiTranslated')} · <a href="#" id="trtoggle">${orig?tr('showTranslation'):tr('showOriginal')}</a>`;$('trtoggle').onclick=e=>{e.preventDefault();orig=!orig;paint();};reportHeight();
+    };
+    paint();
   }
   function answer(choice){
     const s=state.session,item=s.current;if(s.answered)return;s.answered=true;
@@ -251,10 +275,9 @@
   const BANK_AREA={classical_mechanics:'mechanics',electromagnetism:'em',oscillations_waves:'waves',optics:'optics',thermodynamics:'thermal',statistical_mechanics:'thermal',quantum_mechanics:'modern',special_relativity:'modern',general_relativity:'modern',mathematical_methods:'math'};
   function studied(xp){saved.xp+=xp;if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}save();paintStats();}
   function paintTabs(){
-    /* the Korean exams are in Korean only: other languages get the exam tracks instead */
-    $('tabs').innerHTML=[['today',tr('tabToday')],['tracks',tr('tabTracks')],...(state.lang==='ko'?[['exam',tr('tabExam')]]:[]),['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
+    $('tabs').innerHTML=[['today',tr('tabToday')],['exam',tr('tabUnits')],['tracks',tr('tabTracks')],['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
     $('tabs').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>MODES[b.dataset.mode]());
-    $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':state.mode==='tracks'||state.lang!=='ko'?'noteTracks':'note');
+    $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':state.mode==='exam'?'noteUnits':'noteTracks');
   }
   /* bank text: paragraphs with $…$ and $$…$$ left to KaTeX auto-render */
   function textHtml(t){return esc(t||'').split(/\n{2,}/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('');}
@@ -802,7 +825,7 @@
       for(const area of P.AREAS)for(const sub of area.subtopics){const unit=area.key+'/'+sub.key,k=saved.skills[unit];
         if(!k||!k.n)record('start-'+area.key,'diag',unit,step,'place');}
       save();scheduleSync();
-      const exams=P.startExams(profile).map(k=>k==='csat'?tr('tabExam'):(state.tracks||[]).find(t=>t.key===k)?.name.en||k.toUpperCase());
+      const exams=P.startExams(profile).map(k=>k==='calc'?tr('calcName'):(state.tracks||[]).find(t=>t.key===k)?.name.en||k.toUpperCase());
       $('app').innerHTML=`<div class="session summary onboard"><p class="eyebrow">${tr('obDone')}</p><p class="big">${tr('step')} ${step}</p>
         <p>${tr(LEVELS[levelOf(step)])} · ${esc(exams.join(' · '))}</p><p class="src">${tr('obNext')}</p>
         <div class="actions"><button type="button" class="primary" id="obToday">${tr('startToday')}</button><button type="button" id="obDiag">${tr('diagStart')}</button></div></div>`;
@@ -813,9 +836,9 @@
   /* the problems a learner starts on: their exams, as graded items */
   async function startPool(){
     const keys=P.startExams(saved.profile||{region:state.lang==='ko'?'kr':'global'});
-    const parts=await Promise.all(keys.map(k=>k==='csat'?allExamItems():trackItems(k).catch(()=>[])));
+    const parts=await Promise.all(keys.map(k=>k==='calc'?allExamItems():trackItems(k).catch(()=>[])));
     const items=parts.flat();
-    return items.length?items:state.lang==='ko'?allExamItems():allTrackItems();
+    return items.length?items:allTrackItems();
   }
   const MODES={start:startHome,today:todayHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
 

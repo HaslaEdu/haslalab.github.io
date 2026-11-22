@@ -50,21 +50,21 @@ test('each problem page has its own title, description, canonical link, the prob
   assert.match(read('robots.txt'),/Sitemap: https:\/\/haslalab\.org\/sitemap-learn\.xml/);
 });
 
-test('each region starts on its own exams: Korea the CSAT, India JEE, the US F=ma and USAPhO, elsewhere AP',()=>{
+test('each region starts on its own exams: Korea AP and calculation problems, India JEE, the US F=ma and USAPhO, elsewhere AP',()=>{
   const P=require(path.join(root,'learn-path.js'));
   assert.equal(P.guessRegion('ko',''),'kr');assert.equal(P.guessRegion('en','Asia/Kolkata'),'in');
   assert.equal(P.guessRegion('en','America/Los_Angeles'),'us');assert.equal(P.guessRegion('en','Europe/Berlin'),'global');
   assert.deepEqual(P.startExams({region:'in',goal:'exam'}),['jeem']);
   assert.deepEqual(P.startExams({region:'us',goal:'olympiad'}),['fma','usapho']);
   assert.deepEqual(P.startExams({region:'global',goal:'school'}),['ap1','ap2','apcm']);
-  assert.deepEqual(P.startExams({region:'kr',goal:'exam'}),['csat']);
+  assert.deepEqual(P.startExams({region:'kr',goal:'exam'}),['ap1','ap2','apcm','calc'],'Korea: AP-level physics and the Korean exams’ calculation problems, no CSAT framing');
   assert.equal(P.startStep({level:'middle',goal:'curious'}),2);
   assert.equal(P.startStep({level:'high2',goal:'olympiad',oly:2}),7);
   assert.equal(P.startStep({level:'high2',goal:'exam',region:'in'}),5);
   assert.equal(P.startStep({}),3);
   /* every exam a region points to is a defined track (the page skips one whose problems are not published yet) */
   const tracks=new Set(execFileSync(process.execPath,['--input-type=module','-e',"import('./tools/practice/build-tracks.mjs').then(m=>console.log(m.TRACKS.map(t=>t.key).join(',')))"],{cwd:root,encoding:'utf8'}).trim().split(','));
-  for(const r of Object.values(P.REGIONS))for(const k of [...r.exam,...r.olympiad,...r.other])assert.ok(k==='csat'||tracks.has(k),k);
+  for(const r of Object.values(P.REGIONS))for(const k of [...r.exam,...r.olympiad,...r.other])assert.ok(k==='calc'||tracks.has(k),k);
   const js=read('practice.js');
   assert.match(js,/if\(!saved\.profile\)\{startHome\(\);return;\}/,'the first visit asks the questions before anything else');
   assert.match(read('index.html'),/sessionStorage\.setItem\("hlCmBack","#\/learn\/practice\?mode=start"\)/,'a new member goes to the questions after signing up');

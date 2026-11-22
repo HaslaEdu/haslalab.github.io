@@ -15,13 +15,13 @@
       goal:{ko:'힘, 에너지, 전기, 빛을 말과 그림으로 설명하고 간단한 식을 세웁니다.',en:'Explain force, energy, electricity and light in words and pictures, and set up simple equations.'},
       sources:{ko:'중학 과학 · 통합과학 · KPhO 중등부 쉬운 문제',en:'Middle-school science · KPhO junior, easier problems'}},
     {key:'basic',steps:[3,4],name:{ko:'기초',en:'Foundations'},
-      who:{ko:'고1–고2 · 물리학Ⅰ을 배우는 학생',en:'Grades 10–11, studying Physics I'},
+      who:{ko:'고1–고2 · 고등학교 물리를 배우는 학생',en:'Grades 10–11, first physics course'},
       goal:{ko:'뉴턴 법칙, 보존 법칙, 회로, 파동을 정량적으로 풉니다.',en:'Solve Newton’s laws, conservation laws, circuits and waves quantitatively.'},
-      sources:{ko:'물리학Ⅰ 학평 · 모평 · 수능',en:'Korean Physics I mock exams and CSAT'}},
+      sources:{ko:'AP Physics 1 · 한국 시험 계산 문제',en:'AP Physics 1 · calculation problems from Korean exams'}},
     {key:'advanced',steps:[5,6],name:{ko:'심화',en:'Advanced'},
-      who:{ko:'물리학Ⅱ · 수능 고난도 · 올림피아드 1차 준비',en:'Physics II, hardest CSAT items, first olympiad rounds'},
+      who:{ko:'AP Physics 2 · C, JEE Main, 올림피아드 1차 준비',en:'AP Physics 2 and C, JEE Main, first olympiad rounds'},
       goal:{ko:'여러 개념을 엮고, 미적분과 근사를 처음으로 씁니다.',en:'Combine several ideas and start using calculus and approximations.'},
-      sources:{ko:'물리학Ⅱ · 수능 고난도 · KPhO 1차',en:'Physics II · hardest CSAT items · KPhO first round'}},
+      sources:{ko:'AP Physics C · JEE Main · F=ma · KPhO 1차',en:'AP Physics C · JEE Main · F=ma · KPhO first round'}},
     {key:'olympiad',steps:[7,8],name:{ko:'올림피아드',en:'Olympiad'},
       who:{ko:'KPhO 고등부 · 국가대표 선발 2차 준비',en:'KPhO senior and national selection'},
       goal:{ko:'대학 일반물리 수준의 모델링, 실험 데이터 처리, 긴 서술형 풀이를 합니다.',en:'University-level modelling, experimental data analysis and long written solutions.'},
@@ -143,14 +143,15 @@
     return area?.subtopics.find(sub=>sub.key===subtopicKey)?.bank||area?.bank||null;
   }
 
-  /* ── who the learner is → where they start. Each region studies for its own exams: Korea for the CSAT and KPhO, India
+  /* ── who the learner is → where they start. Each region studies for its own exams: Korea for AP-level physics (with the
+     Korean exams' calculation problems, 'calc') and KPhO, India
      for JEE, the United States for F=ma and the USAPhO, everyone else for AP Physics. The onboarding asks for the
      region (guessed from the language and time zone), the school level, the goal and, for olympiad learners, how far they
      have got; startStep() turns that into the step every unit starts at, and the region's exams fill the first
      problems. The other exams stay one tap away. ── */
   const REGIONS={
-    kr:{name:{ko:'한국',en:'Korea'},lang:'ko',exam:['csat'],olympiad:['csat'],other:['ap1','ap2','apcm','jeem','fma','usapho'],
-      examName:{ko:'수능 · 내신',en:'Korean CSAT'},olyName:{ko:'한국물리올림피아드(KPhO)',en:'KPhO'}},
+    kr:{name:{ko:'한국',en:'Korea'},lang:'ko',exam:['ap1','ap2','apcm','calc'],olympiad:['fma','usapho','calc'],other:['jeem'],
+      examName:{ko:'AP Physics · 계산 문제',en:'AP Physics and calculation problems'},olyName:{ko:'물리올림피아드(KPhO · F=ma · USAPhO 형식)',en:'Physics olympiad (KPhO, F=ma, USAPhO style)'}},
     in:{name:{ko:'인도',en:'India'},lang:'en',exam:['jeem'],olympiad:['jeem'],other:['ap1','ap2','apcm','fma','usapho'],
       examName:{ko:'JEE Main · Advanced',en:'JEE Main · Advanced'},olyName:{ko:'JEE Advanced · INPhO',en:'JEE Advanced · INPhO'}},
     us:{name:{ko:'미국',en:'United States'},lang:'en',exam:['ap1','ap2','apcm'],olympiad:['fma','usapho'],other:['jeem'],
