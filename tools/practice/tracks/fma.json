@@ -1,0 +1,885 @@
+{
+ "track": "fma",
+ "items": [
+  {
+   "id": "fma-u1-001",
+   "syl": "u1",
+   "unit": "mechanics/kinematics",
+   "step": 5,
+   "type": "mc",
+   "q": "A stone is thrown straight up at 20 m/s from the edge of a cliff 25 m above the ground below. Take $g=10\\ \\text{m/s}^2$. The stone misses the cliff on the way down and lands on the ground below. What total distance does it travel from release to landing?",
+   "choices": [
+    "40 m",
+    "85 m",
+    "25 m",
+    "65 m",
+    "45 m"
+   ],
+   "answer": 3,
+   "hints": [
+    "Break the motion into an upward leg and a downward leg.",
+    "Find how far above the cliff edge the stone rises before stopping.",
+    "Distance = rise + (rise + 25 m)."
+   ],
+   "sol": "The rise is $h=v_0^2/2g=400/20=20$ m. The stone then falls $20+25=45$ m to the ground. The total path length is $20+45=65$ m (the displacement would be only 25 m downward, which is a distractor)."
+  },
+  {
+   "id": "fma-u1-002",
+   "syl": "u1",
+   "unit": "mechanics/kinematics",
+   "step": 5,
+   "type": "mc",
+   "q": "A particle starts from rest at $t=0$ and moves along a straight line with acceleration $a=ct$, where $c$ is a constant. Let $d_1$ be the distance it covers between $t=0$ and $t=1$ s, and $d_2$ the distance between $t=1$ s and $t=2$ s. What is $d_2/d_1$?",
+   "choices": [
+    "3",
+    "5",
+    "7",
+    "4",
+    "8"
+   ],
+   "answer": 2,
+   "hints": [
+    "Integrate the acceleration twice, using the starting conditions.",
+    "The position grows like a power of $t$; find which power.",
+    "Compute $x(1)$, $x(2)$ and form $(x(2)-x(1))/x(1)$."
+   ],
+   "sol": "From $a=ct$ and rest at $t=0$: $v=ct^2/2$ and $x=ct^3/6$. Then $d_1=c/6$ and $d_2=c(8-1)/6=7c/6$. So $d_2/d_1=7$. (The answer 3 would hold for constant acceleration, and 8 is $x(2)/x(1)$.)"
+  },
+  {
+   "id": "fma-u1-003",
+   "syl": "u1",
+   "unit": "mechanics/kinematics",
+   "step": 5,
+   "type": "mc",
+   "q": "A projectile is launched from level ground and lands on the ground 60 m away. At its highest point it is 20 m above the ground. Take $g=10\\ \\text{m/s}^2$ and neglect air resistance. What was its launch speed?",
+   "choices": [
+    "25 m/s",
+    "35 m/s",
+    "30 m/s",
+    "20 m/s",
+    "15 m/s"
+   ],
+   "answer": 0,
+   "hints": [
+    "Treat the horizontal and vertical motions separately.",
+    "The maximum height fixes the initial vertical speed, which fixes the flight time.",
+    "$v_y=\\sqrt{2gH}$, $T=2v_y/g$, $v_x=R/T$, then combine."
+   ],
+   "sol": "$v_y=\\sqrt{2\\cdot10\\cdot20}=20$ m/s, so the flight time is $T=2v_y/g=4$ s. Then $v_x=60/4=15$ m/s. The launch speed is $\\sqrt{15^2+20^2}=25$ m/s."
+  },
+  {
+   "id": "fma-u1-004",
+   "syl": "u1",
+   "unit": "mechanics/kinematics",
+   "step": 5,
+   "type": "mc",
+   "q": "A boat has a speed of 5 m/s relative to still water. It crosses a river 120 m wide with a uniform current of 3 m/s, and the pilot steers so that the boat lands at the point on the far bank directly opposite the starting point. How long does the crossing take?",
+   "choices": [
+    "15 s",
+    "60 s",
+    "30 s",
+    "24 s",
+    "40 s"
+   ],
+   "answer": 2,
+   "hints": [
+    "Which component of the boat's velocity relative to the water must cancel the current?",
+    "Part of the 5 m/s is spent cancelling the 3 m/s current; what is left crosses the river.",
+    "Crossing speed $=\\sqrt{5^2-3^2}$."
+   ],
+   "sol": "To go straight across, the upstream component of the boat's velocity must equal 3 m/s. The remaining component across the river is $\\sqrt{5^2-3^2}=4$ m/s. Time $=120/4=30$ s. (24 s is the time if the boat pointed straight across and drifted downstream.)"
+  },
+  {
+   "id": "fma-u1-005",
+   "syl": "u1",
+   "unit": "mechanics/kinematics",
+   "step": 6,
+   "type": "mc",
+   "q": "A stone is dropped from rest from the top of a tower and falls freely ($g=10\\ \\text{m/s}^2$). During the last 2.0 s of its fall it covers 60 m. How tall is the tower?",
+   "choices": [
+    "80 m",
+    "60 m",
+    "125 m",
+    "100 m",
+    "45 m"
+   ],
+   "answer": 0,
+   "hints": [
+    "Let the total fall time be $t$ and write the distance fallen in time $t$ and in time $t-2$.",
+    "The last-2-s distance is the difference of those two expressions.",
+    "$\\tfrac12 g t^2-\\tfrac12 g(t-2)^2=60$."
+   ],
+   "sol": "With $h=5t^2$ the last 2 s give $5t^2-5(t-2)^2=20t-20=60$, so $t=4$ s. Then $h=5\\cdot16=80$ m."
+  },
+  {
+   "id": "fma-u2-001",
+   "syl": "u2",
+   "unit": "mechanics/newton",
+   "step": 6,
+   "type": "mc",
+   "q": "A block is launched up a rough incline of angle $\\theta$, comes to rest momentarily, and then slides back down to its starting point. The coefficient of kinetic friction is $\\mu=\\tfrac12\\tan\\theta$. What is the ratio (time spent sliding down)/(time spent sliding up)?",
+   "choices": [
+    "$2$",
+    "$\\sqrt2$",
+    "$\\sqrt3$",
+    "$3$",
+    "$1$"
+   ],
+   "answer": 2,
+   "hints": [
+    "Both trips cover the same distance, and each one starts or ends at rest at the turning point.",
+    "For equal distances from rest, $t\\propto 1/\\sqrt a$.",
+    "Up: $a_u=g(\\sin\\theta+\\mu\\cos\\theta)$; down: $a_d=g(\\sin\\theta-\\mu\\cos\\theta)$."
+   ],
+   "sol": "With $\\mu\\cos\\theta=\\tfrac12\\sin\\theta$: $a_u=\\tfrac32 g\\sin\\theta$ and $a_d=\\tfrac12 g\\sin\\theta$. The distance $d=\\tfrac12 a t^2$ is the same both ways, so $t_d/t_u=\\sqrt{a_u/a_d}=\\sqrt3$."
+  },
+  {
+   "id": "fma-u2-002",
+   "syl": "u2",
+   "unit": "mechanics/newton",
+   "step": 5,
+   "type": "mc",
+   "q": "A 2 kg block sits on a horizontal table and is connected by a light string over a light, frictionless pulley at the table edge to a 3 kg block hanging freely. The coefficient of kinetic friction between the 2 kg block and the table is 0.25. Take $g=10\\ \\text{m/s}^2$. What is the string tension while the blocks move?",
+   "choices": [
+    "15 N",
+    "30 N",
+    "12 N",
+    "20 N",
+    "18 N"
+   ],
+   "answer": 0,
+   "hints": [
+    "Write Newton's second law separately for each block; they share the same acceleration and tension.",
+    "Friction on the table block is $\\mu m g$.",
+    "$30-T=3a$ and $T-5=2a$."
+   ],
+   "sol": "Friction is $0.25\\cdot2\\cdot10=5$ N. Adding $30-T=3a$ and $T-5=2a$ gives $25=5a$, so $a=5$ m/s$^2$ and $T=30-15=15$ N. (12 N would be the frictionless result.)"
+  },
+  {
+   "id": "fma-u2-003",
+   "syl": "u2",
+   "unit": "mechanics/newton",
+   "step": 5,
+   "type": "mc",
+   "q": "A 1 kg block rests on top of a 4 kg block, which lies on a frictionless floor. The coefficient of static friction between the two blocks is 0.50. A horizontal force $F$ is applied to the 4 kg block. What is the largest $F$ for which the blocks move together without slipping? ($g=10\\ \\text{m/s}^2$)",
+   "choices": [
+    "30 N",
+    "5 N",
+    "20 N",
+    "25 N",
+    "50 N"
+   ],
+   "answer": 3,
+   "hints": [
+    "Only static friction can accelerate the top block.",
+    "Find the largest acceleration the top block can have.",
+    "Then apply $F=(m+M)a_{\\max}$ to the whole system."
+   ],
+   "sol": "The top block's maximum acceleration is $a=\\mu_s g=5$ m/s$^2$. For the pair to share it, $F=(1+4)(5)=25$ N. The value 5 N is just the maximum friction force, which is not the applied force."
+  },
+  {
+   "id": "fma-u2-004",
+   "syl": "u2",
+   "unit": "mechanics/newton",
+   "step": 5,
+   "type": "mc",
+   "q": "Inside an elevator accelerating upward at $2\\ \\text{m/s}^2$, a 2 kg block hangs from the ceiling by a string, and a 3 kg block hangs from the 2 kg block by a second string. Take $g=10\\ \\text{m/s}^2$. What is the tension in the lower string (between the two blocks)?",
+   "choices": [
+    "60 N",
+    "36 N",
+    "24 N",
+    "30 N",
+    "12 N"
+   ],
+   "answer": 1,
+   "hints": [
+    "Which blocks does the lower string have to accelerate?",
+    "Only the 3 kg block hangs from the lower string.",
+    "$T-m g=m a$ with $a=+2$ upward."
+   ],
+   "sol": "For the 3 kg block: $T-30=3(2)$, so $T=36$ N. (The upper string carries $5\\cdot12=60$ N; 30 N would be the tension without the elevator's acceleration.)"
+  },
+  {
+   "id": "fma-u2-005",
+   "syl": "u2",
+   "unit": "mechanics/newton",
+   "step": 6,
+   "type": "mc",
+   "q": "A falling object experiences air drag proportional to the square of its speed, $F=kv^2$. Its terminal speed is 40 m/s. At what speed is the magnitude of its downward acceleration equal to $g/4$?",
+   "choices": [
+    "30 m/s",
+    "34.6 m/s",
+    "10 m/s",
+    "38 m/s",
+    "20 m/s"
+   ],
+   "answer": 1,
+   "hints": [
+    "At terminal speed, drag equals weight; use this to eliminate $k$.",
+    "Write $ma=mg-kv^2$ and express it using $v_t$.",
+    "$a=g\\,(1-v^2/v_t^2)$."
+   ],
+   "sol": "Since $kv_t^2=mg$, $a=g(1-v^2/v_t^2)$. Setting $a=g/4$ gives $v^2=\\tfrac34 v_t^2$, so $v=40\\sqrt{3}/2\\approx34.6$ m/s. (30 m/s would be the answer for drag proportional to $v$.)"
+  },
+  {
+   "id": "fma-u3-001",
+   "syl": "u3",
+   "unit": "mechanics/energy",
+   "step": 5,
+   "type": "mc",
+   "q": "A 0.50 kg block compresses a spring ($k=200$ N/m) by 0.30 m on a horizontal table and is released. After leaving the spring it crosses a rough 1.0 m stretch (kinetic friction coefficient 0.40), then slides up a frictionless ramp. Take $g=10\\ \\text{m/s}^2$. What maximum height above the table does it reach?",
+   "choices": [
+    "1.8 m",
+    "2.0 m",
+    "1.0 m",
+    "0.90 m",
+    "1.4 m"
+   ],
+   "answer": 4,
+   "hints": [
+    "Use energy: where does the stored spring energy go?",
+    "Friction removes $\\mu m g d$ of energy on the rough stretch.",
+    "$\\tfrac12 kx^2-\\mu m g d=mgh$."
+   ],
+   "sol": "Spring energy $=\\tfrac12(200)(0.3)^2=9$ J. Friction removes $0.4\\cdot0.5\\cdot10\\cdot1.0=2$ J. The remaining 7 J becomes $mgh=5h$, so $h=1.4$ m. (1.8 m ignores friction.)"
+  },
+  {
+   "id": "fma-u3-002",
+   "syl": "u3",
+   "unit": "mechanics/energy",
+   "step": 5,
+   "type": "mc",
+   "q": "A 1000 kg car's engine delivers a constant 40 kW to the driving wheels. The total resistive force opposing the motion is a constant 1000 N. What is the car's acceleration when its speed is 10 m/s?",
+   "choices": [
+    "3.0 m/s$^2$",
+    "1.0 m/s$^2$",
+    "2.0 m/s$^2$",
+    "4.0 m/s$^2$",
+    "0.4 m/s$^2$"
+   ],
+   "answer": 0,
+   "hints": [
+    "Power and speed together fix the driving force.",
+    "The net force is the driving force minus the resistance.",
+    "$F=P/v$, then $a=(F-f)/m$."
+   ],
+   "sol": "Driving force $F=P/v=40000/10=4000$ N. Net force $=4000-1000=3000$ N, so $a=3.0$ m/s$^2$. (4.0 m/s$^2$ forgets the resistance.)"
+  },
+  {
+   "id": "fma-u3-003",
+   "syl": "u3",
+   "unit": "mechanics/energy",
+   "step": 6,
+   "type": "mc",
+   "q": "A uniform chain of mass 8.0 kg and length 2.0 m lies on a frictionless horizontal table with one quarter of its length hanging over the edge, held at rest. How much work is needed to pull the chain slowly entirely onto the table? ($g=10\\ \\text{m/s}^2$)",
+   "choices": [
+    "40 J",
+    "5 J",
+    "2.5 J",
+    "10 J",
+    "20 J"
+   ],
+   "answer": 1,
+   "hints": [
+    "Only the hanging part has to be raised, and different bits rise different distances.",
+    "Treat the hanging piece as a point mass at its center.",
+    "The hanging piece has mass $M/4$ and its center is $L/8$ below the edge."
+   ],
+   "sol": "The hanging piece has mass 2 kg and length 0.5 m; its center of mass is 0.25 m below the edge. Raising it to table level takes $W=(2)(10)(0.25)=5$ J. (10 J would come from lifting all of it by the full 0.5 m.)"
+  },
+  {
+   "id": "fma-u3-004",
+   "syl": "u3",
+   "unit": "mechanics/energy",
+   "step": 6,
+   "type": "mc",
+   "q": "A pendulum bob of mass $m$ hangs from a light string of length $L$. It is released from rest with the string making an angle of $60^\\circ$ to the vertical. What is the string tension when the bob passes the lowest point?",
+   "choices": [
+    "$1.5\\,mg$",
+    "$2.5\\,mg$",
+    "$2mg$",
+    "$mg$",
+    "$3mg$"
+   ],
+   "answer": 2,
+   "hints": [
+    "Energy conservation gives the speed at the bottom.",
+    "At the bottom the net upward force provides the centripetal force.",
+    "$v^2=2gL(1-\\cos60^\\circ)$ and $T-mg=mv^2/L$."
+   ],
+   "sol": "The bob drops $L(1-\\cos60^\\circ)=L/2$, so $v^2=gL$. At the bottom $T-mg=mv^2/L=mg$, giving $T=2mg$. (3mg is the result for release from the horizontal.)"
+  },
+  {
+   "id": "fma-u3-005",
+   "syl": "u3",
+   "unit": "mechanics/energy",
+   "step": 6,
+   "type": "mc",
+   "q": "A small block slides without friction from rest down a track and into a vertical circular loop of radius $R$. It is released from a height $h$ above the lowest point of the loop. For what value of $h/R$ does the track push on the block with a force equal to $mg$ when the block is at the top of the loop?",
+   "choices": [
+    "2.5",
+    "2",
+    "4",
+    "3",
+    "3.5"
+   ],
+   "answer": 3,
+   "hints": [
+    "At the top, both gravity and the normal force point toward the center.",
+    "Use energy conservation to relate the speed at the top to $h$.",
+    "$N+mg=mv^2/R$ with $v^2=2g(h-2R)$."
+   ],
+   "sol": "At the top, $N+mg=mv^2/R$. With $N=mg$, $v^2=2gR$. Energy gives $v^2=2g(h-2R)$, so $h-2R=R$ and $h=3R$. (2.5 would just barely keep contact, $N=0$.)"
+  },
+  {
+   "id": "fma-u4-001",
+   "syl": "u4",
+   "unit": "mechanics/momentum",
+   "step": 5,
+   "type": "mc",
+   "q": "A block of mass $m$ moving at speed $v$ makes a head-on elastic collision with a stationary block of mass $3m$ on a frictionless surface. What fraction of the original kinetic energy is carried by the $3m$ block after the collision?",
+   "choices": [
+    "$1$",
+    "$1/4$",
+    "$3/4$",
+    "$3/8$",
+    "$1/2$"
+   ],
+   "answer": 2,
+   "hints": [
+    "Use momentum conservation together with the fact that an elastic head-on collision reverses the relative velocity.",
+    "Find the final speed of the heavy block in terms of $v$.",
+    "$v_2=2m\\,v/(m+3m)$."
+   ],
+   "sol": "For an elastic collision with a stationary target, $v_2=\\dfrac{2m}{m+3m}v=v/2$. Its kinetic energy is $\\tfrac12(3m)(v/2)^2=\\tfrac38 mv^2$, compared with the initial $\\tfrac12 mv^2$. The fraction is $3/4$."
+  },
+  {
+   "id": "fma-u4-002",
+   "syl": "u4",
+   "unit": "mechanics/momentum",
+   "step": 5,
+   "type": "mc",
+   "q": "A 20 g bullet embeds itself in a 1.98 kg wooden block hanging from long light strings. The block-plus-bullet system swings up to a maximum height 0.20 m above its starting position. Take $g=10\\ \\text{m/s}^2$. What was the bullet's speed just before impact?",
+   "choices": [
+    "200 m/s",
+    "20 m/s",
+    "100 m/s",
+    "400 m/s",
+    "198 m/s"
+   ],
+   "answer": 0,
+   "hints": [
+    "Split the problem into a very short collision and a later swing.",
+    "Momentum is conserved in the collision, energy in the swing.",
+    "$v_{\\text{after}}=\\sqrt{2gh}$ and $m v=(m+M)v_{\\text{after}}$."
+   ],
+   "sol": "After the collision $v'=\\sqrt{2\\cdot10\\cdot0.2}=2$ m/s. Momentum: $0.02\\,v=2.00\\cdot2$, so $v=200$ m/s. (198 m/s comes from using only the block's mass.)"
+  },
+  {
+   "id": "fma-u4-003",
+   "syl": "u4",
+   "unit": "mechanics/momentum",
+   "step": 6,
+   "type": "mc",
+   "q": "Sand falls vertically onto a horizontal conveyor belt at a steady rate of 5.0 kg/s. A motor keeps the belt moving at a constant 2.0 m/s. What power must the motor supply (ignore friction in the belt mechanism)?",
+   "choices": [
+    "40 W",
+    "10 W",
+    "20 W",
+    "5 W",
+    "2.5 W"
+   ],
+   "answer": 2,
+   "hints": [
+    "The sand has no horizontal speed on arrival and must be brought up to the belt speed.",
+    "Use force $=\\mathrm{d}p/\\mathrm{d}t$, and then power $=Fv$.",
+    "$F=v\\,(\\mathrm{d}m/\\mathrm{d}t)$."
+   ],
+   "sol": "The belt must supply horizontal momentum to the sand at the rate $F=v\\,\\mathrm{d}m/\\mathrm{d}t=2\\cdot5=10$ N. The motor power is $Fv=10\\cdot2=20$ W. Only half of this, 10 W, ends up as kinetic energy of the sand; the rest is dissipated as the sand slips on the belt."
+  },
+  {
+   "id": "fma-u4-004",
+   "syl": "u4",
+   "unit": "mechanics/momentum",
+   "step": 6,
+   "type": "mc",
+   "q": "A 2 kg cart moving at 3 m/s in the $+x$ direction collides with, and sticks to, a 1 kg cart moving at 4 m/s in the $+y$ direction on a frictionless horizontal surface. How much kinetic energy is lost in the collision?",
+   "choices": [
+    "12.5 J",
+    "6.0 J",
+    "4.2 J",
+    "8.3 J",
+    "17 J"
+   ],
+   "answer": 3,
+   "hints": [
+    "Momentum is a vector; conserve each component.",
+    "Find the total momentum, then the kinetic energy of the combined carts.",
+    "$K=p^2/2M$ with $p^2=6^2+4^2$."
+   ],
+   "sol": "Initial energy $=\\tfrac12(2)(9)+\\tfrac12(1)(16)=17$ J. The total momentum is $(6,4)$ kg m/s, so $K_f=\\dfrac{36+16}{2\\cdot3}=\\dfrac{26}{3}\\approx8.67$ J. The loss is $17-8.67\\approx8.3$ J."
+  },
+  {
+   "id": "fma-u4-005",
+   "syl": "u4",
+   "unit": "mechanics/momentum",
+   "step": 5,
+   "type": "mc",
+   "q": "A 0.20 kg ball strikes a smooth vertical wall at 10 m/s, with its velocity making $60^\\circ$ with the normal (perpendicular) to the wall. It rebounds elastically, with its speed unchanged. What is the magnitude of the impulse the wall gives the ball?",
+   "choices": [
+    "1.0 N s",
+    "2.8 N s",
+    "4.0 N s",
+    "3.5 N s",
+    "2.0 N s"
+   ],
+   "answer": 4,
+   "hints": [
+    "A smooth wall can exert force only along the normal.",
+    "Which component of the ball's momentum reverses?",
+    "$J=2mv\\cos60^\\circ$."
+   ],
+   "sol": "Only the normal component of velocity reverses: $v_n=10\\cos60^\\circ=5$ m/s. The impulse is $J=2mv_n=2(0.2)(5)=2.0$ N s. (4.0 N s would be a head-on bounce; 3.5 N s uses $\\sin60^\\circ$.)"
+  },
+  {
+   "id": "fma-u5-001",
+   "syl": "u5",
+   "unit": "mechanics/rigid_body",
+   "step": 6,
+   "type": "mc",
+   "q": "A solid uniform sphere rolls without slipping down an incline whose slope has $\\sin\\theta=0.60$. Take $g=10\\ \\text{m/s}^2$. What is the acceleration of its center?",
+   "choices": [
+    "6.0 m/s$^2$",
+    "3.0 m/s$^2$",
+    "2.5 m/s$^2$",
+    "4.3 m/s$^2$",
+    "4.0 m/s$^2$"
+   ],
+   "answer": 3,
+   "hints": [
+    "Both friction and gravity contribute to the equations for translation and rotation.",
+    "The rolling condition links $a$ and $\\alpha$.",
+    "$a=\\dfrac{g\\sin\\theta}{1+I/(mR^2)}$ with $I=\\tfrac25 mR^2$."
+   ],
+   "sol": "For rolling, $a=\\dfrac{g\\sin\\theta}{1+I/mR^2}=\\dfrac{6}{1+2/5}=\\dfrac{30}{7}\\approx4.3$ m/s$^2$. (6.0 is a frictionless slide, 4.0 a solid disk, 3.0 a hoop.)"
+  },
+  {
+   "id": "fma-u5-002",
+   "syl": "u5",
+   "unit": "mechanics/rigid_body",
+   "step": 6,
+   "type": "mc",
+   "q": "A frictionless turntable of moment of inertia $20\\ \\text{kg m}^2$ spins freely. A 40 kg person stands on it at 1.0 m from the axis, and the two rotate together. The person then walks slowly to the axis (treat the person as a point mass). What is the ratio (final kinetic energy)/(initial kinetic energy)?",
+   "choices": [
+    "1",
+    "2",
+    "3",
+    "9",
+    "6"
+   ],
+   "answer": 2,
+   "hints": [
+    "What is conserved when the person walks inward, and what is not?",
+    "Kinetic energy can be written as $L^2/(2I)$.",
+    "Initial $I=20+40(1)^2$, final $I=20$."
+   ],
+   "sol": "Angular momentum is conserved. With $K=L^2/2I$, $K_f/K_i=I_i/I_f=(20+40)/20=3$. The extra energy comes from the work the person does walking inward against the (fictitious) outward push. (9 would result from squaring the ratio of $\\omega$.)"
+  },
+  {
+   "id": "fma-u5-003",
+   "syl": "u5",
+   "unit": "mechanics/rigid_body",
+   "step": 6,
+   "type": "mc",
+   "q": "A uniform rod of mass $m$ and length $L$ is pivoted at one end on a frictionless horizontal pin and held horizontal, then released from rest. Just after release, what is the magnitude of the force the pin exerts on the rod?",
+   "choices": [
+    "$mg/2$",
+    "$mg$",
+    "$mg/4$",
+    "$0$",
+    "$3mg/4$"
+   ],
+   "answer": 2,
+   "hints": [
+    "Find the angular acceleration from the torque about the pin.",
+    "Then find the linear acceleration of the center of mass and apply Newton's second law.",
+    "$\\alpha=\\dfrac{mgL/2}{mL^2/3}$, $a_{cm}=\\alpha L/2$."
+   ],
+   "sol": "About the pin, $\\tau=mg\\,L/2=\\tfrac13mL^2\\alpha$, so $\\alpha=3g/2L$. The center accelerates down at $a=\\alpha L/2=3g/4$. Newton's law: $mg-F=m(3g/4)$, so $F=mg/4$."
+  },
+  {
+   "id": "fma-u5-004",
+   "syl": "u5",
+   "unit": "mechanics/rigid_body",
+   "step": 6,
+   "type": "mc",
+   "q": "Blocks of mass 3 kg and 1 kg hang from the two ends of a string that passes over a pulley, a uniform disk of mass 4 kg and radius $R$ that turns on a fixed frictionless axle. The string does not slip on the pulley. Take $g=10\\ \\text{m/s}^2$. What is the magnitude of the blocks' acceleration?",
+   "choices": [
+    "5.0 m/s$^2$",
+    "2.0 m/s$^2$",
+    "3.3 m/s$^2$",
+    "4.0 m/s$^2$",
+    "2.5 m/s$^2$"
+   ],
+   "answer": 2,
+   "hints": [
+    "The two string tensions differ, because the pulley has a moment of inertia.",
+    "The pulley's rotational inertia acts like an extra mass $I/R^2$ in the linear equation.",
+    "$(3-1)g=(3+1+I/R^2)a$ with $I=\\tfrac12MR^2$."
+   ],
+   "sol": "The net driving force is $(3-1)(10)=20$ N. The effective inertia is $3+1+\\tfrac12(4)=6$ kg, so $a=20/6\\approx3.3$ m/s$^2$. (5.0 would be the answer for a massless pulley.)"
+  },
+  {
+   "id": "fma-u5-005",
+   "syl": "u5",
+   "unit": "mechanics/rigid_body",
+   "step": 7,
+   "type": "mc",
+   "q": "A solid uniform sphere slides at 7.0 m/s along a smooth floor with no spin, then enters a rough region where friction eventually makes it roll without slipping. What is its center-of-mass speed once it rolls without slipping?",
+   "choices": [
+    "3.5 m/s",
+    "6.0 m/s",
+    "4.7 m/s",
+    "5.0 m/s",
+    "7.0 m/s"
+   ],
+   "answer": 3,
+   "hints": [
+    "Which point on the sphere is a good axis, so that friction exerts no torque about it?",
+    "Conserve angular momentum about a point on the floor under the center's line of motion.",
+    "$mv_0R=(mR^2+\\tfrac25mR^2)\\,\\omega$, and $v=\\omega R$."
+   ],
+   "sol": "Friction acts at the contact point, so angular momentum about the floor is conserved: $mv_0R=mvR+\\tfrac25mR^2(v/R)$. Hence $v=v_0/(1+2/5)=\\tfrac57v_0=5.0$ m/s. (4.7 m/s is the result for a solid cylinder, $\\tfrac23v_0$.)"
+  },
+  {
+   "id": "fma-u6-001",
+   "syl": "u6",
+   "unit": "mechanics/gravitation",
+   "step": 6,
+   "type": "mc",
+   "q": "A satellite is in a circular orbit of radius $4R$ about a planet of radius $R$. What is the ratio of its orbital speed to the escape speed from the planet's surface?",
+   "choices": [
+    "$1/4$",
+    "$1/\\sqrt8$",
+    "$1/\\sqrt2$",
+    "$1/8$",
+    "$1/2$"
+   ],
+   "answer": 1,
+   "hints": [
+    "Write the orbital speed and escape speed in terms of $GM$ and the relevant radius.",
+    "Orbital speed: gravity supplies the centripetal force.",
+    "$v_{orb}=\\sqrt{GM/4R}$, $v_{esc}=\\sqrt{2GM/R}$."
+   ],
+   "sol": "$v_{orb}^2=GM/(4R)$ and $v_{esc}^2=2GM/R$, so $v_{orb}^2/v_{esc}^2=1/8$ and the ratio is $1/\\sqrt8\\approx0.35$."
+  },
+  {
+   "id": "fma-u6-002",
+   "syl": "u6",
+   "unit": "mechanics/gravitation",
+   "step": 5,
+   "type": "mc",
+   "q": "A comet orbits the Sun with its closest approach at 0.5 AU and its farthest distance at 7.5 AU. Using Earth's orbit (1 AU, 1 year) as the reference, what is the comet's period?",
+   "choices": [
+    "16 years",
+    "20.5 years",
+    "8 years",
+    "2 years",
+    "4 years"
+   ],
+   "answer": 2,
+   "hints": [
+    "Kepler's third law uses the semi-major axis of the ellipse.",
+    "Find the semi-major axis from the two extreme distances.",
+    "$T^2=a^3$ in years and AU."
+   ],
+   "sol": "The semi-major axis is $a=(0.5+7.5)/2=4$ AU. Kepler's third law: $T^2=a^3=64$, so $T=8$ years. (20.5 years uses the aphelion distance in place of $a$.)"
+  },
+  {
+   "id": "fma-u6-003",
+   "syl": "u6",
+   "unit": "mechanics/gravitation",
+   "step": 6,
+   "type": "mc",
+   "q": "A satellite of mass $m$ is in a circular orbit just above the surface of a planet of radius $R$ and surface gravity $g$ (take the orbit radius as $R$). Engines move it to a circular orbit of radius $3R$. What is the minimum total energy that the engines must supply, in units of $mgR$?",
+   "choices": [
+    "$2/3$",
+    "$1/3$",
+    "$1/2$",
+    "$1/6$",
+    "$1$"
+   ],
+   "answer": 1,
+   "hints": [
+    "Compare the total mechanical energies of the two circular orbits.",
+    "Total energy in a circular orbit is $-GMm/2r$.",
+    "$GM=gR^2$."
+   ],
+   "sol": "$E=-GMm/2r$, so $\\Delta E=\\dfrac{GMm}{2}\\left(\\dfrac1R-\\dfrac1{3R}\\right)=\\dfrac{GMm}{3R}=\\dfrac13mgR$. (2/3 would be only the change in potential energy.)"
+  },
+  {
+   "id": "fma-u6-004",
+   "syl": "u6",
+   "unit": "mechanics/gravitation",
+   "step": 7,
+   "type": "mc",
+   "q": "A uniform spherical planet of radius $R$ has surface gravity $g$. A straight tunnel is bored through its center (ignore rotation and friction). An object is dropped from rest at one end of the tunnel. How long does it take to reach the center?",
+   "choices": [
+    "$\\dfrac{\\pi}{4}\\sqrt{R/g}$",
+    "$2\\pi\\sqrt{R/g}$",
+    "$\\sqrt{2R/g}$",
+    "$\\pi\\sqrt{R/g}$",
+    "$\\dfrac{\\pi}{2}\\sqrt{R/g}$"
+   ],
+   "answer": 4,
+   "hints": [
+    "Inside a uniform sphere, only the mass at smaller radius pulls on you.",
+    "What does that make the gravitational force as a function of distance from the center?",
+    "$g(r)=gr/R$, a linear restoring force, so SHM."
+   ],
+   "sol": "Inside a uniform sphere $g(r)=g\\,r/R$, directed to the center, so the motion is SHM with $\\omega^2=g/R$. The period is $2\\pi\\sqrt{R/g}$, and reaching the center takes a quarter period, $\\tfrac\\pi2\\sqrt{R/g}$. (Free fall at constant $g$ would give $\\sqrt{2R/g}$, which is shorter.)"
+  },
+  {
+   "id": "fma-u6-005",
+   "syl": "u6",
+   "unit": "mechanics/gravitation",
+   "step": 6,
+   "type": "mc",
+   "q": "Two identical stars, each of mass $M$, move in circular orbits about their common center, separated by a distance $d$. A tiny planet orbits a single star of mass $M$ in a circle of radius $d$. What is the ratio (period of the binary)/(period of the planet)?",
+   "choices": [
+    "$1/2$",
+    "$1/\\sqrt2$",
+    "$\\sqrt2$",
+    "$1$",
+    "$2$"
+   ],
+   "answer": 1,
+   "hints": [
+    "Each star is pulled by the other, at separation $d$, but moves on a circle of smaller radius.",
+    "Each star's orbit radius is $d/2$.",
+    "$M\\,(4\\pi^2/T^2)(d/2)=GM^2/d^2$."
+   ],
+   "sol": "For a star: $M\\omega^2(d/2)=GM^2/d^2$, so $\\omega^2=2GM/d^3$ and $T_b=2\\pi\\sqrt{d^3/2GM}$. The planet has $T_p=2\\pi\\sqrt{d^3/GM}$. So $T_b/T_p=1/\\sqrt2$."
+  },
+  {
+   "id": "fma-u7-001",
+   "syl": "u7",
+   "unit": "waves/shm",
+   "step": 5,
+   "type": "mc",
+   "q": "A 0.50 kg block on a horizontal frictionless surface is attached to a spring of constant 50 N/m and oscillates with amplitude 0.10 m. What is its speed when it is 0.060 m from the equilibrium position?",
+   "choices": [
+    "0.80 m/s",
+    "1.0 m/s",
+    "0.60 m/s",
+    "0.48 m/s",
+    "1.2 m/s"
+   ],
+   "answer": 0,
+   "hints": [
+    "Use energy conservation, or $v=\\omega\\sqrt{A^2-x^2}$.",
+    "Find $\\omega=\\sqrt{k/m}$ first.",
+    "$\\omega=10$ rad/s."
+   ],
+   "sol": "$\\omega=\\sqrt{50/0.5}=10$ rad/s. Then $v=\\omega\\sqrt{A^2-x^2}=10\\sqrt{0.01-0.0036}=10(0.08)=0.80$ m/s. (1.0 m/s is the maximum speed $\\omega A$; 0.60 m/s is $\\omega x$.)"
+  },
+  {
+   "id": "fma-u7-002",
+   "syl": "u7",
+   "unit": "waves/shm",
+   "step": 6,
+   "type": "mc",
+   "q": "A simple pendulum has period $T_0$ when its support is at rest. It is then hung in a cart that accelerates horizontally at $a=\\tfrac34g$. For small oscillations about the new equilibrium, what is the period in terms of $T_0$?",
+   "choices": [
+    "$0.89\\,T_0$",
+    "$0.64\\,T_0$",
+    "$0.71\\,T_0$",
+    "$0.80\\,T_0$",
+    "$1.12\\,T_0$"
+   ],
+   "answer": 0,
+   "hints": [
+    "In the cart's frame there is an extra, fictitious force.",
+    "Combine it with gravity to get an effective gravitational acceleration.",
+    "$g_{\\text{eff}}=\\sqrt{g^2+a^2}$ and $T\\propto g_{\\text{eff}}^{-1/2}$."
+   ],
+   "sol": "In the cart's frame $g_{\\text{eff}}=\\sqrt{g^2+(0.75g)^2}=1.25g$. Since $T\\propto1/\\sqrt{g_{\\text{eff}}}$, $T=T_0/\\sqrt{1.25}\\approx0.89\\,T_0$. (0.80 would forget the square root.)"
+  },
+  {
+   "id": "fma-u7-003",
+   "syl": "u7",
+   "unit": "waves/shm",
+   "step": 5,
+   "type": "mc",
+   "q": "A block on a horizontal frictionless surface is attached to a wall by a spring of constant $k$ and oscillates with period $T$. The spring is replaced by two springs, of constants $k$ and $3k$, joined end to end (in series), with the same block attached. What is the new period?",
+   "choices": [
+    "$1.33\\,T$",
+    "$0.87\\,T$",
+    "$1.15\\,T$",
+    "$0.50\\,T$",
+    "$2.0\\,T$"
+   ],
+   "answer": 2,
+   "hints": [
+    "Springs in series are softer than either spring alone.",
+    "Find the effective spring constant of the combination.",
+    "$1/k_{\\text{eff}}=1/k+1/3k$."
+   ],
+   "sol": "The series combination has $k_{\\text{eff}}=\\dfrac{k\\cdot3k}{k+3k}=\\dfrac34k$. Since $T\\propto1/\\sqrt{k}$, the new period is $T\\sqrt{4/3}\\approx1.15\\,T$. (0.50 T would be the parallel combination, $4k$.)"
+  },
+  {
+   "id": "fma-u7-004",
+   "syl": "u7",
+   "unit": "waves/shm",
+   "step": 6,
+   "type": "mc",
+   "q": "A flat horizontal platform oscillates horizontally in simple harmonic motion with period $\\pi/5$ s. A small block rests on it, with a coefficient of static friction 0.40 between them. Take $g=10\\ \\text{m/s}^2$. What is the largest amplitude for which the block does not slip?",
+   "choices": [
+    "0.020 m",
+    "0.10 m",
+    "0.40 m",
+    "0.0040 m",
+    "0.040 m"
+   ],
+   "answer": 4,
+   "hints": [
+    "The block needs a maximum acceleration supplied by friction.",
+    "The platform's maximum acceleration is $\\omega^2A$.",
+    "$\\omega^2A\\le\\mu_s g$, with $\\omega=2\\pi/T$."
+   ],
+   "sol": "$\\omega=2\\pi/(\\pi/5)=10$ rad/s. Slipping starts when $\\omega^2A=\\mu_s g$, i.e. $A=\\dfrac{0.4\\cdot10}{100}=0.040$ m."
+  },
+  {
+   "id": "fma-u7-005",
+   "syl": "u7",
+   "unit": "waves/shm",
+   "step": 5,
+   "type": "mc",
+   "q": "A particle oscillates in simple harmonic motion with amplitude $A$ and period $T$. It starts at rest at maximum displacement, $x=A$. How long does it take to first reach $x=A/2$, the point halfway between that extreme and the equilibrium position?",
+   "choices": [
+    "$T/3$",
+    "$T/8$",
+    "$T/6$",
+    "$T/12$",
+    "$T/4$"
+   ],
+   "answer": 2,
+   "hints": [
+    "Think of SHM as the projection of uniform circular motion.",
+    "Starting at $x=A$, $x(t)=A\\cos\\omega t$.",
+    "Solve $\\cos\\omega t=\\tfrac12$ for the first time."
+   ],
+   "sol": "With $x=A\\cos\\omega t$ the condition $x=A/2$ gives $\\omega t=\\pi/3$, so $t=\\dfrac{\\pi/3}{2\\pi/T}=T/6$. (T/4 is the time to reach equilibrium itself, and the motion is slower near the ends than near the middle.)"
+  },
+  {
+   "id": "fma-u8-001",
+   "syl": "u8",
+   "unit": "mechanics/statics",
+   "step": 6,
+   "type": "mc",
+   "q": "A uniform ladder of mass 20 kg leans against a smooth vertical wall, with its foot on rough ground. The ladder makes an angle $\\theta$ with the floor, with $\\tan\\theta=2$. Take $g=10\\ \\text{m/s}^2$. What friction force must the ground exert on the ladder to keep it from slipping?",
+   "choices": [
+    "200 N",
+    "25 N",
+    "75 N",
+    "100 N",
+    "50 N"
+   ],
+   "answer": 4,
+   "hints": [
+    "Take torques about the foot of the ladder to find the wall's force.",
+    "Then apply horizontal force balance.",
+    "Wall force $N_w\\,L\\sin\\theta=mg\\,(L/2)\\cos\\theta$."
+   ],
+   "sol": "Torques about the foot: $N_wL\\sin\\theta=mg\\tfrac L2\\cos\\theta$, so $N_w=\\dfrac{mg}{2\\tan\\theta}=\\dfrac{200}{4}=50$ N. The wall is smooth, so horizontal balance requires friction $f=N_w=50$ N."
+  },
+  {
+   "id": "fma-u8-002",
+   "syl": "u8",
+   "unit": "mechanics/fluids",
+   "step": 5,
+   "type": "mc",
+   "q": "A uniform block of density $0.88\\ \\text{g/cm}^3$ floats at rest at the boundary between a layer of oil (density $0.80\\ \\text{g/cm}^3$) lying on top of water (density $1.00\\ \\text{g/cm}^3$). The block is thick enough to be partly in each liquid. What fraction of its volume is in the water?",
+   "choices": [
+    "0.50",
+    "0.40",
+    "0.20",
+    "0.60",
+    "0.88"
+   ],
+   "answer": 1,
+   "hints": [
+    "The buoyant force is the sum of the weights of displaced oil and displaced water.",
+    "Let $f$ be the fraction in water and write a force balance per unit volume.",
+    "$0.88=1.00f+0.80(1-f)$."
+   ],
+   "sol": "Equilibrium: $\\rho_{b}=\\rho_wf+\\rho_o(1-f)$, i.e. $0.88=0.80+0.20f$. So $f=0.40$."
+  },
+  {
+   "id": "fma-u8-003",
+   "syl": "u8",
+   "unit": "mechanics/fluids",
+   "step": 6,
+   "type": "mc",
+   "q": "A tall tank is kept filled with water to a depth of 1.0 m above the ground. A small hole is made in its side at a height of 0.40 m above the ground. Ignoring viscosity, how far from the base of the tank (horizontally) does the jet hit the ground?",
+   "choices": [
+    "1.2 m",
+    "0.80 m",
+    "0.69 m",
+    "0.98 m",
+    "0.49 m"
+   ],
+   "answer": 3,
+   "hints": [
+    "Find the exit speed from Bernoulli's equation (Torricelli's result).",
+    "Then treat the jet as a projectile launched horizontally from 0.40 m.",
+    "$v=\\sqrt{2g\\,d}$ with $d=0.60$ m, and $t=\\sqrt{2(0.40)/g}$."
+   ],
+   "sol": "The hole is 0.60 m below the surface, so $v=\\sqrt{2g(0.6)}$. The fall time from 0.40 m is $t=\\sqrt{2(0.4)/g}$. Range $=vt=2\\sqrt{0.6\\cdot0.4}\\approx0.98$ m. (The $g$ cancels, so the result doesn't depend on its value.)"
+  },
+  {
+   "id": "fma-u8-004",
+   "syl": "u8",
+   "unit": "mechanics/fluids",
+   "step": 7,
+   "type": "mc",
+   "q": "Estimate the terminal speed of a raindrop of radius 1.0 mm. Model the drag as $F=\\tfrac12\\rho_{\\text{air}}Av^2$ with $A$ the drop's cross-sectional area, $\\rho_{\\text{air}}=1.2\\ \\text{kg/m}^3$, $\\rho_{\\text{water}}=1000\\ \\text{kg/m}^3$ and $g=10\\ \\text{m/s}^2$. Which is closest?",
+   "choices": [
+    "47 m/s",
+    "0.47 m/s",
+    "1.5 m/s",
+    "4.7 m/s",
+    "15 m/s"
+   ],
+   "answer": 3,
+   "hints": [
+    "At terminal speed, weight equals drag.",
+    "Write the mass using the drop's volume and the area as $\\pi r^2$.",
+    "$\\tfrac43\\pi r^3\\rho_wg=\\tfrac12\\rho_a\\pi r^2v^2$."
+   ],
+   "sol": "Setting weight equal to drag: $\\tfrac43\\pi r^3\\rho_wg=\\tfrac12\\rho_a\\pi r^2v^2$, so $v^2=\\dfrac{8\\rho_w g\\,r}{3\\rho_a}=\\dfrac{8(1000)(10)(10^{-3})}{3(1.2)}\\approx22$ and $v\\approx4.7$ m/s."
+  },
+  {
+   "id": "fma-u8-005",
+   "syl": "u8",
+   "unit": "mechanics/statics",
+   "step": 6,
+   "type": "mc",
+   "q": "A uniform horizontal beam of weight 200 N and length 4.0 m rests on two supports: one at its left end and one 3.0 m from the left end (1.0 m from the right end). A load is hung from the right end. What is the largest load for which the beam does not tip up off the left support?",
+   "choices": [
+    "100 N",
+    "300 N",
+    "400 N",
+    "200 N",
+    "150 N"
+   ],
+   "answer": 3,
+   "hints": [
+    "At the point of tipping, the left support's force is zero.",
+    "Take torques about the right-hand support.",
+    "Beam's weight acts 1.0 m to the left of the right support, the load 1.0 m to the right."
+   ],
+   "sol": "When the beam is about to lift off the left support, the only forces are the support at 3.0 m, the beam's weight (at 2.0 m) and the load $w$ (at 4.0 m). Torques about the support: $200(1.0)=w(1.0)$, so $w=200$ N."
+  }
+ ]
+}

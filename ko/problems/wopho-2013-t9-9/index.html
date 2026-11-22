@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WoPhO 세계물리올림피아드 2013 9 · 고효율 발광 다이오드 | 하슬라랩</title>
+<meta name="description" content="(착상: Mihkel Heidelberg) 머리말. 보통 전구와 견주면 발광 다이오드(LED)는 조명 효율이 매우 높다. 그 까닭은 보통 램프의 분광 에너지 분포가 흑체 복사에 가깝기 때문인데, 이 경우 광자가 흑체와 열평형을 이룬다고 말할 수 있다. 그러면 흑체가 단위…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/wopho-2013-t9-9/">
+
+<meta property="og:title" content="WoPhO 세계물리올림피아드 2013 9 · 고효율 발광 다이오드 | 하슬라랩">
+<meta property="og:description" content="(착상: Mihkel Heidelberg) 머리말. 보통 전구와 견주면 발광 다이오드(LED)는 조명 효율이 매우 높다. 그 까닭은 보통 램프의 분광 에너지 분포가 흑체 복사에 가깝기 때문인데, 이 경우 광자가 흑체와 열평형을 이룬다고 말할 수 있다. 그러면 흑체가 단위…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / WoPhO 세계물리올림피아드</nav>
+<h1>WoPhO 세계물리올림피아드 2013 9 · 고효율 발광 다이오드</h1><p class="meta">WoPhO 세계물리올림피아드 · 2013 · 단계 8</p>
+<div class="q"><p>(착상: Mihkel Heidelberg)</p><p>머리말. 보통 전구와 견주면 발광 다이오드(LED)는 조명 효율이 매우 높다. 그 까닭은 보통 램프의 분광 에너지 분포가 흑체 복사에 가깝기 때문인데, 이 경우 광자가 흑체와 열평형을 이룬다고 말할 수 있다. 그러면 흑체가 단위 넓이·단위 시간·단위 진동수 간격당 내는 전체 에너지는 플랑크 법칙</p><p>$$I=\frac{2\pi h}{c^2}\,\frac{\nu^3}{e^{h\nu/kT}-1}$$</p><p>으로 주어진다. 여기서 $\nu$는 진동수, $h=6.626\times10^{-34}\,\mathrm{J\cdot s}$는 플랑크 상수, $c=2.997\times10^{8}\,\mathrm{m/s}$는 빛의 속력, $k=1.38\times10^{-23}\,\mathrm{J\cdot K^{-1}}$은 볼츠만 상수, $T$는 온도이다. 다음에 유의하라.</p><p>$$\int_0^\infty I\,d\nu=\sigma T^4,$$</p><p>여기서 $\sigma=5.678\times10^{-8}\,\mathrm{W\cdot m^{-2}\cdot K^{-4}}$는 슈테판-볼츠만 상수이다. 흑체 복사에서는 보이지 않는 빛을 내느라 많은 에너지가 버려진다. 한편 LED는 거의 가시광만 내도록 만들 수 있다.</p><p>최근 실험들(P. Santhanam et al, Thermoelectrically Pumped Light-Emitting Diodes Operating above Unity Efficiency, Phys. Rev. Lett. 108, 097403 (2012))에서는 효율이 $100\,\%$보다 높은 LED를 만들었다고 보고되었다. 여기서 효율은 소비한 전기 에너지에 대한 내보낸 빛 에너지의 비로 정의한다.</p><p>문제. 합리적인 근사를 바탕으로, 다음을 가정할 때 LED의 이론적으로 가능한 가장 높은 효율이 얼마인지 구하여라.</p><p>(a) LED에는 (둘레 매질과의 충분히 빠른 열교환을 통해) 실온 $T_0=293\,\mathrm{K}$로 유지되는 방열판이 있다;</p><p>(b) LED는 파장이 $\lambda_0=700\,\mathrm{nm}$보다 짧은 빛을 낸다;</p><p>(b) LED의 발광 부분의 겉넓이는 $S=1\,\mathrm{mm^2}$이다;</p><p>(c) LED의 발광 출력은 $P=1\,\mu\mathrm{W}$이다.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

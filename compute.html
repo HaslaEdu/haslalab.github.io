@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>계산물리 · HaslaLab</title>
+<link rel="icon" href="logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="vendor/katex/katex.min.css?v=c7c428bc728d">
+<link rel="stylesheet" href="compute.css?v=0f33650fb133">
+<script defer src="vendor/katex/katex.min.js?v=dc84b296ec3e"></script>
+<script defer src="vendor/katex/contrib/auto-render.min.js?v=9cb8dacfc086"></script>
+<script defer src="learn-path.js?v=2fffa95fd5dc"></script>
+<script defer src="compute-problems.js?v=45a25eb7cdd0"></script>
+<script defer src="compute.js?v=5a5cfa08057c"></script>
+</head>
+<body>
+<main>
+  <div class="top"><div><p class="eyebrow">HaslaLab · Computational physics</p><h1 data-i18n="title">계산물리</h1></div></div>
+  <p class="intro" data-i18n="intro"></p>
+  <ul class="plist" id="plist" aria-label="문제 목록"></ul>
+  <div class="work">
+    <section class="panel statement" id="statement" aria-live="polite"></section>
+    <section class="panel editor">
+      <label for="code" data-i18n="code">Python 코드</label>
+      <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off"></textarea>
+      <div class="actions"><button class="primary" id="run" type="button" data-i18n="run">실행 · 채점</button><button id="reset" type="button" data-i18n="reset">처음 코드로</button><button id="stop" type="button" hidden data-i18n="stop">중지</button><span class="status" id="status" role="status"></span></div>
+      <div class="results" id="results"></div>
+      <div class="plotbox" id="plotbox" hidden><canvas id="plot" role="img"></canvas><div class="legend" id="legend"></div></div>
+      <pre class="out" id="out" hidden></pre>
+      <p class="note" data-i18n="note"></p>
+    </section>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPhO 온라인 물리올림피아드 2023 T2 · 복소 퍼텐셜 | 하슬라랩</title>
+<meta name="description" content="등각 변환 복소수는 두 개의 실수를 \&quot;저장\&quot;하는 수학적 대상으로 생각할 수 있습니다. 복소수 집합 C의 원소 z는 다음과 같이 쓸 수 있습니다: z=x+iy 여기서 i -1은 허수 단위(imaginary unit)라 부르며, x,y R입니다. 이로써, 복소수 값을…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/opho-2023-ti-t2/">
+
+<meta property="og:title" content="OPhO 온라인 물리올림피아드 2023 T2 · 복소 퍼텐셜 | 하슬라랩">
+<meta property="og:description" content="등각 변환 복소수는 두 개의 실수를 \&quot;저장\&quot;하는 수학적 대상으로 생각할 수 있습니다. 복소수 집합 C의 원소 z는 다음과 같이 쓸 수 있습니다: z=x+iy 여기서 i -1은 허수 단위(imaginary unit)라 부르며, x,y R입니다. 이로써, 복소수 값을…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / OPhO 온라인 물리올림피아드</nav>
+<h1>OPhO 온라인 물리올림피아드 2023 T2 · 복소 퍼텐셜</h1><p class="meta">OPhO 온라인 물리올림피아드 · 2023 · 단계 7</p>
+<div class="q"><p>등각 변환</p><p>복소수는 두 개의 실수를 \&quot;저장\&quot;하는 수학적 대상으로 생각할 수 있습니다. 복소수 집합 $\mathbb{C}$의 원소 $z$는 다음과 같이 쓸 수 있습니다:</p><p>$$z=x+iy$$</p><p>여기서 $i\equiv\sqrt{-1}$은 허수 단위(imaginary unit)라 부르며, $x,y\in\mathbb{R}$입니다. 이로써, 복소수 값을 갖는 함수, 즉 함수 $f:\mathbb{C}\to\mathbb{C}$를 구성하는 것을 생각할 수 있습니다:</p><p>$$f(z)=f(x+iy)=w(x,y)+iu(x,y)\tag{1}$$</p><p>복소수는 두 실수 $x$와 $y$를 부호화하므로, 우리는 $x,y$에 의존하는 두 실수 값 함수 $w(x,y)$와 $u(x,y)$를 산출하는 복소수 값 다변수 함수를 고려할 수 있습니다. 실수 값 다변수 함수인 $w$와 $u$는 우리가 $\mathbb{R}^2$에서의 미적분을 $\mathbb{C}$로 확장할 수 있게 해줍니다. 두 복소 미분 가능 함수의 합성이 적절한 정의역에서 또 다른 복소 미분 가능 함수를 산출한다는 사실이 주어집니다.</p><p>(a) 단변수 미적분에서 도함수의 정의로부터 출발하여, (1)에서 주어진 $f$가 복소 미분 가능하다면 $w$와 $u$가 다음을 만족함을 보이십시오:</p><p>$$\frac{\partial w}{\partial x}=\frac{\partial u}{\partial y}\quad\text{그리고}\quad\frac{\partial w}{\partial y}=-\frac{\partial u}{\partial x}$$</p><p>(b) $w(x,y)$와 $u(x,y)$가 2차원 라플라스 방정식의 해임을 보이십시오:</p><p>$$\nabla^2\phi=\frac{\partial^2\phi}{\partial x^2}+\frac{\partial^2\phi}{\partial y^2}=0\tag{2}$$</p><p>(c) 복소 평면 위의 매개변수화된 곡선 $\gamma$는 실수 $t$를 받아 복소 평면 위의 점 $\gamma(t)$를 산출하는 함수로 생각할 수 있습니다. 두 매개변수화된 곡선 $\gamma_1$과 $\gamma_2$가 어떤 점 $p=\gamma_1(t_1)=\gamma_2(t_2)$에서 교차합니다. $p$에서 두 곡선의 접선은 각 $\alpha$를 이룹니다. 곡선 $f\circ\gamma_1$과 $f\circ\gamma_2$의 $f(p)$에서의 접선이 같은 각 $\alpha$를 이룸을 보이십시오. 여기서 $\circ$는 합성 함수입니다.</p><p>등각 변환된 정전기계</p><p>정전기학으로부터, 우리는 전하가 없는 영역에서 정전기 퍼텐셜 $\phi$가 라플라스 방정식 $\nabla^2\phi=0$을 만족함을 압니다. 위에서 여러분이 보였듯이, 이는 실수부가 정전기 퍼텐셜인 복소 미분 가능 함수를 정의하려는 발상에 동기를 부여합니다 -- 복소 미분 가능성은 정전기 퍼텐셜이 (2)를 만족한다는 사실을 부호화합니다. 전하가 없는 영역에서의 2차원 정전기 문제가 주어질 때, 우리는 복소 퍼텐셜(complex potential) $f(z)$를 다음과 같이 정의합니다:</p><p>$$f(z)=\phi(x,y)+i\psi(x,y)$$</p><p>여기서 $\psi$는 문제 1에서 유도한 조건을 만족하여 $f$를 복소 미분 가능 함수로 만드는 적절한 실수 값 함수입니다. 유일성 정리(uniqueness theorem)가 주어집니다: 2차원 라플라스 방정식은 명시된 경계 조건을 만족하는 유일한 해를 가집니다.</p><p>(d) 2차원 정전기 문제와 적절한 복소 퍼텐셜 $f$가 주어질 때, 도함수 $\frac{df}{dz}$를 전기장 $\mathbf{E}(x,y)=E_x(x,y)\hat x+E_y(x,y)\hat y$의 $x,y$ 성분으로 표현하십시오.</p><p>(e) 함수 $\phi(x,y)=\frac{\phi_0}{\pi}\arctan\frac yx$가 경계 조건 $\phi(x&gt;0,0)=0$이면서 $\phi(x&lt;0,0)=\phi_0$인 2차원 라플라스 방정식을 만족함을 보이십시오.</p><p>(f) 복소 로그 함수는 $z=re^{i\theta}$에서 $r\neq0$, $0&lt;\theta&lt;2\pi$에 대해 $\log(z)=\log|r|+i\theta$로 정의됩니다. 상반평면 $\mathcal{H}$(허수부가 양수인 복소 평면 위의 점들)가 로그 사상 아래에서 $\mathrm{Im}(z)=0$과 $\mathrm{Im}(z)=\pi$로 둘러싸인 띠(strip)로 변환됨을 보이십시오. 이 문제에서는 로그 함수가 $\mathcal{H}$에서 복소 미분 가능하고 그 역함수가 $e^z$라고 가정해도 됩니다.</p><p>(g) (e)의 정전기 퍼텐셜로부터 출발하여, 거리 $d$만큼 떨어진 두 무한히 큰 축전기 판 사이 영역에서의 정전기 퍼텐셜을 구하십시오. 이 방법이 왜 올바른 해를 산출하는지 신중히 논증하십시오.</p><p>(h) 함수 $f(z)=\frac{i(1-z)}{(1+z)}$이 원점을 중심으로 하는 단위원 $\mathcal{C}$를 실수 직선으로, 원의 내부를 $\mathcal{H}$로 사상함을 보이십시오. 함수 $f$의 역함수 $g$를 구하고, $\mathcal{C}$로 둘러싸인 점들과 $\mathcal{H}$ 사이에 일대일 대응이 존재하는 이유를 설명하십시오.</p><p>(i) 전하 밀도 $\lambda$인 무한 막대와 반지름 $R$인 접지된 동심 도체 원통 껍질 사이 영역에서의 정전기 퍼텐셜을 구하십시오.</p><p>(j) 이제 같은 무한 막대가 높이 $h$에서 접지된 도체 판 위에 매달려 있는 경우를 생각해 봅시다. 문제 (h)와 (i)의 결과를 이용하여 판 위쪽 영역에서의 정전기 퍼텐셜 $\phi$를 유도하십시오.</p><p>(k) 아래 그림에 보인 곡선 $C$를 생각해 봅시다. $dl$의 상(image)이 $dl'$임이 주어집니다. 곡선 $C$ 위의 어떤 선소 $dl$을 택할 때, $f(C)$ 위의 그 상 $dl'$로의 비례 인자(scaling factor)를 구하십시오. 이는 사상이 정칙 함수(holomorphic function)인 등각 변환(conformal transformation)으로 알려져 있습니다.</p><figure><img src="/practice/contest/fig/opho-2023-Ti-p8-f1.webp" width="971" height="507" alt="" loading="lazy"></figure><p>(l) $C$가 도체 표면을 나타낸다고 합시다. $\phi$가 $\phi|_C=0$을 만족하는 2차원 라플라스 방정식의 적절한 해라면, $dl$에서의 표면 (전하), $\phi'|_{f(C)}=0$을 만족하는 정전기 퍼텐셜 $\phi'$, 그리고 $\phi'$로부터 $dl'$에서의 표면 전하에 대한 표현식을 구하십시오.</p><p>(m) 문제 (k)와 (l)의 결과가 서로 일관됨을 확인하십시오.</p><p>선전하와 도체 쐐기 사이의 정전기 상호작용에 관하여</p><p>우리는 여기서 얻은 지식을 익숙한 물리 퍼즐을 푸는 데 적용할 수 있습니다. 이 퍼즐은 특정 경우(예: 영상법(image method)으로 쉽게 풀 수 있는 경우)에서 널리 알려지고 인기 있었지만, 일반성이 부족합니다. 개구각(opening angle) $\theta$인 접지되고 무한히 큰 도체 쐐기를 생각해 봅시다. 쐐기 안에는, 모서리(edge)에 평행하게 놓인, 단위 길이당 균일한 전하 밀도 $Q$를 갖는 가늘고 무한히 긴 직선이 있습니다. 직선과 모서리 사이의 거리는 $L$이고, 직선과 모서리를 모두 지나는 평면은 쐐기의 한 면과 각 $\alpha$를 이룹니다.</p><figure><img src="/practice/contest/fig/opho-2023-Ti-p8-f2.webp" width="868" height="398" alt="" loading="lazy"></figure><p>(n) 단위 길이당 직선에 작용하는 전기력의 방향과 크기를 구하십시오. $2\pi&gt;\theta&gt;\alpha$인 일반적인 경우에 대해 풀고, $\theta=120^\circ$, $\alpha=30^\circ$에 대해 $kQ^2/L$ 단위로 답을 계산하십시오.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

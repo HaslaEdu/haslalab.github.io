@@ -54,7 +54,7 @@ export async function readPublicPosts(db, url, time = currentTime()) {
   const query = (sp.get('q') || '').trim().slice(0, 60), field = sp.get('field') || 'all';
   const sort = sp.get('sort') || 'new', best = sp.get('best') === '1', noticesOnly = sp.get('notices') === '1';
   const page = Math.max(1, Math.min(500, parseInt(sp.get('page')) || 1));
-  if (board && !PUBLIC_BOARDS.includes(board)) throw new PublicDataError('bad_board');
+  if (board && !PUBLIC_BOARDS.includes(board) && !/^g-[a-z0-9](?:[a-z0-9-]{1,22}[a-z0-9])$/.test(board)) throw new PublicDataError('bad_board');   /* minor galleries: galleries.js */
   const lang = pickLang(sp.get('lang')), where = [noticesOnly ? "p.tag='notice'" : "p.tag<>'notice'", 'p.lang=?'], args = [lang];
   if (board) { where.push('p.board=?'); args.push(board); }
   if (!noticesOnly && tag && PUBLIC_TAGS.includes(tag)) { where.push('p.tag=?'); args.push(tag); }

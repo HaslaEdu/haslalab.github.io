@@ -1,0 +1,1217 @@
+{
+ "track": "jeem",
+ "items": [
+  {
+   "id": "jeem-u1-001",
+   "syl": "u1",
+   "unit": "experiment/uncertainty",
+   "step": 5,
+   "type": "mc",
+   "q": "The dimensional formula of the quantity $\\dfrac{B^{2}}{\\mu_0}$, where $B$ is magnetic field and $\\mu_0$ the permeability of free space, is the same as that of:",
+   "choices": [
+    "$[ML^{2}T^{-2}]$",
+    "$[MLT^{-2}]$",
+    "$[ML^{-1}T^{-2}]$",
+    "$[ML^{-2}T^{-2}]$"
+   ],
+   "answer": 2,
+   "hints": [
+    "Ask what physical quantity has the units of energy per unit volume.",
+    "$B^2/(2\\mu_0)$ is the magnetic energy density.",
+    "Energy density has dimensions of energy divided by volume: $[ML^2T^{-2}]/[L^3]$."
+   ],
+   "sol": "$B^2/(2\\mu_0)$ is the magnetic energy stored per unit volume, so $B^2/\\mu_0$ has the same dimensions as energy density (or pressure). Dimensions: $[ML^2T^{-2}]/[L^3]=[ML^{-1}T^{-2}]$."
+  },
+  {
+   "id": "jeem-u1-002",
+   "syl": "u1",
+   "unit": "experiment/uncertainty",
+   "step": 7,
+   "type": "mc",
+   "q": "A length is constructed from the gravitational constant $G$, Planck's constant $h$ and the speed of light $c$ as $L\\propto G^{x}h^{y}c^{z}$. The exponents $(x,y,z)$ are:",
+   "choices": [
+    "$(\\tfrac12,\\tfrac12,-\\tfrac32)$",
+    "$(\\tfrac12,\\tfrac12,-\\tfrac12)$",
+    "$(-\\tfrac12,\\tfrac12,\\tfrac32)$",
+    "$(1,1,-3)$"
+   ],
+   "answer": 0,
+   "hints": [
+    "Write the dimensions of $G$, $h$ and $c$ in terms of $M$, $L$, $T$.",
+    "$[G]=M^{-1}L^3T^{-2}$, $[h]=ML^2T^{-1}$, $[c]=LT^{-1}$. Equate powers of $M$, $L$, $T$ to those of $L^1$.",
+    "Mass: $-x+y=0$. Time: $-2x-y-z=0$. Length: $3x+2y+z=1$."
+   ],
+   "sol": "Mass: $-x+y=0\\Rightarrow y=x$. Time: $-2x-y-z=0\\Rightarrow z=-3x$. Length: $3x+2y+z=1\\Rightarrow 3x+2x-3x=1\\Rightarrow x=\\tfrac12$. So $y=\\tfrac12$, $z=-\\tfrac32$."
+  },
+  {
+   "id": "jeem-u1-003",
+   "syl": "u1",
+   "unit": "experiment/uncertainty",
+   "step": 5,
+   "type": "num",
+   "q": "A quantity is computed as $Q=\\dfrac{a^{2}b^{3}}{c\\sqrt{d}}$. The percentage errors in measuring $a$, $b$, $c$, $d$ are $1\\%$, $2\\%$, $3\\%$ and $4\\%$ respectively. Find the maximum percentage error in $Q$. Answer as an integer (percent).",
+   "answer": {
+    "value": 13,
+    "tol": 0,
+    "unit": "%"
+   },
+   "hints": [
+    "Maximum errors add, each weighted by the magnitude of the power.",
+    "$\\Delta Q/Q = 2(\\Delta a/a)+3(\\Delta b/b)+(\\Delta c/c)+\\tfrac12(\\Delta d/d)$.",
+    "Insert $1,2,3,4$ percent."
+   ],
+   "sol": "$\\dfrac{\\Delta Q}{Q}=2(1)+3(2)+1(3)+\\tfrac12(4)=2+6+3+2=13\\%$."
+  },
+  {
+   "id": "jeem-u2-001",
+   "syl": "u2",
+   "unit": "mechanics/kinematics",
+   "step": 6,
+   "type": "num",
+   "q": "A particle moves along a straight line with position $x=t^{3}-6t^{2}+9t$ (SI units). Find the total distance travelled in the first $4$ s. Answer as an integer in metres.",
+   "answer": {
+    "value": 12,
+    "tol": 0,
+    "unit": "m"
+   },
+   "hints": [
+    "Distance is not the same as displacement if the particle turns around.",
+    "Find when $v=0$ and split the motion there.",
+    "$v=3t^2-12t+9$ vanishes at $t=1$ s and $t=3$ s; add $|\\Delta x|$ for each interval."
+   ],
+   "sol": "$v=3(t-1)(t-3)$, so the particle reverses at $t=1$ and $t=3$ s. $x(0)=0$, $x(1)=4$, $x(3)=0$, $x(4)=4$. Distance $=4+4+4=12$ m."
+  },
+  {
+   "id": "jeem-u2-002",
+   "syl": "u2",
+   "unit": "mechanics/kinematics",
+   "step": 5,
+   "type": "num",
+   "q": "A stone is dropped from the top of a $60$ m tower at the same instant another stone is thrown vertically upward from the ground at $30$ m/s. Take $g=10$ m/s$^2$. At what height above the ground do the stones meet? Answer as an integer in metres.",
+   "answer": {
+    "value": 40,
+    "tol": 0,
+    "unit": "m"
+   },
+   "hints": [
+    "Relative motion: both have the same acceleration, so their relative speed is constant.",
+    "Relative speed $=30$ m/s, initial separation $=60$ m.",
+    "Meeting time $t=60/30$; compute the height of the dropped stone then."
+   ],
+   "sol": "Relative acceleration is zero, so they meet when $t=60/30=2$ s. The dropped stone has fallen $\\tfrac12(10)(2^2)=20$ m, so the height above ground is $60-20=40$ m."
+  },
+  {
+   "id": "jeem-u2-003",
+   "syl": "u2",
+   "unit": "mechanics/kinematics",
+   "step": 6,
+   "type": "mc",
+   "q": "A boat can move at $5$ m/s in still water. It must cross a river $200$ m wide flowing at $3$ m/s and land at the point directly opposite its starting point. How long does the crossing take?",
+   "choices": [
+    "40 s",
+    "50 s",
+    "66.7 s",
+    "25 s"
+   ],
+   "answer": 1,
+   "hints": [
+    "To land directly opposite, the boat must cancel the river's drift.",
+    "The boat heads upstream so that its velocity component along the bank is $3$ m/s upstream.",
+    "Effective cross-stream speed is $\\sqrt{5^2-3^2}$."
+   ],
+   "sol": "Heading upstream at angle with $5\\sin\\theta=3$, the cross-stream speed is $5\\cos\\theta=\\sqrt{25-9}=4$ m/s. Time $=200/4=50$ s."
+  },
+  {
+   "id": "jeem-u3-001",
+   "syl": "u3",
+   "unit": "mechanics/newton",
+   "step": 5,
+   "type": "mc",
+   "q": "Masses $3$ kg and $5$ kg are connected by a light string passing over a smooth, light, fixed pulley. They are released from rest. Take $g=10$ m/s$^2$. The tension in the string is:",
+   "choices": [
+    "30 N",
+    "40 N",
+    "50 N",
+    "37.5 N"
+   ],
+   "answer": 3,
+   "hints": [
+    "Write Newton's second law separately for each mass.",
+    "The acceleration is $a=\\dfrac{(5-3)g}{5+3}$.",
+    "$T=m_1(g+a)$ for the lighter mass."
+   ],
+   "sol": "$a=\\dfrac{(5-3)(10)}{8}=2.5$ m/s$^2$. For the 3 kg mass, $T-30=3(2.5)\\Rightarrow T=37.5$ N."
+  },
+  {
+   "id": "jeem-u3-002",
+   "syl": "u3",
+   "unit": "mechanics/newton",
+   "step": 6,
+   "type": "mc",
+   "q": "A $4$ kg block slides down a rough plane inclined at $30^\\circ$ to the horizontal. The coefficient of kinetic friction is $\\mu=\\dfrac{1}{2\\sqrt3}$. Take $g=10$ m/s$^2$. The acceleration of the block is:",
+   "choices": [
+    "$2.5$ m/s$^2$",
+    "$5$ m/s$^2$",
+    "$1.25$ m/s$^2$",
+    "$3.75$ m/s$^2$"
+   ],
+   "answer": 0,
+   "hints": [
+    "Resolve weight along and perpendicular to the plane.",
+    "$a=g(\\sin\\theta-\\mu\\cos\\theta)$; the mass cancels.",
+    "$\\mu\\cos30^\\circ=\\dfrac{1}{2\\sqrt3}\\cdot\\dfrac{\\sqrt3}{2}$."
+   ],
+   "sol": "$a=g(\\sin30^\\circ-\\mu\\cos30^\\circ)=10\\left(\\tfrac12-\\tfrac14\\right)=2.5$ m/s$^2$."
+  },
+  {
+   "id": "jeem-u3-003",
+   "syl": "u3",
+   "unit": "mechanics/newton",
+   "step": 5,
+   "type": "num",
+   "q": "Two blocks of masses $2$ kg and $3$ kg lie in contact on a rough horizontal floor (coefficient of kinetic friction $0.1$ for both). A horizontal force of $20$ N pushes the $2$ kg block, which in turn pushes the $3$ kg block. Take $g=10$ m/s$^2$. Find the contact force between the blocks. Answer as an integer in newtons.",
+   "answer": {
+    "value": 12,
+    "tol": 0,
+    "unit": "N"
+   },
+   "hints": [
+    "Treat both blocks as one system to find the common acceleration.",
+    "$a=\\dfrac{F-\\mu(m_1+m_2)g}{m_1+m_2}$.",
+    "The contact force is the net push needed on the $3$ kg block: $N=m_2a+\\mu m_2g$."
+   ],
+   "sol": "$a=\\dfrac{20-0.1(5)(10)}{5}=3$ m/s$^2$. For the 3 kg block: $N-0.1(3)(10)=3(3)$, so $N=9+3=12$ N."
+  },
+  {
+   "id": "jeem-u4-001",
+   "syl": "u4",
+   "unit": "mechanics/energy",
+   "step": 5,
+   "type": "mc",
+   "q": "A particle is moved along the $x$-axis by a force $F=(6x^{2}-4x)$ N, where $x$ is in metres. The work done by the force from $x=1$ m to $x=3$ m is:",
+   "choices": [
+    "24 J",
+    "36 J",
+    "48 J",
+    "60 J"
+   ],
+   "answer": 1,
+   "hints": [
+    "Work by a variable force is $\\int F\\,dx$.",
+    "Antiderivative: $2x^3-2x^2$.",
+    "Evaluate between $x=1$ and $x=3$."
+   ],
+   "sol": "$W=\\int_1^3(6x^2-4x)\\,dx=[2x^3-2x^2]_1^3=(54-18)-(2-2)=36$ J."
+  },
+  {
+   "id": "jeem-u4-002",
+   "syl": "u4",
+   "unit": "mechanics/energy",
+   "step": 5,
+   "type": "mc",
+   "q": "A ball dropped from rest from a height of $5$ m on a hard floor rebounds to a height of $3.2$ m. The coefficient of restitution between the ball and the floor is:",
+   "choices": [
+    "0.64",
+    "0.36",
+    "0.8",
+    "0.6"
+   ],
+   "answer": 2,
+   "hints": [
+    "The speed just before and after impact follow from energy conservation.",
+    "$e=v_{after}/v_{before}$, with $v=\\sqrt{2gh}$.",
+    "$e=\\sqrt{h'/h}$."
+   ],
+   "sol": "$v_{before}=\\sqrt{2g(5)}$, $v_{after}=\\sqrt{2g(3.2)}$, so $e=\\sqrt{3.2/5}=\\sqrt{0.64}=0.8$."
+  },
+  {
+   "id": "jeem-u4-003",
+   "syl": "u4",
+   "unit": "mechanics/energy",
+   "step": 6,
+   "type": "num",
+   "q": "A pump driven by a $5$ kW motor with $80\\%$ efficiency lifts water from a well $10$ m deep and delivers it at the surface with negligible speed. Take $g=10$ m/s$^2$. How many kilograms of water are lifted per second? Answer as an integer in kg/s.",
+   "answer": {
+    "value": 40,
+    "tol": 0,
+    "unit": "kg/s"
+   },
+   "hints": [
+    "Useful power output is efficiency times input power.",
+    "Useful power equals the rate of gain of potential energy, $\\dot m\\,g h$.",
+    "$\\dot m=\\dfrac{\\eta P}{gh}$."
+   ],
+   "sol": "Useful power $=0.8\\times5000=4000$ W $=\\dot m g h=\\dot m(10)(10)$. So $\\dot m=40$ kg/s."
+  },
+  {
+   "id": "jeem-u5-001",
+   "syl": "u5",
+   "unit": "mechanics/rigid_body",
+   "step": 5,
+   "type": "mc",
+   "q": "A solid sphere rolls without slipping on a horizontal surface. The fraction of its total kinetic energy that is rotational is:",
+   "choices": [
+    "$\\dfrac27$",
+    "$\\dfrac25$",
+    "$\\dfrac57$",
+    "$\\dfrac13$"
+   ],
+   "answer": 0,
+   "hints": [
+    "For rolling without slipping, $v=\\omega R$.",
+    "$K_{rot}=\\tfrac12 I\\omega^2$ with $I=\\tfrac25 MR^2$.",
+    "Compare $\\tfrac15Mv^2$ with $\\tfrac12Mv^2+\\tfrac15Mv^2$."
+   ],
+   "sol": "$K_{rot}=\\tfrac12\\cdot\\tfrac25MR^2\\omega^2=\\tfrac15Mv^2$, $K_{trans}=\\tfrac12Mv^2$. Fraction $=\\dfrac{1/5}{1/2+1/5}=\\dfrac{2}{7}$."
+  },
+  {
+   "id": "jeem-u5-002",
+   "syl": "u5",
+   "unit": "mechanics/rigid_body",
+   "step": 5,
+   "type": "num",
+   "q": "A uniform disc of mass $4$ kg and radius $0.5$ m is free to rotate about its central axis. A constant torque of $2$ N m is applied starting from rest. What is its angular velocity after $5$ s? Answer as an integer in rad/s.",
+   "answer": {
+    "value": 20,
+    "tol": 0,
+    "unit": "rad/s"
+   },
+   "hints": [
+    "Find the moment of inertia of a disc about its axis.",
+    "$I=\\tfrac12MR^2$ and $\\alpha=\\tau/I$.",
+    "$\\omega=\\alpha t$ from rest."
+   ],
+   "sol": "$I=\\tfrac12(4)(0.5)^2=0.5$ kg m$^2$. $\\alpha=\\tau/I=4$ rad/s$^2$. $\\omega=\\alpha t=20$ rad/s."
+  },
+  {
+   "id": "jeem-u5-003",
+   "syl": "u5",
+   "unit": "mechanics/rigid_body",
+   "step": 7,
+   "type": "num",
+   "q": "A uniform thin rod of length $1.2$ m is hinged at one end and released from rest in a horizontal position. Take $g=10$ m/s$^2$. Find the speed of the free end when the rod passes through the vertical position. Answer as an integer in m/s.",
+   "answer": {
+    "value": 6,
+    "tol": 0,
+    "unit": "m/s"
+   },
+   "hints": [
+    "Use energy conservation about the hinge.",
+    "Centre of mass falls by $L/2$; $I=\\tfrac13ML^2$.",
+    "$MgL/2=\\tfrac12\\cdot\\tfrac13ML^2\\omega^2$, then $v=\\omega L$."
+   ],
+   "sol": "$Mg\\tfrac L2=\\tfrac12\\left(\\tfrac13ML^2\\right)\\omega^2\\Rightarrow\\omega^2=\\dfrac{3g}{L}$. The tip speed is $v=\\omega L=\\sqrt{3gL}=\\sqrt{3(10)(1.2)}=6$ m/s."
+  },
+  {
+   "id": "jeem-u6-001",
+   "syl": "u6",
+   "unit": "mechanics/gravitation",
+   "step": 5,
+   "type": "mc",
+   "q": "A planet has $8$ times the mass of the Earth and $2$ times its radius. If the escape speed from Earth is $11.2$ km/s, the escape speed from this planet is:",
+   "choices": [
+    "11.2 km/s",
+    "22.4 km/s",
+    "44.8 km/s",
+    "5.6 km/s"
+   ],
+   "answer": 1,
+   "hints": [
+    "Escape speed is $v_e=\\sqrt{2GM/R}$.",
+    "Form the ratio $v_p/v_E=\\sqrt{(M_p/M_E)(R_E/R_p)}$.",
+    "$\\sqrt{8/2}$."
+   ],
+   "sol": "$v_p/v_E=\\sqrt{\\dfrac{8}{2}}=2$, so $v_p=22.4$ km/s."
+  },
+  {
+   "id": "jeem-u6-002",
+   "syl": "u6",
+   "unit": "mechanics/gravitation",
+   "step": 5,
+   "type": "num",
+   "q": "Satellite A orbits a planet with a period of $3$ hours. Satellite B moves in a circular orbit of radius $4$ times that of A around the same planet. Find the period of B. Answer as an integer in hours.",
+   "answer": {
+    "value": 24,
+    "tol": 0,
+    "unit": "h"
+   },
+   "hints": [
+    "Use Kepler's third law.",
+    "$T^2\\propto r^3$, so $T\\propto r^{3/2}$.",
+    "$T_B=3\\times4^{3/2}$."
+   ],
+   "sol": "$T\\propto r^{3/2}$, so $T_B=T_A(4)^{3/2}=3\\times8=24$ hours."
+  },
+  {
+   "id": "jeem-u6-003",
+   "syl": "u6",
+   "unit": "mechanics/gravitation",
+   "step": 7,
+   "type": "mc",
+   "q": "Take Earth's radius $R=6400$ km and $g=10$ m/s$^2$ at the surface. The work needed to raise a $2$ kg body slowly from the surface to a height equal to $R$ above the surface is:",
+   "choices": [
+    "128 MJ",
+    "32 MJ",
+    "64 MJ",
+    "85 MJ"
+   ],
+   "answer": 2,
+   "hints": [
+    "The gravitational field is not uniform over such a large height.",
+    "$\\Delta U=GMm\\left(\\dfrac1R-\\dfrac1{2R}\\right)$ and $GM=gR^2$.",
+    "$\\Delta U=\\dfrac{mgR}{2}$."
+   ],
+   "sol": "$\\Delta U=GMm\\left(\\dfrac1R-\\dfrac1{2R}\\right)=\\dfrac{GMm}{2R}=\\dfrac{mgR}{2}=\\dfrac{2(10)(6.4\\times10^6)}{2}=6.4\\times10^7$ J $=64$ MJ."
+  },
+  {
+   "id": "jeem-u7-001",
+   "syl": "u7",
+   "unit": "mechanics/fluids",
+   "step": 6,
+   "type": "mc",
+   "q": "A soap bubble of radius $R$ (two surfaces, surface tension $T$) is blown up slowly, isothermally, to radius $2R$ ignoring the work against the atmosphere and the change in the enclosed air. The extra surface energy stored is:",
+   "choices": [
+    "$24\\pi R^{2}T$",
+    "$12\\pi R^{2}T$",
+    "$8\\pi R^{2}T$",
+    "$6\\pi R^{2}T$"
+   ],
+   "answer": 0,
+   "hints": [
+    "A bubble has two free surfaces.",
+    "$\\Delta E=T\\,\\Delta A$ with $A=2\\times4\\pi r^2$.",
+    "$\\Delta A=8\\pi(4R^2-R^2)$."
+   ],
+   "sol": "$\\Delta A=2\\times4\\pi\\left[(2R)^2-R^2\\right]=24\\pi R^2$, so $\\Delta E=24\\pi R^2T$."
+  },
+  {
+   "id": "jeem-u7-002",
+   "syl": "u7",
+   "unit": "mechanics/fluids",
+   "step": 5,
+   "type": "mc",
+   "q": "A wire of length $L$ and radius $r$ stretches by $x$ under a load $F$. A second wire of the same material with length $2L$ and radius $2r$ carries the same load $F$. Its extension is:",
+   "choices": [
+    "$x$",
+    "$2x$",
+    "$x/4$",
+    "$x/2$"
+   ],
+   "answer": 3,
+   "hints": [
+    "Use $\\Delta\\ell=\\dfrac{FL}{AY}$.",
+    "Length doubles and area quadruples.",
+    "Ratio of extensions $=\\dfrac{2}{4}$."
+   ],
+   "sol": "$\\Delta\\ell=\\dfrac{FL}{\\pi r^2Y}$. Doubling $L$ doubles it, doubling $r$ divides it by $4$, so the new extension is $x/2$."
+  },
+  {
+   "id": "jeem-u7-003",
+   "syl": "u7",
+   "unit": "mechanics/fluids",
+   "step": 6,
+   "type": "num",
+   "q": "Water (density $1000$ kg/m$^3$) flows steadily through a horizontal pipe whose diameter narrows from $10$ cm to $5$ cm. The speed in the wide section is $2$ m/s. Find the pressure drop from the wide to the narrow section. Answer as an integer in kPa.",
+   "answer": {
+    "value": 30,
+    "tol": 0,
+    "unit": "kPa"
+   },
+   "hints": [
+    "Use the continuity equation to find the speed in the narrow part.",
+    "Area is proportional to diameter squared, so the area ratio is $4$.",
+    "Bernoulli: $p_1-p_2=\\tfrac12\\rho(v_2^2-v_1^2)$."
+   ],
+   "sol": "$v_2=4v_1=8$ m/s. $p_1-p_2=\\tfrac12(1000)(64-4)=30000$ Pa $=30$ kPa."
+  },
+  {
+   "id": "jeem-u8-001",
+   "syl": "u8",
+   "unit": "thermal/first_law",
+   "step": 5,
+   "type": "mc",
+   "q": "A diatomic ideal gas (rigid molecules) is heated at constant pressure. The fraction of the heat supplied that is converted into work done by the gas is:",
+   "choices": [
+    "$\\dfrac25$",
+    "$\\dfrac27$",
+    "$\\dfrac57$",
+    "$\\dfrac35$"
+   ],
+   "answer": 1,
+   "hints": [
+    "Constant pressure: $Q=nC_p\\Delta T$ and $W=nR\\Delta T$.",
+    "For a diatomic gas $C_p=\\tfrac72R$.",
+    "Fraction $=R/C_p$."
+   ],
+   "sol": "$W/Q=\\dfrac{nR\\Delta T}{nC_p\\Delta T}=\\dfrac{R}{7R/2}=\\dfrac27$."
+  },
+  {
+   "id": "jeem-u8-002",
+   "syl": "u8",
+   "unit": "thermal/heat_engines",
+   "step": 7,
+   "type": "num",
+   "q": "A Carnot engine has an efficiency of $40\\%$. When the temperature of its sink is lowered by $50$ K (source unchanged), the efficiency becomes $50\\%$. Find the source temperature. Answer as an integer in kelvin.",
+   "answer": {
+    "value": 500,
+    "tol": 0,
+    "unit": "K"
+   },
+   "hints": [
+    "Efficiency of a Carnot engine is $1-T_2/T_1$.",
+    "Write the two efficiency equations and subtract.",
+    "$\\dfrac{50}{T_1}=0.5-0.4$."
+   ],
+   "sol": "$1-T_2/T_1=0.4$ and $1-(T_2-50)/T_1=0.5$. Subtracting: $50/T_1=0.1$, so $T_1=500$ K."
+  },
+  {
+   "id": "jeem-u8-003",
+   "syl": "u8",
+   "unit": "thermal/heat_transfer",
+   "step": 5,
+   "type": "num",
+   "q": "$20$ g of ice at $0^\\circ$C is dropped into $100$ g of water at $40^\\circ$C in an insulated container. Specific heat of water is $1$ cal g$^{-1}\\,{}^\\circ$C$^{-1}$ and latent heat of fusion of ice is $80$ cal g$^{-1}$. Find the final equilibrium temperature. Answer as an integer in $^\\circ$C.",
+   "answer": {
+    "value": 20,
+    "tol": 0,
+    "unit": "°C"
+   },
+   "hints": [
+    "Check that there is enough heat to melt all the ice.",
+    "Heat to melt: $20\\times80$; heat available from water cooling to $0^\\circ$C: $100\\times40$.",
+    "Then $120\\,T=100\\times40-20\\times80$."
+   ],
+   "sol": "Melting the ice needs $1600$ cal; cooling the water to $0^\\circ$C gives $4000$ cal, so all ice melts. Then $100(40-T)=1600+20T$, giving $2400=120T$ and $T=20^\\circ$C."
+  },
+  {
+   "id": "jeem-u9-001",
+   "syl": "u9",
+   "unit": "thermal/kinetic_theory",
+   "step": 6,
+   "type": "mc",
+   "q": "One mole of a monatomic ideal gas is mixed with one mole of a rigid diatomic ideal gas. The ratio $\\gamma=C_p/C_v$ for the mixture is:",
+   "choices": [
+    "$\\dfrac32$",
+    "$\\dfrac53$",
+    "$\\dfrac75$",
+    "$\\dfrac43$"
+   ],
+   "answer": 0,
+   "hints": [
+    "Find $C_v$ of the mixture as the mole-weighted average.",
+    "$C_v=\\dfrac{\\tfrac32R+\\tfrac52R}{2}$.",
+    "Then $C_p=C_v+R$."
+   ],
+   "sol": "$C_v=\\dfrac{1.5R+2.5R}{2}=2R$, $C_p=3R$. Hence $\\gamma=3/2$."
+  },
+  {
+   "id": "jeem-u9-002",
+   "syl": "u9",
+   "unit": "thermal/kinetic_theory",
+   "step": 7,
+   "type": "mc",
+   "q": "An ideal gas in a rigid sealed container is heated until its absolute temperature doubles. The mean collision frequency of a molecule with other molecules changes by a factor of:",
+   "choices": [
+    "2",
+    "1 (unchanged)",
+    "$\\sqrt2$",
+    "$2\\sqrt2$"
+   ],
+   "answer": 2,
+   "hints": [
+    "Collision frequency $=\\bar v/\\lambda$.",
+    "At fixed volume and number of molecules, $\\lambda=\\dfrac{1}{\\sqrt2\\pi d^2 n}$ does not change.",
+    "$\\bar v\\propto\\sqrt T$."
+   ],
+   "sol": "$\\lambda\\propto 1/n$ is unchanged because $n=N/V$ is fixed. The mean speed scales as $\\sqrt T$, so the collision frequency $\\bar v/\\lambda$ increases by $\\sqrt2$."
+  },
+  {
+   "id": "jeem-u9-003",
+   "syl": "u9",
+   "unit": "thermal/kinetic_theory",
+   "step": 5,
+   "type": "num",
+   "q": "The rms speed of hydrogen molecules ($M=2$ g/mol) at $50$ K equals the rms speed of oxygen molecules ($M=32$ g/mol) at temperature $T$. Find $T$. Answer as an integer in kelvin.",
+   "answer": {
+    "value": 800,
+    "tol": 0,
+    "unit": "K"
+   },
+   "hints": [
+    "$v_{rms}=\\sqrt{3RT/M}$.",
+    "Equal speeds mean $T/M$ is the same for both gases.",
+    "$T_{O}=50\\times32/2$."
+   ],
+   "sol": "$v_{rms}^2=3RT/M$, so $T_O/32=50/2$, giving $T_O=800$ K."
+  },
+  {
+   "id": "jeem-u10-001",
+   "syl": "u10",
+   "unit": "waves/shm",
+   "step": 5,
+   "type": "mc",
+   "q": "A simple pendulum has period $T$ in a stationary lift. The lift now accelerates upward at $g/3$. The new period is:",
+   "choices": [
+    "$\\dfrac{2}{\\sqrt3}T$",
+    "$\\dfrac{3}{4}T$",
+    "$\\dfrac{T}{\\sqrt3}$",
+    "$\\dfrac{\\sqrt3}{2}T$"
+   ],
+   "answer": 3,
+   "hints": [
+    "Effective gravity changes in an accelerating frame.",
+    "Upward acceleration $a$ gives $g_{eff}=g+a$.",
+    "$T'=2\\pi\\sqrt{L/g_{eff}}$ with $g_{eff}=\\tfrac43g$."
+   ],
+   "sol": "$g_{eff}=g+g/3=\\tfrac43g$. $T'/T=\\sqrt{g/g_{eff}}=\\sqrt{3/4}=\\dfrac{\\sqrt3}{2}$."
+  },
+  {
+   "id": "jeem-u10-002",
+   "syl": "u10",
+   "unit": "waves/wave_motion",
+   "step": 5,
+   "type": "num",
+   "q": "A stretched string of length $0.6$ m is fixed at both ends and waves travel on it at $120$ m/s. Find the frequency of its third harmonic. Answer as an integer in hertz.",
+   "answer": {
+    "value": 300,
+    "tol": 0,
+    "unit": "Hz"
+   },
+   "hints": [
+    "For a string fixed at both ends, $f_n=nv/2L$.",
+    "The fundamental is $v/2L$.",
+    "Third harmonic $=3\\times$ fundamental."
+   ],
+   "sol": "Fundamental $f_1=\\dfrac{v}{2L}=\\dfrac{120}{1.2}=100$ Hz. Third harmonic $f_3=3f_1=300$ Hz."
+  },
+  {
+   "id": "jeem-u10-003",
+   "syl": "u10",
+   "unit": "waves/sound",
+   "step": 6,
+   "type": "mc",
+   "q": "A source emits sound of frequency $640$ Hz while moving at $20$ m/s directly toward a stationary observer. The speed of sound is $340$ m/s. The observer hears a frequency of:",
+   "choices": [
+    "604 Hz",
+    "680 Hz",
+    "640 Hz",
+    "1280 Hz"
+   ],
+   "answer": 1,
+   "hints": [
+    "Doppler shift for a moving source: the wavelength in front is compressed.",
+    "$f'=f\\dfrac{v}{v-v_s}$.",
+    "$640\\times\\dfrac{340}{320}$."
+   ],
+   "sol": "$f'=f\\dfrac{v}{v-v_s}=640\\times\\dfrac{340}{320}=680$ Hz."
+  },
+  {
+   "id": "jeem-u11-001",
+   "syl": "u11",
+   "unit": "em/electrostatics",
+   "step": 5,
+   "type": "mc",
+   "q": "Two point charges $+q$ and $+4q$ are fixed a distance $d$ apart. The point on the line joining them where the net electric field is zero lies at a distance from the charge $+q$ of:",
+   "choices": [
+    "$d/3$",
+    "$d/5$",
+    "$d/2$",
+    "$2d/3$"
+   ],
+   "answer": 0,
+   "hints": [
+    "Between like charges the fields oppose; the null point is nearer the smaller charge.",
+    "$\\dfrac{kq}{x^2}=\\dfrac{4kq}{(d-x)^2}$.",
+    "Take the square root: $d-x=2x$."
+   ],
+   "sol": "$\\dfrac{q}{x^2}=\\dfrac{4q}{(d-x)^2}\\Rightarrow d-x=2x\\Rightarrow x=\\dfrac d3$."
+  },
+  {
+   "id": "jeem-u11-002",
+   "syl": "u11",
+   "unit": "em/capacitors",
+   "step": 6,
+   "type": "mc",
+   "q": "A parallel plate capacitor is charged to potential $V$ and then disconnected from the battery. Its energy is $U_0$. A dielectric slab of constant $K=4$ now completely fills the space between the plates. The energy stored becomes:",
+   "choices": [
+    "$4U_0$",
+    "$U_0/2$",
+    "$U_0/4$",
+    "$U_0$"
+   ],
+   "answer": 2,
+   "hints": [
+    "After disconnection the charge is fixed.",
+    "$C\\to KC$ and $U=Q^2/2C$.",
+    "$U=U_0/K$."
+   ],
+   "sol": "Charge $Q$ is constant and $C'=4C$. $U'=\\dfrac{Q^2}{2C'}=\\dfrac{U_0}{4}$."
+  },
+  {
+   "id": "jeem-u11-003",
+   "syl": "u11",
+   "unit": "em/capacitors",
+   "step": 5,
+   "type": "num",
+   "q": "A $6\\,\\mu$F and a $3\\,\\mu$F capacitor are connected in series across a $90$ V battery. Find the charge on each capacitor. Answer as an integer in $\\mu$C.",
+   "answer": {
+    "value": 180,
+    "tol": 0,
+    "unit": "μC"
+   },
+   "hints": [
+    "Capacitors in series carry the same charge.",
+    "Find the equivalent capacitance first.",
+    "$Q=C_{eq}V$ with $C_{eq}=\\dfrac{6\\times3}{6+3}\\,\\mu$F."
+   ],
+   "sol": "$C_{eq}=\\dfrac{6\\cdot3}{9}=2\\,\\mu$F. $Q=C_{eq}V=2\\times90=180\\,\\mu$C on each."
+  },
+  {
+   "id": "jeem-u12-001",
+   "syl": "u12",
+   "unit": "em/dc_circuits",
+   "step": 5,
+   "type": "mc",
+   "q": "A battery of emf $12$ V and internal resistance $2\\,\\Omega$ is connected to a variable external resistor. The maximum power that can be delivered to the external resistor is:",
+   "choices": [
+    "18 W",
+    "36 W",
+    "72 W",
+    "9 W"
+   ],
+   "answer": 0,
+   "hints": [
+    "Maximum power transfer occurs when $R=r$.",
+    "At that point $I=E/2r$.",
+    "$P_{max}=E^2/4r$."
+   ],
+   "sol": "$R=r=2\\,\\Omega$, $I=12/4=3$ A, $P=I^2R=9\\times2=18$ W."
+  },
+  {
+   "id": "jeem-u12-002",
+   "syl": "u12",
+   "unit": "em/dc_circuits",
+   "step": 6,
+   "type": "num",
+   "q": "A $24$ V battery of negligible internal resistance is connected in series with a $3\\,\\Omega$ resistor, and this series combination feeds a parallel pair of resistors of $4\\,\\Omega$ and $12\\,\\Omega$. Find the current through the $4\\,\\Omega$ resistor. Answer as an integer in amperes.",
+   "answer": {
+    "value": 3,
+    "tol": 0,
+    "unit": "A"
+   },
+   "hints": [
+    "Find the parallel equivalent first.",
+    "$R_{par}=\\dfrac{4\\times12}{16}=3\\,\\Omega$, so total resistance is $6\\,\\Omega$.",
+    "Current divides inversely to resistance: the $4\\,\\Omega$ branch takes $12/16$ of the total."
+   ],
+   "sol": "$R_{par}=3\\,\\Omega$, $R_{tot}=6\\,\\Omega$, $I=24/6=4$ A. The $4\\,\\Omega$ branch gets $\\dfrac{12}{12+4}\\times4=3$ A."
+  },
+  {
+   "id": "jeem-u12-003",
+   "syl": "u12",
+   "unit": "em/dc_circuits",
+   "step": 6,
+   "type": "mc",
+   "q": "Bulb A is rated $60$ W, $120$ V and bulb B is rated $120$ W, $120$ V. They are connected in series across a $120$ V supply. Assuming constant resistances, the total power drawn from the supply is:",
+   "choices": [
+    "180 W",
+    "40 W",
+    "90 W",
+    "20 W"
+   ],
+   "answer": 1,
+   "hints": [
+    "Find each bulb's resistance from its rating, $R=V^2/P$.",
+    "$R_A=240\\,\\Omega$, $R_B=120\\,\\Omega$.",
+    "$P=V^2/(R_A+R_B)$."
+   ],
+   "sol": "$R_A=\\dfrac{120^2}{60}=240\\,\\Omega$, $R_B=\\dfrac{120^2}{120}=120\\,\\Omega$. In series, $P=\\dfrac{120^2}{360}=40$ W."
+  },
+  {
+   "id": "jeem-u13-001",
+   "syl": "u13",
+   "unit": "em/lorentz",
+   "step": 7,
+   "type": "mc",
+   "q": "A proton and an alpha particle ($m_\\alpha=4m_p$, $q_\\alpha=2q_p$) enter the same uniform magnetic field perpendicular to it, with the same kinetic energy. The ratio of the radii of their circular paths, $r_p:r_\\alpha$, is:",
+   "choices": [
+    "1 : 2",
+    "2 : 1",
+    "1 : 1",
+    "1 : $\\sqrt2$"
+   ],
+   "answer": 2,
+   "hints": [
+    "For circular motion $r=\\dfrac{mv}{qB}=\\dfrac{\\sqrt{2mK}}{qB}$.",
+    "At equal $K$, $r\\propto\\sqrt m/q$.",
+    "Compute $\\dfrac{\\sqrt{1}/1}{\\sqrt{4}/2}$."
+   ],
+   "sol": "$r=\\dfrac{\\sqrt{2mK}}{qB}\\propto\\dfrac{\\sqrt m}{q}$. For the proton: $1/1=1$; for the alpha: $\\sqrt4/2=1$. Ratio $=1:1$."
+  },
+  {
+   "id": "jeem-u13-002",
+   "syl": "u13",
+   "unit": "em/magnetic_field",
+   "step": 5,
+   "type": "num",
+   "q": "A straight conductor $0.5$ m long carries a current of $4$ A in a uniform magnetic field of $0.5$ T. The conductor makes an angle of $30^\\circ$ with the field. Find the magnitude of the force on it. Answer as an integer in millinewtons (mN).",
+   "answer": {
+    "value": 500,
+    "tol": 0,
+    "unit": "mN"
+   },
+   "hints": [
+    "Force on a current element is $I\\,\\vec L\\times\\vec B$.",
+    "$F=ILB\\sin\\theta$ with $\\theta$ the angle between wire and field.",
+    "$4\\times0.5\\times0.5\\times\\sin30^\\circ$ in newtons, then convert."
+   ],
+   "sol": "$F=ILB\\sin\\theta=4(0.5)(0.5)(0.5)=0.5$ N $=500$ mN."
+  },
+  {
+   "id": "jeem-u13-003",
+   "syl": "u13",
+   "unit": "em/lorentz",
+   "step": 5,
+   "type": "num",
+   "q": "In a velocity selector, a uniform electric field of $2\\times10^{4}$ V/m is applied perpendicular to a uniform magnetic field of $0.1$ T, and both are perpendicular to the beam. Charged particles pass through undeflected only if their speed has a particular value. Find this speed. Answer as an integer in km/s.",
+   "answer": {
+    "value": 200,
+    "tol": 0,
+    "unit": "km/s"
+   },
+   "hints": [
+    "Undeflected means the electric and magnetic forces balance.",
+    "$qE=qvB$.",
+    "$v=E/B$; convert to km/s."
+   ],
+   "sol": "$qE=qvB\\Rightarrow v=\\dfrac EB=\\dfrac{2\\times10^4}{0.1}=2\\times10^5$ m/s $=200$ km/s."
+  },
+  {
+   "id": "jeem-u14-001",
+   "syl": "u14",
+   "unit": "em/induction",
+   "step": 6,
+   "type": "mc",
+   "q": "A metal rod of length $0.2$ m rotates at $50$ rad/s about an axis through one end. The axis is parallel to a uniform magnetic field of $0.4$ T, so the rod turns in a plane perpendicular to the field. The emf induced between its ends is:",
+   "choices": [
+    "0.4 V",
+    "0.8 V",
+    "0.2 V",
+    "0.04 V"
+   ],
+   "answer": 0,
+   "hints": [
+    "Every element of the rod moves at a speed proportional to its distance from the pivot.",
+    "The average speed is $\\omega l/2$.",
+    "$\\varepsilon=\\tfrac12B\\omega l^2$."
+   ],
+   "sol": "$\\varepsilon=\\tfrac12B\\omega l^2=\\tfrac12(0.4)(50)(0.2)^2=0.4$ V."
+  },
+  {
+   "id": "jeem-u14-002",
+   "syl": "u14",
+   "unit": "em/ac_circuits",
+   "step": 6,
+   "type": "num",
+   "q": "A series LCR circuit has $R=30\\,\\Omega$, inductive reactance $80\\,\\Omega$ and capacitive reactance $40\\,\\Omega$ at the supply frequency. The source is $100$ V rms. Find the average power dissipated. Answer as an integer in watts.",
+   "answer": {
+    "value": 120,
+    "tol": 0,
+    "unit": "W"
+   },
+   "hints": [
+    "Compute the impedance from $R$ and the net reactance.",
+    "$Z=\\sqrt{R^2+(X_L-X_C)^2}=50\\,\\Omega$.",
+    "$P=I_{rms}^2R$."
+   ],
+   "sol": "$Z=\\sqrt{30^2+40^2}=50\\,\\Omega$. $I_{rms}=100/50=2$ A. $P=I^2R=4\\times30=120$ W."
+  },
+  {
+   "id": "jeem-u14-003",
+   "syl": "u14",
+   "unit": "em/ac_circuits",
+   "step": 6,
+   "type": "mc",
+   "q": "A step-down transformer draws $1000$ W from the mains and is $90\\%$ efficient. Its secondary supplies a load at $30$ V. The current in the secondary is:",
+   "choices": [
+    "33.3 A",
+    "27 A",
+    "3 A",
+    "30 A"
+   ],
+   "answer": 3,
+   "hints": [
+    "Output power is efficiency times input power.",
+    "$P_{out}=0.9\\times1000=900$ W.",
+    "$I_s=P_{out}/V_s$."
+   ],
+   "sol": "$P_{out}=0.9\\times1000=900$ W. $I_s=P_{out}/V_s=900/30=30$ A."
+  },
+  {
+   "id": "jeem-u15-001",
+   "syl": "u15",
+   "unit": "em/em_waves",
+   "step": 5,
+   "type": "mc",
+   "q": "The electric field amplitude of a plane electromagnetic wave in vacuum is $30$ V/m. Take $c=3\\times10^8$ m/s. The amplitude of the magnetic field is:",
+   "choices": [
+    "$1\\times10^{-7}$ T",
+    "$1\\times10^{-8}$ T",
+    "$9\\times10^{9}$ T",
+    "$1\\times10^{-6}$ T"
+   ],
+   "answer": 0,
+   "hints": [
+    "In vacuum the field amplitudes are related by $E_0=cB_0$.",
+    "$B_0=E_0/c$.",
+    "$30/(3\\times10^8)$."
+   ],
+   "sol": "$B_0=\\dfrac{E_0}{c}=\\dfrac{30}{3\\times10^8}=1\\times10^{-7}$ T."
+  },
+  {
+   "id": "jeem-u15-002",
+   "syl": "u15",
+   "unit": "em/em_waves",
+   "step": 6,
+   "type": "mc",
+   "q": "Light of intensity $600$ W/m$^2$ falls normally on a perfectly reflecting surface. Take $c=3\\times10^8$ m/s. The radiation pressure on the surface is:",
+   "choices": [
+    "$2\\times10^{-6}$ Pa",
+    "$8\\times10^{-6}$ Pa",
+    "$4\\times10^{-6}$ Pa",
+    "$1.8\\times10^{11}$ Pa"
+   ],
+   "answer": 2,
+   "hints": [
+    "Momentum change per photon on reflection is twice that on absorption.",
+    "Absorbing surface: $p=I/c$.",
+    "Perfect reflector: $p=2I/c$."
+   ],
+   "sol": "For total reflection the momentum transferred is doubled: $p=\\dfrac{2I}{c}=\\dfrac{2(600)}{3\\times10^8}=4\\times10^{-6}$ Pa."
+  },
+  {
+   "id": "jeem-u15-003",
+   "syl": "u15",
+   "unit": "em/em_waves",
+   "step": 5,
+   "type": "num",
+   "q": "An electromagnetic wave of frequency $6\\times10^{8}$ Hz travels in a non-magnetic medium of relative permittivity $4$ (relative permeability $1$). Take $c=3\\times10^8$ m/s. Find its wavelength in the medium. Answer as an integer in centimetres.",
+   "answer": {
+    "value": 25,
+    "tol": 0,
+    "unit": "cm"
+   },
+   "hints": [
+    "Speed in a medium is $v=1/\\sqrt{\\mu\\varepsilon}=c/\\sqrt{\\varepsilon_r\\mu_r}$.",
+    "$v=1.5\\times10^8$ m/s.",
+    "$\\lambda=v/f$."
+   ],
+   "sol": "$v=c/\\sqrt{4}=1.5\\times10^8$ m/s. $\\lambda=v/f=\\dfrac{1.5\\times10^8}{6\\times10^8}=0.25$ m $=25$ cm."
+  },
+  {
+   "id": "jeem-u16-001",
+   "syl": "u16",
+   "unit": "optics/interference",
+   "step": 5,
+   "type": "mc",
+   "q": "In a Young's double slit experiment the fringe width in air is $0.6$ mm. The whole apparatus is then immersed in a liquid of refractive index $1.5$. The fringe width becomes:",
+   "choices": [
+    "0.9 mm",
+    "0.6 mm",
+    "0.3 mm",
+    "0.4 mm"
+   ],
+   "answer": 3,
+   "hints": [
+    "Immersion changes the wavelength of light but not the slit separation or screen distance.",
+    "$\\lambda'=\\lambda/n$.",
+    "$\\beta\\propto\\lambda$."
+   ],
+   "sol": "$\\beta=\\lambda D/d$ and $\\lambda'=\\lambda/1.5$, so $\\beta'=0.6/1.5=0.4$ mm."
+  },
+  {
+   "id": "jeem-u16-002",
+   "syl": "u16",
+   "unit": "optics/lenses",
+   "step": 6,
+   "type": "mc",
+   "q": "A thin equiconvex glass lens ($n=1.5$) has focal length $20$ cm in air. When completely immersed in water ($n=4/3$) its focal length becomes:",
+   "choices": [
+    "80 cm",
+    "40 cm",
+    "20 cm",
+    "160 cm"
+   ],
+   "answer": 0,
+   "hints": [
+    "Use the lens maker's formula with the relative refractive index.",
+    "$\\dfrac1f=\\left(\\dfrac{n_g}{n_m}-1\\right)\\left(\\dfrac1{R_1}-\\dfrac1{R_2}\\right)$.",
+    "Take the ratio $f_w/f_a=\\dfrac{n_g-1}{n_g/n_w-1}$."
+   ],
+   "sol": "$\\dfrac{f_w}{f_a}=\\dfrac{1.5-1}{1.5/(4/3)-1}=\\dfrac{0.5}{0.125}=4$. So $f_w=80$ cm."
+  },
+  {
+   "id": "jeem-u16-003",
+   "syl": "u16",
+   "unit": "optics/refraction",
+   "step": 6,
+   "type": "num",
+   "q": "A prism has apex angle $60^\\circ$ and refractive index $\\sqrt2$. Find the angle of minimum deviation. Answer as an integer in degrees.",
+   "answer": {
+    "value": 30,
+    "tol": 0,
+    "unit": "°"
+   },
+   "hints": [
+    "At minimum deviation the ray passes symmetrically.",
+    "$n=\\dfrac{\\sin\\frac{A+\\delta_m}{2}}{\\sin\\frac A2}$.",
+    "$\\sin\\frac{A+\\delta_m}{2}=\\sqrt2\\times\\tfrac12$."
+   ],
+   "sol": "$\\sin\\dfrac{A+\\delta_m}{2}=\\sqrt2\\sin30^\\circ=\\dfrac1{\\sqrt2}$, so $\\dfrac{60+\\delta_m}{2}=45^\\circ$ and $\\delta_m=30^\\circ$."
+  },
+  {
+   "id": "jeem-u17-001",
+   "syl": "u17",
+   "unit": "modern/photon",
+   "step": 6,
+   "type": "mc",
+   "q": "Light of photon energy $4$ eV falls on a metal of work function $2$ eV and the stopping potential is measured. If the photon energy is doubled to $8$ eV, the stopping potential becomes:",
+   "choices": [
+    "4 V",
+    "6 V",
+    "8 V",
+    "3 V"
+   ],
+   "answer": 1,
+   "hints": [
+    "Einstein: $eV_0=h\\nu-\\phi$.",
+    "First case: $eV_0=4-2$. Do not simply double $V_0$.",
+    "Second case: $eV_0=8-2$."
+   ],
+   "sol": "$eV_0=E_{photon}-\\phi$. Initially $V_0=2$ V; with $8$ eV photons $eV_0=8-2=6$ eV, so $V_0=6$ V."
+  },
+  {
+   "id": "jeem-u17-002",
+   "syl": "u17",
+   "unit": "modern/matter_waves",
+   "step": 7,
+   "type": "mc",
+   "q": "A proton and an alpha particle are accelerated from rest through the same potential difference. The ratio of their de Broglie wavelengths, $\\lambda_p/\\lambda_\\alpha$, is:",
+   "choices": [
+    "$\\sqrt2$",
+    "$2$",
+    "$2\\sqrt2$",
+    "$4$"
+   ],
+   "answer": 2,
+   "hints": [
+    "$\\lambda=h/p=h/\\sqrt{2mqV}$.",
+    "At equal $V$, $\\lambda\\propto1/\\sqrt{mq}$.",
+    "$m_\\alpha q_\\alpha=(4m_p)(2q_p)=8m_pq_p$."
+   ],
+   "sol": "$\\lambda\\propto\\dfrac1{\\sqrt{mq}}$, so $\\dfrac{\\lambda_p}{\\lambda_\\alpha}=\\sqrt{\\dfrac{m_\\alpha q_\\alpha}{m_pq_p}}=\\sqrt8=2\\sqrt2$."
+  },
+  {
+   "id": "jeem-u17-003",
+   "syl": "u17",
+   "unit": "modern/photon",
+   "step": 5,
+   "type": "num",
+   "q": "A laser emits monochromatic light of wavelength $620$ nm with power $3.2$ mW. Use $hc=1240$ eV nm and $e=1.6\\times10^{-19}$ C. How many photons are emitted per second? Answer as an integer in units of $10^{15}$ photons/s.",
+   "answer": {
+    "value": 10,
+    "tol": 0,
+    "unit": "×10^15 /s"
+   },
+   "hints": [
+    "Find one photon's energy in joules.",
+    "$E=\\dfrac{1240}{620}=2$ eV $=3.2\\times10^{-19}$ J.",
+    "$N=P/E$."
+   ],
+   "sol": "$E=\\dfrac{1240}{620}=2$ eV $=3.2\\times10^{-19}$ J. Rate $=\\dfrac{3.2\\times10^{-3}}{3.2\\times10^{-19}}=1\\times10^{16}$ s$^{-1}=10\\times10^{15}$ s$^{-1}$."
+  },
+  {
+   "id": "jeem-u18-001",
+   "syl": "u18",
+   "unit": "modern/atoms",
+   "step": 6,
+   "type": "mc",
+   "q": "In the hydrogen spectrum, the ratio of the longest wavelength of the Lyman series to the shortest wavelength of the Balmer series is:",
+   "choices": [
+    "$1:3$",
+    "$3:1$",
+    "$1:9$",
+    "$27:5$"
+   ],
+   "answer": 0,
+   "hints": [
+    "Use $\\dfrac1\\lambda=R\\left(\\dfrac1{n_1^2}-\\dfrac1{n_2^2}\\right)$.",
+    "Lyman longest: $n_1=1$, $n_2=2$. Balmer shortest: $n_1=2$, $n_2=\\infty$.",
+    "$\\lambda_L=\\dfrac{4}{3R}$, $\\lambda_B=\\dfrac4R$."
+   ],
+   "sol": "Lyman longest: $1/\\lambda=R(1-\\tfrac14)=\\tfrac{3R}{4}$, so $\\lambda=\\tfrac{4}{3R}$. Balmer shortest: $1/\\lambda=R/4$, so $\\lambda=4/R$. Ratio $=\\tfrac13$."
+  },
+  {
+   "id": "jeem-u18-002",
+   "syl": "u18",
+   "unit": "modern/nuclear",
+   "step": 5,
+   "type": "mc",
+   "q": "A nucleus of mass number $238$ and atomic number $92$ emits $2$ alpha particles and $2$ beta-minus particles in succession. The resulting nucleus has (mass number, atomic number):",
+   "choices": [
+    "(230, 88)",
+    "(234, 92)",
+    "(230, 90)",
+    "(230, 94)"
+   ],
+   "answer": 2,
+   "hints": [
+    "Each alpha reduces $A$ by 4 and $Z$ by 2.",
+    "Each beta-minus leaves $A$ unchanged and increases $Z$ by 1.",
+    "$A=238-8$; $Z=92-4+2$."
+   ],
+   "sol": "$A=238-2(4)=230$. $Z=92-2(2)+2(1)=90$. The result is $(230,90)$."
+  },
+  {
+   "id": "jeem-u18-003",
+   "syl": "u18",
+   "unit": "modern/nuclear",
+   "step": 5,
+   "type": "num",
+   "q": "A radioactive source has an initial activity of $3200$ counts per second and a half-life of $10$ minutes. What is its activity after $1$ hour? Answer as an integer in counts per second.",
+   "answer": {
+    "value": 50,
+    "tol": 0,
+    "unit": "counts/s"
+   },
+   "hints": [
+    "Count the number of half-lives elapsed.",
+    "$60/10=6$ half-lives.",
+    "$A=A_0/2^6$."
+   ],
+   "sol": "Six half-lives elapse, so $A=\\dfrac{3200}{2^6}=\\dfrac{3200}{64}=50$ counts/s."
+  },
+  {
+   "id": "jeem-u19-001",
+   "syl": "u19",
+   "unit": "modern/solids",
+   "step": 5,
+   "type": "mc",
+   "q": "Inputs $A$ and $B$ are fed to a NOR gate and its output is passed through a NOT gate. The combination is equivalent to a single:",
+   "choices": [
+    "AND gate",
+    "NAND gate",
+    "XOR gate",
+    "OR gate"
+   ],
+   "answer": 3,
+   "hints": [
+    "Write the output of the NOR gate first.",
+    "$Y_1=\\overline{A+B}$.",
+    "Inverting it gives $\\overline{\\overline{A+B}}$."
+   ],
+   "sol": "NOR gives $\\overline{A+B}$; the NOT gate inverts it to $A+B$, which is an OR gate."
+  },
+  {
+   "id": "jeem-u19-002",
+   "syl": "u19",
+   "unit": "modern/solids",
+   "step": 6,
+   "type": "mc",
+   "q": "The current gain of a transistor in common-base mode is $\\alpha=0.98$. Its current gain $\\beta$ in common-emitter mode is:",
+   "choices": [
+    "98",
+    "49",
+    "0.02",
+    "50"
+   ],
+   "answer": 1,
+   "hints": [
+    "Relate $I_C$, $I_B$ and $I_E$.",
+    "$\\beta=\\dfrac{I_C}{I_B}$ and $I_E=I_C+I_B$.",
+    "$\\beta=\\dfrac{\\alpha}{1-\\alpha}$."
+   ],
+   "sol": "$\\beta=\\dfrac{\\alpha}{1-\\alpha}=\\dfrac{0.98}{0.02}=49$."
+  },
+  {
+   "id": "jeem-u19-003",
+   "syl": "u19",
+   "unit": "modern/solids",
+   "step": 6,
+   "type": "num",
+   "q": "A $6$ V Zener diode is used as a shunt regulator. A $10$ V supply feeds it through a series resistor of $200\\,\\Omega$, and a $1\\,$k$\\Omega$ load is connected across the Zener. Find the current through the Zener diode. Answer as an integer in mA.",
+   "answer": {
+    "value": 14,
+    "tol": 0,
+    "unit": "mA"
+   },
+   "hints": [
+    "The load sees the Zener voltage.",
+    "Current through the series resistor is $(10-6)/200$.",
+    "Zener current $=I_{total}-I_{load}$."
+   ],
+   "sol": "$I_{total}=\\dfrac{10-6}{200}=20$ mA. $I_{load}=\\dfrac{6}{1000}=6$ mA. $I_Z=20-6=14$ mA."
+  },
+  {
+   "id": "jeem-u20-001",
+   "syl": "u20",
+   "unit": "experiment/design",
+   "step": 5,
+   "type": "mc",
+   "q": "A vernier caliper has $10$ vernier divisions equal to $9$ main scale divisions, with $1$ main scale division $=1$ mm. When the jaws are closed the zero of the vernier is $0.3$ mm to the right of the main-scale zero (the $3$rd vernier line coincides). Measuring a rod, the main scale reading is $24$ mm and the $6$th vernier division coincides. The corrected length is:",
+   "choices": [
+    "24.9 mm",
+    "24.6 mm",
+    "24.3 mm",
+    "23.7 mm"
+   ],
+   "answer": 2,
+   "hints": [
+    "Least count $=1$ MSD $-1$ VSD $=0.1$ mm.",
+    "Observed reading $=24+6\\times0.1$.",
+    "Subtract the positive zero error."
+   ],
+   "sol": "Least count $=1-0.9=0.1$ mm. Observed $=24+0.6=24.6$ mm. Zero error is $+0.3$ mm, so corrected $=24.6-0.3=24.3$ mm."
+  },
+  {
+   "id": "jeem-u20-002",
+   "syl": "u20",
+   "unit": "experiment/design",
+   "step": 6,
+   "type": "mc",
+   "q": "In a metre bridge a resistance $R$ is in the left gap and a known $14\\,\\Omega$ resistor in the right gap. The balance point is $30$ cm from the left end. The value of $R$ is:",
+   "choices": [
+    "$4.2\\,\\Omega$",
+    "$6\\,\\Omega$",
+    "$10\\,\\Omega$",
+    "$32.7\\,\\Omega$"
+   ],
+   "answer": 1,
+   "hints": [
+    "At balance $R/S=\\ell/(100-\\ell)$, with $\\ell$ measured from the end near $R$.",
+    "$\\ell=30$ cm, $100-\\ell=70$ cm.",
+    "$R=14\\times30/70$."
+   ],
+   "sol": "$\\dfrac{R}{14}=\\dfrac{30}{70}\\Rightarrow R=6\\,\\Omega$."
+  },
+  {
+   "id": "jeem-u20-003",
+   "syl": "u20",
+   "unit": "experiment/uncertainty",
+   "step": 6,
+   "type": "num",
+   "q": "In an experiment to find $g$ using $g=4\\pi^{2}L/T^{2}$, the length is measured as $L=100$ cm with a least count of $1$ cm, and the time for $20$ oscillations is $40$ s with a stopwatch least count of $0.2$ s. Find the maximum percentage error in $g$. Answer as an integer (percent).",
+   "answer": {
+    "value": 2,
+    "tol": 0,
+    "unit": "%"
+   },
+   "hints": [
+    "Max error: add fractional errors weighted by powers.",
+    "$\\Delta g/g=\\Delta L/L+2\\,\\Delta T/T$.",
+    "$\\Delta T/T$ equals the fractional error in the total time, $0.2/40$."
+   ],
+   "sol": "$\\dfrac{\\Delta L}{L}=\\dfrac1{100}=1\\%$. $\\dfrac{\\Delta T}{T}=\\dfrac{0.2}{40}=0.5\\%$. $\\dfrac{\\Delta g}{g}=1+2(0.5)=2\\%$."
+  }
+ ]
+}

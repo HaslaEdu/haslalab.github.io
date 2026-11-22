@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physics Cup 2021 5 · 비선형 원형 공진기 | 하슬라랩</title>
+<meta name="description" content="출제: Jaan Kalda (탈린 공과대학교). 광섬유의 원형 공진기는 그림과 같이 원형 단일 모드 광섬유 하나를 곧은 단일 모드 광섬유 두 개와 결합하여 만든다. 단일 모드 광섬유에서 빛의 전파는 사실상 1차원이다. 광섬유의 각 단면에서 전기장과 자기장의 위상이…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/physcup-2021-t5-5/">
+
+<meta property="og:title" content="Physics Cup 2021 5 · 비선형 원형 공진기 | 하슬라랩">
+<meta property="og:description" content="출제: Jaan Kalda (탈린 공과대학교). 광섬유의 원형 공진기는 그림과 같이 원형 단일 모드 광섬유 하나를 곧은 단일 모드 광섬유 두 개와 결합하여 만든다. 단일 모드 광섬유에서 빛의 전파는 사실상 1차원이다. 광섬유의 각 단면에서 전기장과 자기장의 위상이…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / Physics Cup</nav>
+<h1>Physics Cup 2021 5 · 비선형 원형 공진기</h1><p class="meta">Physics Cup · 2021 · 단계 9</p>
+<div class="q"><p>출제: Jaan Kalda (탈린 공과대학교).</p><p>광섬유의 원형 공진기는 그림과 같이 원형 단일 모드 광섬유 하나를 곧은 단일 모드 광섬유 두 개와 결합하여 만든다. 단일 모드 광섬유에서 빛의 전파는 사실상 1차원이다. 광섬유의 각 단면에서 전기장과 자기장의 위상이 일정하다. 원형 광섬유와 곧은 광섬유 사이의 결합 $A$와 $C$는, 한 광섬유를 따라 전파하는 빛 에너지의 아주 작은 비율 $\alpha\ll1$가 결합부를 지나 다른 광섬유로 건너가게 되어 있다. 두 결합부는 똑같다고 가정한다. 진폭 $E$인 파동이 원형 광섬유 속을 전파하면, 광섬유의 비선형성 때문에 진폭 $\mathcal{E}$인 두 배 진동수의 빛 파동이 생긴다(그러나 두 배 진동수 파동은 선형으로 전파하며 네 배 진동수 파동을 만들지 않는다). 분산은 무시할 수 있다고, 곧 굴절률이 주 파동과 두 배 진동수 파동에서 같아서 두 배 진동수 파동의 진폭 증가 $\Delta\mathcal{E}$가 진행 거리에 비례한다고 가정한다. 여기서는 원형 광섬유의 비선형성을 상수 $\delta$로 나타내는데, 진폭 $E$인 파동이 반원 $ABC$을 지나가면 함께 진행하는 두 배 진동수 파동의 진폭 $\mathcal{E}$가 $\Delta\mathcal{E}=\delta E^2$만큼 커진다. 이 식은 $\delta\mathcal{E}\ll1$라고 가정할 때 성립한다(이 가정을 써도 된다). 결합 상수 $\alpha$는 파동의 진동수의 함수이다. 여기서는 주 파동의 결합 상수를 $\alpha$로 나타내고, 두 배 진동수 파동의 결합 상수는 $\alpha^2$와 같다고 가정한다. 원형 광섬유의 길이는 주 진동수 파동의 파장의 정수배이다.</p><p>세기가 $I_0=E_0^2$($E_0$는 파동의 진폭)이고 결맞음 길이가 아주 긴 레이저 빛을 입력 $O$에서 아래쪽 광섬유로 넣는다. 출력 $D$에서는 주 진동수 빛과 두 배 진동수 빛이 모두 나온다. $I_0$와 $\delta$가 정해져 있을 때, 출력에서 두 배 진동수 빛의 세기 $\mathcal{I}$는 제조 과정에서 쉽게 조절할 수 있는 결합 세기 $\alpha$에 의존한다. $\mathcal{I}$의 최댓값 $\mathcal{I}_m$와 그에 해당하는 결합 세기 $\alpha_m$를 구하여라($I_0$와 $\delta$로 나타내어라). 닫힌 꼴의 식만 인정한다).</p><figure><img src="/practice/contest/fig/physcup-2021-T5-p1-f1.webp" width="704" height="409" alt="" loading="lazy"></figure></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

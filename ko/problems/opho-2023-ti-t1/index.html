@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPhO 온라인 물리올림피아드 2023 T1 · 부스터 | 하슬라랩</title>
+<meta name="description" content="이 문제에서, 우리는 고체 로켓 부스터(Solid Rocket Booster, SRB)의 단순화된 모형을 탐구합니다. SRB는 액체 로켓을 보조하며, 더 낮은 비추력(specific impulse)을 감수하는 대신 발사 시 막대한 추력을 제공합니다. 그 설계는 꽤…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/opho-2023-ti-t1/">
+
+<meta property="og:title" content="OPhO 온라인 물리올림피아드 2023 T1 · 부스터 | 하슬라랩">
+<meta property="og:description" content="이 문제에서, 우리는 고체 로켓 부스터(Solid Rocket Booster, SRB)의 단순화된 모형을 탐구합니다. SRB는 액체 로켓을 보조하며, 더 낮은 비추력(specific impulse)을 감수하는 대신 발사 시 막대한 추력을 제공합니다. 그 설계는 꽤…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / OPhO 온라인 물리올림피아드</nav>
+<h1>OPhO 온라인 물리올림피아드 2023 T1 · 부스터</h1><p class="meta">OPhO 온라인 물리올림피아드 · 2023 · 단계 7</p>
+<div class="q"><p>이 문제에서, 우리는 고체 로켓 부스터(Solid Rocket Booster, SRB)의 단순화된 모형을 탐구합니다. SRB는 액체 로켓을 보조하며, 더 낮은 비추력(specific impulse)을 감수하는 대신 발사 시 막대한 추력을 제공합니다. 그 설계는 꽤 단순합니다 -- 연소실 역할을 하는 중심 공동(central cavity)을 가진, 고체 추진제가 담긴 관입니다. 고체 연료가 연소(deflagrate)하면서, 기체가 노즐을 통해 연소실 밖으로 밀려나며 추력을 발생시킵니다. (우주선에 가해지는 구조적 하중을 줄이기 위해) 일정한 추력을 내고, 또한 (SRB에 가해지는 응력을 줄이기 위해) 내부 압력과 온도가 일정한 연소실 설계를 선택하는 것이 바람직합니다. 아래에 도식과 함께 전형적인 연소실 모양이 있습니다.</p><figure><img src="/practice/contest/fig/opho-2023-Ti-p4-f1.webp" width="826" height="329" alt="" loading="lazy"></figure><p>그림 1: SRB의 구조(왼쪽)와 전형적인 연소실의 모양(오른쪽)</p><p>데이터:</p><p>- 연료 표면의 기화율: $v=9\times10^{-3}\ \frac{\mathrm{m}}{\mathrm{s}}$<br>- 연소실 길이: $l=45\,\mathrm{m}$<br>- 연소실 반지름: $r_0=0.6\,\mathrm{m}$<br>- 추진제 밀도: $\rho=1500\ \frac{\mathrm{kg}}{\mathrm{m}^3}$<br>- 배기 가스 몰 질량: $M=0.040\ \frac{\mathrm{kg}}{\mathrm{mol}}$<br>- 연소실 내부 온도: $T=4000\,\mathrm{K}$<br>- 이상 기체 상수: $R=8.31\ \frac{\mathrm{J}}{\mathrm{mol\cdot K}}$</p><p>(a) 다음 연소실 설계들에 대해, 연료의 연소율(burn rate, $\frac{\mathrm{kg}}{\mathrm{s}}$ 단위)을 시간의 함수로 구하십시오. 연소실이 SRB의 벽에 결코 도달하지 않는다고 가정하십시오.</p><p>(i)</p><figure><img src="/practice/contest/fig/opho-2023-Ti-p4-f3.webp" width="257" height="291" alt="" loading="lazy"></figure><p>(ii)</p><figure><img src="/practice/contest/fig/opho-2023-Ti-p4-f2.webp" width="257" height="293" alt="" loading="lazy"></figure><p>설계 i에 대해 다음에 답하십시오.</p><p>(b) 추력을 시간의 함수로 계산하십시오. 연소실의 온도와 압력은 일정하게 유지되고, 기체의 밀도는 $\rho_g$라고 가정하십시오.</p><p>(c) 이 설계에서 내부 조건이 일정하다는 가정은 타당합니까?</p><p>(d) 이제 온도는 일정하지만 압력은 변한다고 가정하십시오. 연소실 내부의 압력을 시간의 함수로 2배 이내의 오차로 추정하십시오.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>

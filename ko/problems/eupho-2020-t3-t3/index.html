@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EuPhO 유럽물리올림피아드 2020 T3 · 고양이 눈 | 하슬라랩</title>
+<meta name="description" content="어둠 속에서 고양이가 헤드램프의 광선 안에 들어왔을 때, 그 눈이 매우 밝게 보이는 현상을 본 적이 있을 것이다 (아래 사진 왼쪽). 이 현상은 렌즈를 이용한 장치로 모형화할 수 있다 (오른쪽 사진과 그 아래의 모식도). 왼쪽: 어둠 속의 고양이 눈. 오른쪽: 렌즈로…">
+<link rel="canonical" href="https://haslalab.org/ko/problems/eupho-2020-t3-t3/">
+
+<meta property="og:title" content="EuPhO 유럽물리올림피아드 2020 T3 · 고양이 눈 | 하슬라랩">
+<meta property="og:description" content="어둠 속에서 고양이가 헤드램프의 광선 안에 들어왔을 때, 그 눈이 매우 밝게 보이는 현상을 본 적이 있을 것이다 (아래 사진 왼쪽). 이 현상은 렌즈를 이용한 장치로 모형화할 수 있다 (오른쪽 사진과 그 아래의 모식도). 왼쪽: 어둠 속의 고양이 눈. 오른쪽: 렌즈로…">
+<meta property="og:image" content="https://haslalab.org/og.png">
+<link rel="icon" href="/logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/vendor/katex/katex.min.css">
+<script defer src="/vendor/katex/katex.min.js"></script>
+<script defer src="/vendor/katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
+<style>
+:root{color-scheme:light dark;--ink:#263247;--muted:#657187;--line:#d5dbe6;--paper:#fbfcfd;--accent:#7059a4}
+@media(prefers-color-scheme:dark){:root{--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--paper:#111017;--accent:#bca0ed}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:760px;margin:auto;padding:24px 16px 48px}a{color:var(--accent)}nav{font-size:14px;color:var(--muted)}h1{font-size:1.45rem;line-height:1.35;margin:10px 0 6px}
+.meta{color:var(--muted);font-size:14px}.q{margin:18px 0}ol.ch{padding-left:1.4em}ol.ch li{margin:6px 0}
+details{margin:12px 0;border:1px solid var(--line);border-radius:10px;padding:10px 14px}summary{cursor:pointer;font-weight:600}
+.cta{display:inline-block;margin:18px 0;padding:11px 18px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:650}
+figure{margin:12px 0;text-align:center}figure img{max-width:100%;height:auto;background:#fff;border-radius:6px}.note{font-size:12.5px;color:var(--muted);margin-top:28px}
+ul.list{padding-left:1.2em}ul.list li{margin:4px 0}.katex-display{overflow-x:auto;overflow-y:hidden}
+</style>
+</head>
+<body><main>
+<nav><a href="/?lang=ko#/">HaslaLab 학습</a> / <a href="/ko/problems/">전체 문제</a> / EuPhO 유럽물리올림피아드</nav>
+<h1>EuPhO 유럽물리올림피아드 2020 T3 · 고양이 눈</h1><p class="meta">EuPhO 유럽물리올림피아드 · 2020 · 단계 9</p>
+<div class="q"><p>어둠 속에서 고양이가 헤드램프의 광선 안에 들어왔을 때, 그 눈이 매우 밝게 보이는 현상을 본 적이 있을 것이다 (아래 사진 왼쪽). 이 현상은 렌즈를 이용한 장치로 모형화할 수 있다 (오른쪽 사진과 그 아래의 모식도).</p><figure><img src="/practice/contest/fig/eupho-2020-T3-p2-f1.webp" width="576" height="280" alt="" loading="lazy"></figure><p>왼쪽: 어둠 속의 고양이 눈. 오른쪽: 렌즈로 모형화한 장치 사진. 빨간 선은 빛의 세기를 측정한 픽셀 줄이다.</p><figure><img src="/practice/contest/fig/eupho-2020-T3-p2-f2.webp" width="717" height="196" alt="" loading="lazy"></figure><p>모식도: lamp = 광원, camera = 카메라, lens = 렌즈, focal plane = 초점면, sheet of paper = 종이. 카메라 축과 광원의 축 사이의 거리는 $h$, 카메라에서 종이까지의 거리는 $L$이다.</p><p>오른쪽 사진은 디지털 일안 반사식 카메라(digital single-lens reflex camera)로 촬영되었다. 사진의 빨간 선으로 표시된 카메라 센서 픽셀들에서 측정된 빛의 세기가 아래 그래프에 나타나 있다. 세로축은 빛의 세기(각 픽셀이 받은 광자의 개수)의 밑이 10인 로그값($\log_{10}I$)이고, 가로축은 픽셀의 한 변 길이를 단위로 하는 $x$-좌표이다.</p><figure><img src="/practice/contest/fig/eupho-2020-T3-p2-f3.webp" width="717" height="436" alt="" loading="lazy"></figure><p>그래프: $\log_{10}I$ 대 $x$ (픽셀 좌표).</p><p>고양이 눈을 모형화한 렌즈는 초점거리 $f=55\,\mathrm{mm}$, 지름 $D=39\,\mathrm{mm}$인 이상적인 얇은 렌즈로 취급할 수 있다. 다만 주어진 그래프는 실제 측정 데이터를 보여 주며 렌즈는 비이상적 특성이 있다는 점을 유의해야 한다. 가장 중요한 것은, 밝게 비춰진 영역의 일부가 렌즈 표면에서 부분 반사(partial reflection)되어 명암 대비(contrast)를 떨어뜨릴 수 있다는 점이다 — 즉 렌즈를 통해 보는 어두운 영역은 실제보다 덜 어둡게 보이는데, 이 효과는 카메라 렌즈에서는 무시할 수 있지만 고양이 눈을 모형화한 렌즈에서는 그럴 수 없다.</p><p>주어진 데이터에 근거하여, 카메라에서 종이까지의 거리가 $L=4.8\,\mathrm{m}$일 때 카메라 축과 광원(점광원으로 취급) 축 사이의 거리 $h$를 약 $20\%$ 정도의 정확성으로 추정하시오.</p></div>
+<a class="cta" href="https://haslalab.org/?lang=ko#/learn/practice?mode=contest">하슬라랩에서 풀고 스스로 채점하기 →</a>
+<p class="note">각 대회의 공식 문제를 하슬라랩이 문항별로 옮겨 적고 번역한 것입니다. 원문과 다르면 공식 PDF를 기준으로 하세요.</p>
+</main></body>
+</html>
