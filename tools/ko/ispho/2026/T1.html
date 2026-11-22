@@ -1,3 +1,4 @@
+<style>/* T1: figures keep their aspect ratio; pages break where the official paper breaks them */ figure img{height:auto;max-height:none}</style>
 <h1>얀센 효과(Janssen effect)</h1>
 <p>얀센 효과는 분립체(granular material)의 특징적인 성질이다. 알갱이들을 용기에 부으면, 입자들 사이의 접촉망이 형성되어 힘 사슬(force chains, 그림 참조)을 이루며, 이것이 알갱이 기둥의 응력을 옆벽 쪽으로 재분배한다.</p>
 <figure><img src="T1_fig1.png" style="width:128mm"><figcaption>그림 1: 힘 사슬(force chains)</figcaption></figure>
@@ -9,6 +10,7 @@ $$\int\frac{dx}{a+x} = \ln|a+x| + C$$
 $$\int x^n\,dx = \frac{1}{n+1}x^{n+1} + C,\qquad n\neq -1$$
 $$\int e^x\,dx = e^x + C$$
 
+<div style="break-before:page"></div>
 <h2>Part A. 정역학 (0.5점)</h2>
 <p>수직 벽과 바닥 넓이 $S$(그림 참조)를 가진 원통형 용기가 총 질량 $m$의 물로 가득 차 있다. 물의 밀도는 $\rho$이다.</p>
 <figure><img src="T1_fig2.png" style="width:51mm"><figcaption>그림 2: 물이 담긴 원통형 용기</figcaption></figure>
@@ -36,6 +38,7 @@ $$\sigma(z) = \left\langle\frac{dF_{\rm hor}}{dS}(z)\right\rangle.$$</li>
 $$P = A + Be^{-h/\lambda}.$$
 매개변수 $A$, $B$, $\lambda$를 구하라. 답을 겉보기 밀도 $\rho$와 $g$, $R$, $K$, $\mu$로 나타내라.</div><i>1.2pt</i></div>
 <p>아래 그래프는 용기 내 알갱이 높이에 대한 바닥에서의 알갱이 압력의 의존성 $P_0(H)$를 보여준다.</p>
+<div style="break-before:page"></div>
 <figure><img src="T1_fig4.png" style="width:136mm"><figcaption>그림 4: $P(h)$ 의존성 그래프</figcaption></figure>
 <div class="task"><b>B.3</b><div>알갱이의 겉보기 밀도 $\rho$와 계수 $K$를 구하라. 답을 유효숫자 2자리로 제시하라. 이 부분에서는 용기 반지름의 수치를 $R = 50~\text{cm}$, 마찰 계수를 $\mu = 0.30$으로 가정한다.</div><i>1.2pt</i></div>
 
@@ -43,6 +46,7 @@ $$P = A + Be^{-h/\lambda}.$$
 <p>이 부분에서는 바닥이 위를 향하도록 놓고 알갱이로 완전히 채운 원뿔형 용기 속 알갱이의 압력 분포를 살펴본다. 이 계산은 예를 들어 곡물 저장 사일로(아래 그림 참조)를 설계하는 데 매우 중요하다.</p>
 <figure><img src="T1_fig5.png" style="width:39mm"><figcaption>그림 5: 원뿔형 사일로</figcaption></figure>
 <p>밑면 반지름 $R$과 원뿔의 반각 $\alpha \ll 1$은 알려져 있다고 하자.</p>
+<div style="break-before:page"></div>
 <figure><img src="T1_fig6.png" style="width:61mm"><figcaption>그림 6: 원뿔형 용기 속 알갱이</figcaption></figure>
 <div class="task"><b>C.1</b><div>주어진 근사에서 용기 단면 반지름의 높이 의존성 $r(z)$를 구하라. 답을 $R$, $\alpha$, $z$로 나타내라.</div><i>0.1pt</i></div>
 <p>다시 B1의 층과 유사한 얇은 분립체 층을 생각하자.</p>
@@ -55,6 +59,7 @@ $$P(z) = A\left(1 - \frac{z}{z_{\max}} - \gamma\left(1 - \frac{z}{z_{\max}}\righ
 <div class="task"><b>C.3</b><div>매개변수 $A$, $\gamma$, $\beta$를 구하라. 답을 알갱이의 겉보기 밀도 $\rho$와 $g$, $z_{\max}$, $K$, $\mu$, $\alpha$로 나타내라.</div><i>0.8pt</i></div>
 <div class="task"><b>C.4</b><div>$P(z)$의 정성적 그래프를 그리고, $\alpha = 0.2K\mu$일 때 최대 연직 압력 $P_{\max}$와 $\rho g z_{\max}$의 비를 구하라. 답을 유효숫자 2자리로 제시하라.</div><i>0.8pt</i></div>
 
+<div style="break-before:page"></div>
 <h2>Part D. 용기를 들어 올리면? (1.5점)</h2>
 <p>이 부분에서는 다시 반지름 $R$인 질량 없는 연직 원통형 용기를 생각한다.</p>
 <p>높이 $H$의 분립체 층을 그 안에 붓는다. 반지름 $a$인 막대를 용기 중심에 연직으로 꽂아 바닥에 닿게 한다. 알갱이의 겉보기 밀도는 $\rho$, 용기 벽에 대한 물질의 마찰 계수는 $\mu_1$, 막대에 대한 물질의 마찰 계수는 $\mu_2$이다. 막대를 일정한 느린 속도로 천천히 위로 잡아당기기 시작한다. 마찰로 인해 알갱이가 담긴 용기가 천천히 올라가기 시작한다. 이 운동 내내 알갱이는 용기에 대해 정지해 있다.</p>
@@ -87,6 +92,7 @@ $$e^x \approx 1 + x + \frac{x^2}{2},\qquad x \ll 1$$</div><i>0.8pt</i></div>
 <h2>Part F. 벽을 통한 알갱이의 “흐름” (1점)</h2>
 <p>이 부분에서는 원통형 용기로부터 알갱이의 “흐름”을 살펴보고, 그 특성과 이상 유체 흐름과의 차이를 알아본다. 이를 위해 다시 알갱이로 채워진 수직 벽 원통형 용기를 생각한다. 각 알갱이는 지름 $d$인 구라고 가정한다. 원통형 용기에 지름 $D \gg d$인 원형 구멍을 뚫는다. 조건 $D \gg d$는 아칭(arching, 구멍 근처에 알갱이가 쌓이는 현상)으로 인해 구멍의 유효 지름이 줄지 않음을 의미한다. 구멍 위에는 높이 $H \gg \lambda$의 알갱이 층이 있으며, 여기서 $\lambda$는 B2에서 구한 매개변수이다. 용기 벽 두께는 $\omega$이다. 또한 $D \ll R$로 가정하며, $R$은 용기의 안쪽 반지름이다.</p>
 <figure><img src="T1_fig9.png" style="width:71mm"><figcaption>그림 9: 두꺼운 벽 용기 속 알갱이의 평형</figcaption></figure>
+<div style="break-before:page"></div>
 <div class="task"><b>F.1</b><div>알갱이 사이의 내부 마찰로 인해, 분립체의 자유 표면이 수평으로부터 벗어날 수 있는 최대 각도는 $\theta_r$이다. 용기에서 알갱이의 흐름이 가능한 최대 벽 두께 $\omega_{\max}$는 얼마인가? 답을 $D$와 $\theta_r$로 나타내라.</div><i>0.2pt</i></div>
 <p>이상 유체와 달리, 분립체에서는 입자 간 마찰로 인해 상당한 에너지 손실이 일어난다. 빠져나가는 입자의 운동 에너지는 구멍으로부터 $D$ 정도의 특성 거리에서만 얻어지고, 가속 중 알갱이의 특성 가속도는 $g$ 정도라고 가정한다.</p>
 <figure><img src="T1_fig10.png" style="width:85mm"><figcaption>그림 10: 구멍을 통한 알갱이 배출</figcaption></figure>
