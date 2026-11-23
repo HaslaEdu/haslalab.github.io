@@ -1,0 +1,427 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="595.22,842">
+<style>
+/* 대만 물리 올림피아드 2016 국가대표팀 복선(2차 선발) 시험 (2016 APhO / IPhO 대표 선발), 합본 소책자:
+   이론 문제(1-8쪽)와 채점 기준(9-17쪽) — Korean edition on the original layout. Same geometry and techniques as the
+   English edition twpho/2016_T_EN.html (see its header): prose 11.5pt; flowing prose blocks (.fw) with figure floats;
+   Chinese labels in Figs 2, 4, 5, 10, 11 covered by "ov" overlays; marking-scheme tables rebuilt as flow tables (.tb)
+   with 0.5pt borders at the original column x / row y, rows keeping the original height as min-height.
+
+   PLACEMENT (as rupho/2016_T1.html): every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs) */
+body{font-family:CM,KB,serif;font-size:11.5pt;line-height:13.5pt;word-break:keep-all}
+p{text-indent:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:85.1pt;width:439.5pt;--l:13.5pt;--fs:11.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.l{text-align:left}
+.n{position:absolute;left:-21.1pt;white-space:nowrap}
+.pn{left:0;width:595.22pt;text-align:center;--fs:10pt;--l:12pt}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+.fl{float:right}
+.nar{word-break:normal}
+.ov{position:absolute;background:#fff;line-height:1;white-space:nowrap;padding:1pt 2pt;font-size:11pt}
+/* flowing prose blocks (see the English edition) */
+.fw{position:absolute;margin:0;left:85.1pt;width:439.5pt;font-size:11.5pt;line-height:13.6pt;
+    top:calc(var(--b)*1pt - 6.8pt - 3.63pt + 0.7pt)}
+.fw p{margin:3pt 0 0 0;text-align:justify;position:relative}
+.fw p:first-child{margin-top:0}
+.fw .q{padding-left:var(--i)}
+.fw .q>.n{left:0}
+.fw .hh{margin-left:15.8pt;font-weight:bold;font-size:12pt}
+.fw .hh>.n{left:-30pt}
+/* marking-scheme tables: --c1..--c4 column widths (each includes its right rule) */
+.tb{position:absolute;margin:0;border-top:.5pt solid #000;border-left:.5pt solid #000;font-size:11.5pt;line-height:13.4pt;
+    width:calc(var(--c1) + var(--c2) + var(--c3) + var(--c4) + .5pt)}
+.pa{display:flex;border-bottom:.5pt solid #000}
+.lb{flex:none;width:var(--c1);border-right:.5pt solid #000;padding:2.4pt 0 0 5pt;text-align:left}
+.rs{flex:none;width:calc(var(--c2) + var(--c3) + var(--c4));display:flex;flex-direction:column}
+.rw{display:flex;border-bottom:.5pt solid #000;flex:auto}
+.rs>.rw:last-child{border-bottom:0}
+.ct{flex:none;width:var(--c2);border-right:.5pt solid #000;padding:2.4pt 3pt 1.5pt 5.4pt;text-align:left}
+.ps{flex:none;width:var(--c3);border-right:.5pt solid #000;padding:2.4pt 0 0 5.4pt}
+.no{flex:none;width:var(--c4);border-right:.5pt solid #000;padding:2.4pt 0 0 4pt}
+.dm{text-align:left;margin-top:3pt}
+.hd{font-size:11pt}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<p class="x c" style="--b:73.7;left:30pt;width:535.2pt;--fs:27pt;--l:32pt">2016년 제17회 아시아 물리 올림피아드</p>
+<p class="x c" style="--b:134;left:30pt;width:535.2pt;--fs:27pt;--l:32pt">및 제47회 국제 물리 올림피아드</p>
+<p class="x c" style="--b:202.6;left:30pt;width:535.2pt;--fs:27pt;--l:32pt">국가대표팀 복선(2차 선발) 시험</p>
+<p class="x c" style="--b:326.9;left:30pt;width:535.2pt;--fs:66pt;--l:72pt">이론 문제</p>
+<p class="x c" style="--b:430;left:30pt;width:535.2pt;--fs:24pt;--l:30pt">2016년 1월 30일</p>
+<p class="x c" style="--b:488.8;left:30pt;width:535.2pt;--fs:24pt;--l:30pt">시험 시간: 13:30–16:30, 총 3시간</p>
+<p class="x c" style="--b:575.2;left:30pt;width:535.2pt;--fs:24pt;--l:30pt">&lt;&lt;&thinsp;주의 사항&thinsp;&gt;&gt;</p>
+<p class="x l" style="--b:607.5;left:106.9pt;width:440pt;--fs:19pt;--l:30.2pt"><span class="n" style="left:-36pt">1.</span>이 시험은 계산 문제 6개로 이루어져 있으며, 문제당 25점, 총 150점이다.</p>
+<p class="x l" style="--b:669.9;left:106.9pt;width:440pt;--fs:19pt;--l:30.2pt"><span class="n" style="left:-36pt">2.</span>각 계산 문제의 답은 답안지의 지정된 위치에 써라. 문제마다 답안지는 2쪽이다.</p>
+<p class="x l" style="--b:732.4;left:106.9pt;width:440pt;--fs:19pt;--l:30.2pt"><span class="n" style="left:-36pt">3.</span>프로그램 기능이 없는 휴대용 계산기(공학용 계산기 포함)를 사용할 수 있다.</p>
+</div>
+
+<!-- page 2: mathematical formulas -->
+<div class="page">
+<p class="x" style="--b:125.8;left:106.9pt;width:417.7pt;--fs:12pt">필요할 수 있는 수학 공식 ($t$는 시간, $x$는 임의의 물리량)</p>
+<p class="x l" style="--b:154;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">1.&ensp;$\dot x = \dfrac{dx}{dt}$,&emsp;$\ddot x = \dfrac{d^2x}{dt^2} = \dfrac{d}{dt}\!\left(\dfrac{dx}{dt}\right)$</span></p>
+<p class="x l" style="--b:190.5;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">2.&ensp;$\displaystyle\int x^m dx = \frac{x^{m+1}}{m+1}$,&ensp;$m$&thinsp;≠&thinsp;$-1$;&emsp;&emsp;&emsp;$\dfrac{d}{dx}x^m = m\cdot x^{m-1}$</span></p>
+<p class="x l" style="--b:228.5;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">3.&ensp;$\dfrac{d\cos x}{dx} = -\sin x$,&emsp;&emsp;&emsp;$\dfrac{d\sin x}{dx} = \cos x$,</span></p>
+<p class="x l" style="--b:262;left:141.8pt;width:383pt;--fs:12pt"><span class="nw">$\displaystyle\int \sin x\,dx = -\cos x$,&emsp;&emsp;&emsp;$\displaystyle\int\cos x\,dx = \sin x$</span></p>
+<p class="x l" style="--b:299.5;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">4.&ensp;$|x|\ll 1$일 때,&ensp;$\dfrac{1}{\sqrt{1+x}} \approx 1-\dfrac{x}{2}$,</span></p>
+<p class="x l" style="--b:337.5;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">5.&ensp;$x\ll 1$일 때,&ensp;$\sin x\approx x$,&emsp;&emsp;$\cos x\approx 1-\dfrac{x^2}{2}$.</span></p>
+<p class="x pn" style="--b:797.2">1</p>
+</div>
+
+<!-- page 3: title, problems 1 and 2 -->
+<div class="page">
+<p class="x c" style="--b:86.8;left:40pt;width:515.2pt;--fs:16pt;--l:20.1pt">2016년 제17회 아시아 및 제47회 국제 물리 올림피아드<br>국가대표팀 복선(2차 선발) 시험 문제</p>
+<p class="x" style="--b:134.7;left:70.9pt;width:453.7pt;--fs:13pt">이 시험은 계산 문제 6개로 이루어져 있으며, 문제당 25점, 총 150점이다.</p>
+<div class="fw" style="--b:161.1">
+<p class="hh"><span class="n">1.</span>수평 탁자 위 반원기둥의 단순 조화 운동</p>
+<p style="margin-top:4pt;line-height:14.6pt"><span class="fl" style="width:150pt;height:124pt"></span>반지름 $R$, 질량 $M$인 반원기둥을 수평 탁자 위에 놓는다. 반원기둥의 평평한 면은 위를 향하고 수평과 작은 기울기 각을 이룬다(오른쪽 그림&nbsp;1). 이제 반원기둥을 정지 상태에서 놓는데, 처음에 평평한 면의 기울기 각이 매우 작으므로 반원기둥의 운동은 단순 조화 운동으로 근사할 수 있다. 반원기둥의 질량중심에서 원기둥 중심축까지의 수직 거리는 <span class="nw">$\tfrac{4R}{3\pi}$,</span> 질량중심에 대한 반원기둥의 관성 모멘트는 $I$, 중력 가속도는 $g$이다. 다음 세 문항에 답하여라.</p>
+<p class="q" style="--i:18pt;margin-top:6pt"><span class="n">(a)</span>탁자 면에 마찰이 없을 때, 이 주기 운동의 주기를 어림하여라. (5점)</p>
+<p class="q" style="--i:18pt"><span class="n">(b)</span>탁자 면에 마찰이 있고, 반원기둥이 정지 상태에서 놓인 뒤 탁자 위에서 미끄러지지 않고 구르기만 한다고 하자. 반원기둥의 처음 기울기 각이 $\theta_0$일 때, 최대 각속도는 얼마인가? (10점)</p>
+<p class="q" style="--i:18pt"><span class="n">(c)</span>앞 문항에 이어서, 반원기둥이 탁자 위에서 미끄러지지 않으려면 탁자 면의 정지 마찰 계수는 적어도 얼마보다 커야 하는가? (10점)</p>
+<p class="hh" style="margin-top:18pt"><span class="n">2.</span>우주선의 튀는 착륙 모의실험</p>
+<p class="nar" style="margin-top:9pt;line-height:14.4pt"><span class="fl" style="width:319.5pt;height:214pt"></span>어떤 역학 장치는 질량이 같은 위, 아래 두 토막을 이상적인 용수철로 연결한 것이다. 토막 하나의 질량은 <span class="nw">$m=2.0\ \mathrm{kg}$,</span> 용수철 상수는 <span class="nw">$k=100\ \mathrm{N/m}$</span>이다. 이 장치는 지면에 수직인 상태로 떨어지며, 이때 용수철은 자연 길이를 유지한다(그림&nbsp;2). 아래 토막이 지면에 막 부딪칠 때 장치의 순간 속력은 <span class="nw">$v_0=5.0\ \mathrm{m/s}$</span>이다. 아래 토막이 지면에 부딪치는 과정은 완전 비탄성 충돌, 즉 충돌 후 아래 토막은 지면 위에 정지하지만 지면에 붙지는 않는다고 하자.</p>
+<p class="q" style="--i:18pt;margin-top:6pt"><span class="n">(a)</span>아래 토막이 지면에 부딪친 때부터 시간을 잴 때, 위 토막의 속도가 처음으로 0이 되는 시각은 언제인가? (7점)</p>
+<p class="q" style="--i:18pt"><span class="n">(b)</span>위 토막이 처음 튀어 오른 뒤의 모습은 그림&nbsp;3과 같다. 아래 토막이 막 지면을 떠난 때부터 시간을 잴 때, 시각 $t$에서 위 토막의 속도는 얼마인가? 위 토막이 최고점에 이르는 시각은 언제인가? 아래 토막이 다시 지면에 부딪치는 시각은 언제인가? (18점)</p>
+</div>
+<div class="f" style="left:378pt;top:190pt"><span class="fig" data-srcpage="3" data-clip="378,190,520,270"></span></div>
+<p class="x" style="--b:291.1;left:410pt;width:72pt;--fs:12pt;text-align:center">그림 1</p>
+<div class="f" style="left:210pt;top:430pt"><span class="fig" data-srcpage="3" data-clip="210,430,522,612"></span></div>
+<div class="ov" style="left:219pt;top:458pt;padding:1pt 1pt;width:42pt;font-size:11.5pt">위 토막</div>
+<div class="ov" style="left:217pt;top:537pt;padding:1pt 1pt;width:45pt;font-size:11.5pt">아래 토막</div>
+<div class="ov" style="left:214pt;top:597pt;width:34pt;font-size:11.5pt">지면</div>
+<div class="ov" style="left:327pt;top:439pt;width:84pt;text-align:center;font-size:11.5pt">충돌 순간</div>
+<p class="x" style="--b:629.9;left:322.9pt;width:80pt;--fs:12pt;text-align:center">그림 2</p>
+<p class="x pn" style="--b:797.2">2</p>
+</div>
+
+<!-- page 4: figure 3, problem 3 -->
+<div class="page">
+<div class="f" style="left:168pt;top:72pt"><span class="fig" data-srcpage="4" data-clip="168,72,452,262"></span></div>
+<p class="x" style="--b:278.5;left:276pt;width:80pt;--fs:12pt;text-align:center">그림 3</p>
+<div class="fw" style="--b:313.6">
+<p class="hh"><span class="n">3.</span>(A) 균일한 전하 분포 공간에서 대전 입자의 운동</p>
+<p style="margin-top:4pt;line-height:14.4pt"><span class="fl" style="width:207pt;height:150pt"></span>3차원 공간에서, 그림&nbsp;4와 같이 $x$축의 <span class="nw">$-d\le x\le d$</span> 영역에 전하가 균일하게 분포해 있으며(O는 원점), 부피 전하 밀도는 <span class="nw">$\rho$ $(\rho&gt;0)$</span>이다. 다른 영역은 모두 진공이다. 다음 물음에 답하여라.</p>
+<p class="q nar" style="--i:21pt;line-height:14.4pt"><span class="n">(a)</span><span class="nw">$x&gt;d$,</span> <span class="nw">$0\le x\le d$,</span> <span class="nw">$-d\le x\le 0$,</span> <span class="nw">$x\le -d$</span> 각 영역에서 전기장은 각각 얼마인가? (4점)</p>
+<p class="q nar" style="--i:21pt;line-height:14.4pt"><span class="n">(b)</span>질량 $m$이고 음전하 $q$를 띤 대전 입자가 <span class="nw">$x&gt;d$,</span> <span class="nw">$0\le x\le d$,</span> <span class="nw">$-d\le x\le 0$,</span> <span class="nw">$x\le -d$</span> 각 영역에서 받는 정전기력은 각각 얼마인가? (2점)</p>
+<p class="q" style="--i:21pt"><span class="n">(c)</span>(a)와 (b)의 결과를 이용하여, 이 대전 입자를 <span class="nw">$x=2d$</span>에서 정지 상태로 놓을 때 <span class="nw">$x=0$</span>에 이르기까지 걸리는 시간을 계산하여라. (5점)</p>
+<p style="margin-top:6pt;font-weight:bold;font-size:12pt">(B) 공간의 자기장 분포가 대전 입자의 운동에 미치는 영향</p>
+<p style="margin-top:4pt">$x$-$y$ 평면에서, $x$가 음의 무한대에 가깝고 <span class="nw">$-H\le y\le H$</span>인 영역에 성긴 전자빔이 있으며, 전자들 사이의 상호작용은 무시할 수 있다. 이 전자들은 같은 속력 $v$로 $x$축에 나란하게 $+x$ 방향으로 움직인다(그림&nbsp;5). $x$-$y$ 평면에 수직인 자기장 분포를 다음 두 조건을 만족하도록 설계하여라.</p>
+<p class="q" style="--i:18pt;margin-top:4pt"><span class="n">(1)</span><span class="nw">$x&lt;0$,</span> <span class="nw">$-H\le y\le H$</span> 영역에서 $x$축에 나란하게 움직이는 전자빔의 전자들이 이 자기장 분포의 작용으로 모두 좌표 원점 O를 지난다.</p>
+<p class="q" style="--i:18pt;margin-top:4pt"><span class="n">(2)</span>원점 O를 지난 전자들은 <span class="nw">$x&gt;0$</span>의 자기장 분포 영역으로 나아간다. 전자빔이 자기장이 작용하는 범위를 벗어난 뒤에는 <span class="nw">$-2H\le y\le 2H$</span>로 퍼지며, 계속 $x$축에 나란하게 같은 속력 $v$로 오른쪽으로 움직인다.</p>
+</div>
+<div class="f" style="left:325pt;top:318pt"><span class="fig" data-srcpage="4" data-clip="325,318,530,453"></span></div>
+<div class="ov" style="left:493pt;top:388.5pt;width:27pt">$x$축</div>
+<p class="x" style="--b:466.3;left:367.8pt;width:80pt;--fs:12pt;text-align:center">그림 4</p>
+<p class="x pn" style="--b:797.2">3</p>
+</div>
+
+<!-- page 5: figure 5, problem 3 (B) questions, problem 4 -->
+<div class="page">
+<div class="f" style="left:105pt;top:72pt"><span class="fig" data-srcpage="5" data-clip="105,72,500,228"></span></div>
+<div class="ov" style="left:288pt;top:80pt;width:30pt">$y$축</div>
+<div class="ov" style="left:457pt;top:142.5pt;width:30pt">$x$축</div>
+<div class="ov" style="left:119pt;top:150pt;width:43pt">전자빔</div>
+<div class="ov" style="left:280pt;top:164.5pt;width:28pt">원점</div>
+<p class="x" style="--b:240.9;left:278pt;width:80pt;--fs:12pt;text-align:center">그림 5</p>
+<div class="fw" style="--b:263.5">
+<p>다음 물음에 답하여라.</p>
+<p class="q" style="--i:18pt;margin-top:1pt"><span class="n">(a)</span><span class="nw">$x\le 0$</span>이고 <span class="nw">$y\le 0$</span>인 영역에서 자기장의 크기와 작용 범위는 무엇인가? (4점)</p>
+<p class="q" style="--i:18pt;margin-top:1pt"><span class="n">(b)</span><span class="nw">$x\ge 0$</span>이고 <span class="nw">$y\ge 0$</span>인 영역에서 자기장의 크기와 작용 범위는 무엇인가? (4점)</p>
+<p class="q" style="--i:18pt;margin-top:1pt"><span class="n">(c)</span>(a), (b)의 결과에 따라, 설계한 $x$-$y$ 평면 위의 모든 자기장 영역을 그리고, 기호 ⨂(종이면에 수직으로 들어감)와 ⨀(종이면에 수직으로 나옴)로 각 영역의 자기장 방향을 표시하여라. (6점)</p>
+<p class="hh" style="margin-top:12pt"><span class="n">4.</span>포인팅 벡터(Poynting vector)</p>
+<p class="nar" style="margin-top:3pt"><span class="fl" style="width:209pt;height:134pt"></span>포인팅 벡터 $\vec S$는 <span class="nw">$\vec S\equiv(1/\mu_0)\big(\vec E\times\vec B\big)$</span>로 정의되며, 여기서 $\mu_0$, $\vec E$, $\vec B$는 각각 진공의 투자율, 공간의 전기장과 자기장의 세기이다. $\vec S$의 방향은 에너지가 전파되는 방향이고, 크기는 전자기장을 통해 전달되는 단위 면적당 일률이다. 이 문제에서는 전자기장을 통해 에너지가 공간의 어떤 영역으로 전달되는 세 가지 경우를 생각하며, 각 경우에 포인팅 벡터를 검증하도록 요구한다. 그러므로 포인팅 벡터를 직접 써서 답하지 마라.</p>
+<p class="q" style="--i:18pt;margin-left:3.8pt"><span class="n">(A)</span>반지름 $R$, 길이 $L$이고 균일하게 분포한 전하 밀도 $\rho$를 띤 절연체 원기둥이, 그 긴 축에 나란한 균일한 전기장 $E$ 안에서 전기장 방향을 따라 속도 $v$로 움직인다(그림&nbsp;6).</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(a)</span>전기장이 이 원기둥에 전달하는 단위 길이당 일률은 얼마인가? (3점)</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(b)</span>이 원기둥 옆면에서 자기장의 크기와 방향(그림으로 나타내어라)은 무엇인가? (2점)</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(c)</span>포인팅 벡터 $\vec S$를 계산하고 그 방향을 설명하며, 그것이 (a)에서 전기장이 이 원기둥에 전달하는 단위 길이당 일률과 일치함을 보여라. (3점)</p>
+<p class="q nar" style="--i:18pt;margin-left:3.8pt"><span class="fl" style="width:152pt;height:112pt"></span><span class="n">(B)</span>평행판 축전기가 반지름 $R$인 금속 원판 두 개로 이루어져 있고, 두 원판 사이의 간격은 $d$, <span class="nw">$d\ll R$</span>이다(그림&nbsp;7). 이 축전기가 어떤 순간 전하 $Q$를 띠고 있으며, 작은 일정한 전류 $I$로 계속 충전된다고 하자.</p>
+<p class="q nar" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(d)</span>이 순간 축전기에 공급되는 일률은 얼마인가? (3점)</p>
+<p class="q nar" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(e)</span>이 순간 축전기 내부 가장자리에서 자기장의 크기와 방향(간단한 그림으로 나타내어라)은 무엇인가? (축전기 안 전기장의 가장자리 효과는 무시한다.) (2점)</p>
+</div>
+<div class="f" style="left:318pt;top:380pt"><span class="fig" data-srcpage="5" data-clip="318,380,524,478"></span></div>
+<p class="x" style="--b:490.9;left:372pt;width:80pt;--fs:12pt;text-align:center">그림 6</p>
+<div class="f" style="left:378pt;top:634pt"><span class="fig" data-srcpage="5" data-clip="378,634,496,737"></span></div>
+<p class="x" style="--b:748.4;left:397.8pt;width:80pt;--fs:12pt;text-align:center">그림 7</p>
+<p class="x pn" style="--b:797.2">4</p>
+</div>
+
+<!-- page 6: problem 4 (cont.), problem 5 -->
+<div class="page">
+<div class="fw" style="--b:83.5">
+<p class="q nar" style="--i:21.2pt;margin-left:21.3pt"><span class="fl" style="width:147pt;height:203pt"></span><span class="n">(f)</span>포인팅 벡터 $\vec S$를 계산하고 그 방향을 설명하며, 그것이 (d)에서 공급되는 일률과 일치함을 보여라. (3점)</p>
+<p class="q nar" style="--i:18pt;margin-left:3.8pt"><span class="n">(C)</span>반지름 $R$, 길이 $\ell$인 긴 솔레노이드(그림&nbsp;8)에 단위 길이당 $N$회 감긴 도선에 전류 $I$가 흐르며, 전류는 일정한 증가율 $dI/dt$로 천천히 증가한다.</p>
+<p class="q nar" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(g)</span>이 솔레노이드에 공급되는 단위 길이당 일률은 얼마인가? (3점)</p>
+<p class="q nar" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(h)</span>솔레노이드 안쪽 표면 근처에서 전기장의 크기와 방향은 무엇인가? (간단한 그림으로 나타내어라.) (3점)</p>
+<p class="q nar" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(i)</span>포인팅 벡터를 계산하고 그 방향을 설명하며, 그것이 (g)에서 공급되는 일률과 일치함을 보여라. (3점)</p>
+<p class="hh" style="margin-top:14pt"><span class="n">5.</span>빛의 굴절과 광행차</p>
+<p class="q nar" style="--i:28.2pt;margin-top:3pt"><span class="fl" style="width:131pt;height:142pt"></span><span class="n">(A):</span>정지한 매질에서는 굴절률이 빛의 진행 방향을 결정한다. 적절한 설계를 통해 굴절률의 공간적 변화를 조절하면 렌즈와 같은 집속·결상 효과를 얻을 수 있다. 그림&nbsp;9와 같이 두께 $d$, 반지름 $a$인 유리 원판의 굴절률이 원판 중심에서 거리 $r$인 곳에서</p>
+<p style="margin:4pt 0 3pt 64pt;font-size:12pt"><span class="nw">$n(r)=n_0-\dfrac{\sqrt{r^2+n_1}}{d}$</span></p>
+<p class="q" style="--i:28.2pt">이다. 여기서 <span class="nw">$n_0&gt;\sqrt{n_1}/d$,</span> <span class="nw">$n_1&gt;0$</span>이다. 공기의 굴절률을 1로 볼 때, 유리 원판에 수직으로 입사하는 평행 광선이 모이는 초점 거리 $f$를 구하여라. (7점)</p>
+<p class="q" style="--i:28.2pt"><span class="n">(B):</span>공기의 굴절률은 1에 가깝지만, 그래도 천체 관측에 치우침을 일으킬 수 있다. 그림&nbsp;10과 같이 지평면과 각 $\theta_0$를 이루는 방향의 천체는 대기의 굴절을 거쳐 시각(視角) $\theta$에 상이 맺힌다. 대기의 굴절률 $n$이 지구 중심 O까지의 거리 $r$에만 의존한다고, 즉 <span class="nw">$n=n(r)$</span>이라고 하고 다음 물음에 답하여라.</p>
+<p class="q" style="--i:17pt;margin-left:25.5pt"><span class="n">(a)</span>지구 중심에서 $r$부터 $r+\Delta r$ <span class="nw">($\Delta r/r\ll 1$)</span>까지의 얇은 대기층은 굴절률이 <span class="nw">$n=n(r)$</span>로 일정한 공기층으로 볼 수 있다. 빛이 이 공기층에 들어가고 나올 때의 굴절을 생각하여, $n(r)$와 광선이 지름 방향과 이루는 각 $\phi(r)$가 만족하는 관계식을 구하여라. 이로부터, 빛이 대기 속에서 지구 둘레를 닫힌 원 궤도로 돌려면 대기 굴절률 $n(r)$는 어떤 꼴이어야 하는지 추론하여라. (9점)</p>
+<p class="q" style="--i:17pt;margin-left:25.5pt"><span class="n">(b)</span>대기의 두께 $\Delta R$는 약 200&nbsp;km, 지구의 반지름 $R_e$는 약 6400&nbsp;km, 지면의 상온 공기 굴절률은 $1.0003$이다. <span class="nw">$\theta_0=\pi/4$</span>인 천체의 상의 치우침 각 <span class="nw">$\Delta\theta=\theta_0-\theta$</span>를 (도 단위로) 어림하여라. (9점)</p>
+</div>
+<div class="f" style="left:398pt;top:98pt"><span class="fig" data-srcpage="6" data-clip="398,98,506,257"></span></div>
+<p class="x" style="--b:268.3;left:418.8pt;width:80pt;--fs:12pt;text-align:center">그림 8</p>
+<div class="f" style="left:398pt;top:292pt"><span class="fig" data-srcpage="6" data-clip="398,292,522,419"></span></div>
+<p class="x" style="--b:433.7;left:390.7pt;width:80pt;--fs:12pt;text-align:center">그림 9</p>
+<p class="x pn" style="--b:797.2">5</p>
+</div>
+
+<!-- page 7: figure 10, problem 6 -->
+<div class="page">
+<div class="f" style="left:155pt;top:72pt"><span class="fig" data-srcpage="7" data-clip="155,72,440,318"></span></div>
+<div class="ov" style="left:330pt;top:304pt;font-size:12pt;padding:1pt 6pt">그림 10</div>
+<div class="fw" style="--b:353.5">
+<p class="hh"><span class="n">6.</span>고체의 비열</p>
+<p class="q" style="--i:21.2pt;margin-top:3pt"><span class="n">(a)</span>어떤 계의 온도가 $dT$만큼 올라갈 때 열 $dQ$를 흡수해야 한다면, 그 비열은 <span class="nw">$C=dQ/dT$</span>로 정의된다. 고체의 경우 온도 변화 과정에서 고체가 주위에 하는 일을 무시할 수 있다고 가정하고, <span class="nw">$C_P\approx C_V=\tfrac{dU}{dT}$</span>임을 증명하여라. 여기서 $U$는 계의 총에너지이고, $C_P$와 $C_V$는 각각 정압 비열과 정적 비열이다. 이하에서는 고체의 비열을 $C$로 나타낸다. (4점)</p>
+<p style="margin-top:4pt">결정 속 원자의 주기적인 배열을 격자라 한다. 격자는 어떤 온도에서나 진동하며, 격자의 진동은 비열에 기여한다. 전자기파를 양자화하면 광자를 얻듯이, 양자화된 격자 진동을 포논(phonon, 음향양자)이라 한다. 포논의 에너지는 광자처럼 <span class="nw">$E=\hbar\omega=hf$</span>로 나타낼 수 있고, <span class="nw">$\hbar=\tfrac{h}{2\pi}$</span>이다. 여기서 $h$는 플랑크 상수, $\omega$는 각진동수로 $2\pi f$와 같으며, $f$는 포논의 진동수이다. 포논의 파장은 <span class="nw">$\lambda=\tfrac{2\pi}{k}$</span>로 나타낼 수 있다. 3차원 실공간에 대응하여 $k$도 3차원 역공간을 이룬다. 역공간에서 포논의 상태 수 $dN$과 포논이 역공간에서 차지하는 부피 $dV_k$ 사이에는 <span class="nw">$dN=\tfrac{V}{8\pi^3}dV_k$</span>의 관계가 있으며, $V$는 고체의 부피이다.</p>
+<p class="q" style="--i:21.2pt;margin-top:4pt"><span class="n">(b)</span>디바이 모형에서 포논의 분산 관계는 <span class="nw">$\omega=vk$</span>이다. $v$는 상수이며, 물리적 의미는 고체 속의 음속이다. 상태 밀도 <span class="nw">$\rho(\omega)\equiv\tfrac{dN}{d\omega}$</span>를 계산하여라. (6점)</p>
+<p class="q" style="--i:21.2pt"><span class="n">(c)</span>격자의 진동은 비열에 일부 기여한다. 포논의 저온 비열 $C_l$이 $\sim T^n$에 비례한다면, $n$의 값은 얼마인가? (5점)</p>
+<p class="q" style="--i:21.2pt"><span class="n">(d)</span>그림&nbsp;11은 알루미늄의 비열과 온도를 측정하는 실험을 마친 뒤 데이터를 정리하여 그린 그래프이다. 극저온 부분에서는 알루미늄이 초전도 상태가 되어 비열이 특이하게 튀는데, 이는 일단 무시한다. 알루미늄의 비열에는 포논의 기여 $C_l$과 전도 운반자의 기여 $C_e$가 있다. 알루미늄의 저온 비열 $C$와 온도 $T$의 관계를 써라. (5점)</p>
+</div>
+<p class="x pn" style="--b:797.2">6</p>
+</div>
+
+<!-- page 8: figure 11, problem 6 (e) -->
+<div class="page">
+<div class="f" style="left:140pt;top:75pt"><span class="fig" data-srcpage="8" data-clip="140,75,466,290"></span></div>
+<div class="ov" style="left:226pt;top:117pt;font-size:12pt">Al (알루미늄)</div>
+<p class="x" style="--b:305.3;left:272.9pt;width:80pt;--fs:12pt;text-align:center">그림 11</p>
+<p class="x nar" style="--b:335.5;left:106.3pt;width:418.3pt;--l:14pt"><span class="n">(e)</span>알루미늄의 비열에는 포논과 전도 운반자의 기여가 있다. 전도 운반자의 낮은 에너지에서의 상태 밀도 $\rho(\omega)$가 $\omega^n$에 비례한다면, $n$의 값은 얼마인가? (5점)</p>
+<p class="x pn" style="--b:797.2">7</p>
+</div>
+
+<!-- page 9: marking scheme, problem 1 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 1 채점 기준:</p>
+<div class="tb" style="left:76.05pt;top:100.05pt;--c1:42.6pt;--c2:324.1pt;--c3:26.6pt;--c4:27.4pt">
+<div class="pa"><div class="lb" style="padding-top:3pt">문항</div><div class="rs"><div class="rw" style="min-height:31.7pt"><div class="ct" style="padding-top:3pt">내용</div><div class="ps hd" style="padding:2.5pt 0 0 7pt;line-height:15.6pt">점<br>수</div><div class="no hd" style="padding:2.5pt 0 0 7pt;line-height:15.6pt">비<br>고</div></div></div></div>
+<div class="pa"><div class="lb">(a)<br>5점</div><div class="rs">
+ <div class="rw" style="min-height:69.3pt"><div class="ct">역학적 에너지 보존을 쓴다: <span class="nw">$Mg(R-L\cos\theta)+\tfrac12Mv^2+\tfrac12I\omega^2=$</span> 상수.<br>$v$는 $z$ 방향의 속도이다(지면에 마찰이 없으므로 질량중심 속도에는 수평 성분이 없다).</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:34.9pt"><div class="ct" style="padding-top:5pt"><span class="nw">$\cos\theta\approx1-\dfrac{\theta^2}{2};\ v=\dfrac{dh}{dt}=\dfrac{d}{dt}[(R-L\cos\theta)]\approx\dfrac{d}{dt}\Big[L\dfrac{\theta^2}{2}\Big]=L\theta\omega$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:59.1pt"><div class="ct"><span class="nw">$\tfrac12Mv^2\ll\tfrac12I\omega^2$</span>이므로 질량중심의 운동 에너지는 무시할 수 있다. 따라서<div class="dm">$\omega_0\approx\sqrt{\dfrac{MgL}{I}},\ L=\dfrac{4R}{3\pi}\Rightarrow T\approx2\pi\sqrt{\dfrac{3\pi I}{4MgR}}$.</div></div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(b)<br>10점</div><div class="rs">
+ <div class="rw" style="min-height:16pt"><div class="ct" style="padding-top:1.5pt"><span class="nw">$\theta\ll1$</span>일 때 접촉점은 대략 반원기둥의 맨 아래에 있다.</div><div class="ps" style="padding-top:1.5pt">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.8pt"><div class="ct">평행축 정리로 접촉점에 대한 관성 모멘트 <span class="nw">$I'=I+M(R-L)^2$</span>을 구한다.</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:64.8pt"><div class="ct" style="padding-top:5pt">$a_z=\dfrac{d^2h}{dt^2}=\dfrac{d^2}{dt^2}[(R-L\cos\theta)]\approx\dfrac{d^2}{dt^2}\Big[L\dfrac{\theta^2}{2}\Big]=L\big(\omega^2+\theta\alpha\big)$이므로 <span class="nw">$a_z\ll g$</span>이다. 따라서 반원기둥이 지면에 작용하는 수직항력은 약 <span class="nw">$N=Mg$</span>이다.</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:46.9pt"><div class="ct">정지 마찰력의 최댓값은 각가속도가 최대일 때, 즉 기울기 각이 바로 처음 기울기 각일 때 생김을 설명한다: <span class="nw">$MgL\theta_0\approx I'\alpha_0\Rightarrow\alpha_0\approx\dfrac{MgL\theta_0}{I'}$.</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:31.2pt"><div class="ct">질량중심 가속도 <span class="nw">$a_0=\alpha_0(R-L)=\dfrac{MgL(R-L)\theta_0}{I'}$</span>을 구한다.</div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(c)<br>10점</div><div class="rs">
+ <div class="rw" style="min-height:52.1pt"><div class="ct">탁자 면이 주는 마찰력이 질량중심을 밀 수 있어야 함을 설명한다. 즉<div class="dm" style="margin-top:1pt">$Mg\mu\ge Ma=\dfrac{M^2gL(R-L)\theta_0}{I'}$.</div></div><div class="ps">5</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.6pt"><div class="ct" style="padding-top:12pt">$\Rightarrow\mu\ge\dfrac{ML\theta_0}{I'}(R-L)=\dfrac{4M(3\pi-4)R^2\theta_0}{(3\pi)^2I'}$.</div><div class="ps">5</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">8</p>
+</div>
+
+<!-- page 10: marking scheme, problem 2 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 2 채점 기준:</p>
+<div class="tb" style="left:70.65pt;top:100.05pt;--c1:40.9pt;--c2:311.9pt;--c3:35.4pt;--c4:37.9pt">
+<div class="pa"><div class="lb" style="padding-top:1pt">문항</div><div class="rs"><div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">내용</div><div class="ps" style="padding:1pt 0 0 4pt">점수</div><div class="no" style="padding-top:1pt">비고</div></div></div></div>
+<div class="pa"><div class="lb">(a)<br>7점</div><div class="rs">
+ <div class="rw" style="min-height:34.3pt"><div class="ct">아래 토막이 지면과 처음 충돌한 뒤 위 토막이 하는 단순 조화 운동의 주기 <span class="nw">$T=2\pi\sqrt{m/k}=0.89\ \mathrm{s}$</span>를 구한다.</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct">위 토막의 처음 위치와 진폭 및 위상각의 관계를 쓴다:<br><span class="nw">$y_0=mg/k=0.2\ \mathrm{m}=y_m\cos\phi$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct">위 토막의 처음 속도와 진폭 및 위상각의 관계를 쓴다:<br><span class="nw">$v_0=\omega y_m\sin\phi$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:3pt">이 운동의 위상각을 구한다: <span class="nw">$\phi=\cot^{-1}\dfrac{mg/k}{v_0/\omega}=74^\circ=1.3\ \mathrm{rad}$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:28.7pt"><div class="ct" style="padding-top:5pt">위 토막이 처음 멈추는 시각은 <span class="nw">$T/2-T\cdot(\phi/2\pi)=0.26\ \mathrm{s}$</span>이다.</div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(b)<br>18점</div><div class="rs">
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:5pt">힘의 평형 조건으로부터, 아래 토막이 지면을 떠날 때 위, 아래 토막 사이의 거리 <span class="nw">$l_0+mg/k$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:5pt">에너지 보존식을 쓴다:<div class="dm" style="margin-top:1pt">$\dfrac12mv_1^2+\dfrac12k\left(\dfrac{mg}{k}\right)^2+mg\cdot\dfrac{mg}{k}=\dfrac12mv_0^2$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:31pt"><div class="ct" style="padding-top:2pt">아래 토막이 지면을 떠날 때 위 토막의 속력 <span class="nw">$v_1=4.4\ \mathrm{m/s}$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:63.5pt"><div class="ct" style="padding-top:2pt">두 토막의 질량중심이 공중에서 포물체 운동을 할 때, 위 토막은 질량중심에 대해 단순 조화 운동을 한다:<div class="dm" style="margin-top:3pt">$y(t)=\dfrac{l_0}{2}+y'_m\cos(\omega't+\phi')$.</div></div><div class="ps"></div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:8pt">단순 조화 운동의 주기 <span class="nw">$T'=2\pi\sqrt{m/(2k)}=0.63\ \mathrm{s}$</span>를 구한다.</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:3pt">단순 조화 운동의 위상각을 구한다: <span class="nw">$\phi'=\cot^{-1}\dfrac{mg/2k}{v_1/2\omega'}=294^\circ=5.1\ \mathrm{rad}$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:3pt">단순 조화 운동의 진폭을 구한다:<div class="dm" style="margin-top:1pt">$y'_m=\sqrt{\left(\dfrac{mg}{2k}\right)^2+\left(\dfrac{v_1}{2\omega'}\right)^2}=0.24\ \mathrm{m}$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:63.5pt"><div class="ct" style="padding-top:5pt">지면에 대한 위 토막의 위치를 구한다:<div class="dm" style="margin-top:5pt">$\dfrac{l_0}{2}+\dfrac{mg}{2k}+\dfrac{v_1}{2}t-\dfrac{g}{2}t^2+\dfrac{l_0}{2}+y'_m\cos(\omega't+\phi')$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:63.5pt"><div class="ct" style="padding-top:5pt">지면에 대한 위 토막의 속도를 구한다:<div class="dm" style="margin-top:5pt">$\dfrac{v_1}{2}-gt-\omega'y'_m\sin(\omega't+\phi')$ $=2.2-9.8t-2.4\sin(10t+5.1)$.</div></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">9</p>
+</div>
+
+<!-- page 11: marking scheme, problem 2 (cont.) -->
+<div class="page">
+<div class="tb" style="left:70.65pt;top:70.65pt;--c1:40.9pt;--c2:311.9pt;--c3:35.4pt;--c4:37.9pt">
+<div class="pa"><div class="lb"></div><div class="rs">
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:6pt">위 토막이 최고점에 이르는 시각을 구한다:<div class="dm" style="margin-top:8pt">$2.2-9.8t-2.4\sin(10t+5.1)=0\Rightarrow t=0.15\ s$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:99.5pt"><div class="ct" style="padding-top:6pt">지면에 대한 아래 토막의 위치를 구한다:<div class="dm" style="margin-top:6pt">$\dfrac{l_0}{2}+\dfrac{mg}{2k}+\dfrac{v_1}{2}t-\dfrac{g}{2}t^2-\dfrac{l_0}{2}-y'_m\cos\big(\omega't+\phi'\big)$</div><div class="dm" style="margin-top:8pt">$=0.1+2.2t-4.9t^2-2.4\cos\big(10t+5.1\big)$.</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:45.6pt"><div class="ct" style="padding-top:8pt">아래 토막이 다시 지면에 부딪치는 시각 <span class="nw">$t_2=0.26\ \mathrm{s}$</span>를 구한다.</div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">10</p>
+</div>
+
+<!-- page 12: marking scheme, problem 3 (A) -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 3 채점 기준:</p>
+<div class="tb" style="left:70.65pt;top:100.05pt;--c1:33.8pt;--c2:350.8pt;--c3:20.8pt;--c4:20.7pt">
+<div class="pa"><div class="lb" style="padding-top:2.5pt;line-height:15.6pt">문<br>항</div><div class="rs"><div class="rw" style="min-height:31.7pt"><div class="ct" style="padding-top:3pt">내용</div><div class="ps hd" style="padding:2.5pt 0 0 4pt;line-height:15.6pt">점<br>수</div><div class="no hd" style="padding:2.5pt 0 0 4pt;line-height:15.6pt">비<br>고</div></div></div></div>
+<div class="pa"><div class="lb" style="line-height:13.8pt">(A)<br>(a)<br>4점</div><div class="rs">
+ <div class="rw" style="min-height:28.6pt"><div class="ct"><span class="nw">$x&gt;d$:</span> 무한히 넓고 균일하게 대전된 평판의 전기장으로부터 <span class="nw">$E=\sigma/(2\varepsilon_0)=\rho d/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:16.2pt"><div class="ct" style="padding-top:1.2pt">마찬가지로 <span class="nw">$x&lt;d$:</span>&ensp;<span class="nw">$E=-\sigma/(2\varepsilon_0)=-\rho d/\varepsilon_0$.</span></div><div class="ps" style="padding-top:1.2pt">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:31.6pt"><div class="ct"><span class="nw">$0&lt;x&lt;d$:</span> $[x,d]$와 $[2x-d,x]$ 사이의 전하가 만드는 전기장은 서로 상쇄되므로 <span class="nw">$E=\sigma/(2\varepsilon_0)=\rho x/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.6pt"><div class="ct">마찬가지로 <span class="nw">$-d&lt;x&lt;0$:</span>&ensp;<span class="nw">$E=-\sigma/(2\varepsilon_0)=-\rho x/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb" style="line-height:13.8pt">(A)<br>(b)<br>2점</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct"><span class="nw">$F=qE$.</span> <span class="nw">$x&gt;d$:</span> <span class="nw">$F=q\rho d/\varepsilon_0$;</span> <span class="nw">$x&lt;d$:</span>&ensp;<span class="nw">$F=-q\rho d/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:28.6pt"><div class="ct"><span class="nw">$0&lt;x&lt;d$:</span> <span class="nw">$F=q\rho x/\varepsilon_0$;</span> <span class="nw">$-d&lt;x&lt;0$:</span>&ensp;<span class="nw">$F=-q\rho x/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb" style="line-height:13.8pt">(A)<br>(c)<br>5점</div><div class="rs">
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:12pt">$x=2d$에서 $x=d$까지 걸리는 시간 <span class="nw">$t_1=\sqrt{\dfrac{2d}{a}}=\sqrt{\dfrac{2\varepsilon_0m}{\rho q}}$</span>을 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.4pt"><div class="ct" style="padding-top:14pt">$x=d$에서의 속도 <span class="nw">$v_1=at_1=-d\sqrt{\dfrac{2\rho q}{\varepsilon_0m}}$</span>을 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:126.6pt"><div class="ct"><span class="nw">$0\le x\le d$</span> 구간에서 입자는 단순 조화 운동을 한다:<div class="dm" style="margin-top:9pt">$x=A\cos(\omega t'+\varphi),\ \omega=\sqrt{\dfrac{k}{m}}=\sqrt{\dfrac{q\rho}{\varepsilon_0m}}$.</div><div class="dm" style="margin-top:22pt">초기 조건: <span class="nw">$x(0)=A\cos\varphi=d,\ v(0)=-A\omega\sin\varphi=v_1=-\sqrt{\dfrac{2\rho q}{\varepsilon_0m}}\,d$.</span></div></div><div class="ps"></div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:12pt">단순 조화 운동의 위상각 <span class="nw">$\varphi=\tan^{-1}\sqrt2$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.4pt"><div class="ct" style="padding-top:1pt">$x=d$에서 $x=0$까지 걸리는 시간을 구한다:<div class="dm" style="margin-top:0">$t_2=\dfrac{\left(\dfrac{\pi}{2}-\tan^{-1}\sqrt2\right)}{\omega}=\sqrt{\dfrac{\varepsilon_0m}{q\rho}}\left(\dfrac{\pi}{2}-\tan^{-1}\sqrt2\right)$</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:123.1pt"><div class="ct" style="padding:8pt 0 0 3pt">$t_1+t_2=\sqrt{\dfrac{2\varepsilon_0m}{q\rho}}+\sqrt{\dfrac{\varepsilon_0m}{q\rho}}\left(\dfrac{\pi}{2}-\tan^{-1}\!\sqrt2\right)$<div class="dm" style="margin:3pt 0 0 40pt">$=\sqrt{\dfrac{\varepsilon_0m}{q\rho}}\Big(\sqrt2+\dfrac{\pi}{2}-\tan^{-1}\!\sqrt2\Big)$</div><div class="dm" style="margin-top:8pt">$t_1+t_2\simeq2.04\sqrt{\tfrac{\varepsilon_0m}{q\rho}}$</div></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">11</p>
+</div>
+
+<!-- page 13: marking scheme, problem 3 (B)(a), (B)(b) -->
+<div class="page">
+<div class="tb" style="left:70.65pt;top:70.65pt;--c1:33.8pt;--c2:350.8pt;--c3:20.8pt;--c4:20.7pt">
+<div class="pa"><div class="lb" style="line-height:13.8pt">(B)<br>(a)<br>4점</div><div class="rs">
+ <div class="rw" style="min-height:90.5pt"><div class="ct"><span class="nw">$x\le0,\ y\le0$:</span> 자기장 경계의 방정식을 쓴다.<div class="dm" style="margin-top:9pt">$x^2+(y+R_{III})^2=R_{III}^2\qquad\quad(1)$</div><div class="dm" style="margin-top:17pt">$(x+R_{III})^2+y^2=R_{III}^2\qquad\quad(2)$</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:29.6pt"><div class="ct" style="padding-top:5pt">반지름 <span class="nw">$R_{III}=H$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:42.8pt"><div class="ct" style="padding-top:9pt">자기장 <span class="nw">$B_{\mathrm{III}}=\dfrac{mv}{eH}=2B_I$</span>를 구한다.</div><div class="ps"></div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb" style="line-height:13.8pt">(B)<br>(b)<br>4점</div><div class="rs">
+ <div class="rw" style="min-height:90.5pt"><div class="ct"><span class="nw">$x\ge0,\ y\ge0$:</span> 자기장 경계의 방정식을 쓴다.<div class="dm" style="margin-top:9pt">$x^2+(y-R_I)^2={R_I}^2\qquad\qquad(3)$</div><div class="dm" style="margin-top:17pt">$\big(x-R_I\big)^2+y^2={R_I}^2\qquad\qquad(4)$</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:23.5pt"><div class="ct" style="padding-top:3pt">반지름 <span class="nw">$R_I=2H$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:64.9pt"><div class="ct" style="padding-top:8pt">자기장 <span class="nw">$B_I=\dfrac{mv}{eR_I}=\dfrac{mv}{2eH}$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">12</p>
+</div>
+
+<!-- page 14: marking scheme, problem 3 (B)(c) -->
+<div class="page">
+<div class="tb" style="left:70.65pt;top:70.65pt;--c1:33.8pt;--c2:350.8pt;--c3:20.8pt;--c4:20.7pt">
+<div class="pa"><div class="lb" style="line-height:13.8pt">(B)<br><br>(c)<br>6점</div><div class="rs">
+ <div class="rw" style="min-height:341.8pt"><div class="ct"><span class="nw">$R_I=R_{IV}=2H$,</span><div style="height:306pt"></div><div class="dm" style="margin-top:0"><span class="nw">$B_I=\dfrac{mv}{eR_I}=\dfrac{mv}{2eH}$, 방향은 $-z$,</span></div><div class="dm" style="margin-top:6pt"><span class="nw">$B_{IV}=\dfrac{mv}{eR_I}=\dfrac{mv}{2eH}$, 방향은 $z$.</span></div><div class="dm" style="margin-top:3pt;line-height:17pt"><span class="nw">$R_{II}=R_{III}=H$,</span><br><span class="nw">$B_{11}=\tfrac{mv}{eH}=2B_I$, 방향은 $-z$,</span><br><span class="nw">$B_{111}=\tfrac{mv}{eH}=2B_I$, 방향은 $+z$.</span><br>방향 3점, 그림 3점.</div></div><div class="ps">6</div><div class="no"></div></div>
+</div></div>
+</div>
+<div class="f" style="left:117.5pt;top:104.8pt"><span class="fig" data-srcpage="14" data-clip="117.5,104.8,454.8,390"></span></div>
+<p class="x pn" style="--b:797.2">13</p>
+</div>
+
+<!-- page 15: marking scheme, problem 4 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 4 채점 기준:</p>
+<div class="tb" style="left:70.65pt;top:86.25pt;--c1:40.9pt;--c2:297.7pt;--c3:35.4pt;--c4:49.6pt">
+<div class="pa"><div class="lb" style="padding-top:1pt">문항</div><div class="rs"><div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">내용</div><div class="ps" style="padding:1pt 0 0 4pt">점수</div><div class="no" style="padding-top:1pt">비고</div></div></div></div>
+<div class="pa"><div class="lb">(a)<br>3점</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct">원기둥의 총 전하량 <span class="nw">$Q=\pi R^2L\rho$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:24.5pt"><div class="ct">전기장이 원기둥에 작용하는 힘 <span class="nw">$F=QE=\pi R^2L\rho E$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:21.4pt"><div class="ct">전기장이 원기둥에 주는 단위 길이당 일률 <span class="nw">$P/L=\pi R^2\rho Ev$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(b)<br>2점</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct">원기둥에서의 자기장 <span class="nw">$B=(\mu_0R\rho v)/2$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:16.9pt"><div class="ct" style="padding-top:1.5pt">오른손 법칙으로 자기장 방향이 시계 반대 방향임을 정한다.</div><div class="ps" style="padding-top:1.5pt">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(c)<br>3점</div><div class="rs">
+ <div class="rw" style="min-height:28.4pt"><div class="ct">포인팅 벡터의 크기 <span class="nw">$S=(1/\mu_0)EB=(R\rho vE)/2$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:20.8pt"><div class="ct">방향: 원기둥의 지름 방향을 따라 중심을 향한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:43.1pt"><div class="ct">포인팅 벡터로 구한 원기둥에 전달되는 단위 길이당 일률이 (a)의 결과와 일치함을 확인한다: <span class="nw">$2\pi RS=\pi R^2\rho Ev$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(d)<br>3점</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct">평행판 축전기의 전기 용량: <span class="nw">$C=\varepsilon_0\pi R^2/d$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">두 판 사이의 전압: <span class="nw">$V=Q/C=Qd/\varepsilon_0\pi R^2$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:16.8pt"><div class="ct" style="padding-top:1.2pt">공급되는 일률: <span class="nw">$P=IV\ \Rightarrow\ P=IQd/\varepsilon_0\pi R^2$</span></div><div class="ps" style="padding-top:1.2pt">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(e)<br>2점</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct">앙페르 법칙으로 자기장 <span class="nw">$B=\mu_0I/(2\pi R)$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">오른손 법칙으로 자기장 방향이 시계 반대 방향임을 정한다.</div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(f)<br>3점</div><div class="rs">
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:8pt">포인팅 벡터의 크기: <span class="nw">$S=(1/\mu_0)EB=IQ/2\varepsilon_0\pi^2R^3$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">방향: 축전기의 지름 방향을 따라 중심을 향한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct">포인팅 벡터로 구한 축전기에 전달되는 일률이 (d)의 결과와 일치함을 확인한다: <span class="nw">$(2\pi Rd)S=IQd/(\varepsilon_0\pi R)$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(g)<br>3점</div><div class="rs">
+ <div class="rw" style="min-height:29.6pt"><div class="ct">솔레노이드의 인덕턴스: <span class="nw">$L=\mu_0N^2\pi R^2\ell$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">인덕터 양단의 전압: <span class="nw">$V=\mu_0N^2\pi R^2\ell(dI/dt)$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">인덕터의 단위 길이당 일률: <span class="nw">$P/\ell=\mu_0N^2\pi^2I(dI/dt)$</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(h)<br>3점</div><div class="rs">
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:8pt">자기 선속 <span class="nw">$\phi_B=\pi R^2\mu_0NI$</span>를 구한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:16.7pt"><div class="ct" style="padding-top:1.2pt">패러데이 법칙으로 전기장: <span class="nw">$E=(\tfrac12)\mu_0NR(dI/dt)$</span></div><div class="ps" style="padding-top:1.2pt">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.6pt"><div class="ct">오른손 법칙과 렌츠 법칙으로 전기장 방향: 시계 방향</div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(i)<br>3점</div><div class="rs">
+ <div class="rw" style="min-height:54.4pt"><div class="ct">포인팅 벡터의 크기를 구한다.<div class="dm" style="margin-top:8pt">$S=(1/\mu_0)EB=\mu_0N^2RI(dI/dt)/2$</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">방향: 솔레노이드의 지름 방향을 따라 중심을 향한다.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:72.6pt"><div class="ct">포인팅 벡터로 구한 인덕터에 전달되는 단위 길이당 일률이 (g)의 결과와 일치함을 확인한다:<div class="dm" style="margin-top:8pt">$P/L=(2\pi R)S=\mu_0N^2\pi^2I(dI/dt)$.</div></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">14</p>
+</div>
+
+<!-- page 16: marking scheme, problem 5 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 5 채점 기준:</p>
+<div class="tb" style="left:70.65pt;top:100.05pt;--c1:40.9pt;--c2:311.9pt;--c3:35.4pt;--c4:37.9pt">
+<div class="pa"><div class="lb" style="padding-top:1pt">문항</div><div class="rs"><div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">내용</div><div class="ps" style="padding:1pt 0 0 4pt">점수</div><div class="no" style="padding-top:1pt">비고</div></div></div></div>
+<div class="pa"><div class="lb">(A)<br>7점</div><div class="rs">
+ <div class="rw" style="min-height:20.5pt"><div class="ct">원판 중심을 지나는 광로 <span class="nw">$n(0)d+f$</span>를 구한다.</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:23.5pt"><div class="ct">중심에서 거리 $r$인 곳을 지나는 광로 <span class="nw">$n(r)d+\sqrt{r^2+f^2}$</span>를 구한다.</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:23.5pt"><div class="ct"><span class="nw">$n(r)d+\sqrt{r^2+f^2}=n(0)d+f\ \Rightarrow\ f=\sqrt{n_1}$</span></div><div class="ps">3</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(B)(a)<br>9점</div><div class="rs">
+ <div class="rw" style="min-height:20.5pt"><div class="ct">스넬 법칙을 쓴다: <span class="nw">$n(r+\Delta r)\sin i_1=n(r)\sin j$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:31.5pt"><div class="ct">사인 법칙을 쓴다: <span class="nw">$\dfrac{\sin j}{r}=\dfrac{\sin(\pi-i_2)}{r+\Delta r}$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:40.5pt"><div class="ct">위의 두 식으로부터 <span class="nw">$(r+\Delta r)n(r+\Delta r)\sin i_1=rn(r)\sin i_2$,</span><br>즉 <span class="nw">$rn(r)\sin\phi(r)=$</span> 상수</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.1pt"><div class="ct">빛이 대기 속에서 지구 둘레를 닫힌 원 궤도로 도는 조건을 얻는다: <span class="nw">$\phi(r)=\pi/2$,</span> <span class="nw">$rn(r)=$</span> 상수, 즉 <span class="nw">$n(r)=k/r$</span></div><div class="ps">3</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(B)(b)<br>9점</div><div class="rs">
+ <div class="rw" style="min-height:90.5pt"><div class="ct" style="padding-top:12pt">(a)로부터 <span class="nw">$nR_e\sin\theta=\big(R_e+\Delta R\big)\sin\theta_0$</span>를 얻으므로<div class="dm" style="margin-top:10pt;padding-left:62pt">$\sin(\theta_0+\Delta\theta)=\dfrac1n\left(1+\dfrac{\Delta R}{R_e}\right)\sin\theta_0$</div></div><div class="ps">3</div><div class="no"></div></div>
+ <div class="rw" style="min-height:72.5pt"><div class="ct" style="padding-top:8pt"><span class="nw">$\dfrac1n\left(1+\dfrac{\Delta R}{R_e}\right)=1.03094$</span>가 1에 매우 가까우므로 <span class="nw">$\Delta\theta\ll1$,</span><div class="dm" style="margin-top:10pt"><span class="nw">$\sin(\theta_0+\Delta\theta)=\sin\theta_0\cos\Delta+\cos\theta_0\sin\Delta\approx\sin\theta_0+\Delta\theta\cos\theta_0$</span></div></div><div class="ps">3</div><div class="no"></div></div>
+ <div class="rw" style="min-height:19.6pt"><div class="ct">이로부터 <span class="nw">$\Delta\theta\approx0.03094\cot\theta_0=0.03094\approx1.77^\circ$</span></div><div class="ps">3</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">15</p>
+</div>
+
+<!-- page 17: marking scheme, problem 6 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 6 채점 기준:</p>
+<div class="tb" style="left:70.65pt;top:100.05pt;--c1:40.9pt;--c2:262.2pt;--c3:49.7pt;--c4:65.4pt">
+<div class="pa"><div class="lb" style="padding-top:1pt">문항</div><div class="rs"><div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">내용</div><div class="ps" style="padding:1pt 0 0 5.4pt">점수</div><div class="no" style="padding:1pt 0 0 5.4pt">비고</div></div></div></div>
+<div class="pa"><div class="lb">(a)<br>4점</div><div class="rs">
+ <div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">열역학 제1법칙을 쓴다: <span class="nw">$dU=dQ-dW$</span></div><div class="ps" style="padding-top:1pt">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:14.3pt"><div class="ct" style="padding-top:.3pt">$dW=0$,</div><div class="ps" style="padding-top:.3pt">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:14.3pt"><div class="ct" style="padding-top:.3pt">$C=dQ/dT=dU/dT$</div><div class="ps" style="padding-top:.3pt">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(b)<br>6점</div><div class="rs">
+ <div class="rw" style="min-height:49.5pt"><div class="ct">역공간에서 반지름이 $k$인 구의 부피를 쓴다:<div class="dm" style="margin-top:2pt">$V_k=\dfrac43\pi k^3$.</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.5pt"><div class="ct nar">역공간에서 반지름이 $k$, 두께가 $dk$인 구 껍질의 부피를 쓴다:<div class="dm" style="margin-top:8pt">$dV_k=4\pi k^2dk$.</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.5pt"><div class="ct">파수의 양자화 <span class="nw">$k_i=2\pi n_i/L_i,\ i=x,y,z$</span>로부터<div class="dm" style="margin-top:8pt">$dV_k=d^3k=(2\pi)^3dN/V$를 구한다.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:5pt"><span class="nw">$\omega=vk$</span>로부터 <span class="nw">$\rho(\omega)\equiv\dfrac{dN}{d\omega}=\dfrac{dN}{dk}\dfrac{dk}{d\omega}=\dfrac{V\omega^2}{2\pi^2v^3}$</span>을 구한다.</div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(c)<br>5점</div><div class="rs">
+ <div class="rw" style="min-height:20.2pt"><div class="ct" style="padding-top:1pt"><span class="nw">$U\sim\int_0^{kT}E\,\rho(E)\,dE$</span>를 쓴다.</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:15.2pt"><div class="ct" style="padding-top:.8pt">$C_l=dU/dT\propto T^3$</div><div class="ps" style="padding-top:.8pt">3</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(d)<br>5점</div><div class="rs">
+ <div class="rw" style="min-height:17.7pt"><div class="ct" style="padding-top:1.5pt">그래프에서 $C/T$가 $T^2$에 대해 직선임을 알 수 있다.</div><div class="ps" style="padding-top:1.5pt">3</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct" style="padding-top:1.5pt"><span class="nw">$C=\gamma T+\beta T^3$,</span> $\gamma$와 $\beta$는 상수.</div><div class="ps" style="padding-top:1.5pt">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(e)<br>5점</div><div class="rs">
+ <div class="rw" style="min-height:36.5pt"><div class="ct nar"><span class="nw">$C=\gamma T+\beta T^3$</span>에서 3차항이 포논의 기여임을 알고 있으므로 1차항은 전자의 기여, 즉 <span class="nw">$C_e=\gamma T$</span>이다.</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.1pt"><div class="ct nar">(c)의 결과로부터 전자의 상태 밀도는 진동수와 무관해야 함을 알 수 있다. 즉 <span class="nw">$\rho_e(\omega)=\mathrm{constant}$.</span></div><div class="ps">3</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">16</p>
+</div>
+
+</body></html>
