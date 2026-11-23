@@ -1,0 +1,28 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "TWPhO_2016_T_KO.pdf",
+ "status": "READY",
+ "sha256": "d4f8b800eb869761514f4cdc4f0707534f5d7a7a21bdb39f9273613fcaf8712e",
+ "bytes": 900927,
+ "pages": 17,
+ "source_file": "TWPhO_2016_T_ZH.pdf",
+ "source_sha256": "4e74bf29300788899cb973d67a8e243a5d12f0a2e5f13667ed8d13d16d0d69b4",
+ "source_page_range": [
+  1,
+  17
+ ],
+ "source_pages": 17,
+ "source_language": "zh",
+ "page_count_matches_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "html_source": "tools/ko_reflow/twpho/2016_T.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/check.py side-by-side images; every flag confirmed by zoom)",
+  "overflow_or_occlusion_observed": false
+ },
+ "page_sizes_match_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 4636
+}

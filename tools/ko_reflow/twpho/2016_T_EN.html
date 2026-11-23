@@ -1,0 +1,436 @@
+<!doctype html><html lang="en"><head><meta name="page" content="595.22,842">
+<style>
+/* TWPhO 2016 (Taiwan, national-team second-round selection exam for APhO 2016 / IPhO 2016), combined booklet:
+   theory paper (pp.1-8) followed by its marking scheme (pp.9-17) — English edition on the original layout.
+   ORIGINAL: MS Word, A4 595.2x842pt, 17 pages, text PDF. Chinese in DFKai-SB 12pt at an 18pt pitch, Latin in Times
+   New Roman / Cambria Math. Text column x 85.1..524.6; problem headings "一、" at x 70.9; sub-question labels at the
+   original's x (85.1 / 106.4 / 113.4). Page numbers 10pt centred, baseline 797.2 (cover has none; page 2 is "1").
+   Prose is 11.5pt on a 13-13.5pt pitch (TWPHO-CONVENTIONS 2); text beside figures wraps round an invisible right
+   float. Figures are stamped; Chinese labels inside them are covered by "ov" overlays; captions are text.
+   Prose on pp.2-6 is set in flowing blocks (.fw) so longer English pushes later items down; consequently 4(e)
+   moves to the top of p.5 (original: split across pp.4-5), and the stamps of Fig.7 (+18pt) and Fig.9 (+55pt)
+   follow their paragraphs.
+   MARKING SCHEME TABLES (pp.9-17) are rebuilt as flow tables (.tb): 0.5pt rules as borders at the original column
+   x and row y; each row keeps the original height as min-height and grows only where the English needs it.
+
+   PLACEMENT (as rupho/2016_T1.html, obf/2024_T_EN.html): every block is placed by the ORIGINAL's first baseline --b:
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs) */
+body{font-family:CM,KB,serif;font-size:11.5pt;line-height:13.5pt}
+p{text-indent:0}
+.x{position:absolute;margin:0;left:85.1pt;width:439.5pt;--l:13.5pt;--fs:11.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.l{text-align:left}
+.h{left:100.9pt;width:423.7pt;font-weight:bold;--fs:12pt}
+.h .n{left:-30pt}
+.n{position:absolute;left:-21.1pt;white-space:nowrap}
+.pn{left:0;width:595.22pt;text-align:center;--fs:10pt;--l:12pt}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+.fl{float:right}
+.ov{position:absolute;background:#fff;line-height:1;white-space:nowrap;padding:1pt 2pt;font-size:11pt}
+/* flowing prose blocks: an absolutely placed container (first baseline --b) whose paragraphs, headings and
+   figure floats flow, so English that is longer than the Chinese pushes later items down instead of overlapping */
+.fw{position:absolute;margin:0;left:85.1pt;width:439.5pt;font-size:11.5pt;line-height:13.2pt;
+    top:calc(var(--b)*1pt - 6.6pt - 3.63pt + 0.7pt)}
+.fw p{margin:3pt 0 0 0;text-align:justify;position:relative}
+.fw p:first-child{margin-top:0}
+.fw .q{padding-left:var(--i)}
+.fw .q>.n{left:0}
+.fw .hh{margin-left:15.8pt;font-weight:bold;font-size:12pt}
+.fw .hh>.n{left:-30pt}
+/* marking-scheme tables: --c1..--c4 column widths (each includes its right rule) */
+.tb{position:absolute;margin:0;border-top:.5pt solid #000;border-left:.5pt solid #000;font-size:11.5pt;line-height:13.2pt;
+    width:calc(var(--c1) + var(--c2) + var(--c3) + var(--c4) + .5pt)}
+.pa{display:flex;border-bottom:.5pt solid #000}
+.lb{flex:none;width:var(--c1);border-right:.5pt solid #000;padding:2.4pt 0 0 5pt;text-align:left}
+.rs{flex:none;width:calc(var(--c2) + var(--c3) + var(--c4));display:flex;flex-direction:column}
+.rw{display:flex;border-bottom:.5pt solid #000;flex:auto}
+.rs>.rw:last-child{border-bottom:0}
+.ct{flex:none;width:var(--c2);border-right:.5pt solid #000;padding:2.4pt 3pt 1.5pt 5.4pt;text-align:left}
+.ps{flex:none;width:var(--c3);border-right:.5pt solid #000;padding:2.4pt 0 0 5.4pt}
+.no{flex:none;width:var(--c4);border-right:.5pt solid #000;padding:2.4pt 0 0 4pt}
+.dm{text-align:left;margin-top:3pt}
+.hd{font-size:10.5pt}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<p class="x c" style="--b:73.7;left:30pt;width:535.2pt;--fs:26pt;--l:32pt">2016: 17th Asian Physics Olympiad</p>
+<p class="x c" style="--b:134;left:30pt;width:535.2pt;--fs:26pt;--l:32pt">and 47th International Physics Olympiad</p>
+<p class="x c" style="--b:202.6;left:30pt;width:535.2pt;--fs:26pt;--l:32pt">National Team Second-Round Selection Exam</p>
+<p class="x c" style="--b:326.9;left:30pt;width:535.2pt;--fs:56pt;--l:62pt">Theory Problems</p>
+<p class="x c" style="--b:430;left:30pt;width:535.2pt;--fs:24pt;--l:30pt">30 January 2016</p>
+<p class="x c" style="--b:488.8;left:30pt;width:535.2pt;--fs:24pt;--l:30pt">Exam time: 13:30–16:30 (3 hours)</p>
+<p class="x c" style="--b:575.2;left:30pt;width:535.2pt;--fs:24pt;--l:30pt">&lt;&lt;&thinsp;Instructions&thinsp;&gt;&gt;</p>
+<p class="x l" style="--b:607.5;left:106.9pt;width:440pt;--fs:18pt;--l:30.2pt"><span class="n" style="left:-36pt">1.</span>This paper contains six calculation problems of 25&nbsp;points each, 150&nbsp;points in total.</p>
+<p class="x l" style="--b:669.9;left:106.9pt;width:440pt;--fs:18pt;--l:30.2pt"><span class="n" style="left:-36pt">2.</span>Answer each problem in its designated place on the answer sheets; each problem has two answer pages.</p>
+<p class="x l" style="--b:732.4;left:106.9pt;width:440pt;--fs:18pt;--l:30.2pt"><span class="n" style="left:-36pt">3.</span>Non-programmable handheld calculators (including scientific calculators) may be used.</p>
+</div>
+
+<!-- page 2: mathematical formulas -->
+<div class="page">
+<p class="x" style="--b:125.8;left:106.9pt;width:417.7pt;--fs:12pt">Mathematical formulas that may be needed ($t$: time; $x$: any physical quantity)</p>
+<p class="x l" style="--b:154;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">1.&ensp;$\dot x = \dfrac{dx}{dt}$,&emsp;$\ddot x = \dfrac{d^2x}{dt^2} = \dfrac{d}{dt}\!\left(\dfrac{dx}{dt}\right)$</span></p>
+<p class="x l" style="--b:190.5;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">2.&ensp;$\displaystyle\int x^m dx = \frac{x^{m+1}}{m+1}$,&ensp;$m$&thinsp;≠&thinsp;$-1$;&emsp;&emsp;&emsp;$\dfrac{d}{dx}x^m = m\cdot x^{m-1}$</span></p>
+<p class="x l" style="--b:228.5;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">3.&ensp;$\dfrac{d\cos x}{dx} = -\sin x$,&emsp;&emsp;&emsp;$\dfrac{d\sin x}{dx} = \cos x$,</span></p>
+<p class="x l" style="--b:262;left:141.8pt;width:383pt;--fs:12pt"><span class="nw">$\displaystyle\int \sin x\,dx = -\cos x$,&emsp;&emsp;&emsp;$\displaystyle\int\cos x\,dx = \sin x$</span></p>
+<p class="x l" style="--b:299.5;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">4.&ensp;For $|x|\ll 1$,&ensp;$\dfrac{1}{\sqrt{1+x}} \approx 1-\dfrac{x}{2}$,</span></p>
+<p class="x l" style="--b:337.5;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">5.&ensp;For $x\ll 1$,&ensp;$\sin x\approx x$,&emsp;&emsp;$\cos x\approx 1-\dfrac{x^2}{2}$.</span></p>
+<p class="x pn" style="--b:797.2">1</p>
+</div>
+
+<!-- page 3: title, problems 1 and 2 -->
+<div class="page">
+<p class="x c" style="--b:86.8;left:40pt;width:515.2pt;--fs:16pt;--l:20.1pt">2016: 17th Asian and 47th International Physics Olympiads<br>National Team Second-Round Selection Exam — Problems</p>
+<p class="x" style="--b:134.7;left:70.9pt;width:453.7pt;--fs:12.5pt">This paper contains six calculation problems of 25 points each, 150 points in total.</p>
+<div class="fw" style="--b:161.1">
+<p class="hh"><span class="n">1.</span>Simple harmonic motion of a half-cylinder on a horizontal table</p>
+<p><span class="fl" style="width:150pt;height:124pt"></span>A half-cylinder of radius $R$ and mass $M$ is placed on a horizontal table with its flat face upward, tilted at a small angle to the horizontal, as in Figure&nbsp;1 on the right. The half-cylinder is released from rest; the initial tilt of its flat face is very small, so its motion can be approximated as simple harmonic. The perpendicular distance from the centre of mass of the half-cylinder to its axis is <span class="nw">$\tfrac{4R}{3\pi}$,</span> its moment of inertia about its centre of mass is $I$, and the gravitational acceleration is $g$. Answer the following three parts:</p>
+<p class="q" style="--i:18pt"><span class="n">(a)</span>If the table is frictionless, estimate the period of this periodic motion. (5&nbsp;points)</p>
+<p class="q" style="--i:18pt"><span class="n">(b)</span>If the table has friction and the half-cylinder, after being released from rest, only rolls without slipping on the table, and the initial tilt of the half-cylinder from the horizontal is $\theta_0$, what is its maximum angular velocity? (10&nbsp;points)</p>
+<p class="q" style="--i:18pt"><span class="n">(c)</span>Continuing from the previous part, for the half-cylinder not to slip on the table, at least how large must the coefficient of static friction of the table be? (10&nbsp;points)</p>
+<p class="hh" style="margin-top:14pt"><span class="n">2.</span>Simulated bouncing landing of a spacecraft</p>
+<p style="margin-top:7pt"><span class="fl" style="width:319.5pt;height:214pt"></span>A mech&shy;an&shy;ical device consists of an upper and a lower block of equal mass joined by an ideal spring. Each block has mass <span class="nw">$m=2.0\ \mathrm{kg}$,</span> and the spring constant is <span class="nw">$k=100\ \mathrm{N/m}$.</span> The device falls while held ver&shy;ti&shy;cal, with the spring at its natural length, as shown in Fig&shy;ure&nbsp;2. When the lower block just hits the ground the speed of the device is <span class="nw">$v_0=5.0\ \mathrm{m/s}$.</span> Assume that the impact of the lower block on the ground is a per&shy;fect&shy;ly in&shy;elas&shy;tic col&shy;li&shy;sion, i.e. after the col&shy;li&shy;sion the lower block is at rest on the ground but is not stuck to it. Then:</p>
+<p class="q" style="--i:18pt"><span class="n">(a)</span>Measuring time from the moment the lower block hits the ground, at what time does the velocity of the upper block first become zero? (7&nbsp;points)</p>
+<p class="q" style="--i:18pt"><span class="n">(b)</span>After the upper block first rebounds, the motion is as shown in Figure&nbsp;3. Measuring time from the moment the lower block just leaves the ground, what is the velocity of the upper block at time $t$? At what time does the upper block reach its highest point? At what time does the lower block hit the ground again? (18&nbsp;points)</p>
+</div>
+<div class="f" style="left:378pt;top:190pt"><span class="fig" data-srcpage="3" data-clip="378,190,520,270"></span></div>
+<p class="x" style="--b:291.1;left:410pt;width:72pt;--fs:12pt;text-align:center">Figure 1</p>
+<div class="f" style="left:210pt;top:430pt"><span class="fig" data-srcpage="3" data-clip="210,430,522,612"></span></div>
+<div class="ov" style="left:219pt;top:455pt;line-height:12pt;padding:1pt 1pt;width:42pt">upper<br>block</div>
+<div class="ov" style="left:217pt;top:533pt;line-height:12pt;padding:1pt 1pt;width:42pt">lower<br>block</div>
+<div class="ov" style="left:214pt;top:597pt;width:34pt">ground</div>
+<div class="ov" style="left:327pt;top:439pt;width:84pt;text-align:center">at impact</div>
+<p class="x" style="--b:629.9;left:322.9pt;width:80pt;--fs:12pt;text-align:center">Figure 2</p>
+<p class="x pn" style="--b:797.2">2</p>
+</div>
+
+<!-- page 4: figure 3, problem 3 -->
+<div class="page">
+<div class="f" style="left:168pt;top:72pt"><span class="fig" data-srcpage="4" data-clip="168,72,452,262"></span></div>
+<p class="x" style="--b:278.5;left:276pt;width:80pt;--fs:12pt;text-align:center">Figure 3</p>
+<div class="fw" style="--b:313.6">
+<p class="hh"><span class="n">3.</span>(A) Motion of a charged particle in a uniform charge distribution</p>
+<p style="margin-top:2pt"><span class="fl" style="width:207pt;height:150pt"></span>In three-dimensional space, as shown in Figure&nbsp;4, charge is uniformly distributed in the region <span class="nw">$-d\le x\le d$</span> of the $x$-axis (O is the origin), with volume charge density <span class="nw">$\rho$ $(\rho&gt;0)$;</span> all other regions are vacuum. Answer the following.</p>
+<p class="q" style="--i:21pt"><span class="n">(a)</span>What is the electric field in each of the regions <span class="nw">$x&gt;d$,</span> <span class="nw">$0\le x\le d$,</span> <span class="nw">$-d\le x\le 0$</span> and <span class="nw">$x\le -d$?</span> (4&nbsp;points)</p>
+<p class="q" style="--i:21pt"><span class="n">(b)</span>A charged particle of mass $m$ carries a negative charge $q$. What electrostatic force does it experience in each of the regions <span class="nw">$x&gt;d$,</span> <span class="nw">$0\le x\le d$,</span> <span class="nw">$-d\le x\le 0$</span> and <span class="nw">$x\le -d$?</span> (2&nbsp;points)</p>
+<p class="q" style="--i:21pt"><span class="n">(c)</span>Using the results of (a) and (b), calculate how long the charged particle, released from rest at <span class="nw">$x=2d$,</span> takes to reach <span class="nw">$x=0$.</span> (5&nbsp;points)</p>
+<p style="margin-top:4pt;font-weight:bold;font-size:11.8pt">(B) Effect of a magnetic field distribution on charged-particle motion</p>
+<p>In the $x$-$y$ plane, in the region where $x$ tends to negative infinity and <span class="nw">$-H\le y\le H$,</span> there is a sparse electron beam whose internal interactions can be neglected. The electrons all move with the same speed $v$ parallel to the $x$-axis, in the $+x$ direction, as shown in Figure&nbsp;5. Design a magnetic field distribution perpendicular to the $x$-$y$ plane that satisfies the following two conditions:</p>
+<p class="q" style="--i:18pt"><span class="n">(1)</span>In the region <span class="nw">$x&lt;0$,</span> <span class="nw">$-H\le y\le H$,</span> under the action of this field distribution, all electrons of the beam moving parallel to the $x$-axis pass through the coordinate origin O;</p>
+<p class="q" style="--i:18pt"><span class="n">(2)</span>After passing through the origin O, the electrons travel into the field region <span class="nw">$x&gt;0$.</span> When the beam leaves the region where the field acts, it has spread out to <span class="nw">$-2H\le y\le 2H$</span> and continues to move to the right, parallel to the $x$-axis, with the same speed $v$.</p>
+</div>
+<div class="f" style="left:325pt;top:318pt"><span class="fig" data-srcpage="4" data-clip="325,318,530,453"></span></div>
+<div class="ov" style="left:493pt;top:388.5pt">$x$-axis</div>
+<p class="x" style="--b:466.3;left:367.8pt;width:80pt;--fs:12pt;text-align:center">Figure 4</p>
+<p class="x pn" style="--b:797.2">3</p>
+</div>
+
+<!-- page 5: figure 5, problem 3 (B) questions, problem 4 -->
+<div class="page">
+<div class="f" style="left:105pt;top:72pt"><span class="fig" data-srcpage="5" data-clip="105,72,500,228"></span></div>
+<div class="ov" style="left:288pt;top:80pt">$y$-axis</div>
+<div class="ov" style="left:457pt;top:142.5pt">$x$-axis</div>
+<div class="ov" style="left:90pt;top:150pt">electron beam</div>
+<div class="ov" style="left:280pt;top:164.5pt">origin</div>
+<p class="x" style="--b:240.9;left:278pt;width:80pt;--fs:12pt;text-align:center">Figure 5</p>
+<div class="fw" style="--b:261">
+<p>Answer the following questions:</p>
+<p class="q" style="--i:18pt;margin-top:1pt"><span class="n">(a)</span>In the region <span class="nw">$x\le 0$,</span> <span class="nw">$y\le 0$,</span> what are the field’s magnitude and extent? (4&nbsp;points)</p>
+<p class="q" style="--i:18pt;margin-top:1pt"><span class="n">(b)</span>In the region <span class="nw">$x\ge 0$,</span> <span class="nw">$y\ge 0$,</span> what are the field’s magnitude and extent? (4&nbsp;points)</p>
+<p class="q" style="--i:18pt;margin-top:1pt"><span class="n">(c)</span>Using the results of (a) and (b), draw all the field regions of your design in the $x$-$y$ plane, and mark the field direction in each region with the symbol ⨂ (perpendicular into the page) or ⨀ (perpendicular out of the page). (6&nbsp;points)</p>
+<p class="hh" style="margin-top:10pt"><span class="n">4.</span>The Poynting vector</p>
+<p style="margin-top:2pt"><span class="fl" style="width:209pt;height:134pt"></span>The Poynting vector $\vec S$ is defined as <span class="nw">$\vec S\equiv(1/\mu_0)\big(\vec E\times\vec B\big)$,</span> where $\mu_0$, $\vec E$ and $\vec B$ are the permeability of vacuum and the electric and magnetic field strengths in space. The direction of $\vec S$ is the direction in which energy propagates, and its magnitude is the power per unit area transported by the electromagnetic field. This problem considers three situations in which energy is transported by electromagnetic fields into a region of space, and in each one you are asked to verify the Poynting vector; so do not answer the questions using the Poynting vector directly.</p>
+<p class="q" style="--i:18pt;margin-left:3.8pt"><span class="n">(A)</span>An insulating cylinder of radius $R$ and length $L$, carrying a uniformly distributed charge density $\rho$, moves with velocity $v$ along the field direction in a uniform electric field $E$ parallel to its long axis, as shown in Figure&nbsp;6. Then:</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(a)</span>Find the power per unit length that the field delivers to the cylinder. (3&nbsp;points)</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(b)</span>What are the magnitude and direction (show with a drawing) of the magnetic field at the side surface of the cylinder? (2&nbsp;points)</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(c)</span>Calculate the Poynting vector $\vec S$, state its direction, and show that it agrees with the power per unit length delivered by the electric field to the cylinder in (a). (3&nbsp;points)</p>
+<p class="q" style="--i:18pt;margin-left:3.8pt"><span class="fl" style="width:152pt;height:112pt"></span><span class="n">(B)</span>A parallel-plate capacitor consists of two metal discs of radius $R$ separated by $d$, <span class="nw">$d\ll R$,</span> as shown in Figure&nbsp;7. Suppose that at some instant the capacitor carries charge $Q$ and continues to be charged by a small constant current $I$. Then:</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(d)</span>What is the power delivered into the capacitor at this moment? (3&nbsp;points)</p>
+
+</div>
+<div class="f" style="left:318pt;top:380pt"><span class="fig" data-srcpage="5" data-clip="318,380,524,478"></span></div>
+<p class="x" style="--b:490.9;left:372pt;width:80pt;--fs:12pt;text-align:center">Figure 6</p>
+<div class="f" style="left:378pt;top:652pt"><span class="fig" data-srcpage="5" data-clip="378,634,496,737"></span></div>
+<p class="x" style="--b:766.4;left:397.8pt;width:80pt;--fs:12pt;text-align:center">Figure 7</p>
+<p class="x pn" style="--b:797.2">4</p>
+</div>
+
+<!-- page 6: problem 4 (cont.), problem 5 -->
+<div class="page">
+<div class="fw" style="--b:83.5">
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="fl" style="width:147pt;height:203pt"></span><span class="n">(e)</span>What are the magnitude and direction (show with a simple sketch) of the magnetic field at the inner edge of the capacitor at this moment? (Neglect edge effects of the electric field in the capacitor.) (2&nbsp;points)</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(f)</span>Calculate the Poynting vector $\vec S$, state its direction, and show that it agrees with the power delivered in (d). (3&nbsp;points)</p>
+<p class="q" style="--i:18pt;margin-left:3.8pt"><span class="n">(C)</span>A long solenoid of radius $R$ and length $\ell$ (see Figure&nbsp;8) has $N$ turns of wire per unit length carrying a current $I$, and the current increases slowly at a constant rate $dI/dt$.</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(g)</span>What is the power delivered per unit length into the solenoid? (3&nbsp;points)</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(h)</span>What are the magnitude and direction of the electric field near the inner surface of the solenoid? (Show with a simple sketch.) (3&nbsp;points)</p>
+<p class="q" style="--i:21.2pt;margin-left:21.3pt"><span class="n">(i)</span>Calculate the Poynting vector, state its direction, and show that it agrees with the power delivered in (g). (3&nbsp;points)</p>
+<p class="hh" style="margin-top:14pt"><span class="n">5.</span>Refraction of light and aberration of light</p>
+<p class="q" style="--i:28.2pt;margin-top:2pt"><span class="fl" style="width:131pt;height:137pt"></span><span class="n">(A):</span>In a medium at rest, the refractive index determines the direction in which light travels. By suitable design, the spatial variation of the refractive index can be tailored to give the same focusing and imaging effect as a lens. As shown in Figure&nbsp;9, a glass disc of thickness $d$ and radius $a$ has, at a distance $r$ from its centre, the refractive index</p>
+<p style="margin:4pt 0 3pt 64pt;font-size:12pt"><span class="nw">$n(r)=n_0-\dfrac{\sqrt{r^2+n_1}}{d}$,</span></p>
+<p class="q" style="--i:28.2pt">where <span class="nw">$n_0&gt;\sqrt{n_1}/d$</span> and <span class="nw">$n_1&gt;0$.</span> Taking the refractive index of air as 1, find the focal length $f$ at which parallel light rays incident perpendicularly on the glass disc are focused. (7&nbsp;points)</p>
+<p class="q" style="--i:28.2pt"><span class="n">(B):</span>Although the refractive index of air is close to 1, it can still shift astronomical observations. As shown in Figure&nbsp;10, a star in a direction at angle $\theta_0$ to the horizontal is seen, after refraction by the atmosphere, at the apparent angle $\theta$. Assume that the refractive index $n$ of the atmosphere depends only on the distance $r$ from the Earth’s centre O, <span class="nw">$n=n(r)$.</span> Answer the following:</p>
+<p class="q" style="--i:17pt;margin-left:25.5pt"><span class="n">(a)</span>The thin atmospheric layer between distances $r$ and $r+\Delta r$ <span class="nw">($\Delta r/r\ll 1$)</span> from the Earth’s centre can be regarded as an air layer of constant refractive index <span class="nw">$n=n(r)$.</span> Considering the refraction of light entering and leaving this layer, find the relation satisfied by $n(r)$ and the angle $\phi(r)$ between the ray and the radial direction. Hence deduce what form the atmospheric refractive index $n(r)$ must have for light to circle the Earth in a closed circular orbit within the atmosphere. (9&nbsp;points)</p>
+<p class="q" style="--i:17pt;margin-left:25.5pt"><span class="n">(b)</span>The thickness of the atmosphere is $\Delta R\approx 200$&nbsp;km, the radius of the Earth is $R_e\approx 6400$&nbsp;km, and the refractive index of air at the ground at ordinary temperature is $1.0003$. Estimate the shift angle <span class="nw">$\Delta\theta=\theta_0-\theta$</span> (in degrees) of the image of a star at <span class="nw">$\theta_0=\pi/4$.</span> (9&nbsp;points)</p>
+</div>
+<div class="f" style="left:398pt;top:98pt"><span class="fig" data-srcpage="6" data-clip="398,98,506,257"></span></div>
+<p class="x" style="--b:268.3;left:418.8pt;width:80pt;--fs:12pt;text-align:center">Figure 8</p>
+<div class="f" style="left:398pt;top:347pt"><span class="fig" data-srcpage="6" data-clip="398,292,522,419"></span></div>
+<p class="x" style="--b:488.7;left:390.7pt;width:80pt;--fs:12pt;text-align:center">Figure 9</p>
+<p class="x pn" style="--b:797.2">5</p>
+</div>
+
+<!-- page 7: figure 10, problem 6 -->
+<div class="page">
+<div class="f" style="left:155pt;top:72pt"><span class="fig" data-srcpage="7" data-clip="155,72,440,318"></span></div>
+<div class="ov" style="left:326pt;top:304pt;font-size:12pt;padding:1pt 3pt">Figure 10</div>
+<div class="fw" style="--b:353.5">
+<p class="hh"><span class="n">6.</span>Specific heat of solids</p>
+<p class="q" style="--i:21.2pt;margin-top:2pt"><span class="n">(a)</span>When the temperature of a system rises by $dT$ it absorbs heat $dQ$; its specific heat is defined as <span class="nw">$C=dQ/dT$.</span> For a solid, assuming that the work done by the solid on its surroundings during the temperature change is negligible, show that <span class="nw">$C_P\approx C_V=\tfrac{dU}{dT}$,</span> where $U$ is the total energy of the system and $C_P$ and $C_V$ are the specific heats at constant pressure and at constant volume. From here on the specific heat of the solid is written $C$. (4&nbsp;points)</p>
+<p>The periodic arrangement of atoms in a crystal is called a lattice; the lattice vibrates at any temperature, and the lattice vibrations contribute to the specific heat. Just as quantizing electromagnetic waves gives photons, quantized lattice vibrations are called phonons. Like that of a photon, the energy of a phonon can be written <span class="nw">$E=\hbar\omega=hf$,</span> with <span class="nw">$\hbar=\tfrac{h}{2\pi}$,</span> where $h$ is Planck’s constant, $\omega$ is the angular frequency, equal to $2\pi f$, and $f$ is the phonon frequency; the phonon wavelength can be written <span class="nw">$\lambda=\tfrac{2\pi}{k}$.</span> Corresponding to three-dimensional real space, $k$ also forms a three-dimensional reciprocal space. In reciprocal space, the number of phonon states $dN$ is related to the volume $dV_k$ occupied by the phonons in reciprocal space by <span class="nw">$dN=\tfrac{V}{8\pi^3}dV_k$,</span> where $V$ is the volume of the solid.</p>
+<p class="q" style="--i:21.2pt"><span class="n">(b)</span>In the Debye model the phonon dispersion relation is <span class="nw">$\omega=vk$,</span> where $v$ is a constant whose physical meaning is the speed of sound in the solid. Calculate the density of states <span class="nw">$\rho(\omega)\equiv\tfrac{dN}{d\omega}$.</span> (6&nbsp;points)</p>
+<p class="q" style="--i:21.2pt"><span class="n">(c)</span>Lattice vibrations contribute part of the specific heat. Given that the low-temperature phonon specific heat $C_l$ is proportional to $\sim T^n$, what is the value of $n$? (5&nbsp;points)</p>
+<p class="q" style="--i:21.2pt"><span class="n">(d)</span>Figure&nbsp;11 is a plot of the processed data from an experiment measuring the specific heat of aluminium as a function of temperature. At very low temperatures the specific heat shows an anomalous jump because aluminium becomes superconducting; ignore it for now. The specific heat of aluminium contains contributions from phonons, $C_l$, and from conduction carriers, $C_e$. Write down the relation between the low-temperature specific heat $C$ of aluminium and the temperature $T$. (5&nbsp;points)</p>
+</div>
+<p class="x pn" style="--b:797.2">6</p>
+</div>
+
+<!-- page 8: figure 11, problem 6 (e) -->
+<div class="page">
+<div class="f" style="left:140pt;top:75pt"><span class="fig" data-srcpage="8" data-clip="140,75,466,290"></span></div>
+<div class="ov" style="left:226pt;top:117pt;font-size:12pt">Al (aluminium)</div>
+<p class="x" style="--b:305.3;left:272.9pt;width:80pt;--fs:12pt;text-align:center">Figure 11</p>
+<p class="x" style="--b:335.5;left:106.3pt;width:418.3pt"><span class="n">(e)</span>The specific heat of aluminium contains contributions from phonons and from conduction carriers. The density of states $\rho(\omega)$ of the conduction carriers at low energy is proportional to $\omega^n$; what is the value of $n$? (5&nbsp;points)</p>
+<p class="x pn" style="--b:797.2">7</p>
+</div>
+
+<!-- page 9: marking scheme, problem 1 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">Marking scheme for Problem 1:</p>
+<div class="tb" style="left:76.05pt;top:100.05pt;--c1:42.6pt;--c2:324.1pt;--c3:26.6pt;--c4:27.4pt">
+<div class="pa"><div class="lb" style="padding-top:3pt">Part</div><div class="rs"><div class="rw" style="min-height:31.7pt"><div class="ct" style="padding-top:3pt">Content</div><div class="ps hd" style="padding:3.5pt 0 0 3pt">Pts</div><div class="no hd" style="padding:3.5pt 0 0 1pt">Notes</div></div></div></div>
+<div class="pa"><div class="lb">(a)<br>5 pts</div><div class="rs">
+ <div class="rw" style="min-height:69.3pt"><div class="ct">Write down conservation of mechanical energy: <span class="nw">$Mg(R-L\cos\theta)+\tfrac12Mv^2+\tfrac12I\omega^2=$</span> constant.<br>$v$ is the velocity in the $z$ direction (the table is frictionless, so the centre-of-mass velocity has no horizontal component).</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:34.9pt"><div class="ct" style="padding-top:5pt"><span class="nw">$\cos\theta\approx1-\dfrac{\theta^2}{2};\ v=\dfrac{dh}{dt}=\dfrac{d}{dt}[(R-L\cos\theta)]\approx\dfrac{d}{dt}\Big[L\dfrac{\theta^2}{2}\Big]=L\theta\omega$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:59.1pt"><div class="ct"><span class="nw">$\tfrac12Mv^2\ll\tfrac12I\omega^2$:</span> the kinetic energy of the centre of mass can be neglected, so<div class="dm">$\omega_0\approx\sqrt{\dfrac{MgL}{I}},\ L=\dfrac{4R}{3\pi}\Rightarrow T\approx2\pi\sqrt{\dfrac{3\pi I}{4MgR}}$.</div></div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(b)<br>10 pts</div><div class="rs">
+ <div class="rw" style="min-height:16pt"><div class="ct" style="padding-top:1.5pt">For <span class="nw">$\theta\ll1$</span> the contact point is roughly at the bottom of the half-cylinder.</div><div class="ps" style="padding-top:1.5pt">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.8pt"><div class="ct">Parallel-axis theorem, contact point: <span class="nw">$I'=I+M(R-L)^2$.</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:64.8pt"><div class="ct" style="padding-top:5pt">$a_z=\dfrac{d^2h}{dt^2}=\dfrac{d^2}{dt^2}[(R-L\cos\theta)]\approx\dfrac{d^2}{dt^2}\Big[L\dfrac{\theta^2}{2}\Big]=L\big(\omega^2+\theta\alpha\big)$, hence <span class="nw">$a_z\ll g$.</span> So the normal force of the half-cylinder on the table is about <span class="nw">$N=Mg$.</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:46.9pt"><div class="ct">Explain that the static friction is largest when the angular acceleration is largest, i.e. when the tilt equals the initial tilt: <span class="nw">$MgL\theta_0\approx I'\alpha_0\Rightarrow\alpha_0\approx\dfrac{MgL\theta_0}{I'}$.</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:31.2pt"><div class="ct">Find the centre-of-mass acceleration <span class="nw">$a_0=\alpha_0(R-L)=\dfrac{MgL(R-L)\theta_0}{I'}$.</span></div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(c)<br>10 pts</div><div class="rs">
+ <div class="rw" style="min-height:52.1pt"><div class="ct">Explain that the friction from the table must be able to drive the centre of mass, i.e.<div class="dm" style="margin-top:1pt">$Mg\mu\ge Ma=\dfrac{M^2gL(R-L)\theta_0}{I'}$.</div></div><div class="ps">5</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.6pt"><div class="ct" style="padding-top:12pt">$\Rightarrow\mu\ge\dfrac{ML\theta_0}{I'}(R-L)=\dfrac{4M(3\pi-4)R^2\theta_0}{(3\pi)^2I'}$.</div><div class="ps">5</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">8</p>
+</div>
+
+<!-- page 10: marking scheme, problem 2 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">Marking scheme for Problem 2:</p>
+<div class="tb" style="left:70.65pt;top:100.05pt;--c1:40.9pt;--c2:311.9pt;--c3:35.4pt;--c4:37.9pt">
+<div class="pa"><div class="lb" style="padding-top:1pt">Part</div><div class="rs"><div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">Content</div><div class="ps" style="padding:1pt 0 0 4pt">Pts</div><div class="no" style="padding-top:1pt">Notes</div></div></div></div>
+<div class="pa"><div class="lb">(a)<br>7 pts</div><div class="rs">
+ <div class="rw" style="min-height:34.3pt"><div class="ct">Period of the upper block’s simple harmonic motion after the lower block first hits the ground: <span class="nw">$T=2\pi\sqrt{m/k}=0.89\ \mathrm{s}$.</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct">Relate the initial position of the upper block to the amplitude and phase angle: <span class="nw">$y_0=mg/k=0.2\ \mathrm{m}=y_m\cos\phi$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct">Relate the initial velocity of the upper block to the amplitude and phase angle: <span class="nw">$v_0=\omega y_m\sin\phi$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:3pt">Phase angle of this motion: <span class="nw">$\phi=\cot^{-1}\dfrac{mg/k}{v_0/\omega}=74^\circ=1.3\ \mathrm{rad}$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:28.7pt"><div class="ct" style="padding-top:5pt">The upper block first stops at <span class="nw">$T/2-T\cdot(\phi/2\pi)=0.26\ \mathrm{s}$.</span></div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(b)<br>18 pts</div><div class="rs">
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:5pt">From the force-balance condition, find the separation of the upper and lower blocks when the lower block leaves the ground: <span class="nw">$l_0+mg/k$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:5pt">Write energy conservation:<div class="dm" style="margin-top:1pt">$\dfrac12mv_1^2+\dfrac12k\left(\dfrac{mg}{k}\right)^2+mg\cdot\dfrac{mg}{k}=\dfrac12mv_0^2$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:31pt"><div class="ct" style="padding-top:2pt">Speed of the upper block when the lower block leaves the ground: <span class="nw">$v_1=4.4\ \mathrm{m/s}$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:63.5pt"><div class="ct" style="padding-top:2pt">While the centre of mass of the two blocks moves as a projectile in the air, the upper block performs simple harmonic motion relative to the centre of mass:<div class="dm" style="margin-top:1pt">$y(t)=\dfrac{l_0}{2}+y'_m\cos(\omega't+\phi')$.</div></div><div class="ps"></div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:8pt">Period of the simple harmonic motion: <span class="nw">$T'=2\pi\sqrt{m/(2k)}=0.63\ \mathrm{s}$.</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:3pt">Phase angle of the simple harmonic motion: <span class="nw">$\phi'=\cot^{-1}\dfrac{mg/2k}{v_1/2\omega'}=294^\circ=5.1\ \mathrm{rad}$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:3pt">Amplitude of the simple harmonic motion:<div class="dm" style="margin-top:1pt">$y'_m=\sqrt{\left(\dfrac{mg}{2k}\right)^2+\left(\dfrac{v_1}{2\omega'}\right)^2}=0.24\ \mathrm{m}$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:63.5pt"><div class="ct" style="padding-top:5pt">Position of the upper block relative to the ground:<div class="dm" style="margin-top:5pt">$\dfrac{l_0}{2}+\dfrac{mg}{2k}+\dfrac{v_1}{2}t-\dfrac{g}{2}t^2+\dfrac{l_0}{2}+y'_m\cos(\omega't+\phi')$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:63.5pt"><div class="ct" style="padding-top:5pt">Velocity of the upper block relative to the ground:<div class="dm" style="margin-top:5pt">$\dfrac{v_1}{2}-gt-\omega'y'_m\sin(\omega't+\phi')$ $=2.2-9.8t-2.4\sin(10t+5.1)$.</div></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">9</p>
+</div>
+
+<!-- page 11: marking scheme, problem 2 (cont.) -->
+<div class="page">
+<div class="tb" style="left:70.65pt;top:70.65pt;--c1:40.9pt;--c2:311.9pt;--c3:35.4pt;--c4:37.9pt">
+<div class="pa"><div class="lb"></div><div class="rs">
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:6pt">Time at which the upper block reaches its highest point:<div class="dm" style="margin-top:8pt">$2.2-9.8t-2.4\sin(10t+5.1)=0\Rightarrow t=0.15\ s$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:99.5pt"><div class="ct" style="padding-top:6pt">Position of the lower block relative to the ground:<div class="dm" style="margin-top:6pt">$\dfrac{l_0}{2}+\dfrac{mg}{2k}+\dfrac{v_1}{2}t-\dfrac{g}{2}t^2-\dfrac{l_0}{2}-y'_m\cos\big(\omega't+\phi'\big)$</div><div class="dm" style="margin-top:8pt">$=0.1+2.2t-4.9t^2-2.4\cos\big(10t+5.1\big)$.</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:45.6pt"><div class="ct" style="padding-top:8pt">Time at which the lower block hits the ground again: <span class="nw">$t_2=0.26\ \mathrm{s}$.</span></div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">10</p>
+</div>
+
+<!-- page 12: marking scheme, problem 3 (A) -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">Marking scheme for Problem 3:</p>
+<div class="tb" style="left:70.65pt;top:100.05pt;--c1:33.8pt;--c2:350.8pt;--c3:20.8pt;--c4:20.7pt">
+<div class="pa"><div class="lb" style="padding-top:3pt">Part</div><div class="rs"><div class="rw" style="min-height:31.7pt"><div class="ct" style="padding-top:3pt">Content</div><div class="ps hd" style="padding:3.5pt 0 0 1.5pt;line-height:15.6pt">Pts</div><div class="no hd" style="padding:3.5pt 0 0 1.5pt;line-height:15.6pt">No-<br>tes</div></div></div></div>
+<div class="pa"><div class="lb" style="line-height:13.8pt">(A)<br>(a)<br>4 pts</div><div class="rs">
+ <div class="rw" style="min-height:28.6pt"><div class="ct"><span class="nw">$x&gt;d$:</span> from the field of an infinite uniformly charged plane, <span class="nw">$E=\sigma/(2\varepsilon_0)=\rho d/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:16.2pt"><div class="ct" style="padding-top:1.2pt">Similarly, <span class="nw">$x&lt;d$:</span>&ensp;<span class="nw">$E=-\sigma/(2\varepsilon_0)=-\rho d/\varepsilon_0$.</span></div><div class="ps" style="padding-top:1.2pt">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:31.6pt"><div class="ct"><span class="nw">$0&lt;x&lt;d$:</span> the fields of the charges in $[x,d]$ and in $[2x-d,x]$ cancel each other, so <span class="nw">$E=\sigma/(2\varepsilon_0)=\rho x/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.6pt"><div class="ct">Similarly, <span class="nw">$-d&lt;x&lt;0$:</span>&ensp;<span class="nw">$E=-\sigma/(2\varepsilon_0)=-\rho x/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb" style="line-height:13.8pt">(A)<br>(b)<br>2 pts</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct"><span class="nw">$F=qE$.</span> <span class="nw">$x&gt;d$:</span> <span class="nw">$F=q\rho d/\varepsilon_0$;</span> <span class="nw">$x&lt;d$:</span>&ensp;<span class="nw">$F=-q\rho d/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:28.6pt"><div class="ct"><span class="nw">$0&lt;x&lt;d$:</span> <span class="nw">$F=q\rho x/\varepsilon_0$;</span> <span class="nw">$-d&lt;x&lt;0$:</span>&ensp;<span class="nw">$F=-q\rho x/\varepsilon_0$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb" style="line-height:13.8pt">(A)<br>(c)<br>5 pts</div><div class="rs">
+ <div class="rw" style="min-height:54.5pt"><div class="ct" style="padding-top:12pt">Time needed from $x=2d$ to $x=d$: <span class="nw">$t_1=\sqrt{\dfrac{2d}{a}}=\sqrt{\dfrac{2\varepsilon_0m}{\rho q}}$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.4pt"><div class="ct" style="padding-top:14pt">Velocity at $x=d$: <span class="nw">$v_1=at_1=-d\sqrt{\dfrac{2\rho q}{\varepsilon_0m}}$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:126.6pt"><div class="ct">In the interval <span class="nw">$0\le x\le d$</span> the particle performs simple harmonic motion:<div class="dm" style="margin-top:9pt">$x=A\cos(\omega t'+\varphi),\ \omega=\sqrt{\dfrac{k}{m}}=\sqrt{\dfrac{q\rho}{\varepsilon_0m}}$.</div><div class="dm" style="margin-top:22pt">Initial conditions: <span class="nw">$x(0)=A\cos\varphi=d,\ v(0)=-A\omega\sin\varphi=v_1=-\sqrt{\dfrac{2\rho q}{\varepsilon_0m}}\,d$.</span></div></div><div class="ps"></div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:12pt">Phase angle of the simple harmonic motion: <span class="nw">$\varphi=\tan^{-1}\sqrt2$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.4pt"><div class="ct" style="padding-top:1pt">Time needed from $x=d$ to $x=0$:<div class="dm" style="margin-top:0">$t_2=\dfrac{\left(\dfrac{\pi}{2}-\tan^{-1}\sqrt2\right)}{\omega}=\sqrt{\dfrac{\varepsilon_0m}{q\rho}}\left(\dfrac{\pi}{2}-\tan^{-1}\sqrt2\right)$</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:123.1pt"><div class="ct" style="padding:8pt 0 0 3pt">$t_1+t_2=\sqrt{\dfrac{2\varepsilon_0m}{q\rho}}+\sqrt{\dfrac{\varepsilon_0m}{q\rho}}\left(\dfrac{\pi}{2}-\tan^{-1}\!\sqrt2\right)$<div class="dm" style="margin:3pt 0 0 40pt">$=\sqrt{\dfrac{\varepsilon_0m}{q\rho}}\Big(\sqrt2+\dfrac{\pi}{2}-\tan^{-1}\!\sqrt2\Big)$</div><div class="dm" style="margin-top:8pt">$t_1+t_2\simeq2.04\sqrt{\tfrac{\varepsilon_0m}{q\rho}}$</div></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">11</p>
+</div>
+
+<!-- page 13: marking scheme, problem 3 (B)(a), (B)(b) -->
+<div class="page">
+<div class="tb" style="left:70.65pt;top:70.65pt;--c1:33.8pt;--c2:350.8pt;--c3:20.8pt;--c4:20.7pt">
+<div class="pa"><div class="lb" style="line-height:13.8pt">(B)<br>(a)<br>4 pts</div><div class="rs">
+ <div class="rw" style="min-height:90.5pt"><div class="ct"><span class="nw">$x\le0,\ y\le0$:</span> write the equations of the field boundaries<div class="dm" style="margin-top:9pt">$x^2+(y+R_{III})^2=R_{III}^2\qquad\quad(1)$</div><div class="dm" style="margin-top:17pt">$(x+R_{III})^2+y^2=R_{III}^2\qquad\quad(2)$</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:29.6pt"><div class="ct" style="padding-top:5pt">Find the radius <span class="nw">$R_{III}=H$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:42.8pt"><div class="ct" style="padding-top:9pt">Find the field <span class="nw">$B_{\mathrm{III}}=\dfrac{mv}{eH}=2B_I$</span></div><div class="ps"></div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb" style="line-height:13.8pt">(B)<br>(b)<br>4 pts</div><div class="rs">
+ <div class="rw" style="min-height:90.5pt"><div class="ct"><span class="nw">$x\ge0,\ y\ge0$:</span> write the equations of the field boundaries<div class="dm" style="margin-top:9pt">$x^2+(y-R_I)^2={R_I}^2\qquad\qquad(3)$</div><div class="dm" style="margin-top:17pt">$\big(x-R_I\big)^2+y^2={R_I}^2\qquad\qquad(4)$</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:23.5pt"><div class="ct" style="padding-top:3pt">Find the radius <span class="nw">$R_I=2H$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:64.9pt"><div class="ct" style="padding-top:8pt">Find the field <span class="nw">$B_I=\dfrac{mv}{eR_I}=\dfrac{mv}{2eH}$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">12</p>
+</div>
+
+<!-- page 14: marking scheme, problem 3 (B)(c) -->
+<div class="page">
+<div class="tb" style="left:70.65pt;top:70.65pt;--c1:33.8pt;--c2:350.8pt;--c3:20.8pt;--c4:20.7pt">
+<div class="pa"><div class="lb" style="line-height:13.8pt">(B)<br><br>(c)<br>6 pts</div><div class="rs">
+ <div class="rw" style="min-height:341.8pt"><div class="ct"><span class="nw">$R_I=R_{IV}=2H$,</span><div style="height:306pt"></div><div class="dm" style="margin-top:0"><span class="nw">$B_I=\dfrac{mv}{eR_I}=\dfrac{mv}{2eH}$, direction $-z$,</span></div><div class="dm" style="margin-top:6pt"><span class="nw">$B_{IV}=\dfrac{mv}{eR_I}=\dfrac{mv}{2eH}$, direction $z$.</span></div><div class="dm" style="margin-top:3pt;line-height:17pt"><span class="nw">$R_{II}=R_{III}=H$,</span><br><span class="nw">$B_{11}=\tfrac{mv}{eH}=2B_I$, direction $-z$,</span><br><span class="nw">$B_{111}=\tfrac{mv}{eH}=2B_I$, direction $+z$.</span><br>Direction 3 points, figure 3 points.</div></div><div class="ps">6</div><div class="no"></div></div>
+</div></div>
+</div>
+<div class="f" style="left:117.5pt;top:104.8pt"><span class="fig" data-srcpage="14" data-clip="117.5,104.8,454.8,390"></span></div>
+<p class="x pn" style="--b:797.2">13</p>
+</div>
+
+<!-- page 15: marking scheme, problem 4 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">Marking scheme for Problem 4:</p>
+<div class="tb" style="left:70.65pt;top:86.25pt;--c1:40.9pt;--c2:297.7pt;--c3:35.4pt;--c4:49.6pt">
+<div class="pa"><div class="lb" style="padding-top:1pt">Part</div><div class="rs"><div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">Content</div><div class="ps" style="padding:1pt 0 0 4pt">Pts</div><div class="no" style="padding-top:1pt">Notes</div></div></div></div>
+<div class="pa"><div class="lb">(a)<br>3 pts</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Total charge in the cylinder: <span class="nw">$Q=\pi R^2L\rho$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:24.5pt"><div class="ct">Force of the field on the cylinder: <span class="nw">$F=QE=\pi R^2L\rho E$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:21.4pt"><div class="ct">Power per unit length from the field: <span class="nw">$P/L=\pi R^2\rho Ev$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(b)<br>2 pts</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Magnetic field at the cylinder: <span class="nw">$B=(\mu_0R\rho v)/2$.</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:16.9pt"><div class="ct" style="padding-top:1.5pt">Right-hand rule: the field is counterclockwise.</div><div class="ps" style="padding-top:1.5pt">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(c)<br>3 pts</div><div class="rs">
+ <div class="rw" style="min-height:28.4pt"><div class="ct">Poynting vector magnitude: <span class="nw">$S=(1/\mu_0)EB=(R\rho vE)/2$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:20.8pt"><div class="ct">Its direction: radially inward, toward the cylinder’s axis.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:43.1pt"><div class="ct">Check that the power per unit length into the cylinder found from the Poynting vector agrees with (a): <span class="nw">$2\pi RS=\pi R^2\rho Ev$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(d)<br>3 pts</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Capacitance of the parallel plates: <span class="nw">$C=\varepsilon_0\pi R^2/d$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Voltage between the plates: <span class="nw">$V=Q/C=Qd/\varepsilon_0\pi R^2$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:16.8pt"><div class="ct" style="padding-top:1.2pt">Power delivered: <span class="nw">$P=IV\ \Rightarrow\ P=IQd/\varepsilon_0\pi R^2$</span></div><div class="ps" style="padding-top:1.2pt">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(e)<br>2 pts</div><div class="rs">
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Ampère’s law gives the field <span class="nw">$B=\mu_0I/(2\pi R)$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Right-hand rule: the field is counterclockwise</div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(f)<br>3 pts</div><div class="rs">
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:8pt">Poynting vector magnitude: <span class="nw">$S=(1/\mu_0)EB=IQ/2\varepsilon_0\pi^2R^3$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Direction: radially inward, toward the capacitor’s centre.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct">Check that the power into the capacitor found from the Poynting vector agrees with (d): <span class="nw">$(2\pi Rd)S=IQd/(\varepsilon_0\pi R)$.</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(g)<br>3 pts</div><div class="rs">
+ <div class="rw" style="min-height:29.6pt"><div class="ct">Inductance of the solenoid: <span class="nw">$L=\mu_0N^2\pi R^2\ell$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Voltage across the inductor: <span class="nw">$V=\mu_0N^2\pi R^2\ell(dI/dt)$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Power per unit length into it: <span class="nw">$P/\ell=\mu_0N^2\pi^2I(dI/dt)$</span></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(h)<br>3 pts</div><div class="rs">
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:8pt">Magnetic flux <span class="nw">$\phi_B=\pi R^2\mu_0NI$</span></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:16.7pt"><div class="ct" style="padding-top:1.2pt">Faraday’s law gives the field <span class="nw">$E=(\tfrac12)\mu_0NR(dI/dt)$</span></div><div class="ps" style="padding-top:1.2pt">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.6pt"><div class="ct">Right-hand rule and Lenz’s law: clockwise direction</div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(i)<br>3 pts</div><div class="rs">
+ <div class="rw" style="min-height:54.4pt"><div class="ct">Find the magnitude of the Poynting vector<div class="dm" style="margin-top:8pt">$S=(1/\mu_0)EB=\mu_0N^2RI(dI/dt)/2$</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct">Its direction: radially inward, toward the solenoid’s axis.</div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:72.6pt"><div class="ct">Check that the power per unit length into the inductor found from the Poynting vector agrees with (g):<div class="dm" style="margin-top:8pt">$P/L=(2\pi R)S=\mu_0N^2\pi^2I(dI/dt)$.</div></div><div class="ps">1</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">14</p>
+</div>
+
+<!-- page 16: marking scheme, problem 5 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">Marking scheme for Problem 5:</p>
+<div class="tb" style="left:70.65pt;top:100.05pt;--c1:40.9pt;--c2:311.9pt;--c3:35.4pt;--c4:37.9pt">
+<div class="pa"><div class="lb" style="padding-top:1pt">Part</div><div class="rs"><div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">Content</div><div class="ps" style="padding:1pt 0 0 4pt">Pts</div><div class="no" style="padding-top:1pt">Notes</div></div></div></div>
+<div class="pa"><div class="lb">(A)<br>7 pts</div><div class="rs">
+ <div class="rw" style="min-height:20.5pt"><div class="ct">Optical path through the centre: <span class="nw">$n(0)d+f$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:23.5pt"><div class="ct">Optical path at distance $r$ from the centre: <span class="nw">$n(r)d+\sqrt{r^2+f^2}$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:23.5pt"><div class="ct"><span class="nw">$n(r)d+\sqrt{r^2+f^2}=n(0)d+f\ \Rightarrow\ f=\sqrt{n_1}$</span></div><div class="ps">3</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(B)(a)<br>9 pts</div><div class="rs">
+ <div class="rw" style="min-height:20.5pt"><div class="ct">Write Snell’s law: <span class="nw">$n(r+\Delta r)\sin i_1=n(r)\sin j$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:31.5pt"><div class="ct">Write the law of sines: <span class="nw">$\dfrac{\sin j}{r}=\dfrac{\sin(\pi-i_2)}{r+\Delta r}$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:40.5pt"><div class="ct">From these two equations, <span class="nw">$(r+\Delta r)n(r+\Delta r)\sin i_1=rn(r)\sin i_2$,</span><br>i.e. <span class="nw">$rn(r)\sin\phi(r)=$</span> constant</div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.1pt"><div class="ct">Condition for light to circle the Earth in a closed circular orbit in the atmosphere: <span class="nw">$\phi(r)=\pi/2$,</span> <span class="nw">$rn(r)=$</span> constant, i.e. <span class="nw">$n(r)=k/r$</span></div><div class="ps">3</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(B)(b)<br>9 pts</div><div class="rs">
+ <div class="rw" style="min-height:90.5pt"><div class="ct" style="padding-top:12pt">From part (a) one obtains <span class="nw">$nR_e\sin\theta=\big(R_e+\Delta R\big)\sin\theta_0$,</span> so<div class="dm" style="margin-top:10pt;padding-left:62pt">$\sin(\theta_0+\Delta\theta)=\dfrac1n\left(1+\dfrac{\Delta R}{R_e}\right)\sin\theta_0$</div></div><div class="ps">3</div><div class="no"></div></div>
+ <div class="rw" style="min-height:72.5pt"><div class="ct" style="padding-top:8pt">Since <span class="nw">$\dfrac1n\left(1+\dfrac{\Delta R}{R_e}\right)=1.03094$</span> is very close to 1, <span class="nw">$\Delta\theta\ll1$,</span><div class="dm" style="margin-top:10pt"><span class="nw">$\sin(\theta_0+\Delta\theta)=\sin\theta_0\cos\Delta+\cos\theta_0\sin\Delta\approx\sin\theta_0+\Delta\theta\cos\theta_0$</span></div></div><div class="ps">3</div><div class="no"></div></div>
+ <div class="rw" style="min-height:19.6pt"><div class="ct">Hence <span class="nw">$\Delta\theta\approx0.03094\cot\theta_0=0.03094\approx1.77^\circ$</span></div><div class="ps">3</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">15</p>
+</div>
+
+<!-- page 17: marking scheme, problem 6 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">Marking scheme for Problem 6:</p>
+<div class="tb" style="left:70.65pt;top:100.05pt;--c1:40.9pt;--c2:262.2pt;--c3:49.7pt;--c4:65.4pt">
+<div class="pa"><div class="lb" style="padding-top:1pt">Part</div><div class="rs"><div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">Content</div><div class="ps" style="padding:1pt 0 0 5.4pt">Points</div><div class="no" style="padding:1pt 0 0 5.4pt">Notes</div></div></div></div>
+<div class="pa"><div class="lb">(a)<br>4 pts</div><div class="rs">
+ <div class="rw" style="min-height:16.1pt"><div class="ct" style="padding-top:1pt">First law of thermodynamics: <span class="nw">$dU=dQ-dW$</span></div><div class="ps" style="padding-top:1pt">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:14.3pt"><div class="ct" style="padding-top:.3pt">$dW=0$,</div><div class="ps" style="padding-top:.3pt">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:14.3pt"><div class="ct" style="padding-top:.3pt">$C=dQ/dT=dU/dT$</div><div class="ps" style="padding-top:.3pt">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(b)<br>6 pts</div><div class="rs">
+ <div class="rw" style="min-height:49.5pt"><div class="ct">Volume of a sphere of radius $k$ in reciprocal space:<div class="dm" style="margin-top:2pt">$V_k=\dfrac43\pi k^3$.</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.5pt"><div class="ct">Volume of a spherical shell of radius $k$ and thickness $dk$ in reciprocal space<div class="dm" style="margin-top:8pt">$dV_k=4\pi k^2dk$.</div></div><div class="ps">1</div><div class="no"></div></div>
+ <div class="rw" style="min-height:54.5pt"><div class="ct">From the quantization of wave numbers, <span class="nw">$k_i=2\pi n_i/L_i,\ i=x,y,z$,</span> find<div class="dm" style="margin-top:8pt">$dV_k=d^3k=(2\pi)^3dN/V$.</div></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="padding-top:5pt">From <span class="nw">$\omega=vk$,</span> find <span class="nw">$\rho(\omega)\equiv\dfrac{dN}{d\omega}=\dfrac{dN}{dk}\dfrac{dk}{d\omega}=\dfrac{V\omega^2}{2\pi^2v^3}$.</span></div><div class="ps">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(c)<br>5 pts</div><div class="rs">
+ <div class="rw" style="min-height:20.2pt"><div class="ct" style="padding-top:1pt">Write <span class="nw">$U\sim\int_0^{kT}E\,\rho(E)\,dE$</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:15.2pt"><div class="ct" style="padding-top:.8pt">$C_l=dU/dT\propto T^3$</div><div class="ps" style="padding-top:.8pt">3</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(d)<br>5 pts</div><div class="rs">
+ <div class="rw" style="min-height:17.7pt"><div class="ct" style="padding-top:1.5pt">The graph shows $C/T$ versus $T^2$ is a straight line</div><div class="ps" style="padding-top:1.5pt">3</div><div class="no"></div></div>
+ <div class="rw" style="min-height:18.5pt"><div class="ct" style="padding-top:1.5pt"><span class="nw">$C=\gamma T+\beta T^3$;</span> $\gamma$ and $\beta$ are constants.</div><div class="ps" style="padding-top:1.5pt">2</div><div class="no"></div></div>
+</div></div>
+<div class="pa"><div class="lb">(e)<br>5 pts</div><div class="rs">
+ <div class="rw" style="min-height:36.5pt"><div class="ct" style="line-height:13.2pt"><span class="nw">$C=\gamma T+\beta T^3$;</span> the cubic term is known to be the phonon contribution, so the linear term is the electron contribution, i.e. <span class="nw">$C_e=\gamma T$.</span></div><div class="ps">2</div><div class="no"></div></div>
+ <div class="rw" style="min-height:36.1pt"><div class="ct" style="line-height:13.2pt">From the result of (c), the density of states of the electrons is independent of frequency, i.e. <span class="nw">$\rho_e(\omega)=\mathrm{constant}$.</span></div><div class="ps">3</div><div class="no"></div></div>
+</div></div>
+</div>
+<p class="x pn" style="--b:797.2">16</p>
+</div>
+
+</body></html>
