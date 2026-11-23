@@ -1,0 +1,948 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="595.22,842">
+<style>
+/* 대만 물리 올림피아드 2019 국가대표팀 복선(2차 선발) 시험 (2019 APhO / IPhO 대표 선발), 이론 문제지(1-9쪽)와
+   채점 기준(10-16쪽) — Korean edition on the original layout. Same geometry and placement as the English edition
+   twpho/2019_T_EN.html (see its header for the original's measurements): body 11.5pt (96% of the original 12pt) on a
+   13.5-14pt pitch, all math retyped in KaTeX, Figures 1-8 stamped, Chinese labels in Fig.2 (長度L) and Fig.3 (增益比值)
+   covered by "ov" overlays, marking-scheme table rules as 0.48pt divs from page.get_drawings(), every cell retyped.
+
+   PLACEMENT (as rupho/2016_T1.html): every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs) */
+body{font-family:CM,KB,serif;font-size:11.5pt;line-height:14pt;word-break:keep-all}
+p{text-indent:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:95.8pt;width:428.8pt;--l:14pt;--fs:11.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.r{text-align:right}
+.l{text-align:left}
+.b{font-weight:bold}
+.h{left:100.9pt;width:423.7pt;font-weight:bold;--fs:12pt}
+.h .n{left:-30pt}
+.n{position:absolute;left:-22.5pt;white-space:nowrap}
+.nar{word-break:normal}
+.pn{left:0;width:595.22pt;text-align:center;--fs:10pt;--l:12pt}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+.d{--l:30pt}
+.fl{float:right}
+.hr{position:absolute;height:0.48pt;background:#000}
+.vr{position:absolute;width:0.48pt;background:#000}
+.t{position:absolute;margin:0;--fs:11.5pt;--l:15pt;font-size:var(--fs);line-height:var(--l);white-space:nowrap;
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.ov{position:absolute;background:#fff;line-height:1;white-space:nowrap;padding:1pt 2pt}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<p class="x c" style="--b:98.8;left:40pt;width:515.2pt;--fs:26pt;--l:35.2pt">2019년 제20회 아시아 물리 올림피아드<br>및 제50회 국제 물리 올림피아드</p>
+<p class="x c" style="--b:202.6;left:40pt;width:515.2pt;--fs:26pt;--l:30pt">국가대표팀 복선(2차 선발) 시험</p>
+<p class="x c" style="--b:326.9;left:40pt;width:515.2pt;--fs:66pt;--l:72pt">이론 문제</p>
+<p class="x c" style="--b:430;left:40pt;width:515.2pt;--fs:24pt;--l:30pt">2019년 2월 16일</p>
+<p class="x c" style="--b:461.2;left:40pt;width:515.2pt;--fs:24pt;--l:30pt">13:30–16:30</p>
+<p class="x c" style="--b:492.4;left:40pt;width:515.2pt;--fs:24pt;--l:30pt">시험 시간: 3시간</p>
+<p class="x c" style="--b:578.9;left:40pt;width:515.2pt;--fs:24pt;--l:30pt">&lt;&lt;&thinsp;주의 사항&thinsp;&gt;&gt;</p>
+<p class="x l" style="--b:604.4;left:106.9pt;width:418pt;--fs:17pt;--l:23.4pt"><span class="n" style="left:-36pt">1.</span>검은색 또는 파란색 볼펜으로만 답하여라.</p>
+<p class="x l" style="--b:627.8;left:106.9pt;width:418pt;--fs:17pt;--l:23.4pt"><span class="n" style="left:-36pt">2.</span>이 시험은 계산 문제 6개로 이루어져 있으며, 문제당 25점, 총 150점이다.</p>
+<p class="x l" style="--b:674.6;left:106.9pt;width:418pt;--fs:17pt;--l:23.4pt"><span class="n" style="left:-36pt">3.</span>각 계산 문제의 답은 답안지의 지정된 위치에 써라. 문제마다 답안지는 2쪽이다.</p>
+<p class="x l" style="--b:721.4;left:106.9pt;width:418pt;--fs:17pt;--l:23.4pt"><span class="n" style="left:-36pt">4.</span>휴대용 계산기(공학용 계산기 포함)를 사용할 수 있다.</p>
+</div>
+
+<!-- page 2: mathematical formulas -->
+<div class="page">
+<p class="x" style="--b:98.2;left:70.9pt;width:453.7pt;--fs:12pt">필요할 수 있는 수학 공식 ($t$는 시간, $x$는 임의의 물리량)</p>
+<p class="x l d" style="--b:131.2;left:70.9pt;--fs:12pt"><span class="nw">1.&ensp;$f'(x)\equiv\dfrac{df}{dx}$,&emsp;$f''(x)\equiv\dfrac{d^2f}{dx^2}=\dfrac{d}{dx}\!\left(\dfrac{df}{dx}\right)$;</span></p>
+<p class="x l d" style="--b:167.4;left:94.9pt;--fs:12pt"><span class="nw">$\dot x(t)\equiv\dfrac{dx}{dt}$,&emsp;$\ddot x(t)\equiv\dfrac{d^2x}{dt^2}$.</span></p>
+<p class="x l d" style="--b:216.6;left:70.9pt;--fs:12pt"><span class="nw">2.&ensp;$\displaystyle\int(ax+b)^m dx=\frac{(ax+b)^{m+1}}{(m+1)a}$,&ensp;$m$&thinsp;≠&thinsp;$-1$;&ensp;$\displaystyle\int(ax+b)^{-1}dx=\frac{1}{a}\ln(ax+b)$;</span></p>
+<p class="x l d" style="--b:256.6;left:88.9pt;--fs:12pt"><span class="nw">$\dfrac{d}{dx}(ax+b)^m=ma\cdot(ax+b)^{m-1}$;&emsp;$\dfrac{d}{dx}\ln(ax+b)=a\cdot(ax+b)^{-1}$.</span></p>
+<p class="x l d" style="--b:307;left:70.9pt;--fs:12pt"><span class="nw">3.&ensp;$\dfrac{de^{ax}}{dx}=ae^{ax}$,&emsp;$\dfrac{d\sin ax}{dx}=a\cos ax$,&emsp;$\dfrac{d\cos ax}{dx}=-a\sin ax$;</span></p>
+<p class="x l d" style="--b:346.4;left:92.1pt;--fs:12pt"><span class="nw">$\displaystyle\int e^{ax}dx=\frac{1}{a}e^{ax}$,&emsp;$\displaystyle\int\sin ax\,dx=-\frac{1}{a}\cos ax$,&emsp;$\displaystyle\int\cos ax\,dx=\frac{1}{a}\sin ax$.</span></p>
+<p class="x l" style="--b:385.9;left:70.9pt;--fs:12pt"><span class="nw">4.&ensp;$|x|\ll1$일 때,&ensp;$(1+x)^\alpha\approx1+\alpha x$,</span></p>
+<p class="x l d" style="--b:414.3;left:94.9pt;--fs:12pt"><span class="nw">$e^x\approx1+x$,&emsp;$\sin x\approx x$,&emsp;$\cos x\approx1-\dfrac{x^2}{2}$.</span></p>
+<p class="x l" style="--b:457.9;left:85.1pt;width:439.5pt;--fs:12pt"><span class="n" style="left:-14.2pt">5.</span>계수가 상수인 선형 1계 미분방정식 <span class="nw">$ax'(t)+bx(t)=0$의</span> 일반해는 다음 꼴이다.</p>
+<p class="x c" style="--b:475.7;left:85.1pt;width:362pt;--fs:12pt">$x(t)=\alpha e^{st}$</p>
+<p class="x l" style="--b:493.7;left:85.1pt;width:439.5pt;--fs:12pt">여기서 $s$는 일차방정식 <span class="nw">$as+b=0$의</span> 근이고,</p>
+<p class="x l" style="--b:511.7;left:85.1pt;width:439.5pt;--fs:12pt">$\alpha$는 초기 조건 $x(0)$으로 정해지는 적분 상수이다.</p>
+<p class="x l" style="--b:547.9;left:85.1pt;width:439.5pt;--fs:12pt"><span class="n" style="left:-14.2pt">6.</span>계수가 상수인 선형 2계 미분방정식 <span class="nw">$ax''(t)+bx'(t)+cx(t)=0$의</span> 일반해는 다음 꼴이다.</p>
+<p class="x c" style="--b:565.7;left:85.1pt;width:362pt;--fs:12pt">$x(t)=\alpha_1e^{s_1t}+\alpha_2e^{s_2t}$</p>
+<p class="x l" style="--b:583.7;left:85.1pt;width:439.5pt;--fs:12pt">여기서 $s_1$, $s_2$는 이차방정식 <span class="nw">$as^2+bs+c=0$의</span> 근이고,</p>
+<p class="x l" style="--b:601.7;left:85.1pt;width:439.5pt;--fs:12pt">$\alpha_1$, $\alpha_2$는 초기 조건 $x(0)$과 $x'(0)$으로 정해지는 적분 상수이다.</p>
+<p class="x pn" style="--b:797.2">1</p>
+</div>
+
+<!-- page 3: problem 1 -->
+<div class="page">
+<p class="x c" style="--b:86.8;left:40pt;width:515.2pt;--fs:16pt;--l:20.1pt">2019년 제20회 아시아 및 제50회 국제 물리 올림피아드<br>국가대표팀 복선(2차 선발) 시험 문제</p>
+<p class="x" style="--b:134.7;left:70.9pt;width:453.7pt;--fs:12pt">이 시험은 계산 문제 6개로 이루어져 있으며, 문제당 25점, 총 150점이다.</p>
+<p class="x h" style="--b:161.1"><span class="n">1.</span>열기관</p>
+<div class="f" style="left:407.4pt;top:158.7pt"><span class="fig" data-srcpage="3" data-clip="407.4,158.7,549.1,337.4"></span></div>
+<p class="x c" style="--b:363.5;left:450pt;width:54pt;--fs:12pt">그림 1</p>
+<p class="x nar" style="--b:179.1;width:302.8pt;--l:14pt">두 개의 등압 과정과 두 개의 등적(부피 일정) 과정으로 이루어진 열기관 순환이 있다. 이 열기관은 이원자 분자 이상기체 1.00&nbsp;몰로 작동하며, 그림&nbsp;1의 <span class="nw">$P$-$V$</span> 그래프에서 A, B, C, D 네 점 사이를 순환한다. 이상기체 상수는 <span class="nw">$R=8.31\ \mathrm{J/mol\cdot K}$이다.</span> A점의 압력과 온도는 각각 <span class="nw">$P_0=1.00\ \mathrm{atm}$,</span> <span class="nw">$T_0=200\ \mathrm K$이고,</span> <span class="nw">$P_\mathrm{h}=3.00P_0$,</span> <span class="nw">$V_\mathrm{h}=2.00V_0$이다.</span> 에너지 손실이 없다고 할 때, 다음 물음에 답하여라.</p>
+<p class="x" style="--b:305.1;left:111.4pt;width:287.2pt"><span class="n">(A)</span>이 열기관의 효율을 계산하여라.</p>
+<p class="x nar" style="--b:323.1;left:111.4pt;width:413.2pt;--l:14pt"><span class="fl" style="width:131pt;height:52pt"></span><span class="n">(B)</span>열기관이 한 번의 순환 과정을 마칠 때 방출하는 열이 1기압의 환경에서 질량 $m$인 드라이아이스를 <span class="nw">$-100$&thinsp;°C에서</span> 온도 27.0&thinsp;°C의 이산화탄소 기체로 바꾸는 데 꼭 맞는 양이라면, $m$의 값은 얼마인가? 1기압에서 드라이아이스의 밀도는 <span class="nw">$1.50\ \mathrm{g/cm^3}$,</span> 상변화 온도는 <span class="nw">$-78.0$&thinsp;°C,</span> 비열은 <span class="nw">$55.0\ \mathrm{J/mol\cdot K}$,</span> 기화열은 <span class="nw">$290\ \mathrm{J/g}$이고,</span> 이산화탄소 기체의 비열은 <span class="nw">$37.0\ \mathrm{J/mol\cdot K}$이다.</span></p>
+<p class="x" style="--b:413;left:111.4pt;width:413.2pt;--l:14pt"><span class="n">(C)</span>(B)에 이어서, 이 이산화탄소 기체의 부피($V_\mathrm{g}$)와 드라이아이스의 부피($V_\mathrm{di}$)의 비 <span class="nw">$V_\mathrm{g}/V_\mathrm{di}$는</span> 얼마인가? (이산화탄소를 이상기체로 취급하여라.)</p>
+<p class="x" style="--b:467.1;left:88.9pt;width:435.7pt">이제 작업상의 필요로 이 열기관을 개조하려 한다.</p>
+<p class="x" style="--b:485.1;left:111.4pt;width:413.2pt"><span class="n">(D)</span>B와 D가 같은 등온선 위에 놓이려면 $V_\mathrm{h}$를 얼마로 조정해야 하는가?</p>
+<p class="x" style="--b:503.1;left:111.4pt;width:413.2pt"><span class="n">(E)</span>B와 D가 같은 단열선 위에 놓이려면 $V_\mathrm{h}$를 얼마로 조정해야 하는가?</p>
+<p class="x" style="--b:521.1;left:111.4pt;width:413.2pt;--l:17pt"><span class="n">(F)</span>B와 D가 같은 단열선 위에 놓일 때 D점이 가져야 할 부피를 $V_\mathrm{ad}$라 하자. 실무에서는 $V_\mathrm{ad}$와 $V_\mathrm{h}$의 차이가 <span class="nw">$\left(\frac{|V_\mathrm{h}-V_\mathrm{ad}|}{V_\mathrm{h}}\right)\le5\%$이면</span> $V_\mathrm{h}$를 $V_\mathrm{ad}$로 볼 수 있어 $V_\mathrm{h}$의 크기를 조정할 필요가 없다. 그렇다면 앞 물음에 해당하는 경우는 이 실무 조건을 만족하는가? 이 열기관의 작동 기체를 단원자 분자 이상기체로 바꾸면 이 실무 조건을 만족할 수 있는가?</p>
+<p class="x pn" style="--b:797.2">2</p>
+</div>
+
+<!-- page 4: problem 2 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">2.</span>펄스 레이저</p>
+<p class="x" style="--b:101.5;left:94.9pt;width:429.7pt;--l:15pt">특정 파장의 빛은 레이저 공진기 안에서 정상파를 만든다. 공진기는 그림&nbsp;2의 모식도와 같고, 길이는 $L$이다. 공진기 가운데에 길이 $d$인 이득 매질이 있다(이 매질에 에너지를 공급하여 빛의 세기를 키우는 다른 장치가 있지만, 문제와 관계없으므로 나타내지 않았다). 빛이 이 이득 매질을 지나면 빛의 세기가 조금 커지고, 그 결과 레이저 빛이 나온다. 공진기 양 끝에는 평행한 두 반사거울(두께는 무시한다)이 있어 패브리-페로 공진기와 비슷하며, 레이저 빛을 100% 반사할 수 있다.</p>
+<div class="f" style="left:75pt;top:204pt"><span class="fig" data-srcpage="4" data-clip="75,204,490,349"></span></div>
+<div class="ov" style="left:234pt;top:207.5pt;width:58.5pt;height:22pt;line-height:22pt;padding:0;text-align:center;font-size:12pt">길이 $L$</div>
+<p class="x c" style="--b:371.5;left:150pt;width:256pt;--fs:12pt">그림 2: 레이저 공진기 모식도</p>
+<p class="x" style="--b:407.5;left:120.5pt;width:404.1pt;--l:18pt"><span class="n" style="left:-25.6pt">(A)</span>이득 매질의 굴절률이 $n$일 때, 공진기 안에서 진행할 수 있는 광파의 진동수 $\nu$는 <span class="nw">$\nu=m\times\nu_0$으로</span> 쓸 수 있다. 여기서 $m$은 양의 정수이다. $\nu_0$의 식을 구하여라.</p>
+<p class="x" style="--b:461.5;left:94.9pt;width:429.7pt;--l:15pt">공진기 안의 빛은 평면파이고, 빛이 이득 매질을 지날 때 증폭 작용이 일어난다. 계산을 간단히 하기 위해, 이득 매질의 총 이득 효과(관련 손실을 뺀 뒤)가 그림&nbsp;3과 같다고 가정한다. 즉 이득 매질은 사각형 범위 안에서 같은 세기로 빛을 내어, <span class="nw">$f_0-\Delta f/2$에서</span> <span class="nw">$f_0+\Delta f/2$까지의</span> 빛을 낼 수 있고 이득 효과도 모두 같다. <span class="nw">$f_0=2\times10^{15}\ \mathrm{Hz}$이고,</span> 대역폭 $\Delta f$는 <span class="nw">$5\times10^{12}\ \mathrm{Hz}$이다.</span></p>
+<div class="f" style="left:140pt;top:534pt"><span class="fig" data-srcpage="4" data-clip="140,534,414,682"></span></div>
+<div class="ov" style="left:140pt;top:536pt;width:74pt;height:17pt;line-height:17pt;padding:0;text-align:center;font-size:12pt">이득 비</div>
+<p class="x l" style="--b:650.6;left:417.2pt;width:107pt;--fs:12pt">진동수 $f$</p>
+<p class="x c" style="--b:700;left:270pt;width:61.2pt;--fs:12pt">그림 3</p>
+<p class="x" style="--b:749.5;left:94.9pt;width:429.7pt">(B)&ensp;이득 매질의 굴절률이 <span class="nw">$n=1.5$,</span> 길이 $d$가 <span class="nw">$50\ \mathrm{cm}$이고,</span> 레이저 공진기의 길이가</p>
+<p class="x pn" style="--b:797.2">3</p>
+</div>
+
+<!-- page 5: problem 2 continued -->
+<div class="page">
+<p class="x" style="--b:83.5;left:94.9pt;width:429.7pt"><span class="nw">$L=100\ \mathrm{cm}$이면,</span> 이 공진기 안에 존재할 수 있는 공진 모드의 수는 얼마인가?</p>
+<p class="x" style="--b:119.5;left:116.2pt;width:408.4pt;--l:18pt"><span class="n" style="left:-21.3pt">(C)</span>각 공진 모드의 세기를 $I_0$이라 하자. 공진기 안의 공진 모드들이 모두 보강 간섭을 하면 섬광등처럼 펄스광이 생기는데, 다만 레이저 펄스광은 아주 짧은 시간 동안 빛의 세기가 매우 강하다. 이 현상을 ‘모드 잠금’(mode locking)이라 한다. 이때 빛의 세기 $I_t(t)$는 시간에 따라 어떻게 변하는가?</p>
+<p class="x" style="--b:191.5;left:116.2pt;width:408.4pt"><span class="n" style="left:-21.3pt">(D)</span>(C)의 결과로부터, 모드 잠금일 때 이웃한 두 펄스광 사이의 시간 간격을 구하여라.</p>
+<p class="x" style="--b:227.5;left:116.2pt;width:408.4pt;--l:18pt"><span class="n" style="left:-21.3pt">(E)</span>(C)의 결과로부터, 모드 잠금일 때 이 펄스광의 시간 영역 폭, 즉 이 펄스광의 시간축 위에서의 폭을 구하여라.</p>
+<p class="x pn" style="--b:797.2">4</p>
+</div>
+
+<!-- page 6: problem 3 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">3.</span>기체 속 전자의 이온화 효과</p>
+<p class="x" style="--b:101.5;--l:14pt">전하가 $-e$인 전자는 강한 전기장 속의 기체에서 가속되며, 그 운동 에너지는 충돌한 기체 분자 A를 이온화하여 양이온 $\mathrm A^+$ 하나와 전자 $\mathrm e^-$ 하나로 쪼갤 만큼 커질 수 있다. 이 문제에서 다루는 전자의 이온화 효과는 위의 <span class="nw">$\mathrm A\to\mathrm A^+ +\mathrm e^-$</span> 유형으로 한정하며, 전자와 이온의 재결합은 무시할 수 있다고 가정한다. 아래에서는 간단한 모형으로, 계가 정상 상태에 이르렀을 때 기체 속 전자의 이온화 효과를 살펴본다. 이는 기체 충전형 전리 방사선 검출기에서 매우 기본적이고 중요한 주제이다.</p>
+<p class="x" style="--b:201;--l:14pt">아래 그림과 같이, 두 평행판 전극 사이의 거리가 $d$이고, 평행판 사이의 강한 전기장은 균일하고 일정하며, 공간은 중성 분자로 이루어진 기체로 채워져 있고 기체 온도는 $T$로 일정하다. 전위가 낮은 음극판은 <span class="nw">$x=0$에,</span> 양극판은 <span class="nw">$x=d$에</span> 있다. 각 전자가 기체 속을 나아갈 때 단위 길이당 만드는 이온화 전자의 수를 상수 $\alpha$로 나타내며, 이 상수를 제1 타운센드 계수라 한다.</p>
+<div class="f" style="left:214pt;top:279pt"><span class="fig" data-srcpage="6" data-clip="214,255,288.5,362"></span></div>
+<div class="f" style="left:352pt;top:314pt"><span class="fig" data-srcpage="6" data-clip="352,290,411,361"></span></div>
+<p class="x l" style="--b:297.8;left:295.4pt;width:150pt;--fs:12pt">$x$축 방향</p>
+<p class="x c" style="--b:404.3;left:280pt;width:66.4pt;--fs:12pt">그림 4</p>
+<p class="x" style="--b:430;left:118.9pt;width:405.7pt;--l:14pt"><span class="n" style="left:-24pt">(A)</span>자외선을 음극판(<span class="nw">$x=0$)에</span> 고르게 비추어, 음극판이 $x$축 방향으로 단위 시간당 방출하는 자유 전자의 수가 $n_0$이 되게 한다. 이 전자들은 기체 속에서 $x$축 방향으로 양극판을 향해 나아가며 기체 분자와 이온화 충돌을 한다. 전기장은 전자와 이온의 영향을 받지 않는다고 가정하고, 이온의 이온화 효과는 무시하며, 전자의 제1 타운센드 계수는 $\alpha$이다. 단위 시간당 양극판(<span class="nw">$x=d$)에</span> 도달하는 전자의 총수 $n_d$를 구하여라.</p>
+<p class="x" style="--b:527;left:118.9pt;width:405.7pt;--l:14pt"><span class="n" style="left:-24pt">(B)</span>앞 문제에 이어서. 실험에 따르면 $\alpha d$의 값이 클 때 단위 시간당 양극판에 도달하는 전자의 총수가 앞 문제에서 예측한 값보다 크다. 그래서 전자와 분자의 이온화 충돌로 생긴 양이온(그 수는 이온화된 전자의 수와 같다)이 음극 쪽으로 움직이며 전기장에 가속된 뒤 역시 기체 분자를 이온화하여 전자를 만들 수 있다고 보는 견해가 있다. 각 양이온이 나아갈 때 단위 길이당 만드는 이온화 전자의 수를 상수 $\beta$로 나타내고, 앞 물음 (A)의 모형을 전자와 양이온의 이온화 효과를 모두 포함하도록 확장하면, 단위 시간당 양극판에 도달하는 전자의 총수 $N_d$는 얼마인가?</p>
+<p class="x" style="--b:663;left:118.9pt;width:405.7pt;--l:14pt"><span class="n" style="left:-24pt">(C)</span>이제 1차 전자를 만드는 다른 방식을 생각하자. 두 전극판 사이 기체의 모든 부분이 외부 방사선원에 고르게 쪼여 기체 분자가 이온화되며, 단위 시간에 단위 부피당 생기는 1차 전자(와 이온)의 수가 $\nu$라고 가정한다. 각 전자의 제1 타운센드 계수는 여전히 $\alpha$이고, 전자에 의한(이온은 고려하지 않는다) 이온화 작용만 고려한다(여기서 전자는 위의 기체 각 부분에서 생긴 1차 전자와, 그것들이 분자와 충돌하여 만든 2차 및 그 이후의 고차 이온화 전자를 모두 포함한다). 두 극판 사이의 기체를 흐르는 전류 밀도 $J$는 얼마인가?</p>
+<p class="x pn" style="--b:797.2">5</p>
+</div>
+
+<!-- page 7: problem 4 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">4.</span>가는 쇠막대의 운동</p>
+<p class="x" style="--b:101.5;left:94.9pt;width:429.7pt;--l:17pt">그림&nbsp;5와 같이, 균일한 가는 쇠막대 하나가 수평한 지면 위에 똑바로 서 있다. 쇠막대의 길이는 $2L$, 질량은 $M$이고, 질량 중심에 대한 관성 모멘트는 <span class="nw">$I=ML^2/3$이다.</span> 위 끝에 아주 작은 수평 힘을 가하여 쇠막대가 균형을 잃고 그림&nbsp;6과 같이 계속 아래로 넘어진다.</p>
+<div class="f" style="left:86pt;top:158pt"><span class="fig" data-srcpage="7" data-clip="86,158,523,306"></span></div>
+<p class="x c" style="--b:331.1;left:160pt;width:56pt;--fs:12pt">그림 5</p>
+<p class="x c" style="--b:324.7;left:378pt;width:56pt;--fs:12pt">그림 6</p>
+<p class="x" style="--b:360;left:94.9pt;width:429.7pt">쇠막대와 지면 사이에 마찰력이 없다면, 다음 물음에 답하여라.</p>
+<p class="x" style="--b:378.5;left:117.4pt;width:407.2pt"><span class="n">(A)</span>쇠막대가 기울어지는 동안의 각속도 $\dot\theta$와 각도 $\theta$의 관계식을 구하고, 지면에 닿기 직전의 각속도를 구하여라.</p>
+<p class="x" style="--b:414;left:117.4pt;width:407.2pt"><span class="n">(B)</span>쇠막대의 질량 중심의 연직 방향 속도 $\dot y$와 각도 $\theta$의 관계식을 구하고, 지면에 닿기 직전의 연직 속도를 구하여라.</p>
+<p class="x" style="--b:450;left:117.4pt;width:407.2pt"><span class="n">(C)</span>쇠막대 아래 끝의 수평 속도 $\dot x$와 각도 $\theta$의 관계식을 구하고, 쇠막대 아래 끝의 속도 $\dot x$와 각도 $\theta$의 관계 그래프를 대략 그려라.</p>
+<p class="x" style="--b:486;left:117.4pt;width:407.2pt"><span class="n">(D)</span>쇠막대 아래 끝이 받는 수직항력 $N$과 각도 $\theta$의 관계식을 구하고, 지면에 닿기 직전의 수직항력을 구하여라.</p>
+<p class="x" style="--b:522;left:94.9pt;width:429.7pt">쇠막대와 지면 사이의 정지 마찰 계수가 $\mu$이고 다른 조건은 그대로일 때, 다음 물음에 답하여라.</p>
+<p class="x" style="--b:553.5;left:117.4pt;width:407.2pt"><span class="n">(E)</span><span class="nw">$\theta=\theta_0$일</span> 때 쇠막대 아래 끝이 미끄러지기 시작한다. $\theta_0$이 만족하는 방정식을 구하여라.</p>
+<p class="x" style="--b:571.5;left:117.4pt;width:407.2pt"><span class="n">(F)</span>(E)에 이어서, <span class="nw">$\mu\ll1$이면</span> $\theta_0$을 구하여라.</p>
+<p class="x pn" style="--b:797.2">6</p>
+</div>
+
+<!-- page 8: problem 5 -->
+<div class="page">
+<p class="x h" style="--b:82.3"><span class="n">5.</span>정전기장 속 대전 입자의 운동</p>
+<div class="f" style="left:298.3pt;top:93.4pt"><span class="fig" data-srcpage="8" data-clip="298.3,93.4,536.9,195.4"></span></div>
+<p class="x c" style="--b:215.6;left:385pt;width:56pt;--fs:12pt">그림 7</p>
+<p class="x nar" style="--b:103.8;width:195pt;--l:14pt">그림&nbsp;7과 같이, 길이가 $2a$이고 총전하 <span class="nw">$Q\,(&gt;0)$가</span> 고르게 분포한 가는 막대가 $z$축 위에 고정되어 있다. 대전된 막대 근처에 질량이 $m$, 전하가 <span class="nw">$-q\,(&lt;0)$인</span> 입자가 있다. 이 입자는 대전된 막대의 정전기력을 받아 운동한다.</p>
+<p class="x l nar" style="--b:197.8;left:118.3pt;width:172pt;--l:14pt"><span class="n">(A)</span>이 점전하의 각운동량의 $z$ 성분이 보존됨을 보여라.</p>
+<p class="x" style="--b:229.8;left:118.3pt;width:406.3pt;--l:16pt"><span class="n">(B)</span>점전하가 <span class="nw">$z=0$인</span> 평면에서 대전된 막대 둘레로 반지름 $r_0$인 원운동을 한다. 이 원운동의 각진동수 $\omega_0$을 구하여라.</p>
+<p class="x" style="--b:301.8;left:118.3pt;width:406.3pt;--l:18pt"><span class="n">(C)</span>(B)에 이어서, 이 입자의 원운동이 지름 방향으로 작은 섭동을 받으면, 입자의 $r$ 방향 위치는 <span class="nw">$r=r_0(1+\epsilon\sin\omega t)$가</span> 된다. $\omega$와 $\omega_0$의 관계를 구하여라.</p>
+<p class="x" style="--b:355.8;left:118.3pt;width:406.3pt;--l:18.5pt"><span class="n">(D)</span>(C)에 이어서, 위의 섭동을 받으면 이 입자의 각속도는 <span class="nw">$\dot\theta=\omega_0(1-\epsilon\alpha_0\sin\omega t)$가</span> 된다. $\alpha_0$을 구하여라.</p>
+<p class="x l d" style="--b:419;left:94.9pt;--fs:12pt"><span class="nw">힌트:&ensp;$\displaystyle\int\frac{1}{\sqrt{x^2+b^2}}\,dx=\ln\!\left(\left|\sqrt{x^2+b^2}+x\right|\right)+C$,</span></p>
+<p class="x l d" style="--b:458;left:140pt;--fs:12pt"><span class="nw">$\displaystyle\int\frac{1}{(x^2+b^2)^{3/2}}\,dx=\frac{x}{b^2\sqrt{x^2+b^2}}+C$.</span></p>
+<p class="x pn" style="--b:797.2">7</p>
+</div>
+
+<!-- page 9: problem 6 -->
+<div class="page">
+<p class="x h" style="--b:82.3"><span class="n">6.</span>수정 발진기</p>
+<p class="x" style="--b:101.8;--l:13.5pt">수정 발진기와 필터. 압전 수정 결정의 전자 회로에서의 주된 응용 가운데 하나는 발진기와 필터의 진동수를 제어하는 것이다. 그림&nbsp;8(a)와 같이, 알맞게 자른 얇은 수정 결정판의 양면에 금속 전극을 입히고 교류 전원에 연결하면, 압전 효과로 결정 안에 역학적 파동이 생긴다. 이 역학적 파동의 파장을 $\lambda$, 결정의 파동 진행 방향 길이를 $\ell$이라 하자. 둘이 공진 조건 <span class="nw">$n(\lambda/2)=\ell$</span>($n$은 양의 정수)을 만족하면 이 역학적 파동은 결정 안에서 정상파를 이루며, 그 진동수는 <span class="nw">$f_s=v/\lambda$이다.</span> 여기서 $v$는 이 역학적 파동이 매질 속에서 전파하는 속력이다. 교류가 압전 효과를 통해 수정의 역학적 진동을 일으키므로, 그 거동은 그림&nbsp;8(b) 오른쪽의 등가 회로처럼 교류 전원으로 구동되는 직렬 인덕터-축전기-저항(LCR) 회로와 비슷하다. 이 등가 LCR 회로에서 L, $C$, R는 각각 수정 결정의 질량, 강성, 역학적 손실(또는 감쇠)에 대응한다. 또한 수정판의 양면에 모두 금속 전극이 입혀져 있으므로, 이를 평행판 축전기 $C_0$으로 볼 수 있으며, $C_0$은 그림&nbsp;8(b) 왼쪽의 등가 회로처럼 앞의 등가 LCR 회로와 병렬로 연결된다. 전형적인 수정 발진기의 임피던스는 역학적 진동의 공진 진동수 $f_s$에서 최솟값을 가질 뿐 아니라, 등가 인덕턴스 $L$과 두 등가 전기용량($C$와 $C_0$) 사이의 공진 때문에 또 다른 진동수 $f_\mathrm a$(반공진 진동수, anti-resonant frequency라 한다)에서 그림&nbsp;8(c)와 같이 임피던스 최댓값이 나타난다. 이상의 내용을 바탕으로 다음 물음에 답하여라.</p>
+<div class="f" style="left:91pt;top:366pt"><span class="fig" data-srcpage="9" data-clip="91,358,534,512"></span></div>
+<p class="x c" style="--b:542.7;left:286pt;width:56pt;--fs:12pt">그림 8</p>
+<p class="x" style="--b:577.3;left:111.4pt;width:413.2pt"><span class="n">(A)</span>위의 수정 발진기의 특성으로부터 $f_s$와 $f_\mathrm a$를 그림의 매개변수 $L$, $C$, $C_0$ 등으로 나타내어 계산하여라.</p>
+<p class="x" style="--b:607.5;left:111.4pt;width:413.2pt"><span class="n">(B)</span>수정의 영률은 <span class="nw">$Y=80.0\ \mathrm{GPa}$,</span> 밀도는 <span class="nw">$\rho=2.65\ \mathrm{g/cm^3}$이다.</span> 1.00&nbsp;MHz용 수정 발진기에 알맞은 길이는 대략 얼마인가? (이 정상파는 <span class="nw">$n=1$인</span> 기본 정상파라고 가정한다.)</p>
+<p class="x" style="--b:650;left:111.4pt;width:413.2pt"><span class="n">(C)</span>압전 재료의 결합 계수(coupling coefficient) $\kappa$는 다음과 같이 정의할 수 있다.</p>
+<p class="x l d" style="--b:677;left:124.9pt;width:399.7pt"><span class="nw">$\kappa^2\equiv\dfrac{\text{계에 저장된 역학적 에너지}}{\text{계에 저장된 전체 에너지}}$.&ensp;<span class="nw">$\kappa^2=1-\dfrac{f_s^2}{f_\mathrm a^2}$임을</span> 보여라.</span></p>
+<p class="x" style="--b:701;left:111.4pt;width:413.2pt"><span class="n">(D)</span>전형적인 X-cut 수정 결정에서 <span class="nw">$\kappa=0.100$이다.</span> <span class="nw">$f_s=1.00\ \mathrm{MHz}$,</span> <span class="nw">$C_0=5.00\ \mathrm{pF}$,</span> <span class="nw">$R=20.0\ \Omega$일</span> 때, 이 수정 결정의 등가 인덕턴스 $L$과 전기용량 $C$를 구하여라.</p>
+<p class="x" style="--b:735;left:111.4pt;width:413.2pt"><span class="n">(E)</span>(D)에 이어서, 수정 발진기의 품질 인자(quality factor) $Q$는 다음과 같이 나타낼 수 있다.</p>
+<p class="x l d" style="--b:775;left:111.4pt;width:413.2pt"><span class="nw">$Q=\dfrac{1}{2\pi f_sRC}$.</span> 이 수정 발진기의 품질 인자를 계산하여라.</p>
+<p class="x pn" style="--b:797.2">8</p>
+</div>
+
+<!-- page 10: marking scheme, problem 1 -->
+<div class="page">
+<p class="x c" style="--b:86.8;left:40pt;width:515.2pt;--fs:16pt;--l:20.1pt">2019년 제20회 아시아 및 제50회 국제 물리 올림피아드<br>국가대표팀 복선(2차 선발) 시험 풀이</p>
+<p class="x" style="--b:141.9;left:70.9pt;width:453.7pt;--fs:12pt">문제 1 채점 기준:</p>
+<!-- table rules from page.get_drawings() (0.48pt) -->
+<div class="hr" style="left:76.32pt;width:421.26pt;top:159.96pt"></div>
+<div class="vr" style="left:76.32pt;top:160.44pt;height:31.20pt"></div>
+<div class="vr" style="left:118.86pt;top:160.44pt;height:31.20pt"></div>
+<div class="vr" style="left:443.10pt;top:160.44pt;height:31.20pt"></div>
+<div class="vr" style="left:469.68pt;top:160.44pt;height:31.20pt"></div>
+<div class="vr" style="left:497.10pt;top:160.44pt;height:31.20pt"></div>
+<div class="hr" style="left:76.32pt;width:421.26pt;top:191.64pt"></div>
+<div class="vr" style="left:76.32pt;top:192.12pt;height:18.06pt"></div>
+<div class="vr" style="left:118.86pt;top:192.12pt;height:18.06pt"></div>
+<div class="vr" style="left:443.10pt;top:192.12pt;height:18.06pt"></div>
+<div class="vr" style="left:469.68pt;top:192.12pt;height:18.06pt"></div>
+<div class="vr" style="left:497.10pt;top:192.12pt;height:18.06pt"></div>
+<div class="hr" style="left:118.86pt;width:378.72pt;top:210.18pt"></div>
+<div class="vr" style="left:76.32pt;top:210.66pt;height:18.00pt"></div>
+<div class="vr" style="left:118.86pt;top:210.66pt;height:18.00pt"></div>
+<div class="vr" style="left:443.10pt;top:210.66pt;height:18.00pt"></div>
+<div class="vr" style="left:469.68pt;top:210.66pt;height:18.00pt"></div>
+<div class="vr" style="left:497.10pt;top:210.66pt;height:18.00pt"></div>
+<div class="hr" style="left:118.86pt;width:378.72pt;top:228.66pt"></div>
+<div class="vr" style="left:76.32pt;top:229.14pt;height:18.00pt"></div>
+<div class="vr" style="left:118.86pt;top:229.14pt;height:18.00pt"></div>
+<div class="vr" style="left:443.10pt;top:229.14pt;height:18.00pt"></div>
+<div class="vr" style="left:469.68pt;top:229.14pt;height:18.00pt"></div>
+<div class="vr" style="left:497.10pt;top:229.14pt;height:18.00pt"></div>
+<div class="hr" style="left:76.32pt;width:421.26pt;top:247.14pt"></div>
+<div class="vr" style="left:76.32pt;top:247.62pt;height:18.06pt"></div>
+<div class="vr" style="left:118.86pt;top:247.62pt;height:18.06pt"></div>
+<div class="vr" style="left:443.10pt;top:247.62pt;height:18.06pt"></div>
+<div class="vr" style="left:469.68pt;top:247.62pt;height:18.06pt"></div>
+<div class="vr" style="left:497.10pt;top:247.62pt;height:18.06pt"></div>
+<div class="hr" style="left:443.10pt;width:54.48pt;top:265.68pt"></div>
+<div class="vr" style="left:76.32pt;top:266.16pt;height:18.00pt"></div>
+<div class="vr" style="left:118.86pt;top:266.16pt;height:18.00pt"></div>
+<div class="vr" style="left:443.10pt;top:266.16pt;height:18.00pt"></div>
+<div class="vr" style="left:469.68pt;top:266.16pt;height:18.00pt"></div>
+<div class="vr" style="left:497.10pt;top:266.16pt;height:18.00pt"></div>
+<div class="hr" style="left:76.32pt;width:421.26pt;top:284.16pt"></div>
+<div class="vr" style="left:76.32pt;top:284.64pt;height:15.96pt"></div>
+<div class="vr" style="left:118.86pt;top:284.64pt;height:15.96pt"></div>
+<div class="vr" style="left:443.10pt;top:284.64pt;height:15.96pt"></div>
+<div class="vr" style="left:469.68pt;top:284.64pt;height:15.96pt"></div>
+<div class="vr" style="left:497.10pt;top:284.64pt;height:15.96pt"></div>
+<div class="hr" style="left:118.86pt;width:378.72pt;top:300.60pt"></div>
+<div class="vr" style="left:76.32pt;top:301.08pt;height:18.00pt"></div>
+<div class="vr" style="left:118.86pt;top:301.08pt;height:18.00pt"></div>
+<div class="vr" style="left:443.10pt;top:301.08pt;height:18.00pt"></div>
+<div class="vr" style="left:469.68pt;top:301.08pt;height:18.00pt"></div>
+<div class="vr" style="left:497.10pt;top:301.08pt;height:18.00pt"></div>
+<div class="hr" style="left:118.86pt;width:378.72pt;top:319.08pt"></div>
+<div class="vr" style="left:76.32pt;top:319.56pt;height:15.60pt"></div>
+<div class="vr" style="left:118.86pt;top:319.56pt;height:15.60pt"></div>
+<div class="vr" style="left:443.10pt;top:319.56pt;height:15.60pt"></div>
+<div class="vr" style="left:469.68pt;top:319.56pt;height:15.60pt"></div>
+<div class="vr" style="left:497.10pt;top:319.56pt;height:15.60pt"></div>
+<div class="hr" style="left:76.32pt;width:421.26pt;top:335.16pt"></div>
+<div class="vr" style="left:76.32pt;top:335.64pt;height:29.46pt"></div>
+<div class="vr" style="left:118.86pt;top:335.64pt;height:29.46pt"></div>
+<div class="vr" style="left:443.10pt;top:335.64pt;height:29.46pt"></div>
+<div class="vr" style="left:469.68pt;top:335.64pt;height:29.46pt"></div>
+<div class="vr" style="left:497.10pt;top:335.64pt;height:29.46pt"></div>
+<div class="hr" style="left:76.32pt;width:421.26pt;top:365.10pt"></div>
+<div class="vr" style="left:76.32pt;top:365.58pt;height:32.94pt"></div>
+<div class="vr" style="left:118.86pt;top:365.58pt;height:32.94pt"></div>
+<div class="vr" style="left:443.10pt;top:365.58pt;height:32.94pt"></div>
+<div class="vr" style="left:469.68pt;top:365.58pt;height:32.94pt"></div>
+<div class="vr" style="left:497.10pt;top:365.58pt;height:32.94pt"></div>
+<div class="hr" style="left:76.32pt;width:421.26pt;top:398.52pt"></div>
+<div class="vr" style="left:76.32pt;top:399.00pt;height:31.26pt"></div>
+<div class="vr" style="left:118.86pt;top:399.00pt;height:31.26pt"></div>
+<div class="vr" style="left:443.10pt;top:399.00pt;height:31.26pt"></div>
+<div class="vr" style="left:469.68pt;top:399.00pt;height:31.26pt"></div>
+<div class="vr" style="left:497.10pt;top:399.00pt;height:31.26pt"></div>
+<div class="hr" style="left:118.86pt;width:378.72pt;top:430.26pt"></div>
+<div class="vr" style="left:76.32pt;top:430.74pt;height:36.00pt"></div>
+<div class="vr" style="left:118.86pt;top:430.74pt;height:36.00pt"></div>
+<div class="vr" style="left:443.10pt;top:430.74pt;height:36.00pt"></div>
+<div class="vr" style="left:469.68pt;top:430.74pt;height:36.00pt"></div>
+<div class="vr" style="left:497.10pt;top:430.74pt;height:36.00pt"></div>
+<div class="hr" style="left:118.86pt;width:378.72pt;top:466.74pt"></div>
+<div class="vr" style="left:76.32pt;top:467.22pt;height:18.54pt"></div>
+<div class="hr" style="left:76.32pt;width:42.54pt;top:485.28pt"></div>
+<div class="vr" style="left:118.86pt;top:467.22pt;height:18.54pt"></div>
+<div class="hr" style="left:119.34pt;width:323.76pt;top:485.28pt"></div>
+<div class="vr" style="left:443.10pt;top:467.22pt;height:18.54pt"></div>
+<div class="hr" style="left:443.58pt;width:26.10pt;top:485.28pt"></div>
+<div class="vr" style="left:469.68pt;top:467.22pt;height:18.54pt"></div>
+<div class="hr" style="left:470.16pt;width:26.94pt;top:485.28pt"></div>
+<div class="vr" style="left:497.10pt;top:467.22pt;height:18.54pt"></div>
+<p class="t" style="--b:171.8;left:82pt">소문항</p>
+<p class="t" style="--b:171.8;left:124.5pt">내용</p>
+<p class="t" style="--b:171.8;left:448.7pt">점</p><p class="t" style="--b:187.4;left:448.7pt">수</p>
+<p class="t" style="--b:171.8;left:475.3pt">비</p><p class="t" style="--b:187.4;left:475.3pt">고</p>
+<p class="t" style="--b:203.4;left:82pt">(A)</p><p class="t" style="--b:217.4;left:82pt">6점</p>
+<p class="t" style="--b:204.8;left:124.5pt">열기관이 외부에 한 일 $W=2P_0V_0$ 계산</p><p class="t" style="--b:203.4;left:448.7pt">2</p>
+<p class="t" style="--b:223.3;left:124.5pt">열기관이 흡수한 열 $Q_\mathrm{in}=(31/2)P_0V_0$ 계산</p><p class="t" style="--b:221.9;left:448.7pt">2</p>
+<p class="t" style="--b:241.7;left:124.5pt">열기관의 효율 $e=W/Q_\mathrm{in}=4/31=0.129$ 계산</p><p class="t" style="--b:240.4;left:448.7pt">2</p>
+<p class="t" style="--b:258.9;left:82pt">(B)</p><p class="t" style="--b:272.9;left:82pt">4점</p>
+<p class="t" style="--b:260.3;left:124.5pt">열기관의 총 방출열 $Q_\mathrm{out}=(27/2)nRT_0=22400\ (\mathrm J)$ 계산</p><p class="t" style="--b:258.9;left:448.7pt">2</p>
+<p class="t" style="--b:278.8;left:124.5pt">드라이아이스의 질량 $m=55.3\ (\mathrm g)$을 구함</p><p class="t" style="--b:277.4;left:448.7pt">2</p>
+<p class="t" style="--b:295.9;left:82pt">(C)</p><p class="t" style="--b:309.8;left:82pt">5점</p>
+<p class="t" style="--b:296.3;left:124.5pt">드라이아이스 부피 $V_{di}=3.69\times10^{-5}\ (\mathrm{m^3})$ 계산</p><p class="t" style="--b:295.9;left:448.7pt">2</p>
+<p class="t" style="--b:314.6;left:124.5pt">27.0&thinsp;°C 이산화탄소의 부피 $V_g=3.10\times10^{-2}\ (\mathrm{m^3})$ 계산</p><p class="t" style="--b:312.3;left:448.7pt">2</p>
+<p class="t" style="--b:331;left:124.5pt">이산화탄소와 드라이아이스 부피의 비 $V_g/V_{di}=840$ 계산</p><p class="t" style="--b:330.8;left:448.7pt">1</p>
+<p class="t" style="--b:346.9;left:82pt">(D)</p><p class="t" style="--b:360.9;left:82pt">3점</p>
+<p class="t" style="--b:348.8;left:124.5pt">B, D가 한 등온선 위에 있으므로 $V_h=3V_0$ 계산</p><p class="t" style="--b:346.9;left:448.7pt">3</p>
+<p class="t" style="--b:376.8;left:82pt">(E)</p><p class="t" style="--b:390.8;left:82pt">3점</p>
+<p class="t" style="--b:377.7;left:124.5pt">B, D가 한 단열선 위에 있으므로 $P_B\,V_B^\gamma=P_D\,V_h^\gamma$를 쓰고,</p><p class="t" style="--b:376.8;left:448.7pt">3</p>
+<p class="t" style="--b:394.3;left:124.5pt">$V_h=3^{1/\gamma}V_0=(2.19)V_0$ 계산</p>
+<p class="t" style="--b:410.3;left:82pt">(F)</p><p class="t" style="--b:424.3;left:82pt">4점</p>
+<p class="t" style="--b:410.5;left:124.5pt">$V_\mathrm{ad}=2.192\,V_0$, $V_\mathrm h=2\,V_0$: 차이가 5%를 넘으므로 부피를</p><p class="t" style="--b:410.3;left:448.7pt">1</p>
+<p class="t" style="--b:426.1;left:124.5pt">조정해야 함</p>
+<p class="t" style="--b:443.3;left:124.5pt">작동 기체가 단원자 분자 이상기체이면 $\gamma=5/3$이므로</p><p class="t" style="--b:442;left:448.7pt">2</p>
+<p class="t" style="--b:461.3;left:124.5pt">$V_\mathrm{ad}=(1.93)V_0$.</p>
+<p class="t" style="--b:479.9;left:124.5pt">$V_\mathrm{ad}$와 $V_\mathrm h$의 차이는 3.35%이므로 $V_\mathrm h$를 조정할 필요 없음.</p><p class="t" style="--b:478.5;left:448.7pt">1</p>
+<p class="x pn" style="--b:797.2">9</p>
+</div>
+
+<!-- page 11: marking scheme, problem 2 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 2 채점 기준:</p>
+<!-- table rules from page.get_drawings() (0.48pt) -->
+<div class="hr" style="left:70.92pt;width:415.32pt;top:100.32pt"></div>
+<div class="vr" style="left:70.92pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:112.50pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:372.54pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:421.44pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:485.76pt;top:100.80pt;height:15.60pt"></div>
+<div class="hr" style="left:70.92pt;width:415.32pt;top:116.40pt"></div>
+<div class="vr" style="left:70.92pt;top:116.88pt;height:15.66pt"></div>
+<div class="vr" style="left:112.50pt;top:116.88pt;height:15.66pt"></div>
+<div class="vr" style="left:372.54pt;top:116.88pt;height:15.66pt"></div>
+<div class="vr" style="left:421.44pt;top:116.88pt;height:15.66pt"></div>
+<div class="vr" style="left:485.76pt;top:116.88pt;height:15.66pt"></div>
+<div class="hr" style="left:112.50pt;width:373.74pt;top:132.54pt"></div>
+<div class="vr" style="left:70.92pt;top:133.02pt;height:18.00pt"></div>
+<div class="vr" style="left:112.50pt;top:133.02pt;height:18.00pt"></div>
+<div class="vr" style="left:372.54pt;top:133.02pt;height:18.00pt"></div>
+<div class="vr" style="left:421.44pt;top:133.02pt;height:18.00pt"></div>
+<div class="vr" style="left:485.76pt;top:133.02pt;height:18.00pt"></div>
+<div class="hr" style="left:112.50pt;width:373.74pt;top:151.02pt"></div>
+<div class="vr" style="left:70.92pt;top:151.50pt;height:20.64pt"></div>
+<div class="vr" style="left:112.50pt;top:151.50pt;height:20.64pt"></div>
+<div class="vr" style="left:372.54pt;top:151.50pt;height:20.64pt"></div>
+<div class="vr" style="left:421.44pt;top:151.50pt;height:20.64pt"></div>
+<div class="vr" style="left:485.76pt;top:151.50pt;height:20.64pt"></div>
+<div class="hr" style="left:70.92pt;width:415.32pt;top:172.14pt"></div>
+<div class="vr" style="left:70.92pt;top:172.62pt;height:18.00pt"></div>
+<div class="vr" style="left:112.50pt;top:172.62pt;height:18.00pt"></div>
+<div class="vr" style="left:372.54pt;top:172.62pt;height:18.00pt"></div>
+<div class="vr" style="left:421.44pt;top:172.62pt;height:18.00pt"></div>
+<div class="vr" style="left:485.76pt;top:172.62pt;height:18.00pt"></div>
+<div class="hr" style="left:112.50pt;width:373.74pt;top:190.62pt"></div>
+<div class="vr" style="left:70.92pt;top:191.10pt;height:36.00pt"></div>
+<div class="vr" style="left:112.50pt;top:191.10pt;height:36.00pt"></div>
+<div class="vr" style="left:372.54pt;top:191.10pt;height:36.00pt"></div>
+<div class="vr" style="left:421.44pt;top:191.10pt;height:36.00pt"></div>
+<div class="vr" style="left:485.76pt;top:191.10pt;height:36.00pt"></div>
+<div class="hr" style="left:70.92pt;width:415.32pt;top:227.10pt"></div>
+<div class="vr" style="left:70.92pt;top:227.58pt;height:54.06pt"></div>
+<div class="vr" style="left:112.50pt;top:227.58pt;height:54.06pt"></div>
+<div class="vr" style="left:372.54pt;top:227.58pt;height:54.06pt"></div>
+<div class="vr" style="left:421.44pt;top:227.58pt;height:54.06pt"></div>
+<div class="vr" style="left:485.76pt;top:227.58pt;height:54.06pt"></div>
+<div class="hr" style="left:112.50pt;width:373.74pt;top:281.64pt"></div>
+<div class="vr" style="left:70.92pt;top:282.12pt;height:72.00pt"></div>
+<div class="vr" style="left:112.50pt;top:282.12pt;height:72.00pt"></div>
+<div class="vr" style="left:372.54pt;top:282.12pt;height:72.00pt"></div>
+<div class="vr" style="left:421.44pt;top:282.12pt;height:72.00pt"></div>
+<div class="vr" style="left:485.76pt;top:282.12pt;height:72.00pt"></div>
+<div class="hr" style="left:70.92pt;width:415.32pt;top:354.12pt"></div>
+<div class="vr" style="left:70.92pt;top:354.60pt;height:108.00pt"></div>
+<div class="vr" style="left:112.50pt;top:354.60pt;height:108.00pt"></div>
+<div class="vr" style="left:372.54pt;top:354.60pt;height:108.00pt"></div>
+<div class="vr" style="left:421.44pt;top:354.60pt;height:108.00pt"></div>
+<div class="vr" style="left:485.76pt;top:354.60pt;height:108.00pt"></div>
+<div class="hr" style="left:70.92pt;width:415.32pt;top:462.60pt"></div>
+<div class="vr" style="left:70.92pt;top:463.08pt;height:36.54pt"></div>
+<div class="hr" style="left:70.92pt;width:41.58pt;top:499.14pt"></div>
+<div class="vr" style="left:112.50pt;top:463.08pt;height:36.54pt"></div>
+<div class="hr" style="left:112.98pt;width:259.56pt;top:499.14pt"></div>
+<div class="vr" style="left:372.54pt;top:463.08pt;height:36.54pt"></div>
+<div class="hr" style="left:373.02pt;width:48.42pt;top:499.14pt"></div>
+<div class="vr" style="left:421.44pt;top:463.08pt;height:36.54pt"></div>
+<div class="hr" style="left:421.92pt;width:63.84pt;top:499.14pt"></div>
+<div class="vr" style="left:485.76pt;top:463.08pt;height:36.54pt"></div>
+<p class="t" style="--b:112.2;left:76.6pt">소문항</p>
+<p class="t" style="--b:112.2;left:118.1pt">내용</p>
+<p class="t" style="--b:112.2;left:378.1pt">점수</p>
+<p class="t" style="--b:112.2;left:427pt">비고</p>
+<p class="t" style="--b:128.2;left:76.6pt">(A)</p><p class="t" style="--b:142.1;left:76.6pt">7점</p>
+<p class="t" style="--b:128.3;left:118.1pt">광경로: $(L-d+nd)$</p><p class="t" style="--b:128.2;left:378.1pt">2</p>
+<p class="t" style="--b:145.6;left:118.1pt">공진 조건: $2(L-d+nd)=m\lambda$.</p><p class="t" style="--b:144.2;left:378.1pt">3</p>
+<p class="t" style="--b:164.5;left:118.1pt;--l:20pt">답: $\nu_0=\frac{c}{2[L+(n-1)d]}$.</p><p class="t" style="--b:162.7;left:378.1pt">2</p>
+<p class="t" style="--b:183.8;left:76.6pt">(B)</p><p class="t" style="--b:197.8;left:76.6pt">3점</p>
+<p class="t" style="--b:185.3;left:118.1pt">$\nu_0=1.2\times10^8\ \mathrm{Hz}$ 계산</p><p class="t" style="--b:183.8;left:378.1pt">1</p>
+<p class="t" style="--b:203.7;left:118.1pt">공진 모드의 수: $M_0=\Delta f/\nu_0=41666$.</p><p class="t" style="--b:202.3;left:378.1pt">2</p>
+<p class="t" style="--b:221.7;left:118.1pt">또는 $M_0=2\Delta f/\nu_0=83333$</p>
+<p class="t" style="--b:238.9;left:76.6pt">(C)</p><p class="t" style="--b:252.8;left:76.6pt">8점</p>
+<p class="t" style="--b:240.2;left:118.1pt">간섭 진폭을 씀</p><p class="t" style="--b:238.9;left:378.1pt">4</p>
+<p class="t" style="--b:269.2;left:118.1pt;--l:26pt">$A_t\propto\sum_{m=1}^{M_0}e^{-i\nu_0mt}=\frac{e^{-i\nu_0t}\left(1-e^{-i\nu_0M_0t}\right)}{1-e^{-i\nu_0t}}$.</p>
+<p class="t" style="--b:306.3;left:118.1pt;--l:26pt">$I_t(t)=|A_t|^2=I_0\left(\frac{\sin5\pi\times10^{12}t}{\sin1.2\pi\times10^{8}t}\right)^2$ 계산.</p><p class="t" style="--b:293.3;left:378.1pt">4</p>
+<p class="t" style="--b:342.3;left:118.1pt;--l:26pt">또는 $I_t(t)=|A_t|^2=I_0\left(\frac{\sin5\pi\times10^{12}t}{\sin2.4\pi\times10^{8}t}\right)^2$.</p>
+<p class="t" style="--b:365.8;left:76.6pt">(D)</p><p class="t" style="--b:379.8;left:76.6pt">3점</p>
+<p class="t" style="--b:367.3;left:118.1pt">이웃한 펄스 사이의 시간 간격: $1.2\pi\times10^8T_0=\pi$.</p><p class="t" style="--b:365.8;left:378.1pt">3</p>
+<p class="t" style="--b:385.3;left:118.1pt">또는 $2.4\pi\times10^8T_0=\pi$.</p>
+<p class="t" style="--b:412.6;left:128pt;--l:22pt">$T_0=\frac{1}{1.2\times10^8}=8.33\times10^{-9}$.</p>
+<p class="t" style="--b:448.6;left:118.1pt;--l:22pt">또는 $T_0=\frac{1}{2.4\times10^8}=4.16\times10^{-9}$&thinsp;초.</p>
+<p class="t" style="--b:474.4;left:76.6pt">(E)</p><p class="t" style="--b:488.3;left:76.6pt">4점</p>
+<p class="t" style="--b:474.7;left:118.1pt">펄스의 시간 영역 폭: $5\pi\times10^{12}t_0=\pi$.</p><p class="t" style="--b:474.4;left:378.1pt">4</p>
+<p class="t" style="--b:493;left:118.1pt;--l:20pt">$t_0=\frac{1}{5\times10^{12}}=2\times10^{-13}$&thinsp;초.</p>
+<p class="x pn" style="--b:797.2">10</p>
+</div>
+
+<!-- page 12: marking scheme, problem 3 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 3 채점 기준:</p>
+<!-- table rules from page.get_drawings() (0.48pt) -->
+<div class="hr" style="left:70.92pt;width:424.26pt;top:100.32pt"></div>
+<div class="vr" style="left:70.92pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:111.84pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:409.62pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:445.02pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:494.70pt;top:100.80pt;height:15.60pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:116.40pt"></div>
+<div class="vr" style="left:70.92pt;top:116.88pt;height:15.66pt"></div>
+<div class="vr" style="left:111.84pt;top:116.88pt;height:15.66pt"></div>
+<div class="vr" style="left:409.62pt;top:116.88pt;height:15.66pt"></div>
+<div class="vr" style="left:445.02pt;top:116.88pt;height:15.66pt"></div>
+<div class="vr" style="left:494.70pt;top:116.88pt;height:15.66pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:132.54pt"></div>
+<div class="vr" style="left:70.92pt;top:133.02pt;height:23.94pt"></div>
+<div class="vr" style="left:111.84pt;top:133.02pt;height:23.94pt"></div>
+<div class="vr" style="left:409.62pt;top:133.02pt;height:23.94pt"></div>
+<div class="vr" style="left:445.02pt;top:133.02pt;height:23.94pt"></div>
+<div class="vr" style="left:494.70pt;top:133.02pt;height:23.94pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:156.96pt"></div>
+<div class="vr" style="left:70.92pt;top:157.44pt;height:21.00pt"></div>
+<div class="vr" style="left:111.84pt;top:157.44pt;height:21.00pt"></div>
+<div class="vr" style="left:409.62pt;top:157.44pt;height:21.00pt"></div>
+<div class="vr" style="left:445.02pt;top:157.44pt;height:21.00pt"></div>
+<div class="vr" style="left:494.70pt;top:157.44pt;height:21.00pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:178.44pt"></div>
+<div class="vr" style="left:70.92pt;top:178.92pt;height:18.00pt"></div>
+<div class="vr" style="left:111.84pt;top:178.92pt;height:18.00pt"></div>
+<div class="vr" style="left:409.62pt;top:178.92pt;height:18.00pt"></div>
+<div class="vr" style="left:445.02pt;top:178.92pt;height:18.00pt"></div>
+<div class="vr" style="left:494.70pt;top:178.92pt;height:18.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:196.92pt"></div>
+<div class="vr" style="left:70.92pt;top:197.40pt;height:16.38pt"></div>
+<div class="vr" style="left:111.84pt;top:197.40pt;height:16.38pt"></div>
+<div class="vr" style="left:409.62pt;top:197.40pt;height:16.38pt"></div>
+<div class="vr" style="left:445.02pt;top:197.40pt;height:16.38pt"></div>
+<div class="vr" style="left:494.70pt;top:197.40pt;height:16.38pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:213.78pt"></div>
+<div class="vr" style="left:70.92pt;top:214.26pt;height:18.00pt"></div>
+<div class="vr" style="left:111.84pt;top:214.26pt;height:18.00pt"></div>
+<div class="vr" style="left:409.62pt;top:214.26pt;height:18.00pt"></div>
+<div class="vr" style="left:445.02pt;top:214.26pt;height:18.00pt"></div>
+<div class="vr" style="left:494.70pt;top:214.26pt;height:18.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:232.26pt"></div>
+<div class="vr" style="left:70.92pt;top:232.74pt;height:18.06pt"></div>
+<div class="vr" style="left:111.84pt;top:232.74pt;height:18.06pt"></div>
+<div class="vr" style="left:409.62pt;top:232.74pt;height:18.06pt"></div>
+<div class="vr" style="left:445.02pt;top:232.74pt;height:18.06pt"></div>
+<div class="vr" style="left:494.70pt;top:232.74pt;height:18.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:250.80pt"></div>
+<div class="vr" style="left:70.92pt;top:251.28pt;height:22.68pt"></div>
+<div class="vr" style="left:111.84pt;top:251.28pt;height:22.68pt"></div>
+<div class="vr" style="left:409.62pt;top:251.28pt;height:22.68pt"></div>
+<div class="vr" style="left:445.02pt;top:251.28pt;height:22.68pt"></div>
+<div class="vr" style="left:494.70pt;top:251.28pt;height:22.68pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:273.96pt"></div>
+<div class="vr" style="left:70.92pt;top:274.44pt;height:54.00pt"></div>
+<div class="vr" style="left:111.84pt;top:274.44pt;height:54.00pt"></div>
+<div class="vr" style="left:409.62pt;top:274.44pt;height:54.00pt"></div>
+<div class="vr" style="left:445.02pt;top:274.44pt;height:54.00pt"></div>
+<div class="vr" style="left:494.70pt;top:274.44pt;height:54.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:328.44pt"></div>
+<div class="vr" style="left:70.92pt;top:328.92pt;height:22.08pt"></div>
+<div class="vr" style="left:111.84pt;top:328.92pt;height:22.08pt"></div>
+<div class="vr" style="left:409.62pt;top:328.92pt;height:22.08pt"></div>
+<div class="vr" style="left:445.02pt;top:328.92pt;height:22.08pt"></div>
+<div class="vr" style="left:494.70pt;top:328.92pt;height:22.08pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:351.00pt"></div>
+<div class="vr" style="left:70.92pt;top:351.48pt;height:22.98pt"></div>
+<div class="vr" style="left:111.84pt;top:351.48pt;height:22.98pt"></div>
+<div class="vr" style="left:409.62pt;top:351.48pt;height:22.98pt"></div>
+<div class="vr" style="left:445.02pt;top:351.48pt;height:22.98pt"></div>
+<div class="vr" style="left:494.70pt;top:351.48pt;height:22.98pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:374.46pt"></div>
+<div class="vr" style="left:70.92pt;top:374.94pt;height:27.90pt"></div>
+<div class="vr" style="left:111.84pt;top:374.94pt;height:27.90pt"></div>
+<div class="vr" style="left:409.62pt;top:374.94pt;height:27.90pt"></div>
+<div class="vr" style="left:445.02pt;top:374.94pt;height:27.90pt"></div>
+<div class="vr" style="left:494.70pt;top:374.94pt;height:27.90pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:402.84pt"></div>
+<div class="vr" style="left:70.92pt;top:403.32pt;height:22.92pt"></div>
+<div class="vr" style="left:111.84pt;top:403.32pt;height:22.92pt"></div>
+<div class="vr" style="left:409.62pt;top:403.32pt;height:22.92pt"></div>
+<div class="vr" style="left:445.02pt;top:403.32pt;height:22.92pt"></div>
+<div class="vr" style="left:494.70pt;top:403.32pt;height:22.92pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:426.24pt"></div>
+<div class="vr" style="left:70.92pt;top:426.72pt;height:54.00pt"></div>
+<div class="vr" style="left:111.84pt;top:426.72pt;height:54.00pt"></div>
+<div class="vr" style="left:409.62pt;top:426.72pt;height:54.00pt"></div>
+<div class="vr" style="left:445.02pt;top:426.72pt;height:54.00pt"></div>
+<div class="vr" style="left:494.70pt;top:426.72pt;height:54.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:480.72pt"></div>
+<div class="vr" style="left:70.92pt;top:481.20pt;height:43.14pt"></div>
+<div class="hr" style="left:70.92pt;width:40.92pt;top:523.86pt"></div>
+<div class="vr" style="left:111.84pt;top:481.20pt;height:43.14pt"></div>
+<div class="hr" style="left:112.32pt;width:297.30pt;top:523.86pt"></div>
+<div class="vr" style="left:409.62pt;top:481.20pt;height:43.14pt"></div>
+<div class="hr" style="left:410.10pt;width:34.92pt;top:523.86pt"></div>
+<div class="vr" style="left:445.02pt;top:481.20pt;height:43.14pt"></div>
+<div class="hr" style="left:445.50pt;width:49.20pt;top:523.86pt"></div>
+<div class="vr" style="left:494.70pt;top:481.20pt;height:43.14pt"></div>
+<p class="t" style="--b:112.2;left:73.5pt">소문항</p>
+<p class="t" style="--b:112.2;left:117.4pt">내용</p>
+<p class="t" style="--b:112.2;left:415.3pt">점수</p>
+<p class="t" style="--b:112.2;left:450.2pt">비고</p>
+<p class="t" style="--b:128.2;left:76.6pt">(A)</p><p class="t" style="--b:142.1;left:76.6pt">4점</p>
+<p class="t" style="--b:128.3;left:117.4pt">$dn=\alpha n(x)dx$를 씀</p><p class="t" style="--b:128.2;left:415.3pt">1</p>
+<p class="t" style="--b:145.6;left:117.4pt">적분하여 $n(x)=n(0)e^{\alpha x}=n_0e^{\alpha x}$를 얻음</p><p class="t" style="--b:144.2;left:415.3pt">2</p>
+<p class="t" style="--b:170.3;left:117.4pt">단위 시간당 양극판에 도달하는 총 전자 수: $n_d=n_0e^{\alpha d}$.</p><p class="t" style="--b:168.7;left:415.3pt">1</p>
+<p class="t" style="--b:190.1;left:76.6pt">(B)</p><p class="t" style="--b:204.1;left:76.6pt">12점</p>
+<p class="t" style="--b:191.5;left:117.4pt">$m(x)=m(x+dx)+dn$을 씀.</p><p class="t" style="--b:190.1;left:415.3pt">1</p>
+<p class="t" style="--b:208.8;left:117.4pt">$d(n+m)=0$, 즉 $n(x)+m(x)=N_d$를 얻음.</p><p class="t" style="--b:208.6;left:415.3pt">2</p>
+<p class="t" style="--b:226.9;left:117.4pt">$dn=[\alpha n(x)+\beta m(x)]dx$를 씀.</p><p class="t" style="--b:225.5;left:415.3pt">1</p>
+<p class="t" style="--b:245.4;left:117.4pt">정리하여 $dn=[(\alpha-\beta)n(x)+\beta N_d]dx$를 얻음</p><p class="t" style="--b:244;left:415.3pt">2</p>
+<p class="t" style="--b:266.2;left:117.4pt;--l:20pt">적분하여 $n(x)+\frac{\beta N_d}{\alpha-\beta}=Ce^{(\alpha-\beta)x}$를 얻음.</p><p class="t" style="--b:262.5;left:415.3pt">2</p>
+<p class="t" style="--b:305.8;left:117.4pt;--l:40pt">$n(0)=n_0$을 대입하여 $\dfrac{n(x)+\frac{\beta N_d}{\alpha-\beta}}{n_0+\frac{\beta N_d}{\alpha-\beta}}=e^{(\alpha-\beta)x}$를 얻음.</p><p class="t" style="--b:285.7;left:415.3pt">1</p>
+<p class="t" style="--b:343.1;left:117.4pt;--l:20pt">$n(d)=N_d$를 위 식에 대입하여 $e^{(\alpha-\beta)d}=\frac{N_d\alpha}{n_0(\alpha-\beta)+\beta N_d}$.</p><p class="t" style="--b:340.1;left:415.3pt">1</p>
+<p class="t" style="--b:366.7;left:117.4pt;--l:20pt">$N_d=\frac{n_0(\alpha-\beta)}{\alpha e^{-(\alpha-\beta)d}-\beta}$을 구함.</p><p class="t" style="--b:362.7;left:415.3pt">2</p>
+<p class="t" style="--b:386.2;left:76.6pt">(C)</p><p class="t" style="--b:400.1;left:76.6pt">9점</p>
+<p class="t" style="--b:386.3;left:117.4pt">$d\tilde n=\alpha\tilde n(x)dx$를 씀</p><p class="t" style="--b:386.2;left:415.3pt">1</p>
+<p class="t" style="--b:416.5;left:117.4pt">적분하여 $\tilde n(x)=\tilde n_0e^{\alpha(x-\xi)}$를 얻음</p><p class="t" style="--b:414.6;left:415.3pt">3</p>
+<p class="t" style="--b:439.3;left:117.4pt">단위 시간, 단위 넓이당 $x$에 도달하는 총 전자 수를 구함</p><p class="t" style="--b:437.9;left:415.3pt">3</p>
+<p class="t" style="--b:466.2;left:117.4pt;--l:22pt">$\tilde N(x)=\frac{\nu}{\alpha}\left[e^{\alpha x}-e^{\alpha(x-d)}\right]$.</p>
+<p class="t" style="--b:502.7;left:117.4pt;--l:20pt">두 극판 사이 기체를 흐르는 전류 밀도 $J=\frac{e\nu}{\alpha}(e^{\alpha d}-1)$.</p><p class="t" style="--b:492.4;left:415.3pt">2</p>
+<p class="x pn" style="--b:797.2">11</p>
+</div>
+
+<!-- page 13: marking scheme, problem 4 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 4 채점 기준:</p>
+<!-- table rules from page.get_drawings() (0.48pt) -->
+<div class="hr" style="left:70.92pt;width:424.26pt;top:100.32pt"></div>
+<div class="vr" style="left:70.92pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:111.84pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:409.62pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:445.02pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:494.70pt;top:100.80pt;height:15.60pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:116.40pt"></div>
+<div class="vr" style="left:70.92pt;top:116.88pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:116.88pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:116.88pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:116.88pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:116.88pt;height:36.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:152.94pt"></div>
+<div class="vr" style="left:70.92pt;top:153.42pt;height:23.94pt"></div>
+<div class="vr" style="left:111.84pt;top:153.42pt;height:23.94pt"></div>
+<div class="vr" style="left:409.62pt;top:153.42pt;height:23.94pt"></div>
+<div class="vr" style="left:445.02pt;top:153.42pt;height:23.94pt"></div>
+<div class="vr" style="left:494.70pt;top:153.42pt;height:23.94pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:177.36pt"></div>
+<div class="vr" style="left:70.92pt;top:177.84pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:177.84pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:177.84pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:177.84pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:177.84pt;height:36.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:213.84pt"></div>
+<div class="vr" style="left:70.92pt;top:214.32pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:214.32pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:214.32pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:214.32pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:214.32pt;height:36.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:250.38pt"></div>
+<div class="vr" style="left:70.92pt;top:250.86pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:250.86pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:250.86pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:250.86pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:250.86pt;height:36.00pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:286.86pt"></div>
+<div class="vr" style="left:70.92pt;top:287.34pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:287.34pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:287.34pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:287.34pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:287.34pt;height:36.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:323.34pt"></div>
+<div class="vr" style="left:70.92pt;top:323.82pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:323.82pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:323.82pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:323.82pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:323.82pt;height:36.06pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:359.88pt"></div>
+<div class="vr" style="left:70.92pt;top:360.36pt;height:27.90pt"></div>
+<div class="vr" style="left:111.84pt;top:360.36pt;height:27.90pt"></div>
+<div class="vr" style="left:409.62pt;top:360.36pt;height:27.90pt"></div>
+<div class="vr" style="left:445.02pt;top:360.36pt;height:27.90pt"></div>
+<div class="vr" style="left:494.70pt;top:360.36pt;height:27.90pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:388.26pt"></div>
+<div class="vr" style="left:70.92pt;top:388.74pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:388.74pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:388.74pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:388.74pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:388.74pt;height:36.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:424.74pt"></div>
+<div class="vr" style="left:70.92pt;top:425.22pt;height:28.80pt"></div>
+<div class="vr" style="left:111.84pt;top:425.22pt;height:28.80pt"></div>
+<div class="vr" style="left:409.62pt;top:425.22pt;height:28.80pt"></div>
+<div class="vr" style="left:445.02pt;top:425.22pt;height:28.80pt"></div>
+<div class="vr" style="left:494.70pt;top:425.22pt;height:28.80pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:454.02pt"></div>
+<div class="vr" style="left:70.92pt;top:454.50pt;height:18.00pt"></div>
+<div class="vr" style="left:111.84pt;top:454.50pt;height:18.00pt"></div>
+<div class="vr" style="left:409.62pt;top:454.50pt;height:18.00pt"></div>
+<div class="vr" style="left:445.02pt;top:454.50pt;height:18.00pt"></div>
+<div class="vr" style="left:494.70pt;top:454.50pt;height:18.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:472.50pt"></div>
+<div class="vr" style="left:70.92pt;top:472.98pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:472.98pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:472.98pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:472.98pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:472.98pt;height:36.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:509.04pt"></div>
+<div class="vr" style="left:70.92pt;top:509.52pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:509.52pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:509.52pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:509.52pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:509.52pt;height:36.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:545.52pt"></div>
+<div class="vr" style="left:70.92pt;top:546.00pt;height:18.00pt"></div>
+<div class="vr" style="left:111.84pt;top:546.00pt;height:18.00pt"></div>
+<div class="vr" style="left:409.62pt;top:546.00pt;height:18.00pt"></div>
+<div class="vr" style="left:445.02pt;top:546.00pt;height:18.00pt"></div>
+<div class="vr" style="left:494.70pt;top:546.00pt;height:18.00pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:564.00pt"></div>
+<div class="vr" style="left:70.92pt;top:564.48pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:564.48pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:564.48pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:564.48pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:564.48pt;height:36.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:600.54pt"></div>
+<div class="vr" style="left:70.92pt;top:601.02pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:601.02pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:601.02pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:601.02pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:601.02pt;height:36.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:637.02pt"></div>
+<div class="vr" style="left:70.92pt;top:637.50pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:637.50pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:637.50pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:637.50pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:637.50pt;height:36.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:673.50pt"></div>
+<div class="vr" style="left:70.92pt;top:673.98pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:673.98pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:673.98pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:673.98pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:673.98pt;height:36.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:710.04pt"></div>
+<div class="vr" style="left:70.92pt;top:710.52pt;height:18.00pt"></div>
+<div class="vr" style="left:111.84pt;top:710.52pt;height:18.00pt"></div>
+<div class="vr" style="left:409.62pt;top:710.52pt;height:18.00pt"></div>
+<div class="vr" style="left:445.02pt;top:710.52pt;height:18.00pt"></div>
+<div class="vr" style="left:494.70pt;top:710.52pt;height:18.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:728.52pt"></div>
+<div class="vr" style="left:70.92pt;top:729.00pt;height:36.54pt"></div>
+<div class="hr" style="left:70.92pt;width:40.92pt;top:765.06pt"></div>
+<div class="vr" style="left:111.84pt;top:729.00pt;height:36.54pt"></div>
+<div class="hr" style="left:112.32pt;width:297.30pt;top:765.06pt"></div>
+<div class="vr" style="left:409.62pt;top:729.00pt;height:36.54pt"></div>
+<div class="hr" style="left:410.10pt;width:34.92pt;top:765.06pt"></div>
+<div class="vr" style="left:445.02pt;top:729.00pt;height:36.54pt"></div>
+<div class="hr" style="left:445.50pt;width:49.20pt;top:765.06pt"></div>
+<div class="vr" style="left:494.70pt;top:729.00pt;height:36.54pt"></div>
+<p class="t" style="--b:112.2;left:73.5pt">소문항</p>
+<p class="t" style="--b:112.2;left:117.4pt">내용</p>
+<p class="t" style="--b:112.2;left:415.3pt">점수</p>
+<p class="t" style="--b:112.2;left:450.2pt">비고</p>
+<p class="t" style="--b:128.2;left:76.6pt">(A)</p><p class="t" style="--b:142.1;left:76.6pt">5점</p>
+<p class="t" style="--b:139;left:117.4pt;--l:20pt">에너지 보존식 $MgL=Mgy+\frac12M\dot y^2+\frac12I\dot\theta^2$을 씀</p><p class="t" style="--b:128.2;left:415.3pt">1</p>
+<p class="t" style="--b:166.6;left:117.4pt">$y=L\cos\theta\Rightarrow\dot y=-L(\sin\theta)\dot\theta$를 씀.</p><p class="t" style="--b:164.6;left:415.3pt">1</p>
+<p class="t" style="--b:199.9;left:117.4pt;--l:20pt">$MgL=MgL\cos\theta+\frac12M(L\sin\theta)^2\dot\theta^2+\frac16ML^2\dot\theta^2$을 얻음</p><p class="t" style="--b:189.1;left:415.3pt">1</p>
+<p class="t" style="--b:237;left:117.4pt;--l:24pt">$\dot\theta=\sqrt{\frac{6g(1-\cos\theta)}{L(3\sin^2\theta+1)}}$을 구함.</p><p class="t" style="--b:225.6;left:415.3pt">1</p>
+<p class="t" style="--b:273.7;left:117.4pt;--l:20pt">지면에 닿기 직전 $\dot\theta=\sqrt{3g/(2L)}$을 구함.</p><p class="t" style="--b:262.1;left:415.3pt">1</p>
+<p class="t" style="--b:298.6;left:76.6pt">(B)</p><p class="t" style="--b:312.5;left:76.6pt">2점</p>
+<p class="t" style="--b:310.4;left:117.4pt;--l:24pt">$\dot y=-\sqrt{\frac{6gL\sin^2\theta(1-\cos\theta)}{(3\sin^2\theta+1)}}$을 구함.</p><p class="t" style="--b:298.6;left:415.3pt">1</p>
+<p class="t" style="--b:346.7;left:117.4pt;--l:20pt">지면에 닿기 직전 $\theta=90^\circ$, $\dot y=-\sqrt{3gL/2}$.</p><p class="t" style="--b:335.1;left:415.3pt">1</p>
+<p class="t" style="--b:371.6;left:76.6pt">(C)</p><p class="t" style="--b:385.6;left:76.6pt">5점</p>
+<p class="t" style="--b:373.5;left:117.4pt">$x=-L\sin\theta\ \Rightarrow\ \dot x=-L(\cos\theta)\dot\theta$를 씀.</p><p class="t" style="--b:371.6;left:415.3pt">1</p>
+<p class="t" style="--b:411.8;left:117.4pt;--l:24pt">$\dot x=-\sqrt{\frac{6gL\cos^2\theta(1-\cos\theta)}{(3\sin^2\theta+1)}}$을 구함</p><p class="t" style="--b:400;left:415.3pt">1</p>
+<p class="t" style="--b:437.9;left:117.4pt">쇠막대 아래 끝의 속도 $\dot x$와 각도 $\theta$의 관계 그래프를 대략 그림</p><p class="t" style="--b:436.5;left:415.3pt">3</p>
+<p class="t" style="--b:465.7;left:76.6pt">(D)</p><p class="t" style="--b:479.7;left:76.6pt">5점</p>
+<p class="t" style="--b:467.1;left:117.4pt">$M\ddot y=N-Mg$를 씀</p><p class="t" style="--b:465.7;left:415.3pt">1</p>
+<p class="t" style="--b:495.4;left:117.4pt;--l:22pt">$\ddot y=-3g\left[\frac{\sin^2\theta\left(3\sin^2\theta+1\right)+2(1-\cos\theta)\cos\theta}{(3\sin^2\theta+1)^2}\right]$을 구함.</p><p class="t" style="--b:484.3;left:415.3pt">2</p>
+<p class="t" style="--b:531.7;left:117.4pt;--l:22pt">$N=Mg\left[\frac{4-6\cos\theta+3\cos^2\theta}{(3\sin^2\theta+1)^2}\right]$을 구함.</p><p class="t" style="--b:520.7;left:415.3pt">1</p>
+<p class="t" style="--b:558.6;left:117.4pt">지면에 닿기 직전 $N=Mg/4$를 구함</p><p class="t" style="--b:557.2;left:415.3pt">1</p>
+<p class="t" style="--b:575.8;left:76.6pt">(E)</p><p class="t" style="--b:589.7;left:76.6pt">6점</p>
+<p class="t" style="--b:586.6;left:117.4pt;--l:20pt">아래 끝에 대한 관성 모멘트 $\tilde I=\frac43ML^2$을 구함</p><p class="t" style="--b:575.8;left:415.3pt">1</p>
+<p class="t" style="--b:623;left:117.4pt;--l:20pt">에너지 보존식 $MgL=MgL\cos\theta+\frac23ML^2\dot\theta^2$을 씀.</p><p class="t" style="--b:612.2;left:415.3pt">1</p>
+<p class="t" style="--b:660.5;left:117.4pt;--l:22pt">$\ddot y=\frac{3g(3\cos^2\theta-2\cos\theta-1)}{4}$을 구함</p><p class="t" style="--b:648.7;left:415.3pt">1</p>
+<p class="t" style="--b:696.4;left:117.4pt;--l:22pt">$\ddot x=\frac{3g\sin\theta(-2+3\cos\theta)}{4}$을 구함</p><p class="t" style="--b:685.3;left:415.3pt">1</p>
+<p class="t" style="--b:723.1;left:117.4pt">$\mu N-M\ddot x=0$을 씀.</p><p class="t" style="--b:721.7;left:415.3pt">1</p>
+<p class="t" style="--b:752;left:117.4pt;--l:22pt">$\frac{\mu Mg(9\cos^2\theta_0-6\cos\theta_0+1)}{4}-\frac{3Mg\sin\theta_0(-2+3\cos\theta_0)}{4}=0$을 얻음.</p><p class="t" style="--b:740.2;left:415.3pt">1</p>
+<p class="x pn" style="--b:797.2">12</p>
+</div>
+
+<!-- page 14: marking scheme, problem 4 (end) -->
+<div class="page">
+<!-- table rules from page.get_drawings() (0.48pt) -->
+<div class="hr" style="left:70.92pt;width:424.26pt;top:70.92pt"></div>
+<div class="vr" style="left:70.92pt;top:71.40pt;height:29.88pt"></div>
+<div class="hr" style="left:70.92pt;width:40.92pt;top:100.80pt"></div>
+<div class="vr" style="left:111.84pt;top:71.40pt;height:29.88pt"></div>
+<div class="hr" style="left:112.32pt;width:297.30pt;top:100.80pt"></div>
+<div class="vr" style="left:409.62pt;top:71.40pt;height:29.88pt"></div>
+<div class="hr" style="left:410.10pt;width:34.92pt;top:100.80pt"></div>
+<div class="vr" style="left:445.02pt;top:71.40pt;height:29.88pt"></div>
+<div class="hr" style="left:445.50pt;width:49.20pt;top:100.80pt"></div>
+<div class="vr" style="left:494.70pt;top:71.40pt;height:29.88pt"></div>
+<p class="t" style="--b:82.6;left:76.6pt">(F)</p><p class="t" style="--b:96.6;left:76.6pt">2점</p>
+<p class="t c" style="--b:84.8;left:112.3pt;width:297.3pt">$\theta_0\approx4\mu/3$</p><p class="t" style="--b:82.6;left:415.3pt">2</p>
+<p class="x pn" style="--b:797.2">13</p>
+</div>
+
+<!-- page 15: marking scheme, problem 5 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 5 채점 기준:</p>
+<!-- table rules from page.get_drawings() (0.48pt) -->
+<div class="hr" style="left:70.92pt;width:426.48pt;top:100.32pt"></div>
+<div class="vr" style="left:70.92pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:118.86pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:423.54pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:459.00pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:496.92pt;top:100.80pt;height:15.60pt"></div>
+<div class="hr" style="left:70.92pt;width:426.48pt;top:116.40pt"></div>
+<div class="vr" style="left:70.92pt;top:116.88pt;height:49.86pt"></div>
+<div class="vr" style="left:118.86pt;top:116.88pt;height:49.86pt"></div>
+<div class="vr" style="left:423.54pt;top:116.88pt;height:49.86pt"></div>
+<div class="vr" style="left:459.00pt;top:116.88pt;height:49.86pt"></div>
+<div class="vr" style="left:496.92pt;top:116.88pt;height:49.86pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:166.74pt"></div>
+<div class="vr" style="left:70.92pt;top:167.22pt;height:18.00pt"></div>
+<div class="vr" style="left:118.86pt;top:167.22pt;height:18.00pt"></div>
+<div class="vr" style="left:423.54pt;top:167.22pt;height:18.00pt"></div>
+<div class="vr" style="left:459.00pt;top:167.22pt;height:18.00pt"></div>
+<div class="vr" style="left:496.92pt;top:167.22pt;height:18.00pt"></div>
+<div class="hr" style="left:70.92pt;width:426.48pt;top:185.22pt"></div>
+<div class="vr" style="left:70.92pt;top:185.70pt;height:36.00pt"></div>
+<div class="vr" style="left:118.86pt;top:185.70pt;height:36.00pt"></div>
+<div class="vr" style="left:423.54pt;top:185.70pt;height:36.00pt"></div>
+<div class="vr" style="left:459.00pt;top:185.70pt;height:36.00pt"></div>
+<div class="vr" style="left:496.92pt;top:185.70pt;height:36.00pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:221.70pt"></div>
+<div class="vr" style="left:70.92pt;top:222.18pt;height:36.06pt"></div>
+<div class="vr" style="left:118.86pt;top:222.18pt;height:36.06pt"></div>
+<div class="vr" style="left:423.54pt;top:222.18pt;height:36.06pt"></div>
+<div class="vr" style="left:459.00pt;top:222.18pt;height:36.06pt"></div>
+<div class="vr" style="left:496.92pt;top:222.18pt;height:36.06pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:258.24pt"></div>
+<div class="vr" style="left:70.92pt;top:258.72pt;height:18.00pt"></div>
+<div class="vr" style="left:118.86pt;top:258.72pt;height:18.00pt"></div>
+<div class="vr" style="left:423.54pt;top:258.72pt;height:18.00pt"></div>
+<div class="vr" style="left:459.00pt;top:258.72pt;height:18.00pt"></div>
+<div class="vr" style="left:496.92pt;top:258.72pt;height:18.00pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:276.72pt"></div>
+<div class="vr" style="left:70.92pt;top:277.20pt;height:72.00pt"></div>
+<div class="vr" style="left:118.86pt;top:277.20pt;height:72.00pt"></div>
+<div class="vr" style="left:423.54pt;top:277.20pt;height:72.00pt"></div>
+<div class="vr" style="left:459.00pt;top:277.20pt;height:72.00pt"></div>
+<div class="vr" style="left:496.92pt;top:277.20pt;height:72.00pt"></div>
+<div class="hr" style="left:70.92pt;width:426.48pt;top:349.20pt"></div>
+<div class="vr" style="left:70.92pt;top:349.68pt;height:36.06pt"></div>
+<div class="vr" style="left:118.86pt;top:349.68pt;height:36.06pt"></div>
+<div class="vr" style="left:423.54pt;top:349.68pt;height:36.06pt"></div>
+<div class="vr" style="left:459.00pt;top:349.68pt;height:36.06pt"></div>
+<div class="vr" style="left:496.92pt;top:349.68pt;height:36.06pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:385.74pt"></div>
+<div class="vr" style="left:70.92pt;top:386.22pt;height:36.00pt"></div>
+<div class="vr" style="left:118.86pt;top:386.22pt;height:36.00pt"></div>
+<div class="vr" style="left:423.54pt;top:386.22pt;height:36.00pt"></div>
+<div class="vr" style="left:459.00pt;top:386.22pt;height:36.00pt"></div>
+<div class="vr" style="left:496.92pt;top:386.22pt;height:36.00pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:422.22pt"></div>
+<div class="vr" style="left:70.92pt;top:422.70pt;height:36.00pt"></div>
+<div class="vr" style="left:118.86pt;top:422.70pt;height:36.00pt"></div>
+<div class="vr" style="left:423.54pt;top:422.70pt;height:36.00pt"></div>
+<div class="vr" style="left:459.00pt;top:422.70pt;height:36.00pt"></div>
+<div class="vr" style="left:496.92pt;top:422.70pt;height:36.00pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:458.70pt"></div>
+<div class="vr" style="left:70.92pt;top:459.18pt;height:36.06pt"></div>
+<div class="vr" style="left:118.86pt;top:459.18pt;height:36.06pt"></div>
+<div class="vr" style="left:423.54pt;top:459.18pt;height:36.06pt"></div>
+<div class="vr" style="left:459.00pt;top:459.18pt;height:36.06pt"></div>
+<div class="vr" style="left:496.92pt;top:459.18pt;height:36.06pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:495.24pt"></div>
+<div class="vr" style="left:70.92pt;top:495.72pt;height:36.00pt"></div>
+<div class="vr" style="left:118.86pt;top:495.72pt;height:36.00pt"></div>
+<div class="vr" style="left:423.54pt;top:495.72pt;height:36.00pt"></div>
+<div class="vr" style="left:459.00pt;top:495.72pt;height:36.00pt"></div>
+<div class="vr" style="left:496.92pt;top:495.72pt;height:36.00pt"></div>
+<div class="hr" style="left:70.92pt;width:426.48pt;top:531.72pt"></div>
+<div class="vr" style="left:70.92pt;top:532.20pt;height:34.68pt"></div>
+<div class="vr" style="left:118.86pt;top:532.20pt;height:34.68pt"></div>
+<div class="vr" style="left:423.54pt;top:532.20pt;height:34.68pt"></div>
+<div class="vr" style="left:459.00pt;top:532.20pt;height:34.68pt"></div>
+<div class="vr" style="left:496.92pt;top:532.20pt;height:34.68pt"></div>
+<div class="hr" style="left:118.86pt;width:378.54pt;top:566.88pt"></div>
+<div class="vr" style="left:70.92pt;top:567.36pt;height:18.48pt"></div>
+<div class="hr" style="left:70.92pt;width:47.94pt;top:585.36pt"></div>
+<div class="vr" style="left:118.86pt;top:567.36pt;height:18.48pt"></div>
+<div class="hr" style="left:119.34pt;width:304.20pt;top:585.36pt"></div>
+<div class="vr" style="left:423.54pt;top:567.36pt;height:18.48pt"></div>
+<div class="hr" style="left:424.02pt;width:34.98pt;top:585.36pt"></div>
+<div class="vr" style="left:459.00pt;top:567.36pt;height:18.48pt"></div>
+<div class="hr" style="left:459.48pt;width:37.44pt;top:585.36pt"></div>
+<div class="vr" style="left:496.92pt;top:567.36pt;height:18.48pt"></div>
+<p class="t" style="--b:112.2;left:76.6pt">소문항</p>
+<p class="t" style="--b:112.2;left:124.5pt">내용</p>
+<p class="t" style="--b:112.2;left:429.1pt">점수</p>
+<p class="t" style="--b:112.2;left:463pt">비고</p>
+<p class="t" style="--b:128.2;left:76.6pt">(A)</p><p class="t" style="--b:142.1;left:76.6pt">4점</p>
+<p class="t" style="--b:139.1;left:124.5pt;--l:20pt">$\frac{d\boldsymbol L}{dt}=\boldsymbol r\times\boldsymbol F=(zF_r-rF_z)\hat{\boldsymbol\theta}$를 씀.</p><p class="t" style="--b:128.2;left:429.1pt">2</p>
+<p class="t" style="--b:180.4;left:124.5pt">$z$ 방향 돌림힘이 없으므로 $L_z$ 보존:$L_z=mr^2\dot\theta=$&thinsp;constant.</p><p class="t" style="--b:178.4;left:429.1pt">2</p>
+<p class="t" style="--b:196.9;left:76.6pt">(B)</p><p class="t" style="--b:210.9;left:76.6pt">8점</p>
+<p class="t" style="--b:207.1;left:124.5pt;--l:20pt">$dE_r=2\frac{1}{4\pi\varepsilon_0}\frac{Q\,dz/2a}{r^2+z^2}\cos\theta$를 씀. 여기서 $\cos\theta=\frac{r}{\sqrt{r^2+z^2}}$.</p><p class="t" style="--b:196.9;left:429.1pt">2</p>
+<p class="t" style="--b:243.5;left:124.5pt;--l:20pt">$E_r(r)=\frac{1}{4\pi\varepsilon_0}\frac{Q}{r\sqrt{r^2+a^2}}$을 얻음.</p><p class="t" style="--b:233.5;left:429.1pt">2</p>
+<p class="t" style="--b:271.5;left:124.5pt">전기장이 원운동의 구심력을 제공: $qE_r=m\omega_0^2r_0$.</p><p class="t" style="--b:269.9;left:429.1pt">2</p>
+<p class="t" style="--b:311.8;left:124.5pt;--l:44pt">$\omega_0=\left(\dfrac{1}{4\pi\varepsilon_0}\dfrac{qQ}{mr_0^2\sqrt{r_0^2+a^2}}\right)^{\frac12}$을 구함</p><p class="t" style="--b:288.4;left:429.1pt">2</p>
+<p class="t" style="--b:361;left:76.6pt">(C)</p><p class="t" style="--b:374.9;left:76.6pt">9점</p>
+<p class="t" style="--b:371.9;left:124.5pt;--l:20pt">$\boldsymbol v=\frac{d\boldsymbol r}{dt}\equiv\dot{\boldsymbol r}=\frac{d}{dt}(r\hat{\boldsymbol r})=\dot r\hat{\boldsymbol r}+r\dot\theta\hat{\boldsymbol\theta}$를 얻음.</p><p class="t" style="--b:361;left:429.1pt">1</p>
+<p class="t" style="--b:409.1;left:124.5pt">$r$ 방향 가속도 성분 $a_r=\ddot r-r\dot\theta^2$을 얻음.</p><p class="t" style="--b:397.4;left:429.1pt">2</p>
+<p class="t" style="--b:443.9;left:124.5pt;--l:20pt">뉴턴 제2법칙: $\ddot r-r\dot\theta^2=F_r/m=-\frac{1}{4\pi\varepsilon_0}\frac{qQ}{mr\sqrt{r^2+a^2}}$.</p><p class="t" style="--b:433.9;left:429.1pt">2</p>
+<p class="t" style="--b:487;left:124.5pt;--l:22pt">정리하면 $\ddot r=\frac{r_0^4\omega_0^2}{r^3}-\frac{r_0^2\omega_0^2\sqrt{r_0^2+a^2}}{r\sqrt{r^2+a^2}}$.</p><p class="t" style="--b:470.5;left:429.1pt">2</p>
+<p class="t" style="--b:518.8;left:124.5pt;--l:24pt">$\omega=\omega_0\sqrt{\frac{r_0^2+2a^2}{r_0^2+a^2}}$을 구함.</p><p class="t" style="--b:506.9;left:429.1pt">2</p>
+<p class="t" style="--b:543.4;left:76.6pt">(D)</p><p class="t" style="--b:557.4;left:76.6pt">4점</p>
+<p class="t" style="--b:545;left:124.5pt">$mr_0^2\omega_0=mr_0^2(1+\epsilon\sin\omega t)^2\omega_0(1-\epsilon\alpha_0\sin\omega t)$를 씀</p><p class="t" style="--b:543.4;left:429.1pt">2</p>
+<p class="t" style="--b:580;left:124.5pt">$\alpha_0=2$를 구함.</p><p class="t" style="--b:578.6;left:429.1pt">2</p>
+<p class="x pn" style="--b:797.2">14</p>
+</div>
+
+<!-- page 16: marking scheme, problem 6 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.7pt;--fs:12pt">문제 6 채점 기준:</p>
+<!-- table rules from page.get_drawings() (0.48pt) -->
+<div class="hr" style="left:70.92pt;width:424.26pt;top:100.32pt"></div>
+<div class="vr" style="left:70.92pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:111.84pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:409.62pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:445.02pt;top:100.80pt;height:15.60pt"></div>
+<div class="vr" style="left:494.70pt;top:100.80pt;height:15.60pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:116.40pt"></div>
+<div class="vr" style="left:70.92pt;top:116.88pt;height:54.06pt"></div>
+<div class="vr" style="left:111.84pt;top:116.88pt;height:54.06pt"></div>
+<div class="vr" style="left:409.62pt;top:116.88pt;height:54.06pt"></div>
+<div class="vr" style="left:445.02pt;top:116.88pt;height:54.06pt"></div>
+<div class="vr" style="left:494.70pt;top:116.88pt;height:54.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:170.94pt"></div>
+<div class="vr" style="left:70.92pt;top:171.42pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:171.42pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:171.42pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:171.42pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:171.42pt;height:36.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:207.42pt"></div>
+<div class="vr" style="left:70.92pt;top:207.90pt;height:72.00pt"></div>
+<div class="vr" style="left:111.84pt;top:207.90pt;height:72.00pt"></div>
+<div class="vr" style="left:409.62pt;top:207.90pt;height:72.00pt"></div>
+<div class="vr" style="left:445.02pt;top:207.90pt;height:72.00pt"></div>
+<div class="vr" style="left:494.70pt;top:207.90pt;height:72.00pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:279.90pt"></div>
+<div class="vr" style="left:70.92pt;top:280.38pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:280.38pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:280.38pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:280.38pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:280.38pt;height:36.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:316.44pt"></div>
+<div class="vr" style="left:70.92pt;top:316.92pt;height:18.00pt"></div>
+<div class="vr" style="left:111.84pt;top:316.92pt;height:18.00pt"></div>
+<div class="vr" style="left:409.62pt;top:316.92pt;height:18.00pt"></div>
+<div class="vr" style="left:445.02pt;top:316.92pt;height:18.00pt"></div>
+<div class="vr" style="left:494.70pt;top:316.92pt;height:18.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:334.92pt"></div>
+<div class="vr" style="left:70.92pt;top:335.40pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:335.40pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:335.40pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:335.40pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:335.40pt;height:36.00pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:371.40pt"></div>
+<div class="vr" style="left:70.92pt;top:371.88pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:371.88pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:371.88pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:371.88pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:371.88pt;height:36.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:407.94pt"></div>
+<div class="vr" style="left:70.92pt;top:408.42pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:408.42pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:408.42pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:408.42pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:408.42pt;height:36.00pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:444.42pt"></div>
+<div class="vr" style="left:70.92pt;top:444.90pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:444.90pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:444.90pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:444.90pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:444.90pt;height:36.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:480.90pt"></div>
+<div class="vr" style="left:70.92pt;top:481.38pt;height:36.06pt"></div>
+<div class="vr" style="left:111.84pt;top:481.38pt;height:36.06pt"></div>
+<div class="vr" style="left:409.62pt;top:481.38pt;height:36.06pt"></div>
+<div class="vr" style="left:445.02pt;top:481.38pt;height:36.06pt"></div>
+<div class="vr" style="left:494.70pt;top:481.38pt;height:36.06pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:517.44pt"></div>
+<div class="vr" style="left:70.92pt;top:517.92pt;height:18.00pt"></div>
+<div class="vr" style="left:111.84pt;top:517.92pt;height:18.00pt"></div>
+<div class="vr" style="left:409.62pt;top:517.92pt;height:18.00pt"></div>
+<div class="vr" style="left:445.02pt;top:517.92pt;height:18.00pt"></div>
+<div class="vr" style="left:494.70pt;top:517.92pt;height:18.00pt"></div>
+<div class="hr" style="left:111.84pt;width:383.34pt;top:535.92pt"></div>
+<div class="vr" style="left:70.92pt;top:536.40pt;height:36.00pt"></div>
+<div class="vr" style="left:111.84pt;top:536.40pt;height:36.00pt"></div>
+<div class="vr" style="left:409.62pt;top:536.40pt;height:36.00pt"></div>
+<div class="vr" style="left:445.02pt;top:536.40pt;height:36.00pt"></div>
+<div class="vr" style="left:494.70pt;top:536.40pt;height:36.00pt"></div>
+<div class="hr" style="left:70.92pt;width:424.26pt;top:572.40pt"></div>
+<div class="vr" style="left:70.92pt;top:572.88pt;height:36.54pt"></div>
+<div class="hr" style="left:70.92pt;width:40.92pt;top:608.94pt"></div>
+<div class="vr" style="left:111.84pt;top:572.88pt;height:36.54pt"></div>
+<div class="hr" style="left:112.32pt;width:297.30pt;top:608.94pt"></div>
+<div class="vr" style="left:409.62pt;top:572.88pt;height:36.54pt"></div>
+<div class="hr" style="left:410.10pt;width:34.92pt;top:608.94pt"></div>
+<div class="vr" style="left:445.02pt;top:572.88pt;height:36.54pt"></div>
+<div class="hr" style="left:445.50pt;width:49.20pt;top:608.94pt"></div>
+<div class="vr" style="left:494.70pt;top:572.88pt;height:36.54pt"></div>
+<p class="t" style="--b:112.2;left:73.5pt">소문항</p>
+<p class="t" style="--b:112.2;left:117.4pt">내용</p>
+<p class="t" style="--b:112.2;left:415.3pt">점수</p>
+<p class="t" style="--b:112.2;left:450.2pt">비고</p>
+<p class="t" style="--b:128.2;left:76.6pt">(A)</p><p class="t" style="--b:142.1;left:76.6pt">6점</p>
+<p class="t" style="--b:139.8;left:117.4pt;--l:20pt">직렬 LCR 회로의 임피던스 $Z=\sqrt{R^2+(X_L-X_c)^2}$을 쓰고,</p><p class="t" style="--b:128.2;left:415.3pt">2</p>
+<p class="t" style="--b:165.5;left:117.4pt">여기서 $X_L=\omega L$; $X_c=1/(\omega C)$.</p>
+<p class="t" style="--b:193.1;left:117.4pt;--l:20pt">임피던스 $Z$가 최소일 때 공진 진동수 $f_s=\frac{1}{2\pi\sqrt{LC}}$.</p><p class="t" style="--b:182.6;left:415.3pt">2</p>
+<p class="t" style="--b:229.7;left:117.4pt;--l:20pt">반공진 진동수 $f_\mathrm a=\frac{1}{2\pi\sqrt{LC'}}$.</p><p class="t" style="--b:219.1;left:415.3pt">2</p>
+<p class="t" style="--b:265.1;left:117.4pt;--l:20pt">$C$와 $C_0$ 두 축전기가 직렬이므로 $\frac{1}{C'}=\frac{1}{C_0}+\frac{1}{C}$.</p>
+<p class="t" style="--b:291.7;left:76.6pt">(B)</p><p class="t" style="--b:305.6;left:76.6pt">5점</p>
+<p class="t" style="--b:303.3;left:117.4pt;--l:20pt">고체 속 음속 $\upsilon=\sqrt{Y/\rho}\approx5.50\times10^3\ \mathrm{m/s}$를 구함</p><p class="t" style="--b:291.7;left:415.3pt">2</p>
+<p class="t" style="--b:329.6;left:117.4pt">파장 $\lambda=\upsilon/f=5.50\times10^{-3}\ \mathrm m$를 구함</p><p class="t" style="--b:328.1;left:415.3pt">1</p>
+<p class="t" style="--b:357.5;left:117.4pt;--l:20pt">$\ell=\frac12\lambda=2.75\times10^{-3}\ \mathrm m$를 구함.</p><p class="t" style="--b:346.6;left:415.3pt">2</p>
+<p class="t" style="--b:383.2;left:76.6pt">(C)</p><p class="t" style="--b:397.1;left:76.6pt">4점</p>
+<p class="t" style="--b:394.1;left:117.4pt;--l:20pt">$\kappa^2\equiv\frac{\text{계에 저장된 역학적 에너지}}{\text{계에 저장된 전체 에너지}}$를 씀</p><p class="t" style="--b:383.2;left:415.3pt">1</p>
+<p class="t" style="--b:430.4;left:117.4pt;--l:22pt">$\kappa^2=\frac{C}{C+C_0}=1-\frac{f_s^2}{f_a^2}$.</p><p class="t" style="--b:419.6;left:415.3pt">3</p>
+<p class="t" style="--b:456.1;left:76.6pt">(D)</p><p class="t" style="--b:470.1;left:76.6pt">8점</p>
+<p class="t" style="--b:467;left:117.4pt;--l:22pt">$f_\mathrm a=\frac{f_s}{\sqrt{1-\kappa^2}}\approx1.005\ \mathrm{MHz}$를 구함</p><p class="t" style="--b:456.1;left:415.3pt">2</p>
+<p class="t" style="--b:503.8;left:117.4pt;--l:24pt">$\frac{f_a}{f_s}=\sqrt{\frac{C+C_0}{C_0}}$을 얻음.</p><p class="t" style="--b:492.7;left:415.3pt">1</p>
+<p class="t" style="--b:530.5;left:117.4pt">$C=0.05\ \mathrm{pF}$를 얻음.</p><p class="t" style="--b:529.1;left:415.3pt">2</p>
+<p class="t" style="--b:557.5;left:117.4pt;--l:22pt">$L=\frac{1}{C(2\pi f_s)^2}\approx0.51\ \mathrm H$를 얻음</p><p class="t" style="--b:547.6;left:415.3pt">3</p>
+<p class="t" style="--b:584.2;left:76.6pt">(E)</p><p class="t" style="--b:598.1;left:76.6pt">2점</p>
+<p class="t" style="--b:594.1;left:117.4pt;--l:20pt">품질 인자 $Q=\frac{1}{2\pi f_sRC}=1.47\times10^5$을 구함</p><p class="t" style="--b:584.2;left:415.3pt">2</p>
+<p class="x pn" style="--b:797.2">15</p>
+</div>
+
+</body></html>
