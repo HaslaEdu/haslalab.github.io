@@ -1,0 +1,132 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="595,842">
+<style>
+/* 브라질 물리 올림피아드(OBF) 2006, 3단계, 3학년 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: MS Word, Arial 12pt (cover instructions 11pt), A4 595x842pt, 4 pages. Text column x 56.7..547.6
+   (width 490.9pt), line pitch 13.8pt (instructions 18.6pt). Same geometry as the English edition obf/2006_T_EN.html:
+   running header retyped; cover logos and all figures stamped (labels are symbols, numbers and "fig 1"/"fig 2");
+   instruction box and sin/cos table rules stamped, their contents retyped.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt). The primary face is Arial
+   (Hangul falls back to Malgun Gothic, KG), so   top = b - l/2 - 0.3465*fs.
+   Text that wraps around a figure on the right is one paragraph whose ::before is a right float of the figure
+   column's width (--fw) and the height of the narrow lines (--fh); sub-items a), b), c) hang at 74.7. */
+body{font-family:Arial,KG,sans-serif;font-size:12pt;line-height:13.8pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0;text-indent:0}
+.x{position:absolute;margin:0;left:56.7pt;width:490.9pt;--l:13.8pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-indent:0}
+.c{text-align:center}
+.r{text-align:right}
+.b{font-weight:bold}
+.it{padding-left:18pt;text-indent:-18pt}
+.fr::before{content:"";float:right;width:calc(var(--fw)*1pt);height:calc(var(--fh)*1pt)}
+/* narrow columns beside figures: allow breaks between Hangul syllables (keep-all leaves wide justified gaps) */
+.fr,.nar{word-break:normal}
+.hd{--fs:10pt;--l:12pt;font-weight:bold;font-style:italic;color:#808080}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+/* cover instructions (11pt, pitch 18.6) */
+.ins{left:63.7pt;width:489pt;--fs:11pt;--l:18.6pt}
+.dat{left:85pt;width:460pt;--fs:11pt;--l:18.6pt}
+.tb{width:50pt;--fs:11pt;--l:13.9pt;text-align:center}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<div class="f" style="left:205.3pt;top:68.8pt"><span class="fig" data-srcpage="1" data-clip="205.3,68.8,415.6,195.8"></span></div>
+<p class="x c" style="--b:240.5;left:56.7pt;width:497.6pt;--fs:36pt;--l:40pt">3단계</p>
+<p class="x c" style="--b:268.8;left:56.7pt;width:490.2pt;--fs:22pt;--l:25pt">3학년 학생용 시험</p>
+<div class="f" style="left:69.9pt;top:313pt"><span class="fig" data-srcpage="1" data-clip="69.9,313,229.6,362.3"></span></div>
+<div class="f" style="left:264.3pt;top:284.2pt"><span class="fig" data-srcpage="1" data-clip="264.3,284.2,351.9,368.5"></span></div>
+<div class="f" style="left:408.3pt;top:305.8pt"><span class="fig" data-srcpage="1" data-clip="408.3,305.8,538.9,364.3"></span></div>
+<!-- instructions box: four rules -->
+<div class="f" style="left:55.5pt;top:391.3pt"><span class="fig" data-srcpage="1" data-clip="55.5,391.3,560.5,392.3"></span></div>
+<div class="f" style="left:55.5pt;top:784.8pt"><span class="fig" data-srcpage="1" data-clip="55.5,784.8,560.5,785.8"></span></div>
+<div class="f" style="left:55.5pt;top:391.3pt"><span class="fig" data-srcpage="1" data-clip="55.5,391.3,56.5,785.8"></span></div>
+<div class="f" style="left:559.5pt;top:391.3pt"><span class="fig" data-srcpage="1" data-clip="559.5,391.3,560.5,785.8"></span></div>
+<p class="x c b" style="--b:407;left:57pt;width:502pt">아래의 지시 사항을 주의 깊게 읽어라.</p>
+<p class="x ins" style="--b:454.8">1 – 이 시험은 3학년 학생<b>만을</b> 대상으로 하며, 08개의 문제로 되어 있다.</p>
+<p class="x ins" style="--b:473.5">2 – 문제는 따로 나누어 주는 <b>풀이 답안지</b>에 풀어야 한다.</p>
+<p class="x ins" style="--b:492.1">3 – 시험 시간은 4시간이다.</p>
+<p class="x ins" style="--b:510.7">4 – 이 시험의 문제를 풀 때, 필요하면 다음 값을 사용하여라.</p>
+<p class="x dat" style="--b:529.4">지표면에서의 중력장 <span class="nw">$g = 10\ \mathrm{m/s^2}$</span></p>
+<p class="x dat" style="--b:548">$1.0\ \mathrm{atm}$은 $100000\ \mathrm{Pa}$와 같다</p>
+<p class="x dat" style="--b:569.6">진공에서의 정전기 상수 <span class="nw">$k_0 = 1/(4\pi\varepsilon_0) = 9\cdot10^{9}\ \mathrm{N{\cdot}m^2{\cdot}C^{-2}}$</span></p>
+<p class="x dat" style="--b:589.4"><b>$\boldsymbol{\theta_K = \theta_C + 273}$</b></p>
+<p class="x dat" style="--b:608.9">$\pi = 3$</p>
+<p class="x dat" style="--b:628.4">액체 상태인 물의 밀도 <span class="nw">$\mu = 1000\ \mathrm{kg/m^3}$</span></p>
+<!-- sin/cos table: rules stamped, contents retyped -->
+<div class="f" style="left:175.2pt;top:649.5pt"><span class="fig" data-srcpage="1" data-clip="175.2,649.5,440.9,650"></span></div>
+<div class="f" style="left:175.2pt;top:663.5pt"><span class="fig" data-srcpage="1" data-clip="175.2,663.5,440.9,664"></span></div>
+<div class="f" style="left:175.2pt;top:677.5pt"><span class="fig" data-srcpage="1" data-clip="175.2,677.5,440.9,677.9"></span></div>
+<div class="f" style="left:175.2pt;top:691.4pt"><span class="fig" data-srcpage="1" data-clip="175.2,691.4,440.9,691.9"></span></div>
+<div class="f" style="left:175.2pt;top:649.5pt"><span class="fig" data-srcpage="1" data-clip="175.2,649.5,175.7,691.9"></span></div>
+<div class="f" style="left:225.6pt;top:649.5pt"><span class="fig" data-srcpage="1" data-clip="225.6,649.5,226.1,691.9"></span></div>
+<div class="f" style="left:266.2pt;top:649.5pt"><span class="fig" data-srcpage="1" data-clip="266.2,649.5,266.7,691.9"></span></div>
+<div class="f" style="left:306.8pt;top:649.5pt"><span class="fig" data-srcpage="1" data-clip="306.8,649.5,307.3,691.9"></span></div>
+<div class="f" style="left:349.3pt;top:649.5pt"><span class="fig" data-srcpage="1" data-clip="349.3,649.5,349.7,691.9"></span></div>
+<div class="f" style="left:391.8pt;top:649.5pt"><span class="fig" data-srcpage="1" data-clip="391.8,649.5,392.3,691.9"></span></div>
+<div class="f" style="left:440.4pt;top:649.5pt"><span class="fig" data-srcpage="1" data-clip="440.4,649.5,440.9,691.9"></span></div>
+<p class="x tb" style="--b:660.6;left:175.7pt;width:49.9pt">$\theta$<br>$\sin\theta$<br>$\cos\theta$</p>
+<p class="x tb" style="--b:660.6;left:226.1pt;width:40.1pt">$30^\circ$<br>0.50<br>0.87</p>
+<p class="x tb" style="--b:660.6;left:266.7pt;width:40.1pt">$37^\circ$<br>0.60<br>0.80</p>
+<p class="x tb" style="--b:660.6;left:307.3pt;width:42pt">$45^\circ$<br>0.70<br>0.70</p>
+<p class="x tb" style="--b:660.6;left:349.7pt;width:42.1pt">$53^\circ$<br>0.80<br>0.60</p>
+<p class="x tb" style="--b:660.6;left:392.3pt;width:48.1pt">$60^\circ$<br>0.87<br>0.50</p>
+<p class="x r" style="--b:744.4;left:400pt;width:155.3pt">건투를 빈다!!!!</p>
+</div>
+
+<!-- page 2: questions 1-2 -->
+<div class="page">
+<p class="x hd" style="--b:45.4">브라질 물리 올림피아드 2006 &nbsp;&nbsp; 3단계 &nbsp;-&nbsp; 3학년</p>
+<p class="x hd r" style="--b:45.4;left:400pt;width:115.4pt">02</p>
+<div class="f" style="left:388.3pt;top:100.8pt"><span class="fig" data-srcpage="2" data-clip="388.3,100.8,536.5,249.6"></span></div>
+<p class="x fr" style="--b:104.6;--fw:164.6;--fh:165"><b>문제 01)</b> 그림의 장치는 안에 피스톤 “E”가 들어 있는 원통형 용기이다. 둘 다 단열되어 있고 열용량은 무시할 수 있다. 피스톤은 질량이 <span class="nw">$m_E = 300\ \mathrm{kg}$이고,</span> 마찰 없이 미끄러지며, 밑면은 넓이 <span class="nw">$S = 100\ \mathrm{cm^2}$인</span> 원이다. 문자 “A”로 나타낸 공간에는 온도 <span class="nw">$T_0 = 300\ \mathrm{K}$인</span> 헬륨 기체 <span class="nw">$1\ \mathrm{mol}$</span> <span class="nw">($4.00\times10^{-3}\ \mathrm{kg}$)이</span> 들어 있는데, 이 기체는 대기압 <span class="nw">$p_{atm} = 1.00\ \mathrm{atm}$에</span> 피스톤의 무게 <span class="nw">$P_E$가</span> 더해진 압력과 평형을 이루어 길이 “a”를 <span class="nw">$0.600\ \mathrm{m}$로</span> 유지한다. 어느 순간 플러그를 <span class="nw">$110\ \mathrm{V}$의</span> 일정한 전압을 내는 전원에 꽂아 저항기 <span class="nw">$R$로</span> 이 기체를 가열한다. 저항기는 기체가 팽창하여 피스톤이 모두 <span class="nw">$2b$만큼</span> 움직일 때까지 켜 둔다. 조각 “F”는 질량이 <span class="nw">$m_F = 100\ \mathrm{kg}$이고</span> 용기의 윗부분에 그냥 얹혀 있으며, 피스톤이 올라가면 함께 밀려 올라간다. 이 조각에는 구멍이 있어서 공간 “B”의 공기를 대기압과 같은 압력으로 유지한다. 등압 과정에서 헬륨의 비열을 <span class="nw">$c_P$,</span> 등적 과정에서 헬륨의 비열을 <span class="nw">$c_V = 3125\ \mathrm{J/(kg{\cdot}{}^\circ C)}$,</span> 비 <span class="nw">$\gamma = c_P/c_V$를</span> $1.664$, 길이 “b”를 <span class="nw">$0.200\ \mathrm{m}$,</span> 저항기 $R$의 전기 저항을 <span class="nw">$1210\ \Omega$이라고</span> 할 때, 다음을 계산하여라.</p>
+<p class="x it" style="--b:396.2"><b>a)</b> 피스톤 E가 조각 F에 막 닿을 때까지 기체가 흡수하는 열량 $Q_1$.</p>
+<p class="x it" style="--b:424.7"><b>b)</b> 저항기를 켜 두어야 하는 시간 간격 $\Delta t$.</p>
+<p class="x it" style="--b:439.4"><b>c)</b> 한 일과 소비한 전기 에너지를 고려한 이 장치의 효율 $\eta$.</p>
+<div class="f" style="left:395.5pt;top:532pt"><span class="fig" data-srcpage="2" data-clip="395.5,532,540.5,637.9"></span></div>
+<p class="x fr" style="--b:536;--fw:157.4;--fh:124"><b>문제 02)</b> 한 학생이 자기 휴대 전화의 배터리를 “충전”하려고 배터리 “충전기”를 즉석에서 만들었다. 몇 가지 시험을 해 보고, 학생은 이 “충전기”의 기전력이 <span class="nw">$E_1 = 4\ \mathrm{V}$로</span> 일정하고 내부 저항이 <span class="nw">$r_1 = 5\ \Omega$임을</span> 알았다. 휴대 전화 배터리의 기전력 <span class="nw">$E_2$는</span> 방전 상태의 <span class="nw">$3.2\ \mathrm{V}$에서</span> 충전 상태의 <span class="nw">$3.6\ \mathrm{V}$까지</span> 변하며, 내부 저항은 <span class="nw">$r_2 = 1\ \Omega$으로</span> 일정하다. 배터리 제조사의 설명서에 따르면 충전 전류의 최댓값은 <span class="nw">$80\ \mathrm{mA}$를</span> 넘으면 안 되므로(“안전한” 충전), 학생은 이 조건을 만족시키려고 회로에 저항기 <span class="nw">$R$을</span> 넣는다. 그림은 학생이 꾸민 회로를 나타내며, 충전기의 단자(점 A와 B)와 배터리의 단자(점 C와 D)를 보여 준다. 다음을 구하여라.</p>
+<p class="x it" style="--b:717.2"><b>a)</b> 이 회로로 가능한 가장 짧은 시간에 배터리를 안전하게 “충전”할 수 있게 하는 저항기 $R$의 저항값.</p>
+<p class="x it" style="--b:744.8"><b>b)</b> 충전이 끝났을 때 C와 D 사이의 전위차.</p>
+</div>
+
+<!-- page 3: questions 3-5 -->
+<div class="page">
+<p class="x hd" style="--b:45.4">브라질 물리 올림피아드 2006 &nbsp;&nbsp; 3단계 &nbsp;-&nbsp; 3학년</p>
+<p class="x hd r" style="--b:45.4;left:400pt;width:115.4pt">03</p>
+<div class="f" style="left:395.5pt;top:58.8pt"><span class="fig" data-srcpage="3" data-clip="395.5,58.8,540.7,166"></span></div>
+<p class="x fr" style="--b:70.1;--fw:157.4;--fh:110"><b>문제 03)</b> 두께를 무시할 수 있고 전체 전하가 0인 속이 빈 구형 도체의 반지름은 <span class="nw">$R_B = 50.0\ \mathrm{cm}$이다.</span> 이 도체는 그와 중심이 같은 구형 도체를 둘러싸고 있는데, 안쪽 도체는 정전기적 평형 상태에 있고 반지름이 <span class="nw">$R_A = 10.0\ \mathrm{cm}$이며</span> 양전하 <span class="nw">$Q_A = 1.00\ \mu\mathrm{C}$를</span> 띠고 있다. 어느 순간 질량이 <span class="nw">$m = 2.00\times10^{-7}\ \mathrm{g}$이고</span> 양전하 <span class="nw">$q = 1.00\ \mathrm{nC}$를</span> 띤 작은 입자가 안쪽 도체의 표면을 떠나 가속되며, 바깥 도체에 구멍이 있으므로 이 입자는 구멍을 지나 그림처럼 위치 <span class="nw">$x = 100.0\ \mathrm{cm}$에서</span> 움직이는 것이 검출된다. 전체 계는 진공 속에 있다. 이 조건에서</p>
+<p class="x it" style="--b:222.8"><b>a)</b> 입자가 두 도체 사이에 있으며 중심에서 <span class="nw">$20.0\times10^{-2}\ \mathrm{m}$</span> 떨어진 점을 지나는 순간, 입자에 작용하는 전기력의 크기를 계산하여라.</p>
+<p class="x it" style="--b:250.4"><b>b)</b> 입자가 위치 <span class="nw">$x = 100.0\ \mathrm{cm}$를</span> 지날 때의 속력을 계산하여라.</p>
+<div class="f" style="left:294.7pt;top:297pt"><span class="fig" data-srcpage="3" data-clip="294.7,297,540.3,363.1"></span></div>
+<p class="x fr" style="--b:305.6;--fw:258.2;--fh:68"><b>문제 04)</b> 두 전투기 A와 B가 수평한 직선 경로를 따라 일렬로 날고 있다. 둘 사이의 거리가 <span class="nw">$600\ \mathrm{m}$일</span> 때, 뒤에 있는 전투기가 앞의 전투기를 향해 <span class="nw">1/4초에</span> 1발씩 연속 사격을 시작한다. 전투기 A에 대한 발사체의 상대 속력 <span class="nw">$v_{P/A}$는</span> <span class="nw">$500\ \mathrm{m/s}$로</span> 일정하며, 발사체가 날아가는 시간이 매우 짧으므로 이 상황을 분석할 때 중력 때문에 발사체가 떨어지는 효과는 무시할 수 있다. 뒤에서 나는 전투기의 속력이 <span class="nw">$v_A = 100\ \mathrm{m/s}$이고</span> 앞에서 나는 전투기의 속력이 <span class="nw">$v_B = 120\ \mathrm{m/s}$이며</span> 이 속력들이 일정하다고 할 때, 다음을 계산하여라.</p>
+<p class="x it" style="--b:457.4"><b>a)</b> 처음 발사된 발사체가 앞의 전투기에 이르는 데 걸리는 시간.</p>
+<p class="x it" style="--b:471.2"><b>b)</b> 연이어 발사된 두 발사체 사이의 거리.</p>
+<p class="x it" style="--b:485"><b>c)</b> 앞의 전투기에 1초 동안 맞는 발사체의 개수.</p>
+<div class="f" style="left:316.3pt;top:537.9pt"><span class="fig" data-srcpage="3" data-clip="316.3,537.9,540.4,639.1"></span></div>
+<p class="x fr" style="--b:540.2;--fw:236.6;--fh:110"><b>문제 05)</b> 그림의 대포가 질량 <span class="nw">$m = 6.00\ \mathrm{kg}$인</span> 유탄을 위치 <span class="nw">$O(x_O;y_O)$</span> <span class="nw">($0\ \mathrm{m}$; $0\ \mathrm{m}$)에서</span> 쏜다. 유탄은 위치 <span class="nw">$P(x_P;y_P)$에서</span> 가장 높은 점에 이르며, 이 점의 좌표는 <span class="nw">($3000\ \mathrm{m}$; $1125\ \mathrm{m}$)이다.</span> 발사하고 <span class="nw">$20.0\ \mathrm{s}$가</span> 지났을 때 유탄이 폭발한다. 폭발로 생긴 파편 “a”와 “b”의 질량은 각각 <span class="nw">$m_a = 2.00\ \mathrm{kg}$과</span> <span class="nw">$m_b = 4.00\ \mathrm{kg}$이며,</span> 이 파편들은 폭발 전의 궤도와 같은 평면에 있는 궤도를 따라 떨어진다. 공기 저항을 무시하고 다음을 계산하여라.</p>
+<p class="x it" style="--b:678.1"><b>a)</b> 폭발 지점의 좌표.</p>
+<p class="x it" style="--b:691.9"><b>b)</b> 폭발하고 <span class="nw">$1.0$초</span> 뒤에 파편 “b”가 좌표 <span class="nw">($3000\ \mathrm{m}$;</span> <span class="nw">$300\ \mathrm{m}$)로</span> 주어진 점 <span class="nw">$B(x_B;y_B)$에서</span> 땅에 닿는 순간, 파편 “a”의 위치 좌표 <span class="nw">$A(x_A;y_A)$.</span></p>
+<p class="x it" style="--b:733.3"><b>c)</b> 파편 A에 작용한, 크기가 일정하고 <span class="nw">$1\ \mathrm{ms}$</span> 동안 지속된 폭발력 $F$의 값(N 단위). (제곱근은 계산하지 말고 남겨 둘 것)</p>
+</div>
+
+<!-- page 4: questions 6-8 -->
+<div class="page">
+<p class="x hd" style="--b:45.4">브라질 물리 올림피아드 2006 &nbsp;&nbsp; 3단계 &nbsp;-&nbsp; 3학년</p>
+<p class="x hd r" style="--b:45.4;left:400pt;width:115.4pt">04</p>
+<div class="f" style="left:323.5pt;top:59.9pt"><span class="fig" data-srcpage="4" data-clip="323.5,59.9,540.4,217"></span></div>
+<p class="x nar" style="--b:70.1;width:261.6pt"><b>문제 06)</b> 그림의 트럭은 강철 코일을 싣고 있다. 코일과 짐칸 사이의 정지 마찰 계수 <span class="nw">$\mu_E$는</span> $0.18$, 운동 마찰 계수 <span class="nw">$\mu_C$는</span> $0.15$이다. 트럭이 <span class="nw">$20\ \mathrm{m/s}$의</span> 속력으로 서로 다른 두 상황에서 도로를 달린다고 하자. 첫째는 도로의 수평 구간에서 노면이 옆으로 기울어진 원형 커브를 도는 <span class="nw">경우(그림&nbsp;1)이고,</span> <span class="nw">둘째(그림&nbsp;2)는</span> 곧고 수평한 도로 구간을 달리는 경우이다.</p>
+<p class="x it" style="--b:237.5"><b>a)</b> 첫째 경우에, 트럭이 짐을 짐칸에서 미끄러지지 않게 하면서 커브를 다 돌 수 있는, 트럭이 지나는 노면의 곡률 반지름의 최솟값을 계산하여라.</p>
+<p class="x it" style="--b:278.9"><b>b)</b> 둘째 경우에, 트럭이 일정한 감속도로 브레이크를 밟아 정확히 <span class="nw">$10\ \mathrm{s}$</span> 만에 멈추어야 할 때, 강철 코일이 차량의 운전실에 부딪치는 속력을 계산하여라.</p>
+<div class="f" style="left:330.7pt;top:355.9pt"><span class="fig" data-srcpage="4" data-clip="330.7,355.9,540.7,440.9"></span></div>
+<p class="x fr" style="--b:361.7;--fw:222.2;--fh:96"><b>문제 07)</b> 그림의 장치에는 그림처럼 맞물려 연결된 도르래들이 있다. 큰 도르래들은 각속도 <span class="nw">$\omega$로</span> 돌며 막대로 서로 연결되어 있고, 질량이 <span class="nw">$m$인</span> 물체가 이 막대 위에 그냥 놓여 있다. 도르래의 회전축에서 도르래와 막대를 잇는 핀까지의 거리는 <span class="nw">$R$이고,</span> 물체와 막대 사이의 정지 마찰 계수는 <span class="nw">$\mu$이다.</span> 이 값들을 써서 <span class="nw">$\omega$의</span> 최댓값을 나타내는 식을 유도하여라.</p>
+<p class="x it" style="--b:493.5"><b>a)</b> 물체가 궤도의 가장 높은 점에 있을 때 막대 위에 계속 얹혀 있기 위한 최댓값.</p>
+<p class="x it" style="--b:521"><b>b)</b> 물체가 궤도의 가장 높은 점과 가장 낮은 점 사이의 중간 점에서 내려가고 있을 때, 미끄러지지 않고 막대 위에 계속 얹혀 있기 위한 최댓값.</p>
+<div class="f" style="left:395.5pt;top:590.3pt"><span class="fig" data-srcpage="4" data-clip="395.5,590.3,540.5,716.5"></span></div>
+<p class="x nar" style="--b:590;width:333.6pt"><b>문제 08)</b> 진공 속에서 어떤 입자가 <span class="nw">$1.30\times10^{3}\ \mathrm{m/s}$의</span> 속력으로 스크린을 향해 움직인다. 이 입자의 질량은 <span class="nw">$1.00\times10^{-8}\ \mathrm{kg}$이고,</span> 입자는 양전하 <span class="nw">$q = 10.0\ \mu\mathrm{C}$를</span> 띠고 있다. 이동하는 동안 입자는 자기 유도가 <span class="nw">$B = 0.50\ \mathrm{T}$인</span> 균일한 자기장을 받는데, 이 자기장은 연직 아래 방향을 향한다. 이동 시간이 매우 짧아서 중력장의 효과는 고려하지 않아도 되므로,</p>
+<p class="x it" style="--b:687.5;width:333.6pt"><b>a)</b> 그림에 나타낸 점에서 충돌 지점까지 입자가 이동하는 데 걸리는 시간을 계산하여라.</p>
+<p class="x it" style="--b:715.1;width:333.6pt"><b>b)</b> 충돌 지점의 좌표 <span class="nw">$(x;y)$를</span> 계산하여라.</p>
+</div>
+
+</body></html>

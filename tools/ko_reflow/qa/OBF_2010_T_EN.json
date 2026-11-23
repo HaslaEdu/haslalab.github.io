@@ -1,0 +1,27 @@
+{
+ "schema": "html-reflow-stamped-twoup-v1",
+ "file": "OBF_2010_T_EN.pdf",
+ "status": "READY",
+ "sha256": "a3f5cc9c533b6a8a1ad25d521893dca6ca076670617fb1c444206f38842c3f24",
+ "bytes": 477235,
+ "pages": 3,
+ "source_file": "OBF_2010_T_PT.pdf",
+ "source_sha256": "2674039fcf842e684d28be85f229a0ace0aa56ac0d0d6937e8db5275a8ac4f15",
+ "source_page_range": [
+  1,
+  3
+ ],
+ "source_pages": 3,
+ "source_language": "pt",
+ "page_count_matches_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "html_source": "tools/ko_reflow/obf/2010_T_EN.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/check.py side-by-side images; every flag confirmed by zoom)",
+  "overflow_or_occlusion_observed": false
+ },
+ "layout": "two-up: original page left, English right",
+ "english_text_justified": true
+}

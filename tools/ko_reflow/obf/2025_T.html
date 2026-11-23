@@ -1,0 +1,167 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="595.276,841.89">
+<style>
+/* 브라질 물리 올림피아드(OBF) 2025, 3단계, 레벨 III 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: pdfLaTeX, CM-Super SFRM1200 12pt, A4 595.3x841.9pt, 5 pages. Text column x 56.7..538.7 (width 482pt);
+   baselineskip 14.45pt. Header (SBF logo, OBF logo, rule at y 93.9) and footer rule (y 805.6) are stamped;
+   page numbers are text (baseline 820.3, right edge 538.6). Figures: Q3 pendulum, Q6 photo, Q8 spool are raster
+   images (labels are symbols only) and are stamped as they are; the Q5 Earth diagram is vector with word labels
+   (T_superfície, Crosta, Manto, Núcleo), which get small "ov" overlays in the figure's own colours.
+   Display equations without words are stamped; displays with words or decimal commas are retyped in KaTeX.
+   Same geometry as the English edition obf/2025_T_EN.html.
+
+   PLACEMENT (as rupho/2016_T1.html): every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs)
+   Lists: labels "(a)", "1.", "•" are right-aligned 5.9pt before the text edge (as LaTeX enumerate/itemize):
+   sub-questions text at x 86.0; instructions text at 110.1 (right edge 514.6), bullets text at 135.8. */
+body{font-family:CM,KB,serif;font-size:12pt;line-height:14.45pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:56.7pt;width:482pt;--l:14.45pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.r{text-align:right}
+.b{font-weight:bold}
+/* text beside a figure on the right: Q3 to x 273.6; Q5, Q6 to 345.9 */
+.w3{width:216.9pt}
+.w5{width:289.2pt}
+/* these columns are under ~300pt: allow breaks between Hangul syllables (keep-all leaves wide justified gaps) */
+.w3,.w5,.wn{word-break:normal}
+/* sub-questions (a)(b)(c): text from 86.0 */
+.s{left:86pt;width:452.7pt}
+/* instructions box on page 1 */
+.ins{left:110.1pt;width:404.5pt}
+.bul{left:135.8pt;width:378.8pt}
+.n{position:absolute;right:100%;margin-right:5.9pt;white-space:nowrap}
+.f{position:absolute;line-height:0}
+/* labels laid over the Q5 diagram (CMBX10 / CMR10 at 7.2pt) */
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:7.2pt;text-align:center}
+/* an inline formula and the Korean particle after it must never be split over two lines */
+.nw{white-space:nowrap}
+</style></head><body>
+
+<!-- page 1: cover and instructions -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="1" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<!-- level box (four rules only: the words inside are retyped) -->
+<div class="f" style="left:364pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="364,118.4,500.7,119.2"></span></div>
+<div class="f" style="left:364pt;top:190pt"><span class="fig" data-srcpage="1" data-clip="364,190,500.7,190.8"></span></div>
+<div class="f" style="left:364pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="364,118.4,364.8,190.8"></span></div>
+<div class="f" style="left:499.9pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="499.9,118.4,500.7,190.8"></span></div>
+<p class="x c b" style="--b:145.4;left:364.4pt;width:135.9pt;--l:14.4pt">레벨 III<br>고등학교 과정<br>3학년과 4학년</p>
+<p class="x c b" style="--b:157.6;left:56.7pt;width:303.6pt;--l:20.4pt">브라질 물리 올림피아드(OBF) 2025<br>3단계 시험<br>2025년 10월 18일</p>
+<!-- instructions box -->
+<div class="f" style="left:73.3pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="73.3,233.1,522,233.9"></span></div>
+<div class="f" style="left:73.3pt;top:768.5pt"><span class="fig" data-srcpage="1" data-clip="73.3,768.5,522,769.3"></span></div>
+<div class="f" style="left:73.3pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="73.3,233.1,74.1,769.3"></span></div>
+<div class="f" style="left:521.2pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="521.2,233.1,522,769.3"></span></div>
+<p class="x c b" style="--b:247.4;left:73.7pt;width:447.9pt">다음 지시 사항을 주의 깊게 읽어라.</p>
+<p class="x ins" style="--b:274.8"><span class="n">1.</span>이 시험은 <b>고등학교 과정 3학년과 4학년</b> 학생만을 대상으로 한다. 문제는 모두 <b>8</b>개이다.</p>
+<p class="x ins" style="--b:313.6"><span class="n">2.</span>계산기와 참고 자료는 사용할 수 없다.</p>
+<p class="x ins" style="--b:338"><span class="n">3.</span>모든 답에는 근거를 제시해야 한다.</p>
+<p class="x bul" style="--b:362.4"><span class="n">$\bullet$</span>풀이와 답은 파란색 또는 검은색 잉크의 볼펜으로 써야 한다(사인펜처럼 펜촉이 섬유로 된 펜은 쓰지 말 것).</p>
+<p class="x bul" style="--b:396.3"><span class="n">$\bullet$</span>문제지의 뒷면을 연습장으로 사용하여라.</p>
+<p class="x ins" style="--b:420.7"><span class="n">4.</span><b>답안지</b>에는 시험을 시작하기 전에 주의 깊게 읽어야 할 지시 사항이 있다.</p>
+<p class="x ins" style="--b:459.6"><span class="n">5.</span>문제에 따로 지시한 것이 없으면, 모든 수치 결과는 국제단위계(SI) 단위로 나타내야 한다.</p>
+<p class="x ins" style="--b:512.9"><span class="n">6.</span>시험 시간은 <b>4</b>시간이며, 학생은 <b>적어도 60분</b> 동안 시험장에 남아 있어야 한다.</p>
+<p class="x ins wn" style="--b:551.7"><span class="n">7.</span>필요하면, 그리고 따로 주어지지 않았으면 다음 값을 사용하여라. <span class="nw">$\sqrt{2} = 1.4$;</span> <span class="nw">$\sqrt{3} = 1.7$;</span> <span class="nw">$\sqrt{5} = 2.2$;</span> <span class="nw">$\sin(30^\circ) = 0.50$;</span> <span class="nw">$\cos(30^\circ) = 0.85$;</span> <span class="nw">$\sin(45^\circ) = 0.70$;</span> <span class="nw">$\pi = 3$;</span> 물의 <span class="nw">밀도 $= 1.0\ \mathrm{g/cm^3}$;</span> <span class="nw">$1\ \mathrm{cal} = 4.2\ \mathrm{J}$;</span> 물의 <span class="nw">비열 $= 4.2\ \mathrm{J/g\,{}^\circ C}$;</span> 쿨롱 <span class="nw">상수 $= 9\times10^{9}\ \mathrm{N{\cdot}m^2{\cdot}C^{-2}}$;</span> 플랑크 <span class="nw">상수 $= 6.6\times10^{-34}\ \mathrm{J{\cdot}s}$;</span> 공기 중 소리의 속력 <span class="nw">$340\ \mathrm{m/s}$;</span> 진공에서 빛의 속력 <span class="nw">$c = 3\times10^{8}\ \mathrm{m/s}$;</span> 중력 <span class="nw">가속도 $= 10.0\ \mathrm{m/s^2}$.</span></p>
+<p class="x ins" style="--b:648.4"><span class="n">8.</span>필요하면 다음의 제곱근 근사식을 사용하여라.</p>
+<div class="f" style="left:240pt;top:656pt"><span class="fig" data-srcpage="1" data-clip="240,656,380,696"></span></div>
+<p class="x ins" style="--b:715">여기서 <span class="nw">$\sqrt{N}$은</span> 값을 알고 있는 제곱근이고, <span class="nw">$\sqrt{N \pm \delta}$는</span> 어림하려는 제곱근이다. 예:</p>
+<p class="x bul" style="--b:739.4"><span class="n">$\bullet$</span>$\sqrt{38} = \sqrt{36+2} \approx \sqrt{36} + \frac{\sqrt{36}}{2\cdot 36}\cdot 2 = 6 + \frac{2}{12} \approx 6.17$</p>
+<p class="x bul" style="--b:761.6"><span class="n">$\bullet$</span>$\sqrt{23} = \sqrt{25-2} \approx \sqrt{25} - \frac{\sqrt{25}}{2\cdot 25}\cdot 2 = 5 - \frac{2}{10} = 4.80$</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="1" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">1</p>
+</div>
+
+<!-- page 2: questions 1-2 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="2" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x wn" style="--b:130.5"><b>문제 1.</b> 키레네의 에라토스테네스(기원전 3세기)는 한 가지 관측과 두 가지 가설로부터 지구의 반지름을 구하였다. 그가 주목한 현상은, 같은 순간에 햇빛이 들어오는 방향이 관측 지점의 위도에 따라 달라진다는 것이었다. 이를 설명하기 위해 그는 햇빛이 평행하고 지구가 구 모양이라고 가정하였다. 이 방법에서 착안하여, 거의 같은 자오선 위에 있는 두 도시 마카파(<span class="nw">$M$)와</span> 포르투알레그리(<span class="nw">$P$)의</span> 학생들이 이 실험을 재현하기로 하였다. 마카파는 거의 적도 위에 있고, 포르투알레그리는 남위 <span class="nw">$30^\circ$</span> 위선 가까이에 있다. 두 도시 사이를 가장 짧은 경로로 잇는 직항 비행기는 거리 <span class="nw">$d = 3\,300\ \mathrm{km}$를</span> 날아간다. 실험은 춘분이나 추분 날 정오, 곧 햇빛이 마카파에 수직으로 내리쬘 때 한다고 하자.</p>
+<p class="x s" style="--b:274.2"><span class="n">(a)</span>포르투알레그리에서 햇빛의 입사각은 대략 얼마인가?</p>
+<p class="x s" style="--b:290.2"><span class="n">(b)</span>에라토스테네스의 가설과 실험 결과로부터 지구의 반지름을 구하여라. 그림을 그려 결과의 근거를 제시하여라.</p>
+<p class="x s" style="--b:320.7"><span class="n">(c)</span>같은 관측 결과는 평평한 지구 모형으로도 설명할 수 있다. 이 모형에서 태양은 지면 위 높이 <span class="nw">$H$인</span> 곳에 있는 점광원이며, 춘분이나 추분 날 정오에 마카파 바로 위에 있다. <span class="nw">$H$를</span> 구하여라. 그림을 그려 결과의 근거를 제시하여라.</p>
+<p class="x s" style="--b:380.1"><span class="n">(d)</span>평평한 지구 모형으로도 여러 도시에서 햇빛의 입사각이 서로 다른 것을 설명할 수 있다면, 왜 이 모형을 채택하지 않는가?</p>
+<p class="x" style="--b:434.6"><b>문제 2.</b> 처음 길이가 <span class="nw">$L_0 = 0.60\ \mathrm{m}$,</span> 밀도가 <span class="nw">$\rho = 8.00\times10^{3}\ \mathrm{kg/m^3}$,</span> 단면적이 <span class="nw">$A = 36\ \mathrm{mm^2}$인</span> 강철 막대가 연직으로 세워져 있다. 이 막대를 막대의 아래 끝에서 잰 높이 <span class="nw">$h$에서</span> 이상적으로 단단한 바닥 위로 떨어뜨린다.</p>
+<p class="x" style="--b:483.9"><b>수직 응력</b>과 <b>축 변형률</b>을 다음과 같이 정의한다.</p>
+<div class="f" style="left:180pt;top:494pt"><span class="fig" data-srcpage="2" data-clip="180,494,219,527"></span></div>
+<p class="x" style="--b:512.7;left:229.2pt;width:45pt">(Pa),</p>
+<div class="f" style="left:277pt;top:494pt"><span class="fig" data-srcpage="2" data-clip="277,494,323,527"></span></div>
+<p class="x" style="--b:512.7;left:333.5pt;width:120pt">(무차원),</p>
+<p class="x" style="--b:541.9">여기서 <span class="nw">$F$는</span> 막대의 축을 따라, 넓이 <span class="nw">$A$인</span> 단면에 수직으로 작용하는 축 방향 힘(인장일 때 양, 압축일 때 음)이고, <span class="nw">$\Delta L$은</span> 막대 길이의 변화량이다. 이 물질의 선형 탄성 거동은 다음 <b>단축 훅 법칙</b>으로 기술된다.</p>
+<div class="f" style="left:272pt;top:590pt"><span class="fig" data-srcpage="2" data-clip="272,590,324,604"></span></div>
+<p class="x" style="--b:619.5">여기서 <span class="nw">$Y$는</span> 물질의 <b>영률</b>이다. 강철에 대해서는 <span class="nw">$Y = 2.00\times10^{11}\ \mathrm{N/m^2}$을</span> 사용하여라. <span class="nw">$|\sigma|$가</span> 물질의 <b>탄성 한계</b> <span class="nw">$\sigma_y$를</span> 넘으면 물질은 영구 변형을 겪는다. 강철에 대해서는 <span class="nw">$\sigma_y = 400\ \mathrm{MPa}$을</span> 사용하여라.</p>
+<p class="x" style="--b:668.8">바닥과 충돌할 때 막대의 아래 끝은 멈추고, 그곳에서 <i>압축파</i>가 생겨 속력 <span class="nw">$v_s = \sqrt{Y/\rho}$로</span> 위쪽으로 전파된다고 하자. 그동안 막대의 위 끝은 파면과 만날 때까지 속력 <span class="nw">$v_0$(충돌</span> 직전 막대의 속력과 같다)으로 계속 아래로 움직인다(이 짧은 시간 동안 중력 가속도는 무시할 수 있다).</p>
+<p class="x s" style="--b:756.9"><span class="n">(a)</span>막대의 위 끝이 움직임을 멈출 때까지 걸리는 시간 간격 <span class="nw">$\tau$를</span> 어림하여라.</p>
+<p class="x s" style="--b:780.5"><span class="n">(b)</span>막대에 영구 변형을 일으키지 않는 최대 낙하 높이 <span class="nw">$h$는</span> 얼마인가?</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="2" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">2</p>
+</div>
+
+<!-- page 3: questions 3-4 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="3" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x b" style="--b:130.5">문제 3.</p>
+<p class="x" style="--b:148">정글에서 산길을 걷던 물리학도 두 명이 나무 꼭대기에 묶인 밧줄을 이용해 개울을 건너야 한다. 관건은 맞은편 기슭에서 가장 먼 수평 거리에 이르려면 <i>언제</i> 밧줄을 놓아야 하는지 정하는 것이다.</p>
+<div class="f" style="left:290pt;top:185.6pt"><span class="fig" data-srcpage="3" data-clip="290,185.6,533.2,290.4"></span></div>
+<p class="x w3" style="--b:202">두 학생은 이 상황을 단진자로 모형화한다. 곧 길이가 <span class="nw">$L$이고</span> 늘어나지 않으며 질량을 무시할 수 있는 이상적인 줄 끝에 질량 <span class="nw">$m$인</span> 작은 구가 달려 있다(그림 참고). 궤적의 가장 낮은 점을 높이 <span class="nw">$y = 0$(도착하는</span> 기슭과 같은 높이)으로 잡아라.</p>
+<p class="x" style="--b:307.6">시각 <span class="nw">$t_0$에</span> 구를 <span class="nw">$y = L$(줄이</span> 수평)인 곳에서 정지 상태로 놓는다. 시각 <span class="nw">$t_1$에</span> 줄은 연직이 되고 구는 <span class="nw">$x = 0$(개울</span> 한가운데 위)을 지난다. 시각 <span class="nw">$t_2$에,</span> 줄이 연직선과 각 <span class="nw">$\theta_2$를</span> 이룰 때 구가 줄에서 풀려난다. 시각 <span class="nw">$t_3$에</span> 구는 수평 좌표 <span class="nw">$x_3$인</span> 곳에서 맞은편 기슭에 닿는다.</p>
+<p class="x s" style="--b:384.3"><span class="n">(a)</span>구가 <span class="nw">$\theta_2 = 45^\circ$에서</span> 풀려날 때 도달하는 좌표 <span class="nw">$x_3(45^\circ)$를</span> 구하여라.</p>
+<p class="x s" style="--b:408.8"><span class="n">(b)</span>함수 <span class="nw">$x_3(\theta_2)$(주어진</span> 풀려나는 각 <span class="nw">$\theta_2$에</span> 대한 수평 도달 거리 <span class="nw">$x_3$)를</span> 구하여라. 이 함수는 정의역 <span class="nw">$0 \le \theta_2 &lt; 90^\circ$에서</span> 연속이다. 이 함수가 구간 <span class="nw">$0^\circ &lt; \theta_2 &lt; 45^\circ$에서</span> 최댓값을 가짐을 증명하여라. 다음 1차 근사식(<span class="nw">$\delta$가</span> 작을 때, rad 단위)을 이용하면 편리할 수 있다.</p>
+<p class="x s c" style="--b:466.5">$\sin(\theta_2+\delta) \approx \sin\theta_2 + \cos\theta_2\,\delta,$</p>
+<p class="x s c" style="--b:487.5">$\cos(\theta_2+\delta) \approx \cos\theta_2 - \sin\theta_2\,\delta,$</p>
+<p class="x s c" style="--b:508.4">$\bigl(\cos(\theta_2+\delta)\bigr)^{\alpha} \approx (\cos\theta_2)^{\alpha} - \alpha(\cos\theta_2)^{\alpha-1}\sin\theta_2\,\delta,$</p>
+<p class="x s c" style="--b:533.3">$\displaystyle\sqrt{u_0+\varepsilon} \approx \sqrt{u_0} + \frac{\varepsilon}{2\sqrt{u_0}}$ &emsp;(특히, <span class="nw">$\sqrt{1-C\delta} \approx 1 - \frac{C}{2}\delta$).</span></p>
+<p class="x" style="--b:585.4"><b>문제 4.</b> 연직 방향으로 선편광된 단색 빨간빛 빛살이, 투과 방향이 연직 방향에 대해 <span class="nw">$30^\circ$</span> 기울어진 선형 편광판에 입사한다. 빛살의 처음 세기는 <span class="nw">$I_0 = 12.0\ \mathrm{mW/m^2}$이고,</span> 사용한 빨간빛의 파장은 <span class="nw">$\lambda = 630\ \mathrm{nm}$이다.</span></p>
+<p class="x s" style="--b:662.1"><span class="n">(a)</span>편광판을 투과한 빛의 세기를 구하여라.</p>
+<p class="x s" style="--b:686.5"><span class="n">(b)</span>빛살의 단면적이 <span class="nw">$A = 1.0\ \mathrm{cm^2}$임을</span> 이용하여, 편광판에 1초 동안 입사하는 광자의 수를 계산하여라.</p>
+<p class="x s" style="--b:725.3"><span class="n">(c)</span>광자 하나가 편광판에 입사할 때 어떤 일이 일어나는지 설명하여라.</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="3" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">3</p>
+</div>
+
+<!-- page 4: questions 5-6 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="4" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x b" style="--b:130.5">문제 5.</p>
+<div class="f" style="left:360pt;top:140pt"><span class="fig" data-srcpage="4" data-clip="360,140,537,310"></span>
+<span class="ov" style="left:41pt;top:1pt;width:60pt;height:11.5pt;line-height:11.5pt">$T_{\text{표면}} \approx 0\,{}^\circ\mathrm{C}$</span>
+<span class="ov b" style="left:74.5pt;top:22.6pt;width:26pt;height:7.8pt;line-height:7.8pt">지각</span>
+<span class="ov b" style="left:39.5pt;top:49.5pt;width:63pt;height:9.5pt;line-height:9.5pt;background:rgb(237,155,64)">맨틀 (1200 $^\circ$C)</span>
+<span class="ov b" style="left:57pt;top:96pt;width:28pt;height:8.5pt;line-height:8.5pt;background:rgb(220,70,50)">핵</span></div>
+<p class="x w5" style="--b:156.4">수십억 년 전 원시 지구는 마그마로 덮여 있었다. 시간이 지나면서 열이 표면으로 전도되어 우주 공간으로 복사됨에 따라, 고체 지각이 생겨 점점 두꺼워졌다(축척을 무시한 그림 참고). 현재 지구의 지각은 평균 두께가 약 <span class="nw">$L = 35\ \mathrm{km}$이고,</span> 평균 열전도율은 <span class="nw">$k = 2.5\ \mathrm{W\,m^{-1}\,K^{-1}}$이다.</span></p>
+<p class="x w5" style="--b:263.5">맨틀에 있는 마그마의 온도는 <span class="nw">$T_{\text{마그마}} = 1200\,{}^\circ\mathrm{C}$이고,</span> 지표면의 온도는 <span class="nw">$T_{\text{표면}} = 0\,{}^\circ\mathrm{C}$로</span> 일정하다고 하자.</p>
+<p class="x" style="--b:328.8">또한 마그마 <span class="nw">$1\ \mathrm{m^3}$가</span> 굳을 때 약 <span class="nw">$5\times10^{5}\ \mathrm{J}$의</span> 에너지를 방출한다는 것이 알려져 있다.</p>
+<p class="x s" style="--b:360.7"><span class="n">(a)</span>맨틀과 표면 사이의 전도에 의한 열 방출에 따른 지각의 성장 속도(mm/년)를 어림하여라.</p>
+<p class="x s" style="--b:399.1"><span class="n">(b)</span>간단히 하기 위해, 이 성장 속도가 지구가 생겨난 뒤로 줄곧 일정했다고 가정하자. 지구 표면에 마그마가 드러나 있던 기간(년 단위)의 크기 정도를 어림하여라.</p>
+<p class="x b" style="--b:471.8">문제 6.</p>
+<div class="f" style="left:386.7pt;top:484pt"><span class="fig" data-srcpage="4" data-clip="386.7,484,541.4,603"></span></div>
+<p class="x w5" style="--b:489.3">송전선(그림과 같은)에서는 서로 다른 <i>위상</i>의 교류(AC)를 사용하여, 도선의 전류를 안전한 한도 안에 두면서 전달하는 전력을 높인다. 세 도선 <span class="nw">$(a, b, c)$로</span> 이루어진 삼상 계를 생각하자. 각 도선의 최대 전압은 <span class="nw">$V_3$이고,</span> 서로의 위상차는 <span class="nw">$2\pi/3$이다.</span></p>
+<div class="f" style="left:138pt;top:576pt"><span class="fig" data-srcpage="4" data-clip="138,576,266,633"></span></div>
+<p class="x" style="--b:650">두 상을 짝지어 순수한 저항 부하(모두 저항이 <span class="nw">$R$인</span> 평형 계)에 연결하면 여러 가지 순간 전압을 얻을 수 있다.</p>
+<p class="x s" style="--b:693.7"><span class="n">(a)</span>상의 쌍 <span class="nw">$(a, b)$,</span> <span class="nw">$(b, c)$,</span> <span class="nw">$(c, a)$를</span> 각각 연결하여 얻는 세 <i>선간</i> 전압(최댓값)을 쓰고, 이들을 <span class="nw">$V\cos(\omega t + \phi)$</span> 꼴로 쓸 수 있음을 보여라. 여기서 <span class="nw">$V$와</span> <span class="nw">$\phi$는</span> <span class="nw">$V_3$과</span> 위상차에 따라 정해진다.</p>
+<p class="x s" style="--b:746.7"><span class="n">(b)</span>평형 삼상 배치에서 전달되는 전체 평균 전력 <span class="nw">$P_3$을</span> <span class="nw">$V_3$과</span> <span class="nw">$R$로</span> 나타내어라.</p>
+<p class="x" style="--b:790.4"><i>도움말:</i> <span class="nw">$\overline{\cos^2(\omega t)} = 1/2$</span> (한 주기 동안의 평균).</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="4" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">4</p>
+</div>
+
+<!-- page 5: questions 7-8 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="5" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x wn" style="--b:130.5"><b>문제 7.</b> 두 굴절면 사이의 꼭지각이 <span class="nw">$\alpha = 30^\circ$인</span> 유리 삼각 프리즘을 생각하자. 백색광의 평행 광선 다발이 프리즘의 한 면에 수직으로 입사하여 둘째 면으로 나오면서 꺾인다. 공기의 굴절률은 <span class="nw">$n_{\text{공기}} = 1.0$으로</span> 하고, 유리의 굴절률은 <span class="nw">$1.5$</span> 근처에서 분산이 작다고 하자. 가시광선 스펙트럼의 양 끝에서 굴절률은 <span class="nw">$n_{\text{빨강}} = 1.48$,</span> <span class="nw">$n_{\text{보라}} = 1.52$이다.</span> 답에서 각은 arcsin 함수로 나타내어라. 다음을 구하여라.</p>
+<p class="x s" style="--b:233.1"><span class="n">(a)</span>삼각 프리즘 때문에 빛살이 겪는 평균 편향각.</p>
+<p class="x s" style="--b:257.5"><span class="n">(b)</span>프리즘에서 나오는 빛살의 빨간색과 보라색 사이의 <i>벌어진 각</i>.</p>
+<p class="x wn" style="--b:314.3"><b>문제 8.</b> 실패 하나가 정지 마찰 계수와 운동 마찰 계수가 모두 <span class="nw">$\mu = 0.75$인</span> 수평한 탁자 위에 놓여 있다(그림 참고). 실이 감긴 안쪽 원통의 반지름은 <span class="nw">$r = 3.00\ \mathrm{cm}$이고,</span> 바깥 테두리(탁자에 닿는 가장자리)의 반지름은 <span class="nw">$R = 5.00\ \mathrm{cm}$이며</span> <span class="nw">$R &gt; r$이다.</span> 실패의 전체 질량은 <span class="nw">$2m$이고,</span> 이를 양옆 원판에 중심으로부터 거리 <span class="nw">$r$인</span> 곳에 고정된 두 질량 <span class="nw">$m$으로</span> 모형화한다고 하자.</p>
+<p class="x" style="--b:392.5">한 사람이 실의 끝을 크기가 <span class="nw">$F = mg$로</span> 일정한 힘으로, 수평과 각 <span class="nw">$\theta$를</span> 이루도록 당긴다.</p>
+<p class="x" style="--b:427.4">질량 중심 <span class="nw">$G$의</span> 선가속도를 <span class="nw">$a$(오른쪽이</span> 양), 각가속도를 <span class="nw">$\alpha$(시계</span> 반대 방향이 양)라고 하자.</p>
+<div class="f" style="left:177pt;top:464.6pt"><span class="fig" data-srcpage="5" data-clip="177,464.6,418.3,591.2"></span></div>
+<p class="x s" style="--b:624.4"><span class="n">(a)</span><span class="nw">$\theta = 0^\circ$일</span> 때 <span class="nw">$a$와</span> <span class="nw">$\alpha$를</span> 구하여라.</p>
+<p class="x s" style="--b:640.8"><span class="n">(b)</span><span class="nw">$\theta = 90^\circ$일</span> 때 <span class="nw">$a$와</span> <span class="nw">$\alpha$를</span> 구하여라.</p>
+<p class="x s" style="--b:657.3"><span class="n">(c)</span>운동의 정성적인 양상이 (a)에서 본 것(<span class="nw">$\theta &lt; \theta_c$)에서</span> (b)에서 본 것(<span class="nw">$\theta &gt; \theta_c$)으로</span> 바뀌는 임계각 <span class="nw">$\theta_c$를</span> 구하여라.</p>
+<p class="x s" style="--b:688.2"><span class="n">(d)</span><span class="nw">$\theta = \theta_c$이고</span> <span class="nw">$F = 2mg$일</span> 때 <span class="nw">$a$와</span> <span class="nw">$\alpha$를</span> 구하여라.</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="5" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">5</p>
+</div>
+
+</body></html>

@@ -1,0 +1,162 @@
+<!doctype html><html lang="en"><head><meta name="page" content="595.276,841.89">
+<style>
+/* OBF 2025 (Olimpíada Brasileira de Física), 3rd phase, Level III theory paper — English edition on the original layout.
+   ORIGINAL: pdfLaTeX, CM-Super SFRM1200 12pt, A4 595.3x841.9pt, 5 pages. Text column x 56.7..538.7 (width 482pt);
+   baselineskip 14.45pt. Header (SBF logo, OBF logo, rule at y 93.9) and footer rule (y 805.6) are stamped;
+   page numbers are text (baseline 820.3, right edge 538.6). Figures: Q3 pendulum, Q6 photo, Q8 spool are raster
+   images (labels are symbols only) and are stamped as they are; the Q5 Earth diagram is vector with word labels
+   (T_superfície, Crosta, Manto, Núcleo), which get small "ov" overlays in the figure's own colours.
+   Display equations without words are stamped; displays with words or decimal commas are retyped in KaTeX.
+
+   PLACEMENT (as rupho/2016_T1.html): every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs)
+   Lists: labels "(a)", "1.", "•" are right-aligned 5.9pt before the text edge (as LaTeX enumerate/itemize):
+   sub-questions text at x 86.0; instructions text at 110.1 (right edge 514.6), bullets text at 135.8. */
+body{font-family:CM,KB,serif;font-size:12pt;line-height:14.45pt}
+p{text-indent:0}
+.katex{line-height:0}
+.x{position:absolute;margin:0;left:56.7pt;width:482pt;--l:14.45pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt);hyphens:auto}
+.c{text-align:center}
+.r{text-align:right}
+.b{font-weight:bold}
+/* text beside a figure on the right: Q3 to x 273.6; Q5, Q6 to 345.9 */
+.w3{width:216.9pt}
+.w5{width:289.2pt}
+/* sub-questions (a)(b)(c): text from 86.0 */
+.s{left:86pt;width:452.7pt}
+/* instructions box on page 1 */
+.ins{left:110.1pt;width:404.5pt}
+.bul{left:135.8pt;width:378.8pt}
+.n{position:absolute;right:100%;margin-right:5.9pt;white-space:nowrap}
+.f{position:absolute;line-height:0}
+/* labels laid over the Q5 diagram (CMBX10 / CMR10 at 7.2pt) */
+.ov{position:absolute;background:#fff;white-space:nowrap;font-size:7.2pt;text-align:center}
+.nw{white-space:nowrap}
+</style></head><body>
+
+<!-- page 1: cover and instructions -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="1" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<!-- level box (four rules only: the words inside are retyped) -->
+<div class="f" style="left:364pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="364,118.4,500.7,119.2"></span></div>
+<div class="f" style="left:364pt;top:190pt"><span class="fig" data-srcpage="1" data-clip="364,190,500.7,190.8"></span></div>
+<div class="f" style="left:364pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="364,118.4,364.8,190.8"></span></div>
+<div class="f" style="left:499.9pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="499.9,118.4,500.7,190.8"></span></div>
+<p class="x c b" style="--b:145.4;left:364.4pt;width:135.9pt;--l:14.4pt">LEVEL III<br>Upper Secondary<br>3rd and 4th Years</p>
+<p class="x c b" style="--b:157.6;left:56.7pt;width:303.6pt;--l:20.4pt">BRAZILIAN PHYSICS OLYMPIAD 2025<br>Third-Phase Exam<br>OCTOBER 18, 2025</p>
+<!-- instructions box -->
+<div class="f" style="left:73.3pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="73.3,233.1,522,233.9"></span></div>
+<div class="f" style="left:73.3pt;top:768.5pt"><span class="fig" data-srcpage="1" data-clip="73.3,768.5,522,769.3"></span></div>
+<div class="f" style="left:73.3pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="73.3,233.1,74.1,769.3"></span></div>
+<div class="f" style="left:521.2pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="521.2,233.1,522,769.3"></span></div>
+<p class="x c b" style="--b:247.4;left:73.7pt;width:447.9pt">READ THE INSTRUCTIONS CAREFULLY:</p>
+<p class="x ins" style="--b:274.8"><span class="n">1.</span>This exam is intended exclusively for students in the <b>3rd and 4th years of upper secondary school.</b> It contains <b>8</b> questions.</p>
+<p class="x ins" style="--b:313.6"><span class="n">2.</span>The use of calculators and reference material is not permitted.</p>
+<p class="x ins" style="--b:338"><span class="n">3.</span>All answers must be justified.</p>
+<p class="x bul" style="--b:362.4"><span class="n">$\bullet$</span>Solutions and answers must be written in ink, with a blue or black ballpoint pen (do not use a felt-tip pen).</p>
+<p class="x bul" style="--b:396.3"><span class="n">$\bullet$</span>Use the back of the question sheets as scratch paper.</p>
+<p class="x ins" style="--b:420.7"><span class="n">4.</span>The <b>Answer Booklet</b> contains instructions that must be read carefully before the exam begins.</p>
+<p class="x ins" style="--b:459.6"><span class="n">5.</span>Unless the statement of a question gives specific instructions, all numerical results must be expressed in units of the International System (SI).</p>
+<p class="x ins" style="--b:512.9"><span class="n">6.</span>The exam lasts <b>four</b> hours, and students must remain in the room for <b>at least sixty minutes.</b></p>
+<p class="x ins" style="--b:551.7"><span class="n">7.</span>If necessary and unless otherwise stated, use: <span class="nw">$\sqrt{2} = 1.4$;</span> <span class="nw">$\sqrt{3} = 1.7$;</span> <span class="nw">$\sqrt{5} = 2.2$;</span> <span class="nw">$\sin(30^\circ) = 0.50$;</span> <span class="nw">$\cos(30^\circ) = 0.85$;</span> <span class="nw">$\sin(45^\circ) = 0.70$;</span> <span class="nw">$\pi = 3$;</span> density of <span class="nw">water $= 1.0\ \mathrm{g/cm^3}$;</span> <span class="nw">$1\ \mathrm{cal} = 4.2\ \mathrm{J}$;</span> specific heat of <span class="nw">water $= 4.2\ \mathrm{J/g\,{}^\circ C}$;</span> Coulomb <span class="nw">constant $= 9\times10^{9}\ \mathrm{N{\cdot}m^2{\cdot}C^{-2}}$;</span> Planck <span class="nw">constant $= 6.6\times10^{-34}\ \mathrm{J{\cdot}s}$;</span> speed of sound in air <span class="nw">$340\ \mathrm{m/s}$;</span> speed of light in vacuum <span class="nw">$c = 3\times10^{8}\ \mathrm{m/s}$;</span> and acceleration due to <span class="nw">gravity $= 10.0\ \mathrm{m/s^2}$.</span></p>
+<p class="x ins" style="--b:648.4"><span class="n">8.</span>If necessary, use the approximation formula for square roots:</p>
+<div class="f" style="left:240pt;top:656pt"><span class="fig" data-srcpage="1" data-clip="240,656,380,696"></span></div>
+<p class="x ins" style="--b:715">where $\sqrt{N}$ is a known root and $\sqrt{N \pm \delta}$ is the root to be estimated. Examples:</p>
+<p class="x bul" style="--b:739.4"><span class="n">$\bullet$</span>$\sqrt{38} = \sqrt{36+2} \approx \sqrt{36} + \frac{\sqrt{36}}{2\cdot 36}\cdot 2 = 6 + \frac{2}{12} \approx 6.17$</p>
+<p class="x bul" style="--b:761.6"><span class="n">$\bullet$</span>$\sqrt{23} = \sqrt{25-2} \approx \sqrt{25} - \frac{\sqrt{25}}{2\cdot 25}\cdot 2 = 5 - \frac{2}{10} = 4.80$</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="1" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">1</p>
+</div>
+
+<!-- page 2: questions 1-2 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="2" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x" style="--b:130.5"><b>Question 1.</b> Eratosthenes of Cyrene (3rd century BC) determined the radius of the Earth from one observation and two hypotheses. The phenomenon that caught his attention is that, at the same instant, the direction of incidence of the Sun’s rays varies with the latitude of the observation point. To explain it, he assumed the Sun’s rays to be parallel and the Earth to be spherical. Inspired by this approach, students from Macapá ($M$) and <span class="nw">Porto Alegre ($P$),</span> cities approximately on the same meridian, decided to reproduce the experiment. Macapá lies practically on the Equator, and Porto Alegre near the $30^\circ$ South parallel. A direct flight between the two cities, by the shortest route, covers <span class="nw">$d = 3\,300\ \mathrm{km}$.</span> Assume that the experiment is done at noon on the equinox, when the Sun shines perpendicularly on Macapá.</p>
+<p class="x s" style="--b:274.2"><span class="n">(a)</span>Approximately what is the angle of incidence of the Sun’s rays in Porto Alegre?</p>
+<p class="x s" style="--b:290.2"><span class="n">(b)</span>Determine the radius of the Earth from Eratosthenes’ hypotheses and the experimental results. Justify your result with a diagram.</p>
+<p class="x s" style="--b:320.7"><span class="n">(c)</span>The same observation can be explained by a flat-Earth model in which the Sun is a point light source at a height $H$ above the plane of the Earth and lies exactly above Macapá at noon on the equinox. Determine $H$. Justify your result with a diagram.</p>
+<p class="x s" style="--b:380.1"><span class="n">(d)</span>If the flat-Earth model is able to explain the difference in the angle of incidence of the Sun’s rays in different cities, why is it not adopted?</p>
+<p class="x" style="--b:434.6"><b>Question 2.</b> Consider a vertically oriented steel bar of initial length <span class="nw">$L_0 = 0.60\ \mathrm{m}$,</span> density <span class="nw">$\rho = 8.00\times10^{3}\ \mathrm{kg/m^3}$</span> and cross-sectional area <span class="nw">$A = 36\ \mathrm{mm^2}$.</span> The bar is dropped onto an ideally rigid floor from a height $h$ measured from its base.</p>
+<p class="x" style="--b:483.9">The <b>normal stress</b> and the <b>axial strain</b> are defined by</p>
+<div class="f" style="left:180pt;top:494pt"><span class="fig" data-srcpage="2" data-clip="180,494,219,527"></span></div>
+<p class="x" style="--b:512.7;left:229.2pt;width:45pt">(Pa),</p>
+<div class="f" style="left:277pt;top:494pt"><span class="fig" data-srcpage="2" data-clip="277,494,323,527"></span></div>
+<p class="x" style="--b:512.7;left:333.5pt;width:120pt">(dimensionless),</p>
+<p class="x" style="--b:541.9">where $F$ is the axial force (positive in tension and negative in compression), applied along the axis of the bar and perpendicular to its cross-section of area $A$, and $\Delta L$ is the change in length of the bar. The linear elastic behaviour of the material is described by the <b>uniaxial Hooke’s law</b>:</p>
+<div class="f" style="left:272pt;top:590pt"><span class="fig" data-srcpage="2" data-clip="272,590,324,604"></span></div>
+<p class="x" style="--b:619.5">where $Y$ is the <b>Young’s modulus</b> of the material. For steel, use <span class="nw">$Y = 2.00\times10^{11}\ \mathrm{N/m^2}$.</span> A material undergoes a permanent deformation when $|\sigma|$ exceeds its <b>elastic limit</b> <span class="nw">$\sigma_y$.</span> For steel, use <span class="nw">$\sigma_y = 400\ \mathrm{MPa}$.</span></p>
+<p class="x" style="--b:668.8">On impact with the floor, assume that the base of the bar stops and that a <i>compression wave</i> arises there, propagating upwards with speed <span class="nw">$v_s = \sqrt{Y/\rho}$.</span> Meanwhile, the top of the bar keeps moving downwards with speed $v_0$ (equal to that of the bar immediately before the impact) until it meets the wave front (the acceleration due to gravity can be neglected during this short time interval).</p>
+<p class="x s" style="--b:756.9"><span class="n">(a)</span>Estimate the time interval $\tau$ it takes for the top to stop moving.</p>
+<p class="x s" style="--b:780.5"><span class="n">(b)</span>What is the greatest release height $h$ that causes no permanent deformation of the bar?</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="2" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">2</p>
+</div>
+
+<!-- page 3: questions 3-4 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="3" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x b" style="--b:130.5">Question 3.</p>
+<p class="x" style="--b:148">During a hike in the jungle, two physics students need to cross a stream using a rope tied to the top of a tree. The challenge is to decide <i>when</i> to let go of the rope so as to reach the greatest horizontal distance on the other bank.</p>
+<div class="f" style="left:290pt;top:185.6pt"><span class="fig" data-srcpage="3" data-clip="290,185.6,533.2,290.4"></span></div>
+<p class="x w3" style="--b:202">They model the situation as a simple pen&shy;du&shy;lum: an ideal string of length $L$, in&shy;ex&shy;ten&shy;si&shy;ble and of negligible mass, with a small sphere of mass $m$ at its end (see figure). Take the lowest point of the trajectory as the level <span class="nw">$y = 0$</span> (the same level as the landing bank).</p>
+<p class="x" style="--b:307.6">At instant $t_0$ the sphere is released from rest at <span class="nw">$y = L$</span> (string horizontal). At instant $t_1$ the string is vertical and the sphere passes through <span class="nw">$x = 0$</span> (above the middle of the stream). At instant $t_2$, when the string makes an angle $\theta_2$ with the vertical, the sphere is let go. At instant $t_3$ it reaches the other bank at the horizontal coordinate <span class="nw">$x_3$.</span></p>
+<p class="x s" style="--b:384.3"><span class="n">(a)</span>Determine the coordinate $x_3(45^\circ)$ reached when the sphere is let go at <span class="nw">$\theta_2 = 45^\circ$.</span></p>
+<p class="x s" style="--b:408.8"><span class="n">(b)</span>Determine the function $x_3(\theta_2)$ (the horizontal range $x_3$ for a given release angle $\theta_2$), which is continuous on the domain <span class="nw">$0 \le \theta_2 &lt; 90^\circ$.</span> Prove that this function has a maximum in the interval <span class="nw">$0^\circ &lt; \theta_2 &lt; 45^\circ$.</span> It may be useful to use the first-order approximations (for small $\delta$, in rad):</p>
+<p class="x s c" style="--b:466.5">$\sin(\theta_2+\delta) \approx \sin\theta_2 + \cos\theta_2\,\delta,$</p>
+<p class="x s c" style="--b:487.5">$\cos(\theta_2+\delta) \approx \cos\theta_2 - \sin\theta_2\,\delta,$</p>
+<p class="x s c" style="--b:508.4">$\bigl(\cos(\theta_2+\delta)\bigr)^{\alpha} \approx (\cos\theta_2)^{\alpha} - \alpha(\cos\theta_2)^{\alpha-1}\sin\theta_2\,\delta,$</p>
+<p class="x s c" style="--b:533.3">$\displaystyle\sqrt{u_0+\varepsilon} \approx \sqrt{u_0} + \frac{\varepsilon}{2\sqrt{u_0}}$ &emsp;(in particular, <span class="nw">$\sqrt{1-C\delta} \approx 1 - \frac{C}{2}\delta$).</span></p>
+<p class="x" style="--b:585.4"><b>Question 4.</b> A beam of monochromatic red light, linearly polarized in the vertical direction, is incident on a linear polarizer whose transmission direction is inclined at $30^\circ$ to the vertical. The initial intensity of the beam is <span class="nw">$I_0 = 12.0\ \mathrm{mW/m^2}$</span> and the wavelength of the red light used is <span class="nw">$\lambda = 630\ \mathrm{nm}$.</span></p>
+<p class="x s" style="--b:662.1"><span class="n">(a)</span>Determine the intensity of the light transmitted by the polarizer.</p>
+<p class="x s" style="--b:686.5"><span class="n">(b)</span>Given that the cross-sectional area of the beam is <span class="nw">$A = 1.0\ \mathrm{cm^2}$,</span> calculate the number of photons per second incident on the polarizer.</p>
+<p class="x s" style="--b:725.3"><span class="n">(c)</span>Comment on what happens when a single photon is incident on the polarizer.</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="3" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">3</p>
+</div>
+
+<!-- page 4: questions 5-6 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="4" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x b" style="--b:130.5">Question 5.</p>
+<div class="f" style="left:360pt;top:140pt"><span class="fig" data-srcpage="4" data-clip="360,140,537,310"></span>
+<span class="ov" style="left:41pt;top:1pt;width:60pt;height:11.5pt;line-height:11.5pt">$T_{\mathrm{surface}} \approx 0\,{}^\circ\mathrm{C}$</span>
+<span class="ov b" style="left:74.5pt;top:22.6pt;width:26pt;height:7.8pt;line-height:7.8pt">Crust</span>
+<span class="ov b" style="left:39.5pt;top:49.5pt;width:63pt;height:9.5pt;line-height:9.5pt;background:rgb(237,155,64)">Mantle (1200 $^\circ$C)</span>
+<span class="ov b" style="left:57pt;top:96pt;width:28pt;height:8.5pt;line-height:8.5pt;background:rgb(220,70,50)">Core</span></div>
+<p class="x w5" style="--b:156.4">Billions of years ago, the primitive Earth was covered by magma. Over time, as heat was conducted to the surface and radiated into space, a solid crust formed and grew progressively (see the diagram, not to scale). Today the Earth’s crust has an average thickness of approximately <span class="nw">$L = 35\ \mathrm{km}$</span> and an average thermal conductivity <span class="nw">$k = 2.5\ \mathrm{W\,m^{-1}\,K^{-1}}$.</span></p>
+<p class="x w5" style="--b:263.5">Take the temperature of the magma in the mantle to be <span class="nw">$T_{\mathrm{magma}} = 1200\,{}^\circ\mathrm{C}$</span> and the temperature at the Earth’s surface to be constant at <span class="nw">$T_{\mathrm{surface}} = 0\,{}^\circ\mathrm{C}$.</span></p>
+<p class="x" style="--b:328.8">It is also known that, on solidifying, $1\ \mathrm{m^3}$ of magma releases about $5\times10^{5}\ \mathrm{J}$ of energy.</p>
+<p class="x s" style="--b:360.7"><span class="n">(a)</span>Estimate the growth rate of the crust (in mm/year) associated with the dissipation of heat by conduction between the mantle and the surface.</p>
+<p class="x s" style="--b:399.1"><span class="n">(b)</span>For simplicity, assume that this rate has remained constant since the formation of the Earth. Estimate the order of magnitude of the time, in years, during which the Earth had magma exposed at its surface.</p>
+<p class="x b" style="--b:471.8">Question 6.</p>
+<div class="f" style="left:386.7pt;top:484pt"><span class="fig" data-srcpage="4" data-clip="386.7,484,541.4,603"></span></div>
+<p class="x w5" style="--b:489.3">In power transmission lines (as in the figure), alternating current (AC) in different <i>phases</i> is used to increase the power delivered while keeping the currents in the conductors within safe limits. Consider a three-phase system with three conductors $(a, b, c)$, each with peak voltage $V_3$ and mutual phase differences <span class="nw">of $2\pi/3$:</span></p>
+<div class="f" style="left:138pt;top:576pt"><span class="fig" data-srcpage="4" data-clip="138,576,266,633"></span></div>
+<p class="x" style="--b:650">Different instantaneous voltages can be obtained by connecting pairs of phases to purely resistive loads, all of resistance $R$ (balanced system).</p>
+<p class="x s" style="--b:693.7"><span class="n">(a)</span>Write the three <i>line</i> voltages (peak) obtained by connecting the pairs of phases $(a, b)$, $(b, c)$ and $(c, a)$, showing that they can be written in the form $V\cos(\omega t + \phi)$, in which $V$ and $\phi$ depend on $V_3$ and on the phase differences.</p>
+<p class="x s" style="--b:746.7"><span class="n">(b)</span>Calculate the total average power transmitted in the balanced three-phase arrangement, $P_3$, in terms of $V_3$ and $R$.</p>
+<p class="x" style="--b:790.4"><i>Hint:</i> <span class="nw">$\overline{\cos^2(\omega t)} = 1/2$</span> (average over one period).</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="4" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">4</p>
+</div>
+
+<!-- page 5: questions 7-8 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="5" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x" style="--b:130.5"><b>Question 7.</b> Consider a triangular glass prism whose apex angle between the two refracting faces is <span class="nw">$\alpha = 30^\circ$.</span> A collimated beam of white light is incident perpendicularly on one of its faces and emerges from the second face, undergoing a deviation. Take the refractive index of air as <span class="nw">$n_{\mathrm{air}} = 1.0$</span> and, for the glass, indices with a small dispersion around $1.5$. The refractive indices at the extremes of the visible spectrum are <span class="nw">$n_{\mathrm{red}} = 1.48$</span> and <span class="nw">$n_{\mathrm{violet}} = 1.52$.</span> In your answers, express angles in terms of the arcsin function. Determine:</p>
+<p class="x s" style="--b:233.1"><span class="n">(a)</span>The mean angular deviation of the light ray due to the presence of the triangular prism.</p>
+<p class="x s" style="--b:257.5"><span class="n">(b)</span>The <i>opening angle</i> of the emerging beam between the red and violet colours at the exit of the prism.</p>
+<p class="x" style="--b:314.3"><b>Question 8.</b> A spool of thread rests on a horizontal table, with coefficients of static and kinetic friction both equal to <span class="nw">$\mu = 0.75$</span> (see figure). The inner drum, on which the thread is wound, has radius <span class="nw">$r = 3.00\ \mathrm{cm}$;</span> the outer rims (the edges that touch the table) have radius <span class="nw">$R = 5.00\ \mathrm{cm}$,</span> with <span class="nw">$R &gt; r$.</span> Assume that the whole mass of the spool is $2m$, modelled as two masses $m$ fixed on the side discs, at a distance $r$ from the centre.</p>
+<p class="x" style="--b:392.5">A person pulls the end of the thread with a constant force of magnitude <span class="nw">$F = mg$,</span> making an angle $\theta$ with the horizontal.</p>
+<p class="x" style="--b:427.4">Let $a$ be the linear acceleration of the centre of mass $G$ (positive to the right) and $\alpha$ the angular acceleration (positive counterclockwise).</p>
+<div class="f" style="left:177pt;top:464.6pt"><span class="fig" data-srcpage="5" data-clip="177,464.6,418.3,591.2"></span></div>
+<p class="x s" style="--b:624.4"><span class="n">(a)</span>Determine $a$ and $\alpha$ when <span class="nw">$\theta = 0^\circ$.</span></p>
+<p class="x s" style="--b:640.8"><span class="n">(b)</span>Determine $a$ and $\alpha$ when <span class="nw">$\theta = 90^\circ$.</span></p>
+<p class="x s" style="--b:657.3"><span class="n">(c)</span>Determine the critical angle $\theta_c$ at which the qualitative behaviour of the motion changes from that observed in (a) (for <span class="nw">$\theta &lt; \theta_c$)</span> to that observed in (b) (for <span class="nw">$\theta &gt; \theta_c$).</span></p>
+<p class="x s" style="--b:688.2"><span class="n">(d)</span>Determine $a$ and $\alpha$ when <span class="nw">$\theta = \theta_c$</span> and <span class="nw">$F = 2mg$.</span></p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="5" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">5</p>
+</div>
+
+</body></html>
