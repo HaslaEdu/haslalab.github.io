@@ -1,0 +1,249 @@
+<!doctype html><html lang="en"><head><meta name="page" content="595.32,841.92">
+<style>
+/* TWPhO 2014 (Taiwan, national-team second-round selection exam for APhO 2014 / IPhO 2014), theory paper —
+   English edition on the original layout.
+   ORIGINAL: MS Word, A4 595.3x841.9pt, 9 pages, text PDF. Chinese in DFKai-SB (標楷體) 12pt, Latin in Times New
+   Roman, math in Cambria Math. Line pitch 18pt (Word 1.5 spacing). Text column x 85.1..524.6; sub-question labels
+   "(a)" at x 85.1, their text at x 104.5/106.2; problem headings "一、" at x 70.9, heading text at x 100.9.
+   Page numbers 10pt, centred at x 297.6, baseline 797.0 (cover page has none; page 2 is numbered 1).
+   Chinese is far denser than English: blocks keep the original's first baseline and x-extent, but body text is
+   11.5pt (96%) on a 13-14.5pt pitch instead of 12pt on 18pt. Where a one-line Chinese item needs two English lines
+   the following item is moved down into the original's blank space (p.5 (c); p.6 (a)-(b), (d)-(f)).
+   Text beside a figure (p.7 (a-1), (b)) wraps round an invisible right float, then runs full width below it.
+   Tables (p.2 constants, p.6 Table 1) are rebuilt in HTML: rules are 0.5pt divs at the original rule coordinates,
+   all cells retyped (their header and first-column cells are Chinese). Chinese figure labels (Fig.1 前/後,
+   Fig.8 懸臂/探針/樣品) and the caption inside Fig.2 are covered by "ov" overlays; other captions are text.
+
+   PLACEMENT (as rupho/2016_T1.html, obf/2024_T_EN.html): every block is placed by the ORIGINAL's first baseline --b:
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs) */
+body{font-family:CM,KB,serif;font-size:11.5pt;line-height:13.5pt}
+p{text-indent:0}
+.x{position:absolute;margin:0;left:85.1pt;width:439.5pt;--l:13.5pt;--fs:11.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.r{text-align:right}
+.l{text-align:left}
+.b{font-weight:bold}
+/* problem heading (12pt bold): number at 70.9, title at 100.9 */
+.h{left:100.9pt;width:423.7pt;font-weight:bold;--fs:12pt}
+.h .n{left:-30pt}
+/* sub-question: text from 106.2, label at 85.1 */
+.s{left:106.2pt;width:418.4pt}
+.n{position:absolute;left:-21.1pt;white-space:nowrap}
+.pn{left:0;width:595.32pt;text-align:center;--fs:10pt;--l:12pt}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+.d{--l:30pt}
+.fl{float:right}
+/* table rules and cells */
+.hr{position:absolute;height:0.5pt;background:#000}
+.vr{position:absolute;width:0.5pt;background:#000}
+.t{position:absolute;margin:0;--fs:12pt;--l:15pt;font-size:var(--fs);line-height:var(--l);white-space:nowrap;
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.ov{position:absolute;background:#fff;line-height:1;white-space:nowrap;padding:1pt 2pt}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<p class="x c" style="--b:98.7;left:40pt;width:515.3pt;--fs:24pt;--l:35.2pt">2014: 15th Asian Physics Olympiad<br>and 45th International Physics Olympiad</p>
+<p class="x c" style="--b:202.6;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">National Team Second-Round Selection Exam</p>
+<p class="x c" style="--b:326.8;left:40pt;width:515.3pt;--fs:54pt;--l:60pt">Theory Problems</p>
+<p class="x c" style="--b:430;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">15 February 2014</p>
+<p class="x c" style="--b:488.9;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">Exam time: 13:30–16:30 (3 hours)</p>
+<p class="x c" style="--b:575.3;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">&lt;&lt;&thinsp;Instructions&thinsp;&gt;&gt;</p>
+<p class="x l" style="--b:607.5;left:106.9pt;width:440pt;--fs:18pt;--l:30.3pt"><span class="n" style="left:-36pt">1.</span>This paper contains six calculation problems of 25&nbsp;points each, 150&nbsp;points in total.</p>
+<p class="x l" style="--b:669.9;left:106.9pt;width:440pt;--fs:18pt;--l:30.3pt"><span class="n" style="left:-36pt">2.</span>Answer each problem in its designated place on the answer sheets; each problem has two answer pages.</p>
+<p class="x l" style="--b:732.3;left:106.9pt;width:440pt;--fs:18pt;--l:30.3pt"><span class="n" style="left:-36pt">3.</span>Non-programmable handheld calculators may be used.</p>
+</div>
+
+<!-- page 2: constants and formulas -->
+<div class="page">
+<p class="x" style="--b:82.3;left:106.9pt;--fs:12pt">Table of constants that may be needed</p>
+<!-- table: columns 101.3 | 233.8 | 309.3 | 503.1 ; rows 100.3, 118.8, 137.3, 155.8, 174.4, 192.9, 211.3 -->
+<div class="hr" style="left:101.3pt;width:402.3pt;top:100.3pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:118.8pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:137.3pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:155.8pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:174.4pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:192.9pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:211.3pt"></div>
+<div class="vr" style="left:101.3pt;top:100.3pt;height:111.5pt"></div>
+<div class="vr" style="left:233.8pt;top:100.3pt;height:111.5pt"></div>
+<div class="vr" style="left:309.3pt;top:100.3pt;height:111.5pt"></div>
+<div class="vr" style="left:503.1pt;top:100.3pt;height:111.5pt"></div>
+<p class="t" style="--b:113.4;left:106.9pt">Name</p>
+<p class="t" style="--b:113.4;left:239.4pt">Symbol</p>
+<p class="t" style="--b:113.4;left:315pt">Value and unit</p>
+<p class="t" style="--b:131.9;left:106.9pt">Speed of light</p>
+<p class="t c" style="--b:132.7;left:234.3pt;width:75pt">$c$</p>
+<p class="t c" style="--b:132.7;left:309.8pt;width:193.3pt">$3.00\times10^{8}\ \mathrm{m/s}$</p>
+<p class="t" style="--b:150.4;left:106.9pt">Elementary charge</p>
+<p class="t c" style="--b:151.2;left:234.3pt;width:75pt">$e$</p>
+<p class="t c" style="--b:151.2;left:309.8pt;width:193.3pt">$1.60\times10^{-19}\ \mathrm{C}$</p>
+<p class="t" style="--b:169;left:106.9pt">Gas constant</p>
+<p class="t c" style="--b:169.8;left:234.3pt;width:75pt">$R$</p>
+<p class="t c" style="--b:169.8;left:309.8pt;width:193.3pt">$8.31\ \mathrm{J/mol\cdot K}$</p>
+<p class="t" style="--b:187.5;left:106.9pt">Boltzmann constant</p>
+<p class="t c" style="--b:188.3;left:234.3pt;width:75pt">$k_B$</p>
+<p class="t c" style="--b:188.3;left:309.8pt;width:193.3pt">$1.38\times10^{-23}\ \mathrm{J/K}$</p>
+<p class="t" style="--b:205.9;left:105pt;--fs:10.8pt">Stefan–Boltzmann constant</p>
+<p class="t c" style="--b:206.8;left:234.3pt;width:75pt">$\sigma$</p>
+<p class="t c" style="--b:206.8;left:309.8pt;width:193.3pt">$5.67\times10^{-8}\ \mathrm{W/m^2\cdot K^4}$</p>
+
+<p class="x" style="--b:252.9;left:106.9pt;width:417.7pt;--fs:12pt">Mathematical formulas ($t$ is time, $x$ is any physical quantity)</p>
+<p class="x l d" style="--b:281.2;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">1.&ensp;$\dot x = \dfrac{dx}{dt}$,&emsp;$\ddot x = \dfrac{d^2x}{dt^2} = \dfrac{d}{dt}\!\left(\dfrac{dx}{dt}\right)$</span></p>
+<p class="x l d" style="--b:316.7;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">2.&ensp;$\dfrac{d}{dx}x^m = m\cdot x^{m-1}$</span></p>
+<p class="x l d" style="--b:352.7;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">3.&ensp;$\dfrac{d\cos x}{dx} = -\sin x$,&emsp;$\dfrac{d\sin x}{dx} = \cos x$</span></p>
+<p class="x l d" style="--b:387.2;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">4.&ensp;For $|x|\ll 1$,&ensp;$\dfrac{1}{\sqrt{1+x}} \approx 1-\dfrac{x}{2}$</span></p>
+<p class="x l" style="--b:414.6;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">5.&ensp;For $x\ll 1$,&ensp;$\sin x\approx x$</span></p>
+<p class="x pn" style="--b:797">1</p>
+</div>
+
+<!-- page 3: heading, problem 1 -->
+<div class="page">
+<p class="x c" style="--b:86.6;left:40pt;width:515.3pt;--fs:16pt;--l:20.3pt">2014: 15th Asian and 45th International Physics Olympiads<br>National Team Second-Round Selection Exam — Problems</p>
+<p class="x" style="--b:134.9;left:70.9pt;width:453.7pt;--fs:12pt">This paper contains six calculation problems of 25 points each, 150 points in total.</p>
+<p class="x h" style="--b:161.2"><span class="n">1.</span>A simple model of small vertical oscillations of a car</p>
+<p class="x" style="--b:179.2;--l:13pt">A simplified model lets us analyse the small vertical oscillations of a stationary car. Treat the car as the plane system of Figure&nbsp;1 below, with its centre of mass at C when at rest; the centre of mass can only move slightly up and down in the <b>vertical direction</b>. The body has mass $m$, and its moment of inertia about the horizontal axis through the centre of mass perpendicular to the vertical plane is <span class="nw">$I = mL^2$,</span> $L$ being the radius of gyration. The front and rear wheels are rigid; the two ideal springs supporting the weight of the body can only stretch and compress vertically, with lower ends fixed to the wheel centres and spring constants $k_1$ and $k_2$. The horizontal distances from the wheel centres to the centre of mass are $l_1$ and $l_2$. In answering, let $z$ be the displacement of the centre of mass (upward positive, see Figure&nbsp;1) and $\theta$ the angular displacement of the body (counterclockwise positive, see Figure&nbsp;1), both zero when the car is in static equilibrium under gravity.</p>
+<div class="f" style="left:159.8pt;top:321.5pt"><span class="fig" data-srcpage="3" data-clip="159.8,321.5,501.5,464.6"></span></div>
+<div class="ov" style="left:162pt;top:423.5pt;font-size:11pt">front</div>
+<div class="ov" style="left:414pt;top:423.5pt;font-size:11pt">rear</div>
+<div class="ov" style="left:279pt;top:446pt;font-size:12pt;padding:1pt 3pt">Figure 1</div>
+<p class="x s" style="--b:485.2"><span class="n">(a)</span>Simplifying the equations of motion of the body in the vertical plane (i.e. those of the centre of mass and of the rotation of the body about it) gives the vertical acceleration $\ddot z$ and the angular acceleration $\ddot\theta$ about the centre of mass as:</p>
+<div class="f" style="left:277pt;top:527pt"><span class="fig" data-srcpage="3" data-clip="277,527,355,542.5"></span></div>
+<p class="x" style="--b:552.1;left:104.7pt;width:419.9pt">and</p>
+<div class="f" style="left:260pt;top:556.5pt"><span class="fig" data-srcpage="3" data-clip="260,556.5,353.5,587.5"></span></div>
+<p class="x s" style="--b:597.1">Write down the expressions for $a$, $b$ and $c$ in these two equations.</p>
+<p class="x s" style="--b:614.1"><span class="n">(b)</span>Assume <span class="nw">$b&gt;0$,</span> and that the vertical motion of the body and its rotation about the centre of mass are simple harmonic with the same angular frequency; such motions are called normal modes. Find their angular frequencies $\omega_n$ ($n$ is an integer labelling the different normal-mode frequencies) and, for each normal mode, the amplitude ratio $A_n/B_n$ of $z$ to $\theta$ (in terms of $a$, $b$, $c$, $L$).</p>
+<p class="x s" style="--b:686.1;--l:13pt"><span class="n">(c)</span>The motion in a normal mode is equivalent to a pure rotation about some point $\mathrm{P}_n$. For the given <span class="nw">$b&gt;0$,</span> let $d_n$ be the distance from each $\mathrm{P}_n$ to the centre of mass C; find the ratio $d_1d_2/L^2$. Here $n=1$ denotes the normal mode of highest frequency and $n=2$ the mode of next-highest angular frequency.</p>
+<p class="x s" style="--b:744;--l:14pt"><span class="n">(d)</span>Assume <span class="nw">$b=0$,</span> <span class="nw">$c$&thinsp;≠&thinsp;$aL^2$.</span> At $t=0$ the car is pressed vertically down by a distance $h$, without any rotation. Find the vertical displacement $z$ and the angular displacement $\theta$ of the car as functions of time.</p>
+<p class="x pn" style="--b:797">2</p>
+</div>
+
+<!-- page 4: problem 2 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">2.</span>Dipole-bound states of negative ions</p>
+<p class="x" style="--b:101.5;left:103.5pt;width:254.5pt;--l:13.2pt"><span class="n" style="left:-18pt">(a)</span>In many non-spherical molecules the centres of positive and negative charge do not coincide, forming an electric dipole. In Figure&nbsp;2 on the right, O is the origin; the charges at the positive and negative charge centres of a molecule are $q$ and $-q$, located on the z-axis at <span class="nw">$z=d/2$</span> and <span class="nw">$z=-d/2$.</span> Let the dipole moment be <span class="nw">$p=qd$.</span> The direction of point A makes an angle $\theta$ with the z-axis, and its distance $r$ from O is much larger than the charge separation, i.e. <span class="nw">$r\gg d$.</span> Taking zero potential at infinity, find the potential at A (to first order in $p$) and the electric field along $\hat{\mathrm r}$ and along <span class="nw">$\hat{\theta}$.</span></p>
+<div class="f" style="left:363pt;top:97.9pt"><span class="fig" data-srcpage="4" data-clip="363,97.9,520.2,231.4"></span></div>
+<div class="ov" style="left:417pt;top:214pt;font-size:12pt;padding:1pt 3pt">Figure 2</div>
+<p class="x" style="--b:277.6;left:104.5pt;width:321pt;--l:13.6pt"><span class="n" style="left:-19.4pt">(b)</span>Some negative ions consist of an electron bound by the electric dipole $p$ of a neutral molecule. As shown in Figure&nbsp;3, the dipole of the molecule is along the z-axis; assume the molecule is fixed at the origin and its dipole is fixed. The electron has charge <span class="nw">$-e$ $(e&gt;0)$</span> and mass $m$, and quantum physics tells us that its smallest non-zero angular momentum about the z-axis is $\hbar$. Suppose the electron is bound to move on the circular orbit in which a plane perpendicular to the z-axis cuts the cone of half-angle $\theta$ about the dipole. If $r$ is much larger than the length of the neutral molecule, find the value of $\cos\theta$ and the z-component of the electron’s angular momentum about the origin, and find the minimum electric dipole moment $p$ the neutral molecule must have to bind the electron in this circular orbit.</p>
+<div class="f" style="left:432pt;top:272pt"><span class="fig" data-srcpage="4" data-clip="432,272,507.4,395.6"></span></div>
+<p class="x c" style="--b:408;left:430pt;width:79.4pt;--fs:12pt">Figure 3</p>
+<p class="x s" style="--b:475.6;--l:13.4pt"><span class="n">(c)</span>When a molecule is spherical, its centres of positive and negative charge coincide by symmetry before a field is applied, so it has no permanent electric dipole moment. Suppose the positive and negative charges of a neutral molecule can be regarded as two uniformly charged spheres of radius $a$, as in Figure&nbsp;4 below. In an external electric field $E$ the centres of positive and negative charge separate and finally reach equilibrium. Assuming that the charge distribution in each sphere is unchanged and that the separation of the two centres is much smaller than the radius $a$, find the dipole moment of the molecule.</p>
+<div class="f" style="left:259pt;top:569pt"><span class="fig" data-srcpage="4" data-clip="259,569,316,615.8"></span></div>
+<div class="f" style="left:253.6pt;top:622.6pt"><span class="fig" data-srcpage="4" data-clip="253.6,622.6,324.2,627.7"></span></div>
+<p class="x r" style="--b:597.2;left:90pt;width:162pt;--fs:12pt">Negatively charged sphere</p>
+<p class="x l" style="--b:597.2;left:327pt;width:190pt;--fs:12pt">Positively charged sphere</p>
+<p class="x c" style="--b:644.1;left:190pt;width:210pt;--fs:12pt">External electric field: $E$</p>
+<p class="x c" style="--b:665.3;left:255pt;width:81.2pt;--fs:12pt">Figure 4</p>
+<p class="x s" style="--b:689.3;--l:14pt"><span class="n">(d)</span>Using the above results, assume that the centres of positive and negative charge of the molecule reach their equilibrium positions instantaneously in the field. An electron moves on a circular orbit of radius $R$ centred on the molecule, with $R$ much larger than the separation of the two sphere centres. Find the energy of this negative ion carrying one negative charge (taking the potential energy to be zero at infinity).</p>
+<p class="x pn" style="--b:797">3</p>
+</div>
+
+<!-- page 5: problem 3 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">3.</span>A charged particle moving in a magnetic field</p>
+<p class="x" style="--b:101.5">Consider a particle of mass $m$ and charge $q$ moving in a magnetic field.</p>
+<p class="x s" style="--b:119.5;--l:13.2pt"><span class="n">(a)</span>Let the magnetic field be uniform, i.e. <span class="nw">$\boldsymbol B(\mathbf r) = B_0\hat z$,</span> where $B_0$ is a constant. At <span class="nw">$t=0$</span> the initial velocity $v_0$ of the particle equals <span class="nw">$v_{\perp,0}\hat x + v_{\parallel,0}\hat z$.</span> Show that the trajectory of the particle is a helix, and find the angular velocity of this gyration in the <span class="nw">$x-y$</span> plane and the velocity in the $z$ direction.</p>
+<p class="x s" style="--b:177;--l:13pt"><span class="n">(b)</span>Let $s$ be the radius of the gyration. From the result of (a), find the angular momentum $L_0$ of the particle along the $z$ direction.</p>
+<p class="x s" style="--b:206;--l:15.5pt"><span class="n">(c)</span>Suppose the magnetic field lines are cylindrically symmetric (no component circling the $z$-axis), as in Figure&nbsp;5 below, with <span class="nw">$\vec B = B_r\hat{\mathrm r} + B_z\hat{\mathrm z}$,</span> where $\hat{\mathrm r}$ is the radial unit vector in the <span class="nw">$x-y$</span> plane, and in a given <span class="nw">$x-y$</span> plane <span class="nw">$\tfrac{\partial B_z}{\partial z}$</span> is approximately a constant $\beta$, i.e. <span class="nw">$\tfrac{\partial B_z}{\partial z}\sim\beta$,</span> independent of the radial distance $r$. Since magnetic field lines are closed curves, Gauss’s law for magnetism gives the relation:</p>
+<div class="f" style="left:212pt;top:290.5pt"><span class="fig" data-srcpage="5" data-clip="212,290.5,422,325"></span></div>
+<p class="x" style="--b:337.7;left:99.1pt;width:425.5pt">Find the relation between $\tfrac{\partial B_r}{\partial r}$ and $\beta$.</p>
+<p class="x" style="--b:358.7;left:78pt;width:446.6pt">Note: $\partial$ denotes a partial derivative; in this problem it acts like a total derivative, i.e. <span class="nw">$\tfrac{\partial}{\partial r}(rB_r) = B_r + r\tfrac{\partial B_r}{\partial r}$.</span></p>
+<div class="f" style="left:135pt;top:391pt"><span class="fig" data-srcpage="5" data-clip="135,391,492,505"></span></div>
+<p class="x c" style="--b:533;left:249.6pt;width:80pt;--fs:12pt">Figure 5</p>
+<p class="x s" style="--b:575.6;--l:14pt"><span class="n">(d)</span>Continuing from the previous part, if the magnetic field is weak and varies slowly along the axis, the gyration of the charged particle in the <span class="nw">$x-y$</span> plane gives it an equivalent magnetic dipole moment. Find this magnetic dipole moment and the force on the particle along the $\hat{\mathrm z}$ direction. (Hint: this magnetic dipole moment does not change with time.)</p>
+<p class="x s" style="--b:647.6;--l:15pt"><span class="n">(e)</span>A magnetic field varying with $z$ can be used to make a “magnetic bottle”, which confines the motion of charged particles to a finite region. Using the result of (d), if $B_1$ and $B_2$ are respectively the <b>minimum</b> and <b>maximum</b> magnitudes of the magnetic field along $\hat{\mathrm z}$, find the value that <span class="nw">$v_{\parallel,0}/v_{\perp,0}$</span> must be smaller than for the charged particle not to escape from the “magnetic bottle”. (Assume that the particle starts at the position of minimum field.)</p>
+<p class="x pn" style="--b:797">4</p>
+</div>
+
+<!-- page 6: problem 4 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">4.</span>A model of the temperature of the Earth’s surface</p>
+<p class="x" style="--b:101.5;--l:13.4pt">When sunlight reaches a planet’s atmosphere, part of it (the fraction $r$) is reflected back into space; the remaining fraction <span class="nw">$1-r\equiv\alpha$</span> (data in Table&nbsp;1 below) is completely absorbed by the atmosphere and the planet’s surface and then radiated into space as infrared radiation. We assume that the surfaces of the Sun, the Earth and Venus all radiate as ideal blackbodies, and that the blackbody temperature of the Sun is <span class="nw">$T_\mathrm{S} = 5780\ \mathrm K$;</span> the table below gives other data for the Sun, the Earth and Venus. In all parts below, “temperature” means absolute temperature.</p>
+<p class="x" style="--b:209.5;--fs:12pt">Table 1: Absorptivity data</p>
+<!-- table: columns 84.0 | 127.5 | 248.0 | 375.5 | 510.2 ; rows 214.9, 233.4, 251.9, 270.4, 289.0 -->
+<div class="hr" style="left:84pt;width:426.7pt;top:214.9pt"></div>
+<div class="hr" style="left:84pt;width:426.7pt;top:233.4pt"></div>
+<div class="hr" style="left:84pt;width:426.7pt;top:251.9pt"></div>
+<div class="hr" style="left:84pt;width:426.7pt;top:270.4pt"></div>
+<div class="hr" style="left:84pt;width:426.7pt;top:289pt"></div>
+<div class="vr" style="left:84pt;top:214.9pt;height:74.6pt"></div>
+<div class="vr" style="left:127.5pt;top:214.9pt;height:74.6pt"></div>
+<div class="vr" style="left:248pt;top:214.9pt;height:74.6pt"></div>
+<div class="vr" style="left:375.5pt;top:214.9pt;height:74.6pt"></div>
+<div class="vr" style="left:510.2pt;top:214.9pt;height:74.6pt"></div>
+<p class="t c" style="--b:228;left:127.9pt;width:120.1pt">Mean radius (m)</p>
+<p class="t c" style="--b:228;left:248.4pt;width:127.1pt;--fs:11pt">Mean distance to Sun (m)</p>
+<p class="t c" style="--b:228;left:376pt;width:134.2pt">Fraction absorbed, $\alpha$</p>
+<p class="t" style="--b:246.5;left:89.7pt">Sun</p>
+<p class="t c" style="--b:247.3;left:127.9pt;width:120.1pt">$R_\mathrm{S} = 6.96\times10^{8}$</p>
+<p class="t c" style="--b:247.1;left:248.4pt;width:127.1pt">-</p>
+<p class="t c" style="--b:247.1;left:376pt;width:134.2pt">-</p>
+<p class="t" style="--b:265;left:89.7pt">Earth</p>
+<p class="t c" style="--b:265.8;left:127.9pt;width:120.1pt">$R_\mathrm{E} = 6.37\times10^{6}$</p>
+<p class="t c" style="--b:265.8;left:248.4pt;width:127.1pt">$R_{\mathrm{E}-S} = 1.496\times10^{11}$</p>
+<p class="t c" style="--b:265.8;left:376pt;width:134.2pt">$70.0\ \%$</p>
+<p class="t" style="--b:283.5;left:89.7pt">Venus</p>
+<p class="t c" style="--b:284.3;left:127.9pt;width:120.1pt">$R_\mathrm{V} = 6.05\times10^{6}$</p>
+<p class="t c" style="--b:284.3;left:248.4pt;width:127.1pt">$R_{\mathrm{V}-S} = 1.08\times10^{11}$</p>
+<p class="t c" style="--b:284.3;left:376pt;width:134.2pt">$23.0\ \%$</p>
+<p class="x b" style="--b:320.2;--fs:12pt">Part A (no greenhouse effect):</p>
+<p class="x s" style="--b:334.6;--l:13pt"><span class="n">(a)</span>Find the incident power per unit area of sunlight at the top of the Earth’s atmosphere (i.e. the solar constant $\varphi$).</p>
+<p class="x s" style="--b:361.5"><span class="n">(b)</span>Suppose there is no greenhouse effect (or no atmosphere), but the solar radiation reaching the top of the atmosphere in the previous part still reaches the planet’s surface in the proportion $\alpha$. When the surface temperatures of the Earth and Venus are steady, find their blackbody radiation temperatures $T_\mathrm{E}$ (Earth) and $T_\mathrm{V}$ (Venus), hereafter called “effective temperatures”.</p>
+<p class="x b" style="--b:436;--fs:12pt">B. A simple greenhouse-effect model:</p>
+<p class="x" style="--b:454;--l:13.2pt">We assume that the Earth’s atmosphere has two layers, the troposphere and the stratosphere, in contact with each other (i.e. the tropopause has zero thickness), their interface being at a height <span class="nw">$\mathrm{H} = 11\ \mathrm{km}$</span> above the ground. In terms of equivalent blackbody radiation, the troposphere has effective temperature $T_1$, while the stratosphere can be regarded as an isothermal layer at temperature $T_2$ with a very small infrared absorptivity $a$ <span class="nw">($a\ll 1$).</span> Assume that the tropospheric temperature $T(z)$ falls linearly with height $z$ above the ground and equals the stratospheric temperature $T_2$ at the top, <span class="nw">$z=H$,</span> so that</p>
+<div class="f" style="left:226pt;top:553pt"><span class="fig" data-srcpage="6" data-clip="226,530,531,546.5"></span></div>
+<p class="x" style="--b:589.5">Here $\gamma$, the lapse rate of the tropospheric air temperature, is <span class="nw">$6.5\ \mathrm{K/km}$,</span> and the ground is at <span class="nw">$z=0$.</span> Using the above data and the result of (b), find, when the temperatures are steady:</p>
+<p class="x s" style="--b:631"><span class="n">(c)</span>the relation between the stratospheric temperature $T_2$ and the effective temperature $T_1$ of the troposphere;</p>
+<p class="x s" style="--b:660"><span class="n">(d)</span>the value of the effective temperature $T_1$ of the troposphere;</p>
+<p class="x s" style="--b:678"><span class="n">(e)</span>the value of the stratospheric temperature $T_2$;</p>
+<p class="x s" style="--b:696"><span class="n">(f)</span>the value of the mean temperature of the Earth’s surface, $T(0)$.</p>
+<p class="x pn" style="--b:797">5</p>
+</div>
+
+<!-- page 7: problem 5 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">5.</span>Focal length of a plano-convex lens</p>
+<p class="x" style="--b:101.5;left:99.3pt;width:425.3pt;--l:13.2pt"><span class="n" style="left:-28.4pt">(a-1)</span><span class="fl" style="width:211pt;height:172pt"></span>As shown in Figure&nbsp;6, when a plane light wave is normally incident on a plano-convex lens, the centre of the lens is thicker than its edge and light is slower in the lens medium than in air, so the edge of a wave&shy;front leaves the lens ahead of its centre; the trans&shy;mit&shy;ted wave there&shy;fore forms a back&shy;ward-bulging <b>ap&shy;prox&shy;i&shy;mate&shy;ly spher&shy;i&shy;cal wave&shy;front</b>. By Huy&shy;gens’ principle this wave&shy;front converges to a point on the principal axis, the focus F. The distance from the focus to the centre of the lens surface is the focal length $f_1$. Suppose the central thickness of the lens is <span class="nw">$d_1 = 0.50\ \mathrm{cm}$,</span> its diameter <span class="nw">$D_1 = 5.00\ \mathrm{cm}$,</span> and the refractive index of the lens medium <span class="nw">$n = 1.66$.</span> Using the approximately spherical wavefront, find the focal length $f_1$ of the lens.</p>
+<div class="f" style="left:318pt;top:92pt"><span class="fig" data-srcpage="7" data-clip="318,92,524,245"></span></div>
+<p class="x c" style="--b:258.9;left:397.4pt;width:68pt;--fs:12pt">Figure 6</p>
+<p class="x" style="--b:326.7;left:99.3pt;width:425.3pt;--l:14pt"><span class="n" style="left:-28.4pt">(a-2)</span>The lensmaker’s formula for a lens in air is <span class="nw">$\tfrac{1}{f} = (n-1)\left(\tfrac{1}{R_1}-\tfrac{1}{R_2}\right)$,</span> where $f$ is the focal length, $n$ the refractive index of the lens, $R_1$ the radius of curvature of the surface where light enters the lens and $R_2$ that of the surface where it leaves. If the thin-lens lensmaker’s formula is applied directly to the plano-convex lens of (a-1), what is its focal length $f_1$?</p>
+<p class="x" style="--b:407.6;left:99.3pt;width:425.3pt"><span class="n" style="left:-28.4pt">(a-3)</span>The two calculations above give different values of the focal length $f_1$. Using the spherical wavefront and the lensmaker’s formula, explain why the values differ.</p>
+<p class="x" style="--b:452.6;left:99.3pt;width:425.3pt;--l:13.2pt"><span class="n" style="left:-21.3pt">(b)</span><span class="fl" style="width:211pt;height:187pt"></span>When intense light passes through a medium, the re&shy;frac&shy;tive index of the medium depends on the light in&shy;ten&shy;si&shy;ty and can be written as <span class="nw">$n = n_0 + aI$,</span> where $n_0$ is the normal re&shy;frac&shy;tive index (under weak il&shy;lu&shy;mi&shy;na&shy;tion), $I$ is the light in&shy;ten&shy;si&shy;ty and $a$ is a constant. Figure&nbsp;7 shows a uniform square glass plate of thick&shy;ness <span class="nw">$d_2 = 10.0\ \mathrm{cm}$.</span> Suppose an intense plane light wave is normally incident on the plate, with the incident intensity distributed as follows:</p>
+<div class="f" style="left:318pt;top:445pt"><span class="fig" data-srcpage="7" data-clip="318,445,524,611.5"></span></div>
+<p class="x c" style="--b:625.6;left:365.9pt;width:68pt;--fs:12pt">Figure 7</p>
+<p class="x l" style="--b:666.2;left:104.5pt;width:420pt;--l:40pt;--fs:12pt"><span class="nw">$I(r)\ \mathrm{W/cm^2} = \begin{cases} 2.00\times10^{13}\times\left(-b+\sqrt{10^6-r^2}\right), &amp; \quad\text{if } r\le 2.50\ \mathrm{cm}\\[4pt] 0, &amp; \quad\text{if } r&gt;2.50\ \mathrm{cm}\end{cases}$</span></p>
+<p class="x" style="--b:702.6;left:99.3pt;width:425.3pt;--l:15pt;text-indent:19.6pt">where <span class="nw">$b = \sqrt{10^6-2.50^2}\ \mathrm{cm}$</span> is a constant and $r$ is the radial distance from the centre of the beam cross-section. The normal refractive index of the glass plate is <span class="nw">$n_0 = 1.66$</span> and the parameter is <span class="nw">$a = 5.00\times10^{-15}\ \mathrm{cm^2/W}$.</span> Using Huygens’ principle, explain why the light wave emerging from the glass plate converges to a point, and find the focal length $f_2$ of the glass plate.</p>
+<p class="x pn" style="--b:797">6</p>
+</div>
+
+<!-- page 8: problem 6 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">6.</span>Atomic force microscopy under van der Waals attraction</p>
+<p class="x" style="--b:101.5;--l:13pt">Atomic force microscopy uses a probe to examine the physical properties of a surface. At a distance of <span class="nw">$5\ \mathrm{nm}$</span> from the surface the probe feels a van der Waals attraction; this problem considers only an atomic force microscope acted on by this attraction. The system can be simplified to the one-dimensional simple harmonic oscillator of Figure&nbsp;8: the probe tip is a sphere of radius $R_1$; the cantilever moves up and down to change the tip–sample distance $Z$; the cantilever–probe link is a spring of spring constant $k$; the sample surface is an infinite flat plane. Under the van der Waals force the probe is deflected down by $\delta$ and is at distance $D$ from the sample; that is, without the van der Waals force between tip and sample their distance would be $Z$, and <span class="nw">$Z = \delta + D$.</span></p>
+<div class="f" style="left:160pt;top:218pt"><span class="fig" data-srcpage="8" data-clip="160,218,426,420"></span></div>
+<div class="ov" style="left:360pt;top:226.5pt;font-size:12pt;padding:3pt 2pt">Cantilever</div>
+<div class="ov" style="left:190pt;top:322pt;font-size:12pt;padding:2pt 4pt">Probe</div>
+<div class="ov" style="left:159pt;top:396pt;font-size:12pt;padding:2pt 2pt">Sample</div>
+<p class="x c" style="--b:442.4;left:120pt;width:350pt;--fs:12pt">Figure 8: Simplified model of the atomic force microscope</p>
+<p class="x" style="--b:461.6">First consider the thermal fluctuations of this one-dimensional simple harmonic oscillator. As the probe is very close to the surface (about <span class="nw">$5\ \mathrm{nm}$),</span> at room temperature we do not want large thermal fluctuations, which would cause measurement errors. We must therefore first find, at room temperature, a probe with a suitable spring constant $k$.</p>
+<p class="x s" style="--b:515.6"><span class="n" style="left:-18pt">(a)</span>At room temperature, <span class="nw">$300\ \mathrm K$,</span> if the rms measurement error due to thermal fluctuations is to be below <span class="nw">$0.1\ \mathrm{nm}$,</span> estimate the minimum spring constant $k$.</p>
+<p class="x" style="--b:551.6;--l:13.2pt">To study the interaction between the probe and a flat sample, first suppose the sample is a sphere of radius $R_2$; when <span class="nw">$R_2\gg R_1$</span> this approximates a spherical probe and a flat sample. As in Figure&nbsp;9, for two solid spheres of radii $R_1$ and $R_2$ with surfaces a distance $D$ apart, the van der Waals potential energy between them is given by equation (1):</p>
+<div class="f" style="left:147pt;top:596pt"><span class="fig" data-srcpage="8" data-clip="147,593,523,666"></span></div>
+<p class="x" style="--b:679.5">where $\Gamma$ is a quantity depending on the materials of the probe and the sample. Answer the following questions.</p>
+<p class="x pn" style="--b:797">7</p>
+</div>
+
+<!-- page 9: problem 6 (continued) -->
+<div class="page">
+<div class="f" style="left:134pt;top:85pt"><span class="fig" data-srcpage="9" data-clip="134,85,458,198.5"></span></div>
+<p class="x c" style="--b:212.4;left:260.5pt;width:80pt;--fs:12pt">Figure 9</p>
+<p class="x s" style="--b:247;--l:15.5pt"><span class="n">(b)</span>If <span class="nw">$\tfrac{R_2}{R_1}\to\infty$</span> and <span class="nw">$D\ll R_1$,</span> the situation of Figure&nbsp;9 approximates that of Figure&nbsp;8, the sample surface being a plane, and the potential energy of equation (1) can be simplified to <span class="nw">$-\alpha\tfrac{R_1}{D}$.</span> Find the expression for $\alpha$.</p>
+<p class="x s" style="--b:297.2;--l:15.5pt"><span class="n">(c)</span>From (b), the potential energy due to the van der Waals force between the probe and a flat sample equals <span class="nw">$-\alpha\tfrac{R_1}{Z-\delta}$.</span> When the probe and the flat sample are in force equilibrium, $\delta$ must satisfy the equation <span class="nw">$\delta^3 + a\delta^2 + b\delta + c = 0$.</span> Find the expressions for $a$, $b$ and $c$ (in terms of $\alpha$, $R_1$, $Z$ and $k$).</p>
+<p class="x s" style="--b:359.7;--l:13pt"><span class="n">(d)</span>Continuing the discussion of (c): when the distance $D$ between the probe and the flat surface is less than a certain value $\ell$, the probe is pulled onto the surface of the sample by the van der Waals force. What is $\ell$? When <span class="nw">$D=\ell$,</span> what is $\delta$? (Both in terms of $\alpha$, $R_1$, $Z$ and $k$.)</p>
+<p class="x s" style="--b:418;--l:14pt"><span class="n">(e)</span>In practice <span class="nw">$\alpha\sim10^{-19}\ \mathrm J$</span> and the radius of the probe is about <span class="nw">$50\ \mathrm{nm}$.</span> Using the $k$ obtained in (a), calculate the value of $\ell$.</p>
+<p class="x pn" style="--b:797">8</p>
+</div>
+
+</body></html>

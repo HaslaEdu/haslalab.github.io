@@ -1,0 +1,240 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="595.32,841.92">
+<style>
+/* 대만 물리 올림피아드 2014 국가대표팀 복선(2차 선발) 시험 (2014 APhO / IPhO 대표 선발), 이론 문제 — Korean edition
+   on the original layout. Same geometry as the English edition twpho/2014_T_EN.html (see its header for the
+   original's measurements): body 11.5pt (96% of the original 12pt) on a 13.5-14.5pt pitch, Chinese one-line items
+   that need two Korean lines push the next items into the original's blank space (p.6 (a)-(f)), text beside
+   Fig.6/Fig.7 wraps round an invisible right float, tables rebuilt in HTML, Chinese labels in Fig.1, Fig.2 (caption)
+   and Fig.8 covered by "ov" overlays.
+
+   PLACEMENT (as rupho/2016_T1.html): every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs) */
+body{font-family:CM,KB,serif;font-size:11.5pt;line-height:14pt;word-break:keep-all}
+p{text-indent:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:85.1pt;width:439.5pt;--l:14pt;--fs:11.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.r{text-align:right}
+.l{text-align:left}
+.b{font-weight:bold}
+.h{left:100.9pt;width:423.7pt;font-weight:bold;--fs:12pt}
+.h .n{left:-30pt}
+.s{left:106.2pt;width:418.4pt}
+.n{position:absolute;left:-21.1pt;white-space:nowrap}
+/* columns under ~300pt beside figures: allow breaks between Hangul syllables */
+.nar{word-break:normal}
+.pn{left:0;width:595.32pt;text-align:center;--fs:10pt;--l:12pt}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+.d{--l:30pt}
+.fl{float:right}
+.hr{position:absolute;height:0.5pt;background:#000}
+.vr{position:absolute;width:0.5pt;background:#000}
+.t{position:absolute;margin:0;--fs:12pt;--l:15pt;font-size:var(--fs);line-height:var(--l);white-space:nowrap;
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.ov{position:absolute;background:#fff;line-height:1;white-space:nowrap;padding:1pt 2pt}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<p class="x c" style="--b:98.7;left:40pt;width:515.3pt;--fs:26pt;--l:35.2pt">2014년 제15회 아시아 물리 올림피아드<br>및 제45회 국제 물리 올림피아드</p>
+<p class="x c" style="--b:202.6;left:40pt;width:515.3pt;--fs:26pt;--l:30pt">국가대표팀 복선(2차 선발) 시험</p>
+<p class="x c" style="--b:326.8;left:40pt;width:515.3pt;--fs:66pt;--l:72pt">이론 문제</p>
+<p class="x c" style="--b:430;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">2014년 2월 15일</p>
+<p class="x c" style="--b:488.9;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">시험 시간: 13:30–16:30, 총 3시간</p>
+<p class="x c" style="--b:575.3;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">&lt;&lt;&thinsp;주의 사항&thinsp;&gt;&gt;</p>
+<p class="x l" style="--b:607.5;left:106.9pt;width:440pt;--fs:19pt;--l:30.3pt"><span class="n" style="left:-36pt">1.</span>이 시험은 계산 문제 6개로 이루어져 있으며, 문제당 25점, 총 150점이다.</p>
+<p class="x l" style="--b:669.9;left:106.9pt;width:440pt;--fs:19pt;--l:30.3pt"><span class="n" style="left:-36pt">2.</span>각 계산 문제의 답은 답안지의 지정된 위치에 써라. 문제마다 답안지는 2쪽이다.</p>
+<p class="x l" style="--b:732.3;left:106.9pt;width:440pt;--fs:19pt;--l:30.3pt"><span class="n" style="left:-36pt">3.</span>프로그램 기능이 없는 휴대용 계산기를 사용할 수 있다.</p>
+</div>
+
+<!-- page 2: constants and formulas -->
+<div class="page">
+<p class="x" style="--b:82.3;left:106.9pt;--fs:12pt">필요할 수 있는 상수표</p>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:100.3pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:118.8pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:137.3pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:155.8pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:174.4pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:192.9pt"></div>
+<div class="hr" style="left:101.3pt;width:402.3pt;top:211.3pt"></div>
+<div class="vr" style="left:101.3pt;top:100.3pt;height:111.5pt"></div>
+<div class="vr" style="left:233.8pt;top:100.3pt;height:111.5pt"></div>
+<div class="vr" style="left:309.3pt;top:100.3pt;height:111.5pt"></div>
+<div class="vr" style="left:503.1pt;top:100.3pt;height:111.5pt"></div>
+<p class="t" style="--b:113.4;left:106.9pt">이름</p>
+<p class="t" style="--b:113.4;left:239.4pt">기호</p>
+<p class="t" style="--b:113.4;left:315pt">값과 단위</p>
+<p class="t" style="--b:131.9;left:106.9pt">광속</p>
+<p class="t c" style="--b:132.7;left:234.3pt;width:75pt">$c$</p>
+<p class="t c" style="--b:132.7;left:309.8pt;width:193.3pt">$3.00\times10^{8}\ \mathrm{m/s}$</p>
+<p class="t" style="--b:150.4;left:106.9pt">기본 전하량</p>
+<p class="t c" style="--b:151.2;left:234.3pt;width:75pt">$e$</p>
+<p class="t c" style="--b:151.2;left:309.8pt;width:193.3pt">$1.60\times10^{-19}\ \mathrm{C}$</p>
+<p class="t" style="--b:169;left:106.9pt">기체 상수</p>
+<p class="t c" style="--b:169.8;left:234.3pt;width:75pt">$R$</p>
+<p class="t c" style="--b:169.8;left:309.8pt;width:193.3pt">$8.31\ \mathrm{J/mol\cdot K}$</p>
+<p class="t" style="--b:187.5;left:106.9pt">볼츠만 상수</p>
+<p class="t c" style="--b:188.3;left:234.3pt;width:75pt">$k_B$</p>
+<p class="t c" style="--b:188.3;left:309.8pt;width:193.3pt">$1.38\times10^{-23}\ \mathrm{J/K}$</p>
+<p class="t" style="--b:205.9;left:106.9pt">슈테판-볼츠만 상수</p>
+<p class="t c" style="--b:206.8;left:234.3pt;width:75pt">$\sigma$</p>
+<p class="t c" style="--b:206.8;left:309.8pt;width:193.3pt">$5.67\times10^{-8}\ \mathrm{W/m^2\cdot K^4}$</p>
+
+<p class="x" style="--b:252.9;left:106.9pt;width:417.7pt;--fs:12pt">수학 공식($t$는 시간, $x$는 임의의 물리량)</p>
+<p class="x l d" style="--b:281.2;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">1.&ensp;$\dot x = \dfrac{dx}{dt}$,&emsp;$\ddot x = \dfrac{d^2x}{dt^2} = \dfrac{d}{dt}\!\left(\dfrac{dx}{dt}\right)$</span></p>
+<p class="x l d" style="--b:316.7;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">2.&ensp;$\dfrac{d}{dx}x^m = m\cdot x^{m-1}$</span></p>
+<p class="x l d" style="--b:352.7;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">3.&ensp;$\dfrac{d\cos x}{dx} = -\sin x$,&emsp;$\dfrac{d\sin x}{dx} = \cos x$</span></p>
+<p class="x l d" style="--b:387.2;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">4.&ensp;$|x|\ll 1$일 때,&ensp;$\dfrac{1}{\sqrt{1+x}} \approx 1-\dfrac{x}{2}$</span></p>
+<p class="x l" style="--b:414.6;left:127.6pt;width:397pt;--fs:12pt"><span class="nw">5.&ensp;$x\ll 1$일 때,&ensp;$\sin x\approx x$</span></p>
+<p class="x pn" style="--b:797">1</p>
+</div>
+
+<!-- page 3: heading, problem 1 -->
+<div class="page">
+<p class="x c" style="--b:86.6;left:40pt;width:515.3pt;--fs:16pt;--l:20.3pt">2014년 제15회 아시아 및 제45회 국제 물리 올림피아드<br>국가대표팀 복선 시험 문제</p>
+<p class="x" style="--b:134.9;left:70.9pt;width:453.7pt;--fs:13pt">이 시험은 계산 문제 6개로 이루어져 있으며, 문제당 25점, 총 150점이다.</p>
+<p class="x h" style="--b:161.2"><span class="n">1.</span>자동차의 작은 연직 진동에 대한 간단한 모형</p>
+<p class="x" style="--b:179.2;--l:13.5pt">간단한 모형을 이용하여 정지한 자동차의 작은 연직 진동을 분석할 수 있다. 자동차를 아래 그림&nbsp;1과 같은 평면계로 볼 수 있다고 하자. 정지 상태에서 질량중심은 C에 있으며, 질량중심은 <b>연직 방향</b>으로만 작게 오르내릴 수 있다. 차체의 질량은 $m$이고, 질량중심을 지나며 연직면에 수직인 수평축에 대한 차체의 관성 모멘트는 <span class="nw">$I = mL^2$이며,</span> $L$은 회전 반지름이다. 앞바퀴와 뒷바퀴는 강체로 보며, 차체의 무게를 지탱하는 두 이상적인 용수철은 연직 방향으로만 늘어나고 줄어들 수 있고, 아래쪽 끝은 바퀴 중심에 고정되어 있으며, 용수철 상수는 각각 <span class="nw">$k_1$과</span> <span class="nw">$k_2$이다.</span> 두 바퀴 중심과 질량중심 사이의 수평 거리는 각각 <span class="nw">$l_1$과</span> <span class="nw">$l_2$이다.</span> 답할 때에는 질량중심의 변위를 $z$(위쪽이 양, 그림&nbsp;1 참조), 차체 회전의 각변위를 $\theta$(시계 반대 방향이 양, 그림&nbsp;1 참조)로 나타내고, $z$와 $\theta$ 모두 자동차가 중력 아래에서 정지 평형에 있을 때의 값을 영점으로 한다.</p>
+<div class="f" style="left:159.8pt;top:321.5pt"><span class="fig" data-srcpage="3" data-clip="159.8,321.5,501.5,464.6"></span></div>
+<div class="ov" style="left:166pt;top:423.5pt;font-size:11pt">앞</div>
+<div class="ov" style="left:415pt;top:423.5pt;font-size:11pt">뒤</div>
+<div class="ov" style="left:283pt;top:446pt;font-size:12pt;padding:1pt 3pt">그림 1</div>
+<p class="x s" style="--b:485.2;--l:13.5pt"><span class="n">(a)</span>연직 평면에서 차체의 운동 방정식(즉 질량중심의 운동 방정식과 질량중심에 대한 차체의 회전 방정식)을 간단히 하면, 연직 방향의 가속도(즉 $\ddot z$)와 질량중심에 대한 회전의 각가속도(즉 $\ddot\theta$)를 다음 두 식으로 얻을 수 있다.</p>
+<div class="f" style="left:277pt;top:527pt"><span class="fig" data-srcpage="3" data-clip="277,527,355,542.5"></span></div>
+<p class="x" style="--b:552.1;left:104.7pt;width:419.9pt">그리고</p>
+<div class="f" style="left:260pt;top:556.5pt"><span class="fig" data-srcpage="3" data-clip="260,556.5,353.5,587.5"></span></div>
+<p class="x s" style="--b:597.1">위의 두 식에서 $a$, $b$, $c$의 표현식을 써라.</p>
+<p class="x s" style="--b:614.1;--l:13.5pt"><span class="n">(b)</span><span class="nw">$b&gt;0$이고,</span> 차체의 연직 상하 운동과 질량중심에 대한 회전이 모두 같은 각진동수로 단순 조화 운동을 한다고 가정하자. 이러한 운동을 정규 모드라고 한다. 이 운동의 각진동수 $\omega_n$($n$은 정수로, 서로 다른 정규 모드 진동수를 나타낸다)을 구하고, 각 정규 모드에서 $z$와 $\theta$의 진폭비 $A_n/B_n$을 구하여라($a$, $b$, $c$, $L$로 나타내어라).</p>
+<p class="x s" style="--b:686.1;--l:13.5pt"><span class="n">(c)</span>정규 모드에서의 운동은 어떤 점 $\mathrm{P}_n$에 대한 순수한 회전과 같다. 주어진 조건 <span class="nw">$b&gt;0$에서</span> 각 $\mathrm{P}_n$에서 질량중심 C까지의 거리를 $d_n$이라 할 때, 비 $d_1d_2/L^2$을 구하여라. 이 문제에서 $n=1$은 진동수가 가장 높은 정규 모드를, $n=2$는 각진동수가 두 번째로 높은 모드를 나타낸다.</p>
+<p class="x s" style="--b:744;--l:14pt"><span class="n">(d)</span><span class="nw">$b=0$,</span> <span class="nw">$c$&thinsp;≠&thinsp;$aL^2$이라</span> 가정하자. $t=0$일 때 자동차를 회전 없이 연직 아래로 거리 $h$만큼 눌러 내린다. 자동차의 연직 변위 $z$와 각변위 $\theta$를 시간의 함수로 구하여라.</p>
+<p class="x pn" style="--b:797">2</p>
+</div>
+
+<!-- page 4: problem 2 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">2.</span>음이온의 전기 쌍극자 속박 상태</p>
+<p class="x nar" style="--b:101.5;left:103.5pt;width:254.5pt;--l:13.5pt"><span class="n" style="left:-18pt">(a)</span>많은 비구형 분자는 양전하와 음전하의 중심이 일치하지 않아 전기 쌍극자를 이룬다. 오른쪽 그림&nbsp;2에서 O는 원점이고, 어떤 분자의 양전하 중심과 음전하 중심의 전하는 $q$와 $-q$이며, 모두 z축 위의 <span class="nw">$z=d/2$와</span> <span class="nw">$z=-d/2$에</span> 있다. 전기 쌍극자 모멘트를 <span class="nw">$p=qd$라</span> 하자. 점 A의 방향이 z축과 이루는 각은 $\theta$이고, 원점 O로부터 A까지의 거리 $r$은 두 전하 사이의 거리보다 훨씬 크다. 즉 <span class="nw">$r\gg d$이다.</span> 무한히 먼 곳을 전위의 영점으로 할 때, 점 A의 전위를 전기 쌍극자 모멘트 $p$의 1차 항까지 구하고, $\hat{\mathrm r}$ 방향과 $\hat{\theta}$ 방향의 전기장을 구하여라.</p>
+<div class="f" style="left:363pt;top:97.9pt"><span class="fig" data-srcpage="4" data-clip="363,97.9,520.2,231.4"></span></div>
+<div class="ov" style="left:421pt;top:214pt;font-size:12pt;padding:1pt 3pt">그림 2</div>
+<p class="x" style="--b:277.6;left:104.5pt;width:321pt;--l:14pt"><span class="n" style="left:-19.4pt">(b)</span>어떤 음이온은 중성 분자의 전기 쌍극자 $p$에 전자가 속박되어 이루어진다. 그림&nbsp;3과 같이 분자의 전기 쌍극자는 z축 방향이며, 분자는 원점에 고정되어 있고 그 전기 쌍극자도 고정되어 있다고 가정한다. 전자의 전하는 <span class="nw">$-e\ (e&gt;0)$,</span> 질량은 $m$이며, 양자 물리에 따르면 z축에 대한 0이 아닌 각운동량의 최솟값은 $\hbar$이다. 전자가, 전기 쌍극자와 각 $\theta$를 이루는 원뿔면과 z축에 수직인 평면이 만나는 원형 궤도 위에서 운동하도록 속박되어 있다고 하자. $r$이 중성 분자의 길이보다 훨씬 클 때, $\cos\theta$의 값과 원점에 대한 전자의 각운동량의 z성분을 구하고, 전자를 이 원형 궤도에 속박하기 위해 중성 분자가 가져야 할 최소 전기 쌍극자 모멘트 $p$를 구하여라.</p>
+<div class="f" style="left:432pt;top:272pt"><span class="fig" data-srcpage="4" data-clip="432,272,507.4,395.6"></span></div>
+<p class="x c" style="--b:408;left:430pt;width:79.4pt;--fs:12pt">그림 3</p>
+<p class="x s" style="--b:475.6;--l:13.5pt"><span class="n">(c)</span>분자가 구형일 때에는 구대칭이므로 전기장을 걸기 전에는 양전하와 음전하의 중심이 일치하여, 분자는 고정된 전기 쌍극자 모멘트를 갖지 않는다. 어떤 중성 분자의 양전하와 음전하를 아래 그림&nbsp;4와 같이 반지름이 $a$이고 균일하게 대전된 두 구로 볼 수 있다고 하자. 외부 전기장 $E$ 안에서 양전하와 음전하의 중심이 분리되어 마침내 평형 위치에 이른다. 각 구의 전하 분포는 변하지 않고 두 구 중심 사이의 거리는 반지름 $a$보다 훨씬 작다고 가정하고, 이 분자의 전기 쌍극자 모멘트를 구하여라.</p>
+<div class="f" style="left:259pt;top:569pt"><span class="fig" data-srcpage="4" data-clip="259,569,316,615.8"></span></div>
+<div class="f" style="left:253.6pt;top:622.6pt"><span class="fig" data-srcpage="4" data-clip="253.6,622.6,324.2,627.7"></span></div>
+<p class="x r" style="--b:597.2;left:90pt;width:162pt;--fs:12pt">음전하 구</p>
+<p class="x l" style="--b:597.2;left:327pt;width:190pt;--fs:12pt">양전하 구</p>
+<p class="x c" style="--b:644.1;left:190pt;width:210pt;--fs:12pt">외부 전기장: $E$</p>
+<p class="x c" style="--b:665.3;left:255pt;width:81.2pt;--fs:12pt">그림 4</p>
+<p class="x s" style="--b:689.3;--l:14pt"><span class="n">(d)</span>위의 결과를 이용하여, 이 분자의 양전하와 음전하 중심이 전기장 안에서 순간적으로 평형 위치에 이른다고 가정하자. 전자 하나가 이 분자를 중심으로 하는 반지름 $R$인 원형 궤도 위에서 운동하며, $R$은 두 구 중심 사이의 거리보다 훨씬 크다. 음전하 하나를 띤 이 음이온의 에너지를 구하여라(무한히 먼 곳을 퍼텐셜 에너지의 영점으로 한다).</p>
+<p class="x pn" style="--b:797">3</p>
+</div>
+
+<!-- page 5: problem 3 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">3.</span>자기장 속에서 운동하는 대전 입자</p>
+<p class="x" style="--b:101.5">질량이 $m$, 전하가 $q$인 입자가 자기장 속에서 운동하는 경우를 생각하자.</p>
+<p class="x s" style="--b:119.5;--l:13.5pt"><span class="n">(a)</span>자기장이 균일하여 <span class="nw">$\boldsymbol B(\mathbf r) = B_0\hat z$이고,</span> $B_0$은 상수이다. <span class="nw">$t=0$일</span> 때 입자의 처음 속도 $v_0$은 <span class="nw">$v_{\perp,0}\hat x + v_{\parallel,0}\hat z$이다.</span> 이 입자의 운동 궤적이 나선임을 보이고, 이 회전 운동의 <span class="nw">$x-y$</span> 평면에서의 각속도와 $z$ 방향의 속도를 구하여라.</p>
+<p class="x s" style="--b:177;--l:13pt"><span class="n">(b)</span>$s$를 회전 운동의 반지름이라 하자. (a)의 결과로부터 이 입자의 $z$ 방향 각운동량 $L_0$을 구하여라.</p>
+<p class="x s" style="--b:206;--l:15.5pt"><span class="n">(c)</span>자기력선 분포가 원통 대칭(z축을 도는 회전 성분이 없음)이고 아래 그림&nbsp;5와 같으며, <span class="nw">$\vec B = B_r\hat{\mathrm r} + B_z\hat{\mathrm z}$라</span> 하자. 여기서 $\hat{\mathrm r}$은 <span class="nw">$x-y$</span> 평면에서 지름 방향의 단위 벡터이고, 같은 <span class="nw">$x-y$</span> 평면에서 <span class="nw">$\tfrac{\partial B_z}{\partial z}$는</span> 근사적으로 일정한 값 $\beta$이다. 즉 <span class="nw">$\tfrac{\partial B_z}{\partial z}\sim\beta$이며,</span> 지름 방향 거리 $r$과 무관하다. 자기력선은 닫힌 곡선이므로, 자기에 대한 가우스 법칙에 따라 다음 관계가 성립한다.</p>
+<div class="f" style="left:212pt;top:290.5pt"><span class="fig" data-srcpage="5" data-clip="212,290.5,422,325"></span></div>
+<p class="x" style="--b:337.7;left:99.1pt;width:425.5pt"><span class="nw">$\tfrac{\partial B_r}{\partial r}$와</span> $\beta$의 관계식을 구하여라.</p>
+<p class="x" style="--b:358.7;left:78pt;width:446.6pt">주: $\partial$는 편미분을 나타내며, 이 문제에서는 전미분처럼 작용한다. 즉 <span class="nw">$\tfrac{\partial}{\partial r}(rB_r) = B_r + r\tfrac{\partial B_r}{\partial r}$이다.</span></p>
+<div class="f" style="left:135pt;top:391pt"><span class="fig" data-srcpage="5" data-clip="135,391,492,505"></span></div>
+<p class="x c" style="--b:533;left:249.6pt;width:80pt;--fs:12pt">그림 5</p>
+<p class="x s" style="--b:575.6"><span class="n">(d)</span>앞 문항에 이어, 자기장이 매우 약하고 축 방향으로 매우 천천히 변한다면, 대전 입자의 <span class="nw">$x-y$</span> 평면에서의 회전 운동은 등가 자기 쌍극자 모멘트를 만든다. 이 자기 쌍극자 모멘트와, 입자가 $\hat{\mathrm z}$ 방향으로 받는 힘을 구하여라. (힌트: 이 자기 쌍극자 모멘트는 시간에 따라 변하지 않는다.)</p>
+<p class="x s" style="--b:647.6;--l:15pt"><span class="n">(e)</span>$z$에 따라 변하는 자기장을 이용하여 ‘자기 병’을 만들 수 있으며, 이것은 대전 입자의 운동을 유한한 범위 안에 가둘 수 있다. (d)의 결과로부터, $B_1$, $B_2$가 각각 $\hat{\mathrm z}$ 방향 자기장 크기의 <b>최솟값</b>과 <b>최댓값</b>일 때, 대전 입자가 ‘자기 병’의 범위 밖으로 빠져나가지 않으려면 <span class="nw">$v_{\parallel,0}/v_{\perp,0}$이</span> 어떤 값보다 작아야 하는지 구하여라. (입자의 처음 위치는 자기장이 최소인 곳이라고 가정한다.)</p>
+<p class="x pn" style="--b:797">4</p>
+</div>
+
+<!-- page 6: problem 4 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">4.</span>지표면 온도 모형</p>
+<p class="x" style="--b:101.5;--l:13.5pt">햇빛이 행성의 대기에 도달하면 일부(그 비율을 $r$로 나타낸다)는 우주 공간으로 반사되고, 나머지 비율 <span class="nw">$1-r\equiv\alpha$(자료는</span> 아래 표&nbsp;1 참조)는 대기와 행성 표면에 완전히 흡수된 뒤 적외선으로 우주 공간에 다시 복사된다. 태양, 지구, 금성 표면의 복사는 모두 이상적인 흑체 복사로 볼 수 있다고 가정하고, 태양의 흑체 복사 온도는 <span class="nw">$T_\mathrm{S} = 5780\ \mathrm K$이다.</span> 아래 표는 태양, 지구, 금성의 그 밖의 자료이다. 아래 각 문항에서 말하는 온도는 모두 절대 온도이다.</p>
+<p class="x" style="--b:209.5;--fs:12pt">표 1: 흡수율 자료</p>
+<div class="hr" style="left:84pt;width:426.7pt;top:214.9pt"></div>
+<div class="hr" style="left:84pt;width:426.7pt;top:233.4pt"></div>
+<div class="hr" style="left:84pt;width:426.7pt;top:251.9pt"></div>
+<div class="hr" style="left:84pt;width:426.7pt;top:270.4pt"></div>
+<div class="hr" style="left:84pt;width:426.7pt;top:289pt"></div>
+<div class="vr" style="left:84pt;top:214.9pt;height:74.6pt"></div>
+<div class="vr" style="left:127.5pt;top:214.9pt;height:74.6pt"></div>
+<div class="vr" style="left:248pt;top:214.9pt;height:74.6pt"></div>
+<div class="vr" style="left:375.5pt;top:214.9pt;height:74.6pt"></div>
+<div class="vr" style="left:510.2pt;top:214.9pt;height:74.6pt"></div>
+<p class="t c" style="--b:228;left:127.9pt;width:120.1pt">평균 반지름(m)</p>
+<p class="t c" style="--b:228;left:248.4pt;width:127.1pt;--fs:11pt">태양까지의 평균 거리(m)</p>
+<p class="t c" style="--b:228;left:376pt;width:134.2pt;--fs:11pt">흡수되는 햇빛의 비율 $\alpha$</p>
+<p class="t" style="--b:246.5;left:89.7pt">태양</p>
+<p class="t c" style="--b:247.3;left:127.9pt;width:120.1pt">$R_\mathrm{S} = 6.96\times10^{8}$</p>
+<p class="t c" style="--b:247.1;left:248.4pt;width:127.1pt">-</p>
+<p class="t c" style="--b:247.1;left:376pt;width:134.2pt">-</p>
+<p class="t" style="--b:265;left:89.7pt">지구</p>
+<p class="t c" style="--b:265.8;left:127.9pt;width:120.1pt">$R_\mathrm{E} = 6.37\times10^{6}$</p>
+<p class="t c" style="--b:265.8;left:248.4pt;width:127.1pt">$R_{\mathrm{E}-S} = 1.496\times10^{11}$</p>
+<p class="t c" style="--b:265.8;left:376pt;width:134.2pt">$70.0\ \%$</p>
+<p class="t" style="--b:283.5;left:89.7pt">금성</p>
+<p class="t c" style="--b:284.3;left:127.9pt;width:120.1pt">$R_\mathrm{V} = 6.05\times10^{6}$</p>
+<p class="t c" style="--b:284.3;left:248.4pt;width:127.1pt">$R_{\mathrm{V}-S} = 1.08\times10^{11}$</p>
+<p class="t c" style="--b:284.3;left:376pt;width:134.2pt">$23.0\ \%$</p>
+<p class="x b" style="--b:320.2;--fs:12pt">A 부분(온실 효과 없음):</p>
+<p class="x s" style="--b:338.1"><span class="n">(a)</span>햇빛이 지구 대기 꼭대기에 도달할 때 단위 면적당 입사 일률(즉 태양 상수 $\varphi$)을 구하여라.</p>
+<p class="x s" style="--b:356.1;--l:13.5pt"><span class="n">(b)</span>온실 효과가 없다고(또는 대기가 없다고) 가정하되, 앞 문항에서 대기 꼭대기에 도달한 태양 복사 에너지는 여전히 비율 $\alpha$만큼 행성 표면에 도달한다. 지구와 금성 표면의 온도가 정상 상태에 이르렀을 때, 두 행성의 흑체 복사 온도 $T_\mathrm{E}$(지구)와 $T_\mathrm{V}$(금성)를 각각 구하여라. 이 온도를 이하에서 ‘유효 온도’라 한다.</p>
+<p class="x b" style="--b:428.2;--fs:12pt">B. 간단한 온실 효과 모형:</p>
+<p class="x" style="--b:446.1;--l:13.5pt">지구 대기는 대류권과 성층권의 두 층으로 이루어져 있고, 대류권과 성층권은 서로 맞닿아 있다고(즉 대류권계면의 두께는 0이라고) 가정한다. 두 층의 경계면은 지표로부터 높이 <span class="nw">$\mathrm{H} = 11\ \mathrm{km}$에</span> 있다. 등가 흑체 복사의 관점에서 대류권의 유효 온도는 $T_1$이고, 성층권은 온도가 $T_2$인 등온층으로 볼 수 있으며 적외선에 대해 매우 작은 흡수율 $a$ <span class="nw">($a\ll 1$)를</span> 가진다. 대류권의 온도 $T(z)$는 지면으로부터의 높이 $z$에 따라 선형으로 감소하고, 꼭대기 <span class="nw">$z=H$에서</span> 성층권 온도 $T_2$와 같아서, 그 변화를 다음과 같이 나타낼 수 있다고 가정한다.</p>
+<div class="f" style="left:226pt;top:530pt"><span class="fig" data-srcpage="6" data-clip="226,530,531,546.5"></span></div>
+<p class="x" style="--b:566.5;--l:13.5pt">위 식에서 $\gamma$는 대류권 기온의 기온 감률로, 그 값은 <span class="nw">$6.5\ \mathrm{K/km}$이며,</span> 지표는 <span class="nw">$z=0$에</span> 있다. 위의 자료와 (b)의 결과를 이용하여, 온도가 정상 상태에 이르렀을 때 다음을 구하여라.</p>
+<p class="x s" style="--b:606.4"><span class="n">(c)</span>성층권 온도 $T_2$와 대류권 유효 온도 $T_1$ 사이의 관계</p>
+<p class="x s" style="--b:626.5"><span class="n">(d)</span>대류권 유효 온도 $T_1$의 값</p>
+<p class="x s" style="--b:646.4"><span class="n">(e)</span>성층권 온도 $T_2$의 값</p>
+<p class="x s" style="--b:666.5"><span class="n">(f)</span>지구 표면의 평균 온도 $T(0)$의 값</p>
+<p class="x pn" style="--b:797">5</p>
+</div>
+
+<!-- page 7: problem 5 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">5.</span>평볼록 렌즈의 초점 거리</p>
+<p class="x nar" style="--b:101.5;left:99.3pt;width:425.3pt;--l:13.5pt"><span class="n" style="left:-28.4pt">(a-1)</span><span class="fl" style="width:211pt;height:172pt"></span>그림&nbsp;6과 같이 평면 광파가 평볼록 렌즈의 면에 수직으로 입사할 때, 렌즈 중앙 부분의 두께가 가장자리보다 두껍고 렌즈 매질 속의 빛의 속력이 공기 중보다 작으므로, 같은 파면에서 가장자리 부분이 중앙 부분보다 앞서서 렌즈를 빠져나온다. 따라서 투과한 광파는 뒤쪽으로 볼록한 <b>근사적인 구면 파면</b>을 이룬다. 하위헌스 원리에 따르면 이 구면 파면은 주축 위의 한 점, 즉 초점 F로 모인다. 초점에서 렌즈 면 중심까지의 거리가 초점 거리 $f_1$이다. 렌즈의 중앙 두께가 <span class="nw">$d_1 = 0.50\ \mathrm{cm}$,</span> 렌즈 지름이 <span class="nw">$D_1 = 5.00\ \mathrm{cm}$,</span> 렌즈 매질의 굴절률이 <span class="nw">$n = 1.66$일</span> 때, 근사적인 구면 파면을 이용하여 렌즈의 초점 거리 $f_1$을 구하여라.</p>
+<div class="f" style="left:318pt;top:92pt"><span class="fig" data-srcpage="7" data-clip="318,92,524,245"></span></div>
+<p class="x c" style="--b:258.9;left:397.4pt;width:68pt;--fs:12pt">그림 6</p>
+<p class="x" style="--b:326.7;left:99.3pt;width:425.3pt;--l:15pt"><span class="n" style="left:-28.4pt">(a-2)</span>공기 중에 있는 렌즈의 렌즈 제작자 공식은 <span class="nw">$\tfrac{1}{f} = (n-1)\left(\tfrac{1}{R_1}-\tfrac{1}{R_2}\right)$이다.</span> 여기서 $f$는 초점 거리, $n$은 렌즈의 굴절률, $R_1$은 빛이 들어가는 렌즈 면의 곡률 반지름, $R_2$는 빛이 렌즈에서 나오는 면의 곡률 반지름이다. 얇은 렌즈의 렌즈 제작자 공식을 그대로 적용하여 (a-1)의 평볼록 렌즈의 초점 거리를 계산하면, 이 평볼록 렌즈의 초점 거리 $f_1$은 얼마인가?</p>
+<p class="x" style="--b:407.6;left:99.3pt;width:425.3pt"><span class="n" style="left:-28.4pt">(a-3)</span>위의 두 계산으로 얻은 초점 거리 $f_1$의 값은 서로 다르다. 구면 파면과 렌즈 제작자 공식을 이용하여 두 값의 크기가 다른 까닭을 설명하여라.</p>
+<p class="x nar" style="--b:452.6;left:99.3pt;width:425.3pt;--l:13.5pt"><span class="n" style="left:-21.3pt">(b)</span><span class="fl" style="width:211pt;height:187pt"></span>센 빛이 매질을 투과할 때 매질의 굴절률은 빛의 세기에 따라 달라지며 <span class="nw">$n = n_0 + aI$로</span> 쓸 수 있다. 여기서 $n_0$은 보통의(약한 빛을 비출 때의) 굴절률, $I$는 빛의 세기, $a$는 상수이다. 그림&nbsp;7은 두께가 <span class="nw">$d_2 = 10.0\ \mathrm{cm}$인</span> 균일한 정사각형 유리판이다. 센 평면 광파가 유리판 면에 수직으로 입사하고, 입사광의 세기 분포가 다음 식과 같다고 하자.</p>
+<div class="f" style="left:318pt;top:445pt"><span class="fig" data-srcpage="7" data-clip="318,445,524,611.5"></span></div>
+<p class="x c" style="--b:625.6;left:365.9pt;width:68pt;--fs:12pt">그림 7</p>
+<p class="x l" style="--b:666.2;left:104.5pt;width:420pt;--l:40pt;--fs:12pt"><span class="nw">$I(r)\ \mathrm{W/cm^2} = \begin{cases} 2.00\times10^{13}\times\left(-b+\sqrt{10^6-r^2}\right), &amp; \quad r\le 2.50\ \mathrm{cm}\text{일 때}\\[4pt] 0, &amp; \quad r&gt;2.50\ \mathrm{cm}\text{일 때}\end{cases}$</span></p>
+<p class="x nar" style="--b:702.6;left:99.3pt;width:425.3pt;--l:15pt;text-indent:19.6pt">여기서 <span class="nw">$b = \sqrt{10^6-2.50^2}\ \mathrm{cm}$는</span> 상수이고, $r$은 광선 다발 단면의 중심으로부터의 지름 방향 거리이다. 매개변수는 <span class="nw">$a = 5.00\times10^{-15}\ \mathrm{cm^2/W}$이고,</span> 이 유리판의 보통 굴절률은 <span class="nw">$n_0 = 1.66$이다.</span> 하위헌스 원리를 이용하여 유리판을 투과한 광파가 왜 한 점에 모이는지 설명하고, 이 유리판의 초점 거리 $f_2$를 구하여라.</p>
+<p class="x pn" style="--b:797">6</p>
+</div>
+
+<!-- page 8: problem 6 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">6.</span>판데르발스 인력이 작용하는 원자힘 현미경</p>
+<p class="x" style="--b:101.5;--l:13.5pt">원자힘 현미경은 탐침을 이용하여 물체 표면의 물리적 성질을 측정하는 기술이다. 탐침과 물체 표면 사이의 거리가 <span class="nw">$5\ \mathrm{nm}$일</span> 때 탐침은 판데르발스 인력을 느낀다. 이 문제에서는 판데르발스 인력만 작용하는 원자힘 현미경 계만 생각한다. 이 계는 그림&nbsp;8과 같은 1차원 단순 조화 진동계로 단순화할 수 있다. 탐침의 끝은 반지름이 $R_1$인 구로 단순화하고, 캔틸레버가 위아래로 움직여 탐침 끝과 시료 사이의 거리 $Z$를 바꾸며, 캔틸레버와 탐침의 연결은 용수철 상수가 $k$인 용수철로 단순화하고, 시료 표면은 무한히 넓은 평평한 면으로 본다. 탐침과 시료 사이에 판데르발스 힘이 작용하면 탐침은 아래로 $\delta$만큼 치우치고, 시료와의 거리는 $D$가 된다. 즉 탐침 끝과 시료 표면 사이에 판데르발스 힘이 작용하지 않는다면 둘 사이의 거리는 $Z$이고, $Z$는 <span class="nw">$\delta + D$와</span> 같다.</p>
+<div class="f" style="left:160pt;top:218pt"><span class="fig" data-srcpage="8" data-clip="160,218,426,420"></span></div>
+<div class="ov" style="left:360pt;top:226.5pt;font-size:12pt;padding:3pt 2pt">캔틸레버</div>
+<div class="ov" style="left:190pt;top:322pt;font-size:12pt;padding:2pt 6pt">탐침</div>
+<div class="ov" style="left:164pt;top:396pt;font-size:12pt;padding:2pt 3pt">시료</div>
+<p class="x c" style="--b:442.4;left:120pt;width:350pt;--fs:12pt">그림 8: 원자힘 현미경 계의 단순화 모형</p>
+<p class="x" style="--b:461.6;--l:13.5pt">먼저 이 1차원 단순 조화 진동계의 열적 요동 문제를 생각하자. 탐침은 표면에 매우 가까이(약 $5\ \mathrm{nm}$) 있으므로, 상온에서 작동할 때 열적 요동이 너무 커서 측정 오차가 생기는 것은 바람직하지 않다. 따라서 먼저 상온 실험에서 알맞은 용수철 상수 $k$를 가진 탐침을 찾아야 한다.</p>
+<p class="x s" style="--b:515.6;--l:13.5pt"><span class="n" style="left:-18pt">(a)</span>상온 <span class="nw">$300\ \mathrm K$에서</span> 열적 요동에 의한 측정 오차의 제곱평균제곱근 값이 <span class="nw">$0.1\ \mathrm{nm}$보다</span> 작기를 바란다면, 용수철 상수 $k$의 최솟값은 얼마인지 어림하여라.</p>
+<p class="x" style="--b:551.6;--l:13.2pt">탐침과 평평한 시료 사이의 상호 작용을 알아보기 위해, 먼저 시료를 반지름 $R_2$인 구라고 가정하자. <span class="nw">$R_2\gg R_1$이면</span> 구 모양 탐침과 평평한 시료로 이루어진 계로 근사할 수 있다. 그림&nbsp;9와 같이 반지름이 각각 $R_1$과 $R_2$이고 표면 사이의 거리가 $D$인 두 속이 찬 구 사이의 판데르발스 힘에 의한 퍼텐셜 에너지는 다음 식 (1)과 같다.</p>
+<div class="f" style="left:147pt;top:596pt"><span class="fig" data-srcpage="8" data-clip="147,593,523,666"></span></div>
+<p class="x" style="--b:679.5">여기서 $\Gamma$는 탐침과 시료의 물질에 관계된 값이다. 다음 물음에 답하여라.</p>
+<p class="x pn" style="--b:797">7</p>
+</div>
+
+<!-- page 9: problem 6 (continued) -->
+<div class="page">
+<div class="f" style="left:134pt;top:85pt"><span class="fig" data-srcpage="9" data-clip="134,85,458,198.5"></span></div>
+<p class="x c" style="--b:212.4;left:260.5pt;width:80pt;--fs:12pt">그림 9</p>
+<p class="x s" style="--b:247;--l:15.5pt"><span class="n">(b)</span><span class="nw">$\tfrac{R_2}{R_1}\to\infty$이고</span> <span class="nw">$D\ll R_1$이면</span> 그림&nbsp;9의 상황은 그림&nbsp;8과 비슷해지고 시료 표면은 평면이 된다. 이때 식 (1)의 퍼텐셜 에너지는 <span class="nw">$-\alpha\tfrac{R_1}{D}$로</span> 간단히 할 수 있다. $\alpha$의 표현식을 구하여라.</p>
+<p class="x s" style="--b:297.2;--l:15.5pt"><span class="n">(c)</span>(b)로부터 탐침과 평평한 시료 사이의 판데르발스 힘에 의한 퍼텐셜 에너지는 <span class="nw">$-\alpha\tfrac{R_1}{Z-\delta}$이다.</span> 탐침과 평평한 시료가 힘의 평형을 이룰 때 $\delta$는 방정식 <span class="nw">$\delta^3 + a\delta^2 + b\delta + c = 0$을</span> 만족해야 한다. $a$, $b$, $c$의 표현식을 구하여라. ($\alpha$, $R_1$, $Z$, $k$로 나타내어라.)</p>
+<p class="x s" style="--b:359.7;--l:14pt"><span class="n">(d)</span>(c)의 논의에 이어, 탐침과 평평한 표면 사이의 거리 $D$가 어떤 특정한 값 $\ell$보다 작아지면 탐침은 판데르발스 힘에 의해 시료 표면에 달라붙는다. $\ell$은 얼마인가? <span class="nw">$D=\ell$일</span> 때 $\delta$는 얼마인가? (모두 $\alpha$, $R_1$, $Z$, $k$로 나타내어라.)</p>
+<p class="x s" style="--b:418;--l:14pt"><span class="n">(e)</span>실제 상황에서 <span class="nw">$\alpha\sim10^{-19}\ \mathrm J$이고</span> 탐침의 반지름은 약 <span class="nw">$50\ \mathrm{nm}$이다.</span> (a)에서 얻은 $k$를 이용하여 $\ell$의 값을 계산하여라.</p>
+<p class="x pn" style="--b:797">8</p>
+</div>
+
+</body></html>
