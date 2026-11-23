@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
@@ -27,7 +28,8 @@ test('country is an ISO 3166-1 alpha-2 code from the list, the goal one of 5, 10
   assert.throws(()=>cleanLearner(null,bad),e=>e.code==='bad_learner');
 });
 
-test('the site\'s country list (learner-form.js) is the server\'s',()=>{
+/* the page's form exists only where the pages are (the preview branch); the server-only deploy skips this check */
+test('the site\'s country list (learner-form.js) is the server\'s',{skip:!fs.existsSync(new URL('../learner-form.js',import.meta.url))},()=>{
   const require=createRequire(import.meta.url);
   const form=require('../learner-form.js');
   assert.deepEqual([...form.COUNTRIES],[...COUNTRIES]);
