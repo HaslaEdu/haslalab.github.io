@@ -17,6 +17,7 @@ import { visionJSON, visionCapabilities, TRANSCRIPT_POLICY } from './vision-prov
 import { rulesFor } from './grading-rules.js';
 import { planOf, takeOne, giveBack, utcDay, parseJson, LANGS, GRADE_FREE, GRADE_PLAN, ensureLearnSchema } from './learn-services.js';
 import { ensurePracticeSchema, updateRatingBy, START, MODES as PRACTICE_MODES, UNIT_RE } from './practice-progress.js';
+import { leagueFromGrading } from './league.js';
 
 export const GRADE_SCHEMA = [
   `CREATE TABLE IF NOT EXISTS practice_rubrics (
@@ -391,8 +392,10 @@ export function createGradeRouter({HttpError, needUser, limit, now, bad, clientI
       await DB.prepare('INSERT OR REPLACE INTO practice_graded_detail(attempt_id,transcript,read_transcript,items,confidence) VALUES(?,?,?,?,?)')
         .bind(attemptId, transcript, read ? read.transcript : null, JSON.stringify(result.items), confidence).run();
       if (item.unit) await feedSkill(env, me.id, item, result, t).catch(() => {});
+      /* weekly league XP from this server-graded answer (league.js) */
+      const leagueXp = await leagueFromGrading(env, me.id, item, result.band, t);
       return {...result, feedback: words(clip(raw.feedback, 2000), 120), transcript, rubric_source: rubricSource,
-        confidence, low_confidence: confidence != null && confidence < LOW_CONFIDENCE, left, attempt_id: attemptId};
+        confidence, low_confidence: confidence != null && confidence < LOW_CONFIDENCE, left, attempt_id: attemptId, league_xp: leagueXp};
     }
     /* ── appeals: the learner disputes a grading in one tap (and an optional sentence); staff uphold or change the score ── */
     if (p === '/api/learn/grade/appeal' && m === 'POST') {

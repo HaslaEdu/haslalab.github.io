@@ -2,6 +2,7 @@
    one rating per unit (Elo-style, the item's difficulty step against the learner), and the small state the
    practice page keeps (levels per unit, XP, study days, solved and missed problems) so it follows the member
    across devices. Guests keep the same data in their browser only; nothing here is required to practise. */
+import { leagueFromAttempts } from './league.js';
 export const PRACTICE_SCHEMA = [
   `CREATE TABLE IF NOT EXISTS practice_attempts (
      id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,7 +61,7 @@ export async function ensurePracticeSchema(env) {
 const PROFILE = {region: ['kr', 'in', 'us', 'global'], level: ['middle', 'high1', 'high2', 'uni', 'L1', 'L2', 'L3', 'L4'], goal: ['school', 'exam', 'olympiad', 'curious']};
 function profileOf(p) {
   if (!p || typeof p !== 'object' || Object.entries(PROFILE).some(([k, ok]) => !ok.includes(p[k]))) return undefined;
-  return {region: p.region, level: p.level, goal: p.goal, oly: Math.max(0, Math.min(2, p.oly | 0)), daily: [5, 10, 20].includes(p.daily) ? p.daily : 10, at: Math.floor(Number(p.at) || 0)};
+  return {region: p.region, level: p.level, goal: p.goal, oly: Math.max(0, Math.min(2, p.oly | 0)), daily: [5, 10, 15, 20].includes(p.daily) ? p.daily : 10, at: Math.floor(Number(p.at) || 0)};
 }
 const newerProfile = (a, b) => (profileOf(b) && (Number(b.at) || 0) > (Number(a?.at) || 0)) || !profileOf(a) ? b : a;
 /* the browser's state and the account's are merged so neither device loses progress */
@@ -131,7 +132,9 @@ export function createPracticeRouter({ HttpError, needUser, limit, now, bad }) {
       for (const s of current.values()) if (clean.some(a => a.unit === s.unit && a.result !== 'skip' && (a.result !== 'place' || s.placed)))
         statements.push(env.DB.prepare('INSERT INTO practice_skills(user_id,unit,rating,n,right_n,last_at) VALUES(?,?,?,?,?,?) ON CONFLICT(user_id,unit) DO UPDATE SET rating=excluded.rating,n=excluded.n,right_n=excluded.right_n,last_at=excluded.last_at').bind(me.id, s.unit, s.rating, s.n, s.right_n, s.last_at));
       await env.DB.batch(statements);
-      return { recorded: clean.length, skills: [...current.values()].map(({ placed, ...s }) => s) };
+      /* weekly league XP from these recorded attempts (league.js): right or solved ones only, capped per day */
+      const league_xp = await leagueFromAttempts(env, me.id, clean, t);
+      return { recorded: clean.length, league_xp, skills: [...current.values()].map(({ placed, ...s }) => s) };
     }
     throw new HttpError(404, 'not_found');
   };

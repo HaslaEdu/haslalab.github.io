@@ -139,7 +139,8 @@ test('the Learn bar: today\'s problems, roadmap, courses, search, lab, in that o
     assert.deepEqual(Array.from(bar('learn','#/learn/teach')).filter(([,x])=>x),[],'the teacher page is off the bar');
   }
   const oly=bar('olympiad','#/ipho/2019');
-  assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/olympiad/schedule','#/monthly','#/hpho','#/lab']);
+  assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/olympiad/schedule','#/monthly','#/hpho']);
+  assert.deepEqual(Array.from(bar('olympiad','#/lab')).filter(([,on])=>on),[],'exam mode is off the bar; #/lab still routes');
   assert.deepEqual(Array.from(oly).filter(([,on])=>on).map(([h])=>h),['#/comps']);
   assert.equal(a.run('sectionLinks(null).length'),0);
   assert.equal(a.run('siteSection("home")'),null);assert.equal(a.run('siteSection("learn")'),'learn');

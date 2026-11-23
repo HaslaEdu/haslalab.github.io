@@ -115,7 +115,7 @@ let expectedHtml=html.replace(/<script src="site-catalogue\.js(?:\?[^"\n]*)?"><\
   .replace(/<script src="site-runtime\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-runtime.js?v='+digest(read('site-runtime.js'))+'"></script>')
   .replace(/<script src="site-design\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-design.js?v='+digest(read('site-design.js'))+'"></script>')
   .replace(/<script src="learn-path\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="learn-path.js?v='+digest(read('learn-path.js'))+'"></script>');
-for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
+for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js','learner-form.js','league-view.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
 expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
 outputs.set('index.html',expectedHtml);
 let examHtml=read('sim/exam.html');
@@ -131,7 +131,7 @@ let computeHtml=read('compute.html').replace(/href="compute\.css(?:\?[^"\n]*)?"/
 for(const file of ['learn-path.js','compute-problems.js','compute.js'])computeHtml=computeHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('compute.html',computeHtml);
 let practiceHtml=read('practice.html').replace(/href="practice\.css(?:\?[^"\n]*)?"/,'href="practice.css?v='+digest(read('practice.css'))+'"');
-for(const file of ['learn-path.js','math-input.js','practice-tools.js','practice.js'])practiceHtml=practiceHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['learn-path.js','learner-form.js','league-view.js','math-input.js','practice-tools.js','practice.js'])practiceHtml=practiceHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('practice.html',practiceHtml);
 /* the creations page (create.html): its own script and style, and the shared math and Python helpers it loads */
 let createHtml=read('create.html').replace(/href="create\.css(?:\?[^"\n]*)?"/,'href="create.css?v='+digest(read('create.css'))+'"');

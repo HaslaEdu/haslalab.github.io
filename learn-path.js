@@ -162,7 +162,9 @@
   const LEVELS=[['middle',{ko:'중학생',en:'Middle school'},2],['high1',{ko:'고1',en:'High school, first years'},3],['high2',{ko:'고2 · 고3',en:'High school, final years'},4],['uni',{ko:'대학생 · 성인',en:'University or adult'},5]];
   const GOALS=['school','exam','olympiad','curious'];
   /* olympiad experience: 0 first time, 1 has sat the first round, 2 has reached the national final or beyond */
-  function guessRegion(lang,timeZone){
+  /* a member's country (learner-form.js, saved on the account) decides first; the page language and time zone guess otherwise */
+  function guessRegion(lang,timeZone,country){
+    if(/^[A-Z]{2}$/.test(country||''))return country==='KR'?'kr':country==='IN'?'in':country==='US'?'us':'global';
     if(lang==='ko'||/^Asia\/Seoul$/.test(timeZone||''))return 'kr';
     if(/^Asia\/(Kolkata|Calcutta)$/.test(timeZone||''))return 'in';
     if(/^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Detroit|Boise|Indiana|Kentucky|North_Dakota|Juneau|Sitka|Nome|Adak|Menominee|Metlakatla|Yakutat)|^Pacific\/Honolulu$/.test(timeZone||''))return 'us';

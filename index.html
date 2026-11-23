@@ -1182,9 +1182,11 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=8fc1f58f4d5c"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="learn-path.js?v=647f664caa81"></script>
+<script src="learn-path.js?v=57047175e02a"></script>
+<script src="learner-form.js?v=693e79ca8e0c"></script>
+<script src="league-view.js?v=285c8235a1df"></script>
 <script src="archive-navigation.js?v=f59ccf8d9f5f"></script>
-<script src="site-catalogue.js?v=ba1fd985f46b"></script>
+<script src="site-catalogue.js?v=68881e53c2a9"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
 <script src="site-design.js?v=f0e733102d6c"></script>
@@ -5504,7 +5506,7 @@ function viewLearnPractice(){
   /* a problem's own link (search pages, discussions) and the exam tracks */
   const hq=new URLSearchParams(location.hash.split("?")[1]||"");
   if(/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(hq.get("item")||""))query.set("item",hq.get("item"));
-  if(/^(?:start|tracks|diag|bank|contest|exam|class|custom|review)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
+  if(/^(?:start|tracks|diag|bank|contest|exam|class|custom|review|league)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
   if(/^L[1-4]$/.test(hq.get("level")||""))query.set("level",hq.get("level"));
   if(/^[a-z0-9]{2,8}$/.test(hq.get("track")||""))query.set("track",hq.get("track"));
   return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
@@ -10243,6 +10245,7 @@ function cmSignup(root){
       <label>${T.password2}<input type="password" name="password2" autocomplete="new-password" required minlength="8"></label>
       <label>${T.email}<span class="cmmail"><input type="email" name="email" autocomplete="email" maxlength="254"><button type="button" class="cmbtn" data-code>${T.sendCode}</button></span><small>${T.emailHelp}</small></label>
       <label>${T.code}<input type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7"><small data-codeinfo>${T.codeHelp}</small></label>
+      ${cmLF()?`<div class="cmlearner">${cmLF().fieldsHtml(lang,{})}</div>`:""}
       <ol class="rules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
       <label class="chk"><input type="checkbox" name="agree"> ${T.agree}</label>
       ${cmConsentHtml()}
@@ -10251,6 +10254,9 @@ function cmSignup(root){
     </form>
     <p class="alt">${T.haveAcc} <a href="#/community/login">${T.login}</a></p></div></div>`;
   const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr"), consentOf=cmConsentWire(f);
+  /* country and daily goal: required with the account, saved with PUT /api/me/learner once it exists */
+  if(cmLF())cmLF().addStyle(document);
+  const readLearner=cmLF()&&f.querySelector(".cmlearner")?cmLF().wire(f.querySelector(".cmlearner"),lang):()=>null;
   const nickFree=cmNickCheck(f.nickname, root.querySelector("#cmSnick"));
   /* a password account is made only for an address its owner reads: the server mails a 6-digit code (10 minutes,
      5 tries) and the sign-up spends it. The button waits a minute between sends; the server allows 5 an hour.
@@ -10275,7 +10281,9 @@ function cmSignup(root){
     const email=f.email.value.trim(), code=digits(f.code.value);
     if(!email||!f.email.checkValidity()){ err.textContent=cmErr({code:"bad_email"}); f.email.focus(); return; }
     if(!/^\d{6}$/.test(code)){ err.textContent=cmErr({code:"code_required"}); f.code.focus(); return; }
+    const learner=readLearner(); if(cmLF()&&!learner){ err.textContent=cmLearnerMissing(); return; }
     try{ const signed=await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent,email,code});
+      if(learner&&signed?.token){ cmTok(signed.token); try{ await cmSaveLearner(learner); }catch(e){ /* asked again on the Learn pages */ } }
       /* a new member answers the Learn questions first (level, goal, exam), unless they came here from somewhere they want to go back to */
       try{ const back=sessionStorage.getItem("hlCmBack")||""; if(!back||back==="#/"||/^#\/(community|learn\/practice)\b/.test(back)&&!/[?&]item=/.test(back)) sessionStorage.setItem("hlCmBack","#/learn/practice?mode=start"); }catch(e){}
       cmAuthDone(signed); }
@@ -10381,10 +10389,15 @@ function cmAccountUsername(root,done){
   let consent=null;
   if(cm.me?.consent_required===true){const holder=document.createElement("div");holder.className="cm";holder.innerHTML=cmConsentHtml();const read=cmConsentWire(holder);root.before(holder);
     consent=()=>cm.me?.consent_required===true?read():undefined;}   // agreed meanwhile in the dialog: nothing more to send
+  /* a social sign-up's username is followed by the country and daily goal step (cmLearnerStep) */
+  const signingUp=cm.me?.username_required===true;
   ui.username(root,{api:cmApi,language:()=>lang,user:cm.me,consent,done:updated=>{
     if(!updated||updated.id!==cm.me?.id||updated.role!==cm.me?.role)throw{code:'account_changed'};
     cmInvalidate();cm.me=updated;cm.meChecked=true;cmMeP=null;cmBootstrapP=null;cmOverviewP=null;
-    if(typeof arChip==='function')arChip();else cmAccountChip();done?.();
+    if(typeof arChip==='function')arChip();else cmAccountChip();
+    if(!signingUp||!cmLF()){done?.();return;}
+    root.parentNode?.querySelectorAll?.("[data-cancel-signup]").forEach(x=>x.remove());
+    cmLearner(true).then(v=>v?.country?done?.():cmLearnerStep(root,()=>done?.()),()=>cmLearnerStep(root,()=>done?.()));
   }});
   /* changed one's mind before choosing a username: the half-made account can still be deleted */
   if(cm.me?.username_required===true&&!root.parentNode?.querySelector?.("[data-cancel-signup]")){
@@ -10397,6 +10410,94 @@ function cmAccountUsername(root,done){
     };
     root.after(box);
   }
+}
+/* ── country and daily goal (learner-form.js, community/src/learner-profile.js): asked at sign-up, then fixed until
+   the member changes them here in Settings ("Learning"). The practice page reads them for its daily goal and exams. ── */
+const cmLF=()=>window.HL_LEARNER_FORM||null;
+let cmLearnerP=null,cmLearnerScope="";
+function cmLearner(fresh){
+  const scope=cmIdentityScope();
+  if(fresh||cmLearnerScope!==scope){cmLearnerScope=scope;cmLearnerP=null;}
+  if(!cmTok())return Promise.resolve(null);
+  return cmLearnerP||(cmLearnerP=cmApi("GET","/me/learner").catch(e=>{cmLearnerP=null;throw e;}));
+}
+async function cmSaveLearner(value){
+  const r=await cmApi("PUT","/me/learner",value);
+  cmLearnerScope=cmIdentityScope();cmLearnerP=Promise.resolve(r);
+  try{sessionStorage.removeItem("hlLearnerLater");}catch(e){}
+  return r;
+}
+const cmLearnerMissing=()=>lang==="ko"?"나라와 하루 목표를 골라 주세요.":"Choose a country and a daily goal.";
+/* the step after a social sign-up's username (or a fresh social account): both fields, then on */
+function cmLearnerStep(root,next){
+  const lf=cmLF();if(!lf||!root){next();return;}
+  lf.addStyle(document);const ko=lang==="ko";
+  root.innerHTML=`<div class="cmauth"><div class="card"><h2>${ko?"나라와 하루 목표":"Country and daily goal"}</h2>
+    <p class="lead">${ko?"가입 마지막 단계입니다. 문제 풀기의 기본 시험과 하루 목표에 쓰입니다. 나중에 설정에서 바꿀 수 있습니다.":"The last step of sign-up. These set your default exams and daily goal in Practice. You can change them later in Settings."}</p>
+    <form id="cmLearnerStep">${lf.fieldsHtml(lang,{})}<p class="cmerr" role="status"></p><button class="cmbtn pri" type="submit">${ko?"저장하고 계속":"Save and continue"}</button></form></div></div>`;
+  const f=root.querySelector("#cmLearnerStep"),read=lf.wire(f,lang),err=f.querySelector(".cmerr"),btn=f.querySelector("button[type=submit]");
+  f.onsubmit=async e=>{e.preventDefault();const v=read();if(!v){err.textContent=cmLearnerMissing();return;}
+    btn.disabled=true;err.textContent="";try{await cmSaveLearner(v);next();}catch(er){err.textContent=cmErr(er);btn.disabled=false;}};
+}
+/* Settings: the "Learning" section of the account page */
+async function cmLearningSettings(box,alive){
+  const lf=cmLF();if(!box)return;
+  const ko=lang==="ko",head=`<h3 style="font-size:15px" id="cmLearningH">${ko?"학습 설정":"Learning"}</h3>`;
+  if(!lf){box.innerHTML=head+`<p class="cmnote">${ko?"페이지를 새로고침해 주세요.":"Reload this page."}</p>`;return;}
+  lf.addStyle(document);
+  box.innerHTML=head+`<p class="cmpm" style="border:0;padding:0">${CMT[lang].loading||"…"}</p>`;
+  let value;try{value=await cmLearner(true);}catch(e){if(!alive||alive())box.innerHTML=head+`<p class="cmerr">${esc(cmErr(e))}</p>`;return;}
+  if(alive&&!alive())return;
+  box.innerHTML=head+`<p style="font-size:13px;color:var(--graphite);margin:0 0 12px">${ko?"문제 풀기의 하루 목표와 기본 시험에 쓰입니다. 리그 순위에는 나라 국기가 나옵니다.":"Used for your daily goal and default exams in Practice. The league ranking shows your country's flag."}</p>
+    <form id="cmLearnForm">${lf.fieldsHtml(lang,value||{})}<div class="row" style="margin-top:12px"><span class="cmerr" role="status"></span><span class="sp"></span><button class="cmbtn pri" type="submit">${ko?"저장":"Save"}</button></div></form>`;
+  const f=box.querySelector("#cmLearnForm"),read=lf.wire(f,lang),out=f.querySelector(".cmerr");
+  f.onsubmit=async e=>{e.preventDefault();out.style.color="";const v=read();if(!v){out.textContent=cmLearnerMissing();return;}
+    try{await cmSaveLearner(v);out.style.color="var(--graphite)";out.textContent=ko?"저장했습니다.":"Saved.";}catch(er){out.textContent=cmErr(er);}};
+  if(/[?&]section=learning\b/.test(location.hash))box.scrollIntoView?.({block:"start"});
+}
+/* a member from before these questions: a small card on the Learn pages until it is saved ("Later" asks again next visit) */
+function mountLearnerPrompt(){
+  const lf=cmLF();if(!lf||!cmTok())return;
+  try{if(sessionStorage.getItem("hlLearnerLater"))return;}catch(e){}
+  const hash=location.hash;
+  Promise.all([cmLoadMe(),cmLearner()]).then(([me,value])=>{
+    if(!me||me.username_required||value?.country||location.hash!==hash||document.getElementById("lfPrompt"))return;
+    const host=document.querySelector("#view > .shell");if(!host)return;
+    lf.addStyle(document);const ko=lang==="ko",box=document.createElement("section");
+    box.id="lfPrompt";box.className="lf-prompt cm";box.setAttribute("aria-labelledby","lfPromptH");
+    box.innerHTML=`<h2 id="lfPromptH">${ko?"나라와 하루 목표를 정해 주세요":"Set your country and daily goal"}</h2>
+      <p>${ko?"한 번만 묻습니다. 문제 풀기의 기본 시험과 하루 목표에 쓰이고, 설정에서 바꿀 수 있습니다.":"Asked once. They set your default exams and daily goal in Practice, and you can change them in Settings."}</p>
+      <form>${lf.fieldsHtml(lang,{})}<div class="lf-acts"><button class="cmbtn pri" type="submit">${ko?"저장":"Save"}</button><button class="cmbtn" type="button" data-later>${ko?"나중에":"Later"}</button><span class="cmerr" role="status"></span></div></form>`;
+    host.prepend(box);
+    const f=box.querySelector("form"),read=lf.wire(f,lang),err=f.querySelector(".cmerr");
+    box.querySelector("[data-later]").onclick=()=>{try{sessionStorage.setItem("hlLearnerLater","1");}catch(e){}box.remove();};
+    f.onsubmit=async e=>{e.preventDefault();const v=read();if(!v){err.textContent=cmLearnerMissing();return;}
+      try{await cmSaveLearner(v);box.remove();cmToast(ko?"저장했습니다.":"Saved.");
+        const frame=document.getElementById("learnPracticeFrame");if(frame)frame.contentWindow?.postMessage({type:"hl-practice-learner"},location.origin);}
+      catch(er){err.textContent=cmErr(er);}};
+  },()=>{});
+}
+/* ── the weekly league's all-time ranking (#/ranking): rebirths, then league, then total league XP (league.js) ── */
+function viewLeagueRanking(){
+  const ko=lang==="ko";
+  return `<div class="shell lg-page"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/practice?mode=league">${ko?"리그":"League"}</a></p>
+    <h1>${ko?"리그 최종 순위":"League ranking"}</h1>
+    <p class="learn-tool-copy">${ko?"환생 횟수가 많은 순서입니다. 같으면 지금 리그가 높은 순서, 그다음은 지금까지 모은 리그 XP 순서입니다.":"Ordered by rebirths, then by current league, then by all the league XP earned so far."}</p></div>
+    <div id="lgRank"><p role="status">${ko?"불러오는 중…":"Loading…"}</p></div></div>`;
+}
+async function mountLeagueRanking(generation){
+  const box=document.getElementById("lgRank"),V=window.HL_LEAGUE_VIEW;if(!box||!V)return;
+  V.addStyle(document);
+  const ko=lang==="ko",q=new URLSearchParams(location.hash.split("?")[1]||""),page=Math.max(1,Math.min(1000,parseInt(q.get("page"))||1));
+  let data;
+  try{if(cmTok())await cmLoadMe();data=await cmApi("GET","/league/ranking?page="+page);}
+  catch(e){if(generation===siteRenderSeq)box.innerHTML=`<p class="cmerr" role="alert">${esc(cmErr(e))}</p><button type="button" class="cmbtn" id="lgRetry">${ko?"다시 시도":"Retry"}</button>`;const b=document.getElementById("lgRetry");if(b)b.onclick=()=>mountLeagueRanking(generation);return;}
+  if(generation!==siteRenderSeq)return;
+  const last=V.pages(data);
+  box.innerHTML=`${data.mine?`<p class="lg-mine">${ko?`내 순위: <b>${data.mine}위</b>`:`Your place: <b>${data.mine}</b>`}</p>`:""}
+    <p class="lg-rule">${esc(V.rulesLine(lang))}</p>${V.rankingHtml(data,lang)}
+    ${last>1?`<nav class="lg-pager" aria-label="${ko?"쪽":"Pages"}">${page>1?`<a class="cmbtn" href="#/ranking?page=${page-1}">← ${ko?"이전":"Previous"}</a>`:""}<span>${page} / ${last}</span>${page<last?`<a class="cmbtn" href="#/ranking?page=${page+1}">${ko?"다음":"Next"} →</a>`:""}</nav>`:""}
+    <p class="lg-acts" style="margin-top:14px"><a class="lg-btn" href="#/learn/practice?mode=league">${ko?"내 리그 보기":"My league"}</a></p>`;
 }
 function cmAccountSecurity(root,{lazy=false}={}){
   if(!root)return;
@@ -10421,6 +10522,7 @@ async function cmAccount(root, alive){
       <span id="cmAvBox">${cmAv(cm.me.nickname,"l",cm.me.avatar)}</span><div><h2 style="margin:0">${esc(cm.me.nickname)}</h2>
       <div class="cmpm" style="border:0;padding:4px 0 0">@${esc(cm.me.username)}${cm.me.username_kind==='generated'?` · ${lang==='ko'?'고유번호':'Unique identifier'}`:''} · ${T.joined} ${cmFull(cm.me.created_at).slice(0,10)}${cm.me.role==="admin"?' · <span class="cmtag notice">admin</span>':""}</div></div></div>
     ${cm.me.username_setup_available?`<div id="cmUsernameSetup"></div>`:""}
+    <section class="cmform" id="cmLearning" data-learning style="border-bottom:8px solid var(--cm-soft)"></section>
     <section class="cmform" data-sessions style="border-bottom:8px solid var(--cm-soft)">
       <h3 style="font-size:15px">${lang === "en" ? "Signed-in devices" : "로그인된 기기"}</h3>
       <p class="cmpm" style="border:0;padding:0 0 8px">${lang === "en" ? "Lost a device, or signed in somewhere you no longer use? End every other session; this device stays signed in." : "기기를 잃어버렸거나 다른 곳에 로그인한 채로 두었다면, 이 기기를 뺀 모든 기기에서 로그아웃하세요."}</p>
@@ -10463,6 +10565,7 @@ async function cmAccount(root, alive){
          const h=root.querySelector(".cmpost h2"); if(h) h.textContent=r.nickname; const b=root.querySelector("#cmAvBox"); if(b) b.innerHTML=cmAv(cm.me.nickname,"l",cm.me.avatar); }
     catch(er){ nOut.textContent=cmErr(er); }
   };
+  cmLearningSettings(root.querySelector('#cmLearning'),alive);
   cmAccountSecurity(root.querySelector('#cmSecurity'));
   cmTrainToggle(root.querySelector('#cmTrain'));
   cmAiTrainToggle(root.querySelector('#cmAiTrain'));
@@ -10500,6 +10603,7 @@ function setDocTitle(first, second){
   }
   else if(first==="comps")       parts.push(d.hComps);
   else if(first==="community")   parts.push(d.navComm);
+  else if(first==="ranking")     parts.push(lang==="ko"?"리그 최종 순위":"League ranking");
   else if(first==="me")          parts.push(CMT[lang].account);
   else if(first==="login"||first==="signup") parts.push(CMT[lang][first]);
   else if(["monthly","weekly","rank"].includes(first)) parts.push(d.navWeekly);
@@ -10626,7 +10730,8 @@ function sectionLinks(section){
     return learnParts().map(p=>[p.href,p.name,on[p.key],p.line]);
   }
   if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],["#/olympiad/schedule",ko?"일정":LX("Calendar"),h=>h==="#/olympiad/schedule"],
-    ["#/monthly",UI[lang].navWeekly,h=>/^#\/(monthly|weekly|rank)\b/.test(h)],["#/hpho","HPhO",h=>/^#\/hpho\b/.test(h)],["#/lab",ko?"실전 모드":LX("Exam mode"),h=>/^#\/lab\b/.test(h)]];
+    ["#/monthly",UI[lang].navWeekly,h=>/^#\/(monthly|weekly|rank)\b/.test(h)],["#/hpho","HPhO",h=>/^#\/hpho\b/.test(h)]];
+  /* exam mode (#/lab) left the bar: it opens from the past-papers archive, and old #/lab links still work */
   return [];
 }
 function paintSectionBar(section){
@@ -10714,6 +10819,7 @@ function render(){
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
+  else if(first==="ranking"){     html=viewLeagueRanking(); active="learn"; }
   else if(first==="hpho"&&second==="phone"&&window.HL_HPHO_PHONE){ html=HL_HPHO_PHONE.view(); active="hpho"; }
   else if(first==="hpho"&&second==="exam"&&window.HL_HPHO_EXAM){ html=HL_HPHO_EXAM.view(); active="weekly"; }
   else if(first==="hpho"&&window.HL_HPHO){ html=HL_HPHO.view(); active="hpho"; }
@@ -10749,6 +10855,8 @@ function render(){
   if(searchFrame)searchFrame.addEventListener('load',syncLearnSearch,{once:true});
   if(active==="olympiad"){ startHero(); mountHomeActivity(); }
   if(active==="community") cmMount();
+  if(first==="ranking") mountLeagueRanking(generation);
+  if(active==="learn"&&first==="learn") mountLearnerPrompt();
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
   if((active==="weekly"&&first!=="hpho")||first==="lab") arMount();
   if(typeof arChip==="function")arChip();else cmAccountChip();

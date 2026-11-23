@@ -346,7 +346,9 @@ async function arOauthBack(root) {
     cmTok(r.token); cm.me = r.user; cm.meChecked = true; arChip();
     if(r.user?.username_required){location.hash='#/me';return;}
     if (q.get("linked")) { try { sessionStorage.removeItem("hlCmBack"); } catch (e) {} cmToast(T.linked); location.hash = "#/me"; return; }
-    if (r.fresh) { try { sessionStorage.setItem("hlArNew", "1"); sessionStorage.removeItem("hlCmBack"); } catch (e) {} location.hash = "#/me"; return; }
+    /* a new social account answers the two sign-up questions (country, daily goal) before going on */
+    if (r.fresh) { try { sessionStorage.setItem("hlArNew", "1"); sessionStorage.removeItem("hlCmBack"); } catch (e) {} const on = () => { location.hash = "#/me"; };
+      if (typeof cmLearnerStep === "function") cmLearner(true).then(v => v?.country ? on() : cmLearnerStep(root, on), () => cmLearnerStep(root, on)); else on(); return; }
     cmBack();
   } catch (e) { root.innerHTML = `<div class="cmauth"><div class="card"><p class="cmerr">${esc(arErr(e))}</p><a class="cmbtn pri" href="#/login">${T.login}</a></div></div>`; }
 }

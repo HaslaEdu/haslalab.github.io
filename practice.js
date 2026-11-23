@@ -21,7 +21,7 @@
       moreProblems:'10문제 더',typeNumber:'숫자로 답하세요 (예: 12.5, 3e8)',typeFormula:'식으로 답하세요 (예: 2*sqrt(gL))',answer:'답',keypad:'수식 키패드',typeHelp:'곱하기는 생략해도 됩니다(2mg). 거듭제곱은 ^, 분수는 a⁄b, 10의 거듭제곱은 ×10ⁿ.',notYet:'식을 끝까지 입력하세요',onlyNumber:'숫자만 입력하세요',unknownVar:'이 문제에 없는 문자',showChoices:'보기 보기 (힌트로 셉니다)',ob_region:'어디에서 공부하나요?',ob_level:'지금 어느 단계인가요?',ob_goal:'무엇을 위해 공부하나요?',ob_oly:'올림피아드는 어디까지 해 봤나요?',ob_daily:'하루 목표를 정하세요',
       obKr:'AP Physics, 한국 시험 계산 문제, 올림피아드',obIn:'JEE Main · Advanced',obUs:'AP Physics, F=ma · USAPhO',obGlobal:'AP Physics와 국제 올림피아드 준비',
       goSchool:'학교 공부 · 내신',goExam:'입시 시험',goOly:'물리 올림피아드',goCurious:'그냥 물리가 좋아서',oly0:'처음 준비합니다',oly1:'1차(예선) 시험을 쳐 봤습니다',oly2:'본선 이상 진출했습니다',
-      perDay:'문제',daily5:'가볍게 · 약 5분',daily10:'꾸준히 · 약 10분',daily20:'열심히 · 약 20분',back:'이전',obDone:'시작 단계',obNext:'모든 단원이 이 단계에서 시작하고, 첫 문제는 위 시험에서 나옵니다. 12문제 수준 찾기로 더 정확하게 맞출 수 있습니다.',
+      perDay:'문제',daily5:'가볍게 · 약 5분',daily10:'꾸준히 · 약 10분',daily15:'조금 더 · 약 15분',daily20:'열심히 · 약 20분',tabLeague:'리그',goalSettings:'하루 목표와 나라는 설정에서 바꿉니다',lfAsk:'나라와 하루 목표를 정해 주세요',lfAskSub:'한 번만 묻습니다. 기본 시험과 하루 목표에 쓰이고, 설정에서 바꿀 수 있습니다.',lfSave:'저장',lfLater:'나중에',lfPick:'나라와 하루 목표를 골라 주세요.',lfFailed:'저장하지 못했습니다. 다시 시도해 주세요.',leagueFailed:'리그를 불러오지 못했습니다.',back:'이전',obDone:'시작 단계',obNext:'모든 단원이 이 단계에서 시작하고, 첫 문제는 위 시험에서 나옵니다. 12문제 수준 찾기로 더 정확하게 맞출 수 있습니다.',
       editProfile:'학습 설정',myExams:'내 시험',otherExams:'다른 시험 보기',dailyGoal:'오늘 목표',
       tabClass:'학급',classIntro:'선생님이 알려 준 6자리 코드로 학급에 들어가면 과제가 여기에 나옵니다. 선생님은 학급을 만들어 AP · JEE 문제를 과제로 내고, 학생별 단원 실력과 과제 진행을 볼 수 있습니다.',myAssignments:'내 과제',noAssignments:'아직 과제가 없습니다.',classCode:'학급 코드',join:'참여',leave:'나가기',leaveConfirm:'이 학급에서 나갈까요?',teach:'가르치기',students:'명',className:'학급 이름',newClass:'학급 만들기',classFree:'무료: 학급 1개, 학생 30명까지. 학생은 이 학급의 학습 기록만 공유합니다.',due:'마감',shareCode:'학생에게 학급 코드를 알려 주세요. 학생이 문제 풀기의 "학급" 탭에서 코드를 입력하면 참여합니다.',student:'학생',answered:'푼 문제',lastActive:'최근 학습',remove:'내보내기',removeConfirm:'이 학생을 학급에서 내보낼까요?',noStudents:'아직 학생이 없습니다.',newAssignment:'과제 내기',allOf:'전체',assign:'과제 내기',closeClass:'학급 닫기',closeConfirm:'학급을 닫을까요? 학생들은 더 이상 과제를 볼 수 없습니다.',
       cl_bad_name:'학급 이름을 입력하세요.',cl_class_limit:'무료로는 학급을 1개까지 만들 수 있습니다.',cl_bad_code:'코드는 6자리입니다.',cl_class_not_found:'그 코드의 학급이 없습니다.',cl_own_class:'내가 만든 학급입니다.',cl_class_full:'학급 정원이 찼습니다.',cl_bad_items:'문제를 고르세요.',cl_bad_due:'마감일을 확인하세요.',cl_rate_limited:'잠시 뒤에 다시 시도하세요.',
@@ -69,7 +69,7 @@
       moreProblems:'Ten more',typeNumber:'Type a number (e.g. 12.5, 3e8)',typeFormula:'Type a formula (e.g. 2*sqrt(gL))',answer:'Answer',keypad:'Math keypad',typeHelp:'You can leave out ×: 2mg works. ^ for powers, a⁄b for a fraction, ×10ⁿ for powers of ten.',notYet:'Finish the expression',onlyNumber:'Numbers only',unknownVar:'Not in this problem',showChoices:'Show the choices (counts as a hint)',ob_region:'Where do you study?',ob_level:'Where are you now?',ob_goal:'What are you studying for?',ob_oly:'How far have you got in olympiads?',ob_daily:'Pick a daily goal',
       obKr:'AP Physics, calculation problems from Korean exams, olympiads',obIn:'JEE Main and Advanced',obUs:'AP Physics, F=ma and the USAPhO',obGlobal:'AP Physics and international olympiad prep',
       goSchool:'School physics',goExam:'An entrance or AP exam',goOly:'Physics olympiad',goCurious:'Just curious',oly0:'Starting out',oly1:'I have sat a first round',oly2:'I have reached a national final or beyond',
-      perDay:'problems',daily5:'Casual · about 5 min',daily10:'Steady · about 10 min',daily20:'Serious · about 20 min',back:'Back',obDone:'Your starting step',obNext:'Every unit starts at this step and your first problems come from the exams above. A 12-problem level check can tune it further.',
+      perDay:'problems',daily5:'Casual · about 5 min',daily10:'Steady · about 10 min',daily15:'A bit more · about 15 min',daily20:'Serious · about 20 min',tabLeague:'League',goalSettings:'Change your daily goal and country in Settings',lfAsk:'Set your country and daily goal',lfAskSub:'Asked once. They set your default exams and daily goal, and you can change them in Settings.',lfSave:'Save',lfLater:'Later',lfPick:'Choose a country and a daily goal.',lfFailed:'Could not save. Please try again.',leagueFailed:'Could not load the league.',back:'Back',obDone:'Your starting step',obNext:'Every unit starts at this step and your first problems come from the exams above. A 12-problem level check can tune it further.',
       editProfile:'Settings',myExams:'Your exams',otherExams:'Other exams',dailyGoal:'today',
       tabClass:'Class',classIntro:'Join your teacher’s class with its six-letter code and your assignments appear here. Teachers can make a class, set AP and JEE problems as assignments, and see each student’s units and progress.',myAssignments:'My assignments',noAssignments:'No assignments yet.',classCode:'Class code',join:'Join',leave:'Leave',leaveConfirm:'Leave this class?',teach:'Teach',students:'students',className:'Class name',newClass:'Make a class',classFree:'Free: one class of up to 30 students. Students share only their Learn practice with the class.',due:'due',shareCode:'Give your students the class code. They enter it in the Class tab of Practice to join.',student:'Student',answered:'Answered',lastActive:'Last active',remove:'Remove',removeConfirm:'Remove this student from the class?',noStudents:'No students yet.',newAssignment:'Set an assignment',allOf:'All',assign:'Assign',closeClass:'Close class',closeConfirm:'Close this class? Students will no longer see its assignments.',
       cl_bad_name:'Enter a class name.',cl_class_limit:'A free account can have one class.',cl_bad_code:'A code has six letters.',cl_class_not_found:'No class has that code.',cl_own_class:'That is your own class.',cl_class_full:'This class is full.',cl_bad_items:'Pick problems.',cl_bad_due:'Check the due date.',cl_rate_limited:'Try again in a moment.',
@@ -198,7 +198,9 @@
     const solvedCount=Object.keys(saved.solved).length;
     const badge=state.sync==='saved'?`<span class="stat sync ok">☁ ${tr('synced')}</span>`:state.sync==='error'?`<span class="stat sync">⚠ ${tr('syncFailed')}</span>`:state.sync==='local'?`<a class="stat sync" href="/#/login" target="_top">${tr('loginToSave')}</a>`:'';
     const tier=tierOf(saved.xp),sk=streakNow();
-    $('stats').innerHTML=`<span class="stat tier t-${tier[1].toLowerCase()}" title="${tr('tier')}"><b>◆</b>${tier[1]}</span><button type="button" class="stat fire${sk.pause?' paused':''}" id="streakBtn" aria-expanded="${!!state.streakOpen}" aria-controls="streakPanel"><b>🔥 ${sk.n}</b>${tr('streak')}<small class="sksub">${sk.pause?esc(tr('skPausedUntil').replace('{d}',shortDay(sk.pause.to))):tr(sk.freezeLeft?'skFreezeLeft':'skFreezeUsed')}</small></button><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span>${saved.profile?`<span class="stat goal${(saved.goalDay?.d===today()?saved.goalDay.n:0)>=saved.profile.daily?' met':''}" title="${tr('dailyGoal')}"><b>🎯 ${saved.goalDay?.d===today()?saved.goalDay.n:0}/${saved.profile.daily}</b>${tr('dailyGoal')}</span>`:''}<span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
+    $('stats').innerHTML=`<span class="stat tier t-${tier[1].toLowerCase()}" title="${tr('tier')}"><b>◆</b>Lv.${TIERS.indexOf(tier)+1}</span><button type="button" class="stat fire${sk.pause?' paused':''}" id="streakBtn" aria-expanded="${!!state.streakOpen}" aria-controls="streakPanel"><b>🔥 ${sk.n}</b>${tr('streak')}<small class="sksub">${sk.pause?esc(tr('skPausedUntil').replace('{d}',shortDay(sk.pause.to))):tr(sk.freezeLeft?'skFreezeLeft':'skFreezeUsed')}</small></button><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span>${dailyGoal()?(()=>{const n=saved.goalDay?.d===today()?saved.goalDay.n:0,g=dailyGoal(),cls=`stat goal${n>=g?' met':''}`,inner=`<b>🎯 ${n}/${g}</b>${tr('dailyGoal')}`;
+      /* a member's goal is fixed: it opens Settings, where it is changed */
+      return state.learner?`<a class="${cls}" href="${SETTINGS_HREF}" target="_top" title="${esc(tr('goalSettings'))}">${inner}</a>`:`<span class="${cls}" title="${tr('dailyGoal')}">${inner}</span>`;})():''}<span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
     $('stats').insertAdjacentHTML('beforeend',state.streakOpen?streakPanel(sk):'');
     $('streakBtn').onclick=()=>{state.streakOpen=!state.streakOpen;paintStats();reportHeight();};
     if($('skPause'))$('skPause').onchange=e=>{
@@ -393,7 +395,7 @@
   function paintTabs(){
     /* no unit tab: the first-visit answers already say what to practise; a unit still opens from the unit map (?unit=) */
     const due=dueNow().length;
-    $('tabs').innerHTML=[['today',tr('tabToday')],['review',tr('tabReview')+(due?` <b class="badge">${due}</b>`:'')],['custom',tr('tabCustom')],['tracks',tr('tabTracks')],['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
+    $('tabs').innerHTML=[['today',tr('tabToday')],['review',tr('tabReview')+(due?` <b class="badge">${due}</b>`:'')],['league',tr('tabLeague')],['custom',tr('tabCustom')],['tracks',tr('tabTracks')],['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
     $('tabs').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>MODES[b.dataset.mode]());
     $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':state.mode==='exam'?'noteUnits':state.mode==='custom'||state.mode==='review'?'noteCustom':'noteTracks');
   }
@@ -741,6 +743,16 @@
   }
 
   /* ── the member's plan: tutor questions left today (GET /api/learn/plan) ── */
+  /* ── the member's country and daily goal (GET /api/me/learner, set at sign-up and in Settings): the goal is fixed
+     for members who have one (the first questions skip it), the country picks the default exams; guests choose here ── */
+  const SETTINGS_HREF='/#/community/account?section=learning';
+  async function loadLearner(){
+    if(!token()){state.learner=null;state.learnerDone=true;return null;}
+    try{const r=await api('/api/me/learner');state.learner=r&&r.country?r:null;state.learnerMissing=!state.learner;}catch(e){state.learner=null;state.learnerMissing=false;}
+    state.learnerDone=true;return state.learner;
+  }
+  const dailyGoal=()=>state.learner?.daily_goal||saved.profile?.daily||0;
+  const countryOf=()=>state.learner?.country||'';
   async function loadPlan(){if(!token()){state.plan={plan:'guest',tutorLeft:0};return;}try{state.plan=await api('/api/learn/plan');}catch(e){state.plan=null;if(/api 404/.test(e.message))state.serverOld=true;}}
 
   /* ── AI translation of English problem text into the learner's language: cached on the server for everyone; the
@@ -1038,10 +1050,12 @@
      elsewhere AP Physics. The placement test can then refine it. ── */
   const pickName=o=>o?(state.lang==='ko'?o.ko:o.en):'';
   function startHome(edit){
+    if(token()&&!state.learnerDone){(state.learnerP||(state.learnerP=loadLearner())).finally(()=>startHome(edit));return;}
     state.mode='start';state.session=null;paintTabs();paintStats();tellUnit('');
     const old=saved.profile||{},tz=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){return '';}})();
-    const a={region:old.region||P.guessRegion(state.lang,tz),level:old.level||'',goal:old.goal||'',oly:old.oly??0,daily:old.daily||10,stage:saved.studyLevel||''};
-    const steps=['region','level','goal','oly','stage','daily'];let i=0;
+    const a={region:old.region||P.guessRegion(state.lang,tz,countryOf()),level:old.level||'',goal:old.goal||'',oly:old.oly??0,daily:state.learner?.daily_goal||old.daily||10,stage:saved.studyLevel||''};
+    /* a member's daily goal was set at sign-up (Settings changes it): only guests choose it here */
+    const steps=['region','level','goal','oly','stage',...(state.learner?.daily_goal?[]:['daily'])];let i=0;
     const q=()=>{
       const key=steps[i];if(key==='oly'&&a.goal!=='olympiad'){i+=dir;return q();}
       const R=P.REGIONS[a.region]||P.REGIONS.global;
@@ -1058,7 +1072,7 @@
         level:P.LEVELS.map(([k,n])=>[k,pickName(n),'']),
         goal:[['school',tr('goSchool'),''],['exam',tr('goExam'),pickName(R.examName)],['olympiad',tr('goOly'),pickName(R.olyName)],['curious',tr('goCurious'),'']],
         oly:[[0,tr('oly0'),''],[1,tr('oly1'),''],[2,tr('oly2'),'']],
-        daily:[[5,'5 '+tr('perDay'),tr('daily5')],[10,'10 '+tr('perDay'),tr('daily10')],[20,'20 '+tr('perDay'),tr('daily20')]]
+        daily:[[5,'5 '+tr('perDay'),tr('daily5')],[10,'10 '+tr('perDay'),tr('daily10')],[15,'15 '+tr('perDay'),tr('daily15')],[20,'20 '+tr('perDay'),tr('daily20')]]
       }[key];
       $('app').innerHTML=`<div class="session onboard"><div class="shead">${i?`<button type="button" class="back" id="obBack">← ${tr('back')}</button>`:edit?`<button type="button" class="back" id="obBack">${tr('quit')}</button>`:''}<span class="progress" aria-hidden="true"><i style="width:${Math.round(100*i/steps.length)}%"></i></span></div>
         <h2>${tr('ob_'+key)}</h2><div class="obopts">${opts.map(([v,label,note])=>`<button type="button" class="unit${String(a[key])===String(v)?' cur':''}" data-v="${v}"><span class="name"><b>${esc(label)}</b>${note?`<small>${esc(note)}</small>`:''}</span></button>`).join('')}</div></div>`;
@@ -1098,7 +1112,7 @@
     $('app').innerHTML=`<div class="session onboard"><h2>${tr('lvPick')}</h2><p class="src">${tr('quickIntro')}</p><div class="obopts">${levelCards('')}</div></div>`;
     $('app').querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{
       const key=b.dataset.level,tz=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){return '';}})();
-      const profile={region:P.guessRegion(state.lang,tz),level:'',goal:'',oly:0,daily:10,...QUICK_PROFILE[key],quick:true,at:Math.floor(Date.now()/1000)},step=P.startStep(profile);
+      const profile={region:P.guessRegion(state.lang,tz,countryOf()),level:'',goal:'',oly:0,daily:state.learner?.daily_goal||10,...QUICK_PROFILE[key],quick:true,at:Math.floor(Date.now()/1000)},step=P.startStep(profile);
       saved.profile=profile;saved.studyLevel=key;
       for(const area of P.AREAS)for(const sub of area.subtopics){const unit=area.key+'/'+sub.key,k=saved.skills[unit];
         if(!k||!k.n)record('start-'+area.key,'diag',unit,step,'place');}
@@ -1725,11 +1739,40 @@
       saved=fill({});save();paintStats();await again();if($('settings')){$('settings').open=true;msg(tr('resetDone'));}
     };
   }
-  const MODES={level:levelHome,start:startHome,play:playHome,today:todayHome,review:reviewHome,custom:customHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
+  /* ── the weekly league (community/src/league.js, drawn by league-view.js): the member's group this week with the
+     promotion, demotion and (in Master) rebirth zones; guests see how it works and a sign-in button ── */
+  async function leagueHome(){
+    state.mode='league';state.session=null;paintTabs();paintStats();tellUnit('');
+    const V=window.HL_LEAGUE_VIEW;if(!V){failed(leagueHome);return;}
+    V.addStyle(document);
+    if(!token()){$('app').innerHTML=V.guestHtml(state.lang);reportHeight();return;}
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let data;try{data=await api('/api/league/me');}catch(e){if(state.mode==='league'){$('app').innerHTML=`<p>${tr('leagueFailed')}</p><button type="button" id="retry">${tr('retry')}</button>`;$('retry').onclick=leagueHome;reportHeight();}return;}
+    if(state.mode!=='league'||state.session)return;
+    $('app').innerHTML=V.meHtml(data,state.lang,{rankingHref:'/#/ranking',settingsHref:SETTINGS_HREF});
+    reportHeight();
+  }
+  /* a member from before the sign-up questions, on the practice page opened on its own (inside the site, the page
+     around this frame asks): the two fields once, "Later" asks again next visit */
+  function learnerPrompt(){
+    const lf=window.HL_LEARNER_FORM;if(!lf||embedded||!state.learnerMissing||$('lfPrompt'))return;
+    try{if(sessionStorage.getItem('hlLearnerLater'))return;}catch(e){}
+    lf.addStyle(document);
+    const box=document.createElement('section');box.id='lfPrompt';box.className='lf-prompt';
+    box.innerHTML=`<h2>${tr('lfAsk')}</h2><p>${tr('lfAskSub')}</p><form>${lf.fieldsHtml(state.lang,{})}<div class="lf-acts"><button type="submit" class="primary">${tr('lfSave')}</button><button type="button" data-later>${tr('lfLater')}</button><span class="lf-err" role="status"></span></div></form>`;
+    $('app').before(box);
+    const f=box.querySelector('form'),read=lf.wire(f,state.lang),err=box.querySelector('.lf-err');
+    box.querySelector('[data-later]').onclick=()=>{try{sessionStorage.setItem('hlLearnerLater','1');}catch(e){}box.remove();reportHeight();};
+    f.onsubmit=async e=>{e.preventDefault();const v=read();if(!v){err.textContent=tr('lfPick');return;}
+      try{const r=await api('/api/me/learner','PUT',v);state.learner=r;state.learnerMissing=false;box.remove();paintStats();reportHeight();}catch(er){err.textContent=tr('lfFailed');}};
+    reportHeight();
+  }
+  const MODES={level:levelHome,start:startHome,play:playHome,today:todayHome,review:reviewHome,custom:customHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome,league:leagueHome};
 
   function applyTheme(){const t=params.get('theme'),dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}
   function translate(){document.documentElement.lang=state.lang;document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=tr(el.dataset.i18n);});$('note').textContent=tr('note');document.title=tr('title')+' · HaslaLab';}
   window.addEventListener('message',event=>{
+    if(embedded&&event.origin===location.origin&&event.source===window.parent&&event.data?.type==='hl-practice-learner'){loadLearner().then(()=>paintStats());return;}
     if(!embedded||event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='hl-practice-settings')return;
     if(['light','dark'].includes(event.data.theme))document.documentElement.dataset.theme=event.data.theme;
     if(LANGS.includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;translate();paintStats();paintTabs();if(!state.session)(MODES[state.mode]||todayHome)();}
@@ -1751,10 +1794,10 @@
     if(!H.STUDY_LEVELS.some(L=>L.key===level))return;
     saved.customOpts={...(saved.customOpts||{}),source:'level:'+level,units:unit&&P.SUBTOPICS.has(unit)?[unit]:[],min:1,max:10,contest:'',yearMin:0,yearMax:0};
   }
-  const boot=()=>{paintStats();pull();loadPlan();setTimeout(()=>flushReports().catch(()=>{}),4000);const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
+  const boot=()=>{paintStats();pull();loadPlan();(state.learnerP=loadLearner()).then(()=>{paintStats();learnerPrompt();});setTimeout(()=>flushReports().catch(()=>{}),4000);const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
     if(item&&/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
     else if(mode==='play'){document.documentElement.classList.add('play');playHome();}
-    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(mode==='review')reviewHome();else if(mode==='custom'){presetCustom(params.get('level'),unit);customHome();}else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
+    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(mode==='league')leagueHome();else if(mode==='review')reviewHome();else if(mode==='custom'){presetCustom(params.get('level'),unit);customHome();}else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
