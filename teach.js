@@ -1,7 +1,9 @@
-/* For teachers: put a test together from HaslaLab's problems, make new problems from one with the AI (each checked by
-   evaluating the stated calculation and by a second, independent solve), print the paper with its answer key, or send
-   the bank problems to a class as an assignment. The server parts are /api/learn/variants and /api/learn/classes
-   (community/src/learn-services.js). The paper being built stays in this browser (localStorage). */
+/* The Workshop's problem and test maker (#/workshop/make): put a test together from HaslaLab's problems, make number
+   variants of a problem written with named values (the answers computed by teach-tools.js), make new problems from one
+   with the AI (each checked by evaluating the stated calculation and by a second, independent solve), tag each problem
+   with a unit and a level for the exam blueprint, print the paper with its answer key and blueprint, or send the bank
+   problems to a class as an assignment. The server parts are /api/learn/variants and /api/learn/classes
+   (community/src/learn-services.js). The paper and the template being written stay in this browser (localStorage). */
 (()=>{
   'use strict';
   const $=id=>document.getElementById(id),params=new URL(location.href).searchParams;
@@ -9,12 +11,22 @@
   const lang=params.get('lang')==='en'?'en':'ko',ko=lang==='ko',dark=params.get('theme')==='dark';
   document.documentElement.lang=lang;document.documentElement.dataset.theme=dark?'dark':'light';document.documentElement.classList.toggle('embedded',embedded);
   const T=ko?{
-    title:'교사용',lede:'하슬라랩 문제로 시험지를 만들고, 한 문제를 바탕으로 AI가 새 문제를 만들게 할 수 있습니다. 시험지는 정답표와 함께 인쇄하거나 PDF로 저장하고, 학급에 과제로 보낼 수 있습니다.',
-    tabPaper:'시험지 만들기',tabVar:'비슷한 문제 만들기',tabClass:'내 학급',
+    title:'문제·시험지 만들기',lede:'하슬라랩 문제와 직접 쓴 문제로 시험지를 만듭니다. 숫자만 바꾼 문제를 여러 개 만들 수 있고, 시험지는 정답표, 이원목적분류표와 함께 인쇄하거나 PDF로 저장합니다.',
+    tabPaper:'시험지 만들기',tabTpl:'숫자 바꾼 문제',tabVar:'AI로 비슷한 문제',tabClass:'내 학급',
+    tpl:{title:'숫자 바꾼 문제',how:'문제 글에서 바꿀 값을 {m}처럼 중괄호로 적고, 값마다 범위와 간격을 정한 다음 답을 식으로 적으세요. 문제마다 답을 계산해 붙입니다.',
+      q:'문제 (바꿀 값은 {이름})',qPh:'질량 {m} kg인 공을 높이 {h} m에서 가만히 놓았다. 바닥에 닿기 직전 공의 속력은?',name:'값',min:'최소',max:'최대',step:'간격',
+      noNames:'문제 글에 {m}처럼 중괄호로 값을 적으면 여기에 범위를 정하는 칸이 생깁니다.',formula:'답 (식)',formulaPh:'sqrt(2 g h)',unit:'답의 단위',constants:'상수 (선택)',constPh:'g = 9.8',
+      sig:'유효숫자',bpUnit:'단원 (분류표용)',n:'몇 문제',make:'만들기',example:'예시 넣기',all:'모두 시험지에 넣기',allIn:n=>`${n}문제를 시험지에 넣었습니다.`,answer:'답',
+      syntax:'식은 계산기처럼 씁니다: 2*sqrt(g*h), v_0^2/(2g), m g sin(theta). 값 이름은 글자 하나(m, h), 아래 첨자가 붙은 글자(v_0), 그리스 문자 이름(theta)만 됩니다.',
+      err:{no_template:'문제 글을 적으세요.',no_values:'바꿀 값을 {m}처럼 중괄호로 적으세요.',too_many_values:'바꿀 값은 8개까지입니다.',bad_name:n=>`{${n}}: 값 이름은 m, v_0, theta처럼 적어야 식에서 읽을 수 있습니다.`,
+        no_range:n=>`{${n}}의 범위를 정하세요.`,bad_range:n=>`{${n}}: 최소가 최대보다 작고 간격이 0보다 커야 합니다.`,no_formula:'답을 계산할 식을 적으세요.',bad_formula:'답 식을 읽지 못했습니다.',
+        unknown_in_formula:n=>`식의 ${n}이(가) 문제의 값이나 상수에 없습니다.`,no_valid_values:'이 범위에서는 답을 계산할 수 없습니다. 0으로 나누거나 음수의 제곱근이 되는지 보세요.',bad_constants:'상수는 g = 9.8, c = 3e8처럼 적으세요.'}},
+    bp:{title:'이원목적분류표',unit:'단원',level:'수준',levels:{know:'지식',understand:'이해',apply:'적용',analyze:'분석'},attach:'분류표 붙이기',total:'합계',items:n=>`${n}문항`,
+      note:'문항마다 단원과 수준을 고르면 아래 표가 채워집니다.',nos:'문항'},
     bank:'문제 고르기',source:'문제 출처',unit:'단원',level:'난이도',all:'전체',search:'검색',searchPh:'낱말이나 수식',
     srcKr:'국내 학력평가 · 모의고사 (객관식)',add:'넣기',added:'넣음',vary:'비슷한 문제',more:'더 보기',none:'맞는 문제가 없습니다.',loading:'불러오는 중…',
     paper:'시험지',pTitle:'시험 이름',pSchool:'학교 · 학원',pInfo:'학년 · 반 · 날짜',pMin:'시간 (분)',pNote:'안내 (선택)',pts:'점',total:'총점',
-    two:'2단으로',key:'정답표 붙이기',sol:'해설 붙이기',space:'풀이 칸 두기',print:'인쇄 · PDF 저장',clear:'비우기',clearAsk:'시험지를 비울까요?',
+    two:'2단으로',key:'정답표 붙이기 (시험지 뒤 새 쪽)',sol:'해설 붙이기',space:'풀이 칸 두기',print:'인쇄 · PDF 저장',clear:'비우기',clearAsk:'시험지를 비울까요?',
     empty:'왼쪽에서 문제를 넣으세요.',own:'직접 만든 문제',up:'위로',down:'아래로',del:'빼기',
     assign:'학급 과제로 보내기',assignNote:'직접 만든 문제는 과제로 보낼 수 없어 빠집니다. 학생은 문제 풀기 화면에서 풀고, 진도는 내 학급에서 봅니다.',
     noClass:'아직 학급이 없습니다.',makeClass:'학급 만들기',classPick:'학급',sent:'과제로 보냈습니다.',
@@ -30,12 +42,22 @@
     err:{variant_limit:'오늘 만들 수 있는 횟수를 다 썼습니다. 교사 플랜은 하루 40번입니다.',ai_failed:'AI가 문제를 만들지 못했습니다. 다시 시도해 주세요.',ai_unavailable:'AI를 지금 쓸 수 없습니다.',
       login_required:'로그인하세요.',rate_limited:'잠시 뒤에 다시 시도해 주세요.',bad_source:'바탕 문제를 넣으세요.',bad_items:'과제로 보낼 문제가 없습니다.',bad_title:'시험 이름을 입력하세요.',class_not_found:'학급을 찾지 못했습니다.'}
   }:{
-    title:'For teachers',lede:'Put a test together from HaslaLab problems, or have the AI write new problems from one you pick. Print the paper with its answer key, save it as a PDF, or send it to a class as an assignment.',
-    tabPaper:'Build a test',tabVar:'Make similar problems',tabClass:'My classes',
+    title:'Problems and tests',lede:'Build a test from HaslaLab problems and your own. Make several versions of a problem with different numbers, and print the paper with its answer key and exam blueprint or save it as a PDF.',
+    tabPaper:'Build a test',tabTpl:'Number variants',tabVar:'Similar problems (AI)',tabClass:'My classes',
+    tpl:{title:'Number variants',how:'Write the problem with the values to change in braces, like {m}. Give each value a range and a step, then write the answer as a formula. Each version gets its own computed answer.',
+      q:'Problem (values to change in {braces})',qPh:'A ball of mass {m} kg is released from rest at a height of {h} m. How fast is it moving just before it hits the floor?',name:'Value',min:'Min',max:'Max',step:'Step',
+      noNames:'Write a value in braces, like {m}, and a row for its range appears here.',formula:'Answer (formula)',formulaPh:'sqrt(2 g h)',unit:'Answer unit',constants:'Constants (optional)',constPh:'g = 9.8',
+      sig:'Significant figures',bpUnit:'Unit (for the blueprint)',n:'How many',make:'Make',example:'Fill in an example',all:'Add all to the paper',allIn:n=>`Added ${n} to the paper.`,answer:'Answer',
+      syntax:'Write formulas the way a calculator takes them: 2*sqrt(g*h), v_0^2/(2g), m g sin(theta). A value is named by one letter (m, h), a letter with a subscript (v_0) or a Greek letter name (theta).',
+      err:{no_template:'Write the problem.',no_values:'Put the values to change in braces, like {m}.',too_many_values:'Up to 8 values can change.',bad_name:n=>`{${n}}: name values like m, v_0 or theta so the formula can read them.`,
+        no_range:n=>`Give {${n}} a range.`,bad_range:n=>`{${n}}: the minimum must not exceed the maximum and the step must be above 0.`,no_formula:'Write the formula for the answer.',bad_formula:'The answer formula could not be read.',
+        unknown_in_formula:n=>`${n} in the formula is not a value of the problem or a constant.`,no_valid_values:'No answer can be computed in these ranges. Check for division by zero or a root of a negative number.',bad_constants:'Write constants like g = 9.8, c = 3e8.'}},
+    bp:{title:'Exam blueprint',unit:'Unit',level:'Level',levels:{know:'Knowledge',understand:'Understanding',apply:'Application',analyze:'Analysis'},attach:'Add the blueprint',total:'Total',items:n=>`${n} item${n===1?'':'s'}`,
+      note:'Pick a unit and a level for each problem and the table below fills in.',nos:'No.'},
     bank:'Pick problems',source:'Source',unit:'Topic',level:'Difficulty',all:'All',search:'Search',searchPh:'a word or a formula',
     srcKr:'Korean national practice exams (multiple choice, Korean)',add:'Add',added:'Added',vary:'Similar',more:'More',none:'No problems match.',loading:'Loading…',
     paper:'Test paper',pTitle:'Test name',pSchool:'School',pInfo:'Class and date',pMin:'Time (min)',pNote:'Instructions (optional)',pts:'pts',total:'Total',
-    two:'Two columns',key:'Answer key',sol:'Solutions',space:'Working space',print:'Print or save as PDF',clear:'Clear',clearAsk:'Clear the paper?',
+    two:'Two columns',key:'Answer key (new page after the test)',sol:'Solutions',space:'Working space',print:'Print or save as PDF',clear:'Clear',clearAsk:'Clear the paper?',
     empty:'Add problems from the list.',own:'your own',up:'Up',down:'Down',del:'Remove',
     assign:'Send to a class',assignNote:'Problems you wrote are left out of assignments. Students solve the rest on the practice page; you see progress under My classes.',
     noClass:'No classes yet.',makeClass:'Make a class',classPick:'Class',sent:'Sent as an assignment.',
@@ -106,21 +128,31 @@
 
   /* ── the paper, kept in this browser ── */
   const KEY='hlTeachPaper';
-  const blank=()=>({title:'',school:'',info:'',minutes:'',note:'',two:true,key:true,sol:false,space:false,items:[]});
+  const blank=()=>({title:'',school:'',info:'',minutes:'',note:'',two:true,key:true,sol:false,space:false,bp:false,items:[]});
   let paper=(()=>{try{const p=JSON.parse(localStorage.getItem(KEY)||'null');return p&&Array.isArray(p.items)?{...blank(),...p}:blank();}catch(e){return blank();}})();
   const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(paper));}catch(e){}};
+  /* the number-variant template being written, kept the same way */
+  const TPL_KEY='hlTeachTemplate';
+  const tplBlank=()=>({template:'',params:{},formula:'',unit:'',constants:'',sig:3,n:5,bpUnit:''});
+  let tpl=(()=>{try{const t=JSON.parse(localStorage.getItem(TPL_KEY)||'null');return t&&typeof t==='object'&&t.params&&typeof t.params==='object'?{...tplBlank(),...t}:tplBlank();}catch(e){return tplBlank();}})();
+  const saveTpl=()=>{try{localStorage.setItem(TPL_KEY,JSON.stringify(tpl));}catch(e){}};
+  const TT=()=>window.HL_TEACH_TOOLS;
+  const LEVELS=['know','understand','apply','analyze'];
+  /* a problem's place in the blueprint: what the teacher picked, else the bank's unit and "understanding" */
+  const bpOf=(p,item)=>({unit:p.bp?.unit??(item?unitName(item.unit):''),level:LEVELS.includes(p.bp?.level)?p.bp.level:'understand'});
 
-  const state={tab:params.get('tab')==='vary'?'vary':'paper',src:'ap1',unit:'',level:'',q:'',shown:30,list:[],source:null,variants:[],busy:false,me:null,plan:null,classes:null};
+  const state={tab:['vary','tpl'].includes(params.get('tab'))?params.get('tab'):'paper',tplOut:[],src:'ap1',unit:'',level:'',q:'',shown:30,list:[],source:null,variants:[],busy:false,me:null,plan:null,classes:null};
 
   function shell(){
     $('app').innerHTML=`<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div></div>
-      <div class="seg tabs" role="tablist">${[['paper',T.tabPaper],['vary',T.tabVar]].map(([k,n])=>`<button type="button" data-tab="${k}" class="${state.tab===k?'on':''}">${n}</button>`).join('')}
+      <div class="seg tabs" role="tablist">${[['paper',T.tabPaper],['tpl',T.tabTpl],['vary',T.tabVar]].map(([k,n])=>`<button type="button" role="tab" aria-selected="${state.tab===k}" data-tab="${k}" class="${state.tab===k?'on':''}">${n}</button>`).join('')}
         <button type="button" data-class="1">${T.tabClass}</button></div>
-      <div id="loginNote"></div><div class="cols"><section class="panel" id="bankPanel"></section><section class="panel" id="rightPanel"></section></div>`;
+      <div id="loginNote"></div><div class="cols"><section class="panel" id="bankPanel"></section><section class="panel" id="rightPanel"></section></div>
+      <datalist id="bpUnits">${[...(P()?.SUBTOPICS||new Map()).keys()].map(k=>`<option value="${esc(unitName(k))}">`).join('')}</datalist>`;
     $('app').querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;shell();});
     $('app').querySelector('[data-class]').onclick=()=>window.top.location.assign('/#/learn/practice?mode=class');
-    if(!token())$('loginNote').innerHTML=`<p class="note">${T.login} <a class="btn" href="/#/login" target="_top">${T.loginBtn}</a></p>`;
-    paintBank();state.tab==='paper'?paintPaper():paintVary();
+    if(!token()&&state.tab!=='tpl')$('loginNote').innerHTML=`<p class="note">${T.login} <a class="btn" href="/#/login" target="_top">${T.loginBtn}</a></p>`;
+    paintBank();state.tab==='paper'?paintPaper():state.tab==='tpl'?paintTpl():paintVary();
   }
 
   async function paintBank(){
@@ -170,9 +202,11 @@
       <div class="paper-meta"><label class="wide">${T.pTitle}<input data-f="title" value="${esc(paper.title)}"></label>
         <label>${T.pSchool}<input data-f="school" value="${esc(paper.school)}"></label><label>${T.pInfo}<input data-f="info" value="${esc(paper.info)}"></label>
         <label>${T.pMin}<input data-f="minutes" inputmode="numeric" value="${esc(paper.minutes)}"></label><label>${T.pNote}<input data-f="note" value="${esc(paper.note)}"></label></div>
-      <div class="opts">${[['two',T.two],['key',T.key],['sol',T.sol],['space',T.space]].map(([k,n])=>`<label><input type="checkbox" data-o="${k}"${paper[k]?' checked':''}>${n}</label>`).join('')}</div>
+      <div class="opts">${[['two',T.two],['key',T.key],['sol',T.sol],['space',T.space],['bp',T.bp.attach]].map(([k,n])=>`<label><input type="checkbox" data-o="${k}"${paper[k]?' checked':''}>${n}</label>`).join('')}</div>
       <div class="plist">${items.length?items.map((x,i)=>`<div class="pitem" data-i="${i}"><span class="n">${i+1}</span><span class="t">${esc(label(x))}${x.own?`<span class="own">${T.own}</span>`:''}</span>
-        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts"><button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-del title="${T.del}">✕</button></span></div>`).join(''):`<p class="empty">${T.empty}</p>`}</div>
+        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts"><button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-del title="${T.del}">✕</button></span>
+        <span class="pbp"><input data-bpu list="bpUnits" maxlength="40" value="${esc(bpOf(x,x.item).unit)}" placeholder="${T.bp.unit}" aria-label="${T.bp.unit}"><select data-bpl aria-label="${T.bp.level}">${LEVELS.map(l=>`<option value="${l}"${bpOf(x,x.item).level===l?' selected':''}>${T.bp.levels[l]}</option>`).join('')}</select></span></div>`).join(''):`<p class="empty">${T.empty}</p>`}</div>
+      ${items.length?`<details class="bpbox" id="bpBox"${paper.bp?' open':''}><summary>${T.bp.title}</summary><p class="note">${T.bp.note}</p><div id="bpTable"></div></details>`:''}
       <div class="row"><button type="button" class="primary" id="print"${items.length?'':' disabled'}>${T.print}</button><button type="button" id="assign"${items.some(x=>!x.own)?'':' disabled'}>${T.assign}</button><button type="button" id="clear"${items.length?'':' disabled'}>${T.clear}</button></div>
       <div id="assignBox"></div>`;
     box.querySelectorAll('[data-f]').forEach(el=>el.oninput=()=>{paper[el.dataset.f]=el.value.slice(0,120);save();});
@@ -183,8 +217,11 @@
       el.querySelector('[data-up]').onclick=()=>{if(i>0){[paper.items[i-1],paper.items[i]]=[paper.items[i],paper.items[i-1]];save();paintPaper();}};
       el.querySelector('[data-down]').onclick=()=>{if(i<paper.items.length-1){[paper.items[i+1],paper.items[i]]=[paper.items[i],paper.items[i+1]];save();paintPaper();}};
       el.querySelector('[data-del]').onclick=()=>{paper.items.splice(i,1);save();paintPaper();paintItems();};
+      const bpSet=()=>{paper.items[i].bp={unit:el.querySelector('[data-bpu]').value.trim().slice(0,40),level:el.querySelector('[data-bpl]').value};save();paintBlueprint(items);};
+      el.querySelector('[data-bpu]').onchange=bpSet;el.querySelector('[data-bpl]').onchange=bpSet;
       el.querySelector('[data-vary]').onclick=()=>{const x=items[i];state.source=x.own?{q:x.own.q,answerPlain:x.own.answer,sol:x.own.sol,plainCh:x.own.choices||[],qHtml:textHtml(x.own.q)}:x.item;state.tab='vary';shell();};
     });
+    paintBlueprint(items);
     $('print').onclick=()=>printPaper(items);
     $('clear').onclick=()=>{if(confirm(T.clearAsk)){paper=blank();save();paintPaper();paintItems();}};
     $('assign').onclick=()=>assignBox(items);
@@ -207,6 +244,17 @@
     height();
   }
 
+  /* the blueprint table: one row per unit, a column per level, each cell the count, the points and the item numbers */
+  function blueprintHtml(items){
+    const B=TT()?.blueprint(items.map(x=>({...bpOf(x,x.item),pts:x.pts})));if(!B)return '';
+    const pt=n=>`${+n.toFixed(2)}${ko?'점':' pts'}`;
+    const cell=c=>c?`<b>${T.bp.items(c.n)}</b> <span>${pt(c.pts)}</span><small>${T.bp.nos} ${c.nos.join(', ')}</small>`:'';
+    return `<table class="bp"><thead><tr><th>${T.bp.unit}</th>${B.levels.map(l=>`<th>${T.bp.levels[l]}</th>`).join('')}<th>${T.bp.total}</th></tr></thead>
+      <tbody>${B.units.map(u=>`<tr><th scope="row">${esc(u)}</th>${B.levels.map(l=>`<td>${cell(B.cells[u][l])}</td>`).join('')}<td><b>${T.bp.items(B.rowTotals[u].n)}</b> <span>${pt(B.rowTotals[u].pts)}</span></td></tr>`).join('')}</tbody>
+      <tfoot><tr><th scope="row">${T.bp.total}</th>${B.levels.map(l=>`<td><b>${T.bp.items(B.byLevel[l].n)}</b> <span>${pt(B.byLevel[l].pts)}</span></td>`).join('')}<td><b>${T.bp.items(B.total.n)}</b> <span>${pt(B.total.pts)}</span></td></tr></tfoot></table>`;
+  }
+  function paintBlueprint(items){const box=$('bpTable');if(box){box.innerHTML=blueprintHtml(items);height();}}
+
   function printPaper(items){
     const out=$('paperPrint'),pt=n=>`${n}${ko?'점':' pts'}`;
     const qHtml=x=>x.own?textHtml(x.own.q):x.item?x.item.qHtml:'';
@@ -223,10 +271,64 @@
       ${paper.note?`<div class="pp-note">${esc(paper.note)}</div>`:''}
       <div class="pp-body${paper.two?' two':''}">${items.map((x,i)=>`<div class="pp-q"><p><span class="no">${i+1}.</span> <span class="pts">[${pt(x.pts)}]</span></p>${qHtml(x)}${chs(x)}${paper.space&&!(x.own?.choices?.length||x.item?.choices?.length)?'<div class="pp-space"></div>':''}</div>`).join('')}</div>
       ${paper.key?`<div class="pp-key"><h2>${esc(paper.title||T.paper)} · ${T.keyTitle}</h2><table>${items.map((x,i)=>`<tr><td style="width:3em">${i+1}</td><td>${ans(x)}</td>${paper.sol?`<td>${textHtml(sol(x))}</td>`:''}</tr>`).join('')}</table>
-        ${srcs.length?`<p class="pp-src">${T.src}: ${srcs.map(esc).join(', ')}</p>`:''}</div>`:''}`;
+        ${srcs.length?`<p class="pp-src">${T.src}: ${srcs.map(esc).join(', ')}</p>`:''}</div>`:''}
+      ${paper.bp?`<div class="pp-bp"><h2>${esc(paper.title||T.paper)} · ${T.bp.title}</h2>${blueprintHtml(items)}</div>`:''}`;
     typeset(out);
     const imgs=[...out.querySelectorAll('img')];
     Promise.all(imgs.map(im=>im.complete?0:new Promise(r=>{im.loading='eager';im.onload=im.onerror=r;}))).then(()=>window.print());
+  }
+
+  /* ── number variants: a template with named values, the answers computed in this browser ── */
+  const EXAMPLE=ko?{template:'질량 {m} kg인 공을 높이 {h} m에서 가만히 놓았다. 공기 저항을 무시할 때, 바닥에 닿기 직전 공의 속력은? (중력 가속도 $g = 9.8\\ \\mathrm{m/s^2}$)',
+      params:{m:{min:0.5,max:3,step:0.5},h:{min:2,max:20,step:1}},formula:'sqrt(2 g h)',unit:'m/s',constants:'g = 9.8',sig:3,n:5,bpUnit:unitName('mechanics/energy')}
+    :{template:'A ball of mass {m} kg is released from rest at a height of {h} m. Ignoring air resistance, how fast is it moving just before it hits the floor? ($g = 9.8\\ \\mathrm{m/s^2}$)',
+      params:{m:{min:0.5,max:3,step:0.5},h:{min:2,max:20,step:1}},formula:'sqrt(2 g h)',unit:'m/s',constants:'g = 9.8',sig:3,n:5,bpUnit:unitName('mechanics/energy')};
+  const tplErr=e=>{const f=T.tpl.err[e.code];return typeof f==='function'?f(e.name):f||e.code;};
+  function paintTpl(){
+    const box=$('rightPanel'),L=T.tpl;
+    box.innerHTML=`<h2>${L.title}<button type="button" class="link" id="tEx">${L.example}</button></h2><p class="note">${L.how}</p>
+      <label class="fld">${L.q}<textarea id="tTpl" rows="5" placeholder="${esc(L.qPh)}">${esc(tpl.template)}</textarea></label>
+      <div id="tParams"></div>
+      <div class="two"><label class="fld">${L.formula}<input id="tFormula" class="mono" value="${esc(tpl.formula)}" placeholder="${esc(L.formulaPh)}" autocomplete="off" spellcheck="false"></label><label class="fld">${L.unit}<input id="tUnit" value="${esc(tpl.unit)}" placeholder="m/s"></label></div>
+      <div class="fpre" id="tPre" aria-live="polite"></div>
+      <div class="two"><label class="fld">${L.constants}<input id="tConst" class="mono" value="${esc(tpl.constants)}" placeholder="${esc(L.constPh)}" spellcheck="false"></label><label class="fld">${L.sig}<select id="tSig">${[2,3,4].map(n=>`<option${n===+tpl.sig?' selected':''}>${n}</option>`).join('')}</select></label></div>
+      <label class="fld">${L.bpUnit}<input id="tBp" list="bpUnits" maxlength="40" value="${esc(tpl.bpUnit)}"></label>
+      <p class="note">${L.syntax}</p>
+      <div class="row"><label class="inl">${L.n}<select id="tN">${[1,2,3,4,5,6,8,10,12,15,20].map(n=>`<option${n===+tpl.n?' selected':''}>${n}</option>`).join('')}</select></label><button type="button" class="primary" id="tMake">${L.make}</button><span id="tMsg" class="note" role="status"></span></div>
+      <div id="tList"></div>`;
+    const sync=()=>{
+      const names=TT().namesIn($('tTpl').value);
+      for(const n of names)if(!tpl.params[n])tpl.params[n]={min:1,max:10,step:1};
+      const rows=names.map(n=>{const p=tpl.params[n];return `<tr data-n="${esc(n)}"><th scope="row" class="mono">{${esc(n)}}</th>${['min','max','step'].map(k=>`<td><input data-k="${k}" inputmode="decimal" value="${esc(p[k])}" aria-label="${esc(n)} ${L[k]}"></td>`).join('')}</tr>`;}).join('');
+      $('tParams').innerHTML=names.length?`<table class="ptab"><thead><tr><th>${L.name}</th><th>${L.min}</th><th>${L.max}</th><th>${L.step}</th></tr></thead><tbody>${rows}</tbody></table>`:`<p class="note">${L.noNames}</p>`;
+      $('tParams').querySelectorAll('tr[data-n]').forEach(tr=>tr.querySelectorAll('input').forEach(i=>i.oninput=()=>{tpl.params[tr.dataset.n][i.dataset.k]=i.value.trim();saveTpl();}));
+      height();
+    };
+    const pre=()=>{const tex=window.HL_MATH?.preview($('tFormula').value);$('tPre').innerHTML=tex?`$${esc(tex)}$${tpl.unit?' '+esc(tpl.unit):''}`:'';typeset($('tPre'));};
+    let tm;$('tTpl').oninput=()=>{tpl.template=$('tTpl').value;saveTpl();clearTimeout(tm);tm=setTimeout(sync,200);};
+    $('tFormula').oninput=()=>{tpl.formula=$('tFormula').value;saveTpl();pre();};
+    for(const [id,k] of [['tUnit','unit'],['tConst','constants'],['tBp','bpUnit']])$(id).oninput=()=>{tpl[k]=$(id).value;saveTpl();if(k==='unit')pre();};
+    $('tSig').onchange=()=>{tpl.sig=+$('tSig').value;saveTpl();};$('tN').onchange=()=>{tpl.n=+$('tN').value;saveTpl();};
+    $('tEx').onclick=()=>{tpl={...tplBlank(),...JSON.parse(JSON.stringify(EXAMPLE))};saveTpl();state.tplOut=[];paintTpl();};
+    $('tMake').onclick=makeTpl;
+    sync();pre();paintTplOut();
+  }
+  function makeTpl(){
+    const msg=$('tMsg'),consts=TT().constants(tpl.constants);
+    if(consts===null){msg.innerHTML=`<span class="bad">${esc(T.tpl.err.bad_constants)}</span>`;return;}
+    const r=TT().variants({template:tpl.template,params:tpl.params,formula:tpl.formula,constants:consts},+tpl.n||5,{sig:+tpl.sig||3});
+    if(r.errors.length){msg.innerHTML=r.errors.map(e=>`<span class="bad">${esc(tplErr(e))}</span>`).join('<br>');state.tplOut=[];paintTplOut();return;}
+    msg.textContent='';state.tplOut=r.items.map(x=>({...x,unit:tpl.unit,bpUnit:tpl.bpUnit.trim(),added:false}));paintTplOut();
+  }
+  function paintTplOut(){
+    const box=$('tList');if(!box)return;const L=T.tpl,out=state.tplOut;
+    const add=v=>{paper.items.push({key:'own:'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),pts:3,own:{q:v.text,answer:v.answerText,unit:v.unit,sol:''},bp:{unit:v.bpUnit,level:'apply'}});v.added=true;};
+    box.innerHTML=out.length?`<div class="row"><button type="button" id="tAll">${L.all}</button><span class="note" id="tAllMsg"></span></div>`+out.map((v,i)=>`<div class="variant tv" data-i="${i}"><div class="text"><span class="vno">${i+1}</span>${textHtml(v.text)}</div>
+      <p class="tans"><b>${L.answer}</b> ${esc(v.answerText)}${v.unit?' '+esc(v.unit):''}</p><div class="row"><button type="button" class="primary" data-take${v.added?' disabled':''}>${v.added?T.inPaper:T.toPaper}</button></div></div>`).join(''):'';
+    typeset(box);
+    box.querySelectorAll('.tv').forEach(el=>{const v=out[+el.dataset.i];el.querySelector('[data-take]').onclick=()=>{add(v);save();paintTplOut();};});
+    if($('tAll'))$('tAll').onclick=()=>{const left=out.filter(v=>!v.added);left.forEach(add);save();paintTplOut();$('tAllMsg').textContent=L.allIn(left.length);};
+    height();
   }
 
   /* ── variants ── */

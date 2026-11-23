@@ -34,6 +34,7 @@ import { createLearnerRouter, ensureLearnerSchema, learnerDeletion } from './lea
 import { createLeagueRouter, ensureLeagueSchema, leagueDeletion, closeLeagueWeeks } from './league.js';
 import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { createHandoutRouter } from './handouts.js';
+import { createWorkshopStorageRouter, workshopForgetUser } from './workshop-storage.js';
 import { createGradeRouter, ensureGradeSchema } from './practice-grade.js';
 import { createCreationRouter, ensureCreationSchema } from './creations.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
@@ -266,6 +267,7 @@ const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, cli
 const handoutRouter = createHandoutRouter({HttpError, needUser, limit, now, bad, isAdmin: u => isAdmin(u)});
 const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
+const workshopStorageRouter = createWorkshopStorageRouter({HttpError, needUser, limit, now, bad});
 const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
 /* a post goes to a built-in board of the main gallery or to an open minor gallery */
 const postBoard = async (env, board) => BOARDS.includes(board) ? board : (await activeGallery(env, board)) ? board : null;
@@ -486,6 +488,8 @@ async function handle(req, env, url, ctx) {
     await forgetMember(env.DB, me.id);
     // HPhO entries, seats and phones, and the proctoring photos, recordings and answer pages kept in R2 (files first)
     const hphoRows = await hphoForgetUser(env.DB, env.HPHO_SNAPS || env.LAB_PAGES, me.id);
+    // the Workshop storage: the member's files in R2 and their rows (workshop-storage.js)
+    await workshopForgetUser(env, me.id);
     // Sign in with Apple: revoke this member's Apple tokens before the link goes (App Store Guideline 5.1.1(v))
     await revokeAppleTokens(env, me.id);
     // Learn section progress (practice-progress.js)
@@ -803,6 +807,8 @@ async function handle(req, env, url, ctx) {
   if (learn !== undefined) return learn;
   const creation = await creationRouter(p, m, body, me, req, env);
   if (creation !== undefined) return creation;
+  const workshopStorage = await workshopStorageRouter(p, m, body, me, req, env);
+  if (workshopStorage !== undefined) return workshopStorage;
   const gallery = await galleryRouter(p, m, body, me, env);
   if (gallery !== undefined) return gallery;
   const omr = await omrRouter(p, m, body, me, req, env, url);

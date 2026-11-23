@@ -14,7 +14,7 @@
           none: q => `"${q}"에 맞는 결과가 없습니다. 대회 이름(IPhO)이나 연도(2017)로 찾아보세요.`, nav: "↑↓ 이동", open: "Enter 열기", esc: "Esc 닫기",
           kind: { comp: "대회", year: "연도", exp: "실험", thy: "이론", page: "메뉴", recent: "최근", text: "본문" },
           done: "해 봄", all: "전체", todo: "안 해 본 것만", ago: t => { const m = Math.round((Date.now() - t) / 60000); return m < 60 ? `${Math.max(1, m)}분 전` : m < 1440 ? `${Math.round(m / 60)}시간 전` : `${Math.round(m / 1440)}일 전`; },
-          pages: [["홈", "#/"], ["아카이브 · 대회 목록", "#/comps"], ["학습", "#/learn"], ["오늘의 문제", "#/learn/practice"], ["로드맵", "#/learn/roadmap"], ["강좌", "#/learn/courses"], ["실험실", "#/learn/lab"], ["교사용", "#/learn/teach"], ["문제 검색", "#/learn/physics/search"], ["문제 제작소", "#/learn/physics/studio"],
+          pages: [["홈", "#/"], ["아카이브 · 대회 목록", "#/comps"], ["학습", "#/learn"], ["오늘의 문제", "#/learn/practice"], ["로드맵", "#/learn/roadmap"], ["강좌", "#/learn/courses"], ["실험실", "#/learn/lab"], ["워크샵", "#/workshop"], ["문제·시험지 만들기", "#/workshop/make"], ["시뮬레이션·가상실험 만들기", "#/workshop/create"], ["보관함", "#/workshop/storage"], ["문제 검색", "#/learn/physics/search"], ["문제 제작소", "#/learn/physics/studio"],
                   ["월별문제", "#/monthly"], ["랭킹", "#/rank"], ["커뮤니티", "#/community"], ["소개", "#/about"], ["로그인", "#/login"], ["내 정보", "#/me"]] },
     en: { exp: "Experiments", expB: "Open a virtual bench", expS: n => `${n} experiments by competition and year`, thy: "Past papers", thyB: "Theory by competition", thyS: "Papers, solutions, answer sheets, exam mode",
           mon: "Monthly problem", monB: "This month's problem", monS: "A new problem each month · ranking", ai: "Ask the AI", aiB: "Hasla AI", aiS: "Concepts, solutions, using the site",
@@ -22,7 +22,7 @@
           none: q => `Nothing matches "${q}". Try a competition (IPhO) or a year (2017).`, nav: "↑↓ move", open: "Enter open", esc: "Esc close",
           kind: { comp: "Comp", year: "Year", exp: "Exp", thy: "Theory", page: "Page", recent: "Recent", text: "Text" },
           done: "Done", all: "All", todo: "Not tried yet", ago: t => { const m = Math.round((Date.now() - t) / 60000); return m < 60 ? `${Math.max(1, m)} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`; },
-          pages: [["Home", "#/"], ["Archive · competitions", "#/comps"], ["Learn", "#/learn"], ["Today's problems", "#/learn/practice"], ["Roadmap", "#/learn/roadmap"], ["Courses", "#/learn/courses"], ["Lab", "#/learn/lab"], ["For teachers", "#/learn/teach"], ["Search problems", "#/learn/physics/search"], ["Problem Studio", "#/learn/physics/studio"],
+          pages: [["Home", "#/"], ["Archive · competitions", "#/comps"], ["Learn", "#/learn"], ["Today's problems", "#/learn/practice"], ["Roadmap", "#/learn/roadmap"], ["Courses", "#/learn/courses"], ["Lab", "#/learn/lab"], ["Workshop", "#/workshop"], ["Problems and tests", "#/workshop/make"], ["Simulations and experiments", "#/workshop/create"], ["Storage", "#/workshop/storage"], ["Search problems", "#/learn/physics/search"], ["Problem Studio", "#/learn/physics/studio"],
                   ["Monthly problem", "#/monthly"], ["Ranking", "#/rank"], ["Community", "#/community"], ["About", "#/about"], ["Sign in", "#/login"], ["My page", "#/me"]] }
   };
   const T = () => TX[L()];
@@ -164,6 +164,7 @@
   /* ── phones: the main menu as a bar at the bottom ── */
   const ICONS = { "#/": '<path d="M4 11l8-6.5 8 6.5"/><path d="M6.5 9.5V19h11V9.5"/><path d="M10 19v-5h4v5"/>', "#/olympiad": '<circle cx="12" cy="14.5" r="5"/><path d="M8.5 4l2.5 5.5M15.5 4L13 9.5M12 12.5v4"/>', "#/comps": '<rect x="4.5" y="4" width="15" height="16" rx="2"/><path d="M8 9h8M8 12.5h8M8 16h5"/>',
     "#/learn": '<path d="M3 8l9-4 9 4-9 4z"/><path d="M7 10v4.5c3 2 7 2 10 0V10"/>', "#/monthly": '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9.5h16M9 3v4M15 3v4"/>',
+    "#/workshop": '<path d="M14.5 5.5a3.5 3.5 0 0 0 4.4 4.4l-8.6 8.6a2 2 0 0 1-2.8-2.8l8.6-8.6"/><path d="M6 6l3 3"/>',
     "#/community": '<path d="M4.5 5h15v10.5H10L5.5 19z"/>', "#/about": '<circle cx="12" cy="12" r="8"/><path d="M12 11v5M12 8h.01"/>' };
   function tabs() {
     const nav = document.getElementById("nav"); if (!nav) return;
@@ -172,7 +173,7 @@
     bar.setAttribute("aria-label", nav.getAttribute("aria-label") || "menu");
     bar.innerHTML = [...nav.querySelectorAll("a")].map(a => { const h = a.getAttribute("href");
       return `<a href="${h}"${a.classList.contains("on") ? ' aria-current="page"' : ""}><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[h] || '<circle cx="12" cy="12" r="7"/>'}</svg><span>${esc(a.textContent.trim())}</span></a>`; }).join("");
-    /* the same five items as the top menu; search stays in the header as an icon */
+    /* the same six items as the top menu; search stays in the header as an icon */
     const exam = /^#\/lab\b|\/(exam|review)(\/|$)/.test(location.hash);
     document.documentElement.classList.toggle("hlx-has-tabs", !exam);
   }

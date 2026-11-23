@@ -140,7 +140,7 @@ outputs.set('create.html',createHtml);
 /* the teachers' page (teach.html): test builder and AI variants */
 let teachHtml=read('teach.html');
 for(const file of ['create.css','teach.css'])teachHtml=teachHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
-for(const file of ['learn-path.js','math-input.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['learn-path.js','math-input.js','teach-tools.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('teach.html',teachHtml);
 outputs.set('concepts.html',read('concepts.html').replace(/href="concepts\.css(?:\?[^"\n]*)?"/,'href="concepts.css?v='+digest(read('concepts.css'))+'"').replace(/src="concepts\.js(?:\?[^"\n]*)?"/,'src="concepts.js?v='+digest(read('concepts.js'))+'"'));
 const sheetModule=read('sim/monthly-answer-sheet.mjs').replace(/from '\.\.\/monthly-problems\.mjs(?:\?[^'\n]*)?'/,"from '../monthly-problems.mjs?v="+digest(read('monthly-problems.mjs'))+"'");

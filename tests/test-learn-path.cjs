@@ -107,20 +107,21 @@ test('the search page forwards only a valid topic and difficulty to the search f
   q=new URLSearchParams(src.split('?')[1]);assert.equal(q.get('subject'),null);assert.equal(q.get('stars'),null);
 });
 
-test('the top menu has five items: Home, Learn, Olympiad, Community, About; the current one is marked',()=>{
+test('the top menu has six items: Home, Learn, Olympiad, Workshop, Community, About; the current one is marked',()=>{
   const a=app('#/');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
-    for(const [active,hash,on] of [['home','#/','#/'],['learn','#/learn/physics','#/learn'],['learn','#/learn/lab','#/learn'],['comps','#/comps','#/olympiad'],['comps','#/archive/books/phys','#/learn'],['weekly','#/monthly','#/olympiad'],['olympiad','#/olympiad','#/olympiad'],['community','#/community','#/community'],['about','#/about','#/about']]){
+    for(const [active,hash,on] of [['home','#/','#/'],['learn','#/learn/physics','#/learn'],['learn','#/learn/lab','#/learn'],['comps','#/comps','#/olympiad'],['comps','#/archive/books/phys','#/learn'],['weekly','#/monthly','#/olympiad'],['olympiad','#/olympiad','#/olympiad'],['workshop','#/workshop','#/workshop'],['workshop','#/workshop/make','#/workshop'],['community','#/community','#/community'],['about','#/about','#/about']]){
       a.context.location.hash=hash;a.run(`paintPageChrome(${JSON.stringify(active)})`);
-      assert.deepEqual(links(a.nav()),['#/','#/learn','#/olympiad','#/community','#/about'],hash);
+      assert.deepEqual(links(a.nav()),['#/','#/learn','#/olympiad','#/workshop','#/community','#/about'],hash);
       assert.equal((a.nav().match(/class="on"/g)||[]).length,1,hash);
       assert.match(a.nav(),new RegExp(`href="${on.replace(/\//g,'\\/')}" class="on"`),hash);
     }
     assert.equal(a.run('UI[lang].navOly'),language==='ko'?'올림피아드':'Olympiad');
     assert.equal(a.run('UI[lang].navHome'),language==='ko'?'홈':'Home');
+    assert.equal(a.run('UI[lang].navWork'),language==='ko'?'워크샵':'Workshop');
   }
-  /* the phone tab bar copies the top menu: the same five items, no extra button */
+  /* the phone tab bar copies the top menu: the same six items, no extra button, an icon for each */
   const ux=read('site-ux.js');assert.doesNotMatch(ux,/data-hlx="search"/);assert.match(ux,/nav\.querySelectorAll\("a"\)/);
 });
 
@@ -134,9 +135,12 @@ test('the Learn bar: today\'s problems, roadmap, courses, search, lab, in that o
     assert.deepEqual(Array.from(a.run('sectionLinks("learn").map(x=>x[1])')),language==='ko'?['오늘의 문제','로드맵','교재','강좌','문제 검색','실험실']:["Today's problems",'Roadmap','Guide','Courses','Search problems','Lab']);
     assert.ok(Array.from(a.run('sectionLinks("learn").map(x=>x[3])')).every(line=>line&&line.length<90),'each item has one short line');
     for(const [hash,on] of [['#/learn/physics/search','#/learn/physics/search'],['#/learn/practice','#/learn/practice'],['#/learn/physics','#/learn/roadmap'],['#/learn/roadmap','#/learn/roadmap'],['#/learn/courses','#/learn/courses'],
-      ['#/learn/lab','#/learn/lab'],['#/learn/concepts','#/learn/lab'],['#/learn/compute','#/learn/lab'],['#/learn/create','#/learn/lab']])
+      ['#/learn/lab','#/learn/lab'],['#/learn/concepts','#/learn/lab'],['#/learn/compute','#/learn/lab']])
       assert.deepEqual(Array.from(bar('learn',hash)).filter(([,x])=>x).map(([h])=>h),[on],hash);
-    assert.deepEqual(Array.from(bar('learn','#/learn/teach')).filter(([,x])=>x),[],'the teacher page is off the bar');
+    for(const hash of ['#/workshop/make','#/workshop/create'])assert.deepEqual(Array.from(bar('learn',hash)).filter(([,x])=>x),[],'the makers left the Learn bar: '+hash);
+    const ws=bar('workshop','#/workshop/storage');
+    assert.deepEqual(Array.from(ws,([href])=>href),['#/workshop','#/workshop/make','#/workshop/create','#/workshop/storage']);
+    assert.deepEqual(Array.from(ws).filter(([,x])=>x).map(([h])=>h),['#/workshop/storage']);
   }
   const oly=bar('olympiad','#/ipho/2019');
   assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/olympiad/schedule','#/monthly','#/hpho']);
@@ -144,7 +148,7 @@ test('the Learn bar: today\'s problems, roadmap, courses, search, lab, in that o
   assert.deepEqual(Array.from(oly).filter(([,on])=>on).map(([h])=>h),['#/comps']);
   assert.equal(a.run('sectionLinks(null).length'),0);
   assert.equal(a.run('siteSection("home")'),null);assert.equal(a.run('siteSection("learn")'),'learn');
-  assert.equal(a.run('siteSection("community")'),null);assert.equal(a.run('siteSection("about")'),null);
+  assert.equal(a.run('siteSection("community")'),null);assert.equal(a.run('siteSection("workshop")'),'workshop');assert.equal(a.run('siteSection("about")'),null);
 });
 
 const PLAIN=/—|unlock|seamless|elevate|comprehensive|empower|journey|잠금 해제|원활|한 단계 높/i;
@@ -163,13 +167,13 @@ test('the home page: one line, one button to practice, a strip of problems loade
     const doors=[...html.matchAll(/class="hm-door" href="([^"]+)"/g)].map(m=>m[1]);
     assert.deepEqual(doors,['#/learn','#/olympiad','#/learn/lab','#/community']);
     const foot=/<p class="hm-foot">([\s\S]*?)<\/p>/.exec(html)[1];
-    assert.deepEqual(links(foot),['#/learn/teach','#/learn/lab']);
+    assert.deepEqual(links(foot),['#/workshop','#/workshop?for=clubs'],'teachers and clubs go to the Workshop');
     assert.equal(hrefs.length,1+4+2,'nothing else to choose from');
     assert.doesNotMatch(html,/hm-sec|hm-go|hm-grid"|hm-top/,'the old sections are gone');
     assert.ok(html.includes(a.run(`nfmt(${A.comps})`)));
     assert.equal(A.comps,language==='en'?49:50);
     assert.doesNotMatch(html,PLAIN);assert.doesNotMatch(html,/id="deflect"|homeLatest/);
-    for(const view of ['viewLearnHome()','viewLearnLab()'])assert.doesNotMatch(a.run(view),PLAIN,view);
+    for(const view of ['viewLearnHome()','viewLearnLab()','viewWorkshop()','viewWorkshopStorage()'])assert.doesNotMatch(a.run(view),PLAIN,view);
   }
   assert.deepEqual(Runtime.routeNeeds('#/'),[]);
 });
@@ -206,26 +210,28 @@ test('the home strip: real problems from every level, short excerpts with whole 
   assert.match(read('site-design.css'),/\.hm-strip:hover,\.hm-strip:focus-within,\.hm-strip\.hm-paused\) \.hm-track\{animation-play-state:paused\}/);
 });
 
-test('the Learn page lists the six parts with one line each, then the teacher page, books and other subjects',()=>{
+test('the Learn page lists the six parts with one line each, then books and other subjects; the teacher page moved to the Workshop',()=>{
   const a=app('#/learn');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewLearnHome()'),hrefs=links(html);
     const parts=[...html.matchAll(/<ol class="ll-parts">([\s\S]*?)<\/ol>/g)][0][1];
     assert.deepEqual(links(parts),['#/learn/practice','#/learn/roadmap','#/learn/guide','#/learn/courses','#/learn/physics/search','#/learn/lab']);
-    for(const href of ['#/learn/teach','#/archive/books/phys','#/learn/subjects'])assert.ok(hrefs.includes(href),href);
+    for(const href of ['#/archive/books/phys','#/learn/subjects'])assert.ok(hrefs.includes(href),href);
+    assert.ok(!hrefs.some(h=>/^#\/(learn\/teach|learn\/create|workshop)/.test(h)),'no making tools in Learn');
     assert.equal((html.match(/class="hm-go"/g)||[]).length,1);
   }
 });
 
-test('the lab gathers the concept simulations, computational physics, the creations and the experiment simulators',()=>{
+test('the lab gathers the concept simulations, computational physics, the creations gallery and the experiment simulators; making is in the Workshop',()=>{
   const a=app('#/learn/lab');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewLearnLab()'),cards=[...html.matchAll(/class="lab-card" href="([^"]+)"/g)].map(m=>m[1]);
-    assert.deepEqual(cards,['#/learn/concepts','#/learn/compute','#/learn/create',language==='ko'?'problems.html':'problems-en.html']);
-    assert.ok(links(html).includes('#/learn/create?view=edit'));assert.equal((html.match(/class="hm-go"/g)||[]).length,1);
-    for(const view of ['viewLearnConcepts()','viewLearnCompute()','viewLearnCreate()'])assert.ok(links(a.run(view)).includes('#/learn/lab'),view);
+    assert.deepEqual(cards,['#/learn/concepts','#/learn/compute','#/workshop/create',language==='ko'?'problems.html':'problems-en.html']);
+    assert.ok(!links(html).some(h=>/view=edit/.test(h)),'no editor button in the lab');assert.equal((html.match(/class="hm-go"/g)||[]).length,1);
+    for(const view of ['viewLearnConcepts()','viewLearnCompute()'])assert.ok(links(a.run(view)).includes('#/learn/lab'),view);
+    for(const view of ['viewWorkshopCreate()','viewWorkshopMake()','viewWorkshopStorage()'])assert.ok(links(a.run(view)).includes('#/workshop'),view);
   }
 });
 
@@ -324,7 +330,7 @@ test('the computational physics page embeds the judge and passes on only a valid
   a.context.location.hash='#/learn/compute?problem=%22%3E%3Cscript%3E';
   src=/id="learnComputeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnCompute()'))[1];
   assert.equal(new URLSearchParams(src.split('?')[1]).get('problem'),null);
-  assert.ok(links(a.run('viewLearnLab()')).includes('#/learn/create'),'the lab leads to Create, which links the site\'s own Python problems');
+  assert.ok(links(a.run('viewLearnLab()')).includes('#/workshop/create'),'the lab leads to Create, which links the site\'s own Python problems');
   assert.deepEqual(Runtime.routeNeeds('#/learn/compute'),[]);
 });
 
@@ -343,4 +349,32 @@ test('the practice page embeds practice.html and passes on only a unit of the le
   q=new URLSearchParams(/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1].split('?')[1]);
   assert.equal(q.get('level'),null);
   assert.deepEqual(Runtime.routeNeeds('#/learn/practice'),[]);
+});
+
+test('the Workshop: a short page of cards, two plain lists, the makers moved from Learn and old links redirected',()=>{
+  const a=app('#/workshop');
+  for(const language of ['ko','en']){
+    a.run(`lang=${JSON.stringify(language)}`);
+    const html=a.run('viewWorkshop()');
+    assert.deepEqual([...html.matchAll(/<a class="ws-card" href="([^"]+)"/g)].map(m=>m[1]),['#/workshop/make','#/workshop/create','#/workshop/storage']);
+    assert.equal((html.match(/class="ws-card ws-soon"/g)||[]).length,2,'the figure editor and the lab tools are marked as coming');
+    assert.match(html,/id="wsTeachers"/);assert.match(html,/id="wsClubs"/);
+    assert.equal((html.match(/<h1\b/g)||[]).length,1);
+    assert.doesNotMatch(html,PLAIN);
+    for(const p of html.match(/<p>[^<]*<\/p>/g)||[])assert.ok(p.length<160,'one sentence a card: '+p);
+    const store=a.run('viewWorkshopStorage()');
+    assert.match(store,/id="wsStore"/);
+    assert.equal((store.match(/ws-soon/g)||[]).length,2);assert.match(store,/Google Drive/);assert.match(store,/GitHub/);
+    assert.match(a.run('viewWorkshopMake()'),/id="learnTeachFrame"[^>]*src="teach\.html\?/);
+    assert.match(a.run('viewWorkshopCreate()'),/id="learnCreateFrame"[^>]*src="create\.html\?/);
+  }
+  assert.deepEqual({...a.run('WORKSHOP_MOVED')},{teach:'#/workshop/make',create:'#/workshop/create'});
+  const replaced=[];a.context.history.replaceState=(s,t,url)=>replaced.push(url);
+  for(const [from,to] of [['#/learn/teach','#/workshop/make'],['#/learn/teach?tab=vary','#/workshop/make?tab=vary'],['#/learn/create?view=edit&id=12','#/workshop/create?view=edit&id=12']]){
+    a.context.location.hash=from;try{a.run('render()');}catch(e){}
+    assert.equal(replaced.at(-1),to,from);
+  }
+  for(const hash of ['#/workshop','#/workshop/make','#/workshop/storage'])assert.deepEqual(Runtime.routeNeeds(hash),[],hash);
+  const ux=read('site-ux.js');assert.match(ux,/"#\/workshop": '<path/,'the phone bar has an icon for the Workshop');
+  assert.match(ux,/\["워크샵", "#\/workshop"\]/);assert.doesNotMatch(ux,/#\/learn\/teach/);
 });
