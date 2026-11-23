@@ -131,7 +131,7 @@ let computeHtml=read('compute.html').replace(/href="compute\.css(?:\?[^"\n]*)?"/
 for(const file of ['learn-path.js','compute-problems.js','compute.js'])computeHtml=computeHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('compute.html',computeHtml);
 let practiceHtml=read('practice.html').replace(/href="practice\.css(?:\?[^"\n]*)?"/,'href="practice.css?v='+digest(read('practice.css'))+'"');
-for(const file of ['learn-path.js','math-input.js','practice.js'])practiceHtml=practiceHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['learn-path.js','math-input.js','practice-tools.js','practice.js'])practiceHtml=practiceHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('practice.html',practiceHtml);
 /* the creations page (create.html): its own script and style, and the shared math and Python helpers it loads */
 let createHtml=read('create.html').replace(/href="create\.css(?:\?[^"\n]*)?"/,'href="create.css?v='+digest(read('create.css'))+'"');

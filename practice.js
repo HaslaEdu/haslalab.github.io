@@ -30,6 +30,13 @@
       bankPick:'분야와 난이도를 고르면 교재와 대학 강의 문제를 하나씩 풉니다. 풀이를 확인하고 스스로 채점하세요.',stars:'난이도',showSol:'풀이 보기',noSol:'아직 등록된 풀이가 없습니다. 커뮤니티 질문 · 답변 갤러리나 AI에게 물어보세요.',
       solvedIt:'풀었어요',missedIt:'못 풀었어요',original:'원문 보기',translated:'번역 보기',noKo:'한국어 번역이 아직 없어 원문을 보여 줍니다.',draft:'하슬라랩 작성 풀이 · 검수 전',refFig:'참고 그림',empty:'이 조건의 문제가 더 없습니다. 난이도나 분야를 바꿔 보세요.',
       contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',figInPdf:'그림은 아래 원본 PDF에서 볼 수 있습니다.',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',
+      tabReview:'복습',tabCustom:'세트 만들기',noteCustom:'세트, 복습 목록, 나중에 풀기는 이 기기에 저장됩니다. 정답 기록과 단원 실력은 로그인하면 계정에도 저장됩니다.',
+      customIntro:'풀 문제의 출처, 주제, 난이도, 개수를 직접 정합니다. 조건에 맞는 문제 가운데 아직 풀지 않았고 최근에 보지 않은 문제가 먼저 나옵니다.',cSource:'문제 출처',cAll:'모든 문제',cCalc:'한국 학교 시험 기출',cContest:'대회 기출',cTopics:'주제',cAllTopics:'전체',cPickUnits:'단원별로 고르기',cDiff:'난이도 (단계)',cCount:'문제 수',cFormat:'답하는 방식',cChoice:'보기 고르기',cTyped:'직접 입력',cFormatNote:'직접 입력은 답이 숫자나 식인 문제만 남깁니다.',cCompetition:'대회',cAnyContest:'모든 대회',cYears:'연도',cTimer:'풀이 시간 재기',cMatch:'조건에 맞는 문제',cStartSet:'세트 시작',cNoMatch:'조건에 맞는 문제가 없습니다. 조건을 넓혀 보세요.',cContestNote:'대회 문제는 단원 구분이 없어 주제를 고르면 빠집니다. 풀이를 확인하고 스스로 채점합니다.',customName:'내 세트',
+      reviewIntro:'틀린 문제와 힌트를 보고서야 맞힌 문제는 1일, 3일, 7일, 21일 뒤에 다시 나옵니다. 복습에서 맞히면 다음 간격으로 넘어가고, 틀리면 1일부터 다시 시작합니다.',dueToday:'오늘 복습',inQueue:'복습 대기',startReview:'복습 시작',noDue:'오늘 복습할 문제가 없습니다.',nextDue:'다음 복습',dueCard:'오늘 복습할 문제가 있습니다',
+      laterTitle:'나중에 풀기',later:'나중에 풀기',laterOn:'저장됨',noLater:'저장한 문제가 없습니다. 문제 아래의 "나중에 풀기"를 누르면 여기에 모입니다.',startLater:'저장한 문제 풀기',removeLater:'빼기',
+      report:'문제 신고',reportTitle:'이 문제에서 무엇이 잘못됐나요?',rWrongAnswer:'정답이 틀림',rTypo:'오타',rFigure:'그림',rTranslation:'번역',rOther:'기타',reportNote:'자세히 적어 주세요 (선택)',reportSend:'메일로 보내기',reportCancel:'닫기',reportSent:'메일 앱에 신고 내용이 채워집니다. 열리지 않으면 이 주소로 보내 주세요:',myReports:'내 신고',noReports:'아직 보낸 신고가 없습니다.',reportPick:'무엇이 잘못됐는지 고르세요.',
+      avgTime:'평균 풀이 시간',vsSuggested:'권장',strike:'이 보기 지우기',unstrike:'이 보기 되살리기',
+      settings:'진도 관리',exportP:'진도 내보내기',importP:'불러오기',resetP:'초기화',resetConfirm:'이 기기의 진도를 모두 지울까요? 되돌릴 수 없습니다. 계정에 저장된 기록은 남습니다.',importDone:'불러왔습니다. 문제마다 더 최근 기록을 남겼습니다.',resetDone:'이 기기의 진도를 지웠습니다.',imp_not_json:'JSON 파일이 아닙니다.',imp_not_backup:'하슬라랩 진도 파일이 아닙니다.',imp_version:'이 페이지에서 읽을 수 없는 버전입니다.',imp_empty:'파일에 불러올 기록이 없습니다.',settingsNote:'진도는 이 기기에 저장됩니다. 파일로 내보내 두면 다른 브라우저로 옮기거나 나중에 되살릴 수 있습니다. 복습 목록과 나중에 풀기는 계정에 저장되지 않으니 파일로 옮기세요.',
       note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.'},
     en:{moreProblems:'Ten more',typeNumber:'Type a number (e.g. 12.5, 3e8)',typeFormula:'Type a formula (e.g. 2*sqrt(gL))',answer:'Answer',keypad:'Math keypad',typeHelp:'You can leave out ×: 2mg works. ^ for powers, a⁄b for a fraction, ×10ⁿ for powers of ten.',notYet:'Finish the expression',onlyNumber:'Numbers only',unknownVar:'Not in this problem',showChoices:'Show the choices (counts as a hint)',ob_region:'Where do you study?',ob_level:'Where are you now?',ob_goal:'What are you studying for?',ob_oly:'How far have you got in olympiads?',ob_daily:'Pick a daily goal',
       obKr:'AP Physics, calculation problems from Korean exams, olympiads',obIn:'JEE Main and Advanced',obUs:'AP Physics, F=ma and the USAPhO',obGlobal:'AP Physics and international olympiad prep',
@@ -53,6 +60,13 @@
       bankPick:'Pick a field and a difficulty to work through textbook and university course problems one at a time. Check the solution and mark yourself.',stars:'Difficulty',showSol:'Show solution',noSol:'No solution yet. Ask in the community Q&A gallery, or ask the AI.',
       solvedIt:'I solved it',missedIt:'I missed it',original:'Original',translated:'Translation',noKo:'',draft:'HaslaLab draft solution · not yet reviewed',refFig:'Reference figures',empty:'No more problems here. Try another difficulty or field.',
       contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',figInPdf:'The figures are in the original PDF below.',transcribed:'The text is transcribed from the original paper; if they differ, the PDF is authoritative.',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device and, when you log in, on your account too.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device and, when you log in, on your account too.',
+      tabReview:'Review',tabCustom:'Build a set',noteCustom:'Sets, the review queue and saved problems are kept on this device. Answers and unit ratings also go to your account when you log in.',
+      customIntro:'Choose the source, topics, difficulty and number of problems yourself. Among the problems that match, ones you have not solved or seen lately come first.',cSource:'Source',cAll:'Everything',cCalc:'Korean school exams',cContest:'Competition problems',cTopics:'Topics',cAllTopics:'All',cPickUnits:'Pick single units',cDiff:'Difficulty (step)',cCount:'Problems',cFormat:'Answer by',cChoice:'Picking a choice',cTyped:'Typing it',cFormatNote:'Typing keeps only problems whose answer is a number or a formula.',cCompetition:'Competition',cAnyContest:'All competitions',cYears:'Years',cTimer:'Time each problem',cMatch:'Problems that match',cStartSet:'Start the set',cNoMatch:'Nothing matches. Widen the filters.',cContestNote:'Competition problems have no unit, so picking topics leaves them out. You check the solution and mark them yourself.',customName:'My set',
+      reviewIntro:'Problems you missed, or got right only with hints, come back after 1, 3, 7 and 21 days. A right answer on review moves a problem to the next gap; a miss starts it again at 1 day.',dueToday:'Due today',inQueue:'In the queue',startReview:'Start review',noDue:'Nothing is due today.',nextDue:'Next review',dueCard:'Problems are due for review today',
+      laterTitle:'Saved for later',later:'Save for later',laterOn:'Saved',noLater:'Nothing saved yet. Tap "Save for later" under a problem to keep it here.',startLater:'Solve saved problems',removeLater:'Remove',
+      report:'Report',reportTitle:'What is wrong with this problem?',rWrongAnswer:'Wrong answer',rTypo:'Typo',rFigure:'Figure',rTranslation:'Translation',rOther:'Other',reportNote:'Details (optional)',reportSend:'Send by email',reportCancel:'Close',reportSent:'Your mail app opens with the report filled in. If it does not, send it to:',myReports:'My reports',noReports:'No reports yet.',reportPick:'Pick what is wrong.',
+      avgTime:'Average time',vsSuggested:'suggested',strike:'Cross out this choice',unstrike:'Bring this choice back',
+      settings:'Progress backup',exportP:'Export progress',importP:'Import',resetP:'Reset',resetConfirm:'Clear all progress on this device? This cannot be undone. Progress saved on your account stays.',importDone:'Imported. For each problem the newer record was kept.',resetDone:'Progress on this device is cleared.',imp_not_json:'That is not a JSON file.',imp_not_backup:'That is not a HaslaLab progress file.',imp_version:'This page cannot read that file’s version.',imp_empty:'The file has no progress to import.',settingsNote:'Progress is kept on this device. Export it to a file to move it to another browser or restore it later. The review queue and saved problems are not stored on your account, so move them with a file.',
       note:'Problems: Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices (Korean only), shared within the permitted web and app use. Some unit labels are automatic and under review. Progress is kept on this device and, when you log in, on your account too.'}
   };
   /* Korean and English for now; tx() is where a further language would look up the English text */
@@ -67,9 +81,12 @@
     read(){try{return JSON.parse(localStorage.getItem('hlPractice')||'{}')||{};}catch(e){return {};}},
     write(v){try{localStorage.setItem('hlPractice',JSON.stringify(v));}catch(e){}}
   };
-  let saved=store.read();saved.solved||={};saved.level||={};saved.xp||=0;saved.days||=[];
+  const H=window.HL_PRACTICE_TOOLS;
+  /* review, later and recent stay on this device: the account's state (community/src/practice-progress.js) keeps
+     only the fields it knows, so they travel in the exported file instead */
+  const fill=v=>{v.solved||={};v.level||={};v.xp||=0;v.days||=[];v.skills||={};v.queue||=[];v.wrong||={};v.bank||={done:{},stars:{}};v.contest||={done:{}};v.review||={};v.later||={};v.recent||={};return v;};
+  let saved=fill(store.read());
   const save=()=>store.write(saved);
-  saved.skills||={};saved.queue||=[];saved.wrong||={};
 
   /* ── progress on the account (community/src/practice-progress.js): the same Elo-style rating per unit is kept
      here so guests see it too; signed-in members' attempts go to the server in batches and their state merges
@@ -202,23 +219,26 @@
   }
   function next(){
     const s=state.session;
-    if(s.n>=SESSION&&!s.diag){summary();return;}
+    if(s.n>=setTotal(s)&&!s.diag){summary();return;}
     const item=s.diag?pickDiag(s):pick(s);if(!item){summary();return;}
-    s.current=item;s.answered=false;s.seen.add(item.id);s.n++;
+    s.current=item;s.answered=false;s.usedChoices=false;s.seen.add(item.id);s.n++;
     if(item.kind==='track'){showTrack(item);return;}
+    if(item.kind==='contest'){contestShow(item.c,null,item);return;}
     const imageChoices=item.ch.every(c=>!c.c.length);
     $('app').innerHTML=`<div class="session">
       ${sessionHead(s,item)}
       <div class="q">${blocks(item.b)}</div>
       <div class="choices${imageChoices?' compact':''}" role="group">${item.ch.map(c=>`<button type="button" class="choice" data-n="${c.n}"><span class="no">${'①②③④⑤'[c.n-1]}</span>${imageChoices?'':`<span>${blocks(c.c).replace(/^<p>|<\/p>$/g,'')}</span>`}</button>`).join('')}</div>
       <div id="feedback"></div>
-      <div class="foot"><span class="src">${esc(item.src)} · ${esc(item.by)}${item.pdf?` · <a href="${esc(item.pdf)}" target="_blank" rel="noopener noreferrer">${tr('pdf')}</a>`:''} · ${tr('time')} ${item.sec}${tr('sec')}</span><span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=SESSION?tr('finish'):tr('next')}</button></span></div>
+      ${toolsHtml(item)}
+      <div class="foot"><span class="src">${esc(item.src)} · ${esc(item.by)}${item.pdf?` · <a href="${esc(item.pdf)}" target="_blank" rel="noopener noreferrer">${tr('pdf')}</a>`:''}</span><span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=setTotal(s)?tr('finish'):tr('next')}</button></span></div>
     </div>`;
-    $('quit').onclick=s.fixed?todayHome:home;
+    $('quit').onclick=s.back||(s.fixed?todayHome:home);
+    addStrike($('app'));wireTools(item,item.src);startPace(item);
     $('skip').hidden=!!s.diag;
     if(state.lang!=='ko')localizeExam(item);
     $('app').querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.n))));
-    const free=imageChoices?null:freeOfExam(item);
+    const free=imageChoices||s.format==='choice'?null:freeOfExam(item);
     if(free){
       const ch=$('app').querySelector('.choices');ch.hidden=true;
       ch.insertAdjacentHTML('afterend',answerBox(free)+`<button type="button" class="linkbtn" id="showch">${tr('showChoices')}</button>`);
@@ -251,7 +271,7 @@
   }
   function answer(choice){
     const s=state.session,item=s.current;if(s.answered)return;s.answered=true;
-    const ok=choice===item.a;
+    const ok=choice===item.a;stopPace(item);noteOutcome(item,ok?(s.usedChoices?'hinted':'right'):'wrong');
     $('app').querySelectorAll('.choice').forEach(b=>{b.disabled=true;const n=Number(b.dataset.n);if(n===item.a)b.classList.add('right');else if(n===choice)b.classList.add('wrong');});
     let note='';
     if(ok){
@@ -271,9 +291,13 @@
   function summary(){
     const s=state.session;
     if(s.diag){diagSummary(s);return;}
-    $('app').innerHTML=`<div class="session summary"><p class="eyebrow">${tr('done')}</p><p class="big">${s.right}${tr('of')}${s.n}</p><p>${tr('result')} · +${s.xp} XP · ${s.mode==='bank'?'★'.repeat(s.stars):s.fixed?tr('tabToday'):tr('step')+' '+s.level+' · '+tr(LEVELS[levelOf(s.level)])}${s.skipped?` · ${s.skipped} ${tr('skipped')}`:''} · 🔥 ${streak()}${tr('streak')}</p>
+    clearInterval(paceTick);
+    const times=s.times||[],avg=k=>times.reduce((a,x)=>a+x[k],0)/Math.max(1,times.length);
+    $('app').innerHTML=`<div class="session summary"><p class="eyebrow">${tr('done')}</p><p class="big">${s.right}${tr('of')}${s.n}</p><p>${tr('result')} · +${s.xp} XP · ${s.mode==='bank'?'★'.repeat(s.stars):s.fixed?esc(s.label||tr('tabToday')):tr('step')+' '+s.level+' · '+tr(LEVELS[levelOf(s.level)])}${s.skipped?` · ${s.skipped} ${tr('skipped')}`:''} · 🔥 ${streak()}${tr('streak')}</p>
+      ${times.length?`<p class="pacesum">${tr('avgTime')} <b class="${avg('t')>avg('sug')?'over':''}">${H.clock(avg('t'))}</b> · ${tr('vsSuggested')} ${H.clock(avg('sug'))}</p>`:''}
       <div class="actions"><button type="button" class="primary" id="again">${tr('again')}</button><button type="button" id="units">${tr('units')}</button></div></div>`;
     if(s.unit==='today'&&document.documentElement.classList.contains('play')){$('again').onclick=playHome;$('units').onclick=todayHome;$('again').textContent=tr('moreProblems');reportHeight();return;}
+    if(s.custom){$('again').onclick=s.again;$('units').onclick=s.back;$('units').textContent=s.back===customHome?tr('tabCustom'):tr('tabReview');reportHeight();return;}
     if(s.assignment){$('again').onclick=classHome;$('units').onclick=classHome;$('again').textContent=tr('tabClass');reportHeight();return;}
     $('again').onclick=()=>s.fixed?todayHome():s.mode==='bank'?bankStart(s.field,s.stars):s.mode==='track'?trackStart(s.track,s.syl):start(s.unit);$('units').onclick=s.fixed?todayHome:s.mode==='bank'?bankHome:s.mode==='track'?tracksHome:home;reportHeight();
   }
@@ -285,14 +309,14 @@
   const BANK_FIELDS=[['classical_mechanics','고전역학','Classical mechanics'],['electromagnetism','전자기학','Electromagnetism'],['oscillations_waves','진동과 파동','Oscillations and waves'],
     ['optics','광학','Optics'],['thermodynamics','열역학','Thermodynamics'],['statistical_mechanics','통계역학','Statistical mechanics'],['quantum_mechanics','양자역학','Quantum mechanics'],
     ['special_relativity','특수 상대성','Special relativity'],['general_relativity','일반 상대성','General relativity'],['mathematical_methods','수리물리','Mathematical methods']];
-  saved.bank||={done:{},stars:{}};saved.contest||={done:{}};
   const BANK_AREA={classical_mechanics:'mechanics',electromagnetism:'em',oscillations_waves:'waves',optics:'optics',thermodynamics:'thermal',statistical_mechanics:'thermal',quantum_mechanics:'modern',special_relativity:'modern',general_relativity:'modern',mathematical_methods:'math'};
   function studied(xp){saved.xp+=xp;if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}save();paintStats();}
   function paintTabs(){
     /* no unit tab: the first-visit answers already say what to practise; a unit still opens from the unit map (?unit=) */
-    $('tabs').innerHTML=[['today',tr('tabToday')],['tracks',tr('tabTracks')],['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
+    const due=dueNow().length;
+    $('tabs').innerHTML=[['today',tr('tabToday')],['review',tr('tabReview')+(due?` <b class="badge">${due}</b>`:'')],['custom',tr('tabCustom')],['tracks',tr('tabTracks')],['bank',tr('tabBank')],['contest',tr('tabContest')],['class',tr('tabClass')]].map(([k,l])=>`<button type="button" role="tab" data-mode="${k}" aria-selected="${state.mode===k}">${l}</button>`).join('');
     $('tabs').querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>MODES[b.dataset.mode]());
-    $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':state.mode==='exam'?'noteUnits':'noteTracks');
+    $('note').textContent=tr(state.mode==='bank'?'noteBank':state.mode==='contest'?'noteContest':state.mode==='exam'?'noteUnits':state.mode==='custom'||state.mode==='review'?'noteCustom':'noteTracks');
   }
   /* bank text: paragraphs with $…$ and $$…$$ left to KaTeX auto-render */
   function textHtml(t){return esc(t||'').split(/\n{2,}/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('');}
@@ -340,16 +364,17 @@
     const fig=a=>`<figure><img src="${BANK_API+a.url}" alt="" loading="lazy"></figure>`;
     const label=BANK_FIELDS.find(f=>f[0]===s.field);
     $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(state.lang==='ko'?label[1]:tx(label[2]))}</span><span class="lvl">${'★'.repeat(s.stars)}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/5)}%"></i></span><span>${s.n}/5</span></div>
+      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(state.lang==='ko'?label[1]:tx(label[2]))}</span><span class="lvl">${'★'.repeat(s.stars)}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/5)}%"></i></span><span>${s.n}/5</span>${paceHtml({id:pick.id,s:P.stepFromStars(s.stars)})}</div>
       ${v.missing?`<p class="src">${tr('noKo')}</p>`:''}<div class="q" id="qtext">${textHtml(v.main?.text)}</div>
       ${v.alt?`<details class="alt"><summary>${tr('original')}</summary><div class="q" id="qalt">${textHtml(v.alt.text)}</div></details>`:''}
       ${figs.filter(a=>a.placement!=='reference').map(fig).join('')}
       ${figs.some(a=>a.placement==='reference')?`<details class="alt"><summary>${tr('refFig')}</summary>${figs.filter(a=>a.placement==='reference').map(fig).join('')}</details>`:''}
       <div id="sol"></div><div id="feedback"></div>
+      ${toolsHtml(pick,{noLater:true})}
       <div class="foot"><span class="src">${esc(pick.source_title||'')}${item.original_number?' · '+esc(item.original_number):''}</span>
         <span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" id="showSol">${tr('showSol')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${s.n>=5?tr('finish'):tr('next')}</button></span></div></div>`;
     typeset($('app'));
-    $('quit').onclick=bankHome;
+    $('quit').onclick=bankHome;startPace({id:pick.id,s:P.stepFromStars(s.stars)});wireTools(pick,(pick.source_title||'')+(item.original_number?' · '+item.original_number:''));
     const bankUnit=(BANK_AREA[s.field]||'mechanics')+'/*',bankStep=P.stepFromStars(s.stars);
     $('skip').onclick=()=>{if(s.answered)return;record(pick.id,'bank',bankUnit,bankStep,'skip');s.skipped++;s.n--;bankNext();};
     $('showSol').onclick=async()=>{
@@ -360,7 +385,7 @@
         typeset($('sol'));}catch(e){$('sol').innerHTML=`<p class="feedback bad">${tr('failed')}</p>`;}
       reportHeight();
     };
-    const mark=ok=>{if(s.answered)return;s.answered=true;
+    const mark=ok=>{if(s.answered)return;s.answered=true;stopPace(pick);
       record(pick.id,'bank',bankUnit,bankStep,ok?'solved':'missed');
       if(ok){s.right++;const gain=10+5*s.stars;s.xp+=gain;saved.bank.done[pick.id]=1;studied(gain);}else{saved.bank.done[pick.id]=0;studied(2);}
       ['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;$('next').focus();
@@ -406,32 +431,37 @@
     if(!(key in state.contestItems)){try{const r=await fetch('practice/contest/'+encodeURIComponent(key)+'.json');state.contestItems[key]=r.ok?(await r.json()).items:[];}catch(e){state.contestItems[key]=[];}}
     return state.contestItems[key];
   }
-  async function contestShow(key,skipId){
+  /* fixed: a problem of a running set (custom, review): marked within the set, then on to the set's next problem */
+  async function contestShow(key,skipId,fixed){
     const c=state.contests.find(x=>x.key===key);if(!c){contestHome();return;}
     const items=await contestItems(key);
     const L={ko:'한국어',en:'English',hu:'Magyar'},safe=u=>PDF_HOST.test(u||'')?u:'';
+    const s=fixed?state.session:null;
     let item=null,p;
-    if(items.length){
+    if(fixed){item=fixed;p=c.problems.find(x=>x.id===item.pdf);if(!p){next();return;}}
+    else if(items.length){
       const open=items.filter(i=>saved.contest.done[i.id]!==1&&i.id!==skipId),pool=open.length?open:items;
       item=pool[Math.floor(Math.random()*pool.length)];p=c.problems.find(x=>x.id===item.pdf);
     }else{
       const open=c.problems.filter(x=>saved.contest.done[x.id]!==1&&x.id!==skipId),pool=open.length?open:c.problems;
       p=pool[Math.floor(Math.random()*pool.length)];
     }
-    const doneId=item?item.id:p.id;
+    const doneId=item?item.id:p.id,paceItem={id:doneId,s:c.step};
     const langs=Object.entries(p.papers).filter(([,u])=>safe(u)),pref=langs.find(([l])=>l===state.lang)||langs[0];
     const sols=Object.entries(p.sols||{}).filter(([,u])=>safe(u));
     const label=item?`${item.year} · ${p.key}${item.key&&item.key!==p.key?' · '+item.key:''}`:`${p.year} · ${p.key}`;
     const title=item?.title||p.title||'';
     const body=item?item.b.map(b=>b.f?`<figure><img src="practice/contest/fig/${encodeURIComponent(b.f)}" width="${b.w}" height="${b.h}" alt="" loading="lazy"></figure>`:textHtml(b.t)).join(''):'';
     $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(nameOf(c.name))}</span><span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}</div>
+      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${s?esc(s.label)+' · ':''}${esc(nameOf(c.name))}</span><span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}${s?`<span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/setTotal(s))}%"></i></span><span>${s.n}/${setTotal(s)}</span>`:''}${paceHtml(paceItem)}</div>
       ${item?`<div class="q" id="qtext">${body}</div>`:''}
       <div class="langrow">${tr('paper')}: ${langs.map(([l,u])=>`<button type="button" class="${!item&&l===pref[0]?'cur':''}" data-pdf="${esc(u)}">${L[l]||l} PDF</button>`).join('')} <a href="${esc(pref[1])}" target="_blank" rel="noopener" id="openPdf">PDF ↗</a></div>
       <div id="pdf" class="pdf"${item?' hidden':''} role="document" aria-label="${esc(nameOf(c.name))} ${esc(label)}"><p class="src">${tr('loading')}</p></div>
       <div id="feedback"></div>
+      ${toolsHtml({id:doneId,kind:'contest',c:key})}
       <div class="foot"><span class="src">${sols.length?`${tr('solution')}: `+sols.map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${L[l]||l} ↗</a>`).join(' · '):tr('noContestSol')}${item?' · '+tr('transcribed'):''}</span>
-        <span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${tr('another')}</button></span></div></div>`;
+        <span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${s?s.n>=setTotal(s)?tr('finish'):tr('next'):tr('another')}</button></span></div></div>`;
+    startPace(paceItem);wireTools({id:doneId,kind:'contest',c:key},nameOf(c.name)+' · '+label);
     if(item)typeset($('qtext'));
     /* the transcriptions are Korean: other readers get an AI translation, with the Korean one tap away */
     if(item&&state.lang!=='ko'){
@@ -450,8 +480,12 @@
     if(item&&item.b.some(b=>/\[(그림|Figure)[^\]]*\]/.test(b.t||''))&&!item.b.some(b=>b.f))$('qtext').insertAdjacentHTML('beforeend',`<p class="src">${tr('figInPdf')}</p>`);
     $('app').querySelectorAll('[data-pdf]').forEach(b=>b.onclick=()=>{$('pdf').hidden=false;showPdf(b.dataset.pdf);$('openPdf').href=b.dataset.pdf;$('app').querySelectorAll('[data-pdf]').forEach(x=>x.classList.toggle('cur',x===b));});
     if(!item)showPdf(pref[1]);
-    $('quit').onclick=contestHome;$('skip').onclick=()=>{record(doneId,'contest','contest/'+key,c.step,'skip');contestShow(key,doneId);};$('next').onclick=()=>contestShow(key,doneId);
-    const mark=ok=>{saved.contest.done[doneId]=ok?1:0;record(doneId,'contest','contest/'+key,c.step,ok?'solved':'missed');studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;
+    $('quit').onclick=s?s.back:contestHome;
+    $('skip').onclick=()=>{record(doneId,'contest','contest/'+key,c.step,'skip');if(s){if(s.answered)return;s.skipped=(s.skipped||0)+1;s.n--;next();return;}contestShow(key,doneId);};
+    $('next').onclick=()=>s?next():contestShow(key,doneId);
+    const mark=ok=>{if(s){if(s.answered)return;s.answered=true;if(ok){s.right++;s.xp+=20+5*c.step;}}
+      stopPace(paceItem);noteOutcome({id:doneId,kind:'contest',c:key},ok?'right':'wrong');
+      saved.contest.done[doneId]=ok?1:0;record(doneId,'contest','contest/'+key,c.step,ok?'solved':'missed');studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;
       $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?'✓ '+tr('solvedIt'):tr('missedIt')}</p>`;reportHeight();};
     $('good').onclick=()=>mark(true);$('miss').onclick=()=>mark(false);
     reportHeight();if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
@@ -504,7 +538,9 @@
     const top=status.filter(x=>x.k).sort((a,b)=>a.r-b.r);
     const answers=Object.values(saved.skills).reduce((n,k)=>n+(k.n||0),0);
     const placeCard=answers<5&&!saved.diagAt?`<section class="session diagcard"><h2>${tr('diagTitle')}</h2><p class="src">${tr('diagBody')}</p><div class="actions"><button type="button" class="primary" id="diagGo">${tr('diagStart')}</button></div></section>`:'';
-    $('app').innerHTML=`${placeCard}<section class="session today">
+    const due=dueNow().length;
+    const dueCard=due?`<button type="button" class="area unit duecard" id="dueGo"><span class="name"><b>${tr('dueCard')}</b><small>${tr('dueToday')} ${due} · ${tr('startReview')}</small></span><span>→</span></button>`:'';
+    $('app').innerHTML=`${placeCard}${dueCard}<section class="session today">
         <h2>${tr('todayTitle')} <a href="#" class="src" id="editProfile">${tr('editProfile')}</a></h2>
         <p class="src">${Object.entries(counts).map(([k,n])=>`${why[k]} ${n}`).join(' · ')}${weakUnits.length?` · ${tr('focus')}: ${weakUnits.map(u=>esc(unitName(u))).join(', ')}`:''}</p>
         <ol class="todaylist">${chosen.map(i=>`<li><span class="tag ${i.why}">${why[i.why]}</span> ${esc(unitName(i.u))} <small>${tr('step')} ${i.s}</small></li>`).join('')}</ol>
@@ -514,7 +550,9 @@
         <button type="button" class="area unit" id="sugBank"><span class="name"><b>${tr('tabBank')}</b><small>${esc(state.lang==='ko'?field[1]:tx(field[2]))} · ${'★'.repeat(fieldStars)}</small></span><span>→</span></button>
         ${contest?`<button type="button" class="area unit" id="sugContest"><span class="name"><b>${tr('tabContest')}</b><small>${esc(nameOf(contest.name))} · ${tr('step')} ${contest.step}</small></span><span>→</span></button>`:''}
       </div>
-      ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitName(x.u))}</td><td>${x.step} <span class="lv lv${levelOf(x.step)}">${tr(LEVELS[levelOf(x.step)])}</span></td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}`;
+      ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitName(x.u))}</td><td>${x.step} <span class="lv lv${levelOf(x.step)}">${tr(LEVELS[levelOf(x.step)])}</span></td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}
+      ${settingsHtml()}`;
+    if($('dueGo'))$('dueGo').onclick=reviewHome;wireSettings(todayHome);
     $('startToday').onclick=()=>startTodaySession(chosen);
     $('sugBank').onclick=()=>{state.bankField=field[0];bankStart(field[0],fieldStars);};
     if($('diagGo'))$('diagGo').onclick=diagStart;
@@ -593,9 +631,9 @@
   const TIERS=[[0,'Bronze'],[500,'Silver'],[2000,'Gold'],[6000,'Platinum'],[15000,'Diamond'],[40000,'Ruby']];
   const tierOf=xp=>[...TIERS].reverse().find(t=>xp>=t[0]);
   function sessionHead(s,item){
-    const name=s.diag?tr('diagTitle'):s.assignment?s.label:s.fixed?tr('tabToday')+' · '+unitName(item.u):s.mode==='track'?s.label:unitName(s.unit);
-    const total=s.diag?s.diag.areas.length*2:SESSION;
-    return `<div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(name)}</span><span class="lvl">${tr('step')} ${item.s}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/total)}%"></i></span><span>${s.n}/${total}</span></div>`;
+    const name=s.diag?tr('diagTitle'):s.assignment?s.label:s.fixed?(s.label||tr('tabToday'))+' · '+unitName(item.u):s.mode==='track'?s.label:unitName(s.unit);
+    const total=setTotal(s);
+    return `<div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(name)}</span><span class="lvl">${tr('step')} ${item.s}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/total)}%"></i></span><span>${s.n}/${total}</span>${paceHtml(item)}</div>`;
   }
 
   /* ── the member's plan: tutor questions left today (GET /api/learn/plan) ── */
@@ -671,7 +709,7 @@
   const numOk=(v,a)=>a.tol>0?Math.abs(v-a.value)<=a.tol*Math.abs(a.value)+1e-12:Math.abs(v-a.value)<1e-9;
   const fmtNum=a=>`${a.value} ${a.unit||''}`.trim();
   function showTrack(item){
-    const s=state.session;s.hints=0;s.answered=false;s.view=null;s.chat=[];s.free=freeOfTrack(item);
+    const s=state.session;s.hints=0;s.answered=false;s.view=null;s.chat=[];s.free=s.format==='choice'&&item.type==='mc'?null:freeOfTrack(item);
     const L='ABCDE';
     $('app').innerHTML=`<div class="session">
       ${sessionHead(s,item)}
@@ -680,11 +718,13 @@
       ${item.type==='mc'?`<div class="choices" role="group"${s.free?' hidden':''}>${item.choices.map((c,i)=>`<button type="button" class="choice" data-i="${i}"><span class="no">${L[i]}</span><span class="ct">${esc(c)}</span></button>`).join('')}</div>`
         :s.free?'':`<form class="numrow" id="numf"><input id="num" inputmode="decimal" autocomplete="off" placeholder="${tr('numPh')}" aria-label="${tr('numPh')}"><span class="unitlbl">${esc(item.answer.unit||'')}</span><button type="submit" class="primary">${tr('check')}</button><span class="numerr" id="numerr"></span></form>`}
       <div id="hints"></div><div id="feedback"></div><div id="sol"></div><div id="tutor"></div><div id="disc"></div>
+      ${toolsHtml(item)}
       <div class="foot"><span class="src">${esc(s.fixed?unitName(item.u):s.label)} · ${tr('byHasla')} · <a href="#" id="discuss">${tr('discuss')}</a></span>
-        <span class="footbtns"><button type="button" id="hint">${tr('hint')} (0/${item.hints.length})</button><button type="button" id="ask">✦ ${tr('tutor')}</button><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=SESSION||s.diag&&s.n>=s.diag.areas.length*2?tr('finish'):tr('next')}</button></span></div></div>`;
+        <span class="footbtns"><button type="button" id="hint">${tr('hint')} (0/${item.hints.length})</button><button type="button" id="ask">✦ ${tr('tutor')}</button><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=setTotal(s)?tr('finish'):tr('next')}</button></span></div></div>`;
     typeset($('qtext'));typeset($('app').querySelector('.choices')||$('app'));
-    $('quit').onclick=s.assignment?classHome:s.diag||s.fixed?todayHome:s.mode==='track'?tracksHome:home;
+    $('quit').onclick=s.back||(s.assignment?classHome:s.diag||s.fixed?todayHome:s.mode==='track'?tracksHome:home);
     $('skip').hidden=!!s.diag;
+    addStrike($('app'));wireTools(item,(s.fixed?unitName(item.u):s.label)+' · '+item.id);startPace(item);
     if(s.free){
       wireAnswer(s.free,ok=>trackAnswer(null,ok));
       $('showch').onclick=()=>{if(item.type!=='mc')return;$('app').querySelector('.choices').hidden=false;$('ansbox').remove();$('showch').remove();s.free=null;s.hints++;reportHeight();};
@@ -724,7 +764,7 @@
   function trackAnswer(given,typedOk){
     const s=state.session,item=s.current;if(s.answered)return;s.answered=true;
     const ok=typedOk!==undefined?typedOk:item.type==='mc'?given===item.answer:numOk(given,item.answer);
-    const result=ok?(s.hints?'solved':'right'):'wrong';
+    const result=ok?(s.hints?'solved':'right'):'wrong';stopPace(item);noteOutcome(item,ok?(s.hints?'hinted':'right'):'wrong');
     if(item.type==='mc')$('app').querySelectorAll('.choice').forEach(b=>{b.disabled=true;const i=Number(b.dataset.i);if(i===item.answer)b.classList.add('right');else if(i===given)b.classList.add('wrong');});
     else if($('numf')){$('num').disabled=true;$('numf').querySelector('button').disabled=true;$('numf').classList.add(ok?'right':'wrong');}
     $('showch')?.remove();
@@ -937,7 +977,226 @@
     if(!chosen.length){todayHome();return;}
     startTodaySession(chosen);
   }
-  const MODES={start:startHome,play:playHome,today:todayHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
+  /* ── pace: a suggested time from the problem's step and a running clock that turns amber past it; it never stops
+     the learner from answering. The time taken goes into the session summary. ── */
+  const setTotal=s=>s.diag?s.diag.areas.length*2:s.total||SESSION;
+  let paceTick=0;
+  const paceHtml=item=>state.session?.timer===false?'':`<span class="pace" id="pace" title="${tr('time')} ${H.clock(H.paceFor(item))}"><span class="pt" id="pacet">0:00</span><small>/ ${H.clock(H.paceFor(item))}</small></span>`;
+  function paintPace(){
+    const p=state.pace,el=$('pace');if(!p||!el){clearInterval(paceTick);return;}
+    const t=((p.end||Date.now())-p.t0)/1000;$('pacet').textContent=H.clock(t);el.classList.toggle('over',t>p.sug);
+  }
+  function startPace(item){clearInterval(paceTick);state.pace={id:item.id,t0:Date.now(),sug:H.paceFor(item)};paintPace();if($('pace'))paceTick=setInterval(paintPace,1000);}
+  /* stops the clock for this item and adds the time to the running set */
+  function stopPace(item){
+    const p=state.pace;if(!p||p.id!==item.id||p.end)return;p.end=Date.now();clearInterval(paceTick);paintPace();
+    const s=state.session;if(s)(s.times||=[]).push({t:(p.end-p.t0)/1000,sug:p.sug});
+  }
+  /* ── strike-out: a small ✕ beside each choice (or a long press on the choice) crosses it out; it stays clickable ── */
+  function addStrike(root){
+    root.querySelectorAll('.choice').forEach(b=>{
+      const w=document.createElement('div');w.className='chrow';b.before(w);
+      const x=document.createElement('button');x.type='button';x.className='strike';x.textContent='✕';x.setAttribute('aria-label',tr('strike'));x.setAttribute('aria-pressed','false');x.title=tr('strike');
+      const flip=()=>{const on=!b.classList.contains('struck');b.classList.toggle('struck',on);x.setAttribute('aria-pressed',String(on));x.setAttribute('aria-label',tr(on?'unstrike':'strike'));x.title=tr(on?'unstrike':'strike');x.textContent=on?'↺':'✕';};
+      x.onclick=flip;w.append(b,x);
+      let timer=0,long=false;
+      b.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||b.disabled)return;long=false;clearTimeout(timer);timer=setTimeout(()=>{long=true;flip();try{navigator.vibrate?.(15);}catch(err){}},550);});
+      for(const t of ['pointerup','pointerleave','pointercancel','pointermove'])b.addEventListener(t,e=>{if(t!=='pointermove'||Math.abs(e.movementX)+Math.abs(e.movementY)>6)clearTimeout(timer);});
+      b.addEventListener('click',e=>{if(long){long=false;e.stopImmediatePropagation();e.preventDefault();}},true);
+      b.addEventListener('contextmenu',e=>{if(e.pointerType!=='mouse')e.preventDefault();});
+    });
+  }
+  /* ── the review queue (1, 3, 7, 21 days) and the record of when each problem was last tried ── */
+  /* t: a readable name for the lists (the exam and question for school items, competition, year and problem for contest items) */
+  const titleOf=item=>String(item.src||(item.kind==='contest'?[item.c,item.year,item.key].filter(Boolean).join(' · '):'')||'').slice(0,120);
+  const metaOf=item=>({...(item.kind==='contest'?{k:'contest',c:item.c}:{k:item.kind==='track'?'track':'exam',u:item.u}),...(titleOf(item)?{t:titleOf(item)}:{})});
+  function noteOutcome(item,outcome){
+    saved.review=H.reviewUpdate(saved.review,item.id,outcome,today(),metaOf(item));
+    saved.recent[item.id]=Math.floor(Date.now()/1000);
+    const ids=Object.keys(saved.recent);if(ids.length>800)for(const [id] of Object.entries(saved.recent).sort((a,b)=>a[1]-b[1]).slice(0,ids.length-800))delete saved.recent[id];
+    save();
+  }
+  const dueNow=()=>H.dueIds(saved.review,today());
+  /* ── under each problem: save for later, and report a problem ── */
+  const CONTACT='mgsnew88@naver.com',REASONS=['rWrongAnswer','rTypo','rFigure','rTranslation','rOther'];
+  const laterLabel=on=>on?'★ '+tr('laterOn'):'☆ '+tr('later');
+  function toolsHtml(item,opt){return `<div class="ptools">${opt?.noLater?'':`<button type="button" class="mini" id="laterBtn" aria-pressed="${!!saved.later[item.id]}">${laterLabel(saved.later[item.id])}</button>`}<button type="button" class="mini quiet" id="reportBtn" aria-expanded="false">${tr('report')}</button></div><div id="report"></div>`;}
+  function wireTools(item,label){
+    if($('laterBtn'))$('laterBtn').onclick=()=>{
+      if(saved.later[item.id])delete saved.later[item.id];else saved.later[item.id]={...metaOf(item),at:Math.floor(Date.now()/1000),t:String(label||item.id).slice(0,120)};
+      save();const on=!!saved.later[item.id];$('laterBtn').textContent=laterLabel(on);$('laterBtn').setAttribute('aria-pressed',String(on));paintTabs();
+    };
+    $('reportBtn').onclick=()=>openReport(item,label);
+  }
+  const readReports=()=>{try{const v=JSON.parse(localStorage.getItem('hlPracticeReports')||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}};
+  function openReport(item,label){
+    const box=$('report');if(box.innerHTML){box.innerHTML='';$('reportBtn').setAttribute('aria-expanded','false');reportHeight();return;}
+    $('reportBtn').setAttribute('aria-expanded','true');
+    box.innerHTML=`<form class="reportf" id="reportf"><p class="rtitle">${tr('reportTitle')}</p>
+      <div class="chips" role="radiogroup" aria-label="${tr('reportTitle')}">${REASONS.map(r=>`<label class="chip"><input type="radio" name="rr" value="${r}"><span>${tr(r)}</span></label>`).join('')}</div>
+      <textarea id="rnote" rows="3" maxlength="800" placeholder="${tr('reportNote')}" aria-label="${tr('reportNote')}"></textarea>
+      <div class="ractions"><a class="btnlink primary" id="rsend" href="#" target="_top">${tr('reportSend')}</a><button type="button" id="rcancel">${tr('reportCancel')}</button><span class="numerr" id="rerr"></span></div></form>`;
+    const f=$('reportf'),reason=()=>f.querySelector('input[name=rr]:checked')?.value;
+    const href=()=>{const r=reason(),note=$('rnote').value.trim(),page=`https://haslalab.org/?lang=${state.lang}#/learn/practice${/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item.id)?'?item='+item.id:''}`;
+      const subject=`[HaslaLab ${tr('report')}] ${item.id} · ${r?copy.en[r]:''}`;
+      const body=[`${state.lang==='ko'?'문제':'Problem'}: ${item.id}`,label?String(label):'',`${state.lang==='ko'?'항목':'Reason'}: ${r?tr(r)+' ('+copy.en[r]+')':''}`,'',note,'',page].filter((x,i)=>x||i>2).join('\n');
+      return 'mailto:'+CONTACT+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);};
+    const refresh=()=>{$('rsend').href=reason()?href():'#';};
+    f.onchange=refresh;$('rnote').oninput=refresh;f.onsubmit=e=>e.preventDefault();
+    $('rcancel').onclick=()=>{box.innerHTML='';$('reportBtn').setAttribute('aria-expanded','false');reportHeight();};
+    $('rsend').onclick=e=>{
+      if(!reason()){e.preventDefault();$('rerr').textContent=tr('reportPick');return;}
+      refresh();const list=readReports();list.push({id:item.id,r:reason(),note:$('rnote').value.trim().slice(0,800),at:Math.floor(Date.now()/1000),t:String(label||'').slice(0,120)});
+      try{localStorage.setItem('hlPracticeReports',JSON.stringify(list.slice(-50)));}catch(err){}
+      const link=$('rsend').href;
+      setTimeout(()=>{box.innerHTML=`<p class="src reportdone">${tr('reportSent')} <a href="${esc(link)}" target="_top">${CONTACT}</a></p>`;reportHeight();},0);
+    };
+    reportHeight();
+  }
+  /* ── one set of fixed problems run through the usual session (custom sets, review, saved problems) ── */
+  function runSet(o){
+    if(!o.items.length){o.back();return;}
+    state.session={mode:'custom',unit:'custom',fixed:true,custom:true,label:o.label,back:o.back,again:o.again,timer:o.timer!==false,format:o.format,total:o.items.length,items:o.items,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0,times:[]};
+    next();
+  }
+  /* competition problems transcribed per problem, as set items (self-marked) */
+  async function loadContests(){if(!state.contests){const r=await fetch('practice/contests.json');if(!r.ok)throw new Error('contests');state.contests=(await r.json()).contests;}return state.contests;}
+  async function allContestItems(){
+    if(state.allContest)return state.allContest;
+    const cs=await loadContests(),lists=await Promise.all(cs.map(c=>contestItems(c.key)));
+    return state.allContest=cs.flatMap((c,k)=>lists[k].filter(i=>c.problems.some(p=>p.id===i.pdf)).map(i=>({...i,kind:'contest',from:'contest',c:c.key,s:c.step,u:'contest/'+c.key,year:Number(i.year)||0})));
+  }
+  /* the problems a set can draw from: each source tagged (from) so the filter can tell them apart */
+  async function setPool(source){
+    state.setPools||={};if(state.setPools[source])return state.setPools[source];
+    const tracks=await loadTracks(),parts=[];
+    if(source==='all'||source==='calc')parts.push(allExamItems().then(a=>a.map(i=>({...i,from:'calc'}))));
+    for(const t of tracks)if(source==='all'||source==='track:'+t.key)parts.push(trackItems(t.key).then(a=>a.map(i=>({...i,from:'track:'+t.key}))));
+    if(source==='all'||source==='contest')parts.push(allContestItems().catch(()=>[]));
+    return state.setPools[source]=(await Promise.all(parts)).flat();
+  }
+  const typeable=new Map();
+  const canType=i=>{if(i.kind==='contest')return false;if(!typeable.has(i.id))typeable.set(i.id,i.kind==='track'?i.type==='num'||!!freeOfTrack(i):!i.ch.every(c=>!c.c.length)&&!!freeOfExam(i));return typeable.get(i.id);};
+  const hasChoices=i=>i.kind==='track'?i.type==='mc':i.kind!=='contest';
+  const solvedMap=()=>({...saved.solved,...Object.fromEntries(Object.entries(saved.contest.done).filter(([,v])=>v===1))});
+  const setOpts=()=>{const d={source:'all',units:[],min:1,max:10,count:10,format:'typed',contest:'',yearMin:0,yearMax:0,timer:true};
+    const keys=P.startExams(saved.profile||{region:state.lang==='ko'?'kr':'global'});if(keys[0]&&keys[0]!=='calc')d.source='track:'+keys[0];
+    return{...d,...(saved.customOpts||{})};};
+  async function customHome(){
+    state.mode='custom';state.session=null;paintTabs();paintStats();tellUnit('');
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let tracks;try{tracks=await loadTracks();await loadContests().catch(()=>[]);}catch(e){failed(customHome);return;}
+    const o=setOpts();let unitsOpen=false,job=0;
+    const seg=(id,list,cur)=>`<div class="seg" role="group" id="${id}">${list.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${String(cur)===String(v)}">${l}</button>`).join('')}</div>`;
+    const render=async()=>{
+      const my=++job;
+      $('app').innerHTML=`<section class="session builder"><h2>${tr('tabCustom')}</h2><p class="src">${tr('customIntro')}</p><p id="cMatch" class="matchline">${tr('loading')}</p></section>`;
+      let pool;try{pool=await setPool(o.source);}catch(e){failed(customHome);return;}
+      if(my!==job)return;
+      const graded=pool.filter(i=>i.from!=='contest'),contests=pool.filter(i=>i.from==='contest');
+      const unitSet=new Set(graded.map(i=>i.u));o.units=o.units.filter(u=>unitSet.has(u));
+      const areas=P.AREAS.map(a=>({a,subs:a.subtopics.map(s=>a.key+'/'+s.key).filter(u=>unitSet.has(u))})).filter(x=>x.subs.length);
+      const steps=[...new Set(pool.map(i=>i.s))].sort((x,y)=>x-y);
+      const lo=steps[0]||1,hi=steps[steps.length-1]||10;o.min=Math.max(lo,Math.min(o.min,hi));o.max=Math.min(hi,Math.max(o.max,o.min));
+      const inC=contests.filter(i=>!o.contest||i.c===o.contest),years=[...new Set(inC.map(i=>i.year))].sort((x,y)=>x-y);
+      if(o.yearMin&&!years.includes(o.yearMin))o.yearMin=0;if(o.yearMax&&!years.includes(o.yearMax))o.yearMax=0;
+      const chosen=new Set(o.units),areaOn=x=>x.subs.every(u=>chosen.has(u));
+      const stepOpt=(v)=>steps.map(st=>`<option value="${st}"${st===v?' selected':''}>${st} · ${tr(LEVELS[levelOf(st)])}</option>`).join('');
+      const srcOpts=[['all',tr('cAll')],...tracks.map(t=>['track:'+t.key,nameOf(t.name)]),['calc',tr('cCalc')],['contest',tr('cContest')]];
+      $('app').innerHTML=`<section class="session builder"><h2>${tr('tabCustom')}</h2><p class="src">${tr('customIntro')}</p>
+        <div class="field"><label class="flabel" for="cSrc">${tr('cSource')}</label><select id="cSrc">${srcOpts.map(([v,l])=>`<option value="${v}"${v===o.source?' selected':''}>${esc(l)}</option>`).join('')}</select></div>
+        ${areas.length?`<div class="field"><span class="flabel">${tr('cTopics')}</span><div class="chips" id="cAreas"><button type="button" class="chipbtn" data-area="" aria-pressed="${!chosen.size}">${tr('cAllTopics')}</button>${areas.map(x=>`<button type="button" class="chipbtn" data-area="${x.a.key}" aria-pressed="${chosen.size>0&&areaOn(x)}">${esc(areaName(x.a))}</button>`).join('')}</div>
+          <details class="alt units" id="cUnits"${unitsOpen?' open':''}><summary>${tr('cPickUnits')}${chosen.size?` (${chosen.size})`:''}</summary>${areas.map(x=>`<p class="sublabel">${esc(areaName(x.a))}</p><div class="chips">${x.subs.map(u=>`<button type="button" class="chipbtn" data-u="${u}" aria-pressed="${chosen.has(u)}">${esc(unitName(u))}</button>`).join('')}</div>`).join('')}</details></div>`:''}
+        <div class="field"><span class="flabel">${tr('cDiff')}</span><div class="range"><select id="cMin" aria-label="${tr('cDiff')} min">${stepOpt(o.min)}</select><span>–</span><select id="cMax" aria-label="${tr('cDiff')} max">${stepOpt(o.max)}</select></div></div>
+        <div class="field"><span class="flabel">${tr('cCount')}</span>${seg('cCount',[[5,'5'],[10,'10'],[20,'20']],o.count)}</div>
+        ${graded.length?`<div class="field"><span class="flabel">${tr('cFormat')}</span>${seg('cFormat',[['choice',tr('cChoice')],['typed',tr('cTyped')]],o.format)}<p class="src">${tr('cFormatNote')}</p></div>`:''}
+        ${contests.length?`<div class="field"><label class="flabel" for="cComp">${tr('cCompetition')}</label><select id="cComp"><option value="">${tr('cAnyContest')}</option>${state.contests.filter(c=>contests.some(i=>i.c===c.key)).map(c=>`<option value="${c.key}"${c.key===o.contest?' selected':''}>${esc(nameOf(c.name))}</option>`).join('')}</select>
+          <span class="flabel">${tr('cYears')}</span><div class="range"><select id="cY1" aria-label="${tr('cYears')} min">${years.map(y=>`<option value="${y}"${y===(o.yearMin||years[0])?' selected':''}>${y}</option>`).join('')}</select><span>–</span><select id="cY2" aria-label="${tr('cYears')} max">${years.map(y=>`<option value="${y}"${y===(o.yearMax||years[years.length-1])?' selected':''}>${y}</option>`).join('')}</select></div>
+          ${graded.length?`<p class="src">${tr('cContestNote')}</p>`:''}</div>`:''}
+        <div class="field"><label class="check"><input type="checkbox" id="cTimer"${o.timer?' checked':''}> ${tr('cTimer')}</label></div>
+        <p class="matchline" id="cMatch"></p>
+        <div class="actions"><button type="button" class="primary" id="cGo">${tr('cStartSet')}</button></div></section>`;
+      const count=H.matchSet(pool,o,canType,hasChoices).length;
+      $('cMatch').innerHTML=count?`${tr('cMatch')}: <b>${count}</b>${count<o.count?` · ${count} ${tr('problems')}`:''}`:`<span class="numerr">${tr('cNoMatch')}</span>`;
+      $('cGo').disabled=!count;
+      const keep=()=>{saved.customOpts={...o};save();};
+      $('cSrc').onchange=()=>{o.source=$('cSrc').value;o.units=[];o.min=1;o.max=10;o.yearMin=o.yearMax=0;o.contest='';keep();render();};
+      $('app').querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{const x=areas.find(y=>y.a.key===b.dataset.area);
+        if(!x)o.units=[];else if(chosen.size&&areaOn(x))o.units=o.units.filter(u=>!x.subs.includes(u));else o.units=[...new Set([...o.units,...x.subs])];keep();render();});
+      $('app').querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const u=b.dataset.u;o.units=chosen.has(u)?o.units.filter(x=>x!==u):[...o.units,u];unitsOpen=true;keep();render();});
+      if($('cUnits'))$('cUnits').ontoggle=()=>{unitsOpen=$('cUnits').open;reportHeight();};
+      $('cMin').onchange=()=>{o.min=Number($('cMin').value);if(o.max<o.min)o.max=o.min;keep();render();};
+      $('cMax').onchange=()=>{o.max=Number($('cMax').value);if(o.min>o.max)o.min=o.max;keep();render();};
+      $('cCount').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{o.count=Number(b.dataset.v);keep();render();});
+      $('cFormat')?.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{o.format=b.dataset.v;keep();render();});
+      if($('cComp')){$('cComp').onchange=()=>{o.contest=$('cComp').value;o.yearMin=o.yearMax=0;keep();render();};
+        $('cY1').onchange=()=>{o.yearMin=Number($('cY1').value);if(o.yearMax&&o.yearMax<o.yearMin)o.yearMax=o.yearMin;keep();render();};
+        $('cY2').onchange=()=>{o.yearMax=Number($('cY2').value);if(o.yearMin&&o.yearMin>o.yearMax)o.yearMin=o.yearMax;keep();render();};}
+      $('cTimer').onchange=()=>{o.timer=$('cTimer').checked;keep();};
+      $('cGo').onclick=()=>customStart({...o});
+      reportHeight();
+    };
+    render();
+  }
+  async function customStart(o){
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    let pool;try{pool=await setPool(o.source);}catch(e){failed(()=>customStart(o));return;}
+    const {items}=H.buildSet(pool,o,{recent:saved.recent,solved:solvedMap(),canType,hasChoices});
+    runSet({items,label:tr('customName'),back:customHome,again:()=>customStart(o),timer:o.timer,format:o.format});
+  }
+  /* ── review: what is due today, the saved problems, my reports, and the progress backup ── */
+  async function resolveItems(ids){
+    const meta=id=>saved.review[id]||saved.later[id]||{},parts=[];
+    if(ids.some(id=>meta(id).k==='exam'))parts.push(allExamItems().catch(()=>[]));
+    for(const k of new Set(ids.filter(id=>meta(id).k==='track').map(id=>id.split('-')[0])))parts.push(trackItems(k).catch(()=>[]));
+    if(ids.some(id=>meta(id).k==='contest'))parts.push(allContestItems().catch(()=>[]));
+    const byId=new Map((await Promise.all(parts)).flat().map(i=>[i.id,i]));
+    return ids.map(id=>byId.get(id)).filter(Boolean);
+  }
+  const entryName=e=>e.k==='contest'?nameOf(state.contests?.find(c=>c.key===e.c)?.name)||e.c:unitName(e.u||'');
+  async function reviewHome(){
+    state.mode='review';state.session=null;paintTabs();paintStats();tellUnit('');
+    await loadContests().catch(()=>{});
+    const due=dueNow(),all=Object.entries(saved.review),later=Object.entries(saved.later).sort((a,b)=>b[1].at-a[1].at),reports=readReports().slice().reverse();
+    const upcoming=all.filter(([,r])=>r.due>today()).sort((a,b)=>a[1].due<b[1].due?-1:1)[0];
+    $('app').innerHTML=`<section class="session reviewcard"><h2>${tr('tabReview')}</h2><p class="src">${tr('reviewIntro')}</p>
+        <div class="stats rstats"><span class="stat"><b>${due.length}</b>${tr('dueToday')}</span><span class="stat"><b>${all.length}</b>${tr('inQueue')}</span>${upcoming?`<span class="stat"><b>${esc(upcoming[1].due.slice(5))}</b>${tr('nextDue')}</span>`:''}</div>
+        ${due.length?`<ol class="todaylist">${due.slice(0,20).map(id=>{const r=saved.review[id];return `<li><span class="tag review">${H.REVIEW_DAYS[r.box]}d</span> ${esc(r.t||entryName(r))} <small>${esc(r.t?entryName(r):'')}</small></li>`;}).join('')}</ol>`:`<p>${tr('noDue')}</p>`}
+        <div class="actions"><button type="button" class="primary" id="goReview"${due.length?'':' disabled'}>${tr('startReview')}${due.length?` (${Math.min(20,due.length)})`:''}</button></div></section>
+      <section class="area laterlist"><h2>${tr('laterTitle')}</h2>${later.length?`<ul class="plainlist">${later.map(([id,e])=>`<li><span class="name">${esc(e.t||id)}<small>${esc(entryName(e))}</small></span><button type="button" class="mini" data-unlater="${esc(id)}">${tr('removeLater')}</button></li>`).join('')}</ul>
+        <div class="actions"><button type="button" class="primary" id="goLater">${tr('startLater')} (${Math.min(20,later.length)})</button></div>`:`<p class="src">${tr('noLater')}</p>`}</section>
+      <section class="area laterlist"><h2>${tr('myReports')}</h2>${reports.length?`<ul class="plainlist">${reports.slice(0,20).map(r=>`<li><span class="name">${esc(r.t||r.id)}<small>${esc(r.id)} · ${tr(REASONS.includes(r.r)?r.r:'rOther')}${r.note?' · '+esc(r.note.slice(0,80)):''} · ${day(r.at)}</small></span></li>`).join('')}</ul>`:`<p class="src">${tr('noReports')}</p>`}</section>
+      ${settingsHtml()}`;
+    $('goReview').onclick=async()=>{$('app').innerHTML=`<p>${tr('loading')}</p>`;const items=await resolveItems(due.slice(0,20));runSet({items,label:tr('tabReview'),back:reviewHome,again:reviewHome});};
+    if($('goLater'))$('goLater').onclick=async()=>{$('app').innerHTML=`<p>${tr('loading')}</p>`;const items=await resolveItems(later.slice(0,20).map(([id])=>id));runSet({items,label:tr('laterTitle'),back:reviewHome,again:reviewHome});};
+    $('app').querySelectorAll('[data-unlater]').forEach(b=>b.onclick=()=>{delete saved.later[b.dataset.unlater];save();reviewHome();});
+    wireSettings(reviewHome);reportHeight();
+  }
+  /* ── progress backup: export the saved state as a file, import one (checked, then merged item by item), reset ── */
+  function settingsHtml(){return `<details class="area settings" id="settings"><summary>${tr('settings')}</summary><p class="src">${tr('settingsNote')}</p>
+    <div class="actions start"><button type="button" id="exportP">${tr('exportP')}</button><button type="button" id="importP">${tr('importP')}</button><input type="file" id="importFile" accept="application/json,.json" hidden><button type="button" class="danger" id="resetP">${tr('resetP')}</button></div><p class="src" id="setMsg" role="status"></p></details>`;}
+  function wireSettings(again){
+    const msg=t=>{$('setMsg').textContent=t;reportHeight();};
+    $('settings').ontoggle=reportHeight;
+    $('exportP').onclick=()=>{
+      const blob=new Blob([JSON.stringify(H.exportOf(saved),null,1)],{type:'application/json'}),a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);a.download=`haslalab-practice-${today()}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    };
+    $('importP').onclick=()=>$('importFile').click();
+    $('importFile').onchange=async()=>{
+      const file=$('importFile').files?.[0];if(!file)return;
+      if(file.size>4e6){msg(tr('imp_not_backup'));return;}
+      const v=H.validateBackup(await file.text());
+      if(!v.ok){msg(tr('imp_'+v.error));return;}
+      saved=fill(Object.assign(saved,H.mergeBackup(saved,v.state)));save();scheduleSync();paintStats();
+      await again();if($('settings')){$('settings').open=true;msg(tr('importDone'));}
+    };
+    $('resetP').onclick=async()=>{
+      if(!confirm(tr('resetConfirm')))return;
+      saved=fill({});save();paintStats();await again();if($('settings')){$('settings').open=true;msg(tr('resetDone'));}
+    };
+  }
+  const MODES={start:startHome,play:playHome,today:todayHome,review:reviewHome,custom:customHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
 
   function applyTheme(){const t=params.get('theme'),dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}
   function translate(){document.documentElement.lang=state.lang;document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=tr(el.dataset.i18n);});$('note').textContent=tr('note');document.title=tr('title')+' · HaslaLab';}
@@ -949,6 +1208,7 @@
   addEventListener('keydown',e=>{
     const s=state.session;if(!s||s.mode==='bank'||/^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName||''))return;
     if(document.activeElement?.id==='ans')return;
+    if(s.current?.kind==='contest')return;
     if(s.current?.kind==='track'){if(!s.answered&&!s.free&&s.current.type==='mc'&&/^[1-5a-eA-E]$/.test(e.key)){const i='abcde'.indexOf(e.key.toLowerCase());const n=i>=0?i:Number(e.key)-1;if(n<s.current.choices.length)trackAnswer(n);}else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}return;}
     if(!s.answered&&!$('ansbox')&&/^[1-5]$/.test(e.key))answer(Number(e.key));
     else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}
@@ -960,6 +1220,6 @@
     if(item&&/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
     else if(mode==='play'){document.documentElement.classList.add('play');playHome();}
-    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
+    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(mode==='review')reviewHome();else if(mode==='custom')customHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
