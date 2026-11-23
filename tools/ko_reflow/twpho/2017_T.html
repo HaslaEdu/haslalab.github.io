@@ -1,0 +1,567 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="595.32,841.92">
+<style>
+/* 대만 물리 올림피아드 2017 국가대표팀 복선(2차 선발) 시험 (2017 APhO / IPhO 대표 선발): 이론 문제(1-7쪽)와
+   채점 기준(評分標準, 8-13쪽)을 묶은 책자 — Korean edition on the original layout. Same geometry as the English edition
+   twpho/2017_T_EN.html (see its header for the original's measurements): body 11.5pt (96% of the original 12pt) on a
+   13-14pt pitch; text beside Fig.3 (p.4) and Fig.6 (p.6) wraps round an invisible right float or a narrowed column;
+   marking-scheme tables rebuilt in HTML (rules from W/tmp/twpho2017/mkrules.py between the RULES markers, all cells
+   retyped); Chinese labels in Fig.1, 2, 4, 6, 7 covered by "ov" overlays.
+
+   PLACEMENT (as twpho/2014_T.html): every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs) */
+body{font-family:CM,KB,serif;font-size:11.5pt;line-height:14pt;word-break:keep-all}
+p{text-indent:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:96.6pt;width:427.8pt;--l:14pt;--fs:11.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.r{text-align:right}
+.l{text-align:left}
+.b{font-weight:bold}
+.h{font-weight:bold;--fs:12pt}
+.h .n{left:-25.7pt}
+.s{left:113.5pt;width:410.9pt}
+.n{position:absolute;left:-18pt;white-space:nowrap}
+.ss{left:124.7pt;width:399.7pt}
+.ss .n{left:-15pt}
+/* columns under ~300pt: allow breaks between Hangul syllables */
+.nar{word-break:normal}
+.pn{left:0;width:595.32pt;text-align:center;--fs:10pt;--l:12pt}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+.fl{float:right}
+.hr{position:absolute;height:0.5pt;background:#000}
+.vr{position:absolute;width:0.5pt;background:#000}
+.t{position:absolute;margin:0;--fs:12pt;--l:15pt;font-size:var(--fs);line-height:var(--l);white-space:nowrap;text-align:left;
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.k{--fs:11.3pt;white-space:normal;word-break:normal}
+.ov{position:absolute;background:#fff;line-height:1;white-space:nowrap;padding:1pt 2pt}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<p class="x c" style="--b:98.5;left:40pt;width:515.3pt;--fs:24pt;--l:35.4pt">2017년 제18회 아시아 물리 올림피아드<br>및 제48회 국제 물리 올림피아드</p>
+<p class="x c" style="--b:202.6;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">국가대표팀 복선(2차 선발) 시험</p>
+<p class="x c" style="--b:326.8;left:40pt;width:515.3pt;--fs:54pt;--l:60pt">이론 문제</p>
+<p class="x c" style="--b:430;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">2017년 2월 11일</p>
+<p class="x c" style="--b:461.3;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">13:30–16:30</p>
+<p class="x c" style="--b:492.5;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">시험 시간: 3시간</p>
+<p class="x c" style="--b:578.9;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">&lt;&lt;&thinsp;주의 사항&thinsp;&gt;&gt;</p>
+<p class="x l" style="--b:604.3;left:106.9pt;width:417.5pt;--fs:18pt;--l:23.4pt"><span class="n" style="left:-36pt">1.</span>검은색 또는 파란색 볼펜만 사용한다.</p>
+<p class="x l" style="--b:627.7;left:106.9pt;width:417.5pt;--fs:18pt;--l:23.4pt"><span class="n" style="left:-36pt">2.</span>이 시험은 계산 문제 6개로 이루어져 있으며, 각 문제 25점, 합계 150점이다.</p>
+<p class="x l" style="--b:674.5;left:106.9pt;width:417.5pt;--fs:18pt;--l:23.4pt"><span class="n" style="left:-36pt">3.</span>각 문제는 답안지의 지정된 위치에 답하며, 문제마다 답안지가 두 쪽이다.</p>
+<p class="x l" style="--b:721.3;left:106.9pt;width:417.5pt;--fs:18pt;--l:23.4pt"><span class="n" style="left:-36pt">4.</span>휴대용 계산기(공학용 계산기 포함)를 사용할 수 있다.</p>
+</div>
+
+<!-- page 2: mathematical formulas -->
+<div class="page">
+<p class="x" style="--b:98.2;left:106.9pt;width:417.5pt;--fs:12pt">필요할 수 있는 수학 공식($t$는 시간, $x$는 임의의 물리량)</p>
+<p class="x" style="--b:127.5;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">1.</span>$x'(t)=\dfrac{dx}{dt}$,&emsp; $x''(t)=\dfrac{d^2x}{dt^2}=\dfrac{d}{dt}\!\left(\dfrac{dx}{dt}\right)$</p>
+<p class="x" style="--b:163;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">2.</span>$\displaystyle\int x^m\,dx=\frac{x^{m+1}}{m+1}$, $m$&thinsp;≠&thinsp;$-1$;&emsp;&emsp;&emsp; $\dfrac{d}{dx}x^m=m\cdot x^{m-1}$</p>
+<p class="x" style="--b:198.9;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">3.</span>$\dfrac{d\cos x}{dx}=-\sin x$,&emsp;&emsp; $\dfrac{d\sin x}{dx}=\cos x$,</p>
+<p class="x" style="--b:232.7;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt">$\displaystyle\int\sin x\,dx=-\cos x$,&emsp;&emsp; $\displaystyle\int\cos x\,dx=\sin x$</p>
+<p class="x" style="--b:269.4;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">4.</span>$|x|\ll1$일 때, $\dfrac{1}{\sqrt{1+x}}\approx1-\dfrac{x}{2}$,</p>
+<p class="x" style="--b:307.7;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">5.</span>$x\ll1$일 때, $\sin x\approx x$,&emsp;&emsp; $\cos x\approx1-\dfrac{x^2}{2}$.</p>
+<p class="x l" style="--b:331.9;left:141.8pt;width:382.6pt;--fs:12pt;--l:18pt"><span class="n" style="left:-14.2pt">6.</span>선형 상수 계수 2계 동차 미분 방정식 <span class="nw">$ax''(t)+bx'(t)+cx(t)=0$</span>의<br>일반해는 <span class="nw">$x(t)=\alpha_1e^{s_1t}+\alpha_2e^{s_2t}$</span> 꼴이며,<br>여기서 $s_1, s_2$는 이차 방정식 <span class="nw">$as^2+bs+c=0$의</span> 근이고,<br>$\alpha_1,\alpha_2$는 적분 상수로서 초기 조건 $x(0)$, $x'(0)$으로 정해진다.</p>
+<p class="x pn" style="--b:797.3">1</p>
+</div>
+
+<!-- page 3: heading, problem 1, problem 2 -->
+<div class="page">
+<p class="x c" style="--b:86.6;left:40pt;width:515.3pt;--fs:16pt;--l:20.3pt">2017년 제18회 아시아 및 제48회 국제 물리 올림피아드<br>국가대표팀 복선(2차 선발) 시험 문제</p>
+<p class="x" style="--b:134.8;left:70.9pt;width:453.5pt;--fs:12pt">이 시험은 계산 문제 6개로 이루어져 있으며, 각 문제 25점, 합계 150점이다.</p>
+<p class="x h" style="--b:161.2;width:340pt"><span class="n">1.</span>이상 기체의 가열 팽창</p>
+<p class="x" style="--b:179.2;width:343pt;--l:14pt">그림&nbsp;1과 같이 바닥을 제외한 모든 벽이 단열된 원통을 칸막이로 부피가 같은 두 부분 A, B로 나누고, 각각에 처음 온도 <span class="nw">0&thinsp;°C,</span> 압력 1&nbsp;atm인 질소 1&nbsp;mole을 넣었다. 원통의 위쪽은 피스톤(역시 단열됨)이며, 피스톤 위의 압력은 항상 <span class="nw">$P_0 = 1\ \mathrm{atm}$으로</span> 유지된다. 이제 80.0&nbsp;cal의 열을 원통 바닥을 통해 천천히 원통에 넣는다. 질소는 이상 기체로 볼 수 있고 기체 상수는 <span class="nw">$R = 8.31\ \mathrm{J/mole\cdot K}$라고</span> 가정한다. 다음 두 경우에 대하여 A와 B 부분 기체의 압력, 부피, 온도의 변화량을 각각 구하여라.</p>
+<p class="x s" style="--b:330;width:326pt"><span class="n">(A)</span>칸막이가 고정되어 있고 열을 전달한다(칸막이의 열용량은 무시한다). (13점)</p>
+<p class="x s" style="--b:360;width:326pt"><span class="n">(B)</span>칸막이가 (마찰 없이) 자유롭게 미끄러질 수 있고 단열되어 있다. (12점)</p>
+<div class="f" style="left:445pt;top:150pt"><span class="fig" data-srcpage="3" data-clip="445,150,532,372"></span></div>
+<div class="ov" style="left:470.2pt;top:342.5pt;font-size:10pt;padding:2pt 5pt">가열기</div>
+<p class="x c" style="--b:384.4;left:458pt;width:62pt;--fs:12pt">그림 1</p>
+<p class="x h" style="--b:413.2"><span class="n">2.</span>일반화된 반사 법칙과 굴절 법칙의 유도</p>
+<p class="x" style="--b:431.2">두 매질 사이의 경계면이 평면인 경우를 생각한다. 파장이 $\lambda$인 평면 전자기파가 매질&nbsp;1에서 매질&nbsp;2로 진행하며, 입사각, 반사각, 굴절각은 그림&nbsp;2와 같이 각각 $\theta_1$, $\theta_1'$, $\theta_2$이다.</p>
+<div class="f" style="left:180pt;top:468pt"><span class="fig" data-srcpage="3" data-clip="180,458,398,620"></span></div>
+<div class="ov" style="left:272pt;top:471pt;font-size:11pt;padding:1pt 4pt">법선</div>
+<div class="ov" style="left:190pt;top:488.5pt;font-size:11pt;padding:1pt 2pt">입사 광선</div>
+<div class="ov" style="left:346pt;top:488.5pt;font-size:11pt;padding:1pt 2pt">반사 광선</div>
+<div class="ov" style="left:316pt;top:610.5pt;font-size:11pt;padding:2pt 2pt 4pt">굴절 광선</div>
+<p class="x c" style="--b:656;left:251pt;width:80pt;--fs:12pt">그림 2</p>
+<p class="x" style="--b:681.8">경계면이 균일하면, 경계면이 반사파와 굴절파에 주는 위상각 변화는 입사점의 위치와 무관하다는 것이 알려져 있다. <span class="nw">$n_1 &gt; n_2$일</span> 때 반사파는 경계면에서 위상각 변화가 없고, <span class="nw">$n_1 &lt; n_2$일</span> 때 반사파의 경계면에서의 위상각 변화는 $\pi$이다. 두 매질의 경계면을 적절히 설계하고 처리하면, 빛이 경계면에서 반사하거나 굴절할 때 모두 그림&nbsp;3과 같이 $X$축 좌표에 따라 변하는 경계면 위상 변화 $\Phi(x)$가 생기게 할 수 있다. (경계면 위의 다른 축을 $Y$축이라 하고, 이 문제에서는 위상각의 변화가 $Y$축 좌표와 무관하다고, 즉 <span class="nw">$\Phi(x,y)=\Phi(x)$라고</span> 가정한다.)</p>
+<p class="x pn" style="--b:797.3">2</p>
+</div>
+
+<!-- page 4: problem 2 (continued), problem 3 -->
+<div class="page">
+<p class="x s" style="--b:83.5"><span class="n">(A)</span>경계면이 균일하다고 하고, 페르마 원리(Fermat principle)를 이용하여 빛의 반사 법칙과 굴절 법칙을 유도하여라. (6점)</p>
+<p class="x s" style="--b:115;--l:13.5pt">(주: 페르마 원리란 두 고정점 사이에서 빛(전자기파)이 진행하는 경로는 광로 길이가 극값을 갖는 경로라는 것이다. 페르마가 처음 제안했을 때는 ‘최소 시간의 원리’라고도 불렀다. 즉 빛이 진행하는 경로는 걸리는 시간이 가장 짧은 경로이다.)</p>
+<p class="x s" style="--b:160;--l:14pt"><span class="n">(B)</span><span class="fl" style="width:176pt;height:178pt"></span>페르마 원리는 언뜻 보면 매우 신기하고 이해하기 어렵다. 예를 들어, 빛은 출발할 때 어느 경로가 시간이 가장 적게 걸리는지 어떻게 알아낼까? 사실 페르마 원리의 물리적 메커니즘은, 전자기파가 진행하는 경로가 위상이 정류하는(stationary phase) 경로라는 것이다. 즉 두 고정점 A와 B 사이의 실제 경로(왼쪽 그림의 실선)를 따라 누적된 위상 변화 $d\varphi$의 총합 <span class="nw">${}_{\text{실선}}\!\int_A^B d\varphi(\vec r)$는</span> 이웃한 경로(왼쪽 그림의 점선)를 따라 누적된 위상 변화의 총합 <span class="nw">${}_{\text{점선}}\!\int_A^B d\varphi(\vec r)$와</span> 거의 같다. 이 문항에서는 <span class="nw">$d\Phi/dx=0$이라고</span> 가정하므로 ${}_{\text{실선}}\!\int_A^B d\varphi(\vec r)-{}_{\text{점선}}\!\int_A^B d\varphi(\vec r)\approx0$이다. 이 식과 위의 힌트를 이용하여 빛의 굴절 법칙을 증명하여라. (4점)</p>
+<div class="f" style="left:356pt;top:153pt"><span class="fig" data-srcpage="4" data-clip="356,128,530,287"></span></div>
+<p class="x c" style="--b:323.8;left:406pt;width:80pt;--fs:12pt">그림 3</p>
+<p class="x s l" style="--b:393;--l:17pt"><span class="n">(C)</span><span class="nw">$\tfrac{d\Phi}{dx}$&thinsp;≠&thinsp;$0$,</span> 즉 빛이 경계면에서 반사하거나 굴절할 때 $X$축 좌표에 따라 변하는 경계면 위상 변화 $\Phi(x)$가 생긴다고 하자. 위의 그림을 이용하여 일반화된 반사 법칙 <span class="nw">$\sin\theta_1'-\sin\theta_1=\tfrac{\lambda}{2\pi n_1}\tfrac{d\Phi}{dx}$와</span> 일반화된 굴절 법칙 <span class="nw">$n_2\sin\theta_2-n_1\sin\theta_1=\tfrac{\lambda}{2\pi}\tfrac{d\Phi}{dx}$를</span> 유도하여라. (5점)</p>
+<p class="x s" style="--b:461;--l:18pt"><span class="n">(D)</span><span class="nw">$\tfrac{d\Phi}{dx}=\tfrac{2\pi}{\Gamma}$이고</span> $\Gamma$는 상수라고 하자. <span class="nw">$\alpha\equiv\lambda/\Gamma$로</span> 놓는다. 보통 <span class="nw">$\Gamma&gt;\lambda$이므로</span> <span class="nw">$0&lt;\alpha&lt;1$이다.</span></p>
+<p class="x ss" style="--b:479"><span class="n">(a)</span>반사광이 존재하지 않는 입사각의 범위를 구하여라. (3점)</p>
+<p class="x ss" style="--b:497"><span class="n">(b)</span><span class="nw">$n_1&lt;n_2$라고</span> 하자. 어떤 조건에서 전반사가 일어나는가? 그 임계 입사각은 얼마인가? (7점)</p>
+<p class="x h" style="--b:550"><span class="n">3.</span>자기력 현미경</p>
+<p class="x" style="--b:568">주사 탐침 현미경은 표면 물리 연구에서 중요한 역할을 한다. 이 장치에는 마이크로미터 크기의 캔틸레버가 있는데, 캔틸레버의 한쪽 끝은 진동자에 고정되어 있고 매달린 자유단에는 돌출된 미세한 탐침 끝이 달려 있다. 캔틸레버 전체가 하나의 용수철 진동계를 이루며, 자기력이 없을 때 탐침의 운동 방정식은 다음과 같이 쓸 수 있다.</p>
+<p class="x l" style="--b:645;--fs:12pt;--l:30pt">$M\dfrac{d^2z}{d^2t}+b\dfrac{dz}{dt}+kz=F_0e^{i\omega t}$</p>
+<p class="x" style="--b:670">여기서 $M$은 탐침계의 질량, $b$는 감쇠 계수(약한 감쇠라고 가정한다), $k$는 자기력이 작용하지 않을 때의 용수철 상수, $F_0e^{i\omega t}$는 위아래 진동의 구동력이다. 이 운동 방정식의 정상 상태 해는 <span class="nw">$z(t)=Ae^{i(\omega t-\phi)}$</span> 꼴이며, $A$는 진폭, $\phi$는 위상각이다. 진폭과 위상각은 모두 구동 각진동수 $\omega$의 함수이다. 그림&nbsp;4와 같이 주사 자기력 현미경의 탐침은 $z$ 방향의 작은 자기 모멘트로 볼 수 있고, 탐침 끝과 측정할 표면 사이의</p>
+<p class="x pn" style="--b:797.3">3</p>
+</div>
+
+<!-- page 5: problem 3 (continued) -->
+<div class="page">
+<p class="x" style="--b:83.5">간격은 일정하게 유지되며, 현미경은 자기력을 통해 측정할 표면의 자기 구역 분포를 알아낼 수 있다.</p>
+<p class="x" style="--b:115">자기력 현미경의 작동 원리는 다음과 같다. 탐침은 측정할 물체 표면의 자기장의 작용을 받아 ‘자기 위치 에너지’ <span class="nw">$U=-mH_z$를</span> 가진다. 여기서 $m$은 자기 모멘트, $H_z$는 점 $z$에서의 자기장의 세기이다. 자기장의 세기가 거리에 따라 변하므로 탐침은 $z$ 방향의 불균일한 자기력을 받고, 이 때문에 캔틸레버의 공명 각진동수가 변한다. 탐침 끝이 측정할 표면을 주사할 때, 장치는 공명 각진동수의 변화를 밝기 대비로 바꾼다. 공명 각진동수가 올라가면 ‘밝음’ 단계로, 반대이면 ‘어두움’ 단계로 나타낸다. 공명 각진동수의 변화는 진폭과 위상각의 변화도 일으키므로, 자기력 현미경은 공명 각진동수, 위상각, 진폭의 변화를 검출 메커니즘으로 이용할 수 있다. 이상의 내용을 바탕으로 다음 물음에 답하여라.</p>
+<p class="x s" style="--b:247"><span class="n">(A)</span><span class="nw">$\omega_0=\sqrt{k/M}$이라</span> 하자. 자기력을 받지 않을 때 탐침의 진폭과 위상각을 구동 각진동수의 함수로 구하여라. (6점)</p>
+<p class="x s" style="--b:276"><span class="n">(B)</span>앞 문항에 이어서, 공명(진폭이 최대인) 각진동수를 구하여라($b$의 1차까지 정확하게). (4점)</p>
+<p class="x s" style="--b:305;--l:13.6pt"><span class="n">(C)</span><span class="nw">$H_z=az^2$이고</span> $a$는 양의 상수라고 가정한다. 약한 감쇠 <span class="nw">$(b\to0)$의</span> 경우, 공명 각진동수의 변화를 자기력 검출 메커니즘으로 이용한다면, 공명 각진동수의 변화량 $(\Delta\omega)$를 $m$, $\omega_0$, <span class="nw">$a$, $z$의</span> 함수로 유도하여라($a$의 1차까지 정확하게). (9점)</p>
+<div class="f" style="left:184pt;top:376pt"><span class="fig" data-srcpage="5" data-clip="184,376,392,494"></span></div>
+<div class="ov" style="left:220pt;top:381pt;font-size:11pt;padding:2pt 6pt 2pt 3pt">검출기</div>
+<div class="ov" style="left:318pt;top:379pt;font-size:11pt;padding:2pt 3pt">레이저</div>
+<div class="ov" style="left:255pt;top:443.5pt;font-size:11pt;padding:2pt 3pt">진동</div>
+<p class="x c" style="--b:521.2;left:122pt;width:362pt;--fs:11.5pt;--l:18pt">그림&nbsp;4: 주사 탐침 모식도. 캔틸레버가 외부에서 구동되어 탐침이 위아래로 진동하며, 관련 변화량의 정보는 반사된 레이저 빛을 분석하여 얻는다.</p>
+<p class="x s" style="--b:568"><span class="n">(D)</span>앞 문항에 이어서, 그림&nbsp;5와 같이 표면 위에 전류 $i$가 흐르는 도선 묶음을 측정한다. 주사하는 동안 탐침의 높이 $z$는 고정되어 있고 <span class="nw">$z\ll x_0, l_0$이다.</span> 그림&nbsp;5의 I, II, III 세 영역이 각각 밝음 단계인지 어두움 단계인지 표시하여라. (6점)</p>
+<div class="f" style="left:116pt;top:614pt"><span class="fig" data-srcpage="5" data-clip="116,614,486,745"></span></div>
+<p class="x c" style="--b:759.2;left:100pt;width:395pt;--fs:11.5pt;--l:18pt">그림&nbsp;5: 왼쪽 그림은 위에서 본 그림이고, 점선은 탐침의 주사 경로이다.<br>오른쪽 그림은 옆에서 본 그림이고, 점선은 고정된 주사 높이를 나타낸다.</p>
+<p class="x pn" style="--b:797.3">4</p>
+</div>
+
+<!-- page 6: problems 4 and 5 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">4.</span>미끄러지며 구르는 운동</p>
+<p class="x" style="--b:101.5;--l:13.5pt">수평한 지면이 직교 좌표계의 $xy$ 평면과 일치하고, 이 지면 위에 질량 $m$, 반지름 $R$인 균일한 구가 있다. 시각 <span class="nw">$t=0$에</span> 구는 원점 O에서 미끄러지며 구르는 운동을 시작하는데, 질량 중심에 대한 회전 각속도는 <span class="nw">$\vec\omega_0=\omega_0(\hat x+\hat y)/\sqrt2$,</span> 질량 중심의 속도는 <span class="nw">$\vec v_0=\sqrt2\,\omega_0R\hat y$이다.</span> 또 구의 질량 중심에 대한 관성 모멘트는 <span class="nw">$I=mk^2=2mR^2/5$,</span> 구와 지면 사이의 운동 마찰 계수는 $\mu_\mathrm{k}$, 중력 가속도는 <span class="nw">$-g\hat z$이다.</span></p>
+<p class="x" style="--b:180;--l:13.5pt">시각 <span class="nw">$t&gt;0$에서</span> 구의 질량 중심 속도 벡터를 <span class="nw">$\vec v=v_x\hat x+v_y\hat y$,</span> 회전 각속도 벡터를 $\vec\omega$, 구의 맨 아래 점의 속도 벡터를 <span class="nw">$\vec u=u\hat u$라고</span> 하자. 여기서 $\hat u$는 구 아래 점의 속도 $\vec u$와 같은 방향의 단위 벡터이다.</p>
+<p class="x s" style="--b:228"><span class="n">(A)</span>구 아래 점의 처음 속도 $\vec u_0$의 크기 $u_0$와 방향 $\hat u_0$를 구하여라. (6점)</p>
+<p class="x s" style="--b:246;--l:13.5pt"><span class="n">(B)</span>구가 미끄러질 때, 질량 중심의 운동 방정식과 질량 중심에 대한 회전 운동 방정식을 써라. (4점)</p>
+<p class="x s" style="--b:278"><span class="n">(C)</span>구가 미끄러질 때, $\vec u$를 시간 $t$의 함수로 구하여라. (5점)</p>
+<p class="x s" style="--b:296"><span class="n">(D)</span>구가 순수하게 구르기 시작하는 시각 $T$를 구하여라. (3점)</p>
+<p class="x s" style="--b:314;--l:13.5pt"><span class="n">(E)</span><span class="nw">$0&lt;t\le T$일</span> 때의 질량 중심 속도 $\vec v(t)$를 구하고, 구가 순수하게 구르기 시작할 때 구 아래 점의 위치 <span class="nw">$\vec r_T=x_T\hat x+y_T\hat y$를</span> 구하여라. (7점)</p>
+<p class="x h" style="--b:353.5;width:290pt"><span class="n">5.</span>톰슨의 자기 부상 금속 고리</p>
+<p class="x nar" style="--b:371.5;width:294.2pt;--l:13.6pt">그림&nbsp;6과 같이 전류 $I(t)$가 흐르는 솔레노이드 코일이 원기둥 모양의 연철을 통해 자기장을 <span class="nw">$z&gt;0$</span> 영역으로 이끈다. 연철에 끼워진 금속 고리는 솔레노이드가 만드는 자기장의 작용으로 <span class="nw">$z=z_0$에</span> 떠 있을 수 있다. 솔레노이드 코일과 금속 고리의 반지름은 모두 $a$, 코일의 감은 수는 $N$, 연철의 투자율은 $\mu$, 금속 고리의 저항은 $R$, 자체 유도 계수는 $L$이다. 다음 물음에 답하여라.</p>
+<p class="x s nar" style="--b:480;width:277.3pt;--l:13.6pt"><span class="n">(A)</span>연철이 원기둥 모양이므로, 자기장은 $z$축 방향과 지름 방향 $r$의 성분 $B_z$, $B_r$만 있다고 가정할 수 있다.</p>
+<p class="x ss" style="--b:521;--l:13.6pt"><span class="n">(a)</span><span class="fl" style="width:132pt;height:40pt"></span>고정된 $z$ 값에 대하여 <span class="nw">$B_z(z,r)\approx B_z(z,0)$임이</span> 알려져 있다. 솔레노이드의 길이를 무시하고 $B_z(z,r)$를 계산한 다음, 이로부터 금속 고리와 솔레노이드 코일 사이의 상호 유도 계수 $M(z)$를 구하여라. (6점)</p>
+<p class="x ss" style="--b:577;--l:13.6pt"><span class="n">(b)</span>길이가 <span class="nw">$dz\ll1$이고</span> 반지름이 $r$인 원기둥면(양 끝 단면 포함)을 지나는 자기 선속을 생각하여 $B_z$와 $B_r$의 관계를 구하고, 이로부터 $B_r(z,r)$를 계산하여라. (5점)</p>
+<div class="f" style="left:398pt;top:333pt"><span class="fig" data-srcpage="6" data-clip="398,333,549,530"></span></div>
+<div class="ov" style="left:485pt;top:366.5pt;font-size:11pt;padding:2pt 3pt">연철</div>
+<div class="ov" style="left:404pt;top:426pt;font-size:10.5pt;padding:2pt 2pt;width:42pt;text-align:right">금속 고리</div>
+<div class="ov" style="left:476pt;top:477.5pt;font-size:10pt;padding:2pt 2pt 2pt 6pt">솔레노이드 코일</div>
+<p class="x c" style="--b:545.4;left:440pt;width:60pt;--fs:12pt">그림 6</p>
+<p class="x s" style="--b:615;--l:13.6pt"><span class="n">(B)</span>솔레노이드 코일의 전류가 <span class="nw">$I(t)=I(z)\sin\omega t$(시계</span> 반대 방향이 양)이고, 시각 $t$에 금속 고리의 전류가 이미 정상 상태에 이르렀다고 가정한다.</p>
+<p class="x ss" style="--b:646;--l:13.6pt"><span class="n">(a)</span>시각 $t$에서 금속 고리의 전류를 구하여라($M(z)$, $L(z)$, $I(z)$, $R$로 나타내어라). 이 전류와 솔레노이드 코일 전류의 위상차가 $\delta$일 때 <span class="nw">$\tan\delta$를</span> 구하여라. (6점)</p>
+<p class="x ss" style="--b:688;--l:13.6pt"><span class="n">(b)</span>솔레노이드 코일의 저항은 $R_0$, 자체 유도 계수는 $L_0$이다. 금속 고리의 저항 $R$은 솔레노이드 코일의 저항 $R_0$에 비해 무시할 수 있다. 솔레노이드 코일을 기전력이 <span class="nw">$\varepsilon(t)=V_0\cos\omega t$인</span> 교류 전원에 연결할 때, 솔레노이드 코일 전류의 진폭 $I(z)$를 구하여라($R_0$, $L_0$, $L$, $V_0$, $\omega$, <span class="nw">$M(z)$로</span> 나타내어라). 일반적인 경우 <span class="nw">$L_0L&gt;M^2(0)$일</span> 때, $z$가 증가함에 따라 $I(z)$가 증가하는지 감소하는지 설명하여라. (8점)</p>
+<p class="x pn" style="--b:797.3">5</p>
+</div>
+
+<!-- page 7: problem 6 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">6.</span>건(Gunn) 발진 회로</p>
+<p class="x" style="--b:101.5;--l:13.6pt">건 다이오드(Gunn diode)는 전자 전이 소자의 일종으로, 보통 갈륨비소 반도체로 만든다. 이 다이오드는 그림&nbsp;7과 같은 독특한 비선형 $I-V$(전류-전압) 관계를 보인다. 건 다이오드의 가장 특이한 성질은, 적절한 작동 조건에서, 예를 들어 그림&nbsp;7에서 다이오드 양단 전압이 $V_1$과 $V_2$ 사이에 있을 때, 이 소자에 음의 미분 저항 현상, 즉 <span class="nw">$r_d\equiv dV/dI&lt;0$이</span> 나타날 수 있다는 것이다. 음의 미분 저항은 이 작동점 부근의 교류 신호에 대해 소자가 에너지를 소모하지 않고 오히려 회로에 에너지를 되돌려 준다는 뜻이다. 건 다이오드는 이 특별한 성질 때문에 마이크로파에서 테라헤르츠파(THz)에 이르는 발생기를 만드는 데 널리 쓰인다. 그림&nbsp;8은 간단히 한 건 발진 회로이다. 회로의 오른쪽 절반에서 건 다이오드와 직렬 저항 $R$은 고주파 초크(RFC)를 거쳐 직류 전압원 $V_b$에 연결되어 있다. 여기서 고주파 초크는 보호 소자로서, 고주파 교류 전류가 직류 전압원으로 들어가는 것을 막는다. 회로의 왼쪽 절반은 $LC$ 진동 회로로서 교류 전류 $i(t)$를 만들 수 있다. 고주파 초크의 에너지 손실은 무시할 수 있고, <span class="nw">$r_d=-r$ $(r&gt;0)$이며,</span> 전압 $V_1$과 $V_2$ 사이 구간에서 $r$은 상수라고 가정한다. 건 다이오드 양단의 직류 전압은 $V$, 교류 전압은 <span class="nw">$v_{out}(t)$이다.</span> 다음 물음에 답하여라.</p>
+<p class="x s" style="--b:303"><span class="n">(A)</span><span class="nw">$i(0)=0$, $i'(0)=\alpha$, $i\ll I$일</span> 때, 교류 전류 $i(t)$를 구하여라. (9점)</p>
+<p class="x s" style="--b:321"><span class="n">(B)</span>회로가 발진하기 위한 조건을 설명하고, 발진 진동수를 구하여라. (6점)</p>
+<p class="x s" style="--b:339;--l:15pt"><span class="n">(C)</span>발진이 일어날 때 $LC$ 회로 부분 양단의 전압 강하를 $v_{in}(t)$(교류 신호 입력원으로 볼 수 있다)라 하자. <span class="nw">$\sqrt{L/C}\gg R$일</span> 때, 이때의 $v_{out}/v_{in}$(전압 이득)을 구하여라. (3점)</p>
+<p class="x s" style="--b:378"><span class="n">(D)</span>회로가 발진할 때 다이오드의 직류 전압을 <span class="nw">$V=(V_2-V_1)/2$로</span> 고정한다. 건 다이오드가 작동할 때 소모하는 총 일률을 구하여라. (7점)</p>
+<div class="f" style="left:96pt;top:455pt"><span class="fig" data-srcpage="7" data-clip="96,455,306,603"></span></div>
+<div class="f" style="left:315pt;top:455pt"><span class="fig" data-srcpage="7" data-clip="315,455,502,603"></span></div>
+<div class="ov" style="left:94pt;top:509pt;font-size:11pt;padding:2pt 2pt 3pt;width:66pt;text-align:right">건 다이오드</div>
+<p class="x c" style="--b:614.2;left:184pt;width:80pt;--fs:12pt">그림 7</p>
+<p class="x c" style="--b:614.2;left:362.7pt;width:80pt;--fs:12pt">그림 8</p>
+<p class="x pn" style="--b:797.3">6</p>
+</div>
+
+<!-- page 8: marking scheme, problem 1 -->
+<div class="page">
+<p class="x c" style="--b:84.2;left:40pt;width:515.3pt;--fs:14pt;--l:18.2pt">2017년 제18회 아시아 및 제48회 국제 물리 올림피아드<br>국가대표팀 복선(2차 선발) 시험 문제 참고 풀이</p>
+<p class="x" style="--b:132.5;left:70.9pt;width:453.5pt;--fs:12pt">문제 1 채점 기준:</p>
+<!--RULES 8-->
+<div class="hr" style="left:70.7pt;width:421.2pt;top:150.5pt"></div>
+<div class="hr" style="left:70.7pt;width:421.2pt;top:182.3pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:220.0pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:236.2pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:252.2pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:268.3pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:284.4pt"></div>
+<div class="hr" style="left:70.7pt;width:421.2pt;top:300.6pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:334.7pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:371.2pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:411.4pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:451.7pt"></div>
+<div class="hr" style="left:70.7pt;width:421.2pt;top:467.8pt"></div>
+<div class="vr" style="left:70.7pt;top:151.0pt;height:317.3pt"></div>
+<div class="vr" style="left:113.3pt;top:151.0pt;height:317.3pt"></div>
+<div class="vr" style="left:437.4pt;top:151.0pt;height:317.3pt"></div>
+<div class="vr" style="left:464.0pt;top:151.0pt;height:317.3pt"></div>
+<div class="vr" style="left:491.4pt;top:151.0pt;height:317.3pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:162.5;left:76.3pt">소문항</p>
+<p class="t" style="--b:162.5;left:118.8pt">내용</p>
+<p class="t" style="--b:162.5;left:443pt;--l:15.6pt">득<br>점</p>
+<p class="t" style="--b:162.5;left:469.6pt;--l:15.6pt">비<br>고</p>
+<p class="t" style="--b:193.9;left:76.3pt;--l:14.1pt">(a)<br>13점</p>
+<p class="t k" style="--b:195.4;left:118.8pt;width:316pt;--l:18pt">이상 기체 방정식 <span class="nw">$P_0V_\mathrm{A0}=P_0V_\mathrm{B0}=RT_0$을</span> 쓰고,<br><span class="nw">$V_\mathrm{A0}=V_\mathrm{B0}=22.5\,\mathrm L$을</span> 계산한다.</p>
+<p class="t" style="--b:193.9;left:443pt">2</p>
+<p class="t k" style="--b:231.8;left:118.8pt;width:316pt">열역학 제1법칙: <span class="nw">$\Delta U_\mathrm{A+B}=5R\Delta T=Q-W$를</span> 쓴다.</p>
+<p class="t" style="--b:231.6;left:443pt">3</p>
+<p class="t k" style="--b:248;left:118.8pt;width:316pt"><span class="nw">$W=R\Delta T$를</span> 계산한다.</p>
+<p class="t" style="--b:247.8;left:443pt">2</p>
+<p class="t k" style="--b:264.1;left:118.8pt;width:316pt">A, B의 온도 변화 <span class="nw">$\Delta T=6.71\,\mathrm K$를</span> 구한다.</p>
+<p class="t" style="--b:263.9;left:443pt">2</p>
+<p class="t k" style="--b:280.2;left:118.8pt;width:316pt">A 부분의 압력 <span class="nw">$P_\mathrm A=2480\,\mathrm{Pa}$를</span> 구한다.</p>
+<p class="t" style="--b:280;left:443pt">2</p>
+<p class="t k" style="--b:296.3;left:118.8pt;width:316pt">B 부분의 부피 <span class="nw">$\Delta V_\mathrm B=0.552\,\mathrm L$을</span> 구한다.</p>
+<p class="t" style="--b:296;left:443pt">2</p>
+<p class="t" style="--b:312.2;left:76.3pt;--l:14.1pt">(b)<br>12점</p>
+<p class="t k" style="--b:313.7;left:118.8pt;width:316pt;--l:16.8pt">열역학 제1법칙 <span class="nw">$\Delta U_\mathrm A=Q-W$를</span> 쓴다:<br>&nbsp;<span class="nw">$(5R/2)\Delta T_\mathrm A=80.0\times4.18-P_0(\Delta V_\mathrm A)$.</span></p>
+<p class="t" style="--b:312.2;left:443pt">3</p>
+<p class="t k" style="--b:347.8;left:118.8pt;width:316pt;--l:18pt">이상 기체 방정식으로부터: <span class="nw">$(7R/2)\Delta T_\mathrm A=80.0\times4.18$.</span><br><span class="nw">$\Delta T_\mathrm A=11.5\,\mathrm K$를</span> 얻는다.</p>
+<p class="t" style="--b:346.3;left:443pt">3</p>
+<p class="t k" style="--b:383;left:118.8pt;width:316pt"><span class="nw">$\Delta V_\mathrm A=0.946\,\mathrm L$을</span> 구한다.</p>
+<p class="t" style="--b:382.8;left:443pt">2</p>
+<p class="t k" style="--b:423.4;left:118.8pt;width:316pt"><span class="nw">$\Delta P_\mathrm A=\Delta P_\mathrm B=0$을</span> 구한다.</p>
+<p class="t" style="--b:423.1;left:443pt">2</p>
+<p class="t k" style="--b:463.6;left:118.8pt;width:316pt"><span class="nw">$\Delta V_\mathrm B=0$; $\Delta T_\mathrm B=0$을</span> 구한다.</p>
+<p class="t" style="--b:463.3;left:443pt">2</p>
+<p class="x pn" style="--b:797.3">7</p>
+</div>
+
+<!-- page 9: marking scheme, problem 2 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.5pt;--fs:12pt">문제 2 채점 기준:</p>
+<!--RULES 9-->
+<div class="hr" style="left:65.3pt;width:419.3pt;top:100.3pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:116.4pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:166.2pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:220.7pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:272.8pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:327.2pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:381.8pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:436.3pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:540.6pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:631.1pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:649.6pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:686.0pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:702.2pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:735.7pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:751.9pt"></div>
+<div class="vr" style="left:65.3pt;top:100.8pt;height:651.6pt"></div>
+<div class="vr" style="left:106.8pt;top:100.8pt;height:651.6pt"></div>
+<div class="vr" style="left:369.0pt;top:100.8pt;height:651.6pt"></div>
+<div class="vr" style="left:418.7pt;top:100.8pt;height:651.6pt"></div>
+<div class="vr" style="left:484.1pt;top:100.8pt;height:651.6pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:112.2;left:68.5pt">소문항</p>
+<p class="t" style="--b:112.2;left:112.4pt">내용</p>
+<p class="t" style="--b:112.2;left:374.6pt">득점</p>
+<p class="t" style="--b:112.2;left:424.2pt">비고</p>
+<p class="t" style="--b:128;left:70.9pt;--l:14.1pt">(A)<br>6점</p>
+<p class="t k" style="--b:128.3;left:112.4pt;width:255pt">A점에서 P점을 거쳐 B점까지의 광로를 쓴다:</p>
+<p class="t k" style="--b:153.8;left:112.4pt;width:255pt;--l:22pt">$f(x_1)=\frac{\sqrt{h_1^2+x_1^2}+\sqrt{h_1'^2+(d-x_1)^2}}{(\lambda/n_1)}$.</p>
+<p class="t" style="--b:128;left:374.6pt">1</p>
+<p class="t k" style="--b:181.5;left:112.4pt;width:255pt;--l:22pt">$f'(x_1)=0$에서 <span class="nw">$\frac{x_1}{\sqrt{h_1^2+x_1^2}}-\frac{d-x_1}{\sqrt{h_1'^2+(d-x_1)^2}}=0$.</span></p>
+<p class="t k" style="--b:215.3;left:112.4pt;width:255pt">즉 <span class="nw">$\sin\theta_1=\sin\theta_1'$</span></p>
+<p class="t" style="--b:177.8;left:374.6pt">2</p>
+<p class="t k" style="--b:233.8;left:112.4pt;width:255pt">A점에서 P점을 거쳐 B점까지의 광로를 쓴다:</p>
+<p class="t k" style="--b:260;left:112.4pt;width:255pt;--l:22pt">$f(x_1)=\frac{\sqrt{h_1^2+x_1^2}}{(\lambda/n_1)}+\frac{\sqrt{h_2^2+(d-x_1)^2}}{(\lambda/n_2)}$.</p>
+<p class="t" style="--b:232.3;left:374.6pt">1</p>
+<p class="t k" style="--b:288.5;left:112.4pt;width:255pt;--l:22pt">$f'(x_1)=0$에서 <span class="nw">$\frac{n_1x_1}{\sqrt{h_1^2+x_1^2}}-\frac{n_2(d-x_1)}{\sqrt{h_2^2+(d-x_1)^2}}=0$.</span></p>
+<p class="t k" style="--b:321.8;left:112.4pt;width:255pt">즉 <span class="nw">$n_1\sin\theta_1=n_2\sin\theta_2$.</span></p>
+<p class="t" style="--b:284.4;left:374.6pt">2</p>
+<p class="t" style="--b:339;left:70.9pt;--l:14.1pt">(B)<br>4점</p>
+<p class="t k" style="--b:340.4;left:112.4pt;width:255pt">이웃한 두 경로의 광로차를 쓴다:</p>
+<p class="t k" style="--b:368.8;left:122pt;width:245pt;--l:22pt"><span class="nw">${}_{\text{실선}}\!\int_A^B d\varphi(\vec r)-{}_{\text{점선}}\!\int_A^B d\varphi(\vec r)$.</span></p>
+<p class="t" style="--b:339;left:374.6pt">2</p>
+<p class="t k" style="--b:402.8;left:112.4pt;width:255pt;--l:22pt">정류 위상 조건에서 <span class="nw">$\frac{2\pi dx\sin\theta_1}{(\lambda/n_1)}+\frac{2\pi dx\sin\theta_2}{(\lambda/n_2)}=0$.</span></p>
+<p class="t k" style="--b:430.9;left:112.4pt;width:255pt">즉 <span class="nw">$n_1\sin\theta_1=n_2\sin\theta_2$.</span></p>
+<p class="t" style="--b:393.5;left:374.6pt">2</p>
+<p class="t" style="--b:448;left:70.9pt;--l:14.1pt">(C)<br>5점</p>
+<p class="t k" style="--b:449.4;left:112.4pt;width:255pt;--l:14pt">굴절할 때 이웃한 두 경로의 광로차를 쓰고, 정류 위상 조건에서</p>
+<p class="t k" style="--b:484;left:112.4pt;width:255pt;--l:22pt"><span class="nw">$\frac{2\pi dx\sin\theta_1}{(\lambda/n_1)}+\frac{2\pi dx\sin\theta_2}{(\lambda/n_2)}+d\Phi=0$,</span></p>
+<p class="t k" style="--b:513.2;left:112.4pt;width:255pt;--l:22pt">즉 <span class="nw">$n_2\sin\theta_2=n_1\sin\theta_1+\frac{\lambda}{2\pi}\frac{d\Phi}{dx}$.</span></p>
+<p class="t" style="--b:448;left:374.6pt">3</p>
+<p class="t k" style="--b:553.7;left:112.4pt;width:255pt;--l:14pt">반사할 때 이웃한 두 경로의 광로차를 쓰고, 정류 위상 조건에서</p>
+<p class="t k" style="--b:588;left:112.4pt;width:255pt;--l:22pt"><span class="nw">$\frac{2\pi dx\sin\theta_1'}{(\lambda/n_1)}+\frac{2\pi dx\sin\theta_1}{(\lambda/n_1)}+d\Phi=0$,</span></p>
+<p class="t k" style="--b:617.5;left:112.4pt;width:255pt;--l:22pt">즉 <span class="nw">$n_1\sin\theta_1'=n_1\sin\theta_1+\frac{\lambda}{2\pi}\frac{d\Phi}{dx}$.</span></p>
+<p class="t" style="--b:552.2;left:374.6pt">2</p>
+<p class="t" style="--b:642.7;left:68.5pt;--l:14.1pt">(D)(a)<br>3점</p>
+<p class="t k" style="--b:644.2;left:112.4pt;width:255pt">(c)의 일반화된 반사 법칙: <span class="nw">$\sin\theta_1'=\sin\theta_1+\alpha$.</span></p>
+<p class="t" style="--b:642.7;left:374.6pt">1</p>
+<p class="t k" style="--b:662.8;left:112.4pt;width:255pt">반사광의 조건 <span class="nw">$\theta_1&gt;\sin^{-1}(1-\alpha)$를</span> 구한다.</p>
+<p class="t" style="--b:661.2;left:374.6pt">2</p>
+<p class="t" style="--b:697.8;left:68.5pt;--l:14.1pt">(D)(b)<br>7점</p>
+<p class="t k" style="--b:698;left:112.4pt;width:255pt">일반화된 굴절 법칙: <span class="nw">$n_2\sin\theta_2=n_1\sin\theta_1+\alpha$.</span></p>
+<p class="t" style="--b:698;left:374.6pt">1</p>
+<p class="t k" style="--b:715.9;left:112.4pt;width:255pt;--l:15.6pt"><span class="nw">$n_1&lt;n_2$일</span> 때 전반사가 일어나는 조건을 구한다:<br><span class="nw">$n_2-\alpha&lt;n_1$이고</span> <span class="nw">$\theta_1&gt;\sin^{-1}[(n_2-\alpha)/n_1]$.</span></p>
+<p class="t" style="--b:713.9;left:374.6pt">4</p>
+<p class="t k" style="--b:747.7;left:112.4pt;width:255pt">임계 입사각 <span class="nw">$\theta_\mathrm c=\sin^{-1}[(n_2-\alpha)/n_1]$을</span> 구한다.</p>
+<p class="t" style="--b:747.5;left:374.6pt">2</p>
+<p class="x pn" style="--b:797.3">8</p>
+</div>
+
+<!-- page 10: marking scheme, problem 3 -->
+<div class="page">
+<p class="x" style="--b:96.1;left:70.9pt;width:453.5pt;--fs:12pt">문제 3 채점 기준:</p>
+<!--RULES 10-->
+<div class="hr" style="left:65.3pt;width:424.1pt;top:114.1pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:130.2pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:202.7pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:239.2pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:275.8pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:312.2pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:331.1pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:367.6pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:422.0pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:465.1pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:508.3pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:551.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:587.9pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:624.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:642.8pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:661.3pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:679.9pt"></div>
+<div class="vr" style="left:65.3pt;top:114.6pt;height:565.8pt"></div>
+<div class="vr" style="left:106.1pt;top:114.6pt;height:565.8pt"></div>
+<div class="vr" style="left:403.8pt;top:114.6pt;height:565.8pt"></div>
+<div class="vr" style="left:439.2pt;top:114.6pt;height:565.8pt"></div>
+<div class="vr" style="left:488.9pt;top:114.6pt;height:565.8pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:126;left:67.5pt">소문항</p>
+<p class="t" style="--b:126;left:111.7pt">내용</p>
+<p class="t" style="--b:126;left:409.4pt">득점</p>
+<p class="t" style="--b:126;left:444.8pt">비고</p>
+<p class="t" style="--b:141.8;left:70.9pt;--l:14.1pt">(a)<br>6점</p>
+<p class="t k" style="--b:143.6;left:111.7pt;width:290pt">정상 상태 해 <span class="nw">$Ae^{i(\omega t-\phi)}$를</span> 미분 방정식</p>
+<p class="t k" style="--b:173.7;left:115pt;width:286pt;--l:22pt">$M\frac{d^2z}{d^2t}+b\frac{dz}{dt}+kz=F_0e^{i\omega t}$에 대입하여</p>
+<p class="t k" style="--b:196.9;left:111.7pt;width:290pt"><span class="nw">$\{-M\omega^{2+bi\omega}+k\}Ae^{i(\omega t-\phi)}=F_0e^{i\omega t}$를</span> 얻는다.</p>
+<p class="t" style="--b:141.8;left:409.4pt">2</p>
+<p class="t k" style="--b:222.1;left:111.7pt;width:290pt;--l:26pt"><span class="nw">$A(\omega)=\frac{F_0/M}{\sqrt{\left(\omega_0^2-\omega^2\right)^2+(b/M)^2\omega^2}}$를</span> 구한다.</p>
+<p class="t" style="--b:214.3;left:409.4pt">2</p>
+<p class="t k" style="--b:261;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\phi=\tan^{-1}\frac{(b\omega/M)}{\left(\omega_0^2-\omega^2\right)}$를</span> 구한다.</p>
+<p class="t" style="--b:250.9;left:409.4pt">2</p>
+<p class="t" style="--b:287.4;left:70.9pt;--l:14.1pt">(b)<br>4점</p>
+<p class="t k" style="--b:298.6;left:111.7pt;width:290pt;--l:22pt">진폭이 최대일 때의 각진동수: <span class="nw">$\frac{dA(\omega)}{d\omega}=0$.</span></p>
+<p class="t" style="--b:287.4;left:409.4pt">2</p>
+<p class="t k" style="--b:326.4;left:111.7pt;width:290pt">$\omega_r=\sqrt{\omega_0^2-(b^2/2M^2)}\approx\omega_0$.</p>
+<p class="t" style="--b:323.9;left:409.4pt">2</p>
+<p class="t" style="--b:342.7;left:70.9pt;--l:14.1pt">(c)<br>9점</p>
+<p class="t k" style="--b:343.8;left:111.7pt;width:290pt">자기력을 받은 뒤의 공명 각진동수를 쓴다:</p>
+<p class="t k" style="--b:360.5;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\omega_1=\sqrt{\frac{k_1}{M}}=\sqrt{\frac{k-\partial F_z/\partial z}{M}}$.</span></p>
+<p class="t" style="--b:342.7;left:409.4pt">2</p>
+<p class="t k" style="--b:380.6;left:111.7pt;width:290pt">공명 각진동수의 변화를 쓴다:</p>
+<p class="t k" style="--b:409.4;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\Delta\omega=\sqrt{\frac{k_1}{M}}-\sqrt{\frac{k}{M}}=\omega_0\left(\sqrt{1-\frac{\partial F_z/\partial z}{k}}-1\right)$.</span></p>
+<p class="t" style="--b:379.2;left:409.4pt">1</p>
+<p class="t k" style="--b:435.1;left:111.7pt;width:290pt;--l:16pt">$\partial F_z/\partial z$의 1차까지 전개하여 <span class="nw">$\Delta\omega\cong-\omega_0(\partial F_z/\partial z)/(2k)$를</span> 얻는다.</p>
+<p class="t" style="--b:433.7;left:409.4pt">2</p>
+<p class="t k" style="--b:478.3;left:111.7pt;width:290pt;--l:16pt"><span class="nw">$U=-mH_z$로부터</span> 탐침이 받는 자기력 <span class="nw">$F_z=m\,\partial H_z/\partial z$를</span> 구한다.</p>
+<p class="t" style="--b:476.9;left:409.4pt">2</p>
+<p class="t k" style="--b:531.6;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\Delta\omega\cong-\frac{\omega_0m}{2k}\left(\frac{\partial^2H_z}{\partial z^2}\right)=-\frac{\omega_0ma}{k}$를</span> 구한다.</p>
+<p class="t" style="--b:520;left:409.4pt">2</p>
+<p class="t" style="--b:563;left:70.9pt;--l:14.1pt">(d)<br>6점</p>
+<p class="t k" style="--b:573.5;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$H_z\propto-\left\{\frac{x}{x^2+z^2}+\frac{x_0-x}{(x_0-x)^2+z^2}\right\}$을</span> 쓴다.</p>
+<p class="t" style="--b:563;left:409.4pt">2</p>
+<p class="t k" style="--b:610.6;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\frac{\partial^2H_z}{\partial z^2}\approx\left\{\frac{2x}{[x^2+z^2]^2}+\frac{2(x_0-x)}{[(x_0-x)^2+z^2]^2}\right\}$을</span> 구한다.</p>
+<p class="t" style="--b:599.5;left:409.4pt">1</p>
+<p class="t k" style="--b:637.4;left:111.7pt;width:290pt">영역 I이 밝음 단계임을 판단한다.</p>
+<p class="t" style="--b:636;left:409.4pt">1</p>
+<p class="t k" style="--b:655.9;left:111.7pt;width:290pt">영역 II가 어두움 단계임을 판단한다.</p>
+<p class="t" style="--b:654.5;left:409.4pt">1</p>
+<p class="t k" style="--b:674.5;left:111.7pt;width:290pt">영역 III이 밝음 단계임을 판단한다.</p>
+<p class="t" style="--b:673.1;left:409.4pt">1</p>
+<p class="x pn" style="--b:797.3">9</p>
+</div>
+
+<!-- page 11: marking scheme, problem 4 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.5pt;--fs:12pt">문제 4 채점 기준:</p>
+<!--RULES 11-->
+<div class="hr" style="left:65.3pt;width:424.1pt;top:100.3pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:116.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:134.9pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:159.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:180.8pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:202.3pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:238.8pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:277.8pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:314.3pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:350.9pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:394.0pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:430.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:448.9pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:467.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:521.9pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:558.5pt"></div>
+<div class="vr" style="left:65.3pt;top:100.8pt;height:458.2pt"></div>
+<div class="vr" style="left:106.1pt;top:100.8pt;height:458.2pt"></div>
+<div class="vr" style="left:403.8pt;top:100.8pt;height:458.2pt"></div>
+<div class="vr" style="left:439.2pt;top:100.8pt;height:458.2pt"></div>
+<div class="vr" style="left:488.9pt;top:100.8pt;height:458.2pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:112.2;left:67.5pt">소문항</p>
+<p class="t" style="--b:112.2;left:111.7pt">내용</p>
+<p class="t" style="--b:112.2;left:409.4pt">득점</p>
+<p class="t" style="--b:112.2;left:444.8pt">비고</p>
+<p class="t" style="--b:128;left:70.9pt;--l:14.1pt">(a)<br>6점</p>
+<p class="t k" style="--b:129.5;left:111.7pt;width:290pt">구 아래 점의 속도 <span class="nw">$\vec u=\vec v+\vec\omega\times(-R\hat z)$를</span> 쓴다.</p>
+<p class="t" style="--b:128;left:409.4pt">2</p>
+<p class="t k" style="--b:148.8;left:111.7pt;width:290pt">초기 조건을 대입하여 <span class="nw">$\vec u_0=\omega_0R(-\hat x+3\hat y)/\sqrt2$.</span></p>
+<p class="t" style="--b:146.5;left:409.4pt">2</p>
+<p class="t k" style="--b:173.4;left:111.7pt;width:290pt">$u_0=\sqrt5\,\omega_0R$.</p>
+<p class="t" style="--b:171;left:409.4pt">1</p>
+<p class="t k" style="--b:194.8;left:111.7pt;width:290pt">$\hat u_0=(-\hat x+3\hat y)/\sqrt{10}$.</p>
+<p class="t" style="--b:192.5;left:409.4pt">1</p>
+<p class="t" style="--b:214;left:70.9pt;--l:14.1pt">(b)<br>4점</p>
+<p class="t k" style="--b:225;left:111.7pt;width:290pt;--l:20pt">질량 중심의 운동 방정식 <span class="nw">$m\frac{d}{dt}\vec v=\vec F=-\mu_\mathrm{k}mg\hat u$를</span> 쓴다.</p>
+<p class="t" style="--b:214;left:409.4pt">2</p>
+<p class="t k" style="--b:251.9;left:111.7pt;width:290pt">질량 중심에 대한 회전 운동 방정식을 쓴다:</p>
+<p class="t k" style="--b:271.2;left:111.7pt;width:290pt;--l:20pt"><span class="nw">$mk^2\frac{d}{dt}\vec\omega=\vec\tau=(-R\hat z)\times\vec F=\mu_\mathrm{k}mgR\hat z\times\hat u$.</span></p>
+<p class="t" style="--b:250.4;left:409.4pt">2</p>
+<p class="t" style="--b:289.4;left:70.9pt;--l:14.1pt">(c)<br>5점</p>
+<p class="t k" style="--b:301.1;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\frac{d\vec u}{dt}=\frac{d\vec v}{dt}+\frac{d\vec\omega}{dt}\times(-R\hat z)$를</span> 쓴다.</p>
+<p class="t" style="--b:289.4;left:409.4pt">1</p>
+<p class="t k" style="--b:337.7;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\frac{d\vec u}{dt}=-\mu_\mathrm{k}g\left(1+\frac{R^2}{k^2}\right)\hat u$를</span> 구한다.</p>
+<p class="t" style="--b:326;left:409.4pt">2</p>
+<p class="t k" style="--b:364;left:111.7pt;width:290pt"><span class="nw">$\vec u(t)=(u_0-\gamma\mu_\mathrm{k}gt)\hat u_0$를</span> 구한다.</p>
+<p class="t" style="--b:362.5;left:409.4pt">2</p>
+<p class="t" style="--b:405.6;left:70.9pt;--l:14.1pt">(d)<br>3점</p>
+<p class="t k" style="--b:416.9;left:111.7pt;width:290pt;--l:22pt">순수하게 구르기 시작하는 시각 <span class="nw">$T=\frac{2\sqrt5\,\omega_0R}{7\mu_\mathrm{k}g}$를</span> 구한다.</p>
+<p class="t" style="--b:405.6;left:409.4pt">3</p>
+<p class="t" style="--b:442.1;left:70.9pt;--l:14.1pt">(e)<br>7점</p>
+<p class="t k" style="--b:443.5;left:111.7pt;width:290pt">(b1)식을 시간에 대해 한 번 적분: <span class="nw">$\vec v(t)=\vec v_0-\mu_\mathrm{k}gt\hat u_0$.</span></p>
+<p class="t" style="--b:442.1;left:409.4pt">2</p>
+<p class="t k" style="--b:462;left:111.7pt;width:290pt">다시 적분: <span class="nw">$\vec r(t)=\vec v_0t-\frac12\mu_\mathrm{k}gt^2\hat u_0$.</span></p>
+<p class="t" style="--b:460.6;left:409.4pt">2</p>
+<p class="t k" style="--b:480.5;left:111.7pt;width:290pt">초기 조건 (a2)와 (a3)을 대입하여</p>
+<p class="t k" style="--b:507.5;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\vec r_T=\vec r(T)=\frac{u_0}{\gamma\mu_\mathrm{k}g}\left(\vec v_0-\frac{u_0}{2\gamma}\hat u_0\right)$.</span></p>
+<p class="t" style="--b:479;left:409.4pt">1</p>
+<p class="t k" style="--b:544.9;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\vec r_T=\frac{\sqrt{10}(\omega_0R)^2}{49\mu_\mathrm{k}g}(\hat x+11\hat y)$를</span> 구한다.</p>
+<p class="t" style="--b:533.6;left:409.4pt">2</p>
+<p class="x pn" style="--b:797.3">10</p>
+</div>
+
+<!-- page 12: marking scheme, problem 5 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.5pt;--fs:12pt">문제 5 채점 기준:</p>
+<!--RULES 12-->
+<div class="hr" style="left:65.3pt;width:426.6pt;top:100.3pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:116.4pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:141.0pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:165.5pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:190.0pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:244.4pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:265.9pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:290.5pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:309.0pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:381.5pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:402.8pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:423.6pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:496.2pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:537.5pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:555.4pt"></div>
+<div class="vr" style="left:65.3pt;top:100.8pt;height:455.1pt"></div>
+<div class="vr" style="left:113.3pt;top:100.8pt;height:455.1pt"></div>
+<div class="vr" style="left:418.0pt;top:100.8pt;height:455.1pt"></div>
+<div class="vr" style="left:453.5pt;top:100.8pt;height:455.1pt"></div>
+<div class="vr" style="left:491.4pt;top:100.8pt;height:455.1pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:112.2;left:70.9pt">소문항</p>
+<p class="t" style="--b:112.2;left:118.8pt">내용</p>
+<p class="t" style="--b:112.2;left:423.6pt">득점</p>
+<p class="t" style="--b:112.2;left:458pt">비고</p>
+<p class="t" style="--b:128;left:68.5pt;--l:14.1pt">(A)(a)<br>6점</p>
+<p class="t k" style="--b:133;left:118.8pt;width:297pt;--l:22pt">원형 코일 중앙의 자기장 <span class="nw">$\frac{\mu ia^2}{2(a^2+z^2)^{3/2}}$을</span> 구한다.</p>
+<p class="t" style="--b:128;left:423.6pt">2</p>
+<p class="t k" style="--b:157.6;left:118.8pt;width:297pt;--l:22pt">금속 고리를 지나는 자기 선속: <span class="nw">$\Phi=\frac{\mu N\pi a^4}{2(a^2+z^2)^{3/2}}I(t)$</span></p>
+<p class="t" style="--b:152.6;left:423.6pt">2</p>
+<p class="t k" style="--b:182;left:118.8pt;width:297pt;--l:22pt">상호 유도 계수 <span class="nw">$M(z)=\frac{\mu N\pi a^4}{2(a^2+z^2)^{3/2}}$을</span> 구한다.</p>
+<p class="t" style="--b:177.1;left:423.6pt">2</p>
+<p class="t" style="--b:201.6;left:68.5pt;--l:14.1pt">(A)(b)<br>5점</p>
+<p class="t k" style="--b:203;left:118.8pt;width:297pt;--l:15.5pt">길이 $dz$, 반지름 $r$인 원기둥면(양 끝 단면 포함)을 지나는 자기 선속이 0임을 쓴다:</p>
+<p class="t k" style="--b:239.9;left:133.8pt;width:282pt"><span class="nw">$dz\,2\pi rB_r(z,r)+\pi r^2B_z(z+dz,r)-\pi r^2B_z(z,r)=0$</span></p>
+<p class="t" style="--b:201.6;left:423.6pt">2</p>
+<p class="t k" style="--b:259.8;left:118.8pt;width:297pt;--l:22pt"><span class="nw">$B_r(z,r)=-\frac{r}{2}\frac{\partial B_z(z,r)}{\partial z}$를</span> 얻는다.</p>
+<p class="t" style="--b:256.1;left:423.6pt">2</p>
+<p class="t k" style="--b:282.5;left:118.8pt;width:297pt;--l:22pt"><span class="nw">$B_r(z,r)\approx\frac{3\mu NI(t)a^2zr}{4(a^2+z^2)^{5/2}}$를</span> 구한다.</p>
+<p class="t" style="--b:277.6;left:423.6pt">1</p>
+<p class="t" style="--b:302.2;left:68.5pt;--l:14.1pt">(B)(a)<br>6점</p>
+<p class="t k" style="--b:303.6;left:118.8pt;width:297pt">금속 고리의 유도 기전력 <span class="nw">$-M(z)\omega\cos\omega t\,I(z)$를</span> 쓴다.</p>
+<p class="t" style="--b:302.2;left:423.6pt">1</p>
+<p class="t k" style="--b:331.7;left:118.8pt;width:297pt">Kirchoff’s law로 회로 방정식을 쓴다:</p>
+<p class="t k" style="--b:367.8;left:118.8pt;width:297pt;--l:22pt">$Ri+L\frac{di}{dt}=-M(z)\omega\cos\omega t\,I(z)$</p>
+<p class="t" style="--b:320.6;left:423.6pt">2</p>
+<p class="t k" style="--b:396.7;left:118.8pt;width:297pt;--l:20pt"><span class="nw">$i(t)=-\frac{M\omega I(z)}{R^2+\omega^2L^2}[R\cos\omega t+\omega L\sin\omega t]$를</span> 구한다.</p>
+<p class="t" style="--b:393.1;left:423.6pt">2</p>
+<p class="t k" style="--b:417.5;left:118.8pt;width:297pt;--l:20pt"><span class="nw">$\tan\delta=\frac{R}{\omega L}$를</span> 구한다.</p>
+<p class="t" style="--b:414.5;left:423.6pt">1</p>
+<p class="t" style="--b:435.4;left:68.5pt;--l:14.1pt">(B)(b)<br>8점</p>
+<p class="t k" style="--b:446.4;left:118.8pt;width:297pt">솔레노이드와 금속 고리의 회로 방정식을 쓴다:</p>
+<p class="t" style="--b:472.8;left:225pt;--fs:11.5pt;--l:18pt">$(i\omega L_0+R_0)i_1+i\omega Mi_2=V_0$;<br>$i\omega Mi_1+(i\omega L)i_2=0$.</p>
+<p class="t" style="--b:435.4;left:423.6pt">3</p>
+<p class="t k" style="--b:512.8;left:118.8pt;width:297pt;--l:30pt"><span class="nw">$I(z)=\frac{V_0}{\sqrt{R_0^2+\omega^2L_0^2\left(1-\frac{M^2}{LL_0}\right)^2}}$를</span> 구한다.</p>
+<p class="t" style="--b:507.8;left:423.6pt">3</p>
+<p class="t k" style="--b:551.2;left:118.8pt;width:297pt">$z$가 증가하면 $I(z)$가 감소함을 설명한다.</p>
+<p class="t" style="--b:549.1;left:423.6pt">2</p>
+<p class="x pn" style="--b:797.3">11</p>
+</div>
+
+<!-- page 13: marking scheme, problem 6 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.5pt;--fs:12pt">문제 6 채점 기준:</p>
+<!--RULES 13-->
+<div class="hr" style="left:65.3pt;width:418.6pt;top:100.3pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:116.4pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:157.1pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:175.8pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:223.2pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:277.7pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:329.3pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:363.4pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:399.8pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:436.3pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:466.2pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:498.0pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:531.7pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:569.4pt"></div>
+<div class="vr" style="left:65.3pt;top:100.8pt;height:469.1pt"></div>
+<div class="vr" style="left:106.1pt;top:100.8pt;height:469.1pt"></div>
+<div class="vr" style="left:368.4pt;top:100.8pt;height:469.1pt"></div>
+<div class="vr" style="left:418.0pt;top:100.8pt;height:469.1pt"></div>
+<div class="vr" style="left:483.4pt;top:100.8pt;height:469.1pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:112.2;left:67.5pt">소문항</p>
+<p class="t" style="--b:112.2;left:111.7pt">내용</p>
+<p class="t" style="--b:112.2;left:374pt">득점</p>
+<p class="t" style="--b:112.2;left:423.6pt">비고</p>
+<p class="t" style="--b:128;left:70.9pt;--l:14.1pt">(a)<br>9점</p>
+<p class="t k" style="--b:129.6;left:111.7pt;width:255pt">Kirchoff’s law로 왼쪽 절반의 회로 방정식을 쓴다:</p>
+<p class="t k" style="--b:151;left:111.7pt;width:255pt;--l:20pt"><span class="nw">$\frac{\int i\,dt}{C}+L\frac{di}{dt}+R(I+i)+[V_1-r(I+i)]=0$</span></p>
+<p class="t" style="--b:128;left:374pt">2</p>
+<p class="t k" style="--b:170.9;left:111.7pt;width:255pt">직류 성분이 상쇄됨을 설명: <span class="nw">$RI+(V_1-rI)=0$</span></p>
+<p class="t" style="--b:168.7;left:374pt">1</p>
+<p class="t k" style="--b:189.6;left:111.7pt;width:255pt">미분하여 2계 미분 방정식을 얻는다:</p>
+<p class="t k" style="--b:212;left:111.7pt;width:255pt;--l:20pt"><span class="nw">$L\frac{d^2i}{dt^2}+(R-r)\frac{di}{dt}+\frac{i}{C}=0$</span></p>
+<p class="t" style="--b:187.4;left:374pt">1</p>
+<p class="t k" style="--b:245.9;left:111.7pt;width:255pt">미분 방정식의 일반해를 쓴다:</p>
+<p class="t k" style="--b:272.2;left:111.7pt;width:255pt;--l:20pt"><span class="nw">$i(t)=\alpha_1e^{(-\xi+s)t}+\alpha_2e^{(-\xi-s)t}$, $s=\sqrt{\xi^2-\omega_0^2}$</span></p>
+<p class="t" style="--b:234.8;left:374pt">2</p>
+<p class="t k" style="--b:300.5;left:111.7pt;width:255pt"><span class="nw">$i(0)=0$, $i'(0)=\alpha$를</span> 대입하여 전류를 구한다:</p>
+<p class="t k" style="--b:323;left:111.7pt;width:255pt">$i(t)=(\alpha/s)e^{-\xi t}\sinh(st)$</p>
+<p class="t" style="--b:289.4;left:374pt">3</p>
+<p class="t" style="--b:340.9;left:70.9pt;--l:14.1pt">(b)<br>6점</p>
+<p class="t k" style="--b:342.4;left:111.7pt;width:255pt;--l:16.8pt">발진이 일어나는 첫째 조건(회로 에너지 손실 없음):<br>&nbsp;<span class="nw">$\xi\le0\Rightarrow R\le r$.</span></p>
+<p class="t" style="--b:340.9;left:374pt">2</p>
+<p class="t k" style="--b:376.4;left:111.7pt;width:255pt;--l:20pt">발진이 일어나는 둘째 조건($s$가 순허수):<br><span class="nw">$&lt;\omega_0\Rightarrow R&lt;r+2\sqrt{L/C}$</span></p>
+<p class="t" style="--b:375;left:374pt">2</p>
+<p class="t k" style="--b:423;left:111.7pt;width:255pt">발진 진동수를 구한다: <span class="nw">$\omega=\sqrt{\omega_0^2-\xi^2}$</span></p>
+<p class="t" style="--b:411.5;left:374pt">2</p>
+<p class="t" style="--b:448;left:70.9pt;--l:14.1pt">(c)<br>3점</p>
+<p class="t k" style="--b:448.2;left:111.7pt;width:255pt"><span class="nw">$v_\mathrm{out}/v_\mathrm{in}=r/(r-R)$을</span> 쓴다.</p>
+<p class="t" style="--b:448;left:374pt">4</p>
+<p class="t" style="--b:478;left:70.9pt;--l:14.1pt">(d)<br>7점</p>
+<p class="t k" style="--b:478.2;left:111.7pt;width:255pt;--l:15.6pt">발진 교류 전압의 진폭은 최대 <span class="nw">$(V_2-V_1)/2$이고,</span> 이를 넘으면 $r_d$가 양이 되어 발진 진폭이 포화됨을 설명한다.</p>
+<p class="t" style="--b:478;left:374pt">1</p>
+<p class="t k" style="--b:510.7;left:111.7pt;width:255pt;--l:15.6pt"><span class="nw">$P_\mathrm{DC}^\mathrm{Gunn}=[(V_2-V_1)/2]$</span><br><span class="nw">$\times\{[V_b-(V_2-V_1)/2]/R\}$을</span> 구한다.</p>
+<p class="t" style="--b:509.6;left:374pt">3</p>
+<p class="t k" style="--b:543.6;left:111.7pt;width:255pt">다음을 구한다:</p>
+<p class="t k" style="--b:560.2;left:111.7pt;width:255pt"><span class="nw">$P_\mathrm{AC}^\mathrm{Gunn}=\langle(\Delta V)(\Delta I)\rangle=\langle iv\rangle=-(V_2-V_1)^2/(8r)$</span></p>
+<p class="t" style="--b:543.4;left:374pt">3</p>
+<p class="x pn" style="--b:797.3">12</p>
+</div>
+
+</body></html>

@@ -1,0 +1,574 @@
+<!doctype html><html lang="en"><head><meta name="page" content="595.32,841.92">
+<style>
+/* TWPhO 2017 (Taiwan, national-team second-round selection exam for APhO 2017 / IPhO 2017), combined booklet:
+   theory paper (pp.1-7) followed by the marking scheme (評分標準, pp.8-13) — English edition on the original layout.
+   ORIGINAL: MS Word, A4 595.3x841.9pt, 13 pages, text PDF. Chinese in DFKai-SB 12pt, Latin in Times New Roman, math
+   in Cambria Math, line pitch 18pt. Text column x 96.6..524.4; problem headings "一、" at x 70.9 (12pt bold),
+   heading text at x 96.6; part labels "(A)" at x 96.6, their text at ~110.8-114; inner "(a)" at x 110.5-112.9,
+   their text at 124.7. Problem 5 text runs beside Fig.6 in the column 96.6..390.8. Page numbers 10pt, centred
+   at x 297.6, baseline 797.3 (cover page has none; page 2 is numbered 1).
+   English body 11.5pt (96%) on a 13.5-14pt pitch. Text beside Fig.3 (p.4 (B)) wraps round an invisible right float.
+   Marking-scheme tables (pp.8-13): rules are 0.5pt divs at the original rule coordinates (generated from
+   page.get_drawings() by W/tmp/twpho2017/mkrules.py between the RULES markers), every cell retyped.
+   Chinese figure labels (Fig.1 加熱器, Fig.2 法線/入射線/反射線/折射線, Fig.4 偵測器/雷射/振盪, Fig.6 軟鐵/金屬環/
+   螺線管線圈, Fig.7 甘恩二極體) are covered by "ov" overlays; captions are text.
+
+   PLACEMENT (as twpho/2014_T_EN.html): every block is placed by the ORIGINAL's first baseline --b:
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs) */
+body{font-family:CM,KB,serif;font-size:11.5pt;line-height:13.5pt}
+p{text-indent:0}
+.x{position:absolute;margin:0;left:96.6pt;width:427.8pt;--l:13.5pt;--fs:11.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.r{text-align:right}
+.l{text-align:left}
+.b{font-weight:bold}
+/* problem heading (12pt bold): number at 70.9, title at 96.6 */
+.h{font-weight:bold;--fs:12pt}
+.h .n{left:-25.7pt}
+/* part (A): label at 96.6, text from 113.5 */
+.s{left:113.5pt;width:410.9pt}
+.n{position:absolute;left:-18pt;white-space:nowrap}
+/* inner (a): label at 110.8, text from 124.7 */
+.ss{left:124.7pt;width:399.7pt}
+.ss .n{left:-15pt}
+.pn{left:0;width:595.32pt;text-align:center;--fs:10pt;--l:12pt}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+.fl{float:right}
+/* table rules and cells */
+.hr{position:absolute;height:0.5pt;background:#000}
+.vr{position:absolute;width:0.5pt;background:#000}
+.t{position:absolute;margin:0;--fs:12pt;--l:15pt;font-size:var(--fs);line-height:var(--l);white-space:nowrap;text-align:left;
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.k{--fs:11.3pt;white-space:normal}
+.ov{position:absolute;background:#fff;line-height:1;white-space:nowrap;padding:1pt 2pt}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<p class="x c" style="--b:98.5;left:40pt;width:515.3pt;--fs:24pt;--l:35.4pt">2017: 18th Asian Physics Olympiad<br>and 48th International Physics Olympiad</p>
+<p class="x c" style="--b:202.6;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">National Team Second-Round Selection Exam</p>
+<p class="x c" style="--b:326.8;left:40pt;width:515.3pt;--fs:54pt;--l:60pt">Theory Problems</p>
+<p class="x c" style="--b:430;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">11 February 2017</p>
+<p class="x c" style="--b:461.3;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">13:30–16:30</p>
+<p class="x c" style="--b:492.5;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">Exam time: three hours</p>
+<p class="x c" style="--b:578.9;left:40pt;width:515.3pt;--fs:24pt;--l:30pt">&lt;&lt;&thinsp;Instructions&thinsp;&gt;&gt;</p>
+<p class="x l" style="--b:604.3;left:106.9pt;width:417.5pt;--fs:18pt;--l:23.4pt"><span class="n" style="left:-36pt">1.</span>Use only a black or blue ballpoint pen.</p>
+<p class="x l" style="--b:627.7;left:106.9pt;width:417.5pt;--fs:18pt;--l:23.4pt"><span class="n" style="left:-36pt">2.</span>This paper contains six calculation problems of 25&nbsp;points each, 150&nbsp;points in total.</p>
+<p class="x l" style="--b:674.5;left:106.9pt;width:417.5pt;--fs:18pt;--l:23.4pt"><span class="n" style="left:-36pt">3.</span>Answer each problem in its designated place on the answer sheets; each problem has two answer pages.</p>
+<p class="x l" style="--b:721.3;left:106.9pt;width:417.5pt;--fs:18pt;--l:23.4pt"><span class="n" style="left:-36pt">4.</span>Handheld calculators (including scientific/engineering calculators) may be used.</p>
+</div>
+
+<!-- page 2: mathematical formulas -->
+<div class="page">
+<p class="x" style="--b:98.2;left:106.9pt;width:417.5pt;--fs:12pt">Mathematical formulas you may need ($t$: time, $x$: any physical quantity)</p>
+<p class="x" style="--b:127.5;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">1.</span>$x'(t)=\dfrac{dx}{dt}$,&emsp; $x''(t)=\dfrac{d^2x}{dt^2}=\dfrac{d}{dt}\!\left(\dfrac{dx}{dt}\right)$</p>
+<p class="x" style="--b:163;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">2.</span>$\displaystyle\int x^m\,dx=\frac{x^{m+1}}{m+1}$, $m$&thinsp;≠&thinsp;$-1$;&emsp;&emsp;&emsp; $\dfrac{d}{dx}x^m=m\cdot x^{m-1}$</p>
+<p class="x" style="--b:198.9;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">3.</span>$\dfrac{d\cos x}{dx}=-\sin x$,&emsp;&emsp; $\dfrac{d\sin x}{dx}=\cos x$,</p>
+<p class="x" style="--b:232.7;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt">$\displaystyle\int\sin x\,dx=-\cos x$,&emsp;&emsp; $\displaystyle\int\cos x\,dx=\sin x$</p>
+<p class="x" style="--b:269.4;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">4.</span>If $|x|\ll1$, $\dfrac{1}{\sqrt{1+x}}\approx1-\dfrac{x}{2}$,</p>
+<p class="x" style="--b:307.7;left:141.8pt;width:382.6pt;--fs:12pt;--l:30pt"><span class="n" style="left:-14.2pt">5.</span>If $x\ll1$, $\sin x\approx x$,&emsp;&emsp; $\cos x\approx1-\dfrac{x^2}{2}$.</p>
+<p class="x l" style="--b:331.9;left:141.8pt;width:382.6pt;--fs:12pt;--l:18pt"><span class="n" style="left:-14.2pt">6.</span>The general solution of the linear, constant-coefficient, homogeneous second-order differential equation $ax''(t)+bx'(t)+cx(t)=0$ has the form <span class="nw">$x(t)=\alpha_1e^{s_1t}+\alpha_2e^{s_2t}$,</span> where $s_1, s_2$ are the roots of the quadratic equation <span class="nw">$as^2+bs+c=0$,</span> and $\alpha_1,\alpha_2$ are constants of integration, determined by the initial conditions $x(0)$, $x'(0)$.</p>
+<p class="x pn" style="--b:797.3">1</p>
+</div>
+
+<!-- page 3: heading, problem 1, problem 2 -->
+<div class="page">
+<p class="x c" style="--b:86.6;left:40pt;width:515.3pt;--fs:16pt;--l:20.3pt">2017: 18th Asian and 48th International Physics Olympiads<br>National Team Second-Round Selection Exam — Problems</p>
+<p class="x" style="--b:134.8;left:70.9pt;width:453.5pt;--fs:12pt">This paper contains six calculation problems of 25 points each, 150 points in total.</p>
+<p class="x h" style="--b:161.2;width:340pt"><span class="n">1.</span>Expansion of an ideal gas on heating</p>
+<p class="x" style="--b:179.2;width:343pt;--l:13.6pt">As shown in Figure&nbsp;1, a cylinder whose walls are all thermally insulating except for its bottom is divided by a partition into two parts, A and B, of equal volume, each containing 1&nbsp;mole of nitrogen at an initial temperature of <span class="nw">0&thinsp;°C</span> and a pressure of 1&nbsp;atm. The top of the cylinder is a piston (also thermally insulating), on which the pressure is always kept at <span class="nw">$P_0 = 1\ \mathrm{atm}$.</span> Now 80.0&nbsp;cal of heat is slowly supplied to the cylinder through its bottom. Assume that the nitrogen can be treated as an ideal gas, with gas constant <span class="nw">$R = 8.31\ \mathrm{J/mole\cdot K}$.</span> Find the changes in pressure, volume and temperature of the gas in parts A and B in each of the following two cases:</p>
+<p class="x s" style="--b:345;width:326pt;--l:13.6pt"><span class="n">(A)</span>The partition is fixed and thermally conducting (its heat capacity can be neglected); (13&nbsp;points)</p>
+<p class="x s" style="--b:372.2;width:326pt;--l:13.6pt"><span class="n">(B)</span>The partition can slide freely (without friction) and is thermally insulating. (12&nbsp;points)</p>
+<div class="f" style="left:445pt;top:150pt"><span class="fig" data-srcpage="3" data-clip="445,150,532,372"></span></div>
+<div class="ov" style="left:470.2pt;top:342.5pt;font-size:10pt;padding:2pt 3pt">Heater</div>
+<p class="x c" style="--b:384.4;left:458pt;width:62pt;--fs:12pt">Figure 1</p>
+<p class="x h" style="--b:413.2"><span class="n">2.</span>Derivation of the generalized laws of reflection and refraction</p>
+<p class="x" style="--b:431.2">Consider a plane interface between two media. A plane electromagnetic wave of wavelength $\lambda$ travels from medium&nbsp;1 towards medium&nbsp;2; its angles of incidence, reflection and refraction are $\theta_1$, $\theta_1'$ and $\theta_2$ respectively, as shown in Figure&nbsp;2.</p>
+<div class="f" style="left:180pt;top:468pt"><span class="fig" data-srcpage="3" data-clip="180,458,398,620"></span></div>
+<div class="ov" style="left:268pt;top:471pt;font-size:11pt;padding:1pt 2pt">Normal</div>
+<div class="ov" style="left:176pt;top:488.5pt;font-size:11pt;padding:1pt 2pt">Incident ray</div>
+<div class="ov" style="left:346pt;top:488.5pt;font-size:11pt;padding:1pt 2pt">Reflected ray</div>
+<div class="ov" style="left:316pt;top:610.5pt;font-size:11pt;padding:2pt 2pt 4pt">Refracted ray</div>
+<p class="x c" style="--b:656;left:251pt;width:80pt;--fs:12pt">Figure 2</p>
+<p class="x" style="--b:674;--l:13.2pt">It is known that if the interface is uniform, the phase change it introduces into the reflected and refracted waves does not depend on the position of the point of incidence. When <span class="nw">$n_1 &gt; n_2$</span> the reflected wave has no phase change at the interface; when <span class="nw">$n_1 &lt; n_2$</span> its phase change at the interface is $\pi$. With suitable design and processing, the interface between two media can be made to produce, on both reflection and refraction, an interface phase change $\Phi(x)$ that varies with the $X$ coordinate, as shown in Figure&nbsp;3. (Let the other axis on the interface be the $Y$ axis; this problem assumes that the phase change does not depend on the $Y$ coordinate, i.e. <span class="nw">$\Phi(x,y)=\Phi(x)$.)</span></p>
+<p class="x pn" style="--b:797.3">2</p>
+</div>
+
+<!-- page 4: problem 2 (continued), problem 3 -->
+<div class="page">
+<p class="x s" style="--b:83.5;--l:13.2pt"><span class="n">(A)</span>Assuming the interface is uniform, derive the laws of reflection and refraction of light from Fermat’s principle. (6&nbsp;points)</p>
+<p class="x s" style="--b:109.5;--l:13pt">(Note: Fermat’s principle states that light (an electromagnetic wave) travels between two fixed points along the path whose optical path length is an extremum. When Fermat first proposed it, it was also called the “principle of least time”: light travels along the path that takes the least time.)</p>
+<p class="x s" style="--b:165;--l:13.2pt"><span class="n">(B)</span><span class="fl" style="width:176pt;height:172pt"></span>At first sight Fermat’s principle seems rather magical and puzzling: for example, how can light, as it sets out, find out which path takes the least time? In fact, the physical mechanism behind Fermat’s principle is that an electromagnetic wave travels along a path of stationary phase; that is, the total phase change $d\varphi$ accumulated along the real path between two fixed points A and B (the solid line in the figure on the left), <span class="nw">${}_{\text{solid}}\!\int_A^B d\varphi(\vec r)$,</span> is almost the same as the total phase change accumulated along a neighbouring path (the dashed line in the figure on the left), <span class="nw">${}_{\text{dashed}}\!\int_A^B d\varphi(\vec r)$.</span> In this part assume <span class="nw">$d\Phi/dx=0$,</span> so that ${}_{\text{solid}}\!\int_A^B d\varphi(\vec r)-{}_{\text{dashed}}\!\int_A^B d\varphi(\vec r)\approx0$. Use this relation and the hint above to prove the law of refraction of light. (4&nbsp;points)</p>
+<div class="f" style="left:356pt;top:153pt"><span class="fig" data-srcpage="4" data-clip="356,128,530,287"></span></div>
+<p class="x c" style="--b:323.8;left:406pt;width:80pt;--fs:12pt">Figure 3</p>
+<p class="x s" style="--b:393;--l:16pt"><span class="n">(C)</span>Assume <span class="nw">$\tfrac{d\Phi}{dx}$&thinsp;≠&thinsp;$0$,</span> i.e. when light is reflected or refracted at the interface there is an interface phase change $\Phi(x)$ that varies with the $X$ coordinate. Using the figure above, derive the generalized law of reflection, <span class="nw">$\sin\theta_1'-\sin\theta_1=\tfrac{\lambda}{2\pi n_1}\tfrac{d\Phi}{dx}$,</span> and the generalized law of refraction, <span class="nw">$n_2\sin\theta_2-n_1\sin\theta_1=\tfrac{\lambda}{2\pi}\tfrac{d\Phi}{dx}$.</span> (5&nbsp;points)</p>
+<p class="x s" style="--b:461;--l:18pt"><span class="n">(D)</span>Let <span class="nw">$\tfrac{d\Phi}{dx}=\tfrac{2\pi}{\Gamma}$,</span> where $\Gamma$ is a constant. Let <span class="nw">$\alpha\equiv\lambda/\Gamma$;</span> usually <span class="nw">$\Gamma&gt;\lambda$,</span> so <span class="nw">$0&lt;\alpha&lt;1$.</span></p>
+<p class="x ss" style="--b:479;--l:13.2pt"><span class="n">(a)</span>Find the range of angles of incidence for which there is no reflected light. (3&nbsp;points)</p>
+<p class="x ss" style="--b:509;--l:13.2pt"><span class="n">(b)</span>Let <span class="nw">$n_1&lt;n_2$.</span> Under what conditions does total reflection occur? What is the critical angle of incidence? (7&nbsp;points)</p>
+<p class="x h" style="--b:550"><span class="n">3.</span>Magnetic force microscope</p>
+<p class="x" style="--b:568;--l:13.2pt">Scanning probe microscopes play an important role in research in surface physics. The instrument has a micrometre-scale cantilever; one end of the cantilever is fixed to an oscillator, and a fine protruding tip is mounted at its free end. The whole cantilever forms a spring oscillator system; in the absence of magnetic forces, the equation of motion of the probe can be written as:</p>
+<p class="x l" style="--b:645;--fs:12pt;--l:30pt">$M\dfrac{d^2z}{d^2t}+b\dfrac{dz}{dt}+kz=F_0e^{i\omega t}$</p>
+<p class="x" style="--b:670;--l:13.2pt">where $M$ is the mass of the probe system, $b$ is the damping coefficient (weak damping is assumed), $k$ is the spring constant in the absence of magnetic forces, and $F_0e^{i\omega t}$ is the driving force of the vertical oscillation. The steady-state solution of this equation of motion has the form <span class="nw">$z(t)=Ae^{i(\omega t-\phi)}$,</span> where $A$ is the amplitude and $\phi$ is the phase angle; both the amplitude and the phase angle are functions of the driving angular frequency $\omega$. As shown in Figure&nbsp;4, the probe of the scanning magnetic force microscope can be regarded as a small magnetic moment along the $z$ direction, and the tip is kept at a fixed distance from the surface under test;</p>
+<p class="x pn" style="--b:797.3">3</p>
+</div>
+
+<!-- page 5: problem 3 (continued) -->
+<div class="page">
+<p class="x" style="--b:83.5;--l:13.2pt">through the magnetic force the microscope can explore the distribution of magnetic domains on the surface under test.</p>
+<p class="x" style="--b:112;--l:13.2pt">The working principle of the magnetic force microscope: in the magnetic field of the surface under test the probe has a “magnetic potential energy” <span class="nw">$U=-mH_z$,</span> where $m$ is the magnetic moment and $H_z$ the magnetic field strength at point $z$. As the field strength varies with distance, the probe feels a non-uniform magnetic force along $z$, which changes the resonant angular frequency of the cantilever. As the tip scans the surface, the system converts the change of the resonant angular frequency into a bright/dark contrast: a rise appears as a “bright” level, the opposite as a “dark” level. A change of the resonant angular frequency also changes the amplitude and the phase angle, so the microscope can use changes of the resonant angular frequency, phase angle and amplitude for detection. Based on the above, answer the following questions.</p>
+<p class="x s" style="--b:262;--l:13.4pt"><span class="n">(A)</span>Let <span class="nw">$\omega_0=\sqrt{k/M}$.</span> Find the amplitude and the phase angle of the probe as functions of the driving angular frequency when no magnetic force acts on it. (6&nbsp;points)</p>
+<p class="x s" style="--b:290;--l:13.2pt"><span class="n">(B)</span>Continuing from the previous part, find the resonant (maximum-amplitude) angular frequency (accurate to first order in $b$). (4&nbsp;points)</p>
+<p class="x s" style="--b:317;--l:12.8pt"><span class="n">(C)</span>Assume <span class="nw">$H_z=az^2$,</span> where $a$ is a positive constant. In the weak-damping case <span class="nw">$(b\to0)$,</span> if the change of the resonant angular frequency is used as the mechanism for detecting the magnetic force, derive the change of the resonant angular frequency $(\Delta\omega)$ as a function of $m$, $\omega_0$, $a$ and $z$ (accurate to first order in $a$). (9&nbsp;points)</p>
+<div class="f" style="left:184pt;top:376pt"><span class="fig" data-srcpage="5" data-clip="184,376,392,494"></span></div>
+<div class="ov" style="left:212pt;top:381pt;font-size:11pt;padding:2pt 3pt">Detector</div>
+<div class="ov" style="left:318pt;top:379pt;font-size:11pt;padding:2pt 3pt">Laser</div>
+<div class="ov" style="left:236pt;top:443.5pt;font-size:11pt;padding:2pt 2pt 2pt 3pt">Oscillation</div>
+<p class="x c" style="--b:521.2;left:122pt;width:362pt;--fs:11.5pt;--l:15pt">Figure&nbsp;4: Schematic of the scanning probe. The cantilever is driven externally, making the probe oscillate up and down; information on the relevant changes is obtained by analysing the reflected laser light.</p>
+<p class="x s" style="--b:572;--l:13.2pt"><span class="n">(D)</span>Continuing from the previous part, the probe scans, at a fixed height $z$ <span class="nw">($z\ll x_0, l_0$),</span> a set of wires carrying current $i$ on a surface, as shown in Figure&nbsp;5. Mark whether each of the regions I, II and III in Figure&nbsp;5 is a bright or a dark level. (6&nbsp;points)</p>
+<div class="f" style="left:116pt;top:614pt"><span class="fig" data-srcpage="5" data-clip="116,614,486,745"></span></div>
+<p class="x c" style="--b:759.2;left:100pt;width:395pt;--fs:11.5pt;--l:18pt">Figure&nbsp;5: Left: top view; the dashed line is the scanning path of the probe.<br>Right: side view; the dashed line shows the fixed scanning height.</p>
+<p class="x pn" style="--b:797.3">4</p>
+</div>
+
+<!-- page 6: problems 4 and 5 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">4.</span>Rolling with slipping</p>
+<p class="x" style="--b:101.5;--l:13pt">The horizontal ground coincides with the $xy$ plane of a Cartesian coordinate system, and on this ground there is a uniform solid sphere of mass $m$ and radius $R$. At time <span class="nw">$t=0$</span> the sphere starts from the origin O, rolling with slipping; its angular velocity of rotation about its centre of mass is <span class="nw">$\vec\omega_0=\omega_0(\hat x+\hat y)/\sqrt2$,</span> and the velocity of its centre of mass is <span class="nw">$\vec v_0=\sqrt2\,\omega_0R\hat y$.</span> In addition, the moment of inertia of the sphere about its centre of mass is <span class="nw">$I=mk^2=2mR^2/5$,</span> the coefficient of kinetic friction between the sphere and the ground is $\mu_\mathrm{k}$, and the gravitational acceleration is <span class="nw">$-g\hat z$.</span></p>
+<p class="x" style="--b:207;--l:13pt">Suppose that at time <span class="nw">$t&gt;0$</span> the velocity of the centre of mass of the sphere is <span class="nw">$\vec v=v_x\hat x+v_y\hat y$,</span> its angular velocity is $\vec\omega$, and the velocity of its bottom point is <span class="nw">$\vec u=u\hat u$,</span> where $\hat u$ is the unit vector along the velocity $\vec u$ of the bottom of the sphere.</p>
+<p class="x s" style="--b:247;--l:13pt"><span class="n">(A)</span>Find the magnitude $u_0$ and the direction $\hat u_0$ of the initial velocity $\vec u_0$ of the bottom of the sphere. (6&nbsp;points)</p>
+<p class="x s" style="--b:274;--l:13pt"><span class="n">(B)</span>Write down, for the sphere while it slips, the equation of motion of its centre of mass and the equation of motion of its rotation about the centre of mass. (4&nbsp;points)</p>
+<p class="x s" style="--b:301"><span class="n">(C)</span>Find $\vec u$ as a function of time $t$ while the sphere slips. (5&nbsp;points)</p>
+<p class="x s" style="--b:315"><span class="n">(D)</span>Find the time $T$ at which the sphere begins pure rolling. (3&nbsp;points)</p>
+<p class="x s" style="--b:328;--l:12.8pt"><span class="n">(E)</span>Find the centre-of-mass velocity $\vec v(t)$ for <span class="nw">$0&lt;t\le T$,</span> and the position <span class="nw">$\vec r_T=x_T\hat x+y_T\hat y$</span> of the bottom of the sphere when pure rolling begins. (7&nbsp;points)</p>
+<p class="x h" style="--b:361;width:290pt"><span class="n">5.</span>Thomson’s levitating metal ring</p>
+<p class="x" style="--b:379;width:294.2pt;--l:13pt">As shown in Figure&nbsp;6, a solenoid coil carrying current $I(t)$ guides its magnetic field through a cylindrical soft-iron core into the region <span class="nw">$z&gt;0$.</span> A metal ring threaded on the soft iron can float at <span class="nw">$z=z_0$</span> under the action of the solenoid’s magnetic field. The solenoid coil and the metal ring both have radius $a$; the coil has $N$ turns; the soft iron has permeability $\mu$; the metal ring has resistance $R$ and self-inductance $L$. Answer the following questions.</p>
+<p class="x s" style="--b:506;width:277.3pt;--l:13pt"><span class="n">(A)</span>Since the soft iron is cylindrical, the magnetic field may be assumed to have only components along the $z$ axis and the radial direction $r$: $B_z$ and $B_r$.</p>
+<p class="x ss" style="--b:547;--l:13pt"><span class="n">(a)</span><span class="fl" style="width:132pt;height:27pt"></span>It is known that for fixed $z$, <span class="nw">$B_z(z,r)\approx B_z(z,0)$.</span> Neglecting the length of the solenoid, calculate $B_z(z,r)$, and from it find the mutual inductance $M(z)$ between the metal ring and the solenoid coil. (6&nbsp;points)</p>
+<p class="x ss" style="--b:600;--l:13pt"><span class="n">(b)</span>Consider the magnetic flux through a cylindrical surface of length <span class="nw">$dz\ll1$</span> and radius $r$ (including its two end faces); find the relation between $B_z$ and $B_r$, and from it calculate $B_r(z,r)$. (5&nbsp;points)</p>
+<div class="f" style="left:398pt;top:345pt"><span class="fig" data-srcpage="6" data-clip="398,333,549,530"></span></div>
+<div class="ov" style="left:485pt;top:377.5pt;font-size:10pt;padding:2pt 1pt;line-height:11pt;white-space:normal;width:32pt">Soft iron</div>
+<div class="ov" style="left:403pt;top:437pt;font-size:10pt;padding:1pt 1pt;line-height:10.5pt;white-space:normal;width:44pt;text-align:right">Metal ring</div>
+<div class="ov" style="left:476pt;top:489.5pt;font-size:10pt;padding:2pt 2pt 2pt 6pt">Solenoid coil</div>
+<p class="x c" style="--b:557.4;left:440pt;width:60pt;--fs:12pt">Figure 6</p>
+<p class="x s" style="--b:644;--l:13pt"><span class="n">(B)</span>The current in the solenoid coil is <span class="nw">$I(t)=I(z)\sin\omega t$</span> (counterclockwise positive); assume that at time $t$ the current in the metal ring has reached a steady state.</p>
+<p class="x ss" style="--b:674;--l:13pt"><span class="n">(a)</span>Find the current in the metal ring at time $t$ (in terms of $M(z)$, $L(z)$, $I(z)$, $R$). If its phase difference from the current in the solenoid coil is $\delta$, find <span class="nw">$\tan\delta$.</span> (6&nbsp;points)</p>
+<p class="x ss" style="--b:704;--l:13pt"><span class="n">(b)</span>The solenoid coil has resistance $R_0$ and self-inductance $L_0$; the resistance $R$ of the metal ring is negligible compared with the resistance $R_0$ of the solenoid coil. If the solenoid coil is connected to an AC source of emf <span class="nw">$\varepsilon(t)=V_0\cos\omega t$,</span> find the current amplitude $I(z)$ in the solenoid coil (in terms of $R_0$, $L_0$, $L$, $V_0$, $\omega$ and <span class="nw">$M(z)$).</span> In general <span class="nw">$L_0L&gt;M^2(0)$;</span> explain whether $I(z)$ increases or decreases as $z$ increases. (8&nbsp;points)</p>
+<p class="x pn" style="--b:797.3">5</p>
+</div>
+
+<!-- page 7: problem 6 -->
+<div class="page">
+<p class="x h" style="--b:83.5"><span class="n">6.</span>Gunn oscillator circuit</p>
+<p class="x" style="--b:101.5;--l:13.2pt">The Gunn diode is a transferred-electron device, generally made from the semiconductor gallium arsenide. This diode exhibits a distinctive non-linear $I-V$ (current–voltage) relation, as shown in Figure&nbsp;7. The most peculiar property of the Gunn diode is that under suitable operating conditions, e.g. with the terminal voltage of the diode between $V_1$ and $V_2$ in Figure&nbsp;7, the device can show negative differential resistance, i.e. <span class="nw">$r_d\equiv dV/dI&lt;0$.</span> Negative differential resistance means that, for AC signals near this operating point, the device does not dissipate energy but instead feeds energy back into the circuit. Because of this special property, Gunn diodes are widely used to make generators of microwaves up to terahertz (THz) waves. Figure&nbsp;8 shows a simplified Gunn oscillator circuit. In the right half of the circuit, the Gunn diode and a series resistor $R$ are connected through a radio-frequency choke (RFC) to a DC voltage source $V_b$. Here the RF choke is a protective element that keeps RF alternating current out of the DC voltage source. The left half of the circuit is an $LC$ oscillator circuit, which can produce an alternating current $i(t)$. Assume here that the energy loss of the RF choke is negligible; <span class="nw">$r_d=-r$ $(r&gt;0)$,</span> where $r$ is a constant in the voltage range between $V_1$ and $V_2$; the DC voltage across the Gunn diode is $V$ and the AC voltage is $v_{out}(t)$. Answer the following questions:</p>
+<p class="x s" style="--b:342"><span class="n">(A)</span>If <span class="nw">$i(0)=0$, $i'(0)=\alpha$, $i\ll I$,</span> find the alternating current $i(t)$. (9&nbsp;points)</p>
+<p class="x s" style="--b:360;--l:13.2pt"><span class="n">(B)</span>State the conditions for the circuit to oscillate, and find the oscillation frequency. (6&nbsp;points)</p>
+<p class="x s" style="--b:389;--l:15pt"><span class="n">(C)</span>When oscillation occurs, the voltage drop across the $LC$ part of the circuit is $v_{in}(t)$ (which can be regarded as an AC signal input source). Taking <span class="nw">$\sqrt{L/C}\gg R$,</span> find $v_{out}/v_{in}$ at this time (this is the voltage gain). (3&nbsp;points)</p>
+<p class="x s" style="--b:436;--l:13.2pt"><span class="n">(D)</span>While the circuit oscillates, the DC voltage of the diode is fixed at <span class="nw">$V=(V_2-V_1)/2$.</span> Find the total power consumed by the Gunn diode in operation. (7&nbsp;points)</p>
+<div class="f" style="left:96pt;top:490pt"><span class="fig" data-srcpage="7" data-clip="96,455,306,603"></span></div>
+<div class="f" style="left:315pt;top:490pt"><span class="fig" data-srcpage="7" data-clip="315,455,502,603"></span></div>
+<div class="ov" style="left:94pt;top:544pt;font-size:11pt;padding:2pt 2pt 3pt;width:66pt;text-align:right">Gunn diode</div>
+<p class="x c" style="--b:649.2;left:184pt;width:80pt;--fs:12pt">Figure 7</p>
+<p class="x c" style="--b:649.2;left:362.7pt;width:80pt;--fs:12pt">Figure 8</p>
+<p class="x pn" style="--b:797.3">6</p>
+</div>
+
+<!-- page 8: marking scheme, problem 1 -->
+<div class="page">
+<p class="x c" style="--b:84.2;left:40pt;width:515.3pt;--fs:14pt;--l:18.2pt">2017: 18th Asian and 48th International Physics Olympiads<br>National Team Second-Round Selection Exam — Reference Solutions</p>
+<p class="x" style="--b:132.5;left:70.9pt;width:453.5pt;--fs:12pt">Marking scheme for Problem 1:</p>
+<!--RULES 8-->
+<div class="hr" style="left:70.7pt;width:421.2pt;top:150.5pt"></div>
+<div class="hr" style="left:70.7pt;width:421.2pt;top:182.3pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:220.0pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:236.2pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:252.2pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:268.3pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:284.4pt"></div>
+<div class="hr" style="left:70.7pt;width:421.2pt;top:300.6pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:334.7pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:371.2pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:411.4pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:451.7pt"></div>
+<div class="hr" style="left:70.7pt;width:421.2pt;top:467.8pt"></div>
+<div class="vr" style="left:70.7pt;top:151.0pt;height:317.3pt"></div>
+<div class="vr" style="left:113.3pt;top:151.0pt;height:317.3pt"></div>
+<div class="vr" style="left:437.4pt;top:151.0pt;height:317.3pt"></div>
+<div class="vr" style="left:464.0pt;top:151.0pt;height:317.3pt"></div>
+<div class="vr" style="left:491.4pt;top:151.0pt;height:317.3pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:162.5;left:76.3pt">Part</p>
+<p class="t" style="--b:162.5;left:118.8pt">Content</p>
+<p class="t" style="--b:162.5;left:442pt">Pts</p>
+<p class="t" style="--b:162.5;left:465.3pt;--fs:10.5pt">Note</p>
+<p class="t" style="--b:193.9;left:76.3pt;--l:14.1pt">(a)<br>13&nbsp;pts</p>
+<p class="t k" style="--b:195.4;left:118.8pt;width:316pt;--l:18pt">Write the ideal-gas equation <span class="nw">$P_0V_\mathrm{A0}=P_0V_\mathrm{B0}=RT_0$,</span><br>obtain <span class="nw">$V_\mathrm{A0}=V_\mathrm{B0}=22.5\,\mathrm L$.</span></p>
+<p class="t" style="--b:193.9;left:443pt">2</p>
+<p class="t k" style="--b:231.8;left:118.8pt;width:316pt">First law of thermodynamics: <span class="nw">$\Delta U_\mathrm{A+B}=5R\Delta T=Q-W$.</span></p>
+<p class="t" style="--b:231.6;left:443pt">3</p>
+<p class="t k" style="--b:248;left:118.8pt;width:316pt">Obtain <span class="nw">$W=R\Delta T$.</span></p>
+<p class="t" style="--b:247.8;left:443pt">2</p>
+<p class="t k" style="--b:264.1;left:118.8pt;width:316pt">Find the temperature change of A and B, <span class="nw">$\Delta T=6.71\,\mathrm K$.</span></p>
+<p class="t" style="--b:263.9;left:443pt">2</p>
+<p class="t k" style="--b:280.2;left:118.8pt;width:316pt">Find the pressure of part A, <span class="nw">$P_\mathrm A=2480\,\mathrm{Pa}$.</span></p>
+<p class="t" style="--b:280;left:443pt">2</p>
+<p class="t k" style="--b:296.3;left:118.8pt;width:316pt">Find the volume of part B, <span class="nw">$\Delta V_\mathrm B=0.552\,\mathrm L$.</span></p>
+<p class="t" style="--b:296;left:443pt">2</p>
+<p class="t" style="--b:312.2;left:76.3pt;--l:14.1pt">(b)<br>12&nbsp;pts</p>
+<p class="t k" style="--b:313.7;left:118.8pt;width:316pt;--l:16.8pt">Write the first law of thermodynamics: <span class="nw">$\Delta U_\mathrm A=Q-W$,</span><br>&nbsp;<span class="nw">$(5R/2)\Delta T_\mathrm A=80.0\times4.18-P_0(\Delta V_\mathrm A)$.</span></p>
+<p class="t" style="--b:312.2;left:443pt">3</p>
+<p class="t k" style="--b:347.8;left:118.8pt;width:316pt;--l:18pt">From the ideal-gas equation: <span class="nw">$(7R/2)\Delta T_\mathrm A=80.0\times4.18$.</span><br>obtain <span class="nw">$\Delta T_\mathrm A=11.5\,\mathrm K$.</span></p>
+<p class="t" style="--b:346.3;left:443pt">3</p>
+<p class="t k" style="--b:383;left:118.8pt;width:316pt">Find <span class="nw">$\Delta V_\mathrm A=0.946\,\mathrm L$.</span></p>
+<p class="t" style="--b:382.8;left:443pt">2</p>
+<p class="t k" style="--b:423.4;left:118.8pt;width:316pt">Find <span class="nw">$\Delta P_\mathrm A=\Delta P_\mathrm B=0$.</span></p>
+<p class="t" style="--b:423.1;left:443pt">2</p>
+<p class="t k" style="--b:463.6;left:118.8pt;width:316pt">Find <span class="nw">$\Delta V_\mathrm B=0$; $\Delta T_\mathrm B=0$.</span></p>
+<p class="t" style="--b:463.3;left:443pt">2</p>
+<p class="x pn" style="--b:797.3">7</p>
+</div>
+
+<!-- page 9: marking scheme, problem 2 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.5pt;--fs:12pt">Marking scheme for Problem 2:</p>
+<!--RULES 9-->
+<div class="hr" style="left:65.3pt;width:419.3pt;top:100.3pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:116.4pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:166.2pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:220.7pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:272.8pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:327.2pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:381.8pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:436.3pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:540.6pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:631.1pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:649.6pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:686.0pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:702.2pt"></div>
+<div class="hr" style="left:106.8pt;width:377.8pt;top:735.7pt"></div>
+<div class="hr" style="left:65.3pt;width:419.3pt;top:751.9pt"></div>
+<div class="vr" style="left:65.3pt;top:100.8pt;height:651.6pt"></div>
+<div class="vr" style="left:106.8pt;top:100.8pt;height:651.6pt"></div>
+<div class="vr" style="left:369.0pt;top:100.8pt;height:651.6pt"></div>
+<div class="vr" style="left:418.7pt;top:100.8pt;height:651.6pt"></div>
+<div class="vr" style="left:484.1pt;top:100.8pt;height:651.6pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:112.2;left:70.9pt">Part</p>
+<p class="t" style="--b:112.2;left:112.4pt">Content</p>
+<p class="t" style="--b:112.2;left:374.6pt">Points</p>
+<p class="t" style="--b:112.2;left:424.2pt">Notes</p>
+<p class="t" style="--b:128;left:70.9pt;--l:14.1pt">(A)<br>6&nbsp;pts</p>
+<p class="t k" style="--b:128.3;left:112.4pt;width:255pt">Write the optical path from A via P to B:</p>
+<p class="t k" style="--b:153.8;left:112.4pt;width:255pt;--l:22pt">$f(x_1)=\frac{\sqrt{h_1^2+x_1^2}+\sqrt{h_1'^2+(d-x_1)^2}}{(\lambda/n_1)}$.</p>
+<p class="t" style="--b:128;left:374.6pt">1</p>
+<p class="t k" style="--b:181.5;left:112.4pt;width:255pt;--l:22pt">From $f'(x_1)=0$: <span class="nw">$\frac{x_1}{\sqrt{h_1^2+x_1^2}}-\frac{d-x_1}{\sqrt{h_1'^2+(d-x_1)^2}}=0$.</span></p>
+<p class="t k" style="--b:215.3;left:112.4pt;width:255pt">i.e. <span class="nw">$\sin\theta_1=\sin\theta_1'$</span></p>
+<p class="t" style="--b:177.8;left:374.6pt">2</p>
+<p class="t k" style="--b:233.8;left:112.4pt;width:255pt">Write the optical path from A via P to B:</p>
+<p class="t k" style="--b:260;left:112.4pt;width:255pt;--l:22pt">$f(x_1)=\frac{\sqrt{h_1^2+x_1^2}}{(\lambda/n_1)}+\frac{\sqrt{h_2^2+(d-x_1)^2}}{(\lambda/n_2)}$.</p>
+<p class="t" style="--b:232.3;left:374.6pt">1</p>
+<p class="t k" style="--b:288.5;left:112.4pt;width:255pt;--l:22pt">From $f'(x_1)=0$: <span class="nw">$\frac{n_1x_1}{\sqrt{h_1^2+x_1^2}}-\frac{n_2(d-x_1)}{\sqrt{h_2^2+(d-x_1)^2}}=0$.</span></p>
+<p class="t k" style="--b:321.8;left:112.4pt;width:255pt">i.e. <span class="nw">$n_1\sin\theta_1=n_2\sin\theta_2$.</span></p>
+<p class="t" style="--b:284.4;left:374.6pt">2</p>
+<p class="t" style="--b:339;left:70.9pt;--l:14.1pt">(B)<br>4&nbsp;pts</p>
+<p class="t k" style="--b:340.4;left:112.4pt;width:255pt">Path difference of two neighbouring paths:</p>
+<p class="t k" style="--b:368.8;left:122pt;width:245pt;--l:22pt"><span class="nw">${}_{\text{solid}}\!\int_A^B d\varphi(\vec r)-{}_{\text{dashed}}\!\int_A^B d\varphi(\vec r)$.</span></p>
+<p class="t" style="--b:339;left:374.6pt">2</p>
+<p class="t k" style="--b:402.8;left:112.4pt;width:255pt;--l:22pt">Stationary phase: <span class="nw">$\frac{2\pi dx\sin\theta_1}{(\lambda/n_1)}+\frac{2\pi dx\sin\theta_2}{(\lambda/n_2)}=0$.</span></p>
+<p class="t k" style="--b:430.9;left:112.4pt;width:255pt">i.e. <span class="nw">$n_1\sin\theta_1=n_2\sin\theta_2$.</span></p>
+<p class="t" style="--b:393.5;left:374.6pt">2</p>
+<p class="t" style="--b:448;left:70.9pt;--l:14.1pt">(C)<br>5&nbsp;pts</p>
+<p class="t k" style="--b:449.4;left:112.4pt;width:255pt;--l:14pt">Write the path difference of neighbouring paths on refraction; the stationary-phase condition gives</p>
+<p class="t k" style="--b:484;left:112.4pt;width:255pt;--l:22pt"><span class="nw">$\frac{2\pi dx\sin\theta_1}{(\lambda/n_1)}+\frac{2\pi dx\sin\theta_2}{(\lambda/n_2)}+d\Phi=0$,</span></p>
+<p class="t k" style="--b:513.2;left:112.4pt;width:255pt;--l:22pt">i.e. <span class="nw">$n_2\sin\theta_2=n_1\sin\theta_1+\frac{\lambda}{2\pi}\frac{d\Phi}{dx}$.</span></p>
+<p class="t" style="--b:448;left:374.6pt">3</p>
+<p class="t k" style="--b:553.7;left:112.4pt;width:255pt;--l:14pt">Write the path difference of neighbouring paths on reflection; the stationary-phase condition gives</p>
+<p class="t k" style="--b:588;left:112.4pt;width:255pt;--l:22pt"><span class="nw">$\frac{2\pi dx\sin\theta_1'}{(\lambda/n_1)}+\frac{2\pi dx\sin\theta_1}{(\lambda/n_1)}+d\Phi=0$,</span></p>
+<p class="t k" style="--b:617.5;left:112.4pt;width:255pt;--l:22pt">i.e. <span class="nw">$n_1\sin\theta_1'=n_1\sin\theta_1+\frac{\lambda}{2\pi}\frac{d\Phi}{dx}$.</span></p>
+<p class="t" style="--b:552.2;left:374.6pt">2</p>
+<p class="t" style="--b:642.7;left:70.9pt;--l:14.1pt">(D)(a)<br>3&nbsp;pts</p>
+<p class="t k" style="--b:644.2;left:112.4pt;width:255pt">Reflection law of (c): <span class="nw">$\sin\theta_1'=\sin\theta_1+\alpha$.</span></p>
+<p class="t" style="--b:642.7;left:374.6pt">1</p>
+<p class="t k" style="--b:662.8;left:112.4pt;width:255pt">Find the condition: <span class="nw">$\theta_1&gt;\sin^{-1}(1-\alpha)$.</span></p>
+<p class="t" style="--b:661.2;left:374.6pt">2</p>
+<p class="t" style="--b:697.8;left:70.9pt;--l:14.1pt">(D)(b)<br>7&nbsp;pts</p>
+<p class="t k" style="--b:698;left:112.4pt;width:255pt">Generalized refraction law: <span class="nw">$n_2\sin\theta_2=n_1\sin\theta_1+\alpha$.</span></p>
+<p class="t" style="--b:698;left:374.6pt">1</p>
+<p class="t k" style="--b:715.9;left:112.4pt;width:255pt;--l:15.6pt">Total reflection for <span class="nw">$n_1&lt;n_2$</span> requires:<br><span class="nw">$n_2-\alpha&lt;n_1$,</span> and <span class="nw">$\theta_1&gt;\sin^{-1}[(n_2-\alpha)/n_1]$.</span></p>
+<p class="t" style="--b:713.9;left:374.6pt">4</p>
+<p class="t k" style="--b:747.7;left:112.4pt;width:255pt">Critical angle <span class="nw">$\theta_\mathrm c=\sin^{-1}[(n_2-\alpha)/n_1]$.</span></p>
+<p class="t" style="--b:747.5;left:374.6pt">2</p>
+<p class="x pn" style="--b:797.3">8</p>
+</div>
+
+<!-- page 10: marking scheme, problem 3 -->
+<div class="page">
+<p class="x" style="--b:96.1;left:70.9pt;width:453.5pt;--fs:12pt">Marking scheme for Problem 3:</p>
+<!--RULES 10-->
+<div class="hr" style="left:65.3pt;width:424.1pt;top:114.1pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:130.2pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:202.7pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:239.2pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:275.8pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:312.2pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:331.1pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:367.6pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:422.0pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:465.1pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:508.3pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:551.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:587.9pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:624.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:642.8pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:661.3pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:679.9pt"></div>
+<div class="vr" style="left:65.3pt;top:114.6pt;height:565.8pt"></div>
+<div class="vr" style="left:106.1pt;top:114.6pt;height:565.8pt"></div>
+<div class="vr" style="left:403.8pt;top:114.6pt;height:565.8pt"></div>
+<div class="vr" style="left:439.2pt;top:114.6pt;height:565.8pt"></div>
+<div class="vr" style="left:488.9pt;top:114.6pt;height:565.8pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:126;left:70.9pt">Part</p>
+<p class="t" style="--b:126;left:111.7pt">Content</p>
+<p class="t" style="--b:126;left:407.5pt">Pts</p>
+<p class="t" style="--b:126;left:444.8pt">Notes</p>
+<p class="t" style="--b:141.8;left:70.9pt;--l:14.1pt">(a)<br>6&nbsp;pts</p>
+<p class="t k" style="--b:143.6;left:111.7pt;width:290pt">Put the steady-state solution <span class="nw">$Ae^{i(\omega t-\phi)}$</span> into the equation</p>
+<p class="t k" style="--b:173.7;left:115pt;width:286pt;--l:22pt">$M\frac{d^2z}{d^2t}+b\frac{dz}{dt}+kz=F_0e^{i\omega t}$</p>
+<p class="t k" style="--b:196.9;left:111.7pt;width:290pt">to get <span class="nw">$\{-M\omega^{2+bi\omega}+k\}Ae^{i(\omega t-\phi)}=F_0e^{i\omega t}$.</span></p>
+<p class="t" style="--b:141.8;left:409.4pt">2</p>
+<p class="t k" style="--b:222.1;left:111.7pt;width:290pt;--l:26pt">Find <span class="nw">$A(\omega)=\frac{F_0/M}{\sqrt{\left(\omega_0^2-\omega^2\right)^2+(b/M)^2\omega^2}}$.</span></p>
+<p class="t" style="--b:214.3;left:409.4pt">2</p>
+<p class="t k" style="--b:261;left:111.7pt;width:290pt;--l:22pt">Find <span class="nw">$\phi=\tan^{-1}\frac{(b\omega/M)}{\left(\omega_0^2-\omega^2\right)}$.</span></p>
+<p class="t" style="--b:250.9;left:409.4pt">2</p>
+<p class="t" style="--b:287.4;left:70.9pt;--l:14.1pt">(b)<br>4&nbsp;pts</p>
+<p class="t k" style="--b:298.6;left:111.7pt;width:290pt;--l:22pt">Angular frequency at maximum amplitude: <span class="nw">$\frac{dA(\omega)}{d\omega}=0$.</span></p>
+<p class="t" style="--b:287.4;left:409.4pt">2</p>
+<p class="t k" style="--b:326.4;left:111.7pt;width:290pt">$\omega_r=\sqrt{\omega_0^2-(b^2/2M^2)}\approx\omega_0$.</p>
+<p class="t" style="--b:323.9;left:409.4pt">2</p>
+<p class="t" style="--b:342.7;left:70.9pt;--l:14.1pt">(c)<br>9&nbsp;pts</p>
+<p class="t k" style="--b:343.8;left:111.7pt;width:290pt">Resonant angular frequency with the magnetic force:</p>
+<p class="t k" style="--b:360.5;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\omega_1=\sqrt{\frac{k_1}{M}}=\sqrt{\frac{k-\partial F_z/\partial z}{M}}$.</span></p>
+<p class="t" style="--b:342.7;left:409.4pt">2</p>
+<p class="t k" style="--b:380.6;left:111.7pt;width:290pt">Write the change of the resonant angular frequency</p>
+<p class="t k" style="--b:409.4;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\Delta\omega=\sqrt{\frac{k_1}{M}}-\sqrt{\frac{k}{M}}=\omega_0\left(\sqrt{1-\frac{\partial F_z/\partial z}{k}}-1\right)$.</span></p>
+<p class="t" style="--b:379.2;left:409.4pt">1</p>
+<p class="t k" style="--b:435.1;left:111.7pt;width:290pt;--l:16pt">Expanding to first order in $\partial F_z/\partial z$ gives <span class="nw">$\Delta\omega\cong-\omega_0(\partial F_z/\partial z)/(2k)$.</span></p>
+<p class="t" style="--b:433.7;left:409.4pt">2</p>
+<p class="t k" style="--b:478.3;left:111.7pt;width:290pt;--l:16pt">From <span class="nw">$U=-mH_z$,</span> find the magnetic force on the probe, <span class="nw">$F_z=m\,\partial H_z/\partial z$.</span></p>
+<p class="t" style="--b:476.9;left:409.4pt">2</p>
+<p class="t k" style="--b:531.6;left:111.7pt;width:290pt;--l:22pt">Find <span class="nw">$\Delta\omega\cong-\frac{\omega_0m}{2k}\left(\frac{\partial^2H_z}{\partial z^2}\right)=-\frac{\omega_0ma}{k}$.</span></p>
+<p class="t" style="--b:520;left:409.4pt">2</p>
+<p class="t" style="--b:563;left:70.9pt;--l:14.1pt">(d)<br>6&nbsp;pts</p>
+<p class="t k" style="--b:573.5;left:111.7pt;width:290pt;--l:22pt">Write <span class="nw">$H_z\propto-\left\{\frac{x}{x^2+z^2}+\frac{x_0-x}{(x_0-x)^2+z^2}\right\}$</span></p>
+<p class="t" style="--b:563;left:409.4pt">2</p>
+<p class="t k" style="--b:610.6;left:111.7pt;width:290pt;--l:22pt">Find <span class="nw">$\frac{\partial^2H_z}{\partial z^2}\approx\left\{\frac{2x}{[x^2+z^2]^2}+\frac{2(x_0-x)}{[(x_0-x)^2+z^2]^2}\right\}$</span></p>
+<p class="t" style="--b:599.5;left:409.4pt">1</p>
+<p class="t k" style="--b:637.4;left:111.7pt;width:290pt">Conclude that region I is a bright level</p>
+<p class="t" style="--b:636;left:409.4pt">1</p>
+<p class="t k" style="--b:655.9;left:111.7pt;width:290pt">Conclude that region II is a dark level</p>
+<p class="t" style="--b:654.5;left:409.4pt">1</p>
+<p class="t k" style="--b:674.5;left:111.7pt;width:290pt">Conclude that region III is a bright level</p>
+<p class="t" style="--b:673.1;left:409.4pt">1</p>
+<p class="x pn" style="--b:797.3">9</p>
+</div>
+
+<!-- page 11: marking scheme, problem 4 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.5pt;--fs:12pt">Marking scheme for Problem 4:</p>
+<!--RULES 11-->
+<div class="hr" style="left:65.3pt;width:424.1pt;top:100.3pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:116.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:134.9pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:159.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:180.8pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:202.3pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:238.8pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:277.8pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:314.3pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:350.9pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:394.0pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:430.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:448.9pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:467.4pt"></div>
+<div class="hr" style="left:106.1pt;width:383.3pt;top:521.9pt"></div>
+<div class="hr" style="left:65.3pt;width:424.1pt;top:558.5pt"></div>
+<div class="vr" style="left:65.3pt;top:100.8pt;height:458.2pt"></div>
+<div class="vr" style="left:106.1pt;top:100.8pt;height:458.2pt"></div>
+<div class="vr" style="left:403.8pt;top:100.8pt;height:458.2pt"></div>
+<div class="vr" style="left:439.2pt;top:100.8pt;height:458.2pt"></div>
+<div class="vr" style="left:488.9pt;top:100.8pt;height:458.2pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:112.2;left:70.9pt">Part</p>
+<p class="t" style="--b:112.2;left:111.7pt">Content</p>
+<p class="t" style="--b:112.2;left:407.5pt">Pts</p>
+<p class="t" style="--b:112.2;left:444.8pt">Notes</p>
+<p class="t" style="--b:128;left:70.9pt;--l:14.1pt">(a)<br>6&nbsp;pts</p>
+<p class="t k" style="--b:129.5;left:111.7pt;width:290pt">Velocity of the bottom of the sphere: <span class="nw">$\vec u=\vec v+\vec\omega\times(-R\hat z)$.</span></p>
+<p class="t" style="--b:128;left:409.4pt">2</p>
+<p class="t k" style="--b:148.8;left:111.7pt;width:290pt">Initial conditions give <span class="nw">$\vec u_0=\omega_0R(-\hat x+3\hat y)/\sqrt2$.</span></p>
+<p class="t" style="--b:146.5;left:409.4pt">2</p>
+<p class="t k" style="--b:173.4;left:111.7pt;width:290pt">$u_0=\sqrt5\,\omega_0R$.</p>
+<p class="t" style="--b:171;left:409.4pt">1</p>
+<p class="t k" style="--b:194.8;left:111.7pt;width:290pt">$\hat u_0=(-\hat x+3\hat y)/\sqrt{10}$.</p>
+<p class="t" style="--b:192.5;left:409.4pt">1</p>
+<p class="t" style="--b:214;left:70.9pt;--l:14.1pt">(b)<br>4&nbsp;pts</p>
+<p class="t k" style="--b:217.5;left:111.7pt;width:290pt;--l:16pt">Write the equation of motion of the centre of mass of the sphere, <span class="nw">$m\frac{d}{dt}\vec v=\vec F=-\mu_\mathrm{k}mg\hat u$.</span></p>
+<p class="t" style="--b:214;left:409.4pt">2</p>
+<p class="t k" style="--b:251.9;left:111.7pt;width:290pt">Write the equation of rotation about the centre of mass</p>
+<p class="t k" style="--b:271.2;left:111.7pt;width:290pt;--l:20pt"><span class="nw">$mk^2\frac{d}{dt}\vec\omega=\vec\tau=(-R\hat z)\times\vec F=\mu_\mathrm{k}mgR\hat z\times\hat u$.</span></p>
+<p class="t" style="--b:250.4;left:409.4pt">2</p>
+<p class="t" style="--b:289.4;left:70.9pt;--l:14.1pt">(c)<br>5&nbsp;pts</p>
+<p class="t k" style="--b:301.1;left:111.7pt;width:290pt;--l:22pt">Write <span class="nw">$\frac{d\vec u}{dt}=\frac{d\vec v}{dt}+\frac{d\vec\omega}{dt}\times(-R\hat z)$</span></p>
+<p class="t" style="--b:289.4;left:409.4pt">1</p>
+<p class="t k" style="--b:337.7;left:111.7pt;width:290pt;--l:22pt">Find <span class="nw">$\frac{d\vec u}{dt}=-\mu_\mathrm{k}g\left(1+\frac{R^2}{k^2}\right)\hat u$</span></p>
+<p class="t" style="--b:326;left:409.4pt">2</p>
+<p class="t k" style="--b:364;left:111.7pt;width:290pt">Find <span class="nw">$\vec u(t)=(u_0-\gamma\mu_\mathrm{k}gt)\hat u_0$.</span></p>
+<p class="t" style="--b:362.5;left:409.4pt">2</p>
+<p class="t" style="--b:405.6;left:70.9pt;--l:14.1pt">(d)<br>3&nbsp;pts</p>
+<p class="t k" style="--b:416.9;left:111.7pt;width:290pt;--l:22pt">Time at which pure rolling begins: <span class="nw">$T=\frac{2\sqrt5\,\omega_0R}{7\mu_\mathrm{k}g}$.</span></p>
+<p class="t" style="--b:405.6;left:409.4pt">3</p>
+<p class="t" style="--b:442.1;left:70.9pt;--l:14.1pt">(e)<br>7&nbsp;pts</p>
+<p class="t k" style="--b:443.5;left:111.7pt;width:290pt">Integrating eq. (b1) once: <span class="nw">$\vec v(t)=\vec v_0-\mu_\mathrm{k}gt\hat u_0$.</span></p>
+<p class="t" style="--b:442.1;left:409.4pt">2</p>
+<p class="t k" style="--b:462;left:111.7pt;width:290pt">Integrating again: <span class="nw">$\vec r(t)=\vec v_0t-\frac12\mu_\mathrm{k}gt^2\hat u_0$.</span></p>
+<p class="t" style="--b:460.6;left:409.4pt">2</p>
+<p class="t k" style="--b:480.5;left:111.7pt;width:290pt">Substituting the initial conditions (a2) and (a3) gives</p>
+<p class="t k" style="--b:507.5;left:111.7pt;width:290pt;--l:22pt"><span class="nw">$\vec r_T=\vec r(T)=\frac{u_0}{\gamma\mu_\mathrm{k}g}\left(\vec v_0-\frac{u_0}{2\gamma}\hat u_0\right)$.</span></p>
+<p class="t" style="--b:479;left:409.4pt">1</p>
+<p class="t k" style="--b:544.9;left:111.7pt;width:290pt;--l:22pt">Find <span class="nw">$\vec r_T=\frac{\sqrt{10}(\omega_0R)^2}{49\mu_\mathrm{k}g}(\hat x+11\hat y)$.</span></p>
+<p class="t" style="--b:533.6;left:409.4pt">2</p>
+<p class="x pn" style="--b:797.3">10</p>
+</div>
+
+<!-- page 12: marking scheme, problem 5 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.5pt;--fs:12pt">Marking scheme for Problem 5:</p>
+<!--RULES 12-->
+<div class="hr" style="left:65.3pt;width:426.6pt;top:100.3pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:116.4pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:141.0pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:165.5pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:190.0pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:244.4pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:265.9pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:290.5pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:309.0pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:381.5pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:402.8pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:423.6pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:496.2pt"></div>
+<div class="hr" style="left:113.3pt;width:378.6pt;top:537.5pt"></div>
+<div class="hr" style="left:65.3pt;width:426.6pt;top:555.4pt"></div>
+<div class="vr" style="left:65.3pt;top:100.8pt;height:455.1pt"></div>
+<div class="vr" style="left:113.3pt;top:100.8pt;height:455.1pt"></div>
+<div class="vr" style="left:418.0pt;top:100.8pt;height:455.1pt"></div>
+<div class="vr" style="left:453.5pt;top:100.8pt;height:455.1pt"></div>
+<div class="vr" style="left:491.4pt;top:100.8pt;height:455.1pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:112.2;left:70.9pt">Part</p>
+<p class="t" style="--b:112.2;left:118.8pt">Content</p>
+<p class="t" style="--b:112.2;left:421.5pt">Pts</p>
+<p class="t" style="--b:112.2;left:458pt">Notes</p>
+<p class="t" style="--b:128;left:70.9pt;--l:14.1pt">(A)(a)<br>6&nbsp;pts</p>
+<p class="t k" style="--b:133;left:118.8pt;width:297pt;--l:22pt">Field at the centre of the circular coil: <span class="nw">$\frac{\mu ia^2}{2(a^2+z^2)^{3/2}}$</span></p>
+<p class="t" style="--b:128;left:423.6pt">2</p>
+<p class="t k" style="--b:157.6;left:118.8pt;width:297pt;--l:22pt">Flux through the metal ring: <span class="nw">$\Phi=\frac{\mu N\pi a^4}{2(a^2+z^2)^{3/2}}I(t)$</span></p>
+<p class="t" style="--b:152.6;left:423.6pt">2</p>
+<p class="t k" style="--b:182;left:118.8pt;width:297pt;--l:22pt">Find the mutual inductance <span class="nw">$M(z)=\frac{\mu N\pi a^4}{2(a^2+z^2)^{3/2}}$</span></p>
+<p class="t" style="--b:177.1;left:423.6pt">2</p>
+<p class="t" style="--b:201.6;left:70.9pt;--l:14.1pt">(A)(b)<br>5&nbsp;pts</p>
+<p class="t k" style="--b:203;left:118.8pt;width:297pt;--l:15.5pt">State that the flux through the cylindrical surface of length $dz$ and radius $r$ (including the two end faces) is zero:</p>
+<p class="t k" style="--b:239.9;left:133.8pt;width:282pt"><span class="nw">$dz\,2\pi rB_r(z,r)+\pi r^2B_z(z+dz,r)-\pi r^2B_z(z,r)=0$</span></p>
+<p class="t" style="--b:201.6;left:423.6pt">2</p>
+<p class="t k" style="--b:259.8;left:118.8pt;width:297pt;--l:22pt">Obtain <span class="nw">$B_r(z,r)=-\frac{r}{2}\frac{\partial B_z(z,r)}{\partial z}$</span></p>
+<p class="t" style="--b:256.1;left:423.6pt">2</p>
+<p class="t k" style="--b:282.5;left:118.8pt;width:297pt;--l:22pt">Find <span class="nw">$B_r(z,r)\approx\frac{3\mu NI(t)a^2zr}{4(a^2+z^2)^{5/2}}$</span></p>
+<p class="t" style="--b:277.6;left:423.6pt">1</p>
+<p class="t" style="--b:302.2;left:70.9pt;--l:14.1pt">(B)(a)<br>6&nbsp;pts</p>
+<p class="t k" style="--b:303.6;left:118.8pt;width:297pt">Induced emf in the metal ring: <span class="nw">$-M(z)\omega\cos\omega t\,I(z)$</span></p>
+<p class="t" style="--b:302.2;left:423.6pt">1</p>
+<p class="t k" style="--b:331.7;left:118.8pt;width:297pt">Write the circuit equation using Kirchoff’s law:</p>
+<p class="t k" style="--b:367.8;left:118.8pt;width:297pt;--l:22pt">$Ri+L\frac{di}{dt}=-M(z)\omega\cos\omega t\,I(z)$</p>
+<p class="t" style="--b:320.6;left:423.6pt">2</p>
+<p class="t k" style="--b:396.7;left:118.8pt;width:297pt;--l:20pt">Find <span class="nw">$i(t)=-\frac{M\omega I(z)}{R^2+\omega^2L^2}[R\cos\omega t+\omega L\sin\omega t]$</span></p>
+<p class="t" style="--b:393.1;left:423.6pt">2</p>
+<p class="t k" style="--b:417.5;left:118.8pt;width:297pt;--l:20pt">Find <span class="nw">$\tan\delta=\frac{R}{\omega L}$.</span></p>
+<p class="t" style="--b:414.5;left:423.6pt">1</p>
+<p class="t" style="--b:435.4;left:70.9pt;--l:14.1pt">(B)(b)<br>8&nbsp;pts</p>
+<p class="t k" style="--b:446.4;left:118.8pt;width:297pt">Write the circuit equations of the solenoid and the metal ring:</p>
+<p class="t" style="--b:472.8;left:225pt;--fs:11.5pt;--l:18pt">$(i\omega L_0+R_0)i_1+i\omega Mi_2=V_0$;<br>$i\omega Mi_1+(i\omega L)i_2=0$.</p>
+<p class="t" style="--b:435.4;left:423.6pt">3</p>
+<p class="t k" style="--b:512.8;left:118.8pt;width:297pt;--l:30pt">Find <span class="nw">$I(z)=\frac{V_0}{\sqrt{R_0^2+\omega^2L_0^2\left(1-\frac{M^2}{LL_0}\right)^2}}$</span></p>
+<p class="t" style="--b:507.8;left:423.6pt">3</p>
+<p class="t k" style="--b:551.2;left:118.8pt;width:297pt">Explain that $I(z)$ decreases as $z$ increases</p>
+<p class="t" style="--b:549.1;left:423.6pt">2</p>
+<p class="x pn" style="--b:797.3">11</p>
+</div>
+
+<!-- page 13: marking scheme, problem 6 -->
+<div class="page">
+<p class="x" style="--b:82.3;left:70.9pt;width:453.5pt;--fs:12pt">Marking scheme for Problem 6:</p>
+<!--RULES 13-->
+<div class="hr" style="left:65.3pt;width:418.6pt;top:100.3pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:116.4pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:157.1pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:175.8pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:223.2pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:277.7pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:329.3pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:363.4pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:399.8pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:436.3pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:466.2pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:498.0pt"></div>
+<div class="hr" style="left:106.1pt;width:377.8pt;top:531.7pt"></div>
+<div class="hr" style="left:65.3pt;width:418.6pt;top:569.4pt"></div>
+<div class="vr" style="left:65.3pt;top:100.8pt;height:469.1pt"></div>
+<div class="vr" style="left:106.1pt;top:100.8pt;height:469.1pt"></div>
+<div class="vr" style="left:368.4pt;top:100.8pt;height:469.1pt"></div>
+<div class="vr" style="left:418.0pt;top:100.8pt;height:469.1pt"></div>
+<div class="vr" style="left:483.4pt;top:100.8pt;height:469.1pt"></div>
+<!--/RULES-->
+<p class="t" style="--b:112.2;left:70.9pt">Part</p>
+<p class="t" style="--b:112.2;left:111.7pt">Content</p>
+<p class="t" style="--b:112.2;left:374pt">Points</p>
+<p class="t" style="--b:112.2;left:423.6pt">Notes</p>
+<p class="t" style="--b:128;left:70.9pt;--l:14.1pt">(a)<br>9&nbsp;pts</p>
+<p class="t k" style="--b:129.6;left:111.7pt;width:255pt">Left-half circuit equation by Kirchoff’s law:</p>
+<p class="t k" style="--b:151;left:111.7pt;width:255pt;--l:20pt"><span class="nw">$\frac{\int i\,dt}{C}+L\frac{di}{dt}+R(I+i)+[V_1-r(I+i)]=0$</span></p>
+<p class="t" style="--b:128;left:374pt">2</p>
+<p class="t k" style="--b:170.9;left:111.7pt;width:255pt">DC components cancel: <span class="nw">$RI+(V_1-rI)=0$</span></p>
+<p class="t" style="--b:168.7;left:374pt">1</p>
+<p class="t k" style="--b:189.6;left:111.7pt;width:255pt">Differentiate to get the second-order equation:</p>
+<p class="t k" style="--b:212;left:111.7pt;width:255pt;--l:20pt"><span class="nw">$L\frac{d^2i}{dt^2}+(R-r)\frac{di}{dt}+\frac{i}{C}=0$</span></p>
+<p class="t" style="--b:187.4;left:374pt">1</p>
+<p class="t k" style="--b:245.9;left:111.7pt;width:255pt">Write the general solution of the equation:</p>
+<p class="t k" style="--b:272.2;left:111.7pt;width:255pt;--l:20pt"><span class="nw">$i(t)=\alpha_1e^{(-\xi+s)t}+\alpha_2e^{(-\xi-s)t}$, $s=\sqrt{\xi^2-\omega_0^2}$</span></p>
+<p class="t" style="--b:234.8;left:374pt">2</p>
+<p class="t k" style="--b:300.5;left:111.7pt;width:255pt">Substitute <span class="nw">$i(0)=0$, $i'(0)=\alpha$</span> to get the current:</p>
+<p class="t k" style="--b:323;left:111.7pt;width:255pt">$i(t)=(\alpha/s)e^{-\xi t}\sinh(st)$</p>
+<p class="t" style="--b:289.4;left:374pt">3</p>
+<p class="t" style="--b:340.9;left:70.9pt;--l:14.1pt">(b)<br>6&nbsp;pts</p>
+<p class="t k" style="--b:342.4;left:111.7pt;width:255pt;--l:16.8pt">1st oscillation condition (circuit loses no energy):<br>&nbsp;<span class="nw">$\xi\le0\Rightarrow R\le r$.</span></p>
+<p class="t" style="--b:340.9;left:374pt">2</p>
+<p class="t k" style="--b:376.4;left:111.7pt;width:255pt;--l:20pt">2nd oscillation condition ($s$ purely imaginary):<br><span class="nw">$&lt;\omega_0\Rightarrow R&lt;r+2\sqrt{L/C}$</span></p>
+<p class="t" style="--b:375;left:374pt">2</p>
+<p class="t k" style="--b:423;left:111.7pt;width:255pt">Oscillation frequency: <span class="nw">$\omega=\sqrt{\omega_0^2-\xi^2}$</span></p>
+<p class="t" style="--b:411.5;left:374pt">2</p>
+<p class="t" style="--b:448;left:70.9pt;--l:14.1pt">(c)<br>3&nbsp;pts</p>
+<p class="t k" style="--b:448.2;left:111.7pt;width:255pt">Write <span class="nw">$v_\mathrm{out}/v_\mathrm{in}=r/(r-R)$</span></p>
+<p class="t" style="--b:448;left:374pt">4</p>
+<p class="t" style="--b:478;left:70.9pt;--l:14.1pt">(d)<br>7&nbsp;pts</p>
+<p class="t k" style="--b:478.2;left:111.7pt;width:255pt;--l:15.6pt">Explain: the AC amplitude is at most <span class="nw">$(V_2-V_1)/2$;</span> beyond it <span class="nw">$r_d&gt;0$</span> and the amplitude saturates.</p>
+<p class="t" style="--b:478;left:374pt">1</p>
+<p class="t k" style="--b:510.7;left:111.7pt;width:255pt;--l:15.6pt">Find <span class="nw">$P_\mathrm{DC}^\mathrm{Gunn}=[(V_2-V_1)/2]$</span><br><span class="nw">$\times\{[V_b-(V_2-V_1)/2]/R\}$</span></p>
+<p class="t" style="--b:509.6;left:374pt">3</p>
+<p class="t k" style="--b:543.6;left:111.7pt;width:255pt">Find</p>
+<p class="t k" style="--b:560.2;left:111.7pt;width:255pt"><span class="nw">$P_\mathrm{AC}^\mathrm{Gunn}=\langle(\Delta V)(\Delta I)\rangle=\langle iv\rangle=-(V_2-V_1)^2/(8r)$</span></p>
+<p class="t" style="--b:543.4;left:374pt">3</p>
+<p class="x pn" style="--b:797.3">12</p>
+</div>
+
+</body></html>
