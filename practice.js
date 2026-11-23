@@ -9,7 +9,7 @@
   const SESSION=10;
   const copy={
     ko:{
-      lvTitle:'레벨',lvPick:'어떤 문제를 풀까요?',lvIntro:'레벨을 고르면 오늘의 문제와 세트 만들기의 기본 출처가 그 레벨의 문제로 바뀝니다. 언제든 바꿀 수 있습니다.',lvHas:'들어 있는 문제',lvSoon:'준비 중',lvChange:'바꾸기',lvCurrent:'지금 레벨',lvBankNote:'교재 · 대학 문제는 "교재 · 대학 문제" 탭에서 풉니다.',ob_stage:'어느 레벨에서 시작할까요?',
+      lvTitle:'레벨',lvPick:'어떤 문제를 풀까요?',lvIntro:'레벨을 고르면 오늘의 문제와 세트 만들기의 기본 출처가 그 레벨의 문제로 바뀝니다. 언제든 바꿀 수 있습니다.',lvHas:'들어 있는 문제',lvSoon:'준비 중',lvChange:'바꾸기',lvCurrent:'지금 레벨',lvBankNote:'교재 · 대학 문제는 "교재 · 대학 문제" 탭에서 풉니다.',ob_stage:'어느 레벨에서 시작할까요?',quickIntro:'고르면 바로 첫 문제가 나옵니다. 가입하지 않아도 풀 수 있고, 레벨은 언제든 바꿀 수 있습니다.',
       wTitle:'풀이 제출',wIntro:'종이에 풀어 사진을 찍거나, 패드에 쓰거나, 파일을 올리면 채점 기준표로 점수를 매깁니다.',wRule:'70% 이상이면 통과하고 다음 문제로 갑니다. 40–69%는 부분 점수: 복습 목록에 넣고 넘어갑니다. 40% 미만이면 힌트를 보고 다시 풀거나 넘어갈 수 있습니다.',
       wPhoto:'사진',wPad:'패드',wFile:'파일',wTake:'사진 찍기 · 고르기',wFilePick:'이미지나 PDF 고르기',wPdfNote:'PDF는 앞 4쪽까지 이미지로 바꿔 보냅니다.',wPdfFail:'이 PDF를 읽지 못했습니다. 페이지를 사진으로 올려 주세요.',wImgFail:'이 파일은 이미지로 읽을 수 없습니다.',
       wPen:'펜',wEraser:'지우개',wThin:'가늘게',wMid:'보통',wThick:'굵게',wUndo:'되돌리기',wClear:'지우기',wAddPage:'페이지로 추가',wPages:'보낼 페이지',wRemove:'빼기',wMax:'4쪽까지 보낼 수 있습니다.',wNone:'보낼 풀이가 없습니다. 사진을 올리거나 패드에 써 주세요.',
@@ -49,7 +49,7 @@
       settings:'진도 관리',exportP:'진도 내보내기',importP:'불러오기',resetP:'초기화',resetConfirm:'이 기기의 진도를 모두 지울까요? 되돌릴 수 없습니다. 계정에 저장된 기록은 남습니다.',importDone:'불러왔습니다. 문제마다 더 최근 기록을 남겼습니다.',resetDone:'이 기기의 진도를 지웠습니다.',imp_not_json:'JSON 파일이 아닙니다.',imp_not_backup:'하슬라랩 진도 파일이 아닙니다.',imp_version:'이 페이지에서 읽을 수 없는 버전입니다.',imp_empty:'파일에 불러올 기록이 없습니다.',settingsNote:'진도는 이 기기에 저장됩니다. 파일로 내보내 두면 다른 브라우저로 옮기거나 나중에 되살릴 수 있습니다. 복습 목록과 나중에 풀기는 계정에 저장되지 않으니 파일로 옮기세요.',
       note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.'},
     en:{
-      lvTitle:'Level',lvPick:'What do you want to practise?',lvIntro:'Your level decides where today’s problems and the set builder’s default source come from. You can change it at any time.',lvHas:'In the bank',lvSoon:'coming',lvChange:'Change',lvCurrent:'Your level',lvBankNote:'Textbook and university problems are in the Books & university tab.',ob_stage:'Which level do you want to start at?',
+      lvTitle:'Level',lvPick:'What do you want to practise?',lvIntro:'Your level decides where today’s problems and the set builder’s default source come from. You can change it at any time.',lvHas:'In the bank',lvSoon:'coming',lvChange:'Change',lvCurrent:'Your level',lvBankNote:'Textbook and university problems are in the Books & university tab.',ob_stage:'Which level do you want to start at?',quickIntro:'Pick one and the first problem opens. No account needed; you can change the level at any time.',
       wTitle:'Show your working',wIntro:'Solve on paper and take a photo, write on the pad, or upload a file. It is marked against a rubric.',wRule:'70% or more passes and moves you on. 40–69% is partial credit: the problem goes into your review queue and you move on. Below 40% you can look at a hint and try again, or move on.',
       wPhoto:'Photo',wPad:'Pad',wFile:'File',wTake:'Take or choose a photo',wFilePick:'Choose an image or a PDF',wPdfNote:'A PDF is sent as images of its first four pages.',wPdfFail:'This PDF could not be read. Upload the pages as photos.',wImgFail:'This file cannot be read as an image.',
       wPen:'Pen',wEraser:'Eraser',wThin:'Thin',wMid:'Medium',wThick:'Thick',wUndo:'Undo',wClear:'Clear',wAddPage:'Add as a page',wPages:'Pages to send',wRemove:'Remove',wMax:'You can send up to four pages.',wNone:'Nothing to send yet. Add a photo or write on the pad.',
@@ -1020,8 +1020,24 @@
   }
   /* the home page's own problem: today's set starts at once, one problem after another, no list in between */
   function startTodaySession(chosen){state.session={unit:'today',fixed:true,items:chosen,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};next();}
+  /* the home page's first visit: only the four level cards, then the first problem. The full questions (region, school
+     year, goal, daily target) stay in the settings; until then every unit starts at the step startStep() gives the level. */
+  const QUICK_PROFILE={L1:{},L2:{goal:'exam',region:'in'},L3:{goal:'olympiad',oly:1},L4:{level:'uni'}};
+  function quickStart(){
+    state.mode='start';state.session=null;paintTabs();paintStats();tellUnit('');
+    $('app').innerHTML=`<div class="session onboard"><h2>${tr('lvPick')}</h2><p class="src">${tr('quickIntro')}</p><div class="obopts">${levelCards('')}</div></div>`;
+    $('app').querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{
+      const key=b.dataset.level,tz=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){return '';}})();
+      const profile={region:P.guessRegion(state.lang,tz),level:'',goal:'',oly:0,daily:10,...QUICK_PROFILE[key],quick:true,at:Math.floor(Date.now()/1000)},step=P.startStep(profile);
+      saved.profile=profile;saved.studyLevel=key;
+      for(const area of P.AREAS)for(const sub of area.subtopics){const unit=area.key+'/'+sub.key,k=saved.skills[unit];
+        if(!k||!k.n)record('start-'+area.key,'diag',unit,step,'place');}
+      save();scheduleSync();playHome();
+    });
+    reportHeight();
+  }
   async function playHome(){
-    if(!saved.profile){startHome();return;}
+    if(!saved.profile){quickStart();return;}
     state.mode='today';state.session=null;paintTabs();paintStats();
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
     let items;try{items=await startPool();}catch(e){failed(playHome);return;}
@@ -1534,10 +1550,15 @@
   document.documentElement.classList.toggle('embedded',embedded);
   applyTheme();translate();
   addEventListener('online',()=>flushReports().catch(()=>{}));
+  /* a course's unit link (#/learn/courses): the set builder opens on that level's problems in that unit */
+  function presetCustom(level,unit){
+    if(!H.STUDY_LEVELS.some(L=>L.key===level))return;
+    saved.customOpts={...(saved.customOpts||{}),source:'level:'+level,units:unit&&P.SUBTOPICS.has(unit)?[unit]:[],min:1,max:10,contest:'',yearMin:0,yearMax:0};
+  }
   const boot=()=>{pull();loadPlan();setTimeout(()=>flushReports().catch(()=>{}),4000);const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
     if(item&&/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
     else if(mode==='play'){document.documentElement.classList.add('play');playHome();}
-    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(mode==='review')reviewHome();else if(mode==='custom')customHome();else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
+    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(mode==='review')reviewHome();else if(mode==='custom'){presetCustom(params.get('level'),unit);customHome();}else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

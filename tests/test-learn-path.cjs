@@ -72,22 +72,30 @@ test('school-exam difficulty and olympiad stars land on one ten-step scale',()=>
   assert.equal(P.bankSubjectOf('modern','special_relativity'),'special_relativity');assert.equal(P.bankSubjectOf('modern','photon'),'quantum_mechanics');
 });
 
-test('the physics learning hub shows the stages, the topic map with search links, and no fetches',()=>{
+test('the unit map is the roadmap\'s second tab: stages, the topic map with practice links, and no fetches; the old physics page goes there',()=>{
   const a=app();
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
-    const html=a.run('viewLearnSubject("physics")');
-    assert.equal((html.match(/class="lp-stage"/g)||[]).length,P.STAGES.length);
-    assert.equal((html.match(/data-subtopic="/g)||[]).length,P.SUBTOPICS.size);
-    assert.ok(links(html).includes('#/learn'));
-    assert.ok(links(html).includes('#/learn/practice?unit=mechanics/momentum'));
-    assert.ok(links(html).includes('#/learn/physics/search'));
-    assert.ok(links(html).includes(language==='ko'?'problems.html':'problems-en.html'));
-    assert.ok(!links(html).includes('#/learn/physics/studio'),'the studio stays for administrators');
-    assert.match(html,language==='ko'?/어디서 시작할까요/:/Where to start/);
+    for(const html of [a.run('viewLearnSubject("physics")'),a.run('viewLearnRoadmap("units")')]){
+      assert.equal((html.match(/class="lp-stage"/g)||[]).length,P.STAGES.length);
+      assert.equal((html.match(/data-subtopic="/g)||[]).length,P.SUBTOPICS.size);
+      assert.ok(links(html).includes('#/learn'));
+      assert.ok(links(html).includes('#/learn/practice?unit=mechanics/momentum'));
+      assert.ok(links(html).includes('#/learn/roadmap')&&links(html).includes('#/learn/roadmap?view=units'),'both roadmap tabs');
+      assert.match(html,/href="#\/learn\/roadmap\?view=units" aria-current="page"/);
+      assert.ok(!links(html).includes('#/learn/physics/studio'),'the studio stays for administrators');
+      assert.match(html,language==='ko'?/어디서 시작할까요/:/Where to start/);
+    }
   }
-  a.run('cm.me={id:1,role:"admin"}');assert.ok(links(a.run('viewLearnSubject("physics")')).includes('#/learn/physics/studio'));
+  /* the studio is on the Learn page for administrators only */
+  assert.ok(!links(a.run('viewLearnHome()')).includes('#/learn/physics/studio'));
+  a.run('cm.me={id:1,role:"admin"}');assert.ok(links(a.run('viewLearnHome()')).includes('#/learn/physics/studio'));a.run('cm.me=null');
   assert.deepEqual(Runtime.routeNeeds('#/learn/physics/search?subject=optics'),[]);
+  /* #/learn/physics is replaced by the unit map */
+  const replaced=[];a.context.history.replaceState=(s,t,url)=>replaced.push(url);
+  a.context.location.hash='#/learn/physics';try{a.run('render()');}catch(e){}
+  assert.equal(replaced[0],'#/learn/roadmap?view=units');
+  for(const hash of ['#/learn/roadmap','#/learn/courses','#/learn/lab','#/learn/subjects','#/learn'])assert.deepEqual(Runtime.routeNeeds(hash),[],hash);
 });
 
 test('the search page forwards only a valid topic and difficulty to the search frame',()=>{
@@ -99,45 +107,117 @@ test('the search page forwards only a valid topic and difficulty to the search f
   q=new URLSearchParams(src.split('?')[1]);assert.equal(q.get('subject'),null);assert.equal(q.get('stars'),null);
 });
 
-test('the header switches between the Learn and Olympiad sections; community and about stand apart',()=>{
+test('the top menu has five items: Home, Learn, Olympiad, Community, About; the current one is marked',()=>{
   const a=app('#/');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
-    for(const [active,hash,on] of [['home','#/','#/'],['learn','#/learn/physics','#/'],['comps','#/comps','#/olympiad'],['comps','#/archive/books/phys','#/'],['weekly','#/monthly','#/olympiad'],['olympiad','#/olympiad','#/olympiad']]){
+    for(const [active,hash,on] of [['home','#/','#/'],['learn','#/learn/physics','#/learn'],['learn','#/learn/lab','#/learn'],['comps','#/comps','#/olympiad'],['comps','#/archive/books/phys','#/learn'],['weekly','#/monthly','#/olympiad'],['olympiad','#/olympiad','#/olympiad'],['community','#/community','#/community'],['about','#/about','#/about']]){
       a.context.location.hash=hash;a.run(`paintPageChrome(${JSON.stringify(active)})`);
-      assert.deepEqual(links(a.nav()),['#/','#/olympiad','#/community','#/about'],hash);
+      assert.deepEqual(links(a.nav()),['#/','#/learn','#/olympiad','#/community','#/about'],hash);
+      assert.equal((a.nav().match(/class="on"/g)||[]).length,1,hash);
       assert.match(a.nav(),new RegExp(`href="${on.replace(/\//g,'\\/')}" class="on"`),hash);
     }
-    a.context.location.hash='#/community';a.run('paintPageChrome("community")');
-    assert.doesNotMatch(a.nav(),/href="#\/(olympiad)?" class="on"/);
     assert.equal(a.run('UI[lang].navOly'),language==='ko'?'올림피아드':'Olympiad');
+    assert.equal(a.run('UI[lang].navHome'),language==='ko'?'홈':'Home');
   }
+  /* the phone tab bar copies the top menu: the same five items, no extra button */
+  const ux=read('site-ux.js');assert.doesNotMatch(ux,/data-hlx="search"/);assert.match(ux,/nav\.querySelectorAll\("a"\)/);
 });
 
-test('each section has its own bar, and the current page is marked in it',()=>{
+test('the Learn bar: today\'s problems, roadmap, courses, search, lab, in that order; old routes mark where they now live',()=>{
   const a=app('#/');
   const bar=(section,hash)=>{a.context.location.hash=hash;return a.run(`sectionLinks(${JSON.stringify(section)}).map(([href,label,current])=>[href,current(${JSON.stringify(hash)})])`);};
-  const learn=bar('learn','#/learn/physics/search');
-  assert.deepEqual(Array.from(learn,([href])=>href).filter(h=>h.startsWith('#')),['#/','#/learn/practice','#/learn/roadmap','#/learn/create','#/learn/teach','#/learn/physics','#/archive/books/phys','#/learn/physics/search','#/learn']);
-  assert.deepEqual(Array.from(learn).filter(([,on])=>on).map(([h])=>h),['#/learn/physics/search']);
+  for(const language of ['ko','en']){
+    a.run(`lang=${JSON.stringify(language)}`);
+    const learn=bar('learn','#/learn/physics/search');
+    assert.deepEqual(Array.from(learn,([href])=>href),['#/learn/practice','#/learn/roadmap','#/learn/courses','#/learn/physics/search','#/learn/lab']);
+    assert.deepEqual(Array.from(a.run('sectionLinks("learn").map(x=>x[1])')),language==='ko'?['오늘의 문제','로드맵','강좌','문제 검색','실험실']:["Today's problems",'Roadmap','Courses','Search problems','Lab']);
+    assert.ok(Array.from(a.run('sectionLinks("learn").map(x=>x[3])')).every(line=>line&&line.length<90),'each item has one short line');
+    for(const [hash,on] of [['#/learn/physics/search','#/learn/physics/search'],['#/learn/practice','#/learn/practice'],['#/learn/physics','#/learn/roadmap'],['#/learn/roadmap','#/learn/roadmap'],['#/learn/courses','#/learn/courses'],
+      ['#/learn/lab','#/learn/lab'],['#/learn/concepts','#/learn/lab'],['#/learn/compute','#/learn/lab'],['#/learn/create','#/learn/lab']])
+      assert.deepEqual(Array.from(bar('learn',hash)).filter(([,x])=>x).map(([h])=>h),[on],hash);
+    assert.deepEqual(Array.from(bar('learn','#/learn/teach')).filter(([,x])=>x),[],'the teacher page is off the bar');
+  }
   const oly=bar('olympiad','#/ipho/2019');
   assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/olympiad/schedule','#/monthly','#/hpho','#/lab']);
   assert.deepEqual(Array.from(oly).filter(([,on])=>on).map(([h])=>h),['#/comps']);
   assert.equal(a.run('sectionLinks(null).length'),0);
+  assert.equal(a.run('siteSection("home")'),null);assert.equal(a.run('siteSection("learn")'),'learn');
   assert.equal(a.run('siteSection("community")'),null);assert.equal(a.run('siteSection("about")'),null);
 });
 
-test('the site opens on the Learn home with a problem open; the roadmap, the calendar and the rest are one click away',()=>{
-  const a=app('#/');
+const PLAIN=/—|unlock|seamless|elevate|comprehensive|empower|journey|잠금 해제|원활|한 단계 높/i;
+test('the home page: today\'s problems at once, four doors, then a section for each part with true numbers and real links',()=>{
+  const a=app('#/'),counts=require('../tools/build-courses.cjs').build().counts;
+  assert.deepEqual({...a.run('PRACTICE_COUNTS')},counts,'the home page counts are what practice/ holds');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
-    const html=a.run('viewHome()'),hrefs=links(html);
-    /* a plain home: today's problems first, then six doors; the bar above carries the rest */
-    for(const href of ['#/learn/practice','#/learn/roadmap','#/learn/practice?mode=tracks','#/learn/practice?mode=contest','#/olympiad/schedule','#/learn/create','#/community'])assert.ok(hrefs.includes(href),href);
+    const html=a.run('viewHome()'),hrefs=links(html),A=a.run('archiveTotals()'),n=x=>a.run(`nfmt(${x})`);
     assert.match(html,/src="practice\.html\?[^"]*mode=play/,'a problem is open on the home page');
-    assert.doesNotMatch(html,/id="deflect"|homeLatest/);
+    const doors=[...html.matchAll(/class="hm-door" href="([^"]+)"/g)].map(m=>m[1]);
+    assert.deepEqual(doors,['#/learn','#/olympiad','#/learn/lab','#/community']);
+    for(const href of ['#/learn/practice','#/learn/courses','#/learn/roadmap','#/learn/physics/search','#/comps','#/olympiad/schedule','#/monthly','#/learn/teach','#/learn/create','#/community'])assert.ok(hrefs.includes(href),href);
+    for(const x of [counts.calc,counts.track,counts.calc+counts.track,counts.contest,A.comps,A.years,A.live])assert.ok(html.includes(n(x)),String(x));
+    assert.equal(A.comps,language==='en'?49:50);
+    assert.equal((html.match(/class="hm-sec"/g)||[]).length,5);
+    assert.equal((html.match(/class="hm-go"/g)||[]).length,5,'one main button per section');
+    assert.doesNotMatch(html,PLAIN);assert.doesNotMatch(html,/id="deflect"|homeLatest/);
+    for(const view of ['viewLearnHome()','viewLearnLab()'])assert.doesNotMatch(a.run(view),PLAIN,view);
   }
   assert.deepEqual(Runtime.routeNeeds('#/'),[]);
+});
+
+test('the Learn page lists the five parts with one line each, then the teacher page, books and other subjects',()=>{
+  const a=app('#/learn');
+  for(const language of ['ko','en']){
+    a.run(`lang=${JSON.stringify(language)}`);
+    const html=a.run('viewLearnHome()'),hrefs=links(html);
+    const parts=[...html.matchAll(/<ol class="ll-parts">([\s\S]*?)<\/ol>/g)][0][1];
+    assert.deepEqual(links(parts),['#/learn/practice','#/learn/roadmap','#/learn/courses','#/learn/physics/search','#/learn/lab']);
+    for(const href of ['#/learn/teach','#/archive/books/phys','#/learn/subjects'])assert.ok(hrefs.includes(href),href);
+    assert.equal((html.match(/class="hm-go"/g)||[]).length,1);
+  }
+});
+
+test('the lab gathers the concept simulations, computational physics, the creations and the experiment simulators',()=>{
+  const a=app('#/learn/lab');
+  for(const language of ['ko','en']){
+    a.run(`lang=${JSON.stringify(language)}`);
+    const html=a.run('viewLearnLab()'),cards=[...html.matchAll(/class="lab-card" href="([^"]+)"/g)].map(m=>m[1]);
+    assert.deepEqual(cards,['#/learn/concepts','#/learn/compute','#/learn/create',language==='ko'?'problems.html':'problems-en.html']);
+    assert.ok(links(html).includes('#/learn/create?view=edit'));assert.equal((html.match(/class="hm-go"/g)||[]).length,1);
+    for(const view of ['viewLearnConcepts()','viewLearnCompute()','viewLearnCreate()'])assert.ok(links(a.run(view)).includes('#/learn/lab'),view);
+  }
+});
+
+test('the courses: one per study level from the repository\'s own data, every link pointing at something that exists',()=>{
+  const C=require('../tools/build-courses.cjs').build(),T=require('../practice-tools.js');
+  assert.equal(read('data/courses.json'),JSON.stringify(C,null,1)+'\n','data/courses.json is current (node tools/build-courses.cjs)');
+  assert.deepEqual(C.levels.map(l=>l.key),T.STUDY_LEVELS.map(l=>l.key));
+  const sims=new Set([...read('concepts.js').matchAll(/\{id:'([a-z0-9-]+)',unit:/g)].map(m=>m[1])),rm=new Set(JSON.parse(read('data/roadmap.json')).stages.map(s=>s.key));
+  for(const L of C.levels){
+    for(const u of L.units){assert.ok(P.SUBTOPICS.has(u.u),u.u);assert.ok(u.n>0);}
+    for(const k of L.roadmap)assert.ok(rm.has(k),k);
+    assert.ok(L.units.length||L.areas.length,L.key);
+  }
+  for(const s of C.sims)assert.ok(sims.has(s.id)&&P.SUBTOPICS.has(s.u),s.id);
+  assert.equal(C.sims.length,sims.size);
+  /* the page: the four levels, a units list with practice links, and the video note */
+  const ctx={lang:'ko',location:{hash:'#/learn/courses?level=L1'},history:{replaceState(){}},URLSearchParams,window:{HL_LEARN_PATH:P},
+    fetch:async f=>({ok:true,json:async()=>JSON.parse(read(f))})};
+  let box={innerHTML:'',querySelectorAll:()=>[]};
+  ctx.document={getElementById:id=>id==='courses'?box:null,body:{contains:()=>true}};
+  vm.createContext(ctx);vm.runInContext(read('guides.js'),ctx);
+  const view=vm.runInContext('window.HL_GUIDES.coursesView()',ctx);
+  assert.match(view,/강의 영상 준비 중/);assert.doesNotMatch(view,PLAIN);
+  return vm.runInContext('window.HL_GUIDES.coursesMount()',ctx).then(()=>{
+    const html=box.innerHTML;
+    assert.equal((html.match(/data-level="L\d"/g)||[]).length,4);
+    assert.ok(links(html).includes('#/learn/practice?mode=custom&amp;level=L1&amp;unit=mechanics/newton'));
+    assert.ok(links(html).includes('#/learn/concepts?sim=pulley-cart'));
+    assert.ok(links(html).some(h=>h.startsWith('#/learn/roadmap?stage=')));
+    assert.match(html,/AP · Physics Bowl · F=ma/);assert.match(html,/Physics Bowl 기출/);
+  });
 });
 
 test('the Olympiad home is the former HaslaLab home with its hero and community panels',()=>{
@@ -167,10 +247,17 @@ test('the computational physics page embeds the judge and passes on only a valid
 
 test('the practice page embeds practice.html and passes on only a unit of the learning path',()=>{
   const a=app('#/learn/practice?unit=em/induction');
-  let src=/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1];
+  let src=/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1],q;
   assert.ok(src.startsWith('practice.html?'));assert.equal(new URLSearchParams(src.split('?')[1]).get('unit'),'em/induction');
   a.context.location.hash='#/learn/practice?unit=../../etc';
   src=/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1];
   assert.equal(new URLSearchParams(src.split('?')[1]).get('unit'),null);
+  /* a course's unit link opens the set builder on that level and unit */
+  a.context.location.hash='#/learn/practice?mode=custom&level=L2&unit=em/induction';
+  q=new URLSearchParams(/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1].split('?')[1]);
+  assert.deepEqual([q.get('mode'),q.get('level'),q.get('unit')],['custom','L2','em/induction']);
+  a.context.location.hash='#/learn/practice?mode=custom&level=L9';
+  q=new URLSearchParams(/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1].split('?')[1]);
+  assert.equal(q.get('level'),null);
   assert.deepEqual(Runtime.routeNeeds('#/learn/practice'),[]);
 });

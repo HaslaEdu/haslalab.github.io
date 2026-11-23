@@ -1023,7 +1023,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=6bab972ef1d4">
+<link rel="stylesheet" href="site-design.css?v=6ef8bce3d980">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
 </head>
@@ -1174,13 +1174,13 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-catalogue.js?v=ba1fd985f46b"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
-<script src="site-design.js?v=56e76d4f3c53"></script>
+<script src="site-design.js?v=f0e733102d6c"></script>
 <script src="hpho.js?v=ea67208eda3b"></script>
-<script src="guides.js?v=9836e46a389c"></script>
+<script src="guides.js?v=948d0aa7ae4a"></script>
 <script src="hpho-proctor.js?v=c8b93c4e12fb"></script>
 <script src="hpho-phone.js?v=3a6015cc1217"></script>
 <script src="hpho-exam.js?v=a4e790f96370"></script>
-<script src="site-ux.js?v=51373bbd8802"></script>
+<script src="site-ux.js?v=22ee9cd54d61"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="ai-chat.js?v=278f5546252e"></script>
 <script>
@@ -5302,46 +5302,128 @@ function learnAreasHtml(){
       return `<li><a href="#/learn/practice?unit=${area.key}/${sub.key}" data-subtopic="${area.key}/${sub.key}">${label}</a></li>`;}).join("")}</ul></section>`).join("")}</div>`;
 }
 
-/* Learn home: the page the site opens on. Short problems by topic and step; long final-round
-   problems stay in the Olympiad section's archive. */
-function viewLearnHome(){
-  /* The Learn home: today's problems first (practice.html in play mode; a first visit answers the setup questions
-     there), then six doors of the same size. Nothing else. */
-  const ko=lang==="ko";
+/* Numbers the home page and the Learn pages show. PRACTICE_COUNTS is what practice/ holds (tools/build-courses.cjs
+   writes the same counts to data/courses.json, and tests/test-learn-path.cjs checks the two agree); the archive's
+   come from the catalogue, without what the English site hides. */
+const PRACTICE_COUNTS={calc:461,track:262,contest:599,total:1322,concepts:6,compute:6};
+function archiveTotals(){
+  const t=window.HL_CATALOGUE?.totals;if(!t)return{comps:Object.keys(DATA).length,years:0,live:0};
+  let {comps,years,live}=t;
+  for(const k of EN_HIDDEN)if(!compShown(k)){const c=window.HL_CATALOGUE.competitions[k]?.counts;comps--;if(c)years-=c.years;}
+  return{comps,years,live};
+}
+const nfmt=n=>Number(n).toLocaleString(lang==="ko"?"ko-KR":"en-US");
+/* One name and one line for each part of the site, used by the home page, the Learn page, the bar and the page titles. */
+function learnParts(){
+  const ko=lang==="ko",C=PRACTICE_COUNTS;
+  return [
+    {key:"practice",href:"#/learn/practice",name:ko?"오늘의 문제":LX("Today's problems"),line:ko?"매일 10문제가 내 레벨에 맞춰 나옵니다. 답을 내면 바로 채점합니다.":LX("Ten problems a day at your level, graded as soon as you answer.")},
+    {key:"roadmap",href:"#/learn/roadmap",name:ko?"로드맵":LX("Roadmap"),line:ko?"입문부터 대학까지 무엇을 어떤 순서로 공부할지, 단원 지도와 함께 봅니다.":LX("What to study and in what order, from a first course to university, with the unit map.")},
+    {key:"courses",href:"#/learn/courses",name:ko?"강좌":LX("Courses"),line:ko?"레벨마다 단원을 순서대로 묶었습니다. 단원마다 문제와 시뮬레이션이 연결됩니다.":LX("The units of each level in order, each linked to its problems and simulations.")},
+    {key:"search",href:"#/learn/physics/search",name:ko?"문제 검색":LX("Search problems"),line:ko?"낱말이나 수식, 주제, 난이도로 문제를 찾습니다.":LX("Find problems by words, equations, topic and difficulty.")},
+    {key:"lab",href:"#/learn/lab",name:ko?"실험실":LX("Lab"),line:ko?"시뮬레이션을 돌려 보고, 직접 만들어 올리고, 다른 사람의 작품을 실행합니다.":LX("Run simulations, build your own and share them, and play what others made.")}
+  ];
+}
+const learnPart=key=>learnParts().find(p=>p.key===key);
+
+/* Home (#/): what the site is, today's problems at once, then one short section for each part with real links. */
+function viewHome(){
+  const ko=lang==="ko",C=PRACTICE_COUNTS,A=archiveTotals();
   const q=new URLSearchParams({embed:"1",mode:"play",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  const door=(href,icon,title,note)=>`<a class="lh3-door" href="${href}"><i aria-hidden="true">${icon}</i><b>${title}</b><span>${note}</span></a>`;
-  return `<div class="shell lh3">
-    <section class="lh3-play" aria-labelledby="lh3H">
-      <div class="lh3-head"><h1 id="lh3H">${ko?"오늘의 문제":LX("Today's problems")}</h1><a href="#/learn/practice">${ko?"다른 문제 고르기":LX("Choose other problems")} →</a></div>
-      <iframe id="learnPracticeFrame" class="learn-studio-frame lh3-frame" src="practice.html?${q}" title="${ko?"오늘의 문제":"Today's problems"}" referrerpolicy="same-origin"></iframe>
-    </section>
-    <nav class="lh3-doors" aria-label="${ko?"학습 메뉴":"Learn"}">
-      ${door("#/learn/roadmap","↗",ko?"로드맵":LX("Roadmap"),ko?"입문부터 학부까지 무엇을 어떤 순서로":"What to study, in order, from a first course to university")}
-      ${door("#/learn/practice?mode=tracks","✎",ko?"시험별 문제":LX("Practice by exam"),"AP · JEE · F=ma · USAPhO")}
-      ${door("#/learn/practice?mode=contest","★",ko?"대회 기출":LX("Competition problems"),ko?"EuPhO, Physics Cup 등 599문제":"599 from EuPhO, Physics Cup and others")}
-      ${door("#/olympiad/schedule","◷",ko?"대회 일정":LX("Contest calendar"),ko?"올림피아드와 입시 날짜":"Olympiad and exam dates")}
-      ${door("#/learn/create","◆",ko?"만들기":LX("Create"),ko?"회원이 만든 시뮬레이션과 문제":"Simulations and problems made by members")}
-      ${door("#/community","✉",ko?"커뮤니티":LX("Community"),ko?"질문과 갤러리":"Questions and galleries")}
-    </nav>
+  const door=(href,title,note)=>`<a class="hm-door" href="${href}"><b>${title}</b><span>${note}</span></a>`;
+  const sec=(id,title,line,go,goLabel,more)=>`<section class="hm-sec" aria-labelledby="${id}"><h2 id="${id}">${title}</h2><p>${line}</p>
+      <p class="hm-acts"><a class="hm-go" href="${go}">${goLabel}</a>${more.map(([h,l])=>`<a href="${h}">${l}</a>`).join("")}</p></section>`;
+  const sims=ko?"problems.html":LX("problems-en.html");
+  return `<div class="shell hm">
+    <p class="hm-lede">${ko?`물리 문제를 풀고, 올림피아드 기출을 찾고, 시뮬레이션을 만드는 무료 사이트입니다. 문제는 가입하지 않아도 풉니다.`:LX("A free site to practise physics problems, find olympiad papers and build simulations. You can solve problems without an account.")}</p>
+    <div class="hm-top">
+      <section class="hm-play" aria-labelledby="hmPlay">
+        <div class="lh3-head"><h1 id="hmPlay">${learnPart("practice").name}</h1><a href="#/learn/practice">${ko?"다른 문제 고르기":LX("Choose other problems")} →</a></div>
+        <iframe id="learnPracticeFrame" class="learn-studio-frame lh3-frame" src="practice.html?${q}" title="${learnPart("practice").name}" referrerpolicy="same-origin"></iframe>
+      </section>
+      <nav class="hm-doors" aria-label="${ko?"하슬라랩에서 할 수 있는 것":LX("What you can do here")}">
+        ${door("#/learn",UI[lang].navLearn,ko?"로드맵, 강좌, 문제 검색":LX("Roadmap, courses, problem search"))}
+        ${door("#/olympiad",UI[lang].navOly,ko?`${nfmt(A.comps)}개 대회 기출과 일정`:`${nfmt(A.comps)} ${LX("competitions: papers and dates")}`)}
+        ${door("#/learn/lab",learnPart("lab").name,ko?"시뮬레이션 실행하고 만들기":LX("Run and build simulations"))}
+        ${door("#/community",UI[lang].navComm,ko?"질문하고 답하기":LX("Ask and answer questions"))}
+      </nav>
+    </div>
+    <div class="hm-grid">
+      ${sec("hmLearn",UI[lang].navLearn,ko?`연습 문제 ${nfmt(C.calc+C.track)}개(한국 시험 계산 문제 ${nfmt(C.calc)}개, AP · JEE · F=ma · USAPhO 형식 ${nfmt(C.track)}개)와 대회 기출 ${nfmt(C.contest)}문제를 레벨과 단원별로 풉니다.`:LX(`Solve ${nfmt(C.calc+C.track)} practice problems (${nfmt(C.calc)} calculation problems from Korean exams, ${nfmt(C.track)} in the style of AP, JEE, F=ma and the USAPhO) and ${nfmt(C.contest)} competition problems by level and unit.`),
+        "#/learn/courses",ko?"강좌 보기":LX("See the courses"),[["#/learn/roadmap",learnPart("roadmap").name],["#/learn/physics/search",learnPart("search").name]])}
+      ${sec("hmOly",UI[lang].navOly,ko?`${nfmt(A.comps)}개 대회, ${nfmt(A.years)}회분의 문제와 해설을 모았습니다. 실험 문제 ${nfmt(A.live)}개는 시뮬레이터로 직접 측정해 봅니다.`:LX(`Problems and solutions from ${nfmt(A.comps)} competitions, ${nfmt(A.years)} sittings in all. ${nfmt(A.live)} experimental problems have a simulator you can measure with.`),
+        "#/comps",ko?"대회 기출 보기":LX("Browse past papers"),[["#/olympiad/schedule",ko?"대회 일정":LX("Contest calendar")],["#/monthly",UI[lang].navWeekly]])}
+      ${sec("hmTeach",ko?"선생님께":LX("For teachers"),ko?"하슬라랩 문제로 시험지를 만들어 정답표와 함께 인쇄하고, 학급에 과제로 보냅니다.":LX("Build a test from HaslaLab's problems, print it with its answer key, and send it to a class as an assignment."),
+        "#/learn/teach",ko?"시험지 만들기":LX("Build a test"),[["#/learn/teach?tab=vary",ko?"비슷한 문제 만들기":LX("Make similar problems")]])}
+      ${sec("hmClub",ko?"동아리에서":LX("For school clubs"),ko?`부원이 시뮬레이션과 문제를 만들어 올리고 서로 풀어 봅니다. 가상 실험실에는 개념 시뮬레이션 ${C.concepts}개, 계산물리 ${C.compute}문제, 실험 시뮬레이터 ${nfmt(A.live)}개가 있습니다.`:LX(`Members build simulations and problems, post them and solve each other's. The virtual lab has ${C.concepts} concept simulations, ${C.compute} computational physics problems and ${nfmt(A.live)} experiment simulators.`),
+        "#/learn/create",ko?"작품 갤러리":LX("Creations gallery"),[["#/learn/lab",ko?"가상 실험실":LX("Virtual lab")],[sims,ko?"실험 시뮬레이터":LX("Experiment simulators")]])}
+      ${sec("hmComm",UI[lang].navComm,ko?"모르는 문제를 묻고, 풀이와 자료를 나눕니다.":LX("Ask about a problem you are stuck on, and share solutions and materials."),
+        "#/community",ko?"커뮤니티 가기":LX("Go to the community"),[["#/about",UI[lang].navAbout]])}
+    </div>
   </div>${adFitBanner("home")}`;
 }
 
-/* Physics learning hub: five stages of ten steps, the topic map, and the tools that serve them. */
-function viewLearnPhysics(){
-  const d=UI[lang],ko=lang==="ko",L=LEARN.physics,search=learnSearchHref;
-  const tools=[
-    [search(""),ko?"문제 검색":LX("Search problems"),ko?"글 · 수식 · 주제 · 난이도로 찾기":LX("By text, equation, topic and difficulty")],
-    [archiveHref("books","phys"),ko?"교재 아카이브":LX("Book archive"),ko?"공개 교재와 학교 자료":LX("Open textbooks and school materials")],
-    [ko?"problems.html":LX("problems-en.html"),ko?"실험 시뮬레이터":LX("Experiment simulators"),ko?"움직임과 측정을 직접 해 보기":LX("See the motion, take the readings")],
-    ...(cm.me?.role==="admin"?[["#/learn/physics/studio",ko?"문제 제작소":LX("Problem Studio"),ko?"관리자 · 문제 만들기와 디지털화":LX("Admin · create and digitize problems")]]:[])];
-  return `<div class="shell learn-physics"><div class="phead"><p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p><h1>${L.name[lang]}</h1>
-      <p class="learn-tool-copy">${ko?"지금 실력에 맞는 단계와 필요한 주제를 골라, 그 문제부터 공부하세요.":LX("Pick the step that matches you and the topic you need, and start with those problems.")}</p></div>
-    <section class="lp-block" aria-labelledby="lpStages"><h2 id="lpStages">${ko?"어디서 시작할까요?":LX("Where to start")}</h2>${learnStagesHtml()}</section>
-    <section class="lp-block" aria-labelledby="lpTopics"><h2 id="lpTopics">${ko?"주제별로 공부하기":LX("Study by topic")}</h2>
-      <p class="learn-tool-copy">${ko?"숫자는 그 주제를 처음 다루는 단계입니다.":LX("The number is the step where a topic first appears.")}</p>${learnAreasHtml()}</section>
-    <section class="lp-block" aria-labelledby="lpTools"><h2 id="lpTools">${ko?"도구":LX("Tools")}</h2><div class="comps">${tools.map(([href,title,note])=>`<a class="comp lsubj" href="${href}"${href.includes("/studio")?' data-learn-tool="studio"':""}><div class="chead"><div class="abbr">${title}</div></div><p class="learn-card-note">${note}</p><span class="go">→</span></a>`).join("")}</div></section>
+/* Learn (#/learn): the five parts of the bar with one line each, then the rest of the section. */
+function viewLearnHome(){
+  const ko=lang==="ko",parts=learnParts();
+  const more=[["#/learn/teach",ko?"교사용":LX("For teachers"),ko?"시험지 만들기, 학급 과제":LX("Tests and class assignments")],
+    [archiveHref("books","phys"),ko?"교재":LX("Books"),ko?"공개 교재와 학교 자료":LX("Open textbooks and school materials")],
+    [ko?"problems.html":LX("problems-en.html"),ko?"실험 시뮬레이터":LX("Experiment simulators"),ko?"올림피아드 실험 문제를 화면에서":LX("Olympiad experiments on screen")],
+    ["#/learn/subjects",ko?"다른 과목":LX("Other subjects"),ko?"천문 등":LX("Astronomy and others")],
+    ...(cm.me?.role==="admin"?[["#/learn/physics/studio",ko?"문제 제작소":LX("Problem Studio"),ko?"관리자":LX("Administrators")]]:[])];
+  return `<div class="shell ll"><div class="phead"><h1>${UI[lang].navLearn}</h1>
+      <p class="learn-tool-copy">${ko?"처음이면 오늘의 문제부터 푸세요. 레벨을 하나 고르면 바로 시작합니다.":LX("New here? Start with today's problems: pick a level and the first problem opens.")}</p>
+      <p><a class="hm-go" href="#/learn/practice">${ko?"오늘의 문제 풀기":LX("Solve today's problems")}</a></p></div>
+    <ol class="ll-parts">${parts.map((p,i)=>`<li><a href="${p.href}"><span class="mono">${i+1}</span><b>${p.name}</b><span>${p.line}</span></a></li>`).join("")}</ol>
+    <section class="ll-more" aria-labelledby="llMore"><h2 id="llMore">${ko?"그 밖에":LX("Also in Learn")}</h2>
+      <ul>${more.map(([h,t,n])=>`<li><a href="${h}"${h.includes("/studio")?' data-learn-tool="studio"':""}>${t}</a> <span>${n}</span></li>`).join("")}</ul></section>
   </div>${adFitBanner("primary")}`;
 }
+
+/* Lab (#/learn/lab): like a block-coding site, play, make, share. Its parts keep their own pages
+   (#/learn/concepts, #/learn/compute, #/learn/create). */
+function viewLearnLab(){
+  const ko=lang==="ko",C=PRACTICE_COUNTS,A=archiveTotals(),label=learnPart("lab").name;
+  const card=(href,title,count,line,go)=>`<a class="lab-card" href="${href}"><b>${title}</b><span class="mono">${count}</span><p>${line}</p><span class="lab-open">${go} →</span></a>`;
+  return `<div class="shell lab"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
+      <p class="learn-tool-copy">${learnPart("lab").line}</p>
+      <p><a class="hm-go" href="#/learn/create?view=edit">${ko?"새 작품 만들기":LX("Make something new")}</a> <a class="lab-sub" href="#/learn/create">${ko?"작품 갤러리 보기":LX("See the gallery")}</a></p></div>
+    <ol class="lab-steps">
+      <li><b>${ko?"해 보기":LX("Play")}</b><span>${ko?"값을 바꾸며 시뮬레이션을 돌려 봅니다.":LX("Change a value and run a simulation.")}</span></li>
+      <li><b>${ko?"만들기":LX("Make")}</b><span>${ko?"JavaScript 시뮬레이션이나 Python 문제를 만듭니다. 남의 작품을 고쳐 만들어도 됩니다.":LX("Write a JavaScript simulation or a Python problem, or remix someone else's.")}</span></li>
+      <li><b>${ko?"공유하기":LX("Share")}</b><span>${ko?"올리면 누구나 실행하고 풀어 볼 수 있습니다.":LX("Post it and anyone can run it and solve it.")}</span></li></ol>
+    <div class="lab-cards">
+      ${card("#/learn/concepts",ko?"개념 시뮬레이션":LX("Concept simulations"),ko?`${C.concepts}개`:`${C.concepts}`,ko?"운동을 보며 값 하나를 바꾸고, 끝에 확인 문제 하나를 풉니다. 입문자용.":LX("Watch the motion, change one value, then answer one question. For beginners."),ko?"해 보기":LX("Play"))}
+      ${card("#/learn/compute",ko?"계산물리":LX("Computational physics"),ko?`${C.compute}문제`:`${C.compute}`,ko?"시뮬레이션을 Python으로 짜면 브라우저 안에서 채점합니다.":LX("Write a simulation in Python; it is graded in your browser."),ko?"풀어 보기":LX("Solve"))}
+      ${card("#/learn/create",ko?"작품 갤러리":LX("Creations gallery"),ko?"회원 작품":LX("by members"),ko?"회원이 만든 시뮬레이션, 가상 실험, 계산물리 문제. 실행하고 리믹스합니다.":LX("Simulations, virtual experiments and Python problems made by members. Run them and remix them."),ko?"둘러보기":LX("Browse"))}
+      ${card(ko?"problems.html":LX("problems-en.html"),ko?"실험 시뮬레이터":LX("Experiment simulators"),ko?`${nfmt(A.live)}개`:nfmt(A.live),ko?"올림피아드 실험 문제를 화면에서 측정합니다. HPhO 실험도 이 방식입니다.":LX("Take the readings of olympiad experiments on screen, the way HPhO's experiments work."),ko?"측정해 보기":LX("Measure"))}
+    </div>
+  </div>${adFitBanner("primary")}`;
+}
+
+/* Roadmap (#/learn/roadmap): the stages (guides.js, data/roadmap.json) and, as a second tab, the unit map
+   (#/learn/roadmap?view=units, where #/learn/physics now goes). */
+const roadmapTab=()=>roadmapForced||(new URLSearchParams(location.hash.split("?")[1]||"").get("view")==="units"?"units":"stages");
+function roadmapTabsHtml(){
+  const ko=lang==="ko",tab=roadmapTab();
+  return `<nav class="rm-tabs" aria-label="${ko?"로드맵 보기":LX("Roadmap views")}"><a href="#/learn/roadmap"${tab==="stages"?' aria-current="page"':""}>${ko?"단계별 로드맵":LX("Stages")}</a><a href="#/learn/roadmap?view=units"${tab==="units"?' aria-current="page"':""}>${ko?"단원 지도":LX("Unit map")}</a></nav>`;
+}
+let roadmapForced="";
+function viewLearnRoadmap(tab){
+  const ko=lang==="ko";roadmapForced=tab||"";
+  if(roadmapTab()==="stages"&&window.HL_GUIDES)return HL_GUIDES.roadmapView(roadmapTabsHtml());
+  if(!window.HL_LEARN_PATH)return viewLearnHome();
+  return `<div class="shell guide learn-physics"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / ${learnPart("roadmap").name}</p><h1>${ko?"단원 지도":LX("Unit map")}</h1>
+      <p class="lede">${ko?"물리의 단원을 분야별로 모았습니다. 단원을 누르면 그 단원 문제가 바로 나옵니다.":LX("The units of physics by field. Pick a unit and its problems open.")}</p></div>
+    ${roadmapTabsHtml()}
+    <section class="lp-block" aria-labelledby="lpTopics"><h2 id="lpTopics">${ko?"주제별로 공부하기":LX("Study by topic")}</h2>
+      <p class="learn-tool-copy">${ko?"숫자는 그 주제를 처음 다루는 단계입니다.":LX("The number is the step where a topic first appears.")}</p>${learnAreasHtml()}</section>
+    <section class="lp-block" aria-labelledby="lpStages"><h2 id="lpStages">${ko?"어디서 시작할까요?":LX("Where to start")}</h2>${learnStagesHtml()}</section>
+  </div>${adFitBanner("primary")}`;
+}
+
+/* the former physics page is the roadmap's unit map */
+function viewLearnPhysics(){ return viewLearnRoadmap("units"); }
 
 function learnStudioHeading(){
   const ko=lang==="ko",label=ko?"문제 제작소":LX("Problem Studio");
@@ -5384,7 +5466,7 @@ function viewLearnConcepts(){
   const sim=new URLSearchParams(location.hash.split("?")[1]||"").get("sim")||"";
   const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(/^[a-z0-9-]{2,40}$/.test(sim))query.set("sim",sim);
-  return `<div class="shell learn-studio learn-concepts"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
+  return `<div class="shell learn-studio learn-concepts"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/lab">${learnPart("lab").name}</a> / ${label}</p><h1>${label}</h1>
     <p class="learn-tool-copy">${ko?"값을 바꾸면 운동이 어떻게 달라지는지 봅니다. 시뮬레이션마다 끝에 확인 문제가 하나 있습니다.":LX("Change a value and see how the motion changes. Each simulation ends with one question.")}</p></div>
     <iframe id="learnConceptsFrame" class="learn-studio-frame" src="concepts.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
@@ -5400,17 +5482,18 @@ if(typeof MutationObserver==="function")new MutationObserver(()=>{document.getEl
 
 /* Practice: short exam problems one at a time, graded at once (practice.html). */
 function viewLearnPractice(){
-  const ko=lang==="ko",label=ko?"문제 풀기":LX("Practice");
+  const ko=lang==="ko",label=learnPart("practice").name;
   const unit=new URLSearchParams(location.hash.split("?")[1]||"").get("unit")||"";
   const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(window.HL_LEARN_PATH?.SUBTOPICS.has(unit))query.set("unit",unit);
   /* a problem's own link (search pages, discussions) and the exam tracks */
   const hq=new URLSearchParams(location.hash.split("?")[1]||"");
   if(/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(hq.get("item")||""))query.set("item",hq.get("item"));
-  if(/^(?:start|tracks|diag|bank|contest|exam|class)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
+  if(/^(?:start|tracks|diag|bank|contest|exam|class|custom|review)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
+  if(/^L[1-4]$/.test(hq.get("level")||""))query.set("level",hq.get("level"));
   if(/^[a-z0-9]{2,8}$/.test(hq.get("track")||""))query.set("track",hq.get("track"));
-  return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
-    <p class="learn-tool-copy">${ko?"AP · JEE · F=ma · USAPhO 형식 문제와 한국 시험 계산 문제는 답을 내면 바로 채점합니다. 교재 · 대학 강의 문제와 EuPhO · BAUPC · Eötvös · Physics Cup · WoPhO · OPhO 기출도 풀 수 있습니다. 어려운 문제는 건너뛰어도 됩니다.":LX("AP, JEE, F=ma and USAPhO-style problems and calculation problems from Korean exams are graded as soon as you answer. You can also work through textbook and university problems, and past problems from EuPhO, BAUPC, Eötvös, Physics Cup, WoPhO and OPhO. Skip any problem you like.")}</p></div>
+  return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
+    <p class="learn-tool-copy">${learnPart("practice").line} ${ko?"위 탭에서 시험별 문제, 대회 기출, 세트 만들기, 복습도 고를 수 있습니다. 어려운 문제는 건너뛰어도 됩니다.":LX("The tabs above also hold practice by exam, competition problems, a set builder and review. Skip any problem you like.")}</p></div>
     <iframe id="learnPracticeFrame" class="learn-studio-frame" src="practice.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
 addEventListener("message",event=>{
@@ -5426,11 +5509,11 @@ if(typeof MutationObserver==="function")new MutationObserver(()=>{document.getEl
 /* Creations (create.html): simulations, virtual experiments and Python problems made by members, played and solved
    by anyone; the frame keeps its own address (gallery, a creation, the editor) and reports its height. */
 function viewLearnCreate(){
-  const ko=lang==="ko",label=ko?"만들기":"Create";
+  const ko=lang==="ko",label=ko?"작품 갤러리":LX("Creations gallery");
   const asked=new URLSearchParams(location.hash.split("?")[1]||""),query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(/^(?:gallery|play|edit)$/.test(asked.get("view")||""))query.set("view",asked.get("view"));
   if(/^(?:\d{1,9}|sample-[a-z]+)$/.test(asked.get("id")||""))query.set("id",asked.get("id"));
-  return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p></div>
+  return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/lab">${learnPart("lab").name}</a> / ${label}</p></div>
     <iframe id="learnCreateFrame" class="learn-studio-frame" src="create.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
 }
 addEventListener("message",event=>{
@@ -5444,7 +5527,7 @@ function viewLearnTeach(){
   const ko=lang==="ko",label=ko?"교사용":LX("For teachers");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(new URLSearchParams(location.hash.split("?")[1]||"").get("tab")==="vary")query.set("tab","vary");
-  return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p></div>
+  return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / ${label}</p></div>
     <iframe id="learnTeachFrame" class="learn-studio-frame" src="teach.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
 }
 addEventListener("message",event=>{
@@ -5458,7 +5541,7 @@ function viewLearnCompute(){
   const asked=new URLSearchParams(location.hash.split("?")[1]||"").get("problem")||"";
   const query=new URLSearchParams({embed:"1",lang:uiLang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(/^[a-z0-9-]{2,40}$/.test(asked))query.set("problem",asked);
-  return `<div class="shell learn-studio learn-compute"><div class="phead"><p class="eyebrow"><a href="#/">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>
+  return `<div class="shell learn-studio learn-compute"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/lab">${learnPart("lab").name}</a> / ${label}</p><h1>${label}</h1>
     <p class="learn-tool-copy">${ko?"시뮬레이션을 Python으로 짜면, 문제에 따라 정확해나 보존 법칙, 기준 계산과 비교해 채점합니다. 코드는 내 브라우저 안에서만 실행됩니다.":LX("Write a simulation in Python. Depending on the problem, it is graded against an exact solution, a conservation law or a reference calculation. Your code runs only in your browser.")}</p></div>
     <iframe id="learnComputeFrame" class="learn-studio-frame" src="compute.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>${adFitBanner("primary")}`;
 }
@@ -10377,7 +10460,9 @@ function setDocTitle(first, second){
   else if(["monthly","weekly","rank"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn"&&second==="concepts") parts.push(lang==="ko"?"학습 — 개념 시뮬레이션":"Learn — Concept simulations");
-  else if(first==="learn"&&second==="practice") parts.push(lang==="ko"?"학습 — 문제 풀기":"Learn — Practice");
+  else if(first==="learn"&&["practice","roadmap","courses","lab"].includes(second)) parts.push(`${d.navLearn} \u2014 ${second==="roadmap"&&roadmapTab()==="units"?(lang==="ko"?"단원 지도":"Unit map"):learnPart(second).name}`);
+  else if(first==="learn"&&second==="create") parts.push(lang==="ko"?"학습 — 작품 갤러리":"Learn — Creations gallery");
+  else if(first==="learn"&&second==="teach") parts.push(lang==="ko"?"학습 — 교사용":"Learn — For teachers");
   else if(first==="learn"&&second==="compute") parts.push(lang==="ko"?"학습 — 계산물리":"Learn — Computational physics");
   else if(first==="learn"&&second==="physics"&&location.hash.split("?")[0]==="#/learn/physics/search") parts.push(lang==="ko"?"학습 — 물리 — 문제 검색":"Learn — Physics — Search problems");
   else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
@@ -10478,19 +10563,23 @@ const siteDataLoader=window.HL_RUNTIME&&window.HL_CATALOGUE?window.HL_RUNTIME.cr
 }):null;
 let siteRenderSeq=0;
 
-/* Two sections, like a portal: Learn (the landing) and Olympiad, each with its own bar under the header.
+/* A portal: Home (#/) stands alone; Learn and Olympiad each have their own bar under the header.
    Community and About belong to neither. */
 function siteSection(active){
-  if(active==="home"||active==="learn")return "learn";
+  if(active==="learn")return "learn";
   if(active==="comps"&&/^#\/archive\/(books|schools)\b/.test(location.hash))return "learn";
   if(["olympiad","comps","weekly","hpho"].includes(active))return "olympiad";
   return null;
 }
 function sectionLinks(section){
   const ko=lang==="ko";
-  if(section==="learn")return [["#/",ko?"학습 홈":LX("Home"),h=>h===""||h==="#/"],["#/learn/practice",ko?"문제 풀기":LX("Practice"),h=>h==="#/learn/practice"],["#/learn/roadmap",ko?"로드맵":LX("Roadmap"),h=>h==="#/learn/roadmap"],["#/learn/create",ko?"만들기":LX("Create"),h=>/^#\/learn\/(create|concepts|compute)\b/.test(h)],["#/learn/teach",ko?"교사용":LX("Teachers"),h=>/^#\/learn\/teach\b/.test(h)],["#/learn/physics",ko?"단원 지도":LX("Unit map"),h=>h==="#/learn/physics"],
-    [archiveHref("books","phys"),ko?"교재":LX("Books"),h=>/^#\/archive\/(books|schools)\b/.test(h)],
-    ["#/learn/physics/search",ko?"문제 검색":LX("Search"),h=>h==="#/learn/physics/search"],["#/learn",ko?"다른 과목":LX("Other subjects"),h=>h==="#/learn"||/^#\/learn\/(?!physics|practice|create|concepts|compute|roadmap|teach)/.test(h)]];
+  /* the Learn bar: the five parts in learnParts(), each with its one line as a tooltip; the old unit map and the lab's
+     parts mark the item they now live under */
+  if(section==="learn"){
+    const on={practice:h=>h==="#/learn/practice",roadmap:h=>/^#\/learn\/(roadmap|physics)$/.test(h),courses:h=>h==="#/learn/courses",
+      search:h=>h==="#/learn/physics/search",lab:h=>/^#\/learn\/(lab|concepts|compute|create)$/.test(h)};
+    return learnParts().map(p=>[p.href,p.name,on[p.key],p.line]);
+  }
   if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],["#/olympiad/schedule",ko?"일정":LX("Calendar"),h=>h==="#/olympiad/schedule"],
     ["#/monthly",UI[lang].navWeekly,h=>/^#\/(monthly|weekly|rank)\b/.test(h)],["#/hpho","HPhO",h=>/^#\/hpho\b/.test(h)],["#/lab",ko?"실전 모드":LX("Exam mode"),h=>/^#\/lab\b/.test(h)]];
   return [];
@@ -10503,13 +10592,17 @@ function paintSectionBar(section){
   const hash=location.hash.split("?")[0],links=sectionLinks(section);
   bar.hidden=!links.length;
   bar.setAttribute("aria-label",section==="learn"?(lang==="ko"?"학습 메뉴":"Learn menu"):(lang==="ko"?"올림피아드 메뉴":"Olympiad menu"));
-  bar.innerHTML=links.length?`<div class="shell">${links.map(([href,label,current])=>`<a href="${href}"${current(hash)?' aria-current="page"':""}>${label}</a>`).join("")}</div>`:"";
+  bar.innerHTML=links.length?`<div class="shell">${links.map(([href,label,current,line])=>`<a href="${href}"${current(hash)?' aria-current="page"':""}${line?` title="${esc(line)}"`:""}>${label}</a>`).join("")}</div>`:"";
+  /* on a phone the bar scrolls sideways: bring the current item into view */
+  const row=bar.firstElementChild,cur=bar.querySelector?.('[aria-current="page"]');
+  if(row&&cur&&row.scrollWidth>row.clientWidth)row.scrollLeft=Math.max(0,cur.offsetLeft-row.offsetLeft-(row.clientWidth-cur.offsetWidth)/2);
 }
 function paintPageChrome(active){
   const d=UI[lang],section=siteSection(active);
   paintSectionBar(section);
   document.getElementById("nav").innerHTML=
-    `<a href="#/" class="${section==="learn"?"on":""}">${d.navLearn}</a>
+    `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
+     <a href="#/learn" class="${section==="learn"?"on":""}">${d.navLearn}</a>
      <a href="#/olympiad" class="${section==="olympiad"?"on":""}">${d.navOly}</a>
      <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
@@ -10538,7 +10631,10 @@ function render(){
   if(animId){cancelAnimationFrame(animId);animId=null;}
   const d=UI[lang];
   const parts=location.hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean);
-  const [first,second,third]=parts;
+  let [first,second,third]=parts;
+  /* the unit map moved into the roadmap */
+  let roadmapAlias="";
+  if(first==="learn"&&second==="physics"&&!third){try{history.replaceState(null,"","#/learn/roadmap?view=units");}catch(e){}second="roadmap";roadmapAlias="units";}
   const currentSearch=document.getElementById('learnSearchFrame');
   if(first==='learn'&&second==='physics'&&third==='search'&&currentSearch&&document.querySelector('.learn-search .phead')){
     document.querySelector('.learn-search .phead').innerHTML=learnSearchHeading();
@@ -10569,7 +10665,7 @@ function render(){
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
   else if(first==="olympiad"){    html=second==="schedule"&&window.HL_GUIDES?HL_GUIDES.scheduleView():viewOlympiad(); active="olympiad"; }
-  else if(first==="learn"){       html=second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="create"?viewLearnCreate():second==="teach"?viewLearnTeach():second==="roadmap"&&window.HL_GUIDES?HL_GUIDES.roadmapView():second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="learn"){       html=!second?viewLearnHome():second==="subjects"?viewLearn():second==="lab"?viewLearnLab():second==="courses"&&window.HL_GUIDES?HL_GUIDES.coursesView():second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="create"?viewLearnCreate():second==="teach"?viewLearnTeach():second==="roadmap"?viewLearnRoadmap(roadmapAlias):second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():viewLearnSubject(second); active="learn"; }
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
@@ -10594,7 +10690,8 @@ function render(){
   if(first==="hpho"&&second==="phone"&&window.HL_HPHO_PHONE) HL_HPHO_PHONE.mount(third||"");
   else if(first==="hpho"&&second==="exam"&&window.HL_HPHO_EXAM) HL_HPHO_EXAM.mount();
   else if(first==="hpho"&&window.HL_HPHO) HL_HPHO.mount();
-  else if(first==="learn"&&second==="roadmap"&&window.HL_GUIDES) HL_GUIDES.roadmapMount();
+  else if(first==="learn"&&second==="roadmap"&&roadmapTab()==="stages"&&window.HL_GUIDES) HL_GUIDES.roadmapMount();
+  else if(first==="learn"&&second==="courses"&&window.HL_GUIDES) HL_GUIDES.coursesMount();
   else if(first==="olympiad"&&second==="schedule"&&window.HL_GUIDES) HL_GUIDES.scheduleMount();
 
   buildRails();

@@ -80,15 +80,15 @@
      tracks: exam-track keys; calc: the Korean exams' calculation items; contests: competition keys; bank: the
      books & university bank. soon: what the level will hold but the bank does not have yet. ── */
   const STUDY_LEVELS=[
-    {key:'L1',name:{ko:'AP · Physics Brawl · F=ma',en:'AP · Physics Brawl · F=ma'},tracks:['ap1','ap2','apcm','fma'],calc:true,contests:[],bank:false,written:false,
+    {key:'L1',name:{ko:'AP · Physics Bowl · F=ma',en:'AP · Physics Bowl · F=ma'},tracks:['ap1','ap2','apcm','fma'],calc:true,contests:[],bank:false,written:false,
       has:{ko:['AP Physics 1 · 2 · C: Mechanics','F=ma 형식','한국 시험 계산 문제'],en:['AP Physics 1, 2 and C: Mechanics','F=ma style','Calculation problems from Korean exams']},
-      soon:{ko:['Physics Brawl'],en:['Physics Brawl']}},
+      soon:{ko:['Physics Bowl 기출'],en:['Physics Bowl past papers']}},
     {key:'L2',name:{ko:'JEE',en:'JEE'},tracks:['jeem'],calc:false,contests:[],bank:false,written:false,
       has:{ko:['JEE Main 형식'],en:['JEE Main style']},soon:{ko:['JEE Advanced 기출'],en:['JEE Advanced past papers']}},
-    {key:'L3',name:{ko:'올림피아드 (국가 선발 → IPhO·APhO → 전공 수준)',en:'Olympiad: national rounds → IPhO/APhO → major level'},tracks:['usapho'],calc:false,contests:['opho','wopho','physcup','eupho','eotvos'],bank:false,written:true,
+    {key:'L3',name:{ko:'올림피아드 (국가 + 국제)',en:'Olympiad (national + international)'},tracks:['usapho'],calc:false,contests:['opho','wopho','physcup','eupho','eotvos'],bank:false,written:true,
       has:{ko:['USAPhO 형식','OPhO','WoPhO','Physics Cup','EuPhO','Eötvös'],en:['USAPhO style','OPhO','WoPhO','Physics Cup','EuPhO','Eötvös']},
       soon:{ko:['국가 선발 시험 기출 (KPhO 등)','IPhO · APhO 기출'],en:['National selection papers (KPhO and others)','IPhO and APhO papers']}},
-    {key:'L4',name:{ko:'대학 물리 (국제 대회 일부 → 학부 전 범위)',en:'University physics (some international problems → the whole undergraduate course)'},tracks:[],calc:false,contests:['baupc','eupho','physcup'],bank:true,written:true,
+    {key:'L4',name:{ko:'대학 물리',en:'University physics'},tracks:[],calc:false,contests:['baupc','eupho','physcup'],bank:true,written:true,
       has:{ko:['BAUPC','EuPhO','Physics Cup','교재 · 대학 강의 문제'],en:['BAUPC','EuPhO','Physics Cup','Textbook and university course problems']},soon:{ko:[],en:[]}}
   ];
   const levelInfo=key=>STUDY_LEVELS.find(l=>l.key===key)||STUDY_LEVELS[0];

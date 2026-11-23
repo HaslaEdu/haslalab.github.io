@@ -48,9 +48,11 @@ test('study levels: four levels with the contract’s pools; problems not in the
   assert.deepEqual(L('L2').tracks,['jeem']);
   assert.deepEqual(L('L3').tracks,['usapho']);assert.deepEqual(L('L3').contests,['opho','wopho','physcup','eupho','eotvos']);
   assert.deepEqual(L('L4').contests,['baupc','eupho','physcup']);assert.equal(L('L4').bank,true);
-  assert.equal(L('L1').name.ko,'AP · Physics Brawl · F=ma');assert.equal(L('L2').name.ko,'JEE');
-  assert.equal(L('L3').name.ko,'올림피아드 (국가 선발 → IPhO·APhO → 전공 수준)');assert.equal(L('L4').name.ko,'대학 물리 (국제 대회 일부 → 학부 전 범위)');
-  assert.ok(L('L1').soon.en.includes('Physics Brawl'));assert.ok(L('L3').soon.ko.some(x=>/국가 선발/.test(x)));
+  assert.equal(L('L1').name.ko,'AP · Physics Bowl · F=ma');assert.equal(L('L1').name.en,'AP · Physics Bowl · F=ma');assert.equal(L('L2').name.ko,'JEE');
+  assert.equal(L('L3').name.ko,'올림피아드 (국가 + 국제)');assert.equal(L('L3').name.en,'Olympiad (national + international)');
+  assert.equal(L('L4').name.ko,'대학 물리');assert.equal(L('L4').name.en,'University physics');
+  assert.ok(L('L1').soon.ko.includes('Physics Bowl 기출'));assert.ok(L('L1').soon.en.includes('Physics Bowl past papers'));
+  assert.doesNotMatch(JSON.stringify(T.STUDY_LEVELS),/Brawl/);assert.ok(L('L3').soon.ko.some(x=>/국가 선발/.test(x)));
   assert.equal(L('L3').written,true);assert.equal(L('L4').written,true);assert.equal(L('L1').written,false);
   assert.equal(T.levelInfo('nope').key,'L1');
   /* every pool key exists in the data */
