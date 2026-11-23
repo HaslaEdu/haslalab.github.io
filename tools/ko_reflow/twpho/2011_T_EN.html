@@ -1,0 +1,145 @@
+<!doctype html><html lang="en"><head><meta name="page" content="595,842">
+<style>
+/* TWPhO 2011 (Taiwan, national-team second-round selection exam for APhO 2011 / IPhO 2011), theory paper —
+   English edition on the original layout.
+   ORIGINAL: scanned paper, A4 595x842pt, 5 pages, no text layer. Chinese about 12pt on a ~18.2pt pitch; body column
+   x 75-528 (problem numbers at x 71-80, sub-question labels "(a)" at x 86-93, their text at ~101-107). Page numbers
+   10pt centred near x 295-303, baselines 803-810 (measured per page; the cover has none; page 2 is numbered 1).
+   All prose and math are retyped (KaTeX); only the figures are stamped from the scan (Fig.1-6). The caption 圖5 sits
+   inside the Fig.5 drawing area and is covered by an "ov" box; other captions are text.
+   This paper is very dense: body text is 11.5pt on a 13pt pitch, and runs of sub-questions are set as one flowing
+   block (div.x with p.q children) starting at the original's first baseline; text beside a figure wraps round an
+   invisible right float. Where the English needs more room, items move into the original's blank space: p.2 problem 1
+   starts 14pt higher; p.3 problem 3 and Fig.3 move up ~22-38pt; p.4 problems 4-5 and Fig.4 move down; p.5 problem 6
+   and Fig.6 move down 16pt.
+
+   PLACEMENT (as twpho/2014_T_EN.html): every block is placed by the ORIGINAL's first baseline --b, measured on the scan:
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs) */
+body{font-family:CM,KB,serif;font-size:11.5pt;line-height:13pt}
+p{text-indent:0}
+.x{position:absolute;margin:0;left:88pt;width:436pt;--l:13pt;--fs:11.5pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.l{text-align:left}
+.b{font-weight:bold}
+.h{font-weight:bold;--fs:12pt}
+.n{position:absolute;left:-17.5pt;white-space:nowrap}
+.h .n{left:-14pt}
+.q{position:relative;margin:2pt 0 0 17.5pt}
+.q2{position:relative;margin:2pt 0 0 44pt}
+.q2 .n{left:-26.5pt}
+.nt{position:relative;margin:2.5pt 0 0 50pt}
+.nt .n{left:-45pt}
+.pn{width:20pt;text-align:center;--fs:10pt;--l:12pt}
+.cap{--fs:12pt;text-align:center}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+.fl{float:right}
+.ov{position:absolute;background:#fff;line-height:1;white-space:nowrap;padding:1pt 2pt}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<p class="x c" style="--b:108;left:40pt;width:515pt;--fs:24pt;--l:36.5pt">2011: 12th Asian Physics Olympiad<br>and 42nd International Physics Olympiad</p>
+<p class="x c" style="--b:214.1;left:40pt;width:515pt;--fs:24pt;--l:30pt">National Team Second-Round Selection Exam</p>
+<p class="x c" style="--b:343.2;left:40pt;width:515pt;--fs:54pt;--l:60pt">Theory Problems</p>
+<p class="x c" style="--b:439.2;left:40pt;width:515pt;--fs:24pt;--l:30pt">19 February 2011</p>
+<p class="x c" style="--b:499.7;left:40pt;width:515pt;--fs:24pt;--l:30pt">Exam time: 13:30–16:30 (3 hours)</p>
+<p class="x c" style="--b:587;left:40pt;width:515pt;--fs:24pt;--l:30pt">&lt;&lt;&thinsp;Instructions&thinsp;&gt;&gt;</p>
+<p class="x l" style="--b:618.7;left:106pt;width:440pt;--fs:18pt;--l:29.8pt"><span class="n" style="left:-35pt">1.</span>This paper contains six calculation problems of 25&nbsp;points each, 150&nbsp;points in total.</p>
+<p class="x l" style="--b:682.1;left:106pt;width:440pt;--fs:18pt;--l:30.7pt"><span class="n" style="left:-35pt">2.</span>Answer each problem in its designated place on the answer sheets; each problem has two answer pages.</p>
+<p class="x l" style="--b:744.5;left:106pt;width:440pt;--fs:18pt;--l:30pt"><span class="n" style="left:-35pt">3.</span>Non-programmable handheld calculators may be used.</p>
+</div>
+
+<!-- page 2: heading, problem 1, problem 2 (start) -->
+<div class="page">
+<p class="x c" style="--b:96.5;left:40pt;width:515pt;--fs:16pt;--l:21.6pt">2011: 12th Asian and 42nd International Physics Olympiads<br>National Team Second-Round Selection Exam — Problems</p>
+<p class="x" style="--b:152;left:74.9pt;width:452pt;--fs:12pt">This paper contains six calculation problems of 25 points each, 150 points in total.</p>
+<p class="x h" style="--b:176;left:88.9pt"><span class="n">1.</span>Trajectory of a ballistic missile</p>
+<div class="x" style="--b:194;left:88pt;width:436pt">
+<span class="fl" style="width:143pt;height:250pt"></span>
+<p>As shown in Figure&nbsp;1, a ballistic missile is launched upward from point A on the ground and, after some time in flight, falls back to another point B on the ground. A and B subtend an angle $\theta$ at the Earth’s centre O, and the initial velocity at launch is parallel, but opposite, to the final velocity on returning to the ground. Neglect air resistance and the rotation of the Earth; $R$ is the radius of the Earth, and the missile obeys Kepler’s laws during its motion. Answer the following questions:</p>
+<p class="q"><span class="n">(a)</span>What kind of curve is the trajectory of the missile? Where is its focus?</p>
+<p class="q"><span class="n">(b)</span>If a low-altitude artificial satellite orbiting the Earth (in a circular orbit whose radius can be taken equal to the Earth’s radius) has period <span class="nw">$T_0$,</span> what is the flight time of the missile from A to B? Express it in terms of $T_0$ and <span class="nw">$\theta$.</span></p>
+<p class="q"><span class="n">(c)</span>What is the maximum height above the ground reached by the missile?</p>
+<p class="q"><span class="n">(d)</span>Now the missile is instead launched horizontally from point A. If the missile is not to fall back to the ground, what is the minimum launch speed? Explain, and sketch its complete trajectory.</p>
+<p class="nt"><span class="n">Note 1:</span>At launch a ballistic missile is propelled by a rocket; once the rocket’s fuel is burnt out, it is acted on only by the Earth’s gravity. The missile trajectory discussed in this problem is its trajectory in the Earth’s gravitational field after it has acquired its initial velocity; the motion during the initial rocket-propelled stage is not considered.</p>
+<p class="nt"><span class="n">Note 2:</span>The area of an ellipse is <span class="nw">$\pi ab$,</span> where $a$ and $b$ are its semi-major and semi-minor axes; the area of a circle is <span class="nw">$\pi R^2$,</span> where $R$ is its radius.</p>
+</div>
+<div class="f" style="left:390pt;top:205pt"><span class="fig" data-srcpage="2" data-clip="390,205,534,416"></span></div>
+<p class="x cap" style="--b:431.4;left:435.5pt;width:60pt">Figure 1</p>
+<p class="x h" style="--b:587.2;left:88.9pt"><span class="n">2.</span>Forces on the apex of an inverted cone standing on a plane</p>
+<div class="x" style="--b:605.4;left:89pt;width:435pt">
+<span class="fl" style="width:160pt;height:162pt"></span>
+<p>A uniform cone of mass $M$ has its central axis $\xi$ initially at an angle $\theta$ to the vertical line <span class="nw">$z$;</span> the apex of the cone is at point O on a horizontal floor, as shown in Figure&nbsp;2, where the <span class="nw">$y$-$z$</span> plane contains the axis $\xi$ of the cone. The triangle in which the cone intersects the <span class="nw">$y$-$z$</span> plane has apex angle <span class="nw">$\beta$;</span> the height of the cone (the perpendicular distance from the apex to the base) is $h$ and the radius of its base is <span class="nw">$R$;</span> in this problem <span class="nw">$\theta+\beta/2&lt;\pi/2$.</span> Answer the following questions:</p>
+<p class="q"><span class="n">(a)</span>Where on the axis $\xi$ is the centre of mass of the cone?</p>
+<p class="q"><span class="n">(b)</span>Suppose that initially the cone is at rest, without any spin about its axis <span class="nw">$\xi$.</span> When the cone starts to fall under gravity,</p>
+</div>
+<div class="f" style="left:366pt;top:600pt"><span class="fig" data-srcpage="2" data-clip="366,600,516,745"></span></div>
+<p class="x cap" style="--b:755.6;left:416pt;width:60pt">Figure 2</p>
+<p class="x pn" style="--b:809.8;left:289.2pt">1</p>
+</div>
+
+<!-- page 3: problem 2 (continued), problem 3 -->
+<div class="page">
+<p class="x" style="--b:88.8;left:106.5pt;width:418pt">there is enough static friction between the apex and the horizontal floor for the apex to stay fixed at O. What is the minimum coefficient of static friction between the apex and the floor?</p>
+<p class="x" style="--b:131;left:106.5pt;width:418pt;--l:13.5pt"><span class="n">(c)</span>Suppose that initially the cone spins about its axis $\xi$ with angular velocity $\vec\omega$ in the $+\xi$ direction, and that $\omega$ is large enough for the centre of mass of the cone to revolve steadily about the $z$-axis (also called “precession”). Find the angular velocity $\vec\Omega$ with which the centre of mass of the cone revolves about the $z$-axis.</p>
+<p class="x" style="--b:190;left:106.5pt;width:418pt"><span class="n">(d)</span>Continuing from (c), what is the normal force on the apex from the horizontal floor in this case?</p>
+<p class="x h" style="--b:222;left:89.4pt"><span class="n">3.</span>Transport of single electrons</p>
+<p class="x" style="--b:240;left:90.7pt;width:435pt">This problem explores the transport of single electrons by the tunnelling effect. On an insulating substrate there is a submicron-sized metal grain, region A in Figure&nbsp;3; three metal wires lie close to it, each forming a capacitor with the metal grain, with equivalent capacitances <span class="nw">$C_L$,</span> $C_R$ and <span class="nw">$C_G$,</span> as marked in the figure. Each wire is separated from the metal grain by an insulating oxide layer; the oxide layers of $C_L$ and $C_R$ are thin, so that electrons can cross them by quantum tunnelling, entering or leaving the metal grain; the oxide layer of <span class="nw">$C_G$,</span> on the other hand, is thick, so that electrons cannot cross it in the same way. Batteries of voltages <span class="nw">$V_L$,</span> $V_R$ and $V_G$ are now connected to the three capacitors respectively, and the negative terminal of each battery is grounded.</p>
+<div class="f" style="left:170pt;top:361pt"><span class="fig" data-srcpage="3" data-clip="170,378,432,520"></span></div>
+<p class="x cap" style="--b:519;left:269pt;width:60pt">Figure 3</p>
+<div class="x" style="--b:537;left:92pt;width:434pt">
+<p class="q"><span class="n">(a)</span>If the net charge on the metal grain is $Q=-ne$ ($-e$ is the charge of an electron, $n$ an integer), find the potential $V_A$ of the metal grain in terms of <span class="nw">$Q$,</span> $C_i$ and $V_i$ (here and below, <span class="nw">$i=L,R,G$).</span></p>
+<p class="q"><span class="n">(b)</span>Find the total electric potential energy $U$ of the three capacitors in terms of <span class="nw">$Q$,</span> $C_i$ and <span class="nw">$V_i$.</span></p>
+<p class="q"><span class="n">(c)</span>If a single electron crosses the oxide layer of $C_L$ (or $C_R$) into the metal grain and stays there, so that the charge on the grain changes by <span class="nw">$\Delta Q=-e$,</span> answer the following:</p>
+<p class="q2"><span class="n">(c-1)</span>What is the change $\Delta V_A$ in the potential of the metal grain? And what is the change in the charge of each capacitor? Express both in terms of $e$ and <span class="nw">$C_i$.</span></p>
+<p class="q2"><span class="n">(c-2)</span>If the electron tunnels through the oxide layer of <span class="nw">$C_L$,</span> find the work done by each of the three batteries and their total work <span class="nw">$W_L$,</span> in terms of <span class="nw">$e$,</span> $C_i$ and <span class="nw">$V_i$.</span></p>
+<p class="q2"><span class="n">(c-3)</span>If the electron tunnels through the oxide layer of <span class="nw">$C_R$,</span> find the work done by each of the three batteries and their total work <span class="nw">$W_R$,</span> in terms of <span class="nw">$e$,</span> $C_i$ and <span class="nw">$V_i$.</span></p>
+<p class="q"><span class="n">(d)</span>Continuing from (c): suppose that, of the net charge <span class="nw">$Q=-ne$</span> on the metal grain, a part was obtained by tunnelling through the oxide layer of <span class="nw">$C_L$,</span></p>
+</div>
+<p class="x pn" style="--b:803.6;left:293.3pt">2</p>
+</div>
+
+<!-- page 4: problem 3 (continued), problem 4, problem 5 (start) -->
+<div class="page">
+<div class="x" style="--b:91.7;left:85.9pt;width:434pt">
+<p style="margin-left:14.4pt">namely <span class="nw">$-n_Le$,</span> and the rest by tunnelling through the oxide layer of <span class="nw">$C_R$,</span> namely <span class="nw">$-n_Re$,</span> i.e. <span class="nw">$n=n_L+n_R$.</span> What is the total work $W$ done by the three batteries? Express it in terms of <span class="nw">$e$,</span> <span class="nw">$n_L$,</span> <span class="nw">$n_R$,</span> $C_i$ and <span class="nw">$V_i$.</span></p>
+<p class="q"><span class="n">(e)</span>The energy <span class="nw">$E=U-W$</span> is the electrostatic energy of the metal grain; its value depends on the net charge on the metal grain. Let $E(n)$ denote the lowest electrostatic energy when the net charge of the metal grain is <span class="nw">$Q=-ne$.</span> If <span class="nw">$V_L=V_R=0$</span> but <span class="nw">$V_G$&thinsp;≠&thinsp;<span class="nw">$0$,</span></span> answer the following:</p>
+<p class="q2"><span class="n">(e-1)</span>Find the expression for $E(n)$ in terms of <span class="nw">$e$,</span> <span class="nw">$n$,</span> $V_G$ and <span class="nw">$C_i$.</span></p>
+<p class="q2"><span class="n">(e-2)</span>Ignoring the effect of temperature, the result of (e-1) shows that the voltage $V_G$ can change the electrostatic energy of the metal grain. When $V_G$ is tuned to certain specific values, electrons can tunnel through the oxide layer of $C_L$ or <span class="nw">$C_R$,</span> entering or leaving the metal grain. If a single electron enters the metal grain by tunnelling, so that its net number of electrons increases from the original $n$ to <span class="nw">$n+1$,</span> what should $V_G$ be? (Hint: calculate the energy difference <span class="nw">$E(n+1)-E(n)$.)</span></p>
+<p class="q"><span class="n">(f)</span>Continuing from (e): if the net number of electrons in the metal grain is to be fixed at <span class="nw">$n$,</span> what is the range of $V_G$? Under this condition electrons cannot enter or leave the metal grain, and the left and right wires do not conduct; this is called the “Coulomb blockade effect”. To observe the Coulomb blockade, however, the temperature must be low enough. Estimate the upper limit of the thermal energy <span class="nw">$k_\mathrm BT$,</span> where $k_\mathrm B$ is the Boltzmann constant and $T$ the absolute temperature of the metal-grain system.</p>
+</div>
+<p class="x h" style="--b:420;left:85pt"><span class="n">4.</span>A salt-water surface raised by electrostatic attraction</p>
+<p class="x" style="--b:438;left:86pt;width:433pt">A small plastic ball of diameter <span class="nw">$1.0\ \mathrm{cm}$</span> carries a uniformly distributed positive charge of <span class="nw">$1.0\times10^{-8}\ \mathrm C$.</span> The charged ball is hung by an insulating thread above a large salt-water surface, the distance between the lowest point of the ball and the salt-water surface being <span class="nw">$1.0\ \mathrm{cm}$.</span> As a result, the salt water directly below the ball is attracted by the electrostatic force and bulges upward slightly, as shown in Figure&nbsp;4. Neglecting the surface tension of the salt water and taking its density as <span class="nw">$1000\ \mathrm{kg/m^3}$,</span> what is the height of the bulge of the salt water directly below the ball? (Hint: salt water is an electrolyte and a good electrical conductor.)</p>
+<div class="f" style="left:183pt;top:537pt"><span class="fig" data-srcpage="4" data-clip="183,507,411,559"></span></div>
+<p class="x cap" style="--b:603;left:274pt;width:60pt">Figure 4</p>
+<p class="x" style="--b:628;left:95pt;width:425pt">Note: the permittivity of air is <span class="nw">$\varepsilon_0=8.85\times10^{-12}\ \mathrm{C^2/(N\,m^2)}$</span></p>
+<p class="x h" style="--b:662;left:85pt"><span class="n">5.</span>Size of the spot of parallel light focused by a plano-convex lens</p>
+<p class="x" style="--b:680;left:86pt;width:433pt">Figure&nbsp;5 shows an incident ray parallel to the optical axis of a plano-convex lens, which after refraction by the lens crosses the optical axis at point Q. Let the refractive index of the lens be $n$ <span class="nw">($n&gt;1$),</span> the radius of curvature of the convex surface of the lens <span class="nw">$R$,</span> and the aperture of its plane surface <span class="nw">$D$,</span> with <span class="nw">$D&lt;R$;</span> the distance between the incident ray and the optical axis is <span class="nw">$\rho$,</span> and the thickness of the lens at its centre is <span class="nw">$\delta$.</span> Answer the following questions:</p>
+<p class="x pn" style="--b:809.4;left:284.9pt">3</p>
+</div>
+
+<!-- page 5: problem 5 (questions), problem 6 -->
+<div class="page">
+<div class="f" style="left:136pt;top:85pt"><span class="fig" data-srcpage="5" data-clip="136,85,472,209"></span></div>
+<div class="ov" style="left:228pt;top:182.5pt;font-size:12pt;padding:2pt 3pt">Figure 5</div>
+<div class="x" style="--b:227;left:93pt;width:434pt">
+<p class="q"><span class="n">(a)</span>Let $q$ be the distance between the vertex A of the lens and point Q. Using ray tracing in geometrical optics, find $q$ as a function of <span class="nw">$n$,</span> $\rho$ and <span class="nw">$R$.</span></p>
+<p class="q"><span class="n">(b)</span>Continuing from (a), show that under the condition <span class="nw">$\rho\ll R$</span> (keeping only terms of first order in $\rho/R$), all incident rays parallel to the principal axis (called paraxial rays) give the same value of $q$ after refraction by the lens, i.e. they converge at the same point Q. The point Q obtained in this case is called the focus F, and the corresponding value of $q$ is called the focal length <span class="nw">$f$.</span></p>
+<p class="q"><span class="n">(c)</span>A screen perpendicular to the optical axis is now placed at the focus F, and a diaphragm of adjustable aperture is attached to the plane surface of the plano-convex lens. The diameter of the diaphragm is set to $d$ (its maximum value is $D$). If a parallel beam of light, parallel to the principal axis of the lens, now illuminates the whole aperture of the diaphragm, what is the diameter $d'$ of the light spot on the screen? Express it in terms of <span class="nw">$n$,</span> $d$ and $R$ (in the calculation keep only the lowest-order term in $(d/2R)$).</p>
+<p class="q"><span class="n">(d)</span>According to the diffraction theory of light waves, the smaller the aperture of the diaphragm, the more pronounced the diffraction. After a parallel light wave passes through a small hole of diameter <span class="nw">$d$,</span> the diameter of the smallest light spot obtained in the focal plane is known to be <span class="nw">$d''$,</span> the two being related by <span class="nw">$d''=1.22\,f\lambda/d$,</span> where $\lambda$ is the wavelength of the incident light. Combining the two effects described in (c) and (d), and taking the diameter of the light spot in the focal plane to be <span class="nw">$s=d'+d''$,</span> what aperture diameter $d$ of the diaphragm gives the smallest light spot? What is the diameter $s_\mathrm{min}$ of the smallest spot obtained? Express them in terms of <span class="nw">$n$,</span> $\lambda$ and <span class="nw">$R$.</span></p>
+</div>
+<p class="x h" style="--b:568;left:94pt"><span class="n">6.</span>A flatcar set sliding by a temperature difference between its two ends</p>
+<div class="x" style="--b:586;left:94pt;width:433pt;--l:13.2pt">
+<span class="fl" style="width:205pt;height:74pt"></span>
+<p>A sealed cylindrical gas container is fixed on a flatcar, which can slide freely on smooth rails, as shown in Figure&nbsp;6. The mass of the empty container together with the flatcar is <span class="nw">$M=150\ \mathrm{kg}$,</span> and the length of the container is <span class="nw">$L=10\ \mathrm m$.</span> Initially the container holds <span class="nw">$m=120\ \mathrm{kg}$</span> of an ideal gas, the temperature around the container is <span class="nw">$T_0=300\ \mathrm K$,</span> and the pressure of the gas in the container is <span class="nw">$P_0=150\ \mathrm{atm}$.</span> The right end face of the container is now heated to <span class="nw">$332\ \mathrm K$</span> and kept at this temperature, while its left end face remains at <span class="nw">$300\ \mathrm K$.</span> Assume that the gas in the container can be treated as an ideal gas and undergoes no chemical change as the temperature changes. When the gas in the container has reached equilibrium again (the gas temperature in the container can then be taken to vary linearly along the central axis of the cylinder):</p>
+<p class="q"><span class="n">(a)</span>What is the pressure of the gas in the container?</p>
+<p class="q"><span class="n">(b)</span>By how much has the centre of the container itself moved?</p>
+</div>
+<div class="f" style="left:328pt;top:575pt"><span class="fig" data-srcpage="5" data-clip="328,551,519,611"></span></div>
+<p class="x cap" style="--b:646;left:393pt;width:60pt">Figure 6</p>
+<p class="x pn" style="--b:802.6;left:293.1pt">4</p>
+</div>
+
+</body></html>
