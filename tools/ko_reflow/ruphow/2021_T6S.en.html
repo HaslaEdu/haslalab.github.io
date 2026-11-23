@@ -1,0 +1,188 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T6 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2021_T6S.html).
+   ORIGINAL: 3 A3 pages (841.9x1191.1pt) printed from the olympiad web page (as the 2026 T1 solution pilot):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt; cards cut by a page break keep only their
+   outer corners) one per sub-question, blue badges A1..C4 (stamped), grey separator under each restated question,
+   one answer frame (3pt stroke #f3f6f9). Panel, cards, separators and the frame are redrawn from the original's
+   vector paths (.bx inside the static .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254
+   (-> Arial,sans-serif), inline math KaTeX 10.8pt (1.2em), text column x 63.4..777.8; the question line after
+   the badge starts at x 107.5 (ink); paragraphs pitch 13.5pt, left-aligned as in the original.
+   Display formulas are stamped except the two with a Cyrillic "Г" typed for the circulation Γ (scrub removes it):
+   "Г = (E_O - E_A)h + Г_OA" and "Г_AB = kσhS_AB", retyped with Γ; inline Г is likewise written Γ.
+   "Ответ:" -> "Answer:".  "Второй метод" -> "Second method".
+   Oddities of the original: the A1 solution text ends with a dangling "и" (translated as an unfinished clause);
+   the C3 and C4 solutions refer to "пункт A1" / "пункт A3" where C1 / C3 are meant (kept as printed);
+   typo "окржности" (окружности).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:44.1pt;--l:15.8pt}   /* the original's question span starts with a space: ink at x 107.5 */
+.l14{--l:14.3pt}
+.h{font-weight:bold}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.ct{border-radius:3.75pt 3.75pt 0 0}
+.cb{border-radius:0 0 3.75pt 3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:80.2pt"></div>
+<div class="bx cd" style="top:125.2pt;height:120pt"></div>
+<div class="bx cd" style="top:256.5pt;height:140.3pt"></div>
+<div class="bx cd" style="top:408pt;height:279.8pt"></div>
+<div class="bx cd" style="top:699pt;height:302.2pt"></div>
+<div class="bx cd" style="top:1012.5pt;height:102pt"></div>
+<div class="bx cd ct" style="top:1125.8pt;height:30.7pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:163.5pt"></div>
+<div class="bx sp" style="top:294.8pt"></div>
+<div class="bx sp" style="top:446.2pt"></div>
+<div class="bx sp" style="top:750.8pt"></div>
+<div class="bx sp" style="top:1050.8pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,102.2,64.8"></span></div>
+<p class="x q" style="--b:57.0">Find the electric field strength at the centre of the charged ring.</p>
+<p class="x" style="--b:90.0">At the centre of the ring the field of every charge is directed in the plane of the ring, so by symmetry the magnitude of the field is zero and</p>
+
+<div class="f" style="left:62.0pt;top:134.7pt"><span class="fig" data-srcpage="1" data-clip="62.0,134.7,102.2,156.3"></span></div>
+<p class="x q" style="--b:148.5">Find the potential on the axis of the ring at a distance $x$ from its centre.</p>
+<p class="x" style="--b:182.5">The distance to the charges on the ring is <span class="nw">$\sqrt{R^2 + x^2}$,</span> hence</p>
+<div class="f" style="left:344.2pt;top:193.5pt"><span class="fig" data-srcpage="1" data-clip="344.2,193.5,495.2,226.9"></span></div>
+
+<div class="f" style="left:62.0pt;top:266.0pt"><span class="fig" data-srcpage="1" data-clip="62.0,266.0,102.2,287.6"></span></div>
+<p class="x q" style="--b:279.8">Find the magnitude of the electric field on the axis of the ring at a distance $x$ from its centre.</p>
+<p class="x" style="--b:312.8">The electric field vector of each of the charges makes with the vertical an angle $\alpha$ such that <span class="nw">$cos(\alpha) = \frac{x}{\sqrt{x^2 + R^2}}$</span></p>
+<p class="x" style="--b:330.8">Combining this with Coulomb’s law</p>
+<div class="f" style="left:338.1pt;top:342.0pt"><span class="fig" data-srcpage="1" data-clip="338.1,342.0,501.2,377.7"></span></div>
+
+<div class="f" style="left:62.0pt;top:417.4pt"><span class="fig" data-srcpage="1" data-clip="62.0,417.4,102.2,439.0"></span></div>
+<p class="x q" style="--b:431.2">For what value of $x$ is the electric field strength on the axis of the ring maximal? Find this maximum field strength.</p>
+<p class="x" style="--b:464.2">We take the derivative of the expression <span class="nw">$\frac{x}{(x^2 + R^2)^{\frac{3}{2}}}$</span> and set it equal to zero</p>
+<div class="f" style="left:348.5pt;top:485.1pt"><span class="fig" data-srcpage="1" data-clip="348.5,485.1,493.6,520.2"></span></div>
+<p class="x" style="--b:552.8">Hence</p>
+<div class="f" style="left:399.0pt;top:563.2pt"><span class="fig" data-srcpage="1" data-clip="399.0,563.2,440.5,595.2"></span></div>
+<p class="x" style="--b:626.2">Substituting this value of $x$ into the expression for the electric field</p>
+<div class="f" style="left:379.2pt;top:636.7pt"><span class="fig" data-srcpage="1" data-clip="379.2,636.7,460.8,669.4"></span></div>
+
+<div class="f" style="left:62.0pt;top:708.4pt"><span class="fig" data-srcpage="1" data-clip="62.0,708.4,102.2,730.0"></span></div>
+<p class="x q" style="--b:722.2">Find the electric field strength created by a disk of radius $R$, uniformly charged over its surface with charge density $\sigma$, on its axis at a distance $x$ from the centre.</p>
+<p class="x" style="--b:768.8">As is well known, the normal component of the field of a flat layer uniformly charged over its surface is</p>
+<div class="f" style="left:392.7pt;top:779.6pt"><span class="fig" data-srcpage="1" data-clip="392.7,779.6,447.2,809.7"></span></div>
+<p class="x" style="--b:840.0">where $\Omega$ is the solid angle subtended by the flat layer at the given point.</p>
+<p class="x" style="--b:853.5">The solid angle subtended by the disk at a point on its axis at a distance $x$ from the centre is</p>
+<div class="f" style="left:358.4pt;top:865.3pt"><span class="fig" data-srcpage="1" data-clip="358.4,865.3,482.4,900.7"></span></div>
+<p class="x" style="--b:933.0">Hence</p>
+<div class="f" style="left:355.5pt;top:945.6pt"><span class="fig" data-srcpage="1" data-clip="355.5,945.6,485.3,981.0"></span></div>
+
+<div class="f" style="left:62.0pt;top:1022.0pt"><span class="fig" data-srcpage="1" data-clip="62.0,1022.0,102.2,1043.6"></span></div>
+<p class="x q" style="--b:1035.8">Find the potential on the axis of the ring at a distance $x$ from its centre.</p>
+<p class="x" style="--b:1068.8">Since the distance to all points of the ring is the same for every $x$, and the total charge of the ring is zero,</p>
+<div class="f" style="left:398.1pt;top:1079.6pt"><span class="fig" data-srcpage="1" data-clip="398.1,1079.6,442.6,1093.9"></span></div>
+
+<div class="f" style="left:62.0pt;top:1135.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,1135.2,102.2,1156.5"></span></div>
+<p class="x q" style="--b:1149.0">Find the magnitude of the electric field at the centre of the ring.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:242.2pt"></div>
+<div class="bx cd" style="top:287.2pt;height:137.3pt"></div>
+<div class="bx cd" style="top:435.8pt;height:180.7pt"></div>
+<div class="bx cd" style="top:627.8pt;height:267pt"></div>
+<div class="bx cd" style="top:906pt;height:191.2pt"></div>
+<div class="bx cd ct" style="top:1108.5pt;height:48pt"></div>
+<div class="bx sp" style="top:33.8pt;height:1.4pt"></div>
+<div class="bx sp" style="top:325.5pt"></div>
+<div class="bx sp" style="top:474.0pt"></div>
+<div class="bx sp" style="top:666.0pt"></div>
+<div class="bx sp" style="top:957.8pt"></div>
+</div>
+<p class="x" style="--b:51.8">If we add up vectorially the fields of the charges of one half of the ring, then, since it is charged uniformly, the magnitude of the electric field equals the diameter of a circle whose half-perimeter equals the sum of the magnitudes of the fields of the charges</p>
+<div class="f" style="left:395.1pt;top:76.5pt"><span class="fig" data-srcpage="2" data-clip="395.1,76.5,445.0,106.0"></span></div>
+<p class="x" style="--b:136.5">Then the expression for the field of half of the ring is</p>
+<div class="f" style="left:376.0pt;top:148.1pt"><span class="fig" data-srcpage="2" data-clip="376.0,148.1,463.8,178.8"></span></div>
+<p class="x" style="--b:208.5">The field vector of the second half has the same magnitude $E$ and is directed opposite to the first. Thus</p>
+<div class="f" style="left:374.3pt;top:219.4pt"><span class="fig" data-srcpage="2" data-clip="374.3,219.4,465.2,250.9"></span></div>
+
+<div class="f" style="left:62.0pt;top:296.7pt"><span class="fig" data-srcpage="2" data-clip="62.0,296.7,102.2,318.3"></span></div>
+<p class="x q" style="--b:310.5">Find the magnitude of the electric field on the axis of the ring at a distance $x$ from its centre.</p>
+<p class="x" style="--b:343.5">We use the result of the previous part. Since the potential on the axis of the ring is zero, the projection of the total field onto the direction of the axis is zero. Then from the previous field we find the expression for the electric field</p>
+<div class="f" style="left:338.9pt;top:368.1pt"><span class="fig" data-srcpage="2" data-clip="338.9,368.1,500.5,404.7"></span></div>
+
+<div class="f" style="left:62.0pt;top:445.2pt"><span class="fig" data-srcpage="2" data-clip="62.0,445.2,102.2,466.8"></span></div>
+<p class="x q" style="--b:459.0">What is the magnitude of the electric field at a distance <span class="nw">$r &lt; R$</span> from the axis of the cylinder?</p>
+<p class="x" style="--b:492.0">By symmetry the field can only be directed perpendicular to the axis of the cylinder. Gauss’s theorem for a cylindrical surface of radius $r$ and some length $L$, whose axis coincides with the axis of the original cylinder, shows that the flux of the electric field is zero. Since at equal distances from the axis of the cylinder the field has the same magnitude, the flux is given by</p>
+<div class="f" style="left:381.8pt;top:529.1pt"><span class="fig" data-srcpage="2" data-clip="381.8,529.1,458.9,543.5"></span></div>
+<p class="x" style="--b:573.8">from which it follows that for any value of $r$</p>
+<div class="f" style="left:404.8pt;top:584.6pt"><span class="fig" data-srcpage="2" data-clip="404.8,584.6,435.9,599.0"></span></div>
+
+<div class="f" style="left:62.0pt;top:637.2pt"><span class="fig" data-srcpage="2" data-clip="62.0,637.2,102.2,658.8"></span></div>
+<p class="x q" style="--b:651.0">Find the magnitude of the electric field at the centre $O$ of the base of the cylinder.</p>
+<p class="x" style="--b:684.0">Consider a small displacement $dx$ along the axis of the cylinder. From the definition of the potential</p>
+<div class="f" style="left:392.3pt;top:695.2pt"><span class="fig" data-srcpage="2" data-clip="392.3,695.2,447.2,725.5"></span></div>
+<p class="x" style="--b:754.5">Let us find the change of the potential. After the displacement the arrangement of the point and the cylinder is the same up to a ring of thickness $dx$, which has moved from the base to infinity. Therefore the change of the potential is</p>
+<div class="f" style="left:348.0pt;top:778.9pt"><span class="fig" data-srcpage="2" data-clip="348.0,778.9,492.7,808.0"></span></div>
+<p class="x" style="--b:838.5">Hence</p>
+<div class="f" style="left:377.0pt;top:846.0pt"><span class="fig" data-srcpage="2" data-clip="377.0,846.0,463.0,876.4"></span></div>
+
+<div class="f" style="left:62.0pt;top:915.4pt"><span class="fig" data-srcpage="2" data-clip="62.0,915.4,102.2,937.0"></span></div>
+<p class="x q" style="--b:928.5">Consider a point $A$ in the base of the cylinder at a distance <span class="nw">$r &lt; R$</span> from the point $O$. Find the projection of the electric field vector onto the line $OA$.</p>
+<p class="x" style="--b:975.8">In part $A1$ it was shown that inside an infinite cylinder the field vanishes. Let us complete the semi-infinite cylinder to an infinite one and consider the field in its base.</p>
+<p class="x" style="--b:1039.5">The fields of the original and of the added semi-infinite cylinders are symmetric with respect to the base. Therefore the total field can vanish only if each of the components is perpendicular to the base. Thus</p>
+<div class="f" style="left:398.9pt;top:1063.1pt"><span class="fig" data-srcpage="2" data-clip="398.9,1063.1,441.8,1078.8"></span></div>
+
+<div class="f" style="left:62.0pt;top:1118.0pt"><span class="fig" data-srcpage="2" data-clip="62.0,1118.0,102.2,1139.6"></span></div>
+<p class="x q" style="--b:1131.8">For the semi-infinite cylinder under consideration, find the magnitude of the electric field at the point $A$ located at a distance <span class="nw">$r = 0.9R$</span> from the point $O$.</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:850.4pt"></div>
+<div class="bx sp" style="top:33.8pt;height:1.4pt"></div>
+<div class="bx ab" style="top:777.7pt;height:92.3pt"></div>
+</div>
+<p class="x" style="--b:51.8">In part $A3$ it was proved that at every point of the base the field is perpendicular to it. To find its magnitude at each point we use the circulation theorem for the electrostatic field. We choose a rectangular loop passing through the point $O$ and an arbitrary point $A$ of the base, such that its other side is <span class="nw">$h \ll OA$.</span></p>
+<p class="x" style="--b:93.3">Then the circulation $\Gamma$ can be written as</p>
+<p class="x c" style="--b:117.0">$\Gamma = (E_O - E_A)\,h + \Gamma_{OA}$</p>
+<p class="x" style="--b:154.8">where $\Gamma_{OA}$ is the part of the circulation along $OA$.</p>
+<p class="x" style="--b:205.5">Let us find the radial component of the field at a height $h$ above the base of the cylinder. Since at the base the field is perpendicular to it, for a small displacement from it the radial component of the field is equivalent to the field of a ring of thickness $dh$ with surface charge density $-\sigma$. Thus</p>
+<p class="x c" style="--b:242.2">$\Gamma_{AB} = k\sigma h S_{AB}$</p>
+<p class="x" style="--b:279.0">where $S_{AB}$ is the area under the graph of $y(x)$ from 0 to <span class="nw">$x = 0.9$.</span> Since the total circulation is zero</p>
+<div class="f" style="left:375.5pt;top:289.9pt"><span class="fig" data-srcpage="3" data-clip="375.5,289.9,464.7,304.8"></span></div>
+<p class="x" style="--b:335.2">Or</p>
+<div class="f" style="left:341.9pt;top:346.5pt"><span class="fig" data-srcpage="3" data-clip="341.9,346.5,497.5,376.9"></span></div>
+<p class="x" style="--b:408.0">where</p>
+<div class="f" style="left:380.1pt;top:418.9pt"><span class="fig" data-srcpage="3" data-clip="380.1,418.9,460.6,433.8"></span></div>
+<p class="x h" style="--b:450.8">Second method</p>
+<p class="x" style="--b:473.2">This method requires numerical integration (calculators such as the <span class="nw">Casio fx-991</span> can do it). When the numerical integration is done by hand (on calculators such as the <span class="nw">Casio fx-82</span>), a considerable error may arise because the integral diverges near 1.</p>
+<p class="x" style="--b:513.8">Consider the field created by a semi-infinite thread with linear charge density $\lambda$ at a distance $x$ from its end (in the plane perpendicular to the thread and passing through its end). In particular, we are interested only in the component of the field parallel to the thread: $E_\parallel$. This quantity can be obtained at once by the method of virtual displacements, or the thread can be divided into infinitesimal segments of length $dh$ and integrated over the range <span class="nw">$h \in [0, \infty)$.</span></p>
+<div class="f" style="left:280.1pt;top:553.4pt"><span class="fig" data-srcpage="3" data-clip="280.1,553.4,559.8,588.5"></span></div>
+<p class="x l14" style="--b:633.0">Returning to the original problem, the whole semi-infinite cylinder can be divided into semi-infinite rectangles of width $Rd\alpha$ (in fact, semi-infinite threads). Each thread is specified by the angle $\alpha$ between the direction from the centre to it and the segment OA. By the law of cosines, the distance between the end of the thread and the point A is <span class="nw">$x(\alpha) = \sqrt{R^2 + r^2 - 2rR\cos\alpha}$.</span> Each thread creates a field perpendicular to the base, calculated with the formula for $E_\parallel$ in which <span class="nw">$\lambda = \sigma R d\alpha$.</span> The total field at the point A for <span class="nw">$r = 0.9R$</span> is found by integration:</p>
+<div class="f" style="left:269.8pt;top:686.9pt"><span class="fig" data-srcpage="3" data-clip="269.8,686.9,571.0,720.5"></span></div>
+<p class="x" style="--b:765.0">Unfortunately, the integral cannot be expressed in elementary functions, but it can be evaluated numerically, which gives the answer:</p>
+<p class="x an" style="--b:806.2">Answer:</p>
+<div class="f" style="left:360.5pt;top:814.5pt"><span class="fig" data-srcpage="3" data-clip="360.5,814.5,479.5,844.2"></span></div>
+</div>
+</body></html>

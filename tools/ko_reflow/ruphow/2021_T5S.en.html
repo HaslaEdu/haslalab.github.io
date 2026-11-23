@@ -1,0 +1,80 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T5 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2021_T5S.html).
+   ORIGINAL: 1 A3 page (841.9x1191.1pt) printed from the olympiad web page (as the 2026 T1 solution pilot):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badges
+   "A1 2.00", "A2 8.00" (stamped), grey separator under the restated question, answer frames (3pt stroke #f3f6f9).
+   Panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX
+   10.8pt (1.2em), text column x 63.4..777.8; the question line after the badge starts at x 107.5 (ink);
+   paragraphs pitch 13.5pt (15-16pt where a line holds an inline fraction), left-aligned as in the original.
+   Display formulas are stamped except "P_НЭ = IU = ..." (retyped, НЭ -> NE as in the problem). "Ответ:" -> "Answer:".
+   Oddity of the original: "2φ принимает значения 2π/3 ≤ φ ≤ 2π" (φ for 2φ) — translated as printed.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:44.1pt}   /* the original's question span starts with a space: ink at x 107.5 */
+.l15{--l:15pt}
+.l16{--l:16pt}
+.l14{--l:14.1pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:281.2pt"></div>
+<div class="bx cd" style="top:326.2pt;height:827.3pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:364.5pt"></div>
+<div class="bx ab" style="top:208.5pt;height:96pt"></div>
+<div class="bx ab" style="top:989.3pt;height:153.7pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,102.2,64.8"></span></div>
+<p class="x q" style="--b:56.9">Find the maximum power $P_1$ dissipated in the nonlinear element.</p>
+<p class="x l15" style="--b:90.0">Let $A$ denote the point on the graph of the current–voltage characteristic of the nonlinear element, and $O$ the centre of the circle. Let $OA$ make an angle $\varphi$ with the voltage axis <span class="nw">$\frac{U}{U_0} = x$.</span> Then</p>
+<p class="x c" style="--b:138.0;transform:translateY(-4.4pt)">$\displaystyle P_{\mathrm{NE}} = IU = U_0 I_0 \sin\varphi\cos\varphi = \frac{U_0 I_0 \sin 2\varphi}{2}$</p>
+<p class="x l16" style="--b:179.8">At the initial moment the angle $\varphi$ equals $\pi/3$, so during the further charging of the capacitor the quantity $2\varphi$ takes the values <span class="nw">$\frac{2\pi}{3} \le \varphi \le 2\pi$.</span> Thus the maximum power dissipated in the nonlinear element is reached at the moment the switch is closed and equals</p>
+<p class="x an" style="--b:237.0">Answer:</p>
+<div class="f" style="left:386.2pt;top:248.8pt"><span class="fig" data-srcpage="1" data-clip="386.2,248.8,453.2,279.5"></span></div>
+
+<div class="f" style="left:62.0pt;top:335.8pt"><span class="fig" data-srcpage="1" data-clip="62.0,335.8,102.2,357.2"></span></div>
+<p class="x q" style="--b:348.8">Find the maximum rate of change $P_2$ of the capacitor energy and the time $\Delta t$ after closing the switch at which it is reached.</p>
+<p class="x" style="--b:382.5">The rate of change of the capacitor energy</p>
+<div class="f" style="left:335.0pt;top:393.0pt"><span class="fig" data-srcpage="1" data-clip="335.0,393.0,507.1,422.5"></span></div>
+<p class="x l14" style="--b:452.2">The quantity <span class="nw">$\sin\varphi(1 - \cos\varphi)$</span> is the area of an isosceles triangle with base <span class="nw">$2\sin\varphi$</span> and height <span class="nw">$(1 - \cos\varphi)$</span> inscribed in a circle of unit radius. The area is maximal for an equilateral triangle. Thus at this moment $\varphi$ equals $2\pi/3$, and the maximum area equals <span class="nw">$S_{max} = 3\sqrt{3}/4$</span></p>
+<p class="x" style="--b:494.2">Finally</p>
+<div class="f" style="left:382.1pt;top:506.0pt"><span class="fig" data-srcpage="1" data-clip="382.1,506.0,457.8,536.7"></span></div>
+<p class="x" style="--b:566.2">Let us find the time after which $\varphi$ reaches the value $2\pi/3$. Consider how the voltage across the capacitor changes with time. Since the total voltage across the nonlinear element and the capacitor is conserved,</p>
+<div class="f" style="left:382.2pt;top:591.0pt"><span class="fig" data-srcpage="1" data-clip="382.2,591.0,458.5,620.5"></span></div>
+<p class="x" style="--b:651.8">The quantity $\frac{dx}{dt}$ is found from the condition that the point $A$ moves along the circle with some angular velocity $\omega$</p>
+<div class="f" style="left:335.0pt;top:664.5pt"><span class="fig" data-srcpage="1" data-clip="335.0,664.5,506.6,694.0"></span></div>
+<p class="x" style="--b:723.8">On the other hand</p>
+<div class="f" style="left:395.1pt;top:734.6pt"><span class="fig" data-srcpage="1" data-clip="395.1,734.6,444.7,749.5"></span></div>
+<p class="x" style="--b:780.0">Hence</p>
+<div class="f" style="left:366.3pt;top:791.2pt"><span class="fig" data-srcpage="1" data-clip="366.3,791.2,474.4,820.8"></span></div>
+<p class="x" style="--b:853.3">Combining the two expressions for $\frac{dU_C}{dt}$</p>
+<div class="f" style="left:376.5pt;top:866.2pt"><span class="fig" data-srcpage="1" data-clip="376.5,866.2,464.2,896.7"></span></div>
+<p class="x" style="--b:927.0">Thus $OA$ rotates with a constant angular velocity, and by the moment the rate of change of the capacitor energy is maximal it has turned through the angle $\pi/3$, which immediately gives the expression for the time</p>
+<div class="f" style="left:389.9pt;top:951.7pt"><span class="fig" data-srcpage="1" data-clip="389.9,951.7,449.5,982.2"></span></div>
+<p class="x an" style="--b:1017.8">Answer:</p>
+<div class="f" style="left:382.1pt;top:1029.5pt"><span class="fig" data-srcpage="1" data-clip="382.1,1029.5,457.8,1060.2"></span></div>
+<div class="f" style="left:389.9pt;top:1086.7pt"><span class="fig" data-srcpage="1" data-clip="389.9,1086.7,449.5,1117.2"></span></div>
+</div>
+</body></html>

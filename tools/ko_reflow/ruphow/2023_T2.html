@@ -1,0 +1,167 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2023, problem T2 (mirages / curvature of light rays) — Korean edition on the original layout.
+   ORIGINAL: 3 A3 pages (841.9x1191.1pt) printed from the olympiad web page (tags "... W ... 2023" on p3).
+   Beige page panel (33.8..807.8), blue site bar on p1 (logo, icons; stamped), white card x 45..796.5,
+   tag card + tag chips (#ebedf3, redrawn; tag words typed), white footer band with "Website in English" (stamped)
+   and "2020 — Мы те, кого должны превзойти." (typed). Panel, cards, chips are redrawn as .bx in the static .dc
+   wrapper (check.py ignores them). Badges "A1 0.40" ... stamped.
+   The site-bar icon at x 725..741 is lost by the scrub as collateral (FontAwesome glyph): put back as an .ov image
+   rendered from the original; a beige .ov strip covers the header stamp's white margin on the panel.
+   Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math 10.8pt (KaTeX 1.2em), text column x 65.2..776,
+   pitch 13.5pt; question line after the badge starts at x 106.6 (pitch 15.9pt); all left-aligned as in the original.
+   Figures 1-3 are raster images (stamped); their Russian labels "Поверхность земли" (fig. 1) and "Луч света"
+   (fig. 3) are covered by white .ov labels (지표면, 광선). Display formulas stamped (no Cyrillic in them);
+   every inline formula retyped (units атм, К, м, км, кг, Дж, Па, м/с² -> atm, K, m, km, kg, J, Pa, m/s²).
+   "Часть A" -> "A부."; "(5.8 балла)" -> "(5.8점)".
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:65.2pt;width:711pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.4pt;--l:15.9pt}
+.h{font-weight:bold}
+.c{text-align:center}
+.tg{color:#7e8299;text-align:center;white-space:nowrap}
+.fo{left:33.8pt;width:774pt;text-align:center;color:#7e8299}
+.ov{position:absolute;white-space:nowrap;background:#fff;color:#000;text-align:center;font-family:'Times New Roman',KB,serif}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:45pt;width:751.5pt;background:#fff}
+.ch{top:234pt;height:15pt;background:rgb(235,237,243);border-radius:3pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:86.2pt;height:1070.3pt;border-radius:3.75pt 3.75pt 0 0"></div>
+</div>
+<div class="f" style="left:33.8pt;top:33.8pt"><span class="fig" data-srcpage="1" data-clip="33.8,33.8,807.8,75.0"></span></div>
+<!-- site-bar icon (FontAwesome glyph lost by the scrub as collateral): 725..741 x 46.5..61, rendered from the original -->
+<div class="ov" style="left:33.8pt;top:75.0pt;width:774pt;height:0.9pt;background:rgb(251,246,240)"></div><!-- covers the stamp's white 0.8pt margin on the beige panel -->
+<div class="ov" style="left:725pt;top:46.5pt;width:16pt;height:14.5pt;background:none;line-height:0"><img style="width:16pt;height:14.5pt" alt="" src="data:image/png;base64,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"></div>
+<p class="x" style="--b:114.0">일상생활에서 우리는 우리를 둘러싼 대기 속에서 빛살이 직선으로 나아가는 것처럼 느낀다. 그러나 실제로는 그렇지 않으며, 빛살이 휘는 효과가 눈에 띄지 않는 것은 공기의 굴절률이 1과 거의 구별되지 않기 때문일 뿐이다. 그러나 큰 규모에서나 몇몇 대기 현상이 일어날 때에는 이 효과를 더 이상 무시할 수 없다. 지구 대기에서는 신기루가 이러한 현상의 예이며, 다른 행성, 예를 들어 금성의 대기에서는 지평선까지의 거리가 사실상 끝없이 멀다는 것이 그 예이다. 이 문제에서는 이 현상들을 하나하나 자세히 살펴본다.</p>
+<p class="x h" style="--b:177.0">A부. 신기루 (5.8점).</p>
+<p class="x" style="--b:199.5">신기루는 지표면과 대기 사이의 온도 차가 클 때 생긴다. 그 수많은 예 가운데 하나가 쿠릴 열도인데, 봄철에는 바다 위 공기가 차가워지기 때문에 일본의 구나시리 해협에서 쿠릴 열도의 신기루를 볼 수 있다.</p>
+<p class="x" style="--b:240.0">대기는 질량이 <span class="nw">$m$인</span> 같은 분자들로 이루어진 이상 기체로 볼 수 있다. 대기 중의 기체를 포함한 대부분의 기체에 대하여, 대기 공기의 굴절률 <span class="nw">$n$이</span> 어떻게 달라지는지를 나타내는 다음 공식이 성립한다고 알려져 있다:</p>
+<div class="f" style="left:387.6pt;top:265.0pt"><span class="fig" data-srcpage="1" data-clip="387.6,265.0,453.9,281.0"></span></div>
+<p class="x" style="--b:298.5">여기서 <span class="nw">$N$은</span> 분자의 수 밀도이고, <span class="nw">$\alpha$는</span> 기체의 종류에 따라 정해지는 계수이다.</p>
+<p class="x" style="--b:325.5;--l:14.25pt">문제를 풀 때 수면은 수평이라고 보아라. 대기의 온도 <span class="nw">$T$는</span> 해수면으로부터의 높이 <span class="nw">$h$가</span> 커질수록 높아지며, 이에 따라 공기의 굴절률도 변한다. 중력의 영향은 무시하고, 대기압은 높이에 관계없이 <span class="nw">$p_0 = 1\,\mathrm{atm}$이라고</span> 보아라. 표준 조건(<span class="nw">$T_0 = 273\,\mathrm{K}$,</span> <span class="nw">$p_0 = 1\,\mathrm{atm}$)에서</span> 대기의 굴절률은 <span class="nw">$n = 1.00028$이다.</span> 온도와 굴절률은 <span class="nw">$h$에만</span> 의존한다고 보아라. 지표면에서 각 <span class="nw">$\theta_S$로</span> 방출된 빛살에 대한 스넬 법칙을 생각하자.</p>
+<p class="x" style="--b:395.2">그림 1과 같이 대기를 두께 <span class="nw">$\Delta h$인</span> 얇은 층들로 나누자. 높이 <span class="nw">$\Delta h(l-1)$에서</span> <span class="nw">$\Delta hl$까지</span> 대기의 굴절률은 일정하며 <span class="nw">$n_l$이고,</span> 이 높이에서 빛살과 수평 방향 사이의 각은 <span class="nw">$\theta_l$이라고</span> 하자. 여기서 <span class="nw">$l = 1, 2, 3, \ldots$이다.</span> 지표면에서 대기의 굴절률은 <span class="nw">$n_1 = n_S$이다.</span></p>
+<div class="f" style="left:233.2pt;top:435.0pt"><span class="fig" data-srcpage="1" data-clip="233.2,435.0,608.2,572.2"></span></div>
+<div class="ov" style="left:334.5pt;top:556.6pt;width:124pt;height:16.6pt;font-size:12pt;line-height:15.6pt">지표면</div>
+
+<div class="f" style="left:64.7pt;top:580.7pt"><span class="fig" data-srcpage="1" data-clip="64.7,580.7,102.5,599.7"></span></div>
+<p class="x q" style="--b:593.2">높이 <span class="nw">$l\Delta h$에</span> 있는 점 <span class="nw">$P$에서의</span> 스넬 법칙을 써라. 극한 <span class="nw">$\Delta h \to 0$,</span> <span class="nw">$\Delta hl \to h$,</span> <span class="nw">$\theta_l \to \theta(h)$,</span> <span class="nw">$n_l \to n(h)$를</span> 취하여 <span class="nw">$\theta(h)$에</span> 대한 식을 구하여라.</p>
+<p class="x" style="--b:631.5">온도 <span class="nw">$T(h)$가</span> <span class="nw">$0 \le h \le H$</span> 범위에서는 <span class="nw">$h$에</span> 따라 선형으로 증가하고, <span class="nw">$h &gt; H$에서는</span> 일정하다고 하자:</p>
+<div class="f" style="left:321.0pt;top:642.8pt"><span class="fig" data-srcpage="1" data-clip="321.0,642.8,520.4,676.9"></span></div>
+<p class="x" style="--b:693.0">여기서 <span class="nw">$T_\mathrm{S} = T(0) &lt; T_\mathrm{H} = T(H)$이다.</span></p>
+<p class="x" style="--b:719.0"><span class="nw">$\frac{T_H - T_S}{T_S} \ll 1$이므로,</span> 높이 <span class="nw">$h$</span> <span class="nw">($0 &lt; h &lt; H$)에서</span> 분자의 수 밀도 <span class="nw">$N(h)$도</span> 좋은 정확도로 높이에 대해 선형이라고 볼 수 있다. 즉:</p>
+<div class="f" style="left:357.5pt;top:733.4pt"><span class="fig" data-srcpage="1" data-clip="357.5,733.4,484.9,764.7"></span></div>
+<p class="x" style="--b:781.5">여기서 <span class="nw">$N_\mathrm{S} = N(0)$,</span> <span class="nw">$N_\mathrm{H} = N(H)$이다.</span></p>
+
+<div class="f" style="left:64.7pt;top:794.5pt"><span class="fig" data-srcpage="1" data-clip="64.7,794.5,102.5,813.5"></span></div>
+<p class="x q" style="--b:806.9">이 결과를 이용하여 대기의 굴절률 <span class="nw">$n(h)$가</span> 높이에 따라 어떻게 달라지는지 구하여라. 답은 <span class="nw">$n_\mathrm{S} = n(0)$과</span> <span class="nw">$n_\mathrm{H} = n(H)$로</span> 나타내어라.</p>
+<p class="x" style="--b:845.2;--l:13.9pt">수평 방향과 각 <span class="nw">$\theta_\mathrm{S}$를</span> 이루며 방출된 빛살의 경로를 생각하자. 빛살은 경로의 최고점 <span class="nw">$h_\mathrm{m} (\le H)$에</span> 이른 뒤 다시 아래로 내려가기 시작한다고 하자. 빛살이 진행하는 평면에서 <span class="nw">$x$축을</span> 수평으로 잡으면, 빛살의 경로 <span class="nw">$h(x)$는</span> 다음 미분 방정식을 만족해야 한다:</p>
+<div class="f" style="left:353.8pt;top:884.8pt"><span class="fig" data-srcpage="1" data-clip="353.8,884.8,488.9,915.5"></span></div>
+<p class="x" style="--b:932.2">여기서 부호 <span class="nw">$+$는</span> 빛살이 올라가는 경우에, <span class="nw">$-$는</span> 내려가는 경우에 해당한다.</p>
+
+<div class="f" style="left:64.7pt;top:944.5pt"><span class="fig" data-srcpage="1" data-clip="64.7,944.5,102.5,963.5"></span></div>
+<p class="x q" style="--b:956.9">빛살 경로의 최고점에서의 굴절률 <span class="nw">$n_\mathrm{m} \equiv n(h_\mathrm{m})$을</span> <span class="nw">$n_S$와</span> <span class="nw">$\theta_S$로</span> 나타내어라.</p>
+<p class="x" style="--b:981.8">앞에서 말한 것을 고려하면, 빛살의 경로를 구하는 방정식은 다음과 같이 쓸 수 있다:</p>
+<div class="f" style="left:338.0pt;top:994.2pt"><span class="fig" data-srcpage="1" data-clip="338.0,994.2,504.3,1029.8"></span></div>
+
+<div class="f" style="left:64.7pt;top:1039.0pt"><span class="fig" data-srcpage="1" data-clip="64.7,1039.0,102.5,1058.0"></span></div>
+<p class="x q" style="--b:1051.4"><span class="nw">$a_\mathrm{m}$과</span> <span class="nw">$b$를</span> <span class="nw">$h_\mathrm{m}$,</span> <span class="nw">$n_\mathrm{H}$,</span> <span class="nw">$n_\mathrm{S}$,</span> <span class="nw">$n_\mathrm{m}$으로</span> 나타내어라.</p>
+<p class="x" style="--b:1076.2">좌표 원점 <span class="nw">$(x, h) = (0, 0)$을</span> 지나는 빛살에 대하여 이 방정식의 해는 다음과 같은 포물선이라고 알려져 있다:</p>
+<div class="f" style="left:387.3pt;top:1087.8pt"><span class="fig" data-srcpage="1" data-clip="387.3,1087.8,454.2,1103.7"></span></div>
+
+<div class="f" style="left:64.7pt;top:1110.3pt"><span class="fig" data-srcpage="1" data-clip="64.7,1110.3,102.5,1129.3"></span></div>
+<p class="x q" style="--b:1122.7">계수 <span class="nw">$c$와</span> <span class="nw">$d$를</span> <span class="nw">$a$와</span> <span class="nw">$b$로</span> 나타내어라.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1122.7pt"></div>
+</div>
+<p class="x" style="--b:44.5">수치값 <span class="nw">$T_\mathrm{S} = 275\,\mathrm{K}$,</span> <span class="nw">$T_\mathrm{H} = 290\,\mathrm{K}$,</span> <span class="nw">$H = 20\,\mathrm{m}$가</span> 주어졌다고 하자. 관측자는 일본 쪽 해안(<span class="nw">$h = 0$)에</span> 있으며, 수면 위로 쿠릴 열도를 관측한다.</p>
+<p class="x" style="--b:84.8">섬까지의 거리를 <span class="nw">$L$이라</span> 하자. 관측자는 섬들을, 섬들이 같은 거리에서 수면 위 높이 <span class="nw">$h_\mathrm{g}$에</span> 있다면 보였을 각과 같은 각으로 본다.</p>
+
+<div class="f" style="left:64.7pt;top:111.3pt"><span class="fig" data-srcpage="2" data-clip="64.7,111.3,102.5,130.3"></span></div>
+<p class="x q" style="--b:123.7"><span class="nw">$h_\mathrm{g}$를</span> 관측자로부터 섬까지의 거리 <span class="nw">$L$의</span> 함수로 나타내어라. 관측되는 섬 가운데 가장 먼 섬은 나머지 섬들보다 높이 보이는가, 낮게 보이는가?</p>
+<div class="f" style="left:64.7pt;top:138.3pt"><span class="fig" data-srcpage="2" data-clip="64.7,138.3,102.5,157.3"></span></div>
+<p class="x q" style="--b:150.7">관측자가 아직 볼 수 있는 섬까지의 최대 거리 <span class="nw">$L_\mathrm{max}$를</span> <span class="nw">$n_S$,</span> <span class="nw">$n_H$,</span> <span class="nw">$H$로</span> 나타내어라. 이때 각 <span class="nw">$\theta_{S\,\mathrm{max}}$는</span> 얼마인가?</p>
+<div class="f" style="left:64.7pt;top:165.3pt"><span class="fig" data-srcpage="2" data-clip="64.7,165.3,102.5,184.3"></span></div>
+<p class="x q" style="--b:177.7"><span class="nw">$L_\mathrm{max}$와</span> <span class="nw">$\theta_\mathrm{S}$를</span> 유효숫자 두 자리까지 계산하여라.</p>
+<p class="x h" style="--b:202.5">B부. 빛살의 휘어짐 (4.2점).</p>
+<p class="x" style="--b:234.0"><span class="nw">$\mathbf{A}$부에서는</span> 중력의 영향을 고려하지 않고, 지표면 근처의 온도 변화만 고려하여 대기의 굴절률을 계산하였다. 지표면으로부터의 높이가 높아질수록 온도는 물론 낮아지지만, 대기의 수 밀도에 가장 큰 영향을 주는 것은 바로 중력이다. 그러므로 이제부터는 간단히 하기 위해 대기의 온도 <span class="nw">$T$가</span> 어디서나 일정하다고 보고, 굴절률의 변화는 중력에 의해서만 생긴다고 보자. 중력 가속도는 <span class="nw">$g$이다.</span></p>
+<p class="x" style="--b:301.5">그림 2와 같이 높이 <span class="nw">$h$에서</span> <span class="nw">$h + \mathrm{d}h$까지의</span> 대기 부분에 작용하는 힘의 평형을 생각하자. 공기 분자의 수 밀도를 <span class="nw">$N(h)$로</span> 나타내자.</p>
+<div class="f" style="left:308.2pt;top:319.5pt"><span class="fig" data-srcpage="2" data-clip="308.2,319.5,533.2,571.5"></span></div>
+
+<div class="f" style="left:64.7pt;top:580.0pt"><span class="fig" data-srcpage="2" data-clip="64.7,580.0,102.5,599.0"></span></div>
+<p class="x q" style="--b:592.4">지표면에서의 수 밀도가 <span class="nw">$N(0) = N_0$일</span> 때 <span class="nw">$N(h)$를</span> 구하여라.</p>
+<p class="x" style="--b:617.2;--l:13.6pt"><span class="nw">$\mathbf{A}$부에서처럼</span> 높이 <span class="nw">$h$에서의</span> 굴절률을 <span class="nw">$n(h)$라</span> 하고, 높이 <span class="nw">$h$에서</span> 빛살이 수평 방향과 이루는 각을 <span class="nw">$\theta(h)$로</span> 나타내자. 지표면의 곡률은 무시할 수 있다.</p>
+<p class="x" style="--b:658.5">대기 속 빛살의 경로는 곡선이며, 각 점에서 이 곡선을 반지름 <span class="nw">$R$인</span> 원의 일부로 근사할 수 있다. 이 <span class="nw">$R$를</span> 그 점에서 빛살 경로의 곡률 반지름이라고 한다(그림 3 참조).</p>
+<div class="f" style="left:233.2pt;top:684.8pt"><span class="fig" data-srcpage="2" data-clip="233.2,684.8,608.2,914.2"></span></div>
+<div class="ov" style="left:323pt;top:821pt;width:72pt;height:17.5pt;font-size:13pt;line-height:15pt">광선</div>
+
+<div class="f" style="left:64.7pt;top:922.7pt"><span class="fig" data-srcpage="2" data-clip="64.7,922.7,102.5,941.7"></span></div>
+<p class="x q" style="--b:935.2"><span class="nw">$\frac{1}{R}$을</span> <span class="nw">$\theta(h)$와</span> <span class="nw">$\frac{\mathrm{d}\theta}{\mathrm{d}h}$로</span> 나타내어라.</p>
+<div class="f" style="left:64.7pt;top:949.7pt"><span class="fig" data-srcpage="2" data-clip="64.7,949.7,102.5,968.7"></span></div>
+<p class="x q" style="--b:962.2"><span class="nw">$\mathbf{B2}$에서</span> 얻은 식을 <span class="nw">$\mathbf{A1}$의</span> 스넬 법칙을 이용하여 <span class="nw">$n$,</span> <span class="nw">$n_S$,</span> <span class="nw">$\theta_S$만</span> 포함하도록 변형하여라.</p>
+<div class="f" style="left:64.7pt;top:976.7pt"><span class="fig" data-srcpage="2" data-clip="64.7,976.7,102.5,995.7"></span></div>
+<p class="x q" style="--b:989.2">지표면 근처에서 수평 방향과 작은 각을 이루며 진행하는 빛살 경로의 곡률 반지름 <span class="nw">$R$를</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$g$,</span> <span class="nw">$n_\mathrm{S}$,</span> <span class="nw">$T$,</span> <span class="nw">$k_\mathrm{B}$로</span> 나타내어라.</p>
+<p class="x" style="--b:1031.3;--l:21pt">이제 지구의 곡률을 고려하자. 지구의 반지름은 <span class="nw">$R_\mathrm{E} = 6.4 \cdot 10^3\,\mathrm{km}$이다.</span> 나머지 수치값은 <span class="nw">$m = 29 \cdot 1.66 \cdot 10^{-27}\,\mathrm{kg}$,</span> <span class="nw">$T = 300\,\mathrm{K}$,</span> <span class="nw">$k_\mathrm{B} = 1.38 \cdot 10^{-23}\,\mathrm{J/K}$,</span> <span class="nw">$g = 9.8\,\mathrm{m/s^2}$이다.</span></p>
+
+<div class="f" style="left:64.7pt;top:1071.3pt"><span class="fig" data-srcpage="2" data-clip="64.7,1071.3,102.5,1090.3"></span></div>
+<p class="x q" style="--b:1083.7">지표면 위의 어떤 점에서 수평으로 출발한 빛살 경로의 곡률 반지름 <span class="nw">$R^{lr}_E$를</span> 수치로 구하여라. 그 뒤 빛살의 지표면으로부터의 높이는 커지는가?</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:166.4pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:219pt;height:45pt;border-radius:3.75pt"></div>
+<div class="bx" style="left:33.8pt;top:286.5pt;width:774pt;height:60pt;background:#fff"></div>
+<div class="bx ch" style="left:69pt;width:23.2pt"></div>
+<div class="bx ch" style="left:96pt;width:50.2pt"></div>
+<div class="bx ch" style="left:150pt;width:122.2pt"></div>
+<div class="bx ch" style="left:276pt;width:79.5pt"></div>
+<div class="bx ch" style="left:359.2pt;width:59.3pt"></div>
+<div class="bx ch" style="left:422.2pt;width:26.3pt"></div>
+<div class="bx ch" style="left:452.2pt;width:108pt"></div>
+<div class="bx ch" style="left:564pt;width:86.2pt"></div>
+<div class="bx ch" style="left:654pt;width:38.2pt"></div>
+</div>
+<p class="x" style="--b:43.5;--l:15.75pt">금성의 대기는 <span class="nw">$\mathrm{CO_2}$로</span> 이루어져 있으며, 이를 이상 기체로 볼 수 있고 앞에서 얻은 모든 결과를 적용할 수 있다. 금성 표면의 대기압은 <span class="nw">$p_\mathrm{V} = 93\,\mathrm{atm}$</span> <span class="nw">($1\,\mathrm{atm} = 1.0 \cdot 10^5\,\mathrm{Pa}$)이고,</span> 온도는 <span class="nw">$T_\mathrm{V} = 740\,\mathrm{K}$이다.</span> 금성의 반지름은 <span class="nw">$R_\mathrm{V} = 6.0 \cdot 10^3\,\mathrm{km}$,</span> 표면에서의 중력 가속도는 <span class="nw">$g_\mathrm{V} = 8.9\,\mathrm{m/s^2}$,</span> <span class="nw">$\mathrm{CO_2}$</span> 분자의 질량은 <span class="nw">$m_\mathrm{C} = 44 \cdot 1.66 \cdot 10^{-27}\,\mathrm{kg}$이다.</span> 금성에서 굴절률에 대하여 다음 식이 성립한다:</p>
+<div class="f" style="left:385.9pt;top:92.5pt"><span class="fig" data-srcpage="3" data-clip="385.9,92.5,454.7,109.0"></span></div>
+<p class="x" style="--b:127.8">계수는 <span class="nw">$\alpha_\mathrm{V} = 4\pi a_\mathrm{C}^3$이며,</span> 여기서 <span class="nw">$a_\mathrm{C} = 1.4 \cdot 10^{-10}\,\mathrm{m}$은</span> <span class="nw">$\mathrm{CO_2}$</span> 분자의 유효 크기이다.</p>
+
+<div class="f" style="left:64.7pt;top:141.3pt"><span class="fig" data-srcpage="3" data-clip="64.7,141.3,102.5,160.3"></span></div>
+<p class="x q" style="--b:153.7">행성 표면 바로 위의 어떤 점에서 수평으로 출발한 빛살 경로의 곡률 반지름 <span class="nw">$R^{lr}_V$를</span> 수치로 구하여라. 그 뒤 빛살의 표면으로부터의 높이는 커지는가?</p>
+
+<p class="x tg" style="--b:245.2;left:69pt;width:23.2pt">T</p>
+<p class="x tg" style="--b:245.2;left:96pt;width:50.2pt">광학</p>
+<p class="x tg" style="--b:245.2;left:150pt;width:122.2pt">기하 광학</p>
+<p class="x tg" style="--b:245.2;left:276pt;width:79.5pt">굴절</p>
+<p class="x tg" style="--b:245.2;left:359.2pt;width:59.3pt">XY 합숙</p>
+<p class="x tg" style="--b:245.2;left:422.2pt;width:26.3pt">W</p>
+<p class="x tg" style="--b:245.2;left:452.2pt;width:108pt">경사 굴절률 광학</p>
+<p class="x tg" style="--b:245.2;left:564pt;width:86.2pt">차용</p>
+<p class="x tg" style="--b:245.2;left:654pt;width:38.2pt">2023</p>
+
+<div class="f" style="left:377.4pt;top:302.5pt"><span class="fig" data-srcpage="3" data-clip="377.4,302.5,470.8,317.2"></span></div>
+<p class="x fo" style="--b:333.8">2020 — 우리는 뛰어넘어야 할 사람들이다.</p>
+</div>
+</body></html>

@@ -1,0 +1,270 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2024, problem T1 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2024_T1S.html).
+   ORIGINAL: 5 A3 pages (841.9x1191.1pt) printed from the olympiad web page (as the 2026 pilot):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 1.50" (stamped), grey separator under the restated question, answer frame (3pt stroke #f3f6f9).
+   The panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX at
+   10.8pt (1.2em), text column x 63.4..777.8; question line after the badge starts at x 104.7 (pitch 15.9pt),
+   other paragraphs pitch 13.6pt, all left-aligned as in the original.
+   Display formulas stamped, except those with Cyrillic, retyped in KaTeX: A3 T_max cases (при -> for, twice),
+   A5 answer (м/с -> m/s), B1 equilibrium equations (F_упр -> F_el), B3 ΔW_p(г), ΔW_p(в), ΔW_p(деф)
+   (-> load, rope, def). A5 table: header units м -> m restored as .ov.
+   "Первое/Второе решение" -> "First/Second solution"; "Ответ:" -> "Answer:".
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.an{left:79.9pt;width:690pt}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1122.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:85.5pt"></div>
+<div class="bx ab" style="top:380.3pt;height:111.0pt"></div>
+<div class="bx ab" style="top:585.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:819.7pt;height:101.3pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">Find the speed $v$ and the acceleration $a$ of the left end of the rope at the moment when the left end has descended by $x$. Express your answer in terms of $g$, $L_1$, $L$, $\alpha$ and $x$.</p>
+<p class="x" style="--b:103.5"><b>First solution:</b> The length of the part of the rope hanging on the right is $L_2 = L_1 + L\sin\alpha$, and the total length of the rope is:</p>
+<p class="x" style="--b:147.8">We use the law of conservation of mechanical energy:</p>
+<p class="x" style="--b:211.5">where $m = \lambda l$ is the mass of the rope and $\Delta W_p$ is the change of its potential energy in the gravitational field.</p>
+<p class="x" style="--b:234.8">The change of the potential energy of the rope in the gravitational field equals the change of the potential energy of a piece of rope of length $x$ whose centre-of-mass coordinate $x_C$ changed from $x_{C_1} = -x/2$ to $x_{C_2} = x/2$. Hence:</p>
+<p class="x" style="--b:294.0">Substituting $\Delta W_p$ into the law of conservation of mechanical energy, we obtain:</p>
+<p class="x" style="--b:367.5">whence:</p>
+<p class="x an" style="--b:408.8">Answer:</p>
+<p class="x" style="--b:500.2">Since the speed $v(x)$ and the displacement $x$ are directly proportional:</p>
+<p class="x" style="--b:573.0">whence:</p>
+<p class="x an" style="--b:614.2">Answer:</p>
+<p class="x" style="--b:696.0"><b>Second solution:</b> We write the equation of motion for each part of the rope:</p>
+<p class="x" style="--b:740.2">where $T_1$ and $T_2$ are the tensions of the rope near pulleys $1$ and $2$, respectively.</p>
+<p class="x" style="--b:762.8">Adding the equations, we obtain:</p>
+<p class="x" style="--b:807.0">whence</p>
+<p class="x an" style="--b:848.2">Answer:</p>
+<p class="x" style="--b:930.0">Multiplying the expression for the acceleration by the speed, we obtain:</p>
+<p class="x" style="--b:993.8">Integrating, we obtain:</p>
+<p class="x" style="--b:1057.5">whence:</p>
+<div class="f" style="left:365.2pt;top:115.5pt"><span class="fig" data-srcpage="1" data-clip="365.2,115.5,475.5,130.2"></span></div>
+<div class="f" style="left:383.8pt;top:159.3pt"><span class="fig" data-srcpage="1" data-clip="383.8,159.3,458.4,192.4"></span></div>
+<div class="f" style="left:329.0pt;top:259.8pt"><span class="fig" data-srcpage="1" data-clip="329.0,259.8,511.8,277.4"></span></div>
+<div class="f" style="left:335.0pt;top:302.0pt"><span class="fig" data-srcpage="1" data-clip="335.0,302.0,507.2,353.2"></span></div>
+<div class="f" style="left:353.1pt;top:409.4pt"><span class="fig" data-srcpage="1" data-clip="353.1,409.4,487.6,467.2"></span></div>
+<div class="f" style="left:373.4pt;top:506.0pt"><span class="fig" data-srcpage="1" data-clip="373.4,506.0,467.4,558.7"></span></div>
+<div class="f" style="left:361.7pt;top:627.7pt"><span class="fig" data-srcpage="1" data-clip="361.7,627.7,479.0,660.4"></span></div>
+<div class="f" style="left:192.9pt;top:708.0pt"><span class="fig" data-srcpage="1" data-clip="192.9,708.0,647.9,722.7"></span></div>
+<div class="f" style="left:308.5pt;top:774.7pt"><span class="fig" data-srcpage="1" data-clip="308.5,774.7,532.2,789.4"></span></div>
+<div class="f" style="left:361.7pt;top:861.0pt"><span class="fig" data-srcpage="1" data-clip="361.7,861.0,479.0,894.4"></span></div>
+<div class="f" style="left:266.5pt;top:941.5pt"><span class="fig" data-srcpage="1" data-clip="266.5,941.5,573.2,976.2"></span></div>
+<div class="f" style="left:358.2pt;top:1005.3pt"><span class="fig" data-srcpage="1" data-clip="358.2,1005.3,483.3,1039.2"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:120.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:165.8pt;height:464.2pt"></div>
+<div class="bx cd" style="top:641.2pt;height:459.0pt"></div>
+<div class="bx cd" style="top:1111.5pt;height:45.0pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:231.0pt"></div>
+<div class="bx sp" style="top:693.0pt"></div>
+<div class="bx ab" style="top:33.7pt;height:110.3pt"></div>
+<div class="bx ab" style="top:382.5pt;height:100.5pt"></div>
+<div class="bx ab" style="top:568.5pt;height:51.0pt"></div>
+<div class="bx ab" style="top:963.0pt;height:126.7pt"></div>
+</div>
+<p class="x an" style="--b:62.2">Answer:</p>
+<div class="f" style="left:62.5pt;top:175.9pt"><span class="fig" data-srcpage="2" data-clip="62.5,175.9,101.8,196.3"></span></div>
+<p class="x q" style="--b:188.9">Find the displacement $x_1$ of the left end of the rope at the moment when the tension in the part of the rope lying on the inclined plane is constant along the length of this part. Express your answer in terms of $L_1$, $L$ and $\alpha$. For what relations between $L_1$, $L$ and $\alpha$ is $x_1$ smaller than the initial length of the right part of the rope?</p>
+<p class="x" style="--b:249.0">Introduce a $y$ axis directed along the inclined plane from pulley $1$ to pulley $2$. We write Newton's second law in projection onto the $y$ axis for a piece of rope of length $dy$ lying on the inclined plane:</p>
+<p class="x" style="--b:305.2">The quantity $dT = 0$ when $a(x_1) = g\sin\alpha$. Hence:</p>
+<p class="x" style="--b:369.8">whence:</p>
+<p class="x an" style="--b:411.0">Answer:</p>
+<p class="x" style="--b:492.0">Let us compare $x_1$ with $L_2$:</p>
+<p class="x" style="--b:555.8">The coefficients of $L_1$ and $L$ in the expression for $L_2$ are greater than the corresponding coefficients in the expression for $x_1$; therefore:</p>
+<p class="x an" style="--b:597.0">Answer: for any relations between $L_1$, $L$ and $\alpha$.</p>
+<div class="f" style="left:62.5pt;top:651.4pt"><span class="fig" data-srcpage="2" data-clip="62.5,651.4,101.8,671.8"></span></div>
+<p class="x q" style="--b:664.4">Find the maximum tension in the rope at the moment when its left end has moved by a distance $x$. Express your answer in terms of $\lambda$, $g$, $L_1$, $L$, $\alpha$ and $x$.</p>
+<p class="x" style="--b:711.0">On the vertical parts of the rope the tension is greatest at the points of contact with the pulleys, since the acceleration $a(x)$ is always less than $g$. Denote by $T_1$ and $T_2$ the tensions of the rope at the points of contact with pulleys $1$ and $2$, respectively.</p>
+<p class="x" style="--b:738.8">From Newton's second law for the left vertical part of the rope we obtain:</p>
+<p class="x" style="--b:783.0">whence:</p>
+<p class="x" style="--b:826.5">Let us analyse the inclined part of the rope. From the solution of part $\mathrm{A2}$ it follows that:</p>
+<p class="x" style="--b:890.2">For $x \le x_1$ the quantity $dT/dy$ is not positive, and for $x \ge x_1$ it is non-negative, whence it follows that:</p>
+<p class="x d c" style="--b:919.5;--a:18.8pt">$T_{max} = \begin{cases} T_1 &amp; \text{for } x \ge x_1 \\ T_2 &amp; \text{for } x \le x_1\end{cases}$</p>
+<p class="x" style="--b:950.2">Substituting the expressions for $a$, $L_2$ and $x_1$, we obtain:</p>
+<p class="x an" style="--b:991.5">Answer:</p>
+<p class="x d c" style="--b:1035.8;--a:33.1pt">$T_{max} = \begin{cases} \dfrac{\lambda g(L_1 + x)(2L_1 + L(1 + \sin\alpha) - 2x)}{2L_1 + L(1 + \sin\alpha)} &amp; \text{for } x \ge L_1\sin\alpha + \dfrac{L\sin\alpha(1 + \sin\alpha)}{2} \\[14pt] \dfrac{\lambda g(L_1 + L\sin\alpha - x)(2L_1 + L(1 + \sin\alpha) + 2x)}{2L_1 + L(1 + \sin\alpha)} &amp; \text{for } x \le L_1\sin\alpha + \dfrac{L\sin\alpha(1 + \sin\alpha)}{2}\end{cases}$</p>
+<div class="f" style="left:62.5pt;top:1121.7pt"><span class="fig" data-srcpage="2" data-clip="62.5,1121.7,101.8,1142.1"></span></div>
+<p class="x q" style="--b:1134.7">Find the displacements $x_{max(1)}$ and $x_{max(2)}$ of the left end of the rope at which it starts to lose contact with pulleys $1$ and $2$, respectively, assuming that the contact with the other pulley is maintained. Express your answers in terms of $L_1$, $L$ and $\alpha$.</p>
+<div class="f" style="left:354.6pt;top:62.1pt"><span class="fig" data-srcpage="2" data-clip="354.6,62.1,486.2,120.7"></span></div>
+<div class="f" style="left:362.3pt;top:273.7pt"><span class="fig" data-srcpage="2" data-clip="362.3,273.7,478.4,287.7"></span></div>
+<div class="f" style="left:347.0pt;top:318.7pt"><span class="fig" data-srcpage="2" data-clip="347.0,318.7,494.6,350.7"></span></div>
+<div class="f" style="left:338.1pt;top:423.7pt"><span class="fig" data-srcpage="2" data-clip="338.1,423.7,502.6,455.7"></span></div>
+<div class="f" style="left:286.2pt;top:505.5pt"><span class="fig" data-srcpage="2" data-clip="286.2,505.5,554.5,537.5"></span></div>
+<div class="f" style="left:265.7pt;top:750.0pt"><span class="fig" data-srcpage="2" data-clip="265.7,750.0,575.0,764.7"></span></div>
+<div class="f" style="left:303.2pt;top:794.2pt"><span class="fig" data-srcpage="2" data-clip="303.2,794.2,537.6,808.9"></span></div>
+<div class="f" style="left:371.0pt;top:840.0pt"><span class="fig" data-srcpage="2" data-clip="371.0,840.0,470.9,871.8"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:753.0pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:798.0pt;height:336.0pt"></div>
+<div class="bx sp" style="top:33.8pt"></div>
+<div class="bx sp" style="top:849.8pt"></div>
+<div class="bx ab" style="top:417.0pt;height:110.3pt"></div>
+<div class="bx ab" style="top:658.5pt;height:111.0pt"></div>
+<div class="bx ab" style="top:1040.3pt;height:83.2pt"></div>
+</div>
+<p class="x" style="--b:51.8">We write Newton's second law for a piece of rope of mass $dm = \lambda dl$:</p>
+<p class="x" style="--b:98.9">When the rope loses contact, $d\vec{N} = 0$; therefore:</p>
+<p class="x" style="--b:145.5">Let $\rho$ be the curvature radius of the surface; then $dl = \rho d\varphi$, where $d\varphi$ is the turning angle of the tangent to the rope over the section $dl$.</p>
+<p class="x" style="--b:159.0">We project the equation of motion onto the normal directed towards the centre of curvature:</p>
+<p class="x" style="--b:222.8">where $g_n$ is the projection of the free-fall acceleration onto the normal.</p>
+<p class="x" style="--b:236.2">Since the radius of the pulleys is small, the condition for losing contact is:</p>
+<p class="x" style="--b:279.8">Let us temporarily denote $x_{max(1)}$ and $x_{max(2)}$ by $x_1$ and $x_2$, respectively.</p>
+<p class="x" style="--b:294.0">The equation for $x_1$ is:</p>
+<p class="x" style="--b:358.5">whence:</p>
+<p class="x" style="--b:404.2">This quadratic equation has one positive root; therefore:</p>
+<p class="x an" style="--b:445.5">Answer:</p>
+<p class="x" style="--b:536.2">The equation for $x_2$ is:</p>
+<p class="x" style="--b:600.0">whence:</p>
+<p class="x" style="--b:645.8">This quadratic equation has one positive root; therefore:</p>
+<p class="x an" style="--b:687.0">Answer:</p>
+<div class="f" style="left:62.5pt;top:808.1pt"><span class="fig" data-srcpage="3" data-clip="62.5,808.1,101.8,828.5"></span></div>
+<p class="x q" style="--b:821.2">Calculate the speed of the rope at the moment it loses contact with one of the pulleys if the inclined plane makes the angles $\alpha_1 = 30^\circ$, $\alpha_2 = 45^\circ$ and $\alpha_3 = 60^\circ$ with the horizontal.</p>
+<p class="x" style="--b:867.8">For each angle, contact is lost at $x$ equal to the smaller of the values $x_{max(1)}$ and $x_{max(2)}$ corresponding to this angle. Let us calculate them:</p>
+<p class="x" style="--b:1014.0">Thus, at the angle $\alpha_1$ the rope first loses contact with the second pulley, and at the angles $\alpha_2$ and $\alpha_3$ with the first one.</p>
+<p class="x" style="--b:1027.5">From this we find:</p>
+<p class="x an" style="--b:1068.8">Answer:</p>
+<p class="x c" style="--b:1092.0">$v_1 = 2.068\,\mathrm{m/s} \qquad v_2 = 2.264\,\mathrm{m/s} \qquad v_3 = 2.314\,\mathrm{m/s}.$</p>
+<div class="f" style="left:361.3pt;top:66.0pt"><span class="fig" data-srcpage="3" data-clip="361.3,66.0,479.4,79.9"></span></div>
+<div class="f" style="left:375.5pt;top:113.2pt"><span class="fig" data-srcpage="3" data-clip="375.5,113.2,465.2,127.2"></span></div>
+<div class="f" style="left:307.1pt;top:170.5pt"><span class="fig" data-srcpage="3" data-clip="307.1,170.5,533.7,204.3"></span></div>
+<div class="f" style="left:398.4pt;top:247.8pt"><span class="fig" data-srcpage="3" data-clip="398.4,247.8,442.3,263.7"></span></div>
+<div class="f" style="left:273.5pt;top:305.5pt"><span class="fig" data-srcpage="3" data-clip="273.5,305.5,568.0,340.9"></span></div>
+<div class="f" style="left:299.4pt;top:370.0pt"><span class="fig" data-srcpage="3" data-clip="299.4,370.0,541.3,388.2"></span></div>
+<div class="f" style="left:248.1pt;top:445.4pt"><span class="fig" data-srcpage="3" data-clip="248.1,445.4,592.7,503.2"></span></div>
+<div class="f" style="left:251.8pt;top:547.8pt"><span class="fig" data-srcpage="3" data-clip="251.8,547.8,590.2,582.4"></span></div>
+<div class="f" style="left:273.1pt;top:611.5pt"><span class="fig" data-srcpage="3" data-clip="273.1,611.5,567.7,629.7"></span></div>
+<div class="f" style="left:217.5pt;top:687.6pt"><span class="fig" data-srcpage="3" data-clip="217.5,687.6,623.3,745.5"></span></div>
+<div class="f" style="left:347.8pt;top:888.3pt"><span class="fig" data-srcpage="3" data-clip="347.8,888.3,493.0,997.0"></span></div>
+<p class="x ov" style="--b:900.0;left:421.2pt;--fs:10.8pt;font-family:KaTeX_Main,serif">m</p>
+<p class="x ov" style="--b:900.0;left:478.3pt;--fs:10.8pt;font-family:KaTeX_Main,serif">m</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:285.7pt"></div>
+<div class="bx cd" style="top:330.8pt;height:300.7pt"></div>
+<div class="bx cd" style="top:642.8pt;height:308.2pt"></div>
+<div class="bx cd" style="top:962.2pt;height:194.3pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:85.5pt"></div>
+<div class="bx sp" style="top:382.5pt"></div>
+<div class="bx sp" style="top:694.5pt"></div>
+<div class="bx sp" style="top:1064.2pt"></div>
+<div class="bx ab" style="top:207.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:519.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:839.3pt;height:101.2pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.9pt"><span class="fig" data-srcpage="4" data-clip="62.5,43.9,101.8,64.3"></span></div>
+<p class="x q" style="--b:56.9">Find the displacement $x_0$ of the left end of the rope corresponding to the equilibrium position of the system. Express your answer in terms of $m$, $\lambda$, $L_1$, $L$, $\alpha$, $g$, $k$ and $F_0$.</p>
+<p class="x" style="--b:103.5">We write the equilibrium conditions for the three parts of the rope:</p>
+<p class="x c" style="--b:125.2">$T_1 = \lambda g(L_1 + x_0) + mg \qquad T_2 - T_1 = \lambda gL\sin\alpha \qquad T_2 = \lambda g(L_2 - x_0) + F_{\mathrm{el}},$</p>
+<p class="x" style="--b:148.5">whence:</p>
+<p class="x c" style="--b:170.2">$F_{\mathrm{el}} = \lambda g(L\sin\alpha + L_1 + x_0 + x_0 - L_1 - L\sin\alpha) + mg = mg + 2\lambda gx_0.$</p>
+<p class="x" style="--b:193.5">Since $F_{\mathrm{el}} = F_0 + kx_0$, we obtain:</p>
+<p class="x an" style="--b:236.2">Answer:</p>
+<div class="f" style="left:62.5pt;top:340.9pt"><span class="fig" data-srcpage="4" data-clip="62.5,340.9,101.8,361.3"></span></div>
+<p class="x q" style="--b:353.9">The equilibrium position from the previous part exists if the spring constant exceeds a certain minimum value $k_{min}$. Find $k_{min}$. Express your answer in terms of $m$, $\lambda$, $L_1$, $L$, $\alpha$, $g$, $k$ and $F_0$. From now on assume everywhere that $k &gt; k_{min}$.</p>
+<p class="x" style="--b:400.5">The denominator of the expression obtained in part $\mathrm{B1}$ must be positive, so we have the restriction:</p>
+<p class="x" style="--b:443.2">The quantity $x_0$ is also limited by the length $L_2$ of the right vertical part of the rope; therefore:</p>
+<p class="x" style="--b:507.0">The last restriction is the more essential one, so we have:</p>
+<p class="x an" style="--b:548.2">Answer:</p>
+<div class="f" style="left:62.5pt;top:652.9pt"><span class="fig" data-srcpage="4" data-clip="62.5,652.9,101.8,673.3"></span></div>
+<p class="x q" style="--b:665.9">Find the change $\Delta W_p$ of the potential energy of the system when the left end of the rope is displaced by $x$. Express your answer in terms of $m$, $\lambda$, $L_1$, $L$, $\alpha$, $g$, $k$, $F_0$ and $x$.</p>
+<p class="x" style="--b:712.5">For the quantities $\Delta W_{p(\mathrm{load})}$ and $\Delta W_{p(\mathrm{rope})}$ we have:</p>
+<p class="x c" style="--b:737.2">$\Delta W_{p(\mathrm{load})} = -mgx \qquad \Delta W_{p(\mathrm{load})} = -\lambda gx^2.$</p>
+<p class="x" style="--b:761.2">The change of the potential energy of the deformation of the spring $\Delta W_{p(\mathrm{def})}$ equals the area under the graph $F_{\mathrm{el}}(\Delta l)$ and is:</p>
+<p class="x d c" style="--b:795.0;--a:15.9pt">$\Delta W_{p(\mathrm{def})} = F_0x + \dfrac{kx^2}{2}.$</p>
+<p class="x" style="--b:826.5">Finally:</p>
+<p class="x an" style="--b:867.8">Answer:</p>
+<div class="f" style="left:62.5pt;top:972.4pt"><span class="fig" data-srcpage="4" data-clip="62.5,972.4,101.8,992.8"></span></div>
+<p class="x q" style="--b:985.4">If the potential energy $W_p$ is taken to be zero at the equilibrium position, it can be written in the form</p>
+<p class="x" style="--b:1051.5">Find $A$ and $B$. Express your answers in terms of $m$, $\lambda$, $L_1$, $L$, $\alpha$, $g$, $k$ and $F_0$.</p>
+<p class="x" style="--b:1082.2">From the expression for $\Delta W_p$ we have:</p>
+<p class="x" style="--b:1152.0">Setting the potential energy at the equilibrium position equal to zero:</p>
+<div class="f" style="left:383.0pt;top:249.7pt"><span class="fig" data-srcpage="4" data-clip="383.0,249.7,457.7,281.7"></span></div>
+<div class="f" style="left:398.9pt;top:411.7pt"><span class="fig" data-srcpage="4" data-clip="398.9,411.7,441.8,425.7"></span></div>
+<div class="f" style="left:284.0pt;top:456.7pt"><span class="fig" data-srcpage="4" data-clip="284.0,456.7,556.7,489.4"></span></div>
+<div class="f" style="left:354.8pt;top:561.0pt"><span class="fig" data-srcpage="4" data-clip="354.8,561.0,486.0,594.4"></span></div>
+<div class="f" style="left:335.3pt;top:880.0pt"><span class="fig" data-srcpage="4" data-clip="335.3,880.0,505.5,913.2"></span></div>
+<div class="f" style="left:376.4pt;top:999.3pt"><span class="fig" data-srcpage="4" data-clip="376.4,999.3,464.4,1033.2"></span></div>
+<div class="f" style="left:213.9pt;top:1094.5pt"><span class="fig" data-srcpage="4" data-clip="213.9,1094.5,626.9,1132.5"></span></div>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:188.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:233.2pt;height:455.3pt"></div>
+<div class="bx cd" style="top:699.8pt;height:267.7pt"></div>
+<div class="bx sp" style="top:285.0pt"></div>
+<div class="bx sp" style="top:751.5pt"></div>
+<div class="bx ab" style="top:102.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:380.3pt;height:110.2pt"></div>
+<div class="bx ab" style="top:576.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:846.0pt;height:111.0pt"></div>
+</div>
+<p class="x" style="--b:90.0">Thus:</p>
+<p class="x an" style="--b:131.2">Answer:</p>
+<div class="f" style="left:62.5pt;top:243.4pt"><span class="fig" data-srcpage="5" data-clip="62.5,243.4,101.8,263.8"></span></div>
+<p class="x q" style="--b:256.4">Find the maximum speed $v_{max}$ of the load and its displacement $x_{max}$ from the initial position if the system is released without initial velocity. Express your answers in terms of $m$, $\lambda$, $L_1$, $L$, $\alpha$, $g$, $k$ and $F_0$.</p>
+<p class="x" style="--b:303.0">The maximum speed of the load is reached at the point with coordinate $x_0$ and is determined from the law of conservation of mechanical energy:</p>
+<p class="x" style="--b:367.5">whence:</p>
+<p class="x an" style="--b:408.8">Answer:</p>
+<p class="x" style="--b:499.5">The value $x_{max}$ is reached at the moment the load stops, i.e. it is determined from the condition:</p>
+<p class="x" style="--b:564.0">whence:</p>
+<p class="x an" style="--b:605.2">Answer:</p>
+<div class="f" style="left:62.5pt;top:709.9pt"><span class="fig" data-srcpage="5" data-clip="62.5,709.9,101.8,730.3"></span></div>
+<p class="x q" style="--b:722.9">What minimum speed $v_{min}$ must the load have at the initial position for the right end of the string to reach the level of pulley 2? Express your answer in terms of $m$, $\lambda$, $L_1$, $L$, $\alpha$, $g$, $k$ and $F_0$.</p>
+<p class="x" style="--b:769.5">The load must stop at the moment when it has descended by $L_2$. From the law of conservation of mechanical energy:</p>
+<p class="x" style="--b:833.2">whence:</p>
+<p class="x an" style="--b:874.5">Answer:</p>
+<div class="f" style="left:340.3pt;top:32.5pt"><span class="fig" data-srcpage="5" data-clip="340.3,32.5,500.4,71.2"></span></div>
+<div class="f" style="left:344.3pt;top:144.0pt"><span class="fig" data-srcpage="5" data-clip="344.3,144.0,496.5,175.9"></span></div>
+<div class="f" style="left:323.0pt;top:314.5pt"><span class="fig" data-srcpage="5" data-clip="323.0,314.5,519.0,349.2"></span></div>
+<div class="f" style="left:309.9pt;top:408.6pt"><span class="fig" data-srcpage="5" data-clip="309.9,408.6,530.8,467.2"></span></div>
+<div class="f" style="left:329.8pt;top:511.0pt"><span class="fig" data-srcpage="5" data-clip="329.8,511.0,512.0,545.0"></span></div>
+<div class="f" style="left:370.5pt;top:618.0pt"><span class="fig" data-srcpage="5" data-clip="370.5,618.0,470.3,650.0"></span></div>
+<div class="f" style="left:286.2pt;top:781.0pt"><span class="fig" data-srcpage="5" data-clip="286.2,781.0,555.2,815.0"></span></div>
+<div class="f" style="left:228.8pt;top:874.3pt"><span class="fig" data-srcpage="5" data-clip="228.8,874.3,612.2,933.0"></span></div>
+</div>
+</body></html>

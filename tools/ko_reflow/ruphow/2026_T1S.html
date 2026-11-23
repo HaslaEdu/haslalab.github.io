@@ -1,0 +1,267 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2026, problem T1 — solution — Korean edition on the original layout.
+   ORIGINAL: 5 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same site as RuPhO 2021 solutions):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 0.50" (stamped), grey separator under the restated question, answer frame (3pt stroke #f3f6f9).
+   The panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math KaTeX at
+   10.8pt (1.2em), text column x 63.4..777.8; question line after the badge starts at x 104.7 (pitch 15.9pt),
+   other paragraphs pitch 13.6pt, all left-aligned as in the original.
+   Display formulas are stamped (no Cyrillic in them) except A2 "C_P = C_V + R·1 моль" (retyped, моль -> mol).
+   "Ответ:" -> "답:".  I начало термодинамики -> 열역학 제1법칙.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.l2{--l:18.2pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:231.7pt"></div>
+<div class="bx cd" style="top:276.8pt;height:219.7pt"></div>
+<div class="bx cd" style="top:507.8pt;height:468.0pt"></div>
+<div class="bx cd" style="top:987pt;height:169.5pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:315.0pt"></div>
+<div class="bx sp" style="top:559.5pt"></div>
+<div class="bx sp" style="top:1038.8pt"></div>
+<div class="bx ab" style="top:160.5pt;height:94.5pt"></div>
+<div class="bx ab" style="top:406.5pt;height:79.5pt"></div>
+<div class="bx ab" style="top:867.7pt;height:97.6pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">이러한 기체의 내부 에너지가 온도에 따라 어떻게 달라지는지 구하여라. <span class="nw">$T = 0$일</span> 때 내부 에너지는 0이라고 보아라.</p>
+<p class="x" style="--b:90.0">기체의 내부 에너지의 미소 증가량을 쓰자:</p>
+<div class="f" style="left:353.6pt;top:115.6pt"><span class="fig" data-srcpage="1" data-clip="353.6,115.6,485.8,129.7"></span></div>
+<p class="x" style="--b:147.8">적분하면 다음을 얻는다:</p>
+<p class="x an" style="--b:189.0">답:</p>
+<div class="f" style="left:380.0pt;top:200.6pt"><span class="fig" data-srcpage="1" data-clip="380.0,200.6,459.5,230.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:286.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,286.8,101.8,307.2"></span></div>
+<p class="x q" style="--b:299.9">주어진 온도 <span class="nw">$T$에서</span> 기체의 정압 열용량 <span class="nw">$C_P$는</span> 얼마인가?</p>
+<p class="x" style="--b:333.0">마이어 관계식에 따라:</p>
+<p class="x c" style="--b:357.0">$C_P = C_V + R\cdot 1\,\mathrm{mol}$</p>
+<p class="x" style="--b:379.8">여기서부터는 모든 식에서 인자 <span class="nw">$1\,\mathrm{mol}$을</span> 생략한다.</p>
+<p class="x" style="--b:393.8">따라서 다음을 얻는다:</p>
+<p class="x an" style="--b:435.0">답:</p>
+<div class="f" style="left:375.2pt;top:445.6pt"><span class="fig" data-srcpage="1" data-clip="375.2,445.6,465.6,459.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:517.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,517.8,101.8,538.2"></span></div>
+<p class="x q" style="--b:530.9">기체가 정적 과정을 거쳐 압력이 <span class="nw">$p_1$에서</span> <span class="nw">$p_2$로</span> 증가한다고 하자. 부피는 <span class="nw">$V$이다.</span> 기체에 공급된 열량 <span class="nw">$Q_V$를</span> 구하여라.</p>
+<p class="x" style="--b:577.5">열역학 제1법칙을 쓰자:</p>
+<div class="f" style="left:384.1pt;top:589.6pt"><span class="fig" data-srcpage="1" data-clip="384.1,589.6,456.7,603.0"></span></div>
+<p class="x" style="--b:621.0">과정이 정적 과정이므로 기체는 일을 하지 않으며,</p>
+<div class="f" style="left:339.1pt;top:632.6pt"><span class="fig" data-srcpage="1" data-clip="339.1,632.6,500.8,664.5"></span></div>
+<p class="x" style="--b:680.2">이상 기체의 상태 방정식:</p>
+<div class="f" style="left:395.9pt;top:691.6pt"><span class="fig" data-srcpage="1" data-clip="395.9,691.6,444.9,705.0"></span></div>
+<p class="x" style="--b:736.5">이로부터 과정의 처음과 끝의 온도를 구할 수 있다:</p>
+<div class="f" style="left:395.5pt;top:748.2pt"><span class="fig" data-srcpage="1" data-clip="395.5,748.2,444.5,776.0"></span></div>
+<div class="f" style="left:395.5pt;top:782.0pt"><span class="fig" data-srcpage="1" data-clip="395.5,782.0,444.5,810.5"></span></div>
+<p class="x" style="--b:828.0">답을 문제에 주어진 양으로 나타내자:</p>
+<p class="x an" style="--b:896.2">답:</p>
+<div class="f" style="left:332.7pt;top:907.9pt"><span class="fig" data-srcpage="1" data-clip="332.7,907.9,506.8,939.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:997.0pt"><span class="fig" data-srcpage="1" data-clip="62.5,997.0,101.8,1017.4"></span></div>
+<p class="x q" style="--b:1010.2">기체가 정압 과정을 거친다고 하자. 처음 부피는 <span class="nw">$V_1$,</span> 나중 부피는 <span class="nw">$V_2$,</span> 압력은 <span class="nw">$p$이다.</span> 기체에 공급된 열량 <span class="nw">$Q_P$를</span> 구하여라.</p>
+<p class="x" style="--b:1056.8">열량의 미소 증가량을 쓰자:</p>
+<div class="f" style="left:342.9pt;top:1068.9pt"><span class="fig" data-srcpage="1" data-clip="342.9,1068.9,496.6,1082.9"></span></div>
+<p class="x" style="--b:1101.0">적분하면 앞 문항과 비슷한 답을 얻는다:</p>
+<div class="f" style="left:340.1pt;top:1112.6pt"><span class="fig" data-srcpage="1" data-clip="340.1,1112.6,499.2,1143.7"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:222.0pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:267pt;height:545.2pt"></div>
+<div class="bx cd" style="top:823.5pt;height:319.5pt"></div>
+<div class="bx sp" style="top:332.2pt"></div>
+<div class="bx sp" style="top:875.2pt"></div>
+<div class="bx ab" style="top:147.0pt;height:98.3pt"></div>
+<div class="bx ab" style="top:708.7pt;height:93.0pt"></div>
+<div class="bx ab" style="top:1038.7pt;height:93.8pt"></div>
+</div>
+<p class="x" style="--b:43.5">상태 방정식으로부터 과정의 처음과 끝의 온도를 얻는다:</p>
+<div class="f" style="left:396.5pt;top:55.2pt"><span class="fig" data-srcpage="2" data-clip="396.5,55.2,443.0,83.0"></span></div>
+<div class="f" style="left:396.5pt;top:89.0pt"><span class="fig" data-srcpage="2" data-clip="396.5,89.0,443.0,117.5"></span></div>
+<p class="x" style="--b:134.2">답을 문제에 주어진 양으로 나타내자:</p>
+<p class="x an" style="--b:175.5">답:</p>
+<div class="f" style="left:316.4pt;top:187.1pt"><span class="fig" data-srcpage="2" data-clip="316.4,187.1,523.2,218.9"></span></div>
+
+<div class="f" style="left:62.5pt;top:277.0pt"><span class="fig" data-srcpage="2" data-clip="62.5,277.0,101.8,297.4"></span></div>
+<p class="x q" style="--b:290.2">압력이 부피에 정비례하는 과정 <span class="nw">$1-2$,</span> 정적 과정 <span class="nw">$2-3$,</span> 정압 과정 <span class="nw">$3-1$로</span> 이루어진 순환 과정 <span class="nw">$123$을</span> 생각하자. 이때 점 1과 점 2에서의 정적 열용량은 <span class="nw">$C_{V2} = 1.5C_{V1}$의</span> 관계를 만족하며, <span class="nw">$V_2 = 2V_1$임이</span> 알려져 있다. 이 순환 과정의 효율을 구하여라. 그 수치값을 구하여라. <span class="nw">$C_0 = 3R/2$이다.</span></p>
+<p class="x" style="--b:350.2">상태 방정식:</p>
+<div class="f" style="left:397.4pt;top:361.6pt"><span class="fig" data-srcpage="2" data-clip="397.4,361.6,442.1,375.0"></span></div>
+<p class="x" style="--b:393.2">과정 <span class="nw">$1-2$에서는</span> <span class="nw">$p = \alpha V$가</span> 성립하므로 <span class="nw">$T \propto V^2$이고,</span> 따라서 <span class="nw">$T_2 = 4T_1,\ p_2 = 2p_1,\ \alpha V_1^2 = RT_1$이다.</span></p>
+<p class="x" style="--b:407.2">문제의 조건에 주어진 관계식을 쓰자:</p>
+<div class="f" style="left:327.1pt;top:419.4pt"><span class="fig" data-srcpage="2" data-clip="327.1,419.4,513.6,433.4"></span></div>
+<p class="x" style="--b:451.5">이로부터 다음이 나온다:</p>
+<div class="f" style="left:395.2pt;top:462.9pt"><span class="fig" data-srcpage="2" data-clip="395.2,462.9,445.0,476.9"></span></div>
+<p class="x" style="--b:494.2">열은 구간 <span class="nw">$1-2$에서만</span> 공급되고(온도가 단조 증가한다), 구간 <span class="nw">$3-1$에서만</span> 방출된다(온도가 단조 감소한다).</p>
+<p class="x" style="--b:507.8">공급된 열량을 구하자:</p>
+<div class="f" style="left:315.6pt;top:519.1pt"><span class="fig" data-srcpage="2" data-clip="315.6,519.1,523.1,533.9"></span></div>
+<p class="x" style="--b:552.0">적분하면 다음을 얻는다:</p>
+<div class="f" style="left:221.6pt;top:563.6pt"><span class="fig" data-srcpage="2" data-clip="221.6,563.6,618.6,594.7"></span></div>
+<p class="x l2" style="--b:617.0;margin-top:-1.8pt">이제 기체가 한 일을 구하자. 구간 <span class="nw">$1-2$에서</span> <span class="nw">$A_{12} = \dfrac{3}{2}RT_1$이고,</span> 구간 <span class="nw">$2-3$은</span> 정적 과정이므로 <span class="nw">$A_{23} = 0$이며,</span> 마지막 구간에서는 압력 <span class="nw">$p_1$에서</span> 부피가 <span class="nw">$2V_1$에서</span> <span class="nw">$V_1$로</span> 변하므로 <span class="nw">$A_{31} = -p_1V_1 = -RT_1$이다.</span></p>
+<p class="x" style="--b:654.7">기체가 한 전체 일은 <span class="nw">$A = \dfrac{RT_1}{2}$이고,</span> 효율은 다음과 같이 구한다:</p>
+<div class="f" style="left:384.7pt;top:671.4pt"><span class="fig" data-srcpage="2" data-clip="384.7,671.4,455.0,700.4"></span></div>
+<p class="x an" style="--b:737.2">답:</p>
+<div class="f" style="left:401.7pt;top:747.9pt"><span class="fig" data-srcpage="2" data-clip="401.7,747.9,437.8,776.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:833.6pt"><span class="fig" data-srcpage="2" data-clip="62.5,833.6,101.8,854.0"></span></div>
+<p class="x q" style="--b:846.7">기체가 거치는 단열 과정을 생각하자. 부피의 무한소 증가량 <span class="nw">$\mathrm{d}V$와</span> 온도의 무한소 증가량 <span class="nw">$\mathrm{d}T$</span> 사이의 관계식을 구하여라. 답은 <span class="nw">$C_0$,</span> <span class="nw">$a$,</span> <span class="nw">$T$,</span> <span class="nw">$V$,</span> <span class="nw">$R$로</span> 나타내어라.</p>
+<p class="x" style="--b:893.2">열량의 미소 증가량을 0으로 놓자:</p>
+<div class="f" style="left:364.6pt;top:904.6pt"><span class="fig" data-srcpage="2" data-clip="364.6,904.6,476.1,918.5"></span></div>
+<p class="x" style="--b:936.0">상태 방정식으로부터:</p>
+<div class="f" style="left:399.2pt;top:947.7pt"><span class="fig" data-srcpage="2" data-clip="399.2,947.7,440.8,974.8"></span></div>
+<p class="x" style="--b:992.2">따라서 다음을 얻는다:</p>
+<div class="f" style="left:355.1pt;top:1004.0pt"><span class="fig" data-srcpage="2" data-clip="355.1,1004.0,485.6,1031.0"></span></div>
+<p class="x an" style="--b:1067.2">답:</p>
+<div class="f" style="left:355.1pt;top:1079.0pt"><span class="fig" data-srcpage="2" data-clip="355.1,1079.0,485.6,1106.0"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:333.0pt"></div>
+<div class="bx cd" style="top:378pt;height:496.5pt"></div>
+<div class="bx cd" style="top:885.8pt;height:270.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:116.2pt"></div>
+<div class="bx sp" style="top:429.8pt"></div>
+<div class="bx sp" style="top:937.5pt"></div>
+<div class="bx ab" style="top:274.5pt;height:81.8pt"></div>
+<div class="bx ab" style="top:715.5pt;height:148.5pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">앞 문항의 관계식으로부터 <span class="nw">$T$와</span> <span class="nw">$V$를</span> 잇는 다음 꼴의 단열 과정 방정식을 구하여라.</p>
+<div class="f" style="left:380.8pt;top:71.4pt"><span class="fig" data-srcpage="3" data-clip="380.8,71.4,460.0,84.7"></span></div>
+<p class="x" style="--b:103.5">함수 <span class="nw">$f$에는</span> <span class="nw">$C_0$,</span> <span class="nw">$a$,</span> <span class="nw">$R$도</span> 들어갈 수 있다.</p>
+<p class="x" style="--b:134.2">앞 문항의 식을 <span class="nw">$T$로</span> 나누면 다음을 얻는다:</p>
+<div class="f" style="left:360.4pt;top:145.2pt"><span class="fig" data-srcpage="3" data-clip="360.4,145.2,480.4,173.8"></span></div>
+<p class="x" style="--b:190.5">적분하면 다음을 얻는다:</p>
+<div class="f" style="left:317.2pt;top:202.2pt"><span class="fig" data-srcpage="3" data-clip="317.2,202.2,523.5,230.9"></span></div>
+<p class="x" style="--b:248.2">여기서 <span class="nw">$T_0$,</span> <span class="nw">$V_0$은</span> 로그 안의 양을 무차원으로 만들기 위한 임의의 상수이다. 이 형식적인 부분을 생략하고, 답을 문제에 주어진 양으로 나타내자:</p>
+<p class="x an" style="--b:303.0">답:</p>
+<div class="f" style="left:324.5pt;top:315.1pt"><span class="fig" data-srcpage="3" data-clip="324.5,315.1,516.2,329.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:388.0pt"><span class="fig" data-srcpage="3" data-clip="62.5,388.0,101.8,408.4"></span></div>
+<p class="x q" style="--b:401.2">등온 과정 <span class="nw">$12$와</span> <span class="nw">$34$,</span> 단열 과정 <span class="nw">$23$과</span> <span class="nw">$41$로</span> 이루어진 카르노 순환 <span class="nw">$1234$를</span> 생각하자. 부피 <span class="nw">$V_3$,</span> <span class="nw">$V_4$를</span> <span class="nw">$V_1$,</span> <span class="nw">$V_2$,</span> 등온 과정의 온도 <span class="nw">$T_+ = T_1 = T_2$,</span> <span class="nw">$T_- = T_3 = T_4$,</span> 그리고 기체의 매개변수 <span class="nw">$C_0$,</span> <span class="nw">$a$,</span> <span class="nw">$R$로</span> 나타내어라.</p>
+<p class="x" style="--b:447.8">단열 과정 <span class="nw">$2-3$에</span> 대하여 앞 문항의 식을 쓰자:</p>
+<div class="f" style="left:296.8pt;top:459.1pt"><span class="fig" data-srcpage="3" data-clip="296.8,459.1,543.9,473.2"></span></div>
+<p class="x" style="--b:490.5">이 식은 다음과 같이 바뀐다:</p>
+<div class="f" style="left:338.6pt;top:502.2pt"><span class="fig" data-srcpage="3" data-clip="338.6,502.2,502.2,532.4"></span></div>
+<p class="x" style="--b:549.8">이로부터 다음이 나온다:</p>
+<div class="f" style="left:336.1pt;top:561.0pt"><span class="fig" data-srcpage="3" data-clip="336.1,561.0,504.6,597.7"></span></div>
+<p class="x" style="--b:615.8">마찬가지로 단열 과정 <span class="nw">$4-1$에</span> 대하여 쓰자:</p>
+<div class="f" style="left:296.8pt;top:627.1pt"><span class="fig" data-srcpage="3" data-clip="296.8,627.1,543.9,641.2"></span></div>
+<p class="x" style="--b:659.2">이 식은 다음과 같이 바뀐다:</p>
+<div class="f" style="left:336.1pt;top:670.5pt"><span class="fig" data-srcpage="3" data-clip="336.1,670.5,504.6,707.2"></span></div>
+<p class="x an" style="--b:744.0">답:</p>
+<div class="f" style="left:336.1pt;top:756.0pt"><span class="fig" data-srcpage="3" data-clip="336.1,756.0,504.6,836.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:895.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,895.8,101.8,916.2"></span></div>
+<p class="x q" style="--b:908.9">(일반 공식을 쓰지 않고) 직접 계산하여, 이 카르노 순환의 효율이 열용량이 일정한 이상 기체의 경우와 같음을 보여라.</p>
+<p class="x" style="--b:955.5">열은 등온 과정에서만 공급되거나 방출될 수 있다(<span class="nw">$1-2$에서는</span> 공급되고, <span class="nw">$3-4$에서는</span> 방출된다).</p>
+<div class="f" style="left:352.7pt;top:966.9pt"><span class="fig" data-srcpage="3" data-clip="352.7,966.9,486.0,980.2"></span></div>
+<p class="x" style="--b:999.0">(과정이 등온 과정이므로 <span class="nw">$\mathrm{d}U = C_V\mathrm{d}T = 0$)</span></p>
+<div class="f" style="left:395.9pt;top:1009.6pt"><span class="fig" data-srcpage="3" data-clip="395.9,1009.6,444.9,1023.0"></span></div>
+<p class="x" style="--b:1041.8">그러면</p>
+<div class="f" style="left:380.1pt;top:1052.4pt"><span class="fig" data-srcpage="3" data-clip="380.1,1052.4,460.6,1080.5"></span></div>
+<div class="f" style="left:378.7pt;top:1086.5pt"><span class="fig" data-srcpage="3" data-clip="378.7,1086.5,462.0,1115.9"></span></div>
+<p class="x" style="--b:1133.2">마찬가지로:</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:294.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:339.8pt;height:398.2pt"></div>
+<div class="bx cd" style="top:749.2pt;height:228.0pt"></div>
+<div class="bx cd" style="top:988.5pt;height:168.0pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:378.0pt"></div>
+<div class="bx sp" style="top:787.5pt"></div>
+<div class="bx sp" style="top:1040.2pt"></div>
+<div class="bx ab" style="top:267.0pt;height:51.0pt"></div>
+<div class="bx ab" style="top:633.7pt;height:93.8pt"></div>
+<div class="bx ab" style="top:873.7pt;height:93.0pt"></div>
+</div>
+<div class="f" style="left:380.2pt;top:32.7pt"><span class="fig" data-srcpage="4" data-clip="380.2,32.7,459.5,61.4"></span></div>
+<p class="x" style="--b:78.8">앞 문항으로부터:</p>
+<div class="f" style="left:397.8pt;top:89.7pt"><span class="fig" data-srcpage="4" data-clip="397.8,89.7,443.0,119.9"></span></div>
+<p class="x" style="--b:136.5">효율을 나타내자:</p>
+<div class="f" style="left:363.0pt;top:147.5pt"><span class="fig" data-srcpage="4" data-clip="363.0,147.5,476.8,177.7"></span></div>
+<p class="x" style="--b:195.8">카르노 순환의 효율:</p>
+<div class="f" style="left:388.1pt;top:206.7pt"><span class="fig" data-srcpage="4" data-clip="388.1,206.7,452.7,236.2"></span></div>
+<p class="x" style="--b:254.2">이로부터 두 효율의 식이 같음을 알 수 있다.</p>
+<p class="x an" style="--b:295.5">답: 이 순환 과정의 효율은 카르노 순환의 효율과 같다.</p>
+
+<div class="f" style="left:62.5pt;top:349.8pt"><span class="fig" data-srcpage="4" data-clip="62.5,349.8,101.8,370.2"></span></div>
+<p class="x q" style="--b:362.9">정적 가열에서 기체에 공급해야 하는 열량 <span class="nw">$Q_V$를</span> 구하여라. 답은 <span class="nw">$T_1$,</span> <span class="nw">$R$로</span> 나타내어라.</p>
+<p class="x" style="--b:396.0">선형 구간에서 <span class="nw">$C_V = C_0 + aT$이다.</span> 다음 연립 일차 방정식을 얻는다:</p>
+<div class="f" style="left:369.9pt;top:408.6pt"><span class="fig" data-srcpage="4" data-clip="369.9,408.6,467.7,436.5"></span></div>
+<p class="x" style="--b:469.5">이 연립 방정식으로부터 다음이 나온다:</p>
+<div class="f" style="left:396.6pt;top:480.1pt"><span class="fig" data-srcpage="4" data-clip="396.6,480.1,444.1,514.4"></span></div>
+<p class="x" style="--b:532.5"><span class="nw">$Q_V$를</span> 구하자:</p>
+<div class="f" style="left:244.1pt;top:545.6pt"><span class="fig" data-srcpage="4" data-clip="244.1,545.6,595.3,591.1"></span></div>
+<div class="f" style="left:326.1pt;top:598.6pt"><span class="fig" data-srcpage="4" data-clip="326.1,598.6,514.1,627.7"></span></div>
+<p class="x an" style="--b:662.2">답:</p>
+<div class="f" style="left:387.5pt;top:673.6pt"><span class="fig" data-srcpage="4" data-clip="387.5,673.6,452.7,702.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:759.3pt"><span class="fig" data-srcpage="4" data-clip="62.5,759.3,101.8,779.7"></span></div>
+<p class="x q" style="--b:772.4">정압 가열에서 기체에 공급해야 하는 열량 <span class="nw">$Q_P$를</span> 구하여라. 답은 <span class="nw">$T_1$,</span> <span class="nw">$R$로</span> 나타내어라.</p>
+<div class="f" style="left:385.9pt;top:795.9pt"><span class="fig" data-srcpage="4" data-clip="385.9,795.9,454.8,809.8"></span></div>
+<p class="x" style="--b:828.0">따라서:</p>
+<div class="f" style="left:308.4pt;top:838.6pt"><span class="fig" data-srcpage="4" data-clip="308.4,838.6,531.9,867.0"></span></div>
+<p class="x an" style="--b:902.2">답:</p>
+<div class="f" style="left:387.5pt;top:912.9pt"><span class="fig" data-srcpage="4" data-clip="387.5,912.9,452.6,942.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:998.6pt"><span class="fig" data-srcpage="4" data-clip="62.5,998.6,101.8,1019.0"></span></div>
+<p class="x q" style="--b:1011.7">기체의 처음 부피가 <span class="nw">$V_0$이라고</span> 하자. 온도를 단열적으로 올렸다면 나중 부피는 얼마인가? 이 과정에서 한 일을 구하여라. 답은 <span class="nw">$T_1$,</span> <span class="nw">$R$,</span> <span class="nw">$V_0$으로</span> 나타내어라.</p>
+<p class="x" style="--b:1058.2">열용량이 온도에 선형으로 의존하는(<span class="nw">$C_V = C_0 + aT$)</span> 단열 과정에서 온도가 <span class="nw">$T_{1x}$에서</span> <span class="nw">$T_{2x}$로,</span> 부피가 <span class="nw">$V_1$에서</span> <span class="nw">$V_2$로</span> 변한다면, 처음과 나중의 부피는 다음과 같은 관계를 가진다:</p>
+<div class="f" style="left:332.8pt;top:1083.7pt"><span class="fig" data-srcpage="4" data-clip="332.8,1083.7,508.0,1120.4"></span></div>
+<p class="x" style="--b:1138.5">이 과정은 다음 매개변수를 갖는 세 개의 선형 과정으로 나눌 수 있다:</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:447.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx ab" style="top:337.5pt;height:133.5pt"></div>
+</div>
+<div class="f" style="left:323.0pt;top:33.1pt"><span class="fig" data-srcpage="5" data-clip="323.0,33.1,517.2,89.9"></span></div>
+<p class="x" style="--b:108.8">그러면 첫 번째 과정이 끝날 때:</p>
+<div class="f" style="left:394.6pt;top:119.7pt"><span class="fig" data-srcpage="5" data-clip="394.6,119.7,445.2,150.7"></span></div>
+<p class="x" style="--b:168.8">두 번째 과정이 끝날 때:</p>
+<div class="f" style="left:379.9pt;top:179.7pt"><span class="fig" data-srcpage="5" data-clip="379.9,179.7,459.5,211.4"></span></div>
+<p class="x" style="--b:228.8">세 번째 과정이 끝날 때:</p>
+<div class="f" style="left:355.9pt;top:241.6pt"><span class="fig" data-srcpage="5" data-clip="355.9,241.6,483.5,273.7"></span></div>
+<p class="x" style="--b:291.8">단열 과정에서 기체가 한 일을 구하자:</p>
+<div class="f" style="left:347.8pt;top:302.4pt"><span class="fig" data-srcpage="5" data-clip="347.8,302.4,492.4,330.7"></span></div>
+<p class="x an" style="--b:366.0">답:</p>
+<div class="f" style="left:386.7pt;top:378.9pt"><span class="fig" data-srcpage="5" data-clip="386.7,378.9,453.5,445.5"></span></div>
+</div>
+</body></html>

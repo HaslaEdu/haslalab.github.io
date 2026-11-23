@@ -1,0 +1,188 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T6 — solution — Korean edition on the original layout.
+   ORIGINAL: 3 A3 pages (841.9x1191.1pt) printed from the olympiad web page (as the 2026 T1 solution pilot):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt; cards cut by a page break keep only their
+   outer corners) one per sub-question, blue badges A1..C4 (stamped), grey separator under each restated question,
+   one answer frame (3pt stroke #f3f6f9). Panel, cards, separators and the frame are redrawn from the original's
+   vector paths (.bx inside the static .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254
+   (-> Arial,KG,sans-serif), inline math KaTeX 10.8pt (1.2em), text column x 63.4..777.8; the question line after
+   the badge starts at x 107.5 (ink); paragraphs pitch 13.5pt, left-aligned as in the original.
+   Display formulas are stamped except the two with a Cyrillic "Г" typed for the circulation Γ (scrub removes it):
+   "Г = (E_O - E_A)h + Г_OA" and "Г_AB = kσhS_AB", retyped with Γ; inline Г is likewise written Γ.
+   "Ответ:" -> "답:".  "Второй метод" -> "두 번째 방법".
+   Oddities of the original: the A1 solution text ends with a dangling "и" (translated as an unfinished clause);
+   the C3 and C4 solutions refer to "пункт A1" / "пункт A3" where C1 / C3 are meant (kept as printed);
+   typo "окржности" (окружности).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:44.1pt;--l:15.8pt}   /* the original's question span starts with a space: ink at x 107.5 */
+.l14{--l:14.3pt}
+.h{font-weight:bold}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.ct{border-radius:3.75pt 3.75pt 0 0}
+.cb{border-radius:0 0 3.75pt 3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:80.2pt"></div>
+<div class="bx cd" style="top:125.2pt;height:120pt"></div>
+<div class="bx cd" style="top:256.5pt;height:140.3pt"></div>
+<div class="bx cd" style="top:408pt;height:279.8pt"></div>
+<div class="bx cd" style="top:699pt;height:302.2pt"></div>
+<div class="bx cd" style="top:1012.5pt;height:102pt"></div>
+<div class="bx cd ct" style="top:1125.8pt;height:30.7pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:163.5pt"></div>
+<div class="bx sp" style="top:294.8pt"></div>
+<div class="bx sp" style="top:446.2pt"></div>
+<div class="bx sp" style="top:750.8pt"></div>
+<div class="bx sp" style="top:1050.8pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,102.2,64.8"></span></div>
+<p class="x q" style="--b:57.0">대전된 고리의 중심에서 전기장의 세기를 구하여라.</p>
+<p class="x" style="--b:90.0">고리의 중심에서 각 전하가 만드는 전기장은 고리의 평면 안을 향하므로, 대칭성에 의해 전기장의 크기는 0이고</p>
+
+<div class="f" style="left:62.0pt;top:134.7pt"><span class="fig" data-srcpage="1" data-clip="62.0,134.7,102.2,156.3"></span></div>
+<p class="x q" style="--b:148.5">고리의 축 위에서 중심으로부터 거리 <span class="nw">$x$인</span> 곳의 전위를 구하여라.</p>
+<p class="x" style="--b:182.5">고리 위의 전하까지의 거리는 <span class="nw">$\sqrt{R^2 + x^2}$이므로</span></p>
+<div class="f" style="left:344.2pt;top:193.5pt"><span class="fig" data-srcpage="1" data-clip="344.2,193.5,495.2,226.9"></span></div>
+
+<div class="f" style="left:62.0pt;top:266.0pt"><span class="fig" data-srcpage="1" data-clip="62.0,266.0,102.2,287.6"></span></div>
+<p class="x q" style="--b:279.8">고리의 축 위에서 중심으로부터 거리 <span class="nw">$x$인</span> 곳의 전기장의 크기를 구하여라.</p>
+<p class="x" style="--b:312.8">각 전하가 만드는 전기장 벡터는 연직 방향과 <span class="nw">$cos(\alpha) = \frac{x}{\sqrt{x^2 + R^2}}$인</span> 각 <span class="nw">$\alpha$를</span> 이룬다.</p>
+<p class="x" style="--b:330.8">이를 쿨롱 법칙과 결합하면</p>
+<div class="f" style="left:338.1pt;top:342.0pt"><span class="fig" data-srcpage="1" data-clip="338.1,342.0,501.2,377.7"></span></div>
+
+<div class="f" style="left:62.0pt;top:417.4pt"><span class="fig" data-srcpage="1" data-clip="62.0,417.4,102.2,439.0"></span></div>
+<p class="x q" style="--b:431.2"><span class="nw">$x$가</span> 어떤 값일 때 고리의 축 위에서 전기장의 세기가 최대가 되는가? 이 최대 세기를 구하여라.</p>
+<p class="x" style="--b:464.2">식 <span class="nw">$\frac{x}{(x^2 + R^2)^{\frac{3}{2}}}$을</span> 미분하여 0으로 놓자.</p>
+<div class="f" style="left:348.5pt;top:485.1pt"><span class="fig" data-srcpage="1" data-clip="348.5,485.1,493.6,520.2"></span></div>
+<p class="x" style="--b:552.8">이로부터</p>
+<div class="f" style="left:399.0pt;top:563.2pt"><span class="fig" data-srcpage="1" data-clip="399.0,563.2,440.5,595.2"></span></div>
+<p class="x" style="--b:626.2">이 <span class="nw">$x$</span> 값을 전기장의 식에 대입하면</p>
+<div class="f" style="left:379.2pt;top:636.7pt"><span class="fig" data-srcpage="1" data-clip="379.2,636.7,460.8,669.4"></span></div>
+
+<div class="f" style="left:62.0pt;top:708.4pt"><span class="fig" data-srcpage="1" data-clip="62.0,708.4,102.2,730.0"></span></div>
+<p class="x q" style="--b:722.2">표면 전하 밀도 <span class="nw">$\sigma$로</span> 고르게 대전된 반지름 <span class="nw">$R$인</span> 원판이 그 축 위에서 중심으로부터 거리 <span class="nw">$x$인</span> 곳에 만드는 전기장의 세기를 구하여라.</p>
+<p class="x" style="--b:768.8">잘 알려져 있듯이, 표면이 고르게 대전된 평평한 층이 만드는 전기장의 법선 성분은 다음과 같다.</p>
+<div class="f" style="left:392.7pt;top:779.6pt"><span class="fig" data-srcpage="1" data-clip="392.7,779.6,447.2,809.7"></span></div>
+<p class="x" style="--b:840.0">여기서 <span class="nw">$\Omega$는</span> 주어진 점에서 평평한 층을 바라본 입체각이다.</p>
+<p class="x" style="--b:853.5">원판의 축 위에서 중심으로부터 거리 <span class="nw">$x$인</span> 점에서 원판을 바라본 입체각은 다음과 같다.</p>
+<div class="f" style="left:358.4pt;top:865.3pt"><span class="fig" data-srcpage="1" data-clip="358.4,865.3,482.4,900.7"></span></div>
+<p class="x" style="--b:933.0">이로부터</p>
+<div class="f" style="left:355.5pt;top:945.6pt"><span class="fig" data-srcpage="1" data-clip="355.5,945.6,485.3,981.0"></span></div>
+
+<div class="f" style="left:62.0pt;top:1022.0pt"><span class="fig" data-srcpage="1" data-clip="62.0,1022.0,102.2,1043.6"></span></div>
+<p class="x q" style="--b:1035.8">고리의 축 위에서 중심으로부터 거리 <span class="nw">$x$인</span> 곳의 전위를 구하여라.</p>
+<p class="x" style="--b:1068.8">모든 <span class="nw">$x$에서</span> 고리 위의 모든 점까지의 거리가 같고, 고리의 전체 전하가 0이므로</p>
+<div class="f" style="left:398.1pt;top:1079.6pt"><span class="fig" data-srcpage="1" data-clip="398.1,1079.6,442.6,1093.9"></span></div>
+
+<div class="f" style="left:62.0pt;top:1135.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,1135.2,102.2,1156.5"></span></div>
+<p class="x q" style="--b:1149.0">고리의 중심에서 전기장의 크기를 구하여라.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:242.2pt"></div>
+<div class="bx cd" style="top:287.2pt;height:137.3pt"></div>
+<div class="bx cd" style="top:435.8pt;height:180.7pt"></div>
+<div class="bx cd" style="top:627.8pt;height:267pt"></div>
+<div class="bx cd" style="top:906pt;height:191.2pt"></div>
+<div class="bx cd ct" style="top:1108.5pt;height:48pt"></div>
+<div class="bx sp" style="top:33.8pt;height:1.4pt"></div>
+<div class="bx sp" style="top:325.5pt"></div>
+<div class="bx sp" style="top:474.0pt"></div>
+<div class="bx sp" style="top:666.0pt"></div>
+<div class="bx sp" style="top:957.8pt"></div>
+</div>
+<p class="x" style="--b:51.8">반쪽 고리 위 전하들이 만드는 전기장을 벡터로 더하면, 반쪽 고리가 고르게 대전되어 있으므로 전기장의 크기는 원의 지름과 같아진다. 이때 그 원의 반둘레는 각 전하가 만드는 전기장 세기의 합과 같다.</p>
+<div class="f" style="left:395.1pt;top:76.5pt"><span class="fig" data-srcpage="2" data-clip="395.1,76.5,445.0,106.0"></span></div>
+<p class="x" style="--b:136.5">그러면 반쪽 고리가 만드는 전기장의 식은</p>
+<div class="f" style="left:376.0pt;top:148.1pt"><span class="fig" data-srcpage="2" data-clip="376.0,148.1,463.8,178.8"></span></div>
+<p class="x" style="--b:208.5">나머지 반쪽이 만드는 전기장 벡터는 크기가 <span class="nw">$E$로</span> 같고 방향은 첫 번째와 반대이다. 따라서</p>
+<div class="f" style="left:374.3pt;top:219.4pt"><span class="fig" data-srcpage="2" data-clip="374.3,219.4,465.2,250.9"></span></div>
+
+<div class="f" style="left:62.0pt;top:296.7pt"><span class="fig" data-srcpage="2" data-clip="62.0,296.7,102.2,318.3"></span></div>
+<p class="x q" style="--b:310.5">고리의 축 위에서 중심으로부터 거리 <span class="nw">$x$인</span> 곳의 전기장의 크기를 구하여라.</p>
+<p class="x" style="--b:343.5">앞 문항의 결과를 이용하자. 고리의 축 위에서 전위가 0이므로, 전체 전기장의 축 방향 성분은 0이다. 그러면 앞 문항의 전기장으로부터 전기장의 식을 다음과 같이 얻는다.</p>
+<div class="f" style="left:338.9pt;top:368.1pt"><span class="fig" data-srcpage="2" data-clip="338.9,368.1,500.5,404.7"></span></div>
+
+<div class="f" style="left:62.0pt;top:445.2pt"><span class="fig" data-srcpage="2" data-clip="62.0,445.2,102.2,466.8"></span></div>
+<p class="x q" style="--b:459.0">원통의 축으로부터 거리 <span class="nw">$r &lt; R$인</span> 곳에서 전기장의 크기는 얼마인가?</p>
+<p class="x" style="--b:492.0">대칭성에 의해 전기장은 원통의 축에 수직한 방향만 가질 수 있다. 축이 처음 원통의 축과 일치하고 반지름이 <span class="nw">$r$,</span> 길이가 <span class="nw">$L$인</span> 원통형 곡면에 가우스 법칙을 적용하면, 전기장 선속이 0임을 알 수 있다. 원통의 축으로부터 같은 거리에서는 전기장의 크기가 같으므로, 선속은 다음과 같이 나타낼 수 있다.</p>
+<div class="f" style="left:381.8pt;top:529.1pt"><span class="fig" data-srcpage="2" data-clip="381.8,529.1,458.9,543.5"></span></div>
+<p class="x" style="--b:573.8">이로부터 모든 <span class="nw">$r$에</span> 대하여 다음이 성립한다.</p>
+<div class="f" style="left:404.8pt;top:584.6pt"><span class="fig" data-srcpage="2" data-clip="404.8,584.6,435.9,599.0"></span></div>
+
+<div class="f" style="left:62.0pt;top:637.2pt"><span class="fig" data-srcpage="2" data-clip="62.0,637.2,102.2,658.8"></span></div>
+<p class="x q" style="--b:651.0">원통 밑면의 중심 <span class="nw">$O$에서</span> 전기장의 크기를 구하여라.</p>
+<p class="x" style="--b:684.0">원통의 축을 따라 작은 거리 <span class="nw">$dx$만큼</span> 옮기는 경우를 생각하자. 전위의 정의로부터</p>
+<div class="f" style="left:392.3pt;top:695.2pt"><span class="fig" data-srcpage="2" data-clip="392.3,695.2,447.2,725.5"></span></div>
+<p class="x" style="--b:754.5">전위의 변화를 구하자. 옮긴 뒤의 점과 원통의 배치는, 밑면에서 무한히 먼 곳으로 옮겨진 두께 <span class="nw">$dx$의</span> 고리 하나를 제외하면 처음과 같다. 그러므로 전위 변화의 식은 다음과 같다.</p>
+<div class="f" style="left:348.0pt;top:778.9pt"><span class="fig" data-srcpage="2" data-clip="348.0,778.9,492.7,808.0"></span></div>
+<p class="x" style="--b:838.5">이로부터</p>
+<div class="f" style="left:377.0pt;top:846.0pt"><span class="fig" data-srcpage="2" data-clip="377.0,846.0,463.0,876.4"></span></div>
+
+<div class="f" style="left:62.0pt;top:915.4pt"><span class="fig" data-srcpage="2" data-clip="62.0,915.4,102.2,937.0"></span></div>
+<p class="x q" style="--b:928.5">원통 밑면 위에서 점 <span class="nw">$O$로부터</span> 거리 <span class="nw">$r &lt; R$인</span> 곳에 있는 점 <span class="nw">$A$를</span> 생각하자. 전기장 벡터를 직선 <span class="nw">$OA$</span> 위로 사영한 성분을 구하여라.</p>
+<p class="x" style="--b:975.8">문항 <span class="nw">$A1$에서</span> 무한히 긴 원통의 내부에서는 전기장이 0임을 보였다. 반무한 원통을 무한히 긴 원통으로 채워 늘리고, 그 밑면에서의 전기장을 생각하자.</p>
+<p class="x" style="--b:1039.5">처음 반무한 원통과 덧붙인 반무한 원통의 전기장은 밑면에 대하여 대칭이다. 그러므로 전체 전기장이 0이 될 수 있는 것은 각 원통의 전기장 성분이 밑면에 수직한 경우뿐이다. 따라서</p>
+<div class="f" style="left:398.9pt;top:1063.1pt"><span class="fig" data-srcpage="2" data-clip="398.9,1063.1,441.8,1078.8"></span></div>
+
+<div class="f" style="left:62.0pt;top:1118.0pt"><span class="fig" data-srcpage="2" data-clip="62.0,1118.0,102.2,1139.6"></span></div>
+<p class="x q" style="--b:1131.8">앞에서 다룬 반무한 원통에 대하여, 점 <span class="nw">$O$로부터</span> 거리 <span class="nw">$r = 0.9R$인</span> 곳에 있는 점 <span class="nw">$A$에서</span> 전기장의 크기를 구하여라.</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:850.4pt"></div>
+<div class="bx sp" style="top:33.8pt;height:1.4pt"></div>
+<div class="bx ab" style="top:777.7pt;height:92.3pt"></div>
+</div>
+<p class="x" style="--b:51.8">문항 <span class="nw">$A3$에서</span> 밑면의 모든 점에서 전기장이 밑면에 수직함을 보였다. 각 점에서 그 크기를 구하기 위해 정전기장의 순환 정리를 이용하자. 점 <span class="nw">$O$와</span> 밑면 위의 임의의 점 <span class="nw">$A$를</span> 지나고, 다른 한 변이 <span class="nw">$h \ll OA$인</span> 직사각형 경로를 택하자.</p>
+<p class="x" style="--b:93.3">그러면 순환 <span class="nw">$\Gamma$는</span> 다음과 같이 나타낼 수 있다.</p>
+<p class="x c" style="--b:117.0">$\Gamma = (E_O - E_A)\,h + \Gamma_{OA}$</p>
+<p class="x" style="--b:154.8">여기서 <span class="nw">$\Gamma_{OA}$는</span> <span class="nw">$OA$</span> 방향을 따른 순환 부분이다.</p>
+<p class="x" style="--b:205.5">원통 밑면에서 높이 <span class="nw">$h$인</span> 곳에서 전기장의 지름 방향 성분을 구하자. 밑면에서는 전기장이 밑면에 수직하므로, 밑면에서 조금 옮긴 곳에서 전기장의 지름 방향 성분은 표면 전하 밀도가 <span class="nw">$-\sigma$이고</span> 두께가 <span class="nw">$dh$인</span> 고리의 전기장과 같다. 따라서</p>
+<p class="x c" style="--b:242.2">$\Gamma_{AB} = k\sigma h S_{AB}$</p>
+<p class="x" style="--b:279.0">여기서 <span class="nw">$S_{AB}$는</span> 그래프 <span class="nw">$y(x)$</span> 아래에서 0부터 <span class="nw">$x = 0.9$까지의</span> 넓이이다. 전체 순환은 0이므로</p>
+<div class="f" style="left:375.5pt;top:289.9pt"><span class="fig" data-srcpage="3" data-clip="375.5,289.9,464.7,304.8"></span></div>
+<p class="x" style="--b:335.2">즉</p>
+<div class="f" style="left:341.9pt;top:346.5pt"><span class="fig" data-srcpage="3" data-clip="341.9,346.5,497.5,376.9"></span></div>
+<p class="x" style="--b:408.0">여기서</p>
+<div class="f" style="left:380.1pt;top:418.9pt"><span class="fig" data-srcpage="3" data-clip="380.1,418.9,460.6,433.8"></span></div>
+<p class="x h" style="--b:450.8">두 번째 방법</p>
+<p class="x" style="--b:473.2">이 방법에는 수치 적분이 필요하다(Casio fx-991 같은 계산기로 할 수 있다). 손으로 수치 적분을 하면(Casio fx-82 같은 계산기로) 1 근처에서 적분이 발산하기 때문에 오차가 크게 생길 수 있다.</p>
+<p class="x" style="--b:513.8">선전하 밀도가 <span class="nw">$\lambda$인</span> 반무한 직선 도선이 그 끝에서 거리 <span class="nw">$x$인</span> 곳(도선에 수직하고 도선의 끝을 지나는 평면 위)에 만드는 전기장을 생각하자. 특히 우리에게 필요한 것은 도선에 평행한 전기장 성분 <span class="nw">$E_\parallel$뿐이다.</span> 이 양은 가상 변위법을 써서 바로 구할 수도 있고, 도선을 길이 <span class="nw">$dh$인</span> 무한소 조각으로 나누어 <span class="nw">$h \in [0, \infty)$</span> 구간에서 적분하여 구할 수도 있다.</p>
+<div class="f" style="left:280.1pt;top:553.4pt"><span class="fig" data-srcpage="3" data-clip="280.1,553.4,559.8,588.5"></span></div>
+<p class="x l14" style="--b:633.0">원래 문제로 돌아가면, 반무한 원통 전체를 폭이 <span class="nw">$Rd\alpha$인</span> 반무한 직사각형(사실상 반무한 직선 도선)으로 나눌 수 있다. 각 도선은 중심에서 그 도선을 향하는 방향과 선분 OA 사이의 각 <span class="nw">$\alpha$로</span> 정해진다. 코사인 법칙에 따라 도선의 끝과 점 A 사이의 거리는 <span class="nw">$x(\alpha) = \sqrt{R^2 + r^2 - 2rR\cos\alpha}$이다.</span> 각 도선은 밑면에 수직한 전기장을 만들며, 이는 <span class="nw">$E_\parallel$의</span> 공식에 <span class="nw">$\lambda = \sigma R d\alpha$를</span> 넣어 계산한다. <span class="nw">$r = 0.9R$일</span> 때 점 A에서의 전체 전기장은 적분하여 구한다.</p>
+<div class="f" style="left:269.8pt;top:686.9pt"><span class="fig" data-srcpage="3" data-clip="269.8,686.9,571.0,720.5"></span></div>
+<p class="x" style="--b:765.0">아쉽게도 이 적분은 초등 함수로 나타낼 수 없지만, 수치적으로 계산할 수 있으며 다음 답을 얻는다.</p>
+<p class="x an" style="--b:806.2">답:</p>
+<div class="f" style="left:360.5pt;top:814.5pt"><span class="fig" data-srcpage="3" data-clip="360.5,814.5,479.5,844.2"></span></div>
+</div>
+</body></html>

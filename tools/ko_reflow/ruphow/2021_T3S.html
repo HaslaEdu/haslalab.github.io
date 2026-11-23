@@ -1,0 +1,91 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T3 — solution — Korean edition on the original layout.
+   ORIGINAL: 2 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same layout as 2021_T1S / the 2026 W
+   pilot): beige page panel, white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badges "A1 3.00",
+   "A2 7.00" (stamped), grey separators, answer frames (3pt stroke #f3f6f9), all redrawn as CSS boxes in the static
+   .dc wrapper. Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math KaTeX at 10.8pt (1.2em), text
+   column x 63.4..777.8, left-aligned as in the original; question line after the badge starts at x 104.7.
+   Stamped: badges and the display formulas without Cyrillic. Retyped in KaTeX: pV_л = νRT, pV_п = νRT_0,
+   V_л + V_п = 2V_0 (л/п = левая/правая часть -> subscripts left/right).
+   Уравнение Менделеева-Клапейрона -> 멘델레예프-클라페이롱 방정식. Original A2 lacks "от" ("зависит его объёма"),
+   "При небольших изменений" (изменениях) and lower-case "менделеева": translated by sense.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{left:104.7pt;width:673pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:477pt"></div>
+<div class="bx cd" style="top:522pt;height:634.5pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:560.2pt"></div>
+<div class="bx ab" style="top:407.3pt;height:93pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,102.2,64.8"></span></div>
+<p class="x q" style="--b:56.9">용기 왼쪽 부분에서 기체의 압력 <span class="nw">$p$가</span> 온도 <span class="nw">$T$에</span> 따라 어떻게 변하는지 구하여라.</p>
+<p class="x" style="--b:90.0">용기의 두 부분에 대해 멘델레예프-클라페이롱 방정식을 쓰자</p>
+<p class="x c" style="--b:111.0">$pV_{\mathrm{left}} = \nu RT$</p>
+<p class="x c" style="--b:155.2">$pV_{\mathrm{right}} = \nu RT_0$</p>
+<p class="x" style="--b:192.0">용기의 부피가 변하지 않음을 고려하자</p>
+<p class="x c" style="--b:213.0">$V_{\mathrm{left}} + V_{\mathrm{right}} = 2V_0$</p>
+<p class="x" style="--b:250.5">이 관계식들로부터 다음이 나온다</p>
+<div class="f" style="left:378.9pt;top:261.5pt"><span class="fig" data-srcpage="1" data-clip="378.9,261.5,460.8,292.9"></span></div>
+<p class="x" style="--b:323.2">처음 순간에는</p>
+<div class="f" style="left:392.2pt;top:331.5pt"><span class="fig" data-srcpage="1" data-clip="392.2,331.5,447.2,364.2"></span></div>
+<p class="x" style="--b:394.5">이로부터</p>
+<p class="x an" style="--b:435.8">답:</p>
+<div class="f" style="left:378.7pt;top:443.8pt"><span class="fig" data-srcpage="1" data-clip="378.7,443.8,462.1,475.2"></span></div>
+
+<div class="f" style="left:62.0pt;top:531.5pt"><span class="fig" data-srcpage="1" data-clip="62.0,531.5,102.2,553.0"></span></div>
+<p class="x q" style="--b:545.2">이 과정에서 용기 왼쪽 부분에 있는 기체의 열용량이 그 부피 <span class="nw">$V$에</span> 따라 어떻게 변하는지 구하여라.</p>
+<p class="x" style="--b:578.2">열역학 제1법칙으로부터</p>
+<div class="f" style="left:376.3pt;top:590.0pt"><span class="fig" data-srcpage="1" data-clip="376.3,590.0,462.4,604.2"></span></div>
+<p class="x" style="--b:635.2">이로부터</p>
+<div class="f" style="left:380.2pt;top:647.0pt"><span class="fig" data-srcpage="1" data-clip="380.2,647.0,459.2,677.0"></span></div>
+<p class="x" style="--b:706.5">멘델레예프-클라페이롱 방정식으로부터 압력을 나타내면</p>
+<div class="f" style="left:369.8pt;top:717.5pt"><span class="fig" data-srcpage="1" data-clip="369.8,717.5,469.8,747.5"></span></div>
+<p class="x" style="--b:776.2">기체의 상태 변수가 조금 변할 때 다음 관계식이 성립한다</p>
+<div class="f" style="left:374.8pt;top:788.0pt"><span class="fig" data-srcpage="1" data-clip="374.8,788.0,466.0,816.8"></span></div>
+<p class="x" style="--b:849.0">첫 번째 문항에서 얻은 압력의 식을 고려하면</p>
+<div class="f" style="left:366.5pt;top:860.0pt"><span class="fig" data-srcpage="1" data-clip="366.5,860.0,474.2,889.9"></span></div>
+<p class="x" style="--b:920.2">이로부터</p>
+<div class="f" style="left:368.0pt;top:931.3pt"><span class="fig" data-srcpage="1" data-clip="368.0,931.3,472.8,961.2"></span></div>
+<p class="x" style="--b:991.5">멘델레예프-클라페이롱 방정식으로부터 부피를 나타내자</p>
+<div class="f" style="left:389.5pt;top:1002.5pt"><span class="fig" data-srcpage="1" data-clip="389.5,1002.5,450.2,1032.4"></span></div>
+<p class="x" style="--b:1062.8">마지막 두 식을 결합하면</p>
+<div class="f" style="left:375.5pt;top:1073.8pt"><span class="fig" data-srcpage="1" data-clip="375.5,1073.8,465.2,1104.4"></span></div>
+<p class="x" style="--b:1134.8">최종적으로 다음을 얻는다</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:107.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx ab" style="top:33.7pt;height:96.8pt"></div>
+</div>
+<p class="x an" style="--b:62.2">답:</p>
+<div class="f" style="left:333.3pt;top:73.3pt"><span class="fig" data-srcpage="2" data-clip="333.3,73.3,507.5,103.9"></span></div>
+</div>
+</body></html>

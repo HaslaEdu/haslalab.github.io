@@ -1,0 +1,80 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T5 — solution — Korean edition on the original layout.
+   ORIGINAL: 1 A3 page (841.9x1191.1pt) printed from the olympiad web page (as the 2026 T1 solution pilot):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badges
+   "A1 2.00", "A2 8.00" (stamped), grey separator under the restated question, answer frames (3pt stroke #f3f6f9).
+   Panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math KaTeX
+   10.8pt (1.2em), text column x 63.4..777.8; the question line after the badge starts at x 107.5 (ink);
+   paragraphs pitch 13.5pt (15-16pt where a line holds an inline fraction), left-aligned as in the original.
+   Display formulas are stamped except "P_НЭ = IU = ..." (retyped, НЭ -> NE as in the problem). "Ответ:" -> "답:".
+   Oddity of the original: "2φ принимает значения 2π/3 ≤ φ ≤ 2π" (φ for 2φ) — translated as printed.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:44.1pt}   /* the original's question span starts with a space: ink at x 107.5 */
+.l15{--l:15pt}
+.l16{--l:16pt}
+.l14{--l:14.1pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:281.2pt"></div>
+<div class="bx cd" style="top:326.2pt;height:827.3pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:364.5pt"></div>
+<div class="bx ab" style="top:208.5pt;height:96pt"></div>
+<div class="bx ab" style="top:989.3pt;height:153.7pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,102.2,64.8"></span></div>
+<p class="x q" style="--b:56.9">비선형 소자에서 발생하는 최대 전력 <span class="nw">$P_1$을</span> 구하여라.</p>
+<p class="x l15" style="--b:90.0">비선형 소자의 전류-전압 특성 그래프 위의 점을 <span class="nw">$A$,</span> 원의 중심을 <span class="nw">$O$라고</span> 하자. <span class="nw">$OA$가</span> 전압 축 <span class="nw">$\frac{U}{U_0} = x$와</span> 이루는 각을 <span class="nw">$\varphi$라고</span> 하자. 그러면</p>
+<p class="x c" style="--b:138.0;transform:translateY(-4.4pt)">$\displaystyle P_{\mathrm{NE}} = IU = U_0 I_0 \sin\varphi\cos\varphi = \frac{U_0 I_0 \sin 2\varphi}{2}$</p>
+<p class="x l16" style="--b:179.8">처음 순간에 각 <span class="nw">$\varphi$는</span> 값 <span class="nw">$\pi/3$을</span> 가지므로, 이후 축전기가 충전되는 동안 <span class="nw">$2\varphi$는</span> <span class="nw">$\frac{2\pi}{3} \le \varphi \le 2\pi$의</span> 값을 가진다. 따라서 비선형 소자에서 발생하는 전력은 스위치를 닫는 순간에 최대가 되며, 그 값은 다음과 같다.</p>
+<p class="x an" style="--b:237.0">답:</p>
+<div class="f" style="left:386.2pt;top:248.8pt"><span class="fig" data-srcpage="1" data-clip="386.2,248.8,453.2,279.5"></span></div>
+
+<div class="f" style="left:62.0pt;top:335.8pt"><span class="fig" data-srcpage="1" data-clip="62.0,335.8,102.2,357.2"></span></div>
+<p class="x q" style="--b:348.8">축전기 에너지의 최대 변화율 <span class="nw">$P_2$와,</span> 스위치를 닫은 뒤 이 최댓값에 이를 때까지 걸리는 시간 <span class="nw">$\Delta t$를</span> 구하여라.</p>
+<p class="x" style="--b:382.5">축전기 에너지의 변화율은</p>
+<div class="f" style="left:335.0pt;top:393.0pt"><span class="fig" data-srcpage="1" data-clip="335.0,393.0,507.1,422.5"></span></div>
+<p class="x l14" style="--b:452.2">양 <span class="nw">$\sin\varphi(1 - \cos\varphi)$는</span> 반지름이 1인 원에 내접하고 밑변이 <span class="nw">$2\sin\varphi$,</span> 높이가 <span class="nw">$(1 - \cos\varphi)$인</span> 이등변삼각형의 넓이이다. 넓이는 정삼각형일 때 최대가 된다. 따라서 이 순간에 <span class="nw">$\varphi$는</span> 값 <span class="nw">$2\pi/3$을</span> 가지며, 최대 넓이는 <span class="nw">$S_{max} = 3\sqrt{3}/4$이다.</span></p>
+<p class="x" style="--b:494.2">결국</p>
+<div class="f" style="left:382.1pt;top:506.0pt"><span class="fig" data-srcpage="1" data-clip="382.1,506.0,457.8,536.7"></span></div>
+<p class="x" style="--b:566.2"><span class="nw">$\varphi$가</span> 값 <span class="nw">$2\pi/3$에</span> 이를 때까지 걸리는 시간을 구하자. 축전기 전압이 시간에 따라 어떻게 변하는지 살펴보자. 비선형 소자와 축전기에 걸린 전압의 합은 일정하게 유지되므로</p>
+<div class="f" style="left:382.2pt;top:591.0pt"><span class="fig" data-srcpage="1" data-clip="382.2,591.0,458.5,620.5"></span></div>
+<p class="x" style="--b:651.8">양 <span class="nw">$\frac{dx}{dt}$는</span> 점 <span class="nw">$A$가</span> 어떤 각속도 <span class="nw">$\omega$로</span> 원을 따라 움직인다는 조건으로부터 구한다.</p>
+<div class="f" style="left:335.0pt;top:664.5pt"><span class="fig" data-srcpage="1" data-clip="335.0,664.5,506.6,694.0"></span></div>
+<p class="x" style="--b:723.8">한편</p>
+<div class="f" style="left:395.1pt;top:734.6pt"><span class="fig" data-srcpage="1" data-clip="395.1,734.6,444.7,749.5"></span></div>
+<p class="x" style="--b:780.0">이로부터</p>
+<div class="f" style="left:366.3pt;top:791.2pt"><span class="fig" data-srcpage="1" data-clip="366.3,791.2,474.4,820.8"></span></div>
+<p class="x" style="--b:853.3"><span class="nw">$\frac{dU_C}{dt}$에</span> 대한 두 식을 결합하면</p>
+<div class="f" style="left:376.5pt;top:866.2pt"><span class="fig" data-srcpage="1" data-clip="376.5,866.2,464.2,896.7"></span></div>
+<p class="x" style="--b:927.0">따라서 <span class="nw">$OA$는</span> 일정한 각속도로 회전하며, 축전기 에너지의 변화율이 최대에 이르는 순간까지 각 <span class="nw">$\pi/3$만큼</span> 돌아간다. 이로부터 바로 시간에 대한 식을 얻는다.</p>
+<div class="f" style="left:389.9pt;top:951.7pt"><span class="fig" data-srcpage="1" data-clip="389.9,951.7,449.5,982.2"></span></div>
+<p class="x an" style="--b:1017.8">답:</p>
+<div class="f" style="left:382.1pt;top:1029.5pt"><span class="fig" data-srcpage="1" data-clip="382.1,1029.5,457.8,1060.2"></span></div>
+<div class="f" style="left:389.9pt;top:1086.7pt"><span class="fig" data-srcpage="1" data-clip="389.9,1086.7,449.5,1117.2"></span></div>
+</div>
+</body></html>

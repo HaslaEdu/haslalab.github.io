@@ -1,0 +1,129 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* RuPhO W ("Road to IPhO") 2026, problem T2 — Korean edition on the original layout.
+   ORIGINAL: 2 A4 pages (595.3x841.9pt), LaTeX with PT Serif 10pt body (-> 'Times New Roman',KB,serif), inline math
+   Computer Modern; line pitch 11.95pt. Text column x 51.0..547.1 (width 496.1pt), paragraph indent 15pt.
+   Header "Road to IPhO" (PT Sans 39.9pt grey, kept as printed: stamped). Title PT Serif 17.9pt centred, b 73.1.
+   Part headings PT Serif Bold 12pt. Sub-questions in black frames (x 15.17..580.11, stroke 1.99pt, redrawn as .bx
+   inside the static .dc wrapper so check.py ignores them); labels A1..B8 and the points at the right stamped.
+   Footer "Условие: страница N из 2" (PT Sans 14.9pt, right edge 574.3) -> "문제: 2쪽 중 N쪽".
+   Part B intro beside the figure (axes x, y, omega: stamped) is a narrow column x 51.0..367.0.
+   Stamped displays: (x(t),y(t)) = ..., (x1,y1), (x2,y2), A r_1i / A r_2i, general solution (no Cyrillic in them).
+   Inline F_тр -> F_fr, v_отн -> v_rel (retyped).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3375*fs + 0.6pt   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em) */
+body{font-family:'Times New Roman',KB,serif;font-size:10pt;line-height:11.95pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:51pt;width:496.1pt;--l:11.95pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 0.6pt);text-align:justify}
+.i{text-indent:15pt}
+.c{text-align:center}
+.q{left:50.8pt}
+.t{left:0;width:595.3pt;text-align:center;--fs:17.9pt;--l:21pt}
+.h{font-weight:bold;--fs:12pt;--l:14pt;text-align:left}
+.nr{width:316pt}
+.ft{font-family:Arial,KG,sans-serif;--fs:14.9pt;--l:17pt;left:274.3pt;width:300pt;text-align:right;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs))}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box;border:1.99pt solid #000}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:226.42pt;width:566.93pt;height:47.87pt"></div>
+<div class="bx" style="left:14.18pt;top:282.26pt;width:566.93pt;height:35.85pt"></div>
+<div class="bx" style="left:14.18pt;top:358.51pt;width:566.93pt;height:35.92pt"></div>
+<div class="bx" style="left:14.18pt;top:552.02pt;width:566.93pt;height:24.89pt"></div>
+<div class="bx" style="left:14.18pt;top:584.89pt;width:566.93pt;height:23.96pt"></div>
+<div class="bx" style="left:14.18pt;top:741.54pt;width:566.93pt;height:36.03pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="1" data-clip="50.0,11.4,275.0,53.2"></span></div>
+<p class="x t" style="--b:73.1">회전하는 매질 (11점)</p>
+<p class="x i" style="--b:113.9">대부분의 물리계는 소산력이 존재하기 때문에 보존계가 아니다. 이러한 힘의 예로 마찰을 들 수 있다. 이 문제에서는 가장 간단한 경우인 점성 마찰이 있는 계의 예를 살펴본다.</p>
+<p class="x h" style="--b:169.9">A부. 정지한 매질 (4점)</p>
+<p class="x" style="--b:192.0">질량 <span class="nw">$m$인</span> 입자가 정지한 매질 속에서 운동하며, 이 매질 속에서 입자에는 점성 마찰력 <span class="nw">$\vec{F}_\mathrm{fr} = -\varepsilon m\vec{v}$가</span> 작용한다. 여기서 <span class="nw">$\vec{v}$는</span> 입자의 속도이다. 중력 가속도는 <span class="nw">$\vec{g}$이고,</span> 처음에 입자는 원점에 있었으며 속도 <span class="nw">$\vec{v}_0$을</span> 가지고 있었다.</p>
+
+<div class="f" style="left:25.1pt;top:231.3pt"><span class="fig" data-srcpage="1" data-clip="25.1,231.3,42.6,245.2"></span></div>
+<div class="f" style="left:553.6pt;top:231.3pt"><span class="fig" data-srcpage="1" data-clip="553.6,231.3,572.6,245.2"></span></div>
+<p class="x q" style="--b:241.6">이 입자의 운동 궤적 <span class="nw">$\vec{r}(t)$를</span> 구하여라. 답은 <span class="nw">$\vec{v}_0$,</span> <span class="nw">$\vec{g}$,</span> <span class="nw">$\varepsilon$을</span> 사용하여 벡터 꼴로 나타내거나, 데카르트 좌표계에서 벡터 <span class="nw">$\vec{r}(t)$의</span> 성분들이 시간에 따라 어떻게 변하는지를 벡터 <span class="nw">$\vec{v}_0$,</span> <span class="nw">$\vec{g}$의</span> 성분들로 나타내어라.</p>
+
+<div class="f" style="left:25.1pt;top:287.1pt"><span class="fig" data-srcpage="1" data-clip="25.1,287.1,42.6,301.0"></span></div>
+<div class="f" style="left:553.6pt;top:287.1pt"><span class="fig" data-srcpage="1" data-clip="553.6,287.1,572.6,301.0"></span></div>
+<p class="x q" style="--b:297.4">열로 빠져나가는 에너지 손실 일률 <span class="nw">$P(t)$는</span> 시간에 따라 어떻게 변하는가? 답은 <span class="nw">$\vec{v}_0$,</span> <span class="nw">$\vec{g}$,</span> <span class="nw">$\varepsilon$,</span> <span class="nw">$t$,</span> <span class="nw">$m$으로</span> 나타내어라.</p>
+
+<p class="x i" style="--b:335.2">이제 중력이 없을 때 입자의 운동을 생각하자. 단, 이번에는 입자에 크기가 일정한 회전하는 힘 <span class="nw">$F_x = F_0\cos(\omega t)$,</span> <span class="nw">$F_y = F_0\sin(\omega t)$가</span> 작용한다.</p>
+
+<div class="f" style="left:25.1pt;top:363.4pt"><span class="fig" data-srcpage="1" data-clip="25.1,363.4,42.6,377.3"></span></div>
+<div class="f" style="left:553.6pt;top:363.4pt"><span class="fig" data-srcpage="1" data-clip="553.6,363.4,572.6,377.3"></span></div>
+<p class="x q" style="--b:373.7">힘을 작용하기 시작하고 충분히 긴 시간 <span class="nw">$t \gg 1/\varepsilon$이</span> 지난 뒤, 열로 빠져나가는 손실 일률 <span class="nw">$P$를</span> 구하여라. 답은 <span class="nw">$F_0$,</span> <span class="nw">$\varepsilon$,</span> <span class="nw">$m$,</span> <span class="nw">$\omega$로</span> 나타내어라.</p>
+
+<div class="f" style="left:389.3pt;top:403.0pt"><span class="fig" data-srcpage="1" data-clip="389.3,403.0,531.5,548.9"></span></div>
+<p class="x h" style="--b:426.0">B부. 회전하는 매질 (7점)</p>
+<p class="x nr" style="--b:447.8">질량 <span class="nw">$m$인</span> 입자가 연직축 <span class="nw">$z$를</span> 중심으로 각속도 <span class="nw">$\omega$로</span> 회전하는 매질 속에 있다. 중력 가속도는 <span class="nw">$\vec{g} = -g\vec{e}_z$이고,</span> 마찰력은 <span class="nw">$\vec{F} = -\varepsilon m\vec{v}_\mathrm{rel}$이다.</span> 여기서 <span class="nw">$\vec{v}_\mathrm{rel}$은</span> 매질에 대한 입자의 상대 속도이다. 처음 순간에 입자는 정지해 있으며, 좌표가 <span class="nw">$(x_0, y_0, z_0) = (r_0, 0, 0)$인</span> 점에 있다.</p>
+
+<div class="f" style="left:25.1pt;top:557.3pt"><span class="fig" data-srcpage="1" data-clip="25.1,557.3,42.6,571.2"></span></div>
+<div class="f" style="left:553.6pt;top:557.3pt"><span class="fig" data-srcpage="1" data-clip="553.6,557.3,572.6,571.2"></span></div>
+<p class="x q" style="--b:567.6"><span class="nw">$z(t)$를</span> 구하여라. 답은 <span class="nw">$r_0$,</span> <span class="nw">$\varepsilon$,</span> <span class="nw">$g$로</span> 나타내어라.</p>
+
+<div class="f" style="left:25.1pt;top:589.8pt"><span class="fig" data-srcpage="1" data-clip="25.1,589.8,42.6,603.7"></span></div>
+<div class="f" style="left:553.6pt;top:589.8pt"><span class="fig" data-srcpage="1" data-clip="553.6,589.8,572.6,603.7"></span></div>
+<p class="x q" style="--b:600.1"><span class="nw">$\ddot{x}$와</span> <span class="nw">$\ddot{y}$를</span> <span class="nw">$x$,</span> <span class="nw">$y$,</span> <span class="nw">$\dot{x}$,</span> <span class="nw">$\dot{y}$,</span> <span class="nw">$\varepsilon$,</span> <span class="nw">$\omega$로</span> 나타내어라.</p>
+
+<p class="x i" style="--b:625.9">여러분이 얻은 방정식들은 다음 꼴의 해를 가진다는 것이 알려져 있다.</p>
+<div class="f" style="left:182.9pt;top:636.8pt"><span class="fig" data-srcpage="1" data-clip="182.9,636.8,415.2,652.4"></span></div>
+<p class="x" style="--b:669.8">이 함수들은 임의의 <span class="nw">$\varphi_0$에</span> 대하여 해가 되며, 특히 <span class="nw">$\varphi_0 = 0$과</span> <span class="nw">$\varphi_0 = \pi/2$일</span> 때 다음을 얻는다.</p>
+<div class="f" style="left:197.9pt;top:682.6pt"><span class="fig" data-srcpage="1" data-clip="197.9,682.6,400.2,717.1"></span></div>
+<p class="x" style="--b:730.5">이때 매개변수 <span class="nw">$(a, \Omega)$의</span> 가능한 값의 쌍은 두 가지이다.</p>
+
+<div class="f" style="left:25.1pt;top:746.4pt"><span class="fig" data-srcpage="1" data-clip="25.1,746.4,42.6,760.3"></span></div>
+<div class="f" style="left:553.6pt;top:746.4pt"><span class="fig" data-srcpage="1" data-clip="553.6,746.4,572.6,760.3"></span></div>
+<p class="x q" style="--b:756.7">해 <span class="nw">$(x_1, y_1)$을</span> 이용하여, 상수 <span class="nw">$a$와</span> <span class="nw">$\Omega$의</span> 가능한 값을 구할 수 있는 연립 방정식을 세워라. 답에는 <span class="nw">$\varepsilon$,</span> <span class="nw">$\omega$도</span> 들어갈 수 있다.</p>
+
+<p class="x ft" style="--b:815.1">문제: 2쪽 중 1쪽</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:56.70pt;width:566.93pt;height:33.91pt"></div>
+<div class="bx" style="left:14.18pt;top:100.59pt;width:566.93pt;height:24.51pt"></div>
+<div class="bx" style="left:14.18pt;top:197.03pt;width:566.93pt;height:79.68pt"></div>
+<div class="bx" style="left:14.18pt;top:284.68pt;width:566.93pt;height:24.52pt"></div>
+<div class="bx" style="left:14.18pt;top:317.17pt;width:566.93pt;height:36.76pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="2" data-clip="50.0,11.4,275.0,53.2"></span></div>
+
+<div class="f" style="left:25.1pt;top:61.6pt"><span class="fig" data-srcpage="2" data-clip="25.1,61.6,42.6,75.5"></span></div>
+<div class="f" style="left:553.6pt;top:61.6pt"><span class="fig" data-srcpage="2" data-clip="553.6,61.6,572.6,75.5"></span></div>
+<p class="x q" style="--b:71.9">얻은 연립 방정식을 풀어, <span class="nw">$a_2 &gt; a_1$일</span> 때 알맞은 값의 쌍 <span class="nw">$(a_1, \Omega_1)$과</span> <span class="nw">$(a_2, \Omega_2)$를</span> 구하여라. 답은 <span class="nw">$\varepsilon$,</span> <span class="nw">$\omega$로</span> 나타내어라.</p>
+
+<div class="f" style="left:25.1pt;top:105.9pt"><span class="fig" data-srcpage="2" data-clip="25.1,105.9,42.6,119.8"></span></div>
+<div class="f" style="left:553.6pt;top:105.9pt"><span class="fig" data-srcpage="2" data-clip="553.6,105.9,572.6,119.8"></span></div>
+<p class="x q" style="--b:116.2"><span class="nw">$\varepsilon \ll \omega$인</span> 경우와 <span class="nw">$\varepsilon \gg \omega$인</span> 경우에 이 양들의 근삿값을 구하여라.</p>
+
+<p class="x i" style="--b:142.2">앞으로는 다음 기호를 사용한다.</p>
+<div class="f" style="left:122.1pt;top:153.0pt"><span class="fig" data-srcpage="2" data-clip="122.1,153.0,476.0,168.6"></span></div>
+<p class="x" style="--b:186.0">여기서 첨자 <span class="nw">$i$는</span> 두 값 <span class="nw">$1, 2$를</span> 가질 수 있으며, 이는 <span class="nw">$(a, \Omega)$의</span> 가능한 두 값에 대응한다.</p>
+
+<div class="f" style="left:25.1pt;top:202.3pt"><span class="fig" data-srcpage="2" data-clip="25.1,202.3,42.6,216.2"></span></div>
+<div class="f" style="left:553.6pt;top:202.3pt"><span class="fig" data-srcpage="2" data-clip="553.6,202.3,572.6,216.2"></span></div>
+<p class="x q" style="--b:212.6">연립 방정식의 일반해는 다음 꼴이다.</p>
+<div class="f" style="left:206.3pt;top:225.3pt"><span class="fig" data-srcpage="2" data-clip="206.3,225.3,391.4,239.1"></span></div>
+<p class="x q" style="--b:256.5">이 부의 도입부에 주어진 초기 조건을 이용하여 <span class="nw">$A$,</span> <span class="nw">$B$,</span> <span class="nw">$C$,</span> <span class="nw">$D$를</span> <span class="nw">$r_0$,</span> <span class="nw">$a_1$,</span> <span class="nw">$a_2$,</span> <span class="nw">$\Omega_1$,</span> <span class="nw">$\Omega_2$로</span> 나타내어라.</p>
+
+<div class="f" style="left:25.1pt;top:290.0pt"><span class="fig" data-srcpage="2" data-clip="25.1,290.0,42.6,303.9"></span></div>
+<div class="f" style="left:553.6pt;top:290.0pt"><span class="fig" data-srcpage="2" data-clip="553.6,290.0,572.6,303.9"></span></div>
+<p class="x q" style="--b:300.3"><span class="nw">$\varepsilon \ll \omega$인</span> 경우와 <span class="nw">$\varepsilon \gg \omega$인</span> 경우에 <span class="nw">$xy$</span> 평면에서 입자의 운동 궤적을 정성적으로 그려라.</p>
+
+<div class="f" style="left:25.1pt;top:322.1pt"><span class="fig" data-srcpage="2" data-clip="25.1,322.1,42.6,336.0"></span></div>
+<div class="f" style="left:553.6pt;top:322.1pt"><span class="fig" data-srcpage="2" data-clip="553.6,322.1,572.6,336.0"></span></div>
+<p class="x q" style="--b:332.4">입자가 좌표 <span class="nw">$\vec{r} = (x, y, z)$인</span> 점에 있고 속도 <span class="nw">$\vec{v} = (v_x, v_y, v_z)$로</span> 움직이는 순간, 열로 빠져나가는 에너지 손실 일률 <span class="nw">$P$를</span> 구하여라.</p>
+
+<p class="x ft" style="--b:815.1">문제: 2쪽 중 2쪽</p>
+</div>
+</body></html>

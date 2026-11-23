@@ -1,0 +1,267 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2026, problem T1 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2026_T1S.html).
+   ORIGINAL: 5 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same site as RuPhO 2021 solutions):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 0.50" (stamped), grey separator under the restated question, answer frame (3pt stroke #f3f6f9).
+   The panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX at
+   10.8pt (1.2em), text column x 63.4..777.8; question line after the badge starts at x 104.7 (pitch 15.9pt),
+   other paragraphs pitch 13.6pt, all left-aligned as in the original.
+   Display formulas are stamped (no Cyrillic in them) except A2 "C_P = C_V + R·1 моль" (retyped, моль -> mol).
+   "Ответ:" -> "Answer:".  I начало термодинамики -> the first law of thermodynamics.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.l2{--l:18.2pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:231.7pt"></div>
+<div class="bx cd" style="top:276.8pt;height:219.7pt"></div>
+<div class="bx cd" style="top:507.8pt;height:468.0pt"></div>
+<div class="bx cd" style="top:987pt;height:169.5pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:315.0pt"></div>
+<div class="bx sp" style="top:559.5pt"></div>
+<div class="bx sp" style="top:1038.8pt"></div>
+<div class="bx ab" style="top:160.5pt;height:94.5pt"></div>
+<div class="bx ab" style="top:406.5pt;height:79.5pt"></div>
+<div class="bx ab" style="top:867.7pt;height:97.6pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">Find how the internal energy of this gas depends on temperature. Assume that the internal energy is zero at $T = 0$.</p>
+<p class="x" style="--b:90.0">Let us write the small increment of the internal energy of the gas:</p>
+<div class="f" style="left:353.6pt;top:115.6pt"><span class="fig" data-srcpage="1" data-clip="353.6,115.6,485.8,129.7"></span></div>
+<p class="x" style="--b:147.8">Integrating, we obtain:</p>
+<p class="x an" style="--b:189.0">Answer:</p>
+<div class="f" style="left:380.0pt;top:200.6pt"><span class="fig" data-srcpage="1" data-clip="380.0,200.6,459.5,230.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:286.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,286.8,101.8,307.2"></span></div>
+<p class="x q" style="--b:299.9">What is the heat capacity $C_P$ of the gas at constant pressure at a given temperature $T$?</p>
+<p class="x" style="--b:333.0">According to Mayer's relation:</p>
+<p class="x c" style="--b:357.0">$C_P = C_V + R\cdot 1\,\mathrm{mol}$</p>
+<p class="x" style="--b:379.8">here and below we omit the factor $1\,\mathrm{mol}$ in all expressions.</p>
+<p class="x" style="--b:393.8">Hence we obtain:</p>
+<p class="x an" style="--b:435.0">Answer:</p>
+<div class="f" style="left:375.2pt;top:445.6pt"><span class="fig" data-srcpage="1" data-clip="375.2,445.6,465.6,459.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:517.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,517.8,101.8,538.2"></span></div>
+<p class="x q" style="--b:530.9">Let the gas undergo an isochoric process in which the pressure increases from $p_1$ to $p_2$; the volume is $V$. Find the heat $Q_V$ supplied to the gas.</p>
+<p class="x" style="--b:577.5">Let us write the first law of thermodynamics:</p>
+<div class="f" style="left:384.1pt;top:589.6pt"><span class="fig" data-srcpage="1" data-clip="384.1,589.6,456.7,603.0"></span></div>
+<p class="x" style="--b:621.0">The process is isochoric, so the gas does no work, and</p>
+<div class="f" style="left:339.1pt;top:632.6pt"><span class="fig" data-srcpage="1" data-clip="339.1,632.6,500.8,664.5"></span></div>
+<p class="x" style="--b:680.2">Equation of state of the ideal gas:</p>
+<div class="f" style="left:395.9pt;top:691.6pt"><span class="fig" data-srcpage="1" data-clip="395.9,691.6,444.9,705.0"></span></div>
+<p class="x" style="--b:736.5">from which the temperatures at the beginning and at the end of the process can be found:</p>
+<div class="f" style="left:395.5pt;top:748.2pt"><span class="fig" data-srcpage="1" data-clip="395.5,748.2,444.5,776.0"></span></div>
+<div class="f" style="left:395.5pt;top:782.0pt"><span class="fig" data-srcpage="1" data-clip="395.5,782.0,444.5,810.5"></span></div>
+<p class="x" style="--b:828.0">Let us express the answer in terms of the quantities given in the problem:</p>
+<p class="x an" style="--b:896.2">Answer:</p>
+<div class="f" style="left:332.7pt;top:907.9pt"><span class="fig" data-srcpage="1" data-clip="332.7,907.9,506.8,939.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:997.0pt"><span class="fig" data-srcpage="1" data-clip="62.5,997.0,101.8,1017.4"></span></div>
+<p class="x q" style="--b:1010.2">Let the gas undergo an isobaric process; the initial volume is $V_1$, the final volume is $V_2$, the pressure is $p$. Find the heat $Q_P$ supplied to the gas.</p>
+<p class="x" style="--b:1056.8">Let us write the small increment of heat:</p>
+<div class="f" style="left:342.9pt;top:1068.9pt"><span class="fig" data-srcpage="1" data-clip="342.9,1068.9,496.6,1082.9"></span></div>
+<p class="x" style="--b:1101.0">Integrating, we obtain an answer similar to that of the previous part:</p>
+<div class="f" style="left:340.1pt;top:1112.6pt"><span class="fig" data-srcpage="1" data-clip="340.1,1112.6,499.2,1143.7"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:222.0pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:267pt;height:545.2pt"></div>
+<div class="bx cd" style="top:823.5pt;height:319.5pt"></div>
+<div class="bx sp" style="top:332.2pt"></div>
+<div class="bx sp" style="top:875.2pt"></div>
+<div class="bx ab" style="top:147.0pt;height:98.3pt"></div>
+<div class="bx ab" style="top:708.7pt;height:93.0pt"></div>
+<div class="bx ab" style="top:1038.7pt;height:93.8pt"></div>
+</div>
+<p class="x" style="--b:43.5">From the equation of state we obtain the temperatures at the beginning and at the end of the process:</p>
+<div class="f" style="left:396.5pt;top:55.2pt"><span class="fig" data-srcpage="2" data-clip="396.5,55.2,443.0,83.0"></span></div>
+<div class="f" style="left:396.5pt;top:89.0pt"><span class="fig" data-srcpage="2" data-clip="396.5,89.0,443.0,117.5"></span></div>
+<p class="x" style="--b:134.2">Let us express the answer in terms of the quantities given in the problem:</p>
+<p class="x an" style="--b:175.5">Answer:</p>
+<div class="f" style="left:316.4pt;top:187.1pt"><span class="fig" data-srcpage="2" data-clip="316.4,187.1,523.2,218.9"></span></div>
+
+<div class="f" style="left:62.5pt;top:277.0pt"><span class="fig" data-srcpage="2" data-clip="62.5,277.0,101.8,297.4"></span></div>
+<p class="x q" style="--b:290.2">Consider the cycle $123$ consisting of the process $1-2$, in which the pressure is directly proportional to the volume, the isochore $2-3$ and the isobar $3-1$. It is known that $V_2 = 2V_1$ and that the heat capacities at constant volume at points 1 and 2 are related by $C_{V2} = 1.5C_{V1}$. Determine the efficiency of this cycle. Find its numerical value. Take $C_0 = 3R/2$.</p>
+<p class="x" style="--b:350.2">Equation of state:</p>
+<div class="f" style="left:397.4pt;top:361.6pt"><span class="fig" data-srcpage="2" data-clip="397.4,361.6,442.1,375.0"></span></div>
+<p class="x" style="--b:393.2">In process $1-2$ we have $p = \alpha V$, hence $T \propto V^2$, so <span class="nw">$T_2 = 4T_1,\ p_2 = 2p_1,\ \alpha V_1^2 = RT_1$.</span></p>
+<p class="x" style="--b:407.2">Let us write the relation given in the problem:</p>
+<div class="f" style="left:327.1pt;top:419.4pt"><span class="fig" data-srcpage="2" data-clip="327.1,419.4,513.6,433.4"></span></div>
+<p class="x" style="--b:451.5">which gives:</p>
+<div class="f" style="left:395.2pt;top:462.9pt"><span class="fig" data-srcpage="2" data-clip="395.2,462.9,445.0,476.9"></span></div>
+<p class="x" style="--b:494.2">Heat is supplied only in section $1-2$ (the temperature increases monotonically) and removed only in section $3-1$ (the temperature decreases monotonically).</p>
+<p class="x" style="--b:507.8">Let us find the heat supplied:</p>
+<div class="f" style="left:315.6pt;top:519.1pt"><span class="fig" data-srcpage="2" data-clip="315.6,519.1,523.1,533.9"></span></div>
+<p class="x" style="--b:552.0">After integration we obtain:</p>
+<div class="f" style="left:221.6pt;top:563.6pt"><span class="fig" data-srcpage="2" data-clip="221.6,563.6,618.6,594.7"></span></div>
+<p class="x l2" style="--b:617.0;margin-top:-1.8pt">Now let us find the work of the gas: in section $1-2$, <span class="nw">$A_{12} = \dfrac{3}{2}RT_1$;</span> section $2-3$ is an isochore, so $A_{23} = 0$; in the last section, at pressure $p_1$, the volume changes from $2V_1$ to $V_1$, so <span class="nw">$A_{31} = -p_1V_1 = -RT_1$.</span></p>
+<p class="x" style="--b:654.7">The total work of the gas is <span class="nw">$A = \dfrac{RT_1}{2}$;</span> the efficiency is found as</p>
+<div class="f" style="left:384.7pt;top:671.4pt"><span class="fig" data-srcpage="2" data-clip="384.7,671.4,455.0,700.4"></span></div>
+<p class="x an" style="--b:737.2">Answer:</p>
+<div class="f" style="left:401.7pt;top:747.9pt"><span class="fig" data-srcpage="2" data-clip="401.7,747.9,437.8,776.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:833.6pt"><span class="fig" data-srcpage="2" data-clip="62.5,833.6,101.8,854.0"></span></div>
+<p class="x q" style="--b:846.7">Consider an adiabatic process undergone by the gas. Derive the relation between the infinitesimal increments of the volume $\mathrm{d}V$ and of the temperature $\mathrm{d}T$. Express the answer in terms of $C_0$, $a$, $T$, $V$, $R$.</p>
+<p class="x" style="--b:893.2">Let us set the small increment of heat equal to zero:</p>
+<div class="f" style="left:364.6pt;top:904.6pt"><span class="fig" data-srcpage="2" data-clip="364.6,904.6,476.1,918.5"></span></div>
+<p class="x" style="--b:936.0">From the equation of state:</p>
+<div class="f" style="left:399.2pt;top:947.7pt"><span class="fig" data-srcpage="2" data-clip="399.2,947.7,440.8,974.8"></span></div>
+<p class="x" style="--b:992.2">Hence we have:</p>
+<div class="f" style="left:355.1pt;top:1004.0pt"><span class="fig" data-srcpage="2" data-clip="355.1,1004.0,485.6,1031.0"></span></div>
+<p class="x an" style="--b:1067.2">Answer:</p>
+<div class="f" style="left:355.1pt;top:1079.0pt"><span class="fig" data-srcpage="2" data-clip="355.1,1079.0,485.6,1106.0"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:333.0pt"></div>
+<div class="bx cd" style="top:378pt;height:496.5pt"></div>
+<div class="bx cd" style="top:885.8pt;height:270.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:116.2pt"></div>
+<div class="bx sp" style="top:429.8pt"></div>
+<div class="bx sp" style="top:937.5pt"></div>
+<div class="bx ab" style="top:274.5pt;height:81.8pt"></div>
+<div class="bx ab" style="top:715.5pt;height:148.5pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">From the relation of the previous part, derive the equation of the adiabat relating $T$ and $V$ in the form</p>
+<div class="f" style="left:380.8pt;top:71.4pt"><span class="fig" data-srcpage="3" data-clip="380.8,71.4,460.0,84.7"></span></div>
+<p class="x" style="--b:103.5">the function $f$ may also contain $C_0$, $a$, $R$.</p>
+<p class="x" style="--b:134.2">Dividing the expression of the previous part by $T$, we obtain:</p>
+<div class="f" style="left:360.4pt;top:145.2pt"><span class="fig" data-srcpage="3" data-clip="360.4,145.2,480.4,173.8"></span></div>
+<p class="x" style="--b:190.5">Integrating, we obtain:</p>
+<div class="f" style="left:317.2pt;top:202.2pt"><span class="fig" data-srcpage="3" data-clip="317.2,202.2,523.5,230.9"></span></div>
+<p class="x" style="--b:248.2">Here $T_0$, $V_0$ are arbitrary constants that make the quantities under the logarithms dimensionless. Omitting this formality, we express the answer in terms of the quantities given in the problem:</p>
+<p class="x an" style="--b:303.0">Answer:</p>
+<div class="f" style="left:324.5pt;top:315.1pt"><span class="fig" data-srcpage="3" data-clip="324.5,315.1,516.2,329.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:388.0pt"><span class="fig" data-srcpage="3" data-clip="62.5,388.0,101.8,408.4"></span></div>
+<p class="x q" style="--b:401.2">Consider the Carnot cycle $1234$ consisting of the isotherms $12$ and $34$ and the adiabats $23$ and $41$. Express the volumes $V_3$, $V_4$ in terms of $V_1$, $V_2$, the temperatures of the isotherms <span class="nw">$T_+ = T_1 = T_2$,</span> <span class="nw">$T_- = T_3 = T_4$</span> and the gas parameters $C_0$, $a$, $R$.</p>
+<p class="x" style="--b:447.8">Let us write the expression of the previous part for the adiabat $2-3$:</p>
+<div class="f" style="left:296.8pt;top:459.1pt"><span class="fig" data-srcpage="3" data-clip="296.8,459.1,543.9,473.2"></span></div>
+<p class="x" style="--b:490.5">which transforms into:</p>
+<div class="f" style="left:338.6pt;top:502.2pt"><span class="fig" data-srcpage="3" data-clip="338.6,502.2,502.2,532.4"></span></div>
+<p class="x" style="--b:549.8">which gives:</p>
+<div class="f" style="left:336.1pt;top:561.0pt"><span class="fig" data-srcpage="3" data-clip="336.1,561.0,504.6,597.7"></span></div>
+<p class="x" style="--b:615.8">Similarly, for the adiabat $4-1$:</p>
+<div class="f" style="left:296.8pt;top:627.1pt"><span class="fig" data-srcpage="3" data-clip="296.8,627.1,543.9,641.2"></span></div>
+<p class="x" style="--b:659.2">which transforms into:</p>
+<div class="f" style="left:336.1pt;top:670.5pt"><span class="fig" data-srcpage="3" data-clip="336.1,670.5,504.6,707.2"></span></div>
+<p class="x an" style="--b:744.0">Answer:</p>
+<div class="f" style="left:336.1pt;top:756.0pt"><span class="fig" data-srcpage="3" data-clip="336.1,756.0,504.6,836.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:895.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,895.8,101.8,916.2"></span></div>
+<p class="x q" style="--b:908.9">By direct calculation (without using the general formula) show that the efficiency of the Carnot cycle is the same as for an ideal gas with a constant heat capacity.</p>
+<p class="x" style="--b:955.5">Heat can be supplied and removed only on the isotherms (on $1-2$ it is supplied, on $3-4$ it is removed).</p>
+<div class="f" style="left:352.7pt;top:966.9pt"><span class="fig" data-srcpage="3" data-clip="352.7,966.9,486.0,980.2"></span></div>
+<p class="x" style="--b:999.0">($\mathrm{d}U = C_V\mathrm{d}T = 0$ since the process is isothermal)</p>
+<div class="f" style="left:395.9pt;top:1009.6pt"><span class="fig" data-srcpage="3" data-clip="395.9,1009.6,444.9,1023.0"></span></div>
+<p class="x" style="--b:1041.8">then</p>
+<div class="f" style="left:380.1pt;top:1052.4pt"><span class="fig" data-srcpage="3" data-clip="380.1,1052.4,460.6,1080.5"></span></div>
+<div class="f" style="left:378.7pt;top:1086.5pt"><span class="fig" data-srcpage="3" data-clip="378.7,1086.5,462.0,1115.9"></span></div>
+<p class="x" style="--b:1133.2">similarly:</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:294.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:339.8pt;height:398.2pt"></div>
+<div class="bx cd" style="top:749.2pt;height:228.0pt"></div>
+<div class="bx cd" style="top:988.5pt;height:168.0pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:378.0pt"></div>
+<div class="bx sp" style="top:787.5pt"></div>
+<div class="bx sp" style="top:1040.2pt"></div>
+<div class="bx ab" style="top:267.0pt;height:51.0pt"></div>
+<div class="bx ab" style="top:633.7pt;height:93.8pt"></div>
+<div class="bx ab" style="top:873.7pt;height:93.0pt"></div>
+</div>
+<div class="f" style="left:380.2pt;top:32.7pt"><span class="fig" data-srcpage="4" data-clip="380.2,32.7,459.5,61.4"></span></div>
+<p class="x" style="--b:78.8">From the previous part:</p>
+<div class="f" style="left:397.8pt;top:89.7pt"><span class="fig" data-srcpage="4" data-clip="397.8,89.7,443.0,119.9"></span></div>
+<p class="x" style="--b:136.5">Let us express the efficiency:</p>
+<div class="f" style="left:363.0pt;top:147.5pt"><span class="fig" data-srcpage="4" data-clip="363.0,147.5,476.8,177.7"></span></div>
+<p class="x" style="--b:195.8">Efficiency of the Carnot cycle:</p>
+<div class="f" style="left:388.1pt;top:206.7pt"><span class="fig" data-srcpage="4" data-clip="388.1,206.7,452.7,236.2"></span></div>
+<p class="x" style="--b:254.2">hence the expressions for the efficiency coincide.</p>
+<p class="x an" style="--b:295.5">Answer: the efficiency of the cycle is equal to the efficiency of the Carnot cycle.</p>
+
+<div class="f" style="left:62.5pt;top:349.8pt"><span class="fig" data-srcpage="4" data-clip="62.5,349.8,101.8,370.2"></span></div>
+<p class="x q" style="--b:362.9">Find the amount of heat $Q_V$ that must be supplied to the gas in isochoric heating. Express the answer in terms of $T_1$, $R$.</p>
+<p class="x" style="--b:396.0">In the linear section $C_V = C_0 + aT$. We obtain a system of linear equations:</p>
+<div class="f" style="left:369.9pt;top:408.6pt"><span class="fig" data-srcpage="4" data-clip="369.9,408.6,467.7,436.5"></span></div>
+<p class="x" style="--b:469.5">From this system it follows that:</p>
+<div class="f" style="left:396.6pt;top:480.1pt"><span class="fig" data-srcpage="4" data-clip="396.6,480.1,444.1,514.4"></span></div>
+<p class="x" style="--b:532.5">Let us find $Q_V$:</p>
+<div class="f" style="left:244.1pt;top:545.6pt"><span class="fig" data-srcpage="4" data-clip="244.1,545.6,595.3,591.1"></span></div>
+<div class="f" style="left:326.1pt;top:598.6pt"><span class="fig" data-srcpage="4" data-clip="326.1,598.6,514.1,627.7"></span></div>
+<p class="x an" style="--b:662.2">Answer:</p>
+<div class="f" style="left:387.5pt;top:673.6pt"><span class="fig" data-srcpage="4" data-clip="387.5,673.6,452.7,702.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:759.3pt"><span class="fig" data-srcpage="4" data-clip="62.5,759.3,101.8,779.7"></span></div>
+<p class="x q" style="--b:772.4">Find the amount of heat $Q_P$ that must be supplied to the gas in isobaric heating. Express the answer in terms of $T_1$, $R$.</p>
+<div class="f" style="left:385.9pt;top:795.9pt"><span class="fig" data-srcpage="4" data-clip="385.9,795.9,454.8,809.8"></span></div>
+<p class="x" style="--b:828.0">therefore:</p>
+<div class="f" style="left:308.4pt;top:838.6pt"><span class="fig" data-srcpage="4" data-clip="308.4,838.6,531.9,867.0"></span></div>
+<p class="x an" style="--b:902.2">Answer:</p>
+<div class="f" style="left:387.5pt;top:912.9pt"><span class="fig" data-srcpage="4" data-clip="387.5,912.9,452.6,942.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:998.6pt"><span class="fig" data-srcpage="4" data-clip="62.5,998.6,101.8,1019.0"></span></div>
+<p class="x q" style="--b:1011.7">Let the initial volume of the gas be $V_0$. What will the final volume be if the temperature was raised adiabatically? Find the work done in this process. Express the answers in terms of $T_1$, $R$, $V_0$.</p>
+<p class="x" style="--b:1058.2">If in an adiabatic process with a heat capacity depending linearly on temperature, $C_V = C_0 + aT$, the temperature changes from $T_{1x}$ to $T_{2x}$ and the volume from $V_1$ to $V_2$, respectively, then the initial and final volumes are related as follows:</p>
+<div class="f" style="left:332.8pt;top:1083.7pt"><span class="fig" data-srcpage="4" data-clip="332.8,1083.7,508.0,1120.4"></span></div>
+<p class="x" style="--b:1138.5">The process can be divided into three linear processes with the parameters:</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:447.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx ab" style="top:337.5pt;height:133.5pt"></div>
+</div>
+<div class="f" style="left:323.0pt;top:33.1pt"><span class="fig" data-srcpage="5" data-clip="323.0,33.1,517.2,89.9"></span></div>
+<p class="x" style="--b:108.8">Then at the end of process 1:</p>
+<div class="f" style="left:394.6pt;top:119.7pt"><span class="fig" data-srcpage="5" data-clip="394.6,119.7,445.2,150.7"></span></div>
+<p class="x" style="--b:168.8">At the end of process 2:</p>
+<div class="f" style="left:379.9pt;top:179.7pt"><span class="fig" data-srcpage="5" data-clip="379.9,179.7,459.5,211.4"></span></div>
+<p class="x" style="--b:228.8">At the end of process 3:</p>
+<div class="f" style="left:355.9pt;top:241.6pt"><span class="fig" data-srcpage="5" data-clip="355.9,241.6,483.5,273.7"></span></div>
+<p class="x" style="--b:291.8">Let us find the work of the gas in the adiabatic process:</p>
+<div class="f" style="left:347.8pt;top:302.4pt"><span class="fig" data-srcpage="5" data-clip="347.8,302.4,492.4,330.7"></span></div>
+<p class="x an" style="--b:366.0">Answer:</p>
+<div class="f" style="left:386.7pt;top:378.9pt"><span class="fig" data-srcpage="5" data-clip="386.7,378.9,453.5,445.5"></span></div>
+</div>
+</body></html>

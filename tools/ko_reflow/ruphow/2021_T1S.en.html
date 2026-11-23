@@ -1,0 +1,156 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T1 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2021_T1S.html).
+   ORIGINAL: 4 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same layout as the 2026 W pilot):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 5.00" (stamped), grey separator under the restated question, answer frames (3pt stroke #f3f6f9), all redrawn
+   as CSS boxes in the static .dc wrapper. Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX
+   at 10.8pt (1.2em), text column x 63.4..777.8, left-aligned as in the original.
+   Stamped: figures (raster images), badges, display formulas without Cyrillic. Retyped in KaTeX: every display
+   with Cyrillic subscripts (отн -> rel, relative; к -> k, stone (камень; the author himself writes S_k later);
+   л -> L, Leopold) and the answers with units м/с -> m/s (decimal comma -> point).
+   Raster figure labels covered by white .ov labels: subscript "отн" -> rel (p1 fig 1, fig 2), "л" -> L, "к" -> k
+   (p1 fig 2), the word "камень" -> stone (p3, both copies of the photo figure).
+   Original oddities kept in the translation: "v_yл = v1 cos α − gt" (should be v2; as printed); the raw LaTeX
+   "\sin⁡α" printed in the text on p2 is typeset as sin α; "в вектор" typo (а вектор) translated by sense.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{left:104.7pt;width:673pt}
+.c{text-align:center}
+.b{font-weight:bold}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{position:absolute;white-space:nowrap;background:#fff;color:#000;text-align:center;font-family:'Times New Roman',serif}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1122.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">Find the maximum possible initial distance $L_{max}$ between the mice and Leopold.</p>
+<p class="x" style="--b:90.0">Preface: The last “shoot-out” between Leopold and the mice took place in 2002; since then the mice had not bothered the cat. Eighteen years later, in 2020, new underwater pebbles turned up for the legendary slingshot, and the mice decided to “relive the good old days”.</p>
+<p class="x" style="--b:117.0">Note: no animals were harmed during the shoot-out.</p>
+<p class="x" style="--b:139.5">In Leopold's frame of reference the stone moves in a straight line with constant velocity $v_{\mathrm{rel}}$. The distance from Leopold to the stone is minimal when the segment joining them is perpendicular to the relative velocity vector (see figure). From the similarity of triangles we find the displacement of the stone relative to Leopold:</p>
+<div class="f" style="left:306.8pt;top:170.3pt"><span class="fig" data-srcpage="1" data-clip="306.8,170.3,534.8,324.8"></span></div>
+<div class="ov" style="left:490.8pt;top:298.1pt;width:16.5pt;height:7pt;line-height:7pt;font-size:9.5pt;text-align:left;padding-left:0.6pt">rel</div>
+<p class="x c" style="--b:345.8;margin-top:-2.07pt">$S_{\mathrm{rel}} = L\dfrac{v_1}{v_{\mathrm{rel}}} = v_{\mathrm{rel}}t$</p>
+<p class="x" style="--b:390.0">whence</p>
+<p class="x c" style="--b:424.5;margin-top:-5.87pt">$L = \dfrac{v_{\mathrm{rel}}^2\,t}{v_1}$</p>
+<p class="x" style="--b:453.0">Let us find the maximum possible time after which the velocities of the stone and Leopold become perpendicular again. Draw the velocity triangles of the stone and of Leopold for the closest approach, combining them into one quadrilateral. Note that this quadrilateral can be inscribed in a circle, since the sum of its opposite angles is 180°. The diameter of the circle is fixed and equal to $v_{\mathrm{rel}}$. Since $L$ is maximal when $t$ is maximal, the second diagonal of the quadrilateral, equal to $gt$, must also be maximal. This is achieved when $gt$ is a diameter of this circle. Thus,</p>
+<div class="f" style="left:306.8pt;top:510.8pt"><span class="fig" data-srcpage="1" data-clip="306.8,510.8,534.8,738.8"></span></div>
+<div class="ov" style="left:399pt;top:633.1pt;width:18.5pt;height:6.6pt;line-height:6.6pt;font-size:9pt;text-align:left;padding-left:0.6pt">rel</div>
+<div class="ov" style="left:373.8pt;top:667.2pt;width:8pt;height:9pt;line-height:8pt;font-size:9pt;font-style:italic">L</div>
+<div class="ov" style="left:473.3pt;top:694.6pt;width:7pt;height:9.8pt;line-height:8pt;font-size:9pt;font-style:italic">k</div>
+<p class="x c" style="--b:762.0;margin-top:-2.14pt">$t_{max} = \dfrac{v_{\mathrm{rel}}}{g}$</p>
+<p class="x" style="--b:804.8">and finally:</p>
+<p class="x c" style="--b:841.5;margin-top:-10.85pt">$L_{max} = \dfrac{v_{\mathrm{rel}}^3}{gv_1} = \dfrac{\left(v_1^2 + v_2^2\right)^{\frac{3}{2}}}{gv_1}$</p>
+<p class="x b" style="--b:870.8">Second solution</p>
+<p class="x" style="--b:893.2">Introduce a coordinate system as shown in the figure. Let the angle to the horizontal at which the stone is thrown be $\alpha$. Let us obtain the coordinates, the velocity components, and the distance between the stone and Leopold as functions of time.</p>
+<div class="f" style="left:306.8pt;top:909.0pt"><span class="fig" data-srcpage="1" data-clip="306.8,909.0,534.8,1057.5"></span></div>
+<p class="x c" style="--b:1083.0;margin-top:-5.89pt">$x_k = v_1t\cos\alpha;\ y_k = v_1t\sin\alpha - \dfrac{gt^2}{2}$</p>
+<p class="x c" style="--b:1131.0">$v_{yk} = v_1\sin\alpha - gt;\ v_{xk} = v_1\cos\alpha$</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1023.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:1068.8pt;height:87.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx ab" style="top:945pt;height:102pt"></div>
+<div class="bx sp" style="top:1107.0pt"></div>
+</div>
+<p class="x c" style="--b:74.2;margin-top:-6.2pt">$x_L = L\cos\alpha - v_2t\sin\alpha;\ y_L = L\sin\alpha + v_2t\cos\alpha - \dfrac{gt^2}{2}$</p>
+<p class="x c" style="--b:122.2">$v_{yL} = v_1\cos\alpha - gt;\ v_{xL} = -v_1\sin\alpha$</p>
+<p class="x" style="--b:159.8">Denote the distance between Leopold and the stone by $l$.</p>
+<p class="x c" style="--b:183.0">$l^2 = (x_k - x_L)^2 + (y_k - y_L)^2$</p>
+<div class="f" style="left:250.1pt;top:217.8pt"><span class="fig" data-srcpage="2" data-clip="250.1,217.8,590.0,234.4"></span></div>
+<div class="f" style="left:351.2pt;top:264.3pt"><span class="fig" data-srcpage="2" data-clip="351.2,264.3,489.0,282.4"></span></div>
+<p class="x" style="--b:312.0">The minimum value of $l$ is reached at the vertex of the parabola, at the moment</p>
+<div class="f" style="left:377.3pt;top:323.5pt"><span class="fig" data-srcpage="2" data-clip="377.3,323.5,463.4,341.7"></span></div>
+<p class="x" style="--b:371.2">To find the maximum possible value of $L$, we need to find the maximum possible value of $\tau$.</p>
+<p class="x" style="--b:384.8">Let the velocity of the stone at the moment $\tau$ make an angle $\beta$ with the horizontal. Since at this moment the velocities of Leopold and the stone are perpendicular, Leopold's velocity makes an angle $90 - \beta$ with the horizontal. Hence, for this moment we can write</p>
+<p class="x c" style="--b:420.0">$v_{yk}/v_{xk} = -v_{xL}/v_{yL}$</p>
+<div class="f" style="left:302.1pt;top:455.1pt"><span class="fig" data-srcpage="2" data-clip="302.1,455.1,538.7,469.9"></span></div>
+<p class="x" style="--b:501.8">From the last relation we find $\tau$</p>
+<div class="f" style="left:358.6pt;top:512.9pt"><span class="fig" data-srcpage="2" data-clip="358.6,512.9,481.0,543.2"></span></div>
+<p class="x" style="--b:574.5">Combining the two ways of obtaining $\tau$, we get the dependence of the distance on the throwing angle of the stone</p>
+<div class="f" style="left:340.8pt;top:586.0pt"><span class="fig" data-srcpage="2" data-clip="340.8,586.0,499.0,619.2"></span></div>
+<p class="x" style="--b:649.5">To find the maximum of $L$, we need to find the maximum of the quantity $v' = (v_1\sin\alpha + v_2\cos\alpha)$</p>
+<div class="f" style="left:346.6pt;top:661.0pt"><span class="fig" data-srcpage="2" data-clip="346.6,661.0,494.2,679.9"></span></div>
+<div class="f" style="left:320.5pt;top:706.8pt"><span class="fig" data-srcpage="2" data-clip="320.5,706.8,520.3,727.2"></span></div>
+<p class="x" style="--b:757.5">Let us find the discriminant of the quadratic equation in $\sin\alpha$</p>
+<div class="f" style="left:342.1pt;top:767.5pt"><span class="fig" data-srcpage="2" data-clip="342.1,767.5,498.6,788.7"></span></div>
+<div class="f" style="left:364.5pt;top:815.5pt"><span class="fig" data-srcpage="2" data-clip="364.5,815.5,476.3,835.9"></span></div>
+<p class="x" style="--b:866.2">The maximum value of $v'$ is reached when the discriminant is zero and equals</p>
+<div class="f" style="left:386.1pt;top:878.0pt"><span class="fig" data-srcpage="2" data-clip="386.1,878.0,454.8,901.0"></span></div>
+<p class="x" style="--b:932.2">Thus, the maximum possible value is</p>
+<p class="x an" style="--b:973.5">Answer:</p>
+<div class="f" style="left:374.5pt;top:985.1pt"><span class="fig" data-srcpage="2" data-clip="374.5,985.1,465.2,1021.2"></span></div>
+
+<div class="f" style="left:62.0pt;top:1078.2pt"><span class="fig" data-srcpage="2" data-clip="62.0,1078.2,102.2,1099.8"></span></div>
+<p class="x q" style="--b:1091.9">Find the values of the speeds $v_1$ and $v_2$. The free-fall acceleration is $g = 9.8\,\mathrm{m/s^2}$.</p>
+<p class="x" style="--b:1132.0">Note that the average velocity vector of the stone at the moment of the photograph equals $\frac{\vec{v}_{\mathrm{rel}}}{2}$, and that of Leopold equals $-\frac{\vec{v}_{\mathrm{rel}}}{2}$. This means that the displacements of the stone and of Leopold are equal in magnitude and opposite in direction. Let $D$ be the midpoint of segment $AC$. Then equal magnitudes of the displacements imply</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1122.7pt;border-radius:0"></div>
+<div class="bx ab" style="top:293.3pt;height:327pt"></div>
+</div>
+<p class="x" style="--b:45.2">that $BD = \frac{L}{2}$, and also that triangle $DCB$ is right-angled, with $\frac{v_2}{v_1} = \frac{CD}{BC}$. Measuring $BC$, $BD$ and $CD$, we obtain</p>
+<div class="f" style="left:306.8pt;top:50.5pt"><span class="fig" data-srcpage="3" data-clip="306.8,50.5,534.8,209.2"></span></div>
+<div class="ov" style="left:307.5pt;top:184.5pt;width:78pt;height:17pt;line-height:17pt;font-size:26pt">stone</div>
+<div class="f" style="left:391.1pt;top:214.4pt"><span class="fig" data-srcpage="3" data-clip="391.1,214.4,449.1,243.9"></span></div>
+<div class="f" style="left:284.3pt;top:249.3pt"><span class="fig" data-srcpage="3" data-clip="284.3,249.3,555.2,285.4"></span></div>
+<p class="x an" style="--b:321.8">Answer:</p>
+<p class="x c" style="--b:354.8;margin-top:-6.85pt">$v_1 = \sqrt{\dfrac{2gBC}{BC^2 + CD^2}}\,BC = 10.8\,\mathrm{m/s}$</p>
+<p class="x c" style="--b:421.5;margin-top:-6.9pt">$v_2 = \sqrt{\dfrac{2gBC}{BC^2 + CD^2}}\,CD = 2.7\,\mathrm{m/s}$</p>
+<div class="f" style="left:306.8pt;top:444.0pt"><span class="fig" data-srcpage="3" data-clip="306.8,444.0,534.8,603.0"></span></div>
+<div class="ov" style="left:307.5pt;top:579.5pt;width:78pt;height:17pt;line-height:17pt;font-size:26pt">stone</div>
+<p class="x b" style="--b:629.2">Second solution</p>
+<p class="x" style="--b:651.8">The expression for $\sin\alpha$ from the solution of the previous part</p>
+<div class="f" style="left:376.9pt;top:659.9pt"><span class="fig" data-srcpage="3" data-clip="376.9,659.9,463.0,700.8"></span></div>
+<p class="x" style="--b:732.0">Let us find the coordinates of the stone and the distance between it and Leopold at the moment $\tau$</p>
+<p class="x c" style="--b:757.5;margin-top:-2.4pt">$x_k = v_1\tau\cos\alpha = \dfrac{v_1v_2}{g}$</p>
+<p class="x c" style="--b:819.0;margin-top:-6.15pt">$y_k = v_1\tau\sin\alpha - \dfrac{g\tau^2}{2} = \dfrac{v_1^2}{g} - \dfrac{v_1^2 + v_2^2}{2g} = \dfrac{v_1^2 - v_2^2}{2g}$</p>
+<div class="f" style="left:382.7pt;top:859.8pt"><span class="fig" data-srcpage="3" data-clip="382.7,859.8,457.0,892.2"></span></div>
+<p class="x" style="--b:923.2">Thus, the displacement of the stone is</p>
+<p class="x c" style="--b:954.8;margin-top:-6.57pt">$S_k = \dfrac{v_1^2 + v_2^2}{2g}$</p>
+<p class="x" style="--b:998.2">By measuring the displacement of the stone and the distance between it and Leopold, we obtain a system of two equations in two unknowns.</p>
+<p class="x" style="--b:1011.8">Express the initial speeds in terms of $l$ and $S_k$</p>
+<div class="f" style="left:395.0pt;top:1022.1pt"><span class="fig" data-srcpage="3" data-clip="395.0,1022.1,445.8,1052.7"></span></div>
+<div class="f" style="left:391.5pt;top:1079.9pt"><span class="fig" data-srcpage="3" data-clip="391.5,1079.9,448.7,1110.2"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:191.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+</div>
+<div class="f" style="left:381.4pt;top:32.6pt"><span class="fig" data-srcpage="4" data-clip="381.4,32.6,458.8,72.4"></span></div>
+<p class="x c" style="--b:121.5;margin-top:-9.15pt">$v_1 = \sqrt{\dfrac{8gS_k}{l^2 + 4S_k^2}}\,S_k = 10.8\,\mathrm{m/s}$</p>
+<p class="x c" style="--b:188.2;margin-top:-9.2pt">$v_2 = \sqrt{\dfrac{2gS_k}{l^2 + 4S_k^2}}\,l = 2.7\,\mathrm{m/s}$</p>
+</div>
+</body></html>

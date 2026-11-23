@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T2 — solution — Korean edition on the original layout.
+   ORIGINAL: 1 A3 page (841.9x1191.1pt) printed from the olympiad web page (same layout as 2021_T1S / the 2026 W
+   pilot): beige page panel, one white card (x 43.5..798, radius 3.75pt), blue badge "A1 10.00" (stamped), grey
+   separator under the restated question, answer frame (3pt stroke #f3f6f9), all redrawn as CSS boxes in the static
+   .dc wrapper. Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math KaTeX at 10.8pt (1.2em), text
+   column x 63.4..777.8, left-aligned as in the original; question line after the badge starts at x 108.2.
+   Stamped: the figure (raster, Latin/Greek labels only), the badge and every display formula (none has Cyrillic).
+   Original typo "неуйстойчиво" (неустойчиво) translated by sense; "cos(φ)" printed in math italic is typeset as cos.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{left:108.2pt;width:669.6pt}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1108.4pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx ab" style="top:1020.7pt;height:111pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,105.2,64.8"></span></div>
+<p class="x q" style="--b:56.9"><span class="nw">$F$가</span> 어떤 값일 때 막대가 회전축을 중심으로 완전히 한 바퀴 돌 수 있는가?</p>
+<p class="x" style="--b:92.2">평형 위치에서 막대와 연직선 사이의 각을 <span class="nw">$\varphi$라</span> 하자. 이 각은 입자의 가장 낮은 위치로부터 잰다. 그러면 평형 조건으로부터 힘 <span class="nw">$F$에</span> 대한 식을 얻는다</p>
+<div class="f" style="left:388.3pt;top:117.1pt"><span class="fig" data-srcpage="1" data-clip="388.3,117.1,452.4,130.9"></span></div>
+<p class="x" style="--b:162.8"><span class="nw">$0 \le \varphi \le \frac{\pi}{2}$임에</span> 주목하자. 그렇지 않으면 평형 위치가 불안정하기 때문이다.</p>
+<p class="x" style="--b:178.5">이후의 운동을 분석하자. <span class="nw">$\alpha$를</span> 막대가 처음 위치로부터 회전한 각, <span class="nw">$L$을</span> 막대의 길이라 하자. 접선 가속도에 대한 뉴턴 제2법칙으로부터 다음을 얻을 수 있다</p>
+<div class="f" style="left:308.8pt;top:202.6pt"><span class="fig" data-srcpage="1" data-clip="308.8,202.6,531.9,231.4"></span></div>
+<div class="f" style="left:306.8pt;top:236.3pt"><span class="fig" data-srcpage="1" data-clip="306.8,236.3,534.8,603.8"></span></div>
+<p class="x" style="--b:621.0">이 식으로부터 <span class="nw">$0 \le \alpha \le 2\varphi$에서는</span> 입자가 빨라지고, <span class="nw">$2\varphi &lt; \alpha \le \pi$에서는</span> 느려지며, <span class="nw">$\pi &lt; \alpha \le 2(\pi + \varphi)$에서는</span> 다시 빨라짐을 알 수 있다. 임의의 순간에 대해 역학적 에너지 보존 법칙을 쓰자</p>
+<div class="f" style="left:306.5pt;top:646.8pt"><span class="fig" data-srcpage="1" data-clip="306.5,646.8,533.5,676.2"></span></div>
+<p class="x" style="--b:705.8">입자가 <span class="nw">$\alpha &lt; \pi$인</span> 곳에서 멈춘다면, 그 뒤 입자는 속도가 0인 두 위치 사이의 구간에서 움직이게 된다. 반면 입자가 이 장벽을 넘으면 <span class="nw">$\alpha &gt; \pi$에서</span> 입자의 운동 에너지는 증가하게 된다. 따라서 완전히 한 바퀴 돌기 위한 필요조건은 <span class="nw">$\alpha = \pi$인</span> 순간의 속도가 0이 아닌 것, 즉 다음과 같다</p>
+<div class="f" style="left:352.9pt;top:744.1pt"><span class="fig" data-srcpage="1" data-clip="352.9,744.1,487.8,772.9"></span></div>
+<p class="x" style="--b:801.8">첫 번째 관계식으로부터 <span class="nw">$\cos(\varphi)$를</span> 구하자</p>
+<div class="f" style="left:365.5pt;top:815.0pt"><span class="fig" data-srcpage="1" data-clip="365.5,815.0,475.8,850.5"></span></div>
+<p class="x" style="--b:882.8">마지막 두 관계식으로부터 다음을 얻는다</p>
+<div class="f" style="left:371.0pt;top:893.3pt"><span class="fig" data-srcpage="1" data-clip="371.0,893.3,471.2,923.0"></span></div>
+<p class="x" style="--b:951.8">또한 막대의 평형 조건으로부터 다음은 분명하다</p>
+<div class="f" style="left:400.3pt;top:963.1pt"><span class="fig" data-srcpage="1" data-clip="400.3,963.1,440.4,977.0"></span></div>
+<p class="x" style="--b:1008.0">따라서 <span class="nw">$F$가</span> 가질 수 있는 값의 최종 범위는</p>
+<p class="x an" style="--b:1049.2">답:</p>
+<div class="f" style="left:363.2pt;top:1057.6pt"><span class="fig" data-srcpage="1" data-clip="363.2,1057.6,476.5,1103.8"></span></div>
+</div>
+</body></html>

@@ -1,0 +1,102 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2025, problem T2 (cycle cooled by a refrigerator) — Korean edition on the original layout.
+   ORIGINAL: 2 A3 pages (841.9x1191.1pt) printed from the olympiad web page, same style as 2025_T1.html: blue site
+   header bar (stamped; the hidden "Задачи" link text is covered by the bar, and the FontAwesome icon at x 726 that the
+   scrub removed with it is restored as a raster crop of the original), beige page panel, white card with the
+   statement (x 45.0..796.5), card with the topic chips (CSS chips, translated), footer "Website in English" (stamped)
+   and "2020 — Мы те, кого должны превзойти." (translated).
+   Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math KaTeX 1.2em, text column x 65.2..776.5, pitch
+   13.5pt; question lines after the badge start at x 106.6 (pitch 15.8pt). Badges and the p-V figure (raster) stamped;
+   caption "Рис. 1" typed (그림 1). Displays eta = A_г/A_хм and chi = Q_-/A_хм retyped (г -> g gas, хм -> ref
+   refrigerator; same subscripts in the solution).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:65.2pt;width:711.3pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.4pt;--l:15.8pt}
+.c{text-align:center}
+.ftx{left:33.8pt;width:774pt;color:#7e8299}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:45pt;width:751.5pt;background:#fff;border-radius:3.75pt}
+.tg{position:absolute;margin:0;left:69pt;display:flex;gap:3.8pt;font-size:9pt;color:#7e8299;white-space:nowrap}
+.tg span{display:block;background:rgb(220,224,238);padding:0 9pt;border-radius:2pt;height:15.8pt;line-height:16.4pt}
+.ov{position:absolute;line-height:0;background:rgb(59,89,152);padding:0.5pt}  /* the padding ring makes build.py see a drawing on the overlay page (an image alone is not detected) */
+.ov img{display:block;width:16pt;height:15pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:86.2pt;height:974.3pt"></div>
+<div class="bx cd" style="top:1079.2pt;height:45.8pt"></div>
+</div>
+<div class="f" style="left:33.8pt;top:33.8pt"><span class="fig" data-srcpage="1" data-clip="33.8,33.8,807.8,75.0"></span></div>
+<!-- header icon (FontAwesome glyph at x 726.2..739.4) lost by the scrub as collateral of the hidden "Задачи" link:
+     restored as a 288 dpi crop of the original (no Cyrillic in it) -->
+<div class="ov" style="left:724.5pt;top:45.5pt"><img src="data:image/png;base64,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"></div>
+<p class="x" style="--b:114.0">잘 알려져 있듯이 효율은 작동 물질이 한 유용한 일과 작동 물질에 공급된 열량의 비이다. 엄밀하지 않게 말하면, 이 계수는 어떤 가열기에서 들어오는 열이 얼마나 효과적으로 일로 ‘바뀌는지’를 나타낸다.</p>
+<p class="x" style="--b:154.5">이 문제에서는 이상 기체로 이루어지는 순환 과정을 다룬다. 이 순환 과정은 두 개의 등압 과정과 두 개의 등적 과정으로 이루어져 있다(그림 1 참고). 기체의 단열 지수는 알려져 있으며 <span class="nw">$\gamma$이다.</span> 기체에서 열을 빼내는 일은 기체와 주위 환경 사이에서 역카르노 순환으로 작동하는 냉동기가 한다고 하자. <span class="nw">$A_\mathrm{g}$를</span> 기체가 위에서 설명한 순환 과정 한 번 동안 한 일, <span class="nw">$A_\mathrm{ref}$를</span> 작동 물질(기체)의 순환 한 번 동안 냉동기의 작동 물질에 해 준 일이라고 하자. 이때 기체에 대한 열 공급은 주위 환경과의 열교환으로 이루어진다. 이 경우에는 효율 대신 순환 과정의 ‘유효도’ <span class="nw">$\eta$를</span> 다음과 같이 도입하는 것이 자연스럽다:</p>
+<p class="x c" style="--b:241.5;margin-top:-5pt">$\eta = \dfrac{A_\mathrm{g}}{A_\mathrm{ref}}.$</p>
+<p class="x" style="--b:287.2">냉동기의 순환 한 번 동안 기체의 온도 변화는 무시할 수 있을 만큼 작다고 보아라.</p>
+<div class="f" style="left:299.2pt;top:298.5pt"><span class="fig" data-srcpage="1" data-clip="299.2,298.5,542.2,538.5"></span></div>
+<p class="x c" style="--b:557.2">그림 1</p>
+
+<div class="f" style="left:64.7pt;top:570.3pt"><span class="fig" data-srcpage="1" data-clip="64.7,570.3,102.5,589.3"></span></div>
+<p class="x q" style="--b:582.7">사용하는 기체의 등압 과정에서의 몰 열용량 <span class="nw">$C_P$와</span> 등적 과정에서의 몰 열용량 <span class="nw">$C_V$를</span> <span class="nw">$R$와</span> <span class="nw">$\gamma$로</span> 나타내어라.</p>
+<p class="x" style="--b:607.5">순환 과정에서 최고 온도는 주위 환경의 온도 <span class="nw">$T$와</span> 같고, 등적 냉각 과정에서 온도는 <span class="nw">$T$에서</span> <span class="nw">$T - t_1$으로,</span> 등압 냉각 과정에서는 <span class="nw">$T - t_1$에서</span> <span class="nw">$T - t$로</span> 낮아진다고 하자.</p>
+
+<div class="f" style="left:64.7pt;top:633.3pt"><span class="fig" data-srcpage="1" data-clip="64.7,633.3,102.5,652.3"></span></div>
+<p class="x q" style="--b:645.7">비 <span class="nw">$p_2/p_1$과</span> <span class="nw">$V_2/V_1$(기호는</span> 그림 1과 같다)을 <span class="nw">$T$,</span> <span class="nw">$t_1$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+<p class="x" style="--b:670.5">기체의 양을 <span class="nw">$\nu$라고</span> 하자.</p>
+
+<div class="f" style="left:64.7pt;top:682.7pt"><span class="fig" data-srcpage="1" data-clip="64.7,682.7,102.5,701.7"></span></div>
+<p class="x q" style="--b:695.2">일 <span class="nw">$A_\mathrm{g}$를</span> <span class="nw">$\nu$,</span> <span class="nw">$R$,</span> <span class="nw">$T$,</span> <span class="nw">$t_1$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+<p class="x" style="--b:720.0">냉동기에 대해서는 냉동 계수 <span class="nw">$\chi$를</span> 다음 식으로 정의한다:</p>
+<p class="x c" style="--b:750.0;margin-top:-5pt">$\chi = \dfrac{Q_-}{A_\mathrm{ref}},$</p>
+<p class="x" style="--b:781.5">여기서 <span class="nw">$Q_-$는</span> 한 순환 동안 기체에서 빼낸 열량이다.</p>
+
+<div class="f" style="left:64.7pt;top:793.7pt"><span class="fig" data-srcpage="1" data-clip="64.7,793.7,102.5,812.7"></span></div>
+<p class="x q" style="--b:806.2">기체의 온도가 <span class="nw">$T - \tau$일</span> 때의 <span class="nw">$\chi$를</span> 구하여라. 답은 <span class="nw">$\tau$,</span> <span class="nw">$T$로</span> 나타내어라.</p>
+
+<div class="f" style="left:64.7pt;top:820.7pt"><span class="fig" data-srcpage="1" data-clip="64.7,820.7,102.5,839.7"></span></div>
+<p class="x q" style="--b:833.2"><span class="nw">$A_\mathrm{ref}$를</span> 구하여라. 답은 <span class="nw">$\nu$,</span> <span class="nw">$R$,</span> <span class="nw">$\gamma$,</span> <span class="nw">$T$,</span> <span class="nw">$t_1$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+<p class="x" style="--b:858.0"><span class="nw">$y = t/T$,</span> <span class="nw">$x = t_1/t$로</span> 놓자.</p>
+
+<div class="f" style="left:64.7pt;top:870.3pt"><span class="fig" data-srcpage="1" data-clip="64.7,870.3,102.5,889.3"></span></div>
+<p class="x q" style="--b:882.7">위에서 설명한 계의 <span class="nw">$\eta$를</span> <span class="nw">$x$,</span> <span class="nw">$\gamma$,</span> <span class="nw">$y$로</span> 나타내어라. <span class="nw">$\gamma = 5/3$,</span> <span class="nw">$x = 0.5$,</span> <span class="nw">$y = 0.5$일</span> 때 그 값을 계산하여라.</p>
+<p class="x" style="--b:907.5">이제 <span class="nw">$y$와</span> <span class="nw">$x$의</span> 여러 값에 대하여 얻을 수 있는 <span class="nw">$\eta$의</span> 최댓값을 분석하자. 가장 좋은 <span class="nw">$\eta$는</span> <span class="nw">$y \ll 1$일</span> 때 얻어진다는 것을 알고 있다고 보아라.</p>
+
+<div class="f" style="left:64.7pt;top:934.0pt"><span class="fig" data-srcpage="1" data-clip="64.7,934.0,102.5,953.0"></span></div>
+<p class="x q" style="--b:946.4"><span class="nw">$y \ll 1$일</span> 때 <span class="nw">$\eta(x)$를</span> 구하여라. 답은 <span class="nw">$\gamma$와</span> <span class="nw">$x$로</span> 나타내어라.</p>
+<p class="x" style="--b:975.9">필요하면 <span class="nw">$\xi \ll 1$일</span> 때 성립하는 공식 <span class="nw">$\ln(1 + \xi) \approx \xi - \xi^2/2$를</span> 사용할 수 있다.</p>
+
+<div class="f" style="left:64.7pt;top:988.0pt"><span class="fig" data-srcpage="1" data-clip="64.7,988.0,102.5,1007.0"></span></div>
+<p class="x q" style="--b:1000.4"><span class="nw">$x$가</span> 얼마일 때 유효도 <span class="nw">$\eta$가</span> 최대가 되는지 구하여라. 답은 <span class="nw">$\gamma$로</span> 나타내어라.</p>
+
+<div class="f" style="left:64.7pt;top:1015.0pt"><span class="fig" data-srcpage="1" data-clip="64.7,1015.0,102.5,1034.0"></span></div>
+<p class="x q" style="--b:1027.4">가능한 최대 유효도 <span class="nw">$\eta_{max}$를</span> 구하여라. 답은 <span class="nw">$\gamma$로</span> 나타내어라. <span class="nw">$\gamma = 5/3$일</span> 때 그 값을 계산하여라.</p>
+
+<div class="tg" style="top:1094.2pt"><span>T</span><span>열역학</span><span>냉동기</span><span>XY 합숙</span><span>효율</span><span>순환 과정</span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx" style="left:33.8pt;top:33.8pt;width:774pt;height:60pt;background:#fff"></div>
+</div>
+<div class="f" style="left:377.4pt;top:49.0pt"><span class="fig" data-srcpage="2" data-clip="377.4,49.0,470.8,63.7"></span></div>
+<p class="x c ftx" style="--b:81.0">2020 — 우리는 넘어서야 할 존재다.</p>
+</div>
+</body></html>

@@ -1,0 +1,103 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T6 — English edition on the original layout (same geometry, stamps and
+   baselines as the Korean edition 2021_T6.html).
+   ORIGINAL: 2 A3 pages (841.9x1191.1pt) printed from the olympiad web page: blue site bar on page 1 (logo, icons;
+   stamped whole, its hidden menu word is removed by scrub), beige page panel (33.8..807.8), white problem card
+   running over both pages (x 45..796.5, radius 3.75pt on its outer corners), blue badges A1..C4 (stamped), part
+   headings Open Sans Bold 9pt, tag card with grey chips (redrawn as CSS chips with translated tags), white footer
+   band (page 2) with "Website in English" (stamped, English) and the site motto (retyped as the site's English motto "We are what they grow beyond.").
+   Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX 10.8pt (1.2em), text column
+   x 65.2..776.3, pitch 13.5pt (15.8pt for a question that wraps under its badge), left-aligned as in the original.
+   Display formula and the raster figures (ring, cylinder, graph of y(x); Latin labels only) are stamped.
+   Oddity of the original: a broken-image placeholder icon under the first paragraph (x 308..320, y 149..161) —
+   stamped as printed.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:65.2pt;width:711.1pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:44.2pt;--l:15.8pt}   /* question after a badge; the original's span starts with a space: ink at x 109.4 */
+.h{font-weight:bold}
+.c{text-align:center}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:45pt;width:751.5pt;background:#fff;border-radius:3.75pt}
+.fb{left:33.8pt;width:774pt;height:60pt;background:#fff}
+.tg{left:69pt;width:720pt;--l:15.7pt;white-space:nowrap;color:#7d8199}
+.tg span{display:inline-block;height:var(--l);line-height:var(--l);padding:0 8.8pt;margin-right:3.8pt;background:#dce0ee;border-radius:3pt}
+/* the site-bar jedi icon (FontAwesome glyph under the hidden menu word) is lost by scrub: restored as a 600-dpi
+   crop of the original (724..742 x 44..64) drawn on top */
+.ic{position:absolute;left:724pt;top:44pt;line-height:0;background:#3b5998;outline:0.4pt solid #3b5998}
+   /* the outline is a vector drawing, so build.py does not skip this image-only overlay as empty */
+.ic img{width:18pt;height:20pt;display:block}
+.mo{left:33.8pt;width:774pt;text-align:center;color:#7d8199}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:86.2pt;height:1070.3pt;border-radius:3.75pt 3.75pt 0 0"></div>
+</div>
+<div class="f" style="left:33.8pt;top:33.8pt"><span class="fig" data-srcpage="1" data-clip="33.8,33.8,807.8,75.0"></span></div>
+<div class="ov ic"><img alt="" src="data:image/png;base64,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"></div>
+<p class="x h" style="--b:114.0">Part A. Ring (2.0 points)</p>
+<p class="x" style="--b:145.5">A ring of radius $R$ is uniformly charged along its perimeter with linear charge density $\lambda$.</p>
+<div class="f" style="left:306.8pt;top:147.8pt"><span class="fig" data-srcpage="1" data-clip="306.8,147.8,321.8,162.8"></span></div>
+<div class="f" style="left:63.5pt;top:168.5pt"><span class="fig" data-srcpage="1" data-clip="63.5,168.5,103.8,190.0"></span></div>
+<p class="x q" style="--b:182.2">Find the electric field strength at the centre of the charged ring.</p>
+<div class="f" style="left:63.5pt;top:195.5pt"><span class="fig" data-srcpage="1" data-clip="63.5,195.5,103.8,217.0"></span></div>
+<p class="x q" style="--b:209.2">Find the potential on the axis of the ring at a distance $x$ from its centre.</p>
+<div class="f" style="left:63.5pt;top:222.5pt"><span class="fig" data-srcpage="1" data-clip="63.5,222.5,103.8,244.0"></span></div>
+<p class="x q" style="--b:236.2">Find the magnitude of the electric field on the axis of the ring at a distance $x$ from its centre.</p>
+<div class="f" style="left:63.5pt;top:249.5pt"><span class="fig" data-srcpage="1" data-clip="63.5,249.5,103.8,271.0"></span></div>
+<p class="x q" style="--b:263.2">For what value of $x$ is the electric field strength on the axis of the ring maximal? Find this maximum field strength.</p>
+<div class="f" style="left:63.5pt;top:276.5pt"><span class="fig" data-srcpage="1" data-clip="63.5,276.5,103.8,298.0"></span></div>
+<p class="x q" style="--b:290.2">Find the electric field strength created by a disk of radius $R$, uniformly charged over its surface with charge density $\sigma$, on its axis at a distance $x$ from the centre.</p>
+<p class="x h" style="--b:328.5">Part B. Two halves of a ring (2.0 points)</p>
+<p class="x" style="--b:360.0">A ring consists of two halves of radius $R$, one of which is uniformly charged with linear charge density $\lambda$, and the other with $-\lambda$.</p>
+<div class="f" style="left:308.2pt;top:363.8pt"><span class="fig" data-srcpage="1" data-clip="308.2,363.8,533.2,541.5"></span></div>
+<div class="f" style="left:63.5pt;top:548.8pt"><span class="fig" data-srcpage="1" data-clip="63.5,548.8,103.8,570.2"></span></div>
+<p class="x q" style="--b:562.5">Find the potential on the axis of the ring at a distance $x$ from its centre.</p>
+<div class="f" style="left:63.5pt;top:575.8pt"><span class="fig" data-srcpage="1" data-clip="63.5,575.8,103.8,597.2"></span></div>
+<p class="x q" style="--b:589.5">Find the magnitude of the electric field at the centre of the ring.</p>
+<div class="f" style="left:63.5pt;top:602.8pt"><span class="fig" data-srcpage="1" data-clip="63.5,602.8,103.8,624.2"></span></div>
+<p class="x q" style="--b:616.5">Find the magnitude of the electric field on the axis of the ring at a distance $x$ from its centre.</p>
+<p class="x h" style="--b:641.2">Part C. Cylinder (6 points)</p>
+<p class="x" style="--b:663.8">An infinite cylinder of radius $R$ is uniformly charged over its lateral surface with surface charge density $\sigma$.</p>
+<div class="f" style="left:63.5pt;top:674.8pt"><span class="fig" data-srcpage="1" data-clip="63.5,674.8,103.8,696.2"></span></div>
+<p class="x q" style="--b:688.5">What is the magnitude of the electric field at a distance <span class="nw">$r &lt; R$</span> from the axis of the cylinder?</p>
+<p class="x" style="--b:722.2">Now consider a semi-infinite cylinder of the same radius $R$, uniformly charged with the same surface charge density $\sigma$. You will need to find the field at every point of the base of the cylinder (see figure).</p>
+<div class="f" style="left:308.2pt;top:739.5pt"><span class="fig" data-srcpage="1" data-clip="308.2,739.5,533.2,948.8"></span></div>
+<div class="f" style="left:63.5pt;top:956.0pt"><span class="fig" data-srcpage="1" data-clip="63.5,956.0,103.8,977.5"></span></div>
+<p class="x q" style="--b:969.8">Find the magnitude of the electric field at the centre $O$ of the base of the cylinder.</p>
+<div class="f" style="left:63.5pt;top:983.0pt"><span class="fig" data-srcpage="1" data-clip="63.5,983.0,103.8,1004.5"></span></div>
+<p class="x q" style="--b:996.8">Consider a point $A$ in the base of the cylinder at a distance <span class="nw">$r &lt; R$</span> from the point $O$. Find the projection of the electric field vector onto the line $OA$.</p>
+<p class="x" style="--b:1035.0">To solve the next part you may need the dependence of the radial component of the electric field of a ring in its own plane. If a ring of radius $R$ is uniformly charged with a charge $Q$, then at a distance $r$ from its centre the radial component of the field is</p>
+<div class="f" style="left:377.8pt;top:1059.6pt"><span class="fig" data-srcpage="1" data-clip="377.8,1059.6,463.7,1090.2"></span></div>
+<p class="x" style="--b:1119.8">where <span class="nw">$x = r/R$.</span> The graph of $y(x)$ is shown in the figure below.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx fb" style="top:543.8pt"></div>
+<div class="bx cd" style="top:33.8pt;height:423pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:475.5pt;height:45.7pt"></div>
+</div>
+<div class="f" style="left:233.2pt;top:33.8pt"><span class="fig" data-srcpage="2" data-clip="233.2,33.8,608.2,389.2"></span></div>
+<div class="f" style="left:63.5pt;top:396.5pt"><span class="fig" data-srcpage="2" data-clip="63.5,396.5,103.8,418.0"></span></div>
+<p class="x q" style="--b:410.2">For the semi-infinite cylinder under consideration, find the magnitude of the electric field at the point $A$ located at a distance <span class="nw">$r = 0.9R$</span> from the point $O$.</p>
+<p class="x tg" style="--b:501.8"><span>T</span><span>Electricity</span><span>Electrostatics</span><span>Field strength</span><span>Ring</span><span>Cylinder</span><span>Electromagnetism</span><span>2021</span><span>XY training camp</span><span>W</span></p>
+<div class="f" style="left:370pt;top:559.3pt"><span class="fig" data-srcpage="2" data-clip="370,559.3,475,576.3"></span></div>
+<p class="x mo" style="--b:591.0">2020 — We are what they grow beyond.</p>
+</div>
+</body></html>

@@ -1,0 +1,204 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2024, problem T2 — solution — Korean edition on the original layout.
+   ORIGINAL: 4 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same layout as the approved 2026 T1S
+   pilot): beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 1.50" (stamped), grey separator under the restated question, answer frame (3pt stroke #f3f6f9); all redrawn
+   as .bx inside the static .dc wrapper. Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math KaTeX at
+   10.8pt (1.2em), text column x 63.4..777.8; question line after the badge starts at x 104.7, left-aligned.
+   Display formulas and the graph (A4, raster) are stamped. Cyrillic inside displays is restored with .ov labels on
+   white (they also cover the left-over dots of "н.э."): subscript н.э. -> NE, ист (источник) -> src,
+   мДж -> mJ, с -> s.  "Ответ:" -> "답:".
+   Oddities of the original kept as printed: A4 explanation says "E <= 5/2(U0+4RI0) - straight line" and
+   "E = U0 + 4RI0" (the answers use 5RI0 and ">"); B4 says the current stays constant until the voltage "on the
+   capacitor" drops to U0 (meaning the non-linear element); the restated A2/A4 questions differ slightly from the
+   problem sheet (A2: "through E, R, U0, I0"; A4: "indicate" instead of "calculate").
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.l2{--l:15.1pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.ov{white-space:nowrap;text-align:left;font-family:CM,serif;background:#fff;--l:8pt;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.5pt)}
+.s7{--fs:7.6pt;--l:7.6pt}
+.s10{--fs:10.8pt;--l:10.8pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:714.0pt"></div>
+<div class="bx cd" style="top:759.0pt;height:376.5pt"></div>
+<div class="bx sp" style="top:162.8pt"></div>
+<div class="bx sp" style="top:797.2pt"></div>
+<div class="bx ab" style="top:644.3pt;height:93.0pt"></div>
+<div class="bx ab" style="top:1017.0pt;height:108.0pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">마디 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이의 부분을 빼면 회로 전체가 직류 전압원과 저항으로만 이루어져 있으므로, 마디 <span class="nw">$A$에서</span> 마디 <span class="nw">$B$로</span> 흐르는 전류 <span class="nw">$I_{AB}$와</span> 이 부분의 전압 <span class="nw">$U_{AB} = \varphi_A - \varphi_B$</span> 사이의 관계는 마디 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이에 연결된 소자에 관계없이 다음 꼴로 나타낼 수 있다:</p>
+<div class="f" style="left:378.2pt;top:97.5pt"><span class="fig" data-srcpage="1" data-clip="378.2,97.5,462.6,132.4"></span></div>
+<p class="x" style="--b:150.0"><span class="nw">$\mathcal{E}_0$과</span> <span class="nw">$r_0$을</span> 구하여라. 답은 <span class="nw">$\mathcal{E}$와</span> <span class="nw">$R$로</span> 나타내어라.</p>
+<p class="x" style="--b:180.8">마디 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이에 이상적인 전압계를 연결하면, 전압계에 걸리는 전압은</p>
+<div class="f" style="left:312.1pt;top:192.7pt"><span class="fig" data-srcpage="1" data-clip="312.1,192.7,528.7,221.7"></span></div>
+<p class="x" style="--b:253.5">전원의 전압이 0이면 전원을 저항이 0인 도선으로 바꿀 수 있다. 그러면 단자 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이의 회로는 병렬로 연결된 두 쌍의 저항 <span class="nw">$(2R,\,8R)$과</span> <span class="nw">$(6R,\,4R)$을</span> 직렬로 연결한 것이 되므로, 저항은</p>
+<div class="f" style="left:322.5pt;top:278.2pt"><span class="fig" data-srcpage="1" data-clip="322.5,278.2,518.3,307.2"></span></div>
+<p class="x" style="--b:324.8">그러면 전압과 전류 사이의 관계는 다음 꼴이 된다</p>
+<div class="f" style="left:375.8pt;top:333.8pt"><span class="fig" data-srcpage="1" data-clip="375.8,333.8,465.0,351.3"></span></div>
+<p class="x" style="--b:368.2">이로부터</p>
+<div class="f" style="left:378.2pt;top:377.3pt"><span class="fig" data-srcpage="1" data-clip="378.2,377.3,462.6,409.2"></span></div>
+<p class="x" style="--b:426.0">또는 단자 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이에 연결한 이상적인 전류계에 흐르게 될 단락 전류 <span class="nw">$I_c = \mathcal{E}_0/r_0$을</span> 계산할 수도 있다. 이렇게 연결하면 전원 <span class="nw">$\mathcal{E}$가</span> 연결된 회로 전체의 저항은</p>
+<div class="f" style="left:334.7pt;top:450.7pt"><span class="fig" data-srcpage="1" data-clip="334.7,450.7,506.0,479.0"></span></div>
+<p class="x" style="--b:496.5">그러면 전원 <span class="nw">$\mathcal{E}$에</span> 흐르는 전체 전류는 <span class="nw">$I_\mathcal{E} = 6\mathcal{E}/25R$이고,</span> 저항 <span class="nw">$2R$와</span> <span class="nw">$8R$에</span> 흐르는 전류는 각각 다음과 같다:</p>
+<div class="f" style="left:328.1pt;top:506.3pt"><span class="fig" data-srcpage="1" data-clip="328.1,506.3,512.6,536.7"></span></div>
+<p class="x" style="--b:552.8">따라서 단락 전류는</p>
+<div class="f" style="left:355.4pt;top:562.5pt"><span class="fig" data-srcpage="1" data-clip="355.4,562.5,485.3,593.0"></span></div>
+<p class="x" style="--b:609.8">이로부터 앞에서와 같은 저항값을 얻는다</p>
+<div class="f" style="left:379.5pt;top:618.8pt"><span class="fig" data-srcpage="1" data-clip="379.5,618.8,461.2,635.7"></span></div>
+<p class="x an" style="--b:672.8">답:</p>
+<div class="f" style="left:372.1pt;top:683.4pt"><span class="fig" data-srcpage="1" data-clip="372.1,683.4,468.3,711.5"></span></div>
+
+<div class="f" style="left:62.5pt;top:769.0pt"><span class="fig" data-srcpage="1" data-clip="62.5,769.0,101.8,789.4"></span></div>
+<p class="x q" style="--b:782.2">전류 <span class="nw">$I_{AB}$가</span> <span class="nw">$\mathcal{E}$에</span> 따라 어떻게 달라지는지 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$으로</span> 나타내어라.</p>
+<p class="x" style="--b:815.2">비선형 소자에 걸린 전압이 <span class="nw">$U_0$보다</span> 작다고 가정하자. 그러면 이 전압은 다음 방정식으로부터 구할 수 있다</p>
+<div class="f" style="left:288.4pt;top:826.5pt"><span class="fig" data-srcpage="1" data-clip="288.4,826.5,552.3,856.2"></span></div>
+<p class="x" style="--b:873.0">이로부터</p>
+<div class="f" style="left:305.2pt;top:882.8pt"><span class="fig" data-srcpage="1" data-clip="305.2,882.8,535.6,915.4"></span></div>
+<p class="x" style="--b:933.0">이에 해당하는 전류값은</p>
+<div class="f" style="left:331.9pt;top:942.0pt"><span class="fig" data-srcpage="1" data-clip="331.9,942.0,508.9,974.7"></span></div>
+<p class="x" style="--b:990.8">전원의 전압을 더 높이면 비선형 소자에 걸린 전압은 <span class="nw">$U_0$보다</span> 커지고, 소자에 흐르는 전류는 <span class="nw">$I_0$이</span> 된다. 이때 비선형 소자에 걸린 전압은 <span class="nw">$U_{AB} = \mathcal{E}_0 - I_0r_0$이다.</span> <span class="nw">$\mathcal{E}_0$과</span> <span class="nw">$r_0$의</span> 식을 대입하면 답을 얻는다.</p>
+<p class="x an" style="--b:1045.5">답:</p>
+<div class="f" style="left:321.5pt;top:1055.5pt"><span class="fig" data-srcpage="1" data-clip="321.5,1055.5,516.1,1099.9"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:202.4pt"></div>
+<div class="bx cd" style="top:247.5pt;height:537.0pt"></div>
+<div class="bx cd" style="top:795.8pt;height:337.4pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:285.8pt"></div>
+<div class="bx sp" style="top:834.0pt"></div>
+<div class="bx ab" style="top:104.3pt;height:121.5pt"></div>
+<div class="bx ab" style="top:334.5pt;height:439.5pt"></div>
+<div class="bx ab" style="top:1025.3pt;height:97.5pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="2" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">비선형 소자에서 발생하는 전력 <span class="nw">$P_\mathrm{NE}$가</span> <span class="nw">$\mathcal{E}$에</span> 따라 어떻게 달라지는지 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$으로</span> 나타내어라.</p>
+<p class="x" style="--b:90.0">비선형 소자에서 발생하는 전력은 <span class="nw">$P_\mathrm{NE} = U_\mathrm{NE}I_{AB}$이다.</span> 앞 문항의 결과를 이용하면 답을 얻는다.</p>
+<p class="x an" style="--b:132.8">답:</p>
+<div class="f" style="left:294.2pt;top:142.0pt"><span class="fig" data-srcpage="2" data-clip="294.2,142.0,543.5,200.6"></span></div>
+<p class="x ov s7" style="--b:177.0;left:302.6pt;width:12.6pt">NE</p>
+
+<div class="f" style="left:62.5pt;top:257.6pt"><span class="fig" data-srcpage="2" data-clip="62.5,257.6,101.8,278.0"></span></div>
+<p class="x q" style="--b:270.7"><span class="nw">$P_\mathrm{NE}(\mathcal{E})$의</span> 정성적인 그래프를 그려라. 그래프에 모든 특징적인 점을 표시하고, 그 점들에 해당하는 값을 적어라.</p>
+<p class="x l2" style="--b:305.1">전압이 작을 때 그래프는 꼭짓점이 원점에 있는 포물선이고, <span class="nw">$\mathcal{E} \le \frac{5}{2}(U_0 + 4RI_0)$일</span> 때는 직선이다. 이차 의존성에서 선형 의존성으로 바뀌는 점에서 <span class="nw">$\mathcal{E} = U_0 + 4RI_0$,</span> <span class="nw">$P_\mathrm{NE} = I_0U_0$이다.</span></p>
+<p class="x an" style="--b:363.0">답:</p>
+<div class="f" style="left:276.0pt;top:365.2pt"><span class="fig" data-srcpage="2" data-clip="276.0,365.2,564.8,756.8"></span></div>
+
+<div class="f" style="left:62.5pt;top:805.8pt"><span class="fig" data-srcpage="2" data-clip="62.5,805.8,101.8,826.2"></span></div>
+<p class="x q" style="--b:818.9">축전기에 흐르는 전류 <span class="nw">$I_C(t)$를</span> 시간 <span class="nw">$t$의</span> 함수로 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$,</span> <span class="nw">$C$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+<p class="x" style="--b:853.0">비선형 소자에 걸린 전압이 <span class="nw">$U_0$보다</span> 작으면, 이 소자는 저항값이 <span class="nw">$r_0 = U_0/I_0 = 500\,\Omega = R$인</span> 저항처럼 행동한다. 따라서 이 경우 비선형 소자에 걸린 전압은 저항에 걸린 전압과 같아야 한다. 그러면 비선형 소자에 걸린 처음 전압은 <span class="nw">$\mathcal{E}/2 = 3\,\mathrm{V} &lt; U_0$이므로,</span> 어디에서나 전류와 전압 사이의 선형 관계를 쓸 수 있다. 그러면 축전기의 전하와 축전기에 흐르는 전류는 (키르히호프 법칙에서 얻는) 다음 관계식으로 이어진다</p>
+<div class="f" style="left:371.7pt;top:904.5pt"><span class="fig" data-srcpage="2" data-clip="371.7,904.5,469.0,921.4"></span></div>
+<p class="x" style="--b:953.2">이 식을 시간에 대해 미분하고 <span class="nw">$\dot q = I$임을</span> 고려하면 다음을 얻는다</p>
+<div class="f" style="left:324.4pt;top:963.7pt"><span class="fig" data-srcpage="2" data-clip="324.4,963.7,516.4,994.9"></span></div>
+<p class="x" style="--b:1012.5">처음 순간에 축전기는 충전되어 있지 않으므로 <span class="nw">$I(0) = \mathcal{E}/(R + r_0)$이다.</span> 따라서 축전기에 흐르는 전류는</p>
+<p class="x an" style="--b:1053.8">답:</p>
+<div class="f" style="left:356.8pt;top:1063.5pt"><span class="fig" data-srcpage="2" data-clip="356.8,1063.5,482.5,1096.2"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:220.4pt"></div>
+<div class="bx cd" style="top:265.5pt;height:315.0pt"></div>
+<div class="bx cd" style="top:591.8pt;height:366.7pt"></div>
+<div class="bx cd" style="top:969.8pt;height:186.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:85.5pt"></div>
+<div class="bx sp" style="top:317.2pt"></div>
+<div class="bx sp" style="top:630.0pt"></div>
+<div class="bx sp" style="top:1021.5pt"></div>
+<div class="bx ab" style="top:472.5pt;height:97.5pt"></div>
+<div class="bx ab" style="top:829.5pt;height:118.5pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">전류가 정상 상태에 이를 때까지 비선형 소자에서 발생하는 열량 <span class="nw">$Q_\mathrm{NE}$는</span> 얼마인가? 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$,</span> <span class="nw">$C$로</span> 나타내어라. 그 수치값을 구하여라.</p>
+<p class="x" style="--b:104.6;--l:14.6pt">축전기가 충전되는 동안 전원을 지나는 전하는 <span class="nw">$q = C\mathcal{E}$이고,</span> 전원이 하는 일은 <span class="nw">$A_\mathrm{src} = q\mathcal{E} = C\mathcal{E}^2$이다.</span> 이 일은 축전기의 에너지 증가와 발생하는 열로 쓰인다:</p>
+<div class="f" style="left:377.1pt;top:130.8pt"><span class="fig" data-srcpage="3" data-clip="377.1,130.8,463.6,161.7"></span></div>
+<p class="x ov s7" style="--b:153.0;left:386.6pt;width:12.2pt">src</p>
+<p class="x" style="--b:178.9;--l:13.9pt">따라서 회로에서 발생하는 열은 <span class="nw">$Q = C\mathcal{E}^2/2$이다.</span> 이 열은 저항과 비선형 소자 사이에 그 저항값에 비례하여 나뉜다(다루는 전압 범위에서 비선형 소자는 저항처럼 행동하기 때문이다)</p>
+<div class="f" style="left:302.4pt;top:204.0pt"><span class="fig" data-srcpage="3" data-clip="302.4,204.0,538.3,235.9"></span></div>
+<p class="x ov s7" style="--b:226.5;left:312.5pt;width:12.6pt">NE</p>
+<p class="x ov s10" style="--b:223.5;left:514.6pt;width:22.4pt">mJ</p>
+
+<div class="f" style="left:62.5pt;top:275.6pt"><span class="fig" data-srcpage="3" data-clip="62.5,275.6,101.8,296.0"></span></div>
+<p class="x q" style="--b:288.7">비선형 소자에서 발생한 열량이 <span class="nw">$Q_\mathrm{NE}$의</span> <span class="nw">$80\%$에</span> 이르는 시간 <span class="nw">$\tau$는</span> 얼마인가? 답은 <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$,</span> <span class="nw">$C$로</span> 나타내어라. 그 수치값을 구하여라.</p>
+<p class="x" style="--b:335.2">비선형 소자에서 발생하는 전력은 시간에 따라 다음과 같이 변한다</p>
+<div class="f" style="left:262.3pt;top:346.8pt"><span class="fig" data-srcpage="3" data-clip="262.3,346.8,578.5,379.9"></span></div>
+<p class="x" style="--b:397.5">그러면 시간 <span class="nw">$t$</span> 동안 비선형 소자에서 발생하는 열은</p>
+<div class="f" style="left:279.4pt;top:408.1pt"><span class="fig" data-srcpage="3" data-clip="279.4,408.1,561.3,441.4"></span></div>
+<p class="x ov s7" style="--b:430.5;left:480.9pt;width:12.7pt">NE</p>
+<p class="x" style="--b:458.1"><span class="nw">$Q = 0.8Q_\mathrm{NE}$가</span> 되는 순간에는 <span class="nw">$e^{-2t/t_0} = 0.2$이므로,</span></p>
+<p class="x an" style="--b:501.0">답:</p>
+<div class="f" style="left:319.7pt;top:512.2pt"><span class="fig" data-srcpage="3" data-clip="319.7,512.2,521.1,542.7"></span></div>
+<p class="x ov s10" style="--b:530.2;left:514.6pt;width:6pt">s</p>
+
+<div class="f" style="left:62.5pt;top:601.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,601.8,101.8,622.2"></span></div>
+<p class="x q" style="--b:614.9">축전기에 흐르는 전류 <span class="nw">$I_C(t)$를</span> 시간 <span class="nw">$t$의</span> 함수로 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$,</span> <span class="nw">$C$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+<p class="x" style="--b:648.0">이제 비선형 소자에 걸린 처음 전압은 <span class="nw">$U_0$보다</span> 크므로, 비선형 소자에 흐르는 전류(축전기에 흐르는 전류와 같다)는 <span class="nw">$I_C = I_0$이다.</span> 이 전류는 축전기에 걸린 전압이 <span class="nw">$U_0$까지</span> 떨어질 때까지 일정하게 유지된다.<br>그 순간까지 축전기의 전하는 시간에 따라 <span class="nw">$q = I_0t$로</span> 변하므로, 비선형 소자에 걸린 전압은</p>
+<div class="f" style="left:361.8pt;top:684.0pt"><span class="fig" data-srcpage="3" data-clip="361.8,684.0,478.9,701.7"></span></div>
+<p class="x ov s7" style="--b:698.2;left:370.7pt;width:12.6pt">NE</p>
+<p class="x" style="--b:720.0">이 관계는 <span class="nw">$U_\mathrm{NE} \ge U_0$인</span> 동안, 즉 다음 범위에서 성립한다</p>
+<div class="f" style="left:355.0pt;top:732.7pt"><span class="fig" data-srcpage="3" data-clip="355.0,732.7,485.7,763.2"></span></div>
+<p class="x" style="--b:780.0">그 뒤로는 보통의 축전기 충전에서처럼 전류가 지수적으로 감소한다:</p>
+<div class="f" style="left:347.2pt;top:791.2pt"><span class="fig" data-srcpage="3" data-clip="347.2,791.2,493.5,821.7"></span></div>
+<p class="x an" style="--b:858.0">답:</p>
+<div class="f" style="left:257.3pt;top:868.0pt"><span class="fig" data-srcpage="3" data-clip="257.3,868.0,580.4,921.4"></span></div>
+
+<div class="f" style="left:62.5pt;top:979.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,979.8,101.8,1000.2"></span></div>
+<p class="x q" style="--b:992.9">전류가 정상 상태에 이를 때까지 비선형 소자에서 발생하는 열량 <span class="nw">$Q_\mathrm{NE}$는</span> 얼마인가? 그 수치값을 <span class="nw">$1\%$</span> 이상의 정확도로 구하여라.</p>
+<p class="x" style="--b:1039.5">전류가 일정하게 유지되는 동안 비선형 소자에서 발생하는 전력은</p>
+<div class="f" style="left:337.2pt;top:1049.3pt"><span class="fig" data-srcpage="3" data-clip="337.2,1049.3,503.5,1066.9"></span></div>
+<p class="x ov s7" style="--b:1063.5;left:377.7pt;width:12.6pt">NE</p>
+<p class="x" style="--b:1085.2">그러면 시간 <span class="nw">$t_1$</span> 동안 발생하는 열은</p>
+<div class="f" style="left:277.9pt;top:1095.9pt"><span class="fig" data-srcpage="3" data-clip="277.9,1095.9,562.8,1128.4"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:254.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx ab" style="top:184.5pt;height:93.0pt"></div>
+</div>
+<div class="f" style="left:207.2pt;top:32.2pt"><span class="fig" data-srcpage="4" data-clip="207.2,32.2,633.5,61.2"></span></div>
+<p class="x ov s10" style="--b:49.5;left:609.8pt;width:22.4pt">mJ</p>
+<p class="x" style="--b:77.2">그 뒤로 전력은 시간에 따라 다음과 같이 변한다(<span class="nw">$t' = t - t_1$)</span></p>
+<div class="f" style="left:328.0pt;top:87.7pt"><span class="fig" data-srcpage="4" data-clip="328.0,87.7,512.7,118.2"></span></div>
+<p class="x" style="--b:135.0">따라서 발생하는 전체 열은</p>
+<div class="f" style="left:254.7pt;top:145.0pt"><span class="fig" data-srcpage="4" data-clip="254.7,145.0,586.0,177.4"></span></div>
+<p class="x ov s10" style="--b:164.2;left:562.4pt;width:22.4pt">mJ</p>
+<p class="x an" style="--b:213.0">답:</p>
+<div class="f" style="left:196.1pt;top:223.5pt"><span class="fig" data-srcpage="4" data-clip="196.1,223.5,644.6,253.2"></span></div>
+<p class="x ov s10" style="--b:241.5;left:621.0pt;width:22.4pt">mJ</p>
+</div>
+</body></html>
