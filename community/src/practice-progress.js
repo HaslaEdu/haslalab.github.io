@@ -29,7 +29,7 @@ export const PRACTICE_SCHEMA = [
 export const MODES = ['exam', 'bank', 'contest', 'track', 'diag'];
 /* 'place': the placement test's verdict for a unit — the rating starts at that step if the unit has none yet */
 export const RESULTS = ['right', 'wrong', 'solved', 'missed', 'skip', 'place'];
-const UNIT = /^(?:[a-z]+\/[a-z_]+|[a-z]+\/\*|contest\/[a-z]+)$/;
+export const UNIT_RE = /^(?:[a-z]+\/[a-z_]+|[a-z]+\/\*|contest\/[a-z]+)$/;
 const ITEM = /^[\w~.:-]{3,120}$/;
 const MAX_BATCH = 50, MAX_STATE = 200000;
 
@@ -39,11 +39,13 @@ export const stepRating = step => 1000 + 100 * step;
 export const ratingStep = rating => Math.max(1, Math.min(10, Math.round((rating - 1000) / 100)));
 export function updateRating(rating, step, result) {
   if (result === 'skip' || result === 'place') return rating;
-  const won = result === 'right' || result === 'solved' ? 1 : 0;
-  const expected = 1 / (1 + 10 ** ((stepRating(step) - rating) / 400));
   /* graded answers count fully; marking yourself counts half */
-  const k = result === 'right' || result === 'wrong' ? 32 : 16;
-  return Math.round((rating + k * (won - expected)) * 10) / 10;
+  return updateRatingBy(rating, step, result === 'right' || result === 'solved' ? 1 : 0, result === 'right' || result === 'wrong' ? 32 : 16);
+}
+/* the same move for a result between 0 and 1 (a photo-graded written answer: the fraction of its marks) */
+export function updateRatingBy(rating, step, won, k = 32) {
+  const expected = 1 / (1 + 10 ** ((stepRating(step) - rating) / 400));
+  return Math.round((rating + k * (Math.max(0, Math.min(1, won)) - expected)) * 10) / 10;
 }
 
 const ready = new WeakSet();
@@ -55,7 +57,7 @@ export async function ensurePracticeSchema(env) {
 }
 
 /* the learner's answers to the first questions (learn-path.js): kept only in this shape, the newer one wins */
-const PROFILE = {region: ['kr', 'in', 'us', 'global'], level: ['middle', 'high1', 'high2', 'uni'], goal: ['school', 'exam', 'olympiad', 'curious']};
+const PROFILE = {region: ['kr', 'in', 'us', 'global'], level: ['middle', 'high1', 'high2', 'uni', 'L1', 'L2', 'L3', 'L4'], goal: ['school', 'exam', 'olympiad', 'curious']};
 function profileOf(p) {
   if (!p || typeof p !== 'object' || Object.entries(PROFILE).some(([k, ok]) => !ok.includes(p[k]))) return undefined;
   return {region: p.region, level: p.level, goal: p.goal, oly: Math.max(0, Math.min(2, p.oly | 0)), daily: [5, 10, 20].includes(p.daily) ? p.daily : 10, at: Math.floor(Number(p.at) || 0)};
@@ -106,7 +108,7 @@ export function createPracticeRouter({ HttpError, needUser, limit, now, bad }) {
       if (!list.length || list.length > MAX_BATCH) bad('bad_attempts');
       await limit(env, 'practice-attempts:' + me.id, 600, 3600);
       const t = now(), clean = list.map(a => {
-        if (!a || !ITEM.test(a.item_id || '') || !MODES.includes(a.mode) || !RESULTS.includes(a.result) || !UNIT.test(a.unit || '')) bad('bad_attempt');
+        if (!a || !ITEM.test(a.item_id || '') || !MODES.includes(a.mode) || !RESULTS.includes(a.result) || !UNIT_RE.test(a.unit || '')) bad('bad_attempt');
         const step = Number(a.step); if (!(step >= 1 && step <= 10)) bad('bad_attempt');
         /* the browser's own clock, within the last two weeks and never ahead of the server */
         const at = Number.isFinite(a.at) ? Math.min(t, Math.max(t - 14 * 86400, Math.floor(a.at))) : t;

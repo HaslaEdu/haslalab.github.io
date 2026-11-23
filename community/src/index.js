@@ -31,6 +31,7 @@ import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError }
 import { createGalleryRouter, activeGallery } from './galleries.js';
 import { createPracticeRouter, ensurePracticeSchema } from './practice-progress.js';
 import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
+import { createGradeRouter, ensureGradeSchema } from './practice-grade.js';
 import { createCreationRouter, ensureCreationSchema } from './creations.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
 import { getMonthlyAnswerSheet, getMonthlyProblemRound } from '../../monthly-problems.mjs';
@@ -257,6 +258,7 @@ const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "ad
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
 const practiceRouter = createPracticeRouter({HttpError, needUser, limit, now, bad});
 const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, clientIp});
+const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
 const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
 /* a post goes to a built-in board of the main gallery or to an open minor gallery */
@@ -483,12 +485,15 @@ async function handle(req, env, url, ctx) {
     // Learn section progress (practice-progress.js)
     await ensurePracticeSchema(env);
     await ensureLearnSchema(env);
+    await ensureGradeSchema(env);
     await ensureCreationSchema(env);
     await env.DB.batch([
       env.DB.prepare("DELETE FROM practice_attempts WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM practice_skills WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM practice_state WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM ai_usage_daily WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM practice_graded WHERE user_id=?").bind(me.id),
+      env.DB.prepare("UPDATE problem_reports SET user_id=NULL WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM entitlements WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM class_members WHERE user_id=?").bind(me.id),
       env.DB.prepare("UPDATE creations SET status='hidden' WHERE user_id=?").bind(me.id),
@@ -775,6 +780,8 @@ async function handle(req, env, url, ctx) {
 
   const practice = await practiceRouter(p, m, body, me, env);
   if (practice !== undefined) return practice;
+  const graded = await gradeRouter(p, m, body, me, req, env);
+  if (graded !== undefined) return graded;
   const learn = await learnRouter(p, m, body, me, req, env);
   if (learn !== undefined) return learn;
   const creation = await creationRouter(p, m, body, me, req, env);

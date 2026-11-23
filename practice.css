@@ -127,3 +127,38 @@ button.mini[aria-pressed=true]{color:var(--accent);border-color:var(--accent);ba
 .settings summary::-webkit-details-marker{display:none}
 .settings summary::after{content:"▾";color:var(--muted,#657187);font-size:14px;transition:transform .15s}
 .settings[open] summary::after{transform:rotate(180deg)}
+/* study level: the bar on the today page and the four cards */
+.levelbar{margin:0 0 12px;display:flex;align-items:center;gap:10px;border-color:var(--accent)}.levelbar .name small{font-size:12px}.levelbar .name b{display:block;font-size:1rem}
+.levelbar .btnlink{flex:none;min-height:40px;display:inline-flex;align-items:center}
+.lvcard{align-items:flex-start;gap:12px}.lvcard .lvno{flex:none;width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:800;display:flex;align-items:center;justify-content:center}
+.lvcard.cur .lvno{background:var(--accent);color:#fff}:root[data-theme=dark] .lvcard.cur .lvno{color:#15121c}
+.lvcard small{margin-top:3px;line-height:1.5}.lvcard .soon .tag{margin-right:2px;color:var(--amber);background:var(--amber-bg)}
+/* written answers */
+.ptools .lastgr{align-self:center;font-size:12.5px;color:var(--muted);border-radius:20px;padding:3px 10px;background:var(--surface-alt)}
+.lastgr.band-pass{color:var(--ok);background:var(--ok-bg)}.lastgr.band-partial{color:var(--amber);background:var(--amber-bg)}.lastgr.band-retry{color:var(--bad);background:var(--bad-bg)}
+.written{margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface-alt)}
+.written .whd{display:flex;align-items:baseline;gap:10px;justify-content:space-between;flex-wrap:wrap}.written h3{margin:0;font-size:1rem}
+.written>.src{margin:4px 0 8px}.wrule{margin:0 0 10px}.wrule summary{min-height:40px;display:flex;align-items:center}.wrule p{margin:4px 0 0;font-size:14px}
+.wlogin{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 10px;padding:10px 12px;border-radius:9px;background:var(--surface);border:1px dashed var(--line);font-size:14px}
+.wmode{margin-bottom:10px}.wpane{margin-bottom:10px}
+.filebtn{position:relative;display:flex;align-items:center;justify-content:center;min-height:56px;border:2px dashed var(--line);border-radius:12px;background:var(--surface);cursor:pointer;font-weight:650;color:var(--accent);padding:10px}
+.filebtn:hover,.filebtn:focus-within{border-color:var(--accent)}.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.padbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}.padbar .seg button{min-height:40px;min-width:48px;padding:6px 10px;font-size:13px}
+.padcv{display:block;width:100%;max-width:640px;aspect-ratio:3/4;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;touch-action:none;cursor:crosshair;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap}.thumb{position:relative;margin:0;width:88px}.thumb img{display:block;width:88px;height:116px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#fff}
+.thumb figcaption{font-size:11px;color:var(--muted);text-align:center}.thumb .rm{position:absolute;top:-6px;right:-6px;width:40px;height:40px;padding:0;border-radius:50%;font-size:13px;background:var(--surface);display:flex;align-items:center;justify-content:center}
+.wmsg{flex:1;min-width:160px}.wmsg.soon{color:var(--amber)}.wmsg.bad{color:var(--bad)}
+.wsteps .on{color:var(--accent);font-weight:700}.wsteps .done{color:var(--ok)}.wsteps .dots::after{content:'';animation:wdots 1.2s steps(4) infinite}
+@keyframes wdots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+@media (prefers-reduced-motion:reduce){.wsteps .dots::after{animation:none;content:'…'}}
+.wres{margin-top:12px;border-radius:10px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-left-width:4px}
+.wres.band-pass{border-left-color:var(--ok)}.wres.band-partial{border-left-color:var(--amber)}.wres.band-retry{border-left-color:var(--bad)}
+.wtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.wscore{font-size:1.05rem}.wscore b{font-size:1.6rem}.wscore small{color:var(--muted);margin-left:4px}
+.bandtag{font-weight:700;border-radius:20px;padding:3px 12px;font-size:13px}.bandtag.pass{color:var(--ok);background:var(--ok-bg)}.bandtag.partial{color:var(--amber);background:var(--amber-bg)}.bandtag.retry{color:var(--bad);background:var(--bad-bg)}
+.wxp{font-weight:700;color:var(--accent)}.wnote{margin:8px 0}
+.rubric{width:100%;border-collapse:collapse;margin:8px 0;font-size:14px}.rubric caption{text-align:left;font-weight:650;font-size:13px;color:var(--muted);padding-bottom:4px}
+.rubric td{padding:7px 6px;border-top:1px solid var(--line);vertical-align:top}.rubric td small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.rubric .pts{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700}.rubric tr.full .pts{color:var(--ok)}.rubric tr.some .pts{color:var(--amber)}.rubric tr.none .pts{color:var(--bad)}
+.wfb{font-size:14.5px}.wfb p{margin:6px 0}.wtrans{font-size:13.5px;color:var(--muted)}
+.tag.rst-fixed{color:var(--ok);background:var(--ok-bg)}.tag.rst-rejected{color:var(--bad);background:var(--bad-bg)}.tag.rst-pending{color:var(--amber);background:var(--amber-bg)}.tag.rst-open{color:var(--accent);background:var(--accent-soft)}
+@media(max-width:600px){.written{margin-left:-4px;margin-right:-4px;padding:12px 10px}.padbar .seg{display:inline-flex}.padbar .seg button{flex:none}.wmode{display:flex}.ptools .lastgr{width:100%;text-align:center}}

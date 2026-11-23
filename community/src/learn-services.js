@@ -59,6 +59,8 @@ export const LANG_NAMES = {ko: 'Korean', en: 'English', es: 'Spanish', pt: 'Braz
   hi: 'Hindi', zh: 'Simplified Chinese', ja: 'Japanese'};
 /* free tutor questions a day; a plan's ceiling only guards against a stolen session */
 export const TUTOR_FREE = 5, TUTOR_PLUS = 100, TUTOR_SCHOOL = 20;
+/* photo gradings of written answers a day (practice-grade.js): a few free, more with any plan */
+export const GRADE_FREE = 10, GRADE_PLAN = 60;
 const PLAN_KINDS = ['plus', 'teacher', 'school_seat'];
 const MAX_TRANSLATE = 12, MAX_SOURCE = 6000;
 /* problem variants for teachers (teach.html): a few runs a day free, more with a teacher or school plan; each run makes
@@ -91,12 +93,12 @@ async function usedToday(env, userId, kind, day) {
   return row ? row.n : 0;
 }
 /* counts the question only if it is still under the day's limit, in one statement, so two tabs cannot both pass */
-async function takeOne(env, userId, kind, day, max) {
+export async function takeOne(env, userId, kind, day, max) {
   const row = await env.DB.prepare(`INSERT INTO ai_usage_daily(user_id,day,kind,n) VALUES(?,?,?,1)
     ON CONFLICT(user_id,day,kind) DO UPDATE SET n=n+1 WHERE ai_usage_daily.n<? RETURNING n`).bind(userId, day, kind, max).first();
   return row ? row.n : null;
 }
-async function giveBack(env, userId, kind, day) {
+export async function giveBack(env, userId, kind, day) {
   await env.DB.prepare('UPDATE ai_usage_daily SET n=MAX(0,n-1) WHERE user_id=? AND day=? AND kind=?').bind(userId, day, kind).run();
 }
 
@@ -183,11 +185,12 @@ export function createLearnRouter({HttpError, needUser, limit, now, bad, clientI
     await ensureLearnSchema(env);
     const t = now();
     if (p === '/api/learn/plan' && m === 'GET') {
-      if (!me) return {plan: 'guest', ads: true, tutorLimit: 0, tutorLeft: 0};
+      if (!me) return {plan: 'guest', ads: true, tutorLimit: 0, tutorLeft: 0, gradeLeft: 0};
       const plan = await planOf(env, me.id, t);
       const vmax = plan.plan === 'free' ? VARIANT_FREE : VARIANT_PLAN;
       return {...plan, tutorLeft: Math.max(0, plan.tutorLimit - await usedToday(env, me.id, 'tutor', utcDay(t))),
-        variantLeft: Math.max(0, vmax - await usedToday(env, me.id, 'variant', utcDay(t)))};
+        variantLeft: Math.max(0, vmax - await usedToday(env, me.id, 'variant', utcDay(t))),
+        gradeLeft: Math.max(0, (plan.plan === 'free' ? GRADE_FREE : GRADE_PLAN) - await usedToday(env, me.id, 'grade', utcDay(t)))};
     }
     if (p === '/api/learn/tutor' && m === 'POST') {
       needUser(me);

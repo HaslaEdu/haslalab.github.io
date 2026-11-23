@@ -8,7 +8,17 @@
   const embedded=params.get('embed')==='1'&&window.parent!==window;
   const SESSION=10;
   const copy={
-    ko:{moreProblems:'10문제 더',typeNumber:'숫자로 답하세요 (예: 12.5, 3e8)',typeFormula:'식으로 답하세요 (예: 2*sqrt(gL))',answer:'답',keypad:'수식 키패드',typeHelp:'곱하기는 생략해도 됩니다(2mg). 거듭제곱은 ^, 분수는 a⁄b, 10의 거듭제곱은 ×10ⁿ.',notYet:'식을 끝까지 입력하세요',onlyNumber:'숫자만 입력하세요',unknownVar:'이 문제에 없는 문자',showChoices:'보기 보기 (힌트로 셉니다)',ob_region:'어디에서 공부하나요?',ob_level:'지금 어느 단계인가요?',ob_goal:'무엇을 위해 공부하나요?',ob_oly:'올림피아드는 어디까지 해 봤나요?',ob_daily:'하루 목표를 정하세요',
+    ko:{
+      lvTitle:'레벨',lvPick:'어떤 문제를 풀까요?',lvIntro:'레벨을 고르면 오늘의 문제와 세트 만들기의 기본 출처가 그 레벨의 문제로 바뀝니다. 언제든 바꿀 수 있습니다.',lvHas:'들어 있는 문제',lvSoon:'준비 중',lvChange:'바꾸기',lvCurrent:'지금 레벨',lvBankNote:'교재 · 대학 문제는 "교재 · 대학 문제" 탭에서 풉니다.',ob_stage:'어느 레벨에서 시작할까요?',
+      wTitle:'풀이 제출',wIntro:'종이에 풀어 사진을 찍거나, 패드에 쓰거나, 파일을 올리면 채점 기준표로 점수를 매깁니다.',wRule:'70% 이상이면 통과하고 다음 문제로 갑니다. 40–69%는 부분 점수: 복습 목록에 넣고 넘어갑니다. 40% 미만이면 힌트를 보고 다시 풀거나 넘어갈 수 있습니다.',
+      wPhoto:'사진',wPad:'패드',wFile:'파일',wTake:'사진 찍기 · 고르기',wFilePick:'이미지나 PDF 고르기',wPdfNote:'PDF는 앞 4쪽까지 이미지로 바꿔 보냅니다.',wPdfFail:'이 PDF를 읽지 못했습니다. 페이지를 사진으로 올려 주세요.',wImgFail:'이 파일은 이미지로 읽을 수 없습니다.',
+      wPen:'펜',wEraser:'지우개',wThin:'가늘게',wMid:'보통',wThick:'굵게',wUndo:'되돌리기',wClear:'지우기',wAddPage:'페이지로 추가',wPages:'보낼 페이지',wRemove:'빼기',wMax:'4쪽까지 보낼 수 있습니다.',wNone:'보낼 풀이가 없습니다. 사진을 올리거나 패드에 써 주세요.',
+      wSend:'채점 받기',wReading:'읽는 중',wGrading:'채점 중',wLogin:'채점은 로그인해야 쓸 수 있습니다. 하루 10번까지 무료입니다.',wSoon:'채점 서버 준비 중입니다. 풀이는 이 화면에 남아 있으니 잠시 뒤에 다시 보내 주세요.',
+      wLimit:'오늘 채점 횟수를 모두 썼습니다. 내일 다시 쓸 수 있습니다.',wUnreadable:'글씨를 읽지 못했습니다. 밝은 곳에서 다시 찍어 주세요. 횟수는 줄지 않았습니다.',wFail:'지금은 채점할 수 없습니다. 잠시 뒤에 다시 시도하세요. 횟수는 줄지 않았습니다.',wBad:'보낸 내용을 확인하세요.',
+      wLeft:'오늘 남은 채점',wTranscript:'읽은 내용',wAiNote:'AI 채점이라 틀릴 수 있습니다. 이상하면 문제 신고로 알려 주세요.',wRubric:'채점 기준',wPoints:'점수',
+      bandPass:'통과',bandPartial:'부분 점수',bandRetry:'다시 풀기',wRetry:'다시 풀기',wMoveOn:'넘어가기',wLast:'지난 채점',wNoText:'이 문제는 글로 옮겨 적지 않아 풀이 채점을 쓸 수 없습니다.',wUnitUp:'이 단원의 단계가 올랐습니다',wPassNote:'통과입니다. 다음 문제로 갑니다.',wPartialNote:'부분 점수입니다. 복습 목록에 넣었습니다.',wRetryNote:'힌트를 보고 다시 풀어 보세요.',wRetryPlain:'풀이를 고쳐서 다시 보내 보세요.',wOpen:'✎ 풀이 제출',
+      rSentOk:'신고를 보냈습니다. 고치면 "내 신고"에서 상태가 바뀝니다.',rQueued:'지금은 보낼 수 없어 이 기기에 두었습니다. 연결되면 자동으로 다시 보냅니다.',rLimit:'오늘은 신고를 더 보낼 수 없습니다. 내일 다시 보내 주세요.',rStatus_open:'접수',rStatus_fixed:'고침',rStatus_rejected:'반려',rStatus_pending:'보내는 중',
+      moreProblems:'10문제 더',typeNumber:'숫자로 답하세요 (예: 12.5, 3e8)',typeFormula:'식으로 답하세요 (예: 2*sqrt(gL))',answer:'답',keypad:'수식 키패드',typeHelp:'곱하기는 생략해도 됩니다(2mg). 거듭제곱은 ^, 분수는 a⁄b, 10의 거듭제곱은 ×10ⁿ.',notYet:'식을 끝까지 입력하세요',onlyNumber:'숫자만 입력하세요',unknownVar:'이 문제에 없는 문자',showChoices:'보기 보기 (힌트로 셉니다)',ob_region:'어디에서 공부하나요?',ob_level:'지금 어느 단계인가요?',ob_goal:'무엇을 위해 공부하나요?',ob_oly:'올림피아드는 어디까지 해 봤나요?',ob_daily:'하루 목표를 정하세요',
       obKr:'AP Physics, 한국 시험 계산 문제, 올림피아드',obIn:'JEE Main · Advanced',obUs:'AP Physics, F=ma · USAPhO',obGlobal:'AP Physics와 국제 올림피아드 준비',
       goSchool:'학교 공부 · 내신',goExam:'입시 시험',goOly:'물리 올림피아드',goCurious:'그냥 물리가 좋아서',oly0:'처음 준비합니다',oly1:'1차(예선) 시험을 쳐 봤습니다',oly2:'본선 이상 진출했습니다',
       perDay:'문제',daily5:'가볍게 · 약 5분',daily10:'꾸준히 · 약 10분',daily20:'열심히 · 약 20분',back:'이전',obDone:'시작 단계',obNext:'모든 단원이 이 단계에서 시작하고, 첫 문제는 위 시험에서 나옵니다. 12문제 수준 찾기로 더 정확하게 맞출 수 있습니다.',
@@ -34,11 +44,21 @@
       customIntro:'풀 문제의 출처, 주제, 난이도, 개수를 직접 정합니다. 조건에 맞는 문제 가운데 아직 풀지 않았고 최근에 보지 않은 문제가 먼저 나옵니다.',cSource:'문제 출처',cAll:'모든 문제',cCalc:'한국 학교 시험 기출',cContest:'대회 기출',cTopics:'주제',cAllTopics:'전체',cPickUnits:'단원별로 고르기',cDiff:'난이도 (단계)',cCount:'문제 수',cFormat:'답하는 방식',cChoice:'보기 고르기',cTyped:'직접 입력',cFormatNote:'직접 입력은 답이 숫자나 식인 문제만 남깁니다.',cCompetition:'대회',cAnyContest:'모든 대회',cYears:'연도',cTimer:'풀이 시간 재기',cMatch:'조건에 맞는 문제',cStartSet:'세트 시작',cNoMatch:'조건에 맞는 문제가 없습니다. 조건을 넓혀 보세요.',cContestNote:'대회 문제는 단원 구분이 없어 주제를 고르면 빠집니다. 풀이를 확인하고 스스로 채점합니다.',customName:'내 세트',
       reviewIntro:'틀린 문제와 힌트를 보고서야 맞힌 문제는 1일, 3일, 7일, 21일 뒤에 다시 나옵니다. 복습에서 맞히면 다음 간격으로 넘어가고, 틀리면 1일부터 다시 시작합니다.',dueToday:'오늘 복습',inQueue:'복습 대기',startReview:'복습 시작',noDue:'오늘 복습할 문제가 없습니다.',nextDue:'다음 복습',dueCard:'오늘 복습할 문제가 있습니다',
       laterTitle:'나중에 풀기',later:'나중에 풀기',laterOn:'저장됨',noLater:'저장한 문제가 없습니다. 문제 아래의 "나중에 풀기"를 누르면 여기에 모입니다.',startLater:'저장한 문제 풀기',removeLater:'빼기',
-      report:'문제 신고',reportTitle:'이 문제에서 무엇이 잘못됐나요?',rWrongAnswer:'정답이 틀림',rTypo:'오타',rFigure:'그림',rTranslation:'번역',rOther:'기타',reportNote:'자세히 적어 주세요 (선택)',reportSend:'메일로 보내기',reportCancel:'닫기',reportSent:'메일 앱에 신고 내용이 채워집니다. 열리지 않으면 이 주소로 보내 주세요:',myReports:'내 신고',noReports:'아직 보낸 신고가 없습니다.',reportPick:'무엇이 잘못됐는지 고르세요.',
+      report:'문제 신고',reportTitle:'이 문제에서 무엇이 잘못됐나요?',rWrongAnswer:'정답이 틀림',rTypo:'오타',rFigure:'그림',rTranslation:'번역',rOther:'기타',reportNote:'자세히 적어 주세요 (선택)',reportSend:'신고 보내기',reportCancel:'닫기',reportSent:'메일 앱에 신고 내용이 채워집니다. 열리지 않으면 이 주소로 보내 주세요:',myReports:'내 신고',noReports:'아직 보낸 신고가 없습니다.',reportPick:'무엇이 잘못됐는지 고르세요.',
       avgTime:'평균 풀이 시간',vsSuggested:'권장',strike:'이 보기 지우기',unstrike:'이 보기 되살리기',
       settings:'진도 관리',exportP:'진도 내보내기',importP:'불러오기',resetP:'초기화',resetConfirm:'이 기기의 진도를 모두 지울까요? 되돌릴 수 없습니다. 계정에 저장된 기록은 남습니다.',importDone:'불러왔습니다. 문제마다 더 최근 기록을 남겼습니다.',resetDone:'이 기기의 진도를 지웠습니다.',imp_not_json:'JSON 파일이 아닙니다.',imp_not_backup:'하슬라랩 진도 파일이 아닙니다.',imp_version:'이 페이지에서 읽을 수 없는 버전입니다.',imp_empty:'파일에 불러올 기록이 없습니다.',settingsNote:'진도는 이 기기에 저장됩니다. 파일로 내보내 두면 다른 브라우저로 옮기거나 나중에 되살릴 수 있습니다. 복습 목록과 나중에 풀기는 계정에 저장되지 않으니 파일로 옮기세요.',
       note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.'},
-    en:{moreProblems:'Ten more',typeNumber:'Type a number (e.g. 12.5, 3e8)',typeFormula:'Type a formula (e.g. 2*sqrt(gL))',answer:'Answer',keypad:'Math keypad',typeHelp:'You can leave out ×: 2mg works. ^ for powers, a⁄b for a fraction, ×10ⁿ for powers of ten.',notYet:'Finish the expression',onlyNumber:'Numbers only',unknownVar:'Not in this problem',showChoices:'Show the choices (counts as a hint)',ob_region:'Where do you study?',ob_level:'Where are you now?',ob_goal:'What are you studying for?',ob_oly:'How far have you got in olympiads?',ob_daily:'Pick a daily goal',
+    en:{
+      lvTitle:'Level',lvPick:'What do you want to practise?',lvIntro:'Your level decides where today’s problems and the set builder’s default source come from. You can change it at any time.',lvHas:'In the bank',lvSoon:'coming',lvChange:'Change',lvCurrent:'Your level',lvBankNote:'Textbook and university problems are in the Books & university tab.',ob_stage:'Which level do you want to start at?',
+      wTitle:'Show your working',wIntro:'Solve on paper and take a photo, write on the pad, or upload a file. It is marked against a rubric.',wRule:'70% or more passes and moves you on. 40–69% is partial credit: the problem goes into your review queue and you move on. Below 40% you can look at a hint and try again, or move on.',
+      wPhoto:'Photo',wPad:'Pad',wFile:'File',wTake:'Take or choose a photo',wFilePick:'Choose an image or a PDF',wPdfNote:'A PDF is sent as images of its first four pages.',wPdfFail:'This PDF could not be read. Upload the pages as photos.',wImgFail:'This file cannot be read as an image.',
+      wPen:'Pen',wEraser:'Eraser',wThin:'Thin',wMid:'Medium',wThick:'Thick',wUndo:'Undo',wClear:'Clear',wAddPage:'Add as a page',wPages:'Pages to send',wRemove:'Remove',wMax:'You can send up to four pages.',wNone:'Nothing to send yet. Add a photo or write on the pad.',
+      wSend:'Mark my working',wReading:'Reading',wGrading:'Marking',wLogin:'Marking needs an account. Ten markings a day are free.',wSoon:'The marking server is not ready yet. Your working stays here; send it again a little later.',
+      wLimit:'You have used today’s markings. More tomorrow.',wUnreadable:'The writing could not be read. Take the photo again in better light. This did not use a marking.',wFail:'Marking is not available right now. Try again in a moment. This did not use a marking.',wBad:'Check what you sent.',
+      wLeft:'Markings left today',wTranscript:'What was read',wAiNote:'AI marking can be wrong. If something looks off, report the problem.',wRubric:'Rubric',wPoints:'Points',
+      bandPass:'Pass',bandPartial:'Partial credit',bandRetry:'Try again',wRetry:'Try again',wMoveOn:'Move on',wLast:'Last marked',wNoText:'This problem is only in the PDF, so it cannot be marked from your working.',wUnitUp:'Up one step in this unit',wPassNote:'Passed. On to the next problem.',wPartialNote:'Partial credit. It is in your review queue.',wRetryNote:'Look at the hint and try again.',wRetryPlain:'Fix your working and send it again.',wOpen:'✎ Show your working',
+      rSentOk:'Report sent. When it is fixed, the status changes under My reports.',rQueued:'Could not send it now, so it is kept on this device and sent again when you are online.',rLimit:'No more reports today. Send it again tomorrow.',rStatus_open:'received',rStatus_fixed:'fixed',rStatus_rejected:'declined',rStatus_pending:'sending',
+      moreProblems:'Ten more',typeNumber:'Type a number (e.g. 12.5, 3e8)',typeFormula:'Type a formula (e.g. 2*sqrt(gL))',answer:'Answer',keypad:'Math keypad',typeHelp:'You can leave out ×: 2mg works. ^ for powers, a⁄b for a fraction, ×10ⁿ for powers of ten.',notYet:'Finish the expression',onlyNumber:'Numbers only',unknownVar:'Not in this problem',showChoices:'Show the choices (counts as a hint)',ob_region:'Where do you study?',ob_level:'Where are you now?',ob_goal:'What are you studying for?',ob_oly:'How far have you got in olympiads?',ob_daily:'Pick a daily goal',
       obKr:'AP Physics, calculation problems from Korean exams, olympiads',obIn:'JEE Main and Advanced',obUs:'AP Physics, F=ma and the USAPhO',obGlobal:'AP Physics and international olympiad prep',
       goSchool:'School physics',goExam:'An entrance or AP exam',goOly:'Physics olympiad',goCurious:'Just curious',oly0:'Starting out',oly1:'I have sat a first round',oly2:'I have reached a national final or beyond',
       perDay:'problems',daily5:'Casual · about 5 min',daily10:'Steady · about 10 min',daily20:'Serious · about 20 min',back:'Back',obDone:'Your starting step',obNext:'Every unit starts at this step and your first problems come from the exams above. A 12-problem level check can tune it further.',
@@ -64,7 +84,7 @@
       customIntro:'Choose the source, topics, difficulty and number of problems yourself. Among the problems that match, ones you have not solved or seen lately come first.',cSource:'Source',cAll:'Everything',cCalc:'Korean school exams',cContest:'Competition problems',cTopics:'Topics',cAllTopics:'All',cPickUnits:'Pick single units',cDiff:'Difficulty (step)',cCount:'Problems',cFormat:'Answer by',cChoice:'Picking a choice',cTyped:'Typing it',cFormatNote:'Typing keeps only problems whose answer is a number or a formula.',cCompetition:'Competition',cAnyContest:'All competitions',cYears:'Years',cTimer:'Time each problem',cMatch:'Problems that match',cStartSet:'Start the set',cNoMatch:'Nothing matches. Widen the filters.',cContestNote:'Competition problems have no unit, so picking topics leaves them out. You check the solution and mark them yourself.',customName:'My set',
       reviewIntro:'Problems you missed, or got right only with hints, come back after 1, 3, 7 and 21 days. A right answer on review moves a problem to the next gap; a miss starts it again at 1 day.',dueToday:'Due today',inQueue:'In the queue',startReview:'Start review',noDue:'Nothing is due today.',nextDue:'Next review',dueCard:'Problems are due for review today',
       laterTitle:'Saved for later',later:'Save for later',laterOn:'Saved',noLater:'Nothing saved yet. Tap "Save for later" under a problem to keep it here.',startLater:'Solve saved problems',removeLater:'Remove',
-      report:'Report',reportTitle:'What is wrong with this problem?',rWrongAnswer:'Wrong answer',rTypo:'Typo',rFigure:'Figure',rTranslation:'Translation',rOther:'Other',reportNote:'Details (optional)',reportSend:'Send by email',reportCancel:'Close',reportSent:'Your mail app opens with the report filled in. If it does not, send it to:',myReports:'My reports',noReports:'No reports yet.',reportPick:'Pick what is wrong.',
+      report:'Report',reportTitle:'What is wrong with this problem?',rWrongAnswer:'Wrong answer',rTypo:'Typo',rFigure:'Figure',rTranslation:'Translation',rOther:'Other',reportNote:'Details (optional)',reportSend:'Send report',reportCancel:'Close',reportSent:'Your mail app opens with the report filled in. If it does not, send it to:',myReports:'My reports',noReports:'No reports yet.',reportPick:'Pick what is wrong.',
       avgTime:'Average time',vsSuggested:'suggested',strike:'Cross out this choice',unstrike:'Bring this choice back',
       settings:'Progress backup',exportP:'Export progress',importP:'Import',resetP:'Reset',resetConfirm:'Clear all progress on this device? This cannot be undone. Progress saved on your account stays.',importDone:'Imported. For each problem the newer record was kept.',resetDone:'Progress on this device is cleared.',imp_not_json:'That is not a JSON file.',imp_not_backup:'That is not a HaslaLab progress file.',imp_version:'This page cannot read that file’s version.',imp_empty:'The file has no progress to import.',settingsNote:'Progress is kept on this device. Export it to a file to move it to another browser or restore it later. The review queue and saved problems are not stored on your account, so move them with a file.',
       note:'Problems: Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices (Korean only), shared within the permitted web and app use. Some unit labels are automatic and under review. Progress is kept on this device and, when you log in, on your account too.'}
@@ -84,7 +104,7 @@
   const H=window.HL_PRACTICE_TOOLS;
   /* review, later and recent stay on this device: the account's state (community/src/practice-progress.js) keeps
      only the fields it knows, so they travel in the exported file instead */
-  const fill=v=>{v.solved||={};v.level||={};v.xp||=0;v.days||=[];v.skills||={};v.queue||=[];v.wrong||={};v.bank||={done:{},stars:{}};v.contest||={done:{}};v.review||={};v.later||={};v.recent||={};return v;};
+  const fill=v=>{v.solved||={};v.level||={};v.xp||=0;v.days||=[];v.skills||={};v.queue||=[];v.wrong||={};v.bank||={done:{},stars:{}};v.contest||={done:{}};v.review||={};v.later||={};v.recent||={};v.graded||={};v.gradedHist||={};return v;};
   let saved=fill(store.read());
   const save=()=>store.write(saved);
 
@@ -159,6 +179,8 @@
       return '';
     }).join('');
   }
+  const unitPlace=u=>u.startsWith('contest/')?nameOf(state.contests?.find(c=>'contest/'+c.key===u)?.name)||u.slice(8):unitName(u);
+  const itemPlace=i=>i.kind==='contest'?unitPlace(i.u)+(i.year?' '+i.year:''):unitName(i.u);
   const unitName=key=>{const e=P.SUBTOPICS.get(key);return e?(state.lang==='ko'?e.sub.name.ko:tx(e.sub.name.en)):key;};
   const areaName=a=>state.lang==='ko'?a.name.ko:tx(a.name.en);
   function paintStats(){
@@ -246,6 +268,12 @@
       wireAnswer(free,ok=>{answer(ok?item.a:0);$('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+freeAnswerTex(free)}</p>`;$('showch')?.remove();reportHeight();});
     }
     $('next').onclick=next;
+    const right=item.ch.find(c=>c.n===item.a);
+    wireWritten(item,{source:'exam',mode:'exam',unit:item.u,step:item.s,xpItem:{kind:'exam',s:item.s},open:writtenDefault(false),
+      gradeItem:()=>({id:item.id,source:'exam',q:item.b.map(b=>b.p?segText(b.p):b.mb!==undefined?'$$'+b.mb+'$$':b.f?(state.lang==='ko'?'[그림]':'[figure]'):'').filter(Boolean).join('\n\n'),
+        answer:right?'①②③④⑤'[item.a-1]+' '+choiceText(right):'',choices:item.ch.map(c=>'①②③④⑤'[c.n-1]+' '+(choiceText(c)||(state.lang==='ko'?'[그림]':'[figure]')))}),
+      answered:()=>s.answered,solve:()=>{saved.solved[item.id]=item.u;delete saved.wrong[item.id];},miss:()=>{saved.wrong[item.id]=Math.floor(Date.now()/1000);},
+      lock:()=>{s.answered=true;$('app').querySelectorAll('.choice').forEach(b=>b.disabled=true);$('ansbox')?.remove();$('showch')?.remove();$('skip').hidden=true;$('next').hidden=false;reportHeight();}});
     $('skip').onclick=()=>{if(s.answered)return;record(item.id,'exam',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
     reportHeight();window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
   }
@@ -391,6 +419,10 @@
       ['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;$('next').focus();
       $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?'✓ '+tr('solvedIt'):tr('missedIt')}</p>`;reportHeight();};
     $('good').onclick=()=>mark(true);$('miss').onclick=()=>mark(false);$('next').onclick=bankNext;
+    wireWritten(pick,{source:'bank',mode:'bank',unit:bankUnit,step:bankStep,xpItem:{kind:'bank',stars:s.stars},open:writtenDefault(true),noReview:true,noText:!v.main?.text,
+      gradeItem:()=>({id:String(pick.id),source:'bank',q:v.main?.text||''}),
+      answered:()=>s.answered,solve:()=>{saved.bank.done[pick.id]=1;},miss:()=>{saved.bank.done[pick.id]=0;},
+      lock:()=>{s.answered=true;['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;reportHeight();}});
     reportHeight();if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
   }
 
@@ -446,22 +478,26 @@
       const open=c.problems.filter(x=>saved.contest.done[x.id]!==1&&x.id!==skipId),pool=open.length?open:c.problems;
       p=pool[Math.floor(Math.random()*pool.length)];
     }
-    const doneId=item?item.id:p.id,paceItem={id:doneId,s:c.step};
+    const doneId=item?item.id:p.id,paceItem={id:doneId,s:c.step},tItem={id:doneId,kind:'contest',c:key};
     const langs=Object.entries(p.papers).filter(([,u])=>safe(u)),pref=langs.find(([l])=>l===state.lang)||langs[0];
     const sols=Object.entries(p.sols||{}).filter(([,u])=>safe(u));
     const label=item?`${item.year} · ${p.key}${item.key&&item.key!==p.key?' · '+item.key:''}`:`${p.year} · ${p.key}`;
     const title=item?.title||p.title||'';
     const body=item?item.b.map(b=>b.f?`<figure><img src="practice/contest/fig/${encodeURIComponent(b.f)}" width="${b.w}" height="${b.h}" alt="" loading="lazy"></figure>`:textHtml(b.t)).join(''):'';
     $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${s?esc(s.label)+' · ':''}${esc(nameOf(c.name))}</span><span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}${s?`<span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/setTotal(s))}%"></i></span><span>${s.n}/${setTotal(s)}</span>`:''}${paceHtml(paceItem)}</div>
+      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${s?esc(s.label||tr('tabToday'))+' · ':''}${esc(nameOf(c.name))}</span><span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}${s?`<span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/setTotal(s))}%"></i></span><span>${s.n}/${setTotal(s)}</span>`:''}${paceHtml(paceItem)}</div>
       ${item?`<div class="q" id="qtext">${body}</div>`:''}
       <div class="langrow">${tr('paper')}: ${langs.map(([l,u])=>`<button type="button" class="${!item&&l===pref[0]?'cur':''}" data-pdf="${esc(u)}">${L[l]||l} PDF</button>`).join('')} <a href="${esc(pref[1])}" target="_blank" rel="noopener" id="openPdf">PDF ↗</a></div>
       <div id="pdf" class="pdf"${item?' hidden':''} role="document" aria-label="${esc(nameOf(c.name))} ${esc(label)}"><p class="src">${tr('loading')}</p></div>
       <div id="feedback"></div>
-      ${toolsHtml({id:doneId,kind:'contest',c:key})}
+      ${toolsHtml(tItem)}
       <div class="foot"><span class="src">${sols.length?`${tr('solution')}: `+sols.map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${L[l]||l} ↗</a>`).join(' · '):tr('noContestSol')}${item?' · '+tr('transcribed'):''}</span>
         <span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${s?s.n>=setTotal(s)?tr('finish'):tr('next'):tr('another')}</button></span></div></div>`;
-    startPace(paceItem);wireTools({id:doneId,kind:'contest',c:key},nameOf(c.name)+' · '+label);
+    startPace(paceItem);wireTools(tItem,nameOf(c.name)+' · '+label);
+    wireWritten(tItem,{source:'contest',mode:'contest',unit:'contest/'+key,step:c.step,xpItem:{kind:'contest',s:c.step},open:!!item&&writtenDefault(true),noText:!item,
+      gradeItem:()=>({id:doneId,source:'contest',q:(title?title+'\n\n':'')+item.b.filter(b=>b.t).map(b=>b.t).join('\n\n')}),
+      answered:()=>s?s.answered:W.locked,solve:()=>{saved.contest.done[doneId]=1;},miss:()=>{saved.contest.done[doneId]=0;},
+      lock:()=>{if(s)s.answered=true;W.locked=true;['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;reportHeight();}});
     if(item)typeset($('qtext'));
     /* the transcriptions are Korean: other readers get an AI translation, with the Korean one tap away */
     if(item&&state.lang!=='ko'){
@@ -483,7 +519,7 @@
     $('quit').onclick=s?s.back:contestHome;
     $('skip').onclick=()=>{record(doneId,'contest','contest/'+key,c.step,'skip');if(s){if(s.answered)return;s.skipped=(s.skipped||0)+1;s.n--;next();return;}contestShow(key,doneId);};
     $('next').onclick=()=>s?next():contestShow(key,doneId);
-    const mark=ok=>{if(s){if(s.answered)return;s.answered=true;if(ok){s.right++;s.xp+=20+5*c.step;}}
+    const mark=ok=>{if(W.locked&&W.item===tItem)return;W.locked=true;if(s){if(s.answered)return;s.answered=true;if(ok){s.right++;s.xp+=20+5*c.step;}}
       stopPace(paceItem);noteOutcome({id:doneId,kind:'contest',c:key},ok?'right':'wrong');
       saved.contest.done[doneId]=ok?1:0;record(doneId,'contest','contest/'+key,c.step,ok?'solved':'missed');studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;
       $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?'✓ '+tr('solvedIt'):tr('missedIt')}</p>`;reportHeight();};
@@ -540,19 +576,20 @@
     const placeCard=answers<5&&!saved.diagAt?`<section class="session diagcard"><h2>${tr('diagTitle')}</h2><p class="src">${tr('diagBody')}</p><div class="actions"><button type="button" class="primary" id="diagGo">${tr('diagStart')}</button></div></section>`:'';
     const due=dueNow().length;
     const dueCard=due?`<button type="button" class="area unit duecard" id="dueGo"><span class="name"><b>${tr('dueCard')}</b><small>${tr('dueToday')} ${due} · ${tr('startReview')}</small></span><span>→</span></button>`:'';
-    $('app').innerHTML=`${placeCard}${dueCard}<section class="session today">
+    const lv=studyLevel(),lvCard=`<button type="button" class="area unit levelbar" id="lvGo"><span class="name"><small>${tr('lvTitle')} ${lv.slice(1)} · ${tr('lvCurrent')}</small><b>${esc(levelName(lv))}</b></span><span class="btnlink">${tr('lvChange')}</span></button>`;
+    $('app').innerHTML=`${lvCard}${placeCard}${dueCard}<section class="session today">
         <h2>${tr('todayTitle')} <a href="#" class="src" id="editProfile">${tr('editProfile')}</a></h2>
-        <p class="src">${Object.entries(counts).map(([k,n])=>`${why[k]} ${n}`).join(' · ')}${weakUnits.length?` · ${tr('focus')}: ${weakUnits.map(u=>esc(unitName(u))).join(', ')}`:''}</p>
-        <ol class="todaylist">${chosen.map(i=>`<li><span class="tag ${i.why}">${why[i.why]}</span> ${esc(unitName(i.u))} <small>${tr('step')} ${i.s}</small></li>`).join('')}</ol>
+        <p class="src">${Object.entries(counts).map(([k,n])=>`${why[k]} ${n}`).join(' · ')}${weakUnits.length?` · ${tr('focus')}: ${weakUnits.map(u=>esc(unitPlace(u))).join(', ')}`:''}</p>
+        <ol class="todaylist">${chosen.map(i=>`<li><span class="tag ${i.why}">${why[i.why]}</span> ${esc(itemPlace(i))} <small>${tr('step')} ${i.s}</small></li>`).join('')}</ol>
         <div class="actions"><button type="button" class="primary" id="startToday"${chosen.length?'':' disabled'}>${tr('startToday')}</button></div>
       </section>
       <div class="areas suggest">
         <button type="button" class="area unit" id="sugBank"><span class="name"><b>${tr('tabBank')}</b><small>${esc(state.lang==='ko'?field[1]:tx(field[2]))} · ${'★'.repeat(fieldStars)}</small></span><span>→</span></button>
         ${contest?`<button type="button" class="area unit" id="sugContest"><span class="name"><b>${tr('tabContest')}</b><small>${esc(nameOf(contest.name))} · ${tr('step')} ${contest.step}</small></span><span>→</span></button>`:''}
       </div>
-      ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitName(x.u))}</td><td>${x.step} <span class="lv lv${levelOf(x.step)}">${tr(LEVELS[levelOf(x.step)])}</span></td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}
+      ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitPlace(x.u))}</td><td>${x.step} <span class="lv lv${levelOf(x.step)}">${tr(LEVELS[levelOf(x.step)])}</span></td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}
       ${settingsHtml()}`;
-    if($('dueGo'))$('dueGo').onclick=reviewHome;wireSettings(todayHome);
+    if($('dueGo'))$('dueGo').onclick=reviewHome;wireSettings(todayHome);$('lvGo').onclick=levelHome;
     $('startToday').onclick=()=>startTodaySession(chosen);
     $('sugBank').onclick=()=>{state.bankField=field[0];bankStart(field[0],fieldStars);};
     if($('diagGo'))$('diagGo').onclick=diagStart;
@@ -737,6 +774,14 @@
     $('skip').onclick=()=>{if(s.answered)return;record(item.id,'track',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
     $('next').onclick=next;
     $('discuss').onclick=e=>{e.preventDefault();discuss(item);};
+    wireWritten(item,{source:'track',mode:'track',unit:item.u,step:item.s,xpItem:{kind:'track',s:item.s},open:writtenDefault(item.type!=='mc'),
+      gradeItem:()=>({id:item.id,source:'track',q:item.q,answer:item.type==='mc'?'ABCDE'[item.answer]+'. '+item.choices[item.answer]:fmtNum(item.answer),sol:item.sol,choices:item.type==='mc'?item.choices:undefined}),
+      answered:()=>s.answered,solve:()=>{saved.solved[item.id]=item.u;delete saved.wrong[item.id];},miss:()=>{saved.wrong[item.id]=Math.floor(Date.now()/1000);},
+      hint:()=>{if(!s.hints&&item.hints.length)$('hint')?.click();},
+      lock:()=>{s.answered=true;$('app').querySelectorAll('.choice').forEach(b=>b.disabled=true);
+        if($('ans')){$('ans').disabled=true;$('ansgo').disabled=true;$('ansbox').querySelector('.keypad').hidden=true;}
+        if($('numf')){$('num').disabled=true;$('numf').querySelector('button').disabled=true;}
+        $('showch')?.remove();paintSolution(item);$('hint').hidden=true;$('skip').hidden=true;$('next').hidden=false;reportHeight();}});
     if(state.lang!=='en')localizeTrack(item);
     reportHeight();window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
   }
@@ -925,11 +970,19 @@
   function startHome(edit){
     state.mode='start';state.session=null;paintTabs();paintStats();tellUnit('');
     const old=saved.profile||{},tz=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){return '';}})();
-    const a={region:old.region||P.guessRegion(state.lang,tz),level:old.level||'',goal:old.goal||'',oly:old.oly??0,daily:old.daily||10};
-    const steps=['region','level','goal','oly','daily'];let i=0;
+    const a={region:old.region||P.guessRegion(state.lang,tz),level:old.level||'',goal:old.goal||'',oly:old.oly??0,daily:old.daily||10,stage:saved.studyLevel||''};
+    const steps=['region','level','goal','oly','stage','daily'];let i=0;
     const q=()=>{
       const key=steps[i];if(key==='oly'&&a.goal!=='olympiad'){i+=dir;return q();}
       const R=P.REGIONS[a.region]||P.REGIONS.global;
+      if(key==='stage'){
+        const cur=a.stage||H.defaultLevel(a);
+        $('app').innerHTML=`<div class="session onboard"><div class="shead"><button type="button" class="back" id="obBack">← ${tr('back')}</button><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*i/steps.length)}%"></i></span></div>
+          <h2>${tr('ob_stage')}</h2><p class="src">${tr('lvIntro')}</p><div class="obopts">${levelCards(cur)}</div></div>`;
+        $('app').querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{a.stage=b.dataset.level;dir=1;i++;q();});
+        $('obBack').onclick=()=>{dir=-1;i--;q();};
+        reportHeight();return;
+      }
       const opts={
         region:Object.entries(P.REGIONS).map(([k,r])=>[k,pickName(r.name),k==='kr'?tr('obKr'):k==='in'?tr('obIn'):k==='us'?tr('obUs'):tr('obGlobal')]),
         level:P.LEVELS.map(([k,n])=>[k,pickName(n),'']),
@@ -945,13 +998,13 @@
     };
     let dir=1;
     const finish=()=>{
-      const profile={...a,at:Math.floor(Date.now()/1000)},step=P.startStep(profile);
-      saved.profile=profile;
+      const {stage,...rest}=a,profile={...rest,at:Math.floor(Date.now()/1000)},step=P.startStep(profile);
+      saved.profile=profile;saved.studyLevel=stage||H.defaultLevel(profile);
       /* every unit with no answers yet starts at that step (the answers that follow move each one on its own) */
       for(const area of P.AREAS)for(const sub of area.subtopics){const unit=area.key+'/'+sub.key,k=saved.skills[unit];
         if(!k||!k.n)record('start-'+area.key,'diag',unit,step,'place');}
       save();scheduleSync();
-      const exams=P.startExams(profile).map(k=>k==='calc'?tr('calcName'):(state.tracks||[]).find(t=>t.key===k)?.name.en||k.toUpperCase());
+      const exams=[tr('lvTitle')+' '+saved.studyLevel.slice(1)+' · '+levelName(saved.studyLevel)];
       $('app').innerHTML=`<div class="session summary onboard"><p class="eyebrow">${tr('obDone')}</p><p class="big">${tr('step')} ${step}</p>
         <p>${tr(LEVELS[levelOf(step)])} · ${esc(exams.join(' · '))}</p><p class="src">${tr('obNext')}</p>
         <div class="actions"><button type="button" class="primary" id="obToday">${tr('startToday')}</button><button type="button" id="obDiag">${tr('diagStart')}</button></div></div>`;
@@ -960,10 +1013,9 @@
     loadTracks().catch(()=>{}).finally(q);
   }
   /* the problems a learner starts on: their exams, as graded items */
+  /* the problems a learner starts on: the chosen level's pool (practice-tools.js STUDY_LEVELS), as set items */
   async function startPool(){
-    const keys=P.startExams(saved.profile||{region:state.lang==='ko'?'kr':'global'});
-    const parts=await Promise.all(keys.map(k=>k==='calc'?allExamItems():trackItems(k).catch(()=>[])));
-    const items=parts.flat();
+    const items=await levelItems(studyLevel());
     return items.length?items:allTrackItems();
   }
   /* the home page's own problem: today's set starts at once, one problem after another, no list in between */
@@ -1017,10 +1069,13 @@
     save();
   }
   const dueNow=()=>H.dueIds(saved.review,today());
-  /* ── under each problem: save for later, and report a problem ── */
-  const CONTACT='mgsnew88@naver.com',REASONS=['rWrongAnswer','rTypo','rFigure','rTranslation','rOther'];
+  /* ── under each problem: show your working, save for later, and report a problem ── */
+  const REASONS=['rWrongAnswer','rTypo','rFigure','rTranslation','rOther'];
+  const REASON_API={rWrongAnswer:'wrong_answer',rTypo:'typo',rFigure:'figure',rTranslation:'translation',rOther:'other'};
   const laterLabel=on=>on?'★ '+tr('laterOn'):'☆ '+tr('later');
-  function toolsHtml(item,opt){return `<div class="ptools">${opt?.noLater?'':`<button type="button" class="mini" id="laterBtn" aria-pressed="${!!saved.later[item.id]}">${laterLabel(saved.later[item.id])}</button>`}<button type="button" class="mini quiet" id="reportBtn" aria-expanded="false">${tr('report')}</button></div><div id="report"></div>`;}
+  const bandLabel=b=>tr(b==='pass'?'bandPass':b==='partial'?'bandPartial':'bandRetry');
+  const lastGradedHtml=id=>{const g=saved.graded[id];return g?`<span class="lastgr band-${g.band}" id="lastgr">${tr('wLast')} ${Math.round(100*g.fraction)}% · ${bandLabel(g.band)} · ${day(g.at)}</span>`:'<span id="lastgr" hidden></span>';};
+  function toolsHtml(item,opt){return `<div class="ptools"><button type="button" class="mini" id="writeBtn" aria-expanded="false">${tr('wOpen')}</button>${opt?.noLater?'':`<button type="button" class="mini" id="laterBtn" aria-pressed="${!!saved.later[item.id]}">${laterLabel(saved.later[item.id])}</button>`}<button type="button" class="mini quiet" id="reportBtn" aria-expanded="false">${tr('report')}</button>${lastGradedHtml(item.id)}</div><div id="written"></div><div id="report"></div>`;}
   function wireTools(item,label){
     if($('laterBtn'))$('laterBtn').onclick=()=>{
       if(saved.later[item.id])delete saved.later[item.id];else saved.later[item.id]={...metaOf(item),at:Math.floor(Date.now()/1000),t:String(label||item.id).slice(0,120)};
@@ -1028,30 +1083,268 @@
     };
     $('reportBtn').onclick=()=>openReport(item,label);
   }
+
+  /* ── written answers: the working (photos, the pad, or a file) goes to POST /api/learn/grade and is marked against a
+     rubric. The band decides what happens next (practice-tools.js moveOn); the last result per problem stays in
+     saved.graded. ctx (from each mode): source, mode, unit, step, xpItem, open, noText, gradeItem(), answered(),
+     solve(), miss(), lock(), hint() ── */
+  const W={pages:[],mode:'photo'};
+  const writtenDefault=noChoices=>H.levelInfo(studyLevel()).written||!!noChoices;
+  const BAND_RANK={retry:0,partial:1,pass:2};
+  function wireWritten(item,ctx){
+    const btn=$('writeBtn');if(!btn)return;
+    if(state.session?.diag){btn.remove();return;}
+    Object.assign(W,{item,ctx,pages:[],padState:null,busy:false,bandSeen:null,locked:false,penSeen:false});
+    btn.onclick=()=>$('written').innerHTML?closeWritten():openWritten();
+    if(ctx.open)openWritten();
+  }
+  function closeWritten(){$('written').innerHTML='';$('writeBtn').setAttribute('aria-expanded','false');reportHeight();}
+  const msgW=(t,cls)=>{const m=$('wMsg');if(m){m.innerHTML=t;m.className='src wmsg'+(cls?' '+cls:'');}reportHeight();};
+  function openWritten(){
+    const ctx=W.ctx;$('writeBtn').setAttribute('aria-expanded','true');
+    if(ctx.noText){$('written').innerHTML=`<section class="written"><p class="src">${tr('wNoText')}</p></section>`;reportHeight();return;}
+    const left=state.plan&&Number.isFinite(state.plan.gradeLeft)?`<span class="src" id="wLeftTop">${tr('wLeft')}: ${state.plan.gradeLeft}</span>`:'';
+    $('written').innerHTML=`<section class="written" id="wbox"><div class="whd"><h3>${tr('wTitle')}</h3>${left}</div><p class="src">${tr('wIntro')}</p>
+      <details class="alt wrule"><summary>${tr('bandPass')} · ${tr('bandPartial')} · ${tr('bandRetry')}</summary><p>${tr('wRule')}</p></details>
+      ${token()?'':`<p class="wlogin">${tr('wLogin')} <a class="btnlink primary" href="/#/login" target="_top">${tr('login')}</a></p>`}
+      <div class="seg wmode" role="group" id="wMode">${[['photo','wPhoto'],['pad','wPad'],['file','wFile']].map(([k,l])=>`<button type="button" data-w="${k}" aria-pressed="${W.mode===k}">${tr(l)}</button>`).join('')}</div>
+      <div id="wPane" class="wpane"></div>
+      <div class="wpages"><p class="sublabel">${tr('wPages')} <span id="wCount"></span></p><div class="thumbs" id="wThumbs"></div></div>
+      <div class="ractions"><button type="button" class="primary" id="wSend"${token()?'':' disabled'}>${tr('wSend')}</button><span class="src wmsg" id="wMsg" role="status"></span></div>
+      <div id="wResult"></div></section>`;
+    $('wMode').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{W.mode=b.dataset.w;$('wMode').querySelectorAll('[data-w]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));paintPane();});
+    $('wSend').onclick=sendWritten;paintPane();paintThumbs();reportHeight();
+  }
+  function paintPane(){
+    const pane=$('wPane');if(!pane)return;
+    if(W.mode==='pad'){paintPad();return;}
+    const photo=W.mode==='photo';
+    pane.innerHTML=`<label class="filebtn"><input type="file" id="wIn" accept="${photo?'image/*':'image/*,application/pdf,.pdf'}"${photo?' capture="environment"':''} multiple><span>${photo?'📷 '+tr('wTake'):'📄 '+tr('wFilePick')}</span></label>${photo?'':`<p class="src">${tr('wPdfNote')}</p>`}`;
+    $('wIn').onchange=e=>{addFiles(e.target.files);e.target.value='';};
+    reportHeight();
+  }
+  /* an image file → a drawable (createImageBitmap where it exists; else a data URL, which the page's CSP allows) */
+  async function loadImage(file){
+    if(window.createImageBitmap){try{return await createImageBitmap(file,{imageOrientation:'from-image'});}catch(e){}}
+    const url=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(file);});
+    const img=new Image();await new Promise((ok,no)=>{img.onload=ok;img.onerror=no;img.src=url;});return img;
+  }
+  /* any drawable → a JPEG data URL with the long side <= 1600 px and at most 1.5 MB (smaller and lower quality until it fits) */
+  function toJpeg(src,w,h){
+    for(const [side,q] of H.ENCODE_STEPS){
+      const f=H.fitSize(w,h,side),c=document.createElement('canvas');c.width=f.w;c.height=f.h;
+      const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,f.w,f.h);g.drawImage(src,0,0,f.w,f.h);
+      const u=c.toDataURL('image/jpeg',q);if(H.pageOk(u))return u;
+    }
+    return null;
+  }
+  async function addFiles(list){
+    let err='';
+    for(const f of [...(list||[])]){
+      if(W.pages.length>=H.MAX_PAGES){err=tr('wMax');break;}
+      const pdf=f.type==='application/pdf'||/\.pdf$/i.test(f.name||'');
+      try{
+        if(pdf){msgW(tr('wReading')+'…');await addPdf(f);}
+        else if(!f.type||/^image\//.test(f.type)){const img=await loadImage(f),u=toJpeg(img,img.width||img.naturalWidth,img.height||img.naturalHeight);img.close?.();if(!u)throw new Error('size');W.pages.push({url:u,from:'photo'});}
+        else err=tr('wImgFail');
+      }catch(e){err=tr(pdf?'wPdfFail':'wImgFail');}
+      paintThumbs();
+    }
+    msgW(err?`<span class="numerr">${err}</span>`:'');
+  }
+  async function addPdf(file){
+    const lib=await loadPdfjs(),doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false}).promise;
+    for(let i=1;i<=doc.numPages&&W.pages.length<H.MAX_PAGES;i++){
+      const page=await doc.getPage(i),v1=page.getViewport({scale:1}),vp=page.getViewport({scale:H.PAGE_SIDE/Math.max(v1.width,v1.height)});
+      const cv=document.createElement('canvas');cv.width=Math.round(vp.width);cv.height=Math.round(vp.height);
+      const g=cv.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,cv.width,cv.height);
+      await page.render({canvasContext:g,viewport:vp}).promise;
+      const u=toJpeg(cv,cv.width,cv.height);if(u)W.pages.push({url:u,from:'pdf'});
+    }
+  }
+  function paintThumbs(){
+    const t=$('wThumbs');if(!t)return;
+    t.innerHTML=W.pages.map((p,i)=>`<figure class="thumb"><img src="${p.url}" alt="${i+1}"><figcaption>${i+1}</figcaption><button type="button" class="rm" data-rm="${i}" aria-label="${tr('wRemove')} ${i+1}" title="${tr('wRemove')}">✕</button></figure>`).join('')||`<p class="src">${tr('wNone')}</p>`;
+    $('wCount').textContent=W.pages.length+'/'+H.MAX_PAGES;
+    t.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{W.pages.splice(Number(b.dataset.rm),1);paintThumbs();});
+    reportHeight();
+  }
+  /* the pad: a white page 1200 × 1600 drawn with pointer events (finger, stylus or mouse); once a stylus touches it,
+     touches of the palm are ignored. Strokes are kept so undo can redraw. */
+  const PAD_W=1200,PAD_H=1600,PAD_SIZES=[4,9,18];
+  function drawStroke(g,st,from){
+    const p=st.pts,i0=Math.max(0,from||0);g.save();g.lineCap='round';g.lineJoin='round';g.strokeStyle=st.tool==='eraser'?'#fff':'#14161c';g.lineWidth=st.w;
+    g.beginPath();g.moveTo(p[i0][0],p[i0][1]);if(p.length===1)g.lineTo(p[0][0]+0.01,p[0][1]);for(let i=i0+1;i<p.length;i++)g.lineTo(p[i][0],p[i][1]);g.stroke();g.restore();
+  }
+  function padRender(c){const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,PAD_W,PAD_H);for(const st of W.padState?.strokes||[])drawStroke(g,st);}
+  function padToJpeg(){const c=document.createElement('canvas');c.width=PAD_W;c.height=PAD_H;padRender(c);return toJpeg(c,PAD_W,PAD_H);}
+  function padAddPage(){
+    const P0=W.padState;if(!P0?.strokes.length)return false;
+    if(W.pages.length>=H.MAX_PAGES){msgW(`<span class="numerr">${tr('wMax')}</span>`);return false;}
+    const u=padToJpeg();if(!u)return false;W.pages.push({url:u,from:'pad'});P0.strokes=[];if($('wCanvas'))padRender($('wCanvas'));paintThumbs();return true;
+  }
+  function paintPad(){
+    const P0=W.padState||=({tool:'pen',size:1,strokes:[]});
+    const seg=(name,list,cur)=>`<div class="seg" role="group">${list.map(([v,l])=>`<button type="button" data-${name}="${v}" aria-pressed="${String(cur)===String(v)}">${l}</button>`).join('')}</div>`;
+    $('wPane').innerHTML=`<div class="padbar">${seg('tool',[['pen','✎ '+tr('wPen')],['eraser','⌫ '+tr('wEraser')]],P0.tool)}${seg('size',[[0,tr('wThin')],[1,tr('wMid')],[2,tr('wThick')]],P0.size)}
+      <button type="button" class="mini" id="padUndo">↶ ${tr('wUndo')}</button><button type="button" class="mini" id="padClear">${tr('wClear')}</button><button type="button" class="mini" id="padAdd">＋ ${tr('wAddPage')}</button></div>
+      <canvas id="wCanvas" class="padcv" width="${PAD_W}" height="${PAD_H}" aria-label="${tr('wPad')}"></canvas>`;
+    const cv=$('wCanvas'),g=cv.getContext('2d');padRender(cv);
+    let cur=null;
+    const pt=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*PAD_W/r.width,(e.clientY-r.top)*PAD_H/r.height];};
+    cv.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='pen')W.penSeen=true;else if(e.pointerType==='touch'&&W.penSeen)return;
+      if(e.button>0||cur)return;e.preventDefault();try{cv.setPointerCapture(e.pointerId);}catch(err){}
+      cur={tool:P0.tool,w:PAD_SIZES[P0.size]*(P0.tool==='eraser'?3:1),pts:[pt(e)],id:e.pointerId};P0.strokes.push(cur);drawStroke(g,cur);
+    });
+    cv.addEventListener('pointermove',e=>{
+      if(!cur||e.pointerId!==cur.id)return;e.preventDefault();
+      const n=cur.pts.length,evs=e.getCoalescedEvents?.()||[];for(const x of evs.length?evs:[e])cur.pts.push(pt(x));drawStroke(g,cur,n-1);
+    });
+    const end=e=>{if(cur&&e.pointerId===cur.id)cur=null;};
+    cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+    cv.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+    $('wPane').querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{P0.tool=b.dataset.tool;$('wPane').querySelectorAll('[data-tool]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+    $('wPane').querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>{P0.size=Number(b.dataset.size);$('wPane').querySelectorAll('[data-size]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+    $('padUndo').onclick=()=>{P0.strokes.pop();padRender(cv);};
+    $('padClear').onclick=()=>{P0.strokes=[];padRender(cv);};
+    $('padAdd').onclick=padAddPage;
+    reportHeight();
+  }
+  const wsteps=stage=>`<span class="wsteps"><span class="${stage==='read'?'on':'done'}">${tr('wReading')}</span> → <span class="${stage==='grade'?'on':''}">${tr('wGrading')}</span><span class="dots" aria-hidden="true"></span></span>`;
+  async function sendWritten(){
+    if(W.busy)return;const item=W.item,ctx=W.ctx;
+    if(!token()){msgW(tr('wLogin'));return;}
+    if(W.padState?.strokes.length)padAddPage();
+    if(!W.pages.length){msgW(`<span class="numerr">${tr('wNone')}</span>`);return;}
+    W.busy=true;$('wSend').disabled=true;msgW(wsteps('read'));$('wResult').innerHTML='';
+    const timer=setTimeout(()=>{if(W.busy&&W.item===item)msgW(wsteps('grade'));},2500);
+    let r=null,j={};
+    try{
+      r=await fetch(API+'/api/learn/grade',{method:'POST',headers:{'content-type':'application/json',Authorization:'Bearer '+token()},
+        body:JSON.stringify({item:H.gradeItem(ctx.gradeItem()),pages:W.pages.map(p=>p.url),level:studyLevel(),lang:state.lang})});
+      j=await r.json().catch(()=>({}));
+    }catch(e){r=null;}
+    clearTimeout(timer);W.busy=false;
+    if(W.item!==item||!$('wSend'))return;
+    $('wSend').disabled=false;
+    if(!r){msgW(tr('wFail'),'bad');return;}
+    if(!r.ok){
+      const code=j.error;
+      if(code==='grade_limit'&&state.plan)state.plan.gradeLeft=0;
+      msgW(r.status===404?tr('wSoon'):code==='login_required'||r.status===401?tr('wLogin'):code==='grade_limit'||r.status===429?tr('wLimit'):code==='unreadable'||r.status===422?tr('wUnreadable'):r.status===400?tr('wBad'):tr('wFail'),r.status===404?'soon':'bad');
+      return;
+    }
+    msgW('');if(state.plan&&Number.isFinite(j.left)){state.plan.gradeLeft=j.left;if($('wLeftTop'))$('wLeftTop').textContent=`${tr('wLeft')}: ${j.left}`;}
+    applyGrade(item,ctx,j);
+  }
+  function stepUp(unit){
+    const k=saved.skills[unit],cur=Math.max(saved.level[unit]||0,ratingStep(k?k.rating:START)),nx=Math.min(10,cur+1);
+    saved.level[unit]=nx;if(k)k.rating=Math.max(k.rating,stepRating(nx));
+    const s=state.session;if(s&&s.unit===unit&&s.steps?.length){const up=s.steps.find(x=>x>s.level);if(up)s.level=up;}
+  }
+  /* pass and partial settle the problem at once; a retry settles only when the learner moves on */
+  function settle(item,ctx,mv){
+    const s=state.session;stopPace(item);
+    if(!ctx.noReview)noteOutcome(item,mv.review);
+    record(item.id,ctx.mode,ctx.unit,ctx.step,mv.result);
+    if(mv.solved){ctx.solve();if(s)s.right++;}else if(mv.review==='wrong')ctx.miss();
+    if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
+    ctx.lock();save();paintStats();
+  }
+  const pts=v=>{const x=Number(v)||0;return String(Math.round(x*10)/10);};
+  function applyGrade(item,ctx,j){
+    const fraction=Math.max(0,Math.min(1,Number.isFinite(Number(j.fraction))?Number(j.fraction):j.max?j.score/j.max:0));
+    const band=H.BANDS.includes(j.band)?j.band:H.bandOf(fraction),was=ctx.answered(),s=state.session;
+    saved.graded[item.id]={fraction,band,at:Math.floor(Date.now()/1000)};
+    let gain=0,note='';
+    if(!was){
+      gain=H.gradedGain(H.baseXp(ctx.xpItem),band,W.bandSeen);
+      if(!W.bandSeen||BAND_RANK[band]>BAND_RANK[W.bandSeen])W.bandSeen=band;
+      if(gain){if(s)s.xp+=gain;saved.xp+=gain;}
+      const h=H.pushGraded(saved.gradedHist,ctx.unit,fraction);saved.gradedHist=h.hist;if(h.up){stepUp(ctx.unit);note=tr('wUnitUp')+' ↑';}
+    }
+    save();paintStats();
+    const last=$('lastgr');if(last)last.outerHTML=lastGradedHtml(item.id);
+    const items=Array.isArray(j.items)?j.items:[],mv=H.moveOn(band);
+    $('wResult').innerHTML=`<div class="wres band-${band}">
+      <div class="wtop"><span class="wscore"><b>${pts(j.score)}</b> / ${pts(j.max)} <small>${Math.round(100*fraction)}%</small></span><span class="bandtag ${band}">${bandLabel(band)}</span>${gain?`<span class="wxp">+${gain} XP</span>`:''}</div>
+      ${was?'':`<p class="wnote">${tr(band==='pass'?'wPassNote':band==='partial'?'wPartialNote':ctx.hint?'wRetryNote':'wRetryPlain')}${note?' · <b>'+note+'</b>':''}</p>`}
+      ${items.length?`<table class="rubric"><caption>${tr('wRubric')}</caption><tbody>${items.map(x=>`<tr class="${Number(x.got)>=Number(x.max)?'full':Number(x.got)>0?'some':'none'}"><td><span class="rd">${esc(x.desc||'')}</span>${x.note?`<small>${esc(x.note)}</small>`:''}</td><td class="pts">${pts(x.got)}/${pts(x.max)}</td></tr>`).join('')}</tbody></table>`:''}
+      ${j.feedback?`<div class="wfb">${textHtml(j.feedback)}</div>`:''}
+      ${j.transcript?`<details class="alt"><summary>${tr('wTranscript')}</summary><div class="wtrans">${textHtml(j.transcript)}</div></details>`:''}
+      <p class="src">${Number.isFinite(j.left)?`${tr('wLeft')}: <b>${j.left}</b> · `:''}${tr('wAiNote')}</p>
+      ${mv.retry&&!was?`<div class="actions start"><button type="button" class="primary" id="wAgain">${tr('wRetry')}</button><button type="button" id="wOn">${tr('wMoveOn')}</button></div>`:''}</div>`;
+    typeset($('wResult'));
+    if(!was&&mv.next)settle(item,ctx,mv);
+    if($('wAgain')){
+      $('wAgain').onclick=()=>{$('wResult').innerHTML='';ctx.hint?.();msgW(tr(ctx.hint?'wRetryNote':'wRetryPlain'));$('written').scrollIntoView?.({block:'nearest'});};
+      $('wOn').onclick=()=>{settle(item,ctx,mv);$('next')?.click();};
+    }
+    reportHeight();
+  }
+
+  /* ── problem reports go to the server (POST /api/learn/report), signed in or not. A report that cannot be sent stays in
+     this browser and goes out later; "My reports" shows the server's status for a signed-in learner ── */
   const readReports=()=>{try{const v=JSON.parse(localStorage.getItem('hlPracticeReports')||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}};
+  const writeReports=list=>{try{localStorage.setItem('hlPracticeReports',JSON.stringify(list.slice(-50)));}catch(e){}};
+  const sourceOf=item=>item.kind==='track'||item.kind==='contest'?item.kind:item.ch?'exam':'bank';
+  async function postReport(body){
+    const r=await fetch(API+'/api/learn/report',{method:'POST',headers:{'content-type':'application/json',...(token()?{Authorization:'Bearer '+token()}:{})},body:JSON.stringify(body)});
+    return{status:r.status,ok:r.ok,j:await r.json().catch(()=>({}))};
+  }
+  /* sends what is waiting; a 400 drops the report (it will never be accepted), anything else waits for the next try */
+  let flushing=false;
+  async function flushReports(){
+    if(flushing)return;flushing=true;
+    try{
+      for(const e of readReports().filter(x=>x.pending&&x.body)){
+        let res;try{res=await postReport(e.body);}catch(err){break;}
+        if(res.status===404||res.status>=500||res.status===429)break;
+        const list=readReports(),k=list.findIndex(x=>x.at===e.at&&x.id===e.id);if(k<0)continue;
+        if(res.ok)list[k]={...list[k],pending:false,sid:res.j.id??null,status:'open'};else list.splice(k,1);
+        writeReports(list);
+      }
+    }finally{flushing=false;}
+  }
   function openReport(item,label){
     const box=$('report');if(box.innerHTML){box.innerHTML='';$('reportBtn').setAttribute('aria-expanded','false');reportHeight();return;}
     $('reportBtn').setAttribute('aria-expanded','true');
     box.innerHTML=`<form class="reportf" id="reportf"><p class="rtitle">${tr('reportTitle')}</p>
       <div class="chips" role="radiogroup" aria-label="${tr('reportTitle')}">${REASONS.map(r=>`<label class="chip"><input type="radio" name="rr" value="${r}"><span>${tr(r)}</span></label>`).join('')}</div>
-      <textarea id="rnote" rows="3" maxlength="800" placeholder="${tr('reportNote')}" aria-label="${tr('reportNote')}"></textarea>
-      <div class="ractions"><a class="btnlink primary" id="rsend" href="#" target="_top">${tr('reportSend')}</a><button type="button" id="rcancel">${tr('reportCancel')}</button><span class="numerr" id="rerr"></span></div></form>`;
+      <textarea id="rnote" rows="3" maxlength="1000" placeholder="${tr('reportNote')}" aria-label="${tr('reportNote')}"></textarea>
+      <div class="ractions"><button type="submit" class="primary" id="rsend">${tr('reportSend')}</button><button type="button" id="rcancel">${tr('reportCancel')}</button><span class="numerr" id="rerr"></span></div></form>`;
     const f=$('reportf'),reason=()=>f.querySelector('input[name=rr]:checked')?.value;
-    const href=()=>{const r=reason(),note=$('rnote').value.trim(),page=`https://haslalab.org/?lang=${state.lang}#/learn/practice${/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item.id)?'?item='+item.id:''}`;
-      const subject=`[HaslaLab ${tr('report')}] ${item.id} · ${r?copy.en[r]:''}`;
-      const body=[`${state.lang==='ko'?'문제':'Problem'}: ${item.id}`,label?String(label):'',`${state.lang==='ko'?'항목':'Reason'}: ${r?tr(r)+' ('+copy.en[r]+')':''}`,'',note,'',page].filter((x,i)=>x||i>2).join('\n');
-      return 'mailto:'+CONTACT+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);};
-    const refresh=()=>{$('rsend').href=reason()?href():'#';};
-    f.onchange=refresh;$('rnote').oninput=refresh;f.onsubmit=e=>e.preventDefault();
     $('rcancel').onclick=()=>{box.innerHTML='';$('reportBtn').setAttribute('aria-expanded','false');reportHeight();};
-    $('rsend').onclick=e=>{
-      if(!reason()){e.preventDefault();$('rerr').textContent=tr('reportPick');return;}
-      refresh();const list=readReports();list.push({id:item.id,r:reason(),note:$('rnote').value.trim().slice(0,800),at:Math.floor(Date.now()/1000),t:String(label||'').slice(0,120)});
-      try{localStorage.setItem('hlPracticeReports',JSON.stringify(list.slice(-50)));}catch(err){}
-      const link=$('rsend').href;
-      setTimeout(()=>{box.innerHTML=`<p class="src reportdone">${tr('reportSent')} <a href="${esc(link)}" target="_top">${CONTACT}</a></p>`;reportHeight();},0);
+    f.onchange=()=>{$('rerr').textContent='';};
+    f.onsubmit=async e=>{
+      e.preventDefault();const r=reason();if(!r){$('rerr').textContent=tr('reportPick');return;}
+      const note=$('rnote').value.trim().slice(0,1000),page=`https://haslalab.org/?lang=${state.lang}#/learn/practice${/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item.id)?'?item='+item.id:''}`;
+      const body={item_id:String(item.id).slice(0,80),source:sourceOf(item),reason:REASON_API[r],note:(label?String(label).slice(0,120)+'\n':'')+note,page:page.slice(0,300),lang:state.lang};
+      body.note=body.note.slice(0,1000);
+      const entry={id:item.id,r,note:note.slice(0,800),at:Math.floor(Date.now()/1000),t:String(label||'').slice(0,120),body,pending:true};
+      writeReports([...readReports(),entry]);
+      $('rsend').disabled=true;
+      let res=null;try{res=await postReport(body);}catch(err){}
+      const list=readReports(),k=list.findIndex(x=>x.at===entry.at&&x.id===entry.id);
+      let text;
+      if(res?.ok){if(k>=0){list[k]={...list[k],pending:false,sid:res.j.id??null,status:'open'};writeReports(list);}text=tr('rSentOk');}
+      else if(res&&res.status===400){if(k>=0){list.splice(k,1);writeReports(list);}$('rerr').textContent=tr('wBad');$('rsend').disabled=false;return;}
+      else{text=res?.status===429?tr('rLimit'):tr('rQueued');setTimeout(flushReports,60000);}
+      box.innerHTML=`<p class="src reportdone" role="status">${text}</p>`;$('reportBtn').setAttribute('aria-expanded','false');reportHeight();
     };
     reportHeight();
+  }
+  /* the learner's own reports with the server's status (GET /api/learn/reports/mine) joined to this browser's list */
+  async function myReportsHtml(){
+    const local=readReports().slice().reverse();let server=[];
+    if(token()){try{const j=await api('/api/learn/reports/mine');server=Array.isArray(j)?j:Array.isArray(j.reports)?j.reports:[];}catch(e){}}
+    const bySid=new Map(server.map(x=>[x.id,x])),seen=new Set();
+    const rows=local.map(r=>{const sv=r.sid!=null?bySid.get(r.sid):null;if(sv)seen.add(sv.id);return{t:r.t||r.id,id:r.id,reason:r.r,note:r.note,at:r.at,status:r.pending?'pending':sv?.status||r.status||'open'};});
+    const inv=Object.fromEntries(Object.entries(REASON_API).map(([k,v])=>[v,k]));
+    for(const sv of server)if(!seen.has(sv.id))rows.push({t:sv.item_id,id:sv.item_id,reason:inv[sv.reason]||'rOther',note:sv.note,at:sv.created_at,status:sv.status});
+    if(!rows.length)return `<p class="src">${tr('noReports')}</p>`;
+    return `<ul class="plainlist">${rows.slice(0,20).map(r=>`<li><span class="name">${esc(r.t)}<small>${esc(r.id)} · ${tr(REASONS.includes(r.reason)?r.reason:'rOther')}${r.note?' · '+esc(String(r.note).slice(0,80)):''} · ${day(r.at)}</small></span><span class="tag rst-${esc(r.status)}">${tr('rStatus_'+(['open','fixed','rejected','pending'].includes(r.status)?r.status:'open'))}</span></li>`).join('')}</ul>`;
   }
   /* ── one set of fixed problems run through the usual session (custom sets, review, saved problems) ── */
   function runSet(o){
@@ -1066,9 +1359,32 @@
     const cs=await loadContests(),lists=await Promise.all(cs.map(c=>contestItems(c.key)));
     return state.allContest=cs.flatMap((c,k)=>lists[k].filter(i=>c.problems.some(p=>p.id===i.pdf)).map(i=>({...i,kind:'contest',from:'contest',c:c.key,s:c.step,u:'contest/'+c.key,year:Number(i.year)||0})));
   }
+  /* ── study level: picked in the first questions or on the today page; it picks the pool ── */
+  const studyLevel=()=>/^L[1-4]$/.test(saved.studyLevel||'')?saved.studyLevel:H.defaultLevel(saved.profile);
+  async function levelItems(key){
+    const L=H.levelInfo(key),parts=[];
+    if(L.calc)parts.push(allExamItems().then(a=>a.map(i=>({...i,from:'calc'}))).catch(()=>[]));
+    for(const k of L.tracks)parts.push(trackItems(k).then(a=>a.map(i=>({...i,from:'track:'+k}))).catch(()=>[]));
+    if(L.contests.length)parts.push(allContestItems().then(a=>a.filter(i=>L.contests.includes(i.c))).catch(()=>[]));
+    return (await Promise.all(parts)).flat();
+  }
+  const levelName=key=>nameOf(H.levelInfo(key).name);
+  function levelCards(cur){
+    return H.STUDY_LEVELS.map((L,n)=>{const has=L.has[state.lang]||L.has.en,soon=L.soon[state.lang]||L.soon.en;
+      return `<button type="button" class="unit lvcard${L.key===cur?' cur':''}" data-level="${L.key}" aria-pressed="${L.key===cur}"><span class="lvno">${n+1}</span><span class="name"><b>${esc(nameOf(L.name))}</b><small>${tr('lvHas')}: ${has.map(esc).join(' · ')}</small>${soon.length?`<small class="soon">${soon.map(x=>`<span class="tag">${tr('lvSoon')}</span> ${esc(x)}`).join(' ')}</small>`:''}${L.bank?`<small>${tr('lvBankNote')}</small>`:''}</span></button>`;}).join('');
+  }
+  function levelHome(){
+    state.mode='level';state.session=null;paintTabs();paintStats();tellUnit('');
+    $('app').innerHTML=`<section class="session onboard"><div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${tr('lvTitle')}</span></div>
+      <h2>${tr('lvPick')}</h2><p class="src">${tr('lvIntro')}</p><div class="obopts">${levelCards(studyLevel())}</div></section>`;
+    $('quit').onclick=todayHome;
+    $('app').querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{saved.studyLevel=b.dataset.level;delete saved.customOpts?.source;save();todayHome();});
+    reportHeight();
+  }
   /* the problems a set can draw from: each source tagged (from) so the filter can tell them apart */
   async function setPool(source){
     state.setPools||={};if(state.setPools[source])return state.setPools[source];
+    if(source.startsWith('level:'))return state.setPools[source]=await levelItems(source.slice(6));
     const tracks=await loadTracks(),parts=[];
     if(source==='all'||source==='calc')parts.push(allExamItems().then(a=>a.map(i=>({...i,from:'calc'}))));
     for(const t of tracks)if(source==='all'||source==='track:'+t.key)parts.push(trackItems(t.key).then(a=>a.map(i=>({...i,from:'track:'+t.key}))));
@@ -1080,7 +1396,7 @@
   const hasChoices=i=>i.kind==='track'?i.type==='mc':i.kind!=='contest';
   const solvedMap=()=>({...saved.solved,...Object.fromEntries(Object.entries(saved.contest.done).filter(([,v])=>v===1))});
   const setOpts=()=>{const d={source:'all',units:[],min:1,max:10,count:10,format:'typed',contest:'',yearMin:0,yearMax:0,timer:true};
-    const keys=P.startExams(saved.profile||{region:state.lang==='ko'?'kr':'global'});if(keys[0]&&keys[0]!=='calc')d.source='track:'+keys[0];
+    d.source='level:'+studyLevel();
     return{...d,...(saved.customOpts||{})};};
   async function customHome(){
     state.mode='custom';state.session=null;paintTabs();paintStats();tellUnit('');
@@ -1102,7 +1418,7 @@
       if(o.yearMin&&!years.includes(o.yearMin))o.yearMin=0;if(o.yearMax&&!years.includes(o.yearMax))o.yearMax=0;
       const chosen=new Set(o.units),areaOn=x=>x.subs.every(u=>chosen.has(u));
       const stepOpt=(v)=>steps.map(st=>`<option value="${st}"${st===v?' selected':''}>${st} · ${tr(LEVELS[levelOf(st)])}</option>`).join('');
-      const srcOpts=[['all',tr('cAll')],...tracks.map(t=>['track:'+t.key,nameOf(t.name)]),['calc',tr('cCalc')],['contest',tr('cContest')]];
+      const srcOpts=[...H.STUDY_LEVELS.map(L=>['level:'+L.key,tr('lvTitle')+' '+L.key.slice(1)+' · '+nameOf(L.name)]),['all',tr('cAll')],...tracks.map(t=>['track:'+t.key,nameOf(t.name)]),['calc',tr('cCalc')],['contest',tr('cContest')]];
       $('app').innerHTML=`<section class="session builder"><h2>${tr('tabCustom')}</h2><p class="src">${tr('customIntro')}</p>
         <div class="field"><label class="flabel" for="cSrc">${tr('cSource')}</label><select id="cSrc">${srcOpts.map(([v,l])=>`<option value="${v}"${v===o.source?' selected':''}>${esc(l)}</option>`).join('')}</select></div>
         ${areas.length?`<div class="field"><span class="flabel">${tr('cTopics')}</span><div class="chips" id="cAreas"><button type="button" class="chipbtn" data-area="" aria-pressed="${!chosen.size}">${tr('cAllTopics')}</button>${areas.map(x=>`<button type="button" class="chipbtn" data-area="${x.a.key}" aria-pressed="${chosen.size>0&&areaOn(x)}">${esc(areaName(x.a))}</button>`).join('')}</div>
@@ -1157,7 +1473,7 @@
   async function reviewHome(){
     state.mode='review';state.session=null;paintTabs();paintStats();tellUnit('');
     await loadContests().catch(()=>{});
-    const due=dueNow(),all=Object.entries(saved.review),later=Object.entries(saved.later).sort((a,b)=>b[1].at-a[1].at),reports=readReports().slice().reverse();
+    const due=dueNow(),all=Object.entries(saved.review),later=Object.entries(saved.later).sort((a,b)=>b[1].at-a[1].at);
     const upcoming=all.filter(([,r])=>r.due>today()).sort((a,b)=>a[1].due<b[1].due?-1:1)[0];
     $('app').innerHTML=`<section class="session reviewcard"><h2>${tr('tabReview')}</h2><p class="src">${tr('reviewIntro')}</p>
         <div class="stats rstats"><span class="stat"><b>${due.length}</b>${tr('dueToday')}</span><span class="stat"><b>${all.length}</b>${tr('inQueue')}</span>${upcoming?`<span class="stat"><b>${esc(upcoming[1].due.slice(5))}</b>${tr('nextDue')}</span>`:''}</div>
@@ -1165,12 +1481,13 @@
         <div class="actions"><button type="button" class="primary" id="goReview"${due.length?'':' disabled'}>${tr('startReview')}${due.length?` (${Math.min(20,due.length)})`:''}</button></div></section>
       <section class="area laterlist"><h2>${tr('laterTitle')}</h2>${later.length?`<ul class="plainlist">${later.map(([id,e])=>`<li><span class="name">${esc(e.t||id)}<small>${esc(entryName(e))}</small></span><button type="button" class="mini" data-unlater="${esc(id)}">${tr('removeLater')}</button></li>`).join('')}</ul>
         <div class="actions"><button type="button" class="primary" id="goLater">${tr('startLater')} (${Math.min(20,later.length)})</button></div>`:`<p class="src">${tr('noLater')}</p>`}</section>
-      <section class="area laterlist"><h2>${tr('myReports')}</h2>${reports.length?`<ul class="plainlist">${reports.slice(0,20).map(r=>`<li><span class="name">${esc(r.t||r.id)}<small>${esc(r.id)} · ${tr(REASONS.includes(r.r)?r.r:'rOther')}${r.note?' · '+esc(r.note.slice(0,80)):''} · ${day(r.at)}</small></span></li>`).join('')}</ul>`:`<p class="src">${tr('noReports')}</p>`}</section>
+      <section class="area laterlist"><h2>${tr('myReports')}</h2><div id="myReports"><p class="src">${tr('loading')}</p></div></section>
       ${settingsHtml()}`;
     $('goReview').onclick=async()=>{$('app').innerHTML=`<p>${tr('loading')}</p>`;const items=await resolveItems(due.slice(0,20));runSet({items,label:tr('tabReview'),back:reviewHome,again:reviewHome});};
     if($('goLater'))$('goLater').onclick=async()=>{$('app').innerHTML=`<p>${tr('loading')}</p>`;const items=await resolveItems(later.slice(0,20).map(([id])=>id));runSet({items,label:tr('laterTitle'),back:reviewHome,again:reviewHome});};
     $('app').querySelectorAll('[data-unlater]').forEach(b=>b.onclick=()=>{delete saved.later[b.dataset.unlater];save();reviewHome();});
     wireSettings(reviewHome);reportHeight();
+    flushReports().catch(()=>{}).then(myReportsHtml).then(h=>{if($('myReports')&&state.mode==='review'){$('myReports').innerHTML=h;reportHeight();}});
   }
   /* ── progress backup: export the saved state as a file, import one (checked, then merged item by item), reset ── */
   function settingsHtml(){return `<details class="area settings" id="settings"><summary>${tr('settings')}</summary><p class="src">${tr('settingsNote')}</p>
@@ -1196,7 +1513,7 @@
       saved=fill({});save();paintStats();await again();if($('settings')){$('settings').open=true;msg(tr('resetDone'));}
     };
   }
-  const MODES={start:startHome,play:playHome,today:todayHome,review:reviewHome,custom:customHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
+  const MODES={level:levelHome,start:startHome,play:playHome,today:todayHome,review:reviewHome,custom:customHome,tracks:tracksHome,exam:home,bank:bankHome,contest:contestHome,class:classHome};
 
   function applyTheme(){const t=params.get('theme'),dark=t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';}
   function translate(){document.documentElement.lang=state.lang;document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=tr(el.dataset.i18n);});$('note').textContent=tr('note');document.title=tr('title')+' · HaslaLab';}
@@ -1216,7 +1533,8 @@
   if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);
   document.documentElement.classList.toggle('embedded',embedded);
   applyTheme();translate();
-  const boot=()=>{pull();loadPlan();const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
+  addEventListener('online',()=>flushReports().catch(()=>{}));
+  const boot=()=>{pull();loadPlan();setTimeout(()=>flushReports().catch(()=>{}),4000);const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
     if(item&&/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
     else if(mode==='play'){document.documentElement.classList.add('play');playHome();}

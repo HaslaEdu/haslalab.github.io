@@ -18,7 +18,7 @@ const fails=async(p,code)=>assert.rejects(p,e=>e.code===code);
 
 test('a guest has no tutor, a member gets the free questions a day, a plan gets more',async()=>{
   const {route,db,now,tick}=setup({ai:()=>'Think about energy: what is conserved?'});
-  assert.deepEqual(await route('/api/learn/plan','GET',null,null),{plan:'guest',ads:true,tutorLimit:0,tutorLeft:0});
+  assert.deepEqual(await route('/api/learn/plan','GET',null,null),{plan:'guest',ads:true,tutorLimit:0,tutorLeft:0,gradeLeft:0});
   await fails(route('/api/learn/tutor','POST',{problem:'p',question:'q'},null),'login_required');
   const p=await route('/api/learn/plan','GET',null,me);
   assert.equal(p.plan,'free');assert.equal(p.ads,true);assert.equal(p.tutorLeft,TUTOR_FREE);

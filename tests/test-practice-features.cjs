@@ -112,7 +112,7 @@ test('the page loads the helpers, keeps review and saved problems out of the acc
   const stateOf=/const stateOf=\(\)=>\(\{([^)]*)\}\);/.exec(js)[1];
   assert.doesNotMatch(stateOf,/review|later|recent/,'the server keeps only the fields it knows, so these stay local');
   for(const k of ['review','custom'])assert.match(js,new RegExp(`\\['${k}',tr\\('tab${k[0].toUpperCase()+k.slice(1)}'\\)`));
-  assert.match(js,/mailto:'\+CONTACT/);assert.match(read('index.html'),/mailto:mgsnew88@naver\.com/);
+  assert.match(js,/\/api\/learn\/report'/,'problem reports go to the server');assert.doesNotMatch(js,/mailto:/,'no mail app for reports');assert.match(read('index.html'),/mailto:mgsnew88@naver\.com/);
   /* every new string has Korean and English */
   const keys=['tabReview','tabCustom','report','later','exportP','importP','resetP','cStartSet','avgTime','strike'];
   for(const k of keys){assert.match(js,new RegExp(`(^|[\\s,{])${k}:'[^']*[가-힣]`,'m'),k+' ko');}
