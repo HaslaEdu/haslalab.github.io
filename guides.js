@@ -137,5 +137,14 @@
     paint();
     box.insertAdjacentHTML('afterend',`<p class="note">${K?'기준일':'As of'} ${esc(d.as_of||'')}. ${K?'날짜가 바뀌었거나 빠진 대회가 있으면 커뮤니티에 알려 주세요.':'If a date has changed or a contest is missing, tell us in the community.'}</p>`);
   }
-  window.HL_GUIDES={roadmapView,roadmapMount,coursesView,coursesMount,scheduleView,scheduleMount};
+  /* the next n dated events from data/schedule.json (the Olympiad home's card): one going on today counts, with the
+     days until it starts (0 while it runs) */
+  function upcomingFrom(d,n=3,today=new Date().toISOString().slice(0,10)){
+    const day=x=>Date.parse(x+'T00:00:00Z')/86400000;
+    return (d?.events||[]).filter(e=>/^\d{4}-\d{2}-\d{2}$/.test(e.start||'')&&(e.end||e.start)>=today)
+      .sort((a,b)=>a.start<b.start?-1:a.start>b.start?1:0).slice(0,n)
+      .map(e=>({key:e.key,name:e.name,name_ko:e.name_ko,url:safe(e.url),country:e.country,start:e.start,end:e.end||e.start,days:Math.max(0,day(e.start)-day(today))}));
+  }
+  const upcoming=(n=3)=>get('data/schedule.json').then(d=>upcomingFrom(d,n));
+  window.HL_GUIDES={roadmapView,roadmapMount,coursesView,coursesMount,scheduleView,scheduleMount,upcoming,upcomingFrom};
 })();

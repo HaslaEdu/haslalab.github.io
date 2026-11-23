@@ -40,13 +40,22 @@
     const up=Math.min(7,n);return{up,reborn:0,down:i>0?Math.max(0,n-Math.max(7,n-5)):0};
   }
   const flag=cc=>/^[A-Z]{2}$/.test(cc||'')?`<img class="lg-flag" alt="${esc(cc)}" title="${esc(cc)}" loading="lazy" decoding="async" width="20" height="15" src="https://flagcdn.com/w40/${cc.toLowerCase()}.png" srcset="https://flagcdn.com/w80/${cc.toLowerCase()}.png 2x">`:'<span class="lg-flag lg-noflag" aria-hidden="true"></span>';
+  /* the profile picture (users.avatar, served at <api>/api/avatar/<key>), else a letter in a colour from the name, as the
+     community's avatars (index.html cmAv). opts.avatarSrc turns a key into the picture's address. */
+  const AVATAR=/^[A-Za-z0-9_-]{8,32}$/;
+  function avatar(nickname,key,opts={}){
+    const src=key&&AVATAR.test(key)&&typeof opts.avatarSrc==='function'?opts.avatarSrc(key):'';
+    if(src&&/^https:\/\/[^\s"'<>]+$/.test(src))return `<img class="lg-av" src="${esc(src)}" alt="" width="28" height="28" loading="lazy" decoding="async">`;
+    const n=String(nickname||'?');let h=0;for(const ch of n)h=(h*31+ch.codePointAt(0))>>>0;
+    return `<span class="lg-av" aria-hidden="true" style="background:hsl(${h%360} 55% 46%)">${esc(([...n][0]||'?').toUpperCase())}</span>`;
+  }
   /* the group table; the server gives each row its zone */
-  function standingsHtml(data,lang){
+  function standingsHtml(data,lang,opts={}){
     const t=ko(lang),rows=data?.standings||[];
     if(!rows.length)return '';
     return `<table class="lg-table"><caption class="lg-sr">${t?'이번 주 그룹 순위':'This week\'s group'}</caption><thead><tr><th scope="col">${t?'순위':'Rank'}</th><th scope="col">${t?'닉네임':'Name'}</th><th scope="col" class="r">XP</th></tr></thead><tbody>${rows.map(r=>{
       const z=r.zone||'stay',label=zoneText(z,lang);
-      return `<tr class="lg-z-${esc(z)}${r.me?' lg-me':''}"${r.me?' aria-current="true"':''}><td class="lg-rk">${r.rank}${label?`<small>${esc(label)}</small>`:''}</td><td><div class="lg-nm">${flag(r.country)}<span>${esc(r.nickname)}</span>${r.rebirths>0?`<em class="lg-rb">${esc(rebirthText(r.rebirths,lang))}</em>`:''}${r.me?`<em class="lg-you">${t?'나':'you'}</em>`:''}</div></td><td class="r">${Number(r.xp)||0}</td></tr>`;}).join('')}</tbody></table>`;
+      return `<tr class="lg-z-${esc(z)}${r.me?' lg-me':''}"${r.me?' aria-current="true"':''}><td class="lg-rk">${r.rank}${label?`<small>${esc(label)}</small>`:''}</td><td><div class="lg-nm">${avatar(r.nickname,r.avatar,opts)}${flag(r.country)}<span>${esc(r.nickname)}</span>${r.rebirths>0?`<em class="lg-rb">${esc(rebirthText(r.rebirths,lang))}</em>`:''}${r.me?`<em class="lg-you">${t?'나':'you'}</em>`:''}</div></td><td class="r">${Number(r.xp)||0}</td></tr>`;}).join('')}</tbody></table>`;
   }
   function legendHtml(data,lang){
     const t=ko(lang),z=data?.zones||{},n=(data?.standings||[]).length,c=zoneCounts(data?.tier??0,n);
@@ -57,13 +66,21 @@
     if(!z.down&&tierIndex(data?.tier??0)===0)items.push(['stay',t?'브론즈는 강등 없음':'No demotion from Bronze']);
     return `<ul class="lg-legend" data-counts="${c.up},${c.down},${c.reborn}">${items.map(([k,l])=>`<li class="lg-k-${k}">${esc(l)}</li>`).join('')}</ul>`;
   }
+  /* today's daily goal (GET /api/league/me today): the problems counted so far, the goal and its one-time bonus */
+  function goalLine(today,lang){
+    const t=ko(lang);if(!today||!today.goal)return '';
+    const n=Math.min(Number(today.counted)||0,today.goal),g=today.goal;
+    const state=today.earned?(t?`목표 달성 +${today.earned_xp||today.bonus_xp} XP`:`Goal reached +${today.earned_xp||today.bonus_xp} XP`):(t?`달성하면 +${today.bonus_xp} XP`:`Reach it for +${today.bonus_xp} XP`);
+    const next=today.next_goal?(t?` · 내일부터 ${today.next_goal}문제`:` · ${today.next_goal} from tomorrow`):'';
+    return `<p class="lg-goal${today.earned?' lg-goal-met':''}"><b>${t?'오늘 목표':'Today'} ${n}/${g}</b> <span>${esc(state+next)}</span></p>`;
+  }
   /* the League tab for a signed-in member */
-  function meHtml(data,lang,{rankingHref='#/ranking',settingsHref=''}={}){
+  function meHtml(data,lang,{rankingHref='#/ranking',settingsHref='',avatarSrc=null}={}){
     const t=ko(lang);
     const head=`<div class="lg-head">${badge(data.tier,data.rebirths,lang,{big:true})}<div class="lg-meta"><b>${esc(daysLeftText(data.days_left,lang))}</b><span>${t?'이번 주':'This week'} ${Number(data.xp)||0} XP${data.rank?` · ${t?data.rank+'위':'rank '+data.rank}`:''}</span></div></div>`;
-    const body=data.joined?standingsHtml(data,lang)+legendHtml(data,lang)
+    const body=data.joined?standingsHtml(data,lang,{avatarSrc})+legendHtml(data,lang)
       :`<p class="lg-empty">${t?`이번 주에는 아직 리그 XP가 없습니다. 문제를 하나 맞히면 ${esc(tierName(data.tier,lang))} 리그의 그룹(최대 30명)에 들어갑니다.`:`No league XP yet this week. Get one problem right and you join a group (up to 30 members) in the ${esc(tierName(data.tier,lang))} league.`}</p>`;
-    return `<section class="lg" aria-label="${t?'리그':'League'}">${head}${body}<p class="lg-rule">${esc(rulesLine(lang))}</p><p class="lg-rule lg-small">${esc(xpLine(lang,data.rules?.daily_counted||200))}</p>
+    return `<section class="lg" aria-label="${t?'리그':'League'}">${head}${goalLine(data.today,lang)}${body}<p class="lg-rule">${esc(rulesLine(lang))}</p><p class="lg-rule lg-small">${esc(xpLine(lang,data.rules?.daily_counted||200))}</p>
       <p class="lg-acts"><a class="lg-btn" href="${esc(rankingHref)}" target="_top">${t?'최종 순위 보기':'All-time ranking'}</a>${settingsHref?`<a class="lg-btn lg-sub" href="${esc(settingsHref)}" target="_top">${t?'설정':'Settings'}</a>`:''}</p></section>`;
   }
   function guestHtml(lang,{loginHref='/#/login'}={}){
@@ -75,11 +92,11 @@
       <p class="lg-acts"><a class="lg-btn" href="${esc(loginHref)}" target="_top">${t?'로그인하고 리그 참가':'Sign in to join'}</a><a class="lg-btn lg-sub" href="/#/ranking" target="_top">${t?'최종 순위 보기':'All-time ranking'}</a></p></section>`;
   }
   /* the all-time ranking: rebirths, then league, then total league XP (the server orders it) */
-  function rankingHtml(data,lang){
+  function rankingHtml(data,lang,opts={}){
     const t=ko(lang),rows=data?.rows||[];
     if(!rows.length)return `<p class="lg-empty">${t?'아직 순위에 오른 회원이 없습니다.':'No one is ranked yet.'}</p>`;
     return `<table class="lg-table lg-ranking"><thead><tr><th scope="col">${t?'순위':'Rank'}</th><th scope="col">${t?'닉네임':'Name'}</th><th scope="col">${t?'리그':'League'}</th><th scope="col" class="r">${t?'리그 XP':'League XP'}</th></tr></thead><tbody>${rows.map(r=>
-      `<tr${r.me?' class="lg-me" aria-current="true"':''}><td class="lg-rk">${r.rank}</td><td><div class="lg-nm">${flag(r.country)}<span>${esc(r.nickname)}</span></div></td><td>${badge(r.tier,r.rebirths,lang)}</td><td class="r">${(Number(r.total_xp)||0).toLocaleString(t?'ko-KR':'en-US')}</td></tr>`).join('')}</tbody></table>`;
+      `<tr${r.me?' class="lg-me" aria-current="true"':''}><td class="lg-rk">${r.rank}</td><td><div class="lg-nm">${avatar(r.nickname,r.avatar,opts)}${flag(r.country)}<span>${esc(r.nickname)}</span></div></td><td>${badge(r.tier,r.rebirths,lang)}</td><td class="r">${(Number(r.total_xp)||0).toLocaleString(t?'ko-KR':'en-US')}</td></tr>`).join('')}</tbody></table>`;
   }
   const pages=data=>Math.max(1,Math.ceil((data?.total||0)/(data?.per_page||100)));
   const CSS=`.lg{display:grid;gap:12px}.lg-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.lg-meta{display:grid;gap:2px}.lg-meta b{font-size:16px}.lg-meta span{font-size:13px;opacity:.75}
@@ -89,19 +106,19 @@
 .lg-table{width:100%;border-collapse:collapse;font-size:14px}.lg-table th{text-align:left;font-size:12px;font-weight:600;opacity:.7;padding:6px 8px;border-bottom:1px solid rgba(128,128,128,.35)}
 .lg-table td{padding:8px;border-bottom:1px solid rgba(128,128,128,.18);vertical-align:middle}.lg-table .r{text-align:right;font-variant-numeric:tabular-nums}
 .lg-rk{width:52px;font-weight:700;font-variant-numeric:tabular-nums}.lg-rk small{display:block;font-size:11px;font-weight:600}
-.lg-nm{display:flex;align-items:center;gap:8px;min-width:0}.lg-nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-nm{display:flex;align-items:center;gap:8px;min-width:0}.lg-av{width:28px;height:28px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;object-fit:cover;background:rgba(128,128,128,.2)}.lg-nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lg-flag{width:20px;height:15px;object-fit:cover;border-radius:2px;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.12)}.lg-noflag{display:inline-block;background:rgba(128,128,128,.2)}
 .lg-rb,.lg-you{font-style:normal;font-size:11px;font-weight:700;padding:1px 6px;border-radius:999px;background:rgba(128,128,128,.16);flex:none}
 .lg-z-up{background:rgba(47,158,68,.10)}.lg-z-up .lg-rk small{color:#2b8a3e}.lg-z-down{background:rgba(224,49,49,.09)}.lg-z-down .lg-rk small{color:#c92a2a}
 .lg-z-reborn{background:rgba(132,65,181,.12)}.lg-z-reborn .lg-rk small{color:#8441b5}.lg-me td{font-weight:700}.lg-me{box-shadow:inset 3px 0 0 currentColor}
 .lg-legend{display:flex;flex-wrap:wrap;gap:6px 14px;list-style:none;margin:0;padding:0;font-size:12px}.lg-legend li{display:flex;align-items:center;gap:6px}
 .lg-legend li::before{content:"";width:12px;height:12px;border-radius:3px;background:rgba(128,128,128,.25)}.lg-k-up::before{background:rgba(47,158,68,.55)!important}.lg-k-down::before{background:rgba(224,49,49,.5)!important}.lg-k-reborn::before{background:rgba(132,65,181,.55)!important}
-.lg-rule{margin:0;font-size:14px;line-height:1.55}.lg-small{font-size:12px;opacity:.75}.lg-empty{margin:0;padding:14px;border:1px dashed rgba(128,128,128,.45);border-radius:10px;font-size:14px}
+.lg-rule{margin:0;font-size:14px;line-height:1.55}.lg-goal{margin:0;font-size:14px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}.lg-goal span{opacity:.8}.lg-goal-met b{color:#2b8a3e}.lg-small{font-size:12px;opacity:.75}.lg-empty{margin:0;padding:14px;border:1px dashed rgba(128,128,128,.45);border-radius:10px;font-size:14px}
 .lg-acts{display:flex;flex-wrap:wrap;gap:8px;margin:0}.lg-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:10px;background:#1c7ed6;color:#fff!important;text-decoration:none;font-weight:600;font-size:14px}
 .lg-btn.lg-sub{background:transparent;color:inherit!important;border:1px solid rgba(128,128,128,.45)}.lg-tiers{display:flex;flex-wrap:wrap;gap:6px;margin:0}.lg-guest h2{margin:0;font-size:18px}.lg-guest p{margin:0}
-@media (max-width:480px){.lg-table td,.lg-table th{padding:8px 4px}.lg-rk{width:40px}.lg-ranking .lg-badge{flex-wrap:wrap;white-space:normal;border-radius:10px;row-gap:0}.lg-ranking .lg-badge b{flex-basis:100%;border-left:0;padding-left:16px;margin-left:0;font-size:11px}}
+@media (max-width:480px){.lg-table td,.lg-table th{padding:8px 4px}.lg-nm{gap:6px}.lg-av{width:26px;height:26px;font-size:12px}.lg-rk{width:40px}.lg-ranking .lg-badge{flex-wrap:wrap;white-space:normal;border-radius:10px;row-gap:0}.lg-ranking .lg-badge b{flex-basis:100%;border-left:0;padding-left:16px;margin-left:0;font-size:11px}}
 .lg-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .lg-pager{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:12px}.lg-pager a,.lg-pager span{min-height:40px;min-width:40px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px}`;
   function addStyle(doc){if(!doc||doc.getElementById('lgStyle'))return;const s=doc.createElement('style');s.id='lgStyle';s.textContent=CSS;doc.head.append(s);}
-  return{TIERS,MASTER,tierIndex,tierName,rebirthText,badge,daysLeftText,zoneText,rulesLine,xpLine,zoneCounts,standingsHtml,legendHtml,meHtml,guestHtml,rankingHtml,pages,addStyle};
+  return{TIERS,MASTER,avatar,goalLine,tierIndex,tierName,rebirthText,badge,daysLeftText,zoneText,rulesLine,xpLine,zoneCounts,standingsHtml,legendHtml,meHtml,guestHtml,rankingHtml,pages,addStyle};
 });

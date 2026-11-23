@@ -133,8 +133,8 @@ export function createPracticeRouter({ HttpError, needUser, limit, now, bad }) {
         statements.push(env.DB.prepare('INSERT INTO practice_skills(user_id,unit,rating,n,right_n,last_at) VALUES(?,?,?,?,?,?) ON CONFLICT(user_id,unit) DO UPDATE SET rating=excluded.rating,n=excluded.n,right_n=excluded.right_n,last_at=excluded.last_at').bind(me.id, s.unit, s.rating, s.n, s.right_n, s.last_at));
       await env.DB.batch(statements);
       /* weekly league XP from these recorded attempts (league.js): right or solved ones only, capped per day */
-      const league_xp = await leagueFromAttempts(env, me.id, clean, t);
-      return { recorded: clean.length, league_xp, skills: [...current.values()].map(({ placed, ...s }) => s) };
+      const league = await leagueFromAttempts(env, me.id, clean, t);
+      return { recorded: clean.length, league_xp: league.xp, goal_bonus: league.bonus, ...(league.today ? { league_today: league.today } : {}), skills: [...current.values()].map(({ placed, ...s }) => s) };
     }
     throw new HttpError(404, 'not_found');
   };

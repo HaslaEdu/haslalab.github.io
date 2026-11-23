@@ -66,6 +66,7 @@ test('each region starts on its own exams: Korea AP and calculation problems, In
   const tracks=new Set(execFileSync(process.execPath,['--input-type=module','-e',"import('./tools/practice/build-tracks.mjs').then(m=>console.log(m.TRACKS.map(t=>t.key).join(',')))"],{cwd:root,encoding:'utf8'}).trim().split(','));
   for(const r of Object.values(P.REGIONS))for(const k of [...r.exam,...r.olympiad,...r.other])assert.ok(k==='calc'||tracks.has(k),k);
   const js=read('practice.js');
-  assert.match(js,/if\(!saved\.profile\)\{startHome\(\);return;\}/,'the first visit asks the questions before anything else');
+  assert.match(js,/async function todayHome\(\)\{\s*\/\*[^*]*\*\/\s*if\(!saved\.profile\)\{quickStart\(\);return;\}/,'the first visit shows the four level cards, then the first problem');
+  assert.match(js,/else if\(mode==='start'\)startHome/,'the full questions stay one link away (after sign-up)');
   assert.match(read('index.html'),/sessionStorage\.setItem\("hlCmBack","#\/learn\/practice\?mode=start"\)/,'a new member goes to the questions after signing up');
 });

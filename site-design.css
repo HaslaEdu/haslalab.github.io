@@ -1164,3 +1164,89 @@ html[data-theme="dark"] body.hl-site .co-soon{background:#2b2418;border-color:#5
   body.hl-site .section-nav .shell::-webkit-scrollbar{display:none}
   body.hl-site .section-nav a{flex:0 0 auto}
 }
+
+/* ── Home (#/): one line, one button, the drifting strip of problems, four doors ── */
+body.hl-site .hm section{padding:0}
+body.hl-site .hm-hero{display:grid;justify-items:start;gap:14px;margin:6px 0 22px}
+body.hl-site .hm-hero .hm-lede{font:650 clamp(21px,4.6vw,30px)/1.35 var(--sans);letter-spacing:-.02em;color:var(--ink);margin:0;max-width:30ch}
+body.hl-site .hm-start{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 28px;border-radius:12px;background:#5c438f;color:#fff!important;font:650 17px var(--sans);text-decoration:none;box-shadow:0 8px 22px -12px rgba(76,52,128,.8)}
+body.hl-site .hm-start:hover{background:#4a3575}body.hl-site .hm-start:focus-visible{outline:3px solid #b6a6d8;outline-offset:3px}
+body.hl-site .hm-strip{position:relative;margin:0 0 22px;min-height:220px;display:grid;gap:10px}
+body.hl-site .hm-strip[data-state="wait"]{background:linear-gradient(90deg,rgba(112,89,164,.05),rgba(112,89,164,.1),rgba(112,89,164,.05));border-radius:14px}
+body.hl-site .hm-row{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+body.hl-site .hm-track{display:flex;gap:10px;width:max-content;animation:hmDrift calc(var(--hm-n,12) * 7s) linear infinite}
+body.hl-site .hm-track.hm-rev{animation-direction:reverse}
+body.hl-site .hm-copy{display:flex;gap:10px}
+body.hl-site :is(.hm-strip:hover,.hm-strip:focus-within,.hm-strip.hm-paused) .hm-track{animation-play-state:paused}
+@keyframes hmDrift{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 5px))}}
+body.hl-site .hm-card{flex:0 0 260px;display:grid;align-content:start;gap:6px;min-height:104px;padding:12px 14px;border:1px solid #d5dbe6;border-radius:12px;background:#fff;color:#263247;text-decoration:none;font-family:var(--sans)}
+body.hl-site .hm-card:hover,body.hl-site .hm-card:focus-visible{border-color:#7059a4;outline:none;box-shadow:0 0 0 2px rgba(112,89,164,.25)}
+body.hl-site .hm-meta{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px}
+body.hl-site .hm-tag{flex:none;padding:1px 8px;border-radius:999px;font-weight:700;font-size:11.5px;background:#ebe5f4;color:#5c438f}
+body.hl-site .hm-L2 .hm-tag{background:#e3f0fb;color:#1b5f9e}body.hl-site .hm-L3 .hm-tag{background:#fdebd9;color:#a2511b}body.hl-site .hm-L4 .hm-tag{background:#e6f4ea;color:#2b7a3e}
+body.hl-site .hm-src{color:#657187;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.hl-site .hm-text{font-size:13.5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+body.hl-site .hm-text .katex{font-size:1.02em}
+body.hl-site .hm-pause{position:absolute;right:0;top:0;width:40px;height:40px;border:1px solid #d5dbe6;border-radius:10px;background:#fff;color:#4a5568;font-size:12px;cursor:pointer;z-index:1}
+body.hl-site .hm-pause:focus-visible{outline:2px solid #7059a4;outline-offset:2px}
+body.hl-site .hm-grid6{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+body.hl-site .hm-grid6 .hm-card{flex:none}
+body.hl-site .hm .hm-doors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 14px}
+body.hl-site .hm .hm-door{min-height:64px}
+body.hl-site .hm-foot{display:flex;align-items:center;gap:18px;justify-content:center;font:13px var(--sans);color:#657187;margin:4px 0 10px}
+body.hl-site .hm-foot a{color:#5c438f;padding:10px 4px}
+html[data-theme="dark"] body.hl-site .hm-hero .hm-lede{color:#ebe8f5}
+html[data-theme="dark"] body.hl-site .hm-start{background:#bca0ed;color:#16121d!important}
+html[data-theme="dark"] body.hl-site :is(.hm-card,.hm-pause){background:#1b1825;border-color:#3b344d;color:#ebe8f5}
+html[data-theme="dark"] body.hl-site .hm-src{color:#a39cb8}
+html[data-theme="dark"] body.hl-site .hm-tag{background:#30243f;color:#cfbdf2}
+html[data-theme="dark"] body.hl-site .hm-L2 .hm-tag{background:#16283a;color:#9fcdf5}html[data-theme="dark"] body.hl-site .hm-L3 .hm-tag{background:#3a2616;color:#f3bd8c}html[data-theme="dark"] body.hl-site .hm-L4 .hm-tag{background:#172b1e;color:#9bdcae}
+html[data-theme="dark"] body.hl-site .hm-foot a{color:#cfbdf2}
+@media(max-width:860px){body.hl-site .hm .hm-doors{grid-template-columns:repeat(2,minmax(0,1fr));order:0}}
+@media(max-width:600px){
+  body.hl-site .hm-hero{margin:8px 0 18px}
+  body.hl-site .hm-start{width:100%;min-height:54px}
+  body.hl-site .hm-card{flex-basis:228px;min-height:96px;padding:10px 12px}
+  body.hl-site .hm-text{font-size:13px}
+  body.hl-site .hm-strip{min-height:200px}
+  body.hl-site .hm-grid6 .hm-card:nth-child(n+4){display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  body.hl-site .hm-track{animation:none}
+}
+/* the daily goal reached in the practice frame (index.html homeGoalMoment) */
+body.hl-site .hl-goal-moment{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:120;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;max-width:calc(100% - 32px);
+  padding:12px 18px;border-radius:14px;background:#fff;color:#263247;border:1px solid #1f7a4d;box-shadow:0 14px 34px -14px rgba(0,0,0,.5);font-family:var(--sans);animation:hlGoalIn .35s ease-out}
+body.hl-site .hl-goal-moment svg circle{fill:none;stroke:#1f7a4d;stroke-width:3}
+body.hl-site .hl-goal-moment b{font-size:16px}body.hl-site .hl-goal-moment small{flex-basis:100%;text-align:center;color:#657187;font-size:12.5px}
+body.hl-site .hl-goal-moment.out{opacity:0;transition:opacity .5s}
+html[data-theme="dark"] body.hl-site .hl-goal-moment{background:#1b1825;color:#ebe8f5;border-color:#8fdcb0}
+html[data-theme="dark"] body.hl-site .hl-goal-moment svg circle{stroke:#8fdcb0}
+@keyframes hlGoalIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(prefers-reduced-motion:reduce){body.hl-site .hl-goal-moment{animation:none}body.hl-site .hl-goal-moment.out{transition:none}}
+
+/* ── Olympiad home (#/olympiad): four small cards under the hero ── */
+body.hl-site .oly-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:6px}
+body.hl-site .hl-home .oly-card{min-width:0;background:#fff;border:1px solid var(--grid-bold);border-radius:12px;padding:12px 16px 8px;font-family:var(--sans)}
+body.hl-site .oly-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}
+body.hl-site .oly-head h2{font-size:15px;font-weight:650;letter-spacing:-.01em;margin:0}
+body.hl-site :is(.oly-head a,.oly-more){font-size:12.5px;color:#5c438f;white-space:nowrap;padding:8px 0;min-height:40px;background:none;border:0;font-family:inherit;cursor:pointer}
+body.hl-site .oly-list{list-style:none;margin:0;padding:0}
+body.hl-site .oly-list li{border-top:1px solid #e3e8f0}body.hl-site .oly-list li:first-child{border-top:0}
+body.hl-site .oly-list li>:is(a,div){display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:6px 0;color:var(--ink);text-decoration:none}
+body.hl-site .oly-list li>a:hover span{color:#5c438f}
+body.hl-site .oly-list span{min-width:0;font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+body.hl-site .oly-list small{display:block;font-size:12px;color:var(--graphite)}
+body.hl-site .oly-list time{flex:none;font-size:12px;color:var(--graphite);letter-spacing:normal;white-space:nowrap}
+body.hl-site .oly-dday{flex:none;font-size:12px;font-weight:700;color:#5c438f;background:#f3f0f9;border-radius:999px;padding:2px 9px;white-space:nowrap}
+body.hl-site .oly-dday.on{color:#1f7a4d;background:#eaf7ef}
+body.hl-site .oly-note{font-size:13px;color:var(--graphite);margin:6px 0}
+body.hl-site .oly-chips{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 6px}
+body.hl-site .oly-chip{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--grid-bold);border-radius:999px;font-size:13.5px;font-weight:600;color:var(--ink);text-decoration:none}
+body.hl-site .oly-chip:hover{border-color:#7059a4;color:#5c438f}
+html[data-theme="dark"] body.hl-site .oly-card{background:#1b1825;border-color:#3b344d}
+html[data-theme="dark"] body.hl-site .oly-list li{border-top-color:#3b344d}
+html[data-theme="dark"] body.hl-site :is(.oly-head a,.oly-more,.oly-dday){color:#cfbdf2}html[data-theme="dark"] body.hl-site .oly-dday{background:#30243f}
+html[data-theme="dark"] body.hl-site .oly-dday.on{color:#8fdcb0;background:#16291f}
+html[data-theme="dark"] body.hl-site .oly-chip{border-color:#3b344d}
+@media(max-width:720px){body.hl-site .oly-cards{grid-template-columns:1fr;gap:12px}}

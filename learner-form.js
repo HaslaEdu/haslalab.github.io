@@ -15,7 +15,12 @@
     +'SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG '
     +'UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW').split(' '));
   const SET=new Set(COUNTRIES);
-  const DAILY_GOALS=Object.freeze([5,10,15,20]),DEFAULT_GOAL=10;
+  /* the daily goal: any whole number from 1 to 50 (the server's learner-profile.js), 10 suggested, five quick picks */
+  const GOAL_MIN=1,GOAL_MAX=50,DEFAULT_GOAL=10,GOAL_PICKS=Object.freeze([1,5,10,20,30]);
+  const isDailyGoal=g=>Number.isInteger(g)&&g>=GOAL_MIN&&g<=GOAL_MAX;
+  const clampGoal=v=>{const n=Math.round(Number(v));return Number.isFinite(n)?Math.max(GOAL_MIN,Math.min(GOAL_MAX,n)):DEFAULT_GOAL;};
+  /* the one-time bonus for reaching the day's goal, as the server pays it (community/src/league.js goalBonus) */
+  const goalBonus=g=>isDailyGoal(g)?Math.round(5*g+2*g**1.3):0;
   const isCountry=c=>typeof c==='string'&&SET.has(c);
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const names={};
@@ -48,21 +53,46 @@
   const regionOf=cc=>cc==='KR'?'kr':cc==='IN'?'in':cc==='US'?'us':isCountry(cc)?'global':'';
 
   const T={
-    ko:{country:'국적·나라',countryHelp:'추측한 나라입니다. 맞는지 확인해 주세요.',search:'나라 이름 검색',goal:'하루 목표',goalUnit:n=>`${n}문제`,goalHelp:'하루에 풀 문제 수입니다. 설정에서 바꿀 수 있습니다.',none:'찾는 나라가 없습니다'},
-    en:{country:'Country',countryHelp:'This is a guess. Please check it.',search:'Search countries',goal:'Daily goal',goalUnit:n=>`${n} problems`,goalHelp:'How many problems a day. You can change it in Settings.',none:'No country matches'}
+    ko:{country:'국적·나라',countryHelp:'추측한 나라입니다. 맞는지 확인해 주세요.',search:'나라 이름 검색',goal:'하루 목표',goalUnit:n=>`${n}문제`,goalHelp:'맞힌 문제 수로 셉니다. 연습 화면에서 언제든 바꿀 수 있습니다.',none:'찾는 나라가 없습니다',
+      recommended:'권장 10',less:'1 줄이기',more:'1 늘리기',count:'문제 수',reward:n=>`달성하면 +${n} XP`,unit:'문제'},
+    en:{country:'Country',countryHelp:'This is a guess. Please check it.',search:'Search countries',goal:'Daily goal',goalUnit:n=>`${n} problems`,goalHelp:'Counted in problems you get right. Change it any time on the practice page.',none:'No country matches',
+      recommended:'10 suggested',less:'One less',more:'One more',count:'Problems',reward:n=>`Reach it: +${n} XP`,unit:'problems'}
   };
   let seq=0;
+  /* the goal on its own (sign-up, Settings and the practice page's goal panel): a stepper, five quick picks and the
+     bonus it pays. wireGoal() returns read(), the number or null. */
+  function goalHtml(lang,value){
+    const t=T[lang==='ko'?'ko':'en'],id='lf'+(++seq),goal=isDailyGoal(value)?value:DEFAULT_GOAL;
+    return `<fieldset class="lf-field lf-goal" data-goal-field><legend>${t.goal} <small class="lf-rec">${t.recommended}</small></legend>
+        <div class="lf-step"><button type="button" class="lf-sb" data-goal-step="-1" aria-label="${t.less}">−</button>
+          <div class="lf-num"><input id="${id}g" class="lf-goalnum" type="number" name="daily_goal" min="${GOAL_MIN}" max="${GOAL_MAX}" step="1" inputmode="numeric" value="${goal}" aria-label="${t.goal} (${GOAL_MIN}–${GOAL_MAX})" required><span class="lf-unit" aria-hidden="true">${t.unit}</span></div>
+          <button type="button" class="lf-sb" data-goal-step="1" aria-label="${t.more}">+</button></div>
+        <div class="lf-picks" role="group" aria-label="${t.goal}">${GOAL_PICKS.map(n=>`<button type="button" data-goal-pick="${n}" aria-pressed="${n===goal}"${n===DEFAULT_GOAL?' class="lf-recpick"':''}>${n}</button>`).join('')}</div>
+        <small class="lf-help"><b class="lf-bonus">${t.reward(goalBonus(goal))}</b> · ${t.goalHelp}</small></fieldset>`;
+  }
+  function wireGoal(box,lang){
+    const t=T[lang==='ko'?'ko':'en'],input=box.querySelector('input[name=daily_goal]');if(!input)return()=>null;
+    const field=input.closest('[data-goal-field]'),bonus=field.querySelector('.lf-bonus');
+    const paint=()=>{const g=Number(input.value);field.querySelectorAll('[data-goal-pick]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.goalPick)===g)));
+      field.querySelector('[data-goal-step="-1"]').disabled=g<=GOAL_MIN;field.querySelector('[data-goal-step="1"]').disabled=g>=GOAL_MAX;
+      if(bonus)bonus.textContent=t.reward(goalBonus(isDailyGoal(g)?g:clampGoal(g)));};
+    const set=v=>{input.value=String(clampGoal(v));paint();input.dispatchEvent(new Event('change',{bubbles:true}));};
+    field.querySelectorAll('[data-goal-step]').forEach(b=>b.onclick=()=>set(Number(input.value||DEFAULT_GOAL)+Number(b.dataset.goalStep)));
+    field.querySelectorAll('[data-goal-pick]').forEach(b=>b.onclick=()=>set(b.dataset.goalPick));
+    input.oninput=paint;input.onblur=()=>set(input.value);
+    paint();
+    return ()=>{const g=Number(input.value);return isDailyGoal(g)?g:null;};
+  }
   /* the two fields as HTML; wire() makes the search filter the list and returns read() */
   function fieldsHtml(lang,value={}){
-    const t=T[lang==='ko'?'ko':'en'],id='lf'+(++seq),cc=isCountry(value.country)?value.country:browserGuess(lang),goal=DAILY_GOALS.includes(value.daily_goal)?value.daily_goal:DEFAULT_GOAL;
+    const t=T[lang==='ko'?'ko':'en'],id='lf'+(++seq),cc=isCountry(value.country)?value.country:browserGuess(lang);
     const sorted=[...COUNTRIES].sort((a,b)=>countryName(a,lang).localeCompare(countryName(b,lang),lang==='ko'?'ko':'en'));
     return `<div class="lf" data-learner-fields>
       <div class="lf-field"><label for="${id}c">${t.country}</label>
         <input type="search" class="lf-search" placeholder="${t.search}" aria-label="${t.search}" aria-controls="${id}c" autocomplete="off">
         <div class="lf-pick"><span class="lf-show" aria-hidden="true">${flagImg(cc)}</span><select id="${id}c" name="country" required>${sorted.map(c=>`<option value="${c}"${c===cc?' selected':''}>${flagEmoji(c)} ${esc(countryName(c,lang))}</option>`).join('')}</select></div>
         <small class="lf-help">${value.country?'':t.countryHelp}</small></div>
-      <fieldset class="lf-field lf-goal"><legend>${t.goal}</legend><div class="lf-goals">${DAILY_GOALS.map(n=>`<label><input type="radio" name="daily_goal" value="${n}"${n===goal?' checked':''} required><span>${t.goalUnit(n)}</span></label>`).join('')}</div>
-        <small class="lf-help">${t.goalHelp}</small></fieldset></div>`;
+      ${goalHtml(lang,value.daily_goal)}</div>`;
   }
   function wire(box,lang){
     const t=T[lang==='ko'?'ko':'en'],sel=box.querySelector('select[name=country]'),search=box.querySelector('.lf-search'),show=box.querySelector('.lf-show'),help=box.querySelector('.lf-field small');
@@ -78,20 +108,26 @@
       sel.onchange();
     };
     search.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();sel.focus();}};
-    return ()=>{const country=sel.value,goal=Number(box.querySelector('input[name=daily_goal]:checked')?.value);return isCountry(country)&&DAILY_GOALS.includes(goal)?{country,daily_goal:goal}:null;};
+    const goal=wireGoal(box,lang);
+    return ()=>{const country=sel.value,g=goal();return isCountry(country)&&g?{country,daily_goal:g}:null;};
   }
   /* the style both pages share; added once */
   const CSS=`.lf{display:grid;gap:14px}.lf-field{display:grid;gap:6px;border:0;margin:0;padding:0;min-width:0}.lf-field>label,.lf-field>legend{font-weight:600;font-size:14px;padding:0}
 .lf-search,.lf-pick select{min-height:44px;font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--lf-line,#c9ccd1);border-radius:8px;background:var(--lf-bg,#fff);color:inherit;width:100%;box-sizing:border-box}
 .lf-pick{display:flex;align-items:center;gap:8px}.lf-show{flex:0 0 24px;display:flex;justify-content:center}.lf-flag{width:20px;height:15px;object-fit:cover;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
-.lf-goals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}@media (max-width:440px){.lf-goals{grid-template-columns:repeat(2,minmax(0,1fr))}}.lf-goals label{min-width:0}.lf-help{white-space:normal}.lf-goals label{display:block;margin:0}.lf-goals input{position:absolute;opacity:0;pointer-events:none}
-.lf-goals span{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--lf-line,#c9ccd1);border-radius:8px;font-size:14px;cursor:pointer;text-align:center;padding:0 4px}
-.lf-goals input:checked+span{border-color:var(--lf-on,#1c7ed6);box-shadow:inset 0 0 0 1px var(--lf-on,#1c7ed6);font-weight:700}.lf-goals input:focus-visible+span{outline:2px solid var(--lf-on,#1c7ed6);outline-offset:2px}
+.lf-rec{font-weight:600;font-size:12px;color:var(--lf-on,#1c7ed6);margin-left:4px}.lf-help{white-space:normal}
+.lf-step{display:flex;align-items:stretch;gap:8px;max-width:280px}.lf-sb{flex:0 0 44px;min-height:44px;border:1px solid var(--lf-line,#c9ccd1);border-radius:8px;background:var(--lf-bg,#fff);color:inherit;font:inherit;font-size:20px;line-height:1;cursor:pointer}
+.lf-sb:disabled{opacity:.4;cursor:default}.lf-num{flex:1;display:flex;align-items:center;gap:6px;min-height:44px;padding:0 10px;border:1px solid var(--lf-line,#c9ccd1);border-radius:8px;background:var(--lf-bg,#fff);margin:0}
+.lf-num input.lf-goalnum{width:100%!important;min-width:0;height:auto!important;margin:0!important;border:0!important;box-shadow:none!important;outline:0;background:transparent!important;color:inherit;font:inherit;font-size:18px;font-weight:700;text-align:right;padding:0!important;-moz-appearance:textfield}.lf-num input::-webkit-inner-spin-button,.lf-num input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.lf-num .lf-unit{flex:none;white-space:nowrap;font-size:14px;font-weight:400;text-transform:none;letter-spacing:normal;opacity:.75;margin:0}.lf-num:focus-within{outline:2px solid var(--lf-on,#1c7ed6);outline-offset:1px}
+.lf-picks{display:flex;flex-wrap:wrap;gap:6px}.lf-picks button{min-width:44px;min-height:40px;padding:0 10px;border:1px solid var(--lf-line,#c9ccd1);border-radius:999px;background:var(--lf-bg,#fff);color:inherit;font:inherit;font-size:14px;cursor:pointer}
+.lf-picks button[aria-pressed=true]{border-color:var(--lf-on,#1c7ed6);box-shadow:inset 0 0 0 1px var(--lf-on,#1c7ed6);font-weight:700}.lf-picks .lf-recpick{border-style:dashed}
+.lf-bonus{font-weight:700;color:inherit}
 .lf-help{color:var(--lf-muted,#666);font-size:12px}
 .lf-prompt{margin:0 0 18px;padding:16px;border:1px solid var(--lf-line,#c9ccd1);border-radius:12px;background:var(--lf-card,var(--paper,#fff));display:grid;gap:10px}
 .lf-prompt h2{margin:0;font-size:17px}.lf-prompt p{margin:0;font-size:14px}.lf-acts{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
 .lf-acts button{min-height:44px;padding:0 16px}
 @media (min-width:720px){.lf-prompt .lf{grid-template-columns:1fr 1fr;align-items:start}}`;
   function addStyle(doc){if(!doc||doc.getElementById('lfStyle'))return;const s=doc.createElement('style');s.id='lfStyle';s.textContent=CSS;doc.head.append(s);}
-  return{COUNTRIES,DAILY_GOALS,DEFAULT_GOAL,isCountry,countryName,flagEmoji,flagImg,guessCountry,browserGuess,regionOf,fieldsHtml,wire,addStyle,TEXT:T};
+  return{COUNTRIES,GOAL_MIN,GOAL_MAX,GOAL_PICKS,DEFAULT_GOAL,isDailyGoal,clampGoal,goalBonus,goalHtml,wireGoal,isCountry,countryName,flagEmoji,flagImg,guessCountry,browserGuess,regionOf,fieldsHtml,wire,addStyle,TEXT:T};
 });

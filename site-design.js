@@ -131,18 +131,77 @@ function viewHomeStudio(){
 
 /* The home page (viewHome) and the Learn page are in index.html; the former HaslaLab home is the Olympiad home. */
 
+/* The Olympiad home (#/olympiad): the experiment hero, then four small cards about olympiads only. Upcoming contests
+   (data/schedule.json through guides.js), this month's problems and HPhO's next round (the server's /monthly and
+   /hpho, as #/monthly and hpho.js read them; links only when it cannot be reached), the archive's latest additions
+   (SITE_UPDATES entries that add papers) and the competitions most visited. */
+const OLY_TEXT={
+  ko:{upcoming:"다가오는 대회",schedule:"전체 일정",live:"오늘의 상황",monthly:"월별문제",hpho:"HPhO",recent:"최근 추가된 기출",archive:"업데이트 전체",quick:"대회 바로가기",comps:"전체 대회",
+    loading:"불러오는 중…",noEvents:"정해진 날짜가 있는 대회가 아직 없습니다.",failed:"일정을 불러오지 못했습니다.",today:"진행 중",days:n=>`${n}일 남음`,
+    deadline:"마감",closed:"이번 달 마감",none:"이번 달 문제 준비 중",open:"보기",hphoNone:"다음 대회 일정 준비 중",
+    hphoState:{open:"접수 중",closed:"접수 마감",soon:"접수 예정",rehearsal:"점검 중",finished:"종료"},regClose:"접수 마감",exam:"시험",cardMonthly:"이번 달 월별문제 · HPhO"},
+  en:{upcoming:"Upcoming",schedule:"Full calendar",live:"Now",monthly:"Monthly problems",hpho:"HPhO",recent:"Recently added papers",archive:"All updates",quick:"Go to a competition",comps:"All competitions",
+    loading:"Loading…",noEvents:"No contest with a set date yet.",failed:"Could not load the calendar.",today:"On now",days:n=>n===1?"1 day left":`${n} days left`,
+    deadline:"Deadline",closed:"This month is closed",none:"This month's problems are coming",open:"Open",hphoNone:"Next round to be announced",
+    hphoState:{open:"Registration open",closed:"Registration closed",soon:"Registration soon",rehearsal:"Test round",finished:"Finished"},regClose:"closes",exam:"exam",cardMonthly:"Monthly problems · HPhO"}
+};
+/* the competitions people open most, then whatever else the archive has, up to twelve chips */
+const OLY_QUICK=["ipho","apho","eupho","usapho","kpho","nbpho","izho","physcup","rupho","rmph","ispho","cpho","gpho","opho"];
+const olyCompKeys=()=>{const has=k=>(window.HL_CATALOGUE?.competitions?.[k]||(typeof DATA==="object"&&DATA[k]))&&(typeof compShown!=="function"||compShown(k));return OLY_QUICK.filter(has).slice(0,12);};
+const olyAbbr=k=>window.HL_CATALOGUE?.competitions?.[k]?.data?.abbr||(typeof DATA==="object"&&DATA[k]?.abbr)||k.toUpperCase();
+/* recently added papers: the newest SITE_UPDATES entries whose title says papers were added, newest first */
+const olyRecent=(n=4)=>SITE_UPDATES.filter(updateShown).filter(u=>/^#\/[a-z0-9]/.test(u.href||"")&&(/추가/.test(u.ko)||/\badded\b/i.test(u.en))).slice(0,n);
+const olyCard=(id,title,href,label,body)=>`<section class="oly-card" aria-labelledby="${id}H"><div class="oly-head"><h2 id="${id}H">${title}</h2>${href?`<a href="${href}">${label} →</a>`:`<button type="button" class="oly-more" aria-haspopup="dialog" onclick="openSiteMailbox(this)">${label} →</button>`}</div><div id="${id}" class="oly-body">${body}</div></section>`;
+const olyShortDate=(iso,ko)=>{const [,m,d]=iso.split("-").map(Number);return ko?`${m}월 ${d}일`:new Date(Date.UTC(2000,m-1,d)).toLocaleDateString("en",{month:"short",day:"numeric",timeZone:"UTC"});};
 function viewOlympiadHome(){
-  const T=SITE_DESIGN_TEXT[lang],original=document.createElement("div");
+  const O=OLY_TEXT[lang],ko=lang==="ko",original=document.createElement("div");
   original.innerHTML=viewOriginalHome();
   const experiment=original.querySelector("figure.screen").outerHTML;
   const homeText=original.querySelector(".hero > div").innerHTML;
-  const updateRows=SITE_UPDATES.filter(updateShown).slice(0,4).map(item=>`<a class="hl-update" href="${item.href}"><span class="hl-update-type">${T.update}</span><b>${esc(item[lang])}</b><time datetime="${item.date}">${item.date.slice(5).replace("-",".")}</time></a>`).join("");
-  return `<div class="shell hl-home">
+  const recent=olyRecent().map(u=>`<li><a href="${esc(u.href)}"><span>${esc(u[lang]||u.en)}</span><time datetime="${u.date}">${olyShortDate(u.date,ko)}</time></a></li>`).join("");
+  const chips=olyCompKeys().map(k=>`<a class="oly-chip" href="#/${k}">${esc(olyAbbr(k))}</a>`).join("");
+  const wait=`<p class="oly-note">${O.loading}</p>`;
+  return `<div class="shell hl-home oly-home">
     <section class="hl-home-cover">${experiment}<div class="hl-cover-info">${homeText}</div></section>
-    <div class="hl-dashboard"><section class="hl-panel"><div class="hl-panel-head"><h2>${T.recent}</h2><a href="#/community">${T.more} →</a></div><div id="homeLatest" aria-live="polite"><p class="hl-empty">${CMT[lang].loading}</p></div></section>
-    <section class="hl-panel"><div class="hl-panel-head"><h2>${T.updates}</h2><div class="hl-panel-actions"><span id="homeNoticeWrite"></span><button type="button" class="hl-more" aria-haspopup="dialog" onclick="openSiteMailbox(this)">${T.more} →</button></div></div><div id="homeNotices"></div>${updateRows}</section></div>
-    ${viewHomeStudio()}
+    <div class="oly-cards">
+      ${olyCard("olyUpcoming",O.upcoming,"#/olympiad/schedule",O.schedule,wait)}
+      ${olyCard("olyNow",O.cardMonthly,"#/monthly",O.open,`<ul class="oly-list"><li><a href="#/monthly"><span>${O.monthly}</span></a></li><li><a href="#/hpho"><span>${O.hpho}</span></a></li></ul>`)}
+      ${olyCard("olyRecent",O.recent,"",O.archive,recent?`<ul class="oly-list">${recent}</ul>`:"")}
+      ${olyCard("olyQuick",O.quick,"#/comps",O.comps,`<div class="oly-chips">${chips}</div>`)}
+    </div>
   </div>${adFitBanner("home")}`;
+}
+/* fills the two cards that need data; each stays a plain link when its source does not answer */
+function mountOlympiadHome(){
+  const up=document.getElementById("olyUpcoming"),now=document.getElementById("olyNow");if(!up||!now)return;
+  const current=lang,O=OLY_TEXT[current],ko=current==="ko",alive=el=>el.isConnected&&lang===current;
+  const G=window.HL_GUIDES;
+  (G?.upcoming?G.upcoming(3):Promise.reject(Error("guides"))).then(list=>{
+    if(!alive(up))return;
+    up.innerHTML=list.length?`<ul class="oly-list">${list.map(e=>{const name=esc(ko?e.name_ko||e.name:e.name),when=`${olyShortDate(e.start,ko)}${e.end!==e.start?" – "+olyShortDate(e.end,ko):""}`;
+      return `<li>${e.url?`<a href="${esc(e.url)}" target="_blank" rel="noopener">`:"<div>"}<span>${name}<small>${when}</small></span><b class="oly-dday${e.days===0?" on":""}">${e.days===0?O.today:O.days(e.days)}</b>${e.url?"</a>":"</div>"}</li>`;}).join("")}</ul>`:`<p class="oly-note">${O.noEvents}</p>`;
+  }).catch(()=>{if(alive(up))up.innerHTML=`<p class="oly-note">${O.failed}</p>`;});
+  const kst=s=>new Date(s*1000).toLocaleString(ko?"ko-KR":"en",{timeZone:"Asia/Seoul",month:ko?"long":"short",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false})+(ko?"":" KST");
+  const daysTo=(at,t)=>Math.max(0,Math.ceil((at-t)/86400));
+  const row=(href,name,line,badge)=>`<li><a href="${href}"><span>${name}${line?`<small>${line}</small>`:""}</span>${badge?`<b class="oly-dday">${badge}</b>`:""}</a></li>`;
+  const monthlyP=typeof cmApi==="function"?cmApi("GET","/monthly?lang="+current).catch(()=>null):Promise.resolve(null);
+  const hphoP=typeof cmApi==="function"?cmApi("GET","/hpho").catch(()=>null):Promise.resolve(null);
+  Promise.all([monthlyP,hphoP]).then(([m,h])=>{
+    if(!alive(now))return;
+    let monthly=row("#/monthly",O.monthly,"","");
+    if(m&&Array.isArray(m.problems)){
+      const p=m.problems[0],t=Number(m.now)||Date.now()/1000;
+      monthly=!p?row("#/monthly",O.monthly,O.none,""):p.open?row("#/monthly",O.monthly,`${O.deadline} ${esc(kst(p.closes_at))}`,O.days(daysTo(p.closes_at,t))):row("#/monthly",O.monthly,O.closed,"");
+    }
+    let hpho=row("#/hpho",O.hpho,"","");
+    if(h&&Array.isArray(h.rounds)){
+      const st=window.HL_HPHO?.roundStatus,r=st?h.rounds.find(x=>st(x)!=="finished"&&st(x)!=="rehearsal"):null;
+      if(!r)hpho=row("#/hpho",O.hpho,O.hphoNone,"");
+      else{const s=st(r),t=Date.now()/1000,start=Math.min(...(r.tracks?.length?r.tracks:[r]).map(k=>k.start_at));
+        hpho=row("#/hpho",esc(r.title?.[current]||r.title?.en||r.title?.ko||O.hpho),`${O.hphoState[s]||""}${s==="open"?` · ${O.regClose} ${esc(kst(r.reg_close))}`:""}`,start>t?O.days(daysTo(start,t)):"");}
+    }
+    now.innerHTML=`<ul class="oly-list">${monthly}${hpho}</ul>`;
+  });
 }
 
 async function mountHomeActivity(){

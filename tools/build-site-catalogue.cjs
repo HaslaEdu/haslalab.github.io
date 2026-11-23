@@ -150,6 +150,41 @@ const monthlyScanVersion=digest(read('sim/monthly-scan.mjs'));
 outputs.set('sim/monthly-scan.html',read('sim/monthly-scan.html').replace(/src="monthly-scan\.mjs(?:\?[^"\n]*)?"/,'src="monthly-scan.mjs?v='+monthlyScanVersion+'"'));
 outputs.set('sim/scan.html',read('sim/scan.html').replace(/import\("\.\/monthly-scan\.mjs(?:\?[^"\n]*)?"\)/,'import("./monthly-scan.mjs?v='+monthlyScanVersion+'")')
   .replace(/src="exam-network\.js(?:\?[^"\n]*)?"/,'src="exam-network.js?v='+networkVersion+'"'));
+/* the home page's strip of problem cards (index.html viewHome, mountHomeStrip): four problems from each exam track and
+   two from each competition the practice page transcribes, the first ~120 characters of each, never cut inside math */
+{
+  const LEVEL_OF={ap1:'L1',ap2:'L1',apcm:'L1',fma:'L1',jeem:'L2',usapho:'L3',opho:'L3',wopho:'L3',physcup:'L3',eupho:'L3',eotvos:'L3',baupc:'L4'};
+  const excerpt=(raw,limit=120)=>{
+    const text=String(raw||'').replace(/\$\$([\s\S]*?)\$\$/g,(_m,x)=>'$'+x.trim()+'$').replace(/\\\[([\s\S]*?)\\\]/g,(_m,x)=>'$'+x.trim()+'$').replace(/\s+/g,' ').trim();
+    const parts=text.split(/(\$[^$]*\$|\\\([\s\S]*?\\\))/);let out='',n=0;
+    for(const part of parts){
+      if(!part)continue;
+      const math=/^(\$|\\\()/.test(part);
+      if(math){if(n+part.length>limit+50)break;out+=part;n+=Math.ceil(part.length/2);if(n>=limit)break;continue;}
+      if(n+part.length<=limit){out+=part;n+=part.length;continue;}
+      const cut=part.slice(0,limit-n),sp=cut.lastIndexOf(' ');out+=sp>20?cut.slice(0,sp):cut;n=limit;break;
+    }
+    out=out.trim();return out.length<text.length?out.replace(/[,.;:(\s]+$/,'')+'…':out;
+  };
+  const spread=(list,k)=>list.length<=k?list:Array.from({length:k},(_,i)=>list[Math.floor((i+0.5)*list.length/k)]);
+  const tracks=JSON.parse(read('practice/tracks.json')).tracks,items=[];
+  for(const t of tracks){
+    const file='practice/track/'+t.key+'.json';if(!LEVEL_OF[t.key]||!fs.existsSync(path.join(root,file)))continue;
+    for(const it of spread(JSON.parse(read(file)).items.filter(i=>typeof i.q==='string'&&i.q.length>=60),4))
+      items.push({id:it.id,level:LEVEL_OF[t.key],src:{ko:t.name.ko||t.name.en,en:t.name.en},lang:'en',text:excerpt(it.q)});
+  }
+  for(const c of JSON.parse(read('practice/contests.json')).contests){
+    const file='practice/contest/'+c.key+'.json';if(!LEVEL_OF[c.key]||!fs.existsSync(path.join(root,file)))continue;
+    const pool=JSON.parse(read(file)).items.map(i=>({i,t:(i.b||[]).filter(b=>typeof b.t==='string').map(b=>b.t).join(' ')})).filter(x=>x.t.length>=80);
+    const abbr=DATA[c.key]?.abbr||c.name.en;
+    for(const {i,t} of spread(pool,2))items.push({id:i.id,level:LEVEL_OF[c.key],src:{ko:abbr+' '+i.year,en:abbr+' '+i.year},lang:'ko',title:i.title||'',text:excerpt(t)});
+  }
+  const strip=JSON.stringify({version:1,items})+'\n';
+  outputs.set('practice/home-strip.json',strip);
+  const page=outputs.get('index.html');
+  if(!/const HOME_STRIP_V="[^"\n]*";/.test(page))throw Error('HOME_STRIP_V marker missing in index.html');
+  outputs.set('index.html',page.replace(/const HOME_STRIP_V="[^"\n]*";/,'const HOME_STRIP_V="'+digest(strip)+'";'));
+}
 const stale=[];
 for(const [name,content]of outputs){const file=path.join(root,name);if(check){if(!fs.existsSync(file)||fs.readFileSync(file,'utf8').replace(/\r\n/g,'\n')!==content.replace(/\r\n/g,'\n'))stale.push(name);}else{fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,content);}}
 if(stale.length){console.error('Generated catalogue is stale: '+stale.join(', '));process.exitCode=1;}

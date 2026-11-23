@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 const V=require('../league-view.js');
 const F=require('../learner-form.js');
 const P=require('../learn-path.js');
+const fs=require('node:fs'),path=require('node:path'),read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
 
 const group=(tier,n,zones)=>({tier,rebirths:0,days_left:3,joined:true,xp:40,rank:2,zones,rules:{daily_counted:200},
   standings:Array.from({length:n},(_,i)=>({rank:i+1,nickname:'m'+(i+1),xp:100-i,rebirths:i===0?2:0,country:i===1?'KR':null,me:i===1,zone:'stay'}))});
@@ -71,5 +72,57 @@ test('country first guess and the practice region it gives',()=>{
   assert.equal(P.guessRegion('ko','Asia/Seoul','IN'),'in','a saved country wins over the language');
   assert.equal(P.guessRegion('en','Asia/Seoul','DE'),'global');assert.equal(P.guessRegion('en','Asia/Kolkata'),'in');
   assert.equal(F.flagEmoji('KR'),'\u{1F1F0}\u{1F1F7}');assert.equal(F.isCountry('XX'),false);
-  assert.deepEqual([...F.DAILY_GOALS],[5,10,15,20]);
+});
+
+test('the daily goal field: 1 to 50, five quick picks, 10 suggested, the bonus it pays, as the server counts it',async()=>{
+  assert.deepEqual([F.GOAL_MIN,F.GOAL_MAX,F.DEFAULT_GOAL,[...F.GOAL_PICKS]],[1,50,10,[1,5,10,20,30]]);
+  assert.equal(F.clampGoal(0),1);assert.equal(F.clampGoal(99),50);assert.equal(F.clampGoal('12'),12);assert.equal(F.clampGoal('x'),10);
+  const {goalBonus}=await import('../community/src/league.js');
+  for(let g=0;g<=51;g++)assert.equal(F.goalBonus(g),goalBonus(g),'the page shows what the server pays: '+g);
+  for(const lang of ['ko','en']){
+    const html=F.goalHtml(lang,undefined);
+    assert.match(html,/type="number" name="daily_goal" min="1" max="50" step="1"[^>]*value="10"/,'10 when nothing is saved');
+    assert.deepEqual([...html.matchAll(/data-goal-pick="(\d+)"/g)].map(m=>+m[1]),[1,5,10,20,30]);
+    assert.match(html,lang==='ko'?/권장 10/:/10 suggested/);
+    assert.match(html,new RegExp('\\+'+F.goalBonus(10)+' XP'));
+    assert.equal((html.match(/data-goal-step/g)||[]).length,2,'a stepper');
+    assert.doesNotMatch(html,PLAIN);assert.doesNotMatch(html,/설정에서만|Settings only/);
+    assert.match(F.goalHtml(lang,37),/value="37"/);assert.match(F.goalHtml(lang,99),/value="10"/);
+    /* sign-up and Settings use the same field */
+    assert.match(F.fieldsHtml(lang,{country:'KR',daily_goal:23}),/name="daily_goal"[^>]*value="23"/);
+  }
+});
+
+test('profile pictures in the tables, the letter otherwise, and the flag beside the name',()=>{
+  const src=k=>'https://api.example/api/avatar/'+k;
+  const d=group(3,3,{up:7,reborn:0,down:5});d.standings[0].avatar='Abc_def-1234';d.standings[1].avatar='../x';
+  const html=V.meHtml(d,'en',{avatarSrc:src});
+  assert.match(html,/<img class="lg-av" src="https:\/\/api\.example\/api\/avatar\/Abc_def-1234"/);
+  assert.equal((html.match(/<span class="lg-av"/g)||[]).length,2,'the others get the letter avatar');
+  assert.match(html,/<span class="lg-av"[^>]*>M<\/span><img class="lg-flag"[^>]*kr\.png/,'the flag stays next to the name');
+  assert.doesNotMatch(V.meHtml(d,'en'),/<img class="lg-av"/,'no address, no picture');
+  const r=V.rankingHtml({rows:[{rank:1,nickname:'ana',rebirths:0,tier:1,total_xp:5,country:'IN',avatar:'Abc_def-1234'},{rank:2,nickname:'<b>',rebirths:0,tier:0,total_xp:1,country:null,avatar:null}]},'ko',{avatarSrc:src});
+  assert.match(r,/lg-av" src="https:\/\/api\.example\/api\/avatar\/Abc_def-1234"[\s\S]*in\.png/);assert.match(r,/>&lt;<\/span>/);
+  assert.match(read('index.html'),/V\.rankingHtml\(data,lang,\{avatarSrc:k=>cmBase\(\)\+"\/api\/avatar\/"\+k\}\)/);
+  assert.match(read('practice.js'),/avatarSrc:k=>API\+'\/api\/avatar\/'\+k/);
+});
+
+test('today\'s goal in the league tab: counted, goal, the bonus pending or earned, the next day\'s goal',()=>{
+  assert.equal(V.goalLine(null,'ko'),'');assert.equal(V.goalLine({goal:null},'ko'),'');
+  assert.match(V.goalLine({counted:4,goal:10,bonus_xp:90,earned:false},'ko'),/오늘 목표 4\/10[\s\S]*달성하면 \+90 XP/);
+  assert.match(V.goalLine({counted:12,goal:10,bonus_xp:90,earned:true,earned_xp:90,next_goal:5},'en'),/Today 10\/10[\s\S]*Goal reached \+90 XP · 5 from tomorrow/);
+  assert.match(V.meHtml({...group(0,2,{up:7}),today:{counted:1,goal:3,bonus_xp:20}},'ko'),/lg-goal/);
+});
+
+test('the practice page: the goal is changed on the page itself, counted like the server, and its reward shown',()=>{
+  const js=read('practice.js');
+  assert.doesNotMatch(js,/goalSettings/,'no "change it in Settings" link on the goal');
+  assert.match(js,/id="goalBtn" aria-expanded/);
+  assert.match(js,/api\('\/api\/me\/learner','PUT',needCountry\?v:\{country:state\.learner\.country,daily_goal:g\}\)/,'members save to the account');
+  assert.match(js,/saved\.dailyGoal=g;if\(saved\.profile\)saved\.profile\.daily=g;save\(\)/,'guests on this device');
+  assert.match(js,/if\(result==='right'\|\|result==='solved'\)\{[^\n]*\n\s*if\(!saved\.goalDay\.ids\.includes\(item_id\)\)/,'right answers, once per problem a day');
+  assert.match(js,/if\(r\.goal_bonus>0\)\{[^\n]*goalMoment\(r\.goal_bonus\)/,'the moment comes with the server\'s bonus');
+  assert.match(js,/type:'hl-practice-goal'/);assert.match(read('index.html'),/hl-practice-goal"\)homeGoalMoment/);
+  assert.match(read('practice.css'),/prefers-reduced-motion:reduce\)\{\.goalmoment\{animation:none\}/);
+  assert.match(js,/LF\(\)\.goalHtml\(state\.lang,a\.daily\)/,'the first questions use the same stepper');
 });

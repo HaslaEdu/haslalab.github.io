@@ -148,24 +148,62 @@ test('the Learn bar: today\'s problems, roadmap, courses, search, lab, in that o
 });
 
 const PLAIN=/—|unlock|seamless|elevate|comprehensive|empower|journey|잠금 해제|원활|한 단계 높/i;
-test('the home page: today\'s problems at once, four doors, then a section for each part with true numbers and real links',()=>{
+test('the home page: one line, one button to practice, a strip of problems loaded later, four doors and a footer line',()=>{
   const a=app('#/'),counts=require('../tools/build-courses.cjs').build().counts;
-  assert.deepEqual({...a.run('PRACTICE_COUNTS')},counts,'the home page counts are what practice/ holds');
+  assert.deepEqual({...a.run('PRACTICE_COUNTS')},counts,'the practice counts are what practice/ holds');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
-    const html=a.run('viewHome()'),hrefs=links(html),A=a.run('archiveTotals()'),n=x=>a.run(`nfmt(${x})`);
-    assert.match(html,/src="practice\.html\?[^"]*mode=play/,'a problem is open on the home page');
+    const html=a.run('viewHome()'),hrefs=links(html),A=a.run('archiveTotals()');
+    assert.doesNotMatch(html,/<iframe|practice\.html/,'today\'s problem is not embedded');
+    assert.equal((html.match(/class="hm-start"/g)||[]).length,1,'one primary button');
+    assert.match(html,/<a class="hm-start" href="#\/learn\/practice">/);
+    assert.match(html,language==='ko'?/문제 풀러 가기/:/Start solving/);
+    assert.equal((html.match(/<h1\b/g)||[]).length,1);
+    assert.match(html,/id="hmStrip"[^>]*data-state="wait"/,'the strip is empty until its data arrives');
     const doors=[...html.matchAll(/class="hm-door" href="([^"]+)"/g)].map(m=>m[1]);
     assert.deepEqual(doors,['#/learn','#/olympiad','#/learn/lab','#/community']);
-    for(const href of ['#/learn/practice','#/learn/courses','#/learn/roadmap','#/learn/physics/search','#/comps','#/olympiad/schedule','#/monthly','#/learn/teach','#/learn/create','#/community'])assert.ok(hrefs.includes(href),href);
-    for(const x of [counts.calc,counts.track,counts.calc+counts.track,counts.contest,A.comps,A.years,A.live])assert.ok(html.includes(n(x)),String(x));
+    const foot=/<p class="hm-foot">([\s\S]*?)<\/p>/.exec(html)[1];
+    assert.deepEqual(links(foot),['#/learn/teach','#/learn/lab']);
+    assert.equal(hrefs.length,1+4+2,'nothing else to choose from');
+    assert.doesNotMatch(html,/hm-sec|hm-go|hm-grid"|hm-top/,'the old sections are gone');
+    assert.ok(html.includes(a.run(`nfmt(${A.comps})`)));
     assert.equal(A.comps,language==='en'?49:50);
-    assert.equal((html.match(/class="hm-sec"/g)||[]).length,5);
-    assert.equal((html.match(/class="hm-go"/g)||[]).length,5,'one main button per section');
     assert.doesNotMatch(html,PLAIN);assert.doesNotMatch(html,/id="deflect"|homeLatest/);
     for(const view of ['viewLearnHome()','viewLearnLab()'])assert.doesNotMatch(a.run(view),PLAIN,view);
   }
   assert.deepEqual(Runtime.routeNeeds('#/'),[]);
+});
+
+test('the home strip: real problems from every level, short excerpts with whole math, links that open the problem',()=>{
+  const strip=JSON.parse(read('practice/home-strip.json')),a=app('#/');
+  assert.match(read('index.html'),new RegExp('const HOME_STRIP_V="'+require('node:crypto').createHash('sha256').update(read('practice/home-strip.json')).digest('hex').slice(0,12)+'"'),'the page asks for the current file');
+  assert.ok(strip.items.length>=24);
+  assert.deepEqual([...new Set(strip.items.map(i=>i.level))].sort(),['L1','L2','L3','L4']);
+  assert.ok(new Set(strip.items.map(i=>i.src.en)).size>=10,'many sources');
+  const ids=new Set();
+  for(const it of strip.items){
+    assert.ok(!ids.has(it.id),it.id);ids.add(it.id);
+    assert.ok(it.text.length>=40&&it.text.length<=260,it.id+' '+it.text.length);
+    const dollars=(it.text.match(/(?<!\\)\$/g)||[]).length;assert.equal(dollars%2,0,'math is never cut: '+it.id);
+    assert.match(it.id,/^[a-z0-9]+-[A-Za-z0-9~._-]{1,60}$/,'the practice page accepts the id');
+  }
+  for(const language of ['ko','en']){
+    a.run(`lang=${JSON.stringify(language)}`);
+    a.context.__items=strip.items;
+    const pick=a.run('homeStripPick(__items,lang)');
+    assert.equal(pick.length,24);
+    if(language==='en')assert.ok(pick.every(i=>i.lang==='en'),'English cards are in English');
+    else assert.ok(pick.some(i=>i.lang==='ko')&&pick.some(i=>i.lang==='en'),'the Korean page mixes tracks and competitions');
+    const html=a.run('homeStripCards(homeStripPick(__items,lang),lang)');
+    assert.equal((html.match(/class="hm-card/g)||[]).length,24);
+    for(const href of links(html))assert.match(href,/^#\/learn\/practice\?item=[A-Za-z0-9~._%-]+$/);
+    assert.doesNotMatch(html,/<script|onerror=/);
+  }
+  /* the strip waits for the first paint and respects reduced motion with a still grid */
+  const js=read('index.html');
+  assert.match(js,/requestIdleCallback\(go/);assert.match(js,/prefers-reduced-motion: reduce/);assert.match(js,/hm-grid6/);
+  assert.match(read('site-design.css'),/prefers-reduced-motion:reduce\)\{\s*body\.hl-site \.hm-track\{animation:none\}/);
+  assert.match(read('site-design.css'),/\.hm-strip:hover,\.hm-strip:focus-within,\.hm-strip\.hm-paused\) \.hm-track\{animation-play-state:paused\}/);
 });
 
 test('the Learn page lists the six parts with one line each, then the teacher page, books and other subjects',()=>{
@@ -221,7 +259,7 @@ test('the courses: one per study level from the repository\'s own data, every li
   });
 });
 
-test('the Olympiad home is the former HaslaLab home with its hero and community panels',()=>{
+test('the Olympiad home: the hero, then upcoming contests, this month and HPhO, recent papers and competition chips',()=>{
   const a=app('#/olympiad');
   a.context.document.createElement=()=>{const el={_h:'',set innerHTML(v){this._h=v;},get innerHTML(){return this._h;},querySelector(sel){
     const h=this._h;if(sel==='figure.screen'){const m=/<figure class="screen">[\s\S]*?<\/figure>/.exec(h);return{outerHTML:m[0]};}
@@ -229,10 +267,54 @@ test('the Olympiad home is the former HaslaLab home with its hero and community 
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewOlympiad()');
-    assert.match(html,/id="deflect"/);assert.match(html,/id="homeLatest"/);
-    assert.ok(links(html).includes('#/comps'));
+    assert.match(html,/id="deflect"/);
+    assert.doesNotMatch(html,/homeLatest|homeNotices|hl-home-studio|hl-dashboard|#\/community|#\/learn\/physics\/studio/,'no community or studio panels');
+    const heads=[...html.matchAll(/<h2 id="(oly\w+)H">/g)].map(m=>m[1]);
+    assert.deepEqual(heads,['olyUpcoming','olyNow','olyRecent','olyQuick']);
+    assert.match(html,language==='ko'?/다가오는 대회[\s\S]*이번 달 월별문제 · HPhO[\s\S]*최근 추가된 기출[\s\S]*대회 바로가기/:/Upcoming[\s\S]*Monthly problems · HPhO[\s\S]*Recently added papers[\s\S]*Go to a competition/);
+    const hrefs=links(html);
+    for(const href of ['#/olympiad/schedule','#/monthly','#/hpho','#/comps'])assert.ok(hrefs.includes(href),href);
+    assert.match(html,/aria-haspopup="dialog" onclick="openSiteMailbox\(this\)"/,'the full update log is one tap away');
+    const chips=[...html.matchAll(/class="oly-chip" href="#\/([a-z0-9]+)"/g)].map(m=>m[1]);
+    assert.deepEqual(chips.slice(0,4),['ipho','apho','eupho','usapho']);
+    assert.ok(chips.length>=8&&chips.length<=12);
+    if(language==='en')assert.ok(!chips.includes('cpho'),'a competition the English site hides is not offered');
+    /* the recent papers are the newest SITE_UPDATES entries that add papers */
+    const recent=/id="olyRecent"[^>]*>([\s\S]*?)<\/div><\/section>/.exec(html)[1];
+    assert.deepEqual(links(recent),[...a.run('olyRecent().map(u=>u.href)')]);
+    assert.ok(links(recent).length>=3);
+    assert.doesNotMatch(html,PLAIN);
   }
   assert.deepEqual(Runtime.routeNeeds('#/olympiad'),[]);
+});
+
+test('the Olympiad home cards fill from the calendar, /monthly and /hpho, and fall back to plain links',async()=>{
+  const sched=JSON.parse(read('data/schedule.json'));
+  const ctx={location:{hash:'#/olympiad'},history:{replaceState(){}},URLSearchParams,window:{},fetch:async()=>({ok:true,json:async()=>sched})};
+  vm.createContext(ctx);vm.runInContext(read('guides.js'),ctx);
+  const up=ctx.window.HL_GUIDES.upcomingFrom(sched,3,'2026-11-23');
+  assert.equal(up.length,3);assert.ok(up.every(e=>e.end>='2026-11-23'));
+  assert.ok(up[0].start<=up[1].start&&up[1].start<=up[2].start);
+  assert.deepEqual(ctx.window.HL_GUIDES.upcomingFrom({events:[{key:'a',name:'A',start:'2026-11-20',end:'2026-11-25'},{key:'b',name:'B',start:'2026-11-30'},{key:'c',name:'C',typical:'May'}]},3,'2026-11-23').map(e=>[e.key,e.days]),[['a',0],['b',7]]);
+  /* the page: with the server down, the card keeps its two links */
+  const a=app('#/olympiad'),boxes={};
+  const box=id=>boxes[id]||(boxes[id]={id,isConnected:true,innerHTML:''});
+  a.context.document.getElementById=id=>['olyUpcoming','olyNow'].includes(id)?box(id):null;
+  a.context.cmApi=async()=>{throw Error('offline');};
+  a.context.window.HL_GUIDES={upcoming:async()=>up};
+  a.run('lang="ko"');a.run('mountOlympiadHome()');
+  await new Promise(r=>setImmediate(r));await new Promise(r=>setImmediate(r));
+  assert.deepEqual(links(boxes.olyNow.innerHTML),['#/monthly','#/hpho']);
+  assert.equal((boxes.olyUpcoming.innerHTML.match(/<li>/g)||[]).length,3);
+  assert.match(boxes.olyUpcoming.innerHTML,/일 남음|진행 중/);
+  /* and with it up: the month's deadline and days left, HPhO's next round */
+  const t=Date.parse('2026-11-23T03:00:00Z')/1000;
+  a.context.cmApi=async(m,p)=>p.startsWith('/monthly')?{now:t,problems:[{open:true,closes_at:t+7*86400}]}:{rounds:[{id:'r1',title:{ko:'제2회 HPhO',en:'HPhO 2'},status:'open',reg_open:t-86400,reg_close:t+10*86400,start_at:t+20*86400,duration_min:300}]};
+  a.context.window.HL_HPHO={roundStatus:r=>'open'};
+  boxes.olyNow.innerHTML='';a.run('mountOlympiadHome()');
+  await new Promise(r=>setImmediate(r));await new Promise(r=>setImmediate(r));
+  assert.match(boxes.olyNow.innerHTML,/마감[\s\S]*7일 남음/);
+  assert.match(boxes.olyNow.innerHTML,/제2회 HPhO[\s\S]*접수 중[\s\S]*20일 남음/);
 });
 
 test('the computational physics page embeds the judge and passes on only a valid problem id',()=>{
@@ -242,7 +324,7 @@ test('the computational physics page embeds the judge and passes on only a valid
   a.context.location.hash='#/learn/compute?problem=%22%3E%3Cscript%3E';
   src=/id="learnComputeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnCompute()'))[1];
   assert.equal(new URLSearchParams(src.split('?')[1]).get('problem'),null);
-  assert.ok(links(a.run('viewHome()')).includes('#/learn/create'),'the home leads to Create, which links the site\'s own Python problems');
+  assert.ok(links(a.run('viewLearnLab()')).includes('#/learn/create'),'the lab leads to Create, which links the site\'s own Python problems');
   assert.deepEqual(Runtime.routeNeeds('#/learn/compute'),[]);
 });
 

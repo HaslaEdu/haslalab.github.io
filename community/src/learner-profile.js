@@ -1,5 +1,5 @@
-/* The learner's country and daily goal: asked once at sign-up (or the first visit to Learn after it), then kept fixed
-   until the member changes them in Settings (index.html, #/community/account, "Learning"). The practice page uses
+/* The learner's country and daily goal: asked once at sign-up (or the first visit to Learn after it); the member can
+   change them in Settings (index.html, #/community/account, "Learning") and the goal on the practice page. The page uses
    the goal as its daily target and the country for its default exams; the league ranking shows the country's flag.
    One small table, made at runtime one statement at a time; the users table is not altered. */
 
@@ -12,7 +12,10 @@ export const COUNTRIES = Object.freeze(('AD AE AF AG AI AL AM AO AQ AR AS AT AU 
   + 'SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG '
   + 'UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW').split(' '));
 const COUNTRY_SET = new Set(COUNTRIES);
-export const DAILY_GOALS = Object.freeze([5, 10, 15, 20]);
+/* any whole number of problems from 1 to 50; the page suggests 10 and offers 1, 5, 10, 20 and 30 as quick picks */
+export const GOAL_MIN = 1, GOAL_MAX = 50, DEFAULT_GOAL = 10;
+export const GOAL_PICKS = Object.freeze([1, 5, 10, 20, 30]);
+export const isDailyGoal = g => Number.isInteger(g) && g >= GOAL_MIN && g <= GOAL_MAX;
 export const LEARNER_SAVES_PER_DAY = 20;
 
 export const LEARNER_SCHEMA = [
@@ -35,8 +38,8 @@ export function cleanLearner(body, bad) {
   if (!body || typeof body !== 'object') bad('bad_learner');
   const country = typeof body.country === 'string' ? body.country.trim().toUpperCase() : '';
   if (!isCountry(country)) bad('bad_country');
-  const goal = Number(body.daily_goal);
-  if (!DAILY_GOALS.includes(goal)) bad('bad_daily_goal');
+  const goal = typeof body.daily_goal === 'number' || (typeof body.daily_goal === 'string' && /^\d{1,2}$/.test(body.daily_goal)) ? Number(body.daily_goal) : NaN;
+  if (!isDailyGoal(goal)) bad('bad_daily_goal');
   return { country, daily_goal: goal };
 }
 
