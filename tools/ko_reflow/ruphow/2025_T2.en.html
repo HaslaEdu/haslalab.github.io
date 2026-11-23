@@ -1,0 +1,102 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2025, problem T2 (cycle cooled by a refrigerator) — English edition on the original layout
+   (same geometry, stamps and baselines as the Korean edition 2025_T2.html).
+   ORIGINAL: 2 A3 pages (841.9x1191.1pt) printed from the olympiad web page, same style as 2025_T1.html: blue site
+   header bar (stamped; the hidden "Задачи" link text is covered by the bar, and the FontAwesome icon at x 726 that the
+   scrub removed with it is restored as a raster crop of the original), beige page panel, white card with the
+   statement (x 45.0..796.5), card with the topic chips (CSS chips, translated), footer "Website in English" (stamped)
+   and "2020 — Мы те, кого должны превзойти." (the site's own English line, typed).
+   Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX 1.2em, text column x 65.2..776.5, pitch
+   13.5pt; question lines after the badge start at x 106.6 (pitch 15.8pt). Badges and the p-V figure (raster) stamped;
+   caption "Рис. 1" typed (Fig. 1). Displays eta = A_г/A_хм and chi = Q_-/A_хм retyped (г -> g gas, хм -> ref
+   refrigerator; same subscripts in the solution); margin-top:-6pt keeps a \dfrac line on the original baseline.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:65.2pt;width:711.3pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.4pt;--l:15.8pt}
+.c{text-align:center}
+.ftx{left:33.8pt;width:774pt;color:#7e8299}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:45pt;width:751.5pt;background:#fff;border-radius:3.75pt}
+.tg{position:absolute;margin:0;left:69pt;display:flex;gap:3.8pt;font-size:9pt;color:#7e8299;white-space:nowrap}
+.tg span{display:block;background:rgb(220,224,238);padding:0 9pt;border-radius:2pt;height:15.8pt;line-height:16.4pt}
+.ov{position:absolute;line-height:0;background:rgb(59,89,152);padding:0.5pt}  /* the padding ring makes build.py see a drawing on the overlay page (an image alone is not detected) */
+.ov img{display:block;width:16pt;height:15pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:86.2pt;height:974.3pt"></div>
+<div class="bx cd" style="top:1079.2pt;height:45.8pt"></div>
+</div>
+<div class="f" style="left:33.8pt;top:33.8pt"><span class="fig" data-srcpage="1" data-clip="33.8,33.8,807.8,75.0"></span></div>
+<!-- header icon (FontAwesome glyph at x 726.2..739.4) lost by the scrub as collateral of the hidden "Задачи" link:
+     restored as a 288 dpi crop of the original (no Cyrillic in it) -->
+<div class="ov" style="left:724.5pt;top:45.5pt"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAA8CAIAAABZ6yszAAAACXBIWXMAACxLAAAsSwGlPZapAAAGD0lEQVR4nO1Z+VNTVxj1/6LSqdCO1drWznQKpIJUESvUIotKwQVUBEQRF2ogQEB2SGQLSyBAIBCWgCCgWKwi5Q/pgdt5c3nvbg8SUmeYOT8Ecu53v/Pevd+WQxExzz5pHAq7BwcCwu3BgYBwe3AgINweHAgImelfstt7Rt58Fvv/ExCX3nz0TI2Uln2/f255M/p0lZQZk9b07fm6/RBwJN5W1T4Lt8YDH46eqRaTbz4eAvNYkl1MS7/rAm12aRP80Ar47te6vrG32Izgp7RGMb/g2QhoWCWmFVV6NZs1jkCkpSIkAuDu6PR7bSfvzHvpkpKqcTB/vCjRiauimQWaXYtfnKoMsoAfUutxZuhtyhunpKseP58E05LRLKZFxlkn5z/Sxpt6FvHPoAnAfR2aXKM3AHBBpQutzdNgnr7SJmU6BpZ19rE2aALwPHTWgZS8TulCHGgwz11zSpl255xxi8vFfUEQcL1s0GgaSLzaLjXd0PUSzFQFqTiQxi2mFjZOXni+JwHHz9n9Lz8yBSRfeyE13da3BGZ6QY+UWdU2y9wFj2BPAsghZuLKPfn77fS8VmQ6BpZ4GyXlSE4gVwBS48yrf3h2EWGkbpGkkfvQLaah1tBFIRqtfa92KeBBzTjPKDA4sSYV4Jl8B2b+U4+YFn+5VbARgMrFtIDDsVakKrFdaXz0BdZBK6rwimnlDX7xRqV2n2kBZ3McYqNAY/eC2LOZxa0TiDcp4JxIrkW0EW+ERykoadkCSBUgxW+3unh2sSXhPKn3CwTUdcyrbBRzqcmcAKdbnxqZmJhfP5lSz7QQlWAjHEFOvfFoSGUXIOfBgDkBlswWOKdi2uN/9z0r3Xx9toYQkGWZWyC8KnqPfCIo77hR6OfMFkF0ozE2+wGRRLccUZh8y0xGdAm9F+9FAkxp8C9sfJm4o/NCFU2+MgbyzMLeYHnPFoC4ixKIgFlmMS9DdIJNdwjJVx2DKzr7lwp6VGwiiKEl0jzhKWEIQOpRfEIE04sbaEp0RlDtkW97vavGLRCaTG0BMG8aW0ChdVTdbmBpMzWfEUxR7RECM2cjyJJiWx1oqlQF3PlzRN0urzVDiiAEXvOJIydN9jSOc4YDDAHZJf2KRnH0ebOJjEIX4aAg592/rGLV2wwcibepCtDevvzxN+zIsmj8uzyvSQFMhkLkjOHPSEtFcaUXDTvNxz8Vo5xghsAQ8E1yLXZVsatrF5G8iENltRNkpkKALOEaXcUHFA66vWyt7FZGB0FRzc4D6EdVNHyVqD8/qP7JV7PUcvIZRZtx/IYaQbrLyNTfgt6Sm8ikGhCnjasQXrpH3jD5t8uHjXxEMLH3w0LvRQKkGkand5xLPF1EnvvV4/3U9I4Gyu/8Jx5kjCgq5emmWma9lwgQa8CR0GjM0QsPMJh+10UWpuR18mi8MtGcALEGrf5JzeusbJ1x+/4Su45T92JwBR2W5hmvJlX0XiTgWJK9vX/JMbAFXrA7f6NDtwrXmtejwFfj4JY3+HD71sjW0umB6A3goYqfqDENo78hnaQRjoFlHflzS4Vu5GoEmtvdC8BLFExW5rbLON34H6mKHBX6paFhIB+yinppsjQTS9tu+R0olnUedMdIBiRIxmgGOoZWNE5uqRu+QhJOtkZGLYQAL7CMICEdzcsFRMZZce3EGn6/003IKNkRSQ/Hbk3GSeolQO8bsZ3g6cwtzcFXS/ql3ssFRGz/MCOuWHBgjKNSOiIZU9g925jY++r2gIr3SgIitrsT8fQGl+GPnYODYep40LMtvCXByJUA7zwqgV177lIAgBoTXoo3xg0+lfVfd0+HF6TniO0qA4UD4mMQvTchYEtDrlNl1oJLjFKUVota8lHdBG6wdC0CvynvzQkAUJnQtzO4wItS/2lslwLIIUYfo9gwKMIXWL9wU5/UQyWAwJLR3CELrypAoiyt8elmSvshgODirS7BjytiIKxVtMyo/AoWQgEEMWlND2sneG2A8ZE73cso7KJNXtYQCtCAXJte0FNoHUWkR+Tp9a6iO2txLdqdc0/r/dfLBlFrmPoVfr8FhAUHAsKNT17Av6R1wH2IASk0AAAAAElFTkSuQmCC"></div>
+<p class="x" style="--b:114.0">As is well known, the efficiency is the ratio of the useful work done by the working substance to the amount of heat supplied to it. Loosely speaking, this coefficient shows how effectively the heat coming from some heater is “converted” into work.</p>
+<p class="x" style="--b:154.5">This problem considers a cycle performed with an ideal gas and consisting of two isobars and two isochores (see Fig. 1). The adiabatic index of the gas is known and equal to $\gamma$. Suppose that heat is removed from the gas by a refrigerator operating on a reverse Carnot cycle between the gas and the surroundings. Let $A_\mathrm{g}$ be the work done by the gas during one cycle described above, and $A_\mathrm{ref}$ the work done on the working substance of the refrigerator during one cycle of the working gas. Heat is supplied to the gas by heat exchange with the surroundings. In this case it is natural to introduce, instead of the efficiency, the “effectiveness” $\eta$ of the cycle:</p>
+<p class="x c" style="--b:241.5;margin-top:-5pt">$\eta = \dfrac{A_\mathrm{g}}{A_\mathrm{ref}}.$</p>
+<p class="x" style="--b:287.2">Assume that the change in the gas temperature during one cycle of the refrigerator is negligible.</p>
+<div class="f" style="left:299.2pt;top:298.5pt"><span class="fig" data-srcpage="1" data-clip="299.2,298.5,542.2,538.5"></span></div>
+<p class="x c" style="--b:557.2">Fig. 1</p>
+
+<div class="f" style="left:64.7pt;top:570.3pt"><span class="fig" data-srcpage="1" data-clip="64.7,570.3,102.5,589.3"></span></div>
+<p class="x q" style="--b:582.7">Express the molar heat capacities of the gas in an isobaric process, $C_P$, and in an isochoric process, $C_V$, in terms of $R$ and $\gamma$.</p>
+<p class="x" style="--b:607.5">Let the maximum temperature in the cycle be equal to the temperature of the surroundings $T$; in the isochoric cooling the temperature decreases from $T$ to $T - t_1$, and in the isobaric cooling from $T - t_1$ to $T - t$.</p>
+
+<div class="f" style="left:64.7pt;top:633.3pt"><span class="fig" data-srcpage="1" data-clip="64.7,633.3,102.5,652.3"></span></div>
+<p class="x q" style="--b:645.7">Express the ratios $p_2/p_1$ and $V_2/V_1$ (notation of Fig. 1) in terms of $T$, $t_1$ and $t$.</p>
+<p class="x" style="--b:670.5">Let the amount of gas be $\nu$.</p>
+
+<div class="f" style="left:64.7pt;top:682.7pt"><span class="fig" data-srcpage="1" data-clip="64.7,682.7,102.5,701.7"></span></div>
+<p class="x q" style="--b:695.2">Express the work $A_\mathrm{g}$ in terms of $\nu$, $R$, $T$, $t_1$ and $t$.</p>
+<p class="x" style="--b:720.0">For a refrigerator, the coefficient of performance $\chi$ is defined by the formula:</p>
+<p class="x c" style="--b:750.0;margin-top:-5pt">$\chi = \dfrac{Q_-}{A_\mathrm{ref}},$</p>
+<p class="x" style="--b:781.5">where $Q_-$ is the heat removed from the gas during one cycle.</p>
+
+<div class="f" style="left:64.7pt;top:793.7pt"><span class="fig" data-srcpage="1" data-clip="64.7,793.7,102.5,812.7"></span></div>
+<p class="x q" style="--b:806.2">Find $\chi$ at the moment when the gas temperature is $T - \tau$. Express the answer in terms of $\tau$ and $T$.</p>
+
+<div class="f" style="left:64.7pt;top:820.7pt"><span class="fig" data-srcpage="1" data-clip="64.7,820.7,102.5,839.7"></span></div>
+<p class="x q" style="--b:833.2">Find $A_\mathrm{ref}$. Express the answer in terms of $\nu$, $R$, $\gamma$, $T$, $t_1$ and $t$.</p>
+<p class="x" style="--b:858.0">Introduce the notation $y = t/T$ and $x = t_1/t$.</p>
+
+<div class="f" style="left:64.7pt;top:870.3pt"><span class="fig" data-srcpage="1" data-clip="64.7,870.3,102.5,889.3"></span></div>
+<p class="x q" style="--b:882.7">Express $\eta$ for the system described in terms of $x$, $\gamma$ and $y$. Calculate its value for $\gamma = 5/3$, $x = 0.5$, $y = 0.5$.</p>
+<p class="x" style="--b:907.5">Now let us analyse what maximum $\eta$ can be obtained for different values of $y$ and $x$. Take it as known that the best $\eta$ is achieved for $y \ll 1$.</p>
+
+<div class="f" style="left:64.7pt;top:934.0pt"><span class="fig" data-srcpage="1" data-clip="64.7,934.0,102.5,953.0"></span></div>
+<p class="x q" style="--b:946.4">Find the dependence $\eta(x)$ for $y \ll 1$. Express the answer in terms of $\gamma$ and $x$.</p>
+<p class="x" style="--b:975.9">If necessary, you may use the formula $\ln(1 + \xi) \approx \xi - \xi^2/2$ for $\xi \ll 1$.</p>
+
+<div class="f" style="left:64.7pt;top:988.0pt"><span class="fig" data-srcpage="1" data-clip="64.7,988.0,102.5,1007.0"></span></div>
+<p class="x q" style="--b:1000.4">Find the value of $x$ at which the effectiveness $\eta$ is maximal. Express the answer in terms of $\gamma$.</p>
+
+<div class="f" style="left:64.7pt;top:1015.0pt"><span class="fig" data-srcpage="1" data-clip="64.7,1015.0,102.5,1034.0"></span></div>
+<p class="x q" style="--b:1027.4">Find the maximum possible effectiveness $\eta_{max}$. Express the answer in terms of $\gamma$. Calculate its value for $\gamma = 5/3$.</p>
+
+<div class="tg" style="top:1094.2pt"><span>T</span><span>Thermodynamics</span><span>Refrigerators</span><span>XY camp</span><span>Efficiency</span><span>Cycles</span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx" style="left:33.8pt;top:33.8pt;width:774pt;height:60pt;background:#fff"></div>
+</div>
+<div class="f" style="left:377.4pt;top:49.0pt"><span class="fig" data-srcpage="2" data-clip="377.4,49.0,470.8,63.7"></span></div>
+<p class="x c ftx" style="--b:81.0">2020 — We are what they grow beyond.</p>
+</div>
+</body></html>

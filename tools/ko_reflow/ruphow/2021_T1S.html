@@ -1,0 +1,156 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T1 — solution — Korean edition on the original layout.
+   ORIGINAL: 4 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same layout as the 2026 W pilot):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 5.00" (stamped), grey separator under the restated question, answer frames (3pt stroke #f3f6f9), all redrawn
+   as CSS boxes in the static .dc wrapper. Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math KaTeX
+   at 10.8pt (1.2em), text column x 63.4..777.8, left-aligned as in the original.
+   Stamped: figures (raster images), badges, display formulas without Cyrillic. Retyped in KaTeX: every display
+   with Cyrillic subscripts (отн -> rel, relative; к -> k, stone (камень; the author himself writes S_k later);
+   л -> L, Leopold) and the answers with units м/с -> m/s (decimal comma -> point).
+   Raster figure labels covered by white .ov labels: subscript "отн" -> rel (p1 fig 1, fig 2), "л" -> L, "к" -> k
+   (p1 fig 2), the word "камень" -> 돌 (p3, both copies of the photo figure).
+   Original oddities kept in the translation: "v_yл = v1 cos α − gt" (should be v2; as printed); the raw LaTeX
+   "\sin⁡α" printed in the text on p2 is typeset as sin α; "в вектор" typo (а вектор) translated by sense.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{left:104.7pt;width:673pt}
+.c{text-align:center}
+.b{font-weight:bold}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{position:absolute;white-space:nowrap;background:#fff;color:#000;text-align:center;font-family:'Times New Roman',serif}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1122.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">생쥐들과 레오폴드 사이의 처음 거리가 가질 수 있는 최댓값 <span class="nw">$L_{max}$를</span> 구하여라.</p>
+<p class="x" style="--b:90.0">머리말: 레오폴드와 생쥐들의 마지막 ‘총격전’은 2002년에 있었고, 그 뒤로 생쥐들은 고양이를 괴롭히지 않았다. 18년이 지난 2020년, 전설의 새총에 쓸 새로운 ‘물밑 조약돌’이 발견되자 생쥐들은 ‘옛 솜씨를 다시 발휘해 보기로’ 했다.</p>
+<p class="x" style="--b:117.0">참고: 이 총격전에서 다친 동물은 없다.</p>
+<p class="x" style="--b:139.5">레오폴드의 기준계에서 돌은 일정한 속도 <span class="nw">$v_{\mathrm{rel}}$로</span> 직선 운동을 한다. 레오폴드에서 돌까지의 거리는 둘을 잇는 선분이 상대 속도 벡터에 수직일 때 최소가 된다(그림 참고). 삼각형의 닮음으로부터 레오폴드에 대한 돌의 변위를 구하자:</p>
+<div class="f" style="left:306.8pt;top:170.3pt"><span class="fig" data-srcpage="1" data-clip="306.8,170.3,534.8,324.8"></span></div>
+<div class="ov" style="left:490.8pt;top:298.1pt;width:16.5pt;height:7pt;line-height:7pt;font-size:9.5pt;text-align:left;padding-left:0.6pt">rel</div>
+<p class="x c" style="--b:345.8;margin-top:-2.07pt">$S_{\mathrm{rel}} = L\dfrac{v_1}{v_{\mathrm{rel}}} = v_{\mathrm{rel}}t$</p>
+<p class="x" style="--b:390.0">이로부터</p>
+<p class="x c" style="--b:424.5;margin-top:-5.87pt">$L = \dfrac{v_{\mathrm{rel}}^2\,t}{v_1}$</p>
+<p class="x" style="--b:453.0">돌과 레오폴드의 속도가 다시 수직이 되기까지 걸리는 시간의 최댓값을 구하자. 둘이 가장 가까워지는 경우에 대해 돌과 레오폴드의 속도 삼각형을 그리고, 이 둘을 하나의 사각형으로 합치자. 이 사각형은 마주 보는 두 각의 합이 180°이므로 원에 내접시킬 수 있다는 점에 주목하자. 원의 지름은 고정되어 있으며 <span class="nw">$v_{\mathrm{rel}}$과</span> 같다. <span class="nw">$L$은</span> <span class="nw">$t$가</span> 최대일 때 최대이므로, 사각형의 다른 대각선, 즉 <span class="nw">$gt$도</span> 최대가 되어야 한다. 이는 <span class="nw">$gt$가</span> 이 원의 지름일 때 이루어진다. 따라서</p>
+<div class="f" style="left:306.8pt;top:510.8pt"><span class="fig" data-srcpage="1" data-clip="306.8,510.8,534.8,738.8"></span></div>
+<div class="ov" style="left:399pt;top:633.1pt;width:18.5pt;height:6.6pt;line-height:6.6pt;font-size:9pt;text-align:left;padding-left:0.6pt">rel</div>
+<div class="ov" style="left:373.8pt;top:667.2pt;width:8pt;height:9pt;line-height:8pt;font-size:9pt;font-style:italic">L</div>
+<div class="ov" style="left:473.3pt;top:694.6pt;width:7pt;height:9.8pt;line-height:8pt;font-size:9pt;font-style:italic">k</div>
+<p class="x c" style="--b:762.0;margin-top:-2.14pt">$t_{max} = \dfrac{v_{\mathrm{rel}}}{g}$</p>
+<p class="x" style="--b:804.8">최종적으로:</p>
+<p class="x c" style="--b:841.5;margin-top:-10.85pt">$L_{max} = \dfrac{v_{\mathrm{rel}}^3}{gv_1} = \dfrac{\left(v_1^2 + v_2^2\right)^{\frac{3}{2}}}{gv_1}$</p>
+<p class="x b" style="--b:870.8">두 번째 풀이</p>
+<p class="x" style="--b:893.2">그림과 같이 좌표계를 도입하자. 돌을 던진 방향이 수평면과 이루는 각을 <span class="nw">$\alpha$라</span> 하자. 돌과 레오폴드의 좌표와 속도 성분, 그리고 둘 사이의 거리가 시간에 따라 어떻게 변하는지 구하자.</p>
+<div class="f" style="left:306.8pt;top:909.0pt"><span class="fig" data-srcpage="1" data-clip="306.8,909.0,534.8,1057.5"></span></div>
+<p class="x c" style="--b:1083.0;margin-top:-5.89pt">$x_k = v_1t\cos\alpha;\ y_k = v_1t\sin\alpha - \dfrac{gt^2}{2}$</p>
+<p class="x c" style="--b:1131.0">$v_{yk} = v_1\sin\alpha - gt;\ v_{xk} = v_1\cos\alpha$</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1023.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:1068.8pt;height:87.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx ab" style="top:945pt;height:102pt"></div>
+<div class="bx sp" style="top:1107.0pt"></div>
+</div>
+<p class="x c" style="--b:74.2;margin-top:-6.2pt">$x_L = L\cos\alpha - v_2t\sin\alpha;\ y_L = L\sin\alpha + v_2t\cos\alpha - \dfrac{gt^2}{2}$</p>
+<p class="x c" style="--b:122.2">$v_{yL} = v_1\cos\alpha - gt;\ v_{xL} = -v_1\sin\alpha$</p>
+<p class="x" style="--b:159.8">레오폴드와 돌 사이의 거리를 <span class="nw">$l$이라</span> 하자.</p>
+<p class="x c" style="--b:183.0">$l^2 = (x_k - x_L)^2 + (y_k - y_L)^2$</p>
+<div class="f" style="left:250.1pt;top:217.8pt"><span class="fig" data-srcpage="2" data-clip="250.1,217.8,590.0,234.4"></span></div>
+<div class="f" style="left:351.2pt;top:264.3pt"><span class="fig" data-srcpage="2" data-clip="351.2,264.3,489.0,282.4"></span></div>
+<p class="x" style="--b:312.0"><span class="nw">$l$의</span> 최솟값은 포물선의 꼭짓점, 즉 다음 시각에 이루어진다</p>
+<div class="f" style="left:377.3pt;top:323.5pt"><span class="fig" data-srcpage="2" data-clip="377.3,323.5,463.4,341.7"></span></div>
+<p class="x" style="--b:371.2"><span class="nw">$L$의</span> 가능한 최댓값을 구하려면 <span class="nw">$\tau$의</span> 가능한 최댓값을 구해야 한다.</p>
+<p class="x" style="--b:384.8">시각 <span class="nw">$\tau$에</span> 돌의 속도가 수평면과 각 <span class="nw">$\beta$를</span> 이룬다고 하자. 이 순간 레오폴드와 돌의 속도는 서로 수직이므로, 레오폴드의 속도는 수평면과 각 <span class="nw">$90 - \beta$를</span> 이룬다. 따라서 이 순간에 대해 다음과 같이 쓸 수 있다</p>
+<p class="x c" style="--b:420.0">$v_{yk}/v_{xk} = -v_{xL}/v_{yL}$</p>
+<div class="f" style="left:302.1pt;top:455.1pt"><span class="fig" data-srcpage="2" data-clip="302.1,455.1,538.7,469.9"></span></div>
+<p class="x" style="--b:501.8">마지막 관계식으로부터 <span class="nw">$\tau$를</span> 구하면</p>
+<div class="f" style="left:358.6pt;top:512.9pt"><span class="fig" data-srcpage="2" data-clip="358.6,512.9,481.0,543.2"></span></div>
+<p class="x" style="--b:574.5"><span class="nw">$\tau$를</span> 구하는 두 방법을 결합하면, 거리가 돌을 던진 각에 따라 어떻게 달라지는지 얻는다</p>
+<div class="f" style="left:340.8pt;top:586.0pt"><span class="fig" data-srcpage="2" data-clip="340.8,586.0,499.0,619.2"></span></div>
+<p class="x" style="--b:649.5"><span class="nw">$L$의</span> 최댓값을 구하려면 <span class="nw">$v' = (v_1\sin\alpha + v_2\cos\alpha)$의</span> 최댓값을 구해야 한다</p>
+<div class="f" style="left:346.6pt;top:661.0pt"><span class="fig" data-srcpage="2" data-clip="346.6,661.0,494.2,679.9"></span></div>
+<div class="f" style="left:320.5pt;top:706.8pt"><span class="fig" data-srcpage="2" data-clip="320.5,706.8,520.3,727.2"></span></div>
+<p class="x" style="--b:757.5"><span class="nw">$\sin\alpha$에</span> 대한 이차 방정식의 판별식을 구하자</p>
+<div class="f" style="left:342.1pt;top:767.5pt"><span class="fig" data-srcpage="2" data-clip="342.1,767.5,498.6,788.7"></span></div>
+<div class="f" style="left:364.5pt;top:815.5pt"><span class="fig" data-srcpage="2" data-clip="364.5,815.5,476.3,835.9"></span></div>
+<p class="x" style="--b:866.2"><span class="nw">$v'$의</span> 최댓값은 판별식이 0일 때 이루어지며, 그 값은 다음과 같다</p>
+<div class="f" style="left:386.1pt;top:878.0pt"><span class="fig" data-srcpage="2" data-clip="386.1,878.0,454.8,901.0"></span></div>
+<p class="x" style="--b:932.2">따라서 가능한 최댓값은</p>
+<p class="x an" style="--b:973.5">답:</p>
+<div class="f" style="left:374.5pt;top:985.1pt"><span class="fig" data-srcpage="2" data-clip="374.5,985.1,465.2,1021.2"></span></div>
+
+<div class="f" style="left:62.0pt;top:1078.2pt"><span class="fig" data-srcpage="2" data-clip="62.0,1078.2,102.2,1099.8"></span></div>
+<p class="x q" style="--b:1091.9">속력 <span class="nw">$v_1$과</span> <span class="nw">$v_2$의</span> 값을 구하여라. 중력 가속도는 <span class="nw">$g = 9.8\,\mathrm{m/s^2}$이다.</span></p>
+<p class="x" style="--b:1132.0">사진을 찍은 순간 돌의 평균 속도 벡터는 <span class="nw">$\frac{\vec{v}_{\mathrm{rel}}}{2}$이고,</span> 레오폴드의 평균 속도 벡터는 <span class="nw">$-\frac{\vec{v}_{\mathrm{rel}}}{2}$임에</span> 주목하자. 이는 돌과 레오폴드의 변위가 크기는 같고 방향은 반대라는 뜻이다. <span class="nw">$D$를</span> 선분 <span class="nw">$AC$의</span> 중점이라 하자. 그러면 두 변위의 크기가 같다는 조건으로부터</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1122.7pt;border-radius:0"></div>
+<div class="bx ab" style="top:293.3pt;height:327pt"></div>
+</div>
+<p class="x" style="--b:45.2"><span class="nw">$BD = \frac{L}{2}$이고,</span> 삼각형 <span class="nw">$DCB$는</span> 직각삼각형이며 <span class="nw">$\frac{v_2}{v_1} = \frac{CD}{BC}$임을</span> 알 수 있다. <span class="nw">$BC$,</span> <span class="nw">$BD$,</span> <span class="nw">$CD$를</span> 재면 다음을 얻는다</p>
+<div class="f" style="left:306.8pt;top:50.5pt"><span class="fig" data-srcpage="3" data-clip="306.8,50.5,534.8,209.2"></span></div>
+<div class="ov" style="left:307.5pt;top:184.5pt;width:78pt;height:17pt;line-height:17pt;font-size:24pt;font-family:'Times New Roman',KB,serif">돌</div>
+<div class="f" style="left:391.1pt;top:214.4pt"><span class="fig" data-srcpage="3" data-clip="391.1,214.4,449.1,243.9"></span></div>
+<div class="f" style="left:284.3pt;top:249.3pt"><span class="fig" data-srcpage="3" data-clip="284.3,249.3,555.2,285.4"></span></div>
+<p class="x an" style="--b:321.8">답:</p>
+<p class="x c" style="--b:354.8;margin-top:-6.85pt">$v_1 = \sqrt{\dfrac{2gBC}{BC^2 + CD^2}}\,BC = 10.8\,\mathrm{m/s}$</p>
+<p class="x c" style="--b:421.5;margin-top:-6.9pt">$v_2 = \sqrt{\dfrac{2gBC}{BC^2 + CD^2}}\,CD = 2.7\,\mathrm{m/s}$</p>
+<div class="f" style="left:306.8pt;top:444.0pt"><span class="fig" data-srcpage="3" data-clip="306.8,444.0,534.8,603.0"></span></div>
+<div class="ov" style="left:307.5pt;top:579.5pt;width:78pt;height:17pt;line-height:17pt;font-size:24pt;font-family:'Times New Roman',KB,serif">돌</div>
+<p class="x b" style="--b:629.2">두 번째 풀이</p>
+<p class="x" style="--b:651.8">앞 문항의 풀이에서 얻은 <span class="nw">$\sin\alpha$의</span> 식</p>
+<div class="f" style="left:376.9pt;top:659.9pt"><span class="fig" data-srcpage="3" data-clip="376.9,659.9,463.0,700.8"></span></div>
+<p class="x" style="--b:732.0">시각 <span class="nw">$\tau$에서</span> 돌의 좌표와, 돌과 레오폴드 사이의 거리를 구하자</p>
+<p class="x c" style="--b:757.5;margin-top:-2.4pt">$x_k = v_1\tau\cos\alpha = \dfrac{v_1v_2}{g}$</p>
+<p class="x c" style="--b:819.0;margin-top:-6.15pt">$y_k = v_1\tau\sin\alpha - \dfrac{g\tau^2}{2} = \dfrac{v_1^2}{g} - \dfrac{v_1^2 + v_2^2}{2g} = \dfrac{v_1^2 - v_2^2}{2g}$</p>
+<div class="f" style="left:382.7pt;top:859.8pt"><span class="fig" data-srcpage="3" data-clip="382.7,859.8,457.0,892.2"></span></div>
+<p class="x" style="--b:923.2">따라서 돌의 변위는</p>
+<p class="x c" style="--b:954.8;margin-top:-6.57pt">$S_k = \dfrac{v_1^2 + v_2^2}{2g}$</p>
+<p class="x" style="--b:998.2">돌의 변위와, 돌과 레오폴드 사이의 거리를 재면 미지수 두 개에 대한 방정식 두 개를 얻는다.</p>
+<p class="x" style="--b:1011.8">처음 속력을 <span class="nw">$l$과</span> <span class="nw">$S_k$로</span> 나타내자</p>
+<div class="f" style="left:395.0pt;top:1022.1pt"><span class="fig" data-srcpage="3" data-clip="395.0,1022.1,445.8,1052.7"></span></div>
+<div class="f" style="left:391.5pt;top:1079.9pt"><span class="fig" data-srcpage="3" data-clip="391.5,1079.9,448.7,1110.2"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:191.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+</div>
+<div class="f" style="left:381.4pt;top:32.6pt"><span class="fig" data-srcpage="4" data-clip="381.4,32.6,458.8,72.4"></span></div>
+<p class="x c" style="--b:121.5;margin-top:-9.15pt">$v_1 = \sqrt{\dfrac{8gS_k}{l^2 + 4S_k^2}}\,S_k = 10.8\,\mathrm{m/s}$</p>
+<p class="x c" style="--b:188.2;margin-top:-9.2pt">$v_2 = \sqrt{\dfrac{2gS_k}{l^2 + 4S_k^2}}\,l = 2.7\,\mathrm{m/s}$</p>
+</div>
+</body></html>

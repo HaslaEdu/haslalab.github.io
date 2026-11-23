@@ -1,0 +1,141 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* RuPhO W ("Road to IPhO") 2024, problem T1 — Korean edition on the original layout.
+   ORIGINAL: 2 A4 pages (595.3x841.9pt), LaTeX with PT Serif 10pt body (-> 'Times New Roman',KB,serif), inline math
+   Computer Modern; line pitch 11.95pt. Text column x 51.0..547.1 (width 496.1pt), beside the figures x 51.0..367.0;
+   paragraph indent 15pt. Header "Road to IPhO" (PT Sans 39.9pt grey, stamped) and "Фамилия, имя" (PT Sans 12pt,
+   right edge 566.4) over a rule (stamped) -> "성명". Title PT Serif 17.9pt centred, b 67.4.
+   Part headings PT Serif Bold 12pt. Sub-questions in black frames (x 15.17..580.11, stroke 1.99pt, redrawn as .bx
+   inside the static .dc wrapper so check.py ignores them); labels A1..B6 and the points at the right stamped.
+   Footer "Условие: страница N из 2" (PT Sans 14.9pt, right edge 574.3) -> "문제: 2쪽 중 N쪽".
+   Figures stamped (p1 vector drawing, p1 raster image, p2 graph: label F_упр -> .ov F_el).
+   Retyped display: W_p = W_p(г) + W_p(в) + W_p(пр) (Cyrillic subscripts -> load, rope, spring). Stamped: B4 display.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3375*fs + 0.6pt   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em) */
+body{font-family:'Times New Roman',KB,serif;font-size:10pt;line-height:11.95pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:51pt;width:496.1pt;--l:11.95pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 0.6pt);text-align:justify}
+.n{width:316pt}
+.i{text-indent:15pt}
+.c{text-align:center}
+.q{left:50.8pt}
+.t{left:0;width:595.3pt;text-align:center;--fs:17.9pt;--l:21pt}
+.h{font-weight:bold;--fs:12pt;--l:14pt;text-align:left}
+.ft{font-family:Arial,KG,sans-serif;--fs:14.9pt;--l:17pt;left:274.3pt;width:300pt;text-align:right;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs))}
+.nm{font-family:Arial,KG,sans-serif;--fs:12pt;--l:14pt;left:366.4pt;width:200pt;text-align:right;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs))}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box;border:1.99pt solid #000}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:276.55pt;width:566.93pt;height:36.48pt"></div>
+<div class="bx" style="left:14.18pt;top:321.00pt;width:566.93pt;height:59.94pt"></div>
+<div class="bx" style="left:14.18pt;top:388.91pt;width:566.93pt;height:36.36pt"></div>
+<div class="bx" style="left:14.18pt;top:459.27pt;width:566.93pt;height:48.31pt"></div>
+<div class="bx" style="left:14.18pt;top:530.00pt;width:566.93pt;height:36.47pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="1" data-clip="50.0,11.4,275.0,53.2"></span></div>
+<div class="f" style="left:406.5pt;top:41.0pt"><span class="fig" data-srcpage="1" data-clip="406.5,41.0,564.5,44.3"></span></div>
+<p class="x nm" style="--b:25.5">성명</p>
+<p class="x t" style="--b:67.4">미끄러져 내리는 밧줄</p>
+<div class="f" style="left:385.2pt;top:68.1pt"><span class="fig" data-srcpage="1" data-clip="385.2,68.1,542.9,244.0"></span></div>
+<p class="x n i" style="--b:91.2">매끄러운 경사면이 수평면과 각 <span class="nw">$\alpha$를</span> 이룬다. 경사면의 표면은 경사면에 접하는 무게 없는 두 도르래 1과 2로 매끄럽게 이어지며, 도르래의 반지름은 무시할 수 있을 만큼 작다고 볼 수 있다.</p>
+<p class="x n i" style="--b:139.0">선질량 밀도가 <span class="nw">$\lambda$로</span> 일정한 유연한 밧줄이 두 도르래에 걸쳐 있으며, 밧줄의 두 끝은 처음에 같은 수평선 위에 있다. 왼쪽에 늘어진 밧줄 부분의 길이는 <span class="nw">$L_1$이고,</span> 경사면 구간의 길이는 <span class="nw">$L$이다.</span> 중력 가속도는 <span class="nw">$g$이다.</span> 밧줄의 왼쪽 끝이 처음 위치로부터 아래로 이동한 거리를 <span class="nw">$x$로</span> 나타낸다(그림 참조).</p>
+<p class="x n i" style="--b:210.8">이 문제에서는 밧줄의 동역학을 살펴본다.</p>
+<p class="x h" style="--b:237.2">A부. 무게 없는 도르래 (7.5점)</p>
+<p class="x" style="--b:254.0">밧줄에 작은 속력을 주어 평형 위치에서 벗어나게 하였더니, 밧줄의 왼쪽 끝이 내려가기 시작하였다. 밧줄은 운동하는 동안 도르래에서 떨어지지 않는다고 보아라.</p>
+
+<div class="f" style="left:24.6pt;top:281.4pt"><span class="fig" data-srcpage="1" data-clip="24.6,281.4,43.1,296.3"></span></div>
+<div class="f" style="left:553.1pt;top:281.4pt"><span class="fig" data-srcpage="1" data-clip="553.1,281.4,573.1,296.3"></span></div>
+<p class="x q" style="--b:292.2">왼쪽 끝이 <span class="nw">$x$만큼</span> 내려간 순간 밧줄의 속력 <span class="nw">$v$와</span> 접선 가속도 <span class="nw">$a$를</span> 구하여라. 답은 <span class="nw">$g$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$x$로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:325.4pt"><span class="fig" data-srcpage="1" data-clip="24.6,325.4,43.1,340.3"></span></div>
+<div class="f" style="left:553.1pt;top:325.4pt"><span class="fig" data-srcpage="1" data-clip="553.1,325.4,573.1,340.3"></span></div>
+<p class="x q" style="--b:336.2">경사면 위에 놓인 밧줄 부분의 장력이 그 부분의 길이를 따라 일정해지는 순간, 밧줄 왼쪽 끝의 변위 <span class="nw">$x_1$을</span> 구하여라. 답은 <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$로</span> 나타내어라.</p>
+<p class="x q" style="--b:372.1"><span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$가</span> 어떤 관계를 만족할 때 <span class="nw">$x_1$이</span> 밧줄 오른쪽 부분의 처음 길이보다 작은가?</p>
+
+<div class="f" style="left:24.6pt;top:393.7pt"><span class="fig" data-srcpage="1" data-clip="24.6,393.7,43.1,408.6"></span></div>
+<div class="f" style="left:553.1pt;top:393.7pt"><span class="fig" data-srcpage="1" data-clip="553.1,393.7,573.1,408.6"></span></div>
+<p class="x q" style="--b:404.5">밧줄의 왼쪽 끝이 거리 <span class="nw">$x$만큼</span> 이동한 순간, 밧줄 장력의 최댓값을 구하여라. 답은 <span class="nw">$\lambda$,</span> <span class="nw">$g$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$x$로</span> 나타내어라.</p>
+<p class="x i" style="--b:436.7">위에서 얻은 식들은 밧줄이 도르래에서 떨어지지 않고 운동하는 동안에만 성립한다.</p>
+<p class="x i" style="--b:448.7">이제 어떤 조건에서 밧줄이 떨어지는지 살펴보자.</p>
+
+<div class="f" style="left:24.6pt;top:464.1pt"><span class="fig" data-srcpage="1" data-clip="24.6,464.1,43.1,479.0"></span></div>
+<div class="f" style="left:553.1pt;top:464.1pt"><span class="fig" data-srcpage="1" data-clip="553.1,464.1,573.1,479.0"></span></div>
+<p class="x q" style="--b:474.9">밧줄이 각각 도르래 1, 2와의 접촉을 잃기 시작할 때 밧줄 왼쪽 끝의 변위 <span class="nw">$x_{\max(1)}$과</span> <span class="nw">$x_{\max(1)}$을</span> 구하여라. 이때 다른 도르래와의 접촉은 유지된다고 보아라. 답은 <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$로</span> 나타내어라.</p>
+<p class="x i" style="--b:519.0">이제부터 <span class="nw">$L = 2L_1$이라고</span> 하자. <span class="nw">$L = 1\,\mathrm{m}$이고,</span> 중력 가속도는 <span class="nw">$g = 10\,\mathrm{m/s^2}$이다.</span></p>
+
+<div class="f" style="left:24.6pt;top:534.8pt"><span class="fig" data-srcpage="1" data-clip="24.6,534.8,43.1,549.7"></span></div>
+<div class="f" style="left:553.1pt;top:534.8pt"><span class="fig" data-srcpage="1" data-clip="553.1,534.8,573.1,549.7"></span></div>
+<p class="x q" style="--b:545.6">경사면이 수평면과 이루는 각이 <span class="nw">$\alpha_1 = 30^\circ$,</span> <span class="nw">$\alpha_2 = 45^\circ$,</span> <span class="nw">$\alpha_2 = 60^\circ$일</span> 때, 밧줄이 도르래 중 하나에서 떨어지는 순간 밧줄의 속력을 계산하여라.</p>
+
+<p class="x h" style="--b:592.4">B부. 용수철과 추가 있는 운동 (4.5점)</p>
+<div class="f" style="left:375.5pt;top:574.0pt"><span class="fig" data-srcpage="1" data-clip="375.5,574.0,548.6,755.8"></span></div>
+<p class="x n" style="--b:608.8">이 부분에서는 밧줄의 왼쪽 끝에 질량 <span class="nw">$m$인</span> 추를 매달고, 밧줄의 오른쪽 끝에는 무게 없는 용수철을 연결한다.</p>
+<p class="x n i" style="--b:632.7">이 용수철은 양 끝에 어떤 최솟값 <span class="nw">$F_0$보다</span> 큰 힘을 가해야만 늘어나기 시작하며, 압축되지는 않는다. 용수철의 탄성력이 늘어난 길이에 따라 어떻게 달라지는지를 나타낸 정성적 그래프가 아래 그림에 있다. <span class="nw">$F_0$(</span><span class="nw">$F_0 &lt; mg$)과</span> 용수철 상수 <span class="nw">$k$(</span><span class="nw">$k = \Delta F/\Delta l$)는</span> 주어진 값으로 보아라.</p>
+<p class="x n i" style="--b:704.4">용수철의 다른 끝은 고정되어 있으며, 용수철은 연직 방향으로 놓여 있다.</p>
+<p class="x n i" style="--b:728.3">밧줄의 기하학적 크기와 처음 위치는 <b>A</b>부와 같다.</p>
+
+<p class="x ft" style="--b:815.1">문제: 2쪽 중 1쪽</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:284.75pt;width:566.93pt;height:33.91pt"></div>
+<div class="bx" style="left:14.18pt;top:328.64pt;width:566.93pt;height:47.87pt"></div>
+<div class="bx" style="left:14.18pt;top:455.77pt;width:566.93pt;height:36.03pt"></div>
+<div class="bx" style="left:14.18pt;top:499.77pt;width:566.93pt;height:75.24pt"></div>
+<div class="bx" style="left:14.18pt;top:609.01pt;width:566.93pt;height:36.47pt"></div>
+<div class="bx" style="left:14.18pt;top:653.45pt;width:566.93pt;height:36.03pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="2" data-clip="50.0,11.4,275.0,53.2"></span></div>
+<div class="f" style="left:406.5pt;top:41.0pt"><span class="fig" data-srcpage="2" data-clip="406.5,41.0,564.5,44.3"></span></div>
+<p class="x nm" style="--b:25.5">성명</p>
+<div class="f" style="left:148.7pt;top:58.7pt"><span class="fig" data-srcpage="2" data-clip="148.7,58.7,444.1,261.6"></span></div>
+<p class="x ov" style="--b:74.1;left:307.6pt;--fs:10.46pt;--l:12pt">el</p>
+
+<div class="f" style="left:24.6pt;top:289.1pt"><span class="fig" data-srcpage="2" data-clip="24.6,289.1,43.1,304.0"></span></div>
+<div class="f" style="left:553.1pt;top:289.1pt"><span class="fig" data-srcpage="2" data-clip="553.1,289.1,573.1,304.0"></span></div>
+<p class="x q" style="--b:299.9">계의 평형 위치에 해당하는 밧줄 왼쪽 끝의 변위 <span class="nw">$x_0$을</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:333.0pt"><span class="fig" data-srcpage="2" data-clip="24.6,333.0,43.1,347.9"></span></div>
+<div class="f" style="left:553.1pt;top:333.0pt"><span class="fig" data-srcpage="2" data-clip="553.1,333.0,573.1,347.9"></span></div>
+<p class="x q" style="--b:343.8">앞 문항의 평형 위치는 용수철 상수가 어떤 최솟값 <span class="nw">$k_{\min}$보다</span> 클 때 존재한다.</p>
+<p class="x q" style="--b:367.7"><span class="nw">$k_{\min}$을</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라. 이후로는 항상 <span class="nw">$k &gt; k_{\min}$이라고</span> 보아라.</p>
+<p class="x i" style="--b:387.9">중력장에서 추와 밧줄의 퍼텐셜 에너지를 각각 <span class="nw">$W_{p(\mathrm{load})}$,</span> <span class="nw">$W_{p(\mathrm{rope})}$로,</span> 용수철의 탄성 퍼텐셜 에너지를 <span class="nw">$W_{p(\mathrm{spring})}$로</span> 나타내자.</p>
+<p class="x i" style="--b:411.8">계 전체의 퍼텐셜 에너지 <span class="nw">$W_p$는</span> 이들의 합이다:</p>
+<p class="x c" style="--b:433.8">$W_p = W_{p(\mathrm{load})} + W_{p(\mathrm{rope})} + W_{p(\mathrm{spring})}.$</p>
+
+<div class="f" style="left:24.6pt;top:460.2pt"><span class="fig" data-srcpage="2" data-clip="24.6,460.2,43.1,475.1"></span></div>
+<div class="f" style="left:553.1pt;top:460.2pt"><span class="fig" data-srcpage="2" data-clip="553.1,460.2,573.1,475.1"></span></div>
+<p class="x q" style="--b:471.0">밧줄의 왼쪽 끝이 <span class="nw">$x$만큼</span> 이동할 때 계의 퍼텐셜 에너지 변화 <span class="nw">$\Delta W_p$를</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$,</span> <span class="nw">$x$로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:504.2pt"><span class="fig" data-srcpage="2" data-clip="24.6,504.2,43.1,519.1"></span></div>
+<div class="f" style="left:553.1pt;top:504.2pt"><span class="fig" data-srcpage="2" data-clip="553.1,504.2,573.1,519.1"></span></div>
+<p class="x q" style="--b:515.0">평형 위치에서의 퍼텐셜 에너지 <span class="nw">$W_p$를</span> 0으로 잡으면, 퍼텐셜 에너지는 다음 꼴로 나타낼 수 있다:</p>
+<div class="f" style="left:258.9pt;top:527.2pt"><span class="fig" data-srcpage="2" data-clip="258.9,527.2,338.8,555.7"></span></div>
+<p class="x q" style="--b:566.2"><span class="nw">$A$와</span> <span class="nw">$B$를</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라.</p>
+<p class="x i" style="--b:586.4">계의 매개변수는, 계를 처음 위치에서 처음 속력 없이 놓으면 줄의 오른쪽 끝이 도르래 2의 높이에 이르지 못하도록 주어져 있다.</p>
+
+<div class="f" style="left:24.6pt;top:613.8pt"><span class="fig" data-srcpage="2" data-clip="24.6,613.8,43.1,628.7"></span></div>
+<div class="f" style="left:553.1pt;top:613.8pt"><span class="fig" data-srcpage="2" data-clip="553.1,613.8,573.1,628.7"></span></div>
+<p class="x q" style="--b:624.6">계를 처음 속력 없이 놓을 때, 추의 최대 속력 <span class="nw">$v_{\max}$와</span> 처음 위치로부터 추의 변위 <span class="nw">$x_{\max}$를</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:657.8pt"><span class="fig" data-srcpage="2" data-clip="24.6,657.8,43.1,672.7"></span></div>
+<div class="f" style="left:553.1pt;top:657.8pt"><span class="fig" data-srcpage="2" data-clip="553.1,657.8,573.1,672.7"></span></div>
+<p class="x q" style="--b:668.6">줄의 오른쪽 끝이 도르래 2의 높이에 이르려면, 처음 위치에서 추가 가져야 하는 최소 속력 <span class="nw">$v_{\min}$은</span> 얼마인가? 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라.</p>
+
+<p class="x ft" style="--b:815.1">문제: 2쪽 중 2쪽</p>
+</div>
+</body></html>

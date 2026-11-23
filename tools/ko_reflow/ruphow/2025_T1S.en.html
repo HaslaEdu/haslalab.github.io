@@ -1,0 +1,204 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2025, problem T1 (unwinding tape) — solution — English edition on the original layout
+   (same geometry, stamps and baselines as the Korean edition 2025_T1S.html).
+   ORIGINAL: 4 A3 pages (841.9x1191.1pt) printed from the olympiad web page, same geometry as the 2026 T1S pilot:
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 1.20" (stamped), grey separator under the restated question, answer frames (3pt stroke #f3f6f9).
+   The panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX at
+   10.8pt (1.2em), text column x 63.4..777.8; question line after the badge starts at x 104.7 (pitch 15.9pt),
+   other paragraphs pitch 13.6pt, all left-aligned as in the original.
+   Display formulas are stamped (no Cyrillic in them) except the two A2 displays with E_k(отн) (retyped, отн -> rel;
+   margin-top:-6pt keeps a \dfrac line on the original baseline).
+   "Ответ:" -> "Answer:".
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:300.0pt"></div>
+<div class="bx cd" style="top:345.0pt;height:322.5pt"></div>
+<div class="bx cd" style="top:678.8pt;height:190.4pt"></div>
+<div class="bx cd" style="top:880.5pt;height:189.7pt"></div>
+<div class="bx cd" style="top:1081.5pt;height:75.0pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:86.2pt"></div>
+<div class="bx sp" style="top:383.2pt"></div>
+<div class="bx sp" style="top:717.0pt"></div>
+<div class="bx sp" style="top:918.8pt"></div>
+<div class="bx sp" style="top:1119.8pt"></div>
+<div class="bx ab" style="top:222.0pt;height:101.2pt"></div>
+<div class="bx ab" style="top:575.3pt;height:81.8pt"></div>
+<div class="bx ab" style="top:747.7pt;height:111.0pt"></div>
+<div class="bx ab" style="top:949.5pt;height:110.2pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">Take the potential energy $W_p$ of the system in the Earth's gravitational field to be zero in the initial position. Find the dependence of the potential energy $W_p$ on the mass $m$. Express the answer in terms of $M$, $\lambda$, $g$ and $m$.</p>
+<p class="x" style="--b:104.2">The length $x$ of the unwound part of the tape is:</p>
+<div class="f" style="left:387.7pt;top:116.6pt"><span class="fig" data-srcpage="1" data-clip="387.7,116.6,453.0,148.8"></span></div>
+<p class="x" style="--b:168.0">Then for the potential energy $W_p$ we obtain:</p>
+<div class="f" style="left:249.9pt;top:179.9pt"><span class="fig" data-srcpage="1" data-clip="249.9,179.9,590.8,213.4"></span></div>
+<p class="x an" style="--b:250.5">Answer:</p>
+<div class="f" style="left:369.4pt;top:262.6pt"><span class="fig" data-srcpage="1" data-clip="369.4,262.6,470.5,296.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:355.0pt"><span class="fig" data-srcpage="1" data-clip="62.5,355.0,101.8,375.4"></span></div>
+<p class="x q" style="--b:368.2">Express the kinetic energy $E_k$ of the system in terms of $m$ and $v$ for $m \gg \lambda R$ (here $R$ is the <b>unknown</b> radius of the cylinder).</p>
+<p class="x" style="--b:401.2">Only the cylinder and the part of the tape on it have kinetic energy. This system is a uniform thin-walled cylinder of mass $m$. From König's theorem we have:</p>
+<p class="x c" style="--b:446.2;margin-top:-6pt">$E_k = \dfrac{mv^2}{2} + E_{k(\mathrm{rel})}.$</p>
+<p class="x" style="--b:478.5">where $E_{k(\mathrm{rel})}$ is the kinetic energy of the system in the reference frame attached to its centre of mass.</p>
+<p class="x" style="--b:507.0">Since the tape is inextensible, the point $O$ where its vertical part touches the cylinder is at rest. Then the angular velocity of the cylinder is $\omega = v/R$, where $R$ is the radius of the cylinder. Hence, in the centre-of-mass frame we have:</p>
+<p class="x c" style="--b:552.8;margin-top:-6pt">$E_{k(\mathrm{rel})} = \dfrac{m\omega^2R^2}{2} = \dfrac{mv^2}{2} \Rightarrow E_k = mv^2.$</p>
+<p class="x an" style="--b:603.8">Answer:</p>
+<div class="f" style="left:395.9pt;top:614.9pt"><span class="fig" data-srcpage="1" data-clip="395.9,614.9,444.3,631.8"></span></div>
+
+<div class="f" style="left:62.5pt;top:688.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,688.8,101.8,709.2"></span></div>
+<p class="x q" style="--b:701.9">Obtain the dependence of the speed $v$ of the cylinder axis on the mass $m$. Express the answer in terms of $M$, $\lambda$, $g$ and $m$.</p>
+<p class="x" style="--b:735.0">From the results of parts $\mathrm{A1}$ and $\mathrm{A2}$ we find:</p>
+<p class="x an" style="--b:776.2">Answer:</p>
+<div class="f" style="left:364.7pt;top:776.8pt"><span class="fig" data-srcpage="1" data-clip="364.7,776.8,476.5,834.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:889.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,889.8,101.8,910.2"></span></div>
+<p class="x q" style="--b:903.7">Find the dependence of the momentum $p$ of the system on the mass $m$. Express the answer in terms of $M$, $\lambda$, $g$ and $m$.</p>
+<p class="x" style="--b:936.8">The momentum of the system is $p = mv$, therefore:</p>
+<p class="x an" style="--b:978.0">Answer:</p>
+<div class="f" style="left:366.8pt;top:977.8pt"><span class="fig" data-srcpage="1" data-clip="366.8,977.8,474.2,1035.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:1091.6pt"><span class="fig" data-srcpage="1" data-clip="62.5,1091.6,101.8,1112.0"></span></div>
+<p class="x q" style="--b:1104.7">Find the dependence of the acceleration $a$ of the cylinder axis on the mass $m$. Express the answer in terms of $g$, $M$ and $m$.</p>
+<p class="x" style="--b:1137.8">For the acceleration of the cylinder axis we have:</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:222.0pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:267.0pt;height:317.2pt"></div>
+<div class="bx cd" style="top:595.5pt;height:240.7pt"></div>
+<div class="bx cd" style="top:847.5pt;height:309.0pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:305.2pt"></div>
+<div class="bx sp" style="top:647.2pt"></div>
+<div class="bx sp" style="top:899.2pt"></div>
+<div class="bx ab" style="top:141.0pt;height:104.2pt"></div>
+<div class="bx ab" style="top:472.5pt;height:101.2pt"></div>
+<div class="bx ab" style="top:721.5pt;height:104.2pt"></div>
+</div>
+<div class="f" style="left:331.7pt;top:32.1pt"><span class="fig" data-srcpage="2" data-clip="331.7,32.1,509.0,66.4"></span></div>
+<p class="x" style="--b:84.8">Thus:</p>
+<div class="f" style="left:302.8pt;top:96.6pt"><span class="fig" data-srcpage="2" data-clip="302.8,96.6,537.9,132.0"></span></div>
+<p class="x an" style="--b:169.5">Answer:</p>
+<div class="f" style="left:375.3pt;top:182.1pt"><span class="fig" data-srcpage="2" data-clip="375.3,182.1,465.4,217.5"></span></div>
+
+<div class="f" style="left:62.5pt;top:277.0pt"><span class="fig" data-srcpage="2" data-clip="62.5,277.0,101.8,297.4"></span></div>
+<p class="x q" style="--b:290.2">Find the dependence of the tension $T_1$ of the tape at the point where it is attached to the vertical wall on the mass $m$. Express the answer in terms of $g$, $M$ and $m$.</p>
+<p class="x" style="--b:323.2">From the theorem on the motion of the centre of mass:</p>
+<div class="f" style="left:383.0pt;top:336.0pt"><span class="fig" data-srcpage="2" data-clip="383.0,336.0,458.7,367.8"></span></div>
+<p class="x" style="--b:387.0">Thus:</p>
+<div class="f" style="left:219.8pt;top:386.9pt"><span class="fig" data-srcpage="2" data-clip="219.8,386.9,621.0,444.7"></span></div>
+<p class="x" style="--b:459.8">Substituting $v$, we find:</p>
+<p class="x an" style="--b:501.0">Answer:</p>
+<div class="f" style="left:358.0pt;top:512.1pt"><span class="fig" data-srcpage="2" data-clip="358.0,512.1,481.8,545.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:605.6pt"><span class="fig" data-srcpage="2" data-clip="62.5,605.6,101.8,626.0"></span></div>
+<p class="x q" style="--b:618.7">Find the dependence of the tension $T_O$ of the tape at the point where the vertical part of the tape touches the cylinder on the mass $m$. Express the answer in terms of $g$, $M$ and $m$.</p>
+<p class="x" style="--b:665.2">Since the vertical part of the tape is at rest, for its tension at the point $O$ we have:</p>
+<div class="f" style="left:307.1pt;top:677.1pt"><span class="fig" data-srcpage="2" data-clip="307.1,677.1,533.6,712.5"></span></div>
+<p class="x an" style="--b:750.0">Answer:</p>
+<div class="f" style="left:367.2pt;top:761.8pt"><span class="fig" data-srcpage="2" data-clip="367.2,761.8,473.5,797.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:857.6pt"><span class="fig" data-srcpage="2" data-clip="62.5,857.6,101.8,878.0"></span></div>
+<p class="x q" style="--b:870.7">Write down the condition relating the tension $T_O$, the speed $v$ and the linear density $\lambda$ under which the tape does not come off the cylinder surface. Assume that the tape tension is constant along the whole first turn of the tape around the cylinder. Also assume that $v^2 \gg gR$.</p>
+<p class="x" style="--b:917.2">Let us go to the translationally moving reference frame attached to the cylinder axis. In this frame the elements of the tape move along a circle of radius $R$ with speed $v$. They are acted on by the tension force $T$ of the tape, friction forces, the normal reaction force of the surface, and also gravity and the inertial force that arises from the transition to a non-inertial reference frame.</p>
+<p class="x" style="--b:971.4">The normal acceleration of the tape elements is $a_n = v^2/R$. Since $v^2 \gg gR$, and the acceleration of the cylinder axis is of the same order as $g$, gravity and the inertial force can be neglected, because $a_n \gg g$.</p>
+<p class="x" style="--b:1011.8">Consider an element of the tape on the surface of the cylinder subtending an angle $d\varphi$. Let the normal reaction force acting on it be $dN$, and let the tension of the tape on this section be $T$. Then Newton's second law for this element of the tape, projected onto the normal direction, gives:</p>
+<div class="f" style="left:319.5pt;top:1037.1pt"><span class="fig" data-srcpage="2" data-clip="319.5,1037.1,521.3,1070.6"></span></div>
+<p class="x" style="--b:1089.8">The condition of no detachment is $dN &gt; 0$. Then we have:</p>
+<div class="f" style="left:398.4pt;top:1100.9pt"><span class="fig" data-srcpage="2" data-clip="398.4,1100.9,442.3,1116.4"></span></div>
+<p class="x" style="--b:1133.2">But since $T \approx T_O$:</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:93.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:138.8pt;height:247.4pt"></div>
+<div class="bx cd" style="top:397.5pt;height:360.7pt"></div>
+<div class="bx cd" style="top:769.5pt;height:190.5pt"></div>
+<div class="bx cd" style="top:971.2pt;height:185.3pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:177.0pt"></div>
+<div class="bx sp" style="top:435.8pt"></div>
+<div class="bx sp" style="top:807.8pt"></div>
+<div class="bx sp" style="top:1023.0pt"></div>
+<div class="bx ab" style="top:33.7pt;height:83.3pt"></div>
+<div class="bx ab" style="top:273.7pt;height:102.0pt"></div>
+<div class="bx ab" style="top:466.5pt;height:81.8pt"></div>
+<div class="bx ab" style="top:556.5pt;height:81.0pt"></div>
+<div class="bx ab" style="top:645.7pt;height:102.0pt"></div>
+<div class="bx ab" style="top:838.5pt;height:111.0pt"></div>
+</div>
+<p class="x an" style="--b:62.2">Answer:</p>
+<div class="f" style="left:397.4pt;top:73.4pt"><span class="fig" data-srcpage="3" data-clip="397.4,73.4,442.8,90.3"></span></div>
+
+<div class="f" style="left:62.5pt;top:148.0pt"><span class="fig" data-srcpage="3" data-clip="62.5,148.0,101.8,168.4"></span></div>
+<p class="x q" style="--b:161.9">At what value $m_c$ does the tape start to come off the surface of the cylinder? Express the answer in terms of $M$.</p>
+<p class="x" style="--b:195.0">Let us find the values of $m$ for which the no-detachment condition holds:</p>
+<div class="f" style="left:275.3pt;top:206.9pt"><span class="fig" data-srcpage="3" data-clip="275.3,206.9,565.4,242.2"></span></div>
+<p class="x" style="--b:261.0">Thus:</p>
+<p class="x an" style="--b:302.2">Answer:</p>
+<div class="f" style="left:395.4pt;top:315.0pt"><span class="fig" data-srcpage="3" data-clip="395.4,315.0,444.2,347.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:407.6pt"><span class="fig" data-srcpage="3" data-clip="62.5,407.6,101.8,428.0"></span></div>
+<p class="x q" style="--b:420.7">Find the values $T_1(m_c)$, $T_O(m_c)$ and $a(m_c)$. Express the answers in terms of $M$ and $g$.</p>
+<p class="x" style="--b:453.8">Substituting $m_c$, we obtain:</p>
+<p class="x an" style="--b:495.0">Answer:</p>
+<div class="f" style="left:395.3pt;top:505.9pt"><span class="fig" data-srcpage="3" data-clip="395.3,505.9,445.4,520.8"></span></div>
+<p class="x an" style="--b:585.0">Answer:</p>
+<div class="f" style="left:387.2pt;top:595.9pt"><span class="fig" data-srcpage="3" data-clip="387.2,595.9,453.5,610.9"></span></div>
+<p class="x an" style="--b:674.2">Answer:</p>
+<div class="f" style="left:383.8pt;top:687.8pt"><span class="fig" data-srcpage="3" data-clip="383.8,687.8,456.2,720.5"></span></div>
+
+<div class="f" style="left:62.5pt;top:779.6pt"><span class="fig" data-srcpage="3" data-clip="62.5,779.6,101.8,800.0"></span></div>
+<p class="x q" style="--b:792.7">Find the value $v(m_c)$. Express the answer in terms of $M$, $g$ and $\lambda$.</p>
+<p class="x" style="--b:825.8">After substituting $m_c$ we obtain:</p>
+<p class="x an" style="--b:867.0">Answer:</p>
+<div class="f" style="left:379.7pt;top:867.6pt"><span class="fig" data-srcpage="3" data-clip="379.7,867.6,461.5,925.5"></span></div>
+
+<div class="f" style="left:62.5pt;top:981.3pt"><span class="fig" data-srcpage="3" data-clip="62.5,981.3,101.8,1001.7"></span></div>
+<p class="x q" style="--b:994.4">What values can $v(m_c)$ take for a fixed length $L$ of the tape, if by that moment the tape has not yet unwound completely? Express the answer in terms of $g$ and $L$.</p>
+<p class="x" style="--b:1041.7">Since the tape has not unwound completely by the moment of detachment, its mass is not less than $M(1 - 1/\sqrt{3})$ and not more than $M$. Then its linear density lies within the range:</p>
+<div class="f" style="left:357.5pt;top:1067.1pt"><span class="fig" data-srcpage="3" data-clip="357.5,1067.1,484.4,1102.5"></span></div>
+<p class="x" style="--b:1121.2">Thus:</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:120.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx ab" style="top:33.7pt;height:110.3pt"></div>
+</div>
+<p class="x an" style="--b:62.2">Answer:</p>
+<div class="f" style="left:351.1pt;top:62.1pt"><span class="fig" data-srcpage="4" data-clip="351.1,62.1,489.6,122.2"></span></div>
+</div>
+</body></html>

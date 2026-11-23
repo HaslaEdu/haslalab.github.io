@@ -63,7 +63,11 @@ for (const item of published) {
     assert.equal(qa.page_count_matches_source, true);
     assert.equal(qa.page_sizes_match_source, true);
     assert.equal(qa.figures_logos_and_pure_math_stamped_from_source, true);
-    assert.ok(qa.hangul_characters > 0);
+    // Korean editions carry Hangul; English editions (RuPhO, shown beside the Russian original) carry no Cyrillic
+    if (item.language === 'en') {
+      assert.ok(qa.latin_characters > 0, item.file);
+      assert.equal(qa.cyrillic_characters, 0, item.file);
+    } else assert.ok(qa.hangul_characters > 0);
     assert.ok(fs.existsSync(path.join(root, qa.html_source)), qa.html_source);
     assert.ok(fs.existsSync(path.join(root, qa.builder)), qa.builder);
     assert.equal(qa.visual_review.reviewed, true);

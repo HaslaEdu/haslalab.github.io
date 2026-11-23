@@ -1,0 +1,172 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2022, problem T2 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2022_T2S.html).
+   ORIGINAL: 3 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same style as 2022_T1S / the 2026
+   pilot): beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 0.60" (stamped), grey separator under the restated question; no answer frames in this booklet.
+   The panel, cards and separators are redrawn from the original's vector paths (.bx inside the static .dc wrapper so
+   check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX at 10.8pt (1.2em),
+   text column x 63.4..777.8; question line after the badge starts at x 104.7 (A10: 109.4), pitch 13.6pt
+   (two-line questions A7: 15.8pt), left-aligned. All display formulas are stamped (none contains Cyrillic).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt}
+.q10{text-indent:46.0pt}
+.l2{--l:15.8pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.cb{border-radius:0 0 3.75pt 3.75pt}
+.ct{border-radius:3.75pt 3.75pt 0 0}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:295.4pt"></div>
+<div class="bx cd" style="top:340.5pt;height:158.3pt"></div>
+<div class="bx cd" style="top:510.0pt;height:188.2pt"></div>
+<div class="bx cd" style="top:709.5pt;height:188.3pt"></div>
+<div class="bx cd ct" style="top:909.0pt;height:247.5pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:378.8pt"></div>
+<div class="bx sp" style="top:548.2pt"></div>
+<div class="bx sp" style="top:747.8pt"></div>
+<div class="bx sp" style="top:947.2pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,102.3,64.7"></span></div>
+<p class="x q" style="--b:56.9">Find the charges of the capacitors <span class="nw">$q_{1_0}$,</span> $q_{2_0}$ and $q_{3_0}$ at <span class="nw">$t \to 0$.</span></p>
+<p class="x" style="--b:90.0">Since the current through the resistors cannot be infinite, at the initial moment the charge is redistributed almost instantaneously between the plates of the second and the third capacitor; consequently, both of them will carry the same charge, while the first capacitor has no time to charge</p>
+<div class="f" style="left:402.8pt;top:114.4pt"><span class="fig" data-srcpage="1" data-clip="402.8,114.4,438.0,129.6"></span></div>
+<div class="f" style="left:389.6pt;top:154.9pt"><span class="fig" data-srcpage="1" data-clip="389.6,154.9,451.0,170.9"></span></div>
+<p class="x" style="--b:201.0">From Kirchhoff’s second law for the loop with the capacitors</p>
+<div class="f" style="left:401.1pt;top:211.9pt"><span class="fig" data-srcpage="1" data-clip="401.1,211.9,438.8,241.6"></span></div>
+<p class="x" style="--b:271.5">whence</p>
+<div class="f" style="left:382.6pt;top:281.3pt"><span class="fig" data-srcpage="1" data-clip="382.6,281.3,456.8,311.7"></span></div>
+
+<div class="f" style="left:62.0pt;top:349.9pt"><span class="fig" data-srcpage="1" data-clip="62.0,349.9,102.3,371.4"></span></div>
+<p class="x q" style="--b:363.7">Find the charges of the capacitors <span class="nw">$q_{1_\infty}$,</span> $q_{2_\infty}$ and $q_{3_\infty}$ at <span class="nw">$t \to \infty$.</span></p>
+<p class="x" style="--b:396.8">After an infinitely long time, when the redistribution of charges has stopped, the currents in all elements are zero. Therefore</p>
+<div class="f" style="left:386.6pt;top:407.6pt"><span class="fig" data-srcpage="1" data-clip="386.6,407.6,453.2,422.9"></span></div>
+<p class="x" style="--b:453.8">The voltage drops only across the third capacitor, therefore</p>
+<div class="f" style="left:397.0pt;top:462.8pt"><span class="fig" data-srcpage="1" data-clip="397.0,462.8,443.4,480.6"></span></div>
+
+<div class="f" style="left:62.0pt;top:519.5pt"><span class="fig" data-srcpage="1" data-clip="62.0,519.5,102.3,541.0"></span></div>
+<p class="x q" style="--b:533.2">Find the amount of heat <span class="nw">$Q_0$</span> released in the system during the time <span class="nw">$t \to 0$.</span></p>
+<p class="x" style="--b:566.2">Let us write the law of conservation of energy for the system during the redistribution of charges at the initial moment</p>
+<div class="f" style="left:311.1pt;top:577.4pt"><span class="fig" data-srcpage="1" data-clip="311.1,577.4,529.1,608.7"></span></div>
+<p class="x" style="--b:638.2">whence</p>
+<div class="f" style="left:393.3pt;top:649.4pt"><span class="fig" data-srcpage="1" data-clip="393.3,649.4,446.2,680.7"></span></div>
+
+<div class="f" style="left:62.0pt;top:719.0pt"><span class="fig" data-srcpage="1" data-clip="62.0,719.0,102.3,740.5"></span></div>
+<p class="x q" style="--b:732.7">Find the amount of heat <span class="nw">$Q_\infty$</span> released in the system during the time <span class="nw">$t \to \infty$.</span></p>
+<p class="x" style="--b:765.8">From the law of conservation of energy for the whole transient process</p>
+<div class="f" style="left:324.9pt;top:776.9pt"><span class="fig" data-srcpage="1" data-clip="324.9,776.9,515.2,808.2"></span></div>
+<p class="x" style="--b:837.8">whence</p>
+<div class="f" style="left:391.4pt;top:848.9pt"><span class="fig" data-srcpage="1" data-clip="391.4,848.9,447.8,880.2"></span></div>
+
+<div class="f" style="left:62.0pt;top:918.5pt"><span class="fig" data-srcpage="1" data-clip="62.0,918.5,102.3,940.0"></span></div>
+<p class="x q" style="--b:932.2">From Kirchhoff’s first law written for node <span class="nw">$A$,</span> express $I_2$ in terms of <span class="nw">$I_1$,</span> <span class="nw">$q_1$,</span> $R$ and <span class="nw">$C$.</span></p>
+<p class="x" style="--b:965.2">Kirchhoff’s second law for the loop with the capacitors gives</p>
+<div class="f" style="left:390.6pt;top:974.6pt"><span class="fig" data-srcpage="1" data-clip="390.6,974.6,448.5,1004.3"></span></div>
+<p class="x" style="--b:1034.2">whence</p>
+<div class="f" style="left:398.3pt;top:1045.1pt"><span class="fig" data-srcpage="1" data-clip="398.3,1045.1,441.9,1060.2"></span></div>
+<p class="x" style="--b:1090.5">From Kirchhoff’s first law for node <span class="nw">$A$</span></p>
+<div class="f" style="left:388.5pt;top:1100.6pt"><span class="fig" data-srcpage="1" data-clip="388.5,1100.6,451.7,1117.2"></span></div>
+<p class="x" style="--b:1146.8">the expression for the current through the second resistor</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:174.7pt"></div>
+<div class="bx cd" style="top:219.8pt;height:244.4pt"></div>
+<div class="bx cd" style="top:475.5pt;height:363.7pt"></div>
+<div class="bx cd" style="top:850.5pt;height:298.5pt"></div>
+<div class="bx sp" style="top:284.2pt"></div>
+<div class="bx sp" style="top:599.2pt"></div>
+<div class="bx sp" style="top:902.2pt"></div>
+</div>
+<div class="f" style="left:385.6pt;top:31.9pt"><span class="fig" data-srcpage="2" data-clip="385.6,31.9,454.6,47.7"></span></div>
+<p class="x" style="--b:77.2">Equating the voltage drops across the elements with index <span class="nw">$1$</span></p>
+<div class="f" style="left:393.6pt;top:85.3pt"><span class="fig" data-srcpage="2" data-clip="393.6,85.3,445.5,114.8"></span></div>
+<p class="x" style="--b:145.5">whence finally</p>
+<div class="f" style="left:368.1pt;top:155.8pt"><span class="fig" data-srcpage="2" data-clip="368.1,155.8,472.6,185.7"></span></div>
+
+<div class="f" style="left:62.0pt;top:229.2pt"><span class="fig" data-srcpage="2" data-clip="62.0,229.2,102.3,250.7"></span></div>
+<p class="x q" style="--b:242.9">From Kirchhoff’s second law written for loop <span class="nw">$ABCD$,</span> express $q_2$ in terms of <span class="nw">$I_1$,</span> <span class="nw">$q_1$,</span> $R$ and <span class="nw">$C$.</span></p>
+<p class="x" style="--b:264.6">Also find <span class="nw">$I_2$</span> by differentiating $q_2$ with respect to time. Express the answer in terms of <span class="nw">$\dfrac{dI_1}{dt}$,</span> <span class="nw">$I_1$,</span> $R$ and <span class="nw">$C$.</span></p>
+<div class="f" style="left:381.0pt;top:290.0pt"><span class="fig" data-srcpage="2" data-clip="381.0,290.0,461.0,319.6"></span></div>
+<p class="x" style="--b:349.5">substituting the results of the previous part</p>
+<div class="f" style="left:380.4pt;top:360.4pt"><span class="fig" data-srcpage="2" data-clip="380.4,360.4,459.8,376.2"></span></div>
+<p class="x" style="--b:405.8">Differentiating,</p>
+<div class="f" style="left:375.4pt;top:416.8pt"><span class="fig" data-srcpage="2" data-clip="375.4,416.8,464.2,446.3"></span></div>
+
+<div class="f" style="left:62.0pt;top:484.9pt"><span class="fig" data-srcpage="2" data-clip="62.0,484.9,102.3,506.4"></span></div>
+<p class="x q l2" style="--b:498.7">By equating the expressions for $I_2$ obtained in parts A5 and A6, show that the differential equation describing the dependence $q_1(t)$ has the following form</p>
+<div class="f" style="left:361.3pt;top:524.9pt"><span class="fig" data-srcpage="2" data-clip="361.3,524.9,479.4,556.6"></span></div>
+<p class="x" style="--b:586.5">Also express $\alpha$ and $\beta$ in terms of $R$ and <span class="nw">$C$.</span></p>
+<p class="x" style="--b:617.2">Equating,</p>
+<div class="f" style="left:341.0pt;top:627.5pt"><span class="fig" data-srcpage="2" data-clip="341.0,627.5,499.8,658.2"></span></div>
+<p class="x" style="--b:690.0">Whence</p>
+<div class="f" style="left:341.2pt;top:701.1pt"><span class="fig" data-srcpage="2" data-clip="341.2,701.1,499.5,732.8"></span></div>
+<div class="f" style="left:390.9pt;top:760.4pt"><span class="fig" data-srcpage="2" data-clip="390.9,760.4,449.3,776.7"></span></div>
+<div class="f" style="left:397.7pt;top:805.9pt"><span class="fig" data-srcpage="2" data-clip="397.7,805.9,442.6,820.2"></span></div>
+
+<div class="f" style="left:62.0pt;top:860.0pt"><span class="fig" data-srcpage="2" data-clip="62.0,860.0,102.3,881.5"></span></div>
+<p class="x q" style="--b:873.7">Find $\lambda_1$ and $\lambda_2$ satisfying the equation obtained in part A7. Express the answers in terms of $R$ and <span class="nw">$C$.</span></p>
+<p class="x" style="--b:889.5">Take the larger of the values as <span class="nw">$\lambda_1$.</span></p>
+<div class="f" style="left:390.0pt;top:911.0pt"><span class="fig" data-srcpage="2" data-clip="390.0,911.0,451.8,940.6"></span></div>
+<div class="f" style="left:384.8pt;top:968.1pt"><span class="fig" data-srcpage="2" data-clip="384.8,968.1,456.4,999.8"></span></div>
+<p class="x" style="--b:1029.8">Whence</p>
+<div class="f" style="left:356.4pt;top:1040.9pt"><span class="fig" data-srcpage="2" data-clip="356.4,1040.9,484.4,1057.2"></span></div>
+<p class="x" style="--b:1089.0">and finally</p>
+<div class="f" style="left:377.6pt;top:1101.8pt"><span class="fig" data-srcpage="2" data-clip="377.6,1101.8,462.0,1132.2"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:231.7pt"></div>
+<div class="bx cd" style="top:276.8pt;height:506.2pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:315.0pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="3" data-clip="62.0,43.2,102.3,64.7"></span></div>
+<p class="x q" style="--b:56.9">From the initial conditions find $A_1$ and <span class="nw">$A_2$.</span> Express the answers in terms of $C$ and <span class="nw">$\mathcal{E}$.</span></p>
+<p class="x" style="--b:90.0">For the moment <span class="nw">$t = 0$</span></p>
+<div class="f" style="left:378.1pt;top:100.9pt"><span class="fig" data-srcpage="3" data-clip="378.1,100.9,462.6,117.4"></span></div>
+<div class="f" style="left:357.0pt;top:143.3pt"><span class="fig" data-srcpage="3" data-clip="357.0,143.3,483.8,174.1"></span></div>
+<p class="x" style="--b:204.0">Whence</p>
+<div class="f" style="left:333.8pt;top:213.0pt"><span class="fig" data-srcpage="3" data-clip="333.8,213.0,505.5,247.2"></span></div>
+
+<div class="f" style="left:62.0pt;top:286.2pt"><span class="fig" data-srcpage="3" data-clip="62.0,286.2,106.8,307.7"></span></div>
+<p class="x q10" style="--b:299.9">Find the amounts of heat $Q_{R_1}$ and $Q_{R_2}$ released in the resistors during the time <span class="nw">$t \to \infty$.</span> Express the answers in terms of $C$ and <span class="nw">$\mathcal{E}$.</span></p>
+<p class="x" style="--b:333.0">Let us find the expression for the heat power released in the first resistor</p>
+<div class="f" style="left:314.3pt;top:344.1pt"><span class="fig" data-srcpage="3" data-clip="314.3,344.1,526.5,375.5"></span></div>
+<p class="x" style="--b:405.8">Hence</p>
+<div class="f" style="left:317.5pt;top:415.4pt"><span class="fig" data-srcpage="3" data-clip="317.5,415.4,523.2,460.9"></span></div>
+<p class="x" style="--b:492.0">Taking into account that <span class="nw">$\lambda_1;\ \lambda_2 &lt; 0$,</span> all three antiderivatives vanish at <span class="nw">$t \to \infty$.</span> Thus</p>
+<div class="f" style="left:254.9pt;top:502.4pt"><span class="fig" data-srcpage="3" data-clip="254.9,502.4,584.2,547.2"></span></div>
+<p class="x" style="--b:579.0">Hence</p>
+<div class="f" style="left:390.7pt;top:590.1pt"><span class="fig" data-srcpage="3" data-clip="390.7,590.1,448.5,620.7"></span></div>
+<p class="x" style="--b:651.0">At the same time</p>
+<div class="f" style="left:346.5pt;top:662.1pt"><span class="fig" data-srcpage="3" data-clip="346.5,662.1,492.8,693.5"></span></div>
+<p class="x" style="--b:723.0">whence</p>
+<div class="f" style="left:388.0pt;top:734.1pt"><span class="fig" data-srcpage="3" data-clip="388.0,734.1,451.5,764.7"></span></div>
+</div>
+</body></html>

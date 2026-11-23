@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T2 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2021_T2S.html).
+   ORIGINAL: 1 A3 page (841.9x1191.1pt) printed from the olympiad web page (same layout as 2021_T1S / the 2026 W
+   pilot): beige page panel, one white card (x 43.5..798, radius 3.75pt), blue badge "A1 10.00" (stamped), grey
+   separator under the restated question, answer frame (3pt stroke #f3f6f9), all redrawn as CSS boxes in the static
+   .dc wrapper. Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX at 10.8pt (1.2em), text
+   column x 63.4..777.8, left-aligned as in the original; question line after the badge starts at x 108.2.
+   Stamped: the figure (raster, Latin/Greek labels only), the badge and every display formula (none has Cyrillic).
+   Original typo "неуйстойчиво" (неустойчиво) translated by sense; "cos(φ)" printed in math italic is typeset as cos.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{left:108.2pt;width:669.6pt}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1108.4pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx ab" style="top:1020.7pt;height:111pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,105.2,64.8"></span></div>
+<p class="x q" style="--b:56.9">For which values of $F$ can the rod make a full revolution about the axis of rotation?</p>
+<p class="x" style="--b:92.2">Let the angle between the rod and the vertical in the equilibrium position be $\varphi$, measured from the lowest position of the particle. Then the equilibrium condition gives the expression for the force $F$</p>
+<div class="f" style="left:388.3pt;top:117.1pt"><span class="fig" data-srcpage="1" data-clip="388.3,117.1,452.4,130.9"></span></div>
+<p class="x" style="--b:162.8">Note that $0 \le \varphi \le \frac{\pi}{2}$, since otherwise the equilibrium position is unstable.</p>
+<p class="x" style="--b:178.5">Let us analyse the subsequent motion. Let $\alpha$ be the angle of rotation of the rod from its initial position, and $L$ its length. From Newton's second law for the tangential acceleration we obtain</p>
+<div class="f" style="left:308.8pt;top:202.6pt"><span class="fig" data-srcpage="1" data-clip="308.8,202.6,531.9,231.4"></span></div>
+<div class="f" style="left:306.8pt;top:236.3pt"><span class="fig" data-srcpage="1" data-clip="306.8,236.3,534.8,603.8"></span></div>
+<p class="x" style="--b:621.0">It follows from this expression that for $0 \le \alpha \le 2\varphi$ the particle speeds up, for $2\varphi &lt; \alpha \le \pi$ it slows down, and for $\pi &lt; \alpha \le 2(\pi + \varphi)$ it speeds up again. Let us write the law of conservation of mechanical energy at an arbitrary moment of time</p>
+<div class="f" style="left:306.5pt;top:646.8pt"><span class="fig" data-srcpage="1" data-clip="306.5,646.8,533.5,676.2"></span></div>
+<p class="x" style="--b:705.8">If the particle stops at some $\alpha &lt; \pi$, it will afterwards move in the region bounded by its two positions of zero velocity. If, however, the particle overcomes this barrier, then for <span class="nw">$\alpha &gt; \pi$</span> its kinetic energy will increase. Thus, a necessary condition for a full revolution is a nonzero velocity at the moment $\alpha = \pi$, that is</p>
+<div class="f" style="left:352.9pt;top:744.1pt"><span class="fig" data-srcpage="1" data-clip="352.9,744.1,487.8,772.9"></span></div>
+<p class="x" style="--b:801.8">Express $\cos(\varphi)$ from the first relation</p>
+<div class="f" style="left:365.5pt;top:815.0pt"><span class="fig" data-srcpage="1" data-clip="365.5,815.0,475.8,850.5"></span></div>
+<p class="x" style="--b:882.8">From the last two relations we obtain</p>
+<div class="f" style="left:371.0pt;top:893.3pt"><span class="fig" data-srcpage="1" data-clip="371.0,893.3,471.2,923.0"></span></div>
+<p class="x" style="--b:951.8">It is also clear from the equilibrium condition of the rod that</p>
+<div class="f" style="left:400.3pt;top:963.1pt"><span class="fig" data-srcpage="1" data-clip="400.3,963.1,440.4,977.0"></span></div>
+<p class="x" style="--b:1008.0">and the final range of values of $F$ is</p>
+<p class="x an" style="--b:1049.2">Answer:</p>
+<div class="f" style="left:363.2pt;top:1057.6pt"><span class="fig" data-srcpage="1" data-clip="363.2,1057.6,476.5,1103.8"></span></div>
+</div>
+</body></html>

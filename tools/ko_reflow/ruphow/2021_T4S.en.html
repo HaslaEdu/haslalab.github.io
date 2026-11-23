@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2021, problem T4 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2021_T4S.html).
+   ORIGINAL: 1 A3 page (841.9x1191.1pt) printed from the olympiad web page (as the 2026 T1 solution pilot):
+   beige page panel (33.8..807.8), white card (x 43.5..798, radius 3.75pt), blue badge "A1 10.00" (stamped), grey
+   separator under the restated question, answer frame (3pt stroke #f3f6f9). Panel, card, separator and answer
+   frame are redrawn from the original's vector paths (.bx inside the static .dc wrapper so check.py ignores them).
+   Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX 10.8pt (1.2em), text column
+   x 63.4..777.8; the question line after the badge starts at x 108.2; paragraphs pitch 13.5pt, left-aligned.
+   Display formulas and the two raster figures (Latin labels only) are stamped; "E_x < 0 и E_y > 0" is retyped
+   (и -> and). "Ответ:" -> "Answer:".
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:47.6pt}   /* the original's question span starts with a space: ink at x 111.0 */
+.l2{--l:14.25pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:953.2pt"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx ab" style="top:879pt;height:97.5pt"></div>
+</div>
+<div class="f" style="left:62.0pt;top:43.2pt"><span class="fig" data-srcpage="1" data-clip="62.0,43.2,105.2,64.8"></span></div>
+<p class="x q" style="--b:56.9">Give the signs of the projections $E_x$ and $E_y$ of the electric field at the centre of the plate, and find the ratio of their magnitudes.</p>
+<p class="x" style="--b:90.0">We use the local Ohm’s law</p>
+<div class="f" style="left:402.9pt;top:104.2pt"><span class="fig" data-srcpage="1" data-clip="402.9,104.2,437.5,132.3"></span></div>
+<p class="x" style="--b:165.0">To determine the signs and the ratio of the projections of the electric field, it is enough to find the same relations between the projections of the current density. For this we use the method of superposition of currents.</p>
+<p class="x" style="--b:205.5">Let a current $2I$ flow between the vertices $DB$, a current $5I$ between $EA$, and a current $8I$ between $BA$.</p>
+<div class="f" style="left:231.8pt;top:216.8pt"><span class="fig" data-srcpage="1" data-clip="231.8,216.8,609.8,340.5"></span></div>
+<p class="x l2" style="--b:357.8">By symmetry it is clear that in the first two cases <span class="nw">$j_y &gt; 0$, $j_x = 0$,</span> and in the third case <span class="nw">$j_x &lt; 0$</span> and <span class="nw">$j_y = 0$.</span> Since the electric field obeys the superposition principle, so does the current density vector. Thus</p>
+<p class="x c" style="--b:395.2">$E_x &lt; 0 \quad \text{and} \quad E_y &gt; 0$</p>
+<p class="x" style="--b:432.0">When a source is connected to two vertices, the current lines do not change as the current is increased. Therefore we introduce the proportionality coefficient between the magnitude of the current density at the centre and the current</p>
+<div class="f" style="left:403.9pt;top:456.4pt"><span class="fig" data-srcpage="1" data-clip="403.9,456.4,436.2,470.5"></span></div>
+<p class="x" style="--b:501.8">For different connections the coefficient $k$ is different. It is the same in the first and the second connection; we denote it by $k_1$. The coefficient in the third connection we denote by $k_2$. Thus</p>
+<div class="f" style="left:387.5pt;top:526.1pt"><span class="fig" data-srcpage="1" data-clip="387.5,526.1,453.2,556.5"></span></div>
+<p class="x" style="--b:574.5">Let us find the relation between $k_1$ and $k_2$. A connection to the vertices $A$ and $C$ is equivalent to the superposition of the connections to $AB$ and $BC$, for which the coefficients are equal to $k_2$.</p>
+<p class="x" style="--b:601.5">Thus</p>
+<div class="f" style="left:378.5pt;top:612.4pt"><span class="fig" data-srcpage="1" data-clip="378.5,612.4,462.2,644.2"></span></div>
+<p class="x" style="--b:675.0">Finally we have</p>
+<div class="f" style="left:306.8pt;top:677.2pt"><span class="fig" data-srcpage="1" data-clip="306.8,677.2,534.8,871.5"></span></div>
+<p class="x an" style="--b:907.5">Answer:</p>
+<div class="f" style="left:387.5pt;top:918.0pt"><span class="fig" data-srcpage="1" data-clip="387.5,918.0,453.2,949.4"></span></div>
+</div>
+</body></html>

@@ -279,7 +279,9 @@ def korean(out, bad, practical):
                 if part in t['f']:
                     # A diagram/layout edition can accompany the Korean
                     # translation while the source manifest keeps the original.
-                    if en:
+                    if en and comp in SIDE_BY_SIDE:
+                        english_beside_original(t['f'][part], en)
+                    elif en:
                         english_edition(t['f'][part], en)
                     t['f'][part]['ko'] = ko
                     if ko.get('containsSolutions'):
@@ -300,6 +302,18 @@ def korean(out, bad, practical):
                     continue
                 if title:
                     t.setdefault('pk', []).append([part, title])
+
+
+# Competitions whose English editions are shown beside the original (sim/compare.html): the original paper and
+# solution stay the part's own files and the English edition is added as slot.en.
+SIDE_BY_SIDE = ('rupho', 'ruphow', 'ruphox', 'ruphoy')
+
+
+def english_beside_original(slot, edition):
+    """Add an English edition without replacing the original: slot.en = {paper, sol}, papers.en = the English paper."""
+    slot['en'] = {key: value for key, value in edition.items() if key in ('paper', 'sol') and value}
+    if edition.get('paper'):
+        slot.setdefault('papers', {})['en'] = edition['paper']
 
 
 def english_edition(slot, edition):

@@ -1,0 +1,129 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* RuPhO W ("Road to IPhO") 2026, problem T2 — English edition on the original layout (same geometry, stamps and
+   baselines as the Korean edition 2026_T2.html).
+   ORIGINAL: 2 A4 pages (595.3x841.9pt), LaTeX with PT Serif 10pt body (-> 'Times New Roman',serif), inline math
+   Computer Modern; line pitch 11.95pt. Text column x 51.0..547.1 (width 496.1pt), paragraph indent 15pt.
+   Header "Road to IPhO" (PT Sans 39.9pt grey, kept as printed: stamped). Title PT Serif 17.9pt centred, b 73.1.
+   Part headings PT Serif Bold 12pt. Sub-questions in black frames (x 15.17..580.11, stroke 1.99pt, redrawn as .bx
+   inside the static .dc wrapper so check.py ignores them); labels A1..B8 and the points at the right stamped.
+   Footer "Условие: страница N из 2" (PT Sans 14.9pt, right edge 574.3) -> "Problem: page N of 2".
+   Part B intro beside the figure (axes x, y, omega: stamped) is a narrow column x 51.0..367.0.
+   Stamped displays: (x(t),y(t)) = ..., (x1,y1), (x2,y2), A r_1i / A r_2i, general solution (no Cyrillic in them).
+   Inline F_тр -> F_fr, v_отн -> v_rel (retyped).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3375*fs + 0.6pt   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em) */
+body{font-family:'Times New Roman',serif;font-size:10pt;line-height:11.95pt;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x{position:absolute;margin:0;left:51pt;width:496.1pt;--l:11.95pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 0.6pt);text-align:justify}
+.i{text-indent:15pt}
+.c{text-align:center}
+.q{left:50.8pt}
+.t{left:0;width:595.3pt;text-align:center;--fs:17.9pt;--l:21pt}
+.h{font-weight:bold;--fs:12pt;--l:14pt;text-align:left}
+.nr{width:316pt}
+.ft{font-family:Arial,sans-serif;--fs:14.9pt;--l:17pt;left:274.3pt;width:300pt;text-align:right;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs))}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box;border:1.99pt solid #000}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:226.42pt;width:566.93pt;height:47.87pt"></div>
+<div class="bx" style="left:14.18pt;top:282.26pt;width:566.93pt;height:35.85pt"></div>
+<div class="bx" style="left:14.18pt;top:358.51pt;width:566.93pt;height:35.92pt"></div>
+<div class="bx" style="left:14.18pt;top:552.02pt;width:566.93pt;height:24.89pt"></div>
+<div class="bx" style="left:14.18pt;top:584.89pt;width:566.93pt;height:23.96pt"></div>
+<div class="bx" style="left:14.18pt;top:741.54pt;width:566.93pt;height:36.03pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="1" data-clip="50.0,11.4,275.0,53.2"></span></div>
+<p class="x t" style="--b:73.1">Rotating Medium (11 points)</p>
+<p class="x i" style="--b:113.9">Most physical systems are not conservative because of the presence of dissipative forces. Friction is an example of such forces. In this problem we consider examples of such systems with the simplest case of friction, viscous friction.</p>
+<p class="x h" style="--b:169.9">Part A. Medium at rest (4 points)</p>
+<p class="x" style="--b:192.0">A particle of mass $m$ moves in a medium at rest, in which a viscous friction force <span class="nw">$\vec{F}_\mathrm{fr} = -\varepsilon m\vec{v}$</span> acts on it, where $\vec{v}$ is the velocity of the particle. The free-fall acceleration is $\vec{g}$; initially the particle was at the origin and had velocity $\vec{v}_0$.</p>
+
+<div class="f" style="left:25.1pt;top:231.3pt"><span class="fig" data-srcpage="1" data-clip="25.1,231.3,42.6,245.2"></span></div>
+<div class="f" style="left:553.6pt;top:231.3pt"><span class="fig" data-srcpage="1" data-clip="553.6,231.3,572.6,245.2"></span></div>
+<p class="x q" style="--b:241.6">Find the trajectory $\vec{r}(t)$ of this particle. Express the answer in vector form in terms of $\vec{v}_0$, $\vec{g}$, $\varepsilon$, or express the components of the vector $\vec{r}(t)$ in a Cartesian coordinate system as functions of time in terms of the components of the vectors $\vec{v}_0$, $\vec{g}$.</p>
+
+<div class="f" style="left:25.1pt;top:287.1pt"><span class="fig" data-srcpage="1" data-clip="25.1,287.1,42.6,301.0"></span></div>
+<div class="f" style="left:553.6pt;top:287.1pt"><span class="fig" data-srcpage="1" data-clip="553.6,287.1,572.6,301.0"></span></div>
+<p class="x q" style="--b:297.4">How does the power of energy losses $P(t)$, which is dissipated as heat, depend on time? Express the answer in terms of $\vec{v}_0$, $\vec{g}$, $\varepsilon$, $t$, $m$.</p>
+
+<p class="x i" style="--b:335.2">Now consider the motion of the particle in the absence of gravity, but now a rotating force of constant magnitude <span class="nw">$F_x = F_0\cos(\omega t)$</span>, <span class="nw">$F_y = F_0\sin(\omega t)$</span> acts on it.</p>
+
+<div class="f" style="left:25.1pt;top:363.4pt"><span class="fig" data-srcpage="1" data-clip="25.1,363.4,42.6,377.3"></span></div>
+<div class="f" style="left:553.6pt;top:363.4pt"><span class="fig" data-srcpage="1" data-clip="553.6,363.4,572.6,377.3"></span></div>
+<p class="x q" style="--b:373.7">Find the loss power $P$ dissipated as heat a long time <span class="nw">$t \gg 1/\varepsilon$</span> after the force has been switched on. Express the answer in terms of $F_0$, $\varepsilon$, $m$, $\omega$.</p>
+
+<div class="f" style="left:389.3pt;top:403.0pt"><span class="fig" data-srcpage="1" data-clip="389.3,403.0,531.5,548.9"></span></div>
+<p class="x h" style="--b:426.0">Part B. Rotating medium (7 points)</p>
+<p class="x nr" style="--b:447.8">A particle of mass $m$ is in a medium rotating with angular velocity $\omega$ about the vertical axis $z$; the free-fall acceleration is <span class="nw">$\vec{g} = -g\vec{e}_z$</span>, the friction force is <span class="nw">$\vec{F} = -\varepsilon m\vec{v}_\mathrm{rel}$</span>, where $\vec{v}_\mathrm{rel}$ is the velocity of the particle relative to the medium. At the initial moment the particle is at rest at the point with coordinates <span class="nw">$(x_0, y_0, z_0) = (r_0, 0, 0)$</span>.</p>
+
+<div class="f" style="left:25.1pt;top:557.3pt"><span class="fig" data-srcpage="1" data-clip="25.1,557.3,42.6,571.2"></span></div>
+<div class="f" style="left:553.6pt;top:557.3pt"><span class="fig" data-srcpage="1" data-clip="553.6,557.3,572.6,571.2"></span></div>
+<p class="x q" style="--b:567.6">Find the dependence $z(t)$. Express the answer in terms of $r_0$, $\varepsilon$, $g$.</p>
+
+<div class="f" style="left:25.1pt;top:589.8pt"><span class="fig" data-srcpage="1" data-clip="25.1,589.8,42.6,603.7"></span></div>
+<div class="f" style="left:553.6pt;top:589.8pt"><span class="fig" data-srcpage="1" data-clip="553.6,589.8,572.6,603.7"></span></div>
+<p class="x q" style="--b:600.1">Express $\ddot{x}$ and $\ddot{y}$ in terms of $x$, $y$, $\dot{x}$, $\dot{y}$, $\varepsilon$ and $\omega$.</p>
+
+<p class="x i" style="--b:625.9">It is known that the equations you have obtained have a solution of the form</p>
+<div class="f" style="left:182.9pt;top:636.8pt"><span class="fig" data-srcpage="1" data-clip="182.9,636.8,415.2,652.4"></span></div>
+<p class="x" style="--b:669.8">These functions are solutions for arbitrary values of $\varphi_0$; in particular, for <span class="nw">$\varphi_0 = 0$</span> and <span class="nw">$\varphi_0 = \pi/2$</span> we obtain</p>
+<div class="f" style="left:197.9pt;top:682.6pt"><span class="fig" data-srcpage="1" data-clip="197.9,682.6,400.2,717.1"></span></div>
+<p class="x" style="--b:730.5">There are two possible pairs of values of the parameters $(a, \Omega)$.</p>
+
+<div class="f" style="left:25.1pt;top:746.4pt"><span class="fig" data-srcpage="1" data-clip="25.1,746.4,42.6,760.3"></span></div>
+<div class="f" style="left:553.6pt;top:746.4pt"><span class="fig" data-srcpage="1" data-clip="553.6,746.4,572.6,760.3"></span></div>
+<p class="x q" style="--b:756.7">Using the solution $(x_1, y_1)$, obtain a system of equations from which the possible values of the constants $a$ and $\Omega$ can be determined. The answer may also contain $\varepsilon$, $\omega$.</p>
+
+<p class="x ft" style="--b:815.1">Problem: page 1 of 2</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:56.70pt;width:566.93pt;height:33.91pt"></div>
+<div class="bx" style="left:14.18pt;top:100.59pt;width:566.93pt;height:24.51pt"></div>
+<div class="bx" style="left:14.18pt;top:197.03pt;width:566.93pt;height:79.68pt"></div>
+<div class="bx" style="left:14.18pt;top:284.68pt;width:566.93pt;height:24.52pt"></div>
+<div class="bx" style="left:14.18pt;top:317.17pt;width:566.93pt;height:36.76pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="2" data-clip="50.0,11.4,275.0,53.2"></span></div>
+
+<div class="f" style="left:25.1pt;top:61.6pt"><span class="fig" data-srcpage="2" data-clip="25.1,61.6,42.6,75.5"></span></div>
+<div class="f" style="left:553.6pt;top:61.6pt"><span class="fig" data-srcpage="2" data-clip="553.6,61.6,572.6,75.5"></span></div>
+<p class="x q" style="--b:71.9">Solve the system of equations you have obtained and find the suitable pairs of values $(a_1, \Omega_1)$ and $(a_2, \Omega_2)$, where <span class="nw">$a_2 &gt; a_1$</span>. Express the answer in terms of $\varepsilon$, $\omega$.</p>
+
+<div class="f" style="left:25.1pt;top:105.9pt"><span class="fig" data-srcpage="2" data-clip="25.1,105.9,42.6,119.8"></span></div>
+<div class="f" style="left:553.6pt;top:105.9pt"><span class="fig" data-srcpage="2" data-clip="553.6,105.9,572.6,119.8"></span></div>
+<p class="x q" style="--b:116.2">Find approximate values of these quantities in the cases $\varepsilon \ll \omega$ and <span class="nw">$\varepsilon \gg \omega$</span>.</p>
+
+<p class="x i" style="--b:142.2">In what follows we shall use the notation</p>
+<div class="f" style="left:122.1pt;top:153.0pt"><span class="fig" data-srcpage="2" data-clip="122.1,153.0,476.0,168.6"></span></div>
+<p class="x" style="--b:186.0">Here the index $i$ can take two values $1, 2$, corresponding to the two possible values of $(a, \Omega)$.</p>
+
+<div class="f" style="left:25.1pt;top:202.3pt"><span class="fig" data-srcpage="2" data-clip="25.1,202.3,42.6,216.2"></span></div>
+<div class="f" style="left:553.6pt;top:202.3pt"><span class="fig" data-srcpage="2" data-clip="553.6,202.3,572.6,216.2"></span></div>
+<p class="x q" style="--b:212.6">An arbitrary solution of the system of equations has the form</p>
+<div class="f" style="left:206.3pt;top:225.3pt"><span class="fig" data-srcpage="2" data-clip="206.3,225.3,391.4,239.1"></span></div>
+<p class="x q" style="--b:256.5">Using the initial conditions given in the introduction to this part, express $A$, $B$, $C$ and $D$ in terms of $r_0$, $a_1$, $a_2$, $\Omega_1$ and $\Omega_2$.</p>
+
+<div class="f" style="left:25.1pt;top:290.0pt"><span class="fig" data-srcpage="2" data-clip="25.1,290.0,42.6,303.9"></span></div>
+<div class="f" style="left:553.6pt;top:290.0pt"><span class="fig" data-srcpage="2" data-clip="553.6,290.0,572.6,303.9"></span></div>
+<p class="x q" style="--b:300.3">Sketch qualitatively the trajectory of the particle in the $xy$ plane for the cases $\varepsilon \ll \omega$ and <span class="nw">$\varepsilon \gg \omega$</span>.</p>
+
+<div class="f" style="left:25.1pt;top:322.1pt"><span class="fig" data-srcpage="2" data-clip="25.1,322.1,42.6,336.0"></span></div>
+<div class="f" style="left:553.6pt;top:322.1pt"><span class="fig" data-srcpage="2" data-clip="553.6,322.1,572.6,336.0"></span></div>
+<p class="x q" style="--b:332.4">Find the power of energy losses $P$ dissipated as heat at the moment when the particle is at the point with coordinates <span class="nw">$\vec{r} = (x, y, z)$</span> and moves with velocity <span class="nw">$\vec{v} = (v_x, v_y, v_z)$</span>.</p>
+
+<p class="x ft" style="--b:815.1">Problem: page 2 of 2</p>
+</div>
+</body></html>
