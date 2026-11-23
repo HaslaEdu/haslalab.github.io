@@ -139,7 +139,7 @@ test('the Learn bar: today\'s problems, roadmap, courses, search, lab, in that o
       assert.deepEqual(Array.from(bar('learn',hash)).filter(([,x])=>x).map(([h])=>h),[on],hash);
     for(const hash of ['#/workshop/make','#/workshop/create'])assert.deepEqual(Array.from(bar('learn',hash)).filter(([,x])=>x),[],'the makers left the Learn bar: '+hash);
     const ws=bar('workshop','#/workshop/storage');
-    assert.deepEqual(Array.from(ws,([href])=>href),['#/workshop','#/workshop/make','#/workshop/create','#/workshop/storage']);
+    assert.deepEqual(Array.from(ws,([href])=>href),['#/workshop','#/workshop/make','#/workshop/draw','#/workshop/create','#/workshop/storage']);
     assert.deepEqual(Array.from(ws).filter(([,x])=>x).map(([h])=>h),['#/workshop/storage']);
   }
   const oly=bar('olympiad','#/ipho/2019');
@@ -356,8 +356,9 @@ test('the Workshop: a short page of cards, two plain lists, the makers moved fro
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewWorkshop()');
-    assert.deepEqual([...html.matchAll(/<a class="ws-card" href="([^"]+)"/g)].map(m=>m[1]),['#/workshop/make','#/workshop/create','#/workshop/storage']);
-    assert.equal((html.match(/class="ws-card ws-soon"/g)||[]).length,2,'the figure editor and the lab tools are marked as coming');
+    assert.deepEqual([...html.matchAll(/<a class="ws-card" href="([^"]+)"/g)].map(m=>m[1]),['#/workshop/make','#/workshop/create','#/workshop/storage','#/workshop/draw']);
+    assert.equal((html.match(/class="ws-card ws-soon"/g)||[]).length,1,'only the lab tools are marked as coming');
+    assert.match(html,language==='ko'?/물리 그림·시뮬레이션/:/Physics figures and simulations/);
     assert.match(html,/id="wsTeachers"/);assert.match(html,/id="wsClubs"/);
     assert.equal((html.match(/<h1\b/g)||[]).length,1);
     assert.doesNotMatch(html,PLAIN);
@@ -367,6 +368,8 @@ test('the Workshop: a short page of cards, two plain lists, the makers moved fro
     assert.equal((store.match(/ws-soon/g)||[]).length,2);assert.match(store,/Google Drive/);assert.match(store,/GitHub/);
     assert.match(a.run('viewWorkshopMake()'),/id="learnTeachFrame"[^>]*src="teach\.html\?/);
     assert.match(a.run('viewWorkshopCreate()'),/id="learnCreateFrame"[^>]*src="create\.html\?/);
+    const draw=a.run('viewWorkshopDraw()');
+    assert.match(draw,/id="learnDrawFrame"[^>]*src="draw\.html\?embed=1&amp;lang=|id="learnDrawFrame"[^>]*src="draw\.html\?embed=1&lang=/);assert.ok(links(draw).includes('#/workshop'));
   }
   assert.deepEqual({...a.run('WORKSHOP_MOVED')},{teach:'#/workshop/make',create:'#/workshop/create'});
   const replaced=[];a.context.history.replaceState=(s,t,url)=>replaced.push(url);
@@ -374,7 +377,8 @@ test('the Workshop: a short page of cards, two plain lists, the makers moved fro
     a.context.location.hash=from;try{a.run('render()');}catch(e){}
     assert.equal(replaced.at(-1),to,from);
   }
-  for(const hash of ['#/workshop','#/workshop/make','#/workshop/storage'])assert.deepEqual(Runtime.routeNeeds(hash),[],hash);
+  for(const hash of ['#/workshop','#/workshop/make','#/workshop/draw','#/workshop/storage'])assert.deepEqual(Runtime.routeNeeds(hash),[],hash);
+  assert.equal(a.run('WORKSHOP_TITLES.draw.ko'),'그림·시뮬레이션');
   const ux=read('site-ux.js');assert.match(ux,/"#\/workshop": '<path/,'the phone bar has an icon for the Workshop');
-  assert.match(ux,/\["워크샵", "#\/workshop"\]/);assert.doesNotMatch(ux,/#\/learn\/teach/);
+  assert.match(ux,/\["워크샵", "#\/workshop"\]/);assert.match(ux,/\["그림·시뮬레이션", "#\/workshop\/draw"\]/);assert.match(ux,/\["Figures and simulations", "#\/workshop\/draw"\]/);assert.doesNotMatch(ux,/#\/learn\/teach/);
 });

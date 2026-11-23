@@ -35,6 +35,7 @@ import { createLeagueRouter, ensureLeagueSchema, leagueDeletion, closeLeagueWeek
 import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { createHandoutRouter } from './handouts.js';
 import { createWorkshopStorageRouter, workshopForgetUser } from './workshop-storage.js';
+import { createWorkshopSceneRouter } from './workshop-scene.js';
 import { createGradeRouter, ensureGradeSchema } from './practice-grade.js';
 import { createCreationRouter, ensureCreationSchema } from './creations.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
@@ -268,6 +269,7 @@ const handoutRouter = createHandoutRouter({HttpError, needUser, limit, now, bad,
 const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
 const workshopStorageRouter = createWorkshopStorageRouter({HttpError, needUser, limit, now, bad});
+const workshopSceneRouter = createWorkshopSceneRouter({HttpError, needUser, limit, now, bad});
 const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
 /* a post goes to a built-in board of the main gallery or to an open minor gallery */
 const postBoard = async (env, board) => BOARDS.includes(board) ? board : (await activeGallery(env, board)) ? board : null;
@@ -809,6 +811,8 @@ async function handle(req, env, url, ctx) {
   if (creation !== undefined) return creation;
   const workshopStorage = await workshopStorageRouter(p, m, body, me, req, env);
   if (workshopStorage !== undefined) return workshopStorage;
+  const workshopScene = await workshopSceneRouter(p, m, body, me, req, env);
+  if (workshopScene !== undefined) return workshopScene;
   const gallery = await galleryRouter(p, m, body, me, env);
   if (gallery !== undefined) return gallery;
   const omr = await omrRouter(p, m, body, me, req, env, url);

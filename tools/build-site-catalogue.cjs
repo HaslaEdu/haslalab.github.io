@@ -142,6 +142,17 @@ let teachHtml=read('teach.html');
 for(const file of ['create.css','teach.css'])teachHtml=teachHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
 for(const file of ['learn-path.js','math-input.js','teach-tools.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('teach.html',teachHtml);
+/* the figure editor (draw.html): its modules import each other, so each import carries the digest of the stamped file */
+{
+  const stampImports=(source,map)=>source.replace(/(from\s+')\.\/(draw-(?:scene|physics|render)\.mjs)(?:\?[^'\n]*)?'/g,(_m,head,file)=>head+'./'+file+'?v='+map[file]+"'");
+  const sceneSrc=read('draw-scene.mjs'),stamped={'draw-scene.mjs':sceneSrc},ver={'draw-scene.mjs':digest(sceneSrc)};
+  for(const file of ['draw-physics.mjs','draw-render.mjs']){stamped[file]=stampImports(read(file),ver);ver[file]=digest(stamped[file]);derivedSources.set(file,stamped[file]);outputs.set(file,stamped[file]);}
+  const drawJs=stampImports(read('draw.js'),ver);derivedSources.set('draw.js',drawJs);outputs.set('draw.js',drawJs);
+  let drawHtml=read('draw.html');
+  for(const file of ['create.css','draw.css'])drawHtml=drawHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
+  drawHtml=drawHtml.replace(/src="draw\.js(?:\?[^"\n]*)?"/,'src="draw.js?v='+digest(drawJs)+'"');
+  outputs.set('draw.html',drawHtml);
+}
 outputs.set('concepts.html',read('concepts.html').replace(/href="concepts\.css(?:\?[^"\n]*)?"/,'href="concepts.css?v='+digest(read('concepts.css'))+'"').replace(/src="concepts\.js(?:\?[^"\n]*)?"/,'src="concepts.js?v='+digest(read('concepts.js'))+'"'));
 const sheetModule=read('sim/monthly-answer-sheet.mjs').replace(/from '\.\.\/monthly-problems\.mjs(?:\?[^'\n]*)?'/,"from '../monthly-problems.mjs?v="+digest(read('monthly-problems.mjs'))+"'");
 outputs.set('sim/monthly-answer-sheet.mjs',sheetModule);

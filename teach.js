@@ -38,7 +38,7 @@
     verify:'두 확인이 모두 맞아도 정답을 보장하지는 않습니다. 시험에 쓰기 전에 직접 풀어 보세요.',
     q:'문제',a:'답',unitL:'단위',solL:'해설',choices:'선택지 (한 줄에 하나, 정답 앞에 *)',why:'오답 선택지가 나온 실수',toPaper:'시험지에 넣기',inPaper:'시험지에 넣었습니다.',
     login:'로그인하면 AI 문제 만들기와 학급 과제를 쓸 수 있습니다. 시험지 만들기와 인쇄는 로그인 없이 됩니다.',loginBtn:'로그인',
-    keyTitle:'정답',name:'이름',number:'번호',src:'출처',
+    keyTitle:'정답',name:'이름',number:'번호',src:'출처',fig:'그림',editFig:'그림 고치기',drawFig:'그림 그려 넣기',
     err:{variant_limit:'오늘 만들 수 있는 횟수를 다 썼습니다. 교사 플랜은 하루 40번입니다.',ai_failed:'AI가 문제를 만들지 못했습니다. 다시 시도해 주세요.',ai_unavailable:'AI를 지금 쓸 수 없습니다.',
       login_required:'로그인하세요.',rate_limited:'잠시 뒤에 다시 시도해 주세요.',bad_source:'바탕 문제를 넣으세요.',bad_items:'과제로 보낼 문제가 없습니다.',bad_title:'시험 이름을 입력하세요.',class_not_found:'학급을 찾지 못했습니다.'}
   }:{
@@ -69,7 +69,7 @@
     verify:'Passing both checks does not prove the answer right. Solve each problem yourself before you use it.',
     q:'Problem',a:'Answer',unitL:'Unit',solL:'Solution',choices:'Choices (one per line, * before the right one)',why:'The mistake behind each wrong choice',toPaper:'Add to the paper',inPaper:'Added to the paper.',
     login:'Log in to make problems with the AI and to send assignments. Building and printing a paper works without an account.',loginBtn:'Log in',
-    keyTitle:'Answer key',name:'Name',number:'No.',src:'Sources',
+    keyTitle:'Answer key',name:'Name',number:'No.',src:'Sources',fig:'figure',editFig:'Edit the figure',drawFig:'Draw a figure',
     err:{variant_limit:'You have used today\'s runs. A teacher plan gives 40 a day.',ai_failed:'The AI could not write the problems. Try again.',ai_unavailable:'The AI is not available right now.',
       login_required:'Log in first.',rate_limited:'Try again in a moment.',bad_source:'Add a source problem.',bad_items:'No problems to send.',bad_title:'Enter a test name.',class_not_found:'Class not found.'}
   };
@@ -131,6 +131,12 @@
   const blank=()=>({title:'',school:'',info:'',minutes:'',note:'',two:true,key:true,sol:false,space:false,bp:false,items:[]});
   let paper=(()=>{try{const p=JSON.parse(localStorage.getItem(KEY)||'null');return p&&Array.isArray(p.items)?{...blank(),...p}:blank();}catch(e){return blank();}})();
   const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(paper));}catch(e){}};
+  /* a figure from the figure editor (draw.js): an SVG data URL, its size and the scene it was drawn from. Only an
+     SVG of a sane size is shown; as an <img> it cannot run anything */
+  const figOf=own=>{const f=own?.fig;return f&&typeof f.src==='string'&&f.src.length<400000&&/^data:image\/svg\+xml;base64,[A-Za-z0-9+/]+=*$/.test(f.src)?{src:f.src,w:Math.max(40,Math.min(2000,+f.w||800)),h:Math.max(20,Math.min(3000,+f.h||400))}:null;};
+  const figHtml=own=>{const f=figOf(own);return f?`<figure class="dfig"><img src="${f.src}" width="${f.w}" height="${f.h}" alt="${T.fig}"></figure>`:'';};
+  /* the editor writes the paper while this page may be open in another tab */
+  addEventListener('storage',e=>{if(e.key!==KEY)return;try{const p=JSON.parse(e.newValue||'null');if(p&&Array.isArray(p.items)){paper={...blank(),...p};if(state.tab==='paper')paintPaper();}}catch(x){}});
   /* the number-variant template being written, kept the same way */
   const TPL_KEY='hlTeachTemplate';
   const tplBlank=()=>({template:'',params:{},formula:'',unit:'',constants:'',sig:3,n:5,bpUnit:''});
@@ -197,16 +203,17 @@
     const box=$('rightPanel');
     const items=await Promise.all(paper.items.map(async p=>({...p,item:p.own?null:await itemOf(p.key)})));
     const total=paper.items.reduce((a,p)=>a+(+p.pts||0),0);
-    const label=x=>x.own?(x.own.q.replace(/\$[^$]*\$/g,'…').slice(0,70)):x.item?(x.item.q.replace(/\$[^$]*\$/g,'…').slice(0,70)):x.key;
+    const label=x=>x.own?((x.own.q||'').replace(/\$[^$]*\$/g,'…').slice(0,70)||(figOf(x.own)?'('+T.fig+')':'')):x.item?(x.item.q.replace(/\$[^$]*\$/g,'…').slice(0,70)):x.key;
     box.innerHTML=`<h2>${T.paper}<span class="plan">${T.total} ${total}${T.pts==='점'?'점':' '+T.pts}</span></h2>
       <div class="paper-meta"><label class="wide">${T.pTitle}<input data-f="title" value="${esc(paper.title)}"></label>
         <label>${T.pSchool}<input data-f="school" value="${esc(paper.school)}"></label><label>${T.pInfo}<input data-f="info" value="${esc(paper.info)}"></label>
         <label>${T.pMin}<input data-f="minutes" inputmode="numeric" value="${esc(paper.minutes)}"></label><label>${T.pNote}<input data-f="note" value="${esc(paper.note)}"></label></div>
       <div class="opts">${[['two',T.two],['key',T.key],['sol',T.sol],['space',T.space],['bp',T.bp.attach]].map(([k,n])=>`<label><input type="checkbox" data-o="${k}"${paper[k]?' checked':''}>${n}</label>`).join('')}</div>
-      <div class="plist">${items.length?items.map((x,i)=>`<div class="pitem" data-i="${i}"><span class="n">${i+1}</span><span class="t">${esc(label(x))}${x.own?`<span class="own">${T.own}</span>`:''}</span>
-        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts"><button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-del title="${T.del}">✕</button></span>
+      <div class="plist">${items.length?items.map((x,i)=>`<div class="pitem" data-i="${i}"><span class="n">${i+1}</span><span class="t">${figOf(x.own)?`<img class="fthumb" src="${figOf(x.own).src}" alt="">`:''}${esc(label(x))}${x.own?`<span class="own">${T.own}</span>`:''}</span>
+        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts">${figOf(x.own)&&x.own.fig.scene?`<button type="button" data-fig>${T.editFig}</button>`:''}<button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-del title="${T.del}">✕</button></span>
         <span class="pbp"><input data-bpu list="bpUnits" maxlength="40" value="${esc(bpOf(x,x.item).unit)}" placeholder="${T.bp.unit}" aria-label="${T.bp.unit}"><select data-bpl aria-label="${T.bp.level}">${LEVELS.map(l=>`<option value="${l}"${bpOf(x,x.item).level===l?' selected':''}>${T.bp.levels[l]}</option>`).join('')}</select></span></div>`).join(''):`<p class="empty">${T.empty}</p>`}</div>
       ${items.length?`<details class="bpbox" id="bpBox"${paper.bp?' open':''}><summary>${T.bp.title}</summary><p class="note">${T.bp.note}</p><div id="bpTable"></div></details>`:''}
+      <div class="row"><a class="btn" href="/#/workshop/draw" target="_top">${T.drawFig}</a></div>
       <div class="row"><button type="button" class="primary" id="print"${items.length?'':' disabled'}>${T.print}</button><button type="button" id="assign"${items.some(x=>!x.own)?'':' disabled'}>${T.assign}</button><button type="button" id="clear"${items.length?'':' disabled'}>${T.clear}</button></div>
       <div id="assignBox"></div>`;
     box.querySelectorAll('[data-f]').forEach(el=>el.oninput=()=>{paper[el.dataset.f]=el.value.slice(0,120);save();});
@@ -217,6 +224,7 @@
       el.querySelector('[data-up]').onclick=()=>{if(i>0){[paper.items[i-1],paper.items[i]]=[paper.items[i],paper.items[i-1]];save();paintPaper();}};
       el.querySelector('[data-down]').onclick=()=>{if(i<paper.items.length-1){[paper.items[i+1],paper.items[i]]=[paper.items[i],paper.items[i+1]];save();paintPaper();}};
       el.querySelector('[data-del]').onclick=()=>{paper.items.splice(i,1);save();paintPaper();paintItems();};
+      const fb=el.querySelector('[data-fig]');if(fb)fb.onclick=()=>{try{localStorage.setItem('hlDrawEdit',JSON.stringify({key:paper.items[i].key,scene:paper.items[i].own.fig.scene}));}catch(e){}window.top.location.assign(embedded?'/#/workshop/draw':'draw.html');};
       const bpSet=()=>{paper.items[i].bp={unit:el.querySelector('[data-bpu]').value.trim().slice(0,40),level:el.querySelector('[data-bpl]').value};save();paintBlueprint(items);};
       el.querySelector('[data-bpu]').onchange=bpSet;el.querySelector('[data-bpl]').onchange=bpSet;
       el.querySelector('[data-vary]').onclick=()=>{const x=items[i];state.source=x.own?{q:x.own.q,answerPlain:x.own.answer,sol:x.own.sol,plainCh:x.own.choices||[],qHtml:textHtml(x.own.q)}:x.item;state.tab='vary';shell();};
@@ -257,7 +265,7 @@
 
   function printPaper(items){
     const out=$('paperPrint'),pt=n=>`${n}${ko?'점':' pts'}`;
-    const qHtml=x=>x.own?textHtml(x.own.q):x.item?x.item.qHtml:'';
+    const qHtml=x=>x.own?textHtml(x.own.q||'')+figHtml(x.own):x.item?x.item.qHtml:'';
     const chs=x=>{const list=x.own?(x.own.choices||[]).map(esc):x.item?.choices||[],mark=x.own?'①②③④⑤':x.item?.mark||'①②③④⑤';
       return list.length?`<div class="pp-ch">${list.map((c,n)=>`<span>${mark[n]}${mark==='ABCDE'?'.':''} ${c}</span>`).join('')}</div>`:'';};
     const ans=x=>x.own?(x.own.choices?.length?'①②③④⑤'[x.own.correct]+' '+esc(x.own.choices[x.own.correct]):esc(x.own.answer+(x.own.unit?' '+x.own.unit:''))):x.item?esc(x.item.answer):'';
