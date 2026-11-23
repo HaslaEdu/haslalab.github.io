@@ -8,7 +8,8 @@
      theory regulation of grading-rules.js. The code adds the marks, so the model never sets the total.
      Every grading is recorded (practice_graded, no images) and, when the page sends the item's unit and step, moves the
      unit's rating like an attempt with the fraction as the result.
-     Quota: GRADE_FREE a day, GRADE_PLAN with a plan (kind 'grade' in ai_usage_daily, given back on any failure).
+     Quota: GRADE_FREE a day, GRADE_PLAN with a plan (kind 'grade' in ai_usage_daily, given back on a failure on our side,
+     and on an unreadable page only UNREADABLE_REFUNDS times a day).
    - POST /api/learn/report: a wrong answer, typo, broken figure or bad translation, signed in or not (20 a day per
      member or address); staff read and close them (GET/PATCH /api/learn/reports), a member sees their own. */
 import { generate } from './ai-assistant.js';
@@ -66,6 +67,7 @@ export const SOURCES = ['track', 'exam', 'contest', 'bank'];
 export const REASONS = ['wrong_answer', 'typo', 'figure', 'translation', 'other'];
 export const STATUSES = ['open', 'fixed', 'rejected'];
 export const REPORTS_PER_DAY = 20;
+export const UNREADABLE_REFUNDS = 3;
 /* fraction of the marks: pass moves on, partial moves on into review, retry offers another go */
 export const bandOf = f => (f >= 0.7 ? 'pass' : f >= 0.4 ? 'partial' : 'retry');
 const ITEM_ID = /^[\w~.:-]{1,80}$/;
@@ -213,7 +215,12 @@ export function createGradeRouter({HttpError, needUser, limit, now, bad, clientI
       const plan = await planOf(env, me.id, t), day = utcDay(t), max = plan.plan === 'free' ? GRADE_FREE : GRADE_PLAN;
       const used = await takeOne(env, me.id, 'grade', day, max);
       if (used == null) throw new HttpError(429, 'grade_limit');
-      const fail = async (status, code) => { await giveBack(env, me.id, 'grade', day); throw new HttpError(status, code); };
+      /* a failure on our side is always given back; an unreadable page (the learner's side, after a paid model call) only
+         UNREADABLE_REFUNDS times a day, so blank pages cannot buy unlimited free model calls */
+      const fail = async (status, code) => {
+        if (code !== 'unreadable' || await takeOne(env, me.id, 'grade-unreadable', day, UNREADABLE_REFUNDS) != null) await giveBack(env, me.id, 'grade', day);
+        throw new HttpError(status, code);
+      };
       /* the rubric: kept per problem content; written once by the solver model */
       const h = await rubricKey(item);
       let rubric = null, rubricSource = 'cached';

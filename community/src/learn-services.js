@@ -63,6 +63,8 @@ export const TUTOR_FREE = 5, TUTOR_PLUS = 100, TUTOR_SCHOOL = 20;
 export const GRADE_FREE = 10, GRADE_PLAN = 60;
 const PLAN_KINDS = ['plus', 'teacher', 'school_seat'];
 const MAX_TRANSLATE = 12, MAX_SOURCE = 6000;
+/* new translations (model calls) a day: a member, a guest's address */
+export const TRANSLATE_MEMBER = 1200, TRANSLATE_GUEST = 240;
 /* problem variants for teachers (teach.html): a few runs a day free, more with a teacher or school plan; each run makes
    up to VARIANT_MAX problems */
 export const VARIANT_FREE = 3, VARIANT_PLAN = 40, VARIANT_MAX = 5;
@@ -221,10 +223,12 @@ export function createLearnRouter({HttpError, needUser, limit, now, bad, clientI
       const missing = texts.map((s, i) => ({s, h: hashes[i]})).filter(x => !found.has(x.h) && x.s.trim());
       if (missing.length) {
         if (!env.AI) throw new HttpError(503, 'ai_unavailable');
-        /* cached text is free for everyone; a new translation counts against the reader */
-        await limit(env, me ? 'tr:m:' + me.id : 'tr:g:' + clientIp(req), me ? 400 : 80, 86400);
-        for (const x of missing) {
+        /* cached text is free for everyone; each new translation (one model call) counts against the reader, so a
+           request of 12 texts costs 12; past the day's limit the rest are shown in the original */
+        for (const [k, x] of missing.entries()) {
           if (found.has(x.h)) continue;
+          try { await limit(env, me ? 'tr:m:' + me.id : 'tr:g:' + clientIp(req), me ? TRANSLATE_MEMBER : TRANSLATE_GUEST, 86400); }
+          catch (e) { if (k === 0 || e?.status !== 429) throw e; break; }
           let out = '';
           try { out = (await generate(env, 'CHAT', [{role: 'system', content: TRANSLATE_SYSTEM(to)}, {role: 'user', content: x.s}], 2000)).trim(); } catch (e) { out = ''; }
           if (!out || !keepsMath(x.s, out)) continue;   /* the original is shown instead */

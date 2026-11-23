@@ -1,16 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {createLearnRouter, keepsMath, tutorMessages, TUTOR_FREE, TUTOR_PLUS, utcDay} from './src/learn-services.js';
+import {createLearnRouter, keepsMath, tutorMessages, TUTOR_FREE, TUTOR_PLUS, TRANSLATE_GUEST, utcDay} from './src/learn-services.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
-function setup({ai}={}){
+function setup({ai,limit=async()=>{}}={}){
   const db=new DatabaseSync(':memory:');
   const D1={async batch(s){const out=[];for(const x of s)out.push(await x.all());return out;},prepare(sql){let args=[];return{bind(...a){args=a;return this;},async first(){return db.prepare(sql).get(...args)||null;},async all(){return{results:db.prepare(sql).all(...args)};},async run(){const r=db.prepare(sql).run(...args);return{meta:{last_row_id:Number(r.lastInsertRowid)}};}};}};
   let t=1_800_000_000;const calls=[];
   const AI={async run(model,input){calls.push(input);return{response:ai?ai(input):'ok'};}};
-  const route=createLearnRouter({HttpError:H,bad,now:()=>t,clientIp:()=>'1.2.3.4',needUser:u=>{if(!u)throw new H(401,'login_required');return u;},limit:async()=>{}});
+  const route=createLearnRouter({HttpError:H,bad,now:()=>t,clientIp:()=>'1.2.3.4',needUser:u=>{if(!u)throw new H(401,'login_required');return u;},limit});
   return {db,env:{DB:D1,AI},calls,route:(p,m,b,me)=>route(p,m,b,me,null,{DB:D1,AI}),tick:s=>{t+=s;},now:()=>t};
 }
 const me={id:7};
@@ -43,6 +43,20 @@ test('the tutor never gives the answer before the learner has tried, and speaks 
   const m=tutorMessages({problem:'P',choices:['1 m','2 m'],question:'answer?',lang:'hi',solved:false,hintsSeen:2});
   assert.match(m[0].content,/Hindi/);assert.match(m[0].content,/never state the final/);assert.match(m[1].content,/\(B\) 2 m/);
   assert.match(tutorMessages({problem:'P',question:'q',lang:'xx',solved:true}).at(0).content,/English[\s\S]*full solution/);
+});
+
+test('each new translation counts against the reader, not each request',async()=>{
+  const counts=new Map(),limit=async(env,key,max)=>{const n=(counts.get(key)||0)+1;counts.set(key,n);if(n>max)throw new H(429,'rate_limited');};
+  const {route,calls}=setup({ai:input=>input.messages[1].content+' (ko)',limit});
+  const batch=k=>Array.from({length:7},(_,i)=>`text ${k}-${i}`);
+  let k=0;
+  while(calls.length+7<=TRANSLATE_GUEST)await route('/api/learn/translate','POST',{to:'ko',texts:batch(k++)},null);
+  const part=await route('/api/learn/translate','POST',{to:'ko',texts:batch(k++)},null);
+  assert.equal(calls.length,TRANSLATE_GUEST,'a guest gets TRANSLATE_GUEST model calls a day, not TRANSLATE_GUEST requests of 12');
+  assert.ok(part.texts.some(x=>x===null),'past the limit the rest stay in the original');
+  await fails(route('/api/learn/translate','POST',{to:'ko',texts:batch(k++)},null),'rate_limited');
+  assert.equal(calls.length,TRANSLATE_GUEST);
+  assert.deepEqual((await route('/api/learn/translate','POST',{to:'ko',texts:batch(0)},null)).texts,batch(0).map(x=>x+' (ko)'),'cached text is still free');
 });
 
 test('translations keep the math, are cached for everyone and fall back to the original',async()=>{

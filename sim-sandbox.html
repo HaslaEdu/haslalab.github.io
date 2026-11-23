@@ -53,8 +53,11 @@ function fail(e){stopped=true;err.textContent=String(e&&e.stack||e).split('\n').
 function size(){parent.postMessage({type:'sim-height',height:document.documentElement.scrollHeight},'*');}
 addEventListener('error',e=>fail(e.error||e.message));
 let ran=false;
+/* only inside the opaque-origin frame create.js opens: framed any other way (another site framing this page without the
+   sandbox attribute) the code would run as haslalab.org and could read the site's storage, so it never runs there */
+const opaque=self.origin==='null';
 addEventListener('message',e=>{
-  if(ran||e.source!==parent||!e.data||e.data.type!=='run'||typeof e.data.code!=='string')return;ran=true;
+  if(ran||!opaque||e.source!==parent||!e.data||e.data.type!=='run'||typeof e.data.code!=='string')return;ran=true;
   document.documentElement.dataset.theme=e.data.theme==='dark'?'dark':'light';
   fit();
   try{new Function('ctx','W','H','loop','slider','button','show','clear','circle','line','text','arrow',e.data.code)(ctx,W,H,loop,slider,button,show,clear,circle,line,text,arrow);}catch(x){fail(x);}

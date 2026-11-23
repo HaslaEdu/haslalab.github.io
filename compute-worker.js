@@ -1,6 +1,11 @@
 /* Runs a learner's Python in Pyodide, off the page's thread. The page terminates this worker when a run
    exceeds its time limit, so an endless loop never freezes the tab. The code runs only in this browser. */
 'use strict';
+/* A creation's grader (create.js) is another member's code, and this worker shares the site's origin: before anything
+   runs, the site's stored data here (IndexedDB, which holds exam recordings; Cache Storage) and the channel to the site's
+   other tabs are taken out of reach. The accessors are deleted along the whole prototype chain, so no path leads back. */
+function seal(scope){for(const k of ['indexedDB','caches','BroadcastChannel']){for(let o=scope;o;o=Object.getPrototypeOf(o)){try{delete o[k];}catch(e){}}}}
+seal(self);
 const PYODIDE='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
 let ready=null;
 function boot(){

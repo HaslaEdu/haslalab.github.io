@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {createGradeRouter, bandOf, cleanPages, cleanRubric, scoreOf, gradePolicy, gradeProvider} from './src/practice-grade.js';
+import {createGradeRouter, UNREADABLE_REFUNDS, bandOf, cleanPages, cleanRubric, scoreOf, gradePolicy, gradeProvider} from './src/practice-grade.js';
 import {createLearnRouter, GRADE_FREE, GRADE_PLAN} from './src/learn-services.js';
 import {PRACTICE_SCHEMA} from './src/practice-progress.js';
 
@@ -88,6 +88,16 @@ test('the day has a quota, a plan has more, and a failure gives the grading back
   assert.equal(rows.length,GRADE_FREE+1,'every grading is recorded, failures are not');
   assert.ok(rows.every(r=>r.level==='L1'&&r.band==='pass'));
   assert.ok(!JSON.stringify(db.prepare("SELECT * FROM practice_rubrics").all()).includes('base64'),'no image is stored');
+});
+
+test('unreadable pages are given back only a few times a day, so blank pages are not free model calls',async()=>{
+  const {route,visionCalls}=setup({vision:()=>({transcript:'',legible:false,items:[],feedback:''})});
+  for(let i=0;i<UNREADABLE_REFUNDS;i++)await fails(route('/api/learn/grade','POST',body(),me),'unreadable');
+  assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,GRADE_FREE,'the first ones are given back');
+  for(let i=0;i<GRADE_FREE;i++)await fails(route('/api/learn/grade','POST',body(),me),'unreadable');
+  assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,0,'after that each one counts');
+  await fails(route('/api/learn/grade','POST',body(),me),'grade_limit');
+  assert.equal(visionCalls.length,UNREADABLE_REFUNDS+GRADE_FREE);
 });
 
 test('a rubric is written once, then cached; other content under the same id gets its own',async()=>{
