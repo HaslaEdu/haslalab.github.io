@@ -10,7 +10,13 @@
    When a week is over, the Worker's minute cron (index.js scheduled) settles it a few groups at a time: ranks 1-7 move
    up a tier, the last 5 move down (never below Bronze); in Master ranks 1-3 are reborn: rebirths + 1, back to Bronze.
    Every step is idempotent (results have a key per member and week, and a member's tier moves only once per week);
-   league_weeks marks a week as done. The all-time ranking orders members by rebirths, then tier, then total league XP. */
+   league_weeks marks a week as done. The all-time ranking orders members by rebirths, then tier, then total league XP.
+
+   The daily goal (learner-profile.js, 1 to 50 problems): when the problems counted today (the rows of league_xp_items
+   for the Korean day, so the one-a-day and 200-a-day rules above apply) reach the goal, the member gets a bonus once
+   that day: goalBonus(goal) = round(5 x goal + 2 x goal^1.3). The goal that counts is the one saved when the day's
+   first problem was counted (league_goal_days keeps it), so lowering the goal later that day changes nothing, and a
+   second bonus is never paid: the bonus column is set once, in the same batch that adds the XP. */
 
 export const LEAGUE_TIERS = Object.freeze(['bronze', 'silver', 'gold', 'platinum', 'emerald', 'sapphire', 'ruby', 'amethyst', 'diamond', 'master']);
 export const MASTER = LEAGUE_TIERS.length - 1;
@@ -56,7 +62,15 @@ export const LEAGUE_SCHEMA = [
      PRIMARY KEY (user_id, week))`,
   `CREATE TABLE IF NOT EXISTS league_weeks (
      week TEXT PRIMARY KEY,
-     closed_at INTEGER NOT NULL)`
+     closed_at INTEGER NOT NULL)`,
+  `CREATE TABLE IF NOT EXISTS league_goal_days (
+     user_id INTEGER NOT NULL,
+     day TEXT NOT NULL,
+     goal INTEGER NOT NULL,
+     bonus INTEGER NOT NULL DEFAULT 0,
+     token TEXT,
+     earned_at INTEGER,
+     PRIMARY KEY (user_id, day))`
 ];
 const ready = new WeakSet();
 export async function ensureLeagueSchema(env) {
@@ -85,6 +99,17 @@ export const attemptXp = a => !a ? 0 : a.result === 'right' ? baseXp(a.mode, a.s
 /* a graded written answer (practice_graded): base XP by step times the band */
 export const gradedXp = (source, step, band) => source === 'archive' || !(band in BAND_MULT) ? 0 : Math.max(1, Math.round(baseXp(source, step) * BAND_MULT[band]));
 
+/* the daily goal's one-time bonus: bigger goals pay more in all and more per problem (7 for 1, 90 for 10, 316 for 30) */
+export const GOAL_MIN = 1, GOAL_MAX = 50;
+export const goalBonus = goal => { const g = Math.floor(Number(goal)); return g >= GOAL_MIN && g <= GOAL_MAX ? Math.round(5 * g + 2 * g ** 1.3) : 0; };
+const goalOk = g => Number.isInteger(g) && g >= GOAL_MIN && g <= GOAL_MAX;
+async function savedGoal(DB, userId) {
+  if (!await hasLearnerTable(DB)) return null;
+  const row = await DB.prepare('SELECT daily_goal FROM learner_profile WHERE user_id=?').bind(userId).first().catch(() => null);
+  return goalOk(row?.daily_goal) ? row.daily_goal : null;
+}
+const newToken = () => (globalThis.crypto?.randomUUID?.() || Math.random().toString(36).slice(2) + Date.now().toString(36));
+
 /* the group a new member of the week joins: the last group of that tier while it has room, else a new one */
 async function groupFor(DB, week, tier) {
   const last = await DB.prepare('SELECT group_no,COUNT(*) AS n FROM league_xp WHERE week=? AND tier=? GROUP BY group_no ORDER BY group_no DESC LIMIT 1').bind(week, tier).first();
@@ -100,10 +125,13 @@ async function joinWeek(DB, userId, week, t) {
   return { tier, group_no };
 }
 
-/* events: [{item_id, xp}] worked out on the server from rows it has just recorded. Returns the XP added. */
-export async function awardLeagueXp(env, userId, events, t) {
+/* events: [{item_id, xp}] worked out on the server from rows it has just recorded. Returns the XP added (the goal
+   bonus included). awardLeague returns {xp, bonus, today} for the routes that tell the page about the goal. */
+export async function awardLeagueXp(env, userId, events, t) { return (await awardLeague(env, userId, events, t)).xp; }
+export async function awardLeague(env, userId, events, t) {
+  const none = { xp: 0, bonus: 0, today: null };
   const list = (events || []).filter(e => e && typeof e.item_id === 'string' && e.item_id && e.xp > 0);
-  if (!list.length || !Number.isInteger(userId)) return 0;
+  if (!list.length || !Number.isInteger(userId)) return none;
   await ensureLeagueSchema(env);
   const DB = env.DB, day = dayOf(t), week = weekOf(t);
   const had = new Map((await DB.prepare('SELECT item_id,xp FROM league_xp_items WHERE user_id=? AND day=?').bind(userId, day).all()).results.map(r => [r.item_id, r.xp]));
@@ -122,18 +150,40 @@ export async function awardLeagueXp(env, userId, events, t) {
     had.set(key, xp);
     writes.push(DB.prepare('INSERT INTO league_xp_items(user_id,day,item_id,xp) VALUES(?,?,?,?) ON CONFLICT(user_id,day,item_id) DO UPDATE SET xp=MAX(xp,excluded.xp)').bind(userId, day, key, xp));
   }
-  if (!gain) return 0;
+  if (!gain) return none;
   await joinWeek(DB, userId, week, t);
   writes.push(DB.prepare('UPDATE league_xp SET xp=xp+?,updated_at=? WHERE user_id=? AND week=?').bind(gain, t, userId, week),
     DB.prepare('UPDATE league_state SET total_xp=total_xp+?,last_week=?,updated_at=? WHERE user_id=?').bind(gain, week, t, userId));
+  /* the day's goal: fixed by the first counted problem of the day, paid once when the count reaches it */
+  let day_ = await DB.prepare('SELECT goal,bonus FROM league_goal_days WHERE user_id=? AND day=?').bind(userId, day).first();
+  if (!day_) {
+    const goal = await savedGoal(DB, userId);
+    if (goal) { writes.push(DB.prepare('INSERT OR IGNORE INTO league_goal_days(user_id,day,goal,bonus) VALUES(?,?,?,0)').bind(userId, day, goal)); day_ = { goal, bonus: 0, fresh: true }; }
+  }
+  const counted = Math.min(had.size, DAILY_COUNTED);
+  let token = null, bonus = 0;
+  if (day_ && !day_.bonus && counted >= day_.goal) {
+    token = newToken(); bonus = goalBonus(day_.goal);
+    /* the guard makes it once a day even if two requests race: only the batch that set the token adds the XP */
+    const mine = 'EXISTS (SELECT 1 FROM league_goal_days g WHERE g.user_id=? AND g.day=? AND g.token=?)';
+    writes.push(DB.prepare('UPDATE league_goal_days SET bonus=?,token=?,earned_at=? WHERE user_id=? AND day=? AND bonus=0 AND goal=?').bind(bonus, token, t, userId, day, day_.goal),
+      DB.prepare(`UPDATE league_xp SET xp=xp+?,updated_at=? WHERE user_id=? AND week=? AND ${mine}`).bind(bonus, t, userId, week, userId, day, token),
+      DB.prepare(`UPDATE league_state SET total_xp=total_xp+?,updated_at=? WHERE user_id=? AND ${mine}`).bind(bonus, t, userId, userId, day, token));
+  }
   await DB.batch(writes);
-  return gain;
+  if (token) {
+    const row = await DB.prepare('SELECT token FROM league_goal_days WHERE user_id=? AND day=?').bind(userId, day).first();
+    if (row?.token !== token) bonus = 0;
+  }
+  const goal = day_?.goal ?? null;
+  return { xp: gain + bonus, bonus, today: { day, counted, goal, bonus_xp: goal ? goalBonus(goal) : 0, earned: !!(day_?.bonus || bonus) } };
 }
 /* the two places that record activity call these; a league failure never fails the practice request */
+const leagueFailed = e => { console.error('league', String(e?.message || e).slice(0, 200)); return { xp: 0, bonus: 0, today: null }; };
 export const leagueFromAttempts = (env, userId, attempts, t) =>
-  awardLeagueXp(env, userId, attempts.map(a => ({ item_id: a.item_id, xp: attemptXp(a) })), t).catch(e => { console.error('league', String(e?.message || e).slice(0, 200)); return 0; });
+  awardLeague(env, userId, attempts.map(a => ({ item_id: a.item_id, xp: attemptXp(a) })), t).catch(leagueFailed);
 export const leagueFromGrading = (env, userId, item, band, t) =>
-  awardLeagueXp(env, userId, [{ item_id: item.id, xp: gradedXp(item.source, item.step, band) }], t).catch(e => { console.error('league', String(e?.message || e).slice(0, 200)); return 0; });
+  awardLeague(env, userId, [{ item_id: item.id, xp: gradedXp(item.source, item.step, band) }], t).catch(leagueFailed);
 
 /* ── the week's end: what each rank in a group does. xps are the group's XP, best first ── */
 export function groupOutcomes(tier, xps) {
@@ -194,12 +244,27 @@ export async function closeLeagueWeeks(env, { now: t, groups = GROUPS_PER_TICK }
   if (left) return { week, settled: pending.length, closed: false };
   await DB.batch([DB.prepare('INSERT OR IGNORE INTO league_weeks(week,closed_at) VALUES(?,?)').bind(week, t),
     /* the per-day item counts are needed only for the day they count */
-    DB.prepare('DELETE FROM league_xp_items WHERE day<?').bind(week)]);
+    DB.prepare('DELETE FROM league_xp_items WHERE day<?').bind(week),
+    DB.prepare('DELETE FROM league_goal_days WHERE day<?').bind(week)]);
   return { week, settled: pending.length, closed: true };
 }
 
 /* ── reading ── */
 const flagOf = c => typeof c === 'string' && /^[A-Z]{2}$/.test(c) ? c : null;
+/* the profile picture's key (users.avatar, served by index.js GET /api/avatar/<key>); the page draws a letter otherwise */
+const avatarOf = a => typeof a === 'string' && /^[A-Za-z0-9_-]{8,32}$/.test(a) ? a : null;
+/* today's goal for GET /api/league/me: the counted problems of the Korean day, the goal in effect and its bonus */
+export async function goalToday(env, userId, t) {
+  await ensureLeagueSchema(env);
+  const DB = env.DB, day = dayOf(t);
+  const counted = Math.min(DAILY_COUNTED, (await DB.prepare('SELECT COUNT(*) AS n FROM league_xp_items WHERE user_id=? AND day=?').bind(userId, day).first())?.n ?? 0);
+  const row = await DB.prepare('SELECT goal,bonus FROM league_goal_days WHERE user_id=? AND day=?').bind(userId, day).first();
+  const saved = await savedGoal(DB, userId), goal = row ? row.goal : saved;
+  const earned = !!row?.bonus;
+  return { day, counted, goal, saved_goal: saved, bonus_xp: goal ? goalBonus(goal) : 0, earned, earned_xp: row?.bonus || 0, pending: !!goal && !earned,
+    /* a goal changed after today's first counted problem applies from tomorrow */
+    next_goal: row && saved && saved !== row.goal ? saved : null };
+}
 async function hasLearnerTable(DB) {
   return !!await DB.prepare("SELECT 1 AS n FROM sqlite_master WHERE type='table' AND name='learner_profile'").first().catch(() => null);
 }
@@ -212,16 +277,17 @@ export async function leagueMe(env, userId, t) {
     week, ends_at: weekEnds(week), days_left: daysLeft(t), tier, tier_key: LEAGUE_TIERS[tier], rebirths: st?.rebirths ?? 0, total_xp: st?.total_xp ?? 0,
     joined: !!row, xp: row?.xp ?? 0, rank: null, group_id: null, standings: [],
     rules: { size: GROUP_SIZE, promote: PROMOTE, demote: DEMOTE, rebirth: REBIRTH, daily_counted: DAILY_COUNTED },
-    zones: tier >= MASTER ? { up: 0, reborn: REBIRTH, down: DEMOTE } : { up: PROMOTE, reborn: 0, down: tier > 0 ? DEMOTE : 0 }
+    zones: tier >= MASTER ? { up: 0, reborn: REBIRTH, down: DEMOTE } : { up: PROMOTE, reborn: 0, down: tier > 0 ? DEMOTE : 0 },
+    today: await goalToday(env, userId, t)
   };
   if (!row) return out;
   const country = await hasLearnerTable(DB);
-  const members = (await DB.prepare(`SELECT x.user_id,x.xp,u.nickname,COALESCE(s.rebirths,0) AS rebirths${country ? ',lp.country' : ''} FROM league_xp x
+  const members = (await DB.prepare(`SELECT x.user_id,x.xp,u.nickname,u.avatar,COALESCE(s.rebirths,0) AS rebirths${country ? ',lp.country' : ''} FROM league_xp x
       JOIN users u ON u.id=x.user_id LEFT JOIN league_state s ON s.user_id=x.user_id${country ? ' LEFT JOIN learner_profile lp ON lp.user_id=x.user_id' : ''}
       WHERE x.week=? AND x.tier=? AND x.group_no=? ${ORDER}`).bind(week, row.tier, row.group_no).all()).results;
   const outcomes = groupOutcomes(row.tier, members.map(m => m.xp));
   out.group_id = groupId(week, row.tier, row.group_no);
-  out.standings = members.map((m, i) => ({ rank: i + 1, nickname: m.nickname, xp: m.xp, rebirths: m.rebirths, country: flagOf(m.country), me: m.user_id === userId, zone: outcomes[i].outcome }));
+  out.standings = members.map((m, i) => ({ rank: i + 1, nickname: m.nickname, avatar: avatarOf(m.avatar), xp: m.xp, rebirths: m.rebirths, country: flagOf(m.country), me: m.user_id === userId, zone: outcomes[i].outcome }));
   out.rank = out.standings.find(s => s.me)?.rank ?? null;
   return out;
 }
@@ -229,7 +295,7 @@ export async function leagueRanking(env, page, userId) {
   await ensureLeagueSchema(env);
   const DB = env.DB, country = await hasLearnerTable(DB), off = (page - 1) * RANKING_PAGE;
   const from = `FROM league_state s JOIN users u ON u.id=s.user_id AND u.deleted=0 WHERE s.total_xp>0`;
-  const rows = (await DB.prepare(`SELECT s.user_id,s.rebirths,s.tier,s.total_xp,u.nickname${country ? ',lp.country' : ''} FROM league_state s JOIN users u ON u.id=s.user_id AND u.deleted=0
+  const rows = (await DB.prepare(`SELECT s.user_id,s.rebirths,s.tier,s.total_xp,u.nickname,u.avatar${country ? ',lp.country' : ''} FROM league_state s JOIN users u ON u.id=s.user_id AND u.deleted=0
       ${country ? 'LEFT JOIN learner_profile lp ON lp.user_id=s.user_id' : ''} WHERE s.total_xp>0
       ORDER BY s.rebirths DESC, s.tier DESC, s.total_xp DESC, s.user_id ASC LIMIT ? OFFSET ?`).bind(RANKING_PAGE, off).all()).results;
   const total = (await DB.prepare(`SELECT COUNT(*) AS n ${from}`).first())?.n ?? 0;
@@ -239,7 +305,7 @@ export async function leagueRanking(env, page, userId) {
     if (s) mine = 1 + ((await DB.prepare(`SELECT COUNT(*) AS n ${from} AND (s.rebirths>? OR (s.rebirths=? AND (s.tier>? OR (s.tier=? AND (s.total_xp>? OR (s.total_xp=? AND s.user_id<?))))))`)
       .bind(s.rebirths, s.rebirths, s.tier, s.tier, s.total_xp, s.total_xp, userId).first())?.n ?? 0);
   }
-  return { page, per_page: RANKING_PAGE, total, mine, rows: rows.map((r, i) => ({ rank: off + i + 1, nickname: r.nickname, rebirths: r.rebirths, tier: r.tier, tier_key: LEAGUE_TIERS[r.tier], total_xp: r.total_xp, country: flagOf(r.country), me: r.user_id === userId })) };
+  return { page, per_page: RANKING_PAGE, total, mine, rows: rows.map((r, i) => ({ rank: off + i + 1, nickname: r.nickname, avatar: avatarOf(r.avatar), rebirths: r.rebirths, tier: r.tier, tier_key: LEAGUE_TIERS[r.tier], total_xp: r.total_xp, country: flagOf(r.country), me: r.user_id === userId })) };
 }
 export async function leagueHistory(env, userId) {
   await ensureLeagueSchema(env);
@@ -247,7 +313,7 @@ export async function leagueHistory(env, userId) {
     .map(r => ({ ...r, tier_key: LEAGUE_TIERS[r.tier] })) };
 }
 /* account deletion: the member's league rows go with the account */
-export const leagueDeletion = (env, userId) => ['league_state', 'league_xp', 'league_xp_items', 'league_results']
+export const leagueDeletion = (env, userId) => ['league_state', 'league_xp', 'league_xp_items', 'league_results', 'league_goal_days']
   .map(table => env.DB.prepare(`DELETE FROM ${table} WHERE user_id=?`).bind(userId));
 
 export function createLeagueRouter({ HttpError, needUser, now, bad }) {

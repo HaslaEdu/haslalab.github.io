@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {createRequire} from 'node:module';
-import {createLearnerRouter, cleanLearner, COUNTRIES, DAILY_GOALS, LEARNER_SAVES_PER_DAY, readLearner, learnerDeletion} from './src/learner-profile.js';
+import {createLearnerRouter, cleanLearner, COUNTRIES, GOAL_MIN, GOAL_MAX, GOAL_PICKS, DEFAULT_GOAL, isDailyGoal, LEARNER_SAVES_PER_DAY, readLearner, learnerDeletion} from './src/learner-profile.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
@@ -19,12 +19,15 @@ function setup(){
 const me={id:7};
 const fails=async(p,code)=>assert.rejects(p,e=>e.code===code);
 
-test('country is an ISO 3166-1 alpha-2 code from the list, the goal one of 5, 10, 15, 20',()=>{
+test('country is an ISO 3166-1 alpha-2 code from the list, the goal any whole number from 1 to 50',()=>{
   assert.equal(COUNTRIES.length,249);assert.equal(new Set(COUNTRIES).size,249);
-  assert.deepEqual(DAILY_GOALS,[5,10,15,20]);
+  assert.deepEqual([GOAL_MIN,GOAL_MAX,DEFAULT_GOAL],[1,50,10]);assert.deepEqual([...GOAL_PICKS],[1,5,10,20,30]);
   assert.deepEqual(cleanLearner({country:'kr',daily_goal:15},bad),{country:'KR',daily_goal:15});
+  for(const daily_goal of [1,2,7,10,23,49,50])assert.equal(cleanLearner({country:'US',daily_goal},bad).daily_goal,daily_goal,String(daily_goal));
+  assert.equal(cleanLearner({country:'US',daily_goal:'12'},bad).daily_goal,12,'a form value as text');
+  assert.ok(isDailyGoal(1)&&isDailyGoal(50)&&!isDailyGoal(0)&&!isDailyGoal(51)&&!isDailyGoal(2.5));
   for(const country of ['XX','KOR','','UK',null,42])assert.throws(()=>cleanLearner({country,daily_goal:10},bad),e=>e.code==='bad_country',String(country));
-  for(const daily_goal of [0,3,12,25,'ten',null])assert.throws(()=>cleanLearner({country:'US',daily_goal},bad),e=>e.code==='bad_daily_goal',String(daily_goal));
+  for(const daily_goal of [0,-1,51,100,2.5,'ten','1e1',' 5',null,undefined,true,[10]])assert.throws(()=>cleanLearner({country:'US',daily_goal},bad),e=>e.code==='bad_daily_goal',String(daily_goal));
   assert.throws(()=>cleanLearner(null,bad),e=>e.code==='bad_learner');
 });
 
@@ -33,7 +36,8 @@ test('the site\'s country list (learner-form.js) is the server\'s',{skip:!fs.exi
   const require=createRequire(import.meta.url);
   const form=require('../learner-form.js');
   assert.deepEqual([...form.COUNTRIES],[...COUNTRIES]);
-  assert.deepEqual([...form.DAILY_GOALS],[...DAILY_GOALS]);
+  assert.deepEqual([form.GOAL_MIN,form.GOAL_MAX,form.DEFAULT_GOAL,[...form.GOAL_PICKS]],[GOAL_MIN,GOAL_MAX,DEFAULT_GOAL,[...GOAL_PICKS]]);
+  for(let g=-2;g<=53;g++)assert.equal(form.isDailyGoal(g),isDailyGoal(g),String(g));
 });
 
 test('read and save need an account; a PUT body is read from the request; saves are limited per day',async()=>{
@@ -48,7 +52,10 @@ test('read and save need an account; a PUT body is read from the request; saves 
   await fails(route('/api/me/learner','PUT',{},me,req({country:'ZZ',daily_goal:20})),'bad_country');
   await route('/api/me/learner','PUT',{},me,req({country:'KR',daily_goal:5}));
   assert.deepEqual(await readLearner(env,7).then(({country,daily_goal})=>({country,daily_goal})),{country:'KR',daily_goal:5},'changing it in settings replaces the row');
-  for(let i=2;i<LEARNER_SAVES_PER_DAY;i++)await route('/api/me/learner','PUT',{},me,req({country:'KR',daily_goal:10}));
+  await route('/api/me/learner','PUT',{},me,req({country:'KR',daily_goal:37}));
+  assert.equal((await readLearner(env,7)).daily_goal,37,'any number in the range is kept');
+  await fails(route('/api/me/learner','PUT',{},me,req({country:'KR',daily_goal:51})),'bad_daily_goal');
+  for(let i=3;i<LEARNER_SAVES_PER_DAY;i++)await route('/api/me/learner','PUT',{},me,req({country:'KR',daily_goal:10}));
   await fails(route('/api/me/learner','PUT',{},me,req({country:'KR',daily_goal:10})),'rate_limited');
   assert.equal(await route('/api/other','GET',{},me),undefined,'other paths pass through');
 });

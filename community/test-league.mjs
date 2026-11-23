@@ -6,7 +6,7 @@ import {createGradeRouter} from './src/practice-grade.js';
 import {createLearnRouter} from './src/learn-services.js';
 import {createLearnerRouter} from './src/learner-profile.js';
 import {createLeagueRouter, awardLeagueXp, closeLeagueWeeks, groupOutcomes, weekOf, dayOf, weekEnds, nextWeek, daysLeft, baseXp, attemptXp, gradedXp,
-  LEAGUE_TIERS, MASTER, GROUP_SIZE, DAILY_COUNTED, leagueDeletion, ensureLeagueSchema} from './src/league.js';
+  LEAGUE_TIERS, MASTER, GROUP_SIZE, DAILY_COUNTED, leagueDeletion, ensureLeagueSchema, goalBonus, GOAL_MIN, GOAL_MAX} from './src/league.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
@@ -15,7 +15,7 @@ const MONDAY=Date.parse('2026-11-23T01:00:00Z')/1000;
 function setup(){
   const db=new DatabaseSync(':memory:');
   const D1={async batch(s){const out=[];for(const x of s)out.push(await x.all());return out;},prepare(sql){let args=[];return{bind(...a){args=a;return this;},async first(){return db.prepare(sql).get(...args)||null;},async all(){return{results:db.prepare(sql).all(...args)};},async run(){const r=db.prepare(sql).run(...args);return{meta:{last_row_id:Number(r.lastInsertRowid)}};}};}};
-  db.exec('CREATE TABLE users (id INTEGER PRIMARY KEY, nickname TEXT, deleted INTEGER NOT NULL DEFAULT 0)');
+  db.exec('CREATE TABLE users (id INTEGER PRIMARY KEY, nickname TEXT, avatar TEXT, deleted INTEGER NOT NULL DEFAULT 0)');
   for(let i=1;i<=120;i++)db.prepare('INSERT INTO users(id,nickname) VALUES(?,?)').run(i,'member'+i);
   let t=MONDAY;
   const deps={HttpError:H,bad,now:()=>t,clientIp:()=>'1.2.3.4',needUser:u=>{if(!u)throw new H(401,'login_required');return u;},limit:async()=>{}};
@@ -153,4 +153,84 @@ test('the final ranking: rebirths, then tier, then total league XP; public, 100 
   await assert.rejects(route('/api/league/ranking','GET',null,null,'?page=0'),e=>e.code==='bad_page');
   for(const s of leagueDeletion(env,4))await s.run();
   assert.equal((await route('/api/league/ranking','GET',null,null,'?page=1')).rows[0].nickname,'member3','a deleted member leaves the ranking');
+});
+
+test('profile pictures: the group table and the ranking carry the avatar key, never anything else',async()=>{
+  const {route,env,db,now}=setup();
+  db.prepare('UPDATE users SET avatar=? WHERE id=1').run('Abc_def-1234');
+  db.prepare('UPDATE users SET avatar=? WHERE id=2').run('../../etc/passwd');
+  for(const id of [1,2,3])await awardLeagueXp(env,id,[{item_id:'p',xp:10+id}],now()+id);
+  const me=await route('/api/league/me','GET',null,user(1));
+  const by=Object.fromEntries(me.standings.map(r=>[r.nickname,r]));
+  assert.equal(by.member1.avatar,'Abc_def-1234');assert.equal(by.member2.avatar,null,'a malformed key is dropped');assert.equal(by.member3.avatar,null);
+  const rank=await route('/api/league/ranking','GET',null,null,'?page=1');
+  assert.equal(rank.rows.find(r=>r.nickname==='member1').avatar,'Abc_def-1234');
+  assert.equal(rank.rows.find(r=>r.nickname==='member2').avatar,null);
+});
+
+test('the goal bonus: 5 x goal + 2 x goal^1.3, rounded; bigger goals pay more in all and per problem',()=>{
+  assert.deepEqual([GOAL_MIN,GOAL_MAX],[1,50]);
+  assert.equal(goalBonus(1),7);assert.equal(goalBonus(10),90);assert.equal(goalBonus(30),316);assert.equal(goalBonus(50),573);
+  for(let g=2;g<=50;g++){assert.ok(goalBonus(g)>goalBonus(g-1),String(g));assert.ok(goalBonus(g)/g>=goalBonus(g-1)/(g-1),'per problem '+g);}
+  for(const g of [0,51,-3,NaN,'x'])assert.equal(goalBonus(g),0,String(g));
+});
+
+test('reaching the daily goal pays its bonus once, from the problems the server counted',async()=>{
+  const {route,db,tick}=setup(),me=user(8),week='2026-11-23';
+  await route('/api/me/learner','PUT',{country:'KR',daily_goal:3},me);
+  let r=await route('/api/practice/attempts','POST',{attempts:[attempt('g-1'),attempt('g-2',{result:'wrong'}),attempt('g-1')]},me);
+  assert.equal(r.goal_bonus,0);assert.equal(r.league_today.counted,1,'a wrong answer and a repeat do not count');assert.equal(r.league_today.goal,3);
+  r=await route('/api/practice/attempts','POST',{attempts:[attempt('g-2'),attempt('g-3')]},me);
+  assert.equal(r.goal_bonus,goalBonus(3));assert.equal(r.league_xp,40+goalBonus(3),'the bonus is part of the league XP');
+  assert.equal(xpOf(db,8,week),60+goalBonus(3));
+  assert.equal(db.prepare('SELECT total_xp FROM league_state WHERE user_id=8').get().total_xp,60+goalBonus(3));
+  let today=(await route('/api/league/me','GET',null,me)).today;
+  assert.deepEqual({counted:today.counted,goal:today.goal,earned:today.earned,earned_xp:today.earned_xp,pending:today.pending},{counted:3,goal:3,earned:true,earned_xp:goalBonus(3),pending:false});
+  /* more problems, and lowering the goal after reaching it: no second bonus */
+  r=await route('/api/practice/attempts','POST',{attempts:[attempt('g-4')]},me);assert.equal(r.goal_bonus,0);assert.equal(r.league_xp,20);
+  await route('/api/me/learner','PUT',{country:'KR',daily_goal:1},me);
+  r=await route('/api/practice/attempts','POST',{attempts:[attempt('g-5')]},me);assert.equal(r.goal_bonus,0);
+  today=(await route('/api/league/me','GET',null,me)).today;
+  assert.equal(today.goal,3,'today keeps the goal in effect');assert.equal(today.next_goal,1,'the new goal counts from tomorrow');
+  assert.equal(xpOf(db,8,week),60+goalBonus(3)+40);
+  /* the next day: the new goal, a new bonus */
+  tick(86400);
+  r=await route('/api/practice/attempts','POST',{attempts:[attempt('g-1')]},me);
+  assert.equal(r.goal_bonus,goalBonus(1));assert.equal(r.league_today.goal,1);
+});
+
+test('the goal in effect is the one saved before the day\'s first counted problem: lowering it mid-day does not help',async()=>{
+  const {route,tick}=setup(),me=user(9);
+  await route('/api/me/learner','PUT',{country:'IN',daily_goal:10},me);
+  await route('/api/practice/attempts','POST',{attempts:[attempt('h-1'),attempt('h-2')]},me);
+  await route('/api/me/learner','PUT',{country:'IN',daily_goal:2},me);
+  let r=await route('/api/practice/attempts','POST',{attempts:[attempt('h-3')]},me);
+  assert.equal(r.goal_bonus,0,'3 counted, the goal in effect is still 10');assert.equal(r.league_today.goal,10);
+  r=await route('/api/practice/attempts','POST',{attempts:Array.from({length:6},(_,i)=>attempt('h-x'+i))},me);
+  assert.equal(r.goal_bonus,0,'9 counted');
+  r=await route('/api/practice/attempts','POST',{attempts:[attempt('h-last')]},me);
+  assert.equal(r.goal_bonus,goalBonus(10),'the tenth');
+  /* raising it mid-day does not move today's target either */
+  tick(86400);
+  await route('/api/practice/attempts','POST',{attempts:[attempt('h-1')]},me);
+  await route('/api/me/learner','PUT',{country:'IN',daily_goal:40},me);
+  r=await route('/api/practice/attempts','POST',{attempts:[attempt('h-2')]},me);
+  assert.equal(r.goal_bonus,goalBonus(2),'the goal saved before the first problem (2)');
+});
+
+test('the goal bonus: no saved goal pays nothing; two requests crossing the goal at once pay it once',async()=>{
+  const {route,env,db,now}=setup();
+  let r=await route('/api/practice/attempts','POST',{attempts:Array.from({length:12},(_,i)=>attempt('n-'+i))},user(10));
+  assert.equal(r.goal_bonus,0);assert.equal(r.league_today.goal,null);
+  const today=(await route('/api/league/me','GET',null,user(10))).today;
+  assert.equal(today.goal,null);assert.equal(today.pending,false);assert.equal(today.counted,12);
+  await route('/api/me/learner','PUT',{country:'FR',daily_goal:2},user(11));
+  await awardLeagueXp(env,11,[{item_id:'a',xp:10}],now());
+  const [x,y]=await Promise.all([awardLeagueXp(env,11,[{item_id:'b',xp:10}],now()),awardLeagueXp(env,11,[{item_id:'c',xp:10}],now())]);
+  assert.equal(x+y,20+goalBonus(2),'one of the two carries the bonus');
+  assert.equal(xpOf(db,11,weekOf(now())),30+goalBonus(2));
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM league_goal_days WHERE user_id=11 AND bonus>0').get().n,1);
+  /* the day rows go with the account and with the closed week */
+  for(const st of leagueDeletion(env,11))await st.run();
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM league_goal_days WHERE user_id=11').get().n,0);
 });
