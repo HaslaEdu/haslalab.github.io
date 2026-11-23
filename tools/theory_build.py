@@ -276,7 +276,9 @@ def korean(out, bad, practical):
                     continue
                 if part == rev_at and rev:
                     ko['rev'] = rev
-                if part in t['f']:
+                if not ko and part not in t['f'] and re.match(r'^T\d+$', part):
+                    pass                  # only the Korean title of a problem in a paper published whole (EuPhO)
+                elif part in t['f']:
                     # A diagram/layout edition can accompany the Korean
                     # translation while the source manifest keeps the original.
                     if en and comp in SIDE_BY_SIDE:
