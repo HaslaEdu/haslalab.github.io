@@ -1,5 +1,6 @@
 # Publishes the site to GitHub Pages without tools/ (6.7 GB of PDF authoring inputs and evidence that no page loads),
-# community/ (the Worker's source; only community/weekly/, whose rubrics the Worker reads back from the site, stays) and tests/;
+# community/ (the Worker's source, including community/weekly/: its rubrics and solutions are private and bundled into
+# the Worker, community/src/monthly-rubrics.js and weekly-content.js) and tests/;
 # src/ stays: the problem cards link to the Python originals; the PDFs in pdfx/ are served by the PDF Worker from
 # releases (tools/pdfx_release.py, pdfx-release.yml), so they are left out too (the zip/xlsx/json files there stay),
 # so the published site stays well under GitHub Pages' 1 GB size limit and its deploys stop timing out.
@@ -48,7 +49,6 @@ jobs:
             !/tools/
             !/node_modules/
             !/community/
-            /community/weekly/
             !/tests/
             !/pdfx/*.pdf
             !/pdfx/*/*.pdf
@@ -56,7 +56,7 @@ jobs:
         if: steps.source.outputs.build_type == 'workflow'
         run: |
           mkdir -p "$RUNNER_TEMP/site"
-          rsync -a --prune-empty-dirs --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --include /community/ --include '/community/weekly/***' --exclude '/community/*' --exclude /tests/ --exclude '/pdfx/**.pdf' ./ "$RUNNER_TEMP/site/"
+          rsync -a --prune-empty-dirs --exclude .git --exclude .github --exclude tools/ --exclude node_modules/ --exclude /community/ --exclude /tests/ --exclude '/pdfx/**.pdf' ./ "$RUNNER_TEMP/site/"
           du -sh "$RUNNER_TEMP/site"; find "$RUNNER_TEMP/site" -type f | wc -l
       # One artifact name per attempt: a re-run keeps the earlier attempts' artifacts.
       - id: upload
