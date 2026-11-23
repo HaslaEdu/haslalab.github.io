@@ -31,6 +31,7 @@ import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError }
 import { createGalleryRouter, activeGallery } from './galleries.js';
 import { createPracticeRouter, ensurePracticeSchema } from './practice-progress.js';
 import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
+import { createHandoutRouter } from './handouts.js';
 import { createGradeRouter, ensureGradeSchema } from './practice-grade.js';
 import { createCreationRouter, ensureCreationSchema } from './creations.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
@@ -258,6 +259,7 @@ const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "ad
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
 const practiceRouter = createPracticeRouter({HttpError, needUser, limit, now, bad});
 const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, clientIp});
+const handoutRouter = createHandoutRouter({HttpError, needUser, limit, now, bad, isAdmin: u => isAdmin(u)});
 const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
 const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
@@ -782,6 +784,8 @@ async function handle(req, env, url, ctx) {
   if (practice !== undefined) return practice;
   const graded = await gradeRouter(p, m, body, me, req, env);
   if (graded !== undefined) return graded;
+  const handout = await handoutRouter(p, m, body, me, req, env);
+  if (handout !== undefined) return handout;
   const learn = await learnRouter(p, m, body, me, req, env);
   if (learn !== undefined) return learn;
   const creation = await creationRouter(p, m, body, me, req, env);

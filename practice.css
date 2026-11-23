@@ -162,3 +162,39 @@ button.mini[aria-pressed=true]{color:var(--accent);border-color:var(--accent);ba
 .wfb{font-size:14.5px}.wfb p{margin:6px 0}.wtrans{font-size:13.5px;color:var(--muted)}
 .tag.rst-fixed{color:var(--ok);background:var(--ok-bg)}.tag.rst-rejected{color:var(--bad);background:var(--bad-bg)}.tag.rst-pending{color:var(--amber);background:var(--amber-bg)}.tag.rst-open{color:var(--accent);background:var(--accent-soft)}
 @media(max-width:600px){.written{margin-left:-4px;margin-right:-4px;padding:12px 10px}.padbar .seg{display:inline-flex}.padbar .seg button{flex:none}.wmode{display:flex}.ptools .lastgr{width:100%;text-align:center}}
+/* the streak: a button that opens its free day and exam-time break */
+button.stat.fire{display:inline-block;text-align:left;min-height:40px;padding:8px 14px;font-weight:400;line-height:1.4}
+button.stat.fire[aria-expanded=true]{border-color:var(--accent)}.stat.fire.paused b{color:var(--muted)}
+.stat .sksub{display:block;font-size:11px;color:var(--muted);line-height:1.3}
+.skpanel{flex-basis:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.skpanel p{margin:8px 0}.skrow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tag.ok{color:var(--ok);background:var(--ok-bg)}
+.switch{display:flex;align-items:center;gap:10px;min-height:44px;font-weight:650;cursor:pointer}
+.switch input{appearance:none;width:44px;height:26px;border-radius:13px;background:var(--line);position:relative;margin:0;flex:none;cursor:pointer;transition:background .15s}
+.switch input::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}
+.switch input:checked{background:var(--accent)}.switch input:checked::after{left:21px}.switch input:disabled{opacity:.5;cursor:default}
+.switch input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* the card before a unit's first problems */
+.introcard h2{margin:6px 0 10px}.introcard .sublabel{margin:14px 0 2px}.introcard p{margin:4px 0}
+.icf{overflow-x:auto;padding:4px 0;font-size:1.05rem}
+.iclinks{display:flex;flex-wrap:wrap;gap:6px 18px;margin:14px 0 0!important}.iclinks a{color:var(--accent);min-height:40px;display:inline-flex;align-items:center}
+.introcard .actions button.primary{min-width:180px;min-height:44px}
+/* drafts */
+.draftbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;margin-top:10px;padding:10px 12px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:12px}
+.draftbar.home{margin:0 0 12px}.draftbar>span:first-child{display:flex;flex-direction:column;min-width:0}.draftbar small{color:var(--muted);overflow-wrap:anywhere}
+.dbtns{display:inline-flex;gap:8px;flex-wrap:wrap}.dbtns button{min-height:40px}
+.dsaved{margin:4px 0 0;font-size:12px}
+/* the reading, to check before marking */
+.wread{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}.wrhead{margin:0 0 8px}
+.wrbody{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:start}
+.thumbs.mini{display:flex;flex-direction:column;gap:6px}.thumbs.mini img{width:96px;height:auto;border:1px solid var(--line);border-radius:6px;display:block;background:#fff}
+.wread textarea,#apNote{width:100%;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
+.wread textarea{min-height:160px}#apNote{font-family:inherit;font-size:14px;min-height:40px}
+.wread .wtrans:not(:empty){margin-top:8px;padding:8px 10px;border:1px dashed var(--line);border-radius:8px;font-size:14px}
+.wread .ractions button.primary{min-width:160px;min-height:44px}
+.conf{display:inline-block;font-size:12px;color:var(--muted);margin-left:6px}.conf.low{font-weight:700;color:var(--amber);background:var(--amber-bg);border-radius:10px;padding:1px 8px}
+/* appeals */
+.appeal{margin-top:10px}#apForm{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}#apForm #apNote{flex:1 1 220px}
+.tag.ap-open{color:var(--amber);background:var(--amber-bg)}.tag.ap-upheld{color:var(--muted)}.tag.ap-changed{color:var(--ok);background:var(--ok-bg)}
+@media(max-width:600px){.wrbody{grid-template-columns:1fr}.thumbs.mini{flex-direction:row;overflow-x:auto}.thumbs.mini img{width:72px}
+  .draftbar .dbtns{width:100%}.draftbar .dbtns button{flex:1}.introcard .actions button.primary{flex:1 1 100%}}

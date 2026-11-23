@@ -103,7 +103,7 @@ test('the page sends working to the grading endpoint and reports to the report e
   const js=read('practice.js'),css=read('practice.css');
   assert.match(js,/API\+'\/api\/learn\/grade'/);assert.match(js,/API\+'\/api\/learn\/report'/);assert.match(js,/\/api\/learn\/reports\/mine/);
   assert.match(js,/accept="\$\{photo\?'image\/\*':'image\/\*,application\/pdf,\.pdf'\}"\$\{photo\?' capture="environment"':''\} multiple/);
-  assert.match(js,/r\.status===404\?tr\('wSoon'\)/,'a missing server reads as "not ready"');
+  assert.match(js,/r\.status===404&&code!=='read_not_found'\?tr\('wSoon'\)/,'a missing server reads as "not ready"');
   assert.match(css,/\.padcv\{[^}]*touch-action:none/);
   for(const k of ['wTitle','wSend','wSoon','wLogin','bandPass','bandPartial','bandRetry','lvTitle','lvSoon','rQueued'])assert.match(js,new RegExp(`(^|[\\s,{])${k}:'[^']*[가-힣]`,'m'),k+' ko');
   assert.doesNotMatch(js,/seamless|unlock|elevate|delve/i);

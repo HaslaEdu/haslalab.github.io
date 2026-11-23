@@ -165,7 +165,7 @@
   /* ── progress backup: a JSON file with {app, version, exported, state}. Import checks every field and keeps only
      what has the right shape; merging keeps the newer entry for each item ── */
   const APP='haslalab-practice',VERSION=1;
-  const FIELDS=['profile','xp','days','level','solved','wrong','skills','bank','contest','review','later','recent','goalDay','diagAt','graded','gradedHist','studyLevel'];
+  const FIELDS=['profile','xp','days','level','solved','wrong','skills','bank','contest','review','later','recent','goalDay','diagAt','graded','gradedHist','studyLevel','streakCfg','intro'];
   function exportOf(saved,when){
     const state={};for(const k of FIELDS)if(saved&&saved[k]!==undefined)state[k]=saved[k];
     return{app:APP,version:VERSION,exported:when||new Date().toISOString(),state};
@@ -194,6 +194,8 @@
     const gm=mapOf(s.graded,gradedOk);if(gm)out.graded=gm;
     const hm=mapOf(s.gradedHist,h=>Array.isArray(h)&&h.length<=UNIT_WINDOW&&h.every(x=>num(x)&&x>=0&&x<=1));if(hm)out.gradedHist=hm;
     if(typeof s.studyLevel==='string'&&/^L[1-4]$/.test(s.studyLevel))out.studyLevel=s.studyLevel;
+    if(isObj(s.streakCfg)&&Array.isArray(s.streakCfg.pauses))out.streakCfg={pauses:s.streakCfg.pauses.filter(pauseOk).slice(-12)};
+    const im=mapOf(s.intro,num);if(im)out.intro=im;
     if(!Object.keys(out).length)return{ok:false,error:'empty'};
     return{ok:true,state:out};
   }
@@ -220,7 +222,148 @@
     if(B.graded)out.graded=obj(A.graded,B.graded,byAt('at'));
     if(B.gradedHist)out.gradedHist={...(A.gradedHist||{}),...B.gradedHist};
     if(B.studyLevel&&!A.studyLevel)out.studyLevel=B.studyLevel;
+    if(B.streakCfg){const seen=new Set(),list=[];for(const p of [...pausesOf(A.streakCfg),...pausesOf(B.streakCfg)]){const k=p.from+p.to;if(!seen.has(k)){seen.add(k);list.push(p);}}out.streakCfg={pauses:list.sort((x,y)=>x.from<y.from?-1:1).slice(-12)};}
+    if(B.intro)out.intro=obj(A.intro,B.intro,mx);
     return out;
   }
-  return{STUDY_LEVELS,levelInfo,inLevel,defaultLevel,BANDS,BAND_MULT,bandOf,baseXp,gradedXp,gradedGain,moveOn,UNIT_WINDOW,UNIT_UP,pushGraded,PAGE_SIDE,PAGE_BYTES,MAX_PAGES,fitSize,dataUrlBytes,ENCODE_STEPS,pageOk,gradeItem,REVIEW_DAYS,addDays,reviewUpdate,dueIds,PACE,paceFor,clock,matchSet,buildSet,APP,VERSION,FIELDS,exportOf,validateBackup,mergeBackup};
+  /* ── streak: a day missed does not end it once a week (the week's freeze, used by itself and back each Monday), and
+     an exam-time pause holds it for up to 14 days. Nothing is spent on mistakes: there are no hearts or energy.
+     cfg: {pauses:[{from,to}]}. The freeze is worked out from the days, so it needs no storage. ── */
+  const PAUSE_DAYS=14,PAUSE_GAP=7;
+  const weekOf=day=>{const [y,m,d]=day.split('-').map(Number),dow=new Date(Date.UTC(y,m-1,d)).getUTCDay();return addDays(day,-((dow+6)%7));};
+  const pauseOk=p=>isObj(p)&&typeof p.from==='string'&&typeof p.to==='string'&&DAY_RE.test(p.from)&&DAY_RE.test(p.to)&&p.from<=p.to&&p.to<=addDays(p.from,PAUSE_DAYS-1);
+  const pausesOf=cfg=>(Array.isArray(cfg?.pauses)?cfg.pauses:[]).filter(pauseOk);
+  function activePause(cfg,day){return pausesOf(cfg).find(p=>p.from<=day&&day<=p.to)||null;}
+  function streakInfo(days,cfg,day){
+    const set=new Set((days||[]).filter(x=>typeof x==='string')),pauses=pausesOf(cfg);
+    const paused=d=>pauses.some(p=>p.from<=d&&d<=p.to);
+    let d=set.has(day)?day:addDays(day,-1),n=0,pending=[];const used=[],weeks=new Set();
+    for(let i=0;i<1000;i++,d=addDays(d,-1)){
+      if(set.has(d)){n++;used.push(...pending);pending=[];continue;}
+      if(paused(d))continue;
+      const w=weekOf(d);if(weeks.has(w))break;
+      weeks.add(w);pending.push(d);
+    }
+    const week=weekOf(day),pause=activePause(cfg,day);
+    return{n,frozen:used.sort(),freezeLeft:!used.some(x=>weekOf(x)===week),pause,canPause:!pause&&pauseAllowed(cfg,day)};
+  }
+  /* a new pause needs PAUSE_GAP days since the last one ended, so pauses cannot be chained */
+  const pauseAllowed=(cfg,day)=>!pausesOf(cfg).some(p=>p.to>=addDays(day,-PAUSE_GAP));
+  function pauseStart(cfg,day){
+    if(!pauseAllowed(cfg,day))return null;
+    return{...(cfg||{}),pauses:[...pausesOf(cfg),{from:day,to:addDays(day,PAUSE_DAYS-1)}].slice(-12)};
+  }
+  function pauseStop(cfg,day){
+    const list=pausesOf(cfg).map(p=>p.from<=day&&day<=p.to?(p.from===day?null:{from:p.from,to:addDays(day,-1)}):p).filter(Boolean);
+    return{...(cfg||{}),pauses:list};
+  }
+
+  /* ── drafts: the pad's strokes and the chosen pages for one problem, kept in this browser until it is graded ── */
+  const DRAFT_POINTS=40000,DRAFT_KEEP=6,DRAFT_DAYS=14,DRAFT_LOCAL_BYTES=300000;
+  function compactStrokes(strokes){
+    const out=[];let total=0;
+    for(const st of Array.isArray(strokes)?strokes:[]){
+      if(!st||!Array.isArray(st.pts)||!st.pts.length)continue;
+      const room=DRAFT_POINTS-total;if(room<=0)break;
+      const pts=st.pts.slice(0,room).filter(p=>Array.isArray(p)&&num(p[0])&&num(p[1])).map(p=>[Math.round(p[0]),Math.round(p[1])]);
+      if(!pts.length)continue;
+      total+=pts.length;out.push({tool:st.tool==='eraser'?'eraser':'pen',w:Math.max(1,Math.min(60,Number(st.w)||4)),pts});
+    }
+    return out;
+  }
+  function draftOf(id,o,at){
+    const d={id:String(id||'').slice(0,120),at:num(at)?at:Math.floor(Date.now()/1000),pages:(o?.pages||[]).filter(pageOk).slice(0,MAX_PAGES),strokes:compactStrokes(o?.strokes)};
+    if(isObj(o?.meta))d.meta=o.meta;if(typeof o?.t==='string')d.t=o.t.slice(0,120);
+    return d;
+  }
+  const draftEmpty=d=>!d||(!d.pages?.length&&!d.strokes?.length);
+  const draftOk=(d,now)=>isObj(d)&&typeof d.id==='string'&&d.id.length>0&&num(d.at)&&(now==null||now-d.at<=DRAFT_DAYS*86400)&&Array.isArray(d.pages)&&d.pages.every(pageOk)&&d.pages.length<=MAX_PAGES&&
+    Array.isArray(d.strokes)&&d.strokes.every(st=>isObj(st)&&Array.isArray(st.pts));
+  /* which drafts to drop: anything older than DRAFT_DAYS, and all but the newest DRAFT_KEEP */
+  function pruneDrafts(list,now){
+    const ok=(list||[]).filter(d=>draftOk(d,now)).sort((a,b)=>b.at-a.at),keep=new Set(ok.slice(0,DRAFT_KEEP).map(d=>d.id));
+    return{keep:[...keep],drop:(list||[]).map(d=>d?.id).filter(id=>typeof id==='string'&&!keep.has(id))};
+  }
+  /* where IndexedDB is missing: localStorage, strokes first, pages only while the whole draft stays small */
+  function localDraft(d){
+    const size=x=>JSON.stringify(x).length;
+    if(size(d)<=DRAFT_LOCAL_BYTES)return d;
+    const noPages={...d,pages:[]};if(size(noPages)<=DRAFT_LOCAL_BYTES)return noPages;
+    return null;
+  }
+
+  /* ── the card before a unit's first problems: what the unit covers, its key formula, the guide chapter and the concept
+     simulation where there is one ── */
+  const C=(ko,en,f,sim)=>({ko,en,f,sim});
+  const UNIT_CARDS={
+    'mechanics/kinematics':C('위치, 속도, 가속도로 운동을 나타냅니다. 등가속도 운동과 포물선 운동이 중심입니다.','Describe motion with position, velocity and acceleration: constant acceleration and projectiles.','x=x_0+v_0t+\\tfrac12at^2,\\quad v^2=v_0^2+2a\\,\\Delta x','projectile'),
+    'mechanics/newton':C('물체에 작용하는 힘을 모두 그리고, 알짜힘으로 가속도를 구합니다. 마찰과 빗면도 다룹니다.','Draw every force on a body and get its acceleration from the net force, with friction and slopes.','\\sum\\vec F=m\\vec a','pulley-cart'),
+    'mechanics/energy':C('힘이 한 일과 운동 에너지, 위치 에너지의 관계를 씁니다.','Relate the work done by forces to kinetic and potential energy.','W=\\Delta K,\\quad K+U=\\text{const}'),
+    'mechanics/momentum':C('충격량과 운동량, 충돌 전후의 운동량 보존을 다룹니다.','Impulse, momentum and its conservation in collisions.','\\vec J=\\Delta\\vec p,\\quad \\sum\\vec p_i=\\sum\\vec p_f','collision'),
+    'mechanics/circular':C('원을 따라 도는 물체에는 중심을 향하는 알짜힘이 필요합니다.','A body moving on a circle needs a net force towards the centre.','a_c=\\frac{v^2}{r}=\\omega^2r','hemisphere'),
+    'mechanics/gravitation':C('만유인력과 원궤도, 케플러 법칙, 탈출 속도를 다룹니다.','Universal gravitation, circular orbits, Kepler’s laws and escape speed.','F=\\frac{GMm}{r^2},\\quad T^2\\propto a^3'),
+    'mechanics/statics':C('정지한 물체는 힘의 합과 돌림힘의 합이 모두 0입니다.','A body at rest has zero net force and zero net torque.','\\sum\\vec F=0,\\quad \\sum\\tau=0'),
+    'mechanics/noninertial':C('가속하는 좌표계에서는 관성력을 더해 뉴턴 법칙을 씁니다.','In an accelerating frame, add the inertial force and use Newton’s laws.','\\vec F_{\\text{in}}=-m\\vec a_{\\text{frame}}'),
+    'mechanics/rigid_body':C('관성 모멘트, 돌림힘과 각가속도, 각운동량 보존을 다룹니다.','Moment of inertia, torque and angular acceleration, conservation of angular momentum.','\\tau=I\\alpha,\\quad L=I\\omega'),
+    'mechanics/fluids':C('압력, 부력, 연속 방정식과 베르누이 방정식을 다룹니다.','Pressure, buoyancy, continuity and Bernoulli’s equation.','p+\\tfrac12\\rho v^2+\\rho gh=\\text{const}'),
+    'waves/shm':C('복원력이 변위에 비례하면 단진동을 합니다. 용수철과 진자가 대표입니다.','A restoring force proportional to displacement gives simple harmonic motion: springs and pendulums.','T=2\\pi\\sqrt{\\frac mk},\\quad T=2\\pi\\sqrt{\\frac Lg}','pendulum'),
+    'waves/wave_motion':C('파장, 진동수, 속력의 관계와 파동 그래프 읽기를 다룹니다.','Wavelength, frequency and speed, and reading wave graphs.','v=f\\lambda'),
+    'waves/sound':C('소리의 세기와 높이, 음원이나 관찰자가 움직일 때의 도플러 효과를 다룹니다.','Loudness and pitch, and the Doppler shift when the source or listener moves.','f\'=f\\,\\frac{v\\pm v_o}{v\\mp v_s}'),
+    'waves/superposition':C('두 파동이 겹치는 간섭, 양 끝이 고정된 줄의 정상파와 공명을 다룹니다.','Waves adding up, standing waves on a string fixed at both ends, and resonance.','\\lambda_n=\\frac{2L}{n}'),
+    'optics/refraction':C('반사 법칙, 굴절 법칙, 전반사의 임계각을 다룹니다.','The law of reflection, Snell’s law and the critical angle.','n_1\\sin\\theta_1=n_2\\sin\\theta_2'),
+    'optics/lenses':C('렌즈와 거울이 만드는 상의 위치와 배율을 구합니다.','Find where lenses and mirrors form images, and how large.','\\frac1a+\\frac1b=\\frac1f,\\quad m=-\\frac ba'),
+    'optics/interference':C('이중 슬릿, 얇은 막, 회절에서 밝은 무늬와 어두운 무늬의 조건을 구합니다.','Conditions for bright and dark fringes in double slits, thin films and diffraction.','d\\sin\\theta=m\\lambda'),
+    'optics/polarization':C('편광판을 지난 빛의 세기와 반사로 생기는 편광을 다룹니다.','Light through polarisers, and polarisation by reflection.','I=I_0\\cos^2\\theta'),
+    'em/electrostatics':C('쿨롱 법칙과 전기장, 여러 전하가 만드는 전기장의 합을 다룹니다.','Coulomb’s law, the electric field and adding the fields of several charges.','F=k\\frac{q_1q_2}{r^2},\\quad \\vec E=\\frac{\\vec F}{q}','charges'),
+    'em/capacitors':C('전위와 전위차, 축전기의 전기 용량과 저장 에너지를 다룹니다.','Potential and potential difference, capacitance and stored energy.','Q=CV,\\quad U=\\tfrac12CV^2'),
+    'em/dc_circuits':C('옴의 법칙, 저항의 직렬 · 병렬 연결, 소비 전력을 다룹니다.','Ohm’s law, resistors in series and parallel, and power.','V=IR,\\quad P=IV'),
+    'em/magnetic_field':C('직선 전류, 원형 전류, 솔레노이드가 만드는 자기장을 다룹니다.','The magnetic field of a straight wire, a loop and a solenoid.','B=\\frac{\\mu_0I}{2\\pi r},\\quad B=\\mu_0nI'),
+    'em/lorentz':C('자기장 속에서 움직이는 전하와 전류가 받는 힘을 다룹니다.','The force on moving charges and currents in a magnetic field.','\\vec F=q\\vec v\\times\\vec B,\\quad r=\\frac{mv}{qB}'),
+    'em/induction':C('자기 선속이 변하면 유도 기전력이 생깁니다. 렌츠 법칙으로 방향을 정합니다.','A changing magnetic flux induces an emf; Lenz’s law gives its direction.','\\varepsilon=-\\frac{d\\Phi}{dt}'),
+    'em/ac_circuits':C('교류에서 저항, 코일, 축전기의 리액턴스와 공명을 다룹니다.','Reactance of resistors, coils and capacitors in AC, and resonance.','\\omega_0=\\frac1{\\sqrt{LC}}'),
+    'em/em_waves':C('전자기파의 종류와 성질, 빛의 속력을 다룹니다.','Kinds and properties of electromagnetic waves, and the speed of light.','c=f\\lambda=\\frac1{\\sqrt{\\mu_0\\varepsilon_0}}'),
+    'em/magnetic_materials':C('강자성체, 상자성체, 반자성체가 자기장에 반응하는 방식을 다룹니다.','How ferromagnetic, paramagnetic and diamagnetic materials respond to a field.','\\vec B=\\mu_0(\\vec H+\\vec M)'),
+    'thermal/ideal_gas':C('이상 기체의 압력, 부피, 온도 사이의 관계를 다룹니다.','How pressure, volume and temperature of an ideal gas are related.','pV=nRT'),
+    'thermal/first_law':C('열, 일, 내부 에너지의 관계와 여러 열역학 과정을 다룹니다.','Heat, work and internal energy, and the common thermodynamic processes.','\\Delta U=Q-W'),
+    'thermal/heat_engines':C('열기관이 한 일과 효율, 카르노 기관의 최대 효율을 다룹니다.','Work and efficiency of heat engines, and the Carnot limit.','e=\\frac{W}{Q_H}\\le 1-\\frac{T_C}{T_H}'),
+    'thermal/heat_transfer':C('전도, 대류, 복사로 열이 전달되는 빠르기를 다룹니다.','How fast heat moves by conduction, convection and radiation.','P=kA\\frac{\\Delta T}{L},\\quad P=\\sigma AT^4'),
+    'thermal/kinetic_theory':C('기체 분자의 운동으로 압력과 온도를 설명합니다.','Explain pressure and temperature from the motion of gas molecules.','\\tfrac12m\\overline{v^2}=\\tfrac32k_BT'),
+    'modern/special_relativity':C('빛의 속력이 일정하다는 데서 시간 지연, 길이 수축, 질량-에너지 관계가 나옵니다.','From a constant speed of light: time dilation, length contraction and mass-energy.','\\Delta t=\\gamma\\Delta t_0,\\quad E=mc^2'),
+    'modern/general_relativity':C('등가 원리와 중력에 의한 시간 지연, 빛의 휘어짐을 다룹니다.','The equivalence principle, gravitational time dilation and the bending of light.','\\frac{\\Delta f}{f}=\\frac{gh}{c^2}'),
+    'modern/photon':C('빛은 광자로 에너지를 주고받습니다. 광전 효과가 대표입니다.','Light exchanges energy in photons, as in the photoelectric effect.','E=hf,\\quad K_{\\max}=hf-W'),
+    'modern/matter_waves':C('입자도 파동처럼 행동합니다. 드브로이 파장과 불확정성 원리를 다룹니다.','Particles behave as waves: the de Broglie wavelength and the uncertainty principle.','\\lambda=\\frac hp,\\quad \\Delta x\\,\\Delta p\\ge\\frac\\hbar2'),
+    'modern/atoms':C('원자의 에너지 준위와 전자가 준위를 옮길 때 나오는 빛을 다룹니다.','Atomic energy levels and the light emitted when an electron changes level.','hf=E_i-E_f'),
+    'modern/nuclear':C('핵반응, 방사성 붕괴와 반감기, 질량 결손을 다룹니다.','Nuclear reactions, radioactive decay and half-life, and mass defect.','N=N_0\\left(\\tfrac12\\right)^{t/T_{1/2}}'),
+    'modern/solids':C('에너지띠, 도체와 반도체, 다이오드의 원리를 다룹니다.','Energy bands, conductors and semiconductors, and how a diode works.','E_g=E_c-E_v'),
+    'experiment/uncertainty':C('측정값의 불확도를 구하고 계산 결과까지 전파합니다.','Estimate the uncertainty of a measurement and carry it through a calculation.','\\frac{\\delta f}{f}=\\sqrt{\\left(\\frac{\\delta x}{x}\\right)^2+\\left(\\frac{\\delta y}{y}\\right)^2}'),
+    'experiment/graphs':C('데이터를 직선이 되도록 바꿔 그리고 기울기와 절편으로 값을 구합니다.','Plot data so it falls on a line, then read values from the slope and intercept.','y=mx+b'),
+    'experiment/design':C('변인을 정하고 통제해 원하는 관계를 측정하는 실험을 세웁니다.','Choose and control variables to measure the relation you want.','\\text{independent}\\to\\text{dependent},\\ \\text{others fixed}'),
+    'math/vectors':C('벡터의 합과 분해, 내적과 외적을 다룹니다.','Adding and resolving vectors, dot and cross products.','\\vec a\\cdot\\vec b=ab\\cos\\theta'),
+    'math/calculus':C('미분은 변화율, 적분은 쌓인 양입니다. 물리 식에 바로 씁니다.','Derivatives are rates and integrals are totals, used straight in physics.','v=\\frac{dx}{dt},\\quad x=\\int v\\,dt'),
+    'math/approximation':C('차원 분석과 작은 값 근사로 답의 꼴과 크기를 빨리 구합니다.','Use dimensions and small-quantity approximations to find the form and size of an answer.','(1+x)^n\\approx1+nx'),
+    'math/ode':C('물리 법칙을 미분방정식으로 세우고 지수 함수나 삼각 함수 해를 찾습니다.','Write physical laws as differential equations and solve them with exponentials or sines.','\\ddot x=-\\omega^2x\\Rightarrow x=A\\cos(\\omega t+\\varphi)')
+  };
+  const unitCard=unit=>UNIT_CARDS[unit]||null;
+  const guideHref=unit=>'/#/learn/guide/'+String(unit||'');
+  const simHref=sim=>'/#/learn/concepts?sim='+encodeURIComponent(sim);
+
+  /* ── the account's state and this browser's, merged so neither loses progress (the server's practice-progress.js
+     mergeState is the same rule). Used on every sign-in, including the first one, when the account is still empty ── */
+  function accountMerge(a,b){
+    const A=a||{},B=b||{},obj=(x,y,f)=>{const o={...(x||{})};for(const[k,v]of Object.entries(y||{}))o[k]=own(o,k)?f(o[k],v):v;return o;},mx=(x,y)=>Math.max(Number(x)||0,Number(y)||0);
+    const newer=(x,y)=>(Number(y?.at)||0)>(Number(x?.at)||0)?y:x||y;
+    return{profile:newer(A.profile,B.profile),xp:mx(A.xp,B.xp),days:[...new Set([...(A.days||[]),...(B.days||[])])].sort().slice(-400),level:obj(A.level,B.level,mx),solved:obj(A.solved,B.solved,x=>x),wrong:obj(A.wrong,B.wrong,mx),
+      bank:{done:obj(A.bank?.done,B.bank?.done,mx),stars:obj(A.bank?.stars,B.bank?.stars,(x,y)=>y??x)},contest:{done:obj(A.contest?.done,B.contest?.done,mx)}};
+  }
+  /* the account's ratings join this browser's: the one with more answers behind it wins */
+  function skillsMerge(local,server){
+    const out={...(local||{})};
+    for(const k of Array.isArray(server)?server:[])if(k&&typeof k.unit==='string'&&(!out[k.unit]||(Number(k.n)||0)>=(Number(out[k.unit].n)||0)))out[k.unit]=k;
+    return out;
+  }
+
+  return{PAUSE_DAYS,PAUSE_GAP,weekOf,activePause,streakInfo,pauseAllowed,pauseStart,pauseStop,
+    DRAFT_POINTS,DRAFT_KEEP,DRAFT_DAYS,DRAFT_LOCAL_BYTES,compactStrokes,draftOf,draftEmpty,draftOk,pruneDrafts,localDraft,
+    UNIT_CARDS,unitCard,guideHref,simHref,accountMerge,skillsMerge,
+    STUDY_LEVELS,levelInfo,inLevel,defaultLevel,BANDS,BAND_MULT,bandOf,baseXp,gradedXp,gradedGain,moveOn,UNIT_WINDOW,UNIT_UP,pushGraded,PAGE_SIDE,PAGE_BYTES,MAX_PAGES,fitSize,dataUrlBytes,ENCODE_STEPS,pageOk,gradeItem,REVIEW_DAYS,addDays,reviewUpdate,dueIds,PACE,paceFor,clock,matchSet,buildSet,APP,VERSION,FIELDS,exportOf,validateBackup,mergeBackup};
 });

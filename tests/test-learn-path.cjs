@@ -130,8 +130,8 @@ test('the Learn bar: today\'s problems, roadmap, courses, search, lab, in that o
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const learn=bar('learn','#/learn/physics/search');
-    assert.deepEqual(Array.from(learn,([href])=>href),['#/learn/practice','#/learn/roadmap','#/learn/courses','#/learn/physics/search','#/learn/lab']);
-    assert.deepEqual(Array.from(a.run('sectionLinks("learn").map(x=>x[1])')),language==='ko'?['오늘의 문제','로드맵','강좌','문제 검색','실험실']:["Today's problems",'Roadmap','Courses','Search problems','Lab']);
+    assert.deepEqual(Array.from(learn,([href])=>href),['#/learn/practice','#/learn/roadmap','#/learn/guide','#/learn/courses','#/learn/physics/search','#/learn/lab']);
+    assert.deepEqual(Array.from(a.run('sectionLinks("learn").map(x=>x[1])')),language==='ko'?['오늘의 문제','로드맵','교재','강좌','문제 검색','실험실']:["Today's problems",'Roadmap','Guide','Courses','Search problems','Lab']);
     assert.ok(Array.from(a.run('sectionLinks("learn").map(x=>x[3])')).every(line=>line&&line.length<90),'each item has one short line');
     for(const [hash,on] of [['#/learn/physics/search','#/learn/physics/search'],['#/learn/practice','#/learn/practice'],['#/learn/physics','#/learn/roadmap'],['#/learn/roadmap','#/learn/roadmap'],['#/learn/courses','#/learn/courses'],
       ['#/learn/lab','#/learn/lab'],['#/learn/concepts','#/learn/lab'],['#/learn/compute','#/learn/lab'],['#/learn/create','#/learn/lab']])
@@ -167,13 +167,13 @@ test('the home page: today\'s problems at once, four doors, then a section for e
   assert.deepEqual(Runtime.routeNeeds('#/'),[]);
 });
 
-test('the Learn page lists the five parts with one line each, then the teacher page, books and other subjects',()=>{
+test('the Learn page lists the six parts with one line each, then the teacher page, books and other subjects',()=>{
   const a=app('#/learn');
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewLearnHome()'),hrefs=links(html);
     const parts=[...html.matchAll(/<ol class="ll-parts">([\s\S]*?)<\/ol>/g)][0][1];
-    assert.deepEqual(links(parts),['#/learn/practice','#/learn/roadmap','#/learn/courses','#/learn/physics/search','#/learn/lab']);
+    assert.deepEqual(links(parts),['#/learn/practice','#/learn/roadmap','#/learn/guide','#/learn/courses','#/learn/physics/search','#/learn/lab']);
     for(const href of ['#/learn/teach','#/archive/books/phys','#/learn/subjects'])assert.ok(hrefs.includes(href),href);
     assert.equal((html.match(/class="hm-go"/g)||[]).length,1);
   }

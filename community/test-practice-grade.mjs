@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {createGradeRouter, UNREADABLE_REFUNDS, bandOf, cleanPages, cleanRubric, scoreOf, gradePolicy, gradeProvider} from './src/practice-grade.js';
+import {createGradeRouter, UNREADABLE_REFUNDS, READ_TTL, bandOf, cleanPages, cleanRubric, scoreOf, gradePolicy, gradeProvider, readPolicy, markPolicy, addedTokens, editAllowed} from './src/practice-grade.js';
 import {createLearnRouter, GRADE_FREE, GRADE_PLAN} from './src/learn-services.js';
 import {PRACTICE_SCHEMA} from './src/practice-progress.js';
 
@@ -168,4 +168,112 @@ test('no vision provider: the grading is unavailable and not counted',async()=>{
   const {route,env}=setup();delete env.GEMINI_API_KEY;
   await fails(route('/api/learn/grade','POST',body(),me),'ai_unavailable');
   assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,GRADE_FREE);
+});
+
+/* ── two steps: read, the learner fixes the transcript, then grade ── */
+const readOut={transcript:'$v=\\sqrt{2gh}=9.8$ m/s [?]',legible:true,confidence:0.42};
+const markOut=args=>({items:[{id:'a',got:3,note:'ok'},{id:'b',got:3,note:'ok'},{id:'c',got:args.transcript.includes('9.9')?4:1,note:''}],feedback:'Good.',confidence:0.9});
+const twoStep=()=>setup({vision:args=>args.mode==='read'?readOut:args.mode==='mark'?markOut(args):{transcript:'x',legible:true,items:[],feedback:''}});
+const gradeBody=(read_id,transcript,over={})=>({step:'grade',read_id,transcript,item:item(over.item),level:'L1',lang:'ko'});
+
+test('read then grade: one vision call reads, a text-only call marks the edited transcript, the quota counts once',async()=>{
+  const {route,visionCalls,db}=twoStep();
+  const r=await route('/api/learn/grade','POST',{...body(),step:'read'},me);
+  assert.equal(r.step,'read');assert.equal(typeof r.read_id,'number');assert.match(r.transcript,/9\.8/);
+  assert.equal(r.confidence,0.42);assert.equal(r.low_confidence,true);assert.equal(r.left,GRADE_FREE-1);assert.equal(r.score,undefined,'a read is not marked');
+  assert.equal(visionCalls.length,1);assert.equal(visionCalls[0].mode,'read');assert.equal(visionCalls[0].pages.length,1);
+  assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,GRADE_FREE-1);
+  const g=await route('/api/learn/grade','POST',gradeBody(r.read_id,'$v=\\sqrt{2gh}=9.9$ m/s'),me);
+  assert.equal(visionCalls.length,2);const call=visionCalls[1];
+  assert.equal(call.mode,'mark');assert.equal(call.pages,undefined,'no images in the marking call');
+  assert.match(call.transcript,/9\.9/,'the edited transcript is marked');assert.match(call.readTranscript,/9\.8/,'the original reading goes along');
+  assert.equal(g.score,10,'the fix of a misread digit earned the final mark');assert.equal(g.transcript,'$v=\\sqrt{2gh}=9.9$ m/s');
+  assert.equal(g.confidence,0.9);assert.equal(g.low_confidence,false);assert.equal(g.left,GRADE_FREE-1);
+  assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,GRADE_FREE-1,'read + grade counted once');
+  const d=db.prepare('SELECT * FROM practice_graded_detail WHERE attempt_id=?').get(g.attempt_id);
+  assert.match(d.transcript,/9\.9/);assert.match(d.read_transcript,/9\.8/);assert.equal(JSON.parse(d.items).length,3);
+  await fails(route('/api/learn/grade','POST',gradeBody(r.read_id,'$v=9.9$'),me),'read_used');
+  assert.equal(visionCalls.length,2,'a used read costs no call');
+  assert.ok(!JSON.stringify(db.prepare('SELECT * FROM practice_reads').all()).includes('base64'),'no image is stored');
+});
+
+test('a read belongs to its learner and its problem, and lasts an hour',async()=>{
+  const {route,tick,visionCalls}=twoStep();
+  const r=await route('/api/learn/grade','POST',{...body(),step:'read'},me);
+  await fails(route('/api/learn/grade','POST',gradeBody(r.read_id,readOut.transcript),{id:8}),'read_not_found');
+  await fails(route('/api/learn/grade','POST',gradeBody(r.read_id,readOut.transcript,{item:{q:'Another problem entirely.'}}),me),'read_not_found');
+  await fails(route('/api/learn/grade','POST',gradeBody(99999,readOut.transcript),me),'read_not_found');
+  await fails(route('/api/learn/grade','POST',{...gradeBody(r.read_id,''),transcript:''},me),'bad_transcript');
+  await fails(route('/api/learn/grade','POST',{...gradeBody('1',readOut.transcript)},me),'bad_read');
+  await fails(route('/api/learn/grade','POST',{...body(),step:'mark'},me),'bad_step');
+  /* writing the whole solution into the transcript is not a correction */
+  const long=readOut.transcript+' '+Array.from({length:60},(_,i)=>'step'+i).join(' ');
+  await fails(route('/api/learn/grade','POST',gradeBody(r.read_id,long),me),'transcript_changed');
+  tick(READ_TTL+1);
+  await fails(route('/api/learn/grade','POST',gradeBody(r.read_id,readOut.transcript),me),'read_expired');
+  assert.equal(visionCalls.length,1,'none of these reached the model');
+  assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,GRADE_FREE-1);
+});
+
+test('step read: unreadable pages and failures follow the one-call rules; step grade failures keep the read',async()=>{
+  let mode='blank';
+  const {route}=setup({vision:args=>{if(args.mode==='read')return mode==='blank'?{transcript:'',legible:false,confidence:0}:readOut;
+    throw Object.assign(new Error('x'),{code:'vision_provider_failed'});}});
+  await fails(route('/api/learn/grade','POST',{...body(),step:'read'},me),'unreadable');
+  assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,GRADE_FREE,'given back like the one-call path');
+  mode='ok';
+  const r=await route('/api/learn/grade','POST',{...body(),step:'read'},me);
+  await fails(route('/api/learn/grade','POST',gradeBody(r.read_id,readOut.transcript),me),'grade_failed');
+  assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,GRADE_FREE-1,'a failed marking neither counts again nor refunds');
+  await fails(route('/api/learn/grade','POST',gradeBody(r.read_id,readOut.transcript),me),'grade_failed');
+});
+
+test('the one-call path still works and reports confidence when the model gives it',async()=>{
+  const {route}=setup({vision:()=>({transcript:'v=9.9',legible:true,confidence:0.3,items:[{id:'a',got:3,note:''},{id:'b',got:3,note:''},{id:'c',got:4,note:''}],feedback:''})});
+  const g=await route('/api/learn/grade','POST',body(),me);
+  assert.equal(g.score,10);assert.equal(g.confidence,0.3);assert.equal(g.low_confidence,true);
+  const {route:r2}=setup();assert.equal((await r2('/api/learn/grade','POST',body(),me)).confidence,null,'no confidence given: none shown');
+  assert.match(readPolicy(),/do not mark it/);assert.match(markPolicy('ko'),/Korean/);assert.match(markPolicy('en'),/no trace in read_transcript/);
+});
+
+test('transcript edits: fixing misreadings is fine, adding new work is not',()=>{
+  assert.equal(addedTokens('a b c','a b c'),0);assert.equal(addedTokens('v = 9.8 [?]','v = 9.9'),1);
+  assert.ok(editAllowed('F = m a , a = 2','F = m a , a = 3'));
+  const base=Array.from({length:100},(_,i)=>'t'+i).join(' ');
+  assert.ok(editAllowed(base,base+' '+Array.from({length:35},(_,i)=>'n'+i).join(' ')));
+  assert.ok(!editAllowed(base,base+' '+Array.from({length:36},(_,i)=>'n'+i).join(' ')));
+});
+
+test('appeals: the owner, once per attempt; staff list with overturn counts and resolve; the learner sees the status',async()=>{
+  const {route,db}=setup();
+  const g=await route('/api/learn/grade','POST',body(),me);
+  assert.equal(g.score,7);
+  await fails(route('/api/learn/grade/appeal','POST',{attempt_id:g.attempt_id},{id:8}),'attempt_not_found');
+  await fails(route('/api/learn/grade/appeal','POST',{attempt_id:g.attempt_id},null),'login_required');
+  await fails(route('/api/learn/grade/appeal','POST',{attempt_id:'x'},me),'bad_attempt');
+  await fails(route('/api/learn/grade/appeal','POST',{attempt_id:g.attempt_id,note:'x'.repeat(501)},me),'bad_note');
+  const a=await route('/api/learn/grade/appeal','POST',{attempt_id:g.attempt_id},me);
+  assert.equal(a.status,'open');assert.equal(a.old_score,7);assert.equal(a.max,10);assert.equal(a.note,'');
+  await fails(route('/api/learn/grade/appeal','POST',{attempt_id:g.attempt_id,note:'again'},me),'appeal_exists');
+  const g2=await route('/api/learn/grade','POST',body(),me);
+  const a2=await route('/api/learn/grade/appeal','POST',{attempt_id:g2.attempt_id,note:'I wrote the unit on line 3.'},me);
+  assert.equal(a2.note,'I wrote the unit on line 3.');
+  await fails(route('/api/learn/grade/appeals','GET',null,me,{url:'https://x/api/learn/grade/appeals'}),'staff_only');
+  const list=await route('/api/learn/grade/appeals','GET',null,staff,{url:'https://x/api/learn/grade/appeals?status=open'});
+  assert.equal(list.appeals.length,2);assert.match(list.appeals[0].transcript,/9\.9/);assert.equal(list.appeals[0].items.length,3);
+  await fails(route(`/api/learn/grade/appeals/${a.id}`,'PATCH',{status:'changed',score:9},me),'staff_only');
+  await fails(route(`/api/learn/grade/appeals/${a.id}`,'PATCH',{status:'changed',score:11},staff),'bad_score');
+  await fails(route(`/api/learn/grade/appeals/${a.id}`,'PATCH',{status:'open'},staff),'bad_status');
+  await fails(route('/api/learn/grade/appeals/9999','PATCH',{status:'upheld'},staff),'appeal_not_found');
+  const c=await route(`/api/learn/grade/appeals/${a.id}`,'PATCH',{status:'changed',score:9,reply:'The unit is on line 3.'},staff);
+  assert.equal(c.status,'changed');assert.equal(c.new_score,9);assert.equal(c.reply,'The unit is on line 3.');
+  assert.equal(db.prepare('SELECT score,band FROM practice_graded WHERE id=?').get(g.attempt_id).score,9,'the grading itself changes');
+  assert.equal((await route(`/api/learn/grade/appeals/${a2.id}`,'PATCH',{status:'upheld'},staff)).new_score,null);
+  const after=await route('/api/learn/grade/appeals','GET',null,staff,{url:'https://x/api/learn/grade/appeals'});
+  assert.deepEqual({...after.by_item[0]},{item_id:'ap1-u1-001',appeals:2,changed:1,open:0},'overturns per problem');
+  const mine=await route('/api/learn/grade/appeals/mine','GET',null,me);
+  assert.deepEqual(mine.appeals.map(x=>x.status),['upheld','changed']);
+  assert.equal((await route('/api/learn/grade/appeals/mine','GET',null,{id:8})).appeals.length,0);
+  const graded=await route('/api/learn/graded','GET',null,me,{url:'https://x/api/learn/graded'});
+  assert.deepEqual(graded.graded.map(x=>x.appeal),['upheld','changed']);
 });

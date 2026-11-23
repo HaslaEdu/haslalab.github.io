@@ -47,6 +47,14 @@
       report:'문제 신고',reportTitle:'이 문제에서 무엇이 잘못됐나요?',rWrongAnswer:'정답이 틀림',rTypo:'오타',rFigure:'그림',rTranslation:'번역',rOther:'기타',reportNote:'자세히 적어 주세요 (선택)',reportSend:'신고 보내기',reportCancel:'닫기',reportSent:'메일 앱에 신고 내용이 채워집니다. 열리지 않으면 이 주소로 보내 주세요:',myReports:'내 신고',noReports:'아직 보낸 신고가 없습니다.',reportPick:'무엇이 잘못됐는지 고르세요.',
       avgTime:'평균 풀이 시간',vsSuggested:'권장',strike:'이 보기 지우기',unstrike:'이 보기 되살리기',
       settings:'진도 관리',exportP:'진도 내보내기',importP:'불러오기',resetP:'초기화',resetConfirm:'이 기기의 진도를 모두 지울까요? 되돌릴 수 없습니다. 계정에 저장된 기록은 남습니다.',importDone:'불러왔습니다. 문제마다 더 최근 기록을 남겼습니다.',resetDone:'이 기기의 진도를 지웠습니다.',imp_not_json:'JSON 파일이 아닙니다.',imp_not_backup:'하슬라랩 진도 파일이 아닙니다.',imp_version:'이 페이지에서 읽을 수 없는 버전입니다.',imp_empty:'파일에 불러올 기록이 없습니다.',settingsNote:'진도는 이 기기에 저장됩니다. 파일로 내보내 두면 다른 브라우저로 옮기거나 나중에 되살릴 수 있습니다. 복습 목록과 나중에 풀기는 계정에 저장되지 않으니 파일로 옮기세요.',
+      dHas:'이 문제에 쓰던 풀이가 있습니다',dHome:'쓰던 풀이가 있습니다',dPages:'페이지',dPad:'패드',dResume:'이어서 쓰기',dDrop:'지우기',dSaved:'이 기기에 자동 저장됩니다',
+      wSendRead:'풀이 보내기',wReadTitle:'이렇게 읽었습니다. 틀린 곳을 고친 뒤 채점하세요.',wReadNote:'읽을 때 오늘 채점 1회가 쓰이고, 채점할 때는 더 쓰이지 않습니다. 읽은 내용은 1시간 동안 채점할 수 있습니다.',wGradeBtn:'채점하기',wReread:'다시 읽기',
+      wConf:'확신',wLowConf:'확신 낮음 · 직접 확인해 보세요',wExpired:'읽은 지 1시간이 지났습니다. 풀이를 다시 보내 주세요.',wChanged:'고친 내용이 너무 많습니다. 잘못 읽은 글자만 고칠 수 있고, 사진에 없는 풀이는 더할 수 없습니다.',wUsed:'이 읽기는 이미 채점했습니다. 풀이를 다시 보내 주세요.',wEmptyT:'읽은 내용이 비어 있습니다.',
+      apBtn:'이의 제기',apNote:'무엇이 잘못됐는지 한 줄 (적지 않아도 됩니다)',apSend:'보내기',apCancel:'취소',apStatus_open:'이의 제기 · 검토 중',apStatus_upheld:'이의 제기 · 점수 유지',apStatus_changed:'이의 제기 · 점수 바뀜',apExists:'이미 이의 제기한 채점입니다.',apFail:'보내지 못했습니다. 잠시 뒤에 다시 시도하세요.',
+      apMine:'내 이의 제기',apNone:'이의 제기한 채점이 없습니다. 채점 결과 아래 "이의 제기"를 누르면 여기에 나옵니다.',apLogin:'로그인하면 이의 제기와 그 결과를 볼 수 있습니다.',apReply:'답변',
+      skTitle:'연속 기록',skFreezeLeft:'이번 주 쉬는 날 1번 남음',skFreezeUsed:'이번 주 쉬는 날 씀',skFreezeNote:'하루를 건너뛰어도 한 주에 한 번은 연속 기록이 이어집니다. 매주 월요일에 다시 생깁니다.',skPause:'시험 기간 · 쉬기',
+      skPauseNote:'켜 두면 최대 14일 동안 연속 기록이 멈춥니다. 문제는 그대로 풀 수 있습니다.',skPausedUntil:'쉬는 중 · {d}까지',skPauseWait:'다음 쉬기는 {d}부터 켤 수 있습니다.',skNoHearts:'틀려도 잃는 것은 없습니다. 하트나 에너지 같은 제한이 없습니다.',skClose:'닫기',
+      icCovers:'이 단원에서 배우는 것',icFormula:'핵심 식',icGuide:'개념 정리 읽기',icSim:'개념 시뮬레이션 해 보기',icStart:'문제 풀기',icSkip:'건너뛰기',
       note:'문항 출처: 한국교육과정평가원, 서울특별시교육청, 경기도교육청, 인천광역시교육청 (웹·앱 배포 허가 범위 안에서 제공). 단원 분류 일부는 자동 분류이며 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.'},
     en:{
       lvTitle:'Level',lvPick:'What do you want to practise?',lvIntro:'Your level decides where today’s problems and the set builder’s default source come from. You can change it at any time.',lvHas:'In the bank',lvSoon:'coming',lvChange:'Change',lvCurrent:'Your level',lvBankNote:'Textbook and university problems are in the Books & university tab.',ob_stage:'Which level do you want to start at?',quickIntro:'Pick one and the first problem opens. No account needed; you can change the level at any time.',
@@ -87,6 +95,14 @@
       report:'Report',reportTitle:'What is wrong with this problem?',rWrongAnswer:'Wrong answer',rTypo:'Typo',rFigure:'Figure',rTranslation:'Translation',rOther:'Other',reportNote:'Details (optional)',reportSend:'Send report',reportCancel:'Close',reportSent:'Your mail app opens with the report filled in. If it does not, send it to:',myReports:'My reports',noReports:'No reports yet.',reportPick:'Pick what is wrong.',
       avgTime:'Average time',vsSuggested:'suggested',strike:'Cross out this choice',unstrike:'Bring this choice back',
       settings:'Progress backup',exportP:'Export progress',importP:'Import',resetP:'Reset',resetConfirm:'Clear all progress on this device? This cannot be undone. Progress saved on your account stays.',importDone:'Imported. For each problem the newer record was kept.',resetDone:'Progress on this device is cleared.',imp_not_json:'That is not a JSON file.',imp_not_backup:'That is not a HaslaLab progress file.',imp_version:'This page cannot read that file’s version.',imp_empty:'The file has no progress to import.',settingsNote:'Progress is kept on this device. Export it to a file to move it to another browser or restore it later. The review queue and saved problems are not stored on your account, so move them with a file.',
+      dHas:'You have unsent working for this problem',dHome:'You have unsent working',dPages:'pages',dPad:'pad',dResume:'Continue',dDrop:'Discard',dSaved:'Saved on this device as you go',
+      wSendRead:'Send my working',wReadTitle:'This is what we read. Fix anything misread, then mark it.',wReadNote:'Reading uses one of today’s markings; marking it uses no more. A reading can be marked for an hour.',wGradeBtn:'Mark it',wReread:'Read again',
+      wConf:'Confidence',wLowConf:'Low confidence · check it yourself',wExpired:'This reading is over an hour old. Send your working again.',wChanged:'Too much was changed. You can fix misread symbols, but not add working that is not on the page.',wUsed:'This reading has already been marked. Send your working again.',wEmptyT:'The reading is empty.',
+      apBtn:'Appeal',apNote:'What looks wrong, in one line (optional)',apSend:'Send',apCancel:'Cancel',apStatus_open:'Appeal · under review',apStatus_upheld:'Appeal · score kept',apStatus_changed:'Appeal · score changed',apExists:'You have already appealed this marking.',apFail:'Could not send. Try again in a moment.',
+      apMine:'My appeals',apNone:'No appeals yet. Tap "Appeal" under a marking result and it shows here.',apLogin:'Log in to see your appeals and their results.',apReply:'Reply',
+      skTitle:'Streak',skFreezeLeft:'1 free day left this week',skFreezeUsed:'This week’s free day is used',skFreezeNote:'Miss a day and the streak still holds, once a week. The free day comes back every Monday.',skPause:'Exam time · take a break',
+      skPauseNote:'While on, the streak is held for up to 14 days. You can still practise.',skPausedUntil:'On a break until {d}',skPauseWait:'You can take the next break from {d}.',skNoHearts:'Mistakes cost nothing here. There are no hearts or energy limits.',skClose:'Close',
+      icCovers:'What this unit covers',icFormula:'Key formula',icGuide:'Read the guide chapter',icSim:'Try the concept simulation',icStart:'Start problems',icSkip:'Skip',
       note:'Problems: Korea Institute for Curriculum and Evaluation and the Seoul, Gyeonggi and Incheon education offices (Korean only), shared within the permitted web and app use. Some unit labels are automatic and under review. Progress is kept on this device and, when you log in, on your account too.'}
   };
   /* Korean and English for now; tx() is where a further language would look up the English text */
@@ -104,7 +120,7 @@
   const H=window.HL_PRACTICE_TOOLS;
   /* review, later and recent stay on this device: the account's state (community/src/practice-progress.js) keeps
      only the fields it knows, so they travel in the exported file instead */
-  const fill=v=>{v.solved||={};v.level||={};v.xp||=0;v.days||=[];v.skills||={};v.queue||=[];v.wrong||={};v.bank||={done:{},stars:{}};v.contest||={done:{}};v.review||={};v.later||={};v.recent||={};v.graded||={};v.gradedHist||={};return v;};
+  const fill=v=>{v.solved||={};v.level||={};v.xp||=0;v.days||=[];v.skills||={};v.queue||=[];v.wrong||={};v.bank||={done:{},stars:{}};v.contest||={done:{}};v.review||={};v.later||={};v.recent||={};v.graded||={};v.gradedHist||={};v.streakCfg||={pauses:[]};v.intro||={};v.appeals||={};return v;};
   let saved=fill(store.read());
   const save=()=>store.write(saved);
 
@@ -127,12 +143,8 @@
     saved.queue.push({item_id,mode,unit,step,result,at});if(saved.queue.length>500)saved.queue=saved.queue.slice(-500);
     save();scheduleSync();
   }
-  function mergeState(a,b){
-    const A=a||{},B=b||{},obj=(x,y,f)=>{const o={...(x||{})};for(const[k,v]of Object.entries(y||{}))o[k]=k in o?f(o[k],v):v;return o;},mx=(x,y)=>Math.max(Number(x)||0,Number(y)||0);
-    const newer=(x,y)=>(Number(y?.at)||0)>(Number(x?.at)||0)?y:x||y;
-    return{profile:newer(A.profile,B.profile),xp:mx(A.xp,B.xp),days:[...new Set([...(A.days||[]),...(B.days||[])])].sort().slice(-400),level:obj(A.level,B.level,mx),solved:obj(A.solved,B.solved,x=>x),wrong:obj(A.wrong,B.wrong,mx),
-      bank:{done:obj(A.bank?.done,B.bank?.done,mx),stars:obj(A.bank?.stars,B.bank?.stars,(x,y)=>y??x)},contest:{done:obj(A.contest?.done,B.contest?.done,mx)}};
-  }
+  /* the merge rule lives in practice-tools.js (accountMerge), where the tests check a first sign-in carries a guest's progress over */
+  const mergeState=H.accountMerge;
   const stateOf=()=>({profile:saved.profile,xp:saved.xp,days:saved.days,level:saved.level,solved:saved.solved,wrong:saved.wrong,bank:saved.bank,contest:saved.contest});
   async function api(path,method='GET',body){
     const r=await fetch(API+path,{method,headers:{Authorization:'Bearer '+token(),...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
@@ -149,7 +161,7 @@
       for(let batch;(batch=saved.queue.filter(sendable).slice(0,50)).length;){
         let r;try{r=await api('/api/practice/attempts','POST',{attempts:batch});}
         catch(e){if(!state.serverOld&&/api 400/.test(e.message)){state.serverOld=true;continue;}throw e;}
-        const sent=new Set(batch);saved.queue=saved.queue.filter(a=>!sent.has(a));for(const k of r.skills||[])if(!state.serverOld||!saved.skills[k.unit]||k.n>=saved.skills[k.unit].n)saved.skills[k.unit]=k;save();
+        const sent=new Set(batch);saved.queue=saved.queue.filter(a=>!sent.has(a));saved.skills=state.serverOld?H.skillsMerge(saved.skills,r.skills):{...saved.skills,...Object.fromEntries((r.skills||[]).map(k=>[k.unit,k]))};save();
       }
       const r=await api('/api/practice/state','POST',{state:stateOf()});Object.assign(saved,mergeState(stateOf(),r.state));save();state.sync='saved';
     }catch(e){state.sync='error';setTimeout(scheduleSync,30000);}
@@ -158,16 +170,15 @@
   /* on opening: the account's state and ratings join this device's, then anything queued here is sent */
   async function pull(){
     if(!token())return;
-    try{const r=await api('/api/practice/state');Object.assign(saved,mergeState(stateOf(),r.state));for(const k of r.skills||[])if(!saved.skills[k.unit]||k.n>=saved.skills[k.unit].n)saved.skills[k.unit]=k;save();state.sync='saved';}catch(e){state.sync='error';}
+    try{const r=await api('/api/practice/state');Object.assign(saved,mergeState(stateOf(),r.state));saved.skills=H.skillsMerge(saved.skills,r.skills);save();state.sync='saved';}catch(e){state.sync='error';}
     paintStats();scheduleSync();
   }
+  /* signing in on another tab (or the site around this frame) sets the token: this browser's progress joins the account then */
+  addEventListener('storage',e=>{if(e.key==='hlCmTok'){state.sync=token()?'pending':'local';if(token())pull();else paintStats();}});
   const today=()=>new Date().toLocaleDateString('sv');   /* YYYY-MM-DD in local time */
-  function streak(){
-    const days=new Set(saved.days);let n=0;const d=new Date();
-    if(!days.has(today()))d.setDate(d.getDate()-1);     /* today not yet studied: yesterday keeps the streak */
-    while(days.has(d.toLocaleDateString('sv'))){n++;d.setDate(d.getDate()-1);}
-    return n;
-  }
+  /* today not yet studied keeps the streak; a missed day uses the week's free day; a pause holds it (practice-tools.js) */
+  const streakNow=()=>H.streakInfo(saved.days,saved.streakCfg,today());
+  const streak=()=>streakNow().n;
   function reportHeight(){if(embedded)requestAnimationFrame(()=>window.parent.postMessage({type:'hl-practice-height',height:Math.ceil(document.querySelector('main').getBoundingClientRect().bottom+scrollY+12)},location.origin));}
   function tellUnit(unit){if(embedded&&!document.documentElement.classList.contains('play'))window.parent.postMessage({type:'hl-practice-unit',unit:unit||''},location.origin);}
   function math(latex,display){try{return window.katex?katex.renderToString(latex,{displayMode:!!display,throwOnError:false,strict:false}):esc(latex);}catch(e){return esc(latex);}}
@@ -186,8 +197,25 @@
   function paintStats(){
     const solvedCount=Object.keys(saved.solved).length;
     const badge=state.sync==='saved'?`<span class="stat sync ok">☁ ${tr('synced')}</span>`:state.sync==='error'?`<span class="stat sync">⚠ ${tr('syncFailed')}</span>`:state.sync==='local'?`<a class="stat sync" href="/#/login" target="_top">${tr('loginToSave')}</a>`:'';
-    const tier=tierOf(saved.xp);
-    $('stats').innerHTML=`<span class="stat tier t-${tier[1].toLowerCase()}" title="${tr('tier')}"><b>◆</b>${tier[1]}</span><span class="stat fire"><b>🔥 ${streak()}</b>${tr('streak')}</span><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span>${saved.profile?`<span class="stat goal${(saved.goalDay?.d===today()?saved.goalDay.n:0)>=saved.profile.daily?' met':''}" title="${tr('dailyGoal')}"><b>🎯 ${saved.goalDay?.d===today()?saved.goalDay.n:0}/${saved.profile.daily}</b>${tr('dailyGoal')}</span>`:''}<span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
+    const tier=tierOf(saved.xp),sk=streakNow();
+    $('stats').innerHTML=`<span class="stat tier t-${tier[1].toLowerCase()}" title="${tr('tier')}"><b>◆</b>${tier[1]}</span><button type="button" class="stat fire${sk.pause?' paused':''}" id="streakBtn" aria-expanded="${!!state.streakOpen}" aria-controls="streakPanel"><b>🔥 ${sk.n}</b>${tr('streak')}<small class="sksub">${sk.pause?esc(tr('skPausedUntil').replace('{d}',shortDay(sk.pause.to))):tr(sk.freezeLeft?'skFreezeLeft':'skFreezeUsed')}</small></button><span class="stat"><b>${saved.xp}</b>${tr('xp')}</span>${saved.profile?`<span class="stat goal${(saved.goalDay?.d===today()?saved.goalDay.n:0)>=saved.profile.daily?' met':''}" title="${tr('dailyGoal')}"><b>🎯 ${saved.goalDay?.d===today()?saved.goalDay.n:0}/${saved.profile.daily}</b>${tr('dailyGoal')}</span>`:''}<span class="stat"><b>${solvedCount}</b>${tr('solved')}</span>${badge}`;
+    $('stats').insertAdjacentHTML('beforeend',state.streakOpen?streakPanel(sk):'');
+    $('streakBtn').onclick=()=>{state.streakOpen=!state.streakOpen;paintStats();reportHeight();};
+    if($('skPause'))$('skPause').onchange=e=>{
+      const next=e.target.checked?H.pauseStart(saved.streakCfg,today()):H.pauseStop(saved.streakCfg,today());
+      if(next){saved.streakCfg=next;save();}paintStats();reportHeight();
+    };
+    if($('skClose'))$('skClose').onclick=()=>{state.streakOpen=false;paintStats();reportHeight();};
+  }
+  const shortDay=d=>{const [,m,dd]=d.split('-').map(Number);return state.lang==='ko'?`${m}월 ${dd}일`:new Date(Date.UTC(2000,m-1,dd)).toLocaleDateString('en',{month:'short',day:'numeric',timeZone:'UTC'});};
+  /* the streak's two safety nets, said plainly next to it */
+  function streakPanel(sk){
+    const last=(saved.streakCfg?.pauses||[]).slice(-1)[0],waitTo=last?H.addDays(last.to,H.PAUSE_GAP+1):'';
+    return `<section class="skpanel" id="streakPanel"><div class="skrow"><b>${tr('skTitle')} ${sk.n}</b><button type="button" class="mini quiet" id="skClose">${tr('skClose')}</button></div>
+      <p><span class="tag${sk.freezeLeft?' ok':''}">${tr(sk.freezeLeft?'skFreezeLeft':'skFreezeUsed')}</span> ${tr('skFreezeNote')}</p>
+      <label class="switch"><input type="checkbox" id="skPause"${sk.pause?' checked':''}${sk.pause||sk.canPause?'':' disabled'}><span>${tr('skPause')}</span></label>
+      <p class="src">${sk.pause?esc(tr('skPausedUntil').replace('{d}',shortDay(sk.pause.to)))+' · ':''}${tr('skPauseNote')}${!sk.pause&&!sk.canPause&&waitTo?' '+esc(tr('skPauseWait').replace('{d}',shortDay(waitTo))):''}</p>
+      <p class="src">${tr('skNoHearts')}</p></section>`;
   }
   async function loadIndex(){
     if(!state.index){const r=await fetch('practice/index.json',{cache:'no-cache'});if(!r.ok)throw new Error('index');state.index=await r.json();}
@@ -229,7 +257,30 @@
     const steps=[...new Set(items.map(i=>i.s))].sort((a,b)=>a-b);
     const level=saved.level[unit]&&steps.includes(saved.level[unit])?saved.level[unit]:steps[0];
     state.session={unit,items,steps,level,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};
-    tellUnit(unit);next();
+    await draftFirst(state.session);
+    tellUnit(unit);withIntro(unit,next,home);
+  }
+  /* after a reload or a crash: the problem with unsent working comes first, with its draft offered back */
+  async function draftFirst(s){
+    const d=await Drafts.latest().catch(()=>null),it=d&&s.items.find(i=>i.id===d.id);
+    if(it&&state.session===s)s.first=it;
+  }
+  /* ── before a unit's first problems: one short card (what it covers, the key formula, the guide chapter, the concept
+     simulation if there is one). Shown once per unit, and never to someone who has already answered there ── */
+  function withIntro(unit,go,back){
+    const card=H.unitCard(unit);
+    if(!card||saved.intro[unit]||saved.skills[unit]?.n>0){go();return;}
+    const seen=()=>{saved.intro[unit]=Math.floor(Date.now()/1000);save();};
+    $('app').innerHTML=`<section class="session introcard"><div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button></div>
+      <h2>${esc(unitName(unit))}</h2>
+      <p class="sublabel">${tr('icCovers')}</p><p>${esc(state.lang==='ko'?card.ko:card.en)}</p>
+      <p class="sublabel">${tr('icFormula')}</p><div class="icf">${math(card.f,true)}</div>
+      <p class="iclinks"><a href="${H.guideHref(unit)}" target="_top">${tr('icGuide')} →</a>${card.sim?`<a href="${H.simHref(card.sim)}" target="_top">${tr('icSim')} →</a>`:''}</p>
+      <div class="actions"><button type="button" class="primary" id="icGo">${tr('icStart')}</button><button type="button" class="linkbtn" id="icSkip">${tr('icSkip')}</button></div></section>`;
+    $('quit').onclick=back;
+    $('icGo').onclick=()=>{seen();go();};$('icSkip').onclick=()=>{seen();go();};
+    $('app').querySelectorAll('.iclinks a').forEach(a=>a.addEventListener('click',seen));
+    reportHeight();window.scrollTo?.(0,0);
   }
   function pick(s){
     if(s.first&&!s.seen.has(s.first.id))return s.first;
@@ -577,7 +628,7 @@
     const due=dueNow().length;
     const dueCard=due?`<button type="button" class="area unit duecard" id="dueGo"><span class="name"><b>${tr('dueCard')}</b><small>${tr('dueToday')} ${due} · ${tr('startReview')}</small></span><span>→</span></button>`:'';
     const lv=studyLevel(),lvCard=`<button type="button" class="area unit levelbar" id="lvGo"><span class="name"><small>${tr('lvTitle')} ${lv.slice(1)} · ${tr('lvCurrent')}</small><b>${esc(levelName(lv))}</b></span><span class="btnlink">${tr('lvChange')}</span></button>`;
-    $('app').innerHTML=`${lvCard}${placeCard}${dueCard}<section class="session today">
+    $('app').innerHTML=`<div id="draftHome"></div>${lvCard}${placeCard}${dueCard}<section class="session today">
         <h2>${tr('todayTitle')} <a href="#" class="src" id="editProfile">${tr('editProfile')}</a></h2>
         <p class="src">${Object.entries(counts).map(([k,n])=>`${why[k]} ${n}`).join(' · ')}${weakUnits.length?` · ${tr('focus')}: ${weakUnits.map(u=>esc(unitPlace(u))).join(', ')}`:''}</p>
         <ol class="todaylist">${chosen.map(i=>`<li><span class="tag ${i.why}">${why[i.why]}</span> ${esc(itemPlace(i))} <small>${tr('step')} ${i.s}</small></li>`).join('')}</ol>
@@ -595,6 +646,22 @@
     if($('diagGo'))$('diagGo').onclick=diagStart;
     $('editProfile').onclick=e=>{e.preventDefault();startHome(true);};
     if($('sugContest'))$('sugContest').onclick=()=>{paintTabs();contestShow(contest.key);};
+    reportHeight();
+    draftHomeCard(todayHome);
+  }
+  /* after a reload or a crash: the newest unsent working, one tap from where it was */
+  async function draftHomeCard(back){
+    const d=await Drafts.latest().catch(()=>null),box=$('draftHome');
+    if(!d||!box||!['exam','track','contest'].includes(d.meta?.k))return;
+    box.innerHTML=`<div class="draftbar home"><span><b>${tr('dHome')}</b><small>${esc(d.t||d.id)} · ${draftSummary(d)}</small></span><span class="dbtns"><button type="button" class="primary" id="dhGo">${tr('dResume')}</button><button type="button" id="dhDrop">${tr('dDrop')}</button></span></div>`;
+    $('dhDrop').onclick=()=>{Drafts.del(d.id);box.innerHTML='';reportHeight();};
+    $('dhGo').onclick=async()=>{
+      $('app').innerHTML=`<p>${tr('loading')}</p>`;
+      await loadContests().catch(()=>{});
+      const items=await resolveItems([d.id],{[d.id]:d.meta});
+      if(!items.length){Drafts.del(d.id);back();return;}
+      state.autoResume=d.id;runSet({items,label:tr('dHome'),back,again:back});
+    };
     reportHeight();
   }
 
@@ -716,7 +783,7 @@
     $('app').querySelectorAll('[data-track]').forEach(b=>b.onclick=()=>trackStart(b.dataset.track,b.dataset.syl));
     reportHeight();
   }
-  async function trackStart(key,syl){
+  async function trackStart(key,syl,opts){
     state.mode='tracks';paintTabs();
     $('app').innerHTML=`<p>${tr('loading')}</p>`;
     let t,items;try{t=(await loadTracks()).find(x=>x.key===key);if(!t){tracksHome();return;}items=(await trackItems(key)).filter(i=>!syl||i.syl===syl);}catch(e){failed(()=>trackStart(key,syl));return;}
@@ -724,14 +791,17 @@
     const steps=[...new Set(items.map(i=>i.s))].sort((a,b)=>a-b),lk='track:'+key+'/'+(syl||'*');
     const own=ratingStep(saved.skills[items[0].u]?.rating??START),level=saved.level[lk]&&steps.includes(saved.level[lk])?saved.level[lk]:steps.reduce((b,x)=>Math.abs(x-own)<Math.abs(b-own)?x:b,steps[0]);
     state.session={mode:'track',track:key,syl,levelKey:lk,label:nameOf(t.name)+(syl?' · '+sylName(t,syl):''),items,steps,level,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};
-    next();
+    /* a syllabus unit: the card of the path unit most of its problems belong to (a mixed set goes straight in) */
+    if(!opts?.noIntro)await draftFirst(state.session);
+    const counts=items.reduce((m,i)=>(m[i.u]=(m[i.u]||0)+1,m),{}),main=syl?Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0]:null;
+    if(main&&!opts?.noIntro)withIntro(main,next,tracksHome);else next();
   }
   /* a problem opened by its link (a search page, a discussion): that one first, then its unit */
   async function openItem(id){
     const key=id.split('-')[0];let items;
     try{items=await trackItems(key);}catch(e){todayHome();return;}
     const it=items.find(i=>i.id===id);if(!it){tracksHome();return;}
-    await trackStart(key,it.syl);const s=state.session;if(!s)return;
+    await trackStart(key,it.syl,{noIntro:true});const s=state.session;if(!s)return;
     s.seen.clear();s.n=0;s.first=it;next();
   }
   /* "3.2e4", "3,2", "3.2×10^4", "3.2 x 10^4", "-1/2" → a number, or NaN */
@@ -1091,8 +1161,9 @@
   const laterLabel=on=>on?'★ '+tr('laterOn'):'☆ '+tr('later');
   const bandLabel=b=>tr(b==='pass'?'bandPass':b==='partial'?'bandPartial':'bandRetry');
   const lastGradedHtml=id=>{const g=saved.graded[id];return g?`<span class="lastgr band-${g.band}" id="lastgr">${tr('wLast')} ${Math.round(100*g.fraction)}% · ${bandLabel(g.band)} · ${day(g.at)}</span>`:'<span id="lastgr" hidden></span>';};
-  function toolsHtml(item,opt){return `<div class="ptools"><button type="button" class="mini" id="writeBtn" aria-expanded="false">${tr('wOpen')}</button>${opt?.noLater?'':`<button type="button" class="mini" id="laterBtn" aria-pressed="${!!saved.later[item.id]}">${laterLabel(saved.later[item.id])}</button>`}<button type="button" class="mini quiet" id="reportBtn" aria-expanded="false">${tr('report')}</button>${lastGradedHtml(item.id)}</div><div id="written"></div><div id="report"></div>`;}
+  function toolsHtml(item,opt){return `<div class="ptools"><button type="button" class="mini" id="writeBtn" aria-expanded="false">${tr('wOpen')}</button>${opt?.noLater?'':`<button type="button" class="mini" id="laterBtn" aria-pressed="${!!saved.later[item.id]}">${laterLabel(saved.later[item.id])}</button>`}<button type="button" class="mini quiet" id="reportBtn" aria-expanded="false">${tr('report')}</button>${lastGradedHtml(item.id)}</div><div id="draftBar"></div><div id="written"></div><div id="report"></div>`;}
   function wireTools(item,label){
+    W.toolLabel=label;
     if($('laterBtn'))$('laterBtn').onclick=()=>{
       if(saved.later[item.id])delete saved.later[item.id];else saved.later[item.id]={...metaOf(item),at:Math.floor(Date.now()/1000),t:String(label||item.id).slice(0,120)};
       save();const on=!!saved.later[item.id];$('laterBtn').textContent=laterLabel(on);$('laterBtn').setAttribute('aria-pressed',String(on));paintTabs();
@@ -1110,10 +1181,57 @@
   function wireWritten(item,ctx){
     const btn=$('writeBtn');if(!btn)return;
     if(state.session?.diag){btn.remove();return;}
-    Object.assign(W,{item,ctx,pages:[],padState:null,busy:false,bandSeen:null,locked:false,penSeen:false});
+    Object.assign(W,{item,ctx,pages:[],padState:null,busy:false,bandSeen:null,locked:false,penSeen:false,read:null,draftHeld:false});
     btn.onclick=()=>$('written').innerHTML?closeWritten():openWritten();
     if(ctx.open)openWritten();
+    if(ctx.noText)return;
+    Drafts.get(item.id).then(d=>{
+      if(!d||W.item!==item||H.draftEmpty(d))return;
+      if(state.autoResume===item.id){state.autoResume=null;resumeDraft(d);return;}
+      W.draftHeld=true;
+      const bar=$('draftBar');if(!bar)return;
+      bar.innerHTML=`<div class="draftbar" role="status"><span><b>${tr('dHas')}</b><small>${draftSummary(d)}</small></span><span class="dbtns"><button type="button" class="primary" id="dResume">${tr('dResume')}</button><button type="button" id="dDrop">${tr('dDrop')}</button></span></div>`;
+      $('dResume').onclick=()=>resumeDraft(d);
+      $('dDrop').onclick=()=>{W.draftHeld=false;bar.innerHTML='';Drafts.del(item.id);saveDraft();reportHeight();};
+      reportHeight();
+    }).catch(()=>{});
   }
+  const draftSummary=d=>[d.pages.length?`${tr('dPages')} ${d.pages.length}`:'',d.strokes.length?tr('dPad'):'',day(d.at)].filter(Boolean).join(' · ');
+  function resumeDraft(d){
+    W.draftHeld=false;if($('draftBar'))$('draftBar').innerHTML='';
+    W.pages=d.pages.slice(0,H.MAX_PAGES).map(url=>({url,from:'draft'}));
+    W.padState={tool:'pen',size:1,strokes:d.strokes.map(st=>({...st}))};
+    if(d.strokes.length&&!d.pages.length)W.mode='pad';
+    if($('written').innerHTML){paintPane();paintThumbs();}else openWritten();
+    reportHeight();
+  }
+  /* saved a moment after each change; held while the learner has not yet chosen between an old draft and a fresh start */
+  let draftTimer=0;
+  function saveDraft(){
+    clearTimeout(draftTimer);const item=W.item;if(!item||W.draftHeld||W.ctx?.noText)return;
+    draftTimer=setTimeout(()=>{if(W.item!==item)return;
+      Drafts.put(H.draftOf(item.id,{pages:W.pages.map(p=>p.url),strokes:W.padState?.strokes,meta:metaOf(item),t:String(W.toolLabel||titleOf(item)||item.id)})).catch(()=>{});},600);
+  }
+  /* ── drafts (practice-tools.js draftOf): kept in IndexedDB; without it, a smaller copy in localStorage ── */
+  const Drafts=(()=>{
+    const now=()=>Math.floor(Date.now()/1000),idb=()=>{try{return typeof indexedDB!=='undefined'&&!!indexedDB;}catch(e){return false;}};
+    let dbp=null;
+    const open=()=>dbp||=new Promise((ok,no)=>{try{const r=indexedDB.open('hlPracticeDrafts',1);r.onupgradeneeded=()=>r.result.createObjectStore('drafts',{keyPath:'id'});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);}catch(e){no(e);}});
+    const run=async(mode,fn)=>{const db=await open();return new Promise((ok,no)=>{const t=db.transaction('drafts',mode),r=fn(t.objectStore('drafts'));t.oncomplete=()=>ok(r?.result);t.onerror=t.onabort=()=>no(t.error);});};
+    const LS='hlPracticeDrafts',lsRead=()=>{try{const v=JSON.parse(localStorage.getItem(LS)||'{}');return v&&typeof v==='object'?v:{};}catch(e){return {};}};
+    const lsWrite=v=>{try{localStorage.setItem(LS,JSON.stringify(v));return true;}catch(e){return false;}};
+    async function all(){if(idb()){try{return (await run('readonly',st=>st.getAll()))||[];}catch(e){}}return Object.values(lsRead());}
+    async function get(id){let d=null;if(idb()){try{d=await run('readonly',st=>st.get(id));}catch(e){}}if(!d)d=lsRead()[id]||null;return H.draftOk(d,now())?d:null;}
+    async function del(id){if(idb()){try{await run('readwrite',st=>st.delete(id));}catch(e){}}const m=lsRead();if(m[id]){delete m[id];lsWrite(m);}}
+    async function put(d){
+      if(H.draftEmpty(d))return del(d.id);
+      let done=false;if(idb()){try{await run('readwrite',st=>st.put(d));done=true;}catch(e){}}
+      if(!done){const m=lsRead(),small=H.localDraft(d);if(small)m[d.id]=small;else delete m[d.id];if(!lsWrite(m)){delete m[d.id];lsWrite(m);}}
+      for(const id of H.pruneDrafts(await all(),now()).drop)await del(id);
+    }
+    async function latest(){return (await all()).filter(d=>H.draftOk(d,now())&&!H.draftEmpty(d)).sort((a,b)=>b.at-a.at)[0]||null;}
+    return{get,put,del,latest};
+  })();
   function closeWritten(){$('written').innerHTML='';$('writeBtn').setAttribute('aria-expanded','false');reportHeight();}
   const msgW=(t,cls)=>{const m=$('wMsg');if(m){m.innerHTML=t;m.className='src wmsg'+(cls?' '+cls:'');}reportHeight();};
   function openWritten(){
@@ -1126,10 +1244,11 @@
       <div class="seg wmode" role="group" id="wMode">${[['photo','wPhoto'],['pad','wPad'],['file','wFile']].map(([k,l])=>`<button type="button" data-w="${k}" aria-pressed="${W.mode===k}">${tr(l)}</button>`).join('')}</div>
       <div id="wPane" class="wpane"></div>
       <div class="wpages"><p class="sublabel">${tr('wPages')} <span id="wCount"></span></p><div class="thumbs" id="wThumbs"></div></div>
-      <div class="ractions"><button type="button" class="primary" id="wSend"${token()?'':' disabled'}>${tr('wSend')}</button><span class="src wmsg" id="wMsg" role="status"></span></div>
-      <div id="wResult"></div></section>`;
+      <div class="ractions"><button type="button" class="primary" id="wSend"${token()?'':' disabled'}>${tr('wSendRead')}</button><span class="src wmsg" id="wMsg" role="status"></span></div>
+      <p class="src dsaved">${tr('dSaved')}</p>
+      <div id="wRead"></div><div id="wResult"></div></section>`;
     $('wMode').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{W.mode=b.dataset.w;$('wMode').querySelectorAll('[data-w]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));paintPane();});
-    $('wSend').onclick=sendWritten;paintPane();paintThumbs();reportHeight();
+    $('wSend').onclick=sendWritten;paintPane();paintThumbs();if(W.read){paintRead();setSendLabel();}reportHeight();
   }
   function paintPane(){
     const pane=$('wPane');if(!pane)return;
@@ -1164,7 +1283,7 @@
         else if(!f.type||/^image\//.test(f.type)){const img=await loadImage(f),u=toJpeg(img,img.width||img.naturalWidth,img.height||img.naturalHeight);img.close?.();if(!u)throw new Error('size');W.pages.push({url:u,from:'photo'});}
         else err=tr('wImgFail');
       }catch(e){err=tr(pdf?'wPdfFail':'wImgFail');}
-      paintThumbs();
+      pagesChanged();paintThumbs();
     }
     msgW(err?`<span class="numerr">${err}</span>`:'');
   }
@@ -1182,7 +1301,7 @@
     const t=$('wThumbs');if(!t)return;
     t.innerHTML=W.pages.map((p,i)=>`<figure class="thumb"><img src="${p.url}" alt="${i+1}"><figcaption>${i+1}</figcaption><button type="button" class="rm" data-rm="${i}" aria-label="${tr('wRemove')} ${i+1}" title="${tr('wRemove')}">✕</button></figure>`).join('')||`<p class="src">${tr('wNone')}</p>`;
     $('wCount').textContent=W.pages.length+'/'+H.MAX_PAGES;
-    t.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{W.pages.splice(Number(b.dataset.rm),1);paintThumbs();});
+    t.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{W.pages.splice(Number(b.dataset.rm),1);pagesChanged();paintThumbs();});
     reportHeight();
   }
   /* the pad: a white page 1200 × 1600 drawn with pointer events (finger, stylus or mouse); once a stylus touches it,
@@ -1197,7 +1316,7 @@
   function padAddPage(){
     const P0=W.padState;if(!P0?.strokes.length)return false;
     if(W.pages.length>=H.MAX_PAGES){msgW(`<span class="numerr">${tr('wMax')}</span>`);return false;}
-    const u=padToJpeg();if(!u)return false;W.pages.push({url:u,from:'pad'});P0.strokes=[];if($('wCanvas'))padRender($('wCanvas'));paintThumbs();return true;
+    const u=padToJpeg();if(!u)return false;W.pages.push({url:u,from:'pad'});P0.strokes=[];if($('wCanvas'))padRender($('wCanvas'));pagesChanged();paintThumbs();return true;
   }
   function paintPad(){
     const P0=W.padState||=({tool:'pen',size:1,strokes:[]});
@@ -1217,41 +1336,82 @@
       if(!cur||e.pointerId!==cur.id)return;e.preventDefault();
       const n=cur.pts.length,evs=e.getCoalescedEvents?.()||[];for(const x of evs.length?evs:[e])cur.pts.push(pt(x));drawStroke(g,cur,n-1);
     });
-    const end=e=>{if(cur&&e.pointerId===cur.id)cur=null;};
+    const end=e=>{if(cur&&e.pointerId===cur.id){cur=null;saveDraft();}};
     cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
     cv.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
     $('wPane').querySelectorAll('[data-tool]').forEach(b=>b.onclick=()=>{P0.tool=b.dataset.tool;$('wPane').querySelectorAll('[data-tool]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
     $('wPane').querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>{P0.size=Number(b.dataset.size);$('wPane').querySelectorAll('[data-size]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
-    $('padUndo').onclick=()=>{P0.strokes.pop();padRender(cv);};
-    $('padClear').onclick=()=>{P0.strokes=[];padRender(cv);};
+    $('padUndo').onclick=()=>{P0.strokes.pop();padRender(cv);saveDraft();};
+    $('padClear').onclick=()=>{P0.strokes=[];padRender(cv);saveDraft();};
     $('padAdd').onclick=padAddPage;
     reportHeight();
   }
   const wsteps=stage=>`<span class="wsteps"><span class="${stage==='read'?'on':'done'}">${tr('wReading')}</span> → <span class="${stage==='grade'?'on':''}">${tr('wGrading')}</span><span class="dots" aria-hidden="true"></span></span>`;
+  /* the pages changed: an earlier reading no longer matches them */
+  function pagesChanged(){if(W.read){W.read=null;if($('wRead'))$('wRead').innerHTML='';setSendLabel();}saveDraft();}
+  const setSendLabel=()=>{const b=$('wSend');if(b){b.textContent=tr(W.read?'wReread':'wSendRead');b.classList.toggle('primary',!W.read);}};
+  const gradeError=(r,code)=>r.status===404&&code!=='read_not_found'?tr('wSoon'):code==='login_required'||r.status===401?tr('wLogin'):code==='grade_limit'||r.status===429?tr('wLimit'):
+    code==='read_expired'||code==='read_not_found'?tr('wExpired'):code==='read_used'?tr('wUsed'):code==='transcript_changed'?tr('wChanged'):code==='unreadable'||r.status===422?tr('wUnreadable'):r.status===400?tr('wBad'):tr('wFail');
+  async function gradePost(body){
+    let r=null,j={};
+    try{r=await fetch(API+'/api/learn/grade',{method:'POST',headers:{'content-type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify(body)});j=await r.json().catch(()=>({}));}
+    catch(e){r=null;}
+    return{r,j};
+  }
+  const confHtml=c=>Number.isFinite(c)?(c<0.6?`<span class="conf low">${tr('wLowConf')}</span>`:`<span class="conf">${tr('wConf')} ${Math.round(100*c)}%</span>`):'';
+  /* step 1: the pages are read (one model call, one of today's markings); the learner fixes the reading, then step 2 marks it */
   async function sendWritten(){
     if(W.busy)return;const item=W.item,ctx=W.ctx;
     if(!token()){msgW(tr('wLogin'));return;}
     if(W.padState?.strokes.length)padAddPage();
     if(!W.pages.length){msgW(`<span class="numerr">${tr('wNone')}</span>`);return;}
-    W.busy=true;$('wSend').disabled=true;msgW(wsteps('read'));$('wResult').innerHTML='';
-    const timer=setTimeout(()=>{if(W.busy&&W.item===item)msgW(wsteps('grade'));},2500);
-    let r=null,j={};
-    try{
-      r=await fetch(API+'/api/learn/grade',{method:'POST',headers:{'content-type':'application/json',Authorization:'Bearer '+token()},
-        body:JSON.stringify({item:H.gradeItem(ctx.gradeItem()),pages:W.pages.map(p=>p.url),level:studyLevel(),lang:state.lang})});
-      j=await r.json().catch(()=>({}));
-    }catch(e){r=null;}
-    clearTimeout(timer);W.busy=false;
+    W.busy=true;$('wSend').disabled=true;msgW(wsteps('read'));$('wResult').innerHTML='';$('wRead').innerHTML='';W.read=null;
+    const {r,j}=await gradePost({step:'read',item:H.gradeItem(ctx.gradeItem()),pages:W.pages.map(p=>p.url),level:studyLevel(),lang:state.lang});
+    W.busy=false;
     if(W.item!==item||!$('wSend'))return;
     $('wSend').disabled=false;
     if(!r){msgW(tr('wFail'),'bad');return;}
+    if(!r.ok){if(j.error==='grade_limit'&&state.plan)state.plan.gradeLeft=0;msgW(gradeError(r,j.error),r.status===404?'soon':'bad');return;}
+    msgW('');if(state.plan&&Number.isFinite(j.left)){state.plan.gradeLeft=j.left;if($('wLeftTop'))$('wLeftTop').textContent=`${tr('wLeft')}: ${j.left}`;}
+    /* a server from before the two steps marks at once */
+    if(j.step!=='read'||!Number.isInteger(j.read_id)){gradeDone(item,ctx,j);return;}
+    W.read={id:j.read_id,transcript:String(j.transcript||''),confidence:j.confidence};
+    paintRead();setSendLabel();
+  }
+  function paintRead(){
+    const R=W.read,box=$('wRead');if(!R||!box)return;
+    box.innerHTML=`<section class="wread"><p class="wrhead"><b>${tr('wReadTitle')}</b> ${confHtml(R.confidence)}</p>
+      <div class="wrbody"><div class="thumbs mini">${W.pages.map((p,i)=>`<a href="${p.url}" target="_blank" rel="noopener"><img src="${p.url}" alt="${i+1}"></a>`).join('')}</div>
+      <textarea id="wTx" rows="8" spellcheck="false" aria-label="${tr('wTranscript')}">${esc(R.transcript)}</textarea></div>
+      <div id="wTxPrev" class="wtrans"></div>
+      <p class="src">${tr('wReadNote')}</p>
+      <div class="ractions"><button type="button" class="primary" id="wGrade">${tr('wGradeBtn')}</button></div></section>`;
+    const prev=()=>{$('wTxPrev').innerHTML=textHtml($('wTx').value);typeset($('wTxPrev'));reportHeight();};
+    let pt=0;$('wTx').oninput=()=>{clearTimeout(pt);pt=setTimeout(prev,400);};prev();
+    $('wGrade').onclick=gradeRead;
+    reportHeight();$('wRead').scrollIntoView?.({block:'nearest'});
+  }
+  async function gradeRead(){
+    if(W.busy||!W.read)return;const item=W.item,ctx=W.ctx,R=W.read,text=$('wTx').value.trim();
+    if(!text){msgW(`<span class="numerr">${tr('wEmptyT')}</span>`);return;}
+    W.busy=true;$('wGrade').disabled=true;$('wSend').disabled=true;msgW(wsteps('grade'));
+    const {r,j}=await gradePost({step:'grade',read_id:R.id,transcript:text,item:H.gradeItem(ctx.gradeItem()),level:studyLevel(),lang:state.lang});
+    W.busy=false;
+    if(W.item!==item||!$('wSend'))return;
+    $('wSend').disabled=false;if($('wGrade'))$('wGrade').disabled=false;
+    if(!r){msgW(tr('wFail'),'bad');return;}
     if(!r.ok){
-      const code=j.error;
-      if(code==='grade_limit'&&state.plan)state.plan.gradeLeft=0;
-      msgW(r.status===404?tr('wSoon'):code==='login_required'||r.status===401?tr('wLogin'):code==='grade_limit'||r.status===429?tr('wLimit'):code==='unreadable'||r.status===422?tr('wUnreadable'):r.status===400?tr('wBad'):tr('wFail'),r.status===404?'soon':'bad');
+      msgW(gradeError(r,j.error),'bad');
+      /* the reading cannot be marked any more: back to sending the pages */
+      if(['read_expired','read_not_found','read_used'].includes(j.error)){W.read=null;$('wRead').innerHTML='';setSendLabel();}
       return;
     }
-    msgW('');if(state.plan&&Number.isFinite(j.left)){state.plan.gradeLeft=j.left;if($('wLeftTop'))$('wLeftTop').textContent=`${tr('wLeft')}: ${j.left}`;}
+    msgW('');W.read=null;$('wRead').innerHTML='';setSendLabel();
+    gradeDone(item,ctx,j);
+  }
+  function gradeDone(item,ctx,j){
+    /* graded: the draft is done with */
+    clearTimeout(draftTimer);Drafts.del(item.id).catch(()=>{});
     applyGrade(item,ctx,j);
   }
   function stepUp(unit){
@@ -1284,20 +1444,54 @@
     const last=$('lastgr');if(last)last.outerHTML=lastGradedHtml(item.id);
     const items=Array.isArray(j.items)?j.items:[],mv=H.moveOn(band);
     $('wResult').innerHTML=`<div class="wres band-${band}">
-      <div class="wtop"><span class="wscore"><b>${pts(j.score)}</b> / ${pts(j.max)} <small>${Math.round(100*fraction)}%</small></span><span class="bandtag ${band}">${bandLabel(band)}</span>${gain?`<span class="wxp">+${gain} XP</span>`:''}</div>
+      <div class="wtop"><span class="wscore"><b>${pts(j.score)}</b> / ${pts(j.max)} <small>${Math.round(100*fraction)}%</small></span><span class="bandtag ${band}">${bandLabel(band)}</span>${gain?`<span class="wxp">+${gain} XP</span>`:''}${confHtml(j.confidence)}</div>
       ${was?'':`<p class="wnote">${tr(band==='pass'?'wPassNote':band==='partial'?'wPartialNote':ctx.hint?'wRetryNote':'wRetryPlain')}${note?' · <b>'+note+'</b>':''}</p>`}
       ${items.length?`<table class="rubric"><caption>${tr('wRubric')}</caption><tbody>${items.map(x=>`<tr class="${Number(x.got)>=Number(x.max)?'full':Number(x.got)>0?'some':'none'}"><td><span class="rd">${esc(x.desc||'')}</span>${x.note?`<small>${esc(x.note)}</small>`:''}</td><td class="pts">${pts(x.got)}/${pts(x.max)}</td></tr>`).join('')}</tbody></table>`:''}
       ${j.feedback?`<div class="wfb">${textHtml(j.feedback)}</div>`:''}
       ${j.transcript?`<details class="alt"><summary>${tr('wTranscript')}</summary><div class="wtrans">${textHtml(j.transcript)}</div></details>`:''}
       <p class="src">${Number.isFinite(j.left)?`${tr('wLeft')}: <b>${j.left}</b> · `:''}${tr('wAiNote')}</p>
+      ${Number.isInteger(j.attempt_id)?`<div class="appeal" id="wAppeal">${appealHtml(j.attempt_id)}</div>`:''}
       ${mv.retry&&!was?`<div class="actions start"><button type="button" class="primary" id="wAgain">${tr('wRetry')}</button><button type="button" id="wOn">${tr('wMoveOn')}</button></div>`:''}</div>`;
     typeset($('wResult'));
+    if(Number.isInteger(j.attempt_id))wireAppeal(j.attempt_id,item);
     if(!was&&mv.next)settle(item,ctx,mv);
     if($('wAgain')){
       $('wAgain').onclick=()=>{$('wResult').innerHTML='';ctx.hint?.();msgW(tr(ctx.hint?'wRetryNote':'wRetryPlain'));$('written').scrollIntoView?.({block:'nearest'});};
       $('wOn').onclick=()=>{settle(item,ctx,mv);$('next')?.click();};
     }
     reportHeight();
+  }
+
+  /* ── appeals: one tap and an optional line (POST /api/learn/grade/appeal); the status shows here and in the Review tab ── */
+  const apLabel=st=>tr('apStatus_'+(['open','upheld','changed'].includes(st)?st:'open'));
+  function appealHtml(id){
+    const a=saved.appeals?.[id];
+    if(a)return `<span class="tag ap-${esc(a.status)}">${apLabel(a.status)}</span>`;
+    return `<button type="button" class="mini" id="apBtn" aria-expanded="false">${tr('apBtn')}</button><div id="apForm" hidden><input type="text" id="apNote" maxlength="500" placeholder="${tr('apNote')}" aria-label="${tr('apNote')}"><span class="dbtns"><button type="button" class="primary" id="apSend">${tr('apSend')}</button><button type="button" id="apCancel">${tr('apCancel')}</button></span><span class="src" id="apMsg" role="status"></span></div>`;
+  }
+  function wireAppeal(id,item){
+    if(!$('apBtn'))return;
+    const form=$('apForm');
+    $('apBtn').onclick=()=>{form.hidden=!form.hidden;$('apBtn').setAttribute('aria-expanded',String(!form.hidden));if(!form.hidden)$('apNote').focus();reportHeight();};
+    $('apCancel').onclick=()=>{form.hidden=true;$('apBtn').setAttribute('aria-expanded','false');reportHeight();};
+    $('apSend').onclick=async()=>{
+      $('apSend').disabled=true;let r=null,j={};
+      try{r=await fetch(API+'/api/learn/grade/appeal',{method:'POST',headers:{'content-type':'application/json',Authorization:'Bearer '+token()},body:JSON.stringify({attempt_id:id,note:$('apNote').value.trim()})});j=await r.json().catch(()=>({}));}catch(e){r=null;}
+      if(!$('wAppeal'))return;
+      if(r&&(r.ok||j.error==='appeal_exists')){
+        (saved.appeals||={})[id]={item:item.id,t:String(W.toolLabel||titleOf(item)||item.id).slice(0,120),status:r.ok&&j.status?j.status:'open',at:Math.floor(Date.now()/1000)};
+        const keys=Object.keys(saved.appeals);if(keys.length>100)for(const k of keys.slice(0,keys.length-100))delete saved.appeals[k];
+        save();$('wAppeal').innerHTML=appealHtml(id);reportHeight();return;
+      }
+      $('apSend').disabled=false;$('apMsg').textContent=tr('apFail');reportHeight();
+    };
+  }
+  async function myAppealsHtml(){
+    if(!token())return `<p class="src">${tr('apLogin')}</p>`;
+    let list=[];try{const j=await api('/api/learn/grade/appeals/mine');list=Array.isArray(j.appeals)?j.appeals:[];}catch(e){return `<p class="src">${tr('failed')}</p>`;}
+    for(const a of list)if(saved.appeals?.[a.attempt_id])saved.appeals[a.attempt_id].status=a.status;
+    if(!list.length)return `<p class="src">${tr('apNone')}</p>`;
+    return `<ul class="plainlist">${list.slice(0,20).map(a=>`<li><span class="name">${esc(saved.appeals?.[a.attempt_id]?.t||a.item_id)}<small>${pts(a.old_score)}${a.status==='changed'&&a.new_score!=null?' → '+pts(a.new_score):''} / ${pts(a.max)} · ${day(a.created_at)}${a.note?' · '+esc(String(a.note).slice(0,80)):''}</small>${a.reply?`<small>${tr('apReply')}: ${esc(String(a.reply).slice(0,300))}</small>`:''}</span><span class="tag ap-${esc(a.status)}">${apLabel(a.status)}</span></li>`).join('')}</ul>`;
   }
 
   /* ── problem reports go to the server (POST /api/learn/report), signed in or not. A report that cannot be sent stays in
@@ -1477,8 +1671,8 @@
     runSet({items,label:tr('customName'),back:customHome,again:()=>customStart(o),timer:o.timer,format:o.format});
   }
   /* ── review: what is due today, the saved problems, my reports, and the progress backup ── */
-  async function resolveItems(ids){
-    const meta=id=>saved.review[id]||saved.later[id]||{},parts=[];
+  async function resolveItems(ids,extra){
+    const meta=id=>saved.review[id]||saved.later[id]||extra?.[id]||{},parts=[];
     if(ids.some(id=>meta(id).k==='exam'))parts.push(allExamItems().catch(()=>[]));
     for(const k of new Set(ids.filter(id=>meta(id).k==='track').map(id=>id.split('-')[0])))parts.push(trackItems(k).catch(()=>[]));
     if(ids.some(id=>meta(id).k==='contest'))parts.push(allContestItems().catch(()=>[]));
@@ -1497,6 +1691,7 @@
         <div class="actions"><button type="button" class="primary" id="goReview"${due.length?'':' disabled'}>${tr('startReview')}${due.length?` (${Math.min(20,due.length)})`:''}</button></div></section>
       <section class="area laterlist"><h2>${tr('laterTitle')}</h2>${later.length?`<ul class="plainlist">${later.map(([id,e])=>`<li><span class="name">${esc(e.t||id)}<small>${esc(entryName(e))}</small></span><button type="button" class="mini" data-unlater="${esc(id)}">${tr('removeLater')}</button></li>`).join('')}</ul>
         <div class="actions"><button type="button" class="primary" id="goLater">${tr('startLater')} (${Math.min(20,later.length)})</button></div>`:`<p class="src">${tr('noLater')}</p>`}</section>
+      <section class="area laterlist"><h2>${tr('apMine')}</h2><div id="myAppeals"><p class="src">${tr('loading')}</p></div></section>
       <section class="area laterlist"><h2>${tr('myReports')}</h2><div id="myReports"><p class="src">${tr('loading')}</p></div></section>
       ${settingsHtml()}`;
     $('goReview').onclick=async()=>{$('app').innerHTML=`<p>${tr('loading')}</p>`;const items=await resolveItems(due.slice(0,20));runSet({items,label:tr('tabReview'),back:reviewHome,again:reviewHome});};
@@ -1504,6 +1699,7 @@
     $('app').querySelectorAll('[data-unlater]').forEach(b=>b.onclick=()=>{delete saved.later[b.dataset.unlater];save();reviewHome();});
     wireSettings(reviewHome);reportHeight();
     flushReports().catch(()=>{}).then(myReportsHtml).then(h=>{if($('myReports')&&state.mode==='review'){$('myReports').innerHTML=h;reportHeight();}});
+    myAppealsHtml().then(h=>{if($('myAppeals')&&state.mode==='review'){$('myAppeals').innerHTML=h;save();reportHeight();}});
   }
   /* ── progress backup: export the saved state as a file, import one (checked, then merged item by item), reset ── */
   function settingsHtml(){return `<details class="area settings" id="settings"><summary>${tr('settings')}</summary><p class="src">${tr('settingsNote')}</p>
@@ -1555,7 +1751,7 @@
     if(!H.STUDY_LEVELS.some(L=>L.key===level))return;
     saved.customOpts={...(saved.customOpts||{}),source:'level:'+level,units:unit&&P.SUBTOPICS.has(unit)?[unit]:[],min:1,max:10,contest:'',yearMin:0,yearMax:0};
   }
-  const boot=()=>{pull();loadPlan();setTimeout(()=>flushReports().catch(()=>{}),4000);const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
+  const boot=()=>{paintStats();pull();loadPlan();setTimeout(()=>flushReports().catch(()=>{}),4000);const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
     if(item&&/^[a-z0-9]+-[a-z0-9-]{1,40}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
     else if(mode==='play'){document.documentElement.classList.add('play');playHome();}

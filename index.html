@@ -347,7 +347,19 @@ section{padding:58px 0}
 .section-nav .shell::-webkit-scrollbar{display:none}
 .section-nav a{flex:none;padding:9px 12px;font-size:13px;color:var(--graphite);text-decoration:none;border-bottom:2px solid transparent;white-space:nowrap}
 .section-nav a:hover{color:var(--ink)}
+.sol-report{margin:8px 0 0}
+.sol-report-btn{display:inline-flex;align-items:center;min-height:40px;padding:0;border:0;background:none;color:var(--graphite);font:inherit;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.sol-report-btn:hover{color:var(--ink)}.sol-report-btn:disabled{text-decoration:none;cursor:default}
+.sol-report-form{margin:6px 0 0;padding:12px 14px;border:1px solid var(--grid-bold);border-radius:8px;font-size:13.5px}
+.sol-report-form fieldset{border:0;margin:0;padding:0;display:grid;gap:2px}.sol-report-form legend{font-weight:650;margin-bottom:4px}
+.sol-report-form fieldset label{display:flex;align-items:center;gap:8px;min-height:36px}
+.sol-report-note{display:flex;flex-direction:column;gap:4px;margin-top:8px;color:var(--graphite)}
+.sol-report-note textarea{box-sizing:border-box;width:100%;padding:8px;border:1px solid var(--grid-bold);border-radius:6px;font:inherit;color:var(--ink);background:transparent}
+.sol-report-acts{display:flex;gap:8px;margin:10px 0 0}.sol-report-acts .cmbtn{min-height:40px}
+.sol-report-msg{margin:6px 0 0;color:var(--graphite);min-height:1em}
 .section-nav a[aria-current="page"]{color:var(--ink);font-weight:650;border-bottom-color:currentColor}
+/* on a phone the Learn bar (six items) scrolls sideways; each item stays a 40 px target and the row fades at the edge it continues past */
+@media(max-width:640px){.section-nav .shell{gap:0;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}.section-nav a{display:inline-flex;align-items:center;min-height:40px;box-sizing:border-box;padding:0 11px}}
 .learn-home{padding-bottom:36px}
 .lh-hero{padding:40px 0 26px;max-width:680px}
 .lh-hero h1{font-size:clamp(1.9rem,4.5vw,2.7rem);line-height:1.2;margin:8px 0 14px}
@@ -1024,6 +1036,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
 <link rel="stylesheet" href="site-design.css?v=6ef8bce3d980">
+<link rel="stylesheet" href="guide.css?v=022546be75f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
 </head>
@@ -1177,6 +1190,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-design.js?v=f0e733102d6c"></script>
 <script src="hpho.js?v=ea67208eda3b"></script>
 <script src="guides.js?v=948d0aa7ae4a"></script>
+<script src="guide.js?v=3470e35a319e"></script>
 <script src="hpho-proctor.js?v=c8b93c4e12fb"></script>
 <script src="hpho-phone.js?v=3a6015cc1217"></script>
 <script src="hpho-exam.js?v=a4e790f96370"></script>
@@ -5319,6 +5333,7 @@ function learnParts(){
   return [
     {key:"practice",href:"#/learn/practice",name:ko?"오늘의 문제":LX("Today's problems"),line:ko?"매일 10문제가 내 레벨에 맞춰 나옵니다. 답을 내면 바로 채점합니다.":LX("Ten problems a day at your level, graded as soon as you answer.")},
     {key:"roadmap",href:"#/learn/roadmap",name:ko?"로드맵":LX("Roadmap"),line:ko?"입문부터 대학까지 무엇을 어떤 순서로 공부할지, 단원 지도와 함께 봅니다.":LX("What to study and in what order, from a first course to university, with the unit map.")},
+    {key:"guide",href:"#/learn/guide",name:ko?"교재":LX("Guide"),line:ko?"단원마다 읽는 교재입니다. 유도와 예제, 직접 풀어 보는 문제, 핸드아웃이 있습니다.":LX("Unit-by-unit chapters with derivations, worked examples, exercises and handouts.")},
     {key:"courses",href:"#/learn/courses",name:ko?"강좌":LX("Courses"),line:ko?"레벨마다 단원을 순서대로 묶었습니다. 단원마다 문제와 시뮬레이션이 연결됩니다.":LX("The units of each level in order, each linked to its problems and simulations.")},
     {key:"search",href:"#/learn/physics/search",name:ko?"문제 검색":LX("Search problems"),line:ko?"낱말이나 수식, 주제, 난이도로 문제를 찾습니다.":LX("Find problems by words, equations, topic and difficulty.")},
     {key:"lab",href:"#/learn/lab",name:ko?"실험실":LX("Lab"),line:ko?"시뮬레이션을 돌려 보고, 직접 만들어 올리고, 다른 사람의 작품을 실행합니다.":LX("Run simulations, build your own and share them, and play what others made.")}
@@ -5909,8 +5924,38 @@ function probCard(o){
           ${o.note||""}
           <div class="acts">${o.main?`<div class="main">${o.main.join("\n")}</div>`:""}
             ${o.docs.length?`<div class="docs n${o.dn||o.docs.length}">${o.docs.join("\n")}</div>`:""}${o.run?`<div class="run">${o.run}</div>`:""}</div>
+          ${o.report?`<p class="sol-report"><button type="button" class="sol-report-btn" data-sol-report="${esc(o.report)}" aria-expanded="false">${lang==="ko"?"해설 오류 신고":"Report an error in the solution"}</button></p>`:""}
         </article>`;
 }
+/* «Report an error in the solution» under an archive problem's solution link: POST /api/learn/report (practice-grade.js) with
+   the problem's archive key as item_id, signed in or not. One form at a time, opened under the button. */
+const archiveReportKey=(key,year,code)=>("archive:"+key+"-"+year+"-"+code).replace(/[^\w~.:-]/g,"-").slice(0,80);
+function solReportForm(btn){
+  const ko=lang==="ko",row=btn.closest(".sol-report"),open=row.nextElementSibling?.classList.contains("sol-report-form");
+  document.querySelectorAll(".sol-report-form").forEach(f=>{f.previousElementSibling?.querySelector("[data-sol-report]")?.setAttribute("aria-expanded","false");f.remove();});
+  if(open)return;
+  btn.setAttribute("aria-expanded","true");
+  row.insertAdjacentHTML("afterend",`<form class="sol-report-form"><fieldset><legend>${ko?"무엇이 잘못됐나요?":"What is wrong?"}</legend>
+    <label><input type="radio" name="reason" value="wrong_answer" checked> ${ko?"해설이나 답이 틀렸어요":"The solution or the answer is wrong"}</label>
+    <label><input type="radio" name="reason" value="other"> ${ko?"그 밖의 문제 (파일, 링크, 번역 등)":"Something else (file, link, translation)"}</label></fieldset>
+    <label class="sol-report-note">${ko?"어느 부분인지 적어 주세요. ‘그 밖의 문제’는 꼭 적어야 합니다.":"Say where. Required for ‘something else’."}<textarea name="note" maxlength="1000" rows="3"></textarea></label>
+    <p class="sol-report-acts"><button type="submit" class="cmbtn pri">${ko?"보내기":"Send"}</button><button type="button" class="cmbtn" data-sol-cancel>${ko?"취소":"Cancel"}</button></p>
+    <p class="sol-report-msg" role="status"></p></form>`);
+  const f=row.nextElementSibling,msg=f.querySelector(".sol-report-msg");
+  f.querySelector("[data-sol-cancel]").onclick=()=>{f.remove();btn.setAttribute("aria-expanded","false");btn.focus();};
+  f.onsubmit=async e=>{
+    e.preventDefault();
+    const reason=f.reason.value,note=f.note.value.trim();
+    if(reason==="other"&&!note){msg.textContent=ko?"무엇이 문제인지 적어 주세요.":"Please say what the problem is.";f.note.focus();return;}
+    const send=f.querySelector('button[type="submit"]');send.disabled=true;msg.textContent=ko?"보내는 중…":"Sending…";
+    try{
+      await cmApi("POST","/learn/report",{item_id:btn.dataset.solReport,reason,note,source:"archive",page:location.hash.slice(0,300),lang});
+      f.innerHTML=`<p class="sol-report-msg" role="status">${ko?"받았습니다. 확인하고 고치겠습니다. 고맙습니다.":"Received. We will check it and fix it. Thank you."}</p>`;btn.disabled=true;
+    }catch(err){send.disabled=false;msg.textContent=err?.code==="rate_limited"?(ko?"오늘은 더 보낼 수 없습니다. 내일 다시 보내 주세요.":"No more reports today. Please try again tomorrow."):(ko?"보내지 못했습니다. 잠시 뒤 다시 해 보세요.":"Could not send. Please try again shortly.");}
+  };
+  f.note.focus();
+}
+if(typeof document==="object"&&typeof document.addEventListener==="function")document.addEventListener("click",e=>{const b=e.target?.closest?.("[data-sol-report]");if(b)solReportForm(b);});
 /* the year's theory problems, as the experiments: «choose a problem» and a card per problem (T1, T2, …; T for a paper
    published whole), made by probCard.  The two main buttons are the problems and the solutions — in Korean the
    translation where there is one (theory_ko.json: a part's files under ko, Korean titles pk, general instructions g;
@@ -5982,7 +6027,7 @@ function theoryHtml(key,yr){
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=ko?probs.map(q=>kt[q[0]]?q[1]:"").filter(Boolean):[];   /* the English site names the problems in English only */
     /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
     const many=titles.length>1;
-    return probCard({code, mode:has?"live":"dl", chip:archive?(archiveLabels[archive.type]||archive.type):has?d.thyKoChip:paperSourceType==="unofficial_translation"?(ko?"비공식 영문 번역":"Unofficial English translation"):d.thyOrigChip,
+    return probCard({code, report:S[0]?archiveReportKey(key,yr.y,code):"", mode:has?"live":"dl", chip:archive?(archiveLabels[archive.type]||archive.type):has?d.thyKoChip:paperSourceType==="unofficial_translation"?(ko?"비공식 영문 번역":"Unofficial English translation"):d.thyOrigChip,
       heading:head||(f.title?.[lang]||(many||!titles.length?(code==="T"?d.thyAll:code):titles[0])), body:(many?clip(titles):alt.map(esc).join(" · "))+(archive?`<p><b>${archiveLabels[archive.type]||esc(archive.type)}</b> · ${esc(archive.note)}</p>`:""),
       tags:[TL(compOf(key),"trkThy")].concat(many?[TL(compOf(key),"thyCnt")(titles.length)]:[], has?[d.thyKo]:[],archive?[archiveLabels[archive.type]||archive.type]:[]),
       note:(selectedContainsSolutions?`<p class="trknote">${t.sourceType==="historical_reprint"?(ko?"선택한 연도의 문제와 다른 회차의 문제·해설이 함께 실린 보고서입니다. 해당 연도 문제 쪽으로 열리며, 이 회차의 해설을 제공하는 것은 아닙니다.":"This report reprints the selected year's problems alongside other years and solutions. The link opens at the relevant pages; a solution to this historical set is not supplied."):(ko?"당시 보고서에 문제와 해설이 함께 실려 있습니다. 학습용 합본이며 해설을 포함합니다.":"This contemporary report includes the problem statements and worked solutions together.")}</p>`:"")+(f.component==="mixed"?`<p class="trknote">${ko?"Part II에는 실험 문제와 이론 문제가 함께 실려 있습니다.":"Part II contains both an experimental and a theoretical problem."}</p>`:"")+((k.paperNotes?.[lang]||f.paperNotes?.[selectedLanguage])?`<p class="trknote">${esc(k.paperNotes?.[lang]||f.paperNotes[selectedLanguage])}</p>`:""),
@@ -10460,7 +10505,7 @@ function setDocTitle(first, second){
   else if(["monthly","weekly","rank"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn"&&second==="concepts") parts.push(lang==="ko"?"학습 — 개념 시뮬레이션":"Learn — Concept simulations");
-  else if(first==="learn"&&["practice","roadmap","courses","lab"].includes(second)) parts.push(`${d.navLearn} \u2014 ${second==="roadmap"&&roadmapTab()==="units"?(lang==="ko"?"단원 지도":"Unit map"):learnPart(second).name}`);
+  else if(first==="learn"&&["practice","roadmap","guide","courses","lab"].includes(second)) parts.push(`${d.navLearn} \u2014 ${second==="roadmap"&&roadmapTab()==="units"?(lang==="ko"?"단원 지도":"Unit map"):learnPart(second).name}`);
   else if(first==="learn"&&second==="create") parts.push(lang==="ko"?"학습 — 작품 갤러리":"Learn — Creations gallery");
   else if(first==="learn"&&second==="teach") parts.push(lang==="ko"?"학습 — 교사용":"Learn — For teachers");
   else if(first==="learn"&&second==="compute") parts.push(lang==="ko"?"학습 — 계산물리":"Learn — Computational physics");
@@ -10576,7 +10621,7 @@ function sectionLinks(section){
   /* the Learn bar: the five parts in learnParts(), each with its one line as a tooltip; the old unit map and the lab's
      parts mark the item they now live under */
   if(section==="learn"){
-    const on={practice:h=>h==="#/learn/practice",roadmap:h=>/^#\/learn\/(roadmap|physics)$/.test(h),courses:h=>h==="#/learn/courses",
+    const on={practice:h=>h==="#/learn/practice",roadmap:h=>/^#\/learn\/(roadmap|physics)$/.test(h),guide:h=>/^#\/learn\/guide(\/|$)/.test(h),courses:h=>h==="#/learn/courses",
       search:h=>h==="#/learn/physics/search",lab:h=>/^#\/learn\/(lab|concepts|compute|create)$/.test(h)};
     return learnParts().map(p=>[p.href,p.name,on[p.key],p.line]);
   }
@@ -10665,7 +10710,7 @@ function render(){
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
   else if(first==="olympiad"){    html=second==="schedule"&&window.HL_GUIDES?HL_GUIDES.scheduleView():viewOlympiad(); active="olympiad"; }
-  else if(first==="learn"){       html=!second?viewLearnHome():second==="subjects"?viewLearn():second==="lab"?viewLearnLab():second==="courses"&&window.HL_GUIDES?HL_GUIDES.coursesView():second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="create"?viewLearnCreate():second==="teach"?viewLearnTeach():second==="roadmap"?viewLearnRoadmap(roadmapAlias):second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():viewLearnSubject(second); active="learn"; }
+  else if(first==="learn"){       html=!second?viewLearnHome():second==="subjects"?viewLearn():second==="lab"?viewLearnLab():second==="courses"&&window.HL_GUIDES?HL_GUIDES.coursesView():second==="guide"&&window.HL_GUIDE?HL_GUIDE.view():second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="create"?viewLearnCreate():second==="teach"?viewLearnTeach():second==="roadmap"?viewLearnRoadmap(roadmapAlias):second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():viewLearnSubject(second); active="learn"; }
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
@@ -10692,6 +10737,7 @@ function render(){
   else if(first==="hpho"&&window.HL_HPHO) HL_HPHO.mount();
   else if(first==="learn"&&second==="roadmap"&&roadmapTab()==="stages"&&window.HL_GUIDES) HL_GUIDES.roadmapMount();
   else if(first==="learn"&&second==="courses"&&window.HL_GUIDES) HL_GUIDES.coursesMount();
+  else if(first==="learn"&&second==="guide"&&window.HL_GUIDE) HL_GUIDE.mount();
   else if(first==="olympiad"&&second==="schedule"&&window.HL_GUIDES) HL_GUIDES.scheduleMount();
 
   buildRails();

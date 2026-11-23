@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 220" width="420" height="220" role="img" aria-labelledby="t">
+  <title id="t">A block slides from rest at height h down a frictionless curve, then a distance d along a rough floor with friction coefficient mu</title>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#263247"/></marker>
+    <marker id="av" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c0392b"/></marker>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#657187" stroke-width="1.4"/></pattern>
+  </defs>
+  <rect width="420" height="220" fill="#fff"/>
+  <path d="M60 52 C 110 52, 130 180, 190 180 H 400" fill="none" stroke="#263247" stroke-width="2.2"/>
+  <path d="M60 52 C 110 52, 130 180, 190 180 L 60 180 Z" fill="#7059a4" fill-opacity=".08"/>
+  <rect x="190" y="180" width="210" height="9" fill="url(#hatch)"/>
+  <rect x="50" y="34" width="20" height="18" rx="2" fill="#5c438f"/>
+  <rect x="352" y="162" width="20" height="18" rx="2" fill="#5c438f" fill-opacity=".45" stroke="#5c438f" stroke-dasharray="3 2"/>
+  <line x1="196" y1="168" x2="240" y2="168" stroke="#c0392b" stroke-width="2" marker-end="url(#av)"/>
+  <line x1="30" y1="54" x2="30" y2="178" stroke="#263247" stroke-width="1.2" marker-start="url(#ar)" marker-end="url(#ar)"/>
+  <line x1="24" y1="52" x2="48" y2="52" stroke="#657187" stroke-dasharray="3 3"/>
+  <line x1="192" y1="204" x2="360" y2="204" stroke="#263247" stroke-width="1.2" marker-start="url(#ar)" marker-end="url(#ar)"/>
+  <line x1="190" y1="192" x2="190" y2="210" stroke="#657187"/><line x1="362" y1="192" x2="362" y2="210" stroke="#657187"/>
+  <g font-family="'Times New Roman',Georgia,serif" font-style="italic" fill="#263247" font-size="18">
+    <text x="14" y="122">h</text>
+    <text x="276" y="198" text-anchor="middle" font-size="17">d</text>
+    <text x="300" y="172" font-size="17">μ</text>
+    <text x="216" y="160" fill="#c0392b" font-size="17">v</text>
+    <text x="80" y="30" font-style="normal" font-size="13" fill="#657187">v = 0</text>
+    <text x="352" y="154" font-style="normal" font-size="13" fill="#657187">v = 0</text>
+  </g>
+</svg>
