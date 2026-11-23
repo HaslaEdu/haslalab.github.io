@@ -1,0 +1,131 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="595.276,841.89">
+<style>
+/* 브라질 물리 올림피아드(OBF) 2024, 3단계, 레벨 III 이론 문제지 — Korean edition on the original layout.
+   ORIGINAL: pdfLaTeX, CM-Super SFRM1200 12pt, A4 595.3x841.9pt, 4 pages. Text column x 56.7..538.7 (width 482pt);
+   baselineskip 14.45pt. Header (SBF logo, OBF logo, rule at y 93.9) and footer rule (y 805.6) are stamped;
+   page numbers are text (baseline 820.3, right edge 538.6). All figures are raster images in the original and are
+   stamped; their labels are single symbols (k, m, ω, z, H, R, x, y, A, M, L, C, F), so no overlays are needed.
+   Same geometry as the English edition obf/2024_T_EN.html.
+
+   PLACEMENT (as rupho/2016_T1.html): every block is placed by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3155*fs + 0.7pt      (l = line pitch --l, fs = font size --fs)
+   Lists: labels "(a)", "1.", "•" are right-aligned 5.9pt before the text edge (as LaTeX enumerate/itemize):
+   sub-questions text at x 86.0; instructions text at 110.1 (right edge 514.6), bullets text at 135.8. */
+body{font-family:CM,KB,serif;font-size:12pt;line-height:14.45pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:56.7pt;width:482pt;--l:14.45pt;--fs:12pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3155*var(--fs) + 0.7pt)}
+.c{text-align:center}
+.r{text-align:right}
+.b{font-weight:bold}
+/* text beside a figure on the right (Q2, Q5, Q8 to x 345.9; Q4 to 297.7; Q7 to 321.8) */
+.w2{width:289.2pt}
+.w4{width:241pt}
+.w7{width:265.1pt}
+/* these columns are under ~300pt: allow breaks between Hangul syllables (keep-all leaves wide justified gaps) */
+.w2,.w4,.w7{word-break:normal}
+/* sub-questions (a)(b)(c): text from 86.0 */
+.s{left:86pt;width:452.7pt}
+/* instructions box on page 1 */
+.ins{left:110.1pt;width:404.5pt}
+.bul{left:135.8pt;width:378.8pt}
+.n{position:absolute;right:100%;margin-right:5.9pt;white-space:nowrap}
+/* figure credit under the photo in Q5 (SFRM0600 6pt, pitch ~7pt), x 367.9..522.1 */
+.cr{left:367.9pt;width:154.2pt;--fs:6pt;--l:6.95pt;text-align:left;word-break:normal}
+.cr .rt{float:right}
+.f{position:absolute;line-height:0}
+/* an inline formula and the Korean particle after it must never be split over two lines */
+.nw{white-space:nowrap}
+</style></head><body>
+
+<!-- page 1: cover and instructions -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="1" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<!-- level box (four rules only: the words inside are retyped) -->
+<div class="f" style="left:364pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="364,118.4,500.7,119.2"></span></div>
+<div class="f" style="left:364pt;top:190pt"><span class="fig" data-srcpage="1" data-clip="364,190,500.7,190.8"></span></div>
+<div class="f" style="left:364pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="364,118.4,364.8,190.8"></span></div>
+<div class="f" style="left:499.9pt;top:118.4pt"><span class="fig" data-srcpage="1" data-clip="499.9,118.4,500.7,190.8"></span></div>
+<p class="x c b" style="--b:145.4;left:364.4pt;width:135.9pt;--l:14.4pt">레벨 III<br>고등학교 과정<br>3학년과 4학년</p>
+<p class="x c b" style="--b:157.6;left:56.7pt;width:303.6pt;--l:20.4pt">브라질 물리 올림피아드(OBF) 2024<br>3단계 시험<br>2024년 10월 26일</p>
+<!-- instructions box -->
+<div class="f" style="left:73.3pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="73.3,233.1,522,233.9"></span></div>
+<div class="f" style="left:73.3pt;top:629.7pt"><span class="fig" data-srcpage="1" data-clip="73.3,629.7,522,630.5"></span></div>
+<div class="f" style="left:73.3pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="73.3,233.1,74.1,630.5"></span></div>
+<div class="f" style="left:521.2pt;top:233.1pt"><span class="fig" data-srcpage="1" data-clip="521.2,233.1,522,630.5"></span></div>
+<p class="x c b" style="--b:247.4;left:73.7pt;width:447.9pt">다음 지시 사항을 주의 깊게 읽어라.</p>
+<p class="x ins" style="--b:274.8"><span class="n">1.</span>이 시험은 <b>고등학교 과정 3학년과 4학년</b> 학생만을 대상으로 한다. 문제는 모두 <b>8</b>개이다.</p>
+<p class="x ins" style="--b:313.6"><span class="n">2.</span>계산기와 참고 자료는 사용할 수 없다.</p>
+<p class="x ins" style="--b:338"><span class="n">3.</span>모든 답에는 근거를 제시해야 한다.</p>
+<p class="x bul" style="--b:362.4"><span class="n">$\bullet$</span>풀이와 답은 파란색 또는 검은색 잉크의 볼펜으로 써야 한다(사인펜처럼 펜촉이 섬유로 된 펜은 쓰지 말 것).</p>
+<p class="x bul" style="--b:396.3"><span class="n">$\bullet$</span>문제지의 뒷면을 연습장으로 사용하여라.</p>
+<p class="x ins" style="--b:420.7"><span class="n">4.</span><b>답안지</b>에는 시험을 시작하기 전에 주의 깊게 읽어야 할 지시 사항이 있다.</p>
+<p class="x ins" style="--b:459.6"><span class="n">5.</span>문제에 따로 지시한 것이 없으면, 모든 수치 결과는 국제단위계(SI) 단위로 나타내야 한다.</p>
+<p class="x ins" style="--b:512.9"><span class="n">6.</span>시험 시간은 <b>4</b>시간이며, 학생은 <b>적어도 60분</b> 동안 시험장에 남아 있어야 한다.</p>
+<p class="x ins" style="--b:551.7"><span class="n">7.</span>필요하면, 그리고 따로 주어지지 않았으면 다음 값을 사용하여라. <span class="nw">$\sqrt{2} = 1.4$;</span> <span class="nw">$\sqrt{3} = 1.7$;</span> <span class="nw">$\sqrt{5} = 2.2$;</span> <span class="nw">$\sin(30^\circ) = 0.50$;</span> <span class="nw">$\cos(30^\circ) = 0.85$;</span> <span class="nw">$\sin(45^\circ) = 0.70$;</span> <span class="nw">$\pi = 3$;</span> 물의 <span class="nw">밀도 $= 1.0\ \mathrm{g/cm^3}$;</span> <span class="nw">$1\ \mathrm{cal} = 4.2\ \mathrm{J}$;</span> 물의 <span class="nw">비열 $= 4.2\ \mathrm{J/g\,{}^\circ C}$;</span> 쿨롱 <span class="nw">상수 $= 9\times10^{9}\ \mathrm{N{\cdot}m^2{\cdot}C^{-2}}$;</span> 플랑크 <span class="nw">상수 $= 6.6\times10^{-34}\ \mathrm{J{\cdot}s}$;</span> 공기 중 소리의 속력 <span class="nw">$340\ \mathrm{m/s}$;</span> 진공에서 빛의 속력 <span class="nw">$c = 3\times10^{8}\ \mathrm{m/s}$;</span> 중력 <span class="nw">가속도 $= 10.0\ \mathrm{m/s^2}$.</span></p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="1" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">1</p>
+</div>
+
+<!-- page 2: questions 1-3 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="2" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x" style="--b:130.5"><b>문제 1.</b> 전하량이 각각 <span class="nw">$q_1 = 3\,\mu\mathrm{C}$,</span> <span class="nw">$q_2 = 12\,\mu\mathrm{C}$인</span> 두 대전 입자가 거리 <span class="nw">$d = 7.2\ \mathrm{cm}$만큼</span> 떨어진 채 고정되어 있다. 전하량이 <span class="nw">$q = 3\,\mu\mathrm{C}$이고</span> 질량이 <span class="nw">$m = 5\ \mathrm{g}$인</span> 셋째 입자를 매우 먼 곳에서 속도 <span class="nw">$\vec v$로</span> 쏘아 보내어, 고정된 두 입자 사이에 있는 한 점에 이르게 해야 한다. 이것이 가능한 <span class="nw">$v = |\vec v|$의</span> 최솟값은 얼마인가?</p>
+<p class="x b" style="--b:206.2">문제 2.</p>
+<div class="f" style="left:387pt;top:212.5pt"><span class="fig" data-srcpage="2" data-clip="387,212.5,541.2,337.1"></span></div>
+<p class="x w2" style="--b:223.7">반지름이 <span class="nw">$R$인</span> 수평한 회전 원판에 중심을 지나는 곧은 홈이 파여 있고, 이 홈 안에서 질량 <span class="nw">$m$인</span> 토막이 마찰 없이 미끄러질 수 있다. 용수철 상수가 <span class="nw">$k$이고</span> 질량을 무시할 수 있는 똑같은 용수철 두 개를 홈 안에 넣는데, 각 용수철의 한쪽 끝은 원판의 가장자리에, 다른 쪽 끝은 토막에 연결한다. 그림을 보아라. 이 장치 전체를 일정한 각속도 <span class="nw">$\omega$로</span> 회전시킨다고 하자.</p>
+<p class="x s" style="--b:363"><span class="n">(a)</span>원판의 각속도가 그보다 작을 때 원판에 대한 토막의 운동이 진동 운동일 수 있는, 원판 각속도의 최댓값 <span class="nw">$\omega_m$을</span> 구하여라.</p>
+<p class="x s" style="--b:401.8"><span class="n">(b)</span><span class="nw">$\omega &lt; \omega_m$일</span> 때, 원판에 대한 토막의 진동 운동의 진동수는 얼마인가?</p>
+<p class="x s" style="--b:426.2"><span class="n">(c)</span><span class="nw">$\omega &gt; \omega_m$일</span> 때, 원판에 대해 토막이 할 수 있는 운동을 설명하여라.</p>
+<p class="x" style="--b:468.6"><b>문제 3.</b> 진동수 <span class="nw">$75\ \mathrm{MHz}$로</span> 방송하는 라디오 방송국이 어떤 도시의 시가지 경계에 있다. 이 방송국에는 출력이 <span class="nw">$P_0$인</span> 안테나가 있어서 신호를 등방적으로 보낸다. 서쪽의 농촌 지역으로 신호를 보내어 에너지를 낭비하지 않으려고, 방송국 소유주들은 청취자가 사는 동쪽으로 신호를 보내기로 한다. 이 효과를 신호 사이의 간섭으로 얻을 수 있음을 알고, 그들은 첫째 안테나에서 서쪽으로 거리 <span class="nw">$d \ge 10\ \mathrm{m}$인</span> 곳에 둘째 안테나를 설치하기로 한다(이 최소 거리는 설치에 관한 기술적 요구 조건이다). 설치한 뒤에는 각 안테나가 출력 <span class="nw">$P$로</span> 작동하며, 둘째 안테나의 신호는 첫째 안테나의 신호에 대하여 위상차 <span class="nw">$\phi$를</span> 두고 방출된다. 지역은 완전히 평평하다고 가정한다. 다음을 구하여라.</p>
+<p class="x s" style="--b:617.5"><span class="n">(a)</span>새 배치에서 신호가 시가지에 전과 같은 세기로 도달하게 하는 비 <span class="nw">$P/P_0$.</span></p>
+<p class="x s" style="--b:656.4"><span class="n">(b)</span>두 안테나 사이의 최소 설치 거리 <span class="nw">$d$.</span></p>
+<p class="x s" style="--b:680.8"><span class="n">(c)</span><span class="nw">$|\phi|$의</span> 최솟값(도 단위). 둘째 안테나의 신호는 첫째 안테나에 대하여 위상이 늦어야 하는가, 같아야 하는가, 아니면 앞서야 하는가?</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="2" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">2</p>
+</div>
+
+<!-- page 3: questions 4-5 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="3" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x b" style="--b:130.5">문제 4.</p>
+<div class="f" style="left:312.2pt;top:136.8pt"><span class="fig" data-srcpage="3" data-clip="312.2,136.8,529,277.4"></span></div>
+<p class="x w4" style="--b:149.9">물리 실험실에서 한 학생이 반지름 <span class="nw">$R = 4\ \mathrm{cm}$,</span> 높이 <span class="nw">$H = 3\ \mathrm{cm}$인</span> 원통 모양 통의 밑면에 구멍을 뚫어 부품을 만든다. 그다음 길고 가늘며 속이 빈 관을 이 구멍에 붙이고 이음매를 막아서, 부품이 깔때기처럼 작동하게 한다. 이어서 이 부품을 수평인 고무 표면 위에 올려놓아 처음 실험 장치를 완성한다. 옆의 그림을 보아라(‘깔때기’가 거꾸로 놓여 있음에 주의하여라).</p>
+<p class="x" style="--b:298.1">부품의 전체 질량은 <span class="nw">$300\ \mathrm{g}$이다.</span> 가는 관의 위쪽 입구로 물을 부으면, ‘깔때기’의 입구가 고무에 맞닿아 있어서 물이 새지 않는다. 부품이 들리지 않게 하면서 학생은 고무 표면으로부터 잰 높이 <span class="nw">$z$가</span> 얼마가 될 때까지 물을 부을 수 있는가?</p>
+<p class="x b" style="--b:359.4">문제 5.</p>
+<div class="f" style="left:372.3pt;top:368pt"><span class="fig" data-srcpage="3" data-clip="372.3,368,526.5,461.8"></span></div>
+<p class="x cr" style="--b:476.3">그림:<span class="rt">www.nasa.gov/general/nasa-next-</span><br>generation-solar-sail-boom-technology-ready-<br>for-launch.</p>
+<p class="x w2" style="--b:376.8">태양 돛으로 움직이는 우주 탐사선은 햇빛의 압력(단위 넓이당 힘)을 추진에 이용한다. 광자(빛의 입자)가 물체에 충돌하면 그 물체에 작은 힘을 작용한다. 태양 돛에서는 빛살을 이루는 수조 개의 광자가 돛의 반사면에 충돌하여 돛을 민다.</p>
+<p class="x" style="--b:511.6">세기가 $I$(단위 시간당 단위 넓이당 에너지)인 빛살이 넓이가 <span class="nw">$A$인</span> 완전 반사 돛에 수직으로 입사할 때, 복사력 <span class="nw">$F_r$는</span> 다음과 같다.</p>
+<div class="f" style="left:266pt;top:541.5pt"><span class="fig" data-srcpage="3" data-clip="266,541.5,328,573"></span></div>
+<p class="x" style="--b:584">여기서 <span class="nw">$c$는</span> 진공에서 빛의 속력이다.</p>
+<p class="x" style="--b:604.4">중력장을 무시할 수 있는 우주 공간의 한 영역을 생각하자. 이 영역에서 우주 정거장이 진동수 <span class="nw">$F$,</span> 세기 <span class="nw">$I$인</span> 단색광 빛살을 쏘고, 이 빛살은 속력 <span class="nw">$v \ll c$로</span> 멀어지고 있는 완전 반사 태양 돛의 넓이 <span class="nw">$A$인</span> 부분에 수직으로 입사한다.</p>
+<p class="x s" style="--b:666.2"><span class="n">(a)</span>태양 돛에서 반사된 빛살의 진동수를 우주 정거장에 있는 관측자가 측정하면 얼마인가?</p>
+<p class="x s" style="--b:705.1"><span class="n">(b)</span>태양 돛의 추진에 관련된 에너지 교환을 고려하여, <span class="nw">$v \ll c$인</span> 영역에서 주어진 <span class="nw">$F_r$의</span> 식이 에너지 보존 법칙에 부합함을 보여라.</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="3" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">3</p>
+</div>
+
+<!-- page 4: questions 6-8 -->
+<div class="page">
+<div class="f" style="left:56.5pt;top:29.5pt"><span class="fig" data-srcpage="4" data-clip="56.5,29.5,538.8,101.3"></span></div>
+<p class="x" style="--b:130.5"><b>문제 6.</b> 부피가 <span class="nw">$V_0$인</span> 단원자 이상 기체가, 그림과 같이 움직이는 피스톤이 달린 실린더의 한 칸 안에 갇혀 있다. 실린더의 벽은 열을 전도하며, 피스톤 머리의 바깥 면과 마찬가지로 대기와 닿아 있다. 이 장치는 수평인 탁자 위에 놓여 있으며, 압력이 <span class="nw">$p_0$인</span> 대기와 열역학적 평형 상태에 있다. 어느 순간 외력 <span class="nw">$\vec F$를</span> 피스톤의 점 <span class="nw">$A$에</span> 작용하여, 기체가 매우 천천히 팽창해서 처음 부피의 세 배가 되게 한다. <span class="nw">$\vec F$가</span> 한 일을 구하여라.</p>
+<div class="f" style="left:177.2pt;top:236.5pt"><span class="fig" data-srcpage="4" data-clip="177.2,236.5,418.1,285.2"></span></div>
+<p class="x b" style="--b:327.5">문제 7.</p>
+<div class="f" style="left:346pt;top:373.4pt"><span class="fig" data-srcpage="4" data-clip="346,373.4,541.2,458.3"></span></div>
+<p class="x w7" style="--b:345">질량이 <span class="nw">$M = 300\ \mathrm{g}$이고</span> <span class="nw">$H = 30\ \mathrm{cm}$,</span> <span class="nw">$L = 40\ \mathrm{cm}$인</span> 쐐기가 고정된 수평면 위에 정지해 있다. 어느 순간 질량 <span class="nw">$m = 100\ \mathrm{g}$인</span> 작은 토막을 쐐기의 가장 높은 점에 올려놓고 속도 0인 상태에서 놓는다. 그림을 보아라. 접촉하는 모든 면은 완전히 매끄럽다고, 곧 토막은 쐐기 위에서, 쐐기는 수평면 위에서 마찰력 없이 미끄러진다고 생각하여라.</p>
+<p class="x" style="--b:489.9">토막이 수평면에 닿기 바로 직전의 순간에 대하여 (고정된 기준틀에서) 다음을 구하여라.</p>
+<p class="x s" style="--b:528.8"><span class="n">(a)</span>쐐기의 변위.</p>
+<p class="x s" style="--b:553.2"><span class="n">(b)</span>토막의 속도의 크기.</p>
+<p class="x b" style="--b:595.5">문제 8.</p>
+<div class="f" style="left:358.1pt;top:616.6pt"><span class="fig" data-srcpage="4" data-clip="358.1,616.6,541.2,698"></span></div>
+<p class="x w2" style="--b:613">단색광 빛살이 그림과 같이 반지름 <span class="nw">$R = 4.00\ \mathrm{cm}$인</span> 반원기둥 모양 프리즘의 면에 수직으로 입사한다. 프리즘은 공기 중에 있으며, 굴절률이 <span class="nw">$n = 1.40$인</span> 물질로 만들어져 있다. 프리즘 앞에 있는 점 <span class="nw">$F$,</span> 곧 빛살의 초점에 불투명한 스크린을 놓는다. 프리즘 안에서 일어나는 2차 이상의 내부 반사를 무시하고 다음을 구하여라.</p>
+<p class="x s" style="--b:740"><span class="n">(a)</span>두 점 <span class="nw">$F$와</span> <span class="nw">$C$</span> 사이의 거리.</p>
+<p class="x s" style="--b:764.4"><span class="n">(b)</span>스크린에서 빛살이 비추는 곳의 <span class="nw">$y$</span> 좌표의 최댓값.</p>
+<div class="f" style="left:56.5pt;top:805.2pt"><span class="fig" data-srcpage="4" data-clip="56.5,805.2,538.8,806"></span></div>
+<p class="x r" style="--b:820.3">4</p>
+</div>
+
+</body></html>

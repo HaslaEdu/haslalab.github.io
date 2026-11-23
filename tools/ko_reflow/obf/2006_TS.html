@@ -1,0 +1,252 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="595,842">
+<style>
+/* 브라질 물리 올림피아드(OBF) 2006, 3단계, 3학년 문제지 모범 답안(Gabarito) — Korean edition on the original layout.
+   ORIGINAL: MS Word, 6 pages A4 595x842pt. Cover: OBF logo (raster, stamped) and three title lines (Times New Roman
+   bold 22pt). Pages 2-6: running header (Arial italic 10pt, black, baseline 45.2; page number Times 10pt, right edge
+   510.3) retyped; body Arial 10pt navy (#000080), column x 85.1..513.1 (428pt), pitch 11.5pt (12.3 where a line
+   carries sub/superscripts), first-line indent to 120.5. Every calculation line sits on its own baseline (no
+   wrapping). Figures are vector drawings with symbol labels and are stamped. Same geometry as obf/2006_TS_EN.html.
+   The original writes products with "." and decimals with ","; here products are "·" and decimals ".".
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt). Primary face Arial (Hangul falls back
+   to Malgun Gothic, KG), so   top = b - l/2 - 0.3465*fs.
+   Text that wraps around a figure is one paragraph whose ::before is a right float (.fr: --fw wide, --fh high). */
+body{font-family:Arial,KG,sans-serif;font-size:10pt;line-height:11.5pt;color:#000080;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0;text-indent:0}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:85.1pt;width:428pt;--l:11.5pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-indent:0}
+.i{text-indent:35.4pt}
+.s{left:120.5pt;width:392.6pt}
+.m{white-space:nowrap;text-align:left}
+.q{font-weight:bold;text-decoration:underline}
+.c{text-align:center}
+.r{text-align:right}
+.b{font-weight:bold}
+.hd{color:#000;font-style:italic;white-space:nowrap}
+.fr::before{content:"";float:right;width:calc(var(--fw)*1pt);height:calc(var(--fh)*1pt)}
+/* columns beside figures (under ~300pt): allow breaks between Hangul syllables */
+.fr,.nar{word-break:normal}
+.tt{font-family:"Times New Roman",KB,serif;font-weight:bold;color:#000;--fs:22pt;--l:25pt;left:56.7pt;width:487.6pt;text-align:center}
+.f{position:absolute;line-height:0}
+.nw{white-space:nowrap}
+</style></head><body>
+
+<!-- page 1: cover -->
+<div class="page">
+<div class="f" style="left:129.6pt;top:179.7pt"><span class="fig" data-srcpage="1" data-clip="129.6,179.7,463.6,381.4"></span></div>
+<p class="x tt" style="--b:442.9">브라질 물리 올림피아드 2006</p>
+<p class="x tt" style="--b:518.8">모범 답안 - 3단계</p>
+<p class="x tt" style="--b:594.7">3학년</p>
+</div>
+
+<!-- page 2: notes, question 01 -->
+<div class="page">
+<p class="x hd" style="--b:45.2">브라질 물리 올림피아드 2006 &nbsp;&nbsp; 3단계 – 3학년</p>
+<p class="x hd" style="--b:45.2;left:351pt;width:100pt">모범 답안</p>
+<p class="x r" style="--b:45.2;left:450pt;width:60.3pt;color:#000;font-family:'Times New Roman',serif">2</p>
+<p class="x s b" style="--b:85;--fs:15pt;--l:17pt;font-style:italic">3단계 - 3학년 시험</p>
+<p class="x i" style="--b:109;font-style:italic">1) 여기에 나온 식들은 수식 편집기의 도움 없이 입력하였다. 그래서 본문에서는, 예를 들어 $R$의 역수를 $1/R$ 또는 <span class="nw">$R^{-1}$로,</span> $p$의 제곱근을 $\sqrt{p}$ 또는 <span class="nw">$(p)^{1/2}$로</span> 쓰는 등 여러 표기를 함께 썼다.</p>
+<p class="x i" style="--b:144.2;font-style:italic">2) 여기에 제시한 풀이는 참고용이며 유일한 풀이가 아니다. 채점할 때에는 학생이 전개한 추론을 고려하였으며, 그 전개 과정이 여기에 제시한 풀이와 늘 같지는 않았다.</p>
+<p class="x i" style="--b:178.7;font-style:italic">3) 문제 출제 위원회의 다른 위원들의 감독 아래 한 명의 교사가 3학년 시험지를 모두 채점하였으며, 이는 채점 기준을 일관되게 유지하는 데 크게 이바지한다.</p>
+<p class="x q" style="--b:270.7">문제 01 - 3학년 (6.0점)</p>
+<div class="f" style="left:381.1pt;top:270.2pt"><span class="fig" data-srcpage="2" data-clip="381.1,270.2,511.6,372"></span></div>
+<p class="x i nar" style="--b:293.6;width:290.3pt">주어진 상황은 흡열 기체 과정을 다룬다. 등압 과정, 이어서 등적 과정, 마지막으로 다시 등압 과정으로 이루어져 있다.</p>
+<p class="x s" style="--b:328.1">a)</p>
+<p class="x s" style="--b:340.4">I) <span class="nw">$T_1$의</span> 계산 (등압 과정, <span class="nw">$0 \rightarrow 1$)</span></p>
+<p class="x m" style="--b:352.6">$V_0/T_0 = V_1/T_1 \;\rightarrow\; S{\cdot} a/T_0 = S{\cdot}(a+b)/T_1 \;\therefore\; T_1 = S{\cdot}(a+b){\cdot} T_0/S{\cdot} a$</p>
+<p class="x m" style="--b:364.9">$T_1 = (0.6+0.2){\cdot}300/0.6 \qquad\rightarrow\qquad \boldsymbol{T_1 = 400}\,\mathbf{K}$</p>
+<p class="x s" style="--b:377.2">II) <span class="nw">$Q_1$의</span> 계산 (등압 과정, <span class="nw">$0 \rightarrow 1$)</span></p>
+<p class="x m" style="--b:389.4">$\gamma = c_p/c_v \qquad c_p = 1.664{\cdot}3125 \qquad c_p = 5200\ \mathrm{J/kg{\cdot}K}$</p>
+<p class="x m" style="--b:401.6">$Q_1 = m{\cdot} c_p{\cdot}(T_1 - T_0) \;\;\rightarrow\;\; Q_1 = 4{\cdot}10^{-3}{\cdot}5200{\cdot}(400-300) \;\;\rightarrow\;\; \boldsymbol{Q_1 = 2080}\,\mathbf{J}$</p>
+<p class="x s" style="--b:424.6">b)</p>
+<p class="x s" style="--b:436.9">III) <span class="nw">$T_2$의</span> 계산 (등적 과정, <span class="nw">$1 \rightarrow 2$)</span></p>
+<p class="x m" style="--b:449.2">$P_1/T_1 = p_2/T_2 \;\;\therefore\;\; T_2 = (p_{atm} + (P_E + P_F)/S)\,/\,(p_{atm} + P_E/S){\cdot} T_1 \quad\rightarrow$</p>
+<p class="x m" style="--b:461.4">$T_2 = (1{\cdot}10^5 + (300{\cdot}10 + 100{\cdot}10)/100{\cdot}10^{-4})/(1{\cdot}10^5 + 300{\cdot}10/100{\cdot}10^{-4}){\cdot}400 \;\;\rightarrow\;\; \boldsymbol{T_2 = 500}\,\mathbf{K}$</p>
+<p class="x s" style="--b:473.6">IV) <span class="nw">$Q_2$의</span> 계산 (등적 과정, <span class="nw">$1 \rightarrow 2$)</span></p>
+<p class="x m" style="--b:485.9">$Q_2 = m{\cdot} c_v{\cdot}(T_2 - T_1) \;\;\rightarrow\;\; Q_2 = 4{\cdot}10^{-3}{\cdot}3125{\cdot}(500-400) \;\;\rightarrow\;\; \boldsymbol{Q_2 = 1250}\,\mathbf{J}$</p>
+<p class="x s" style="--b:498.1">V) <span class="nw">$T_3$의</span> 계산 (등압 과정, <span class="nw">$2 \rightarrow 3$)</span></p>
+<p class="x m" style="--b:510.4">$V_2/T_2 = V_3/T_3 \;\;\rightarrow\;\; S{\cdot}(a+b)/T_2 = S{\cdot}(a+2{\cdot} b)/T_3 \;\;\therefore\;\; T_3 = (0.6+2{\cdot}0.2){\cdot}500/(0.6{\cdot}0.2) \quad\rightarrow$</p>
+<p class="x m" style="--b:521.9">$\boldsymbol{T_3 = 625}\,\mathbf{K}$</p>
+<p class="x s" style="--b:534.1">VI) <span class="nw">$Q_3$의</span> 계산 (등압 과정, <span class="nw">$2 \rightarrow 3$)</span></p>
+<p class="x m" style="--b:546.4">$Q_3 = m{\cdot} c_p{\cdot}(T_3 - T_2) \;\;\rightarrow\;\; Q_3 = 4{\cdot}10^{-3}{\cdot}5200{\cdot}(625-400) \;\;\rightarrow\;\; \boldsymbol{Q_3 = 2600}\,\mathbf{J}$</p>
+<p class="x i" style="--b:558.7">VII) 저항기를 켜 두는 시간 <span class="nw">$\Delta t$의</span> 계산. (저항기는 모든 전기 에너지를 열로 바꾸고, 이 열은 모두 기체에 흡수된다.)</p>
+<p class="x m" style="--b:582.4">$Q_{total} = P_{\text{전기}}{\cdot}\Delta t \;\;\rightarrow\;\; Q_{total} = V^2{\cdot}\Delta t/R \;\;\rightarrow\;\; Q_1 + Q_2 + Q_3 = 110^2{\cdot}\Delta t/1210$</p>
+<p class="x m" style="--b:594.7">$2080 + 1250 + 2600 = 110^2{\cdot}\Delta t/12 \;\;\therefore\;\; \boldsymbol{\Delta t = 593}\,\mathbf{s}$</p>
+<p class="x s" style="--b:617.6">c)</p>
+<p class="x s" style="--b:629.9">VIII) 효율 <span class="nw">$\eta$의</span> 계산</p>
+<p class="x m" style="--b:642.1">$\eta =$ 한 일/소비한 에너지 &nbsp; $\eta = [p_0{\cdot}(V_1 - V_0) + p_2{\cdot}(V_3 - V_2)]/Q_{total} \quad\rightarrow$</p>
+<p class="x m" style="--b:654.4">$\eta = [4{\cdot}10^5 + ((2{\cdot}10^{-3}) + 5{\cdot}10^5 + ((2{\cdot}10^{-3})]/5930 \;\;\rightarrow\;\; \eta = 1800/5930 \;\;\rightarrow\;\; \eta = 0.3035$</p>
+</div>
+
+<!-- page 3: questions 02, 03 -->
+<div class="page">
+<p class="x hd" style="--b:45.2">브라질 물리 올림피아드 2006 &nbsp;&nbsp; 3단계 – 3학년</p>
+<p class="x hd" style="--b:45.2;left:351pt;width:100pt">모범 답안</p>
+<p class="x r" style="--b:45.2;left:450pt;width:60.3pt;color:#000;font-family:'Times New Roman',serif">3</p>
+<p class="x q" style="--b:80.2">문제 02 - 3학년 (6.0점)</p>
+<p class="x i" style="--b:103.1">제시된 상황은 전원, 수전기(역기전력원), 저항기로 이루어진 단일 고리 회로를 다룬다. <span class="nw">$E_1 &gt; E_2$이므로</span> 전류는 (그림에 나타낸 회로에서) 시계 방향으로 흐른다. 따라서 <span class="nw">$E_1$은</span> 전원이고 <span class="nw">$E_2$는</span> 수전기라고 할 수 있다. 즉, 충전용 배터리에서처럼 <span class="nw">$E_2$는</span> 전기 에너지를 받아 화학 퍼텐셜 에너지로 저장한다.</p>
+<p class="x i" style="--b:160.6">가능한 가장 짧은 시간에 충전하려면 전류가 허용되는 최댓값이어야 한다.</p>
+<p class="x s" style="--b:195.1">a)</p>
+<p class="x s" style="--b:206.6">I) <span class="nw">$R$의</span> 계산.</p>
+<p class="x m" style="--b:218.9">$\Sigma E = \Sigma R{\cdot} i \;\;\rightarrow\;\; E_1 - E_{2o} = r_1{\cdot} i_o + R{\cdot} i_o + r_2{\cdot} i_o \;\;\rightarrow\;\; 4 - 3.2 = 5{\cdot}80{\cdot}10^{-3} + R{\cdot}80{\cdot}10^{-3} + 1{\cdot}80{\cdot}10^{-3}$</p>
+<p class="x m" style="--b:231.2">$0.8 = 0.40 + R{\cdot}80{\cdot}10^{-3} + 0.08 \;\;\therefore\;\; \boldsymbol{R = 4}\,\boldsymbol{\Omega}$</p>
+<p class="x s" style="--b:254.1">b)</p>
+<p class="x s" style="--b:265.6">II) <span class="nw">$i_f$의</span> 계산</p>
+<p class="x m" style="--b:277.9">$E_1 - E_{2f} = r_1{\cdot} i_f + R{\cdot} i_f + r_2{\cdot} i_f \;\;\rightarrow\;\; 4 - 3.6 = 5{\cdot} i_f + R{\cdot} i_f + 1{\cdot} i_f \qquad \boldsymbol{i_f = 40}\,\mathbf{mA}$</p>
+<p class="x s" style="--b:289.4">III) <span class="nw">$V_{cdf}$의</span> 계산</p>
+<p class="x m" style="--b:300.9">$V_{CDf} = E_{2f} + r_2{\cdot} i_f = 3.6 + 1{\cdot}40{\cdot}10^{-3} = \boldsymbol{3.64}\,\mathbf{V}$</p>
+<p class="x q" style="--b:346.9">문제 03 - 3학년 (6.0점)</p>
+<div class="f" style="left:388.3pt;top:345.5pt"><span class="fig" data-srcpage="3" data-clip="388.3,345.5,527.6,454.5"></span></div>
+<p class="x nar" style="--b:369.8;width:297.6pt">이 현상을 이해하려면 완전 유도에 대한 지식이 필요하다. 안쪽 도체는 <span class="nw">$1\ \mu\mathrm{C}$의</span> 양전하를 띠고, 이를 둘러싼 중성 도체는 완전 유도에 의해 안쪽 면에 <span class="nw">$1\ \mu\mathrm{C}$의</span> 음전하, 바깥쪽 면에 <span class="nw">$1\ \mu\mathrm{C}$의</span> 양전하를 띠게 된다. 두 도체 사이와 바깥쪽의 전기장은 바깥으로 퍼져 나가는 지름 방향의 전기장이며, 그 세기는 거리의 제곱에 반비례하여 변한다. <span class="nw">$r = 50\ \mathrm{cm}$에서</span> 그래프가 불연속인 것은 바로 그 위치에 바깥쪽 도체가 있기 때문이다.</p>
+<p class="x s" style="--b:487.1">a)</p>
+<p class="x" style="--b:498.6">I) <span class="nw">$r = 20\ \mathrm{cm}$에서</span> 전기장 세기의 계산</p>
+<p class="x m" style="--b:510.9">$E_{20} = (1/4\pi\varepsilon_o){\cdot} Q/r^2 \;\;\rightarrow\;\; E_{20} = 9{\cdot}10^9{\cdot}1{\cdot}10^{-6}/(20{\cdot}10^{-2})^2 \;\;\rightarrow\;\; E_{20} = 225\ \mathrm{kV/m}$</p>
+<p class="x s" style="--b:522.4">II) 입자에 작용하는 힘의 계산</p>
+<p class="x m" style="--b:534.7">$F_{20} = E_{20}{\cdot} q \quad\rightarrow \boldsymbol{F_{20} = 2.25{\cdot}10^{-4}}\,\mathbf{N}$</p>
+<p class="x s" style="--b:557.6">b)</p>
+<p class="x s" style="--b:569.1">III) 안쪽 도체 표면에서 전기장의 전위 계산</p>
+<p class="x m" style="--b:581.4">$V_A = (1/4\pi\varepsilon_o){\cdot} Q/r_A \;\;\rightarrow\;\; V_A = 9{\cdot}10^9{\cdot}1{\cdot}10^{-6}/10{\cdot}10^{-2} \;\;\rightarrow\;\; \boldsymbol{V_A = 90000}\,\mathbf{V}$</p>
+<p class="x s" style="--b:592.9">IV) 전체 계의 중심에서 100 cm 떨어진 점에서 전위의 계산</p>
+<p class="x m" style="--b:605.2">$V_B = (1/4\pi\varepsilon_o){\cdot} Q/r_B \;\;\rightarrow\;\; V_A = 9{\cdot}10^9{\cdot}1{\cdot}10^{-6}/100{\cdot}10^{-2} \;\;\rightarrow\;\; \boldsymbol{V_A = 9000}\,\mathbf{V}$</p>
+<p class="x s" style="--b:616.6">V) 입자의 속력 계산</p>
+<p class="x m" style="--b:628.9">$\tau = V_{AB}{\cdot} q$ 그런데 $\tau = \Delta E_C \;\rightarrow\; (V_A{-}V_B){\cdot} q = (m{\cdot} v_B^2)/2 - (m{\cdot} v_A^2)/2 \,\therefore\, v_B = [2{\cdot}(V_A - V_B){\cdot} q/m]^{1/2}$</p>
+<p class="x m" style="--b:641.2">$v_B = [2{\cdot}(90000 - 9000){\cdot}1{\cdot}10^{-9}/2{\cdot}10^{-10}]^{1/2} \;\;\rightarrow\;\; \boldsymbol{v_B = 900}\,\mathbf{m/s}$</p>
+</div>
+
+<!-- page 4: questions 04, 05 -->
+<div class="page">
+<p class="x hd" style="--b:45.2">브라질 물리 올림피아드 2006 &nbsp;&nbsp; 3단계 – 3학년</p>
+<p class="x hd" style="--b:45.2;left:351pt;width:100pt">모범 답안</p>
+<p class="x r" style="--b:45.2;left:450pt;width:60.3pt;color:#000;font-family:'Times New Roman',serif">4</p>
+<p class="x q" style="--b:80.2">문제 04 - 3학년 (6.0점)</p>
+<p class="x" style="--b:103.1">주어진 상황을 풀려면 여러 운동체 사이의 상대 운동에 대한 지식이 필요하다. 도플러-피조 효과와 관련된 식을 이 경우에 맞게 고쳐 쓰는 방법도 이 문제의 풀이로 인정하였다.</p>
+<p class="x s" style="--b:137.6">a)</p>
+<p class="x s" style="--b:149.2">I) 운동 방정식으로부터 발사체가 전투기 B에 이르는 데 걸리는 시간의 계산</p>
+<p class="x m" style="--b:161.4">발사체</p>
+<p class="x m" style="--b:161.4;left:155.9pt">$x_P = x_{0P} + v_P{\cdot} t \;\;\rightarrow\;\; x_P = 0 + 600{\cdot} t$</p>
+<p class="x m" style="--b:173.6">전투기 B</p>
+<p class="x m" style="--b:173.6;left:155.9pt">$x_B = x_{0B} + v_B{\cdot} t \;\;\rightarrow\;\; x_P = 600 + 120{\cdot} t$</p>
+<p class="x m" style="--b:185.9">둘이 만나는 조건은 &nbsp;$x_P = x_B \qquad 600{\cdot} t = 600 + 120{\cdot} t \;\;\therefore\;\; \boldsymbol{t = 1.25}\,\mathbf{s}$</p>
+<p class="x s" style="--b:208.9">b)</p>
+<p class="x s" style="--b:220.4">II) 연이은 발사체 사이의 거리 계산</p>
+<p class="x m" style="--b:231.9">발사원이 정지해 있다면, $0.25\ \mathrm{s}$ 동안 발사체들은 $d = v_P{\cdot} t$, 즉 $d = 150\ \mathrm{m}$만큼 떨어져 있을 것이다.</p>
+<p class="x m" style="--b:244.1">그러나 $0.25\ \mathrm{s}$ 동안 발사원(전투기 A)과, 따라서 다음 발사체도 $\Delta d = v_A{\cdot}0.25$, 즉</p>
+<p class="x m" style="--b:256.4">$\Delta d = 100{\cdot}0.25 \;\;\rightarrow\;\; \Delta d = 25\ \mathrm{m}$만큼 움직인다.</p>
+<p class="x m" style="--b:268.7">따라서 연이은 발사체 사이의 거리는 $d' = d - \Delta d$, 즉 <b>$\boldsymbol{d' = 125}\,\mathbf{m}$</b>이다.</p>
+<p class="x s" style="--b:303.1">c)</p>
+<p class="x s" style="--b:314.6">III) 발사체가 전투기 B에 맞는 진동수의 계산</p>
+<p class="x" style="--b:326.1">전투기 B에 대한 발사체의 상대 속도는 다음과 같다.</p>
+<p class="x m" style="--b:338.4">$v_{P/B} = v_P - v_B = 600 - 120 \qquad\rightarrow\qquad v_{P/B} = 480\ \mathrm{m/s}$</p>
+<p class="x nar" style="--b:349.9">발사체들은 서로 <span class="nw">$125\ \mathrm{m}$씩</span> 떨어져 있으므로, 이들이 전투기 B에 잇달아 부딪치는 시간 간격은 다음과 같다.</p>
+<p class="x m" style="--b:373.7">$d' = v_{P/B}{\cdot}\Delta t \;\;\rightarrow\;\; 125 = 480{\cdot}\Delta t \;\;\therefore\;\; \Delta t = 125/480$ &nbsp;또는&nbsp; $\Delta t = 25/96$초(발사체 한 개마다).</p>
+<p class="x" style="--b:385.1">이는 <span class="nw">$25\ \mathrm{s}$마다</span> 발사체 96개, 곧 <b>1초에 발사체 3.84개</b>라는 뜻이기도 하다.</p>
+<p class="x q" style="--b:442.7">문제 05 - 3학년 (6.0점)</p>
+<p class="x" style="--b:465.6">주어진 문제 상황은 갈릴레이의 운동 독립성 원리와, 계의 내력은 그 계의 질량 중심(CM)의 궤도를 바꿀 수 없다는 사실을 적용하여 풀며, 힘의 충격량과 운동량의 개념도 함께 쓴다.</p>
+<p class="x s" style="--b:511.6">a)</p>
+<p class="x s" style="--b:523.1">I) 처음 연직 속도의 계산</p>
+<p class="x m" style="--b:535.4">$v_{Py}^2 = v_{0y}^2 + 2{\cdot} g{\cdot} y_P \;\;\rightarrow\;\; 0^2 = v_{0y}^2 + 2{\cdot}(-10){\cdot}1125 \;\;\therefore\;\; \boldsymbol{v_{0y} = 150}\,\mathbf{m/s}$</p>
+<p class="x s" style="--b:546.8">II) 올라가는 시간의 계산</p>
+<p class="x m" style="--b:559.1">$v_{Py} = v_{0y} + g{\cdot} t_P \;\;\rightarrow\;\; 0 = 150 + (-10){\cdot} t_P \;\;\therefore\;\; \boldsymbol{t_P = 15}\,\mathbf{s}$</p>
+<p class="x s" style="--b:570.6">III) 수평 속도(일정)의 계산</p>
+<p class="x m" style="--b:582.9">$x_P = x_0 + v_x{\cdot} t_P \;\;\rightarrow\;\; 3000 = 0 + v_x{\cdot}15 \;\;\therefore\;\; \boldsymbol{v_x = 200}\,\mathbf{m/s}$</p>
+<p class="x s" style="--b:594.4">IV) 폭발 순간(<span class="nw">$t = 20\ \mathrm{s}$)의</span> 위치 계산</p>
+<p class="x m" style="--b:606.7">$x_{20} = x_0 + v_x{\cdot} t_{20} \;\;\rightarrow\;\; x_{20} = 0 + 200{\cdot}20 \;\;\rightarrow\;\; x_{20} = 4000\ \mathrm{m}$</p>
+<p class="x m" style="--b:618.9">$y_{20} = y_0 + v_{0y}{\cdot} t_{20} + (1/2){\cdot}(g{\cdot} t_{20}^2) \;\;\rightarrow\;\; y_{20} = 0 + 150{\cdot}20 + (1/2){\cdot}((-10){\cdot}20^2) \;\;\rightarrow\;\; \boldsymbol{y_{20} = 1000}\,\mathbf{m}$</p>
+<p class="x s" style="--b:641.9">b)</p>
+<p class="x i" style="--b:653.3">V) 폭발하고 1초가 지난 순간(<span class="nw">$t = 21\ \mathrm{s}$)</span> 계의 질량 중심(CM) 위치의 계산</p>
+<p class="x m" style="--b:677.2">$x_{21} = x_0 + v_x{\cdot} t_{21} \;\;\rightarrow\;\; x_{21} = 0 + 200{\cdot}21 \;\;\rightarrow\;\; \boldsymbol{x_{21} = 4200}\,\mathbf{m}$</p>
+<p class="x m" style="--b:689.4">$y_{21} = y_0 + v_{0y}{\cdot} t_{21} + (1/2){\cdot}(g{\cdot} t_{21}^2) \;\;\rightarrow\;\; y_{21} = 0 + 150{\cdot}21 + (1/2){\cdot}((-10){\cdot}21^2) \;\;\rightarrow\;\; \boldsymbol{y_{21} = 945}\,\mathbf{m}$</p>
+<p class="x i" style="--b:700.9">VI) 파편 B의 위치와 계의 질량 중심으로부터, 순간 <span class="nw">$t = 21\ \mathrm{s}$에서</span> 파편 A의 위치 계산</p>
+<p class="x m" style="--b:724.6">$x_{21} = m_A{\cdot} x_{A21} + m_B{\cdot} x_{B21}/(m_A + m_B) \;\;\rightarrow\;\; 4200 = 2{\cdot} x_{A21} + 4{\cdot}3000/(2+4) \;\;\rightarrow\;\; \boldsymbol{x_{A21} = 6600}\,\mathbf{m}$</p>
+<p class="x m" style="--b:736.9">$y_{21} = m_A{\cdot} y_{A21} + m_B{\cdot} y_{B21}/(m_A + m_B) \;\;\rightarrow\;\; 945 = 2{\cdot} y_{A21} + 4{\cdot}300/(2+4) \;\;\rightarrow\;\; \boldsymbol{y_{A21} = 2235}\,\mathbf{m}$</p>
+</div>
+
+<!-- page 5: question 05 c), question 06 -->
+<div class="page">
+<p class="x hd" style="--b:45.2">브라질 물리 올림피아드 2006 &nbsp;&nbsp; 3단계 – 3학년</p>
+<p class="x hd" style="--b:45.2;left:351pt;width:100pt">모범 답안</p>
+<p class="x r" style="--b:45.2;left:450pt;width:60.3pt;color:#000;font-family:'Times New Roman',serif">5</p>
+<p class="x" style="--b:91.6">c)</p>
+<p class="x i" style="--b:103.1">VII) <span class="nw">$t = 20\ \mathrm{s}$에서</span> (폭발 직전) 파편 A의 속도 성분 계산</p>
+<p class="x m" style="--b:126.9">$v_{Ax\,\text{전}} = v_x \;\;\rightarrow\;\; \boldsymbol{v_{Ax\,\text{전}} = 200}\,\mathbf{m/s}$</p>
+<p class="x m" style="--b:139.1">$v_{Ay\,\text{전}} = v_{0y} + g{\cdot} t_{20} \;\;\rightarrow\;\; v_{Ay\,\text{전}} = 150 + (-10){\cdot}20 \;\;\rightarrow\;\; \boldsymbol{v_{Ay\,\text{전}} = -50}\,\mathbf{m/s}$</p>
+<p class="x i" style="--b:150.7">VIII) <span class="nw">$t = 20\ \mathrm{s}$에서</span> (폭발 직후) 파편 A의 속도 성분 계산</p>
+<p class="x m" style="--b:174.4">$x_{A21} = x_{A20} + v_{Ax\,\text{후}}{\cdot}(t_{21} - t_{20}) \;\;\rightarrow\;\; 6600 = 4000 + v_{Ax\,\text{후}}{\cdot}1 \;\;\therefore\;\; \boldsymbol{v_{Ax\,\text{후}} = 2600}\,\mathbf{m/s}$</p>
+<p class="x m" style="--b:186.7">$y_{A21} = y_{A20} + v_{20y\,\text{후}}{\cdot}(t_{21} - t_{20}) + \tfrac12{\cdot}(g{\cdot}(t_{21} - t_{20})^2) \;\rightarrow\; 2235 = 1000 + v_{20y\,\text{후}}{\cdot}1 + \tfrac12{\cdot}((-10){\cdot}1^2)$</p>
+<p class="x m" style="--b:198.2">$\boldsymbol{v_{20y\,\text{후}} = 1240}\,\mathbf{m/s}$</p>
+<p class="x i" style="--b:209.6">IX) 힘의 충격량과 운동량 변화의 관계식으로부터 폭발력의 계산. 계(두 파편 중 하나)가 고립되어 있지 않으므로 충격량은 다음과 같이 계산할 수 있다.</p>
+<p class="x m" style="--b:244.9">$m_A{\cdot} v_{Ax\,\text{후}} = m_A{\cdot} v_{Ax\,\text{전}} + F_x{\cdot}\Delta t \;\;\rightarrow\;\; 2{\cdot}2600 = 2{\cdot}(200) + F_x{\cdot}1{\cdot}10^{-3} \;\;\therefore\;\; F_x = 4800\ \mathrm{kN}$</p>
+<p class="x m" style="--b:257.2">$m_A{\cdot} v_{Ay\,\text{후}} = m_A{\cdot} v_{Ay\,\text{전}} + F_y{\cdot}\Delta t \;\;\rightarrow\;\; 2{\cdot}1240 = 2{\cdot}(-50) + F_y{\cdot}1{\cdot}10^{-3} \;\;\therefore\;\; F_y = 2580\ \mathrm{kN}$</p>
+<p class="x m" style="--b:269.4">$F = (4800^2 + 2580^2)^{1/2} \;\;\rightarrow\;\; \boldsymbol{F = (29696400)^{1/2}}$ <b>kN 단위</b></p>
+<p class="x q" style="--b:326.9">문제 06 - 3학년 (6.0점)</p>
+<div class="f" style="left:345.1pt;top:332.9pt"><span class="fig" data-srcpage="5" data-clip="345.1,332.9,526,435.4"></span></div>
+<p class="x i nar" style="--b:338.4;width:254.4pt">이 문제는 두 가지 상황을 다루며, 둘 다 임계 상황이다.</p>
+<p class="x i nar" style="--b:361.4;width:254.4pt">I) 첫째는 트럭이 커브를 돌 때 짐이 미끄러지기 직전인 상황이다(그림은 이 상황을 나타낸다). 짐이 미끄러지기 시작하면 안 되므로 다음이 성립한다.</p>
+<p class="x s" style="--b:407.3">a)</p>
+<p class="x m" style="--b:419.6">$\rightarrow$ 연직축: (연직 방향의 평형)</p>
+<p class="x m" style="--b:431.9">$N{\cdot}\cos\alpha - F_A{\cdot}\sin\alpha - P = 0$ &nbsp;&nbsp; 또는</p>
+<p class="x m" style="--b:444.1">$m{\cdot} g = N{\cdot}\cos\alpha - \mu{\cdot} N{\cdot}\sin\alpha \qquad (1)$</p>
+<p class="x m" style="--b:456.4">$\rightarrow$ 수평축: (구심력 <span class="nw">($F_C$)은</span> 수평 방향의 알짜힘이다)</p>
+<p class="x m" style="--b:468.7">$F_C = N{\cdot}\sin\alpha + F_A{\cdot}\cos\alpha$ &nbsp;&nbsp; 또는</p>
+<p class="x m" style="--b:480.9">$mv^2/R = N{\cdot}\sin\alpha + \mu{\cdot} N{\cdot}\cos\alpha \qquad (2)$</p>
+<p class="x m" style="--b:492.4">(1)을 (2)로 나누면</p>
+<p class="x m" style="--b:504.7">$R = (v^2/g){\cdot}[\cos\alpha - \mu{\cdot}\sin\alpha]/[\sin\alpha + \mu{\cdot}\cos\alpha]$</p>
+<p class="x m" style="--b:516.9">$R = (20^2/10){\cdot}[(12/13) - 0.18{\cdot}(5/13)]/[(5/13) + 0.18{\cdot}(12/13)]$</p>
+<p class="x m" style="--b:529.1">$R = (20^2/10){\cdot}[12 - 0.18{\cdot}5]/[5 + 0.18{\cdot}12] \;\;\rightarrow\;\; \boldsymbol{R = 62.01}\,\mathbf{m}$</p>
+<p class="x s" style="--b:552.1">b)</p>
+<p class="x" style="--b:563.6">II) 둘째는 곧고 수평한 경로에서 브레이크를 밟는 상황이다.</p>
+<p class="x" style="--b:575.1">트럭의 감속도가 정해져 있으므로, 학생은 정지 마찰력이 트럭과 같은 감속도를 보장할 수 있는지 확인해야 한다. 트럭의 감속도는 다음과 같다.</p>
+<p class="x m" style="--b:598.9">$v = v_0 + a{\cdot} t \;\;\rightarrow\;\; 0 = 20 + a{\cdot}10 \;\;\therefore\;\; \boldsymbol{a = -2}\,\mathbf{m/s^2}$</p>
+<p class="x s" style="--b:610.4">III) 마찰력이 줄 수 있는 가속도 $a_E$</p>
+<p class="x nar" style="--b:622.7;--l:11.4pt">$F_{AE} = m{\cdot} a_E \;\rightarrow\; \mu_E{\cdot} N = m{\cdot} a_E \;\rightarrow\; \mu_E{\cdot} m{\cdot} g = m{\cdot} a_E \;\therefore\; a_E = -1.8\ \mathrm{m/s^2}$ (코일은 미끄러지며, 코일의 감속도 <span class="nw">$a_B$는</span> 운동 마찰력(미끄럼 마찰력)이 제공한다)</p>
+<p class="x s" style="--b:645.6">IV) 감속도의 계산</p>
+<p class="x m" style="--b:657.9">$F_{AC} = m{\cdot} a_B \;\;\rightarrow\;\; \mu_C{\cdot} N = m{\cdot} a_B \;\;\rightarrow\;\; \mu_C{\cdot} m{\cdot} g = m{\cdot} a_B \;\;\therefore\;\; \boldsymbol{a_B = -1.5}\,\mathbf{m/s^2}$</p>
+<p class="x i" style="--b:669.4">V) 코일이 운전실에 부딪치는 속력은 코일과 운전실 사이의 상대 속도 <span class="nw">$v_{B/C}$이다.</span></p>
+<p class="x m" style="--b:693.2">$v_{B/C}^2 = v_{0B/C}^2 + 2{\cdot} a_{B/C}{\cdot} x_{A/C} \;\;\rightarrow\;\; v_{B/C}^2 = (v_{0B} - v_{0C})^2 + 2{\cdot}(a_B - a_C){\cdot} x_{A/C} \quad\rightarrow$</p>
+<p class="x m" style="--b:705.4">$v_{B/C}^2 = (0)^2 + 2{\cdot}[(-1.5) - (-2)]{\cdot}2 \;\;\rightarrow\;\; \boldsymbol{v_{B/C} = \sqrt2}\,\mathbf{m/s}$</p>
+</div>
+
+<!-- page 6: questions 07, 08 -->
+<div class="page">
+<p class="x hd" style="--b:45.2">브라질 물리 올림피아드 2006 &nbsp;&nbsp; 3단계 – 3학년</p>
+<p class="x hd" style="--b:45.2;left:351pt;width:100pt">모범 답안</p>
+<p class="x r" style="--b:45.2;left:450pt;width:60.3pt;color:#000;font-family:'Times New Roman',serif">6</p>
+<p class="x q" style="--b:80.2">문제 07 - 3학년 (6.0점)</p>
+<div class="f" style="left:330.7pt;top:85.4pt"><span class="fig" data-srcpage="6" data-clip="330.7,85.4,519.1,169.4"></span></div>
+<p class="x i nar" style="--b:103.1;width:239.9pt">이 문제는 두 극단적 상황에서 물체의 안정성을 논의한다. 궤도의 가장 높은 점(그림 1)에서는</p>
+<p class="x nar" style="--b:137.6;width:239.9pt">수직 항력 $N$이 0보다 큰 어떤 최솟값을 가지는 한 안정성이 유지된다. 학생은 이 점에서 가속도의 연직 성분만 있음을 알아야 한다. 따라서</p>
+<p class="x s" style="--b:183.7">a)</p>
+<p class="x s" style="--b:195.1">I) 연직 가속도 <span class="nw">$a_{max1}$의</span> 계산</p>
+<p class="x m" style="--b:207.4">$P - N = m{\cdot} a \;\;\rightarrow\;\; m{\cdot} g - N = m{\cdot} a \;\;\rightarrow\;\; m{\cdot} g - 0 = m{\cdot} a_{max1}$</p>
+<p class="x s" style="--b:219.7">II) 최대 각속도 <span class="nw">$\omega_{max1}$의</span> 계산</p>
+<p class="x m" style="--b:231.9">$m{\cdot} g = m{\cdot}\omega_{max1}^2{\cdot} R \;\;\therefore\;\; \boldsymbol{\omega_{max1} = \sqrt{(g/R)}}$</p>
+<p class="x s" style="--b:243.4">b)</p>
+<p class="x i" style="--b:254.9">중간 점(그림 2)에서 수평축을 따라 분석하면, 물체는 최대 변위, 최소 속도, 최대 가속도인 점에 있다. 따라서 정지 마찰력이 구심력의 역할을 온전히 할 수 있으면 안정성이 보장된다. 학생은 이 점에서 가속도의 수평 성분만 있음을 알아야 한다. 따라서</p>
+<p class="x s" style="--b:312.4">III) 속도, 연직 가속도 <span class="nw">$a_{max2}$의</span> 계산</p>
+<p class="x m" style="--b:324.7">$F_A = m{\cdot} a \;\;\rightarrow\;\; \mu{\cdot} m{\cdot} g = m{\cdot} a \;\;\rightarrow\;\; \mu{\cdot} m{\cdot} g = m{\cdot} a_{max2}$</p>
+<p class="x s" style="--b:336.9">IV) 최대 각속도 <span class="nw">$\omega_{max2}$의</span> 계산</p>
+<p class="x m" style="--b:349.1">$\mu{\cdot} m{\cdot} g = m{\cdot}\omega_{max2}^2{\cdot} R \;\;\therefore\;\; \boldsymbol{\omega_{max2} = \sqrt{(\mu{\cdot} g/R)}}$</p>
+<p class="x q" style="--b:383.7">문제 08 - 3학년 (6.0점)</p>
+<div class="f" style="left:337.9pt;top:375pt"><span class="fig" data-srcpage="6" data-clip="337.9,375,525.4,526.1"></span></div>
+<p class="x fr" style="--b:406.6;--l:11.65pt;--fw:180.9;--fh:139;text-indent:19.5pt">이 문제는 갈릴레이의 운동 중첩 원리와 관련된 문제로, 대전 입자가 균일한 자기장 속에서 움직인다. 입자의 속도가 자기장선과 각을 이루므로, 학생은 두 운동이 겹쳐진 것으로 생각해야 한다. 하나는 알짜힘이 0인 상태에서의 연직 운동이고, 다른 하나는 속도에 수직인 힘을 받아 등속 원운동을 하는 수평 운동이다. 각 <span class="nw">$\alpha$는</span> 스크린에 수직인 연직면의 수평선에 대한 처음 속도의 방향을 정하고, 각 <span class="nw">$\beta$는</span> 수평면에서, 입자가 자기력을 받아 출발 위치에서 도착 위치까지 그리는 원호의 부채꼴을 정한다.</p>
+<p class="x s" style="--b:580.6">a)</p>
+<p class="x s" style="--b:592.1">I) 속도 성분의 계산</p>
+<p class="x m" style="--b:604.4">$v_x = v{\cdot}\cos\alpha \;\;\rightarrow\;\; v_x = 1300{\cdot}120/(120^2 + 50^2)^{1/2} \qquad\rightarrow\quad \boldsymbol{v_x = 1200}\,\mathbf{m/s}$</p>
+<p class="x m" style="--b:616.7">$v_y = v{\cdot}\sin\alpha \;\;\rightarrow\;\; v_x = 1300{\cdot}50/(120^2 + 50^2)^{1/2} \qquad\rightarrow\quad \boldsymbol{v_x = 500}\,\mathbf{m/s}$</p>
+<p class="x s" style="--b:628.1">II) 궤도를 수평면에 투영한 원의 반지름 계산</p>
+<p class="x m" style="--b:640.4">$R = m{\cdot} v_x/(B{\cdot} q) \;\;\rightarrow\;\; R = 1{\cdot}10^{-8}{\cdot}1200/(0.5{\cdot}10{\cdot}10^{-6}) \;\;\rightarrow\;\; \boldsymbol{R = 2.4}\,\mathbf{m}$</p>
+<p class="x s" style="--b:651.9">III) 충돌할 때까지 돈 각의 계산</p>
+<p class="x m" style="--b:664.1">$\sin\beta = x/R \;\;\rightarrow\;\; \sin\beta = 1.20/2.40 \;\;\rightarrow\;\; \sin\beta = 0.50 \;\;\therefore\;\; \boldsymbol{\beta = 30^\circ}$</p>
+<p class="x s" style="--b:675.6">IV) 원 궤도의 주기 $T$의 계산</p>
+<p class="x m" style="--b:687.9">$v_x = 2{\cdot}\pi{\cdot} R/T \;\;\rightarrow\;\; 1200 = 2{\cdot}3{\cdot}2.4/T \;\;\therefore\;\; \boldsymbol{T = 12{\cdot}10^{-3}}\,\mathbf{s}$</p>
+<p class="x s" style="--b:699.4">b)</p>
+<p class="x s" style="--b:710.9">V) 스크린에 이르는 데 걸리는 시간의 계산</p>
+<p class="x m" style="--b:723.2">$360^\circ/T = 30^\circ/\Delta t \;\;\therefore\;\; \boldsymbol{\Delta t = 1{\cdot}10^{-3}}\,\mathbf{s}$</p>
+<p class="x s" style="--b:734.6">VI) 충돌 지점 좌표의 계산</p>
+<p class="x m" style="--b:746.9">$x = R - R{\cdot}\cos\beta \;\;\rightarrow\;\; x = -2.4 - (-2.4{\cdot}0.87) \;\;\rightarrow\;\; \boldsymbol{x = -0.312}\,\mathbf{m}$</p>
+<p class="x m" style="--b:759.2">$y = v_y{\cdot}\Delta t \;\;\rightarrow\;\; y = 500{\cdot}1{\cdot}10^{-3} \;\;\rightarrow\;\; \boldsymbol{y = 0.50}\,\mathbf{m}$</p>
+</div>
+
+</body></html>
