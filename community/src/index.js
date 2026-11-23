@@ -31,6 +31,8 @@ import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
 import { createGalleryRouter, activeGallery } from './galleries.js';
 import { createPracticeRouter, ensurePracticeSchema } from './practice-progress.js';
+import { createLearnerRouter, ensureLearnerSchema, learnerDeletion } from './learner-profile.js';
+import { createLeagueRouter, ensureLeagueSchema, leagueDeletion, closeLeagueWeeks } from './league.js';
 import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { createHandoutRouter } from './handouts.js';
 import { createGradeRouter, ensureGradeSchema } from './practice-grade.js';
@@ -270,6 +272,8 @@ const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
 const practiceRouter = createPracticeRouter({HttpError, needUser, limit, now, bad});
+const learnerRouter = createLearnerRouter({HttpError, needUser, limit, now, bad});
+const leagueRouter = createLeagueRouter({HttpError, needUser, now, bad});
 const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, clientIp});
 const handoutRouter = createHandoutRouter({HttpError, needUser, limit, now, bad, isAdmin: u => isAdmin(u)});
 const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
@@ -503,7 +507,12 @@ async function handle(req, env, url, ctx) {
     await ensureLearnSchema(env);
     await ensureGradeSchema(env);
     await ensureCreationSchema(env);
+    // country and daily goal (learner-profile.js) and the weekly league (league.js)
+    await ensureLearnerSchema(env);
+    await ensureLeagueSchema(env);
     await env.DB.batch([
+      learnerDeletion(env, me.id),
+      ...leagueDeletion(env, me.id),
       env.DB.prepare("DELETE FROM practice_attempts WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM practice_skills WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM practice_state WHERE user_id=?").bind(me.id),
@@ -796,6 +805,10 @@ async function handle(req, env, url, ctx) {
 
   const practice = await practiceRouter(p, m, body, me, env);
   if (practice !== undefined) return practice;
+  const learner = await learnerRouter(p, m, body, me, req, env);
+  if (learner !== undefined) return learner;
+  const league = await leagueRouter(p, m, body, me, req, env, url);
+  if (league !== undefined) return league;
   const graded = await gradeRouter(p, m, body, me, req, env);
   if (graded !== undefined) return graded;
   const handout = await handoutRouter(p, m, body, me, req, env);
@@ -916,6 +929,9 @@ export default {
     work.push(backupTick(env,{now:event.scheduledTime??Date.now()}).catch(e=>console.error('backup',String(e?.message||e).slice(0,200))));
     /* the assistant's nightly self-test (ai-eval.js): one case a minute from 02:00 Korean time until the day's total */
     work.push(aiEvalTick(env,{now:event.scheduledTime??Date.now()}).catch(e=>console.error('ai-eval',String(e?.message||e).slice(0,200))));
+    /* the weekly league (league.js): after Sunday 24:00 Korean time, a few groups a minute move up, down or are reborn;
+       results are keyed per member and week and league_weeks marks the week done, so it runs once */
+    work.push(closeLeagueWeeks(env,{now:Math.floor((event.scheduledTime??Date.now())/1000)}).catch(e=>console.error('league-close',String(e?.message||e).slice(0,200))));
     ctx.waitUntil(Promise.allSettled(work));
   },
   async queue(batch, env) { await consumeLabJobs(batch, env, LAB_JOB_HANDLERS); },
