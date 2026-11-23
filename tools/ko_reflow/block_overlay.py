@@ -17,21 +17,25 @@ def blocks(page):
     for i, b in enumerate(page.get_text('dict')['blocks']):
         if b.get('type') != 0:
             continue
-        lines, lb = [], []
+        lines, lb, lbold = [], [], []
         size = nb = nc = 0
+        color = None
         for l in b['lines']:
             t = ''.join(s['text'] for s in l['spans'])
             if t.strip():
                 lines.append(t)
                 lb.append([round(v, 1) for v in l['bbox']])
+                lbold.append(all('Bold' in s['font'] or 'bx' in s['font'].lower() for s in l['spans'] if s['text'].strip()))
                 size = max(size, max(s['size'] for s in l['spans']))
                 for s in l['spans']:
                     k = len(s['text'].strip())
+                    if k and color is None:
+                        color = s.get('color', 0)
                     nc += k
                     nb += k if ('Bold' in s['font'] or 'bx' in s['font'].lower()) else 0
         if lines:
             out.append({'id': f'b{i}', 'bbox': [round(v, 1) for v in b['bbox']], 'size': round(size, 1),
-                        'bold': nb > 0.6 * nc, 'text': '\n'.join(lines), 'lines': lb})
+                        'bold': nb > 0.6 * nc, 'text': '\n'.join(lines), 'lines': lb, 'lbold': lbold, 'color': color or 0})
     return out
 
 
@@ -69,7 +73,7 @@ def html(orig, ko, out):
                 run = [B[f'b{i}'] for i in range(lo, hi + 1) if f'b{i}' in B]
                 b = {'bbox': [min(r['bbox'][0] for r in run), min(r['bbox'][1] for r in run), max(r['bbox'][2] for r in run),
                               max(r['bbox'][3] for r in run)], 'size': run[0]['size'], 'bold': False,
-                     'lines': [l for r in run for l in r['lines']]}
+                     'lines': [l for r in run for l in r['lines']], 'lbold': [x for r in run for x in r.get('lbold', [])], 'color': run[0].get('color', 0)}
             if not b and not opt:
                 sys.exit(f'page {pn}: no block {bid}')
             x0, y0, x1, y1 = b['bbox'] if b else (0, 0, 0, 0)
@@ -79,15 +83,23 @@ def html(orig, ko, out):
             x0, y0, x1, y1 = opt.get('x0', x0), opt.get('y0', y0), opt.get('x1', x1), opt.get('y1', y1)
             size = opt.get('size', b['size'] if b else 10)
             y1 = max(y1, y0 + size * 1.4)          # one line of Korean needs a little more height than one line of Latin
-            cls = 'kb ov' + (' b' if (b and b['bold'] and opt.get('bold', True)) or opt.get('bold') else '') + (' c' if opt.get('align') == 'center' else ' r' if opt.get('align') == 'right' else '')
+            boldcell = 'lines' in opt and b.get('lbold') and all(b['lbold'][i] for i in (range(len(b['lines'])) if opt['lines'] == 'all' else opt['lines']))
+            cls = 'kb ov' + (' b' if (b and (b['bold'] or boldcell) and opt.get('bold', True)) or opt.get('bold') else '') + (' c' if opt.get('align') == 'center' else ' r' if opt.get('align') == 'right' else '')
+            lines = L if 'lines' in opt else (b['lines'] if b else [])
+            tops = sorted(l[1] for l in lines)
+            gaps = sorted(q - p for p, q in zip(tops, tops[1:]) if q - p > size * 0.8)
+            pitch = gaps[len(gaps) // 2] if gaps else size * 1.22       # the original line spacing, kept in Korean
+            color = opt.get('color', (b or {}).get('color', 0))
+            ink = f'color:#{color:06x};' if color else ''
             if 'lines' in opt:          # a table cell: paint the English out, put the rules back, set the Korean clear
-                red.setdefault(n, []).extend(pymupdf.Rect(max(l[0], x0) - 0.5, l[1] - 0.3, min(l[2], x1) + 0.5, l[3] + 1.2) for l in L)
+                red.setdefault(n, []).extend(pymupdf.Rect(max(l[0], x0) - 0.5, l[1] - 2, min(l[2], x1) + 0.5, l[3] + 1.2) for l in L)
                 if any(k in opt for k in ('y0', 'y1')):   # a cell stretched past its lines: paint that out too
                     red[n].append(pymupdf.Rect(x0, y0, x1, y1))
-                l, t, w, h, pad, bg = x0, y0, x1 - x0, y1 - y0 + 1, '1.8pt 0 0 0.6pt', 'background:none;'
+                first = L[0][3] - L[0][1]
+                l, t, w, h, pad, bg = x0, y0 - (pitch - first) / 2, x1 - x0, y1 - y0 + (pitch - first) / 2, '0 0 0 0.6pt', 'background:none;'
             else:
                 l, t, w, h, pad, bg = x0 - 1.2, y0 - 1.5, x1 - x0 + 2.4, y1 - y0 + 2, '1pt 1.2pt 0', ''
-            parts.append(f'<div class="{cls}" data-s="{size}" style="{bg}left:{l:.1f}pt;top:{t:.1f}pt;'
+            parts.append(f'<div class="{cls}" data-s="{size}" style="{bg}{ink}line-height:{pitch:.2f}pt;left:{l:.1f}pt;top:{t:.1f}pt;'
                          f'width:{w:.1f}pt;height:{h:.1f}pt;padding:{pad};box-sizing:border-box">{text}</div>')
         parts.append('</div>')
     parts.append(FIT + '</body></html>')
@@ -102,7 +114,7 @@ def html(orig, ko, out):
         sh = pg.new_shape()                    # then the rules of the table go back on top: straight level or upright
         for q in paths:                        # lines and outlined boxes only, not the slanted lines of figures
             items = [it for it in q['items'] if
-                     (it[0] == 'l' and (abs(it[1].x - it[2].x) < 0.5 or abs(it[1].y - it[2].y) < 0.5) and abs(it[1] - it[2]) > 4)
+                     (it[0] == 'l' and ((abs(it[1].x - it[2].x) < 0.5 and abs(it[1].y - it[2].y) > 8) or (abs(it[1].y - it[2].y) < 0.5 and abs(it[1].x - it[2].x) > 25)))
                      or (it[0] == 're' and (min(it[1].width, it[1].height) < 2.5 or not q.get('fill')) and max(it[1].width, it[1].height) > 4)]
             if not items:
                 continue
