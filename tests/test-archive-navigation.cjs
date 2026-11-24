@@ -47,8 +47,8 @@ test('chapter routes preserve an exact empty or nonempty chapter only with one a
   assert.equal(A.clean('source='+source+'&chapter=1&chapter=2').has('chapter'),false);
 });
 
-test('the general archive opens the physics book catalogue independently of contests',()=>{
-  assert.equal(A.legacy('#/archive'),'#/archive/books/phys');
-  assert.equal(A.parse('#/archive').category,'books');
+test('the archive menu keeps the existing contest entrance and separate textbook category', ()=>{
+  assert.equal(A.legacy('#/archive'),'#/archive/contests');
   assert.equal(A.parse('#/archive/contests').category,'contests');
+  assert.equal(A.parse('#/archive/books/phys').category,'books');
 });
