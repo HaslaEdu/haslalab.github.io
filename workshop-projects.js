@@ -97,50 +97,151 @@
     }
     return {list, load, saveExternal, token};
   }
-  function library(host, storage, {kind, title, onOpen, onNew, onResume, initial = 'store', height = () => {}}) {
+  function library(host, storage, {kind, title, onOpen, onNew, onResume, initial = 'store', unified = false, height = () => {}}) {
+    host.classList.toggle('project-library', unified);
     const heading = make('h1', title, 'project-library-title'); heading.tabIndex = -1;
     const tools = make('div', null, 'row project-library-tools');
-    const select = providerSelect(initial);
     const list = make('div', null, 'grid project-library-grid');
-    const status = make('p', null, 'note'); status.setAttribute('role', 'status');
+    const status = make('p', null, 'note'); status.setAttribute('role', 'status'); status.hidden = true;
+    const notice = make('p', null, 'note'); notice.hidden = true;
+    const say = message => { status.textContent = message; status.hidden = !message; };
     if (onNew) tools.append(button(txt('새 프로젝트', 'New project'), onNew, 'primary'));
     if (onResume) tools.append(button(txt('현재 작업 이어서', 'Resume current work'), onResume));
-    tools.append(select);
-    const storageLink = make('a', txt('저장소 연결 관리', 'Manage storage connections'), 'btn');
+    const select = unified ? null : providerSelect(initial);
+    const search = make('input'), sort = make('select');
+    search.type = 'search';
+    search.placeholder = txt('프로젝트 이름 검색', 'Search project names');
+    search.setAttribute('aria-label', search.placeholder);
+    sort.setAttribute('aria-label', txt('프로젝트 정렬', 'Sort projects'));
+    sort.append(new Option(txt('최근 수정순', 'Last modified'), 'recent'), new Option(txt('이름순', 'Name'), 'name'));
+    const filters = make('div', null, 'project-library-filters');
+    filters.append(search, sort);
+    if (select) tools.append(select);
+    const storageLink = make('a', txt('저장소 연결 관리', 'Manage storage connections'), 'btn project-library-manage');
     storageLink.href = '/#/workshop/storage'; storageLink.target = '_top'; tools.append(storageLink);
-    host.replaceChildren(heading, tools, status, list);
-    let generation = 0, opening = 0;
+    const head = make('div', null, 'project-library-head');
+    head.append(heading, tools);
+    host.replaceChildren(head, ...(unified ? [filters] : []), notice, status, list);
+    const names = labels(document.documentElement.lang === 'ko');
+    const docs = new WeakMap();
+    function load(entry) {
+      if (!docs.has(entry)) docs.set(entry, storage.load(entry).catch(e => { docs.delete(entry); throw e; }));
+      return docs.get(entry);
+    }
+    let generation = 0, opening = 0, rendering = 0, activePreviews = 0, rows = [], pending = [];
+    const cardName = entry => entry.name.replace(/(?:-[a-f0-9]{8}-haslalab-(?:figure|compute|illustration|asset))?\.json$/i, '');
+    const timestamp = entry => Date.parse(entry.modified || '') || (entry.updated_at || 0) * 1000;
+    let observer;
+    function queue(cover, entry) {
+      pending.push({cover,entry,render:rendering});
+      paintPreviews();
+    }
+    function paintPreviews() {
+      while (activePreviews < 3 && pending.length) {
+        const {cover,entry,render} = pending.shift();
+        if (render !== rendering || !cover.isConnected) continue;
+        activePreviews++;
+        load(entry).then(async raw => {
+          if (render !== rendering || !cover.isConnected) return;
+          if (kind === 'figure') {
+            const data = await figure(raw, 320);
+            const img = make('img'); img.alt = ''; img.src = data.src; img.decoding = 'async';
+            cover.replaceChildren(img);
+          } else {
+            const lang = raw?.language === 'c' ? 'c' : 'python';
+            const source = raw?.sources?.[lang];
+            if (typeof source !== 'string') return;
+            const snippet = source.split(/\r?\n/).filter(line => line.trim()).slice(0,4).map(line => line.slice(0,64)).join('\n');
+            const badge = make('span', lang === 'c' ? 'C' : 'Python', 'project-preview-language');
+            cover.replaceChildren(badge, make('code', snippet));
+          }
+        }).catch(() => {}).finally(() => { activePreviews--; paintPreviews(); });
+      }
+    }
+    function renderRows() {
+      rendering++;
+      observer?.disconnect();
+      pending = [];
+      list.replaceChildren();
+      const query = search.value.trim().toLocaleLowerCase();
+      const orderByName = (a,b) => cardName(a).localeCompare(cardName(b), document.documentElement.lang);
+      const shown = rows.filter(entry => !query || cardName(entry).toLocaleLowerCase().includes(query))
+        .sort((a,b) => (sort.value === 'recent' ? timestamp(b) - timestamp(a) : 0) || orderByName(a,b));
+      if (!shown.length && !status.textContent) {
+        list.append(make('p', query ? txt('검색 결과가 없습니다.', 'No projects match your search.')
+          : txt('저장된 프로젝트가 없습니다.', 'No saved projects.'), 'project-library-empty'));
+      }
+      if (unified && typeof IntersectionObserver === 'function') {
+        observer = new IntersectionObserver((entries, current) => {
+          for (const item of entries) if (item.isIntersecting) {
+            current.unobserve(item.target);
+            const entry = shown[Number(item.target.dataset.preview)];
+            if (entry) queue(item.target, entry);
+          }
+        }, {rootMargin:'120px'});
+      }
+      shown.forEach((entry,index) => {
+        const name = cardName(entry);
+        const item = button(unified ? '' : name, async () => {
+          const selection = ++opening, round = generation;
+          item.disabled = true;
+          say(txt('프로젝트 여는 중…', 'Opening project…'));
+          try {
+            const data = await load(entry);
+            if (round !== generation || selection !== opening || !host.isConnected || host.hidden) return;
+            await onOpen(data, entry);
+            say('');
+          } catch (e) { if (selection === opening && round === generation) say(error(e)); }
+          finally { item.disabled = false; height(); }
+        }, 'card project-library-card');
+        const stamp = timestamp(entry), date = stamp ? new Date(stamp).toLocaleDateString(document.documentElement.lang) : '';
+        if (unified) {
+          const cover = make('span', null, 'project-preview project-preview--' + kind);
+          cover.setAttribute('aria-hidden','true');
+          cover.append(make('span', kind === 'compute' ? '</>' : '◇', 'project-preview-placeholder'));
+          cover.dataset.preview = String(index);
+          const meta = make('span', null, 'project-card-meta');
+          if (date) meta.append(make('span',date));
+          meta.append(make('span', names[entry.provider] || names.store, 'project-card-source'));
+          const title = make('strong',name,'project-card-name'); title.title = name;
+          item.append(cover,title,meta);
+          if (observer) observer.observe(cover);
+          else if (index < 9) queueMicrotask(() => queue(cover,entry));
+        } else if (date) item.append(make('span', date, 'note'));
+        list.append(item);
+      });
+      height();
+    }
     async function refresh() {
       const round = ++generation;
-      list.replaceChildren();
-      status.textContent = txt('프로젝트 불러오는 중…', 'Loading projects…');
+      rows = [];
+      say(txt('프로젝트 불러오는 중…', 'Loading projects…'));
+      notice.hidden = true;
+      renderRows();
       try {
-        const rows = await storage.list(kind, select.value);
-        if (round !== generation || !host.isConnected) return;
-        status.textContent = rows.length ? '' : txt('이 저장소에 저장한 프로젝트가 없습니다.', 'No projects in this location.');
-        for (const entry of rows) {
-          const name = entry.name.replace(/(?:-[a-f0-9]{8}-haslalab-(?:figure|compute|illustration|asset))?\.json$/i, '');
-          const item = button(name, async () => {
-            const selection = ++opening;
-            item.disabled = true;
-            status.textContent = txt('프로젝트 여는 중…', 'Opening project…');
-            try {
-              const data = await storage.load(entry);
-              if (round !== generation || selection !== opening || !host.isConnected || host.hidden) return;
-              await onOpen(data, entry);
-              status.textContent = '';
-            } catch (e) { if (round === generation) status.textContent = error(e); }
-            finally { item.disabled = false; height(); }
-          }, 'card project-library-card');
-          const stamp = entry.modified || (typeof entry.updated_at === 'number' ? new Date(entry.updated_at*1000) : null);
-          if (stamp && Number.isFinite(new Date(stamp).valueOf())) item.append(make('span', new Date(stamp).toLocaleDateString(document.documentElement.lang), 'note'));
-          list.append(item);
+        if (unified) {
+          if (!storage.token()) throw {code:'login_required'};
+          const results = await Promise.allSettled(providers.map(provider => storage.list(kind, provider)));
+          if (round !== generation || !host.isConnected) return;
+          if (results.every(r => r.status === 'rejected')) throw results[0].reason;
+          rows = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+          const unavailable = results.flatMap((r,i) => r.status === 'rejected' && !['not_connected','not_configured','repo_not_chosen'].includes(r.reason?.code) ? [names[providers[i]]] : []);
+          if (unavailable.length) {
+            notice.textContent = txt('일부 저장소를 불러오지 못했습니다. ', 'Some storage locations could not be loaded. ') + unavailable.join(', ');
+            notice.hidden = false;
+          }
+        } else {
+          const result = await storage.list(kind, select.value);
+          if (round !== generation || !host.isConnected) return;
+          rows = result;
         }
-      } catch (e) {
-        if (round === generation) status.textContent = error(e);
-      } finally { height(); }
+        if (round !== generation || !host.isConnected) return;
+        say('');
+      } catch (e) { if (round === generation) say(error(e)); }
+      finally { if (round === generation) renderRows(); }
     }
-    select.onchange = refresh;
+    if (select) select.onchange = refresh;
+    search.oninput = sort.onchange = renderRows;
     refresh();
     return {refresh, heading};
   }
@@ -154,12 +255,12 @@
     result.splice(index, 0, scene);
     return result;
   }
-  async function figure(scene) {
+  async function figure(scene, width = 800) {
     const [S,R] = await Promise.all([import('./draw-scene.mjs'), import('./draw-render.mjs')]);
     const v = S.validateScene(scene);
     if (!v.ok) throw new Error(txt('그림 데이터를 읽을 수 없습니다.', 'Could not read the figure.'));
     const clean = v.scene, view = clean.view || S.sceneBounds(clean);
-    const svg = R.renderSVG(clean, {width:800, view, ...R.printScale(clean.style, clean.printW)});
+    const svg = R.renderSVG(clean, {width, view, ...R.printScale(clean.style, clean.printW)});
     const bytes = new TextEncoder().encode(svg);
     let binary = '';
     for (let i=0; i<bytes.length; i+=0x8000) binary += String.fromCharCode(...bytes.subarray(i,i+0x8000));
