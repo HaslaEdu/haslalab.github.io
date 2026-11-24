@@ -4,7 +4,9 @@
 .panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 16px}
 .panel h2{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .filt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.filt .wide{grid-column:1/-1}
-.items{display:grid;gap:8px;max-height:900px;overflow:auto;padding-right:2px}
+/* position:relative keeps KaTeX's hidden MathML (position:absolute) inside the scrolling list: without it the copies of
+   off-list items made the framed page thousands of pixels taller than its content */
+.items{display:grid;gap:8px;max-height:900px;overflow:auto;padding-right:2px;position:relative}
 .item{border:1px solid var(--row);border-radius:10px;padding:10px 12px;font-size:14px}
 .item .q{max-height:9.5em;overflow:hidden;position:relative}.item .q p{margin:0 0 6px}
 .item figure{margin:4px 0}.item img{max-width:100%;height:auto;max-height:150px}

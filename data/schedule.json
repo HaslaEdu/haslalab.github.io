@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-22",
+ "as_of": "2026-11-24",
  "events": [
   {
    "key": "physics-cup-2027",
@@ -55,7 +55,7 @@
    "country": "kr",
    "start": "2026-12-12",
    "end": "2026-12-12",
-   "host": "Seoul (Seoul National University), KR"
+   "host": {"ko": "서울대학교, 서울", "en": "Seoul National University, Seoul"}
   },
   {
    "key": "vn-hsgqg-2027",
@@ -78,18 +78,7 @@
    "country": "intl",
    "start": "2027-01-10",
    "end": "2027-01-15",
-   "host": "Almaty, KZ"
-  },
-  {
-   "key": "in-jee-main-2027-s1",
-   "name": "JEE (Main) 2027 – Session 1",
-   "name_ko": "JEE Main 2027 1회차",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://jeemain.nta.nic.in/",
-   "country": "in",
-   "start": "2027-01-20",
-   "end": "2027-01-28"
+   "host": {"ko": "카자흐스탄 알마티", "en": "Almaty, Kazakhstan"}
   },
   {
    "key": "uk-bpho-r2-2027",
@@ -121,8 +110,8 @@
    "level": "final",
    "url": "https://olympiads.hbcse.tifr.res.in/",
    "country": "in",
-   "typical": "February (first week)",
-   "typical_ko": "2월 첫째 주"
+   "start": "2027-01-31",
+   "end": "2027-01-31"
   },
   {
    "key": "de-ipho-r3-2027",
@@ -169,17 +158,6 @@
    "end": "2027-03-25"
   },
   {
-   "key": "in-jee-main-2027-s2",
-   "name": "JEE (Main) 2027 – Session 2",
-   "name_ko": "JEE Main 2027 2회차",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://jeemain.nta.nic.in/",
-   "country": "in",
-   "start": "2027-04-02",
-   "end": "2027-04-07"
-  },
-  {
    "key": "ca-sin-2027",
    "name": "Sir Isaac Newton Exam",
    "name_ko": "아이작 뉴턴 경시 (워털루대)",
@@ -213,94 +191,6 @@
    "typical_ko": "4월"
   },
   {
-   "key": "ib-may-2027",
-   "name": "IB Diploma Programme May 2027 examination session",
-   "name_ko": "IB 디플로마 2027년 5월 시험",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://www.ibo.org/programmes/diploma-programme/assessment-and-exams/",
-   "country": "intl",
-   "typical": "late April–May",
-   "typical_ko": "4월 말–5월"
-  },
-  {
-   "key": "us-ap-physics-c-mech-2027",
-   "name": "AP Physics C: Mechanics",
-   "name_ko": "AP 물리 C: 역학",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
-   "country": "us",
-   "start": "2027-05-03",
-   "end": "2027-05-03"
-  },
-  {
-   "key": "us-ap-physics-1-2027",
-   "name": "AP Physics 1: Algebra-Based",
-   "name_ko": "AP 물리 1",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
-   "country": "us",
-   "start": "2027-05-05",
-   "end": "2027-05-05"
-  },
-  {
-   "key": "us-ap-physics-c-em-2027",
-   "name": "AP Physics C: Electricity and Magnetism",
-   "name_ko": "AP 물리 C: 전자기학",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
-   "country": "us",
-   "start": "2027-05-05",
-   "end": "2027-05-05"
-  },
-  {
-   "key": "us-ap-physics-2-2027",
-   "name": "AP Physics 2: Algebra-Based",
-   "name_ko": "AP 물리 2",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://apcentral.collegeboard.org/exam-administration-ordering-scores/exam-dates",
-   "country": "us",
-   "start": "2027-05-06",
-   "end": "2027-05-06"
-  },
-  {
-   "key": "gb-alevel-summer-2027",
-   "name": "GCE A level June 2027 examination series",
-   "name_ko": "영국 A레벨 2027년 6월 시험 시리즈",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://www.jcq.org.uk/",
-   "country": "gb",
-   "start": "2027-05-10",
-   "end": "2027-06-22"
-  },
-  {
-   "key": "in-jee-adv-2027",
-   "name": "JEE (Advanced) 2027",
-   "name_ko": "JEE Advanced 2027 (인도공과대학 입학시험)",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://jeeadv.ac.in/",
-   "country": "in",
-   "start": "2027-05-23",
-   "end": "2027-05-23"
-  },
-  {
-   "key": "in-neet-ug-2027",
-   "name": "NEET (UG) 2027",
-   "name_ko": "NEET UG 2027 (인도 의대 입학시험)",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "https://neet.nta.nic.in/",
-   "country": "in",
-   "typical": "May",
-   "typical_ko": "5월"
-  },
-  {
    "key": "kr-national-team-2027",
    "name": "Korean national team selection (IPhO/APhO 2027)",
    "name_ko": "물리올림피아드 국가대표 최종 선발",
@@ -320,7 +210,7 @@
    "url": "https://olympiad.phas.ubc.ca/",
    "country": "ca",
    "typical": "May",
-   "host": "Vancouver (UBC), CA",
+   "host": {"ko": "캐나다 밴쿠버 (UBC)", "en": "Vancouver (UBC), Canada"},
    "typical_ko": "5월"
   },
   {
@@ -332,19 +222,8 @@
    "url": "http://asianphysicsolympiad.org/",
    "country": "intl",
    "typical": "May",
-   "host": "Nakhon Ratchasima (per Wikipedia; not officially confirmed), TH",
+   "host": {"ko": "태국 나콘랏차시마 (공식 발표 전)", "en": "Nakhon Ratchasima, Thailand (not yet officially announced)"},
    "typical_ko": "5월"
-  },
-  {
-   "key": "cn-gaokao-2027",
-   "name": "2027年普通高校招生全国统一考试（高考）",
-   "name_ko": "2027 중국 대학입학시험 (가오카오)",
-   "kind": "entrance",
-   "level": "exam",
-   "url": "http://www.moe.gov.cn/",
-   "country": "cn",
-   "typical": "June (national papers 7–8 June)",
-   "typical_ko": "6월 (전국 시험 6월 7–8일)"
   },
   {
    "key": "eupho-2027",
@@ -388,7 +267,7 @@
    "url": "https://www.ipho-new.org/",
    "country": "intl",
    "typical": "July",
-   "host": "SA",
+   "host": {"ko": "사우디아라비아", "en": "Saudi Arabia"},
    "typical_ko": "7월"
   },
   {
@@ -413,5 +292,205 @@
    "typical": "October (theory); November (experimental)",
    "typical_ko": "10월 이론, 11월 실험"
   }
- ]
+ ],
+ "selection": {
+  "_about": "National selection for the international olympiads, per country (the codes of events[].country). Each stage is an event of events[] (\"event\") or its own entry; \"months\" is the usual month when no date is announced, shown as such and never as a day. \"targets\" are the international events the stages lead to.",
+  "kr": {
+   "targets": [
+    "apho-2027",
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "kr-kpho-winter-entrance-2027"
+    },
+    {
+     "event": "kr-kpho-winter-school-2027",
+     "months": [
+      1
+     ]
+    },
+    {
+     "event": "kr-national-team-2027"
+    }
+   ]
+  },
+  "us": {
+   "targets": [
+    "eupho-2027",
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "us-fma-2027"
+    },
+    {
+     "event": "us-usapho-2027"
+    },
+    {
+     "key": "us-camp-2027",
+     "name": "U.S. Physics Team Training & Development Camp (University of Maryland)",
+     "name_ko": "미국 물리 국가대표 훈련캠프 (메릴랜드대)",
+     "url": "https://aapt.org/physicsteam/2027/importantdates.cfm",
+     "months": [
+      5,
+      6
+     ],
+     "note": "2027 dates TBA on the AAPT page; the 2026 camp ran May 30 – June 9.",
+     "note_ko": "2027년 날짜는 AAPT 발표 전입니다. 2026년에는 5월 30일–6월 9일이었습니다."
+    }
+   ]
+  },
+  "in": {
+   "targets": [
+    "apho-2027",
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "in-nsep-2026"
+    },
+    {
+     "event": "in-inpho-2027"
+    },
+    {
+     "key": "in-ocsc-physics-2027",
+     "name": "Orientation-cum-Selection Camp (OCSC) in Physics, HBCSE Mumbai",
+     "name_ko": "인도 물리 OCSC (국가대표 선발캠프, HBCSE 뭄바이)",
+     "url": "https://olympiads.hbcse.tifr.res.in/science-olympiad-2026-2027/",
+     "months": [
+      4,
+      5
+     ],
+     "note": "HBCSE announces the 2027 dates by January 15, 2027; the 2025 physics camp ran April 21 – May 4.",
+     "note_ko": "2027년 날짜는 HBCSE가 2027년 1월 15일까지 발표합니다. 2025년 물리 캠프는 4월 21일–5월 4일이었습니다."
+    }
+   ]
+  },
+  "vn": {
+   "targets": [
+    "apho-2027",
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "vn-hsgqg-2027"
+    },
+    {
+     "key": "vn-tst-2027",
+     "name": "Kỳ thi chọn đội tuyển quốc gia dự thi Olympic khu vực và quốc tế",
+     "name_ko": "베트남 국가대표 선발시험 (APhO·IPhO 대표팀)",
+     "url": "https://moet.gov.vn/",
+     "months": [
+      3
+     ],
+     "note": "In 2026 the exam opened on March 25.",
+     "note_ko": "2026년에는 3월 25일에 시작했습니다."
+    }
+   ]
+  },
+  "gb": {
+   "targets": [
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "uk-bpho-r1-2026"
+    },
+    {
+     "event": "uk-bpho-r2-2027"
+    }
+   ]
+  },
+  "de": {
+   "targets": [
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "de-ipho-r2-2027"
+    },
+    {
+     "event": "de-ipho-r3-2027"
+    },
+    {
+     "event": "de-ipho-r4-2027"
+    }
+   ]
+  },
+  "ca": {
+   "targets": [
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "ca-cap-exam-2027",
+     "months": [
+      4
+     ]
+    },
+    {
+     "event": "ca-cpo-2027",
+     "months": [
+      5
+     ]
+    }
+   ]
+  },
+  "au": {
+   "targets": [
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "au-aso-physics-2027"
+    }
+   ]
+  },
+  "jp": {
+   "targets": [
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "jp-physics-challenge-2027"
+    }
+   ]
+  },
+  "cn": {
+   "targets": [
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "cn-cpho-2027"
+    }
+   ]
+  },
+  "sg": {
+   "targets": [
+    "ipho-2027"
+   ],
+   "stages": [
+    {
+     "event": "sg-spho-2027",
+     "months": [
+      10,
+      11
+     ]
+    }
+   ]
+  },
+  "ru": {
+   "targets": [],
+   "stages": [
+    {
+     "event": "ru-vsosh-physics-2027",
+     "months": [
+      4
+     ]
+    }
+   ]
+  }
+ }
 }

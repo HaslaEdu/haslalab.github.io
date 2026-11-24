@@ -5,9 +5,9 @@
    localStorage 'hlTeachPaper'; the figure is an SVG data URL with its scene), into the member's storage
    (/api/workshop/storage) or into this browser. "Start from a photo" sends one photo to /api/workshop/scene-from-image
    (community/src/workshop-scene.js) and opens what comes back for checking. */
-import {validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, FIELDS, isBody, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS} from './draw-scene.mjs?v=821b2b258cf0';
-import {buildSim} from './draw-physics.mjs?v=e409d69aebc7';
-import {renderSVG} from './draw-render.mjs?v=3f0095a65808';
+import {validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS} from './draw-scene.mjs?v=db9a7a5f3c86';
+import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=356d0090fae5';
+import {renderSVG, texSVG, STYLES} from './draw-render.mjs?v=93b8bb65e09e';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -29,7 +29,7 @@ const T = ko ? {
     mu: '마찰 계수 μ', hatch: '빗금', side: '단단한 쪽', angle: '각도 (°)', length: '빗면 길이 (m)', flip: '왼쪽으로 오르게', angleLabel: '각 이름표', mount: '붙은 곳', a: '한쪽 끝', b: '다른 끝', over: '지나는 도르래', mode: '운동', k: '용수철 상수 k (N/m)', L0: '자연 길이 (m)', coils: '감은 수',
     F: '힘의 크기 (N)', len: '화살표 길이 (m)', text: '글', size: '글자 크기', x1: 'x₁', y1: 'y₁', x2: 'x₂', y2: 'y₂', offset: '띄우기 (m)', from: '시작 각 (°)', to: '끝 각 (°)', lx: 'x축 길이', ly: 'y축 길이', xlabel: 'x축 이름', ylabel: 'y축 이름', dash: '점선'},
   enums: {left: '왼쪽', right: '오른쪽', normal: '보통', conical: '원뿔 진자'}, none: '(없음)',
-  texHint: 'm_1, v_0, \\theta, \\mu 처럼 쓰면 아래 첨자와 그리스 문자가 됩니다.',
+  texHint: 'm_1, v_0^2, \\theta, \\vec{F}, \\dot{x}, \\frac{a}{b}, \\hbar 처럼 TeX로 쓰거나 Ω 단추로 기호를 넣으세요. 아래 미리보기가 그림에 들어가는 모양입니다.',
   out: '내보내기', svg: 'SVG 내려받기', png: 'PNG 내려받기 (2배)', toPaper: '시험지에 넣기', replacePaper: '시험지 그림 바꾸기', paperQ: '문제 글 (선택, 수식은 $...$)', inPaper: '시험지에 넣었습니다.', openPaper: '시험지 열기',
   store: '보관함에 저장', stored: n => `보관함 ‘${n}’ 폴더에 JSON과 SVG를 저장했습니다.`, storeLogin: '로그인하면 보관함에 저장할 수 있습니다. 지금은 이 브라우저에 저장하거나 파일로 내려받으세요.', login: '로그인', folder: '그림',
   local: '이 브라우저에 저장', localSaved: '이 브라우저에 저장했습니다.', open: '열기', json: 'JSON 내려받기', load: 'JSON 불러오기', loadBad: '이 파일은 그림 파일이 아니거나 값이 맞지 않습니다.', saves: '이 브라우저에 저장한 그림',
@@ -55,7 +55,7 @@ const T = ko ? {
     mu: 'Friction μ', hatch: 'Hatching', side: 'Solid side', angle: 'Angle (°)', length: 'Slope length (m)', flip: 'Rises to the left', angleLabel: 'Angle label', mount: 'Fixed to', a: 'One end', b: 'Other end', over: 'Over pulleys', mode: 'Motion', k: 'Spring constant k (N/m)', L0: 'Natural length (m)', coils: 'Coils',
     F: 'Magnitude (N)', len: 'Arrow length (m)', text: 'Text', size: 'Size', x1: 'x₁', y1: 'y₁', x2: 'x₂', y2: 'y₂', offset: 'Offset (m)', from: 'From (°)', to: 'To (°)', lx: 'x-axis length', ly: 'y-axis length', xlabel: 'x label', ylabel: 'y label', dash: 'Dashed'},
   enums: {left: 'Left', right: 'Right', normal: 'Normal', conical: 'Conical pendulum'}, none: '(none)',
-  texHint: 'Write m_1, v_0, \\theta, \\mu for subscripts and Greek letters.',
+  texHint: 'Write TeX such as m_1, v_0^2, \\theta, \\vec{F}, \\dot{x}, \\frac{a}{b}, \\hbar, or insert symbols with the Ω button. The preview is how the figure will show it.',
   out: 'Export', svg: 'Download SVG', png: 'Download PNG (2×)', toPaper: 'Put on the test paper', replacePaper: 'Replace the figure on the paper', paperQ: 'Problem text (optional, $...$ for maths)', inPaper: 'Added to the paper.', openPaper: 'Open the paper',
   store: 'Save to Storage', stored: n => `Saved the JSON and SVG in the “${n}” folder of your storage.`, storeLogin: 'Log in to save to your storage. For now, save in this browser or download the file.', login: 'Log in', folder: 'Figures',
   local: 'Save in this browser', localSaved: 'Saved in this browser.', open: 'Open', json: 'Download JSON', load: 'Open JSON', loadBad: 'This file is not a figure, or its values are out of range.', saves: 'Figures saved in this browser',
@@ -67,6 +67,87 @@ const T = ko ? {
   invalid: 'value out of range', tooMany: `A figure can have up to ${MAX_OBJECTS} objects.`,
   rd: {body: 'Body', x: 'x (m)', y: 'y (m)', v: 'Speed (m/s)', a: 'Accel. (m/s²)', tension: 'Tension', K: 'Kinetic energy', U: 'Potential energy', E: 'Mechanical energy', heat: 'Lost to friction', graph: 'Graph', speedOf: id => `speed of ${id}`, yOf: id => `height of ${id}`, xOf: id => `x of ${id}`, energy: 'energy', tensionOf: id => `tension ${id}`}
 };
+
+/* ── the other domains: names, palette, symbol picker ── */
+const X2 = ko ? {
+  lede: '역학·전자기·열·광학·파동·현대물리 문제 그림을 값으로 그립니다. 그리스 문자와 물리 기호를 넣을 수 있고, 같은 그림을 시험지에 넣거나 시뮬레이션·계산으로 확인할 수 있습니다.',
+  domains: {mech: '역학', em: '전자기', thermo: '열', optics: '광학', waves: '파동', modern: '현대물리', general: '일반'},
+  search: '찾기 (예: 저항, lens, 우물)', style: '그림체', symbols: 'Ω 기호', symTitle: '그리스 문자 · 물리 기호', symHint: '누르면 선택한 글자 칸(없으면 새 글자)에 넣습니다. TeX로 직접 써도 됩니다.',
+  solve: '회로 풀기 (전류·전압)', info: '계산값', circuit: '회로', noCircuit: {empty: '회로 소자가 없습니다.', ac: '교류 전원이 있는 회로는 풀지 않습니다.', short: '이상적인 전원이 단락되었거나 전압원 고리가 있어 풀 수 없습니다.'},
+  tau: '시간 상수 τ', vFinal: '나중 전압', iFinal: '나중 전류', rth: '테브난 저항', charging: id => `${id} 충전 곡선 V(t)`, current: '전류', drop: '전압', element: '소자',
+  infoT: {cycle: (c) => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (카르노 한계 ${c.carnot})`, oarrow: c => `상 위치 x = ${c.x} m, 배율 m = ${c.m} (${c.real ? '실상' : '허상'})`, slits: c => `무늬 간격 Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, 투과율 T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `일 W = ∫P dV = ${c.W}`},
+  types: {element: '회로 소자', ground: '접지', charge: '점전하', plate: '대전판', fieldlines: '전기력선', field: '균일한 장', cwire: '전류 도선', current: '지면 수직 전류', solenoid: '솔레노이드', loop: '원형 전류 고리', magnet: '막대자석',
+    cylinder: '실린더·피스톤', reservoir: '열원', engine: '열기관 도식', graph: '그래프 틀', curve: '곡선', cycle: '순환 과정', lens: '렌즈', mirror: '거울', prism: '프리즘', slab: '유리판', oarrow: '물체 (광학)', ray: '광선', slits: '슬릿·스크린', wavefront: '파면',
+    wave: '파동', well: '퍼텐셜 우물', levels: '에너지 준위', phototube: '광전 효과 장치', spacetime: '민코프스키 도표', worldline: '세계선', frames: '관성계 S, S′', vector: '벡터', region: '영역', point: '점'},
+  kinds: {wire: '도선', resistor: '저항', battery: '전지 (여러 칸)', cell: '전지', dc: '직류 전원', ac: '교류 전원', capacitor: '축전기', inductor: '코일 (인덕터)', switch: '스위치', diode: '다이오드', led: '발광 다이오드', bulb: '전구', ammeter: '전류계', voltmeter: '전압계', galvanometer: '검류계'},
+  fields: {kind: '종류', value: '값', r: '반지름 / 내부 저항', closed: '닫힘', look: '모양', route: '꺾는 방향', q: '전하 (μC)', n: '개수', levels: '등전위선 수 / 준위 수', equip: '등전위선', arrows: '화살표', dir: '방향', mag: '세기 (T 또는 V/m)', spacing: '간격', pattern: '선 모양',
+    I: '전류 (A)', rings: '자기장 고리', turns: '감은 수', core: '철심', showB: '자기장 표시', ccw: '반시계 방향', tilt: '기울기', piston: '피스톤 높이 (0–1)', gas: '기체 알갱이', weight: '추', heat: '열', hot: '고온', th: '고온 이름', tc: '저온 이름', qh: 'Q_H 이름', qc: 'Q_C 이름', wl: 'W 이름',
+    xmin: 'x 최솟값', xmax: 'x 최댓값', ymin: 'y 최솟값', ymax: 'y 최댓값', auto: '범위 자동', ticks: '눈금', grid: '격자', origin: '원점 이름', graph: '그래프', expr: '식 y = f(x)', gamma: '비열비 γ', heads: '화살표', v1: 'V₁', v2: 'V₂', t1: '고온 T_H', t2: '저온 T_C', labels: '이름 표시', shade: '넓이 칠하기',
+    f: '초점 거리 f (m)', face: '빛이 오는 쪽', showF: '초점 표시', apex: '꼭지각 (°)', rays: '주광선', image: '상', imageLabel: '상 이름', d: '슬릿 간격 d (mm)', L: 'L (m / nm)', lambda: '파장 λ (nm)', screen: '스크린까지 (그림)', waves: '입사파 표시',
+    A: '진폭 A', phase: '위상 (°)', ends: '양 끝', showLambda: 'λ 표시', showA: 'A 표시', envelope: '포락선', axis: '축', arrow: '화살표', V0: 'V₀ (eV) / ħω', E: '입사 에너지 E (eV)', psi: '파동 함수', values: '준위 (eV, 쉼표)', trans: '전이 (예: 3-2)',
+    units: '눈금 수', beta: 'β = v/c', primed: 'S′ 축', cone: '빛 원뿔', hyperbola: '불변 쌍곡선', diagram: '도표', x0: '시작 x', tau: '고유 시간 간격', gap: 'S′까지 거리', width: '굵기', head: '화살촉', shape: '모양', fill: '채우기', filled: '채움', box: '테두리', flip: '뒤집기', size: '크기', marks: '부호 표시'},
+  enums: {B: '자기장 B', E: '전기장 E', in: '지면으로 들어감 ⊗', out: '지면에서 나옴 ⊙', arrow: '화살표', solid: '실선', dashed: '점선', dotted: '점점선', dashdot: '일점쇄선', none: '없음', auto: '그림체 따름', zigzag: '지그재그', box: '상자 (IEC)', straight: '곧게', hv: '가로 먼저', vh: '세로 먼저',
+    func: '함수', isotherm: '등온', adiabat: '단열', isobar: '등압', isochore: '등적', mid: '가운데', end: '끝', start: '처음', both: '양쪽', carnot: '카르노', otto: '오토', stirling: '스털링', engine: '열기관', fridge: '냉동기',
+    plane: '평면파', circular: '원형파', travel: '진행파', standing: '정상파', fixed: '고정', infinite: '무한 우물', finite: '유한 우물', harmonic: '조화 진동자', barrier: '장벽', step: '계단', psi: 'ψ', prob: '|ψ|²', hydrogen: '수소', custom: '직접 입력',
+    rect: '사각형', ellipse: '타원', gray: '회색', hatch: '빗금', dots: '점', filled: '채운 삼각형', open: '열린 화살촉', stealth: '날렵한 화살촉'},
+  units: {resistor: 'Ω', bulb: 'Ω', galvanometer: 'Ω', battery: 'V', cell: 'V', dc: 'V', ac: 'V', diode: 'V', led: 'V', capacitor: 'μF', inductor: 'H'}
+} : {
+  lede: 'Draw mechanics, electromagnetism, thermodynamics, optics, waves and modern-physics figures by value, with Greek letters and physics symbols. Put a figure on a test paper, or check it with a simulation or a calculation.',
+  domains: {mech: 'Mechanics', em: 'E&M', thermo: 'Thermal', optics: 'Optics', waves: 'Waves', modern: 'Modern', general: 'General'},
+  search: 'Search (e.g. resistor, lens, well)', style: 'Style', symbols: 'Ω Symbols', symTitle: 'Greek letters and physics symbols', symHint: 'Click to insert into the selected text field (or a new label). TeX can be typed too.',
+  solve: 'Solve the circuit (currents, voltages)', info: 'Computed', circuit: 'Circuit', noCircuit: {empty: 'No circuit elements.', ac: 'Circuits with an AC source are not solved.', short: 'An ideal source is shorted or a loop of voltage sources makes it unsolvable.'},
+  tau: 'Time constant τ', vFinal: 'Final voltage', iFinal: 'Final current', rth: 'Thevenin resistance', charging: id => `charging of ${id}, V(t)`, current: 'Current', drop: 'Voltage', element: 'Element',
+  infoT: {cycle: c => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (Carnot limit ${c.carnot})`, oarrow: c => `image at x = ${c.x} m, magnification m = ${c.m} (${c.real ? 'real' : 'virtual'})`, slits: c => `fringe spacing Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, transmission T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `work W = ∫P dV = ${c.W}`},
+  types: {element: 'Circuit element', ground: 'Ground', charge: 'Point charge', plate: 'Charged plate', fieldlines: 'Field lines', field: 'Uniform field', cwire: 'Current wire', current: 'Current through the page', solenoid: 'Solenoid', loop: 'Current loop', magnet: 'Bar magnet',
+    cylinder: 'Cylinder and piston', reservoir: 'Reservoir', engine: 'Heat engine diagram', graph: 'Graph frame', curve: 'Curve', cycle: 'Cycle', lens: 'Lens', mirror: 'Mirror', prism: 'Prism', slab: 'Slab', oarrow: 'Object (optics)', ray: 'Ray', slits: 'Slits and screen', wavefront: 'Wavefronts',
+    wave: 'Wave', well: 'Potential well', levels: 'Energy levels', phototube: 'Photoelectric setup', spacetime: 'Minkowski diagram', worldline: 'Worldline', frames: 'Frames S, S′', vector: 'Vector', region: 'Region', point: 'Point'},
+  kinds: {wire: 'Wire', resistor: 'Resistor', battery: 'Battery', cell: 'Cell', dc: 'DC source', ac: 'AC source', capacitor: 'Capacitor', inductor: 'Inductor', switch: 'Switch', diode: 'Diode', led: 'LED', bulb: 'Bulb', ammeter: 'Ammeter', voltmeter: 'Voltmeter', galvanometer: 'Galvanometer'},
+  fields: {kind: 'Kind', value: 'Value', r: 'Radius / internal resistance', closed: 'Closed', look: 'Look', route: 'Route', q: 'Charge (μC)', n: 'Number', levels: 'Equipotentials / levels', equip: 'Equipotentials', arrows: 'Arrows', dir: 'Direction', mag: 'Strength (T or V/m)', spacing: 'Spacing', pattern: 'Line',
+    I: 'Current (A)', rings: 'Field rings', turns: 'Turns', core: 'Iron core', showB: 'Show B', ccw: 'Anticlockwise', tilt: 'Tilt', piston: 'Piston height (0–1)', gas: 'Gas particles', weight: 'Weight', heat: 'Heat', hot: 'Hot', th: 'Hot label', tc: 'Cold label', qh: 'Q_H label', qc: 'Q_C label', wl: 'W label',
+    xmin: 'x min', xmax: 'x max', ymin: 'y min', ymax: 'y max', auto: 'Auto range', ticks: 'Ticks', grid: 'Grid', origin: 'Origin label', graph: 'Graph', expr: 'Formula y = f(x)', gamma: 'Heat capacity ratio γ', heads: 'Arrows', v1: 'V₁', v2: 'V₂', t1: 'Hot T_H', t2: 'Cold T_C', labels: 'Labels', shade: 'Shade the area',
+    f: 'Focal length f (m)', face: 'Light comes from', showF: 'Mark focal points', apex: 'Apex angle (°)', rays: 'Principal rays', image: 'Image', imageLabel: 'Image label', d: 'Slit spacing d (mm)', L: 'L (m / nm)', lambda: 'Wavelength λ (nm)', screen: 'To the screen (figure)', waves: 'Incident waves',
+    A: 'Amplitude A', phase: 'Phase (°)', ends: 'Ends', showLambda: 'Mark λ', showA: 'Mark A', envelope: 'Envelope', axis: 'Axis', arrow: 'Arrow', V0: 'V₀ (eV) / ħω', E: 'Energy E (eV)', psi: 'Wave function', values: 'Levels (eV, commas)', trans: 'Transitions (e.g. 3-2)',
+    units: 'Units', beta: 'β = v/c', primed: 'S′ axes', cone: 'Light cone', hyperbola: 'Invariant hyperbolas', diagram: 'Diagram', x0: 'Start x', tau: 'Proper-time step', gap: 'Distance to S′', width: 'Width', head: 'Arrowhead', shape: 'Shape', fill: 'Fill', filled: 'Filled', box: 'Box', flip: 'Flip', size: 'Size', marks: 'Signs'},
+  enums: {B: 'Magnetic B', E: 'Electric E', in: 'Into the page ⊗', out: 'Out of the page ⊙', arrow: 'Arrows', solid: 'Solid', dashed: 'Dashed', dotted: 'Dotted', dashdot: 'Dash-dot', none: 'None', auto: 'From the style', zigzag: 'Zigzag', box: 'Box (IEC)', straight: 'Straight', hv: 'Horizontal first', vh: 'Vertical first',
+    func: 'Function', isotherm: 'Isotherm', adiabat: 'Adiabat', isobar: 'Isobar', isochore: 'Isochore', mid: 'Middle', end: 'End', start: 'Start', both: 'Both', carnot: 'Carnot', otto: 'Otto', stirling: 'Stirling', engine: 'Engine', fridge: 'Refrigerator',
+    plane: 'Plane', circular: 'Circular', travel: 'Travelling', standing: 'Standing', fixed: 'Fixed', infinite: 'Infinite well', finite: 'Finite well', harmonic: 'Harmonic oscillator', barrier: 'Barrier', step: 'Step', psi: 'ψ', prob: '|ψ|²', hydrogen: 'Hydrogen', custom: 'Custom',
+    rect: 'Rectangle', ellipse: 'Ellipse', gray: 'Gray', hatch: 'Hatching', dots: 'Dots', filled: 'Filled', open: 'Open', stealth: 'Stealth'},
+  units: {resistor: 'Ω', bulb: 'Ω', galvanometer: 'Ω', battery: 'V', cell: 'V', dc: 'V', ac: 'V', diode: 'V', led: 'V', capacitor: 'μF', inductor: 'H'}
+};
+T.lede = X2.lede; Object.assign(T.types, X2.types); Object.assign(T.fields, X2.fields); Object.assign(T.enums, X2.enums);
+T.err.not_mechanics = ko ? '물리 문제 그림을 찾지 못했습니다. 그림이 잘 보이게 다시 찍어 주세요.' : 'No physics figure was found. Take the photo again with the figure clearly visible.';
+T.unsure = {...T.unsure, ...(ko ? {charge: '전하', kind: '종류', focal: '초점 거리'} : {charge: 'charge', kind: 'kind', focal: 'focal length'})};
+/* the palette: [type, preset, name] by domain */
+const K = X2.kinds, N2 = (k, e) => ko ? k : e;
+const PALETTE = {
+  mech: ['block', 'ball', 'floor', 'incline', 'wall', 'ceiling', 'pulley', 'pivot', 'string', 'rod', 'spring', 'force'].map(t => [t, {}, T.types[t]]),
+  em: [...['wire', 'resistor', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer'].map(k => ['element', {kind: k}, K[k]]),
+    ['ground', {}, T.types.ground], ['charge', {q: 1}, N2('양전하 +q', 'Charge +q')], ['charge', {q: -1}, N2('음전하 −q', 'Charge −q')], ['plate', {}, T.types.plate], ['fieldlines', {}, T.types.fieldlines],
+    ['field', {kind: 'B', dir: 'in'}, N2('자기장 ⊗', 'B field ⊗')], ['field', {kind: 'B', dir: 'out'}, N2('자기장 ⊙', 'B field ⊙')], ['field', {kind: 'E', dir: 'arrow', angle: -90, label: '\\vec{E}'}, N2('균일한 전기장', 'Uniform E field')],
+    ['cwire', {}, T.types.cwire], ['current', {}, T.types.current], ['solenoid', {}, T.types.solenoid], ['loop', {}, T.types.loop], ['magnet', {}, T.types.magnet]],
+  thermo: [['cylinder', {}, T.types.cylinder], ['reservoir', {}, T.types.reservoir], ['engine', {}, T.types.engine], ['graph', {xlabel: 'V', ylabel: 'P'}, N2('P–V 그래프', 'P–V graph')],
+    ...['isotherm', 'adiabat', 'isobar', 'isochore'].map(k => ['curve', {kind: k}, T.enums[k]]), ['cycle', {kind: 'carnot'}, N2('카르노 순환', 'Carnot cycle')], ['cycle', {kind: 'otto'}, N2('오토 순환', 'Otto cycle')], ['cycle', {kind: 'stirling'}, N2('스털링 순환', 'Stirling cycle')]],
+  optics: [['line', {pattern: 'dashdot'}, N2('광축', 'Optical axis')], ['lens', {f: 1}, N2('볼록 렌즈', 'Converging lens')], ['lens', {f: -1}, N2('오목 렌즈', 'Diverging lens')], ['mirror', {f: 0}, N2('평면 거울', 'Plane mirror')], ['mirror', {f: 1}, N2('오목 거울', 'Concave mirror')], ['mirror', {f: -1}, N2('볼록 거울', 'Convex mirror')],
+    ['prism', {}, T.types.prism], ['slab', {}, T.types.slab], ['oarrow', {}, T.types.oarrow], ['ray', {}, T.types.ray], ['slits', {n: 1}, N2('단일 슬릿', 'Single slit')], ['slits', {n: 2}, N2('이중 슬릿', 'Double slit')], ['slits', {n: 6, d: 0.1, a: 0.02}, N2('회절격자', 'Grating')],
+    ['wavefront', {kind: 'plane'}, N2('평면 파면', 'Plane wavefronts')], ['wavefront', {kind: 'circular'}, N2('원형 파면', 'Circular wavefronts')]],
+  waves: [['wave', {kind: 'travel'}, N2('진행파', 'Travelling wave')], ['wave', {kind: 'standing', ends: 'fixed'}, N2('정상파 (고정단)', 'Standing wave (fixed ends)')], ['wavefront', {kind: 'circular'}, N2('원형 파면', 'Circular wavefronts')], ['wavefront', {kind: 'plane'}, N2('평면 파면', 'Plane wavefronts')]],
+  modern: [['well', {kind: 'infinite'}, N2('무한 우물', 'Infinite well')], ['well', {kind: 'finite'}, N2('유한 우물', 'Finite well')], ['well', {kind: 'harmonic', V0: 0.5, levels: 4}, N2('조화 진동자', 'Harmonic oscillator')], ['well', {kind: 'barrier', L: 0.4, V0: 4, E: 2.5}, N2('퍼텐셜 장벽', 'Barrier')], ['well', {kind: 'step', V0: 3, E: 2}, N2('퍼텐셜 계단', 'Step')],
+    ['levels', {}, T.types.levels], ['phototube', {}, T.types.phototube], ['spacetime', {}, T.types.spacetime], ['worldline', {}, T.types.worldline], ['frames', {}, T.types.frames]],
+  general: [['label', {}, T.types.label], ['label', {box: true, text: '\\text{box}'}, N2('글 상자', 'Text box')], ['vector', {}, T.types.vector], ['dim', {}, T.types.dim], ['arc', {}, T.types.arc], ['axes', {}, T.types.axes],
+    ['line', {pattern: 'dashed'}, N2('점선', 'Dashed line')], ['line', {pattern: 'dotted'}, N2('점점선', 'Dotted line')], ['line', {pattern: 'solid', heads: 'end'}, N2('화살표 선', 'Arrow line')], ['region', {}, T.types.region], ['point', {}, T.types.point], ['graph', {}, N2('함수 그래프', 'Function graph')], ['curve', {kind: 'func'}, N2('함수 곡선', 'Function curve')]]
+};
+const PAL_EN = {mech: 'block ball floor incline wall ceiling pulley pivot string rod spring force', em: 'wire resistor battery cell dc ac capacitor inductor switch diode led bulb ammeter voltmeter galvanometer ground charge plate field lines B E current solenoid loop magnet', thermo: 'cylinder piston reservoir engine graph isotherm adiabat isobar isochore carnot otto stirling', optics: 'axis lens mirror prism slab object ray slit grating wavefront', waves: 'wave standing travelling wavefront', modern: 'well barrier step harmonic levels hydrogen photoelectric minkowski spacetime worldline frames', general: 'label text box vector dimension arc axes line dashed dotted arrow region point graph function curve'};
+/* the symbol picker: [group, [[tex, shown-as], …]] */
+const SYMBOLS = [
+  [N2('그리스 소문자', 'Greek lower case'), 'alpha beta gamma delta epsilon varepsilon zeta eta theta vartheta iota kappa lambda mu nu xi pi varpi rho varrho sigma varsigma tau upsilon phi varphi chi psi omega'.split(' ').map(n => ['\\' + n])],
+  [N2('그리스 대문자', 'Greek capitals'), 'Gamma Delta Theta Lambda Xi Pi Sigma Upsilon Phi Psi Omega'.split(' ').map(n => ['\\' + n])],
+  [N2('벡터 · 미분 표기', 'Vectors and derivatives'), [['\\vec{F}'], ['\\hat{x}'], ['\\hat{n}'], ['\\dot{x}'], ['\\ddot{x}'], ['\\bar{v}'], ['\\tilde{x}'], ["x'"], ["x''"], ['\\overrightarrow{AB}'], ['\\mathbf{F}'], ['x_{1}'], ['x^{2}'], ['v_0^2'], ['\\frac{a}{b}'], ['\\sqrt{x}'], ['\\sqrt[3]{x}'], ['|\\vec{r}|']]],
+  [N2('미적분 · 연산', 'Calculus and operators'), [['\\nabla'], ['\\partial'], ['\\int'], ['\\oint'], ['\\iint'], ['\\sum'], ['\\prod'], ['\\infty'], ['\\pm'], ['\\mp'], ['\\times'], ['\\cdot'], ['\\circ'], ['\\nabla\\times\\vec{B}'], ['\\nabla\\cdot\\vec{E}'], ['\\frac{dv}{dt}'], ['\\frac{\\partial f}{\\partial x}'], ['\\Delta x']]],
+  [N2('관계', 'Relations'), [['\\approx'], ['\\neq'], ['\\le'], ['\\ge'], ['\\propto'], ['\\sim'], ['\\equiv'], ['\\ll'], ['\\gg'], ['\\simeq']]],
+  [N2('양자 · 상대론', 'Quantum and relativity'), [['\\hbar'], ['\\ket{\\psi}'], ['\\bra{\\phi}'], ['\\braket{\\phi|\\psi}'], ['\\langle x \\rangle'], ['|\\psi|^2'], ['\\hat{H}'], ['\\mathcal{H}'], ['\\mathcal{L}'], ['\\gamma'], ['ct'], ["x'"], ["S'"], ['\\beta = v/c'], ['E = mc^2'], ['h\\nu'], ['e^-'], ['\\lambda_{dB}']]],
+  [N2('기하 · 방향', 'Geometry and direction'), [['\\odot'], ['\\otimes'], ['\\perp'], ['\\parallel'], ['\\angle'], ['\\triangle'], ['\\to'], ['\\Rightarrow'], ['\\leftrightarrow'], ['\\rightleftharpoons'], ['\\uparrow'], ['\\downarrow'], ['\\circlearrowleft'], ['\\circlearrowright']]],
+  [N2('전자기 · 단위', 'E&M and units'), [['\\mathcal{E}'], ['\\varepsilon_0'], ['\\mu_0'], ['\\Phi_B'], ['\\mathrm{\\Omega}'], ['\\mathrm{k\\Omega}'], ['\\mathrm{\\mu F}'], ['\\mathrm{mH}'], ['\\mathrm{\\mu C}'], ['\\mathrm{\\AA}'], ['30^\\circ'], ['\\mathrm{m/s^2}'], ['\\mathrm{N\\,m}'], ['\\mathrm{eV}'], ['\\mathrm{nm}'], ['\\mathrm{K}'], ['T_H'], ['T_C'], ['Q_H']]]
+];
 
 /* ── the member's session, as the other Workshop pages read it ── */
 const API = (() => { let o = ''; try { o = localStorage.getItem('hlCmApi') || ''; } catch (e) {} return (/^https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev\/?$/.test(o) ? o : 'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/, ''); })();
@@ -84,12 +165,12 @@ const store = {get(k) { try { return localStorage.getItem(k); } catch (e) { retu
 
 /* ── state ── */
 const SCENE_KEY = 'hlDrawScene', SAVES_KEY = 'hlDrawSaves', PAPER_KEY = 'hlTeachPaper', EDIT_KEY = 'hlDrawEdit';
-const st = {scene: null, sel: '', undo: [], redo: [], connect: null, grid: true, snap: true, fbd: false, readouts: true,
+const st = {scene: null, sel: '', undo: [], redo: [], connect: null, grid: true, snap: true, fbd: false, readouts: true, solve: false, circuit: null, dom: 'mech', q: '', lastText: null,
   sim: null, playing: false, speed: 1, last: 0, trails: new Map(), samples: [], graph: '', ai: null, msg: '', paperEdit: null, drag: null};
 const clone = o => JSON.parse(JSON.stringify(o));
 function startScene() {
   const t = params.get('t');
-  if (t && TEMPLATE_KEYS.includes(t)) return validateScene(template(t, lang)).scene;
+  if (t && TEMPLATE_KEYS.includes(t)) { st.dom = TEMPLATE_DOMAIN[t] || 'mech'; return validateScene(template(t, lang)).scene; }
   /* a figure sent from the paper to be changed (teach.js "그림 고치기") */
   try { const e = JSON.parse(store.get(EDIT_KEY) || 'null'); if (e && typeof e.key === 'string' && e.scene) { const r = validateScene(e.scene); if (r.ok) { st.paperEdit = e.key; store.del(EDIT_KEY); return r.scene; } } } catch (e) {}
   try { const r = validateScene(JSON.parse(store.get(SCENE_KEY) || 'null')); if (r.ok && r.scene.objects.length) return r.scene; } catch (e) {}
@@ -112,27 +193,70 @@ let flashTimer;
 function flash(html) { st.msg = html; const el = $('status'); if (el) el.innerHTML = html; clearTimeout(flashTimer); flashTimer = setTimeout(() => { st.msg = ''; status(); }, 6000); }
 
 /* ids: the type's letter and the first free number */
-const PREFIX = {block: 'm', ball: 'b', floor: 'f', ceiling: 'c', wall: 'w', incline: 'i', pulley: 'p', pivot: 'o', string: 's', rod: 'r', spring: 'k', force: 'F', label: 'l', dim: 'd', arc: 'a', axes: 'x', line: 'n'};
-const freeId = type => { let n = 1; while (byId(PREFIX[type] + n)) n++; return PREFIX[type] + n; };
+const PREFIX = {block: 'm', ball: 'b', floor: 'f', ceiling: 'c', wall: 'w', incline: 'i', pulley: 'p', pivot: 'o', string: 's', rod: 'r', spring: 'k', force: 'F', label: 'l', dim: 'd', arc: 'a', axes: 'x', line: 'n',
+  element: 'e', ground: 'gnd', charge: 'q', plate: 'P', fieldlines: 'FL', field: 'B', cwire: 'I', current: 'J', solenoid: 'sol', loop: 'loop', magnet: 'mag', cylinder: 'cyl', reservoir: 'res', engine: 'eng', graph: 'G', curve: 'c', cycle: 'cyc',
+  lens: 'L', mirror: 'M', prism: 'pr', slab: 'sl', oarrow: 'O', ray: 'ray', slits: 'S', wavefront: 'wf', wave: 'wave', well: 'W', levels: 'lv', phototube: 'pt', spacetime: 'st', worldline: 'wl', frames: 'fr', vector: 'v', region: 'rg', point: 'pt'};
+const KIND_PREFIX = {wire: 'W', resistor: 'R', battery: 'E', cell: 'E', dc: 'E', ac: 'E', capacitor: 'C', inductor: 'L', switch: 'S', diode: 'D', led: 'D', bulb: 'B', ammeter: 'A', voltmeter: 'V', galvanometer: 'G'};
+const freeId = (type, kind) => { const p = type === 'element' && KIND_PREFIX[kind] ? KIND_PREFIX[kind] : PREFIX[type] || 'o'; let n = 1; while (byId(p + n)) n++; return p + n; };
 const snapV = v => st.snap ? Math.round(v / st.scene.grid) * st.scene.grid : v;
 const r4 = v => Math.round(v * 1e4) / 1e4;
 
-function addObject(type) {
+/* where a new object goes and how large it is: from the view, so it shows wherever the figure is */
+function placeNew(type, preset, v, next) {
+  const cx = snapV(v.x + v.w / 2), cy = snapV(v.y + v.h / 2), m = Math.min(v.w, v.h), o = {};
+  const box = (fw, fh) => { const w = r4(snapV(v.w * fw)) || st.scene.grid, h = r4(snapV(v.h * fh)) || st.scene.grid; Object.assign(o, {x: r4(snapV(cx - w / 2)), y: r4(snapV(cy - h / 2)), w, h}); };
+  const seg = frac => { const L = Math.max(st.scene.grid, r4(snapV(v.w * frac))); Object.assign(o, {x1: r4(snapV(cx - L / 2)), y1: cy, x2: r4(snapV(cx - L / 2) + L), y2: cy}); };
+  if (type === 'floor' || type === 'ceiling') Object.assign(o, {x: snapV(v.x + v.w * 0.1), y: type === 'floor' ? snapV(v.y + v.h * 0.15) : snapV(v.y + v.h * 0.9), w: r4(snapV(v.w * 0.8))});
+  else if (type === 'wall') Object.assign(o, {x: snapV(v.x + v.w * 0.1), y: snapV(v.y + v.h * 0.15), h: r4(snapV(v.h * 0.6))});
+  else if (type === 'incline') Object.assign(o, {x: snapV(v.x + v.w * 0.15), y: snapV(v.y + v.h * 0.15), length: r4(snapV(Math.min(v.w * 0.6, v.h * 1.2)))});
+  else if (type === 'dim' || type === 'line') { seg(0.25); }
+  else if (type === 'element' || type === 'plate' || type === 'cwire' || type === 'vector') seg(type === 'element' ? 0.2 : 0.3);
+  else if (['field', 'solenoid', 'cylinder', 'slab', 'region', 'phototube'].includes(type)) box(0.4, 0.4);
+  else if (type === 'magnet') box(0.35, 0.1);
+  else if (type === 'reservoir') box(0.4, 0.12);
+  else if (type === 'graph' || type === 'well' || type === 'levels') box(0.6, 0.65);
+  else if (type === 'engine') Object.assign(o, {x: cx, y: cy, size: r4(m * 0.22)});
+  else if (type === 'spacetime') Object.assign(o, {x: cx, y: r4(snapV(v.y + v.h * 0.12)), size: r4(snapV(v.h * 0.7))});
+  else if (type === 'frames') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.15)), y: r4(snapV(v.y + v.h * 0.25)), size: r4(snapV(m * 0.35)), gap: r4(snapV(v.w * 0.4))});
+  else if (type === 'lens' || type === 'mirror') Object.assign(o, {x: cx, y: cy, h: r4(v.h * 0.5), f: preset.f !== undefined ? r4(preset.f * v.w * 0.15) : r4(v.w * 0.15)});
+  else if (type === 'oarrow') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.15)), y: cy, h: r4(v.h * 0.15)});
+  else if (type === 'ray') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.08)), y: cy, len: r4(v.w * 1.2)});
+  else if (type === 'slits') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.25)), y: cy, h: r4(v.h * 0.6), screen: r4(v.w * 0.45)});
+  else if (type === 'wave') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.15)), y: cy, len: r4(snapV(v.w * 0.65)), A: r4(v.h * 0.12), lambda: r4(v.w * 0.22)});
+  else if (type === 'wavefront') Object.assign(o, {x: cx, y: cy, spacing: r4(m * 0.06), h: r4(v.h * 0.5)});
+  else if (type === 'charge') Object.assign(o, {x: cx, y: cy, r: r4(Math.max(0.02, m * 0.03))});
+  else if (type === 'current') Object.assign(o, {x: cx, y: cy, r: r4(Math.max(0.02, m * 0.02))});
+  else if (type === 'loop') Object.assign(o, {x: cx, y: cy, r: r4(m * 0.2)});
+  else if (type === 'prism') Object.assign(o, {x: cx, y: r4(snapV(cy - m * 0.2)), size: r4(m * 0.45)});
+  else if (type === 'arc') Object.assign(o, {x: cx, y: cy, r: r4(m * 0.1)});
+  else if (type === 'axes') Object.assign(o, {x: cx, y: cy, lx: r4(m * 0.3), ly: r4(m * 0.3)});
+  else if (type === 'curve' || type === 'cycle') {
+    let g = next.objects.find(x => x.type === 'graph');
+    if (!g) { g = {...defaults('graph'), id: freeId('graph'), ...(type === 'cycle' || preset.kind !== 'func' ? {xlabel: 'V', ylabel: 'P'} : {})}; Object.assign(g, placeNew('graph', {}, v, next)); next.objects.push(g); }
+    o.graph = g.id;
+    if (type === 'curve') Object.assign(o, preset.kind === 'func' || !preset.kind ? {x1: 0, x2: 6.2832} : {x1: 1, x2: 3, y1: 3, y2: 1});
+  } else if (type === 'worldline') {
+    let d = next.objects.find(x => x.type === 'spacetime');
+    if (!d) { d = {...defaults('spacetime'), id: freeId('spacetime')}; Object.assign(d, placeNew('spacetime', {}, v, next)); next.objects.push(d); }
+    o.diagram = d.id;
+  } else if ('x' in FIELDS[type]) Object.assign(o, {x: cx, y: cy});
+  return o;
+}
+function addObject(type, preset = {}) {
   if (st.scene.objects.length >= MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
   if (['string', 'rod', 'spring', 'force'].includes(type)) {
     const sel = byId(st.sel);
     if (type === 'force' && isBody(sel)) { finishConnect({type: 'force', a: sel.id}); return; }
     st.connect = {type, a: null, over: []}; st.sel = ''; paint(); return;
   }
-  const v = view(), cx = snapV(v.x + v.w / 2), cy = snapV(v.y + v.h / 2), o = {...defaults(type), id: freeId(type)};
-  if (type === 'floor' || type === 'ceiling') Object.assign(o, {x: snapV(v.x + v.w * 0.1), y: type === 'floor' ? snapV(v.y + v.h * 0.15) : snapV(v.y + v.h * 0.9), w: r4(snapV(v.w * 0.8))});
-  else if (type === 'wall') Object.assign(o, {x: snapV(v.x + v.w * 0.1), y: snapV(v.y + v.h * 0.15), h: r4(snapV(v.h * 0.6))});
-  else if (type === 'incline') Object.assign(o, {x: snapV(v.x + v.w * 0.15), y: snapV(v.y + v.h * 0.15), length: r4(snapV(Math.min(v.w * 0.6, v.h * 1.2)))});
-  else if (type === 'dim' || type === 'line') Object.assign(o, {x1: cx - 0.5, y1: cy, x2: cx + 0.5, y2: cy});
-  else Object.assign(o, {x: cx, y: cy});
+  const next = clone(st.scene), o = {...defaults(type), id: freeId(type, preset.kind)};
+  Object.assign(o, placeNew(type, preset, view(), next), Object.fromEntries(Object.entries(preset).filter(([k]) => !(k === 'f' && (type === 'lens' || type === 'mirror')))));
+  if (type === 'mirror' && preset.f === 0) o.f = 0;
   if (type === 'block') o.label = `m_${o.id.slice(1)}`;
-  if (type === 'label') o.text = 'A';
-  const next = clone(st.scene); next.objects.push(o);
+  if (type === 'label' && !o.text) o.text = 'A';
+  if (type === 'element' && !o.label) o.label = {resistor: 'R', capacitor: 'C', inductor: 'L', battery: '\\mathcal{E}', cell: '\\mathcal{E}', dc: '\\mathcal{E}', ac: '\\mathcal{E}', bulb: '', switch: 'S'}[o.kind] || '';
+  if (type === 'element') o.value = {battery: 12, cell: 1.5, dc: 6, ac: 10, capacitor: 100, inductor: 0.1, diode: 0.7, led: 2, resistor: 100, bulb: 10, galvanometer: 0}[o.kind] ?? o.value;
+  next.objects.push(o);
   if (commit(next)) { st.sel = o.id; paint(); }
 }
 /* a click while a string, rod, spring or force is being joined */
@@ -176,6 +300,8 @@ function removeIds(scene, ids) {
       if (o.type === 'force' && gone.has(o.on)) gone.add(o.id);
       if (isBody(o) && o.on && gone.has(o.on)) { const p = bodyPose({...scene, objects: [...scene.objects, ...st.scene.objects.filter(x => x.id === o.on)]}, o); o.on = ''; o.x = r4(p.x); o.y = r4(p.y); }
       if (o.type === 'pulley' && gone.has(o.mount)) o.mount = '';
+      if ((o.type === 'curve' || o.type === 'cycle') && gone.has(o.graph)) gone.add(o.id);
+      if (o.type === 'worldline' && gone.has(o.diagram)) gone.add(o.id);
     }
   }
 }
@@ -183,10 +309,10 @@ function del() { if (!st.sel) return; const next = clone(st.scene); removeIds(ne
 function dup() {
   const o = byId(st.sel); if (!o || ['string', 'rod', 'spring', 'force'].includes(o.type)) return;
   if (st.scene.objects.length >= MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
-  const c = {...clone(o), id: freeId(o.type)}, d = st.scene.grid * 3;
+  const c = {...clone(o), id: freeId(o.type, o.kind)}, d = st.scene.grid * 3;
   if (isBody(c) && c.on) c.at = r4(c.at + (c.type === 'ball' ? 2 * c.r : c.w) + st.scene.grid);
   else if ('x1' in c) { c.x1 += d; c.x2 += d; c.y1 -= d; c.y2 -= d; }
-  else { c.x = r4(c.x + d); c.y = r4(c.y - d); }
+  else if ('x' in c) { c.x = r4(c.x + d); c.y = r4(c.y - d); }
   if (c.type === 'block' && /^m_\d+$/.test(o.label)) c.label = 'm_' + c.id.slice(1);
   const next = clone(st.scene); next.objects.push(c);
   if (commit(next)) { st.sel = c.id; paint(); }
@@ -202,11 +328,14 @@ function paintCanvas() {
   let forces = null;
   if (st.fbd) { try { forces = (simOn ? st.sim : buildSim(st.scene)).forces(); } catch (e) { forces = null; } }
   shownScene = sc; shownPoses = simOn ? st.sim.poses() : null;
-  box.innerHTML = renderSVG(sc, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? '' : st.sel, forces, poses: shownPoses,
+  st.circuit = st.solve ? solveCircuit(st.scene) : null;
+  box.innerHTML = renderSVG(sc, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? '' : st.sel, forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit,
     velocities: simOn ? st.sim.velocities() : null, anchors: simOn ? st.sim.anchors : null, trails: simOn ? [...st.trails].filter(([id]) => byId(id)?.trail) : null,
     conical: (simOn ? st.sim : null)?.systems.filter(s => s.kind === 'conical').map(s => ({centre: s.centre, radius: s.radius})) || st.scene.objects.filter(o => (o.type === 'string' || o.type === 'rod') && o.mode === 'conical').map(o => conicalOrbit(o)).filter(Boolean)});
   box.classList.toggle('connecting', !!st.connect);
 }
+/* labels on a narrow screen: the 800-px drawing is shown smaller, so its labels are drawn larger to stay readable */
+function screenLabelScale(box) { const w = box.clientWidth || W; return Math.max(1, Math.min(2.4, 0.75 * W / Math.max(200, w - 14))); }
 function conicalOrbit(s) {
   const P = [byId(s.a), byId(s.b)].find(o => o?.type === 'pivot'), b = [byId(s.a), byId(s.b)].find(isBody);
   if (!P || !b) return null; const p = bodyPose(st.scene, b);
@@ -222,11 +351,13 @@ function bindCanvas() {
   const box = $('canvas');
   box.addEventListener('pointerdown', ev => {
     if (ev.button !== 0) return;
+    const hd = ev.target.closest?.('[data-handle]'), hs = hd && byId(st.sel);
+    if (hs && !st.connect) { if (st.sim) { stopSim(); } st.drag = {id: hs.id, handle: +hd.dataset.handle, start: worldAt(ev), orig: clone(hs), before: JSON.stringify(st.scene), moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
     const o = pickAt(ev);
     if (st.connect) { connectClick(o); return; }
     if (st.sim) { stopSim(); paint(); }
     st.sel = o ? o.id : ''; paintCanvas(); paintSide(); status();
-    if (!o || ['string', 'rod', 'spring', 'force'].includes(o.type)) return;
+    if (!o || ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline', 'fieldlines'].includes(o.type)) return;
     st.drag = {id: o.id, start: worldAt(ev), orig: clone(o), before: JSON.stringify(st.scene), moved: false};
     box.setPointerCapture?.(ev.pointerId);
   });
@@ -248,6 +379,13 @@ function bindCanvas() {
    when pulled away; a body hanging from a pulley moves up and down only */
 function dragTo(d, p, dx, dy) {
   const o = byId(d.id), g = d.orig; if (!o) return;
+  if (d.handle) {
+    /* one end of a wire, an element, a line…: on the grid, or onto a terminal near it */
+    let q = {x: r4(snapV(p.x)), y: r4(snapV(p.y))};
+    const near = st.scene.objects.filter(x => x.id !== o.id && 'x1' in x && 'y2' in x).flatMap(x => [{x: x.x1, y: x.y1}, {x: x.x2, y: x.y2}]).find(t => Math.hypot(t.x - p.x, t.y - p.y) < Math.max(st.scene.grid * 0.6, 12 * view().w / W));
+    if (near) q = near;
+    o['x' + d.handle] = q.x; o['y' + d.handle] = q.y; return;
+  }
   if (isBody(o)) {
     const hanging = st.scene.objects.some(s => s.type === 'string' && s.over.length && (s.a === o.id || s.b === o.id)) && !g.on;
     if (g.on) {
@@ -305,31 +443,55 @@ function readNow() {
 const unsupportedText = sim => sim.unsupported.map(u => `${u.ids.join(', ')}: ${T.unsupported[u.code] || u.code}`).join(' · ');
 
 /* ── side panel: the selected object's values, or the figure's ── */
-const NUM_STEP = {mass: 0.1, angle: 1, mu: 0.05, k: 1, F: 1, size: 1, coils: 1, from: 5, to: 5};
+const NUM_STEP = {mass: 0.1, angle: 1, mu: 0.05, k: 1, F: 1, size: 1, coils: 1, from: 5, to: 5, n: 1, levels: 1, turns: 1, rings: 1, units: 1, apex: 1, lambda: 10, beta: 0.05, gamma: 0.01, q: 0.5, t1: 10, t2: 10, value: 1};
+/* fields that mean nothing for this object as it is now set (a switch has no value, a function curve no γ …) */
+function relevant(o, k) {
+  if (o.type === 'element') {
+    const K = o.kind;
+    if (k === 'value') return !!X2.units[K];
+    if (k === 'r') return ['battery', 'cell', 'dc'].includes(K);
+    if (k === 'closed') return K === 'switch';
+    if (k === 'look') return K === 'resistor';
+    if (k === 'route') return K === 'wire';
+  }
+  if (o.type === 'field' && k === 'angle') return o.dir === 'arrow';
+  if (o.type === 'curve') { if (k === 'expr') return o.kind === 'func'; if (k === 'gamma') return o.kind === 'adiabat'; if (k === 'y2') return o.kind === 'isochore'; if (k === 'x2') return o.kind !== 'isochore'; if (k === 'y1') return o.kind !== 'func'; }
+  if (o.type === 'cycle' && k === 'gamma') return true;
+  if (o.type === 'graph' && ['xmin', 'xmax', 'ymin', 'ymax'].includes(k)) return !o.auto;
+  if (o.type === 'well') { if (k === 'E') return o.kind === 'barrier' || o.kind === 'step'; if (k === 'levels') return !['barrier', 'step'].includes(o.kind); if (k === 'L') return o.kind !== 'harmonic' && o.kind !== 'step'; }
+  if (o.type === 'levels') { if (k === 'values') return o.kind === 'custom'; if (k === 'n') return o.kind === 'hydrogen'; }
+  if (o.type === 'wave') { if (k === 'n') return o.kind === 'standing'; if (k === 'lambda' || k === 'phase' || k === 'arrow') return o.kind === 'travel'; if (k === 'envelope') return o.kind === 'standing'; }
+  if (o.type === 'wavefront' && k === 'angle') return o.kind === 'plane';
+  if (o.type === 'charge' && ['mass', 'vx', 'vy', 'showV', 'vLabel', 'trail'].includes(k)) return true;
+  return true;
+}
+const fieldName = (o, k) => o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
 function paintSide() {
   const box = $('props'); if (!box) return;
   const o = byId(st.sel);
   if (!o) {
     box.innerHTML = `<h2>${T.scene}</h2><div class="props"><label class="wide">${T.sceneTitle}<input data-scene="title" maxlength="80" value="${esc(st.scene.title)}"></label>
+      <label class="wide">${X2.style}<select data-scene="style">${STYLE_KEYS.map(k => `<option value="${k}"${k === st.scene.style ? ' selected' : ''}>${esc(STYLES[k].name[lang])}</option>`).join('')}</select></label>
       <label>${T.g}<input data-scene="g" type="number" step="0.1" value="${st.scene.g}"></label><label>${T.gridSize}<input data-scene="grid" type="number" step="0.05" value="${st.scene.grid}"></label></div>
-      <p class="note">${T.noSel}</p><div class="note">${T.objects}</div><div class="olist">${st.scene.objects.map(x => `<button type="button" data-pick="${esc(x.id)}">${esc(x.id)} · ${T.types[x.type]}</button>`).join('')}</div>`;
-    box.querySelectorAll('[data-scene]').forEach(el => el.onchange = () => { const next = clone(st.scene), k = el.dataset.scene; next[k] = k === 'title' ? el.value : parseFloat(el.value); commit(next); });
+      <p class="note">${T.noSel}</p><div class="note">${T.objects}</div><div class="olist">${st.scene.objects.map(x => `<button type="button" data-pick="${esc(x.id)}">${esc(x.id)} · ${esc(x.type === 'element' ? X2.kinds[x.kind] : T.types[x.type])}</button>`).join('')}</div>`;
+    box.querySelectorAll('[data-scene]').forEach(el => el.onchange = () => { const next = clone(st.scene), k = el.dataset.scene; next[k] = k === 'title' || k === 'style' ? el.value : parseFloat(el.value); commit(next); });
     box.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { st.sel = b.dataset.pick; paint(); });
     return;
   }
-  const F = FIELDS[o.type], fields = Object.entries(F).filter(([k]) => !(isBody(o) && o.on && (k === 'x' || k === 'y')) && !(isBody(o) && !o.on && k === 'at'));
+  const F = FIELDS[o.type], fields = Object.entries(F).filter(([k]) => !(isBody(o) && o.on && (k === 'x' || k === 'y')) && !(isBody(o) && !o.on && k === 'at') && relevant(o, k));
   const opts = (types, cur, optional) => (optional ? `<option value="">${T.none}</option>` : '') + st.scene.objects.filter(x => types.includes(x.type) && x.id !== o.id).map(x => `<option value="${esc(x.id)}"${x.id === cur ? ' selected' : ''}>${esc(x.id)} · ${T.types[x.type]}</option>`).join('');
   const optional = k => !(['string', 'rod', 'spring'].includes(o.type) && (k === 'a' || k === 'b')) && !(o.type === 'force' && k === 'on');
   const field = ([k, f]) => {
-    const L = T.fields[k] || k;
+    const L = fieldName(o, k);
     if (f.k === 'num') return `<label>${L}<input data-f="${k}" type="number" step="${NUM_STEP[k] || 0.05}" min="${f.min}" max="${f.max}" value="${r4(o[k])}"></label>`;
     if (f.k === 'bool') return `<label class="chk wide"><input data-f="${k}" type="checkbox"${o[k] ? ' checked' : ''}>${L}</label>`;
-    if (f.k === 'enum') return `<label>${L}<select data-f="${k}">${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${T.enums[v] || v}</option>`).join('')}</select></label>`;
+    if (f.k === 'enum') return `<label>${L}<select data-f="${k}">${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : T.enums[v] || v)}</option>`).join('')}</select></label>`;
     if (f.k === 'ref') return `<label>${L}<select data-f="${k}">${opts(f.types, o[k], optional(k))}</select></label>`;
     if (f.k === 'refs') { const ps = st.scene.objects.filter(x => x.type === 'pulley'); return ps.length ? `<div class="wide"><span class="note">${L}</span><div class="over">${ps.map(p => `<label><input type="checkbox" data-over="${esc(p.id)}"${o.over.includes(p.id) ? ' checked' : ''}>${esc(p.id)}</label>`).join('')}</div></div>` : ''; }
-    return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}"><span class="tex" data-tex="${k}"></span></label>`;
+    if (f.k === 'expr') return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>`;
+    return `<label class="wide">${L}<span class="tin"><input data-f="${k}" data-text="1" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"><button type="button" class="symbtn" data-sym="${k}" title="${esc(X2.symTitle)}">Ω</button></span><span class="tex" data-tex="${k}"></span></label>`;
   };
-  box.innerHTML = `<h2>${T.types[o.type]} <span class="note">${esc(o.id)}</span></h2><div class="props">${fields.map(field).join('')}</div>
+  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2><div class="props">${fields.map(field).join('')}</div>
     ${fields.some(([, f]) => f.k === 'txt') ? `<p class="note">${esc(T.texHint)}</p>` : ''}
     <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}<button type="button" data-act="del">${T.del}</button></div>`;
   box.querySelectorAll('[data-f]').forEach(el => {
@@ -339,6 +501,7 @@ function paintSide() {
       if (f.k === 'num') { const v = parseFloat(el.value); if (!Number.isFinite(v)) { paintSide(); return; } x[k] = v; }
       else if (f.k === 'bool') x[k] = el.checked;
       else x[k] = el.value;
+      if (o.type === 'element' && k === 'kind' && X2.units[x.kind] && !X2.units[o.kind]) x.value = defaults('element').value;
       if (k === 'on') {
         if (x.on) { const fr = surfaceFrame(next.objects.find(y => y.id === x.on)); x.at = r4(Math.max(0, Math.min(fr.length, vec.dot(vec.sub(bodyPose(st.scene, o), fr.p0), fr.u)))); }
         else { const p = bodyPose(st.scene, o); x.x = r4(p.x); x.y = r4(p.y); }
@@ -346,30 +509,29 @@ function paintSide() {
       if (!commit(next, {keepSel: true})) paintSide();
     };
     el.onchange = apply;
-    if (f.k === 'txt') el.oninput = () => texPreview(k, el.value);
-    if (f.k === 'txt') texPreview(k, el.value);
+    if (f.k === 'txt') { el.oninput = () => texPreview(k, el.value); el.onfocus = () => { st.lastText = {id: o.id, k}; }; texPreview(k, el.value); }
   });
   box.querySelectorAll('[data-over]').forEach(el => el.onchange = () => {
     const next = clone(st.scene), x = next.objects.find(y => y.id === o.id), ids = [...box.querySelectorAll('[data-over]')].filter(c => c.checked).map(c => c.dataset.over);
     x.over = [...x.over.filter(id => ids.includes(id)), ...ids.filter(id => !x.over.includes(id))];
     alignHanging(next, x); commit(next, {keepSel: true});
   });
+  box.querySelectorAll('[data-sym]').forEach(b => b.onclick = () => { st.lastText = {id: o.id, k: b.dataset.sym}; openSymbols(); });
   box.querySelector('[data-act="dup"]')?.addEventListener('click', dup);
   box.querySelector('[data-act="del"]').onclick = del;
 }
-/* the label as KaTeX shows it, when KaTeX has loaded */
+/* the label as the figure will show it (the same typesetter as the SVG, in the figure's style) */
 function texPreview(k, v) {
   const el = document.querySelector(`[data-tex="${k}"]`); if (!el) return;
-  if (!window.katex || !v) { el.textContent = ''; return; }
-  const tex = v.includes('$') ? v.replace(/\$/g, ' ') : /[가-힣]/.test(v) ? `\\text{${v.replace(/[{}\\]/g, '')}}` : v;
-  try { window.katex.render(tex, el, {throwOnError: false}); } catch (e) { el.textContent = ''; }
+  el.innerHTML = v ? texSVG(v, 17, st.scene.style) : '';
 }
 
 /* ── readouts and the graph ── */
 const fmt = v => Number.isFinite(v) ? (Math.abs(v) >= 1000 ? v.toFixed(0) : Math.abs(v) >= 100 ? v.toFixed(1) : v.toFixed(2)) : '—';
 function paintReadouts() {
   const box = $('readouts'); if (!box) return;
-  if (!st.readouts || !st.sim) { box.innerHTML = ''; return; }
+  if (!st.readouts) { box.innerHTML = ''; return; }
+  if (!st.sim) { box.innerHTML = staticReadouts(); return; }
   const sim = st.sim, poses = sim.poses(), vel = sim.velocities(), acc = sim.accelerations(), e = sim.energy(), ten = sim.tensions(), R = T.rd;
   const ids = [...poses.keys()];
   const keys = [...ids.map(id => ['v:' + id, R.speedOf(id)]), ...ids.map(id => ['y:' + id, R.yOf(id)]), ...ids.map(id => ['x:' + id, R.xOf(id)]), ['energy', R.energy], ...Object.keys(ten).map(id => ['T:' + id, R.tensionOf(id)])];
@@ -380,6 +542,36 @@ function paintReadouts() {
       <tr><td>${R.K}</td><td>${fmt(e.K)} J</td></tr><tr><td>${R.U}</td><td>${fmt(e.Ug + e.Us)} J</td></tr><tr><td>${R.E}</td><td>${fmt(e.E)} J</td></tr>${e.heat > 1e-9 ? `<tr><td>${R.heat}</td><td>${fmt(e.heat)} J</td></tr>` : ''}</tbody></table></div>
     <div class="graph"><label class="note">${R.graph} <select id="gSel">${keys.map(([k, n]) => `<option value="${esc(k)}"${k === st.graph ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select></label>${graphSvg()}</div>`;
   $('gSel').onchange = e2 => { st.graph = e2.target.value; paintReadouts(); };
+}
+/* what the figure computes when nothing moves: the circuit's currents and voltages and its RC (RL) transient, a cycle's
+   work and efficiency, an image's place, a fringe spacing, a well's energies… */
+const sig = v => typeof v === 'number' ? (Math.abs(v) >= 1e4 || (Math.abs(v) < 1e-3 && v !== 0) ? v.toExponential(2) : +v.toPrecision(4) + '') : v;
+const si = (v0, u) => { const v = +(+v0).toPrecision(6), a = Math.abs(v); const [k, p] = a >= 1e6 ? [1e-6, 'M'] : a >= 1e3 ? [1e-3, 'k'] : a >= 1 || a === 0 ? [1, ''] : a >= 1e-3 ? [1e3, 'm'] : a >= 1e-6 ? [1e6, 'μ'] : [1e9, 'n']; return `${+(v * k).toPrecision(4)} ${p}${u}`; };
+function staticReadouts() {
+  const parts = [];
+  if (st.solve) {
+    const c = st.circuit || solveCircuit(st.scene);
+    if (!c.ok) parts.push(`<p class="note bad">${X2.circuit}: ${esc(X2.noCircuit[c.code] || c.code)}</p>`);
+    else {
+      const rows = [...c.el].filter(([id]) => byId(id)?.kind !== 'wire').map(([id, r]) => `<tr><td>${esc(id)}</td><td>${esc(X2.kinds[byId(id).kind])}</td><td>${si(Math.abs(r.drop) < 1e-6 ? 0 : r.drop, 'V')}</td><td>${si(Math.abs(r.I) < 1e-9 ? 0 : r.I, 'A')}</td></tr>`).join('');
+      parts.push(`<div><table><thead><tr><th>${X2.element}</th><th></th><th>${X2.drop} V₁−V₂</th><th>${X2.current} (1→2)</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+      for (const t of c.transients) {
+        const N = 120, pts = Array.from({length: N + 1}, (_, i) => { const tt = 5 * t.tau * i / N; return {t: tt, v: t.at(tt)}; }), lo = Math.min(0, ...pts.map(p => p.v)), hi = Math.max(1e-12, ...pts.map(p => p.v));
+        const Xg = tt => 34 + tt / (5 * t.tau) * 258, Yg = v => 108 - (v - lo) / ((hi - lo) || 1) * 96;
+        parts.push(`<div class="graph"><div class="note">${esc(X2.charging(t.id))} · ${X2.tau} = ${si(t.tau, 's')} · ${X2.rth} = ${si(t.R, 'Ω')} · ${t.kind === 'rc' ? X2.vFinal : X2.iFinal} = ${si(t.final, t.kind === 'rc' ? 'V' : 'A')}</div>
+          <svg viewBox="0 0 300 120" role="img"><line x1="34" y1="108" x2="292" y2="108" stroke="currentColor" stroke-opacity=".35"/><line x1="34" y1="10" x2="34" y2="108" stroke="currentColor" stroke-opacity=".35"/>
+          <line x1="${Xg(t.tau).toFixed(1)}" y1="10" x2="${Xg(t.tau).toFixed(1)}" y2="108" stroke="currentColor" stroke-opacity=".3" stroke-dasharray="3 3"/><text x="${Xg(t.tau).toFixed(1)}" y="119" font-size="9" text-anchor="middle" fill="currentColor">τ</text>
+          <text x="30" y="14" font-size="9" text-anchor="end" fill="currentColor">${sig(hi)}</text><text x="292" y="119" font-size="9" text-anchor="end" fill="currentColor">5τ</text>
+          <polyline points="${pts.map(p => `${Xg(p.t).toFixed(1)},${Yg(p.v).toFixed(1)}`).join(' ')}" fill="none" stroke="#3b6fd8" stroke-width="1.6"/></svg></div>`);
+      }
+    }
+  }
+  const info = computedInfo(st.scene).map(c => {
+    const v = Object.fromEntries(Object.entries(c).map(([k, x]) => [k, Array.isArray(x) ? (c.type === 'levels' ? x.map(t => `${t.from}→${t.to}: ${t.lambda.toFixed(1)} nm`).join(', ') : x.map(e => sig(e) + ' eV').join(', ')) : k === 'dy' ? si(x, 'm') : sig(x)]));
+    const line = X2.infoT[c.type]?.(v); return line ? `<li><b>${esc(c.id)}</b> ${esc(line)}</li>` : '';
+  }).join('');
+  if (info) parts.push(`<div><div class="note">${X2.info}</div><ul class="info">${info}</ul></div>`);
+  return parts.join('');
 }
 function graphSvg() {
   const k = st.graph, data = st.samples.map(s => ({t: s.t, v: k === 'energy' ? s.E : k.startsWith('T:') ? s.tension[k.slice(2)] : s[k]})).filter(d => Number.isFinite(d.v));
@@ -413,10 +605,16 @@ function paintSimBar() {
 }
 
 /* ── export ── */
-function exportSvg() {
+/* for the paper: the figure is printed about 70 mm wide (a column) (at most 62 mm high), so labels are drawn to come out near
+   3.3 mm (about 9.5 pt) there, and lines a little heavier */
+function paperScale() {
+  const v = view(), h = W * v.h / v.w, mm = Math.min(70, 62 * W / h), px = mm / W;
+  return {labelScale: Math.max(1, Math.min(3, 3.3 / (15 * px))), strokeScale: Math.max(1, Math.min(2, 0.3 / (1.7 * px)))};
+}
+function exportSvg(paper = false) {
   const sc = st.sim ? st.sim.applyTo(st.scene) : st.scene;
   let forces = null; if (st.fbd) { try { forces = (st.sim || buildSim(st.scene)).forces(); } catch (e) {} }
-  return renderSVG(sc, {width: W, view: view(), forces, poses: st.sim ? st.sim.poses() : null, velocities: st.sim ? st.sim.velocities() : null, anchors: st.sim?.anchors, title: st.scene.title || T.title,
+  return renderSVG(sc, {width: W, view: view(), forces, circuit: st.solve ? solveCircuit(st.scene) : null, ...(paper ? paperScale() : {}), poses: st.sim ? st.sim.poses() : null, velocities: st.sim ? st.sim.velocities() : null, anchors: st.sim?.anchors, title: st.scene.title || T.title,
     conical: st.scene.objects.filter(o => (o.type === 'string' || o.type === 'rod') && o.mode === 'conical').map(conicalOrbit).filter(Boolean)});
 }
 const b64 = s => { const bytes = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(bin); };
@@ -431,7 +629,7 @@ function pngBlob(svg) {
   });
 }
 function toPaper() {
-  const svg = exportSvg(), src = svgDataUrl(svg), m = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
+  const svg = exportSvg(true), src = svgDataUrl(svg), m = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
   let paper;
   try { paper = JSON.parse(store.get(PAPER_KEY) || 'null'); } catch (e) { paper = null; }
   if (!paper || !Array.isArray(paper.items)) paper = {title: '', school: '', info: '', minutes: '', note: '', two: true, key: true, sol: false, space: false, bp: false, items: []};
@@ -522,27 +720,65 @@ function paintAi() {
 }
 
 /* ── the page ── */
-const PALETTE = [['bodies', ['block', 'ball']], ['surfaces', ['floor', 'incline', 'wall', 'ceiling', 'pulley', 'pivot']], ['links', ['string', 'rod', 'spring', 'force']], ['marks', ['label', 'dim', 'arc', 'axes', 'line']]];
+/* the palette: a tab a domain, or every match of the search */
+function paintPalette() {
+  const box = $('palette'); if (!box) return;
+  const q = st.q.trim().toLowerCase();
+  const entries = q ? Object.entries(PALETTE).flatMap(([d, list]) => list.map((e, i) => [d, i, e]).filter(([, , e]) => (e[2] + ' ' + e[0] + ' ' + (e[1].kind || '') + ' ' + PAL_EN[d]).toLowerCase().includes(q) || e[2].toLowerCase().includes(q)))
+    : PALETTE[st.dom].map((e, i) => [st.dom, i, e]);
+  box.innerHTML = `<div class="tabs" role="tablist">${Object.keys(PALETTE).map(d => `<button type="button" role="tab" data-dom="${d}" aria-selected="${!q && d === st.dom}" class="${!q && d === st.dom ? 'on' : ''}">${X2.domains[d]}</button>`).join('')}</div>
+    <div class="items">${entries.map(([d, i, e]) => `<button type="button" data-add="${d}:${i}" class="${st.connect?.type === e[0] ? 'on' : ''}">${esc(e[2])}</button>`).join('') || `<span class="note">—</span>`}</div>`;
+  box.querySelectorAll('[data-dom]').forEach(b => b.onclick = () => { st.dom = b.dataset.dom; st.q = ''; const s2 = $('palSearch'); if (s2) s2.value = ''; paintPalette(); height(); });
+  box.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { const [d, i] = b.dataset.add.split(':'), e = PALETTE[d][+i]; addObject(e[0], clone(e[1])); });
+}
+/* the symbol picker: inserts into the text field last used, or adds a label */
+function openSymbols() {
+  let pop = $('symPop');
+  if (pop) { pop.hidden = !pop.hidden; if (!pop.hidden) pop.querySelector('button')?.focus(); return; }
+  pop = document.createElement('div'); pop.id = 'symPop'; pop.className = 'sympop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', X2.symTitle);
+  pop.innerHTML = `<div class="symhead"><b>${X2.symTitle}</b><button type="button" data-close aria-label="✕">✕</button></div><p class="note">${X2.symHint}</p>${SYMBOLS.map(([g, list]) => `<div class="symgrp"><div class="note">${esc(g)}</div><div class="syms">${list.map(([tex]) => `<button type="button" data-tex="${esc(tex)}" title="${esc(tex)}">${texSVG(tex, 17, st.scene.style)}</button>`).join('')}</div></div>`).join('')}`;
+  $('stageTop').after(pop);
+  pop.querySelector('[data-close]').onclick = () => { pop.hidden = true; };
+  pop.querySelectorAll('[data-tex]').forEach(b => b.onclick = () => insertSymbol(b.dataset.tex));
+  height();
+}
+function insertSymbol(tex) {
+  const t = st.lastText, o = t && byId(t.id);
+  if (o && FIELDS[o.type][t.k]?.k === 'txt') {
+    const el = document.querySelector(`[data-f="${t.k}"]`), cur = String(o[t.k] || ''), a = el && document.activeElement === el ? el.selectionStart : (el?._caret ?? cur.length), b = el && document.activeElement === el ? el.selectionEnd : a;
+    const val = (cur.slice(0, a) + tex + (/^\\[A-Za-z]+$/.test(tex) && /^[A-Za-z]/.test(cur.slice(b)) ? ' ' : '') + cur.slice(b)).slice(0, FIELDS[o.type][t.k].max);
+    const next = clone(st.scene); next.objects.find(x => x.id === o.id)[t.k] = val;
+    if (commit(next, {keepSel: true})) { st.sel = o.id; paint(); const el2 = document.querySelector(`[data-f="${t.k}"]`); if (el2) { el2.focus(); const c = Math.min(val.length, a + tex.length); el2.setSelectionRange(c, c); el2._caret = c; } }
+    return;
+  }
+  const v = view(), next = clone(st.scene), id = freeId('label');
+  next.objects.push({...defaults('label'), id, x: r4(snapV(v.x + v.w / 2)), y: r4(snapV(v.y + v.h / 2)), text: tex});
+  if (commit(next)) { st.sel = id; st.lastText = {id, k: 'text'}; paint(); }
+}
 function shell() {
   $('app').innerHTML = `<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div></div>
-    <div class="dbar"><select id="tpl" aria-label="${T.template}"><option value="">${T.template}…</option>${TEMPLATE_KEYS.map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}<option value="blank">${T.blank}</option></select>
+    <div class="dbar"><select id="tpl" aria-label="${T.template}"><option value="">${T.template}…</option>${Object.keys(DOMAINS).map(d => `<optgroup label="${esc(X2.domains[d])}">${TEMPLATE_KEYS.filter(k => TEMPLATE_DOMAIN[k] === d).map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}</optgroup>`).join('')}<option value="blank">${T.blank}</option></select>
+      <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bSym">${X2.symbols}</button>
       <label class="btn filebtn">📷 ${T.photo}<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/*"></label><span class="sep"></span>
       <button type="button" id="bUndo" title="Ctrl+Z">↶ ${T.undo}</button><button type="button" id="bRedo" title="Ctrl+Y">↷ ${T.redo}</button><button type="button" id="bDup" title="Ctrl+D">${T.dup}</button><button type="button" id="bDel" title="Delete">${T.del}</button><span class="sep"></span>
       <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><button type="button" id="bFit">${T.fit}</button></div>
     <div id="aiNote" class="ainote" hidden></div>
-    <div class="work"><nav class="palette" aria-label="${T.groups.bodies}">${PALETTE.map(([g, types]) => `<div class="grp"><h3>${T.groups[g]}</h3>${types.map(t => `<button type="button" data-add="${t}">${T.types[t]}</button>`).join('')}</div>`).join('')}</nav>
-      <section class="stage"><div id="canvas" class="canvas"></div><p id="status" class="status" role="status"></p>
+    <div class="work"><nav class="palwrap" aria-label="${X2.search}"><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></nav>
+      <section class="stage"><div id="stageTop"></div><div id="canvas" class="canvas"></div><p id="status" class="status" role="status"></p>
         <div class="simbar"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
-          <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><span class="clock" id="clock"></span></div>
+          <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
         <div id="readouts" class="readouts"></div></section>
       <div class="side"><section class="panel" id="props"></section><section class="panel" id="out"></section></div></div>`;
-  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; st.sel = ''; commit(k === 'blank' ? {...blankScene(), view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene); };
+  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; st.sel = ''; if (TEMPLATE_DOMAIN[k]) st.dom = TEMPLATE_DOMAIN[k]; commit(k === 'blank' ? {...blankScene(), view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene); };
   $('photo').onchange = e => { const f = e.target.files[0]; e.target.value = ''; photoFile(f); };
   $('bUndo').onclick = undo; $('bRedo').onclick = redo; $('bDup').onclick = dup; $('bDel').onclick = del;
   $('cGrid').onchange = e => { st.grid = e.target.checked; paintCanvas(); }; $('cSnap').onchange = e => { st.snap = e.target.checked; };
   $('bFit').onclick = () => { const next = clone(st.scene); next.view = sceneBounds(next); commit(next, {keepSel: true}); };
-  document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => addObject(b.dataset.add));
+  $('palSearch').oninput = e => { st.q = e.target.value; paintPalette(); height(); };
+  $('styleSel').onchange = e => { const next = clone(st.scene); next.style = e.target.value; commit(next, {keepSel: true}); const pop = $('symPop'); if (pop) { pop.remove(); } };
+  $('bSym').onclick = openSymbols;
+  $('cSolve').onchange = e => { st.solve = e.target.checked; paintCanvas(); paintReadouts(); };
   $('playBtn').onclick = () => st.playing ? pause() : play();
   $('resetBtn').onclick = () => { stopSim(); paint(); };
   $('speed').onchange = e => { st.speed = +e.target.value; };
@@ -551,13 +787,14 @@ function shell() {
   bindCanvas(); paint(); paintOut();
 }
 function paint() {
-  paintCanvas(); paintSide(); paintReadouts(); paintSimBar(); status(); paintAi();
-  document.querySelectorAll('[data-add]').forEach(b => b.classList.toggle('on', st.connect?.type === b.dataset.add));
+  paintCanvas(); paintSide(); paintReadouts(); paintSimBar(); status(); paintAi(); paintPalette();
+  if ($('styleSel')) $('styleSel').value = st.scene.style;
   if ($('bUndo')) { $('bUndo').disabled = !st.undo.length; $('bRedo').disabled = !st.redo.length; $('bDel').disabled = !st.sel; $('bDup').disabled = !st.sel; }
   height();
 }
 function height() { if (embedded) requestAnimationFrame(() => window.parent.postMessage({type: 'hl-draw-height', height: Math.ceil(document.querySelector('main').getBoundingClientRect().bottom + scrollY + 16)}, location.origin)); }
-if (typeof ResizeObserver === 'function') new ResizeObserver(height).observe(document.body);
+let lastW = 0;
+if (typeof ResizeObserver === 'function') new ResizeObserver(() => { height(); const w = $('canvas')?.clientWidth || 0; if (w && Math.abs(w - lastW) > 30) { lastW = w; paintCanvas(); } }).observe(document.body);
 addEventListener('keydown', e => {
   if (e.target.closest?.('input,textarea,select')) return;
   const mod = e.ctrlKey || e.metaKey;

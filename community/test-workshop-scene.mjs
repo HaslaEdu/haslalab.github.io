@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {createWorkshopSceneRouter, cleanImage, sceneFromAnswer, SCENE_PATH, SCENE_DAILY, SCENE_IMAGE_BYTES} from './src/workshop-scene.js';
+import {createWorkshopSceneRouter, cleanImage, sceneFromAnswer, SCENE_PATH, SCENE_DAILY, SCENE_IMAGE_BYTES, SCENE_RESPONSE, scenePolicy} from './src/workshop-scene.js';
 import {validateScene, UNSURE_FIELDS} from '../draw-scene.mjs';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
@@ -94,4 +94,26 @@ test(`${SCENE_DAILY} a day; a failure on our side is given back; no provider, no
   const n=setup(GOOD,{provider:false});
   await fails(n.call({image:jpeg()}),'ai_unavailable',503);assert.equal(n.calls.length,0);
   void db;
+});
+
+test('beyond mechanics: a circuit, a lens and a field come back as version-2 objects; the schema lists their fields',async()=>{
+  const answer={physics:true,objects:[
+    {id:'E1',type:'element',kind:'battery',x1:0,y1:0,x2:0,y2:2,value:9,label:'\\mathcal{E}'},
+    {id:'R1',type:'element',kind:'resistor',x1:0,y1:2,x2:2,y2:2,value:100,label:'R_1'},
+    {id:'W1',type:'element',kind:'wire',x1:2,y1:2,x2:0,y2:0,route:'vh'},
+    {id:'L1',type:'lens',x:3,y:0,h:1.5,f:-1,label:'L'},
+    {id:'B1',type:'field',x:0,y:3,w:2,h:1,kind:'B',dir:'out',label:'\\vec{B}'},
+    {id:'X1',type:'element',kind:'transistor',x1:0,y1:0,x2:1,y2:0},
+    {id:'q1',type:'charge',x:1,y:1,q:-2,label:'<b>q</b>'}],unsure:[{id:'L1',what:'focal'},{id:'q1',what:'charge'}]};
+  const {call}=setup(answer);
+  const r=await call({image:jpeg()});
+  assert.equal(r.scene.version,2);assert.ok(validateScene(r.scene).ok);
+  assert.deepEqual(r.scene.objects.map(o=>o.id),['E1','R1','W1','L1','B1','q1'],'an unknown kind is dropped');
+  assert.equal(r.scene.objects.find(o=>o.id==='q1').label,'','markup is not a label');
+  assert.ok(r.unsure.some(u=>u.id==='L1'&&u.what==='focal'));
+  const props=SCENE_RESPONSE.properties.objects.items.properties;
+  for(const k of ['kind','value','x1','f','q','dir','route','expr'])assert.ok(props[k],k);
+  assert.ok(props.kind.enum.includes('capacitor')&&props.type.enum.includes('lens'));
+  assert.match(scenePolicy(),/element \{x1,y1,x2,y2,kind/);
+  const n=setup({physics:false,objects:[],unsure:[]});await fails(n.call({image:jpeg()}),'not_mechanics',422);
 });

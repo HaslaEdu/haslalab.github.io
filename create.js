@@ -125,16 +125,13 @@ loop(dt=>{
     else codeProblem($('stagebox'),c,done);
     height();
   }
-  /* a simulation runs in sim-sandbox.html: an opaque-origin frame that cannot read this site or reach the network */
+  /* a simulation runs in sim-sandbox.html: an opaque-origin frame that cannot read this site or reach the network
+     (create-studio.js opens it and checks every message it sends) */
+  let current=null;
   function runSim(box,code){
-    box.innerHTML=`<iframe class="sim" sandbox="allow-scripts" src="sim-sandbox.html" title="simulation"></iframe>`;
-    const f=box.querySelector('iframe');
-    const on=e=>{
-      if(e.source!==f.contentWindow)return;
-      if(e.data?.type==='sim-ready')f.contentWindow.postMessage({type:'run',code,theme:dark?'dark':'light'},'*');
-      if(e.data?.type==='sim-height'&&Number.isFinite(e.data.height)){f.style.height=Math.min(1200,Math.max(380,e.data.height))+'px';height();}
-    };
-    addEventListener('message',on);
+    if(current)current.stop();
+    const r=current=window.HL_STUDIO.runSandbox(box,{code,dark,onHeight:h=>{r.frame.style.height=Math.min(1200,Math.max(380,h))+'px';height();}});
+    return r;
   }
   /* the experiment's question, answered on the same keypad syntax as the practice page (math-input.js) */
   function answerFrom(text){
@@ -186,48 +183,26 @@ loop(dt=>{
     if(all)done();height();
   }
 
-  /* ── the editor: a new creation, an edit of one's own, or a remix ── */
+  /* ── the editor (create-studio.js): a new creation, an edit of one's own, or a remix. Anyone can write and run code;
+     saving, publishing and the AI need a login. ── */
+  let studio=null;
   async function edit(id){
-    if(!token()){$('app').innerHTML=`<button type="button" class="back" id="back">${T.back}</button><p class="note">${T.login}</p><p><a class="btn primary" href="/#/login" target="_top">${T.loginBtn}</a></p>`;$('back').onclick=()=>go('gallery');height();return;}
-    let c={kind:'sim',title:'',summary:'',body:'',code:'',starter:'',grader:'',answer:'',unit:''};
-    if(id){try{c=(await api('/api/creations/'+encodeURIComponent(id))).creation;}catch(e){}}
-    else{try{const d=JSON.parse(sessionStorage.getItem('hlCreateDraft')||'null');if(d){c={...c,...d};sessionStorage.removeItem('hlCreateDraft');}}catch(e){}}
-    $('app').innerHTML=`<button type="button" class="back" id="back">${T.back}</button><h1>${id?T.edit:T.make}</h1>
-      <form id="ef" class="editor">
-        <label>${T.kind}<select name="kind"><option value="sim">${T.sim}</option><option value="code">${T.code}</option></select></label>
-        <label>${T.name}<input name="title" maxlength="80" required></label>
-        <label>${T.summary}<input name="summary" maxlength="200"></label>
-        <div class="only-sim"><label>${T.codeSim}<textarea name="code" class="code" rows="16" spellcheck="false"></textarea></label><p class="help"><b>${T.helpers}</b> ${esc(T.helpSim)}</p>
-          <label>${T.qText}<textarea name="body" rows="3"></textarea></label><div class="two"><label>${T.ans}<input name="answer" maxlength="400" spellcheck="false"></label><label>${T.unit}<input name="unit" maxlength="24"></label></div></div>
-        <div class="only-code"><label>${T.body}<textarea name="bodyc" rows="5"></textarea></label><label>${T.starter}<textarea name="starter" class="code" rows="8" spellcheck="false"></textarea></label>
-          <label>${T.grader}<textarea name="grader" class="code" rows="12" spellcheck="false"></textarea></label><p class="help">${esc(T.helpCode)}</p></div>
-        <div class="row"><button type="button" id="tpl">${T.template}</button><button type="button" id="pv">${T.preview}</button><button type="submit" class="primary">${T.save}</button><span class="note" id="emsg"></span></div>
-      </form><div id="pvbox"></div>`;
-    const f=$('ef');
-    const fill=c=>{f.kind.value=c.kind;f.title.value=c.title||'';f.summary.value=c.summary||'';f.code.value=c.code||'';f.body.value=c.kind==='sim'?c.body||'':'';f.bodyc.value=c.kind==='code'?c.body||'':'';
-      f.answer.value=c.answer||'';f.unit.value=c.unit||'';f.starter.value=c.starter||'';f.grader.value=c.grader||'';kindView();};
-    const kindView=()=>{const k=f.kind.value;f.querySelector('.only-sim').hidden=k!=='sim';f.querySelector('.only-code').hidden=k!=='code';height();};
-    const read=()=>{const k=f.kind.value;return{kind:k,title:f.title.value.trim(),summary:f.summary.value.trim(),body:k==='sim'?f.body.value:f.bodyc.value,
-      code:k==='sim'?f.code.value:'',answer:k==='sim'?f.answer.value.trim():'',unit:k==='sim'?f.unit.value.trim():'',starter:k==='code'?f.starter.value:'',grader:k==='code'?f.grader.value:''};};
-    fill(c);f.kind.onchange=kindView;
-    for(const ta of f.querySelectorAll('textarea.code'))ta.onkeydown=e=>{if(e.key==='Tab'&&!e.shiftKey){e.preventDefault();const s=ta.selectionStart;ta.setRangeText('    ',s,ta.selectionEnd,'end');}};
-    $('back').onclick=()=>go('gallery');
-    $('tpl').onclick=()=>{const t=TEMPLATE[f.kind.value];fill({...t,title:f.title.value||t.title,summary:f.summary.value||t.summary});};
-    $('pv').onclick=()=>{const d=read();if(d.kind==='sim'){runSim($('pvbox'),d.code);if(d.answer)question(document.createElement('div'),d,()=>{});}else codeProblem($('pvbox'),{...d,id:'preview'},()=>{});height();};
-    f.onsubmit=async e=>{
-      e.preventDefault();const d=read();if(d.answer&&!answerFrom(d.answer)){$('emsg').textContent=T.ans;return;}
-      try{
-        if(id){await api('/api/creations/'+id,'PATCH',d);go('play',id);}
-        else{const r=await api('/api/creations','POST',{...d,...(Number.isInteger(c.forked_from)?{forked_from:c.forked_from}:{})});go('play',r.id);}
-      }catch(err){$('emsg').textContent=errText(err);}
-    };
-    height();
+    let c={kind:'sim',title:'',summary:'',body:'',code:'',starter:'',grader:'',answer:'',unit:''},fromDraft=false;
+    if(id){
+      if(!token()){$('app').innerHTML=`<button type="button" class="back" id="back">${T.back}</button><p class="note">${T.login}</p><p><a class="btn primary" href="/#/login" target="_top">${T.loginBtn}</a></p>`;$('back').onclick=()=>go('gallery');height();return;}
+      try{c=(await api('/api/creations/'+encodeURIComponent(id))).creation;}catch(e){$('app').innerHTML=`<p class="note">${esc(errText(e))}</p><button type="button" id="back">${T.back}</button>`;$('back').onclick=()=>go('gallery');height();return;}
+    }
+    else{try{const d=JSON.parse(sessionStorage.getItem('hlCreateDraft')||'null');if(d){c={...c,...d};fromDraft=true;sessionStorage.removeItem('hlCreateDraft');}}catch(e){}}
+    studio=window.HL_STUDIO.open({root:$('app'),T,lang,dark,creation:c,id:id||null,fresh:!id,fromDraft,api,apiBase:API,token,errText,answerFrom,go,height,codeTemplate:TEMPLATE.code});
   }
 
   function route(){
     const v=new URL(location.href).searchParams;
     for(const k of ['kind','sort','mine'])params.set(k,v.get(k)||'');
     const view=v.get('view')||'gallery',id=v.get('id');
+    if(studio){studio.stop();studio=null;}
+    if(current){current.stop();current=null;}
+    if(view!=='edit')document.querySelector('main')?.classList.remove('wide');
     if(view==='play'&&id)play(id);else if(view==='edit')edit(id);else gallery();
     window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-create-top'},location.origin);
   }

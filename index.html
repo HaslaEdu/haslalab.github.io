@@ -1035,7 +1035,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=0667c5b6dfca">
+<link rel="stylesheet" href="site-design.css?v=24167dfe6480">
 <link rel="stylesheet" href="guide.css?v=022546be75f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
@@ -1191,7 +1191,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="logo/variants.js?v=f186eafdba6b"></script>
 <script src="site-design.js?v=acd39be705c0"></script>
 <script src="hpho.js?v=ea67208eda3b"></script>
-<script src="guides.js?v=2d9259befa65"></script>
+<script src="guides.js?v=34dcae8f0e8d"></script>
 <script src="guide.js?v=3470e35a319e"></script>
 <script src="hpho-proctor.js?v=c8b93c4e12fb"></script>
 <script src="hpho-phone.js?v=3a6015cc1217"></script>
@@ -5467,6 +5467,13 @@ function learnStudioHeading(){
   return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/physics">${LEARN.physics.name[lang]}</a> / ${label}</p>
     <h1>${label}</h1><p class="learn-tool-copy">${ko?"문제 제작 · 문제 디지털화 · 문제 검색":LX("Problem creation · Problem digitization · Problem search")}</p>`;
 }
+/* A message from one of this page's same-origin tool frames (practice, studio, teach, draw, ...). WebKit (Safari and
+   every iOS browser) gives a frame's postMessage made in an arrow-function callback (requestAnimationFrame,
+   ResizeObserver, timers) this window as event.source instead of the frame, so the frames' height reports were
+   dropped there and each frame stayed 1050px tall with the rest cut off. The origin check keeps other sites out. */
+function fromSameOriginFrame(event,frame){
+  return !!frame&&event.origin===location.origin&&(event.source===frame.contentWindow||event.source===window);
+}
 function learnStudioMode(){
   const mode=new URLSearchParams(location.hash.split("?")[1]||"").get("mode");
   return ["generate","digitize","restore"].includes(mode)?mode:"generate";
@@ -5486,7 +5493,7 @@ function syncLearnStudio(){
 }
 addEventListener("message",event=>{
   const frame=document.getElementById("learnStudioFrame");
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(!fromSameOriginFrame(event,frame))return;
   if(event.data?.type==="hl-studio-height"&&Number.isFinite(event.data.height))
     frame.style.height=Math.max(600,Math.min(30000,Math.ceil(event.data.height)))+"px";
   if(event.data?.type==="hl-studio-dialog"&&Number.isFinite(event.data.top)&&Number.isFinite(event.data.height)&&event.data.top>=0&&event.data.top<=30000&&event.data.height>0&&event.data.height<=4000){
@@ -5509,7 +5516,7 @@ function viewLearnConcepts(){
 }
 addEventListener("message",event=>{
   const frame=document.getElementById("learnConceptsFrame");
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(!fromSameOriginFrame(event,frame))return;
   const d=event.data||{};
   if(d.type==="hl-concepts-height"&&Number.isFinite(d.height))frame.style.height=Math.max(700,Math.min(30000,Math.ceil(d.height)))+"px";
   if(d.type==="hl-concepts-sim"&&/^[a-z0-9-]{2,40}$/.test(d.sim||"")){try{history.replaceState(null,"","#/learn/concepts?sim="+d.sim);}catch(e){}}
@@ -5535,7 +5542,7 @@ function viewLearnPractice(){
 }
 addEventListener("message",event=>{
   const frame=document.getElementById("learnPracticeFrame");
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(!fromSameOriginFrame(event,frame))return;
   if(event.data?.type==="hl-practice-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(600,Math.min(30000,Math.ceil(event.data.height)))+"px";
   if(event.data?.type==="hl-practice-goal")homeGoalMoment(event.data);
   if(event.data?.type==="hl-practice-top"){const top=frame.getBoundingClientRect().top+scrollY-120;if(scrollY>top)scrollTo({top:Math.max(0,top)});}
@@ -5564,7 +5571,7 @@ function viewWorkshopCreate(){
 }
 addEventListener("message",event=>{
   const frame=document.getElementById("learnCreateFrame");
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(!fromSameOriginFrame(event,frame))return;
   if(event.data?.type==="hl-create-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(640,Math.min(30000,Math.ceil(event.data.height)))+"px";
   if(event.data?.type==="hl-create-top"){const top=frame.getBoundingClientRect().top+scrollY-120;if(scrollY>top)scrollTo({top:Math.max(0,top)});}
 });
@@ -5578,7 +5585,7 @@ function viewWorkshopMake(){
 }
 addEventListener("message",event=>{
   const frame=document.getElementById("learnTeachFrame");
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(!fromSameOriginFrame(event,frame))return;
   if(event.data?.type==="hl-teach-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(640,Math.min(30000,Math.ceil(event.data.height)))+"px";
 });
 
@@ -5593,7 +5600,7 @@ function viewWorkshopDraw(){
 }
 addEventListener("message",event=>{
   const frame=document.getElementById("learnDrawFrame");
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(!fromSameOriginFrame(event,frame))return;
   if(event.data?.type==="hl-draw-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(640,Math.min(30000,Math.ceil(event.data.height)))+"px";
 });
 
@@ -5781,7 +5788,7 @@ function viewLearnCompute(){
 }
 addEventListener("message",event=>{
   const frame=document.getElementById("learnComputeFrame");
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(!fromSameOriginFrame(event,frame))return;
   if(event.data?.type==="hl-compute-height"&&Number.isFinite(event.data.height))frame.style.height=Math.max(700,Math.min(30000,Math.ceil(event.data.height)))+"px";
   if(event.data?.type==="hl-compute-problem"&&/^[a-z0-9-]{2,40}$/.test(event.data.problem||"")){try{history.replaceState(null,"","#/learn/compute?problem="+event.data.problem);}catch(e){}}
 });
@@ -5805,7 +5812,7 @@ function syncLearnSearch(){
 }
 addEventListener('message',event=>{
   const frame=document.getElementById('learnSearchFrame');
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(!fromSameOriginFrame(event,frame))return;
   if(event.data?.type==='hl-problem-search-height'&&Number.isFinite(event.data.height))frame.style.height=Math.max(600,Math.min(30000,Math.ceil(event.data.height)))+'px';
 });
 if(typeof MutationObserver==='function')new MutationObserver(syncLearnSearch).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});

@@ -3,67 +3,325 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- A member's simulation runs here, in a frame the page opens with sandbox="allow-scripts" and no allow-same-origin:
-     it has no access to the site's storage or cookies, and this policy lets it reach nothing on the network. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'">
+<!-- A member's simulation (or code the Workshop's AI wrote) runs here, in a frame the page opens with
+     sandbox="allow-scripts" and no allow-same-origin: an opaque origin with no access to the site's storage, cookies or
+     tokens, no popups, dialogs, downloads or top navigation, and this policy lets it reach nothing on the network. The code
+     is added as an inline script (so no 'unsafe-eval'), and only once, only when this document really is opaque. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; worker-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Simulation</title>
 <style>
-:root{color-scheme:light;--ink:#263247;--muted:#657187;--line:#d5dbe6;--accent:#7059a4}
-:root[data-theme=dark]{color-scheme:dark;--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--accent:#bca0ed}
+:root{color-scheme:light;--ink:#263247;--muted:#657187;--line:#d5dbe6;--accent:#7059a4;--stage:#fbfcfd;--soft:#ebe5f4}
+:root[data-theme=dark]{color-scheme:dark;--ink:#ebe8f5;--muted:#aca6bd;--line:#3b344d;--accent:#bca0ed;--stage:#15131c;--soft:#30243f}
 *{box-sizing:border-box}html,body{margin:0;background:transparent;color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
-#stage{display:block;width:100%;height:360px;border:1px solid var(--line);border-radius:12px;background:#fbfcfd}
-:root[data-theme=dark] #stage{background:#15131c}
-#ui{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:10px;align-items:center}
-#ui label{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}#ui label b{color:var(--ink);font-weight:600;min-width:3.5em}
-#ui input[type=range]{width:140px;accent-color:var(--accent)}
-#ui button{font:inherit;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:5px 12px;cursor:pointer}
+#stage{display:block;width:100%;height:360px;border:1px solid var(--line);border-radius:12px;background:var(--stage);touch-action:none;outline:none}
+#stage:focus-visible{border-color:var(--accent)}
+#ctl{display:none;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap}#ctl.on{display:flex}#ctl .t{color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px;margin-left:4px}
+#ui{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:10px;align-items:center}
+#ui label{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted)}#ui label b{color:var(--ink);font-weight:600;min-width:3.5em;font-variant-numeric:tabular-nums}
+#ui input[type=range]{width:140px;accent-color:var(--accent)}#ui input[type=checkbox]{accent-color:var(--accent)}
+button,select{font:inherit;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:5px 12px;cursor:pointer}
+#ctl button{min-width:44px}#ctl button.on{background:var(--soft);border-color:var(--accent)}
 #reads{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:13px;color:var(--muted)}#reads b{color:var(--ink);font-variant-numeric:tabular-nums}
-#err{white-space:pre-wrap;color:#a32f46;font:12px/1.5 ui-monospace,Menlo,monospace;margin-top:8px}
+#plots canvas{display:block;width:100%;height:150px;margin-top:10px;border:1px solid var(--line);border-radius:10px;background:var(--stage)}
+#err{white-space:pre-wrap;color:#a32f46;font:12px/1.5 ui-monospace,Menlo,monospace;margin-top:8px}:root[data-theme=dark] #err{color:#ffb0bd}
+@media(max-width:520px){#ui input[type=range]{width:110px}}
 </style>
 </head>
 <body>
-<canvas id="stage"></canvas>
+<canvas id="stage" tabindex="0" aria-label="simulation"></canvas>
+<div id="ctl"></div>
 <div id="ui"></div>
 <div id="reads"></div>
+<div id="plots"></div>
 <div id="err"></div>
+<script id="hl-lib">
+'use strict';
+/* ── the numerical core: pure functions, tested in tests/test-sim-helpers.cjs ── */
+/* @hl-math-begin */
+const HLMath=(()=>{
+  const arr=y=>Array.isArray(y)?y:[+y];
+  const axpy=(y,d,k)=>{const o=new Array(y.length);for(let i=0;i<y.length;i++)o[i]=y[i]+k*d[i];return o;};
+  /* one explicit Euler step of dy/dt = f(t, y) */
+  function euler(f,y,t,dt){y=arr(y);return axpy(y,arr(f(t,y)),dt);}
+  /* one classical Runge–Kutta (4th order) step */
+  function rk4(f,y,t,dt){
+    y=arr(y);const k1=arr(f(t,y)),k2=arr(f(t+dt/2,axpy(y,k1,dt/2))),k3=arr(f(t+dt/2,axpy(y,k2,dt/2))),k4=arr(f(t+dt,axpy(y,k3,dt)));
+    const o=new Array(y.length);for(let i=0;i<y.length;i++)o[i]=y[i]+dt/6*(k1[i]+2*k2[i]+2*k3[i]+k4[i]);return o;
+  }
+  /* one velocity-Verlet step for x'' = acc(x, v, t): symplectic for forces of position only (springs, gravity, orbits);
+     with a velocity-dependent force (drag, magnetism) the velocity in acc is the one at the start of the step */
+  function verlet(acc,x,v,t,dt){
+    x=arr(x);v=arr(v);const a=arr(acc(x,v,t)),xn=new Array(x.length);
+    for(let i=0;i<x.length;i++)xn[i]=x[i]+v[i]*dt+0.5*a[i]*dt*dt;
+    const an=arr(acc(xn,v,t+dt)),vn=new Array(v.length);for(let i=0;i<v.length;i++)vn[i]=v[i]+0.5*(a[i]+an[i])*dt;
+    return [xn,vn];
+  }
+  /* integrate from t0 to t1 in steps of dt (the last step shortened to land on t1) */
+  function solve(f,y0,t0,t1,dt,method='rk4'){
+    const step=method==='euler'?euler:rk4;let y=arr(y0).slice(),t=t0;const T=[t],Y=[y];
+    const n=Math.ceil((t1-t0)/dt-1e-9);if(!(n>=0)||n>5e6)throw new RangeError('solve: too many steps');
+    for(let i=0;i<n;i++){const h=Math.min(dt,t1-t);y=step(f,y,t,h);t+=h;T.push(t);Y.push(y);}
+    return {t:T,y:Y};
+  }
+  return {euler,rk4,verlet,solve};
+})();
+/* @hl-math-end */
+if(typeof module==='object'&&module.exports)module.exports=HLMath;
+</script>
 <script>
-/* The helpers a simulation is written with (see create.html's reference):
-     W, H          the canvas size in CSS pixels; ctx  its 2D context
-     loop(fn)      fn(dt) every frame, dt in seconds (at most 0.05)
-     slider(label, min, max, step, value)  → a function returning the current value
-     button(label, fn)     show(label, value, unit)     clear()
-     circle(x, y, r, color)  line(x1, y1, x2, y2, color, width)  text(s, x, y, color)  arrow(x1, y1, x2, y2, color) */
+/* The helpers a simulation is written with (create.html's reference lists them):
+   – the original globals, kept for creations written before the `hl` helpers:
+     W, H, ctx, loop(fn), slider(label, min, max, step, value), button(label, fn), show(label, value, unit), clear(),
+     circle(x, y, r, color), line(x1, y1, x2, y2, color, width), text(s, x, y, color), arrow(x1, y1, x2, y2, color)  (pixels)
+   – hl: physics coordinates (metres, y up), declared controls, play/pause/reset, vectors, trails, plots, fixed-step
+     integrators and keyboard/touch input. The same list is the AI's whole API (community/src/workshop-code-ai.js).
+   Messages to the page: sim-ready, sim-height, sim-beat (the page's watchdog), sim-log (console), sim-error (with the
+   line in the member's code). The page sends one message: {type:'run', code, theme}.
+   Everything here is inside one function, so the member's code sees only the globals handed to it below. */
+(()=>{
 'use strict';
 let ctx,W=0,H=0;
-const stage=document.getElementById('stage'),ui=document.getElementById('ui'),reads=document.getElementById('reads'),err=document.getElementById('err');
-function fit(){const r=stage.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);stage.width=Math.round(r.width*d);stage.height=Math.round(r.height*d);ctx=stage.getContext('2d');ctx.setTransform(d,0,0,d,0,0);W=r.width;H=r.height;}
-const frames=[];let last=0,stopped=false;
-function tick(t){if(stopped)return;const dt=last?Math.min(.05,(t-last)/1000):0;last=t;for(const f of frames){try{f(dt);}catch(e){fail(e);return;}}requestAnimationFrame(tick);}
-function loop(fn){frames.push(fn);}
-function slider(label,min,max,step,value){const l=document.createElement('label'),i=document.createElement('input'),b=document.createElement('b');i.type='range';Object.assign(i,{min,max,step,value});b.textContent=value;l.append(String(label),i,b);i.oninput=()=>{b.textContent=i.value;};ui.append(l);return()=>Number(i.value);}
-function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=String(label);b.onclick=()=>{try{fn();}catch(e){fail(e);}};ui.append(b);return b;}
+const $=id=>document.getElementById(id);
+const stage=$('stage'),ui=$('ui'),ctl=$('ctl'),reads=$('reads'),plotsBox=$('plots'),err=$('err');
+const post=m=>{try{parent.postMessage(m,'*');}catch(e){}};
+const theme=()=>document.documentElement.dataset.theme==='dark';
+let fitView=false;
+function fit(){
+  /* in the editor the frame is a fixed pane: the canvas takes most of it and the controls stay in view below */
+  if(fitView)stage.style.height=Math.round(Math.max(200,Math.min(520,innerHeight*0.6)))+'px';
+  const r=stage.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);
+  stage.width=Math.max(1,Math.round(r.width*d));stage.height=Math.max(1,Math.round(r.height*d));ctx=stage.getContext('2d');ctx.setTransform(d,0,0,d,0,0);W=r.width;H=r.height;
+  if(ran){globalThis.W=W;globalThis.H=H;globalThis.ctx=ctx;}
+}
+
+/* ── the loop guard: every while/for condition in the member's code calls __hlG(), which stops a loop that keeps one
+   frame (or one click) busy for more than LOOP_MS, so a mistake cannot freeze the tab ── */
+const LOOP_MS=1500;let sliceStart=0,guardN=0;
+const enter=()=>{sliceStart=performance.now();guardN=0;};
+function __hlG(){if((++guardN&1023)===0&&performance.now()-sliceStart>LOOP_MS)throw new RangeError('A loop ran for more than '+LOOP_MS/1000+' s without finishing: stopped.');return true;}
+/* a small JavaScript scanner (strings, template literals, comments and regular expressions skipped); it changes no line breaks */
+function guardLoops(src){
+  const n=src.length,out=[];let i=0,last='',lastWord='';
+  const regexOk=()=>last===''||/[(,=:[!&|?{};+\-*%<>~^]$/.test(last)||/^(?:return|typeof|case|do|else|in|of|new|delete|void|throw|yield|await)$/.test(lastWord);
+  function skipStr(q,j){j++;while(j<n&&src[j]!==q){if(src[j]==='\\')j++;else if(src[j]==='\n'&&q!=='`')break;else if(q==='`'&&src[j]==='$'&&src[j+1]==='{'){j=skipBraces(j+1);continue;}j++;}return j+1;}
+  function skipBraces(j){let d=0;for(;j<n;j++){const c=src[j];if(c==='"'||c==="'"||c==='`'){j=skipStr(c,j)-1;continue;}if(c==='{')d++;else if(c==='}'){d--;if(!d)return j+1;}}return j;}
+  function skipSpace(j){for(;;){while(j<n&&/\s/.test(src[j]))j++;if(src.startsWith('//',j)){while(j<n&&src[j]!=='\n')j++;continue;}if(src.startsWith('/*',j)){const e=src.indexOf('*/',j+2);j=e<0?n:e+2;continue;}return j;}}
+  /* the index just past the ')' closing the '(' at j, and the top-level ';' positions inside */
+  function header(j){let d=0;const semis=[];for(;j<n;j++){const c=src[j];
+    if(c==='"'||c==="'"||c==='`'){j=skipStr(c,j)-1;continue;}
+    if(c==='/'&&src[j+1]==='/'){while(j<n&&src[j]!=='\n')j++;continue;}
+    if(c==='/'&&src[j+1]==='*'){const e=src.indexOf('*/',j+2);j=e<0?n:e+1;continue;}
+    if(c==='('||c==='['||c==='{')d++;else if(c===')'||c===']'||c==='}'){d--;if(!d)return {end:j+1,semis};}else if(c===';'&&d===1)semis.push(j);}
+    return null;}
+  while(i<n){
+    const c=src[i];
+    if(c==='/'&&src[i+1]==='/'){const e=src.indexOf('\n',i);const k=e<0?n:e;out.push(src.slice(i,k));i=k;continue;}
+    if(c==='/'&&src[i+1]==='*'){const e=src.indexOf('*/',i+2);const k=e<0?n:e+2;out.push(src.slice(i,k));i=k;continue;}
+    if(c==='"'||c==="'"||c==='`'){const k=Math.min(n,skipStr(c,i));out.push(src.slice(i,k));i=k;last=c;lastWord='';continue;}
+    if(c==='/'&&regexOk()){let j=i+1,cls=false;while(j<n&&src[j]!=='\n'){if(src[j]==='\\')j++;else if(src[j]==='[')cls=true;else if(src[j]===']')cls=false;else if(src[j]==='/'&&!cls)break;j++;}
+      j++;while(j<n&&/[a-z]/i.test(src[j]))j++;out.push(src.slice(i,j));i=j;last='r';lastWord='';continue;}
+    if(/[A-Za-z_$]/.test(c)){let j=i;while(j<n&&/[\w$]/.test(src[j]))j++;const w=src.slice(i,j);
+      const prev=out.length?out[out.length-1]:'',dotted=/\.\s*$/.test(prev)&&!/\.\.\.\s*$/.test(prev);
+      if(!dotted&&(w==='while'||w==='for')){
+        let k=skipSpace(j);if(w==='for'&&src.startsWith('await',k))k=skipSpace(k+5);
+        const h=src[k]==='('?header(k):null;
+        if(h){const inner=src.slice(k+1,h.end-1);let g;
+          if(w==='while')g='(__hlG()&&('+inner+'))';
+          else if(h.semis.length===2){const a=h.semis[0]-k-1,b=h.semis[1]-k-1,cond=inner.slice(a+1,b);g='('+inner.slice(0,a+1)+(cond.trim()?'__hlG()&&('+cond+')':'__hlG()')+inner.slice(b)+')';}
+          if(g){out.push(src.slice(i,k)+g);i=h.end;last=')';lastWord='';continue;}
+        }
+      }
+      out.push(w);i=j;last='w';lastWord=w;continue;}
+    out.push(c);if(!/\s/.test(c)){last=c;lastWord='';}i++;
+  }
+  return out.join('');
+}
+
+/* ── console and errors, forwarded to the page (bounded so a chatty loop cannot flood it) ── */
+let logBudget=400,stopped=false,lastBeat=0;
+const fmt=v=>{if(typeof v==='string')return v;if(typeof v==='number')return Number.isInteger(v)||!isFinite(v)?String(v):String(+v.toPrecision(6));
+  if(v instanceof Error)return v.name+': '+v.message;try{const s=JSON.stringify(v,(k,x)=>typeof x==='number'&&!Number.isInteger(x)?+x.toPrecision(6):x);return s===undefined?String(v):s;}catch(e){return String(v);}};
+function log(level,args){
+  if(logBudget<=0)return;if(--logBudget===0){post({type:'sim-log',level:'warn',text:'… (more output was dropped)'});return;}
+  post({type:'sim-log',level,text:[...args].map(fmt).join(' ').slice(0,2000)});
+}
+for(const level of ['log','info','warn','error','debug']){try{console[level]=(...a)=>log(level==='debug'?'log':level,a);}catch(e){}}
+setInterval(()=>{logBudget=Math.min(400,logBudget+40);},1000);
+/* the line in the member's code: their script carries sourceURL=sim.js and starts on line 1 */
+function where(e){const m=/sim\.js:(\d+):(\d+)/.exec(String(e&&e.stack||''));return m?{line:+m[1],col:+m[2]}:null;}
+function fail(e,at){
+  stopped=true;const msg=String(e&&e.name&&e.message!=null?e.name+': '+e.message:e&&e.message||e);const w=at||where(e);
+  err.textContent=msg+(w?'  (line '+w.line+')':'');post({type:'sim-error',message:msg.slice(0,1000),line:w?w.line:0,col:w?w.col:0});size();
+}
+function size(){post({type:'sim-height',height:document.documentElement.scrollHeight});}
+const safe=fn=>function(...a){if(stopped)return;enter();try{return fn.apply(this,a);}catch(e){fail(e);}};
+
+/* ── the original helpers (pixels, y down) ── */
+const frames=[];let last=0;
+function loop(fn){if(typeof fn==='function')frames.push(fn);}
+function slider(label,min,max,step,value){return makeSlider(label,min,max,value,step,false);}
+function button(label,fn){const b=document.createElement('button');b.type='button';b.textContent=String(label);b.onclick=safe(()=>fn());ui.append(b);return b;}
 const shown=new Map();
-function show(label,value,unit=''){let s=shown.get(label);if(!s){s=document.createElement('span');shown.set(label,s);reads.append(s);}const v=typeof value==='number'?(Math.abs(value)>=1e4||Math.abs(value)<1e-3&&value?value.toExponential(3):+value.toPrecision(4)):value;s.innerHTML='';s.append(String(label)+' ');const b=document.createElement('b');b.textContent=v+(unit?' '+unit:'');s.append(b);}
+const num=v=>typeof v==='number'?(!isFinite(v)?String(v):Math.abs(v)>=1e4||Math.abs(v)<1e-3&&v?v.toExponential(3):String(+v.toPrecision(4))):String(v);
+function show(label,value,unit=''){let s=shown.get(label);if(!s){s=document.createElement('span');s.append(String(label)+' ',document.createElement('b'));shown.set(label,s);reads.append(s);}s.lastChild.textContent=num(value)+(unit?' '+unit:'');}
 function clear(){ctx.clearRect(0,0,W,H);}
-function circle(x,y,r,color='#7059a4'){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}
+function circle(x,y,r,color='#7059a4'){ctx.beginPath();ctx.arc(x,y,Math.max(0,r),0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}
 function line(x1,y1,x2,y2,color='#657187',width=1.5){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();}
-function text(s,x,y,color='#263247'){ctx.fillStyle=color;ctx.font='13px system-ui,sans-serif';ctx.fillText(String(s),x,y);}
+function text(s,x,y,color){ctx.fillStyle=color||(theme()?'#ebe8f5':'#263247');ctx.font='13px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText(String(s),x,y);}
 function arrow(x1,y1,x2,y2,color='#c2410c'){line(x1,y1,x2,y2,color,2);const a=Math.atan2(y2-y1,x2-x1);ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-8*Math.cos(a-.4),y2-8*Math.sin(a-.4));ctx.lineTo(x2-8*Math.cos(a+.4),y2-8*Math.sin(a+.4));ctx.closePath();ctx.fillStyle=color;ctx.fill();}
-function fail(e){stopped=true;err.textContent=String(e&&e.stack||e).split('\n').slice(0,4).join('\n');size();}
-function size(){parent.postMessage({type:'sim-height',height:document.documentElement.scrollHeight},'*');}
-addEventListener('error',e=>fail(e.error||e.message));
+
+/* ── hl: the physics helpers ── */
+let resetHook=null;
+function makeSlider(name,min,max,value,step,isHl){
+  min=+min;max=+max;value=value==null?min:+value;step=step==null?(isHl?+((max-min)/100).toPrecision(1):1):+step;
+  const l=document.createElement('label'),i=document.createElement('input'),b=document.createElement('b');
+  i.type='range';i.min=min;i.max=max;i.step=step;i.value=value;b.textContent=num(+i.value);l.append(String(name),i,b);
+  const get=()=>Number(i.value);hl.p[name]=get();
+  i.oninput=()=>{b.textContent=num(get());hl.p[name]=get();if(resetHook)resetHook();};
+  ui.append(l);get.set=v=>{i.value=v;i.oninput();};return get;
+}
+const hl={p:{},t:0,
+  colors:{ink:'#263247',accent:'#7059a4',blue:'#2563eb',red:'#c0264b',green:'#1f7a4d',orange:'#c2410c',muted:'#657187'},
+  get W(){return W;},get H(){return H;},get ctx(){return ctx;},get scale(){return view.s;},
+  ...HLMath};
+Object.defineProperty(hl,'dark',{get:theme});
+const view={x0:0,x1:10,y0:0,y1:null,s:1,ox:0,oy:0,set:false};
+function layout(){
+  const y1=view.y1==null?view.y0+(view.x1-view.x0)*H/Math.max(1,W):view.y1;
+  const s=Math.min(W/(view.x1-view.x0),H/(y1-view.y0));view.s=isFinite(s)&&s>0?s:1;
+  view.ox=(W-(view.x1-view.x0)*view.s)/2-view.x0*view.s;view.oy=H-(H-(y1-view.y0)*view.s)/2+view.y0*view.s;
+}
+const sx=x=>view.ox+x*view.s,sy=y=>view.oy-y*view.s;
+hl.view=(x0,x1,y0,y1)=>{if(!(x1>x0))throw new RangeError('hl.view: xmax must be greater than xmin');view.x0=+x0;view.x1=+x1;view.y0=+(y0??0);view.y1=y1==null?null:+y1;if(view.y1!=null&&!(view.y1>view.y0))throw new RangeError('hl.view: ymax must be greater than ymin');layout();};
+hl.toScreen=(x,y)=>[sx(x),sy(y)];hl.toWorld=(px,py)=>[(px-view.ox)/view.s,(view.oy-py)/view.s];
+const ink=()=>theme()?'#ebe8f5':'#263247',faint=()=>theme()?'rgba(235,232,245,.12)':'rgba(38,50,71,.09)';
+const col=(c,d)=>c||d;
+hl.clear=color=>{ctx.clearRect(0,0,W,H);if(color){ctx.fillStyle=color;ctx.fillRect(0,0,W,H);}};
+hl.circle=(x,y,r,color)=>{ctx.beginPath();ctx.arc(sx(x),sy(y),Math.max(0.5,r*view.s),0,Math.PI*2);ctx.fillStyle=col(color,hl.colors.accent);ctx.fill();};
+hl.dot=(x,y,px=4,color)=>{ctx.beginPath();ctx.arc(sx(x),sy(y),px,0,Math.PI*2);ctx.fillStyle=col(color,hl.colors.accent);ctx.fill();};
+hl.line=(x1,y1,x2,y2,color,width=1.5)=>{ctx.beginPath();ctx.moveTo(sx(x1),sy(y1));ctx.lineTo(sx(x2),sy(y2));ctx.strokeStyle=col(color,ink());ctx.lineWidth=width;ctx.stroke();};
+hl.rect=(x,y,w,h,color,fill=true)=>{ctx.beginPath();ctx.rect(sx(x),sy(y+h),w*view.s,h*view.s);if(fill){ctx.fillStyle=col(color,hl.colors.muted);ctx.fill();}else{ctx.strokeStyle=col(color,ink());ctx.lineWidth=1.5;ctx.stroke();}};
+hl.poly=(pts,color,fill=true)=>{if(!pts||!pts.length)return;ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(sx(x),sy(y)):ctx.moveTo(sx(x),sy(y)));ctx.closePath();if(fill){ctx.fillStyle=col(color,hl.colors.muted);ctx.fill();}else{ctx.strokeStyle=col(color,ink());ctx.lineWidth=1.5;ctx.stroke();}};
+hl.arrow=(x,y,dx,dy,o={})=>{const k=o.scale??1,X=sx(x),Y=sy(y),X2=sx(x+dx*k),Y2=sy(y+dy*k),c=col(o.color,hl.colors.orange);
+  if(Math.hypot(X2-X,Y2-Y)<0.5)return;arrow(X,Y,X2,Y2,c);if(o.label){ctx.fillStyle=c;ctx.font='12px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText(String(o.label),X2+4,Y2-4);}};
+hl.spring=(x1,y1,x2,y2,o={})=>{const n=Math.max(2,o.coils??10),w=(o.width??0.2)/2,dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,px=-uy,py=ux;
+  ctx.beginPath();ctx.moveTo(sx(x1),sy(y1));const lead=0.08;for(let i=0;i<=2*n;i++){const f=lead+(1-2*lead)*i/(2*n),s=i===0||i===2*n?0:(i%2?w:-w);ctx.lineTo(sx(x1+dx*f+px*s),sy(y1+dy*f+py*s));}
+  ctx.lineTo(sx(x2),sy(y2));ctx.strokeStyle=col(o.color,hl.colors.muted);ctx.lineWidth=1.6;ctx.stroke();};
+hl.text=(s,x,y,o={})=>{ctx.fillStyle=col(o.color,ink());ctx.font=(o.size||13)+'px system-ui,sans-serif';ctx.textAlign=o.align||'left';ctx.fillText(String(s),sx(x),sy(y));};
+hl.label=(s,px,py,o={})=>{ctx.fillStyle=col(o.color,ink());ctx.font=(o.size||13)+'px system-ui,sans-serif';ctx.textAlign=o.align||'left';ctx.fillText(String(s),px,py);};
+hl.grid=(step=1)=>{if(!(step>0))return;const [a,b]=hl.toWorld(0,H),[c,d]=hl.toWorld(W,0);if((c-a)/step>400||(d-b)/step>400)return;ctx.beginPath();
+  for(let x=Math.ceil(a/step)*step;x<=c;x+=step){ctx.moveTo(sx(x),0);ctx.lineTo(sx(x),H);}for(let y=Math.ceil(b/step)*step;y<=d;y+=step){ctx.moveTo(0,sy(y));ctx.lineTo(W,sy(y));}
+  ctx.strokeStyle=faint();ctx.lineWidth=1;ctx.stroke();};
+hl.axes=(xl='x (m)',yl='y (m)')=>{const [a,b]=hl.toWorld(0,H),[c,d]=hl.toWorld(W,0);const X=Math.min(Math.max(0,a),c),Y=Math.min(Math.max(0,b),d);
+  hl.line(a,Y,c,Y,hl.colors.muted,1);hl.line(X,b,X,d,hl.colors.muted,1);ctx.fillStyle=hl.colors.muted;ctx.font='12px system-ui,sans-serif';ctx.textAlign='right';ctx.fillText(xl,W-6,sy(Y)-6);ctx.textAlign='left';ctx.fillText(yl,sx(X)+6,14);};
+hl.ground=(y=0)=>{const [a]=hl.toWorld(0,0),[c]=hl.toWorld(W,0);hl.line(a,y,c,y,hl.colors.muted,2);ctx.strokeStyle=hl.colors.muted;ctx.lineWidth=1;ctx.beginPath();for(let px=0;px<W;px+=10){ctx.moveTo(px,sy(y));ctx.lineTo(px-6,sy(y)+7);}ctx.stroke();};
+hl.trail=(max=600,color)=>{const pts=[];return{push(x,y){if(isFinite(x)&&isFinite(y)){pts.push([x,y]);if(pts.length>max)pts.shift();}},clear(){pts.length=0;},get points(){return pts;},
+  draw(){if(pts.length<2)return;ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(sx(x),sy(y)):ctx.moveTo(sx(x),sy(y)));ctx.strokeStyle=col(color,hl.colors.blue);ctx.globalAlpha=.7;ctx.lineWidth=1.5;ctx.stroke();ctx.globalAlpha=1;}};};
+hl.slider=(name,min,max,value,step)=>makeSlider(name,min,max,value,step,true);
+hl.toggle=(name,on=false)=>{const l=document.createElement('label'),i=document.createElement('input');i.type='checkbox';i.checked=!!on;l.append(i,String(name));ui.append(l);hl.p[name]=i.checked;i.onchange=()=>{hl.p[name]=i.checked;if(resetHook)resetHook();};return()=>i.checked;};
+hl.choice=(name,options,value)=>{const l=document.createElement('label'),s=document.createElement('select');for(const o of options||[]){const e=document.createElement('option');e.textContent=String(o);s.append(e);}if(value!=null)s.value=String(value);l.append(String(name),s);ui.append(l);hl.p[name]=s.value;s.onchange=()=>{hl.p[name]=s.value;if(resetHook)resetHook();};return()=>s.value;};
+hl.button=button;hl.show=show;
+hl.loop=fn=>loop(fn);
+/* plots: a strip under the canvas each, redrawn after every frame that added points */
+const plots=[];
+hl.plot=(title='',o={})=>{
+  const cv=document.createElement('canvas');plotsBox.append(cv);const series=new Map(),max=o.max||2000;let dirty=true;size();
+  const p={add(x,y,name=''){if(!isFinite(x)||!isFinite(y))return;let s=series.get(name);if(!s){s=[];series.set(name,s);}s.push([x,y]);if(s.length>max)s.shift();dirty=true;},
+    clear(){series.clear();dirty=true;},touch(){dirty=true;},
+    draw(){if(!dirty)return;dirty=false;const r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(!r.width)return;cv.width=r.width*d;cv.height=r.height*d;const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);
+      const w=r.width,h=r.height,L=48,R=10,T=18,B=22;let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+      for(const s of series.values())for(const [x,y] of s){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+      g.fillStyle=ink();g.font='12px system-ui,sans-serif';g.textAlign='left';g.fillText(String(title),L,13);
+      if(!(x1>=x0))return;if(x1===x0){x1+=1;}
+      /* a quantity that barely changes (a conserved energy) is drawn flat, not as magnified rounding noise */
+      const mid=(y0+y1)/2,span=Math.max(y1-y0,Math.abs(mid)*0.02,1e-12);y0=mid-span/2;y1=mid+span/2;const pad=(y1-y0)*.06;y0-=pad;y1+=pad;
+      const X=x=>L+(x-x0)/(x1-x0)*(w-L-R),Y=y=>h-B-(y-y0)/(y1-y0)*(h-T-B);
+      g.strokeStyle=faint();g.beginPath();g.rect(L,T,w-L-R,h-T-B);g.stroke();
+      g.fillStyle=hl.colors.muted;g.textAlign='right';g.fillText(num(y1-pad),L-4,T+9);g.fillText(num(y0+pad),L-4,h-B);g.textAlign='left';g.fillText(num(x0),L,h-6);g.textAlign='right';g.fillText(num(x1)+(o.xlabel?' '+o.xlabel:''),w-R,h-6);
+      if(o.ylabel){g.textAlign='left';g.fillText(String(o.ylabel),L+4,T+12);}
+      const pal=[hl.colors.blue,hl.colors.red,hl.colors.green,hl.colors.orange,hl.colors.accent];let k=0,lx=w-R;
+      for(const [name,s] of series){const c=pal[k++%pal.length];g.beginPath();s.forEach(([x,y],i)=>i?g.lineTo(X(x),Y(y)):g.moveTo(X(x),Y(y)));g.strokeStyle=c;g.lineWidth=1.6;g.stroke();
+        if(name){g.fillStyle=c;g.textAlign='right';g.fillText(String(name),lx,13);lx-=g.measureText(String(name)).width+12;}}
+    }};
+  plots.push(p);return p;
+};
+/* input: keys held, the pointer in world coordinates, clicks and drags on the canvas */
+const keys=new Set(),clicks=[],drags=[];
+hl.pointer={x:0,y:0,down:false};
+hl.key=name=>keys.has(String(name).length===1?String(name).toLowerCase():String(name));
+hl.onClick=fn=>{if(typeof fn==='function')clicks.push(safe(fn));};hl.onDrag=fn=>{if(typeof fn==='function')drags.push(safe(fn));};
+addEventListener('keydown',e=>{keys.add(e.key.length===1?e.key.toLowerCase():e.key);if((e.target===stage||e.target===document.body)&&(/^Arrow/.test(e.key)||e.key===' '))e.preventDefault();});
+addEventListener('keyup',e=>keys.delete(e.key.length===1?e.key.toLowerCase():e.key));addEventListener('blur',()=>keys.clear());
+function pt(e){const r=stage.getBoundingClientRect();const [x,y]=hl.toWorld(e.clientX-r.left,e.clientY-r.top);hl.pointer.x=x;hl.pointer.y=y;return [x,y];}
+stage.addEventListener('pointerdown',e=>{stage.focus();try{stage.setPointerCapture(e.pointerId);}catch(x){}hl.pointer.down=true;const [x,y]=pt(e);for(const f of clicks)f(x,y);for(const f of drags)f(x,y);});
+stage.addEventListener('pointermove',e=>{const [x,y]=pt(e);if(hl.pointer.down)for(const f of drags)f(x,y);});
+for(const t of ['pointerup','pointercancel'])stage.addEventListener(t,()=>{hl.pointer.down=false;});
+
+/* hl.run: a fixed-step simulation with play / pause / reset / speed */
+let runner=null;
+hl.run=o=>{
+  if(runner)throw new Error('hl.run can be called once');if(!o||typeof o.step!=='function')throw new TypeError('hl.run needs a step(state, dt, t) function');
+  const dt=o.dt>0?+o.dt:1/600;runner={o,dt,state:null,acc:0,speed:o.speed>0?+o.speed:1,paused:!!o.paused};
+  const reset=()=>{hl.t=0;runner.acc=0;runner.state=typeof o.init==='function'?o.init():{};if(stopped)return;draw();for(const p of plots)p.clear();};
+  runner.reset=reset;if(o.resetOnChange)resetHook=safe(reset);
+  ctl.classList.add('on');
+  const play=document.createElement('button'),rs=document.createElement('button'),sp=document.createElement('select'),tm=document.createElement('span');
+  play.type=rs.type='button';rs.textContent='↺';rs.title='reset';tm.className='t';
+  const label=()=>{play.textContent=runner.paused?'▶':'❚❚';play.title=runner.paused?'play':'pause';play.classList.toggle('on',!runner.paused);};
+  play.onclick=()=>{runner.paused=!runner.paused;label();};rs.onclick=safe(reset);
+  for(const v of [0.1,0.25,0.5,1,2,4,10]){const e=document.createElement('option');e.value=v;e.textContent='×'+v;sp.append(e);}sp.value=String(runner.speed);sp.onchange=()=>{runner.speed=+sp.value;};
+  ctl.append(play,rs,sp,tm);runner.tm=tm;label();
+  enter();reset();
+};
+function draw(){if(runner&&typeof runner.o.draw==='function')runner.o.draw(runner.state,hl.t);}
+function advance(real){
+  const r=runner;if(r.paused||stopped)return;r.acc+=real*r.speed;const t0=performance.now();let n=0;
+  while(r.acc>=r.dt){const s=r.o.step(r.state,r.dt,hl.t);if(s!==undefined)r.state=s;hl.t+=r.dt;r.acc-=r.dt;
+    /* keep the frame rate: past ~25 ms of stepping in one frame the rest of the backlog is dropped */
+    if((++n&63)===0&&performance.now()-t0>25){r.acc=0;break;}}
+}
+
+function tick(t){
+  if(stopped)return;
+  const dt=last?Math.min(.05,(t-last)/1000):0;last=t;
+  enter();
+  try{for(const f of frames)f(dt,hl.t);if(runner){advance(dt);draw();runner.tm.textContent='t = '+num(+hl.t.toFixed(3))+' s';}for(const p of plots)p.draw();}catch(e){fail(e);return;}
+  if(t-lastBeat>500){lastBeat=t;post({type:'sim-beat'});}
+  requestAnimationFrame(tick);
+}
+/* a heartbeat that keeps going while the frame is hidden (no animation frames then), so the page's watchdog only fires
+   when this document is truly stuck */
+setInterval(()=>{if(!stopped)post({type:'sim-beat'});},1000);
+
+addEventListener('error',e=>{
+  /* reported to the page, not left as an uncaught error */
+  e.preventDefault();
+  if(stopped)return;
+  /* a syntax error in the member's script has no stack: its line comes with the event */
+  const at=/sim\.js$/.test(e.filename||'')&&e.lineno?{line:e.lineno,col:e.colno||0}:null;fail(e.error||e.message,at||where(e.error));
+});
+addEventListener('unhandledrejection',e=>{e.preventDefault();fail(e.reason);});
 let ran=false;
-/* only inside the opaque-origin frame create.js opens: framed any other way (another site framing this page without the
+/* only inside the opaque-origin frame the page opens: framed any other way (another site framing this page without the
    sandbox attribute) the code would run as haslalab.org and could read the site's storage, so it never runs there */
 const opaque=self.origin==='null';
 addEventListener('message',e=>{
-  if(ran||!opaque||e.source!==parent||!e.data||e.data.type!=='run'||typeof e.data.code!=='string')return;ran=true;
-  document.documentElement.dataset.theme=e.data.theme==='dark'?'dark':'light';
-  fit();
-  try{new Function('ctx','W','H','loop','slider','button','show','clear','circle','line','text','arrow',e.data.code)(ctx,W,H,loop,slider,button,show,clear,circle,line,text,arrow);}catch(x){fail(x);}
-  requestAnimationFrame(tick);size();
+  if(ran||!opaque||e.source!==parent||!e.data||e.data.type!=='run'||typeof e.data.code!=='string'||e.data.code.length>200000)return;ran=true;
+  document.documentElement.dataset.theme=e.data.theme==='dark'?'dark':'light';fitView=e.data.fit===true;
+  hl.colors.ink=theme()?'#ebe8f5':'#263247';hl.colors.accent=theme()?'#bca0ed':'#7059a4';hl.colors.muted=theme()?'#aca6bd':'#657187';
+  fit();layout();
+  Object.assign(globalThis,{hl,W,H,ctx,loop,slider,button,show,clear,circle,line,text,arrow,__hlG});
+  let code;try{code=guardLoops(e.data.code);}catch(x){code=e.data.code;}
+  const s=document.createElement('script');
+  /* line 1 of the script is line 1 of the member's code */
+  s.textContent='(function(){'+code+'\n})();\n//# sourceURL=sim.js';
+  enter();requestAnimationFrame(tick);
+  document.head.append(s);
+  size();
 });
-parent.postMessage({type:'sim-ready'},'*');
+addEventListener('resize',()=>{if(!ran)return;fit();layout();for(const p of plots)p.touch();});
+post({type:'sim-ready'});
+})();
 </script>
 </body>
 </html>

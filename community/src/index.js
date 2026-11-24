@@ -36,6 +36,7 @@ import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { createHandoutRouter } from './handouts.js';
 import { createWorkshopStorageRouter, workshopForgetUser } from './workshop-storage.js';
 import { createWorkshopSceneRouter } from './workshop-scene.js';
+import { createWorkshopCodeAiRouter } from './workshop-code-ai.js';
 import { createGradeRouter, ensureGradeSchema } from './practice-grade.js';
 import { createCreationRouter, ensureCreationSchema } from './creations.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
@@ -270,6 +271,7 @@ const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, cli
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
 const workshopStorageRouter = createWorkshopStorageRouter({HttpError, needUser, limit, now, bad});
 const workshopSceneRouter = createWorkshopSceneRouter({HttpError, needUser, limit, now, bad});
+const workshopCodeAiRouter = createWorkshopCodeAiRouter({HttpError, needUser, limit, now, bad});
 const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
 /* a post goes to a built-in board of the main gallery or to an open minor gallery */
 const postBoard = async (env, board) => BOARDS.includes(board) ? board : (await activeGallery(env, board)) ? board : null;
@@ -813,6 +815,8 @@ async function handle(req, env, url, ctx) {
   if (workshopStorage !== undefined) return workshopStorage;
   const workshopScene = await workshopSceneRouter(p, m, body, me, req, env);
   if (workshopScene !== undefined) return workshopScene;
+  const workshopCodeAi = await workshopCodeAiRouter(p, m, body, me, req, env);
+  if (workshopCodeAi !== undefined) return workshopCodeAi;
   const gallery = await galleryRouter(p, m, body, me, env);
   if (gallery !== undefined) return gallery;
   const omr = await omrRouter(p, m, body, me, req, env, url);

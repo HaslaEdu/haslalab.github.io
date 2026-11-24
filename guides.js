@@ -7,6 +7,7 @@
   const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const ko=()=>typeof lang==='undefined'||lang==='ko';
   const get=(()=>{const cache={};return f=>cache[f]||(cache[f]=fetch(f,{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(f);return r.json();}).catch(e=>{delete cache[f];throw e;}));})();
+  const hostText=h=>!h?'':typeof h==='string'?h:(ko()?h.ko:h.en)||h.en||h.ko||'';
   const safe=u=>/^https:\/\/[^\s"'<>]+$/.test(u||'')?u:'';
   /* where each stage meets HaslaLab's own practice */
   const OURS={
@@ -94,54 +95,84 @@
     paint();
   }
 
-  /* ── the calendar: a row per event, the date if announced, otherwise the usual month ── */
+  /* ── the calendar: a row per event, the date if announced, otherwise the usual month. Olympiads only: university
+     entrance exams (kind "entrance") are not part of it. With a country picked, its national selection
+     (data/schedule.json "selection") comes first, stage by stage, with the international events it leads to. ── */
   const MONTHS={ko:['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],en:['January','February','March','April','May','June','July','August','September','October','November','December']};
-  const KINDS=[['all',{ko:'전체',en:'All'}],['international',{ko:'국제 올림피아드',en:'International'}],['regional',{ko:'지역 · 온라인',en:'Regional and online'}],['national',{ko:'각국 선발',en:'National rounds'}],['entrance',{ko:'입시',en:'Entrance exams'}]];
+  const KINDS=[['all',{ko:'전체',en:'All'}],['international',{ko:'국제 올림피아드',en:'International'}],['regional',{ko:'지역 · 온라인',en:'Regional and online'}],['national',{ko:'각국 선발',en:'National rounds'}]];
   const kindOf=e=>e.kind==='online'?'regional':e.kind==='selection'?'national':e.kind;
+  const olympiad=e=>e&&e.kind!=='entrance';
+  const COUNTRY_KEY='hlScheduleCountry';
+  const savedCountry=()=>{try{return localStorage.getItem(COUNTRY_KEY);}catch(e){return null;}};
+  const saveCountry=c=>{try{localStorage.setItem(COUNTRY_KEY,c||'all');}catch(e){}};
+  const countryLabel=(c,K)=>{const lf=window.HL_LEARNER_FORM;const n=lf?.countryName?lf.countryName(c.toUpperCase(),K?'ko':'en'):'';return n&&n!==c.toUpperCase()?n:c.toUpperCase();};
   function scheduleView(){
     const K=ko();
-    return `<div class="shell guide"><div class="phead"><p class="eyebrow"><a href="#/olympiad">${K?'올림피아드':'Olympiad'}</a> / ${K?'대회 일정':'Calendar'}</p><h1>${K?'대회 · 시험 일정':'Contest and exam calendar'}</h1>
-      <p class="lede">${K?'국제 올림피아드, 각국 선발 시험, 물리가 들어가는 입시의 다음 날짜입니다. 공식 발표가 없는 것은 보통 열리는 달로 적었습니다. 날짜는 바뀔 수 있으니 공식 사이트에서 확인하세요.':'The next dates of the international olympiads, national selection rounds and entrance exams with physics. Where nothing is announced yet, the usual month is shown. Dates change; check the official site.'}</p></div>
-      <div class="sc-filters" id="scFilters"></div><div id="schedule"><p class="note">${K?'불러오는 중…':'Loading…'}</p></div></div>`;
+    return `<div class="shell guide"><div class="phead"><p class="eyebrow"><a href="#/olympiad">${K?'올림피아드':'Olympiad'}</a> / ${K?'대회 일정':'Calendar'}</p><h1>${K?'올림피아드 일정':'Olympiad calendar'}</h1>
+      <p class="lede">${K?'국제 물리 올림피아드와 각국 선발 시험의 다음 날짜입니다. 나라를 고르면 그 나라의 국가대표 선발 단계가 국제 대회와 함께 나옵니다. 공식 발표가 없는 것은 예년에 열린 달로 적었습니다. 날짜는 바뀔 수 있으니 공식 사이트에서 확인하세요.':'The next dates of the international physics olympiads and the national selection rounds. Pick a country to see its selection stages next to the international events. Where nothing is announced yet, the usual month is shown. Dates change; check the official site.'}</p></div>
+      <div class="sc-filters" id="scFilters"></div><div id="scNational"></div><div id="schedule"><p class="note">${K?'불러오는 중…':'Loading…'}</p></div></div>`;
   }
   async function scheduleMount(){
-    const box=document.getElementById('schedule'),bar=document.getElementById('scFilters');if(!box)return;const K=ko();
+    const box=document.getElementById('schedule'),bar=document.getElementById('scFilters'),nat=document.getElementById('scNational');if(!box)return;const K=ko();
     let d;try{d=await get('data/schedule.json');}catch(e){box.innerHTML=`<p class="note">${K?'일정을 불러오지 못했습니다.':'Could not load the calendar.'}</p>`;return;}
     if(!document.body.contains(box))return;
     const today=new Date().toISOString().slice(0,10);
     const monthOf=e=>e.start?Number(e.start.slice(5,7)):(()=>{const m=MONTHS.en.findIndex(n=>String(e.typical||'').toLowerCase().startsWith(n.toLowerCase()));return m>=0?m+1:13;})();
-    const ev=[...d.events].map(e=>({...e,_m:monthOf(e),_y:e.start?Number(e.start.slice(0,4)):null})).filter(e=>!e.end||e.end>=today||!e.start||e.start>=today);
+    const all=(d.events||[]).filter(olympiad),byKey=new Map(all.map(e=>[e.key,e]));
+    const ev=all.map(e=>({...e,_m:monthOf(e),_y:e.start?Number(e.start.slice(0,4)):null})).filter(e=>!e.end||e.end>=today||!e.start||e.start>=today);
+    const sel=d.selection||{};
+    const countries=[...new Set([...ev.map(e=>e.country),...Object.keys(sel).filter(c=>!c.startsWith('_'))].filter(c=>c&&c!=='intl'))].sort((a,b)=>countryLabel(a,K).localeCompare(countryLabel(b,K),K?'ko':'en'));
     let kind='all',country='';
-    const countries=[...new Set(ev.map(e=>e.country).filter(c=>c&&c!=='intl'))].sort();
-    const date=e=>{
-      if(e.start){
-        const [y,m,dd]=e.start.split('-').map(Number),[y2,m2,d2]=(e.end||e.start).split('-').map(Number),one=e.end===e.start||!e.end;
-        if(K)return `<b>${y}년 ${m}월 ${dd}일${one?'':` – ${y2!==y?y2+'년 ':''}${m2!==m||y2!==y?m2+'월 ':''}${d2}일`}</b>`;
-        const M=n=>MONTHS.en[n-1].slice(0,3);
-        return `<b>${M(m)} ${dd}${one?'':` – ${m2!==m?M(m2)+' ':''}${d2}`}, ${y2}</b>`;
-      }
-      return `<span class="tba">${K?'미정 · 보통 ':'TBA · usually '}${esc(K?e.typical_ko||e.typical||'':e.typical||'')}</span>`;
+    const stored=savedCountry();
+    if(stored&&(stored==='all'||countries.includes(stored)))country=stored==='all'?'':stored;
+    const dateText=e=>{
+      const [y,m,dd]=e.start.split('-').map(Number),[y2,m2,d2]=(e.end||e.start).split('-').map(Number),one=e.end===e.start||!e.end;
+      if(K)return `${y}년 ${m}월 ${dd}일${one?'':` – ${y2!==y?y2+'년 ':''}${m2!==m||y2!==y?m2+'월 ':''}${d2}일`}`;
+      const M=n=>MONTHS.en[n-1].slice(0,3);
+      return `${M(m)} ${dd}${one?'':` – ${m2!==m?M(m2)+' ':''}${d2}`}, ${y2}`;
+    };
+    /* the usual month(s) when no date is out: "예년 기준 4–5월" / "Usually April–May" */
+    const usual=months=>K?`예년 기준 ${months.join('–')}월`:`Usually ${months.map(n=>MONTHS.en[n-1]).join('–')}`;
+    const date=e=>e.start?`<b>${dateText(e)}</b>`:`<span class="tba">${K?'미정 · 보통 ':'TBA · usually '}${esc(K?e.typical_ko||e.typical||'':e.typical||'')}</span>`;
+    const stageDate=s=>s.start?`<b>${dateText(s)}</b>`:Array.isArray(s.months)&&s.months.length?`<span class="tba">${usual(s.months)}</span>`:`<span class="tba">${K?'미정 · 보통 ':'TBA · usually '}${esc(K?s.typical_ko||s.typical||'':s.typical||'')}</span>`;
+    const title=e=>{const n=esc(K?e.name_ko||e.name:e.name);return safe(e.url)?`<a href="${esc(e.url)}" target="_blank" rel="noopener">${n}</a>`:n;};
+    const paintNational=()=>{
+      const plan=country&&sel[country];
+      if(!plan){nat.innerHTML='';return;}
+      const stages=(plan.stages||[]).map(s=>s.event?{...byKey.get(s.event),...s}:s).filter(s=>s&&s.name);
+      const targets=(plan.targets||[]).map(k=>byKey.get(k)).filter(Boolean);
+      const past=s=>(s.end||s.start||'9999')<today;
+      nat.innerHTML=`<section class="sc-national" aria-labelledby="scNatH"><h2 id="scNatH">${typeof flagImg==='function'?flagImg(country,'sc-flag'):''} ${esc(countryLabel(country,K))} ${K?'국가대표 선발 일정':'national selection'}</h2>
+        <ol class="sc-stages">${stages.map((s,i)=>`<li class="${past(s)?'done':''}"><span class="sc-step">${i+1}</span><div><span class="sc-when">${stageDate(s)}${past(s)?` <small>${K?'지남':'past'}</small>`:''}</span>${title(s)}${(K?s.note_ko:s.note)?`<small>${esc(K?s.note_ko:s.note)}</small>`:''}</div></li>`).join('')}
+        ${targets.map(t=>`<li class="intl"><span class="sc-step">→</span><div><span class="sc-when">${stageDate({...t,months:null})}</span>${title(t)}${t.host?`<small>${esc(hostText(t.host))}</small>`:''}</div></li>`).join('')}</ol></section>`;
     };
     const paint=()=>{
       bar.innerHTML=`<div class="seg">${KINDS.map(([k,n])=>`<button type="button" data-k="${k}" class="${k===kind?'on':''}">${K?n.ko:n.en}</button>`).join('')}</div>
-        <select id="scCountry" aria-label="${K?'나라':'Country'}"><option value="">${K?'모든 나라':'All countries'}</option>${countries.map(c=>`<option value="${c}"${c===country?' selected':''}>${c.toUpperCase()}</option>`).join('')}</select>`;
+        <select id="scCountry" aria-label="${K?'나라':'Country'}"><option value="">${K?'모든 나라':'All countries'}</option>${countries.map(c=>`<option value="${c}"${c===country?' selected':''}>${esc(countryLabel(c,K))}</option>`).join('')}</select>`;
       bar.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{kind=b.dataset.k;paint();});
-      document.getElementById('scCountry').onchange=e=>{country=e.target.value;paint();};
-      const rows=ev.filter(e=>(kind==='all'||kindOf(e)===kind)&&(!country||e.country===country||e.country==='intl'&&kind==='international'));
+      document.getElementById('scCountry').onchange=e=>{country=e.target.value;saveCountry(country);paint();};
+      paintNational();
+      /* a country: its own rounds and the international events */
+      const rows=ev.filter(e=>(kind==='all'||kindOf(e)===kind)&&(!country||e.country===country||e.country==='intl'));
       rows.sort((a,b)=>(a.start||'9999')<(b.start||'9999')?-1:(a.start||'9999')>(b.start||'9999')?1:a._m-b._m);
       box.innerHTML=rows.length?`<table class="sc-table"><thead><tr><th>${K?'날짜':'Date'}</th><th>${K?'대회 · 시험':'Event'}</th><th>${K?'종류':'Kind'}</th><th>${K?'장소':'Where'}</th></tr></thead><tbody>${rows.map(e=>`<tr>
-          <td>${date(e)}</td><td>${safe(e.url)?`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(K?e.name_ko||e.name:e.name)}</a>`:esc(K?e.name_ko||e.name:e.name)}${K?'':`<small>${esc(e.level||'')}</small>`}</td>
+          <td>${date(e)}</td><td>${title(e)}${K?'':`<small>${esc(e.level||'')}</small>`}</td>
           <td><span class="sc-kind ${kindOf(e)}">${esc((KINDS.find(k=>k[0]===kindOf(e))||[0,{ko:e.kind,en:e.kind}])[1][K?'ko':'en'])}</span></td>
-          <td>${e.country&&e.country!=='intl'&&typeof flagImg==='function'?flagImg(e.country,'sc-flag'):''} ${esc(e.host||(e.country==='intl'?'':e.country.toUpperCase()))}</td></tr>`).join('')}</tbody></table>`:`<p class="note">${K?'해당하는 일정이 없습니다.':'Nothing matches.'}</p>`;
+          <td>${e.country&&e.country!=='intl'&&typeof flagImg==='function'?flagImg(e.country,'sc-flag'):''} ${esc(hostText(e.host)||(e.country==='intl'?'':e.country.toUpperCase()))}</td></tr>`).join('')}</tbody></table>`:`<p class="note">${K?'해당하는 일정이 없습니다.':'Nothing matches.'}</p>`;
     };
     paint();
     box.insertAdjacentHTML('afterend',`<p class="note">${K?'기준일':'As of'} ${esc(d.as_of||'')}. ${K?'날짜가 바뀌었거나 빠진 대회가 있으면 커뮤니티에 알려 주세요.':'If a date has changed or a contest is missing, tell us in the community.'}</p>`);
+    /* no choice kept on this device: the country of the member's learner profile, when it has a selection */
+    if(stored===null&&typeof cmLearner==='function'){
+      try{const v=await cmLearner();const c=String(v?.country||'').toLowerCase();
+        if(c&&countries.includes(c)&&!country&&savedCountry()===null&&document.body.contains(box)){country=c;paint();}}catch(e){}
+    }
   }
-  /* the next n dated events from data/schedule.json (the Olympiad home's card): one going on today counts, with the
-     days until it starts (0 while it runs) */
+  /* the next n dated olympiad events from data/schedule.json (the Olympiad home's card): one going on today counts,
+     with the days until it starts (0 while it runs); entrance exams never */
   function upcomingFrom(d,n=3,today=new Date().toISOString().slice(0,10)){
     const day=x=>Date.parse(x+'T00:00:00Z')/86400000;
-    return (d?.events||[]).filter(e=>/^\d{4}-\d{2}-\d{2}$/.test(e.start||'')&&(e.end||e.start)>=today)
+    return (d?.events||[]).filter(e=>olympiad(e)&&/^\d{4}-\d{2}-\d{2}$/.test(e.start||'')&&(e.end||e.start)>=today)
       .sort((a,b)=>a.start<b.start?-1:a.start>b.start?1:0).slice(0,n)
       .map(e=>({key:e.key,name:e.name,name_ko:e.name_ko,url:safe(e.url),country:e.country,start:e.start,end:e.end||e.start,days:Math.max(0,day(e.start)-day(today))}));
   }

@@ -183,7 +183,13 @@
   /* today not yet studied keeps the streak; a missed day uses the week's free day; a pause holds it (practice-tools.js) */
   const streakNow=()=>H.streakInfo(saved.days,saved.streakCfg,today());
   const streak=()=>streakNow().n;
-  function reportHeight(){if(embedded)requestAnimationFrame(()=>window.parent.postMessage({type:'hl-practice-height',height:Math.ceil(document.querySelector('main').getBoundingClientRect().bottom+scrollY+12)},location.origin));}
+  /* the frame's height for the page around it (index.html): after each paint, and again shortly after in case the
+     browser holds back animation frames (an iframe partly out of view); the same height is not sent twice */
+  let sentHeight=0,heightTimer=0;
+  function sendHeight(){clearTimeout(heightTimer);heightTimer=0;const main=document.querySelector('main');if(!main)return;
+    const h=Math.ceil(main.getBoundingClientRect().bottom+scrollY+12);if(h===sentHeight)return;sentHeight=h;
+    window.parent.postMessage({type:'hl-practice-height',height:h},location.origin);}
+  function reportHeight(){if(!embedded)return;requestAnimationFrame(sendHeight);if(!heightTimer)heightTimer=setTimeout(sendHeight,300);}
   function tellUnit(unit){if(embedded&&!document.documentElement.classList.contains('play'))window.parent.postMessage({type:'hl-practice-unit',unit:unit||''},location.origin);}
   function math(latex,display){try{return window.katex?katex.renderToString(latex,{displayMode:!!display,throwOnError:false,strict:false}):esc(latex);}catch(e){return esc(latex);}}
   function blocks(list){
@@ -1865,7 +1871,15 @@
     if(!s.answered&&!$('ansbox')&&/^[1-5]$/.test(e.key))answer(Number(e.key));
     else if(s.answered&&e.key==='Enter'&&document.activeElement?.id!=='next'){e.preventDefault();$('next')?.click();}
   });
-  if(typeof ResizeObserver==='function')new ResizeObserver(reportHeight).observe(document.body);
+  /* anything that changes the height: layout (ResizeObserver), figures and fonts that arrive late, opened <details> */
+  if(embedded){
+    if(typeof ResizeObserver==='function'){const ro=new ResizeObserver(reportHeight);ro.observe(document.documentElement);ro.observe(document.body);}
+    addEventListener('load',reportHeight);
+    document.addEventListener('load',e=>{if(e.target?.tagName==='IMG')reportHeight();},true);
+    document.addEventListener('error',e=>{if(e.target?.tagName==='IMG')reportHeight();},true);
+    document.addEventListener('toggle',reportHeight,true);
+    try{document.fonts?.ready?.then(reportHeight);document.fonts?.addEventListener?.('loadingdone',reportHeight);}catch(e){}
+  }
   document.documentElement.classList.toggle('embedded',embedded);
   applyTheme();translate();
   addEventListener('online',()=>flushReports().catch(()=>{}));

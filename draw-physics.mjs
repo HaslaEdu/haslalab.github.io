@@ -17,7 +17,7 @@
    its surface or the body it is tied to, a body landing on a floor or an incline, a body leaving its surface
    (N below zero), two bodies on one surface touching. Systems outside these kinds are reported in `unsupported`
    with a code, and the figure stays a figure. */
-import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec} from './draw-scene.mjs?v=821b2b258cf0';
+import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec} from './draw-scene.mjs?v=db9a7a5f3c86';
 
 export const SIM_DT = 1e-3;
 const EPS_V = 1e-9;
@@ -388,4 +388,475 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
     }
   };
   return sim;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   The other domains. Everything here is a pure function of the scene, so the editor recomputes it on every redraw:
+   field lines follow a charge while it is dragged, rays follow a lens, P–V curves and wave functions follow their
+   parameters ("live" figures). Units are SI unless a field says otherwise (draw-scene.mjs).
+   ════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+export const K_E = 8.9875517923e9, H_PLANCK = 6.62607015e-34, HBAR = H_PLANCK / (2 * Math.PI), M_E = 9.1093837015e-31, EV = 1.602176634e-19, C_LIGHT = 299792458;
+const HC_EV_NM = H_PLANCK * C_LIGHT / EV * 1e9;   /* 1239.84 eV nm */
+
+/* ── electrostatics: point charges (q in μC) and plates (a line of PLATE_PIECES equal charges) ── */
+const PLATE_PIECES = 40;
+export function chargesOf(scene) {
+  const out = [];
+  for (const o of scene.objects) {
+    if (o.type === 'charge') out.push({x: o.x, y: o.y, q: o.q * 1e-6, r: o.r, id: o.id});
+    else if (o.type === 'plate') for (let i = 0; i < PLATE_PIECES; i++) { const t = (i + 0.5) / PLATE_PIECES; out.push({x: o.x1 + (o.x2 - o.x1) * t, y: o.y1 + (o.y2 - o.y1) * t, q: o.q * 1e-6 / PLATE_PIECES, r: 0, id: o.id, plate: true}); }
+  }
+  return out;
+}
+/** E (V/m) at p of point charges [{x,y,q (C)}]: Σ k q r̂ / r² */
+export function eField(charges, p) {
+  let ex = 0, ey = 0;
+  for (const c of charges) { const dx = p.x - c.x, dy = p.y - c.y, r2 = dx * dx + dy * dy; if (r2 < 1e-18) continue; const k = K_E * c.q / (r2 * Math.sqrt(r2)); ex += k * dx; ey += k * dy; }
+  return {x: ex, y: ey};
+}
+export function potential(charges, p) { let V = 0; for (const c of charges) { const r = Math.hypot(p.x - c.x, p.y - c.y); if (r > 1e-9) V += K_E * c.q / r; } return V; }
+const distSeg = (p, a, b) => { const ab = vec.sub(b, a), t = Math.max(0, Math.min(1, vec.dot(vec.sub(p, a), ab) / (vec.dot(ab, ab) || 1))); return vec.len(vec.sub(p, vec.add(a, vec.mul(ab, t)))); };
+/** field lines of every charge and plate in the view: [{pts, arrow:{x,y,dx,dy}}], integrated (RK4 along Ê) from the
+ *  positive charges (n lines for the largest |q|, fewer for smaller ones) until they reach a negative one or leave */
+export function fieldLines(scene, view, {n = 8} = {}) {
+  const ch = chargesOf(scene), pts = scene.objects.filter(o => o.type === 'charge'), plates = scene.objects.filter(o => o.type === 'plate');
+  if (!ch.length) return [];
+  const qmax = Math.max(...pts.map(o => Math.abs(o.q)), ...plates.map(o => Math.abs(o.q) / 4), 1e-12);
+  const pos = ch.reduce((s, c) => s + Math.max(0, c.q), 0), sign = pos > 0 ? 1 : -1;
+  const h = Math.hypot(view.w, view.h) / 420, pad = 0.15 * Math.max(view.w, view.h);
+  const inView = p => p.x > view.x - pad && p.x < view.x + view.w + pad && p.y > view.y - pad && p.y < view.y + view.h + pad;
+  const dir = p => { const E = eField(ch, p), m = Math.hypot(E.x, E.y); return m > 0 ? {x: sign * E.x / m, y: sign * E.y / m} : null; };
+  const sinks = pts.filter(o => Math.sign(o.q) === -sign), sinkPlates = plates.filter(o => Math.sign(o.q) === -sign);
+  const starts = [];
+  for (const o of pts) if (Math.sign(o.q) === sign) {
+    const k = Math.max(2, Math.round(n * Math.abs(o.q) / qmax)), r0 = Math.max(o.r, 2 * h);
+    for (let i = 0; i < k; i++) { const a = 2 * Math.PI * (i + 0.5) / k; starts.push({x: o.x + r0 * Math.cos(a), y: o.y + r0 * Math.sin(a)}); }
+  }
+  for (const o of plates) if (Math.sign(o.q) === sign) {
+    const k = Math.max(2, Math.round(n * Math.abs(o.q) / qmax / 2)), u = vec.unit({x: o.x2 - o.x1, y: o.y2 - o.y1}), nn = vec.perp(u), L = Math.hypot(o.x2 - o.x1, o.y2 - o.y1);
+    for (let i = 0; i < k; i++) for (const s of [1, -1]) { const t = (i + 0.5) / k; starts.push({x: o.x1 + u.x * L * t + nn.x * s * 2 * h, y: o.y1 + u.y * L * t + nn.y * s * 2 * h}); }
+  }
+  const lines = [];
+  for (const s0 of starts) {
+    let p = s0; const line = [p];
+    for (let i = 0; i < 1800; i++) {
+      const k1 = dir(p); if (!k1) break;
+      const k2 = dir(vec.add(p, vec.mul(k1, h / 2))); if (!k2) break;
+      const k3 = dir(vec.add(p, vec.mul(k2, h / 2))); if (!k3) break;
+      const k4 = dir(vec.add(p, vec.mul(k3, h))); if (!k4) break;
+      p = vec.add(p, vec.mul({x: k1.x + 2 * k2.x + 2 * k3.x + k4.x, y: k1.y + 2 * k2.y + 2 * k3.y + k4.y}, h / 6));
+      line.push(p);
+      if (!inView(p) || sinks.some(o => Math.hypot(p.x - o.x, p.y - o.y) < Math.max(o.r * 0.9, 1.5 * h)) || sinkPlates.some(o => distSeg(p, {x: o.x1, y: o.y1}, {x: o.x2, y: o.y2}) < 1.2 * h)) break;
+    }
+    if (line.length < 3) continue;
+    const sunk = inView(line[line.length - 1]);
+    if (sign < 0) line.reverse();
+    /* the arrow: half-way along a line that ends on a charge, else a fifth of the view from where it starts */
+    let total = 0; for (let i = 1; i < line.length; i++) total += Math.hypot(line[i].x - line[i - 1].x, line[i].y - line[i - 1].y);
+    const want = sunk ? total / 2 : Math.min(total / 2, 0.2 * Math.max(view.w, view.h)), at = sign < 0 ? 1 - want / total : want / total;
+    if (!(total > 0) || line.some(q => !Number.isFinite(q.x) || !Number.isFinite(q.y))) continue;
+    const arrow = {at: Math.min(1, Math.max(0, at))};
+    lines.push({pts: line, arrow});
+  }
+  return lines;
+}
+/** equipotential lines in the view (marching squares on a grid, joined into polylines): [{V, pts}] */
+export function equipotentials(scene, view, {levels = 6, nx = 110} = {}) {
+  const ch = chargesOf(scene); if (!ch.length || !levels) return [];
+  const qmax = Math.max(...ch.map(c => Math.abs(c.q) * (c.plate ? PLATE_PIECES / 4 : 1)));
+  const ny = Math.max(10, Math.round(nx * view.h / view.w)), dx = view.w / nx, dy = view.h / ny;
+  const V = new Float64Array((nx + 1) * (ny + 1)), near = new Uint8Array((nx + 1) * (ny + 1));
+  const pc = scene.objects.filter(o => o.type === 'charge');
+  for (let j = 0; j <= ny; j++) for (let i = 0; i <= nx; i++) { const p = {x: view.x + i * dx, y: view.y + j * dy}, k = j * (nx + 1) + i; V[k] = potential(ch, p); near[k] = pc.some(o => Math.hypot(p.x - o.x, p.y - o.y) < o.r * 1.2) ? 1 : 0; }
+  const both = ch.some(c => c.q > 0) && ch.some(c => c.q < 0), half = Math.ceil(levels / 2), Ls = [];
+  for (let k = 0; k < half; k++) { const d = view.w * 0.05 * Math.pow(1.75, k), v = K_E * qmax / d; Ls.push(v); if (both) Ls.push(-v); }
+  if (!both) Ls.forEach((v, i) => { Ls[i] = Math.sign(ch.reduce((s, c) => s + c.q, 0)) * Math.abs(v); });
+  if (both && levels % 2) Ls.push(0);
+  const out = [];
+  for (const lv of Ls.slice(0, levels)) {
+    const segs = [], at = (i, j) => V[j * (nx + 1) + i] - lv;
+    const pt = (i0, j0, i1, j1) => { const a = at(i0, j0), b = at(i1, j1), t = a / (a - b); return {x: view.x + (i0 + (i1 - i0) * t) * dx, y: view.y + (j0 + (j1 - j0) * t) * dy, key: `${i0},${j0},${i1},${j1}`}; };
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      if (near[j * (nx + 1) + i] || near[j * (nx + 1) + i + 1] || near[(j + 1) * (nx + 1) + i] || near[(j + 1) * (nx + 1) + i + 1]) continue;
+      const c = (at(i, j) > 0 ? 1 : 0) | (at(i + 1, j) > 0 ? 2 : 0) | (at(i + 1, j + 1) > 0 ? 4 : 0) | (at(i, j + 1) > 0 ? 8 : 0);
+      if (c === 0 || c === 15) continue;
+      const e = [() => pt(i, j, i + 1, j), () => pt(i + 1, j, i + 1, j + 1), () => pt(i, j + 1, i + 1, j + 1), () => pt(i, j, i, j + 1)];
+      const T = {1: [[0, 3]], 2: [[0, 1]], 3: [[1, 3]], 4: [[1, 2]], 5: [[0, 1], [2, 3]], 6: [[0, 2]], 7: [[2, 3]], 8: [[2, 3]], 9: [[0, 2]], 10: [[0, 3], [1, 2]], 11: [[1, 2]], 12: [[1, 3]], 13: [[0, 1]], 14: [[0, 3]]}[c];
+      for (const [a, b] of T) segs.push([e[a](), e[b]()]);
+    }
+    /* join the pieces that share an edge point */
+    const ends = new Map(); segs.forEach((s, i) => { for (const p of s) { if (!ends.has(p.key)) ends.set(p.key, []); ends.get(p.key).push(i); } });
+    const used = new Uint8Array(segs.length);
+    for (let s = 0; s < segs.length; s++) {
+      if (used[s]) continue; used[s] = 1;
+      const line = [segs[s][0], segs[s][1]];
+      for (const dirn of [1, 0]) {
+        for (;;) {
+          const tip = dirn ? line[line.length - 1] : line[0], nxt = (ends.get(tip.key) || []).find(i => !used[i]);
+          if (nxt === undefined) break;
+          used[nxt] = 1; const q = segs[nxt][0].key === tip.key ? segs[nxt][1] : segs[nxt][0];
+          if (dirn) line.push(q); else line.unshift(q);
+        }
+      }
+      if (line.length > 3) out.push({V: lv, pts: line.map(p => ({x: p.x, y: p.y}))});
+    }
+  }
+  return out;
+}
+/** the path of a moving charge through the uniform field regions (q μC, mass mg, E V/m, B T): F = q(E + v × B) */
+export function chargePath(scene, o, view, {maxSteps = 4000} = {}) {
+  const regions = scene.objects.filter(r => r.type === 'field'), qm = o.q / o.mass;
+  const plates = scene.objects.filter(p => p.type === 'plate');
+  const acc = (p, v) => {
+    let ax = 0, ay = 0;
+    for (const r of regions) {
+      if (p.x < r.x || p.x > r.x + r.w || p.y < r.y || p.y > r.y + r.h) continue;
+      if (r.kind === 'E' && r.dir === 'arrow') { const a = r.angle * Math.PI / 180; ax += qm * r.mag * Math.cos(a); ay += qm * r.mag * Math.sin(a); }
+      if (r.kind === 'B' && r.dir !== 'arrow') { const Bz = r.dir === 'out' ? r.mag : -r.mag; ax += qm * v.y * Bz; ay += -qm * v.x * Bz; }
+    }
+    return {x: ax, y: ay};
+  };
+  let p = {x: o.x, y: o.y}, v = {x: o.vx, y: o.vy}; const pts = [p];
+  const ds = Math.max(view.w, view.h) / 500, pad = 0.1 * Math.max(view.w, view.h);
+  for (let i = 0; i < maxSteps; i++) {
+    const sp = Math.hypot(v.x, v.y); if (sp < 1e-9) break;
+    const dt = ds / sp;
+    const f = (pp, vv) => [vv, acc(pp, vv)];
+    const [a1, b1] = f(p, v), [a2, b2] = f(vec.add(p, vec.mul(a1, dt / 2)), vec.add(v, vec.mul(b1, dt / 2)));
+    const [a3, b3] = f(vec.add(p, vec.mul(a2, dt / 2)), vec.add(v, vec.mul(b2, dt / 2))), [a4, b4] = f(vec.add(p, vec.mul(a3, dt)), vec.add(v, vec.mul(b3, dt)));
+    const np = {x: p.x + dt / 6 * (a1.x + 2 * a2.x + 2 * a3.x + a4.x), y: p.y + dt / 6 * (a1.y + 2 * a2.y + 2 * a3.y + a4.y)};
+    v = {x: v.x + dt / 6 * (b1.x + 2 * b2.x + 2 * b3.x + b4.x), y: v.y + dt / 6 * (b1.y + 2 * b2.y + 2 * b3.y + b4.y)};
+    if (plates.some(pl => segCross(p, np, {x: pl.x1, y: pl.y1}, {x: pl.x2, y: pl.y2}))) { pts.push(np); break; }
+    p = np; pts.push(p);
+    if (p.x < view.x - pad || p.x > view.x + view.w + pad || p.y < view.y - pad || p.y > view.y + view.h + pad) break;
+  }
+  return pts;
+}
+function segCross(a, b, c, d) {
+  const r = vec.sub(b, a), s = vec.sub(d, c), den = vec.cross(r, s); if (Math.abs(den) < 1e-15) return false;
+  const t = vec.cross(vec.sub(c, a), s) / den, u = vec.cross(vec.sub(c, a), r) / den; return t >= 0 && t <= 1 && u >= 0 && u <= 1;
+}
+
+/* ── circuits: DC steady state by modified nodal analysis (our own Gaussian elimination) ──
+   Every element is a two-terminal branch from (x1,y1) to (x2,y2); its current I runs from x1 to x2 inside it.
+     resistor, bulb, galvanometer (value Ω > 0): I = (V1 − V2)/R
+     battery, cell, dc (emf value, internal r):    V2 − V1 = emf − r I     (x2 is +)
+     wire: its ends are one node.  ammeter, inductor (DC), closed switch, R = 0: V2 = V1, I measured
+     capacitor (DC), voltmeter, open switch: no current. diode, led: ideal with a forward drop (value V): on
+       (V1 − V2 = drop, I ≥ 0) or off (I = 0, V1 − V2 ≤ drop), found by trying states until they agree.
+     ac sources are not solved.
+   A ground fixes its node at 0 V; without one, the − end of the first source is 0 V. Each node also has a leak of
+   1e-12 S to ground so that a floating part does not make the system singular. */
+const TOL = 1e-6;
+const elementPath = e => e.kind === 'wire' && e.route !== 'straight' ? [{x: e.x1, y: e.y1}, e.route === 'hv' ? {x: e.x2, y: e.y1} : {x: e.x1, y: e.y2}, {x: e.x2, y: e.y2}] : [{x: e.x1, y: e.y1}, {x: e.x2, y: e.y2}];
+export {elementPath};
+/** the nodes of the circuit: terminals that coincide, wires joining their ends, ends lying on a wire */
+export function circuitNodes(scene) {
+  const els = scene.objects.filter(o => o.type === 'element'), grounds = scene.objects.filter(o => o.type === 'ground');
+  const tol = Math.max(0.01, (scene.grid || 0.1) / 100);
+  const terms = [];
+  els.forEach(e => { terms.push({p: {x: e.x1, y: e.y1}, el: e, end: 1}); terms.push({p: {x: e.x2, y: e.y2}, el: e, end: 2}); });
+  grounds.forEach(g => terms.push({p: {x: g.x, y: g.y}, ground: g}));
+  const parent = terms.map((_, i) => i), find = i => { while (parent[i] !== i) i = parent[i] = parent[parent[i]]; return i; }, join = (a, b) => { a = find(a); b = find(b); if (a !== b) parent[a] = b; };
+  for (let i = 0; i < terms.length; i++) for (let j = i + 1; j < terms.length; j++) if (Math.hypot(terms[i].p.x - terms[j].p.x, terms[i].p.y - terms[j].p.y) < tol) join(i, j);
+  terms.forEach((t, i) => { if (t.el?.kind === 'wire' && t.end === 1) join(i, i + 1); });
+  /* an end on the middle of a wire */
+  terms.forEach((t, i) => { for (let j = 0; j < terms.length; j += 2) { const w = terms[j].el; if (!w || w.kind !== 'wire' || t.el === w) continue; const P = elementPath(w); for (let s = 0; s + 1 < P.length; s++) if (distSeg(t.p, P[s], P[s + 1]) < tol) join(i, j); } });
+  const ids = new Map(); terms.forEach((t, i) => { const r = find(i); if (!ids.has(r)) ids.set(r, ids.size); t.node = ids.get(r); });
+  return {terms, count: ids.size, els, grounds};
+}
+function gauss(A, b) {
+  const n = b.length;
+  for (let c = 0; c < n; c++) {
+    let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+    if (Math.abs(A[p][c]) < 1e-14) return null;
+    [A[c], A[p]] = [A[p], A[c]]; [b[c], b[p]] = [b[p], b[c]];
+    for (let r = c + 1; r < n; r++) { const k = A[r][c] / A[c][c]; if (!k) continue; for (let j = c; j < n; j++) A[r][j] -= k * A[c][j]; b[r] -= k * b[c]; }
+  }
+  const x = new Array(n).fill(0);
+  for (let r = n - 1; r >= 0; r--) { let s = b[r]; for (let j = r + 1; j < n; j++) s -= A[r][j] * x[j]; x[r] = s / A[r][r]; }
+  return x;
+}
+const SOURCE = ['battery', 'cell', 'dc'], RESIST = ['resistor', 'bulb', 'galvanometer'];
+/* one linear solve with given diode states; replace: {id: 'short'|'open'|{current}} overrides for the transient;
+   zeroSources: emfs and drops at 0 */
+function mnaSolve(net, ref, diodeOn, replace = {}, zeroSources = false) {
+  const {terms, count, els} = net, node = (e, end) => terms.find(t => t.el === e && t.end === end).node;
+  const idx = k => k === ref ? -1 : k < ref ? k : k - 1, nv = count - 1;
+  const vs = [];      /* branches with a current unknown: [el, emf, r] */
+  const cur = [];     /* current sources: [el, I] */
+  const res = [];
+  for (const e of els) {
+    const rep = replace[e.id];
+    if (e.kind === 'wire') continue;
+    if (rep === 'open') continue;
+    if (rep === 'short') { vs.push([e, 0, 0]); continue; }
+    if (rep && typeof rep === 'object') { cur.push([e, rep.current]); continue; }
+    if (SOURCE.includes(e.kind)) vs.push([e, zeroSources ? 0 : e.value, e.r]);
+    else if (RESIST.includes(e.kind)) { if (e.value > 0) res.push([e, e.value]); else vs.push([e, 0, 0]); }
+    else if (e.kind === 'ammeter' || e.kind === 'inductor' || (e.kind === 'switch' && e.closed)) vs.push([e, 0, 0]);
+    else if ((e.kind === 'diode' || e.kind === 'led') && diodeOn.has(e.id)) vs.push([e, zeroSources ? 0 : -e.value, 0]);
+  }
+  const n = nv + vs.length, A = Array.from({length: n}, () => new Array(n).fill(0)), b = new Array(n).fill(0);
+  const addG = (a, c, g) => { const i = idx(a), j = idx(c); if (i >= 0) A[i][i] += g; if (j >= 0) A[j][j] += g; if (i >= 0 && j >= 0) { A[i][j] -= g; A[j][i] -= g; } };
+  for (let k = 0; k < count; k++) if (k !== ref) A[idx(k)][idx(k)] += 1e-12;
+  for (const [e, R] of res) addG(node(e, 1), node(e, 2), 1 / R);
+  for (const [e, I] of cur) { const i = idx(node(e, 1)), j = idx(node(e, 2)); if (i >= 0) b[i] -= I; if (j >= 0) b[j] += I; }
+  vs.forEach(([e, emf, r], m) => {
+    const row = nv + m, i = idx(node(e, 1)), j = idx(node(e, 2));
+    /* current I (x1 → x2 inside) leaves node 1 and enters node 2 */
+    if (i >= 0) { A[i][row] += 1; A[row][i] -= 1; }
+    if (j >= 0) { A[j][row] -= 1; A[row][j] += 1; }
+    A[row][row] += r; b[row] = emf;      /* V2 − V1 + r I = emf */
+  });
+  const x = gauss(A, b);
+  if (!x || x.some(v => !Number.isFinite(v))) return null;
+  const V = k => k === ref ? 0 : x[idx(k)];
+  const out = new Map();
+  for (const e of els) {
+    const V1 = V(node(e, 1)), V2 = V(node(e, 2)); let I = 0;
+    const m = vs.findIndex(([x0]) => x0 === e);
+    if (m >= 0) I = x[nv + m]; else { const rr = res.find(([x0]) => x0 === e); if (rr) I = (V1 - V2) / rr[1]; const cc = cur.find(([x0]) => x0 === e); if (cc) I = cc[1]; }
+    out.set(e.id, {V1, V2, I});
+  }
+  return {out, V};
+}
+/** the DC steady state: {ok, code, nodes, el: Map id → {V1, V2, I (x1 → x2), drop V1 − V2}, transients} */
+export function solveCircuit(scene) {
+  const net = circuitNodes(scene), {els, terms} = net;
+  if (!els.some(e => e.kind !== 'wire')) return {ok: false, code: 'empty', el: new Map(), transients: [], net};
+  if (els.some(e => e.kind === 'ac')) return {ok: false, code: 'ac', el: new Map(), transients: [], net};
+  const g = terms.find(t => t.ground), src = els.find(e => SOURCE.includes(e.kind));
+  const ref = g ? g.node : src ? terms.find(t => t.el === src && t.end === 1).node : 0;
+  const diodes = els.filter(e => e.kind === 'diode' || e.kind === 'led');
+  let on = new Set(), sol = null;
+  for (let it = 0; it < 2 * diodes.length + 2; it++) {
+    sol = mnaSolve(net, ref, on); if (!sol) return {ok: false, code: 'short', el: new Map(), transients: [], net};
+    const next = new Set();
+    for (const d of diodes) { const r = sol.out.get(d.id); if (on.has(d.id) ? r.I >= -1e-12 : r.V1 - r.V2 > d.value + 1e-12) next.add(d.id); }
+    if (next.size === on.size && [...next].every(id => on.has(id))) break;
+    on = next;
+  }
+  const el = new Map([...sol.out].map(([id, r]) => [id, {...r, drop: r.V1 - r.V2}]));
+  /* the transient of the one capacitor or inductor: its Thevenin resistance with the sources at zero */
+  const dyn = els.filter(e => e.kind === 'capacitor' || e.kind === 'inductor'), transients = [];
+  if (dyn.length === 1) {
+    const e = dyn[0], test = mnaSolve(net, ref, on, {[e.id]: {current: -1}}, true);
+    if (test) {
+      const r = test.out.get(e.id), Rth = r.V1 - r.V2;     /* the element drives 1 A out of its x1 end: V1 − V2 = R_th */
+      if (Rth > 1e-9 && Rth < 1e12) {
+        if (e.kind === 'capacitor') { const tau = Rth * e.value * 1e-6, Vf = el.get(e.id).V1 - el.get(e.id).V2; transients.push({id: e.id, kind: 'rc', tau, R: Rth, final: Vf, at: t => Vf * (1 - Math.exp(-t / tau)), current: t => Vf / Rth * Math.exp(-t / tau)}); }
+        else { const tau = e.value / Rth, If = el.get(e.id).I; transients.push({id: e.id, kind: 'rl', tau, R: Rth, final: If, at: t => If * (1 - Math.exp(-t / tau))}); }
+      }
+    }
+  }
+  return {ok: true, el, transients, net, ref};
+}
+/** equivalent resistance between two terminals of a network of resistors (for tests and readouts) */
+export const seriesR = (...r) => r.reduce((a, b) => a + b, 0), parallelR = (...r) => 1 / r.reduce((a, b) => a + 1 / b, 0);
+
+/* ── thermodynamics: ideal-gas processes on a P–V graph (any consistent units; for a cycle nR = 1, P = T/V) ── */
+/** points of a process in data units: isotherm P = y1 x1 / V, adiabat P = y1 (x1/V)^γ, isobar P = y1, isochore V = x1 */
+export function processPoints(kind, {x1, x2, y1, y2, gamma = 1.4}, n = 160) {
+  const pts = [];
+  if (kind === 'isochore') { for (let i = 0; i <= 1; i++) pts.push({x: x1, y: i ? y2 : y1}); return pts; }
+  const P = kind === 'isotherm' ? V => y1 * x1 / V : kind === 'adiabat' ? V => y1 * Math.pow(x1 / V, gamma) : () => y1;
+  for (let i = 0; i <= n; i++) { const V = x1 + (x2 - x1) * i / n; pts.push({x: V, y: P(V)}); }
+  return pts;
+}
+/** ∫ P dV along a process, by Simpson's rule on its own formula (2000 intervals) */
+export function processWork(kind, o) {
+  if (kind === 'isochore') return 0;
+  const P = kind === 'isotherm' ? V => o.y1 * o.x1 / V : kind === 'adiabat' ? V => o.y1 * Math.pow(o.x1 / V, o.gamma) : () => o.y1;
+  const N = 2000, h = (o.x2 - o.x1) / N; let s = P(o.x1) + P(o.x2);
+  for (let i = 1; i < N; i++) s += (i % 2 ? 4 : 2) * P(o.x1 + i * h);
+  return s * h / 3;
+}
+/** an ideal-gas cycle (nR = 1): its states A, B, C, D, its legs, the work W (from the integrals), the heat taken in
+ *  Q_in (from the state functions: Q = W on an isotherm, C_V ΔT on an isochore, 0 on an adiabat) and η = W / Q_in */
+export function gasCycle(o) {
+  const g = o.gamma, cv = 1 / (g - 1), Th = Math.max(o.t1, o.t2), Tc = Math.min(o.t1, o.t2), Va = Math.min(o.v1, o.v2), Vb = Math.max(o.v1, o.v2);
+  let S;
+  if (o.kind === 'carnot') { const k = Math.pow(Th / Tc, cv); S = [[Va, Th], [Vb, Th], [Vb * k, Tc], [Va * k, Tc]]; }
+  else if (o.kind === 'otto') { const T2 = Tc * Math.pow(Vb / Va, g - 1), T3 = Math.max(Th, T2 * 1.0001), T4 = T3 * Math.pow(Va / Vb, g - 1); S = [[Vb, Tc], [Va, T2], [Va, T3], [Vb, T4]]; }
+  else S = [[Va, Th], [Vb, Th], [Vb, Tc], [Va, Tc]];
+  const states = S.map(([V, T], i) => ({name: 'ABCD'[i], V, T, P: T / V}));
+  const kinds = o.kind === 'carnot' ? ['isotherm', 'adiabat', 'isotherm', 'adiabat'] : o.kind === 'otto' ? ['adiabat', 'isochore', 'adiabat', 'isochore'] : ['isotherm', 'isochore', 'isotherm', 'isochore'];
+  const legs = kinds.map((kind, i) => {
+    const a = states[i], b = states[(i + 1) % 4], p = {x1: a.V, x2: b.V, y1: a.P, y2: b.P, gamma: g};
+    const W = processWork(kind, p), Q = kind === 'isotherm' ? W : kind === 'adiabat' ? 0 : cv * (b.T - a.T);
+    return {kind, from: a.name, to: b.name, pts: processPoints(kind, p), W, Q};
+  });
+  const W = legs.reduce((s, l) => s + l.W, 0), Qin = legs.reduce((s, l) => s + Math.max(0, l.Q), 0);
+  return {states, legs, W, Qin, Qout: Qin - W, eta: W / Qin, Th, Tc};
+}
+
+/* ── optics ── sign convention ("real is positive"): an object distance u > 0 for a real object on the side the light
+   comes from, an image distance v > 0 for a real image (beyond a lens, in front of a mirror), f > 0 for a converging
+   lens or a concave mirror. Thin lens and mirror: 1/u + 1/v = 1/f, magnification m = −v/u. The ray tracer uses the
+   thin-element (paraxial) map at a lens or a mirror, s' = s − y/f for the slope s along the direction of travel and
+   the height y above its axis, which images every point exactly, and Snell's law (with total internal reflection) at
+   the faces of prisms and slabs. */
+export const lensImage = (u, f) => 1 / (1 / f - 1 / u);
+export const mirrorImage = (u, f) => 1 / (1 / f - 1 / u);
+export function prismCorners(o) { const ht = (o.size / 2) / Math.tan(o.apex * Math.PI / 360); return [{x: o.x - o.size / 2, y: o.y}, {x: o.x + o.size / 2, y: o.y}, {x: o.x, y: o.y + ht}]; }
+const slabCorners = o => [{x: o.x, y: o.y}, {x: o.x + o.w, y: o.y}, {x: o.x + o.w, y: o.y + o.h}, {x: o.x, y: o.y + o.h}];
+const inPoly = (p, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) if ((P[i].y > p.y) !== (P[j].y > p.y) && p.x < (P[j].x - P[i].x) * (p.y - P[i].y) / (P[j].y - P[i].y) + P[i].x) c = !c; return c; };
+/** a ray from p in direction d through the scene's optics: {pts, hits, d (the last direction)} */
+export function traceRay(scene, p0, d0, {len = 50, maxHits = 16} = {}) {
+  const lenses = scene.objects.filter(o => o.type === 'lens'), mirrors = scene.objects.filter(o => o.type === 'mirror');
+  const polys = scene.objects.filter(o => o.type === 'prism' || o.type === 'slab').map(o => ({o, P: o.type === 'prism' ? prismCorners(o) : slabCorners(o)}));
+  let p = p0, d = vec.unit(d0), left = len, hits = 0; const pts = [p];
+  while (left > 1e-9 && hits < maxHits) {
+    let best = null;
+    const consider = (t, what) => { if (t > 1e-7 && t <= left && (!best || t < best.t)) best = {t, ...what}; };
+    if (Math.abs(d.x) > 1e-12) {
+      for (const L of lenses) { const t = (L.x - p.x) / d.x, y = p.y + d.y * t; if (Math.abs(y - L.y) <= L.h * 1.5) consider(t, {lens: L}); }
+      for (const M of mirrors) { const t = (M.x - p.x) / d.x, y = p.y + d.y * t; if (Math.abs(y - M.y) <= M.h / 2 * 1.02) consider(t, {mirror: M}); }
+    }
+    for (const {o, P} of polys) for (let i = 0; i < P.length; i++) {
+      const a = P[i], b = P[(i + 1) % P.length], s = vec.sub(b, a), den = vec.cross(d, s); if (Math.abs(den) < 1e-14) continue;
+      const t = vec.cross(vec.sub(a, p), s) / den, u = vec.cross(vec.sub(a, p), d) / den;
+      if (u >= 0 && u <= 1) consider(t, {poly: o, P, edge: vec.unit(s)});
+    }
+    if (!best) { p = vec.add(p, vec.mul(d, left)); pts.push(p); left = 0; break; }
+    p = vec.add(p, vec.mul(d, best.t)); left -= best.t; pts.push(p); hits++;
+    if (best.lens || best.mirror) {
+      const E = best.lens || best.mirror, sx = Math.sign(d.x), s = d.y / Math.abs(d.x);
+      if (best.lens) d = vec.unit({x: sx, y: s - (p.y - E.y) / E.f});
+      else {
+        if ((E.face === 'left') !== (sx > 0)) { left = 0; break; }      /* the back of a mirror */
+        d = vec.unit({x: -sx, y: E.f ? s - (p.y - E.y) / E.f : s});
+      }
+      p = vec.add(p, vec.mul(d, 1e-9));
+    } else {
+      const N0 = vec.perp(best.edge), inside = inPoly(vec.add(p, vec.mul(d, -1e-6)), best.P);
+      let N = vec.dot(N0, d) > 0 ? vec.mul(N0, -1) : N0;       /* against the ray */
+      const n1 = inside ? best.poly.n : 1, n2 = inside ? 1 : best.poly.n, eta = n1 / n2, c1 = -vec.dot(d, N), k = 1 - eta * eta * (1 - c1 * c1);
+      d = k < 0 ? vec.unit(vec.add(d, vec.mul(N, 2 * c1))) : vec.unit(vec.add(vec.mul(d, eta), vec.mul(N, eta * c1 - Math.sqrt(k))));
+      p = vec.add(p, vec.mul(d, 1e-9));
+    }
+  }
+  return {pts, hits, d, end: p};
+}
+/** the image of an object arrow through the system, by tracing two rays from its tip and meeting their last lines:
+ *  {x, y, h, real, m} (null if the rays leave parallel or there is no lens or mirror ahead) */
+export function opticImage(scene, o, span = 200) {
+  const rays = principalRays(scene, o, span); if (rays.length < 2) return null;
+  const [a, b] = rays, pa = a.trace.pts[a.trace.pts.length - 2], pb = b.trace.pts[b.trace.pts.length - 2], da = a.trace.d, db = b.trace.d;
+  const den = vec.cross(da, db); if (Math.abs(den) < 1e-12) return null;
+  const t = vec.cross(vec.sub(pb, pa), db) / den, u = vec.cross(vec.sub(pb, pa), da) / den, I = vec.add(pa, vec.mul(da, t));
+  return {x: I.x, y: o.y, h: I.y - o.y, top: I, real: t > 0 && u > 0, m: (I.y - o.y) / o.h, lastA: pa, lastB: pb};
+}
+/** the principal rays of an object arrow: parallel to the axis, through the centre (vertex) of the first lens or
+ *  mirror, and through its front focal point */
+export function principalRays(scene, o, span = 50) {
+  const els = scene.objects.filter(e => (e.type === 'lens' || e.type === 'mirror') && e.x > o.x + 1e-6).sort((a, b) => a.x - b.x), E = els[0];
+  if (!E) return [];
+  const tip = {x: o.x, y: o.y + o.h}, out = [];
+  const go = (d, kind) => out.push({kind, trace: traceRay(scene, tip, d, {len: span})});
+  go({x: 1, y: 0}, 'parallel');
+  go(vec.sub({x: E.x, y: E.y}, tip), 'centre');
+  if (E.type === 'lens' || E.f) { let d = vec.sub({x: E.x - E.f, y: E.y}, tip); if (Math.abs(d.x) > 1e-6) { if (d.x < 0) d = vec.mul(d, -1); go(d, 'focal'); } }
+  return out;
+}
+
+/* ── single slit, double slit, grating: I(θ)/I₀ = (sin β / β)² (sin Nα / N sin α)², β = π a sin θ / λ,
+   α = π d sin θ / λ (a, d in mm, L in m, λ in nm); y = L tan θ on the screen ── */
+export function slitIntensity(o, y) {
+  const lam = o.lambda * 1e-9, th = Math.atan2(y, o.L), s = Math.sin(th), b = Math.PI * o.a * 1e-3 * s / lam, a = Math.PI * o.d * 1e-3 * s / lam;
+  const env = Math.abs(b) < 1e-9 ? 1 : (Math.sin(b) / b) ** 2;
+  if (o.n <= 1) return env;
+  const N = Math.round(o.n), sa = Math.sin(a), inter = Math.abs(sa) < 1e-9 ? 1 : (Math.sin(N * a) / (N * sa)) ** 2;
+  return env * inter;
+}
+export const fringeSpacing = o => o.lambda * 1e-9 * o.L / (o.d * 1e-3);
+/** the half-height of the screen shown (m): three and a half fringes, or the single slit's second minimum */
+export const slitRange = o => o.n <= 1 ? 2.6 * o.lambda * 1e-9 * o.L / (o.a * 1e-3) : 3.5 * fringeSpacing(o);
+/** the bright fringes (principal maxima) on the screen within ±range (m), found numerically */
+export function slitMaxima(o, range = slitRange(o)) {
+  const N = 4000, out = []; let prev = slitIntensity(o, -range), cur = slitIntensity(o, -range + 2 * range / N);
+  for (let i = 2; i <= N; i++) { const y = -range + 2 * range * i / N, next = slitIntensity(o, y); if (cur >= prev && cur > next && cur > (o.n > 2 ? 0.25 : 0.05)) {
+    let lo = y - 4 * range / N, hi = y; for (let k = 0; k < 60; k++) { const m1 = lo + (hi - lo) / 3, m2 = hi - (hi - lo) / 3; if (slitIntensity(o, m1) < slitIntensity(o, m2)) lo = m1; else hi = m2; } out.push((lo + hi) / 2); }
+    prev = cur; cur = next; }
+  return out;
+}
+
+/* ── quantum wells (L in nm, V0 and E in eV, mass in electron masses) ── */
+/** infinite well: E_n = n² h² / (8 m L²) in eV */
+export const infiniteWellEnergy = (n, L, mass = 1) => n * n * H_PLANCK * H_PLANCK / (8 * mass * M_E * (L * 1e-9) ** 2) / EV;
+/** finite well of depth V0 (V = 0 inside |x| < L/2): the bound energies, from z tan z = √(z0² − z²) (even) and
+ *  −z cot z = √(z0² − z²) (odd), z = kL/2, z0 = (L/2)√(2 m V0)/ħ; E = 2ħ² z² / (m L²) */
+export function finiteWellLevels(L, V0, mass = 1) {
+  const m = mass * M_E, Lm = L * 1e-9, z0 = Lm / 2 * Math.sqrt(2 * m * V0 * EV) / HBAR, out = [];
+  const root = (f, a, b) => { let fa = f(a); for (let k = 0; k < 200; k++) { const c = (a + b) / 2, fc = f(c); if ((fc > 0) === (fa > 0)) { a = c; fa = fc; } else b = c; } return (a + b) / 2; };
+  for (let k = 0; k * Math.PI / 2 < z0; k++) {
+    const a = k * Math.PI / 2 + 1e-12, b = Math.min((k + 1) * Math.PI / 2 - 1e-12, z0);
+    const f = k % 2 === 0 ? z => z * Math.tan(z) - Math.sqrt(Math.max(0, z0 * z0 - z * z)) : z => -z / Math.tan(z) - Math.sqrt(Math.max(0, z0 * z0 - z * z));
+    if (b <= a) continue;
+    if ((f(a) > 0) === (f(b) > 0)) continue;
+    const z = root(f, a, b);
+    out.push({n: out.length + 1, E: 2 * HBAR * HBAR * z * z / (m * Lm * Lm) / EV, parity: k % 2 === 0 ? 'even' : 'odd', z});
+  }
+  return out;
+}
+const hermite = (n, x) => { let a = 1, b = 2 * x; if (n === 0) return a; for (let k = 1; k < n; k++) { const c = 2 * x * b - 2 * k * a; a = b; b = c; } return b; };
+/** a well's potential, levels and wave functions: {V(x), xs: [x0, x1] (nm), Emax, levels: [{n, E, psi(x)}], T} */
+export function wellModel(o) {
+  const m = o.mass * M_E, L = o.L, k = E => Math.sqrt(2 * m * Math.max(0, E) * EV) / HBAR * 1e-9;   /* per nm */
+  if (o.kind === 'infinite') {
+    const levels = Array.from({length: o.levels}, (_, i) => { const n = i + 1; return {n, E: infiniteWellEnergy(n, L, o.mass), psi: x => Math.abs(x) > L / 2 ? 0 : n % 2 ? Math.cos(n * Math.PI * x / L) : Math.sin(n * Math.PI * x / L)}; });
+    return {V: x => Math.abs(x) > L / 2 ? Infinity : 0, xs: [-0.8 * L, 0.8 * L], walls: [-L / 2, L / 2], Emax: (levels.at(-1)?.E || infiniteWellEnergy(1, L, o.mass)) * 1.3, levels};
+  }
+  if (o.kind === 'finite') {
+    const levels = finiteWellLevels(L, o.V0, o.mass).slice(0, o.levels).map(l => {
+      const kk = k(l.E), kap = Math.sqrt(2 * m * (o.V0 - l.E) * EV) / HBAR * 1e-9, even = l.parity === 'even';
+      const edge = even ? Math.cos(kk * L / 2) : Math.sin(kk * L / 2);
+      const raw = x => Math.abs(x) <= L / 2 ? (even ? Math.cos(kk * x) : Math.sin(kk * x)) : Math.sign(even ? 1 : x) * edge * Math.exp(-kap * (Math.abs(x) - L / 2));
+      return {...l, psi: raw};
+    });
+    return {V: x => Math.abs(x) > L / 2 ? o.V0 : 0, xs: [-L, L], walls: [-L / 2, L / 2], Emax: o.V0 * 1.3, levels};
+  }
+  if (o.kind === 'harmonic') {
+    const w = o.V0 * EV / HBAR, x0 = Math.sqrt(HBAR / (m * w)) * 1e9, N = Math.max(1, o.levels), xt = x0 * Math.sqrt(2 * N + 1) * 1.35;
+    const levels = Array.from({length: o.levels}, (_, n) => ({n, E: (n + 0.5) * o.V0, psi: x => hermite(n, x / x0) * Math.exp(-((x / x0) ** 2) / 2)}));
+    return {V: x => 0.5 * m * w * w * (x * 1e-9) ** 2 / EV, xs: [-xt, xt], Emax: (N + 0.5) * o.V0 * 1.25, levels, x0};
+  }
+  /* barrier (V0 for |x| < L/2) and step (V0 for x > 0): one incident energy E */
+  const E = Math.max(1e-6, o.E), k1 = k(E), lam = 2 * Math.PI / k1, span = Math.max(2.5 * L, 1.8 * lam);
+  if (o.kind === 'step') {
+    const below = E < o.V0, kap = Math.sqrt(2 * m * Math.abs(o.V0 - E) * EV) / HBAR * 1e-9, t = below ? 0 : 2 * k1 / (k1 + kap);
+    const T = below ? 0 : 4 * k1 * kap / (k1 + kap) ** 2;
+    return {V: x => x > 0 ? o.V0 : 0, xs: [-span, span], walls: [0], Emax: Math.max(o.V0, E) * 1.3, T, levels: [{n: 0, E, psi: x => x <= 0 ? Math.cos(k1 * x) : below ? Math.exp(-kap * x) : t * Math.cos(kap * x)}]};
+  }
+  const below = E < o.V0, q = Math.sqrt(2 * m * Math.abs(o.V0 - E) * EV) / HBAR * 1e-9;
+  const T = below ? 1 / (1 + o.V0 ** 2 * Math.sinh(q * L) ** 2 / (4 * E * (o.V0 - E))) : 1 / (1 + o.V0 ** 2 * Math.sin(q * L) ** 2 / (4 * E * Math.max(1e-12, E - o.V0)));
+  const st = Math.sqrt(T);
+  const psi = x => x < -L / 2 ? Math.cos(k1 * (x + L / 2)) : x > L / 2 ? st * Math.cos(k1 * (x - L / 2)) : below ? Math.exp(Math.log(st) * (x + L / 2) / L) : Math.cos(q * (x + L / 2)) * (1 + (st - 1) * (x + L / 2) / L);
+  return {V: x => Math.abs(x) < L / 2 ? o.V0 : 0, xs: [-span, span], walls: [-L / 2, L / 2], Emax: Math.max(o.V0, E) * 1.35, T, levels: [{n: 0, E, psi}]};
+}
+/** energy levels (eV): hydrogen E_n = −13.6057/n², or the custom list; transitions "a-b" with λ = hc/|ΔE| */
+export function levelModel(o) {
+  const E = o.kind === 'hydrogen' ? Array.from({length: o.n}, (_, i) => ({n: i + 1, E: -13.605693 / (i + 1) ** 2})) : String(o.values).split(/[,;\s]+/).map(Number).filter(Number.isFinite).slice(0, 12).sort((a, b) => a - b).map((e, i) => ({n: i + 1, E: e}));
+  const trans = String(o.trans).split(/[,;\s]+/).map(s => /^(\d+)\s*[-→>]+\s*(\d+)$/.exec(s)).filter(Boolean).map(m => ({from: +m[1], to: +m[2]})).filter(t => t.from !== t.to && E[t.from - 1] && E[t.to - 1])
+    .map(t => { const dE = E[t.from - 1].E - E[t.to - 1].E; return {...t, dE, lambda: HC_EV_NM / Math.abs(dE)}; });
+  return {levels: E, trans};
+}
+/** special relativity: γ, and the events of a clock's ticks on its worldline (x0 + β ct, every τ of proper time) */
+export const lorentzGamma = beta => 1 / Math.sqrt(1 - beta * beta);
+export const clockTicks = (o, max) => { const g = lorentzGamma(o.beta), out = []; for (let k = 1; g * k * o.tau <= max + 1e-9 && k < 200; k++) out.push({ct: g * k * o.tau, x: o.x0 + o.beta * g * k * o.tau, k}); return out; };
+
+/** what the side panel shows for the figure's computed objects: [{id, type, ...values}] */
+export function computedInfo(scene) {
+  const out = [];
+  for (const o of scene.objects) {
+    if (o.type === 'cycle') { const c = gasCycle(o); out.push({id: o.id, type: o.type, W: c.W, Qin: c.Qin, eta: c.eta, carnot: 1 - c.Tc / c.Th}); }
+    else if (o.type === 'oarrow') { const im = opticImage(scene, o); if (im) out.push({id: o.id, type: o.type, x: im.x, h: im.h, m: im.m, real: im.real}); }
+    else if (o.type === 'slits') out.push({id: o.id, type: o.type, dy: fringeSpacing(o), n: o.n});
+    else if (o.type === 'well') { const w = wellModel(o); out.push({id: o.id, type: o.type, E: w.levels.map(l => l.E), T: w.T}); }
+    else if (o.type === 'levels') out.push({id: o.id, type: o.type, trans: levelModel(o).trans});
+    else if (o.type === 'spacetime') out.push({id: o.id, type: o.type, gamma: lorentzGamma(o.beta)});
+    else if (o.type === 'curve' && o.kind !== 'func' && o.kind !== 'isochore') out.push({id: o.id, type: o.type, W: processWork(o.kind, o)});
+  }
+  return out;
 }

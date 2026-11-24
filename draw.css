@@ -5,12 +5,25 @@ main{max-width:1280px}
 .dbar select{width:auto;padding:7px 8px}.dbar .sep{width:1px;height:26px;background:var(--line);margin:0 4px}
 .dbar button,.dbar .btn{padding:6px 11px;font-size:14px}
 .filebtn{position:relative;overflow:hidden}.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
-.work{display:grid;grid-template-columns:132px minmax(0,1fr) 300px;gap:12px;align-items:start}
-.palette{display:grid;gap:10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:10px}
-.palette h3{margin:0 0 4px;font-size:11.5px;color:var(--muted);font-weight:650;letter-spacing:.02em}
-.palette .grp{display:grid;gap:4px}
-.palette button{padding:5px 8px;font-size:13px;text-align:left;border-radius:8px}
-.palette button.on{background:var(--soft);border-color:var(--accent);color:var(--accent2)}
+.work{display:grid;grid-template-columns:172px minmax(0,1fr) 300px;gap:12px;align-items:start}
+.palwrap{display:grid;gap:6px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:8px}
+.palwrap input[type=search]{padding:6px 8px;font-size:13px;width:100%}
+.palette{display:grid;gap:8px}
+.palette .tabs{display:flex;flex-wrap:wrap;gap:3px}
+.palette .tabs button{padding:3px 7px;font-size:12px;border-radius:7px}
+.palette .tabs button.on{background:var(--rail);border-color:var(--rail);color:#fff}
+.palette .items{display:grid;gap:4px;max-height:62vh;overflow:auto}
+.palette .items button{padding:5px 8px;font-size:13px;text-align:left;border-radius:8px}
+.palette .items button.on{background:var(--soft);border-color:var(--accent);color:var(--accent2)}
+.canvas .handle{cursor:grab}
+.tin{display:flex;gap:4px}.tin input{flex:1;min-width:0}.symbtn{padding:2px 8px;font-size:13px;border-radius:7px;font-family:'Times New Roman',serif}
+.tex svg{display:block;max-width:100%;height:auto;margin-top:2px}
+.sympop{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:8px 10px;margin:0 0 8px;max-height:46vh;overflow:auto}
+.symhead{display:flex;justify-content:space-between;align-items:center}.symhead button{padding:1px 8px}
+.symgrp{margin-top:6px}.syms{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.syms button{padding:2px 4px;min-width:34px;min-height:32px;border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center}
+.syms button svg{display:block;max-height:28px;width:auto}
+ul.info{margin:4px 0 0;padding-left:18px;font-size:13px}ul.info li{margin:2px 0}
 .stage{min-width:0}
 .canvas{border:1px solid var(--line);border-radius:12px;background:#fff;padding:6px;touch-action:none;user-select:none;-webkit-user-select:none}
 .canvas svg{display:block;margin:auto;width:auto;height:auto;max-width:100%;max-height:min(68vh,640px)}
@@ -41,9 +54,11 @@ main{max-width:1280px}
 .ainote ul{margin:6px 0 0;padding-left:18px}.ainote button{padding:1px 7px;font-size:12px;margin-left:4px}
 .saves{display:grid;gap:4px;margin-top:6px}.saves div{display:flex;gap:6px;align-items:center;font-size:13px}.saves span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.saves button{padding:2px 8px;font-size:12px}
 textarea.q{min-height:64px;font-size:13.5px}
-@media(max-width:1060px){.work{grid-template-columns:116px minmax(0,1fr)}.side{grid-column:1/-1;grid-template-columns:1fr 1fr}}
+@media(max-width:1060px){.work{grid-template-columns:150px minmax(0,1fr)}.side{grid-column:1/-1;grid-template-columns:1fr 1fr}}
 @media(max-width:720px){
   .work{grid-template-columns:1fr}.side{grid-template-columns:1fr}.stage{order:-1}
-  .palette{display:flex;flex-wrap:wrap;gap:6px 10px}.palette .grp{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.palette h3{width:100%;margin:0}
+  .palette .tabs{flex-wrap:nowrap;overflow-x:auto}.palette .tabs button{flex:none;padding:5px 9px;font-size:13px}
+  .palette .items{display:flex;flex-wrap:wrap;max-height:none}.palette .items button{padding:6px 9px}
+  .canvas{padding:2px}.canvas svg{max-height:none}.syms button{min-width:40px;min-height:38px}
   .readouts{grid-template-columns:1fr}.simbar .clock{margin-left:0}
 }

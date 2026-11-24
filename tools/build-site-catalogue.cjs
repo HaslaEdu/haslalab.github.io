@@ -135,7 +135,7 @@ for(const file of ['learn-path.js','learner-form.js','league-view.js','math-inpu
 outputs.set('practice.html',practiceHtml);
 /* the creations page (create.html): its own script and style, and the shared math and Python helpers it loads */
 let createHtml=read('create.html').replace(/href="create\.css(?:\?[^"\n]*)?"/,'href="create.css?v='+digest(read('create.css'))+'"');
-for(const file of ['math-input.js','compute-problems.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['math-input.js','compute-problems.js','code-editor.js','sim-templates.js','create-studio.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('create.html',createHtml);
 /* the teachers' page (teach.html): test builder and AI variants */
 let teachHtml=read('teach.html');
