@@ -52,6 +52,10 @@ export function createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers,ne
    const claimed=await env.DB.prepare('UPDATE oauth_desktop_intents SET started_at=? WHERE intent_hash=? AND started_at IS NULL RETURNING intent_hash').bind(now(),hash).first();
    return claimed?{returnTo:'desktop:'+intent,linkUser:row.link_user}:null;
   },
+  async signupOrigin(env,ret) {
+   const row=await env.DB.prepare('SELECT callback_url FROM oauth_desktop_intents WHERE intent_hash=?').bind(await sha256(ret.slice(8))).first();
+   return row?.callback_url;
+  },
   async finish(env,ret,userId,fresh){
    await ensure(env.DB);const row=await env.DB.prepare('SELECT * FROM oauth_desktop_intents WHERE intent_hash=?').bind(await sha256(ret.slice(8))).first();
    if(!row||row.created_at<now()-300||row.code_hash)return new Response('This sign-in link expired.',{status:400});

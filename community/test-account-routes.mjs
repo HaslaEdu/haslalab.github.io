@@ -24,7 +24,7 @@ function setup(){
     async batch(statements){sql.exec('BEGIN');try{const result=statements.map(s=>s.execute());sql.exec('COMMIT');return result}catch(e){sql.exec('ROLLBACK');throw e}},
   };
   const emails=[],jobs=[],env={DB,ALLOWED_ORIGINS:'https://haslalab.org',AUTH_EMAIL_ENABLED:'on',AUTH_MAIL_FROM:'accounts@hasla.example',ACCOUNT_EMAIL:{async send(message){emails.push(message);return{messageId:'fixture'}}}};
-  const api=async(method,path,body,token)=>{const response=await worker.fetch(new Request('https://worker.invalid/api'+path,{method,headers:{Origin:'https://haslalab.org','CF-Connecting-IP':'192.0.2.77',...(body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined}),env,{waitUntil:job=>jobs.push(job)});return{status:response.status,data:await response.json()}};
+  const api=async(method,path,body,token,origin='https://haslalab.org')=>{const response=await worker.fetch(new Request('https://worker.invalid/api'+path,{method,headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.77',...(body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},body:body?JSON.stringify(body):undefined}),env,{waitUntil:job=>jobs.push(job)});return{status:response.status,data:await response.json()}};
   const proof=()=>new URLSearchParams(new URL(emails.at(-1).text.split('\n\n').find(value=>value.startsWith('https://'))).hash.split('?')[1]).get('token');
   return{sql,api,emails,jobs,proof,close(){sql.close()}};
 }
@@ -33,7 +33,8 @@ test('signup/login, old-password check, verified-email reset and revoked session
     assert.deepEqual(await s.api('GET','/auth/recovery'),{status:200,data:{mail_available:true}});
     // password sign-up spends a code mailed to its address (signup-email.js); that address becomes the verified recovery email
     assert.deepEqual(await s.api('POST','/signup/email-code',{email:'signup-owner@example.com'}),{status:200,data:{ok:true}});const code=s.emails.at(-1).text.split('\n\n').find(line=>/^\d{6}$/.test(line));
-    const signup=await s.api('POST','/signup',{username:'recovery_owner',nickname:'복구 테스트',password:'old-password',consent:{terms:true,privacy:true,age14:true},email:'signup-owner@example.com',code});assert.equal(signup.status,200);const token=signup.data.token;assert.ok(token);assert.equal(signup.data.user.sessionCreatedAt,undefined);
+    const signup=await s.api('POST','/signup',{username:'recovery_owner',nickname:'복구 테스트',password:'old-password',consent:{terms:true,privacy:true,age14:true},email:'signup-owner@example.com',code},undefined,'https://haslaedu.kr');assert.equal(signup.status,200);
+    assert.equal(s.sql.prepare('SELECT source FROM account_signup_sources').get().source,'nonsul');const token=signup.data.token;assert.ok(token);assert.equal(signup.data.user.sessionCreatedAt,undefined);
     assert.equal((await s.api('GET','/me/security')).status,401);
     assert.equal((await s.api('POST','/me/password',{password:'new-password'},token)).data.error,'current_password_required');
     assert.equal((await s.api('POST','/me/password',{old:'wrong-password',password:'new-password'},token)).data.error,'bad_current_password');

@@ -14,6 +14,7 @@ async function setup(){
  const env={DB,ALLOWED_ORIGINS:origin};
  const user=(id,username,{role='user',deleted=0,pw='x',at=T-3600}={})=>sql.prepare('INSERT INTO users(id,username,nickname,pw,role,created_at,deleted) VALUES(?,?,?,?,?,?,?)').run(id,username,'nick_'+username,pw,role,at,deleted);
  user(1,'boss_account',{role:'admin'});user(2,'student_one');user(3,'student_two',{pw:null});user(4,'gone_student',{deleted:1,at:T-40*86400});user(5,'~pending_abc',{pw:null});
+ sql.exec("INSERT INTO account_signup_sources(user_id,source) VALUES(1,'lab'),(2,'lab'),(3,'nonsul')");
  sql.prepare('INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)').run('google','g-3',3,T);
  sql.prepare('INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)').run('discord','d-5',5,T);
  let labN=0;const lab=(uid,status,key='ipho2011_E2')=>sql.prepare(`INSERT INTO lab_sessions(user_id,exam_key,comp,year,tasks,started_at,ended_at,scan_until,upload_hash,status,created_at,graded_at) VALUES(?,?,'ipho',2011,'[]',?,?,?,?,?,?,?)`).run(uid,key,T,T,T,'h'+(++labN),status,T-600,status==='graded'?T-60:null);
@@ -47,6 +48,8 @@ test('admin stats: people leave out admin accounts; grading, sign-in methods and
   const r=await s.get(s.tokens.admin),d=JSON.parse(r.text);
   assert.equal(d.users.created,5);assert.equal(d.users.active,4);assert.equal(d.users.deleted,1);
   assert.equal(d.users.admins,1);assert.equal(d.users.people,3,'students 2, 3 and the pending one');
+  assert.deepEqual(Object.fromEntries(Object.entries(d.signup_sources).map(([source, counts])=>[source, counts.period])),{lab:1,nonsul:1,unknown:1});
+  assert.deepEqual(['lab','nonsul','unknown'].map(source=>d.series.reduce((sum,row)=>sum+row['signup_'+source],0)),[1,1,1]);
   assert.equal(d.users.pending_username,1);assert.equal(d.users.new_period,3,'the deleted account joined before the period; the admin is not counted');
   assert.deepEqual(d.users.methods,{password:1,google:1,discord:1});
   assert.equal(d.lab.graded,2,'the admin’s two graded exams are left out');assert.equal(d.lab.graded_people,1);assert.equal(d.graded.people,1);
