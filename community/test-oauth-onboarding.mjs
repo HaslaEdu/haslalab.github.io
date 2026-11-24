@@ -116,6 +116,20 @@ test('desktop handoff accepts only fixed loopback callbacks and proof-bound, one
   const row=s.sql.prepare('SELECT * FROM oauth_desktop_intents').get();assert.notEqual(row.code_hash,code);assert.notEqual(row.intent_hash,authorize.searchParams.get('desktop'));assert.equal(row.code_verifier,undefined);assert.ok(row.used_at);
  }finally{s.close()}
 });
+test('web OAuth refused by the provider comes back with the step and code (d), never a secret',async()=>{
+ const s=setup();try{
+  const verifier='w'.repeat(64),state='s'.repeat(43),challenge=b64(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)));
+  const start=await s.api('POST','/oauth/web/start',{provider:'google',code_challenge:challenge,state,redirect_uri:'https://physleague.kr/'});assert.equal(start.status,200);
+  const original=globalThis.fetch;globalThis.fetch=async()=>Response.json({error:'invalid_client',error_description:'Bad client credentials fixture-secret'},{status:401});
+  try{
+   const started=await s.get(start.data.authorize_url);const st=new URL(started.headers.get('Location')).searchParams.get('state');
+   const back=await s.get('/api/oauth/google/callback?state='+st+'&code=fixture');assert.equal(back.status,302);
+   const url=new URL(back.headers.get('Location'));assert.equal(url.origin,'https://physleague.kr');
+   const q=new URLSearchParams(url.hash.split('?')[1]);assert.equal(q.get('e'),'oauth_failed');assert.equal(q.get('d'),'token-401-invalid_client');assert.equal(q.get('state'),state);
+   assert.ok(!url.href.includes('fixture-secret'));
+  }finally{globalThis.fetch=original}
+ }finally{s.close()}
+});
 test('web OAuth requires an initiated proof, matching state and a trusted HTTPS return; it cannot redeem as desktop or legacy',async()=>{
  const s=setup();try{
   const verifier='w'.repeat(64),state='s'.repeat(43),challenge=b64(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)));

@@ -1,0 +1,270 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2024, problem T1 — solution — Korean edition on the original layout.
+   ORIGINAL: 5 A3 pages (841.9x1191.1pt) printed from the olympiad web page (as the 2026 pilot):
+   beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 1.50" (stamped), grey separator under the restated question, answer frame (3pt stroke #f3f6f9).
+   The panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math KaTeX at
+   10.8pt (1.2em), text column x 63.4..777.8; question line after the badge starts at x 104.7 (pitch 15.9pt),
+   other paragraphs pitch 13.6pt, all left-aligned as in the original.
+   Display formulas stamped, except those with Cyrillic, retyped in KaTeX: A3 T_max cases (при -> 일 때, twice),
+   A5 answer (м/с -> m/s), B1 equilibrium equations (F_упр -> F_el), B3 ΔW_p(г), ΔW_p(в), ΔW_p(деф)
+   (-> load, rope, def). A5 table: header units м -> m restored as .ov.
+   "Первое/Второе решение" -> "첫 번째/두 번째 풀이"; "Ответ:" -> "답:".
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.c{text-align:center}
+.d{line-height:0;top:calc(var(--b)*1pt - var(--a))}
+.an{left:79.9pt;width:690pt}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1122.7pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:85.5pt"></div>
+<div class="bx ab" style="top:380.3pt;height:111.0pt"></div>
+<div class="bx ab" style="top:585.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:819.7pt;height:101.3pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">왼쪽 끝이 <span class="nw">$x$만큼</span> 내려간 순간 밧줄 왼쪽 끝의 속력 <span class="nw">$v$와</span> 가속도 <span class="nw">$a$를</span> 구하여라. 답은 <span class="nw">$g$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$x$로</span> 나타내어라.</p>
+<p class="x" style="--b:103.5"><b>첫 번째 풀이:</b> 오른쪽에 늘어진 밧줄 부분의 길이는 <span class="nw">$L_2 = L_1 + L\sin\alpha$이고,</span> 밧줄의 전체 길이는 다음과 같다:</p>
+<p class="x" style="--b:147.8">역학적 에너지 보존 법칙을 쓰자:</p>
+<p class="x" style="--b:211.5">여기서 <span class="nw">$m = \lambda l$은</span> 밧줄의 질량이고, <span class="nw">$\Delta W_p$는</span> 중력장에서 밧줄의 퍼텐셜 에너지 변화이다.</p>
+<p class="x" style="--b:234.8">중력장에서 밧줄의 퍼텐셜 에너지 변화는 길이 <span class="nw">$x$인</span> 밧줄 부분의 퍼텐셜 에너지 변화와 같으며, 이 부분의 질량 중심 좌표 <span class="nw">$x_C$는</span> <span class="nw">$x_{C_1} = -x/2$에서</span> <span class="nw">$x_{C_2} = x/2$로</span> 바뀌었다. 따라서 다음을 얻는다:</p>
+<p class="x" style="--b:294.0"><span class="nw">$\Delta W_p$를</span> 역학적 에너지 보존 법칙에 대입하면 다음을 얻는다:</p>
+<p class="x" style="--b:367.5">따라서:</p>
+<p class="x an" style="--b:408.8">답:</p>
+<p class="x" style="--b:500.2">속력 <span class="nw">$v(x)$와</span> 변위 <span class="nw">$x$는</span> 정비례하므로:</p>
+<p class="x" style="--b:573.0">따라서:</p>
+<p class="x an" style="--b:614.2">답:</p>
+<p class="x" style="--b:696.0"><b>두 번째 풀이:</b> 밧줄의 각 부분에 대한 운동 방정식을 쓰자:</p>
+<p class="x" style="--b:740.2">여기서 <span class="nw">$T_1$과</span> <span class="nw">$T_2$는</span> 각각 도르래 <span class="nw">$1$과</span> <span class="nw">$2$</span> 근처에서 밧줄의 장력이다.</p>
+<p class="x" style="--b:762.8">방정식들을 더하면 다음을 얻는다:</p>
+<p class="x" style="--b:807.0">따라서</p>
+<p class="x an" style="--b:848.2">답:</p>
+<p class="x" style="--b:930.0">가속도 식에 속력을 곱하면 다음을 얻는다:</p>
+<p class="x" style="--b:993.8">적분하면 다음을 얻는다:</p>
+<p class="x" style="--b:1057.5">따라서:</p>
+<div class="f" style="left:365.2pt;top:115.5pt"><span class="fig" data-srcpage="1" data-clip="365.2,115.5,475.5,130.2"></span></div>
+<div class="f" style="left:383.8pt;top:159.3pt"><span class="fig" data-srcpage="1" data-clip="383.8,159.3,458.4,192.4"></span></div>
+<div class="f" style="left:329.0pt;top:259.8pt"><span class="fig" data-srcpage="1" data-clip="329.0,259.8,511.8,277.4"></span></div>
+<div class="f" style="left:335.0pt;top:302.0pt"><span class="fig" data-srcpage="1" data-clip="335.0,302.0,507.2,353.2"></span></div>
+<div class="f" style="left:353.1pt;top:409.4pt"><span class="fig" data-srcpage="1" data-clip="353.1,409.4,487.6,467.2"></span></div>
+<div class="f" style="left:373.4pt;top:506.0pt"><span class="fig" data-srcpage="1" data-clip="373.4,506.0,467.4,558.7"></span></div>
+<div class="f" style="left:361.7pt;top:627.7pt"><span class="fig" data-srcpage="1" data-clip="361.7,627.7,479.0,660.4"></span></div>
+<div class="f" style="left:192.9pt;top:708.0pt"><span class="fig" data-srcpage="1" data-clip="192.9,708.0,647.9,722.7"></span></div>
+<div class="f" style="left:308.5pt;top:774.7pt"><span class="fig" data-srcpage="1" data-clip="308.5,774.7,532.2,789.4"></span></div>
+<div class="f" style="left:361.7pt;top:861.0pt"><span class="fig" data-srcpage="1" data-clip="361.7,861.0,479.0,894.4"></span></div>
+<div class="f" style="left:266.5pt;top:941.5pt"><span class="fig" data-srcpage="1" data-clip="266.5,941.5,573.2,976.2"></span></div>
+<div class="f" style="left:358.2pt;top:1005.3pt"><span class="fig" data-srcpage="1" data-clip="358.2,1005.3,483.3,1039.2"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:120.7pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:165.8pt;height:464.2pt"></div>
+<div class="bx cd" style="top:641.2pt;height:459.0pt"></div>
+<div class="bx cd" style="top:1111.5pt;height:45.0pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:231.0pt"></div>
+<div class="bx sp" style="top:693.0pt"></div>
+<div class="bx ab" style="top:33.7pt;height:110.3pt"></div>
+<div class="bx ab" style="top:382.5pt;height:100.5pt"></div>
+<div class="bx ab" style="top:568.5pt;height:51.0pt"></div>
+<div class="bx ab" style="top:963.0pt;height:126.7pt"></div>
+</div>
+<p class="x an" style="--b:62.2">답:</p>
+<div class="f" style="left:62.5pt;top:175.9pt"><span class="fig" data-srcpage="2" data-clip="62.5,175.9,101.8,196.3"></span></div>
+<p class="x q" style="--b:188.9">경사면 위에 놓인 밧줄 부분의 장력이 그 부분의 길이를 따라 일정해지는 순간, 밧줄 왼쪽 끝의 변위 <span class="nw">$x_1$을</span> 구하여라. 답은 <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$로</span> 나타내어라. <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$가</span> 어떤 관계를 만족할 때 <span class="nw">$x_1$이</span> 밧줄 오른쪽 부분의 처음 길이보다 작은가?</p>
+<p class="x" style="--b:249.0">경사면을 따라 도르래 <span class="nw">$1$에서</span> 도르래 <span class="nw">$2$</span> 쪽으로 향하는 <span class="nw">$y$축을</span> 잡자. 경사면 위에 놓인 길이 <span class="nw">$dy$인</span> 밧줄 부분에 대한 뉴턴 제2법칙을 <span class="nw">$y$축</span> 방향 성분으로 쓰자:</p>
+<p class="x" style="--b:305.2"><span class="nw">$a(x_1) = g\sin\alpha$일</span> 때 <span class="nw">$dT = 0$이다.</span> 따라서:</p>
+<p class="x" style="--b:369.8">따라서:</p>
+<p class="x an" style="--b:411.0">답:</p>
+<p class="x" style="--b:492.0"><span class="nw">$x_1$과</span> <span class="nw">$L_2$를</span> 비교하자:</p>
+<p class="x" style="--b:555.8"><span class="nw">$L_2$의</span> 식에서 <span class="nw">$L_1$과</span> <span class="nw">$L$의</span> 계수는 <span class="nw">$x_1$의</span> 식에서 대응하는 계수보다 크다. 따라서:</p>
+<p class="x an" style="--b:597.0">답: <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$</span> 사이의 관계와 관계없이 언제나 그렇다.</p>
+<div class="f" style="left:62.5pt;top:651.4pt"><span class="fig" data-srcpage="2" data-clip="62.5,651.4,101.8,671.8"></span></div>
+<p class="x q" style="--b:664.4">밧줄의 왼쪽 끝이 거리 <span class="nw">$x$만큼</span> 이동한 순간, 밧줄 장력의 최댓값을 구하여라. 답은 <span class="nw">$\lambda$,</span> <span class="nw">$g$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$x$로</span> 나타내어라.</p>
+<p class="x" style="--b:711.0">밧줄의 연직 부분에서 장력은 도르래와 접하는 점에서 가장 크다. 가속도 <span class="nw">$a(x)$가</span> 항상 <span class="nw">$g$보다</span> 작기 때문이다. 도르래 <span class="nw">$1$과</span> <span class="nw">$2$에</span> 접하는 점에서 밧줄의 장력을 각각 <span class="nw">$T_1$과</span> <span class="nw">$T_2$로</span> 나타내자.</p>
+<p class="x" style="--b:738.8">왼쪽 연직 부분에 대한 뉴턴 제2법칙으로부터 다음을 얻는다:</p>
+<p class="x" style="--b:783.0">따라서:</p>
+<p class="x" style="--b:826.5">밧줄의 경사면 부분을 살펴보자. <span class="nw">$\mathrm{A2}$의</span> 풀이로부터 다음이 나온다:</p>
+<p class="x" style="--b:890.2"><span class="nw">$x \le x_1$이면</span> <span class="nw">$dT/dy$는</span> 양수가 아니고, <span class="nw">$x \ge x_1$이면</span> 음수가 아니다. 따라서 다음이 나온다:</p>
+<p class="x d c" style="--b:919.5;--a:18.8pt">$T_{max} = \begin{cases} T_1 &amp; x \ge x_1\text{일 때} \\ T_2 &amp; x \le x_1\text{일 때}\end{cases}$</p>
+<p class="x" style="--b:950.2"><span class="nw">$a$,</span> <span class="nw">$L_2$,</span> <span class="nw">$x_1$의</span> 식을 대입하면 다음을 얻는다:</p>
+<p class="x an" style="--b:991.5">답:</p>
+<p class="x d c" style="--b:1035.8;--a:33.1pt">$T_{max} = \begin{cases} \dfrac{\lambda g(L_1 + x)(2L_1 + L(1 + \sin\alpha) - 2x)}{2L_1 + L(1 + \sin\alpha)} &amp; x \ge L_1\sin\alpha + \dfrac{L\sin\alpha(1 + \sin\alpha)}{2}\;\text{일 때} \\[14pt] \dfrac{\lambda g(L_1 + L\sin\alpha - x)(2L_1 + L(1 + \sin\alpha) + 2x)}{2L_1 + L(1 + \sin\alpha)} &amp; x \le L_1\sin\alpha + \dfrac{L\sin\alpha(1 + \sin\alpha)}{2}\;\text{일 때}\end{cases}$</p>
+<div class="f" style="left:62.5pt;top:1121.7pt"><span class="fig" data-srcpage="2" data-clip="62.5,1121.7,101.8,1142.1"></span></div>
+<p class="x q" style="--b:1134.7">밧줄이 각각 도르래 <span class="nw">$1$,</span> <span class="nw">$2$와의</span> 접촉을 잃기 시작할 때 밧줄 왼쪽 끝의 변위 <span class="nw">$x_{max(1)}$과</span> <span class="nw">$x_{max(2)}$를</span> 구하여라. 이때 다른 도르래와의 접촉은 유지된다고 보아라. 답은 <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$로</span> 나타내어라.</p>
+<div class="f" style="left:354.6pt;top:62.1pt"><span class="fig" data-srcpage="2" data-clip="354.6,62.1,486.2,120.7"></span></div>
+<div class="f" style="left:362.3pt;top:273.7pt"><span class="fig" data-srcpage="2" data-clip="362.3,273.7,478.4,287.7"></span></div>
+<div class="f" style="left:347.0pt;top:318.7pt"><span class="fig" data-srcpage="2" data-clip="347.0,318.7,494.6,350.7"></span></div>
+<div class="f" style="left:338.1pt;top:423.7pt"><span class="fig" data-srcpage="2" data-clip="338.1,423.7,502.6,455.7"></span></div>
+<div class="f" style="left:286.2pt;top:505.5pt"><span class="fig" data-srcpage="2" data-clip="286.2,505.5,554.5,537.5"></span></div>
+<div class="f" style="left:265.7pt;top:750.0pt"><span class="fig" data-srcpage="2" data-clip="265.7,750.0,575.0,764.7"></span></div>
+<div class="f" style="left:303.2pt;top:794.2pt"><span class="fig" data-srcpage="2" data-clip="303.2,794.2,537.6,808.9"></span></div>
+<div class="f" style="left:371.0pt;top:840.0pt"><span class="fig" data-srcpage="2" data-clip="371.0,840.0,470.9,871.8"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:753.0pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:798.0pt;height:336.0pt"></div>
+<div class="bx sp" style="top:33.8pt"></div>
+<div class="bx sp" style="top:849.8pt"></div>
+<div class="bx ab" style="top:417.0pt;height:110.3pt"></div>
+<div class="bx ab" style="top:658.5pt;height:111.0pt"></div>
+<div class="bx ab" style="top:1040.3pt;height:83.2pt"></div>
+</div>
+<p class="x" style="--b:51.8">질량 <span class="nw">$dm = \lambda dl$인</span> 밧줄 부분에 대한 뉴턴 제2법칙을 쓰자:</p>
+<p class="x" style="--b:98.9">밧줄이 떨어질 때 <span class="nw">$d\vec{N} = 0$이므로:</span></p>
+<p class="x" style="--b:145.5"><span class="nw">$\rho$를</span> 고려하는 면의 곡률 반지름이라 하면 <span class="nw">$dl = \rho d\varphi$이다.</span> 여기서 <span class="nw">$d\varphi$는</span> 고려하는 부분 <span class="nw">$dl$에서</span> 밧줄에 대한 접선이 회전한 각이다.</p>
+<p class="x" style="--b:159.0">운동 방정식을 곡률 중심을 향하는 법선 방향으로 사영하자:</p>
+<p class="x" style="--b:222.8">여기서 <span class="nw">$g_n$은</span> 중력 가속도의 법선 방향 성분이다.</p>
+<p class="x" style="--b:236.2">도르래의 반지름이 작으므로, 밧줄이 떨어지는 조건은 다음과 같다:</p>
+<p class="x" style="--b:279.8">잠시 <span class="nw">$x_{max(1)}$과</span> <span class="nw">$x_{max(2)}$를</span> 각각 <span class="nw">$x_1$과</span> <span class="nw">$x_2$로</span> 다시 나타내자.</p>
+<p class="x" style="--b:294.0"><span class="nw">$x_1$에</span> 대한 방정식은 다음과 같다:</p>
+<p class="x" style="--b:358.5">따라서:</p>
+<p class="x" style="--b:404.2">이 이차 방정식은 양의 근을 하나 가지므로:</p>
+<p class="x an" style="--b:445.5">답:</p>
+<p class="x" style="--b:536.2"><span class="nw">$x_2$에</span> 대한 방정식은 다음과 같다:</p>
+<p class="x" style="--b:600.0">따라서:</p>
+<p class="x" style="--b:645.8">이 이차 방정식은 양의 근을 하나 가지므로:</p>
+<p class="x an" style="--b:687.0">답:</p>
+<div class="f" style="left:62.5pt;top:808.1pt"><span class="fig" data-srcpage="3" data-clip="62.5,808.1,101.8,828.5"></span></div>
+<p class="x q" style="--b:821.2">경사면이 수평면과 이루는 각이 <span class="nw">$\alpha_1 = 30^\circ$,</span> <span class="nw">$\alpha_2 = 45^\circ$,</span> <span class="nw">$\alpha_3 = 60^\circ$일</span> 때, 밧줄이 도르래 중 하나에서 떨어지는 순간 밧줄의 속력을 계산하여라.</p>
+<p class="x" style="--b:867.8">각 각도에 대하여, 밧줄은 <span class="nw">$x$가</span> 그 각도에 해당하는 <span class="nw">$x_{max(1)}$과</span> <span class="nw">$x_{max(2)}$</span> 중 작은 값과 같을 때 떨어진다. 이 값들을 계산하자:</p>
+<p class="x" style="--b:1014.0">따라서 각 <span class="nw">$\alpha_1$에서는</span> 밧줄이 먼저 두 번째 도르래와의 접촉을 잃고, 각 <span class="nw">$\alpha_2$와</span> <span class="nw">$\alpha_3$에서는</span> 첫 번째 도르래와의 접촉을 잃는다.</p>
+<p class="x" style="--b:1027.5">이로부터 다음을 구한다:</p>
+<p class="x an" style="--b:1068.8">답:</p>
+<p class="x c" style="--b:1092.0">$v_1 = 2.068\,\mathrm{m/s} \qquad v_2 = 2.264\,\mathrm{m/s} \qquad v_3 = 2.314\,\mathrm{m/s}.$</p>
+<div class="f" style="left:361.3pt;top:66.0pt"><span class="fig" data-srcpage="3" data-clip="361.3,66.0,479.4,79.9"></span></div>
+<div class="f" style="left:375.5pt;top:113.2pt"><span class="fig" data-srcpage="3" data-clip="375.5,113.2,465.2,127.2"></span></div>
+<div class="f" style="left:307.1pt;top:170.5pt"><span class="fig" data-srcpage="3" data-clip="307.1,170.5,533.7,204.3"></span></div>
+<div class="f" style="left:398.4pt;top:247.8pt"><span class="fig" data-srcpage="3" data-clip="398.4,247.8,442.3,263.7"></span></div>
+<div class="f" style="left:273.5pt;top:305.5pt"><span class="fig" data-srcpage="3" data-clip="273.5,305.5,568.0,340.9"></span></div>
+<div class="f" style="left:299.4pt;top:370.0pt"><span class="fig" data-srcpage="3" data-clip="299.4,370.0,541.3,388.2"></span></div>
+<div class="f" style="left:248.1pt;top:445.4pt"><span class="fig" data-srcpage="3" data-clip="248.1,445.4,592.7,503.2"></span></div>
+<div class="f" style="left:251.8pt;top:547.8pt"><span class="fig" data-srcpage="3" data-clip="251.8,547.8,590.2,582.4"></span></div>
+<div class="f" style="left:273.1pt;top:611.5pt"><span class="fig" data-srcpage="3" data-clip="273.1,611.5,567.7,629.7"></span></div>
+<div class="f" style="left:217.5pt;top:687.6pt"><span class="fig" data-srcpage="3" data-clip="217.5,687.6,623.3,745.5"></span></div>
+<div class="f" style="left:347.8pt;top:888.3pt"><span class="fig" data-srcpage="3" data-clip="347.8,888.3,493.0,997.0"></span></div>
+<p class="x ov" style="--b:900.0;left:421.2pt;--fs:10.8pt;font-family:KaTeX_Main,serif">m</p>
+<p class="x ov" style="--b:900.0;left:478.3pt;--fs:10.8pt;font-family:KaTeX_Main,serif">m</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:285.7pt"></div>
+<div class="bx cd" style="top:330.8pt;height:300.7pt"></div>
+<div class="bx cd" style="top:642.8pt;height:308.2pt"></div>
+<div class="bx cd" style="top:962.2pt;height:194.3pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:85.5pt"></div>
+<div class="bx sp" style="top:382.5pt"></div>
+<div class="bx sp" style="top:694.5pt"></div>
+<div class="bx sp" style="top:1064.2pt"></div>
+<div class="bx ab" style="top:207.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:519.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:839.3pt;height:101.2pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.9pt"><span class="fig" data-srcpage="4" data-clip="62.5,43.9,101.8,64.3"></span></div>
+<p class="x q" style="--b:56.9">계의 평형 위치에 해당하는 밧줄 왼쪽 끝의 변위 <span class="nw">$x_0$을</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라.</p>
+<p class="x" style="--b:103.5">밧줄의 세 부분에 대한 평형 조건을 쓰자:</p>
+<p class="x c" style="--b:125.2">$T_1 = \lambda g(L_1 + x_0) + mg \qquad T_2 - T_1 = \lambda gL\sin\alpha \qquad T_2 = \lambda g(L_2 - x_0) + F_{\mathrm{el}},$</p>
+<p class="x" style="--b:148.5">따라서:</p>
+<p class="x c" style="--b:170.2">$F_{\mathrm{el}} = \lambda g(L\sin\alpha + L_1 + x_0 + x_0 - L_1 - L\sin\alpha) + mg = mg + 2\lambda gx_0.$</p>
+<p class="x" style="--b:193.5"><span class="nw">$F_{\mathrm{el}} = F_0 + kx_0$이므로</span> 다음을 얻는다:</p>
+<p class="x an" style="--b:236.2">답:</p>
+<div class="f" style="left:62.5pt;top:340.9pt"><span class="fig" data-srcpage="4" data-clip="62.5,340.9,101.8,361.3"></span></div>
+<p class="x q" style="--b:353.9">앞 문항의 평형 위치는 용수철 상수가 어떤 최솟값 <span class="nw">$k_{min}$보다</span> 클 때 존재한다. <span class="nw">$k_{min}$을</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라. 이후로는 항상 <span class="nw">$k &gt; k_{min}$이라고</span> 보아라.</p>
+<p class="x" style="--b:400.5"><span class="nw">$\mathrm{B1}$에서</span> 얻은 식의 분모는 양수여야 하므로, 다음 제한 조건을 얻는다:</p>
+<p class="x" style="--b:443.2"><span class="nw">$x_0$은</span> 밧줄 오른쪽 연직 부분의 길이 <span class="nw">$L_2$로도</span> 제한되므로:</p>
+<p class="x" style="--b:507.0">마지막 제한 조건이 더 중요하므로, 다음을 얻는다:</p>
+<p class="x an" style="--b:548.2">답:</p>
+<div class="f" style="left:62.5pt;top:652.9pt"><span class="fig" data-srcpage="4" data-clip="62.5,652.9,101.8,673.3"></span></div>
+<p class="x q" style="--b:665.9">밧줄의 왼쪽 끝이 <span class="nw">$x$만큼</span> 이동할 때 계의 퍼텐셜 에너지 변화 <span class="nw">$\Delta W_p$를</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$,</span> <span class="nw">$x$로</span> 나타내어라.</p>
+<p class="x" style="--b:712.5"><span class="nw">$\Delta W_{p(\mathrm{load})}$와</span> <span class="nw">$\Delta W_{p(\mathrm{rope})}$에</span> 대하여 다음을 얻는다:</p>
+<p class="x c" style="--b:737.2">$\Delta W_{p(\mathrm{load})} = -mgx \qquad \Delta W_{p(\mathrm{load})} = -\lambda gx^2.$</p>
+<p class="x" style="--b:761.2">용수철의 탄성 퍼텐셜 에너지 변화 <span class="nw">$\Delta W_{p(\mathrm{def})}$는</span> 그래프 <span class="nw">$F_{\mathrm{el}}(\Delta l)$</span> 아래의 넓이와 같으며, 다음과 같다:</p>
+<p class="x d c" style="--b:795.0;--a:15.9pt">$\Delta W_{p(\mathrm{def})} = F_0x + \dfrac{kx^2}{2}.$</p>
+<p class="x" style="--b:826.5">결국:</p>
+<p class="x an" style="--b:867.8">답:</p>
+<div class="f" style="left:62.5pt;top:972.4pt"><span class="fig" data-srcpage="4" data-clip="62.5,972.4,101.8,992.8"></span></div>
+<p class="x q" style="--b:985.4">평형 위치에서의 퍼텐셜 에너지 <span class="nw">$W_p$를</span> 0으로 잡으면, 퍼텐셜 에너지는 다음 꼴로 나타낼 수 있다</p>
+<p class="x" style="--b:1051.5"><span class="nw">$A$와</span> <span class="nw">$B$를</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라.</p>
+<p class="x" style="--b:1082.2"><span class="nw">$\Delta W_p$의</span> 식으로부터 다음을 얻는다:</p>
+<p class="x" style="--b:1152.0">평형 위치에서의 퍼텐셜 에너지를 0으로 정하면:</p>
+<div class="f" style="left:383.0pt;top:249.7pt"><span class="fig" data-srcpage="4" data-clip="383.0,249.7,457.7,281.7"></span></div>
+<div class="f" style="left:398.9pt;top:411.7pt"><span class="fig" data-srcpage="4" data-clip="398.9,411.7,441.8,425.7"></span></div>
+<div class="f" style="left:284.0pt;top:456.7pt"><span class="fig" data-srcpage="4" data-clip="284.0,456.7,556.7,489.4"></span></div>
+<div class="f" style="left:354.8pt;top:561.0pt"><span class="fig" data-srcpage="4" data-clip="354.8,561.0,486.0,594.4"></span></div>
+<div class="f" style="left:335.3pt;top:880.0pt"><span class="fig" data-srcpage="4" data-clip="335.3,880.0,505.5,913.2"></span></div>
+<div class="f" style="left:376.4pt;top:999.3pt"><span class="fig" data-srcpage="4" data-clip="376.4,999.3,464.4,1033.2"></span></div>
+<div class="f" style="left:213.9pt;top:1094.5pt"><span class="fig" data-srcpage="4" data-clip="213.9,1094.5,626.9,1132.5"></span></div>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:188.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:233.2pt;height:455.3pt"></div>
+<div class="bx cd" style="top:699.8pt;height:267.7pt"></div>
+<div class="bx sp" style="top:285.0pt"></div>
+<div class="bx sp" style="top:751.5pt"></div>
+<div class="bx ab" style="top:102.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:380.3pt;height:110.2pt"></div>
+<div class="bx ab" style="top:576.7pt;height:101.3pt"></div>
+<div class="bx ab" style="top:846.0pt;height:111.0pt"></div>
+</div>
+<p class="x" style="--b:90.0">따라서:</p>
+<p class="x an" style="--b:131.2">답:</p>
+<div class="f" style="left:62.5pt;top:243.4pt"><span class="fig" data-srcpage="5" data-clip="62.5,243.4,101.8,263.8"></span></div>
+<p class="x q" style="--b:256.4">계를 처음 속력 없이 놓을 때, 추의 최대 속력 <span class="nw">$v_{max}$와</span> 처음 위치로부터 추의 변위 <span class="nw">$x_{max}$를</span> 구하여라. 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라.</p>
+<p class="x" style="--b:303.0">추의 속력은 좌표가 <span class="nw">$x_0$인</span> 점에서 최대가 되며, 역학적 에너지 보존 법칙으로 구한다:</p>
+<p class="x" style="--b:367.5">따라서:</p>
+<p class="x an" style="--b:408.8">답:</p>
+<p class="x" style="--b:499.5"><span class="nw">$x_{max}$에는</span> 추가 멈추는 순간에 이른다. 즉 다음 조건으로 구한다:</p>
+<p class="x" style="--b:564.0">따라서:</p>
+<p class="x an" style="--b:605.2">답:</p>
+<div class="f" style="left:62.5pt;top:709.9pt"><span class="fig" data-srcpage="5" data-clip="62.5,709.9,101.8,730.3"></span></div>
+<p class="x q" style="--b:722.9">줄의 오른쪽 끝이 도르래 2의 높이에 이르려면, 처음 위치에서 추가 가져야 하는 최소 속력 <span class="nw">$v_{min}$은</span> 얼마인가? 답은 <span class="nw">$m$,</span> <span class="nw">$\lambda$,</span> <span class="nw">$L_1$,</span> <span class="nw">$L$,</span> <span class="nw">$\alpha$,</span> <span class="nw">$g$,</span> <span class="nw">$k$,</span> <span class="nw">$F_0$으로</span> 나타내어라.</p>
+<p class="x" style="--b:769.5">추는 <span class="nw">$L_2$만큼</span> 내려간 순간에 멈추어야 한다. 역학적 에너지 보존 법칙으로부터:</p>
+<p class="x" style="--b:833.2">따라서:</p>
+<p class="x an" style="--b:874.5">답:</p>
+<div class="f" style="left:340.3pt;top:32.5pt"><span class="fig" data-srcpage="5" data-clip="340.3,32.5,500.4,71.2"></span></div>
+<div class="f" style="left:344.3pt;top:144.0pt"><span class="fig" data-srcpage="5" data-clip="344.3,144.0,496.5,175.9"></span></div>
+<div class="f" style="left:323.0pt;top:314.5pt"><span class="fig" data-srcpage="5" data-clip="323.0,314.5,519.0,349.2"></span></div>
+<div class="f" style="left:309.9pt;top:408.6pt"><span class="fig" data-srcpage="5" data-clip="309.9,408.6,530.8,467.2"></span></div>
+<div class="f" style="left:329.8pt;top:511.0pt"><span class="fig" data-srcpage="5" data-clip="329.8,511.0,512.0,545.0"></span></div>
+<div class="f" style="left:370.5pt;top:618.0pt"><span class="fig" data-srcpage="5" data-clip="370.5,618.0,470.3,650.0"></span></div>
+<div class="f" style="left:286.2pt;top:781.0pt"><span class="fig" data-srcpage="5" data-clip="286.2,781.0,555.2,815.0"></span></div>
+<div class="f" style="left:228.8pt;top:874.3pt"><span class="fig" data-srcpage="5" data-clip="228.8,874.3,612.2,933.0"></span></div>
+</div>
+</body></html>

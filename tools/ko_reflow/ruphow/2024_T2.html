@@ -1,0 +1,133 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* RuPhO W ("Road to IPhO") 2024, problem T2 — Korean edition on the original layout.
+   ORIGINAL: 2 A4 pages (595.3x841.9pt), LaTeX with PT Serif 10pt body (-> 'Times New Roman',KB,serif), inline math
+   Computer Modern; line pitch 11.95pt. Text column x 51.0..547.1 (width 496.1pt), paragraph indent 15pt.
+   Header "Road to IPhO" (PT Sans 39.9pt grey, stamped) and the name field "Фамилия, имя" (PT Sans 12pt, right edge
+   566.4; its underline is stamped) -> "성명". Title PT Serif 17.9pt centred, b 67.4.
+   Part headings PT Serif Bold 12pt. Sub-questions in black frames (x 15.17..580.11, stroke 1.99pt, redrawn as .bx
+   inside the static .dc wrapper so check.py ignores them); labels A1..B5 and the points at the right stamped.
+   Footer "Условие: страница N из 2" (PT Sans 14.9pt, right edge 574.3) -> "문제: 2쪽 중 N쪽".
+   Figures 1-3 stamped; "мА"/"В" in fig. 1 and the circle label "Н.Э" (нелинейный элемент) in figs 2, 3 are put back
+   as .ov labels (mA, V, NE). Subscript н.э -> NE (P_NE, Q_NE). Stamped display: I_AB = (E0 - U_AB)/r0 (A1).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3375*fs + 0.6pt   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em) */
+body{font-family:'Times New Roman',KB,serif;font-size:10pt;line-height:11.95pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:51pt;width:496.1pt;--l:11.95pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 0.6pt);text-align:justify}
+.i{text-indent:15pt}
+.c{text-align:center}
+.q{left:50.8pt}
+.li{left:62.9pt;width:484.2pt}
+.t{left:0;width:595.3pt;text-align:center;--fs:17.9pt;--l:21pt}
+.h{font-weight:bold;--fs:12pt;--l:14pt;text-align:left}
+.cap{--fs:9pt;--l:11pt;width:80pt;text-align:center}
+.ft{font-family:Arial,KG,sans-serif;--fs:14.9pt;--l:17pt;left:274.3pt;width:300pt;text-align:right;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs))}
+.nm{font-family:Arial,KG,sans-serif;--fs:12pt;--l:14pt;left:266.4pt;width:300pt;text-align:right;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs))}
+.ov{white-space:nowrap;text-align:left;width:auto}
+.ov.c{text-align:center}
+.nw{white-space:nowrap}
+.wn{word-break:normal}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box;border:1.99pt solid #000}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:477.9pt;width:566.93pt;height:101.7pt"></div>
+<div class="bx" style="left:14.18pt;top:587.6pt;width:566.93pt;height:24.5pt"></div>
+<div class="bx" style="left:14.18pt;top:620.1pt;width:566.93pt;height:36.4pt"></div>
+<div class="bx" style="left:14.18pt;top:664.4pt;width:566.93pt;height:36.5pt"></div>
+</div>
+<div class="f" style="left:49.5pt;top:10.9pt"><span class="fig" data-srcpage="1" data-clip="49.5,10.9,275.5,53.7"></span></div>
+<div class="f" style="left:405.6pt;top:40.6pt"><span class="fig" data-srcpage="1" data-clip="405.6,40.6,565.5,44.6"></span></div>
+<p class="x nm" style="--b:25.5">성명</p>
+<p class="x t" style="--b:67.4">다리의 한가운데</p>
+<p class="x i" style="--b:91.2">이 문제에서는 비선형 소자가 들어 있는 전기 회로를 다룬다. 이 비선형 소자의 전류-전압 특성은 그림 1과 같다.</p>
+<p class="x i" style="--b:115.1">비선형 소자의 전류-전압 특성은 다음 두 구간으로 이루어진다:</p>
+<p class="x li" style="--b:135.1">1.&ensp;<span class="nw">$U \le U_0$일</span> 때 <span class="nw">$I = I_0\cdot(U/U_0)$.</span> 여기서 <span class="nw">$I_0 = 10\,\mathrm{mA}$,</span> <span class="nw">$U_0 = 5\,\mathrm{V}$이다.</span></p>
+<p class="x li" style="--b:151.0">2.&ensp;<span class="nw">$U \ge U_0$일</span> 때 <span class="nw">$I = I_0 = \mathrm{const}$.</span></p>
+
+<div class="f" style="left:95.6pt;top:182.3pt"><span class="fig" data-srcpage="1" data-clip="95.6,182.3,275.0,363.3"></span></div>
+<div class="f" style="left:338.4pt;top:174.6pt"><span class="fig" data-srcpage="1" data-clip="338.4,174.6,512.0,361.6"></span></div>
+<p class="x ov" style="--b:195.4;left:138.2pt;--fs:14.9pt;--l:17pt">mA</p>
+<p class="x ov" style="--b:325.0;left:264.3pt;--fs:14.9pt;--l:17pt">V</p>
+<p class="x ov c" style="--b:263.1;left:410.2pt;width:30pt;--fs:10.5pt;--l:12pt">NE</p>
+<p class="x cap" style="--b:375.4;left:145.4pt">그림 1</p>
+<p class="x cap" style="--b:375.4;left:385.2pt">그림 2</p>
+
+<p class="x h" style="--b:415.1">A부. 직류 회로 (3.0점)</p>
+<p class="x" style="--b:431.5">그림 2는 저항값이 <span class="nw">$R$,</span> <span class="nw">$2R$,</span> <span class="nw">$4R$,</span> <span class="nw">$6R$,</span> <span class="nw">$8R$인</span> 저항들, 이상적인 직류 전압원 <span class="nw">$\mathcal{E}$,</span> 그리고 위에서 설명한 비선형 소자로 이루어진 전기 회로를 나타낸다. 문제의 이 부분에서는 비선형 소자에 흐르는 전류가 전원의 전압에 따라 어떻게 달라지는지 살펴본다.</p>
+
+<div class="f" style="left:24.6pt;top:482.7pt"><span class="fig" data-srcpage="1" data-clip="24.6,482.7,43.1,497.7"></span></div>
+<div class="f" style="left:553.1pt;top:482.7pt"><span class="fig" data-srcpage="1" data-clip="553.1,482.7,573.1,497.7"></span></div>
+<p class="x q" style="--b:493.5">마디 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이의 부분을 빼면 회로 전체가 직류 전압원과 저항으로만 이루어져 있으므로, 마디 <span class="nw">$A$에서</span> 마디 <span class="nw">$B$로</span> 흐르는 전류 <span class="nw">$I_{AB}$와</span> 이 부분의 전압 <span class="nw">$U_{AB} = \varphi_A - \varphi_B$</span> 사이의 관계는 마디 <span class="nw">$A$와</span> <span class="nw">$B$</span> 사이에 연결된 소자에 관계없이 다음 꼴로 나타낼 수 있다:</p>
+<div class="f" style="left:259.3pt;top:531.4pt"><span class="fig" data-srcpage="1" data-clip="259.3,531.4,338.4,559.7"></span></div>
+<p class="x q" style="--b:570.8"><span class="nw">$\mathcal{E}_0$과</span> <span class="nw">$r_0$을</span> 구하여라. 답은 <span class="nw">$\mathcal{E}$와</span> <span class="nw">$R$로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:592.4pt"><span class="fig" data-srcpage="1" data-clip="24.6,592.4,43.1,607.4"></span></div>
+<div class="f" style="left:553.1pt;top:592.4pt"><span class="fig" data-srcpage="1" data-clip="553.1,592.4,573.1,607.4"></span></div>
+<p class="x q" style="--b:603.2">전류 <span class="nw">$I_{AB}$가</span> <span class="nw">$\mathcal{E}$에</span> 따라 어떻게 달라지는지 구하여라. 답은 <span class="nw">$\mathcal{E}_0$,</span> <span class="nw">$r_0$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$으로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:624.9pt"><span class="fig" data-srcpage="1" data-clip="24.6,624.9,43.1,639.9"></span></div>
+<div class="f" style="left:553.1pt;top:624.9pt"><span class="fig" data-srcpage="1" data-clip="553.1,624.9,573.1,639.9"></span></div>
+<p class="x q" style="--b:635.7">비선형 소자에서 발생하는 전력 <span class="nw">$P_\mathrm{NE}$가</span> <span class="nw">$\mathcal{E}$에</span> 따라 어떻게 달라지는지 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$으로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:669.2pt"><span class="fig" data-srcpage="1" data-clip="24.6,669.2,43.1,684.2"></span></div>
+<div class="f" style="left:553.1pt;top:669.2pt"><span class="fig" data-srcpage="1" data-clip="553.1,669.2,573.1,684.2"></span></div>
+<p class="x q" style="--b:680.0"><span class="nw">$P_\mathrm{NE}(\mathcal{E})$의</span> 정성적인 그래프를 그려라. 그래프에 모든 특징적인 점을 표시하고, 그 점들에 해당하는 값을 계산하여라.</p>
+
+<p class="x ft" style="--b:815.1">문제: 2쪽 중 1쪽</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:216.0pt;width:566.93pt;height:34.0pt"></div>
+<div class="bx" style="left:14.18pt;top:257.9pt;width:566.93pt;height:35.9pt"></div>
+<div class="bx" style="left:14.18pt;top:301.8pt;width:566.93pt;height:35.9pt"></div>
+<div class="bx" style="left:14.18pt;top:359.6pt;width:566.93pt;height:34.4pt"></div>
+<div class="bx" style="left:14.18pt;top:402.0pt;width:566.93pt;height:35.8pt"></div>
+</div>
+<div class="f" style="left:49.5pt;top:10.9pt"><span class="fig" data-srcpage="2" data-clip="49.5,10.9,275.5,53.7"></span></div>
+<div class="f" style="left:405.6pt;top:40.6pt"><span class="fig" data-srcpage="2" data-clip="405.6,40.6,565.5,44.6"></span></div>
+<p class="x nm" style="--b:25.5">성명</p>
+<p class="x h" style="--b:69.2">B부. 축전기가 들어 있는 전기 회로 (5.0점)</p>
+<div class="f" style="left:375.5pt;top:80.4pt"><span class="fig" data-srcpage="2" data-clip="375.5,80.4,563.2,191.4"></span></div>
+<p class="x ov c" style="--b:115.7;left:492.6pt;width:30pt;--fs:13.9pt;--l:16pt">NE</p>
+<p class="x" style="--b:109.5;width:316pt">그림은 이상적인 전압원 <span class="nw">$\mathcal{E}$,</span> 저항 <span class="nw">$R = 500\,\Omega$,</span> 전기 용량이 <span class="nw">$C = 100\,\mu\mathrm{F}$인</span> 축전기, 비선형 소자를 직렬로 연결하고 스위치 <span class="nw">$K$를</span> 함께 단 전기 회로를 나타낸다. 처음에 스위치는 열려 있고 축전기는 충전되어 있지 않다. 시각 <span class="nw">$t = 0$에</span> 스위치를 닫는다.</p>
+<p class="x i" style="--b:181.3;width:316pt">전원의 기전력을 <span class="nw">$\mathcal{E} = 6\,\mathrm{V}$라고</span> 하자.</p>
+<p class="x cap" style="--b:210.3;left:422.0pt;--fs:10pt;--l:12pt">그림 3</p>
+
+<div class="f" style="left:24.6pt;top:220.4pt"><span class="fig" data-srcpage="2" data-clip="24.6,220.4,43.1,235.4"></span></div>
+<div class="f" style="left:553.1pt;top:220.4pt"><span class="fig" data-srcpage="2" data-clip="553.1,220.4,573.1,235.4"></span></div>
+<p class="x q" style="--b:231.2">축전기에 흐르는 전류 <span class="nw">$I_C(t)$를</span> 시간 <span class="nw">$t$의</span> 함수로 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$,</span> <span class="nw">$C$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:262.3pt"><span class="fig" data-srcpage="2" data-clip="24.6,262.3,43.1,277.3"></span></div>
+<div class="f" style="left:553.1pt;top:262.3pt"><span class="fig" data-srcpage="2" data-clip="553.1,262.3,573.1,277.3"></span></div>
+<p class="x q" style="--b:273.1">전류가 정상 상태에 이를 때까지 비선형 소자에서 발생하는 열량 <span class="nw">$Q_\mathrm{NE}$는</span> 얼마인가? 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$,</span> <span class="nw">$C$로</span> 나타내어라. 그 수치값을 구하여라.</p>
+
+<div class="f" style="left:24.6pt;top:306.2pt"><span class="fig" data-srcpage="2" data-clip="24.6,306.2,43.1,321.2"></span></div>
+<div class="f" style="left:553.1pt;top:306.2pt"><span class="fig" data-srcpage="2" data-clip="553.1,306.2,573.1,321.2"></span></div>
+<p class="x q" style="--b:317.0">비선형 소자에서 발생한 열량이 <span class="nw">$Q_\mathrm{NE}$의</span> <span class="nw">$80\%$에</span> 이르는 시간 <span class="nw">$\tau$는</span> 얼마인가? 답은 <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$,</span> <span class="nw">$C$로</span> 나타내어라. 그 수치값을 구하여라.</p>
+
+<p class="x i" style="--b:349.1">이제 전원의 기전력이 <span class="nw">$\mathcal{E} = 12\,\mathrm{V}$라고</span> 하자.</p>
+
+<div class="f" style="left:24.6pt;top:364.5pt"><span class="fig" data-srcpage="2" data-clip="24.6,364.5,43.1,379.5"></span></div>
+<div class="f" style="left:553.1pt;top:364.5pt"><span class="fig" data-srcpage="2" data-clip="553.1,364.5,573.1,379.5"></span></div>
+<p class="x q" style="--b:375.3">축전기에 흐르는 전류 <span class="nw">$I_C(t)$를</span> 시간 <span class="nw">$t$의</span> 함수로 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$R$,</span> <span class="nw">$U_0$,</span> <span class="nw">$I_0$,</span> <span class="nw">$C$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+
+<div class="f" style="left:24.6pt;top:406.9pt"><span class="fig" data-srcpage="2" data-clip="24.6,406.9,43.1,421.9"></span></div>
+<div class="f" style="left:553.1pt;top:406.9pt"><span class="fig" data-srcpage="2" data-clip="553.1,406.9,573.1,421.9"></span></div>
+<p class="x q" style="--b:417.7">전류가 정상 상태에 이를 때까지 비선형 소자에서 발생하는 열량 <span class="nw">$Q_\mathrm{NE}$는</span> 얼마인가? 그 수치값을 <span class="nw">$1\%$</span> 이상의 정확도로 구하여라.</p>
+
+<p class="x ft" style="--b:815.1">문제: 2쪽 중 2쪽</p>
+</div>
+</body></html>

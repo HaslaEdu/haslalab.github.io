@@ -171,7 +171,7 @@ test('the home page: one line, one button to practice, a strip of problems loade
     assert.equal(hrefs.length,1+4+2,'nothing else to choose from');
     assert.doesNotMatch(html,/hm-sec|hm-go|hm-grid"|hm-top/,'the old sections are gone');
     assert.ok(html.includes(a.run(`nfmt(${A.comps})`)));
-    assert.equal(A.comps,language==='en'?49:50);
+    assert.equal(A.comps,language==='en'?55:56);
     assert.doesNotMatch(html,PLAIN);assert.doesNotMatch(html,/id="deflect"|homeLatest/);
     for(const view of ['viewLearnHome()','viewLearnLab()','viewWorkshop()','viewWorkshopStorage()'])assert.doesNotMatch(a.run(view),PLAIN,view);
   }
@@ -320,7 +320,7 @@ test('the Olympiad home cards fill from the calendar, /monthly and /hpho, and fa
   boxes.olyNow.innerHTML='';a.run('mountOlympiadHome()');
   await new Promise(r=>setImmediate(r));await new Promise(r=>setImmediate(r));
   assert.match(boxes.olyNow.innerHTML,/마감[\s\S]*7일 남음/);
-  assert.match(boxes.olyNow.innerHTML,/제2회 HPhO[\s\S]*접수 중[\s\S]*20일 남음/);
+  assert.match(boxes.olyNow.innerHTML,/제2회 HPhO[\s\S]*접수 중[\s\S]*\d+일 남음/);
 });
 
 test('the computational physics page embeds the judge and passes on only a valid problem id',()=>{

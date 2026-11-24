@@ -14,7 +14,7 @@ function page({lang='ko',fail={}}={}){
   w.__api=async(method,route,body)=>{calls.push({method,route,body});if(route==='/consent/info')return{age_required:false};if(fail[route])throw{code:fail[route]};if(route==='/signup')return{token:'t',user:{id:1}};return{ok:true};};
   w.eval(`var lang=${JSON.stringify(lang)};${dictionary};var cm={me:null};var done=[];
     const cmApi=(...a)=>window.__api(...a);const cmErr=e=>CMT[lang].err[e&&e.code]||CMT[lang].err.server_error;
-    const cmNickCheck=()=>async()=>true;const cmAuthDone=r=>done.push(r);const arOauth=()=>{};${consent}${signup}`);
+    const cmLF=()=>null;const cmLearnerMissing=()=>'';const cmNickCheck=()=>async()=>true;const cmAuthDone=r=>done.push(r);const arOauth=()=>{};${consent}${signup}`);
   const root=w.document.getElementById('root');w.eval('cmSignup')(root);
   const f=root.querySelector('#cmS'),fill=(name,value)=>{f.querySelector(`[name=${name}]`).value=value;};
   // browsers expose form controls by name (f.email); jsdom does not, so the page's code gets them the same way here

@@ -19,7 +19,7 @@ const STORE = /^X[a-z]+_(?=[A-Za-z0-9])/;
 const DAY = 86400;
 /* Replacing assets in place keeps their download URLs, so cached copies would
  * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
-const CACHE_V = 107;         // IZhO Korean grading tables and frames fit their content
+const CACHE_V = 108;         // RuPhO W Korean+English
 
 export default {
   async fetch(req, env, ctx) {

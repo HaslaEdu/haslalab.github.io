@@ -1,0 +1,135 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2022, problem T1 — Korean edition on the original layout.
+   ORIGINAL: 2 A3 pages (841.9x1191.1pt) printed from the olympiad web page (problem view): beige page panel
+   (33.8..807.8), blue site header bar with logo and icons (p1, stamped as printed; the hidden menu word "Задачи" is
+   white-on-blue and invisible, removed by scrub), one white card (x 45..796.5) holding the problem, a tag card and
+   a white footer band (p2). Panel, cards and tag boxes are redrawn from the original's vector paths (.bx inside the
+   static .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif), inline math
+   KaTeX at 10.8pt (1.2em); text column x 65.2..776.3, pitch 13.5pt, left-aligned as in the original. Part headings
+   bold. Sub-question badges "A1 0.50" stamped; the question text after a badge starts at x 106.6.
+   Stamped: header bar, three figures (raster, Latin labels only), display x(t), the two integrals of the note,
+   "Website in English" with its icon. Tags and the footer motto typed (#7e8299).
+   scrub.py's redaction of the hidden "Задачи" also removed the visible FontAwesome "Jedi" icon (U+F669, x 726..739)
+   in the header: it is restored as an .ov image (600 dpi PNG crop of the original, data URI; the .ic border in the
+   bar's blue only makes build.py lay the overlay pass over the page).
+   "Часть A" -> "A부.", "Примечание" -> "참고", footer "2020 — Мы те, кого должны превзойти." -> Korean.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:65.2pt;width:711.1pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{left:106.6pt;width:669.7pt}
+.h{font-weight:bold}
+.c{left:33.8pt;width:774pt;text-align:center}
+.tg{color:#7e8299;text-align:center;white-space:nowrap}
+.mo{color:#7e8299}
+.pm{font-family:KaTeX_Main,KB,serif;font-style:italic;font-size:10.8pt}
+.ov{position:absolute;line-height:0}
+.ic{border:0.3pt solid rgb(59,89,152)}
+.ic img{display:block;width:17pt;height:17.5pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:45pt;width:751.5pt;background:#fff;border-radius:3.75pt}
+.tb{background:rgb(235,237,243);border:1pt solid rgb(226,229,238);border-radius:3pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:86.2pt;height:1070.3pt;border-radius:3.75pt 3.75pt 0 0"></div>
+</div>
+<div class="f" style="left:33.8pt;top:33.8pt"><span class="fig" data-srcpage="1" data-clip="33.8,33.8,807.8,75.0"></span></div>
+<div class="ov ic" style="left:724.2pt;top:44.2pt"><img src="data:image/png;base64,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"></div>
+<p class="x h" style="--b:114.0">A부. 축전기 안의 대전된 판</p>
+<p class="x" style="--b:136.9">넓이가 <span class="nw">$S$이고</span> 극판 사이 거리가 <span class="nw">$d \ll \sqrt{S}$인</span> 평행판 축전기의 똑같은 두 금속 극판(대전되지 않음) 사이 한가운데에, 극판과 모양이 같고 질량이 <span class="nw">$m$인</span> 유전체 판이 놓여 있다. 이 판은 표면 전체에 걸쳐 전하 <span class="nw">$q &gt; 0$으로</span> 고르게 대전되어 있다. 축전기의 두 극판을 내부 저항이 0인 직류 전압원 <span class="nw">$\mathcal{E}$에</span> 연결하였다. 그런 다음 판을 놓는다. 판이 움직이는 동안 축전기의 극판은 움직이지 않는다.</p>
+<p class="x" style="--b:191.2">판이 처음 위치에서 벗어난 변위를 <span class="nw">$x$,</span> 왼쪽 극판의 전하를 <span class="nw">$q_1$,</span> 오른쪽 극판의 전하를 <span class="nw">$q_2$라</span> 하자.</p>
+<div class="f" style="left:233.2pt;top:204.0pt"><span class="fig" data-srcpage="1" data-clip="233.2,204.0,608.2,522.8"></span></div>
+
+<div class="f" style="left:63.5pt;top:530.0pt"><span class="fig" data-srcpage="1" data-clip="63.5,530.0,103.8,551.5"></span></div>
+<p class="x q" style="--b:543.7">축전기 극판의 전하 <span class="nw">$q_1(x)$와</span> <span class="nw">$q_2(x)$를</span> <span class="nw">$\mathcal{E}$,</span> <span class="nw">$S$,</span> <span class="nw">$d$,</span> <span class="nw">$q$,</span> <span class="nw">$x$와</span> 물리 상수로 나타내어라.</p>
+<div class="f" style="left:63.5pt;top:557.0pt"><span class="fig" data-srcpage="1" data-clip="63.5,557.0,103.8,578.5"></span></div>
+<p class="x q" style="--b:570.7">판과 극판 사이의 정전기적 상호 작용 힘 <span class="nw">$F(x)$를</span> <span class="nw">$\mathcal{E}$,</span> <span class="nw">$S$,</span> <span class="nw">$d$,</span> <span class="nw">$q$,</span> <span class="nw">$x$와</span> 물리 상수로 나타내어라.</p>
+<p class="x" style="--b:595.5">판의 변위 <span class="nw">$x(t)$가</span> 시간에 따라 다음과 같은 꼴로 변함을 보일 수 있다.</p>
+<div class="f" style="left:360.5pt;top:606.6pt"><span class="fig" data-srcpage="1" data-clip="360.5,606.6,481.0,623.0"></span></div>
+<p class="x" style="--b:654.8">여기서 <span class="nw">$a$는</span> <span class="nw">$\mathcal{E}$,</span> <span class="nw">$S$,</span> <span class="nw">$d$,</span> <span class="nw">$q$,</span> <span class="nw">$m$에만</span> 의존하고, <span class="nw">$A$,</span> <span class="nw">$B$,</span> <span class="nw">$C$는</span> 초기 조건으로 정해진다.</p>
+<div class="f" style="left:63.5pt;top:665.7pt"><span class="fig" data-srcpage="1" data-clip="63.5,665.7,103.8,687.2"></span></div>
+<p class="x q" style="--b:679.4"><span class="nw">$a$,</span> <span class="nw">$A$,</span> <span class="nw">$B$,</span> <span class="nw">$C$를</span> <span class="nw">$\mathcal{E}$,</span> <span class="nw">$S$,</span> <span class="nw">$d$,</span> <span class="nw">$q$,</span> <span class="nw">$m$과</span> 물리 상수로 나타내어라.</p>
+<div class="f" style="left:63.5pt;top:692.7pt"><span class="fig" data-srcpage="1" data-clip="63.5,692.7,103.8,714.2"></span></div>
+<p class="x q" style="--b:706.4">판이 축전기 극판에 부딪히는 순간 판의 속력 <span class="nw">$v^*$를</span> <span class="nw">$\mathcal{E}$,</span> <span class="nw">$S$,</span> <span class="nw">$d$,</span> <span class="nw">$q$,</span> <span class="nw">$m$과</span> 물리 상수로 나타내어라.</p>
+
+<p class="x h" style="--b:731.2">B부. 유전체가 채워진 축전기</p>
+<p class="x" style="--b:754.2">극판 넓이가 <span class="nw">$S$이고</span> 극판 사이 거리가 <span class="nw">$d \ll \sqrt{S}$인</span> 평행판 축전기가 유전 상수 <span class="nw">$\varepsilon$,</span> 비저항 <span class="nw">$\rho$인</span> 유전체로 채워져 있다. 유전체와 극판은 전기적으로 잘 접촉해 있다. 축전기 두 극판 사이의 전위차가 <span class="nw">$V$라고</span> 하자.</p>
+<div class="f" style="left:233.2pt;top:780.8pt"><span class="fig" data-srcpage="1" data-clip="233.2,780.8,608.2,1032.8"></span></div>
+
+<div class="f" style="left:63.5pt;top:1040.0pt"><span class="fig" data-srcpage="1" data-clip="63.5,1040.0,103.8,1061.5"></span></div>
+<p class="x q" style="--b:1053.7">축전기의 금속 극판에 있는 전하 <span class="nw">$q$를</span> 구하여라. 답은 <span class="nw">$V$,</span> <span class="nw">$S$,</span> <span class="nw">$d$,</span> <span class="nw">$\varepsilon$과</span> 물리 상수로 나타내어라.</p>
+<div class="f" style="left:63.5pt;top:1067.0pt"><span class="fig" data-srcpage="1" data-clip="63.5,1067.0,103.8,1088.5"></span></div>
+<p class="x q" style="--b:1080.7">유전체를 지나는 전류 <span class="nw">$I$를</span> 구하여라. 답은 <span class="nw">$V$,</span> <span class="nw">$S$,</span> <span class="nw">$d$,</span> <span class="nw">$\rho$와</span> 물리 상수로 나타내어라.</p>
+<p class="x" style="--b:1105.5">앞의 두 문항으로부터, 전기 회로 안에서 이러한 축전기는 저항이 <span class="nw">$R$인</span> 저항기와 전기 용량이 <span class="nw">$C$인</span> 축전기를 어떤 방식으로 연결한 것과 등가임을 알 수 있다.</p>
+<div class="f" style="left:63.5pt;top:1130.0pt"><span class="fig" data-srcpage="1" data-clip="63.5,1130.0,103.8,1151.5"></span></div>
+<p class="x q" style="--b:1143.7"><span class="nw">$R$과</span> <span class="nw">$C$를</span> 구하고, 이 두 소자가 어떤 방식으로 연결되어 있는지(직렬 또는 병렬) 밝혀라.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:797.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:849.8pt;height:45pt"></div>
+<div class="bx" style="left:33.8pt;top:917.2pt;width:774pt;height:60pt;background:#fff"></div>
+<div class="bx tb" style="left:68.6pt;top:863.8pt;width:24.0pt;height:17pt"></div>
+<div class="bx tb" style="left:94.8pt;top:863.8pt;width:76.6pt;height:17pt"></div>
+<div class="bx tb" style="left:173.8pt;top:863.8pt;width:88.3pt;height:17pt"></div>
+<div class="bx tb" style="left:264.5pt;top:863.8pt;width:102.7pt;height:17pt"></div>
+<div class="bx tb" style="left:369.4pt;top:863.8pt;width:54.7pt;height:17pt"></div>
+<div class="bx tb" style="left:426.5pt;top:863.8pt;width:60.7pt;height:17pt"></div>
+<div class="bx tb" style="left:489.4pt;top:863.8pt;width:27.8pt;height:17pt"></div>
+<div class="bx tb" style="left:519.4pt;top:863.8pt;width:40.5pt;height:17pt"></div>
+<div class="bx tb" style="left:562.1pt;top:863.8pt;width:49.4pt;height:17pt"></div>
+</div>
+<p class="x" style="--b:45.8">이제 이 복합 축전기를 내부 저항이 <span class="nw">$r$인</span> 직류 전압원 <span class="nw">$\mathcal{E}$에</span> 연결한다. 처음 순간에 축전기는 대전되어 있지 않다.</p>
+<div class="f" style="left:63.5pt;top:70.2pt"><span class="fig" data-srcpage="2" data-clip="63.5,70.2,103.8,91.7"></span></div>
+<p class="x q" style="--b:83.9">전압원을 지나는 전류 <span class="nw">$I(t)$가</span> 시간에 따라 어떻게 변하는지 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$r$,</span> <span class="nw">$R$,</span> <span class="nw">$C$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+
+<p class="x h" style="--b:108.8">C부. 두 유전체가 채워진 축전기</p>
+<p class="x" style="--b:131.2">극판 사이 거리가 <span class="nw">$d$인</span> 평행판 축전기가 두 유전체로 채워져 있다. 하나는 유전 상수가 <span class="nw">$\varepsilon_1$,</span> 비저항이 <span class="nw">$\rho_1$이고</span> 극판과 닿는 넓이가 <span class="nw">$S_1$이며,</span> 다른 하나는 유전 상수가 <span class="nw">$\varepsilon_2$,</span> 비저항이 <span class="nw">$\rho_2$이고</span> 극판과 닿는 넓이가 <span class="nw">$S_2$이다.</span> 두 유전체 모두 축전기 극판과 전기적으로 잘 접촉해 있다.</p>
+<div class="f" style="left:63.5pt;top:170.0pt"><span class="fig" data-srcpage="2" data-clip="63.5,170.0,103.8,191.5"></span></div>
+<p class="x q" style="--b:183.7">이 축전기의 등가 전기 용량 <span class="nw">$C_0$을</span> 구하여라. 답은 <span class="nw">$S_1$,</span> <span class="nw">$S_2$,</span> <span class="nw">$\varepsilon_1$,</span> <span class="nw">$\varepsilon_2$,</span> <span class="nw">$d$와</span> 물리 상수로 나타내어라.</p>
+<div class="f" style="left:63.5pt;top:197.0pt"><span class="fig" data-srcpage="2" data-clip="63.5,197.0,103.8,218.5"></span></div>
+<p class="x q" style="--b:210.7">이 축전기의 등가 저항 <span class="nw">$R_0$을</span> 구하여라. 답은 <span class="nw">$S_1$,</span> <span class="nw">$S_2$,</span> <span class="nw">$\rho_1$,</span> <span class="nw">$\rho_2$,</span> <span class="nw">$d$로</span> 나타내어라.</p>
+<p class="x" style="--b:235.5">이 축전기를 전기 용량이 <span class="nw">$C$인</span> 축전기와 직렬로 하여, 내부 저항이 0인 직류 전압원 <span class="nw">$\mathcal{E}$에</span> 연결한다. 스위치가 열려 있는 동안 축전기들은 대전되어 있지 않았다. 복합 축전기 양단의 전압은 이상적인 전압계 <span class="nw">$V$로</span> 측정한다.</p>
+<div class="f" style="left:233.2pt;top:261.7pt"><span class="fig" data-srcpage="2" data-clip="233.2,261.7,608.2,606.0"></span></div>
+
+<div class="f" style="left:63.5pt;top:613.2pt"><span class="fig" data-srcpage="2" data-clip="63.5,613.2,103.8,634.7"></span></div>
+<p class="x q" style="--b:626.9">스위치를 닫은 직후 전기 용량이 <span class="nw">$C$인</span> 축전기의 전하 <span class="nw">$q_C(0)$을</span> 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$C$,</span> <span class="nw">$C_0$으로</span> 나타내어라.</p>
+<div class="f" style="left:63.5pt;top:640.2pt"><span class="fig" data-srcpage="2" data-clip="63.5,640.2,103.8,661.7"></span></div>
+<p class="x q" style="--b:653.9">스위치를 닫은 뒤 전압계의 눈금 <span class="nw">$V(t)$가</span> 시간 <span class="nw">$t$에</span> 따라 어떻게 변하는지 구하여라. 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$C$,</span> <span class="nw">$C_0$,</span> <span class="nw">$R_0$,</span> <span class="nw">$t$로</span> 나타내어라.</p>
+<div class="f" style="left:63.5pt;top:667.2pt"><span class="fig" data-srcpage="2" data-clip="63.5,667.2,103.8,688.7"></span></div>
+<p class="x q" style="--b:680.9">저항 <span class="nw">$R_0$에서</span> 발생하는 열량 <span class="nw">$Q_{R_0}$은</span> 얼마인가? 답은 <span class="nw">$\mathcal{E}$,</span> <span class="nw">$C$,</span> <span class="nw">$C_0$으로</span> 나타내어라.</p>
+<p class="x" style="--b:706.5"><span class="pm">참고</span>:</p>
+<div class="f" style="left:349.3pt;top:717.7pt"><span class="fig" data-srcpage="2" data-clip="349.3,717.7,491.7,747.3"></span></div>
+<div class="f" style="left:373.2pt;top:774.1pt"><span class="fig" data-srcpage="2" data-clip="373.2,774.1,467.9,805.0"></span></div>
+
+<p class="x tg" style="--b:875.2;left:68.6pt;width:24.0pt">T</p>
+<p class="x tg" style="--b:875.2;left:94.8pt;width:76.6pt">축전기</p>
+<p class="x tg" style="--b:875.2;left:173.8pt;width:88.3pt">정전기학</p>
+<p class="x tg" style="--b:875.2;left:264.5pt;width:102.7pt">전자기학</p>
+<p class="x tg" style="--b:875.2;left:369.4pt;width:54.7pt">전기 용량</p>
+<p class="x tg" style="--b:875.2;left:426.5pt;width:60.7pt">XY 합숙</p>
+<p class="x tg" style="--b:875.2;left:489.4pt;width:27.8pt">W</p>
+<p class="x tg" style="--b:875.2;left:519.4pt;width:40.5pt">2022</p>
+<p class="x tg" style="--b:875.2;left:562.1pt;width:49.4pt">누설</p>
+
+<div class="f" style="left:377.4pt;top:932.5pt"><span class="fig" data-srcpage="2" data-clip="377.4,932.5,470.8,947.2"></span></div>
+<p class="x c mo" style="--b:964.5">2020 — 우리는 그들이 뛰어넘어야 할 존재이다.</p>
+</div>
+</body></html>

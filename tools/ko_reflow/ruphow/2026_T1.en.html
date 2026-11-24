@@ -1,0 +1,117 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* RuPhO W ("Road to IPhO") 2026, problem T1 — English edition on the original layout (same geometry, stamps and
+   baselines as the Korean edition 2026_T1.html).
+   ORIGINAL: 2 A4 pages (595.3x841.9pt), LaTeX with PT Serif 10pt body (-> 'Times New Roman',serif), inline math
+   Computer Modern; line pitch 11.95pt. Text column x 51.0..547.1 (width 496.1pt), paragraph indent 15pt.
+   Header "Road to IPhO" (PT Sans 39.9pt grey, kept as printed: stamped). Title PT Serif 17.9pt centred, b 67.4.
+   Part headings PT Serif Bold 12pt. Sub-questions in black frames (x 15.17..580.11, stroke 1.99pt, redrawn as .bx
+   inside the static .dc wrapper so check.py ignores them); labels A1..B3 and the points at the right stamped.
+   Footer "Условие: страница N из 2" (PT Sans 14.9pt, right edge 574.3) -> "Problem: page N of 2".
+   Stamped display: f(T,V) = const (A7).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3375*fs + 0.6pt   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em) */
+body{font-family:'Times New Roman',serif;font-size:10pt;line-height:11.95pt;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x{position:absolute;margin:0;left:51pt;width:496.1pt;--l:11.95pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 0.6pt);text-align:justify}
+.i{text-indent:15pt}
+.c{text-align:center}
+.q{left:50.8pt}
+.t{left:0;width:595.3pt;text-align:center;--fs:17.9pt;--l:21pt}
+.h{font-weight:bold;--fs:12pt;--l:14pt;text-align:left}
+.ft{font-family:Arial,sans-serif;--fs:14.9pt;--l:17pt;left:274.3pt;width:300pt;text-align:right;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs))}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box;border:1.99pt solid #000}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:252.65pt;width:566.93pt;height:36.48pt"></div>
+<div class="bx" style="left:14.18pt;top:297.10pt;width:566.93pt;height:24.07pt"></div>
+<div class="bx" style="left:14.18pt;top:329.14pt;width:566.93pt;height:35.92pt"></div>
+<div class="bx" style="left:14.18pt;top:373.03pt;width:566.93pt;height:36.77pt"></div>
+<div class="bx" style="left:14.18pt;top:417.77pt;width:566.93pt;height:60.75pt"></div>
+<div class="bx" style="left:14.18pt;top:486.50pt;width:566.93pt;height:36.47pt"></div>
+<div class="bx" style="left:14.18pt;top:530.94pt;width:566.93pt;height:67.91pt"></div>
+<div class="bx" style="left:14.18pt;top:606.82pt;width:566.93pt;height:36.24pt"></div>
+<div class="bx" style="left:14.18pt;top:651.03pt;width:566.93pt;height:35.92pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="1" data-clip="50.0,11.4,275.0,53.2"></span></div>
+<p class="x t" style="--b:67.4">Gas with Variable Heat Capacity (9 points)</p>
+<p class="x i" style="--b:91.2">When ideal gases are studied, their molar heat capacity at constant volume $C_V$ is usually assumed to be a constant that does not depend on temperature and is determined by the number of atoms in a gas molecule. In reality, however, this heat capacity can vary. At very low temperatures the thermal energy is not sufficient to excite rotational motion of the molecules, and they can be treated as monatomic. Therefore the heat capacity at low temperatures is lower than at high temperatures. In this problem we consider several cases of a varying heat capacity. The equation of state of the ideal gas (that is, the relation between pressure, volume and temperature) remains unchanged.</p>
+<p class="x h" style="--b:189.4">Part A. Heat capacity depending linearly on temperature (5.7 points)</p>
+<p class="x" style="--b:206.2">In this part we assume that, over the whole temperature range of interest, the heat capacity of one mole of the gas at constant volume depends on temperature as $C_V = C_0 + aT$ ($C_0$, $a &gt; 0$ are known constants independent of temperature). All processes are carried out with one mole of the gas. In all answers of this part you may use the quantities $C_0$, $a$ and the universal gas constant $R$.</p>
+
+<div class="f" style="left:25.1pt;top:258.0pt"><span class="fig" data-srcpage="1" data-clip="25.1,258.0,42.6,271.9"></span></div>
+<div class="f" style="left:553.6pt;top:258.0pt"><span class="fig" data-srcpage="1" data-clip="553.6,258.0,572.6,271.9"></span></div>
+<p class="x q" style="--b:268.3">Find how the internal energy of this gas depends on temperature. Assume that the internal energy is zero at $T = 0$.</p>
+
+<div class="f" style="left:25.1pt;top:302.0pt"><span class="fig" data-srcpage="1" data-clip="25.1,302.0,42.6,315.9"></span></div>
+<div class="f" style="left:553.6pt;top:302.0pt"><span class="fig" data-srcpage="1" data-clip="553.6,302.0,572.6,315.9"></span></div>
+<p class="x q" style="--b:312.3">What is the heat capacity $C_P$ of the gas at constant pressure at a given temperature $T$?</p>
+
+<div class="f" style="left:25.1pt;top:334.0pt"><span class="fig" data-srcpage="1" data-clip="25.1,334.0,42.6,347.9"></span></div>
+<div class="f" style="left:553.6pt;top:334.0pt"><span class="fig" data-srcpage="1" data-clip="553.6,334.0,572.6,347.9"></span></div>
+<p class="x q" style="--b:344.3">Let the gas undergo an isochoric process in which the pressure increases from $p_1$ to $p_2$; the volume is $V$. Find the heat $Q_V$ supplied to the gas.</p>
+
+<div class="f" style="left:25.1pt;top:377.9pt"><span class="fig" data-srcpage="1" data-clip="25.1,377.9,42.6,391.8"></span></div>
+<div class="f" style="left:553.6pt;top:377.9pt"><span class="fig" data-srcpage="1" data-clip="553.6,377.9,572.6,391.8"></span></div>
+<p class="x q" style="--b:388.2">Let the gas undergo an isobaric process; the initial volume is $V_1$, the final volume is $V_2$, the pressure is $p$. Find the heat $Q_p$ supplied to the gas.</p>
+
+<div class="f" style="left:25.1pt;top:423.1pt"><span class="fig" data-srcpage="1" data-clip="25.1,423.1,42.6,437.0"></span></div>
+<div class="f" style="left:553.6pt;top:423.1pt"><span class="fig" data-srcpage="1" data-clip="553.6,423.1,572.6,437.0"></span></div>
+<p class="x q" style="--b:433.4">Consider the cycle $123$ consisting of the process $1-2$, in which the pressure is directly proportional to the volume, the isochore $2-3$ and the isobar $3-1$. It is known that $V_2 = 2V_1$ and that the heat capacities at constant volume at points 1 and 2 are related by $C_{V2} = 1.5C_{V1}$. Determine the efficiency of this cycle. Find its numerical value. Take $C_0 = 3R/2$.</p>
+
+<div class="f" style="left:25.1pt;top:491.8pt"><span class="fig" data-srcpage="1" data-clip="25.1,491.8,42.6,505.7"></span></div>
+<div class="f" style="left:553.6pt;top:491.8pt"><span class="fig" data-srcpage="1" data-clip="553.6,491.8,572.6,505.7"></span></div>
+<p class="x q" style="--b:502.1">Consider an adiabatic process undergone by the gas. Derive the relation between the infinitesimal increments of the volume $dV$ and of the temperature $dT$. Express the answer in terms of $C_0$, $a$, $T$, $V$, $R$.</p>
+
+<div class="f" style="left:25.1pt;top:535.8pt"><span class="fig" data-srcpage="1" data-clip="25.1,535.8,42.6,549.7"></span></div>
+<div class="f" style="left:553.6pt;top:535.8pt"><span class="fig" data-srcpage="1" data-clip="553.6,535.8,572.6,549.7"></span></div>
+<p class="x q" style="--b:546.1">From the relation of the previous part, derive the equation of the adiabat relating $T$ and $V$ in the form</p>
+<div class="f" style="left:262.0pt;top:559.3pt"><span class="fig" data-srcpage="1" data-clip="262.0,559.3,335.6,571.2"></span></div>
+<p class="x q" style="--b:590.0">the function $f$ may also contain $C_0$, $a$, $R$.</p>
+
+<div class="f" style="left:25.1pt;top:611.7pt"><span class="fig" data-srcpage="1" data-clip="25.1,611.7,42.6,625.6"></span></div>
+<div class="f" style="left:553.6pt;top:611.7pt"><span class="fig" data-srcpage="1" data-clip="553.6,611.7,572.6,625.6"></span></div>
+<p class="x q" style="--b:622.0">Consider the Carnot cycle $1234$ consisting of the isotherms $12$ and $34$ and the adiabats $23$ and $41$. Express the volumes $V_3$, $V_4$ in terms of $V_1$, $V_2$, the temperatures of the isotherms <span class="nw">$T_+ = T_1 = T_2$,</span> <span class="nw">$T_- = T_3 = T_4$</span> and the gas parameters $C_0$, $a$, $R$.</p>
+
+<div class="f" style="left:25.1pt;top:655.9pt"><span class="fig" data-srcpage="1" data-clip="25.1,655.9,42.6,669.8"></span></div>
+<div class="f" style="left:553.6pt;top:655.9pt"><span class="fig" data-srcpage="1" data-clip="553.6,655.9,572.6,669.8"></span></div>
+<p class="x q" style="--b:666.2">By direct calculation (without using the general formula) show that the efficiency of the Carnot cycle is the same as for an ideal gas with a constant heat capacity.</p>
+
+<p class="x ft" style="--b:815.1">Problem: page 1 of 2</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:156.80pt;width:566.93pt;height:35.91pt"></div>
+<div class="bx" style="left:14.18pt;top:200.69pt;width:566.93pt;height:36.35pt"></div>
+<div class="bx" style="left:14.18pt;top:245.02pt;width:566.93pt;height:47.66pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="2" data-clip="50.0,11.4,275.0,53.2"></span></div>
+<p class="x h" style="--b:69.2">Part B. Piecewise linear heat capacity (3.3 points)</p>
+<p class="x" style="--b:86.0">As a more realistic model of the temperature dependence of the heat capacity of a gas, the following can be proposed. For $T &lt; T_1$ the heat capacity $C_V$ is constant and equal to the heat capacity of a monatomic gas, $C_1 = 3R/2$. In the temperature range $T_1 &lt; T &lt; T_2$ the heat capacity grows linearly, reaching at $T = T_2$ the value $C_2 = 5R/2$ corresponding to a diatomic gas. At higher temperatures the heat capacity remains constant. We consider one mole of such a gas, for which $T_2 = 2T_1$. Let the initial temperature of the gas be $T_A = T_1/2$. The temperature of the gas is raised to $T_B = 3T_1$ in different ways.</p>
+
+<div class="f" style="left:25.1pt;top:161.7pt"><span class="fig" data-srcpage="2" data-clip="25.1,161.7,42.6,175.6"></span></div>
+<div class="f" style="left:553.6pt;top:161.7pt"><span class="fig" data-srcpage="2" data-clip="553.6,161.7,572.6,175.6"></span></div>
+<p class="x q" style="--b:172.0">Find the amount of heat $Q_V$ that must be supplied to the gas in isochoric heating. Express the answer in terms of $T_1$, $R$.</p>
+
+<div class="f" style="left:25.1pt;top:206.0pt"><span class="fig" data-srcpage="2" data-clip="25.1,206.0,42.6,219.9"></span></div>
+<div class="f" style="left:553.6pt;top:206.0pt"><span class="fig" data-srcpage="2" data-clip="553.6,206.0,572.6,219.9"></span></div>
+<p class="x q" style="--b:216.3">Find the amount of heat $Q_P$ that must be supplied to the gas in isobaric heating. Express the answer in terms of $T_1$, $R$.</p>
+
+<div class="f" style="left:25.1pt;top:249.9pt"><span class="fig" data-srcpage="2" data-clip="25.1,249.9,42.6,263.8"></span></div>
+<div class="f" style="left:553.6pt;top:249.9pt"><span class="fig" data-srcpage="2" data-clip="553.6,249.9,572.6,263.8"></span></div>
+<p class="x q" style="--b:260.2">Let the initial volume of the gas be $V_0$. What will the final volume be if the temperature was raised adiabatically? Find the work done in this process. Express the answers in terms of $T_1$, $R$, $V_0$.</p>
+
+<p class="x ft" style="--b:815.1">Problem: page 2 of 2</p>
+</div>
+</body></html>

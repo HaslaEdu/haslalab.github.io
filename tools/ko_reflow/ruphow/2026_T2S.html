@@ -1,0 +1,242 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2026, problem T2 — solution — Korean edition on the original layout.
+   ORIGINAL: 6 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same layout as the 2026 T1 solution):
+   beige page panel, white cards one per sub-question, blue badge "A1 1.30" (stamped), grey separator under the
+   restated question, answer frame (3pt stroke). Panel, cards, separators and answer frames redrawn from the
+   original's vector paths (.bx inside the static .dc wrapper). Body: Open Sans 9pt #3f4254 (-> Arial,KG,sans-serif),
+   inline math KaTeX 1.2em, text column x 63.4..777.8; question line after the badge starts at x 104.7 (pitch 15.9pt).
+   Display formulas and the two trajectory plots (B7) are stamped (no Cyrillic in them) except the B8 formula
+   "P = ... = εm v²_отн = ..." (p5 and p6), retyped with v_rel. "Ответ:" -> "답:". "Первый/Второй метод" -> 첫 번째/두 번째 방법.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,KG,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.c{text-align:center}
+.b{font-weight:bold}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.ct{border-radius:3.75pt 3.75pt 0 0}
+.cb{border-radius:0 0 3.75pt 3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:354.7pt"></div>
+<div class="bx cd" style="top:399.8pt;height:322.4pt"></div>
+<div class="bx cd" style="top:733.5pt;height:375.7pt"></div>
+<div class="bx cd ct" style="top:1120.5pt;height:36pt"></div>
+<div class="bx sp" style="top:85.5pt"></div>
+<div class="bx sp" style="top:438.0pt"></div>
+<div class="bx sp" style="top:771.8pt"></div>
+<div class="bx ab" style="top:279.7pt;height:98.3pt"></div>
+<div class="bx ab" style="top:603.7pt;height:108.0pt"></div>
+<div class="bx ab" style="top:998.3pt;height:100.4pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">이 입자의 운동 궤적 <span class="nw">$\vec{r}(t)$를</span> 구하여라. 답은 <span class="nw">$\vec{v}_0$,</span> <span class="nw">$\vec{g}$,</span> <span class="nw">$\varepsilon$을</span> 사용하여 벡터 꼴로 나타내거나, 데카르트 좌표계에서 벡터 <span class="nw">$\vec{r}(t)$의</span> 성분들이 시간에 따라 어떻게 변하는지를 벡터 <span class="nw">$\vec{v}_0$,</span> <span class="nw">$\vec{g}$의</span> 성분들로 나타내어라.</p>
+<p class="x" style="--b:103.5">뉴턴 제2법칙:</p>
+<div class="f" style="left:374.3pt;top:115.7pt"><span class="fig" data-srcpage="1" data-clip="374.3,115.7,466.0,131.3"></span></div>
+<p class="x" style="--b:149.2">속도를 두 항으로 나누자:</p>
+<div class="f" style="left:380.3pt;top:161.7pt"><span class="fig" data-srcpage="1" data-clip="380.3,161.7,460.0,187.7"></span></div>
+<p class="x" style="--b:207.0"><span class="nw">$\vec{u}$에</span> 대한 방정식:</p>
+<div class="f" style="left:397.5pt;top:218.5pt"><span class="fig" data-srcpage="1" data-clip="397.5,218.5,442.7,232.0"></span></div>
+<div class="f" style="left:356.3pt;top:241.3pt"><span class="fig" data-srcpage="1" data-clip="356.3,241.3,484.0,271.3"></span></div>
+<p class="x an" style="--b:308.2">답:</p>
+<div class="f" style="left:342.7pt;top:320.7pt"><span class="fig" data-srcpage="1" data-clip="342.7,320.7,497.3,350.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:409.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,409.8,101.8,430.2"></span></div>
+<p class="x q" style="--b:422.9">열로 빠져나가는 에너지 손실 일률 <span class="nw">$P(t)$는</span> 시간에 따라 어떻게 변하는가? 답은 <span class="nw">$\vec{v}_0$,</span> <span class="nw">$\vec{g}$,</span> <span class="nw">$\varepsilon$,</span> <span class="nw">$t$,</span> <span class="nw">$m$으로</span> 나타내어라.</p>
+<p class="x" style="--b:456.0">입자+매질 계의 에너지 변화 법칙을 쓰자:</p>
+<div class="f" style="left:361.5pt;top:468.3pt"><span class="fig" data-srcpage="1" data-clip="361.5,468.3,478.5,490.7"></span></div>
+<div class="f" style="left:354.7pt;top:497.5pt"><span class="fig" data-srcpage="1" data-clip="354.7,497.5,485.3,520.0"></span></div>
+<div class="f" style="left:354.0pt;top:527.7pt"><span class="fig" data-srcpage="1" data-clip="354.0,527.7,486.3,553.7"></span></div>
+<div class="f" style="left:292.3pt;top:562.7pt"><span class="fig" data-srcpage="1" data-clip="292.3,562.7,548.0,595.0"></span></div>
+<p class="x an" style="--b:632.2">답:</p>
+<div class="f" style="left:275.5pt;top:643.7pt"><span class="fig" data-srcpage="1" data-clip="275.5,643.7,562.3,684.3"></span></div>
+
+<div class="f" style="left:62.5pt;top:743.6pt"><span class="fig" data-srcpage="1" data-clip="62.5,743.6,101.8,764.0"></span></div>
+<p class="x q" style="--b:756.7">힘을 작용하기 시작하고 충분히 긴 시간 <span class="nw">$t \gg 1/\varepsilon$이</span> 지난 뒤, 열로 빠져나가는 손실 일률 <span class="nw">$P$를</span> 구하여라. 답은 <span class="nw">$F_0$,</span> <span class="nw">$\varepsilon$,</span> <span class="nw">$m$,</span> <span class="nw">$\omega$로</span> 나타내어라.</p>
+<p class="x" style="--b:789.8;--l:13.85pt">시간 <span class="nw">$t \gg 1/\varepsilon$이</span> 지나면 운동은 정상 상태가 되며, 계의 등방성으로부터 입자는 각속도 <span class="nw">$\omega$와</span> 크기가 일정한 속력 <span class="nw">$u$로</span> 원운동을 한다는 것을 알 수 있다. 이때 속도와 힘 사이의 각은 일정하며 <span class="nw">$\alpha$와</span> 같다. 뉴턴 제2법칙을 속도 방향과 그에 수직인 방향의 성분으로 쓰자.</p>
+<div class="f" style="left:368.7pt;top:828.7pt"><span class="fig" data-srcpage="1" data-clip="368.7,828.7,470.0,857.7"></span></div>
+<div class="f" style="left:394.0pt;top:866.0pt"><span class="fig" data-srcpage="1" data-clip="394.0,866.0,445.5,888.3"></span></div>
+<div class="f" style="left:312.5pt;top:896.5pt"><span class="fig" data-srcpage="1" data-clip="312.5,896.5,527.3,926.3"></span></div>
+<p class="x" style="--b:945.0">계에 대한 에너지 변화 법칙:</p>
+<div class="f" style="left:349.0pt;top:957.3pt"><span class="fig" data-srcpage="1" data-clip="349.0,957.3,491.3,989.7"></span></div>
+<p class="x an" style="--b:1026.8">답:</p>
+<div class="f" style="left:379.0pt;top:1039.0pt"><span class="fig" data-srcpage="1" data-clip="379.0,1039.0,460.5,1071.5"></span></div>
+
+<div class="f" style="left:62.5pt;top:1130.6pt"><span class="fig" data-srcpage="1" data-clip="62.5,1130.6,101.8,1151.0"></span></div>
+<p class="x q" style="--b:1143.7"><span class="nw">$z(t)$를</span> 구하여라. 답은 <span class="nw">$r_0$,</span> <span class="nw">$\varepsilon$,</span> <span class="nw">$g$로</span> 나타내어라.</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:204.7pt"></div>
+<div class="bx cd" style="top:249.8pt;height:228.7pt"></div>
+<div class="bx cd ct" style="top:489.8pt;height:666.7pt"></div>
+<div class="bx sp" style="top:33.8pt"></div>
+<div class="bx sp" style="top:288.0pt"></div>
+<div class="bx sp" style="top:541.5pt"></div>
+<div class="bx ab" style="top:126.7pt;height:99.0pt"></div>
+<div class="bx ab" style="top:371.3pt;height:96.7pt"></div>
+</div>
+<p class="x" style="--b:51.8">뉴턴 제2법칙의 <span class="nw">$z$축</span> 성분:</p>
+<div class="f" style="left:374.0pt;top:64.0pt"><span class="fig" data-srcpage="2" data-clip="374.0,64.0,466.0,75.7"></span></div>
+<div class="f" style="left:390.0pt;top:83.5pt"><span class="fig" data-srcpage="2" data-clip="390.0,83.5,450.0,96.0"></span></div>
+<p class="x" style="--b:114.0">앞 부분과 같은 방법으로 푼다.</p>
+<p class="x an" style="--b:155.2">답:</p>
+<div class="f" style="left:356.7pt;top:167.0pt"><span class="fig" data-srcpage="2" data-clip="356.7,167.0,483.0,197.5"></span></div>
+
+<div class="f" style="left:62.5pt;top:259.8pt"><span class="fig" data-srcpage="2" data-clip="62.5,259.8,101.8,280.2"></span></div>
+<p class="x q" style="--b:272.9"><span class="nw">$\ddot{x}$와</span> <span class="nw">$\ddot{y}$를</span> <span class="nw">$x$,</span> <span class="nw">$y$,</span> <span class="nw">$\dot{x}$,</span> <span class="nw">$\dot{y}$,</span> <span class="nw">$\varepsilon$,</span> <span class="nw">$\omega$로</span> 나타내어라.</p>
+<p class="x" style="--b:306.0">뉴턴 제2법칙:</p>
+<div class="f" style="left:351.7pt;top:318.3pt"><span class="fig" data-srcpage="2" data-clip="351.7,318.3,488.3,340.7"></span></div>
+<p class="x" style="--b:358.5"><span class="nw">$x$축과</span> <span class="nw">$y$축</span> 성분으로 쓰면:</p>
+<p class="x an" style="--b:399.8">답:</p>
+<div class="f" style="left:376.0pt;top:411.0pt"><span class="fig" data-srcpage="2" data-clip="376.0,411.0,462.3,440.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:499.8pt"><span class="fig" data-srcpage="2" data-clip="62.5,499.8,101.8,520.2"></span></div>
+<p class="x q" style="--b:512.9">해 <span class="nw">$(x_1, y_1)$을</span> 이용하여, 상수 <span class="nw">$a$와</span> <span class="nw">$\Omega$의</span> 가능한 값을 구할 수 있는 연립 방정식을 세워라. 답에는 <span class="nw">$\varepsilon$,</span> <span class="nw">$\omega$도</span> 들어갈 수 있다.</p>
+<p class="x b" style="--b:559.5">첫 번째 방법</p>
+<p class="x" style="--b:582.0;--l:13.5pt">두 해 가운데 하나만 생각해도 충분하다는 것에 주목하자. 다른 해는 계를 <span class="nw">$z$축에</span> 대하여 회전시켜 얻은 것이므로, 대칭성에 의해 의존 관계의 계수는 바뀌지 않는다. 앞 문항의 답에 첫 번째 해를 대입하자.</p>
+<div class="f" style="left:362.7pt;top:608.3pt"><span class="fig" data-srcpage="2" data-clip="362.7,608.3,477.7,638.0"></span></div>
+<div class="f" style="left:331.0pt;top:646.5pt"><span class="fig" data-srcpage="2" data-clip="331.0,646.5,509.7,676.3"></span></div>
+<div class="f" style="left:305.0pt;top:684.5pt"><span class="fig" data-srcpage="2" data-clip="305.0,684.5,535.3,720.0"></span></div>
+<p class="x" style="--b:738.8">앞 문항의 답에 대입하자:</p>
+<div class="f" style="left:221.5pt;top:750.5pt"><span class="fig" data-srcpage="2" data-clip="221.5,750.5,619.5,786.0"></span></div>
+<p class="x" style="--b:804.8">사인과 코사인 앞의 계수를 각각 같게 놓으면 <span class="nw">$a$와</span> <span class="nw">$\Omega$에</span> 대한 연립 방정식을 얻는다:</p>
+<div class="f" style="left:378.3pt;top:816.7pt"><span class="fig" data-srcpage="2" data-clip="378.3,816.7,460.3,845.7"></span></div>
+<p class="x b" style="--b:864.0">두 번째 방법</p>
+<p class="x" style="--b:886.5">극좌표 <span class="nw">$(r, \varphi)$에서</span> 평면 운동을 생각하자.</p>
+<div class="f" style="left:383.0pt;top:898.7pt"><span class="fig" data-srcpage="2" data-clip="383.0,898.7,457.3,916.0"></span></div>
+<div class="f" style="left:341.5pt;top:923.5pt"><span class="fig" data-srcpage="2" data-clip="341.5,923.5,498.5,940.5"></span></div>
+<p class="x" style="--b:960.0">뉴턴 제2법칙을 <span class="nw">$\vec{e}_r$과</span> <span class="nw">$\vec{e}_\varphi$</span> 방향 성분으로 쓰자:</p>
+<div class="f" style="left:358.7pt;top:973.0pt"><span class="fig" data-srcpage="2" data-clip="358.7,973.0,479.3,1002.5"></span></div>
+<p class="x" style="--b:1020.8"><span class="nw">$r = Ae^{at}$와</span> <span class="nw">$\varphi = \Omega t$를</span> 대입하자:</p>
+<div class="f" style="left:378.3pt;top:1032.7pt"><span class="fig" data-srcpage="2" data-clip="378.3,1032.7,460.3,1061.7"></span></div>
+<p class="x" style="--b:1080.8">첫 번째 방법과 같은 연립 방정식을 얻었다.</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:107.2pt"></div>
+<div class="bx cd" style="top:152.2pt;height:730.6pt"></div>
+<div class="bx cd ct" style="top:894.0pt;height:262.5pt"></div>
+<div class="bx sp" style="top:190.5pt"></div>
+<div class="bx sp" style="top:932.2pt"></div>
+<div class="bx ab" style="top:33.7pt;height:96.8pt"></div>
+<div class="bx ab" style="top:608.3pt;height:264.0pt"></div>
+</div>
+<p class="x an" style="--b:62.2">답:</p>
+<div class="f" style="left:378.3pt;top:74.3pt"><span class="fig" data-srcpage="3" data-clip="378.3,74.3,460.3,103.3"></span></div>
+
+<div class="f" style="left:62.5pt;top:162.3pt"><span class="fig" data-srcpage="3" data-clip="62.5,162.3,101.8,182.7"></span></div>
+<p class="x q" style="--b:175.4">얻은 연립 방정식을 풀어, <span class="nw">$a_2 &gt; a_1$일</span> 때 알맞은 값의 쌍 <span class="nw">$(a_1, \Omega_1)$과</span> <span class="nw">$(a_2, \Omega_2)$를</span> 구하여라. 답은 <span class="nw">$\varepsilon$,</span> <span class="nw">$\omega$로</span> 나타내어라.</p>
+<p class="x" style="--b:208.5">풀기 위해 방정식을 변형하자:</p>
+<div class="f" style="left:366.3pt;top:220.5pt"><span class="fig" data-srcpage="3" data-clip="366.3,220.5,471.7,270.7"></span></div>
+<p class="x" style="--b:295.4;margin-top:-1.6pt"><span class="nw">$\gamma = \left(a + \frac{\varepsilon}{2}\right)^2$이라고</span> 놓자.</p>
+<div class="f" style="left:370.5pt;top:310.7pt"><span class="fig" data-srcpage="3" data-clip="370.5,310.7,470.3,339.7"></span></div>
+<div class="f" style="left:329.3pt;top:348.3pt"><span class="fig" data-srcpage="3" data-clip="329.3,348.3,510.7,380.0"></span></div>
+<div class="f" style="left:363.3pt;top:388.5pt"><span class="fig" data-srcpage="3" data-clip="363.3,388.5,477.7,424.5"></span></div>
+<p class="x" style="--b:443.2"><span class="nw">$\gamma &gt; 0$이므로</span> 부호가 <span class="nw">$+$인</span> 근만 알맞다는 것에 주목하자.</p>
+<div class="f" style="left:341.7pt;top:455.5pt"><span class="fig" data-srcpage="3" data-clip="341.7,455.5,499.5,497.7"></span></div>
+<div class="f" style="left:333.5pt;top:505.0pt"><span class="fig" data-srcpage="3" data-clip="333.5,505.0,504.3,550.0"></span></div>
+<div class="f" style="left:362.0pt;top:557.0pt"><span class="fig" data-srcpage="3" data-clip="362.0,557.0,477.7,599.7"></span></div>
+<p class="x an" style="--b:636.8">답:</p>
+<div class="f" style="left:331.3pt;top:648.3pt"><span class="fig" data-srcpage="3" data-clip="331.3,648.3,506.5,845.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:904.0pt"><span class="fig" data-srcpage="3" data-clip="62.5,904.0,101.8,924.4"></span></div>
+<p class="x q" style="--b:917.2"><span class="nw">$\varepsilon \ll \omega$인</span> 경우와 <span class="nw">$\varepsilon \gg \omega$인</span> 경우에 이 양들의 근삿값을 구하여라.</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:245.2pt"></div>
+<div class="bx cd" style="top:290.2pt;height:774.0pt"></div>
+<div class="bx cd ct" style="top:1075.5pt;height:81.0pt"></div>
+<div class="bx sp" style="top:372.8pt"></div>
+<div class="bx sp" style="top:1113.8pt"></div>
+<div class="bx ab" style="top:33.7pt;height:234.8pt"></div>
+<div class="bx ab" style="top:832.5pt;height:221.2pt"></div>
+</div>
+<p class="x an" style="--b:62.2">답: <span class="nw">$\varepsilon \ll \omega$일</span> 때:</p>
+<div class="f" style="left:375.7pt;top:74.3pt"><span class="fig" data-srcpage="4" data-clip="375.7,74.3,464.3,140.7"></span></div>
+<p class="x an" style="--b:159.8"><span class="nw">$\varepsilon \gg \omega$일</span> 때:</p>
+<div class="f" style="left:398.5pt;top:172.7pt"><span class="fig" data-srcpage="4" data-clip="398.5,172.7,442.5,241.5"></span></div>
+
+<div class="f" style="left:62.5pt;top:300.3pt"><span class="fig" data-srcpage="4" data-clip="62.5,300.3,101.8,320.7"></span></div>
+<p class="x q" style="--b:313.4">연립 방정식의 일반해는 다음 꼴이다.</p>
+<div class="f" style="left:322.0pt;top:327.3pt"><span class="fig" data-srcpage="4" data-clip="322.0,327.3,518.7,341.0"></span></div>
+<p class="x" style="--b:360.0">이 부의 도입부에 주어진 초기 조건을 이용하여 <span class="nw">$A$,</span> <span class="nw">$B$,</span> <span class="nw">$C$,</span> <span class="nw">$D$를</span> <span class="nw">$r_0$,</span> <span class="nw">$a_1$,</span> <span class="nw">$a_2$,</span> <span class="nw">$\Omega_1$,</span> <span class="nw">$\Omega_2$로</span> 나타내어라.</p>
+<p class="x" style="--b:390.8">초기 조건: <span class="nw">$x(0) = 0$,</span> <span class="nw">$y(0) = r_0$,</span> <span class="nw">$\dot{x}(0) = 0$,</span> <span class="nw">$\dot{y}(0) = 0$.</span></p>
+<div class="f" style="left:267.0pt;top:402.7pt"><span class="fig" data-srcpage="4" data-clip="267.0,402.7,573.3,823.3"></span></div>
+<p class="x an" style="--b:861.0">답:</p>
+<div class="f" style="left:334.0pt;top:872.5pt"><span class="fig" data-srcpage="4" data-clip="334.0,872.5,506.3,1025.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:1085.6pt"><span class="fig" data-srcpage="4" data-clip="62.5,1085.6,101.8,1106.0"></span></div>
+<p class="x q" style="--b:1098.7"><span class="nw">$\varepsilon \ll \omega$인</span> 경우와 <span class="nw">$\varepsilon \gg \omega$인</span> 경우에 <span class="nw">$xy$</span> 평면에서 입자의 운동 궤적을 정성적으로 그려라.</p>
+<p class="x" style="--b:1131.8"><span class="nw">$\varepsilon \ll \omega$일</span> 때 다음을 얻는다:</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:814.4pt"></div>
+<div class="bx cd ct" style="top:859.5pt;height:297.0pt"></div>
+<div class="bx sp" style="top:912.0pt"></div>
+<div class="bx ab" style="top:113.3pt;height:331.4pt"></div>
+<div class="bx ab" style="top:509.3pt;height:328.4pt"></div>
+</div>
+<div class="f" style="left:361.0pt;top:33.3pt"><span class="fig" data-srcpage="5" data-clip="361.0,33.3,479.7,68.0"></span></div>
+<p class="x" style="--b:87.0;--l:13.5pt">감쇠하는 지수 함수 항을 무시하면 로그 나선을 얻는다. 운동을 시작하고 충분히 긴 시간이 지난 뒤 위치 벡터와 속도 사이의 각은 <span class="nw">$45^\circ$이다.</span></p>
+<p class="x an" style="--b:141.8">답:</p>
+<div class="f" style="left:233.2pt;top:145.5pt"><span class="fig" data-srcpage="5" data-clip="233.2,145.5,607.5,426.0"></span></div>
+<p class="x" style="--b:453.8"><span class="nw">$\varepsilon \gg \omega$일</span> 때 입자는 반지름 <span class="nw">$r_0$인</span> 원을 따라 움직이며, 그 반지름은 천천히 커진다:</p>
+<div class="f" style="left:384.0pt;top:465.3pt"><span class="fig" data-srcpage="5" data-clip="384.0,465.3,457.0,500.7"></span></div>
+<p class="x an" style="--b:537.8">답:</p>
+<div class="f" style="left:233.2pt;top:541.5pt"><span class="fig" data-srcpage="5" data-clip="233.2,541.5,607.5,819.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:869.6pt"><span class="fig" data-srcpage="5" data-clip="62.5,869.6,101.8,890.0"></span></div>
+<p class="x q" style="--b:882.7">입자가 좌표 <span class="nw">$\vec{r} = (x, y, z)$인</span> 점에 있고 속도 <span class="nw">$\vec{v} = (v_x, v_y, v_z)$로</span> 움직이는 순간, 열로 빠져나가는 에너지 손실 일률 <span class="nw">$P$를</span> 구하여라.</p>
+<p class="x" style="--b:930.0">계의 에너지 변화 법칙을 쓰자:</p>
+<div class="f" style="left:349.3pt;top:942.3pt"><span class="fig" data-srcpage="5" data-clip="349.3,942.3,491.0,964.7"></span></div>
+<p class="x" style="--b:982.5;--l:14.6pt">여기서 <span class="nw">$W$는</span> 매질에 작용하는 외력의 일률이다. <span class="nw">$W$를</span> 구하자. 매질이 일정한 각속도로 회전하려면 매질의 각 부분에 작용하는 힘은 속도 방향 성분이 0이어야 한다. 따라서 입자가 있는 영역에는 입자가 작용하는 힘 <span class="nw">$-\vec{F}$와</span> 외력 <span class="nw">$\vec{F}$가</span> 작용한다.</p>
+<div class="f" style="left:381.7pt;top:1024.0pt"><span class="fig" data-srcpage="5" data-clip="381.7,1024.0,457.7,1046.5"></span></div>
+<div class="f" style="left:323.3pt;top:1054.0pt"><span class="fig" data-srcpage="5" data-clip="323.3,1054.0,517.5,1076.5"></span></div>
+<p class="x c" style="--b:1098.0;margin-top:1.5pt">$P = \left(\vec{F}, [\vec{\omega}, \vec{r}] - \vec{v}\right) = \varepsilon m v_\mathrm{rel}^2 = \varepsilon m\left(v_z^2 + (v_x + \omega y)^2 + \left(v_y - \omega x\right)^2\right)$</p>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd cb" style="top:33.8pt;height:100.4pt"></div>
+<div class="bx ab" style="top:33.7pt;height:90.0pt"></div>
+</div>
+<p class="x an" style="--b:62.2">답:</p>
+<p class="x c" style="--b:88.5;margin-top:1.5pt">$P = \left(\vec{F}, [\vec{\omega}, \vec{r}] - \vec{v}\right) = \varepsilon m v_\mathrm{rel}^2 = \varepsilon m\left(v_z^2 + (v_x + \omega y)^2 + \left(v_y - \omega x\right)^2\right)$</p>
+</div>
+</body></html>

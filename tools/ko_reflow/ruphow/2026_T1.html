@@ -1,0 +1,117 @@
+<!doctype html><html><head><meta name="page" content="595.276,841.89">
+<style>
+/* RuPhO W ("Road to IPhO") 2026, problem T1 — Korean edition on the original layout.
+   ORIGINAL: 2 A4 pages (595.3x841.9pt), LaTeX with PT Serif 10pt body (-> 'Times New Roman',KB,serif), inline math
+   Computer Modern; line pitch 11.95pt. Text column x 51.0..547.1 (width 496.1pt), paragraph indent 15pt.
+   Header "Road to IPhO" (PT Sans 39.9pt grey, kept as printed: stamped). Title PT Serif 17.9pt centred, b 67.4.
+   Part headings PT Serif Bold 12pt. Sub-questions in black frames (x 15.17..580.11, stroke 1.99pt, redrawn as .bx
+   inside the static .dc wrapper so check.py ignores them); labels A1..B3 and the points at the right stamped.
+   Footer "Условие: страница N из 2" (PT Sans 14.9pt, right edge 574.3) -> "문제: 2쪽 중 N쪽".
+   Stamped display: f(T,V) = const (A7).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3375*fs + 0.6pt   (Times New Roman: (ascent - descent)/2 = (0.891 - 0.216)/2 em) */
+body{font-family:'Times New Roman',KB,serif;font-size:10pt;line-height:11.95pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0}
+.katex .text{font-family:KaTeX_Main,KB,serif}
+.x{position:absolute;margin:0;left:51pt;width:496.1pt;--l:11.95pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3375*var(--fs) + 0.6pt);text-align:justify}
+.i{text-indent:15pt}
+.c{text-align:center}
+.q{left:50.8pt}
+.t{left:0;width:595.3pt;text-align:center;--fs:17.9pt;--l:21pt}
+.h{font-weight:bold;--fs:12pt;--l:14pt;text-align:left}
+.ft{font-family:Arial,KG,sans-serif;--fs:14.9pt;--l:17pt;left:274.3pt;width:300pt;text-align:right;
+    top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs))}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box;border:1.99pt solid #000}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:252.65pt;width:566.93pt;height:36.48pt"></div>
+<div class="bx" style="left:14.18pt;top:297.10pt;width:566.93pt;height:24.07pt"></div>
+<div class="bx" style="left:14.18pt;top:329.14pt;width:566.93pt;height:35.92pt"></div>
+<div class="bx" style="left:14.18pt;top:373.03pt;width:566.93pt;height:36.77pt"></div>
+<div class="bx" style="left:14.18pt;top:417.77pt;width:566.93pt;height:60.75pt"></div>
+<div class="bx" style="left:14.18pt;top:486.50pt;width:566.93pt;height:36.47pt"></div>
+<div class="bx" style="left:14.18pt;top:530.94pt;width:566.93pt;height:67.91pt"></div>
+<div class="bx" style="left:14.18pt;top:606.82pt;width:566.93pt;height:36.24pt"></div>
+<div class="bx" style="left:14.18pt;top:651.03pt;width:566.93pt;height:35.92pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="1" data-clip="50.0,11.4,275.0,53.2"></span></div>
+<p class="x t" style="--b:67.4">열용량이 변하는 기체 (9점)</p>
+<p class="x i" style="--b:91.2">보통 이상 기체를 다룰 때에는 그 정적 몰 열용량 <span class="nw">$C_V$가</span> 온도에 의존하지 않는 상수이며, 기체 분자를 이루는 원자의 수로 정해진다고 본다. 그러나 실제로는 이 열용량이 변할 수 있다. 매우 낮은 온도에서는 열에너지가 분자의 회전 운동을 일으키기에 부족하므로, 분자를 단원자 분자로 볼 수 있다. 그러므로 낮은 온도에서의 열용량은 높은 온도에서보다 작다. 이 문제에서는 열용량이 변하는 몇 가지 경우를 살펴본다. 이때 이상 기체의 상태 방정식(즉 압력, 부피, 온도 사이의 관계)은 변하지 않는다.</p>
+<p class="x h" style="--b:189.4">A부. 온도에 선형으로 의존하는 열용량 (5.7점)</p>
+<p class="x" style="--b:206.2">이 부분에서는 우리가 관심을 두는 온도 구간 전체에서 기체 1몰의 정적 열용량이 온도에 따라 <span class="nw">$C_V = C_0 + aT$로</span> 변한다고 하자(<span class="nw">$C_0$,</span> <span class="nw">$a &gt; 0$은</span> 온도에 의존하지 않는 알려진 상수이다). 모든 과정은 기체 1몰을 가지고 진행한다. 이 부분의 모든 답에는 <span class="nw">$C_0$,</span> <span class="nw">$a$와</span> 보편 기체 상수 <span class="nw">$R$을</span> 사용할 수 있다.</p>
+
+<div class="f" style="left:25.1pt;top:258.0pt"><span class="fig" data-srcpage="1" data-clip="25.1,258.0,42.6,271.9"></span></div>
+<div class="f" style="left:553.6pt;top:258.0pt"><span class="fig" data-srcpage="1" data-clip="553.6,258.0,572.6,271.9"></span></div>
+<p class="x q" style="--b:268.3">이러한 기체의 내부 에너지가 온도에 따라 어떻게 달라지는지 구하여라. <span class="nw">$T = 0$일</span> 때 내부 에너지는 0이라고 보아라.</p>
+
+<div class="f" style="left:25.1pt;top:302.0pt"><span class="fig" data-srcpage="1" data-clip="25.1,302.0,42.6,315.9"></span></div>
+<div class="f" style="left:553.6pt;top:302.0pt"><span class="fig" data-srcpage="1" data-clip="553.6,302.0,572.6,315.9"></span></div>
+<p class="x q" style="--b:312.3">주어진 온도 <span class="nw">$T$에서</span> 기체의 정압 열용량 <span class="nw">$C_P$는</span> 얼마인가?</p>
+
+<div class="f" style="left:25.1pt;top:334.0pt"><span class="fig" data-srcpage="1" data-clip="25.1,334.0,42.6,347.9"></span></div>
+<div class="f" style="left:553.6pt;top:334.0pt"><span class="fig" data-srcpage="1" data-clip="553.6,334.0,572.6,347.9"></span></div>
+<p class="x q" style="--b:344.3">기체가 정적 과정을 거쳐 압력이 <span class="nw">$p_1$에서</span> <span class="nw">$p_2$로</span> 증가한다고 하자. 부피는 <span class="nw">$V$이다.</span> 기체에 공급된 열량 <span class="nw">$Q_V$를</span> 구하여라.</p>
+
+<div class="f" style="left:25.1pt;top:377.9pt"><span class="fig" data-srcpage="1" data-clip="25.1,377.9,42.6,391.8"></span></div>
+<div class="f" style="left:553.6pt;top:377.9pt"><span class="fig" data-srcpage="1" data-clip="553.6,377.9,572.6,391.8"></span></div>
+<p class="x q" style="--b:388.2">기체가 정압 과정을 거친다고 하자. 처음 부피는 <span class="nw">$V_1$,</span> 나중 부피는 <span class="nw">$V_2$,</span> 압력은 <span class="nw">$p$이다.</span> 기체에 공급된 열량 <span class="nw">$Q_p$를</span> 구하여라.</p>
+
+<div class="f" style="left:25.1pt;top:423.1pt"><span class="fig" data-srcpage="1" data-clip="25.1,423.1,42.6,437.0"></span></div>
+<div class="f" style="left:553.6pt;top:423.1pt"><span class="fig" data-srcpage="1" data-clip="553.6,423.1,572.6,437.0"></span></div>
+<p class="x q" style="--b:433.4">압력이 부피에 정비례하는 과정 <span class="nw">$1-2$,</span> 정적 과정 <span class="nw">$2-3$,</span> 정압 과정 <span class="nw">$3-1$로</span> 이루어진 순환 과정 <span class="nw">$123$을</span> 생각하자. 이때 점 1과 점 2에서의 정적 열용량은 <span class="nw">$C_{V2} = 1.5C_{V1}$의</span> 관계를 만족하며, <span class="nw">$V_2 = 2V_1$임이</span> 알려져 있다. 이 순환 과정의 효율을 구하여라. 그 수치값을 구하여라. <span class="nw">$C_0 = 3R/2$이다.</span></p>
+
+<div class="f" style="left:25.1pt;top:491.8pt"><span class="fig" data-srcpage="1" data-clip="25.1,491.8,42.6,505.7"></span></div>
+<div class="f" style="left:553.6pt;top:491.8pt"><span class="fig" data-srcpage="1" data-clip="553.6,491.8,572.6,505.7"></span></div>
+<p class="x q" style="--b:502.1">기체가 거치는 단열 과정을 생각하자. 부피의 무한소 증가량 <span class="nw">$dV$와</span> 온도의 무한소 증가량 <span class="nw">$dT$</span> 사이의 관계식을 구하여라. 답은 <span class="nw">$C_0$,</span> <span class="nw">$a$,</span> <span class="nw">$T$,</span> <span class="nw">$V$,</span> <span class="nw">$R$로</span> 나타내어라.</p>
+
+<div class="f" style="left:25.1pt;top:535.8pt"><span class="fig" data-srcpage="1" data-clip="25.1,535.8,42.6,549.7"></span></div>
+<div class="f" style="left:553.6pt;top:535.8pt"><span class="fig" data-srcpage="1" data-clip="553.6,535.8,572.6,549.7"></span></div>
+<p class="x q" style="--b:546.1">앞 문항의 관계식으로부터 <span class="nw">$T$와</span> <span class="nw">$V$를</span> 잇는 다음 꼴의 단열 과정 방정식을 구하여라.</p>
+<div class="f" style="left:262.0pt;top:559.3pt"><span class="fig" data-srcpage="1" data-clip="262.0,559.3,335.6,571.2"></span></div>
+<p class="x q" style="--b:590.0">함수 <span class="nw">$f$에는</span> <span class="nw">$C_0$,</span> <span class="nw">$a$,</span> <span class="nw">$R$도</span> 들어갈 수 있다.</p>
+
+<div class="f" style="left:25.1pt;top:611.7pt"><span class="fig" data-srcpage="1" data-clip="25.1,611.7,42.6,625.6"></span></div>
+<div class="f" style="left:553.6pt;top:611.7pt"><span class="fig" data-srcpage="1" data-clip="553.6,611.7,572.6,625.6"></span></div>
+<p class="x q" style="--b:622.0">등온 과정 <span class="nw">$12$와</span> <span class="nw">$34$,</span> 단열 과정 <span class="nw">$23$과</span> <span class="nw">$41$로</span> 이루어진 카르노 순환 <span class="nw">$1234$를</span> 생각하자. 부피 <span class="nw">$V_3$,</span> <span class="nw">$V_4$를</span> <span class="nw">$V_1$,</span> <span class="nw">$V_2$,</span> 등온 과정의 온도 <span class="nw">$T_+ = T_1 = T_2$,</span> <span class="nw">$T_- = T_3 = T_4$,</span> 그리고 기체의 매개변수 <span class="nw">$C_0$,</span> <span class="nw">$a$,</span> <span class="nw">$R$로</span> 나타내어라.</p>
+
+<div class="f" style="left:25.1pt;top:655.9pt"><span class="fig" data-srcpage="1" data-clip="25.1,655.9,42.6,669.8"></span></div>
+<div class="f" style="left:553.6pt;top:655.9pt"><span class="fig" data-srcpage="1" data-clip="553.6,655.9,572.6,669.8"></span></div>
+<p class="x q" style="--b:666.2">(일반 공식을 쓰지 않고) 직접 계산하여, 이 카르노 순환의 효율이 열용량이 일정한 이상 기체의 경우와 같음을 보여라.</p>
+
+<p class="x ft" style="--b:815.1">문제: 2쪽 중 1쪽</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx" style="left:14.18pt;top:156.80pt;width:566.93pt;height:35.91pt"></div>
+<div class="bx" style="left:14.18pt;top:200.69pt;width:566.93pt;height:36.35pt"></div>
+<div class="bx" style="left:14.18pt;top:245.02pt;width:566.93pt;height:47.66pt"></div>
+</div>
+<div class="f" style="left:50pt;top:11.4pt"><span class="fig" data-srcpage="2" data-clip="50.0,11.4,275.0,53.2"></span></div>
+<p class="x h" style="--b:69.2">B부. 구간별 선형 열용량 (3.3점)</p>
+<p class="x" style="--b:86.0">기체의 열용량이 온도에 따라 달라지는 방식에 대한 더 현실적인 모형으로 다음을 제안할 수 있다. <span class="nw">$T &lt; T_1$에서</span> 열용량 <span class="nw">$C_V$는</span> 일정하며, 그 값은 단원자 기체의 열용량 <span class="nw">$C_1 = 3R/2$이다.</span> 온도 구간 <span class="nw">$T_1 &lt; T &lt; T_2$에서</span> 열용량은 선형적으로 증가하여, <span class="nw">$T = T_2$에서</span> 이원자 기체에 해당하는 값 <span class="nw">$C_2 = 5R/2$에</span> 이른다. 그보다 높은 온도에서는 열용량이 일정하게 유지된다. <span class="nw">$T_2 = 2T_1$인</span> 이러한 기체 1몰을 생각하자. 기체의 처음 온도는 <span class="nw">$T_A = T_1/2$이다.</span> 여러 가지 방법으로 기체의 온도를 <span class="nw">$T_B = 3T_1$까지</span> 올린다.</p>
+
+<div class="f" style="left:25.1pt;top:161.7pt"><span class="fig" data-srcpage="2" data-clip="25.1,161.7,42.6,175.6"></span></div>
+<div class="f" style="left:553.6pt;top:161.7pt"><span class="fig" data-srcpage="2" data-clip="553.6,161.7,572.6,175.6"></span></div>
+<p class="x q" style="--b:172.0">정적 가열에서 기체에 공급해야 하는 열량 <span class="nw">$Q_V$를</span> 구하여라. 답은 <span class="nw">$T_1$,</span> <span class="nw">$R$로</span> 나타내어라.</p>
+
+<div class="f" style="left:25.1pt;top:206.0pt"><span class="fig" data-srcpage="2" data-clip="25.1,206.0,42.6,219.9"></span></div>
+<div class="f" style="left:553.6pt;top:206.0pt"><span class="fig" data-srcpage="2" data-clip="553.6,206.0,572.6,219.9"></span></div>
+<p class="x q" style="--b:216.3">정압 가열에서 기체에 공급해야 하는 열량 <span class="nw">$Q_P$를</span> 구하여라. 답은 <span class="nw">$T_1$,</span> <span class="nw">$R$로</span> 나타내어라.</p>
+
+<div class="f" style="left:25.1pt;top:249.9pt"><span class="fig" data-srcpage="2" data-clip="25.1,249.9,42.6,263.8"></span></div>
+<div class="f" style="left:553.6pt;top:249.9pt"><span class="fig" data-srcpage="2" data-clip="553.6,249.9,572.6,263.8"></span></div>
+<p class="x q" style="--b:260.2">기체의 처음 부피가 <span class="nw">$V_0$이라고</span> 하자. 온도를 단열적으로 올렸다면 나중 부피는 얼마인가? 이 과정에서 한 일을 구하여라. 답은 <span class="nw">$T_1$,</span> <span class="nw">$R$,</span> <span class="nw">$V_0$으로</span> 나타내어라.</p>
+
+<p class="x ft" style="--b:815.1">문제: 2쪽 중 2쪽</p>
+</div>
+</body></html>

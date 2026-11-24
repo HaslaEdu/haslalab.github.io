@@ -1,0 +1,361 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2023, problem T1 (capacitor with a varying voltage) — solution — English edition on the
+   original layout (copy of the Korean edition 2023_T1S.html: same stamps and baselines, English text
+   translated from the Russian).
+   ORIGINAL: 7 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same layout as the approved 2026 T1S
+   pilot): beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 0.30" (stamped), grey separator under the restated question, answer frame (3pt stroke #f3f6f9).
+   The panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX at
+   10.8pt (1.2em), text column x 63.4..777.8; question line after the badge starts at x 104.7 (x 109.5 after the
+   wider B10..B13 badges; pitch 15.9pt), other paragraphs pitch 13.5pt, all left-aligned as in the original.
+   Display formulas and the three graphs (Latin labels only) are stamped; inline formulas are retyped in KaTeX
+   (also the inline fractions that the original sets in display size: dq/dt, dU/dt, Delta W, U_1 ~ T^2/48R^2C^2).
+   The original prints the LaTeX source "\textbf{A4}" / "\textbf{B3}" / "\textbf{A3}" / "\textbf{B4}" literally:
+   typeset here as bold A4 / B3 / A3 / B4.  "Ответ:" -> "Answer:".
+   Badges C1, C2, C3, C6 are printed with a CYRILLIC "С" (scrub removes it): a white Latin "C" (.ov, Arial 8.1pt,
+   original glyph origin x 70.12, top = b - 0.3465*8.1 with line-height 0) is laid back on each badge.
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.katex .text{font-family:KaTeX_Main,sans-serif}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.q2{text-indent:46.1pt;--l:15.9pt}
+.l2{--l:19.6pt}
+.l3{--l:21.4pt}
+.l4{--l:14.8pt}
+.an{left:79.9pt;width:690pt}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.ov{position:absolute;white-space:nowrap;line-height:0;font-family:Arial,sans-serif;font-size:8.1pt;color:#fff}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:348.8pt"></div>
+<div class="bx cd" style="top:393.8pt;height:192.8pt"></div>
+<div class="bx cd" style="top:597.8pt;height:191.2pt"></div>
+<div class="bx cd" style="top:800.2pt;height:187.5pt"></div>
+<div class="bx cd" style="top:999.0pt;height:157.5pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:85.5pt"></div>
+<div class="bx sp" style="top:432.0pt"></div>
+<div class="bx sp" style="top:636.0pt"></div>
+<div class="bx sp" style="top:852.8pt"></div>
+<div class="bx sp" style="top:1050.8pt"></div>
+<div class="bx ab" style="top:282.0pt;height:90.0pt"></div>
+<div class="bx ab" style="top:475.5pt;height:100.5pt"></div>
+<div class="bx ab" style="top:681.8pt;height:96.8pt"></div>
+<div class="bx ab" style="top:883.5pt;height:93.8pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">Initially the charge of the capacitor is zero. At the moment $t = 0$ a constant voltage $V = V_0$ is applied to the input of the circuit. Find the time dependence of the voltage across the capacitor $U(t)$ for $t &gt; 0$.</p>
+<p class="x" style="--b:103.5">The instantaneous value of the current through the capacitor is</p>
+<div class="f" style="left:389.1pt;top:114.5pt"><span class="fig" data-srcpage="1" data-clip="389.1,114.5,451.7,143.3"></span></div>
+<p class="x l2" style="--b:179.9;margin-top:-1.6pt">The current equals the derivative of the capacitor charge, $I = \dfrac{dq}{dt}$, and the charge can be expressed in terms of the voltage: $q = CU$, whence $I = C\dfrac{dU}{dt}$, so the equation for the voltage is</p>
+<div class="f" style="left:370.2pt;top:209.8pt"><span class="fig" data-srcpage="1" data-clip="370.2,209.8,471.7,239.3"></span></div>
+<p class="x" style="--b:269.2">and its solution is</p>
+<p class="x an" style="--b:310.5">Answer:</p>
+<div class="f" style="left:368.3pt;top:320.6pt"><span class="fig" data-srcpage="1" data-clip="368.3,320.6,472.5,347.6"></span></div>
+
+<div class="f" style="left:62.5pt;top:403.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,403.8,101.8,424.2"></span></div>
+<p class="x q" style="--b:416.9">Find the time dependence of the current through the resistor $I(t)$ ($t &gt; 0$).</p>
+<div class="f" style="left:61.9pt;top:438.5pt"><span class="fig" data-srcpage="1" data-clip="61.9,438.5,109.8,467.3"></span></div>
+<p class="x an" style="--b:504.0">Answer:</p>
+<div class="f" style="left:385.0pt;top:516.5pt"><span class="fig" data-srcpage="1" data-clip="385.0,516.5,455.8,548.3"></span></div>
+
+<div class="f" style="left:62.5pt;top:607.8pt"><span class="fig" data-srcpage="1" data-clip="62.5,607.8,101.8,628.2"></span></div>
+<p class="x q" style="--b:620.9">Find the heat $Q_0$ released in the resistor during the whole process.</p>
+<p class="x l4" style="--b:654.2">During the whole process the charge $q = CV_0$ passes through the circuit, and the work done on it is $A = V_0q = CV_0^2$. The final energy of the capacitor is $W = CV_0^2/2$, and the heat is $Q = A - W$.</p>
+<p class="x an" style="--b:710.2">Answer:</p>
+<div class="f" style="left:354.5pt;top:721.8pt"><span class="fig" data-srcpage="1" data-clip="354.5,721.8,486.2,754.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:810.3pt"><span class="fig" data-srcpage="1" data-clip="62.5,810.3,101.8,830.7"></span></div>
+<p class="x q" style="--b:823.4">Now let the initial voltage across the capacitor at $t = 0$ be $U_1$, and, as before, a constant voltage $V = V_0$ is applied to the input. Find the time dependence of the voltage across the capacitor $U(t)$ and of the current through the resistor $I(t)$.</p>
+<p class="x" style="--b:870.8">The equation for the voltage is the same as in the first part, and its solution, taking the initial conditions into account, is</p>
+<p class="x an" style="--b:912.0">Answer:</p>
+<div class="f" style="left:304.6pt;top:922.3pt"><span class="fig" data-srcpage="1" data-clip="304.6,922.3,536.1,951.1"></span></div>
+
+<div class="f" style="left:62.5pt;top:1009.0pt"><span class="fig" data-srcpage="1" data-clip="62.5,1009.0,101.8,1029.5"></span></div>
+<p class="x q" style="--b:1022.2">Find the amount of heat $Q_1$ released during the whole process of part <b>A4</b>. Sketch (qualitatively) the graph of $Q_1$ versus $U_1$.</p>
+<p class="x l2" style="--b:1077.6;margin-top:1.4pt">During charging the charge $q = C(V_0 - U_1)$ flows through the circuit, the change of the capacitor energy is $\Delta W = \dfrac{CV_0^2}{2} - \dfrac{CU_1^2}{2}$, the work of the source is $A = V_0q$, so the heat released is</p>
+<div class="f" style="left:269.2pt;top:1108.8pt"><span class="fig" data-srcpage="1" data-clip="269.2,1108.8,570.2,1142.7"></span></div>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:106.5pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:151.5pt;height:159.0pt"></div>
+<div class="bx cd" style="top:321.8pt;height:162.0pt"></div>
+<div class="bx cd" style="top:495.0pt;height:153.0pt"></div>
+<div class="bx cd" style="top:659.2pt;height:153.0pt"></div>
+<div class="bx cd" style="top:823.5pt;height:170.2pt"></div>
+<div class="bx cd" style="top:1005.0pt;height:138.0pt"></div>
+<div class="bx sp" style="top:189.8pt"></div>
+<div class="bx sp" style="top:360.0pt"></div>
+<div class="bx sp" style="top:533.2pt"></div>
+<div class="bx sp" style="top:697.5pt"></div>
+<div class="bx sp" style="top:875.2pt"></div>
+<div class="bx sp" style="top:1043.2pt"></div>
+<div class="bx ab" style="top:33.8pt;height:96.0pt"></div>
+<div class="bx ab" style="top:220.5pt;height:79.5pt"></div>
+<div class="bx ab" style="top:390.8pt;height:82.5pt"></div>
+<div class="bx ab" style="top:543.8pt;height:93.8pt"></div>
+<div class="bx ab" style="top:708.0pt;height:93.8pt"></div>
+<div class="bx ab" style="top:885.8pt;height:97.5pt"></div>
+<div class="bx ab" style="top:1053.8pt;height:78.8pt"></div>
+</div>
+<p class="x an" style="--b:62.2">Answer:</p>
+<div class="f" style="left:375.5pt;top:73.8pt"><span class="fig" data-srcpage="2" data-clip="375.5,73.8,465.3,104.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:161.6pt"><span class="fig" data-srcpage="2" data-clip="62.5,161.6,101.8,181.9"></span></div>
+<p class="x q" style="--b:174.7">Suppose a sufficiently long time has passed. Find the expression for the current through the resistor $I(t)$.</p>
+<p class="x" style="--b:207.8">After a long time the charge of the capacitor is $q = CU \approx CV = C\alpha t$, and the current is $I = dq/dt$.</p>
+<p class="x an" style="--b:249.0">Answer:</p>
+<div class="f" style="left:399.9pt;top:260.0pt"><span class="fig" data-srcpage="2" data-clip="399.9,260.0,440.9,274.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:331.8pt"><span class="fig" data-srcpage="2" data-clip="62.5,331.8,101.8,352.2"></span></div>
+<p class="x q" style="--b:344.9">Find the amount of heat $Q$ released in the resistor during a sufficiently long time $t$.</p>
+<p class="x" style="--b:378.1">The power after the process has settled is $P = I^2R \approx C^2\alpha^2R$.</p>
+<p class="x an" style="--b:419.2">Answer:</p>
+<div class="f" style="left:387.6pt;top:430.8pt"><span class="fig" data-srcpage="2" data-clip="387.6,430.8,453.2,446.7"></span></div>
+
+<div class="f" style="left:62.5pt;top:505.1pt"><span class="fig" data-srcpage="2" data-clip="62.5,505.1,101.8,525.5"></span></div>
+<p class="x q" style="--b:518.2">Find the current through the resistor $I$. Express it in terms of the instantaneous voltage across the capacitor $U$, the input voltage $V$ and the circuit parameters.</p>
+<p class="x an" style="--b:572.2">Answer:</p>
+<div class="f" style="left:390.2pt;top:583.3pt"><span class="fig" data-srcpage="2" data-clip="390.2,583.3,450.6,611.3"></span></div>
+
+<div class="f" style="left:62.5pt;top:669.3pt"><span class="fig" data-srcpage="2" data-clip="62.5,669.3,101.8,689.7"></span></div>
+<p class="x q" style="--b:682.4">Express the rate of change of the voltage across the capacitor $dU/dt$ in terms of the current through the resistor $I$ and the circuit parameters.</p>
+<p class="x an" style="--b:736.5">Answer:</p>
+<div class="f" style="left:392.8pt;top:746.8pt"><span class="fig" data-srcpage="2" data-clip="392.8,746.8,449.1,776.3"></span></div>
+
+<div class="f" style="left:62.5pt;top:833.5pt"><span class="fig" data-srcpage="2" data-clip="62.5,833.5,101.8,854.0"></span></div>
+<p class="x q" style="--b:846.7">By differentiating the equation from <b>B3</b>, obtain a differential equation for the current through the resistor, i.e. express $dI/dt$ in terms of $I$, the circuit parameters and the constant $\alpha$.</p>
+<p class="x an" style="--b:914.2">Answer:</p>
+<div class="f" style="left:326.8pt;top:925.3pt"><span class="fig" data-srcpage="2" data-clip="326.8,925.3,514.8,955.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:1015.0pt"><span class="fig" data-srcpage="2" data-clip="62.5,1015.0,101.8,1035.5"></span></div>
+<p class="x q" style="--b:1028.2">What is the current through the resistor at the initial moment, $I(0)$?</p>
+<p class="x an" style="--b:1082.2">Answer:</p>
+<div class="f" style="left:404.7pt;top:1092.5pt"><span class="fig" data-srcpage="2" data-clip="404.7,1092.5,436.0,1106.7"></span></div>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:183.0pt"></div>
+<div class="bx cd" style="top:228.0pt;height:558.8pt"></div>
+<div class="bx cd" style="top:798.0pt;height:214.5pt"></div>
+<div class="bx cd" style="top:1023.8pt;height:132.8pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:72.0pt"></div>
+<div class="bx sp" style="top:266.2pt"></div>
+<div class="bx sp" style="top:836.2pt"></div>
+<div class="bx sp" style="top:1062.0pt"></div>
+<div class="bx ab" style="top:116.2pt;height:90.0pt"></div>
+<div class="bx ab" style="top:371.2pt;height:90.0pt"></div>
+<div class="bx ab" style="top:469.5pt;height:306.8pt"></div>
+<div class="bx ab" style="top:904.5pt;height:97.5pt"></div>
+</div>
+<div class="f" style="left:62.5pt;top:43.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,43.8,101.8,64.2"></span></div>
+<p class="x q" style="--b:56.9">Using the analogy with charging a capacitor, find the time dependence of the current through the resistor $I(t)$.</p>
+<p class="x" style="--b:90.0">The equation shows that the current grows like the voltage across a capacitor being charged, the maximum value of the current being $C\alpha$ and the characteristic time of the change of the current being $\tau = RC$, as for the charging of a capacitor.</p>
+<p class="x an" style="--b:144.8">Answer:</p>
+<div class="f" style="left:369.9pt;top:154.8pt"><span class="fig" data-srcpage="3" data-clip="369.9,154.8,470.8,181.8"></span></div>
+
+<div class="f" style="left:62.5pt;top:238.1pt"><span class="fig" data-srcpage="3" data-clip="62.5,238.1,101.8,258.4"></span></div>
+<p class="x q" style="--b:251.2">Find the time dependence of the voltage across the capacitor $U(t)$. Sketch (qualitatively) the graph of the voltage versus time.</p>
+<p class="x" style="--b:284.2">The charge on the capacitor can be found by integrating the current (the initial charge being zero):</p>
+<div class="f" style="left:245.7pt;top:294.7pt"><span class="fig" data-srcpage="3" data-clip="245.7,294.7,595.1,327.4"></span></div>
+<p class="x" style="--b:357.8">and the voltage is $U = q/C$.</p>
+<p class="x an" style="--b:399.8">Answer:</p>
+<div class="f" style="left:349.9pt;top:409.8pt"><span class="fig" data-srcpage="3" data-clip="349.9,409.8,490.8,436.8"></span></div>
+<p class="x an" style="--b:498.0">Answer:</p>
+<div class="f" style="left:231.8pt;top:500.2pt"><span class="fig" data-srcpage="3" data-clip="231.8,500.2,609.0,759.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:808.0pt"><span class="fig" data-srcpage="3" data-clip="62.5,808.0,101.8,828.5"></span></div>
+<p class="x q" style="--b:821.2">Find the amount of heat $Q(t)$ released in the resistor during the time $t$.</p>
+<p class="x" style="--b:854.4">The power released in the resistor is $P = I^2(t)R$; integrating it, we find the heat released:</p>
+<div class="f" style="left:308.0pt;top:864.7pt"><span class="fig" data-srcpage="3" data-clip="308.0,864.7,532.8,898.2"></span></div>
+<p class="x an" style="--b:933.0">Answer:</p>
+<div class="f" style="left:281.5pt;top:944.0pt"><span class="fig" data-srcpage="3" data-clip="281.5,944.0,559.2,974.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:1033.8pt"><span class="fig" data-srcpage="3" data-clip="62.5,1033.8,106.3,1054.2"></span></div>
+<p class="x q2" style="--b:1046.9">Find the time dependence of the voltage across the capacitor for $t &gt; T$.</p>
+<p class="x" style="--b:1080.0">This problem is similar to the one in part A4. Here the voltage at the moment $T$ must be used as the initial voltage. One must also use the relation $V_0 = \alpha T$.</p>
+<p class="x" style="--b:1107.6">Then $V_0 - U_1 = \alpha RC\left(1 - e^{-T/RC}\right)$.</p>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:100.5pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:145.5pt;height:209.2pt"></div>
+<div class="bx cd" style="top:366.0pt;height:175.5pt"></div>
+<div class="bx cd" style="top:552.8pt;height:450.8pt"></div>
+<div class="bx cd" style="top:1014.8pt;height:141.8pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:183.8pt"></div>
+<div class="bx sp" style="top:404.2pt"></div>
+<div class="bx sp" style="top:618.0pt"></div>
+<div class="bx sp" style="top:1053.0pt"></div>
+<div class="bx ab" style="top:33.8pt;height:90.0pt"></div>
+<div class="bx ab" style="top:250.5pt;height:93.8pt"></div>
+<div class="bx ab" style="top:435.0pt;height:96.0pt"></div>
+<div class="bx ab" style="top:897.0pt;height:96.0pt"></div>
+<div class="bx ab" style="top:1083.8pt;height:72.7pt;border-bottom:0;border-radius:3.8pt 3.8pt 0 0"></div>
+</div>
+<p class="x an" style="--b:62.2">Answer:</p>
+<div class="f" style="left:336.4pt;top:72.3pt"><span class="fig" data-srcpage="4" data-clip="336.4,72.3,504.3,99.3"></span></div>
+
+<div class="f" style="left:62.5pt;top:155.6pt"><span class="fig" data-srcpage="4" data-clip="62.5,155.6,106.3,175.9"></span></div>
+<p class="x q2" style="--b:168.7">Find the amount of heat $Q_2$ released in the resistor for $t &gt; T$.</p>
+<p class="x" style="--b:201.8">This amount of heat can be calculated using the result of A5.</p>
+<div class="f" style="left:308.4pt;top:213.3pt"><span class="fig" data-srcpage="4" data-clip="308.4,213.3,532.4,244.9"></span></div>
+<p class="x an" style="--b:279.0">Answer:</p>
+<div class="f" style="left:346.0pt;top:290.4pt"><span class="fig" data-srcpage="4" data-clip="346.0,290.4,494.7,319.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:376.1pt"><span class="fig" data-srcpage="4" data-clip="62.5,376.1,106.3,396.4"></span></div>
+<p class="x q2" style="--b:389.2">Find the amount of heat $Q_T$ released in the resistor during the whole time of charging the capacitor.</p>
+<p class="x" style="--b:422.2">We add the answers of B9 and B11, collect like terms and substitute $\alpha = V_0/T$.</p>
+<p class="x an" style="--b:463.5">Answer:</p>
+<div class="f" style="left:315.8pt;top:475.0pt"><span class="fig" data-srcpage="4" data-clip="315.8,475.0,524.9,505.6"></span></div>
+
+<div class="f" style="left:62.5pt;top:562.8pt"><span class="fig" data-srcpage="4" data-clip="62.5,562.8,106.3,583.2"></span></div>
+<p class="x q2" style="--b:575.9">Find the ratio $k = Q_T/Q_0$. Here $Q_0$ is the heat released in the resistor when the voltage $V_0$ is applied instantaneously to the input of the circuit (see part <b>A3</b>); $Q_T$ was defined in the previous part.</p>
+<p class="x" style="--b:605.2">Write an approximate expression for $k$ when $T \gg RC$.</p>
+<p class="x" style="--b:636.2">$Q_0 = CV_0^2/2$; taking this into account,</p>
+<div class="f" style="left:336.8pt;top:649.0pt"><span class="fig" data-srcpage="4" data-clip="336.8,649.0,503.9,679.6"></span></div>
+<p class="x" style="--b:708.8">At long times the second term is much smaller than the first,</p>
+<div class="f" style="left:394.1pt;top:719.8pt"><span class="fig" data-srcpage="4" data-clip="394.1,719.8,446.7,748.6"></span></div>
+<p class="x" style="--b:778.5">Note also that at short times</p>
+<div class="f" style="left:325.3pt;top:790.0pt"><span class="fig" data-srcpage="4" data-clip="325.3,790.0,515.4,820.2"></span></div>
+<p class="x" style="--b:850.5">therefore</p>
+<div class="f" style="left:384.8pt;top:861.5pt"><span class="fig" data-srcpage="4" data-clip="384.8,861.5,456.0,890.7"></span></div>
+<p class="x an" style="--b:925.5">Answer:</p>
+<div class="f" style="left:317.3pt;top:937.0pt"><span class="fig" data-srcpage="4" data-clip="317.3,937.0,523.5,967.6"></span></div>
+
+<div class="f" style="left:62.5pt;top:1024.8pt"><span class="fig" data-srcpage="4" data-clip="62.5,1024.8,101.8,1045.2"></span></div>
+<div class="ov" style="left:69.9pt;top:1035.2pt">C</div>
+<p class="x q" style="--b:1037.9">Suppose a sufficiently long time has passed and the oscillations have settled. How must $U_1$ and $U_2$ then be related?</p>
+<p class="x" style="--b:1071.0">In the steady state, opposite values of the external voltage correspond to opposite values of the voltage across the capacitor.</p>
+<p class="x an" style="--b:1112.2">Answer:</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:48.8pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:93.8pt;height:153.0pt"></div>
+<div class="bx cd" style="top:258.0pt;height:273.8pt"></div>
+<div class="bx cd" style="top:543.0pt;height:213.8pt"></div>
+<div class="bx cd" style="top:768.0pt;height:302.2pt"></div>
+<div class="bx cd" style="top:1081.5pt;height:75.0pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:132.0pt"></div>
+<div class="bx sp" style="top:309.8pt"></div>
+<div class="bx sp" style="top:594.8pt"></div>
+<div class="bx sp" style="top:819.8pt"></div>
+<div class="bx sp" style="top:1133.2pt"></div>
+<div class="bx ab" style="top:33.8pt;height:38.2pt;border-top:0;border-radius:0 0 3.8pt 3.8pt"></div>
+<div class="bx ab" style="top:142.5pt;height:93.8pt"></div>
+<div class="bx ab" style="top:424.5pt;height:96.8pt"></div>
+<div class="bx ab" style="top:649.5pt;height:96.8pt"></div>
+<div class="bx ab" style="top:963.0pt;height:96.8pt"></div>
+</div>
+<div class="f" style="left:394.2pt;top:32.0pt"><span class="fig" data-srcpage="5" data-clip="394.2,32.0,446.5,46.9"></span></div>
+
+<div class="f" style="left:62.5pt;top:103.8pt"><span class="fig" data-srcpage="5" data-clip="62.5,103.8,101.8,124.2"></span></div>
+<div class="ov" style="left:69.9pt;top:114.2pt">C</div>
+<p class="x q" style="--b:116.9">What is the current through the resistor $I_1$ when the input voltage equals $V_0$?</p>
+<p class="x an" style="--b:171.0">Answer:</p>
+<div class="f" style="left:385.6pt;top:182.0pt"><span class="fig" data-srcpage="5" data-clip="385.6,182.0,455.1,210.8"></span></div>
+
+<div class="f" style="left:62.5pt;top:268.1pt"><span class="fig" data-srcpage="5" data-clip="62.5,268.1,101.8,288.4"></span></div>
+<div class="ov" style="left:69.9pt;top:278.4pt">C</div>
+<p class="x q" style="--b:281.2">By analogy with part <b>B4</b>, write the equation satisfied by the current through the resistor in the interval where the input voltage decreases linearly.</p>
+<p class="x" style="--b:327.8">The input voltage in the interval considered is</p>
+<div class="f" style="left:381.8pt;top:338.8pt"><span class="fig" data-srcpage="5" data-clip="381.8,338.8,458.9,367.6"></span></div>
+<p class="x" style="--b:397.5">The equation for the current contains only $dV/dt$, so the constant term does not affect it. The equation then coincides with the equation of part B5 with $\alpha = -4V_0/T$.</p>
+<p class="x an" style="--b:453.0">Answer:</p>
+<div class="f" style="left:362.8pt;top:464.0pt"><span class="fig" data-srcpage="5" data-clip="362.8,464.0,479.0,493.6"></span></div>
+
+<div class="f" style="left:62.5pt;top:553.0pt"><span class="fig" data-srcpage="5" data-clip="62.5,553.0,101.8,573.5"></span></div>
+<p class="x q" style="--b:566.2">Taking the two previous parts into account, find the time dependence of the current in the interval where the input voltage decreases linearly. For simplicity of notation, assume that this interval begins at the moment <span class="nw">$t = 0$.</span></p>
+<p class="x" style="--b:612.8">After a long time the current would be $I_2 = -4CV_0/T$, and the general solution of the equation has the form</p>
+<div class="f" style="left:363.0pt;top:624.7pt"><span class="fig" data-srcpage="5" data-clip="363.0,624.7,476.8,641.7"></span></div>
+<p class="x an" style="--b:678.0">Answer:</p>
+<div class="f" style="left:319.0pt;top:689.0pt"><span class="fig" data-srcpage="5" data-clip="319.0,689.0,520.9,719.0"></span></div>
+
+<div class="f" style="left:62.5pt;top:778.0pt"><span class="fig" data-srcpage="5" data-clip="62.5,778.0,101.8,798.5"></span></div>
+<p class="x q" style="--b:791.2">Using the expression found for the current, express the voltage across the capacitor at the end of the linear interval, $U_2$, in terms of the voltage at its beginning, $U_1$, and the parameters of the problem.</p>
+<p class="x" style="--b:837.8">The change of the charge on the capacitor while the voltage decreases is</p>
+<div class="f" style="left:252.0pt;top:849.7pt"><span class="fig" data-srcpage="5" data-clip="252.0,849.7,588.7,882.4"></span></div>
+<p class="x" style="--b:912.8">so the change of the voltage is</p>
+<div class="f" style="left:241.0pt;top:924.5pt"><span class="fig" data-srcpage="5" data-clip="241.0,924.5,599.7,954.5"></span></div>
+<p class="x an" style="--b:991.5">Answer:</p>
+<div class="f" style="left:298.4pt;top:1002.5pt"><span class="fig" data-srcpage="5" data-clip="298.4,1002.5,542.4,1032.5"></span></div>
+
+<div class="f" style="left:62.5pt;top:1091.5pt"><span class="fig" data-srcpage="5" data-clip="62.5,1091.5,101.8,1112.0"></span></div>
+<div class="ov" style="left:69.9pt;top:1101.9pt">C</div>
+<p class="x q" style="--b:1104.7">Find the maximum voltage across the capacitor $U_1$ in the steady state. Write approximate expressions for $U_1$ when $T \ll RC$ and $T \gg RC$.</p>
+</div>
+
+<!-- page 6 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:923.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:968.2pt;height:188.2pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:1006.5pt"></div>
+<div class="bx ab" style="top:165.8pt;height:97.5pt"></div>
+</div>
+<p class="x" style="--b:43.5">Solving the equation $U_2 = -U_1$ for $U_1$, we find (for convenience of notation we use the so-called hyperbolic function $\tanh x$; if desired, the answer can also be written simply in terms of exponentials.)</p>
+<p class="x l3" style="--b:84.1">For large values of the argument $\tanh x \approx 1$ and $U_1 \approx V_0\left(1 - 4RC/T\right) \approx V_0$; for small values of the argument $\tanh x \approx x - x^3/3$,<br>$U_1 \approx \dfrac{T^2}{48R^2C^2}V_0$.</p>
+<p class="x" style="--b:139.5">If the behaviour of the function cannot be obtained analytically, it can also be found numerically by computing values for small values of the time $T/RC$. In this way one can verify that at short times $U_1 \sim T^2$.</p>
+<p class="x an" style="--b:194.2">Answer:</p>
+<div class="f" style="left:290.1pt;top:204.7pt"><span class="fig" data-srcpage="6" data-clip="290.1,204.7,550.6,235.2"></span></div>
+<p class="x" style="--b:272.2">Note that the value of $U_1$ is in fact not the maximum voltage across the capacitor, since the capacitor continues to charge for some time after the input voltage has begun to decrease. The maximum voltage is reached when the current through the capacitor becomes zero, after which the current changes sign and the capacitor begins to discharge. This moment $t_1$ can be found from the condition</p>
+<div class="f" style="left:313.1pt;top:309.5pt"><span class="fig" data-srcpage="6" data-clip="313.1,309.5,527.6,339.5"></span></div>
+<p class="x" style="--b:372.0">therefore</p>
+<div class="f" style="left:275.6pt;top:383.0pt"><span class="fig" data-srcpage="6" data-clip="275.6,383.0,565.2,415.2"></span></div>
+<p class="x" style="--b:447.0">During the time $t_1$ an additional charge flows onto the capacitor:</p>
+<div class="f" style="left:259.9pt;top:457.5pt"><span class="fig" data-srcpage="6" data-clip="259.9,457.5,580.8,490.2"></span></div>
+<p class="x" style="--b:520.5">Substituting the expressions for the exponential and for the voltage $U_1$ into the second term, we obtain</p>
+<div class="f" style="left:358.9pt;top:530.8pt"><span class="fig" data-srcpage="6" data-clip="358.9,530.8,481.8,559.6"></span></div>
+<p class="x" style="--b:589.5">Then the maximum voltage is</p>
+<div class="f" style="left:250.1pt;top:601.3pt"><span class="fig" data-srcpage="6" data-clip="250.1,601.3,590.7,630.5"></span></div>
+<p class="x" style="--b:663.0">This voltage is greater than $U_1$; at small values of the time it depends on the time linearly.</p>
+<div class="f" style="left:231.8pt;top:674.2pt"><span class="fig" data-srcpage="6" data-clip="231.8,674.2,609.0,938.2"></span></div>
+
+<div class="f" style="left:62.5pt;top:978.3pt"><span class="fig" data-srcpage="6" data-clip="62.5,978.3,101.8,998.7"></span></div>
+<p class="x q" style="--b:991.4">Plot the graph of the ratio $U_1/V_0$ versus the dimensionless variable $T/RC$.</p>
+</div>
+
+<!-- page 7 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:322.5pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx ab" style="top:33.8pt;height:312.0pt"></div>
+</div>
+<p class="x an" style="--b:62.2">Answer:</p>
+<div class="f" style="left:231.8pt;top:64.5pt"><span class="fig" data-srcpage="7" data-clip="231.8,64.5,609.0,328.5"></span></div>
+</div>
+</body></html>

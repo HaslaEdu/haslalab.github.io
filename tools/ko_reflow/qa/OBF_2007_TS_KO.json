@@ -1,0 +1,28 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "OBF_2007_TS_KO.pdf",
+ "status": "READY",
+ "sha256": "d9520d832989757d23919fc0431c9356331240c9d9d1b39cea9bbf8ebbbaedda",
+ "bytes": 445550,
+ "pages": 12,
+ "source_file": "OBF_2007_TS.pdf",
+ "source_sha256": "6d30e0e1fcd2be6123799a2988479b68109b5bbaf44adab098fa29d0aa9f8175",
+ "source_page_range": [
+  1,
+  12
+ ],
+ "source_pages": 12,
+ "source_language": "pt",
+ "page_count_matches_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "html_source": "tools/ko_reflow/obf/2007_TS.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/check.py side-by-side images; every flag confirmed by zoom)",
+  "overflow_or_occlusion_observed": false
+ },
+ "page_sizes_match_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 2297
+}

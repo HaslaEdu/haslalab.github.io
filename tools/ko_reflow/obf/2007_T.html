@@ -1,0 +1,145 @@
+<!doctype html><html lang="ko"><head><meta name="page" content="842,595.22">
+<style>
+/* 브라질 물리 올림피아드(OBF) 2007, 3단계, 3학년 문제지 — Korean edition on the original layout.
+   ORIGINAL: Word, landscape A4 (842x595.2pt, stored as a rotated portrait page), 5 pages, two columns
+   x 70.9..406.0 and 438.7..773.8 (width 335.1pt); body ArialMT 10pt, inline MathType (Times 12pt), so the line pitch
+   varies (16-21pt); each paragraph gets its own pitch --l. Page 1: cover images (stamped, with overlays for the
+   Portuguese words "3ª FASE", "PROVA PARA ALUNOS DO 3º ANO", "Apoio") and the instructions. Figures are vector and
+   stamped; the Portuguese labels of Fig. 1 and Fig. 5 get overlays (ov). Page numbers top right (baseline 44.8).
+   Same geometry as the English edition obf/2007_T_EN.html. Hangul in Malgun Gothic (KG) beside Arial.
+
+   PLACEMENT: every block is placed by the ORIGINAL's first baseline --b (pt); for Arial:
+       top = b - l/2 - 0.3465*fs      (l = line pitch --l, fs = font size --fs)
+   Lists: "a)" labels 18pt left of the item text (left column text at 106.9, right column at 474.7). */
+body{font-family:Arial,KG,sans-serif;font-size:10pt;word-break:keep-all}
+p{text-indent:0}
+.katex{line-height:0;font-size:1.1em!important;white-space:nowrap}
+.katex .text{font-family:KaTeX_Main,KG,sans-serif}
+.x{position:absolute;margin:0;left:70.9pt;width:335.1pt;--l:17.3pt;--fs:10pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:justify}
+.R{left:438.7pt}
+/* item columns are under 300pt: allow breaks between Hangul syllables */
+.s{left:106.9pt;width:299.1pt;word-break:normal}
+.sR{left:474.7pt;width:299.1pt;word-break:normal}
+.c{text-align:center}
+.r{text-align:right}
+.n{position:absolute;right:100%;margin-right:7pt;white-space:nowrap}
+.pn{left:700pt;width:73.8pt;text-align:right}
+.f{position:absolute;line-height:0}
+/* an inline formula and the Korean particle after it must never be split over two lines */
+.nw{white-space:nowrap}
+.ov{position:absolute;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;
+    font-family:KG,sans-serif;font-size:9.5pt;line-height:11pt;white-space:nowrap}
+.cv{font-weight:bold;justify-content:flex-start}
+.bar{font-weight:bold;font-size:9.5pt}
+.bar span{display:inline-block;writing-mode:vertical-rl;text-orientation:upright;line-height:1}
+</style></head><body>
+
+<!-- page 1: cover and instructions -->
+<div class="page">
+<div class="f" style="left:70.9pt;top:56.7pt"><span class="fig" data-srcpage="1" data-clip="70.9,56.7,409.7,534.4"></span></div>
+<div class="ov cv" style="left:82pt;top:327.5pt;width:118pt;height:22pt;font-size:19pt">3단계</div>
+<div class="ov cv" style="left:82pt;top:370.5pt;width:268pt;height:17pt;font-size:13pt">3학년 학생용 시험</div>
+<div class="ov cv" style="left:321pt;top:462.5pt;width:56pt;height:17pt;font-size:12.5pt">후원</div>
+<p class="x R" style="--b:69.8;--fs:14pt;font-weight:bold;width:345pt;text-align:left">아래 지시 사항을 주의 깊게 읽어라.</p>
+<p class="x sR" style="--b:112.6;--fs:12pt;--l:20.7pt"><span class="n"><b>1.</b></span>이 시험은 <b><u>3학년</u></b> 학생만을 대상으로 한다.</p>
+<p class="x sR" style="--b:174.7;--fs:12pt;--l:20.8pt;word-break:keep-all"><span class="n"><b>2.</b></span>시험은 8개의 문제로 이루어져 있으며, <b>모든 문제를 풀어야 한다.</b></p>
+<p class="x sR" style="--b:236.8;--fs:12pt"><span class="n"><b>3.</b></span>시험 시간은 <b>4시간</b>이다.</p>
+<p class="x sR" style="--b:278.2;--fs:12pt;--l:20.7pt"><span class="n"><b>4.</b></span>이 시험의 문제를 풀 때, 필요하면 다음 값을 사용하여라.</p>
+<p class="x sR" style="--b:320.5;--fs:12pt;text-align:left"><span class="n">$\bullet$</span><b>g</b> (지구 표면에서) = <b>10 m/s<sup>2</sup></b></p>
+<p class="x sR" style="--b:351.1;--fs:12pt;width:100pt;text-align:left;white-space:nowrap"><span class="n">$\bullet$</span>$k_0 = 9.0\times10^{9}\,\dfrac{\mathrm{N.m^2}}{\mathrm{C^2}}$</p>
+<p class="x" style="--b:351.1;--fs:12pt;--l:23.1pt;left:571.6pt;width:202.2pt;text-align:center">(쿨롱 법칙의 비례 상수)</p>
+<p class="x" style="--b:512.1;--fs:12pt;left:640pt;width:108.2pt;text-align:right">건투를 빈다!</p>
+</div>
+
+<!-- page 2: Q1, Q2, Q3 (start) -->
+<div class="page">
+<p class="x pn" style="--b:44.8">2</p>
+<p class="x" style="--b:67.6;--l:20.85pt"><b>01.</b> 동일한 두 수레 $A$와 $B$가 막대로 단단하게 연결되어 있고, 이들 전체(수레 $A$ + 수레 $B$ + 막대)의 질량은 <span class="nw">$4\ \mathrm{kg}$이다.</span> 질량이 각각 $M_C = 2\ \mathrm{kg}$, <span class="nw">$M_D = 2\ \mathrm{kg}$인</span> 두 수레 $C$와 $D$가 수레 $A$와 $B$ 사이에 같은 간격으로 정지 상태로 놓여 있다(그림 1).</p>
+<div class="f" style="left:75.7pt;top:163pt"><span class="fig" data-srcpage="2" data-clip="75.7,163,398,227.5"></span></div>
+<div class="ov" style="left:204.5pt;top:162.8pt;width:55.5pt;height:11.6pt">강체 막대</div>
+<p class="x c" style="--b:242.5">그림 1</p>
+<p class="x" style="--b:271.2;--l:18.6pt">$A$와 $B$의 속도가 오른쪽으로 $3\ \mathrm{m/s}$이고, 수레의 바퀴와 지면 사이의 마찰을 무시할 수 있다고 할 때, 다음 물음에 답하여라.</p>
+<p class="x s" style="--b:327.4;--l:19.3pt"><span class="n">a)</span>$A$와 $C$의 충돌이 완전 <b>비탄성</b> 충돌($C$가 $A$에 “달라붙음”)이고, $C$와 $D$의 충돌이 완전 <b>탄성</b> 충돌이라고 하자. $D$와 $B$의 충돌도 완전 <b>비탄성</b> 충돌($D$가 $B$에 “달라붙음”)이라면 계의 나중 속도는 얼마인가?</p>
+<p class="x s" style="--b:421.7;--l:18.1pt"><span class="n">b)</span>$A$와 $C$의 충돌이 완전 <b>비탄성</b> 충돌이고 $C$와 $D$의 충돌도 완전 <b>비탄성</b> 충돌일 때, 계의 나중 속도는 얼마인가? 이 속도를 (a)에서 구한 속도와 비교하여라. 그 결과를 설명하여라.</p>
+<p class="x" style="--b:507.1;--l:19.9pt"><b>02.</b> 파동이 <span class="nw">$F = A\cos(\omega t - \beta z)$의</span> 꼴로 주어질 때, $\beta$와 $v$ 사이에는</p>
+<p class="x R" style="--b:67.7;--l:23.7pt"><span class="nw">$\beta v = \omega$의</span> 관계가 있다. 여기서 $v$는 파동의 전파 속력이다. 속력이 <span class="nw">$v = 10^{6}\ \mathrm{m/s}$인</span> 파동이 다음과 같이 기술된다고 하자.</p>
+<p class="x R c" style="--b:114.2">$y = 10\cos(4z + \omega t),$</p>
+<p class="x R" style="--b:134.2">여기서 $y$와 $z$의 단위는 미터, $t$의 단위는 초이다. 다음을 구하여라.</p>
+<p class="x sR" style="--b:153.2"><span class="n">a)</span>파장($\lambda$)</p>
+<p class="x sR" style="--b:173.9"><span class="n">b)</span><span class="nw">$t = t_0 = 0$일</span> 때, $z$의 함수로 나타낸 파동의 개략도(그래프)</p>
+<p class="x sR" style="--b:194.9;--l:21pt"><span class="n">c)</span>시각 $t = t_0 = 0$부터 <span class="nw">$t = t_1 = 0.523\times10^{-6}\ \mathrm{s}$까지</span> 파동이 진행하는 거리를 파장에 대한 비율로 계산한 값</p>
+<p class="x R" style="--b:237.1;--l:29.7pt"><b>도움말</b>: 개략도(그래프)를 그리려면 <span class="nw">$z = 0,\ \dfrac{\lambda}{4},\ \dfrac{\lambda}{2},\ \dfrac{3\lambda}{4}$, $\lambda$일</span> 때의 점 $y$를 생각하여라.</p>
+<p class="x R" style="--b:305.3;--l:18.48pt"><b>03.</b> 역학의 결과 중 하나는, 정지 상태나 운동 상태에 변화가 없는 크기가 있는 물체에서는 힘의 합력과 알짜 돌림힘(모멘트)이 0이라는 것이다. 한편 정전기학에 따르면 두 점전하 사이의 힘의 크기는 두 전하 사이의 거리의 제곱에 반비례하고, 두 전하의 절댓값의 곱에 비례한다. 이러한 결과를 고려하여, 실험실에 그림 2와 같은 실험 장치를 만들었다고 하자. 이 그림에서 막대 $AB$의 질량은 $m$, 길이는 $L$이며, 막대의 중점은 천장에 고정된 받침대에 얹혀 있다. 막대의 양 끝 $A$와 $B$에는 크기가 $Q$인 전하가 있다. 실험대에는 두 받침대 $a$와 $b$가 고정되어 있고, 그 끝에는 각각 $-5Q$와 $-6Q$의 전하가 있다. 받침대와 막대는 전하가</p>
+</div>
+
+<!-- page 3: Q3 (end), Q4 (start) -->
+<div class="page">
+<p class="x pn" style="--b:44.8">3</p>
+<p class="x" style="--b:65.9;--l:19.83pt">표시된 점에 집중되어 있도록 알맞은 재료로 만들어져 있다. 이 실험은 $A$와 $a$의 전하 사이의 전기력, 그리고 $B$와 $b$의 전하 사이의 전기력만 고려하면 되도록 구성되어 있다. 이 조건에서, 막대 $AB$가 수평을 유지하려면 막대의 중점에서 <span class="nw">$L/3$만큼</span> 떨어진 점에 질량이 $M$인 물체를 매달아야 한다는 것이 관찰된다. $A$와 $a$의 전하 사이의 거리, 그리고 $B$와 $b$의 전하 사이의 거리를 $D$라 할 때, 다음을 구하여라.</p>
+<p class="x s" style="--b:204.7"><span class="n">a)</span>거리 $D$와 전하 $Q$의 함수로 나타낸 물체의 질량 $M$</p>
+<p class="x s" style="--b:228.4;--l:20.73pt"><span class="n">b)</span>기본 전하의 값이 <span class="nw">$e = 0.16\times10^{-18}\ \mathrm{C}$이고,</span> 거리가 <span class="nw">$D = 30\ \mathrm{cm}$일</span> 때 막대를 수평으로 유지하는 데 사용된 물체의 질량 $M$이 <span class="nw">$0.1536\ \mathrm{kg}$이라는</span> 것을 이용하여, $Q$에 들어 있는 기본 전하의 수를 구하여라.</p>
+<div class="f" style="left:112pt;top:299pt"><span class="fig" data-srcpage="3" data-clip="112,299,372,506"></span></div>
+<p class="x c" style="--b:520">그림 2</p>
+<p class="x R" style="--b:65.9;--l:18.3pt"><b>04.</b> 반지름이 $R$인 원형 고리에 그림 3a에 표시된 방향으로 전류 $i$가 흐를 때, 이 고리가 대칭축 위에 만드는 자기장은 다음과 같다(간단히 나타내기 위해, 고리를 완성하는 회로의 나머지 부분은 그리지 않았다).</p>
+<div class="f" style="left:545pt;top:126pt"><span class="fig" data-srcpage="3" data-clip="545,126,664,175"></span></div>
+<p class="x R" style="--b:187.5;--l:24.8pt">여기서 $\mu_0$은 진공의 투자율이며, SI 단위로 그 값은 <span class="nw">$4\pi\times10^{-7}\ \mathrm{N/A^2}$이다.</span></p>
+<div class="f" style="left:503pt;top:222pt"><span class="fig" data-srcpage="3" data-clip="503,222,708,436"></span></div>
+<p class="x R c" style="--b:450.2">그림 3a</p>
+<p class="x R" style="--b:467.4;--l:18.85pt">그림 3b와 같은 배치<sup>1</sup>를 생각하자. 반지름 $R$이 같은 두 고리 $A$와 $D$가 거리 $\ell$만큼 떨어져 있고, 그림과 같이 두 고리에 전류 $i$가 흐른다.</p>
+<div class="f" style="left:438.7pt;top:522pt"><span class="fig" data-srcpage="3" data-clip="438.7,522,582.7,523.4"></span></div>
+<p class="x R" style="--b:536.4;--fs:9pt;--l:10.4pt;text-align:left"><sup>1</sup> 헬름홀츠 코일 – K.D. Machado – <i>Teoria do Eletromagnetismo</i> – Ed. UEPG (2002)</p>
+</div>
+
+<!-- page 4: Q4 (end), Q5, Q6 -->
+<div class="page">
+<p class="x pn" style="--b:44.8">4</p>
+<div class="f" style="left:143pt;top:54pt"><span class="fig" data-srcpage="4" data-clip="143,54,331,320"></span></div>
+<p class="x c" style="--b:333.3">그림 3b</p>
+<p class="x s" style="--b:350.5;--l:18.67pt;width:291pt"><span class="n">a)</span>고리 $A$가 $xy$ 평면에 있을 때, 두 고리가 점 $P$에 만드는 자기장의 식을 점 $P$의 좌표 $z$와 거리 $\ell$의 함수로 구하여라.</p>
+<p class="x s" style="--b:426.5;width:291pt"><span class="n">b)</span>거리 $\ell$이 줄어들어 0에 가까워지는 경우의 자기장을 분석하여라.</p>
+<p class="x s" style="--b:463.5;width:291pt"><span class="n">c)</span>다음 각 경우에 얻은 결과를 설명하여라.</p>
+<p class="x" style="--b:482.5;left:106.3pt;width:200pt">(i) &nbsp;$\ell = 0,\ z$&thinsp;≠&thinsp;$0$</p>
+<p class="x" style="--b:504.2;left:106.3pt;width:200pt">(ii) &nbsp;$\ell = 0,\ z = 0$;</p>
+<p class="x" style="--b:526;left:106.3pt;width:200pt">(iii) &nbsp;$\ell = z,\ z$&thinsp;≠&thinsp;$0$;</p>
+<p class="x R" style="--b:65.9;--l:17.26pt"><b>05</b>. 어떤 열기관의 효율은 온도 <span class="nw"><i>T<sub>1</sub> = 300 K</i>와</span> <span class="nw"><i>T<sub>2</sub> = 600 K</i></span> 사이에서 작동하는 카르노 기관의 효율보다 <i>20%</i> 낮다. 이 열기관이 단위 시간당 받는 열량은 두께가 <i>10 cm</i>, 넓이가 <i>2 m<sup>2</sup></i>, 열전도도가 <i>50 W/(m K)</i>인 벽의 양쪽에 <i>500 K</i>의 온도 차가 걸릴 때 벽을 통해 흐르는 단위 시간당 열량과 같다.</p>
+<p class="x sR" style="--b:169.4"><span class="n">a)</span>이 열기관의 일률을 구하여라.</p>
+<p class="x sR" style="--b:186.7;--l:17.25pt"><span class="n">b)</span>이 열기관이 <i>10분</i> 동안 버리는 열량을 이용하면 <span class="nw"><i>–20 <sup>o</sup>C</i>의</span> 얼음을 얼마나 녹일 수 있는가?</p>
+<p class="x R" style="--b:249.9;--l:21.5pt"><b>06</b> - 처음에 상태 <i>A</i>에 있는 일정량의 헬륨 기체의 압력과 부피는 <span class="nw">$P_A = 32\times10^{5}\ \mathrm{N/m^2}$,</span> <span class="nw">$V_A = 1\ \mathrm{m^3}$이다.</span> 이 기체는 <span class="nw"><i>A</i>&thinsp;→&thinsp;<i>B</i>&thinsp;→&thinsp;<i>C</i></span> 과정을 거친다. <span class="nw"><i>A</i>&thinsp;→&thinsp;<i>B</i></span> 과정은 등압 과정이고, <span class="nw"><i>B</i>&thinsp;→&thinsp;<i>C</i></span> 과정은 단열 과정이다. 기체는 이상 기체이고, 헬륨의 정적 몰비열과 정압 몰비열은 각각 <span class="nw">$c_v = 3R/2$,</span> <span class="nw">$c_p = 5R/2$라고</span> 하자.</p>
+<p class="x sR" style="--b:374.8;--l:21pt"><span class="n">a)</span>상태 <i>B</i>에서 기체의 부피가 <span class="nw">$V_B = 2\ \mathrm{m^3}$이고</span> 상태 <i>C</i>에서 압력이 <span class="nw">$P_C = 1\times10^{5}\ \mathrm{N/m^2}$일</span> 때, PV 도표를 그려라.</p>
+<p class="x sR" style="--b:416.9"><span class="n">b)</span><span class="nw"><i>A</i>&thinsp;→&thinsp;<i>C</i></span> 팽창에서 기체가 한 일은 얼마인가?</p>
+<p class="x sR" style="--b:435.1"><span class="n">c)</span><span class="nw"><i>A</i>&thinsp;→&thinsp;<i>C</i></span> 과정에서 기체의 내부 에너지 변화는 얼마인가?</p>
+<p class="x R" style="--b:453.1;--l:26.9pt"><i>참고: 단열 과정에서 상태 1&thinsp;→&thinsp;2 사이에 기체가 한 일(또는 받은 일)은 다음과 같다.</i> <span class="nw">$\Delta\tau = \dfrac{1}{1-\gamma}\left(P_2V_2 - P_1V_1\right)$,</span></p>
+<p class="x R" style="--b:520.7"><i>여기서</i> <span class="nw">$\gamma = \dfrac{c_p}{c_v}$<i>는</i></span> <i>푸아송 계수이다.</i></p>
+</div>
+
+<!-- page 5: Q7, Q8 -->
+<div class="page">
+<p class="x pn" style="--b:44.8">5</p>
+<p class="x" style="--b:70.4;--l:16.38pt"><b>07.</b> 트럭 짐칸에 설치된 물탱크 바닥의 정확히 한가운데에 동전이 놓여 있다. 한 청년이 액체 표면의 법선에 대해 각 α를 이루는 방향으로 동전을 관찰하여, 겉보기 깊이를 <i>50 cm</i>로 측정한다. 어느 순간 트럭이 일정한 가속도로 앞으로 움직이기 시작하고, 청년은 액체 표면(이제는 기울어져 있음)의 법선에 대해 같은 각 α를 이루는 방향으로 동전을 관찰하여 겉보기 깊이를 <span class="nw">$25\sqrt{3}\ \mathrm{cm}$로</span> 판단한다. 트럭의 가속도를 구하여라.</p>
+<div class="f" style="left:91pt;top:212pt"><span class="fig" data-srcpage="5" data-clip="91,212,384,324"></span></div>
+<p class="x c" style="--b:337.9">그림 4</p>
+<p class="x" style="--b:358.5;--l:16.79pt"><b>08.</b> 빛의 입자설에는 아인슈타인과 플랑크의 유명한 수식이 있다. 이 식에 따르면, 진동수가 $f$인 모든 빛살에서 각 광자의 에너지는 $E = hf$이다. 여기서 $h$는 플랑크 상수이며, 그 값은 <span class="nw">$6.62\times10^{-34}$ 줄×초이다.</span> 그림 5는 파장($\lambda$)이 표시된 전자기파 스펙트럼이다. 이 그림에서 가시광선 영역의 파장은 $0.4\times10^{-6}\ \mathrm{m}$와 $0.7\times10^{-6}\ \mathrm{m}$ 사이이고 <span class="nw">($1\ \text{\AA} = 10^{-10}\ \mathrm{m}$임을</span> 기억하라), 전파 영역의 파장은 대략 $10\ \mathrm{cm}$에서 <span class="nw">$10\ \mathrm{km}$까지임을</span> 알 수 있다.</p>
+<p class="x s" style="--b:511.5;--l:15.2pt"><span class="n">a)</span>이 정보를 이용하여 다음을 전자볼트(<i>eV</i>) 단위로 계산하여라(<span class="nw">$1\ \mathrm{eV} = 1.6\times10^{-19}\ \mathrm{J}$임을</span> 기억하라). 파장이</p>
+<p class="x sR" style="--b:67.7;--l:18.8pt;word-break:keep-all"><span class="nw">$\lambda = 310\ \mathrm{m}$인</span> 전파의 광자 에너지, 그리고 가시광선 광자의 에너지가 변하는 범위.</p>
+<div class="f" style="left:450pt;top:95pt"><span class="fig" data-srcpage="5" data-clip="450,95,760,327"></span></div>
+<div class="ov bar" style="left:487.1pt;top:115.5pt;width:19.6pt;height:45.9pt;background:rgb(59,55,52);color:#fff"><span>보라</span></div>
+<div class="ov bar" style="left:507.2pt;top:115.5pt;width:19.9pt;height:45.9pt;background:rgb(96,93,92);color:#fff"><span>파랑</span></div>
+<div class="ov bar" style="left:527.6pt;top:115.5pt;width:34.5pt;height:45.9pt;background:rgb(131,130,128);color:#fff"><span>초록</span></div>
+<div class="ov bar" style="left:562.9pt;top:115.5pt;width:19.8pt;height:45.9pt;background:rgb(221,221,220);color:rgb(36,33,29)"><span>노랑</span></div>
+<div class="ov bar" style="left:583.5pt;top:115.5pt;width:17.6pt;height:45.9pt;background:rgb(169,168,167);color:rgb(36,33,29)"><span>주황</span></div>
+<div class="ov bar" style="left:602pt;top:115.5pt;width:35.9pt;height:45.9pt;background:rgb(131,130,128);color:#fff"><span>빨강</span></div>
+<div class="ov" style="left:537pt;top:164.5pt;width:52pt;height:22pt;font-weight:bold">가시광선<br>스펙트럼</div>
+<div class="ov" style="left:451pt;top:279.5pt;width:35pt;height:24pt">감마선</div>
+<div class="ov" style="left:483pt;top:264.5pt;width:38.5pt;height:9.5pt">X선</div>
+<div class="ov" style="left:526pt;top:269.8pt;width:32pt;height:22pt">자외선</div>
+<div class="ov" style="left:587pt;top:262.2pt;width:43pt;height:34.5pt">열적외선</div>
+<div class="ov" style="left:533.5pt;top:301.2pt;width:77.5pt;height:24pt">근적외선과<br>중적외선</div>
+<div class="ov" style="left:624.5pt;top:292.2pt;width:55pt;height:9pt">마이크로파</div>
+<div class="ov" style="left:664.5pt;top:271.2pt;width:58pt;height:9.5pt">TV와 라디오</div>
+<p class="x R c" style="--b:339.9">그림 5</p>
+<p class="x sR" style="--b:361.7;--l:15.3pt"><span class="n">b)</span>전파 영역에서 광자 하나의 에너지가 매우 작다는 것은, 라디오 신호가 검출되려면 매우 많은 수의 광자를 포함해야 한다는 것을 뜻한다. 파장이 <span class="nw">$\lambda = 310\ \mathrm{m}$인</span> 전파의 경우, <span class="nw">$40\ \mathrm{eV}$의</span> 에너지를 얻는 데 필요한 광자의 수를 구하여라.</p>
+<p class="x sR" style="--b:441.7;--l:20.25pt"><span class="n">c)</span>빛의 파장이 <span class="nw">$\lambda = \dfrac{c}{f}$의</span> 관계(여기서 <span class="nw">$c = 3\times10^{8}\ \mathrm{m/s}$는</span> 빛의 속력)를 따르고, 광자의 에너지가 위에서 언급한 관계식으로 주어진다는 것을 이용하여, Å 단위로 나타낸 파장 $\lambda$의 식을 전자볼트로 주어진 에너지의 함수로 구하여라.</p>
+</div>
+
+</body></html>

@@ -1,0 +1,31 @@
+{
+ "schema": "html-reflow-stamped-v1",
+ "file": "RuPhOW_2024_T1_KO.pdf",
+ "status": "READY",
+ "sha256": "f83e87d1585eb72b83681e906715f8e811b7b78b8fb3bf496e22d426626ca31b",
+ "bytes": 298367,
+ "pages": 2,
+ "language": "ko",
+ "source_file": "RuPhOW_2024_T1_RU.pdf",
+ "source_sha256": "6eb6382d56ef6855932b85b8aec820365323de4199b31a364710b2aa7035e877",
+ "source_page_range": [
+  1,
+  2
+ ],
+ "source_pages": 2,
+ "source_language": "ru",
+ "page_count_matches_source": true,
+ "page_sizes_match_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "korean_text_justified": true,
+ "hangul_characters": 1195,
+ "latin_characters": 212,
+ "cyrillic_characters": 0,
+ "html_source": "tools/ko_reflow/ruphow/2024_T1.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/check.py and qa side-by-side images; every flag confirmed by zoom)",
+  "overflow_or_occlusion_observed": false
+ }
+}

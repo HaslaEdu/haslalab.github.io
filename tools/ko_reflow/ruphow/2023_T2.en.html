@@ -1,0 +1,166 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2023, problem T2 (mirages / curvature of light rays) — English edition on the original
+   layout (same geometry, stamps and baselines as the Korean edition 2023_T2.html).
+   ORIGINAL: 3 A3 pages (841.9x1191.1pt) printed from the olympiad web page (tags "... W ... 2023" on p3).
+   Beige page panel (33.8..807.8), blue site bar on p1 (logo, icons; stamped), white card x 45..796.5,
+   tag card + tag chips (#ebedf3, redrawn; tag words typed), white footer band with "Website in English" (stamped)
+   and "2020 — Мы те, кого должны превзойти." (typed as the site's own English motto). Panel, cards, chips are
+   redrawn as .bx in the static .dc wrapper (check.py ignores them). Badges "A1 0.40" ... stamped.
+   The site-bar icon at x 725..741 is lost by the scrub as collateral (FontAwesome glyph): put back as an .ov image
+   rendered from the original; a beige .ov strip covers the header stamp's white margin on the panel.
+   Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math 10.8pt (KaTeX 1.2em), text column x 65.2..776,
+   pitch 13.5pt; question line after the badge starts at x 106.6 (pitch 15.9pt); all left-aligned as in the original.
+   Figures 1-3 are raster images (stamped); their Russian labels "Поверхность земли" (fig. 1) and "Луч света"
+   (fig. 3) are covered by white .ov labels. Display formulas stamped (no Cyrillic in them);
+   every inline formula retyped (units атм, К, м, км, кг, Дж, Па, м/с² -> atm, K, m, km, kg, J, Pa, m/s²).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.5pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:65.2pt;width:711pt;--l:13.5pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.4pt;--l:15.9pt}
+.h{font-weight:bold}
+.c{text-align:center}
+.tg{color:#7e8299;text-align:center;white-space:nowrap}
+.fo{left:33.8pt;width:774pt;text-align:center;color:#7e8299}
+.ov{position:absolute;white-space:nowrap;background:#fff;color:#000;text-align:center;font-family:'Times New Roman',serif}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:45pt;width:751.5pt;background:#fff}
+.ch{top:234pt;height:15pt;background:rgb(235,237,243);border-radius:3pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:86.2pt;height:1070.3pt;border-radius:3.75pt 3.75pt 0 0"></div>
+</div>
+<div class="f" style="left:33.8pt;top:33.8pt"><span class="fig" data-srcpage="1" data-clip="33.8,33.8,807.8,75.0"></span></div>
+<!-- site-bar icon (FontAwesome glyph lost by the scrub as collateral): 725..741 x 46.5..61, rendered from the original -->
+<div class="ov" style="left:33.8pt;top:75.0pt;width:774pt;height:0.9pt;background:rgb(251,246,240)"></div><!-- covers the stamp's white 0.8pt margin on the beige panel -->
+<div class="ov" style="left:725pt;top:46.5pt;width:16pt;height:14.5pt;background:none;line-height:0"><img style="width:16pt;height:14.5pt" alt="" src="data:image/png;base64,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"></div>
+<p class="x" style="--b:114.0">In everyday life it seems to us that light rays in the atmosphere around us travel in straight lines. However, this is not so, and the bending of the rays goes unnoticed only because the refractive index of air is practically indistinguishable from unity. On large scales, and when certain atmospheric phenomena occur, it can no longer be neglected. In the Earth’s atmosphere an example of such phenomena is the mirage, and in the atmospheres of other planets (for example, Venus) a practically unlimited distance to the horizon. In this problem we consider each of these phenomena in detail.</p>
+<p class="x h" style="--b:177.0">Part A. Mirages (5.8 points).</p>
+<p class="x" style="--b:199.5">Mirages arise when there is a large temperature difference between the Earth’s surface and the atmosphere. One of their many examples is the Kuril Islands, whose mirages can be observed in spring in the Kunashir Strait in Japan owing to the cooling of the air above the sea.</p>
+<p class="x" style="--b:240.0">The atmosphere can be treated as an ideal gas consisting of identical molecules of mass <span class="nw">$m$.</span> It is known that for most gases, including the gas of the atmosphere, the following formula for the dependence of the refractive index <span class="nw">$n$</span> of atmospheric air applies:</p>
+<div class="f" style="left:387.6pt;top:265.0pt"><span class="fig" data-srcpage="1" data-clip="387.6,265.0,453.9,281.0"></span></div>
+<p class="x" style="--b:298.5">where <span class="nw">$N$</span> is the number density of the molecules and <span class="nw">$\alpha$</span> is a coefficient that depends on the nature of the gas.</p>
+<p class="x" style="--b:325.5;--l:14.25pt">When solving the problem, assume that the water surface is horizontal. The temperature of the atmosphere <span class="nw">$T$</span> increases with the height <span class="nw">$h$</span> above sea level, and so the refractive index of air changes as well. Neglect the effect of gravity, taking the atmospheric pressure to be <span class="nw">$p_0 = 1\,\mathrm{atm}$</span> regardless of height. The refractive index of the atmosphere under normal conditions (<span class="nw">$T_0 = 273\,\mathrm{K}$,</span> <span class="nw">$p_0 = 1\,\mathrm{atm}$)</span> is <span class="nw">$n = 1.00028$.</span> Assume that the temperature and the refractive index depend only on <span class="nw">$h$.</span> Consider Snell’s law for rays emitted at an angle <span class="nw">$\theta_S$</span> from the Earth’s surface.</p>
+<p class="x" style="--b:395.2">Divide the atmosphere into thin layers of thickness <span class="nw">$\Delta h$,</span> as shown in Figure 1. Assume that the refractive index of the atmosphere at heights from <span class="nw">$\Delta h(l-1)$</span> to <span class="nw">$\Delta hl$</span> is constant and equal to <span class="nw">$n_l$,</span> and that the angle between the light ray and the horizontal at this height is <span class="nw">$\theta_l$,</span> where <span class="nw">$l = 1, 2, 3, \ldots$.</span> The refractive index of the atmosphere at the surface equals <span class="nw">$n_1 = n_S$.</span></p>
+<div class="f" style="left:233.2pt;top:435.0pt"><span class="fig" data-srcpage="1" data-clip="233.2,435.0,608.2,572.2"></span></div>
+<div class="ov" style="left:334.5pt;top:556.6pt;width:124pt;height:16.6pt;font-size:12pt;line-height:15.6pt">Earth’s surface</div>
+
+<div class="f" style="left:64.7pt;top:580.7pt"><span class="fig" data-srcpage="1" data-clip="64.7,580.7,102.5,599.7"></span></div>
+<p class="x q" style="--b:593.2">Write Snell’s law for the point <span class="nw">$P$</span> at the height <span class="nw">$l\Delta h$.</span> Taking the limit <span class="nw">$\Delta h \to 0$,</span> <span class="nw">$\Delta hl \to h$,</span> <span class="nw">$\theta_l \to \theta(h)$,</span> <span class="nw">$n_l \to n(h)$,</span> obtain an expression for <span class="nw">$\theta(h)$.</span></p>
+<p class="x" style="--b:631.5">Suppose that the temperature <span class="nw">$T(h)$</span> increases linearly with <span class="nw">$h$</span> in the range <span class="nw">$0 \le h \le H$</span> and is constant for <span class="nw">$h &gt; H$:</span></p>
+<div class="f" style="left:321.0pt;top:642.8pt"><span class="fig" data-srcpage="1" data-clip="321.0,642.8,520.4,676.9"></span></div>
+<p class="x" style="--b:693.0">where <span class="nw">$T_\mathrm{S} = T(0) &lt; T_\mathrm{H} = T(H)$.</span></p>
+<p class="x" style="--b:719.0">Since <span class="nw">$\frac{T_H - T_S}{T_S} \ll 1$,</span> the dependence of the number density <span class="nw">$N(h)$</span> on the height <span class="nw">$h$</span> <span class="nw">($0 &lt; h &lt; H$)</span> can then also be taken, to good accuracy, as linear, i.e.:</p>
+<div class="f" style="left:357.5pt;top:733.4pt"><span class="fig" data-srcpage="1" data-clip="357.5,733.4,484.9,764.7"></span></div>
+<p class="x" style="--b:781.5">where <span class="nw">$N_\mathrm{S} = N(0)$,</span> <span class="nw">$N_\mathrm{H} = N(H)$.</span></p>
+
+<div class="f" style="left:64.7pt;top:794.5pt"><span class="fig" data-srcpage="1" data-clip="64.7,794.5,102.5,813.5"></span></div>
+<p class="x q" style="--b:806.9">Using this result, find how the refractive index of the atmosphere <span class="nw">$n(h)$</span> depends on the height. Express your answer in terms of <span class="nw">$n_\mathrm{S} = n(0)$</span> and <span class="nw">$n_\mathrm{H} = n(H)$.</span></p>
+<p class="x" style="--b:845.2;--l:13.9pt">Consider the trajectory of a ray emitted at an angle <span class="nw">$\theta_\mathrm{S}$</span> to the horizontal. Assume that on reaching the highest point of its trajectory <span class="nw">$h_\mathrm{m} (\le H)$</span> the ray starts moving back down. Direct the <span class="nw">$x$</span> axis horizontally in the plane of propagation of the ray; then its trajectory <span class="nw">$h(x)$</span> must satisfy the differential equation</p>
+<div class="f" style="left:353.8pt;top:884.8pt"><span class="fig" data-srcpage="1" data-clip="353.8,884.8,488.9,915.5"></span></div>
+<p class="x" style="--b:932.2">where the sign <span class="nw">$+$</span> corresponds to the ray rising and <span class="nw">$-$</span> to the ray descending.</p>
+
+<div class="f" style="left:64.7pt;top:944.5pt"><span class="fig" data-srcpage="1" data-clip="64.7,944.5,102.5,963.5"></span></div>
+<p class="x q" style="--b:956.9">Express the refractive index <span class="nw">$n_\mathrm{m} \equiv n(h_\mathrm{m})$</span> at the highest point of the ray’s trajectory in terms of <span class="nw">$n_S$</span> and <span class="nw">$\theta_S$.</span></p>
+<p class="x" style="--b:981.8">Taking the above into account, the equation determining the trajectory of the ray can be written as</p>
+<div class="f" style="left:338.0pt;top:994.2pt"><span class="fig" data-srcpage="1" data-clip="338.0,994.2,504.3,1029.8"></span></div>
+
+<div class="f" style="left:64.7pt;top:1039.0pt"><span class="fig" data-srcpage="1" data-clip="64.7,1039.0,102.5,1058.0"></span></div>
+<p class="x q" style="--b:1051.4">Express <span class="nw">$a_\mathrm{m}$</span> and <span class="nw">$b$</span> in terms of <span class="nw">$h_\mathrm{m}$,</span> <span class="nw">$n_\mathrm{H}$,</span> <span class="nw">$n_\mathrm{S}$</span> and <span class="nw">$n_\mathrm{m}$.</span></p>
+<p class="x" style="--b:1076.2">It is known that the solution of this equation for a ray passing through the origin <span class="nw">$(x, h) = (0, 0)$</span> is the parabola</p>
+<div class="f" style="left:387.3pt;top:1087.8pt"><span class="fig" data-srcpage="1" data-clip="387.3,1087.8,454.2,1103.7"></span></div>
+
+<div class="f" style="left:64.7pt;top:1110.3pt"><span class="fig" data-srcpage="1" data-clip="64.7,1110.3,102.5,1129.3"></span></div>
+<p class="x q" style="--b:1122.7">Express the coefficients <span class="nw">$c$</span> and <span class="nw">$d$</span> in terms of <span class="nw">$a$</span> and <span class="nw">$b$.</span></p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:1122.7pt"></div>
+</div>
+<p class="x" style="--b:44.5">Let the numerical values be <span class="nw">$T_\mathrm{S} = 275\,\mathrm{K}$,</span> <span class="nw">$T_\mathrm{H} = 290\,\mathrm{K}$,</span> <span class="nw">$H = 20\,\mathrm{m}$.</span> An observer is on the Japanese shore (<span class="nw">$h = 0$)</span> and observes the Kuril Islands above the water surface.</p>
+<p class="x" style="--b:84.8">Let the distance to the islands be <span class="nw">$L$.</span> The observer sees them at the same angle at which he would see the islands if they were at the same distance at a height <span class="nw">$h_\mathrm{g}$</span> above the water surface.</p>
+
+<div class="f" style="left:64.7pt;top:111.3pt"><span class="fig" data-srcpage="2" data-clip="64.7,111.3,102.5,130.3"></span></div>
+<p class="x q" style="--b:123.7">Express <span class="nw">$h_\mathrm{g}$</span> as a function of the distance <span class="nw">$L$</span> from the observer to the island. Is the most distant of the observed islands seen higher or lower than the others?</p>
+<div class="f" style="left:64.7pt;top:138.3pt"><span class="fig" data-srcpage="2" data-clip="64.7,138.3,102.5,157.3"></span></div>
+<p class="x q" style="--b:150.7">Express in terms of <span class="nw">$n_S$,</span> <span class="nw">$n_H$</span> and <span class="nw">$H$</span> the maximum distance <span class="nw">$L_\mathrm{max}$</span> to an island that the observer can still see. What is the angle <span class="nw">$\theta_{S\,\mathrm{max}}$</span> in this case?</p>
+<div class="f" style="left:64.7pt;top:165.3pt"><span class="fig" data-srcpage="2" data-clip="64.7,165.3,102.5,184.3"></span></div>
+<p class="x q" style="--b:177.7">Calculate <span class="nw">$L_\mathrm{max}$</span> and <span class="nw">$\theta_\mathrm{S}$</span> to two significant figures.</p>
+<p class="x h" style="--b:202.5">Part B. Curvature of light rays (4.2 points).</p>
+<p class="x" style="--b:234.0">In Part <span class="nw">$\mathbf{A}$</span> the refractive index of the atmosphere was calculated without taking into account the effect of gravity, and with the temperature changing only near the Earth’s surface. As the height above the surface increases, the temperature of course decreases, but it is gravity that has the greatest influence on the number density of the atmosphere. Therefore, from now on, for simplicity, we take the temperature of the atmosphere <span class="nw">$T$</span> to be the same everywhere and consider the change of the refractive index to be due to gravity alone. The free-fall acceleration is <span class="nw">$g$.</span></p>
+<p class="x" style="--b:301.5">Consider the balance of forces acting on a portion of the atmosphere between the heights <span class="nw">$h$</span> and <span class="nw">$h + \mathrm{d}h$,</span> as shown in Figure 2. Denote the number density of air molecules by <span class="nw">$N(h)$.</span></p>
+<div class="f" style="left:308.2pt;top:319.5pt"><span class="fig" data-srcpage="2" data-clip="308.2,319.5,533.2,571.5"></span></div>
+
+<div class="f" style="left:64.7pt;top:580.0pt"><span class="fig" data-srcpage="2" data-clip="64.7,580.0,102.5,599.0"></span></div>
+<p class="x q" style="--b:592.4">Find the dependence <span class="nw">$N(h)$</span> if the number density at the Earth’s surface is <span class="nw">$N(0) = N_0$.</span></p>
+<p class="x" style="--b:617.2;--l:13.6pt">As in Part <span class="nw">$\mathbf{A}$,</span> we take the refractive index at the height <span class="nw">$h$</span> to be <span class="nw">$n(h)$,</span> and denote by <span class="nw">$\theta(h)$</span> the angle to the horizontal at which the ray travels at the height <span class="nw">$h$.</span> The curvature of the Earth’s surface can be neglected.</p>
+<p class="x" style="--b:658.5">The trajectory of a ray in the atmosphere is a curve which at every point can be approximated by an arc of a circle of radius <span class="nw">$R$.</span> This value of <span class="nw">$R$</span> is called the radius of curvature of the ray’s trajectory at that point (see Figure 3).</p>
+<div class="f" style="left:233.2pt;top:684.8pt"><span class="fig" data-srcpage="2" data-clip="233.2,684.8,608.2,914.2"></span></div>
+<div class="ov" style="left:323pt;top:821pt;width:72pt;height:17.5pt;font-size:13pt;line-height:15pt">Light ray</div>
+
+<div class="f" style="left:64.7pt;top:922.7pt"><span class="fig" data-srcpage="2" data-clip="64.7,922.7,102.5,941.7"></span></div>
+<p class="x q" style="--b:935.2">Express <span class="nw">$\frac{1}{R}$</span> in terms of <span class="nw">$\theta(h)$</span> and <span class="nw">$\frac{\mathrm{d}\theta}{\mathrm{d}h}$.</span></p>
+<div class="f" style="left:64.7pt;top:949.7pt"><span class="fig" data-srcpage="2" data-clip="64.7,949.7,102.5,968.7"></span></div>
+<p class="x q" style="--b:962.2">Using Snell’s law from <span class="nw">$\mathbf{A1}$,</span> transform the expression obtained in <span class="nw">$\mathbf{B2}$</span> so that it contains only <span class="nw">$n$,</span> <span class="nw">$n_S$</span> and <span class="nw">$\theta_S$.</span></p>
+<div class="f" style="left:64.7pt;top:976.7pt"><span class="fig" data-srcpage="2" data-clip="64.7,976.7,102.5,995.7"></span></div>
+<p class="x q" style="--b:989.2">Find the radius of curvature <span class="nw">$R$</span> near the Earth’s surface of the trajectory of a ray propagating at a small angle to the horizontal. Express your answer in terms of <span class="nw">$m$,</span> <span class="nw">$g$,</span> <span class="nw">$n_\mathrm{S}$,</span> <span class="nw">$T$</span> and <span class="nw">$k_\mathrm{B}$.</span></p>
+<p class="x" style="--b:1031.3;--l:21pt">Now take into account the curvature of the Earth. Its radius is <span class="nw">$R_\mathrm{E} = 6.4 \cdot 10^3\,\mathrm{km}$.</span> The other numerical values are <span class="nw">$m = 29 \cdot 1.66 \cdot 10^{-27}\,\mathrm{kg}$,</span> <span class="nw">$T = 300\,\mathrm{K}$,</span> <span class="nw">$k_\mathrm{B} = 1.38 \cdot 10^{-23}\,\mathrm{J/K}$,</span> <span class="nw">$g = 9.8\,\mathrm{m/s^2}$.</span></p>
+
+<div class="f" style="left:64.7pt;top:1071.3pt"><span class="fig" data-srcpage="2" data-clip="64.7,1071.3,102.5,1090.3"></span></div>
+<p class="x q" style="--b:1083.7">Find numerically the radius of curvature <span class="nw">$R^{lr}_E$</span> of the trajectory of a ray leaving some point on the Earth’s surface horizontally. Does the height of the ray above the surface increase afterwards?</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:166.4pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:219pt;height:45pt;border-radius:3.75pt"></div>
+<div class="bx" style="left:33.8pt;top:286.5pt;width:774pt;height:60pt;background:#fff"></div>
+<div class="bx ch" style="left:69pt;width:23.2pt"></div>
+<div class="bx ch" style="left:96pt;width:50.2pt"></div>
+<div class="bx ch" style="left:150pt;width:122.2pt"></div>
+<div class="bx ch" style="left:276pt;width:79.5pt"></div>
+<div class="bx ch" style="left:359.2pt;width:59.3pt"></div>
+<div class="bx ch" style="left:422.2pt;width:26.3pt"></div>
+<div class="bx ch" style="left:452.2pt;width:108pt"></div>
+<div class="bx ch" style="left:564pt;width:86.2pt"></div>
+<div class="bx ch" style="left:654pt;width:38.2pt"></div>
+</div>
+<p class="x" style="--b:43.5;--l:15.75pt">The atmosphere of Venus consists of <span class="nw">$\mathrm{CO_2}$,</span> which can be treated as an ideal gas to which all the results obtained above apply. The atmospheric pressure at the surface of Venus is <span class="nw">$p_\mathrm{V} = 93\,\mathrm{atm}$</span> <span class="nw">($1\,\mathrm{atm} = 1.0 \cdot 10^5\,\mathrm{Pa}$),</span> and the temperature is <span class="nw">$T_\mathrm{V} = 740\,\mathrm{K}$.</span> The radius of Venus is <span class="nw">$R_\mathrm{V} = 6.0 \cdot 10^3\,\mathrm{km}$,</span> the free-fall acceleration at its surface is <span class="nw">$g_\mathrm{V} = 8.9\,\mathrm{m/s^2}$,</span> the mass of a <span class="nw">$\mathrm{CO_2}$</span> molecule is <span class="nw">$m_\mathrm{C} = 44 \cdot 1.66 \cdot 10^{-27}\,\mathrm{kg}$.</span> For the refractive index on Venus the following equation holds:</p>
+<div class="f" style="left:385.9pt;top:92.5pt"><span class="fig" data-srcpage="3" data-clip="385.9,92.5,454.7,109.0"></span></div>
+<p class="x" style="--b:127.8">with the coefficient <span class="nw">$\alpha_\mathrm{V} = 4\pi a_\mathrm{C}^3$,</span> where <span class="nw">$a_\mathrm{C} = 1.4 \cdot 10^{-10}\,\mathrm{m}$</span> is the effective size of a <span class="nw">$\mathrm{CO_2}$</span> molecule.</p>
+
+<div class="f" style="left:64.7pt;top:141.3pt"><span class="fig" data-srcpage="3" data-clip="64.7,141.3,102.5,160.3"></span></div>
+<p class="x q" style="--b:153.7">Find numerically the radius of curvature <span class="nw">$R^{lr}_V$</span> of the trajectory of a ray leaving horizontally some point just above the surface of the planet. Does the height of the ray above the surface increase afterwards?</p>
+
+<p class="x tg" style="--b:245.2;left:69pt;width:23.2pt">T</p>
+<p class="x tg" style="--b:245.2;left:96pt;width:50.2pt">Optics</p>
+<p class="x tg" style="--b:245.2;left:150pt;width:122.2pt">Geometrical optics</p>
+<p class="x tg" style="--b:245.2;left:276pt;width:79.5pt">Refraction</p>
+<p class="x tg" style="--b:245.2;left:359.2pt;width:59.3pt">XY camps</p>
+<p class="x tg" style="--b:245.2;left:422.2pt;width:26.3pt">W</p>
+<p class="x tg" style="--b:245.2;left:452.2pt;width:108pt">Gradient optics</p>
+<p class="x tg" style="--b:245.2;left:564pt;width:86.2pt">Borrowed</p>
+<p class="x tg" style="--b:245.2;left:654pt;width:38.2pt">2023</p>
+
+<div class="f" style="left:377.4pt;top:302.5pt"><span class="fig" data-srcpage="3" data-clip="377.4,302.5,470.8,317.2"></span></div>
+<p class="x fo" style="--b:333.8">2020 — We are what they grow beyond.</p>
+</div>
+</body></html>

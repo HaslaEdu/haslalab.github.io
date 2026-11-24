@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c2027">
+<meta name="robots" content="noindex">
+<title>Original and translation · HaslaLab</title>
+<link rel="icon" type="image/svg+xml" href="../favicon-light.svg"><link rel="icon" type="image/svg+xml" href="../favicon-dark.svg" media="(prefers-color-scheme: dark)">
+<!-- An original paper and its translation side by side, page by page (each translation keeps the original's page
+     count and layout, so page n of one sits beside page n of the other).  pdf.js draws the pages on canvases; both
+     files can still be opened on their own from the bar.
+     URL: compare.html?l=<original PDF URL>&r=<translation PDF URL>&lt=<left label>&rt=<right label>&t=<title>&lang=ko|en
+     Used for the RuPhO papers (index.html card(): English editions shown beside the Russian original). -->
+<style>
+  :root{--bg:#1c2027;--panel:#22262d;--ink:#e8eef2;--muted:#9aa3ab;--line:#33373e;--accent:#f2c14e}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  header{position:sticky;top:0;z-index:2;background:var(--panel);border-bottom:1px solid var(--line);
+    display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 12px}
+  header h1{font-size:15px;margin:0 8px 0 0;font-weight:600}
+  header .sp{flex:1}
+  header a,header button{color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;
+    padding:4px 10px;font:inherit;text-decoration:none;cursor:pointer}
+  header a:hover,header button:hover{border-color:var(--accent)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 10px;position:sticky;top:45px;z-index:1;
+    background:var(--bg);color:var(--muted);font-size:13px}
+  main{padding:0 10px 40px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 10px}
+  .cell{background:#fff;min-height:120px;display:flex;align-items:flex-start;justify-content:center;overflow:hidden}
+  .cell canvas{width:100%;height:auto;display:block}
+  .cell.empty{background:transparent;border:1px dashed var(--line)}
+  .msg{padding:40px 16px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><h1 id="title"></h1><span class="sp"></span><a id="openL" target="_blank" rel="noopener"></a><a id="openR" target="_blank" rel="noopener"></a><button id="back"></button></header>
+<div class="cols"><div id="labL"></div><div id="labR"></div></div>
+<main id="pages"><div class="msg" id="msg"></div></main>
+<script>
+const Q = new URLSearchParams(location.search);
+const lang = Q.get("lang") === "ko" ? "ko" : "en";
+const T = {ko: {loading: "불러오는 중…", fail: "PDF를 불러오지 못했습니다. 위의 단추로 각 파일을 따로 열 수 있습니다.", open: "열기", back: "돌아가기",
+               title: "원문과 번역 나란히 보기"},
+           en: {loading: "Loading…", fail: "The PDFs could not be loaded. Each file can still be opened with the buttons above.", open: "Open", back: "Back",
+               title: "Original and translation side by side"}}[lang];
+document.documentElement.lang = lang;
+/* only the site's own PDF server */
+const ok = u => { try { const x = new URL(u); return x.protocol === "https:" && /(^|\.)haslalab\.workers\.dev$|(^|\.)haslaedu\.kr$|(^|\.)haslalab\.com$/.test(x.hostname); } catch (e) { return false; } };
+const L = Q.get("l"), R = Q.get("r");
+const labL = Q.get("lt") || "Original", labR = Q.get("rt") || "Translation";
+const title = Q.get("t") || T.title;
+document.title = title + " · HaslaLab";
+document.getElementById("title").textContent = title;
+document.getElementById("labL").textContent = labL;
+document.getElementById("labR").textContent = labR;
+const oL = document.getElementById("openL"), oR = document.getElementById("openR");
+oL.textContent = labL + " · " + T.open; oR.textContent = labR + " · " + T.open;
+if (ok(L)) oL.href = L; else oL.hidden = true;
+if (ok(R)) oR.href = R; else oR.hidden = true;
+const back = document.getElementById("back");
+back.textContent = T.back; back.onclick = () => history.length > 1 ? history.back() : (location.href = "../");
+const msg = document.getElementById("msg");
+msg.textContent = T.loading;
+
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+function pdfjs() {
+  return new Promise((res, rej) => {
+    const sc = document.createElement("script"); sc.src = PDFJS + "pdf.min.js";
+    sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js"; res(window.pdfjsLib); };
+    sc.onerror = () => rej(new Error("pdfjs")); document.head.append(sc);
+  });
+}
+async function draw(pg, cell) {
+  const w = cell.clientWidth || 400, dpr = Math.min(2, devicePixelRatio || 1);
+  const vp0 = pg.getViewport({scale: 1}), vp = pg.getViewport({scale: w / vp0.width * dpr});
+  const c = document.createElement("canvas"); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+  c.oncontextmenu = e => e.preventDefault();
+  await pg.render({canvasContext: c.getContext("2d"), viewport: vp}).promise;
+  cell.innerHTML = ""; cell.append(c);
+}
+(async () => {
+  if (!ok(L) || !ok(R)) { msg.textContent = T.fail; return; }
+  try {
+    const lib = await pdfjs();
+    const [a, b] = await Promise.all([lib.getDocument({url: L}).promise, lib.getDocument({url: R}).promise]);
+    const main = document.getElementById("pages"); main.innerHTML = "";
+    const n = Math.max(a.numPages, b.numPages), jobs = [];
+    for (let i = 1; i <= n; i++) {
+      const row = document.createElement("div"); row.className = "row";
+      const cl = document.createElement("div"), cr = document.createElement("div");
+      cl.className = "cell"; cr.className = "cell"; row.append(cl, cr); main.append(row);
+      jobs.push([i, cl, cr]);
+    }
+    /* draw the pages as they come into view */
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting || e.target.dataset.done) return;
+      e.target.dataset.done = 1; const [i, cl, cr] = jobs[+e.target.dataset.i];
+      if (i <= a.numPages) a.getPage(i).then(p => draw(p, cl)); else cl.className = "cell empty";
+      if (i <= b.numPages) b.getPage(i).then(p => draw(p, cr)); else cr.className = "cell empty";
+    }), {rootMargin: "600px 0px"});
+    jobs.forEach(([i, cl], k) => { cl.parentElement.dataset.i = k; io.observe(cl.parentElement); });
+  } catch (e) { const main = document.getElementById("pages"); main.innerHTML = ""; msg.textContent = T.fail; main.append(msg); }
+})();
+</script>
+</body>
+</html>

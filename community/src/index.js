@@ -25,6 +25,7 @@ import { createOmrRouter, ensureOmrSchema } from './omr.js';
 import { hasLabQueue, requireLabQueue, enqueueLabJobs, dispatchLabJobs, consumeLabJobs, LabJobDeferred, labJobGuard } from './lab-jobs.js';
 import { DB_SCOPE, READ_METRICS, publicRead, invalidatePublicReads, wantsFresh } from './public-read-cache.js';
 import { ensureWeeklyContent } from './weekly-content.js';
+import { monthlyRubric } from './monthly-rubrics.js';
 import { createD1Metrics, timedDB, d1Timing } from './d1-timing.js';
 import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.js';
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
@@ -184,6 +185,17 @@ const SIGNUP_TOKENS = 3;
    other axis: two new accounts a day from one IP (the owner's rule, 2026-11-04), password and OAuth sign-ups alike.
    SIGNUP_DAY_CAP in the environment overrides it. */
 const SIGNUP_DAY_CAP = 2;
+/* The cap counts accounts actually made (key signup-made:<ip>), not attempts: a sign-up refused for a wrong code, a
+   missing box or a taken name used to spend one of the two, so one person fixing a typo was locked out for a day.
+   signupCapCheck refuses when the day's accounts are already made; signupCapCount records one after the account exists. */
+async function signupCapCheck(env, req) {
+  const cap = Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP;
+  const row = await env.DB.prepare("SELECT start,n FROM ratelimits WHERE k=?").bind("signup-made:" + clientIp(req)).first();
+  if (row && now() - row.start < 86400 && row.n >= cap) throw new HttpError(429, "rate_limited");
+}
+async function signupCapCount(env, req) {
+  try { await limit(env, "signup-made:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400); } catch {}
+}
 const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 // letters (any script), digits, _ . -  and inner spaces; 2–16 chars
 const NICK_RE = /^[\p{L}\p{N}_.\-](?:[\p{L}\p{N}_.\- ]{0,14}[\p{L}\p{N}_.\-])?$/u;
@@ -364,9 +376,10 @@ async function handle(req, env, url, ctx) {
     const clash = await env.DB.prepare("SELECT username,nickname FROM users WHERE username=? OR nickname=?")
       .bind(username, nickname).first();
     if (clash) throw new HttpError(409, clash.username.toLowerCase() === username.toLowerCase() ? "username_taken" : "nickname_taken");
-    // per hour, and at most SIGNUP_DAY_CAP new accounts a day from one address
-    await limit(env, "signup:" + clientIp(req), 20, 3600);
-    await limit(env, "signup-day:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400);
+    /* at most SIGNUP_DAY_CAP new accounts a day from one address. There is no per-hour attempt limit any more: it counted
+       refused tries (a wrong code, a missing box), so one person fixing typos was locked out for an hour, while what it
+       guarded is already bounded by the day cap, the mailed-code limits (per IP, per address) and the code's 5 tries. */
+    await signupCapCheck(env, req);
     /* the mailed code last: a name taken or a box left unticked does not spend one of its tries */
     const { email, hash, t } = await signupEmail.checkCode(env, body);
     let res;
@@ -386,6 +399,7 @@ async function handle(req, env, url, ctx) {
     }
     if (!res[0].meta?.changes) bad("code_invalid");      // a parallel sign-up spent the code first
     const id = res[0].meta.last_row_id;
+    await signupCapCount(env, req);
     await recordConsent(env.DB, id, consent, now(), env[DB_SCOPE] || env.DB);
     const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=?").bind(id).first();
     return { token: await newSession(env, id), user: pubUser(decorateConsent(user, { consent_required: false, train_ok: consent.train })) };
@@ -3961,14 +3975,14 @@ async function labBench(env, s, job) {
         out = { grader: { ...g, endpoint: ep }, sum, results, skipped: cases.filter(c => c.skip) };
       }
     } else if (spec.stage === 'monthly-rubric') {
-      /* a hand-built monthly rubric (community/weekly/rubrics-<week>/<id>.json, served by the site) becomes the problem's
+      /* a hand-built monthly rubric (community/weekly/rubrics-<week>/<id>.json, bundled by monthly-rubrics.js) becomes the problem's
          rubric: an administrator edit, checked here as the grader reads it (integer maxima adding up to the points) */
       const pid = Number(spec.problem_id); if (!Number.isSafeInteger(pid) || pid <= 0) throw new Error('bad_problem');
       const prob = await env.DB.prepare('SELECT id, week, points, rubric FROM problems WHERE id=?').bind(pid).first();
       if (!prob || !/^\d{4}-\d{2}$/.test(String(prob.week || ''))) throw new Error('problem_not_monthly');
-      const r = await fetch(`${env.LAB_SITE_BASE || "https://haslalab.org/"}community/weekly/rubrics-${prob.week}/${pid}.json`, { signal: AbortSignal.timeout(15000) });
-      if (!r.ok) throw new Error('rubric_not_found_' + r.status);
-      const rubric = await r.json(), ok = Array.isArray(rubric) && rubric.length && rubric.every(c => c && typeof c.id === 'string' && c.id && typeof c.name === 'string' && Number.isInteger(c.max) && c.max > 0 && typeof c.requirement === 'string');
+      const rubric = monthlyRubric(prob.week, pid);
+      if (!rubric) throw new Error('rubric_not_found');
+      const ok = Array.isArray(rubric) && rubric.length && rubric.every(c => c && typeof c.id === 'string' && c.id && typeof c.name === 'string' && Number.isInteger(c.max) && c.max > 0 && typeof c.requirement === 'string');
       const total = ok ? rubric.reduce((a, c) => a + c.max, 0) : NaN;
       if (!ok || total !== Number(prob.points) || new Set(rubric.map(c => c.id)).size !== rubric.length) throw new Error('bad_rubric');
       if (spec.dry !== true) await env.DB.prepare('UPDATE problems SET rubric=? WHERE id=?').bind(JSON.stringify(rubric), pid).run();
@@ -5240,7 +5254,7 @@ function oauthRedirectOrigin(env, prov, url) {
   return listed && origin ? origin : url.origin;
 }
 function backTo(ret, frag) { return new Response(null, { status: 302, headers: { Location: ret + "#/oauth?" + frag, "Cache-Control": "no-store" } }); }
-function oauthBack(env,ret,frag){return ret.startsWith('desktop:')?desktopOAuth.error(env,ret,new URLSearchParams(frag).get('e')||'oauth_failed'):backTo(ret,frag)}
+function oauthBack(env,ret,frag){const f=new URLSearchParams(frag);return ret.startsWith('desktop:')?desktopOAuth.error(env,ret,f.get('e')||'oauth_failed',f.get('d')||''):backTo(ret,frag)}
 /* a provider's display name, made into a free nickname */
 async function freeNick(env, raw) {
   let base = cleanNick(String(raw || "").normalize("NFKC").replace(/[^\p{L}\p{N}_.\- ]/gu, "").replace(NICK_BLANK, "")).slice(0, 12).trim();
@@ -5355,11 +5369,11 @@ async function oauthSignIn(req, env, prov, sub, name, st, afterUser = null) {
     userId = st.link_user;
   } else if (found) userId = found.user_id;
   else {
-    await limit(env, "signup:" + clientIp(req), 20, 3600);
-    await limit(env, "signup-day:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400);
+    await signupCapCheck(env, req);
     const uname = '~pending_' + b64u(crypto.getRandomValues(new Uint8Array(18)));
     const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,NULL,?,?)").bind(uname, await freeNick(env, name), now(), SIGNUP_TOKENS).run();
     userId = res.meta.last_row_id; fresh = 1;
+    await signupCapCount(env, req);
     await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, userId, now()).run();
   }
   if (afterUser) await afterUser(userId);

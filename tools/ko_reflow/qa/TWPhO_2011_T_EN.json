@@ -1,0 +1,27 @@
+{
+ "schema": "html-reflow-stamped-twoup-v1",
+ "file": "TWPhO_2011_T_EN.pdf",
+ "status": "READY",
+ "sha256": "206ce6eedc723a65821f23cc1f7cec308fe203d8f7dfee9cb03c051cd897253f",
+ "bytes": 8778933,
+ "pages": 5,
+ "source_file": "TWPhO_2011_T_ZH.pdf",
+ "source_sha256": "f6952ad48b75ab24458d72624b6a1a92258655068523b4a6535ecd5092c67a34",
+ "source_page_range": [
+  1,
+  5
+ ],
+ "source_pages": 5,
+ "source_language": "zh",
+ "page_count_matches_source": true,
+ "figures_logos_and_pure_math_stamped_from_source": true,
+ "html_source": "tools/ko_reflow/twpho/2011_T_EN.html",
+ "builder": "tools/ko_reflow/build.py",
+ "visual_review": {
+  "reviewed": true,
+  "method": "every page compared side by side with the source at equal DPI (tools/ko_reflow/check.py side-by-side images; every flag confirmed by zoom)",
+  "overflow_or_occlusion_observed": false
+ },
+ "layout": "two-up: original page left, English right",
+ "english_text_justified": true
+}

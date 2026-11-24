@@ -1,0 +1,253 @@
+<!doctype html><html><head><meta name="page" content="841.92,1191.12">
+<style>
+/* RuPhO W ("Road to IPhO") 2023, problem T2 — solution — English edition on the original layout (same geometry,
+   stamps and baselines as the Korean edition 2023_T2S.html).
+   ORIGINAL: 5 A3 pages (841.9x1191.1pt) printed from the olympiad web page (same layout as the 2026 T1 solution
+   pilot): beige page panel (33.8..807.8), white cards (x 43.5..798, radius 3.75pt) one per sub-question, blue badge
+   "A1 0.40" (stamped), grey separator under the restated question, answer frame (3pt stroke #f3f6f9).
+   Panel, cards, separators and answer frames are redrawn from the original's vector paths (.bx inside the static
+   .dc wrapper so check.py ignores them). Body: Open Sans 9pt #3f4254 (-> Arial,sans-serif), inline math KaTeX at
+   10.8pt (1.2em), text column x 63.4..777.8; question line after the badge starts at x 104.7 (pitch 15.9pt),
+   all left-aligned as in the original. "Ответ:" -> "Answer:".
+   Display formulas are stamped (no Cyrillic in them) except those with "км": A8 third line
+   "=> L_max = 14.4 км, θ_S = 0.31°." and the answer "L_max = 14.4 км" (retyped); B5/B6 "= 31.4·10^3 км." and
+   "= 1.00·10^3 км." (the fraction on the left is stamped, the right part retyped) and the answers R = ... км (retyped).
+   Note: the original's A8 derivation gives θ_S = 0.31° but its answer box says θ_S = 0.45° (kept as printed).
+   PLACEMENT: every block by the ORIGINAL's first baseline --b (pt):
+       top = b - l/2 - 0.3465*fs   (Arial: (ascent - descent)/2 = (0.905 - 0.212)/2 em) */
+body{font-family:Arial,sans-serif;font-size:9pt;line-height:13.6pt;color:#3f4254;word-break:normal;hyphens:manual}
+p{text-indent:0}
+.katex{line-height:0}
+.x .katex{font-size:1.2em!important}
+.x{position:absolute;margin:0;left:63.4pt;width:714.4pt;--l:13.6pt;--fs:9pt;font-size:var(--fs);line-height:var(--l);
+   top:calc(var(--b)*1pt - var(--l)/2 - 0.3465*var(--fs));text-align:left}
+.q{text-indent:41.3pt;--l:15.9pt}
+.c{text-align:center}
+.an{left:79.9pt;width:690pt}
+.r{width:auto;white-space:nowrap}
+.nw{white-space:nowrap}
+.f{position:absolute;line-height:0}
+.dc{position:static}
+.bx{position:absolute;box-sizing:border-box}
+.bg{left:33.8pt;top:33.8pt;width:774pt;height:1122.7pt;background:rgb(251,246,240)}
+.cd{left:43.5pt;width:754.5pt;background:#fff;border-radius:3.75pt}
+.sp{left:63.8pt;width:714pt;height:1.5pt;background:rgb(235,237,243)}
+.ab{left:63.7pt;width:714pt;border:3pt solid rgb(243,246,249);border-radius:3.8pt}
+</style></head><body>
+
+<!-- page 1 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:358.4pt"></div>
+<div class="bx cd" style="top:403.5pt;height:283.5pt"></div>
+<div class="bx cd" style="top:698.2pt;height:312.0pt"></div>
+<div class="bx cd" style="top:1021.5pt;height:135.0pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:85.5pt"></div>
+<div class="bx sp" style="top:455.2pt"></div>
+<div class="bx sp" style="top:736.5pt"></div>
+<div class="bx sp" style="top:1059.8pt"></div>
+<div class="bx ab" style="top:240.7pt;height:141.0pt"></div>
+<div class="bx ab" style="top:579.0pt;height:97.5pt"></div>
+<div class="bx ab" style="top:853.5pt;height:146.2pt"></div>
+</div>
+<div class="f" style="left:63.2pt;top:44.5pt"><span class="fig" data-srcpage="1" data-clip="63.2,44.5,101.0,63.5"></span></div>
+<p class="x q" style="--b:56.9">Write Snell’s law for the point <span class="nw">$P$</span> at the height <span class="nw">$l\Delta h$.</span> Taking the limit <span class="nw">$\Delta h \to 0$,</span> <span class="nw">$\Delta hl \to h$,</span> <span class="nw">$\theta_l \to \theta(h)$,</span> <span class="nw">$n_l \to n(h)$,</span> obtain an expression for <span class="nw">$\theta(h)$.</span></p>
+<p class="x" style="--b:103.5">Snell’s law for the point <span class="nw">$P$:</span></p>
+<div class="f" style="left:365.1pt;top:114.4pt"><span class="fig" data-srcpage="1" data-clip="365.1,114.4,475.6,129.4"></span></div>
+<p class="x" style="--b:147.0">Passing to the limit, we obtain Snell’s law for a continuous medium:</p>
+<div class="f" style="left:360.5pt;top:157.9pt"><span class="fig" data-srcpage="1" data-clip="360.5,157.9,480.3,172.8"></span></div>
+<p class="x" style="--b:191.2">whence we finally obtain:</p>
+<div class="f" style="left:355.4pt;top:201.4pt"><span class="fig" data-srcpage="1" data-clip="355.4,201.4,485.3,232.2"></span></div>
+<p class="x an" style="--b:269.2">Answer:</p>
+<div class="f" style="left:366.7pt;top:280.1pt"><span class="fig" data-srcpage="1" data-clip="366.7,280.1,473.6,295.2"></span></div>
+<div class="f" style="left:356.9pt;top:322.9pt"><span class="fig" data-srcpage="1" data-clip="356.9,322.9,483.8,353.7"></span></div>
+
+<div class="f" style="left:63.2pt;top:414.3pt"><span class="fig" data-srcpage="1" data-clip="63.2,414.3,101.0,433.3"></span></div>
+<p class="x q" style="--b:426.7">Using this result, find how the refractive index of the atmosphere <span class="nw">$n(h)$</span> depends on the height. Express your answer in terms of <span class="nw">$n_\mathrm{S} = n(0)$</span> and <span class="nw">$n_\mathrm{H} = n(H)$.</span></p>
+<p class="x" style="--b:473.2">Let us express the number densities of air at the heights <span class="nw">$h = 0$</span> and <span class="nw">$h = H$:</span></p>
+<div class="f" style="left:326.8pt;top:484.1pt"><span class="fig" data-srcpage="1" data-clip="326.8,484.1,514.0,512.5"></span></div>
+<p class="x" style="--b:528.8">Substituting them into the dependence of the refractive index, we have:</p>
+<div class="f" style="left:349.1pt;top:540.8pt"><span class="fig" data-srcpage="1" data-clip="349.1,540.8,491.6,571.0"></span></div>
+<p class="x an" style="--b:607.5">Answer:</p>
+<div class="f" style="left:350.6pt;top:619.6pt"><span class="fig" data-srcpage="1" data-clip="350.6,619.6,489.2,649.8"></span></div>
+
+<div class="f" style="left:63.2pt;top:709.0pt"><span class="fig" data-srcpage="1" data-clip="63.2,709.0,101.0,728.0"></span></div>
+<p class="x q" style="--b:721.4">Express the refractive index <span class="nw">$n_\mathrm{m} \equiv n(h_\mathrm{m})$</span> at the highest point of the ray’s trajectory in terms of <span class="nw">$n_S$</span> and <span class="nw">$\theta_\mathrm{S}$.</span></p>
+<p class="x" style="--b:754.5">We write Snell’s law, taking into account that at the top of the trajectory <span class="nw">$\theta = 0$:</span></p>
+<div class="f" style="left:357.6pt;top:764.6pt"><span class="fig" data-srcpage="1" data-clip="357.6,764.6,483.2,780.3"></span></div>
+<p class="x" style="--b:797.2">From this and the results of the previous part we have:</p>
+<div class="f" style="left:374.8pt;top:808.4pt"><span class="fig" data-srcpage="1" data-clip="374.8,808.4,465.9,845.5"></span></div>
+<p class="x an" style="--b:882.0">Answer:</p>
+<div class="f" style="left:384.7pt;top:892.1pt"><span class="fig" data-srcpage="1" data-clip="384.7,892.1,455.3,907.8"></span></div>
+<div class="f" style="left:376.3pt;top:935.9pt"><span class="fig" data-srcpage="1" data-clip="376.3,935.9,463.8,973.0"></span></div>
+
+<div class="f" style="left:63.2pt;top:1032.3pt"><span class="fig" data-srcpage="1" data-clip="63.2,1032.3,101.0,1051.3"></span></div>
+<p class="x q" style="--b:1044.7">Express <span class="nw">$a_\mathrm{m}$</span> and <span class="nw">$b$</span> in terms of <span class="nw">$h_\mathrm{m}$,</span> <span class="nw">$n_\mathrm{H}$,</span> <span class="nw">$n_\mathrm{S}$</span> and <span class="nw">$n_\mathrm{m}$.</span></p>
+<p class="x" style="--b:1077.8">We substitute directly:</p>
+</div>
+
+<!-- page 2 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:242.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:287.2pt;height:285.0pt"></div>
+<div class="bx cd" style="top:583.5pt;height:482.3pt"></div>
+<div class="bx cd" style="top:1077.0pt;height:79.5pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:325.5pt"></div>
+<div class="bx sp" style="top:621.8pt"></div>
+<div class="bx sp" style="top:1115.2pt"></div>
+<div class="bx ab" style="top:123.0pt;height:142.5pt"></div>
+<div class="bx ab" style="top:426.0pt;height:135.7pt"></div>
+<div class="bx ab" style="top:928.5pt;height:126.8pt"></div>
+</div>
+<div class="f" style="left:250.2pt;top:20.9pt"><span class="fig" data-srcpage="2" data-clip="250.2,20.9,591.3,114.4"></span></div>
+<p class="x an" style="--b:151.5">Answer:</p>
+<div class="f" style="left:383.7pt;top:162.6pt"><span class="fig" data-srcpage="2" data-clip="383.7,162.6,456.2,198.4"></span></div>
+<div class="f" style="left:402.8pt;top:224.6pt"><span class="fig" data-srcpage="2" data-clip="402.8,224.6,437.4,240.4"></span></div>
+
+<div class="f" style="left:63.2pt;top:298.0pt"><span class="fig" data-srcpage="2" data-clip="63.2,298.0,101.0,317.0"></span></div>
+<p class="x q" style="--b:310.4">Express the coefficients <span class="nw">$c$</span> and <span class="nw">$d$</span> in terms of <span class="nw">$a$</span> and <span class="nw">$b$.</span></p>
+<p class="x" style="--b:343.5">We substitute directly:</p>
+<div class="f" style="left:292.2pt;top:356.1pt"><span class="fig" data-srcpage="2" data-clip="292.2,356.1,547.1,419.7"></span></div>
+<p class="x an" style="--b:454.5">Answer:</p>
+<div class="f" style="left:402.0pt;top:465.4pt"><span class="fig" data-srcpage="2" data-clip="402.0,465.4,439.0,481.2"></span></div>
+<div class="f" style="left:397.3pt;top:511.6pt"><span class="fig" data-srcpage="2" data-clip="397.3,511.6,442.8,536.7"></span></div>
+
+<div class="f" style="left:63.2pt;top:594.3pt"><span class="fig" data-srcpage="2" data-clip="63.2,594.3,101.0,613.3"></span></div>
+<p class="x q" style="--b:606.7">Express <span class="nw">$h_\mathrm{g}$</span> as a function of the distance <span class="nw">$L$</span> from the observer to the island. Is the most distant of the observed islands seen higher or lower than the others?</p>
+<p class="x" style="--b:639.8">It is easy to see that:</p>
+<div class="f" style="left:292.7pt;top:639.6pt"><span class="fig" data-srcpage="2" data-clip="292.7,639.6,551.1,784.5"></span></div>
+<p class="x" style="--b:796.5">Since <span class="nw">$L \to 0$</span> <span class="nw">$(h_\mathrm{m} \to 0)$,</span> the root with the sign "<span class="nw">$-$"</span> must be chosen. From the geometric properties of the parabolic trajectory</p>
+<div class="f" style="left:395.6pt;top:807.4pt"><span class="fig" data-srcpage="2" data-clip="395.6,807.4,445.1,822.4"></span></div>
+<p class="x" style="--b:840.8">therefore</p>
+<div class="f" style="left:303.1pt;top:840.6pt"><span class="fig" data-srcpage="2" data-clip="303.1,840.6,537.7,903.8"></span></div>
+<p class="x" style="--b:915.8">This formula makes it clear that the most distant of the islands will be seen higher than the others.</p>
+<p class="x an" style="--b:957.0">Answer: The most distant island is seen higher than the others.</p>
+<div class="f" style="left:305.5pt;top:971.1pt"><span class="fig" data-srcpage="2" data-clip="305.5,971.1,535.3,1034.2"></span></div>
+
+<div class="f" style="left:63.2pt;top:1087.7pt"><span class="fig" data-srcpage="2" data-clip="63.2,1087.7,101.0,1106.7"></span></div>
+<p class="x q" style="--b:1100.2">Express in terms of <span class="nw">$n_S$,</span> <span class="nw">$n_H$</span> and <span class="nw">$H$</span> the maximum distance <span class="nw">$L_\mathrm{max}$</span> to an island that the observer can still see. What is the angle <span class="nw">$\theta_{S\,\mathrm{max}}$</span> in this case?</p>
+<p class="x" style="--b:1133.2">Clearly, the maximum distance corresponds to the case <span class="nw">$h_\mathrm{m} = H$,</span> whence, substituting it into one of the expressions of the previous part,</p>
+</div>
+
+<!-- page 3 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:273.0pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:318.0pt;height:294.8pt"></div>
+<div class="bx cd" style="top:624.0pt;height:327.8pt"></div>
+<div class="bx cd" style="top:963.0pt;height:193.5pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:356.2pt"></div>
+<div class="bx sp" style="top:662.2pt"></div>
+<div class="bx sp" style="top:1001.2pt"></div>
+<div class="bx ab" style="top:135.0pt;height:161.3pt"></div>
+<div class="bx ab" style="top:475.5pt;height:126.8pt"></div>
+<div class="bx ab" style="top:853.5pt;height:87.8pt"></div>
+</div>
+<div class="f" style="left:372.0pt;top:31.9pt"><span class="fig" data-srcpage="3" data-clip="372.0,31.9,468.7,72.3"></span></div>
+<p class="x" style="--b:90.0">From Snell’s law:</p>
+<div class="f" style="left:372.6pt;top:97.5pt"><span class="fig" data-srcpage="3" data-clip="372.6,97.5,468.1,127.0"></span></div>
+<p class="x an" style="--b:163.5">Answer:</p>
+<div class="f" style="left:373.5pt;top:173.6pt"><span class="fig" data-srcpage="3" data-clip="373.5,173.6,466.0,214.0"></span></div>
+<div class="f" style="left:374.1pt;top:244.6pt"><span class="fig" data-srcpage="3" data-clip="374.1,244.6,465.2,269.5"></span></div>
+
+<div class="f" style="left:63.2pt;top:328.7pt"><span class="fig" data-srcpage="3" data-clip="63.2,328.7,101.0,347.7"></span></div>
+<p class="x q" style="--b:341.2">Calculate <span class="nw">$L_\mathrm{max}$</span> and <span class="nw">$\theta_\mathrm{S}$</span> to two significant figures.</p>
+<p class="x" style="--b:374.2">Let us find for normal conditions:</p>
+<div class="f" style="left:284.9pt;top:385.4pt"><span class="fig" data-srcpage="3" data-clip="284.9,385.4,555.9,451.0"></span></div>
+<p class="x r" style="--b:462.8;left:340.7pt">$\Longrightarrow L_\mathrm{max} = 14.4\,\mathrm{km}, \quad \theta_S = 0.31^\circ.$</p>
+<p class="x an" style="--b:504.0">Answer:</p>
+<p class="x c" style="--b:527.2">$L_\mathrm{max} = 14.4\,\mathrm{km}$</p>
+<div class="f" style="left:394.6pt;top:558.6pt"><span class="fig" data-srcpage="3" data-clip="394.6,558.6,445.6,576.3"></span></div>
+
+<div class="f" style="left:63.2pt;top:634.7pt"><span class="fig" data-srcpage="3" data-clip="63.2,634.7,101.0,653.7"></span></div>
+<p class="x q" style="--b:647.2">Find the dependence <span class="nw">$N(h)$</span> if the number density at the Earth’s surface is <span class="nw">$N(0) = N_0$.</span></p>
+<p class="x" style="--b:680.2">Considering the balance of forces acting on a portion of the atmosphere at heights from <span class="nw">$h$</span> to <span class="nw">$h + \mathrm{d}h$,</span> we obtain:</p>
+<div class="f" style="left:393.5pt;top:693.4pt"><span class="fig" data-srcpage="3" data-clip="393.5,693.4,448.6,725.7"></span></div>
+<p class="x" style="--b:744.0">Since air can be treated as an ideal gas, from the Mendeleev–Clapeyron equation:</p>
+<div class="f" style="left:395.5pt;top:752.2pt"><span class="fig" data-srcpage="3" data-clip="395.5,752.2,445.2,783.4"></span></div>
+<p class="x" style="--b:799.5">whence</p>
+<div class="f" style="left:283.2pt;top:812.6pt"><span class="fig" data-srcpage="3" data-clip="283.2,812.6,558.3,845.7"></span></div>
+<p class="x an" style="--b:882.0">Answer:</p>
+<div class="f" style="left:380.4pt;top:893.5pt"><span class="fig" data-srcpage="3" data-clip="380.4,893.5,456.9,914.7"></span></div>
+
+<div class="f" style="left:63.2pt;top:973.7pt"><span class="fig" data-srcpage="3" data-clip="63.2,973.7,101.0,992.7"></span></div>
+<p class="x q" style="--b:986.2">Express <span class="nw">$\frac{1}{R}$</span> in terms of <span class="nw">$\theta(h)$</span> and <span class="nw">$\frac{\mathrm{d}\theta}{\mathrm{d}h}$.</span></p>
+<p class="x" style="--b:1019.2">For an element of length <span class="nw">$\mathrm{d}l$</span> of the ray’s trajectory, on the one hand,</p>
+<div class="f" style="left:393.1pt;top:1029.4pt"><span class="fig" data-srcpage="3" data-clip="393.1,1029.4,447.6,1059.4"></span></div>
+<p class="x" style="--b:1075.5">and on the other hand,</p>
+<div class="f" style="left:390.3pt;top:1086.4pt"><span class="fig" data-srcpage="3" data-clip="390.3,1086.4,450.4,1100.7"></span></div>
+<p class="x" style="--b:1118.2">whence</p>
+<div class="f" style="left:380.8pt;top:1129.1pt"><span class="fig" data-srcpage="3" data-clip="380.8,1129.1,460.7,1159.2"></span></div>
+</div>
+
+<!-- page 4 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:113.2pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx cd" style="top:158.2pt;height:278.3pt"></div>
+<div class="bx cd" style="top:447.8pt;height:280.4pt"></div>
+<div class="bx cd" style="top:739.5pt;height:260.3pt"></div>
+<div class="bx cd" style="top:1011.0pt;height:145.5pt;border-radius:3.75pt 3.75pt 0 0"></div>
+<div class="bx sp" style="top:196.5pt"></div>
+<div class="bx sp" style="top:499.5pt"></div>
+<div class="bx sp" style="top:791.2pt"></div>
+<div class="bx sp" style="top:1062.8pt"></div>
+<div class="bx ab" style="top:33.7pt;height:93.8pt"></div>
+<div class="bx ab" style="top:330.7pt;height:95.3pt"></div>
+<div class="bx ab" style="top:612.0pt;height:105.7pt"></div>
+<div class="bx ab" style="top:891.0pt;height:98.3pt"></div>
+</div>
+<p class="x an" style="--b:62.2">Answer:</p>
+<div class="f" style="left:382.2pt;top:73.1pt"><span class="fig" data-srcpage="4" data-clip="382.2,73.1,458.5,103.2"></span></div>
+
+<div class="f" style="left:63.2pt;top:169.0pt"><span class="fig" data-srcpage="4" data-clip="63.2,169.0,101.0,188.0"></span></div>
+<p class="x q" style="--b:181.4">Using Snell’s law from <span class="nw">$\mathbf{A1}$,</span> transform the expression obtained in <span class="nw">$\mathbf{B2}$</span> so that it contains only <span class="nw">$n$,</span> <span class="nw">$n_S$</span> and <span class="nw">$\theta_S$.</span></p>
+<p class="x" style="--b:214.5">From Snell’s law</p>
+<div class="f" style="left:377.0pt;top:226.9pt"><span class="fig" data-srcpage="4" data-clip="377.0,226.9,463.7,259.0"></span></div>
+<p class="x" style="--b:278.2">then</p>
+<div class="f" style="left:262.2pt;top:290.1pt"><span class="fig" data-srcpage="4" data-clip="262.2,290.1,579.5,322.8"></span></div>
+<p class="x an" style="--b:359.2">Answer:</p>
+<div class="f" style="left:371.0pt;top:370.1pt"><span class="fig" data-srcpage="4" data-clip="371.0,370.1,469.8,400.8"></span></div>
+
+<div class="f" style="left:63.2pt;top:458.5pt"><span class="fig" data-srcpage="4" data-clip="63.2,458.5,101.0,477.5"></span></div>
+<p class="x q" style="--b:470.9">Find the radius of curvature <span class="nw">$R$</span> near the Earth’s surface of the trajectory of a ray propagating at a small angle to the horizontal. Express your answer in terms of <span class="nw">$m$,</span> <span class="nw">$g$,</span> <span class="nw">$n_\mathrm{S}$,</span> <span class="nw">$T$</span> and <span class="nw">$k_\mathrm{B}$.</span></p>
+<p class="x" style="--b:517.5">We find directly:</p>
+<div class="f" style="left:259.2pt;top:528.6pt"><span class="fig" data-srcpage="4" data-clip="259.2,528.6,579.2,604.0"></span></div>
+<p class="x an" style="--b:640.5">Answer:</p>
+<div class="f" style="left:373.8pt;top:651.4pt"><span class="fig" data-srcpage="4" data-clip="373.8,651.4,466.0,691.0"></span></div>
+
+<div class="f" style="left:63.2pt;top:750.3pt"><span class="fig" data-srcpage="4" data-clip="63.2,750.3,101.0,769.3"></span></div>
+<p class="x q" style="--b:762.7">Find numerically the radius of curvature <span class="nw">$R^{lr}_E$</span> of the trajectory of a ray leaving some point on the Earth’s surface horizontally. Does the height of the ray above the surface increase afterwards?</p>
+<p class="x" style="--b:809.2">Substituting the numerical values:</p>
+<div class="f" style="left:333.0pt;top:820.1pt"><span class="fig" data-srcpage="4" data-clip="333.0,820.1,431.5,859.8"></span></div>
+<p class="x r" style="--b:837.8;left:434.0pt">$= 31.4 \cdot 10^3\,\mathrm{km}.$</p>
+<p class="x" style="--b:877.5">The height of the ray above the surface increases, since <span class="nw">$R^{lr}_E &gt; R_E$.</span></p>
+<p class="x an" style="--b:919.5">Answer: The height of the ray above the surface increases.</p>
+<p class="x c" style="--b:957.0">$R^{lr}_E = 31.4 \cdot 10^3\,\mathrm{km}$</p>
+
+<div class="f" style="left:63.2pt;top:1021.7pt"><span class="fig" data-srcpage="4" data-clip="63.2,1021.7,101.0,1040.7"></span></div>
+<p class="x q" style="--b:1034.2">Find numerically the radius of curvature <span class="nw">$R^{lr}_V$</span> of the trajectory of a ray leaving horizontally some point just above the surface of the planet. Does the height of the ray above the surface increase afterwards?</p>
+<p class="x" style="--b:1080.8">First we find the refractive index <span class="nw">$n_V$</span> at the surface of Venus:</p>
+<div class="f" style="left:352.3pt;top:1093.1pt"><span class="fig" data-srcpage="4" data-clip="352.3,1093.1,488.5,1125.4"></span></div>
+<p class="x" style="--b:1143.0">then, by the already known formula,</p>
+</div>
+
+<!-- page 5 -->
+<div class="page">
+<div class="dc">
+<div class="bx bg"></div>
+<div class="bx cd" style="top:33.8pt;height:178.4pt;border-radius:0 0 3.75pt 3.75pt"></div>
+<div class="bx ab" style="top:103.5pt;height:98.2pt"></div>
+</div>
+<div class="f" style="left:326.9pt;top:31.9pt"><span class="fig" data-srcpage="5" data-clip="326.9,31.9,437.5,71.5"></span></div>
+<p class="x r" style="--b:49.5;left:440.1pt">$= 1.00 \cdot 10^3\,\mathrm{km}.$</p>
+<p class="x" style="--b:89.2">The height of the ray above the surface decreases, since <span class="nw">$R^{lr}_V &lt; R_V$.</span></p>
+<p class="x an" style="--b:132.0">Answer: The height of the ray above the surface decreases.</p>
+<p class="x c" style="--b:168.8">$R^{lr}_V = 1.00 \cdot 10^3\,\mathrm{km}$</p>
+</div>
+</body></html>
