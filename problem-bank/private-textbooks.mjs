@@ -1,7 +1,7 @@
 const ROUTE = '/api/problem-bank/private-textbooks';
 const PREFIX = 'textbook-intake/2026-11-21/viewer-v1';
 const HEX = /^[0-9a-f]{64}$/;
-const BOOKS = new Set(['goldstein', 'guopei', 'savchenko', 'estonian', 'russian', 'general', 'aptitude']);
+const BOOKS = new Set(['goldstein', 'guopei', 'savchenko', 'estonian', 'russian', 'general', 'aptitude', 'halliday', 'perfect']);
 const BATCH_SIZE = 24;
 const LIST_SIZE = 24;
 const MAX_JSON = 6 * 1024 * 1024;
@@ -44,7 +44,9 @@ async function readJson(bucket, key, expected) {
 
 function publicBook(book) {
   return {id: book.id, title: text(book.title, 250), count: book.count,
-          korean_count: book.korean_count, limitation: text(book.limitation, 600)};
+          korean_count: book.korean_count, limitation: text(book.limitation, 600),
+          ...(typeof book.cover_webp === 'string' && /^UklGR[A-Za-z0-9+/]{100,31995}={0,2}$/.test(book.cover_webp)
+            ? {cover_webp: book.cover_webp} : {})};
 }
 
 function mediaView(attrs, endpoint) {
@@ -122,6 +124,7 @@ export async function privateTextbookRoute(request, env, url, user) {
       const items = found.slice((page - 1) * LIST_SIZE, page * LIST_SIZE).map(item => ({
         ordinal: item.ordinal, number: text(item.number, 100), label: text(item.label, 140),
         chapter: text(item.chapter, 160), kind: text(item.kind, 40), has_korean: item.has_korean === true,
+        ...(item.has_english === false ? {has_english: false} : {}),
       }));
       return json({book: publicBook(book), items, page, pages, total: found.length});
     }

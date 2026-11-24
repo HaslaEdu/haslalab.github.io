@@ -195,11 +195,15 @@ export function mountArchiveLibrary(container,options={}){
     russian: 'Russian Physics Olympiads 2005–2021',
     general: 'Problems in General Physics — Irodov',
     aptitude: 'Aptitude Test Problems in Physics — Krotov',
+    halliday: 'Fundamentals of Physics, 10th ed. — Halliday',
+    perfect: '퍼펙트물리',
   };
   function privateBookCard(book){
     const title=privateTitles[book.id], href='#/archive/books/phys?view=private-textbooks&book='+book.id;
     const ko=config.lang==='ko';
-    return `<a class="comp al-book-card" href="${esc(href)}"><div class="chead"><div class="abbr">${esc(title)}</div></div>${metadata([[tr('problems'),book.count],[ko?'한국어':'Korean',book.korean_count],[tr('access'),ko?'비공개 웹문항 이용 가능':'Private web problems available']])}<span class="go" aria-hidden="true">→</span></a>`;
+    const cover=typeof book.cover_webp==='string'&&/^UklGR[A-Za-z0-9+/]{100,31995}={0,2}$/.test(book.cover_webp)
+      ? `<img class="clogo al-card-book-image" src="data:image/webp;base64,${esc(book.cover_webp)}" alt="" loading="lazy" decoding="async">`:'';
+    return `<a class="comp al-book-card" href="${esc(href)}"><div class="chead"><div class="abbr">${esc(title)}</div>${cover}</div>${metadata([[tr('problems'),book.count],[ko?'한국어':'Korean',book.korean_count],[tr('access'),ko?'비공개 웹문항 이용 가능':'Private web problems available']])}<span class="go" aria-hidden="true">→</span></a>`;
   }
   function referenceBooks(){return (Array.isArray(config.bookReferences)?config.bookReferences:[]).filter(item=>item?.collection===config.collection&&typeof item.id==='string'&&!SID.test(item.id)&&officialURL(item.href));}
   function referenceCard(item){
