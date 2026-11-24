@@ -17,7 +17,7 @@
    its surface or the body it is tied to, a body landing on a floor or an incline, a body leaving its surface
    (N below zero), two bodies on one surface touching. Systems outside these kinds are reported in `unsupported`
    with a code, and the figure stays a figure. */
-import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA} from './draw-scene.mjs?v=89d7475e50e7';
+import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr} from './draw-scene.mjs?v=fb1c204d7324';
 
 export const SIM_DT = 1e-3;
 const EPS_V = 1e-9;
@@ -35,6 +35,28 @@ function rk4(f, q, h) {
   return out;
 }
 const sgn = v => v > 0 ? 1 : v < 0 ? -1 : 0;
+
+/** the part of the figure a free body rests on or hangs from that the solver does not compute (a plank, a track, a
+ *  line, a drawn shape's edge, a liquid it stands in), or null. Contact: a point of the part within a small tolerance
+ *  of the body's outline. */
+export function heldBy(scene, b) {
+  const p = bodyPose(scene, b), round = b.type === 'ball' || b.type === 'wheel', hw = bodyHalfWidth(b), hh = bodyHalfHeight(b), tol = Math.max(0.004, 0.06 * Math.min(hw, hh));
+  const touches = q => round ? Math.hypot(q.x - p.x, q.y - p.y) <= b.r + tol : Math.abs(q.x - p.x) <= hw + tol && Math.abs(q.y - p.y) <= hh + tol;
+  const seg = (a, c, n = 48) => { for (let i = 0; i <= n; i++) if (touches({x: a.x + (c.x - a.x) * i / n, y: a.y + (c.y - a.y) * i / n})) return true; return false; };
+  const ring = pts => pts.some((q, i) => i && seg(pts[i - 1], q));
+  for (const o of scene.objects) {
+    if (o === b) continue;
+    const T = o.type;
+    if (T === 'plank') { const a = o.rot * Math.PI / 180, u = {x: Math.cos(a), y: Math.sin(a)}, n = {x: -u.y, y: u.x}, c = (s1, t) => ({x: o.x + u.x * s1 + n.x * t, y: o.y + u.y * s1 + n.y * t}), L = o.len / 2, t2 = o.thick / 2;
+      if (ring([c(-L, t2), c(L, t2), c(L, -t2), c(-L, -t2), c(-L, t2)])) return o.id; }
+    else if (T === 'track') { const pts = []; for (let i = 0; i <= 120; i++) { const t = (o.from + (o.to - o.from) * i / 120) * Math.PI / 180; pts.push({x: o.x + o.r * Math.cos(t), y: o.y + o.r * Math.sin(t)}); } if (ring(pts)) return o.id; }
+    else if (T === 'line' || T === 'vector' || T === 'cwire') { if (seg({x: o.x1, y: o.y1}, {x: o.x2, y: o.y2})) return o.id; }
+    else if (T === 'poly') { const pts = o.pts.map(q => ({x: q[0], y: q[1]})); if (ring(o.closed ? [...pts, pts[0]] : pts)) return o.id; }
+    else if (T === 'rect' || T === 'region' && o.shape === 'rect') { if (!o.rot && ring([{x: o.x, y: o.y}, {x: o.x + o.w, y: o.y}, {x: o.x + o.w, y: o.y + o.h}, {x: o.x, y: o.y + o.h}, {x: o.x, y: o.y}])) return o.id; }
+    else if (T === 'container' || T === 'utube') { if (p.x > o.x && p.x < o.x + o.w && p.y - hh >= o.y - tol && p.y - hh < o.y + o.h) return o.id; }
+  }
+  return null;
+}
 
 /** Build the simulation of a validated scene. */
 export function buildSim(scene, {dt = SIM_DT} = {}) {
@@ -300,6 +322,15 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
     systems.push(sys);
   }
 
+  /* a body at rest that is not on a floor, an incline or a block, nor on a string, but touches a part the solver does
+     not compute (a plank, a curved track, a drawn line or shape) or stands in a liquid, is held there: it stays a
+     figure, reported, instead of falling through what it rests on */
+  for (const b of bodies) {
+    if (owner.has(b.id) || b.on || Math.hypot(b.vx, b.vy) > 1e-9 || springsOf(b.id).length) continue;
+    const by = heldBy(scene, b);
+    if (by) reject([b.id], 'held_by_figure');
+  }
+
   /* group the remaining bodies joined by springs */
   const rest = bodies.filter(b => !owner.has(b.id)), parent = new Map(rest.map(b => [b.id, b.id]));
   const root = id => { while (parent.get(id) !== id) id = parent.get(id); return id; };
@@ -416,13 +447,14 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
 
   /* one step of one system, cut at the first event inside it */
   function stepSystem(s, h) {
+    /* a body that starts touching a surface (value 0) lands at once when it moves into it */
     s.prepare();
     const f = q => s.f(q), q0 = s.q, q1 = rk4(f, q0, h);
     const before = s.events(q0), after = s.events(q1);
     let first = null, tau = 1;
     after.forEach((e, i) => {
       const g0 = before[i] ? before[i].g : NaN;
-      if (!(g0 > 0 && e.g <= 0)) return;
+      if (!((g0 > 0 && e.g <= 0) || (e.code === 'landed' && g0 >= -1e-9 && g0 <= 0 && e.g < g0 - 1e-12))) return;
       let lo = 0, hi = 1;
       for (let k = 0; k < 40; k++) { const mid = (lo + hi) / 2, gm = s.events(rk4(f, q0, h * mid))[i]?.g; if (gm > 0) lo = mid; else hi = mid; }
       if (!first || hi < tau) { tau = hi; first = e; }
@@ -957,6 +989,126 @@ export function wellModel(o) {
   const psi = x => x < -L / 2 ? Math.cos(k1 * (x + L / 2)) : x > L / 2 ? st * Math.cos(k1 * (x - L / 2)) : below ? Math.exp(Math.log(st) * (x + L / 2) / L) : Math.cos(q * (x + L / 2)) * (1 + (st - 1) * (x + L / 2) / L);
   return {V: x => Math.abs(x) < L / 2 ? o.V0 : 0, xs: [-span, span], walls: [-L / 2, L / 2], Emax: Math.max(o.V0, E) * 1.35, T, levels: [{n: 0, E, psi}]};
 }
+/* ── a potential typed as V(x): the stationary Schrödinger equation −(ħ²/2m) ψ'' + V ψ = E ψ, solved numerically.
+   Units: x in nm, V and E in eV, m in electron masses; C = ħ²/(2 m_e) = 0.0380998 eV nm².
+   Bound states: the operator by central differences on a grid of N inner points over [x0, x1] with ψ = 0 at both ends
+   (a symmetric tridiagonal matrix: 2C/h² + V_i on the diagonal, −C/h² beside it). Its eigenvalues are found one by
+   one by bisection with the Sturm sequence count (how many eigenvalues lie below λ), each eigenvector by inverse
+   iteration (the tridiagonal system solved by the Thomas algorithm). The error is O(h²) relative to the level.
+   Scattering at energy E: V is cut into slabs where it is constant (cells of equal value merged), and (ψ, ψ') is
+   carried through each slab by its exact 2×2 matrix (cos kd, sin kd / k; −k sin kd, cos kd), with k² = (E − V)/C
+   (cosh and sinh where E < V). Starting on the right from the outgoing wave t e^{ik_R x} (t = 1) and going left, the
+   wave on the left splits into incident A e^{ik_L x} and reflected B e^{−ik_L x}; T = (k_R/k_L)/|A|², R = |B/A|².
+   For piecewise-constant V this is exact; a smooth V is sampled at the cells' midpoints. ── */
+export const HBAR2_2ME = HBAR * HBAR / (2 * M_E) / EV * 1e18;   /* eV nm² */
+/** the lowest `count` eigenvalues and normalised eigenvectors (∫ψ² dx = 1) of −C ψ'' + V ψ on [x0, x1], ψ(x0) = ψ(x1) = 0 */
+export function boundStates(V, x0, x1, {mass = 1, N = 600, count = 4} = {}) {
+  const C = HBAR2_2ME / mass, h = (x1 - x0) / (N + 1), off = -C / (h * h);
+  const xs = new Float64Array(N), d = new Float64Array(N);
+  for (let i = 0; i < N; i++) { xs[i] = x0 + (i + 1) * h; const v = V(xs[i]); d[i] = 2 * C / (h * h) + (Number.isFinite(v) ? Math.max(-1e6, Math.min(1e6, v)) : 1e6); }
+  /* eigenvalues below lam: the sign changes of the Sturm sequence */
+  const below = lam => { let q = d[0] - lam, c = q < 0 ? 1 : 0; for (let i = 1; i < N; i++) { q = d[i] - lam - off * off / (q === 0 ? 1e-300 : q); if (q < 0) c++; } return c; };
+  let lo = Infinity, hi = -Infinity; for (let i = 0; i < N; i++) { lo = Math.min(lo, d[i] - 2 * Math.abs(off)); hi = Math.max(hi, d[i] + 2 * Math.abs(off)); }
+  const out = [];
+  for (let k = 0; k < Math.min(count, N); k++) {
+    let a = lo, b = hi;
+    for (let it = 0; it < 200 && b - a > 1e-13 * Math.max(1, Math.abs(a) + Math.abs(b)); it++) { const m = (a + b) / 2; if (below(m) > k) b = m; else a = m; }
+    const E = (a + b) / 2;
+    /* inverse iteration: (H − (E + δ)) y = previous y */
+    let y = new Float64Array(N).fill(1); y[0] = 0.5;
+    const shift = E + 1e-10 * Math.max(1, Math.abs(E));
+    for (let it = 0; it < 4; it++) {
+      const cp = new Float64Array(N), dp = new Float64Array(N);
+      let den = d[0] - shift; cp[0] = off / den; dp[0] = y[0] / den;
+      for (let i = 1; i < N; i++) { den = d[i] - shift - off * cp[i - 1]; if (Math.abs(den) < 1e-300) den = 1e-300; cp[i] = off / den; dp[i] = (y[i] - off * dp[i - 1]) / den; }
+      const z = new Float64Array(N); z[N - 1] = dp[N - 1];
+      for (let i = N - 2; i >= 0; i--) z[i] = dp[i] - cp[i] * z[i + 1];
+      let nrm = 0; for (let i = 0; i < N; i++) nrm += z[i] * z[i]; nrm = Math.sqrt(nrm * h) || 1;
+      for (let i = 0; i < N; i++) z[i] /= nrm;
+      y = z;
+    }
+    /* a fixed sign: the first lobe up */
+    let first = 0; for (let i = 0; i < N; i++) if (Math.abs(y[i]) > 1e-3 * Math.sqrt(1 / (x1 - x0))) { first = y[i]; break; }
+    if (first < 0) for (let i = 0; i < N; i++) y[i] = -y[i];
+    out.push({n: k + 1, E, xs, psi: y});
+  }
+  return out;
+}
+/* complex numbers as [re, im] */
+const cx = {add: (a, b) => [a[0] + b[0], a[1] + b[1]], mul: (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]], scale: (a, k) => [a[0] * k, a[1] * k],
+  div: (a, b) => { const q = b[0] * b[0] + b[1] * b[1]; return [(a[0] * b[0] + a[1] * b[1]) / q, (a[1] * b[0] - a[0] * b[1]) / q]; }, abs2: a => a[0] * a[0] + a[1] * a[1]};
+/* the slab matrix carrying (ψ, ψ') over a distance d where k² = q (q = (E − V)/C) */
+function slabMatrix(q, d) {
+  if (q > 1e-14) { const k = Math.sqrt(q), c = Math.cos(k * d), s = Math.sin(k * d); return [c, s / k, -k * s, c]; }
+  if (q < -1e-14) { const k = Math.sqrt(-q), kd = Math.max(-700, Math.min(700, k * d)), c = Math.cosh(kd), s = Math.sinh(kd); return [c, s / k, k * s, c]; }
+  return [1, d, 0, 1];
+}
+/** V cut into slabs [{a, b, V}] over [x0, x1] (N cells, sampled at their midpoints, equal neighbours merged) */
+export function potentialSlabs(V, x0, x1, N = 1200) {
+  const h = (x1 - x0) / N, out = [];
+  for (let i = 0; i < N; i++) {
+    let v = V(x0 + (i + 0.5) * h); if (!Number.isFinite(v)) v = 1e6;
+    const last = out[out.length - 1];
+    if (last && Math.abs(last.V - v) <= 1e-12 * Math.max(1, Math.abs(v))) last.b = x0 + (i + 1) * h; else out.push({a: x0 + i * h, b: x0 + (i + 1) * h, V: v});
+  }
+  return out;
+}
+/** a scattering state at energy E coming from the left: T, R and ψ(x) on the grid (complex), for V on [x0, x1] and
+ *  V(x0), V(x1) continued outside */
+export function scatterState(V, x0, x1, E, {mass = 1, N = 1200, samples = 400} = {}) {
+  const C = HBAR2_2ME / mass, slabs = potentialSlabs(V, x0, x1, N), VL = slabs[0].V, VR = slabs[slabs.length - 1].V;
+  if (!(E > VL)) return {T: 0, R: 1, kL: 0, kR: 0, xs: [], psi: [], ok: false};
+  const kL = Math.sqrt((E - VL) / C), open = E > VR, kR = open ? Math.sqrt((E - VR) / C) : Math.sqrt((VR - E) / C);
+  /* (ψ, ψ') at x1: outgoing e^{ik x}, or decaying e^{−κ x} */
+  let psi = [1, 0], dpsi = open ? [0, kR] : [-kR, 0];
+  const pts = [];
+  const sampleAt = new Float64Array(samples + 1); for (let i = 0; i <= samples; i++) sampleAt[i] = x0 + (x1 - x0) * i / samples;
+  let si = samples;
+  pts[si] = {x: x1, re: psi[0], im: psi[1]};
+  for (let j = slabs.length - 1; j >= 0; j--) {
+    const sl = slabs[j], q = (E - sl.V) / C;
+    /* inside the slab: the sample points, from its right end */
+    while (si - 1 >= 0 && sampleAt[si - 1] >= sl.a - 1e-12) {
+      si--; const M = slabMatrix(q, sampleAt[si] - sl.b);
+      pts[si] = {x: sampleAt[si], re: M[0] * psi[0] + M[1] * dpsi[0], im: M[0] * psi[1] + M[1] * dpsi[1]};
+    }
+    const M = slabMatrix(q, sl.a - sl.b);
+    const p2 = cx.add(cx.scale(psi, M[0]), cx.scale(dpsi, M[1])), d2 = cx.add(cx.scale(psi, M[2]), cx.scale(dpsi, M[3]));
+    psi = p2; dpsi = d2;
+  }
+  /* at x0: ψ = A e^{ik x0} + B e^{−ik x0}, ψ' = ik(A e^{ik x0} − B e^{−ik x0}) (phases taken at x0) */
+  const ik = [0, kL], A = cx.scale(cx.add(psi, cx.div(dpsi, ik)), 0.5), B = cx.scale(cx.add(psi, cx.scale(cx.div(dpsi, ik), -1)), 0.5);
+  const a2 = cx.abs2(A), T = open ? (kR / kL) / a2 : 0, R = cx.abs2(B) / a2;
+  const norm = 1 / Math.sqrt(a2);
+  const phase = cx.div([1, 0], A);   /* ψ / A: incident amplitude 1 */
+  const psiOut = pts.map(p => { const z = cx.mul([p.re, p.im], phase); return {x: p.x, re: z[0], im: z[1]}; });
+  return {T, R, kL, kR, ok: true, open, xs: psiOut.map(p => p.x), psi: psiOut, norm};
+}
+/** T(E) over (Elo, Ehi] at n energies */
+export function transmissionCurve(V, x0, x1, Ehi, {mass = 1, n = 160, N = 800} = {}) {
+  const out = [];
+  for (let i = 1; i <= n; i++) { const E = Ehi * i / n, r = scatterState(V, x0, x1, E, {mass, N, samples: 2}); out.push({E, T: r.T}); }
+  return out;
+}
+/** everything a qpot object draws: V on its range, the bound states below both ends' V, a scattering state at E, T(E) */
+export function qpotModel(o, {N = 500} = {}) {
+  const V = boundExpr(o.V, o.params);
+  if (!V) return {ok: false};
+  const x0 = Math.min(o.xmin, o.xmax), x1 = Math.max(o.xmin, o.xmax);
+  if (!(x1 - x0 > 1e-9)) return {ok: false};
+  const vs = []; for (let i = 0; i <= 400; i++) { const x = x0 + (x1 - x0) * i / 400, v = V(x); vs.push({x, V: Number.isFinite(v) ? v : NaN}); }
+  const finite = vs.filter(p => Number.isFinite(p.V)), Vmin = Math.min(...finite.map(p => p.V)), Vmax = Math.max(...finite.map(p => p.V));
+  const edge = Math.min(Number.isFinite(V(x0)) ? V(x0) : Infinity, Number.isFinite(V(x1)) ? V(x1) : Infinity);
+  /* bound: below what both ends reach (a state above it is only held by the box's walls) */
+  const states = o.levels > 0 ? boundStates(V, x0, x1, {mass: o.mass, N, count: o.levels}).map(s => ({...s, bound: s.E < edge - 1e-9})) : [];
+  const scatter = o.E > 0 ? scatterState(V, x0, x1, o.E, {mass: o.mass, samples: 400}) : null;
+  const shown = states.filter(s => s.bound);
+  const Etop = Math.max(Vmax > Vmin ? Vmax : Vmin + 1, ...shown.map(s => s.E), o.E || 0);
+  const Emax = o.Emax > 0 ? o.Emax : Etop + 0.25 * (Etop - Math.min(0, Vmin));
+  const curve = o.tplot ? transmissionCurve(V, x0, x1, Emax, {mass: o.mass}) : null;
+  return {ok: true, V, x0, x1, vs, Vmin: Math.min(0, Vmin), Vmax, Emax, states, scatter, curve, edge};
+}
+
 /** energy levels (eV): hydrogen E_n = −13.6057/n², or the custom list; transitions "a-b" with λ = hc/|ΔE| */
 export function levelModel(o) {
   const E = o.kind === 'hydrogen' ? Array.from({length: o.n}, (_, i) => ({n: i + 1, E: -13.605693 / (i + 1) ** 2})) : String(o.values).split(/[,;\s]+/).map(Number).filter(Number.isFinite).slice(0, 12).sort((a, b) => a - b).map((e, i) => ({n: i + 1, E: e}));
@@ -1001,6 +1153,7 @@ export function computedInfo(scene) {
     else if (o.type === 'oarrow') { const im = opticImage(scene, o); if (im) out.push({id: o.id, type: o.type, x: im.x, h: im.h, m: im.m, real: im.real}); }
     else if (o.type === 'slits') out.push({id: o.id, type: o.type, dy: fringeSpacing(o), n: o.n});
     else if (o.type === 'well') { const w = wellModel(o); out.push({id: o.id, type: o.type, E: w.levels.map(l => l.E), T: w.T}); }
+    else if (o.type === 'qpot') { const q = qpotModel(o); if (q.ok) out.push({id: o.id, type: o.type, E: q.states.filter(x => x.bound).map(x => x.E), T: q.scatter?.ok ? q.scatter.T : undefined}); }
     else if (o.type === 'levels') out.push({id: o.id, type: o.type, trans: levelModel(o).trans});
     else if (o.type === 'spacetime') out.push({id: o.id, type: o.type, gamma: lorentzGamma(o.beta)});
     else if (o.type === 'curve' && o.kind !== 'func' && o.kind !== 'isochore') out.push({id: o.id, type: o.type, W: processWork(o.kind, o)});

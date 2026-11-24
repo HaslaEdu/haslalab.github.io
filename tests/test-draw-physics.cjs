@@ -405,3 +405,119 @@ test('figure styles come from the measured table: each preset has its row, 수�
   const f=S.validateScene({style:'suneung',objects:[{id:'f',type:'floor',x:0,y:0,w:2}]}).scene,f2={...f,style:'textbook'};
   assert.ok(R.renderSVG(f,{view:{x:-1,y:-1,w:4,h:2}}).split('<path').length<R.renderSVG(f2,{view:{x:-1,y:-1,w:4,h:2}}).split('<path').length);
 });
+
+/* ── the mechanics regression (bodies fell through planks, tracks and lines when played; mounts left their pulleys;
+   a free body touching a floor fell through it; labels of tall figures came out tiny on screen) ── */
+test('mechanics templates: every one runs without NaN; bodies on parts the solver does not compute are held, not dropped',async()=>{
+  const {S,P}=await load();
+  for(const k of S.TEMPLATE_KEYS.filter(k=>S.TEMPLATE_DOMAIN[k]==='mech')){
+    const sc=S.validateScene(S.template(k)).scene,sim=P.buildSim(sc);sim.run(1);
+    for(const [id,p] of sim.poses())assert.ok(Number.isFinite(p.x)&&Number.isFinite(p.y),`${k}: ${id} is finite`);
+    const held=new Set(sim.unsupported.filter(u=>u.code==='held_by_figure').flatMap(u=>u.ids));
+    for(const b of sc.objects.filter(S.isBody)){const by=P.heldBy(sc,b);if(by&&!b.on&&!b.vx&&!b.vy)assert.ok(held.has(b.id),`${k}: ${b.id} rests on ${by} and is held`);}
+  }
+  const ids=k=>{const sim=P.buildSim(S.validateScene(S.template(k)).scene);return sim.unsupported.filter(u=>u.code==='held_by_figure').flatMap(u=>u.ids).sort().join();};
+  assert.equal(ids('seesaw'),'m1,m2','blocks on a seesaw plank stay');assert.equal(ids('loop_track'),'b1','a ball on a curved ramp stays');assert.equal(ids('hinged_beam'),'m1','a block hung from a drawn line stays');
+  assert.equal(ids('buoyancy'),'A,b1','bodies in a liquid stay');
+  /* the six classic set-ups still move as before */
+  const kind=k=>P.buildSim(S.validateScene(S.template(k)).scene).systems.map(s=>s.kind).join();
+  assert.deepEqual(['atwood','incline_pulley','spring_block','pendulum','projectile','conical'].map(kind),['chain','chain','surface','pendulum','free','conical']);
+  /* a free block put exactly on a floor (not "on" it) lands at once instead of falling through it */
+  const sc=scene(S,[{id:'f',type:'floor',x:0,y:0,w:4},{id:'b',type:'block',x:1,y:0.15,w:0.3,h:0.3}]);
+  const sim=P.buildSim(sc);sim.run(1);assert.equal(sim.events[0]?.code,'landed');assert.ok(sim.poses().get('b').y>0.149,'still on the floor');
+  /* a block standing on a drawn rectangle (a table drawn with the tools) stays on it */
+  const tb=P.buildSim(scene(S,[{id:'t',type:'rect',x:0,y:0,w:2,h:0.5},{id:'b',type:'block',x:1,y:0.65,w:0.3,h:0.3}]));assert.deepEqual(tb.unsupported.map(u=>u.code),['held_by_figure']);
+  /* template details: the amplitude mark sits under the floor; the string to the table block runs level to the pulley's top */
+  const sb=S.validateScene(S.template('spring_block')).scene,d=sb.objects.find(o=>o.id==='d1');assert.ok(d.y1<0&&d.offset===0&&d.x2>d.x1);
+  const kp=S.validateScene(S.template('ks_pulley')).scene,A=kp.objects.find(o=>o.id==='A'),p1=kp.objects.find(o=>o.id==='p1');near(p1.y+p1.r,A.y,1e-9,'the pulley top is level with A');
+});
+test('labels on screen: a figure shown smaller (a phone, a tall figure held to the canvas height) gets larger labels',async()=>{
+  const {R}=await load();
+  assert.equal(R.labelScaleFor(730,612,459),1,'a wide figure at full width: as drawn');
+  assert.ok(R.labelScaleFor(730,612,1017)>1.25,'Atwood (tall) shrunk to 612 px high: labels grow');
+  assert.ok(R.labelScaleFor(346,Infinity,459)>1.7,'on a 390-px phone');
+  assert.ok(R.labelScaleFor(100,100,5000)<=2.6,'capped');
+});
+
+/* ── particles and other minimal defaults ── */
+test('particles are plain by default (no velocity arrow); the arrow is an option; old scenes keep theirs',async()=>{
+  const {S,R}=await load();
+  assert.equal(S.defaults('particle').arrow,false);assert.equal(S.defaults('wave').showLambda,false);assert.equal(S.defaults('wave').showA,false);assert.equal(S.defaults('levels').showLambda,false);
+  const draw=o=>R.renderSVG(scene(S,[{id:'p',type:'particle',x:0,y:0,...o}]),{width:800,view:{x:-1,y:-1,w:4,h:2}});
+  for(const kind of ['neutron','proton','electron','positron','alpha']){
+    const plain=draw({kind}),withArrow=draw({kind,arrow:true});
+    assert.doesNotMatch(plain,/<line /,`${kind}: no arrow by default`);assert.match(withArrow,/<line /,`${kind}: the arrow when asked`);
+  }
+  const old=S.validateScene({objects:[{id:'p',type:'particle',x:0,y:0,kind:'proton',len:1}]}).scene.objects[0];assert.equal(old.arrow,true,'a scene written before keeps its arrow');
+  assert.equal(S.validateScene({objects:[{id:'p',type:'particle',x:0,y:0,kind:'proton',len:0}]}).scene.objects[0].arrow,false);
+  assert.equal(S.validateScene({objects:[{id:'w',type:'wave',x:0,y:0}]}).scene.objects[0].showLambda,true,'an old wave keeps its λ mark');
+  for(const k of ['alpha_decay','compton'])assert.ok(S.validateScene(S.template(k)).scene.objects.filter(o=>o.type==='particle'&&o.kind!=='photon').every(o=>o.arrow),`${k} still shows its arrows`);
+});
+
+/* ── basic drawing shapes ── */
+test('basic shapes: rect, ellipse, polyline/polygon/pen and Bézier are checked, drawn, exported; points are simplified',async()=>{
+  const {S,R}=await load();
+  const sc=scene(S,[{id:'r',type:'rect',x:0,y:0,w:1,h:0.6,r:0.1,fill:'hatch',color:'blue'},{id:'e',type:'ellipse',x:1.2,y:0,w:1,h:0.5,fill:'tint',color:'red',pattern:'dashed'},
+    {id:'p',type:'poly',pts:[[0,1],[0.5,1.4],[1,1]],heads:'end',smooth:true},{id:'q',type:'poly',pts:[[2,1],[2.5,1.5],[3,1]],closed:true,fill:'lightgray'},
+    {id:'b',type:'bezier',x1:0,y1:2,cx1:0.5,cy1:2.5,cx2:1,cy2:1.5,x2:1.5,y2:2,heads:'both',color:'green'},{id:'l',type:'line',x1:0,y1:3,x2:1,y2:3,pattern:'solid',heads:'end',color:'orange'},{id:'t',type:'label',x:2,y:3,text:'A',color:'blue'}]);
+  for(const style of S.STYLE_KEYS){const svg=R.renderSVG({...sc,style},{width:800,view:{x:-0.5,y:-0.5,w:4,h:4},...R.printScale(style)});assert.doesNotMatch(svg,/NaN|undefined|Infinity/,style);
+    assert.match(svg,/stroke="#1d4ed8"/);assert.match(svg,/fill="#c0262d" fill-opacity="0.16"/);assert.match(svg,/ C|C[0-9.]/);assert.match(svg,/fill="#e6e8ec"/);}
+  const ed=R.renderSVG(sc,{width:800,view:{x:-0.5,y:-0.5,w:4,h:4},edit:true,selected:['p']});assert.equal((ed.match(/data-handle="p\d"/g)||[]).length,3,'a handle for each vertex');
+  assert.match(R.renderSVG(sc,{width:800,view:{x:-0.5,y:-0.5,w:4,h:4},edit:true,selected:['b']}),/data-handle="c1"[\s\S]*data-handle="c2"/,'Bézier control handles');
+  for(const bad of [{pts:[[0,0]]},{pts:[[0,'a'],[1,1]]},{pts:[[0,0],[1e6,0]]},{pts:'0,0 1,1'}])assert.ok(!S.validateScene({objects:[{id:'p',type:'poly',...bad}]}).ok,JSON.stringify(bad));
+  assert.ok(!S.validateScene({objects:[{id:'r',type:'rect',x:0,y:0,w:1,h:1,color:'purple'}]}).ok,'only the listed colours');
+  assert.ok(S.SHAPE_TYPES.every(t=>S.TYPES.includes(t)));
+  const ext=S.objectExtent(sc.objects.find(o=>o.id==='b'));assert.ok(ext.y+ext.h>2.1&&ext.y<1.95,'a Bézier\'s box holds its bulges');
+  const raw=Array.from({length:300},(_,i)=>({x:i/100,y:Math.sin(i/30)+(i%2?1e-4:-1e-4)})),simp=S.simplifyPath(raw,0.005,200);
+  assert.ok(simp.length<60&&simp.length>=5,`simplified to ${simp.length}`);assert.deepEqual(simp[0],raw[0]);assert.deepEqual(simp.at(-1),raw.at(-1));
+  const bp=S.bezierPoints({x1:0,y1:0,cx1:0,cy1:1,cx2:1,cy2:1,x2:1,y2:0},4);assert.deepEqual([bp[0],bp[4]],[{x:0,y:0},{x:1,y:0}]);near(bp[2].y,0.75,1e-12,'B(½)');
+  /* a scene with shapes survives JSON and the paper's figure (SVG) */
+  const again=S.validateScene(JSON.parse(JSON.stringify(sc)));assert.ok(again.ok);assert.deepEqual(again.scene,sc);
+});
+
+/* ── functions with parameters ── */
+test('formulas: comparisons, conditionals and named parameters with slider ranges',async()=>{
+  const {S,R}=await load();
+  const V=S.compileExpr('x<0 ? 0 : (x<a ? V0 : 0)',['x','a','V0']);assert.deepEqual([-1,0.5,2].map(x=>V([x,1,5])),[0,5,0]);
+  assert.equal(S.compileExpr('x>=1 && x<=2',['x'])([1.5]),1);assert.equal(S.compileExpr('x<0 || x>3')(2),0);assert.equal(S.compileExpr('step(x-1)')(2),1);
+  assert.equal(S.compileExpr('2x^2')(3),18,'implicit products still work');assert.equal(S.compileExpr('kx',['x','k'])([2,3]),6,'"kx" is k·x');
+  assert.equal(S.compileExpr('a+1'),null,'an unknown name is refused');assert.equal(S.compileExpr('x ? 1'),null);assert.equal(S.compileExpr('alert(1)'),null);
+  assert.deepEqual(S.parseParams('a=1 [0.2, 3], V0=5'),[{name:'a',value:1,min:0.2,max:3},{name:'V0',value:5,min:0,max:10}]);
+  for(const bad of ['x=1','a=1, a=2','a=','sin=2','a=1 [3, 1]','a=1;; b'])assert.equal(S.parseParams(bad),null,bad);
+  assert.deepEqual(S.parseParams(S.paramsText(S.parseParams('w=3 [0.5, 8], A=-1'))),S.parseParams('w=3 [0.5, 8], A=-1'),'the text round-trips');
+  const f=S.boundExpr('A exp(-x/tau) cos(w x)','A=2, tau=3, w=3');near(f(1),2*Math.exp(-1/3)*Math.cos(3),1e-12,'bound');
+  const mk=params=>({objects:[{id:'G',type:'graph',x:0,y:0,w:3,h:2,auto:false,xmin:0,xmax:6,ymin:-2,ymax:2},{id:'c',type:'curve',graph:'G',kind:'func',params,expr:'A sin(k x)',x1:0,x2:6}]});
+  assert.ok(S.validateScene(mk('A=1, k=1')).ok);assert.ok(!S.validateScene(mk('A=1')).ok,'the formula names a parameter that is not there');
+  const s1=R.renderSVG(S.validateScene(mk('A=1, k=1')).scene,{width:800,view:{x:-0.5,y:-0.5,w:4,h:3}}),s2=R.renderSVG(S.validateScene(mk('A=1.5, k=2')).scene,{width:800,view:{x:-0.5,y:-0.5,w:4,h:3}});
+  assert.notEqual(s1,s2,'a slider value changes the plot');assert.doesNotMatch(s2,/NaN/);
+  assert.ok(S.validateScene(S.template('param_function')).ok);
+});
+
+/* ── the Schrödinger equation for a typed potential ── */
+test('typed potentials: finite differences give the infinite well, (n + ½)ħω and a finite well\'s count; transfer matrices give a barrier\'s T',async()=>{
+  const {S,P,R}=await load();
+  const C=hbar*hbar/(2*me)/eV*1e18;near(P.HBAR2_2ME,C,1e-12,'ħ²/2m in eV nm²');
+  /* infinite well of width L: E_n = n²π²ħ²/(2mL²) */
+  for(const [L,mass] of [[1,1],[0.5,0.067]]){const st=P.boundStates(()=>0,0,L,{mass,N:1500,count:4});st.forEach(s=>near(s.E,P.infiniteWellEnergy(s.n,L,mass),2e-5,`E_${s.n}, L=${L}`));
+    const h2=L/1501;near(st[0].psi.reduce((a,v)=>a+v*v,0)*h2,1,1e-9,'normalised');}
+  /* harmonic oscillator ½kx²: E_n = (n + ½) ħω, ħω = √(2Ck/m) */
+  for(const k of [2,8]){const hw=Math.sqrt(2*C*k),st=P.boundStates(S.boundExpr('0.5 k x^2','k='+k),-4,4,{N:2000,count:5});st.forEach(s=>near(s.E,(s.n-0.5)*hw,2e-4,`HO level ${s.n}, k=${k}`));}
+  /* finite well of depth V0, width 1 nm: ⌈2z₀/π⌉ bound states, energies close to the transcendental roots */
+  for(const V0 of [0.5,3,10]){const V=S.boundExpr('abs(x)<a/2 ? 0 : V0',`a=1, V0=${V0}`),st=P.boundStates(V,-3,3,{N:2000,count:12}).filter(s=>s.E<V0);
+    const z0=0.5e-9*Math.sqrt(2*me*V0*eV)/hbar;assert.equal(st.length,Math.ceil(2*z0/Math.PI),`bound states for V0=${V0}`);
+    P.finiteWellLevels(1,V0).forEach((l,i)=>near(st[i].E,l.E,3e-3,`finite level ${i+1}, V0=${V0}`));}
+  /* rectangular barrier: T = 1/(1 + V0² sinh²(κa)/(4E(V0−E))) below the top, with sin above it; T + R = 1 */
+  const B=S.boundExpr('abs(x) < a/2 ? V0 : 0','a=0.4, V0=4');
+  for(const E of [0.5,2.5,3.9,4.5,8]){const q=Math.sqrt(Math.abs(4-E)/C),T=E<4?1/(1+16*Math.sinh(q*0.4)**2/(4*E*(4-E))):1/(1+16*Math.sin(q*0.4)**2/(4*E*(E-4)));
+    const r=P.scatterState(B,-1,1,E);near(r.T,T,1e-9,`T at E=${E}`);near(r.T+r.R,1,1e-9,'T + R = 1');}
+  /* a step up: T = 4 k₁k₂/(k₁+k₂)² above it, 0 below; the wave decays inside */
+  const st2=S.boundExpr('x<0 ? 0 : V0','V0=3');{const r=P.scatterState(st2,-1,1,5),k1=Math.sqrt(5/C),k2=Math.sqrt(2/C);near(r.T,4*k1*k2/(k1+k2)**2,1e-9,'step T');}
+  {const r=P.scatterState(st2,-1,1,2);assert.equal(r.T,0);near(r.R,1,1e-9,'total reflection');const end=r.psi.at(-1);assert.ok(Math.hypot(end.re,end.im)<0.05,'evanescent inside');}
+  /* the object: a template draws its levels and its scattering state without NaN; T(E) rises to 1 */
+  for(const k of ['custom_well','custom_barrier']){const sc=S.validateScene(S.template(k)).scene,o=sc.objects[0],m=P.qpotModel(o);assert.ok(m.ok);
+    assert.doesNotMatch(R.renderSVG(sc,{width:800,view:sc.view}),/NaN|undefined/);
+    if(o.levels)assert.equal(m.states.filter(s=>s.bound).length,o.levels,'its levels are bound');
+    if(o.tplot){assert.ok(m.curve.at(-1).T>0.5&&m.curve[5].T<0.01,"T(E) grows from ~0 past the top");near(m.scatter.T,P.scatterState(m.V,m.x0,m.x1,o.E).T,1e-12,'T at its E');}}
+  assert.ok(!S.validateScene({objects:[{id:'Q',type:'qpot',x:0,y:0,V:'V0 x',params:'a=1'}]}).ok,'V names a parameter that is not there');
+  const info=P.computedInfo(S.validateScene(S.template('custom_barrier')).scene);assert.equal(info[0].type,'qpot');assert.ok(info[0].T>0&&info[0].T<1);
+});

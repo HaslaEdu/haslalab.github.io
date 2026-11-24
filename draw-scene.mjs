@@ -82,13 +82,26 @@
        label    x,y text size box          dim x1,y1,x2,y2 offset text      arc x,y r from to text arrow
        axes     x,y lx ly xlabel ylabel    line x1,y1,x2,y2 pattern heads   vector x1,y1,x2,y2 label width head
        region   x,y w,h shape fill pattern label                            point x,y label filled
+   drawing (the editor's tools; color: black gray lightgray blue red green orange; fill: none white lightgray gray dark
+   hatch dots cross tint)
+       rect x,y,w,h r (corner) color fill pattern rot     ellipse x,y,w,h color fill pattern rot
+       poly pts [[x,y],…] (2–400) closed smooth color fill pattern heads     (polyline, polygon, the pen's strokes)
+       bezier x1,y1 cx1,cy1 cx2,cy2 x2,y2 color pattern heads
+       line, label and arc also take color (arc a pattern).
+   a typed potential
+       qpot x,y,w,h V (expr in x, nm → eV) params ("a=1 [0.2, 3], V0=5") xmin xmax mass showV levels psi E tplot Emax
+            labels — its bound states and a scattering state, solved numerically (draw-physics.mjs qpotModel)
+   A curve's expr can use its params too. A particle's velocity arrow is off unless arrow (a scene written before,
+   without the field, keeps it).
    validateScene() checks every field (type, range, references) and returns the normalised version-2 scene. */
 
 export const SCENE_FORMAT = 'haslalab-scene', SCENE_VERSION = 2, MAX_OBJECTS = 120;
 export const BODY_TYPES = ['block', 'ball', 'wheel'];
 export const SURFACE_TYPES = ['floor', 'incline'];
 export const ANCHOR_TYPES = ['pivot', 'ceiling', 'wall', 'floor'];
-export const MARK_TYPES = ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'panel', 'brace', 'callout'];
+export const MARK_TYPES = ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'panel', 'brace', 'callout', 'rect', 'ellipse', 'poly', 'bezier'];
+/* the plain shapes the drawing tools make */
+export const SHAPE_TYPES = ['line', 'rect', 'ellipse', 'poly', 'bezier', 'arc', 'label', 'dim'];
 export const STYLE_KEYS = ['textbook', 'university', 'olympiad', 'jee', 'suneung', 'print'];
 export const ELEMENT_KINDS = ['wire', 'resistor', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer', 'rheostat', 'dielectric'];
 /* round bodies (a ball, a wheel) touch a surface at one point and are joined at their centre */
@@ -105,7 +118,13 @@ const txt = (d, max) => ({k: 'txt', d, max});
 const bool = d => ({k: 'bool', d});
 const ref = (types, d = '') => ({k: 'ref', d, types});
 const pick = (d, list) => ({k: 'enum', d, list});
-const expr = d => ({k: 'expr', d, max: 120});
+const expr = d => ({k: 'expr', d, max: 160});
+const params = d => ({k: 'params', d, max: 200});
+/* stroke colours and fills of the drawing tools (draw-render.mjs COLOR_HEX): black and grays first, a few colours */
+export const COLORS = ['black', 'gray', 'lightgray', 'blue', 'red', 'green', 'orange'];
+export const FILLS = ['none', 'white', 'lightgray', 'gray', 'dark', 'hatch', 'dots', 'cross', 'tint'];
+const COLOR = pick('black', COLORS), FILL = pick('none', FILLS);
+const HEADS = pick('none', ['none', 'end', 'start', 'both']);
 const X = num(0, -COORD, COORD), Y = num(0, -COORD, COORD), X1 = X, Y1 = Y, X2 = num(1, -COORD, COORD), Y2 = Y;
 const SEG = {x1: X1, y1: Y1, x2: X2, y2: Y2};
 const MOTION = {vx: num(0, -SPEED, SPEED), vy: num(0, -SPEED, SPEED), showV: bool(false), vLabel: txt('v_0', 24)};
@@ -156,7 +175,7 @@ export const FIELDS = {
   engine: {x: X, y: Y, size: num(1, 0.2, 40), kind: pick('engine', ['engine', 'fridge']), th: txt('T_H', 24), tc: txt('T_C', 24), qh: txt('Q_H', 24), qc: txt('Q_C', 24), wl: txt('W', 24)},
   graph: {...BOX(3, 2.2), xmin: num(0, -DATA, DATA), xmax: num(1, -DATA, DATA), ymin: num(0, -DATA, DATA), ymax: num(1, -DATA, DATA), auto: bool(true), xlabel: txt('x', 24), ylabel: txt('y', 24), ticks: bool(false), grid: bool(false), origin: txt('O', 8),
     xt: txt('', 120), yt: txt('', 120)},
-  curve: {graph: ref(['graph']), kind: pick('func', ['func', 'isotherm', 'adiabat', 'isobar', 'isochore', 'points']), x1: num(0, -DATA, DATA), x2: num(1, -DATA, DATA), y1: num(1, -DATA, DATA), y2: num(0.5, -DATA, DATA), gamma: num(1.4, 1.01, 3), expr: expr('sin(x)'),
+  curve: {graph: ref(['graph']), kind: pick('func', ['func', 'isotherm', 'adiabat', 'isobar', 'isochore', 'points']), x1: num(0, -DATA, DATA), x2: num(1, -DATA, DATA), y1: num(1, -DATA, DATA), y2: num(0.5, -DATA, DATA), gamma: num(1.4, 1.01, 3), params: params(''), expr: expr('sin(x)'),
     data: txt('0,0 1,2 3,2 4,0', 240), heads: pick('none', ['none', 'mid', 'end']), pattern: pick('solid', PATTERNS), shade: bool(false), label: L()},
   cycle: {graph: ref(['graph']), kind: pick('carnot', ['carnot', 'otto', 'stirling']), v1: num(1, 1e-6, DATA), v2: num(2, 1e-6, DATA), t1: num(600, 1e-6, DATA), t2: num(400, 1e-6, DATA), gamma: num(1.4, 1.01, 3), labels: bool(true), arrows: bool(true), shade: bool(false)},
   /* optics */
@@ -174,32 +193,44 @@ export const FIELDS = {
   wavefront: {x: X, y: Y, kind: pick('circular', ['plane', 'circular']), n: num(5, 1, 30), spacing: num(0.3, 0.02, 50), angle: num(0, -360, 360), h: num(1.4, 0.05, 200)},
   /* waves */
   wave: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, 0, 50), lambda: num(1.6, 0.02, 400), phase: num(0, -360, 360), kind: pick('travel', ['travel', 'standing']), n: num(3, 1, 20), ends: pick('none', ['none', 'fixed']),
-    showLambda: bool(true), showA: bool(true), envelope: bool(true), axis: bool(true), arrow: bool(false), label: L()},
+    showLambda: bool(false), showA: bool(false), envelope: bool(true), axis: bool(true), arrow: bool(false), label: L()},
   pulse: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, -50, 50), width: num(0.6, 0.02, 100), pos: num(0.35, 0, 1), shape: pick('gauss', ['gauss', 'tri', 'square']), dir: pick('right', ['right', 'left', 'none']), axis: bool(true), label: L()},
   interference: {x: X, y: Y, d: num(1, 0.01, 100), lambda: num(0.4, 0.01, 100), n: num(5, 1, 30), nodal: bool(true), labels: bool(true), rot: ROT},
   /* modern physics */
   well: {...BOX(4, 3), kind: pick('infinite', ['infinite', 'finite', 'harmonic', 'barrier', 'step']), L: num(1, 1e-3, 1e4), V0: num(5, 0, 1e6), mass: num(1, 1e-3, 1e6), levels: num(3, 0, 8), psi: pick('psi', ['none', 'psi', 'prob']), E: num(2, 0, 1e6), labels: bool(true)},
-  levels: {...BOX(2.6, 3), kind: pick('hydrogen', ['hydrogen', 'custom']), n: num(5, 2, 10), values: txt('-13.6,-3.4,-1.51,-0.85', 160), trans: txt('3-2,2-1', 80), labels: bool(true), showLambda: bool(true)},
+  levels: {...BOX(2.6, 3), kind: pick('hydrogen', ['hydrogen', 'custom']), n: num(5, 2, 10), values: txt('-13.6,-3.4,-1.51,-0.85', 160), trans: txt('3-2,2-1', 80), labels: bool(true), showLambda: bool(false)},
   phototube: {...BOX(3, 2), label: L()},
   spacetime: {x: X, y: Y, size: num(3, 0.2, 400), units: num(4, 1, 20), beta: num(0.5, -0.99, 0.99), primed: bool(true), cone: bool(true), grid: bool(false), hyperbola: bool(false), xlabel: txt('x', 24), ylabel: txt('$ct$', 24)},
   worldline: {diagram: ref(['spacetime']), x0: num(0, -100, 100), beta: num(0.5, -0.99, 0.99), ticks: bool(true), tau: num(1, 0.05, 50), label: L()},
   frames: {x: X, y: Y, size: num(1.2, 0.1, 100), gap: num(1.8, 0, 200), label: L('v')},
   nucleus: {x: X, y: Y, r: num(0.3, 0.02, 20), np: num(6, 0, 60), nn: num(6, 0, 60), label: L()},
-  particle: {x: X, y: Y, kind: pick('electron', ['electron', 'positron', 'proton', 'neutron', 'alpha', 'photon', 'neutrino']), angle: num(0, -360, 360), len: num(0.8, 0, 50), label: L()},
+  particle: {x: X, y: Y, kind: pick('electron', ['electron', 'positron', 'proton', 'neutron', 'alpha', 'photon', 'neutrino']), arrow: bool(false), angle: num(0, -360, 360), len: num(0.8, 0, 50), label: L()},
+  /* a potential typed as a function V(x) (eV, x in nm) with parameters: its bound states and a scattering state found
+     numerically (draw-physics.mjs qpotModel) */
+  qpot: {...BOX(4.4, 3), V: expr('abs(x) < a/2 ? 0 : V0'), params: params('a=1 [0.2, 3], V0=5 [0, 20]'), xmin: num(-1.5, -1e4, 1e4), xmax: num(1.5, -1e4, 1e4), mass: num(1, 1e-3, 1e6),
+    showV: bool(true), levels: num(3, 0, 10), psi: pick('psi', ['none', 'psi', 'prob']), E: num(0, 0, 1e6), tplot: bool(false), Emax: num(0, 0, 1e6), labels: bool(true)},
   /* general marks */
-  label: {x: X, y: Y, text: txt('', 80), size: num(16, 8, 48), box: bool(false), rot: ROT},
+  label: {x: X, y: Y, text: txt('', 80), size: num(16, 8, 48), box: bool(false), rot: ROT, color: COLOR},
   dim: {x1: X, y1: Y, x2: X, y2: Y, offset: num(0.15, -10, 10), text: txt('', 40)},
-  arc: {x: X, y: Y, r: num(0.3, 0.02, 20), from: num(0, -360, 360), to: num(30, -360, 360), text: txt('', 24), arrow: bool(false)},
+  arc: {x: X, y: Y, r: num(0.3, 0.02, 20), from: num(0, -360, 360), to: num(30, -360, 360), text: txt('', 24), arrow: bool(false), color: COLOR, pattern: pick('solid', PATTERNS)},
   axes: {x: X, y: Y, lx: num(1, 0, 100), ly: num(1, 0, 100), xlabel: txt('x', 12), ylabel: txt('y', 12)},
-  line: {x1: X, y1: Y, x2: X, y2: Y, pattern: pick('dashed', PATTERNS), heads: pick('none', ['none', 'end', 'start', 'both', 'mid'])},
+  line: {x1: X, y1: Y, x2: X, y2: Y, pattern: pick('dashed', PATTERNS), heads: pick('none', ['none', 'end', 'start', 'both', 'mid']), color: COLOR},
   vector: {...SEG, label: L(), width: num(1.6, 0.3, 6), head: pick('auto', ['auto', 'filled', 'open', 'stealth', 'none'])},
   region: {...BOX(1, 0.8), shape: pick('rect', ['rect', 'ellipse']), fill: pick('gray', ['none', 'gray', 'hatch', 'dots', 'cross', 'lines', 'dark']), pattern: pick('solid', PATTERNS), label: L(), rot: ROT},
   point: {x: X, y: Y, label: L(), filled: bool(true)},
   panel: {...BOX(2, 1.5), caption: txt('(가)', 24), frame: bool(false)},
   brace: {...SEG, kind: pick('brace', ['brace', 'bracket']), offset: num(0.12, -10, 10), text: txt('', 40)},
   callout: {x: X, y: Y, x2: num(1, -COORD, COORD), y2: num(0.6, -COORD, COORD), text: txt('', 60), end: pick('dot', ['dot', 'arrow', 'none'])},
-  parrows: {...SEG, n: num(5, 1, 40), len: num(0.4, 0.02, 50), dir: pick('out', ['in', 'out']), label: L()}
+  parrows: {...SEG, n: num(5, 1, 40), len: num(0.4, 0.02, 50), dir: pick('out', ['in', 'out']), label: L()},
+  /* basic drawing (the editor's drawing tools): plain shapes with a stroke colour, a fill and a line pattern */
+  rect: {...BOX(1, 0.6), r: num(0, 0, 100), color: COLOR, fill: FILL, pattern: pick('solid', PATTERNS), rot: ROT},
+  ellipse: {...BOX(1, 0.6), color: COLOR, fill: FILL, pattern: pick('solid', PATTERNS), rot: ROT},
+  poly: {pts: {k: 'pts', d: [[0, 0], [1, 0]], max: 400}, closed: bool(false), smooth: bool(false), color: COLOR, fill: FILL, pattern: pick('solid', PATTERNS), heads: HEADS},
+  bezier: {x1: X, y1: Y, cx1: num(0.3, -COORD, COORD), cy1: num(0.5, -COORD, COORD), cx2: num(0.7, -COORD, COORD), cy2: num(0.5, -COORD, COORD), x2: X2, y2: Y, color: COLOR, pattern: pick('solid', PATTERNS), heads: HEADS}
 };
+/* fields whose default became off (a particle's arrow, a wave's λ and A marks, the levels' wavelengths): an object
+   written before, without the field, keeps what it showed */
+const LEGACY_ON = {particle: {arrow: raw => (typeof raw.len === 'number' ? raw.len : 0.8) > 0}, wave: {showLambda: () => true, showA: () => true}, levels: {showLambda: () => true}};
 /* every object also has a line weight and a label size (multiples of the style's), and can be locked against dragging */
 export const COMMON_FIELDS = {lw: num(1, 0.2, 5), ls: num(1, 0.3, 4), lock: bool(false)};
 for (const t of Object.keys(FIELDS)) Object.assign(FIELDS[t], COMMON_FIELDS);
@@ -213,8 +244,8 @@ export const DOMAINS = {
   thermo: ['cylinder', 'container', 'utube', 'thermometer', 'heater', 'gasbox', 'reservoir', 'engine', 'cycle', 'curve'],
   optics: ['lens', 'mirror', 'prism', 'slab', 'oarrow', 'ray', 'slits', 'wavefront', 'screen', 'eye', 'source', 'fiber'],
   waves: ['wave', 'pulse', 'interference'],
-  modern: ['well', 'levels', 'phototube', 'spacetime', 'worldline', 'frames', 'nucleus', 'particle'],
-  general: ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'graph', 'panel', 'brace', 'callout', 'parrows']
+  modern: ['well', 'qpot', 'levels', 'phototube', 'spacetime', 'worldline', 'frames', 'nucleus', 'particle'],
+  general: ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'graph', 'panel', 'brace', 'callout', 'parrows', 'rect', 'ellipse', 'poly', 'bezier']
 };
 export const TYPE_DOMAIN = Object.fromEntries(Object.entries(DOMAINS).flatMap(([d, list]) => list.map(t => [t, d])));
 /* references that must name an existing object, and which must not be the same */
@@ -222,41 +253,98 @@ const REQUIRED_REFS = {string: ['a', 'b'], rod: ['a', 'b'], spring: ['a', 'b'], 
 export const isBody = o => !!o && BODY_TYPES.includes(o.type);
 export const isSeg = o => !!o && 'x1' in (FIELDS[o.type] || {});
 
-/* ── a small, safe expression language for plotted functions: numbers, x, pi, e, + − * / ^, implicit products (2x,
-   3sin(x)), and the functions below. Compiled to closures; nothing is ever evaluated as code. ── */
+/* ── a small, safe expression language for plotted functions and potentials: numbers, x, pi, e, + − * / ^, implicit
+   products (2x, 3sin(x), a x), the functions below, comparisons (< <= > >= == !=), && and ||, and the conditional
+   c ? a : b (so a piecewise V(x) reads "x < 0 ? 0 : (x < a ? V0 : 0)"); a true comparison is 1, a false one 0. Names
+   other than x are the parameters the caller lists (a curve's or a potential's params). Compiled to closures; nothing
+   is ever evaluated as code. ── */
 const FN = {sin: Math.sin, cos: Math.cos, tan: Math.tan, asin: Math.asin, acos: Math.acos, atan: Math.atan, sinh: Math.sinh, cosh: Math.cosh, tanh: Math.tanh,
-  exp: Math.exp, ln: Math.log, log: Math.log10, sqrt: Math.sqrt, abs: Math.abs, sign: Math.sign, floor: Math.floor, ceil: Math.ceil, sec: x => 1 / Math.cos(x), csc: x => 1 / Math.sin(x), cot: x => 1 / Math.tan(x)};
+  exp: Math.exp, ln: Math.log, log: Math.log10, sqrt: Math.sqrt, abs: Math.abs, sign: Math.sign, floor: Math.floor, ceil: Math.ceil, sec: x => 1 / Math.cos(x), csc: x => 1 / Math.sin(x), cot: x => 1 / Math.tan(x),
+  step: x => x >= 0 ? 1 : 0};
+export const EXPR_FUNCTIONS = Object.keys(FN);
+const RESERVED = new Set(['x', 'pi', 'e', ...EXPR_FUNCTIONS]);
+/* an unknown run of letters split into known names, longest first ("ax" → a x, "kx" → k x); null if it does not split */
+function splitName(id, known) {
+  const out = []; let i = 0;
+  while (i < id.length) { let hit = ''; for (const k of known) if (k.length > hit.length && id.startsWith(k, i)) hit = k; if (!hit) return null; out.push(hit); i += hit.length; }
+  return out;
+}
 export function compileExpr(src, vars = ['x']) {
-  const s = String(src ?? '').replace(/π/g, 'pi').replace(/·|×/g, '*').replace(/−/g, '-').trim();
-  if (!s || s.length > 120) return null;
-  const toks = [], re = /\s*(?:(\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?)|([A-Za-z]+)|(\*\*|[-+*/^(),]))/y;
+  const s = String(src ?? '').replace(/π/g, 'pi').replace(/·|×/g, '*').replace(/−/g, '-').replace(/≤/g, '<=').replace(/≥/g, '>=').replace(/≠/g, '!=').trim();
+  if (!s || s.length > 160) return null;
+  const known = [...vars, ...EXPR_FUNCTIONS, 'pi', 'e'];
+  const toks = [], re = /\s*(?:(\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?)|([A-Za-z][A-Za-z0-9_]*)|(\*\*|<=|>=|==|!=|&&|\|\||[-+*/^(),<>?:]))/y;
   let m, k = 0;
-  while (k < s.length) { re.lastIndex = k; m = re.exec(s); if (!m) return null; k = re.lastIndex; toks.push(m[1] !== undefined ? {n: +m[1]} : m[2] !== undefined ? {id: m[2]} : {op: m[3] === '**' ? '^' : m[3]}); if (/^\s*$/.test(s.slice(k))) break; }
+  while (k < s.length) {
+    re.lastIndex = k; m = re.exec(s); if (!m) return null; k = re.lastIndex;
+    if (m[1] !== undefined) toks.push({n: +m[1]});
+    else if (m[2] !== undefined) {
+      const id = m[2];
+      if (known.includes(id)) toks.push({id});
+      else { const letters = /^[A-Za-z]+/.exec(id)[0], parts = splitName(letters, known); if (!parts) return null; parts.forEach(p => toks.push({id: p})); k -= id.length - letters.length; }
+    } else toks.push({op: m[3] === '**' ? '^' : m[3]});
+    if (/^\s*$/.test(s.slice(k))) break;
+  }
   let i = 0, depth = 0;
   const peek = () => toks[i], op = c => toks[i] && toks[i].op === c;
   const fail = () => { throw new Error('expr'); };
+  const ternary = () => { const c = orP(); if (!op('?')) return c; i++; const a = ternary(); if (!op(':')) fail(); i++; const b = ternary(); return x => (c(x) ? a(x) : b(x)); };
+  const orP = () => { let a = andP(); while (op('||')) { i++; const b = andP(), A = a; a = x => (A(x) || b(x)) ? 1 : 0; } return a; };
+  const andP = () => { let a = cmpP(); while (op('&&')) { i++; const b = cmpP(), A = a; a = x => (A(x) && b(x)) ? 1 : 0; } return a; };
+  const CMP = {'<': (a, b) => a < b, '<=': (a, b) => a <= b, '>': (a, b) => a > b, '>=': (a, b) => a >= b, '==': (a, b) => a === b, '!=': (a, b) => a !== b};
+  const cmpP = () => { const a = exprP(); const t = peek(); if (t && CMP[t.op]) { i++; const b = exprP(), c = CMP[t.op]; return x => c(a(x), b(x)) ? 1 : 0; } return a; };
   const exprP = () => { let a = term(); while (op('+') || op('-')) { const o = toks[i++].op, b = term(), A = a; a = o === '+' ? x => A(x) + b(x) : x => A(x) - b(x); } return a; };
   const startsAtom = t => t && (t.n !== undefined || t.id !== undefined || t.op === '(');
   const term = () => { let a = unary(); for (;;) { if (op('*') || op('/')) { const o = toks[i++].op, b = unary(), A = a; a = o === '*' ? x => A(x) * b(x) : x => A(x) / b(x); } else if (startsAtom(peek())) { const b = power(), A = a; a = x => A(x) * b(x); } else return a; } };
   const unary = () => { if (op('-')) { i++; const a = unary(); return x => -a(x); } if (op('+')) { i++; return unary(); } return power(); };
   const power = () => { const a = atom(); if (op('^')) { i++; const b = unary(); return x => Math.pow(a(x), b(x)); } return a; };
   const atom = () => {
-    if (++depth > 40) fail();
+    if (++depth > 60) fail();
     const t = toks[i++]; let r;
     if (!t) fail();
     if (t.n !== undefined) r = () => t.n;
-    else if (t.op === '(') { const a = exprP(); if (!op(')')) fail(); i++; r = a; }
+    else if (t.op === '(') { const a = ternary(); if (!op(')')) fail(); i++; r = a; }
     else if (t.id !== undefined) {
       const id = t.id;
-      if (FN[id]) { let a; if (op('(')) { i++; a = exprP(); if (!op(')')) fail(); i++; } else a = power(); const f = FN[id]; r = x => f(a(x)); }
+      if (FN[id] && !vars.includes(id)) { let a; if (op('(')) { i++; a = ternary(); if (!op(')')) fail(); i++; } else a = power(); const f = FN[id]; r = x => f(a(x)); }
+      else if (vars.includes(id)) { const j = vars.indexOf(id); r = x => (Array.isArray(x) ? x[j] : j === 0 ? x : NaN); }
       else if (id === 'pi') r = () => Math.PI;
       else if (id === 'e') r = () => Math.E;
-      else if (vars.includes(id)) { const j = vars.indexOf(id); r = x => (Array.isArray(x) ? x[j] : x); }
       else fail();
     } else fail();
     depth--; return r;
   };
-  try { const f = exprP(); if (i !== toks.length) return null; return f; } catch (e) { return null; }
+  try { const f = ternary(); if (i !== toks.length) return null; return f; } catch (e) { return null; }
+}
+/** Parameters of a function or a potential: "a = 1, V0 = 5 [0, 20]" — a name (a letter, then letters, digits or _,
+ *  up to 8; not x, pi, e or a function), its value and an optional slider range [min, max] (else from the value).
+ *  Returns the list (at most 8) or null when the text does not read. */
+export function parseParams(text) {
+  const s = String(text ?? '').trim(), out = [];
+  if (!s) return out;
+  const NUM = '[-+]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?';
+  const re = new RegExp(`\\s*([A-Za-z][A-Za-z0-9_]{0,7})\\s*=\\s*(${NUM})(?:\\s*\\[\\s*(${NUM})\\s*[,~]\\s*(${NUM})\\s*\\])?\\s*(?:[,;]|$)`, 'y');
+  let k = 0;
+  while (k < s.length) {
+    re.lastIndex = k; const m = re.exec(s); if (!m || re.lastIndex === k) return null; k = re.lastIndex;
+    const name = m[1], value = +m[2];
+    if (RESERVED.has(name) || out.some(p => p.name === name) || !Number.isFinite(value)) return null;
+    let min = m[3] !== undefined ? +m[3] : value > 0 ? 0 : value < 0 ? 2 * value : -1, max = m[4] !== undefined ? +m[4] : value > 0 ? 2 * value : value < 0 ? 0 : 1;
+    if (!(max > min)) return null;
+    out.push({name, value, min, max});
+    if (out.length > 8) return null;
+  }
+  return out;
+}
+/** the parameters as text again (what a slider writes back) */
+export const paramsText = list => list.map(p => `${p.name}=${+p.value.toPrecision(6)} [${+p.min.toPrecision(6)}, ${+p.max.toPrecision(6)}]`).join(', ');
+/** a function of x with an object's parameters bound (a curve's expr, a potential's V): null if it does not compile */
+export function boundExpr(src, params) {
+  const list = typeof params === 'string' ? parseParams(params) : params || [];
+  if (!list) return null;
+  const fn = compileExpr(src, ['x', ...list.map(p => p.name)]); if (!fn) return null;
+  const vals = list.map(p => p.value);
+  return x => fn([x, ...vals]);
 }
 
 /* text: no control characters, the length cut; for text the AI wrote, only what a physics label needs */
@@ -323,9 +411,12 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
     seen.add(id);
     const o = {id, type}, F = FIELDS[type];
     let bad = false;
+    /* fields whose default changed to off: a scene written before keeps what it showed */
+    const legacy = LEGACY_ON[type];
+    if (legacy) for (const [k, on] of Object.entries(legacy)) if (raw[k] === undefined) o[k] = on(raw);
     for (const [k, f] of Object.entries(F)) {
       const v = raw[k];
-      if (v === undefined || v === null) { o[k] = Array.isArray(f.d) ? [] : f.d; continue; }
+      if (v === undefined || v === null) { if (!(k in o)) o[k] = Array.isArray(f.d) ? [] : f.d; continue; }
       if (f.k === 'num') {
         if (typeof v !== 'number' || !Number.isFinite(v)) { err('bad_number', id, k); bad = true; continue; }
         if (v < f.min || v > f.max) {
@@ -337,9 +428,18 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
         const t = typeof v === 'string' ? cleanText(v, f.max, aiText) : null;
         if (t == null) { if (lenient) { o[k] = ''; notes.push({code: 'text_dropped', id, field: k}); continue; } err('bad_text', id, k); bad = true; continue; }
         o[k] = t;
+      } else if (f.k === 'params') {
+        const t = typeof v === 'string' ? cleanText(v, f.max, false) : null;
+        if (t == null || !parseParams(t)) { if (lenient) { o[k] = f.d; notes.push({code: 'params_dropped', id, field: k}); continue; } err('bad_params', id, k); bad = true; continue; }
+        o[k] = t;
+      } else if (f.k === 'pts') {
+        const ok = Array.isArray(v) && v.length >= 2 && v.length <= f.max && v.every(q => Array.isArray(q) && q.length === 2 && q.every(c => typeof c === 'number' && Number.isFinite(c) && Math.abs(c) <= COORD));
+        if (!ok) { err('bad_points', id, k); bad = true; continue; }
+        o[k] = v.map(q => [q[0], q[1]]);
       } else if (f.k === 'expr') {
         const t = typeof v === 'string' ? cleanText(v, f.max, false) : null;
-        if (t == null || !compileExpr(t)) { if (lenient) { o[k] = f.d; notes.push({code: 'expr_dropped', id, field: k}); continue; } err('bad_expr', id, k); bad = true; continue; }
+        const pl = 'params' in F ? parseParams(typeof raw.params === 'string' ? raw.params : F.params.d) || [] : [];
+        if (t == null || !compileExpr(t, ['x', ...pl.map(q => q.name)])) { if (lenient) { o[k] = f.d; notes.push({code: 'expr_dropped', id, field: k}); continue; } err('bad_expr', id, k); bad = true; continue; }
         o[k] = t;
       } else if (f.k === 'bool') {
         if (typeof v !== 'boolean') { err('bad_bool', id, k); bad = true; continue; }
@@ -581,7 +681,7 @@ function mechTemplate(key, name) {
     {id: 'gnd', type: 'floor', x: 0.2, y: 0, w: 2.6},
     {id: 'm1', type: 'block', on: 'gnd', at: 1.4, w: 0.3, h: 0.3, mass: 1, label: 'm'},
     {id: 'k1', type: 'spring', a: 'wl', b: 'm1', k: 40, L0: 1.0, coils: 10, label: 'k'},
-    {id: 'd1', type: 'dim', x1: 1.6, y1: -0.12, x2: 1.35, y2: -0.12, offset: -0.12, text: 'A'}
+    {id: 'd1', type: 'dim', x1: 1.35, y1: -0.22, x2: 1.6, y2: -0.22, offset: 0, text: 'A'}
   ], {x: -0.05, y: -0.45, w: 3.05, h: 1.3});
   if (key === 'pendulum') { const L = 1.5, a = rad(25); return T(name, [
     {id: 'ceil', type: 'ceiling', x: 1.0, y: 2.4, w: 1.0},
@@ -722,6 +822,10 @@ const NEW_TEMPLATES = {
     {id: 'st', type: 'spacetime', x: 0, y: 0, size: 3, units: 4, beta: 0.5, primed: true, cone: true, hyperbola: true},
     {id: 'clk', type: 'worldline', diagram: 'st', x0: 1, beta: 0.5, ticks: true, tau: 1, label: '\\text{clock}'},
     {id: 'rest', type: 'worldline', diagram: 'st', x0: -1, beta: 0, ticks: true, tau: 1, label: ''}]],
+  custom_well: ['modern', '직접 입력한 퍼텐셜: 이중 우물 (ψ, 준위)', 'A typed potential: double well (ψ, levels)', 0.1, {x: -0.7, y: -0.5, w: 5.8, h: 3.9}, [
+    {id: 'Q1', type: 'qpot', x: 0, y: 0, w: 4.6, h: 3.1, V: 'abs(x) > a + b/2 ? V0 : (abs(x) < b/2 ? Vb : 0)', params: 'a=0.5 [0.2, 1.5], b=0.12 [0, 0.8], V0=6 [0, 12], Vb=1.2 [0, 8]', xmin: -1.3, xmax: 1.3, levels: 3, psi: 'psi'}]],
+  custom_barrier: ['modern', '직접 입력한 장벽의 투과 (ψ, T(E))', 'Transmission through a typed barrier (ψ, T(E))', 0.1, {x: -0.7, y: -0.5, w: 6.4, h: 3.6}, [
+    {id: 'Q1', type: 'qpot', x: 0, y: 0, w: 5.2, h: 2.8, V: 'x < 0 ? 0 : (x < a ? V0 : 0)', params: 'a=0.4 [0.05, 1.5], V0=4 [0, 10]', xmin: -1.2, xmax: 1.6, levels: 0, psi: 'psi', E: 2.5, tplot: true}]],
   photoelectric: ['modern', '광전 효과 장치', 'Photoelectric effect setup', 0.1, {x: -0.4, y: -0.6, w: 3.8, h: 3.2}, [
     {id: 'pt', type: 'phototube', x: 0, y: 0, w: 3, h: 2.2, label: '$hf$'}]],
   /* general */
@@ -730,6 +834,9 @@ const NEW_TEMPLATES = {
     {id: 'c1', type: 'curve', graph: 'G1', kind: 'func', expr: 'exp(-x/3)*cos(3x)', x1: 0, x2: 7, label: ''},
     {id: 'c2', type: 'curve', graph: 'G1', kind: 'func', expr: 'exp(-x/3)', x1: 0, x2: 7, pattern: 'dashed', label: 'Ae^{-t/\\tau}'},
     {id: 'c3', type: 'curve', graph: 'G1', kind: 'func', expr: '-exp(-x/3)', x1: 0, x2: 7, pattern: 'dashed', label: ''}]],
+  param_function: ['general', '값을 바꾸는 함수 그래프 (매개변수 슬라이더)', 'A function with parameters (sliders)', 0.1, {x: -0.6, y: -1.6, w: 5.6, h: 3.4}, [
+    {id: 'G1', type: 'graph', x: 0, y: -1.2, w: 4.4, h: 2.4, auto: false, xmin: 0, xmax: 7, ymin: -1.3, ymax: 1.3, xlabel: 't', ylabel: 'x', ticks: true, origin: 'O'},
+    {id: 'c1', type: 'curve', graph: 'G1', kind: 'func', params: 'A=1 [0, 1.2], tau=3 [0.5, 10], w=3 [0.5, 8]', expr: 'A exp(-x/tau) cos(w x)', x1: 0, x2: 7, label: ''}]],
   vectors: ['general', '벡터의 합과 각', 'Adding vectors, with angles', 0.1, {x: -0.5, y: -0.5, w: 4.2, h: 3}, [
     {id: 'va', type: 'vector', x1: 0, y1: 0, x2: 2.2, y2: 0.6, label: '\\vec{A}'},
     {id: 'vb', type: 'vector', x1: 2.2, y1: 0.6, x2: 3, y2: 2.1, label: '\\vec{B}'},
@@ -869,11 +976,11 @@ const NEW_TEMPLATES = {
     {id: 'IF', type: 'interference', x: 0, y: 0, d: 1.2, lambda: 0.4, n: 4, nodal: true, labels: true}]],
   alpha_decay: ['modern', '알파 붕괴와 감마선', 'Alpha decay and a gamma ray', 0.1, {x: -0.4, y: -1.1, w: 4.4, h: 2.2}, [
     {id: 'nu', type: 'nucleus', x: 0.6, y: 0, r: 0.45, np: 12, nn: 14, label: '{}^{A}_{Z}\\mathrm{X}'},
-    {id: 'al', type: 'particle', x: 1.4, y: 0.3, kind: 'alpha', angle: 20, len: 1.4, label: '\\alpha'},
+    {id: 'al', type: 'particle', x: 1.4, y: 0.3, kind: 'alpha', arrow: true, angle: 20, len: 1.4, label: '\\alpha'},
     {id: 'ga', type: 'particle', x: 1.3, y: -0.35, kind: 'photon', angle: -15, len: 1.8, label: '\\gamma'}]],
   compton: ['modern', '광자와 전자의 충돌 (콤프턴 산란)', 'A photon scattering off an electron (Compton)', 0.1, {x: -0.3, y: -1.3, w: 4.6, h: 2.6}, [
     {id: 'ph', type: 'particle', x: 0, y: 0, kind: 'photon', angle: 0, len: 1.7, label: 'h\\nu'},
-    {id: 'el', type: 'particle', x: 2, y: 0, kind: 'electron', angle: -35, len: 1.3, label: 'e^-'},
+    {id: 'el', type: 'particle', x: 2, y: 0, kind: 'electron', arrow: true, angle: -35, len: 1.3, label: 'e^-'},
     {id: 'sc', type: 'particle', x: 2.15, y: 0.08, kind: 'photon', angle: 40, len: 1.6, label: "h\\nu'"},
     {id: 'ax', type: 'line', x1: 2, y1: 0, x2: 4, y2: 0, pattern: 'dashed'},
     {id: 'th', type: 'arc', x: 2, y: 0, r: 0.6, from: 0, to: 40, text: '\\theta'}]],
@@ -908,8 +1015,8 @@ const NEW_TEMPLATES = {
   ks_pulley: ['mech', '수능형: 실로 연결된 물체 A, B (도르래)', 'CSAT style: blocks A and B joined over a pulley', 0.1, {x: -0.2, y: -0.3, w: 3.1, h: 1.7}, [
     {id: 'tb', type: 'floor', x: 0, y: 1, w: 2.2, hatch: false},
     {id: 'A', type: 'block', on: 'tb', at: 1, w: 0.42, h: 0.3, mass: 2, label: 'A'},
-    {id: 'p1', type: 'pulley', x: 2.3, y: 1.1, r: 0.1, mount: 'tb'},
-    {id: 'B', type: 'block', x: 2.4, y: 0.35, w: 0.3, h: 0.3, mass: 1, label: 'B'},
+    {id: 'p1', type: 'pulley', x: 2.3, y: 1.05, r: 0.1, mount: 'tb'},
+    {id: 'B', type: 'block', x: 2.4, y: 0.45, w: 0.3, h: 0.3, mass: 1, label: 'B'},
     {id: 's1', type: 'string', a: 'A', b: 'B', over: ['p1']},
     {id: 'gd', type: 'floor', x: -0.1, y: 0, w: 3}, {id: 'lf', type: 'label', x: 0.3, y: -0.17, text: '수평면', size: 13},
     {id: 'pq', type: 'point', x: 0.3, y: 1, label: 'p'}, {id: 'pr', type: 'point', x: 1.9, y: 1, label: 'q'}], {style: 'suneung'}],
@@ -992,8 +1099,33 @@ function baseExtent(o) {
     case 'wave': return box(o.x, o.y - o.A - 0.3, o.x + o.len, o.y + o.A + 0.3);
     case 'spacetime': return box(o.x - o.size * 0.6, o.y - 0.1, o.x + o.size, o.y + o.size);
     case 'frames': return box(o.x - 0.1, o.y - 0.1, o.x + o.gap + o.size, o.y + o.size + 0.3);
+    case 'qpot': case 'rect': case 'ellipse': return box(o.x, o.y, o.x + o.w, o.y + o.h);
+    case 'poly': { const xs = o.pts.map(q => q[0]), ys = o.pts.map(q => q[1]); return box(Math.min(...xs) - 0.03, Math.min(...ys) - 0.03, Math.max(...xs) + 0.03, Math.max(...ys) + 0.03); }
+    case 'bezier': { const pts = bezierPoints(o, 24); return box(Math.min(...pts.map(q => q.x)) - 0.03, Math.min(...pts.map(q => q.y)) - 0.03, Math.max(...pts.map(q => q.x)) + 0.03, Math.max(...pts.map(q => q.y)) + 0.03); }
   }
   return null;
+}
+
+/** points along a cubic Bézier (x1,y1) → (cx1,cy1), (cx2,cy2) → (x2,y2) */
+export function bezierPoints(o, n = 32) {
+  const out = [];
+  for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t, a = u * u * u, b = 3 * u * u * t, c = 3 * u * t * t, d = t * t * t; out.push({x: a * o.x1 + b * o.cx1 + c * o.cx2 + d * o.x2, y: a * o.y1 + b * o.cy1 + c * o.cy2 + d * o.y2}); }
+  return out;
+}
+/** a freehand stroke made plain: Ramer–Douglas–Peucker with tolerance tol (world units), at most max points */
+export function simplifyPath(pts, tol, max = 200) {
+  if (pts.length < 3) return pts.slice();
+  const keep = new Uint8Array(pts.length); keep[0] = keep[pts.length - 1] = 1;
+  const stack = [[0, pts.length - 1]];
+  while (stack.length) {
+    const [a, b] = stack.pop(), A = pts[a], B = pts[b], dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy) || 1e-12;
+    let best = -1, bd = tol;
+    for (let i = a + 1; i < b; i++) { const d = Math.abs((pts[i].x - A.x) * dy - (pts[i].y - A.y) * dx) / L; if (d > bd) { bd = d; best = i; } }
+    if (best > 0) { keep[best] = 1; stack.push([a, best], [best, b]); }
+  }
+  let out = pts.filter((_, i) => keep[i]);
+  if (out.length > max) out = simplifyPath(out, tol * 2, max);
+  return out;
 }
 
 /** the world rectangle every object fits in, with a margin */
@@ -1016,7 +1148,7 @@ export const VISION_OBJECT_TYPES = ['block', 'ball', 'wheel', 'floor', 'ceiling'
   'cylinder', 'container', 'reservoir', 'graph', 'curve',
   'lens', 'mirror', 'prism', 'slab', 'oarrow', 'ray', 'screen',
   'wave', 'well', 'spacetime',
-  'label', 'arc', 'dim', 'line', 'vector', 'panel'];
+  'label', 'arc', 'dim', 'line', 'vector', 'panel', 'rect', 'ellipse'];
 export const UNSURE_FIELDS = ['object', 'position', 'mass', 'angle', 'mu', 'k', 'length', 'connection', 'velocity', 'force', 'label', 'value', 'charge', 'kind', 'focal'];
 /** every field the vision model may write for VISION_OBJECT_TYPES, as one JSON-schema property each (enums merged) */
 export function visionProperties() {

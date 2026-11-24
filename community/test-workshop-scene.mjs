@@ -117,3 +117,13 @@ test('beyond mechanics: a circuit, a lens and a field come back as version-2 obj
   assert.match(scenePolicy(),/element \{x1,y1,x2,y2,kind/);
   const n=setup({physics:false,objects:[],unsure:[]});await fails(n.call({image:jpeg()}),'not_mechanics',422);
 });
+
+test('plain drawn shapes (rect, ellipse) come back checked; a bad fill or a path the model cannot write is dropped',async()=>{
+  const answer={physics:true,objects:[
+    {id:'r1',type:'rect',x:0,y:0,w:2,h:0.5,fill:'hatch'},{id:'e1',type:'ellipse',x:3,y:0,w:1,h:1,fill:'lightgray'},
+    {id:'r2',type:'rect',x:0,y:1,w:1,h:1,fill:'rainbow'},{id:'p1',type:'poly',pts:[[0,0],[1,1]]}],unsure:[]};
+  const {call}=setup(answer);const r=await call({image:jpeg()});
+  assert.ok(validateScene(r.scene).ok);
+  assert.deepEqual(r.scene.objects.map(o=>o.id+':'+o.fill),['r1:hatch','e1:lightgray','r2:none'],'an unknown fill falls back; a polyline is not for the model');
+  assert.ok(SCENE_RESPONSE.properties.objects.items.properties.type.enum.includes('rect'));assert.match(scenePolicy(),/rect \{x,y,w,h/);
+});

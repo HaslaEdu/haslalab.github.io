@@ -66,6 +66,7 @@ Waves and modern physics
 - wave {x,y,len,A,lambda,kind:'travel'|'standing',n,ends}. well {x,y,w,h,kind:'infinite'|'finite'|'barrier'|'harmonic'|'step',L (nm),V0 (eV),levels}. spacetime {x,y,size,beta}.
 Marks
 - label {x,y,text}. arc {x,y,r,from,to,text}. dim {x1,y1,x2,y2,text}. line {x1,y1,x2,y2,pattern}. vector {x1,y1,x2,y2,label}.
+- rect {x,y,w,h,r,fill}, ellipse {x,y,w,h,fill}: plain drawn shapes (fill 'none', 'lightgray', 'hatch' …) for what no object above fits.
 - panel {x,y,w,h,caption}: one part of a figure in panels, with its caption like (가), (나) or (a), (b) under it.
 Use the values written in the problem. When a value is not given, choose a plausible one and list it in unsure.
 Labels: short TeX like m_1, \\theta, \\mu, v_0, \\vec{F}, R_1, \\mathcal{E}, T_H, \\lambda. ids: short letters and digits. At most ${MAX_OBJECTS} objects.

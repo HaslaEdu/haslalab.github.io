@@ -5,9 +5,9 @@
    localStorage 'hlTeachPaper'; the figure is an SVG data URL with its scene), into the member's storage
    (/api/workshop/storage) or into this browser. "Start from a photo" sends one photo to /api/workshop/scene-from-image
    (community/src/workshop-scene.js) and opens what comes back for checking. */
-import {validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE} from './draw-scene.mjs?v=89d7475e50e7';
-import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=38361b6fa4aa';
-import {renderSVG, texSVG, STYLES, STYLE_TABLE, objectBox, printScale} from './draw-render.mjs?v=de4ee6724ac8';
+import {validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath} from './draw-scene.mjs?v=fb1c204d7324';
+import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=268cba8afa3e';
+import {renderSVG, texSVG, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=32f5ecd294a5';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -22,7 +22,7 @@ const T = ko ? {
   connect: {string: '줄: 한쪽 끝(물체나 고정점)을 누르고, 지나갈 도르래를 차례로 누른 뒤 다른 끝을 누르세요.', rod: '막대: 고정점을 누른 뒤 물체를 누르세요.', spring: '용수철: 두 끝(물체, 벽, 천장, 바닥, 고정점)을 차례로 누르세요.', force: '힘: 힘을 받을 물체를 누르세요.', esc: 'Esc로 취소'},
   play: '재생', pause: '일시정지', reset: '처음으로', speed: '속도', fbd: '힘 그림(자유물체도)', readouts: '측정값', time: '시간',
   stopped: '멈춤', events: {landed: id => `${id}이(가) 면에 닿았습니다`, reached_pulley: id => `${id}이(가) 도르래에 닿았습니다`, end_of_surface: id => `${id}이(가) 면 끝에 이르렀습니다`, lift_off: id => `${id}이(가) 면에서 떨어집니다`, slack: id => `줄 ${id}이(가) 느슨해졌습니다`, touched: id => `${id}이(가) 다른 물체에 닿았습니다`},
-  unsupported: {hanging_not_vertical: '매달린 물체가 도르래 바로 아래에 있지 않습니다', tied_not_on_surface: '도르래 없이 이은 두 물체는 면 위에 있어야 합니다', spring_between_systems: '서로 다른 종류의 운동을 하는 물체를 용수철로 이었습니다', pivot_over_pulley: '고정점에서 도르래를 거치는 줄은 아직 계산하지 못합니다', pendulum_on_surface: '진자의 추가 면 위에 있습니다', pendulum_with_spring: '진자에 용수철이 달려 있습니다', zero_length: '줄의 길이가 0입니다', conical_angle: '원뿔 진자의 각도는 0°와 88° 사이여야 합니다', spring_surface_and_air: '면 위의 물체와 공중의 물체를 용수철로 이었습니다'},
+  unsupported: {held_by_figure: '계산하지 않는 부분(판·궤도·선·도형·액체)에 놓이거나 매달려 있어 그대로 둡니다', hanging_not_vertical: '매달린 물체가 도르래 바로 아래에 있지 않습니다', tied_not_on_surface: '도르래 없이 이은 두 물체는 면 위에 있어야 합니다', spring_between_systems: '서로 다른 종류의 운동을 하는 물체를 용수철로 이었습니다', pivot_over_pulley: '고정점에서 도르래를 거치는 줄은 아직 계산하지 못합니다', pendulum_on_surface: '진자의 추가 면 위에 있습니다', pendulum_with_spring: '진자에 용수철이 달려 있습니다', zero_length: '줄의 길이가 0입니다', conical_angle: '원뿔 진자의 각도는 0°와 88° 사이여야 합니다', spring_surface_and_air: '면 위의 물체와 공중의 물체를 용수철로 이었습니다'},
   notSim: '이 부분은 계산하지 않습니다', nothing: '움직일 물체가 없습니다.',
   scene: '그림', sceneTitle: '그림 이름', g: '중력 가속도 g (m/s²)', gridSize: '격자 간격 (m)', objects: '그림에 있는 것', noSel: '그림에서 물체를 누르면 값을 고칠 수 있습니다.',
   fields: {x: 'x (m)', y: 'y (m)', w: '너비 (m)', h: '높이 (m)', r: '반지름 (m)', mass: '질량 (kg)', label: '이름표', on: '놓인 면', at: '면 위 위치 (m)', vx: '처음 속도 vx (m/s)', vy: '처음 속도 vy (m/s)', showV: '속도 화살표', vLabel: '속도 이름표', trail: '지나간 길 표시',
@@ -48,7 +48,7 @@ const T = ko ? {
   connect: {string: 'String: click one end (a body or a pivot), then each pulley it goes over, then the other end.', rod: 'Rod: click the pivot, then the body.', spring: 'Spring: click its two ends (bodies, walls, ceilings, floors or pivots).', force: 'Force: click the body it acts on.', esc: 'Esc cancels'},
   play: 'Play', pause: 'Pause', reset: 'Reset', speed: 'Speed', fbd: 'Forces (free-body diagram)', readouts: 'Readouts', time: 'Time',
   stopped: 'Stopped', events: {landed: id => `${id} hit a surface`, reached_pulley: id => `${id} reached the pulley`, end_of_surface: id => `${id} reached the end of its surface`, lift_off: id => `${id} leaves its surface`, slack: id => `string ${id} went slack`, touched: id => `${id} touched another body`},
-  unsupported: {hanging_not_vertical: 'a hanging body is not straight below its pulley', tied_not_on_surface: 'two bodies tied without a pulley must rest on surfaces', spring_between_systems: 'a spring joins bodies that move in different kinds of systems', pivot_over_pulley: 'a string from a pivot over pulleys is not computed yet', pendulum_on_surface: 'the pendulum bob rests on a surface', pendulum_with_spring: 'the pendulum has a spring', zero_length: 'the string has no length', conical_angle: 'a conical pendulum needs an angle between 0° and 88°', spring_surface_and_air: 'a spring joins a body on a surface and one in the air'},
+  unsupported: {held_by_figure: 'it rests on or hangs from a part that is not computed (a plank, a track, a line, a shape, a liquid), so it stays put', hanging_not_vertical: 'a hanging body is not straight below its pulley', tied_not_on_surface: 'two bodies tied without a pulley must rest on surfaces', spring_between_systems: 'a spring joins bodies that move in different kinds of systems', pivot_over_pulley: 'a string from a pivot over pulleys is not computed yet', pendulum_on_surface: 'the pendulum bob rests on a surface', pendulum_with_spring: 'the pendulum has a spring', zero_length: 'the string has no length', conical_angle: 'a conical pendulum needs an angle between 0° and 88°', spring_surface_and_air: 'a spring joins a body on a surface and one in the air'},
   notSim: 'not computed', nothing: 'Nothing here can move.',
   scene: 'Figure', sceneTitle: 'Name', g: 'Gravity g (m/s²)', gridSize: 'Grid step (m)', objects: 'In the figure', noSel: 'Click an object in the figure to edit its values.',
   fields: {x: 'x (m)', y: 'y (m)', w: 'Width (m)', h: 'Height (m)', r: 'Radius (m)', mass: 'Mass (kg)', label: 'Label', on: 'Rests on', at: 'Position on it (m)', vx: 'Initial vx (m/s)', vy: 'Initial vy (m/s)', showV: 'Velocity arrow', vLabel: 'Velocity label', trail: 'Show its path',
@@ -76,7 +76,7 @@ const X2 = ko ? {
   solve: '회로 풀기 (전류·전압)', info: '계산값', circuit: '회로', noCircuit: {empty: '회로 소자가 없습니다.', ac: '교류 전원이 있는 회로는 풀지 않습니다.', short: '이상적인 전원이 단락되었거나 전압원 고리가 있어 풀 수 없습니다.'},
   tau: '시간 상수 τ', vFinal: '나중 전압', iFinal: '나중 전류', rth: '테브난 저항', charging: id => `${id} 충전 곡선 V(t)`, current: '전류', drop: '전압', element: '소자',
   infoT: {rails: c => `유도 기전력 ε = BLv = ${c.emf} V, 전류 I = ${c.I} A, 자기력 F = BIL = ${c.F} N`, buoyancy: c => `부력 ${c.B} N, 무게 ${c.W} N${c.floats < 1 ? `, 뜬다면 잠기는 비율 ${c.floats}` : ', 가라앉음'}`, bridge: c => `접점 위치 l = ${c.l} cm (평형: R/S = l/(100 − l))`,
-    cycle: (c) => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (카르노 한계 ${c.carnot})`, oarrow: c => `상 위치 x = ${c.x} m, 배율 m = ${c.m} (${c.real ? '실상' : '허상'})`, slits: c => `무늬 간격 Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, 투과율 T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `일 W = ∫P dV = ${c.W}`},
+    cycle: (c) => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (카르노 한계 ${c.carnot})`, oarrow: c => `상 위치 x = ${c.x} m, 배율 m = ${c.m} (${c.real ? '실상' : '허상'})`, slits: c => `무늬 간격 Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, 투과율 T = ${c.T}` : ''}`, qpot: c => `속박 준위 E = ${c.E || '없음'}${c.T !== undefined ? `, 투과율 T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `일 W = ∫P dV = ${c.W}`},
   types: {element: '회로 소자', ground: '접지', charge: '점전하', plate: '대전판', fieldlines: '전기력선', field: '균일한 장', cwire: '전류 도선', current: '지면 수직 전류', solenoid: '솔레노이드', loop: '원형 전류 고리', magnet: '막대자석',
     cylinder: '실린더·피스톤', reservoir: '열원', engine: '열기관 도식', graph: '그래프 틀', curve: '곡선', cycle: '순환 과정', lens: '렌즈', mirror: '거울', prism: '프리즘', slab: '유리판', oarrow: '물체 (광학)', ray: '광선', slits: '슬릿·스크린', wavefront: '파면',
     wave: '파동', well: '퍼텐셜 우물', levels: '에너지 준위', phototube: '광전 효과 장치', spacetime: '민코프스키 도표', worldline: '세계선', frames: '관성계 S, S′', vector: '벡터', region: '영역', point: '점'},
@@ -99,7 +99,7 @@ const X2 = ko ? {
   solve: 'Solve the circuit (currents, voltages)', info: 'Computed', circuit: 'Circuit', noCircuit: {empty: 'No circuit elements.', ac: 'Circuits with an AC source are not solved.', short: 'An ideal source is shorted or a loop of voltage sources makes it unsolvable.'},
   tau: 'Time constant τ', vFinal: 'Final voltage', iFinal: 'Final current', rth: 'Thevenin resistance', charging: id => `charging of ${id}, V(t)`, current: 'Current', drop: 'Voltage', element: 'Element',
   infoT: {rails: c => `motional EMF ε = BLv = ${c.emf} V, current I = ${c.I} A, force F = BIL = ${c.F} N`, buoyancy: c => `buoyancy ${c.B} N, weight ${c.W} N${c.floats < 1 ? `, would float with ${c.floats} submerged` : ', sinks'}`, bridge: c => `jockey at l = ${c.l} cm (balance: R/S = l/(100 − l))`,
-    cycle: c => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (Carnot limit ${c.carnot})`, oarrow: c => `image at x = ${c.x} m, magnification m = ${c.m} (${c.real ? 'real' : 'virtual'})`, slits: c => `fringe spacing Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, transmission T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `work W = ∫P dV = ${c.W}`},
+    cycle: c => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (Carnot limit ${c.carnot})`, oarrow: c => `image at x = ${c.x} m, magnification m = ${c.m} (${c.real ? 'real' : 'virtual'})`, slits: c => `fringe spacing Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, transmission T = ${c.T}` : ''}`, qpot: c => `bound levels E = ${c.E || 'none'}${c.T !== undefined ? `, transmission T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `work W = ∫P dV = ${c.W}`},
   types: {element: 'Circuit element', ground: 'Ground', charge: 'Point charge', plate: 'Charged plate', fieldlines: 'Field lines', field: 'Uniform field', cwire: 'Current wire', current: 'Current through the page', solenoid: 'Solenoid', loop: 'Current loop', magnet: 'Bar magnet',
     cylinder: 'Cylinder and piston', reservoir: 'Reservoir', engine: 'Heat engine diagram', graph: 'Graph frame', curve: 'Curve', cycle: 'Cycle', lens: 'Lens', mirror: 'Mirror', prism: 'Prism', slab: 'Slab', oarrow: 'Object (optics)', ray: 'Ray', slits: 'Slits and screen', wavefront: 'Wavefronts',
     wave: 'Wave', well: 'Potential well', levels: 'Energy levels', phototube: 'Photoelectric setup', spacetime: 'Minkowski diagram', worldline: 'Worldline', frames: 'Frames S, S′', vector: 'Vector', region: 'Region', point: 'Point'},
@@ -142,8 +142,35 @@ const X3 = ko ? {
     zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomFit: 'Show all', zoomHint: 'Ctrl+wheel or two fingers to zoom, drag on empty space to select several, Space+drag to pan', copy: 'Copy', paste: 'Paste', front: 'To front', backZ: 'To back', lockAll: 'Lock', unlockAll: 'Unlock',
     multi: n => `${n} selected`, align: 'Align', distribute: 'Distribute', aL: 'Left', aC: 'Centre', aR: 'Right', aT: 'Top', aM: 'Middle', aB: 'Bottom', dH: 'Horizontally', dV: 'Vertically', printW: 'Print width (mm, 0: the style\'s)', styleSrc: 'What the style is based on', sliders: 'Adjust', frameMark: 'Figure frame', setFrame: 'Make the visible part the frame'}
 };
+/* the drawing tools, the plain shapes, the typed potential, the start hint */
+const X4 = ko ? {
+  types: {rect: '사각형', ellipse: '원 · 타원', poly: '꺾은선 · 다각형 · 펜', bezier: '곡선 (베지어)', qpot: '퍼텐셜 직접 입력 V(x)'},
+  fields: {color: '선 색', fill: '채우기', closed: '닫힌 도형', smooth: '부드럽게', pts: '점', cx1: '조절점 1 x', cy1: '조절점 1 y', cx2: '조절점 2 x', cy2: '조절점 2 y', params: '매개변수 (이름=값 [최소, 최대], …)', V: '퍼텐셜 V(x) (eV, x는 nm)',
+    xmin: 'x 시작 (nm)', xmax: 'x 끝 (nm)', showV: 'V(x) 그리기', tplot: '투과율 T(E) 그래프', Emax: '에너지 축 위 끝 (eV, 0: 자동)', psiQ: '그릴 것', levelsQ: '속박 상태 수', EQ: '산란 에너지 E (eV, 0: 없음)', speedArrow: '속도 화살표', mass: '질량 (전자 질량 배)'},
+  enums: {black: '검정', gray: '회색', lightgray: '연회색', blue: '파랑', red: '빨강', green: '초록', orange: '주황', white: '흰색', tint: '선 색 옅게'},
+  tools: {select: '선택·이동 (V)', line: '선 (L)', arrow: '화살표 (A)', poly: '꺾은선: 누를 때마다 점, 두 번 누르거나 Enter로 끝 (Y)', curve: '곡선: 끌어서 그린 뒤 조절점을 옮기세요 (C)', rect: '사각형 (R)', rrect: '둥근 사각형', ellipse: '원·타원, Shift: 정원 (O)', arc: '호: 중심, 시작점, 끝점을 차례로', polygon: '다각형: 점을 찍고 첫 점을 누르거나 Enter (G)',
+    pen: '펜: 손으로 그리기 (P)', text: '글자 (T)', dim: '치수선 (D)', angle: '각도 표시: 꼭짓점, 한쪽 변, 다른 변을 차례로', fill: '채우기: 도형을 누르세요 (F)', eraser: '지우개: 누르거나 끌어서 지우기 (E)'},
+  style: {color: '색', width: '굵기', dash: '선 모양', fill: '채우기', heads: '화살촉', start: '시작', end: '끝'},
+  parts: '물리 부품', partsHint: '상자, 도르래, 회로 소자, 렌즈… 값으로 움직이는 부품', templates: '템플릿 (완성된 그림)', drawing: '그리기 도구',
+  hint: ['그리기 도구로 시작: 선, 화살표, 도형, 펜으로 그리세요.', '물리 부품 추가: ‘물리 부품’ 칸에서 상자·도르래·회로·렌즈 등을 넣으세요.', '값 조절 · 내보내기: 오른쪽에서 값과 슬라이더로 고치고 SVG·PNG·시험지로 보내세요.'], hintClose: '알겠어요', hintTitle: '처음이라면',
+  draftHint: {poly: '점을 찍으세요. 두 번 누르거나 Enter로 끝, Esc로 취소', polygon: '점을 찍으세요. 첫 점을 누르거나 Enter로 닫기', arc: '중심 → 시작점 → 끝점', angle: '꼭짓점 → 한쪽 변 위의 점 → 다른 변 위의 점'},
+  lede: '선·화살표·도형·펜으로 간단히 그리고, 필요하면 물리 부품과 템플릿을 더합니다. 같은 그림을 시험지에 넣거나 시뮬레이션·계산으로 확인할 수 있습니다.'
+} : {
+  types: {rect: 'Rectangle', ellipse: 'Circle, ellipse', poly: 'Polyline, polygon, pen', bezier: 'Curve (Bézier)', qpot: 'Typed potential V(x)'},
+  fields: {color: 'Line colour', fill: 'Fill', closed: 'Closed', smooth: 'Smooth', pts: 'Points', cx1: 'Control 1 x', cy1: 'Control 1 y', cx2: 'Control 2 x', cy2: 'Control 2 y', params: 'Parameters (name=value [min, max], …)', V: 'Potential V(x) (eV, x in nm)',
+    xmin: 'x from (nm)', xmax: 'x to (nm)', showV: 'Draw V(x)', tplot: 'Transmission T(E) plot', Emax: 'Top of the energy axis (eV, 0: auto)', psiQ: 'Draw', levelsQ: 'Bound states', EQ: 'Scattering energy E (eV, 0: none)', speedArrow: 'Velocity arrow', mass: 'Mass (electron masses)'},
+  enums: {black: 'Black', gray: 'Gray', lightgray: 'Light gray', blue: 'Blue', red: 'Red', green: 'Green', orange: 'Orange', white: 'White', tint: 'Light line colour'},
+  tools: {select: 'Select and move (V)', line: 'Line (L)', arrow: 'Arrow (A)', poly: 'Polyline: click for each point, double-click or Enter ends (Y)', curve: 'Curve: drag, then move its handles (C)', rect: 'Rectangle (R)', rrect: 'Rounded rectangle', ellipse: 'Circle, ellipse; Shift: circle (O)', arc: 'Arc: centre, start, end', polygon: 'Polygon: click the points, then the first one or Enter (G)',
+    pen: 'Pen: freehand (P)', text: 'Text (T)', dim: 'Dimension (D)', angle: 'Angle mark: vertex, a point on each side', fill: 'Fill: click a shape (F)', eraser: 'Eraser: click or drag over (E)'},
+  style: {color: 'Colour', width: 'Width', dash: 'Line', fill: 'Fill', heads: 'Arrowheads', start: 'Start', end: 'End'},
+  parts: 'Physics parts', partsHint: 'Blocks, pulleys, circuit elements, lenses… parts that move by value', templates: 'Templates (finished figures)', drawing: 'Drawing tools',
+  hint: ['Start with the drawing tools: lines, arrows, shapes, the pen.', 'Add physics parts: blocks, pulleys, circuits, lenses from the “Physics parts” panel.', 'Adjust and export: change values and sliders on the right, then SVG, PNG or the test paper.'], hintClose: 'Got it', hintTitle: 'New here?',
+  draftHint: {poly: 'Click points. Double-click or Enter ends, Esc cancels', polygon: 'Click points. Click the first point or press Enter to close', arc: 'Centre → start → end', angle: 'Vertex → a point on one side → a point on the other'},
+  lede: 'Draw simply with lines, arrows, shapes and the pen, then add physics parts and templates when you need them. Put a figure on a test paper, or check it with a simulation or a calculation.'
+};
+Object.assign(X3.types, X4.types); Object.assign(X3.fields, X4.fields); Object.assign(X3.enums, X4.enums);
 Object.assign(X2.types, X3.types); Object.assign(X2.kinds, X3.kinds); Object.assign(X2.fields, X3.fields); Object.assign(X2.enums, X3.enums); Object.assign(X2.units, {rheostat: 'Ω', dielectric: 'μF'});
-T.lede = X2.lede; Object.assign(T.types, X2.types); Object.assign(T.fields, X2.fields); Object.assign(T.enums, X2.enums);
+T.lede = X4.lede; Object.assign(T.types, X2.types); Object.assign(T.fields, X2.fields); Object.assign(T.enums, X2.enums);
 T.err.not_mechanics = ko ? '물리 문제 그림을 찾지 못했습니다. 그림이 잘 보이게 다시 찍어 주세요.' : 'No physics figure was found. Take the photo again with the figure clearly visible.';
 T.unsure = {...T.unsure, ...(ko ? {charge: '전하', kind: '종류', focal: '초점 거리'} : {charge: 'charge', kind: 'kind', focal: 'focal length'})};
 /* the palette: [type, preset, name] by domain */
@@ -166,9 +193,11 @@ const PALETTE = {
   waves: [['wave', {kind: 'travel'}, N2('진행파', 'Travelling wave')], ['wave', {kind: 'standing', ends: 'fixed'}, N2('정상파 (고정단)', 'Standing wave (fixed ends)')], ['pulse', {}, T.types.pulse], ['interference', {}, T.types.interference], ['wavefront', {kind: 'circular'}, N2('원형 파면', 'Circular wavefronts')], ['wavefront', {kind: 'plane'}, N2('평면 파면', 'Plane wavefronts')]],
   modern: [['well', {kind: 'infinite'}, N2('무한 우물', 'Infinite well')], ['well', {kind: 'finite'}, N2('유한 우물', 'Finite well')], ['well', {kind: 'harmonic', V0: 0.5, levels: 4}, N2('조화 진동자', 'Harmonic oscillator')], ['well', {kind: 'barrier', L: 0.4, V0: 4, E: 2.5}, N2('퍼텐셜 장벽', 'Barrier')], ['well', {kind: 'step', V0: 3, E: 2}, N2('퍼텐셜 계단', 'Step')],
     ['levels', {}, T.types.levels], ['phototube', {}, T.types.phototube], ['spacetime', {}, T.types.spacetime], ['worldline', {}, T.types.worldline], ['frames', {}, T.types.frames],
-    ['nucleus', {}, T.types.nucleus], ['particle', {kind: 'electron'}, N2('전자', 'Electron')], ['particle', {kind: 'photon'}, N2('광자 (물결 화살표)', 'Photon (wiggle)')], ['particle', {kind: 'alpha'}, N2('알파 입자', 'Alpha particle')], ['particle', {kind: 'proton'}, N2('양성자', 'Proton')], ['particle', {kind: 'neutron'}, N2('중성자', 'Neutron')]],
+    ['qpot', {}, N2('퍼텐셜 직접 입력: 유한 우물', 'Typed potential: finite well')], ['qpot', {V: 'x < 0 ? 0 : (x < a ? V0 : 0)', params: 'a=0.4 [0.05, 1.5], V0=4 [0, 10]', xmin: -1.2, xmax: 1.6, levels: 0, E: 2.5, tplot: true}, N2('퍼텐셜 직접 입력: 장벽 투과', 'Typed potential: barrier')],
+    ['qpot', {V: '0.5 k x^2', params: 'k=2 [0.2, 10]', xmin: -2.5, xmax: 2.5, levels: 4}, N2('퍼텐셜 직접 입력: 조화 진동자', 'Typed potential: harmonic')], ['qpot', {V: 'abs(x) > a + b/2 ? V0 : (abs(x) < b/2 ? Vb : 0)', params: 'a=0.5 [0.2, 1.5], b=0.12 [0, 0.8], V0=6 [0, 12], Vb=1.2 [0, 8]', xmin: -1.3, xmax: 1.3, levels: 3}, N2('퍼텐셜 직접 입력: 이중 우물', 'Typed potential: double well')],
+    ['nucleus', {}, T.types.nucleus], ['particle', {kind: 'electron'}, N2('전자', 'Electron')], ['particle', {kind: 'photon'}, N2('광자 (물결 화살표)', 'Photon (wiggle)')], ['particle', {kind: 'alpha'}, N2('알파 입자', 'Alpha particle')], ['particle', {kind: 'proton'}, N2('양성자', 'Proton')], ['particle', {kind: 'neutron'}, N2('중성자', 'Neutron')], ['particle', {kind: 'positron'}, N2('양전자', 'Positron')], ['particle', {kind: 'neutrino'}, N2('중성미자', 'Neutrino')]],
   general: [['label', {}, T.types.label], ['label', {box: true, text: '\\text{box}'}, N2('글 상자', 'Text box')], ['vector', {}, T.types.vector], ['dim', {}, T.types.dim], ['arc', {}, T.types.arc], ['axes', {}, T.types.axes],
-    ['line', {pattern: 'dashed'}, N2('점선', 'Dashed line')], ['line', {pattern: 'dotted'}, N2('점점선', 'Dotted line')], ['line', {pattern: 'solid', heads: 'end'}, N2('화살표 선', 'Arrow line')], ['region', {}, T.types.region], ['region', {fill: 'hatch'}, N2('빗금 영역', 'Hatched region')], ['point', {}, T.types.point], ['graph', {}, N2('함수 그래프', 'Function graph')], ['curve', {kind: 'func'}, N2('함수 곡선', 'Function curve')],
+    ['line', {pattern: 'dashed'}, N2('점선', 'Dashed line')], ['line', {pattern: 'dotted'}, N2('점점선', 'Dotted line')], ['line', {pattern: 'solid', heads: 'end'}, N2('화살표 선', 'Arrow line')], ['region', {}, T.types.region], ['region', {fill: 'hatch'}, N2('빗금 영역', 'Hatched region')], ['point', {}, T.types.point], ['graph', {}, N2('함수 그래프', 'Function graph')], ['curve', {kind: 'func'}, N2('함수 곡선', 'Function curve')], ['curve', {kind: 'func', params: 'A=1 [0, 2], k=1 [0.1, 5]', expr: 'A sin(k x)'}, N2('매개변수 함수 (슬라이더)', 'Function with parameters (sliders)')],
     ['graph', {xlabel: 't', ylabel: 'v', grid: true, origin: '0'}, N2('v–t 그래프 (격자)', 'v–t graph (grid)')], ['curve', {kind: 'points', shade: true}, N2('꺾은선 (넓이 칠하기)', 'Polyline (shaded area)')], ['panel', {caption: '(가)'}, N2('그림 칸 (가)', 'Panel (a)')], ['panel', {caption: '(나)'}, N2('그림 칸 (나)', 'Panel (b)')],
     ['brace', {}, T.types.brace], ['callout', {}, T.types.callout], ['parrows', {}, T.types.parrows]]
 };
@@ -203,7 +232,8 @@ const store = {get(k) { try { return localStorage.getItem(k); } catch (e) { retu
 const SCENE_KEY = 'hlDrawScene', SAVES_KEY = 'hlDrawSaves', PAPER_KEY = 'hlTeachPaper', EDIT_KEY = 'hlDrawEdit', PREFS_KEY = 'hlDrawPrefs';
 /* sel: the object whose values the panel shows; selection: every selected id (shift-click, a box drawn on empty space) */
 const st = {scene: null, sel: '', selection: new Set(), hist: createHistory(250), connect: null, grid: true, snap: true, fbd: false, readouts: true, solve: false, circuit: null, dom: 'mech', q: '', lastText: null,
-  sim: null, playing: false, speed: 1, last: 0, trails: new Map(), samples: [], graph: '', ai: null, msg: '', paperEdit: null, drag: null, zoom: null, clip: null, gesture: null, marquee: null, space: false};
+  sim: null, playing: false, speed: 1, last: 0, trails: new Map(), samples: [], graph: '', ai: null, msg: '', paperEdit: null, drag: null, zoom: null, clip: null, gesture: null, marquee: null, space: false,
+  tool: 'select', draft: null, dstyle: {color: 'black', lw: 1, pattern: 'solid', fill: 'none', hs: false, he: false}};
 const clone = o => JSON.parse(JSON.stringify(o));
 /* the member's choice: open with an example figure or an empty one (an empty canvas once the example was cleared) */
 const prefs = () => { try { const p = JSON.parse(store.get(PREFS_KEY) || '{}'); return p && typeof p === 'object' ? p : {}; } catch (e) { return {}; } };
@@ -252,7 +282,7 @@ function flash(html) { st.msg = html; const el = $('status'); if (el) el.innerHT
 const PREFIX = {wheel: 'wh', plank: 'pl', track: 'tr', bridge: 'BR', transformer: 'TR', rails: 'RL', container: 'ct', utube: 'ut', thermometer: 'th', heater: 'ht', gasbox: 'gb', screen: 'sc', eye: 'eye', source: 'src', fiber: 'fb', pulse: 'pu', interference: 'IF', nucleus: 'nu', particle: 'pa', panel: 'pn', brace: 'br', callout: 'co', parrows: 'ar',
   block: 'm', ball: 'b', floor: 'f', ceiling: 'c', wall: 'w', incline: 'i', pulley: 'p', pivot: 'o', string: 's', rod: 'r', spring: 'k', force: 'F', label: 'l', dim: 'd', arc: 'a', axes: 'x', line: 'n',
   element: 'e', ground: 'gnd', charge: 'q', plate: 'P', fieldlines: 'FL', field: 'B', cwire: 'I', current: 'J', solenoid: 'sol', loop: 'loop', magnet: 'mag', cylinder: 'cyl', reservoir: 'res', engine: 'eng', graph: 'G', curve: 'c', cycle: 'cyc',
-  lens: 'L', mirror: 'M', prism: 'pr', slab: 'sl', oarrow: 'O', ray: 'ray', slits: 'S', wavefront: 'wf', wave: 'wave', well: 'W', levels: 'lv', phototube: 'pt', spacetime: 'st', worldline: 'wl', frames: 'fr', vector: 'v', region: 'rg', point: 'pt'};
+  lens: 'L', mirror: 'M', prism: 'pr', slab: 'sl', oarrow: 'O', ray: 'ray', slits: 'S', wavefront: 'wf', wave: 'wave', well: 'W', levels: 'lv', phototube: 'pt', spacetime: 'st', worldline: 'wl', frames: 'fr', vector: 'v', region: 'rg', point: 'pt', rect: 'rc', ellipse: 'el', poly: 'pg', bezier: 'bz', qpot: 'Q'};
 const KIND_PREFIX = {rheostat: 'R', dielectric: 'C', wire: 'W', resistor: 'R', battery: 'E', cell: 'E', dc: 'E', ac: 'E', capacitor: 'C', inductor: 'L', switch: 'S', diode: 'D', led: 'D', bulb: 'B', ammeter: 'A', voltmeter: 'V', galvanometer: 'G'};
 const freeId = (type, kind) => { const p = type === 'element' && KIND_PREFIX[kind] ? KIND_PREFIX[kind] : PREFIX[type] || 'o'; let n = 1; while (byId(p + n)) n++; return p + n; };
 const snapV = v => st.snap ? Math.round(v / st.scene.grid) * st.scene.grid : v;
@@ -288,7 +318,8 @@ function placeNew(type, preset, v, next) {
   else if (['field', 'solenoid', 'cylinder', 'slab', 'region', 'phototube'].includes(type)) box(0.4, 0.4);
   else if (type === 'magnet') box(0.35, 0.1);
   else if (type === 'reservoir') box(0.4, 0.12);
-  else if (type === 'graph' || type === 'well' || type === 'levels') box(0.6, 0.65);
+  else if (type === 'graph' || type === 'well' || type === 'levels' || type === 'qpot') box(0.6, 0.65);
+  else if (type === 'rect' || type === 'ellipse') box(0.25, 0.2);
   else if (type === 'engine') Object.assign(o, {x: cx, y: cy, size: r4(m * 0.22)});
   else if (type === 'spacetime') Object.assign(o, {x: cx, y: r4(snapV(v.y + v.h * 0.12)), size: r4(snapV(v.h * 0.7))});
   else if (type === 'frames') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.15)), y: r4(snapV(v.y + v.h * 0.25)), size: r4(snapV(m * 0.35)), gap: r4(snapV(v.w * 0.4))});
@@ -326,7 +357,6 @@ function addObject(type, preset = {}) {
   const next = clone(st.scene), o = {...defaults(type), id: freeId(type, preset.kind)};
   Object.assign(o, placeNew(type, preset, dview(), next), Object.fromEntries(Object.entries(preset).filter(([k]) => !(k === 'f' && (type === 'lens' || type === 'mirror')))));
   if (type === 'mirror' && preset.f === 0) o.f = 0;
-  if (type === 'block') o.label = `m_${o.id.slice(1)}`;
   if (type === 'label' && !o.text) o.text = 'A';
   if (type === 'element' && !o.label) o.label = {resistor: 'R', capacitor: 'C', inductor: 'L', battery: '\\mathcal{E}', cell: '\\mathcal{E}', dc: '\\mathcal{E}', ac: '\\mathcal{E}', bulb: '', switch: 'S'}[o.kind] || '';
   if (type === 'element') o.value = {battery: 12, cell: 1.5, dc: 6, ac: 10, capacitor: 100, inductor: 0.1, diode: 0.7, led: 2, resistor: 100, bulb: 10, galvanometer: 0}[o.kind] ?? o.value;
@@ -417,7 +447,8 @@ function dup() { if (copySel()) pasteClip(); }
    surface), a segment moves both ends */
 function moveObj(o, dx, dy, g = o, keepAt = false) {
   if (isBody(o) && g.on) { if (keepAt) return; const s = st.scene.objects.find(x => x.id === g.on); if (s) { const fr = surfaceFrame(s, st.scene); o.at = r4(g.at + vec.dot({x: dx, y: dy}, fr.u)); return; } }
-  if ('x1' in g && 'x2' in g && !('x' in g)) { o.x1 = r4(g.x1 + dx); o.y1 = r4(g.y1 + dy); o.x2 = r4(g.x2 + dx); o.y2 = r4(g.y2 + dy); return; }
+  if ('x1' in g && 'x2' in g && !('x' in g)) { o.x1 = r4(g.x1 + dx); o.y1 = r4(g.y1 + dy); o.x2 = r4(g.x2 + dx); o.y2 = r4(g.y2 + dy); if ('cx1' in g) { o.cx1 = r4(g.cx1 + dx); o.cy1 = r4(g.cy1 + dy); o.cx2 = r4(g.cx2 + dx); o.cy2 = r4(g.cy2 + dy); } return; }
+  if (g.pts) { o.pts = g.pts.map(q => [r4(q[0] + dx), r4(q[1] + dy)]); return; }
   if (o.type === 'callout') { o.x2 = r4(g.x2 + dx); o.y2 = r4(g.y2 + dy); }
   if ('x' in g) { o.x = r4(g.x + dx); o.y = r4(g.y + dy); }
 }
@@ -458,17 +489,23 @@ function paintCanvas() {
   if (st.fbd) { try { forces = (simOn ? st.sim : buildSim(st.scene)).forces(); } catch (e) { forces = null; } }
   shownScene = sc; shownPoses = simOn ? st.sim.poses() : null;
   st.circuit = st.solve && hasCircuit() ? solveCircuit(st.scene) : null;
-  let svg = renderSVG(sc, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? [] : selIds(), forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit, marquee: st.marquee,
+  const drawn = st.draft ? {...sc, objects: [...sc.objects, draftObject()].filter(Boolean)} : sc;
+  let svg = renderSVG(drawn, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? [] : selIds(), forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit, marquee: st.marquee,
     velocities: simOn ? st.sim.velocities() : null, anchors: simOn ? st.sim.anchors : null, trails: simOn ? [...st.trails].filter(([id]) => byId(id)?.trail) : null,
     conical: (simOn ? st.sim : null)?.systems.filter(s => s.kind === 'conical').map(s => ({centre: s.centre, radius: s.radius})) || st.scene.objects.filter(o => (o.type === 'string' || o.type === 'rod') && o.mode === 'conical').map(o => conicalOrbit(o)).filter(Boolean)});
   /* zoomed: the figure's frame (what is exported) as a thin dashed box */
   if (st.zoom) { const f = view(), S = W / v.w, x = (f.x - v.x) * S, y = (v.y + v.h - f.y - f.h) * S; svg = svg.replace(/<\/svg>$/, `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(f.w * S).toFixed(1)}" height="${(f.h * S).toFixed(1)}" fill="none" stroke="#d97706" stroke-width="1.2" stroke-dasharray="7 4" pointer-events="none" class="frame"/></svg>`); }
   box.innerHTML = svg;
-  box.classList.toggle('connecting', !!st.connect); box.classList.toggle('panning', st.space);
+  box.classList.toggle('connecting', !!st.connect); box.classList.toggle('panning', st.space); box.dataset.tool = st.tool;
   const z = $('zoomPct'); if (z) z.textContent = `${Math.round(100 * view().w / v.w)}%`;
 }
-/* labels on a narrow screen: the 800-px drawing is shown smaller, so its labels are drawn larger to stay readable */
-function screenLabelScale(box) { const w = box.clientWidth || W; return Math.max(1, Math.min(2.4, 0.75 * W / Math.max(200, w - 14))); }
+/* labels on screen: the 800-px drawing is shown at the canvas's width or, for a tall figure, at the height the canvas
+   allows (68% of the window, at most 640 px), so its labels are drawn larger by what it is shrunk, to stay about
+   12 px or more on screen (draw-render.mjs screenLabelScale) */
+function screenLabelScale(box) {
+  const v = dview(), wide = !matchMedia('(max-width:720px)').matches;
+  return labelScaleFor((box.clientWidth || W) - 14, wide ? Math.min(innerHeight * 0.68, 640) : Infinity, W * v.h / v.w);
+}
 function conicalOrbit(s) {
   const P = [byId(s.a), byId(s.b)].find(o => o?.type === 'pivot'), b = [byId(s.a), byId(s.b)].find(isBody);
   if (!P || !b) return null; const p = bodyPose(st.scene, b);
@@ -490,6 +527,158 @@ function zoomBy(k, at) {
 function panBy(dx, dy) { const v = dview(); st.zoom = {x: v.x - dx, y: v.y - dy, w: v.w, h: v.h}; paintCanvas(); }
 function pickAt(ev) { const g = ev.target.closest?.('[data-id]'); return g ? byId(g.dataset.id) : null; }
 const NO_DRAG = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline', 'fieldlines'];
+/* ── the drawing tools ──
+   select (move, box-select), line, arrow, polyline, curve (a Bézier with two handles), rectangle, rounded rectangle,
+   circle/ellipse, arc, polygon, pen (freehand, simplified and smoothed), text, dimension, angle mark, fill and eraser.
+   A shape takes the current colour, line width, line pattern, fill and arrowheads (st.dstyle). Points snap to the
+   points of the figure near them (ends, corners, vertices, terminals) or else to the grid; with Shift a segment turns
+   in 15° steps (a rectangle or an ellipse becomes a square or a circle). */
+const TOOLS = ['select', 'line', 'arrow', 'poly', 'curve', 'rect', 'rrect', 'ellipse', 'arc', 'polygon', 'pen', 'text', 'dim', 'angle', 'fill', 'eraser'];
+const ic = d => `<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const TOOL_ICON = {select: ic('<path d="M5 3l10 7-4.5 1 2.5 5-2 1-2.5-5L5 15z" fill="currentColor" stroke="none"/>'), line: ic('<path d="M4 16L16 4"/>'), arrow: ic('<path d="M4 16L15 5M9 5h6v6"/>'),
+  poly: ic('<path d="M3 15l5-9 4 7 5-9"/>'), curve: ic('<path d="M3 15C6 3 13 17 17 5"/><circle cx="3" cy="15" r="1.4" fill="currentColor"/><circle cx="17" cy="5" r="1.4" fill="currentColor"/>'), rect: ic('<rect x="3" y="5" width="14" height="10"/>'),
+  rrect: ic('<rect x="3" y="5" width="14" height="10" rx="3.5"/>'), ellipse: ic('<ellipse cx="10" cy="10" rx="7" ry="5.5"/>'), arc: ic('<path d="M4 15A7 7 0 0 1 16 10"/><circle cx="10" cy="15" r="1" fill="currentColor"/>'),
+  polygon: ic('<path d="M10 3l7 5-3 8H6L3 8z"/>'), pen: ic('<path d="M3 17c2-1 3-4 5-4s1 3 4 2 3-6 5-8"/>'), text: ic('<path d="M5 5h10M10 5v11"/>'), dim: ic('<path d="M3 7v8M17 7v8M3 11h14M6 9l-3 2 3 2M14 9l3 2-3 2"/>'),
+  angle: ic('<path d="M3 16h14M3 16L14 5M8.5 16a5.5 5.5 0 0 0-1.6-3.9"/>'), fill: ic('<rect x="4" y="4" width="12" height="12"/><path d="M4 12l8-8M4 16l12-12M8 16l8-8M12 16l4-4" stroke-width="1"/>'), eraser: ic('<path d="M8 16l-4-4 8-8 5 5-7 7zM8 16h9M7 9l5 5"/>')};
+const TOOL_KEY = {v: 'select', l: 'line', a: 'arrow', y: 'poly', c: 'curve', r: 'rect', o: 'ellipse', g: 'polygon', p: 'pen', t: 'text', d: 'dim', f: 'fill', e: 'eraser'};
+const DRAG_TOOLS = ['line', 'arrow', 'curve', 'rect', 'rrect', 'ellipse', 'dim', 'pen'], CLICK_TOOLS = {poly: 0, polygon: 0, arc: 3, angle: 3};
+const FILLABLE = ['rect', 'ellipse', 'poly', 'region'];
+const headsOf = ds => ds.hs && ds.he ? 'both' : ds.he ? 'end' : ds.hs ? 'start' : 'none';
+function setTool(t) { st.tool = TOOLS.includes(t) ? t : 'select'; st.draft = null; st.connect = null; paintTools(); paintCanvas(); status(); }
+/* the points a new point snaps to */
+function snapTargets(exclude) {
+  const out = [];
+  for (const o of st.scene.objects) {
+    if (o.id === exclude) continue;
+    if ('x1' in o && 'y2' in o && typeof o.x1 === 'number') out.push({x: o.x1, y: o.y1}, {x: o.x2, y: o.y2});
+    if (o.type === 'poly') o.pts.forEach(q => out.push({x: q[0], y: q[1]}));
+    if (o.type === 'rect' || o.type === 'region' || o.type === 'ellipse') { const c = [[0, 0], [1, 0], [0, 1], [1, 1]]; if (o.type === 'ellipse') c.splice(0, 4, [0.5, 0], [0.5, 1], [0, 0.5], [1, 0.5], [0.5, 0.5]); c.forEach(([a, b]) => out.push({x: o.x + a * o.w, y: o.y + b * o.h})); }
+    if (['point', 'arc', 'pivot', 'pulley', 'charge'].includes(o.type)) out.push({x: o.x, y: o.y});
+    if (o.type === 'floor' || o.type === 'ceiling') out.push({x: o.x, y: o.y}, {x: o.x + o.w, y: o.y});
+  }
+  return out;
+}
+function snapPt(p, {from = null, shift = false, exclude = ''} = {}) {
+  if (from && shift) {
+    const dx = p.x - from.x, dy = p.y - from.y, L = Math.hypot(dx, dy), a = Math.round(Math.atan2(dy, dx) / (Math.PI / 12)) * (Math.PI / 12);
+    const L2 = st.snap ? Math.round(L / st.scene.grid) * st.scene.grid || L : L;
+    return {x: r4(from.x + L2 * Math.cos(a)), y: r4(from.y + L2 * Math.sin(a))};
+  }
+  const tol = Math.max(10 * dview().w / W, st.snap ? st.scene.grid * 0.45 : 0);
+  let best = null, bd = tol;
+  for (const q of snapTargets(exclude)) { const d = Math.hypot(q.x - p.x, q.y - p.y); if (d < bd) { bd = d; best = q; } }
+  if (best) return {x: r4(best.x), y: r4(best.y)};
+  return {x: r4(snapV(p.x)), y: r4(snapV(p.y))};
+}
+const deg = (c, p) => r4(Math.atan2(p.y - c.y, p.x - c.x) * 180 / Math.PI);
+/* the object a draft makes (null while it is too small to be one) */
+function shapeOf(dr) {
+  const ds = st.dstyle, look = {color: ds.color, lw: ds.lw}, t = dr.tool, a = dr.a, b = dr.b;
+  const tiny = 3 * dview().w / W;
+  if (t === 'line' || t === 'arrow' || t === 'dim') {
+    if (!b || Math.hypot(b.x - a.x, b.y - a.y) < tiny) return null;
+    if (t === 'dim') return {type: 'dim', x1: a.x, y1: a.y, x2: b.x, y2: b.y, offset: 0, text: ''};
+    return {type: 'line', x1: a.x, y1: a.y, x2: b.x, y2: b.y, pattern: ds.pattern, heads: t === 'arrow' ? (ds.hs ? 'both' : 'end') : headsOf(ds), ...look};
+  }
+  if (t === 'rect' || t === 'rrect' || t === 'ellipse') {
+    if (!b) return null; let w = Math.abs(b.x - a.x), h = Math.abs(b.y - a.y);
+    if (dr.shift) w = h = Math.max(w, h);
+    if (w < tiny || h < tiny) return null;
+    const x = b.x < a.x ? a.x - w : a.x, y = b.y < a.y ? a.y - h : a.y;
+    return {type: t === 'ellipse' ? 'ellipse' : 'rect', x: r4(x), y: r4(y), w: r4(w), h: r4(h), ...(t === 'rrect' ? {r: r4(Math.min(w, h) * 0.18)} : {}), fill: ds.fill, pattern: ds.pattern === 'none' ? 'solid' : ds.pattern, ...look};
+  }
+  if (t === 'curve') {
+    if (!b) return null; const dx = b.x - a.x, dy = b.y - a.y, L = Math.hypot(dx, dy); if (L < tiny) return null;
+    const n = {x: -dy / L, y: dx / L}, k = 0.3 * L;
+    return {type: 'bezier', x1: a.x, y1: a.y, x2: b.x, y2: b.y, cx1: r4(a.x + dx / 3 + n.x * k), cy1: r4(a.y + dy / 3 + n.y * k), cx2: r4(a.x + 2 * dx / 3 + n.x * k), cy2: r4(a.y + 2 * dy / 3 + n.y * k), pattern: ds.pattern, heads: headsOf(ds), ...look};
+  }
+  if (t === 'pen') {
+    if (!dr.raw || dr.raw.length < 2) return null;
+    const pts = dr.done ? simplifyPath(dr.raw, 1.6 * dview().w / W, 200) : dr.raw;
+    if (pts.length < 2) return null;
+    return {type: 'poly', pts: pts.map(q => [r4(q.x), r4(q.y)]), smooth: pts.length > 2, closed: false, fill: 'none', pattern: ds.pattern, heads: headsOf(ds), ...look};
+  }
+  if (t === 'poly' || t === 'polygon') {
+    const pts = [...dr.pts, ...(dr.cur && !dr.done ? [dr.cur] : [])]; if (pts.length < 2) return null;
+    const closed = t === 'polygon' && (dr.done || pts.length > 2);
+    return {type: 'poly', pts: pts.map(q => [q.x, q.y]), closed, smooth: false, fill: closed ? ds.fill : 'none', pattern: ds.pattern, heads: closed ? 'none' : headsOf(ds), ...look};
+  }
+  if (t === 'arc' || t === 'angle') {
+    const pts = [...dr.pts, ...(dr.cur && !dr.done ? [dr.cur] : [])]; if (pts.length < 2) return null;
+    const c = pts[0], p1 = pts[1], p2 = pts[2] || null, R1 = Math.hypot(p1.x - c.x, p1.y - c.y); if (R1 < tiny) return null;
+    if (t === 'arc') return {type: 'arc', x: c.x, y: c.y, r: r4(Math.max(0.02, R1)), from: deg(c, p1), to: p2 ? deg(c, p2) : r4(deg(c, p1) + 1), text: '', arrow: ds.he, pattern: ds.pattern, color: ds.color};
+    if (!p2) return {type: 'line', x1: c.x, y1: c.y, x2: p1.x, y2: p1.y, pattern: 'dotted', heads: 'none'};
+    let from = deg(c, p1), to = deg(c, p2), sweep = ((to - from) % 360 + 360) % 360;
+    if (sweep > 180) [from, to] = [to, from];
+    const R2 = Math.hypot(p2.x - c.x, p2.y - c.y);
+    return {type: 'arc', x: c.x, y: c.y, r: r4(Math.max(0.03, 0.35 * Math.min(R1, R2))), from, to, text: '\\theta', arrow: false, color: ds.color};
+  }
+  return null;
+}
+function draftObject() { const o = st.draft && shapeOf(st.draft); return o ? {...defaults(o.type), ...o, id: 'zzDraft'} : null; }
+function addShape(o) {
+  if (!o) return;
+  if (st.scene.objects.length >= MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
+  const next = clone(st.scene), id = freeId(o.type); next.objects.push({...defaults(o.type), ...o, id});
+  if (commit(next)) { setSel([id]); paint(); }
+  return id;
+}
+function finishDraft() { const dr = st.draft; if (!dr) return; dr.done = true; if (dr.pts) dr.pts = dr.pts.filter((q, i, a) => !i || Math.hypot(q.x - a[i - 1].x, q.y - a[i - 1].y) > 1e-9); const o = shapeOf(dr); st.draft = null; if (o) addShape(o); else paintCanvas(); status(); }
+function toolDown(ev) {
+  const t = st.tool, raw = worldAt(ev), shift = ev.shiftKey;
+  if (t === 'eraser') { st.drag = {erase: new Set()}; const o = pickAt(ev); if (o) st.drag.erase.add(o.id); setSel([...st.drag.erase]); paintCanvas(); return; }
+  if (t === 'fill') {
+    const o = pickAt(ev); if (!o || !FILLABLE.includes(o.type)) return;
+    const next = clone(st.scene), x = next.objects.find(y => y.id === o.id), want = st.dstyle.fill !== 'none' ? st.dstyle.fill : (o.fill === 'none' ? 'lightgray' : 'none');
+    if (x.type === 'region') x.fill = {lightgray: 'gray', gray: 'gray', white: 'none', tint: 'gray'}[want] || (FIELDS.region.fill.list.includes(want) ? want : 'gray');
+    else { x.fill = want; if (x.type === 'poly') x.closed = true; }
+    if (commit(next)) { setSel([o.id]); paint(); }
+    return;
+  }
+  if (t === 'text') {
+    const p = snapPt(raw), id = addShape({type: 'label', x: p.x, y: p.y, text: 'A', size: 16, color: st.dstyle.color});
+    ev.preventDefault();
+    if (id) { st.lastText = {id, k: 'text'}; setTimeout(() => { const el = document.querySelector('[data-f="text"]'); if (el) { el.focus(); el.select(); } }, 0); }
+    return;
+  }
+  if (t in CLICK_TOOLS) {
+    const dr = st.draft && st.draft.tool === t ? st.draft : (st.draft = {tool: t, pts: []});
+    const last = dr.pts[dr.pts.length - 1], p = snapPt(raw, {from: last, shift: shift && !!last});
+    /* a second press on the same spot ends a polyline or a polygon (the canvas is redrawn between the presses, so the
+       browser's own dblclick does not come) */
+    const now = performance.now(), quick = dr.lastDown && now - dr.lastDown.t < 400 && Math.hypot(ev.clientX - dr.lastDown.x, ev.clientY - dr.lastDown.y) < 6;
+    dr.lastDown = {t: now, x: ev.clientX, y: ev.clientY};
+    if (quick && !CLICK_TOOLS[t]) { finishDraft(); return; }
+    /* a polygon closes on its first point */
+    if (t === 'polygon' && dr.pts.length > 2 && Math.hypot(p.x - dr.pts[0].x, p.y - dr.pts[0].y) < 10 * dview().w / W) { finishDraft(); return; }
+    dr.pts.push(p); dr.cur = null;
+    if (CLICK_TOOLS[t] && dr.pts.length >= CLICK_TOOLS[t]) { finishDraft(); return; }
+    paintCanvas(); status(); return;
+  }
+  if (DRAG_TOOLS.includes(t)) {
+    const a = t === 'pen' ? raw : snapPt(raw);
+    st.draft = t === 'pen' ? {tool: t, raw: [a]} : {tool: t, a, b: null};
+    st.drag = {tool: true};
+    $('canvas').setPointerCapture?.(ev.pointerId);
+  }
+}
+function toolMove(ev) {
+  const dr = st.draft; if (!dr) return;
+  const raw = worldAt(ev);
+  if (dr.tool === 'pen') { const q = dr.raw[dr.raw.length - 1]; if (Math.hypot(raw.x - q.x, raw.y - q.y) > 1.2 * dview().w / W) dr.raw.push(raw); }
+  else if (dr.a) { dr.shift = ev.shiftKey; dr.b = ['rect', 'rrect', 'ellipse'].includes(dr.tool) ? snapPt(raw) : snapPt(raw, {from: dr.a, shift: ev.shiftKey}); }
+  else if (dr.pts) { const last = dr.pts[dr.pts.length - 1]; dr.cur = snapPt(raw, {from: last, shift: ev.shiftKey && !!last}); }
+  paintCanvas();
+}
+/* a mount's pulleys and the bodies hanging from them go along when it is dragged (and a pulley's hanging bodies) */
+function followersOf(o) {
+  if (!o || isBody(o)) return [];
+  const pulleys = o.type === 'pulley' ? [] : st.scene.objects.filter(p => p.type === 'pulley' && p.mount === o.id), out = [...pulleys];
+  for (const p of o.type === 'pulley' ? [o, ...pulleys] : pulleys) for (const sg of st.scene.objects) if (sg.type === 'string' && sg.over.length)
+    for (const [bid, pid] of [[sg.a, sg.over[0]], [sg.b, sg.over[sg.over.length - 1]]]) { const b = byId(bid); if (pid === p.id && isBody(b) && !b.on && !out.includes(b)) out.push(b); }
+  return out.map(clone);
+}
+
 function bindCanvas() {
   const box = $('canvas'), pts = new Map();
   box.addEventListener('pointerdown', ev => {
@@ -499,9 +688,10 @@ function bindCanvas() {
     if (ev.button !== 0) return;
     const before = JSON.stringify(st.scene);
     const hd = ev.target.closest?.('[data-handle]'), hs = hd && byId(st.sel);
-    if (hs && !st.connect && !hs.lock) { if (st.sim) stopSim(); st.drag = {id: hs.id, handle: +hd.dataset.handle, start: worldAt(ev), orig: clone(hs), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
+    if (hs && !st.connect && !hs.lock) { if (st.sim) stopSim(); st.drag = {id: hs.id, handle: hd.dataset.handle, start: worldAt(ev), orig: clone(hs), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
     const rh = ev.target.closest?.('[data-rot]'), rs = rh && byId(st.sel);
     if (rs && !st.connect) { if (st.sim) stopSim(); const c = isBody(rs) ? bodyPose(st.scene, rs) : rotCentre(rs); st.drag = {id: rs.id, rot: true, c, before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
+    if (st.tool !== 'select' && !st.connect) { if (st.sim) { stopSim(); paint(); } toolDown(ev); return; }
     const o = pickAt(ev);
     if (st.connect) { connectClick(o); return; }
     if (st.sim) { stopSim(); paint(); }
@@ -516,12 +706,15 @@ function bindCanvas() {
     paintCanvas(); paintSide(); status(); paintBar();
     const ids = selIds().filter(id => !NO_DRAG.includes(byId(id).type) && !byId(id).lock);
     if (!ids.length || (byId(o.id).lock && ids.length <= 1)) return;
-    st.drag = ids.length > 1 ? {group: ids, origs: new Map(ids.map(id => [id, clone(byId(id))])), start: worldAt(ev), before, moved: false} : {id: o.id, start: worldAt(ev), orig: clone(o), before, moved: false};
+    st.drag = ids.length > 1 ? {group: ids, origs: new Map(ids.map(id => [id, clone(byId(id))])), start: worldAt(ev), before, moved: false} : {id: o.id, start: worldAt(ev), orig: clone(o), follow: followersOf(o), before, moved: false};
     box.setPointerCapture?.(ev.pointerId);
   });
   box.addEventListener('pointermove', ev => {
     if (pts.has(ev.pointerId)) pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
+    if (!st.drag && st.draft && st.draft.pts) { toolMove(ev); return; }
     const d = st.drag; if (!d) return;
+    if (d.tool) { toolMove(ev); return; }
+    if (d.erase) { const o = pickAt(ev) || (() => { const el = document.elementFromPoint(ev.clientX, ev.clientY); const g = el?.closest?.('[data-id]'); return g ? byId(g.dataset.id) : null; })(); if (o && !d.erase.has(o.id)) { d.erase.add(o.id); setSel([...d.erase]); paintCanvas(); } return; }
     if (d.pinch) { if (pts.size < 2) return; const [a, b] = [...pts.values()], dd = Math.hypot(a.x - b.x, a.y - b.y); if (dd > 10) { st.zoom = {...d.v0}; zoomBy(dd / d.d0, d.mid); } return; }
     if (d.pan) { const svg = box.querySelector('svg'), r = svg.getBoundingClientRect(), k = dview().w / r.width; panBy((ev.clientX - d.last.x) * k, -(ev.clientY - d.last.y) * k); d.last = {x: ev.clientX, y: ev.clientY}; return; }
     const p = worldAt(ev);
@@ -532,6 +725,7 @@ function bindCanvas() {
       setSel([...d.keep, ...hits]); paintCanvas(); return;
     }
     if (d.rot) { const o = byId(d.id); if (!o) return; let a = Math.atan2(p.y - d.c.y, p.x - d.c.x) * 180 / Math.PI - 90; if (!ev.shiftKey) a = Math.round(a / 15) * 15; o.rot = r4(((a + 540) % 360) - 180); d.moved = true; paintCanvas(); return; }
+    d.shift = ev.shiftKey;
     const dx = p.x - d.start.x, dy = p.y - d.start.y;
     if (!d.moved && Math.hypot(dx, dy) * W / dview().w < 3) return;
     d.moved = true;
@@ -542,6 +736,8 @@ function bindCanvas() {
   const end = ev => {
     pts.delete(ev.pointerId);
     const d = st.drag; st.drag = null; if (!d) return;
+    if (d.tool) { if (st.draft && DRAG_TOOLS.includes(st.draft.tool)) finishDraft(); return; }
+    if (d.erase) { if (d.erase.size) { const next = clone(st.scene); removeIds(next, [...d.erase]); setSel([]); commit(next); } return; }
     if (d.marquee) { st.marquee = null; paint(); return; }
     if (d.pan || d.pinch || !d.moved) return;
     const r = validateScene(st.scene);
@@ -560,12 +756,20 @@ function bindCanvas() {
 function dragTo(d, p, dx, dy) {
   const o = byId(d.id), g = d.orig; if (!o) return;
   if (d.handle) {
-    /* one end of a wire, an element, a line…: on the grid, or onto a terminal near it */
-    let q = {x: r4(snapV(p.x)), y: r4(snapV(p.y))};
-    const near = st.scene.objects.filter(x => x.id !== o.id && 'x1' in x && 'y2' in x).flatMap(x => [{x: x.x1, y: x.y1}, {x: x.x2, y: x.y2}]).find(t => Math.hypot(t.x - p.x, t.y - p.y) < Math.max(st.scene.grid * 0.6, 12 * dview().w / W));
-    if (near) q = near;
-    if (o.type === 'callout') { if (d.handle === 1) { o.x = q.x; o.y = q.y; } else { o.x2 = q.x; o.y2 = q.y; } return; }
-    o['x' + d.handle] = q.x; o['y' + d.handle] = q.y; return;
+    /* an end of a wire, an element, a line…, a vertex, a control point, a corner: onto a point of the figure near it or
+       the grid; with Shift a segment's end turns in 15° steps about the other end */
+    const h = String(d.handle);
+    if (h === '1' || h === '2') {
+      const other = o.type === 'callout' ? (h === '1' ? {x: o.x2, y: o.y2} : {x: o.x, y: o.y}) : {x: o['x' + (h === '1' ? 2 : 1)], y: o['y' + (h === '1' ? 2 : 1)]};
+      const q = snapPt(p, {from: other, shift: !!d.shift, exclude: o.id});
+      if (o.type === 'callout') { if (h === '1') { o.x = q.x; o.y = q.y; } else { o.x2 = q.x; o.y2 = q.y; } return; }
+      o['x' + h] = q.x; o['y' + h] = q.y; return;
+    }
+    if (h[0] === 'p' && o.type === 'poly') { const i = +h.slice(1), prev = o.pts[i - 1] || o.pts[i + 1], q = snapPt(p, {from: prev && {x: prev[0], y: prev[1]}, shift: !!d.shift && !!prev, exclude: o.id}); o.pts[i] = [q.x, q.y]; return; }
+    if (h === 'c1' || h === 'c2') { const k = h[1], q = snapPt(p, {from: {x: o['x' + k], y: o['y' + k]}, shift: !!d.shift, exclude: o.id}); o['cx' + k] = q.x; o['cy' + k] = q.y; return; }
+    if (h === 'wh') { const q = snapPt(p, {exclude: o.id}), m = Math.max(0.05, st.scene.grid * 0.5); o.w = r4(Math.max(m, q.x - o.x)); o.h = r4(Math.max(m, q.y - o.y)); if (d.shift && (o.type === 'rect' || o.type === 'ellipse')) o.w = o.h = Math.max(o.w, o.h); return; }
+    if (h === 'r') { const q = snapPt(p, {exclude: o.id}); o.r = r4(Math.max(0.02, Math.hypot(q.x - o.x, q.y - o.y))); o.to = deg(o, q); return; }
+    return;
   }
   if (isBody(o)) {
     const hanging = st.scene.objects.some(s => s.type === 'string' && s.over.length && (s.a === o.id || s.b === o.id)) && !g.on;
@@ -585,8 +789,12 @@ function dragTo(d, p, dx, dy) {
     }
     return;
   }
-  if ('x1' in g && !('x' in g)) { o.x1 = r4(snapV(g.x1 + dx)); o.y1 = r4(snapV(g.y1 + dy)); o.x2 = r4(g.x2 + (o.x1 - g.x1)); o.y2 = r4(g.y2 + (o.y1 - g.y1)); return; }
-  if ('x' in g) { o.x = r4(snapV(g.x + dx)); o.y = r4(snapV(g.y + dy)); if (o.type === 'callout') { o.x2 = r4(g.x2 + (o.x - g.x)); o.y2 = r4(g.y2 + (o.y - g.y)); } }
+  if ('x1' in g && !('x' in g)) { o.x1 = r4(snapV(g.x1 + dx)); o.y1 = r4(snapV(g.y1 + dy)); const ex = o.x1 - g.x1, ey = o.y1 - g.y1; o.x2 = r4(g.x2 + ex); o.y2 = r4(g.y2 + ey); if ('cx1' in g) { o.cx1 = r4(g.cx1 + ex); o.cy1 = r4(g.cy1 + ey); o.cx2 = r4(g.cx2 + ex); o.cy2 = r4(g.cy2 + ey); } return; }
+  if (g.pts) { const ex = r4(snapV(g.pts[0][0] + dx)) - g.pts[0][0], ey = r4(snapV(g.pts[0][1] + dy)) - g.pts[0][1]; o.pts = g.pts.map(q => [r4(q[0] + ex), r4(q[1] + ey)]); return; }
+  if ('x' in g) {
+    o.x = r4(snapV(g.x + dx)); o.y = r4(snapV(g.y + dy)); if (o.type === 'callout') { o.x2 = r4(g.x2 + (o.x - g.x)); o.y2 = r4(g.y2 + (o.y - g.y)); }
+    for (const fw of d.follow || []) { const x = byId(fw.id); if (x) { x.x = r4(fw.x + o.x - g.x); x.y = r4(fw.y + o.y - g.y); } }
+  }
 }
 function placeOnFrame(o, fr) { const h = isRound(o) ? o.r : o.h / 2, c = vec.add(vec.add(fr.p0, vec.mul(fr.u, o.at)), vec.mul(fr.n, h)); o.x = r4(c.x); o.y = r4(c.y); }
 
@@ -598,6 +806,7 @@ function ensureSim() {
   return st.sim;
 }
 function play() {
+  st.msg = ''; clearTimeout(flashTimer);
   const sim = ensureSim();
   if (!sim.systems.length) { st.sim = null; flash(`<span class="bad">${T.nothing}</span>${sim.unsupported.length ? ' ' + esc(unsupportedText(sim)) : ''}`); return; }
   if (sim.done) { stopSim(); ensureSim(); }
@@ -663,9 +872,14 @@ function relevant(o, k) {
   if (o.type === 'wave') { if (k === 'n') return o.kind === 'standing'; if (k === 'lambda' || k === 'phase' || k === 'arrow') return o.kind === 'travel'; if (k === 'envelope') return o.kind === 'standing'; }
   if (o.type === 'wavefront' && k === 'angle') return o.kind === 'plane';
   if (o.type === 'charge' && ['mass', 'vx', 'vy', 'showV', 'vLabel', 'trail'].includes(k)) return true;
+  if (o.type === 'particle' && (k === 'angle' || k === 'len')) return o.arrow || o.kind === 'photon';
+  if (isBody(o) && k === 'vLabel') return o.showV;
+  if (o.type === 'poly') { if (k === 'fill') return o.closed; if (k === 'heads') return !o.closed; if (k === 'pts') return false; }
+  if (o.type === 'qpot' && k === 'Emax') return true;
   return true;
 }
-const fieldName = (o, k) => o.type === 'block' && k === 'mu' ? (ko ? '마찰 계수 μ (윗면)' : 'Friction μ (top face)') : o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
+const QNAME = {psi: 'psiQ', levels: 'levelsQ', E: 'EQ', mass: 'mass'};
+const fieldName = (o, k) => o.type === 'particle' && k === 'arrow' ? X4.fields.speedArrow : o.type === 'qpot' && QNAME[k] ? X4.fields[QNAME[k]] : o.type === 'block' && k === 'mu' ? (ko ? '마찰 계수 μ (윗면)' : 'Friction μ (top face)') : o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
 /* the leads that touch a bridge wire at its jockey move with it */
 const jockey = b => ({x: b.x1 + (b.x2 - b.x1) * b.at, y: b.y1 + (b.y2 - b.y1) * b.at});
 function followJockey(scene, J0, J1) { for (const e of scene.objects) if (e.type === 'element') for (const k of [1, 2]) if (Math.hypot(e['x' + k] - J0.x, e['y' + k] - J0.y) < 1e-6) { e['x' + k] = r4(J1.x); e['y' + k] = r4(J1.y); } }
@@ -706,6 +920,8 @@ function paintSide() {
     if (f.k === 'enum') return `<label>${L}<select data-f="${k}">${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : o.type === 'block' && v === 'box' ? (ko ? '상자' : 'Box') : T.enums[v] || v)}</option>`).join('')}</select></label>`;
     if (f.k === 'ref') return `<label>${L}<select data-f="${k}">${opts(f.types, o[k], optional(k))}</select></label>`;
     if (f.k === 'refs') { const ps = st.scene.objects.filter(x => x.type === 'pulley'); return ps.length ? `<div class="wide"><span class="note">${L}</span><div class="over">${ps.map(p => `<label><input type="checkbox" data-over="${esc(p.id)}"${o.over.includes(p.id) ? ' checked' : ''}>${esc(p.id)}</label>`).join('')}</div></div>` : ''; }
+    if (f.k === 'pts') return '';
+    if (f.k === 'params') { const list = parseParams(o[k]) || []; return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>${list.map((q, i) => `<label class="wide slide">${esc(q.name)}<span class="numrow"><input data-pv="${i}" type="number" step="any" value="${+q.value.toPrecision(6)}"><input data-ps="${i}" type="range" min="${q.min}" max="${q.max}" step="${(q.max - q.min) / 200}" value="${q.value}" aria-label="${esc(q.name)}"></span></label>`).join('')}`; }
     if (f.k === 'expr' || k === 'data' || k === 'xt' || k === 'yt') return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>`;
     return `<label class="wide">${L}<span class="tin"><input data-f="${k}" data-text="1" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"><button type="button" class="symbtn" data-sym="${k}" title="${esc(X2.symTitle)}">Ω</button></span><span class="tex" data-tex="${k}"></span></label>`;
   };
@@ -747,6 +963,18 @@ function paintSide() {
     };
     el.onchange = () => { const g = st.gesture; st.gesture = null; if (!g) return; const r = validateScene(st.scene); if (!r.ok) { st.scene = JSON.parse(g.before); paint(); return; } st.hist.record(g.before); st.scene = r.scene; save(); paint(); };
   });
+  /* a parameter's slider (a function's or a potential's): the figure follows live, one step of history when let go */
+  const setParam = (i, v, live) => {
+    const x = byId(o.id), list = x && parseParams(x.params); if (!list || !list[i] || !Number.isFinite(v)) return;
+    list[i].value = v; if (v < list[i].min) list[i].min = v; if (v > list[i].max) list[i].max = v;
+    if (live) { if (!st.gesture) st.gesture = {before: JSON.stringify(st.scene)}; x.params = paramsText(list); const n = box.querySelector(`[data-pv="${i}"]`); if (n) n.value = +v.toPrecision(6); paintCanvas(); paintReadouts(); }
+    else { const next = clone(st.scene); next.objects.find(y => y.id === o.id).params = paramsText(list); commit(next, {keepSel: true}); }
+  };
+  box.querySelectorAll('[data-ps]').forEach(el => {
+    el.oninput = () => setParam(+el.dataset.ps, r4(parseFloat(el.value)), true);
+    el.onchange = () => { const g = st.gesture; st.gesture = null; if (!g) return; const r = validateScene(st.scene); if (!r.ok) { st.scene = JSON.parse(g.before); paint(); return; } st.hist.record(g.before); st.scene = r.scene; save(); paint(); };
+  });
+  box.querySelectorAll('[data-pv]').forEach(el => el.onchange = () => setParam(+el.dataset.pv, parseFloat(el.value), false));
   box.querySelectorAll('[data-over]').forEach(el => el.onchange = () => {
     const next = clone(st.scene), x = next.objects.find(y => y.id === o.id), ids2 = [...box.querySelectorAll('[data-over]')].filter(c => c.checked).map(c => c.dataset.over);
     x.over = [...x.over.filter(id => ids2.includes(id)), ...ids2.filter(id => !x.over.includes(id))];
@@ -842,6 +1070,7 @@ function graphSvg() {
 function status() {
   const el = $('status'); if (!el) return;
   if (st.msg) { el.innerHTML = st.msg; return; }
+  if (st.draft && X4.draftHint[st.draft.tool]) { el.innerHTML = `<b>${esc(X4.tools[st.draft.tool].split(':')[0])}</b> · ${esc(X4.draftHint[st.draft.tool])}`; return; }
   if (st.connect) { const c = st.connect; el.innerHTML = `<b>${esc(T.connect[c.type])}</b> ${c.a ? esc([c.a, ...c.over].join(' → ')) + ' → …' : ''} · ${T.connect.esc}`; return; }
   const sim = st.sim;
   if (sim) {
@@ -1009,7 +1238,8 @@ function insertSymbol(tex) {
 function shell() {
   const tl = X3.tools;
   $('app').innerHTML = `<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div></div>
-    <div class="dbar"><select id="tpl" aria-label="${T.template}"><option value="">${T.template}…</option>${Object.keys(DOMAINS).map(d => `<optgroup label="${esc(X2.domains[d])}">${TEMPLATE_KEYS.filter(k => TEMPLATE_DOMAIN[k] === d).map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}</optgroup>`).join('')}<option value="blank">${T.blank}</option></select>
+    <div id="hint3"></div>
+    <div class="dbar"><select id="tpl" aria-label="${esc(X4.templates)}" title="${esc(X4.templates)}"><option value="">${esc(X4.templates)}…</option>${Object.keys(DOMAINS).map(d => `<optgroup label="${esc(X2.domains[d])}">${TEMPLATE_KEYS.filter(k => TEMPLATE_DOMAIN[k] === d).map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}</optgroup>`).join('')}<option value="blank">${T.blank}</option></select>
       <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bSym">${X2.symbols}</button>
       <label class="btn filebtn">📷 ${T.photo}<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/*"></label><span class="sep"></span>
       <button type="button" id="bUndo" class="hist" title="${esc(tl.backT)}" aria-label="${esc(tl.backT)}">${tl.back}</button><button type="button" id="bRedo" class="hist" title="${esc(tl.fwdT)}" aria-label="${esc(tl.fwdT)}">${tl.fwd}</button>
@@ -1017,8 +1247,8 @@ function shell() {
       <span class="zoom" role="group" aria-label="zoom"><button type="button" id="bZout" title="${esc(tl.zoomOut)} (−)" aria-label="${esc(tl.zoomOut)}">−</button><span id="zoomPct" class="pct">100%</span><button type="button" id="bZin" title="${esc(tl.zoomIn)} (+)" aria-label="${esc(tl.zoomIn)}">+</button><button type="button" id="bZfit" title="${esc(tl.zoomFit)} (0)">${tl.zoomFit}</button></span>
       <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><label class="btn"><input type="checkbox" id="cVals" style="width:auto"> ${tl.values}</label><button type="button" id="bFit" title="${esc(tl.frameMark)}">${T.fit}</button></div>
     <div id="aiNote" class="ainote" hidden></div>
-    <div class="work"><nav class="palwrap" aria-label="${X2.search}"><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></nav>
-      <section class="stage"><div id="stageTop"></div><div id="canvas" class="canvas" tabindex="0"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
+    <div class="work"><details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details>
+      <section class="stage"><div id="tools" class="tools" role="toolbar" aria-label="${esc(X4.drawing)}"></div><div id="stageTop"></div><div id="canvas" class="canvas" tabindex="0"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
         <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
           <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label></span><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label id="solveLbl"><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
@@ -1041,7 +1271,37 @@ function shell() {
   $('speed').onchange = e => { st.speed = +e.target.value; };
   $('cFbd').onchange = e => { st.fbd = e.target.checked; paintCanvas(); };
   $('cRead').onchange = e => { st.readouts = e.target.checked; paintReadouts(); };
-  bindCanvas(); paint(); paintOut();
+  $('parts').ontoggle = e => { setPref('parts', e.target.open); height(); };
+  bindCanvas(); paintHint(); paintTools(); paint(); paintOut();
+}
+/* the three steps a new member sees once (dismissed for good, in this browser) */
+function paintHint() {
+  const box = $('hint3'); if (!box) return;
+  if (store.get('hlDrawHint') === '1') { box.innerHTML = ''; box.hidden = true; return; }
+  box.hidden = false; box.className = 'hint3';
+  box.innerHTML = `<b>${esc(X4.hintTitle)}</b><ol>${X4.hint.map(t => `<li>${esc(t)}</li>`).join('')}</ol><button type="button" id="hintClose">${esc(X4.hintClose)}</button>`;
+  $('hintClose').onclick = () => { store.set('hlDrawHint', '1'); paintHint(); height(); };
+}
+/* the drawing toolbar: the tools, then the look of what they draw (also applied to the selected shapes) */
+const STYLE_FIELDS = ['color', 'lw', 'pattern', 'fill', 'heads'];
+function paintTools() {
+  const box = $('tools'); if (!box) return;
+  const ds = st.dstyle, sw = c => `<button type="button" class="swatch${ds.color === c ? ' on' : ''}" data-color="${c}" title="${esc(X4.enums[c])}" aria-label="${esc(X4.enums[c])}" style="--c:${COLOR_HEX[c]}"></button>`;
+  box.innerHTML = `<div class="tgroup">${TOOLS.map(t => `<button type="button" class="tool${st.tool === t ? ' on' : ''}" data-tool="${t}" title="${esc(X4.tools[t])}" aria-label="${esc(X4.tools[t])}" aria-pressed="${st.tool === t}">${TOOL_ICON[t]}</button>`).join('')}</div>
+    <div class="tgroup tstyle"><span class="swatches" role="group" aria-label="${esc(X4.style.color)}">${COLORS.map(sw).join('')}</span>
+      <label title="${esc(X4.style.width)}">${esc(X4.style.width)}<select data-ds="lw">${[0.5, 0.75, 1, 1.5, 2, 3].map(v => `<option value="${v}"${v === ds.lw ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
+      <label title="${esc(X4.style.dash)}">${esc(X4.style.dash)}<select data-ds="pattern">${['solid', 'dashed', 'dotted', 'dashdot'].map(v => `<option value="${v}"${v === ds.pattern ? ' selected' : ''}>${esc(T.enums[v])}</option>`).join('')}</select></label>
+      <label title="${esc(X4.style.fill)}">${esc(X4.style.fill)}<select data-ds="fill">${FILLS.map(v => `<option value="${v}"${v === ds.fill ? ' selected' : ''}>${esc(X4.enums[v] || T.enums[v] || v)}</option>`).join('')}</select></label>
+      <span class="heads" title="${esc(X4.style.heads)}">${esc(X4.style.heads)} <label><input type="checkbox" data-dh="hs"${ds.hs ? ' checked' : ''}>${esc(X4.style.start)}</label><label><input type="checkbox" data-dh="he"${ds.he ? ' checked' : ''}>${esc(X4.style.end)}</label></span></div>`;
+  box.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => setTool(b.dataset.tool));
+  const keep = () => setPref('dstyle', st.dstyle);
+  /* the look goes to the selected shapes too (one step of history) */
+  const toSel = (k, v) => { const ids = new Set(selIds()); if (!ids.size) return; const next = clone(st.scene); let any = false;
+    for (const o of next.objects) if (ids.has(o.id) && k in FIELDS[o.type]) { if (k === 'heads' && !FIELDS[o.type].heads.list.includes(v)) continue; if (k === 'fill' && !FIELDS[o.type].fill.list.includes(v)) continue; if (k === 'color' && !FIELDS[o.type].color.list.includes(v)) continue; o[k] = v; any = true; }
+    if (any) commit(next, {keepSel: true}); };
+  box.querySelectorAll('[data-color]').forEach(b => b.onclick = () => { ds.color = b.dataset.color; keep(); toSel('color', ds.color); paintTools(); });
+  box.querySelectorAll('[data-ds]').forEach(el => el.onchange = () => { const k = el.dataset.ds; ds[k] = k === 'lw' ? +el.value : el.value; keep(); toSel(k, ds[k]); });
+  box.querySelectorAll('[data-dh]').forEach(el => el.onchange = () => { ds[el.dataset.dh] = el.checked; keep(); toSel('heads', headsOf(ds)); });
 }
 /* the toolbar's state: back/forward only when there is something to go to; play only for mechanics; the circuit solver
    only with a circuit */
@@ -1067,7 +1327,10 @@ addEventListener('keydown', e => {
   if (e.target.closest?.('input,textarea,select')) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
   if (e.key === ' ' && !st.space) { st.space = true; $('canvas')?.classList.add('panning'); e.preventDefault(); return; }
-  if (e.key === 'Escape') { st.connect = null; setSel([]); paint(); }
+  if (e.key === 'Escape' && st.draft) { st.draft = null; paintCanvas(); status(); return; }
+  if (e.key === 'Enter' && st.draft) { e.preventDefault(); finishDraft(); return; }
+  if (!mod && !e.altKey && TOOL_KEY[k] && !(selIds().length && e.key.startsWith('Arrow'))) { setTool(TOOL_KEY[k]); return; }
+  if (e.key === 'Escape') { st.connect = null; if (st.tool !== 'select') setTool('select'); setSel([]); paint(); }
   else if (mod && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
   else if (mod && k === 'y') { e.preventDefault(); redo(); }
   else if (mod && k === 'd') { e.preventDefault(); dup(); }
@@ -1088,6 +1351,7 @@ addEventListener('keydown', e => {
   }
 });
 addEventListener('keyup', e => { if (e.key === ' ') { st.space = false; $('canvas')?.classList.remove('panning'); } });
+try { const d = prefs().dstyle; if (d && typeof d === 'object') { const ds = st.dstyle; if (COLORS.includes(d.color)) ds.color = d.color; if ([0.5, 0.75, 1, 1.5, 2, 3].includes(d.lw)) ds.lw = d.lw; if (['solid', 'dashed', 'dotted', 'dashdot'].includes(d.pattern)) ds.pattern = d.pattern; if (FILLS.includes(d.fill)) ds.fill = d.fill; ds.hs = d.hs === true; ds.he = d.he === true; } } catch (e) {}
 st.scene = startScene();
 if (!st.scene.view) st.scene.view = sceneBounds(st.scene);
 if (document.readyState === 'loading') addEventListener('DOMContentLoaded', shell); else shell();
