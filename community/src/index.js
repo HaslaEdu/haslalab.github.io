@@ -65,7 +65,7 @@ import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-ban
 import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH, readCompletion, stripThinking, sseTexts } from './ai-assistant.js';
 import { reasonBudgeted, readMarkLines, QWQ_MODEL, QWQ_CONTEXT } from './qwq-reason.js';
 import { forgetMember } from './ai-memory.js';
-import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
+import { createAiEvalRouter, AI_EVAL_PATH } from './ai-eval.js';
 import { createAiTrainRouter, AI_TRAIN_PATH } from './ai-train.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
@@ -941,8 +941,7 @@ export default {
       hphoMailTick(env,{now:event.scheduledTime??Date.now(),scope:e=>e[DB_SCOPE]||e.DB}).catch(e=>console.error('hpho-mail',String(e?.message||e).slice(0,200))));
     /* the weekly Google Drive backup (drive-backup.js): starts Sunday 18:00 UTC, then one short step a minute until done */
     work.push(backupTick(env,{now:event.scheduledTime??Date.now()}).catch(e=>console.error('backup',String(e?.message||e).slice(0,200))));
-    /* the assistant's nightly self-test (ai-eval.js): one case a minute from 02:00 Korean time until the day's total */
-    work.push(aiEvalTick(env,{now:event.scheduledTime??Date.now()}).catch(e=>console.error('ai-eval',String(e?.message||e).slice(0,200))));
+    /* the assistant's nightly self-test (ai-eval.js aiEvalTick) is switched off (owner, 2026-11-24): it ran ~80 AI cases a night */
     /* the weekly league (league.js): after Sunday 24:00 Korean time, a few groups a minute move up, down or are reborn;
        results are keyed per member and week and league_weeks marks the week done, so it runs once */
     work.push(closeLeagueWeeks(env,{now:Math.floor((event.scheduledTime??Date.now())/1000)}).catch(e=>console.error('league-close',String(e?.message||e).slice(0,200))));
