@@ -1208,6 +1208,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="hpho-exam.js?v=a4e790f96370"></script>
 <script src="site-ux.js?v=5d2021353f65"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
+<script src="workshop-connectors.js?v=8596cfc6b3f4"></script>
 <script src="ai-chat.js?v=278f5546252e"></script>
 <script>
 "use strict";
@@ -5660,16 +5661,11 @@ function viewWorkshop(){
    a shell; mountWorkshopStorage() fills #wsStore once it knows who is signed in. */
 function viewWorkshopStorage(){
   const ko=lang==="ko",label=wsTitle("storage");
-  const conn=(name,line)=>`<div class="ws-card ws-soon" aria-disabled="true"><b>${name}</b><p>${line}</p><span class="ws-tag">${ko?"준비 중":LX("Coming soon")}</span></div>`;
   return `<div class="shell ws ws-storage"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p><h1>${label}</h1>
       <p class="learn-tool-copy">${ko?"수업 자료와 만든 파일을 내 계정에 보관합니다. 올린 파일은 나만 볼 수 있습니다.":LX("Keep class materials and the files you make in your account. Only you can see them.")}</p></div>
+    <div id="wsConnTabs" class="ws-tabs" role="tablist" aria-label="${ko?"저장 위치":LX("Where files are kept")}"></div>
     <div id="wsStore" class="ws-store" aria-live="polite"><p class="ws-note">${ko?"불러오는 중…":LX("Loading…")}</p></div>
-    <section class="ws-connect" aria-labelledby="wsConnH"><h2 id="wsConnH">${ko?"다른 저장소 연결":LX("Connect other storage")}</h2>
-      <p class="ws-note">${ko?"관리자 설정 후 열립니다.":LX("Opens once the administrator has set it up.")}</p>
-      <div class="ws-cards ws-cards2">
-        ${conn("Google Drive",ko?"내 드라이브에 ‘HaslaLab’ 폴더를 만들어, 이 사이트가 만든 파일만 넣고 꺼냅니다.":LX("A HaslaLab folder in your Drive; the site reads and writes only the files it made there."))}
-        ${conn("GitHub",ko?"시뮬레이션 코드와 문제 파일을 내 저장소에 올려 버전을 관리합니다.":LX("Push simulation code and problem files to your own repository and keep their history."))}
-      </div></section>
+    <div id="wsConnPanel" class="ws-cpanel" aria-live="polite" hidden></div>
   </div>`;
 }
 const WS_ERR={ko:{file_too_large:"파일 하나는 20MB까지 올릴 수 있습니다.",quota_exceeded:"보관함 용량이 모자랍니다. 파일을 지우고 다시 올려 주세요.",type_not_allowed:"올릴 수 없는 파일 형식입니다.",type_mismatch:"파일 내용이 확장자와 맞지 않습니다.",
@@ -5704,6 +5700,9 @@ function mountWorkshopStorage(generation){
       return;
     }
     wsLoad(box,here);
+    /* the Google Drive and GitHub tabs (workshop-connectors.js) */
+    const tabs=document.getElementById("wsConnTabs"),panel=document.getElementById("wsConnPanel");
+    if(tabs&&panel)window.HL_WS_CONNECT?.mount({tabs,panel,store:box,ko,LX,esc,api:cmApi,base:cmBase,token:cmTok,here,reloadStore:()=>wsLoad(box,here)});
   });
 }
 async function wsLoad(box,here){

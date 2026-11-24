@@ -36,6 +36,7 @@ import { createLeagueRouter, ensureLeagueSchema, leagueDeletion, closeLeagueWeek
 import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { createHandoutRouter } from './handouts.js';
 import { createWorkshopStorageRouter, workshopForgetUser } from './workshop-storage.js';
+import { createWorkshopConnectorsRouter, workshopConnectorsForgetUser } from './workshop-connectors.js';
 import { createWorkshopSceneRouter } from './workshop-scene.js';
 import { createWorkshopCodeAiRouter } from './workshop-code-ai.js';
 import { createGradeRouter, ensureGradeSchema } from './practice-grade.js';
@@ -282,6 +283,7 @@ const handoutRouter = createHandoutRouter({HttpError, needUser, limit, now, bad,
 const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
 const workshopStorageRouter = createWorkshopStorageRouter({HttpError, needUser, limit, now, bad});
+const workshopConnectorsRouter = createWorkshopConnectorsRouter({HttpError, needUser, limit, now, bad});
 const workshopSceneRouter = createWorkshopSceneRouter({HttpError, needUser, limit, now, bad});
 const workshopCodeAiRouter = createWorkshopCodeAiRouter({HttpError, needUser, limit, now, bad});
 const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
@@ -508,6 +510,8 @@ async function handle(req, env, url, ctx) {
     const hphoRows = await hphoForgetUser(env.DB, env.HPHO_SNAPS || env.LAB_PAGES, me.id);
     // the Workshop storage: the member's files in R2 and their rows (workshop-storage.js)
     await workshopForgetUser(env, me.id);
+    // the storage connectors: the Google token is revoked at Google, both links and any flow in progress go (workshop-connectors.js)
+    await workshopConnectorsForgetUser(env, me.id);
     // Sign in with Apple: revoke this member's Apple tokens before the link goes (App Store Guideline 5.1.1(v))
     await revokeAppleTokens(env, me.id);
     // Learn section progress (practice-progress.js)
@@ -827,6 +831,8 @@ async function handle(req, env, url, ctx) {
   if (creation !== undefined) return creation;
   const workshopStorage = await workshopStorageRouter(p, m, body, me, req, env);
   if (workshopStorage !== undefined) return workshopStorage;
+  const workshopConnectors = await workshopConnectorsRouter(p, m, body, me, req, env);
+  if (workshopConnectors !== undefined) return workshopConnectors;
   const workshopScene = await workshopSceneRouter(p, m, body, me, req, env);
   if (workshopScene !== undefined) return workshopScene;
   const workshopCodeAi = await workshopCodeAiRouter(p, m, body, me, req, env);

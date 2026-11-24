@@ -14,7 +14,8 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS backup_photos (page_id INTEGER PRIMARY KEY, drive_id TEXT NOT NULL, bytes INTEGER NOT NULL, at INTEGER NOT NULL)`,
   `CREATE TABLE IF NOT EXISTS backup_kv (k TEXT PRIMARY KEY, v TEXT NOT NULL)`,
 ];
-const FOLDER = 'application/vnd.google-apps.folder', API = 'https://www.googleapis.com', MULTIPART_MAX = 4 * 1024 * 1024;
+export const DRIVE_FOLDER = 'application/vnd.google-apps.folder', DRIVE_API = 'https://www.googleapis.com';
+const FOLDER = DRIVE_FOLDER, API = DRIVE_API, MULTIPART_MAX = 4 * 1024 * 1024;
 const LEASE = 300, MAX_FAILS = 10, DUMP_MAX = 80 * 1024 * 1024;
 const sec = ms => Math.floor(ms / 1000);
 
@@ -41,20 +42,22 @@ export async function driveToken(env, { fetchImpl = globalThis.fetch, now = Date
   cached = { key: env.GDRIVE_REFRESH_TOKEN, token: j.access_token, exp: now + (+j.expires_in || 3600) * 1000 };
   return j.access_token;
 }
-async function driveFail(r, what) {
+export async function driveFail(r, what) {
   const t = await r.text().catch(() => '');
   throw Object.assign(new Error(`drive_${what}_${r.status}:${t.slice(0, 160)}`), { status: r.status });
 }
-const q = s => "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
-async function driveFind(token, name, parent, fetchImpl) {
+export const driveQuote = s => "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+const q = driveQuote;
+/* helpers shared with the members' Drive connector (workshop-connectors.js); the defaults are the backup's own calls */
+export async function driveFind(token, name, parent, fetchImpl) {
   const query = `name=${q(name)} and mimeType=${q(FOLDER)} and trashed=false and ${q(parent || 'root')} in parents`;
   const r = await fetchImpl(`${API}/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id)&pageSize=1`, { headers: { Authorization: 'Bearer ' + token } });
   if (!r.ok) await driveFail(r, 'find');
   return (await r.json()).files?.[0]?.id || null;
 }
-async function driveMkdir(token, name, parent, fetchImpl) {
+export async function driveMkdir(token, name, parent, fetchImpl, extra = null) {
   const r = await fetchImpl(`${API}/drive/v3/files?fields=id`, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, mimeType: FOLDER, ...(parent ? { parents: [parent] } : {}) }) });
+    body: JSON.stringify({ name, mimeType: FOLDER, ...(parent ? { parents: [parent] } : {}), ...(extra || {}) }) });
   if (!r.ok) await driveFail(r, 'mkdir');
   return (await r.json()).id;
 }
@@ -79,13 +82,13 @@ export async function driveUpload(token, { name, parent, mime, bytes }, fetchImp
   if (!r.ok) await driveFail(r, 'upload');
   return (await r.json()).id;
 }
-async function driveDelete(token, id, fetchImpl) {
+export async function driveDelete(token, id, fetchImpl) {
   const r = await fetchImpl(`${API}/drive/v3/files/${encodeURIComponent(id)}`, { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
   if (!r.ok && r.status !== 404) await driveFail(r, 'delete');
 }
-async function driveList(token, parent, fetchImpl) {
+export async function driveList(token, parent, fetchImpl, { fields = 'files(id,name,createdTime)', orderBy = 'createdTime desc' } = {}) {
   const query = `${q(parent)} in parents and trashed=false`;
-  const r = await fetchImpl(`${API}/drive/v3/files?q=${encodeURIComponent(query)}&orderBy=createdTime%20desc&fields=files(id,name,createdTime)&pageSize=100`, { headers: { Authorization: 'Bearer ' + token } });
+  const r = await fetchImpl(`${API}/drive/v3/files?q=${encodeURIComponent(query)}&orderBy=${encodeURIComponent(orderBy)}&fields=${encodeURIComponent(fields)}&pageSize=100`, { headers: { Authorization: 'Bearer ' + token } });
   if (!r.ok) await driveFail(r, 'list');
   return (await r.json()).files || [];
 }

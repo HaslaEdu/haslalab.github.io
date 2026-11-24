@@ -414,7 +414,8 @@ test('the Workshop: a short page of cards, two plain lists, the makers moved fro
     for(const p of html.match(/<p>[^<]*<\/p>/g)||[])assert.ok(p.length<160,'one sentence a card: '+p);
     const store=a.run('viewWorkshopStorage()');
     assert.match(store,/id="wsStore"/);
-    assert.equal((store.match(/ws-soon/g)||[]).length,2);assert.match(store,/Google Drive/);assert.match(store,/GitHub/);
+    /* the Google Drive and GitHub tabs are drawn by workshop-connectors.js into these, once the member is known */
+    assert.match(store,/id="wsConnTabs"/);assert.match(store,/id="wsConnPanel"[^>]*hidden/);
     assert.match(a.run('viewWorkshopMake()'),/id="learnTeachFrame"[^>]*src="teach\.html\?/);
     assert.match(a.run('viewWorkshopCreate()'),/id="learnCreateFrame"[^>]*src="create\.html\?/);
     const draw=a.run('viewWorkshopDraw()');
