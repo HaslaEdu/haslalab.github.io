@@ -117,3 +117,9 @@ dialog.shdlg{width:min(620px,calc(100vw - 32px));max-height:min(90vh,820px);over
 .sh-thumb{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted)}.sh-thumb img{width:160px;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff}
 .sh-errs{margin:8px 0 0;padding-left:18px;color:var(--bad);font-size:13px}.sh-errs:empty{display:none}
 .sh-msg.ok{color:var(--ok)}.sh-msg.bad{color:var(--bad)}
+
+.project-library-tools{margin:10px 0 14px}
+.project-provider{width:auto;max-width:100%}
+.project-library-grid{grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr))}
+.project-library-card{align-items:flex-start;text-align:left;min-height:86px;overflow-wrap:anywhere}
+.project-library-card .note{margin:4px 0 0}

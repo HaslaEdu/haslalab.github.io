@@ -84,6 +84,7 @@
     const {root, api, apiBase, token, height, esc} = ctx, ko = ctx.lang === 'ko';
     const tr = (a,b) => ko ? a : b;
     const share = window.HL_SHARE, forms = window.HL_SHARE_MAKER;
+    const P = window.HL_WORKSHOP_PROJECTS, cloud = P.client({base:apiBase,token});
     const localKey = transfer === 'draw' || transfer === 'problem' ? key + ':' + transfer : key;
     const previous = !id ? read(localStorage, localKey) : null;
     const question = transfer === 'problem' ? read(sessionStorage, 'hlWorkshopComputeQuestion') : null;
@@ -102,7 +103,7 @@
     let stored = draft?.storage || null, sharedId = id ? +id : draft?.sharedId || null, published = !!draft?.published;
     let active = true, running = null, busy = false, lastError = '', lastOutput = '', proposal = '', undo = null;
     if (!isLanguage(project.language)) project.language = 'python';
-    root.innerHTML = '<div class="compute-maker">' +
+    root.innerHTML = '<section id="cpProjects" hidden></section><div class="compute-maker" id="cpEditor">' +
       '<header class="head"><div><h1>' + tr('전산물리 제작', 'Computational physics maker') + '</h1><p class="lede">' +
       tr('Python 또는 C로 계산하고, 결과를 그래프로 확인하세요.', 'Compute in Python or C and plot the results.') +
       '</p></div><div class="acts"><a class="btn" href="/#/workshop/share" target="_top">' + tr('작품 공유', 'Showcase') + '</a>' +
@@ -111,6 +112,7 @@
       '<label>' + tr('언어', 'Language') + '<select id="cpLang"><option value="python">Python</option><option value="c">C</option></select></label></div>' +
       '<div class="compute-work"><section class="panel"><h2>' + tr('코드', 'Code') + '</h2><textarea id="cpCode" class="code" rows="16" maxlength="60000" spellcheck="false" aria-label="' + tr('코드', 'Code') + '"></textarea>' +
       '<p id="cpFormat" class="note"></p><div class="row"><button class="primary" id="cpRun">' + tr('실행', 'Run') + '</button><button id="cpStop" disabled>' + tr('중지', 'Stop') + '</button><button id="cpDown">' + tr('코드 내려받기', 'Download code') + '</button></div>' +
+      (preview ? '' : '<div class="row"><button id="cpImportFigure">' + tr('그림 불러오기','Import figure') + '</button></div>') +
       '<div id="cpFigure" hidden></div><details><summary>' + tr('작품 설명', 'Project description') + '</summary><textarea id="cpDescription" rows="3" maxlength="3000" aria-label="' + tr('작품 설명', 'Project description') + '"></textarea></details></section>' +
       '<section class="panel"><h2>' + tr('실행 결과', 'Results') + '</h2><p id="cpRunStatus" role="status"></p><div id="cpPlots"></div><pre class="out" id="cpOutput" hidden></pre></section>' +
       (preview ? '' : '<section class="panel compute-chat"><h2>' + tr('AI에게 맡기기', 'Ask AI to build it') + '</h2><div id="cpChat" role="log" aria-live="polite"></div>' +
@@ -119,12 +121,13 @@
       '<label class="compute-check"><input type="checkbox" id="cpDelegate"> ' + tr('전권 위임 · 코드 적용, 실행 및 오류 시 1회 수정', 'Delegate · apply, run and fix errors once') + '</label>' +
       '<details id="cpProposal" hidden><summary>' + tr('제안 코드 보기', 'Review proposed code') + '</summary><pre class="out"></pre></details>' +
       '<div class="row"><button class="primary" type="submit">' + tr('보내기', 'Send') + '</button><button type="button" id="cpApply" hidden>' + tr('코드 적용', 'Apply code') + '</button><button type="button" id="cpUndo" hidden>' + tr('되돌리기', 'Undo') + '</button></div></form></section>') +
-      '</div>' + (preview ? '' : '<div class="row compute-actions"><button id="cpSave">' + tr('보관함에 저장', 'Save to Storage') + '</button><button id="cpOpen">' + tr('보관함에서 열기', 'Open from Storage') + '</button>' +
+      '</div>' + (preview ? '' : '<div class="row compute-actions"><span id="cpProvider"></span><button id="cpSave">' + tr('저장', 'Save') + '</button><button id="cpOpen">' + tr('프로젝트 목록', 'Projects') + '</button>' +
       '<button id="cpPaper">' + tr('문제 제작에 활용', 'Use in a problem') + '</button><button class="primary" id="cpShare">' + tr('작품 공유', 'Share project') + '</button></div>') +
       '<p id="cpStatus" role="status" class="note"></p><div id="cpRuntime"></div></div>';
     const $ = id => root.querySelector('#' + id);
     const msg = s => { $('cpStatus').textContent = s || ''; height(); };
     const lang = $('cpLang'), source = $('cpCode'), title = $('cpTitle'), description = $('cpDescription');
+    if (!preview) $('cpProvider').append(P.providerSelect(stored?.provider));
     const snapshot = () => ({...project, storage: stored, sharedId, published});
     const persist = () => { if (!id && !preview) write(localStorage, localKey, snapshot()); };
     const chat = (who, content) => {
@@ -304,52 +307,71 @@
       fd.append('folder','전산물리');
       fd.append('ensure_folder','1');
       const {format, language, sources, figure, question, title: name, description} = project;
-      if (stored?.updated_at) fd.append('base', String(stored.updated_at));
-      fd.append('file', new Blob([JSON.stringify({format, language, sources, figure, question, title: name, description})], {type: 'application/json'}), stored?.name || (name + '.json'));
-      const response = stored ? await fileRequest('/files/' + stored.id + '/content','PUT',fd) : await fileRequest('/files','POST',fd);
-      stored = (await response.json()).file;
+      const provider = $('cpProvider').querySelector('select').value;
+      const data = {format, language, sources, figure, question, title:name, description};
+      if (provider !== 'store') stored = await cloud.saveExternal(provider,'compute',name,data,stored);
+      else {
+        const local = stored?.provider === 'store' || (stored && !stored.provider) ? stored : null;
+        if (local?.updated_at) fd.append('base', String(local.updated_at));
+        fd.append('file', new Blob([JSON.stringify(data)], {type:'application/json'}), local?.name || (name+'.json'));
+        const response = local ? await fileRequest('/files/' + encodeURIComponent(local.id) + '/content','PUT',fd) : await fileRequest('/files','POST',fd);
+        stored = {...(await response.json()).file,provider:'store'};
+      }
       persist();
     };
+
+    let storageRevision = 0;
+    function showEditor() {
+      $('cpProjects').hidden = true;
+      $('cpEditor').hidden = false;
+      $('cpProvider').querySelector('select').value = stored?.provider || 'store';
+      height();
+    }
+    function showProjects() {
+      if (!active || busy) return;
+      running?.stop();
+      $('cpEditor').hidden = true;
+      const host = $('cpProjects');
+      host.hidden = false;
+      const panel = P.library(host,cloud,{kind:'compute', title:tr('전산물리 프로젝트','Computational physics projects'), height,
+        onResume:showEditor,
+        onNew() { loadProject(blank(), null); },
+        onOpen:loadProject,
+      });
+      panel.heading.focus();
+      height();
+    }
+    function loadProject(data, entry) {
+      if (!active || busy || $('cpProjects').hidden) return;
+      running?.stop();
+      hydrate(data);
+      storageRevision++;
+      stored=entry; sharedId=null; published=false; lastOutput=''; lastError='';
+      $('cpPlots').replaceChildren(); $('cpOutput').hidden=true; $('cpRunStatus').textContent='';
+      persist();
+      showEditor();
+      title.focus();
+    }
     async function perform(button, action) {
       if (busy) return;
       button.disabled = true;
       busy = true;
-      try { await action(); } catch (e) { if (active) msg(errorText(e)); }
+      try { await action(); } catch (e) { if (active) msg(P.error(e)); }
       finally { button.disabled = false; busy = false; }
     }
     if (!preview) {
       $('cpSave').onclick = () => {
         if (!login()) return;
-        perform($('cpSave'), async () => { await save(); msg(tr('보관함에 저장했습니다.', 'Saved to Storage.')); });
+        perform($('cpSave'), async () => { await save(); msg(tr('선택한 저장소에 저장했습니다.', 'Saved to the selected storage.')); });
       };
-      $('cpOpen').onclick = () => {
-        if (!login()) return;
-        perform($('cpOpen'), async () => {
-          const {files} = await api('/api/workshop/storage?kind=sim');
-          if (!active) return;
-          const dialog = document.createElement('dialog');
-          dialog.className = 'stdlg';
-          dialog.innerHTML = '<div class="dlg-head"><h2>' + tr('보관함에서 열기','Open from Storage') + '</h2><button type="button">' + tr('닫기','Close') + '</button></div><div class="row" data-files></div>';
-          dialog.onclose = () => dialog.remove();
-          dialog.querySelector('button').onclick = () => dialog.close();
-          const list = dialog.querySelector('[data-files]');
-          for (const f of files.filter(f => /\.json$/i.test(f.name))) {
-            const b = document.createElement('button');
-            b.textContent = f.name;
-            b.onclick = () => perform(b, async () => {
-              const r = await fileRequest('/files/' + f.id, 'GET');
-              const data = await r.json();
-              if (!active) return;
-              running?.stop();
-              hydrate(data);
-              stored = f; sharedId = null; published = false; persist();
-              dialog.close();
-            });
-            list.append(b);
-          }
-          if (!list.childElementCount) list.textContent = tr('저장한 전산물리 작품이 없습니다.', 'No saved computational physics projects.');
-          root.append(dialog); dialog.showModal();
-        });
+      $('cpOpen').onclick = showProjects;
+      $('cpImportFigure').onclick = () => {
+        const local = read(localStorage,'hlDrawScene');
+        const revision = storageRevision;
+        P.pickFigure(cloud,{local,height,onPick(figure) {
+          if (!active || revision !== storageRevision) return;
+          project.figure=figure; paint(); persist();
+        }});
       };
       $('cpPaper').onclick = () => {
         const transfer = {title: title.value.trim(), description: description.value.trim(), language: project.language, code: source.value, output: lastOutput, figure: project.figure};
@@ -379,6 +401,7 @@
       };
     }
     paint();
+    if (!preview && !id && !transfer) showProjects();
     if (!id && transfer) persist();
     if (id) {
       $('cpRun').disabled = true;

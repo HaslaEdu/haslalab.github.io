@@ -169,12 +169,12 @@ for(const file of ['learn-path.js','learner-form.js','league-view.js','math-inpu
 outputs.set('practice.html',practiceHtml);
 /* the creations page (create.html): its own script and style, and the shared math and Python helpers it loads */
 let createHtml=read('create.html').replace(/href="create\.css(?:\?[^"\n]*)?"/,'href="create.css?v='+digest(read('create.css'))+'"');
-for(const file of ['math-input.js','compute-problems.js','code-editor.js','sim-templates.js','share-publish.js','share-makers.js','create-studio.js','workshop-compute.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['math-input.js','compute-problems.js','code-editor.js','sim-templates.js','share-publish.js','share-makers.js','create-studio.js','workshop-projects.js','workshop-compute.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('create.html',createHtml);
 /* the teachers' page (teach.html): test builder and AI variants */
 let teachHtml=read('teach.html');
 for(const file of ['create.css','teach.css'])teachHtml=teachHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
-for(const file of ['learn-path.js','math-input.js','teach-tools.js','share-publish.js','share-makers.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['learn-path.js','math-input.js','teach-tools.js','share-publish.js','share-makers.js','workshop-projects.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('teach.html',teachHtml);
 /* the figure editor (draw.html): its modules import each other, so each import carries the digest of the stamped file */
 {
@@ -185,6 +185,7 @@ outputs.set('teach.html',teachHtml);
   let drawHtml=read('draw.html');
   for(const file of ['create.css','draw.css'])drawHtml=drawHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
   drawHtml=drawHtml.replace(/src="draw\.js(?:\?[^"\n]*)?"/,'src="draw.js?v='+digest(drawJs)+'"').replace(/src="share-publish\.js(?:\?[^"\n]*)?"/,'src="share-publish.js?v='+digest(read('share-publish.js'))+'"');
+  drawHtml=drawHtml.replace(/src="workshop-projects\.js(?:\?[^"\n]*)?"/,'src="workshop-projects.js?v='+digest(read('workshop-projects.js'))+'"');
   outputs.set('draw.html',drawHtml);
 }
 outputs.set('concepts.html',read('concepts.html').replace(/href="concepts\.css(?:\?[^"\n]*)?"/,'href="concepts.css?v='+digest(read('concepts.css'))+'"').replace(/src="concepts\.js(?:\?[^"\n]*)?"/,'src="concepts.js?v='+digest(read('concepts.js'))+'"'));

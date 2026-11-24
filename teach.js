@@ -124,6 +124,16 @@
     const r=await fetch(API+path,{method,headers:{...(token()?{Authorization:'Bearer '+token()}:{}),...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
     const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error||'api '+r.status),{code:j.error,status:r.status});return j;
   }
+  function importWorkshopFigure(item) {
+    let local;
+    try { local=JSON.parse(localStorage.getItem('hlDrawScene') || 'null'); } catch {}
+    const P=window.HL_WORKSHOP_PROJECTS;
+    P.pickFigure(P.client({base:API,token}),{local,height,onPick(fig){
+      if(item && paper.items.includes(item) && item.own) item.own.fig=fig;
+      else paper.items.push({key:'own:'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),pts:3,own:{q:'',answer:'',unit:'',sol:'',fig}});
+      save();paintPaper();paintItems();
+    }});
+  }
   const errText=e=>T.err[e.code]||e.message||'error';
   function height(){if(embedded)requestAnimationFrame(()=>window.parent.postMessage({type:'hl-teach-height',height:Math.ceil(document.querySelector('main').getBoundingClientRect().bottom+scrollY+16)},location.origin));}
   if(typeof ResizeObserver==='function')new ResizeObserver(height).observe(document.body);
@@ -261,12 +271,12 @@
         <label>${T.pMin}<input data-f="minutes" inputmode="numeric" value="${esc(paper.minutes)}"></label><label>${T.pNote}<input data-f="note" value="${esc(paper.note)}"></label></div>
       <div class="opts">${[['two',T.two],['key',T.key],['sol',T.sol],['space',T.space],['bp',T.bp.attach]].map(([k,n])=>`<label><input type="checkbox" data-o="${k}"${paper[k]?' checked':''}>${n}</label>`).join('')}</div>
       <div class="plist">${items.length?items.map((x,i)=>`<div class="pitem" data-i="${i}"><span class="n">${i+1}</span><span class="t">${figOf(x.own)?`<img class="fthumb" src="${figOf(x.own).src}" alt="">`:''}${esc(label(x))}${x.own?`<span class="own">${T.own}</span>`:''}</span>
-        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts">${x.own?`<button type="button" data-one title="${X.saveOne}">${X.saveOne}</button>`:''}${figOf(x.own)&&x.own.fig.scene?`<button type="button" data-fig>${T.editFig}</button>`:''}<button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-compute>${ko?"시뮬레이션으로 제작":"Make a simulation"}</button><button type="button" data-del title="${T.del}">✕</button></span>
+        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts">${x.own?`<button type="button" data-one title="${X.saveOne}">${X.saveOne}</button>`:''}${x.own?`<button type="button" data-fig>${figOf(x.own) ? (ko?'그림 바꾸기':'Replace figure') : (ko?'그림 불러오기':'Import figure')}</button>`:''}<button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-compute>${ko?"시뮬레이션으로 제작":"Make a simulation"}</button><button type="button" data-del title="${T.del}">✕</button></span>
         <span class="pbp"><input data-bpu list="bpUnits" maxlength="40" value="${esc(bpOf(x,x.item).unit)}" placeholder="${T.bp.unit}" aria-label="${T.bp.unit}"><select data-bpl aria-label="${T.bp.level}">${LEVELS.map(l=>`<option value="${l}"${bpOf(x,x.item).level===l?' selected':''}>${T.bp.levels[l]}</option>`).join('')}</select></span></div>`).join(''):`<p class="empty">${T.empty}</p>`}</div>
       ${items.length?`<details class="bpbox" id="bpBox"${paper.bp?' open':''}><summary>${T.bp.title}</summary><p class="note">${T.bp.note}</p><div id="bpTable"></div></details>`:''}
       <div class="row store-row"><button type="button" class="primary" id="stSave">${X.save}</button><button type="button" id="stOpen">${X.open}</button><button type="button" id="stNew">${X.newPaper}</button><span class="note" id="stStatus" role="status">${esc(cloudStatus())}</span></div>
       <div class="row share-row" id="shareRow"></div>
-      <div class="row"><a class="btn" href="/#/workshop/draw" target="_top">${T.drawFig}</a></div>
+      <div class="row"><button type="button" id="stFigure">${ko?'그림 불러오기':'Import figure'}</button></div>
       <div class="row"><button type="button" class="primary" id="print"${items.length?'':' disabled'}>${T.print}</button><button type="button" id="assign"${items.some(x=>!x.own)?'':' disabled'}>${T.assign}</button><button type="button" id="clear"${items.length?'':' disabled'}>${T.clear}</button></div>
       <div id="assignBox"></div>`;
     box.querySelectorAll('[data-f]').forEach(el=>el.oninput=()=>{paper[el.dataset.f]=el.value.slice(0,120);save();});
@@ -279,12 +289,13 @@
       el.querySelector('[data-del]').onclick=()=>{paper.items.splice(i,1);save();paintPaper();paintItems();};
       el.querySelector('[data-compute]').onclick=()=>toCompute(items[i]);
       const ob=el.querySelector('[data-one]');if(ob)ob.onclick=()=>saveProblem(paper.items[i],$('stStatus'));
-      const fb=el.querySelector('[data-fig]');if(fb)fb.onclick=()=>{try{localStorage.setItem('hlDrawEdit',JSON.stringify({key:paper.items[i].key,scene:paper.items[i].own.fig.scene}));}catch(e){}window.top.location.assign(embedded?'/#/workshop/draw':'draw.html');};
+      const fb=el.querySelector('[data-fig]');if(fb)fb.onclick=()=>importWorkshopFigure(paper.items[i]);
       const bpSet=()=>{paper.items[i].bp={unit:el.querySelector('[data-bpu]').value.trim().slice(0,40),level:el.querySelector('[data-bpl]').value};save();paintBlueprint(items);};
       el.querySelector('[data-bpu]').onchange=bpSet;el.querySelector('[data-bpl]').onchange=bpSet;
       el.querySelector('[data-vary]').onclick=()=>{const x=items[i];state.source=x.own?{q:x.own.q,answerPlain:x.own.answer,sol:x.own.sol,plainCh:x.own.choices||[],qHtml:textHtml(x.own.q)}:x.item;state.tab='vary';shell();};
     });
     paintBlueprint(items);paintShare();
+    $('stFigure').onclick=()=>importWorkshopFigure(null);
     $('print').onclick=()=>printPaper(items);
     $('clear').onclick=()=>{if(confirm(T.clearAsk)){paper=blank();save();paintPaper();paintItems();}};
     $('assign').onclick=()=>assignBox(items);
