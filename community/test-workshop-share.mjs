@@ -7,7 +7,7 @@ import {createCreationRouter} from './src/creations.js';
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
 const text=(v,max,code)=>{if(typeof v!=='string')bad(code);v=v.trim();if(!v||v.length>max)bad(code);return v;};
-function setup(){
+function setup(externalProject){
   const db=new DatabaseSync(':memory:');
   db.exec("CREATE TABLE users(id INTEGER PRIMARY KEY,nickname TEXT,role TEXT,avatar TEXT,created_at INTEGER,deleted INTEGER DEFAULT 0)");
   db.exec("INSERT INTO users(id,nickname,role,avatar,created_at) VALUES(1,'ana',NULL,'abcdefgh12',1),(2,'bo',NULL,NULL,1),(3,'cy',NULL,NULL,1),(9,'staff','admin',NULL,1)");
@@ -16,7 +16,7 @@ function setup(){
   const hits=new Map();let clock=1_800_000_000,ip='1.1.1.1';
   const deps={HttpError:H,bad,text,now:()=>clock,clientIp:()=>ip,needUser:u=>{if(!u)throw new H(401,'login_required');return u;},
     limit:async(env,k,max)=>{const n=(hits.get(k)||0)+1;hits.set(k,n);if(n>max)throw new H(429,'rate_limited');}};
-  const share=createShareRouter(deps),creations=createCreationRouter(deps);
+  const share=createShareRouter({...deps,externalProject}),creations=createCreationRouter(deps);
   const env={DB:D1};
   const call=(route,p,m,b,me,q='')=>route(p,m,b,me,{url:'https://x'+p+q},env);
   const r=(p,m,b,me,q)=>call(share,p,m,b,me,q);
@@ -50,6 +50,40 @@ test('C and Python simulations preserve the runtime through publication and remi
   const {project} = await r(path,'GET');
   assert.equal(project.language,'js');
   assert.equal(project.code,'hl.clear()');
+});
+
+test('authorized external snapshots update in place, and daily and live caps also cover the legacy API',async()=>{
+  let code='print(1)', providerCalls=0;
+  const r=setup(async(provider,ref,max,member)=>{
+    providerCalls++;
+    assert.equal(max,1024*1024);
+    if(member.id!==ana.id)throw new H(403,'forbidden');
+    assert.equal(provider,'github');assert.equal(ref,'pendulum.json');
+    return {key:'github:10:main:haslalab:pendulum.json',name:ref,mime:'application/json',
+      bytes:new TextEncoder().encode(JSON.stringify({format:'haslalab-compute',language:'python',sources:{python:code,c:'secret alternate code'}}))};
+  });
+  const preview=()=>r('/api/share/source','GET',null,ana,'?provider=github&file=pendulum.json');
+  const post=p=>r('/api/share','POST',{source_provider:'github',source_file:'pendulum.json',source_digest:p.digest,title:'Pendulum'},ana);
+  await fails(r('/api/share/source','GET',null,bo,'?provider=github&file=pendulum.json'),'forbidden');
+  const before=await preview();
+  assert.deepEqual(before.payload,{language:'python',code:'print(1)'});
+  code='print(2)';
+  await fails(post(before),'source_changed');
+  const {id}=await post(await preview());
+  assert.equal((await r('/api/share/'+id,'GET')).project.code,'print(2)');
+  code='print(3)';
+  assert.equal((await post(await preview())).id,id);
+  assert.equal((await r('/api/share/'+id,'GET')).project.code,'print(3)');
+  assert.ok(providerCalls>=6);
+  const legacy=()=>r.creations('/api/creations','POST',{kind:'sim',title:'Legacy',code:'hl.clear()'},ana);
+  await legacy(); await legacy();
+  await fails(legacy(),'workshop_daily_share_limit');
+  await r('/api/share/'+id,'DELETE',null,ana);
+  await fails(legacy(),'workshop_daily_share_limit');
+  assert.equal((await post(await preview())).id,id);
+  for(let day=0;day<2;day++){r.tick(86400);await legacy();await legacy();await legacy();}
+  r.tick(86400);await legacy();
+  await fails(legacy(),'workshop_public_cap');
 });
 
 test('thumbnails: real PNGs, safe SVGs (stored as base64), nothing that can run or load; 200 KB at most',()=>{

@@ -75,6 +75,8 @@ export const WORKSHOP_TYPES = {
   svg: {mime: 'image/svg+xml', sig: 'svg'},
   json: {mime: 'application/json', sig: TEXT},
   txt: {mime: 'text/plain', sig: TEXT},
+  py: {mime: 'text/plain', sig: TEXT},
+  c: {mime: 'text/plain', sig: TEXT},
   csv: {mime: 'text/csv', sig: TEXT},
   md: {mime: 'text/markdown', sig: TEXT},
   hwpx: {mime: 'application/hwp+zip', sig: ZIP},
@@ -259,7 +261,7 @@ export async function workshopReplaceBytes(env, uid, id, {bytes, kind = null, ba
   return {file: fileView(r), used: u.n, ...limits};
 }
 /* one of the member's files and its bytes (owner only), for the connectors' copy out of storage */
-export async function workshopReadBytes(env, uid, id, {HttpError}) {
+export async function workshopReadBytes(env, uid, id, {HttpError, maxBytes = WORKSHOP_MAX_FILE}) {
   await ensureWorkshopSchema(env);
   if (!ID.test(String(id || ''))) throw new HttpError(404, 'not_found');
   const row = await env.DB.prepare(`SELECT ${COLS},r2_key FROM workshop_files WHERE id=? AND owner_id=?`).bind(id, uid).first();
@@ -267,7 +269,9 @@ export async function workshopReadBytes(env, uid, id, {HttpError}) {
   if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
   const obj = await env.LAB_PAGES.get(row.r2_key);
   if (!obj) throw new HttpError(404, 'file_missing');
+  if (row.size > maxBytes || obj.size > maxBytes) throw new HttpError(413, 'file_too_large');
   const bytes = new Uint8Array(await (obj.arrayBuffer ? obj.arrayBuffer() : new Response(obj.body).arrayBuffer()));
+  if (bytes.length > maxBytes) throw new HttpError(413, 'file_too_large');
   return {name: row.name, mime: row.mime, folder: row.folder, bytes};
 }
 

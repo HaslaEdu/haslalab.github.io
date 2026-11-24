@@ -284,7 +284,11 @@ const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, cli
 const handoutRouter = createHandoutRouter({HttpError, needUser, limit, now, bad, isAdmin: u => isAdmin(u)});
 const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
-const shareRouter = createShareRouter({HttpError, needUser, limit, now, bad, clientIp, text, isStaff: u => isAdmin(u)});
+const shareRouter = createShareRouter({HttpError, needUser, limit, now, bad, clientIp, text, isStaff: u => isAdmin(u),
+  externalProject: (provider, ref, maxBytes, me, env) => {
+    const path='/api/workshop/connectors/'+provider+'/project-source';
+    return workshopConnectorsRouter(path,'GET',null,me,new Request('https://workshop.internal'+path),env,{ref,maxBytes});
+  }});
 const workshopStorageRouter = createWorkshopStorageRouter({HttpError, needUser, limit, now, bad});
 const workshopConnectorsRouter = createWorkshopConnectorsRouter({HttpError, needUser, limit, now, bad});
 const workshopSceneRouter = createWorkshopSceneRouter({HttpError, needUser, limit, now, bad});

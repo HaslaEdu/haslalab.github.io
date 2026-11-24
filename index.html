@@ -1208,9 +1208,10 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="hpho-exam.js?v=a4e790f96370"></script>
 <script src="site-ux.js?v=f05cf4ce7e82"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
-<script src="workshop-connectors.js?v=8596cfc6b3f4"></script>
+<script src="workshop-connectors.js?v=d1f83e98ed6a"></script>
 <script src="share-publish.js?v=c4278342f87e"></script>
-<script src="workshop-share.js?v=6ecba0f7fcab"></script>
+<script src="workshop-share.js?v=9e8c863f80c5"></script>
+<script src="workshop-publish-source.js?v=67091036105a"></script>
 <script src="workshop-class-storage.js?v=86b88dd474d4"></script>
 <style>
 .ws-class-shares{margin:22px 0}.ws-class-shares h2{margin:0 0 8px}.ws-share-item{border:1px solid var(--rule,#d5dbe6);padding:10px 14px;border-radius:10px;margin:8px 0}.ws-share-item summary{cursor:pointer}.ws-share-item small{margin-inline-start:8px;color:var(--muted)}.ws-share-instructions{white-space:pre-wrap;overflow-wrap:anywhere}.ws-share-item ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px}
@@ -5690,7 +5691,7 @@ const WS_ERR={ko:{file_too_large:"현재 요금제에서 올릴 수 있는 파�
   en:{file_too_large:"The file exceeds your current plan’s upload limit.",quota_exceeded:"There is not enough space in Storage.",type_not_allowed:"This file type cannot be uploaded.",type_mismatch:"The file does not match its extension.",
     name_taken:"A file with that name is already there.",folder_exists:"A folder with that name is already there.",folder_not_empty:"Only an empty folder can be deleted.",folder_into_itself:"A folder cannot go inside itself.",bad_folder:"Check the folder name. / \\ : * ? \" < > | are not allowed.",
     bad_name:"Enter a name.",rate_limited:"Try again in a moment.",login_required:"Sign in first.",r2_unavailable:"Storage is not available right now.",too_many_files:"Too many files.",too_many_folders:"Too many folders.",network:"Could not connect.",other:"Something went wrong."}};
-const WS_TYPES=["pdf","png","jpg","jpeg","webp","svg","json","txt","csv","md","hwpx","docx","xlsx","pptx"];
+const WS_TYPES=["pdf","png","jpg","jpeg","webp","svg","json","txt","py","c","csv","md","hwpx","docx","xlsx","pptx"];
 const wsStore={folder:"",data:null,edit:null,msg:"",busy:0};
 const wsErr=code=>{const E=WS_ERR[lang==="ko"?"ko":"en"];const t=E[code]||E.other;return lang==="ko"?t:LX(t);};
 const wsBytes=n=>n>=1048576?Number((n/1048576).toFixed(1))+" MB":n>=1024?Math.round(n/1024)+" KB":n+" B";
@@ -5761,7 +5762,7 @@ function wsPaint(box,here){
           ${ed?.path===f?editRow(ed.kind,ed.kind==="move"?(f.includes("/")?f.slice(0,f.lastIndexOf("/")):""):leaf(f)):`<span class="ws-meta">${T("폴더","Folder")}</span><span class="ws-row-acts"><button type="button" data-class-share="${esc(f)}">${T("공유","Share")}</button><button type="button" data-ws-frename="${esc(f)}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-fdel="${esc(f)}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}
         ${files.map(f=>`<li class="ws-row"><span class="ws-name"><span class="ws-ext">${esc(f.name.split(".").pop().toUpperCase())}</span>${esc(f.name)}</span>
           ${ed?.id===f.id?editRow(ed.kind,ed.kind==="move"?f.folder:f.name.replace(/\.[^.]+$/,"")):`<span class="ws-meta">${wsBytes(f.size)} · ${date(f.updated_at)}</span>
-          <span class="ws-row-acts"><button type="button" data-class-share="${f.id}">${T("공유","Share")}</button><button type="button" data-ws-down="${f.id}">${T("내려받기","Download")}</button><button type="button" data-ws-rename="${f.id}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-move="${f.id}">${T("옮기기","Move")}</button><button type="button" data-ws-del="${f.id}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}</ul>`
+          <span class="ws-row-acts">${/\.(json|py|c)$/i.test(f.name)?`<button type="button" data-ws-publish="${f.id}">${T("작품 공개","Publish project")}</button>`:""}<button type="button" data-class-share="${f.id}">${T("공유","Share")}</button><button type="button" data-ws-down="${f.id}">${T("내려받기","Download")}</button><button type="button" data-ws-rename="${f.id}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-move="${f.id}">${T("옮기기","Move")}</button><button type="button" data-ws-del="${f.id}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}</ul>`
         :`<p class="ws-empty">${cur?T("빈 폴더입니다.","This folder is empty."):T("아직 올린 파일이 없습니다.","No files yet.")}</p>`}
       <p class="ws-hint">${T("파일을 여기로 끌어다 놓아도 됩니다. PDF, 그림(PNG·JPG·WebP·SVG), 한글(HWPX), 워드·엑셀·파워포인트, CSV·TXT·MD·JSON","You can also drop files here. PDF, images (PNG, JPG, WebP, SVG), HWPX, Word, Excel, PowerPoint, CSV, TXT, MD, JSON")}</p>
     </div>
@@ -5774,6 +5775,10 @@ function wsPaint(box,here){
   q("[data-ws-go]").forEach(b=>b.onclick=()=>{wsStore.folder=b.dataset.wsGo;wsStore.edit=null;wsStore.msg="";again();});
   box.querySelector("[data-ws-newfolder]").onclick=()=>{wsStore.edit={kind:"newfolder"};again();box.querySelector("[data-ws-to]")?.focus();};
   const file=id=>D.files.find(f=>f.id===id);
+  const publish=id=>{const saved=file(id);if(saved)window.HL_WS_PUBLISH?.({file:saved,api:cmApi,text:T,here,error:wsErr});};
+  q("[data-ws-publish]").forEach(b=>b.onclick=()=>publish(b.dataset.wsPublish));
+  const source=new URLSearchParams(location.hash.split("?")[1]||"").get("publish");
+  if(source){history.replaceState(null,"","#/workshop/storage");publish(source);}
   q("[data-ws-rename]").forEach(b=>b.onclick=()=>{wsStore.edit={kind:"name",id:b.dataset.wsRename};again();box.querySelector("[data-ws-to]")?.focus();});
   q("[data-ws-move]").forEach(b=>b.onclick=()=>{wsStore.edit={kind:"move",id:b.dataset.wsMove};again();});
   q("[data-ws-frename]").forEach(b=>b.onclick=()=>{wsStore.edit={kind:"name",path:b.dataset.wsFrename};again();box.querySelector("[data-ws-to]")?.focus();});

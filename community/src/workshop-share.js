@@ -29,7 +29,8 @@
    images from this API with a CSP that allows nothing, an SVG is accepted only when it has no script, event handler,
    link, foreign object, style sheet or external reference, and a project's code runs only in sim-sandbox.html (an
    opaque-origin frame) or in a Pyodide worker in the reader's browser. */
-import {ensureCreationSchema, LIMITS as CL} from './creations.js';
+import {ensureCreationSchema, publicCreationWrite, LIMITS as CL} from './creations.js';
+import {workshopReadBytes} from './workshop-storage.js';
 import {validateScene} from '../../draw-scene.mjs';
 
 export const SHARE_SCHEMA = [
@@ -210,6 +211,25 @@ function payloadColumns(type, p, bad) {
   return {code: '', body: '', starter: '', grader: '', answer: null, unit: '', payload: JSON.stringify(set)};
 }
 
+
+function sourceProject(doc, name) {
+  const title = String(doc?.title || doc?.paper?.title || name.replace(/\.json$/i,'')).trim().slice(0,80);
+  if (doc?.format === 'haslalab-compute' && ['python','c'].includes(doc.language)) {
+    return {type:'sim', title, description:typeof doc.description === 'string' ? doc.description.slice(0,3000) : '',
+      payload:{language:doc.language, code:doc.sources?.[doc.language]}};
+  }
+  if (doc?.format === 'haslalab-scene') return {type:'figure', title, payload:{scene:doc}};
+  const paper = doc?.format === 'haslalab-paper' ? doc.paper : doc?.format === 'haslalab-problem'
+    ? {items:[{...doc.item,key:'own:1'}]} : null;
+  if (!Array.isArray(paper?.items)) return null;
+  const items = paper.items.map(({key,pts,own}) => own ? {key,pts,own:{
+    q:own.q || (own.fig ? '(그림)' : ''), answer:own.answer || '', unit:own.unit || '', sol:own.sol || '',
+    ...(own.choices ? {choices:own.choices,correct:own.correct} : {}),
+    ...(own.fig ? {fig:{src:own.fig.src,w:own.fig.w,h:own.fig.h}} : {})
+  }} : {key,pts});
+  return {type:'set', title, payload:{title,info:paper.info,minutes:paper.minutes,items}};
+}
+
 const LIST_COLS = `c.id,c.kind,c.title,c.summary,c.plays AS views,c.likes,c.forked_from,c.created_at,c.updated_at,c.user_id,u.nickname,u.avatar AS av,
   COALESCE(s.topic,'other') AS topic,COALESCE(s.tags,'') AS tags,COALESCE(s.favs,0) AS favs,COALESCE(s.n_comments,0) AS comments,
   COALESCE(s.featured,0) AS featured,length(COALESCE(s.thumb,''))>0 AS has_thumb,COALESCE(s.shared_at,c.created_at) AS shared_at,
@@ -226,7 +246,7 @@ const card = r => ({...r, type: TYPE_OF[r.kind], kind: undefined, tags: r.tags ?
   av: r.av && /^[A-Za-z0-9_-]{8,32}$/.test(r.av) ? r.av : null});
 const likeEsc = s => s.replace(/[\\%_]/g, c => '\\' + c);
 
-export function createShareRouter({HttpError, needUser, limit, now, bad, clientIp, text, isStaff = me => me?.role === 'admin'}) {
+export function createShareRouter({HttpError, needUser, limit, now, bad, clientIp, text, externalProject, isStaff = me => me?.role === 'admin'}) {
   const field = (body, key, max, code = 'bad_' + key) => { const v = plainText(body?.[key], max); if (v == null) bad(code); return v; };
   /** the fields of a publish or an edit; partial: only those sent */
   function meta(body, partial) {
@@ -248,13 +268,14 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
       s.payload,s.featured,s.mod_hidden,s.favs,s.n_comments,s.shared_at FROM creations c LEFT JOIN users u ON u.id=c.user_id LEFT JOIN share_meta s ON s.creation_id=c.id WHERE c.id=?`).bind(id).first();
   }
   const visibleTo = (row, me) => row && (row.status === 'public' && !row.mod_hidden || me && (row.user_id === me.id || isStaff(me)));
-  async function writeMeta(DB, id, o, t, shared) {
-    await DB.prepare(`INSERT INTO share_meta(creation_id,topic,tags,descr,howto,notes,thumb,payload,shared_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)
+  function metaStatement(DB, id, o, t, shared) {
+    return DB.prepare(`INSERT INTO share_meta(creation_id,topic,tags,descr,howto,notes,thumb,payload,shared_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)
       ON CONFLICT(creation_id) DO UPDATE SET topic=COALESCE(?,topic),tags=COALESCE(?,tags),descr=COALESCE(?,descr),howto=COALESCE(?,howto),notes=COALESCE(?,notes),
       thumb=COALESCE(?,thumb),payload=COALESCE(?,payload),shared_at=COALESCE(shared_at,?),updated_at=?`)
       .bind(id, o.topic ?? 'other', o.tags ?? '', o.descr ?? '', o.howto ?? '', o.notes ?? '', o.thumb ?? '', o.payload ?? null, shared ? t : null, t,
-        o.topic ?? null, o.tags ?? null, o.descr ?? null, o.howto ?? null, o.notes ?? null, o.thumb ?? null, o.payload ?? null, shared ? t : null, t).run();
+        o.topic ?? null, o.tags ?? null, o.descr ?? null, o.howto ?? null, o.notes ?? null, o.thumb ?? null, o.payload ?? null, shared ? t : null, t);
   }
+  const writeMeta = (...args) => metaStatement(...args).run();
   async function list(DB, q, me, extra = {}) {
     const where = [VISIBLE], args = [];
     const filter = q.get('type');
@@ -292,13 +313,51 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
     const DB = env.DB, t = now(), q = new URL(req?.url || 'https://x/').searchParams;
     if (p === '/api/share' && m === 'GET') return list(DB, q, me);
 
+    async function readSource(file, provider = 'storage') {
+      needUser(me);
+      if (typeof file !== 'string' || file.length > 1024 || !['storage','drive','github'].includes(provider)) bad('bad_source');
+      const maxBytes = 1024 * 1024;
+      const saved = provider === 'storage' ? await workshopReadBytes(env, me.id, file, {HttpError,maxBytes})
+        : await externalProject?.(provider,file,maxBytes,me,env);
+      if (!saved) bad('bad_source');
+      const sourceKey = saved.key || file;
+      let project;
+      const decoded = new TextDecoder().decode(saved.bytes);
+      const ext = /\.(py|c)$/i.exec(saved.name)?.[1]?.toLowerCase();
+      if (ext && saved.mime === 'text/plain' && !decoded.includes('\0')) {
+        project = {type:'sim',title:saved.name.slice(0,80),payload:{language:ext==='py'?'python':'c',code:decoded}};
+      } else if (saved.mime === 'application/json') {
+        try { project=sourceProject(JSON.parse(decoded),saved.name); }
+        catch { bad('bad_source'); }
+      }
+      if (!project) bad('bad_source');
+      const cols = payloadColumns(project.type, project.payload, bad);
+      const value = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify([project.type,cols])));
+      const digest = [...new Uint8Array(value)].map(x=>x.toString(16).padStart(2,'0')).join('');
+      const previous = await DB.prepare(`SELECT id,status,title FROM creations WHERE user_id=? AND (source_file=? OR source_digest=?)
+        ORDER BY source_digest=? DESC LIMIT 1`).bind(me.id, sourceKey, digest, digest).first();
+      project.payload = project.type === 'sim' ? {language:project.payload.language,code:project.payload.code} : JSON.parse(cols.payload);
+      return {project, cols, digest, previous, sourceKey};
+    }
+    if (p === '/api/share/source' && m === 'GET') {
+      needUser(me);
+      await limit(env, 'workshop-source-preview:' + me.id, 60, 3600);
+      const {project,digest,previous} = await readSource(q.get('file'),q.get('provider') || 'storage');
+      return {title:project.title, type:project.type, description:project.description || '', payload:project.payload, digest, previous};
+    }
+
     /* publish: a new project, or one of the member's own creations/drafts (creation_id) made public with its details */
     if (p === '/api/share' && m === 'POST') {
       needUser(me);
-      const type = Object.hasOwn(TYPES, body?.type) ? body.type : bad('bad_type');
-      let id = Number.isInteger(body?.creation_id) ? body.creation_id : null, cols = null;
+      const file = body?.source_file;
+      if (file != null) await limit(env, 'workshop-source-publish:' + me.id, 30, 3600);
+      const src = file != null ? await readSource(file,body?.source_provider) : null;
+      if (src && src.digest !== body.source_digest) throw new HttpError(409,'source_changed');
+      const type = src?.project.type || (Object.hasOwn(TYPES, body?.type) ? body.type : bad('bad_type'));
+      let id = src ? src.previous?.id : Number.isInteger(body?.creation_id) ? body.creation_id : null, cols = src?.cols || null;
       /* a new project sends every field; publishing an existing one keeps what it does not send */
       const o = meta(body, !!id);
+      let publish;
       if (id) {
         const row = await load(DB, id);
         o.title ??= row?.title;
@@ -306,18 +365,19 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
         if (row.mod_hidden) throw new HttpError(403, 'hidden_by_staff');
         if (TYPE_OF[row.kind] !== type) bad('bad_type');
         await limit(env, 'creation-edit:' + me.id, 120, 3600);
-        if (body?.payload != null) cols = payloadColumns(type, body.payload, bad);
-        await DB.prepare(`UPDATE creations SET title=?,summary=COALESCE(?,summary),status='public',updated_at=?${cols ? ',code=?,body=?,starter=?,grader=?,answer=?,unit=?' : ''} WHERE id=?`)
-          .bind(o.title, o.descr !== undefined ? summaryOf(o.descr) : null, t, ...(cols ? [cols.code, cols.body, cols.starter, cols.grader, cols.answer, cols.unit] : []), id).run();
+        if (!src && body?.payload != null) cols = payloadColumns(type, body.payload, bad);
+        publish = DB.prepare(`UPDATE creations SET title=?,summary=COALESCE(?,summary),status='public',updated_at=?,source_digest=COALESCE(?,source_digest)${cols ? ',code=?,body=?,starter=?,grader=?,answer=?,unit=?' : ''} WHERE id=?`)
+          .bind(o.title, o.descr !== undefined ? summaryOf(o.descr) : null, t, src?.digest ?? null, ...(cols ? [cols.code, cols.body, cols.starter, cols.grader, cols.answer, cols.unit] : []), id);
       } else {
         await limit(env, 'creation-new:' + me.id, 20, 86400);
-        cols = payloadColumns(type, body?.payload, bad);
+        cols ||= payloadColumns(type, body?.payload, bad);
         const from = Number.isInteger(body?.remix_of) ? body.remix_of : null;
-        const r = await DB.prepare(`INSERT INTO creations(user_id,kind,title,summary,body,code,starter,grader,answer,unit,forked_from,created_at,updated_at)
-          VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(me.id, TYPES[type], o.title, summaryOf(o.descr), cols.body, cols.code, cols.starter, cols.grader, cols.answer, cols.unit, from, t, t).run();
+        const r = await publicCreationWrite(DB.prepare(`INSERT INTO creations(user_id,kind,title,summary,body,code,starter,grader,answer,unit,forked_from,created_at,updated_at,source_file,source_digest,status)
+          VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'draft')`).bind(me.id, TYPES[type], o.title, summaryOf(o.descr), cols.body, cols.code, cols.starter, cols.grader, cols.answer, cols.unit, from, t, t, src?.sourceKey ?? null, src?.digest ?? null), HttpError);
         id = r.meta.last_row_id;
+        publish = DB.prepare("UPDATE creations SET status='public' WHERE id=?").bind(id);
       }
-      await writeMeta(DB, id, {...o, payload: cols?.payload ?? undefined}, t, true);
+      await publicCreationWrite({run:()=>DB.batch([publish, metaStatement(DB,id,{...o,payload:cols?.payload ?? undefined},t,true)])},HttpError);
       return {id, url: '#/workshop/share/' + id};
     }
 
@@ -494,5 +554,6 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
 
 /** a member's account is deleted: their favourites go; their comments stay (as in the community) under no name */
 export function shareDeletion(env, userId) {
-  return [env.DB.prepare('DELETE FROM share_favs WHERE user_id=?').bind(userId)];
+  return [env.DB.prepare('DELETE FROM share_favs WHERE user_id=?').bind(userId),
+    env.DB.prepare('DELETE FROM creation_first_publication WHERE user_id=?').bind(userId)];
 }

@@ -174,7 +174,7 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     const save=()=>{const q=new URLSearchParams();if(st.tab!=='popular')q.set('tab',st.tab);for(const k of ['type','topic','sort','q','period'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');
       try{history.replaceState(null,'','#/workshop/share'+(q.toString()?'?'+q:''));}catch(e){}};
     body.innerHTML=`<div class="shr-top"><form class="shr-search" role="search" id="shrSearch">${icon('search')}<input id="shrQ" type="search" maxlength="60" value="${esc(st.q)}" placeholder="${T('제목, 태그, 만든 사람으로 찾기','Search titles, tags or authors')}" aria-label="${T('작품 검색','Search projects')}"><button type="submit">${T('찾기','Search')}</button></form>
-        <nav class="shr-me" id="shrMe" aria-label="${T('내 작품','My projects')}"></nav></div>
+        <nav class="shr-me" id="shrMe" aria-label="${T('내 작품','My projects')}"></nav><a class="shr-btn pri" href="#/workshop/storage">${T("보관함에서 작품 공개","Publish from Storage")}</a></div>
       <section class="shr-week" id="shrWeek" aria-labelledby="shrWeekH" hidden><h2 id="shrWeekH">${T('이번 주 인기','Popular this week')}</h2><div class="shr-row" id="shrWeekRow"></div></section>
       <div class="shr-tabs" role="tablist" aria-label="${T('작품 목록','Project lists')}">${TABS.map(([k,ko,en])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="${st.tab===k&&!st.fav}">${T(ko,en)}</button>`).join('')}</div>
       <div class="shr-chips" id="shrTopics" ${st.tab==='topic'?'':'hidden'} style="margin:0 0 10px">${TOPICS.map(k=>`<button type="button" data-topic="${k}" aria-pressed="${st.topic===k}">${esc(topicName(k))}</button>`).join('')}</div>
