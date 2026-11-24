@@ -60,7 +60,7 @@ main.wide{max-width:1480px}
 .dock-controls button[aria-pressed=true]{color:var(--accent2);background:var(--soft);border-color:var(--accent)}
 .is-dock-expanded [data-dock]:not(.is-dock-expanded-item){display:none!important}
 .compute-work.is-dock-expanded,.is-workspace .compute-work.is-dock-expanded{display:block}
-.compute-work.is-dock-expanded .compute-document{display:block}
+.compute-work.is-dock-expanded .compute-document:has(.is-dock-expanded-item){display:block!important}
 .compute-work.is-dock-expanded [data-dock].is-dock-expanded-item{display:block!important}
 .compute-work.is-dock-expanded .compute-document:not(:has(.is-dock-expanded-item)){display:none}
 .dock-bar h2{margin:0}
