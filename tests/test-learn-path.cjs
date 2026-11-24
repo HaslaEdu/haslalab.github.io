@@ -265,7 +265,7 @@ test('the courses: one per study level from the repository\'s own data, every li
   });
 });
 
-test('the Olympiad home: the hero, then upcoming contests, this month and HPhO, recent papers and competition chips',()=>{
+test('the Olympiad home: the hero, then upcoming contests, this month and HPhO, recent papers and this week\'s set',()=>{
   const a=app('#/olympiad');
   a.context.document.createElement=()=>{const el={_h:'',set innerHTML(v){this._h=v;},get innerHTML(){return this._h;},querySelector(sel){
     const h=this._h;if(sel==='figure.screen'){const m=/<figure class="screen">[\s\S]*?<\/figure>/.exec(h);return{outerHTML:m[0]};}
@@ -276,15 +276,14 @@ test('the Olympiad home: the hero, then upcoming contests, this month and HPhO, 
     assert.match(html,/id="deflect"/);
     assert.doesNotMatch(html,/homeLatest|homeNotices|hl-home-studio|hl-dashboard|#\/community|#\/learn\/physics\/studio/,'no community or studio panels');
     const heads=[...html.matchAll(/<h2 id="(oly\w+)H">/g)].map(m=>m[1]);
-    assert.deepEqual(heads,['olyUpcoming','olyNow','olyRecent','olyQuick']);
-    assert.match(html,language==='ko'?/다가오는 대회[\s\S]*이번 달 월별문제 · HPhO[\s\S]*최근 추가된 기출[\s\S]*대회 바로가기/:/Upcoming[\s\S]*Monthly problems · HPhO[\s\S]*Recently added papers[\s\S]*Go to a competition/);
+    assert.deepEqual(heads,['olyUpcoming','olyNow','olyRecent','olyWeekly']);
+    assert.match(html,language==='ko'?/다가오는 대회[\s\S]*이번 달 월별문제 · HPhO[\s\S]*최근 추가된 기출[\s\S]*이번 주 추천 세트/:/Upcoming[\s\S]*Monthly problems · HPhO[\s\S]*Recently added papers[\s\S]*This week's set/);
     const hrefs=links(html);
-    for(const href of ['#/olympiad/schedule','#/monthly','#/hpho','#/comps'])assert.ok(hrefs.includes(href),href);
+    for(const href of ['#/olympiad/schedule','#/monthly','#/hpho','#/learn/practice'])assert.ok(hrefs.includes(href),href);
+    /* the competition chips are gone: the fourth card is filled later (mountWeeklySet, tests/test-weekly-set.cjs) */
+    assert.doesNotMatch(html,/oly-chip|대회 바로가기|Go to a competition/);
+    assert.match(/id="olyWeekly"[^>]*>([\s\S]*?)<\/div><\/section>/.exec(html)[1],/oly-note/,'a loading line until the set is chosen');
     assert.match(html,/aria-haspopup="dialog" onclick="openSiteMailbox\(this\)"/,'the full update log is one tap away');
-    const chips=[...html.matchAll(/class="oly-chip" href="#\/([a-z0-9]+)"/g)].map(m=>m[1]);
-    assert.deepEqual(chips.slice(0,4),['ipho','apho','eupho','usapho']);
-    assert.ok(chips.length>=8&&chips.length<=12);
-    if(language==='en')assert.ok(!chips.includes('cpho'),'a competition the English site hides is not offered');
     /* the recent papers are the newest SITE_UPDATES entries that add papers */
     const recent=/id="olyRecent"[^>]*>([\s\S]*?)<\/div><\/section>/.exec(html)[1];
     assert.deepEqual(links(recent),[...a.run('olyRecent().map(u=>u.href)')]);
@@ -391,6 +390,13 @@ test('the practice page embeds practice.html and passes on only a unit of the le
   a.context.location.hash='#/learn/practice?mode=custom&level=L9';
   q=new URLSearchParams(/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1].split('?')[1]);
   assert.equal(q.get('level'),null);
+  /* this week's set (the Olympiad home): only well-formed problem ids go on, at most ten */
+  a.context.location.hash='#/learn/practice?mode=set&ids=opho-2020-T~1,usapho-u1-001,%22%3E%3Cx,eupho-2017-T1~T1';
+  q=new URLSearchParams(/id="learnPracticeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnPractice()'))[1].replace(/&amp;/g,'&').split('?')[1]);
+  assert.deepEqual([q.get('mode'),q.get('ids')],['set','opho-2020-T~1,usapho-u1-001,eupho-2017-T1~T1']);
+  const pjs=read('practice.js');
+  assert.match(pjs,/else if\(mode==='set'\)idSet\(params\.get\('ids'\)\)/,'practice.js opens the set');
+  assert.match(pjs,/async function idSet\(raw\)\{[\s\S]*?const items=ids\.map\(id=>byId\.get\(id\)\)\.filter\(Boolean\);/,'each id is looked up in the bank; unknown ones are dropped');
   assert.deepEqual(Runtime.routeNeeds('#/learn/practice'),[]);
 });
 

@@ -41,7 +41,7 @@
       solvedIt:'풀었어요',missedIt:'못 풀었어요',original:'원문 보기',translated:'번역 보기',noKo:'한국어 번역이 아직 없어 원문을 보여 줍니다.',draft:'하슬라랩 작성 풀이 · 검수 전',refFig:'참고 그림',empty:'이 조건의 문제가 더 없습니다. 난이도나 분야를 바꿔 보세요.',
       contestPick:'대회를 고르면 기출 문제가 하나씩 나옵니다. PDF로 풀고, 풀이를 확인한 뒤 스스로 채점하세요.',paper:'문제',solution:'풀이',noContestSol:'이 문제는 공식 풀이가 없습니다.',problems:'문제',another:'다른 문제',figInPdf:'그림은 아래 원본 PDF에서 볼 수 있습니다.',transcribed:'문제 글은 원본 PDF에서 옮겨 적은 것입니다. 원본과 다르면 PDF를 기준으로 하세요.',noteBank:'문항 출처는 문제마다 표시합니다(교재 · 대학 강의). 한국어 번역과 "하슬라랩 작성" 풀이는 검수 중입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',noteContest:'각 대회의 공식 문제와 풀이이며, 한국어판은 하슬라랩 번역입니다. 기록은 이 기기에 저장되고, 로그인하면 계정에도 저장되어 다른 기기에서 이어집니다.',
       tabReview:'복습',tabCustom:'세트 만들기',noteCustom:'세트, 복습 목록, 나중에 풀기는 이 기기에 저장됩니다. 정답 기록과 단원 실력은 로그인하면 계정에도 저장됩니다.',
-      customIntro:'풀 문제의 출처, 주제, 난이도, 개수를 직접 정합니다. 조건에 맞는 문제 가운데 아직 풀지 않았고 최근에 보지 않은 문제가 먼저 나옵니다.',cSource:'문제 출처',cAll:'모든 문제',cCalc:'한국 학교 시험 기출',cContest:'대회 기출',cTopics:'주제',cAllTopics:'전체',cPickUnits:'단원별로 고르기',cDiff:'난이도 (단계)',cCount:'문제 수',cFormat:'답하는 방식',cChoice:'보기 고르기',cTyped:'직접 입력',cFormatNote:'직접 입력은 답이 숫자나 식인 문제만 남깁니다.',cCompetition:'대회',cAnyContest:'모든 대회',cYears:'연도',cTimer:'풀이 시간 재기',cMatch:'조건에 맞는 문제',cStartSet:'세트 시작',cNoMatch:'조건에 맞는 문제가 없습니다. 조건을 넓혀 보세요.',cContestNote:'대회 문제는 단원 구분이 없어 주제를 고르면 빠집니다. 풀이를 확인하고 스스로 채점합니다.',customName:'내 세트',
+      customIntro:'풀 문제의 출처, 주제, 난이도, 개수를 직접 정합니다. 조건에 맞는 문제 가운데 아직 풀지 않았고 최근에 보지 않은 문제가 먼저 나옵니다.',cSource:'문제 출처',cAll:'모든 문제',cCalc:'한국 학교 시험 기출',cContest:'대회 기출',cTopics:'주제',cAllTopics:'전체',cPickUnits:'단원별로 고르기',cDiff:'난이도 (단계)',cCount:'문제 수',cFormat:'답하는 방식',cChoice:'보기 고르기',cTyped:'직접 입력',cFormatNote:'직접 입력은 답이 숫자나 식인 문제만 남깁니다.',cCompetition:'대회',cAnyContest:'모든 대회',cYears:'연도',cTimer:'풀이 시간 재기',cMatch:'조건에 맞는 문제',cStartSet:'세트 시작',cNoMatch:'조건에 맞는 문제가 없습니다. 조건을 넓혀 보세요.',cContestNote:'대회 문제는 단원 구분이 없어 주제를 고르면 빠집니다. 풀이를 확인하고 스스로 채점합니다.',customName:'내 세트',weeklyName:'이번 주 추천 세트',
       reviewIntro:'틀린 문제와 힌트를 보고서야 맞힌 문제는 1일, 3일, 7일, 21일 뒤에 다시 나옵니다. 복습에서 맞히면 다음 간격으로 넘어가고, 틀리면 1일부터 다시 시작합니다.',dueToday:'오늘 복습',inQueue:'복습 대기',startReview:'복습 시작',noDue:'오늘 복습할 문제가 없습니다.',nextDue:'다음 복습',dueCard:'오늘 복습할 문제가 있습니다',
       laterTitle:'나중에 풀기',later:'나중에 풀기',laterOn:'저장됨',noLater:'저장한 문제가 없습니다. 문제 아래의 "나중에 풀기"를 누르면 여기에 모입니다.',startLater:'저장한 문제 풀기',removeLater:'빼기',
       report:'문제 신고',reportTitle:'이 문제에서 무엇이 잘못됐나요?',rWrongAnswer:'정답이 틀림',rTypo:'오타',rFigure:'그림',rTranslation:'번역',rOther:'기타',reportNote:'자세히 적어 주세요 (선택)',reportSend:'신고 보내기',reportCancel:'닫기',reportSent:'메일 앱에 신고 내용이 채워집니다. 열리지 않으면 이 주소로 보내 주세요:',myReports:'내 신고',noReports:'아직 보낸 신고가 없습니다.',reportPick:'무엇이 잘못됐는지 고르세요.',
@@ -89,7 +89,7 @@
       solvedIt:'I solved it',missedIt:'I missed it',original:'Original',translated:'Translation',noKo:'',draft:'HaslaLab draft solution · not yet reviewed',refFig:'Reference figures',empty:'No more problems here. Try another difficulty or field.',
       contestPick:'Pick a competition to get its problems one at a time. Solve from the PDF, check the solution and mark yourself.',paper:'Problem',solution:'Solution',noContestSol:'This problem has no official solution.',problems:'problems',another:'Another problem',figInPdf:'The figures are in the original PDF below.',transcribed:'The text is transcribed from the original paper; if they differ, the PDF is authoritative.',noteBank:'Each problem shows its source (textbook or university course). Translations and HaslaLab draft solutions are under review. Progress is kept on this device and, when you log in, on your account too.',noteContest:'Official problems and solutions of each competition; Korean versions are HaslaLab translations. Progress is kept on this device and, when you log in, on your account too.',
       tabReview:'Review',tabCustom:'Build a set',noteCustom:'Sets, the review queue and saved problems are kept on this device. Answers and unit ratings also go to your account when you log in.',
-      customIntro:'Choose the source, topics, difficulty and number of problems yourself. Among the problems that match, ones you have not solved or seen lately come first.',cSource:'Source',cAll:'Everything',cCalc:'Korean school exams',cContest:'Competition problems',cTopics:'Topics',cAllTopics:'All',cPickUnits:'Pick single units',cDiff:'Difficulty (step)',cCount:'Problems',cFormat:'Answer by',cChoice:'Picking a choice',cTyped:'Typing it',cFormatNote:'Typing keeps only problems whose answer is a number or a formula.',cCompetition:'Competition',cAnyContest:'All competitions',cYears:'Years',cTimer:'Time each problem',cMatch:'Problems that match',cStartSet:'Start the set',cNoMatch:'Nothing matches. Widen the filters.',cContestNote:'Competition problems have no unit, so picking topics leaves them out. You check the solution and mark them yourself.',customName:'My set',
+      customIntro:'Choose the source, topics, difficulty and number of problems yourself. Among the problems that match, ones you have not solved or seen lately come first.',cSource:'Source',cAll:'Everything',cCalc:'Korean school exams',cContest:'Competition problems',cTopics:'Topics',cAllTopics:'All',cPickUnits:'Pick single units',cDiff:'Difficulty (step)',cCount:'Problems',cFormat:'Answer by',cChoice:'Picking a choice',cTyped:'Typing it',cFormatNote:'Typing keeps only problems whose answer is a number or a formula.',cCompetition:'Competition',cAnyContest:'All competitions',cYears:'Years',cTimer:'Time each problem',cMatch:'Problems that match',cStartSet:'Start the set',cNoMatch:'Nothing matches. Widen the filters.',cContestNote:'Competition problems have no unit, so picking topics leaves them out. You check the solution and mark them yourself.',customName:'My set',weeklyName:"This week's set",
       reviewIntro:'Problems you missed, or got right only with hints, come back after 1, 3, 7 and 21 days. A right answer on review moves a problem to the next gap; a miss starts it again at 1 day.',dueToday:'Due today',inQueue:'In the queue',startReview:'Start review',noDue:'Nothing is due today.',nextDue:'Next review',dueCard:'Problems are due for review today',
       laterTitle:'Saved for later',later:'Save for later',laterOn:'Saved',noLater:'Nothing saved yet. Tap "Save for later" under a problem to keep it here.',startLater:'Solve saved problems',removeLater:'Remove',
       report:'Report',reportTitle:'What is wrong with this problem?',rWrongAnswer:'Wrong answer',rTypo:'Typo',rFigure:'Figure',rTranslation:'Translation',rOther:'Other',reportNote:'Details (optional)',reportSend:'Send report',reportCancel:'Close',reportSent:'Your mail app opens with the report filled in. If it does not, send it to:',myReports:'My reports',noReports:'No reports yet.',reportPick:'Pick what is wrong.',
@@ -444,7 +444,7 @@
       ${times.length?`<p class="pacesum">${tr('avgTime')} <b class="${avg('t')>avg('sug')?'over':''}">${H.clock(avg('t'))}</b> · ${tr('vsSuggested')} ${H.clock(avg('sug'))}</p>`:''}
       <div class="actions"><button type="button" class="primary" id="again">${tr('again')}</button><button type="button" id="units">${tr('units')}</button></div></div>`;
     if(s.unit==='today'&&document.documentElement.classList.contains('play')){$('again').onclick=playHome;$('units').onclick=todayHome;$('again').textContent=tr('moreProblems');reportHeight();return;}
-    if(s.custom){$('again').onclick=s.again;$('units').onclick=s.back;$('units').textContent=s.back===customHome?tr('tabCustom'):tr('tabReview');reportHeight();return;}
+    if(s.custom){$('again').onclick=s.again;$('units').onclick=s.back;$('units').textContent=s.backLabel||(s.back===customHome?tr('tabCustom'):tr('tabReview'));reportHeight();return;}
     if(s.assignment){$('again').onclick=classHome;$('units').onclick=classHome;$('again').textContent=tr('tabClass');reportHeight();return;}
     $('again').onclick=()=>s.fixed?todayHome():s.mode==='bank'?bankStart(s.field,s.stars):s.mode==='track'?trackStart(s.track,s.syl):start(s.unit);$('units').onclick=s.fixed?todayHome:s.mode==='bank'?bankHome:s.mode==='track'?tracksHome:home;reportHeight();
   }
@@ -1658,8 +1658,24 @@
   /* ── one set of fixed problems run through the usual session (custom sets, review, saved problems) ── */
   function runSet(o){
     if(!o.items.length){o.back();return;}
-    state.session={mode:'custom',unit:'custom',fixed:true,custom:true,label:o.label,back:o.back,again:o.again,timer:o.timer!==false,format:o.format,total:o.items.length,items:o.items,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0,times:[]};
+    state.session={mode:'custom',unit:'custom',fixed:true,custom:true,label:o.label,back:o.back,backLabel:o.backLabel,again:o.again,timer:o.timer!==false,format:o.format,total:o.items.length,items:o.items,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0,times:[]};
     next();
+  }
+  /* this week's set from the Olympiad home (weekly-set.js setHref): ?mode=set&ids=a,b,… — each id must be a problem in
+     the bank (a transcribed competition problem or an exam-track item); unknown ones are dropped, at most ten */
+  async function idSet(raw){
+    const ids=[...new Set(String(raw||'').split(',').filter(id=>/^[a-z0-9]+-[A-Za-z0-9~._-]{1,60}$/.test(id)))].slice(0,10);
+    state.mode='today';state.session=null;paintTabs();paintStats();
+    if(!ids.length){todayHome();return;}
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    const parts=[];
+    if(ids.some(id=>id.includes('~')))parts.push(allContestItems().catch(()=>[]));
+    const keys=new Set(ids.filter(id=>!id.includes('~')).map(id=>id.split('-')[0]));
+    if(keys.size){const known=await loadTracks().catch(()=>[]);for(const t of known)if(keys.has(t.key))parts.push(trackItems(t.key).catch(()=>[]));}
+    const byId=new Map((await Promise.all(parts)).flat().map(i=>[i.id,i]));
+    const items=ids.map(id=>byId.get(id)).filter(Boolean);
+    if(!items.length){todayHome();return;}
+    runSet({items,label:tr('weeklyName'),back:todayHome,backLabel:tr('tabToday'),again:todayHome,timer:true});
   }
   /* competition problems transcribed per problem, as set items (self-marked) */
   async function loadContests(){if(!state.contests){const r=await fetch('practice/contests.json');if(!r.ok)throw new Error('contests');state.contests=(await r.json()).contests;}return state.contests;}
@@ -1892,6 +1908,6 @@
     if(item&&/^[a-z0-9]+-[A-Za-z0-9~._-]{1,60}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
     else if(mode==='play'){document.documentElement.classList.add('play');playHome();}
-    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(mode==='league')leagueHome();else if(mode==='review')reviewHome();else if(mode==='custom'){presetCustom(params.get('level'),unit);customHome();}else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
+    else if(mode==='diag')diagStart();else if(mode==='start')startHome(!!saved.profile);else if(mode==='class')classHome();else if(mode==='league')leagueHome();else if(mode==='review')reviewHome();else if(mode==='set')idSet(params.get('ids'));else if(mode==='custom'){presetCustom(params.get('level'),unit);customHome();}else if(unit&&P.SUBTOPICS.has(unit))start(unit);else if(mode==='exam')home();else todayHome();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();

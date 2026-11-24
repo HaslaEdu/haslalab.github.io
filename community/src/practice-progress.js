@@ -32,7 +32,7 @@ export const MODES = ['exam', 'bank', 'contest', 'track', 'diag'];
 export const RESULTS = ['right', 'wrong', 'solved', 'missed', 'skip', 'place'];
 export const UNIT_RE = /^(?:[a-z]+\/[a-z_]+|[a-z]+\/\*|contest\/[a-z]+)$/;
 const ITEM = /^[\w~.:-]{3,120}$/;
-const MAX_BATCH = 50, MAX_STATE = 200000;
+const MAX_BATCH = 50, MAX_STATE = 200000, RECENT_MAX = 60, RECENT_DAYS = 60;
 
 /* rating scale: a problem at step s sits at 1000 + 100·s; a learner starts at step 3 (1300) */
 export const START = 1300;
@@ -92,6 +92,13 @@ export function createPracticeRouter({ HttpError, needUser, limit, now, bad }) {
       const row = await env.DB.prepare('SELECT state FROM practice_state WHERE user_id=?').bind(me.id).first();
       let state = {}; try { state = row ? JSON.parse(row.state) : {}; } catch (e) { state = {}; }
       return { state, skills: await skills(env, me.id) };
+    }
+    /* the latest answers, newest first: what the Olympiad home's weekly set reads for recent accuracy and recent misses
+       (weekly-set.js). Read-only, the last 60 answers of the last 60 days, skips and placements left out */
+    if (p === '/api/practice/recent' && m === 'GET') {
+      const rows = (await env.DB.prepare("SELECT item_id,mode,unit,step,result,created_at AS at FROM practice_attempts WHERE user_id=? AND created_at>=? AND result NOT IN ('skip','place') ORDER BY created_at DESC, id DESC LIMIT ?")
+        .bind(me.id, now() - RECENT_DAYS * 86400, RECENT_MAX).all()).results;
+      return { attempts: rows };
     }
     if (p === '/api/practice/state' && m === 'POST') {
       const text = JSON.stringify(body?.state ?? null);

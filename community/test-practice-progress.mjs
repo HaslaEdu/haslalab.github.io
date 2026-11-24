@@ -77,3 +77,22 @@ test('the first-visit profile follows the account: the newer answers win and any
   assert.equal(mergeState({profile:{region:'mars',level:'high1',goal:'school',at:1}},{}).profile,undefined);
   assert.deepEqual(mergeState({profile:{region:'mars',at:999}},{profile:old}).profile,old,'a bad newer profile never replaces a good one');
 });
+
+test('the recent answers (the weekly set reads them): newest first, own only, no skips or placements, within 60 days and 60 rows',async()=>{
+  const {env,route,tick}=setup();
+  await fails(route('/api/practice/recent','GET',{},null,env),'login_required');
+  await route('/api/practice/attempts','POST',{attempts:[
+    {item_id:'opho-2020-T~1',mode:'contest',unit:'contest/opho',step:7,result:'solved',at:999_000},
+    {item_id:'usapho-u1-001',mode:'track',unit:'mechanics/energy',step:7,result:'wrong',at:999_500},
+    {item_id:'usapho-u1-002',mode:'track',unit:'mechanics/momentum',step:8,result:'skip',at:999_600},
+    {item_id:'diag-waves',mode:'diag',unit:'waves/shm',step:8,result:'place',at:999_700}]},me,env);
+  await route('/api/practice/attempts','POST',{attempts:[{item_id:'kr-1',mode:'exam',unit:'mechanics/energy',step:4,result:'right'}]},other,env);
+  const r=await route('/api/practice/recent','GET',{},me,env);
+  assert.deepEqual(r.attempts.map(a=>[a.item_id,a.result,a.at]),[['usapho-u1-001','wrong',999_500],['opho-2020-T~1','solved',999_000]]);
+  assert.deepEqual(Object.keys(r.attempts[0]).sort(),['at','item_id','mode','result','step','unit']);
+  const many=Array.from({length:50},(_,i)=>({item_id:'usapho-u2-'+String(i).padStart(3,'0'),mode:'track',unit:'waves/shm',step:6,result:'right'}));
+  await route('/api/practice/attempts','POST',{attempts:many},me,env);await route('/api/practice/attempts','POST',{attempts:many},me,env);
+  assert.equal((await route('/api/practice/recent','GET',{},me,env)).attempts.length,60);
+  tick(61*86400);
+  assert.equal((await route('/api/practice/recent','GET',{},me,env)).attempts.length,0,'older than 60 days: left out');
+});

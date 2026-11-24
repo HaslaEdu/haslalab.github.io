@@ -1322,12 +1322,23 @@ body.hl-site .oly-list time{flex:none;font-size:12px;color:var(--graphite);lette
 body.hl-site .oly-dday{flex:none;font-size:12px;font-weight:700;color:#5c438f;background:#f3f0f9;border-radius:999px;padding:2px 9px;white-space:nowrap}
 body.hl-site .oly-dday.on{color:#1f7a4d;background:#eaf7ef}
 body.hl-site .oly-note{font-size:13px;color:var(--graphite);margin:6px 0}
-body.hl-site .oly-chips{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 6px}
-body.hl-site .oly-chip{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--grid-bold);border-radius:999px;font-size:13.5px;font-weight:600;color:var(--ink);text-decoration:none}
-body.hl-site .oly-chip:hover{border-color:#7059a4;color:#5c438f}
+body.hl-site .oly-week li>a{justify-content:flex-start;gap:10px}
+body.hl-site .oly-tick{flex:none;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:1.5px solid var(--grid-bold);border-radius:50%;font-size:12px;font-weight:700;color:transparent}
+body.hl-site .oly-wk.right .oly-tick{border-color:#1f7a4d;background:#eaf7ef;color:#1f7a4d}
+body.hl-site .oly-wk.wrong .oly-tick{border-color:#b4532a;background:#fbefe8;color:#b4532a}
+body.hl-site .oly-dots{font-style:normal;letter-spacing:1px;color:#5c438f;margin-right:4px}
+body.hl-site .oly-wk-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #e3e8f0;padding:8px 0 6px;font-size:13px;color:var(--graphite)}
+body.hl-site .oly-wk-n{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+body.hl-site .oly-go{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border:0;border-radius:999px;background:#5c438f;color:#fff;font:inherit;font-size:13.5px;font-weight:650;text-decoration:none;cursor:pointer;white-space:nowrap}
+body.hl-site .oly-go:hover{background:#4b3576}
+body.hl-site .oly-note a{color:#5c438f}
 html[data-theme="dark"] body.hl-site .oly-card{background:#1b1825;border-color:#3b344d}
 html[data-theme="dark"] body.hl-site .oly-list li{border-top-color:#3b344d}
 html[data-theme="dark"] body.hl-site :is(.oly-head a,.oly-more,.oly-dday){color:#cfbdf2}html[data-theme="dark"] body.hl-site .oly-dday{background:#30243f}
 html[data-theme="dark"] body.hl-site .oly-dday.on{color:#8fdcb0;background:#16291f}
-html[data-theme="dark"] body.hl-site .oly-chip{border-color:#3b344d}
+html[data-theme="dark"] body.hl-site :is(.oly-tick,.oly-wk-foot){border-color:#3b344d}
+html[data-theme="dark"] body.hl-site .oly-wk.right .oly-tick{border-color:#8fdcb0;background:#16291f;color:#8fdcb0}
+html[data-theme="dark"] body.hl-site .oly-wk.wrong .oly-tick{border-color:#f0a37f;background:#33201a;color:#f0a37f}
+html[data-theme="dark"] body.hl-site :is(.oly-dots,.oly-note a){color:#cfbdf2}
+html[data-theme="dark"] body.hl-site .oly-go{background:#7d63b8}html[data-theme="dark"] body.hl-site .oly-wk-n{color:inherit}
 @media(max-width:720px){body.hl-site .oly-cards{grid-template-columns:1fr;gap:12px}}

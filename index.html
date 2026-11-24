@@ -1044,7 +1044,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=54a5c4799c76">
+<link rel="stylesheet" href="site-design.css?v=4b5e2dc548a8">
 <link rel="stylesheet" href="guide.css?v=022546be75f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
@@ -1198,9 +1198,10 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-catalogue.js?v=7d2c385b7b26"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
-<script src="site-design.js?v=264d9122e2d7"></script>
+<script src="site-design.js?v=af0e919623fe"></script>
 <script src="hpho.js?v=ea67208eda3b"></script>
 <script src="guides.js?v=2dcd3d5af493"></script>
+<script src="weekly-set.js?v=bf8319ae9261"></script>
 <script src="guide.js?v=3470e35a319e"></script>
 <script src="hpho-proctor.js?v=c8b93c4e12fb"></script>
 <script src="hpho-phone.js?v=3a6015cc1217"></script>
@@ -5542,7 +5543,9 @@ function viewLearnPractice(){
   /* a problem's own link (search pages, discussions) and the exam tracks */
   const hq=new URLSearchParams(location.hash.split("?")[1]||"");
   if(/^[a-z0-9]+-[A-Za-z0-9~._-]{1,60}$/.test(hq.get("item")||""))query.set("item",hq.get("item"));
-  if(/^(?:start|tracks|diag|bank|contest|exam|class|custom|review|league)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
+  if(/^(?:start|tracks|diag|bank|contest|exam|class|custom|review|league|set)$/.test(hq.get("mode")||""))query.set("mode",hq.get("mode"));
+  /* this week's set (the Olympiad home): the problem ids, each checked again by practice.js against the bank */
+  if(hq.get("mode")==="set"){const ids=String(hq.get("ids")||"").split(",").filter(id=>/^[a-z0-9]+-[A-Za-z0-9~._-]{1,60}$/.test(id)).slice(0,10);if(ids.length)query.set("ids",ids.join(","));}
   if(/^L[1-4]$/.test(hq.get("level")||""))query.set("level",hq.get("level"));
   if(/^[a-z0-9]{2,8}$/.test(hq.get("track")||""))query.set("track",hq.get("track"));
   return `<div class="shell learn-studio learn-practice"><div class="phead"><p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / ${label}</p><h1>${label}</h1>

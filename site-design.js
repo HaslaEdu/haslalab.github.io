@@ -134,21 +134,26 @@ function viewHomeStudio(){
 /* The Olympiad home (#/olympiad): the experiment hero, then four small cards about olympiads only. Upcoming contests
    (data/schedule.json through guides.js), this month's problems and HPhO's next round (the server's /monthly and
    /hpho, as #/monthly and hpho.js read them; links only when it cannot be reached), the archive's latest additions
-   (SITE_UPDATES entries that add papers) and the competitions most visited. */
+   (SITE_UPDATES entries that add papers) and this week's set: five competition problems picked from the learner's own
+   practice record (weekly-set.js, mountWeeklySet). */
 const OLY_TEXT={
-  ko:{upcoming:"다가오는 대회",schedule:"전체 일정",live:"오늘의 상황",monthly:"월별문제",hpho:"HPhO",recent:"최근 추가된 기출",archive:"업데이트 전체",quick:"대회 바로가기",comps:"전체 대회",
+  ko:{upcoming:"다가오는 대회",schedule:"전체 일정",live:"오늘의 상황",monthly:"월별문제",hpho:"HPhO",recent:"최근 추가된 기출",archive:"업데이트 전체",
     loading:"불러오는 중…",noEvents:"정해진 날짜가 있는 대회가 아직 없습니다.",failed:"일정을 불러오지 못했습니다.",today:"진행 중",days:n=>`${n}일 남음`,usual:m=>`예년 기준 ${m}월`,usualBadge:"날짜 미정",
     deadline:"마감",closed:"이번 달 마감",none:"이번 달 문제 준비 중",open:"보기",hphoNone:"다음 대회 일정 준비 중",
-    hphoState:{open:"접수 중",closed:"접수 마감",soon:"접수 예정",rehearsal:"점검 중",finished:"종료"},regClose:"접수 마감",exam:"시험",cardMonthly:"이번 달 월별문제 · HPhO"},
-  en:{upcoming:"Upcoming",schedule:"Full calendar",live:"Now",monthly:"Monthly problems",hpho:"HPhO",recent:"Recently added papers",archive:"All updates",quick:"Go to a competition",comps:"All competitions",
+    hphoState:{open:"접수 중",closed:"접수 마감",soon:"접수 예정",rehearsal:"점검 중",finished:"종료"},regClose:"접수 마감",exam:"시험",cardMonthly:"이번 달 월별문제 · HPhO",
+    week:{title:"이번 주 추천 세트",open:"문제 풀기",go:"세트 풀기",again:"새 세트",doneAll:"이번 주 세트를 다 풀었습니다.",failed:"추천 세트를 불러오지 못했습니다.",
+      weak:u=>`약한 단원: ${u}`,missed:"최근 틀림",fresh:u=>`아직 안 푼 단원: ${u}`,level:"내 수준",stretch:"한 단계 위 도전",starter:"기본 단원",
+      line:(t,acc,n)=>`목표 난이도 ${t}단계${acc==null?"":` · 최근 ${n}문제 정답률 ${acc}%`}`,starterLine:"풀수록 내 약점에 맞춰집니다.",diag:"레벨 찾기",
+      right:"맞힘",wrong:"틀림",todo:"아직",step:s=>`${s}단계`}},
+  en:{upcoming:"Upcoming",schedule:"Full calendar",live:"Now",monthly:"Monthly problems",hpho:"HPhO",recent:"Recently added papers",archive:"All updates",
     loading:"Loading…",noEvents:"No contest with a set date yet.",failed:"Could not load the calendar.",today:"On now",days:n=>n===1?"1 day left":`${n} days left`,usual:m=>`Usually ${new Date(Date.UTC(2000,m-1,1)).toLocaleDateString("en",{month:"long",timeZone:"UTC"})}`,usualBadge:"Date TBA",
     deadline:"Deadline",closed:"This month is closed",none:"This month's problems are coming",open:"Open",hphoNone:"Next round to be announced",
-    hphoState:{open:"Registration open",closed:"Registration closed",soon:"Registration soon",rehearsal:"Test round",finished:"Finished"},regClose:"closes",exam:"exam",cardMonthly:"Monthly problems · HPhO"}
+    hphoState:{open:"Registration open",closed:"Registration closed",soon:"Registration soon",rehearsal:"Test round",finished:"Finished"},regClose:"closes",exam:"exam",cardMonthly:"Monthly problems · HPhO",
+    week:{title:"This week's set",open:"Practice",go:"Start the set",again:"New set",doneAll:"You finished this week's set.",failed:"Could not load this week's set.",
+      weak:u=>`Weak unit: ${u}`,missed:"Missed recently",fresh:u=>`Not tried yet: ${u}`,level:"At your level",stretch:"One step up",starter:"Core unit",
+      line:(t,acc,n)=>`Target step ${t}${acc==null?"":` · ${acc}% right in your last ${n}`}`,starterLine:"The more you solve, the more it fits your weak spots.",diag:"Find my level",
+      right:"right",wrong:"missed",todo:"not yet",step:s=>`step ${s}`}}
 };
-/* the competitions people open most, then whatever else the archive has, up to twelve chips */
-const OLY_QUICK=["ipho","apho","eupho","usapho","kpho","nbpho","izho","physcup","rupho","rmph","ispho","cpho","gpho","opho"];
-const olyCompKeys=()=>{const has=k=>(window.HL_CATALOGUE?.competitions?.[k]||(typeof DATA==="object"&&DATA[k]))&&(typeof compShown!=="function"||compShown(k));return OLY_QUICK.filter(has).slice(0,12);};
-const olyAbbr=k=>window.HL_CATALOGUE?.competitions?.[k]?.data?.abbr||(typeof DATA==="object"&&DATA[k]?.abbr)||k.toUpperCase();
 /* recently added papers: the newest SITE_UPDATES entries whose title says papers were added, newest first */
 const olyRecent=(n=4)=>SITE_UPDATES.filter(updateShown).filter(u=>/^#\/[a-z0-9]/.test(u.href||"")&&(/추가/.test(u.ko)||/\badded\b/i.test(u.en))).slice(0,n);
 const olyCard=(id,title,href,label,body)=>`<section class="oly-card" aria-labelledby="${id}H"><div class="oly-head"><h2 id="${id}H">${title}</h2>${href?`<a href="${href}">${label} →</a>`:`<button type="button" class="oly-more" aria-haspopup="dialog" onclick="openSiteMailbox(this)">${label} →</button>`}</div><div id="${id}" class="oly-body">${body}</div></section>`;
@@ -159,7 +164,6 @@ function viewOlympiadHome(){
   const experiment=original.querySelector("figure.screen").outerHTML;
   const homeText=original.querySelector(".hero > div").innerHTML;
   const recent=olyRecent().map(u=>`<li><a href="${esc(u.href)}"><span>${esc(u[lang]||u.en)}</span><time datetime="${u.date}">${olyShortDate(u.date,ko)}</time></a></li>`).join("");
-  const chips=olyCompKeys().map(k=>`<a class="oly-chip" href="#/${k}">${esc(olyAbbr(k))}</a>`).join("");
   const wait=`<p class="oly-note">${O.loading}</p>`;
   return `<div class="shell hl-home oly-home">
     <section class="hl-home-cover">${experiment}<div class="hl-cover-info">${homeText}</div></section>
@@ -167,12 +171,57 @@ function viewOlympiadHome(){
       ${olyCard("olyUpcoming",O.upcoming,"#/olympiad/schedule",O.schedule,wait)}
       ${olyCard("olyNow",O.cardMonthly,"#/monthly",O.open,`<ul class="oly-list"><li><a href="#/monthly"><span>${O.monthly}</span></a></li><li><a href="#/hpho"><span>${O.hpho}</span></a></li></ul>`)}
       ${olyCard("olyRecent",O.recent,"",O.archive,recent?`<ul class="oly-list">${recent}</ul>`:"")}
-      ${olyCard("olyQuick",O.quick,"#/comps",O.comps,`<div class="oly-chips">${chips}</div>`)}
+      ${olyCard("olyWeekly",O.week.title,"#/learn/practice",O.week.open,wait)}
     </div>
   </div>${adFitBanner("home")}`;
 }
-/* fills the two cards that need data; each stays a plain link when its source does not answer */
+/* this week's set (weekly-set.js): this browser's practice record (practice.js keeps it in localStorage hlPractice)
+   joined with the account's (/api/practice/state and /recent), then five problems with the reason for each, the
+   answers given since the set was made, one button that opens practice with exactly these problems, and a new set
+   once all five are done. The set itself stays on this device (hlWeeklySet) for the week. */
+const olyStore={get:k=>{try{return JSON.parse(localStorage.getItem(k)||"null");}catch(e){return null;}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+let olyPoolP=null;
+/* a guest's set is seeded by a random id kept on this device, a member's by the account */
+function olyWeekId(){
+  let id="";
+  try{id=localStorage.getItem("hlWeeklyId")||"";if(!/^[a-z0-9]{8,32}$/.test(id)){id=Math.random().toString(36).slice(2,12)+Date.now().toString(36);localStorage.setItem("hlWeeklyId",id);}}catch(e){id="guest";}
+  return id;
+}
+function mountWeeklySet(country){
+  const box=document.getElementById("olyWeekly");if(!box)return;
+  const W=window.HL_WEEKLY_SET,current=lang,T=OLY_TEXT[current].week,alive=()=>box.isConnected!==false&&lang===current;
+  const plain=`<ul class="oly-list"><li><a href="#/learn/practice"><span>${T.open}</span></a></li></ul>`;
+  if(!W||typeof fetch!=="function"){box.innerHTML=plain;return;}
+  const signed=typeof cmTok==="function"&&!!cmTok()&&typeof cmApi==="function";
+  const server=signed?Promise.all([cmApi("GET","/practice/state").catch(()=>null),cmApi("GET","/practice/recent").catch(()=>null),
+    typeof cmLoadMe==="function"?cmLoadMe().catch(()=>null):null,typeof cmLearner==="function"?Promise.resolve().then(()=>cmLearner()).catch(()=>null):null]):Promise.resolve([]);
+  const poolP=olyPoolP||(olyPoolP=fetch(W.POOL_URL).then(r=>{if(!r.ok)throw Error("pool");return r.json();}).catch(e=>{olyPoolP=null;throw e;}));
+  Promise.all([poolP,server]).then(([pool,[st,rec,me,learner]])=>{
+    if(!alive())return;
+    const inp=W.inputsFrom({local:olyStore.get("hlPractice"),serverState:st?.state,serverSkills:st?.skills,serverAttempts:rec?.attempts,reports:olyStore.get("hlPracticeReports")});
+    const ctx={...inp,pool:pool.items,country:String(learner?.country||country||"").toLowerCase(),user:me?.id?"u"+me.id:olyWeekId(),now:Date.now()};
+    const P=window.HL_LEARN_PATH,names=pool.names||{};
+    const unitName=u=>{const x=P?.SUBTOPICS?.get?.(u);return x?x.sub.name[current]||x.sub.name.en:u;};
+    const detail=i=>i.why==="weak"?T.weak(unitName(i.u)):i.why==="new"?T.fresh(unitName(i.u)):unitName(i.u)+" · "+(T[i.why]||"");
+    const paint=set=>{
+      const pr=W.progress(set,inp.attempts),acc=set.accuracy==null?null:Math.round(set.accuracy*100);
+      const head=set.starter?`<p class="oly-note">${T.starterLine} <a href="#/learn/practice?mode=diag">${T.diag} →</a></p>`:`<p class="oly-note">${esc(T.line(set.target,acc,set.recentN))}</p>`;
+      const rows=set.items.map(i=>{
+        const mark=pr.marks[i.id],name=(names[i.c]?.[current]||names[i.c]?.en||i.c)+(i.y?" "+i.y:"")+(i.k?" · "+i.k:"");
+        return `<li class="oly-wk${mark?" "+mark:""}"><a href="#/learn/practice?item=${encodeURIComponent(i.id)}"><b class="oly-tick" title="${mark?T[mark]:T.todo}">${mark==="right"?"✓":mark==="wrong"?"✗":""}</b><span>${esc(name)}<small><i class="oly-dots" title="${esc(T.step(i.s))}">${W.dots(i.s)}</i> ${esc(detail(i))}</small></span></a></li>`;
+      }).join("");
+      const foot=pr.complete?`<div class="oly-wk-foot"><span>${T.doneAll}</span><button type="button" class="oly-go" id="olyWeekNew">${T.again}</button></div>`
+        :`<div class="oly-wk-foot"><span class="oly-wk-n">${pr.done}/${pr.total}</span><a class="oly-go" href="${W.setHref(set)}">${T.go}</a></div>`;
+      box.innerHTML=head+`<ol class="oly-list oly-week">${rows}</ol>`+foot;
+      const again=box.querySelector?.("#olyWeekNew");
+      if(again)again.onclick=()=>{set=W.nextSet(set,{...ctx,now:Date.now()});olyStore.set("hlWeeklySet",set);paint(set);};
+    };
+    const set=W.weekSet(olyStore.get("hlWeeklySet"),ctx);olyStore.set("hlWeeklySet",set);paint(set);
+  }).catch(()=>{if(alive())box.innerHTML=`<p class="oly-note">${T.failed}</p>${plain}`;});
+}
+/* fills the cards that need data; each stays a plain link when its source does not answer */
 function mountOlympiadHome(){
+  mountWeeklySet(window.HL_GUIDES?.homeCountry?window.HL_GUIDES.homeCountry(lang):(lang==="ko"?"kr":""));
   const up=document.getElementById("olyUpcoming"),now=document.getElementById("olyNow");if(!up||!now)return;
   const current=lang,O=OLY_TEXT[current],ko=current==="ko",alive=el=>el.isConnected&&lang===current;
   /* upcoming contests for the visitor's country (guides.js upcomingFor): its own selection stages and the events open

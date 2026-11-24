@@ -12,7 +12,5 @@ test('CPhO is kept off the English site: no card, no count, a direct link goes t
   /* the update feed follows the same rule */
   const design = read('site-design.js');
   assert.match(design, /const olyRecent=\(n=4\)=>SITE_UPDATES\.filter\(updateShown\)/, 'the Olympiad home\'s recent papers');
-  assert.match(design, /OLY_QUICK\.filter\(has\)/);
-  assert.match(design, /\(typeof compShown!=="function"\|\|compShown\(k\)\)/, 'and its competition chips');
   assert.match(design, /SITE_UPDATES\.forEach\(\(item,index\)=>updateShown\(item\)&&items\.push/);
 });

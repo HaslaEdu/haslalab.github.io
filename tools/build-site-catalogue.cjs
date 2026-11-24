@@ -110,12 +110,46 @@ for(const [key,c]of Object.entries(DATA)){
 for(const data of Object.values(THEORY))for(const y of Object.values(data))thy+=Object.keys(y.f||{}).filter(k=>!y.f[k].kx).length;
 const metadata={competitions,theoryKeys:dataKeys,versions,pairProfiles,mixedProfiles,totals:{comps:Object.keys(DATA).length,years,probs,live,thy}};
 const metadataSource=generated+'window.HL_CATALOGUE='+JSON.stringify(metadata)+';\n';outputs.set('site-catalogue.js',metadataSource);
+/* this week's set on the Olympiad home (weekly-set.js): the Olympiad level's transcribed competition problems and
+   its exam track, each with a unit and a step. A competition problem's unit is estimated from its title and text
+   (unitOfText, the learning path's keywords; none found: left out), its step is the competition's, one less in the
+   first third of its paper and one more in the last third. weekly-set.js carries the file's digest. */
+{
+  const W=require('../weekly-set.js'),PT=require('../practice-tools.js'),L3=PT.levelInfo('L3');
+  const items=[],names={};
+  const tracks=JSON.parse(read('practice/tracks.json')).tracks;
+  for(const key of L3.tracks){
+    const t=tracks.find(x=>x.key===key),file='practice/track/'+key+'.json';if(!t||!fs.existsSync(path.join(root,file)))continue;
+    names[key]={ko:(t.name.en||key)+' 형식',en:(t.name.en||key)+'-style'};
+    for(const it of JSON.parse(read(file)).items){
+      const m=/-u(\d+)-0*(\d+)$/.exec(it.id);
+      if(it.unit&&Number.isFinite(it.step))items.push({id:it.id,c:key,y:0,k:m?m[1]+'-'+m[2]:'',u:it.unit,s:it.step});
+    }
+  }
+  for(const c of JSON.parse(read('practice/contests.json')).contests){
+    const file='practice/contest/'+c.key+'.json';if(!L3.contests.includes(c.key)||!fs.existsSync(path.join(root,file)))continue;
+    const abbr=DATA[c.key]?.abbr||c.name.en;names[c.key]={ko:abbr,en:abbr};
+    const papers=new Map(c.problems.map(p=>[p.id,p])),list=JSON.parse(read(file)).items.filter(i=>papers.has(i.pdf));
+    const byPaper=new Map();for(const i of list)(byPaper.get(i.pdf)||byPaper.set(i.pdf,[]).get(i.pdf)).push(i);
+    for(const [pdf,group] of byPaper)group.forEach((i,k)=>{
+      const p=papers.get(pdf),u=W.unitOfText(i.title,(i.b||[]).filter(b=>typeof b.t==='string').map(b=>b.t).join(' '));if(!u)return;
+      const at=group.length>=3?k/(group.length-1):0.5,s=Math.max(1,Math.min(10,c.step+(at<1/3?-1:at>2/3?1:0)));
+      items.push({id:i.id,c:c.key,y:Number(i.year)||0,k:i.key&&i.key!==p.key?p.key+' · '+i.key:p.key,u,s});
+    });
+  }
+  const pool=JSON.stringify({version:1,names,items})+'\n';
+  outputs.set('practice/weekly-pool.json',pool);
+  const weekly=read('weekly-set.js');
+  if(!/const POOL_V="[^"\n]*";/.test(weekly))throw Error('POOL_V marker missing in weekly-set.js');
+  const stampedWeekly=weekly.replace(/const POOL_V="[^"\n]*";/,'const POOL_V="'+digest(pool)+'";');
+  derivedSources.set('weekly-set.js',stampedWeekly);outputs.set('weekly-set.js',stampedWeekly);
+}
 let expectedHtml=html.replace(/<script src="site-catalogue\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-catalogue.js?v='+digest(metadataSource)+'"></script>')
   .replace(/<link rel="stylesheet" href="site-design\.css(?:\?[^"\n]*)?">/,'<link rel="stylesheet" href="site-design.css?v='+digest(read('site-design.css'))+'">')
   .replace(/<script src="site-runtime\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-runtime.js?v='+digest(read('site-runtime.js'))+'"></script>')
   .replace(/<script src="site-design\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-design.js?v='+digest(read('site-design.js'))+'"></script>')
   .replace(/<script src="learn-path\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="learn-path.js?v='+digest(read('learn-path.js'))+'"></script>');
-for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js','learner-form.js','league-view.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
+for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js','learner-form.js','league-view.js','weekly-set.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
 expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
 outputs.set('index.html',expectedHtml);
 let examHtml=read('sim/exam.html');
