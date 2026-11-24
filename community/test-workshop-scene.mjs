@@ -127,3 +127,16 @@ test('plain drawn shapes (rect, ellipse) come back checked; a bad fill or a path
   assert.deepEqual(r.scene.objects.map(o=>o.id+':'+o.fill),['r1:hatch','e1:lightgray','r2:none'],'an unknown fill falls back; a polyline is not for the model');
   assert.ok(SCENE_RESPONSE.properties.objects.items.properties.type.enum.includes('rect'));assert.match(scenePolicy(),/rect \{x,y,w,h/);
 });
+
+test('Mathpix stroke recognition preserves stroke groups and drops math delimiters',async()=>{
+  const {mathpixStrokes}=await import('./src/ocr-engines.js');
+  const env={MATHPIX_APP_ID:'fixture-id',MATHPIX_APP_KEY:'fixture-key'};
+  const result=await mathpixStrokes(env,[[[15,16],[19,20]],[[25,26],[29,30]]],{fetchImpl:async(url,options)=>{
+    assert.equal(url,'https://api.mathpix.com/v3/strokes');
+    const body=JSON.parse(options.body);
+    assert.deepEqual(body.strokes.strokes,{x:[[15,19],[25,29]],y:[[16,20],[26,30]]});
+    assert.equal(body.metadata.improve_mathpix,false);
+    return Response.json({latex_styled:'\\(\\frac{1}{2}\\)'});
+  }});
+  assert.equal(result,'\\frac{1}{2}');
+});

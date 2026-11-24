@@ -93,8 +93,8 @@ export function sceneFromAnswer(raw) {
   return {scene: r.scene, unsure};
 }
 
-const readScene = (env, {provider, image, lang}) => visionJSON(env, {provider, stage: 'scene', policy: scenePolicy(),
-  input: {task: 'figure_to_scene', language_of_labels: lang === 'en' ? 'English' : 'Korean'}, images: [image], schema: SCENE_RESPONSE, maxTokens: 6144, timeoutMs: 60000});
+const readScene = (env, {provider, image, lang, prompt}) => visionJSON(env, {provider, stage: 'scene', policy: scenePolicy(),
+  input: {task: 'figure_to_scene', language_of_labels: lang === 'en' ? 'English' : 'Korean', ...(prompt ? {user_tracing_instructions: prompt} : {})}, images: [image], schema: SCENE_RESPONSE, maxTokens: 6144, timeoutMs: 60000});
 
 export function createWorkshopSceneRouter({HttpError, needUser, limit, now, bad, vision = readScene}) {
   return async function workshopSceneRoute(p, m, body, me, req, env) {
@@ -104,6 +104,8 @@ export function createWorkshopSceneRouter({HttpError, needUser, limit, now, bad,
     const image = cleanImage(body?.image);
     if (image === 'too_large') throw new HttpError(413, 'image_too_large');
     if (!image) bad('bad_image');
+    const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : '';
+    if (prompt.length > 1200) bad('bad_prompt');
     const lang = body?.lang === 'en' ? 'en' : 'ko';
     const provider = gradeProvider(env);
     if (!provider) throw new HttpError(503, 'ai_unavailable');
@@ -112,7 +114,7 @@ export function createWorkshopSceneRouter({HttpError, needUser, limit, now, bad,
     const day = utcDay(now()), used = await takeOne(env, me.id, 'scene', day, SCENE_DAILY);
     if (used == null) throw new HttpError(429, 'scene_limit');
     let raw;
-    try { raw = (await vision(env, {provider, image, lang}))?.raw; }
+    try { raw = (await vision(env, {provider, image, lang, prompt}))?.raw; }
     catch (e) { await giveBack(env, me.id, 'scene', day); throw new HttpError(503, e?.code === 'provider_unavailable' ? 'ai_unavailable' : 'scene_failed'); }
     if (!raw || typeof raw !== 'object') { await giveBack(env, me.id, 'scene', day); throw new HttpError(503, 'scene_failed'); }
     const out = sceneFromAnswer(raw);

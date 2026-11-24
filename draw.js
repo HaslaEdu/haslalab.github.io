@@ -315,21 +315,87 @@ const store = {get(k) { try { return localStorage.getItem(k); } catch (e) { retu
 const SCENE_KEY = 'hlDrawScene', SAVES_KEY = 'hlDrawSaves', PAPER_KEY = 'hlTeachPaper', EDIT_KEY = 'hlDrawEdit', PREFS_KEY = 'hlDrawPrefs';
 /* sel: the object whose values the panel shows; selection: every selected id (shift-click, a box drawn on empty space) */
 const st = {scene: null, sel: '', selection: new Set(), hist: createHistory(250), connect: null, grid: true, snap: true, fbd: false, readouts: true, solve: false, circuit: null, dom: 'mech', q: '', lastText: null,
-  sim: null, playing: false, speed: 1, last: 0, trails: new Map(), samples: [], graph: '', ai: null, msg: '', paperEdit: null, drag: null, zoom: null, clip: null, gesture: null, marquee: null, space: false,
+  sim: null, playing: false, animationFrame: 0, speed: 1, last: 0, trails: new Map(), samples: [], graph: '', ai: null, msg: '', paperEdit: null, drag: null, zoom: null, clip: null, gesture: null, marquee: null, space: false,
   tool: 'select', draft: null, dstyle: {color: 'black', lw: 1, pattern: 'solid', fill: 'none', hs: false, he: false}, rtrail: false, symTab: 'struct', symBase: 'x', symValue: false};
 const clone = o => JSON.parse(JSON.stringify(o));
 /* the member's choice: open with an example figure or an empty one (an empty canvas once the example was cleared) */
 const prefs = () => { try { const p = JSON.parse(store.get(PREFS_KEY) || '{}'); return p && typeof p === 'object' ? p : {}; } catch (e) { return {}; } };
 const setPref = (k, v) => store.set(PREFS_KEY, JSON.stringify({...prefs(), [k]: v}));
 const EXAMPLE = 'incline_pulley';
+const PROJECT_PAGES = 12;
+const projectTitle = () => st.project?.title || st.scene?.title || (ko ? '제목 없는 프로젝트' : 'Untitled project');
+const blankPage = () => ({...blankScene(), style: st.scene?.style || blankScene().style, view: {x: -0.5, y: -0.5, w: 4, h: 3}});
+function decodeProject(raw) {
+  const active = validateScene(raw);
+  if (!active.ok) return null;
+  if (raw.project?.version !== 1) return {title: '', index: 0, pages: [active.scene]};
+  const {title, index, otherPages} = raw.project;
+  if (!Array.isArray(otherPages) || otherPages.length >= PROJECT_PAGES || !Number.isInteger(index) || index < 0 || index > otherPages.length) return null;
+  const pages = otherPages.map(page => validateScene(page));
+  if (pages.some(page => !page.ok)) return null;
+  const scenes = pages.map(page => page.scene);
+  scenes.splice(index, 0, active.scene);
+  return {title: typeof title === 'string' ? title.trim().slice(0, 60) : '', index, pages: scenes};
+}
+function projectData() {
+  const {title, index, pages} = st.project;
+  return {...st.scene, project: {version: 1, title, index, otherPages: pages.filter((_, i) => i !== index)}};
+}
+function selectProjectPage(index, {bind = true} = {}) {
+  const scene = st.project.pages[index];
+  if (!scene) return;
+  st.project.index = index;
+  st.scene = clone(scene);
+  if (!st.scene.view) st.scene.view = sceneBounds(st.scene);
+  if (!bind) return;
+  st.hist = createHistory(250);
+  const editingPaper = st.paperEdit;
+  st.paperEdit = null;
+  st.ai = null;
+  st.zoom = null;
+  keepShare(null);
+  setSel([]);
+  setTool('select');
+  stopSim();
+  save({changed: false});
+  paint();
+  if (editingPaper) paintOut();
+}
+function addProjectPage(scene = blankPage()) {
+  if (st.project.pages.length >= PROJECT_PAGES) { flash(ko ? '프로젝트당 그림을 최대 12개 만들 수 있습니다.' : 'A project can have up to 12 figures.'); return; }
+  st.projectChanged = true;
+  st.project.pages.push(scene);
+  selectProjectPage(st.project.pages.length - 1);
+}
+function replaceProject(project, ids = null) {
+  st.project = project;
+  st.projectChanged = false;
+  keepStoreIds(ids);
+  selectProjectPage(project.index);
+}
+function canLeaveProject() {
+  if (st.storageBusy) return false;
+  return !st.projectChanged || confirm(ko ? '현재 프로젝트를 보관함이나 이 브라우저에 저장하지 않고 다른 프로젝트를 열까요?' : 'Open another project without saving this one to storage or this browser?');
+}
+function paintProject() {
+  if (!$('projectPages')) return;
+  const {pages, index, title} = st.project;
+  pages[index] = st.scene;
+  $('projectTitle').value = title;
+  $('projectPages').innerHTML = pages.map((page, i) => `<option value="${i}">${i + 1} · ${esc(page.title || (ko ? '그림' : 'Figure'))}</option>`).join('');
+  $('projectPages').value = index;
+  $('projectRemove').disabled = pages.length < 2;
+  $('projectAdd').disabled = pages.length >= PROJECT_PAGES;
+  $('saveStatus').textContent = st.projectChanged ? (ko ? '편집 중' : 'Edited') : '';
+}
 function startScene() {
   const t = params.get('t');
-  if (t && TEMPLATE_KEYS.includes(t)) { st.dom = TEMPLATE_DOMAIN[t] || 'mech'; return validateScene(template(t, lang)).scene; }
+  if (t && TEMPLATE_KEYS.includes(t)) { st.unlinkedStart = true; st.dom = TEMPLATE_DOMAIN[t] || 'mech'; return validateScene(template(t, lang)).scene; }
   /* a figure sent from the paper to be changed (teach.js "그림 고치기") */
-  try { const e = JSON.parse(store.get(EDIT_KEY) || 'null'); if (e && typeof e.key === 'string' && e.scene) { const r = validateScene(e.scene); if (r.ok) { st.paperEdit = e.key; store.del(EDIT_KEY); return r.scene; } } } catch (e) {}
+  try { const e = JSON.parse(store.get(EDIT_KEY) || 'null'); if (e && typeof e.key === 'string' && e.scene) { const r = validateScene(e.scene); if (r.ok) { st.unlinkedStart = true; st.paperEdit = e.key; store.del(EDIT_KEY); return r.scene; } } } catch (e) {}
   let saved = null;
-  try { const r = validateScene(JSON.parse(store.get(SCENE_KEY) || 'null')); if (r.ok) saved = r.scene; } catch (e) {}
-  if (saved && saved.objects.length) return saved;
+  try { const raw = JSON.parse(store.get(SCENE_KEY) || 'null'), p = decodeProject(raw); if (p) { st.project = p; st.savedProject = raw.project?.version === 1; st.projectChanged = !!raw.project?.dirty; saved = p.pages[p.index]; } } catch (e) {}
+  if (saved && (saved.objects.length || st.savedProject || st.project.pages.length > 1 || st.project.title)) return saved;
   if (prefs().example === false) return saved || {...blankScene(), view: {x: -0.5, y: -0.5, w: 4, h: 3}};
   return validateScene(template(EXAMPLE, lang)).scene;
 }
@@ -348,7 +414,13 @@ function commit(next, {keepSel = false, before = null} = {}) {
   if (!st.scene.objects.length && prefs().example !== false) setPref('example', false);
   stopSim(); save(); paint(); return true;
 }
-const save = () => store.set(SCENE_KEY, JSON.stringify(st.scene));
+function save({changed = true} = {}) {
+  st.project.pages[st.project.index] = st.scene;
+  if (changed) st.projectChanged = true;
+  const saved = projectData();
+  saved.project.dirty = !!st.projectChanged;
+  return store.set(SCENE_KEY, JSON.stringify(saved));
+}
 function restore(text) { st.scene = JSON.parse(text); setSel(selIds(), st.sel); stopSim(); save(); paint(); }
 function undo() { const t = st.hist.undo(JSON.stringify(st.scene)); if (t) restore(t); }
 function redo() { const t = st.hist.redo(JSON.stringify(st.scene)); if (t) restore(t); }
@@ -748,6 +820,22 @@ function snapPt(p, {from = null, shift = false, exclude = ''} = {}) {
   if (best) return {x: r4(best.x), y: r4(best.y)};
   return {x: r4(snapV(p.x)), y: r4(snapV(p.y))};
 }
+function smoothInk(points, unit) {
+  const first = points[0], last = points.at(-1);
+  const dx = last.x - first.x, dy = last.y - first.y, length = Math.hypot(dx, dy);
+  if (length >= 28 * unit && points.every(p => {
+    const x = p.x - first.x, y = p.y - first.y, along = (x * dx + y * dy) / length;
+    return Math.abs(x * dy - y * dx) / length <= 4 * unit && along >= -unit && along <= length + unit;
+  })) return [first, last];
+  return points.map((p, i) => {
+    if (!i || i === points.length - 1) return p;
+    const a = points[i - 1], b = points[i + 1];
+    const before = {x:p.x-a.x,y:p.y-a.y}, after = {x:b.x-p.x,y:b.y-p.y};
+    const turn = before.x * after.x + before.y * after.y;
+    if (turn < .5 * Math.hypot(before.x,before.y) * Math.hypot(after.x,after.y)) return p;
+    return {x: .2 * a.x + .6 * p.x + .2 * b.x, y: .2 * a.y + .6 * p.y + .2 * b.y};
+  });
+}
 const deg = (c, p) => r4(Math.atan2(p.y - c.y, p.x - c.x) * 180 / Math.PI);
 /* the object a draft makes (null while it is too small to be one) */
 function shapeOf(dr) {
@@ -772,9 +860,11 @@ function shapeOf(dr) {
   }
   if (t === 'pen') {
     if (!dr.raw || dr.raw.length < 2) return null;
-    const pts = dr.done ? simplifyPath(dr.raw, 1.6 * dview().w / W, 200) : dr.raw;
+    const unit = dview().w / W;
+    const raw = dr.smooth && dr.done ? smoothInk(dr.raw, unit) : dr.raw;
+    const pts = dr.done ? simplifyPath(raw, (dr.smooth ? 1.2 : 0.6) * unit, 200) : raw;
     if (pts.length < 2) return null;
-    return {type: 'poly', pts: pts.map(q => [r4(q.x), r4(q.y)]), smooth: pts.length > 2, closed: false, fill: 'none', pattern: ds.pattern, heads: headsOf(ds), ...look};
+    return {type: 'poly', pts: pts.map(q => [r4(q.x), r4(q.y)]), smooth: dr.smooth && pts.length > 2, closed: false, fill: 'none', pattern: ds.pattern, heads: headsOf(ds), ...look};
   }
   if (t === 'poly' || t === 'polygon') {
     const pts = [...dr.pts, ...(dr.cur && !dr.done ? [dr.cur] : [])]; if (pts.length < 2) return null;
@@ -836,15 +926,23 @@ function toolDown(ev) {
   }
   if (DRAG_TOOLS.includes(t)) {
     const a = t === 'pen' ? raw : snapPt(raw);
-    st.draft = t === 'pen' ? {tool: t, raw: [a]} : {tool: t, a, b: null};
-    st.drag = {tool: true};
+    st.draft = t === 'pen' ? {tool: t, raw: [a], smooth: $('penSmooth').checked} : {tool: t, a, b: null};
+    st.drag = {tool: true, penPointer: ev.pointerType === 'pen' ? ev.pointerId : null};
     $('canvas').setPointerCapture?.(ev.pointerId);
   }
 }
 function toolMove(ev) {
   const dr = st.draft; if (!dr) return;
   const raw = worldAt(ev);
-  if (dr.tool === 'pen') { const q = dr.raw[dr.raw.length - 1]; if (Math.hypot(raw.x - q.x, raw.y - q.y) > 1.2 * dview().w / W) dr.raw.push(raw); }
+  if (dr.tool === 'pen') {
+    const events = ev.getCoalescedEvents?.();
+    const threshold = 0.8 * dview().w / W;
+    for (const point of events?.length ? events.map(event => worldAt(event)) : [raw]) {
+      const q = dr.raw.at(-1);
+      if (Math.hypot(point.x - q.x, point.y - q.y) > threshold) dr.raw.push(point);
+    }
+    if (dr.raw.length > 1600) dr.raw = dr.raw.filter((_, i, all) => i % 2 === 0 || i === all.length - 1);
+  }
   else if (dr.a) { dr.shift = ev.shiftKey; dr.b = ['rect', 'rrect', 'ellipse'].includes(dr.tool) ? snapPt(raw) : snapPt(raw, {from: dr.a, shift: ev.shiftKey}); }
   else if (dr.pts) { const last = dr.pts[dr.pts.length - 1]; dr.cur = snapPt(raw, {from: last, shift: ev.shiftKey && !!last}); }
   paintCanvas();
@@ -861,10 +959,12 @@ function followersOf(o) {
 function bindCanvas() {
   const box = $('canvas'), pts = new Map();
   box.addEventListener('pointerdown', ev => {
+    if (st.drag?.penPointer != null && ev.pointerId !== st.drag.penPointer) return;
     pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
     if (pts.size === 2) { const [a, b] = [...pts.values()]; st.drag = {pinch: true, d0: Math.hypot(a.x - b.x, a.y - b.y), v0: {...dview()}, mid: worldAt({clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2})}; st.marquee = null; return; }
     if (ev.button === 1 || (ev.button === 0 && st.space)) { st.drag = {pan: true, last: {x: ev.clientX, y: ev.clientY}}; box.setPointerCapture?.(ev.pointerId); ev.preventDefault(); return; }
     if (ev.button !== 0) return;
+    box.focus({preventScroll: true});
     const before = JSON.stringify(st.scene);
     const hd = ev.target.closest?.('[data-handle]'), hs = hd && byId(st.sel);
     if (hs && !st.connect && !hs.lock) { if (st.sim) stopSim(); st.drag = {id: hs.id, handle: hd.dataset.handle, start: worldAt(ev), orig: clone(hs), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
@@ -878,11 +978,12 @@ function bindCanvas() {
     if (!o) {
       /* a box drawn on empty space selects what it touches */
       if (!add) setSel([]);
+      paintObjectPicker();
       st.drag = {marquee: true, start: worldAt(ev), keep: new Set(selIds()), moved: false}; box.setPointerCapture?.(ev.pointerId); paintCanvas(); paintSide(); status(); return;
     }
     if (add) { const ids = new Set(selIds()); ids.has(o.id) ? ids.delete(o.id) : ids.add(o.id); setSel([...ids], o.id); paint(); return; }
     if (!st.selection.has(o.id)) setSel([o.id]); else st.sel = o.id;
-    paintCanvas(); paintSide(); status(); paintBar();
+    paintObjectPicker(); paintCanvas(); paintSide(); status(); paintBar();
     const ids = [...new Set(selIds().filter(id => !NO_DRAG.includes(byId(id).type) && !byId(id).lock).flatMap(id => geoDragIds(byId(id))))].filter(id => byId(id) && !byId(id).lock);
     if (!ids.length || (byId(o.id).lock && ids.length <= 1)) return;
     if (ids.length > 1 || ids[0] !== o.id) { st.drag = {group: ids, origs: new Map(ids.map(id => [id, clone(byId(id))])), start: worldAt(ev), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
@@ -890,6 +991,7 @@ function bindCanvas() {
     box.setPointerCapture?.(ev.pointerId);
   });
   box.addEventListener('pointermove', ev => {
+    if (st.drag?.penPointer != null && ev.pointerId !== st.drag.penPointer) return;
     if (pts.has(ev.pointerId)) pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
     if (!st.drag && st.draft && st.draft.pts) { toolMove(ev); return; }
     const d = st.drag; if (!d) return;
@@ -914,9 +1016,14 @@ function bindCanvas() {
     paintCanvas();
   });
   const end = ev => {
+    if (st.drag?.penPointer != null && ev.pointerId !== st.drag.penPointer) return;
     pts.delete(ev.pointerId);
     const d = st.drag; st.drag = null; if (!d) return;
-    if (d.tool) { if (st.draft && DRAG_TOOLS.includes(st.draft.tool)) finishDraft(); return; }
+    if (d.tool) {
+      if (ev.type === 'pointercancel' && st.draft?.tool === 'pen') { st.draft = null; paintCanvas(); status(); }
+      else if (st.draft && DRAG_TOOLS.includes(st.draft.tool)) finishDraft();
+      return;
+    }
     if (d.erase) { if (d.erase.size) { const next = clone(st.scene); removeIds(next, [...d.erase]); setSel([]); commit(next); } return; }
     if (d.marquee) { st.marquee = null; paint(); return; }
     if (d.pan || d.pinch || !d.moved) return;
@@ -979,27 +1086,51 @@ function dragTo(d, p, dx, dy) {
 function placeOnFrame(o, fr) { const h = isRound(o) ? o.r : o.h / 2, c = vec.add(vec.add(fr.p0, vec.mul(fr.u, o.at)), vec.mul(fr.n, h)); o.x = r4(c.x); o.y = r4(c.y); }
 
 /* ── the simulation ── */
-function stopSim() { st.sim = null; st.playing = false; st.trails = new Map(); st.samples = []; }
+function stopSim() { stopPlayback(); st.sim = null; st.trails = new Map(); st.samples = []; }
 function ensureSim() {
   if (st.sim) return st.sim;
   st.sim = buildSim(st.scene); st.trails = new Map(); st.samples = []; sample();
   return st.sim;
 }
-function play() {
+function simForPlayback() {
   st.msg = ''; clearTimeout(flashTimer);
   const sim = ensureSim();
-  if (!sim.systems.length) { st.sim = null; flash(`<span class="bad">${T.nothing}</span>${sim.unsupported.length ? ' ' + esc(unsupportedText(sim)) : ''}`); return; }
-  if (sim.done) { stopSim(); ensureSim(); }
-  st.playing = true; st.last = performance.now(); requestAnimationFrame(frame); paintSimBar();
+  if (sim.systems.length) return sim;
+  stopSim();
+  flash(`<span class="bad">${T.nothing}</span>${sim.unsupported.length ? ' ' + esc(unsupportedText(sim)) : ''}`);
+  return null;
 }
-function pause() { st.playing = false; paintSimBar(); }
+function stopPlayback() {
+  cancelAnimationFrame(st.animationFrame);
+  st.animationFrame = 0;
+  st.playing = false;
+}
+function play() {
+  const sim = simForPlayback();
+  if (!sim) return;
+  if (sim.done) { stopSim(); ensureSim(); }
+  st.playing = true;
+  st.last = performance.now();
+  st.animationFrame = requestAnimationFrame(frame);
+  paintSimBar();
+}
+function pause() { stopPlayback(); paintSimBar(); }
+function advanceSimulation(dt) {
+  st.sim.run(dt);
+  sample();
+  if (st.sim.done) stopPlayback();
+  paintCanvas(); paintReadouts(); paintSimBar(); status();
+}
+function stepSimulation() {
+  const sim = simForPlayback();
+  if (sim && !sim.done) advanceSimulation(0.05);
+}
 function frame(now) {
   if (!st.playing || !st.sim) return;
-  const dt = Math.min(0.05, (now - st.last) / 1000) * st.speed; st.last = now;
-  st.sim.run(dt); sample();
-  if (st.sim.done) st.playing = false;
-  paintCanvas(); paintReadouts(); paintSimBar(); status();
-  if (st.playing) requestAnimationFrame(frame);
+  const dt = Math.min(0.05, (now - st.last) / 1000) * st.speed;
+  st.last = now;
+  advanceSimulation(dt);
+  if (st.playing) st.animationFrame = requestAnimationFrame(frame);
 }
 function sample() {
   const sim = st.sim; if (!sim) return;
@@ -1301,6 +1432,7 @@ function status() {
 function paintSimBar() {
   const b = $('playBtn'); if (!b) return;
   b.textContent = st.playing ? '⏸ ' + T.pause : '▶ ' + T.play;
+  $('stepBtn').disabled = st.playing || !!st.sim?.done;
   $('clock').textContent = `${T.time} ${(st.sim ? st.sim.t : 0).toFixed(2)} s`;
 }
 
@@ -1348,11 +1480,11 @@ function toPaper() {
   else paper.items.push({key: 'own:' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), pts: 3, own: {q: ($('paperQ')?.value || '').trim().slice(0, 4000), answer: '', unit: '', sol: '', fig}});
   if (!store.set(PAPER_KEY, JSON.stringify(paper))) { flash(`<span class="bad">${T.err.other}</span>`); return; }
   st.paperEdit = null;
+  if ($('paperQ')) $('paperQ').value = '';
   $('outMsg').innerHTML = `<span class="ok">${T.inPaper}</span> <a class="btn" href="${embedded ? '/#/workshop/make' : 'teach.html'}" target="_top">${T.openPaper}</a>`;
   paintOut(true);
 }
-/* ── HaslaLab storage (보관함) first: 저장 keeps the figure (JSON + SVG) in the folder 그림 and saves over the same files
-   the next time (their ids are kept with the figure in this browser); 보관함에서 열기 lists the figures there ── */
+/* Projects use the member's existing “그림” folder and Workshop quota. */
 const FIG_FOLDER = '그림', STORE_IDS_KEY = 'hlDrawStoreIds';
 const X6 = ko ? {save: '💾 저장', saveT: '보관함 ‘그림’ 폴더에 저장 (다시 누르면 같은 파일에 덮어씀)', open: '📂 보관함에서 열기', saved: n => `보관함 ‘그림/${n}’에 저장했습니다.`, overwritten: n => `보관함 ‘그림/${n}’을(를) 새 내용으로 바꿨습니다.`,
   changed: '보관함의 파일이 다른 곳에서 바뀌어 새 파일로 저장했습니다.', localOnly: '로그인하지 않아 이 브라우저에 저장했습니다.', list: '보관함 ‘그림’ 폴더의 그림', none: '보관함 ‘그림’ 폴더에 저장한 그림이 없습니다.', opened: n => `보관함에서 ‘${n}’을(를) 열었습니다.`,
@@ -1364,52 +1496,93 @@ const X6 = ko ? {save: '💾 저장', saveT: '보관함 ‘그림’ 폴더에 �
   aiErr: {login_required: 'Log in to use it.', quota: 'You have used today’s quota.', not_configured: 'The AI is not set up yet.', bad_prompt: 'Describe the figure a little more.', ai_failed: 'The AI could not make the figure. Try again.', empty: 'Nothing usable came back.'}};
 st.storeIds = (() => { try { const v = JSON.parse(store.get(STORE_IDS_KEY) || 'null'); return v && typeof v.json === 'string' ? v : null; } catch (e) { return null; } })();
 const keepStoreIds = ids => { st.storeIds = ids; if (ids) store.set(STORE_IDS_KEY, JSON.stringify(ids)); else store.del(STORE_IDS_KEY); };
-const figForm = (ext, body, type, extra = {}) => { const form = new FormData(); form.append('file', new File([body], fileName(ext), {type})); form.append('kind', 'figure'); for (const [k, v] of Object.entries(extra)) form.append(k, v); return form; };
-async function toStorage() {
-  const msg = $('outMsg') || $('status');
-  if (!token()) { saveLocal(); msg.innerHTML = `${esc(X6.localOnly)} ${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
-  msg.textContent = '…';
-  const json = JSON.stringify(st.scene, null, 1), svg = exportSvg(), parts = [['json', json, 'application/json'], ['svg', svg, 'image/svg+xml']];
-  const create = async () => { const out = {}; for (const [ext, body, type] of parts) { const r = await api('/api/workshop/storage/files', 'POST', figForm(ext, body, type, {folder: FIG_FOLDER, ensure_folder: '1'}), true); out[ext] = r.file; } return {json: out.json.id, svg: out.svg.id, base: out.json.updated_at, name: out.json.name}; };
-  try {
-    let ids = st.storeIds, how = 'saved';
-    if (ids?.json) {
-      try {
-        const r = await api(`/api/workshop/storage/files/${encodeURIComponent(ids.json)}/content`, 'PUT', figForm('json', json, 'application/json', ids.base ? {base: String(ids.base)} : {}), true);
-        let svgId = ids.svg;
-        try { if (svgId) await api(`/api/workshop/storage/files/${encodeURIComponent(svgId)}/content`, 'PUT', figForm('svg', svg, 'image/svg+xml'), true); } catch (e) { if (e.status !== 404) throw e; svgId = ''; }
-        if (!svgId) svgId = (await api('/api/workshop/storage/files', 'POST', figForm('svg', svg, 'image/svg+xml', {folder: FIG_FOLDER, ensure_folder: '1'}), true)).file.id;
-        ids = {...ids, svg: svgId, base: r.file?.updated_at ?? ids.base, name: r.file?.name || ids.name}; how = 'overwritten';
-      } catch (e) {
-        if (e.status === 404) ids = await create();
-        else if (e.status === 409) { ids = await create(); how = 'changed'; }
-        else throw e;
-      }
-    } else ids = await create();
-    keepStoreIds(ids);
-    msg.innerHTML = `<span class="ok">${esc(how === 'changed' ? X6.changed : X6[how](ids.name || fileName('json')))}</span>`;
-  } catch (e) { msg.innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
+function projectFileName(title) { return (title.replace(/[\\/:*?"<>|]+/g, ' ').trim().slice(0, 60) || 'project') + '.json'; }
+function projectUpload(json, name, extra = {}) {
+  const form = new FormData();
+  form.append('file', new File([json], name, {type: 'application/json'}));
+  form.append('kind', 'figure');
+  for (const [k, v] of Object.entries(extra)) form.append(k, v);
+  return form;
 }
-async function openFromStorage() {
-  const msg = $('outMsg');
-  if (!token()) { msg.innerHTML = `${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
+async function toStorage() {
+  if (st.storageBusy) return;
+  if (!token()) {
+    if (saveLocal()) $('saveStatus').innerHTML = `${esc(X6.localOnly)} <a href="/#/login" target="_top">${T.login}</a>`;
+    return;
+  }
+  const data = JSON.stringify(projectData()), msg = $('saveStatus');
+  const current = st.project, fileName = projectFileName(projectTitle());
+  const rename = !!current.title;
+  const create = () => api('/api/workshop/storage/files', 'POST', projectUpload(data, fileName, {folder: FIG_FOLDER, ensure_folder: '1'}), true);
+  st.storageBusy = true;
+  $('bSave').disabled = true;
+  msg.textContent = ko ? '저장 중…' : 'Saving…';
+  try {
+    const ids = st.storeIds;
+    let response, copied = false;
+    try {
+      response = ids ? await api(`/api/workshop/storage/files/${encodeURIComponent(ids.json)}/content`, 'PUT', projectUpload(data, fileName, ids.base ? {base: String(ids.base)} : {}), true) : await create();
+    } catch (e) {
+      if (!ids || ![404, 409].includes(e.status)) throw e;
+      response = await create();
+      copied = e.status === 409;
+    }
+    let file = response.file, renameProblem = false;
+    if (ids?.json === file.id && rename && file.name !== fileName) {
+      try { file = (await api(`/api/workshop/storage/files/${encodeURIComponent(file.id)}`, 'PATCH', {name: fileName})).file; }
+      catch { renameProblem = true; }
+    }
+    if (st.project === current) {
+      keepStoreIds({json: file.id, base: file.updated_at, name: file.name});
+      st.projectChanged = data !== JSON.stringify(projectData());
+      save({changed: false});
+      msg.textContent = renameProblem ? (ko ? '내용 저장됨 · 보관함 파일 이름 변경 실패' : 'Content saved · storage file name could not be changed') : copied ? X6.changed : st.projectChanged ? (ko ? '이전 상태 저장됨 · 새 수정 있음' : 'Earlier revision saved · newer edits pending') : X6.saved(file.name);
+    }
+    if ($('projectShelf').open) openFromStorage({reveal: false});
+  } catch (e) {
+    msg.textContent = errText(e);
+  } finally {
+    st.storageBusy = false;
+    $('bSave').disabled = false;
+  }
+}
+function formatSpace(bytes) {
+  return new Intl.NumberFormat(lang, {style: 'unit', unit: bytes >= 1024 * 1024 ? 'megabyte' : 'kilobyte', maximumFractionDigits: 1})
+    .format(bytes / (bytes >= 1024 * 1024 ? 1024 * 1024 : 1024));
+}
+let projectListing = 0;
+async function openFromStorage({reveal = true} = {}) {
+  const shelf = $('projectShelf'), msg = $('projectList');
+  if (reveal) { shelf.open = true; shelf.scrollIntoView({block: 'nearest'}); }
+  const listing = ++projectListing;
+  if (!token()) {
+    msg.innerHTML = `${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`;
+    return;
+  }
   msg.textContent = '…';
   try {
-    const r = await api(`/api/workshop/storage?kind=figure&folder=${encodeURIComponent(FIG_FOLDER)}`), files = (r.files || []), jsons = files.filter(f => /\.json$/i.test(f.name));
-    if (!jsons.length) { msg.textContent = X6.none; return; }
-    msg.innerHTML = `<span class="note">${esc(X6.list)}</span><div class="saves">${jsons.slice(0, 60).map((f, i) => `<div><span>${esc(f.name.replace(/\.json$/i, ''))}</span><button type="button" data-sopen="${i}">${T.open}</button></div>`).join('')}</div>`;
-    msg.querySelectorAll('[data-sopen]').forEach(b => b.onclick = async () => {
-      const f = jsons[+b.dataset.sopen]; msg.textContent = '…';
+    const r = await api(`/api/workshop/storage?kind=figure&folder=${encodeURIComponent(FIG_FOLDER)}`);
+    if (listing !== projectListing) return;
+    const files = (r.files || []).filter(f => /\.json$/i.test(f.name));
+    $('projectQuota').textContent = `${formatSpace(r.used)} / ${formatSpace(r.quota)}`;
+    if (!files.length) { msg.textContent = X6.none; return; }
+    msg.innerHTML = `<div class="saves">${files.map((f, i) => `<div><button type="button" data-sopen="${i}" title="${esc(f.name)}">${esc(f.name.replace(/\.json$/i, ''))}</button></div>`).join('')}</div>`;
+    msg.querySelectorAll('[data-sopen]').forEach(button => button.onclick = async () => {
+      if (!canLeaveProject()) return;
+      const f = files[+button.dataset.sopen], before = JSON.stringify(projectData());
+      button.disabled = true;
       try {
-        const scene = await api(`/api/workshop/storage/files/${encodeURIComponent(f.id)}`);
-        const r2 = validateScene(scene, {lenient: true}); if (!r2.scene.view) r2.scene.view = sceneBounds(r2.scene);
-        const svgf = files.find(x => x.name === f.name.replace(/\.json$/i, '.svg'));
-        setSel([]); st.ai = null; st.zoom = null; stopSim(); commit(r2.scene);
-        keepStoreIds({json: f.id, svg: svgf?.id || '', base: f.updated_at, name: f.name});
-        $('outMsg').innerHTML = `<span class="ok">${esc(X6.opened(f.name))}</span>`;
-      } catch (e) { $('outMsg').innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
+        const raw = await api(`/api/workshop/storage/files/${encodeURIComponent(f.id)}`);
+        if (listing !== projectListing || before !== JSON.stringify(projectData()) || st.storageBusy) return;
+        const project = decodeProject(raw);
+        if (!project) throw new Error('bad_project');
+        project.title ||= f.name.replace(/\.json$/i, '');
+        replaceProject(project, {json: f.id, base: f.updated_at, name: f.name});
+        $('saveStatus').textContent = X6.opened(f.name);
+      } catch (e) { $('saveStatus').textContent = e.message === 'bad_project' ? T.loadBad : errText(e); }
+      finally { button.disabled = false; }
     });
-  } catch (e) { msg.innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
+  } catch (e) { if (listing === projectListing) msg.textContent = errText(e); }
 }
 /* ── sharing (작품 공유, share-publish.js window.HL_SHARE): publish the figure with a title, a description, how to use it,
    tags and a topic; the share id is kept with the figure in this browser, so the dialog offers to update the shared
@@ -1461,10 +1634,12 @@ function openShare() {
 async function openShared(n) {
   const S = window.HL_SHARE; if (!S || !(n > 0)) return;
   try {
+    const before = JSON.stringify(projectData());
     const r = await S.get(n), p = r?.project, sc = p?.payload?.scene || p?.payload;
     const v = validateScene(sc, {lenient: true}); if (!v.scene.objects.length) return;
     if (!v.scene.view) v.scene.view = sceneBounds(v.scene);
-    keepStoreIds(null); setSel([]); st.zoom = null; stopSim(); commit(v.scene);
+    if (st.storageBusy || before !== JSON.stringify(projectData())) return;
+    replaceProject({title: p.title || '', index: 0, pages: [v.scene]});
     const mine = !!p.mine, meta = {title: p.title, description: p.description ?? p.descr ?? '', howto: p.howto || '', tags: p.tags || [], topic: p.topic};
     keepShare(mine ? (p.status === 'public' ? {id: n, meta} : {draft: n, meta}) : {remixOf: n, meta: {...meta, title: p.title}});
     flash(esc(mine ? X7.draft(n) : X7.remix(n)));
@@ -1477,22 +1652,52 @@ async function aiModels() {
     if (sel && st.aiModels.length > 1) { sel.innerHTML = st.aiModels.map(m => `<option value="${esc(m.id)}"${m.id === r.default ? ' selected' : ''}>${esc(m.model || m.id)}</option>`).join(''); sel.hidden = false; }
   } catch (e) { st.aiModels = []; }
 }
-/* ── a figure from a description (POST /api/workshop/ai/scene): the answer is checked by the same validator (lenient),
-   then loaded as one step of history; its notes and the uses left today are shown ── */
+/* Preview a checked proposal in the existing AI panel before replacing the drawing. */
+function showAiProposal(scene, base, edit, recognition = null) {
+  const panel = $('aiProposal');
+  const caption = ko ? 'AI가 제안한 그림' : 'AI-proposed figure';
+  panel.innerHTML = `<img src="${svgDataUrl(renderSVG(scene, {width: 480, view: scene.view}))}" alt="${caption}" width="480" style="max-width:100%;height:auto">
+    <div class="row"><button type="button" class="primary" id="aiApply">${ko ? '그림에 적용' : 'Apply to figure'}</button><button type="button" id="aiDiscard">${ko ? '제안 닫기' : 'Discard proposal'}</button></div>`;
+  panel.hidden = false;
+  const close = () => { panel.replaceChildren(); panel.hidden = true; $('aiGo').focus(); height(); };
+  $('aiDiscard').onclick = close;
+  $('aiApply').onclick = () => {
+    if (JSON.stringify(projectData()) !== base) {
+      $('aiMsg').textContent = ko ? '요청 후 그림이 바뀌었습니다. 현재 그림으로 다시 요청해 주세요.' : 'The figure changed after this request. Ask again with the current figure.';
+      return;
+    }
+    setSel([]);
+    st.zoom = null;
+    st.ai = recognition;
+    if (commit(scene)) {
+      if (!edit) keepShare(null);
+      $('aiMsg').textContent = ko ? '그림에 적용했습니다. 실행 취소로 되돌릴 수 있습니다.' : 'Applied to the figure. You can undo this change.';
+      close();
+    }
+  };
+  height();
+}
 async function aiDraw() {
-  const box = $('aiMsg'), text = ($('aiPrompt')?.value || '').trim(), edit = !!$('aiEditCur')?.checked;
-  if (!text) { $('aiPrompt')?.focus(); return; }
+  const box = $('aiMsg'), text = ($('aiPrompt')?.value || '').trim(), file = $('aiPhoto').files[0];
+  const edit = !file && !!$('aiEditCur')?.checked;
+  if ($('aiGo').disabled) return;
+  if (!text && !file) { $('aiPrompt')?.focus(); return; }
   if (!token()) { box.innerHTML = `${esc(X6.aiErr.login_required)} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
+  const base = JSON.stringify(projectData());
+  const scene = edit ? clone(st.scene) : null;
+  $('aiProposal').hidden = true;
+  $('aiProposal').replaceChildren();
   box.textContent = '…'; $('aiGo').disabled = true;
   try {
     const model = $('aiModel') && !$('aiModel').hidden ? $('aiModel').value : '';
-    const r = await api('/api/workshop/ai/scene', 'POST', {prompt: text.slice(0, 1200), ...(edit ? {scene: st.scene} : {}), lang, ...(model ? {model} : {})});
+    const r = file
+      ? await api('/api/workshop/scene-from-image', 'POST', {image: await photoData(file), prompt: text, lang})
+      : await api('/api/workshop/ai/scene', 'POST', {prompt: text, ...(scene ? {scene} : {}), lang, ...(model ? {model} : {})});
     const v = validateScene(r?.scene, {lenient: true});
-    if (!v.scene.objects.length) throw Object.assign(new Error('empty'), {code: 'empty'});
+    if (!v.scene?.objects.length) throw Object.assign(new Error('empty'), {code: 'empty'});
     if (!v.scene.view) v.scene.view = sceneBounds(v.scene);
-    stopSim(); setSel([]); st.zoom = null; st.ai = null;
-    if (!edit) keepStoreIds(null);
-    commit(v.scene);
+    const recognition = file ? {unsure: Array.isArray(r.unsure) ? r.unsure : [], left: r.left} : null;
+    showAiProposal(v.scene, base, edit, recognition);
     const notes = (Array.isArray(r.notes) ? r.notes : []).filter(n => typeof n === 'string').slice(0, 6);
     $('aiMsg').innerHTML = `${notes.length ? `<ul>${notes.map(n => `<li>${esc(n.slice(0, 200))}</li>`).join('')}</ul>` : ''}${Number.isFinite(r.left) ? `<span class="note">${esc(X6.aiLeft(r.left))}</span>` : ''}`;
   } catch (e) { box.innerHTML = `<span class="bad">${esc(X6.aiErr[e.code] || errText(e))}</span>`; }
@@ -1500,24 +1705,27 @@ async function aiDraw() {
 }
 const saves = () => { try { const l = JSON.parse(store.get(SAVES_KEY) || '[]'); return Array.isArray(l) ? l.filter(x => x && typeof x.name === 'string' && x.scene) : []; } catch (e) { return []; } };
 function saveLocal() {
-  const list = saves().filter(x => x.name !== (st.scene.title || fileName('json')));
-  list.unshift({name: st.scene.title || fileName('json'), t: Date.now(), scene: st.scene});
-  $('outMsg').innerHTML = store.set(SAVES_KEY, JSON.stringify(list.slice(0, 20))) ? `<span class="ok">${T.localSaved}</span>` : `<span class="bad">${T.err.other}</span>`;
+  const name = projectTitle(), list = saves().filter(x => x.name !== name);
+  list.unshift({name, t: Date.now(), scene: projectData()});
+  const ok = store.set(SAVES_KEY, JSON.stringify(list.slice(0, 20)));
+  if (ok) { st.projectChanged = false; save({changed: false}); paintProject(); }
+  $('outMsg').innerHTML = ok ? `<span class="ok">${T.localSaved}</span>` : `<span class="bad">${T.err.other}</span>`;
   paintOut(true);
+  return ok;
 }
 function openScene(obj) {
-  const r = validateScene(obj);
-  if (!r.ok) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; return; }
-  if (!r.scene.view) r.scene.view = sceneBounds(r.scene);
-  setSel([]); st.ai = null; st.zoom = null; commit(r.scene);
+  const project = decodeProject(obj);
+  if (!project) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; return; }
+  if (canLeaveProject()) replaceProject(project);
 }
 function paintOut(keepMsg) {
   const box = $('out'); if (!box) return;
   const old = keepMsg ? $('outMsg')?.innerHTML || '' : '';
+  const question = $('paperQ')?.value || '';
   const list = saves();
   box.innerHTML = `<h2>${T.out}</h2>
     <div class="row"><button type="button" id="oSvg">${T.svg}</button><button type="button" id="oPng">${T.png}</button></div>
-    ${st.paperEdit ? '' : `<label class="note" for="paperQ">${T.paperQ}</label><textarea id="paperQ" class="q" rows="2"></textarea>`}
+    ${st.paperEdit ? '' : `<label class="note" for="paperQ">${T.paperQ}</label><textarea id="paperQ" class="q" rows="2">${esc(question)}</textarea>`}
     <div class="row"><button type="button" class="primary" id="oPaper">${st.paperEdit ? T.replacePaper : T.toPaper}</button><button type="button" id="oCompute">${ko ? "전산물리 제작에 사용" : "Use in Computational physics"}</button></div>
     <div class="row"><button type="button" class="primary" id="oStore">${esc(X6.save)}</button><button type="button" id="oOpen">${esc(X6.open)}</button></div>
     <div class="row"><button type="button" id="oLocal">${T.local}</button></div>
@@ -1527,32 +1735,29 @@ function paintOut(keepMsg) {
   $('oSvg').onclick = () => download(new Blob([exportSvg()], {type: 'image/svg+xml'}), fileName('svg'));
   $('oPng').onclick = () => pngBlob(exportSvg()).then(b => download(b, fileName('png'))).catch(() => { $('outMsg').innerHTML = `<span class="bad">${T.err.other}</span>`; });
   $('oCompute').onclick = toCompute;
-  $('oPaper').onclick = toPaper; $('oStore').onclick = toStorage; $('oOpen').onclick = openFromStorage; $('oLocal').onclick = saveLocal;
-  $('oJson').onclick = () => download(new Blob([JSON.stringify(st.scene, null, 1)], {type: 'application/json'}), fileName('json'));
-  $('oLoad').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f || f.size > 1e6) return; try { openScene(JSON.parse(await f.text())); } catch (x) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; } };
+  $('oPaper').onclick = toPaper; $('oStore').onclick = toStorage; $('oOpen').onclick = () => openFromStorage(); $('oLocal').onclick = saveLocal;
+  $('oJson').onclick = () => download(new Blob([JSON.stringify(projectData(), null, 1)], {type: 'application/json'}), fileName('json'));
+  $('oLoad').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; if (f.size > 5e6) { $('outMsg').textContent = T.loadBad; return; } try { openScene(JSON.parse(await f.text())); } catch (x) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; } };
   box.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openScene(list[+b.dataset.open].scene));
   box.querySelectorAll('[data-drop]').forEach(b => b.onclick = () => { const l = saves(); l.splice(+b.dataset.drop, 1); store.set(SAVES_KEY, JSON.stringify(l)); paintOut(); });
 }
 
-/* ── photo → figure ── */
-async function photoFile(file) {
-  if (!file) return;
-  if (!token()) { flash(`<span class="bad">${T.photoLogin}</span> <a class="btn" href="/#/login" target="_top">${T.login}</a>`); return; }
-  flash(T.reading);
-  let image;
+// Flatten and downsize the photo before sending it to the existing vision service.
+async function photoData(file) {
+  if (file.size > 24 * 1024 * 1024) throw {code: 'image_too_large'};
+  let bitmap;
   try {
-    const bmp = await createImageBitmap(file), k = Math.min(1, 1600 / Math.max(bmp.width, bmp.height)), c = document.createElement('canvas');
-    c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k); const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(bmp, 0, 0, c.width, c.height);
-    for (const q of [0.85, 0.7, 0.55]) { image = c.toDataURL('image/jpeg', q); if (image.length < 5.2e6) break; }
-  } catch (e) { flash(`<span class="bad">${T.err.bad_image}</span>`); return; }
-  try {
-    const r = await api('/api/workshop/scene-from-image', 'POST', {image, lang});
-    const v = validateScene(r.scene);
-    if (!v.ok) throw {code: 'scene_failed'};
-    v.scene.view = sceneBounds(v.scene); if (!v.scene.title) v.scene.title = '';
-    st.ai = {unsure: Array.isArray(r.unsure) ? r.unsure : [], left: r.left}; setSel([]); st.zoom = null;
-    commit(v.scene); flash('');
-  } catch (e) { flash(`<span class="bad">${esc(errText(e))}</span>`); }
+    bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', 0.82);
+  } catch { throw {code: 'bad_image'}; }
+  finally { bitmap?.close(); }
 }
 function paintAi() {
   const box = $('aiNote'); if (!box) return;
@@ -1663,30 +1868,82 @@ function insertSymbol(tex) {
   next.objects.push({...defaults('label'), id, x: r4(snapV(v.x + v.w / 2)), y: r4(snapV(v.y + v.h / 2)), text: text.slice(0, FIELDS.label.text.max)});
   if (commit(next)) { setSel([id]); st.lastText = {id, k: 'text'}; paint(); const el2 = document.querySelector('[data-f="text"]'); if (el2) select(el2, 0, el2.value); }
 }
+function paintTemplates() {
+  const box = $('templateCards'), domain = $('templateDomain').value;
+  box.innerHTML = TEMPLATE_KEYS.filter(key => TEMPLATE_DOMAIN[key] === domain).map(key => {
+    const scene = template(key, lang);
+    const src = svgDataUrl(renderSVG(scene, {width: 160, view: scene.view || sceneBounds(scene)}));
+    return `<button type="button" data-template="${key}"><img alt="" src="${src}" loading="lazy"><span>${esc(TEMPLATE_NAMES[key][lang])}</span></button>`;
+  }).join('');
+  box.querySelectorAll('[data-template]').forEach(button => button.onclick = () => {
+    const key = button.dataset.template, scene = validateScene(template(key, lang)).scene;
+    st.dom = TEMPLATE_DOMAIN[key];
+    if (st.scene.objects.length) addProjectPage(scene);
+    else { st.projectChanged = true; st.project.pages[st.project.index] = scene; selectProjectPage(st.project.index); }
+  });
+  height();
+}
 function shell() {
   const tl = X3.tools;
-  $('app').innerHTML = `<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div></div>
+  $('app').innerHTML = `<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div>
+      <div class="project-actions"><button type="button" id="bNewProject">${ko ? '새 프로젝트' : 'New project'}</button><button type="button" id="bOpenStore">${esc(X6.open)}</button><button type="button" id="bSave" class="primary">${esc(X6.save)}</button></div></div>
+    <div class="project-line"><label class="note" for="projectTitle">${ko ? '프로젝트 이름' : 'Project name'}</label><input id="projectTitle" maxlength="60" placeholder="${ko ? '제목 없는 프로젝트' : 'Untitled project'}"><select id="projectPages" aria-label="${ko ? '프로젝트의 그림' : 'Figures in project'}"></select><button type="button" id="projectAdd">${ko ? '+ 그림 추가' : '+ Add figure'}</button><button type="button" id="projectRemove">${ko ? '현재 그림 삭제' : 'Remove current figure'}</button><span id="saveStatus" class="note" role="status"></span></div>
     <div id="hint3"></div>
-    <div class="dbar"><select id="tpl" aria-label="${esc(X4.templates)}" title="${esc(X4.templates)}"><option value="">${esc(X4.templates)}…</option>${Object.keys(DOMAINS).map(d => `<optgroup label="${esc(X2.domains[d])}">${TEMPLATE_KEYS.filter(k => TEMPLATE_DOMAIN[k] === d).map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}</optgroup>`).join('')}<option value="blank">${T.blank}</option></select>
-      <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bSym">${X2.symbols}</button><button type="button" id="bSave" class="primary" title="${esc(X6.saveT)}">${esc(X6.save)}</button><button type="button" id="bOpenStore">${esc(X6.open)}</button><button type="button" id="bShare">${esc(X7.share)}</button>
-      <label class="btn filebtn">📷 ${T.photo}<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/*"></label><span class="sep"></span>
+    <div class="dbar"><button type="button" id="bTemplates">${esc(X4.templates)}</button>
+      <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bSym">${X2.symbols}</button><button type="button" id="bShare">${esc(X7.share)}</button>
+      <span class="sep"></span>
       <button type="button" id="bUndo" class="hist" title="${esc(tl.backT)}" aria-label="${esc(tl.backT)}">${tl.back}</button><button type="button" id="bRedo" class="hist" title="${esc(tl.fwdT)}" aria-label="${esc(tl.fwdT)}">${tl.fwd}</button>
       <button type="button" id="bDup" title="Ctrl+D">${T.dup}</button><button type="button" id="bCopy" title="Ctrl+C">${tl.copy}</button><button type="button" id="bPaste" title="Ctrl+V">${tl.paste}</button><button type="button" id="bDel" title="Delete">${T.del}</button><button type="button" id="bClear" class="danger">${tl.clear}</button><span class="sep"></span>
       <span class="zoom" role="group" aria-label="zoom"><button type="button" id="bZout" title="${esc(tl.zoomOut)} (−)" aria-label="${esc(tl.zoomOut)}">−</button><span id="zoomPct" class="pct">100%</span><button type="button" id="bZin" title="${esc(tl.zoomIn)} (+)" aria-label="${esc(tl.zoomIn)}">+</button><button type="button" id="bZfit" title="${esc(tl.zoomFit)} (0)">${tl.zoomFit}</button></span>
       <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><label class="btn"><input type="checkbox" id="cVals" style="width:auto"> ${tl.values}</label><button type="button" id="bFit" title="${esc(tl.frameMark)}">${T.fit}</button></div>
-    <details class="aibox" id="aiBox"><summary>${esc(X6.ai)}</summary><textarea id="aiPrompt" rows="2" maxlength="1200" placeholder="${esc(X6.aiHint)}"></textarea>
-      <div class="row"><label class="chk"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div></details>
+    <details class="aibox" id="aiBox"><summary>${ko ? '✨ AI 그림 작업' : '✨ AI figure maker'}</summary>
+      <p class="note">${ko ? '설명으로 그리거나 문제 사진의 도식을 편집 가능한 그림으로 복원합니다.' : 'Draw from a description or turn a problem photo into an editable figure.'}</p>
+      <textarea id="aiPrompt" aria-label="${ko ? '그림 설명 또는 복원 요청' : 'Figure description or tracing instructions'}" rows="2" maxlength="1200" placeholder="${esc(X6.aiHint)}"></textarea>
+      <div class="row"><label class="note" for="aiPhoto">${ko ? '문제 사진 첨부' : 'Attach a problem photo'}</label><input type="file" id="aiPhoto" accept="image/jpeg,image/png,image/webp"><button type="button" id="aiClearPhoto" hidden>${ko ? '첨부 지우기' : 'Remove attachment'}</button></div>
+      <div class="row"><label class="chk"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div><div id="aiProposal" hidden></div></details>
     <div id="aiNote" class="ainote" hidden></div>
-    <div class="work"><details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details>
-      <section class="stage"><div id="tools" class="tools" role="toolbar" aria-label="${esc(X4.drawing)}"></div><div id="stageTop"></div><div id="canvas" class="canvas" tabindex="0"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
-        <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button>
+    <div class="work"><div class="draw-library">
+      <details class="palwrap parts" id="templateShelf"><summary>${esc(X4.templates)}</summary><label class="note" for="templateDomain">${ko ? '분야' : 'Topic'}</label>
+        <select id="templateDomain">${Object.keys(DOMAINS).filter(d => TEMPLATE_KEYS.some(k => TEMPLATE_DOMAIN[k] === d)).map(d => `<option value="${d}">${esc(X2.domains[d])}</option>`).join('')}</select>
+        <div id="templateCards" class="template-cards"></div></details>
+      <details class="palwrap parts" id="projectShelf"><summary>${ko ? '내 프로젝트' : 'My projects'}</summary><p id="projectQuota" class="note"></p><div id="projectList" aria-live="polite"></div></details>
+      <details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details></div>
+      <section class="stage"><div id="tools" class="tools" role="toolbar" aria-label="${esc(X4.drawing)}"></div><div id="stageTop"><label class="note" id="penSmoothLabel" hidden><input type="checkbox" id="penSmooth" style="width:auto"${prefs().penSmooth !== false ? ' checked' : ''}> ${ko ? '펜 흔들림 보정' : 'Stabilize pen strokes'}</label><select id="objectPicker" aria-label="${ko ? '그림 요소 선택' : 'Select figure object'}"></select>
+        <button type="button" id="inkGo" hidden title="${ko ? '선택한 획만 수식 인식 서비스에 전송합니다.' : 'Sends only the selected strokes to the formula recognizer.'}">${ko ? '선택한 획을 수식으로' : 'Recognize selected ink'}</button><span id="inkStatus" class="note" role="status"></span>
+        <div id="inkProposal" hidden><label for="inkText" class="note">LaTeX</label><input id="inkText" maxlength="240"><div id="inkPreview"></div><button type="button" id="inkApply">${ko ? '수식 적용' : 'Apply formula'}</button><button type="button" id="inkDiscard">${ko ? '닫기' : 'Close'}</button></div></div><div id="canvas" class="canvas" tabindex="0" role="region" aria-label="${ko ? '그림 편집 캔버스' : 'Figure editing canvas'}"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
+        <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button><button type="button" id="stepBtn">${ko ? '0.05초 진행' : 'Step 0.05 s'}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
           <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label><label id="rtLbl"><input type="checkbox" id="cRt"${st.rtrail ? ' checked' : ''}>${esc(X5.trails)}</label></span><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label id="solveLbl"><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
         <div id="readouts" class="readouts"></div></section>
       <div class="side"><section class="panel" id="props"></section><section class="panel" id="out"></section></div></div>`;
-  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; keepStoreIds(null); keepShare(null); setSel([]); st.zoom = null; if (TEMPLATE_DOMAIN[k]) st.dom = TEMPLATE_DOMAIN[k]; commit(k === 'blank' ? {...blankScene(), style: st.scene.style, view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene); };
-  $('photo').onchange = e => { const f = e.target.files[0]; e.target.value = ''; keepStoreIds(null); photoFile(f); };
-  $('bSave').onclick = toStorage; $('bOpenStore').onclick = () => { openFromStorage(); $('out')?.scrollIntoView?.({block: 'nearest'}); };
+  $('bNewProject').onclick = () => {
+    if (canLeaveProject()) { replaceProject({title: '', index: 0, pages: [blankPage()]}); $('projectTitle').focus(); }
+  };
+  $('projectTitle').onchange = e => { st.project.title = e.target.value.trim(); save(); paintProject(); };
+  $('projectPages').onchange = e => selectProjectPage(+e.target.value);
+  $('projectAdd').onclick = () => addProjectPage();
+  $('projectRemove').onclick = () => {
+    const p = st.project;
+    if (p.pages.length < 2 || !confirm(ko ? '현재 그림을 프로젝트에서 삭제할까요?' : 'Remove this figure from the project?')) return;
+    p.pages.splice(p.index, 1);
+    st.projectChanged = true;
+    selectProjectPage(Math.min(p.index, p.pages.length - 1));
+    $('projectPages').focus();
+  };
+  $('bTemplates').onclick = () => { const shelf = $('templateShelf'); shelf.open = true; shelf.scrollIntoView({block: 'nearest'}); $('templateDomain').focus({preventScroll: true}); };
+  $('templateShelf').ontoggle = e => { if (e.target.open) paintTemplates(); height(); };
+  $('templateDomain').onchange = paintTemplates;
+  $('projectShelf').ontoggle = e => { if (e.target.open && !$('projectList').textContent) openFromStorage({reveal: false}); height(); };
+  function syncAiPhoto() {
+    const attached = !!$('aiPhoto').files.length;
+    $('aiClearPhoto').hidden = !attached;
+    $('aiEditCur').disabled = attached;
+    $('aiModel').disabled = attached;
+    $('aiGo').textContent = attached ? (ko ? '사진에서 복원' : 'Trace photo') : X6.aiGo;
+  }
+  $('aiPhoto').onchange = syncAiPhoto;
+  $('aiClearPhoto').onclick = () => { $('aiPhoto').value = ''; syncAiPhoto(); $('aiPhoto').focus(); };
+  $('bSave').onclick = toStorage; $('bOpenStore').onclick = () => openFromStorage();
   $('aiGo').onclick = aiDraw; $('aiBox').ontoggle = () => { if ($('aiBox').open) aiModels(); };
   $('bShare').onclick = openShare;
   { const n = +params.get('share'); if (n > 0) { if (window.HL_SHARE) openShared(n); else addEventListener('load', () => openShared(n), {once: true}); } } $('aiPrompt').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) aiDraw(); };
@@ -1702,11 +1959,21 @@ function shell() {
   $('cSolve').onchange = e => { st.solve = e.target.checked; paintCanvas(); paintReadouts(); };
   $('playBtn').onclick = () => st.playing ? pause() : play();
   $('resetBtn').onclick = () => { stopSim(); paint(); };
+  $('stepBtn').onclick = stepSimulation;
   $('speed').onchange = e => { st.speed = +e.target.value; };
   $('cFbd').onchange = e => { st.fbd = e.target.checked; paintCanvas(); };
   $('cRt').onchange = e => { st.rtrail = e.target.checked; paintCanvas(); };
   $('cRead').onchange = e => { st.readouts = e.target.checked; paintReadouts(); };
   $('parts').ontoggle = e => { setPref('parts', e.target.open); height(); };
+  $('objectPicker').onchange = e => {
+    const id = e.target.value;
+    if (id && st.sim) stopSim();
+    setSel(id ? [id] : []);
+    paint();
+  };
+  $('inkGo').onclick = recognizeInk;
+  $('inkDiscard').onclick = () => { $('inkProposal').hidden = true; $('canvas').focus(); height(); };
+  $('penSmooth').onchange = e => setPref('penSmooth', e.target.checked);
   bindCanvas(); paintHint(); paintTools(); paint(); paintOut();
 }
 /* the three steps a new member sees once (dismissed for good, in this browser) */
@@ -1720,6 +1987,7 @@ function paintHint() {
 /* the drawing toolbar: the tools, then the look of what they draw (also applied to the selected shapes) */
 const STYLE_FIELDS = ['color', 'lw', 'pattern', 'fill', 'heads'];
 function paintTools() {
+  if ($('penSmoothLabel')) $('penSmoothLabel').hidden = st.tool !== 'pen';
   const box = $('tools'); if (!box) return;
   const ds = st.dstyle, sw = c => `<button type="button" class="swatch${ds.color === c ? ' on' : ''}" data-color="${c}" title="${esc(X4.enums[c])}" aria-label="${esc(X4.enums[c])}" style="--c:${COLOR_HEX[c]}"></button>`;
   box.innerHTML = `<div class="tgroup">${TOOLS.map(t => `<button type="button" class="tool${st.tool === t ? ' on' : ''}" data-tool="${t}" title="${esc(X4.tools[t])}" aria-label="${esc(X4.tools[t])}" aria-pressed="${st.tool === t}">${TOOL_ICON[t]}</button>`).join('')}</div>
@@ -1751,8 +2019,64 @@ function paintBar() {
   $('mechBar').hidden = !mech; $('clock').hidden = !mech; $('solveLbl').hidden = !circ; $('rtLbl').hidden = !hasPhys();
   if (!mech && st.sim) stopSim();
 }
+function inkObjects() { return selIds().map(byId).filter(o => o.type === 'poly' && !o.closed && o.pts.length >= 2); }
+async function recognizeInk() {
+  const items = inkObjects(), box = $('inkStatus'), button = $('inkGo');
+  if (!items.length || button.disabled) return;
+  if (items.length > 32) { box.textContent = ko ? '수식에 해당하는 획을 32개 이하로 선택해 주세요.' : 'Select no more than 32 strokes for the formula.'; return; }
+  if (!token()) { box.textContent = T.storeLogin; return; }
+  const base = JSON.stringify(projectData()), ids = new Set(items.map(o => o.id));
+  const paths = items.map(o => o.pts), points = paths.flat();
+  const x = Math.min(...points.map(p => p[0])), y = Math.max(...points.map(p => p[1]));
+  const w = Math.max(...points.map(p => p[0])) - x, h = y - Math.min(...points.map(p => p[1]));
+  const scale = 900 / Math.max(0.001, w, h);
+  const strokes = paths.map(path => path.map(p => [Math.round(16+(p[0]-x)*scale), Math.round(16+(y-p[1])*scale)]));
+  button.disabled = true;
+  $('inkProposal').hidden = true;
+  box.textContent = ko ? '수식 인식 중…' : 'Recognizing formula…';
+  try {
+    const {latex} = await api('/api/workshop/ink-formula', 'POST', {strokes});
+    const field = $('inkText'), render = () => { $('inkPreview').innerHTML = texSVG(field.value, 24, st.scene.style); height(); };
+    field.value = latex;
+    field.oninput = render;
+    $('inkApply').onclick = () => {
+      if (base !== JSON.stringify(projectData())) { box.textContent = ko ? '그림이 바뀌었습니다. 다시 인식해 주세요.' : 'The figure changed. Recognize the ink again.'; return; }
+      const text = field.value.trim();
+      if (!text) return;
+      const next = clone(st.scene), id = freeId('label');
+      next.objects = next.objects.filter(o => !ids.has(o.id));
+      next.objects.push({...defaults('label'), id, x:r4(x+w/2), y:r4(y-h/2), text, color:items[0].color});
+      if (commit(next)) {
+        setSel([id]); paint();
+        $('inkProposal').hidden = true;
+        box.textContent = ko ? '수식으로 바꿨습니다. 실행 취소로 되돌릴 수 있습니다.' : 'Converted to a formula. You can undo this change.';
+        $('canvas').focus();
+      }
+      height();
+    };
+    $('inkProposal').hidden = false;
+    box.textContent = ko ? '인식 결과를 확인하고 적용하세요.' : 'Review the recognized formula before applying.';
+    render(); field.focus();
+  } catch (e) {
+    box.textContent = e.code === 'ocr_engine_unavailable' ? (ko ? '수식 인식 서비스가 아직 연결되지 않았습니다.' : 'Formula recognition is not configured.')
+      : (ko ? '수식을 읽지 못했습니다. 수식에 해당하는 획만 선택해 다시 시도해 주세요.' : 'Could not read the formula. Select only its strokes and try again.');
+  } finally { button.disabled = false; height(); }
+}
+function paintObjectPicker() {
+  $('inkGo').hidden = !inkObjects().length;
+  const picker = $('objectPicker');
+  const elements = st.scene.objects.map(o => {
+    const type = o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type];
+    const caption = o.label || (o.type === 'label' ? o.text : '');
+    const lock = o.lock ? ' · ' + (ko ? '잠김' : 'Locked') : '';
+    return `<option value="${esc(o.id)}">${esc([o.id, type, caption].filter(Boolean).join(' · ') + lock)}</option>`;
+  });
+  picker.innerHTML = `<option value="">${ko ? '그림 요소 선택…' : 'Select figure object…'}</option>${elements.join('')}`;
+  picker.value = selIds().length === 1 ? st.sel : '';
+  picker.disabled = !elements.length;
+}
 function paint() {
-  paintCanvas(); paintSide(); paintReadouts(); paintSimBar(); status(); paintAi(); paintPalette(); paintBar();
+  paintProject(); paintObjectPicker(); paintCanvas(); paintSide(); paintReadouts(); paintSimBar(); status(); paintAi(); paintPalette(); paintBar();
   if ($('styleSel')) $('styleSel').value = st.scene.style;
   height();
 }
@@ -1760,9 +2084,11 @@ function height() { if (embedded) requestAnimationFrame(() => window.parent.post
 let lastW = 0;
 if (typeof ResizeObserver === 'function') new ResizeObserver(() => { height(); const w = $('canvas')?.clientWidth || 0; if (w && Math.abs(w - lastW) > 30) { lastW = w; paintCanvas(); } }).observe(document.body);
 addEventListener('keydown', e => {
-  if (e.target.closest?.('input,textarea,select')) return;
+  if (e.defaultPrevented || e.isComposing || e.target.closest?.('input,textarea,select,[contenteditable]')) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
-  if (e.key === ' ' && !st.space) { st.space = true; $('canvas')?.classList.add('panning'); e.preventDefault(); return; }
+  // Native controls keep their normal Space and Enter activation.
+  if ((e.key === ' ' || e.key === 'Enter') && e.target.closest?.('button,a,label,summary')) return;
+  if (e.key === ' ' && $('canvas')?.contains(e.target)) { st.space = true; $('canvas').classList.add('panning'); e.preventDefault(); return; }
   if (e.key === 'Escape' && st.draft) { st.draft = null; paintCanvas(); status(); return; }
   if (e.key === 'Enter' && st.draft) { e.preventDefault(); if (!geoFinish()) finishDraft(); return; }
   if (!mod && !e.altKey && TOOL_KEY[k] && !(selIds().length && e.key.startsWith('Arrow'))) { setTool(TOOL_KEY[k]); return; }
@@ -1786,8 +2112,12 @@ addEventListener('keydown', e => {
     commit(next, {keepSel: true});
   }
 });
-addEventListener('keyup', e => { if (e.key === ' ') { st.space = false; $('canvas')?.classList.remove('panning'); } });
+function releasePan() { st.space = false; $('canvas')?.classList.remove('panning'); }
+addEventListener('keyup', e => { if (e.key === ' ') releasePan(); });
+addEventListener('blur', releasePan);
 try { const d = prefs().dstyle; if (d && typeof d === 'object') { const ds = st.dstyle; if (COLORS.includes(d.color)) ds.color = d.color; if ([0.5, 0.75, 1, 1.5, 2, 3].includes(d.lw)) ds.lw = d.lw; if (['solid', 'dashed', 'dotted', 'dashdot'].includes(d.pattern)) ds.pattern = d.pattern; if (FILLS.includes(d.fill)) ds.fill = d.fill; ds.hs = d.hs === true; ds.he = d.he === true; } } catch (e) {}
 st.scene = startScene();
+st.project ||= {title: '', index: 0, pages: [st.scene]};
+if (st.unlinkedStart) keepStoreIds(null);
 if (!st.scene.view) st.scene.view = sceneBounds(st.scene);
 if (document.readyState === 'loading') addEventListener('DOMContentLoaded', shell); else shell();

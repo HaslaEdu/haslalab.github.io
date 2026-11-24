@@ -1776,6 +1776,8 @@ async function arAdminStats(root, alive, days) {
     root.querySelector(".arempty").innerHTML = `${L.failed} ${esc(arErr(e))}`; return; }
   if (!alive()) return;
   const n = (v) => Number(v || 0).toLocaleString(en ? "en-US" : "ko-KR"), u = d.users, per = L.period.replace("%d", d.days);
+  const signupLabels = en ? {lab: "HaslaLab", nonsul: "Hasla Nonsul", unknown: "Unknown source"}
+    : {lab: "하슬라랩 가입", nonsul: "하슬라논술 가입", unknown: "가입 경로 확인 불가"};
   const tile = (label, big, sub) => `<div class="arstat-tile"><span>${label}</span><b>${big}</b>${sub ? `<small>${sub}</small>` : ""}</div>`;
   const sum = (k) => d.series.reduce((a, x) => a + x[k], 0);
   /* one small bar chart per measure, each on its own scale (no shared axis across different measures) */
@@ -1811,6 +1813,11 @@ async function arAdminStats(root, alive, days) {
       <form class="aractions"><input name="q" class="cmfield" type="search" maxlength="64" aria-label="${en?"Username, nickname or member ID":"아이디, 닉네임 또는 회원 번호"}" placeholder="${en?"Username, nickname or member ID":"아이디, 닉네임 또는 회원 번호"}"><button type="submit" class="cmbtn sm">${en?"Search":"검색"}</button></form>
       <div data-country-results aria-live="polite"></div><button type="button" class="cmbtn sm" data-country-more hidden>${en?"Next page":"다음 페이지"}</button>
     </details>
+    ${d.signup_sources ? `<div class="arpanel"><h3>${en ? "Sign-ups by first service" : "최초 가입 서비스별 통계"}</h3>
+      <div class="arstat-grid">${Object.entries(signupLabels).map(([key, label]) => {
+        const s = d.signup_sources[key] || {};
+        return tile(label, n(s.period), `${per} · ${L.today} ${n(s.today)} · ${L.active} ${n(s.active)}`);
+      }).join("")}</div><p class="arempty">${en ? "Older accounts without a recorded sign-up source are listed as unknown." : "가입 경로 기록이 없는 기존 계정은 확인 불가로 표시합니다."}</p></div>` : ""}
     <div class="arstat-grid">
       ${tile(L.visitors, n(v.visitors), `${L.today} ${n(v.visitors_today)} · ${L.views} ${n(v.views)} · ${L.countriesN.replace("%d", n(v.countries))}`)}
       ${tile(L.people, n(u.people) + (en ? "" : L.of), `${L.today} +${n(u.new_today)} · ${L.d7} +${n(u.new_7d)}`)}
@@ -1819,7 +1826,7 @@ async function arAdminStats(root, alive, days) {
       ${tile(L.monthly, n(d.monthly.graded), d.monthly.waiting ? `${L.waiting} ${n(d.monthly.waiting)}` : "")}
       ${tile(L.ai, n(d.ai.asked), `${L.d7} ${n(d.ai.asked_7d)} · ${L.guests} ${n(d.ai.guests)} · ${L.membersAsked} ${n(d.ai.members)}`)}
     </div>
-    <div class="arpanel"><h3>${L.daily}</h3><div class="arstat-charts">${bars("visitors", L.visitors)}${bars("signups", L.signups)}${bars("lab", L.lab)}${bars("monthly", L.mo)}${bars("ai", L.ai)}</div>
+    <div class="arpanel"><h3>${L.daily}</h3><div class="arstat-charts">${bars("visitors", L.visitors)}${bars("signups", L.signups)}${d.signup_sources ? Object.entries(signupLabels).map(([key, label]) => bars("signup_" + key, label)).join("") : ""}${bars("lab", L.lab)}${bars("monthly", L.mo)}${bars("ai", L.ai)}</div>
       <details style="margin-top:10px"><summary style="cursor:pointer">${L.table}</summary><table class="arstat-t"><thead><tr><th>${L.day}</th><th class="r">${L.visitors}</th><th class="r">${L.views}</th><th class="r">${L.signups}</th><th class="r">${L.lab}</th><th class="r">${L.mo}</th><th class="r">${L.ai}</th></tr></thead>
         <tbody>${d.series.slice().reverse().map((x) => `<tr><td>${x.day}</td><td class="r">${n(x.visitors)}</td><td class="r">${n(x.views)}</td><td class="r">${n(x.signups)}</td><td class="r">${n(x.lab)}</td><td class="r">${n(x.monthly)}</td><td class="r">${n(x.ai)}</td></tr>`).join("")}</tbody></table></details></div>
     <div class="arstat-charts">

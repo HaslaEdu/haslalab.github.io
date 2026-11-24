@@ -30,6 +30,24 @@ export async function mathpixRead(env, bytes, mime, { signal, fetchImpl = fetch 
   return { text: String(body.text || ''), confidence: Number.isFinite(body.confidence) ? body.confidence : null, handwritten: !!body.is_handwritten };
 }
 
+export async function mathpixStrokes(env, points, {fetchImpl = fetch} = {}) {
+  const id = pick(env, MATHPIX, ID), key = pick(env, MATHPIX, SECRET);
+  if (!id || !key) throw new OcrEngineError('ocr_engine_unavailable');
+  const res = await fetchImpl('https://api.mathpix.com/v3/strokes', {
+    method: 'POST', signal: AbortSignal.timeout(25000),
+    headers: {app_id: id, app_key: key, 'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      strokes: {strokes: {x: points.map(stroke => stroke.map(p => p[0])), y: points.map(stroke => stroke.map(p => p[1]))}},
+      formats: ['latex_styled', 'text'], metadata: {improve_mathpix: false},
+    }),
+  });
+  const body = await res.json().catch(() => null);
+  if (!res.ok || !body || body.error) throw new OcrEngineError('ocr_engine_failed', res.status);
+  const latex = String(body.latex_styled || body.text || '').trim();
+  return latex.startsWith('\\(') && latex.endsWith('\\)') || latex.startsWith('\\[') && latex.endsWith('\\]')
+    ? latex.slice(2, -2).trim() : latex;
+}
+
 /** SimpleTex simpletex_ocr (general page with formulas), signed with the app id and secret */
 export async function simpletexRead(env, bytes, mime, { signal, fetchImpl = fetch } = {}) {
   const id = pick(env, SIMPLETEX, ID), secret = pick(env, SIMPLETEX, SECRET);
