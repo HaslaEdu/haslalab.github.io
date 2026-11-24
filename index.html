@@ -1208,9 +1208,15 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="hpho-exam.js?v=a4e790f96370"></script>
 <script src="site-ux.js?v=f05cf4ce7e82"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
-<script src="workshop-connectors.js?v=8596cfc6b3f4"></script>
+<script src="workshop-connectors.js?v=d1f83e98ed6a"></script>
 <script src="share-publish.js?v=c4278342f87e"></script>
-<script src="workshop-share.js?v=d231ee2c1b0c"></script>
+<script src="workshop-share.js?v=9e8c863f80c5"></script>
+<script src="workshop-publish-source.js?v=67091036105a"></script>
+<script src="workshop-class-storage.js?v=86b88dd474d4"></script>
+<style>
+.ws-class-shares{margin:22px 0}.ws-class-shares h2{margin:0 0 8px}.ws-share-item{border:1px solid var(--rule,#d5dbe6);padding:10px 14px;border-radius:10px;margin:8px 0}.ws-share-item summary{cursor:pointer}.ws-share-item small{margin-inline-start:8px;color:var(--muted)}.ws-share-instructions{white-space:pre-wrap;overflow-wrap:anywhere}.ws-share-item ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.ws-share-dialog{width:min(470px,calc(100% - 24px));border:1px solid var(--rule,#d5dbe6);border-radius:14px;color:var(--ink);background:var(--paper,#fff);padding:20px}.ws-share-dialog::backdrop{background:#17203675}.ws-share-dialog form,.ws-share-dialog label{display:grid;gap:8px}.ws-share-dialog label[hidden]{display:none}.ws-share-dialog h2,.ws-share-dialog p{margin:0}.ws-student-paper{width:min(760px,calc(100% - 24px))}.ws-student-paper li{margin:8px 0}.ws-student-paper p{white-space:pre-wrap}.ws-student-paper img{max-width:100%;height:auto;display:block}.ws-share-dialog :is(select,input,textarea){width:100%;font:inherit;color:inherit;padding:7px 8px;border:1px solid var(--rule,#d5dbe6);border-radius:7px;background:var(--paper,#fff)}
+</style>
 <script src="ai-chat.js?v=278f5546252e"></script>
 <script>
 "use strict";
@@ -5579,7 +5585,9 @@ function homeGoalMoment(d){
 function viewWorkshopCreate(){
   const ko=lang==="ko",label=wsTitle("create");
   const asked=new URLSearchParams(location.hash.split("?")[1]||""),query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  if(/^(?:gallery|play|edit)$/.test(asked.get("view")||""))query.set("view",asked.get("view"));
+  const view = asked.get("view");
+  query.set("view", /^(?:gallery|play|edit|compute|compute-preview)$/.test(view||"") ? view : "compute");
+  if(["draw","problem"].includes(asked.get("from")))query.set("from",asked.get("from"));
   if(/^(?:\d{1,9}|sample-[a-z]+)$/.test(asked.get("id")||""))query.set("id",asked.get("id"));
   return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p></div>
     <iframe id="learnCreateFrame" class="learn-studio-frame" src="create.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
@@ -5594,7 +5602,8 @@ addEventListener("message",event=>{
 function viewWorkshopMake(){
   const ko=lang==="ko",label=wsTitle("make");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  const asked=new URLSearchParams(location.hash.split("?")[1]||""),tab=asked.get("tab");if(tab==="vary"||tab==="tpl")query.set("tab",tab);
+  const asked=new URLSearchParams(location.hash.split("?")[1]||""),tab=asked.get("tab");if(["vary","tpl","ai"].includes(tab))query.set("tab",tab);
+  if(asked.get("from")==="compute")query.set("from","compute");
   /* a shared problem set to open as a new paper (작품 공유's remix or "open in the editor") */
   if(/^\d{1,9}$/.test(asked.get("share")||""))query.set("share",asked.get("share"));
   return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p></div>
@@ -5611,7 +5620,8 @@ addEventListener("message",event=>{
 function viewWorkshopDraw(){
   const ko=lang==="ko",label=wsTitle("draw");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  const t=new URLSearchParams(location.hash.split("?")[1]||"").get("t");if(/^[a-z_]{2,24}$/.test(t||""))query.set("t",t);
+  const asked=new URLSearchParams(location.hash.split("?")[1]||""),t=asked.get("t");if(/^[a-z_]{2,24}$/.test(t||""))query.set("t",t);
+  if(/^\d{1,9}$/.test(asked.get("share")||""))query.set("share",asked.get("share"));
   return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p></div>
     <iframe id="learnDrawFrame" class="learn-studio-frame" src="draw.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
 }
@@ -5638,7 +5648,7 @@ function viewWorkshop(){
     <div class="ws-cards">
       ${card("#/workshop/make",wsTitle("make"),ko?"하슬라랩 문제와 직접 쓴 문제로 시험지를 엮어 정답표와 함께 인쇄합니다.":LX("Build a test from HaslaLab problems and your own, and print it with the answer key."))}
       ${card("#/workshop/draw",wsTitle("draw"),ko?"빗면, 도르래, 회로 같은 물리 그림을 값으로 그리고 시뮬레이션으로 돌려 봅니다.":LX("Draw physics figures such as inclines, pulleys and circuits by value, and run them as simulations."))}
-      ${card("#/workshop/create",wsTitle("create"),ko?"브라우저에서 JavaScript 시뮬레이션이나 Python 문제를 코딩해 바로 실행합니다.":LX("Code a JavaScript simulation or a Python problem in the browser and run it at once."))}
+      ${card("#/workshop/create",wsTitle("create"),ko?"Python과 C로 시뮬레이션을 만들고 이 기기에서 실행합니다.":LX("Build a simulation in Python or C and run it on this device."))}
       ${card("#/workshop/share",wsTitle("share"),ko?"회원들이 공유한 작품을 실행해 보고, 리믹스해서 내 것으로 고쳐 씁니다.":LX("Run what members have shared, and remix a project to make it your own."))}
       ${card("#/workshop/storage",wsTitle("storage"),ko?"시험지, 실험 자료, 사진을 내 계정에 올려 두고 어디서나 내려받습니다.":LX("Keep tests, lab data and photos in your account and download them anywhere."))}
       ${later(ko?"실험 도구":LX("Lab tools"),ko?"측정값으로 그래프와 맞춤선을 그리고, 실험 영상에서 물체의 위치를 따라갑니다.":LX("Plot readings and fit a line, and track an object through a video of an experiment."))}
@@ -5669,22 +5679,22 @@ function viewWorkshop(){
 function viewWorkshopStorage(){
   const ko=lang==="ko",label=wsTitle("storage");
   return `<div class="shell ws ws-storage"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p><h1>${label}</h1>
-      <p class="learn-tool-copy">${ko?"수업 자료와 만든 파일을 내 계정에 보관합니다. 올린 파일은 나만 볼 수 있습니다.":LX("Keep class materials and the files you make in your account. Only you can see them.")}</p></div>
+      <p class="learn-tool-copy">${ko?"내 파일을 보관하고 학급이나 동아리에 자료와 과제를 공유합니다.":LX("Keep your files and share materials and assignments with classes or clubs.")}</p></div>
     <div id="wsConnTabs" class="ws-tabs" role="tablist" aria-label="${ko?"저장 위치":LX("Where files are kept")}"></div>
     <div id="wsStore" class="ws-store" aria-live="polite"><p class="ws-note">${ko?"불러오는 중…":LX("Loading…")}</p></div>
     <div id="wsConnPanel" class="ws-cpanel" aria-live="polite" hidden></div>
   </div>`;
 }
-const WS_ERR={ko:{file_too_large:"파일 하나는 20MB까지 올릴 수 있습니다.",quota_exceeded:"보관함 용량이 모자랍니다. 파일을 지우고 다시 올려 주세요.",type_not_allowed:"올릴 수 없는 파일 형식입니다.",type_mismatch:"파일 내용이 확장자와 맞지 않습니다.",
+const WS_ERR={ko:{file_too_large:"현재 요금제에서 올릴 수 있는 파일 크기를 초과했습니다.",quota_exceeded:"보관함의 남은 용량이 부족합니다.",type_not_allowed:"올릴 수 없는 파일 형식입니다.",type_mismatch:"파일 내용이 확장자와 맞지 않습니다.",
     name_taken:"같은 이름의 파일이 이미 있습니다.",folder_exists:"같은 이름의 폴더가 이미 있습니다.",folder_not_empty:"폴더가 비어 있어야 지울 수 있습니다.",folder_into_itself:"폴더를 그 안으로 옮길 수 없습니다.",bad_folder:"폴더 이름을 확인해 주세요. / \\ : * ? \" < > | 는 쓸 수 없습니다.",
     bad_name:"이름을 입력해 주세요.",rate_limited:"잠시 뒤에 다시 시도해 주세요.",login_required:"로그인하세요.",r2_unavailable:"지금은 보관함을 쓸 수 없습니다.",too_many_files:"파일이 너무 많습니다.",too_many_folders:"폴더가 너무 많습니다.",network:"연결에 실패했습니다.",other:"처리하지 못했습니다."},
-  en:{file_too_large:"Each file can be up to 20 MB.",quota_exceeded:"Your storage is full. Delete a file and try again.",type_not_allowed:"This file type cannot be uploaded.",type_mismatch:"The file does not match its extension.",
+  en:{file_too_large:"The file exceeds your current plan’s upload limit.",quota_exceeded:"There is not enough space in Storage.",type_not_allowed:"This file type cannot be uploaded.",type_mismatch:"The file does not match its extension.",
     name_taken:"A file with that name is already there.",folder_exists:"A folder with that name is already there.",folder_not_empty:"Only an empty folder can be deleted.",folder_into_itself:"A folder cannot go inside itself.",bad_folder:"Check the folder name. / \\ : * ? \" < > | are not allowed.",
     bad_name:"Enter a name.",rate_limited:"Try again in a moment.",login_required:"Sign in first.",r2_unavailable:"Storage is not available right now.",too_many_files:"Too many files.",too_many_folders:"Too many folders.",network:"Could not connect.",other:"Something went wrong."}};
-const WS_TYPES=["pdf","png","jpg","jpeg","webp","svg","json","txt","csv","md","hwpx","docx","xlsx","pptx"];
+const WS_TYPES=["pdf","png","jpg","jpeg","webp","svg","json","txt","py","c","csv","md","hwpx","docx","xlsx","pptx"];
 const wsStore={folder:"",data:null,edit:null,msg:"",busy:0};
 const wsErr=code=>{const E=WS_ERR[lang==="ko"?"ko":"en"];const t=E[code]||E.other;return lang==="ko"?t:LX(t);};
-const wsBytes=n=>n>=1048576?(n/1048576).toFixed(n>=104857600?0:1)+" MB":n>=1024?Math.round(n/1024)+" KB":n+" B";
+const wsBytes=n=>n>=1048576?Number((n/1048576).toFixed(1))+" MB":n>=1024?Math.round(n/1024)+" KB":n+" B";
 async function wsFetch(method,path,body){
   /* JSON through cmApi; the form upload and the file itself straight to the API with the member's token */
   const h={Authorization:"Bearer "+cmTok()};
@@ -5711,7 +5721,7 @@ function mountWorkshopStorage(generation){
   cmLoadMe().then(me=>{
     if(!here())return;
     if(!me){
-      box.innerHTML=`<div class="ws-login"><p>${ko?"보관함은 로그인한 회원이 씁니다. 파일 하나는 20MB, 모두 합쳐 500MB까지 올릴 수 있습니다.":LX("Storage is for signed-in members: up to 20 MB a file and 500 MB in all.")}</p><a class="hm-go" href="#/login">${CMT[lang].login}</a></div>`;
+      box.innerHTML=`<div class="ws-login"><p>${ko?"로그인하면 기본 10 MB를 쓸 수 있습니다. 이용권이 활성화되면 보관함 용량이 늘어납니다.":LX("Sign in for 10 MB of storage. An active plan increases your storage limit.")}</p><a class="hm-go" href="#/login">${CMT[lang].login}</a></div>`;
       box.querySelector("a").addEventListener("click",()=>{try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}});
       return;
     }
@@ -5729,6 +5739,8 @@ async function wsLoad(box,here){
 function wsPaint(box,here){
   const ko=lang==="ko",D=wsStore.data,cur=wsStore.folder,T=(k,e)=>ko?k:LX(e);
   const pct=Math.min(100,Math.round(D.used/D.quota*1000)/10);
+  const maxFile = D.max_file || D.quota;
+  const capacity = D.plan === "free" ? T("기본 용량","Free storage") : D.plan ? T("확장 용량","Expanded storage") : "";
   const kids=D.folders.filter(f=>f.startsWith(cur?cur+"/":"")&&f!==cur&&!f.slice(cur?cur.length+1:0).includes("/"));
   const files=D.files.filter(f=>f.folder===cur);
   const crumbs=[["",T("보관함","Storage")],...(cur?cur.split("/").map((s,i,a)=>[a.slice(0,i+1).join("/"),s]):[])];
@@ -5738,21 +5750,24 @@ function wsPaint(box,here){
   const editRow=(kind,value)=>`<div class="ws-edit">${kind==="move"?moveSel(value):`<input data-ws-to value="${esc(value)}" maxlength="120" aria-label="${T("새 이름","New name")}">`}<button type="button" class="ws-btn" data-ws-ok>${T("저장","Save")}</button><button type="button" class="ws-btn ghost" data-ws-cancel>${T("취소","Cancel")}</button></div>`;
   const leaf=p=>p.split("/").pop();
   box.innerHTML=`<div class="ws-quota"><div class="ws-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="${T("사용한 용량","Space used")}"><span style="width:${pct}%"></span></div>
-      <p>${wsBytes(D.used)} / ${wsBytes(D.quota)} ${T("사용","used")} · ${T("파일 하나 20MB까지","up to 20 MB a file")}</p></div>
+      <p>${capacity ? esc(capacity)+" · " : ""}${wsBytes(D.used)} / ${wsBytes(D.quota)} ${T("사용","used")} · ${T("파일당 최대 "+wsBytes(maxFile),"Up to "+wsBytes(maxFile)+" per file")}</p>
+      ${D.used>D.quota?`<p class="ws-note">${T("현재 용량을 초과했습니다. 기존 파일은 내려받을 수 있으며, 새 파일을 올리려면 용량을 확보해야 합니다.","You are over your storage limit. You can still download your files. Free up space to upload new files.")}</p>`:""}
+      ${D.plan==="free"?`<p class="ws-note">${T("이용권이 활성화되면 보관함 용량이 늘어납니다.","An active plan increases your storage limit.")}</p>`:""}</div>
     <div class="ws-tools"><nav class="ws-crumbs" aria-label="${T("폴더 위치","Folder")}">${crumbs.map(([p,n],i)=>i===crumbs.length-1?`<b>${esc(n)}</b>`:`<button type="button" data-ws-go="${esc(p)}">${esc(n)}</button><span aria-hidden="true">/</span>`).join("")}</nav>
       <span class="ws-acts"><button type="button" class="ws-btn ghost" data-ws-newfolder>${T("새 폴더","New folder")}</button>
       <label class="ws-btn pri ws-upbtn">${T("파일 올리기","Upload files")}<input type="file" multiple data-ws-file accept="${WS_TYPES.map(x=>"."+x).join(",")}"></label></span></div>
     ${ed?.kind==="newfolder"?`<div class="ws-row ws-row-edit">${editRow("name","")}</div>`:""}
     <div class="ws-drop" data-ws-drop>
       ${kids.length||files.length?`<ul class="ws-list">${kids.map(f=>`<li class="ws-row ws-folder"><button type="button" class="ws-name" data-ws-go="${esc(f)}"><span class="ws-ico" aria-hidden="true">▸</span>${esc(leaf(f))}</button>
-          ${ed?.path===f?editRow(ed.kind,ed.kind==="move"?(f.includes("/")?f.slice(0,f.lastIndexOf("/")):""):leaf(f)):`<span class="ws-meta">${T("폴더","Folder")}</span><span class="ws-row-acts"><button type="button" data-ws-frename="${esc(f)}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-fdel="${esc(f)}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}
+          ${ed?.path===f?editRow(ed.kind,ed.kind==="move"?(f.includes("/")?f.slice(0,f.lastIndexOf("/")):""):leaf(f)):`<span class="ws-meta">${T("폴더","Folder")}</span><span class="ws-row-acts"><button type="button" data-class-share="${esc(f)}">${T("공유","Share")}</button><button type="button" data-ws-frename="${esc(f)}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-fdel="${esc(f)}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}
         ${files.map(f=>`<li class="ws-row"><span class="ws-name"><span class="ws-ext">${esc(f.name.split(".").pop().toUpperCase())}</span>${esc(f.name)}</span>
           ${ed?.id===f.id?editRow(ed.kind,ed.kind==="move"?f.folder:f.name.replace(/\.[^.]+$/,"")):`<span class="ws-meta">${wsBytes(f.size)} · ${date(f.updated_at)}</span>
-          <span class="ws-row-acts"><button type="button" data-ws-down="${f.id}">${T("내려받기","Download")}</button><button type="button" data-ws-rename="${f.id}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-move="${f.id}">${T("옮기기","Move")}</button><button type="button" data-ws-del="${f.id}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}</ul>`
+          <span class="ws-row-acts">${/\.(json|py|c)$/i.test(f.name)?`<button type="button" data-ws-publish="${f.id}">${T("작품 공개","Publish project")}</button>`:""}<button type="button" data-class-share="${f.id}">${T("공유","Share")}</button><button type="button" data-ws-down="${f.id}">${T("내려받기","Download")}</button><button type="button" data-ws-rename="${f.id}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-move="${f.id}">${T("옮기기","Move")}</button><button type="button" data-ws-del="${f.id}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}</ul>`
         :`<p class="ws-empty">${cur?T("빈 폴더입니다.","This folder is empty."):T("아직 올린 파일이 없습니다.","No files yet.")}</p>`}
       <p class="ws-hint">${T("파일을 여기로 끌어다 놓아도 됩니다. PDF, 그림(PNG·JPG·WebP·SVG), 한글(HWPX), 워드·엑셀·파워포인트, CSV·TXT·MD·JSON","You can also drop files here. PDF, images (PNG, JPG, WebP, SVG), HWPX, Word, Excel, PowerPoint, CSV, TXT, MD, JSON")}</p>
     </div>
-    <p class="ws-msg" role="status">${esc(wsStore.msg)}</p>`;
+    <p class="ws-msg" role="status">${esc(wsStore.msg)}</p><section class="ws-class-shares" data-class-shares></section>`;
+  window.HL_WS_CLASS_STORAGE?.({host:box.querySelector("[data-class-shares]"),root:box,api:cmApi,fetchFile:wsFetch,text:T,esc,error:wsErr,files:D.files,folders:D.folders,here});
   const again=()=>{if(here())wsPaint(box,here);};
   const reload=()=>wsLoad(box,here);
   const fail=e=>{wsStore.msg=wsErr(e?.code);again();};
@@ -5760,6 +5775,10 @@ function wsPaint(box,here){
   q("[data-ws-go]").forEach(b=>b.onclick=()=>{wsStore.folder=b.dataset.wsGo;wsStore.edit=null;wsStore.msg="";again();});
   box.querySelector("[data-ws-newfolder]").onclick=()=>{wsStore.edit={kind:"newfolder"};again();box.querySelector("[data-ws-to]")?.focus();};
   const file=id=>D.files.find(f=>f.id===id);
+  const publish=id=>{const saved=file(id);if(saved)window.HL_WS_PUBLISH?.({file:saved,api:cmApi,text:T,here,error:wsErr});};
+  q("[data-ws-publish]").forEach(b=>b.onclick=()=>publish(b.dataset.wsPublish));
+  const source=new URLSearchParams(location.hash.split("?")[1]||"").get("publish");
+  if(source){history.replaceState(null,"","#/workshop/storage");publish(source);}
   q("[data-ws-rename]").forEach(b=>b.onclick=()=>{wsStore.edit={kind:"name",id:b.dataset.wsRename};again();box.querySelector("[data-ws-to]")?.focus();});
   q("[data-ws-move]").forEach(b=>b.onclick=()=>{wsStore.edit={kind:"move",id:b.dataset.wsMove};again();});
   q("[data-ws-frename]").forEach(b=>b.onclick=()=>{wsStore.edit={kind:"name",path:b.dataset.wsFrename};again();box.querySelector("[data-ws-to]")?.focus();});
@@ -5785,11 +5804,11 @@ function wsPaint(box,here){
     catch(e){fail(e);}finally{b.disabled=false;}
   });
   const send=async list=>{
-    const max=D.max_file||20*1048576;let done=0;
+    let done=0;
     for(const f of list){
       const ext=(f.name.split(".").pop()||"").toLowerCase();
       if(!WS_TYPES.includes(ext)){wsStore.msg=f.name+": "+wsErr("type_not_allowed");continue;}
-      if(f.size>max){wsStore.msg=f.name+": "+wsErr("file_too_large");continue;}
+      if(f.size>maxFile){wsStore.msg=f.name+": "+T("파일당 최대 "+wsBytes(maxFile)+"까지 올릴 수 있습니다.","You can upload up to "+wsBytes(maxFile)+" per file.");continue;}
       wsStore.msg=(ko?"올리는 중… ":LX("Uploading… "))+f.name;again();
       const form=new FormData();form.append("file",f);form.append("folder",cur);
       try{await wsFetch("POST","/files",form);done++;wsStore.msg="";}catch(e){wsStore.msg=f.name+": "+wsErr(e?.code);if(e?.code==="quota_exceeded")break;}

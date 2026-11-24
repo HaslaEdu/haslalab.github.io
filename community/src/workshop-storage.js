@@ -20,10 +20,9 @@
    - DELETE /api/workshop/storage/folders?path=…        an empty folder
    Files go to the existing R2 binding env.LAB_PAGES under workshop/<userId>/<fileId>; the R2 key is made from ids only,
    never from a name or a folder the member typed, so nothing a member sends can reach another key. Names and folders
-   live in D1 (workshop_files, workshop_folders). Every route needs a signed-in member and reads only that member's rows.
-   TODO(share): sharing a file or a folder with a class (learn-services.js classes) or a club is not built yet. When it
-   is, add a workshop_shares table (file or folder, class id, who shared it) and let the download route also open a file
-   to members of a class it is shared with; until then a file is visible to its owner only. */
+   live in D1. Shared files use the same attachment response after a class membership check. */
+import { classStorageRoutes, STORAGE_SHARE_SCHEMA } from './workshop-class-storage.js';
+import { ensureLearnSchema, planOf } from './learn-services.js';
 
 export const WORKSHOP_SCHEMA = [
   `CREATE TABLE IF NOT EXISTS workshop_files (
@@ -53,7 +52,15 @@ export const WORKSHOP_KINDS = ['file', 'paper', 'problem', 'figure', 'sim'];
 const kindOf = v => (typeof v === 'string' && WORKSHOP_KINDS.includes(v) ? v : null);
 export const WORKSHOP_PREFIX = 'workshop/';
 export const WORKSHOP_MAX_FILE = 20 * 1024 * 1024;
-export const WORKSHOP_QUOTA = 500 * 1024 * 1024;
+export const WORKSHOP_FREE_QUOTA = 10 * 1024 * 1024;
+export const WORKSHOP_PAID_QUOTA = 500 * 1024 * 1024;
+
+async function storageLimits(env, userId, now) {
+  await ensureLearnSchema(env);
+  const {plan} = await planOf(env, userId, now);
+  const quota = plan === 'free' ? WORKSHOP_FREE_QUOTA : WORKSHOP_PAID_QUOTA;
+  return {plan, quota, max_file: Math.min(quota, WORKSHOP_MAX_FILE)};
+}
 const NAME_MAX = 120, SEG_MAX = 60, DEPTH_MAX = 5, PATH_MAX = 240, FILES_MAX = 2000, FOLDERS_MAX = 300;
 const ID = /^[0-9a-f]{32}$/;
 
@@ -68,6 +75,8 @@ export const WORKSHOP_TYPES = {
   svg: {mime: 'image/svg+xml', sig: 'svg'},
   json: {mime: 'application/json', sig: TEXT},
   txt: {mime: 'text/plain', sig: TEXT},
+  py: {mime: 'text/plain', sig: TEXT},
+  c: {mime: 'text/plain', sig: TEXT},
   csv: {mime: 'text/csv', sig: TEXT},
   md: {mime: 'text/markdown', sig: TEXT},
   hwpx: {mime: 'application/hwp+zip', sig: ZIP},
@@ -128,6 +137,7 @@ export async function ensureWorkshopSchema(env) {
   for (const sql of WORKSHOP_COLUMNS) {
     try { await env.DB.prepare(sql).run(); } catch (e) { if (!/duplicate column/i.test(String(e?.message || e))) throw e; }
   }
+  for (const sql of STORAGE_SHARE_SCHEMA) await env.DB.prepare(sql).run();
   for (const sql of WORKSHOP_INDEXES) await env.DB.prepare(sql).run();
   ready.add(env.DB);
 }
@@ -139,6 +149,7 @@ export async function workshopForgetUser(env, userId) {
   if (env.LAB_PAGES) for (let i = 0; i < rows.length; i += 500) await env.LAB_PAGES.delete(rows.slice(i, i + 500).map(r => r.r2_key));
   await env.DB.prepare('DELETE FROM workshop_files WHERE owner_id=?').bind(userId).run();
   await env.DB.prepare('DELETE FROM workshop_folders WHERE owner_id=?').bind(userId).run();
+  await env.DB.prepare('DELETE FROM workshop_class_shares WHERE owner_id=?').bind(userId).run();
   return rows.length;
 }
 
@@ -157,14 +168,16 @@ export async function workshopSaveBytes(env, uid, {bytes, name, folder = '', kin
   if (!contentMatches(ext, bytes)) throw new HttpError(415, 'type_mismatch');
   const f = cleanFolder(folder);
   if (f == null) throw new HttpError(400, 'bad_folder');
+  const limits = await storageLimits(env, uid, t);
+  if (bytes.length > limits.max_file) throw new HttpError(413, 'file_too_large');
+  const u = (await DB.prepare('SELECT COALESCE(SUM(size),0) AS n, COUNT(*) AS c FROM workshop_files WHERE owner_id=?').bind(uid).first()) || {n: 0, c: 0};
+  if (u.c >= FILES_MAX) throw new HttpError(409, 'too_many_files');
+  if (u.n + bytes.length > limits.quota) throw new HttpError(413, 'quota_exceeded');
   if (f && !await DB.prepare('SELECT 1 FROM workshop_folders WHERE owner_id=? AND path=?').bind(uid, f).first()) {
     if (!ensureFolder) throw new HttpError(404, 'folder_not_found');
     await workshopEnsureFolder(env, uid, f, t, {HttpError});
   }
   const k = kindOf(kind) || 'file';
-  const u = (await DB.prepare('SELECT COALESCE(SUM(size),0) AS n, COUNT(*) AS c FROM workshop_files WHERE owner_id=?').bind(uid).first()) || {n: 0, c: 0};
-  if (u.c >= FILES_MAX) throw new HttpError(409, 'too_many_files');
-  if (u.n + bytes.length > WORKSHOP_QUOTA) throw new HttpError(413, 'quota_exceeded');
   const taken = async n => !!(await DB.prepare('SELECT 1 FROM workshop_files WHERE owner_id=? AND folder=? AND name=?').bind(uid, f, n).first());
   let finalName = cleanName(name, ext);
   if (await taken(finalName)) {
@@ -180,10 +193,10 @@ export async function workshopSaveBytes(env, uid, {bytes, name, folder = '', kin
     /* the quota is checked again in the insert itself, so two uploads at once cannot both pass it */
     row = await DB.prepare(`INSERT INTO workshop_files(id,owner_id,folder,name,size,mime,r2_key,created_at,updated_at,kind)
       SELECT ?,?,?,?,?,?,?,?,?,? WHERE (SELECT COALESCE(SUM(size),0) FROM workshop_files WHERE owner_id=?)+?<=? RETURNING ${COLS}`)
-      .bind(id, uid, f, finalName, bytes.length, mime, key, t, t, k, uid, bytes.length, WORKSHOP_QUOTA).first();
+      .bind(id, uid, f, finalName, bytes.length, mime, key, t, t, k, uid, bytes.length, limits.quota).first();
   } catch (e) { await env.LAB_PAGES.delete(key).catch(() => {}); throw e; }
   if (!row) { await env.LAB_PAGES.delete(key).catch(() => {}); throw new HttpError(413, 'quota_exceeded'); }
-  return {file: fileView(row), used: u.n + bytes.length};
+  return {file: fileView(row), used: u.n + bytes.length, ...limits};
 }
 const fileView = r => ({id: r.id, folder: r.folder, name: r.name, size: r.size, mime: r.mime, kind: r.kind || 'file', created_at: r.created_at, updated_at: r.updated_at});
 
@@ -204,7 +217,8 @@ export async function workshopEnsureFolder(env, uid, path, t, {HttpError}) {
 
 /* new bytes for one of the member's files, in place: same id, name and folder. The type is the file's own (its
    extension); the first bytes are checked against it; the quota is checked with the size difference inside the
-   UPDATE, so two saves at once cannot both pass it. The bytes go to a fresh R2 key and the old object goes only
+   UPDATE, so two saves at once cannot both pass it. Members over quota can still replace a file without increasing its size.
+   The bytes go to a fresh R2 key and the old object goes only
    after the row has moved to the new one, so a failed save leaves the old file whole. base: the updated_at the
    caller last saw (optional): a file saved since is refused with 409 changed. */
 export async function workshopReplaceBytes(env, uid, id, {bytes, kind = null, base = null}, {HttpError, now}) {
@@ -222,6 +236,8 @@ export async function workshopReplaceBytes(env, uid, id, {bytes, kind = null, ba
   if (base != null && Number(base) !== row.updated_at) throw new HttpError(409, 'changed');
   const k = kindOf(kind);
   if (kind != null && kind !== '' && !k) throw new HttpError(400, 'bad_kind');
+  const limits = await storageLimits(env, uid, t);
+  if (bytes.length > Math.max(limits.max_file, row.size)) throw new HttpError(413, 'file_too_large');
   const rev = crypto.randomUUID().replace(/-/g, '').slice(0, 12), key = `${WORKSHOP_PREFIX}${uid}/${row.id}-${rev}`, mime = WORKSHOP_TYPES[ext].mime;
   await env.LAB_PAGES.put(key, bytes, {httpMetadata: {contentType: mime}, customMetadata: {owner: String(uid)}});
   let r;
@@ -229,8 +245,9 @@ export async function workshopReplaceBytes(env, uid, id, {bytes, kind = null, ba
   const stamp = Math.max(t, row.updated_at + 1);
   try {
     r = await DB.prepare(`UPDATE workshop_files SET size=?,r2_key=?,updated_at=?,kind=COALESCE(?,kind)
-      WHERE id=? AND owner_id=? AND r2_key=? AND (SELECT COALESCE(SUM(size),0) FROM workshop_files WHERE owner_id=?)-size+?<=? RETURNING ${COLS}`)
-      .bind(bytes.length, key, stamp, k, row.id, uid, row.r2_key, uid, bytes.length, WORKSHOP_QUOTA).first();
+      WHERE id=? AND owner_id=? AND r2_key=?
+        AND (?<=size OR (SELECT COALESCE(SUM(size),0) FROM workshop_files WHERE owner_id=?)-size+?<=?) RETURNING ${COLS}`)
+      .bind(bytes.length, key, stamp, k, row.id, uid, row.r2_key, bytes.length, uid, bytes.length, limits.quota).first();
   } catch (e) { await env.LAB_PAGES.delete(key).catch(() => {}); throw e; }
   if (!r) {
     await env.LAB_PAGES.delete(key).catch(() => {});
@@ -241,10 +258,10 @@ export async function workshopReplaceBytes(env, uid, id, {bytes, kind = null, ba
   }
   await env.LAB_PAGES.delete(row.r2_key).catch(() => {});
   const u = (await DB.prepare('SELECT COALESCE(SUM(size),0) AS n FROM workshop_files WHERE owner_id=?').bind(uid).first()) || {n: 0};
-  return {file: fileView(r), used: u.n};
+  return {file: fileView(r), used: u.n, ...limits};
 }
 /* one of the member's files and its bytes (owner only), for the connectors' copy out of storage */
-export async function workshopReadBytes(env, uid, id, {HttpError}) {
+export async function workshopReadBytes(env, uid, id, {HttpError, maxBytes = WORKSHOP_MAX_FILE}) {
   await ensureWorkshopSchema(env);
   if (!ID.test(String(id || ''))) throw new HttpError(404, 'not_found');
   const row = await env.DB.prepare(`SELECT ${COLS},r2_key FROM workshop_files WHERE id=? AND owner_id=?`).bind(id, uid).first();
@@ -252,7 +269,9 @@ export async function workshopReadBytes(env, uid, id, {HttpError}) {
   if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
   const obj = await env.LAB_PAGES.get(row.r2_key);
   if (!obj) throw new HttpError(404, 'file_missing');
+  if (row.size > maxBytes || obj.size > maxBytes) throw new HttpError(413, 'file_too_large');
   const bytes = new Uint8Array(await (obj.arrayBuffer ? obj.arrayBuffer() : new Response(obj.body).arrayBuffer()));
+  if (bytes.length > maxBytes) throw new HttpError(413, 'file_too_large');
   return {name: row.name, mime: row.mime, folder: row.folder, bytes};
 }
 
@@ -274,6 +293,28 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     return r;
   };
   const view = fileView;
+  const shared = classStorageRoutes({HttpError, limit, bad, cleanFolder, fileView, download});
+
+  async function download(env, row, method, transform = null) {
+    if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
+    const obj = await env.LAB_PAGES.get(row.r2_key);
+    if (!obj) throw new HttpError(404, 'file_missing');
+    const headers = {
+      'Content-Type': row.mime,
+      'Content-Disposition': `attachment; filename="${asciiName(row.name)}"; filename*=UTF-8''${encodeURIComponent(row.name)}`,
+      'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
+      'Content-Security-Policy': "default-src 'none'; sandbox", 'X-Frame-Options': 'DENY'
+    };
+    if (transform) {
+      if (method === 'HEAD') return new Response(null, {headers});
+      if (row.size > 5 * 1024 * 1024) throw new HttpError(413, 'file_too_large');
+      const body = await new Response(obj.body).json().then(transform).catch(() => null);
+      if (!body) throw new HttpError(415, 'bad_worksheet');
+      return new Response(JSON.stringify(body), {headers});
+    }
+    if (obj.size != null) headers['Content-Length'] = String(obj.size);
+    return new Response(method === 'HEAD' ? null : obj.body, {headers});
+  }
 
   async function readUpload(req) {
     const declared = Number(req?.headers?.get?.('Content-Length') || 0);
@@ -318,6 +359,7 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     needUser(me);
     await ensureWorkshopSchema(env);
     const DB = env.DB, t = now(), uid = me.id;
+    if (p === '/api/workshop/storage/shared' || p.startsWith('/api/workshop/storage/shared/')) return shared(p, m, body, uid, t, env);
 
     if (p === '/api/workshop/storage' && m === 'GET') {
       const url = req?.url ? new URL(req.url) : null, qk = url?.searchParams.get('kind'), qf = url?.searchParams.get('folder');
@@ -328,16 +370,15 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
       const order = qk != null || qf != null ? 'updated_at DESC, name' : 'folder, name';
       const files = (await DB.prepare(`SELECT ${COLS} FROM workshop_files WHERE ${where.join(' AND ')} ORDER BY ${order} LIMIT ${FILES_MAX}`).bind(...args).all()).results || [];
       const folders = ((await DB.prepare('SELECT path FROM workshop_folders WHERE owner_id=? ORDER BY path').bind(uid).all()).results || []).map(r => r.path);
-      const u = await used(DB, uid);
-      return {files: files.map(view), folders, used: u.n, quota: WORKSHOP_QUOTA, max_file: WORKSHOP_MAX_FILE, types: Object.keys(WORKSHOP_TYPES)};
+      const [u, limits] = await Promise.all([used(DB, uid), storageLimits(env, uid, t)]);
+      return {files: files.map(view), folders, used: u.n, ...limits, types: Object.keys(WORKSHOP_TYPES)};
     }
 
     if (p === '/api/workshop/storage/files' && m === 'POST') {
       await limit(env, 'ws-up:' + uid, 120, 3600);
       if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
       const {bytes, name, folder, kind, ensureFolder} = await readUpload(req);
-      const out = await workshopSaveBytes(env, uid, {bytes, name, folder, kind, ensureFolder}, {HttpError, now: () => t});
-      return {...out, quota: WORKSHOP_QUOTA};
+      return workshopSaveBytes(env, uid, {bytes, name, folder, kind, ensureFolder}, {HttpError, now: () => t});
     }
 
     if (p === '/api/workshop/storage/folders') {
@@ -388,8 +429,7 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
       const row = await own(DB, uid, mc[1]);
       const fx = extOf(c.fname);
       if (fx && fx !== extOf(row.name)) throw new HttpError(415, 'type_change');
-      const out = await workshopReplaceBytes(env, uid, row.id, {bytes: c.bytes, kind: c.kind, base: c.base}, {HttpError, now: () => t});
-      return {...out, quota: WORKSHOP_QUOTA};
+      return workshopReplaceBytes(env, uid, row.id, {bytes: c.bytes, kind: c.kind, base: c.base}, {HttpError, now: () => t});
     }
     const mm = /^\/api\/workshop\/storage\/files\/([^/]+)$/.exec(p);
     if (!mm) throw new HttpError(404, 'not_found');
@@ -397,18 +437,7 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
 
     if (m === 'GET' || m === 'HEAD') {
       await limit(env, 'ws-down:' + uid, 600, 3600);
-      if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
-      const obj = await env.LAB_PAGES.get(row.r2_key);
-      if (!obj) throw new HttpError(404, 'file_missing');
-      const headers = {
-        'Content-Type': row.mime,
-        /* always saved, never shown in the browser: an SVG or a text file cannot run as a page of the site */
-        'Content-Disposition': `attachment; filename="${asciiName(row.name)}"; filename*=UTF-8''${encodeURIComponent(row.name)}`,
-        'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
-        'Content-Security-Policy': "default-src 'none'; sandbox", 'X-Frame-Options': 'DENY'
-      };
-      if (obj.size != null) headers['Content-Length'] = String(obj.size);
-      return new Response(m === 'HEAD' ? null : obj.body, {status: 200, headers});
+      return download(env, row, m);
     }
 
     if (m === 'PATCH') {

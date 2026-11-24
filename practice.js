@@ -1129,6 +1129,7 @@
     const byClass=new Map(d.joined.map(c=>[c.id,c]));
     $('app').innerHTML=`<p class="pick">${tr('classIntro')}</p><div class="areas">
       <section class="area"><h2>${tr('myAssignments')}</h2>
+        <p><a class="btnlink" href="/#/workshop/storage" target="_top">${lang==="ko"?"보관함에서 공유 받은 자료와 과제":"Shared materials and assignments in Storage"}</a></p>
         ${d.assignments.length?d.assignments.map(a=>`<button type="button" class="unit" data-assign="${a.id}"><span class="name"><b>${esc(a.title)}</b><small>${esc(byClass.get(a.class_id)?.name||'')} · ${a.done}/${a.items.length}${a.due_at?' · '+tr('due')+' '+day(a.due_at):''}</small></span><span class="bar"><i style="width:${Math.round(100*a.done/Math.max(1,a.items.length))}%"></i></span></button>`).join(''):`<p class="src">${tr('noAssignments')}</p>`}
         <form id="joinf" class="numrow"><input id="joincode" maxlength="6" autocomplete="off" placeholder="${tr('classCode')}" aria-label="${tr('classCode')}"><button type="submit" class="primary">${tr('join')}</button><span class="numerr" id="joinerr"></span></form>
         ${d.joined.length?`<p class="src">${d.joined.map(c=>`${esc(c.name)}${c.teacher?' · '+esc(c.teacher):''} <a href="#" data-leave="${c.id}">${tr('leave')}</a>`).join('<br>')}</p>`:''}

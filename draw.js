@@ -1326,12 +1326,23 @@ function pngBlob(svg) {
     img.onerror = reject; img.src = svgDataUrl(svg);
   });
 }
+function workshopFigure() {
+  const svg = exportSvg(true), m = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(svg);
+  return {src: svgDataUrl(svg), w: m ? +m[1] : 800, h: m ? +m[2] : 400, scene: st.scene};
+}
+function toCompute() {
+  const figure = workshopFigure();
+  if (figure.src.length >= 390000) { $('outMsg').textContent = ko ? '그림이 너무 큽니다. 요소를 줄인 뒤 다시 보내 주세요.' : 'Reduce the number of elements in the figure and try again.'; return; }
+  try { sessionStorage.setItem('hlWorkshopFigure', JSON.stringify(figure)); }
+  catch { $('outMsg').textContent = ko ? '그림을 전산물리 제작에 보낼 수 없습니다.' : 'Could not send the figure to Computational physics.'; return; }
+  if (embedded) window.top.location.hash = '/workshop/create?view=compute&from=draw';
+  else location.assign('create.html?view=compute&from=draw&lang=' + lang);
+}
 function toPaper() {
-  const svg = exportSvg(true), src = svgDataUrl(svg), m = /viewBox="0 0 (\d+) (\d+)"/.exec(svg);
   let paper;
   try { paper = JSON.parse(store.get(PAPER_KEY) || 'null'); } catch (e) { paper = null; }
   if (!paper || !Array.isArray(paper.items)) paper = {title: '', school: '', info: '', minutes: '', note: '', two: true, key: true, sol: false, space: false, bp: false, items: []};
-  const fig = {src, w: +m[1], h: +m[2], scene: st.scene};
+  const fig = workshopFigure();
   const item = st.paperEdit && paper.items.find(x => x.key === st.paperEdit && x.own);
   if (item) item.own.fig = fig;
   else paper.items.push({key: 'own:' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), pts: 3, own: {q: ($('paperQ')?.value || '').trim().slice(0, 4000), answer: '', unit: '', sol: '', fig}});
@@ -1507,7 +1518,7 @@ function paintOut(keepMsg) {
   box.innerHTML = `<h2>${T.out}</h2>
     <div class="row"><button type="button" id="oSvg">${T.svg}</button><button type="button" id="oPng">${T.png}</button></div>
     ${st.paperEdit ? '' : `<label class="note" for="paperQ">${T.paperQ}</label><textarea id="paperQ" class="q" rows="2"></textarea>`}
-    <div class="row"><button type="button" class="primary" id="oPaper">${st.paperEdit ? T.replacePaper : T.toPaper}</button></div>
+    <div class="row"><button type="button" class="primary" id="oPaper">${st.paperEdit ? T.replacePaper : T.toPaper}</button><button type="button" id="oCompute">${ko ? "전산물리 제작에 사용" : "Use in Computational physics"}</button></div>
     <div class="row"><button type="button" class="primary" id="oStore">${esc(X6.save)}</button><button type="button" id="oOpen">${esc(X6.open)}</button></div>
     <div class="row"><button type="button" id="oLocal">${T.local}</button></div>
     <div class="row"><button type="button" id="oJson">${T.json}</button><label class="btn filebtn">${T.load}<input type="file" id="oLoad" accept=".json,application/json"></label></div>
@@ -1515,6 +1526,7 @@ function paintOut(keepMsg) {
     ${list.length ? `<div class="note">${T.saves}</div><div class="saves">${list.map((x, i) => `<div><span>${esc(x.name)}</span><button type="button" data-open="${i}">${T.open}</button><button type="button" data-drop="${i}" aria-label="${T.del}">✕</button></div>`).join('')}</div>` : ''}`;
   $('oSvg').onclick = () => download(new Blob([exportSvg()], {type: 'image/svg+xml'}), fileName('svg'));
   $('oPng').onclick = () => pngBlob(exportSvg()).then(b => download(b, fileName('png'))).catch(() => { $('outMsg').innerHTML = `<span class="bad">${T.err.other}</span>`; });
+  $('oCompute').onclick = toCompute;
   $('oPaper').onclick = toPaper; $('oStore').onclick = toStorage; $('oOpen').onclick = openFromStorage; $('oLocal').onclick = saveLocal;
   $('oJson').onclick = () => download(new Blob([JSON.stringify(st.scene, null, 1)], {type: 'application/json'}), fileName('json'));
   $('oLoad').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f || f.size > 1e6) return; try { openScene(JSON.parse(await f.text())); } catch (x) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; } };

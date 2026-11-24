@@ -103,7 +103,7 @@ html[data-theme="dark"] :is(.ws-cform select,.ws-cform input,.ws-import select){
     return `<ul class="ws-list">${items.map(f=>f.folder
       ?`<li class="ws-row ws-folder"><button type="button" class="ws-name" data-wsc-go="${esc(kind==="drive"?f.id:f.path)}"><span class="ws-ico" aria-hidden="true">▸</span>${esc(f.name)}</button><span class="ws-meta">${T("폴더","Folder")}</span><span class="ws-row-acts"></span></li>`
       :`<li class="ws-row"><span class="ws-name"><span class="ws-ext">${esc(String(f.name.split(".").pop()).toUpperCase())}</span>${esc(f.name)}</span><span class="ws-meta">${bytes(f.size)}</span>
-        <span class="ws-row-acts"><button type="button" data-wsc-down="${esc(kind==="drive"?f.id:f.path)}" data-name="${esc(f.name)}">${T("내려받기","Download")}</button>${kind==="drive"?`<button type="button" data-wsc-rename="${esc(f.id)}" data-name="${esc(f.name)}">${T("이름 바꾸기","Rename")}</button>`:""}<button type="button" data-wsc-tostore="${esc(kind==="drive"?f.id:f.path)}">${T("보관함으로 복사","Copy to storage")}</button><button type="button" data-wsc-del="${esc(kind==="drive"?f.id:f.path)}" data-name="${esc(f.name)}">${T("삭제","Delete")}</button></span></li>`).join("")}</ul>`;
+        <span class="ws-row-acts"><button type="button" data-wsc-down="${esc(kind==="drive"?f.id:f.path)}" data-name="${esc(f.name)}">${T("내려받기","Download")}</button>${kind==="drive"?`<button type="button" data-wsc-rename="${esc(f.id)}" data-name="${esc(f.name)}">${T("이름 바꾸기","Rename")}</button>`:""}<button type="button" data-wsc-tostore="${esc(kind==="drive"?f.id:f.path)}">${T("보관함으로 복사","Copy to storage")}</button>${/\.(json|py|c)$/i.test(f.name)?` <button type="button" data-wsc-publish="${esc(kind==="drive"?f.id:f.path)}">${T("작품 공개","Publish project")}</button>`:""}<button type="button" data-wsc-del="${esc(kind==="drive"?f.id:f.path)}" data-name="${esc(f.name)}">${T("삭제","Delete")}</button></span></li>`).join("")}</ul>`;
   }
   function drivePanel(){
     const d=S.status?.drive;
@@ -179,6 +179,9 @@ html[data-theme="dark"] :is(.ws-cform select,.ws-cform input,.ws-import select){
     q("[data-wsc-tostore]").forEach(b=>b.onclick=()=>run(async()=>{
       await api("POST",drive?"/drive/copy":"/github/copy",drive?{direction:"to_storage",id:b.dataset.wscTostore,folder:""}:{direction:"to_storage",path:b.dataset.wscTostore,folder:""});
       S.storeFiles=null;C.reloadStore();},T("보관함 맨 위에 복사했습니다.","Copied to the top of your storage.")));
+    q("[data-wsc-publish]").forEach(b=>b.onclick=()=>window.HL_WS_PUBLISH?.({
+      file:{id:b.dataset.wscPublish,provider:drive?"drive":"github"},api:C.api,text:T,here:C.here,error:err
+    }));
     P.querySelector("[data-wsc-import]")?.addEventListener("click",()=>{const id=P.querySelector("[data-wsc-pick]")?.value;if(!id)return;
       run(()=>api("POST",drive?"/drive/copy":"/github/copy",drive?{direction:"to_drive",file_id:id,folder:S.drive.folder||""}:{direction:"to_github",file_id:id,path:S.gh.path||""}),
         drive?T("드라이브로 복사했습니다.","Copied to Drive."):T("GitHub에 올렸습니다.","Committed to GitHub."));});
