@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {createRequire} from 'node:module';
-import {createLearnerRouter, cleanLearner, COUNTRIES, GOAL_MIN, GOAL_MAX, GOAL_PICKS, DEFAULT_GOAL, isDailyGoal, LEARNER_SAVES_PER_DAY, readLearner, learnerDeletion} from './src/learner-profile.js';
+import {createLearnerRouter, cleanLearner, COUNTRIES, GOAL_MIN, GOAL_MAX, GOAL_PICKS, DEFAULT_GOAL, isDailyGoal, LEARNER_SAVES_PER_DAY, readLearner, learnerDeletion, listLearnerCountries} from './src/learner-profile.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
@@ -17,6 +17,18 @@ function setup(){
   return {db,env,route:(p,m,b,me,req)=>route(p,m,b,me,req,env),tick:s=>{t+=s;}};
 }
 const me={id:7};
+
+test('member country search selects only configured countries of non-deleted members', async()=>{
+  const {db,env,route}=setup();
+  db.exec("CREATE TABLE users(id INTEGER PRIMARY KEY,username TEXT,nickname TEXT,deleted INTEGER NOT NULL,email TEXT)");
+  db.exec("INSERT INTO users VALUES(7,'reader','Reader',0,'private'),(8,'new','New',0,'private'),(9,'old','Old',1,'private')");
+  await route('/api/me/learner','PUT',{country:'KR',daily_goal:10},me);
+  const {users}=await listLearnerCountries(env);
+  assert.deepEqual(users.map(({id,country})=>[id,country]),[[8,null],[7,'KR']]);
+  assert.deepEqual(Object.keys(users[1]).sort(),['country','id','nickname','username']);
+  assert.equal((await listLearnerCountries(env,{query:'Read',before:8})).users[0].id,7);
+  assert.equal((await listLearnerCountries(env,{query:"%' OR 1=1"})).users.length,0);
+});
 const fails=async(p,code)=>assert.rejects(p,e=>e.code===code);
 
 test('country is an ISO 3166-1 alpha-2 code from the list, the goal any whole number from 1 to 50',()=>{

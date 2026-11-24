@@ -1748,7 +1748,7 @@ function arModelTestLabels() {
    only for an admin session; this page holds nothing of its own, so opening it without that role shows nothing. */
 async function arAdminStats(root, alive, days) {
   const en = lang === "en", L = en ? {
-    h: "Site statistics", note: "Counts only. Admin accounts are left out. Days are Korean days (UTC+9).", denied: "Only admin accounts can see the site statistics.", login: "Sign in",
+    h: "Site statistics", note: "The statistics exclude admin accounts. Dates follow Korea Standard Time.", denied: "Only admin accounts can see the site statistics.", login: "Sign in",
     people: "Members", graded: "Graded at least once", labGraded: "Exam-mode gradings", monthly: "Monthly problem gradings", ai: "Hasla AI questions",
     today: "today", d7: "last 7 days", period: "last %d days", of: "people", guests: "guests", membersAsked: "members",
     accounts: "Accounts", created: "Accounts ever made", active: "Active", deleted: "Deleted", suspended: "Suspended", admins: "Admin accounts", pending: "Signed in but no username yet",
@@ -1756,7 +1756,7 @@ async function arAdminStats(root, alive, days) {
     exams: "Most graded exams", exam: "Exam", times: "Gradings", statuses: "Exam sessions by state", status: "State", all: "All", members: "Members only",
     waiting: "waiting for grading", visitors: "Visitors", views: "Page loads", visitNote: "Visitors are counted once per browser per day; counting started on 10 November 2026.", byCountry: "Visitors by country", byRegion: "Visitors by region", country: "Country", region: "Region", unknown: "Unknown", countriesN: "%d countries", pay: "Payments", orders: "Orders", amount: "Amount", none: "None yet", table: "Show as a table", refresh: "Refresh", failed: "Could not load the statistics.", at: "As of"
   } : {
-    h: "사이트 통계", note: "숫자만 보여 줍니다. 관리자 계정은 빼고 셉니다. 날짜는 한국 시간 기준입니다.", denied: "관리자 계정만 사이트 통계를 볼 수 있습니다.", login: "로그인",
+    h: "사이트 통계", note: "통계 집계에서 관리자 계정을 제외합니다. 날짜는 한국 시간 기준입니다.", denied: "관리자 계정만 사이트 통계를 볼 수 있습니다.", login: "로그인",
     people: "회원", graded: "채점 받은 사람", labGraded: "실전 모드 채점", monthly: "월간 문제 채점", ai: "Hasla AI 질문",
     today: "오늘", d7: "최근 7일", period: "최근 %d일", of: "명", guests: "비회원", membersAsked: "회원",
     accounts: "계정", created: "지금까지 만들어진 계정", active: "활성", deleted: "탈퇴·삭제", suspended: "정지", admins: "관리자 계정", pending: "인증만 하고 아이디를 안 정함",
@@ -1806,6 +1806,11 @@ async function arAdminStats(root, alive, days) {
       .arstat-chart svg{width:100%;height:64px;display:block}.arstat-bar{fill:var(--cm-acc,#3b5bdb)}.arstat-hit{fill:transparent}.arstat-hit:hover+.arstat-bar,g:hover>.arstat-bar{opacity:.75}
       .arstat-base{stroke:var(--cm-line,#e3e8ee);stroke-width:1}.arstat-axis{display:flex;justify-content:space-between;font-size:11px;opacity:.6}
       .arstat-t{width:100%;border-collapse:collapse;font-size:13px}.arstat-t th,.arstat-t td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--cm-line)}.arstat-t td.r,.arstat-t th.r{text-align:right;font-variant-numeric:tabular-nums}</style>
+    <details class="arpanel" data-member-countries><summary>${en?"Country by member":"회원별 국가 조회"}</summary>
+      <p>${en?"Country selected in the member’s learning profile.":"회원이 학습 프로필에 직접 선택한 국가입니다."}</p>
+      <form class="aractions"><input name="q" class="cmfield" type="search" maxlength="64" aria-label="${en?"Username, nickname or member ID":"아이디, 닉네임 또는 회원 번호"}" placeholder="${en?"Username, nickname or member ID":"아이디, 닉네임 또는 회원 번호"}"><button type="submit" class="cmbtn sm">${en?"Search":"검색"}</button></form>
+      <div data-country-results aria-live="polite"></div><button type="button" class="cmbtn sm" data-country-more hidden>${en?"Next page":"다음 페이지"}</button>
+    </details>
     <div class="arstat-grid">
       ${tile(L.visitors, n(v.visitors), `${L.today} ${n(v.visitors_today)} · ${L.views} ${n(v.views)} · ${L.countriesN.replace("%d", n(v.countries))}`)}
       ${tile(L.people, n(u.people) + (en ? "" : L.of), `${L.today} +${n(u.new_today)} · ${L.d7} +${n(u.new_7d)}`)}
@@ -1835,6 +1840,32 @@ async function arAdminStats(root, alive, days) {
     </div>`;
   for (const b of root.querySelectorAll("[data-days]")) b.onclick = () => arAdminStats(root, alive, +b.dataset.days);
   root.querySelector("[data-refresh]").onclick = () => arAdminStats(root, alive, d.days);
+  const panel = root.querySelector("[data-member-countries]"), form = panel.querySelector("form");
+  const results = panel.querySelector("[data-country-results]"), more = panel.querySelector("[data-country-more]");
+  let q = "", next = null, seq = 0;
+  async function loadCountries(before = null) {
+    const request = ++seq;
+    more.hidden = true;
+    results.textContent = en ? "Loading…" : "불러오는 중…";
+    const params = new URLSearchParams({q});
+    if (before) params.set("before",before);
+    try {
+      const data = await cmApi("GET","/admin/member-countries?"+params);
+      if (!alive() || !panel.isConnected || request !== seq) return;
+      next = data.next;
+      more.hidden = !next;
+      const cols = en ? ["Member ID","Username","Nickname","Selected country"] : ["회원 번호","아이디","닉네임","등록 국가"];
+      results.innerHTML = data.users.length ? `<table class="arstat-t"><thead><tr>${cols.map(t=>`<th scope="col">${t}</th>`).join("")}</tr></thead>
+        <tbody>${data.users.map(u=>`<tr><td>${esc(u.id)}</td><td>${esc(u.username||"—")}</td><td>${esc(u.nickname||"—")}</td>
+        <td>${esc(u.country ? country(u.country) : en ? "Not set" : "미등록")}</td></tr>`).join("")}</tbody></table>`
+        : (en ? "No matching members." : "해당 회원이 없습니다.");
+    } catch (_) {
+      if (alive() && panel.isConnected && request === seq) results.textContent = en ? "Could not load member countries." : "회원 국가를 불러오지 못했습니다.";
+    }
+  }
+  panel.addEventListener("toggle",()=>{if(panel.open&&!seq)loadCountries();});
+  form.onsubmit = e => {e.preventDefault();q=form.elements.q.value.trim();loadCountries();};
+  more.onclick = () => {if(next)loadCountries(next);};
 }
 
 function arModelTestLink(active) {

@@ -19,7 +19,7 @@ async function setup(){
  let labN=0;const lab=(uid,status,key='ipho2011_E2')=>sql.prepare(`INSERT INTO lab_sessions(user_id,exam_key,comp,year,tasks,started_at,ended_at,scan_until,upload_hash,status,created_at,graded_at) VALUES(?,?,'ipho',2011,'[]',?,?,?,?,?,?,?)`).run(uid,key,T,T,T,'h'+(++labN),status,T-600,status==='graded'?T-60:null);
  lab(1,'graded');lab(1,'graded');lab(2,'graded');lab(2,'graded','apho2023_E1');lab(3,'cancelled');
  const tokens={};for(const [id,name] of [[1,'admin'],[2,'student']]){tokens[name]=name.padEnd(32,'k');sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(await hash(tokens[name]),id,T,T+86400);}
- const get=async token=>{const r=await worker.fetch(new Request('https://worker.invalid/api/admin/stats',{headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.44',...(token?{Authorization:'Bearer '+token}:{})}}),env,{waitUntil(){}});return{status:r.status,cache:r.headers.get('Cache-Control'),text:await r.text()}};
+ const get=async (token,path='/api/admin/stats')=>{const r=await worker.fetch(new Request('https://worker.invalid'+path,{headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.44',...(token?{Authorization:'Bearer '+token}:{})}}),env,{waitUntil(){}});return{status:r.status,cache:r.headers.get('Cache-Control'),text:await r.text()}};
  const visit=async({first=0,country='KR',region='Seoul',ua='Mozilla/5.0 (Macintosh)',ip='192.0.2.50'}={})=>{const ctx={tasks:[],waitUntil(p){this.tasks.push(p)}};const r=await worker.fetch(new Request('https://worker.invalid/api/visit',{method:'POST',body:JSON.stringify({first}),headers:{Origin:origin,'Content-Type':'text/plain','User-Agent':ua,'CF-Connecting-IP':ip,...(country?{'CF-IPCountry':country}:{}),...(region?{'X-Hasla-Region':encodeURIComponent(region)}:{})}}),env,ctx);await Promise.all(ctx.tasks);return r.status};
  return{get,visit,sql,tokens,close(){sql.close()}};
 }
@@ -29,6 +29,16 @@ test('admin stats: only an admin session reads them',async()=>{
   assert.ok([401,403].includes((await s.get()).status),'no session');
   assert.equal((await s.get(s.tokens.student)).status,403,'a student');
   const ok=await s.get(s.tokens.admin);assert.equal(ok.status,200);assert.match(ok.cache||'',/no-store/);
+ }finally{s.close()}
+});
+
+test('member countries require an administrator and disable shared caching',async()=>{
+ const s=await setup();const path='/api/admin/member-countries?q=student_one';try{
+  assert.equal((await s.get(undefined,path)).status,403);
+  assert.equal((await s.get(s.tokens.student,path)).status,403);
+  const r=await s.get(s.tokens.admin,path);
+  assert.equal(r.status,200);assert.match(r.cache,/no-store/);
+  assert.deepEqual(JSON.parse(r.text),{users:[{id:2,username:'student_one',nickname:'nick_student_one',country:null}],next:null});
  }finally{s.close()}
 });
 
