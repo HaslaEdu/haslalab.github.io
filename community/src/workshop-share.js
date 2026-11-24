@@ -173,7 +173,7 @@ export function cleanSet(p) {
       }
       if (w.fig && typeof w.fig === 'object') {
         const src = cleanThumb(w.fig.src, SHARE_LIMITS.figSrc);
-        if (src && src.startsWith('data:image/svg+xml')) own.fig = {src, w: num(+w.fig.w || 800, 40, 2000, 800) ?? 800, h: num(+w.fig.h || 400, 20, 3000, 400) ?? 400};
+        if (src) own.fig = {src, w: num(+w.fig.w || 800, 40, 2000, 800) ?? 800, h: num(+w.fig.h || 400, 20, 3000, 400) ?? 400};
       }
       o.own = own;
     } else if (it.key.startsWith('own:')) return null;

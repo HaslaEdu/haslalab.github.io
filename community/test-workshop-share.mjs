@@ -110,6 +110,8 @@ test('descriptions are plain text, tags are short words, problem sets keep only 
   assert.equal(cleanTags(['<script>']),null);assert.equal(cleanTags(Array.from({length:9},(_,i)=>'t'+i)),null);
   const s=cleanSet({title:'Quiz <i>1</i>',items:[{key:'ap1:12',pts:4},{key:'own:a1',own:{q:'Find v.',answer:'3',unit:'m/s',sol:'',evil:'<x>',fig:{src:'data:image/svg+xml;base64,'+Buffer.from('<svg onload=1></svg>').toString('base64')}}}],extra:1});
   assert.deepEqual(s,{title:'Quiz 1',info:'',minutes:0,items:[{key:'ap1:12',pts:4},{key:'own:a1',pts:3,own:{q:'Find v.',answer:'3',unit:'m/s',sol:''}}]});
+  const withIllustration=cleanSet({items:[{key:'own:raster',own:{q:'Read the diagram.',fig:{src:PNG,w:100,h:70}}}]});
+  assert.deepEqual(withIllustration.items[0].own.fig,{src:PNG,w:100,h:70});
   assert.equal(cleanSet({items:[]}),null);assert.equal(cleanSet({items:[{key:'own:x'}]}),null,'an own problem needs its text');
 });
 
