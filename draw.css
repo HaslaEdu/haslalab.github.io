@@ -38,7 +38,16 @@ ul.info{margin:4px 0 0;padding-left:18px;font-size:13px}ul.info li{margin:2px 0}
 .readouts thead th{color:var(--muted);font-weight:600}
 .graph{border:1px solid var(--row);border-radius:10px;padding:6px 8px;background:var(--surface)}.graph select{width:auto;padding:3px 6px;font-size:12.5px}
 .graph svg{display:block;width:100%;height:120px}
-.side{display:grid;gap:12px}
+.side{display:grid;gap:8px}.side>.dock-bar{grid-column:1/-1}
+#drawSideBody:not([hidden]){display:grid;gap:12px;grid-column:1/-1;grid-template-columns:inherit}
+#drawDock.is-dock-expanded{grid-template-columns:minmax(0,1fr)}
+#drawDock.is-dock-expanded .side{grid-template-columns:minmax(0,1fr)}
+#drawDock .is-dock-collapsed .dock-bar{padding:6px;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+@media(min-width:1061px){
+  #drawDock:not(.is-dock-expanded):has(.side.is-dock-collapsed){grid-template-columns:172px minmax(0,1fr) 124px}
+  #drawDock:not(.is-dock-expanded):has(.draw-library.is-dock-collapsed){grid-template-columns:124px minmax(0,1fr) 300px}
+  #drawDock:not(.is-dock-expanded):has(.draw-library.is-dock-collapsed):has(.side.is-dock-collapsed){grid-template-columns:124px minmax(0,1fr) 124px}
+}
 .panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:12px 14px}
 .panel h2{font-size:1rem;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .props{display:grid;grid-template-columns:1fr 1fr;gap:7px 8px}

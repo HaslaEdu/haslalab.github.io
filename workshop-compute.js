@@ -11,14 +11,14 @@
   const clip = (text, n) => typeof text === 'string' ? text.slice(0, n) : '';
   const blank = () => ({format: 'haslalab-compute', language: 'python', title: '', description: '', sources: {...examples}, history: []});
 
-  function launch(host, language, code, onPhase) {
+  function launch(host, language, code, onPhase, stdin = '') {
     const frame = document.createElement('iframe');
     frame.className = 'compute-runtime-frame';
     frame.title = 'Computation runtime';
     frame.setAttribute('aria-hidden','true');
     frame.tabIndex = -1;
     frame.setAttribute('sandbox', 'allow-scripts');
-    frame.src = 'workshop-runtime.html?v=6d92acda3996';
+    frame.src = 'workshop-runtime.html?v=0523eed3716b';
     let timer, finish, sent = false;
     const result = new Promise(resolve => { finish = resolve; });
     const close = value => {
@@ -36,7 +36,7 @@
         sent = true;
         clearTimeout(timer);
         timer = setTimeout(() => close({timeout:'runtime'}), language === 'c' ? 180000 : 120000);
-        frame.contentWindow.postMessage({type: 'workshop-run', language, code}, '*');
+        frame.contentWindow.postMessage({type: 'workshop-run', language, code, stdin}, '*');
       } else if (d?.phase === 'running') {
         clearTimeout(timer);
         timer = setTimeout(() => close({timeout:'program'}), 30000);
@@ -45,7 +45,7 @@
         onPhase(d.phase);
       } else if (d?.phase === 'done') {
         close({stage:d.stage === 'program' ? 'program' : 'runtime', stdout: clip(d.stdout, 32000), stderr: clip(d.stderr, 8000), error: clip(d.error, 8000),
-          plots: Array.isArray(d.plots) ? d.plots.slice(0, 6) : []});
+          plots: Array.isArray(d.plots) ? d.plots.slice(0, 6) : [], images:Array.isArray(d.images) ? d.images.slice(0,4) : []});
       }
     }
     addEventListener('message', receive);
@@ -107,7 +107,8 @@
       try { sessionStorage.removeItem('hlWorkshopComputeQuestion'); } catch {}
     }
     let stored = draft?.storage || null, sharedId = id ? +id : draft?.sharedId || null, published = !!draft?.published;
-    let active = true, running = null, busy = false, lastError = '', lastOutput = '', proposal = null, undo = null;
+    let active = true, running = null, busy = false, lastError = '', lastOutput = '', copyOutput = '', copyPlot = null, proposal = null, undo = null;
+    const panelControls = P.panelControls;
     if (!isLanguage(project.language)) project.language = 'python';
     root.innerHTML = '<section id="cpProjects" hidden></section><div class="compute-maker" id="cpEditor">' +
       '<header class="head"><div><h1>' + tr('전산물리 제작', 'Computational physics maker') + '</h1><p class="lede">' +
@@ -117,24 +118,26 @@
       '<div class="compute-meta"><label>' + tr('제목', 'Title') + '<input id="cpTitle" maxlength="80"></label>' +
       '<label>' + tr('언어', 'Language') + '<select id="cpLang"><option value="python">Python</option><option value="c">C</option></select></label></div>' +
       (preview ? '' : '<div class="compute-viewbar" id="cpViewbar" role="group" aria-label="' + tr('작업 화면','Workspace views') + '" hidden><button type="button" data-pane="assistant">' + tr('대화','Chat') + '</button><button type="button" data-pane="code">' + tr('코드','Code') + '</button><button type="button" data-pane="result">' + tr('실행 결과','Results') + '</button></div>') +
-      '<div class="compute-work"><div class="compute-document"><section class="panel" id="cpCodePane"><h2>' + tr('코드', 'Code') + '</h2><textarea id="cpCode" class="code" rows="16" maxlength="60000" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="' + tr('코드', 'Code') + '"></textarea>' +
-      '<p id="cpFormat" class="note"></p><div class="row"><button class="primary" id="cpRun">' + tr('실행', 'Run') + '</button><button id="cpDown">' + tr('코드 내려받기', 'Download code') + '</button></div>' +
+      '<div class="compute-work" id="cpDock"><div class="compute-document"><section class="panel" id="cpCodePane" data-dock><header class="dock-bar"><h2>' + tr('코드', 'Code') + '</h2>' + panelControls('cpCodeBody') + '</header><div id="cpCodeBody" data-dock-body><textarea id="cpCode" class="code" rows="16" maxlength="60000" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="' + tr('코드', 'Code') + '"></textarea>' +
+      '<p id="cpFormat" class="note"></p><div class="row"><button class="primary" id="cpRun">' + tr('실행', 'Run') + '</button><button type="button" id="cpCopyCode">' + tr('코드 복사','Copy code') + '</button><button id="cpDown">' + tr('코드 내려받기', 'Download code') + '</button></div><details><summary>' + tr('실행 입력 (stdin)','Program input (stdin)') + '</summary><textarea id="cpInput" rows="3" maxlength="8000" aria-label="' + tr('실행 입력','Program input') + '"></textarea></details>' +
       (preview ? '' : '<div class="row"><button id="cpImportFigure">' + tr('그림 불러오기','Import figure') + '</button></div>') +
-      '<div id="cpFigure" hidden></div><details><summary>' + tr('작품 설명', 'Project description') + '</summary><textarea id="cpDescription" rows="3" maxlength="3000" aria-label="' + tr('작품 설명', 'Project description') + '"></textarea></details></section>' +
-      '<section class="panel" id="cpResultPane"><header class="compute-result-head"><h2>' + tr('실행 결과', 'Results') + '</h2><button id="cpStop" disabled>' + tr('중지','Stop') + '</button></header><p id="cpRunStatus" role="status"></p><div id="cpPlots"></div><pre class="out" id="cpOutput" hidden></pre></section></div>' +
-      (preview ? '' : '<section class="panel compute-chat" id="cpAssistant" hidden><header class="compute-chat-head"><h2>' + tr('하슬라 AI와 작업','Work with Hasla AI') + '</h2><span id="cpChatLanguage"></span></header><p id="cpChatEmpty" class="note">' + tr('물리 모델을 설명하거나 열린 코드에 대해 질문해 보세요.', 'Describe a physical model or ask about the open code.') + '</p><div id="cpChat" role="log" aria-live="polite"></div><p id="cpTaskStatus" class="note" role="status"></p>' +
+      '<div id="cpFigure" hidden></div><details><summary>' + tr('작품 설명', 'Project description') + '</summary><textarea id="cpDescription" rows="3" maxlength="3000" aria-label="' + tr('작품 설명', 'Project description') + '"></textarea></details></div></section>' +
+      '<section class="panel" id="cpResultPane" data-dock><header class="dock-bar"><h2>' + tr('실행 결과', 'Results') + '</h2>' + panelControls('cpResultBody') + '</header><div id="cpResultBody" data-dock-body><div class="row"><button id="cpStop" disabled>' + tr('중지','Stop') + '</button><button type="button" id="cpCopyResult" disabled>' + tr('결과 복사','Copy result') + '</button></div><p id="cpRunStatus" role="status"></p><div id="cpPlots"></div><pre class="out" id="cpOutput" hidden></pre></div></section></div>' +
+      (preview ? '' : '<section class="panel compute-chat" id="cpAssistant" data-dock hidden><header class="dock-bar"><h2>' + tr('하슬라 AI와 작업','Work with Hasla AI') + '</h2>' + panelControls('cpAssistantBody') + '</header><div id="cpAssistantBody" data-dock-body><p class="note" id="cpChatLanguage"></p><p id="cpChatEmpty" class="note">' + tr('물리 모델을 설명하거나 열린 코드에 대해 질문해 보세요.', 'Describe a physical model or ask about the open code.') + '</p><div id="cpChat" role="log" aria-live="polite"></div><p id="cpTaskStatus" class="note" role="status"></p>' +
       '<form id="cpForm"><textarea id="cpPrompt" rows="3" maxlength="2000" required aria-label="' + tr('AI에게 요청할 내용', 'Prompt') + '" placeholder="' +
       tr('예: 공기 저항을 포함한 포물선 운동을 만들어 줘. 이후 질량을 바꿔 달라고 요청할 수 있어요.', 'E.g. Build a projectile model with air resistance. Then ask to change the mass.') + '"></textarea>' +
       '<div class="compute-composer"><label for="cpTaskMode">' + tr('작업 방식','Task mode') + '</label><select id="cpTaskMode"><option value="edit">' + tr('코드 제안','Propose code') + '</option><option value="delegate">' + tr('적용하고 실행','Apply and run') + '</option><option value="chat">' + tr('질문만','Ask a question') + '</option></select><button class="primary" type="submit">' + tr('보내기','Send') + '</button></div>' +
-      '</form><details id="cpProposal" hidden><summary>' + tr('제안 코드 보기', 'Review proposed code') + '</summary><pre class="out"></pre><button type="button" id="cpApply" hidden>' + tr('코드에 적용', 'Apply to code') + '</button></details><button type="button" id="cpUndo" hidden>' + tr('AI 변경 되돌리기','Undo AI change') + '</button></section>') +
+      '</form><details id="cpProposal" hidden><summary>' + tr('제안 코드 보기', 'Review proposed code') + '</summary><pre class="out"></pre><button type="button" id="cpApply" hidden>' + tr('코드에 적용', 'Apply to code') + '</button></details><button type="button" id="cpUndo" hidden>' + tr('AI 변경 되돌리기','Undo AI change') + '</button></div></section>') +
       '</div>' + (preview ? '' : '<div class="row compute-actions"><span id="cpProvider"></span><button id="cpSave">' + tr('저장', 'Save') + '</button><button id="cpOpen">' + tr('프로젝트 목록', 'Projects') + '</button>' +
       '<button id="cpPaper">' + tr('문제 제작에 활용', 'Use in a problem') + '</button><button class="primary" id="cpShare">' + tr('작품 공유', 'Share project') + '</button></div>') +
-      '<p id="cpStatus" role="status" class="note"></p><div id="cpRuntime"></div></div>';
+      '<p id="cpCopyStatus" role="status" class="note"></p><p id="cpStatus" role="status" class="note"></p><div id="cpRuntime"></div></div>';
     const $ = id => root.querySelector('#' + id);
     const msg = s => { $('cpStatus').textContent = s || ''; height(); };
     const lang = $('cpLang'), source = $('cpCode'), title = $('cpTitle'), description = $('cpDescription');
     const editor = $('cpEditor'), workToggle = $('cpWorkspace');
+    const dock = P.bindPanels($('cpDock'),height);
     function selectPane(pane) {
+      dock.restore();
       editor.dataset.pane = pane;
       if (pane !== 'assistant') editor.dataset.document = pane;
       $('cpViewbar')?.querySelectorAll('[data-pane]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pane === pane)));
@@ -142,6 +145,7 @@
     }
     function setWorkspace(opened) {
       if (!workToggle) return;
+      dock.restore();
       editor.classList.toggle('is-workspace', opened);
       workToggle.setAttribute('aria-expanded', String(opened));
       $('cpAssistant').hidden = $('cpViewbar').hidden = !opened;
@@ -152,6 +156,37 @@
       workToggle.onclick = () => setWorkspace(!editor.classList.contains('is-workspace'));
       $('cpViewbar').onclick = e => { const pane = e.target.closest('[data-pane]')?.dataset.pane; if (pane) selectPane(pane); };
     }
+    function resetCopyResult() {
+      copyOutput = '';
+      copyPlot = null;
+      $('cpCopyResult').disabled = true;
+      $('cpCopyStatus').textContent = '';
+    }
+    async function copyText(value) {
+      if (!value) return;
+      let copied = false;
+      try { await navigator.clipboard.writeText(value); copied = true; }
+      catch {
+        const active = document.activeElement, field = document.createElement('textarea');
+        field.className = 'copy-fallback-field'; field.value = value; field.readOnly = true;
+        document.body.append(field); field.select(); field.setSelectionRange(0,field.value.length);
+        try { copied = document.execCommand('copy'); } catch {}
+        field.remove(); active?.focus({preventScroll:true});
+      }
+      $('cpCopyStatus').textContent = copied ? tr('복사했습니다.','Copied.') : tr('복사할 수 없습니다. 텍스트를 선택해 복사해 주세요.','Could not copy. Select the text to copy it manually.');
+      height();
+    }
+    $('cpCopyCode').onclick = () => copyText(source.value);
+    $('cpCopyResult').onclick = async () => {
+      if (copyOutput) return copyText(copyOutput);
+      if (!copyPlot) return;
+      try {
+        const bytes = Uint8Array.from(atob(copyPlot), ch => ch.charCodeAt(0));
+        await navigator.clipboard.write([new ClipboardItem({'image/png':new Blob([bytes],{type:'image/png'})})]);
+        $('cpCopyStatus').textContent = tr('그래프를 복사했습니다.','Plot copied.');
+      } catch { $('cpCopyStatus').textContent = tr('그래프를 길게 누르거나 우클릭해 복사해 주세요.','Press and hold or right-click the plot to copy it.'); }
+      height();
+    };
     if (!preview) $('cpProvider').append(P.providerSelect(stored?.provider));
     const snapshot = () => ({...project, storage: stored, sharedId, published});
     const persist = () => { if (!id && !preview) write(localStorage, localKey, snapshot()); };
@@ -217,7 +252,7 @@
       if (stop) stop.disabled = true;
     }
     lang.onchange = () => {
-      cancelRun(); project.language = lang.value; proposal = null; lastError = lastOutput = '';
+      cancelRun(); project.language = lang.value; proposal = null; lastError = lastOutput = ''; resetCopyResult();
       if ($('cpApply')) $('cpApply').hidden = $('cpProposal').hidden = true;
       $('cpPlots').replaceChildren(); $('cpOutput').hidden = true; $('cpRunStatus').textContent = '';
       paint(); persist();
@@ -226,13 +261,14 @@
     description.oninput = () => { project.description = description.value; persist(); };
     async function run({fromAI = false} = {}) {
       if (!active || !source.value.trim() || source.value.length > 60000) return null;
+      dock.restore(); dock.reveal($('cpResultPane'));
       if (editor.classList.contains('is-workspace')) {
         editor.dataset.document = 'result';
         if (!fromAI) selectPane('result');
       }
       running?.stop();
       const status = $('cpRunStatus'), output = $('cpOutput'), plots = $('cpPlots');
-      output.hidden = true; plots.replaceChildren(); $('cpStop').disabled = false;
+      output.hidden = true; plots.replaceChildren(); $('cpStop').disabled = false; resetCopyResult();
       lastError = lastOutput = '';
       const phases = {
         loading:tr('실행 환경을 여는 중…','Opening the runtime…'),
@@ -241,7 +277,7 @@
         retrying:tr('다운로드에 실패해 다른 경로로 다시 시도하는 중…','Download failed. Trying an alternate source…'),
         running:tr('이 기기에서 실행 중…','Running on this device…'),
       };
-      const task = launch($('cpRuntime'), project.language, source.value, phase => { status.textContent = phases[phase]; });
+      const task = launch($('cpRuntime'), project.language, source.value, phase => { status.textContent = phases[phase]; }, $('cpInput').value);
       if (!fromAI && innerWidth < 760 && !editor.classList.contains('is-workspace')) status.scrollIntoView({block:'nearest'});
       running = task;
       const r = await task.result;
@@ -254,6 +290,14 @@
       output.textContent = [lastOutput, r.stderr, lastError].filter(Boolean).join('\n');
       output.hidden = !output.textContent;
       for (const p of r.plots || []) drawPlot(plots, p);
+      for (const data of r.images || []) {
+        if (typeof data !== 'string' || data.length > 500000 || !/^[A-Za-z0-9+/]+=*$/.test(data)) continue;
+        const img = new Image();img.src = 'data:image/png;base64,' + data;img.alt = tr('Python 실행 그래프','Python plot'); plots.append(img); copyPlot ||= data;
+      }
+      const series = project.language === 'python' ? (r.plots || []).filter(p => Array.isArray(p?.x) && Array.isArray(p.y)).map(p =>
+        [p.label || 'x,y',...p.x.slice(0,2000).map((x,i) => Number(x)+','+Number(p.y[i]))].join('\n')) : [];
+      copyOutput = [output.textContent,...series].filter(Boolean).join('\n\n');
+      $('cpCopyResult').disabled = !copyOutput && !copyPlot;
       const startupFailed = (r.stage === 'runtime' && lastError) || (r.timeout && r.timeout !== 'program');
       status.textContent = r.stopped ? tr('중지했습니다.','Stopped.') : startupFailed
         ? tr('실행 환경을 시작하지 못했습니다.','Could not start the runtime.') : lastError ? tr('코드 실행 오류','Program error') : tr('실행 완료','Run finished');
@@ -421,7 +465,7 @@
       cancelRun();
       hydrate(data);
       storageRevision++;
-      stored=entry; sharedId=null; published=false; lastOutput=''; lastError='';
+      stored=entry; sharedId=null; published=false; lastOutput=''; lastError=''; resetCopyResult(); $('cpInput').value = '';
       $('cpPlots').replaceChildren(); $('cpOutput').hidden=true; $('cpRunStatus').textContent='';
       persist();
       showEditor();

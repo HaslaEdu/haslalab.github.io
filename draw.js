@@ -341,12 +341,20 @@ function projectData() {
   const {title, index, pages} = st.project;
   return {...st.scene, project: {version: 1, title, index, otherPages: pages.filter((_, i) => i !== index)}};
 }
-function selectProjectPage(index, {bind = true} = {}) {
+function projectSignature() {
+  const {title,index,pages} = st.project;
+  return JSON.stringify([title,pages.map((page,i) => {
+    const scene = i === index ? st.scene : page;
+    return scene.view ? scene : {...scene,view:sceneBounds(scene)};
+  })]);
+}
+function selectProjectPage(index, {bind = true, loaded = false} = {}) {
   const scene = st.project.pages[index];
   if (!scene) return;
   st.project.index = index;
   st.scene = clone(scene);
   if (!st.scene.view) st.scene.view = sceneBounds(st.scene);
+  if (loaded) st.savedSignature = projectSignature();
   if (!bind) return;
   st.hist = createHistory(250);
   $('inkProposal').hidden = true;
@@ -370,7 +378,7 @@ function replaceProject(project, ids = null) {
   st.project = project;
   st.projectChanged = false;
   keepStoreIds(ids);
-  selectProjectPage(project.index);
+  selectProjectPage(project.index,{loaded:true});
 }
 function canLeaveProject() {
   if (st.storageBusy) return false;
@@ -419,7 +427,7 @@ function commit(next, {keepSel = false, before = null} = {}) {
 }
 function save({changed = true} = {}) {
   st.project.pages[st.project.index] = st.scene;
-  if (changed) st.projectChanged = true;
+  if (changed) st.projectChanged = st.savedSignature !== projectSignature();
   const saved = projectData();
   saved.project.dirty = !!st.projectChanged;
   return store.set(SCENE_KEY, JSON.stringify(saved));
@@ -1539,7 +1547,7 @@ async function toStorage() {
     return;
   }
   const provider = $('drawProvider').querySelector('select').value;
-  const data = JSON.stringify(projectData()), msg = $('saveStatus');
+  const data = JSON.stringify(projectData()), signature = projectSignature(), msg = $('saveStatus');
   const current = st.project, fileName = projectFileName(projectTitle());
   const rename = !!current.title;
   const create = () => api('/api/workshop/storage/files', 'POST', projectUpload(data, fileName, {folder: FIG_FOLDER, ensure_folder: '1'}), true);
@@ -1552,7 +1560,8 @@ async function toStorage() {
       const entry = await drawStorage.saveExternal(provider,'figure',projectTitle(),JSON.parse(data),ids);
       if (st.project === current) {
         keepStoreIds(entry);
-        st.projectChanged = data !== JSON.stringify(projectData());
+        st.savedSignature = signature;
+        st.projectChanged = signature !== projectSignature();
         save({changed:false});
         msg.textContent = st.projectChanged ? (ko ? '이전 상태 저장됨 · 새 수정 있음' : 'Earlier revision saved · newer edits pending') : (ko ? '저장했습니다.' : 'Saved.');
       }
@@ -1574,7 +1583,8 @@ async function toStorage() {
     }
     if (st.project === current) {
       keepStoreIds({json: file.id, base: file.updated_at, name: file.name});
-      st.projectChanged = data !== JSON.stringify(projectData());
+      st.savedSignature = signature;
+      st.projectChanged = signature !== projectSignature();
       save({changed: false});
       msg.textContent = renameProblem ? (ko ? '내용 저장됨 · 보관함 파일 이름 변경 실패' : 'Content saved · storage file name could not be changed') : copied ? X6.changed : st.projectChanged ? (ko ? '이전 상태 저장됨 · 새 수정 있음' : 'Earlier revision saved · newer edits pending') : X6.saved(file.name);
     }
@@ -1865,7 +1875,7 @@ function saveLocal() {
   const name = projectTitle(), list = saves().filter(x => x.name !== name);
   list.unshift({name, t: Date.now(), scene: projectData()});
   const ok = store.set(SAVES_KEY, JSON.stringify(list.slice(0, 20)));
-  if (ok) { st.projectChanged = false; save({changed: false}); paintProject(); }
+  if (ok) { st.savedSignature = projectSignature(); st.projectChanged = false; save({changed: false}); paintProject(); }
   $('outMsg').innerHTML = ok ? `<span class="ok">${T.localSaved}</span>` : `<span class="bad">${T.err.other}</span>`;
   paintOut(true);
   return ok;
@@ -2124,7 +2134,7 @@ function paintTemplates() {
   height();
 }
 function shell() {
-  const tl = X3.tools;
+  const tl = X3.tools, panelControls = window.HL_WORKSHOP_PROJECTS.panelControls;
   $('app').innerHTML = `<section id="drawProjects" hidden></section><div id="drawEditor"><div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div>
       <div class="project-actions"><button type="button" id="bOpenStore">${ko ? '프로젝트 목록' : 'Projects'}</button><span id="drawProvider"></span><button type="button" id="bSave" class="primary">${esc(X6.save)}</button></div></div>
     <div class="project-line"><label class="note" for="projectTitle">${ko ? '프로젝트 이름' : 'Project name'}</label><input id="projectTitle" maxlength="60" placeholder="${ko ? '제목 없는 프로젝트' : 'Untitled project'}"><select id="projectPages" aria-label="${ko ? '프로젝트의 그림' : 'Figures in project'}"></select><button type="button" id="projectAdd">${ko ? '+ 그림 추가' : '+ Add figure'}</button><button type="button" id="projectRemove">${ko ? '현재 그림 삭제' : 'Remove current figure'}</button><span id="saveStatus" class="note" role="status"></span></div>
@@ -2147,19 +2157,20 @@ function shell() {
       <div class="row"><label for="aiRegion">${ko ? '사용할 영역' : 'Region to use'}</label><select id="aiRegion"></select></div></div>
       <div class="row"><label class="chk" id="aiEditLabel"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div><div id="aiProposal" hidden></div><div id="aiIllustration" hidden></div></details>
     <div id="aiNote" class="ainote" hidden></div>
-    <div class="work"><div class="draw-library">
+    <div class="work" id="drawDock"><div class="draw-library" data-dock><div class="dock-bar"><span>${ko ? '도구와 템플릿' : 'Tools and templates'}</span>${panelControls('drawLibraryBody')}</div><div id="drawLibraryBody" data-dock-body>
       <details class="palwrap parts" id="templateShelf"><summary>${esc(X4.templates)}</summary><label class="note" for="templateDomain">${ko ? '분야' : 'Topic'}</label>
         <select id="templateDomain">${Object.keys(DOMAINS).filter(d => TEMPLATE_KEYS.some(k => TEMPLATE_DOMAIN[k] === d)).map(d => `<option value="${d}">${esc(X2.domains[d])}</option>`).join('')}</select>
         <div id="templateCards" class="template-cards"></div></details>
-      <details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details></div>
-      <section class="stage"><div id="tools" class="tools" role="toolbar" aria-label="${esc(X4.drawing)}"></div><div id="stageTop"><label class="note" id="penSmoothLabel" hidden><input type="checkbox" id="penSmooth" style="width:auto"${prefs().penSmooth !== false ? ' checked' : ''}> ${ko ? '펜 흔들림 보정' : 'Stabilize pen strokes'}</label><select id="objectPicker" aria-label="${ko ? '그림 요소 선택' : 'Select figure object'}"></select>
+      <details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details></div></div>
+      <section class="stage" data-dock><div class="dock-bar"><span>${ko ? '캔버스' : 'Canvas'}</span>${panelControls('canvas',{collapse:false})}</div><div id="tools" class="tools" role="toolbar" aria-label="${esc(X4.drawing)}"></div><div id="stageTop"><label class="note" id="penSmoothLabel" hidden><input type="checkbox" id="penSmooth" style="width:auto"${prefs().penSmooth !== false ? ' checked' : ''}> ${ko ? '펜 흔들림 보정' : 'Stabilize pen strokes'}</label><select id="objectPicker" aria-label="${ko ? '그림 요소 선택' : 'Select figure object'}"></select>
         <button type="button" id="inkGo" hidden title="${ko ? '선택한 획만 수식 인식 서비스에 전송합니다.' : 'Sends only the selected strokes to the formula recognizer.'}">${ko ? '선택한 획을 수식으로' : 'Recognize selected ink'}</button><span id="inkStatus" class="note" role="status"></span>
         <div id="inkProposal" hidden><label for="inkText" class="note">LaTeX</label><input id="inkText" maxlength="240"><div id="inkPreview"></div><button type="button" id="inkApply">${ko ? '수식 적용' : 'Apply formula'}</button><button type="button" id="inkDiscard">${ko ? '닫기' : 'Close'}</button></div></div><div id="canvas" class="canvas" tabindex="0" role="region" aria-label="${ko ? '그림 편집 캔버스' : 'Figure editing canvas'}"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
         <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button><button type="button" id="stepBtn">${ko ? '0.05초 진행' : 'Step 0.05 s'}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
           <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label><label id="rtLbl"><input type="checkbox" id="cRt"${st.rtrail ? ' checked' : ''}>${esc(X5.trails)}</label></span><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label id="solveLbl"><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
         <div id="readouts" class="readouts"></div></section>
-      <div class="side"><section class="panel" id="props"></section><section class="panel" id="out"></section></div></div></div>`;
+      <div class="side" data-dock><div class="dock-bar"><span>${ko ? '속성과 내보내기' : 'Properties and export'}</span>${panelControls('drawSideBody')}</div><div id="drawSideBody" data-dock-body><section class="panel" id="props"></section><section class="panel" id="out"></section></div></div></div></div>`;
+  window.HL_WORKSHOP_PROJECTS.bindPanels($('drawDock'),()=>{ if (!$('drawEditor').hidden) paintCanvas(); height(); });
   $('drawProvider').append(window.HL_WORKSHOP_PROJECTS.providerSelect(st.storeIds?.provider));
 
   $('projectTitle').onchange = e => { st.project.title = e.target.value.trim(); save(); paintProject(); };
@@ -2369,6 +2380,7 @@ addEventListener('blur', releasePan);
 try { const d = prefs().dstyle; if (d && typeof d === 'object') { const ds = st.dstyle; if (COLORS.includes(d.color)) ds.color = d.color; if ([0.5, 0.75, 1, 1.5, 2, 3].includes(d.lw)) ds.lw = d.lw; if (['solid', 'dashed', 'dotted', 'dashdot'].includes(d.pattern)) ds.pattern = d.pattern; if (FILLS.includes(d.fill)) ds.fill = d.fill; ds.hs = d.hs === true; ds.he = d.he === true; } } catch (e) {}
 st.scene = startScene();
 st.project ||= {title: '', index: 0, pages: [st.scene]};
+if (!st.projectChanged) st.savedSignature = projectSignature();
 if (st.unlinkedStart) keepStoreIds(null);
 if (!st.scene.view) st.scene.view = sceneBounds(st.scene);
 if (document.readyState === 'loading') addEventListener('DOMContentLoaded', shell); else shell();

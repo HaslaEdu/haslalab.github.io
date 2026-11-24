@@ -325,5 +325,42 @@
       onOpen: (raw, entry) => showPages(raw, entry.name),
       onResume: local ? () => showPages(local, txt('현재 브라우저 작업','Current browser draft')) : null});
   }
-  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error};
+  function panelControls(bodyId, {collapse = true} = {}) {
+    return '<span class="dock-controls">' + (collapse ? '<button type="button" data-dock-action="collapse" aria-controls="'+bodyId+'" aria-expanded="true">'+txt('접기','Collapse')+'</button>' : '') +
+      '<button type="button" data-dock-action="expand" aria-controls="'+bodyId+'" aria-pressed="false">'+txt('확대','Expand')+'</button></span>';
+  }
+  function bindPanels(grid, changed) {
+    const controls = [...grid.querySelectorAll('[data-dock]')].map(panel => ({
+      panel, body:panel.querySelector('[data-dock-body]'),
+      collapse:panel.querySelector('[data-dock-action="collapse"]'), expand:panel.querySelector('[data-dock-action="expand"]'),
+    }));
+    function layout(expanded) {
+      grid.classList.toggle('is-dock-expanded', !!expanded);
+      for (const {panel,expand} of controls) {
+        const on = panel === expanded;
+        panel.classList.toggle('is-dock-expanded-item', on);
+        expand.setAttribute('aria-pressed',String(on));
+        expand.textContent = on ? txt('복원','Restore') : txt('확대','Expand');
+      }
+      changed();
+    }
+    for (const {panel,body,collapse,expand} of controls) {
+      function setCollapsed(on) {
+        body.hidden = on;panel.classList.toggle('is-dock-collapsed',on);
+        collapse.setAttribute('aria-expanded', String(!on));
+        collapse.textContent = on ? txt('펼치기','Show') : txt('접기','Collapse');
+      }
+      if (collapse) collapse.onclick = () => { setCollapsed(!body.hidden); changed(); };
+      expand.onclick = () => {
+        const on = !panel.classList.contains('is-dock-expanded-item');
+        if (on && collapse && body.hidden) setCollapsed(false);
+        layout(on ? panel : null);
+      };
+    }
+    return {
+      restore:() => { if (grid.classList.contains('is-dock-expanded')) layout(null); },
+      reveal:panel => { const item = controls.find(item => item.panel === panel); if (item?.body?.hidden) item.collapse?.click(); },
+    };
+  }
+  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error, panelControls, bindPanels};
 })();

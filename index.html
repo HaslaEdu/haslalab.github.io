@@ -11006,7 +11006,6 @@ let siteRenderSeq=0;
 function siteSection(active){
   if(active==="learn")return "learn";
   if(active==="workshop")return "workshop";
-  if(active==="comps"&&/^#\/archive\/(books|schools)\b/.test(location.hash))return "learn";
   if(["olympiad","comps","weekly","hpho"].includes(active))return "olympiad";
   return null;
 }
@@ -11019,7 +11018,7 @@ function sectionLinks(section){
       search:h=>h==="#/learn/physics/search",lab:h=>/^#\/learn\/(lab|concepts|compute)$/.test(h)};
     return learnParts().map(p=>[p.href,p.name,on[p.key],p.line]);
   }
-  if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],["#/olympiad/schedule",ko?"일정":LX("Calendar"),h=>h==="#/olympiad/schedule"],
+  if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/archive/contests",ko?"대회 아카이브":LX("Competition archive"),h=>/^#\/(comps|archive)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],["#/olympiad/schedule",ko?"일정":LX("Calendar"),h=>h==="#/olympiad/schedule"],
     ["#/monthly",UI[lang].navWeekly,h=>/^#\/(monthly|weekly|rank)\b/.test(h)],["#/hpho","HPhO",h=>/^#\/hpho\b/.test(h)]];
   if(section==="workshop")return [["#/workshop",ko?"워크샵 홈":LX("Workshop home"),h=>h==="#/workshop"],
     ["#/workshop/make",wsTitle("make"),h=>h==="#/workshop/make"],["#/workshop/draw",wsTitle("draw"),h=>h==="#/workshop/draw"],["#/workshop/create",wsTitle("create"),h=>h==="#/workshop/create"],
