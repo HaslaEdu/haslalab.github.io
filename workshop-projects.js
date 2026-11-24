@@ -62,12 +62,12 @@
     async function list(kind, provider) {
       if (provider === 'store') {
         const r = await request('/api/workshop/storage?kind=' + (kind === 'compute' ? 'sim' : 'figure'));
-        const folders = kind === 'compute' ? ['전산물리'] : kind === 'attachment' ? ['그림','삽화'] : ['그림'];
+        const folders = kind === 'compute' ? ['전산물리'] : kind === 'attachment' ? ['그림','삽화'] : kind === 'asset' ? ['에셋'] : ['그림'];
         return (r.files || []).filter(f => folders.includes(f.folder) && /\.json$/i.test(f.name)).map(f => ({...f, provider}));
       }
       const r = await request(connector(provider, 'files'));
       return (r.files || []).filter(f => !f.folder && /\.json$/i.test(f.name) &&
-        (f.name.endsWith(suffix(kind)) || (kind === 'attachment' && (f.name.endsWith(suffix('figure')) || f.name.endsWith(suffix('illustration')))) || !/-haslalab-(figure|compute|illustration)\.json$/i.test(f.name))).map(f => ({...f, provider, scope: provider === 'github' ? scopeOf(r) : null}));
+        (f.name.endsWith(suffix(kind)) || (kind === 'attachment' && (f.name.endsWith(suffix('figure')) || f.name.endsWith(suffix('illustration')))) || (kind !== 'asset' && !/-haslalab-(figure|compute|illustration|asset)\.json$/i.test(f.name)))).map(f => ({...f, provider, scope: provider === 'github' ? scopeOf(r) : null}));
     }
     function load(entry) {
       const p = entry.provider || 'store';
@@ -119,7 +119,7 @@
         if (round !== generation || !host.isConnected) return;
         status.textContent = rows.length ? '' : txt('이 저장소에 저장한 프로젝트가 없습니다.', 'No projects in this location.');
         for (const entry of rows) {
-          const name = entry.name.replace(/(?:-[a-f0-9]{8}-haslalab-(?:figure|compute|illustration))?\.json$/i, '');
+          const name = entry.name.replace(/(?:-[a-f0-9]{8}-haslalab-(?:figure|compute|illustration|asset))?\.json$/i, '');
           const item = button(name, async () => {
             const selection = ++opening;
             item.disabled = true;

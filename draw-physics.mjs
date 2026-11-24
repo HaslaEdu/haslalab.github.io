@@ -17,7 +17,7 @@
    its surface or the body it is tied to, a body landing on a floor or an incline, a body leaving its surface
    (N below zero), two bodies on one surface touching. Systems outside these kinds are reported in `unsupported`
    with a code, and the figure stays a figure. */
-import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr, isPhysShape, CONE_TILT} from './draw-scene.mjs?v=0fa3728066f3';
+import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr, isPhysShape, CONE_TILT} from './draw-scene.mjs?v=7959e10d8eeb';
 
 export const SIM_DT = 1e-3;
 const EPS_V = 1e-9;
@@ -359,13 +359,17 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
 
   /* ── bodies resting on surfaces ── */
   function surfaceSystem(list) {
-    /* a wheel (k = I / m r² of its kind) on a surface with friction rolls without slipping while the friction that
-       needs, k Q / (1 + k), is at most μN: a = Q / (m (1 + k)); otherwise it slides (its spin is not followed) */
-    const items = list.map(b => { const fr = surfaceFrame(byId.get(b.on), scene); return {b, id: b.id, m: b.mass, fr, mu: fr.mu, angle: Math.atan2(fr.u.y, fr.u.x), k: b.type === 'wheel' && fr.mu > 0 ? INERTIA[b.kind] ?? 0.5 : 0}; });
-    const n = items.length, q = new Float64Array(2 * n + 2);
-    items.forEach((it, i) => { q[2 * i] = it.b.at; q[2 * i + 1] = vec.dot({x: it.b.vx, y: it.b.vy}, it.fr.u); });
+    /* For a wheel, the contact speed is v + rω. Static friction enforces rolling when contact speed is zero
+       and the required force fits the friction limit. Otherwise kinetic friction also supplies the wheel's torque. */
+    const items = list.map(b => { const fr = surfaceFrame(byId.get(b.on), scene); return {b, id: b.id, m: b.mass, fr, mu: fr.mu, angle: Math.atan2(fr.u.y, fr.u.x), k: b.type === 'wheel' ? INERTIA[b.kind] ?? 0.5 : 0}; });
+    const n = items.length, spinIndex = 2 * n + 2, omegaIndex = spinIndex + n, q = new Float64Array(omegaIndex + n);
+    items.forEach((it, i) => {
+      q[2 * i] = it.b.at;
+      q[2 * i + 1] = vec.dot({x: it.b.vx, y: it.b.vy}, it.fr.u);
+      if (it.k && it.mu > 0) q[omegaIndex + i] = -q[2 * i + 1] / it.b.r;
+    });
     const centre = (it, at) => vec.add(vec.add(it.fr.p0, vec.mul(it.fr.u, at)), vec.mul(it.fr.n, bodyHalfHeight(it.b)));
-    const posesAt = qq => new Map(items.map((it, i) => { const c = centre(it, qq[2 * i]); return [it.id, {x: c.x, y: c.y, angle: it.b.type === 'block' ? it.angle : 0, at: qq[2 * i]}]; }));
+    const posesAt = qq => new Map(items.map((it, i) => { const c = centre(it, qq[2 * i]); return [it.id, {x: c.x, y: c.y, angle: it.b.type === 'block' ? it.angle : 0, at: qq[2 * i], ...(it.b.type === 'wheel' ? {spin: qq[spinIndex + i], omega: qq[omegaIndex + i]} : {})}]; }));
     const modes = new Array(n).fill(0);
     const sys = {kind: 'surface', id: items.map(x => x.id).join('+'), ids: items.map(x => x.id), q, t: 0, modes, done: null,
       eval(qq) {
@@ -375,33 +379,53 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
           for (const sp of springsOf(it.id)) F = vec.add(F, springForce(sp, it.id, id => poses.get(id)).F);
           const N = -vec.dot(F, it.fr.n), Q = vec.dot(F, it.fr.u), cap = it.mu * Math.max(0, N), v = qq[2 * i + 1];
           let f, a;
-          if (it.k > 0 && Math.abs(it.k * Q / (1 + it.k)) <= cap + 1e-12) return {F, N, Q, f: -it.k * Q / (1 + it.k), a: Q / (it.m * (1 + it.k)), pose: poses.get(it.id), rolling: true};
+          if (it.k) {
+            const slip = v + it.b.r * qq[omegaIndex + i], needed = -it.k * Q / (1 + it.k);
+            const rolling = Math.abs(slip) <= EPS_V && Math.abs(needed) <= cap + 1e-12;
+            f = rolling ? needed : -(modes[i] || sgn(slip) || sgn(Q)) * cap;
+            return {F, N, Q, f, a:(Q + f) / it.m, alpha:f / (it.k * it.m * it.b.r), slip, rolling, pose:poses.get(it.id)};
+          }
           if (modes[i] === 0 && Math.abs(v) <= EPS_V) { f = -Math.max(-cap, Math.min(cap, Q)); a = 0; }
           else { f = -(modes[i] || sgn(v)) * cap; a = (Q + f) / it.m; }
           return {F, N, Q, f, a, pose: poses.get(it.id)};
         });
       },
       prepare() {
-        items.forEach((it, i) => { const v = this.q[2 * i + 1]; if (Math.abs(v) > EPS_V) modes[i] = sgn(v); else modes[i] = 0; });
+        items.forEach((it, i) => {
+          const speed = this.q[2 * i + 1] + (it.k ? it.b.r * this.q[omegaIndex + i] : 0);
+          modes[i] = Math.abs(speed) > EPS_V ? sgn(speed) : 0;
+        });
         const r = this.eval(this.q);
-        items.forEach((it, i) => { if (modes[i] === 0) { const cap = it.mu * Math.max(0, r[i].N); modes[i] = Math.abs(r[i].Q) <= cap + 1e-12 ? 0 : sgn(r[i].Q); } });
+        items.forEach((it, i) => { if (!it.k && modes[i] === 0) { const cap = it.mu * Math.max(0, r[i].N); modes[i] = Math.abs(r[i].Q) <= cap + 1e-12 ? 0 : sgn(r[i].Q); } });
       },
       f(qq) {
         const r = this.eval(qq), out = new Float64Array(qq.length);
-        items.forEach((it, i) => { const v = qq[2 * i + 1]; out[2 * i] = v; out[2 * i + 1] = r[i].rolling ? r[i].a : modes[i] === 0 && Math.abs(v) <= EPS_V ? 0 : r[i].a;
-          out[2 * n] += r[i].rolling ? 0 : -r[i].f * v * (modes[i] === 0 ? 0 : 1); out[2 * n + 1] += vec.dot(applied(it.id), vec.mul(it.fr.u, v)); });
+        items.forEach((it, i) => {
+          const v = qq[2 * i + 1], motion = r[i];
+          out[2 * i] = v; out[2 * i + 1] = motion.a;
+          if (it.k) {
+            out[spinIndex + i] = qq[omegaIndex + i];
+            out[omegaIndex + i] = motion.alpha;
+            if (!motion.rolling) out[2 * n] -= motion.f * motion.slip;
+          } else if (modes[i]) out[2 * n] -= motion.f * v;
+          out[2 * n + 1] += vec.dot(applied(it.id), vec.mul(it.fr.u, v));
+        });
         return out;
       },
       events(qq) {
         const r = this.eval(qq), out = [];
         items.forEach((it, i) => { const at = qq[2 * i], hw = bodyHalfWidth(it.b);
           out.push({code: 'end_of_surface', id: it.id, g: at - hw}, {code: 'end_of_surface', id: it.id, g: it.fr.length - at - hw}, {code: 'lift_off', id: it.id, g: r[i].N});
-          if (it.mu > 0 && modes[i] !== 0 && !r[i].rolling) out.push({code: 'stick', i, g: modes[i] * qq[2 * i + 1], stop: false});
+          if (it.mu > 0 && modes[i] !== 0) out.push({code: 'stick', i, g: modes[i] * (it.k ? r[i].slip : qq[2 * i + 1]), stop: false});
           for (let j = i + 1; j < n; j++) if (items[j].b.on === it.b.on) out.push({code: 'touched', id: it.id, g: Math.abs(qq[2 * j] - at) - hw - bodyHalfWidth(items[j].b)});
         });
         return out;
       },
-      onStick(ev) { this.q[2 * ev.i + 1] = 0; modes[ev.i] = 0; },
+      onStick({i}) {
+        if (items[i].k) this.q[omegaIndex + i] = -this.q[2 * i + 1] / items[i].b.r;
+        else this.q[2 * i + 1] = 0;
+        modes[i] = 0;
+      },
       poses(qq = this.q) { return posesAt(qq); },
       velocities(qq = this.q) { return new Map(items.map((it, i) => [it.id, vec.mul(it.fr.u, qq[2 * i + 1])])); },
       accel(qq = this.q) { const r = this.eval(qq); return new Map(items.map((it, i) => [it.id, vec.mul(it.fr.u, r[i].a)])); },
@@ -416,8 +440,8 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
           return [it.id, list.map(x => ({...x, at: r[i].pose}))];
         }));
       },
-      energy(qq = this.q) { const p = posesAt(qq), r = this.eval(qq);
-        return {K: items.reduce((k, it, i) => k + 0.5 * it.m * qq[2 * i + 1] ** 2 * (r[i].rolling ? 1 + it.k : 1), 0), Ug: items.reduce((u, it) => u + it.m * g * p.get(it.id).y, 0), Us: springEnergy(id => p.get(id)), heat: qq[2 * n], work: qq[2 * n + 1]}; }
+      energy(qq = this.q) { const p = posesAt(qq);
+        return {K: items.reduce((k, it, i) => k + 0.5 * it.m * (qq[2 * i + 1] ** 2 + it.k * (it.b.r || 0) ** 2 * qq[omegaIndex + i] ** 2), 0), Ug: items.reduce((u, it) => u + it.m * g * p.get(it.id).y, 0), Us: springEnergy(id => p.get(id)), heat: qq[2 * n], work: qq[2 * n + 1]}; }
     };
     return sys;
   }

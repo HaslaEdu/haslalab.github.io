@@ -166,7 +166,7 @@ test('illustration selects Gemini 3 Pro Image, respects the chosen style and onl
     assert.equal(options.headers['x-goog-api-key'],'fixture-key');
     const body=JSON.parse(options.body);
     assert.deepEqual(body.generationConfig.responseModalities,['IMAGE']);
-    assert.match(body.contents[0].parts[0].text,/black linework/);
+    assert.match(body.contents[0].parts[0].text,/black variable-weight outlines/);
     assert.match(body.contents[0].parts[0].text,/Keep the arrows/);
     assert.deepEqual(body.contents[0].parts[1].inlineData,{mimeType:crop.mime,data:crop.data});
     return Response.json({candidates:[{content:{parts:[

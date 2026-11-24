@@ -5,10 +5,10 @@
    localStorage 'hlTeachPaper'; the figure is an SVG data URL with its scene), into the member's storage
    (/api/workshop/storage) or into this browser. "Start from a photo" sends one photo to /api/workshop/scene-from-image
    (community/src/workshop-scene.js) and opens what comes back for checking. */
-import {geoIntersect, validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath,
-  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape} from './draw-scene.mjs?v=0fa3728066f3';
-import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=5c7e5138c56f';
-import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=f1d35152f547';
+import {geoIntersect, validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, vectorPoints, vectorTransform, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath,
+  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape} from './draw-scene.mjs?v=7959e10d8eeb';
+import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=f6b4ee63f834';
+import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=f74e161993eb';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -401,7 +401,13 @@ const view = () => st.scene.view || (st.scene.view = sceneBounds(st.scene));
 /* the part of the world the canvas shows: the figure's frame, or the zoomed part of it */
 const dview = () => st.zoom || view();
 const selIds = () => [...st.selection].filter(id => byId(id));
-function setSel(ids, primary) { st.selection = new Set(ids.filter(Boolean)); st.sel = primary && st.selection.has(primary) ? primary : st.selection.size === 1 ? [...st.selection][0] : st.selection.size ? (st.selection.has(st.sel) ? st.sel : [...st.selection].pop()) : ''; }
+const groupOf = id => st.scene.groups?.find(members => members.includes(id));
+function setSel(ids, primary, {expand = true} = {}) { st.selection = new Set(ids.filter(Boolean).flatMap(id => (expand && groupOf(id)) || [id])); st.sel = primary && st.selection.has(primary) ? primary : st.selection.size === 1 ? [...st.selection][0] : st.selection.size ? (st.selection.has(st.sel) ? st.sel : [...st.selection].pop()) : ''; }
+function toggleSelection(id) {
+  const ids = new Set(selIds()), members = groupOf(id) || [id], remove = members.every(member => ids.has(member));
+  members.forEach(member => remove ? ids.delete(member) : ids.add(member));
+  setSel([...ids], id);
+}
 /* every change goes through here: checked, kept for undo (one step), saved in this browser */
 function commit(next, {keepSel = false, before = null} = {}) {
   const r = validateScene(next);
@@ -567,6 +573,7 @@ function removeIds(scene, ids) {
       if (o.type === 'string') o.over = o.over.filter(p => !gone.has(p));
       if (['string', 'rod', 'spring'].includes(o.type) && (gone.has(o.a) || gone.has(o.b))) gone.add(o.id);
       if (o.type === 'force' && gone.has(o.on)) gone.add(o.id);
+      if (o.type === 'vector' && gone.has(o.on)) setVectorAttachment(st.scene, o, '', o.vectorFrame);
       if (isBody(o) && o.on && gone.has(o.on)) { const p = bodyPose({...scene, objects: [...scene.objects, ...st.scene.objects.filter(x => x.id === o.on)]}, o); o.on = ''; o.x = r4(p.x); o.y = r4(p.y); }
       if (o.type === 'pulley' && gone.has(o.mount)) o.mount = '';
       if ((o.type === 'curve' || o.type === 'cycle') && gone.has(o.graph)) gone.add(o.id);
@@ -577,6 +584,20 @@ function removeIds(scene, ids) {
     }
   }
 }
+function setVectorAttachment(scene, o, on, frame) {
+  const points = vectorPoints(scene, o);
+  o.on = on; o.vectorFrame = frame;
+  const {toLocal} = vectorTransform(scene, o);
+  points.map(toLocal).forEach((p,i) => { o['x'+(i+1)] = r4(p.x); o['y'+(i+1)] = r4(p.y); });
+}
+function groupSelection(ungroup = false) {
+  const ids = selIds(), selected = new Set(ids);
+  if (ids.length < 2) return;
+  const next = clone(st.scene);
+  next.groups = (next.groups || []).filter(members => !members.some(id => selected.has(id)));
+  if (!ungroup) next.groups.push(ids);
+  commit(next, {keepSel:true});
+}
 function del() { const ids = selIds(); if (!ids.length) return; const next = clone(st.scene); removeIds(next, ids); setSel([]); commit(next); }
 /* copy and paste: the selected objects, and the strings, springs, forces and curves among them; pasted a few grid
    steps away with fresh ids (references inside the copy follow it, a body keeps the surface it rests on) */
@@ -584,19 +605,25 @@ const LINKS = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline'
 function copySel() {
   const ids = new Set(selIds()); if (!ids.size) return false;
   for (const o of st.scene.objects) if (LINKS.includes(o.type) && !ids.has(o.id)) { const refs = refsOf(o); if (refs.length && refs.every(r => ids.has(r))) ids.add(o.id); }
-  st.clip = st.scene.objects.filter(o => ids.has(o.id)).map(clone);
+  st.clip = {objects:st.scene.objects.filter(o => ids.has(o.id)).map(clone),
+    groups:(st.scene.groups || []).filter(members => members.every(id => ids.has(id))).map(clone)};
   try { sessionStorage.setItem('hlDrawClip', JSON.stringify(st.clip)); } catch (e) {}
   return true;
 }
 const refsOf = o => Object.entries(FIELDS[o.type]).flatMap(([k, f]) => f.k === 'ref' ? (o[k] ? [o[k]] : []) : f.k === 'refs' ? o[k] : []);
 function pasteClip(offset = 3) {
   let clip = st.clip; if (!clip) { try { clip = JSON.parse(sessionStorage.getItem('hlDrawClip') || 'null'); } catch (e) { clip = null; } }
-  if (!Array.isArray(clip) || !clip.length) return;
-  if (st.scene.objects.length + clip.length > MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
-  const next = clone(st.scene), map = new Map(), d = st.scene.grid * offset, made = [];
+  if (Array.isArray(clip)) clip = {objects:clip};
+  if (!Array.isArray(clip?.objects) || !clip.objects.length) return;
+  const d = st.scene.grid * offset;
+  return insertObjects(clip, d, -d);
+}
+function insertObjects(clip, dx, dy) {
+  if (st.scene.objects.length + clip.objects.length > MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
+  const next = clone(st.scene), map = new Map(), made = [];
   const taken = new Set(next.objects.map(o => o.id)), fresh = (type, kind) => { const p = type === 'element' && KIND_PREFIX[kind] ? KIND_PREFIX[kind] : PREFIX[type] || 'o'; let n = 1; while (taken.has(p + n)) n++; taken.add(p + n); return p + n; };
-  for (const o of clip) map.set(o.id, fresh(o.type, o.kind));
-  for (const o0 of clip) {
+  for (const o of clip.objects) map.set(o.id, fresh(o.type, o.kind));
+  for (const o0 of clip.objects) {
     const o = {...clone(o0), id: map.get(o0.id)};
     let ok = true;
     for (const [k, f] of Object.entries(FIELDS[o.type] || {})) {
@@ -604,19 +631,31 @@ function pasteClip(offset = 3) {
       if (f.k === 'refs') { if (o[k].some(x => !map.has(x) && !byId(x))) ok = false; o[k] = o[k].map(x => map.get(x) || x); }
     }
     if (!ok) continue;
-    if (!LINKS.includes(o.type)) moveObj(o, d, -d, o0, map.has(o0.on));
-    if (o.type === 'block' && /^m_\d+$/.test(o.label)) o.label = 'm_' + o.id.slice(1);
+    if (!LINKS.includes(o.type)) moveObj(o, dx, dy, o0, map.has(o0.on));
+    if (!clip.style && o.type === 'block' && /^m_\d+$/.test(o.label)) o.label = 'm_' + o.id.slice(1);
     next.objects.push(o); made.push(o.id);
   }
-  if (commit(next)) { setSel(made); paint(); }
+  if (clip.groups?.length) next.groups = [...(next.groups || []), ...clip.groups.map(ids => ids.map(id => map.get(id)))];
+  if (!commit(next)) return false;
+  setSel(made); paint();
+  return true;
 }
 function dup() { if (copySel()) pasteClip(); }
 /* move one object by (dx, dy) from its state `g`: a body on a surface slides along it (or keeps its place on a pasted
    surface), a segment moves both ends */
 function moveObj(o, dx, dy, g = o, keepAt = false) {
-  if (isBody(o) && g.on) { if (keepAt) return; const s = st.scene.objects.find(x => x.id === g.on); if (s) { const fr = surfaceFrame(s, st.scene); o.at = r4(g.at + vec.dot({x: dx, y: dy}, fr.u)); return; } }
+  if (g.on && keepAt && (isBody(o) || o.type === 'vector')) return;
+  if (o.type === 'vector' && o.on) {
+    const {toWorld, toLocal} = vectorTransform(st.scene, o);
+    for (const i of [1,2]) {
+      const p = toWorld({x:g['x'+i],y:g['y'+i]}), q = toLocal({x:p.x+dx,y:p.y+dy});
+      o['x'+i] = r4(q.x); o['y'+i] = r4(q.y);
+    }
+    return;
+  }
+  if (isBody(o) && g.on) { const s = st.scene.objects.find(x => x.id === g.on); if (s) { const fr = surfaceFrame(s, st.scene); o.at = r4(g.at + vec.dot({x: dx, y: dy}, fr.u)); return; } }
   if ('x1' in g && 'x2' in g && !('x' in g)) { o.x1 = r4(g.x1 + dx); o.y1 = r4(g.y1 + dy); o.x2 = r4(g.x2 + dx); o.y2 = r4(g.y2 + dy); if ('cx1' in g) { o.cx1 = r4(g.cx1 + dx); o.cy1 = r4(g.cy1 + dy); o.cx2 = r4(g.cx2 + dx); o.cy2 = r4(g.cy2 + dy); } return; }
-  if (g.pts) { o.pts = g.pts.map(q => [r4(q[0] + dx), r4(q[1] + dy)]); return; }
+  if (g.type === 'poly') { o.pts = g.pts.map(q => [r4(q[0] + dx), r4(q[1] + dy)]); return; }
   if (o.type === 'callout') { o.x2 = r4(g.x2 + dx); o.y2 = r4(g.y2 + dy); }
   if ('x' in g) { o.x = r4(g.x + dx); o.y = r4(g.y + dy); }
 }
@@ -978,13 +1017,15 @@ function bindCanvas() {
       paintObjectPicker();
       st.drag = {marquee: true, start: worldAt(ev), keep: new Set(selIds()), moved: false}; box.setPointerCapture?.(ev.pointerId); paintCanvas(); paintSide(); status(); return;
     }
-    if (add) { const ids = new Set(selIds()); ids.has(o.id) ? ids.delete(o.id) : ids.add(o.id); setSel([...ids], o.id); paint(); return; }
+    if (add || $('selectMore').checked) {
+      toggleSelection(o.id); paint(); return;
+    }
     if (!st.selection.has(o.id)) setSel([o.id]); else st.sel = o.id;
     paintObjectPicker(); paintCanvas(); paintSide(); status(); paintBar();
     const ids = [...new Set(selIds().filter(id => !NO_DRAG.includes(byId(id).type) && !byId(id).lock).flatMap(id => geoDragIds(byId(id))))].filter(id => byId(id) && !byId(id).lock);
     if (!ids.length || (byId(o.id).lock && ids.length <= 1)) return;
     if (ids.length > 1 || ids[0] !== o.id) { st.drag = {group: ids, origs: new Map(ids.map(id => [id, clone(byId(id))])), start: worldAt(ev), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
-    st.drag = ids.length > 1 ? {group: ids, origs: new Map(ids.map(id => [id, clone(byId(id))])), start: worldAt(ev), before, moved: false} : {id: o.id, start: worldAt(ev), orig: clone(o), follow: followersOf(o), before, moved: false};
+    st.drag = {id: o.id, start: worldAt(ev), orig: clone(o), follow: followersOf(o), before, moved: false};
     box.setPointerCapture?.(ev.pointerId);
   });
   box.addEventListener('pointermove', ev => {
@@ -1008,7 +1049,7 @@ function bindCanvas() {
     const dx = p.x - d.start.x, dy = p.y - d.start.y;
     if (!d.moved && Math.hypot(dx, dy) * W / dview().w < 3) return;
     d.moved = true;
-    if (d.group) { const sx = st.snap ? snapV(dx) : dx, sy = st.snap ? snapV(dy) : dy; for (const id of d.group) { const o = byId(id); if (o) moveObj(o, sx, sy, d.origs.get(id)); } }
+    if (d.group) { const sx = st.snap ? snapV(dx) : dx, sy = st.snap ? snapV(dy) : dy; for (const id of d.group) { const o = byId(id); if (o) moveObj(o, sx, sy, d.origs.get(id), d.origs.has(o.on)); } }
     else dragTo(d, p, dx, dy);
     paintCanvas();
   });
@@ -1044,8 +1085,9 @@ function dragTo(d, p, dx, dy) {
        the grid; with Shift a segment's end turns in 15° steps about the other end */
     const h = String(d.handle);
     if (h === '1' || h === '2') {
-      const other = o.type === 'callout' ? (h === '1' ? {x: o.x2, y: o.y2} : {x: o.x, y: o.y}) : {x: o['x' + (h === '1' ? 2 : 1)], y: o['y' + (h === '1' ? 2 : 1)]};
-      const q = snapPt(p, {from: other, shift: !!d.shift, exclude: o.id});
+      const other = o.type === 'vector' ? vectorPoints(st.scene, o)[h === '1' ? 1 : 0] : o.type === 'callout' ? (h === '1' ? {x: o.x2, y: o.y2} : {x: o.x, y: o.y}) : {x: o['x' + (h === '1' ? 2 : 1)], y: o['y' + (h === '1' ? 2 : 1)]};
+      let q = snapPt(p, {from: other, shift: !!d.shift, exclude: o.id});
+      if (o.type === 'vector') q = vectorTransform(st.scene, o).toLocal(q);
       if (o.type === 'callout') { if (h === '1') { o.x = q.x; o.y = q.y; } else { o.x2 = q.x; o.y2 = q.y; } return; }
       o['x' + h] = q.x; o['y' + h] = q.y; return;
     }
@@ -1073,6 +1115,7 @@ function dragTo(d, p, dx, dy) {
     }
     return;
   }
+  if (o.type === 'vector' && o.on) { moveObj(o, snapV(dx), snapV(dy), g); return; }
   if ('x1' in g && !('x' in g)) { o.x1 = r4(snapV(g.x1 + dx)); o.y1 = r4(snapV(g.y1 + dy)); const ex = o.x1 - g.x1, ey = o.y1 - g.y1; o.x2 = r4(g.x2 + ex); o.y2 = r4(g.y2 + ey); if ('cx1' in g) { o.cx1 = r4(g.cx1 + ex); o.cy1 = r4(g.cy1 + ey); o.cx2 = r4(g.cx2 + ex); o.cy2 = r4(g.cy2 + ey); } return; }
   if (g.pts) { const ex = r4(snapV(g.pts[0][0] + dx)) - g.pts[0][0], ey = r4(snapV(g.pts[0][1] + dy)) - g.pts[0][1]; o.pts = g.pts.map(q => [r4(q[0] + ex), r4(q[1] + ey)]); return; }
   if ('x' in g) {
@@ -1161,6 +1204,7 @@ const slideRange = (o, k, f) => {
 };
 /* fields that mean nothing for this object as it is now set (a switch has no value, a function curve no γ …) */
 function relevant(o, k) {
+  if (o.type === 'vector' && k === 'vectorFrame') return !!o.on;
   if (o.type === 'curve') {
     const K = o.kind;
     if (k === 'expr2') return K === 'param';
@@ -1247,10 +1291,11 @@ function paintSide() {
   const optional = k => !(['string', 'rod', 'spring'].includes(o.type) && (k === 'a' || k === 'b')) && !(o.type === 'force' && k === 'on');
   const field = ([k, f]) => {
     const lettering = k === 'letterStyle' || k === 'letterFamily';
-    const L = lettering ? LETTER_OPTIONS[k] : fieldName(o, k);
+    const L = lettering ? LETTER_OPTIONS[k] : o.type === 'vector' && k === 'on' ? (ko ? '따라갈 물체' : 'Follow body')
+      : k === 'vectorFrame' ? (ko ? '벡터 방향' : 'Vector direction') : fieldName(o, k);
     if (f.k === 'num') { const sr = slideRange(o, k, f); return `<label class="${sr ? 'wide slide' : ''}">${L}<span class="numrow"><input data-f="${k}" type="number" step="${NUM_STEP[k] || 0.05}" min="${f.min}" max="${f.max}" value="${r4(o[k])}">${sr ? `<input data-s="${k}" type="range" min="${sr[0]}" max="${sr[1]}" step="${(sr[1] - sr[0]) / 200}" value="${Math.max(sr[0], Math.min(sr[1], o[k]))}" aria-label="${esc(L)}">` : ''}</span></label>`; }
     if (f.k === 'bool') return `<label class="chk wide"><input data-f="${k}" type="checkbox"${o[k] ? ' checked' : ''}>${L}</label>`;
-    if (f.k === 'enum') return `<label>${L}<select data-f="${k}"${lettering ? ` aria-label="${esc(L)}"` : ''}>${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : o.type === 'block' && v === 'box' ? (ko ? '상자' : 'Box') : (lettering ? LETTER_OPTIONS[v] : T.enums[v]) || v)}</option>`).join('')}</select></label>`;
+    if (f.k === 'enum') return `<label>${L}<select data-f="${k}"${lettering ? ` aria-label="${esc(L)}"` : ''}>${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : o.type === 'block' && v === 'box' ? (ko ? '상자' : 'Box') : (k === 'vectorFrame' ? (v === 'body' ? (ko ? '물체와 함께 회전' : 'Rotate with body') : (ko ? '공간 기준 방향 유지' : 'Keep world direction')) : lettering ? LETTER_OPTIONS[v] : T.enums[v]) || v)}</option>`).join('')}</select></label>`;
     if (f.k === 'ref') return `<label>${L}<select data-f="${k}">${opts(f.types, o[k], optional(k))}</select></label>`;
     if (f.k === 'refs' && o.type === 'gpoly') return `<div class="wide note">${esc(L)}: ${esc(o.pts.join(', '))}</div>`;
     if (f.k === 'refs') { const ps = st.scene.objects.filter(x => x.type === 'pulley'); return ps.length ? `<div class="wide"><span class="note">${L}</span><div class="over">${ps.map(p => `<label><input type="checkbox" data-over="${esc(p.id)}"${o.over.includes(p.id) ? ' checked' : ''}>${esc(p.id)}</label>`).join('')}</div></div>` : ''; }
@@ -1276,11 +1321,12 @@ function paintSide() {
       const next = clone(st.scene), x = next.objects.find(y => y.id === o.id);
       if (f.k === 'num') { const v = parseFloat(el.value); if (!Number.isFinite(v)) { paintSide(); return; } const J0 = x.type === 'bridge' ? jockey(x) : null; x[k] = v; if (J0) followJockey(next, J0, jockey(x)); }
       else if (f.k === 'bool') x[k] = el.checked;
+      else if (o.type === 'vector' && (k === 'on' || k === 'vectorFrame')) setVectorAttachment(next, x, k === 'on' ? el.value : x.on, k === 'vectorFrame' ? el.value : x.vectorFrame);
       else x[k] = el.value;
       if (o.type === 'element' && k === 'kind' && X2.units[x.kind] && !X2.units[o.kind]) x.value = defaults('element').value;
       /* a curve changing between a function of x and one of t takes a formula in the new variable */
       if (o.type === 'curve' && k === 'kind') { const tv = v => v === 'param' || v === 'polar'; if (tv(x.kind) && !tv(o.kind)) Object.assign(x, x.kind === 'polar' ? {expr: '1 + cos(t)'} : {expr: 'cos(t)', expr2: 'sin(t)'}, {x1: 0, x2: 6.2832}); else if (!tv(x.kind) && tv(o.kind)) x.expr = 'sin(x)'; else if (x.kind === 'polar' && o.kind === 'param') x.expr = '1 + cos(t)'; }
-      if (k === 'on') {
+      if (k === 'on' && isBody(x)) {
         if (x.on) { const fr = surfaceFrame(next.objects.find(y => y.id === x.on), next); x.at = r4(Math.max(0, Math.min(fr.length, vec.dot(vec.sub(bodyPose(st.scene, o), fr.p0), fr.u)))); }
         else { const p = bodyPose(st.scene, o); x.x = r4(p.x); x.y = r4(p.y); }
       }
@@ -1333,8 +1379,10 @@ function paintSide() {
 }
 /* several objects: align, distribute, the look of all of them */
 function paintMulti(box, ids) {
+  const group = groupOf(ids[0]), grouped = group?.length === ids.length && ids.every(id => group.includes(id));
   const tl = X3.tools, b = (act, t) => `<button type="button" data-al="${act}">${t}</button>`;
-  box.innerHTML = `<h2>${esc(tl.multi(ids.length))}</h2>
+  box.innerHTML = `<h2>${esc(grouped ? (ko ? `그룹 · ${ids.length}개` : `Group · ${ids.length}`) : tl.multi(ids.length))}</h2>
+    <div class="row"><button type="button" data-group>${grouped ? (ko ? '그룹 해제' : 'Ungroup') : (ko ? '그룹으로 묶기' : 'Group objects')}</button><button type="button" data-save-asset>${ko ? '에셋으로 저장' : 'Save as asset'}</button></div>
     <div class="note">${tl.align}</div><div class="row tight">${b('aL', '⇤ ' + tl.aL)}${b('aC', '↔ ' + tl.aC)}${b('aR', tl.aR + ' ⇥')}${b('aT', '⤒ ' + tl.aT)}${b('aM', '↕ ' + tl.aM)}${b('aB', '⤓ ' + tl.aB)}</div>
     <div class="note">${tl.distribute}</div><div class="row tight">${b('dH', '⋯ ' + tl.dH)}${b('dV', '⋮ ' + tl.dV)}</div>
     ${styleSelect(ids.map(id => byId(id).style || '').every((v, i, a) => v === a[0]) ? byId(ids[0]).style || '' : null)}
@@ -1342,14 +1390,16 @@ function paintMulti(box, ids) {
       ${ids.some(id => PHYS_SHAPES.includes(byId(id).type)) ? `<label class="wide">⚙ ${esc(X5.physTitle)}<select data-allphys>${FIELDS.rect.phys.list.map(v => `<option value="${v}"${ids.every(id => byId(id).phys === v) ? ' selected' : ''}>${esc(T.enums[v] || X5.physNone)}</option>`).join('')}</select></label>` : ''}</div>
     <div class="row"><button type="button" data-act="dup">${T.dup}</button><button type="button" data-act="lock">${tl.lockAll}</button><button type="button" data-act="unlock">${tl.unlockAll}</button><button type="button" data-act="front">${tl.front}</button><button type="button" data-act="back">${tl.backZ}</button><button type="button" data-act="del">${T.del}</button></div>
     <div class="olist">${ids.map(id => `<button type="button" data-pick="${esc(id)}">${esc(id)}</button>`).join('')}</div>`;
-  box.querySelectorAll('[data-al]').forEach(x => x.onclick = () => alignSel(x.dataset.al));
+  box.querySelector('[data-group]').onclick = () => groupSelection(grouped);
+  box.querySelector('[data-save-asset]').onclick = () => saveGroupAsset(ids);
+  box.querySelectorAll('[data-al]').forEach(x => { x.disabled = grouped; x.onclick = () => alignSel(x.dataset.al); });
   bindStyleSelect(box);
   box.querySelector('[data-allphys]')?.addEventListener('change', e => setAll('phys', e.target.value));
   box.querySelectorAll('[data-all]').forEach(x => x.onchange = () => { const v = parseFloat(x.value); if (Number.isFinite(v)) setAll(x.dataset.all, v); });
   box.querySelector('[data-act="dup"]').onclick = dup; box.querySelector('[data-act="del"]').onclick = del;
   box.querySelector('[data-act="lock"]').onclick = () => setAll('lock', true); box.querySelector('[data-act="unlock"]').onclick = () => setAll('lock', false);
   box.querySelector('[data-act="front"]').onclick = () => zOrder(true); box.querySelector('[data-act="back"]').onclick = () => zOrder(false);
-  box.querySelectorAll('[data-pick]').forEach(x => x.onclick = () => { setSel([x.dataset.pick]); paint(); });
+  box.querySelectorAll('[data-pick]').forEach(x => x.onclick = () => { setSel([x.dataset.pick], null, {expand:false}); paint(); });
 }
 /* the label as the figure will show it (the same typesetter as the SVG, in the figure's style) */
 function texPreview(k, v) {
@@ -1726,8 +1776,22 @@ async function illustrationAsset(src, title) {
   }
   throw new Error(ko ? '삽화 파일이 너무 큽니다.' : 'The illustration is too large.');
 }
-function showIllustration(src, prompt, left) {
+async function showIllustration(src, prompt, left, style) {
   if (typeof src !== 'string' || !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src)) throw {code:'illustration_failed'};
+  if (style === 'exam') {
+    const image = await decodeAiImage(src), canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+    const paper = canvas.getContext('2d');
+    paper.fillStyle = '#fff'; paper.fillRect(0,0,canvas.width,canvas.height);
+    paper.drawImage(image,0,0);
+    const pixels = paper.getImageData(0,0,canvas.width,canvas.height);
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      const gray = 0.2126*pixels.data[i] + 0.7152*pixels.data[i+1] + 0.0722*pixels.data[i+2];
+      pixels.data[i] = pixels.data[i+1] = pixels.data[i+2] = gray;
+    }
+    paper.putImageData(pixels,0,0);
+    src = canvas.toDataURL('image/png');
+  }
   const host = $('aiIllustration');
   host.hidden = false;
   host.innerHTML = '<img id="aiRasterPreview" alt=""><label for="aiRasterTitle"></label><input id="aiRasterTitle" maxlength="60"><div class="row" id="aiRasterTools"></div><p class="note" id="aiRasterStatus" role="status"></p>';
@@ -1751,7 +1815,7 @@ function showIllustration(src, prompt, left) {
       status.textContent = ko ? '저장했습니다. 시험지 제작에서 그림 불러오기로 선택할 수 있습니다.' : 'Saved. Select it under Import figure in the test-paper maker.';
     } catch (e) { status.textContent = window.HL_WORKSHOP_PROJECTS.error(e); }
     finally { saveButton.disabled = false; height(); }
-  }),button(ko ? '원본 내려받기' : 'Download original', () => {
+  }),button(ko ? '삽화 내려받기' : 'Download illustration', () => {
     const content = Uint8Array.from(atob(src.slice(src.indexOf(',')+1)),ch=>ch.charCodeAt(0));
     const ext = fileExt === 'jpeg' ? 'jpg' : fileExt;
     download(new Blob([content],{type:'image/'+fileExt}),projectFileName(getTitle()).replace(/\.json$/,'.'+ext));
@@ -1779,7 +1843,7 @@ async function aiDraw() {
     const image = photo ? await aiCrop(photo,cropIndex) : undefined;
     if (raster) {
       const r = await api('/api/workshop/illustration','POST',{prompt:text,style,lang,...(image ? {image} : {})});
-      showIllustration(r.image,text,r.left);
+      await showIllustration(r.image,text,r.left,style);
       return;
     }
     const r = image
@@ -1957,6 +2021,59 @@ function insertSymbol(tex) {
   if (commit(next)) { setSel([id]); st.lastText = {id, k: 'text'}; paint(); const el2 = document.querySelector('[data-f="text"]'); if (el2) select(el2, 0, el2.value); }
 }
 const drawStorage = window.HL_WORKSHOP_PROJECTS.client({base:API, token});
+async function saveGroupAsset(ids) {
+  if (!token()) { $('saveStatus').textContent = X6.aiErr.login_required; return; }
+  const name = prompt(ko ? '에셋 이름' : 'Asset name', ko ? '물체 그룹' : 'Object group')?.trim().slice(0,60);
+  if (!name) return;
+  const selected = new Set(ids), scene = clone(st.scene);
+  for (const o of scene.objects) {
+    if (!selected.has(o.id) && LINKS.includes(o.type)) {
+      const refs = refsOf(o);
+      if (refs.length && refs.every(id => selected.has(id))) selected.add(o.id);
+    }
+  }
+  removeIds(scene, scene.objects.filter(o => !selected.has(o.id)).map(o => o.id));
+  const clean = validateScene({...scene, title:name, groups:[ids]}, {lenient:true}).scene;
+  if (clean.objects.length < 2) { $('saveStatus').textContent = T.loadBad; return; }
+  clean.groups = [clean.objects.map(o => o.id)];
+  clean.view = sceneBounds(clean);
+  const data = {...clean, asset:'group'};
+  const status = $('saveStatus'), provider = $('drawProvider').querySelector('select').value;
+  status.textContent = ko ? '에셋 저장 중…' : 'Saving asset…';
+  try {
+    if (provider === 'store') await api('/api/workshop/storage/files','POST',projectUpload(JSON.stringify(data), projectFileName(name), {folder:'에셋',ensure_folder:'1'}), true);
+    else await drawStorage.saveExternal(provider,'asset',name,data);
+    status.textContent = ko ? '에셋을 저장했습니다.' : 'Asset saved.';
+  } catch (e) { status.textContent = window.HL_WORKSHOP_PROJECTS.error(e); }
+  height();
+}
+function openAssetLibrary() {
+  const dialog = document.createElement('dialog'), host = document.createElement('div');
+  dialog.className = 'stdlg';
+  const close = document.createElement('button');
+  close.type = 'button'; close.textContent = ko ? '닫기' : 'Close'; close.onclick = () => dialog.close();
+  dialog.append(close, host);
+  dialog.addEventListener('close', () => { dialog.remove(); $('bInsertAsset').focus(); height(); });
+  document.body.append(dialog);
+  dialog.showModal();
+  const library = window.HL_WORKSHOP_PROJECTS.library(host, drawStorage, {
+    kind:'asset', title:ko ? '에셋 불러오기' : 'Insert asset', height,
+    initial:$('drawProvider').querySelector('select').value,
+    onOpen(raw) {
+      const {scene, ok} = validateScene(raw);
+      if (!ok || raw.asset !== 'group' || scene.objects.length < 2) throw new Error(T.loadBad);
+      const view = dview(), bounds = scene.view || sceneBounds(scene);
+      if (scene.style !== st.scene.style) for (const o of scene.objects) if (!o.style) o.style = scene.style;
+      const dx = view.x+view.w/2-bounds.x-bounds.w/2, dy = view.y+view.h/2-bounds.y-bounds.h/2;
+      if (!insertObjects(scene, dx, dy)) throw new Error(st.scene.objects.length + scene.objects.length > MAX_OBJECTS ? T.tooMany : T.loadBad);
+      dialog.close();
+    },
+  });
+  library.heading.id = 'assetLibraryTitle';
+  dialog.setAttribute('aria-labelledby', library.heading.id);
+  library.heading.focus();
+  height();
+}
 function showDrawEditor() {
   $('drawProjects').hidden = true;
   $('drawEditor').hidden = false;
@@ -2014,6 +2131,7 @@ function shell() {
     <div id="hint3"></div>
     <div class="dbar"><button type="button" id="bTemplates">${esc(X4.templates)}</button>
       <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bShare">${esc(X7.share)}</button>
+      <button type="button" id="bInsertAsset">${ko ? '에셋 불러오기' : 'Insert asset'}</button><label class="btn"><input type="checkbox" id="selectMore" style="width:auto"> ${ko ? '여러 물체 선택' : 'Multi-select'}</label>
       <span class="sep"></span>
       <button type="button" id="bUndo" class="hist" title="${esc(tl.backT)}" aria-label="${esc(tl.backT)}">${tl.back}</button><button type="button" id="bRedo" class="hist" title="${esc(tl.fwdT)}" aria-label="${esc(tl.fwdT)}">${tl.fwd}</button>
       <button type="button" id="bDup" title="Ctrl+D">${T.dup}</button><button type="button" id="bCopy" title="Ctrl+C">${tl.copy}</button><button type="button" id="bPaste" title="Ctrl+V">${tl.paste}</button><button type="button" id="bDel" title="Delete">${T.del}</button><button type="button" id="bClear" class="danger">${tl.clear}</button><span class="sep"></span>
@@ -2065,6 +2183,7 @@ function shell() {
   $('aiWhole').onclick = () => detectAiRegions({whole:true});
   $('aiRegion').onchange = paintAiOutline;
   syncAiControls();
+  $('bInsertAsset').onclick = openAssetLibrary;
   $('bSave').onclick = toStorage; $('bOpenStore').onclick = showDrawProjects;
   $('aiGo').onclick = aiDraw; $('aiBox').ontoggle = () => { if ($('aiBox').open) aiModels(); };
   $('bShare').onclick = openShare;
@@ -2089,7 +2208,8 @@ function shell() {
   $('objectPicker').onchange = e => {
     const id = e.target.value;
     if (id && st.sim) stopSim();
-    setSel(id ? [id] : []);
+    if (id && $('selectMore').checked) toggleSelection(id);
+    else setSel(id ? [id] : []);
     paint();
   };
   $('inkGo').onclick = recognizeInk;
@@ -2235,7 +2355,11 @@ addEventListener('keydown', e => {
     e.preventDefault();
     const d = st.scene.grid * (e.shiftKey ? 10 : 1), dx = e.key === 'ArrowLeft' ? -d : e.key === 'ArrowRight' ? d : 0, dy = e.key === 'ArrowDown' ? -d : e.key === 'ArrowUp' ? d : 0;
     const next = clone(st.scene), ids = new Set(selIds());
-    for (const x of next.objects) if (ids.has(x.id) && !x.lock && !NO_DRAG.includes(x.type)) { const g = clone(x); if (isBody(x) && x.on) x.at = r4(x.at + (dx || dy)); else moveObj(x, dx, dy, g); }
+    const moving = new Set(next.objects.filter(x => ids.has(x.id) && !x.lock && !NO_DRAG.includes(x.type)).map(x => x.id));
+    for (const x of next.objects) if (moving.has(x.id)) {
+      if (isBody(x) && x.on && !moving.has(x.on)) x.at = r4(x.at + (dx || dy));
+      else moveObj(x, dx, dy, clone(x), moving.has(x.on));
+    }
     commit(next, {keepSel: true});
   }
 });

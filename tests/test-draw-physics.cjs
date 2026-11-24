@@ -354,9 +354,31 @@ test('rolling without slipping: a = g sin θ / (1 + I/mr²) for a disk, a ring a
     const sim=P.buildSim(scene(S,[{id:'i',type:'incline',x:0,y:0,angle:30,length:6,mu:0.5},{id:'w',type:'wheel',on:'i',at:5,r:0.2,mass:2,kind}]));
     const a=sim.accelerations().get('w');near(Math.hypot(a.x,a.y),P.rollingAccel(g,30,k),1e-9,kind);near(P.rollingAccel(g,30,k),g*0.5/(1+k),1e-12,'formula');
     const E0=sim.energy().E;sim.run(0.6);near(sim.energy().E,E0,1e-6,kind+': rolling keeps the energy (K includes the spin)');
+    const pose=sim.poses().get('w');
+    near(pose.spin,(5-pose.at)/0.2,1e-8,'angle follows rolling distance');
+    const v=sim.velocities().get('w');
+    near(pose.omega,Math.hypot(v.x,v.y)/0.2,1e-8,'positive angular speed down the rising incline');
   }
   const slip=P.buildSim(scene(S,[{id:'i',type:'incline',x:0,y:0,angle:60,length:6,mu:0.1},{id:'w',type:'wheel',on:'i',at:5,r:0.2,mass:2,kind:'ring'}]));
   const r=60*Math.PI/180,a=slip.accelerations().get('w');near(Math.hypot(a.x,a.y),g*(Math.sin(r)-0.1*Math.cos(r)),1e-9,'slides: g (sin θ − μ cos θ)');
+  const E0=slip.energy().E;slip.run(0.5);
+  near(slip.poses().get('w').omega,0.1*g*Math.cos(r)*0.5/0.2,1e-8,'friction spins the sliding ring');
+  near(slip.energy().E+slip.energy().heat,E0,1e-8,'sliding accounts for rotational energy and heat');
+});
+
+test('vectors can follow a rolling body in world axes or rotate with its radius',async()=>{
+  const {S,P}=await load();
+  const raw=S.template('rolling_incline');
+  raw.objects.push({id:'arrow',type:'vector',on:'w1',vectorFrame:'body',x1:0,y1:0,x2:1,y2:0});
+  raw.groups=[['w1','arrow','missing']];
+  const scene=S.validateScene(raw).scene, arrow=scene.objects.find(o=>o.id==='arrow');
+  assert.deepEqual(scene.groups,[['w1','arrow']]);
+  const simulation=P.buildSim(scene).run(0.5), poses=simulation.poses(), w=poses.get('w1');
+  const [base,tip]=S.vectorPoints(scene,arrow,poses);
+  near(base.x,w.x,1e-10,'starts at axle');near(base.y,w.y,1e-10,'follows axle');
+  near(tip.x-base.x,Math.cos(w.spin),1e-10,'body-frame x');near(tip.y-base.y,Math.sin(w.spin),1e-10,'body-frame y');
+  const [fixedBase,fixedTip]=S.vectorPoints(scene,{...arrow,vectorFrame:'world'},poses);
+  near(fixedTip.x-fixedBase.x,1,1e-10,'world-frame x');near(fixedTip.y-fixedBase.y,0,1e-10,'world-frame y');
 });
 
 test('buoyancy ρ g V, a floating fraction ρ_b/ρ_f; motional EMF ε = BLv; meter bridge balance R/S = l/(100 − l)',async()=>{
