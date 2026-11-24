@@ -124,3 +124,20 @@ test('corrupt JSON and original media never produce viewer content', async () =>
   asset.data.set(PREFIX + '/media/' + PACK + '.bin', Buffer.alloc(OBJ.length, 1));
   assert.equal((await asset.call(ROOT + '/goldstein/questions/1/media/1')).status, 503);
 });
+
+test('a verified delta uses the base index and serves its revised problem batch', async () => {
+  const adaptation = {text: '한국어 학습 문항.', review_status: 'study_adapted'};
+  const revisedBatch = bytes([{...row, ko: adaptation}]);
+  const book = {...JSON.parse(manifest).books[0], batches: [hash(revisedBatch)]};
+  const delta = bytes({schema: JSON.parse(manifest).schema, inherit_from: RELEASE, books: [book]});
+  const release = hash(delta);
+  const base = PREFIX + '/releases/' + release;
+  const state = setup(undefined, {BANK_TEXTBOOK_RELEASE: release});
+  state.data.set(base + '/manifest.json', delta);
+  state.data.set(base + '/goldstein/batches/0.json', revisedBatch);
+  assert.equal((await state.call(ROOT + '/goldstein')).status, 200);
+  assert.ok(state.calls.includes(BASE + '/goldstein/index.json'));
+  const detail = await state.call(ROOT + '/goldstein/questions/1');
+  assert.deepEqual((await detail.json()).ko, adaptation);
+  assert.ok(!state.calls.includes(BASE + '/goldstein/batches/0.json'));
+});

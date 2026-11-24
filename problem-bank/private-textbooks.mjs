@@ -100,8 +100,19 @@ export async function privateTextbookRoute(request, env, url, user) {
     const book = books.find(item => item.id === match[1]);
     if (!book) return status('not_found', 404);
     const bookBase = base + '/' + book.id;
+    let priorBook, priorBase;
+    if (manifest.inherit_from !== undefined) {
+      const inherited = manifest.inherit_from;
+      if (typeof inherited !== 'string' || !HEX.test(inherited) || inherited === release) throw Error('textbook_integrity');
+      priorBase = PREFIX + '/releases/' + inherited;
+      const prior = await readJson(env.LIBRARY, priorBase + '/manifest.json', inherited);
+      if (prior.schema !== manifest.schema || prior.inherit_from !== undefined ||
+          !Array.isArray(prior.books)) throw Error('textbook_integrity');
+      priorBook = prior.books.find(item => item.id === book.id);
+    }
+    const objectBase = (sha, priorSha) => sha === priorSha ? priorBase + '/' + book.id : bookBase;
     if (!match[2]) {
-      const directory = await readJson(env.LIBRARY, bookBase + '/index.json', book.index_sha256);
+      const directory = await readJson(env.LIBRARY, objectBase(book.index_sha256, priorBook?.index_sha256) + '/index.json', book.index_sha256);
       if (!Array.isArray(directory) || directory.length !== book.count) throw Error('textbook_integrity');
       const keyword = search.normalize('NFKC').toLowerCase();
       const found = keyword ? directory.filter(item => [item.number, item.label, item.chapter, item.kind]
@@ -117,7 +128,8 @@ export async function privateTextbookRoute(request, env, url, user) {
     const ordinal = index(match[2]);
     if (ordinal > book.count) return status('not_found', 404);
     const batch = Math.floor((ordinal - 1) / BATCH_SIZE);
-    const rows = await readJson(env.LIBRARY, bookBase + '/batches/' + batch + '.json', book.batches[batch]);
+    const sha = book.batches[batch];
+    const rows = await readJson(env.LIBRARY, objectBase(sha, priorBook?.batches?.[batch]) + '/batches/' + batch + '.json', sha);
     const row = rows[(ordinal - 1) % BATCH_SIZE];
     if (row?.ordinal !== ordinal || !Array.isArray(row.media) || row.media.length > 100) throw Error('textbook_integrity');
     if (!match[3]) {

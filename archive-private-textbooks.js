@@ -14,7 +14,7 @@ const COPY = {
     question_crop: '문제 원문', source_page: '원본 PDF', english_page: '영어 참고판', figure: '문제 그림',
     page: '쪽', source_compared: '원문 대조', model_source_reviewed: 'AI 원문 대조',
     machine_draft: '자동 번역 초안', upstream_corrected_edition: '원본 사이트 영어판',
-    pending: '원문 대조 필요', structured_english_russian: '공개 영어·러시아어 본문 기준',
+    pending: '원문 대조 필요', study_adapted: '한국어 학습용 순화판', structured_english_russian: '공개 영어·러시아어 본문 기준',
   },
   en: {
     heading: 'My private textbooks', home: '← Book archive', loading: 'Loading…',
@@ -28,7 +28,7 @@ const COPY = {
     question_crop: 'Problem excerpt', source_page: 'Original PDF', english_page: 'English reference edition',
     figure: 'Problem diagram', page: 'p.', source_compared: 'Compared with source',
     model_source_reviewed: 'AI comparison with source', machine_draft: 'Machine translation draft',
-    upstream_corrected_edition: 'English edition from the source website', pending: 'Source comparison pending',
+    upstream_corrected_edition: 'English edition from the source website', pending: 'Source comparison pending', study_adapted: 'Korean study adaptation',
     structured_english_russian: 'Based on the published English and Russian statements',
   },
 };
@@ -65,7 +65,9 @@ export function mountPrivateTextbooks(container, options) {
 
   const token = () => String(options.getToken?.() || '');
   let observedToken = token();
-  let state = {book: '', page: 1, q: '', problem: null};
+  const requestedBook = options.params?.get('book') || '';
+  const initialState = () => ({book: BOOK.test(requestedBook) ? requestedBook : '', page: 1, q: '', problem: null});
+  let state = initialState();
   let books = [];
   let disposed = false;
   let epoch = 0;
@@ -297,6 +299,7 @@ export function mountPrivateTextbooks(container, options) {
     }
     try {
       if (!books.length) books = (await get(API + '/books', run)).books;
+      if (!books.some(book => book.id === state.book)) state.book = '';
       if (!state.book) renderBooks();
       else if (state.problem) {
         const row = await get(API + '/books/' + state.book + '/questions/' + state.problem, run);
@@ -317,7 +320,7 @@ export function mountPrivateTextbooks(container, options) {
     if (next === observedToken || disposed) return;
     observedToken = next;
     books = [];
-    state = {book: '', page: 1, q: '', problem: null};
+    state = initialState();
     refresh();
   }
   win.addEventListener('storage', authChanged);

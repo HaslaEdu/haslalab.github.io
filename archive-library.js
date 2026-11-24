@@ -67,6 +67,7 @@ export function mountArchiveLibrary(container,options={}){
   let config={kind:'book',collection:'physics',lang:'ko',theme:'light',apiOrigin:'https://haslalab-problem-bank.haslalab.workers.dev',params:new URLSearchParams(),...options};
   let disposed=false,epoch=0,panelRequest=0,bootstrapRequest=0,readerRequest=0,identifyRequest=0,activeQuestion=null,identifyBusy=false,mathLayoutFrame=0,sources=[],status={},statusChecked=false,contents=null,urls=new Set(),controllers=new Set(),metadataControllers=new Set();
   let token=String(config.getToken?.()||''),params=cleanParams(config.params),candidateItems=null;
+  const privateBookToken=token;
   const root=doc.createElement('section');root.className='al';container.replaceChildren(root);
   const $=selector=>root.querySelector(selector),tr=key=>WORDS[config.lang==='en'?'en':'ko'][key]||key;
   const current=e=>!disposed&&e===epoch&&String(config.getToken?.()||'')===token;
@@ -186,6 +187,20 @@ export function mountArchiveLibrary(container,options={}){
     return `<a class="comp al-school-card" href="${esc(href({school:school.id,source:null,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(short)}</div>${logo?`<img class="clogo al-card-school-logo${school.logo_monochrome?' al-logo-monochrome':''}" src="${esc(logo)}" data-logo-light="${esc(light)}" data-logo-dark="${esc(dark)}" alt="" loading="lazy" decoding="async">`:''}</div><div class="full">${esc(school.id==='other'?tr('unclassified'):localized(school.name))}</div>${metadata([[tr('materials'),papers.length||'—','data-card-papers'],[tr('materialType'),tr(papers.length?'schoolPapers':'officialLinks')],[tr('officialLinksCount'),schoolMaterials(school).length],[tr('problems'),papers.length?count:tr('notDigitized'),'data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
   }
   function officialMaterialsHTML(school){const items=schoolMaterials(school);return items.length?`<section class="al-official"><h3>${esc(tr('officialMaterials'))}</h3><ul>${items.map(x=>`<li><a href="${esc(officialURL(x.url))}" target="_blank" rel="noopener noreferrer">${esc(localized(x.label)||x.url)} ↗</a></li>`).join('')}</ul></section>`:'';}
+  const privateTitles = {
+    goldstein: 'Classical Mechanics — Goldstein',
+    guopei: 'Guopei — Physics Olympiad Training and Selection',
+    savchenko: 'Problems in Physics — Savchenko',
+    estonian: '200 Estonian Physics Olympiad Problems',
+    russian: 'Russian Physics Olympiads 2005–2021',
+    general: 'Problems in General Physics — Irodov',
+    aptitude: 'Aptitude Test Problems in Physics — Krotov',
+  };
+  function privateBookCard(book){
+    const title=privateTitles[book.id], href='#/archive/books/phys?view=private-textbooks&book='+book.id;
+    const ko=config.lang==='ko';
+    return `<a class="comp al-book-card" href="${esc(href)}"><div class="chead"><div class="abbr">${esc(title)}</div></div>${metadata([[tr('problems'),book.count],[ko?'한국어':'Korean',book.korean_count],[tr('access'),ko?'비공개 웹문항 이용 가능':'Private web problems available']])}<span class="go" aria-hidden="true">→</span></a>`;
+  }
   function referenceBooks(){return (Array.isArray(config.bookReferences)?config.bookReferences:[]).filter(item=>item?.collection===config.collection&&typeof item.id==='string'&&!SID.test(item.id)&&officialURL(item.href));}
   function referenceCard(item){
     const title=localized(item.full_title||item.title),topic=localized(item.topic_label),availability=tr(item.availability==='digitization_pending'?'digitizationPending':item.resource_kind==='handouts'?'officialProblems':'officialOnline');
@@ -242,8 +257,10 @@ export function mountArchiveLibrary(container,options={}){
     }
     const list=visibleSources().filter(s=>[sourceTitle(s),sourceMeta(s),localized(sourceMedia(s.id).short_title),localized(sourceMedia(s.id).topic_label),sourceMedia(s.id).full_title].join(' ').toLocaleLowerCase().includes(query)),books=config.kind==='book';slot.className=books?'comps':'al-paper-list';
     if(books)slot.dataset.lang=config.lang;else slot.removeAttribute('data-lang');
-    const references=books?referenceBooks().filter(item=>[localized(item.title),localized(item.full_title),item.short_title,item.author,localized(item.topic_label)].join(' ').toLocaleLowerCase().includes(query)):[];
-    slot.innerHTML=list.length||references.length?list.map(s=>books?bookCard(s):`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join('')+references.map(referenceCard).join(''):books?`<div class="subjempty">${esc(tr('emptySources'))}</div>`:`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
+    const privateBooks=books&&privateBookToken===token&&config.collection==='physics'?(config.privateBooks||[]).filter(book=>Object.hasOwn(privateTitles,book.id)):[];
+    const privateCards=privateBooks.filter(book=>privateTitles[book.id].toLocaleLowerCase().includes(query)).map(privateBookCard).join('');
+    const references=books?referenceBooks().filter(item=>!(item.id==='goldstein-classical-mechanics'&&privateBooks.some(book=>book.id==='goldstein'))).filter(item=>[localized(item.title),localized(item.full_title),item.short_title,item.author,localized(item.topic_label)].join(' ').toLocaleLowerCase().includes(query)):[];
+    slot.innerHTML=list.length||references.length||privateCards?privateCards+list.map(s=>books?bookCard(s):`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join('')+references.map(referenceCard).join(''):books?`<div class="subjempty">${esc(tr('emptySources'))}</div>`:`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
   }
   function setSearchMode(mode){
     if(!['text','ocr'].includes(mode))return;viewState().searchMode=mode;
