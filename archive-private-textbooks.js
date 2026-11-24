@@ -234,6 +234,7 @@ export function mountPrivateTextbooks(container, options) {
       reader.append(credit);
     }
     const images = row.media || [];
+    let loadSourceScan;
     if (images.length) {
       const section = atom('section');
       const chooser = atom('div');
@@ -250,7 +251,7 @@ export function mountPrivateTextbooks(container, options) {
         option.value = String(item.id);
         select.append(option);
       }
-      const show = button(words.showImage, async () => {
+      const loadImage = async () => {
         const item = images.find(i => String(i.id) === select.value);
         if (!item || !current(run)) return;
         const exact = API + '/books/' + state.book + '/questions/' + row.ordinal + '/media/' + item.id;
@@ -273,7 +274,9 @@ export function mountPrivateTextbooks(container, options) {
         } finally {
           show.disabled = false;
         }
-      });
+      };
+      const show = button(words.showImage, loadImage);
+      if (row.ko?.review_status === 'source_scan') loadSourceScan = loadImage;
       select.addEventListener('change', () => {
         pending?.abort();
         release();
@@ -287,6 +290,7 @@ export function mountPrivateTextbooks(container, options) {
     content.replaceChildren(reader);
     const initial = row.ko && (!row.en || options.lang !== 'en') ? 'ko' : 'en';
     selectLanguage(initial);
+    if (loadSourceScan) void loadSourceScan();
   }
 
   async function refresh() {
