@@ -6,7 +6,7 @@ import {createGradeRouter} from './src/practice-grade.js';
 import {createLearnRouter} from './src/learn-services.js';
 import {createLearnerRouter} from './src/learner-profile.js';
 import {createLeagueRouter, awardLeagueXp, closeLeagueWeeks, groupOutcomes, weekOf, dayOf, weekEnds, nextWeek, daysLeft, baseXp, attemptXp, gradedXp,
-  LEAGUE_TIERS, MASTER, GROUP_SIZE, DAILY_COUNTED, leagueDeletion, ensureLeagueSchema, goalBonus, GOAL_MIN, GOAL_MAX} from './src/league.js';
+  LEAGUE_TIERS, MASTER, GROUP_SIZE, DAILY_COUNTED, leagueDeletion, ensureLeagueSchema, goalBonus, GOAL_MIN, GOAL_MAX, hintMult} from './src/league.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
@@ -233,4 +233,24 @@ test('the goal bonus: no saved goal pays nothing; two requests crossing the goal
   /* the day rows go with the account and with the closed week */
   for(const st of leagueDeletion(env,11))await st.run();
   assert.equal(db.prepare('SELECT COUNT(*) AS n FROM league_goal_days WHERE user_id=11').get().n,0);
+});
+
+test('hints: 25 % off the problem\'s XP per hint, never below 25 %; the server\'s own hint records count whatever the answer says',async()=>{
+  assert.deepEqual([0,1,2,3,4,9].map(hintMult),[1,0.75,0.5,0.25,0.25,0.25]);
+  assert.equal(attemptXp(attempt('a',{hints:1})),15);assert.equal(attemptXp(attempt('a',{hints:2,result:'solved'})),5);
+  assert.equal(gradedXp('track',5,'pass',2),10);assert.equal(gradedXp('track',5,'retry',3),1);
+  const {route,db}=setup(),me=user(9),week='2026-11-23';
+  /* hints shown (recorded at once), then an answer that claims none: the recorded two still count */
+  await route('/api/practice/attempts','POST',{attempts:[attempt('ap1-u1-001',{result:'hint',ctx:'daily',level:'L1'}),attempt('ap1-u1-001',{result:'hint',ctx:'daily',level:'L1'})]},me);
+  assert.equal(db.prepare("SELECT COUNT(*) n FROM sqlite_master WHERE name='league_xp'").get().n?xpOf(db,9,week):0,0,'a hint earns nothing');
+  const r=await route('/api/practice/attempts','POST',{attempts:[attempt('ap1-u1-001',{ctx:'daily',level:'L1',hints:0})]},me);
+  assert.equal(r.league_xp,10,'20 XP × 50 % for two hints');
+  /* in the same batch too, and the answer's own count wins when it is higher */
+  const r2=await route('/api/practice/attempts','POST',{attempts:[attempt('ap1-u1-002',{result:'hint'}),attempt('ap1-u1-002')]},me);
+  assert.equal(r2.league_xp,15);
+  const r3=await route('/api/practice/attempts','POST',{attempts:[attempt('ap1-u1-003',{hints:3})]},me);
+  assert.equal(r3.league_xp,5);
+  /* "I can't solve this" earns nothing; the goal still counts only right or solved problems */
+  assert.equal((await route('/api/practice/attempts','POST',{attempts:[attempt('ap1-u1-004',{result:'giveup',ctx:'daily',level:'L1'})]},me)).league_xp,0);
+  assert.equal(xpOf(db,9,week),30);
 });

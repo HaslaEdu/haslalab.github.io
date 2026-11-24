@@ -28,6 +28,7 @@
     }
     if(outcome!=='right'||!cur)return out;
     if(cur.due>day)return out;                       /* answered right before it was due: no change */
+    if(cur.once){delete out[id];return out;}         /* a hint's "see it again tomorrow": once, then it leaves */
     const box=(cur.box|0)+1;
     if(box>=REVIEW_DAYS.length){delete out[id];return out;}
     out[id]={...cur,box,due:addDays(day,REVIEW_DAYS[box]),at:stamp};
@@ -162,10 +163,94 @@
     return it;
   }
 
+  /* ── the daily problems ("오늘의 문제"): a difficulty rating per study level, hints, and how the working is handed in.
+     The rating math is community/src/practice-progress.js dailyUpdate (the server recomputes it from the recorded
+     answers and its value wins for members; the tests check the two give the same numbers). ── */
+  const LEVEL_STEPS={L1:[2,7],L2:[5,7],L3:[6,9],L4:[8,9]};
+  const DAILY_K_FIRST=48,DAILY_K=20,DAILY_FIRST_N=10;
+  const stepR=s=>1000+100*s;
+  const lvKey=level=>LEVEL_STEPS[level]?level:'L1';
+  const dailyBounds=level=>{const [lo,hi]=LEVEL_STEPS[lvKey(level)];return [stepR(Math.max(1,lo-1)),stepR(Math.min(10,hi+1))];};
+  /* a new learner starts in the middle of the level's steps: "medium" */
+  const dailyStart=level=>{const [lo,hi]=LEVEL_STEPS[lvKey(level)];return stepR((lo+hi)/2);};
+  const dailyK=n=>n<DAILY_FIRST_N?DAILY_K_FIRST:DAILY_K;
+  const DAILY_RESULTS=['right','solved','wrong','missed','giveup'];
+  function dailyUpdate(rating,n,step,result,hints,level){
+    if(!DAILY_RESULTS.includes(result))return rating;
+    const won=result==='right'||result==='solved'?1:0,h=Math.max(0,Math.min(5,Math.floor(Number(hints)||0)));
+    const k=dailyK(n),expected=1/(1+10**((stepR(Math.max(1,Math.min(10,Number(step)||3)))-rating)/400));
+    let delta=k*(won-expected);
+    if(won)delta*=Math.max(0,1-h/3);
+    if(result==='giveup')delta=Math.min(delta,-k/2);
+    const [lo,hi]=dailyBounds(level);
+    return Math.round(Math.max(lo,Math.min(hi,rating+delta))*10)/10;
+  }
+  /* the state kept per level: {r, n, dir (+1 up, -1 down, 0), at} */
+  function dailyApply(d,level,step,result,hints,at){
+    const cur=d&&num(d.r)?d:{r:dailyStart(level),n:0,dir:0,at:0};
+    if(!DAILY_RESULTS.includes(result))return cur;
+    const r=dailyUpdate(cur.r,cur.n|0,step,result,hints,level);
+    return{r,n:(cur.n|0)+1,dir:r>cur.r?1:r<cur.r?-1:0,at:at??Math.floor(Date.now()/1000)};
+  }
+  /* the rating said gently: five words from easy to hard within the level, and which way it last moved */
+  const DAILY_WORDS={ko:['쉬움','조금 쉬움','보통','조금 어려움','어려움'],en:['easy','fairly easy','medium','fairly hard','hard']};
+  function dailyLabel(d,level,lang){
+    const [lo,hi]=LEVEL_STEPS[lvKey(level)],r=d&&num(d.r)?d.r:dailyStart(level);
+    const f=(r-stepR(lo-0.5))/(stepR(hi+0.5)-stepR(lo-0.5)),band=Math.max(0,Math.min(4,Math.floor(f*5)));
+    const words=DAILY_WORDS[lang]||DAILY_WORDS.en,arrow=d?.dir>0?'↑':d?.dir<0?'↓':'';
+    return{band,word:words[band],arrow,step:Math.max(1,Math.min(10,Math.round((r-1000)/100))),text:words[band]+(arrow?' '+arrow:'')};
+  }
+  /* the next daily problem: near the rating's step, a little spread (the jitter), unseen first, then unsolved, then the
+     units asked for first (weak ones) */
+  function dailyPick(pool,rating,ctx){
+    const c=ctx||{},rand=c.rand||Math.random,seen=c.seen||new Set(),solved=c.solved||{},units=new Set(c.units||[]);
+    const target=(rating-1000)/100+(c.spread??0.6)*(rand()*2-1);
+    const open=(pool||[]).filter(i=>i&&!seen.has(i.id));
+    const score=i=>Math.abs(i.s-target)*10+(solved[i.id]?6:0)+(units.size&&!units.has(i.u)?2:0)+rand();
+    return open.map(i=>({i,k:score(i)})).sort((a,b)=>a.k-b.k)[0]?.i||null;
+  }
+  /* hints: each one shown takes 25 % off the problem's XP, never below 25 % (league.js hintMult, the same rule) */
+  const HINT_STEP=0.25,HINT_FLOOR=0.25;
+  const hintMult=h=>Math.max(HINT_FLOOR,1-HINT_STEP*Math.max(0,Math.floor(Number(h)||0)));
+  /* the first step of an official solution: its first sentence (not split inside $…$), at most 280 characters */
+  function firstStep(sol){
+    const t=String(sol||'').trim().split(/\n{2,}/)[0]||'';if(!t)return '';
+    let math=false;
+    for(let i=0;i<t.length;i++){const ch=t[i];if(ch==='$')math=!math;else if(!math&&/[.!?。]/.test(ch)&&(i+1===t.length||/\s/.test(t[i+1]))&&i>=12)return t.slice(0,i+1).slice(0,280);}
+    return t.length>280?t.slice(0,277)+'…':t;
+  }
+  /* the hints a problem offers, in order: its own hints; if it has none, the first step of its official solution; an
+     exam item with typed answers can show its choices instead; else none (the button is off) */
+  function hintList(item,opts){
+    if(!item)return [];
+    if(Array.isArray(item.hints)&&item.hints.length)return item.hints.map(text=>({kind:'text',text:String(text)}));
+    const step=item.kind==='track'||typeof item.sol==='string'?firstStep(item.sol):'';
+    if(step)return [{kind:'solstep',text:step}];
+    if(opts?.choices)return [{kind:'choices'}];
+    return [];
+  }
+  /* ── the device, for how the working is handed in. env: {coarse, fine, hover, w, h (screen, CSS px), touch
+     (maxTouchPoints), ua, platform}. iPadOS reports a desktop Mac: MacIntel with touch points is an iPad. ── */
+  function deviceKind(env){
+    const e=env||{},touch=Number(e.touch)||0,short=Math.min(Number(e.w)||0,Number(e.h)||0)||9999,ua=String(e.ua||'');
+    if(/iPad/.test(ua)||(e.platform==='MacIntel'&&touch>1))return 'tablet';
+    if(/iPhone|iPod/.test(ua)||(/Android/.test(ua)&&/Mobile/.test(ua)))return 'phone';
+    if(/Android/.test(ua))return short<600?'phone':'tablet';
+    if(e.coarse&&!e.fine)return short<600?'phone':'tablet';
+    if(!e.fine&&touch>0)return short<600?'phone':'tablet';
+    return 'computer';
+  }
+  /* the ways shown first on each device, and the rest under "other ways" */
+  const SUBMIT_OPTIONS={computer:{main:['phone','file'],more:['pad','photo']},tablet:{main:['photo','pad','file'],more:['phone']},phone:{main:['photo','file'],more:['pad']}};
+  const submitOptions=kind=>SUBMIT_OPTIONS[kind]||SUBMIT_OPTIONS.computer;
+  /* the phone hand-off's code: 8 letters and digits without 0, O, 1 or I */
+  const HANDOFF_RE=/^[A-HJ-NP-Z2-9]{8}$/;
+  const handoffLink=(base,code)=>String(base||'').replace(/[#?].*$/,'')+'#ph='+code;
+
   /* ── progress backup: a JSON file with {app, version, exported, state}. Import checks every field and keeps only
      what has the right shape; merging keeps the newer entry for each item ── */
   const APP='haslalab-practice',VERSION=1;
-  const FIELDS=['profile','xp','days','level','solved','wrong','skills','bank','contest','review','later','recent','goalDay','diagAt','graded','gradedHist','studyLevel','streakCfg','intro'];
+  const FIELDS=['profile','xp','days','level','solved','wrong','skills','bank','contest','review','later','recent','goalDay','diagAt','graded','gradedHist','studyLevel','streakCfg','intro','dailyR'];
   function exportOf(saved,when){
     const state={};for(const k of FIELDS)if(saved&&saved[k]!==undefined)state[k]=saved[k];
     return{app:APP,version:VERSION,exported:when||new Date().toISOString(),state};
@@ -196,6 +281,7 @@
     if(typeof s.studyLevel==='string'&&/^L[1-4]$/.test(s.studyLevel))out.studyLevel=s.studyLevel;
     if(isObj(s.streakCfg)&&Array.isArray(s.streakCfg.pauses))out.streakCfg={pauses:s.streakCfg.pauses.filter(pauseOk).slice(-12)};
     const im=mapOf(s.intro,num);if(im)out.intro=im;
+    const dm=mapOf(s.dailyR,d=>isObj(d)&&num(d.r)&&Number.isInteger(d.n)&&d.n>=0);if(dm){for(const k of Object.keys(dm))if(!LEVEL_STEPS[k])delete dm[k];else{const [lo,hi]=dailyBounds(k);dm[k]={...dm[k],r:Math.max(lo,Math.min(hi,dm[k].r))};}out.dailyR=dm;}
     if(!Object.keys(out).length)return{ok:false,error:'empty'};
     return{ok:true,state:out};
   }
@@ -224,6 +310,7 @@
     if(B.studyLevel&&!A.studyLevel)out.studyLevel=B.studyLevel;
     if(B.streakCfg){const seen=new Set(),list=[];for(const p of [...pausesOf(A.streakCfg),...pausesOf(B.streakCfg)]){const k=p.from+p.to;if(!seen.has(k)){seen.add(k);list.push(p);}}out.streakCfg={pauses:list.sort((x,y)=>x.from<y.from?-1:1).slice(-12)};}
     if(B.intro)out.intro=obj(A.intro,B.intro,mx);
+    if(B.dailyR)out.dailyR=obj(A.dailyR,B.dailyR,(x,y)=>(Number(y?.n)||0)>(Number(x?.n)||0)?y:x);
     return out;
   }
   /* ── streak: a day missed does not end it once a week (the week's freeze, used by itself and back each Monday), and
@@ -265,7 +352,8 @@
     for(const st of Array.isArray(strokes)?strokes:[]){
       if(!st||!Array.isArray(st.pts)||!st.pts.length)continue;
       const room=DRAFT_POINTS-total;if(room<=0)break;
-      const pts=st.pts.slice(0,room).filter(p=>Array.isArray(p)&&num(p[0])&&num(p[1])).map(p=>[Math.round(p[0]),Math.round(p[1])]);
+      /* a stylus's pressure (0–1) rides along as a third number */
+      const pts=st.pts.slice(0,room).filter(p=>Array.isArray(p)&&num(p[0])&&num(p[1])).map(p=>num(p[2])?[Math.round(p[0]),Math.round(p[1]),Math.round(Math.max(0,Math.min(1,p[2]))*100)/100]:[Math.round(p[0]),Math.round(p[1])]);
       if(!pts.length)continue;
       total+=pts.length;out.push({tool:st.tool==='eraser'?'eraser':'pen',w:Math.max(1,Math.min(60,Number(st.w)||4)),pts});
     }
@@ -362,7 +450,8 @@
     return out;
   }
 
-  return{PAUSE_DAYS,PAUSE_GAP,weekOf,activePause,streakInfo,pauseAllowed,pauseStart,pauseStop,
+  return{LEVEL_STEPS,DAILY_K_FIRST,DAILY_K,DAILY_FIRST_N,DAILY_RESULTS,dailyBounds,dailyStart,dailyK,dailyUpdate,dailyApply,dailyLabel,dailyPick,HINT_STEP,HINT_FLOOR,hintMult,firstStep,hintList,deviceKind,SUBMIT_OPTIONS,submitOptions,HANDOFF_RE,handoffLink,
+    PAUSE_DAYS,PAUSE_GAP,weekOf,activePause,streakInfo,pauseAllowed,pauseStart,pauseStop,
     DRAFT_POINTS,DRAFT_KEEP,DRAFT_DAYS,DRAFT_LOCAL_BYTES,compactStrokes,draftOf,draftEmpty,draftOk,pruneDrafts,localDraft,
     UNIT_CARDS,unitCard,guideHref,simHref,accountMerge,skillsMerge,
     STUDY_LEVELS,levelInfo,inLevel,defaultLevel,BANDS,BAND_MULT,bandOf,baseXp,gradedXp,gradedGain,moveOn,UNIT_WINDOW,UNIT_UP,pushGraded,PAGE_SIDE,PAGE_BYTES,MAX_PAGES,fitSize,dataUrlBytes,ENCODE_STEPS,pageOk,gradeItem,REVIEW_DAYS,addDays,reviewUpdate,dueIds,PACE,paceFor,clock,matchSet,buildSet,APP,VERSION,FIELDS,exportOf,validateBackup,mergeBackup};

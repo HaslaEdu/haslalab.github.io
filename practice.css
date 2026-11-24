@@ -194,7 +194,7 @@ button.stat.fire[aria-expanded=true]{border-color:var(--accent)}.stat.fire.pause
 .wread .ractions button.primary{min-width:160px;min-height:44px}
 .conf{display:inline-block;font-size:12px;color:var(--muted);margin-left:6px}.conf.low{font-weight:700;color:var(--amber);background:var(--amber-bg);border-radius:10px;padding:1px 8px}
 /* appeals */
-.appeal{margin-top:10px}#apForm{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}#apForm #apNote{flex:1 1 220px}
+.appeal{margin-top:10px}#apForm{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:center}#apForm[hidden]{display:none}#apForm #apNote{flex:1 1 220px}
 .tag.ap-open{color:var(--amber);background:var(--amber-bg)}.tag.ap-upheld{color:var(--muted)}.tag.ap-changed{color:var(--ok);background:var(--ok-bg)}
 @media(max-width:600px){.wrbody{grid-template-columns:1fr}.thumbs.mini{flex-direction:row;overflow-x:auto}.thumbs.mini img{width:72px}
   .draftbar .dbtns{width:100%}.draftbar .dbtns button{flex:1}.introcard .actions button.primary{flex:1 1 100%}}
@@ -211,3 +211,25 @@ button.stat.goal[aria-expanded=true]{border-color:var(--accent)}button.stat.goal
 @keyframes goalIn{from{opacity:0;transform:translate(-50%,12px) scale(.96)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
 @media (prefers-reduced-motion:reduce){.goalmoment{animation:none}.goalmoment.out{transition:none}.goalring circle.on{transition:none}}
 :root{--lf-line:var(--line);--lf-bg:var(--surface);--lf-on:var(--accent);--lf-muted:var(--muted)}
+/* daily problems: one per screen, each sliding in; skip, hint, "I can't solve this", and "I solved it" (off until checked) */
+.session.daily{animation:dIn .26s ease-out}
+@keyframes dIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+.dfoot button#next{min-width:9.5em}.dfoot button#next:disabled{opacity:.45;cursor:not-allowed}
+.dfoot #giveup{color:var(--muted)}
+.dlv{background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:1px 10px;font-weight:600}
+.dlvline{margin:-4px 0 8px}.dlvline .tag{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.hintcost{margin:4px 0 0;color:var(--amber)}
+.flash{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;background:var(--ink);color:var(--paper);padding:9px 18px;border-radius:999px;font-weight:600;box-shadow:0 6px 22px rgba(0,0,0,.18);transition:opacity .45s,transform .45s;max-width:calc(100vw - 32px)}
+.flash.out{opacity:0;transform:translate(-50%,10px)}
+@media (prefers-reduced-motion:reduce){.session.daily{animation:none}.flash{transition:none}}
+/* handing in the working: this device's ways first, the rest under "other ways"; the phone hand-off's QR */
+.wmore{margin:6px 0 0}.wmore>.seg{margin-top:6px}
+.handoff{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;padding:12px;border:1px dashed var(--line);border-radius:12px;background:var(--surface-alt)}
+.hoqr{width:176px;height:176px;flex:none;background:#fff;border-radius:10px;padding:6px;display:flex;align-items:center;justify-content:center}.hoqr svg{width:100%;height:100%}
+.hotext{flex:1 1 240px;min-width:0}.hotext ol{margin:6px 0;padding-left:20px}.hotext code{word-break:break-all;font-size:13px;color:var(--ink)}
+.hostate{font-weight:600;color:var(--accent)}
+.phonemode .wpages,.phonemode #wSend,.phonemode .dsaved{display:none}
+/* the phone's page opened from the QR */
+.phonepage .stats,.phonepage .tabs,.phonepage .note{display:none}
+.session.phone h2{margin-top:0}.phbtns{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.filebtn.big{min-height:84px;font-size:17px}

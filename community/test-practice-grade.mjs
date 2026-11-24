@@ -277,3 +277,53 @@ test('appeals: the owner, once per attempt; staff list with overturn counts and 
   const graded=await route('/api/learn/graded','GET',null,me,{url:'https://x/api/learn/graded'});
   assert.deepEqual(graded.graded.map(x=>x.appeal),['upheld','changed']);
 });
+
+/* ── the phone hand-off (daily problems on a computer): a QR for one problem, the phone sends photos with no sign-in,
+   the pages are read for the owner, and the computer gets the reading to check and mark ── */
+test('phone hand-off: a code per problem; the phone sends pages with no account; the computer gets the reading and marks it',async()=>{
+  const {route,db,visionCalls,tick}=twoStep();
+  await fails(route('/api/learn/grade/handoff','POST',{item:item()},null),'login_required');
+  await fails(route('/api/learn/grade/handoff','POST',{item:{id:'x'}},me),'bad_item');
+  const h=await route('/api/learn/grade/handoff','POST',{item:item(),level:'L1',lang:'ko'},me);
+  assert.match(h.code,/^[A-HJ-NP-Z2-9]{8}$/);assert.equal(typeof h.id,'number');
+  assert.ok(!JSON.stringify(db.prepare('SELECT * FROM practice_handoffs').all()).includes(h.code),'only the code\'s hash is kept');
+  const phone=`/api/learn/grade/handoff/${h.code}`;
+  /* the phone: the problem's text and the state, no account */
+  const info=await route(phone,'GET',null,null,{ip:'5.5.5.5'});
+  assert.equal(info.status,'waiting');assert.match(info.q,/ball falls/);assert.equal(info.lang,'ko');
+  await fails(route('/api/learn/grade/handoff/ABCDEFGH','GET',null,null,{}),'handoff_not_found');
+  /* the computer polls: waiting; another member cannot see it */
+  assert.equal((await route('/api/learn/grade/handoff','GET',null,me,{url:'https://x/api/learn/grade/handoff?id='+h.id})).status,'waiting');
+  await fails(route('/api/learn/grade/handoff','GET',null,{id:8},{url:'https://x/api/learn/grade/handoff?id='+h.id}),'handoff_not_found');
+  /* the phone sends: one read, on the owner's quota */
+  await fails(route(phone,'POST',{pages:['nope']},null,{}),'bad_pages');
+  const sent=await route(phone,'POST',{pages:[jpeg(),jpeg()]},null,{});
+  assert.equal(sent.status,'read');assert.equal(sent.pages,2);assert.equal(sent.transcript,undefined,'the phone does not get the reading');
+  assert.equal(visionCalls.length,1);assert.equal(visionCalls[0].mode,'read');
+  assert.equal((await route('/api/learn/plan','GET',null,me)).gradeLeft,GRADE_FREE-1,'the owner\'s marking was used');
+  const got=await route('/api/learn/grade/handoff','GET',null,me,{url:'https://x/api/learn/grade/handoff?id='+h.id});
+  assert.equal(got.status,'read');assert.equal(got.pages,2);assert.match(got.transcript,/9\.8/);assert.equal(typeof got.read_id,'number');
+  /* the computer marks it exactly as a read it sent itself */
+  const g=await route('/api/learn/grade','POST',gradeBody(got.read_id,'$v=\\sqrt{2gh}=9.9$ m/s'),me);
+  assert.equal(g.score,10);
+  assert.equal((await route('/api/learn/grade/handoff','GET',null,me,{url:'https://x/api/learn/grade/handoff?id='+h.id})).status,'graded');
+  /* three sends per code, then a new QR */
+  await route(phone,'POST',{pages:[jpeg()]},null,{});await route(phone,'POST',{pages:[jpeg()]},null,{});
+  await fails(route(phone,'POST',{pages:[jpeg()]},null,{}),'handoff_used');
+  /* a code lasts 20 minutes */
+  const h2=await route('/api/learn/grade/handoff','POST',{item:item()},me);
+  tick(1201);
+  await fails(route(`/api/learn/grade/handoff/${h2.code}`,'POST',{pages:[jpeg()]},null,{}),'handoff_expired');
+});
+
+test('graded league XP counts the hints the server recorded on the problem (25 % each)',async()=>{
+  const {route,db,env}=setup();
+  const {createPracticeRouter}=await import('./src/practice-progress.js');
+  const practice=createPracticeRouter({HttpError:H,bad,now:()=>1_800_000_000,needUser:u=>u,limit:async()=>{}});
+  await practice('/api/practice/attempts','POST',{attempts:[{item_id:'ap1-u1-001',mode:'track',unit:'mechanics/kinematics',step:5,result:'hint',ctx:'daily',level:'L1'},
+    {item_id:'ap1-u1-001',mode:'track',unit:'mechanics/kinematics',step:5,result:'hint',ctx:'daily',level:'L1'}]},me,env);
+  const r=await route('/api/learn/grade','POST',body({item:{unit:'mechanics/kinematics',step:5}}),me);
+  /* 7/10 → pass: base 20 × 1 × 50 % for two hints */
+  assert.equal(r.band,'pass');assert.equal(r.league_xp,10);
+  assert.equal(db.prepare("SELECT xp FROM league_xp_items WHERE user_id=7 AND item_id='ap1-u1-001'").get().xp,10);
+});

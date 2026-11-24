@@ -47,6 +47,10 @@
       report:'문제 신고',reportTitle:'이 문제에서 무엇이 잘못됐나요?',rWrongAnswer:'정답이 틀림',rTypo:'오타',rFigure:'그림',rTranslation:'번역',rOther:'기타',reportNote:'자세히 적어 주세요 (선택)',reportSend:'신고 보내기',reportCancel:'닫기',reportSent:'메일 앱에 신고 내용이 채워집니다. 열리지 않으면 이 주소로 보내 주세요:',myReports:'내 신고',noReports:'아직 보낸 신고가 없습니다.',reportPick:'무엇이 잘못됐는지 고르세요.',
       avgTime:'평균 풀이 시간',vsSuggested:'권장',strike:'이 보기 지우기',unstrike:'이 보기 되살리기',
       settings:'진도 관리',exportP:'진도 내보내기',importP:'불러오기',resetP:'초기화',resetConfirm:'이 기기의 진도를 모두 지울까요? 되돌릴 수 없습니다. 계정에 저장된 기록은 남습니다.',importDone:'불러왔습니다. 문제마다 더 최근 기록을 남겼습니다.',resetDone:'이 기기의 진도를 지웠습니다.',imp_not_json:'JSON 파일이 아닙니다.',imp_not_backup:'하슬라랩 진도 파일이 아닙니다.',imp_version:'이 페이지에서 읽을 수 없는 버전입니다.',imp_empty:'파일에 불러올 기록이 없습니다.',settingsNote:'진도는 이 기기에 저장됩니다. 파일로 내보내 두면 다른 브라우저로 옮기거나 나중에 되살릴 수 있습니다. 복습 목록과 나중에 풀기는 계정에 저장되지 않으니 파일로 옮기세요.',
+      giveUp:'못 풀겠어요',dContinue:'계속',dLevel:'난이도',dHintNone:'이 문제에는 힌트가 없습니다',dHintCost:'힌트 {n}개 · 이 문제 XP {p}%',dHintTomorrow:'내일 오늘의 문제에 한 번 더 나옵니다.',dSolStep:'풀이 첫 단계',dChoicesHint:'보기를 보여 줍니다',
+      dGiveUpNote:'괜찮습니다. 다음 문제는 조금 더 쉽게 고릅니다.',dSkipNote:'건너뛰었습니다',dWait:'답을 고르거나 풀이를 채점받으면 누를 수 있습니다',dSelfMark:'채점할 수 없어 스스로 표시합니다 (XP 절반)',dSolvedWithHints:'힌트를 써서 풀었습니다',
+      wPhone:'휴대폰으로',wMore:'다른 방법',hoTitle:'휴대폰으로 찍어 올리기',hoStep1:'휴대폰 카메라로 QR을 찍으세요.',hoStep2:'열린 화면에서 풀이를 찍어 보내세요. 로그인은 필요 없습니다.',hoStep3:'읽은 내용이 여기에 나오면 확인하고 채점하세요.',hoLink:'QR이 안 되면 휴대폰에서 이 주소를 여세요',hoWait:'휴대폰을 기다리는 중…',hoGot:'휴대폰에서 {n}쪽을 받았습니다. 아래에서 읽은 내용을 확인하세요.',hoExpired:'QR 시간이 지났습니다.',hoNew:'새 QR 받기',hoFail:'QR을 만들지 못했습니다. 잠시 뒤에 다시 시도하세요.',hoGraded:'이 QR로 보낸 풀이는 채점했습니다.',
+      phTitle:'풀이 사진 보내기',phIntro:'컴퓨터에서 연 문제의 풀이를 찍어 보내세요. 보내면 컴퓨터 화면에 읽은 내용이 나옵니다.',phSend:'보내기',phSent:'보냈습니다. 컴퓨터 화면에서 읽은 내용을 확인하고 채점하세요.',phBad:'이 QR은 만료되었거나 잘못되었습니다. 컴퓨터에서 새 QR을 받으세요.',phUsed:'이 QR로는 더 보낼 수 없습니다. 컴퓨터에서 새 QR을 받으세요.',phAgain:'다른 사진으로 다시 보내기',phProblem:'문제',
       dHas:'이 문제에 쓰던 풀이가 있습니다',dHome:'쓰던 풀이가 있습니다',dPages:'페이지',dPad:'패드',dResume:'이어서 쓰기',dDrop:'지우기',dSaved:'이 기기에 자동 저장됩니다',
       wSendRead:'풀이 보내기',wReadTitle:'이렇게 읽었습니다. 틀린 곳을 고친 뒤 채점하세요.',wReadNote:'읽을 때 오늘 채점 1회가 쓰이고, 채점할 때는 더 쓰이지 않습니다. 읽은 내용은 1시간 동안 채점할 수 있습니다.',wGradeBtn:'채점하기',wReread:'다시 읽기',
       wConf:'확신',wLowConf:'확신 낮음 · 직접 확인해 보세요',wExpired:'읽은 지 1시간이 지났습니다. 풀이를 다시 보내 주세요.',wChanged:'고친 내용이 너무 많습니다. 잘못 읽은 글자만 고칠 수 있고, 사진에 없는 풀이는 더할 수 없습니다.',wUsed:'이 읽기는 이미 채점했습니다. 풀이를 다시 보내 주세요.',wEmptyT:'읽은 내용이 비어 있습니다.',
@@ -95,6 +99,10 @@
       report:'Report',reportTitle:'What is wrong with this problem?',rWrongAnswer:'Wrong answer',rTypo:'Typo',rFigure:'Figure',rTranslation:'Translation',rOther:'Other',reportNote:'Details (optional)',reportSend:'Send report',reportCancel:'Close',reportSent:'Your mail app opens with the report filled in. If it does not, send it to:',myReports:'My reports',noReports:'No reports yet.',reportPick:'Pick what is wrong.',
       avgTime:'Average time',vsSuggested:'suggested',strike:'Cross out this choice',unstrike:'Bring this choice back',
       settings:'Progress backup',exportP:'Export progress',importP:'Import',resetP:'Reset',resetConfirm:'Clear all progress on this device? This cannot be undone. Progress saved on your account stays.',importDone:'Imported. For each problem the newer record was kept.',resetDone:'Progress on this device is cleared.',imp_not_json:'That is not a JSON file.',imp_not_backup:'That is not a HaslaLab progress file.',imp_version:'This page cannot read that file’s version.',imp_empty:'The file has no progress to import.',settingsNote:'Progress is kept on this device. Export it to a file to move it to another browser or restore it later. The review queue and saved problems are not stored on your account, so move them with a file.',
+      giveUp:'I can’t solve this',dContinue:'Continue',dLevel:'Difficulty',dHintNone:'This problem has no hints',dHintCost:'{n} hint(s) · {p}% of this problem’s XP',dHintTomorrow:'It comes back once in tomorrow’s problems.',dSolStep:'First step of the solution',dChoicesHint:'Showing the choices',
+      dGiveUpNote:'That’s fine. The next problems will be a little easier.',dSkipNote:'Skipped',dWait:'Pick an answer or get your working marked first',dSelfMark:'Marking is not available, so you mark it yourself (half XP)',dSolvedWithHints:'Solved with hints',
+      wPhone:'With your phone',wMore:'Other ways',hoTitle:'Take the photo with your phone',hoStep1:'Scan the QR code with your phone’s camera.',hoStep2:'Photograph your working on the page that opens and send it. No sign-in needed.',hoStep3:'When the reading appears here, check it and get it marked.',hoLink:'If the QR does not work, open this address on your phone',hoWait:'Waiting for your phone…',hoGot:'{n} page(s) arrived from your phone. Check the reading below.',hoExpired:'The QR code has expired.',hoNew:'Get a new QR code',hoFail:'Could not make a QR code. Try again in a moment.',hoGraded:'The working sent with this QR has been marked.',
+      phTitle:'Send a photo of your working',phIntro:'Photograph your working for the problem open on your computer and send it. The reading then shows on the computer.',phSend:'Send',phSent:'Sent. Check the reading on your computer and get it marked.',phBad:'This QR code has expired or is wrong. Get a new one on your computer.',phUsed:'No more sends with this QR code. Get a new one on your computer.',phAgain:'Send other photos instead',phProblem:'Problem',
       dHas:'You have unsent working for this problem',dHome:'You have unsent working',dPages:'pages',dPad:'pad',dResume:'Continue',dDrop:'Discard',dSaved:'Saved on this device as you go',
       wSendRead:'Send my working',wReadTitle:'This is what we read. Fix anything misread, then mark it.',wReadNote:'Reading uses one of today’s markings; marking it uses no more. A reading can be marked for an hour.',wGradeBtn:'Mark it',wReread:'Read again',
       wConf:'Confidence',wLowConf:'Low confidence · check it yourself',wExpired:'This reading is over an hour old. Send your working again.',wChanged:'Too much was changed. You can fix misread symbols, but not add working that is not on the page.',wUsed:'This reading has already been marked. Send your working again.',wEmptyT:'The reading is empty.',
@@ -120,7 +128,7 @@
   const H=window.HL_PRACTICE_TOOLS;
   /* review, later and recent stay on this device: the account's state (community/src/practice-progress.js) keeps
      only the fields it knows, so they travel in the exported file instead */
-  const fill=v=>{v.solved||={};v.level||={};v.xp||=0;v.days||=[];v.skills||={};v.queue||=[];v.wrong||={};v.bank||={done:{},stars:{}};v.contest||={done:{}};v.review||={};v.later||={};v.recent||={};v.graded||={};v.gradedHist||={};v.streakCfg||={pauses:[]};v.intro||={};v.appeals||={};return v;};
+  const fill=v=>{v.solved||={};v.level||={};v.xp||=0;v.days||=[];v.skills||={};v.queue||=[];v.wrong||={};v.bank||={done:{},stars:{}};v.contest||={done:{}};v.review||={};v.later||={};v.recent||={};v.graded||={};v.gradedHist||={};v.streakCfg||={pauses:[]};v.intro||={};v.appeals||={};v.dailyR||={};return v;};
   let saved=fill(store.read());
   const save=()=>store.write(saved);
 
@@ -135,15 +143,22 @@
   }
   const API=(()=>{let o='';try{o=localStorage.getItem('hlCmApi')||'';}catch(e){}return(/^https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev\/?$/.test(o)?o:'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/,'');})();
   const token=()=>{try{const v=localStorage.getItem('hlCmTok')||'';return /^[A-Za-z0-9_-]{20,4096}$/.test(v)?v:'';}catch(e){return '';}};
-  function record(item_id,mode,unit,step,result){
-    const at=Math.floor(Date.now()/1000);
+  function record(item_id,mode,unit,step,result,extra){
+    const at=Math.floor(Date.now()/1000),s=state.session;
+    /* a daily problem's answer carries its context, study level and hints, and moves the daily difficulty (once a day per
+       problem, as the server does; the server's value replaces this one for members) */
+    if(!extra&&isDaily(s)&&s.current?.id===item_id)extra={ctx:'daily',level:s.lv,hints:s.hints|0};
+    if(extra?.ctx==='daily'&&H.DAILY_RESULTS.includes(result)){
+      const d=today();if(saved.dailyDay?.d!==d)saved.dailyDay={d,ids:[]};
+      if(!saved.dailyDay.ids.includes(item_id)){saved.dailyDay.ids.push(item_id);saved.dailyR[extra.level]=H.dailyApply(saved.dailyR[extra.level],extra.level,step,result,extra.hints,at);}
+    }
     if(result==='place'){const k=saved.skills[unit];if(!k||!k.n)saved.skills[unit]={unit,rating:stepRating(step),n:0,right_n:0,last_at:at};}
-    else if(result!=='skip'){const k=saved.skills[unit]||{unit,rating:START,n:0,right_n:0,last_at:at};k.rating=updateRating(k.rating,step,result);k.n++;if(result==='right'||result==='solved')k.right_n++;k.last_at=at;saved.skills[unit]=k;}
+    else if(result!=='skip'&&result!=='hint'){const k=saved.skills[unit]||{unit,rating:START,n:0,right_n:0,last_at:at};k.rating=updateRating(k.rating,step,result);k.n++;if(result==='right'||result==='solved')k.right_n++;k.last_at=at;saved.skills[unit]=k;}
     /* the daily goal counts problems got right (or marked solved), each once a day, as the server's league does */
     if(result==='right'||result==='solved'){const d=today();if(saved.goalDay?.d!==d||!Array.isArray(saved.goalDay.ids))saved.goalDay={d,n:saved.goalDay?.d===d?saved.goalDay.n|0:0,ids:[]};
       if(!saved.goalDay.ids.includes(item_id)){const before=goalNow();saved.goalDay.ids.push(item_id);saved.goalDay.n++;goalCrossed(before);}}
-    saved.queue.push({item_id,mode,unit,step,result,at});if(saved.queue.length>500)saved.queue=saved.queue.slice(-500);
-    save();scheduleSync();
+    saved.queue.push({item_id,mode,unit,step,result,at,...(extra?.hints?{hints:Math.min(5,extra.hints)}:{}),...(extra?.ctx?{ctx:extra.ctx,level:extra.level}:{})});if(saved.queue.length>500)saved.queue=saved.queue.slice(-500);
+    save();if(result==='hint')sync();else scheduleSync();
   }
   /* the merge rule lives in practice-tools.js (accountMerge), where the tests check a first sign-in carries a guest's progress over */
   const mergeState=H.accountMerge;
@@ -159,12 +174,13 @@
     if(syncing){scheduleSync();return;}syncing=true;
     try{
       /* a server not yet updated knows only the first three modes: the rest wait in the queue until it is */
-      const sendable=a=>!state.serverOld||(['exam','bank','contest'].includes(a.mode)&&a.result!=='place');
+      const sendable=a=>!state.serverOld||(['exam','bank','contest'].includes(a.mode)&&!['place','hint','giveup'].includes(a.result));
       for(let batch;(batch=saved.queue.filter(sendable).slice(0,50)).length;){
         let r;try{r=await api('/api/practice/attempts','POST',{attempts:batch});}
         catch(e){if(!state.serverOld&&/api 400/.test(e.message)){state.serverOld=true;continue;}throw e;}
         if(r.league_today){state.today={...(state.today||{}),...r.league_today};state.todayAt=today();}
         if(r.goal_bonus>0){state.today={...(state.today||{}),earned:true,earned_xp:r.goal_bonus};goalMoment(r.goal_bonus);}
+        if(r.daily)dailyMerge(r.daily,true);
         const sent=new Set(batch);saved.queue=saved.queue.filter(a=>!sent.has(a));saved.skills=state.serverOld?H.skillsMerge(saved.skills,r.skills):{...saved.skills,...Object.fromEntries((r.skills||[]).map(k=>[k.unit,k]))};save();
       }
       const r=await api('/api/practice/state','POST',{state:stateOf()});Object.assign(saved,mergeState(stateOf(),r.state));save();state.sync='saved';
@@ -174,8 +190,25 @@
   /* on opening: the account's state and ratings join this device's, then anything queued here is sent */
   async function pull(){
     if(!token())return;
-    try{const r=await api('/api/practice/state');Object.assign(saved,mergeState(stateOf(),r.state));saved.skills=H.skillsMerge(saved.skills,r.skills);save();state.sync='saved';}catch(e){state.sync='error';}
+    try{const r=await api('/api/practice/state');Object.assign(saved,mergeState(stateOf(),r.state));saved.skills=H.skillsMerge(saved.skills,r.skills);if(r.daily)dailyMerge(r.daily,false);save();state.sync='saved';}catch(e){state.sync='error';}
     paintStats();scheduleSync();
+  }
+  /* the server's daily difficulty (practice-progress.js, worked out from the recorded answers) replaces this browser's; on
+     opening, a level with more answers here than on the account (some still waiting to be sent) keeps this one */
+  function dailyMerge(server,sent){
+    for(const [lv,d] of Object.entries(server||{})){if(!H.LEVEL_STEPS[lv]||!Number.isFinite(d?.rating))continue;
+      const cur=saved.dailyR[lv];if(!sent&&cur&&(cur.n|0)>(d.n|0))continue;
+      saved.dailyR[lv]={r:d.rating,n:d.n|0,dir:d.dir|0,at:d.updated_at|0};}
+  }
+  const isDaily=s=>!!s&&s.daily===true&&!s.diag;
+  const dailyNow=()=>saved.dailyR[studyLevel()]||{r:H.dailyStart(studyLevel()),n:0,dir:0,at:0};
+  const dailyText=()=>`${tr('dLevel')}: ${H.dailyLabel(saved.dailyR[studyLevel()],studyLevel(),state.lang==='ko'?'ko':'en').text}`;
+  /* a new learner (or a new level) starts at medium */
+  function dailyEnsure(level){if(!saved.dailyR[level]){saved.dailyR[level]={r:H.dailyStart(level),n:0,dir:0,at:Math.floor(Date.now()/1000)};}}
+  /* a short line at the bottom of the screen as the page moves on (skip, "I can't solve this") */
+  function flash(text){
+    document.querySelector('.flash')?.remove();const el=document.createElement('div');el.className='flash';el.setAttribute('role','status');el.textContent=text;
+    document.body.append(el);setTimeout(()=>el.classList.add('out'),1400);setTimeout(()=>el.remove(),1900);
   }
   /* signing in on another tab (or the site around this frame) sets the token: this browser's progress joins the account then */
   addEventListener('storage',e=>{if(e.key==='hlCmTok'){state.sync=token()?'pending':'local';if(token())pull();else paintStats();}});
@@ -352,11 +385,21 @@
   }
   function pick(s){
     if(s.first&&!s.seen.has(s.first.id))return s.first;
+    if(isDaily(s))return pickDaily(s);
     if(s.fixed)return s.items.find(i=>!s.seen.has(i.id))||null;
     /* nearest step to the learner's level, unsolved and unseen first */
     const pool=s.items.filter(i=>!s.seen.has(i.id));
     const score=i=>Math.abs(i.s-s.level)*10+(saved.solved[i.id]?5:0)+Math.random();
     return pool.sort((a,b)=>score(a)-score(b))[0]||null;
+  }
+  /* the daily set: reviews as listed; any other planned problem while it is within a step of the current difficulty, else
+     one picked near it now (after "I can't solve this" the next problems come easier at once) */
+  function pickDaily(s){
+    const plan=s.items.find(i=>!s.seen.has(i.id)),r=dailyNow().r,st=(r-1000)/100;
+    if(plan&&(plan.why==='review'||Math.abs(plan.s-st)<=1.25))return plan;
+    if(plan)s.seen.add(plan.id);
+    const units=s.items.filter(i=>i.why==='weak').map(i=>i.u);
+    return H.dailyPick(s.pool.filter(i=>!saved.wrong[i.id]||i.id===plan?.id),r,{seen:s.seen,solved:solvedMap(),units})||plan||null;
   }
   function next(){
     const s=state.session;
@@ -365,25 +408,25 @@
     s.current=item;s.answered=false;s.usedChoices=false;s.seen.add(item.id);s.n++;
     if(item.kind==='track'){showTrack(item);return;}
     if(item.kind==='contest'){contestShow(item.c,null,item);return;}
-    const imageChoices=item.ch.every(c=>!c.c.length);
-    $('app').innerHTML=`<div class="session">
+    const imageChoices=item.ch.every(c=>!c.c.length),daily=isDaily(s);
+    $('app').innerHTML=`<div class="session${daily?' daily':''}">
       ${sessionHead(s,item)}
       <div class="q">${blocks(item.b)}</div>
       <div class="choices${imageChoices?' compact':''}" role="group">${item.ch.map(c=>`<button type="button" class="choice" data-n="${c.n}"><span class="no">${'①②③④⑤'[c.n-1]}</span>${imageChoices?'':`<span>${blocks(c.c).replace(/^<p>|<\/p>$/g,'')}</span>`}</button>`).join('')}</div>
-      <div id="feedback"></div>
+      ${daily?'<div id="hints"></div>':''}<div id="feedback"></div>
       ${toolsHtml(item)}
-      <div class="foot"><span class="src">${esc(item.src)} · ${esc(item.by)}${item.pdf?` · <a href="${esc(item.pdf)}" target="_blank" rel="noopener noreferrer">${tr('pdf')}</a>`:''}</span><span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=setTotal(s)?tr('finish'):tr('next')}</button></span></div>
+      <div class="foot"><span class="src">${esc(item.src)} · ${esc(item.by)}${item.pdf?` · <a href="${esc(item.pdf)}" target="_blank" rel="noopener noreferrer">${tr('pdf')}</a>`:''}</span>${daily?dailyFoot():`<span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=setTotal(s)?tr('finish'):tr('next')}</button></span>`}</div>
     </div>`;
     $('quit').onclick=s.back||(s.fixed?todayHome:home);
     addStrike($('app'));wireTools(item,item.src);startPace(item);
     $('skip').hidden=!!s.diag;
     if(state.lang!=='ko')localizeExam(item);
     $('app').querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.n))));
-    const free=imageChoices||s.format==='choice'?null:freeOfExam(item);
+    const free=imageChoices||s.format==='choice'?null:freeOfExam(item);s.freeExam=!!free;
     if(free){
       const ch=$('app').querySelector('.choices');ch.hidden=true;
-      ch.insertAdjacentHTML('afterend',answerBox(free)+`<button type="button" class="linkbtn" id="showch">${tr('showChoices')}</button>`);
-      $('showch').onclick=()=>{ch.hidden=false;$('ansbox').remove();$('showch').remove();s.usedChoices=true;reportHeight();};
+      ch.insertAdjacentHTML('afterend',answerBox(free)+`<button type="button" class="linkbtn" id="showch"${daily?' hidden':''}>${tr('showChoices')}</button>`);
+      $('showch').onclick=()=>{if(!$('ansbox'))return;ch.hidden=false;$('ansbox').remove();$('showch').remove();s.usedChoices=true;reportHeight();};
       wireAnswer(free,ok=>{answer(ok?item.a:0);$('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+freeAnswerTex(free)}</p>`;$('showch')?.remove();reportHeight();});
     }
     $('next').onclick=next;
@@ -392,8 +435,9 @@
       gradeItem:()=>({id:item.id,source:'exam',q:item.b.map(b=>b.p?segText(b.p):b.mb!==undefined?'$$'+b.mb+'$$':b.f?(state.lang==='ko'?'[그림]':'[figure]'):'').filter(Boolean).join('\n\n'),
         answer:right?'①②③④⑤'[item.a-1]+' '+choiceText(right):'',choices:item.ch.map(c=>'①②③④⑤'[c.n-1]+' '+(choiceText(c)||(state.lang==='ko'?'[그림]':'[figure]')))}),
       answered:()=>s.answered,solve:()=>{saved.solved[item.id]=item.u;delete saved.wrong[item.id];},miss:()=>{saved.wrong[item.id]=Math.floor(Date.now()/1000);},
-      lock:()=>{s.answered=true;$('app').querySelectorAll('.choice').forEach(b=>b.disabled=true);$('ansbox')?.remove();$('showch')?.remove();$('skip').hidden=true;$('next').hidden=false;reportHeight();}});
-    $('skip').onclick=()=>{if(s.answered)return;record(item.id,'exam',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
+      lock:ok=>{s.answered=true;$('app').querySelectorAll('.choice').forEach(b=>b.disabled=true);$('ansbox')?.remove();$('showch')?.remove();$('skip').hidden=true;ready(ok);reportHeight();}});
+    $('skip').onclick=()=>{if(s.answered)return;record(item.id,'exam',item.u,item.s,'skip');if(daily)flash(tr('dSkipNote')+' →');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
+    if(daily)wireDaily(s,item,()=>{$('showch')?.onclick?.();});
     reportHeight();window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
   }
   /* the Korean exams' calculation problems for English readers: each paragraph and choice goes to the cached AI
@@ -422,7 +466,7 @@
     $('app').querySelectorAll('.choice').forEach(b=>{b.disabled=true;const n=Number(b.dataset.n);if(n===item.a)b.classList.add('right');else if(n===choice)b.classList.add('wrong');});
     let note='';
     if(ok){
-      s.right++;s.run++;const gain=10+2*item.s;s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=item.u;delete saved.wrong[item.id];
+      s.right++;s.run++;const gain=Math.round((10+2*item.s)*(isDaily(s)?H.hintMult(s.hints):1));s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=item.u;delete saved.wrong[item.id];
       if(s.fixed||s.diag){}else if(s.run>=2){const up=s.steps.find(x=>x>s.level);if(up){s.level=up;note=' · '+tr('up')+' ↑';}s.run=0;}
     }else{
       s.run=0;saved.wrong[item.id]=Math.floor(Date.now()/1000);
@@ -433,7 +477,7 @@
     if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
     save();paintStats();
     $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+'①②③④⑤'[item.a-1]}${note}</p>`;
-    $('next').hidden=false;$('skip').hidden=true;$('next').focus();reportHeight();
+    ready(ok);$('skip').hidden=true;$('next').focus();reportHeight();
   }
   function summary(){
     const s=state.session;
@@ -603,20 +647,21 @@
     const label=item?`${item.year} · ${p.key}${item.key&&item.key!==p.key?' · '+item.key:''}`:`${p.year} · ${p.key}`;
     const title=item?.title||p.title||'';
     const body=item?item.b.map(b=>b.f?`<figure><img src="practice/contest/fig/${encodeURIComponent(b.f)}" width="${b.w}" height="${b.h}" alt="" loading="lazy"></figure>`:textHtml(b.t)).join(''):'';
-    $('app').innerHTML=`<div class="session">
-      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${s?esc(s.label||tr('tabToday'))+' · ':''}${esc(nameOf(c.name))}</span><span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}${s?`<span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/setTotal(s))}%"></i></span><span>${s.n}/${setTotal(s)}</span>`:''}${paceHtml(paceItem)}</div>
+    const daily=isDaily(s);
+    $('app').innerHTML=`<div class="session${daily?' daily':''}">
+      <div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${s?esc(s.label||tr('tabToday'))+' · ':''}${esc(nameOf(c.name))}</span>${daily?`<span class="lvl dlv" id="dlv">${esc(dailyText())}</span>`:''}<span class="lvl">${esc(label)}</span>${title?`<span>${esc(title)}</span>`:''}${s?`<span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/setTotal(s))}%"></i></span><span>${s.n}/${setTotal(s)}</span>`:''}${paceHtml(paceItem)}</div>
       ${item?`<div class="q" id="qtext">${body}</div>`:''}
       <div class="langrow">${tr('paper')}: ${langs.map(([l,u])=>`<button type="button" class="${!item&&l===pref[0]?'cur':''}" data-pdf="${esc(u)}">${L[l]||l} PDF</button>`).join('')} <a href="${esc(pref[1])}" target="_blank" rel="noopener" id="openPdf">PDF ↗</a></div>
       <div id="pdf" class="pdf"${item?' hidden':''} role="document" aria-label="${esc(nameOf(c.name))} ${esc(label)}"><p class="src">${tr('loading')}</p></div>
-      <div id="feedback"></div>
+      ${daily?'<div id="hints"></div>':''}<div id="feedback"></div>
       ${toolsHtml(tItem)}
       <div class="foot"><span class="src">${sols.length?`${tr('solution')}: `+sols.map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${L[l]||l} ↗</a>`).join(' · '):tr('noContestSol')}${item?' · '+tr('transcribed'):''}</span>
-        <span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${s?s.n>=setTotal(s)?tr('finish'):tr('next'):tr('another')}</button></span></div></div>`;
+        ${daily?dailyFoot():`<span class="footbtns"><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="good">${tr('solvedIt')}</button><button type="button" id="miss">${tr('missedIt')}</button><button type="button" class="primary" id="next" hidden>${s?s.n>=setTotal(s)?tr('finish'):tr('next'):tr('another')}</button></span>`}</div></div>`;
     startPace(paceItem);wireTools(tItem,nameOf(c.name)+' · '+label);
     wireWritten(tItem,{source:'contest',mode:'contest',unit:'contest/'+key,step:c.step,xpItem:{kind:'contest',s:c.step},open:!!item&&writtenDefault(true),noText:!item,
       gradeItem:()=>({id:doneId,source:'contest',q:(title?title+'\n\n':'')+item.b.filter(b=>b.t).map(b=>b.t).join('\n\n')}),
       answered:()=>s?s.answered:W.locked,solve:()=>{saved.contest.done[doneId]=1;},miss:()=>{saved.contest.done[doneId]=0;},
-      lock:()=>{if(s)s.answered=true;W.locked=true;['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;reportHeight();}});
+      lock:ok=>{if(s)s.answered=true;W.locked=true;['good','miss','skip'].forEach(id=>{if($(id))$(id).hidden=true;});ready(ok);reportHeight();}});
     if(item)typeset($('qtext'));
     /* the transcriptions are Korean: other readers get an AI translation, with the Korean one tap away */
     if(item&&state.lang!=='ko'){
@@ -636,13 +681,17 @@
     $('app').querySelectorAll('[data-pdf]').forEach(b=>b.onclick=()=>{$('pdf').hidden=false;showPdf(b.dataset.pdf);$('openPdf').href=b.dataset.pdf;$('app').querySelectorAll('[data-pdf]').forEach(x=>x.classList.toggle('cur',x===b));});
     if(!item)showPdf(pref[1]);
     $('quit').onclick=s?s.back:contestHome;
-    $('skip').onclick=()=>{record(doneId,'contest','contest/'+key,c.step,'skip');if(s){if(s.answered)return;s.skipped=(s.skipped||0)+1;s.n--;next();return;}contestShow(key,doneId);};
+    $('skip').onclick=()=>{if(s?.answered)return;record(doneId,'contest','contest/'+key,c.step,'skip');if(s){if(daily)flash(tr('dSkipNote')+' →');s.skipped=(s.skipped||0)+1;s.n--;next();return;}contestShow(key,doneId);};
     $('next').onclick=()=>s?next():contestShow(key,doneId);
     const mark=ok=>{if(W.locked&&W.item===tItem)return;W.locked=true;if(s){if(s.answered)return;s.answered=true;if(ok){s.right++;s.xp+=20+5*c.step;}}
       stopPace(paceItem);noteOutcome({id:doneId,kind:'contest',c:key},ok?'right':'wrong');
-      saved.contest.done[doneId]=ok?1:0;record(doneId,'contest','contest/'+key,c.step,ok?'solved':'missed');studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>$(id).hidden=true);$('next').hidden=false;
+      saved.contest.done[doneId]=ok?1:0;record(doneId,'contest','contest/'+key,c.step,ok?'solved':'missed');studied(ok?20+5*c.step:2);['good','miss','skip'].forEach(id=>{if($(id))$(id).hidden=true;});ready(ok);
       $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?'✓ '+tr('solvedIt'):tr('missedIt')}</p>`;reportHeight();};
-    $('good').onclick=()=>mark(true);$('miss').onclick=()=>mark(false);
+    if($('good')){$('good').onclick=()=>mark(true);$('miss').onclick=()=>mark(false);}
+    /* a daily competition problem is marked from the working; where it cannot be (no account, or no markings left
+       today) "I solved it" marks it yourself, as the competition tab does */
+    if(daily){wireDaily(s,item,()=>{});
+      if(!token()||state.plan?.gradeLeft===0){const nb=$('next');nb.disabled=false;nb.title=tr('dSelfMark');nb.onclick=()=>{if(!s.answered){mark(true);$('feedback').insertAdjacentHTML('beforeend',`<p class="src">${tr('dSelfMark')}</p>`);return;}next();};}}
     reportHeight();if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
   }
 
@@ -660,18 +709,23 @@
       /* lower is more urgent: a weak rating, few attempts, or a long gap since the last one */
       return{u,k,r,step:ratingStep(r),urgency:r-Math.min(days,30)*4-(k?0:60)+(k&&k.n>=6&&k.right_n/k.n>0.8?80:0)};}).sort((a,b)=>a.urgency-b.urgency);
   }
+  /* the steps come from the daily difficulty (one rating for the level, H.dailyUpdate), with a little spread; the units
+     from the unit ratings (weak and long-untouched first). Due reviews come first: hinted problems from yesterday and
+     earlier misses */
   function chooseToday(items){
     const byUnit={};for(const it of items)(byUnit[it.u]||=[]).push(it);
     const status=unitStatus(Object.keys(byUnit)),chosen=[],taken=new Set();
+    const base=(dailyNow().r-1000)/100,jit=()=>base+(Math.random()-.5)*1.2;
     const add=it=>{if(it&&!taken.has(it.id)&&chosen.length<SESSION){taken.add(it.id);chosen.push({...it,why:it.why});}};
     const near=(u,step,why)=>{const pool=(byUnit[u]||[]).filter(i=>!taken.has(i.id)&&!saved.solved[i.id]&&!saved.wrong[i.id]);
       pool.sort((a,b)=>Math.abs(a.s-step)-Math.abs(b.s-step)+(Math.random()-.5)*.4);return pool[0]&&{...pool[0],why};};
     const byId=new Map(items.map(i=>[i.id,i]));
-    for(const [id] of Object.entries(saved.wrong).sort((a,b)=>a[1]-b[1]).slice(0,3)){const it=byId.get(id);if(it)add({...it,why:'review'});}
-    for(const st of status.slice(0,3)){add(near(st.u,st.step,'weak'));add(near(st.u,st.step,'weak'));}
+    const reviews=[...new Set([...dueNow(),...Object.entries(saved.wrong).sort((a,b)=>a[1]-b[1]).map(([id])=>id)])].filter(id=>byId.has(id)).slice(0,4);
+    for(const id of reviews)add({...byId.get(id),why:'review'});
+    for(const st of status.slice(0,3)){add(near(st.u,jit(),'weak'));add(near(st.u,jit(),'weak'));}
     const strong=[...status].filter(x=>x.k&&x.k.n>=3).sort((a,b)=>b.r-a.r)[0];
-    if(strong)add(near(strong.u,strong.step+1,'stretch'));
-    for(const st of status.slice(3)){if(chosen.length>=SESSION)break;add(near(st.u,st.step,'new'));}
+    if(strong)add(near(strong.u,base+1,'stretch'));
+    for(const st of status.slice(3)){if(chosen.length>=SESSION)break;add(near(st.u,jit(),'new'));}
     return{chosen,status};
   }
   async function todayHome(){
@@ -699,6 +753,7 @@
     const lv=studyLevel(),lvCard=`<button type="button" class="area unit levelbar" id="lvGo"><span class="name"><small>${tr('lvTitle')} ${lv.slice(1)} · ${tr('lvCurrent')}</small><b>${esc(levelName(lv))}</b></span><span class="btnlink">${tr('lvChange')}</span></button>`;
     $('app').innerHTML=`<div id="draftHome"></div>${lvCard}${placeCard}${dueCard}<section class="session today">
         <h2>${tr('todayTitle')} <a href="#" class="src" id="editProfile">${tr('editProfile')}</a></h2>
+        <p class="dlvline"><span class="tag">${esc(dailyText())}</span></p>
         <p class="src">${Object.entries(counts).map(([k,n])=>`${why[k]} ${n}`).join(' · ')}${weakUnits.length?` · ${tr('focus')}: ${weakUnits.map(u=>esc(unitPlace(u))).join(', ')}`:''}</p>
         <ol class="todaylist">${chosen.map(i=>`<li><span class="tag ${i.why}">${why[i.why]}</span> ${esc(itemPlace(i))} <small>${tr('step')} ${i.s}</small></li>`).join('')}</ol>
         <div class="actions"><button type="button" class="primary" id="startToday"${chosen.length?'':' disabled'}>${tr('startToday')}</button></div>
@@ -710,7 +765,7 @@
       ${top.length?`<section class="area skills"><h2>${tr('mySkills')}</h2><table><thead><tr><th>${tr('unit')}</th><th>${tr('step')}</th><th>${tr('accuracy')}</th></tr></thead><tbody>${top.slice(0,12).map(x=>`<tr><td>${esc(unitPlace(x.u))}</td><td>${x.step} <span class="lv lv${levelOf(x.step)}">${tr(LEVELS[levelOf(x.step)])}</span></td><td>${Math.round(100*x.k.right_n/Math.max(1,x.k.n))}% <small>(${x.k.n})</small></td></tr>`).join('')}</tbody></table></section>`:`<p class="src">${tr('noSkills')}</p>`}
       ${settingsHtml()}`;
     if($('dueGo'))$('dueGo').onclick=reviewHome;wireSettings(todayHome);$('lvGo').onclick=levelHome;
-    $('startToday').onclick=()=>startTodaySession(chosen);
+    $('startToday').onclick=()=>startTodaySession(chosen,items);
     $('sugBank').onclick=()=>{state.bankField=field[0];bankStart(field[0],fieldStars);};
     if($('diagGo'))$('diagGo').onclick=diagStart;
     $('editProfile').onclick=e=>{e.preventDefault();startHome(true);};
@@ -806,7 +861,7 @@
   function sessionHead(s,item){
     const name=s.diag?tr('diagTitle'):s.assignment?s.label:s.fixed?(s.label||tr('tabToday'))+' · '+unitName(item.u):s.mode==='track'?s.label:unitName(s.unit);
     const total=setTotal(s);
-    return `<div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(name)}</span><span class="lvl">${tr('step')} ${item.s}</span><span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/total)}%"></i></span><span>${s.n}/${total}</span>${paceHtml(item)}</div>`;
+    return `<div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${esc(name)}</span>${isDaily(s)?`<span class="lvl dlv" id="dlv">${esc(dailyText())}</span>`:`<span class="lvl">${tr('step')} ${item.s}</span>`}<span class="progress" aria-hidden="true"><i style="width:${Math.round(100*(s.n-1)/total)}%"></i></span><span>${s.n}/${total}</span>${paceHtml(item)}</div>`;
   }
 
   /* ── the member's plan: tutor questions left today (GET /api/learn/plan) ── */
@@ -905,8 +960,8 @@
   const fmtNum=a=>`${a.value} ${a.unit||''}`.trim();
   function showTrack(item){
     const s=state.session;s.hints=0;s.answered=false;s.view=null;s.chat=[];s.free=s.format==='choice'&&item.type==='mc'?null:freeOfTrack(item);
-    const L='ABCDE';
-    $('app').innerHTML=`<div class="session">
+    const L='ABCDE',daily=isDaily(s);
+    $('app').innerHTML=`<div class="session${daily?' daily':''}">
       ${sessionHead(s,item)}
       <div class="q" id="qtext">${textHtml(item.q)}</div><p class="src" id="trnote"></p>
       ${s.free?answerBox(s.free)+`<button type="button" class="linkbtn" id="showch">${tr('showChoices')}</button>`:''}
@@ -915,36 +970,38 @@
       <div id="hints"></div><div id="feedback"></div><div id="sol"></div><div id="tutor"></div><div id="disc"></div>
       ${toolsHtml(item)}
       <div class="foot"><span class="src">${esc(s.fixed?unitName(item.u):s.label)} · ${tr('byHasla')} · <a href="#" id="discuss">${tr('discuss')}</a></span>
-        <span class="footbtns"><button type="button" id="hint">${tr('hint')} (0/${item.hints.length})</button><button type="button" id="ask">✦ ${tr('tutor')}</button><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=setTotal(s)?tr('finish'):tr('next')}</button></span></div></div>`;
+        ${daily?dailyFoot(`<button type="button" id="ask">✦ ${tr('tutor')}</button>`):`<span class="footbtns"><button type="button" id="hint">${tr('hint')} (0/${item.hints.length})</button><button type="button" id="ask">✦ ${tr('tutor')}</button><button type="button" id="skip">${tr('skip')}</button><button type="button" class="primary" id="next" hidden>${s.n>=setTotal(s)?tr('finish'):tr('next')}</button></span>`}</div></div>`;
     typeset($('qtext'));typeset($('app').querySelector('.choices')||$('app'));
     $('quit').onclick=s.back||(s.assignment?classHome:s.diag||s.fixed?todayHome:s.mode==='track'?tracksHome:home);
     $('skip').hidden=!!s.diag;
     addStrike($('app'));wireTools(item,(s.fixed?unitName(item.u):s.label)+' · '+item.id);startPace(item);
     if(s.free){
       wireAnswer(s.free,ok=>trackAnswer(null,ok));
-      $('showch').onclick=()=>{if(item.type!=='mc')return;$('app').querySelector('.choices').hidden=false;$('ansbox').remove();$('showch').remove();s.free=null;s.hints++;reportHeight();};
+      $('showch').onclick=()=>{if(item.type!=='mc'||s.answered)return;$('app').querySelector('.choices').hidden=false;$('ansbox').remove();$('showch').remove();s.free=null;if(daily)useHint(s,item);else s.hints++;reportHeight();};
       if(item.type!=='mc')$('showch').remove();
     }
     if(item.type==='mc')$('app').querySelectorAll('.choice').forEach(b=>b.onclick=()=>trackAnswer(Number(b.dataset.i)));
     else if(!s.free)$('numf').onsubmit=e=>{e.preventDefault();const v=parseNum($('num').value);if(!Number.isFinite(v)){$('numerr').textContent=tr('notNumber');return;}trackAnswer(v);};
     $('hint').onclick=()=>{if(s.hints>=item.hints.length)return;s.hints++;paintHints(item);$('hint').textContent=`${tr('hint')} (${s.hints}/${item.hints.length})`;if(s.hints>=item.hints.length)$('hint').disabled=true;reportHeight();};
     $('ask').onclick=()=>openTutor(item);
-    $('skip').onclick=()=>{if(s.answered)return;record(item.id,'track',item.u,item.s,'skip');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
+    $('skip').onclick=()=>{if(s.answered)return;record(item.id,'track',item.u,item.s,'skip');if(daily)flash(tr('dSkipNote')+' →');s.skipped=(s.skipped||0)+1;s.n--;s.extra=(s.extra||0)+1;if(s.extra>30){summary();return;}next();};
     $('next').onclick=next;
+    if(daily)wireDaily(s,item,()=>{});
     $('discuss').onclick=e=>{e.preventDefault();discuss(item);};
     wireWritten(item,{source:'track',mode:'track',unit:item.u,step:item.s,xpItem:{kind:'track',s:item.s},open:writtenDefault(item.type!=='mc'),
       gradeItem:()=>({id:item.id,source:'track',q:item.q,answer:item.type==='mc'?'ABCDE'[item.answer]+'. '+item.choices[item.answer]:fmtNum(item.answer),sol:item.sol,choices:item.type==='mc'?item.choices:undefined}),
       answered:()=>s.answered,solve:()=>{saved.solved[item.id]=item.u;delete saved.wrong[item.id];},miss:()=>{saved.wrong[item.id]=Math.floor(Date.now()/1000);},
-      hint:()=>{if(!s.hints&&item.hints.length)$('hint')?.click();},
-      lock:()=>{s.answered=true;$('app').querySelectorAll('.choice').forEach(b=>b.disabled=true);
+      /* a daily problem's hints cost XP: they are the learner's choice, never opened for them */
+      hint:daily?undefined:()=>{if(!s.hints&&item.hints.length)$('hint')?.click();},
+      lock:ok=>{s.answered=true;$('app').querySelectorAll('.choice').forEach(b=>b.disabled=true);
         if($('ans')){$('ans').disabled=true;$('ansgo').disabled=true;$('ansbox').querySelector('.keypad').hidden=true;}
         if($('numf')){$('num').disabled=true;$('numf').querySelector('button').disabled=true;}
-        $('showch')?.remove();paintSolution(item);$('hint').hidden=true;$('skip').hidden=true;$('next').hidden=false;reportHeight();}});
+        $('showch')?.remove();paintSolution(item);$('hint').hidden=true;$('skip').hidden=true;ready(ok);reportHeight();}});
     if(state.lang!=='en')localizeTrack(item);
     reportHeight();window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-practice-top'},location.origin);
   }
   const viewOf=item=>state.session?.view&&!state.session.showOriginal?state.session.view:{q:item.q,choices:item.choices||[],hints:item.hints,sol:item.sol};
-  function paintHints(item){const v=viewOf(item),s=state.session;$('hints').innerHTML=v.hints.slice(0,s.hints).map((h,i)=>`<p class="hintbox"><b>${tr('hint')} ${i+1}</b> ${esc(h)}</p>`).join('');typeset($('hints'));}
+  function paintHints(item){const v=viewOf(item),s=state.session;if(isDaily(s)){paintDailyHints(item);return;}$('hints').innerHTML=v.hints.slice(0,s.hints).map((h,i)=>`<p class="hintbox"><b>${tr('hint')} ${i+1}</b> ${esc(h)}</p>`).join('');typeset($('hints'));}
   function paintTexts(item){
     const v=viewOf(item),s=state.session;
     $('qtext').innerHTML=textHtml(v.q);typeset($('qtext'));
@@ -967,13 +1024,15 @@
   function trackAnswer(given,typedOk){
     const s=state.session,item=s.current;if(s.answered)return;s.answered=true;
     const ok=typedOk!==undefined?typedOk:item.type==='mc'?given===item.answer:numOk(given,item.answer);
-    const result=ok?(s.hints?'solved':'right'):'wrong';stopPace(item);noteOutcome(item,ok?(s.hints?'hinted':'right'):'wrong');
+    /* a daily problem counts as right with its hints recorded (the league takes 25 % off per hint); elsewhere a hinted
+       answer is "solved" (half) */
+    const result=ok?(s.hints&&!isDaily(s)?'solved':'right'):'wrong';stopPace(item);noteOutcome(item,ok?(s.hints?'hinted':'right'):'wrong');
     if(item.type==='mc')$('app').querySelectorAll('.choice').forEach(b=>{b.disabled=true;const i=Number(b.dataset.i);if(i===item.answer)b.classList.add('right');else if(i===given)b.classList.add('wrong');});
     else if($('numf')){$('num').disabled=true;$('numf').querySelector('button').disabled=true;$('numf').classList.add(ok?'right':'wrong');}
     $('showch')?.remove();
     let note='';
     if(ok){
-      s.right++;s.run++;const gain=Math.max(4,10+2*item.s-3*s.hints);s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=item.u;delete saved.wrong[item.id];
+      s.right++;s.run++;const gain=isDaily(s)?Math.round((10+2*item.s)*H.hintMult(s.hints)):Math.max(4,10+2*item.s-3*s.hints);s.xp+=gain;saved.xp+=gain;saved.solved[item.id]=item.u;delete saved.wrong[item.id];
       if(!s.fixed&&!s.diag&&s.run>=2){const up=s.steps.find(x=>x>s.level);if(up){s.level=up;note=' · '+tr('up')+' ↑';}s.run=0;}
     }else{
       s.run=0;saved.wrong[item.id]=Math.floor(Date.now()/1000);
@@ -986,7 +1045,7 @@
     const answerText=s.free?null:item.type==='mc'?'ABCDE'[item.answer]+'. '+(viewOf(item).choices[item.answer]||''):fmtNum(item.answer);
     $('feedback').innerHTML=`<p class="feedback ${ok?'ok':'bad'}">${ok?tr('right'):tr('wrong')+' '+(s.free?freeAnswerTex(s.free):esc(answerText))}${note}${ok&&s.hints?' · '+tr('withHints'):''}</p>`;
     typeset($('feedback'));if(!s.diag)paintSolution(item);
-    $('next').hidden=false;$('skip').hidden=true;$('hint').hidden=true;$('next').focus();reportHeight();
+    ready(ok);$('skip').hidden=true;$('hint').hidden=true;$('next').focus();reportHeight();
   }
   function discuss(item){
     const link=`https://haslalab.org/?lang=${state.lang}#/learn/practice?item=${item.id}`;
@@ -1168,7 +1227,7 @@
     let dir=1;
     const finish=()=>{
       const {stage,...rest}=a,profile={...rest,at:Math.floor(Date.now()/1000)},step=P.startStep(profile);
-      saved.profile=profile;saved.studyLevel=stage||H.defaultLevel(profile);
+      saved.profile=profile;saved.studyLevel=stage||H.defaultLevel(profile);dailyEnsure(saved.studyLevel);
       /* every unit with no answers yet starts at that step (the answers that follow move each one on its own) */
       for(const area of P.AREAS)for(const sub of area.subtopics){const unit=area.key+'/'+sub.key,k=saved.skills[unit];
         if(!k||!k.n)record('start-'+area.key,'diag',unit,step,'place');}
@@ -1188,7 +1247,7 @@
     return items.length?items:allTrackItems();
   }
   /* the home page's own problem: today's set starts at once, one problem after another, no list in between */
-  function startTodaySession(chosen){state.session={unit:'today',fixed:true,items:chosen,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};next();}
+  function startTodaySession(chosen,pool){dailyEnsure(studyLevel());state.session={unit:'today',fixed:true,daily:true,lv:studyLevel(),pool:pool||chosen,items:chosen,steps:[],level:0,n:0,right:0,run:0,seen:new Set(),current:null,answered:false,xp:0};next();}
   /* the home page's first visit: only the four level cards, then the first problem. The full questions (region, school
      year, goal, daily target) stay in the settings; until then every unit starts at the step startStep() gives the level. */
   const QUICK_PROFILE={L1:{},L2:{goal:'exam',region:'in'},L3:{goal:'olympiad',oly:1},L4:{level:'uni'}};
@@ -1198,7 +1257,7 @@
     $('app').querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{
       const key=b.dataset.level,tz=(()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone;}catch(e){return '';}})();
       const profile={region:P.guessRegion(state.lang,tz,countryOf()),level:'',goal:'',oly:0,daily:state.learner?.daily_goal||10,...QUICK_PROFILE[key],quick:true,at:Math.floor(Date.now()/1000)},step=P.startStep(profile);
-      saved.profile=profile;saved.studyLevel=key;
+      saved.profile=profile;saved.studyLevel=key;dailyEnsure(key);
       for(const area of P.AREAS)for(const sub of area.subtopics){const unit=area.key+'/'+sub.key,k=saved.skills[unit];
         if(!k||!k.n)record('start-'+area.key,'diag',unit,step,'place');}
       save();scheduleSync();playHome();
@@ -1212,7 +1271,7 @@
     let items;try{items=await startPool();}catch(e){failed(playHome);return;}
     const {chosen}=chooseToday(items);
     if(!chosen.length){todayHome();return;}
-    startTodaySession(chosen);
+    startTodaySession(chosen,items);
   }
   /* ── pace: a suggested time from the problem's step and a running clock that turns amber past it; it never stops
      the learner from answering. The time taken goes into the session summary. ── */
@@ -1254,6 +1313,53 @@
     save();
   }
   const dueNow=()=>H.dueIds(saved.review,today());
+  /* ── a daily problem ("오늘의 문제"), one per screen as in a language app: skip moves on at once; a hint costs 25 % of
+     the problem's XP (never below 25 %, league.js hintMult on the server) and brings the problem back once tomorrow;
+     "I can't solve this" moves on, lowers the daily difficulty and does not bring it back; "I solved it" opens only
+     once the answer has been checked (a choice, a typed answer, or the marked working) ── */
+  function dailyFoot(extra){
+    return `<span class="footbtns dfoot">${extra||''}<button type="button" id="skip">${tr('skip')}</button><button type="button" id="hint">💡 ${tr('hint')}</button><button type="button" id="giveup">${tr('giveUp')}</button><button type="button" class="primary" id="next" disabled title="${esc(tr('dWait'))}">${tr('solvedIt')}</button></span>`;
+  }
+  const kindMode=item=>item.kind==='track'?'track':item.kind==='contest'?'contest':'exam';
+  function hintsOf(item){
+    if(item.kind==='track'){const v=viewOf(item);return H.hintList({...item,hints:v.hints,sol:v.sol});}
+    return H.hintList(item,{choices:item.kind!=='contest'&&!!state.session?.freeExam});
+  }
+  function paintDailyHints(item){
+    const s=state.session,box=$('hints');if(!box||!s)return;
+    const shown=hintsOf(item).slice(0,s.shown||0);
+    box.innerHTML=shown.map((h,i)=>`<p class="hintbox"><b>${h.kind==='solstep'?tr('dSolStep'):tr('hint')+' '+(i+1)}</b> ${h.kind==='choices'?esc(tr('dChoicesHint')):esc(h.text)}</p>`).join('')
+      +(s.hints?`<p class="src hintcost" id="hintcost">${esc(tr('dHintCost').replace('{n}',s.hints).replace('{p}',Math.round(100*H.hintMult(s.hints))))} · ${tr('dHintTomorrow')}</p>`:'');
+    typeset(box);reportHeight();
+  }
+  /* a hint used: recorded at once (the server counts it against the problem's league XP whatever the answer says), and the
+     problem goes into tomorrow's set once (practice-tools.js reviewUpdate, "once") */
+  function useHint(s,item){
+    s.hints=(s.hints|0)+1;
+    record(item.id,kindMode(item),item.u,item.s,'hint');
+    saved.review=H.reviewUpdate(saved.review,item.id,'hinted',today(),{...metaOf(item),once:1});save();
+    paintDailyHints(item);
+  }
+  function wireDaily(s,item,showChoices){
+    s.hints=0;s.shown=0;
+    const hb=$('hint'),label=()=>{const l=hintsOf(item);hb.disabled=s.answered||!l.length||s.shown>=l.length;hb.title=l.length?'':tr('dHintNone');hb.innerHTML=`💡 ${tr('hint')}${l.length?` <small>${s.shown}/${l.length}</small>`:''}`;};
+    label();
+    hb.onclick=()=>{const l=hintsOf(item);if(s.answered||s.shown>=l.length)return;const h=l[s.shown++];if(h.kind==='choices')showChoices();useHint(s,item);label();};
+    $('giveup').onclick=()=>giveUp(s,item);
+  }
+  function giveUp(s,item){
+    if(s.answered||state.session!==s)return;s.answered=true;stopPace(item);
+    record(item.id,kindMode(item),item.u,item.s,'giveup');
+    delete saved.wrong[item.id];delete saved.review[item.id];saved.recent[item.id]=Math.floor(Date.now()/1000);
+    if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
+    save();paintStats();paintTabs();clearTimeout(draftTimer);Drafts.del(item.id).catch(()=>{});
+    flash(tr('dGiveUpNote'));next();
+  }
+  /* the answer is checked: "next" (in a daily problem "I solved it", or "Continue" after a miss) opens */
+  function ready(ok){
+    const b=$('next');if(!b)return;b.hidden=false;b.disabled=false;
+    if(isDaily(state.session)){b.removeAttribute('title');b.textContent=(ok===false?tr('dContinue'):tr('solvedIt'))+' →';for(const id of ['hint','giveup'])if($(id))$(id).hidden=true;if($('dlv'))$('dlv').textContent=dailyText();}
+  }
   /* ── under each problem: show your working, save for later, and report a problem ── */
   const REASONS=['rWrongAnswer','rTypo','rFigure','rTranslation','rOther'];
   const REASON_API={rWrongAnswer:'wrong_answer',rTypo:'typo',rFigure:'figure',rTranslation:'translation',rOther:'other'};
@@ -1280,7 +1386,8 @@
   function wireWritten(item,ctx){
     const btn=$('writeBtn');if(!btn)return;
     if(state.session?.diag){btn.remove();return;}
-    Object.assign(W,{item,ctx,pages:[],padState:null,busy:false,bandSeen:null,locked:false,penSeen:false,read:null,draftHeld:false});
+    clearTimeout(W.hoTimer);
+    Object.assign(W,{item,ctx,pages:[],padState:null,busy:false,bandSeen:null,locked:false,penSeen:false,read:null,draftHeld:false,handoff:null});
     btn.onclick=()=>$('written').innerHTML?closeWritten():openWritten();
     if(ctx.open)openWritten();
     if(ctx.noText)return;
@@ -1335,27 +1442,113 @@
   const msgW=(t,cls)=>{const m=$('wMsg');if(m){m.innerHTML=t;m.className='src wmsg'+(cls?' '+cls:'');}reportHeight();};
   function openWritten(){
     const ctx=W.ctx;$('writeBtn').setAttribute('aria-expanded','true');
+    /* the ways to hand in the working, this device's first (practice-tools.js deviceKind, submitOptions) */
+    const opt=H.submitOptions(deviceNow());if(!W.modeChosen||![...opt.main,...opt.more].includes(W.mode))W.mode=opt.main[0];
     if(ctx.noText){$('written').innerHTML=`<section class="written"><p class="src">${tr('wNoText')}</p></section>`;reportHeight();return;}
     const left=state.plan&&Number.isFinite(state.plan.gradeLeft)?`<span class="src" id="wLeftTop">${tr('wLeft')}: ${state.plan.gradeLeft}</span>`:'';
     $('written').innerHTML=`<section class="written" id="wbox"><div class="whd"><h3>${tr('wTitle')}</h3>${left}</div><p class="src">${tr('wIntro')}</p>
       <details class="alt wrule"><summary>${tr('bandPass')} · ${tr('bandPartial')} · ${tr('bandRetry')}</summary><p>${tr('wRule')}</p></details>
       ${token()?'':`<p class="wlogin">${tr('wLogin')} <a class="btnlink primary" href="/#/login" target="_top">${tr('login')}</a></p>`}
-      <div class="seg wmode" role="group" id="wMode">${[['photo','wPhoto'],['pad','wPad'],['file','wFile']].map(([k,l])=>`<button type="button" data-w="${k}" aria-pressed="${W.mode===k}">${tr(l)}</button>`).join('')}</div>
+      ${modeButtons(opt)}
       <div id="wPane" class="wpane"></div>
       <div class="wpages"><p class="sublabel">${tr('wPages')} <span id="wCount"></span></p><div class="thumbs" id="wThumbs"></div></div>
       <div class="ractions"><button type="button" class="primary" id="wSend"${token()?'':' disabled'}>${tr('wSendRead')}</button><span class="src wmsg" id="wMsg" role="status"></span></div>
       <p class="src dsaved">${tr('dSaved')}</p>
       <div id="wRead"></div><div id="wResult"></div></section>`;
-    $('wMode').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{W.mode=b.dataset.w;$('wMode').querySelectorAll('[data-w]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));paintPane();});
+    $('wbox').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{W.mode=b.dataset.w;W.modeChosen=true;$('wbox').querySelectorAll('[data-w]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));paintPane();});
     $('wSend').onclick=sendWritten;paintPane();paintThumbs();if(W.read){paintRead();setSendLabel();}reportHeight();
+  }
+  /* phone, tablet or computer: the pointer (coarse or fine), the screen's short side, touch points, and an iPad that
+     reports itself as a Mac. ?device= overrides it (for checking each layout) */
+  function deviceNow(){
+    const o=params.get('device');if(['phone','tablet','computer'].includes(o))return o;
+    const mm=q=>{try{return matchMedia(q).matches;}catch(e){return false;}};
+    return H.deviceKind({coarse:mm('(pointer:coarse)'),fine:mm('(any-pointer:fine)'),w:screen?.width,h:screen?.height,touch:navigator.maxTouchPoints||0,ua:navigator.userAgent,platform:navigator.platform});
+  }
+  const MODE_LABEL={photo:['📷','wPhoto'],pad:['✎','wPad'],file:['📄','wFile'],phone:['📱','wPhone']};
+  function modeButtons(opt){
+    const seg=(list,id)=>`<div class="seg wmode" role="group"${id?` id="${id}"`:''}>${list.map(k=>`<button type="button" data-w="${k}" aria-pressed="${W.mode===k}">${MODE_LABEL[k][0]} ${tr(MODE_LABEL[k][1])}</button>`).join('')}</div>`;
+    return seg(opt.main,'wMode')+(opt.more.length?`<details class="alt wmore"${opt.more.includes(W.mode)?' open':''}><summary>${tr('wMore')}</summary>${seg(opt.more)}</details>`:'');
   }
   function paintPane(){
     const pane=$('wPane');if(!pane)return;
     if(W.mode==='pad'){paintPad();return;}
+    $('wbox')?.classList.toggle('phonemode',W.mode==='phone');
+    if(W.mode==='phone'){paintHandoff();return;}
     const photo=W.mode==='photo';
     pane.innerHTML=`<label class="filebtn"><input type="file" id="wIn" accept="${photo?'image/*':'image/*,application/pdf,.pdf'}"${photo?' capture="environment"':''} multiple><span>${photo?'📷 '+tr('wTake'):'📄 '+tr('wFilePick')}</span></label>${photo?'':`<p class="src">${tr('wPdfNote')}</p>`}`;
     $('wIn').onchange=e=>{addFiles(e.target.files);e.target.value='';};
     reportHeight();
+  }
+  /* ── the phone hand-off, the computer's side (practice-grade.js /api/learn/grade/handoff): a QR code and a short link for
+     this problem; the phone opens practice.html#ph=<code> with no sign-in and sends its photos, which are read for this
+     account; this page asks every 2.5 s and shows the reading to check and mark, as if the pages had been sent here ── */
+  let qrLib=null;
+  const qrSvg=async url=>{
+    qrLib||=window.qrcode?Promise.resolve(window.qrcode):new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='vendor/qrcode/qrcode.js';sc.onload=()=>window.qrcode?ok(window.qrcode):no(Error('qr'));sc.onerror=()=>{qrLib=null;no(Error('qr'));};document.head.append(sc);});
+    const q=(await qrLib)(0,'M');q.addData(url);q.make();return q.createSvgTag({cellSize:5,margin:2,scalable:true});
+  };
+  async function paintHandoff(){
+    const pane=$('wPane'),item=W.item,ctx=W.ctx;if(!pane)return;
+    if(!token()){pane.innerHTML=`<p class="wlogin">${tr('wLogin')} <a class="btnlink primary" href="/#/login" target="_top">${tr('login')}</a></p>`;reportHeight();return;}
+    pane.innerHTML=`<div class="handoff"><div class="hoqr" id="hoQr"><p class="src">${tr('loading')}</p></div><div class="hotext"><b>📱 ${tr('hoTitle')}</b><ol><li>${tr('hoStep1')}</li><li>${tr('hoStep2')}</li><li>${tr('hoStep3')}</li></ol>
+      <p class="src">${tr('hoLink')}:<br><code id="hoLink"></code></p><p class="hostate" id="hoState" role="status"><span class="dots" aria-hidden="true"></span> ${tr('hoWait')}</p></div></div>`;
+    reportHeight();
+    let h=W.handoff;
+    if(!h||h.item!==item||h.expires_at<Date.now()/1000+60){
+      try{const r=await api('/api/learn/grade/handoff','POST',{item:H.gradeItem(ctx.gradeItem()),level:studyLevel(),lang:state.lang});h={item,id:r.id,code:r.code,expires_at:r.expires_at,readId:null};}
+      catch(e){if(W.item===item&&$('hoQr'))$('hoQr').innerHTML=`<p class="numerr">${tr('hoFail')}</p>`;reportHeight();return;}
+      if(W.item!==item)return;W.handoff=h;
+    }
+    if(W.mode!=='phone'||!$('hoQr'))return;
+    const link=H.handoffLink(location.origin+location.pathname,h.code);
+    $('hoLink').textContent=link.replace(/^https?:\/\//,'');
+    $('hoQr').innerHTML=await qrSvg(link).catch(()=>`<p class="numerr">${tr('hoFail')}</p>`);
+    if(h.readId&&$('hoState'))$('hoState').textContent=tr('hoGot').replace('{n}',W.read?.phone||1);
+    reportHeight();pollHandoff(h);
+  }
+  function pollHandoff(h){
+    clearTimeout(W.hoTimer);
+    const tick=async()=>{
+      if(W.handoff!==h||W.mode!=='phone'||!$('wbox'))return;
+      if(Date.now()/1000>h.expires_at){if($('hoState')){$('hoState').innerHTML=`${tr('hoExpired')} <button type="button" class="mini" id="hoNew">${tr('hoNew')}</button>`;$('hoNew').onclick=()=>{W.handoff=null;paintHandoff();};}return;}
+      let r=null;try{r=await api('/api/learn/grade/handoff?id='+h.id);}catch(e){}
+      if(W.handoff!==h)return;
+      if(r?.status==='read'&&r.read_id&&r.read_id!==h.readId){
+        h.readId=r.read_id;W.read={id:r.read_id,transcript:String(r.transcript||''),confidence:r.confidence,phone:r.pages||1};
+        if($('hoState'))$('hoState').textContent=tr('hoGot').replace('{n}',r.pages||1);paintRead();setSendLabel();
+      }
+      if(r?.status==='graded'){if($('hoState'))$('hoState').textContent=tr('hoGraded');return;}
+      W.hoTimer=setTimeout(tick,2500);
+    };
+    W.hoTimer=setTimeout(tick,1500);
+  }
+  /* ── the phone's side: practice.html#ph=<code>, opened from the QR. Photos (or files) of the working go to the hand-off;
+     the reading shows on the computer, where it is checked and marked ── */
+  async function phoneHome(code){
+    document.documentElement.classList.add('phonepage');
+    state.mode='phone';state.session=null;$('tabs').innerHTML='';$('stats').innerHTML='';$('note').textContent='';
+    $('app').innerHTML=`<p>${tr('loading')}</p>`;
+    const url=API+'/api/learn/grade/handoff/'+code,bad=t=>{$('app').innerHTML=`<section class="session phone"><h2>📱 ${tr('phTitle')}</h2><p class="feedback bad">${t}</p></section>`;};
+    let info;try{const r=await fetch(url);info=await r.json().catch(()=>({}));if(!r.ok){bad(tr('phBad'));return;}}catch(e){bad(tr('wFail'));return;}
+    if(LANGS.includes(info.lang)&&!params.get('lang')&&info.lang!==state.lang){state.lang=info.lang;translate();}
+    Object.assign(W,{item:{id:'phone-'+code},ctx:{noText:true},pages:[],padState:null,busy:false,read:null,draftHeld:true,mode:'photo'});
+    $('app').innerHTML=`<section class="session phone written" id="wbox"><h2>📱 ${tr('phTitle')}</h2><p class="src">${tr('phIntro')}</p>
+      ${info.q?`<details class="alt"><summary>${tr('phProblem')}</summary><div class="q" id="phq">${textHtml(info.q)}</div></details>`:''}
+      <div class="phbtns"><label class="filebtn big"><input type="file" id="phCam" accept="image/*" capture="environment" multiple><span>📷 ${tr('wTake')}</span></label><label class="filebtn"><input type="file" id="phFile" accept="image/*,application/pdf,.pdf" multiple><span>📄 ${tr('wFilePick')}</span></label></div>
+      <div class="wpages"><p class="sublabel">${tr('wPages')} <span id="wCount"></span></p><div class="thumbs" id="wThumbs"></div></div>
+      <div class="ractions"><button type="button" class="primary" id="phSend">${tr('phSend')}</button><span class="src wmsg" id="wMsg" role="status"></span></div></section>`;
+    if($('phq'))typeset($('phq'));
+    for(const id of ['phCam','phFile'])$(id).onchange=e=>{addFiles(e.target.files);e.target.value='';};
+    paintThumbs();
+    $('phSend').onclick=async()=>{
+      if(W.busy)return;if(!W.pages.length){msgW(`<span class="numerr">${tr('wNone')}</span>`);return;}
+      W.busy=true;$('phSend').disabled=true;msgW(wsteps('read'));
+      let r=null,j={};try{r=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({pages:W.pages.map(p=>p.url)})});j=await r.json().catch(()=>({}));}catch(e){r=null;}
+      W.busy=false;$('phSend').disabled=false;
+      if(r?.ok){W.pages=[];paintThumbs();msgW(`<span class="feedback ok">✓ ${tr('phSent')}</span>`);$('phSend').textContent=tr('phAgain');if(j.uploads>=j.max_uploads)$('phSend').disabled=true;return;}
+      msgW(`<span class="numerr">${!r?tr('wFail'):r.status===404||r.status===410?tr('phBad'):j.error==='handoff_used'?tr('phUsed'):j.error==='grade_limit'?tr('wLimit'):r.status===422?tr('wUnreadable'):tr('wFail')}</span>`);
+    };
   }
   /* an image file → a drawable (createImageBitmap where it exists; else a data URL, which the page's CSP allows) */
   async function loadImage(file){
@@ -1406,8 +1599,15 @@
   /* the pad: a white page 1200 × 1600 drawn with pointer events (finger, stylus or mouse); once a stylus touches it,
      touches of the palm are ignored. Strokes are kept so undo can redraw. */
   const PAD_W=1200,PAD_H=1600,PAD_SIZES=[4,9,18];
+  const pressW=(w,p)=>p==null?w:w*(0.45+1.1*p);
   function drawStroke(g,st,from){
     const p=st.pts,i0=Math.max(0,from||0);g.save();g.lineCap='round';g.lineJoin='round';g.strokeStyle=st.tool==='eraser'?'#fff':'#14161c';g.lineWidth=st.w;
+    if(st.tool!=='eraser'&&p.some(x=>x.length>2)){
+      /* with pressure: each segment at its own width */
+      if(p.length===1||i0===0){g.beginPath();g.lineWidth=pressW(st.w,p[0][2]);g.moveTo(p[0][0],p[0][1]);g.lineTo(p[0][0]+0.01,p[0][1]);g.stroke();}
+      for(let i=Math.max(1,i0);i<p.length;i++){g.beginPath();g.lineWidth=pressW(st.w,((p[i][2]??0.5)+(p[i-1][2]??0.5))/2);g.moveTo(p[i-1][0],p[i-1][1]);g.lineTo(p[i][0],p[i][1]);g.stroke();}
+      g.restore();return;
+    }
     g.beginPath();g.moveTo(p[i0][0],p[i0][1]);if(p.length===1)g.lineTo(p[0][0]+0.01,p[0][1]);for(let i=i0+1;i<p.length;i++)g.lineTo(p[i][0],p[i][1]);g.stroke();g.restore();
   }
   function padRender(c){const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,PAD_W,PAD_H);for(const st of W.padState?.strokes||[])drawStroke(g,st);}
@@ -1425,7 +1625,8 @@
       <canvas id="wCanvas" class="padcv" width="${PAD_W}" height="${PAD_H}" aria-label="${tr('wPad')}"></canvas>`;
     const cv=$('wCanvas'),g=cv.getContext('2d');padRender(cv);
     let cur=null;
-    const pt=e=>{const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*PAD_W/r.width,(e.clientY-r.top)*PAD_H/r.height];};
+    /* a stylus's pressure (0–1) is kept with each point and widens the line; a mouse or finger draws at the set width */
+    const pt=e=>{const r=cv.getBoundingClientRect(),p=[(e.clientX-r.left)*PAD_W/r.width,(e.clientY-r.top)*PAD_H/r.height];if(e.pointerType==='pen'&&e.pressure>0)p.push(Math.round(e.pressure*100)/100);return p;};
     cv.addEventListener('pointerdown',e=>{
       if(e.pointerType==='pen')W.penSeen=true;else if(e.pointerType==='touch'&&W.penSeen)return;
       if(e.button>0||cur)return;e.preventDefault();try{cv.setPointerCapture(e.pointerId);}catch(err){}
@@ -1480,7 +1681,7 @@
   function paintRead(){
     const R=W.read,box=$('wRead');if(!R||!box)return;
     box.innerHTML=`<section class="wread"><p class="wrhead"><b>${tr('wReadTitle')}</b> ${confHtml(R.confidence)}</p>
-      <div class="wrbody"><div class="thumbs mini">${W.pages.map((p,i)=>`<a href="${p.url}" target="_blank" rel="noopener"><img src="${p.url}" alt="${i+1}"></a>`).join('')}</div>
+      <div class="wrbody"><div class="thumbs mini">${R.phone?`<span class="src">📱 ${R.phone} ${tr('dPages')}</span>`:W.pages.map((p,i)=>`<a href="${p.url}" target="_blank" rel="noopener"><img src="${p.url}" alt="${i+1}"></a>`).join('')}</div>
       <textarea id="wTx" rows="8" spellcheck="false" aria-label="${tr('wTranscript')}">${esc(R.transcript)}</textarea></div>
       <div id="wTxPrev" class="wtrans"></div>
       <p class="src">${tr('wReadNote')}</p>
@@ -1525,7 +1726,7 @@
     record(item.id,ctx.mode,ctx.unit,ctx.step,mv.result);
     if(mv.solved){ctx.solve();if(s)s.right++;}else if(mv.review==='wrong')ctx.miss();
     if(!saved.days.includes(today())){saved.days.push(today());saved.days=saved.days.slice(-400);}
-    ctx.lock();save();paintStats();
+    ctx.lock(!!mv.solved);save();paintStats();
   }
   const pts=v=>{const x=Number(v)||0;return String(Math.round(x*10)/10);};
   function applyGrade(item,ctx,j){
@@ -1534,7 +1735,7 @@
     saved.graded[item.id]={fraction,band,at:Math.floor(Date.now()/1000)};
     let gain=0,note='';
     if(!was){
-      gain=H.gradedGain(H.baseXp(ctx.xpItem),band,W.bandSeen);
+      gain=Math.round(H.gradedGain(H.baseXp(ctx.xpItem),band,W.bandSeen)*(isDaily(s)?H.hintMult(s.hints):1));
       if(!W.bandSeen||BAND_RANK[band]>BAND_RANK[W.bandSeen])W.bandSeen=band;
       if(gain){if(s)s.xp+=gain;saved.xp+=gain;}
       const h=H.pushGraded(saved.gradedHist,ctx.unit,fraction);saved.gradedHist=h.hist;if(h.up){stepUp(ctx.unit);note=tr('wUnitUp')+' ↑';}
@@ -1550,14 +1751,16 @@
       ${j.transcript?`<details class="alt"><summary>${tr('wTranscript')}</summary><div class="wtrans">${textHtml(j.transcript)}</div></details>`:''}
       <p class="src">${Number.isFinite(j.left)?`${tr('wLeft')}: <b>${j.left}</b> · `:''}${tr('wAiNote')}</p>
       ${Number.isInteger(j.attempt_id)?`<div class="appeal" id="wAppeal">${appealHtml(j.attempt_id)}</div>`:''}
-      ${mv.retry&&!was?`<div class="actions start"><button type="button" class="primary" id="wAgain">${tr('wRetry')}</button><button type="button" id="wOn">${tr('wMoveOn')}</button></div>`:''}</div>`;
+      ${mv.retry&&!was?`<div class="actions start"><button type="button" class="primary" id="wAgain">${tr('wRetry')}</button>${isDaily(s)?'':`<button type="button" id="wOn">${tr('wMoveOn')}</button>`}</div>`:''}</div>`;
     typeset($('wResult'));
     if(Number.isInteger(j.attempt_id))wireAppeal(j.attempt_id,item);
     if(!was&&mv.next)settle(item,ctx,mv);
     if($('wAgain')){
       $('wAgain').onclick=()=>{$('wResult').innerHTML='';ctx.hint?.();msgW(tr(ctx.hint?'wRetryNote':'wRetryPlain'));$('written').scrollIntoView?.({block:'nearest'});};
-      $('wOn').onclick=()=>{settle(item,ctx,mv);$('next')?.click();};
+      if($('wOn'))$('wOn').onclick=()=>{settle(item,ctx,mv);$('next')?.click();};
     }
+    /* a daily problem: the marks are back, so "continue" opens; moving on settles a retry as a miss */
+    if(isDaily(s)&&mv.retry&&!was&&$('next')){ready(false);const nb=$('next'),go=nb.onclick;nb.onclick=()=>{if(!ctx.answered())settle(item,ctx,mv);go?.call(nb);};}
     reportHeight();
   }
 
@@ -1703,7 +1906,7 @@
     $('app').innerHTML=`<section class="session onboard"><div class="shead"><button type="button" class="back" id="quit">${tr('quit')}</button><span class="unitname">${tr('lvTitle')}</span></div>
       <h2>${tr('lvPick')}</h2><p class="src">${tr('lvIntro')}</p><div class="obopts">${levelCards(studyLevel())}</div></section>`;
     $('quit').onclick=todayHome;
-    $('app').querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{saved.studyLevel=b.dataset.level;delete saved.customOpts?.source;save();todayHome();});
+    $('app').querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{saved.studyLevel=b.dataset.level;dailyEnsure(saved.studyLevel);delete saved.customOpts?.source;save();todayHome();});
     reportHeight();
   }
   /* the problems a set can draw from: each source tagged (from) so the filter can tell them apart */
@@ -1904,7 +2107,10 @@
     if(!H.STUDY_LEVELS.some(L=>L.key===level))return;
     saved.customOpts={...(saved.customOpts||{}),source:'level:'+level,units:unit&&P.SUBTOPICS.has(unit)?[unit]:[],min:1,max:10,contest:'',yearMin:0,yearMax:0};
   }
-  const boot=()=>{paintStats();pull();loadPlan();(state.learnerP=loadLearner()).then(()=>{paintStats();learnerPrompt();loadToday();});setTimeout(()=>flushReports().catch(()=>{}),4000);const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
+  const boot=()=>{
+    /* the phone opened from a hand-off QR: only the photo page */
+    const ph=/^#ph=([A-HJ-NP-Z2-9]{8})$/.exec(location.hash);if(ph){phoneHome(ph[1]);return;}
+    paintStats();pull();loadPlan();(state.learnerP=loadLearner()).then(()=>{paintStats();learnerPrompt();loadToday();});setTimeout(()=>flushReports().catch(()=>{}),4000);const unit=params.get('unit'),mode=params.get('mode'),item=params.get('item'),track=params.get('track');state.mode='exam';paintTabs();
     if(item&&/^[a-z0-9]+-[A-Za-z0-9~._-]{1,60}$/.test(item))openItem(item);
     else if(mode==='bank')bankHome();else if(mode==='contest')contestHome();else if(mode==='tracks'||track)track&&/^[a-z0-9]{2,8}$/.test(track)?trackStart(track,params.get('syl')||''):tracksHome();
     else if(mode==='play'){document.documentElement.classList.add('play');playHome();}

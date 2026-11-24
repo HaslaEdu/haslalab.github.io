@@ -6,6 +6,9 @@
    XP. The rule is the page's own: 10 + 2 x step (competition items 20 + 5 x step), and a graded answer gets that times
    1 for a pass, 0.5 for partial credit and 0.15 for a retry. Against abuse: one problem counts once a day (a better
    grading of it adds only the difference), and at most 200 problems count per member per day.
+   Hints: each hint shown takes 25 % off the problem's XP, down to a floor of 25 % (hintMult). The hints are the ones the
+   server recorded for the problem (practice-progress.js stores each hint the moment it is shown), so an answer that
+   later says "no hints" still earns the reduced XP.
 
    When a week is over, the Worker's minute cron (index.js scheduled) settles it a few groups at a time: ranks 1-7 move
    up a tier, the last 5 move down (never below Bronze); in Master ranks 1-3 are reborn: rebirths + 1, back to Bronze.
@@ -93,11 +96,14 @@ export const daysLeft = t => Math.max(1, Math.ceil((weekEnds(weekOf(t)) - t) / D
 const stepOf = s => Math.max(1, Math.min(10, Math.round(Number(s) || 3)));
 export const baseXp = (kind, step) => kind === 'contest' ? 20 + 5 * stepOf(step) : 10 + 2 * stepOf(step);
 export const BAND_MULT = Object.freeze({ pass: 1, partial: 0.5, retry: 0.15 });
+/* hints: 1 → 75 %, 2 → 50 %, 3 or more → 25 % of the problem's XP */
+export const HINT_STEP = 0.25, HINT_FLOOR = 0.25;
+export const hintMult = hints => Math.max(HINT_FLOOR, 1 - HINT_STEP * Math.max(0, Math.floor(Number(hints) || 0)));
 /* a recorded attempt: a right answer earns league XP, a problem the member marked solved half of it */
 /* a self-marked "I solved it" (contest problems checked against the PDF) earns half: nothing checks it */
-export const attemptXp = a => !a ? 0 : a.result === 'right' ? baseXp(a.mode, a.step) : a.result === 'solved' ? Math.round(baseXp(a.mode, a.step) / 2) : 0;
-/* a graded written answer (practice_graded): base XP by step times the band */
-export const gradedXp = (source, step, band) => source === 'archive' || !(band in BAND_MULT) ? 0 : Math.max(1, Math.round(baseXp(source, step) * BAND_MULT[band]));
+export const attemptXp = a => !a ? 0 : a.result === 'right' ? Math.round(baseXp(a.mode, a.step) * hintMult(a.hints)) : a.result === 'solved' ? Math.round(baseXp(a.mode, a.step) / 2 * hintMult(a.hints)) : 0;
+/* a graded written answer (practice_graded): base XP by step times the band, less for hints */
+export const gradedXp = (source, step, band, hints = 0) => source === 'archive' || !(band in BAND_MULT) ? 0 : Math.max(1, Math.round(baseXp(source, step) * BAND_MULT[band] * hintMult(hints)));
 
 /* the daily goal's one-time bonus: bigger goals pay more in all and more per problem (7 for 1, 90 for 10, 316 for 30) */
 export const GOAL_MIN = 1, GOAL_MAX = 50;
@@ -182,8 +188,8 @@ export async function awardLeague(env, userId, events, t) {
 const leagueFailed = e => { console.error('league', String(e?.message || e).slice(0, 200)); return { xp: 0, bonus: 0, today: null }; };
 export const leagueFromAttempts = (env, userId, attempts, t) =>
   awardLeague(env, userId, attempts.map(a => ({ item_id: a.item_id, xp: attemptXp(a) })), t).catch(leagueFailed);
-export const leagueFromGrading = (env, userId, item, band, t) =>
-  awardLeague(env, userId, [{ item_id: item.id, xp: gradedXp(item.source, item.step, band) }], t).catch(leagueFailed);
+export const leagueFromGrading = (env, userId, item, band, t, hints = 0) =>
+  awardLeague(env, userId, [{ item_id: item.id, xp: gradedXp(item.source, item.step, band, hints) }], t).catch(leagueFailed);
 
 /* ── the week's end: what each rank in a group does. xps are the group's XP, best first ── */
 export function groupOutcomes(tier, xps) {

@@ -89,7 +89,22 @@ export const GRADE_SCHEMA = [
      updated_at INTEGER NOT NULL)`,
   `CREATE INDEX IF NOT EXISTS practice_appeals_status ON practice_appeals(status, created_at DESC)`,
   `CREATE INDEX IF NOT EXISTS practice_appeals_user ON practice_appeals(user_id, created_at DESC)`,
-  `CREATE INDEX IF NOT EXISTS practice_appeals_item ON practice_appeals(item_id, status)`
+  `CREATE INDEX IF NOT EXISTS practice_appeals_item ON practice_appeals(item_id, status)`,
+  /* the phone hand-off for one problem: the code's hash, the problem as the computer sent it, and the read it produced */
+  `CREATE TABLE IF NOT EXISTS practice_handoffs (
+     id INTEGER PRIMARY KEY AUTOINCREMENT,
+     code_hash TEXT NOT NULL UNIQUE,
+     user_id INTEGER NOT NULL,
+     item TEXT NOT NULL,
+     level TEXT,
+     lang TEXT,
+     created_at INTEGER NOT NULL,
+     expires_at INTEGER NOT NULL,
+     uploads INTEGER NOT NULL DEFAULT 0,
+     pages INTEGER,
+     read_id INTEGER,
+     read_at INTEGER)`,
+  `CREATE INDEX IF NOT EXISTS practice_handoffs_user ON practice_handoffs(user_id, created_at DESC)`
 ];
 const ready = new WeakSet();
 export async function ensureGradeSchema(env) {
@@ -115,6 +130,16 @@ const MAX_TRANSCRIPT = 20000;
 /* fraction of the marks: pass moves on, partial moves on into review, retry offers another go */
 export const bandOf = f => (f >= 0.7 ? 'pass' : f >= 0.4 ? 'partial' : 'retry');
 const ITEM_ID = /^[\w~.:-]{1,80}$/;
+/* the phone hand-off: an 8-letter code (no 0/O/1/I), 20 minutes, three sends */
+export const HANDOFF_TTL = 1200, HANDOFF_UPLOADS = 3;
+const HANDOFF_ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+export const handoffCode = () => Array.from(crypto.getRandomValues(new Uint8Array(8)), b => HANDOFF_ABC[b % 32]).join('');
+const handoffStatus = (row, read, t) => read?.graded_at ? 'graded' : row.read_id ? 'read' : row.expires_at < t ? 'expired' : 'waiting';
+/* hints shown on a problem in the last day, as practice-progress.js recorded them (none when that table is not there yet) */
+async function hintsSeen(env, userId, itemId, t) {
+  try { await ensurePracticeSchema(env); return (await env.DB.prepare("SELECT COUNT(*) AS n FROM practice_attempts WHERE user_id=? AND item_id=? AND result='hint' AND created_at>=?").bind(userId, itemId, t - 86400).first())?.n || 0; }
+  catch { return 0; }
+}
 const MAX_PAGES = 4, MAX_PAGE_BYTES = 1.5 * 1024 * 1024;
 const clip = (s, n) => String(s ?? '').slice(0, n);
 const round1 = x => Math.round(x * 10) / 10;
@@ -288,6 +313,35 @@ export function addedTokens(read, edited) {
 export const editAllowed = (read, edited) => addedTokens(read, edited) <= Math.max(25, Math.ceil(tokens(read).length * 0.35));
 
 export function createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff = u => u?.role === 'admin', vision = readPages}) {
+  /* step 'read' for one learner: one of today's markings is taken (given back on a failure on our side, and on an
+     unreadable page only UNREADABLE_REFUNDS times a day); the transcript is kept an hour for step 'grade' */
+  async function readFor(env, userId, item, pages, lang, t) {
+    const DB = env.DB, provider = gradeProvider(env);
+    if (!provider) throw new HttpError(503, 'ai_unavailable');
+    await limit(env, 'grade-flood:' + userId, 6, 60);
+    const h = await rubricKey(item);
+    const plan = await planOf(env, userId, t), day = utcDay(t), max = plan.plan === 'free' ? GRADE_FREE : GRADE_PLAN;
+    const used = await takeOne(env, userId, 'grade', day, max);
+    if (used == null) throw new HttpError(429, 'grade_limit');
+    const fail = async (status, code) => {
+      if (code !== 'unreadable' || await takeOne(env, userId, 'grade-unreadable', day, UNREADABLE_REFUNDS) != null) await giveBack(env, userId, 'grade', day);
+      throw new HttpError(status, code);
+    };
+    const left = Math.max(0, max - used);
+    let raw;
+    try { raw = (await vision(env, {mode: 'read', provider, item, pages, lang}))?.raw; }
+    catch (e) { await fail(503, e?.code === 'provider_unavailable' ? 'ai_unavailable' : 'grade_failed'); }
+    if (!raw || typeof raw !== 'object') await fail(503, 'grade_failed');
+    const transcript = clip(typeof raw.transcript === 'string' ? raw.transcript : '', MAX_TRANSCRIPT).trim();
+    if (raw.legible === false || !transcript) await fail(422, 'unreadable');
+    const confidence = conf(raw.confidence);
+    const ins = await DB.prepare('INSERT INTO practice_reads(user_id,item_id,rubric_h,transcript,confidence,created_at) VALUES(?,?,?,?,?,?)')
+      .bind(userId, item.id, h, transcript, confidence, t).run();
+    /* reads older than a day are of no use: keep the table small */
+    await DB.prepare('DELETE FROM practice_reads WHERE user_id=? AND created_at<?').bind(userId, t - 86400).run();
+    return {step: 'read', read_id: ins.meta.last_row_id, transcript, confidence, low_confidence: confidence != null && confidence < LOW_CONFIDENCE,
+      expires_at: t + READ_TTL, left};
+  }
   return async function gradeRoute(p, m, body, me, req, env) {
     if (p !== '/api/learn/grade' && !p.startsWith('/api/learn/grade/') && p !== '/api/learn/graded' && p !== '/api/learn/report' && !p.startsWith('/api/learn/reports')) return undefined;
     await ensureLearnSchema(env);
@@ -308,6 +362,8 @@ export function createGradeRouter({HttpError, needUser, limit, now, bad, clientI
         edited = body.transcript.trim();
       }
       const level = LEVELS.includes(body.level) ? body.level : null, lang = LANGS.includes(body.lang) ? body.lang : 'en';
+      /* step 'read': the pages → a transcript the learner checks (the phone hand-off below reads the same way) */
+      if (step === 'read') return readFor(env, me.id, item, pages, lang, t);
       const provider = gradeProvider(env);
       if (!provider) throw new HttpError(503, 'ai_unavailable');
       await limit(env, 'grade-flood:' + me.id, 6, 60);
@@ -335,21 +391,6 @@ export function createGradeRouter({HttpError, needUser, limit, now, bad, clientI
         throw new HttpError(status, code);
       };
       const left = Math.max(0, max - used);
-      if (step === 'read') {
-        let raw;
-        try { raw = (await vision(env, {mode: 'read', provider, item, pages, lang}))?.raw; }
-        catch (e) { await fail(503, e?.code === 'provider_unavailable' ? 'ai_unavailable' : 'grade_failed'); }
-        if (!raw || typeof raw !== 'object') await fail(503, 'grade_failed');
-        const transcript = clip(typeof raw.transcript === 'string' ? raw.transcript : '', MAX_TRANSCRIPT).trim();
-        if (raw.legible === false || !transcript) await fail(422, 'unreadable');
-        const confidence = conf(raw.confidence);
-        const ins = await DB.prepare('INSERT INTO practice_reads(user_id,item_id,rubric_h,transcript,confidence,created_at) VALUES(?,?,?,?,?,?)')
-          .bind(me.id, item.id, h, transcript, confidence, t).run();
-        /* reads older than a day are of no use: keep the table small */
-        await DB.prepare('DELETE FROM practice_reads WHERE user_id=? AND created_at<?').bind(me.id, t - 86400).run();
-        return {step: 'read', read_id: ins.meta.last_row_id, transcript, confidence, low_confidence: confidence != null && confidence < LOW_CONFIDENCE,
-          expires_at: t + READ_TTL, left};
-      }
       /* the rubric: kept per problem content; written once by the solver model */
       let rubric = null, rubricSource = 'cached';
       const row = await DB.prepare('SELECT rubric FROM practice_rubrics WHERE h=?').bind(h).first();
@@ -392,10 +433,59 @@ export function createGradeRouter({HttpError, needUser, limit, now, bad, clientI
       await DB.prepare('INSERT OR REPLACE INTO practice_graded_detail(attempt_id,transcript,read_transcript,items,confidence) VALUES(?,?,?,?,?)')
         .bind(attemptId, transcript, read ? read.transcript : null, JSON.stringify(result.items), confidence).run();
       if (item.unit) await feedSkill(env, me.id, item, result, t).catch(() => {});
-      /* weekly league XP from this server-graded answer (league.js) */
-      const league = await leagueFromGrading(env, me.id, item, result.band, t), leagueXp = league.xp;
+      /* weekly league XP from this server-graded answer (league.js), less for the hints recorded on the problem today */
+      const hints = await hintsSeen(env, me.id, item.id, t);
+      const league = await leagueFromGrading(env, me.id, item, result.band, t, hints), leagueXp = league.xp;
       return {...result, feedback: words(clip(raw.feedback, 2000), 120), transcript, rubric_source: rubricSource,
         confidence, low_confidence: confidence != null && confidence < LOW_CONFIDENCE, left, attempt_id: attemptId, league_xp: leagueXp, goal_bonus: league.bonus, ...(league.today ? {league_today: league.today} : {})};
+    }
+    /* ── the phone hand-off: on a computer the page shows a QR (and a short link) for one problem; the learner's phone
+       opens it with no sign-in, photographs the working and sends it here; the pages are read for the owner (one of
+       their markings, the same step 'read' as above) and the computer, which polls, gets the transcript to check and
+       mark. The code is only in the QR (its hash is kept), lasts HANDOFF_TTL and takes HANDOFF_UPLOADS sends. ── */
+    if (p === '/api/learn/grade/handoff' && m === 'POST') {
+      needUser(me);
+      const item = cleanItem(body?.item);
+      if (!item) bad('bad_item');
+      await limit(env, 'grade-handoff:' + me.id, 30, 3600);
+      const code = handoffCode(), level = LEVELS.includes(body.level) ? body.level : null, lang = LANGS.includes(body.lang) ? body.lang : 'en';
+      const ins = await DB.prepare('INSERT INTO practice_handoffs(code_hash,user_id,item,level,lang,created_at,expires_at) VALUES(?,?,?,?,?,?,?)')
+        .bind(await sha256(code), me.id, JSON.stringify(item), level, lang, t, t + HANDOFF_TTL).run();
+      await DB.prepare('DELETE FROM practice_handoffs WHERE user_id=? AND expires_at<?').bind(me.id, t - 86400).run();
+      return {id: ins.meta.last_row_id, code, expires_at: t + HANDOFF_TTL};
+    }
+    if (p === '/api/learn/grade/handoff' && m === 'GET') {
+      needUser(me);
+      const id = Number(new URL(req?.url || 'https://x/').searchParams.get('id'));
+      const row = Number.isInteger(id) && id > 0 ? await DB.prepare('SELECT * FROM practice_handoffs WHERE id=?').bind(id).first() : null;
+      if (!row || row.user_id !== me.id) throw new HttpError(404, 'handoff_not_found');
+      const read = row.read_id ? await DB.prepare('SELECT id,transcript,confidence,graded_at FROM practice_reads WHERE id=? AND user_id=?').bind(row.read_id, me.id).first() : null;
+      return {status: handoffStatus(row, read, t), expires_at: row.expires_at, pages: row.pages || 0, uploads: row.uploads,
+        ...(read && !read.graded_at ? {read_id: read.id, transcript: read.transcript, confidence: read.confidence, low_confidence: read.confidence != null && read.confidence < LOW_CONFIDENCE} : {})};
+    }
+    const hand = /^\/api\/learn\/grade\/handoff\/([A-Z2-9]{8})$/.exec(p);
+    if (hand) {
+      /* the phone: no account, only the code */
+      await limit(env, 'grade-handoff-ip:' + (clientIp?.(req) || 'local'), 60, 600);
+      const row = await DB.prepare('SELECT * FROM practice_handoffs WHERE code_hash=?').bind(await sha256(hand[1])).first();
+      if (!row) throw new HttpError(404, 'handoff_not_found');
+      if (row.expires_at < t) throw new HttpError(410, 'handoff_expired');
+      let item = null; try { item = cleanItem(JSON.parse(row.item)); } catch { item = null; }
+      if (!item) throw new HttpError(404, 'handoff_not_found');
+      if (m === 'GET') return {status: handoffStatus(row, null, t), expires_at: row.expires_at, uploads: row.uploads, max_uploads: HANDOFF_UPLOADS, q: clip(item.q, 600), lang: row.lang};
+      if (m !== 'POST') throw new HttpError(405, 'method_not_allowed');
+      if (row.uploads >= HANDOFF_UPLOADS) throw new HttpError(429, 'handoff_used');
+      const pages = cleanPages(body?.pages);
+      if (!pages) bad('bad_pages');
+      /* one send at a time per code: the counter is claimed first, so two phones cannot both spend a marking */
+      const claimed = await DB.prepare('UPDATE practice_handoffs SET uploads=uploads+1 WHERE id=? AND uploads=? RETURNING uploads').bind(row.id, row.uploads).first();
+      if (!claimed) throw new HttpError(409, 'handoff_busy');
+      let out;
+      try { out = await readFor(env, row.user_id, item, pages, row.lang || 'en', t); }
+      catch (e) { if (e?.status !== 429 && e?.status !== 422) await DB.prepare('UPDATE practice_handoffs SET uploads=MAX(0,uploads-1) WHERE id=?').bind(row.id).run(); throw e; }
+      await DB.prepare('UPDATE practice_handoffs SET read_id=?,pages=?,read_at=? WHERE id=?').bind(out.read_id, pages.length, t, row.id).run();
+      /* the phone sees only that it arrived; the transcript is for the computer */
+      return {status: 'read', pages: pages.length, uploads: claimed.uploads, max_uploads: HANDOFF_UPLOADS};
     }
     /* ── appeals: the learner disputes a grading in one tap (and an optional sentence); staff uphold or change the score ── */
     if (p === '/api/learn/grade/appeal' && m === 'POST') {

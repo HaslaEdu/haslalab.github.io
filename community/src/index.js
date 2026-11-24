@@ -530,6 +530,8 @@ async function handle(req, env, url, ctx) {
       env.DB.prepare("DELETE FROM practice_state WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM ai_usage_daily WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM practice_graded WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM practice_daily WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM practice_handoffs WHERE user_id=?").bind(me.id),
       env.DB.prepare("UPDATE problem_reports SET user_id=NULL WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM entitlements WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM class_members WHERE user_id=?").bind(me.id),

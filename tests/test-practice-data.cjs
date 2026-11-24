@@ -62,7 +62,7 @@ test('the competition challenge lists the six competitions with papers on the PD
 
 test('every practice mode lets the learner skip a problem',()=>{
   const js=read('practice.js');
-  assert.equal((js.match(/id="skip"/g)||[]).length,4,'exam, exam-track, bank and contest problems each have a skip button');
+  assert.equal((js.match(/id="skip"/g)||[]).length,5,'exam, exam-track, bank and contest problems each have a skip button, and the daily problems\' shared footer one');
   assert.match(read('practice.html'),/connect-src 'self' https:\/\/haslalab-problem-bank\.haslalab\.workers\.dev https:\/\/haslalab-pdf\.haslalab\.workers\.dev/);
 });
 
