@@ -13,9 +13,9 @@
    vector notation (an arrow over the letter, or bold). The presets follow the conventions of university problem
    sets, olympiad papers and JEE papers as drawn from general knowledge of how such figures look; nothing is traced
    or copied from them. */
-import {isBody, isRound, bodyPose, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=0fa3728066f3';
+import {isBody, isRound, bodyPose, vectorPoints, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=7959e10d8eeb';
 import {funcFeatures, derivative, integrate, jointEnds, fieldLines, equipotentials, chargePath, circuitNodes, elementPath, processPoints, gasCycle, traceRay, principalRays, opticImage, prismCorners,
-  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=5c7e5138c56f';
+  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=f6b4ee63f834';
 /* the types drawn turned by a transform about their centre (a block and a plank turn their own corners) */
 const ROT_WRAP = new Set(['transformer', 'solenoid', 'magnet', 'cylinder', 'lens', 'mirror', 'screen', 'eye', 'source', 'label', 'region', 'rect', 'ellipse']);
 /* the drawing tools' stroke colours (draw-scene.mjs COLORS) and the light tints their fill 'tint' uses */
@@ -1210,11 +1210,13 @@ export function renderSVG(scene, opts = {}) {
       s += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(r)}" fill="${o.kind === 'sphere' || o.kind === 'shell' ? st.fill : st.fill}" stroke="${ink}" stroke-width="${f(lw)}"/>`;
       if (o.kind === 'ring' || o.kind === 'shell') s += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(r * 0.8)}" fill="none" stroke="${ink}" stroke-width="${f(thin)}"/>`;
       if (o.kind === 'sphere') s += `<ellipse cx="${f(c.x)}" cy="${f(c.y)}" rx="${f(r)}" ry="${f(r * 0.3)}" fill="none" stroke="${ink}" stroke-width="${f(hair)}"${dash('dashed', 0.6)}/>`;
-      const nsp = o.spokes || (o.kind === 'wheel' ? 6 : 0);
-      for (let i = 0; i < nsp; i++) { const a = spin + i * Math.PI / nsp; s += line({x: c.x + Math.cos(a) * r * 0.92, y: c.y - Math.sin(a) * r * 0.92}, {x: c.x - Math.cos(a) * r * 0.92, y: c.y + Math.sin(a) * r * 0.92}, hair); }
+      const nsp = o.spokes || (o.kind === 'wheel' ? 6 : (o.omega !== 'none' && p.spin !== undefined ? 1 : 0));
+      if (nsp === 1) s += line(c, {x: c.x + Math.cos(spin) * r * 0.92, y: c.y - Math.sin(spin) * r * 0.92}, thin);
+      for (let i = nsp === 1 ? 1 : 0; i < nsp; i++) { const a = spin + i * Math.PI / nsp; s += line({x: c.x + Math.cos(a) * r * 0.92, y: c.y - Math.sin(a) * r * 0.92}, {x: c.x - Math.cos(a) * r * 0.92, y: c.y + Math.sin(a) * r * 0.92}, hair); }
       if (o.kind === 'wheel') s += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(r * 0.86)}" fill="none" stroke="${ink}" stroke-width="${f(thin)}"/>`;
       s += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(Math.max(1.4, st.dot * ss * 0.8))}" fill="${ink}"/>`;
-      if (o.omega !== 'none') { const R = r * 1.28 + 4, a0 = 0.35, a1 = 2.4, ccw = o.omega === 'ccw', d = `M${f(c.x + R * Math.cos(a0))},${f(c.y - R * Math.sin(a0))}A${f(R)},${f(R)} 0 0 0 ${f(c.x + R * Math.cos(a1))},${f(c.y - R * Math.sin(a1))}`;
+      const showOmega = o.omega !== 'none' && (p.omega === undefined || Math.abs(p.omega) > 1e-5);
+      if (showOmega) { const R = r * 1.28 + 4, a0 = 0.35, a1 = 2.4, ccw = p.omega === undefined ? o.omega === 'ccw' : p.omega > 0, d = `M${f(c.x + R * Math.cos(a0))},${f(c.y - R * Math.sin(a0))}A${f(R)},${f(R)} 0 0 0 ${f(c.x + R * Math.cos(a1))},${f(c.y - R * Math.sin(a1))}`;
         const ta = ccw ? a1 : a0, tip = {x: c.x + R * Math.cos(ta), y: c.y - R * Math.sin(ta)}, dir = ccw ? {x: -Math.sin(ta), y: -Math.cos(ta)} : {x: Math.sin(ta), y: Math.cos(ta)};
         s += `<path d="${d}" fill="none" stroke="${ink}" stroke-width="${f(thin)}"/>` + head(tip, dir.x, dir.y, {len: HL * 0.9})[0] + lbl('\\omega', c.x, c.y - R - 9, 15); }
       if (o.label) s += r >= 13 * CUR.ls ? lbl(o.label, c.x, c.y + r * 0.45, Math.min(16, r * 0.6 / CUR.ls), 'middle', '', {name: true, halo: true}) : lbl(o.label, c.x + r + 5, c.y - r - 6, 15, 'start', '', {name: true});
@@ -1424,7 +1426,7 @@ export function renderSVG(scene, opts = {}) {
       if (o.heads === 'mid') s += midHead([a, b], 0.5, {len: HL * 0.85, color: lc});
       s += hit(`M${f(a.x)},${f(a.y)}L${f(b.x)},${f(b.y)}`);
     } else if (T === 'vector') {
-      const a = screen({x: o.x1, y: o.y1}), b = screen({x: o.x2, y: o.y2}), L = Math.hypot(b.x - a.x, b.y - a.y) || 1, n = {x: -(b.y - a.y) / L, y: (b.x - a.x) / L};
+      const [a,b] = vectorPoints(scene, o, opts.poses).map(screen), L = Math.hypot(b.x - a.x, b.y - a.y) || 1, n = {x: -(b.y - a.y) / L, y: (b.x - a.x) / L};
       const vc = st.vecInk || ink;
       s += arrow(a, b, {width: o.width * ss, kind: o.head === 'auto' ? st.head : o.head, head: HL * Math.max(0.9, Math.sqrt(o.width / 1.6)), color: vc});
       if (o.label) { const side = n.y > 0 ? -1 : 1; s += lbl(o.label, (a.x + b.x) / 2 + side * n.x * 15, (a.y + b.y) / 2 + side * n.y * 15, 16, 'middle', st.vecInk ? ` fill="${vc}"` : '', {halo: true}); }
@@ -1534,7 +1536,7 @@ export function renderSVG(scene, opts = {}) {
       const o = byId.get(id); if (!o) continue;
       const b = objectBox(scene, o, opts.poses); if (b) out.push(`<rect x="${f(X(b.x) - 5)}" y="${f(Y(b.y + b.h) - 5)}" width="${f(b.w * S + 10)}" height="${f(b.h * S + 10)}" fill="none" stroke="${o.lock ? '#9aa3b5' : '#3b6fd8'}" stroke-width="1.3" stroke-dasharray="5 3" pointer-events="none" class="selbox"/>`);
       if (id !== sel || o.lock) continue;
-      if (('x1' in o && 'y2' in o) || o.type === 'callout') for (const k of [1, 2]) { const p = o.type === 'callout' ? screen(k === 1 ? {x: o.x, y: o.y} : {x: o.x2, y: o.y2}) : screen({x: o['x' + k], y: o['y' + k]}); out.push(`<circle data-handle="${k}" cx="${f(p.x)}" cy="${f(p.y)}" r="7" fill="#fff" fill-opacity="0.85" stroke="#3b6fd8" stroke-width="1.6" class="handle"/>`); }
+      if (('x1' in o && 'y2' in o) || o.type === 'callout') for (const k of [1, 2]) { const p = o.type === 'callout' ? screen(k === 1 ? {x: o.x, y: o.y} : {x: o.x2, y: o.y2}) : screen(o.type === 'vector' ? vectorPoints(scene, o, opts.poses)[k - 1] : {x: o['x' + k], y: o['y' + k]}); out.push(`<circle data-handle="${k}" cx="${f(p.x)}" cy="${f(p.y)}" r="7" fill="#fff" fill-opacity="0.85" stroke="#3b6fd8" stroke-width="1.6" class="handle"/>`); }
       const hd = (k, p, extra = '') => `<circle data-handle="${k}" cx="${f(p.x)}" cy="${f(p.y)}" r="6.5" fill="#fff" fill-opacity="0.9" stroke="#3b6fd8" stroke-width="1.6" class="handle"${extra}/>`;
       if (o.type === 'poly') o.pts.forEach((q, i) => out.push(hd('p' + i, screen({x: q[0], y: q[1]}))));
       if (o.type === 'bezier') for (const k of [1, 2]) { const a = screen({x: o['x' + k], y: o['y' + k]}), c = screen({x: o['cx' + k], y: o['cy' + k]}); out.push(`<line x1="${f(a.x)}" y1="${f(a.y)}" x2="${f(c.x)}" y2="${f(c.y)}" stroke="#3b6fd8" stroke-width="1" stroke-dasharray="3 2" pointer-events="none"/>` + hd('c' + k, c, ' data-ctrl="1"')); }
@@ -1878,6 +1880,7 @@ export function objectBox(scene, o, poses, opts2 = {}) {
   if (isBody(o)) { const p = poses?.get?.(o.id) || bodyPose(scene, o), r = isRound(o) ? o.r : Math.hypot(o.w, o.h) / 2; return {x: p.x - r, y: p.y - r, w: 2 * r, h: 2 * r}; }
   switch (o.type) {
     case 'string': case 'rod': case 'spring': { const A = byId.get(o.a), B = byId.get(o.b); if (!A || !B) return null; const pa = isBody(A) ? (poses?.get?.(A.id) || bodyPose(scene, A)) : A, pb = isBody(B) ? (poses?.get?.(B.id) || bodyPose(scene, B)) : B; return box([pa, pb, ...((o.over || []).map(id => byId.get(id)).filter(Boolean))]); }
+    case 'vector': return box(vectorPoints(scene, o, poses));
     case 'force': { const b = byId.get(o.on); if (!b) return null; const p = poses?.get?.(b.id) || bodyPose(scene, b), th = o.angle * Math.PI / 180; return box([p, {x: p.x + Math.cos(th) * o.len, y: p.y + Math.sin(th) * o.len}]); }
     case 'curve': case 'cycle': { const g = byId.get(o.graph); return g ? objectExtent(g) : null; }
     case 'worldline': { const g = byId.get(o.diagram); return g ? objectExtent(g) : null; }

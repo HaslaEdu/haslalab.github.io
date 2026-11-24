@@ -248,7 +248,7 @@ export const FIELDS = {
   arc: {x: X, y: Y, r: num(0.3, 0.02, 20), from: num(0, -360, 360), to: num(30, -360, 360), text: txt('', 24), arrow: bool(false), color: COLOR, pattern: pick('solid', PATTERNS)},
   axes: {x: X, y: Y, lx: num(1, 0, 100), ly: num(1, 0, 100), xlabel: txt('x', 12), ylabel: txt('y', 12)},
   line: {x1: X, y1: Y, x2: X, y2: Y, pattern: pick('dashed', PATTERNS), heads: pick('none', ['none', 'end', 'start', 'both', 'mid']), color: COLOR},
-  vector: {...SEG, label: L(), width: num(1.6, 0.3, 6), head: pick('auto', ['auto', 'filled', 'open', 'stealth', 'none'])},
+  vector: {...SEG, on: ref(BODY_TYPES), vectorFrame: pick('world', ['world', 'body']), label: L(), width: num(1.6, 0.3, 6), head: pick('auto', ['auto', 'filled', 'open', 'stealth', 'none'])},
   region: {...BOX(1, 0.8), shape: pick('rect', ['rect', 'ellipse']), fill: pick('gray', ['none', 'gray', 'hatch', 'dots', 'cross', 'lines', 'dark']), pattern: pick('solid', PATTERNS), label: L(), rot: ROT},
   point: {x: X, y: Y, label: L(), filled: bool(true)},
   panel: {...BOX(2, 1.5), caption: txt('(가)', 24), frame: bool(false)},
@@ -589,6 +589,18 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
   const cyc = computeGeometry({objects: keep}).cyclic;
   if (cyc.size) { for (const id of cyc) err('geo_cycle', id); if (lenient) keep = keep.filter(o => !cyc.has(o.id)); }
   scene.objects = keep;
+  if (Array.isArray(input.groups)) {
+    const present = new Set(keep.map(o => o.id)), grouped = new Set();
+    const groups = [];
+    for (const members of input.groups.slice(0, MAX_OBJECTS)) {
+      if (!Array.isArray(members)) continue;
+      const ids = [...new Set(members.slice(0, MAX_OBJECTS))].filter(id => present.has(id) && !grouped.has(id));
+      if (ids.length < 2) continue;
+      ids.forEach(id => grouped.add(id));
+      groups.push(ids);
+    }
+    if (groups.length) scene.groups = groups;
+  }
   /* bodies on bodies: the lower ones first */
   for (let pass = 0; pass < 3; pass++) for (const o of scene.objects) if (isBody(o) && o.on) placeOnSurface(scene, o);
   const dropped = list.length - keep.length;
@@ -662,6 +674,22 @@ export function bodyPose(scene, b, depth = 0) {
     if (s) { const f = surfaceFrame(s, scene, depth), c = vec.add(vec.add(f.p0, vec.mul(f.u, b.at)), vec.mul(f.n, bodyHalfHeight(b))); return {x: c.x, y: c.y, angle: b.type === 'block' ? Math.atan2(f.u.y, f.u.x) : 0}; }
   }
   return {x: b.x, y: b.y, angle: b.type === 'block' ? (b.rot || 0) * Math.PI / 180 : 0};
+}
+/* Attached vector endpoints are offsets from the body's centre, in world or body axes. */
+export function vectorTransform(scene, o, poses) {
+  const body = o.on && scene.objects.find(x => x.id === o.on);
+  const p = body ? (poses?.get(body.id) || bodyPose(scene, body)) : {x: 0, y: 0};
+  const angle = body && o.vectorFrame === 'body'
+    ? (p.angle || 0) + (p.spin || 0) + (isRound(body) ? rad(body.rot || 0) : 0) : 0;
+  const c = Math.cos(angle), s = Math.sin(angle);
+  return {
+    toWorld: ({x, y}) => ({x: p.x + x*c - y*s, y: p.y + x*s + y*c}),
+    toLocal: ({x, y}) => ({x: (x-p.x)*c + (y-p.y)*s, y: -(x-p.x)*s + (y-p.y)*c}),
+  };
+}
+export function vectorPoints(scene, o, poses) {
+  const {toWorld} = vectorTransform(scene, o, poses);
+  return [toWorld({x:o.x1, y:o.y1}), toWorld({x:o.x2, y:o.y2})];
 }
 /* the point where a string or a spring meets a body: the middle of the face looking towards `toward` (a block), or the
    centre (a ball, a wheel) */
@@ -1059,7 +1087,7 @@ const NEW_TEMPLATES = {
   rolling_incline: ['mech', '빗면을 굴러 내려가는 원통 (미끄러지지 않음)', 'A cylinder rolling down an incline without slipping', 0.1, {x: -0.3, y: -0.35, w: 3.6, h: 2.0}, [
     {id: 'gnd', type: 'floor', x: -0.1, y: 0, w: 3.3},
     {id: 'inc', type: 'incline', x: 0.1, y: 0, angle: 28, length: 3, mu: 0.3, angleLabel: '\\theta'},
-    {id: 'w1', type: 'wheel', on: 'inc', at: 2.3, r: 0.22, mass: 2, kind: 'disk', omega: 'ccw', label: ''},
+    {id: 'w1', type: 'wheel', on: 'inc', at: 2.3, r: 0.22, mass: 2, kind: 'disk', omega: 'ccw', spokes: 1, label: ''},
     {id: 'lR', type: 'label', x: 2.45, y: 1.62, text: 'm, R', size: 14}]],
   seesaw: ['mech', '시소 (지레의 평형)', 'A seesaw (balance of a lever)', 0.1, {x: 0.1, y: 0, w: 3.8, h: 1.25}, [
     {id: 'pl', type: 'plank', x: 2, y: 0.6, len: 3.2, thick: 0.07, rot: 0, support: 'fulcrum', at: 0.5, mass: 0},
@@ -1383,6 +1411,7 @@ export function sceneBounds(scene) {
   for (const o of scene.objects) {
     if (geo && GEO_TYPES.includes(o.type)) { const b = geoExtent(geo, o); if (b) { add(b.x, b.y); add(b.x + b.w, b.y + b.h); } continue; }
     if (isBody(o)) { const p = bodyPose(scene, o), r = Math.max(bodyHalfWidth(o), bodyHalfHeight(o)) * 1.5; add(p.x - r, p.y - r); add(p.x + r, p.y + r); continue; }
+    if (o.type === 'vector' && o.on) { for (const p of vectorPoints(scene, o)) add(p.x, p.y); continue; }
     const b = objectExtent(o);
     if (b) { add(b.x, b.y); add(b.x + b.w, b.y + b.h); }
   }
