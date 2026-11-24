@@ -1197,7 +1197,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="learn-path.js?v=57047175e02a"></script>
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
-<script src="archive-navigation.js?v=de6b12ec5c39"></script>
+<script src="archive-navigation.js?v=0cde2faf0e5e"></script>
 <script src="site-catalogue.js?v=41dea20ff266"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
@@ -5177,7 +5177,7 @@ function updateArchiveReadingChrome(route){const node=document.getElementById('a
   try{ mountHaslaAdFitSides(); }catch(e){}}
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=ae86f26b0512"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=356121d191a3"),import("./archive-reference-media.js?v=5e0538ed8abd")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=f4ab34344486"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=356121d191a3"),import("./archive-reference-media.js?v=5e0538ed8abd")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){
@@ -11006,6 +11006,7 @@ let siteRenderSeq=0;
 function siteSection(active){
   if(active==="learn")return "learn";
   if(active==="workshop")return "workshop";
+  if(active==="comps"&&/^#\/archive\/(books|schools|open)\b/.test(location.hash))return "archive";
   if(["olympiad","comps","weekly","hpho"].includes(active))return "olympiad";
   return null;
 }
@@ -11045,6 +11046,7 @@ function paintPageChrome(active){
   document.getElementById("nav").innerHTML=
     `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
      <a href="#/learn" class="${section==="learn"?"on":""}">${d.navLearn}</a>
+     <a href="#/archive" class="${section==="archive"?"on":""}">${d.navComps}</a>
      <a href="#/olympiad" class="${section==="olympiad"?"on":""}">${d.navOly}</a>
      <a href="#/workshop" class="${section==="workshop"?"on":""}">${d.navWork}</a>
      <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>

@@ -477,3 +477,14 @@ test('official book references use real external links without phantom question 
   for(const card of cards){assert.equal(card.target,'_blank');assert.match(card.rel,/noopener/);assert.equal(new URL(card.href).protocol,'https:');assert.equal(card.querySelector('[data-card-questions]'),null);assert.equal(card.querySelector('img'),null);assert(!card.href.includes('source=src_'));}
   assert.equal(h.mount.querySelectorAll('[data-card-questions]').length,1);const filter=h.mount.querySelector('[data-source-query]');filter.value='Goldstein';filter.dispatchEvent(new h.w.Event('input',{bubbles:true}));assert.equal(h.mount.querySelectorAll('.al-reference-card').length,1);assert.equal(h.mount.querySelectorAll('.al-book-card').length,0);assert.equal(h.calls.length,1);
 });
+
+test('private textbooks share the standard card hierarchy, image class and count row',async t=>{
+  const h=await setup(t,{token:'owner',options:{privateBooks:[{id:'halliday',count:3946,cover_webp:'UklGR'+'A'.repeat(100)}]}});
+  const cards=h.mount.querySelectorAll('.al-book-card');
+  assert.equal(cards.length,2);
+  assert.equal(cards[0].querySelector('.chead .abbr').textContent,'Halliday');
+  assert.equal(cards[0].querySelector('img').className,'clogo al-card-cover');
+  assert.ok(cards[0].querySelector('.full').textContent.includes('Fundamentals of Physics'));
+  assert.equal(cards[0].querySelectorAll('dl div').length,cards[1].querySelectorAll('dl div').length);
+  assert.equal(cards[0].querySelector('[data-card-questions]').textContent,'3946');
+});

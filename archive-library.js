@@ -179,7 +179,12 @@ export function mountArchiveLibrary(container,options={}){
     const media=config.bookMedia?.[source.id],title=source.published_title_en||source.published_title_ko||source.title||media?.title||sourceTitle(source),edition=source.edition_label||media?.edition||'—';
     const image=media?.image_url?tr(media.provenanceKind==='source_title_page'?'titlePage':'cover'):tr('noCover');
     const short=localized(media?.short_title)||source.primary_author||title,topic=localized(media?.topic_label);
-    return `<a class="comp al-book-card" href="${esc(href({source:source.id,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(short)}${topic?`<span class="al-card-topic${media.topic_prominent?' prominent':''}">${esc(topic)}</span>`:''}</div>${cardImage(source)}</div><div class="full">${esc(media?.full_title||title)}</div>${metadata([[tr('originalLanguage'),source.source_language?.toUpperCase()||'—'],[tr('edition'),edition],[tr('imageType'),image],[tr('problems'),Number.isSafeInteger(source.question_count)?source.question_count:'—','data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
+    return textbookCard({href:href({source:source.id,problem:null,cursor:null}),short,topic,
+      prominent:media?.topic_prominent,title:media?.full_title||title,cover:cardImage(source),
+      language:source.source_language?.toUpperCase()||'—',edition,image,count:source.question_count});
+  }
+  function textbookCard({href,short,topic,prominent,title,cover,language,edition,image,count}){
+    return `<a class="comp al-book-card" href="${esc(href)}"><div class="chead"><div class="abbr">${esc(short)}${topic?`<span class="al-card-topic${prominent?' prominent':''}">${esc(topic)}</span>`:''}</div>${cover}</div><div class="full">${esc(title)}</div>${metadata([[tr('originalLanguage'),language],[tr('edition'),edition],[tr('imageType'),image],[tr('problems'),Number.isSafeInteger(count)?count:'—','data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
   }
   function schoolCard(school){
     const papers=schoolSources(school),light=safeMediaURL(school.logo_url),dark=safeMediaURL(school.dark_logo_url),logo=config.theme==='dark'&&dark?dark:light;
@@ -198,12 +203,27 @@ export function mountArchiveLibrary(container,options={}){
     halliday: 'Fundamentals of Physics, 10th ed. — Halliday',
     perfect: '퍼펙트물리',
   };
+  const privateBookLabels = {
+    goldstein: ['Goldstein', 'EN', '3rd edition'],
+    guopei: ['Guopei', 'ZH'],
+    savchenko: ['Savchenko', 'RU', ''],
+    estonian: ['Estonian', 'EN'],
+    russian: ['Russian Olympiads', 'EN'],
+    general: ['Irodov', 'EN'],
+    aptitude: ['Krotov', 'EN'],
+    halliday: ['Halliday', 'EN', '10th edition'],
+    perfect: ['퍼펙트물리', 'KO'],
+  };
   function privateBookCard(book){
     const title=privateTitles[book.id], href='#/archive/books/phys?view=private-textbooks&book='+book.id;
-    const ko=config.lang==='ko';
-    const cover=typeof book.cover_webp==='string'&&/^UklGR[A-Za-z0-9+/]{100,31995}={0,2}$/.test(book.cover_webp)
-      ? `<img class="clogo al-card-book-image" src="data:image/webp;base64,${esc(book.cover_webp)}" alt="" loading="lazy" decoding="async">`:'';
-    return `<a class="comp al-book-card" href="${esc(href)}"><div class="chead"><div class="abbr">${esc(title)}</div>${cover}</div>${metadata([[tr('problems'),book.count],[ko?'한국어':'Korean',book.korean_count],[tr('access'),ko?'비공개 웹문항 이용 가능':'Private web problems available']])}<span class="go" aria-hidden="true">→</span></a>`;
+    const [short,language,edition]=privateBookLabels[book.id];
+    const image=typeof book.cover_webp==='string'&&/^UklGR[A-Za-z0-9+/]{100,31995}={0,2}$/.test(book.cover_webp);
+    const titlePage=['savchenko','estonian','russian','perfect'].includes(book.id);
+    const cover=image
+      ? `<img class="clogo al-card-cover" src="data:image/webp;base64,${esc(book.cover_webp)}" alt="" loading="lazy" decoding="async">`
+      : `<span class="clogo al-card-cover-placeholder" aria-label="${esc(tr('noCover'))}">—</span>`;
+    return textbookCard({href,short,title,cover,language,edition:edition||'—',
+      image:tr(image?(titlePage?'titlePage':'cover'):'noCover'),count:book.count});
   }
   function referenceBooks(){return (Array.isArray(config.bookReferences)?config.bookReferences:[]).filter(item=>item?.collection===config.collection&&typeof item.id==='string'&&!SID.test(item.id)&&officialURL(item.href));}
   function referenceCard(item){

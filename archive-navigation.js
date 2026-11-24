@@ -39,7 +39,7 @@
     const text=String(hash||''),[path,query='']=text.split('?'),parts=path.replace(/^#\/?/,'').split('/').filter(Boolean);
     if(parts[0]!=='archive')return null;
     if(parts[1]==='open')return {category:'books',kind:'book',sub:'phys',collection:'physics',params:clean(query,{legacy:true}),baseHash:'#/archive/open',resolveLegacy:true};
-    const category=Object.hasOwn(categories,parts[1])?parts[1]:'contests';
+    const category=Object.hasOwn(categories,parts[1])?parts[1]:(parts.length===1?'books':'contests');
     const sub=slug(Object.hasOwn(categories,parts[1])?parts[2]:parts[1])||(category==='contests'?'':'phys');
     const params=scopedParams(query,category,sub),baseHash=href(category,sub);
     return {category,kind:categories[category],sub,collection:subjects[sub]||'physics',params,baseHash,resolveLegacy:false};
