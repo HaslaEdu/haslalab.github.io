@@ -10,8 +10,7 @@
 name: Train Hasla AI
 
 on:
-  schedule:
-    - cron: "17 18 * * *"
+  # the nightly RunPod training run was removed (owner, 2026-11-24); it only runs when started by hand
   workflow_dispatch:
     inputs:
       role:
