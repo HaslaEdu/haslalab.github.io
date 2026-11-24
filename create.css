@@ -33,6 +33,7 @@ main.wide{max-width:1480px}
 .compute-maker .head{align-items:center}.compute-maker h1{font-size:clamp(1.5rem,3vw,2rem)}
 .compute-meta,.compute-document{display:grid;gap:12px;margin:12px 0;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .compute-meta{grid-template-columns:minmax(0,1fr) minmax(100px,12rem);align-items:end}
+.compute-document{align-items:start}
 .compute-meta label{display:grid;gap:4px}.compute-maker .panel{min-width:0;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
 .compute-maker :is(#cpCode,#cpPrompt,#cpDescription){resize:vertical}.compute-maker #cpCode{min-height:190px}
 .compute-maker #cpFigure{margin-top:10px}.compute-maker #cpFigure img{display:block;max-width:100%;max-height:170px;margin-bottom:8px;background:white;border-radius:8px}
@@ -55,18 +56,27 @@ main.wide{max-width:1480px}
 .compute-chat[hidden],.compute-viewbar[hidden]{display:none}
 .compute-actions{margin:12px 0}
 .dock-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 8px;font-weight:650;font-size:13px}
-.dock-controls{display:inline-flex;gap:4px;flex-wrap:wrap}
-.dock-controls button{padding:4px 8px;font-size:12px;white-space:nowrap}
-.dock-controls button[aria-pressed=true]{color:var(--accent2);background:var(--soft);border-color:var(--accent)}
-.is-dock-expanded [data-dock]:not(.is-dock-expanded-item){display:none!important}
-.compute-work.is-dock-expanded,.is-workspace .compute-work.is-dock-expanded{display:block}
-.compute-work.is-dock-expanded .compute-document:has(.is-dock-expanded-item){display:block!important}
-.compute-work.is-dock-expanded [data-dock].is-dock-expanded-item{display:block!important}
-.compute-work.is-dock-expanded .compute-document:not(:has(.is-dock-expanded-item)){display:none}
+.dock-handle{--dock-axis:y;--dock-sign:1;position:relative;z-index:2;display:grid;place-items:center;width:48px;height:32px;margin:2px auto -10px;cursor:row-resize;touch-action:none;user-select:none;-webkit-user-select:none}
+.dock-handle::before{content:'↕';display:grid;place-items:center;width:30px;height:20px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--accent2);font:700 14px/1 system-ui;box-shadow:0 1px 3px #0002}
+.dock-handle:hover::before,.dock-handle:active::before,.dock-handle:focus-visible::before{border-color:var(--accent);background:var(--soft)}
+.dock-handle:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-radius:5px}
+[data-dock]{position:relative;min-width:0}
+[data-dock-body]{height:var(--dock-height,auto);min-width:0;overflow:auto}
+.dock-collapsed>[data-dock-body]{height:0;visibility:hidden;overflow:hidden}
+@media(min-width:761px){
+  .compute-maker:not(.is-workspace) .compute-document{grid-template-columns:min(var(--dock-code-width,50%),66%) minmax(0,1fr);gap:22px}
+  .is-workspace .compute-work{grid-template-columns:min(var(--dock-assistant-width,38%),62%) minmax(0,1fr);gap:22px}
+  .compute-maker:not(.is-workspace) #cpCodePane>.dock-handle,.is-workspace #cpAssistant>.dock-handle{--dock-axis:x;--dock-max:.66;position:absolute;top:22px;right:-21px;width:42px;height:46px;margin:0;cursor:col-resize}
+  .is-workspace #cpAssistant>.dock-handle{--dock-max:.62}
+  .compute-maker:not(.is-workspace) #cpCodePane>.dock-handle::before,.is-workspace #cpAssistant>.dock-handle::before{content:'↔';width:20px;height:30px}
+  .compute-maker:not(.is-workspace) #cpCodePane>[data-dock-body],.is-workspace #cpAssistant>[data-dock-body]{height:auto}
+  .compute-maker:not(.is-workspace) #cpCodePane.dock-collapsed>:is(.dock-bar,[data-dock-body]),.is-workspace #cpAssistant.dock-collapsed>:is(.dock-bar,[data-dock-body]){display:none}
+  .compute-maker:not(.is-workspace) #cpCodePane.dock-collapsed,.is-workspace #cpAssistant.dock-collapsed{min-height:96px;padding-inline:0}
+}
 .dock-bar h2{margin:0}
 .copy-fallback-field{position:fixed;inset:0 auto auto 0;inline-size:1px;block-size:1px;opacity:0;pointer-events:none}
 .compute-runtime-frame{position:absolute;inline-size:1px;block-size:1px;border:0;clip-path:inset(50%);pointer-events:none}
-.is-workspace .compute-work{display:grid;grid-template-columns:minmax(280px,0.8fr) minmax(0,1.2fr);gap:14px;align-items:start}
+.is-workspace .compute-work{display:grid;align-items:start}
 .is-workspace .compute-chat{grid-column:1;grid-row:1}
 .is-workspace .compute-document{grid-column:2;grid-row:1;display:block;margin:0}
 .is-workspace[data-document=code] #cpResultPane,.is-workspace[data-document=result] #cpCodePane{display:none}

@@ -108,7 +108,7 @@
     }
     let stored = draft?.storage || null, sharedId = id ? +id : draft?.sharedId || null, published = !!draft?.published;
     let active = true, running = null, busy = false, lastError = '', lastOutput = '', copyOutput = '', copyPlot = null, proposal = null, undo = null;
-    const panelControls = P.panelControls;
+    const panelHandle = P.panelHandle;
     if (!isLanguage(project.language)) project.language = 'python';
     root.innerHTML = '<section id="cpProjects" hidden></section><div class="compute-maker" id="cpEditor">' +
       '<header class="head"><div><h1>' + tr('전산물리 제작', 'Computational physics maker') + '</h1><p class="lede">' +
@@ -118,16 +118,16 @@
       '<div class="compute-meta"><label>' + tr('제목', 'Title') + '<input id="cpTitle" maxlength="80"></label>' +
       '<label>' + tr('언어', 'Language') + '<select id="cpLang"><option value="python">Python</option><option value="c">C</option></select></label></div>' +
       (preview ? '' : '<div class="compute-viewbar" id="cpViewbar" role="group" aria-label="' + tr('작업 화면','Workspace views') + '" hidden><button type="button" data-pane="assistant">' + tr('대화','Chat') + '</button><button type="button" data-pane="code">' + tr('코드','Code') + '</button><button type="button" data-pane="result">' + tr('실행 결과','Results') + '</button></div>') +
-      '<div class="compute-work" id="cpDock"><div class="compute-document"><section class="panel" id="cpCodePane" data-dock><header class="dock-bar"><h2>' + tr('코드', 'Code') + '</h2>' + panelControls('cpCodeBody') + '</header><div id="cpCodeBody" data-dock-body><textarea id="cpCode" class="code" rows="16" maxlength="60000" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="' + tr('코드', 'Code') + '"></textarea>' +
+      '<div class="compute-work" id="cpDock"><div class="compute-document"><section class="panel" id="cpCodePane" data-dock="code"><header class="dock-bar"><h2>' + tr('코드', 'Code') + '</h2></header><div id="cpCodeBody" data-dock-body><textarea id="cpCode" class="code" rows="16" maxlength="60000" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="' + tr('코드', 'Code') + '"></textarea>' +
       '<p id="cpFormat" class="note"></p><div class="row"><button class="primary" id="cpRun">' + tr('실행', 'Run') + '</button><button type="button" id="cpCopyCode">' + tr('코드 복사','Copy code') + '</button><button id="cpDown">' + tr('코드 내려받기', 'Download code') + '</button></div><details><summary>' + tr('실행 입력 (stdin)','Program input (stdin)') + '</summary><textarea id="cpInput" rows="3" maxlength="8000" aria-label="' + tr('실행 입력','Program input') + '"></textarea></details>' +
       (preview ? '' : '<div class="row"><button id="cpImportFigure">' + tr('그림 불러오기','Import figure') + '</button></div>') +
-      '<div id="cpFigure" hidden></div><details><summary>' + tr('작품 설명', 'Project description') + '</summary><textarea id="cpDescription" rows="3" maxlength="3000" aria-label="' + tr('작품 설명', 'Project description') + '"></textarea></details></div></section>' +
-      '<section class="panel" id="cpResultPane" data-dock><header class="dock-bar"><h2>' + tr('실행 결과', 'Results') + '</h2>' + panelControls('cpResultBody') + '</header><div id="cpResultBody" data-dock-body><div class="row"><button id="cpStop" disabled>' + tr('중지','Stop') + '</button><button type="button" id="cpCopyResult" disabled>' + tr('결과 복사','Copy result') + '</button></div><p id="cpRunStatus" role="status"></p><div id="cpPlots"></div><pre class="out" id="cpOutput" hidden></pre></div></section></div>' +
-      (preview ? '' : '<section class="panel compute-chat" id="cpAssistant" data-dock hidden><header class="dock-bar"><h2>' + tr('하슬라 AI와 작업','Work with Hasla AI') + '</h2>' + panelControls('cpAssistantBody') + '</header><div id="cpAssistantBody" data-dock-body><p class="note" id="cpChatLanguage"></p><p id="cpChatEmpty" class="note">' + tr('물리 모델을 설명하거나 열린 코드에 대해 질문해 보세요.', 'Describe a physical model or ask about the open code.') + '</p><div id="cpChat" role="log" aria-live="polite"></div><p id="cpTaskStatus" class="note" role="status"></p>' +
+      '<div id="cpFigure" hidden></div><details><summary>' + tr('작품 설명', 'Project description') + '</summary><textarea id="cpDescription" rows="3" maxlength="3000" aria-label="' + tr('작품 설명', 'Project description') + '"></textarea></details></div>' + panelHandle('cpCodeBody',['코드','code']) + '</section>' +
+      '<section class="panel" id="cpResultPane" data-dock="result"><header class="dock-bar"><h2>' + tr('실행 결과', 'Results') + '</h2></header><div id="cpResultBody" data-dock-body><div class="row"><button id="cpStop" disabled>' + tr('중지','Stop') + '</button><button type="button" id="cpCopyResult" disabled>' + tr('결과 복사','Copy result') + '</button></div><p id="cpRunStatus" role="status"></p><div id="cpPlots"></div><pre class="out" id="cpOutput" hidden></pre></div>' + panelHandle('cpResultBody',['실행 결과','results']) + '</section></div>' +
+      (preview ? '' : '<section class="panel compute-chat" id="cpAssistant" data-dock="assistant" hidden><header class="dock-bar"><h2>' + tr('하슬라 AI와 작업','Work with Hasla AI') + '</h2></header><div id="cpAssistantBody" data-dock-body><p class="note" id="cpChatLanguage"></p><p id="cpChatEmpty" class="note">' + tr('물리 모델을 설명하거나 열린 코드에 대해 질문해 보세요.', 'Describe a physical model or ask about the open code.') + '</p><div id="cpChat" role="log" aria-live="polite"></div><p id="cpTaskStatus" class="note" role="status"></p>' +
       '<form id="cpForm"><textarea id="cpPrompt" rows="3" maxlength="2000" required aria-label="' + tr('AI에게 요청할 내용', 'Prompt') + '" placeholder="' +
       tr('예: 공기 저항을 포함한 포물선 운동을 만들어 줘. 이후 질량을 바꿔 달라고 요청할 수 있어요.', 'E.g. Build a projectile model with air resistance. Then ask to change the mass.') + '"></textarea>' +
       '<div class="compute-composer"><label for="cpTaskMode">' + tr('작업 방식','Task mode') + '</label><select id="cpTaskMode"><option value="edit">' + tr('코드 제안','Propose code') + '</option><option value="delegate">' + tr('적용하고 실행','Apply and run') + '</option><option value="chat">' + tr('질문만','Ask a question') + '</option></select><button class="primary" type="submit">' + tr('보내기','Send') + '</button></div>' +
-      '</form><details id="cpProposal" hidden><summary>' + tr('제안 코드 보기', 'Review proposed code') + '</summary><pre class="out"></pre><button type="button" id="cpApply" hidden>' + tr('코드에 적용', 'Apply to code') + '</button></details><button type="button" id="cpUndo" hidden>' + tr('AI 변경 되돌리기','Undo AI change') + '</button></div></section>') +
+      '</form><details id="cpProposal" hidden><summary>' + tr('제안 코드 보기', 'Review proposed code') + '</summary><pre class="out"></pre><button type="button" id="cpApply" hidden>' + tr('코드에 적용', 'Apply to code') + '</button></details><button type="button" id="cpUndo" hidden>' + tr('AI 변경 되돌리기','Undo AI change') + '</button></div>' + panelHandle('cpAssistantBody',['AI 대화','AI chat']) + '</section>') +
       '</div>' + (preview ? '' : '<div class="row compute-actions"><span id="cpProvider"></span><button id="cpSave">' + tr('저장', 'Save') + '</button><button id="cpOpen">' + tr('프로젝트 목록', 'Projects') + '</button>' +
       '<button id="cpPaper">' + tr('문제 제작에 활용', 'Use in a problem') + '</button><button class="primary" id="cpShare">' + tr('작품 공유', 'Share project') + '</button></div>') +
       '<p id="cpCopyStatus" role="status" class="note"></p><p id="cpStatus" role="status" class="note"></p><div id="cpRuntime"></div></div>';
@@ -137,7 +137,6 @@
     const editor = $('cpEditor'), workToggle = $('cpWorkspace');
     const dock = P.bindPanels($('cpDock'),height);
     function selectPane(pane) {
-      dock.restore();
       editor.dataset.pane = pane;
       if (pane !== 'assistant') editor.dataset.document = pane;
       $('cpViewbar')?.querySelectorAll('[data-pane]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pane === pane)));
@@ -145,7 +144,6 @@
     }
     function setWorkspace(opened) {
       if (!workToggle) return;
-      dock.restore();
       editor.classList.toggle('is-workspace', opened);
       workToggle.setAttribute('aria-expanded', String(opened));
       $('cpAssistant').hidden = $('cpViewbar').hidden = !opened;
@@ -261,7 +259,7 @@
     description.oninput = () => { project.description = description.value; persist(); };
     async function run({fromAI = false} = {}) {
       if (!active || !source.value.trim() || source.value.length > 60000) return null;
-      dock.restore(); dock.reveal($('cpResultPane'));
+      dock.reveal($('cpResultPane'));
       if (editor.classList.contains('is-workspace')) {
         editor.dataset.document = 'result';
         if (!fromAI) selectPane('result');

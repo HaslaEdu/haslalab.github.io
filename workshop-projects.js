@@ -325,42 +325,84 @@
       onOpen: (raw, entry) => showPages(raw, entry.name),
       onResume: local ? () => showPages(local, txt('현재 브라우저 작업','Current browser draft')) : null});
   }
-  function panelControls(bodyId, {collapse = true} = {}) {
-    return '<span class="dock-controls">' + (collapse ? '<button type="button" data-dock-action="collapse" aria-controls="'+bodyId+'" aria-expanded="true">'+txt('접기','Collapse')+'</button>' : '') +
-      '<button type="button" data-dock-action="expand" aria-controls="'+bodyId+'" aria-pressed="false">'+txt('확대','Expand')+'</button></span>';
+  function panelHandle(bodyId, name) {
+    const label = txt(name[0] + ' 크기 조절', 'Resize ' + name[1]);
+    return '<div class="dock-handle" data-dock-handle role="separator" tabindex="0" aria-controls="' + bodyId +
+      '" aria-label="' + label + '" title="' + label + '"></div>';
   }
   function bindPanels(grid, changed) {
-    const controls = [...grid.querySelectorAll('[data-dock]')].map(panel => ({
-      panel, body:panel.querySelector('[data-dock-body]'),
-      collapse:panel.querySelector('[data-dock-action="collapse"]'), expand:panel.querySelector('[data-dock-action="expand"]'),
-    }));
-    function layout(expanded) {
-      grid.classList.toggle('is-dock-expanded', !!expanded);
-      for (const {panel,expand} of controls) {
-        const on = panel === expanded;
-        panel.classList.toggle('is-dock-expanded-item', on);
-        expand.setAttribute('aria-pressed',String(on));
-        expand.textContent = on ? txt('복원','Restore') : txt('확대','Expand');
-      }
-      changed();
-    }
-    for (const {panel,body,collapse,expand} of controls) {
-      function setCollapsed(on) {
-        body.hidden = on;panel.classList.toggle('is-dock-collapsed',on);
-        collapse.setAttribute('aria-expanded', String(!on));
-        collapse.textContent = on ? txt('펼치기','Show') : txt('접기','Collapse');
-      }
-      if (collapse) collapse.onclick = () => { setCollapsed(!body.hidden); changed(); };
-      expand.onclick = () => {
-        const on = !panel.classList.contains('is-dock-expanded-item');
-        if (on && collapse && body.hidden) setCollapsed(false);
-        layout(on ? panel : null);
-      };
-    }
-    return {
-      restore:() => { if (grid.classList.contains('is-dock-expanded')) layout(null); },
-      reveal:panel => { const item = controls.find(item => item.panel === panel); if (item?.body?.hidden) item.collapse?.click(); },
+    let frame = 0;
+    const notify = () => {
+      if (!frame) frame = requestAnimationFrame(() => { frame = 0; changed(); });
     };
+    const docks = [...grid.querySelectorAll('[data-dock-handle]')].map(handle => {
+      const panel = handle.closest('[data-dock]'), body = panel.querySelector('[data-dock-body]');
+      const id = panel.dataset.dock, minHeight = Number(panel.dataset.minHeight || 0);
+      const widthKey = '--dock-' + id + '-width';
+      let drag = null;
+      function metrics() {
+        const css = getComputedStyle(handle), x = css.getPropertyValue('--dock-axis').trim() === 'x';
+        const min = x ? 38 : minHeight;
+        const fraction = Number(css.getPropertyValue('--dock-max').trim()) || .6;
+        const max = x ? Math.max(min, Math.floor(grid.clientWidth * fraction)) : Math.max(min, Math.min(innerHeight * 1.5,1200));
+        const preferred = x ? parseFloat(grid.style.getPropertyValue(widthKey)) : parseFloat(panel.style.getPropertyValue('--dock-height'));
+        const current = Number.isFinite(preferred) ? preferred : x ? panel.getBoundingClientRect().width : body.getBoundingClientRect().height;
+        return {x,min,max,size:Math.max(min,Math.min(max,current)),sign:css.getPropertyValue('--dock-sign').trim() === '-1' ? -1 : 1};
+      }
+      function info(m = metrics()) {
+        if (!handle.getClientRects().length) return;
+        handle.setAttribute('aria-orientation',m.x ? 'vertical' : 'horizontal');
+        handle.setAttribute('aria-valuemin',String(m.min));
+        handle.setAttribute('aria-valuemax',String(Math.round(m.max)));
+        handle.setAttribute('aria-valuenow',String(Math.round(m.size)));
+        const collapsed = m.x ? m.size < 100 : !minHeight && m.size < 12;
+        panel.classList.toggle('dock-collapsed',collapsed);
+        body.inert = collapsed;
+      }
+      function apply(m, value) {
+        let size = Math.round(Math.max(m.min,Math.min(m.max,value)));
+        if ((m.x && size < 70) || (!m.x && size < m.min+12)) size = m.min;
+        if (m.x) grid.style.setProperty(widthKey,size + 'px');
+        else panel.style.setProperty('--dock-height',size + 'px');
+        info({...m,size}); notify();
+      }
+      const coord = (e, x) => x ? e.clientX : e.clientY;
+      handle.addEventListener('pointerdown',e => {
+        if (drag || e.button !== 0) return;
+        const m = metrics();
+        drag = {m,start:coord(e,m.x),id:e.pointerId};
+        handle.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+      handle.addEventListener('pointermove',e => {
+        if (drag?.id !== e.pointerId) return;
+        const {m,start} = drag, delta = (coord(e,m.x)-start)*m.sign;
+        if (Math.abs(delta) > 2 || drag.moved) { drag.moved = true; apply(m,m.size+delta); }
+      });
+      handle.addEventListener('lostpointercapture',() => { drag = null; });
+      handle.addEventListener('keydown',e => {
+        const m = metrics(), backwards = m.x ? 'ArrowLeft' : 'ArrowUp', forwards = m.x ? 'ArrowRight' : 'ArrowDown';
+        let size;
+        if (e.key === 'Home') size = m.min;
+        else if (e.key === 'End') size = m.max;
+        else if (e.key === backwards || e.key === forwards) size = m.size + (e.key === backwards ? -1 : 1)*m.sign*(e.shiftKey ? 12 : 64);
+        else return;
+        e.preventDefault(); apply(m,size);
+      });
+      info();
+      return {panel,handle,info,metrics,apply};
+    });
+    const observer = new ResizeObserver(() => {
+      if (grid.isConnected) docks.forEach(dock => dock.info());
+      else observer.disconnect();
+    });
+    observer.observe(grid);
+    return {reveal(panel) {
+      const dock = docks.find(item => item.panel === panel);
+      if (!dock) return;
+      const m = dock.metrics();
+      if (!m.x && panel.style.getPropertyValue('--dock-height') && m.size < 140) dock.apply(m,200);
+    }};
   }
-  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error, panelControls, bindPanels};
+  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error, panelHandle, bindPanels};
 })();
