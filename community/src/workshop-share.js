@@ -186,7 +186,11 @@ function payloadColumns(type, p, bad) {
   if (type === 'sim') {
     const code = str(p.code, CL.code, 1), body = str(p.question ?? '', CL.body), answer = str(p.answer ?? '', CL.answer), unit = str(p.answerUnit ?? '', CL.unit);
     if (code == null || body == null || answer == null || unit == null) bad('bad_payload');
-    return {code, body, answer: answer.trim() || null, unit: unit.trim(), starter: '', grader: '', payload: null};
+    if (p.language != null && !['js','python','c'].includes(p.language)) bad('bad_payload');
+    if (p.language === 'python' || p.language === 'c') {
+      return {code: '/* HaslaLab computational project */', body, answer: null, unit: '', starter: '', grader: '', payload: JSON.stringify({language: p.language, code})};
+    }
+    return {code, body, answer: answer.trim() || null, unit: unit.trim(), starter: '', grader: '', payload: JSON.stringify({language:'js'})};
   }
   if (type === 'python') {
     const body = str(p.statement, CL.body, 1), starter = str(p.starter ?? '', CL.starter), grader = str(p.grader, CL.grader, 1);
@@ -253,8 +257,13 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
   }
   async function list(DB, q, me, extra = {}) {
     const where = [VISIBLE], args = [];
-    const type = TYPES[q.get('type')];
+    const filter = q.get('type');
+    const type = Object.hasOwn(TYPES, filter) ? TYPES[filter] : null;
     if (type) { where.push('c.kind=?'); args.push(type); }
+    const period = q.get('period');
+    if (['7', '30', '90'].includes(period)) {
+      where.push('COALESCE(s.shared_at,c.created_at)>=?'); args.push(now() - Number(period) * 86400);
+    }
     const topic = q.get('topic');
     if (TOPICS.includes(topic)) { where.push("COALESCE(s.topic,'other')=?"); args.push(topic); }
     const needle = (q.get('q') || '').normalize('NFKC').trim().slice(0, 60);
@@ -375,7 +384,7 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
         created_at: row.created_at, updated_at: row.updated_at, shared_at: row.shared_at || row.created_at,
         likes: row.likes, views: row.plays, favs: row.favs || 0, comments: row.n_comments || 0, remixes: nRemix?.n || 0, has_thumb: row.thumb_len > 0, mine: owner,
         forked_from: row.forked_from || null,
-        ...(type === 'sim' ? {code: row.code, question: row.body, answer: row.answer, answerUnit: row.unit} : {}),
+        ...(type === 'sim' ? {code: payload?.code ?? row.code, language: payload?.language || 'js', question: row.body, answer: row.answer, answerUnit: row.unit} : {}),
         ...(type === 'python' ? {statement: row.body, starter: row.starter, grader: row.grader} : {}),
         ...(type === 'figure' || type === 'set' ? {payload} : {})};
       const shownOriginal = original && (original.status === 'public' && !original.mod_hidden) ? {id: original.id, title: original.title, nickname: original.nickname} : original ? {id: null, gone: true} : null;
@@ -440,7 +449,7 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
       const nid = ins.meta.last_row_id;
       await writeMeta(DB, nid, {topic: row.topic || 'other', tags: row.tags || '', descr: row.descr || '', howto: row.howto || '', notes: (row.notes || ''), thumb: undefined, payload: row.payload ?? undefined}, t, false);
       const type = TYPE_OF[row.kind];
-      const edit = type === 'figure' ? '#/workshop/draw?share=' + nid : type === 'set' ? '#/workshop/make?share=' + nid : '#/workshop/create?view=edit&id=' + nid;
+      const edit = type === 'figure' ? '#/workshop/draw?share=' + nid : type === 'set' ? '#/workshop/make?share=' + nid : row.kind === 'sim' && row.code === '/* HaslaLab computational project */' ? '#/workshop/create?view=compute&id=' + nid : '#/workshop/create?view=edit&id=' + nid;
       return {id: nid, edit, remix_of: id};
     }
     if (act === 'feature' && m === 'POST') {

@@ -17,7 +17,7 @@
   const esc=s=>C.esc(s==null?'':String(s));
   const TOPICS=['mechanics','em','thermal','optics','waves','modern','other'];
   const TOPIC_NAMES={mechanics:['역학','Mechanics'],em:['전자기','Electromagnetism'],thermal:['열','Heat'],optics:['광학','Optics'],waves:['파동','Waves'],modern:['현대물리','Modern physics'],other:['기타','Other']};
-  const TYPE_NAMES={sim:['시뮬레이션','Simulation'],python:['전산물리(Python)','Computational (Python)'],figure:['그림','Figure'],set:['문제 세트','Problem set']};
+  const TYPE_NAMES={set:['문제·시험지','Problems & papers'],figure:['그림','Figures'],sim:['시뮬레이션','Simulations'],python:['전산물리 문제','Coding problems']};
   const TABS=[['popular','인기','Popular'],['new','최신','New'],['featured','추천','Staff picks'],['topic','주제별','By topic']];
   const SORTS=[['popular','인기순','Most popular'],['new','최신순','Newest'],['likes','좋아요순','Most liked'],['views','조회순','Most viewed'],['remixes','리믹스순','Most remixed']];
   const topicName=k=>T(...(TOPIC_NAMES[k]||TOPIC_NAMES.other));
@@ -86,7 +86,14 @@
 .shr-stats{display:flex;gap:12px;font-size:12.5px;color:var(--sh-mute)}.shr-stats span{display:inline-flex;align-items:center;gap:3px}
 .shr-i{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .shr-more{display:flex;justify-content:center;margin:18px 0 6px}.shr-empty{padding:28px 14px;text-align:center;color:var(--sh-mute);border:1px dashed var(--sh-line);border-radius:14px}
-.shr-how{margin:26px 0 4px;padding:12px 14px;border-radius:12px;background:var(--sh-bg2);font-size:13.5px;color:var(--sh-mute);line-height:1.6}
+.shr-explore .phead{padding:22px 24px;border:1px solid var(--sh-line);border-radius:18px;background:var(--sh-soft);margin:0 0 16px}
+.shr-explore .shr-top{margin:0 0 18px}.shr-explore .shr-filters{background:var(--sh-bg2);padding:10px 12px;border-radius:12px}
+.shr-explore .shr-chips button,.shr-explore .shr-tabs button,.shr-explore .shr-sort select{min-height:40px;font-size:14px}
+.shr-explore .shr-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.shr-explore .shr-week{padding:14px 0;margin:16px 0}.shr-explore .shr-empty{grid-column:1/-1;padding:36px 16px}
+.shr-explore .shr-filters select{max-width:140px}.shr-explore .shr-tools{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap}
+.shr-runtime{padding:16px;display:grid;justify-items:start;gap:10px}.shr-runtime .shr-note{margin:0;color:var(--sh-mute)}
+@media(max-width:560px){.shr-explore .phead{padding:16px}.shr-explore .shr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shr-explore .shr-tools{width:100%}.shr-explore .shr-filters{padding:8px}.shr-explore .shr-chips button{padding:4px 8px}}
 .shr-proj{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
 .shr-stage{border:1px solid var(--sh-line);border-radius:14px;background:var(--sh-card);padding:12px;min-height:240px}
 .shr-stage iframe{display:block;width:100%;height:460px;border:0;background:transparent}.shr-stage .shr-fig{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border-radius:8px}
@@ -133,8 +140,8 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
   function view(ctx){
     C=ctx;const r=route();
     if(r.page!=='explore')return `<div class="shell ws shr" id="shrRoot"><div class="phead">${crumbs('…')}</div><p class="ws-note" role="status">${T('불러오는 중…','Loading…')}</p></div>`;
-    return `<div class="shell ws shr" id="shrRoot"><div class="phead">${crumbs()}<h1>${esc(C.title)}</h1>
-      <p class="learn-tool-copy">${T('회원들이 워크샵에서 만든 시뮬레이션, 전산물리 문제, 그림, 문제 세트를 실행해 보고, 마음에 들면 리믹스해서 내 것으로 고쳐 씁니다.','Run the simulations, computational problems, figures and problem sets members made in the Workshop, and remix one to make it your own.')}</p></div>
+    return `<div class="shell ws shr shr-explore" id="shrRoot"><div class="phead">${crumbs()}<h1>${esc(C.title)}</h1>
+      <p class="learn-tool-copy">${T("문제, 그림, 시뮬레이션을 둘러보고 워크샵에서 리믹스하세요.","Explore problems, figures and simulations, then remix them in the Workshop.")}</p></div>
       <div id="shrBody"><p class="ws-note" role="status">${T('불러오는 중…','Loading…')}</p></div></div>`;
   }
   function mount(ctx){
@@ -159,10 +166,12 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
   /* ── explore ── */
   function explore(root,q0){
     const body=document.getElementById('shrBody');if(!body)return;
-    const st={tab:TABS.some(t=>t[0]===q0.get('tab'))?q0.get('tab'):'popular',type:TYPE_NAMES[q0.get('type')]?q0.get('type'):'',topic:TOPICS.includes(q0.get('topic'))?q0.get('topic'):'',
+    const st={tab:TABS.some(t=>t[0]===q0.get('tab'))?q0.get('tab'):'popular',type:Object.hasOwn(TYPE_NAMES,q0.get('type'))?q0.get('type'):'',topic:TOPICS.includes(q0.get('topic'))?q0.get('topic'):'',
       sort:SORTS.some(s=>s[0]===q0.get('sort'))?q0.get('sort'):'',q:(q0.get('q')||'').slice(0,60),fav:q0.get('fav')==='1',page:0,more:true,busy:false,seq:0};
     if(st.topic&&st.tab!=='topic')st.tab='topic';
-    const save=()=>{const q=new URLSearchParams();if(st.tab!=='popular')q.set('tab',st.tab);for(const k of ['type','topic','sort','q'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');
+    const periods = {"7":T("최근 7일","Last 7 days"),"30":T("최근 30일","Last 30 days"),"90":T("최근 90일","Last 90 days")};
+    st.period = Object.hasOwn(periods,q0.get("period")) ? q0.get("period") : "";
+    const save=()=>{const q=new URLSearchParams();if(st.tab!=='popular')q.set('tab',st.tab);for(const k of ['type','topic','sort','q','period'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');
       try{history.replaceState(null,'','#/workshop/share'+(q.toString()?'?'+q:''));}catch(e){}};
     body.innerHTML=`<div class="shr-top"><form class="shr-search" role="search" id="shrSearch">${icon('search')}<input id="shrQ" type="search" maxlength="60" value="${esc(st.q)}" placeholder="${T('제목, 태그, 만든 사람으로 찾기','Search titles, tags or authors')}" aria-label="${T('작품 검색','Search projects')}"><button type="submit">${T('찾기','Search')}</button></form>
         <nav class="shr-me" id="shrMe" aria-label="${T('내 작품','My projects')}"></nav></div>
@@ -170,22 +179,26 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
       <div class="shr-tabs" role="tablist" aria-label="${T('작품 목록','Project lists')}">${TABS.map(([k,ko,en])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="${st.tab===k&&!st.fav}">${T(ko,en)}</button>`).join('')}</div>
       <div class="shr-chips" id="shrTopics" ${st.tab==='topic'?'':'hidden'} style="margin:0 0 10px">${TOPICS.map(k=>`<button type="button" data-topic="${k}" aria-pressed="${st.topic===k}">${esc(topicName(k))}</button>`).join('')}</div>
       <div class="shr-filters"><div class="shr-chips" role="group" aria-label="${T('종류','Type')}"><button type="button" data-type="" aria-pressed="${!st.type}">${T('전체','All')}</button>${Object.keys(TYPE_NAMES).map(k=>`<button type="button" data-type="${k}" aria-pressed="${st.type===k}">${esc(typeName(k))}</button>`).join('')}</div>
-        <label class="shr-sort">${T('정렬','Sort')}<select id="shrSort"><option value="">${T('탭 기본','Tab default')}</option>${SORTS.map(([k,ko,en])=>`<option value="${k}"${st.sort===k?' selected':''}>${T(ko,en)}</option>`).join('')}</select></label></div>
+        <div class="shr-tools"><label class="shr-sort">${T('정렬','Sort')}<select id="shrSort"><option value="">${T('탭 기본','Tab default')}</option>${SORTS.map(([k,ko,en])=>`<option value="${k}"${st.sort===k?' selected':''}>${T(ko,en)}</option>`).join('')}</select></label><label class="shr-sort">${T('기간','Period')}<select id="shrPeriod"><option value="">${T('전체 기간','Any time')}</option>${Object.entries(periods).map(([k,v])=>`<option value="${k}"${st.period===k?' selected':''}>${v}</option>`).join('')}</select></label></div></div>
       <div class="shr-grid" id="shrGrid" aria-live="polite"></div><div class="shr-more"><button type="button" class="shr-btn" id="shrMore" hidden>${T('더 보기','Show more')}</button></div><p class="shr-msg" id="shrMsg"></p>
-      <p class="shr-how">${T('문제 제작, 그림 제작, 전산물리 제작에서 만든 것을 «공유하기»로 올리면 여기에 나옵니다. 남의 작품은 «리믹스»로 내 워크샵에 복사해 고칠 수 있고, 원작이 함께 표시됩니다.','Use “Share” in Problems, Figures or Computational physics to post what you made here. “Remix” copies someone’s project into your Workshop to change, and the original is credited.')}</p>`;
+`;
     const grid=document.getElementById('shrGrid'),more=document.getElementById('shrMore'),msg=document.getElementById('shrMsg');
     const query=page=>{const q=new URLSearchParams({page:String(page)});const tab=st.fav?'':st.tab==='topic'?'':st.tab;if(tab)q.set('tab',tab);if(st.tab==='topic'&&!st.sort)q.set('sort','popular');
-      for(const k of ['type','topic','sort','q'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');return '/share?'+q;};
+      for(const k of ['type','topic','sort','q','period'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');return '/share?'+q;};
     async function load(reset){
-      if(reset){st.page=0;st.more=true;grid.innerHTML='';st.seq++;}
-      if(st.busy||!st.more)return;st.busy=true;const seq=st.seq;msg.textContent='';
+      if(reset){st.page=0;st.more=true;st.busy=false;grid.innerHTML='';st.seq++;more.hidden=true;}
+      grid.setAttribute('aria-busy','true');
+      if(st.busy||!st.more){if(!st.busy)grid.setAttribute('aria-busy','false');return;}st.busy=true;const seq=st.seq;msg.textContent='';
       try{const r=await api('GET',query(st.page+1));if(seq!==st.seq||!C.here())return;
         st.page=r.page;st.more=r.more;grid.insertAdjacentHTML('beforeend',r.items.map(cardHtml).join(''));
         if(!grid.children.length)grid.innerHTML=`<div class="shr-empty">${st.q?T('찾는 작품이 없습니다. 다른 낱말로 찾아 보세요.','No projects match. Try other words.'):st.fav?T('즐겨찾기한 작품이 없습니다. 작품 페이지에서 ★를 누르면 여기에 모입니다.','No favourites yet. Press ★ on a project to keep it here.'):T('아직 올라온 작품이 없습니다. 첫 작품을 공유해 보세요.','Nothing shared here yet. Be the first to share.')}</div>`;
       }catch(e){if(seq===st.seq)msg.textContent=err(e);}
-      finally{if(seq===st.seq){st.busy=false;more.hidden=!st.more;}}
+      finally{if(seq===st.seq){st.busy=false;grid.setAttribute('aria-busy','false');more.hidden=!st.more;}}
     }
-    const repaint=()=>{save();
+    const week=document.getElementById('shrWeek');
+    let hasWeek=false;
+    const showWeek=()=>{week.hidden=!hasWeek||!!(st.type||st.q||st.fav||st.period||st.tab!=='popular');};
+    const repaint=()=>{save();showWeek();
       body.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',String(!st.fav&&b.dataset.tab===st.tab)));
       body.querySelectorAll('[data-type]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.type===st.type)));
       body.querySelectorAll('[data-topic]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.topic===st.topic)));
@@ -193,12 +206,13 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     body.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{st.tab=b.dataset.tab;st.fav=false;if(st.tab!=='topic')st.topic='';else if(!st.topic)st.topic='mechanics';repaint();});
     body.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>{st.type=b.dataset.type;repaint();});
     body.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>{st.topic=b.dataset.topic;repaint();});
+    document.getElementById('shrPeriod').onchange=e=>{st.period=e.target.value;repaint();};
     document.getElementById('shrSort').onchange=e=>{st.sort=e.target.value;repaint();};
     document.getElementById('shrSearch').onsubmit=e=>{e.preventDefault();st.q=document.getElementById('shrQ').value.trim().slice(0,60);repaint();};
     more.onclick=()=>load(false);
     if(typeof IntersectionObserver==='function'){observer=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)&&C.here()&&st.page>0)load(false);},{rootMargin:'600px'});observer.observe(more.parentNode);}
     load(true);
-    api('GET','/share?tab=week').then(r=>{if(!C.here()||!r.items.length)return;document.getElementById('shrWeekRow').innerHTML=r.items.map(cardHtml).join('');document.getElementById('shrWeek').hidden=false;}).catch(()=>{});
+    api('GET','/share?tab=week').then(r=>{if(!C.here()||!r.items.length)return;document.getElementById('shrWeekRow').innerHTML=r.items.map(cardHtml).join('');hasWeek=true;showWeek();}).catch(()=>{});
     C.me().then(me=>{const nav=document.getElementById('shrMe');if(!nav||!C.here())return;
       nav.innerHTML=me?`<a href="#/workshop/share/user/${+me.id}">${T('내 작품','My projects')}</a><a href="#/workshop/share?fav=1" id="shrFav">★ ${T('즐겨찾기','Favourites')}</a>`:`<a href="#/login" id="shrLogin">${T('로그인하고 공유하기','Sign in to share')}</a>`;
       const f=document.getElementById('shrFav');if(f)f.onclick=e=>{e.preventDefault();st.fav=true;repaint();};
@@ -206,7 +220,8 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
   }
 
   /* ── a project ── */
-  const editHash=p=>p.type==='figure'?'#/workshop/draw?share='+p.id:p.type==='set'?'#/workshop/make?share='+p.id:'#/workshop/create?view=edit&id='+p.id;
+  const computeLanguage=p=>['python','c'].includes(p.language);
+  const editHash=p=>computeLanguage(p)?'#/workshop/create?view=compute&id='+p.id:p.type==='figure'?'#/workshop/draw?share='+p.id:p.type==='set'?'#/workshop/make?share='+p.id:'#/workshop/create?view=edit&id='+p.id;
   async function project(root,id){
     let d;
     try{d=await api('GET','/share/'+id);}catch(e){if(C.here())root.innerHTML=`<div class="phead">${crumbs(T('작품','Project'))}</div><div class="shr-empty" role="alert">${esc(err(e))}</div><p><a class="shr-btn" href="#/workshop/share">${T('작품 공유로 돌아가기','Back to Showcase')}</a></p>`;return;}
@@ -295,6 +310,11 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     return stop;
   }
   function stage(box,p){
+    if(p.type==='sim' && computeLanguage(p)){
+      const runtime = p.language === 'c' ? 'C' : 'Python';
+      box.innerHTML = `<div class="shr-runtime"><h2>${runtime} ${T('시뮬레이션','simulation')}</h2><p class="shr-note">${T('실행 환경을 열고 이 기기에서 계산할 수 있습니다.','Open the runtime to compute on this device.')}</p><a class="shr-btn pri" href="#/workshop/create?view=compute-preview&id=${+p.id}">${T('실행 환경 열기','Open runtime')}</a></div>`;
+      return;
+    }
     if(p.type==='sim'){
       box.innerHTML='<div id="shrSim"></div>'+(p.question?`<div class="shr-q"><b>${T('질문','Question')}</b><div class="shr-text">${md(p.question)}</div>${p.answer?`<a class="shr-btn" href="#/workshop/create?view=play&id=${+p.id}">${T('답 확인하기','Check your answer')}</a>`:''}</div>`:'');
       stopSim=runSim(document.getElementById('shrSim'),p.code);return;

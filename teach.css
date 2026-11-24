@@ -17,9 +17,9 @@
 .paper-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.paper-meta .wide{grid-column:1/-1}
 .paper-meta label,.vform label{display:grid;gap:3px;font-size:12.5px;color:var(--muted)}
 .plist{display:grid;gap:6px;margin:10px 0}
-.pitem{display:grid;grid-template-columns:28px minmax(0,1fr) 64px auto;gap:8px;align-items:center;border:1px solid var(--row);border-radius:10px;padding:8px 10px;font-size:13.5px}
+.pitem{display:grid;grid-template-columns:28px minmax(0,1fr) 64px;gap:8px;align-items:center;border:1px solid var(--row);border-radius:10px;padding:8px 10px;font-size:13.5px}
 .pitem .n{font-weight:700;color:var(--accent2)}.pitem .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pitem input{padding:4px 6px;text-align:right}.pitem .acts button{padding:3px 8px;font-size:12px}
+.pitem input{padding:4px 6px;text-align:right}.pitem .acts{grid-column:2/-1}.pitem .acts button{padding:3px 8px;font-size:12px}
 .pitem .own{font-size:11px;color:#9a5b00;margin-left:4px}
 .pitem .pbp{grid-column:2/-1;display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:6px}.pitem .pbp input,.pitem .pbp select{padding:3px 6px;font-size:12.5px;text-align:left}
 .bpbox{margin:4px 0 10px;border:1px solid var(--row);border-radius:10px;padding:8px 10px}.bpbox summary{cursor:pointer;font-weight:650;font-size:14px}

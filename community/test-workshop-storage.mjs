@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
+import {ensureLearnSchema} from './src/learn-services.js';
 import {createWorkshopStorageRouter, workshopForgetUser, cleanFolder, cleanName, contentMatches, WORKSHOP_MAX_FILE, WORKSHOP_QUOTA, WORKSHOP_KINDS} from './src/workshop-storage.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
@@ -31,6 +32,47 @@ function setup({r2=true}={}){
   return {db,R2,env,limits,call,upload,replace,route,tick:s=>{t+=s;}};
 }
 const alice={id:7},bob={id:8};
+
+test('class storage checks membership on each read and withholds worksheet solutions', async () => {
+  const {db, env, call, upload} = setup();
+  await ensureLearnSchema(env);
+  db.exec(`CREATE TABLE users (id INTEGER PRIMARY KEY, deleted INTEGER NOT NULL);
+    INSERT INTO users VALUES (7,0), (8,0), (9,0);
+    INSERT INTO classes VALUES (1,7,'Physics club','ABCDEF',0,NULL);
+    INSERT INTO class_members VALUES (1,8,0);`);
+  const outside = {id: 9};
+  const prefix = '/api/workshop/storage/shared';
+  const worksheet = {format:'haslalab-paper', paper:{title:'Pendulum', items:[{pts:2, own:{
+    q:'What is the period?', choices:['1', '2'], correct:1, answer:'SECRET', sol:'SECRET', rubric:[{desc:'SECRET'}]
+  }}]}};
+  const mime = {kind:'paper', ensure_folder:'1'};
+  const {file} = await upload(alice, 'paper.json', JSON.stringify(worksheet), 'Club', mime);
+  const input = {kind:'assignment',class_id:1,title:'Pendulum',folder:'Club',due_at:1_800_001_000};
+  await fails(call(prefix,'POST',input,bob),'forbidden',403);
+  await fails(call(prefix,'POST',{...input,kind:'resource',due_at:null},outside),'forbidden',403);
+  const {id} = await call(prefix,'POST',input,alice);
+  const {file: later} = await upload(alice, 'later.json', JSON.stringify(worksheet), 'Club', mime);
+  assert.equal((await call(prefix,'GET',null,outside)).shares.length,0);
+  assert.equal((await call(prefix,'GET',null,bob)).shares[0].file_count,1);
+  const list = await call(prefix+'/'+id,'GET',null,bob);
+  assert.deepEqual(list.files.map(f=>f.id), [file.id]);
+  assert.ok(!('folder' in list.files[0]));
+  const url = prefix+'/'+id+'/files/'+file.id;
+  const res = await call(url,'GET',null,bob);
+  assert.match(res.headers.get('content-disposition'), /^attachment/);
+  const student = await res.text();
+  assert.doesNotMatch(student, /SECRET|correct|answer|rubric/);
+  assert.match(student, /What is the period/);
+  await fails(call(prefix+'/'+id+'/files/'+later.id,'GET',null,bob),'not_found',404);
+  const {file: material} = await upload(bob,'readme.txt','club notes');
+  const resource = await call(prefix,'POST',{kind:'resource',class_id:1,title:'Club notes',file_id:material.id},bob);
+  assert.equal(await (await call(prefix+'/'+resource.id+'/files/'+material.id,'GET',null,alice)).text(), 'club notes');
+  db.exec('DELETE FROM class_members WHERE class_id=1 AND user_id=8');
+  await fails(call(url,'GET',null,bob),'not_found',404);
+  await fails(call(prefix+'/'+resource.id,'GET',null,alice),'not_found',404);
+  assert.deepEqual(await call(prefix+'/'+id,'DELETE',null,alice),{ok:true});
+  await fails(call(url,'GET',null,alice),'not_found',404);
+});
 const pdf=(n=100)=>Buffer.concat([Buffer.from('%PDF-1.7\n'),Buffer.alloc(n,0x20),Buffer.from('\n%%EOF\n')]);
 const png=()=>Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0,0,0,13]);
 const zip=()=>Buffer.from([0x50,0x4b,0x03,0x04,20,0,0,0]);

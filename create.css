@@ -30,6 +30,17 @@ pre.out{background:var(--alt);border-radius:9px;padding:10px;font-size:12.5px;ov
 @media(max-width:600px){main{padding:14px 12px 30px}.two{grid-template-columns:1fr}iframe.sim{height:420px}}
 /* ── the coding studio (create-studio.js) and its editor (code-editor.js) ── */
 main.wide{max-width:1480px}
+.compute-maker .head{align-items:center}.compute-maker h1{font-size:clamp(1.5rem,3vw,2rem)}
+.compute-meta,.compute-work{display:grid;gap:12px;margin:12px 0;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.compute-meta{grid-template-columns:minmax(0,1fr) minmax(100px,12rem);align-items:end}
+.compute-meta label{display:grid;gap:4px}.compute-maker .panel{min-width:0;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.compute-maker :is(#cpCode,#cpPrompt,#cpDescription){resize:vertical}.compute-maker #cpCode{min-height:190px}
+.compute-maker #cpFigure{margin-top:10px}.compute-maker #cpFigure img{display:block;max-width:100%;max-height:170px;margin-bottom:8px;background:white;border-radius:8px}
+.compute-maker details{margin-top:14px}.compute-maker details textarea{margin-top:8px}
+.compute-maker #cpPlots figure{margin:12px 0}.compute-maker #cpPlots svg{width:100%;display:block;background:var(--alt);border-radius:8px}
+.compute-chat{grid-column:1/-1}.compute-chat #cpChat{max-height:260px;overflow:auto}.compute-chat #cpChat p{padding:8px 12px;margin:0 0 6px;border-radius:10px;background:var(--alt);white-space:pre-wrap;overflow-wrap:anywhere}
+.compute-check{display:flex;align-items:flex-start;gap:8px}.compute-check input{width:auto;margin-top:5px}.compute-actions{margin:12px 0}
+@media(max-width:760px){.compute-work{grid-template-columns:minmax(0,1fr)}.compute-maker .panel{padding:12px}}
 .studio{--edh:620px;display:grid;gap:8px}
 .st-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.st-top .back{margin-right:4px}
 .st-title{flex:1;min-width:160px;font-size:1.05rem;font-weight:650;width:auto}.st-top select{width:auto}

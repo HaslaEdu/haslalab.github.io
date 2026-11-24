@@ -1210,7 +1210,12 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="workshop-connectors.js?v=8596cfc6b3f4"></script>
 <script src="share-publish.js?v=c4278342f87e"></script>
-<script src="workshop-share.js?v=d231ee2c1b0c"></script>
+<script src="workshop-share.js?v=6ecba0f7fcab"></script>
+<script src="workshop-class-storage.js?v=e270078bc1ea"></script>
+<style>
+.ws-class-shares{margin:22px 0}.ws-class-shares h2{margin:0 0 8px}.ws-share-item{border:1px solid var(--rule,#d5dbe6);padding:10px 14px;border-radius:10px;margin:8px 0}.ws-share-item summary{cursor:pointer}.ws-share-item small{margin-inline-start:8px;color:var(--muted)}.ws-share-instructions{white-space:pre-wrap;overflow-wrap:anywhere}.ws-share-item ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.ws-share-dialog{width:min(470px,calc(100% - 24px));border:1px solid var(--rule,#d5dbe6);border-radius:14px;color:var(--ink);background:var(--paper,#fff);padding:20px}.ws-share-dialog::backdrop{background:#17203675}.ws-share-dialog form,.ws-share-dialog label{display:grid;gap:8px}.ws-share-dialog label[hidden]{display:none}.ws-share-dialog h2,.ws-share-dialog p{margin:0}.ws-student-paper{width:min(760px,calc(100% - 24px))}.ws-student-paper li{margin:8px 0}.ws-student-paper p{white-space:pre-wrap}.ws-student-paper img{max-width:100%;height:auto;display:block}.ws-share-dialog :is(select,input,textarea){width:100%;font:inherit;color:inherit;padding:7px 8px;border:1px solid var(--rule,#d5dbe6);border-radius:7px;background:var(--paper,#fff)}
+</style>
 <script src="ai-chat.js?v=278f5546252e"></script>
 <script>
 "use strict";
@@ -5579,7 +5584,9 @@ function homeGoalMoment(d){
 function viewWorkshopCreate(){
   const ko=lang==="ko",label=wsTitle("create");
   const asked=new URLSearchParams(location.hash.split("?")[1]||""),query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  if(/^(?:gallery|play|edit)$/.test(asked.get("view")||""))query.set("view",asked.get("view"));
+  const view = asked.get("view");
+  query.set("view", /^(?:gallery|play|edit|compute|compute-preview)$/.test(view||"") ? view : "compute");
+  if(["draw","problem"].includes(asked.get("from")))query.set("from",asked.get("from"));
   if(/^(?:\d{1,9}|sample-[a-z]+)$/.test(asked.get("id")||""))query.set("id",asked.get("id"));
   return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p></div>
     <iframe id="learnCreateFrame" class="learn-studio-frame" src="create.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
@@ -5594,7 +5601,8 @@ addEventListener("message",event=>{
 function viewWorkshopMake(){
   const ko=lang==="ko",label=wsTitle("make");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  const asked=new URLSearchParams(location.hash.split("?")[1]||""),tab=asked.get("tab");if(tab==="vary"||tab==="tpl")query.set("tab",tab);
+  const asked=new URLSearchParams(location.hash.split("?")[1]||""),tab=asked.get("tab");if(["vary","tpl","ai"].includes(tab))query.set("tab",tab);
+  if(asked.get("from")==="compute")query.set("from","compute");
   /* a shared problem set to open as a new paper (작품 공유's remix or "open in the editor") */
   if(/^\d{1,9}$/.test(asked.get("share")||""))query.set("share",asked.get("share"));
   return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p></div>
@@ -5611,7 +5619,8 @@ addEventListener("message",event=>{
 function viewWorkshopDraw(){
   const ko=lang==="ko",label=wsTitle("draw");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  const t=new URLSearchParams(location.hash.split("?")[1]||"").get("t");if(/^[a-z_]{2,24}$/.test(t||""))query.set("t",t);
+  const asked=new URLSearchParams(location.hash.split("?")[1]||""),t=asked.get("t");if(/^[a-z_]{2,24}$/.test(t||""))query.set("t",t);
+  if(/^\d{1,9}$/.test(asked.get("share")||""))query.set("share",asked.get("share"));
   return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p></div>
     <iframe id="learnDrawFrame" class="learn-studio-frame" src="draw.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
 }
@@ -5638,7 +5647,7 @@ function viewWorkshop(){
     <div class="ws-cards">
       ${card("#/workshop/make",wsTitle("make"),ko?"하슬라랩 문제와 직접 쓴 문제로 시험지를 엮어 정답표와 함께 인쇄합니다.":LX("Build a test from HaslaLab problems and your own, and print it with the answer key."))}
       ${card("#/workshop/draw",wsTitle("draw"),ko?"빗면, 도르래, 회로 같은 물리 그림을 값으로 그리고 시뮬레이션으로 돌려 봅니다.":LX("Draw physics figures such as inclines, pulleys and circuits by value, and run them as simulations."))}
-      ${card("#/workshop/create",wsTitle("create"),ko?"브라우저에서 JavaScript 시뮬레이션이나 Python 문제를 코딩해 바로 실행합니다.":LX("Code a JavaScript simulation or a Python problem in the browser and run it at once."))}
+      ${card("#/workshop/create",wsTitle("create"),ko?"Python과 C로 시뮬레이션을 만들고 이 기기에서 실행합니다.":LX("Build a simulation in Python or C and run it on this device."))}
       ${card("#/workshop/share",wsTitle("share"),ko?"회원들이 공유한 작품을 실행해 보고, 리믹스해서 내 것으로 고쳐 씁니다.":LX("Run what members have shared, and remix a project to make it your own."))}
       ${card("#/workshop/storage",wsTitle("storage"),ko?"시험지, 실험 자료, 사진을 내 계정에 올려 두고 어디서나 내려받습니다.":LX("Keep tests, lab data and photos in your account and download them anywhere."))}
       ${later(ko?"실험 도구":LX("Lab tools"),ko?"측정값으로 그래프와 맞춤선을 그리고, 실험 영상에서 물체의 위치를 따라갑니다.":LX("Plot readings and fit a line, and track an object through a video of an experiment."))}
@@ -5669,7 +5678,7 @@ function viewWorkshop(){
 function viewWorkshopStorage(){
   const ko=lang==="ko",label=wsTitle("storage");
   return `<div class="shell ws ws-storage"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p><h1>${label}</h1>
-      <p class="learn-tool-copy">${ko?"수업 자료와 만든 파일을 내 계정에 보관합니다. 올린 파일은 나만 볼 수 있습니다.":LX("Keep class materials and the files you make in your account. Only you can see them.")}</p></div>
+      <p class="learn-tool-copy">${ko?"내 파일을 보관하고 학급이나 동아리에 자료와 과제를 공유합니다.":LX("Keep your files and share materials and assignments with classes or clubs.")}</p></div>
     <div id="wsConnTabs" class="ws-tabs" role="tablist" aria-label="${ko?"저장 위치":LX("Where files are kept")}"></div>
     <div id="wsStore" class="ws-store" aria-live="polite"><p class="ws-note">${ko?"불러오는 중…":LX("Loading…")}</p></div>
     <div id="wsConnPanel" class="ws-cpanel" aria-live="polite" hidden></div>
@@ -5745,14 +5754,15 @@ function wsPaint(box,here){
     ${ed?.kind==="newfolder"?`<div class="ws-row ws-row-edit">${editRow("name","")}</div>`:""}
     <div class="ws-drop" data-ws-drop>
       ${kids.length||files.length?`<ul class="ws-list">${kids.map(f=>`<li class="ws-row ws-folder"><button type="button" class="ws-name" data-ws-go="${esc(f)}"><span class="ws-ico" aria-hidden="true">▸</span>${esc(leaf(f))}</button>
-          ${ed?.path===f?editRow(ed.kind,ed.kind==="move"?(f.includes("/")?f.slice(0,f.lastIndexOf("/")):""):leaf(f)):`<span class="ws-meta">${T("폴더","Folder")}</span><span class="ws-row-acts"><button type="button" data-ws-frename="${esc(f)}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-fdel="${esc(f)}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}
+          ${ed?.path===f?editRow(ed.kind,ed.kind==="move"?(f.includes("/")?f.slice(0,f.lastIndexOf("/")):""):leaf(f)):`<span class="ws-meta">${T("폴더","Folder")}</span><span class="ws-row-acts"><button type="button" data-class-share="${esc(f)}">${T("공유","Share")}</button><button type="button" data-ws-frename="${esc(f)}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-fdel="${esc(f)}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}
         ${files.map(f=>`<li class="ws-row"><span class="ws-name"><span class="ws-ext">${esc(f.name.split(".").pop().toUpperCase())}</span>${esc(f.name)}</span>
           ${ed?.id===f.id?editRow(ed.kind,ed.kind==="move"?f.folder:f.name.replace(/\.[^.]+$/,"")):`<span class="ws-meta">${wsBytes(f.size)} · ${date(f.updated_at)}</span>
-          <span class="ws-row-acts"><button type="button" data-ws-down="${f.id}">${T("내려받기","Download")}</button><button type="button" data-ws-rename="${f.id}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-move="${f.id}">${T("옮기기","Move")}</button><button type="button" data-ws-del="${f.id}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}</ul>`
+          <span class="ws-row-acts"><button type="button" data-class-share="${f.id}">${T("공유","Share")}</button><button type="button" data-ws-down="${f.id}">${T("내려받기","Download")}</button><button type="button" data-ws-rename="${f.id}">${T("이름 바꾸기","Rename")}</button><button type="button" data-ws-move="${f.id}">${T("옮기기","Move")}</button><button type="button" data-ws-del="${f.id}">${T("삭제","Delete")}</button></span>`}</li>`).join("")}</ul>`
         :`<p class="ws-empty">${cur?T("빈 폴더입니다.","This folder is empty."):T("아직 올린 파일이 없습니다.","No files yet.")}</p>`}
       <p class="ws-hint">${T("파일을 여기로 끌어다 놓아도 됩니다. PDF, 그림(PNG·JPG·WebP·SVG), 한글(HWPX), 워드·엑셀·파워포인트, CSV·TXT·MD·JSON","You can also drop files here. PDF, images (PNG, JPG, WebP, SVG), HWPX, Word, Excel, PowerPoint, CSV, TXT, MD, JSON")}</p>
     </div>
-    <p class="ws-msg" role="status">${esc(wsStore.msg)}</p>`;
+    <p class="ws-msg" role="status">${esc(wsStore.msg)}</p><section class="ws-class-shares" data-class-shares></section>`;
+  window.HL_WS_CLASS_STORAGE?.({host:box.querySelector("[data-class-shares]"),root:box,api:cmApi,fetchFile:wsFetch,text:T,esc,error:wsErr,files:D.files,folders:D.folders,here});
   const again=()=>{if(here())wsPaint(box,here);};
   const reload=()=>wsLoad(box,here);
   const fail=e=>{wsStore.msg=wsErr(e?.code);again();};

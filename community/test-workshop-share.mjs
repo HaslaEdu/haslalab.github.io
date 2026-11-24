@@ -32,6 +32,26 @@ const scene={format:'haslalab-scene',version:2,objects:[{id:'b1',type:'block',x:
 const sim={type:'sim',title:'Projectile',description:'Change the **angle**.\nSee where it lands.',howto:'Drag the slider.',notes:'After a textbook figure.',tags:['포물선','#Kinematics'],topic:'mechanics',
   payload:{code:'loop(dt=>{})',question:'How far?',answer:'45',answerUnit:'m'},thumbnail:PNG};
 
+test('C and Python simulations preserve the runtime through publication and remix', async () => {
+  const r = setup();
+  const source = 'int main(void) { return 0; }';
+  const {id} = await r('/api/share','POST',{...sim,payload:{language:'c',code:source}},ana);
+  const path = '/api/share/'+id;
+  assert.equal((await r(path,'GET')).project.code, source);
+  assert.equal((await r(path,'GET')).project.language, 'c');
+  assert.equal((await r('/api/share','GET',null,null,'?type=figure')).items.length,0);
+  const remix = await r(path+'/remix','POST',{},bo);
+  assert.match(remix.edit,/view=compute/);
+  await fails(r('/api/share/'+remix.id,'GET',null,cy),'not_found');
+  assert.equal((await r('/api/share/'+remix.id,'GET',null,bo)).project.language,'c');
+  await r(path,'PATCH',{payload:{language:'python',code:'print(42)'}},ana);
+  assert.equal((await r(path,'GET')).project.code,'print(42)');
+  await r(path,'PATCH',{payload:{language:'js',code:'hl.clear()'}},ana);
+  const {project} = await r(path,'GET');
+  assert.equal(project.language,'js');
+  assert.equal(project.code,'hl.clear()');
+});
+
 test('thumbnails: real PNGs, safe SVGs (stored as base64), nothing that can run or load; 200 KB at most',()=>{
   assert.equal(cleanThumb(PNG),PNG);
   assert.equal(cleanThumb('data:image/png;base64,'+Buffer.from('GIF89a'.repeat(8)).toString('base64')),null,'a PNG label on other bytes');

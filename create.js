@@ -91,7 +91,7 @@ loop(dt=>{
     $('app').querySelectorAll('[data-kind]').forEach(b=>b.onclick=()=>setQ('kind',b.dataset.kind));
     $('app').querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>setQ('sort',b.dataset.sort));
     $('app').querySelectorAll('[data-mine]').forEach(b=>b.onclick=()=>setQ('mine','1'));
-    $('make').onclick=()=>go('edit');
+    $('make').onclick=()=>go('compute');
     let items=[];
     try{const q=new URLSearchParams({sort:sort==='popular'?'popular':'new',...(kind?{kind}:{}),...(mine?{mine:'1'}:{})});items=(await api('/api/creations?'+q)).items;}
     catch(e){$('gnote').textContent=T.offline;}
@@ -121,6 +121,7 @@ loop(dt=>{
     if($('hide'))$('hide').onclick=async()=>{if(!confirm(T.hideConfirm))return;try{await api('/api/creations/'+c.id,'DELETE');go('gallery');}catch(e){alert(errText(e));}};
     if($('like'))$('like').onclick=async()=>{if(!token()){alert(T.login);return;}try{const r=await api(`/api/creations/${c.id}/like`,'POST',{on:!liked});liked=r.liked;$('like').textContent='♥ '+r.likes;$('like').classList.toggle('on',liked);}catch(e){}};
     const done=()=>{if(c.sample||solved||!token())return;solved=true;api(`/api/creations/${c.id}/solve`,'POST',{}).catch(()=>{});};
+    if(c.kind==='sim' && c.code==='/* HaslaLab computational project */'){go('compute-preview',c.id);return;}
     if(c.kind==='sim'){runSim($('stagebox'),c.code);if(c.answer)question($('qbox'),c,done);else if(c.body){$('qbox').innerHTML=`<div class="text">${textHtml(c.body)}</div>`;typeset($('qbox'));}}
     else codeProblem($('stagebox'),c,done);
     height();
@@ -192,7 +193,8 @@ loop(dt=>{
       if(!token()){$('app').innerHTML=`<button type="button" class="back" id="back">${T.back}</button><p class="note">${T.login}</p><p><a class="btn primary" href="/#/login" target="_top">${T.loginBtn}</a></p>`;$('back').onclick=()=>go('gallery');height();return;}
       try{c=(await api('/api/creations/'+encodeURIComponent(id))).creation;}catch(e){$('app').innerHTML=`<p class="note">${esc(errText(e))}</p><button type="button" id="back">${T.back}</button>`;$('back').onclick=()=>go('gallery');height();return;}
     }
-    else{try{const d=JSON.parse(sessionStorage.getItem('hlCreateDraft')||'null');if(d){c={...c,...d};fromDraft=true;sessionStorage.removeItem('hlCreateDraft');}}catch(e){}}
+    else{if (new URLSearchParams(location.search).get('kind') === 'code') c.kind = 'code';
+      try{const d=JSON.parse(sessionStorage.getItem('hlCreateDraft')||'null');if(d){c={...c,...d};fromDraft=true;sessionStorage.removeItem('hlCreateDraft');}}catch(e){}}
     studio=window.HL_STUDIO.open({root:$('app'),T,lang,dark,creation:c,id:id||null,fresh:!id,fromDraft,api,apiBase:API,token,errText,answerFrom,go,height,codeTemplate:TEMPLATE.code});
   }
 
@@ -202,8 +204,10 @@ loop(dt=>{
     const view=v.get('view')||'gallery',id=v.get('id');
     if(studio){studio.stop();studio=null;}
     if(current){current.stop();current=null;}
-    if(view!=='edit')document.querySelector('main')?.classList.remove('wide');
-    if(view==='play'&&id)play(id);else if(view==='edit')edit(id);else gallery();
+    $('app').classList.toggle('wide', ['compute','compute-preview','edit'].includes(view));
+    if (view === 'compute' || view === 'compute-preview') {
+      studio = window.HL_WORKSHOP_COMPUTE.open({root:$('app'),api,apiBase:API,token,height,esc,lang}, {id, preview: view === 'compute-preview', transfer: v.get('from')});
+    } else if(view==='play'&&id)play(id);else if(view==='edit')edit(id);else gallery();
     window.scrollTo?.(0,0);if(embedded)window.parent.postMessage({type:'hl-create-top'},location.origin);
   }
   addEventListener('popstate',route);

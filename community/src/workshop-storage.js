@@ -20,10 +20,8 @@
    - DELETE /api/workshop/storage/folders?path=…        an empty folder
    Files go to the existing R2 binding env.LAB_PAGES under workshop/<userId>/<fileId>; the R2 key is made from ids only,
    never from a name or a folder the member typed, so nothing a member sends can reach another key. Names and folders
-   live in D1 (workshop_files, workshop_folders). Every route needs a signed-in member and reads only that member's rows.
-   TODO(share): sharing a file or a folder with a class (learn-services.js classes) or a club is not built yet. When it
-   is, add a workshop_shares table (file or folder, class id, who shared it) and let the download route also open a file
-   to members of a class it is shared with; until then a file is visible to its owner only. */
+   live in D1. Shared files use the same attachment response after a class membership check. */
+import { classStorageRoutes, STORAGE_SHARE_SCHEMA } from './workshop-class-storage.js';
 
 export const WORKSHOP_SCHEMA = [
   `CREATE TABLE IF NOT EXISTS workshop_files (
@@ -128,6 +126,7 @@ export async function ensureWorkshopSchema(env) {
   for (const sql of WORKSHOP_COLUMNS) {
     try { await env.DB.prepare(sql).run(); } catch (e) { if (!/duplicate column/i.test(String(e?.message || e))) throw e; }
   }
+  for (const sql of STORAGE_SHARE_SCHEMA) await env.DB.prepare(sql).run();
   for (const sql of WORKSHOP_INDEXES) await env.DB.prepare(sql).run();
   ready.add(env.DB);
 }
@@ -139,6 +138,7 @@ export async function workshopForgetUser(env, userId) {
   if (env.LAB_PAGES) for (let i = 0; i < rows.length; i += 500) await env.LAB_PAGES.delete(rows.slice(i, i + 500).map(r => r.r2_key));
   await env.DB.prepare('DELETE FROM workshop_files WHERE owner_id=?').bind(userId).run();
   await env.DB.prepare('DELETE FROM workshop_folders WHERE owner_id=?').bind(userId).run();
+  await env.DB.prepare('DELETE FROM workshop_class_shares WHERE owner_id=?').bind(userId).run();
   return rows.length;
 }
 
@@ -274,6 +274,28 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     return r;
   };
   const view = fileView;
+  const shared = classStorageRoutes({HttpError, limit, bad, cleanFolder, fileView, download});
+
+  async function download(env, row, method, transform = null) {
+    if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
+    const obj = await env.LAB_PAGES.get(row.r2_key);
+    if (!obj) throw new HttpError(404, 'file_missing');
+    const headers = {
+      'Content-Type': row.mime,
+      'Content-Disposition': `attachment; filename="${asciiName(row.name)}"; filename*=UTF-8''${encodeURIComponent(row.name)}`,
+      'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
+      'Content-Security-Policy': "default-src 'none'; sandbox", 'X-Frame-Options': 'DENY'
+    };
+    if (transform) {
+      if (method === 'HEAD') return new Response(null, {headers});
+      if (row.size > 5 * 1024 * 1024) throw new HttpError(413, 'file_too_large');
+      const body = await new Response(obj.body).json().then(transform).catch(() => null);
+      if (!body) throw new HttpError(415, 'bad_worksheet');
+      return new Response(JSON.stringify(body), {headers});
+    }
+    if (obj.size != null) headers['Content-Length'] = String(obj.size);
+    return new Response(method === 'HEAD' ? null : obj.body, {headers});
+  }
 
   async function readUpload(req) {
     const declared = Number(req?.headers?.get?.('Content-Length') || 0);
@@ -318,6 +340,7 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     needUser(me);
     await ensureWorkshopSchema(env);
     const DB = env.DB, t = now(), uid = me.id;
+    if (p === '/api/workshop/storage/shared' || p.startsWith('/api/workshop/storage/shared/')) return shared(p, m, body, uid, t, env);
 
     if (p === '/api/workshop/storage' && m === 'GET') {
       const url = req?.url ? new URL(req.url) : null, qk = url?.searchParams.get('kind'), qf = url?.searchParams.get('folder');
@@ -397,18 +420,7 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
 
     if (m === 'GET' || m === 'HEAD') {
       await limit(env, 'ws-down:' + uid, 600, 3600);
-      if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
-      const obj = await env.LAB_PAGES.get(row.r2_key);
-      if (!obj) throw new HttpError(404, 'file_missing');
-      const headers = {
-        'Content-Type': row.mime,
-        /* always saved, never shown in the browser: an SVG or a text file cannot run as a page of the site */
-        'Content-Disposition': `attachment; filename="${asciiName(row.name)}"; filename*=UTF-8''${encodeURIComponent(row.name)}`,
-        'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer',
-        'Content-Security-Policy': "default-src 'none'; sandbox", 'X-Frame-Options': 'DENY'
-      };
-      if (obj.size != null) headers['Content-Length'] = String(obj.size);
-      return new Response(m === 'HEAD' ? null : obj.body, {status: 200, headers});
+      return download(env, row, m);
     }
 
     if (m === 'PATCH') {
