@@ -2086,7 +2086,7 @@ function showDrawProjects() {
   const host = $('drawProjects');
   host.hidden = false;
   const library = window.HL_WORKSHOP_PROJECTS.library(host, drawStorage, {
-    kind:'figure', title:ko ? '그림 프로젝트' : 'Figure projects', height,
+    kind:'figure', unified:true, title:ko ? '그림 프로젝트' : 'Figure projects', height,
     onNew() {
       if (!canLeaveProject()) return;
       replaceProject({title:'', index:0, pages:[blankPage()]});

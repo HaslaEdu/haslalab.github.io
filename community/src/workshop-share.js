@@ -230,7 +230,7 @@ function sourceProject(doc, name) {
   return {type:'set', title, payload:{title,info:paper.info,minutes:paper.minutes,items}};
 }
 
-const LIST_COLS = `c.id,c.kind,c.title,c.summary,c.plays AS views,c.likes,c.forked_from,c.created_at,c.updated_at,c.user_id,u.nickname,u.avatar AS av,
+const LIST_COLS = `c.id,c.kind,c.title,c.summary,substr(COALESCE(NULLIF(s.descr,''),c.summary,''),1,240) AS preview,c.plays AS views,c.likes,c.forked_from,c.created_at,c.updated_at,c.user_id,u.nickname,u.avatar AS av,
   COALESCE(s.topic,'other') AS topic,COALESCE(s.tags,'') AS tags,COALESCE(s.favs,0) AS favs,COALESCE(s.n_comments,0) AS comments,
   COALESCE(s.featured,0) AS featured,length(COALESCE(s.thumb,''))>0 AS has_thumb,COALESCE(s.shared_at,c.created_at) AS shared_at,
   (SELECT COUNT(*) FROM creations r WHERE r.forked_from=c.id AND r.status='public') AS remixes`;

@@ -620,6 +620,9 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .sns-ig:hover{background:var(--cm-soft,rgba(127,127,127,.08))}
 .sns-ig svg{width:15px;height:15px}
 .adfit-banner-label{position:absolute;top:-17px;left:0;color:#667085;font:9px/1.1 var(--mono)}
+.adfit-banner--workshop:not(.is-filled) .adfit-banner-label{visibility:hidden}
+.adfit-banner--workshop[hidden]{display:none}
+@media(max-width:343px){.adfit-banner--workshop{display:none}}
 .adfit-banner-slot{width:320px;max-width:100%;height:50px}
 .adfit-banner--secondary,.adfit-banner--secondary .adfit-banner-slot{height:100px}
 @media (min-width:700px){.adfit-banner{margin-top:52px}}
@@ -1210,7 +1213,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="workshop-connectors.js?v=d1f83e98ed6a"></script>
 <script src="share-publish.js?v=c4278342f87e"></script>
-<script src="workshop-share.js?v=d0b23b376548"></script>
+<script src="workshop-share.js?v=67892ab2db85"></script>
 <script src="workshop-publish-source.js?v=67091036105a"></script>
 <script src="workshop-class-storage.js?v=86b88dd474d4"></script>
 <style>
@@ -4999,13 +5002,14 @@ const hlNoAds=()=>{ try{ const v=JSON.parse(localStorage.getItem("hlPlanNoAds")|
   try{ const v=JSON.parse(localStorage.getItem("hlPlanNoAds")||"null"); if(v&&v.checked>Date.now()-6*3600e3) return; }catch(e){}
   fetch(base+"/api/learn/plan",{headers:{Authorization:"Bearer "+token}}).then(r=>r.ok?r.json():null).then(p=>{
     if(!p) return; try{ localStorage.setItem("hlPlanNoAds",JSON.stringify({until:p.ads===false?Date.now()+86400e3:0,checked:Date.now()})); }catch(e){}
+    if(p.ads===false)document.querySelectorAll('.adfit-banner--workshop').forEach(el=>{el.hidden=true;});
   }).catch(()=>{});
 })();
-function adFitBanner(placement){
+function adFitBanner(placement,workshop=false){
   if(typeof hlNoAds==="function"&&hlNoAds()) return "";
   const size=placement==="secondary" ? " adfit-banner--secondary" : "";
   const ad=lang==="ko" ? {aria:"광고",label:"광고"} : {aria:"Advertisement",label:"Ad"};
-  return `<aside class="adfit-banner${size}" aria-label="${ad.aria}">
+  return `<aside class="adfit-banner${size}${workshop?' adfit-banner--workshop':''}" aria-label="${ad.aria}">
     <span class="adfit-banner-label">${ad.label}</span>
     <div class="adfit-banner-slot haslalab-adfit-slot" data-ad-placement="${placement}"></div>
   </aside>`;
@@ -5653,6 +5657,7 @@ function viewWorkshop(){
       ${card("#/workshop/storage",wsTitle("storage"),ko?"시험지, 실험 자료, 사진을 내 계정에 올려 두고 어디서나 내려받습니다.":LX("Keep tests, lab data and photos in your account and download them anywhere."))}
       ${later(ko?"실험 도구":LX("Lab tools"),ko?"측정값으로 그래프와 맞춤선을 그리고, 실험 영상에서 물체의 위치를 따라갑니다.":LX("Plot readings and fit a line, and track an object through a video of an experiment."))}
     </div>
+    ${adFitBanner("primary",true)}
     <div class="ws-who">
       <section id="wsTeachers" aria-labelledby="wsTeachersH"><h2 id="wsTeachersH">${ko?"선생님께":LX("For teachers")}</h2>${list(ko?[
         "단원과 난이도를 골라 시험지를 만들고, 인쇄하거나 PDF로 저장합니다.",
@@ -5704,7 +5709,7 @@ async function wsFetch(method,path,body){
 }
 /* the sharing place (#/workshop/share, workshop-share.js): the shell here, the pages drawn by HL_SHARE_PAGE */
 function workshopShareCtx(generation){
-  return {ko:lang==="ko",uiLang,LX,esc,api:cmApi,base:cmBase,av:cmAv,me:cmLoadMe,here:()=>generation===siteRenderSeq,title:wsTitle("share"),workshop:UI[lang].navWork};
+  return {ko:lang==="ko",uiLang,LX,esc,api:cmApi,base:cmBase,av:cmAv,me:cmLoadMe,here:()=>generation===siteRenderSeq,title:wsTitle("share"),workshop:UI[lang].navWork,adBanner:()=>adFitBanner("primary",true)};
 }
 function viewWorkshopShare(){
   if(window.HL_SHARE_PAGE)return HL_SHARE_PAGE.view(workshopShareCtx(siteRenderSeq));
@@ -10961,6 +10966,8 @@ addEventListener("resize",mountHaslaAdFitSides);
 if(typeof ResizeObserver==="function"){ let t=0; const view=document.getElementById("view");
   if(view) new ResizeObserver(()=>{ clearTimeout(t); t=setTimeout(mountHaslaAdFitSides,150); }).observe(view); }
 let adFitObserver=null;
+window.hlWorkshopAdLoad=el=>el?.closest('.adfit-banner--workshop')?.classList.add('is-filled');
+window.hlWorkshopAdFail=el=>{const banner=el?.closest('.adfit-banner--workshop');if(banner)banner.hidden=true;};
 function mountHaslaAdFit(){
   mountHaslaAdFitSides();
   adFitObserver?.disconnect();adFitObserver=null;
@@ -10969,10 +10976,13 @@ function mountHaslaAdFit(){
   const ads=desktop?{primary:{unit:"DAN-SftG79uMQrQr81Vk",width:728,height:90},secondary:{unit:"DAN-yC9q3CmZpKwsFdMz",width:728,height:90}}:{primary:{unit:"DAN-iGyhh2ByjtPoCpiA",width:320,height:50},secondary:{unit:"DAN-z8B8tUfB0Ev740NV",width:320,height:100}};
   let scheduled=false;
   const activate=slot=>{
-    if(!slot.isConnected||slot.dataset.adLoaded)return;
+    if(!slot.isConnected||slot.dataset.adLoaded||hlNoAds()||!slot.getClientRects().length)return;
     slot.dataset.adLoaded="1";const ad=ads[slot.dataset.adPlacement]||ads.primary;
-    slot.closest(".adfit-banner").classList.toggle("adfit-banner--desktop",desktop);
-    const ins=document.createElement("ins");ins.className="kakao_ad_area";ins.style.display="none";ins.dataset.adUnit=ad.unit;ins.dataset.adWidth=String(ad.width);ins.dataset.adHeight=String(ad.height);slot.append(ins);
+    const banner=slot.closest(".adfit-banner");
+    banner.classList.toggle("adfit-banner--desktop",desktop);
+    const ins=document.createElement("ins");ins.className="kakao_ad_area";ins.style.display="none";ins.dataset.adUnit=ad.unit;ins.dataset.adWidth=String(ad.width);ins.dataset.adHeight=String(ad.height);
+    if(banner.classList.contains('adfit-banner--workshop')){ins.dataset.adOnload='hlWorkshopAdLoad';ins.dataset.adOnfail='hlWorkshopAdFail';}
+    slot.append(ins);
     if(!scheduled){scheduled=true;queueMicrotask(()=>{scheduled=false;if(!slot.isConnected)return;const script=document.createElement("script");script.src="https://t1.kakaocdn.net/kas/static/ba.min.js";script.async=true;document.body.append(script);});}
   };
   if(typeof IntersectionObserver!=="function"){slots.forEach(activate);return;}

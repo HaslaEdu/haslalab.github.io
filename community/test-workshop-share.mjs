@@ -128,7 +128,7 @@ test('publishing checks the type, the fields and the payload of each kind; guest
   await fails(r('/api/share','POST',{type:'figure',title:'F',payload:{scene:{objects:[]}}},ana),'bad_payload');
   await fails(r('/api/share','POST',{type:'figure',title:'F',payload:{scene:{objects:[{id:'b',type:'block',label:'x'.repeat(130000)}]}}},ana),'payload_too_large');
   await fails(r('/api/share','POST',{type:'set',title:'S',payload:{items:[{key:'<bad>'}]}},ana),'bad_payload');
-  const a=await r('/api/share','POST',{...sim,description:'<script>x</script>Change the angle.'},ana);
+  const a=await r('/api/share','POST',{...sim,description:'<script>x</script>Change the angle.\nNow record the range. '+ 'a'.repeat(260)},ana);
   assert.equal(a.url,'#/workshop/share/'+a.id);
   const f=await r('/api/share','POST',{type:'figure',title:'Block on a floor',topic:'mechanics',payload:{scene},thumbnail:'data:image/svg+xml,'+encodeURIComponent(SVG)},bo);
   const s=await r('/api/share','POST',{type:'set',title:'Kinematics quiz',topic:'mechanics',payload:{items:[{key:'own:q1',own:{q:'A car…',answer:'2'}}]}},bo);
@@ -136,13 +136,16 @@ test('publishing checks the type, the fields and the payload of each kind; guest
   const list=await r('/api/share','GET',null,null,'?tab=new');
   assert.deepEqual(list.items.map(i=>[i.id,i.type]),[[py.id,'python'],[s.id,'set'],[f.id,'figure'],[a.id,'sim']]);
   assert.ok(!('code' in list.items[0])&&!('payload' in list.items[0]),'the list carries no code or payload');
+  assert.equal(list.items.at(-1).summary,'xChange the angle.');
+  assert.match(list.items.at(-1).preview,/Now record the range/);
+  assert.equal(list.items.at(-1).preview.length,240);
   assert.equal(list.items.at(-1).av,'abcdefgh12');assert.equal(list.items.at(-1).has_thumb,true);assert.deepEqual(list.items.at(-1).tags,['포물선','kinematics']);
   assert.deepEqual((await r('/api/share','GET',null,null,'?type=figure')).items.map(i=>i.id),[f.id]);
   assert.deepEqual((await r('/api/share','GET',null,null,'?topic=other')).items.map(i=>i.id),[py.id]);
   assert.deepEqual((await r('/api/share','GET',null,null,'?q=KINEMAT')).items.map(i=>i.id).sort(),[a.id,s.id].sort(),'title or tag');
   assert.deepEqual((await r('/api/share','GET',null,null,'?q=100%25')).items,[],'% is not a wildcard');
   const one=(await r(`/api/share/${a.id}`,'GET',null,null)).project;
-  assert.equal(one.description,'xChange the angle.','tags stripped');assert.equal(one.code,'loop(dt=>{})');assert.equal(one.answerUnit,'m');assert.equal(one.mine,false);
+  assert.match(one.description,/^xChange the angle\.\nNow record the range\./,'tags stripped, full description retained');assert.equal(one.code,'loop(dt=>{})');assert.equal(one.answerUnit,'m');assert.equal(one.mine,false);
   assert.equal((await r(`/api/share/${f.id}`,'GET',null,null)).project.payload.scene.objects[0].type,'block');
   assert.equal((await r(`/api/share/${s.id}`,'GET',null,null)).project.payload.items[0].own.q,'A car…');
   /* create.html's own gallery keeps showing only simulations and Python problems */

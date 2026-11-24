@@ -333,7 +333,7 @@
       $('cpEditor').hidden = true;
       const host = $('cpProjects');
       host.hidden = false;
-      const panel = P.library(host,cloud,{kind:'compute', title:tr('전산물리 프로젝트','Computational physics projects'), height,
+      const panel = P.library(host,cloud,{kind:'compute', unified:true, title:tr('전산물리 프로젝트','Computational physics projects'), height,
         onResume:showEditor,
         onNew() { loadProject(blank(), null); },
         onOpen:loadProject,
