@@ -282,7 +282,14 @@ for (const t of PHYS_SHAPES) Object.assign(FIELDS[t], PHYS_FIELDS);
 const LEGACY_ON = {particle: {arrow: raw => (typeof raw.len === 'number' ? raw.len : 0.8) > 0}, wave: {showLambda: () => true, showA: () => true}, levels: {showLambda: () => true}};
 /* every object also has a line weight and a label size (multiples of the style's), and can be locked against dragging */
 export const COMMON_FIELDS = {lw: num(1, 0.2, 5), ls: num(1, 0.3, 4), lock: bool(false), style: pick('', ['', ...STYLE_KEYS])};
-for (const t of Object.keys(FIELDS)) Object.assign(FIELDS[t], COMMON_FIELDS);
+const LETTER_FIELDS = {
+  letterStyle: pick('auto', ['auto', 'regular', 'italic', 'bold', 'boldItalic']),
+  letterFamily: pick('auto', ['auto', 'serif', 'sans', 'mono']),
+};
+for (const fields of Object.values(FIELDS)) {
+  if (Object.values(fields).some(field => field.k === 'txt')) Object.assign(fields, LETTER_FIELDS);
+  Object.assign(fields, COMMON_FIELDS);
+}
 export const TYPES = Object.keys(FIELDS);
 /* the types that turn by their field rot (degrees, anticlockwise) about their centre */
 export const ROTATABLE = TYPES.filter(t => 'rot' in FIELDS[t]);
@@ -1396,7 +1403,7 @@ export const UNSURE_FIELDS = ['object', 'position', 'mass', 'angle', 'mu', 'k', 
 export function visionProperties() {
   const props = {};
   for (const t of VISION_OBJECT_TYPES) for (const [k, f] of Object.entries(FIELDS[t])) {
-    if (k in COMMON_FIELDS || k in PHYS_FIELDS) continue;
+    if (k in COMMON_FIELDS || k in PHYS_FIELDS || k in LETTER_FIELDS) continue;
     const s = f.k === 'num' ? {type: 'number'} : f.k === 'bool' ? {type: 'boolean'} : f.k === 'refs' ? {type: 'array', items: {type: 'string'}} : f.k === 'enum' ? {type: 'string', enum: [...f.list]} : {type: 'string'};
     const old = props[k];
     if (!old) props[k] = s;

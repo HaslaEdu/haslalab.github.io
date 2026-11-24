@@ -6,9 +6,9 @@
    (/api/workshop/storage) or into this browser. "Start from a photo" sends one photo to /api/workshop/scene-from-image
    (community/src/workshop-scene.js) and opens what comes back for checking. */
 import {geoIntersect, validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath,
-  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape} from './draw-scene.mjs?v=6a3c9af34d22';
-import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=c28a48272a2b';
-import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=1d18c2e45bc3';
+  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape} from './draw-scene.mjs?v=0fa3728066f3';
+import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=5c7e5138c56f';
+import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=f1d35152f547';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -1207,6 +1207,9 @@ function relevant(o, k) {
   if (o.type === 'qpot' && k === 'Emax') return true;
   return true;
 }
+const LETTER_OPTIONS = ko
+  ? {letterStyle: '글자 스타일', letterFamily: '글꼴', auto: '그림 기본값', regular: '바르게', italic: '기울임 (이탤릭)', bold: '굵게', boldItalic: '굵은 기울임', serif: '명조 계열', sans: '고딕 계열', mono: '고정폭'}
+  : {letterStyle: 'Text style', letterFamily: 'Font family', auto: 'Figure default', regular: 'Upright', italic: 'Italic', bold: 'Bold', boldItalic: 'Bold italic', serif: 'Serif', sans: 'Sans serif', mono: 'Monospace'};
 const QNAME = {psi: 'psiQ', levels: 'levelsQ', E: 'EQ', mass: 'mass'};
 const fieldName = (o, k) => k === 'mass' && !['qpot', 'well'].includes(o.type) ? (o.type === 'charge' ? (ko ? '질량 (mg)' : 'Mass (mg)') : (ko ? '질량 (kg)' : 'Mass (kg)')) : GEO_TYPES.includes(o.type) && X5.geoFields[k] ? X5.geoFields[k] : o.type === 'joint' && (k === 'a' || k === 'b') ? X5.geoFields[k] : o.type === 'curve' && ['param', 'polar'].includes(o.kind) && (k === 'x1' || k === 'x2') ? (k === 'x1' ? (ko ? 't 처음' : 't from') : (ko ? 't 끝' : 't to'))
   : o.type === 'curve' && k === 'expr' && o.kind !== 'func' && ['param', 'polar', 'ineq'].includes(o.kind) ? ({param: 'x(t)', polar: ko ? 'r(t) (t = θ, 라디안)' : 'r(t) (t = θ, radians)', ineq: 'f(x)'})[o.kind] : o.type === 'particle' && k === 'arrow' ? X4.fields.speedArrow : o.type === 'qpot' && QNAME[k] ? X4.fields[QNAME[k]] : o.type === 'block' && k === 'mu' ? (ko ? '마찰 계수 μ (윗면)' : 'Friction μ (top face)') : o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
@@ -1248,10 +1251,11 @@ function paintSide() {
   const opts = (types, cur, optional) => (optional ? `<option value="">${T.none}</option>` : '') + st.scene.objects.filter(x => types.includes(x.type) && x.id !== o.id).map(x => `<option value="${esc(x.id)}"${x.id === cur ? ' selected' : ''}>${esc(x.id)} · ${T.types[x.type]}</option>`).join('');
   const optional = k => !(['string', 'rod', 'spring'].includes(o.type) && (k === 'a' || k === 'b')) && !(o.type === 'force' && k === 'on');
   const field = ([k, f]) => {
-    const L = fieldName(o, k);
+    const lettering = k === 'letterStyle' || k === 'letterFamily';
+    const L = lettering ? LETTER_OPTIONS[k] : fieldName(o, k);
     if (f.k === 'num') { const sr = slideRange(o, k, f); return `<label class="${sr ? 'wide slide' : ''}">${L}<span class="numrow"><input data-f="${k}" type="number" step="${NUM_STEP[k] || 0.05}" min="${f.min}" max="${f.max}" value="${r4(o[k])}">${sr ? `<input data-s="${k}" type="range" min="${sr[0]}" max="${sr[1]}" step="${(sr[1] - sr[0]) / 200}" value="${Math.max(sr[0], Math.min(sr[1], o[k]))}" aria-label="${esc(L)}">` : ''}</span></label>`; }
     if (f.k === 'bool') return `<label class="chk wide"><input data-f="${k}" type="checkbox"${o[k] ? ' checked' : ''}>${L}</label>`;
-    if (f.k === 'enum') return `<label>${L}<select data-f="${k}">${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : o.type === 'block' && v === 'box' ? (ko ? '상자' : 'Box') : T.enums[v] || v)}</option>`).join('')}</select></label>`;
+    if (f.k === 'enum') return `<label>${L}<select data-f="${k}"${lettering ? ` aria-label="${esc(L)}"` : ''}>${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : o.type === 'block' && v === 'box' ? (ko ? '상자' : 'Box') : (lettering ? LETTER_OPTIONS[v] : T.enums[v]) || v)}</option>`).join('')}</select></label>`;
     if (f.k === 'ref') return `<label>${L}<select data-f="${k}">${opts(f.types, o[k], optional(k))}</select></label>`;
     if (f.k === 'refs' && o.type === 'gpoly') return `<div class="wide note">${esc(L)}: ${esc(o.pts.join(', '))}</div>`;
     if (f.k === 'refs') { const ps = st.scene.objects.filter(x => x.type === 'pulley'); return ps.length ? `<div class="wide"><span class="note">${L}</span><div class="over">${ps.map(p => `<label><input type="checkbox" data-over="${esc(p.id)}"${o.over.includes(p.id) ? ' checked' : ''}>${esc(p.id)}</label>`).join('')}</div></div>` : ''; }
@@ -1285,6 +1289,7 @@ function paintSide() {
         else { const p = bodyPose(st.scene, o); x.x = r4(p.x); x.y = r4(p.y); }
       }
       if (!commit(next, {keepSel: true})) paintSide();
+      if (k === 'letterStyle' || k === 'letterFamily') box.querySelector(`[data-f="${k}"]`)?.focus({preventScroll: true});
     };
     el.onchange = apply;
     if (f.k === 'txt') { el.oninput = () => texPreview(k, el.value); el.onfocus = () => { st.lastText = {id: o.id, k}; }; texPreview(k, el.value); }
@@ -1353,7 +1358,8 @@ function paintMulti(box, ids) {
 /* the label as the figure will show it (the same typesetter as the SVG, in the figure's style) */
 function texPreview(k, v) {
   const el = document.querySelector(`[data-tex="${k}"]`); if (!el) return;
-  el.innerHTML = v ? texSVG(v, 17, st.scene.style) : '';
+  const object = byId(st.sel);
+  el.innerHTML = v ? texSVG(v, 17, object?.style || st.scene.style, object) : '';
 }
 
 /* ── readouts and the graph ── */
