@@ -46,3 +46,9 @@ test('chapter routes preserve an exact empty or nonempty chapter only with one a
   assert.equal(A.clean({chapter:'1'}).has('chapter'),false);assert.equal(A.clean({source,chapter:'bad\u0000chapter'}).has('chapter'),false);
   assert.equal(A.clean('source='+source+'&chapter=1&chapter=2').has('chapter'),false);
 });
+
+test('the general archive opens the physics book catalogue independently of contests',()=>{
+  assert.equal(A.legacy('#/archive'),'#/archive/books/phys');
+  assert.equal(A.parse('#/archive').category,'books');
+  assert.equal(A.parse('#/archive/contests').category,'contests');
+});
