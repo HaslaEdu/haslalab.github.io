@@ -145,6 +145,7 @@ test('photo region detection selects Gemini 3.8 Flash and normalizes boxes',asyn
   const image=cleanImage(jpeg());
   const regions=await detectWorkshopRegions({}, {image,lang:'ko'},async(_env,call)=>{
     assert.equal(call.model,'gemini-3.8-flash');
+    assert.equal(call.thinking,'low');
     assert.deepEqual(call.images,[image]);
     return {raw:{regions:[
       {box:[-10,45.8,500,1020],label:'빗면'},
