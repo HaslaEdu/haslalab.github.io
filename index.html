@@ -5684,16 +5684,16 @@ function viewWorkshopStorage(){
     <div id="wsConnPanel" class="ws-cpanel" aria-live="polite" hidden></div>
   </div>`;
 }
-const WS_ERR={ko:{file_too_large:"파일 하나는 20MB까지 올릴 수 있습니다.",quota_exceeded:"보관함 용량이 모자랍니다. 파일을 지우고 다시 올려 주세요.",type_not_allowed:"올릴 수 없는 파일 형식입니다.",type_mismatch:"파일 내용이 확장자와 맞지 않습니다.",
+const WS_ERR={ko:{file_too_large:"현재 요금제에서 올릴 수 있는 파일 크기를 초과했습니다.",quota_exceeded:"보관함의 남은 용량이 부족합니다.",type_not_allowed:"올릴 수 없는 파일 형식입니다.",type_mismatch:"파일 내용이 확장자와 맞지 않습니다.",
     name_taken:"같은 이름의 파일이 이미 있습니다.",folder_exists:"같은 이름의 폴더가 이미 있습니다.",folder_not_empty:"폴더가 비어 있어야 지울 수 있습니다.",folder_into_itself:"폴더를 그 안으로 옮길 수 없습니다.",bad_folder:"폴더 이름을 확인해 주세요. / \\ : * ? \" < > | 는 쓸 수 없습니다.",
     bad_name:"이름을 입력해 주세요.",rate_limited:"잠시 뒤에 다시 시도해 주세요.",login_required:"로그인하세요.",r2_unavailable:"지금은 보관함을 쓸 수 없습니다.",too_many_files:"파일이 너무 많습니다.",too_many_folders:"폴더가 너무 많습니다.",network:"연결에 실패했습니다.",other:"처리하지 못했습니다."},
-  en:{file_too_large:"Each file can be up to 20 MB.",quota_exceeded:"Your storage is full. Delete a file and try again.",type_not_allowed:"This file type cannot be uploaded.",type_mismatch:"The file does not match its extension.",
+  en:{file_too_large:"The file exceeds your current plan’s upload limit.",quota_exceeded:"There is not enough space in Storage.",type_not_allowed:"This file type cannot be uploaded.",type_mismatch:"The file does not match its extension.",
     name_taken:"A file with that name is already there.",folder_exists:"A folder with that name is already there.",folder_not_empty:"Only an empty folder can be deleted.",folder_into_itself:"A folder cannot go inside itself.",bad_folder:"Check the folder name. / \\ : * ? \" < > | are not allowed.",
     bad_name:"Enter a name.",rate_limited:"Try again in a moment.",login_required:"Sign in first.",r2_unavailable:"Storage is not available right now.",too_many_files:"Too many files.",too_many_folders:"Too many folders.",network:"Could not connect.",other:"Something went wrong."}};
 const WS_TYPES=["pdf","png","jpg","jpeg","webp","svg","json","txt","csv","md","hwpx","docx","xlsx","pptx"];
 const wsStore={folder:"",data:null,edit:null,msg:"",busy:0};
 const wsErr=code=>{const E=WS_ERR[lang==="ko"?"ko":"en"];const t=E[code]||E.other;return lang==="ko"?t:LX(t);};
-const wsBytes=n=>n>=1048576?(n/1048576).toFixed(n>=104857600?0:1)+" MB":n>=1024?Math.round(n/1024)+" KB":n+" B";
+const wsBytes=n=>n>=1048576?Number((n/1048576).toFixed(1))+" MB":n>=1024?Math.round(n/1024)+" KB":n+" B";
 async function wsFetch(method,path,body){
   /* JSON through cmApi; the form upload and the file itself straight to the API with the member's token */
   const h={Authorization:"Bearer "+cmTok()};
@@ -5720,7 +5720,7 @@ function mountWorkshopStorage(generation){
   cmLoadMe().then(me=>{
     if(!here())return;
     if(!me){
-      box.innerHTML=`<div class="ws-login"><p>${ko?"보관함은 로그인한 회원이 씁니다. 파일 하나는 20MB, 모두 합쳐 500MB까지 올릴 수 있습니다.":LX("Storage is for signed-in members: up to 20 MB a file and 500 MB in all.")}</p><a class="hm-go" href="#/login">${CMT[lang].login}</a></div>`;
+      box.innerHTML=`<div class="ws-login"><p>${ko?"로그인하면 기본 10 MB를 쓸 수 있습니다. 이용권이 활성화되면 보관함 용량이 늘어납니다.":LX("Sign in for 10 MB of storage. An active plan increases your storage limit.")}</p><a class="hm-go" href="#/login">${CMT[lang].login}</a></div>`;
       box.querySelector("a").addEventListener("click",()=>{try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}});
       return;
     }
@@ -5738,6 +5738,8 @@ async function wsLoad(box,here){
 function wsPaint(box,here){
   const ko=lang==="ko",D=wsStore.data,cur=wsStore.folder,T=(k,e)=>ko?k:LX(e);
   const pct=Math.min(100,Math.round(D.used/D.quota*1000)/10);
+  const maxFile = D.max_file || D.quota;
+  const capacity = D.plan === "free" ? T("기본 용량","Free storage") : D.plan ? T("확장 용량","Expanded storage") : "";
   const kids=D.folders.filter(f=>f.startsWith(cur?cur+"/":"")&&f!==cur&&!f.slice(cur?cur.length+1:0).includes("/"));
   const files=D.files.filter(f=>f.folder===cur);
   const crumbs=[["",T("보관함","Storage")],...(cur?cur.split("/").map((s,i,a)=>[a.slice(0,i+1).join("/"),s]):[])];
@@ -5747,7 +5749,9 @@ function wsPaint(box,here){
   const editRow=(kind,value)=>`<div class="ws-edit">${kind==="move"?moveSel(value):`<input data-ws-to value="${esc(value)}" maxlength="120" aria-label="${T("새 이름","New name")}">`}<button type="button" class="ws-btn" data-ws-ok>${T("저장","Save")}</button><button type="button" class="ws-btn ghost" data-ws-cancel>${T("취소","Cancel")}</button></div>`;
   const leaf=p=>p.split("/").pop();
   box.innerHTML=`<div class="ws-quota"><div class="ws-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="${T("사용한 용량","Space used")}"><span style="width:${pct}%"></span></div>
-      <p>${wsBytes(D.used)} / ${wsBytes(D.quota)} ${T("사용","used")} · ${T("파일 하나 20MB까지","up to 20 MB a file")}</p></div>
+      <p>${capacity ? esc(capacity)+" · " : ""}${wsBytes(D.used)} / ${wsBytes(D.quota)} ${T("사용","used")} · ${T("파일당 최대 "+wsBytes(maxFile),"Up to "+wsBytes(maxFile)+" per file")}</p>
+      ${D.used>D.quota?`<p class="ws-note">${T("현재 용량을 초과했습니다. 기존 파일은 내려받을 수 있으며, 새 파일을 올리려면 용량을 확보해야 합니다.","You are over your storage limit. You can still download your files. Free up space to upload new files.")}</p>`:""}
+      ${D.plan==="free"?`<p class="ws-note">${T("이용권이 활성화되면 보관함 용량이 늘어납니다.","An active plan increases your storage limit.")}</p>`:""}</div>
     <div class="ws-tools"><nav class="ws-crumbs" aria-label="${T("폴더 위치","Folder")}">${crumbs.map(([p,n],i)=>i===crumbs.length-1?`<b>${esc(n)}</b>`:`<button type="button" data-ws-go="${esc(p)}">${esc(n)}</button><span aria-hidden="true">/</span>`).join("")}</nav>
       <span class="ws-acts"><button type="button" class="ws-btn ghost" data-ws-newfolder>${T("새 폴더","New folder")}</button>
       <label class="ws-btn pri ws-upbtn">${T("파일 올리기","Upload files")}<input type="file" multiple data-ws-file accept="${WS_TYPES.map(x=>"."+x).join(",")}"></label></span></div>
@@ -5795,11 +5799,11 @@ function wsPaint(box,here){
     catch(e){fail(e);}finally{b.disabled=false;}
   });
   const send=async list=>{
-    const max=D.max_file||20*1048576;let done=0;
+    let done=0;
     for(const f of list){
       const ext=(f.name.split(".").pop()||"").toLowerCase();
       if(!WS_TYPES.includes(ext)){wsStore.msg=f.name+": "+wsErr("type_not_allowed");continue;}
-      if(f.size>max){wsStore.msg=f.name+": "+wsErr("file_too_large");continue;}
+      if(f.size>maxFile){wsStore.msg=f.name+": "+T("파일당 최대 "+wsBytes(maxFile)+"까지 올릴 수 있습니다.","You can upload up to "+wsBytes(maxFile)+" per file.");continue;}
       wsStore.msg=(ko?"올리는 중… ":LX("Uploading… "))+f.name;again();
       const form=new FormData();form.append("file",f);form.append("folder",cur);
       try{await wsFetch("POST","/files",form);done++;wsStore.msg="";}catch(e){wsStore.msg=f.name+": "+wsErr(e?.code);if(e?.code==="quota_exceeded")break;}

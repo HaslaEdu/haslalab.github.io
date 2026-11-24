@@ -215,6 +215,7 @@
     };
     const login = () => { if (!token()) { msg(tr('로그인한 뒤 이용할 수 있습니다.', 'Sign in to use this feature.')); return false; } return true; };
     const errorText = e => e?.code === 'code_ai_limit' ? tr('오늘의 AI 사용량을 모두 사용했습니다.', 'Today’s AI quota is used up.')
+      : e?.code === 'quota_exceeded' ? tr('보관함의 남은 용량이 부족합니다.', 'There is not enough space in Storage.')
       : e?.code === 'changed' ? tr('다른 곳에서 파일을 수정했습니다. 다시 열어 주세요.', 'The file changed elsewhere. Reopen it.')
       : tr('처리하지 못했습니다. ', 'Could not complete the request. ') + (e?.code || e?.message || '');
     const form = $('cpForm');

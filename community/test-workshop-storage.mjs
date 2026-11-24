@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
 import {ensureLearnSchema} from './src/learn-services.js';
-import {createWorkshopStorageRouter, workshopForgetUser, cleanFolder, cleanName, contentMatches, WORKSHOP_MAX_FILE, WORKSHOP_QUOTA, WORKSHOP_KINDS} from './src/workshop-storage.js';
+import {createWorkshopStorageRouter, workshopForgetUser, cleanFolder, cleanName, contentMatches, WORKSHOP_MAX_FILE, WORKSHOP_FREE_QUOTA, WORKSHOP_PAID_QUOTA, WORKSHOP_KINDS} from './src/workshop-storage.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
@@ -91,14 +91,14 @@ test('an upload goes to R2 under workshop/<user>/<id>, never under a name the me
   const {file:f,used,quota}=await upload(alice,'../../시험지 1.pdf',pdf());
   assert.match(f.id,/^[0-9a-f]{32}$/);assert.equal(f.name,'시험지 1.pdf','the path is dropped from the name');
   assert.equal(f.folder,'');assert.equal(f.mime,'application/pdf');assert.equal(f.size,pdf().length);assert.ok(!('r2_key' in f));
-  assert.equal(used,pdf().length);assert.equal(quota,WORKSHOP_QUOTA);
+  assert.equal(used,pdf().length);assert.equal(quota,WORKSHOP_FREE_QUOTA);
   const row=db.prepare('SELECT * FROM workshop_files WHERE id=?').get(f.id);
   assert.equal(row.r2_key,`workshop/7/${f.id}`);assert.equal(row.owner_id,7);
   assert.equal(R2.store.get(row.r2_key).opts.httpMetadata.contentType,'application/pdf');
   assert.ok(limits.some(([k])=>k==='ws-up:7'),'uploads are rate limited');
   const list=await call('/api/workshop/storage','GET',null,alice);
   assert.deepEqual(list.files.map(x=>x.name),['시험지 1.pdf']);assert.equal(list.used,pdf().length);
-  assert.equal(list.max_file,WORKSHOP_MAX_FILE);assert.ok(list.types.includes('hwpx')&&list.types.includes('svg'));
+  assert.equal(list.max_file,WORKSHOP_FREE_QUOTA);assert.equal(list.plan,'free');assert.ok(list.types.includes('hwpx')&&list.types.includes('svg'));
   assert.equal((await call('/api/workshop/storage','GET',null,bob)).files.length,0,'another member sees nothing');
   const again=await upload(alice,'시험지 1.pdf',pdf());assert.equal(again.file.name,'시험지 1 (2).pdf','a taken name gets a number');
 });
@@ -119,13 +119,67 @@ test('only the listed types, whose first bytes match the extension, and at most 
   assert.ok(!contentMatches('svg',Buffer.from('<html></html>')));assert.ok(!contentMatches('exe',Buffer.from('MZ')));
 });
 
+test('active Plus, teacher and school plans expand storage, and expiry preserves existing files', async () => {
+  const {db, env, call, upload, replace, tick} = setup();
+  const path = '/api/workshop/storage';
+  const large = pdf(WORKSHOP_FREE_QUOTA);
+  await fails(upload(alice, 'large.pdf', large), 'file_too_large', 413);
+  await ensureLearnSchema(env);
+  const grant = db.prepare(`INSERT INTO entitlements(user_id,kind,starts_at,ends_at,source,created_at)
+    VALUES(?,?,1,?,'test',1)`);
+  grant.run(alice.id, 'plus', 1_800_000_060);
+  grant.run(bob.id, 'teacher', null);
+  const school = {id:9};
+  grant.run(school.id, 'school_seat', null);
+
+  for (const [me, plan] of [[alice, 'plus'], [bob, 'teacher'], [school, 'school']]) {
+    const list = await call(path, 'GET', null, me);
+    assert.equal(list.plan, plan);
+    assert.equal(list.quota, WORKSHOP_PAID_QUOTA);
+    assert.equal(list.max_file, WORKSHOP_MAX_FILE);
+  }
+
+  const {file, quota} = await upload(alice, 'large.pdf', large);
+  assert.equal(quota, WORKSHOP_PAID_QUOTA);
+  const filePath = path+'/files/'+file.id;
+  tick(60);
+  const over = await call(path, 'GET', null, alice);
+  assert.equal(over.plan, 'free');
+  assert.equal(over.quota, WORKSHOP_FREE_QUOTA);
+  assert.equal(over.used, large.length);
+  assert.equal((await call(filePath, 'GET', null, alice)).status, 200);
+  await fails(upload(alice, 'another.pdf', pdf()), 'quota_exceeded', 413);
+  await fails(replace(alice, file.id, pdf(WORKSHOP_FREE_QUOTA+50), {base:file.updated_at}), 'file_too_large', 413);
+  const stillOver = await replace(alice, file.id, pdf(WORKSHOP_FREE_QUOTA - 5), {base:file.updated_at});
+  assert.ok(stillOver.used > WORKSHOP_FREE_QUOTA);
+  const shrink = await replace(alice, file.id, pdf(), {base:stillOver.file.updated_at});
+  assert.equal(shrink.quota, WORKSHOP_FREE_QUOTA);
+  assert.equal(shrink.used, pdf().length);
+  assert.equal(shrink.file.id, file.id);
+  assert.ok((await upload(alice, 'new.pdf', pdf())).file);
+});
+
 test('the quota counts every file of the member and is checked in the insert too',async()=>{
   const {upload,R2,db}=setup();
   db.exec(`CREATE TABLE IF NOT EXISTS workshop_files (id TEXT PRIMARY KEY, owner_id INTEGER NOT NULL, folder TEXT NOT NULL DEFAULT '', name TEXT NOT NULL, size INTEGER NOT NULL, mime TEXT NOT NULL, r2_key TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)`);
-  db.prepare("INSERT INTO workshop_files VALUES('x',7,'','old.pdf',?, 'application/pdf','workshop/7/x',0,0)").run(WORKSHOP_QUOTA-50);
+  db.prepare("INSERT INTO workshop_files VALUES('x',7,'','old.pdf',?, 'application/pdf','workshop/7/x',0,0)").run(WORKSHOP_FREE_QUOTA-50);
   await fails(upload(alice,'over.pdf',pdf()),'quota_exceeded',413);
   assert.equal(R2.store.size,0);
   assert.ok((await upload(bob,'mine.pdf',pdf())).file,'another member has their own quota');
+
+  db.prepare("UPDATE workshop_files SET size=? WHERE id='x'").run(WORKSHOP_FREE_QUOTA-150);
+  const put = R2.put;
+  let arrivals = 0, release;
+  const gate = new Promise(resolve => { release = resolve; });
+  R2.put = async (...args) => {
+    if (++arrivals === 2) release();
+    await gate;
+    return put(...args);
+  };
+  const results = await Promise.allSettled([upload(alice,'one.pdf',pdf(90)),upload(alice,'two.pdf',pdf(90))]);
+  assert.equal(results.filter(x => x.status === 'fulfilled').length, 1);
+  assert.equal(results.find(x => x.status === 'rejected').reason.code, 'quota_exceeded');
+  assert.equal([...R2.store.keys()].filter(key => key.startsWith('workshop/7/')).length, 1);
 });
 
 test('folders: made with their parents, files moved in, renamed with everything inside, deleted only when empty',async()=>{
@@ -227,7 +281,7 @@ test('apps save in place: PUT …/content keeps the id, name and folder, checks 
 test('a replacement counts only the size difference against the quota, in the update itself',async()=>{
   const {upload,replace,R2,db}=setup();
   const f=(await upload(alice,'a.txt',Buffer.from('x'.repeat(100)))).file;
-  db.prepare("INSERT INTO workshop_files(id,owner_id,folder,name,size,mime,r2_key,created_at,updated_at) VALUES('y',7,'','big.pdf',?,'application/pdf','workshop/7/y',0,0)").run(WORKSHOP_QUOTA-150);
+  db.prepare("INSERT INTO workshop_files(id,owner_id,folder,name,size,mime,r2_key,created_at,updated_at) VALUES('y',7,'','big.pdf',?,'application/pdf','workshop/7/y',0,0)").run(WORKSHOP_FREE_QUOTA-150);
   assert.ok((await replace(alice,f.id,Buffer.from('y'.repeat(140)))).file,'40 more bytes fit');
   await fails(replace(alice,f.id,Buffer.from('z'.repeat(200))),'quota_exceeded',413);
   assert.equal(db.prepare('SELECT size FROM workshop_files WHERE id=?').get(f.id).size,140,'the file is unchanged');
