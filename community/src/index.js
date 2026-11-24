@@ -31,7 +31,7 @@ import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
 import { createGalleryRouter, activeGallery } from './galleries.js';
 import { createPracticeRouter, ensurePracticeSchema } from './practice-progress.js';
-import { createLearnerRouter, ensureLearnerSchema, learnerDeletion } from './learner-profile.js';
+import { createLearnerRouter, ensureLearnerSchema, learnerDeletion, listLearnerCountries } from './learner-profile.js';
 import { createLeagueRouter, ensureLeagueSchema, leagueDeletion, closeLeagueWeeks } from './league.js';
 import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { createHandoutRouter } from './handouts.js';
@@ -1620,6 +1620,10 @@ async function arena(p, m, body, me, req, env, url) {
     if (!isAdmin(me)) throw new HttpError(403, "forbidden");
     /* accounts suspended for an answer that instructed the grader: why (the matched passages), and lifting it */
     /* sign-ups, grading and Hasla AI use, as counts only (admin-stats.js) */
+    if (p === "/api/admin/member-countries" && m === "GET") {
+      await limit(env, "admin-member-countries:" + me.id, 90, 60);
+      return listLearnerCountries(env,{query:url.searchParams.get("q") || "",before:Number(url.searchParams.get("before"))});
+    }
     if (p === "/api/admin/stats" && m === "GET") return adminStats(env[DB_SCOPE] || env.DB, { days: url.searchParams.get("days") });
     if (p === "/api/admin/suspensions" && m === "GET") {
       await ensureSuspensionSchema(env.DB, env[DB_SCOPE] || env.DB);
