@@ -149,7 +149,7 @@ let expectedHtml=html.replace(/<script src="site-catalogue\.js(?:\?[^"\n]*)?"><\
   .replace(/<script src="site-runtime\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-runtime.js?v='+digest(read('site-runtime.js'))+'"></script>')
   .replace(/<script src="site-design\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-design.js?v='+digest(read('site-design.js'))+'"></script>')
   .replace(/<script src="learn-path\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="learn-path.js?v='+digest(read('learn-path.js'))+'"></script>');
-for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js','learner-form.js','league-view.js','weekly-set.js','workshop-connectors.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
+for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js','learner-form.js','league-view.js','weekly-set.js','workshop-connectors.js','share-publish.js','workshop-share.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
 expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
 outputs.set('index.html',expectedHtml);
 let examHtml=read('sim/exam.html');
@@ -169,12 +169,12 @@ for(const file of ['learn-path.js','learner-form.js','league-view.js','math-inpu
 outputs.set('practice.html',practiceHtml);
 /* the creations page (create.html): its own script and style, and the shared math and Python helpers it loads */
 let createHtml=read('create.html').replace(/href="create\.css(?:\?[^"\n]*)?"/,'href="create.css?v='+digest(read('create.css'))+'"');
-for(const file of ['math-input.js','compute-problems.js','code-editor.js','sim-templates.js','create-studio.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['math-input.js','compute-problems.js','code-editor.js','sim-templates.js','share-publish.js','share-makers.js','create-studio.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('create.html',createHtml);
 /* the teachers' page (teach.html): test builder and AI variants */
 let teachHtml=read('teach.html');
 for(const file of ['create.css','teach.css'])teachHtml=teachHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
-for(const file of ['learn-path.js','math-input.js','teach-tools.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['learn-path.js','math-input.js','teach-tools.js','share-publish.js','share-makers.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('teach.html',teachHtml);
 /* the figure editor (draw.html): its modules import each other, so each import carries the digest of the stamped file */
 {
@@ -184,7 +184,7 @@ outputs.set('teach.html',teachHtml);
   const drawJs=stampImports(read('draw.js'),ver);derivedSources.set('draw.js',drawJs);outputs.set('draw.js',drawJs);
   let drawHtml=read('draw.html');
   for(const file of ['create.css','draw.css'])drawHtml=drawHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
-  drawHtml=drawHtml.replace(/src="draw\.js(?:\?[^"\n]*)?"/,'src="draw.js?v='+digest(drawJs)+'"');
+  drawHtml=drawHtml.replace(/src="draw\.js(?:\?[^"\n]*)?"/,'src="draw.js?v='+digest(drawJs)+'"').replace(/src="share-publish\.js(?:\?[^"\n]*)?"/,'src="share-publish.js?v='+digest(read('share-publish.js'))+'"');
   outputs.set('draw.html',drawHtml);
 }
 outputs.set('concepts.html',read('concepts.html').replace(/href="concepts\.css(?:\?[^"\n]*)?"/,'href="concepts.css?v='+digest(read('concepts.css'))+'"').replace(/src="concepts\.js(?:\?[^"\n]*)?"/,'src="concepts.js?v='+digest(read('concepts.js'))+'"'));

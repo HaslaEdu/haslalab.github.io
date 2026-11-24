@@ -1206,9 +1206,11 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="hpho-proctor.js?v=c8b93c4e12fb"></script>
 <script src="hpho-phone.js?v=3a6015cc1217"></script>
 <script src="hpho-exam.js?v=a4e790f96370"></script>
-<script src="site-ux.js?v=5d2021353f65"></script>
+<script src="site-ux.js?v=f05cf4ce7e82"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="workshop-connectors.js?v=8596cfc6b3f4"></script>
+<script src="share-publish.js?v=c4278342f87e"></script>
+<script src="workshop-share.js?v=d231ee2c1b0c"></script>
 <script src="ai-chat.js?v=278f5546252e"></script>
 <script>
 "use strict";
@@ -5443,7 +5445,7 @@ function viewLearnLab(){
     <div class="lab-cards">
       ${card("#/learn/concepts",ko?"개념 시뮬레이션":LX("Concept simulations"),ko?`${C.concepts}개`:`${C.concepts}`,ko?"운동을 보며 값 하나를 바꾸고, 끝에 확인 문제 하나를 풉니다. 입문자용.":LX("Watch the motion, change one value, then answer one question. For beginners."),ko?"해 보기":LX("Play"))}
       ${card("#/learn/compute",ko?"계산물리":LX("Computational physics"),ko?`${C.compute}문제`:`${C.compute}`,ko?"시뮬레이션을 Python으로 짜면 브라우저 안에서 채점합니다.":LX("Write a simulation in Python; it is graded in your browser."),ko?"풀어 보기":LX("Solve"))}
-      ${card("#/workshop/create",ko?"작품 갤러리":LX("Creations gallery"),ko?"회원 작품":LX("by members"),ko?"회원이 만든 시뮬레이션과 가상 실험을 실행합니다. 직접 만들기는 워크샵에서 합니다.":LX("Run simulations and virtual experiments made by members. Making your own is in the Workshop."),ko?"둘러보기":LX("Browse"))}
+      ${card("#/workshop/share",ko?"작품 갤러리":LX("Creations gallery"),ko?"회원 작품":LX("by members"),ko?"회원이 만든 시뮬레이션, 그림, 문제 세트를 실행합니다. 직접 만들기는 워크샵에서 합니다.":LX("Run simulations, figures and problem sets made by members. Making your own is in the Workshop."),ko?"둘러보기":LX("Browse"))}
       ${card(ko?"problems.html":LX("problems-en.html"),ko?"실험 시뮬레이터":LX("Experiment simulators"),ko?`${nfmt(A.live)}개`:nfmt(A.live),ko?"올림피아드 실험 문제를 화면에서 측정합니다. HPhO 실험도 이 방식입니다.":LX("Take the readings of olympiad experiments on screen, the way HPhO's experiments work."),ko?"측정해 보기":LX("Measure"))}
     </div>
   </div>${adFitBanner("primary")}`;
@@ -5575,7 +5577,7 @@ function homeGoalMoment(d){
 /* Creations (create.html): simulations, virtual experiments and Python problems made by members, played and solved
    by anyone; the frame keeps its own address (gallery, a creation, the editor) and reports its height. */
 function viewWorkshopCreate(){
-  const ko=lang==="ko",label=ko?"시뮬레이션·가상실험 만들기":LX("Simulations and virtual experiments");
+  const ko=lang==="ko",label=wsTitle("create");
   const asked=new URLSearchParams(location.hash.split("?")[1]||""),query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   if(/^(?:gallery|play|edit)$/.test(asked.get("view")||""))query.set("view",asked.get("view"));
   if(/^(?:\d{1,9}|sample-[a-z]+)$/.test(asked.get("id")||""))query.set("id",asked.get("id"));
@@ -5590,9 +5592,11 @@ addEventListener("message",event=>{
 });
 
 function viewWorkshopMake(){
-  const ko=lang==="ko",label=ko?"문제·시험지 만들기":LX("Problems and tests");
+  const ko=lang==="ko",label=wsTitle("make");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
-  const tab=new URLSearchParams(location.hash.split("?")[1]||"").get("tab");if(tab==="vary"||tab==="tpl")query.set("tab",tab);
+  const asked=new URLSearchParams(location.hash.split("?")[1]||""),tab=asked.get("tab");if(tab==="vary"||tab==="tpl")query.set("tab",tab);
+  /* a shared problem set to open as a new paper (작품 공유's remix or "open in the editor") */
+  if(/^\d{1,9}$/.test(asked.get("share")||""))query.set("share",asked.get("share"));
   return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p></div>
     <iframe id="learnTeachFrame" class="learn-studio-frame" src="teach.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
 }
@@ -5605,7 +5609,7 @@ addEventListener("message",event=>{
 /* Figures and simulations (#/workshop/draw, draw.html): a mechanics figure drawn by value, printed on a test or run as a
    simulation; the frame reports its height like the problem maker's. */
 function viewWorkshopDraw(){
-  const ko=lang==="ko",label=ko?"물리 그림·시뮬레이션":LX("Physics figures and simulations");
+  const ko=lang==="ko",label=wsTitle("draw");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light"});
   const t=new URLSearchParams(location.hash.split("?")[1]||"").get("t");if(/^[a-z_]{2,24}$/.test(t||""))query.set("t",t);
   return `<div class="shell learn-studio learn-create"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${label}</p></div>
@@ -5620,7 +5624,9 @@ addEventListener("message",event=>{
 /* Workshop (#/workshop): making things for a class or a club. The problem and test maker (teach.html), the creations
    editor (create.html) and the storage moved here from Learn; #/learn/teach and #/learn/create redirect. */
 const WORKSHOP_MOVED={teach:"#/workshop/make",create:"#/workshop/create"};
-const WORKSHOP_TITLES={make:{ko:"문제·시험지 만들기",en:"Problems and tests"},draw:{ko:"그림·시뮬레이션",en:"Figures and simulations"},create:{ko:"시뮬레이션·가상실험 만들기",en:"Simulations and experiments"},storage:{ko:"보관함",en:"Storage"}};
+/* the bar's order: 문제 제작 · 그림 제작 · 전산물리 제작 · 작품 공유 · 보관함; older Workshop addresses of the sharing place redirect */
+const WORKSHOP_TITLES={make:{ko:"문제 제작",en:"Problems"},draw:{ko:"그림 제작",en:"Figures"},create:{ko:"전산물리 제작",en:"Computational physics"},share:{ko:"작품 공유",en:"Showcase"},storage:{ko:"보관함",en:"Storage"}};
+const WORKSHOP_ALIAS={gallery:"#/workshop/share",explore:"#/workshop/share",projects:"#/workshop/share"};
 const wsTitle=key=>lang==="ko"?WORKSHOP_TITLES[key].ko:LX(WORKSHOP_TITLES[key].en);
 function viewWorkshop(){
   const ko=lang==="ko",soon=ko?"준비 중":LX("Coming soon");
@@ -5630,10 +5636,11 @@ function viewWorkshop(){
   return `<div class="shell ws"><div class="phead"><h1>${UI[lang].navWork}</h1>
       <p class="learn-tool-copy">${ko?"수업과 동아리 활동에 쓸 문제, 시험지, 시뮬레이션을 만들고 보관하는 곳입니다.":LX("Make problems, tests and simulations for a class or a club, and keep them in one place.")}</p></div>
     <div class="ws-cards">
-      ${card("#/workshop/make",wsTitle("make"),ko?"하슬라랩 문제와 직접 쓴 문제로 시험지를 엮고, 숫자를 바꾼 문제와 정답표를 함께 인쇄합니다.":LX("Build a test from HaslaLab problems and your own, make number variants, and print it with the answer key."))}
-      ${card("#/workshop/create",wsTitle("create"),ko?"JavaScript 시뮬레이션이나 Python 문제를 만들어 올리고, 다른 회원의 작품을 고쳐 씁니다.":LX("Write a JavaScript simulation or a Python problem, post it, or remix one a member made."))}
+      ${card("#/workshop/make",wsTitle("make"),ko?"하슬라랩 문제와 직접 쓴 문제로 시험지를 엮어 정답표와 함께 인쇄합니다.":LX("Build a test from HaslaLab problems and your own, and print it with the answer key."))}
+      ${card("#/workshop/draw",wsTitle("draw"),ko?"빗면, 도르래, 회로 같은 물리 그림을 값으로 그리고 시뮬레이션으로 돌려 봅니다.":LX("Draw physics figures such as inclines, pulleys and circuits by value, and run them as simulations."))}
+      ${card("#/workshop/create",wsTitle("create"),ko?"브라우저에서 JavaScript 시뮬레이션이나 Python 문제를 코딩해 바로 실행합니다.":LX("Code a JavaScript simulation or a Python problem in the browser and run it at once."))}
+      ${card("#/workshop/share",wsTitle("share"),ko?"회원들이 공유한 작품을 실행해 보고, 리믹스해서 내 것으로 고쳐 씁니다.":LX("Run what members have shared, and remix a project to make it your own."))}
       ${card("#/workshop/storage",wsTitle("storage"),ko?"시험지, 실험 자료, 사진을 내 계정에 올려 두고 어디서나 내려받습니다.":LX("Keep tests, lab data and photos in your account and download them anywhere."))}
-      ${card("#/workshop/draw",ko?"물리 그림·시뮬레이션":LX("Physics figures and simulations"),ko?"빗면, 도르래, 용수철 그림을 값으로 그려 시험지에 넣고, 같은 그림을 시뮬레이션으로 돌려 봅니다.":LX("Draw inclines, pulleys and springs by value, put the figure on a test, and run it as a simulation."))}
       ${later(ko?"실험 도구":LX("Lab tools"),ko?"측정값으로 그래프와 맞춤선을 그리고, 실험 영상에서 물체의 위치를 따라갑니다.":LX("Plot readings and fit a line, and track an object through a video of an experiment."))}
     </div>
     <div class="ws-who">
@@ -5685,7 +5692,16 @@ async function wsFetch(method,path,body){
   if(!r.ok){const j=await r.json().catch(()=>({}));throw{code:j.error||"other",status:r.status};}
   return r;
 }
+/* the sharing place (#/workshop/share, workshop-share.js): the shell here, the pages drawn by HL_SHARE_PAGE */
+function workshopShareCtx(generation){
+  return {ko:lang==="ko",uiLang,LX,esc,api:cmApi,base:cmBase,av:cmAv,me:cmLoadMe,here:()=>generation===siteRenderSeq,title:wsTitle("share"),workshop:UI[lang].navWork};
+}
+function viewWorkshopShare(){
+  if(window.HL_SHARE_PAGE)return HL_SHARE_PAGE.view(workshopShareCtx(siteRenderSeq));
+  return `<div class="shell ws"><div class="phead"><p class="eyebrow"><a href="#/workshop">${UI[lang].navWork}</a> / ${wsTitle("share")}</p><h1>${wsTitle("share")}</h1></div><p class="ws-note" role="alert">${lang==="ko"?"페이지를 불러오지 못했습니다. 새로 고쳐 주세요.":LX("The page could not load. Please reload.")}</p></div>`;
+}
 function mountWorkshop(second,generation){
+  if(second==="share"){window.HL_SHARE_PAGE?.mount(workshopShareCtx(generation));return;}
   if(second==="storage"){mountWorkshopStorage(generation);return;}
   if(!second&&new URLSearchParams(location.hash.split("?")[1]||"").get("for")==="clubs")document.getElementById("wsClubs")?.scrollIntoView?.({block:"start"});
 }
@@ -10973,8 +10989,8 @@ function sectionLinks(section){
   if(section==="olympiad")return [["#/olympiad",ko?"올림피아드 홈":LX("Home"),h=>h==="#/olympiad"],["#/comps",ko?"대회":LX("Competitions"),h=>/^#\/(comps|archive\/contests)\b/.test(h)||!!DATA[h.slice(2).split("/")[0]]],["#/olympiad/schedule",ko?"일정":LX("Calendar"),h=>h==="#/olympiad/schedule"],
     ["#/monthly",UI[lang].navWeekly,h=>/^#\/(monthly|weekly|rank)\b/.test(h)],["#/hpho","HPhO",h=>/^#\/hpho\b/.test(h)]];
   if(section==="workshop")return [["#/workshop",ko?"워크샵 홈":LX("Workshop home"),h=>h==="#/workshop"],
-    ["#/workshop/make",WORKSHOP_TITLES.make[lang],h=>h==="#/workshop/make"],["#/workshop/draw",WORKSHOP_TITLES.draw[lang],h=>h==="#/workshop/draw"],["#/workshop/create",WORKSHOP_TITLES.create[lang],h=>h==="#/workshop/create"],
-    ["#/workshop/storage",WORKSHOP_TITLES.storage[lang],h=>h==="#/workshop/storage"]];
+    ["#/workshop/make",wsTitle("make"),h=>h==="#/workshop/make"],["#/workshop/draw",wsTitle("draw"),h=>h==="#/workshop/draw"],["#/workshop/create",wsTitle("create"),h=>h==="#/workshop/create"],
+    ["#/workshop/share",wsTitle("share"),h=>/^#\/workshop\/share(\/|$)/.test(h)],["#/workshop/storage",wsTitle("storage"),h=>h==="#/workshop/storage"]];
   /* exam mode (#/lab) left the bar: it opens from the past-papers archive, and old #/lab links still work */
   return [];
 }
@@ -11033,6 +11049,8 @@ function render(){
   /* the teachers' maker and the creations moved from Learn to the Workshop: old links keep working */
   const workshopMoved=first==="learn"&&WORKSHOP_MOVED[second];
   if(workshopMoved){const q=location.hash.split("?")[1],to=workshopMoved+(q?"?"+q:"");try{history.replaceState(null,"",to);}catch(e){location.hash=to;return;}return render();}
+  const shareAlias=first==="workshop"&&Object.hasOwn(WORKSHOP_ALIAS,second||"")&&WORKSHOP_ALIAS[second];
+  if(shareAlias){const rest=parts.slice(2).join("/"),q=location.hash.split("?")[1],to=shareAlias+(rest?"/"+rest:"")+(q?"?"+q:"");try{history.replaceState(null,"",to);}catch(e){location.hash=to;return;}return render();}
   const currentSearch=document.getElementById('learnSearchFrame');
   if(first==='learn'&&second==='physics'&&third==='search'&&currentSearch&&document.querySelector('.learn-search .phead')){
     document.querySelector('.learn-search .phead').innerHTML=learnSearchHeading();
@@ -11064,7 +11082,7 @@ function render(){
   if(first==="about"){            html=viewAbout();  active="about"; }
   else if(first==="olympiad"){    html=second==="schedule"&&window.HL_GUIDES?HL_GUIDES.scheduleView():viewOlympiad(); active="olympiad"; }
   else if(first==="learn"){       html=!second?viewLearnHome():second==="subjects"?viewLearn():second==="lab"?viewLearnLab():second==="courses"&&window.HL_GUIDES?HL_GUIDES.coursesView():second==="guide"&&window.HL_GUIDE?HL_GUIDE.view():second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="roadmap"?viewLearnRoadmap(roadmapAlias):second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():viewLearnSubject(second); active="learn"; }
-  else if(first==="workshop"){    html=second==="make"?viewWorkshopMake():second==="draw"?viewWorkshopDraw():second==="create"?viewWorkshopCreate():second==="storage"?viewWorkshopStorage():viewWorkshop(); active="workshop"; }
+  else if(first==="workshop"){    html=second==="make"?viewWorkshopMake():second==="draw"?viewWorkshopDraw():second==="create"?viewWorkshopCreate():second==="share"?viewWorkshopShare():second==="storage"?viewWorkshopStorage():viewWorkshop(); active="workshop"; }
   else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }

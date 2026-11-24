@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
-import {createWorkshopStorageRouter, workshopForgetUser, cleanFolder, cleanName, contentMatches, WORKSHOP_MAX_FILE, WORKSHOP_QUOTA} from './src/workshop-storage.js';
+import {createWorkshopStorageRouter, workshopForgetUser, cleanFolder, cleanName, contentMatches, WORKSHOP_MAX_FILE, WORKSHOP_QUOTA, WORKSHOP_KINDS} from './src/workshop-storage.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
@@ -20,9 +20,15 @@ function setup({r2=true}={}){
   const route=createWorkshopStorageRouter({HttpError:H,bad,now:()=>t,needUser:u=>{if(!u)throw new H(401,'login_required');return u;},limit:async(env,key,max,win)=>{limits.push([key,max,win]);}});
   const R2=r2?fakeR2():null,env={DB:D1,...(R2?{LAB_PAGES:R2}:{})};
   const call=(p,m,body,me,req)=>route(p,m,body,me,req||new Request('https://x.test'+p,{method:m==='HEAD'?'GET':m}),env);
-  const upload=(me,name,bytes,folder='')=>{const form=new FormData();form.set('file',new File([bytes],name));form.set('folder',folder);
+  const upload=(me,name,bytes,folder='',extra={})=>{const form=new FormData();form.set('file',new File([bytes],name));form.set('folder',folder);for(const [k,v] of Object.entries(extra))form.set(k,v);
     return route('/api/workshop/storage/files','POST',{},me,new Request('https://x.test/api/workshop/storage/files',{method:'POST',body:form}),env);};
-  return {db,R2,env,limits,call,upload,route,tick:s=>{t+=s;}};
+  /* PUT …/content: a multipart file (with kind, base) or the raw bytes (?kind, ?base) */
+  const replace=(me,id,bytes,{name,raw=false,kind,base}={})=>{
+    const path=`/api/workshop/storage/files/${id}/content`;
+    if(raw){const q=new URLSearchParams({...(kind?{kind}:{}),...(base!=null?{base:String(base)}:{})});return route(path,'PUT',{},me,new Request('https://x.test'+path+(q.size?'?'+q:''),{method:'PUT',body:bytes}),env);}
+    const form=new FormData();form.set('file',new File([bytes],name||'x'));if(kind)form.set('kind',kind);if(base!=null)form.set('base',String(base));
+    return route(path,'PUT',{},me,new Request('https://x.test'+path,{method:'PUT',body:form}),env);};
+  return {db,R2,env,limits,call,upload,replace,route,tick:s=>{t+=s;}};
 }
 const alice={id:7},bob={id:8};
 const pdf=(n=100)=>Buffer.concat([Buffer.from('%PDF-1.7\n'),Buffer.alloc(n,0x20),Buffer.from('\n%%EOF\n')]);
@@ -143,6 +149,65 @@ test('without the R2 binding nothing is stored; deleting the account removes eve
   assert.equal(await workshopForgetUser(env,7),2);
   assert.deepEqual([...R2.store.keys()].map(k=>k.split('/')[1]),['8']);
   assert.equal(db.prepare('SELECT COUNT(*) n FROM workshop_files WHERE owner_id=7').get().n,0);
+});
+
+test('apps save in place: PUT …/content keeps the id, name and folder, checks the type, and frees the old object',async()=>{
+  const {upload,replace,call,R2,db,tick}=setup();
+  const json=o=>Buffer.from(JSON.stringify(o));
+  const f=(await upload(alice,'중간고사.json',json({v:1}),'시험지',{kind:'paper',ensure_folder:'1'})).file;
+  assert.equal(f.kind,'paper');assert.equal(f.folder,'시험지','ensure_folder made the folder');
+  assert.deepEqual((await call('/api/workshop/storage','GET',null,alice)).folders,['시험지']);
+  const key0=db.prepare('SELECT r2_key FROM workshop_files WHERE id=?').get(f.id).r2_key;
+  tick(5);
+  const r=await replace(alice,f.id,json({v:2,items:[1,2,3]}),{name:'아무 이름.json'});
+  assert.equal(r.file.id,f.id);assert.equal(r.file.name,'중간고사.json');assert.equal(r.file.folder,'시험지');assert.equal(r.file.kind,'paper');
+  assert.equal(r.file.size,json({v:2,items:[1,2,3]}).length);assert.ok(r.file.updated_at>f.updated_at);assert.equal(r.used,r.file.size);
+  const key1=db.prepare('SELECT r2_key FROM workshop_files WHERE id=?').get(f.id).r2_key;
+  assert.notEqual(key1,key0);assert.match(key1,new RegExp(`^workshop/7/${f.id}-[0-9a-f]{12}$`));
+  assert.ok(!R2.store.has(key0),'the old object is gone');assert.equal(R2.store.size,1);
+  assert.deepEqual(JSON.parse(await (await call(`/api/workshop/storage/files/${f.id}`,'GET',null,alice)).text()),{v:2,items:[1,2,3]});
+  /* the raw body works too, with ?kind */
+  const raw=await replace(alice,f.id,json({v:3}),{raw:true,kind:'problem'});assert.equal(raw.file.kind,'problem');
+  /* base: a save over a version the page did not see is refused */
+  await fails(replace(alice,f.id,json({v:4}),{base:f.updated_at}),'changed',409);
+  assert.ok((await replace(alice,f.id,json({v:4}),{base:raw.file.updated_at})).file);
+  /* the file's own type only */
+  await fails(replace(alice,f.id,Buffer.from([0xff,0xfe,0,0x41])),'type_mismatch',415);
+  await fails(replace(alice,f.id,pdf(),{name:'a.pdf'}),'type_change',415);
+  await fails(replace(alice,f.id,Buffer.alloc(0)),'file_required');
+  await fails(replace(alice,f.id,json({v:1}),{kind:'virus'}),'bad_kind');
+  await fails(replace(bob,f.id,json({hack:1})),'not_found',404);
+  await fails(replace(alice,'0'.repeat(32),json({v:1})),'not_found',404);
+  await fails(call(`/api/workshop/storage/files/${f.id}/content`,'POST',{},alice),'method_not_allowed',405);
+  assert.equal(R2.store.size,1,'refused saves leave nothing behind');
+});
+
+test('a replacement counts only the size difference against the quota, in the update itself',async()=>{
+  const {upload,replace,R2,db}=setup();
+  const f=(await upload(alice,'a.txt',Buffer.from('x'.repeat(100)))).file;
+  db.prepare("INSERT INTO workshop_files(id,owner_id,folder,name,size,mime,r2_key,created_at,updated_at) VALUES('y',7,'','big.pdf',?,'application/pdf','workshop/7/y',0,0)").run(WORKSHOP_QUOTA-150);
+  assert.ok((await replace(alice,f.id,Buffer.from('y'.repeat(140)))).file,'40 more bytes fit');
+  await fails(replace(alice,f.id,Buffer.from('z'.repeat(200))),'quota_exceeded',413);
+  assert.equal(db.prepare('SELECT size FROM workshop_files WHERE id=?').get(f.id).size,140,'the file is unchanged');
+  assert.equal(R2.store.size,1);
+});
+
+test('kinds: tagged at upload or later, listed by kind and folder (newest first)',async()=>{
+  const {upload,call,tick}=setup();
+  assert.deepEqual(WORKSHOP_KINDS,['file','paper','problem','figure','sim']);
+  await fails(upload(alice,'a.json',Buffer.from('{}'),'',{kind:'exe'}),'bad_kind');
+  const a=(await upload(alice,'a.json',Buffer.from('{}'),'그림',{kind:'figure',ensure_folder:'1'})).file;tick(3);
+  const b=(await upload(alice,'b.svg',Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"></svg>'),'그림',{kind:'figure'})).file;
+  await upload(alice,'c.pdf',pdf());
+  const q=(qs,me=alice)=>call('/api/workshop/storage','GET',null,me,new Request('https://x.test/api/workshop/storage?'+qs));
+  assert.deepEqual((await q('kind=figure')).files.map(f=>f.name),['b.svg','a.json']);
+  assert.deepEqual((await q('kind=file')).files.map(f=>f.name),['c.pdf']);
+  assert.deepEqual((await q('folder='+encodeURIComponent('그림'))).files.map(f=>f.id),[b.id,a.id]);
+  assert.equal((await q('kind=figure',bob)).files.length,0);
+  await fails(q('kind=nope'),'bad_kind');
+  assert.equal((await call(`/api/workshop/storage/files/${a.id}`,'PATCH',{kind:'sim'},alice)).file.kind,'sim');
+  await fails(call(`/api/workshop/storage/files/${a.id}`,'PATCH',{kind:'x'},alice),'bad_kind');
+  assert.equal((await call('/api/workshop/storage','GET',null,alice)).files.find(f=>f.id===a.id).kind,'sim');
 });
 
 test('names and folders are cleaned the same way everywhere',()=>{

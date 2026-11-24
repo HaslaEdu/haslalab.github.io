@@ -3,7 +3,13 @@
    with the AI (each checked by evaluating the stated calculation and by a second, independent solve), tag each problem
    with a unit and a level for the exam blueprint, print the paper with its answer key and blueprint, or send the bank
    problems to a class as an assignment. The server parts are /api/learn/variants and /api/learn/classes
-   (community/src/learn-services.js). The paper and the template being written stay in this browser (localStorage). */
+   (community/src/learn-services.js). The paper and the template being written are kept in this browser (localStorage) as
+   a draft; a signed-in teacher saves the paper into HaslaLab storage (보관함, folder "시험지", kind 'paper'), and once it
+   has a file there every change is saved back into that same file (PUT …/files/:id/content, community/src/workshop-storage.js);
+   "이 문제만 저장" keeps one problem in the folder "문제" (kind 'problem'), and "보관함에서 열기" opens either. The AI tab
+   writes new problems from a prompt (POST /api/workshop/ai/problem, community/src/workshop-ai.js), each with our own
+   check of its answer; a figure it draws is rendered with the figure editor's renderer (draw-render.mjs). There is no
+   PDF file pipeline: printing goes through the browser's print dialog, so a PDF is not saved into storage from here. */
 (()=>{
   'use strict';
   const $=id=>document.getElementById(id),params=new URL(location.href).searchParams;
@@ -73,6 +79,44 @@
     err:{variant_limit:'You have used today\'s runs. A teacher plan gives 40 a day.',ai_failed:'The AI could not write the problems. Try again.',ai_unavailable:'The AI is not available right now.',
       login_required:'Log in first.',rate_limited:'Try again in a moment.',bad_source:'Add a source problem.',bad_items:'No problems to send.',bad_title:'Enter a test name.',class_not_found:'Class not found.'}
   };
+  /* storage (보관함) and the AI maker */
+  const X=ko?{tabAi:'AI로 문제 만들기',save:'보관함에 저장',open:'보관함에서 열기',saveOne:'이 문제만 저장',folderPaper:'시험지',folderProblem:'문제',
+      local:'이 기기에만 임시 저장되어 있습니다. 로그인하면 보관함에 저장됩니다.',unsaved:'아직 보관함에 저장하지 않았습니다.',cloud:(n,t)=>`보관함 ‘${n}’에 저장됨 · ${t}`,saving:'보관함에 저장하는 중…',
+      savedOne:n=>`보관함 ‘${n}’에 저장했습니다.`,openTitle:'보관함에서 열기',papers:'시험지',problems:'문제',none:'저장한 것이 없습니다.',close:'닫기',opened:'열었습니다.',
+      addedOne:'시험지에 넣었습니다.',badFile:'이 파일은 시험지나 문제 파일이 아닙니다.',replaceAsk:'지금 시험지를 보관함의 시험지로 바꿀까요? (지금 시험지가 보관함에 없으면 사라집니다)',
+      newPaper:'새 시험지',newAsk:'새 시험지를 시작할까요? 지금 시험지는 보관함에 저장된 그대로 남습니다.',
+      ai:{title:'AI로 문제 만들기',how:'만들고 싶은 문제를 적으면 AI가 문제, 답, 해설을 씁니다. 답은 하슬라랩이 따로 계산해 맞는지 확인하고, 객관식은 정답이 하나뿐인지 봅니다.',
+        prompt:'어떤 문제를 만들까요?',promptPh:'예) 빗면 위 물체의 운동, 마찰 계수 0.2, 가속도를 묻는 문제',unit:'단원 (선택)',level:'난이도',count:'몇 문제',format:'형식',model:'AI 모델',fig:'그림도 같이',
+        levels:{easy:'쉬움',medium:'보통',hard:'어려움',olympiad:'올림피아드'},formats:{mc:'객관식',short:'단답형',written:'서술형'},
+        auto:'자동 (가장 저렴한 모델)',notConf:'설정 안 됨',make:'만들기',making:'만드는 중입니다… 30초쯤 걸립니다.',left:n=>`오늘 ${n}번 더 만들 수 있습니다.`,
+        ok:'검증됨',mismatch:'확인 필요 · 계산이 답과 다름',unverified:'확인 필요 · 검산할 수 없음',fixed:'정답 번호를 계산에 맞게 고침',tplOk:'숫자 바꾼 문제 틀 있음',
+        answer:'답',solution:'해설',rubric:'채점 기준',toPaper:'시험지에 넣기',inPaper:'시험지에 넣었습니다.',toTpl:'숫자 바꾼 문제로',editFig:'그림 편집기에서 열기',noFig:'그림을 그리지 못했습니다. 그림 편집기에서 열어 보세요.',
+        verify:'검증됨은 AI가 적은 계산식을 하슬라랩이 다시 계산해 답과 같다는 뜻입니다. 시험에 쓰기 전에 직접 풀어 보세요.',
+        err:{ai_limit:'오늘 만들 수 있는 횟수를 다 썼습니다.',busy:'오늘은 AI 사용량이 많아 잠시 멈췄습니다. 내일 다시 시도해 주세요.',not_configured:'고른 AI 모델이 아직 설정되지 않았습니다. 다른 모델을 고르세요.',
+          ai_failed:'AI가 답하지 못했습니다. 다시 시도해 주세요.',ai_unusable:'AI의 답이 확인을 통과하지 못했습니다. 요청을 조금 바꿔 다시 시도해 주세요.',bad_prompt:'만들 문제를 1500자 안으로 적으세요.'}}}
+    :{tabAi:'Make with AI',save:'Save to Storage',open:'Open from Storage',saveOne:'Save this problem',folderPaper:'Test papers',folderProblem:'Problems',
+      local:'Kept on this device only. Log in to save to Storage.',unsaved:'Not saved to Storage yet.',cloud:(n,t)=>`Saved in Storage as “${n}” · ${t}`,saving:'Saving to Storage…',
+      savedOne:n=>`Saved to Storage as “${n}”.`,openTitle:'Open from Storage',papers:'Test papers',problems:'Problems',none:'Nothing saved yet.',close:'Close',opened:'Opened.',
+      addedOne:'Added to the paper.',badFile:'This file is not a test paper or a problem.',replaceAsk:'Replace the current paper with the one from Storage? (The current paper is lost unless it is in Storage.)',
+      newPaper:'New paper',newAsk:'Start a new paper? The current one stays in Storage as saved.',
+      ai:{title:'Make problems with AI',how:'Describe the problems you want and the AI writes them with answers and solutions. HaslaLab recomputes each answer, and checks that a multiple-choice problem has exactly one right choice.',
+        prompt:'What should the problems be about?',promptPh:'e.g. a block on an incline with friction 0.2; ask for the acceleration',unit:'Unit (optional)',level:'Level',count:'How many',format:'Format',model:'AI model',fig:'With a figure',
+        levels:{easy:'Easy',medium:'Medium',hard:'Hard',olympiad:'Olympiad'},formats:{mc:'Multiple choice',short:'Short answer',written:'Written'},
+        auto:'Auto (cheapest model)',notConf:'not set up',make:'Make',making:'Working… about 30 seconds.',left:n=>`${n} more today.`,
+        ok:'Verified',mismatch:'Check · the calculation differs from the answer',unverified:'Check · could not be recomputed',fixed:'Answer key corrected to match the calculation',tplOk:'has a number-variant template',
+        answer:'Answer',solution:'Solution',rubric:'Marking scheme',toPaper:'Add to the paper',inPaper:'Added to the paper.',toTpl:'Open as number variants',editFig:'Open in the figure editor',noFig:'The figure could not be drawn here. Open it in the figure editor.',
+        verify:'Verified means HaslaLab recomputed the AI\'s own calculation and it matches the answer. Solve each problem yourself before you use it.',
+        err:{ai_limit:'You have used today\'s runs.',busy:'AI use is paused for today because of high demand. Try again tomorrow.',not_configured:'That AI model is not set up yet. Pick another one.',
+          ai_failed:'The AI did not answer. Try again.',ai_unusable:'The AI\'s answer did not pass the checks. Rephrase the request and try again.',bad_prompt:'Describe the problems in at most 1500 characters.'}}};
+  /* sharing the paper in 작품 공유 (share-publish.js, share-makers.js) */
+  const SH=ko?{share:'공유하기',update:'공유 내용 업데이트',stop:'공유 취소',view:'작품 공유에서 보기',login:'로그인하면 이 시험지를 문제 세트로 작품 공유에 올릴 수 있습니다.',
+      live:'작품 공유에 올라가 있습니다.',draft:'리믹스한 문제 세트입니다. 공유하기를 누르면 이 리믹스로 올라갑니다.',stopAsk:'공유를 취소할까요? 작품 공유 목록에서 사라집니다.',stopped:'공유를 취소했습니다.',
+      loading:'공유된 문제 세트를 불러오는 중…',loaded:t=>`작품 공유의 ‘${t}’을(를) 새 시험지로 열었습니다. 앞의 시험지는 보관함에 저장된 그대로 남습니다.`,
+      ask:'저장하지 않은 시험지가 있습니다. 공유된 문제 세트를 새 시험지로 열면 지금 시험지는 사라집니다. 열까요?',kept:'지금 시험지를 그대로 두었습니다.',notSet:'이 작품은 문제 세트가 아닙니다.',failed:'공유된 문제 세트를 불러오지 못했습니다.'}
+    :{share:'Share',update:'Update the shared copy',stop:'Stop sharing',view:'View in the gallery',login:'Log in to share this paper in the gallery as a problem set.',
+      live:'Shared in the gallery.',draft:'A remixed problem set. Sharing publishes this remix.',stopAsk:'Stop sharing? It leaves the gallery.',stopped:'No longer shared.',
+      loading:'Loading the shared problem set…',loaded:t=>`Opened “${t}” from the gallery as a new paper. Your previous paper stays in Storage as saved.`,
+      ask:'This paper is not saved. Opening the shared problem set as a new paper replaces it. Open it?',kept:'Kept the current paper.',notSet:'This project is not a problem set.',failed:'Could not load the shared problem set.'};
   const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const API=(()=>{let o='';try{o=localStorage.getItem('hlCmApi')||'';}catch(e){}return(/^https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev\/?$/.test(o)?o:'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/,'');})();
   const token=()=>{try{const v=localStorage.getItem('hlCmTok')||'';return /^[A-Za-z0-9_-]{20,4096}$/.test(v)?v:'';}catch(e){return '';}};
@@ -130,13 +174,13 @@
   const KEY='hlTeachPaper';
   const blank=()=>({title:'',school:'',info:'',minutes:'',note:'',two:true,key:true,sol:false,space:false,bp:false,items:[]});
   let paper=(()=>{try{const p=JSON.parse(localStorage.getItem(KEY)||'null');return p&&Array.isArray(p.items)?{...blank(),...p}:blank();}catch(e){return blank();}})();
-  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(paper));}catch(e){}};
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(paper));}catch(e){}cloudSoon();};
   /* a figure from the figure editor (draw.js): an SVG data URL, its size and the scene it was drawn from. Only an
      SVG of a sane size is shown; as an <img> it cannot run anything */
   const figOf=own=>{const f=own?.fig;return f&&typeof f.src==='string'&&f.src.length<400000&&/^data:image\/svg\+xml;base64,[A-Za-z0-9+/]+=*$/.test(f.src)?{src:f.src,w:Math.max(40,Math.min(2000,+f.w||800)),h:Math.max(20,Math.min(3000,+f.h||400))}:null;};
   const figHtml=own=>{const f=figOf(own);return f?`<figure class="dfig"><img src="${f.src}" width="${f.w}" height="${f.h}" alt="${T.fig}"></figure>`:'';};
   /* the editor writes the paper while this page may be open in another tab */
-  addEventListener('storage',e=>{if(e.key!==KEY)return;try{const p=JSON.parse(e.newValue||'null');if(p&&Array.isArray(p.items)){paper={...blank(),...p};if(state.tab==='paper')paintPaper();}}catch(x){}});
+  addEventListener('storage',e=>{if(e.key!==KEY)return;try{const p=JSON.parse(e.newValue||'null');if(p&&Array.isArray(p.items)){paper={...blank(),...p};cloudSoon();if(state.tab==='paper')paintPaper();}}catch(x){}});
   /* the number-variant template being written, kept the same way */
   const TPL_KEY='hlTeachTemplate';
   const tplBlank=()=>({template:'',params:{},formula:'',unit:'',constants:'',sig:3,n:5,bpUnit:''});
@@ -147,18 +191,18 @@
   /* a problem's place in the blueprint: what the teacher picked, else the bank's unit and "understanding" */
   const bpOf=(p,item)=>({unit:p.bp?.unit??(item?unitName(item.unit):''),level:LEVELS.includes(p.bp?.level)?p.bp.level:'understand'});
 
-  const state={tab:['vary','tpl'].includes(params.get('tab'))?params.get('tab'):'paper',tplOut:[],src:'ap1',unit:'',level:'',q:'',shown:30,list:[],source:null,variants:[],busy:false,me:null,plan:null,classes:null};
+  const state={tab:['vary','tpl','ai'].includes(params.get('tab'))?params.get('tab'):'paper',tplOut:[],src:'ap1',unit:'',level:'',q:'',shown:30,list:[],source:null,variants:[],busy:false,me:null,plan:null,classes:null};
 
   function shell(){
     $('app').innerHTML=`<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div></div>
-      <div class="seg tabs" role="tablist">${[['paper',T.tabPaper],['tpl',T.tabTpl],['vary',T.tabVar]].map(([k,n])=>`<button type="button" role="tab" aria-selected="${state.tab===k}" data-tab="${k}" class="${state.tab===k?'on':''}">${n}</button>`).join('')}
+      <div class="seg tabs" role="tablist">${[['paper',T.tabPaper],['tpl',T.tabTpl],['vary',T.tabVar],['ai',X.tabAi]].map(([k,n])=>`<button type="button" role="tab" aria-selected="${state.tab===k}" data-tab="${k}" class="${state.tab===k?'on':''}">${n}</button>`).join('')}
         <button type="button" data-class="1">${T.tabClass}</button></div>
       <div id="loginNote"></div><div class="cols"><section class="panel" id="bankPanel"></section><section class="panel" id="rightPanel"></section></div>
       <datalist id="bpUnits">${[...(P()?.SUBTOPICS||new Map()).keys()].map(k=>`<option value="${esc(unitName(k))}">`).join('')}</datalist>`;
     $('app').querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;shell();});
     $('app').querySelector('[data-class]').onclick=()=>window.top.location.assign('/#/learn/practice?mode=class');
     if(!token()&&state.tab!=='tpl')$('loginNote').innerHTML=`<p class="note">${T.login} <a class="btn" href="/#/login" target="_top">${T.loginBtn}</a></p>`;
-    paintBank();state.tab==='paper'?paintPaper():state.tab==='tpl'?paintTpl():paintVary();
+    paintBank();state.tab==='paper'?paintPaper():state.tab==='tpl'?paintTpl():state.tab==='ai'?paintAi():paintVary();
   }
 
   async function paintBank(){
@@ -210,9 +254,11 @@
         <label>${T.pMin}<input data-f="minutes" inputmode="numeric" value="${esc(paper.minutes)}"></label><label>${T.pNote}<input data-f="note" value="${esc(paper.note)}"></label></div>
       <div class="opts">${[['two',T.two],['key',T.key],['sol',T.sol],['space',T.space],['bp',T.bp.attach]].map(([k,n])=>`<label><input type="checkbox" data-o="${k}"${paper[k]?' checked':''}>${n}</label>`).join('')}</div>
       <div class="plist">${items.length?items.map((x,i)=>`<div class="pitem" data-i="${i}"><span class="n">${i+1}</span><span class="t">${figOf(x.own)?`<img class="fthumb" src="${figOf(x.own).src}" alt="">`:''}${esc(label(x))}${x.own?`<span class="own">${T.own}</span>`:''}</span>
-        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts">${figOf(x.own)&&x.own.fig.scene?`<button type="button" data-fig>${T.editFig}</button>`:''}<button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-del title="${T.del}">✕</button></span>
+        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts">${x.own?`<button type="button" data-one title="${X.saveOne}">${X.saveOne}</button>`:''}${figOf(x.own)&&x.own.fig.scene?`<button type="button" data-fig>${T.editFig}</button>`:''}<button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-del title="${T.del}">✕</button></span>
         <span class="pbp"><input data-bpu list="bpUnits" maxlength="40" value="${esc(bpOf(x,x.item).unit)}" placeholder="${T.bp.unit}" aria-label="${T.bp.unit}"><select data-bpl aria-label="${T.bp.level}">${LEVELS.map(l=>`<option value="${l}"${bpOf(x,x.item).level===l?' selected':''}>${T.bp.levels[l]}</option>`).join('')}</select></span></div>`).join(''):`<p class="empty">${T.empty}</p>`}</div>
       ${items.length?`<details class="bpbox" id="bpBox"${paper.bp?' open':''}><summary>${T.bp.title}</summary><p class="note">${T.bp.note}</p><div id="bpTable"></div></details>`:''}
+      <div class="row store-row"><button type="button" class="primary" id="stSave">${X.save}</button><button type="button" id="stOpen">${X.open}</button><button type="button" id="stNew">${X.newPaper}</button><span class="note" id="stStatus" role="status">${esc(cloudStatus())}</span></div>
+      <div class="row share-row" id="shareRow"></div>
       <div class="row"><a class="btn" href="/#/workshop/draw" target="_top">${T.drawFig}</a></div>
       <div class="row"><button type="button" class="primary" id="print"${items.length?'':' disabled'}>${T.print}</button><button type="button" id="assign"${items.some(x=>!x.own)?'':' disabled'}>${T.assign}</button><button type="button" id="clear"${items.length?'':' disabled'}>${T.clear}</button></div>
       <div id="assignBox"></div>`;
@@ -224,16 +270,253 @@
       el.querySelector('[data-up]').onclick=()=>{if(i>0){[paper.items[i-1],paper.items[i]]=[paper.items[i],paper.items[i-1]];save();paintPaper();}};
       el.querySelector('[data-down]').onclick=()=>{if(i<paper.items.length-1){[paper.items[i+1],paper.items[i]]=[paper.items[i],paper.items[i+1]];save();paintPaper();}};
       el.querySelector('[data-del]').onclick=()=>{paper.items.splice(i,1);save();paintPaper();paintItems();};
+      const ob=el.querySelector('[data-one]');if(ob)ob.onclick=()=>saveProblem(paper.items[i],$('stStatus'));
       const fb=el.querySelector('[data-fig]');if(fb)fb.onclick=()=>{try{localStorage.setItem('hlDrawEdit',JSON.stringify({key:paper.items[i].key,scene:paper.items[i].own.fig.scene}));}catch(e){}window.top.location.assign(embedded?'/#/workshop/draw':'draw.html');};
       const bpSet=()=>{paper.items[i].bp={unit:el.querySelector('[data-bpu]').value.trim().slice(0,40),level:el.querySelector('[data-bpl]').value};save();paintBlueprint(items);};
       el.querySelector('[data-bpu]').onchange=bpSet;el.querySelector('[data-bpl]').onchange=bpSet;
       el.querySelector('[data-vary]').onclick=()=>{const x=items[i];state.source=x.own?{q:x.own.q,answerPlain:x.own.answer,sol:x.own.sol,plainCh:x.own.choices||[],qHtml:textHtml(x.own.q)}:x.item;state.tab='vary';shell();};
     });
-    paintBlueprint(items);
+    paintBlueprint(items);paintShare();
     $('print').onclick=()=>printPaper(items);
     $('clear').onclick=()=>{if(confirm(T.clearAsk)){paper=blank();save();paintPaper();paintItems();}};
     $('assign').onclick=()=>assignBox(items);
+    $('stSave').onclick=()=>saveCloud(false);$('stOpen').onclick=openDialog;
+    $('stNew').onclick=()=>{if(!paper.items.length&&!paper.store)return;if(!confirm(paper.store?X.newAsk:T.clearAsk))return;paper=blank();save();paintPaper();paintItems();};
     typeset(box);height();
+  }
+
+  /* ── HaslaLab storage (보관함): the paper as one JSON file saved in place, single problems beside it ── */
+  async function form(path,method,fd){
+    let r;try{r=await fetch(API+path,{method,headers:{Authorization:'Bearer '+token()},body:fd});}catch(e){throw Object.assign(new Error('network'),{code:'network'});}
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error||'api '+r.status),{code:j.error,status:r.status});return j;
+  }
+  /* a JSON document into storage: in place when it has a file id (the same file, the same name), else a new file in folder */
+  async function putDoc({id,name,folder,kind,data}){
+    const text=JSON.stringify(data),file=()=>new File([text],name,{type:'application/json'});
+    if(id){
+      const fd=new FormData();fd.append('file',file());fd.append('kind',kind);
+      try{return (await form('/api/workshop/storage/files/'+id+'/content','PUT',fd)).file;}catch(e){if(e.status!==404)throw e;}
+    }
+    const fd=new FormData();fd.append('file',file());fd.append('folder',folder);fd.append('kind',kind);fd.append('ensure_folder','1');
+    return (await form('/api/workshop/storage/files','POST',fd)).file;
+  }
+  async function getDoc(id){
+    const r=await fetch(API+'/api/workshop/storage/files/'+encodeURIComponent(id),{headers:{Authorization:'Bearer '+token()}});
+    if(!r.ok){const j=await r.json().catch(()=>({}));throw Object.assign(new Error(j.error||'api'),{code:j.error,status:r.status});}
+    return JSON.parse(await r.text());
+  }
+  const safeName=t=>(String(t||'').replace(/[\\/:*?"<>|\u0000-\u001f]+/g,' ').replace(/\s+/g,' ').trim().slice(0,60)||X.folderPaper)+'.json';
+  const timeText=ms=>new Date(ms).toLocaleString(ko?'ko-KR':'en-GB',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  function cloudStatus(){
+    if(!token())return X.local;
+    return paper.store?.id?X.cloud((paper.store.folder?paper.store.folder+'/':'')+paper.store.name,timeText((paper.store.at||0)*1000)):X.unsaved;
+  }
+  let cloudT=0,cloudLast=0,cloudBusy=false,cloudAgain=false;
+  /* every change of a paper that is in storage goes back into that file: 4 s after the last change, at most every 30 s */
+  function cloudSoon(){
+    if(!token()||!paper.store?.id)return;
+    clearTimeout(cloudT);cloudT=setTimeout(()=>saveCloud(true),Math.max(4000,cloudLast+30000-Date.now()));
+  }
+  async function paperDoc(){
+    const items=await Promise.all(paper.items.map(async p=>({...p,item:p.own?null:await itemOf(p.key).catch(()=>null)})));
+    const rows=items.map(x=>({...bpOf(x,x.item),pts:x.pts}));
+    const {store,...rest}=paper;
+    return {format:'haslalab-paper',version:1,saved_at:Date.now(),paper:rest,template:tpl,variants:state.tplOut.slice(0,30),blueprint:TT()?.blueprint(rows)||null};
+  }
+  async function saveCloud(quiet){
+    const st=$('stStatus');
+    if(!token()){if(st&&!quiet)st.innerHTML=`<span class="bad">${esc(X.local)}</span> <a class="btn" href="/#/login" target="_top">${T.loginBtn}</a>`;return;}
+    if(cloudBusy){cloudAgain=true;return;}
+    cloudBusy=true;clearTimeout(cloudT);if(st&&!quiet)st.textContent=X.saving;
+    try{
+      const f=await putDoc({id:paper.store?.id,name:paper.store?.name||safeName(paper.title),folder:X.folderPaper,kind:'paper',data:await paperDoc()});
+      paper.store={id:f.id,name:f.name,folder:f.folder,at:f.updated_at};cloudLast=Date.now();
+      try{localStorage.setItem(KEY,JSON.stringify(paper));}catch(e){}
+      const s2=$('stStatus');if(s2)s2.textContent=cloudStatus();
+    }catch(e){const s2=$('stStatus');if(s2)s2.innerHTML=`<span class="bad">${esc(storeErr(e))}</span>`;}
+    finally{cloudBusy=false;if(cloudAgain){cloudAgain=false;cloudSoon();}}
+  }
+  const storeErr=e=>({quota_exceeded:ko?'보관함 용량이 모자랍니다.':'Your storage is full.',file_too_large:ko?'파일이 너무 큽니다.':'The file is too large.',r2_unavailable:ko?'지금은 보관함을 쓸 수 없습니다.':'Storage is not available right now.',
+    network:ko?'서버에 연결하지 못했습니다.':'Could not reach the server.',not_found:ko?'보관함에서 파일을 찾지 못했습니다.':'The file is no longer in Storage.'})[e.code]||errText(e);
+  /* one problem of the paper (or of the AI) as its own file in the folder "문제" */
+  async function saveProblem(item,out){
+    if(!token()){if(out)out.innerHTML=`<span class="bad">${esc(X.local)}</span>`;return;}
+    const own=item.own||{},name=safeName((own.q||'').replace(/\$[^$]*\$/g,'').slice(0,40)||X.folderProblem);
+    try{const f=await putDoc({name,folder:X.folderProblem,kind:'problem',data:{format:'haslalab-problem',version:1,saved_at:Date.now(),item:{pts:item.pts||3,own,...(item.bp?{bp:item.bp}:{}),...(item.template?{template:item.template}:{})}}});
+      if(out)out.innerHTML=`<span class="ok">${esc(X.savedOne((f.folder?f.folder+'/':'')+f.name))}</span>`;}
+    catch(e){if(out)out.innerHTML=`<span class="bad">${esc(storeErr(e))}</span>`;}
+  }
+  /* what a saved file may bring back: plain fields of the shapes this page writes, nothing else */
+  const cleanOwn=o=>{if(!o||typeof o!=='object')return null;const s=(v,n)=>typeof v==='string'?v.slice(0,n):'';
+    const out={q:s(o.q,4000),answer:s(o.answer,400),unit:s(o.unit,24),sol:s(o.sol,4000)};
+    if(Array.isArray(o.choices)){out.choices=o.choices.filter(c=>typeof c==='string').slice(0,5).map(c=>c.slice(0,400));out.correct=Number.isInteger(o.correct)&&o.correct>=0&&o.correct<out.choices.length?o.correct:0;}
+    if(Array.isArray(o.rubric))out.rubric=o.rubric.slice(0,8).filter(r=>r&&typeof r.desc==='string').map(r=>({desc:r.desc.slice(0,300),pts:+r.pts||0}));
+    const f=figOf(o);if(f)out.fig={...f,...(o.fig.scene&&typeof o.fig.scene==='object'?{scene:o.fig.scene}:{})};
+    return out;};
+  const cleanItem=x=>{if(!x||typeof x!=='object'||typeof x.key!=='string')return null;const it={key:x.key.slice(0,80),pts:Math.max(0,Math.min(100,+x.pts||0))};
+    if(x.own){const o=cleanOwn(x.own);if(!o)return null;it.own=o;}else if(!/^[a-z0-9]+:[^\s<>"]{1,70}$/i.test(it.key))return null;
+    if(x.bp&&typeof x.bp==='object')it.bp={unit:String(x.bp.unit||'').slice(0,40),level:LEVELS.includes(x.bp.level)?x.bp.level:'understand'};
+    return it;};
+  async function openDialog(){
+    if(!token()){$('stStatus').innerHTML=`<span class="bad">${esc(X.local)}</span> <a class="btn" href="/#/login" target="_top">${T.loginBtn}</a>`;return;}
+    let dlg=$('stDlg');if(!dlg){dlg=document.createElement('dialog');dlg.id='stDlg';dlg.className='stdlg';document.body.append(dlg);}
+    let kind='paper';
+    const paint=async()=>{
+      dlg.innerHTML=`<div class="dlg-head"><h2>${X.openTitle}</h2><button type="button" data-x aria-label="${X.close}">✕</button></div>
+        <div class="seg">${[['paper',X.papers],['problem',X.problems]].map(([k,n])=>`<button type="button" data-k="${k}" class="${k===kind?'on':''}">${n}</button>`).join('')}</div>
+        <div class="dlg-list"><p class="note">${T.loading}</p></div><p class="note" data-msg></p>`;
+      dlg.querySelector('[data-x]').onclick=()=>dlg.close();
+      dlg.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{kind=b.dataset.k;paint();});
+      let files=[];
+      try{files=(await api('/api/workshop/storage?kind='+kind)).files||[];}catch(e){dlg.querySelector('.dlg-list').innerHTML=`<p class="bad">${esc(storeErr(e))}</p>`;return;}
+      const list=dlg.querySelector('.dlg-list');
+      list.innerHTML=files.length?files.map(f=>`<button type="button" class="dlg-file${paper.store?.id===f.id?' on':''}" data-id="${f.id}"><b>${esc(f.name)}</b><span>${esc(f.folder||'/')} · ${timeText(f.updated_at*1000)} · ${Math.max(1,Math.round(f.size/1024))} KB</span></button>`).join(''):`<p class="empty">${X.none}</p>`;
+      list.querySelectorAll('[data-id]').forEach(b=>b.onclick=async()=>{
+        const f=files.find(x=>x.id===b.dataset.id),msg=dlg.querySelector('[data-msg]');
+        try{
+          const d=await getDoc(f.id);
+          if(kind==='paper'){
+            if(d?.format!=='haslalab-paper'||!d.paper||!Array.isArray(d.paper.items))throw Object.assign(new Error('bad'),{code:'bad_file'});
+            if(paper.items.length&&paper.store?.id!==f.id&&!confirm(X.replaceAsk))return;
+            const p=d.paper,str=(v,n)=>typeof v==='string'?v.slice(0,n):'';
+            paper={...blank(),title:str(p.title,120),school:str(p.school,120),info:str(p.info,120),minutes:str(p.minutes,120),note:str(p.note,120),
+              ...Object.fromEntries(['two','key','sol','space','bp'].map(k=>[k,!!p[k]])),items:p.items.slice(0,200).map(cleanItem).filter(Boolean),store:{id:f.id,name:f.name,folder:f.folder,at:f.updated_at}};
+            if(d.template&&typeof d.template==='object'&&d.template.params&&typeof d.template.params==='object'){tpl={...tplBlank(),...d.template};saveTpl();}
+            try{localStorage.setItem(KEY,JSON.stringify(paper));}catch(e){}
+            dlg.close();state.tab='paper';shell();
+          }else{
+            const it=d?.format==='haslalab-problem'?cleanItem({...d.item,key:'own:x'}):null;
+            if(!it)throw Object.assign(new Error('bad'),{code:'bad_file'});
+            paper.items.push({...it,key:'own:'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)});save();
+            msg.innerHTML=`<span class="ok">${X.addedOne}</span>`;if(state.tab==='paper')paintPaper();
+          }
+        }catch(e){msg.innerHTML=`<span class="bad">${esc(e.code==='bad_file'||e instanceof SyntaxError?X.badFile:storeErr(e))}</span>`;}
+      });
+    };
+    if(!dlg.open)dlg.showModal();
+    paint();
+  }
+
+  /* ── 작품 공유: the paper as a problem set ('set'). The share is remembered with the paper (paper.share: {id, published,
+     meta} for one of the member's own projects — a remix draft too — or {remixOf} for someone else's set opened here), so a
+     later "공유하기" publishes the same project by creation_id, and a published one is updated or withdrawn ── */
+  const SM=()=>window.HL_SHARE_MAKER,HS=()=>window.HL_SHARE;
+  function paintShare(note,cls){
+    const row=$('shareRow');if(!row)return;
+    if(!SM()||!HS()){row.innerHTML='';return;}
+    if(!token()){row.innerHTML=`<span class="note">${esc(SH.login)}</span>`;return;}
+    const sh=paper.share,live=!!(sh?.id&&sh.published);
+    row.innerHTML=live?`<button type="button" id="shView" class="primary">${SH.view}</button><button type="button" id="shUpd">${SH.update}</button><button type="button" id="shStop">${SH.stop}</button><span class="note" id="shMsg" role="status"></span>`
+      :`<button type="button" id="shGo"${paper.items.length?'':' disabled'}>${SH.share}</button><span class="note" id="shMsg" role="status">${sh?.id||sh?.remixOf?esc(SH.draft):''}</span>`;
+    if(note){$('shMsg').className='note '+(cls||'');$('shMsg').textContent=note;}
+    if($('shGo'))$('shGo').onclick=()=>shareDialog();
+    if($('shUpd'))$('shUpd').onclick=()=>shareDialog();
+    if($('shView'))$('shView').onclick=()=>HS().open(sh.id);
+    if($('shStop'))$('shStop').onclick=async()=>{if(!confirm(SH.stopAsk))return;
+      try{await HS().unpublish(sh.id);paper.share={...sh,published:false};save();paintShare(SH.stopped,'ok');}
+      catch(e){paintShare(SM().errText(e.code,lang),'bad');}};
+  }
+  /* what is shared: the paper's own fields, never its storage reference or the share record itself */
+  const sharePayload=()=>SM().paperPayload(paper,lang);
+  async function shareDialog(){
+    const items=await Promise.all(paper.items.map(async p=>({...p,item:p.own?null:await itemOf(p.key).catch(()=>null)})));
+    const sh=paper.share||{},mine=Number.isInteger(sh.id)?sh.id:null;
+    const values=sh.meta?{...sh.meta}:{title:paper.title||T.paper,description:paper.note||'',topic:SM().topicGuess(items.map(x=>x.item?.unit))};
+    const thumbnail=SM().paperThumb({title:paper.title,items:items.map(x=>({own:x.own,text:x.item?.q}))},lang);
+    const build=fv=>SM().publishInput({type:'set',form:fv,payload:sharePayload(),thumbnail,creationId:mine,remixOf:sh.remixOf});
+    SM().dialog({lang,type:'set',values,thumbnail,shared:mine?{id:mine,published:!!sh.published}:null,build,
+      publish:input=>HS().publish(input),update:input=>HS().update(mine,input),unpublish:()=>HS().unpublish(mine),
+      onDone:r=>{const meta=r.form?{title:r.form.title,description:r.form.description,howto:r.form.howto,notes:r.form.notes,tags:r.form.tags,topic:r.form.topic}:sh.meta;
+        paper.share={id:r.id||mine,published:!r.unpublished,...(meta?{meta}:{})};save();paintShare();},errText:e=>T.err[e.code]||'',height});
+  }
+  /* #/workshop/make?share=N (a remix's "open in the maker", or the owner's "편집기에서 열기"): the shared set becomes a
+     new paper — after asking, when the current paper is not in storage — and its share is remembered */
+  async function loadShared(id){
+    if(paper.share?.from===id)return;
+    const say=(t,cls)=>{const b=$('loginNote');if(b)b.innerHTML=`<p class="note ${cls||''}">${esc(t)}</p>`;};
+    if(!HS()){say(SH.failed,'bad');return;}
+    say(SH.loading);
+    let p;try{p=(await HS().get(id)).project;}catch(e){say(SH.failed+' '+SM().errText(e.code,lang),'bad');return;}
+    const np=p?.type==='set'?SM().paperFromPayload(p.payload):null;
+    if(!np){say(SH.notSet,'bad');return;}
+    if(paper.items.length&&!paper.store?.id&&!confirm(SH.ask)){say(SH.kept);return;}
+    const meta={title:p.title,description:p.description||'',howto:p.howto||'',notes:p.notes||'',tags:p.tags||[],topic:p.topic||'other'};
+    paper={...blank(),title:np.title||p.title||'',info:np.info,minutes:np.minutes,items:np.items.map(cleanItem).filter(Boolean),
+      share:p.mine?{id,from:id,published:p.status==='public',meta}:{from:id,remixOf:id,meta:{...meta,title:((ko?'리믹스: ':'Remix: ')+p.title).slice(0,80)}}};
+    save();state.tab='paper';shell();say(SH.loaded(p.title));
+  }
+
+  /* ── the AI maker: a prompt → checked problems (community/src/workshop-ai.js) ── */
+  const ai={busy:false,out:[],notes:[],models:null,left:null,f:{prompt:'',unit:'',level:'medium',count:3,format:'mc',model:'auto',withFigure:false}};
+  let drawMods=null;
+  const b64=s=>{const b=new TextEncoder().encode(s);let bin='';for(let i=0;i<b.length;i+=0x8000)bin+=String.fromCharCode(...b.subarray(i,i+0x8000));return btoa(bin);};
+  /* a scene → the paper's figure ({src, w, h, scene}) with the figure editor's own renderer, or null */
+  async function figFromScene(scene){
+    try{
+      drawMods=drawMods||Promise.all([import('./draw-render.mjs'),import('./draw-scene.mjs')]);
+      const [R,S]=await drawMods,view=scene.view||(typeof S.sceneBounds==='function'?S.sceneBounds(scene):null);
+      const svg=R.renderSVG(scene,{width:640,...(view?{view}:{})}),m=/viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(svg),src='data:image/svg+xml;base64,'+b64(svg);
+      return src.length<400000?{src,w:m?Math.round(+m[1]):640,h:m?Math.round(+m[2]):400,scene}:null;
+    }catch(e){return null;}
+  }
+  function paintAi(){
+    const box=$('rightPanel'),A=X.ai,f=ai.f;
+    const opt=(k,n,sel)=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`;
+    const models=ai.models?ai.models.models:[{id:'gemini',model:'gemini',configured:true},{id:'gpt',model:'gpt',configured:true},{id:'claude',model:'claude',configured:true}];
+    box.innerHTML=`<h2>${A.title}${ai.left!=null?`<span class="plan">${A.left(ai.left)}</span>`:''}</h2><p class="note">${A.how}</p>
+      <label class="fld">${A.prompt}<textarea id="aiPrompt" rows="4" maxlength="1500" placeholder="${esc(A.promptPh)}">${esc(f.prompt)}</textarea></label>
+      <div class="vform"><label>${A.unit}<input id="aiUnit" list="bpUnits" maxlength="60" value="${esc(f.unit)}"></label>
+        <label>${A.level}<select id="aiLevel">${Object.entries(A.levels).map(([k,n])=>opt(k,n,f.level)).join('')}</select></label>
+        <label>${A.count}<select id="aiCount">${[1,2,3,4,5].map(n=>opt(n,n,f.count)).join('')}</select></label>
+        <label>${A.format}<select id="aiFormat">${Object.entries(A.formats).map(([k,n])=>opt(k,n,f.format)).join('')}</select></label>
+        <label>${A.model}<select id="aiModel">${opt('auto',A.auto,f.model)}${models.map(m=>`<option value="${m.id}"${m.id===f.model?' selected':''}${m.configured?'':' disabled'}>${esc(m.model)}${m.configured?'':' ('+A.notConf+')'}</option>`).join('')}</select></label>
+        <label class="inl ck"><input type="checkbox" id="aiFig"${f.withFigure?' checked':''}> ${A.fig}</label></div>
+      <div class="row"><button type="button" class="primary" id="aiMake"${ai.busy?' disabled':''}>${A.make}</button><span id="aiMsg" class="note" role="status">${ai.busy?A.making:''}</span></div>
+      <p class="note">${A.verify}</p>${ai.notes.length?`<ul class="ainotes">${ai.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}<div id="aiList"></div>`;
+    const read=()=>{f.prompt=$('aiPrompt').value;f.unit=$('aiUnit').value;f.level=$('aiLevel').value;f.count=+$('aiCount').value;f.format=$('aiFormat').value;f.model=$('aiModel').value;f.withFigure=$('aiFig').checked;};
+    box.querySelectorAll('textarea,input,select').forEach(el=>el.onchange=el.oninput=read);
+    $('aiMake').onclick=()=>{read();makeAi();};
+    paintAiOut();
+    if(!ai.models)api('/api/workshop/ai/models').then(r=>{ai.models=r;if(r.left!=null)ai.left=r.left;if(state.tab==='ai'&&!ai.busy)paintAi();}).catch(()=>{ai.models={models}; });
+    height();
+  }
+  async function makeAi(){
+    const msg=$('aiMsg'),A=X.ai,f=ai.f;
+    if(!token()){msg.innerHTML=`<span class="bad">${T.err.login_required}</span> <a class="btn" href="/#/login" target="_top">${T.loginBtn}</a>`;return;}
+    if(!f.prompt.trim()||f.prompt.length>1500){msg.innerHTML=`<span class="bad">${A.err.bad_prompt}</span>`;return;}
+    ai.busy=true;$('aiMake').disabled=true;msg.textContent=A.making;
+    try{
+      const r=await api('/api/workshop/ai/problem','POST',{prompt:f.prompt.trim(),unit:f.unit.trim(),level:f.level,count:f.count,format:f.format,model:f.model,withFigure:f.withFigure,lang});
+      ai.out=await Promise.all((r.problems||[]).map(async p=>({...p,fig:p.figure_scene?await figFromScene(p.figure_scene):null,added:false})));
+      ai.notes=Array.isArray(r.notes)?r.notes:[];if(Number.isFinite(r.left))ai.left=r.left;
+      ai.busy=false;paintAi();
+    }catch(e){ai.busy=false;$('aiMake').disabled=false;msg.innerHTML=`<span class="bad">${esc(A.err[e.code]||errText(e))}</span>`;}
+  }
+  const aiItem=p=>({key:'own:'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),pts:3,
+    own:{q:p.stem,answer:p.answer,unit:p.unit||'',sol:p.solution||'',...(p.choices?{choices:p.choices,correct:p.correct}:{}),...(p.rubric?.length?{rubric:p.rubric}:{}),...(p.fig?{fig:p.fig}:{})},
+    bp:{unit:ai.f.unit.trim().slice(0,40),level:ai.f.level==='easy'?'know':ai.f.level==='medium'?'understand':ai.f.level==='hard'?'apply':'analyze'},...(p.template?{template:p.template}:{})});
+  function paintAiOut(){
+    const box=$('aiList');if(!box)return;const A=X.ai;
+    const badge=c=>c.status==='verified'?`<span class="chk ok">✓ ${A.ok}</span>`:c.status==='mismatch'?`<span class="chk bad">✕ ${A.mismatch}</span>`:`<span class="chk">${A.unverified}</span>`;
+    box.innerHTML=ai.out.map((p,i)=>`<div class="variant aiv" data-i="${i}"><div class="checks">${badge(p.check||{})}${p.check?.mc==='fixed'?`<span class="chk bad">${A.fixed}</span>`:''}${p.template?`<span class="chk">${A.tplOk}</span>`:''}</div>
+      <div class="text">${textHtml(p.stem)}</div>
+      ${p.fig?`<figure class="dfig"><img src="${p.fig.src}" width="${p.fig.w}" height="${p.fig.h}" alt="${T.fig}"></figure>`:p.figure_scene?`<p class="note">${A.noFig}</p>`:''}
+      ${p.choices?`<ol class="aich">${p.choices.map((c,k)=>`<li class="${k===p.correct?'right':''}">${'①②③④⑤'[k]} ${esc(c)}</li>`).join('')}</ol>`:''}
+      <p class="tans"><b>${A.answer}</b> ${esc(p.answer)}${p.unit&&!String(p.answer).includes(p.unit)?' '+esc(p.unit):''}</p>
+      ${p.solution?`<details><summary>${A.solution}</summary>${textHtml(p.solution)}</details>`:''}
+      ${p.rubric?.length?`<details open><summary>${A.rubric}</summary><ul>${p.rubric.map(r=>`<li>${esc(r.desc)} <b>${r.pts}${ko?'점':' pts'}</b></li>`).join('')}</ul></details>`:''}
+      <div class="row"><button type="button" class="primary" data-take${p.added?' disabled':''}>${p.added?A.inPaper:A.toPaper}</button><button type="button" data-one>${X.saveOne}</button>
+        ${p.template?`<button type="button" data-tpl>${A.toTpl}</button>`:''}${p.figure_scene?`<button type="button" data-fig>${A.editFig}</button>`:''}<span class="note" data-msg></span></div></div>`).join('');
+    typeset(box);
+    box.querySelectorAll('.aiv').forEach(el=>{
+      const p=ai.out[+el.dataset.i],out=el.querySelector('[data-msg]');
+      const take=()=>{if(p.item)return p.item;p.item=aiItem(p);paper.items.push(p.item);p.added=true;save();return p.item;};
+      el.querySelector('[data-take]').onclick=()=>{take();paintAiOut();};
+      el.querySelector('[data-one]').onclick=()=>saveProblem(p.item||aiItem(p),out);
+      const tb=el.querySelector('[data-tpl]');if(tb)tb.onclick=()=>{const t=p.template;tpl={...tplBlank(),template:t.template,params:t.params,formula:t.formula,unit:t.unit||p.unit||'',constants:t.constants||'',bpUnit:ai.f.unit.trim()};saveTpl();state.tplOut=[];state.tab='tpl';shell();};
+      const fb=el.querySelector('[data-fig]');if(fb)fb.onclick=()=>{const it=take();try{localStorage.setItem('hlDrawEdit',JSON.stringify({key:it.key,scene:p.figure_scene}));}catch(e){}window.top.location.assign(embedded?'/#/workshop/draw':'draw.html');};
+    });
+    height();
   }
 
   async function assignBox(items){
@@ -269,7 +552,7 @@
     const chs=x=>{const list=x.own?(x.own.choices||[]).map(esc):x.item?.choices||[],mark=x.own?'①②③④⑤':x.item?.mark||'①②③④⑤';
       return list.length?`<div class="pp-ch">${list.map((c,n)=>`<span>${mark[n]}${mark==='ABCDE'?'.':''} ${c}</span>`).join('')}</div>`:'';};
     const ans=x=>x.own?(x.own.choices?.length?'①②③④⑤'[x.own.correct]+' '+esc(x.own.choices[x.own.correct]):esc(x.own.answer+(x.own.unit?' '+x.own.unit:''))):x.item?esc(x.item.answer):'';
-    const sol=x=>x.own?x.own.sol:x.item?.sol||'';
+    const sol=x=>x.own?(x.own.sol||'')+(x.own.rubric?.length?'\n\n'+x.own.rubric.map(r=>`${r.desc} (${pt(r.pts)})`).join('\n'):''):x.item?.sol||'';
     const total=items.reduce((a,x)=>a+(+x.pts||0),0);
     const srcs=[...new Set(items.filter(x=>x.item&&x.item.by).map(x=>x.item.src))];
     out.innerHTML=`<div class="pp-head"><div class="pp-sub"><span>${esc(paper.school)}</span><span>${esc(paper.info)}</span></div>
@@ -416,5 +699,5 @@
     height();
   }
 
-  addEventListener('DOMContentLoaded',shell);
+  addEventListener('DOMContentLoaded',()=>{shell();const sid=params.get('share');if(/^\d{1,9}$/.test(sid||''))loadShared(+sid);});
 })();

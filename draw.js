@@ -5,9 +5,10 @@
    localStorage 'hlTeachPaper'; the figure is an SVG data URL with its scene), into the member's storage
    (/api/workshop/storage) or into this browser. "Start from a photo" sends one photo to /api/workshop/scene-from-image
    (community/src/workshop-scene.js) and opens what comes back for checking. */
-import {validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath} from './draw-scene.mjs?v=fb1c204d7324';
-import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=268cba8afa3e';
-import {renderSVG, texSVG, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=32f5ecd294a5';
+import {geoIntersect, validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath,
+  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape} from './draw-scene.mjs?v=6a3c9af34d22';
+import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=c28a48272a2b';
+import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=1d18c2e45bc3';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -71,7 +72,7 @@ const T = ko ? {
 /* ── the other domains: names, palette, symbol picker ── */
 const X2 = ko ? {
   lede: '역학·전자기·열·광학·파동·현대물리 문제 그림을 값으로 그립니다. 그리스 문자와 물리 기호를 넣을 수 있고, 같은 그림을 시험지에 넣거나 시뮬레이션·계산으로 확인할 수 있습니다.',
-  domains: {mech: '역학', em: '전자기', thermo: '열', optics: '광학', waves: '파동', modern: '현대물리', general: '일반'},
+  domains: {mech: '역학', em: '전자기', thermo: '열', optics: '광학', waves: '파동', modern: '현대물리', general: '일반', geo: '작도'},
   search: '찾기 (예: 저항, lens, 우물)', style: '그림체', symbols: 'Ω 기호', symTitle: '그리스 문자 · 물리 기호', symHint: '누르면 선택한 글자 칸(없으면 새 글자)에 넣습니다. TeX로 직접 써도 됩니다.',
   solve: '회로 풀기 (전류·전압)', info: '계산값', circuit: '회로', noCircuit: {empty: '회로 소자가 없습니다.', ac: '교류 전원이 있는 회로는 풀지 않습니다.', short: '이상적인 전원이 단락되었거나 전압원 고리가 있어 풀 수 없습니다.'},
   tau: '시간 상수 τ', vFinal: '나중 전압', iFinal: '나중 전류', rth: '테브난 저항', charging: id => `${id} 충전 곡선 V(t)`, current: '전류', drop: '전압', element: '소자',
@@ -94,7 +95,7 @@ const X2 = ko ? {
   units: {resistor: 'Ω', bulb: 'Ω', galvanometer: 'Ω', battery: 'V', cell: 'V', dc: 'V', ac: 'V', diode: 'V', led: 'V', capacitor: 'μF', inductor: 'H'}
 } : {
   lede: 'Draw mechanics, electromagnetism, thermodynamics, optics, waves and modern-physics figures by value, with Greek letters and physics symbols. Put a figure on a test paper, or check it with a simulation or a calculation.',
-  domains: {mech: 'Mechanics', em: 'E&M', thermo: 'Thermal', optics: 'Optics', waves: 'Waves', modern: 'Modern', general: 'General'},
+  domains: {mech: 'Mechanics', em: 'E&M', thermo: 'Thermal', optics: 'Optics', waves: 'Waves', modern: 'Modern', general: 'General', geo: 'Construct'},
   search: 'Search (e.g. resistor, lens, well)', style: 'Style', symbols: 'Ω Symbols', symTitle: 'Greek letters and physics symbols', symHint: 'Click to insert into the selected text field (or a new label). TeX can be typed too.',
   solve: 'Solve the circuit (currents, voltages)', info: 'Computed', circuit: 'Circuit', noCircuit: {empty: 'No circuit elements.', ac: 'Circuits with an AC source are not solved.', short: 'An ideal source is shorted or a loop of voltage sources makes it unsolvable.'},
   tau: 'Time constant τ', vFinal: 'Final voltage', iFinal: 'Final current', rth: 'Thevenin resistance', charging: id => `charging of ${id}, V(t)`, current: 'Current', drop: 'Voltage', element: 'Element',
@@ -168,6 +169,92 @@ const X4 = ko ? {
   draftHint: {poly: 'Click points. Double-click or Enter ends, Esc cancels', polygon: 'Click points. Click the first point or press Enter to close', arc: 'Centre → start → end', angle: 'Vertex → a point on one side → a point on the other'},
   lede: 'Draw simply with lines, arrows, shapes and the pen, then add physics parts and templates when you need them. Put a figure on a test paper, or check it with a simulation or a calculation.'
 };
+/* ── construction, physics for drawn shapes, per-object style, the reorganised symbol picker ── */
+const X5 = ko ? {
+  types: {gpoint: '점 (작도)', gline: '선분 · 직선 · 반직선', gcircle: '원 (작도)', gpoly: '다각형 (작도)', gangle: '각 (작도)', joint: '연결 (용수철 · 줄 · 막대)'},
+  geoFields: {kind: '종류', a: '대상 1', b: '대상 2', c: '중심', p: '원 위의 점', n: '교점 번호 (0, 1)', pts: '꼭짓점'},
+  fields: {base: '기준 직선', show: '점 보이기', measure: '값 표시 (길이 · 넓이 · 각)',
+    expr2: '식 y(t)', rel: '부등호', tangent: '접선', tx: '접점 x', area: '넓이 (적분)', a1: '구간 시작 a', a2: '구간 끝 b', roots: '근 표시', extrema: '극값 표시', xstep: 'x 눈금 간격 (0: 자동)', ystep: 'y 눈금 간격 (0: 자동)',
+    phys: '물리', pmass: '질량 (kg)', pvx: '처음 속도 vx (m/s)', pvy: '처음 속도 vy (m/s)', pw: '처음 각속도 ω (rad/s)', pmu: '마찰 계수 μ', pe: '반발 계수 e', pfx: '가한 힘 Fx (N)', pfy: '가한 힘 Fy (N)',
+    ax: '연결점 x (도형 중심에서)', ay: '연결점 y (도형 중심에서)', bx: '다른 끝 x', by: '다른 끝 y', damp: '감쇠 (N·s/m)', style: '그림체 (이 개체만)'},
+  enums: {free: '자유로운 점', on: '대상 위의 점', mid: '중점', inter: '교점', segment: '선분', line: '직선', ray: '반직선', perp: '수선', par: '평행선', param: '매개변수 곡선 (x(t), y(t))', polar: '극좌표 r(θ)', ineq: '부등식 영역',
+    lt: 'y < f(x)', le: 'y ≤ f(x)', gt: 'y > f(x)', ge: 'y ≥ f(x)', dynamic: '움직임 (동역학)', static: '고정 (바닥 · 벽 · 경사면)', spring: '용수철', string: '줄', rod: '막대'},
+  styleInherit: s => `그림 전체 따름 (${s})`,
+  geoTools: {gpoint: '점: 빈 곳을 누르면 자유로운 점, 선이나 원을 누르면 그 위의 점', gseg: '선분: 두 점', gline: '직선: 두 점', gray: '반직선: 시작점, 지나는 점', gcircle: '원: 중심, 원 위의 점', gcircleR: '원: 중심 (반지름은 값으로)', gpoly: '다각형: 꼭짓점들, 첫 점을 누르면 닫힘',
+    gperp: '수선: 직선, 지나는 점', gpar: '평행선: 직선, 지나는 점', gmid: '중점: 두 점 또는 선분', ginter: '교점: 두 선 · 원', gangle: '각: 점, 꼭짓점, 점', gdist: '거리: 두 점 (길이 표시)'},
+  geoGroup: '작도', geoHint: '작도 도구: 점을 누르거나 빈 곳을 눌러 새 점을 만듭니다. 자유로운 점(파란 테두리)을 끌면 그 점에 기대는 것이 모두 따라 움직입니다.',
+  geoStep: {gseg: ['첫 점', '둘째 점'], gline: ['첫 점', '둘째 점'], gray: ['시작점', '지나는 점'], gdist: ['첫 점', '둘째 점'], gcircle: ['중심', '원 위의 점'], gperp: ['기준 직선', '지나는 점'], gpar: ['기준 직선', '지나는 점'], gmid: ['첫 점 (또는 선분)', '둘째 점'], ginter: ['첫 선 · 원', '둘째 선 · 원'], gangle: ['첫 점', '꼭짓점', '셋째 점'], gpoly: ['꼭짓점 (첫 점을 누르거나 Enter로 닫기)']},
+  geoNeedLine: '직선(선분)을 먼저 누르세요', geoNeedPath: '선이나 원을 누르세요', geoNoCross: '두 대상이 만나지 않습니다',
+  physTitle: '물리 적용', physHint: '그린 도형에 물리를 줍니다. ‘움직임’은 질량을 가지고 떨어지고 부딪히며, ‘고정’은 바닥 · 벽 · 경사면이 됩니다. ▶ 재생을 누르면 움직입니다.',
+  physScene: '그린 도형의 물리', gravityOn: '중력 켜기', drag: '공기 저항 (1/s)', join: '연결하기', joinSpring: '용수철로 잇기', joinString: '줄로 잇기', joinRod: '막대로 잇기',
+  joinHint: '다른 도형(물리 적용)을 누르거나, 빈 곳을 눌러 고정점에 잇습니다', trails: '궤적 · 속도 화살표', physNone: '물리 없음', physShapes: '물리 도형',
+  sym: {title: '수식 기호', search: '찾기 (예: nabla, hbar, 플랑크, 아래첨자)', recent: '최근', tabs: {lower: '그리스 소문자', upper: '그리스 대문자', accent: '꾸밈', ops: '벡터 · 미분 연산자', rel: '관계 · 기호', const: '물리 상수', struct: '구조', chem: '화학식'},
+    base: '기본 글자', accentHint: '글자를 고르고(또는 입력하고) 꾸밈을 누르세요', withValue: '값과 단위도 넣기', structHint: '구조를 넣으면 파란 빈칸이 선택됩니다. 글자를 쳐서 채우고 Tab으로 다음 빈칸으로 갑니다. 글자 바로 뒤에서 첨자를 누르면 그 글자에 붙습니다.',
+    chemHint: '\\ce{…} 안에서는 원소 뒤 숫자가 아래첨자, ^2- 나 끝의 + − 가 전하가 됩니다', none: '찾은 기호가 없습니다', tooLong: '이 칸에는 너무 깁니다. 글자 개체로 넣었습니다.'}
+} : {
+  types: {gpoint: 'Point (construction)', gline: 'Segment, line, ray', gcircle: 'Circle (construction)', gpoly: 'Polygon (construction)', gangle: 'Angle (construction)', joint: 'Joint (spring, string, rod)'},
+  geoFields: {kind: 'Kind', a: 'Object 1', b: 'Object 2', c: 'Centre', p: 'Point on it', n: 'Intersection (0, 1)', pts: 'Vertices'},
+  fields: {base: 'Reference line', show: 'Show the point', measure: 'Show the value (length, area, angle)',
+    expr2: 'y(t)', rel: 'Inequality', tangent: 'Tangent', tx: 'Tangent at x', area: 'Area (integral)', a1: 'From a', a2: 'To b', roots: 'Mark roots', extrema: 'Mark extrema', xstep: 'x tick step (0: auto)', ystep: 'y tick step (0: auto)',
+    phys: 'Physics', pmass: 'Mass (kg)', pvx: 'Start velocity vx (m/s)', pvy: 'Start velocity vy (m/s)', pw: 'Start angular velocity ω (rad/s)', pmu: 'Friction μ', pe: 'Restitution e', pfx: 'Applied force Fx (N)', pfy: 'Applied force Fy (N)',
+    ax: 'Attach x (from the centre)', ay: 'Attach y (from the centre)', bx: 'Other end x', by: 'Other end y', damp: 'Damping (N·s/m)', style: 'Style (this object only)'},
+  enums: {free: 'Free point', on: 'Point on object', mid: 'Midpoint', inter: 'Intersection', segment: 'Segment', line: 'Line', ray: 'Ray', perp: 'Perpendicular', par: 'Parallel', param: 'Parametric (x(t), y(t))', polar: 'Polar r(θ)', ineq: 'Inequality region',
+    lt: 'y < f(x)', le: 'y ≤ f(x)', gt: 'y > f(x)', ge: 'y ≥ f(x)', dynamic: 'Moves (dynamic)', static: 'Fixed (floor, wall, ramp)', spring: 'Spring', string: 'String', rod: 'Rod'},
+  styleInherit: s => `Follow the figure (${s})`,
+  geoTools: {gpoint: 'Point: on empty space a free point, on a line or circle a point on it', gseg: 'Segment: two points', gline: 'Line: two points', gray: 'Ray: start, a point it passes', gcircle: 'Circle: centre, a point on it', gcircleR: 'Circle: centre (radius as a value)', gpoly: 'Polygon: vertices, click the first to close',
+    gperp: 'Perpendicular: a line, a point', gpar: 'Parallel: a line, a point', gmid: 'Midpoint: two points or a segment', ginter: 'Intersection: two lines or circles', gangle: 'Angle: point, vertex, point', gdist: 'Distance: two points (length shown)'},
+  geoGroup: 'Construct', geoHint: 'Construction tools: click a point, or empty space for a new one. Drag a free point (blue ring) and everything built on it follows.',
+  geoStep: {gseg: ['first point', 'second point'], gline: ['first point', 'second point'], gray: ['start', 'a point it passes'], gdist: ['first point', 'second point'], gcircle: ['centre', 'a point on it'], gperp: ['a line', 'a point'], gpar: ['a line', 'a point'], gmid: ['first point (or a segment)', 'second point'], ginter: ['first line or circle', 'second line or circle'], gangle: ['first point', 'vertex', 'third point'], gpoly: ['vertices (click the first or press Enter to close)']},
+  geoNeedLine: 'Click a line (segment) first', geoNeedPath: 'Click a line or a circle', geoNoCross: 'The two do not meet',
+  physTitle: 'Physics', physHint: 'Give a drawn shape physics. ‘Moves’ has a mass, falls and collides; ‘Fixed’ becomes a floor, wall or ramp. Press ▶ Play.',
+  physScene: 'Physics of the drawn shapes', gravityOn: 'Gravity on', drag: 'Air drag (1/s)', join: 'Join', joinSpring: 'Join with a spring', joinString: 'Join with a string', joinRod: 'Join with a rod',
+  joinHint: 'Click another shape with physics, or empty space for a fixed point', trails: 'Trails and velocity arrows', physNone: 'No physics', physShapes: 'Physics shapes',
+  sym: {title: 'Maths symbols', search: 'Search (e.g. nabla, hbar, planck, subscript)', recent: 'Recent', tabs: {lower: 'Greek lower case', upper: 'Greek capitals', accent: 'Accents', ops: 'Vector & calculus', rel: 'Relations & signs', const: 'Constants', struct: 'Structures', chem: 'Chemistry'},
+    base: 'Base letter', accentHint: 'Pick (or type) a letter, then an accent', withValue: 'Insert the value and unit too', structHint: 'A structure comes with its first blue box selected: type to fill it, Tab goes to the next box. Right after a letter, a script attaches to it.',
+    chemHint: 'Inside \\ce{…} a number after an element is a subscript, ^2- or a closing + − is the charge', none: 'No symbol found', tooLong: 'Too long for this field: added as a label.'}
+};
+Object.assign(X4.types, X5.types); Object.assign(X4.fields, X5.fields); Object.assign(X4.enums, X5.enums);
+T.connect.joint = X5.joinHint;
+Object.assign(X4.types, ko ? {nnet: '신경망 (인공지능 가중치 네트워크)', fbox: '블록 (블록 선도)', farrow: '블록 화살표'} : {nnet: 'Neural network', fbox: 'Block (block diagram)', farrow: 'Block arrow'});
+Object.assign(X4.fields, ko ? {layers: '층마다 노드 수 (예: 2,3,1)', inLabels: '입력 이름 (쉼표로)', outLabels: '출력 이름 (쉼표로)', act: '활성화 함수 표시', bias: '편향 노드 (+1)', weights: '가중치 행렬 (행은 /, 층 사이는 ;)', wstyle: '가중치 표시', wlabels: '가중치 글자 (w_ij)', nodeR: '노드 반지름 (m)', shape: '모양', route: '꺾는 방향', sign: '부호 (+, −)'}
+  : {layers: 'Nodes per layer (e.g. 2,3,1)', inLabels: 'Input names (comma separated)', outLabels: 'Output names (comma separated)', act: 'Activation label', bias: 'Bias nodes (+1)', weights: 'Weight matrices (rows by /, layers by ;)', wstyle: 'Show weights as', wlabels: 'Weight labels (w_ij)', nodeR: 'Node radius (m)', shape: 'Shape', route: 'Route', sign: 'Sign (+, −)'});
+Object.assign(X4.enums, ko ? {width: '선 굵기', color: '색 (+ 파랑, − 빨강)', round: '둥근 상자', circle: '원', diamond: '마름모', sum: '합산점', hv: '가로 먼저', vh: '세로 먼저', straight: '곧게'} : {width: 'Line width', color: 'Colour (+ blue, − red)', round: 'Rounded', circle: 'Circle', diamond: 'Diamond', sum: 'Summing junction', hv: 'Horizontal first', vh: 'Vertical first', straight: 'Straight'});
+T.connect.farrow = ko ? '블록 화살표: 시작 블록을 누른 뒤 끝 블록을 누르세요.' : 'Block arrow: click the block it starts from, then the one it goes to.';
+/* the symbol picker, like an equation editor: [tex, names (Korean and English, for the search)] by tab */
+const GK = ['alpha 알파', 'beta 베타', 'gamma 감마', 'delta 델타', 'epsilon 엡실론', 'varepsilon 엡실론', 'zeta 제타', 'eta 에타', 'theta 세타', 'vartheta 세타', 'iota 요타', 'kappa 카파', 'lambda 람다', 'mu 뮤', 'nu 뉴', 'xi 크사이', 'pi 파이', 'varpi 파이', 'rho 로', 'varrho 로', 'sigma 시그마', 'varsigma 시그마', 'tau 타우', 'upsilon 입실론', 'phi 파이', 'varphi 파이', 'chi 카이', 'psi 프사이', 'omega 오메가'];
+const GKU = ['Gamma 감마', 'Delta 델타', 'Theta 세타', 'Lambda 람다', 'Xi 크사이', 'Pi 파이', 'Sigma 시그마', 'Upsilon 입실론', 'Phi 파이', 'Psi 프사이', 'Omega 오메가'];
+const ACCENTS = [['\\vec{#}', 'vector arrow 벡터 화살표'], ['\\mathbf{#}', 'bold vector 굵은 벡터'], ['\\boldsymbol{#}', 'bold italic 굵은 기울임'], ['\\hat{#}', 'hat unit vector 단위 벡터 모자'], ['\\dot{#}', 'dot time derivative 점 시간 미분'], ['\\ddot{#}', 'double dot 점 두 개 이계 미분'],
+  ['\\bar{#}', 'bar mean 바 평균'], ['\\tilde{#}', 'tilde 물결'], ["#'", 'prime 프라임 미분'], ["#''", 'double prime 이계 프라임'], ['#^\\dagger', 'dagger 대거 수반'], ['\\overrightarrow{#}', 'overrightarrow 긴 화살표'], ['\\overline{#}', 'overline 윗줄'], ['\\underline{#}', 'underline 밑줄'], ['\\check{#}', 'check 체크']];
+const ACC_BASES = ['x', 'y', 'z', 'r', 'v', 'a', 'p', 'F', 'E', 'B', 'A', 'L', 'J', 'n', 'k', 'u', 'R', 'H', '\\omega', '\\theta', '\\phi', '\\psi', '\\mu', '\\sigma', '\\tau', '\\rho'];
+const SYMTAB = {
+  lower: GK.map(s => { const [n, k] = s.split(' '); return ['\\' + n, n + ' ' + k]; }),
+  upper: GKU.map(s => { const [n, k] = s.split(' '); return ['\\' + n, n + ' 대문자 ' + k]; }),
+  ops: [['\\nabla', 'nabla del gradient 나블라 기울기'], ['\\nabla\\cdot', 'divergence 발산'], ['\\nabla\\times', 'curl 회전'], ['\\nabla^2', 'laplacian 라플라시안'], ['\\partial', 'partial 편미분'], ['\\partial_t', 'partial t 시간 편미분'],
+    ['\\frac{\\partial}{\\partial t}', 'partial derivative d/dt 편미분'], ['\\frac{d}{dt}', 'derivative d/dt 미분'], ['\\mathrm{d}', 'differential d 미분'], ['\\int', 'integral 적분'], ['\\oint', 'contour integral 선적분 폐곡선'], ['\\iint', 'double integral 이중적분'], ['\\iiint', 'triple integral 삼중적분'],
+    ['\\sum', 'sum 합 시그마'], ['\\prod', 'product 곱'], ['\\lim', 'limit 극한'], ['\\Delta', 'delta change 변화량'], ['\\langle \u2B1A \\rangle', 'expectation bracket 기댓값 꺾쇠'], ['\\ket{\u2B1A}', 'ket 켓'], ['\\bra{\u2B1A}', 'bra 브라'], ['\\braket{\u2B1A|\u2B1A}', 'braket 브라켓 내적'],
+    ['\\hat{H}', 'hamiltonian operator 해밀토니안 연산자'], ['\\nabla\\times\\vec{B}', 'curl B 회전'], ['\\nabla\\cdot\\vec{E}', 'divergence E 발산'], ['\\oint \\vec{B}\\cdot d\\vec{l}', 'ampere 앙페르 선적분']],
+  rel: [['\\approx', 'approx 근사'], ['\\neq', 'not equal 같지 않음'], ['\\le', 'less equal 작거나 같음'], ['\\ge', 'greater equal 크거나 같음'], ['\\ll', 'much less 훨씬 작음'], ['\\gg', 'much greater 훨씬 큼'], ['\\propto', 'proportional 비례'], ['\\sim', 'similar order 대략'],
+    ['\\simeq', 'simeq 거의 같음'], ['\\equiv', 'equiv 정의 항등'], ['\\pm', 'plus minus 플러스 마이너스'], ['\\mp', 'minus plus'], ['\\times', 'times cross 곱하기 외적'], ['\\cdot', 'cdot dot 점곱 내적'], ['\\div', 'divide 나누기'], ['\\infty', 'infinity 무한대'], ['^\\circ', 'degree 도'],
+    ["'", 'prime 프라임'], ['\\to', 'arrow to 화살표'], ['\\leftarrow', 'left arrow 왼쪽 화살표'], ['\\leftrightarrow', 'both arrow 양쪽 화살표'], ['\\Rightarrow', 'implies 이면'], ['\\Leftrightarrow', 'iff 동치'], ['\\uparrow', 'up 위'], ['\\downarrow', 'down 아래'],
+    ['\\perp', 'perpendicular 수직'], ['\\parallel', 'parallel 평행'], ['\\angle', 'angle 각'], ['\\triangle', 'triangle 삼각형'], ['\\odot', 'out of page 나오는 방향'], ['\\otimes', 'into page 들어가는 방향'], ['\\in', 'in element 원소'], ['\\forall', 'for all 모든'], ['\\exists', 'exists 존재'], ['\\ldots', 'dots 점점점'], ['\\hbar', 'hbar 디랙 상수']],
+  const: [['c', 'speed of light 빛의 속력', '2.998\\times10^{8}', 'm/s'], ['h', 'planck 플랑크 상수', '6.626\\times10^{-34}', 'J\\,s'], ['\\hbar', 'hbar reduced planck 환산 플랑크 상수 디랙', '1.055\\times10^{-34}', 'J\\,s'],
+    ['e', 'elementary charge 기본 전하 전자 전하량', '1.602\\times10^{-19}', 'C'], ['m_e', 'electron mass 전자 질량', '9.109\\times10^{-31}', 'kg'], ['m_p', 'proton mass 양성자 질량', '1.673\\times10^{-27}', 'kg'], ['m_n', 'neutron mass 중성자 질량', '1.675\\times10^{-27}', 'kg'],
+    ['\\varepsilon_0', 'permittivity epsilon0 진공 유전율', '8.854\\times10^{-12}', 'F/m'], ['\\mu_0', 'permeability mu0 진공 투자율', '1.257\\times10^{-6}', 'N/A^2'], ['k_B', 'boltzmann 볼츠만 상수', '1.381\\times10^{-23}', 'J/K'],
+    ['k_e', 'coulomb constant 쿨롱 상수', '8.988\\times10^{9}', 'N\\,m^2/C^2'], ['G', 'gravitational constant 중력 상수 만유인력', '6.674\\times10^{-11}', 'N\\,m^2/kg^2'], ['N_A', 'avogadro 아보가드로 수', '6.022\\times10^{23}', 'mol^{-1}'],
+    ['R', 'gas constant 기체 상수', '8.314', 'J/(mol\\,K)'], ['\\sigma', 'stefan boltzmann 슈테판 볼츠만 상수', '5.670\\times10^{-8}', 'W/(m^2\\,K^4)'], ['a_0', 'bohr radius 보어 반지름', '5.292\\times10^{-11}', 'm'],
+    ['g', 'gravity 중력 가속도', '9.8', 'm/s^2'], ['\\mathrm{u}', 'atomic mass unit 원자 질량 단위', '1.661\\times10^{-27}', 'kg'], ['R_\\infty', 'rydberg 뤼드베리 상수', '1.097\\times10^{7}', 'm^{-1}'], ['\\alpha', 'fine structure 미세 구조 상수', '1/137.04', ''],
+    ['\\lambda_C', 'compton wavelength 콤프턴 파장', '2.426\\times10^{-12}', 'm'], ['\\mathrm{eV}', 'electron volt 전자볼트', '1.602\\times10^{-19}', 'J']],
+  struct: [['\u2B1A_{\u2B1A}', 'subscript 아래첨자'], ['\u2B1A^{\u2B1A}', 'superscript power 위첨자 거듭제곱'], ['\u2B1A_{\u2B1A}^{\u2B1A}', 'sub and superscript 위아래첨자'], ['\\frac{\u2B1A}{\u2B1A}', 'fraction 분수'], ['\\sqrt{\u2B1A}', 'square root 제곱근 루트'], ['\\sqrt[\u2B1A]{\u2B1A}', 'nth root 거듭제곱근'],
+    ['\\overline{\u2B1A}', 'overline 윗줄'], ['\\vec{\u2B1A}', 'vector box 벡터'], ['\\hat{\u2B1A}', 'hat box 모자'], ['\\frac{d\u2B1A}{d\u2B1A}', 'derivative 미분'], ['\\frac{d^2\u2B1A}{d\u2B1A^2}', 'second derivative 이계 미분'], ['\\frac{\\partial \u2B1A}{\\partial \u2B1A}', 'partial derivative 편미분'],
+    ['\\int_{\u2B1A}^{\u2B1A} \u2B1A\\,d\u2B1A', 'integral limits 정적분'], ['\\oint \u2B1A\\,d\u2B1A', 'closed integral 폐곡선 적분'], ['\\sum_{\u2B1A}^{\u2B1A} \u2B1A', 'sum limits 합 시그마'], ['\\prod_{\u2B1A}^{\u2B1A} \u2B1A', 'product limits 곱'], ['\\lim_{\u2B1A \\to \u2B1A} \u2B1A', 'limit 극한'],
+    ['|\u2B1A|', 'absolute value 절댓값'], ['\\langle \u2B1A \\rangle', 'average 평균'], ['\\pmatrix{\u2B1A & \u2B1A \\\\ \u2B1A & \u2B1A}', 'matrix 2x2 행렬'], ['\\vmatrix{\u2B1A & \u2B1A \\\\ \u2B1A & \u2B1A}', 'determinant 행렬식'], ['\\cases{\u2B1A & \u2B1A \\\\ \u2B1A & \u2B1A}', 'cases piecewise 경우 조각'],
+    ['\u2B1A \\times 10^{\u2B1A}', 'scientific notation 과학적 표기'], ['\\mathrm{\u2B1A}', 'upright text 단위 정자체'], ['{}^{\u2B1A}_{\u2B1A}\\mathrm{\u2B1A}', 'nuclide 핵종 원자번호 질량수']],
+  chem: [['\\ce{\u2B1A}', 'formula box 화학식 입력'], ['\\ce{H2O}', 'water 물'], ['\\ce{CO2}', 'carbon dioxide 이산화탄소'], ['\\ce{O2}', 'oxygen 산소'], ['\\ce{H2SO4}', 'sulfuric acid 황산'], ['\\ce{NaCl}', 'salt 염화나트륨'], ['\\ce{CaCO3}', 'calcium carbonate 탄산칼슘'],
+    ['\\ce{SO4^2-}', 'sulfate ion 황산 이온'], ['\\ce{NH4+}', 'ammonium 암모늄 이온'], ['\\ce{OH-}', 'hydroxide 수산화 이온'], ['\\ce{H3O+}', 'hydronium 하이드로늄'], ['\\ce{Fe^3+}', 'iron ion 철 이온'], ['\\ce{Cu^2+}', 'copper ion 구리 이온'], ['\\ce{e-}', 'electron 전자'],
+    ['\\ce{->}', 'reaction arrow 반응 화살표'], ['\\ce{<=>}', 'equilibrium 평형 화살표'], ['\\ce{(aq)}', 'aqueous 수용액'], ['\\ce{(s)}', 'solid 고체'], ['\\ce{(l)}', 'liquid 액체'], ['\\ce{(g)}', 'gas 기체'], ['\\ce{2H2 + O2 -> 2H2O}', 'reaction 반응식'],
+    ['\\ce{N2 + 3H2 <=> 2NH3}', 'haber 하버 평형'], ['{}^{235}_{92}\\mathrm{U}', 'uranium nuclide 우라늄 핵종'], ['{}^{4}_{2}\\mathrm{He}', 'alpha helium 헬륨 알파']]
+};
+const SYM_RECENT = 'hlDrawSymRecent';
 Object.assign(X3.types, X4.types); Object.assign(X3.fields, X4.fields); Object.assign(X3.enums, X4.enums);
 Object.assign(X2.types, X3.types); Object.assign(X2.kinds, X3.kinds); Object.assign(X2.fields, X3.fields); Object.assign(X2.enums, X3.enums); Object.assign(X2.units, {rheostat: 'Ω', dielectric: 'μF'});
 T.lede = X4.lede; Object.assign(T.types, X2.types); Object.assign(T.fields, X2.fields); Object.assign(T.enums, X2.enums);
@@ -199,20 +286,16 @@ const PALETTE = {
   general: [['label', {}, T.types.label], ['label', {box: true, text: '\\text{box}'}, N2('글 상자', 'Text box')], ['vector', {}, T.types.vector], ['dim', {}, T.types.dim], ['arc', {}, T.types.arc], ['axes', {}, T.types.axes],
     ['line', {pattern: 'dashed'}, N2('점선', 'Dashed line')], ['line', {pattern: 'dotted'}, N2('점점선', 'Dotted line')], ['line', {pattern: 'solid', heads: 'end'}, N2('화살표 선', 'Arrow line')], ['region', {}, T.types.region], ['region', {fill: 'hatch'}, N2('빗금 영역', 'Hatched region')], ['point', {}, T.types.point], ['graph', {}, N2('함수 그래프', 'Function graph')], ['curve', {kind: 'func'}, N2('함수 곡선', 'Function curve')], ['curve', {kind: 'func', params: 'A=1 [0, 2], k=1 [0.1, 5]', expr: 'A sin(k x)'}, N2('매개변수 함수 (슬라이더)', 'Function with parameters (sliders)')],
     ['graph', {xlabel: 't', ylabel: 'v', grid: true, origin: '0'}, N2('v–t 그래프 (격자)', 'v–t graph (grid)')], ['curve', {kind: 'points', shade: true}, N2('꺾은선 (넓이 칠하기)', 'Polyline (shaded area)')], ['panel', {caption: '(가)'}, N2('그림 칸 (가)', 'Panel (a)')], ['panel', {caption: '(나)'}, N2('그림 칸 (나)', 'Panel (b)')],
-    ['brace', {}, T.types.brace], ['callout', {}, T.types.callout], ['parrows', {}, T.types.parrows]]
+    ['brace', {}, T.types.brace], ['callout', {}, T.types.callout], ['parrows', {}, T.types.parrows],
+    ['curve', {kind: 'param', expr: 'cos(t)', expr2: 'sin(2t)', x1: 0, x2: 6.2832}, N2('매개변수 곡선 x(t), y(t)', 'Parametric curve x(t), y(t)')], ['curve', {kind: 'polar', expr: '1 + cos(t)', x1: 0, x2: 6.2832}, N2('극좌표 곡선 r(θ)', 'Polar curve r(θ)')],
+    ['curve', {kind: 'ineq', expr: '0.5 x', rel: 'lt'}, N2('부등식 영역 y < f(x)', 'Inequality region y < f(x)')], ['curve', {kind: 'func', expr: 'x^2 - 1', x1: -2, x2: 2, tangent: true, tx: 1, area: true, a1: -1, a2: 1, roots: true, extrema: true}, N2('함수 분석 (접선·넓이·근·극값)', 'Function analysis (tangent, area, roots, extrema)')]],
+  geo: [['gpoint', {}, N2('자유로운 점', 'Free point')], ['rect', {phys: 'dynamic', fill: 'lightgray'}, N2('물리 상자 (움직임)', 'Physics box (dynamic)')], ['ellipse', {phys: 'dynamic', fill: 'tint', color: 'red'}, N2('물리 공 (움직임)', 'Physics ball (dynamic)')],
+    ['line', {phys: 'static', pattern: 'solid'}, N2('고정된 바닥 · 경사면 선', 'Fixed floor or ramp line')],
+    ['nnet', {}, N2('신경망 (층 · 노드 · 가중치)', 'Neural network (layers, nodes, weights)')], ['nnet', {layers: '3,4,4,2', inLabels: 'x_1,x_2,x_3', outLabels: 'y_1,y_2', bias: true}, N2('심층 신경망 (편향 포함)', 'Deep network (with bias)')],
+    ['fbox', {text: '$G(s)$'}, N2('블록 (상자)', 'Block (box)')], ['fbox', {shape: 'sum', w: 0.36, h: 0.36}, N2('합산점 ⊗', 'Summing junction')], ['fbox', {shape: 'diamond', w: 1.2, h: 0.7, text: '?'}, N2('판단 (마름모)', 'Decision (diamond)')], ['fbox', {shape: 'round', text: '시작'}, N2('시작 · 끝 (둥근 상자)', 'Start or end (rounded)')],
+    ['farrow', {}, N2('블록 화살표 (두 블록 잇기)', 'Block arrow (join two blocks)')]]
 };
-const PAL_EN = {mech: 'block ball floor incline wall ceiling pulley pivot string rod spring force cart car wheel disk cylinder ring plank lever seesaw hinge track loop ramp', em: 'wire resistor rheostat battery cell dc ac capacitor dielectric inductor switch diode led bulb ammeter voltmeter galvanometer meter bridge potentiometer jockey transformer rails rod emf ground charge plate field lines B E current solenoid loop magnet', thermo: 'cylinder piston container liquid water buoyancy utube thermometer heater burner coil gas molecules pressure reservoir engine graph isotherm adiabat isobar isochore carnot otto stirling', optics: 'axis lens mirror prism slab object ray slit grating wavefront beam splitter half screen eye source laser bulb fiber', waves: 'wave standing travelling wavefront pulse interference', modern: 'well barrier step harmonic levels hydrogen photoelectric minkowski spacetime worldline frames nucleus particle electron photon alpha proton neutron', general: 'label text box vector dimension arc axes line dashed dotted arrow region hatch point graph function curve panel caption brace callout arrows'};
-/* the symbol picker: [group, [[tex, shown-as], …]] */
-const SYMBOLS = [
-  [N2('그리스 소문자', 'Greek lower case'), 'alpha beta gamma delta epsilon varepsilon zeta eta theta vartheta iota kappa lambda mu nu xi pi varpi rho varrho sigma varsigma tau upsilon phi varphi chi psi omega'.split(' ').map(n => ['\\' + n])],
-  [N2('그리스 대문자', 'Greek capitals'), 'Gamma Delta Theta Lambda Xi Pi Sigma Upsilon Phi Psi Omega'.split(' ').map(n => ['\\' + n])],
-  [N2('벡터 · 미분 표기', 'Vectors and derivatives'), [['\\vec{F}'], ['\\hat{x}'], ['\\hat{n}'], ['\\dot{x}'], ['\\ddot{x}'], ['\\bar{v}'], ['\\tilde{x}'], ["x'"], ["x''"], ['\\overrightarrow{AB}'], ['\\mathbf{F}'], ['x_{1}'], ['x^{2}'], ['v_0^2'], ['\\frac{a}{b}'], ['\\sqrt{x}'], ['\\sqrt[3]{x}'], ['|\\vec{r}|']]],
-  [N2('미적분 · 연산', 'Calculus and operators'), [['\\nabla'], ['\\partial'], ['\\int'], ['\\oint'], ['\\iint'], ['\\sum'], ['\\prod'], ['\\infty'], ['\\pm'], ['\\mp'], ['\\times'], ['\\cdot'], ['\\circ'], ['\\nabla\\times\\vec{B}'], ['\\nabla\\cdot\\vec{E}'], ['\\frac{dv}{dt}'], ['\\frac{\\partial f}{\\partial x}'], ['\\Delta x']]],
-  [N2('관계', 'Relations'), [['\\approx'], ['\\neq'], ['\\le'], ['\\ge'], ['\\propto'], ['\\sim'], ['\\equiv'], ['\\ll'], ['\\gg'], ['\\simeq']]],
-  [N2('양자 · 상대론', 'Quantum and relativity'), [['\\hbar'], ['\\ket{\\psi}'], ['\\bra{\\phi}'], ['\\braket{\\phi|\\psi}'], ['\\langle x \\rangle'], ['|\\psi|^2'], ['\\hat{H}'], ['\\mathcal{H}'], ['\\mathcal{L}'], ['\\gamma'], ['ct'], ["x'"], ["S'"], ['\\beta = v/c'], ['E = mc^2'], ['h\\nu'], ['e^-'], ['\\lambda_{dB}']]],
-  [N2('기하 · 방향', 'Geometry and direction'), [['\\odot'], ['\\otimes'], ['\\perp'], ['\\parallel'], ['\\angle'], ['\\triangle'], ['\\to'], ['\\Rightarrow'], ['\\leftrightarrow'], ['\\rightleftharpoons'], ['\\uparrow'], ['\\downarrow'], ['\\circlearrowleft'], ['\\circlearrowright']]],
-  [N2('전자기 · 단위', 'E&M and units'), [['\\mathcal{E}'], ['\\varepsilon_0'], ['\\mu_0'], ['\\Phi_B'], ['\\mathrm{\\Omega}'], ['\\mathrm{k\\Omega}'], ['\\mathrm{\\mu F}'], ['\\mathrm{mH}'], ['\\mathrm{\\mu C}'], ['\\mathrm{\\AA}'], ['30^\\circ'], ['\\mathrm{m/s^2}'], ['\\mathrm{N\\,m}'], ['\\mathrm{eV}'], ['\\mathrm{nm}'], ['\\mathrm{K}'], ['T_H'], ['T_C'], ['Q_H']]]
-];
+const PAL_EN = {mech: 'block ball floor incline wall ceiling pulley pivot string rod spring force cart car wheel disk cylinder ring plank lever seesaw hinge track loop ramp', em: 'wire resistor rheostat battery cell dc ac capacitor dielectric inductor switch diode led bulb ammeter voltmeter galvanometer meter bridge potentiometer jockey transformer rails rod emf ground charge plate field lines B E current solenoid loop magnet', thermo: 'cylinder piston container liquid water buoyancy utube thermometer heater burner coil gas molecules pressure reservoir engine graph isotherm adiabat isobar isochore carnot otto stirling', optics: 'axis lens mirror prism slab object ray slit grating wavefront beam splitter half screen eye source laser bulb fiber', waves: 'wave standing travelling wavefront pulse interference', modern: 'well barrier step harmonic levels hydrogen photoelectric minkowski spacetime worldline frames nucleus particle electron photon alpha proton neutron', geo: 'point construction geometry segment line circle physics rigid box ball ramp', general: 'parametric polar inequality tangent area root extremum label text box vector dimension arc axes line dashed dotted arrow region hatch point graph function curve panel caption brace callout arrows'};
 
 /* ── the member's session, as the other Workshop pages read it ── */
 const API = (() => { let o = ''; try { o = localStorage.getItem('hlCmApi') || ''; } catch (e) {} return (/^https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev\/?$/.test(o) ? o : 'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/, ''); })();
@@ -233,7 +316,7 @@ const SCENE_KEY = 'hlDrawScene', SAVES_KEY = 'hlDrawSaves', PAPER_KEY = 'hlTeach
 /* sel: the object whose values the panel shows; selection: every selected id (shift-click, a box drawn on empty space) */
 const st = {scene: null, sel: '', selection: new Set(), hist: createHistory(250), connect: null, grid: true, snap: true, fbd: false, readouts: true, solve: false, circuit: null, dom: 'mech', q: '', lastText: null,
   sim: null, playing: false, speed: 1, last: 0, trails: new Map(), samples: [], graph: '', ai: null, msg: '', paperEdit: null, drag: null, zoom: null, clip: null, gesture: null, marquee: null, space: false,
-  tool: 'select', draft: null, dstyle: {color: 'black', lw: 1, pattern: 'solid', fill: 'none', hs: false, he: false}};
+  tool: 'select', draft: null, dstyle: {color: 'black', lw: 1, pattern: 'solid', fill: 'none', hs: false, he: false}, rtrail: false, symTab: 'struct', symBase: 'x', symValue: false};
 const clone = o => JSON.parse(JSON.stringify(o));
 /* the member's choice: open with an example figure or an empty one (an empty canvas once the example was cleared) */
 const prefs = () => { try { const p = JSON.parse(store.get(PREFS_KEY) || '{}'); return p && typeof p === 'object' ? p : {}; } catch (e) { return {}; } };
@@ -284,7 +367,9 @@ const PREFIX = {wheel: 'wh', plank: 'pl', track: 'tr', bridge: 'BR', transformer
   element: 'e', ground: 'gnd', charge: 'q', plate: 'P', fieldlines: 'FL', field: 'B', cwire: 'I', current: 'J', solenoid: 'sol', loop: 'loop', magnet: 'mag', cylinder: 'cyl', reservoir: 'res', engine: 'eng', graph: 'G', curve: 'c', cycle: 'cyc',
   lens: 'L', mirror: 'M', prism: 'pr', slab: 'sl', oarrow: 'O', ray: 'ray', slits: 'S', wavefront: 'wf', wave: 'wave', well: 'W', levels: 'lv', phototube: 'pt', spacetime: 'st', worldline: 'wl', frames: 'fr', vector: 'v', region: 'rg', point: 'pt', rect: 'rc', ellipse: 'el', poly: 'pg', bezier: 'bz', qpot: 'Q'};
 const KIND_PREFIX = {rheostat: 'R', dielectric: 'C', wire: 'W', resistor: 'R', battery: 'E', cell: 'E', dc: 'E', ac: 'E', capacitor: 'C', inductor: 'L', switch: 'S', diode: 'D', led: 'D', bulb: 'B', ammeter: 'A', voltmeter: 'V', galvanometer: 'G'};
-const freeId = (type, kind) => { const p = type === 'element' && KIND_PREFIX[kind] ? KIND_PREFIX[kind] : PREFIX[type] || 'o'; let n = 1; while (byId(p + n)) n++; return p + n; };
+Object.assign(PREFIX, {gline: 'g', gcircle: 'ci', gpoly: 'pol', gangle: 'ang', joint: 'j'});
+/* a construction point takes the next free capital letter (A, B, C …), as on a blackboard */
+const freeId = (type, kind) => { if (type === 'gpoint') { for (const c of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') if (!byId(c)) return c; } const p = type === 'element' && KIND_PREFIX[kind] ? KIND_PREFIX[kind] : PREFIX[type] || 'o'; let n = 1; while (byId(p + n)) n++; return p + n; };
 const snapV = v => st.snap ? Math.round(v / st.scene.grid) * st.scene.grid : v;
 const r4 = v => Math.round(v * 1e4) / 1e4;
 
@@ -320,6 +405,8 @@ function placeNew(type, preset, v, next) {
   else if (type === 'reservoir') box(0.4, 0.12);
   else if (type === 'graph' || type === 'well' || type === 'levels' || type === 'qpot') box(0.6, 0.65);
   else if (type === 'rect' || type === 'ellipse') box(0.25, 0.2);
+  else if (type === 'nnet') box(0.6, 0.55);
+  else if (type === 'fbox') Object.assign(o, {x: cx, y: cy, w: r4(snapV(v.w * 0.18)) || 1, h: r4(snapV(v.h * 0.15)) || 0.6});
   else if (type === 'engine') Object.assign(o, {x: cx, y: cy, size: r4(m * 0.22)});
   else if (type === 'spacetime') Object.assign(o, {x: cx, y: r4(snapV(v.y + v.h * 0.12)), size: r4(snapV(v.h * 0.7))});
   else if (type === 'frames') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.15)), y: r4(snapV(v.y + v.h * 0.25)), size: r4(snapV(m * 0.35)), gap: r4(snapV(v.w * 0.4))});
@@ -349,6 +436,7 @@ function placeNew(type, preset, v, next) {
 }
 function addObject(type, preset = {}) {
   if (st.scene.objects.length >= MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
+  if (type === 'farrow') { st.connect = {type, a: null, over: []}; setSel([]); paint(); return; }
   if (['string', 'rod', 'spring', 'force'].includes(type)) {
     const sel = byId(st.sel);
     if (type === 'force' && isBody(sel)) { finishConnect({type: 'force', a: sel.id}); return; }
@@ -364,9 +452,16 @@ function addObject(type, preset = {}) {
   if (commit(next)) { setSel([o.id]); paint(); }
 }
 /* a click while a string, rod, spring or force is being joined */
-function connectClick(o) {
+function connectClick(o, at) {
   const c = st.connect;
+  /* a joint between drawn shapes with physics: the second end on another one, or on empty space a fixed point */
+  if (c.type === 'joint') {
+    if (o && isPhysShape(o) && o.id !== c.a) finishConnect({...c, b: o.id});
+    else if (!o || !isPhysShape(o)) { const p = snapPt(at); finishConnect({...c, b: '', bx: p.x, by: p.y}); }
+    return;
+  }
   if (!o) return;
+  if (c.type === 'farrow') { if (o.type !== 'fbox') return; if (!c.a) c.a = o.id; else if (o.id !== c.a) { finishConnect({...c, b: o.id}); return; } status(); paintCanvas(); return; }
   if (c.type === 'force') { if (isBody(o)) finishConnect({type: 'force', a: o.id}); return; }
   const endOk = c.type === 'rod' ? (c.a ? isBody(o) : o.type === 'pivot') : c.type === 'string' ? isBody(o) || o.type === 'pivot' : isBody(o) || ['pivot', 'wall', 'ceiling', 'floor'].includes(o.type);
   if (!c.a) { if (endOk) c.a = o.id; }
@@ -377,7 +472,8 @@ function connectClick(o) {
 function finishConnect(c) {
   st.connect = null;
   const next = clone(st.scene), id = freeId(c.type), o = {...defaults(c.type), id};
-  if (c.type === 'force') Object.assign(o, {on: c.a});
+  if (c.type === 'joint') Object.assign(o, {a: c.a, b: c.b, kind: c.kind, bx: c.b ? 0 : r4(c.bx), by: c.b ? 0 : r4(c.by), k: c.kind === 'spring' ? 40 : 50});
+  else if (c.type === 'force') Object.assign(o, {on: c.a});
   else Object.assign(o, {a: c.a, b: c.b, ...(c.type === 'string' ? {over: c.over} : {})});
   if (c.type === 'spring') { const A = next.objects.find(x => x.id === c.a), B = next.objects.find(x => x.id === c.b), pa = isBody(A) ? bodyPose(next, A) : A, pb = isBody(B) ? bodyPose(next, B) : B; if (pa && pb && Number.isFinite(pa.x) && Number.isFinite(pb.x)) o.L0 = r4(Math.max(0.05, Math.hypot(pa.x - pb.x, pa.y - pb.y) * 0.8)); }
   next.objects.push(o);
@@ -406,6 +502,9 @@ function removeIds(scene, ids) {
       if (o.type === 'pulley' && gone.has(o.mount)) o.mount = '';
       if ((o.type === 'curve' || o.type === 'cycle') && gone.has(o.graph)) gone.add(o.id);
       if (o.type === 'worldline' && gone.has(o.diagram)) gone.add(o.id);
+      if (o.type === 'joint' && (gone.has(o.a) || (o.b && gone.has(o.b)))) gone.add(o.id);
+      if (o.type === 'farrow' && (gone.has(o.a) || gone.has(o.b))) gone.add(o.id);
+      if (GEO_TYPES.includes(o.type) && (['a', 'b', 'c', 'p', 'base'].some(k => o[k] && gone.has(o[k])) || (o.type === 'gpoly' && o.pts.some(k => gone.has(k))))) gone.add(o.id);
     }
   }
 }
@@ -491,8 +590,7 @@ function paintCanvas() {
   st.circuit = st.solve && hasCircuit() ? solveCircuit(st.scene) : null;
   const drawn = st.draft ? {...sc, objects: [...sc.objects, draftObject()].filter(Boolean)} : sc;
   let svg = renderSVG(drawn, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? [] : selIds(), forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit, marquee: st.marquee,
-    velocities: simOn ? st.sim.velocities() : null, anchors: simOn ? st.sim.anchors : null, trails: simOn ? [...st.trails].filter(([id]) => byId(id)?.trail) : null,
-    conical: (simOn ? st.sim : null)?.systems.filter(s => s.kind === 'conical').map(s => ({centre: s.centre, radius: s.radius})) || st.scene.objects.filter(o => (o.type === 'string' || o.type === 'rod') && o.mode === 'conical').map(o => conicalOrbit(o)).filter(Boolean)});
+    velocities: simOn ? st.sim.velocities() : null, anchors: simOn ? st.sim.anchors : null, trails: simOn ? [...st.trails].filter(([id]) => byId(id)?.trail || (st.rtrail && isPhysShape(byId(id)))) : null, ...simDrawOpts(simOn)});
   /* zoomed: the figure's frame (what is exported) as a thin dashed box */
   if (st.zoom) { const f = view(), S = W / v.w, x = (f.x - v.x) * S, y = (v.y + v.h - f.y - f.h) * S; svg = svg.replace(/<\/svg>$/, `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(f.w * S).toFixed(1)}" height="${(f.h * S).toFixed(1)}" fill="none" stroke="#d97706" stroke-width="1.2" stroke-dasharray="7 4" pointer-events="none" class="frame"/></svg>`); }
   box.innerHTML = svg;
@@ -509,7 +607,13 @@ function screenLabelScale(box) {
 function conicalOrbit(s) {
   const P = [byId(s.a), byId(s.b)].find(o => o?.type === 'pivot'), b = [byId(s.a), byId(s.b)].find(isBody);
   if (!P || !b) return null; const p = bodyPose(st.scene, b);
-  return {centre: {x: P.x, y: p.y}, radius: Math.abs(p.x - P.x)};
+  return {id: s.id, centre: {x: P.x, y: p.y}, radius: Math.abs(p.x - P.x)};
+}
+/* what the simulation adds to the drawing: the conical orbits, the rigid world's joints, velocities and trails */
+function simDrawOpts(simOn) {
+  const rig = simOn ? st.sim.systems.find(s => s.kind === 'rigid') : null;
+  return {conical: (simOn ? st.sim.systems.filter(s => s.kind === 'conical').map(s => ({id: s.id, centre: s.centre, radius: s.radius})) : null) || st.scene.objects.filter(o => (o.type === 'string' || o.type === 'rod') && o.mode === 'conical').map(conicalOrbit).filter(Boolean),
+    jointEnds: rig ? rig.jointWorld() : null, rigidV: rig && st.rtrail ? rig.velocities() : null};
 }
 function worldAt(ev) {
   const svg = $('canvas').querySelector('svg'), r = svg.getBoundingClientRect(), v = dview(), H = svg.viewBox.baseVal.height;
@@ -526,7 +630,17 @@ function zoomBy(k, at) {
 }
 function panBy(dx, dy) { const v = dview(); st.zoom = {x: v.x - dx, y: v.y - dy, w: v.w, h: v.h}; paintCanvas(); }
 function pickAt(ev) { const g = ev.target.closest?.('[data-id]'); return g ? byId(g.dataset.id) : null; }
-const NO_DRAG = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline', 'fieldlines'];
+const NO_DRAG = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline', 'fieldlines', 'gangle', 'joint', 'farrow'];
+/* a construction object is dragged by its free points (a segment by both ends, a circle by its centre and point …);
+   a point computed from others (a midpoint, an intersection) does not move by itself */
+function geoDragIds(o) {
+  if (!GEO_TYPES.includes(o.type)) return [o.id];
+  if (o.type === 'gpoint') return o.kind === 'free' || o.kind === 'on' ? [o.id] : [];
+  const refs = o.type === 'gpoly' ? o.pts : ['a', 'b', 'c', 'p'].map(k => o[k]).filter(Boolean);
+  const out = new Set();
+  for (const id of refs) { const x = byId(id); if (x) for (const y of geoDragIds(x)) out.add(y); }
+  return [...out];
+}
 /* ── the drawing tools ──
    select (move, box-select), line, arrow, polyline, curve (a Bézier with two handles), rectangle, rounded rectangle,
    circle/ellipse, arc, polygon, pen (freehand, simplified and smoothed), text, dimension, angle mark, fill and eraser.
@@ -544,7 +658,70 @@ const TOOL_KEY = {v: 'select', l: 'line', a: 'arrow', y: 'poly', c: 'curve', r: 
 const DRAG_TOOLS = ['line', 'arrow', 'curve', 'rect', 'rrect', 'ellipse', 'dim', 'pen'], CLICK_TOOLS = {poly: 0, polygon: 0, arc: 3, angle: 3};
 const FILLABLE = ['rect', 'ellipse', 'poly', 'region'];
 const headsOf = ds => ds.hs && ds.he ? 'both' : ds.he ? 'end' : ds.hs ? 'start' : 'none';
-function setTool(t) { st.tool = TOOLS.includes(t) ? t : 'select'; st.draft = null; st.connect = null; paintTools(); paintCanvas(); status(); }
+/* ── the construction tools (GeoGebra-like): each click picks a point (an existing one near the pointer, a new point
+   on the line or circle under it, or a new free point), and the tool makes its object when it has what it needs ── */
+const GEO_TOOLS = ['gpoint', 'gseg', 'gline', 'gray', 'gdist', 'gcircle', 'gcircleR', 'gpoly', 'gperp', 'gpar', 'gmid', 'ginter', 'gangle'];
+const gi = d => ic(d);
+const GEO_ICON = {gpoint: gi('<circle cx="10" cy="10" r="2.6" fill="currentColor"/>'), gseg: gi('<path d="M4 15L16 5"/><circle cx="4" cy="15" r="1.8" fill="currentColor"/><circle cx="16" cy="5" r="1.8" fill="currentColor"/>'),
+  gline: gi('<path d="M1 18L19 2"/><circle cx="6" cy="13.5" r="1.8" fill="currentColor"/><circle cx="14" cy="6.5" r="1.8" fill="currentColor"/>'), gray: gi('<path d="M4 15L19 2"/><circle cx="4" cy="15" r="1.8" fill="currentColor"/><circle cx="12" cy="8" r="1.8" fill="currentColor"/>'),
+  gdist: gi('<path d="M3 14L17 6"/><circle cx="3" cy="14" r="1.6" fill="currentColor"/><circle cx="17" cy="6" r="1.6" fill="currentColor"/><path d="M8 7l1.5 2.5" stroke-width="1"/><text x="9" y="18" font-size="6" fill="currentColor" stroke="none">cm</text>'),
+  gcircle: gi('<circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="1.5" fill="currentColor"/><circle cx="17" cy="10" r="1.5" fill="currentColor"/>'), gcircleR: gi('<circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="1.5" fill="currentColor"/><path d="M10 10h7" stroke-dasharray="2 1.5"/>'),
+  gpoly: gi('<path d="M4 16L7 4l10 4-2 8z"/><circle cx="4" cy="16" r="1.4" fill="currentColor"/><circle cx="7" cy="4" r="1.4" fill="currentColor"/><circle cx="17" cy="8" r="1.4" fill="currentColor"/>'),
+  gperp: gi('<path d="M2 15h16M10 15V2M10 12h3v3"/>'), gpar: gi('<path d="M2 14L16 4M5 18L19 8"/>'), gmid: gi('<path d="M3 15L17 5"/><circle cx="10" cy="10" r="2.2" fill="currentColor"/>'),
+  ginter: gi('<path d="M3 17L17 3M3 3l14 14"/><circle cx="10" cy="10" r="2" fill="currentColor"/>'), gangle: gi('<path d="M3 16h14M3 16L13 4M8 16a5 5 0 0 0-1.8-3.8"/>')};
+function freeIdIn(scene, type) {
+  const has = id => scene.objects.some(o => o.id === id);
+  if (type === 'gpoint') for (const c of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') if (!has(c)) return c;
+  const p = PREFIX[type] || 'o'; let n = 1; while (has(p + n)) n++; return p + n;
+}
+function geoDown(ev) {
+  const t = st.tool, raw = worldAt(ev), hit0 = pickAt(ev), geo = computeGeometry(st.scene), tol = 11 * dview().w / W;
+  if (st.scene.objects.length >= MAX_OBJECTS - 2) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
+  const dr = st.draft && st.draft.tool === t ? st.draft : (st.draft = {tool: t, picks: [], geo: true});
+  const next = clone(st.scene);
+  const add = o => { const id = freeIdIn(next, o.type); next.objects.push({...defaults(o.type), ...o, id, ...(o.type === 'gpoint' ? {label: o.label ?? id} : {})}); return id; };
+  const nearPt = () => { let best = null, bd = tol; for (const x of st.scene.objects) if (x.type === 'gpoint') { const g = geo.get(x.id); if (g) { const d = Math.hypot(g.x - raw.x, g.y - raw.y); if (d < bd) { bd = d; best = x.id; } } } return best; };
+  const pathHit = () => hit0 && ['gline', 'gcircle', 'gpoly'].includes(hit0.type) ? hit0 : null;
+  const point = () => { const id = nearPt(); if (id) return id; const p = pathHit(); if (p) return add({type: 'gpoint', kind: 'on', a: p.id, x: r4(raw.x), y: r4(raw.y)}); const q = snapPt(raw); return add({type: 'gpoint', x: q.x, y: q.y}); };
+  const done = (sel) => { st.draft = t === 'gpoint' || t === 'gcircleR' ? null : {tool: t, picks: [], geo: true}; if (commit(next)) { setSel(sel ? [sel] : []); paint(); } };
+  const keep = () => { if (next.objects.length !== st.scene.objects.length) commit(next); setSel(dr.picks.filter(id => next.objects.some(o => o.id === id))); paint(); };
+  if (t === 'gpoint') { done(point()); return; }
+  if (t === 'gcircleR') { const c = point(); done(add({type: 'gcircle', c, r: Math.max(st.scene.grid * 5, 0.5)})); return; }
+  if (t === 'gperp' || t === 'gpar') {
+    if (!dr.picks.length) { if (hit0?.type !== 'gline') { flash(esc(X5.geoNeedLine)); return; } dr.picks.push(hit0.id); keep(); return; }
+    const a = point(); done(add({type: 'gline', kind: t === 'gperp' ? 'perp' : 'par', a, base: dr.picks[0], pattern: 'dashed'})); return;
+  }
+  if (t === 'ginter') {
+    const p = pathHit(); if (!p) { flash(esc(X5.geoNeedPath)); return; }
+    if (!dr.picks.length || dr.picks[0] === p.id) { dr.picks = [p.id]; keep(); return; }
+    const n = geoIntersect(geo.get(dr.picks[0]), geo.get(p.id)).length;
+    if (!n) { flash(esc(X5.geoNoCross)); st.draft = {tool: t, picks: [], geo: true}; paint(); return; }
+    let last = ''; for (let k = 0; k < Math.min(2, n); k++) last = add({type: 'gpoint', kind: 'inter', a: dr.picks[0], b: p.id, n: k});
+    done(last); return;
+  }
+  if (t === 'gmid' && !dr.picks.length && !nearPt() && hit0?.type === 'gline') { done(add({type: 'gpoint', kind: 'mid', a: hit0.id})); return; }
+  const id = point();
+  if (t === 'gpoly' && dr.picks.length >= 3 && id === dr.picks[0]) { done(add({type: 'gpoly', pts: [...dr.picks]})); return; }
+  if (dr.picks[dr.picks.length - 1] !== id) dr.picks.push(id);
+  const need = {gseg: 2, gline: 2, gray: 2, gdist: 2, gcircle: 2, gmid: 2, gangle: 3}[t];
+  if (need && dr.picks.length >= need) {
+    const [a, b, c] = dr.picks;
+    if (t === 'gcircle') done(add({type: 'gcircle', c: a, p: b}));
+    else if (t === 'gmid') done(add({type: 'gpoint', kind: 'mid', a, b}));
+    else if (t === 'gangle') done(add({type: 'gangle', a, b, c}));
+    else done(add({type: 'gline', a, b, kind: t === 'gline' ? 'line' : t === 'gray' ? 'ray' : 'segment', measure: t === 'gdist'}));
+    return;
+  }
+  keep();
+}
+/* Enter closes a polygon being constructed */
+function geoFinish() {
+  const dr = st.draft; if (!dr?.geo) return false;
+  if (dr.tool === 'gpoly' && dr.picks.length >= 3) { const next = clone(st.scene), id = freeIdIn(next, 'gpoly'); next.objects.push({...defaults('gpoly'), id, pts: [...dr.picks]}); st.draft = {tool: 'gpoly', picks: [], geo: true}; if (commit(next)) { setSel([id]); paint(); } }
+  else { st.draft = null; paint(); }
+  return true;
+}
+function setTool(t) { st.tool = TOOLS.includes(t) || GEO_TOOLS.includes(t) ? t : 'select'; st.draft = null; st.connect = null; paintTools(); paintCanvas(); status(); }
 /* the points a new point snaps to */
 function snapTargets(exclude) {
   const out = [];
@@ -556,6 +733,7 @@ function snapTargets(exclude) {
     if (['point', 'arc', 'pivot', 'pulley', 'charge'].includes(o.type)) out.push({x: o.x, y: o.y});
     if (o.type === 'floor' || o.type === 'ceiling') out.push({x: o.x, y: o.y}, {x: o.x + o.w, y: o.y});
   }
+  if (st.scene.objects.some(o => o.type === 'gpoint')) { const geo = computeGeometry(st.scene); for (const o of st.scene.objects) if (o.type === 'gpoint' && o.id !== exclude) { const g = geo.get(o.id); if (g) out.push({x: g.x, y: g.y}); } }
   return out;
 }
 function snapPt(p, {from = null, shift = false, exclude = ''} = {}) {
@@ -626,6 +804,7 @@ function addShape(o) {
 function finishDraft() { const dr = st.draft; if (!dr) return; dr.done = true; if (dr.pts) dr.pts = dr.pts.filter((q, i, a) => !i || Math.hypot(q.x - a[i - 1].x, q.y - a[i - 1].y) > 1e-9); const o = shapeOf(dr); st.draft = null; if (o) addShape(o); else paintCanvas(); status(); }
 function toolDown(ev) {
   const t = st.tool, raw = worldAt(ev), shift = ev.shiftKey;
+  if (GEO_TOOLS.includes(t)) { geoDown(ev); return; }
   if (t === 'eraser') { st.drag = {erase: new Set()}; const o = pickAt(ev); if (o) st.drag.erase.add(o.id); setSel([...st.drag.erase]); paintCanvas(); return; }
   if (t === 'fill') {
     const o = pickAt(ev); if (!o || !FILLABLE.includes(o.type)) return;
@@ -693,7 +872,7 @@ function bindCanvas() {
     if (rs && !st.connect) { if (st.sim) stopSim(); const c = isBody(rs) ? bodyPose(st.scene, rs) : rotCentre(rs); st.drag = {id: rs.id, rot: true, c, before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
     if (st.tool !== 'select' && !st.connect) { if (st.sim) { stopSim(); paint(); } toolDown(ev); return; }
     const o = pickAt(ev);
-    if (st.connect) { connectClick(o); return; }
+    if (st.connect) { connectClick(o, worldAt(ev)); return; }
     if (st.sim) { stopSim(); paint(); }
     const add = ev.shiftKey || ev.ctrlKey || ev.metaKey;
     if (!o) {
@@ -704,8 +883,9 @@ function bindCanvas() {
     if (add) { const ids = new Set(selIds()); ids.has(o.id) ? ids.delete(o.id) : ids.add(o.id); setSel([...ids], o.id); paint(); return; }
     if (!st.selection.has(o.id)) setSel([o.id]); else st.sel = o.id;
     paintCanvas(); paintSide(); status(); paintBar();
-    const ids = selIds().filter(id => !NO_DRAG.includes(byId(id).type) && !byId(id).lock);
+    const ids = [...new Set(selIds().filter(id => !NO_DRAG.includes(byId(id).type) && !byId(id).lock).flatMap(id => geoDragIds(byId(id))))].filter(id => byId(id) && !byId(id).lock);
     if (!ids.length || (byId(o.id).lock && ids.length <= 1)) return;
+    if (ids.length > 1 || ids[0] !== o.id) { st.drag = {group: ids, origs: new Map(ids.map(id => [id, clone(byId(id))])), start: worldAt(ev), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
     st.drag = ids.length > 1 ? {group: ids, origs: new Map(ids.map(id => [id, clone(byId(id))])), start: worldAt(ev), before, moved: false} : {id: o.id, start: worldAt(ev), orig: clone(o), follow: followersOf(o), before, moved: false};
     box.setPointerCapture?.(ev.pointerId);
   });
@@ -853,6 +1033,22 @@ const slideRange = (o, k, f) => {
 };
 /* fields that mean nothing for this object as it is now set (a switch has no value, a function curve no γ …) */
 function relevant(o, k) {
+  if (o.type === 'curve') {
+    const K = o.kind;
+    if (k === 'expr2') return K === 'param';
+    if (k === 'rel') return K === 'ineq';
+    if (['tangent', 'area', 'roots', 'extrema'].includes(k)) return K === 'func';
+    if (k === 'tx') return K === 'func' && o.tangent;
+    if (k === 'a1' || k === 'a2') return K === 'func' && o.area;
+    if (k === 'color') return ['func', 'param', 'polar', 'ineq', 'points'].includes(K);
+    if (K === 'ineq' && ['x1', 'x2', 'heads', 'shade', 'pattern', 'y1', 'y2', 'gamma', 'data'].includes(k)) return false;
+    if ((K === 'param' || K === 'polar') && ['shade', 'y1', 'y2', 'gamma', 'data'].includes(k)) return false;
+    if (k === 'expr' && (K === 'param' || K === 'polar' || K === 'ineq')) return true;
+  }
+  if (o.type === 'gpoint') { if (k === 'x' || k === 'y') return o.kind === 'free' || o.kind === 'on'; if (k === 'a') return o.kind !== 'free'; if (k === 'b') return o.kind === 'mid' || o.kind === 'inter'; if (k === 'n') return o.kind === 'inter'; }
+  if (o.type === 'gline') { if (k === 'b') return o.kind !== 'perp' && o.kind !== 'par'; if (k === 'base') return o.kind === 'perp' || o.kind === 'par'; }
+  if (o.type === 'gcircle' && k === 'r') return !o.p;
+  if (o.type === 'joint' && ['k', 'damp', 'coils'].includes(k)) return o.kind === 'spring';
   if (o.type === 'element') {
     const K = o.kind;
     if (k === 'value') return !!X2.units[K];
@@ -879,12 +1075,14 @@ function relevant(o, k) {
   return true;
 }
 const QNAME = {psi: 'psiQ', levels: 'levelsQ', E: 'EQ', mass: 'mass'};
-const fieldName = (o, k) => o.type === 'particle' && k === 'arrow' ? X4.fields.speedArrow : o.type === 'qpot' && QNAME[k] ? X4.fields[QNAME[k]] : o.type === 'block' && k === 'mu' ? (ko ? '마찰 계수 μ (윗면)' : 'Friction μ (top face)') : o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
+const fieldName = (o, k) => k === 'mass' && !['qpot', 'well'].includes(o.type) ? (o.type === 'charge' ? (ko ? '질량 (mg)' : 'Mass (mg)') : (ko ? '질량 (kg)' : 'Mass (kg)')) : GEO_TYPES.includes(o.type) && X5.geoFields[k] ? X5.geoFields[k] : o.type === 'joint' && (k === 'a' || k === 'b') ? X5.geoFields[k] : o.type === 'curve' && ['param', 'polar'].includes(o.kind) && (k === 'x1' || k === 'x2') ? (k === 'x1' ? (ko ? 't 처음' : 't from') : (ko ? 't 끝' : 't to'))
+  : o.type === 'curve' && k === 'expr' && o.kind !== 'func' && ['param', 'polar', 'ineq'].includes(o.kind) ? ({param: 'x(t)', polar: ko ? 'r(t) (t = θ, 라디안)' : 'r(t) (t = θ, radians)', ineq: 'f(x)'})[o.kind] : o.type === 'particle' && k === 'arrow' ? X4.fields.speedArrow : o.type === 'qpot' && QNAME[k] ? X4.fields[QNAME[k]] : o.type === 'block' && k === 'mu' ? (ko ? '마찰 계수 μ (윗면)' : 'Friction μ (top face)') : o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
 /* the leads that touch a bridge wire at its jockey move with it */
 const jockey = b => ({x: b.x1 + (b.x2 - b.x1) * b.at, y: b.y1 + (b.y2 - b.y1) * b.at});
 function followJockey(scene, J0, J1) { for (const e of scene.objects) if (e.type === 'element') for (const k of [1, 2]) if (Math.hypot(e['x' + k] - J0.x, e['y' + k] - J0.y) < 1e-6) { e['x' + k] = r4(J1.x); e['y' + k] = r4(J1.y); } }
 /* which simulation and solver controls make sense for this figure */
-const hasMech = () => st.scene.objects.some(o => isBody(o) || o.type === 'force' || o.type === 'spring');
+const hasMech = () => st.scene.objects.some(o => isBody(o) || o.type === 'force' || o.type === 'spring' || (isPhysShape(o) && o.phys === 'dynamic'));
+const hasPhys = () => st.scene.objects.some(isPhysShape);
 const hasCircuit = () => st.scene.objects.some(o => o.type === 'element' || o.type === 'bridge');
 function paintSide() {
   const box = $('props'); if (!box) return;
@@ -897,12 +1095,15 @@ function paintSide() {
       ${hasMech() ? `<label>${T.g}<input data-scene="g" type="number" step="0.1" value="${st.scene.g}"></label>` : ''}<label>${T.gridSize}<input data-scene="grid" type="number" step="0.05" value="${st.scene.grid}"></label>
       <label class="wide">${X3.tools.printW}<input data-scene="printW" type="number" min="0" max="400" step="5" value="${st.scene.printW || 0}"></label>
       <label class="chk wide"><input type="checkbox" data-scene="values"${st.scene.values ? ' checked' : ''}>${X3.tools.values}</label>
-      <label class="chk wide"><input type="checkbox" id="prefExample"${pr.example !== false ? ' checked' : ''}>${X3.tools.example}</label></div>
+      <label class="chk wide"><input type="checkbox" id="prefExample"${pr.example !== false ? ' checked' : ''}>${X3.tools.example}</label>
+      ${hasPhys() ? `<div class="wide note">⚙ ${esc(X5.physScene)}</div><label class="chk"><input type="checkbox" data-scene="gravityOn"${st.scene.gravityOn !== false ? ' checked' : ''}>${esc(X5.gravityOn)}</label><label>${esc(X5.drag)}<input data-scene="drag" type="number" min="0" max="50" step="0.05" value="${st.scene.drag || 0}"></label>` : ''}</div>
       <details class="stylesrc"><summary>${X3.tools.styleSrc}</summary><p class="note">${esc(t.source)}${t.n ? ` · n = ${t.n}` : ''} · ${ko ? '그림 폭' : 'figure width'} ${t.widthPt} pt · ${ko ? '글자' : 'labels'} ${t.labelPt} pt · ${ko ? '선' : 'lines'} ${t.thin}/${t.main}/${t.thick} pt${t.gray != null ? ` · ${ko ? '회색' : 'gray'} ${t.gray}` : ''}${t.est.length ? ` · ${ko ? '추정' : 'estimated'}: ${t.est.join(', ')}` : ''}${!t.n ? ` · ${ko ? '실측 자료 없음 (가정)' : 'no measured source (assumed)'}` : ''}</p></details>
       <p class="note">${T.noSel}</p><div class="note">${T.objects}</div><div class="olist">${st.scene.objects.map(x => `<button type="button" data-pick="${esc(x.id)}">${esc(x.id)} · ${esc(x.type === 'element' ? X2.kinds[x.kind] : T.types[x.type])}</button>`).join('')}</div>`;
     box.querySelectorAll('[data-scene]').forEach(el => el.onchange = () => {
       const next = clone(st.scene), k = el.dataset.scene;
-      if (k === 'values') next.values = el.checked; else if (k === 'printW') { const v = parseFloat(el.value); if (v > 0) next.printW = Math.max(20, Math.min(400, v)); else delete next.printW; }
+      if (k === 'gravityOn') { if (el.checked) delete next.gravityOn; else next.gravityOn = false; }
+      else if (k === 'drag') { const v = parseFloat(el.value); if (v > 0) next.drag = Math.min(50, v); else delete next.drag; }
+      else if (k === 'values') next.values = el.checked; else if (k === 'printW') { const v = parseFloat(el.value); if (v > 0) next.printW = Math.max(20, Math.min(400, v)); else delete next.printW; }
       else next[k] = k === 'title' || k === 'style' ? el.value : parseFloat(el.value);
       commit(next);
     });
@@ -919,15 +1120,20 @@ function paintSide() {
     if (f.k === 'bool') return `<label class="chk wide"><input data-f="${k}" type="checkbox"${o[k] ? ' checked' : ''}>${L}</label>`;
     if (f.k === 'enum') return `<label>${L}<select data-f="${k}">${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : o.type === 'block' && v === 'box' ? (ko ? '상자' : 'Box') : T.enums[v] || v)}</option>`).join('')}</select></label>`;
     if (f.k === 'ref') return `<label>${L}<select data-f="${k}">${opts(f.types, o[k], optional(k))}</select></label>`;
+    if (f.k === 'refs' && o.type === 'gpoly') return `<div class="wide note">${esc(L)}: ${esc(o.pts.join(', '))}</div>`;
     if (f.k === 'refs') { const ps = st.scene.objects.filter(x => x.type === 'pulley'); return ps.length ? `<div class="wide"><span class="note">${L}</span><div class="over">${ps.map(p => `<label><input type="checkbox" data-over="${esc(p.id)}"${o.over.includes(p.id) ? ' checked' : ''}>${esc(p.id)}</label>`).join('')}</div></div>` : ''; }
     if (f.k === 'pts') return '';
     if (f.k === 'params') { const list = parseParams(o[k]) || []; return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>${list.map((q, i) => `<label class="wide slide">${esc(q.name)}<span class="numrow"><input data-pv="${i}" type="number" step="any" value="${+q.value.toPrecision(6)}"><input data-ps="${i}" type="range" min="${q.min}" max="${q.max}" step="${(q.max - q.min) / 200}" value="${q.value}" aria-label="${esc(q.name)}"></span></label>`).join('')}`; }
-    if (f.k === 'expr' || k === 'data' || k === 'xt' || k === 'yt') return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>`;
+    if (f.k === 'expr' || k === 'data' || k === 'xt' || k === 'yt' || k === 'weights' || k === 'layers') return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>`;
     return `<label class="wide">${L}<span class="tin"><input data-f="${k}" data-text="1" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"><button type="button" class="symbtn" data-sym="${k}" title="${esc(X2.symTitle)}">Ω</button></span><span class="tex" data-tex="${k}"></span></label>`;
   };
-  /* the object's own values first, its look (line weight, label size, lock) last */
-  const main = fields.filter(([k]) => !['lw', 'ls', 'lock'].includes(k)), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k));
-  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2><div class="props">${main.map(field).join('')}</div>
+  /* the object's own values first, its physics (a drawn shape), its look (line weight, label size, lock) last; its
+     style (그림체) on top */
+  const PK = Object.keys(PHYS_FIELDS), physRel = k => k === 'phys' || (o.phys === 'dynamic') || (o.phys === 'static' && (k === 'pmu' || k === 'pe'));
+  const main = fields.filter(([k]) => !['lw', 'ls', 'lock', 'style', ...PK].includes(k)), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k)), phys = fields.filter(([k]) => PK.includes(k) && physRel(k));
+  const physBox = PHYS_SHAPES.includes(o.type) ? `<details class="physp"${o.phys !== 'none' ? ' open' : ''}><summary>⚙ ${esc(X5.physTitle)}${o.phys !== 'none' ? ' · ' + esc(T.enums[o.phys]) : ''}</summary><p class="note">${esc(X5.physHint)}</p><div class="props">${phys.map(field).join('')}</div>
+    ${o.phys !== 'none' ? `<div class="row tight">${['spring', 'string', 'rod'].map(k2 => `<button type="button" data-join="${k2}">${esc(X5['join' + k2[0].toUpperCase() + k2.slice(1)])}</button>`).join('')}</div>` : ''}</details>` : '';
+  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2>${styleSelect(o.style || '')}<div class="props">${main.map(field).join('')}</div>${physBox}
     ${fields.some(([, f]) => f.k === 'txt') ? `<p class="note">${esc(T.texHint)}</p>` : ''}
     <details class="look"><summary>${ko ? '선 · 글자 · 잠금' : 'Lines, labels, lock'}</summary><div class="props">${look.map(field).join('')}</div></details>
     <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}<button type="button" data-act="front">${X3.tools.front}</button><button type="button" data-act="back">${X3.tools.backZ}</button><button type="button" data-act="del">${T.del}</button></div>`;
@@ -939,6 +1145,8 @@ function paintSide() {
       else if (f.k === 'bool') x[k] = el.checked;
       else x[k] = el.value;
       if (o.type === 'element' && k === 'kind' && X2.units[x.kind] && !X2.units[o.kind]) x.value = defaults('element').value;
+      /* a curve changing between a function of x and one of t takes a formula in the new variable */
+      if (o.type === 'curve' && k === 'kind') { const tv = v => v === 'param' || v === 'polar'; if (tv(x.kind) && !tv(o.kind)) Object.assign(x, x.kind === 'polar' ? {expr: '1 + cos(t)'} : {expr: 'cos(t)', expr2: 'sin(t)'}, {x1: 0, x2: 6.2832}); else if (!tv(x.kind) && tv(o.kind)) x.expr = 'sin(x)'; else if (x.kind === 'polar' && o.kind === 'param') x.expr = '1 + cos(t)'; }
       if (k === 'on') {
         if (x.on) { const fr = surfaceFrame(next.objects.find(y => y.id === x.on), next); x.at = r4(Math.max(0, Math.min(fr.length, vec.dot(vec.sub(bodyPose(st.scene, o), fr.p0), fr.u)))); }
         else { const p = bodyPose(st.scene, o); x.x = r4(p.x); x.y = r4(p.y); }
@@ -981,6 +1189,10 @@ function paintSide() {
     alignHanging(next, x); commit(next, {keepSel: true});
   });
   box.querySelectorAll('[data-sym]').forEach(b => b.onclick = () => { st.lastText = {id: o.id, k: b.dataset.sym}; openSymbols(); });
+  bindStyleSelect(box);
+  box.querySelectorAll('[data-join]').forEach(b => b.onclick = () => { st.connect = {type: 'joint', kind: b.dataset.join, a: o.id, over: []}; status(); paintCanvas(); flash(esc(X5.joinHint)); });
+  /* a text field: where its caret is (for the symbol picker), and Tab from one placeholder box to the next */
+  box.querySelectorAll('[data-text]').forEach(el => bindTextField(el, o.id, el.dataset.f));
   box.querySelector('[data-act="dup"]')?.addEventListener('click', dup);
   box.querySelector('[data-act="front"]').onclick = () => zOrder(true); box.querySelector('[data-act="back"]').onclick = () => zOrder(false);
   box.querySelector('[data-act="del"]').onclick = del;
@@ -991,10 +1203,14 @@ function paintMulti(box, ids) {
   box.innerHTML = `<h2>${esc(tl.multi(ids.length))}</h2>
     <div class="note">${tl.align}</div><div class="row tight">${b('aL', '⇤ ' + tl.aL)}${b('aC', '↔ ' + tl.aC)}${b('aR', tl.aR + ' ⇥')}${b('aT', '⤒ ' + tl.aT)}${b('aM', '↕ ' + tl.aM)}${b('aB', '⤓ ' + tl.aB)}</div>
     <div class="note">${tl.distribute}</div><div class="row tight">${b('dH', '⋯ ' + tl.dH)}${b('dV', '⋮ ' + tl.dV)}</div>
-    <div class="props"><label>${T.fields.lw}<input data-all="lw" type="number" step="0.1" min="0.2" max="5" value="${byId(ids[0]).lw}"></label><label>${T.fields.ls}<input data-all="ls" type="number" step="0.1" min="0.3" max="4" value="${byId(ids[0]).ls}"></label></div>
+    ${styleSelect(ids.map(id => byId(id).style || '').every((v, i, a) => v === a[0]) ? byId(ids[0]).style || '' : null)}
+    <div class="props"><label>${T.fields.lw}<input data-all="lw" type="number" step="0.1" min="0.2" max="5" value="${byId(ids[0]).lw}"></label><label>${T.fields.ls}<input data-all="ls" type="number" step="0.1" min="0.3" max="4" value="${byId(ids[0]).ls}"></label>
+      ${ids.some(id => PHYS_SHAPES.includes(byId(id).type)) ? `<label class="wide">⚙ ${esc(X5.physTitle)}<select data-allphys>${FIELDS.rect.phys.list.map(v => `<option value="${v}"${ids.every(id => byId(id).phys === v) ? ' selected' : ''}>${esc(T.enums[v] || X5.physNone)}</option>`).join('')}</select></label>` : ''}</div>
     <div class="row"><button type="button" data-act="dup">${T.dup}</button><button type="button" data-act="lock">${tl.lockAll}</button><button type="button" data-act="unlock">${tl.unlockAll}</button><button type="button" data-act="front">${tl.front}</button><button type="button" data-act="back">${tl.backZ}</button><button type="button" data-act="del">${T.del}</button></div>
     <div class="olist">${ids.map(id => `<button type="button" data-pick="${esc(id)}">${esc(id)}</button>`).join('')}</div>`;
   box.querySelectorAll('[data-al]').forEach(x => x.onclick = () => alignSel(x.dataset.al));
+  bindStyleSelect(box);
+  box.querySelector('[data-allphys]')?.addEventListener('change', e => setAll('phys', e.target.value));
   box.querySelectorAll('[data-all]').forEach(x => x.onchange = () => { const v = parseFloat(x.value); if (Number.isFinite(v)) setAll(x.dataset.all, v); });
   box.querySelector('[data-act="dup"]').onclick = dup; box.querySelector('[data-act="del"]').onclick = del;
   box.querySelector('[data-act="lock"]').onclick = () => setAll('lock', true); box.querySelector('[data-act="unlock"]').onclick = () => setAll('lock', false);
@@ -1070,6 +1286,8 @@ function graphSvg() {
 function status() {
   const el = $('status'); if (!el) return;
   if (st.msg) { el.innerHTML = st.msg; return; }
+  if (st.draft?.geo) { const steps = X5.geoStep[st.draft.tool]; el.innerHTML = `<b>${esc(X5.geoTools[st.draft.tool].split(':')[0])}</b>${steps ? ' · ' + esc(steps[Math.min(steps.length - 1, st.draft.picks.length)]) : ''}${st.draft.picks.length ? ' (' + esc(st.draft.picks.join(', ')) + ')' : ''} · Esc`; return; }
+  if (GEO_TOOLS.includes(st.tool)) { el.innerHTML = `<b>${esc(X5.geoTools[st.tool])}</b>`; return; }
   if (st.draft && X4.draftHint[st.draft.tool]) { el.innerHTML = `<b>${esc(X4.tools[st.draft.tool].split(':')[0])}</b> · ${esc(X4.draftHint[st.draft.tool])}`; return; }
   if (st.connect) { const c = st.connect; el.innerHTML = `<b>${esc(T.connect[c.type])}</b> ${c.a ? esc([c.a, ...c.over].join(' → ')) + ' → …' : ''} · ${T.connect.esc}`; return; }
   const sim = st.sim;
@@ -1095,7 +1313,7 @@ function exportSvg(paper = true) {
   const sc = st.sim ? st.sim.applyTo(st.scene) : st.scene;
   let forces = null; if (st.fbd) { try { forces = (st.sim || buildSim(st.scene)).forces(); } catch (e) {} }
   return renderSVG(sc, {width: W, view: view(), forces, circuit: st.solve && hasCircuit() ? solveCircuit(st.scene) : null, ...(paper ? paperScale() : {}), poses: st.sim ? st.sim.poses() : null, velocities: st.sim ? st.sim.velocities() : null, anchors: st.sim?.anchors, title: st.scene.title || T.title,
-    conical: st.scene.objects.filter(o => (o.type === 'string' || o.type === 'rod') && o.mode === 'conical').map(conicalOrbit).filter(Boolean)});
+    ...simDrawOpts(!!st.sim)});
 }
 const b64 = s => { const bytes = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(bin); };
 const svgDataUrl = svg => 'data:image/svg+xml;base64,' + b64(svg);
@@ -1122,18 +1340,152 @@ function toPaper() {
   $('outMsg').innerHTML = `<span class="ok">${T.inPaper}</span> <a class="btn" href="${embedded ? '/#/workshop/make' : 'teach.html'}" target="_top">${T.openPaper}</a>`;
   paintOut(true);
 }
+/* ── HaslaLab storage (보관함) first: 저장 keeps the figure (JSON + SVG) in the folder 그림 and saves over the same files
+   the next time (their ids are kept with the figure in this browser); 보관함에서 열기 lists the figures there ── */
+const FIG_FOLDER = '그림', STORE_IDS_KEY = 'hlDrawStoreIds';
+const X6 = ko ? {save: '💾 저장', saveT: '보관함 ‘그림’ 폴더에 저장 (다시 누르면 같은 파일에 덮어씀)', open: '📂 보관함에서 열기', saved: n => `보관함 ‘그림/${n}’에 저장했습니다.`, overwritten: n => `보관함 ‘그림/${n}’을(를) 새 내용으로 바꿨습니다.`,
+  changed: '보관함의 파일이 다른 곳에서 바뀌어 새 파일로 저장했습니다.', localOnly: '로그인하지 않아 이 브라우저에 저장했습니다.', list: '보관함 ‘그림’ 폴더의 그림', none: '보관함 ‘그림’ 폴더에 저장한 그림이 없습니다.', opened: n => `보관함에서 ‘${n}’을(를) 열었습니다.`,
+  ai: '✨ AI로 그리기', aiHint: '그릴 그림을 말로 적으세요. 예: 30° 빗면 위 2 kg 블록, 마찰계수 0.2, 도르래로 1 kg 추와 연결', aiEdit: '현재 그림 고치기', aiGo: '그리기', aiLeft: n => `오늘 ${n}번 더 쓸 수 있습니다.`,
+  aiErr: {login_required: '로그인하면 쓸 수 있습니다.', quota: '오늘 쓸 수 있는 횟수를 다 썼습니다.', not_configured: 'AI가 아직 준비되지 않았습니다.', bad_prompt: '설명을 조금 더 구체적으로 적어 주세요.', ai_failed: 'AI가 그림을 만들지 못했습니다. 다시 시도해 주세요.', empty: 'AI가 돌려준 그림에 쓸 수 있는 것이 없었습니다.'}}
+  : {save: '💾 Save', saveT: 'Save to the “그림” folder of your storage (saving again overwrites the same file)', open: '📂 Open from storage', saved: n => `Saved to storage: 그림/${n}.`, overwritten: n => `Updated 그림/${n} in your storage.`,
+  changed: 'The stored file was changed elsewhere, so this was saved as a new file.', localOnly: 'Not logged in: saved in this browser.', list: 'Figures in the “그림” folder', none: 'No figures in the “그림” folder yet.', opened: n => `Opened ‘${n}’ from storage.`,
+  ai: '✨ Draw with AI', aiHint: 'Describe the figure. E.g. a 2 kg block on a 30° incline, μ = 0.2, tied over a pulley to a 1 kg mass', aiEdit: 'Change the current figure', aiGo: 'Draw', aiLeft: n => `${n} left today.`,
+  aiErr: {login_required: 'Log in to use it.', quota: 'You have used today’s quota.', not_configured: 'The AI is not set up yet.', bad_prompt: 'Describe the figure a little more.', ai_failed: 'The AI could not make the figure. Try again.', empty: 'Nothing usable came back.'}};
+st.storeIds = (() => { try { const v = JSON.parse(store.get(STORE_IDS_KEY) || 'null'); return v && typeof v.json === 'string' ? v : null; } catch (e) { return null; } })();
+const keepStoreIds = ids => { st.storeIds = ids; if (ids) store.set(STORE_IDS_KEY, JSON.stringify(ids)); else store.del(STORE_IDS_KEY); };
+const figForm = (ext, body, type, extra = {}) => { const form = new FormData(); form.append('file', new File([body], fileName(ext), {type})); form.append('kind', 'figure'); for (const [k, v] of Object.entries(extra)) form.append(k, v); return form; };
 async function toStorage() {
+  const msg = $('outMsg') || $('status');
+  if (!token()) { saveLocal(); msg.innerHTML = `${esc(X6.localOnly)} ${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
+  msg.textContent = '…';
+  const json = JSON.stringify(st.scene, null, 1), svg = exportSvg(), parts = [['json', json, 'application/json'], ['svg', svg, 'image/svg+xml']];
+  const create = async () => { const out = {}; for (const [ext, body, type] of parts) { const r = await api('/api/workshop/storage/files', 'POST', figForm(ext, body, type, {folder: FIG_FOLDER, ensure_folder: '1'}), true); out[ext] = r.file; } return {json: out.json.id, svg: out.svg.id, base: out.json.updated_at, name: out.json.name}; };
+  try {
+    let ids = st.storeIds, how = 'saved';
+    if (ids?.json) {
+      try {
+        const r = await api(`/api/workshop/storage/files/${encodeURIComponent(ids.json)}/content`, 'PUT', figForm('json', json, 'application/json', ids.base ? {base: String(ids.base)} : {}), true);
+        let svgId = ids.svg;
+        try { if (svgId) await api(`/api/workshop/storage/files/${encodeURIComponent(svgId)}/content`, 'PUT', figForm('svg', svg, 'image/svg+xml'), true); } catch (e) { if (e.status !== 404) throw e; svgId = ''; }
+        if (!svgId) svgId = (await api('/api/workshop/storage/files', 'POST', figForm('svg', svg, 'image/svg+xml', {folder: FIG_FOLDER, ensure_folder: '1'}), true)).file.id;
+        ids = {...ids, svg: svgId, base: r.file?.updated_at ?? ids.base, name: r.file?.name || ids.name}; how = 'overwritten';
+      } catch (e) {
+        if (e.status === 404) ids = await create();
+        else if (e.status === 409) { ids = await create(); how = 'changed'; }
+        else throw e;
+      }
+    } else ids = await create();
+    keepStoreIds(ids);
+    msg.innerHTML = `<span class="ok">${esc(how === 'changed' ? X6.changed : X6[how](ids.name || fileName('json')))}</span>`;
+  } catch (e) { msg.innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
+}
+async function openFromStorage() {
   const msg = $('outMsg');
   if (!token()) { msg.innerHTML = `${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
   msg.textContent = '…';
   try {
-    await api('/api/workshop/storage/folders', 'POST', {path: T.folder});
-    for (const [ext, body, type] of [['json', JSON.stringify(st.scene, null, 1), 'application/json'], ['svg', exportSvg(), 'image/svg+xml']]) {
-      const form = new FormData(); form.append('file', new File([body], fileName(ext), {type})); form.append('folder', T.folder);
-      await api('/api/workshop/storage/files', 'POST', form, true);
-    }
-    msg.innerHTML = `<span class="ok">${esc(T.stored(T.folder))}</span>`;
+    const r = await api(`/api/workshop/storage?kind=figure&folder=${encodeURIComponent(FIG_FOLDER)}`), files = (r.files || []), jsons = files.filter(f => /\.json$/i.test(f.name));
+    if (!jsons.length) { msg.textContent = X6.none; return; }
+    msg.innerHTML = `<span class="note">${esc(X6.list)}</span><div class="saves">${jsons.slice(0, 60).map((f, i) => `<div><span>${esc(f.name.replace(/\.json$/i, ''))}</span><button type="button" data-sopen="${i}">${T.open}</button></div>`).join('')}</div>`;
+    msg.querySelectorAll('[data-sopen]').forEach(b => b.onclick = async () => {
+      const f = jsons[+b.dataset.sopen]; msg.textContent = '…';
+      try {
+        const scene = await api(`/api/workshop/storage/files/${encodeURIComponent(f.id)}`);
+        const r2 = validateScene(scene, {lenient: true}); if (!r2.scene.view) r2.scene.view = sceneBounds(r2.scene);
+        const svgf = files.find(x => x.name === f.name.replace(/\.json$/i, '.svg'));
+        setSel([]); st.ai = null; st.zoom = null; stopSim(); commit(r2.scene);
+        keepStoreIds({json: f.id, svg: svgf?.id || '', base: f.updated_at, name: f.name});
+        $('outMsg').innerHTML = `<span class="ok">${esc(X6.opened(f.name))}</span>`;
+      } catch (e) { $('outMsg').innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
+    });
   } catch (e) { msg.innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
+}
+/* ── sharing (작품 공유, share-publish.js window.HL_SHARE): publish the figure with a title, a description, how to use it,
+   tags and a topic; the share id is kept with the figure in this browser, so the dialog offers to update the shared
+   version or take it down. Opened as ?share=N: someone else's figure becomes a new draft published as a remix of N;
+   one's own unpublished draft N is published as itself (creation_id). ── */
+const SHARE_KEY = 'hlDrawShare';
+const X7 = ko ? {share: '🔗 공유하기', title: '작품 공유', name: '제목', desc: '설명', howto: '사용 방법', tags: '태그 (쉼표로)', topic: '주제', publish: '공유하기', update: '공유 내용 업데이트', unpublish: '공유 취소', view: '공유 페이지 보기', cancel: '닫기',
+  done: '공유했습니다.', updated: '공유 내용을 바꿨습니다.', removed: '공유를 취소했습니다.', remix: n => `공유된 그림 #${n}을(를) 불러왔습니다. 고쳐서 공유하면 리믹스가 됩니다.`, draft: n => `초안 #${n}을(를) 불러왔습니다.`, login: '로그인하면 공유할 수 있습니다.', unavailable: '공유 기능을 불러오지 못했습니다.',
+  topics: {mechanics: '역학', em: '전자기', thermal: '열', optics: '광학', waves: '파동', modern: '현대물리', other: '기타'}}
+  : {share: '🔗 Share', title: 'Share this figure', name: 'Title', desc: 'Description', howto: 'How to use it', tags: 'Tags (comma separated)', topic: 'Topic', publish: 'Share', update: 'Update the shared version', unpublish: 'Stop sharing', view: 'Open the share page', cancel: 'Close',
+  done: 'Shared.', updated: 'The shared version was updated.', removed: 'No longer shared.', remix: n => `Loaded shared figure #${n}. Share your changes and it becomes a remix.`, draft: n => `Loaded draft #${n}.`, login: 'Log in to share.', unavailable: 'Sharing could not be loaded.',
+  topics: {mechanics: 'Mechanics', em: 'E&M', thermal: 'Thermal', optics: 'Optics', waves: 'Waves', modern: 'Modern', other: 'Other'}};
+st.share = (() => { try { const v = JSON.parse(store.get(SHARE_KEY) || 'null'); return v && typeof v === 'object' ? v : null; } catch (e) { return null; } })();
+const keepShare = v => { st.share = v; if (v) store.set(SHARE_KEY, JSON.stringify(v)); else store.del(SHARE_KEY); };
+const topicOf = () => { const d = Object.entries(DOMAINS).map(([k, l]) => [k, st.scene.objects.filter(o => l.includes(o.type)).length]).sort((a, b) => b[1] - a[1])[0]?.[0]; return {mech: 'mechanics', em: 'em', thermo: 'thermal', optics: 'optics', waves: 'waves', modern: 'modern'}[d] || 'other'; };
+function openShare() {
+  const S = window.HL_SHARE; let box = $('shareBox');
+  if (!S) { flash(`<span class="bad">${esc(X7.unavailable)}</span>`); return; }
+  if (!token()) { flash(`${esc(X7.login)} <a class="btn" href="/#/login" target="_top">${T.login}</a>`); return; }
+  if (!box) { box = document.createElement('div'); box.id = 'shareBox'; box.className = 'sharebox'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', X7.title); $('stageTop').after(box); }
+  const sh = st.share || {}, m = sh.meta || {};
+  box.hidden = false;
+  box.innerHTML = `<div class="symhead"><b>${esc(X7.title)}</b><button type="button" data-close aria-label="✕">✕</button></div>
+    <div class="props"><label class="wide">${esc(X7.name)}<input id="shTitle" maxlength="80" value="${esc(m.title || st.scene.title || '')}"></label>
+    <label class="wide">${esc(X7.desc)}<textarea id="shDesc" rows="3" maxlength="3000">${esc(m.description || '')}</textarea></label>
+    <label class="wide">${esc(X7.howto)}<textarea id="shHow" rows="2" maxlength="3000">${esc(m.howto || '')}</textarea></label>
+    <label>${esc(X7.tags)}<input id="shTags" maxlength="180" value="${esc((m.tags || []).join(', '))}"></label>
+    <label>${esc(X7.topic)}<select id="shTopic">${S.TOPICS.map(t => `<option value="${t}"${t === (m.topic || topicOf()) ? ' selected' : ''}>${esc(X7.topics[t] || t)}</option>`).join('')}</select></label></div>
+    <div class="row">${sh.id ? `<button type="button" class="primary" id="shUpd">${esc(X7.update)}</button><button type="button" id="shView">${esc(X7.view)}</button><button type="button" class="danger" id="shDel">${esc(X7.unpublish)}</button>` : `<button type="button" class="primary" id="shPub">${esc(X7.publish)}</button>`}</div>
+    <p class="note" id="shMsg" role="status"></p>`;
+  const msg = t => { $('shMsg').innerHTML = t; };
+  const fields = () => ({title: $('shTitle').value.trim() || st.scene.title || T.title, description: $('shDesc').value, howto: $('shHow').value, tags: $('shTags').value.split(',').map(x => x.trim()).filter(Boolean).slice(0, 8), topic: $('shTopic').value});
+  const content = () => { const thumb = S.svgThumb(exportSvg(false)); return {payload: {scene: st.scene}, ...(thumb ? {thumbnail: thumb} : {})}; };
+  const fail = e => msg(`<span class="bad">${esc(e?.code === 'login_required' ? X7.login : T.err[e?.code] || e?.code || T.err.other)}</span>`);
+  box.querySelector('[data-close]').onclick = () => { box.hidden = true; height(); };
+  $('shPub')?.addEventListener('click', async () => {
+    msg('…'); const f = fields();
+    try {
+      const r = await S.publish({type: 'figure', ...f, ...content(), ...(sh.draft ? {creation_id: sh.draft} : sh.remixOf ? {remix_of: sh.remixOf} : {})});
+      keepShare({id: r.id, meta: f}); openShare(); $('shMsg').innerHTML = `<span class="ok">${esc(X7.done)}</span>`;
+    } catch (e) { fail(e); }
+  });
+  $('shUpd')?.addEventListener('click', async () => { msg('…'); const f = fields(); try { await S.update(sh.id, {...f, ...content()}); keepShare({...sh, meta: f}); msg(`<span class="ok">${esc(X7.updated)}</span>`); } catch (e) { fail(e); } });
+  $('shDel')?.addEventListener('click', async () => { msg('…'); try { await S.unpublish(sh.id); keepShare(null); openShare(); $('shMsg').textContent = X7.removed; } catch (e) { fail(e); } });
+  $('shView')?.addEventListener('click', () => S.open(sh.id));
+  height();
+}
+/* #/workshop/draw?share=N: the shared figure N opened in the editor */
+async function openShared(n) {
+  const S = window.HL_SHARE; if (!S || !(n > 0)) return;
+  try {
+    const r = await S.get(n), p = r?.project, sc = p?.payload?.scene || p?.payload;
+    const v = validateScene(sc, {lenient: true}); if (!v.scene.objects.length) return;
+    if (!v.scene.view) v.scene.view = sceneBounds(v.scene);
+    keepStoreIds(null); setSel([]); st.zoom = null; stopSim(); commit(v.scene);
+    const mine = !!p.mine, meta = {title: p.title, description: p.description ?? p.descr ?? '', howto: p.howto || '', tags: p.tags || [], topic: p.topic};
+    keepShare(mine ? (p.status === 'public' ? {id: n, meta} : {draft: n, meta}) : {remixOf: n, meta: {...meta, title: p.title}});
+    flash(esc(mine ? X7.draft(n) : X7.remix(n)));
+  } catch (e) { flash(`<span class="bad">${esc(T.err[e?.code] || T.err.other)}</span>`); }
+}
+/* the models the server offers for drawing with AI (GET /api/workshop/ai/models), asked for once */
+async function aiModels() {
+  if (st.aiModels || !token()) return;
+  try { const r = await api('/api/workshop/ai/models'); st.aiModels = (r.models || []).filter(m => m && m.id && m.configured !== false); const sel = $('aiModel');
+    if (sel && st.aiModels.length > 1) { sel.innerHTML = st.aiModels.map(m => `<option value="${esc(m.id)}"${m.id === r.default ? ' selected' : ''}>${esc(m.model || m.id)}</option>`).join(''); sel.hidden = false; }
+  } catch (e) { st.aiModels = []; }
+}
+/* ── a figure from a description (POST /api/workshop/ai/scene): the answer is checked by the same validator (lenient),
+   then loaded as one step of history; its notes and the uses left today are shown ── */
+async function aiDraw() {
+  const box = $('aiMsg'), text = ($('aiPrompt')?.value || '').trim(), edit = !!$('aiEditCur')?.checked;
+  if (!text) { $('aiPrompt')?.focus(); return; }
+  if (!token()) { box.innerHTML = `${esc(X6.aiErr.login_required)} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
+  box.textContent = '…'; $('aiGo').disabled = true;
+  try {
+    const model = $('aiModel') && !$('aiModel').hidden ? $('aiModel').value : '';
+    const r = await api('/api/workshop/ai/scene', 'POST', {prompt: text.slice(0, 1200), ...(edit ? {scene: st.scene} : {}), lang, ...(model ? {model} : {})});
+    const v = validateScene(r?.scene, {lenient: true});
+    if (!v.scene.objects.length) throw Object.assign(new Error('empty'), {code: 'empty'});
+    if (!v.scene.view) v.scene.view = sceneBounds(v.scene);
+    stopSim(); setSel([]); st.zoom = null; st.ai = null;
+    if (!edit) keepStoreIds(null);
+    commit(v.scene);
+    const notes = (Array.isArray(r.notes) ? r.notes : []).filter(n => typeof n === 'string').slice(0, 6);
+    $('aiMsg').innerHTML = `${notes.length ? `<ul>${notes.map(n => `<li>${esc(n.slice(0, 200))}</li>`).join('')}</ul>` : ''}${Number.isFinite(r.left) ? `<span class="note">${esc(X6.aiLeft(r.left))}</span>` : ''}`;
+  } catch (e) { box.innerHTML = `<span class="bad">${esc(X6.aiErr[e.code] || errText(e))}</span>`; }
+  finally { if ($('aiGo')) $('aiGo').disabled = false; }
 }
 const saves = () => { try { const l = JSON.parse(store.get(SAVES_KEY) || '[]'); return Array.isArray(l) ? l.filter(x => x && typeof x.name === 'string' && x.scene) : []; } catch (e) { return []; } };
 function saveLocal() {
@@ -1156,13 +1508,14 @@ function paintOut(keepMsg) {
     <div class="row"><button type="button" id="oSvg">${T.svg}</button><button type="button" id="oPng">${T.png}</button></div>
     ${st.paperEdit ? '' : `<label class="note" for="paperQ">${T.paperQ}</label><textarea id="paperQ" class="q" rows="2"></textarea>`}
     <div class="row"><button type="button" class="primary" id="oPaper">${st.paperEdit ? T.replacePaper : T.toPaper}</button></div>
-    <div class="row"><button type="button" id="oStore">${T.store}</button><button type="button" id="oLocal">${T.local}</button></div>
+    <div class="row"><button type="button" class="primary" id="oStore">${esc(X6.save)}</button><button type="button" id="oOpen">${esc(X6.open)}</button></div>
+    <div class="row"><button type="button" id="oLocal">${T.local}</button></div>
     <div class="row"><button type="button" id="oJson">${T.json}</button><label class="btn filebtn">${T.load}<input type="file" id="oLoad" accept=".json,application/json"></label></div>
     <p class="note" id="outMsg" role="status">${old}</p>
     ${list.length ? `<div class="note">${T.saves}</div><div class="saves">${list.map((x, i) => `<div><span>${esc(x.name)}</span><button type="button" data-open="${i}">${T.open}</button><button type="button" data-drop="${i}" aria-label="${T.del}">✕</button></div>`).join('')}</div>` : ''}`;
   $('oSvg').onclick = () => download(new Blob([exportSvg()], {type: 'image/svg+xml'}), fileName('svg'));
   $('oPng').onclick = () => pngBlob(exportSvg()).then(b => download(b, fileName('png'))).catch(() => { $('outMsg').innerHTML = `<span class="bad">${T.err.other}</span>`; });
-  $('oPaper').onclick = toPaper; $('oStore').onclick = toStorage; $('oLocal').onclick = saveLocal;
+  $('oPaper').onclick = toPaper; $('oStore').onclick = toStorage; $('oOpen').onclick = openFromStorage; $('oLocal').onclick = saveLocal;
   $('oJson').onclick = () => download(new Blob([JSON.stringify(st.scene, null, 1)], {type: 'application/json'}), fileName('json'));
   $('oLoad').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f || f.size > 1e6) return; try { openScene(JSON.parse(await f.text())); } catch (x) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; } };
   box.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openScene(list[+b.dataset.open].scene));
@@ -1211,51 +1564,120 @@ function paintPalette() {
   box.querySelectorAll('[data-dom]').forEach(b => b.onclick = () => { st.dom = b.dataset.dom; st.q = ''; const s2 = $('palSearch'); if (s2) s2.value = ''; paintPalette(); height(); });
   box.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { const [d, i] = b.dataset.add.split(':'), e = PALETTE[d][+i]; addObject(e[0], clone(e[1])); });
 }
-/* the symbol picker: inserts into the text field last used, or adds a label */
+/* the style (그림체) of the selected objects only: '' follows the figure's */
+function styleSelect(cur) {
+  return `<label class="wide stylepick">${esc(X5.fields.style)}<select data-objstyle>${cur === null ? '<option value="" selected>—</option>' : ''}<option value=""${cur === '' ? ' selected' : ''}>${esc(X5.styleInherit(STYLES[st.scene.style].name[lang]))}</option>${STYLE_KEYS.map(k => `<option value="${k}"${cur === k ? ' selected' : ''}>${esc(STYLES[k].name[lang])}</option>`).join('')}</select></label>`;
+}
+function bindStyleSelect(box) { box.querySelector('[data-objstyle]')?.addEventListener('change', e => setAll('style', e.target.value)); }
+/* a label's text field: the caret is kept (the symbol picker inserts there), and Tab goes to the next placeholder box
+   (Shift+Tab to the one before) */
+function bindTextField(el, id, k) {
+  const keep = () => { st.lastText = {id, k, caret: el.selectionStart, caretEnd: el.selectionEnd}; };
+  for (const ev of ['keyup', 'click', 'select', 'focus', 'input']) el.addEventListener(ev, keep);
+  el.addEventListener('keydown', e => {
+    if (e.key !== 'Tab' || !el.value.includes(PLACEHOLDER)) return;
+    const v = el.value, from = e.shiftKey ? el.selectionStart - 1 : el.selectionEnd;
+    let i = e.shiftKey ? v.lastIndexOf(PLACEHOLDER, from) : v.indexOf(PLACEHOLDER, from);
+    if (i < 0) i = e.shiftKey ? v.lastIndexOf(PLACEHOLDER) : v.indexOf(PLACEHOLDER);
+    if (i < 0) return;
+    e.preventDefault(); el.setSelectionRange(i, i + 1); keep();
+  });
+}
+/* ── the symbol picker, organised like an equation editor: Greek, accents on a letter you choose, vector and calculus
+   operators, relations and signs, physical constants (typeset, their value and unit on hover), structures with
+   placeholder boxes (Tab moves between them), chemical formulas; the recently used ones on top and a search by name ── */
+const symRecent = () => { try { const l = JSON.parse(store.get(SYM_RECENT) || '[]'); return Array.isArray(l) ? l.filter(x => typeof x === 'string').slice(0, 16) : []; } catch (e) { return []; } };
+const constTex = c => st.symValue && c[2] ? `${c[0]} = ${c[2]}${c[3] ? `\\,\\mathrm{${c[3]}}` : ''}` : c[0];
+function symItems(tab) {
+  if (tab === 'accent') return ACCENTS.map(([t, n]) => [t.replace(/#/g, st.symBase.length > 1 && !st.symBase.startsWith('\\') ? `{${st.symBase}}` : st.symBase), n]);
+  if (tab === 'const') return SYMTAB.const.map(c => [constTex(c), c[1], `${c[1].split(' ').filter(w => /[가-힣]/.test(w)).join(' ') || c[1]}: ${c[2].replace(/\\times10\^\{(-?\d+)\}/, ' × 10^$1')} ${c[3].replace(/\\,/g, '·')}`]);
+  return SYMTAB[tab] || [];
+}
 function openSymbols() {
   let pop = $('symPop');
-  if (pop) { pop.hidden = !pop.hidden; if (!pop.hidden) pop.querySelector('button')?.focus(); return; }
-  pop = document.createElement('div'); pop.id = 'symPop'; pop.className = 'sympop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', X2.symTitle);
-  pop.innerHTML = `<div class="symhead"><b>${X2.symTitle}</b><button type="button" data-close aria-label="✕">✕</button></div><p class="note">${X2.symHint}</p>${SYMBOLS.map(([g, list]) => `<div class="symgrp"><div class="note">${esc(g)}</div><div class="syms">${list.map(([tex]) => `<button type="button" data-tex="${esc(tex)}" title="${esc(tex)}">${texSVG(tex, 17, st.scene.style)}</button>`).join('')}</div></div>`).join('')}`;
-  $('stageTop').after(pop);
-  pop.querySelector('[data-close]').onclick = () => { pop.hidden = true; };
-  pop.querySelectorAll('[data-tex]').forEach(b => b.onclick = () => insertSymbol(b.dataset.tex));
-  height();
+  if (pop && !pop.hidden) { pop.hidden = true; return; }
+  if (!pop) { pop = document.createElement('div'); pop.id = 'symPop'; pop.className = 'sympop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', X5.sym.title); $('stageTop').after(pop); }
+  pop.hidden = false; paintSymbols(); height();
 }
+function paintSymbols() {
+  const pop = $('symPop'); if (!pop) return;
+  const S5 = X5.sym, q = (st.symQ || '').trim().toLowerCase(), tabs = Object.keys(S5.tabs);
+  const btn = (tex, name, tip) => `<button type="button" data-tex="${esc(tex)}" title="${esc(tip || `${name ? name + ' · ' : ''}${tex}`)}">${texSVG(tex, 17, st.scene.style)}</button>`;
+  let body;
+  if (q) {
+    const hits = tabs.flatMap(t => symItems(t).filter(([tex, n]) => (tex + ' ' + (n || '')).toLowerCase().includes(q)).map(([tex, n, tip]) => btn(tex, n, tip)));
+    body = hits.length ? `<div class="syms">${[...new Set(hits)].join('')}</div>` : `<p class="note">${esc(S5.none)}</p>`;
+  } else {
+    const tab = st.symTab, items = symItems(tab);
+    const extra = tab === 'accent' ? `<div class="symbase"><label>${esc(S5.base)} <input id="symBase" value="${esc(st.symBase)}" maxlength="12" spellcheck="false"></label><div class="syms small">${ACC_BASES.map(b => `<button type="button" data-base="${esc(b)}" class="${b === st.symBase ? 'on' : ''}">${texSVG(b, 15, st.scene.style)}</button>`).join('')}</div><p class="note">${esc(S5.accentHint)}</p></div>`
+      : tab === 'const' ? `<label class="chk"><input type="checkbox" id="symVal"${st.symValue ? ' checked' : ''}> ${esc(S5.withValue)}</label>`
+      : tab === 'struct' ? `<p class="note">${esc(S5.structHint)}</p>` : tab === 'chem' ? `<p class="note">${esc(S5.chemHint)}</p>` : '';
+    body = `${extra}<div class="syms${tab === 'struct' || tab === 'chem' || tab === 'const' ? ' wide' : ''}">${items.map(([tex, n, tip]) => btn(tex, n, tip)).join('')}</div>`;
+  }
+  const rec = symRecent();
+  pop.innerHTML = `<div class="symhead"><b>${esc(S5.title)}</b><input type="search" id="symQ" placeholder="${esc(S5.search)}" aria-label="${esc(S5.search)}" value="${esc(st.symQ || '')}"><button type="button" data-close aria-label="✕">✕</button></div>
+    ${rec.length ? `<div class="symrec"><span class="note">${esc(S5.recent)}</span><div class="syms">${rec.map(t => btn(t)).join('')}</div></div>` : ''}
+    <div class="tabs symtabs" role="tablist">${tabs.map(t => `<button type="button" role="tab" data-symtab="${t}" aria-selected="${!q && t === st.symTab}" class="${!q && t === st.symTab ? 'on' : ''}">${esc(S5.tabs[t])}</button>`).join('')}</div>
+    <div class="symbody">${body}</div>`;
+  pop.querySelector('[data-close]').onclick = () => { pop.hidden = true; height(); };
+  pop.querySelectorAll('[data-tex]').forEach(b => { b.onmousedown = e => e.preventDefault(); b.onclick = () => insertSymbol(b.dataset.tex); });
+  pop.querySelectorAll('[data-symtab]').forEach(b => b.onclick = () => { st.symTab = b.dataset.symtab; st.symQ = ''; paintSymbols(); height(); });
+  pop.querySelectorAll('[data-base]').forEach(b => { b.onmousedown = e => e.preventDefault(); b.onclick = () => { st.symBase = b.dataset.base; paintSymbols(); }; });
+  const sb = $('symBase'); if (sb) sb.oninput = () => { st.symBase = sb.value.trim() || 'x'; const pos = sb.selectionStart; paintSymbols(); const s2 = $('symBase'); s2.focus(); s2.setSelectionRange(pos, pos); };
+  const sv = $('symVal'); if (sv) sv.onchange = () => { st.symValue = sv.checked; paintSymbols(); };
+  const sq = $('symQ'); sq.oninput = () => { st.symQ = sq.value; const pos = sq.selectionStart; paintSymbols(); const s2 = $('symQ'); s2.focus(); s2.setSelectionRange(pos, pos); };
+}
+/* insert at the caret of the text field last used (else a new label): a structure whose first box is its base (X_□)
+   right after a letter takes that letter as its base; the first box of what was put in is selected */
 function insertSymbol(tex) {
+  store.set(SYM_RECENT, JSON.stringify([tex, ...symRecent().filter(x => x !== tex)].slice(0, 16)));
   const t = st.lastText, o = t && byId(t.id);
+  const select = (el, from, to) => { const i = to.indexOf(PLACEHOLDER, from); const c = i >= 0 ? i : Math.min(to.length, from); el.focus(); el.setSelectionRange(c, i >= 0 ? c + 1 : c); st.lastText = {...st.lastText, caret: c, caretEnd: i >= 0 ? c + 1 : c}; };
   if (o && FIELDS[o.type][t.k]?.k === 'txt') {
-    const el = document.querySelector(`[data-f="${t.k}"]`), cur = String(o[t.k] || ''), a = el && document.activeElement === el ? el.selectionStart : (el?._caret ?? cur.length), b = el && document.activeElement === el ? el.selectionEnd : a;
-    const val = (cur.slice(0, a) + tex + (/^\\[A-Za-z]+$/.test(tex) && /^[A-Za-z]/.test(cur.slice(b)) ? ' ' : '') + cur.slice(b)).slice(0, FIELDS[o.type][t.k].max);
+    const el = document.querySelector(`[data-f="${t.k}"]`), live = el && el.value !== undefined ? el.value : String(o[t.k] || ''), cur = live;
+    const a = el && document.activeElement === el ? el.selectionStart : (t.caret ?? cur.length), b = el && document.activeElement === el ? el.selectionEnd : (t.caretEnd ?? a);
+    let ins = tex;
+    /* a script right after its base: Q then X_□ gives Q_□ */
+    if (ins.startsWith(PLACEHOLDER + '_') || ins.startsWith(PLACEHOLDER + '^')) { const before = cur.slice(0, a); if (/([A-Za-z0-9}')|]|\\[A-Za-z]+)$/.test(before) && a === b) ins = ins.slice(1); }
+    /* a placeholder that is selected is replaced by what is inserted */
+    const val = cur.slice(0, a) + ins + (/^\\[A-Za-z]+$/.test(ins) && /^[A-Za-z]/.test(cur.slice(b)) ? ' ' : '') + cur.slice(b);
+    const max = FIELDS[o.type][t.k].max;
+    if (val.length > max) { flash(esc(X5.sym.tooLong)); st.lastText = null; return insertSymbol(tex); }
     const next = clone(st.scene); next.objects.find(x => x.id === o.id)[t.k] = val;
-    if (commit(next, {keepSel: true})) { setSel([o.id]); paint(); const el2 = document.querySelector(`[data-f="${t.k}"]`); if (el2) { el2.focus(); const c = Math.min(val.length, a + tex.length); el2.setSelectionRange(c, c); el2._caret = c; } }
+    if (commit(next, {keepSel: true})) { setSel([o.id]); paint(); const el2 = document.querySelector(`[data-f="${t.k}"]`); if (el2) select(el2, a, val); }
     return;
   }
-  const v = dview(), next = clone(st.scene), id = freeId('label');
-  next.objects.push({...defaults('label'), id, x: r4(snapV(v.x + v.w / 2)), y: r4(snapV(v.y + v.h / 2)), text: tex});
-  if (commit(next)) { setSel([id]); st.lastText = {id, k: 'text'}; paint(); }
+  const v = dview(), next = clone(st.scene), id = freeId('label'), text = tex.startsWith(PLACEHOLDER + '_') || tex.startsWith(PLACEHOLDER + '^') ? tex : tex;
+  next.objects.push({...defaults('label'), id, x: r4(snapV(v.x + v.w / 2)), y: r4(snapV(v.y + v.h / 2)), text: text.slice(0, FIELDS.label.text.max)});
+  if (commit(next)) { setSel([id]); st.lastText = {id, k: 'text'}; paint(); const el2 = document.querySelector('[data-f="text"]'); if (el2) select(el2, 0, el2.value); }
 }
 function shell() {
   const tl = X3.tools;
   $('app').innerHTML = `<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div></div>
     <div id="hint3"></div>
     <div class="dbar"><select id="tpl" aria-label="${esc(X4.templates)}" title="${esc(X4.templates)}"><option value="">${esc(X4.templates)}…</option>${Object.keys(DOMAINS).map(d => `<optgroup label="${esc(X2.domains[d])}">${TEMPLATE_KEYS.filter(k => TEMPLATE_DOMAIN[k] === d).map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}</optgroup>`).join('')}<option value="blank">${T.blank}</option></select>
-      <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bSym">${X2.symbols}</button>
+      <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bSym">${X2.symbols}</button><button type="button" id="bSave" class="primary" title="${esc(X6.saveT)}">${esc(X6.save)}</button><button type="button" id="bOpenStore">${esc(X6.open)}</button><button type="button" id="bShare">${esc(X7.share)}</button>
       <label class="btn filebtn">📷 ${T.photo}<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/*"></label><span class="sep"></span>
       <button type="button" id="bUndo" class="hist" title="${esc(tl.backT)}" aria-label="${esc(tl.backT)}">${tl.back}</button><button type="button" id="bRedo" class="hist" title="${esc(tl.fwdT)}" aria-label="${esc(tl.fwdT)}">${tl.fwd}</button>
       <button type="button" id="bDup" title="Ctrl+D">${T.dup}</button><button type="button" id="bCopy" title="Ctrl+C">${tl.copy}</button><button type="button" id="bPaste" title="Ctrl+V">${tl.paste}</button><button type="button" id="bDel" title="Delete">${T.del}</button><button type="button" id="bClear" class="danger">${tl.clear}</button><span class="sep"></span>
       <span class="zoom" role="group" aria-label="zoom"><button type="button" id="bZout" title="${esc(tl.zoomOut)} (−)" aria-label="${esc(tl.zoomOut)}">−</button><span id="zoomPct" class="pct">100%</span><button type="button" id="bZin" title="${esc(tl.zoomIn)} (+)" aria-label="${esc(tl.zoomIn)}">+</button><button type="button" id="bZfit" title="${esc(tl.zoomFit)} (0)">${tl.zoomFit}</button></span>
       <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><label class="btn"><input type="checkbox" id="cVals" style="width:auto"> ${tl.values}</label><button type="button" id="bFit" title="${esc(tl.frameMark)}">${T.fit}</button></div>
+    <details class="aibox" id="aiBox"><summary>${esc(X6.ai)}</summary><textarea id="aiPrompt" rows="2" maxlength="1200" placeholder="${esc(X6.aiHint)}"></textarea>
+      <div class="row"><label class="chk"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div></details>
     <div id="aiNote" class="ainote" hidden></div>
     <div class="work"><details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details>
       <section class="stage"><div id="tools" class="tools" role="toolbar" aria-label="${esc(X4.drawing)}"></div><div id="stageTop"></div><div id="canvas" class="canvas" tabindex="0"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
         <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
-          <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label></span><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label id="solveLbl"><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
+          <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label><label id="rtLbl"><input type="checkbox" id="cRt"${st.rtrail ? ' checked' : ''}>${esc(X5.trails)}</label></span><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label id="solveLbl"><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
         <div id="readouts" class="readouts"></div></section>
       <div class="side"><section class="panel" id="props"></section><section class="panel" id="out"></section></div></div>`;
-  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; setSel([]); st.zoom = null; if (TEMPLATE_DOMAIN[k]) st.dom = TEMPLATE_DOMAIN[k]; commit(k === 'blank' ? {...blankScene(), style: st.scene.style, view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene); };
-  $('photo').onchange = e => { const f = e.target.files[0]; e.target.value = ''; photoFile(f); };
+  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; keepStoreIds(null); keepShare(null); setSel([]); st.zoom = null; if (TEMPLATE_DOMAIN[k]) st.dom = TEMPLATE_DOMAIN[k]; commit(k === 'blank' ? {...blankScene(), style: st.scene.style, view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene); };
+  $('photo').onchange = e => { const f = e.target.files[0]; e.target.value = ''; keepStoreIds(null); photoFile(f); };
+  $('bSave').onclick = toStorage; $('bOpenStore').onclick = () => { openFromStorage(); $('out')?.scrollIntoView?.({block: 'nearest'}); };
+  $('aiGo').onclick = aiDraw; $('aiBox').ontoggle = () => { if ($('aiBox').open) aiModels(); };
+  $('bShare').onclick = openShare;
+  { const n = +params.get('share'); if (n > 0) { if (window.HL_SHARE) openShared(n); else addEventListener('load', () => openShared(n), {once: true}); } } $('aiPrompt').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) aiDraw(); };
   $('bUndo').onclick = undo; $('bRedo').onclick = redo; $('bDup').onclick = dup; $('bDel').onclick = del; $('bClear').onclick = clearAll;
   $('bCopy').onclick = () => { if (copySel()) paintBar(); }; $('bPaste').onclick = () => pasteClip();
   $('bZin').onclick = () => zoomBy(1.25); $('bZout').onclick = () => zoomBy(0.8); $('bZfit').onclick = () => { st.zoom = null; paintCanvas(); };
@@ -1270,6 +1692,7 @@ function shell() {
   $('resetBtn').onclick = () => { stopSim(); paint(); };
   $('speed').onchange = e => { st.speed = +e.target.value; };
   $('cFbd').onchange = e => { st.fbd = e.target.checked; paintCanvas(); };
+  $('cRt').onchange = e => { st.rtrail = e.target.checked; paintCanvas(); };
   $('cRead').onchange = e => { st.readouts = e.target.checked; paintReadouts(); };
   $('parts').ontoggle = e => { setPref('parts', e.target.open); height(); };
   bindCanvas(); paintHint(); paintTools(); paint(); paintOut();
@@ -1288,6 +1711,7 @@ function paintTools() {
   const box = $('tools'); if (!box) return;
   const ds = st.dstyle, sw = c => `<button type="button" class="swatch${ds.color === c ? ' on' : ''}" data-color="${c}" title="${esc(X4.enums[c])}" aria-label="${esc(X4.enums[c])}" style="--c:${COLOR_HEX[c]}"></button>`;
   box.innerHTML = `<div class="tgroup">${TOOLS.map(t => `<button type="button" class="tool${st.tool === t ? ' on' : ''}" data-tool="${t}" title="${esc(X4.tools[t])}" aria-label="${esc(X4.tools[t])}" aria-pressed="${st.tool === t}">${TOOL_ICON[t]}</button>`).join('')}</div>
+    <div class="tgroup geo" role="group" aria-label="${esc(X5.geoGroup)}"><span class="tlabel">${esc(X5.geoGroup)}</span>${GEO_TOOLS.map(t => `<button type="button" class="tool${st.tool === t ? ' on' : ''}" data-tool="${t}" title="${esc(X5.geoTools[t])}" aria-label="${esc(X5.geoTools[t])}" aria-pressed="${st.tool === t}">${GEO_ICON[t]}</button>`).join('')}</div>
     <div class="tgroup tstyle"><span class="swatches" role="group" aria-label="${esc(X4.style.color)}">${COLORS.map(sw).join('')}</span>
       <label title="${esc(X4.style.width)}">${esc(X4.style.width)}<select data-ds="lw">${[0.5, 0.75, 1, 1.5, 2, 3].map(v => `<option value="${v}"${v === ds.lw ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
       <label title="${esc(X4.style.dash)}">${esc(X4.style.dash)}<select data-ds="pattern">${['solid', 'dashed', 'dotted', 'dashdot'].map(v => `<option value="${v}"${v === ds.pattern ? ' selected' : ''}>${esc(T.enums[v])}</option>`).join('')}</select></label>
@@ -1312,7 +1736,7 @@ function paintBar() {
   $('bPaste').disabled = !st.clip; $('bClear').disabled = !st.scene.objects.length;
   $('cVals').checked = !!st.scene.values;
   const mech = hasMech(), circ = hasCircuit();
-  $('mechBar').hidden = !mech; $('clock').hidden = !mech; $('solveLbl').hidden = !circ;
+  $('mechBar').hidden = !mech; $('clock').hidden = !mech; $('solveLbl').hidden = !circ; $('rtLbl').hidden = !hasPhys();
   if (!mech && st.sim) stopSim();
 }
 function paint() {
@@ -1328,7 +1752,7 @@ addEventListener('keydown', e => {
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
   if (e.key === ' ' && !st.space) { st.space = true; $('canvas')?.classList.add('panning'); e.preventDefault(); return; }
   if (e.key === 'Escape' && st.draft) { st.draft = null; paintCanvas(); status(); return; }
-  if (e.key === 'Enter' && st.draft) { e.preventDefault(); finishDraft(); return; }
+  if (e.key === 'Enter' && st.draft) { e.preventDefault(); if (!geoFinish()) finishDraft(); return; }
   if (!mod && !e.altKey && TOOL_KEY[k] && !(selIds().length && e.key.startsWith('Arrow'))) { setTool(TOOL_KEY[k]); return; }
   if (e.key === 'Escape') { st.connect = null; if (st.tool !== 'select') setTool('select'); setSel([]); paint(); }
   else if (mod && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }

@@ -1,6 +1,10 @@
 /* The Workshop's coding environment (create.html, view=edit): code on the left, the running simulation on the right
    (tabs Code / Run / AI on a phone or a tablet held upright), an AI panel that proposes a whole new file shown as a diff,
    and saving: local autosave, a downloaded file, the member's storage, and publishing as a creation (creations.js).
+   Storage (보관함): the first "보관함에 저장" makes a text file in the folder "시뮬레이션" (kind 'sim', .js.txt: storage
+   never keeps a runnable .js, and serves every file as an attachment); its id is remembered with this creation, so later
+   saves replace that same file (PUT /api/workshop/storage/files/:id/content). "보관함에서 열기" lists the member's saved
+   simulations and loads one into the editor (undo brings the previous code back).
    Security: a simulation, and anything the AI wrote, runs only in sim-sandbox.html inside
    <iframe sandbox="allow-scripts"> (an opaque origin: no cookies, storage or tokens of the site, no network by its own
    policy, and this page's frame-src 'self' keeps it from navigating anywhere else). Messages from it are accepted only
@@ -48,7 +52,8 @@
       details:'설명 · 문제',summary:'한 줄 설명',question:'질문 (선택: 실험으로 답을 구하게 하려면)',answer:'답 (숫자나 식, 예: 9.8, 2*pi*sqrt(L/g))',unit:'단위',body:'문제 설명 (수식은 $...$)',
       ref:'도우미 API (hl) 설명',restored:'자동 저장된 내용을 불러왔습니다.',restoreOffer:'저장하지 않은 고친 내용이 이 기기에 있습니다.',restore:'불러오기',drop:'버리기',
       saved:'저장했습니다.',savedStorage:n=>`보관함의 ‘${n}’에 저장했습니다.`,needLogin:'로그인하면 저장하고 공개할 수 있습니다. 코드는 이 기기에 자동 저장됩니다.',autosaved:'이 기기에 자동 저장됨',
-      folder:'시뮬레이션',confirmTpl:'지금 코드를 예시로 바꿀까요? 되돌리기로 돌아올 수 있습니다.',keys:'기호 입력',
+      folder:'시뮬레이션',open:'보관함에서 열기',openTitle:'보관함에서 열기',none:'보관함에 저장한 시뮬레이션이 없습니다.',close:'닫기',loading:'불러오는 중…',opened:n=>`보관함의 ‘${n}’을(를) 열었습니다. 되돌리기로 앞의 코드로 돌아갈 수 있습니다.`,
+      updated:n=>`보관함의 ‘${n}’에 덮어 저장했습니다.`,badFile:'이 파일은 시뮬레이션이 아닙니다.',confirmTpl:'지금 코드를 예시로 바꿀까요? 되돌리기로 돌아올 수 있습니다.',keys:'기호 입력',
       err:{bad_title:'제목을 입력하세요.',bad_code:'코드를 입력하세요.',bad_grader:'채점 코드에 def grade(ns): 가 있어야 합니다.',bad_body:'문제 설명을 입력하세요.',rate_limited:'잠시 뒤에 다시 시도하세요.',login_required:'로그인이 필요합니다.',not_owner:'내 작품만 고칠 수 있습니다.',file_too_large:'파일이 너무 큽니다.',quota_exceeded:'보관함 용량이 모자랍니다.',r2_unavailable:'지금은 보관함을 쓸 수 없습니다.',network:'서버에 연결하지 못했습니다.'}},
     en:{code:'Code',run:'Run',ai:'AI',runBtn:'▶ Run',stop:'■ Stop',auto:'Auto-run',tpl:'Load an example',undo:'↶ Undo',download:'⤓ Download',storage:'Save to Storage',publish:'Save and publish',
       title:'Title',kindSim:'Simulation (JavaScript)',kindCode:'Python problem',solution:'solution.py (starter)',grader:'grader.py',console:'Console',clear:'Clear',
@@ -63,7 +68,8 @@
       details:'Description and question',summary:'One-line summary',question:'Question (optional, for a virtual experiment)',answer:'Answer (a number or a formula, e.g. 9.8, 2*pi*sqrt(L/g))',unit:'Unit',body:'Problem statement ($...$ for math)',
       ref:'Helper API (hl) reference',restored:'Restored what was autosaved.',restoreOffer:'This device has unsaved changes to this creation.',restore:'Restore',drop:'Discard',
       saved:'Saved.',savedStorage:n=>`Saved to Storage as “${n}”.`,needLogin:'Log in to save and publish. Your code is autosaved on this device.',autosaved:'Autosaved on this device',
-      folder:'Simulations',confirmTpl:'Replace the current code with the example? Undo brings it back.',keys:'Symbols',
+      folder:'Simulations',open:'Open from Storage',openTitle:'Open from Storage',none:'No simulations saved in Storage yet.',close:'Close',loading:'Loading…',opened:n=>`Opened “${n}” from Storage. Undo brings the previous code back.`,
+      updated:n=>`Saved over “${n}” in Storage.`,badFile:'This file is not a simulation.',confirmTpl:'Replace the current code with the example? Undo brings it back.',keys:'Symbols',
       err:{bad_title:'Enter a title.',bad_code:'Enter the code.',bad_grader:'The grader needs a def grade(ns): function.',bad_body:'Enter the problem statement.',rate_limited:'Try again in a moment.',login_required:'Log in first.',not_owner:'You can only edit your own.',file_too_large:'The file is too large.',quota_exceeded:'Your storage is full.',r2_unavailable:'Storage is not available right now.',network:'Could not reach the server.'}}
   };
   /* the reference beside the editor: the same helpers the sandbox defines and the AI is told about */
@@ -120,7 +126,7 @@
         <select id="stTpl" aria-label="${esc(L.tpl)}"><option value="">${esc(L.tpl)}…</option></select>
         <button type="button" id="stUndo" disabled>${L.undo}</button>
         <span class="st-gap"></span>
-        <button type="button" id="stDown">${L.download}</button><button type="button" id="stStore">${esc(L.storage)}</button><button type="button" class="primary" id="stPub">${esc(L.publish)}</button>
+        <button type="button" id="stDown">${L.download}</button><button type="button" id="stStore">${esc(L.storage)}</button><button type="button" id="stOpenStore">${esc(L.open)}</button><button type="button" class="primary" id="stPub">${esc(L.publish)}</button>
       </div>
       <p class="st-msg" id="stMsg" role="status"></p>
       <nav class="st-mtabs" role="tablist"><button type="button" data-m="code" role="tab">${L.code}</button><button type="button" data-m="run" role="tab">▶ ${L.run}</button><button type="button" data-m="ai" role="tab">✦ ${L.ai}</button></nav>
@@ -328,33 +334,101 @@
     const fileText=()=>d.kind==='sim'?`// ${d.title.trim()||'HaslaLab simulation'} · HaslaLab Workshop (hl helpers: sim-sandbox.html)\n${d.code}`:`# ${d.title.trim()||'HaslaLab problem'}\n# ── solution.py ──\n${d.starter}\n\n# ── grader.py ──\n${d.grader}`;
     $('#stDown').onclick=()=>{readForm();const blob=new Blob([fileText()],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');
       a.href=URL.createObjectURL(blob);a.download=fileName(d.kind==='sim'?'.js':'.py');document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);};
+    /* the storage file this creation was saved to: {id, name, folder}, kept on this device beside the autosave */
+    const refKey='hlStudioStore:'+(id||'new');
+    let storeRef=(()=>{try{const r=JSON.parse(store.get(refKey)||'null');return r&&/^[0-9a-f]{32}$/.test(r.id)?r:null;}catch(e){return null;}})();
+    const setRef=f=>{storeRef=f?{id:f.id,name:f.name,folder:f.folder}:null;if(storeRef)store.set(refKey,JSON.stringify(storeRef));else store.del(refKey);};
+    async function sendForm(path,method,fd){
+      let r;try{r=await fetch(ctx.apiBase+path,{method,headers:{Authorization:'Bearer '+ctx.token()},body:fd});}catch(e){throw Object.assign(new Error('network'),{code:'network'});}
+      const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error||'error'),{code:j.error,status:r.status});return j;
+    }
     $('#stStore').onclick=async()=>{
       readForm();if(!ctx.token()){msg(L.needLogin,'bad');return;}
       const b=$('#stStore');b.disabled=true;
       try{
-        let folder=L.folder;
-        try{const have=(await ctx.api('/api/workshop/storage')).folders||[];if(!have.includes(folder))await ctx.api('/api/workshop/storage/folders','POST',{path:folder});}catch(e){if(e.code!=='folder_exists')folder='';}
-        const name=fileName(d.kind==='sim'?'.js.txt':'.py.txt'),fd=new FormData();
-        fd.append('file',new File([fileText()],name,{type:'text/plain'}));fd.append('folder',folder);
-        let r;try{r=await fetch(ctx.apiBase+'/api/workshop/storage/files',{method:'POST',headers:{Authorization:'Bearer '+ctx.token()},body:fd});}catch(e){throw Object.assign(new Error('network'),{code:'network'});}
-        const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error||'error'),{code:j.error});
-        msg(L.savedStorage((folder?folder+'/':'')+(j.file?.name||j.name||name)),'ok');
+        const kind=d.kind==='sim'?'sim':'file',name=fileName(d.kind==='sim'?'.js.txt':'.py.txt'),file=()=>new File([fileText()],name,{type:'text/plain'});
+        let f=null;
+        if(storeRef){
+          const fd=new FormData();fd.append('file',file());fd.append('kind',kind);
+          try{f=(await sendForm('/api/workshop/storage/files/'+storeRef.id+'/content','PUT',fd)).file;}
+          catch(e){if(e.status!==404&&e.code!=='type_change')throw e;}
+          if(f){setRef(f);msg(L.updated((f.folder?f.folder+'/':'')+f.name),'ok');return;}
+        }
+        const fd=new FormData();fd.append('file',file());fd.append('folder',L.folder);fd.append('kind',kind);fd.append('ensure_folder','1');
+        f=(await sendForm('/api/workshop/storage/files','POST',fd)).file;
+        setRef(f);msg(L.savedStorage((f.folder?f.folder+'/':'')+f.name),'ok');
       }catch(e){msg(L.err[e.code]||e.message||'error','bad');}
       finally{b.disabled=false;}
     };
+    /* a saved file → the editor: «// title · HaslaLab Workshop …» then the code; a Python one has its two sections */
+    function fromText(text,name){
+      const t=String(text).replace(/\r\n?/g,'\n');
+      if(/\.js\.txt$/i.test(name)){const m=/^\/\/ (.*?) · HaslaLab Workshop[^\n]*\n/.exec(t);return {kind:'sim',title:m?m[1]:name.replace(/\.js\.txt$/i,''),code:m?t.slice(m[0].length):t};}
+      const m=/^# (.*)\n# ── solution\.py ──\n([\s\S]*?)\n\n# ── grader\.py ──\n([\s\S]*)$/.exec(t);
+      return m?{kind:'code',title:m[1],starter:m[2],grader:m[3]}:null;
+    }
+    $('#stOpenStore').onclick=async()=>{
+      if(!ctx.token()){msg(L.needLogin,'bad');return;}
+      let dlg=document.getElementById('stStoreDlg');if(!dlg){dlg=document.createElement('dialog');dlg.id='stStoreDlg';dlg.className='stdlg';document.body.append(dlg);}
+      dlg.innerHTML=`<div class="dlg-head"><h2>${esc(L.openTitle)}</h2><button type="button" data-x aria-label="${esc(L.close)}">✕</button></div><div class="dlg-list"><p class="note">${esc(L.loading)}</p></div><p class="note" data-msg></p>`;
+      dlg.querySelector('[data-x]').onclick=()=>dlg.close();
+      if(!dlg.open)dlg.showModal();
+      const list=dlg.querySelector('.dlg-list'),say=(t,c)=>{const m=dlg.querySelector('[data-msg]');m.className='note '+(c||'');m.textContent=t;};
+      let files=[];
+      try{
+        /* the files saved as simulations, and the ones saved before files had a kind (a .js.txt or .py.txt in the folder) */
+        const [a,b]=await Promise.all([ctx.api('/api/workshop/storage?kind=sim'),ctx.api('/api/workshop/storage?folder='+encodeURIComponent(L.folder))]);
+        const seen=new Set();files=[...(a.files||[]),...(b.files||[])].filter(f=>/\.(js|py)\.txt$/i.test(f.name)&&!seen.has(f.id)&&seen.add(f.id)).sort((x,y)=>y.updated_at-x.updated_at);
+      }catch(e){list.innerHTML=`<p class="bad">${esc(L.err[e.code]||e.message||'error')}</p>`;return;}
+      const when=s=>new Date(s*1000).toLocaleString(ko?'ko-KR':'en-GB',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      list.innerHTML=files.length?files.map(f=>`<button type="button" class="dlg-file${storeRef?.id===f.id?' on':''}" data-id="${f.id}"><b>${esc(f.name)}</b><span>${esc(f.folder||'/')} · ${when(f.updated_at)}</span></button>`).join(''):`<p class="empty">${esc(L.none)}</p>`;
+      list.querySelectorAll('[data-id]').forEach(btn=>btn.onclick=async()=>{
+        const f=files.find(x=>x.id===btn.dataset.id);
+        try{
+          const r=await fetch(ctx.apiBase+'/api/workshop/storage/files/'+f.id,{headers:{Authorization:'Bearer '+ctx.token()}});
+          if(!r.ok){const j=await r.json().catch(()=>({}));throw Object.assign(new Error(j.error||'error'),{code:j.error});}
+          const got=fromText((await r.text()).slice(0,200000),f.name);
+          if(!got){say(L.badFile,'bad');return;}
+          remember();stop(true);
+          d.kind=got.kind;d.title=(got.title||'').slice(0,80);if(got.kind==='sim')d.code=got.code.slice(0,60000);else{d.starter=got.starter;d.grader=got.grader;}
+          file='main';fillForm();autosave();setRef(f);dlg.close();msg(L.opened((f.folder?f.folder+'/':'')+f.name),'ok');
+          if(d.kind==='sim'&&d.code.trim())run();
+        }catch(e){say(L.err[e.code]||e.message||'error','bad');}
+      });
+    };
+    /* publishing: the creation is saved (creations.js), then shared in 작품 공유 with its details through the sharing
+       dialog (share-makers.js → HL_SHARE.publish with creation_id, so a remix draft or an existing creation is published
+       as itself, never as a new project). No thumbnail: the sandbox does not hand frames to the page. */
+    /* the creation's number (the address gives it as text; creation_id must be a number, or the server makes a new project) */
+    let savedId=/^\d{1,9}$/.test(String(id||''))?+id:null;
+    const creationBody=()=>({kind:d.kind,title:d.title.trim(),summary:d.summary.trim(),body:d.body,code:d.kind==='sim'?d.code:'',answer:d.kind==='sim'?d.answer.trim():'',unit:d.kind==='sim'?d.unit.trim():'',starter:d.kind==='code'?d.starter:'',grader:d.kind==='code'?d.grader:''});
+    async function saveCreation(){
+      const body=creationBody();
+      if(savedId)await ctx.api('/api/creations/'+savedId,'PATCH',body);
+      else savedId=(await ctx.api('/api/creations','POST',{...body,...(Number.isInteger(d.forked_from)?{forked_from:d.forked_from}:{})})).id;
+      store.del(key);return savedId;
+    }
+    const sharePayload=()=>d.kind==='sim'?{code:d.code,question:d.body||'',answer:d.answer.trim(),answerUnit:d.unit.trim()}:{statement:d.body||'',starter:d.starter||'',grader:d.grader||''};
+    const withoutPayload=input=>{const o={...input};delete o.payload;return o;};
     $('#stPub').onclick=async()=>{
       readForm();if(!ctx.token()){msg(L.needLogin,'bad');return;}
-      const body={kind:d.kind,title:d.title.trim(),summary:d.summary.trim(),body:d.body,code:d.kind==='sim'?d.code:'',answer:d.kind==='sim'?d.answer.trim():'',unit:d.kind==='sim'?d.unit.trim():'',starter:d.kind==='code'?d.starter:'',grader:d.kind==='code'?d.grader:''};
-      if(!body.title){msg(L.err.bad_title,'bad');$('#stTitle').focus();return;}
-      if(body.answer&&!ctx.answerFrom(body.answer)){msg(L.answer,'bad');$('#stDetails').open=true;return;}
-      const b=$('#stPub');b.disabled=true;
-      try{
-        let to=id;
-        if(id)await ctx.api('/api/creations/'+id,'PATCH',body);
-        else to=(await ctx.api('/api/creations','POST',{...body,...(Number.isInteger(d.forked_from)?{forked_from:d.forked_from}:{})})).id;
-        store.del(key);stop(true);ctx.go('play',to);
-      }catch(e){msg(ctx.errText(e),'bad');}
-      finally{b.disabled=false;}
+      if(!d.title.trim()){msg(L.err.bad_title,'bad');$('#stTitle').focus();return;}
+      if(d.kind==='sim'&&d.answer.trim()&&!ctx.answerFrom(d.answer.trim())){msg(L.answer,'bad');$('#stDetails').open=true;return;}
+      const SM=window.HL_SHARE_MAKER,HS=window.HL_SHARE,b=$('#stPub');
+      if(!SM||!HS){b.disabled=true;try{const to=await saveCreation();stop(true);ctx.go('play',to);}catch(e){msg(ctx.errText(e),'bad');}finally{b.disabled=false;}return;}
+      b.disabled=true;
+      let shared=null;if(savedId){try{shared=(await HS.get(savedId)).project;}catch(e){shared=null;}}
+      b.disabled=false;
+      const type=d.kind==='sim'?'sim':'python',live=!!(shared&&shared.status==='public');
+      const values={title:d.title.trim(),description:shared?.description||d.summary.trim(),howto:shared?.howto||'',notes:shared?.notes||'',tags:shared?.tags||[],topic:shared?.topic||'other'};
+      let done=false;
+      const dlg=SM.dialog({lang:ko?'ko':'en',type,values,shared:live?{id:savedId,published:true}:null,height:ctx.height,errText:ctx.errText,
+        build:fv=>SM.publishInput({type,form:fv,payload:sharePayload(),creationId:savedId||undefined}),
+        publish:async input=>{const cid=await saveCreation();return HS.publish({...withoutPayload(input),creation_id:cid});},
+        update:async input=>{await saveCreation();return HS.update(savedId,withoutPayload(input));},
+        unpublish:()=>HS.unpublish(savedId),
+        onDone:r=>{done=!r.unpublished;if(r.form&&r.form.title){d.title=r.form.title;$('#stTitle').value=d.title;}}});
+      dlg.addEventListener('close',()=>{if(done){stop(true);ctx.go('play',savedId);}},{once:true});
     };
     $('#stBack').onclick=()=>{autosave();stop(true);document.querySelector('main')?.classList.remove('wide');ctx.go('gallery');};
 

@@ -13,9 +13,9 @@
    vector notation (an arrow over the letter, or bold). The presets follow the conventions of university problem
    sets, olympiad papers and JEE papers as drawn from general knowledge of how such figures look; nothing is traced
    or copied from them. */
-import {isBody, isRound, bodyPose, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA} from './draw-scene.mjs?v=fb1c204d7324';
-import {fieldLines, equipotentials, chargePath, circuitNodes, elementPath, processPoints, gasCycle, traceRay, principalRays, opticImage, prismCorners,
-  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=268cba8afa3e';
+import {isBody, isRound, bodyPose, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=6a3c9af34d22';
+import {funcFeatures, derivative, integrate, jointEnds, fieldLines, equipotentials, chargePath, circuitNodes, elementPath, processPoints, gasCycle, traceRay, principalRays, opticImage, prismCorners,
+  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=c28a48272a2b';
 /* the types drawn turned by a transform about their centre (a block and a plank turn their own corners) */
 const ROT_WRAP = new Set(['transformer', 'solenoid', 'magnet', 'cylinder', 'lens', 'mirror', 'screen', 'eye', 'source', 'label', 'region', 'rect', 'ellipse']);
 /* the drawing tools' stroke colours (draw-scene.mjs COLORS) and the light tints their fill 'tint' uses */
@@ -48,39 +48,49 @@ const SERIF = `'Times New Roman','STIX Two Text','Nimbus Roman','Liberation Seri
                  New Roman, italic variables; 125 arrowheads (tip 42–53°, length 4–14 × line, median ≈ 8 ×); dashes on
                  41 paths ([2.25 3] at 0.75 pt); 43 gray fills (IQR 0.33–0.75); hatching from 3 figures only: gap
                  8.5–14 pt (median 12.8), stroke 9.3 pt long, 0.75 pt wide
-   university    MIT OCW 8.01SC (2016) problem sets 2, 3, 4, 10 and 8.02T (2005)  239    12     0.52 / 0.8 / 1.04       3.7, 0.55, concave (notch   8w/8w         0.87   5.5
-                 problem-solving handouts (15 vector figures, 6 files; + 25 raster);  0.81 of the length; 28 heads)
-                 labels = body size (12 pt; Times / STIX), vectors set in bold (STIX Bold); light gray fills (54, median 0.87)
+   (university   MIT OCW 8.01SC / 8.02T problem sets, measured: 239 pt figures, 12 pt labels, lines 0.52/0.8/1.04, stealth
+                 heads. It looked too close to textbook to be worth a style of its own, so it was merged into textbook:
+                 a figure written with 'university' reads as 'textbook' (draw-scene.mjs LEGACY_STYLES).)
    jee           JEE Advanced 2022, 2024, 2025 Paper 1, physics part (8 vector   160    8.5    0.38 / 0.72 / 1.1       4.5 est, 0.65 est, filled   3/2 est       0.47   4.4
                  figures in 2022, 40 raster at ~200 dpi); labels 0.81 × body (8.5 of 10.4 pt), Times New Roman, point
                  names upright; gray rarely (one paper, level 0.47)
-   textbook      assumed (no measured source; the earlier default look kept)                  220    10     0.77 / 1.13 / 1.4       6.0, 0.76, filled           4/2.7         0.82   3.7
-   print         assumed: the earlier black-and-white look kept (heavier, no gray)            220    11     1.17 / 1.69 / 2.0       8.4, 0.76, filled           4.4/2.9       none   4
+   textbook      designed (no measured source; the earlier default look kept)                 220    10     0.77 / 1.13 / 1.4       6.0, 0.76, filled           4/2.7         0.82   3.7
+   classic       designed: an old letterpress textbook — a heavier schoolbook serif (Century  220    10.5   0.9 / 1.4 / 1.9         7.0, 0.62, open             5/3           none   3.6
+                 Schoolbook), hatching instead of gray, open arrowheads, square line ends
+   modern        designed: a clean digital textbook — thin even strokes, round caps and joins, 220    10     0.6 / 0.85 / 1.1        6.5, 0.75, filled           3.5/2.5       0.88   3.4
+                 a sans-serif face with italic variables, light fills, one accent colour
+                 (blue, for vectors and forces) and grays
+   print         designed: the earlier black-and-white look kept (heavier, no gray)           220    11     1.17 / 1.69 / 2.0       8.4, 0.76, filled           4.4/2.9       none   4
+   basis: 'measured' rows hold numbers measured from the sources named; 'designed' rows are choices made here, and
+   their sources say so. Within a measured row, est lists what was estimated by eye and measured what was measured.
 
    How the table drives a preset: the drawing is 800 px wide and a label's base size is 15 px, so one pt of the
    source is 15 / label pt px. Every line width, arrowhead, hatch, dash and dot keeps the measured ratio to the label;
    printed (printScale) at the source's typical width, a figure comes out with the measured absolute sizes. */
 export const STYLE_TABLE = {
-  suneung: {source: 'KICE 수능 물리학 I·II 2025–2027 (6 papers, 136 raster figures, 600–700 dpi)', n: 136, widthPt: 148, labelPt: 9, bodyPt: 11.2, thin: 0.33, main: 0.36, thick: 0.53, hair: 0.25,
+  suneung: {basis: 'measured', source: 'KICE 수능 물리학 I·II 2025–2027 (6 papers, 136 raster figures, 600–700 dpi)', n: 136, widthPt: 148, labelPt: 9, bodyPt: 11.2, thin: 0.33, main: 0.36, thick: 0.53, hair: 0.25,
     headLen: 4.5, headW: 0.5, head: 'filled', dash: [2.2, 1.4], gray: 0.80, light: 0.88, dark: 0.70, dot: 2.2, hatchGap: 4, hatchLen: 3.5, hatchAngle: 45,
     measured: ['widthPt', 'thin', 'main', 'thick', 'gray', 'light', 'dark', 'bodyPt'], est: ['labelPt', 'headLen', 'headW', 'dash', 'dot', 'hatchGap', 'hatchLen']},
-  olympiad: {source: 'IPhO 2003/2005/2006, APhO 2005/2018, EuPhO 2019 (30 vector + 71 raster figures, 13 + 16 files)', n: 101, widthPt: 194, labelPt: 10, bodyPt: 11.6, thin: 0.5, main: 0.75, thick: 1.0, hair: 0.25,
+  olympiad: {basis: 'measured', source: 'IPhO 2003/2005/2006, APhO 2005/2018, EuPhO 2019 (30 vector + 71 raster figures, 13 + 16 files)', n: 101, widthPt: 194, labelPt: 10, bodyPt: 11.6, thin: 0.5, main: 0.75, thick: 1.0, hair: 0.25,
     headLen: 4.0, headW: 0.95, head: 'filled', dash: [2.25, 3.0], gray: 0.52, light: 0.76, dark: 0.33, dot: 3.0, hatchGap: 12.8, hatchLen: 9.3, hatchAngle: 45,
     measured: ['widthPt', 'labelPt', 'bodyPt', 'thin', 'main', 'thick', 'headLen', 'headW', 'dash', 'gray', 'dot', 'hatchGap', 'hatchLen'], est: []},
-  university: {source: 'MIT OCW 8.01SC 2016 problem sets, 8.02T 2005 problem-solving handouts (15 vector + 25 raster figures)', n: 40, widthPt: 239, labelPt: 12, bodyPt: 12, thin: 0.52, main: 0.8, thick: 1.04, hair: 0.32,
-    headLen: 3.7, headW: 0.55, head: 'stealth', dash: [6.4, 6.4], gray: 0.87, light: 0.93, dark: 0.4, dot: 5.5, hatchGap: 8.3, hatchLen: 11.8, hatchAngle: 70,
-    measured: ['widthPt', 'labelPt', 'bodyPt', 'thin', 'main', 'thick', 'headLen', 'dash', 'gray', 'light', 'dot', 'hatchGap', 'hatchLen'], est: ['headW']},
-  jee: {source: 'JEE Advanced 2022/2024/2025 Paper 1 physics (8 vector + 40 raster figures, ~200 dpi)', n: 48, widthPt: 160, labelPt: 8.5, bodyPt: 10.4, thin: 0.38, main: 0.72, thick: 1.1, hair: 0.3,
+  jee: {basis: 'measured', source: 'JEE Advanced 2022/2024/2025 Paper 1 physics (8 vector + 40 raster figures, ~200 dpi)', n: 48, widthPt: 160, labelPt: 8.5, bodyPt: 10.4, thin: 0.38, main: 0.72, thick: 1.1, hair: 0.3,
     headLen: 4.5, headW: 0.65, head: 'filled', dash: [3, 2], gray: 0.47, light: 0.85, dark: 0.35, dot: 4.4, hatchGap: 4, hatchLen: 4, hatchAngle: 45,
     measured: ['widthPt', 'labelPt', 'bodyPt', 'thin', 'main', 'thick', 'gray', 'dot'], est: ['headLen', 'headW', 'dash', 'hatchGap', 'hatchLen']},
-  textbook: {source: 'assumed', n: 0, widthPt: 220, labelPt: 10, bodyPt: 10, thin: 0.77, main: 1.13, thick: 1.4, hair: 0.57, headLen: 6, headW: 0.76, head: 'filled', dash: [4, 2.7], gray: 0.82, light: 0.95, dark: 0.6, dot: 3.7,
-    hatchGap: 6, hatchLen: 4.7, hatchAngle: 45, measured: [], est: []},
-  print: {source: 'assumed', n: 0, widthPt: 220, labelPt: 11, bodyPt: 11, thin: 1.17, main: 1.69, thick: 2.0, hair: 0.88, headLen: 8.4, headW: 0.76, head: 'filled', dash: [4.4, 2.9], gray: null, light: 1, dark: 0, dot: 4,
-    hatchGap: 6.6, hatchLen: 5.9, hatchAngle: 45, measured: [], est: []}
+  textbook: {basis: 'designed', source: 'assumed', n: 0, widthPt: 220, labelPt: 10, bodyPt: 10, thin: 0.77, main: 1.13, thick: 1.4, hair: 0.57, headLen: 6, headW: 0.76, head: 'filled', dash: [4, 2.7], gray: 0.82, light: 0.95, dark: 0.6, dot: 3.7,
+    hatchGap: 6, hatchLen: 4.7, hatchAngle: 45, measured: [], est: [], designed: ['all: the earlier default look; it also stands for the merged university style']},
+  classic: {basis: 'designed', source: 'assumed', n: 0, widthPt: 220, labelPt: 10.5, bodyPt: 10.5, thin: 0.9, main: 1.4, thick: 1.9, hair: 0.6, headLen: 7, headW: 0.62, head: 'open', dash: [5, 3], gray: null, light: 1, dark: 0, dot: 3.6,
+    hatchGap: 4.5, hatchLen: 5, hatchAngle: 45, measured: [], est: [], designed: ['face: a schoolbook serif (Century Schoolbook / TeX Gyre Schola), heavier than Times', 'no gray: hatching for every fill', 'open arrowheads', 'heavier main lines, square ends (letterpress)']},
+  modern: {basis: 'designed', source: 'assumed', n: 0, widthPt: 220, labelPt: 10, bodyPt: 10, thin: 0.6, main: 0.85, thick: 1.1, hair: 0.45, headLen: 6.5, headW: 0.75, head: 'filled', dash: [3.5, 2.5], gray: 0.88, light: 0.95, dark: 0.55, dot: 3.4,
+    hatchGap: 6, hatchLen: 4.5, hatchAngle: 45, measured: [], est: [], designed: ['face: a sans serif (Inter / Helvetica) with italic variables', 'thin, even strokes with round caps and joins', 'light fills', 'one accent colour (blue) for vectors and forces, the rest in grays', 'filled arrowheads']},
+  print: {basis: 'designed', source: 'assumed', n: 0, widthPt: 220, labelPt: 11, bodyPt: 11, thin: 1.17, main: 1.69, thick: 2.0, hair: 0.88, headLen: 8.4, headW: 0.76, head: 'filled', dash: [4.4, 2.9], gray: null, light: 1, dark: 0, dot: 4,
+    hatchGap: 6.6, hatchLen: 5.9, hatchAngle: 45, measured: [], est: [], designed: ['all: the earlier black-and-white look, heavier, no gray']}
 };
 const KR_GOTHIC = `'Noto Sans KR','Noto Sans CJK KR','Malgun Gothic','Apple SD Gothic Neo','NanumGothic','Nanum Gothic',sans-serif`;
 const KR_MYEONGJO = `'Noto Serif KR','Noto Serif CJK KR','Nanum Myeongjo','Batang','AppleMyungjo',serif`;
 const CM_SERIF = `'Latin Modern Roman','CMU Serif','Computer Modern','STIX Two Text','Times New Roman','Nimbus Roman','Liberation Serif',serif`;
+const SCHOOLBOOK = `'TeX Gyre Schola','Century Schoolbook','New Century Schoolbook','Century Schoolbook L','C059','Georgia','Noto Serif KR',serif`;
+const MODERN_SANS = `'Inter','Helvetica Neue','Helvetica','Arial','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif`;
 const hex = g => { const v = Math.round(Math.max(0, Math.min(1, g)) * 255).toString(16).padStart(2, '0'); return '#' + v + v + v; };
 /** a preset from its row of STYLE_TABLE: px at the 800 px drawing, where a base label is 15 px */
 function preset(key, extra) {
@@ -88,11 +98,13 @@ function preset(key, extra) {
   return {key, lw: t.main * u, thin: t.thin * u, hair: t.hair * u, thick: t.thick * u, headLen: t.headLen * u, headW: t.headW / 2, head: t.head,
     hatchGap: t.hatchGap * u, hatchLen: t.hatchLen * u, hatchW: t.thin * u, hatchAngle: t.hatchAngle, dash: t.dash.map(v => v * u), dot: t.dot * u / 2,
     gray: t.gray == null ? null : hex(t.gray), light: hex(t.light ?? 0.95), dark: hex(t.dark ?? 0.5), labelScale: 1, widthPt: t.widthPt, labelPt: t.labelPt,
-    font: SERIF, hangul: null, caption: null, sans: false, vec: 'arrow', fill: '#fff', accent: '#000', dimHead: 'filled', resistor: 'zigzag', polarity: false, uprightNames: false, floor: 'hatch', wall: 'hatch', ...extra};
+    font: SERIF, hangul: null, caption: null, sans: false, vec: 'arrow', fill: '#fff', accent: '#000', dimHead: 'filled', resistor: 'zigzag', polarity: false, uprightNames: false, floor: 'hatch', wall: 'hatch',
+    ink: '#000', vecInk: null, round: false, wscale: 1, ...extra};
 }
 export const STYLES = {
   textbook: preset('textbook', {name: {ko: '교과서 (기본)', en: 'Textbook (default)'}, accent: '#b42318'}),
-  university: preset('university', {name: {ko: '대학 과제 (MIT 실측)', en: 'University problem set (measured, MIT)'}, vec: 'bold', fill: '#fff', accent: '#1d4ed8', dimHead: 'stealth', polarity: true}),
+  classic: preset('classic', {name: {ko: '클래식 (오래된 인쇄 교재)', en: 'Classic (old printed textbook)'}, font: SCHOOLBOOK, caption: KR_MYEONGJO, wscale: 1.1, accent: '#000', dimHead: 'open'}),
+  modern: preset('modern', {name: {ko: '모던 (디지털 교재)', en: 'Modern (digital textbook)'}, font: MODERN_SANS, hangul: KR_GOTHIC, sans: true, wscale: 1.08, ink: '#1f2937', accent: '#2563eb', vecInk: '#2563eb', round: true, fill: '#f1f5f9'}),
   olympiad: preset('olympiad', {name: {ko: '올림피아드 (IPhO·APhO 실측)', en: 'Olympiad (measured, IPhO/APhO)'}, vec: 'bold', dimHead: 'filled', resistor: 'box', polarity: true}),
   jee: preset('jee', {name: {ko: 'JEE (실측)', en: 'JEE (measured)'}, uprightNames: true}),
   suneung: preset('suneung', {name: {ko: '수능 (평가원 실측)', en: 'CSAT 수능 (measured, KICE)'}, font: CM_SERIF, hangul: KR_GOTHIC, caption: KR_MYEONGJO, uprightNames: true, floor: 'line', wall: 'gray', dimHead: 'filled'}),
@@ -123,7 +135,7 @@ const SYM = {alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', epsilon: 'ϵ', v
   odot: '⊙', otimes: '⊗', oplus: '⊕', perp: '⊥', parallel: '∥', angle: '∠', measuredangle: '∡', triangle: '△', square: '□', forall: '∀', exists: '∃', neg: '¬', wedge: '∧', vee: '∨',
   to: '→', rightarrow: '→', leftarrow: '←', gets: '←', uparrow: '↑', downarrow: '↓', leftrightarrow: '↔', updownarrow: '↕', Rightarrow: '⇒', Leftarrow: '⇐', Leftrightarrow: '⇔', implies: '⇒', iff: '⇔',
   rightleftharpoons: '⇌', leftrightharpoons: '⇋', mapsto: '↦', nearrow: '↗', searrow: '↘', circlearrowleft: '↺', circlearrowright: '↻', longrightarrow: '⟶',
-  ldots: '…', cdots: '⋯', vdots: '⋮', prime: '′', dagger: '†', ddagger: '‡', '%': '%', '$': '$', '{': '{', '}': '}', '_': '_', '#': '#', '&': '&', '|': '‖', lbrace: '{', rbrace: '}',
+  ldots: '…', cdots: '⋯', vdots: '⋮', ddots: '⋱', iddots: '⋰', Box: '□', prime: '′', dagger: '†', ddagger: '‡', '%': '%', '$': '$', '{': '{', '}': '}', '_': '_', '#': '#', '&': '&', '|': '‖', lbrace: '{', rbrace: '}',
   sin: 'sin', cos: 'cos', tan: 'tan', cot: 'cot', sec: 'sec', csc: 'csc', ln: 'ln', log: 'log', exp: 'exp', lim: 'lim', max: 'max', min: 'min', det: 'det', sinh: 'sinh', cosh: 'cosh', tanh: 'tanh', arcsin: 'arcsin', arccos: 'arccos', arctan: 'arctan',
   deg: '°', ohm: 'Ω', micro: 'µ', imath: 'ı', jmath: 'ȷ'};
 const OPNAMES = new Set(['sin', 'cos', 'tan', 'cot', 'sec', 'csc', 'ln', 'log', 'exp', 'lim', 'max', 'min', 'det', 'sinh', 'cosh', 'tanh', 'arcsin', 'arccos', 'arctan']);
@@ -132,6 +144,39 @@ const ACCENTS = {vec: 'vec', hat: 'hat', widehat: 'hat', dot: 'dot', ddot: 'ddot
 const FONTS = {mathrm: 'rm', text: 'rm', textrm: 'rm', rm: 'rm', operatorname: 'rm', mathbf: 'bf', bf: 'bf', textbf: 'bf', boldsymbol: 'bfit', bm: 'bfit', mathit: 'it', textit: 'it', mathsf: 'rm', mathcal: 'cal', mathscr: 'cal'};
 const CAL = {A: '𝒜', B: 'ℬ', C: '𝒞', D: '𝒟', E: 'ℰ', F: 'ℱ', G: '𝒢', H: 'ℋ', I: 'ℐ', J: '𝒥', K: '𝒦', L: 'ℒ', M: 'ℳ', N: '𝒩', O: '𝒪', P: '𝒫', Q: '𝒬', R: 'ℛ', S: '𝒮', T: '𝒯', U: '𝒰', V: '𝒱', W: '𝒲', X: '𝒳', Y: '𝒴', Z: '𝒵'};
 const IGNORE = new Set(['left', 'right', 'big', 'Big', 'bigg', 'Bigg', 'displaystyle', 'textstyle', 'limits', 'nolimits', 'mathstrut']);
+
+/* a font command over its argument: every text node in it (in scripts, fractions and roots too) takes the font; a
+   symbol keeps its own unless the font is bold */
+function fontSet(list, font) {
+  return list.map(n => n.k === 't' ? {...n, font: font === 'cal' ? 'cal' : n.sym && font !== 'bf' && font !== 'bfit' ? n.font : font}
+    : n.k === 'g' || n.k === 'acc' || n.k === 'sqrt' ? {...n, body: fontSet(n.body, font)}
+    : n.k === 'scr' ? {...n, base: fontSet(n.base, font), sub: n.sub && fontSet(n.sub, font), sup: n.sup && fontSet(n.sup, font)}
+    : n.k === 'frac' ? {...n, num: fontSet(n.num, font), den: fontSet(n.den, font)} : n);
+}
+/* the placeholder a structure of the symbol picker leaves to be filled (drawn as a tinted box) */
+export const PLACEHOLDER = '⬚';
+/** a chemical formula as TeX: a number after an element or a bracket is a subscript, a charge after ^ (or a + or −
+ *  closing a species) a superscript, -> <- <-> <=> are arrows, (aq) (s) (l) (g) states; a number before a species
+ *  is its coefficient. Upright throughout (the caller sets it in \mathrm). */
+export function ceTex(src) {
+  const s = String(src ?? ''); let out = '', i = 0, prev = '';
+  const arrows = [['<=>', '\\rightleftharpoons '], ['<->', '\\leftrightarrow '], ['->', '\\rightarrow '], ['<-', '\\leftarrow '], ['⇌', '\\rightleftharpoons '], ['→', '\\rightarrow ']];
+  while (i < s.length) {
+    const a = arrows.find(([t]) => s.startsWith(t, i));
+    if (a) { out = out.trimEnd() + a[1].trim() + ' '; i += a[0].length; while (s[i] === ' ') i++; prev = 'op'; continue; }
+    const st = /^\((aq|s|l|g)\)/.exec(s.slice(i));
+    if (st) { out += '(' + st[1] + ')'; i += st[0].length; prev = 'state'; continue; }
+    const c = s[i];
+    if (/[A-Z]/.test(c)) { const m = /^[A-Z][a-z]?/.exec(s.slice(i)); out += m[0]; i += m[0].length; prev = 'el'; continue; }
+    if (/[0-9]/.test(c)) { const m = /^[0-9]+/.exec(s.slice(i)); out += prev === 'el' || prev === 'close' ? '_{' + m[0] + '}' : m[0]; i += m[0].length; prev = prev === 'el' || prev === 'close' ? 'sub' : 'coef'; continue; }
+    if (c === '^') { const m = /^\^\{?([0-9]*[+\-−])\}?/.exec(s.slice(i)); if (m) { out += '^{' + m[1].replace(/-/g, '−') + '}'; i += m[0].length; prev = 'charge'; continue; } }
+    if ((c === '+' || c === '-') && (prev === 'el' || prev === 'sub' || prev === 'close') && (i + 1 === s.length || /[\s)\]]/.test(s[i + 1]))) { out += '^{' + (c === '-' ? '−' : '+') + '}'; i++; prev = 'charge'; continue; }
+    if (c === ')' || c === ']') { out += c; i++; prev = 'close'; continue; }
+    if (c === '\\' || c === '{' || c === '}') { out += c; i++; prev = ''; continue; }
+    out += c === '-' ? '−' : c; i++; prev = c === ' ' ? 'space' : c === '(' || c === '[' ? 'open' : prev === 'space' && c === '+' ? 'op' : '';
+  }
+  return out;
+}
 
 /* a parsed label: nodes {k:'t', s, font} | {k:'g', body} | {k:'scr', base, sub, sup} | {k:'frac', num, den} |
    {k:'sqrt', body, index} | {k:'acc', a, body} | {k:'sp', w} */
@@ -144,9 +189,27 @@ function parseTex(str) {
     if (SPACES[name] !== undefined) return [{k: 'sp', w: SPACES[name]}];
     if (IGNORE.has(name)) return [];
     if (ACCENTS[name]) return [{k: 'acc', a: ACCENTS[name], body: arg()}];
-    if (FONTS[name]) { const body = arg(), font = FONTS[name]; const set = list => list.map(n => n.k === 't' ? {...n, font: font === 'cal' ? 'cal' : n.sym && font !== 'bf' && font !== 'bfit' ? n.font : font} : n.k === 'g' || n.k === 'acc' ? {...n, body: set(n.body)} : n); return [{k: 'g', body: set(body)}]; }
+    if (FONTS[name]) return [{k: 'g', body: fontSet(arg(), FONTS[name])}];
+    /* \ce{H2SO4}, \ce{SO4^2-}, \ce{2H2 + O2 -> 2H2O}: a chemical formula (draw-render.mjs ceTex) */
+    if (name === 'ce') { while (str[k] === ' ') k++; const raw = str[k] === '{' ? group() : ''; return [{k: 'g', body: fontSet(parseList(ceTex(raw)), 'rm'), chem: true}]; }
     if (name === 'frac' || name === 'dfrac' || name === 'tfrac') { const a = arg(), b = arg(); return [{k: 'frac', num: a, den: b, t: name === 'tfrac'}]; }
     if (name === 'sqrt') { let index = null; if (str[k] === '[') { const j = str.indexOf(']', k); if (j > k) { index = parseList(str.slice(k + 1, j)); k = j + 1; } } return [{k: 'sqrt', body: arg(), index}]; }
+    /* matrices and cases: \begin{pmatrix} a & b \\ c & d \end{pmatrix} (also bmatrix, vmatrix, matrix, cases), or the
+       short \pmatrix{a & b \\ c & d}, \bmatrix{…}, \vmatrix{…}, \cases{…} */
+    /* also array (with a column spec like {cc|c}: l c r and | for a rule) and amatrix (bracketed, a rule before its last
+       column: an augmented matrix) */
+    const MATS = ['pmatrix', 'bmatrix', 'vmatrix', 'Vmatrix', 'matrix', 'cases', 'array', 'amatrix'];
+    if (name === 'begin' || MATS.includes(name)) {
+      let env = name, raw = '', spec = '';
+      if (name === 'begin') { while (str[k] === ' ') k++; env = str[k] === '{' ? group().trim() : ''; while (str[k] === ' ') k++; if (env === 'array' && str[k] === '{') spec = group(); const endTag = '\\end{' + env + '}', j = str.indexOf(endTag, k); raw = j >= 0 ? str.slice(k, j) : str.slice(k); k = j >= 0 ? j + endTag.length : str.length; }
+      else { while (str[k] === ' ') k++; if (env === 'array' && str[k] === '[') { const j = str.indexOf(']', k); spec = str.slice(k + 1, j); k = j + 1; } raw = str[k] === '{' ? group() : ''; }
+      if (!MATS.includes(env)) return [];
+      const rows = raw.split(/\\\\/).map(r => r.trim()).filter((r, i, a) => r || i < a.length - 1).slice(0, 16).map(r => r.split('&').slice(0, 16).map(c => parseList(c.trim())));
+      const ncol = Math.max(0, ...rows.map(r => r.length)), align = [], bars = new Set();
+      for (const c of spec.replace(/\s/g, '')) { if (c === '|') bars.add(align.length); else if ('lcr'.includes(c)) align.push(c); }
+      if (env === 'amatrix') bars.add(ncol - 1);
+      return rows.length ? [{k: 'mat', env, rows, align, bars}] : [];
+    }
     if (name === 'ket') return [{k: 't', s: '|', font: 'rm'}, ...arg(), {k: 't', s: '⟩', font: 'rm'}];
     if (name === 'bra') return [{k: 't', s: '⟨', font: 'rm'}, ...arg(), {k: 't', s: '|', font: 'rm'}];
     if (name === 'braket') return [{k: 't', s: '⟨', font: 'rm'}, ...arg(), {k: 't', s: '⟩', font: 'rm'}];
@@ -189,26 +252,57 @@ function parseTex(str) {
 const WT = ' 250!333"408#500$500%833&778\'180(333)333*500+564,250-333.250/2780500150025003500450055006500750085009500:278;278<564=564>564?444@921A722B667C667D722E611F556G722H722I333J389K722L611M889N722O722P556Q722R667S556T611U722V722W944X722Y722Z611[333\\278]333^469_500`333a444b500c444d500e444f333g500h500i278j278k500l278m778n500o500p500q500r333s389t278u500v500w722x500y500z444{480|200}480~541';
 const ADV = (() => { const m = {}; for (let i = 0; i < WT.length;) { const c = WT[i]; m[c] = +WT.slice(i + 1, i + 4) / 1000; i += 4; } return m; })();
 const XLOW = new Set('acemnorsuvwxzαεικνοπρστυωϵ·×+−-=<>~∼≈:,.'.split(''));
+/* advances (em) of the symbols outside the table, set at or above the widest of the faces a browser falls back to for
+   them (Times New Roman, STIX Two, Cambria Math, DejaVu Serif): a glyph drawn wider than its advance would run into the
+   next one (∇×B came out with ∇, × and B on top of each other with ∇ at 0.52) */
+const SYMW = {'∇': 0.725, '∂': 0.54, 'ħ': 0.54, 'ℏ': 0.54, 'ℓ': 0.46, '∑': 0.78, '∏': 0.84, '∫': 0.5, '∬': 0.78, '∭': 1.04, '∮': 0.54, '×': 0.62, '±': 0.62, '∓': 0.62, '÷': 0.62, '−': 0.62,
+  '≈': 0.62, '≠': 0.62, '≤': 0.62, '≥': 0.62, '∝': 0.66, '∼': 0.62, '≡': 0.62, '≃': 0.62, '≅': 0.62, '·': 0.28, '∘': 0.46, '•': 0.4, '∞': 0.82, '⊙': 0.8, '⊗': 0.8, '⊕': 0.8, '°': 0.4, '′': 0.3, '″': 0.5,
+  '⟨': 0.4, '⟩': 0.4, '‖': 0.4, '†': 0.5, '‡': 0.5,
+  /* Greek: the italic advance or the ink's right edge, whichever is wider (measured on the serif stack in Chromium), so a
+     subscript sits right after the letter (ε₀, not ε 0) and the next glyph does not run into it */
+  'α': 0.55, 'β': 0.5, 'γ': 0.44, 'δ': 0.48, 'ε': 0.42, 'ϵ': 0.44, 'ζ': 0.47, 'η': 0.5, 'θ': 0.49, 'ϑ': 0.52, 'ι': 0.28, 'κ': 0.5, 'λ': 0.48, 'μ': 0.53, 'ν': 0.45, 'ξ': 0.44, 'π': 0.53, 'ρ': 0.48, 'ϱ': 0.48, 'σ': 0.53, 'ς': 0.44, 'τ': 0.4, 'υ': 0.47, 'φ': 0.56, 'ϕ': 0.52, 'χ': 0.47, 'ψ': 0.64, 'ω': 0.7, 'ϖ': 0.66,
+  'Ω': 0.74, 'Φ': 0.76, 'Ψ': 0.78, 'Θ': 0.72, 'Σ': 0.6, 'Γ': 0.6, 'Λ': 0.72, 'Δ': 0.64, 'Π': 0.76, 'Ξ': 0.64,
+  '→': 1.0, '←': 1.0, '↔': 1.0, '⇒': 1.0, '⇐': 1.0, '⇔': 1.0, '⇌': 1.0, '⇋': 1.0, '↦': 1.0, '⟶': 1.4, '↑': 0.52, '↓': 0.52, '↕': 0.52, '…': 1.0, '⋯': 1.0, '⋮': 0.4, '⋱': 1.0, '⋰': 1.0, '∈': 0.66, '∉': 0.66, '⊥': 0.7, '∥': 0.4, '∠': 0.72, [PLACEHOLDER]: 0.62};
 function charW(c, it) {
   if (ADV[c] !== undefined) return ADV[c] * (it && c === 'f' ? 0.9 : 1);
-  if (/[α-ω]/.test(c)) return c === 'ω' ? 0.68 : c === 'ι' ? 0.32 : c === 'μ' ? 0.55 : 0.52;
-  if (/[Α-Ω]/.test(c)) return 0.68;
-  if ('ϑϕϵϱςϖϰ'.includes(c)) return 0.55;
+  if (SYMW[c] !== undefined) return SYMW[c];
+  if (/[α-ω]/.test(c)) return 0.54;
+  if (/[Α-Ω]/.test(c)) return 0.7;
+  if ('ϑϕϵϱςϖϰ'.includes(c)) return 0.56;
   if (/[가-힣ㄱ-ㅎ]/.test(c)) return 0.92;
-  if ('→←↔⇒⇐⇔⇌⇋↦⟶'.includes(c)) return 0.95;
-  if ('↑↓↕'.includes(c)) return 0.5;
-  if ('∑∏∫∬∭∮'.includes(c)) return 0.62;
-  if ('·∘•'.includes(c)) return 0.3;
-  if ('°′″'.includes(c)) return 0.36;
-  if ('⟨⟩|‖'.includes(c)) return 0.36;
-  if ('×±∓÷≈≠≤≥∝∼≡≃≅−'.includes(c)) return 0.58;
-  if ('∞⊙⊗⊕'.includes(c)) return 0.78;
-  if ('ħℏℓ∂∇'.includes(c)) return 0.52;
-  if (/[\u{1D49C}-\u{1D4CF}ℬℰℱℋℐℒℳℛ]/u.test(c)) return 0.72;
-  if ('…⋯'.includes(c)) return 0.95;
-  return 0.6;
+  if (/[\u{1D49C}-\u{1D4CF}ℬℰℱℋℐℒℳℛ]/u.test(c)) return 0.74;
+  return 0.62;
 }
-const textWidth = (s, sz, it, bold) => { let w = 0; for (const c of s) w += charW(c, it); return w * sz * (CUR.sans ? 1.08 : 1) * (bold ? 1.04 : 1); };
+const textWidth = (s, sz, it, bold) => { let w = 0; for (const c of s) w += charW(c, it); return w * sz * (CUR.wscale || (CUR.sans ? 1.08 : 1)) * (bold ? 1.04 : 1); };
+/* ── maths spacing: TeX's atom classes and the spaces between them (in em; none in scripts but around operators) ── */
+const BIN_CH = '+−-±∓×·∘•÷∗⋆∧∨⊕⊗∩∪', REL_CH = '=≈≠≤≥<>∝∼≃≅≡∈∉→←↔⇒⇐⇔⇌⇋↦⟶≪≫⊥∥', LOP_CH = '∑∏∫∬∭∮', OPEN_CH = '([{⟨', CLOSE_CH = ')]}⟩', PUNCT_CH = ',;';
+const charClass = c => !c ? 'ord' : LOP_CH.includes(c) ? 'op' : BIN_CH.includes(c) ? 'bin' : REL_CH.includes(c) ? 'rel' : OPEN_CH.includes(c) ? 'open' : CLOSE_CH.includes(c) ? 'close' : PUNCT_CH.includes(c) ? 'punct' : 'ord';
+/* the class a node has on its left and on its right */
+function nodeClass(n) {
+  if (n.k === 't') {
+    if (n.sym && n.font === 'rm' && n.s.length > 1) return {l: 'op', r: 'op'};
+    const t = n.s.trim(); if (!t) return null;
+    if (n.sym) { const c = charClass(t[0]); return {l: c, r: c}; }
+    /* a sign closing the run after a relation or an operator is unary: it binds to what follows ("= −ρ") */
+    const last = charClass(t[t.length - 1]), before = t.length > 1 ? charClass(t.slice(0, -1).trimEnd().slice(-1)) : null;
+    return {l: charClass(t[0]), r: last === 'bin' && ['rel', 'bin', 'open', 'punct'].includes(before) ? 'ord' : last};
+  }
+  if (n.k === 'scr') { const b = n.base.length === 1 ? nodeClass(n.base[0]) : null; return b && b.r === 'op' ? {l: 'op', r: 'op'} : {l: b?.l || 'ord', r: 'ord'}; }
+  if (n.k === 'sp') return null;
+  return {l: 'ord', r: 'ord'};
+}
+const MATH_SPACE = (L, R, script) => {
+  if (!L) return 0;
+  if ((L === 'op' && (R === 'ord' || R === 'op' || R === 'open')) || ((L === 'ord' || L === 'close') && R === 'op')) return 0.167;
+  if (script) return 0;
+  if (R === 'bin' && (L === 'ord' || L === 'close')) return 0.222;
+  if (L === 'bin' && (R === 'ord' || R === 'op' || R === 'open')) return 0.222;
+  if (R === 'rel' && (L === 'ord' || L === 'op' || L === 'close')) return 0.278;
+  if (L === 'rel' && (R === 'ord' || R === 'op' || R === 'open')) return 0.278;
+  if (L === 'punct' && R !== 'close' && R !== 'punct') return 0.167;
+  return 0;
+};
+const UNARY_AFTER = new Set([null, 'bin', 'rel', 'open', 'op', 'punct']);
 const highChar = c => !XLOW.has(c);
 
 /* the layout: a box {w, a (ascent), d (descent), items: [{x, y, t, size, it, bf}], paths: [{d (path data with
@@ -220,15 +314,24 @@ function layout(nodes, sz, ctx) {
     for (const p of b.paths) paths.push({...p, ox: (p.ox || 0) + x, oy: (p.oy || 0) + dy});
     a = Math.max(a, b.a - dy); d = Math.max(d, b.d + dy); x += b.w;
   };
+  let prev = null;
   for (let i = 0; i < nodes.length; i++) {
     const n = nodes[i];
-    if (n.k === 't') put(textBox(n, sz, {...ctx, lead: x === 0 && !items.length}));
+    /* the space TeX puts between this atom and the one before (∇ × B, a = b, \sin x, ∑ x) */
+    const cls = ctx.math ? nodeClass(n) : null, before = prev; let left = cls?.l;
+    if (cls) { if (left === 'bin' && UNARY_AFTER.has(prev)) left = 'ord'; x += MATH_SPACE(prev, left, (ctx.level || 0) > 0) * sz; }
+    /* an italic letter followed by an upright one leans into it: its italic correction */
+    if (n.k === 't' && items.length && items[items.length - 1].it && !/^[\s]/.test(n.s) && n.font !== 'it' && !(n.font === 'auto' && /^[A-Za-z]/.test(n.s))) x += sz * 0.05;
+    if (cls) prev = left === 'ord' && cls.r === 'bin' && cls.l === 'bin' ? 'ord' : cls.r;
+    if (n.k === 't') put(textBox(n, sz, {...ctx, lead: x === 0 && !items.length, prev: before}));
     else if (n.k === 'g') put(layout(n.body, sz, ctx));
     else if (n.k === 'sp') x += n.w * sz;
     else if (n.k === 'scr') {
       const base = layout(n.base, sz, ctx), s2 = Math.max(7, sz * (ctx.level ? 0.8 : 0.7)), c2 = {...ctx, level: (ctx.level || 0) + 1};
       put(base);
       const it = base.items.length === 1 && base.items[0].it ? sz * 0.06 : 0;
+      /* ∇'s advance is set for the widest fallback face; its scripts tuck in by what the usual faces leave empty */
+      const last = base.items[base.items.length - 1]; if (last && /∇$/.test(last.t)) x -= sz * 0.05;
       const sub = n.sub ? layout(n.sub, s2, c2) : null, sup = n.sup ? layout(n.sup, s2, c2) : null;
       const x0 = x;
       if (sup) { x = x0 + it; put(sup, -Math.max(sz * 0.4, base.a - s2 * 0.38)); }
@@ -251,6 +354,29 @@ function layout(nodes, sz, ctx) {
       for (const p of b.paths) box.paths.push({...p, ox: (p.ox || 0) + rw});
       if (n.index) { const ix = layout(n.index, Math.max(7, sz * 0.5), {...ctx, level: 2}); for (const it of ix.items) box.items.push({...it, x: it.x + sz * 0.02, y: it.y - sz * 0.42}); }
       put(box);
+    } else if (n.k === 'mat') {
+      /* a matrix: cells centred in their columns (cases: to the left), rows about the maths axis, its brackets drawn */
+      const s2 = ctx.level ? sz * 0.85 : sz, cells = n.rows.map(r => r.map(c => layout(c, s2, ctx))), ncol = Math.max(...n.rows.map(r => r.length)), al = j => n.env === 'cases' ? 'l' : n.align?.[j] || 'c';
+      const colW = Array.from({length: ncol}, (_, j) => Math.max(s2 * 0.4, ...cells.map(r => r[j] ? r[j].w : 0)));
+      const rowA = cells.map(r => Math.max(s2 * 0.62, ...r.map(c => c.a))), rowD = cells.map(r => Math.max(s2 * 0.2, ...r.map(c => c.d)));
+      const gx = s2 * (n.env === 'cases' ? 1 : 0.7), gy = s2 * 0.24, totH = rowA.reduce((t, v, i) => t + v + rowD[i], 0) + gy * (cells.length - 1), axis = sz * 0.27, top = -axis - totH / 2;
+      const dw = n.env === 'matrix' || n.env === 'array' ? 0 : sz * 0.38, cw = colW.reduce((t, v) => t + v, 0) + gx * (ncol - 1), sw = Math.max(0.7, sz * 0.055);
+      const box = {w: dw + cw + (n.env === 'cases' ? sz * 0.1 : dw) + sz * 0.1, a: -top + sz * 0.05, d: top + totH + sz * 0.05, items: [], paths: []};
+      let yy = top;
+      cells.forEach((r, i) => {
+        const base = yy + rowA[i]; let xx = dw + sz * 0.05;
+        r.forEach((c, j) => { const dx = al(j) === 'l' ? 0 : al(j) === 'r' ? colW[j] - c.w : (colW[j] - c.w) / 2; for (const it of c.items) box.items.push({...it, x: it.x + xx + dx, y: it.y + base}); for (const p of c.paths) box.paths.push({...p, ox: (p.ox || 0) + xx + dx, oy: (p.oy || 0) + base}); xx += colW[j] + gx; });
+        yy = base + rowD[i] + gy;
+      });
+      const y0 = top - sz * 0.04, y1 = top + totH + sz * 0.04, ym = (y0 + y1) / 2, R = box.w - sz * 0.05;
+      if (n.env === 'pmatrix') box.paths.push({d: `M${f(dw * 0.85)},${f(y0)}Q${f(dw * 0.05)},${f(ym)} ${f(dw * 0.85)},${f(y1)}M${f(R - dw * 0.85)},${f(y0)}Q${f(R - dw * 0.05)},${f(ym)} ${f(R - dw * 0.85)},${f(y1)}`, sw, join: true});
+      /* the rules of an array or an augmented matrix, between columns */
+      for (const j of n.bars || []) { if (j <= 0 || j >= ncol) continue; let xx = dw + sz * 0.05; for (let q = 0; q < j; q++) xx += colW[q] + gx; xx -= gx / 2; box.paths.push({d: `M${f(xx)},${f(y0)}V${f(y1)}`, sw: sw * 0.8}); }
+      if (n.env === 'bmatrix' || n.env === 'amatrix') box.paths.push({d: `M${f(dw * 0.8)},${f(y0)}H${f(dw * 0.3)}V${f(y1)}H${f(dw * 0.8)}M${f(R - dw * 0.8)},${f(y0)}H${f(R - dw * 0.3)}V${f(y1)}H${f(R - dw * 0.8)}`, sw});
+      else if (n.env === 'vmatrix') box.paths.push({d: `M${f(dw * 0.5)},${f(y0)}V${f(y1)}M${f(R - dw * 0.5)},${f(y0)}V${f(y1)}`, sw});
+      else if (n.env === 'Vmatrix') box.paths.push({d: `M${f(dw * 0.35)},${f(y0)}V${f(y1)}M${f(dw * 0.65)},${f(y0)}V${f(y1)}M${f(R - dw * 0.35)},${f(y0)}V${f(y1)}M${f(R - dw * 0.65)},${f(y0)}V${f(y1)}`, sw});
+      else if (n.env === 'cases') { const xr = dw * 0.85, xl = dw * 0.15, xm = dw * 0.5; box.paths.push({d: `M${f(xr)},${f(y0)}Q${f(xm)},${f(y0)} ${f(xm)},${f(y0 + (ym - y0) * 0.3)}V${f(ym - (ym - y0) * 0.25)}Q${f(xm)},${f(ym)} ${f(xl)},${f(ym)}Q${f(xm)},${f(ym)} ${f(xm)},${f(ym + (y1 - ym) * 0.25)}V${f(y1 - (y1 - ym) * 0.3)}Q${f(xm)},${f(y1)} ${f(xr)},${f(y1)}`, sw, join: true}); }
+      x += sz * 0.08; put(box); x += sz * 0.08;
     } else if (n.k === 'acc') {
       if (n.a === 'vec' && ctx.vec === 'bold') { put(layout(n.body, sz, {...ctx, bold: true})); continue; }
       const b = layout(n.body, sz, ctx), single = b.items.length === 1 && [...b.items[0].t].length === 1, slant = single && b.items[0].it ? sz * 0.09 : 0;
@@ -274,10 +400,29 @@ function layout(nodes, sz, ctx) {
 function textBox(n, sz, ctx) {
   const items = []; let x = 0, high = false;
   const bold = ctx.bold || n.font === 'bf' || n.font === 'bfit';
-  const add = (t, it) => { if (!t) return; const w = textWidth(t, sz, it, bold); const ko = /[가-힣ㄱ-ㅎ]/.test(t); items.push({x, y: 0, t, size: sz, it: it && !ko, bf: bold, ko}); x += w; if ([...t].some(highChar)) high = true; };
+  const add = (t, it) => {
+    if (!t) return;
+    /* a placeholder of the symbol picker is an item of its own, drawn as a box */
+    if (t.includes(PLACEHOLDER) && t !== PLACEHOLDER) { for (const part of t.split(new RegExp(`(${PLACEHOLDER})`))) add(part, it); return; }
+    const last = items[items.length - 1];
+    if (last && last.it && !it && !/^\s/.test(t)) x += sz * 0.05;
+    const w = textWidth(t, sz, it, bold), ko = /[가-힣ㄱ-ㅎ]/.test(t);
+    items.push({x, y: 0, t, size: sz, it: it && !ko && t !== PLACEHOLDER, bf: bold, ko, ...(t === PLACEHOLDER ? {ph: true} : {})}); x += w; if ([...t].some(highChar)) high = true;
+  };
   let s = n.s;
-  /* in maths: a true minus sign, and room around relations */
-  if (ctx.math && n.font === 'auto' && !n.sym) s = s.replace(/-/g, '−').replace(/\s*([=≈≠≤≥<>≡∝→⇒])\s*/g, ' $1 ').replace(/\s*([−+±∓×])\s*/g, (m, op, off) => off === 0 && ctx.lead ? op : ` ${op} `);
+  /* in maths: a true minus sign, and room around relations and binary operators inside the run (a sign is unary at
+     the start, after a relation, an operator or an opening bracket); at the run's ends the spacing between atoms in
+     layout() does it, so the run is trimmed there */
+  if (ctx.math && n.font === 'auto' && !n.sym) {
+    const orig = s, OPS = '=≈≠≤≥<>≡∝→⇒−+±∓×·-';
+    s = s.replace(/-/g, '−').replace(/\s*([=≈≠≤≥<>≡∝→⇒])\s*/g, ' $1 ').replace(/\s*([−+±∓×·])\s*/g, (m, op, off, all) => {
+      const before = all.slice(0, off).trimEnd();
+      const unary = before === '' ? (ctx.lead || UNARY_AFTER.has(ctx.prev ?? null)) : /[=≈≠≤≥<>≡∝→⇒(\[{,−+±∓×·]$/.test(before);
+      return unary ? (before === '' ? op : ' ' + op) : ` ${op} `;
+    });
+    if (OPS.includes(orig.trimStart()[0])) s = s.trimStart();
+    if (OPS.includes(orig.trimEnd().slice(-1))) s = s.trimEnd();
+  }
   if (n.font === 'cal') s = [...s].map(c => CAL[c] || c).join('');
   if (n.font === 'rm' || n.font === 'bf' || n.font === 'cal') add(s, false);
   else if (n.font === 'it' || n.font === 'bfit') add(s, true);
@@ -308,6 +453,13 @@ export function texLayout(src, sz = 16) {
   }
   return {w: x, a, d, items, paths};
 }
+/** the glyph boxes of a label laid out at size sz (for tests): [{t, x, w, y, size, it}] in reading order, each its
+ *  advance wide — the next glyph on the same line must start at or after x + w */
+export function glyphBoxes(src, sz = 100, style = 'textbook') {
+  const saved = CUR; CUR = {...STYLES[style] || STYLES.textbook, ls: 1, ss: 1};
+  const b = texLayout(src, sz), out = b.items.map(it => ({t: it.t, x: it.x, w: textWidth(it.t, it.size, it.it, it.bf), y: it.y, size: it.size, it: !!it.it}));
+  CUR = saved; return out;
+}
 /** the runs of a label (for tests and the editor): [{t, it, sh: '' | 'sub' | 'sup'}] */
 export function texRuns(src) {
   const b = texLayout(src, 100);
@@ -324,14 +476,16 @@ export function texText(src, x, y, size = 16, anchor = 'middle', extra = '', opt
   const halo = opts.halo ? ` stroke="#fff" stroke-width="${f(Math.max(2, sz * 0.22))}" stroke-linejoin="round" paint-order="stroke"` : '';
   let t = '';
   const kfont = it => it.ko && (opts.caption ? CUR.caption : CUR.hangul) ? ` font-family="${esc(opts.caption ? CUR.caption : CUR.hangul).replace(/&#39;/g, "'")}"` : '';
-  for (const it of b.items) t += `<tspan x="${f(x0 + it.x)}" y="${f(base + it.y)}"${Math.abs(it.size - sz) > 0.01 ? ` font-size="${f(it.size)}"` : ''}${it.it ? ' font-style="italic"' : ''}${it.bf ? ' font-weight="bold"' : ''}${kfont(it)}>${esc(it.t)}</tspan>`;
+  let ph = '';
+  for (const it of b.items) if (it.ph) { const w = textWidth(PLACEHOLDER, it.size, false, false); ph += `<rect class="ph" x="${f(x0 + it.x + it.size * 0.06)}" y="${f(base + it.y - it.size * 0.66)}" width="${f(w - it.size * 0.12)}" height="${f(it.size * 0.78)}" rx="${f(it.size * 0.08)}" fill="#dbeafe" stroke="#2563eb" stroke-width="${f(Math.max(0.6, it.size * 0.05))}" stroke-dasharray="${f(it.size * 0.12)} ${f(it.size * 0.08)}"/>`; }
+  for (const it of b.items) if (!it.ph) t += `<tspan x="${f(x0 + it.x)}" y="${f(base + it.y)}"${Math.abs(it.size - sz) > 0.01 ? ` font-size="${f(it.size)}"` : ''}${it.it ? ' font-style="italic"' : ''}${it.bf ? ' font-weight="bold"' : ''}${kfont(it)}>${esc(it.t)}</tspan>`;
   let p = '';
   for (const q of b.paths) {
     const ox = x0 + (q.ox || 0), oy = base + (q.oy || 0);
     if (q.dot) p += `<circle cx="${f(ox + q.dot[0])}" cy="${f(oy + q.dot[1])}" r="${f(q.dot[2])}" fill="${color}"/>`;
     else p += `<path d="${q.d}" transform="translate(${f(ox)},${f(oy)})" fill="none" stroke="${color}" stroke-width="${f(q.sw)}"${q.join ? ' stroke-linejoin="round" stroke-linecap="round"' : ''}/>`;
   }
-  return `<g class="tex"${extra.replace(/fill="[^"]+"/, '')}>${t ? `<text font-size="${f(sz)}" font-family="${esc(CUR.font).replace(/&#39;/g, "'")}" fill="${color}"${halo}>${t}</text>` : ''}${p}</g>`;
+  return `<g class="tex"${extra.replace(/fill="[^"]+"/, '')}>${ph}${t ? `<text font-size="${f(sz)}" font-family="${esc(CUR.font).replace(/&#39;/g, "'")}" fill="${color}"${halo}>${t}</text>` : ''}${p}</g>`;
 }
 /** a label on its own, as an SVG document (the editor's previews and the symbol picker) */
 export function texSVG(src, size = 18, style = 'textbook') {
@@ -343,7 +497,7 @@ export function texSVG(src, size = 18, style = 'textbook') {
 
 /** the points of a data curve: "x,y x,y …" (or ; between points) */
 export function dataPoints(src) { return String(src || '').trim().split(/[\s;]+/).map(t => t.split(',').map(Number)).filter(p => p.length === 2 && p.every(Number.isFinite)).map(([x, y]) => ({x, y})).slice(0, 80); }
-const FORCE_LABEL = {gravity: '$mg$', normal: '$N$', friction: '$f$', tension: '$T$', spring: '$F_s$', applied: '$F$'};
+const FORCE_LABEL = {gravity: '$mg$', normal: '$N$', friction: '$f$', tension: '$T$', spring: '$F_s$', applied: '$F$', centripetal: '$m\\omega^2 r$'};
 /* dash patterns in px: dashed from the style's measured dash; dotted and dash-dot from it */
 const dashOf = (pattern, st) => { const [a, b] = st.dash; return pattern === 'dashed' ? [a, b] : pattern === 'dotted' ? [Math.max(0.6, st.thin * 0.9), b * 1.1] : pattern === 'dashdot' ? [a * 1.6, b * 0.8, Math.max(0.8, st.thin), b * 0.8] : null; };
 const fmtSI = (v0, unit) => {
@@ -373,24 +527,29 @@ const X2U = {resistor: 'Ω', rheostat: 'Ω', bulb: 'Ω', galvanometer: 'Ω', bat
 export function renderSVG(scene, opts = {}) {
   const W = opts.width || 800, view = opts.view || scene.view || {x: -0.5, y: -0.5, w: 4, h: 3};
   const S = W / view.w, H = Math.max(40, Math.round(view.h * S));
-  const st = STYLES[opts.style || scene.style] || STYLES.textbook, ss = opts.strokeScale || 1;
-  const baseLs = (opts.labelScale || 1) * st.labelScale;
+  /* the figure's style; an object with a style of its own is drawn in that one (setStyle, in the loop below) */
+  const st0 = STYLES[opts.style || scene.style] || STYLES.textbook, ss = opts.strokeScale || 1;
+  let st = st0, baseLs = (opts.labelScale || 1) * st.labelScale;
   CUR = {...st, ls: baseLs, ss};
   const X = x => (x - view.x) * S, Y = y => (view.y + view.h - y) * S, P = p => `${f(X(p.x))},${f(Y(p.y))}`;
   const byId = new Map(scene.objects.map(o => [o.id, o]));
   const edit = !!opts.edit, selSet = new Set(Array.isArray(opts.selected) ? opts.selected : opts.selected ? [opts.selected] : []), sel = selSet.size === 1 ? [...selSet][0] : '';
   const showValues = opts.values ?? !!scene.values;
   const out = [];
-  const ink = '#000', minW = opts.edit ? 0.75 : 0;
-  const B0 = {lw: Math.max(minW, st.lw * ss), thin: Math.max(minW * 0.8, st.thin * ss), hair: Math.max(minW * 0.7, st.hair * ss), thick: Math.max(minW, st.thick * ss), HL: st.headLen * ss};
+  const minW = opts.edit ? 0.75 : 0;
+  const weights = s => ({lw: Math.max(minW, s.lw * ss), thin: Math.max(minW * 0.8, s.thin * ss), hair: Math.max(minW * 0.7, s.hair * ss), thick: Math.max(minW, s.thick * ss), HL: s.headLen * ss});
+  let ink = st.ink, B0 = weights(st);
   let lw = B0.lw, thin = B0.thin, hair = B0.hair, thick = B0.thick, HL = B0.HL, om = 1;
-  const gray = st.gray, light = st.light, fill = st.fill;
+  let gray = st.gray, light = st.light, fill = st.fill, cap = st.round ? ' stroke-linecap="round" stroke-linejoin="round"' : '';
+  const setStyle = s => { st = s; ink = s.ink; B0 = weights(s); gray = s.gray; light = s.light; fill = s.fill; cap = s.round ? ' stroke-linecap="round" stroke-linejoin="round"' : ''; baseLs = (opts.labelScale || 1) * s.labelScale; CUR = {...s, ls: baseLs, ss}; };
+  const geo = scene.objects.some(o => GEO_TYPES.includes(o.type)) ? computeGeometry(scene) : null;
   const lbl = (s, x, y, size = 15, anchor = 'middle', extra = '', o2) => texText(s, x, y, size, anchor, extra, o2);
   const group = (o, inner) => edit ? `<g data-id="${esc(o.id)}" class="obj${selSet.has(o.id) ? ' sel' : ''}${o.lock ? ' locked' : ''}">${inner}</g>` : inner;
   const hit = d => edit ? `<path d="${d}" fill="none" stroke="transparent" stroke-width="12" pointer-events="stroke"/>` : '';
   const hitBox = (x, y, w, h) => edit ? `<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" fill="transparent"/>` : '';
   const dash = (pattern, k = 1) => { const d = dashOf(pattern, st); return d ? ` stroke-dasharray="${d.map(v => f(v * ss * k * om)).join(' ')}"${pattern === 'dotted' ? ' stroke-linecap="round"' : ''}` : ''; };
-  const line = (a, b, w = lw, extra = '') => `<line x1="${f(a.x)}" y1="${f(a.y)}" x2="${f(b.x)}" y2="${f(b.y)}" stroke="${ink}" stroke-width="${f(w)}"${extra}/>`;
+  /* (an extra stroke colour replaces the ink: a doubled attribute would make the file invalid XML) */
+  const line = (a, b, w = lw, extra = '') => `<line x1="${f(a.x)}" y1="${f(a.y)}" x2="${f(b.x)}" y2="${f(b.y)}"${/ stroke="/.test(extra) ? '' : ` stroke="${ink}"`} stroke-width="${f(w)}"${extra.includes('linecap') ? '' : cap}${extra}/>`;
   const poly = (pts, w = lw, extra = '') => `<polyline points="${pts.map(p => `${f(p.x)},${f(p.y)}`).join(' ')}" fill="none" stroke="${ink}" stroke-width="${f(w)}" stroke-linejoin="round"${extra}/>`;
   const hatch = (x1, y1, x2, y2, nx, ny, gap = st.hatchGap) => {
     /* short slanted strokes on the solid side (nx, ny: the side, in screen px) of the line from (x1,y1) to (x2,y2) */
@@ -412,7 +571,7 @@ export function renderSVG(scene, opts = {}) {
     const dx = to.x - from.x, dy = to.y - from.y, L = Math.hypot(dx, dy);
     if (L < 1) return '';
     const ux = dx / L, uy = dy / L, [hs, end] = head(to, ux, uy, {color, len: Math.min(hl, L * 0.7), kind, w: width});
-    return `<line x1="${f(from.x)}" y1="${f(from.y)}" x2="${f(end.x)}" y2="${f(end.y)}" stroke="${color}" stroke-width="${f(width)}"${dash(pattern)}/>` + hs;
+    return `<line x1="${f(from.x)}" y1="${f(from.y)}" x2="${f(end.x)}" y2="${f(end.y)}" stroke="${color}" stroke-width="${f(width)}"${cap}${dash(pattern)}/>` + hs;
   };
   /* an arrowhead in the middle of a polyline (screen points) */
   const midHead = (pts, at = 0.5, opt = {}) => {
@@ -449,11 +608,14 @@ export function renderSVG(scene, opts = {}) {
     for (let x = Math.ceil(view.x / step) * step; x <= view.x + view.w; x += step) d += `M${f(X(x))},0V${H}`;
     for (let y = Math.ceil(view.y / step) * step; y <= view.y + view.h; y += step) d += `M0,${f(Y(y))}H${W}`;
     out.push(`<path d="${d}" stroke="#d9dee8" stroke-width="0.6" fill="none" class="grid"/>`);
-    const o = {x: X(0), y: Y(0)}; if (o.x >= 0 && o.x <= W && o.y >= 0 && o.y <= H) out.push(`<circle cx="${f(o.x)}" cy="${f(o.y)}" r="2.2" fill="#9aa3b5"/>`);
+    /* the world's origin: the two grid lines through it a little darker (a dot there read as a stray point) */
+    const o = {x: X(0), y: Y(0)}, ax = [];
+    if (o.x >= 0 && o.x <= W) ax.push(`M${f(o.x)},0V${H}`); if (o.y >= 0 && o.y <= H) ax.push(`M0,${f(o.y)}H${W}`);
+    if (ax.length) out.push(`<path d="${ax.join('')}" stroke="#c3cad8" stroke-width="0.9" fill="none" class="grid origin"/>`);
   }
   /* trails first, under everything */
   for (const [id, pts] of opts.trails || []) if (pts.length > 1) out.push(`<polyline points="${pts.map(p => P(p)).join(' ')}" fill="none" stroke="#666" stroke-width="1" stroke-dasharray="4 3" data-trail="${esc(id)}"/>`);
-  for (const c of opts.conical || []) out.push(`<ellipse cx="${f(X(c.centre.x))}" cy="${f(Y(c.centre.y))}" rx="${f(c.radius * S)}" ry="${f(c.radius * S * 0.22)}" fill="none" stroke="#555" stroke-width="1" stroke-dasharray="5 4"/>`);
+
 
   /* graphs: their ranges, fitted to what is plotted on them when auto */
   const ranges = new Map();
@@ -465,6 +627,8 @@ export function renderSVG(scene, opts = {}) {
         if (c.type === 'cycle') gasCycle(c).legs.forEach(l => pts.push(...l.pts));
         else if (c.kind === 'points') pts.push(...dataPoints(c.data));
         else if (c.kind === 'func') { const fn = boundExpr(c.expr, c.params); for (let i = 0; i <= 60; i++) { const x = c.x1 + (c.x2 - c.x1) * i / 60, y = fn ? fn(x) : NaN; if (Number.isFinite(y) && Math.abs(y) < 1e6) pts.push({x, y}); } }
+        else if (c.kind === 'param' || c.kind === 'polar') { const fx = boundExpr(c.expr, c.params, 't'), fy = c.kind === 'param' ? boundExpr(c.expr2, c.params, 't') : null; for (let i = 0; i <= 120 && fx; i++) { const t = c.x1 + (c.x2 - c.x1) * i / 120, v = fx(t), p = c.kind === 'polar' ? {x: v * Math.cos(t), y: v * Math.sin(t)} : {x: v, y: fy ? fy(t) : NaN}; if (Number.isFinite(p.x) && Number.isFinite(p.y) && Math.abs(p.x) < 1e6 && Math.abs(p.y) < 1e6) pts.push(p); } }
+        else if (c.kind === 'ineq') continue;
         else pts.push(...processPoints(c.kind, c, 40));
       }
       if (pts.length) {
@@ -481,7 +645,7 @@ export function renderSVG(scene, opts = {}) {
   const ccen = els.length ? {x: els.reduce((s, e) => s + e.x1 + e.x2, 0) / (2 * els.length), y: els.reduce((s, e) => s + e.y1 + e.y2, 0) / (2 * els.length)} : {x: 0, y: 0};
 
   /* order: regions and frames, surfaces, connections, bodies, marks (so a string ends under the block it pulls) */
-  const RANK = {panel: -4, region: -3, container: -1.5, utube: -1.5, gasbox: -1, track: 0, plank: 4.5, wheel: 5, bridge: 3, rails: 2, transformer: 3, parrows: 6, brace: 7, callout: 7, particle: 6, nucleus: 5, interference: 1, pulse: 2, screen: 1, eye: 5, source: 5, fiber: 2, thermometer: 5, heater: 4, field: -2, graph: -2, well: -1, levels: -1, spacetime: -1, reservoir: -1, fieldlines: -0.5, floor: 0, ceiling: 0, wall: 0, incline: 1, line: 2, axes: 2, slab: 1, prism: 1,
+  const RANK = {nnet: 3, fbox: 4, farrow: 3.5, gpoly: 1.5, gcircle: 2, gline: 2.2, gangle: 6.5, gpoint: 7.5, joint: 3.2, panel: -4, region: -3, container: -1.5, utube: -1.5, gasbox: -1, track: 0, plank: 4.5, wheel: 5, bridge: 3, rails: 2, transformer: 3, parrows: 6, brace: 7, callout: 7, particle: 6, nucleus: 5, interference: 1, pulse: 2, screen: 1, eye: 5, source: 5, fiber: 2, thermometer: 5, heater: 4, field: -2, graph: -2, well: -1, levels: -1, spacetime: -1, reservoir: -1, fieldlines: -0.5, floor: 0, ceiling: 0, wall: 0, incline: 1, line: 2, axes: 2, slab: 1, prism: 1,
     curve: 2.5, cycle: 2.5, worldline: 2.5, pulley: 4, pivot: 4, string: 3, rod: 3, spring: 3, block: 5, ball: 5, force: 6, label: 7, dim: 7, arc: 7, point: 7, vector: 6, oarrow: 6, ray: 5.5, charge: 5, element: 3};
   const order = [...scene.objects].sort((a, b) => (RANK[a.type] ?? 4) - (RANK[b.type] ?? 4));
   /* a gray strip on the solid side of a fixed surface (수능 draws walls and ceilings so) */
@@ -490,22 +654,25 @@ export function renderSVG(scene, opts = {}) {
   const nv = v => `${+(+v).toPrecision(3)}`.replace('-', '−');
   const valueMark = o => {
     const T = o.type, at = (p, t, dx = 0, dy = 0, anchor = 'middle') => lbl(t, p.x + dx, p.y + dy, 12.5, anchor, '', {halo: true});
-    if (isBody(o)) { const p = screen(opts.poses?.get?.(o.id) || poseOf(o)), r = (isRound(o) ? o.r : o.h / 2) * S; return at(p, `\mathrm{${nv(o.mass)}\,kg}`, 0, r + 11); }
-    if (T === 'incline') { const c = inclineCorners(o), q = screen(c.foot); return at(q, `${nv(o.angle)}^\circ`, (o.flip ? -1 : 1) * 46, -7); }
-    if (T === 'spring') { const A = byId.get(o.a), B = byId.get(o.b); if (!A || !B) return ''; const a = screen(isBody(A) ? poseOf(A) : A), b = screen(isBody(B) ? poseOf(B) : B); return at({x: (a.x + b.x) / 2, y: (a.y + b.y) / 2}, `\mathrm{${nv(o.k)}\,N/m}`, 0, 18); }
-    if (T === 'force') { const b = byId.get(o.on); if (!b) return ''; const p = screen(poseOf(b)), th = o.angle * Math.PI / 180, L = o.len * S; return at({x: p.x + Math.cos(th) * L, y: p.y - Math.sin(th) * L}, `\mathrm{${nv(o.F)}\,N}`, 0, 16); }
-    if (T === 'element' && X2U[o.kind]) { const m = screen({x: (o.x1 + o.x2) / 2, y: (o.y1 + o.y2) / 2}), vert = Math.abs(o.x2 - o.x1) < Math.abs(o.y2 - o.y1); return at(m, `\mathrm{${nv(o.value)}\,${X2U[o.kind]}}`, vert ? -22 : 0, vert ? 0 : 22, vert ? 'end' : 'middle'); }
-    if (T === 'lens' || T === 'mirror') { const c = screen(o); return o.f ? at(c, `f = \mathrm{${nv(o.f)}\,m}`, 0, o.h * S / 2 + 14) : ''; }
-    if (T === 'charge') { const c = screen(o); return at(c, `\mathrm{${nv(o.q)}\,\mu C}`, 0, Math.max(6, o.r * S) + 12); }
-    if (T === 'rails') { const m = motionalEMF(o), p = screen({x: o.x + o.w / 2, y: o.y}); return at(p, `\mathcal{E} = \mathrm{${nv(m.emf)}\,V}`, 0, 30); }
-    if (T === 'container') { const p = screen({x: o.x + o.w / 2, y: o.y}); return at(p, `\rho = \mathrm{${nv(o.rho)}\,kg/m^3}`, 0, 14); }
-    if (T === 'bridge') { const p = screen(bridgeJockey(o)); return at(p, `l = \mathrm{${nv(o.at * 100)}\,cm}`, 0, 30); }
-    if (T === 'pulley' || T === 'wheel') { const c = screen(o); return at(c, `\mathrm{${nv(o.r)}\,m}`, 0, o.r * S + 12); }
+    if (isBody(o)) { const p = screen(opts.poses?.get?.(o.id) || poseOf(o)), r = (isRound(o) ? o.r : o.h / 2) * S; return at(p, `\\mathrm{${nv(o.mass)}\\,kg}`, 0, r + 11); }
+    if (T === 'incline') { const c = inclineCorners(o), q = screen(c.foot); return at(q, `${nv(o.angle)}^\\circ`, (o.flip ? -1 : 1) * 46, -7); }
+    if (T === 'spring') { const A = byId.get(o.a), B = byId.get(o.b); if (!A || !B) return ''; const a = screen(isBody(A) ? poseOf(A) : A), b = screen(isBody(B) ? poseOf(B) : B); return at({x: (a.x + b.x) / 2, y: (a.y + b.y) / 2}, `\\mathrm{${nv(o.k)}\\,N/m}`, 0, 18); }
+    if (T === 'force') { const b = byId.get(o.on); if (!b) return ''; const p = screen(poseOf(b)), th = o.angle * Math.PI / 180, L = o.len * S; return at({x: p.x + Math.cos(th) * L, y: p.y - Math.sin(th) * L}, `\\mathrm{${nv(o.F)}\\,N}`, 0, 16); }
+    if (T === 'element' && X2U[o.kind]) { const m = screen({x: (o.x1 + o.x2) / 2, y: (o.y1 + o.y2) / 2}), vert = Math.abs(o.x2 - o.x1) < Math.abs(o.y2 - o.y1); return at(m, `\\mathrm{${nv(o.value)}\\,${X2U[o.kind]}}`, vert ? -22 : 0, vert ? 0 : 22, vert ? 'end' : 'middle'); }
+    if (T === 'lens' || T === 'mirror') { const c = screen(o); return o.f ? at(c, `f = \\mathrm{${nv(o.f)}\\,m}`, 0, o.h * S / 2 + 14) : ''; }
+    if (T === 'charge') { const c = screen(o); return at(c, `\\mathrm{${nv(o.q)}\\,\\mu C}`, 0, Math.max(6, o.r * S) + 12); }
+    if (T === 'rails') { const m = motionalEMF(o), p = screen({x: o.x + o.w / 2, y: o.y}); return at(p, `\\mathcal{E} = \\mathrm{${nv(m.emf)}\\,V}`, 0, 30); }
+    if (T === 'container') { const p = screen({x: o.x + o.w / 2, y: o.y}); return at(p, `\\rho = \\mathrm{${nv(o.rho)}\\,kg/m^3}`, 0, 14); }
+    if (T === 'bridge') { const p = screen(bridgeJockey(o)); return at(p, `l = \\mathrm{${nv(o.at * 100)}\\,cm}`, 0, 30); }
+    if (T === 'pulley' || T === 'wheel') { const c = screen(o); return at(c, `\\mathrm{${nv(o.r)}\\,m}`, 0, o.r * S + 12); }
     return '';
   };
   for (const o of order) {
     let s = '';
     const T = o.type;
+    /* an object drawn in a style of its own */
+    const ost = (o.style && STYLES[o.style]) || st0;
+    if (ost !== st) setStyle(ost);
     /* the object's own line weight and label size */
     om = o.lw || 1; lw = B0.lw * om; thin = B0.thin * om; hair = B0.hair * om; thick = B0.thick * om; HL = B0.HL * Math.sqrt(om); CUR.ls = baseLs * (o.ls || 1);
     if (T === 'floor') {
@@ -557,10 +724,12 @@ export function renderSVG(scene, opts = {}) {
         s = `<path d="${d}" fill="none" stroke="${ink}" stroke-width="${f(thin)}"/>${hit(d)}`;
         if (o.label && path.segs.length === 1) { const a = screen(path.segs[0][0]), b = screen(path.segs[0][1]), n = vec.unit({x: -(b.y - a.y), y: b.x - a.x}); s += lbl(o.label, (a.x + b.x) / 2 + n.x * 13, (a.y + b.y) / 2 + n.y * 13, 15); }
       }
+      if (o.mode === 'conical') s = conicalMarks(o) + s;
     } else if (T === 'rod') {
       const A = byId.get(o.a), B = byId.get(o.b);
       if (A && B) { const a = screen(poseOf(A)), b = screen(opts.poses?.get?.(B.id) || poseOf(B)); s = `${line(a, b, Math.max(thick * 2.2, 2 * ss), ' stroke-linecap="round"')}${hit(`M${f(a.x)},${f(a.y)}L${f(b.x)},${f(b.y)}`)}`;
         if (o.label) { const n = vec.unit({x: -(b.y - a.y), y: b.x - a.x}); s += lbl(o.label, (a.x + b.x) / 2 + n.x * 14, (a.y + b.y) / 2 + n.y * 14, 15); } }
+      if (o.mode === 'conical') s = conicalMarks(o) + s;
     } else if (T === 'spring') {
       const A = byId.get(o.a), B = byId.get(o.b);
       if (A && B) {
@@ -606,7 +775,7 @@ export function renderSVG(scene, opts = {}) {
     } else if (T === 'force') {
       const b = byId.get(o.on);
       if (b) { const p = screen(opts.poses?.get?.(b.id) || poseOf(b)), th = o.angle * Math.PI / 180, L = o.len * S, tip = {x: p.x + Math.cos(th) * L, y: p.y - Math.sin(th) * L};
-        s = arrow(p, tip, {width: lw * 1.15, head: HL * 1.1}) + (o.label ? lbl(o.label, tip.x + Math.cos(th) * 13, tip.y - Math.sin(th) * 13, 16) : '') + hit(`M${f(p.x)},${f(p.y)}L${f(tip.x)},${f(tip.y)}`); }
+        s = arrow(p, tip, {width: lw * 1.15, head: HL * 1.1, color: st.vecInk || ink}) + (o.label ? lbl(o.label, tip.x + Math.cos(th) * 13, tip.y - Math.sin(th) * 13, 16, 'middle', st.vecInk ? ` fill="${st.vecInk}"` : '') : '') + hit(`M${f(p.x)},${f(p.y)}L${f(tip.x)},${f(tip.y)}`); }
 
     /* ── electromagnetism ── */
     } else if (T === 'element') {
@@ -740,9 +909,9 @@ export function renderSVG(scene, opts = {}) {
       const ax = r.y0 <= 0 && r.y1 >= 0 ? toGraph(o, {x: r.x0, y: 0}).y : p0.y, ay = r.x0 <= 0 && r.x1 >= 0 ? toGraph(o, {x: 0, y: r.y0}).x : p0.x;
       if (o.grid || o.ticks) {
         const step = v => { const raw = v / 6, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; };
-        const sx = step(r.x1 - r.x0), sy = step(r.y1 - r.y0);
-        for (let v = Math.ceil(r.x0 / sx) * sx; v <= r.x1 + 1e-9; v += sx) { const q = toGraph(o, {x: v, y: r.y0}); if (o.grid) s += line({x: q.x, y: p0.y}, {x: q.x, y: p0.y - h}, 0.5, ' stroke="#bbb"'); if (o.ticks && Math.abs(v) > sx * 1e-6) s += line({x: q.x, y: ax}, {x: q.x, y: ax + 4}, hair) + lbl(`\\mathrm{${+v.toPrecision(3)}}`, q.x, ax + 13, 11); }
-        for (let v = Math.ceil(r.y0 / sy) * sy; v <= r.y1 + 1e-9; v += sy) { const q = toGraph(o, {x: r.x0, y: v}); if (o.grid) s += line({x: p0.x, y: q.y}, {x: p0.x + w, y: q.y}, 0.5, ' stroke="#bbb"'); if (o.ticks && Math.abs(v) > sy * 1e-6) s += line({x: ay, y: q.y}, {x: ay - 4, y: q.y}, hair) + lbl(`\\mathrm{${+v.toPrecision(3)}}`, ay - 6, q.y, 11, 'end'); }
+        const sx = o.xstep > 0 && (r.x1 - r.x0) / o.xstep <= 200 ? o.xstep : step(r.x1 - r.x0), sy = o.ystep > 0 && (r.y1 - r.y0) / o.ystep <= 200 ? o.ystep : step(r.y1 - r.y0);
+        for (let v = Math.ceil(r.x0 / sx) * sx; v <= r.x1 + 1e-9; v += sx) { const q = toGraph(o, {x: v, y: r.y0}); if (o.grid) s += line({x: q.x, y: p0.y}, {x: q.x, y: p0.y - h}, 0.5, ' stroke="#bbb"'); if (o.ticks && Math.abs(v) > sx * 1e-6) s += line({x: q.x, y: ax}, {x: q.x, y: ax + 4}, hair) + lbl(`\\mathrm{${(+v.toPrecision(3) + "").replace("-", "−")}}`, q.x, ax + 13, 11); }
+        for (let v = Math.ceil(r.y0 / sy) * sy; v <= r.y1 + 1e-9; v += sy) { const q = toGraph(o, {x: r.x0, y: v}); if (o.grid) s += line({x: p0.x, y: q.y}, {x: p0.x + w, y: q.y}, 0.5, ' stroke="#bbb"'); if (o.ticks && Math.abs(v) > sy * 1e-6) s += line({x: ay, y: q.y}, {x: ay - 4, y: q.y}, hair) + lbl(`\\mathrm{${(+v.toPrecision(3) + "").replace("-", "−")}}`, ay - 6, q.y, 11, 'end'); }
       }
       s += arrow({x: p0.x - 4, y: ax}, {x: p0.x + w + 0.07 * w, y: ax}, {width: thin}) + arrow({x: ay, y: p0.y + 4}, {x: ay, y: p0.y - h - 0.07 * h}, {width: thin});
       /* custom ticks "1:t_0, 2:2t_0": a tick, its label and a dotted guide across the plot */
@@ -756,18 +925,61 @@ export function renderSVG(scene, opts = {}) {
       s += hitBox(p0.x, p0.y - h, w, h);
     } else if (T === 'curve') {
       const g = byId.get(o.graph); if (g && ranges.has(g.id)) {
-        const r = ranges.get(g.id), segs = [[]];
+        const r = ranges.get(g.id), segs = [[]], col = o.color && o.color !== 'black' ? COLOR_HEX[o.color] : ink, ylo = r.y0 - (r.y1 - r.y0) * 0.02, yhi = r.y1 + (r.y1 - r.y0) * 0.02;
+        const xlo = r.x0 - (r.x1 - r.x0) * 0.02, xhi = r.x1 + (r.x1 - r.x0) * 0.02, inside = p => Number.isFinite(p.x) && Number.isFinite(p.y) && p.x >= xlo && p.x <= xhi && p.y >= ylo && p.y <= yhi;
+        const num = v => (+(+v).toPrecision(3)).toString().replace('-', '−');
+        const tint = pts => { const pg = `polygon points="${pts.map(p => `${f(p.x)},${f(p.y)}`).join(' ')}"`; return gray ? `<${pg} fill="${col}" fill-opacity="${col === ink ? 0.12 : 0.18}" stroke="none"/>` : shade(pg, 'hatch'); };
+        const fn = o.kind === 'func' || o.kind === 'ineq' ? boundExpr(o.expr, o.params) : null;
+        const x0 = Math.max(o.x1, r.x0), x1 = Math.min(o.x2, r.x1);
         if (o.kind === 'func') {
-          const fn = boundExpr(o.expr, o.params), N = 400, x0 = Math.max(o.x1, r.x0), x1 = Math.min(o.x2, r.x1), ylo = r.y0 - (r.y1 - r.y0) * 0.02, yhi = r.y1 + (r.y1 - r.y0) * 0.02;
+          const N = 400;
           for (let i = 0; i <= N && fn; i++) { const x = x0 + (x1 - x0) * i / N, y = fn(x); if (Number.isFinite(y) && y >= ylo && y <= yhi) segs[segs.length - 1].push(toGraph(g, {x, y})); else if (segs[segs.length - 1].length) segs.push([]); }
+        } else if (o.kind === 'param' || o.kind === 'polar') {
+          const fx = boundExpr(o.expr, o.params, 't'), fy = o.kind === 'param' ? boundExpr(o.expr2, o.params, 't') : null, N = 720;
+          for (let i = 0; i <= N && fx && (fy || o.kind === 'polar'); i++) {
+            const t = o.x1 + (o.x2 - o.x1) * i / N, rr = fx(t), p = o.kind === 'polar' ? {x: rr * Math.cos(t), y: rr * Math.sin(t)} : {x: rr, y: fy(t)};
+            if (inside(p)) segs[segs.length - 1].push(toGraph(g, p)); else if (segs[segs.length - 1].length) segs.push([]);
+          }
+        } else if (o.kind === 'ineq') {
+          /* the part of the plot where y < f(x) (or >, ≤, ≥): shaded, its edge dashed when strict */
+          const N = 300, below = o.rel === 'lt' || o.rel === 'le'; let poly2 = [];
+          const flush = () => { if (poly2.length > 1) { const yb = toGraph(g, {x: r.x0, y: below ? r.y0 : r.y1}).y; s += tint([{x: poly2[0].x, y: yb}, ...poly2, {x: poly2[poly2.length - 1].x, y: yb}]); } poly2 = []; };
+          for (let i = 0; i <= N && fn; i++) { const x = r.x0 + (r.x1 - r.x0) * i / N, y = fn(x); if (!Number.isFinite(y)) { flush(); continue; } poly2.push(toGraph(g, {x, y: Math.max(r.y0, Math.min(r.y1, y))})); const yy = fn(x); if (yy >= ylo && yy <= yhi) segs[segs.length - 1].push(toGraph(g, {x, y: yy})); else if (segs[segs.length - 1].length) segs.push([]); }
+          flush();
         } else if (o.kind === 'points') segs[0] = dataPoints(o.data).map(p => toGraph(g, p));
         else segs[0] = processPoints(o.kind, o).map(p => toGraph(g, p));
-        if (o.shade) { const y0 = toGraph(g, {x: r.x0, y: Math.max(r.y0, Math.min(r.y1, 0))}).y; for (const sg of segs) if (sg.length > 1) s += `<polygon points="${[{x: sg[0].x, y: y0}, ...sg, {x: sg[sg.length - 1].x, y: y0}].map(p => `${f(p.x)},${f(p.y)}`).join(' ')}" fill="${gray ? light : 'none'}" stroke="none"/>` + (gray ? '' : shade(`polygon points="${[{x: sg[0].x, y: y0}, ...sg, {x: sg[sg.length - 1].x, y: y0}].map(p => `${f(p.x)},${f(p.y)}`).join(' ')}"`, 'hatch')); }
-        for (const sg of segs) if (sg.length > 1) s += poly(sg, o.kind === 'points' || o.kind === 'func' ? thick : lw * 0.9, dash(o.pattern)) + hit('M' + sg.map(p => `${f(p.x)},${f(p.y)}`).join('L'));
+        if (o.shade && o.kind !== 'ineq') { const y0 = toGraph(g, {x: r.x0, y: Math.max(r.y0, Math.min(r.y1, 0))}).y; for (const sg of segs) if (sg.length > 1) s += `<polygon points="${[{x: sg[0].x, y: y0}, ...sg, {x: sg[sg.length - 1].x, y: y0}].map(p => `${f(p.x)},${f(p.y)}`).join(' ')}" fill="${gray ? light : 'none'}" stroke="none"/>` + (gray ? '' : shade(`polygon points="${[{x: sg[0].x, y: y0}, ...sg, {x: sg[sg.length - 1].x, y: y0}].map(p => `${f(p.x)},${f(p.y)}`).join(' ')}"`, 'hatch')); }
+        /* the area under a function from a1 to a2, its value written */
+        if (o.kind === 'func' && o.area && fn) {
+          const a1 = Math.max(Math.min(o.a1, o.a2), r.x0), a2 = Math.min(Math.max(o.a1, o.a2), r.x1);
+          if (a2 > a1) {
+            const pts = [], y0 = toGraph(g, {x: r.x0, y: Math.max(r.y0, Math.min(r.y1, 0))}).y;
+            for (let i = 0; i <= 160; i++) { const x = a1 + (a2 - a1) * i / 160, y = fn(x); if (Number.isFinite(y)) pts.push(toGraph(g, {x, y: Math.max(r.y0, Math.min(r.y1, y))})); }
+            if (pts.length > 1) { s += tint([{x: pts[0].x, y: y0}, ...pts, {x: pts[pts.length - 1].x, y: y0}]); const xm = (a1 + a2) / 2, ym = fn(xm), q = toGraph(g, {x: xm, y: Number.isFinite(ym) ? Math.max(r.y0, Math.min(r.y1, ym / 2)) : 0});
+              s += lbl(`S = ${num(integrate(fn, Math.min(o.a1, o.a2), Math.max(o.a1, o.a2)) * (o.a2 < o.a1 ? -1 : 1))}`, q.x, q.y, 13, 'middle', '', {halo: true}); }
+          }
+        }
+        for (const sg of segs) if (sg.length > 1) s += `<polyline points="${sg.map(p => `${f(p.x)},${f(p.y)}`).join(' ')}" fill="none" stroke="${col}" stroke-width="${f(['points', 'func', 'param', 'polar', 'ineq'].includes(o.kind) ? thick : lw * 0.9)}" stroke-linejoin="round"${st.round ? ' stroke-linecap="round"' : ''}${dash(o.kind === 'ineq' && (o.rel === 'lt' || o.rel === 'gt') ? 'dashed' : o.pattern)}/>` + hit('M' + sg.map(p => `${f(p.x)},${f(p.y)}`).join('L'));
+        if (o.kind === 'func' && fn) {
+          /* the tangent at x = tx */
+          if (o.tangent && Number.isFinite(fn(o.tx))) {
+            const y0 = fn(o.tx), m = derivative(fn, o.tx), bb = y0 - m * o.tx;
+            let ta = r.x0, tb = r.x1;
+            if (Math.abs(m) > 1e-12) { const u = (r.y0 - bb) / m, v = (r.y1 - bb) / m; ta = Math.max(ta, Math.min(u, v)); tb = Math.min(tb, Math.max(u, v)); }
+            if (tb > ta && Number.isFinite(m)) { const A = toGraph(g, {x: ta, y: bb + m * ta}), B = toGraph(g, {x: tb, y: bb + m * tb}), q = toGraph(g, {x: o.tx, y: y0});
+              s += `<line x1="${f(A.x)}" y1="${f(A.y)}" x2="${f(B.x)}" y2="${f(B.y)}" stroke="${st.accent && st.accent !== '#000' ? st.accent : ink}" stroke-width="${f(thin)}"${cap}/>` + `<circle cx="${f(q.x)}" cy="${f(q.y)}" r="${f(Math.max(2, st.dot * ss))}" fill="${ink}"/>`;
+              s += lbl(`y = ${num(m)}x ${bb < 0 ? '−' : '+'} ${num(Math.abs(bb))}`, q.x + 8, q.y + 16, 12, 'start', '', {halo: true}); }
+          }
+          if (o.roots || o.extrema) {
+            const ft = funcFeatures(fn, x0, x1);
+            if (o.roots && r.y0 <= 0 && r.y1 >= 0) for (const x of ft.roots.slice(0, 12)) { const q = toGraph(g, {x, y: 0}); s += `<circle cx="${f(q.x)}" cy="${f(q.y)}" r="${f(Math.max(2.4, st.dot * ss * 1.1))}" fill="#fff" stroke="${col}" stroke-width="${f(thin * 1.2)}"/>`; if (ft.roots.length <= 6) s += lbl(num(x), q.x, q.y + 13, 11, 'middle', '', {halo: true}); }
+            if (o.extrema) for (const e of ft.extrema.slice(0, 12)) { if (e.y < r.y0 || e.y > r.y1) continue; const q = toGraph(g, e); s += `<circle cx="${f(q.x)}" cy="${f(q.y)}" r="${f(Math.max(2.4, st.dot * ss * 1.1))}" fill="${col}"/>`; if (ft.extrema.length <= 6) s += lbl(`(${num(e.x)}, ${num(e.y)})`, q.x, q.y + (e.kind === 'max' ? -12 : 14), 11, 'middle', '', {halo: true}); }
+          }
+        }
         const main = segs.reduce((a, b) => b.length > a.length ? b : a, []);
         if (main.length > 1) {
           if (o.heads === 'mid') s += midHead(main, 0.5); else if (o.heads === 'end') { const a = main[main.length - 2], b = main[main.length - 1], l = Math.hypot(b.x - a.x, b.y - a.y) || 1; s += head(b, (b.x - a.x) / l, (b.y - a.y) / l)[0]; }
-          if (o.label) { const e = main[main.length - 1]; s += lbl(o.label, e.x + 6, e.y - 10, 15, 'start', '', {halo: true}); }
+          if (o.label) { const e = main[main.length - 1]; s += lbl(o.label, e.x + 6, e.y - 10, 15, 'start', col !== ink ? ` fill="${col}"` : '', {halo: true}); }
         }
       }
     } else if (T === 'cycle') {
@@ -1194,8 +1406,9 @@ export function renderSVG(scene, opts = {}) {
       s += hit(`M${f(a.x)},${f(a.y)}L${f(b.x)},${f(b.y)}`);
     } else if (T === 'vector') {
       const a = screen({x: o.x1, y: o.y1}), b = screen({x: o.x2, y: o.y2}), L = Math.hypot(b.x - a.x, b.y - a.y) || 1, n = {x: -(b.y - a.y) / L, y: (b.x - a.x) / L};
-      s += arrow(a, b, {width: o.width * ss, kind: o.head === 'auto' ? st.head : o.head, head: HL * Math.max(0.9, Math.sqrt(o.width / 1.6))});
-      if (o.label) { const side = n.y > 0 ? -1 : 1; s += lbl(o.label, (a.x + b.x) / 2 + side * n.x * 15, (a.y + b.y) / 2 + side * n.y * 15, 16, 'middle', '', {halo: true}); }
+      const vc = st.vecInk || ink;
+      s += arrow(a, b, {width: o.width * ss, kind: o.head === 'auto' ? st.head : o.head, head: HL * Math.max(0.9, Math.sqrt(o.width / 1.6)), color: vc});
+      if (o.label) { const side = n.y > 0 ? -1 : 1; s += lbl(o.label, (a.x + b.x) / 2 + side * n.x * 15, (a.y + b.y) / 2 + side * n.y * 15, 16, 'middle', st.vecInk ? ` fill="${vc}"` : '', {halo: true}); }
       s += hit(`M${f(a.x)},${f(a.y)}L${f(b.x)},${f(b.y)}`);
     } else if (T === 'region') {
       const p0 = screen({x: o.x, y: o.y + o.h}), w = o.w * S, h = o.h * S;
@@ -1225,6 +1438,16 @@ export function renderSVG(scene, opts = {}) {
         if (o.heads === 'start' || o.heads === 'both') s += tip(open.a, open.a2);
       }
       if (edit) s += closed ? `<${shapeAttr} fill="transparent" stroke="transparent" stroke-width="12"/>` : `<${shapeAttr} fill="none" stroke="transparent" stroke-width="12" pointer-events="stroke"/>`;
+    } else if (geo && GEO_TYPES.includes(T)) {
+      s += drawGeo(o);
+    } else if (T === 'joint') {
+      s += drawJoint(o);
+    } else if (T === 'nnet') {
+      s += drawNet(o);
+    } else if (T === 'fbox') {
+      s += drawFbox(o);
+    } else if (T === 'farrow') {
+      s += drawFarrow(o);
     } else if (T === 'qpot') {
       s += drawQpot(o);
     } else if (T === 'point') {
@@ -1241,9 +1464,18 @@ export function renderSVG(scene, opts = {}) {
       }
     }
     if (s && o.rot && ROT_WRAP.has(T)) { const c = screen(rotCentre(o)); s = `<g transform="rotate(${f(-o.rot)} ${f(c.x)} ${f(c.y)})">${s}</g>`; }
+    /* a drawn shape given physics: its velocity (the start velocity while editing, dashed; the simulation's while it runs) */
+    if (s && isPhysShape(o) && o.phys === 'dynamic') {
+      const vNow = opts.rigidV?.get?.(o.id), v = vNow || (edit && !opts.poses ? {x: o.pvx, y: o.pvy} : null), sp = v ? Math.hypot(v.x, v.y) : 0;
+      if (sp > 1e-6) {
+        const p = opts.poses?.get?.(o.id) || (() => { const b = objectExtent(o); return b ? {x: b.x + b.w / 2, y: b.y + b.h / 2} : null; })();
+        if (p) { const c = screen(p), L = Math.max(0.3, Math.min(1.4, sp * 0.12)) * S, ux = v.x / sp, uy = v.y / sp; s += arrow(c, {x: c.x + ux * L, y: c.y - uy * L}, {width: thin * 1.2, color: st.vecInk || st.accent || ink, pattern: vNow ? 'solid' : 'dashed'}); }
+      }
+    }
     if (s && showValues) s += valueMark(o);
     if (s) out.push(group(o, s));
   }
+  if (st !== st0) setStyle(st0);
   om = 1; lw = B0.lw; thin = B0.thin; hair = B0.hair; thick = B0.thick; HL = B0.HL; CUR.ls = baseLs;
 
   /* circuit readings, the junction dots of the circuit */
@@ -1253,10 +1485,28 @@ export function renderSVG(scene, opts = {}) {
     let max = 0;
     for (const list of opts.forces.values()) for (const x of list) max = Math.max(max, vec.len(x.v));
     const color = opts.forceColor || st.accent;
-    for (const [id, list] of opts.forces) for (const x of list) {
-      const m = vec.len(x.v); if (m < 1e-9 || !max) continue;
-      const L = Math.max(16, 90 * m / max), u = vec.unit(x.v), a = screen(x.at), tip = {x: a.x + u.x * L, y: a.y - u.y * L};
-      out.push(`<g class="fbd" data-body="${esc(id)}" data-kind="${x.kind}">${arrow(a, tip, {color, width: 2 * ss, head: HL})}${lbl(FORCE_LABEL[x.kind] || '', tip.x + u.x * 12, tip.y - u.y * 12, 14, 'middle', ` fill="${color}"`)}</g>`);
+    /* every arrow reaches out of its body; its label goes beyond the tip, clear of the body's outline and of the other
+       labels on the same body (moved sideways when two would meet) */
+    for (const [id, list] of opts.forces) {
+      const bo = byId.get(id), ext = bo && !isBody(bo) ? objectExtent(bo) : null;
+      const rB = bo ? (isRound(bo) ? bo.r : isBody(bo) ? Math.hypot(bo.w, bo.h) / 2 : ext ? Math.hypot(ext.w, ext.h) / 2 : 0) * S : 0, placed = [];
+      for (const x of list) {
+        const m = vec.len(x.v); if (m < 1e-9 || !max) continue;
+        const u = vec.unit(x.v), a = screen(x.at), text = FORCE_LABEL[x.kind] || '', b = texLayout(text, 14 * CUR.ls), hw = b.w / 2 + 3, hh = (b.a + b.d) / 2 + 2;
+        const off = 6 + Math.abs(u.x) * hw + Math.abs(u.y) * hh;
+        /* shortened (not below the body's edge) so the arrow and its label stay on the figure */
+        let L = rB + Math.max(20, 80 * m / max);
+        const room = Math.min(u.x > 1e-9 ? (W - 4 - a.x) / u.x : u.x < -1e-9 ? (a.x - 4) / -u.x : Infinity, -u.y > 1e-9 ? (H - 4 - a.y) / -u.y : -u.y < -1e-9 ? (a.y - 4) / u.y : Infinity) - off - Math.max(hw, hh);
+        L = Math.max(rB + 14, Math.min(L, room));
+        const tip = {x: a.x + u.x * L, y: a.y - u.y * L};
+        let q = {x: tip.x + u.x * off, y: tip.y - u.y * off};
+        const clash = p => placed.some(o => Math.abs(o.x - p.x) < (o.hw + hw) && Math.abs(o.y - p.y) < (o.hh + hh));
+        for (let k = 1; k <= 6 && (clash(q) || Math.hypot(q.x - a.x, q.y - a.y) < rB + hw); k++) q = {x: tip.x + u.x * off - u.y * 14 * k * (k % 2 ? 1 : -1), y: tip.y - u.y * off - u.x * 14 * k * (k % 2 ? 1 : -1)};
+        placed.push({...q, hw, hh});
+        /* from the body's edge when the body is drawn large enough to carry its own label inside */
+        const from = rB > 10 && bo?.label ? {x: a.x + u.x * rB * 0.95, y: a.y - u.y * rB * 0.95} : a;
+        out.push(`<g class="fbd" data-body="${esc(id)}" data-kind="${x.kind}">${arrow(from, tip, {color, width: 2 * ss, head: HL, pattern: x.kind === 'centripetal' ? 'dashed' : 'solid'})}${lbl(text, q.x, q.y, 14, 'middle', ` fill="${color}"`, {halo: true})}</g>`);
+      }
     }
   }
   if (edit && selSet.size) {
@@ -1276,6 +1526,201 @@ export function renderSVG(scene, opts = {}) {
   }
   if (edit && opts.marquee) { const m = opts.marquee; out.push(`<rect x="${f(Math.min(X(m.x0), X(m.x1)))}" y="${f(Math.min(Y(m.y0), Y(m.y1)))}" width="${f(Math.abs(X(m.x1) - X(m.x0)))}" height="${f(Math.abs(Y(m.y1) - Y(m.y0)))}" fill="#3b6fd8" fill-opacity="0.08" stroke="#3b6fd8" stroke-width="1" stroke-dasharray="4 3" pointer-events="none" class="marquee"/>`); }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="${esc(st.font).replace(/&#39;/g, "'")}">${opts.title ? `<title>${esc(opts.title)}</title>` : ''}${out.join('')}</svg>`;
+
+  /* ── the geometric construction (computeGeometry): points, segments, lines and rays, circles, polygons, angles ── */
+  function drawGeo(o) {
+    const G = geo.get(o.id); if (!G) return '';
+    const col = o.color && o.color !== 'black' ? COLOR_HEX[o.color] : ink, num = v => (+v.toFixed(2)).toString().replace('-', '−');
+    let s = '';
+    const fillShape = (shapeAttr, kind) => {
+      if (!kind || kind === 'none') return '';
+      if (FILL_HEX[kind]) return `<${shapeAttr} fill="${FILL_HEX[kind]}" stroke="none"/>`;
+      if (kind === 'tint') return gray ? `<${shapeAttr} fill="${col}" fill-opacity="0.14" stroke="none"/>` : shade(shapeAttr, 'hatch');
+      if (kind === 'cross') return shade(shapeAttr, 'hatch') + shade(shapeAttr, 'hatch2');
+      return shade(shapeAttr, kind);
+    };
+    if (G.k === 'pt') {
+      if (!o.show && !edit) return '';
+      const c = screen(G), r = Math.max(2, st.dot * ss * 1.05);
+      if (edit && o.kind === 'free') s += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(r + 4)}" fill="#3b6fd8" fill-opacity="0.16" stroke="none" class="free"/>`;
+      if (edit && o.kind === 'on') s += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(r + 4)}" fill="none" stroke="#3b6fd8" stroke-opacity="0.5" stroke-width="1"/>`;
+      s += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(r)}" fill="${col}"${!o.show ? ' fill-opacity="0.35"' : ''}/>`;
+      if (o.label) s += lbl(o.label, c.x + 7, c.y - 10, 15, 'start', '', {halo: true, point: true});
+      return s + hitBox(c.x - 9, c.y - 9, 18, 18);
+    }
+    if (G.k === 'line') {
+      /* the part inside the view (Liang–Barsky) */
+      let t0 = G.t0, t1 = G.t1;
+      for (const [p, d, lo, hi] of [[G.p.x, G.d.x, view.x, view.x + view.w], [G.p.y, G.d.y, view.y, view.y + view.h]]) {
+        if (Math.abs(d) < 1e-15) { if (p < lo || p > hi) return ''; continue; }
+        const a = (lo - p) / d, b = (hi - p) / d; t0 = Math.max(t0, Math.min(a, b)); t1 = Math.min(t1, Math.max(a, b));
+      }
+      if (!(t1 > t0)) return '';
+      const a = screen(geoLinePoint(G, t0)), b = screen(geoLinePoint(G, t1)), d = `M${f(a.x)},${f(a.y)}L${f(b.x)},${f(b.y)}`;
+      s += `<path d="${d}" fill="none" stroke="${col}" stroke-width="${f(thin * 1.15)}"${cap}${dash(o.pattern)}/>`;
+      const P = byId.get(o.a), Q = o.kind === 'perp' || o.kind === 'par' ? null : byId.get(o.b);
+      const pa = geo.get(P?.id), pb = Q ? geo.get(Q.id) : null;
+      if ((o.measure || o.label) && pa) {
+        const m = pb ? screen({x: (pa.x + pb.x) / 2, y: (pa.y + pb.y) / 2}) : screen(geoLinePoint(G, Math.max(t0, Math.min(t1, 1)))), L = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+        /* below the segment (its points' labels sit above and to the right) */
+        let nx = -(b.y - a.y) / L, ny = (b.x - a.x) / L; if (ny < 0) { nx = -nx; ny = -ny; }
+        const val = pb ? Math.hypot(pb.x - pa.x, pb.y - pa.y) : null, text = o.measure && val != null ? (o.label ? `${o.label} = ${num(val)}` : num(val)) : o.label;
+        s += lbl(text, m.x + nx * 13, m.y + ny * 13, 14, 'middle', '', {halo: true});
+      }
+      return s + hit(d);
+    }
+    if (G.k === 'circ') {
+      const c = screen(G.c), r = G.r * S, shapeAttr = `circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(r)}"`;
+      s += fillShape(shapeAttr, o.fill) + `<${shapeAttr} fill="none" stroke="${col}" stroke-width="${f(thin * 1.15)}"${dash(o.pattern)}/>`;
+      if (o.measure || o.label) s += lbl(o.measure ? `${o.label || 'r'} = ${num(G.r)}` : o.label, c.x + r * 0.72 + 6, c.y - r * 0.72 - 6, 14, 'start', '', {halo: true});
+      return s + (edit ? `<${shapeAttr} fill="none" stroke="transparent" stroke-width="12" pointer-events="stroke"/>` : '');
+    }
+    if (G.k === 'poly') {
+      const pts = G.pts.map(screen), shapeAttr = `path d="M${pts.map(p => `${f(p.x)},${f(p.y)}`).join('L')}Z"`;
+      s += fillShape(shapeAttr, o.fill) + `<${shapeAttr} fill="none" stroke="${col}" stroke-width="${f(thin * 1.15)}" stroke-linejoin="round"${dash(o.pattern)}/>`;
+      if (o.measure || o.label) { const cx = pts.reduce((t, p) => t + p.x, 0) / pts.length, cy = pts.reduce((t, p) => t + p.y, 0) / pts.length; s += lbl(o.measure ? `${o.label ? o.label + ' = ' : ''}${num(polyArea(G.pts))}` : o.label, cx, cy, 14, 'middle', '', {halo: true}); }
+      return s + (edit ? `<${shapeAttr} fill="transparent" stroke="none"/>` : '');
+    }
+    if (G.k === 'ang') {
+      const b = G.b, aA = Math.atan2(G.a.y - b.y, G.a.x - b.x), small = G.deg <= 180, start = small ? aA : Math.atan2(G.c.y - b.y, G.c.x - b.x), sweep = (small ? G.deg : 360 - G.deg) * Math.PI / 180, val = small ? G.deg : 360 - G.deg;
+      const at = t => screen({x: b.x + o.r * Math.cos(t), y: b.y + o.r * Math.sin(t)});
+      if (Math.abs(val - 90) < 0.05) { const u = {x: Math.cos(start), y: Math.sin(start)}, v = {x: Math.cos(start + sweep), y: Math.sin(start + sweep)}, k = o.r * 0.6;
+        const p1 = screen({x: b.x + u.x * k, y: b.y + u.y * k}), p2 = screen({x: b.x + (u.x + v.x) * k, y: b.y + (u.y + v.y) * k}), p3 = screen({x: b.x + v.x * k, y: b.y + v.y * k});
+        s += `<path d="M${f(p1.x)},${f(p1.y)}L${f(p2.x)},${f(p2.y)}L${f(p3.x)},${f(p3.y)}" fill="none" stroke="${ink}" stroke-width="${f(hair * 1.2)}"/>`; }
+      else { const pts = []; for (let i = 0; i <= 24; i++) pts.push(at(start + sweep * i / 24)); s += `<path d="M${pts.map(p => `${f(p.x)},${f(p.y)}`).join('L')}" fill="none" stroke="${ink}" stroke-width="${f(hair * 1.2)}"/>`; }
+      const mid = start + sweep / 2, lp = screen({x: b.x + o.r * Math.cos(mid), y: b.y + o.r * Math.sin(mid)}), c = screen(b), ux = (lp.x - c.x) / (o.r * S || 1), uy = (lp.y - c.y) / (o.r * S || 1);
+      const text = o.measure ? `${o.label ? o.label + ' = ' : ''}${val.toFixed(1)}^\\circ` : o.label;
+      if (text) s += lbl(text, lp.x + ux * 16, lp.y + uy * 12, 13, 'middle', '', {halo: true});
+      return s + hitBox(lp.x - 10, lp.y - 10, 20, 20);
+    }
+    return '';
+  }
+  /* ── a neural network: layers left to right, every node joined to every node of the next layer; with weights the
+     edges are as thick as |w| (or blue for w > 0, red for w < 0), w_ij written on them when asked; bias nodes (+1, dashed)
+     on top of every layer but the last ── */
+  function drawNet(o) {
+    const L = nnLayers(o.layers); if (!L) return '';
+    const W8 = o.weights ? nnWeights(o.weights, L) : null, wmax = W8 ? Math.max(1e-12, ...W8.flat(2).filter(v => v != null).map(Math.abs)) : 1;
+    const p0 = screen({x: o.x, y: o.y + o.h}), w = o.w * S, h = o.h * S, r = Math.max(4, o.nodeR * S), nmax = Math.max(...L.map((n, l) => n + (o.bias && l < L.length - 1 ? 1 : 0)));
+    const gap = Math.min(h / Math.max(1, nmax), r * 3.4), col = l => p0.x + r + (w - 2 * r) * l / (L.length - 1);
+    const pos = (l, i, n) => ({x: col(l), y: p0.y + h / 2 + (i - (n - 1) / 2) * gap});
+    const nodes = L.map((n, l) => { const nb = o.bias && l < L.length - 1 ? 1 : 0, tot = n + nb; return Array.from({length: tot}, (_, i) => ({...pos(l, i, tot), bias: nb && i === 0})); });
+    const inL = String(o.inLabels || '').split(',').map(t => t.trim()), outL = String(o.outLabels || '').split(',').map(t => t.trim());
+    let s = '', lab = '';
+    const pos2 = '#1d4ed8', neg = '#c0262d';
+    for (let l = 0; l + 1 < L.length; l++) {
+      const A = nodes[l], B = nodes[l + 1].filter(q => !q.bias), many = A.length * B.length;
+      A.forEach((a, ii) => B.forEach((b, j) => {
+        const i = a.bias ? -1 : ii - (A[0].bias ? 1 : 0), wv = !a.bias && W8 ? W8[l][i]?.[j] : null;
+        const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1, ux = dx / d, uy = dy / d, A2 = {x: a.x + ux * r, y: a.y + uy * r}, B2 = {x: b.x - ux * r, y: b.y - uy * r};
+        const width = wv != null && o.wstyle === 'width' ? hair + (thick * 2.2 - hair) * Math.abs(wv) / wmax : hair;
+        const color = wv != null && o.wstyle === 'color' ? (wv >= 0 ? pos2 : neg) : wv != null && o.wstyle === 'width' && wv < 0 ? st.dark || '#666' : ink;
+        const op = wv != null && o.wstyle === 'color' ? ` stroke-opacity="${f(0.35 + 0.65 * Math.abs(wv) / wmax)}"` : '';
+        s += `<line x1="${f(A2.x)}" y1="${f(A2.y)}" x2="${f(B2.x)}" y2="${f(B2.y)}" stroke="${color}" stroke-width="${f(width)}"${op}${a.bias ? dash('dashed', 0.7) : ''}/>`;
+        if (o.wlabels && !a.bias && many <= 24) { const q = {x: A2.x + (B2.x - A2.x) * 0.3, y: A2.y + (B2.y - A2.y) * 0.3}; lab += lbl(wv != null ? `${+wv.toPrecision(3)}`.replace('-', '−') : `w_{${i + 1}${j + 1}}`, q.x, q.y - 6, 10, 'middle', '', {halo: true}); }
+        if (o.wlabels && !a.bias && many > 24 && ii === 0 && j === 0) lab += lbl(`W^{(${l + 1})}`, (a.x + b.x) / 2, p0.y - 4, 13, 'middle', '', {halo: true});
+      }));
+    }
+    nodes.forEach((list, l) => list.forEach((q, i) => {
+      const hidden = l > 0 && l < L.length - 1;
+      s += `<circle cx="${f(q.x)}" cy="${f(q.y)}" r="${f(r)}" fill="${q.bias ? '#fff' : l === 0 ? fill : hidden ? (gray ? light : '#fff') : fill}" stroke="${ink}" stroke-width="${f(thin * 1.1)}"${q.bias ? dash('dashed', 0.8) : ''}/>`;
+      if (q.bias) s += lbl('+1', q.x, q.y, Math.min(13, r * 0.9 / CUR.ls), 'middle');
+      else if (hidden && o.act && r >= 7) s += lbl(o.act, q.x, q.y, Math.min(14, r * 0.95 / CUR.ls), 'middle');
+      const k = i - (list[0].bias ? 1 : 0);
+      if (l === 0 && !q.bias && inL[k]) s += lbl(inL[k], q.x - r - 6, q.y, 15, 'end');
+      if (l === L.length - 1 && outL[k]) s += lbl(outL[k], q.x + r + 6, q.y, 15, 'start');
+    }));
+    if (o.label) s += lbl(o.label, p0.x + w / 2, p0.y + h + 14, 15);
+    return s + lab + hitBox(p0.x, p0.y, w, h);
+  }
+  /* ── a block diagram: a box (rectangle, rounded, circle, diamond, or a summing junction ⊗) with its text, and an arrow
+     from one box's edge to another's, straight or with one bend ── */
+  function fboxEdge(b, toward) {
+    const dx = toward.x - b.x, dy = toward.y - b.y, hw = b.w / 2, hh = b.h / 2;
+    if (Math.abs(dx) < 1e-12 && Math.abs(dy) < 1e-12) return {x: b.x, y: b.y};
+    let k;
+    if (b.shape === 'circle' || b.shape === 'sum') { const rr = Math.min(hw, hh); k = rr / Math.hypot(dx, dy); }
+    else if (b.shape === 'diamond') k = 1 / (Math.abs(dx) / hw + Math.abs(dy) / hh);
+    else k = Math.min(Math.abs(dx) > 1e-12 ? hw / Math.abs(dx) : Infinity, Math.abs(dy) > 1e-12 ? hh / Math.abs(dy) : Infinity);
+    return {x: b.x + dx * k, y: b.y + dy * k};
+  }
+  function drawFbox(o) {
+    const c = screen(o), w = o.w * S, h = o.h * S, col = ink;
+    let shapeAttr;
+    if (o.shape === 'circle' || o.shape === 'sum') shapeAttr = `circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(Math.min(w, h) / 2)}"`;
+    else if (o.shape === 'diamond') shapeAttr = `path d="M${f(c.x)},${f(c.y - h / 2)}L${f(c.x + w / 2)},${f(c.y)}L${f(c.x)},${f(c.y + h / 2)}L${f(c.x - w / 2)},${f(c.y)}Z"`;
+    else shapeAttr = `rect x="${f(c.x - w / 2)}" y="${f(c.y - h / 2)}" width="${f(w)}" height="${f(h)}"${o.shape === 'round' ? ` rx="${f(Math.min(w, h) * 0.22)}"` : ''}`;
+    let s = '';
+    if (o.fill && o.fill !== 'none') s += FILL_HEX[o.fill] ? `<${shapeAttr} fill="${FILL_HEX[o.fill]}" stroke="none"/>` : o.fill === 'tint' ? `<${shapeAttr} fill="${st.vecInk || '#1d4ed8'}" fill-opacity="0.12" stroke="none"/>` : shade(shapeAttr, o.fill === 'cross' ? 'hatch' : o.fill);
+    s += `<${shapeAttr} fill="${o.fill && o.fill !== 'none' ? 'none' : '#fff'}" stroke="${col}" stroke-width="${f(lw)}" stroke-linejoin="round"/>`;
+    if (o.shape === 'sum') { const rr = Math.min(w, h) / 2 * 0.707; s += `<path d="M${f(c.x - rr)},${f(c.y - rr)}L${f(c.x + rr)},${f(c.y + rr)}M${f(c.x + rr)},${f(c.y - rr)}L${f(c.x - rr)},${f(c.y + rr)}" stroke="${col}" stroke-width="${f(thin)}"/>`; }
+    if (o.text) s += o.shape === 'sum' ? lbl(o.text, c.x + w / 2 + 4, c.y - h / 2 - 4, 13, 'start') : lbl(o.text, c.x, c.y, Math.min(16, h * 0.5 / CUR.ls), 'middle');
+    return s + hitBox(c.x - w / 2, c.y - h / 2, w, h);
+  }
+  function drawFarrow(o) {
+    const A = byId.get(o.a), B = byId.get(o.b); if (!A || !B) return '';
+    let pts;
+    if (o.route === 'hv' || o.route === 'vh') {
+      const corner = o.route === 'hv' ? {x: B.x, y: A.y} : {x: A.x, y: B.y};
+      pts = [fboxEdge(A, corner), corner, fboxEdge(B, corner)];
+    } else pts = [fboxEdge(A, B), fboxEdge(B, A)];
+    const sp = pts.map(screen), d = 'M' + sp.map(p => `${f(p.x)},${f(p.y)}`).join('L');
+    const last = sp[sp.length - 1], prev = sp[sp.length - 2], L = Math.hypot(last.x - prev.x, last.y - prev.y) || 1;
+    const [hs, end] = head(last, (last.x - prev.x) / L, (last.y - prev.y) / L, {len: HL});
+    const body = [...sp.slice(0, -1), end];
+    let s = `<polyline points="${body.map(p => `${f(p.x)},${f(p.y)}`).join(' ')}" fill="none" stroke="${ink}" stroke-width="${f(thin * 1.2)}" stroke-linejoin="round"${dash(o.pattern)}/>` + hs;
+    const m = sp.length === 3 ? sp[1] : {x: (sp[0].x + last.x) / 2, y: (sp[0].y + last.y) / 2}, seg = sp.length === 3 ? [sp[1], sp[2]] : [sp[0], last], ux = seg[1].x - seg[0].x, uy = seg[1].y - seg[0].y, ul = Math.hypot(ux, uy) || 1;
+    let nx = -uy / ul, ny = ux / ul; if (ny > 0) { nx = -nx; ny = -ny; }
+    if (o.label) s += lbl(o.label, (sp.length === 3 ? (sp[1].x + last.x) / 2 : m.x) + nx * 12, (sp.length === 3 ? (sp[1].y + last.y) / 2 : m.y) + ny * 12, 14, 'middle', '', {halo: true});
+    if (o.sign) s += lbl(o.sign === '-' ? '−' : o.sign, last.x - (last.x - prev.x) / L * 12 + nx * 10, last.y - (last.y - prev.y) / L * 12 + ny * 10, 13, 'middle');
+    return s + hit(d);
+  }
+  /* ── a joint between drawn shapes given physics: a spring, a rod or a string (to a fixed point: a small pivot) ── */
+  function drawJoint(o) {
+    const e = opts.jointEnds?.get?.(o.id) || jointEnds(scene, o); if (!e) return '';
+    const a = screen(e.a), b = screen(e.b), L = Math.hypot(b.x - a.x, b.y - a.y); let s = '';
+    if (L < 1) return '';
+    const ux = (b.x - a.x) / L, uy = (b.y - a.y) / L, d0 = `M${f(a.x)},${f(a.y)}L${f(b.x)},${f(b.y)}`;
+    if (o.kind === 'spring') {
+      const lead = Math.min(12 * ss, L * 0.15), n = Math.round(o.coils) * 2, amp = 6 * ss, seg = (L - 2 * lead) / n;
+      let d = `M${f(a.x)},${f(a.y)}l${f(ux * lead)},${f(uy * lead)}`;
+      for (let i = 0; i < n; i++) { const t = lead + seg * (i + 0.5), side = i % 2 ? -1 : 1; d += `L${f(a.x + ux * t - uy * amp * side)},${f(a.y + uy * t + ux * amp * side)}`; }
+      d += `L${f(b.x - ux * lead)},${f(b.y - uy * lead)}L${f(b.x)},${f(b.y)}`;
+      s += `<path d="${d}" fill="none" stroke="${ink}" stroke-width="${f(thin * 1.15)}" stroke-linejoin="round"/>`;
+    } else s += line(a, b, o.kind === 'rod' ? Math.max(thick * 2, 2 * ss) : thin, o.kind === 'rod' ? ' stroke-linecap="round"' : '');
+    for (const p of [a, ...(e.fixed ? [] : [b])]) s += `<circle cx="${f(p.x)}" cy="${f(p.y)}" r="${f(Math.max(1.6, st.dot * ss * 0.8))}" fill="${ink}"/>`;
+    if (e.fixed) s += line({x: b.x - 11, y: b.y - 6}, {x: b.x + 11, y: b.y - 6}) + hatch(b.x - 11, b.y - 6, b.x + 11, b.y - 6, 0, -1) + line({x: b.x, y: b.y - 6}, b, thin) + `<circle cx="${f(b.x)}" cy="${f(b.y)}" r="${f(Math.max(2, st.dot * ss))}" fill="#fff" stroke="${ink}" stroke-width="${f(thin)}"/>`;
+    if (o.label) { let nx = -uy, ny = ux; if (ny > 0) { nx = -nx; ny = -ny; } s += lbl(o.label, (a.x + b.x) / 2 + nx * 16, (a.y + b.y) / 2 + ny * 16, 15); }
+    return s + hit(d0);
+  }
+
+  /* ── a conical pendulum in an oblique view: the bob's horizontal circle as an ellipse (the half behind the axis dashed),
+     the vertical axis through the pivot, the radius r from the circle's centre to the bob and the angle θ of the string
+     from the vertical ── */
+  function conicalMarks(o) {
+    const A = byId.get(o.a), Bo = byId.get(o.b), P = [A, Bo].find(x => x?.type === 'pivot'), b = [A, Bo].find(isBody);
+    if (!P || !b) return '';
+    const given = (opts.conical || []).find(c => c.id === o.id);
+    let C, R;
+    if (given) { C = given.centre; R = given.radius; } else { const p = bodyPose(scene, b); C = {x: P.x, y: p.y}; R = Math.abs(p.x - P.x); }
+    if (!(R > 1e-6)) return '';
+    const c = screen(C), rx = R * S, ry = rx * CONE_TILT, pv = screen(P), q = screen(opts.poses?.get?.(b.id) || poseOf(b));
+    let s = `<path d="M${f(c.x - rx)},${f(c.y)}A${f(rx)},${f(ry)} 0 0 1 ${f(c.x + rx)},${f(c.y)}" fill="none" stroke="${ink}" stroke-width="${f(hair)}"${dash('dashed', 0.8)}/>`;
+    s += `<path d="M${f(c.x + rx)},${f(c.y)}A${f(rx)},${f(ry)} 0 0 1 ${f(c.x - rx)},${f(c.y)}" fill="none" stroke="${ink}" stroke-width="${f(thin)}"/>`;
+    s += line(pv, {x: c.x, y: c.y + ry + 12 * ss}, hair, dash('dashdot', 0.8));
+    s += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(Math.max(1.4, st.dot * ss * 0.7))}" fill="${ink}"/>`;
+    s += line(c, q, hair, dash('dashed', 0.7));
+    /* r near the axis end of the radius, so a force drawn from the bob along it keeps its own label */
+    const mr = {x: c.x + (q.x - c.x) * 0.3, y: c.y + (q.y - c.y) * 0.3};
+    s += lbl('r', mr.x, mr.y + (q.y >= c.y ? -11 : 11), 14, 'middle', '', {halo: true});
+    const L = Math.hypot(q.x - pv.x, q.y - pv.y), ar = Math.max(16, Math.min(40, L * 0.28)), a1 = Math.atan2(q.y - pv.y, q.x - pv.x), a0 = Math.PI / 2;
+    if (Math.abs(a1 - a0) > 0.04) {
+      const p1 = {x: pv.x + ar * Math.cos(a0), y: pv.y + ar * Math.sin(a0)}, p2 = {x: pv.x + ar * Math.cos(a1), y: pv.y + ar * Math.sin(a1)}, mid = (a0 + a1) / 2;
+      s += `<path d="M${f(p1.x)},${f(p1.y)}A${f(ar)},${f(ar)} 0 0 ${a1 < a0 ? 0 : 1} ${f(p2.x)},${f(p2.y)}" fill="none" stroke="${ink}" stroke-width="${f(hair * 1.2)}"/>`;
+      s += lbl('\\theta', pv.x + (ar + 11) * Math.cos(mid), pv.y + (ar + 11) * Math.sin(mid), 14, 'middle', '', {halo: true});
+    }
+    return s;
+  }
 
   /* ── a typed potential: V(x), its bound states, a scattering state at E and T(E) beside it (E upwards in both) ── */
   function drawQpot(o) {
@@ -1407,7 +1852,7 @@ export function renderSVG(scene, opts = {}) {
 }
 
 /** the world box around one object (for the selection outline and for picking) */
-export function objectBox(scene, o, poses) {
+export function objectBox(scene, o, poses, opts2 = {}) {
   const byId = new Map(scene.objects.map(x => [x.id, x]));
   const box = pts => { const xs = pts.map(p => p.x), ys = pts.map(p => p.y), x = Math.min(...xs), y = Math.min(...ys); return {x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y}; };
   if (isBody(o)) { const p = poses?.get?.(o.id) || bodyPose(scene, o), r = isRound(o) ? o.r : Math.hypot(o.w, o.h) / 2; return {x: p.x - r, y: p.y - r, w: 2 * r, h: 2 * r}; }
@@ -1417,7 +1862,10 @@ export function objectBox(scene, o, poses) {
     case 'curve': case 'cycle': { const g = byId.get(o.graph); return g ? objectExtent(g) : null; }
     case 'worldline': { const g = byId.get(o.diagram); return g ? objectExtent(g) : null; }
     case 'fieldlines': return null;
+    case 'joint': { const e = opts2.jointEnds?.get?.(o.id) || jointEnds(scene, o); return e ? box([e.a, e.b]) : null; }
+    case 'farrow': { const A = byId.get(o.a), B = byId.get(o.b); return A && B ? box([A, B]) : null; }
   }
+  if (GEO_TYPES.includes(o.type)) return geoExtent(opts2.geo || computeGeometry(scene), o);
   return objectExtent(o);
 }
 export {surfaceFrame};

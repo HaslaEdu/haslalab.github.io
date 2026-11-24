@@ -99,6 +99,16 @@ function evaluate(node, at) {
   return NaN;
 }
 export function parseExpr(text) { const tokens = tokenize(normalise(text)); return tokens ? parse(tokens) : null; }
+/** the value of an expression at the given values of its variables (NaN when it cannot be read or a variable has no
+    value); the workshop's problem generator checks a stated calculation and a variant formula with it (workshop-ai.js) */
+export function evalExpr(text, at = {}) {
+  const node = parseExpr(text);
+  if (!node) return NaN;
+  for (const v of vars(node)) if (!Number.isFinite(at[v])) return NaN;
+  return evaluate(node, at);
+}
+/** the variable names an expression uses (null when it cannot be read) */
+export function exprVars(text) { const node = parseExpr(text); return node ? [...vars(node)] : null; }
 
 /* deterministic pseudo-random points (the same verdict every time for the same pair) */
 function points(names, n, seed) {

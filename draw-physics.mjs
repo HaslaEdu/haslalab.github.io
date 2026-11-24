@@ -17,7 +17,7 @@
    its surface or the body it is tied to, a body landing on a floor or an incline, a body leaving its surface
    (N below zero), two bodies on one surface touching. Systems outside these kinds are reported in `unsupported`
    with a code, and the figure stays a figure. */
-import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr} from './draw-scene.mjs?v=fb1c204d7324';
+import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr, isPhysShape, CONE_TILT} from './draw-scene.mjs?v=6a3c9af34d22';
 
 export const SIM_DT = 1e-3;
 const EPS_V = 1e-9;
@@ -289,14 +289,23 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
       const alpha = Math.atan2(Math.abs(d.x), -d.y), side = sgn(d.x) || 1;
       if (!(alpha > 0.01 && alpha < 1.53)) { reject([b.id], 'conical_angle'); continue; }
       const w = Math.sqrt(g / (L * Math.cos(alpha))), R = L * Math.sin(alpha);
-      systems.push({kind: 'conical', id: s.id, ids: [b.id], q: Float64Array.from([0]), t: 0, mode: 0, done: null, omega: w, radius: R, centre: {x: P.x, y: P.y - L * Math.cos(alpha)}, side,
+      /* the bob turns on a horizontal circle; the figure shows it in an oblique view (CONE_TILT: the circle as an ellipse
+         whose height is that fraction of its width), so its drawn y moves with the depth z (z > 0: towards the viewer,
+         lower on the page). φ = ω t from the side the figure put it on. */
+      const C = {x: P.x, y: P.y - L * Math.cos(alpha)}, T = m * g / Math.cos(alpha);
+      const at3 = q => ({x: C.x + side * R * Math.cos(q[0]), y: C.y, z: R * Math.sin(q[0])});
+      systems.push({kind: 'conical', id: s.id, ids: [b.id], q: Float64Array.from([0]), t: 0, mode: 0, done: null, omega: w, radius: R, centre: C, side, alpha, length: L, pivot: {x: P.x, y: P.y},
         prepare() {}, f() { return Float64Array.from([w]); }, events() { return []; },
-        poses(q = this.q) { return new Map([[b.id, {x: P.x + side * R * Math.cos(q[0]), y: P.y - L * Math.cos(alpha), z: R * Math.sin(q[0]), angle: 0}]]); },
+        poses(q = this.q) { const p = at3(q); return new Map([[b.id, {x: p.x, y: p.y - CONE_TILT * p.z, z: p.z, phi: q[0], angle: 0}]]); },
         velocities(q = this.q) { return new Map([[b.id, {x: -side * R * w * Math.sin(q[0]), y: 0, z: R * w * Math.cos(q[0])}]]); },
-        accel(q = this.q) { return new Map([[b.id, {x: -side * R * w * w * Math.cos(q[0]), y: 0}]]); },
-        tensions() { return {[s.id]: m * g / Math.cos(alpha)}; },
-        forceList(q = this.q) { const p = this.poses(q).get(b.id), T = m * g / Math.cos(alpha), u = vec.unit(vec.sub(P, p));
-          return new Map([[b.id, [{kind: 'gravity', v: vec.mul(G, m)}, {kind: 'tension', v: vec.mul(u, T)}].map(x => ({...x, at: {x: p.x, y: p.y}}))]]); },
+        accel(q = this.q) { return new Map([[b.id, {x: -side * R * w * w * Math.cos(q[0]), y: 0, z: -R * w * w * Math.sin(q[0])}]]); },
+        tensions() { return {[s.id]: T}; },
+        /* the forces in 3D, drawn in the same oblique view: gravity, the tension along the string, and their sum, the
+           centripetal force m ω² r towards the axis */
+        forceList(q = this.q) {
+          const p3 = at3(q), p = {x: p3.x, y: p3.y - CONE_TILT * p3.z}, proj = v => ({x: v.x, y: v.y - CONE_TILT * v.z});
+          const tv = {x: (P.x - p3.x) * T / L, y: (P.y - p3.y) * T / L, z: -p3.z * T / L}, cv = {x: (C.x - p3.x) * m * w * w, y: 0, z: -p3.z * m * w * w};
+          return new Map([[b.id, [{kind: 'gravity', v: vec.mul(G, m)}, {kind: 'tension', v: proj(tv)}, {kind: 'centripetal', v: proj(cv)}].map(x => ({...x, at: p}))]]); },
         energy(q = this.q) { return {K: 0.5 * m * (R * w) ** 2, Ug: m * g * (P.y - L * Math.cos(alpha)), Us: 0, heat: 0, work: 0}; },
         period: 2 * Math.PI / w});
       continue;
@@ -466,6 +475,10 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
     } else { s.q = q1; s.t += h; }
   }
 
+  /* the drawn shapes given physics: their own rigid-body world (rigidWorld below) */
+  const rw = rigidWorld(scene);
+  if (rw) systems.push(rw);
+
   const sim = {
     scene, systems, unsupported, dt, t: 0,
     get done() { return systems.length > 0 && systems.every(s => s.done); },
@@ -473,6 +486,7 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
     /* move every system on to time T */
     advanceTo(T) {
       for (const s of systems) {
+        if (s.advance) { s.advance(T); continue; }
         let guard = 0;
         while (!s.done && s.t < T - 1e-12 && guard++ < 2e6) stepSystem(s, Math.min(dt, T - s.t));
       }
@@ -497,12 +511,315 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
       const poses = this.poses(), out = {...base, objects: base.objects.map(o => {
         const p = poses.get(o.id);
         if (!p) return o;
+        if (p.rigid) return rw ? rw.place(o) : o;
         return p.at !== undefined ? {...o, at: p.at, x: p.x, y: p.y} : {...o, x: p.x, y: p.y, on: ''};
       })};
       return out;
     }
   };
   return sim;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   Drawn shapes given physics ("물리 적용": a rect, an ellipse, a polygon or a line with phys 'dynamic' or 'static',
+   joints between them): a small 2D rigid-body engine of its own, deterministic (a fixed step, a fixed order, no
+   randomness), so the same figure plays the same way everywhere.
+     bodies     a circle (an ellipse as wide as high) or a convex polygon (a rect; an ellipse as 24 sides; a polygon or a
+                pen stroke as its convex hull; a line as a two-sided segment). Mass from pmass, the moment of inertia
+                from the shape (uniform density). Static: infinite mass (a drawn floor, wall or ramp); a static open
+                polyline is a chain of segments.
+     step       semi-implicit (symplectic) Euler at RIGID_DT: v += (g + F/m − drag v) h, then the constraints on the
+                velocities, then x += v h, θ += ω h, then the positions corrected (penetration and rod lengths).
+     contacts   SAT for convex polygons (reference face and clipped incident face, up to two points), circle–polygon
+                and circle–circle; a small margin makes resting contacts speculative (no jitter).
+     impulses   sequential impulses with accumulated, clamped normal and friction impulses, warm-started from the step
+                before (matched by the contact's features). Coulomb friction μ = √(μa μb) for sticking and sliding;
+                restitution e = max(ea, eb) above a small closing speed (resting contacts do not bounce).
+     joints     spring (a force k (ℓ − L0) along it, with damping), rod (ℓ = L0 both ways), string (ℓ ≤ L0, pulls only),
+                solved with the contacts in the same iterations; L0 = 0 takes the length at the start.
+     sleeping   a body slower than 3 cm/s and 0.05 rad/s for 0.6 s sleeps (stays put, acts as fixed) until a moving body
+                touches it or pulls on it.
+   Bodies of the analytic solver above (block, ball, wheel) are not part of this world. */
+export const RIGID_DT = 1 / 480;
+const R_ITER = 12, R_POS = 3, R_SLOP = 0.002, R_MARGIN = 0.004, R_BAUM = 0.6, R_MAXCORR = 0.04, R_BOUNCE = 0.4;
+const rot = (a, v) => { const c = Math.cos(a), s = Math.sin(a); return {x: c * v.x - s * v.y, y: s * v.x + c * v.y}; };
+const crs = (a, b) => a.x * b.y - a.y * b.x;
+/* the convex hull of points (monotone chain), anticlockwise */
+export function convexHull(pts) {
+  const p = [...pts].sort((a, b) => a.x - b.x || a.y - b.y), out = [];
+  if (p.length < 3) return p;
+  const lo = [], hi = [];
+  for (const q of p) { while (lo.length > 1 && crs(vec.sub(lo[lo.length - 1], lo[lo.length - 2]), vec.sub(q, lo[lo.length - 2])) <= 1e-12) lo.pop(); lo.push(q); }
+  for (const q of p.slice().reverse()) { while (hi.length > 1 && crs(vec.sub(hi[hi.length - 1], hi[hi.length - 2]), vec.sub(q, hi[hi.length - 2])) <= 1e-12) hi.pop(); hi.push(q); }
+  out.push(...lo.slice(0, -1), ...hi.slice(0, -1));
+  return out;
+}
+/* area, centroid and the second moment (about the centroid, per unit density) of a polygon */
+function polyMass(v) {
+  let A = 0, cx = 0, cy = 0;
+  for (let i = 0; i < v.length; i++) { const a = v[i], b = v[(i + 1) % v.length], c = crs(a, b); A += c / 2; cx += (a.x + b.x) * c / 6; cy += (a.y + b.y) * c / 6; }
+  if (Math.abs(A) < 1e-14) return null;
+  const c = {x: cx / A, y: cy / A}; let J = 0;
+  for (let i = 0; i < v.length; i++) { const a = vec.sub(v[i], c), b = vec.sub(v[(i + 1) % v.length], c), k = crs(a, b); J += k * (vec.dot(a, a) + vec.dot(a, b) + vec.dot(b, b)) / 12; }
+  return {A: Math.abs(A), c, J: Math.abs(J)};
+}
+/* a shape's outline in the world (unturned for rect and ellipse, whose rot is the start angle) */
+function shapeBodies(o) {
+  const out = [], deg = Math.PI / 180;
+  if (o.type === 'rect') { const c = {x: o.x + o.w / 2, y: o.y + o.h / 2}, hw = o.w / 2, hh = o.h / 2; out.push({c, a: (o.rot || 0) * deg, verts: [{x: -hw, y: -hh}, {x: hw, y: -hh}, {x: hw, y: hh}, {x: -hw, y: hh}], I1: (o.w * o.w + o.h * o.h) / 12}); }
+  else if (o.type === 'ellipse') {
+    const c = {x: o.x + o.w / 2, y: o.y + o.h / 2};
+    if (Math.abs(o.w - o.h) <= 1e-6 * Math.max(o.w, o.h)) out.push({c, a: (o.rot || 0) * deg, r: o.w / 2, I1: o.w * o.w / 8});
+    else { const verts = []; for (let i = 0; i < 24; i++) { const t = 2 * Math.PI * i / 24; verts.push({x: o.w / 2 * Math.cos(t), y: o.h / 2 * Math.sin(t)}); } const pm = polyMass(verts); out.push({c, a: (o.rot || 0) * deg, verts, I1: pm.J / pm.A}); }
+  } else if (o.type === 'line') { const a = {x: o.x1, y: o.y1}, b = {x: o.x2, y: o.y2}, c = vec.mul(vec.add(a, b), 0.5), L = vec.len(vec.sub(b, a)); if (L > 1e-9) out.push({c, a: 0, verts: [vec.sub(a, c), vec.sub(b, c)], I1: L * L / 12}); }
+  else if (o.type === 'poly') {
+    const pts = o.pts.map(q => ({x: q[0], y: q[1]}));
+    if (o.phys === 'static' && !o.closed) { for (let i = 1; i < pts.length; i++) { const a = pts[i - 1], b = pts[i], c = vec.mul(vec.add(a, b), 0.5); if (vec.len(vec.sub(b, a)) > 1e-9) out.push({c, a: 0, verts: [vec.sub(a, c), vec.sub(b, c)], I1: 0, part: i}); } }
+    else { const h = convexHull(pts), pm = h.length >= 3 ? polyMass(h) : null;
+      if (pm) out.push({c: pm.c, a: 0, verts: h.map(q => vec.sub(q, pm.c)), I1: pm.J / pm.A});
+      else if (h.length === 2) { const c = vec.mul(vec.add(h[0], h[1]), 0.5), L = vec.len(vec.sub(h[1], h[0])); out.push({c, a: 0, verts: [vec.sub(h[0], c), vec.sub(h[1], c)], I1: L * L / 12}); } }
+  }
+  return out;
+}
+/** the centre and the start angle a drawn shape has in the rigid world (where a joint's ax, ay are measured from) */
+export function rigidFrame(o) { const b = shapeBodies({...o, phys: o.phys === 'static' && o.type === 'poly' && !o.closed ? 'dynamic' : o.phys})[0]; return b ? {c: b.c, a: b.a} : null; }
+/** a joint's two ends in the world, the shapes as they are in the scene given (an end on no shape: the fixed point) */
+export function jointEnds(scene, j) {
+  const byId = new Map(scene.objects.map(o => [o.id, o])), A = byId.get(j.a), B = j.b ? byId.get(j.b) : null;
+  const end = (o, x, y) => { const fr = o && rigidFrame(o); if (!fr) return null; const c = Math.cos(fr.a), s = Math.sin(fr.a); return {x: fr.c.x + c * x - s * y, y: fr.c.y + s * x + c * y}; };
+  const a = end(A, j.ax, j.ay), b = j.b ? end(B, j.bx, j.by) : {x: j.bx, y: j.by};
+  return a && b ? {a, b, fixed: !j.b} : null;
+}
+/* the outward normals of a polygon's edges (a two-point segment has two, opposite) */
+function normalsOf(v) { return v.map((a, i) => { const b = v[(i + 1) % v.length], d = vec.sub(b, a), l = vec.len(d) || 1; return {x: d.y / l, y: -d.x / l}; }); }
+
+/* collision: [{n (unit, from a to b), pts: [{p, sep, id}]}] or null */
+function worldVerts(B) { if (B._wv && B._wt === B.stamp) return B._wv; const c = Math.cos(B.a), s = Math.sin(B.a); B._wv = B.verts.map(v => ({x: B.x + c * v.x - s * v.y, y: B.y + s * v.x + c * v.y})); B._wn = B.norms.map(n => ({x: c * n.x - s * n.y, y: s * n.x + c * n.y})); B._wt = B.stamp; return B._wv; }
+function maxSep(A, B) { const va = worldVerts(A), na = A._wn, vb = worldVerts(B); let best = -Infinity, edge = 0; for (let i = 0; i < va.length; i++) { let m = Infinity; for (const q of vb) m = Math.min(m, na[i].x * (q.x - va[i].x) + na[i].y * (q.y - va[i].y)); if (m > best) { best = m; edge = i; } } return {sep: best, edge}; }
+function collidePolys(A, B) {
+  const sa = maxSep(A, B); if (sa.sep > R_MARGIN) return null;
+  const sb = maxSep(B, A); if (sb.sep > R_MARGIN) return null;
+  let ref = A, inc = B, e = sa.edge, flip = false;
+  if (sb.sep > sa.sep + 1e-4) { ref = B; inc = A; e = sb.edge; flip = true; }
+  const rv = worldVerts(ref), rn = ref._wn[e], v1 = rv[e], v2 = rv[(e + 1) % rv.length], iv = worldVerts(inc), inn = inc._wn;
+  /* the incident edge: the one facing the reference face most */
+  let ie = 0, md = Infinity; for (let i = 0; i < iv.length; i++) { const d = vec.dot(inn[i], rn); if (d < md) { md = d; ie = i; } }
+  let cp = [{p: iv[ie], id: ie}, {p: iv[(ie + 1) % iv.length], id: (ie + 1) % iv.length}];
+  const t = vec.unit(vec.sub(v2, v1));
+  const clip = (pts, nrm, off, cid) => { const out = [], d0 = vec.dot(nrm, pts[0].p) - off, d1 = vec.dot(nrm, pts[1].p) - off; if (d0 <= 0) out.push(pts[0]); if (d1 <= 0) out.push(pts[1]); if (d0 * d1 < 0) { const k = d0 / (d0 - d1); out.push({p: vec.add(pts[0].p, vec.mul(vec.sub(pts[1].p, pts[0].p), k)), id: cid}); } return out; };
+  cp = clip(cp, vec.mul(t, -1), -vec.dot(t, v1), 100 + e); if (cp.length < 2) { if (!cp.length) return null; }
+  if (cp.length === 2) cp = clip(cp, t, vec.dot(t, v2), 200 + e);
+  const pts = [];
+  for (const q of cp) { const sep = vec.dot(rn, q.p) - vec.dot(rn, v1); if (sep <= R_MARGIN) pts.push({p: vec.sub(q.p, vec.mul(rn, sep / 2)), sep, id: (flip ? 1000 : 0) + e * 31 + q.id}); }
+  if (!pts.length) return null;
+  return {n: flip ? vec.mul(rn, -1) : rn, pts};
+}
+function collideCirclePoly(C, Pb, flip) {
+  const v = worldVerts(Pb), n = Pb._wn, c = {x: C.x, y: C.y};
+  let sep = -Infinity, e = 0;
+  for (let i = 0; i < v.length; i++) { const s = vec.dot(n[i], vec.sub(c, v[i])); if (s > sep) { sep = s; e = i; } }
+  if (sep > C.r + R_MARGIN) return null;
+  const v1 = v[e], v2 = v[(e + 1) % v.length];
+  let nrm, p, s;
+  const u1 = vec.dot(vec.sub(c, v1), vec.sub(v2, v1)), u2 = vec.dot(vec.sub(c, v2), vec.sub(v1, v2));
+  if (sep < 1e-9) { nrm = n[e]; s = sep - C.r; p = vec.sub(c, vec.mul(nrm, C.r + s / 2)); }
+  else if (u1 <= 0 || u2 <= 0) { const q = u1 <= 0 ? v1 : v2, d = vec.sub(c, q), l = vec.len(d); if (l > C.r + R_MARGIN) return null; nrm = l > 1e-12 ? vec.mul(d, 1 / l) : n[e]; s = l - C.r; p = q; }
+  else { nrm = n[e]; s = sep - C.r; p = vec.sub(c, vec.mul(nrm, C.r + s / 2)); }
+  /* nrm points from the polygon to the circle */
+  return {n: flip ? nrm : vec.mul(nrm, -1), pts: [{p, sep: s, id: e}]};
+}
+function collide(A, B) {
+  if (A.r && B.r) { const d = {x: B.x - A.x, y: B.y - A.y}, l = vec.len(d), s = l - A.r - B.r; if (s > R_MARGIN) return null; const n = l > 1e-12 ? vec.mul(d, 1 / l) : {x: 0, y: 1}; return {n, pts: [{p: vec.add(A, vec.mul(n, A.r + s / 2)), sep: s, id: 0}]}; }
+  if (A.r) return collideCirclePoly(A, B, false);
+  if (B.r) return collideCirclePoly(B, A, true);
+  return collidePolys(A, B);
+}
+
+/** the rigid-body world of a scene's drawn shapes given physics, as a system of buildSim (null if there is none) */
+export function rigidWorld(scene, {dt = RIGID_DT} = {}) {
+  const shapes = scene.objects.filter(isPhysShape);
+  if (!shapes.some(o => o.phys === 'dynamic')) return null;
+  const g = scene.gravityOn === false ? 0 : scene.g, drag = scene.drag || 0;
+  const bodies = [], byObj = new Map();
+  for (const o of shapes) for (const sb of shapeBodies(o)) {
+    const dyn = o.phys === 'dynamic', m = dyn ? o.pmass : 0, I = dyn ? Math.max(1e-12, m * sb.I1) : 0;
+    const B = {id: o.id, o, part: sb.part || 0, x: sb.c.x, y: sb.c.y, a: sb.a, c0: {...sb.c}, a0: sb.a, r: sb.r || 0, verts: sb.verts || null, norms: sb.verts ? normalsOf(sb.verts) : null,
+      m, invM: dyn ? 1 / m : 0, I, invI: dyn ? 1 / I : 0, vx: dyn ? o.pvx : 0, vy: dyn ? o.pvy : 0, w: dyn ? o.pw : 0, mu: o.pmu, e: o.pe, fx: dyn ? o.pfx : 0, fy: dyn ? o.pfy : 0,
+      dyn, asleep: false, sleepT: 0, stamp: 0, touch: new Map()};
+    B.bound = B.r || Math.max(...B.verts.map(v => Math.hypot(v.x, v.y)));
+    bodies.push(B); if (!byObj.has(o.id)) byObj.set(o.id, B);
+  }
+  /* joints: each end a body (by its shape) and a point on it in its own frame, or a fixed point */
+  const joints = [];
+  for (const j of scene.objects.filter(o => o.type === 'joint')) {
+    const A = byObj.get(j.a), Bb = j.b ? byObj.get(j.b) : null; if (!A || (j.b && !Bb)) continue;
+    const la = {x: j.ax, y: j.ay}, lb = Bb ? {x: j.bx, y: j.by} : null;
+    const wa = vec.add(A, rot(A.a, la)), wb = Bb ? vec.add(Bb, rot(Bb.a, lb)) : {x: j.bx, y: j.by};
+    joints.push({j, A, B: Bb, la, lb, fixed: Bb ? null : {x: j.bx, y: j.by}, L: j.L0 > 0 ? j.L0 : vec.len(vec.sub(wb, wa)), acc: 0, T: 0});
+  }
+  const anchor = (B, l) => { const r = rot(B.a, l); return {r, p: {x: B.x + r.x, y: B.y + r.y}}; };
+  const jEnds = J => { const a = anchor(J.A, J.la), b = J.B ? anchor(J.B, J.lb) : {r: {x: 0, y: 0}, p: J.fixed}; return {a, b}; };
+  const awake = B => B.dyn && !B.asleep;
+  const iM = B => awake(B) ? B.invM : 0, iI = B => awake(B) ? B.invI : 0;
+  const velAt = (B, r) => ({x: B.vx - B.w * r.y, y: B.vy + B.w * r.x});
+  const impulse = (B, P, r) => { if (!awake(B)) return; B.vx += P.x * B.invM; B.vy += P.y * B.invM; B.w += crs(r, P) * B.invI; };
+  const wake = B => { if (B.dyn && B.asleep) { B.asleep = false; B.sleepT = 0; } };
+  let cache = new Map(), work = 0, E0 = null, lastContacts = [];
+  const bump = () => { for (const B of bodies) B.stamp++; };
+  const findContacts = () => {
+    const out = [];
+    for (let i = 0; i < bodies.length; i++) for (let k = i + 1; k < bodies.length; k++) {
+      const A = bodies[i], B = bodies[k];
+      if (!A.dyn && !B.dyn) continue; if (A.id === B.id) continue;
+      if (!awake(A) && !awake(B)) continue;
+      if (Math.abs(A.x - B.x) > A.bound + B.bound + R_MARGIN || Math.abs(A.y - B.y) > A.bound + B.bound + R_MARGIN) continue;
+      const m = collide(A, B); if (m) out.push({A, B, ...m});
+    }
+    return out;
+  };
+  function step(h) {
+    /* forces: gravity, the applied force, drag, springs */
+    for (const B of bodies) if (awake(B)) {
+      B.vx += h * (B.fx / B.m - drag * B.vx); B.vy += h * (-g + B.fy / B.m - drag * B.vy); B.w -= h * drag * B.w;
+      work += h * (B.fx * B.vx + B.fy * B.vy);
+    }
+    for (const J of joints) if (J.j.kind === 'spring') {
+      const {a, b} = jEnds(J), d = vec.sub(b.p, a.p), l = vec.len(d); if (l < 1e-12) continue;
+      const u = vec.mul(d, 1 / l), vr = vec.sub(J.B ? velAt(J.B, b.r) : {x: 0, y: 0}, velAt(J.A, a.r)), F = J.j.k * (l - J.L) + J.j.damp * vec.dot(vr, u);
+      J.T = F; if (Math.abs(F) > 1e-12) { wake(J.A); if (J.B) wake(J.B); }
+      impulse(J.A, vec.mul(u, F * h), a.r); if (J.B) impulse(J.B, vec.mul(u, -F * h), b.r);
+    }
+    /* contacts: prepared once, then the iterations */
+    bump();
+    const contacts = findContacts(), next = new Map();
+    for (const C of contacts) {
+      const {A, B} = C, t = {x: -C.n.y, y: C.n.x}; C.mu = Math.sqrt(A.mu * B.mu); C.e = Math.max(A.e, B.e);
+      /* a moving body wakes a sleeping one it touches */
+      if (awake(A) !== awake(B)) { const M = awake(A) ? A : B; if (Math.hypot(M.vx, M.vy) > 0.05 || Math.abs(M.w) > 0.1) wake(awake(A) ? B : A); }
+      for (const q of C.pts) {
+        q.rA = vec.sub(q.p, A); q.rB = vec.sub(q.p, B);
+        const rnA = crs(q.rA, C.n), rnB = crs(q.rB, C.n), rtA = crs(q.rA, t), rtB = crs(q.rB, t);
+        q.mN = 1 / Math.max(1e-12, iM(A) + iM(B) + iI(A) * rnA * rnA + iI(B) * rnB * rnB);
+        q.mT = 1 / Math.max(1e-12, iM(A) + iM(B) + iI(A) * rtA * rtA + iI(B) * rtB * rtB);
+        const vn = vec.dot(vec.sub(velAt(B, q.rB), velAt(A, q.rA)), C.n);
+        q.bias = vn < -R_BOUNCE ? -C.e * vn : 0;
+        /* a contact not yet touching lets the bodies close the gap within the step (speculative) */
+        q.spec = q.sep > 0 ? q.sep / h : 0;
+        const key = A.id + '|' + A.part + '|' + B.id + '|' + B.part + '|' + q.id, old = cache.get(key);
+        q.key = key; q.Pn = old ? old.Pn : 0; q.Pt = old ? old.Pt : 0;
+        const P = vec.add(vec.mul(C.n, q.Pn), vec.mul(t, q.Pt)); impulse(A, vec.mul(P, -1), q.rA); impulse(B, P, q.rB);
+      }
+      C.t = t;
+    }
+    for (const J of joints) { J.acc = 0; if (J.j.kind !== 'spring' && (awake(J.A) || (J.B && awake(J.B)))) { wake(J.A); if (J.B) wake(J.B); } }
+    for (let it = 0; it < R_ITER; it++) {
+      for (const J of joints) {
+        if (J.j.kind === 'spring') continue;
+        const {a, b} = jEnds(J), d = vec.sub(b.p, a.p), l = vec.len(d); if (l < 1e-12) continue;
+        if (J.j.kind === 'string' && l < J.L - R_SLOP) continue;
+        const u = vec.mul(d, 1 / l), Bj = J.B, ra = crs(a.r, u), rb = Bj ? crs(b.r, u) : 0;
+        const K = iM(J.A) + iI(J.A) * ra * ra + (Bj ? iM(Bj) + iI(Bj) * rb * rb : 0); if (K < 1e-12) continue;
+        const cd = vec.dot(vec.sub(Bj ? velAt(Bj, b.r) : {x: 0, y: 0}, velAt(J.A, a.r)), u);
+        let lam = -cd / K;
+        if (J.j.kind === 'string') { const old = J.acc; J.acc = Math.min(0, old + lam); lam = J.acc - old; } else J.acc += lam;
+        impulse(J.A, vec.mul(u, -lam), a.r); if (Bj) impulse(Bj, vec.mul(u, lam), b.r);
+      }
+      for (const C of contacts) {
+        const {A, B, n, t} = C;
+        for (const q of C.pts) {
+          const dv = vec.sub(velAt(B, q.rB), velAt(A, q.rA));
+          /* friction, within the cone of the normal impulse */
+          const vt = vec.dot(dv, t), maxF = C.mu * q.Pn, oldT = q.Pt; q.Pt = Math.max(-maxF, Math.min(maxF, oldT - vt * q.mT));
+          const dPt = q.Pt - oldT; impulse(A, vec.mul(t, -dPt), q.rA); impulse(B, vec.mul(t, dPt), q.rB);
+          const dv2 = vec.sub(velAt(B, q.rB), velAt(A, q.rA)), vn = vec.dot(dv2, n);
+          const oldN = q.Pn; q.Pn = Math.max(0, oldN - (vn - q.bias + q.spec) * q.mN);
+          const dPn = q.Pn - oldN; impulse(A, vec.mul(n, -dPn), q.rA); impulse(B, vec.mul(n, dPn), q.rB);
+        }
+      }
+    }
+    /* the contact forces on each body, one normal force and one friction force for each body it touches */
+    for (const B of bodies) B.touch = new Map();
+    const addF = (B, other, N, F) => { const k = other.id, t = B.touch.get(k) || {N: {x: 0, y: 0}, F: {x: 0, y: 0}}; t.N = vec.add(t.N, N); t.F = vec.add(t.F, F); B.touch.set(k, t); };
+    for (const C of contacts) for (const q of C.pts) {
+      next.set(q.key, {Pn: q.Pn, Pt: q.Pt});
+      const N = vec.mul(C.n, q.Pn / h), F = vec.mul(C.t, q.Pt / h);
+      addF(C.B, C.A, N, F); addF(C.A, C.B, vec.mul(N, -1), vec.mul(F, -1));
+    }
+    for (const J of joints) if (J.j.kind !== 'spring') J.T = -J.acc / h;
+    cache = next; lastContacts = contacts;
+    /* positions */
+    for (const B of bodies) if (awake(B)) { B.x += h * B.vx; B.y += h * B.vy; B.a += h * B.w; }
+    /* position correction: what still overlaps is pushed apart, a rod or a taut string is brought to its length */
+    for (let it = 0; it < R_POS; it++) {
+      bump();
+      for (const C of findContacts()) {
+        const {A, B, n} = C;
+        for (const q of C.pts) {
+          const corr = Math.max(-R_MAXCORR, Math.min(0, R_BAUM * (q.sep + R_SLOP))); if (corr >= 0) continue;
+          const rA = vec.sub(q.p, A), rB = vec.sub(q.p, B), rnA = crs(rA, n), rnB = crs(rB, n);
+          const K = iM(A) + iM(B) + iI(A) * rnA * rnA + iI(B) * rnB * rnB; if (K < 1e-12) continue;
+          const P = -corr / K / C.pts.length;
+          if (awake(A)) { A.x -= n.x * P * A.invM; A.y -= n.y * P * A.invM; A.a -= crs(rA, n) * P * A.invI; }
+          if (awake(B)) { B.x += n.x * P * B.invM; B.y += n.y * P * B.invM; B.a += crs(rB, n) * P * B.invI; }
+          bump();
+        }
+      }
+      for (const J of joints) {
+        if (J.j.kind === 'spring') continue;
+        const {a, b} = jEnds(J), d = vec.sub(b.p, a.p), l = vec.len(d); if (l < 1e-12) continue;
+        const Cc = l - J.L; if (J.j.kind === 'string' && Cc < 0) continue;
+        const u = vec.mul(d, 1 / l), Bj = J.B, ra = crs(a.r, u), rb = Bj ? crs(b.r, u) : 0;
+        const K = iM(J.A) + iI(J.A) * ra * ra + (Bj ? iM(Bj) + iI(Bj) * rb * rb : 0); if (K < 1e-12) continue;
+        const P = Cc / K;
+        if (awake(J.A)) { J.A.x += u.x * P * J.A.invM; J.A.y += u.y * P * J.A.invM; J.A.a += ra * P * J.A.invI; }
+        if (Bj && awake(Bj)) { Bj.x -= u.x * P * Bj.invM; Bj.y -= u.y * P * Bj.invM; Bj.a -= rb * P * Bj.invI; }
+        bump();
+      }
+    }
+    /* sleeping */
+    const touched = new Set(); for (const C of contacts) { touched.add(C.A); touched.add(C.B); }
+    for (const B of bodies) if (awake(B)) {
+      if (Math.hypot(B.vx, B.vy) < 0.03 && Math.abs(B.w) < 0.05 && (touched.has(B) || g === 0)) B.sleepT += h; else B.sleepT = 0;
+      if (B.sleepT > 0.6) { B.asleep = true; B.vx = B.vy = B.w = 0; }
+    }
+  }
+  const energyNow = () => {
+    let K = 0, Ug = 0, Us = 0;
+    for (const B of bodies) if (B.dyn && !B.part) { K += 0.5 * B.m * (B.vx * B.vx + B.vy * B.vy) + 0.5 * B.I * B.w * B.w; Ug += B.m * g * B.y; }
+    for (const J of joints) if (J.j.kind === 'spring') { const {a, b} = jEnds(J); Us += 0.5 * J.j.k * (vec.len(vec.sub(b.p, a.p)) - J.L) ** 2; }
+    return {K, Ug, Us};
+  };
+  const dynBodies = bodies.filter(B => B.dyn);
+  const sys = {kind: 'rigid', id: 'rigid', ids: dynBodies.map(B => B.id), t: 0, done: null, dt, bodies, joints,
+    prepare() {},
+    advance(T) { if (E0 === null) { const e = energyNow(); E0 = e.K + e.Ug + e.Us; } let guard = 0; while (this.t < T - 1e-12 && guard++ < 2e6) { step(dt); this.t += dt; } },
+    poses() { return new Map(dynBodies.map(B => [B.id, {x: B.x, y: B.y, angle: B.a, rigid: true}])); },
+    velocities() { return new Map(dynBodies.map(B => [B.id, {x: B.vx, y: B.vy, w: B.w}])); },
+    accel() { return new Map(dynBodies.map(B => [B.id, {x: 0, y: 0}])); },
+    tensions() { return Object.fromEntries(joints.map(J => [J.j.id, J.T])); },
+    jointWorld() { return new Map(joints.map(J => { const {a, b} = jEnds(J); return [J.j.id, {a: a.p, b: b.p, fixed: !J.B}]; })); },
+    contacts() { return lastContacts.flatMap(C => C.pts.map(q => ({a: C.A.id, b: C.B.id, p: q.p, n: C.n, sep: q.sep}))); },
+    forceList() {
+      return new Map(dynBodies.map(B => { const at = {x: B.x, y: B.y}, list = [];
+        if (g) list.push({kind: 'gravity', v: {x: 0, y: -B.m * g}, at});
+        if (B.fx || B.fy) list.push({kind: 'applied', v: {x: B.fx, y: B.fy}, at});
+        for (const [, t] of B.touch || []) { if (vec.len(t.N) > 1e-9) list.push({kind: 'normal', v: t.N, at}); if (vec.len(t.F) > 1e-6) list.push({kind: 'friction', v: t.F, at}); }
+        for (const J of joints) if ((J.A === B || J.B === B) && Math.abs(J.T) > 1e-9) { const {a, b} = jEnds(J), u = vec.unit(vec.sub(b.p, a.p)), s = J.A === B ? 1 : -1; list.push({kind: J.j.kind === 'spring' ? 'spring' : 'tension', v: vec.mul(u, s * J.T), at}); }
+        return [B.id, list]; })); },
+    energy() { const e = energyNow(), E = e.K + e.Ug + e.Us; return {...e, heat: Math.max(0, (E0 ?? E) + work - E), work}; },
+    /** a drawn shape where the world has it now: rect and ellipse by their corner and rot, a polygon's and a line's points */
+    place(o) {
+      const B = byObj.get(o.id); if (!B || !B.dyn) return o;
+      const da = B.a - B.a0, d = {x: B.x - B.c0.x, y: B.y - B.c0.y}, deg = da * 180 / Math.PI;
+      const tp = (x, y) => { const q = rot(da, {x: x - B.c0.x, y: y - B.c0.y}); return [B.x + q.x, B.y + q.y]; };
+      const wrap = r => { let v = ((r + 180) % 360 + 360) % 360 - 180; return v; };
+      if (o.type === 'rect' || o.type === 'ellipse') return {...o, x: o.x + d.x, y: o.y + d.y, rot: wrap((o.rot || 0) + deg)};
+      if (o.type === 'line') { const [x1, y1] = tp(o.x1, o.y1), [x2, y2] = tp(o.x2, o.y2); return {...o, x1, y1, x2, y2}; }
+      if (o.type === 'poly') return {...o, pts: o.pts.map(q => tp(q[0], q[1]))};
+      return o;
+    }
+  };
+  return sys;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
@@ -1117,6 +1434,43 @@ export function levelModel(o) {
   return {levels: E, trans};
 }
 /** special relativity: γ, and the events of a clock's ticks on its worldline (x0 + β ct, every τ of proper time) */
+/* ── a function's features, found numerically (a graphing calculator's: roots, extrema, the tangent, the area) ── */
+/** f'(x) by a central difference */
+export function derivative(fn, x, h = 1e-5 * Math.max(1, Math.abs(x))) { return (fn(x + h) - fn(x - h)) / (2 * h); }
+/** ∫ f from a to b by Simpson's rule (n even); the parts where f is not finite count as 0 */
+export function integrate(fn, a, b, n = 600) {
+  const h = (b - a) / n, F = x => { const y = fn(x); return Number.isFinite(y) ? y : 0; };
+  let s = F(a) + F(b);
+  for (let i = 1; i < n; i++) s += F(a + i * h) * (i % 2 ? 4 : 2);
+  return s * h / 3;
+}
+/** the roots and the local extrema of f on [x0, x1]: sign changes on n samples, refined by bisection (an extremum is a
+ *  root of f′ where f′ changes sign; a jump of f, like tan's, is not counted) → {roots: [x], extrema: [{x, y, kind}]} */
+export function funcFeatures(fn, x0, x1, n = 800) {
+  const roots = [], extrema = [];
+  if (!fn || !(x1 > x0)) return {roots, extrema};
+  const xs = [], ys = [];
+  for (let i = 0; i <= n; i++) { const x = x0 + (x1 - x0) * i / n; xs.push(x); ys.push(fn(x)); }
+  const span = Math.max(1e-9, ...ys.filter(Number.isFinite).map(Math.abs));
+  const bisect = (g, a, b) => { let ga = g(a); for (let k = 0; k < 60; k++) { const m = (a + b) / 2, gm = g(m); if (!Number.isFinite(gm)) return null; if ((gm > 0) === (ga > 0)) { a = m; ga = gm; } else b = m; } return (a + b) / 2; };
+  for (let i = 0; i < n; i++) {
+    const a = ys[i], b = ys[i + 1]; if (!Number.isFinite(a) || !Number.isFinite(b)) continue;
+    if (a === 0) { roots.push(xs[i]); continue; }
+    if (a * b < 0 && Math.abs(a - b) < 0.5 * span) { const r = bisect(fn, xs[i], xs[i + 1]); if (r != null) roots.push(r); }
+  }
+  if (ys[n] === 0) roots.push(xs[n]);
+  const h = (x1 - x0) / n, d = x => derivative(fn, x, h * 1e-3);
+  for (let i = 1; i < n; i++) {
+    const a = ys[i - 1], b = ys[i], c = ys[i + 1]; if (![a, b, c].every(Number.isFinite)) continue;
+    if ((b - a) * (c - b) < 0 && Math.abs(c - a) < 0.5 * span) {
+      const x = bisect(d, xs[i - 1], xs[i + 1]); if (x == null) continue;
+      const y = fn(x); if (Number.isFinite(y)) extrema.push({x, y, kind: b > a ? 'max' : 'min'});
+    }
+  }
+  const uniq = list => list.filter((v, i) => !i || Math.abs((v.x ?? v) - (list[i - 1].x ?? list[i - 1])) > h * 0.5);
+  return {roots: uniq(roots), extrema: uniq(extrema)};
+}
+
 export const lorentzGamma = beta => 1 / Math.sqrt(1 - beta * beta);
 export const clockTicks = (o, max) => { const g = lorentzGamma(o.beta), out = []; for (let k = 1; g * k * o.tau <= max + 1e-9 && k < 200; k++) out.push({ct: g * k * o.tau, x: o.x0 + o.beta * g * k * o.tau, k}); return out; };
 

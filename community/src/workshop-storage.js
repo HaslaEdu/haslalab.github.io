@@ -1,8 +1,19 @@
 /* Workshop storage (#/workshop/storage): each member's own files, kept by HaslaLab.
    - GET    /api/workshop/storage                       the member's folders and files, bytes used, the quota and the limits
-   - POST   /api/workshop/storage/files                 multipart/form-data: "file" and "folder" ('' is the top level)
+                                                        (?kind=paper|problem|figure|sim|file and/or ?folder=… narrow the list)
+   - POST   /api/workshop/storage/files                 multipart/form-data: "file" and "folder" ('' is the top level);
+                                                        optional "kind" (WORKSHOP_KINDS) and "ensure_folder"="1" (the folder
+                                                        and its parents are made when missing, as POST …/folders does)
    - GET    /api/workshop/storage/files/:id             the file, always as an attachment (owner only)
-   - PATCH  /api/workshop/storage/files/:id             {name} renames (the extension stays), {folder} moves
+   - PUT    /api/workshop/storage/files/:id/content     replaces the file's bytes in place (the id, name and folder stay): a
+                                                        multipart "file" (its extension, if it has one, must be the file's)
+                                                        with optional "kind" and "base", or the raw bytes as the body with
+                                                        ?kind=…&base=…; base = the updated_at the page last saw, 409 changed
+                                                        when the file was saved since. Same type and first-byte checks, 20 MB,
+                                                        and the quota counted with the size difference in the update itself.
+                                                        The new bytes go to a new R2 key first; the old object is deleted only
+                                                        once the row points at the new one.
+   - PATCH  /api/workshop/storage/files/:id             {name} renames (the extension stays), {folder} moves, {kind} retags
    - DELETE /api/workshop/storage/files/:id             the row and its R2 object
    - POST   /api/workshop/storage/folders               {path} makes a folder (and the folders above it)
    - PATCH  /api/workshop/storage/folders               {path, to} renames or moves a folder with everything in it
@@ -32,6 +43,14 @@ export const WORKSHOP_SCHEMA = [
      created_at INTEGER NOT NULL,
      PRIMARY KEY (owner_id, path))`
 ];
+/* added after the table first went out: what made the file, so an app lists only its own documents. A duplicate column
+   error means another isolate added it already. */
+const WORKSHOP_COLUMNS = [`ALTER TABLE workshop_files ADD COLUMN kind TEXT NOT NULL DEFAULT 'file'`];
+const WORKSHOP_INDEXES = [`CREATE INDEX IF NOT EXISTS workshop_files_kind ON workshop_files(owner_id, kind, updated_at)`];
+/* paper: a test paper of the problem maker (teach.js); problem: one problem; figure: a figure editor scene or picture;
+   sim: a simulation of the coding environment; file: anything uploaded by hand */
+export const WORKSHOP_KINDS = ['file', 'paper', 'problem', 'figure', 'sim'];
+const kindOf = v => (typeof v === 'string' && WORKSHOP_KINDS.includes(v) ? v : null);
 export const WORKSHOP_PREFIX = 'workshop/';
 export const WORKSHOP_MAX_FILE = 20 * 1024 * 1024;
 export const WORKSHOP_QUOTA = 500 * 1024 * 1024;
@@ -106,6 +125,10 @@ const ready = new WeakSet();
 export async function ensureWorkshopSchema(env) {
   if (ready.has(env.DB)) return;
   for (const sql of WORKSHOP_SCHEMA) await env.DB.prepare(sql).run();
+  for (const sql of WORKSHOP_COLUMNS) {
+    try { await env.DB.prepare(sql).run(); } catch (e) { if (!/duplicate column/i.test(String(e?.message || e))) throw e; }
+  }
+  for (const sql of WORKSHOP_INDEXES) await env.DB.prepare(sql).run();
   ready.add(env.DB);
 }
 
@@ -119,11 +142,11 @@ export async function workshopForgetUser(env, userId) {
   return rows.length;
 }
 
-const COLS = 'id,folder,name,size,mime,created_at,updated_at';
+const COLS = 'id,folder,name,size,mime,kind,created_at,updated_at';
 
 /* keep bytes in the member's storage with every check an upload gets (type list, first bytes, 20 MB, folder, file count,
    quota, a free name); used by the upload route and by the connectors' copy into storage (workshop-connectors.js) */
-export async function workshopSaveBytes(env, uid, {bytes, name, folder = ''}, {HttpError, now}) {
+export async function workshopSaveBytes(env, uid, {bytes, name, folder = '', kind = 'file', ensureFolder = false}, {HttpError, now}) {
   await ensureWorkshopSchema(env);
   const DB = env.DB, t = now();
   if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
@@ -134,7 +157,11 @@ export async function workshopSaveBytes(env, uid, {bytes, name, folder = ''}, {H
   if (!contentMatches(ext, bytes)) throw new HttpError(415, 'type_mismatch');
   const f = cleanFolder(folder);
   if (f == null) throw new HttpError(400, 'bad_folder');
-  if (f && !await DB.prepare('SELECT 1 FROM workshop_folders WHERE owner_id=? AND path=?').bind(uid, f).first()) throw new HttpError(404, 'folder_not_found');
+  if (f && !await DB.prepare('SELECT 1 FROM workshop_folders WHERE owner_id=? AND path=?').bind(uid, f).first()) {
+    if (!ensureFolder) throw new HttpError(404, 'folder_not_found');
+    await workshopEnsureFolder(env, uid, f, t, {HttpError});
+  }
+  const k = kindOf(kind) || 'file';
   const u = (await DB.prepare('SELECT COALESCE(SUM(size),0) AS n, COUNT(*) AS c FROM workshop_files WHERE owner_id=?').bind(uid).first()) || {n: 0, c: 0};
   if (u.c >= FILES_MAX) throw new HttpError(409, 'too_many_files');
   if (u.n + bytes.length > WORKSHOP_QUOTA) throw new HttpError(413, 'quota_exceeded');
@@ -151,12 +178,70 @@ export async function workshopSaveBytes(env, uid, {bytes, name, folder = ''}, {H
   let row;
   try {
     /* the quota is checked again in the insert itself, so two uploads at once cannot both pass it */
-    row = await DB.prepare(`INSERT INTO workshop_files(id,owner_id,folder,name,size,mime,r2_key,created_at,updated_at)
-      SELECT ?,?,?,?,?,?,?,?,? WHERE (SELECT COALESCE(SUM(size),0) FROM workshop_files WHERE owner_id=?)+?<=? RETURNING ${COLS}`)
-      .bind(id, uid, f, finalName, bytes.length, mime, key, t, t, uid, bytes.length, WORKSHOP_QUOTA).first();
+    row = await DB.prepare(`INSERT INTO workshop_files(id,owner_id,folder,name,size,mime,r2_key,created_at,updated_at,kind)
+      SELECT ?,?,?,?,?,?,?,?,?,? WHERE (SELECT COALESCE(SUM(size),0) FROM workshop_files WHERE owner_id=?)+?<=? RETURNING ${COLS}`)
+      .bind(id, uid, f, finalName, bytes.length, mime, key, t, t, k, uid, bytes.length, WORKSHOP_QUOTA).first();
   } catch (e) { await env.LAB_PAGES.delete(key).catch(() => {}); throw e; }
   if (!row) { await env.LAB_PAGES.delete(key).catch(() => {}); throw new HttpError(413, 'quota_exceeded'); }
-  return {file: {id: row.id, folder: row.folder, name: row.name, size: row.size, mime: row.mime, created_at: row.created_at, updated_at: row.updated_at}, used: u.n + bytes.length};
+  return {file: fileView(row), used: u.n + bytes.length};
+}
+const fileView = r => ({id: r.id, folder: r.folder, name: r.name, size: r.size, mime: r.mime, kind: r.kind || 'file', created_at: r.created_at, updated_at: r.updated_at});
+
+/* a folder (and the folders above it) made when it is not there yet: the apps save into "시험지", "시뮬레이션" … by name */
+export async function workshopEnsureFolder(env, uid, path, t, {HttpError}) {
+  await ensureWorkshopSchema(env);
+  const p = cleanFolder(path);
+  if (p == null) throw new HttpError(400, 'bad_folder');
+  if (!p) return '';
+  const add = [];
+  for (const a of ancestors(p)) if (!await env.DB.prepare('SELECT 1 FROM workshop_folders WHERE owner_id=? AND path=?').bind(uid, a).first()) add.push(a);
+  if (!add.length) return p;
+  const n = (await env.DB.prepare('SELECT COUNT(*) AS n FROM workshop_folders WHERE owner_id=?').bind(uid).first())?.n || 0;
+  if (n + add.length > FOLDERS_MAX) throw new HttpError(409, 'too_many_folders');
+  for (const a of add) await env.DB.prepare('INSERT OR IGNORE INTO workshop_folders(owner_id,path,created_at) VALUES(?,?,?)').bind(uid, a, t).run();
+  return p;
+}
+
+/* new bytes for one of the member's files, in place: same id, name and folder. The type is the file's own (its
+   extension); the first bytes are checked against it; the quota is checked with the size difference inside the
+   UPDATE, so two saves at once cannot both pass it. The bytes go to a fresh R2 key and the old object goes only
+   after the row has moved to the new one, so a failed save leaves the old file whole. base: the updated_at the
+   caller last saw (optional): a file saved since is refused with 409 changed. */
+export async function workshopReplaceBytes(env, uid, id, {bytes, kind = null, base = null}, {HttpError, now}) {
+  await ensureWorkshopSchema(env);
+  const DB = env.DB, t = now();
+  if (!ID.test(String(id || ''))) throw new HttpError(404, 'not_found');
+  const row = await DB.prepare(`SELECT ${COLS},r2_key FROM workshop_files WHERE id=? AND owner_id=?`).bind(id, uid).first();
+  if (!row) throw new HttpError(404, 'not_found');
+  if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
+  const ext = extOf(row.name);
+  if (!WORKSHOP_TYPES[ext]) throw new HttpError(415, 'type_not_allowed');
+  if (!bytes?.length) throw new HttpError(400, 'file_required');
+  if (bytes.length > WORKSHOP_MAX_FILE) throw new HttpError(413, 'file_too_large');
+  if (!contentMatches(ext, bytes)) throw new HttpError(415, 'type_mismatch');
+  if (base != null && Number(base) !== row.updated_at) throw new HttpError(409, 'changed');
+  const k = kindOf(kind);
+  if (kind != null && kind !== '' && !k) throw new HttpError(400, 'bad_kind');
+  const rev = crypto.randomUUID().replace(/-/g, '').slice(0, 12), key = `${WORKSHOP_PREFIX}${uid}/${row.id}-${rev}`, mime = WORKSHOP_TYPES[ext].mime;
+  await env.LAB_PAGES.put(key, bytes, {httpMetadata: {contentType: mime}, customMetadata: {owner: String(uid)}});
+  let r;
+  /* a second save in the same second still moves updated_at on, so base always tells two versions apart */
+  const stamp = Math.max(t, row.updated_at + 1);
+  try {
+    r = await DB.prepare(`UPDATE workshop_files SET size=?,r2_key=?,updated_at=?,kind=COALESCE(?,kind)
+      WHERE id=? AND owner_id=? AND r2_key=? AND (SELECT COALESCE(SUM(size),0) FROM workshop_files WHERE owner_id=?)-size+?<=? RETURNING ${COLS}`)
+      .bind(bytes.length, key, stamp, k, row.id, uid, row.r2_key, uid, bytes.length, WORKSHOP_QUOTA).first();
+  } catch (e) { await env.LAB_PAGES.delete(key).catch(() => {}); throw e; }
+  if (!r) {
+    await env.LAB_PAGES.delete(key).catch(() => {});
+    const now2 = await DB.prepare('SELECT r2_key FROM workshop_files WHERE id=? AND owner_id=?').bind(row.id, uid).first();
+    if (!now2) throw new HttpError(404, 'not_found');
+    if (now2.r2_key !== row.r2_key) throw new HttpError(409, 'changed');
+    throw new HttpError(413, 'quota_exceeded');
+  }
+  await env.LAB_PAGES.delete(row.r2_key).catch(() => {});
+  const u = (await DB.prepare('SELECT COALESCE(SUM(size),0) AS n FROM workshop_files WHERE owner_id=?').bind(uid).first()) || {n: 0};
+  return {file: fileView(r), used: u.n};
 }
 /* one of the member's files and its bytes (owner only), for the connectors' copy out of storage */
 export async function workshopReadBytes(env, uid, id, {HttpError}) {
@@ -188,7 +273,7 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     if (!r) throw new HttpError(404, 'not_found');
     return r;
   };
-  const view = r => ({id: r.id, folder: r.folder, name: r.name, size: r.size, mime: r.mime, created_at: r.created_at, updated_at: r.updated_at});
+  const view = fileView;
 
   async function readUpload(req) {
     const declared = Number(req?.headers?.get?.('Content-Length') || 0);
@@ -205,8 +290,27 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     if (!bytes.length) bad('file_required');
     if (bytes.length > WORKSHOP_MAX_FILE) throw new HttpError(413, 'file_too_large');
     if (!contentMatches(ext, bytes)) throw new HttpError(415, 'type_mismatch');
-    const folder = form.get('folder');
-    return {bytes, ext, name: cleanName(file.name, ext), folder: folderOf(typeof folder === 'string' ? folder : '')};
+    const folder = form.get('folder'), kind = form.get('kind');
+    if (kind != null && kind !== '' && !kindOf(kind)) bad('bad_kind');
+    return {bytes, ext, name: cleanName(file.name, ext), folder: folderOf(typeof folder === 'string' ? folder : ''), kind: kindOf(kind) || 'file', ensureFolder: form.get('ensure_folder') === '1'};
+  }
+  /* the body of PUT …/content: a multipart "file" (and "kind", "base"), or the bytes themselves (?kind, ?base) */
+  async function readContent(req) {
+    const declared = Number(req?.headers?.get?.('Content-Length') || 0);
+    if (declared > WORKSHOP_MAX_FILE + 64 * 1024) throw new HttpError(413, 'file_too_large');
+    const url = req?.url ? new URL(req.url) : null;
+    if ((req?.headers?.get?.('Content-Type') || '').startsWith('multipart/form-data')) {
+      let form;
+      try { form = await req.formData(); } catch { bad('bad_form'); }
+      const file = form.get('file');
+      if (!file || typeof file === 'string' || typeof file.arrayBuffer !== 'function') bad('file_required');
+      if (file.size > WORKSHOP_MAX_FILE) throw new HttpError(413, 'file_too_large');
+      const kind = form.get('kind'), base = form.get('base');
+      return {bytes: new Uint8Array(await file.arrayBuffer()), fname: String(file.name || ''), kind: typeof kind === 'string' && kind ? kind : null, base: typeof base === 'string' && base ? base : null};
+    }
+    let buf;
+    try { buf = await req.arrayBuffer(); } catch { bad('bad_body'); }
+    return {bytes: new Uint8Array(buf), fname: '', kind: url?.searchParams.get('kind') || null, base: url?.searchParams.get('base') || null};
   }
 
   return async function workshopStorageRoute(p, m, body, me, req, env) {
@@ -216,7 +320,13 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     const DB = env.DB, t = now(), uid = me.id;
 
     if (p === '/api/workshop/storage' && m === 'GET') {
-      const files = (await DB.prepare(`SELECT ${COLS} FROM workshop_files WHERE owner_id=? ORDER BY folder, name LIMIT ${FILES_MAX}`).bind(uid).all()).results || [];
+      const url = req?.url ? new URL(req.url) : null, qk = url?.searchParams.get('kind'), qf = url?.searchParams.get('folder');
+      if (qk != null && !kindOf(qk)) bad('bad_kind');
+      const where = ['owner_id=?'], args = [uid];
+      if (qk != null) { where.push('kind=?'); args.push(qk); }
+      if (qf != null) { where.push('folder=?'); args.push(folderOf(qf)); }
+      const order = qk != null || qf != null ? 'updated_at DESC, name' : 'folder, name';
+      const files = (await DB.prepare(`SELECT ${COLS} FROM workshop_files WHERE ${where.join(' AND ')} ORDER BY ${order} LIMIT ${FILES_MAX}`).bind(...args).all()).results || [];
       const folders = ((await DB.prepare('SELECT path FROM workshop_folders WHERE owner_id=? ORDER BY path').bind(uid).all()).results || []).map(r => r.path);
       const u = await used(DB, uid);
       return {files: files.map(view), folders, used: u.n, quota: WORKSHOP_QUOTA, max_file: WORKSHOP_MAX_FILE, types: Object.keys(WORKSHOP_TYPES)};
@@ -225,8 +335,8 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     if (p === '/api/workshop/storage/files' && m === 'POST') {
       await limit(env, 'ws-up:' + uid, 120, 3600);
       if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
-      const {bytes, name, folder} = await readUpload(req);
-      const out = await workshopSaveBytes(env, uid, {bytes, name, folder}, {HttpError, now: () => t});
+      const {bytes, name, folder, kind, ensureFolder} = await readUpload(req);
+      const out = await workshopSaveBytes(env, uid, {bytes, name, folder, kind, ensureFolder}, {HttpError, now: () => t});
       return {...out, quota: WORKSHOP_QUOTA};
     }
 
@@ -269,6 +379,18 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
       throw new HttpError(404, 'not_found');
     }
 
+    const mc = /^\/api\/workshop\/storage\/files\/([^/]+)\/content$/.exec(p);
+    if (mc) {
+      if (m !== 'PUT') throw new HttpError(405, 'method_not_allowed');
+      await limit(env, 'ws-up:' + uid, 120, 3600);
+      await own(DB, uid, mc[1]);
+      const c = await readContent(req);
+      const row = await own(DB, uid, mc[1]);
+      const fx = extOf(c.fname);
+      if (fx && fx !== extOf(row.name)) throw new HttpError(415, 'type_change');
+      const out = await workshopReplaceBytes(env, uid, row.id, {bytes: c.bytes, kind: c.kind, base: c.base}, {HttpError, now: () => t});
+      return {...out, quota: WORKSHOP_QUOTA};
+    }
     const mm = /^\/api\/workshop\/storage\/files\/([^/]+)$/.exec(p);
     if (!mm) throw new HttpError(404, 'not_found');
     const row = await own(DB, uid, mm[1]);
@@ -292,7 +414,8 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     if (m === 'PATCH') {
       await limit(env, 'ws-edit:' + uid, 300, 3600);
       const b = body || {};
-      if (!('name' in b) && !('folder' in b)) bad('nothing_to_change');
+      if (!('name' in b) && !('folder' in b) && !('kind' in b)) bad('nothing_to_change');
+      if ('kind' in b && !kindOf(b.kind)) bad('bad_kind');
       const ext = extOf(row.name);
       let name = row.name, folder = row.folder;
       if ('name' in b) {
@@ -304,7 +427,7 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
         if (!await folderExists(DB, uid, folder)) throw new HttpError(404, 'folder_not_found');
       }
       if (await nameTaken(DB, uid, folder, name, row.id)) throw new HttpError(409, 'name_taken');
-      const r = await DB.prepare(`UPDATE workshop_files SET name=?,folder=?,updated_at=? WHERE id=? AND owner_id=? RETURNING ${COLS}`).bind(name, folder, t, row.id, uid).first();
+      const r = await DB.prepare(`UPDATE workshop_files SET name=?,folder=?,kind=?,updated_at=? WHERE id=? AND owner_id=? RETURNING ${COLS}`).bind(name, folder, 'kind' in b ? b.kind : row.kind || 'file', Math.max(t, row.updated_at), row.id, uid).first();
       if (!r) throw new HttpError(404, 'not_found');
       return {file: view(r)};
     }

@@ -139,8 +139,10 @@ test('the Learn bar: today\'s problems, roadmap, courses, search, lab, in that o
       assert.deepEqual(Array.from(bar('learn',hash)).filter(([,x])=>x).map(([h])=>h),[on],hash);
     for(const hash of ['#/workshop/make','#/workshop/create'])assert.deepEqual(Array.from(bar('learn',hash)).filter(([,x])=>x),[],'the makers left the Learn bar: '+hash);
     const ws=bar('workshop','#/workshop/storage');
-    assert.deepEqual(Array.from(ws,([href])=>href),['#/workshop','#/workshop/make','#/workshop/draw','#/workshop/create','#/workshop/storage']);
+    assert.deepEqual(Array.from(ws,([href])=>href),['#/workshop','#/workshop/make','#/workshop/draw','#/workshop/create','#/workshop/share','#/workshop/storage']);
+    assert.deepEqual(Array.from(a.run('sectionLinks("workshop").map(x=>x[1])')),language==='ko'?['워크샵 홈','문제 제작','그림 제작','전산물리 제작','작품 공유','보관함']:['Workshop home','Problems','Figures','Computational physics','Showcase','Storage']);
     assert.deepEqual(Array.from(ws).filter(([,x])=>x).map(([h])=>h),['#/workshop/storage']);
+    for(const hash of ['#/workshop/share','#/workshop/share/12','#/workshop/share/user/3'])assert.deepEqual(Array.from(bar('workshop',hash)).filter(([,x])=>x).map(([h])=>h),['#/workshop/share'],hash);
   }
   const oly=bar('olympiad','#/ipho/2019');
   assert.deepEqual(Array.from(oly,([href])=>href),['#/olympiad','#/comps','#/olympiad/schedule','#/monthly','#/hpho']);
@@ -228,7 +230,7 @@ test('the lab gathers the concept simulations, computational physics, the creati
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewLearnLab()'),cards=[...html.matchAll(/class="lab-card" href="([^"]+)"/g)].map(m=>m[1]);
-    assert.deepEqual(cards,['#/learn/concepts','#/learn/compute','#/workshop/create',language==='ko'?'problems.html':'problems-en.html']);
+    assert.deepEqual(cards,['#/learn/concepts','#/learn/compute','#/workshop/share',language==='ko'?'problems.html':'problems-en.html']);
     assert.ok(!links(html).some(h=>/view=edit/.test(h)),'no editor button in the lab');assert.equal((html.match(/class="hm-go"/g)||[]).length,1);
     for(const view of ['viewLearnConcepts()','viewLearnCompute()'])assert.ok(links(a.run(view)).includes('#/learn/lab'),view);
     for(const view of ['viewWorkshopCreate()','viewWorkshopMake()','viewWorkshopStorage()'])assert.ok(links(a.run(view)).includes('#/workshop'),view);
@@ -372,7 +374,7 @@ test('the computational physics page embeds the judge and passes on only a valid
   a.context.location.hash='#/learn/compute?problem=%22%3E%3Cscript%3E';
   src=/id="learnComputeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnCompute()'))[1];
   assert.equal(new URLSearchParams(src.split('?')[1]).get('problem'),null);
-  assert.ok(links(a.run('viewLearnLab()')).includes('#/workshop/create'),'the lab leads to Create, which links the site\'s own Python problems');
+  assert.ok(links(a.run('viewLearnLab()')).includes('#/workshop/share'),'the lab leads to the members\' shared projects');
   assert.deepEqual(Runtime.routeNeeds('#/learn/compute'),[]);
 });
 
@@ -405,9 +407,9 @@ test('the Workshop: a short page of cards, two plain lists, the makers moved fro
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewWorkshop()');
-    assert.deepEqual([...html.matchAll(/<a class="ws-card" href="([^"]+)"/g)].map(m=>m[1]),['#/workshop/make','#/workshop/create','#/workshop/storage','#/workshop/draw']);
+    assert.deepEqual([...html.matchAll(/<a class="ws-card" href="([^"]+)"/g)].map(m=>m[1]),['#/workshop/make','#/workshop/draw','#/workshop/create','#/workshop/share','#/workshop/storage']);
     assert.equal((html.match(/class="ws-card ws-soon"/g)||[]).length,1,'only the lab tools are marked as coming');
-    assert.match(html,language==='ko'?/물리 그림·시뮬레이션/:/Physics figures and simulations/);
+    assert.match(html,language==='ko'?/<b>그림 제작<\/b>[\s\S]*<b>전산물리 제작<\/b>[\s\S]*<b>작품 공유<\/b>/:/<b>Figures<\/b>[\s\S]*<b>Computational physics<\/b>[\s\S]*<b>Showcase<\/b>/);
     assert.match(html,/id="wsTeachers"/);assert.match(html,/id="wsClubs"/);
     assert.equal((html.match(/<h1\b/g)||[]).length,1);
     assert.doesNotMatch(html,PLAIN);
@@ -427,8 +429,13 @@ test('the Workshop: a short page of cards, two plain lists, the makers moved fro
     a.context.location.hash=from;try{a.run('render()');}catch(e){}
     assert.equal(replaced.at(-1),to,from);
   }
-  for(const hash of ['#/workshop','#/workshop/make','#/workshop/draw','#/workshop/storage'])assert.deepEqual(Runtime.routeNeeds(hash),[],hash);
-  assert.equal(a.run('WORKSHOP_TITLES.draw.ko'),'그림·시뮬레이션');
+  for(const [from,to] of [['#/workshop/gallery','#/workshop/share'],['#/workshop/explore?tab=new','#/workshop/share?tab=new'],['#/workshop/projects/7','#/workshop/share/7']]){
+    a.context.location.hash=from;try{a.run('render()');}catch(e){}
+    assert.equal(replaced.at(-1),to,from);
+  }
+  for(const hash of ['#/workshop','#/workshop/make','#/workshop/draw','#/workshop/share','#/workshop/share/4','#/workshop/storage'])assert.deepEqual(Runtime.routeNeeds(hash),[],hash);
+  assert.equal(a.run('WORKSHOP_TITLES.draw.ko'),'그림 제작');assert.equal(a.run('WORKSHOP_TITLES.share.en'),'Showcase');
   const ux=read('site-ux.js');assert.match(ux,/"#\/workshop": '<path/,'the phone bar has an icon for the Workshop');
-  assert.match(ux,/\["워크샵", "#\/workshop"\]/);assert.match(ux,/\["그림·시뮬레이션", "#\/workshop\/draw"\]/);assert.match(ux,/\["Figures and simulations", "#\/workshop\/draw"\]/);assert.doesNotMatch(ux,/#\/learn\/teach/);
+  assert.match(ux,/\["워크샵", "#\/workshop"\]/);assert.match(ux,/\["그림 제작", "#\/workshop\/draw"\]/);assert.match(ux,/\["Figures", "#\/workshop\/draw"\]/);
+  assert.match(ux,/\["작품 공유", "#\/workshop\/share"\]/);assert.match(ux,/\["Showcase", "#\/workshop\/share"\]/);assert.match(ux,/\["전산물리 제작", "#\/workshop\/create"\]/);assert.doesNotMatch(ux,/#\/learn\/teach/);
 });

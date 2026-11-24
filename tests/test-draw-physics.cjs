@@ -395,8 +395,9 @@ test('history: one step a change, at most the limit, redo cleared by a new chang
 test('figure styles come from the measured table: each preset has its row, 수능 exists with Hangul and caption faces, the print scale gives the measured sizes',async()=>{
   const {S,R}=await load();
   assert.deepEqual(Object.keys(R.STYLE_TABLE).sort(),[...S.STYLE_KEYS].sort());
-  for(const k of ['suneung','olympiad','university','jee']){const t=R.STYLE_TABLE[k];assert.ok(t.n>0&&t.source&&t.measured.length>=5,k+' is measured');}
-  for(const k of ['textbook','print'])assert.equal(R.STYLE_TABLE[k].source,'assumed');
+  for(const k of ['suneung','olympiad','jee']){const t=R.STYLE_TABLE[k];assert.ok(t.n>0&&t.source&&t.measured.length>=5&&t.basis==='measured',k+' is measured');}
+  for(const k of ['textbook','classic','modern','print']){const t=R.STYLE_TABLE[k];assert.equal(t.source,'assumed');assert.equal(t.basis,'designed');assert.ok(t.designed.length>=1,k+' says what was designed');}
+  assert.ok(!S.STYLE_KEYS.includes('university')&&!R.STYLES.university,'대학 과제 merged into 교과서');
   const t=R.STYLE_TABLE.suneung,st=R.STYLES.suneung;near(st.lw,t.main*15/t.labelPt,1e-12,'lines keep the ratio to the label');assert.ok(st.hangul&&st.caption&&st.uprightNames);
   const p=R.printScale('suneung');near(p.widthPt,t.widthPt,1e-12,'default print width');near(15*p.labelScale*p.widthPt/800,t.labelPt,1e-9,'labels come out at the measured pt');
   const sc=S.validateScene(S.template('ks_collision')).scene,svg=R.renderSVG(sc,{});
@@ -520,4 +521,164 @@ test('typed potentials: finite differences give the infinite well, (n + ½)ħω 
     if(o.tplot){assert.ok(m.curve.at(-1).T>0.5&&m.curve[5].T<0.01,"T(E) grows from ~0 past the top");near(m.scatter.T,P.scatterState(m.V,m.x0,m.x1,o.E).T,1e-12,'T at its E');}}
   assert.ok(!S.validateScene({objects:[{id:'Q',type:'qpot',x:0,y:0,V:'V0 x',params:'a=1'}]}).ok,'V names a parameter that is not there');
   const info=P.computedInfo(S.validateScene(S.template('custom_barrier')).scene);assert.equal(info[0].type,'qpot');assert.ok(info[0].T>0&&info[0].T<1);
+});
+
+/* ── the workshop round of 2026-11: per-object style, styles merged and added, the TeX spacing, the conical pendulum,
+   the construction, function features, and drawn shapes given physics (the rigid-body world) ── */
+test('styles: 대학 과제 reads as 교과서 (figure and object); 클래식 hatches with open heads, 모던 is sans with round caps and an accent; one object drawn in another style',async()=>{
+  const {S,R}=await load();
+  const r=S.validateScene({style:'university',objects:[{id:'a',type:'rect',x:0,y:0,w:1,h:1,style:'university'}]});
+  assert.ok(r.ok);assert.equal(r.scene.style,'textbook');assert.equal(r.scene.objects[0].style,'textbook');assert.ok(r.notes.some(n=>n.code==='style_merged'));
+  assert.equal(R.STYLES.classic.gray,null);assert.equal(R.STYLES.classic.head,'open');assert.ok(R.STYLES.modern.sans&&R.STYLES.modern.round&&R.STYLES.modern.vecInk);
+  const sc=S.validateScene({objects:[{id:'v1',type:'vector',x1:0,y1:0,x2:1,y2:0},{id:'v2',type:'vector',x1:0,y1:1,x2:1,y2:1,style:'modern',label:'\\vec{v}'}]}).scene;
+  const svg=R.renderSVG(sc,{view:{x:-0.5,y:-0.5,w:2,h:2}});
+  assert.match(svg,/stroke="#2563eb"/,'the modern object takes the accent');assert.match(svg,/stroke="#000"/,'the other keeps the figure style');
+  assert.match(svg,/font-family="'Inter'/,'its label face too');
+  for(const k of S.STYLE_KEYS)assert.equal(S.validateScene({objects:[{id:'a',type:'label',x:0,y:0,text:'A',style:k}]}).scene.objects[0].style,k);
+});
+
+test('TeX: binary operators and relations get TeX spacing, so ∇×B, ∇·E, a×b do not overlap; glyph boxes never overlap; metrics hold the widest fallback faces',async()=>{
+  const {R}=await load();
+  const F=['\\nabla\\times\\vec{B}','\\nabla\\times B','\\nabla\\cdot\\vec{E}','\\nabla^2\\phi','\\partial_t \\rho','a\\times b','a\\cdot b','\\int f\\,dx','\\vec{F} = m\\vec{a}','x = -b \\pm c','\\hbar\\omega','\\sum_{i} m_i v_i','\\oint \\vec{B}\\cdot d\\vec{l} = \\mu_0 I','\\hat{x}\\times\\hat{y} = \\hat{z}','\\dot{x}\\ddot{y}','∇×B','E \\approx mc^2','\\ce{SO4^2-}','\\ce{2H2 + O2 -> 2H2O}','\\langle x \\rangle'];
+  for(const s of F){
+    const b=R.glyphBoxes(s,100);assert.ok(b.length>0,s);
+    /* on one baseline (scripts aside) each glyph starts after the previous one ends */
+    const base=b.filter(g=>Math.abs(g.y)<1).sort((p,q)=>p.x-q.x);
+    for(let i=1;i<base.length;i++)assert.ok(base[i].x>=base[i-1].x+base[i-1].w-0.01,`${s}: “${base[i-1].t}” and “${base[i].t}” overlap`);
+  }
+  /* a script sits right after its base, Greek and ∇ included (ε₀ not “ε 0”): within 0.15 em of the base's right edge */
+  for(const s of ['\\varepsilon_0','\\nabla^2','\\rho_0','\\omega_0','\\theta_i','\\mu_0','\\psi^2','\\Omega_k']){
+    const [b0,sc]=R.glyphBoxes('$'+s+'$',100),gap=sc.x-(b0.x+b0.w);assert.ok(gap<=15&&gap>=-8,`${s}: the script is ${gap} from its base`);
+  }
+  /* the operator gets room on both sides (TeX's medium space, 4/18 em) */
+  const c=R.glyphBoxes('\\nabla\\times B',100),[n,x,B]=c;assert.ok(x.x-(n.x+n.w)>=20&&B.x-(x.x+x.w)>=20,'medium space around ×');
+  const rel=R.glyphBoxes('a = b',100);assert.ok(rel.length===3||rel.length===2);
+  const unary=R.glyphBoxes('-x',100);assert.ok(unary[1].x-(unary[0].x+unary[0].w)<5,'a sign at the start is unary (no space)');
+  /* advances at least those of Times New Roman / STIX Two (em ×1000) for the symbols that overlapped */
+  const W={'∇':722,'×':564,'·':250,'∂':494,'∑':713,'∫':444,'ħ':500,'→':1000,'≈':548};
+  for(const [ch,w] of Object.entries(W))assert.ok(R.glyphBoxes('$'+ch+'$',1000)[0].w>=w,ch+' advance');
+  /* \ce: subscripts, charges, arrows; matrices and cases typeset */
+  assert.equal(R.ceTex('SO4^2-'),'SO_{4}^{2−}');assert.equal(R.ceTex('NH4+'),'NH_{4}^{+}');assert.match(R.ceTex('2H2 + O2 -> 2H2O'),/^2H_\{2\} \+ O_\{2\}\\rightarrow 2H_\{2\}O$/);
+  const m=R.texSVG('\\pmatrix{a & b \\\\ c & d}',20);assert.doesNotMatch(m,/NaN/);assert.equal((m.match(/<tspan/g)||[]).length,4);
+  assert.match(R.texSVG('Q_{⬚}',20),/class="ph"/,'a placeholder is a box');
+});
+
+test('conical pendulum: drawn in an oblique view (the bob goes round an ellipse), period 2π√(L cos θ / g), tension mg/cos θ, the centripetal force in the free-body diagram',async()=>{
+  const {S,P,R}=await load();
+  const sc=S.validateScene(S.template('conical')).scene,sim=P.buildSim(sc),s=sim.systems[0],L=1.6,th=30*Math.PI/180;
+  assert.equal(s.kind,'conical');near(s.period,2*Math.PI*Math.sqrt(L*Math.cos(th)/g),1e-4,'period');
+  /* measured from the motion: the bob's x crosses the axis upwards once a period */
+  const ups=[];let prev=sim.poses().get('b1').x-1.5,t=0;while(t<8){t+=1e-3;sim.advanceTo(t);const x=sim.poses().get('b1').x-1.5;if(prev<0&&x>=0)ups.push(t);prev=x;}
+  near((ups.at(-1)-ups[0])/(ups.length-1),2*Math.PI*Math.sqrt(L*Math.cos(th)/g),2e-3,'measured period');
+  /* not a plane pendulum: the drawn y changes as the bob goes round (front lower, back higher), the true height does not */
+  const ys=[];const s2=P.buildSim(sc);for(let k=0;k<20;k++){s2.run(s.period/20);ys.push(s2.poses().get('b1').y);}
+  assert.ok(Math.max(...ys)-Math.min(...ys)>0.2*L*Math.sin(th),'the drawn orbit is an ellipse');
+  const f=sim.forces().get('b1'),kinds=f.map(x=>x.kind);assert.deepEqual(kinds,['gravity','tension','centripetal']);
+  near(sim.tensions().s1,0.5*g/Math.cos(th),1e-4,'tension');
+  const svg=R.renderSVG(sim.applyTo(sc),{poses:sim.poses(),forces:sim.forces(),conical:[{id:'s1',centre:s.centre,radius:s.radius}]});
+  /* the force labels stand clear of the bob and of each other */
+  const bob=sim.poses().get('b1'),V=sc.view,Sc=800/V.w,bx=(bob.x-V.x)*Sc,by=(V.y+V.h-bob.y)*Sc,rb=0.08*Sc;
+  const labs=[...svg.matchAll(/data-kind="(\w+)">.*?<text[^>]*>(.*?)<\/text>/g)].map(m=>{const xs=[...m[2].matchAll(/x="([\d.]+)" y="([\d.]+)"/g)].map(q=>[+q[1],+q[2]]);return {k:m[1],x:xs[0][0],y:xs[0][1]};});
+  assert.equal(labs.length,3);for(const l of labs)assert.ok(Math.hypot(l.x-bx,l.y-by)>rb,`${l.k} label off the bob`);
+  for(let i=0;i<3;i++)for(let j=i+1;j<3;j++)assert.ok(Math.hypot(labs[i].x-labs[j].x,labs[i].y-labs[j].y)>12,'labels apart');
+  assert.match(svg,/A[\d.]+,[\d.]+ 0 0 1/,'the orbit drawn as arcs of an ellipse');assert.match(svg,/data-kind="centripetal"/);assert.doesNotMatch(svg,/NaN/);
+});
+
+test('construction: points, midpoints, perpendiculars, intersections and circles follow when a free point moves; cycles are refused',async()=>{
+  const {S,R}=await load();
+  const sc=S.validateScene(S.template('geo_triangle')).scene,G=S.computeGeometry(sc);
+  const O=G.get('O'),dist=id=>Math.hypot(G.get(id).x-O.x,G.get(id).y-O.y);
+  near(dist('A'),dist('B'),1e-9,'circumcentre: OA = OB');near(dist('B'),dist('C'),1e-9,'OB = OC');near(G.get('cc').r,dist('A'),1e-9,'the circle goes through A');
+  /* drag B: everything that depends on it moves, the circumcentre stays equidistant */
+  sc.objects.find(o=>o.id==='B').x=4.2;const G2=S.computeGeometry(sc),O2=G2.get('O');
+  assert.ok(Math.hypot(O2.x-O.x,O2.y-O.y)>0.05,'O moved');near(Math.hypot(G2.get('A').x-O2.x,G2.get('A').y-O2.y),Math.hypot(G2.get('C').x-O2.x,G2.get('C').y-O2.y),1e-9,'still OA = OC');
+  const ang=G.get('ang');near(ang.deg,Math.acos(((3.2*1.2)+(0.2*2.4))/(Math.hypot(3.2,0.2)*Math.hypot(1.2,2.4)))*180/Math.PI,1e-9,'angle BAC');
+  /* line–circle and circle–circle intersections, a point on a circle */
+  const two=S.computeGeometry(S.validateScene({objects:[{id:'C1',type:'gpoint',x:0,y:0},{id:'C2',type:'gpoint',x:1,y:0},{id:'k1',type:'gcircle',c:'C1',r:1},{id:'k2',type:'gcircle',c:'C2',r:1},{id:'X',type:'gpoint',kind:'inter',a:'k1',b:'k2',n:1},{id:'Q',type:'gpoint',kind:'on',a:'k1',x:3,y:0}]}).scene);
+  near(two.get('X').y,Math.sqrt(3)/2,1e-12,'circle ∩ circle (the second, by x then y)');near(two.get('Q').x,1,1e-12,'a point on a circle is the nearest one');
+  const bad=S.validateScene({objects:[{id:'P',type:'gpoint',kind:'on',a:'L'},{id:'Q',type:'gpoint',x:1,y:1},{id:'L',type:'gline',a:'P',b:'Q'}]});
+  assert.ok(!bad.ok&&bad.errors.some(e=>e.code==='geo_cycle'));assert.equal(S.validateScene(bad.scene.objects.length?bad.scene:{objects:[]},{lenient:true}).ok,true);
+  assert.ok(!S.validateScene({objects:[{id:'L',type:'gline',a:'',b:''}]}).ok,'a line needs its points');
+  const svg=R.renderSVG(sc,{edit:true});assert.doesNotMatch(svg,/NaN|undefined/);assert.match(svg,/class="free"/,'free points marked for dragging');
+});
+
+test('functions: roots and extrema found numerically, the tangent, the area by Simpson, parametric, polar and inequality curves drawn',async()=>{
+  const {S,P,R}=await load();
+  const ft=P.funcFeatures(x=>0.5*x**3-2*x,-3,3);
+  assert.deepEqual(ft.roots.map(x=>+x.toFixed(9)),[-2,0,2]);near(ft.extrema[0].x,-Math.sqrt(4/3),1e-6,'max at −√(4/3)');assert.equal(ft.extrema[0].kind,'max');
+  near(P.integrate(x=>x*x,0,3),9,1e-12,'∫x² = 9');near(P.derivative(Math.sin,0),1,1e-9,"sin' 0 = 1");
+  assert.equal(P.funcFeatures(Math.tan,-1.5,4.5).roots.length,2,'a jump is not a root (tan: 0 and π)');
+  const sc=S.validateScene(S.template('func_features')).scene,svg=R.renderSVG(sc,{});
+  assert.doesNotMatch(svg,/NaN|undefined/);assert.match(svg,/>S<\/tspan><tspan[^>]*> = /,'the area written');assert.match(svg,/stroke="#b42318"/,'the tangent drawn in the accent');
+  /* the formula of a parametric curve is in t; one in x is refused there */
+  assert.ok(S.validateScene({objects:[{id:'G',type:'graph'},{id:'c',type:'curve',graph:'G',kind:'param',expr:'cos(t)',expr2:'sin(t)'}]}).ok);
+  assert.ok(!S.validateScene({objects:[{id:'G',type:'graph'},{id:'c',type:'curve',graph:'G',kind:'param',expr:'cos(x)',expr2:'sin(t)'}]}).ok);
+});
+
+/* the rigid-body world: a semi-implicit Euler step of 1/480 s, sequential impulses */
+const rig=async(objects,extra)=>{const {S,P}=await load();return P.buildSim(scene(S,objects,extra));};
+const crossing=(sim,read,T)=>{const ups=[];let prev=read(),t=0;while(t<T){t+=1e-3;sim.advanceTo(t);const v=read();if(prev<0&&v>=0)ups.push(t);prev=v;}return (ups.at(-1)-ups[0])/(ups.length-1);};
+test('drawn shapes with physics: free fall ½gt², projectile range v² sin 2θ / g',async()=>{
+  const sim=await rig([{id:'c',type:'ellipse',x:0,y:10,w:0.2,h:0.2,phys:'dynamic'}]);
+  assert.equal(sim.systems[0].kind,'rigid');sim.run(1);near(10.1-sim.poses().get('c').y,0.5*g,3e-3,'fall in 1 s');
+  const v=10,a=Math.PI/4,p=await rig([{id:'c',type:'ellipse',x:-0.05,y:-0.05,w:0.1,h:0.1,phys:'dynamic',pvx:v*Math.cos(a),pvy:v*Math.sin(a)}]);
+  let prev=p.poses().get('c'),t=0,range=null;while(t<3&&range===null){t+=1e-3;p.advanceTo(t);const q=p.poses().get('c');if(t>0.5&&prev.y>=0&&q.y<0)range=prev.x+(q.x-prev.x)*prev.y/(prev.y-q.y);prev=q;}
+  near(range,v*v/g,3e-3,'range');
+});
+test('drawn shapes with physics: an elastic collision keeps momentum and energy, a perfectly inelastic one moves together',async()=>{
+  for(const e of [1,0]){
+    const sim=await rig([{id:'a',type:'ellipse',x:0,y:0,w:0.2,h:0.2,phys:'dynamic',pmass:1,pvx:2,pe:e,pmu:0},{id:'b',type:'ellipse',x:1,y:0,w:0.2,h:0.2,phys:'dynamic',pmass:2,pe:e,pmu:0}],{gravityOn:false});
+    sim.run(1.5);const va=sim.velocities().get('a').x,vb=sim.velocities().get('b').x;
+    near(va+2*vb,2,1e-9,'momentum');
+    if(e===1){near(va,-2/3,1e-6,'v_a');near(vb,4/3,1e-6,'v_b');near(0.5*va*va+vb*vb,2,1e-6,'kinetic energy');}
+    else{near(va,2/3,1e-6,'common velocity');near(vb,2/3,1e-6,'common velocity');}
+  }
+});
+test('drawn shapes with physics: a block on a drawn ramp slides with a = g (sin θ − μ cos θ) and stays when tan θ ≤ μ',async()=>{
+  for(const [th,mu] of [[30,0.2],[40,0.3],[20,0.5],[25,0.47]]){
+    const r=th*Math.PI/180,c=Math.cos(r),sn=Math.sin(r),w=0.4,h=0.2,cen={x:4*c-sn*h/2,y:4*sn+c*h/2};
+    const sim=await rig([{id:'rp',type:'line',x1:0,y1:0,x2:6*c,y2:6*sn,phys:'static',pmu:mu},{id:'b',type:'rect',x:cen.x-w/2,y:cen.y-h/2,w,h,rot:th,phys:'dynamic',pmu:mu,pmass:2}]);
+    sim.run(1);const v=sim.velocities().get('b'),a=g*(sn-mu*c),p=sim.poses().get('b');
+    if(Math.tan(r)<=mu){assert.ok(Math.hypot(p.x-cen.x,p.y-cen.y)<1e-3,`held at θ=${th}, μ=${mu}`);}
+    else{near(Math.hypot(v.x,v.y),a,5e-3,`speed after 1 s at θ=${th}, μ=${mu}`);assert.ok(Math.abs(p.angle-r)<1e-3,'it slides without tipping');}
+  }
+});
+test('drawn shapes with physics: a rod joint is a pendulum (2π√(L/g)), a spring joint oscillates with 2π√(m/k)',async()=>{
+  const L=1.2,a=5*Math.PI/180;
+  const pend=await rig([{id:'c',type:'ellipse',x:L*Math.sin(a)-0.03,y:-L*Math.cos(a)-0.03,w:0.06,h:0.06,phys:'dynamic'},{id:'j',type:'joint',a:'c',b:'',kind:'rod',bx:0,by:0}]);
+  near(crossing(pend,()=>pend.poses().get('c').x,12),2*Math.PI*Math.sqrt(L/g),3e-3,'pendulum period');
+  const k=40,m=1,spr=await rig([{id:'c',type:'rect',x:-0.1,y:-1.3,w:0.2,h:0.2,phys:'dynamic',pmass:m},{id:'j',type:'joint',a:'c',b:'',kind:'spring',bx:0,by:0,k,L0:1}]);
+  near(crossing(spr,()=>spr.poses().get('c').y+1+m*g/k,10),2*Math.PI*Math.sqrt(m/k),3e-3,'spring period');
+  const e0=spr.energy();assert.ok(Number.isFinite(e0.E)&&e0.Us>0);
+});
+test('drawn shapes with physics: a stack of five boxes stands still for 10 s (no jitter, no explosion); the demo template runs',async()=>{
+  const objs=[{id:'f',type:'line',x1:-2,y1:0,x2:2,y2:0,phys:'static'}];for(let i=0;i<5;i++)objs.push({id:'b'+i,type:'rect',x:-0.25+0.01*(i%2),y:i*0.3,w:0.5,h:0.3,phys:'dynamic'});
+  const sim=await rig(objs);sim.run(10);
+  for(const [id,p] of sim.poses()){const i=+id.slice(1);assert.ok(Math.abs(p.y-(0.15+0.3*i))<3e-3&&Math.abs(p.angle)<1e-3&&Math.abs(p.x-(0.01*(i%2)))<3e-3,id+' stayed');const v=sim.velocities().get(id);assert.ok(Math.hypot(v.x,v.y)<1e-3,id+' at rest');}
+  const {S,P,R}=await load(),sc=S.validateScene(S.template('rigid_demo')).scene,d=P.buildSim(sc);d.run(3);
+  for(const [,p] of d.poses())assert.ok(Number.isFinite(p.x)&&Number.isFinite(p.y));
+  const svg=R.renderSVG(d.applyTo(sc),{poses:d.poses(),forces:d.forces()});assert.doesNotMatch(svg,/NaN|undefined/);
+  /* deterministic: the same figure plays the same way */
+  const d2=P.buildSim(sc);d2.run(3);assert.deepEqual([...d2.poses()],[...d.poses()]);
+});
+
+test('diagrams and notation: matrices of any size with dots and augmented bars, tensors, a neural network with weights, a block diagram; the schema for the AI',async()=>{
+  const {S,R}=await load();
+  for(const s of ['\\pmatrix{a_{11} & \\cdots & a_{1n} \\\\ \\vdots & \\ddots & \\vdots \\\\ a_{m1} & \\cdots & a_{mn}}','\\amatrix{1 & 2 & 3 \\\\ 4 & 5 & 6}','\\begin{array}{cc|c} 1 & 0 & 2 \\\\ 0 & 1 & 3 \\end{array}','\\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix}','T^{\\mu\\nu}{}_{\\rho}','\\varepsilon_{ijk}\\delta_{jk}','R^{\\rho}{}_{\\sigma\\mu\\nu}']){
+    const v=R.texSVG(s,20);assert.doesNotMatch(v,/NaN|undefined/,s);
+  }
+  const big=R.texSVG('\\pmatrix{1&2&3&4&5\\\\6&7&8&9&10\\\\1&2&3&4&5\\\\6&7&8&9&10\\\\1&2&3&4&5}',20);assert.equal((big.match(/<tspan/g)||[]).length,25,'5×5');
+  assert.match(R.texSVG('\\amatrix{1 & 2 \\\\ 3 & 4}',20),/V[\d.]+"/,'the augmented bar');
+  assert.deepEqual(S.nnLayers('2,3,1'),[2,3,1]);assert.equal(S.nnLayers('1'),null);
+  assert.deepEqual(S.nnWeights('1 2 3 / 4 5 6 ; 7 / 8 / 9',[2,3,1]),[[[1,2,3],[4,5,6]],[[7],[8],[9]]]);
+  for(const k of ['nn_mlp','matrix_eq','tensor_sample','block_flow']){const r=S.validateScene(S.template(k));assert.ok(r.ok,k);const svg=R.renderSVG(r.scene,{edit:true});assert.doesNotMatch(svg,/NaN|undefined/,k);}
+  const nn=R.renderSVG(S.validateScene(S.template('nn_mlp')).scene,{});assert.match(nn,/stroke="#1d4ed8"/,'a positive weight in blue');assert.match(nn,/stroke="#c0262d"/,'a negative one in red');
+  assert.equal((nn.match(/<line [^>]*stroke-opacity/g)||[]).length,2*3+3*1,'every weighted edge drawn');
+  assert.ok(!S.validateScene({objects:[{id:'N',type:'nnet',layers:'0'}]}).ok);assert.ok(!S.validateScene({objects:[{id:'b',type:'fbox'},{id:'a',type:'farrow',a:'b',b:'b'}]}).ok);
+  /* every template in every style: no attribute twice on a tag (a doubled one makes the downloaded SVG invalid XML), the
+     values written on the figure typeset (not “mathrm”) */
+  for(const k of S.TEMPLATE_KEYS)for(const style of S.STYLE_KEYS){const svg=R.renderSVG({...S.validateScene(S.template(k)).scene,style,values:true},{edit:true,grid:true});
+    for(const m of svg.matchAll(/<[a-z]+ [^>]*>/g)){const names=[...m[0].matchAll(/ ([a-z-]+)="/g)].map(x=>x[1]);assert.equal(new Set(names).size,names.length,`${k}/${style}: ${m[0].slice(0,80)}`);}
+    assert.doesNotMatch(svg,/>mathrm|>circ</,k);}
+  const sch=S.sceneSchemaForAI();assert.equal(JSON.parse(JSON.stringify(sch)).types.block.fields.mass[0],'num');assert.deepEqual(sch.types.farrow.needs,['a','b']);assert.ok(sch.top.style[2].includes('modern'));
 });

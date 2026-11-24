@@ -5,7 +5,10 @@
 
    Scene, version 2 (lengths in metres of the figure's world, masses in kg, forces in N, angles in degrees, y up):
      {format:'haslalab-scene', version:2, title:'', g:9.8, grid:0.1, style:'textbook', view:{x,y,w,h}, objects:[…]}
-   style is the figure style ("그림체", draw-render.mjs STYLES): textbook | university | olympiad | jee | print.
+   style is the figure style ("그림체", draw-render.mjs STYLES): textbook | classic | modern | olympiad | jee | suneung |
+   print. 'university' (대학 과제) was merged into textbook: a scene or an object written with it reads as textbook.
+   Every object may carry its own style (one object drawn in another 그림체; '' follows the figure's).
+   Optional top-level: gravityOn (false: the drawn rigid shapes float) and drag (air drag of the rigid shapes, 1/s).
    Version 1 (mechanics only, no style) is still read: it is migrated by migrateScene() (a line's dash:true|false
    becomes pattern:'dashed'|'solid'; style 'textbook'). view is the part of the world the figure shows (optional; the
    editor fits one). At most MAX_OBJECTS objects, each with an id (a letter, then letters, digits, _ or -, up to 24)
@@ -93,6 +96,22 @@
             labels — its bound states and a scattering state, solved numerically (draw-physics.mjs qpotModel)
    A curve's expr can use its params too. A particle's velocity arrow is off unless arrow (a scene written before,
    without the field, keeps it).
+   curve kinds param (x = expr(t), y = expr2(t) for t from x1 to x2), polar (r = expr(t), θ = t from x1 to x2, radians)
+   and ineq (the part of the graph where y rel expr(x), rel lt le gt ge, shaded; a strict one has a dashed edge); a
+   function curve can show tangent (at x = tx), area (from a1 to a2, its value written), roots and extrema (found
+   numerically, draw-physics.mjs funcFeatures). graph xstep, ystep: the tick spacing (0: automatic).
+   physics given to drawn shapes (rect, ellipse, poly, line: draw-physics.mjs rigidWorld): phys none | dynamic | static,
+   pmass (kg), pvx, pvy (m/s), pw (rad/s), pmu (friction), pe (restitution), pfx, pfy (a constant applied force, N);
+       joint    a b (drawn shapes; b '' = the fixed point bx,by) kind (spring | string | rod) ax,ay (the point on a, from its
+                centre, in its own frame) bx,by k L0 (0: the distance at the start) damp coils label
+   geometric construction (GeoGebra-like; every dependent object is computed from what it refers to, computeGeometry):
+       gpoint   x,y kind (free | on: on the line, circle or polygon a, the nearest point to x,y | mid: of the points a, b
+                or of the segment a | inter: the n-th intersection of a and b) label show
+       gline    a b kind (segment | line | ray | perp | par: through a, perpendicular or parallel to the line base)
+                measure (the length written) label color pattern
+       gcircle  c (centre) p (a point on it, or '' and the radius r) measure color fill pattern label
+       gpoly    pts [point ids] measure (the area written) color fill pattern label
+       gangle   a b (the vertex) c r measure (the angle written) label
    validateScene() checks every field (type, range, references) and returns the normalised version-2 scene. */
 
 export const SCENE_FORMAT = 'haslalab-scene', SCENE_VERSION = 2, MAX_OBJECTS = 120;
@@ -102,7 +121,15 @@ export const ANCHOR_TYPES = ['pivot', 'ceiling', 'wall', 'floor'];
 export const MARK_TYPES = ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'panel', 'brace', 'callout', 'rect', 'ellipse', 'poly', 'bezier'];
 /* the plain shapes the drawing tools make */
 export const SHAPE_TYPES = ['line', 'rect', 'ellipse', 'poly', 'bezier', 'arc', 'label', 'dim'];
-export const STYLE_KEYS = ['textbook', 'university', 'olympiad', 'jee', 'suneung', 'print'];
+export const STYLE_KEYS = ['textbook', 'classic', 'modern', 'olympiad', 'jee', 'suneung', 'print'];
+/* styles that were merged into another (a scene written with one reads as the other) */
+export const LEGACY_STYLES = {university: 'textbook'};
+export const legacyStyle = s => (typeof s === 'string' && LEGACY_STYLES[s]) || s;
+/* the geometric construction's types and the drawn shapes that can be given physics */
+export const GEO_TYPES = ['gpoint', 'gline', 'gcircle', 'gpoly', 'gangle'];
+export const PHYS_SHAPES = ['rect', 'ellipse', 'poly', 'line'];
+/* a conical pendulum's horizontal circle is drawn as an ellipse this many times as high as it is wide (an oblique view) */
+export const CONE_TILT = 0.28;
 export const ELEMENT_KINDS = ['wire', 'resistor', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer', 'rheostat', 'dielectric'];
 /* round bodies (a ball, a wheel) touch a surface at one point and are joined at their centre */
 export const isRound = o => !!o && (o.type === 'ball' || o.type === 'wheel');
@@ -132,6 +159,10 @@ const BOX = (w, h) => ({x: X, y: Y, w: num(w, 0.05, 400), h: num(h, 0.05, 400)})
 const L = (d = '') => txt(d, 40);
 const ROT = num(0, -360, 360);
 const ON = ref([...SURFACE_TYPES, 'block']);
+/* physics given to a drawn shape (draw-physics.mjs rigidWorld) */
+export const PHYS_FIELDS = {phys: pick('none', ['none', 'dynamic', 'static']), pmass: num(1, 0.001, 1e4), pvx: num(0, -SPEED, SPEED), pvy: num(0, -SPEED, SPEED), pw: num(0, -200, 200),
+  pmu: num(0.3, 0, 2), pe: num(0.2, 0, 1), pfx: num(0, -1e6, 1e6), pfy: num(0, -1e6, 1e6)};
+const GP = ref(['gpoint']), GEO_LINE = ['gline'], GEO_PATH = ['gline', 'gcircle', 'gpoly'];
 export const FIELDS = {
   /* mechanics */
   block: {x: X, y: Y, w: num(0.4, 0.02, 20), h: num(0.3, 0.02, 20), mass: num(1, 0.001, 10000), label: L(), on: ON, at: num(0, -COORD, COORD), ...MOTION, mu: num(0, 0, 2), look: pick('box', ['box', 'cart', 'car']), rot: ROT},
@@ -174,9 +205,11 @@ export const FIELDS = {
   reservoir: {...BOX(2, 0.5), hot: bool(true), label: L('T')},
   engine: {x: X, y: Y, size: num(1, 0.2, 40), kind: pick('engine', ['engine', 'fridge']), th: txt('T_H', 24), tc: txt('T_C', 24), qh: txt('Q_H', 24), qc: txt('Q_C', 24), wl: txt('W', 24)},
   graph: {...BOX(3, 2.2), xmin: num(0, -DATA, DATA), xmax: num(1, -DATA, DATA), ymin: num(0, -DATA, DATA), ymax: num(1, -DATA, DATA), auto: bool(true), xlabel: txt('x', 24), ylabel: txt('y', 24), ticks: bool(false), grid: bool(false), origin: txt('O', 8),
-    xt: txt('', 120), yt: txt('', 120)},
-  curve: {graph: ref(['graph']), kind: pick('func', ['func', 'isotherm', 'adiabat', 'isobar', 'isochore', 'points']), x1: num(0, -DATA, DATA), x2: num(1, -DATA, DATA), y1: num(1, -DATA, DATA), y2: num(0.5, -DATA, DATA), gamma: num(1.4, 1.01, 3), params: params(''), expr: expr('sin(x)'),
-    data: txt('0,0 1,2 3,2 4,0', 240), heads: pick('none', ['none', 'mid', 'end']), pattern: pick('solid', PATTERNS), shade: bool(false), label: L()},
+    xt: txt('', 120), yt: txt('', 120), xstep: num(0, 0, DATA), ystep: num(0, 0, DATA)},
+  curve: {graph: ref(['graph']), kind: pick('func', ['func', 'isotherm', 'adiabat', 'isobar', 'isochore', 'points', 'param', 'polar', 'ineq']), x1: num(0, -DATA, DATA), x2: num(1, -DATA, DATA), y1: num(1, -DATA, DATA), y2: num(0.5, -DATA, DATA), gamma: num(1.4, 1.01, 3), params: params(''), expr: expr('sin(x)'),
+    expr2: expr('sin(t)'), rel: pick('lt', ['lt', 'le', 'gt', 'ge']),
+    data: txt('0,0 1,2 3,2 4,0', 240), heads: pick('none', ['none', 'mid', 'end']), pattern: pick('solid', PATTERNS), shade: bool(false), label: L(),
+    tangent: bool(false), tx: num(0.5, -DATA, DATA), area: bool(false), a1: num(0, -DATA, DATA), a2: num(1, -DATA, DATA), roots: bool(false), extrema: bool(false), color: COLOR},
   cycle: {graph: ref(['graph']), kind: pick('carnot', ['carnot', 'otto', 'stirling']), v1: num(1, 1e-6, DATA), v2: num(2, 1e-6, DATA), t1: num(600, 1e-6, DATA), t2: num(400, 1e-6, DATA), gamma: num(1.4, 1.01, 3), labels: bool(true), arrows: bool(true), shade: bool(false)},
   /* optics */
   lens: {x: X, y: Y, h: num(1.4, 0.05, 100), f: num(1, -1000, 1000), showF: bool(true), label: L(), rot: ROT},
@@ -210,7 +243,7 @@ export const FIELDS = {
   qpot: {...BOX(4.4, 3), V: expr('abs(x) < a/2 ? 0 : V0'), params: params('a=1 [0.2, 3], V0=5 [0, 20]'), xmin: num(-1.5, -1e4, 1e4), xmax: num(1.5, -1e4, 1e4), mass: num(1, 1e-3, 1e6),
     showV: bool(true), levels: num(3, 0, 10), psi: pick('psi', ['none', 'psi', 'prob']), E: num(0, 0, 1e6), tplot: bool(false), Emax: num(0, 0, 1e6), labels: bool(true)},
   /* general marks */
-  label: {x: X, y: Y, text: txt('', 80), size: num(16, 8, 48), box: bool(false), rot: ROT, color: COLOR},
+  label: {x: X, y: Y, text: txt('', 240), size: num(16, 8, 48), box: bool(false), rot: ROT, color: COLOR},
   dim: {x1: X, y1: Y, x2: X, y2: Y, offset: num(0.15, -10, 10), text: txt('', 40)},
   arc: {x: X, y: Y, r: num(0.3, 0.02, 20), from: num(0, -360, 360), to: num(30, -360, 360), text: txt('', 24), arrow: bool(false), color: COLOR, pattern: pick('solid', PATTERNS)},
   axes: {x: X, y: Y, lx: num(1, 0, 100), ly: num(1, 0, 100), xlabel: txt('x', 12), ylabel: txt('y', 12)},
@@ -226,13 +259,29 @@ export const FIELDS = {
   rect: {...BOX(1, 0.6), r: num(0, 0, 100), color: COLOR, fill: FILL, pattern: pick('solid', PATTERNS), rot: ROT},
   ellipse: {...BOX(1, 0.6), color: COLOR, fill: FILL, pattern: pick('solid', PATTERNS), rot: ROT},
   poly: {pts: {k: 'pts', d: [[0, 0], [1, 0]], max: 400}, closed: bool(false), smooth: bool(false), color: COLOR, fill: FILL, pattern: pick('solid', PATTERNS), heads: HEADS},
-  bezier: {x1: X, y1: Y, cx1: num(0.3, -COORD, COORD), cy1: num(0.5, -COORD, COORD), cx2: num(0.7, -COORD, COORD), cy2: num(0.5, -COORD, COORD), x2: X2, y2: Y, color: COLOR, pattern: pick('solid', PATTERNS), heads: HEADS}
+  bezier: {x1: X, y1: Y, cx1: num(0.3, -COORD, COORD), cy1: num(0.5, -COORD, COORD), cx2: num(0.7, -COORD, COORD), cy2: num(0.5, -COORD, COORD), x2: X2, y2: Y, color: COLOR, pattern: pick('solid', PATTERNS), heads: HEADS},
+  /* a spring, a string or a rod between drawn shapes given physics (or from one to a fixed point) */
+  joint: {a: ref(PHYS_SHAPES), b: ref(PHYS_SHAPES), kind: pick('spring', ['spring', 'string', 'rod']), ax: num(0, -COORD, COORD), ay: num(0, -COORD, COORD), bx: num(0, -COORD, COORD), by: num(0, -COORD, COORD),
+    k: num(50, 0.01, 1e6), L0: num(0, 0, 400), damp: num(0, 0, 1e4), coils: num(10, 3, 30), label: txt('', 24)},
+  /* diagrams: a neural network (layers of nodes, every node joined to every node of the next layer; weights typed as
+     matrices make the edges thicker or coloured, w_ij written on them), and block diagrams (boxes joined by arrows) */
+  nnet: {...BOX(3.2, 2.2), layers: txt('2,3,1', 40), inLabels: txt('x_1,x_2', 120), outLabels: txt('\\hat{y}', 80), act: txt('\\sigma', 24), bias: bool(false), weights: txt('', 600),
+    wstyle: pick('none', ['none', 'width', 'color']), wlabels: bool(false), nodeR: num(0.13, 0.02, 5), label: L()},
+  fbox: {x: X, y: Y, w: num(1, 0.05, 100), h: num(0.6, 0.05, 100), shape: pick('rect', ['rect', 'round', 'circle', 'diamond', 'sum']), text: txt('', 80), fill: FILL},
+  farrow: {a: ref(['fbox']), b: ref(['fbox']), route: pick('straight', ['straight', 'hv', 'vh']), label: L(), sign: txt('', 4), pattern: pick('solid', PATTERNS)},
+  /* the geometric construction */
+  gpoint: {x: X, y: Y, kind: pick('free', ['free', 'on', 'mid', 'inter']), a: ref(['gpoint', ...GEO_PATH]), b: ref(['gpoint', ...GEO_PATH]), n: num(0, 0, 1), label: L(), show: bool(true), color: COLOR},
+  gline: {a: GP, b: GP, kind: pick('segment', ['segment', 'line', 'ray', 'perp', 'par']), base: ref(GEO_LINE), measure: bool(false), label: L(), color: COLOR, pattern: pick('solid', PATTERNS)},
+  gcircle: {c: GP, p: GP, r: num(1, 0.001, 400), measure: bool(false), label: L(), color: COLOR, fill: FILL, pattern: pick('solid', PATTERNS)},
+  gpoly: {pts: {k: 'refs', d: [], types: ['gpoint'], max: 24}, measure: bool(false), label: L(), color: COLOR, fill: pick('tint', FILLS), pattern: pick('solid', PATTERNS)},
+  gangle: {a: GP, b: GP, c: GP, r: num(0.3, 0.02, 20), measure: bool(true), label: L()}
 };
+for (const t of PHYS_SHAPES) Object.assign(FIELDS[t], PHYS_FIELDS);
 /* fields whose default became off (a particle's arrow, a wave's λ and A marks, the levels' wavelengths): an object
    written before, without the field, keeps what it showed */
 const LEGACY_ON = {particle: {arrow: raw => (typeof raw.len === 'number' ? raw.len : 0.8) > 0}, wave: {showLambda: () => true, showA: () => true}, levels: {showLambda: () => true}};
 /* every object also has a line weight and a label size (multiples of the style's), and can be locked against dragging */
-export const COMMON_FIELDS = {lw: num(1, 0.2, 5), ls: num(1, 0.3, 4), lock: bool(false)};
+export const COMMON_FIELDS = {lw: num(1, 0.2, 5), ls: num(1, 0.3, 4), lock: bool(false), style: pick('', ['', ...STYLE_KEYS])};
 for (const t of Object.keys(FIELDS)) Object.assign(FIELDS[t], COMMON_FIELDS);
 export const TYPES = Object.keys(FIELDS);
 /* the types that turn by their field rot (degrees, anticlockwise) about their centre */
@@ -245,12 +294,18 @@ export const DOMAINS = {
   optics: ['lens', 'mirror', 'prism', 'slab', 'oarrow', 'ray', 'slits', 'wavefront', 'screen', 'eye', 'source', 'fiber'],
   waves: ['wave', 'pulse', 'interference'],
   modern: ['well', 'qpot', 'levels', 'phototube', 'spacetime', 'worldline', 'frames', 'nucleus', 'particle'],
-  general: ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'graph', 'panel', 'brace', 'callout', 'parrows', 'rect', 'ellipse', 'poly', 'bezier']
+  general: ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'graph', 'panel', 'brace', 'callout', 'parrows', 'rect', 'ellipse', 'poly', 'bezier', 'joint', 'nnet', 'fbox', 'farrow'],
+  geo: GEO_TYPES
 };
 export const TYPE_DOMAIN = Object.fromEntries(Object.entries(DOMAINS).flatMap(([d, list]) => list.map(t => [t, d])));
 /* references that must name an existing object, and which must not be the same */
-const REQUIRED_REFS = {string: ['a', 'b'], rod: ['a', 'b'], spring: ['a', 'b'], force: ['on'], curve: ['graph'], cycle: ['graph'], worldline: ['diagram']};
+const REQUIRED_REFS = {farrow: ['a', 'b'], string: ['a', 'b'], rod: ['a', 'b'], spring: ['a', 'b'], force: ['on'], curve: ['graph'], cycle: ['graph'], worldline: ['diagram'], joint: ['a'], gline: ['a'], gcircle: ['c'], gangle: ['a', 'b', 'c']};
+/* references a geometric object needs as it is set */
+const geoNeeds = o => o.type === 'gpoint' ? (o.kind === 'on' ? ['a'] : o.kind === 'mid' ? ['a'] : o.kind === 'inter' ? ['a', 'b'] : [])
+  : o.type === 'gline' ? (o.kind === 'perp' || o.kind === 'par' ? ['a', 'base'] : ['a', 'b']) : [];
 export const isBody = o => !!o && BODY_TYPES.includes(o.type);
+/* a drawn shape given physics */
+export const isPhysShape = o => !!o && PHYS_SHAPES.includes(o.type) && !!o.phys && o.phys !== 'none';
 export const isSeg = o => !!o && 'x1' in (FIELDS[o.type] || {});
 
 /* ── a small, safe expression language for plotted functions and potentials: numbers, x, pi, e, + − * / ^, implicit
@@ -263,6 +318,8 @@ const FN = {sin: Math.sin, cos: Math.cos, tan: Math.tan, asin: Math.asin, acos: 
   step: x => x >= 0 ? 1 : 0};
 export const EXPR_FUNCTIONS = Object.keys(FN);
 const RESERVED = new Set(['x', 'pi', 'e', ...EXPR_FUNCTIONS]);
+/* the variable of a curve's formula: t for a parametric or a polar curve, else x */
+export const curveVar = kind => kind === 'param' || kind === 'polar' ? 't' : 'x';
 /* an unknown run of letters split into known names, longest first ("ax" → a x, "kx" → k x); null if it does not split */
 function splitName(id, known) {
   const out = []; let i = 0;
@@ -339,10 +396,10 @@ export function parseParams(text) {
 /** the parameters as text again (what a slider writes back) */
 export const paramsText = list => list.map(p => `${p.name}=${+p.value.toPrecision(6)} [${+p.min.toPrecision(6)}, ${+p.max.toPrecision(6)}]`).join(', ');
 /** a function of x with an object's parameters bound (a curve's expr, a potential's V): null if it does not compile */
-export function boundExpr(src, params) {
+export function boundExpr(src, params, v = 'x') {
   const list = typeof params === 'string' ? parseParams(params) : params || [];
   if (!list) return null;
-  const fn = compileExpr(src, ['x', ...list.map(p => p.name)]); if (!fn) return null;
+  const fn = compileExpr(src, [v, ...list.map(p => p.name)]); if (!fn) return null;
   const vals = list.map(p => p.value);
   return x => fn([x, ...vals]);
 }
@@ -392,7 +449,10 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
   /* optional: the values written on the figure (2 kg, 30°, 10 Ω …), and the printed width in mm (0: the style's) */
   if (input.values !== undefined) { if (typeof input.values === 'boolean') { if (input.values) scene.values = true; } else if (!lenient) err('bad_bool', null, 'values'); }
   if (input.printW !== undefined && input.printW !== 0) { const p = top('printW', 0, 20, 400); if (p) scene.printW = p; }
-  if (input.style !== undefined) { if (STYLE_KEYS.includes(input.style)) scene.style = input.style; else if (lenient) notes.push({code: 'style_dropped'}); else err('bad_enum', null, 'style'); }
+  if (input.style !== undefined) { const sk = legacyStyle(input.style); if (sk !== input.style) notes.push({code: 'style_merged', from: input.style, to: sk}); if (STYLE_KEYS.includes(sk)) scene.style = sk; else if (lenient) notes.push({code: 'style_dropped'}); else err('bad_enum', null, 'style'); }
+  /* the drawn rigid shapes: gravity off, air drag */
+  if (input.gravityOn !== undefined) { if (typeof input.gravityOn === 'boolean') { if (!input.gravityOn) scene.gravityOn = false; } else if (!lenient) err('bad_bool', null, 'gravityOn'); }
+  if (input.drag !== undefined && input.drag !== 0) { const d = top('drag', 0, 0, 50); if (d) scene.drag = d; }
   if (input.title !== undefined) { const t = typeof input.title === 'string' ? cleanText(input.title, 80, aiText) : null; if (t == null) err('bad_text', null, 'title'); else scene.title = t; }
   if (input.view !== undefined && input.view !== null) {
     const v = input.view, ok = v && typeof v === 'object' && ['x', 'y', 'w', 'h'].every(k => typeof v[k] === 'number' && Number.isFinite(v[k]))
@@ -415,7 +475,7 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
     const legacy = LEGACY_ON[type];
     if (legacy) for (const [k, on] of Object.entries(legacy)) if (raw[k] === undefined) o[k] = on(raw);
     for (const [k, f] of Object.entries(F)) {
-      const v = raw[k];
+      const v = k === 'style' ? legacyStyle(raw[k]) : raw[k];
       if (v === undefined || v === null) { if (!(k in o)) o[k] = Array.isArray(f.d) ? [] : f.d; continue; }
       if (f.k === 'num') {
         if (typeof v !== 'number' || !Number.isFinite(v)) { err('bad_number', id, k); bad = true; continue; }
@@ -439,7 +499,8 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
       } else if (f.k === 'expr') {
         const t = typeof v === 'string' ? cleanText(v, f.max, false) : null;
         const pl = 'params' in F ? parseParams(typeof raw.params === 'string' ? raw.params : F.params.d) || [] : [];
-        if (t == null || !compileExpr(t, ['x', ...pl.map(q => q.name)])) { if (lenient) { o[k] = f.d; notes.push({code: 'expr_dropped', id, field: k}); continue; } err('bad_expr', id, k); bad = true; continue; }
+        const v0 = type === 'curve' ? curveVar(raw.kind) : 'x';
+        if (t == null || !compileExpr(t, [v0, ...pl.map(q => q.name)])) { if (lenient || (type === 'curve' && k === 'expr2' && v0 === 'x')) { o[k] = f.d; if (!(type === 'curve' && k === 'expr2' && v0 === 'x')) notes.push({code: 'expr_dropped', id, field: k}); continue; } err('bad_expr', id, k); bad = true; continue; }
         o[k] = t;
       } else if (f.k === 'bool') {
         if (typeof v !== 'boolean') { err('bad_bool', id, k); bad = true; continue; }
@@ -479,7 +540,17 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
           if (o[k].some(x => !byId.has(x) || !f.types.includes(byId.get(x).type))) { err('bad_ref', o.id, k); bad = true; }
         }
       }
-      if ((o.type === 'string' || o.type === 'spring') && o.a && o.a === o.b) { err('same_ends', o.id); bad = true; }
+      if ((o.type === 'string' || o.type === 'spring' || o.type === 'joint' || o.type === 'farrow') && o.a && o.a === o.b) { err('same_ends', o.id); bad = true; }
+      if (!bad && o.type === 'nnet' && !nnLayers(o.layers)) { if (lenient) { o.layers = '2,3,1'; notes.push({code: 'clamped', id: o.id, field: 'layers'}); } else { err('bad_layers', o.id, 'layers'); bad = true; } }
+      /* a geometric object names what it is built from */
+      if (!bad && GEO_TYPES.includes(o.type)) {
+        for (const k of geoNeeds(o)) if (!o[k]) { err('missing_ref', o.id, k); bad = true; }
+        if (o.type === 'gpoint' && o.kind === 'mid' && !o.b && byId.get(o.a)?.type !== 'gline') { err('missing_ref', o.id, 'b'); bad = true; }
+        if (o.type === 'gpoint' && o.kind === 'inter' && (byId.get(o.a)?.type === 'gpoint' || byId.get(o.b)?.type === 'gpoint')) { err('bad_ref', o.id, 'a'); bad = true; }
+        if (o.type === 'gpoint' && o.kind === 'mid' && byId.get(o.a)?.type !== 'gpoint' && byId.get(o.a)?.type !== 'gline') { err('bad_ref', o.id, 'a'); bad = true; }
+        if (o.type === 'gpoly' && o.pts.length < 3) { err('bad_points', o.id, 'pts'); bad = true; }
+      }
+
       /* a body on a block: not on itself, and the blocks under it end on a floor or an incline (no loop) */
       if (isBody(o) && o.on && !bad && byId.get(o.on)?.type === 'block') {
         let cur = o, seen = new Set([o.id]), okStack = false;
@@ -507,6 +578,9 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
     ends.forEach(e => used.add(e));
     return true;
   });
+  /* a construction that refers to itself (a point on a line through it) cannot be computed */
+  const cyc = computeGeometry({objects: keep}).cyclic;
+  if (cyc.size) { for (const id of cyc) err('geo_cycle', id); if (lenient) keep = keep.filter(o => !cyc.has(o.id)); }
   scene.objects = keep;
   /* bodies on bodies: the lower ones first */
   for (let pass = 0; pass < 3; pass++) for (const o of scene.objects) if (isBody(o) && o.on) placeOnSurface(scene, o);
@@ -644,6 +718,124 @@ export function stringPath(scene, str, poses) {
   return {a: pa, b: pb, segs, wraps};
 }
 
+/* ── the geometric construction: every object resolved from what it refers to, in dependency order ──
+   computeGeometry(scene) → {get(id), cyclic: Set of ids that depend on themselves}; get gives
+     point  {k:'pt', x, y}                      line {k:'line', p, d (direction, |d| = the segment's length), t0, t1}
+     circle {k:'circ', c, r}                    poly {k:'poly', pts}        angle {k:'ang', a, b, c, deg}
+   or null when it cannot be computed (two parallel lines do not meet, a point is missing). A segment runs t ∈ [0, 1],
+   a ray [0, ∞), a line (−∞, ∞). */
+const GEO_INF = 1e9;
+export function geoLinePoint(L, t) { return {x: L.p.x + L.d.x * t, y: L.p.y + L.d.y * t}; }
+/* the nearest point to q on a line, a circle or a polygon's edges */
+export function geoProject(G, q) {
+  if (!G) return null;
+  if (G.k === 'line') { const dd = G.d.x * G.d.x + G.d.y * G.d.y; if (dd < 1e-18) return {...G.p}; const t = Math.max(G.t0, Math.min(G.t1, ((q.x - G.p.x) * G.d.x + (q.y - G.p.y) * G.d.y) / dd)); return geoLinePoint(G, t); }
+  if (G.k === 'circ') { const dx = q.x - G.c.x, dy = q.y - G.c.y, l = Math.hypot(dx, dy) || 1; return {x: G.c.x + dx / l * G.r, y: G.c.y + dy / l * G.r}; }
+  if (G.k === 'poly') { let best = null, bd = Infinity; G.pts.forEach((a, i) => { const b = G.pts[(i + 1) % G.pts.length], p = geoProject({k: 'line', p: a, d: {x: b.x - a.x, y: b.y - a.y}, t0: 0, t1: 1}, q), d = Math.hypot(p.x - q.x, p.y - q.y); if (d < bd) { bd = d; best = p; } }); return best; }
+  return null;
+}
+/* the points where two lines, a line and a circle, or two circles meet (polygons: each edge) */
+export function geoIntersect(A, B) {
+  if (!A || !B) return [];
+  if (A.k === 'poly' || B.k === 'poly') {
+    const [P, Q] = A.k === 'poly' ? [A, B] : [B, A], out = [];
+    P.pts.forEach((a, i) => { const b = P.pts[(i + 1) % P.pts.length]; out.push(...geoIntersect({k: 'line', p: a, d: {x: b.x - a.x, y: b.y - a.y}, t0: 0, t1: 1}, Q)); });
+    return out;
+  }
+  const inL = (L, t) => t >= L.t0 - 1e-9 && t <= L.t1 + 1e-9;
+  if (A.k === 'line' && B.k === 'line') {
+    const den = A.d.x * B.d.y - A.d.y * B.d.x; if (Math.abs(den) < 1e-12) return [];
+    const wx = B.p.x - A.p.x, wy = B.p.y - A.p.y, t = (wx * B.d.y - wy * B.d.x) / den, u = (wx * A.d.y - wy * A.d.x) / den;
+    return inL(A, t) && inL(B, u) ? [geoLinePoint(A, t)] : [];
+  }
+  if (A.k === 'circ' && B.k === 'line') return geoIntersect(B, A);
+  if (A.k === 'line' && B.k === 'circ') {
+    const fx = A.p.x - B.c.x, fy = A.p.y - B.c.y, a = A.d.x * A.d.x + A.d.y * A.d.y, b = 2 * (fx * A.d.x + fy * A.d.y), c = fx * fx + fy * fy - B.r * B.r, disc = b * b - 4 * a * c;
+    if (a < 1e-18 || disc < -1e-12) return [];
+    const s = Math.sqrt(Math.max(0, disc)), ts = disc < 1e-12 ? [-b / (2 * a)] : [(-b - s) / (2 * a), (-b + s) / (2 * a)];
+    return ts.filter(t => inL(A, t)).map(t => geoLinePoint(A, t));
+  }
+  if (A.k === 'circ' && B.k === 'circ') {
+    const dx = B.c.x - A.c.x, dy = B.c.y - A.c.y, d = Math.hypot(dx, dy);
+    if (d < 1e-12 || d > A.r + B.r + 1e-12 || d < Math.abs(A.r - B.r) - 1e-12) return [];
+    const a = (A.r * A.r - B.r * B.r + d * d) / (2 * d), h = Math.sqrt(Math.max(0, A.r * A.r - a * a)), mx = A.c.x + dx * a / d, my = A.c.y + dy * a / d;
+    return h < 1e-12 ? [{x: mx, y: my}] : [{x: mx - dy * h / d, y: my + dx * h / d}, {x: mx + dy * h / d, y: my - dx * h / d}];
+  }
+  return [];
+}
+export function computeGeometry(scene) {
+  const byId = new Map((scene.objects || []).map(o => [o.id, o])), memo = new Map(), busy = new Set(), cyclic = new Set();
+  const get = id => {
+    if (!id) return null;
+    if (memo.has(id)) return memo.get(id);
+    const o = byId.get(id); if (!o || !GEO_TYPES.includes(o.type)) return null;
+    if (busy.has(id)) { cyclic.add(id); return null; }
+    busy.add(id);
+    let r = null;
+    const pt = k => { const g = get(o[k]); return g && g.k === 'pt' ? g : null; };
+    if (o.type === 'gpoint') {
+      if (o.kind === 'free') r = {k: 'pt', x: o.x, y: o.y};
+      else if (o.kind === 'on') { const q = geoProject(get(o.a), o); r = q ? {k: 'pt', ...q} : null; }
+      else if (o.kind === 'mid') {
+        const A = get(o.a);
+        if (A && A.k === 'line' && !o.b) r = {k: 'pt', ...geoLinePoint(A, 0.5)};
+        else { const B = pt('b'); r = A && A.k === 'pt' && B ? {k: 'pt', x: (A.x + B.x) / 2, y: (A.y + B.y) / 2} : null; }
+      } else if (o.kind === 'inter') {
+        const list = geoIntersect(get(o.a), get(o.b));
+        /* the same one of two crossings stays chosen while the figure moves: sorted by x, then y */
+        list.sort((p, q) => Math.abs(p.x - q.x) > 1e-9 ? p.x - q.x : p.y - q.y);
+        const q = list[Math.min(list.length - 1, Math.round(o.n))]; r = q ? {k: 'pt', x: q.x, y: q.y} : null;
+      }
+    } else if (o.type === 'gline') {
+      const A = pt('a');
+      if (A && (o.kind === 'perp' || o.kind === 'par')) { const B = get(o.base); if (B && B.k === 'line') { const l = Math.hypot(B.d.x, B.d.y) || 1, d = o.kind === 'par' ? {x: B.d.x / l, y: B.d.y / l} : {x: -B.d.y / l, y: B.d.x / l}; r = {k: 'line', p: {x: A.x, y: A.y}, d, t0: -GEO_INF, t1: GEO_INF}; } }
+      else { const B = pt('b'); if (A && B && Math.hypot(B.x - A.x, B.y - A.y) > 1e-12) r = {k: 'line', p: {x: A.x, y: A.y}, d: {x: B.x - A.x, y: B.y - A.y}, t0: o.kind === 'line' ? -GEO_INF : 0, t1: o.kind === 'segment' ? 1 : GEO_INF}; }
+    } else if (o.type === 'gcircle') {
+      const C = pt('c'), P = o.p ? pt('p') : null;
+      if (C && (!o.p || P)) r = {k: 'circ', c: {x: C.x, y: C.y}, r: P ? Math.hypot(P.x - C.x, P.y - C.y) : o.r};
+    } else if (o.type === 'gpoly') {
+      const pts = o.pts.map(id => get(id)); if (pts.length >= 3 && pts.every(g => g && g.k === 'pt')) r = {k: 'poly', pts: pts.map(g => ({x: g.x, y: g.y}))};
+    } else if (o.type === 'gangle') {
+      const A = pt('a'), B = pt('b'), C = pt('c');
+      if (A && B && C) { let deg = (Math.atan2(C.y - B.y, C.x - B.x) - Math.atan2(A.y - B.y, A.x - B.x)) * 180 / Math.PI; deg = ((deg % 360) + 360) % 360; r = {k: 'ang', a: A, b: B, c: C, deg}; }
+    }
+    busy.delete(id); memo.set(id, r);
+    return r;
+  };
+  for (const o of scene.objects || []) if (GEO_TYPES.includes(o.type)) get(o.id);
+  /* everything that leans on a self-referring object is cyclic too */
+  if (cyclic.size) for (let pass = 0; pass < 8; pass++) for (const o of scene.objects) if (GEO_TYPES.includes(o.type) && !cyclic.has(o.id) && (['a', 'b', 'c', 'p', 'base'].some(k => cyclic.has(o[k])) || (o.type === 'gpoly' && (o.pts || []).some(k => cyclic.has(k))))) cyclic.add(o.id);
+  return {get, cyclic};
+}
+/** the world box of a geometric object (an infinite line: the box of the points it goes through) */
+export function geoExtent(geo, o) {
+  const G = geo.get(o.id); if (!G) return null;
+  const box = pts => { const xs = pts.map(p => p.x), ys = pts.map(p => p.y), x = Math.min(...xs), y = Math.min(...ys); return {x: x - 0.05, y: y - 0.05, w: Math.max(...xs) - x + 0.1, h: Math.max(...ys) - y + 0.1}; };
+  if (G.k === 'pt') return box([G]);
+  if (G.k === 'line') return box([G.p, geoLinePoint(G, G.t1 > 1 ? 1 : G.t1)]);
+  if (G.k === 'circ') return box([{x: G.c.x - G.r, y: G.c.y - G.r}, {x: G.c.x + G.r, y: G.c.y + G.r}]);
+  if (G.k === 'poly') return box(G.pts);
+  if (G.k === 'ang') return box([G.b, {x: G.b.x + o.r, y: G.b.y + o.r}, {x: G.b.x - o.r, y: G.b.y - o.r}]);
+  return null;
+}
+/** a network's layer sizes from "2,3,1" (2 to 12 layers of 1 to 16 nodes), or null */
+export function nnLayers(s) {
+  const l = String(s ?? '').split(/[,\s]+/).filter(Boolean).map(Number);
+  return l.length >= 2 && l.length <= 12 && l.every(n => Number.isInteger(n) && n >= 1 && n <= 16) ? l : null;
+}
+/** a network's weight matrices from "0.5 -1 0.2 / 1 0 -0.4 ; 0.7 / -1.2 / 0.3": one matrix a pair of layers (;), its rows
+ *  the nodes of the earlier layer (/), its columns those of the later one; what does not fit is left out (null) */
+export function nnWeights(s, layers) {
+  const out = [], parts = String(s ?? '').split(';');
+  for (let l = 0; l + 1 < layers.length; l++) {
+    const rows = (parts[l] || '').split('/').map(r => r.split(/[,\s]+/).filter(Boolean).map(Number));
+    out.push(Array.from({length: layers[l]}, (_, i) => Array.from({length: layers[l + 1]}, (_, j) => { const v = rows[i]?.[j]; return Number.isFinite(v) ? v : null; })));
+  }
+  return out;
+}
+/** the area of a polygon (shoelace, positive) */
+export const polyArea = pts => Math.abs(pts.reduce((s, p, i) => { const q = pts[(i + 1) % pts.length]; return s + p.x * q.y - q.x * p.y; }, 0)) / 2;
+
 /* ── templates: the classic figures, ready to edit or run ── */
 const T = (title, objects, view, extra = {}) => ({format: SCENE_FORMAT, version: SCENE_VERSION, title, g: 9.8, grid: 0.1, style: 'textbook', view, ...extra,
   objects: objects.map(o => ({...defaults(o.type), ...o}))});
@@ -697,14 +889,14 @@ function mechTemplate(key, name) {
     {id: 'th', type: 'arc', x: 0.3, y: 0.1, r: 0.55, from: 0, to: 45, text: '\\theta'},
     {id: 'ax', type: 'axes', x: 0.3, y: 0.1, lx: 10.8, ly: 3.2, xlabel: 'x', ylabel: 'y'}
   ], {x: -0.5, y: -0.6, w: 12, h: 4.2}); }
+  /* a conical pendulum: the string's conical mode draws the orbit as an ellipse in an oblique view, the vertical axis,
+     the radius r and the angle θ itself (draw-render.mjs), and the solver turns the bob round it at ω = √(g / (L cos θ)) */
   if (key === 'conical') { const L = 1.6, a = rad(30); return T(name, [
     {id: 'ceil', type: 'ceiling', x: 0.9, y: 2.6, w: 1.2},
     {id: 'pv', type: 'pivot', x: 1.5, y: 2.6},
     {id: 'b1', type: 'ball', x: +(1.5 + L * Math.sin(a)).toFixed(4), y: +(2.6 - L * Math.cos(a)).toFixed(4), r: 0.08, mass: 0.5, label: 'm'},
-    {id: 's1', type: 'string', a: 'pv', b: 'b1', mode: 'conical', label: 'L'},
-    {id: 'ln', type: 'line', x1: 1.5, y1: 2.6, x2: 1.5, y2: 1.0, pattern: 'dashed'},
-    {id: 'th', type: 'arc', x: 1.5, y: 2.6, r: 0.4, from: -90, to: -60, text: '\\theta'}
-  ], {x: 0.35, y: 0.75, w: 2.3, h: 2.1}); }
+    {id: 's1', type: 'string', a: 'pv', b: 'b1', mode: 'conical', label: 'L'}
+  ], {x: 0.25, y: 0.75, w: 2.5, h: 2.1}); }
   if (key === 'vertical_circle') return T(name, [
     {id: 'pv', type: 'pivot', x: 1.5, y: 1.5},
     {id: 'b1', type: 'ball', x: 1.5, y: 0.5, r: 0.08, mass: 0.3, label: 'm', vx: 6, showV: true, vLabel: 'v_0', trail: true},
@@ -1029,7 +1221,54 @@ const NEW_TEMPLATES = {
     {id: 'G1', type: 'graph', x: 3.4, y: 0, w: 2.6, h: 1.6, auto: false, xmin: 0, xmax: 4, ymin: 0, ymax: 3, xlabel: '시간', ylabel: '속력', origin: '0', xt: '1:t_0, 2:2t_0', yt: '2:v_0'},
     {id: 'c1', type: 'curve', graph: 'G1', kind: 'points', data: '0,2 1,2 2,1 3.5,1', label: ''},
     {id: 'pa', type: 'panel', x: 0, y: -0.25, w: 2.6, h: 1.5, caption: '(가)'},
-    {id: 'pb', type: 'panel', x: 3.3, y: -0.25, w: 2.9, h: 1.5, caption: '(나)'}], {style: 'suneung'}]
+    {id: 'pb', type: 'panel', x: 3.3, y: -0.25, w: 2.9, h: 1.5, caption: '(나)'}], {style: 'suneung'}],
+  /* diagrams: a 2-3-1 neural network with typed weights, a matrix equation, tensor notation, a feedback block diagram */
+  nn_mlp: ['general', '신경망 (2-3-1 다층 퍼셉트론, 가중치)', 'Neural network (2-3-1 MLP, weights)', 0.1, {x: -0.8, y: -0.6, w: 5.4, h: 3.2}, [
+    {id: 'N', type: 'nnet', x: 0, y: 0, w: 3.8, h: 2.2, layers: '2,3,1', inLabels: 'x_1,x_2', outLabels: '\\hat{y}', act: '\\sigma', bias: true, weights: '0.8 -0.5 0.3 / -1.2 0.9 0.6 ; 1.1 / -0.7 / 0.4', wstyle: 'color', wlabels: false},
+    {id: 'l1', type: 'label', x: 0.25, y: -0.35, text: '입력층', size: 13}, {id: 'l2', type: 'label', x: 1.9, y: -0.35, text: '은닉층', size: 13}, {id: 'l3', type: 'label', x: 3.6, y: -0.35, text: '출력층', size: 13},
+    {id: 'eq', type: 'label', x: 1.9, y: 2.4, text: '$h_j = \\sigma(\\sum_i w_{ij} x_i + b_j)$', size: 15}]],
+  matrix_eq: ['general', '행렬 방정식 Ax = b (첨가 행렬)', 'Matrix equation Ax = b (augmented matrix)', 0.1, {x: -0.2, y: -0.2, w: 5.4, h: 2.6}, [
+    {id: 'm1', type: 'label', x: 2.5, y: 1.75, text: '$\\pmatrix{2 & 1 & -1 \\\\ 1 & 3 & 2 \\\\ 0 & 1 & 4}\\pmatrix{x_1 \\\\ x_2 \\\\ x_3} = \\pmatrix{3 \\\\ 5 \\\\ 6}$', size: 17},
+    {id: 'm2', type: 'label', x: 2.5, y: 0.5, text: '$\\amatrix{2 & 1 & -1 & 3 \\\\ 1 & 3 & 2 & 5 \\\\ 0 & 1 & 4 & 6}$', size: 17}]],
+  tensor_sample: ['general', '텐서 표기 (위아래 첨자, 아인슈타인 합, ε, δ)', 'Tensor notation (indices, Einstein sum, ε, δ)', 0.1, {x: -0.2, y: -0.3, w: 5.6, h: 3.2}, [
+    {id: 't1', type: 'label', x: 2.6, y: 2.5, text: '$F_{\\mu\\nu} = \\partial_\\mu A_\\nu - \\partial_\\nu A_\\mu$', size: 17},
+    {id: 't2', type: 'label', x: 2.6, y: 1.8, text: '$(\\vec{a}\\times\\vec{b})_i = \\varepsilon_{ijk} a_j b_k$', size: 17},
+    {id: 't3', type: 'label', x: 2.6, y: 1.0, text: '$\\delta_{ij} = \\cases{1 & i = j \\\\ 0 & i \\neq j}$', size: 17},
+    {id: 't4', type: 'label', x: 2.6, y: 0.2, text: '$T^{\\mu\\nu} = (\\rho + p) u^\\mu u^\\nu + p\\, g^{\\mu\\nu}$', size: 17}]],
+  block_flow: ['general', '블록 선도 (되먹임 제어)', 'Block diagram (feedback control)', 0.1, {x: -0.3, y: -0.9, w: 6.2, h: 2.4}, [
+    {id: 'in', type: 'fbox', x: 0.2, y: 0.5, w: 0.1, h: 0.1, shape: 'circle', fill: 'dark'},
+    {id: 'sum', type: 'fbox', x: 1.0, y: 0.5, w: 0.36, h: 0.36, shape: 'sum'},
+    {id: 'C', type: 'fbox', x: 2.3, y: 0.5, w: 1.1, h: 0.6, text: '$C(s)$'}, {id: 'P', type: 'fbox', x: 3.9, y: 0.5, w: 1.1, h: 0.6, text: '$G(s)$'},
+    {id: 'out', type: 'fbox', x: 5.4, y: 0.5, w: 0.1, h: 0.1, shape: 'circle', fill: 'dark'}, {id: 'Hs', type: 'fbox', x: 3.1, y: -0.45, w: 1.1, h: 0.55, text: '$H(s)$'},
+    {id: 'a1', type: 'farrow', a: 'in', b: 'sum', label: 'R', sign: '+'}, {id: 'a2', type: 'farrow', a: 'sum', b: 'C', label: 'E'}, {id: 'a3', type: 'farrow', a: 'C', b: 'P', label: 'U'},
+    {id: 'a4', type: 'farrow', a: 'P', b: 'out', label: 'Y'}, {id: 'a5', type: 'farrow', a: 'out', b: 'Hs', route: 'vh'}, {id: 'a6', type: 'farrow', a: 'Hs', b: 'sum', route: 'hv', sign: '-'}]],
+  /* the geometric construction: drag A, B or C and everything built on them follows */
+  geo_triangle: ['geo', '작도: 삼각형의 외심과 외접원', 'Construction: circumcentre and circumcircle of a triangle', 0.1, {x: -0.8, y: -0.85, w: 5.6, h: 4.0}, [
+    {id: 'A', type: 'gpoint', x: 0.4, y: 0.4, label: 'A'}, {id: 'B', type: 'gpoint', x: 3.6, y: 0.6, label: 'B'}, {id: 'C', type: 'gpoint', x: 1.6, y: 2.8, label: 'C'},
+    {id: 'ab', type: 'gline', a: 'A', b: 'B', measure: true}, {id: 'bc', type: 'gline', a: 'B', b: 'C'}, {id: 'ca', type: 'gline', a: 'C', b: 'A'},
+    {id: 'M1', type: 'gpoint', kind: 'mid', a: 'ab', label: 'M'}, {id: 'M2', type: 'gpoint', kind: 'mid', a: 'bc', label: 'N'},
+    {id: 'p1', type: 'gline', kind: 'perp', a: 'M1', base: 'ab', pattern: 'dashed', color: 'gray'}, {id: 'p2', type: 'gline', kind: 'perp', a: 'M2', base: 'bc', pattern: 'dashed', color: 'gray'},
+    {id: 'O', type: 'gpoint', kind: 'inter', a: 'p1', b: 'p2', label: 'O'},
+    {id: 'cc', type: 'gcircle', c: 'O', p: 'A', color: 'blue'},
+    {id: 'ang', type: 'gangle', a: 'B', b: 'A', c: 'C', r: 0.45}]],
+  /* functions like a graphing calculator: a parameter slider, the tangent, the area, roots and extrema */
+  func_features: ['general', '함수 분석: 접선 · 넓이 · 근 · 극값', 'Function analysis: tangent, area, roots, extrema', 0.1, {x: -0.6, y: -0.5, w: 6.4, h: 4.4}, [
+    {id: 'G', type: 'graph', x: 0, y: 0, w: 5.4, h: 3.4, auto: false, xmin: -3, xmax: 3, ymin: -3, ymax: 3, ticks: true, grid: true, xstep: 1, ystep: 1},
+    {id: 'f', type: 'curve', graph: 'G', kind: 'func', expr: 'a x^3 - 2x', params: 'a=0.5 [0.1, 2]', x1: -3, x2: 3, label: 'y = f(x)', tangent: true, tx: 1.6, area: true, a1: 0, a2: 1.8, roots: true, extrema: true},
+    {id: 'r', type: 'curve', graph: 'G', kind: 'polar', expr: '1 + 0.5 cos(3t)', x1: 0, x2: 6.2832, color: 'blue', pattern: 'dashed'},
+    {id: 'q', type: 'curve', graph: 'G', kind: 'ineq', expr: '0.5 x - 2', rel: 'lt', color: 'green'}]],
+  /* drawn shapes given physics: a ramp and a floor drawn as lines, boxes and a ball that fall, slide and roll */
+  rigid_demo: ['mech', '그린 도형에 물리 적용 (경사면 · 상자 · 공)', 'Drawn shapes with physics (ramp, boxes, ball)', 0.1, {x: -0.3, y: -0.4, w: 5.6, h: 3.4}, [
+    {id: 'fl', type: 'line', x1: 0, y1: 0, x2: 5, y2: 0, pattern: 'solid', phys: 'static', pmu: 0.4},
+    {id: 'rp', type: 'line', x1: 0, y1: 1.8, x2: 2.2, y2: 0.4, pattern: 'solid', phys: 'static', pmu: 0.2},
+    {id: 'wl', type: 'line', x1: 5, y1: 0, x2: 5, y2: 2.6, pattern: 'solid', phys: 'static'},
+    {id: 'bx', type: 'rect', x: 0.28, y: 1.53, w: 0.4, h: 0.3, rot: -32.47, fill: 'lightgray', phys: 'dynamic', pmass: 1, pmu: 0.2},
+    {id: 'b2', type: 'rect', x: 3.6, y: 0, w: 0.5, h: 0.5, fill: 'gray', phys: 'dynamic', pmass: 2},
+    {id: 'b3', type: 'rect', x: 3.65, y: 0.5, w: 0.4, h: 0.4, fill: 'lightgray', phys: 'dynamic', pmass: 1},
+    {id: 'bl', type: 'ellipse', x: 1.5, y: 2.2, w: 0.3, h: 0.3, fill: 'tint', color: 'red', phys: 'dynamic', pmass: 0.5, pvx: 1.2, pe: 0.6},
+    {id: 'pd', type: 'ellipse', x: 4.35, y: 1.25, w: 0.2, h: 0.2, fill: 'dark', phys: 'dynamic', pmass: 0.3, pvx: -1.5},
+    {id: 'jt', type: 'joint', a: 'pd', b: '', kind: 'rod', bx: 4.45, by: 2.5},
+    {id: 'pv', type: 'point', x: 4.45, y: 2.5, filled: false}]]
 };
 export const TEMPLATE_KEYS = [...MECH_KEYS, ...Object.keys(NEW_TEMPLATES)];
 export const TEMPLATE_NAMES = {...MECH_NAMES, ...Object.fromEntries(Object.entries(NEW_TEMPLATES).map(([k, t]) => [k, {ko: t[1], en: t[2]}]))};
@@ -1099,7 +1338,8 @@ function baseExtent(o) {
     case 'wave': return box(o.x, o.y - o.A - 0.3, o.x + o.len, o.y + o.A + 0.3);
     case 'spacetime': return box(o.x - o.size * 0.6, o.y - 0.1, o.x + o.size, o.y + o.size);
     case 'frames': return box(o.x - 0.1, o.y - 0.1, o.x + o.gap + o.size, o.y + o.size + 0.3);
-    case 'qpot': case 'rect': case 'ellipse': return box(o.x, o.y, o.x + o.w, o.y + o.h);
+    case 'qpot': case 'rect': case 'ellipse': case 'nnet': return box(o.x, o.y, o.x + o.w, o.y + o.h);
+    case 'fbox': return box(o.x - o.w / 2, o.y - o.h / 2, o.x + o.w / 2, o.y + o.h / 2);
     case 'poly': { const xs = o.pts.map(q => q[0]), ys = o.pts.map(q => q[1]); return box(Math.min(...xs) - 0.03, Math.min(...ys) - 0.03, Math.max(...xs) + 0.03, Math.max(...ys) + 0.03); }
     case 'bezier': { const pts = bezierPoints(o, 24); return box(Math.min(...pts.map(q => q.x)) - 0.03, Math.min(...pts.map(q => q.y)) - 0.03, Math.max(...pts.map(q => q.x)) + 0.03, Math.max(...pts.map(q => q.y)) + 0.03); }
   }
@@ -1132,7 +1372,9 @@ export function simplifyPath(pts, tol, max = 200) {
 export function sceneBounds(scene) {
   let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
   const add = (x, y) => { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); };
+  const geo = scene.objects.some(o => GEO_TYPES.includes(o.type)) ? computeGeometry(scene) : null;
   for (const o of scene.objects) {
+    if (geo && GEO_TYPES.includes(o.type)) { const b = geoExtent(geo, o); if (b) { add(b.x, b.y); add(b.x + b.w, b.y + b.h); } continue; }
     if (isBody(o)) { const p = bodyPose(scene, o), r = Math.max(bodyHalfWidth(o), bodyHalfHeight(o)) * 1.5; add(p.x - r, p.y - r); add(p.x + r, p.y + r); continue; }
     const b = objectExtent(o);
     if (b) { add(b.x, b.y); add(b.x + b.w, b.y + b.h); }
@@ -1154,7 +1396,7 @@ export const UNSURE_FIELDS = ['object', 'position', 'mass', 'angle', 'mu', 'k', 
 export function visionProperties() {
   const props = {};
   for (const t of VISION_OBJECT_TYPES) for (const [k, f] of Object.entries(FIELDS[t])) {
-    if (k in COMMON_FIELDS) continue;
+    if (k in COMMON_FIELDS || k in PHYS_FIELDS) continue;
     const s = f.k === 'num' ? {type: 'number'} : f.k === 'bool' ? {type: 'boolean'} : f.k === 'refs' ? {type: 'array', items: {type: 'string'}} : f.k === 'enum' ? {type: 'string', enum: [...f.list]} : {type: 'string'};
     const old = props[k];
     if (!old) props[k] = s;
@@ -1162,4 +1404,34 @@ export function visionProperties() {
     else if (s.enum) props[k] = {type: 'string', enum: [...new Set([...(old.enum || []), ...s.enum])]};
   }
   return props;
+}
+
+/** The scene schema in a compact, machine-readable form, for a model asked to write or change a scene (the server's
+ *  POST /api/workshop/ai/scene imports it for its prompt): every type with its domain, the references it needs and
+ *  each field as [kind, default, …] — num: [min, max], enum: [values], txt: max length, ref/refs: the types it may
+ *  name. The fields every object has (lw, ls, lock, style) are listed once under common. Plain JSON, no functions. */
+export function sceneSchemaForAI() {
+  const field = d => d.k === 'num' ? ['num', d.d, d.min, d.max] : d.k === 'enum' ? ['enum', d.d, [...d.list]] : d.k === 'bool' ? ['bool', d.d]
+    : d.k === 'ref' ? ['ref', [...d.types]] : d.k === 'refs' ? ['refs', [...d.types], d.max] : d.k === 'pts' ? ['pts', d.max] : [d.k, d.d, d.max];
+  const types = {};
+  for (const [t, F] of Object.entries(FIELDS)) {
+    const fields = {};
+    for (const [k, d] of Object.entries(F)) if (!(k in COMMON_FIELDS)) fields[k] = field(d);
+    types[t] = {domain: TYPE_DOMAIN[t], ...(REQUIRED_REFS[t] ? {needs: [...REQUIRED_REFS[t]]} : {}), fields};
+  }
+  const out = {format: SCENE_FORMAT, version: SCENE_VERSION, maxObjects: MAX_OBJECTS,
+    units: 'lengths in metres of the drawing (y up), masses kg, forces N, angles degrees; keep the figure within about 0..6 m',
+    top: {title: ['txt', '', 80], g: ['num', 9.8, 0.1, 30], grid: ['num', 0.1, 0.01, 1], style: ['enum', 'textbook', [...STYLE_KEYS]], view: 'optional {x,y,w,h}', values: ['bool', false], gravityOn: ['bool', true], drag: ['num', 0, 0, 50]},
+    common: Object.fromEntries(Object.entries(COMMON_FIELDS).map(([k, d]) => [k, field(d)])),
+    ids: 'a letter, then letters, digits, _ or - (at most 24), unique',
+    labels: 'TeX-like: m_1, \\theta, \\vec{F}, $…$ for maths, \\ce{H2O} for chemistry',
+    expressions: 'curve expr: + - * / ^, sin cos tan exp ln log sqrt abs …, pi, e, comparisons and c ? a : b; variable x (t for param and polar); params "a=1 [0, 2], k=3"',
+    domains: Object.fromEntries(Object.entries(DOMAINS).map(([d, l]) => [d, [...l]])), types};
+  /* the same as text for a prompt: one line a type, "type {field,…}" and then each field's kind, default and range */
+  const one = ([k, d]) => d[0] === 'num' ? `${k}=${d[1]} [${d[2]},${d[3]}]` : d[0] === 'enum' ? `${k}:${d[2].join('|')}` : d[0] === 'bool' ? `${k}:bool` : d[0] === 'ref' ? `${k}→${d[1].join('|')}` : d[0] === 'refs' ? `${k}→[${d[1].join('|')}]` : d[0] === 'pts' ? `${k}:[[x,y],…]` : `${k}:${d[0]}≤${d[2]}`;
+  out.text = [`Scene ${SCENE_FORMAT} v${SCENE_VERSION}: {title, g, grid, style (${STYLE_KEYS.join('|')}), view {x,y,w,h}, objects: [{id, type, …fields}]}, at most ${MAX_OBJECTS} objects.`,
+    `Units: ${out.units}. ids: ${out.ids}. Labels: ${out.labels}. Formulas: ${out.expressions}.`,
+    `Every object may also have: ${Object.entries(out.common).map(one).join(', ')}.`,
+    ...Object.entries(types).map(([t, d]) => `${t} {${Object.keys(d.fields).join(',')}}${d.needs ? ' needs ' + d.needs.join(',') : ''} — ${Object.entries(d.fields).map(one).join('; ')}`)].join('\n');
+  return out;
 }

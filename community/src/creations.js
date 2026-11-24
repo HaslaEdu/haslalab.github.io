@@ -80,8 +80,9 @@ export function createCreationRouter({HttpError, needUser, limit, now, bad, clie
       const sort = q.get('sort') === 'popular' ? '(c.likes*3+c.solves*2+c.plays) DESC, c.id DESC' : 'c.id DESC';
       const page = Math.max(1, Math.min(200, parseInt(q.get('page')) || 1));
       const mine = q.get('mine') === '1' && me;
-      const where = mine ? 'c.user_id=?' : "c.status='public'" + (kind ? ' AND c.kind=?' : '');
-      const args = mine ? [me.id] : kind ? [kind] : [];
+      /* figures and problem sets shared from the other makers (workshop-share.js) are kept here too; create.html lists only its own kinds */
+      const where = (mine ? 'c.user_id=?' : "c.status='public'") + (kind ? ' AND c.kind=?' : " AND c.kind IN ('sim','code')");
+      const args = [...(mine ? [me.id] : []), ...(kind ? [kind] : [])];
       const rows = (await DB.prepare(`SELECT ${LIST_COLS} FROM creations c LEFT JOIN users u ON u.id=c.user_id WHERE ${where} ORDER BY ${sort} LIMIT ? OFFSET ?`)
         .bind(...args, PER_PAGE + 1, (page - 1) * PER_PAGE).all()).results || [];
       return {items: rows.slice(0, PER_PAGE), more: rows.length > PER_PAGE, page};
@@ -111,8 +112,9 @@ export function createCreationRouter({HttpError, needUser, limit, now, bad, clie
       if (!owner && !staff) throw new HttpError(403, 'not_owner');
       await limit(env, 'creation-edit:' + me.id, 120, 3600);
       const c = {...row, ...clean(body, true)};complete(c);
-      await DB.prepare(`UPDATE creations SET kind=?,title=?,summary=?,body=?,code=?,starter=?,grader=?,answer=?,unit=?,updated_at=? WHERE id=?`)
-        .bind(c.kind, c.title, c.summary, c.body, c.code, c.starter, c.grader, c.answer, c.unit, t, id).run();
+      /* a remix starts as the member's private draft (workshop-share.js); the editor's "save and publish" makes it public */
+      await DB.prepare(`UPDATE creations SET kind=?,title=?,summary=?,body=?,code=?,starter=?,grader=?,answer=?,unit=?,updated_at=?,status=CASE WHEN status='draft' AND user_id=? THEN 'public' ELSE status END WHERE id=?`)
+        .bind(c.kind, c.title, c.summary, c.body, c.code, c.starter, c.grader, c.answer, c.unit, t, me.id, id).run();
       return {ok: true};
     }
     if (!mm[2] && m === 'DELETE') {

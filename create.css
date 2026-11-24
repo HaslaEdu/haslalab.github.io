@@ -92,3 +92,17 @@ main.wide{max-width:1480px}
   .st-gap{display:none}
 }
 @media (max-width:600px){.studio{--edh:520px}.st-bar button,.st-bar select{padding:6px 9px;font-size:13.5px}.st-title{min-width:100%;order:2}.st-con{height:130px}}
+
+/* the storage dialog (보관함에서 열기) of the coding environment and the problem maker */
+dialog.stdlg{border:1px solid var(--line);border-radius:14px;padding:16px;width:min(560px,calc(100vw - 32px));max-height:min(80vh,640px);background:var(--surface,#fff);color:inherit}
+dialog.stdlg::backdrop{background:rgba(15,23,42,.35)}
+.stdlg .dlg-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.stdlg h2{margin:0;font-size:18px}.stdlg .seg{margin:10px 0;width:max-content}
+.dlg-list{display:flex;flex-direction:column;gap:6px;overflow:auto;max-height:52vh}
+.dlg-file{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px}.dlg-file span{font-size:12px;color:var(--muted)}.dlg-file.on{border-color:var(--rail)}
+/* the sharing dialog (share-makers.js), used by create.html and teach.html */
+dialog.shdlg{width:min(620px,calc(100vw - 32px));max-height:min(90vh,820px);overflow:auto}
+.sh-fields{display:grid;gap:10px;margin-top:10px}.sh-fields label{display:grid;gap:4px;font-size:13px;color:var(--muted)}.sh-fields label input,.sh-fields label textarea,.sh-fields label select{color:var(--ink);font-size:14px}
+.sh-two{display:grid;grid-template-columns:2fr 1fr;gap:10px}@media (max-width:520px){.sh-two{grid-template-columns:1fr}}
+.sh-thumb{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--muted)}.sh-thumb img{width:160px;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff}
+.sh-errs{margin:8px 0 0;padding-left:18px;color:var(--bad);font-size:13px}.sh-errs:empty{display:none}
+.sh-msg.ok{color:var(--ok)}.sh-msg.bad{color:var(--bad)}

@@ -39,8 +39,10 @@ import { createWorkshopStorageRouter, workshopForgetUser } from './workshop-stor
 import { createWorkshopConnectorsRouter, workshopConnectorsForgetUser } from './workshop-connectors.js';
 import { createWorkshopSceneRouter } from './workshop-scene.js';
 import { createWorkshopCodeAiRouter } from './workshop-code-ai.js';
+import { createWorkshopAiRouter, workshopAiForgetUser } from './workshop-ai.js';
 import { createGradeRouter, ensureGradeSchema } from './practice-grade.js';
 import { createCreationRouter, ensureCreationSchema } from './creations.js';
+import { createShareRouter, ensureShareSchema, shareDeletion } from './workshop-share.js';
 import { isProblemPeriod, isMonthPeriod, canonicalProblemPeriod, isoMonth } from './problem-period.js';
 import { getMonthlyAnswerSheet, getMonthlyProblemRound } from '../../monthly-problems.mjs';
 import { ensureMonthlyAnswerSetup, visibleMonthlySql, normalizeMonthlyParts,
@@ -282,10 +284,12 @@ const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, cli
 const handoutRouter = createHandoutRouter({HttpError, needUser, limit, now, bad, isAdmin: u => isAdmin(u)});
 const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
+const shareRouter = createShareRouter({HttpError, needUser, limit, now, bad, clientIp, text, isStaff: u => isAdmin(u)});
 const workshopStorageRouter = createWorkshopStorageRouter({HttpError, needUser, limit, now, bad});
 const workshopConnectorsRouter = createWorkshopConnectorsRouter({HttpError, needUser, limit, now, bad});
 const workshopSceneRouter = createWorkshopSceneRouter({HttpError, needUser, limit, now, bad});
 const workshopCodeAiRouter = createWorkshopCodeAiRouter({HttpError, needUser, limit, now, bad});
+const workshopAiRouter = createWorkshopAiRouter({HttpError, needUser, limit, now, bad});
 const galleryRouter = createGalleryRouter({HttpError, needUser, limit, now, text, bad, invalidate: env => invalidatePublicReads(env)});
 /* a post goes to a built-in board of the main gallery or to an open minor gallery */
 const postBoard = async (env, board) => BOARDS.includes(board) ? board : (await activeGallery(env, board)) ? board : null;
@@ -512,6 +516,8 @@ async function handle(req, env, url, ctx) {
     await workshopForgetUser(env, me.id);
     // the storage connectors: the Google token is revoked at Google, both links and any flow in progress go (workshop-connectors.js)
     await workshopConnectorsForgetUser(env, me.id);
+    // the Workshop AI makers' call log (workshop-ai.js)
+    await workshopAiForgetUser(env, me.id);
     // Sign in with Apple: revoke this member's Apple tokens before the link goes (App Store Guideline 5.1.1(v))
     await revokeAppleTokens(env, me.id);
     // Learn section progress (practice-progress.js)
@@ -519,6 +525,7 @@ async function handle(req, env, url, ctx) {
     await ensureLearnSchema(env);
     await ensureGradeSchema(env);
     await ensureCreationSchema(env);
+    await ensureShareSchema(env);
     // country and daily goal (learner-profile.js) and the weekly league (league.js)
     await ensureLearnerSchema(env);
     await ensureLeagueSchema(env);
@@ -538,6 +545,7 @@ async function handle(req, env, url, ctx) {
       env.DB.prepare("UPDATE creations SET status='hidden' WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM creation_likes WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM creation_solves WHERE user_id=?").bind(me.id),
+      ...shareDeletion(env, me.id),
       env.DB.prepare("UPDATE classes SET closed_at=? WHERE teacher_id=? AND closed_at IS NULL").bind(now(), me.id),
       ...hphoRows,
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
@@ -831,6 +839,9 @@ async function handle(req, env, url, ctx) {
   if (learn !== undefined) return learn;
   const creation = await creationRouter(p, m, body, me, req, env);
   if (creation !== undefined) return creation;
+  // the Workshop's sharing place, 작품 공유 (workshop-share.js)
+  const shareResult = await shareRouter(p, m, body, me, req, env);
+  if (shareResult !== undefined) return shareResult;
   const workshopStorage = await workshopStorageRouter(p, m, body, me, req, env);
   if (workshopStorage !== undefined) return workshopStorage;
   const workshopConnectors = await workshopConnectorsRouter(p, m, body, me, req, env);
@@ -839,6 +850,8 @@ async function handle(req, env, url, ctx) {
   if (workshopScene !== undefined) return workshopScene;
   const workshopCodeAi = await workshopCodeAiRouter(p, m, body, me, req, env);
   if (workshopCodeAi !== undefined) return workshopCodeAi;
+  const workshopAi = await workshopAiRouter(p, m, body, me, req, env);
+  if (workshopAi !== undefined) return workshopAi;
   const gallery = await galleryRouter(p, m, body, me, env);
   if (gallery !== undefined) return gallery;
   const omr = await omrRouter(p, m, body, me, req, env, url);
