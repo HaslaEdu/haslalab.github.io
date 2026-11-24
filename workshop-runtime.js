@@ -25,7 +25,8 @@
       if (started) return;
       started = true;
       const {language, code, binary} = data;
-      let stdout = '', stderr = '', plots = [], stage = 'runtime';
+      const stdin = (typeof data.stdin === 'string' ? data.stdin : '').replace(/\r\n?/g,'\n').slice(0,8000);
+      let stdout = '', stderr = '', plots = [], images = [], stage = 'runtime';
       try {
         if (language === 'python') {
           send({phase:'python'});
@@ -43,6 +44,10 @@
             }
             return instance;
           });
+          const lines = stdin.split('\n');
+          if (lines.at(-1) === '') lines.pop();
+          let input = 0;
+          py.setStdin({stdin:() => lines[input++] ?? null});
           py.setStdout({batched:s => { if (stdout.length < 32000) stdout += s.slice(0, 32000) + '\n'; }});
           py.setStderr({batched:s => { if (stderr.length < 8000) stderr += s.slice(0, 8000) + '\n'; }});
           py.globals.set('_hl_plot', (x, y, label) => {
@@ -53,10 +58,25 @@
             'def plot(x, y, label=""):\n' +
             '    _hl_plot(list(map(float, _hl_slice(iter(x), 2000))), list(map(float, _hl_slice(iter(y), 2000))), label)\n'
           );
+          const matplotlib = /\b(?:import|from)\s+matplotlib\b/.test(code);
           stage = 'program';
           send({phase:'running'});
+          if (matplotlib) {
+            py.globals.set('_hl_image', data => { if (images.length < 4 && data.length <= 500000) images.push(data); });
+            await py.runPythonAsync(
+              'import matplotlib as _hl_mpl\n_hl_mpl.use("Agg")\n' +
+              'import matplotlib.pyplot as _hl_plt\n_hl_plt.show = lambda *a, **k: None\n'
+            );
+          }
           const result = await py.runPythonAsync(code);
           if (typeof result?.destroy === 'function') result.destroy();
+          if (matplotlib) await py.runPythonAsync(
+            'import io as _hl_io, base64 as _hl_b64\n' +
+            'for _hl_num in _hl_plt.get_fignums()[:4]:\n' +
+            '    with _hl_io.BytesIO() as _hl_buffer:\n' +
+            '        _hl_plt.figure(_hl_num).savefig(_hl_buffer, format="png", dpi=80)\n' +
+            '        _hl_image(_hl_b64.b64encode(_hl_buffer.getvalue()).decode("ascii"))\n'
+          );
         } else if (language === 'c' && !binary) {
           send({phase:'compiler'});
           const wasm = await withMirror(async host => {
@@ -88,7 +108,7 @@
           stderr = data.stderr || '';
           const outDecoder = new TextDecoder(), errDecoder = new TextDecoder();
           const wasi = new WASI(['simulation'], [], [
-            new OpenFile(new File(new Uint8Array())),
+            new OpenFile(new File(new TextEncoder().encode(stdin))),
             new ConsoleStdout(b => { if (stdout.length < 32000) stdout += outDecoder.decode(b,{stream:true}).slice(0,32000); }),
             new ConsoleStdout(b => { if (stderr.length < 8000) stderr += errDecoder.decode(b,{stream:true}).slice(0,8000); })
           ]);
@@ -100,7 +120,7 @@
           if (status) throw new Error('C exit code ' + status);
           plots = points(stdout);
         } else throw new Error('Unsupported runtime');
-        send({phase:'done',stdout:stdout.slice(0,32000),stderr:stderr.slice(0,8000),plots});
+        send({phase:'done',stdout:stdout.slice(0,32000),stderr:stderr.slice(0,8000),plots,images});
       } catch (error) {
         send({phase:'done',stage,stdout:stdout.slice(0,32000),error:(stderr + '\n' + text(error)).trim().slice(0,8000)});
       }
@@ -116,7 +136,7 @@
       worker.onmessage = ({data}) => {
         if (input.language === 'c' && !input.binary && data?.phase === 'compiled' && data.binary instanceof ArrayBuffer) {
           worker.terminate();
-          runWorker({language:'c',binary:data.binary,stderr:data.stderr}, [data.binary]);
+          runWorker({language:'c',binary:data.binary,stderr:data.stderr,stdin:input.stdin}, [data.binary]);
         } else forward(data);
       };
       worker.onerror = event => forward({phase:'done',stage:'runtime',error:event.message || 'Browser runtime failed to start'});
@@ -130,7 +150,7 @@
     if (typeof e.data.code !== 'string' || e.data.code.length > 60000 || !['python','c'].includes(e.data.language)) return;
     started = true;
     parentOrigin = e.origin;
-    runWorker({language:e.data.language,code:e.data.code});
+    runWorker({language:e.data.language,code:e.data.code,stdin:typeof e.data.stdin === 'string' ? e.data.stdin.slice(0,8000) : ''});
   });
   addEventListener('pagehide', () => { worker?.terminate(); URL.revokeObjectURL(url); });
   parent.postMessage({phase:'ready'}, '*');

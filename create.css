@@ -37,9 +37,8 @@ main.wide{max-width:1480px}
 .compute-maker :is(#cpCode,#cpPrompt,#cpDescription){resize:vertical}.compute-maker #cpCode{min-height:190px}
 .compute-maker #cpFigure{margin-top:10px}.compute-maker #cpFigure img{display:block;max-width:100%;max-height:170px;margin-bottom:8px;background:white;border-radius:8px}
 .compute-maker details{margin-top:14px}.compute-maker details textarea{margin-top:8px}
-.compute-maker #cpPlots figure{margin:12px 0}.compute-maker #cpPlots svg{width:100%;display:block;background:var(--alt);border-radius:8px}
-.compute-result-head,.compute-chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.compute-chat-head span{color:var(--muted);font-size:12px}
+.compute-maker #cpPlots figure{margin:12px 0}.compute-maker #cpPlots img{display:block;max-width:100%;height:auto;margin:12px auto;border-radius:8px}
+.compute-maker #cpPlots svg{width:100%;display:block;background:var(--alt);border-radius:8px}
 .compute-chat #cpChat{display:grid;gap:10px;max-height:min(44vh,380px);overflow:auto;overscroll-behavior:contain;padding:3px 2px}
 .compute-chat #cpChat p{padding:10px 12px;margin:0;border-radius:12px;background:var(--alt);white-space:pre-wrap;overflow-wrap:anywhere}
 .compute-chat #cpChat strong{display:block;margin-bottom:4px;font-size:12px;color:var(--muted)}
@@ -55,6 +54,17 @@ main.wide{max-width:1480px}
 .compute-viewbar [data-pane=assistant]{display:none}
 .compute-chat[hidden],.compute-viewbar[hidden]{display:none}
 .compute-actions{margin:12px 0}
+.dock-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 8px;font-weight:650;font-size:13px}
+.dock-controls{display:inline-flex;gap:4px;flex-wrap:wrap}
+.dock-controls button{padding:4px 8px;font-size:12px;white-space:nowrap}
+.dock-controls button[aria-pressed=true]{color:var(--accent2);background:var(--soft);border-color:var(--accent)}
+.is-dock-expanded [data-dock]:not(.is-dock-expanded-item){display:none!important}
+.compute-work.is-dock-expanded,.is-workspace .compute-work.is-dock-expanded{display:block}
+.compute-work.is-dock-expanded .compute-document{display:block}
+.compute-work.is-dock-expanded [data-dock].is-dock-expanded-item{display:block!important}
+.compute-work.is-dock-expanded .compute-document:not(:has(.is-dock-expanded-item)){display:none}
+.dock-bar h2{margin:0}
+.copy-fallback-field{position:fixed;inset:0 auto auto 0;inline-size:1px;block-size:1px;opacity:0;pointer-events:none}
 .compute-runtime-frame{position:absolute;inline-size:1px;block-size:1px;border:0;clip-path:inset(50%);pointer-events:none}
 .is-workspace .compute-work{display:grid;grid-template-columns:minmax(280px,0.8fr) minmax(0,1.2fr);gap:14px;align-items:start}
 .is-workspace .compute-chat{grid-column:1;grid-row:1}
@@ -155,7 +165,7 @@ dialog.shdlg{width:min(620px,calc(100vw - 32px));max-height:min(90vh,820px);over
 .project-library{padding:6px 0 20px}
 .project-library-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .project-library .project-library-head{padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--alt)}
-.project-library .project-library-title{font-size:clamp(1.55rem,3vw,2.15rem);line-height:1.2;margin:0}
+.project-library .project-library-title{font-size:clamp(1.55rem,3vw,2.15rem);line-height:1.2;margin:0;outline:none}
 .project-library .project-library-tools{margin:0}
 .project-library .project-library-manage{font-size:13px;color:var(--muted);background:transparent;border-color:transparent}
 .project-library-filters{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:18px 0}
