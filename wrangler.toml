@@ -158,6 +158,13 @@ BANK_OCR_MODEL = "gemini-3.1-flash-lite"
 # photo once, removed from Drive when the site lets it go. Needs the secrets GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET and
 # GDRIVE_REFRESH_TOKEN (scope drive.file); without them nothing runs. "off" stops it.
 BACKUP_DRIVE = "on"
+# Workshop storage connectors (src/workshop-connectors.js; owner setup in CONNECTORS.md). Google Drive: GOOGLE_CLIENT_ID /
+# GOOGLE_CLIENT_SECRET (the sign-in client) and the secret WORKSHOP_TOKEN_KEY. GitHub: the secrets GITHUB_APP_ID,
+# GITHUB_APP_CLIENT_ID, GITHUB_APP_CLIENT_SECRET, GITHUB_APP_PRIVATE_KEY and the variable GITHUB_APP_SLUG (the App's public
+# name in its URL, not a secret: add it here as GITHUB_APP_SLUG = "<slug>" once the App exists, never as an empty value).
+# Until they are set the storage page shows both connectors as "not set up yet". Optional: WORKSHOP_CONNECTOR_ORIGIN (an
+# https origin) moves the two callbacks off https://haslalab-community.haslalab.workers.dev.
+GITHUB_APP_SLUG = "haslalab-storage"
 # empty: Gemini thinks at the level the bench measured (minimal); "off" would leave it to the model
 LAB_READ_THINKING = ""
 # 3.8 Flash on AI Studio: 7 of 17 production reads failed at 126-128 s (a page looping on itself; the same on Vertex),
