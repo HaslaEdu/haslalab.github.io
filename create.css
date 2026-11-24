@@ -40,8 +40,11 @@ main.wide{max-width:1480px}
 .compute-maker details{margin-top:14px}.compute-maker details textarea{margin-top:8px}
 .compute-maker #cpPlots figure{margin:12px 0}.compute-maker #cpPlots img{display:block;max-width:100%;height:auto;margin:12px auto;border-radius:8px}
 .compute-maker #cpPlots svg{width:100%;display:block;background:var(--alt);border-radius:8px}
-.compute-chat #cpChat{display:grid;gap:10px;max-height:min(44vh,380px);overflow:auto;overscroll-behavior:contain;padding:3px 2px}
-.compute-chat #cpChat p{padding:10px 12px;margin:0;border-radius:12px;background:var(--alt);white-space:pre-wrap;overflow-wrap:anywhere}
+.compute-chat #cpChat{display:grid;gap:14px;max-height:min(58vh,640px);overflow:auto;overscroll-behavior:contain;padding:3px 2px}
+.compute-chat #cpChat article{padding:10px 12px;border-radius:12px;background:var(--alt);min-width:0}
+.compute-chat #cpChat p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.compute-chat #cpChat details{margin:8px 0 7px}
+.compute-chat #cpChat button{padding:5px 10px;font-size:13px}
 .compute-chat #cpChat strong{display:block;margin-bottom:4px;font-size:12px;color:var(--muted)}
 .compute-chat #cpChat .compute-turn-user{margin-inline-start:12%;background:var(--soft)}
 .compute-chat #cpChat .compute-turn-assistant{margin-inline-end:8%}
@@ -56,24 +59,29 @@ main.wide{max-width:1480px}
 .compute-chat[hidden],.compute-viewbar[hidden]{display:none}
 .compute-actions{margin:12px 0}
 .dock-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:0 0 8px;font-weight:650;font-size:13px}
-.dock-handle{--dock-axis:y;--dock-sign:1;position:relative;z-index:2;display:grid;place-items:center;width:48px;height:32px;margin:2px auto -10px;cursor:row-resize;touch-action:none;user-select:none;-webkit-user-select:none}
-.dock-handle::before{content:'↕';display:grid;place-items:center;width:30px;height:20px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--accent2);font:700 14px/1 system-ui;box-shadow:0 1px 3px #0002}
-.dock-handle:hover::before,.dock-handle:active::before,.dock-handle:focus-visible::before{border-color:var(--accent);background:var(--soft)}
-.dock-handle:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-radius:5px}
+.dock-handle{--dock-axis:y;--dock-sign:1;position:absolute;z-index:2;left:0;right:0;bottom:-9px;height:18px;cursor:row-resize;touch-action:none;user-select:none;-webkit-user-select:none}
+.dock-handle::before{content:'';position:absolute;inset:calc(50% - 1px) 0 auto;height:2px;border-radius:2px;pointer-events:none}
+.dock-handle:hover::before,.dock-handle:active::before,.dock-handle:focus-visible::before{background:var(--accent)}
+.dock-handle:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.dock-tab{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:7px 7px 3px 3px;background:var(--alt);font-weight:650;touch-action:manipulation;user-select:none}
+.dock-tab-icon{font:700 15px/1.2 system-ui;color:var(--accent2)}
+.dock-tab-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dock-icon-rail .dock-tab-label{display:none}
+.dock-icon-rail .dock-bar{justify-content:center}
+.dock-icon-rail .dock-tab{padding:4px 6px}
 [data-dock]{position:relative;min-width:0}
 [data-dock-body]{height:var(--dock-height,auto);min-width:0;overflow:auto}
 .dock-collapsed>[data-dock-body]{height:0;visibility:hidden;overflow:hidden}
 @media(min-width:761px){
   .compute-maker:not(.is-workspace) .compute-document{grid-template-columns:min(var(--dock-code-width,50%),66%) minmax(0,1fr);gap:22px}
   .is-workspace .compute-work{grid-template-columns:min(var(--dock-assistant-width,38%),62%) minmax(0,1fr);gap:22px}
-  .compute-maker:not(.is-workspace) #cpCodePane>.dock-handle,.is-workspace #cpAssistant>.dock-handle{--dock-axis:x;--dock-max:.66;position:absolute;top:22px;right:-21px;width:42px;height:46px;margin:0;cursor:col-resize}
+  .compute-maker:not(.is-workspace) #cpCodePane>.dock-handle,.is-workspace #cpAssistant>.dock-handle{--dock-axis:x;--dock-max:.66;top:0;bottom:0;left:auto;right:-11px;width:22px;height:auto;cursor:col-resize}
   .is-workspace #cpAssistant>.dock-handle{--dock-max:.62}
-  .compute-maker:not(.is-workspace) #cpCodePane>.dock-handle::before,.is-workspace #cpAssistant>.dock-handle::before{content:'↔';width:20px;height:30px}
+  .compute-maker:not(.is-workspace) #cpCodePane>.dock-handle::before,.is-workspace #cpAssistant>.dock-handle::before{inset:0 auto 0 calc(50% - 1px);width:2px;height:auto}
   .compute-maker:not(.is-workspace) #cpCodePane>[data-dock-body],.is-workspace #cpAssistant>[data-dock-body]{height:auto}
-  .compute-maker:not(.is-workspace) #cpCodePane.dock-collapsed>:is(.dock-bar,[data-dock-body]),.is-workspace #cpAssistant.dock-collapsed>:is(.dock-bar,[data-dock-body]){display:none}
+  .compute-maker:not(.is-workspace) #cpCodePane.dock-collapsed>[data-dock-body],.is-workspace #cpAssistant.dock-collapsed>[data-dock-body]{display:none}
   .compute-maker:not(.is-workspace) #cpCodePane.dock-collapsed,.is-workspace #cpAssistant.dock-collapsed{min-height:96px;padding-inline:0}
 }
-.dock-bar h2{margin:0}
 .copy-fallback-field{position:fixed;inset:0 auto auto 0;inline-size:1px;block-size:1px;opacity:0;pointer-events:none}
 .compute-runtime-frame{position:absolute;inline-size:1px;block-size:1px;border:0;clip-path:inset(50%);pointer-events:none}
 .is-workspace .compute-work{display:grid;align-items:start}

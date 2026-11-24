@@ -325,6 +325,10 @@
       onOpen: (raw, entry) => showPages(raw, entry.name),
       onResume: local ? () => showPages(local, txt('현재 브라우저 작업','Current browser draft')) : null});
   }
+  function panelTab(bodyId, name, icon) {
+    const title = txt(...name);
+    return '<button type="button" class="dock-tab" data-dock-tab aria-controls="'+bodyId+'" aria-expanded="true" aria-label="'+title+'" title="'+title+'"><span aria-hidden="true" class="dock-tab-icon">'+icon+'</span><span class="dock-tab-label">'+title+'</span></button>';
+  }
   function panelHandle(bodyId, name) {
     const label = txt(name[0] + ' 크기 조절', 'Resize ' + name[1]);
     return '<div class="dock-handle" data-dock-handle role="separator" tabindex="0" aria-controls="' + bodyId +
@@ -339,6 +343,7 @@
       const panel = handle.closest('[data-dock]'), body = panel.querySelector('[data-dock-body]');
       const id = panel.dataset.dock, minHeight = Number(panel.dataset.minHeight || 0);
       const widthKey = '--dock-' + id + '-width';
+      const tab = panel.querySelector('[data-dock-tab]'), restored = {x:0,y:0};
       let drag = null;
       function metrics() {
         const css = getComputedStyle(handle), x = css.getPropertyValue('--dock-axis').trim() === 'x';
@@ -357,14 +362,31 @@
         handle.setAttribute('aria-valuenow',String(Math.round(m.size)));
         const collapsed = m.x ? m.size < 100 : !minHeight && m.size < 12;
         panel.classList.toggle('dock-collapsed',collapsed);
+        panel.classList.toggle('dock-icon-rail',collapsed && m.x);
+        tab?.setAttribute('aria-expanded',String(!collapsed));
         body.inert = collapsed;
       }
       function apply(m, value) {
+        const key = m.x ? 'x' : 'y', threshold = m.x ? 100 : m.min + 12;
+        if (m.size >= threshold && value < threshold) restored[key] = m.size;
         let size = Math.round(Math.max(m.min,Math.min(m.max,value)));
         if ((m.x && size < 70) || (!m.x && size < m.min+12)) size = m.min;
         if (m.x) grid.style.setProperty(widthKey,size + 'px');
         else panel.style.setProperty('--dock-height',size + 'px');
         info({...m,size}); notify();
+      }
+      function toggle() {
+        const m = metrics(), key = m.x ? 'x' : 'y';
+        if (panel.classList.contains('dock-collapsed')) apply(m,restored[key] || (m.x ? 224 : 260));
+        else apply(m,m.min);
+      }
+      if (tab) {
+        let revealedAt = -Infinity;
+        tab.onclick = e => {
+          if (panel.classList.contains('dock-collapsed')) { toggle(); revealedAt = performance.now(); }
+          else if (e.detail === 0) toggle();
+        };
+        tab.ondblclick = () => { if (performance.now() - revealedAt > 500) toggle(); };
       }
       const coord = (e, x) => x ? e.clientX : e.clientY;
       handle.addEventListener('pointerdown',e => {
@@ -404,5 +426,5 @@
       if (!m.x && panel.style.getPropertyValue('--dock-height') && m.size < 140) dock.apply(m,200);
     }};
   }
-  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error, panelHandle, bindPanels};
+  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error, panelTab, panelHandle, bindPanels};
 })();
