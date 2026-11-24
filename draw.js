@@ -5,9 +5,9 @@
    localStorage 'hlTeachPaper'; the figure is an SVG data URL with its scene), into the member's storage
    (/api/workshop/storage) or into this browser. "Start from a photo" sends one photo to /api/workshop/scene-from-image
    (community/src/workshop-scene.js) and opens what comes back for checking. */
-import {validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS} from './draw-scene.mjs?v=db9a7a5f3c86';
-import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=356d0090fae5';
-import {renderSVG, texSVG, STYLES} from './draw-render.mjs?v=93b8bb65e09e';
+import {validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE} from './draw-scene.mjs?v=89d7475e50e7';
+import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=38361b6fa4aa';
+import {renderSVG, texSVG, STYLES, STYLE_TABLE, objectBox, printScale} from './draw-render.mjs?v=de4ee6724ac8';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -75,7 +75,8 @@ const X2 = ko ? {
   search: '찾기 (예: 저항, lens, 우물)', style: '그림체', symbols: 'Ω 기호', symTitle: '그리스 문자 · 물리 기호', symHint: '누르면 선택한 글자 칸(없으면 새 글자)에 넣습니다. TeX로 직접 써도 됩니다.',
   solve: '회로 풀기 (전류·전압)', info: '계산값', circuit: '회로', noCircuit: {empty: '회로 소자가 없습니다.', ac: '교류 전원이 있는 회로는 풀지 않습니다.', short: '이상적인 전원이 단락되었거나 전압원 고리가 있어 풀 수 없습니다.'},
   tau: '시간 상수 τ', vFinal: '나중 전압', iFinal: '나중 전류', rth: '테브난 저항', charging: id => `${id} 충전 곡선 V(t)`, current: '전류', drop: '전압', element: '소자',
-  infoT: {cycle: (c) => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (카르노 한계 ${c.carnot})`, oarrow: c => `상 위치 x = ${c.x} m, 배율 m = ${c.m} (${c.real ? '실상' : '허상'})`, slits: c => `무늬 간격 Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, 투과율 T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `일 W = ∫P dV = ${c.W}`},
+  infoT: {rails: c => `유도 기전력 ε = BLv = ${c.emf} V, 전류 I = ${c.I} A, 자기력 F = BIL = ${c.F} N`, buoyancy: c => `부력 ${c.B} N, 무게 ${c.W} N${c.floats < 1 ? `, 뜬다면 잠기는 비율 ${c.floats}` : ', 가라앉음'}`, bridge: c => `접점 위치 l = ${c.l} cm (평형: R/S = l/(100 − l))`,
+    cycle: (c) => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (카르노 한계 ${c.carnot})`, oarrow: c => `상 위치 x = ${c.x} m, 배율 m = ${c.m} (${c.real ? '실상' : '허상'})`, slits: c => `무늬 간격 Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, 투과율 T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `일 W = ∫P dV = ${c.W}`},
   types: {element: '회로 소자', ground: '접지', charge: '점전하', plate: '대전판', fieldlines: '전기력선', field: '균일한 장', cwire: '전류 도선', current: '지면 수직 전류', solenoid: '솔레노이드', loop: '원형 전류 고리', magnet: '막대자석',
     cylinder: '실린더·피스톤', reservoir: '열원', engine: '열기관 도식', graph: '그래프 틀', curve: '곡선', cycle: '순환 과정', lens: '렌즈', mirror: '거울', prism: '프리즘', slab: '유리판', oarrow: '물체 (광학)', ray: '광선', slits: '슬릿·스크린', wavefront: '파면',
     wave: '파동', well: '퍼텐셜 우물', levels: '에너지 준위', phototube: '광전 효과 장치', spacetime: '민코프스키 도표', worldline: '세계선', frames: '관성계 S, S′', vector: '벡터', region: '영역', point: '점'},
@@ -97,7 +98,8 @@ const X2 = ko ? {
   search: 'Search (e.g. resistor, lens, well)', style: 'Style', symbols: 'Ω Symbols', symTitle: 'Greek letters and physics symbols', symHint: 'Click to insert into the selected text field (or a new label). TeX can be typed too.',
   solve: 'Solve the circuit (currents, voltages)', info: 'Computed', circuit: 'Circuit', noCircuit: {empty: 'No circuit elements.', ac: 'Circuits with an AC source are not solved.', short: 'An ideal source is shorted or a loop of voltage sources makes it unsolvable.'},
   tau: 'Time constant τ', vFinal: 'Final voltage', iFinal: 'Final current', rth: 'Thevenin resistance', charging: id => `charging of ${id}, V(t)`, current: 'Current', drop: 'Voltage', element: 'Element',
-  infoT: {cycle: c => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (Carnot limit ${c.carnot})`, oarrow: c => `image at x = ${c.x} m, magnification m = ${c.m} (${c.real ? 'real' : 'virtual'})`, slits: c => `fringe spacing Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, transmission T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `work W = ∫P dV = ${c.W}`},
+  infoT: {rails: c => `motional EMF ε = BLv = ${c.emf} V, current I = ${c.I} A, force F = BIL = ${c.F} N`, buoyancy: c => `buoyancy ${c.B} N, weight ${c.W} N${c.floats < 1 ? `, would float with ${c.floats} submerged` : ', sinks'}`, bridge: c => `jockey at l = ${c.l} cm (balance: R/S = l/(100 − l))`,
+    cycle: c => `W = ${c.W}, Q_in = ${c.Qin}, η = ${c.eta} (Carnot limit ${c.carnot})`, oarrow: c => `image at x = ${c.x} m, magnification m = ${c.m} (${c.real ? 'real' : 'virtual'})`, slits: c => `fringe spacing Δy = λL/d = ${c.dy}`, well: c => `E = ${c.E}${c.T !== undefined ? `, transmission T = ${c.T}` : ''}`, levels: c => c.trans, spacetime: c => `γ = ${c.gamma}`, curve: c => `work W = ∫P dV = ${c.W}`},
   types: {element: 'Circuit element', ground: 'Ground', charge: 'Point charge', plate: 'Charged plate', fieldlines: 'Field lines', field: 'Uniform field', cwire: 'Current wire', current: 'Current through the page', solenoid: 'Solenoid', loop: 'Current loop', magnet: 'Bar magnet',
     cylinder: 'Cylinder and piston', reservoir: 'Reservoir', engine: 'Heat engine diagram', graph: 'Graph frame', curve: 'Curve', cycle: 'Cycle', lens: 'Lens', mirror: 'Mirror', prism: 'Prism', slab: 'Slab', oarrow: 'Object (optics)', ray: 'Ray', slits: 'Slits and screen', wavefront: 'Wavefronts',
     wave: 'Wave', well: 'Potential well', levels: 'Energy levels', phototube: 'Photoelectric setup', spacetime: 'Minkowski diagram', worldline: 'Worldline', frames: 'Frames S, S′', vector: 'Vector', region: 'Region', point: 'Point'},
@@ -114,29 +116,63 @@ const X2 = ko ? {
     rect: 'Rectangle', ellipse: 'Ellipse', gray: 'Gray', hatch: 'Hatching', dots: 'Dots', filled: 'Filled', open: 'Open', stealth: 'Stealth'},
   units: {resistor: 'Ω', bulb: 'Ω', galvanometer: 'Ω', battery: 'V', cell: 'V', dc: 'V', ac: 'V', diode: 'V', led: 'V', capacitor: 'μF', inductor: 'H'}
 };
+/* the added elements, fields and editor tools */
+const X3 = ko ? {
+  types: {wheel: '바퀴 · 원통 · 고리', plank: '막대 · 판 (지레, 시소)', track: '곡면 궤도', bridge: '미터 브리지 · 전위차계', transformer: '변압기', rails: '레일과 움직이는 막대', container: '액체 그릇', utube: 'U자관', thermometer: '온도계', heater: '가열 장치',
+    gasbox: '기체 분자 상자', screen: '스크린', eye: '눈', source: '광원', fiber: '광섬유', pulse: '펄스', interference: '두 파원 간섭', nucleus: '원자핵', particle: '입자 · 광자', panel: '그림 칸 (가)(나)', brace: '묶음 괄호', callout: '지시선', parrows: '나란한 화살표 (압력)'},
+  kinds: {rheostat: '가변 저항', dielectric: '유전체 축전기'},
+  fields: {rot: '회전 (°)', lw: '선 굵기 (배)', ls: '글자 크기 (배)', lock: '잠금 (끌지 않음)', look: '모양', omega: '회전 방향 ω', spokes: '바퀴살', len: '길이 (m)', thick: '두께 (m)', support: '받침', at: '위치 (0–1 / m)', R: '저항 (Ω) / R', scale: '눈금자', np: '1차 감은 수', ns: '2차 감은 수',
+    v: '속도 v (m/s)', B: '자기장 B (T)', field: '자기장', level: '수면 높이 (0–1)', rho: '밀도 ρ (kg/m³)', open: '위가 열림', tube: '관 폭', left: '왼쪽 수면', right: '오른쪽 수면', seed: '배치 번호', xt: 'x 눈금 (값:이름, …)', yt: 'y 눈금 (값:이름, …)', data: '점 (x,y x,y …)', half: '반투명 (빔 분할기)',
+    width: '폭 / 굵기', pos: '위치 (0–1)', shape: '모양', nodal: '마디선', nn: '중성자 수', caption: '칸 이름', frame: '테두리', end: '끝 모양'},
+  enums: {cart: '수레', car: '자동차', disk: '원판 · 원통', ring: '고리', wheel: '바퀴', sphere: '구', shell: '구 껍질', ccw: '반시계', cw: '시계', fulcrum: '받침점 (삼각형)', pivot: '회전축', hinge: '경첩', wall: '벽 경첩', meter: '미터 브리지', pot: '전위차계', lines: '가로줄', cross: '격자 빗금', dark: '진한 회색',
+    flame: '불꽃', coil: '전열선', plate: '전열판', bulb: '전구', laser: '레이저', point: '점광원', sun: '태양', gauss: '종 모양', tri: '삼각형', square: '사각형', right: '오른쪽', left: '왼쪽', electron: '전자', positron: '양전자', proton: '양성자', neutron: '중성자', alpha: '알파 입자', photon: '광자', neutrino: '중성미자', bracket: '꺾쇠', brace: '중괄호', dot: '점', points: '점 잇기'},
+  tools: {back: '↶ 뒤로', fwd: '↷ 앞으로', backT: '되돌리기 (Ctrl+Z)', fwdT: '다시 하기 (Ctrl+Shift+Z, Ctrl+Y)', clear: '모두 지우기', cleared: '모두 지웠습니다. ‘↶ 뒤로’로 되돌릴 수 있습니다.', example: '처음에 예시 보여 주기', values: '값 표시',
+    zoomIn: '확대', zoomOut: '축소', zoomFit: '전체 보기', zoomHint: 'Ctrl+휠·두 손가락으로 확대, 빈 곳을 끌면 여러 개 선택, Space+끌기로 이동', copy: '복사', paste: '붙여넣기', front: '맨 위로', backZ: '맨 아래로', lockAll: '잠금', unlockAll: '잠금 풀기',
+    multi: n => `${n}개 선택됨`, align: '정렬', distribute: '고르게 놓기', aL: '왼쪽', aC: '가운데', aR: '오른쪽', aT: '위', aM: '가운데(세로)', aB: '아래', dH: '가로로', dV: '세로로', printW: '인쇄 폭 (mm, 0: 그림체 기본)', styleSrc: '그림체 근거', sliders: '값 조절', frameMark: '그림 범위', setFrame: '보이는 곳을 그림 범위로'}
+} : {
+  types: {wheel: 'Wheel, cylinder, ring', plank: 'Plank (lever, seesaw)', track: 'Curved track', bridge: 'Meter bridge, potentiometer', transformer: 'Transformer', rails: 'Rails and sliding rod', container: 'Liquid container', utube: 'U-tube', thermometer: 'Thermometer', heater: 'Heater',
+    gasbox: 'Gas molecules box', screen: 'Screen', eye: 'Eye', source: 'Light source', fiber: 'Optical fibre', pulse: 'Pulse', interference: 'Two-source interference', nucleus: 'Nucleus', particle: 'Particle, photon', panel: 'Panel (a)(b)', brace: 'Brace', callout: 'Callout', parrows: 'Parallel arrows (pressure)'},
+  kinds: {rheostat: 'Rheostat', dielectric: 'Capacitor with dielectric'},
+  fields: {rot: 'Rotation (°)', lw: 'Line weight (×)', ls: 'Label size (×)', lock: 'Locked (no dragging)', look: 'Look', omega: 'Spin ω', spokes: 'Spokes', len: 'Length (m)', thick: 'Thickness (m)', support: 'Support', at: 'Position (0–1 / m)', R: 'Resistance (Ω) / R', scale: 'Scale', np: 'Primary turns', ns: 'Secondary turns',
+    v: 'Velocity v (m/s)', B: 'Field B (T)', field: 'Field', level: 'Liquid level (0–1)', rho: 'Density ρ (kg/m³)', open: 'Open top', tube: 'Tube width', left: 'Left level', right: 'Right level', seed: 'Layout seed', xt: 'x ticks (value:label, …)', yt: 'y ticks (value:label, …)', data: 'Points (x,y x,y …)', half: 'Half-silvered (beam splitter)',
+    width: 'Width', pos: 'Position (0–1)', shape: 'Shape', nodal: 'Nodal lines', nn: 'Neutrons', caption: 'Caption', frame: 'Frame', end: 'End'},
+  enums: {cart: 'Cart', car: 'Car', disk: 'Disk, cylinder', ring: 'Ring', wheel: 'Wheel', sphere: 'Sphere', shell: 'Spherical shell', ccw: 'Anticlockwise', cw: 'Clockwise', fulcrum: 'Fulcrum', pivot: 'Pivot', hinge: 'Hinge', wall: 'Wall hinge', meter: 'Meter bridge', pot: 'Potentiometer', lines: 'Lines', cross: 'Cross-hatch', dark: 'Dark gray',
+    flame: 'Flame', coil: 'Coil', plate: 'Hot plate', bulb: 'Bulb', laser: 'Laser', point: 'Point source', sun: 'Sun', gauss: 'Bell', tri: 'Triangle', square: 'Square', right: 'Right', left: 'Left', electron: 'Electron', positron: 'Positron', proton: 'Proton', neutron: 'Neutron', alpha: 'Alpha', photon: 'Photon', neutrino: 'Neutrino', bracket: 'Bracket', brace: 'Brace', dot: 'Dot', points: 'Data points'},
+  tools: {back: '↶ Back', fwd: '↷ Forward', backT: 'Undo (Ctrl+Z)', fwdT: 'Redo (Ctrl+Shift+Z, Ctrl+Y)', clear: 'Clear all', cleared: 'Cleared. ‘↶ Back’ brings it back.', example: 'Show an example at first', values: 'Show values',
+    zoomIn: 'Zoom in', zoomOut: 'Zoom out', zoomFit: 'Show all', zoomHint: 'Ctrl+wheel or two fingers to zoom, drag on empty space to select several, Space+drag to pan', copy: 'Copy', paste: 'Paste', front: 'To front', backZ: 'To back', lockAll: 'Lock', unlockAll: 'Unlock',
+    multi: n => `${n} selected`, align: 'Align', distribute: 'Distribute', aL: 'Left', aC: 'Centre', aR: 'Right', aT: 'Top', aM: 'Middle', aB: 'Bottom', dH: 'Horizontally', dV: 'Vertically', printW: 'Print width (mm, 0: the style\'s)', styleSrc: 'What the style is based on', sliders: 'Adjust', frameMark: 'Figure frame', setFrame: 'Make the visible part the frame'}
+};
+Object.assign(X2.types, X3.types); Object.assign(X2.kinds, X3.kinds); Object.assign(X2.fields, X3.fields); Object.assign(X2.enums, X3.enums); Object.assign(X2.units, {rheostat: 'Ω', dielectric: 'μF'});
 T.lede = X2.lede; Object.assign(T.types, X2.types); Object.assign(T.fields, X2.fields); Object.assign(T.enums, X2.enums);
 T.err.not_mechanics = ko ? '물리 문제 그림을 찾지 못했습니다. 그림이 잘 보이게 다시 찍어 주세요.' : 'No physics figure was found. Take the photo again with the figure clearly visible.';
 T.unsure = {...T.unsure, ...(ko ? {charge: '전하', kind: '종류', focal: '초점 거리'} : {charge: 'charge', kind: 'kind', focal: 'focal length'})};
 /* the palette: [type, preset, name] by domain */
 const K = X2.kinds, N2 = (k, e) => ko ? k : e;
 const PALETTE = {
-  mech: ['block', 'ball', 'floor', 'incline', 'wall', 'ceiling', 'pulley', 'pivot', 'string', 'rod', 'spring', 'force'].map(t => [t, {}, T.types[t]]),
-  em: [...['wire', 'resistor', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer'].map(k => ['element', {kind: k}, K[k]]),
+  mech: [...['block', 'ball', 'floor', 'incline', 'wall', 'ceiling', 'pulley', 'pivot', 'string', 'rod', 'spring', 'force'].map(t => [t, {}, T.types[t]]),
+    ['block', {look: 'cart'}, N2('수레', 'Cart')], ['block', {look: 'car'}, N2('자동차', 'Car')], ['wheel', {kind: 'disk', omega: 'ccw'}, N2('원판 · 원통 (ω)', 'Disk, cylinder (ω)')], ['wheel', {kind: 'ring'}, N2('고리', 'Ring')], ['wheel', {kind: 'wheel', spokes: 6}, N2('바퀴', 'Wheel')],
+    ['plank', {support: 'fulcrum'}, N2('시소 · 지레', 'Seesaw, lever')], ['plank', {support: 'hinge', at: 0}, N2('경첩 막대', 'Hinged rod')], ['plank', {support: 'none'}, N2('판 · 막대', 'Plank')], ['track', {from: 180, to: 270}, N2('곡면 경사로', 'Curved ramp')], ['track', {from: -90, to: 270}, N2('원형 궤도 (루프)', 'Loop')]],
+  em: [...['wire', 'resistor', 'rheostat', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'dielectric', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer'].map(k => ['element', {kind: k}, K[k]]),
+    ['bridge', {kind: 'meter'}, N2('미터 브리지', 'Meter bridge')], ['bridge', {kind: 'pot'}, N2('전위차계 (접점)', 'Potentiometer (jockey)')], ['transformer', {}, T.types.transformer], ['rails', {}, T.types.rails],
     ['ground', {}, T.types.ground], ['charge', {q: 1}, N2('양전하 +q', 'Charge +q')], ['charge', {q: -1}, N2('음전하 −q', 'Charge −q')], ['plate', {}, T.types.plate], ['fieldlines', {}, T.types.fieldlines],
     ['field', {kind: 'B', dir: 'in'}, N2('자기장 ⊗', 'B field ⊗')], ['field', {kind: 'B', dir: 'out'}, N2('자기장 ⊙', 'B field ⊙')], ['field', {kind: 'E', dir: 'arrow', angle: -90, label: '\\vec{E}'}, N2('균일한 전기장', 'Uniform E field')],
     ['cwire', {}, T.types.cwire], ['current', {}, T.types.current], ['solenoid', {}, T.types.solenoid], ['loop', {}, T.types.loop], ['magnet', {}, T.types.magnet]],
-  thermo: [['cylinder', {}, T.types.cylinder], ['reservoir', {}, T.types.reservoir], ['engine', {}, T.types.engine], ['graph', {xlabel: 'V', ylabel: 'P'}, N2('P–V 그래프', 'P–V graph')],
+  thermo: [['cylinder', {}, T.types.cylinder], ['container', {}, T.types.container], ['utube', {}, T.types.utube], ['thermometer', {}, T.types.thermometer], ['heater', {kind: 'flame'}, N2('가열 장치 (불꽃)', 'Burner')], ['heater', {kind: 'coil'}, N2('전열선', 'Heating coil')], ['gasbox', {}, T.types.gasbox], ['parrows', {dir: 'in', label: 'P'}, N2('압력 화살표', 'Pressure arrows')], ['reservoir', {}, T.types.reservoir], ['engine', {}, T.types.engine], ['graph', {xlabel: 'V', ylabel: 'P'}, N2('P–V 그래프', 'P–V graph')],
     ...['isotherm', 'adiabat', 'isobar', 'isochore'].map(k => ['curve', {kind: k}, T.enums[k]]), ['cycle', {kind: 'carnot'}, N2('카르노 순환', 'Carnot cycle')], ['cycle', {kind: 'otto'}, N2('오토 순환', 'Otto cycle')], ['cycle', {kind: 'stirling'}, N2('스털링 순환', 'Stirling cycle')]],
   optics: [['line', {pattern: 'dashdot'}, N2('광축', 'Optical axis')], ['lens', {f: 1}, N2('볼록 렌즈', 'Converging lens')], ['lens', {f: -1}, N2('오목 렌즈', 'Diverging lens')], ['mirror', {f: 0}, N2('평면 거울', 'Plane mirror')], ['mirror', {f: 1}, N2('오목 거울', 'Concave mirror')], ['mirror', {f: -1}, N2('볼록 거울', 'Convex mirror')],
     ['prism', {}, T.types.prism], ['slab', {}, T.types.slab], ['oarrow', {}, T.types.oarrow], ['ray', {}, T.types.ray], ['slits', {n: 1}, N2('단일 슬릿', 'Single slit')], ['slits', {n: 2}, N2('이중 슬릿', 'Double slit')], ['slits', {n: 6, d: 0.1, a: 0.02}, N2('회절격자', 'Grating')],
-    ['wavefront', {kind: 'plane'}, N2('평면 파면', 'Plane wavefronts')], ['wavefront', {kind: 'circular'}, N2('원형 파면', 'Circular wavefronts')]],
-  waves: [['wave', {kind: 'travel'}, N2('진행파', 'Travelling wave')], ['wave', {kind: 'standing', ends: 'fixed'}, N2('정상파 (고정단)', 'Standing wave (fixed ends)')], ['wavefront', {kind: 'circular'}, N2('원형 파면', 'Circular wavefronts')], ['wavefront', {kind: 'plane'}, N2('평면 파면', 'Plane wavefronts')]],
+    ['wavefront', {kind: 'plane'}, N2('평면 파면', 'Plane wavefronts')], ['wavefront', {kind: 'circular'}, N2('원형 파면', 'Circular wavefronts')],
+    ['mirror', {f: 0, half: true, rot: -45, showF: false}, N2('반투명 거울 (빔 분할기)', 'Half-silvered mirror (beam splitter)')], ['screen', {}, T.types.screen], ['eye', {}, T.types.eye], ['source', {kind: 'bulb'}, N2('광원 (전구)', 'Light source (bulb)')], ['source', {kind: 'laser'}, N2('레이저', 'Laser')], ['source', {kind: 'point'}, N2('점광원', 'Point source')], ['fiber', {}, T.types.fiber]],
+  waves: [['wave', {kind: 'travel'}, N2('진행파', 'Travelling wave')], ['wave', {kind: 'standing', ends: 'fixed'}, N2('정상파 (고정단)', 'Standing wave (fixed ends)')], ['pulse', {}, T.types.pulse], ['interference', {}, T.types.interference], ['wavefront', {kind: 'circular'}, N2('원형 파면', 'Circular wavefronts')], ['wavefront', {kind: 'plane'}, N2('평면 파면', 'Plane wavefronts')]],
   modern: [['well', {kind: 'infinite'}, N2('무한 우물', 'Infinite well')], ['well', {kind: 'finite'}, N2('유한 우물', 'Finite well')], ['well', {kind: 'harmonic', V0: 0.5, levels: 4}, N2('조화 진동자', 'Harmonic oscillator')], ['well', {kind: 'barrier', L: 0.4, V0: 4, E: 2.5}, N2('퍼텐셜 장벽', 'Barrier')], ['well', {kind: 'step', V0: 3, E: 2}, N2('퍼텐셜 계단', 'Step')],
-    ['levels', {}, T.types.levels], ['phototube', {}, T.types.phototube], ['spacetime', {}, T.types.spacetime], ['worldline', {}, T.types.worldline], ['frames', {}, T.types.frames]],
+    ['levels', {}, T.types.levels], ['phototube', {}, T.types.phototube], ['spacetime', {}, T.types.spacetime], ['worldline', {}, T.types.worldline], ['frames', {}, T.types.frames],
+    ['nucleus', {}, T.types.nucleus], ['particle', {kind: 'electron'}, N2('전자', 'Electron')], ['particle', {kind: 'photon'}, N2('광자 (물결 화살표)', 'Photon (wiggle)')], ['particle', {kind: 'alpha'}, N2('알파 입자', 'Alpha particle')], ['particle', {kind: 'proton'}, N2('양성자', 'Proton')], ['particle', {kind: 'neutron'}, N2('중성자', 'Neutron')]],
   general: [['label', {}, T.types.label], ['label', {box: true, text: '\\text{box}'}, N2('글 상자', 'Text box')], ['vector', {}, T.types.vector], ['dim', {}, T.types.dim], ['arc', {}, T.types.arc], ['axes', {}, T.types.axes],
-    ['line', {pattern: 'dashed'}, N2('점선', 'Dashed line')], ['line', {pattern: 'dotted'}, N2('점점선', 'Dotted line')], ['line', {pattern: 'solid', heads: 'end'}, N2('화살표 선', 'Arrow line')], ['region', {}, T.types.region], ['point', {}, T.types.point], ['graph', {}, N2('함수 그래프', 'Function graph')], ['curve', {kind: 'func'}, N2('함수 곡선', 'Function curve')]]
+    ['line', {pattern: 'dashed'}, N2('점선', 'Dashed line')], ['line', {pattern: 'dotted'}, N2('점점선', 'Dotted line')], ['line', {pattern: 'solid', heads: 'end'}, N2('화살표 선', 'Arrow line')], ['region', {}, T.types.region], ['region', {fill: 'hatch'}, N2('빗금 영역', 'Hatched region')], ['point', {}, T.types.point], ['graph', {}, N2('함수 그래프', 'Function graph')], ['curve', {kind: 'func'}, N2('함수 곡선', 'Function curve')],
+    ['graph', {xlabel: 't', ylabel: 'v', grid: true, origin: '0'}, N2('v–t 그래프 (격자)', 'v–t graph (grid)')], ['curve', {kind: 'points', shade: true}, N2('꺾은선 (넓이 칠하기)', 'Polyline (shaded area)')], ['panel', {caption: '(가)'}, N2('그림 칸 (가)', 'Panel (a)')], ['panel', {caption: '(나)'}, N2('그림 칸 (나)', 'Panel (b)')],
+    ['brace', {}, T.types.brace], ['callout', {}, T.types.callout], ['parrows', {}, T.types.parrows]]
 };
-const PAL_EN = {mech: 'block ball floor incline wall ceiling pulley pivot string rod spring force', em: 'wire resistor battery cell dc ac capacitor inductor switch diode led bulb ammeter voltmeter galvanometer ground charge plate field lines B E current solenoid loop magnet', thermo: 'cylinder piston reservoir engine graph isotherm adiabat isobar isochore carnot otto stirling', optics: 'axis lens mirror prism slab object ray slit grating wavefront', waves: 'wave standing travelling wavefront', modern: 'well barrier step harmonic levels hydrogen photoelectric minkowski spacetime worldline frames', general: 'label text box vector dimension arc axes line dashed dotted arrow region point graph function curve'};
+const PAL_EN = {mech: 'block ball floor incline wall ceiling pulley pivot string rod spring force cart car wheel disk cylinder ring plank lever seesaw hinge track loop ramp', em: 'wire resistor rheostat battery cell dc ac capacitor dielectric inductor switch diode led bulb ammeter voltmeter galvanometer meter bridge potentiometer jockey transformer rails rod emf ground charge plate field lines B E current solenoid loop magnet', thermo: 'cylinder piston container liquid water buoyancy utube thermometer heater burner coil gas molecules pressure reservoir engine graph isotherm adiabat isobar isochore carnot otto stirling', optics: 'axis lens mirror prism slab object ray slit grating wavefront beam splitter half screen eye source laser bulb fiber', waves: 'wave standing travelling wavefront pulse interference', modern: 'well barrier step harmonic levels hydrogen photoelectric minkowski spacetime worldline frames nucleus particle electron photon alpha proton neutron', general: 'label text box vector dimension arc axes line dashed dotted arrow region hatch point graph function curve panel caption brace callout arrows'};
 /* the symbol picker: [group, [[tex, shown-as], …]] */
 const SYMBOLS = [
   [N2('그리스 소문자', 'Greek lower case'), 'alpha beta gamma delta epsilon varepsilon zeta eta theta vartheta iota kappa lambda mu nu xi pi varpi rho varrho sigma varsigma tau upsilon phi varphi chi psi omega'.split(' ').map(n => ['\\' + n])],
@@ -164,39 +200,60 @@ const errText = e => T.err[e?.code] || T.err.other;
 const store = {get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }, del(k) { try { localStorage.removeItem(k); } catch (e) {} }};
 
 /* ── state ── */
-const SCENE_KEY = 'hlDrawScene', SAVES_KEY = 'hlDrawSaves', PAPER_KEY = 'hlTeachPaper', EDIT_KEY = 'hlDrawEdit';
-const st = {scene: null, sel: '', undo: [], redo: [], connect: null, grid: true, snap: true, fbd: false, readouts: true, solve: false, circuit: null, dom: 'mech', q: '', lastText: null,
-  sim: null, playing: false, speed: 1, last: 0, trails: new Map(), samples: [], graph: '', ai: null, msg: '', paperEdit: null, drag: null};
+const SCENE_KEY = 'hlDrawScene', SAVES_KEY = 'hlDrawSaves', PAPER_KEY = 'hlTeachPaper', EDIT_KEY = 'hlDrawEdit', PREFS_KEY = 'hlDrawPrefs';
+/* sel: the object whose values the panel shows; selection: every selected id (shift-click, a box drawn on empty space) */
+const st = {scene: null, sel: '', selection: new Set(), hist: createHistory(250), connect: null, grid: true, snap: true, fbd: false, readouts: true, solve: false, circuit: null, dom: 'mech', q: '', lastText: null,
+  sim: null, playing: false, speed: 1, last: 0, trails: new Map(), samples: [], graph: '', ai: null, msg: '', paperEdit: null, drag: null, zoom: null, clip: null, gesture: null, marquee: null, space: false};
 const clone = o => JSON.parse(JSON.stringify(o));
+/* the member's choice: open with an example figure or an empty one (an empty canvas once the example was cleared) */
+const prefs = () => { try { const p = JSON.parse(store.get(PREFS_KEY) || '{}'); return p && typeof p === 'object' ? p : {}; } catch (e) { return {}; } };
+const setPref = (k, v) => store.set(PREFS_KEY, JSON.stringify({...prefs(), [k]: v}));
+const EXAMPLE = 'incline_pulley';
 function startScene() {
   const t = params.get('t');
   if (t && TEMPLATE_KEYS.includes(t)) { st.dom = TEMPLATE_DOMAIN[t] || 'mech'; return validateScene(template(t, lang)).scene; }
   /* a figure sent from the paper to be changed (teach.js "그림 고치기") */
   try { const e = JSON.parse(store.get(EDIT_KEY) || 'null'); if (e && typeof e.key === 'string' && e.scene) { const r = validateScene(e.scene); if (r.ok) { st.paperEdit = e.key; store.del(EDIT_KEY); return r.scene; } } } catch (e) {}
-  try { const r = validateScene(JSON.parse(store.get(SCENE_KEY) || 'null')); if (r.ok && r.scene.objects.length) return r.scene; } catch (e) {}
-  return validateScene(template('incline_pulley', lang)).scene;
+  let saved = null;
+  try { const r = validateScene(JSON.parse(store.get(SCENE_KEY) || 'null')); if (r.ok) saved = r.scene; } catch (e) {}
+  if (saved && saved.objects.length) return saved;
+  if (prefs().example === false) return saved || {...blankScene(), view: {x: -0.5, y: -0.5, w: 4, h: 3}};
+  return validateScene(template(EXAMPLE, lang)).scene;
 }
 const byId = id => st.scene.objects.find(o => o.id === id);
 const view = () => st.scene.view || (st.scene.view = sceneBounds(st.scene));
-/* every change goes through here: checked, kept for undo, saved in this browser */
-function commit(next, {keepSel = false} = {}) {
+/* the part of the world the canvas shows: the figure's frame, or the zoomed part of it */
+const dview = () => st.zoom || view();
+const selIds = () => [...st.selection].filter(id => byId(id));
+function setSel(ids, primary) { st.selection = new Set(ids.filter(Boolean)); st.sel = primary && st.selection.has(primary) ? primary : st.selection.size === 1 ? [...st.selection][0] : st.selection.size ? (st.selection.has(st.sel) ? st.sel : [...st.selection].pop()) : ''; }
+/* every change goes through here: checked, kept for undo (one step), saved in this browser */
+function commit(next, {keepSel = false, before = null} = {}) {
   const r = validateScene(next);
   if (!r.ok) { flash(`<span class="bad">${T.invalid}: ${esc(r.errors.map(e => (e.id ? e.id + '.' : '') + (e.field || e.code)).slice(0, 3).join(', '))}</span>`); return false; }
-  st.undo.push(JSON.stringify(st.scene)); if (st.undo.length > 120) st.undo.shift(); st.redo = [];
-  st.scene = r.scene; if (!keepSel && st.sel && !byId(st.sel)) st.sel = '';
+  st.hist.record(before || JSON.stringify(st.scene));
+  st.scene = r.scene; if (!keepSel) setSel(selIds(), st.sel);
+  if (!st.scene.objects.length && prefs().example !== false) setPref('example', false);
   stopSim(); save(); paint(); return true;
 }
 const save = () => store.set(SCENE_KEY, JSON.stringify(st.scene));
-function undo() { if (!st.undo.length) return; st.redo.push(JSON.stringify(st.scene)); st.scene = JSON.parse(st.undo.pop()); if (st.sel && !byId(st.sel)) st.sel = ''; stopSim(); save(); paint(); }
-function redo() { if (!st.redo.length) return; st.undo.push(JSON.stringify(st.scene)); st.scene = JSON.parse(st.redo.pop()); stopSim(); save(); paint(); }
+function restore(text) { st.scene = JSON.parse(text); setSel(selIds(), st.sel); stopSim(); save(); paint(); }
+function undo() { const t = st.hist.undo(JSON.stringify(st.scene)); if (t) restore(t); }
+function redo() { const t = st.hist.redo(JSON.stringify(st.scene)); if (t) restore(t); }
+/* 모두 지우기: an empty figure in the same style and frame (one undo step); from then on the editor opens empty */
+function clearAll() {
+  const next = {...blankScene(), style: st.scene.style, view: st.scene.view, ...(st.scene.printW ? {printW: st.scene.printW} : {})};
+  setSel([]); st.ai = null;
+  if (commit(next)) { setPref('example', false); flash(esc(X3.tools.cleared)); }
+}
 let flashTimer;
 function flash(html) { st.msg = html; const el = $('status'); if (el) el.innerHTML = html; clearTimeout(flashTimer); flashTimer = setTimeout(() => { st.msg = ''; status(); }, 6000); }
 
 /* ids: the type's letter and the first free number */
-const PREFIX = {block: 'm', ball: 'b', floor: 'f', ceiling: 'c', wall: 'w', incline: 'i', pulley: 'p', pivot: 'o', string: 's', rod: 'r', spring: 'k', force: 'F', label: 'l', dim: 'd', arc: 'a', axes: 'x', line: 'n',
+const PREFIX = {wheel: 'wh', plank: 'pl', track: 'tr', bridge: 'BR', transformer: 'TR', rails: 'RL', container: 'ct', utube: 'ut', thermometer: 'th', heater: 'ht', gasbox: 'gb', screen: 'sc', eye: 'eye', source: 'src', fiber: 'fb', pulse: 'pu', interference: 'IF', nucleus: 'nu', particle: 'pa', panel: 'pn', brace: 'br', callout: 'co', parrows: 'ar',
+  block: 'm', ball: 'b', floor: 'f', ceiling: 'c', wall: 'w', incline: 'i', pulley: 'p', pivot: 'o', string: 's', rod: 'r', spring: 'k', force: 'F', label: 'l', dim: 'd', arc: 'a', axes: 'x', line: 'n',
   element: 'e', ground: 'gnd', charge: 'q', plate: 'P', fieldlines: 'FL', field: 'B', cwire: 'I', current: 'J', solenoid: 'sol', loop: 'loop', magnet: 'mag', cylinder: 'cyl', reservoir: 'res', engine: 'eng', graph: 'G', curve: 'c', cycle: 'cyc',
   lens: 'L', mirror: 'M', prism: 'pr', slab: 'sl', oarrow: 'O', ray: 'ray', slits: 'S', wavefront: 'wf', wave: 'wave', well: 'W', levels: 'lv', phototube: 'pt', spacetime: 'st', worldline: 'wl', frames: 'fr', vector: 'v', region: 'rg', point: 'pt'};
-const KIND_PREFIX = {wire: 'W', resistor: 'R', battery: 'E', cell: 'E', dc: 'E', ac: 'E', capacitor: 'C', inductor: 'L', switch: 'S', diode: 'D', led: 'D', bulb: 'B', ammeter: 'A', voltmeter: 'V', galvanometer: 'G'};
+const KIND_PREFIX = {rheostat: 'R', dielectric: 'C', wire: 'W', resistor: 'R', battery: 'E', cell: 'E', dc: 'E', ac: 'E', capacitor: 'C', inductor: 'L', switch: 'S', diode: 'D', led: 'D', bulb: 'B', ammeter: 'A', voltmeter: 'V', galvanometer: 'G'};
 const freeId = (type, kind) => { const p = type === 'element' && KIND_PREFIX[kind] ? KIND_PREFIX[kind] : PREFIX[type] || 'o'; let n = 1; while (byId(p + n)) n++; return p + n; };
 const snapV = v => st.snap ? Math.round(v / st.scene.grid) * st.scene.grid : v;
 const r4 = v => Math.round(v * 1e4) / 1e4;
@@ -209,7 +266,24 @@ function placeNew(type, preset, v, next) {
   if (type === 'floor' || type === 'ceiling') Object.assign(o, {x: snapV(v.x + v.w * 0.1), y: type === 'floor' ? snapV(v.y + v.h * 0.15) : snapV(v.y + v.h * 0.9), w: r4(snapV(v.w * 0.8))});
   else if (type === 'wall') Object.assign(o, {x: snapV(v.x + v.w * 0.1), y: snapV(v.y + v.h * 0.15), h: r4(snapV(v.h * 0.6))});
   else if (type === 'incline') Object.assign(o, {x: snapV(v.x + v.w * 0.15), y: snapV(v.y + v.h * 0.15), length: r4(snapV(Math.min(v.w * 0.6, v.h * 1.2)))});
-  else if (type === 'dim' || type === 'line') { seg(0.25); }
+  else if (type === 'dim' || type === 'line' || type === 'brace' || type === 'parrows') { seg(0.25); if (type === 'parrows') o.len = r4(m * 0.1); }
+  else if (type === 'bridge' || type === 'fiber') { seg(type === 'bridge' ? 0.55 : 0.6); if (type === 'fiber') o.r = r4(m * 0.04); }
+  else if (type === 'wheel') Object.assign(o, {x: cx, y: cy, r: r4(Math.max(0.02, m * 0.08))});
+  else if (type === 'plank') Object.assign(o, {x: cx, y: cy, len: r4(snapV(v.w * 0.5)) || 1, thick: r4(Math.max(0.01, m * 0.025))});
+  else if (type === 'track') Object.assign(o, {x: cx, y: cy, r: r4(m * 0.3)});
+  else if (type === 'transformer') Object.assign(o, {x: cx, y: cy, h: r4(v.h * 0.4)});
+  else if (type === 'rails') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.15)), y: r4(snapV(cy - v.h * 0.18)), w: r4(snapV(v.w * 0.6)), h: r4(snapV(v.h * 0.35)) || 0.1, at: r4(snapV(v.w * 0.35))});
+  else if (['container', 'utube', 'gasbox'].includes(type)) box(0.4, 0.45);
+  else if (type === 'panel') box(0.45, 0.45);
+  else if (type === 'thermometer') Object.assign(o, {x: cx, y: r4(snapV(cy - v.h * 0.2)), h: r4(v.h * 0.4)});
+  else if (type === 'heater') Object.assign(o, {x: cx, y: cy, w: r4(m * 0.2)});
+  else if (type === 'screen') Object.assign(o, {x: cx, y: cy, h: r4(v.h * 0.5)});
+  else if (type === 'eye' || type === 'source') Object.assign(o, {x: cx, y: cy, size: r4(m * (type === 'eye' ? 0.12 : 0.1))});
+  else if (type === 'pulse') Object.assign(o, {x: r4(snapV(v.x + v.w * 0.1)), y: cy, len: r4(snapV(v.w * 0.8)), A: r4(v.h * 0.12), width: r4(v.w * 0.12)});
+  else if (type === 'interference') Object.assign(o, {x: cx, y: cy, d: r4(m * 0.25), lambda: r4(m * 0.08)});
+  else if (type === 'nucleus') Object.assign(o, {x: cx, y: cy, r: r4(m * 0.08)});
+  else if (type === 'particle') Object.assign(o, {x: cx, y: cy, len: r4(m * 0.2)});
+  else if (type === 'callout') Object.assign(o, {x: cx, y: cy, x2: r4(snapV(cx + v.w * 0.15)), y2: r4(snapV(cy + v.h * 0.15)), text: 'A'});
   else if (type === 'element' || type === 'plate' || type === 'cwire' || type === 'vector') seg(type === 'element' ? 0.2 : 0.3);
   else if (['field', 'solenoid', 'cylinder', 'slab', 'region', 'phototube'].includes(type)) box(0.4, 0.4);
   else if (type === 'magnet') box(0.35, 0.1);
@@ -247,17 +321,17 @@ function addObject(type, preset = {}) {
   if (['string', 'rod', 'spring', 'force'].includes(type)) {
     const sel = byId(st.sel);
     if (type === 'force' && isBody(sel)) { finishConnect({type: 'force', a: sel.id}); return; }
-    st.connect = {type, a: null, over: []}; st.sel = ''; paint(); return;
+    st.connect = {type, a: null, over: []}; setSel([]); paint(); return;
   }
   const next = clone(st.scene), o = {...defaults(type), id: freeId(type, preset.kind)};
-  Object.assign(o, placeNew(type, preset, view(), next), Object.fromEntries(Object.entries(preset).filter(([k]) => !(k === 'f' && (type === 'lens' || type === 'mirror')))));
+  Object.assign(o, placeNew(type, preset, dview(), next), Object.fromEntries(Object.entries(preset).filter(([k]) => !(k === 'f' && (type === 'lens' || type === 'mirror')))));
   if (type === 'mirror' && preset.f === 0) o.f = 0;
   if (type === 'block') o.label = `m_${o.id.slice(1)}`;
   if (type === 'label' && !o.text) o.text = 'A';
   if (type === 'element' && !o.label) o.label = {resistor: 'R', capacitor: 'C', inductor: 'L', battery: '\\mathcal{E}', cell: '\\mathcal{E}', dc: '\\mathcal{E}', ac: '\\mathcal{E}', bulb: '', switch: 'S'}[o.kind] || '';
   if (type === 'element') o.value = {battery: 12, cell: 1.5, dc: 6, ac: 10, capacitor: 100, inductor: 0.1, diode: 0.7, led: 2, resistor: 100, bulb: 10, galvanometer: 0}[o.kind] ?? o.value;
   next.objects.push(o);
-  if (commit(next)) { st.sel = o.id; paint(); }
+  if (commit(next)) { setSel([o.id]); paint(); }
 }
 /* a click while a string, rod, spring or force is being joined */
 function connectClick(o) {
@@ -278,7 +352,7 @@ function finishConnect(c) {
   if (c.type === 'spring') { const A = next.objects.find(x => x.id === c.a), B = next.objects.find(x => x.id === c.b), pa = isBody(A) ? bodyPose(next, A) : A, pb = isBody(B) ? bodyPose(next, B) : B; if (pa && pb && Number.isFinite(pa.x) && Number.isFinite(pb.x)) o.L0 = r4(Math.max(0.05, Math.hypot(pa.x - pb.x, pa.y - pb.y) * 0.8)); }
   next.objects.push(o);
   if (c.type === 'string') alignHanging(next, o);
-  if (commit(next)) { st.sel = id; paint(); }
+  if (commit(next)) { setSel([id]); paint(); }
 }
 /* a body hanging from a pulley goes straight under the pulley's edge on its side */
 function alignHanging(scene, s) {
@@ -305,34 +379,93 @@ function removeIds(scene, ids) {
     }
   }
 }
-function del() { if (!st.sel) return; const next = clone(st.scene); removeIds(next, [st.sel]); st.sel = ''; commit(next); }
-function dup() {
-  const o = byId(st.sel); if (!o || ['string', 'rod', 'spring', 'force'].includes(o.type)) return;
-  if (st.scene.objects.length >= MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
-  const c = {...clone(o), id: freeId(o.type, o.kind)}, d = st.scene.grid * 3;
-  if (isBody(c) && c.on) c.at = r4(c.at + (c.type === 'ball' ? 2 * c.r : c.w) + st.scene.grid);
-  else if ('x1' in c) { c.x1 += d; c.x2 += d; c.y1 -= d; c.y2 -= d; }
-  else if ('x' in c) { c.x = r4(c.x + d); c.y = r4(c.y - d); }
-  if (c.type === 'block' && /^m_\d+$/.test(o.label)) c.label = 'm_' + c.id.slice(1);
-  const next = clone(st.scene); next.objects.push(c);
-  if (commit(next)) { st.sel = c.id; paint(); }
+function del() { const ids = selIds(); if (!ids.length) return; const next = clone(st.scene); removeIds(next, ids); setSel([]); commit(next); }
+/* copy and paste: the selected objects, and the strings, springs, forces and curves among them; pasted a few grid
+   steps away with fresh ids (references inside the copy follow it, a body keeps the surface it rests on) */
+const LINKS = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline'];
+function copySel() {
+  const ids = new Set(selIds()); if (!ids.size) return false;
+  for (const o of st.scene.objects) if (LINKS.includes(o.type) && !ids.has(o.id)) { const refs = refsOf(o); if (refs.length && refs.every(r => ids.has(r))) ids.add(o.id); }
+  st.clip = st.scene.objects.filter(o => ids.has(o.id)).map(clone);
+  try { sessionStorage.setItem('hlDrawClip', JSON.stringify(st.clip)); } catch (e) {}
+  return true;
 }
+const refsOf = o => Object.entries(FIELDS[o.type]).flatMap(([k, f]) => f.k === 'ref' ? (o[k] ? [o[k]] : []) : f.k === 'refs' ? o[k] : []);
+function pasteClip(offset = 3) {
+  let clip = st.clip; if (!clip) { try { clip = JSON.parse(sessionStorage.getItem('hlDrawClip') || 'null'); } catch (e) { clip = null; } }
+  if (!Array.isArray(clip) || !clip.length) return;
+  if (st.scene.objects.length + clip.length > MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return; }
+  const next = clone(st.scene), map = new Map(), d = st.scene.grid * offset, made = [];
+  const taken = new Set(next.objects.map(o => o.id)), fresh = (type, kind) => { const p = type === 'element' && KIND_PREFIX[kind] ? KIND_PREFIX[kind] : PREFIX[type] || 'o'; let n = 1; while (taken.has(p + n)) n++; taken.add(p + n); return p + n; };
+  for (const o of clip) map.set(o.id, fresh(o.type, o.kind));
+  for (const o0 of clip) {
+    const o = {...clone(o0), id: map.get(o0.id)};
+    let ok = true;
+    for (const [k, f] of Object.entries(FIELDS[o.type] || {})) {
+      if (f.k === 'ref' && o[k]) { if (map.has(o[k])) o[k] = map.get(o[k]); else if (!byId(o[k]) || LINKS.includes(o.type)) { if (LINKS.includes(o.type)) ok = false; else o[k] = ''; } }
+      if (f.k === 'refs') { if (o[k].some(x => !map.has(x) && !byId(x))) ok = false; o[k] = o[k].map(x => map.get(x) || x); }
+    }
+    if (!ok) continue;
+    if (!LINKS.includes(o.type)) moveObj(o, d, -d, o0, map.has(o0.on));
+    if (o.type === 'block' && /^m_\d+$/.test(o.label)) o.label = 'm_' + o.id.slice(1);
+    next.objects.push(o); made.push(o.id);
+  }
+  if (commit(next)) { setSel(made); paint(); }
+}
+function dup() { if (copySel()) pasteClip(); }
+/* move one object by (dx, dy) from its state `g`: a body on a surface slides along it (or keeps its place on a pasted
+   surface), a segment moves both ends */
+function moveObj(o, dx, dy, g = o, keepAt = false) {
+  if (isBody(o) && g.on) { if (keepAt) return; const s = st.scene.objects.find(x => x.id === g.on); if (s) { const fr = surfaceFrame(s, st.scene); o.at = r4(g.at + vec.dot({x: dx, y: dy}, fr.u)); return; } }
+  if ('x1' in g && 'x2' in g && !('x' in g)) { o.x1 = r4(g.x1 + dx); o.y1 = r4(g.y1 + dy); o.x2 = r4(g.x2 + dx); o.y2 = r4(g.y2 + dy); return; }
+  if (o.type === 'callout') { o.x2 = r4(g.x2 + dx); o.y2 = r4(g.y2 + dy); }
+  if ('x' in g) { o.x = r4(g.x + dx); o.y = r4(g.y + dy); }
+}
+/* align and distribute the selection by the boxes the figure draws them in */
+function alignSel(how) {
+  const ids = selIds().filter(id => !LINKS.includes(byId(id).type)); if (ids.length < 2) return;
+  const next = clone(st.scene), boxes = ids.map(id => ({id, b: objectBox(st.scene, byId(id))})).filter(x => x.b);
+  const L = Math.min(...boxes.map(x => x.b.x)), R = Math.max(...boxes.map(x => x.b.x + x.b.w)), B = Math.min(...boxes.map(x => x.b.y)), Tp = Math.max(...boxes.map(x => x.b.y + x.b.h));
+  const mv = (id, dx, dy) => { const o = next.objects.find(x => x.id === id); moveObj(o, dx, dy, clone(o)); };
+  if (how === 'dH' || how === 'dV') {
+    const h = how === 'dH', list = [...boxes].sort((a, b) => h ? a.b.x + a.b.w / 2 - b.b.x - b.b.w / 2 : a.b.y + a.b.h / 2 - b.b.y - b.b.h / 2);
+    if (list.length < 3) return;
+    const c0 = h ? list[0].b.x + list[0].b.w / 2 : list[0].b.y + list[0].b.h / 2, c1 = h ? list.at(-1).b.x + list.at(-1).b.w / 2 : list.at(-1).b.y + list.at(-1).b.h / 2;
+    list.forEach((x, i) => { const want = c0 + (c1 - c0) * i / (list.length - 1), now = h ? x.b.x + x.b.w / 2 : x.b.y + x.b.h / 2; mv(x.id, h ? want - now : 0, h ? 0 : want - now); });
+  } else for (const {id, b} of boxes) {
+    const dx = how === 'aL' ? L - b.x : how === 'aR' ? R - b.x - b.w : how === 'aC' ? (L + R) / 2 - b.x - b.w / 2 : 0;
+    const dy = how === 'aB' ? B - b.y : how === 'aT' ? Tp - b.y - b.h : how === 'aM' ? (B + Tp) / 2 - b.y - b.h / 2 : 0;
+    mv(id, dx, dy);
+  }
+  commit(next, {keepSel: true});
+}
+/* the order objects are drawn in (within their layer): to the end of the list is on top */
+function zOrder(front) {
+  const ids = new Set(selIds()); if (!ids.size) return;
+  const next = clone(st.scene), picked = next.objects.filter(o => ids.has(o.id)), rest = next.objects.filter(o => !ids.has(o.id));
+  next.objects = front ? [...rest, ...picked] : [...picked, ...rest]; commit(next, {keepSel: true});
+}
+function setAll(k, v) { const ids = new Set(selIds()); if (!ids.size) return; const next = clone(st.scene); for (const o of next.objects) if (ids.has(o.id) && k in FIELDS[o.type]) o[k] = v; commit(next, {keepSel: true}); }
 
 /* ── the canvas ── */
 const W = 800;
 let shownScene = null, shownPoses = null;
 function paintCanvas() {
   const box = $('canvas'); if (!box) return;
-  const v = view(), simOn = !!st.sim;
+  const v = dview(), simOn = !!st.sim;
   const sc = simOn ? st.sim.applyTo(st.scene) : st.scene;
   let forces = null;
   if (st.fbd) { try { forces = (simOn ? st.sim : buildSim(st.scene)).forces(); } catch (e) { forces = null; } }
   shownScene = sc; shownPoses = simOn ? st.sim.poses() : null;
-  st.circuit = st.solve ? solveCircuit(st.scene) : null;
-  box.innerHTML = renderSVG(sc, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? '' : st.sel, forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit,
+  st.circuit = st.solve && hasCircuit() ? solveCircuit(st.scene) : null;
+  let svg = renderSVG(sc, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? [] : selIds(), forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit, marquee: st.marquee,
     velocities: simOn ? st.sim.velocities() : null, anchors: simOn ? st.sim.anchors : null, trails: simOn ? [...st.trails].filter(([id]) => byId(id)?.trail) : null,
     conical: (simOn ? st.sim : null)?.systems.filter(s => s.kind === 'conical').map(s => ({centre: s.centre, radius: s.radius})) || st.scene.objects.filter(o => (o.type === 'string' || o.type === 'rod') && o.mode === 'conical').map(o => conicalOrbit(o)).filter(Boolean)});
-  box.classList.toggle('connecting', !!st.connect);
+  /* zoomed: the figure's frame (what is exported) as a thin dashed box */
+  if (st.zoom) { const f = view(), S = W / v.w, x = (f.x - v.x) * S, y = (v.y + v.h - f.y - f.h) * S; svg = svg.replace(/<\/svg>$/, `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(f.w * S).toFixed(1)}" height="${(f.h * S).toFixed(1)}" fill="none" stroke="#d97706" stroke-width="1.2" stroke-dasharray="7 4" pointer-events="none" class="frame"/></svg>`); }
+  box.innerHTML = svg;
+  box.classList.toggle('connecting', !!st.connect); box.classList.toggle('panning', st.space);
+  const z = $('zoomPct'); if (z) z.textContent = `${Math.round(100 * view().w / v.w)}%`;
 }
 /* labels on a narrow screen: the 800-px drawing is shown smaller, so its labels are drawn larger to stay readable */
 function screenLabelScale(box) { const w = box.clientWidth || W; return Math.max(1, Math.min(2.4, 0.75 * W / Math.max(200, w - 14))); }
@@ -342,38 +475,85 @@ function conicalOrbit(s) {
   return {centre: {x: P.x, y: p.y}, radius: Math.abs(p.x - P.x)};
 }
 function worldAt(ev) {
-  const svg = $('canvas').querySelector('svg'), r = svg.getBoundingClientRect(), v = view(), H = svg.viewBox.baseVal.height;
+  const svg = $('canvas').querySelector('svg'), r = svg.getBoundingClientRect(), v = dview(), H = svg.viewBox.baseVal.height;
   const px = (ev.clientX - r.left) * W / r.width, py = (ev.clientY - r.top) * H / r.height, S = W / v.w;
   return {x: v.x + px / S, y: v.y + v.h - py / S};
 }
+/* zoom by k about a world point (the frame's aspect kept, so the canvas does not change height) */
+function zoomBy(k, at) {
+  const v = dview(), f = view(), c = at || {x: v.x + v.w / 2, y: v.y + v.h / 2};
+  let w = Math.max(f.w / 20, Math.min(f.w * 4, v.w / k)); const h = w * f.h / f.w;
+  if (Math.abs(w - f.w) < f.w * 0.02 && Math.abs(c.x - (f.x + f.w / 2)) < f.w * 0.02 && !at) { st.zoom = null; paintCanvas(); return; }
+  const rx = (c.x - v.x) / v.w, ry = (c.y - v.y) / v.h;
+  st.zoom = {x: c.x - rx * w, y: c.y - ry * h, w, h}; paintCanvas();
+}
+function panBy(dx, dy) { const v = dview(); st.zoom = {x: v.x - dx, y: v.y - dy, w: v.w, h: v.h}; paintCanvas(); }
 function pickAt(ev) { const g = ev.target.closest?.('[data-id]'); return g ? byId(g.dataset.id) : null; }
+const NO_DRAG = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline', 'fieldlines'];
 function bindCanvas() {
-  const box = $('canvas');
+  const box = $('canvas'), pts = new Map();
   box.addEventListener('pointerdown', ev => {
+    pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
+    if (pts.size === 2) { const [a, b] = [...pts.values()]; st.drag = {pinch: true, d0: Math.hypot(a.x - b.x, a.y - b.y), v0: {...dview()}, mid: worldAt({clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2})}; st.marquee = null; return; }
+    if (ev.button === 1 || (ev.button === 0 && st.space)) { st.drag = {pan: true, last: {x: ev.clientX, y: ev.clientY}}; box.setPointerCapture?.(ev.pointerId); ev.preventDefault(); return; }
     if (ev.button !== 0) return;
+    const before = JSON.stringify(st.scene);
     const hd = ev.target.closest?.('[data-handle]'), hs = hd && byId(st.sel);
-    if (hs && !st.connect) { if (st.sim) { stopSim(); } st.drag = {id: hs.id, handle: +hd.dataset.handle, start: worldAt(ev), orig: clone(hs), before: JSON.stringify(st.scene), moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
+    if (hs && !st.connect && !hs.lock) { if (st.sim) stopSim(); st.drag = {id: hs.id, handle: +hd.dataset.handle, start: worldAt(ev), orig: clone(hs), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
+    const rh = ev.target.closest?.('[data-rot]'), rs = rh && byId(st.sel);
+    if (rs && !st.connect) { if (st.sim) stopSim(); const c = isBody(rs) ? bodyPose(st.scene, rs) : rotCentre(rs); st.drag = {id: rs.id, rot: true, c, before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
     const o = pickAt(ev);
     if (st.connect) { connectClick(o); return; }
     if (st.sim) { stopSim(); paint(); }
-    st.sel = o ? o.id : ''; paintCanvas(); paintSide(); status();
-    if (!o || ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline', 'fieldlines'].includes(o.type)) return;
-    st.drag = {id: o.id, start: worldAt(ev), orig: clone(o), before: JSON.stringify(st.scene), moved: false};
+    const add = ev.shiftKey || ev.ctrlKey || ev.metaKey;
+    if (!o) {
+      /* a box drawn on empty space selects what it touches */
+      if (!add) setSel([]);
+      st.drag = {marquee: true, start: worldAt(ev), keep: new Set(selIds()), moved: false}; box.setPointerCapture?.(ev.pointerId); paintCanvas(); paintSide(); status(); return;
+    }
+    if (add) { const ids = new Set(selIds()); ids.has(o.id) ? ids.delete(o.id) : ids.add(o.id); setSel([...ids], o.id); paint(); return; }
+    if (!st.selection.has(o.id)) setSel([o.id]); else st.sel = o.id;
+    paintCanvas(); paintSide(); status(); paintBar();
+    const ids = selIds().filter(id => !NO_DRAG.includes(byId(id).type) && !byId(id).lock);
+    if (!ids.length || (byId(o.id).lock && ids.length <= 1)) return;
+    st.drag = ids.length > 1 ? {group: ids, origs: new Map(ids.map(id => [id, clone(byId(id))])), start: worldAt(ev), before, moved: false} : {id: o.id, start: worldAt(ev), orig: clone(o), before, moved: false};
     box.setPointerCapture?.(ev.pointerId);
   });
   box.addEventListener('pointermove', ev => {
+    if (pts.has(ev.pointerId)) pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
     const d = st.drag; if (!d) return;
-    const p = worldAt(ev), dx = p.x - d.start.x, dy = p.y - d.start.y;
-    if (!d.moved && Math.hypot(dx, dy) * W / view().w < 3) return;
-    d.moved = true; dragTo(d, p, dx, dy); paintCanvas();
+    if (d.pinch) { if (pts.size < 2) return; const [a, b] = [...pts.values()], dd = Math.hypot(a.x - b.x, a.y - b.y); if (dd > 10) { st.zoom = {...d.v0}; zoomBy(dd / d.d0, d.mid); } return; }
+    if (d.pan) { const svg = box.querySelector('svg'), r = svg.getBoundingClientRect(), k = dview().w / r.width; panBy((ev.clientX - d.last.x) * k, -(ev.clientY - d.last.y) * k); d.last = {x: ev.clientX, y: ev.clientY}; return; }
+    const p = worldAt(ev);
+    if (d.marquee) {
+      d.moved = true; st.marquee = {x0: d.start.x, y0: d.start.y, x1: p.x, y1: p.y};
+      const x0 = Math.min(d.start.x, p.x), x1 = Math.max(d.start.x, p.x), y0 = Math.min(d.start.y, p.y), y1 = Math.max(d.start.y, p.y);
+      const hits = st.scene.objects.filter(o => { const b = objectBox(st.scene, o); return b && b.x <= x1 && b.x + b.w >= x0 && b.y <= y1 && b.y + b.h >= y0 && !(b.x < x0 && b.x + b.w > x1 && b.y < y0 && b.y + b.h > y1); }).map(o => o.id);
+      setSel([...d.keep, ...hits]); paintCanvas(); return;
+    }
+    if (d.rot) { const o = byId(d.id); if (!o) return; let a = Math.atan2(p.y - d.c.y, p.x - d.c.x) * 180 / Math.PI - 90; if (!ev.shiftKey) a = Math.round(a / 15) * 15; o.rot = r4(((a + 540) % 360) - 180); d.moved = true; paintCanvas(); return; }
+    const dx = p.x - d.start.x, dy = p.y - d.start.y;
+    if (!d.moved && Math.hypot(dx, dy) * W / dview().w < 3) return;
+    d.moved = true;
+    if (d.group) { const sx = st.snap ? snapV(dx) : dx, sy = st.snap ? snapV(dy) : dy; for (const id of d.group) { const o = byId(id); if (o) moveObj(o, sx, sy, d.origs.get(id)); } }
+    else dragTo(d, p, dx, dy);
+    paintCanvas();
   });
-  const end = () => {
-    const d = st.drag; st.drag = null; if (!d || !d.moved) return;
+  const end = ev => {
+    pts.delete(ev.pointerId);
+    const d = st.drag; st.drag = null; if (!d) return;
+    if (d.marquee) { st.marquee = null; paint(); return; }
+    if (d.pan || d.pinch || !d.moved) return;
     const r = validateScene(st.scene);
     if (!r.ok) { st.scene = JSON.parse(d.before); paint(); return; }
-    st.undo.push(d.before); st.redo = []; st.scene = r.scene; save(); paint();
+    /* one step of history a drag */
+    st.hist.record(d.before); st.scene = r.scene; save(); paint();
   };
   box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
+  box.addEventListener('wheel', ev => {
+    if (ev.ctrlKey || ev.metaKey) { ev.preventDefault(); zoomBy(Math.exp(-ev.deltaY * 0.0022), worldAt(ev)); }
+    else if (st.zoom) { ev.preventDefault(); const k = dview().w / (box.clientWidth || W); panBy((ev.shiftKey ? ev.deltaY : ev.deltaX) * k, (ev.shiftKey ? 0 : -ev.deltaY) * k); }
+  }, {passive: false});
 }
 /* where a dragged object goes: a body slides along the surface it rests on, drops onto one it is put near, or leaves it
    when pulled away; a body hanging from a pulley moves up and down only */
@@ -382,30 +562,33 @@ function dragTo(d, p, dx, dy) {
   if (d.handle) {
     /* one end of a wire, an element, a line…: on the grid, or onto a terminal near it */
     let q = {x: r4(snapV(p.x)), y: r4(snapV(p.y))};
-    const near = st.scene.objects.filter(x => x.id !== o.id && 'x1' in x && 'y2' in x).flatMap(x => [{x: x.x1, y: x.y1}, {x: x.x2, y: x.y2}]).find(t => Math.hypot(t.x - p.x, t.y - p.y) < Math.max(st.scene.grid * 0.6, 12 * view().w / W));
+    const near = st.scene.objects.filter(x => x.id !== o.id && 'x1' in x && 'y2' in x).flatMap(x => [{x: x.x1, y: x.y1}, {x: x.x2, y: x.y2}]).find(t => Math.hypot(t.x - p.x, t.y - p.y) < Math.max(st.scene.grid * 0.6, 12 * dview().w / W));
     if (near) q = near;
+    if (o.type === 'callout') { if (d.handle === 1) { o.x = q.x; o.y = q.y; } else { o.x2 = q.x; o.y2 = q.y; } return; }
     o['x' + d.handle] = q.x; o['y' + d.handle] = q.y; return;
   }
   if (isBody(o)) {
     const hanging = st.scene.objects.some(s => s.type === 'string' && s.over.length && (s.a === o.id || s.b === o.id)) && !g.on;
     if (g.on) {
-      const fr = surfaceFrame(byId(g.on)), rel = vec.sub(p, fr.p0), off = vec.dot(rel, fr.n);
+      const fr = surfaceFrame(byId(g.on), st.scene), rel = vec.sub(p, fr.p0), off = vec.dot(rel, fr.n);
       if (off > -0.2 && off < 0.6 + (o.h || o.r || 0)) { o.on = g.on; o.at = r4(snapV(vec.dot(rel, fr.u))); placeOnFrame(o, fr); return; }
       o.on = ''; o.x = r4(snapV(p.x)); o.y = r4(snapV(p.y)); return;
     }
     if (hanging) { o.y = r4(snapV(g.y + dy)); return; }
     o.x = r4(snapV(g.x + dx)); o.y = r4(snapV(g.y + dy));
-    const half = o.type === 'ball' ? o.r : o.h / 2;
-    for (const s of st.scene.objects.filter(x => x.type === 'floor' || x.type === 'incline')) {
-      const fr = surfaceFrame(s), rel = vec.sub(o, fr.p0), along = vec.dot(rel, fr.u), off = vec.dot(rel, fr.n) - half;
-      if (Math.abs(off) < 0.12 && along >= 0 && along <= fr.length) { o.on = s.id; o.at = r4(snapV(along)); placeOnFrame(o, fr); return; }
+    const half = isRound(o) ? o.r : o.h / 2;
+    /* resting places: floors, inclines and the tops of blocks (not its own, not one above it) */
+    const above = id => { let b = byId(id); for (let k = 0; b && k < 8; k++) { if (b.id === o.id) return true; b = byId(b.on); } return false; };
+    for (const s of st.scene.objects.filter(x => x.type === 'floor' || x.type === 'incline' || (x.type === 'block' && x.id !== o.id && !above(x.id)))) {
+      const fr = surfaceFrame(s, st.scene), rel = vec.sub(o, fr.p0), along = vec.dot(rel, fr.u), off = vec.dot(rel, fr.n) - half;
+      if (Math.abs(off) < 0.12 && along >= 0 && along <= fr.length) { o.on = s.id; o.at = r4(snapV(along)); o.rot = 0; placeOnFrame(o, fr); return; }
     }
     return;
   }
-  if ('x1' in g) { o.x1 = r4(snapV(g.x1 + dx)); o.y1 = r4(snapV(g.y1 + dy)); o.x2 = r4(g.x2 + (o.x1 - g.x1)); o.y2 = r4(g.y2 + (o.y1 - g.y1)); return; }
-  if ('x' in g) { o.x = r4(snapV(g.x + dx)); o.y = r4(snapV(g.y + dy)); }
+  if ('x1' in g && !('x' in g)) { o.x1 = r4(snapV(g.x1 + dx)); o.y1 = r4(snapV(g.y1 + dy)); o.x2 = r4(g.x2 + (o.x1 - g.x1)); o.y2 = r4(g.y2 + (o.y1 - g.y1)); return; }
+  if ('x' in g) { o.x = r4(snapV(g.x + dx)); o.y = r4(snapV(g.y + dy)); if (o.type === 'callout') { o.x2 = r4(g.x2 + (o.x - g.x)); o.y2 = r4(g.y2 + (o.y - g.y)); } }
 }
-function placeOnFrame(o, fr) { const h = o.type === 'ball' ? o.r : o.h / 2, c = vec.add(vec.add(fr.p0, vec.mul(fr.u, o.at)), vec.mul(fr.n, h)); o.x = r4(c.x); o.y = r4(c.y); }
+function placeOnFrame(o, fr) { const h = isRound(o) ? o.r : o.h / 2, c = vec.add(vec.add(fr.p0, vec.mul(fr.u, o.at)), vec.mul(fr.n, h)); o.x = r4(c.x); o.y = r4(c.y); }
 
 /* ── the simulation ── */
 function stopSim() { st.sim = null; st.playing = false; st.trails = new Map(); st.samples = []; }
@@ -443,7 +626,22 @@ function readNow() {
 const unsupportedText = sim => sim.unsupported.map(u => `${u.ids.join(', ')}: ${T.unsupported[u.code] || u.code}`).join(' · ');
 
 /* ── side panel: the selected object's values, or the figure's ── */
-const NUM_STEP = {mass: 0.1, angle: 1, mu: 0.05, k: 1, F: 1, size: 1, coils: 1, from: 5, to: 5, n: 1, levels: 1, turns: 1, rings: 1, units: 1, apex: 1, lambda: 10, beta: 0.05, gamma: 0.01, q: 0.5, t1: 10, t2: 10, value: 1};
+const NUM_STEP = {mass: 0.1, angle: 1, mu: 0.05, k: 1, F: 1, size: 1, coils: 1, from: 5, to: 5, n: 1, levels: 1, turns: 1, rings: 1, units: 1, apex: 1, lambda: 10, beta: 0.05, gamma: 0.01, q: 0.5, t1: 10, t2: 10, value: 1, rot: 5, lw: 0.1, ls: 0.1, at: 0.05, level: 0.05, np: 1, ns: 1, spokes: 1, seed: 1, rho: 10, B: 0.05, v: 0.1, R: 1};
+/* the main physical values get a slider beside their box: [min, max] in the field's unit (else from its range) */
+const SLIDE = {mass: [0.1, 20], angle: [0, 89], mu: [0, 1], k: [1, 500], r: [0.02, 2], F: [0, 100], f: [-5, 5], lambda: [100, 900], q: [-10, 10], A: [0, 2], v: [-10, 10], B: [0, 2], at: [0, 1], level: [0, 1], rho: [100, 3000], V0: [0, 20], E: [0, 20], beta: [-0.95, 0.95], d: [0.01, 2], value: null, rot: [-180, 180], h: [0.1, 5], L: [0.1, 10], len: [0.1, 6], R: [0.1, 100], tilt: [0.05, 1], piston: [0.1, 0.95], gamma: [1.01, 2], apex: [10, 150], n: null};
+const slideRange = (o, k, f) => {
+  if (o.type === 'element' && k === 'value') return o.kind === 'capacitor' || o.kind === 'dielectric' ? [1, 1000] : ['battery', 'cell', 'dc', 'ac', 'diode', 'led'].includes(o.kind) ? [0, 24] : o.kind === 'inductor' ? [0.01, 2] : [1, 1000];
+  if (o.type === 'incline' && k === 'angle') return [1, 89];
+  if (o.type === 'slits' && k === 'lambda') return [380, 780];
+  if (o.type === 'wave' && k === 'lambda') return [0.2, 5];
+  if (o.type === 'interference' && k === 'lambda') return [0.05, 1.5];
+  if ((o.type === 'lens' || o.type === 'mirror' || o.type === 'screen') && k === 'h') return [0.2, 4];
+  if (k === 'h' || k === 'len' && o.type !== 'plank') return null;
+  if (k === 'at') { if (isBody(o)) { const s2 = byId(o.on); return s2 ? [0, r4(surfaceFrame(s2, st.scene).length)] : null; } if (o.type !== 'plank' && o.type !== 'bridge') return null; }
+  if (k === 'r' && !['wheel', 'ball', 'pulley', 'track', 'nucleus'].includes(o.type)) return null;
+  const r = SLIDE[k]; if (!r) return null;
+  return [Math.max(f.min, r[0]), Math.min(f.max, r[1])];
+};
 /* fields that mean nothing for this object as it is now set (a switch has no value, a function curve no γ …) */
 function relevant(o, k) {
   if (o.type === 'element') {
@@ -455,7 +653,9 @@ function relevant(o, k) {
     if (k === 'route') return K === 'wire';
   }
   if (o.type === 'field' && k === 'angle') return o.dir === 'arrow';
-  if (o.type === 'curve') { if (k === 'expr') return o.kind === 'func'; if (k === 'gamma') return o.kind === 'adiabat'; if (k === 'y2') return o.kind === 'isochore'; if (k === 'x2') return o.kind !== 'isochore'; if (k === 'y1') return o.kind !== 'func'; }
+  if (o.type === 'curve') { if (k === 'data') return o.kind === 'points'; if (o.kind === 'points' && ['x1', 'x2', 'y1', 'y2', 'gamma', 'expr'].includes(k)) return false; if (k === 'expr') return o.kind === 'func'; if (k === 'gamma') return o.kind === 'adiabat'; if (k === 'y2') return o.kind === 'isochore'; if (k === 'x2') return o.kind !== 'isochore'; if (k === 'y1') return o.kind !== 'func'; }
+  if (o.type === 'plank' && k === 'at') return o.support !== 'none';
+  if (o.type === 'wheel' && k === 'spokes') return o.kind === 'wheel' || o.kind === 'disk';
   if (o.type === 'cycle' && k === 'gamma') return true;
   if (o.type === 'graph' && ['xmin', 'xmax', 'ymin', 'ymax'].includes(k)) return !o.auto;
   if (o.type === 'well') { if (k === 'E') return o.kind === 'barrier' || o.kind === 'step'; if (k === 'levels') return !['barrier', 'step'].includes(o.kind); if (k === 'L') return o.kind !== 'harmonic' && o.kind !== 'step'; }
@@ -465,45 +665,66 @@ function relevant(o, k) {
   if (o.type === 'charge' && ['mass', 'vx', 'vy', 'showV', 'vLabel', 'trail'].includes(k)) return true;
   return true;
 }
-const fieldName = (o, k) => o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
+const fieldName = (o, k) => o.type === 'block' && k === 'mu' ? (ko ? '마찰 계수 μ (윗면)' : 'Friction μ (top face)') : o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
+/* the leads that touch a bridge wire at its jockey move with it */
+const jockey = b => ({x: b.x1 + (b.x2 - b.x1) * b.at, y: b.y1 + (b.y2 - b.y1) * b.at});
+function followJockey(scene, J0, J1) { for (const e of scene.objects) if (e.type === 'element') for (const k of [1, 2]) if (Math.hypot(e['x' + k] - J0.x, e['y' + k] - J0.y) < 1e-6) { e['x' + k] = r4(J1.x); e['y' + k] = r4(J1.y); } }
+/* which simulation and solver controls make sense for this figure */
+const hasMech = () => st.scene.objects.some(o => isBody(o) || o.type === 'force' || o.type === 'spring');
+const hasCircuit = () => st.scene.objects.some(o => o.type === 'element' || o.type === 'bridge');
 function paintSide() {
   const box = $('props'); if (!box) return;
-  const o = byId(st.sel);
+  const ids = selIds(), o = ids.length === 1 ? byId(ids[0]) : null;
+  if (ids.length > 1) { paintMulti(box, ids); return; }
   if (!o) {
+    const sk = st.scene.style, t = STYLE_TABLE[sk], pr = prefs();
     box.innerHTML = `<h2>${T.scene}</h2><div class="props"><label class="wide">${T.sceneTitle}<input data-scene="title" maxlength="80" value="${esc(st.scene.title)}"></label>
-      <label class="wide">${X2.style}<select data-scene="style">${STYLE_KEYS.map(k => `<option value="${k}"${k === st.scene.style ? ' selected' : ''}>${esc(STYLES[k].name[lang])}</option>`).join('')}</select></label>
-      <label>${T.g}<input data-scene="g" type="number" step="0.1" value="${st.scene.g}"></label><label>${T.gridSize}<input data-scene="grid" type="number" step="0.05" value="${st.scene.grid}"></label></div>
+      <label class="wide">${X2.style}<select data-scene="style">${STYLE_KEYS.map(k => `<option value="${k}"${k === sk ? ' selected' : ''}>${esc(STYLES[k].name[lang])}</option>`).join('')}</select></label>
+      ${hasMech() ? `<label>${T.g}<input data-scene="g" type="number" step="0.1" value="${st.scene.g}"></label>` : ''}<label>${T.gridSize}<input data-scene="grid" type="number" step="0.05" value="${st.scene.grid}"></label>
+      <label class="wide">${X3.tools.printW}<input data-scene="printW" type="number" min="0" max="400" step="5" value="${st.scene.printW || 0}"></label>
+      <label class="chk wide"><input type="checkbox" data-scene="values"${st.scene.values ? ' checked' : ''}>${X3.tools.values}</label>
+      <label class="chk wide"><input type="checkbox" id="prefExample"${pr.example !== false ? ' checked' : ''}>${X3.tools.example}</label></div>
+      <details class="stylesrc"><summary>${X3.tools.styleSrc}</summary><p class="note">${esc(t.source)}${t.n ? ` · n = ${t.n}` : ''} · ${ko ? '그림 폭' : 'figure width'} ${t.widthPt} pt · ${ko ? '글자' : 'labels'} ${t.labelPt} pt · ${ko ? '선' : 'lines'} ${t.thin}/${t.main}/${t.thick} pt${t.gray != null ? ` · ${ko ? '회색' : 'gray'} ${t.gray}` : ''}${t.est.length ? ` · ${ko ? '추정' : 'estimated'}: ${t.est.join(', ')}` : ''}${!t.n ? ` · ${ko ? '실측 자료 없음 (가정)' : 'no measured source (assumed)'}` : ''}</p></details>
       <p class="note">${T.noSel}</p><div class="note">${T.objects}</div><div class="olist">${st.scene.objects.map(x => `<button type="button" data-pick="${esc(x.id)}">${esc(x.id)} · ${esc(x.type === 'element' ? X2.kinds[x.kind] : T.types[x.type])}</button>`).join('')}</div>`;
-    box.querySelectorAll('[data-scene]').forEach(el => el.onchange = () => { const next = clone(st.scene), k = el.dataset.scene; next[k] = k === 'title' || k === 'style' ? el.value : parseFloat(el.value); commit(next); });
-    box.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { st.sel = b.dataset.pick; paint(); });
+    box.querySelectorAll('[data-scene]').forEach(el => el.onchange = () => {
+      const next = clone(st.scene), k = el.dataset.scene;
+      if (k === 'values') next.values = el.checked; else if (k === 'printW') { const v = parseFloat(el.value); if (v > 0) next.printW = Math.max(20, Math.min(400, v)); else delete next.printW; }
+      else next[k] = k === 'title' || k === 'style' ? el.value : parseFloat(el.value);
+      commit(next);
+    });
+    $('prefExample').onchange = e => setPref('example', e.target.checked);
+    box.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { setSel([b.dataset.pick]); paint(); });
     return;
   }
-  const F = FIELDS[o.type], fields = Object.entries(F).filter(([k]) => !(isBody(o) && o.on && (k === 'x' || k === 'y')) && !(isBody(o) && !o.on && k === 'at') && relevant(o, k));
+  const F = FIELDS[o.type], fields = Object.entries(F).filter(([k]) => !(isBody(o) && o.on && (k === 'x' || k === 'y' || k === 'rot')) && !(isBody(o) && !o.on && k === 'at') && !(o.type === 'block' && k === 'mu' && !st.scene.objects.some(x => x.on === o.id)) && relevant(o, k));
   const opts = (types, cur, optional) => (optional ? `<option value="">${T.none}</option>` : '') + st.scene.objects.filter(x => types.includes(x.type) && x.id !== o.id).map(x => `<option value="${esc(x.id)}"${x.id === cur ? ' selected' : ''}>${esc(x.id)} · ${T.types[x.type]}</option>`).join('');
   const optional = k => !(['string', 'rod', 'spring'].includes(o.type) && (k === 'a' || k === 'b')) && !(o.type === 'force' && k === 'on');
   const field = ([k, f]) => {
     const L = fieldName(o, k);
-    if (f.k === 'num') return `<label>${L}<input data-f="${k}" type="number" step="${NUM_STEP[k] || 0.05}" min="${f.min}" max="${f.max}" value="${r4(o[k])}"></label>`;
+    if (f.k === 'num') { const sr = slideRange(o, k, f); return `<label class="${sr ? 'wide slide' : ''}">${L}<span class="numrow"><input data-f="${k}" type="number" step="${NUM_STEP[k] || 0.05}" min="${f.min}" max="${f.max}" value="${r4(o[k])}">${sr ? `<input data-s="${k}" type="range" min="${sr[0]}" max="${sr[1]}" step="${(sr[1] - sr[0]) / 200}" value="${Math.max(sr[0], Math.min(sr[1], o[k]))}" aria-label="${esc(L)}">` : ''}</span></label>`; }
     if (f.k === 'bool') return `<label class="chk wide"><input data-f="${k}" type="checkbox"${o[k] ? ' checked' : ''}>${L}</label>`;
-    if (f.k === 'enum') return `<label>${L}<select data-f="${k}">${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : T.enums[v] || v)}</option>`).join('')}</select></label>`;
+    if (f.k === 'enum') return `<label>${L}<select data-f="${k}">${f.list.map(v => `<option value="${v}"${v === o[k] ? ' selected' : ''}>${esc(o.type === 'element' && k === 'kind' ? X2.kinds[v] : o.type === 'block' && v === 'box' ? (ko ? '상자' : 'Box') : T.enums[v] || v)}</option>`).join('')}</select></label>`;
     if (f.k === 'ref') return `<label>${L}<select data-f="${k}">${opts(f.types, o[k], optional(k))}</select></label>`;
     if (f.k === 'refs') { const ps = st.scene.objects.filter(x => x.type === 'pulley'); return ps.length ? `<div class="wide"><span class="note">${L}</span><div class="over">${ps.map(p => `<label><input type="checkbox" data-over="${esc(p.id)}"${o.over.includes(p.id) ? ' checked' : ''}>${esc(p.id)}</label>`).join('')}</div></div>` : ''; }
-    if (f.k === 'expr') return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>`;
+    if (f.k === 'expr' || k === 'data' || k === 'xt' || k === 'yt') return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>`;
     return `<label class="wide">${L}<span class="tin"><input data-f="${k}" data-text="1" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"><button type="button" class="symbtn" data-sym="${k}" title="${esc(X2.symTitle)}">Ω</button></span><span class="tex" data-tex="${k}"></span></label>`;
   };
-  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2><div class="props">${fields.map(field).join('')}</div>
+  /* the object's own values first, its look (line weight, label size, lock) last */
+  const main = fields.filter(([k]) => !['lw', 'ls', 'lock'].includes(k)), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k));
+  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2><div class="props">${main.map(field).join('')}</div>
     ${fields.some(([, f]) => f.k === 'txt') ? `<p class="note">${esc(T.texHint)}</p>` : ''}
-    <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}<button type="button" data-act="del">${T.del}</button></div>`;
+    <details class="look"><summary>${ko ? '선 · 글자 · 잠금' : 'Lines, labels, lock'}</summary><div class="props">${look.map(field).join('')}</div></details>
+    <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}<button type="button" data-act="front">${X3.tools.front}</button><button type="button" data-act="back">${X3.tools.backZ}</button><button type="button" data-act="del">${T.del}</button></div>`;
   box.querySelectorAll('[data-f]').forEach(el => {
     const k = el.dataset.f, f = F[k];
     const apply = () => {
       const next = clone(st.scene), x = next.objects.find(y => y.id === o.id);
-      if (f.k === 'num') { const v = parseFloat(el.value); if (!Number.isFinite(v)) { paintSide(); return; } x[k] = v; }
+      if (f.k === 'num') { const v = parseFloat(el.value); if (!Number.isFinite(v)) { paintSide(); return; } const J0 = x.type === 'bridge' ? jockey(x) : null; x[k] = v; if (J0) followJockey(next, J0, jockey(x)); }
       else if (f.k === 'bool') x[k] = el.checked;
       else x[k] = el.value;
       if (o.type === 'element' && k === 'kind' && X2.units[x.kind] && !X2.units[o.kind]) x.value = defaults('element').value;
       if (k === 'on') {
-        if (x.on) { const fr = surfaceFrame(next.objects.find(y => y.id === x.on)); x.at = r4(Math.max(0, Math.min(fr.length, vec.dot(vec.sub(bodyPose(st.scene, o), fr.p0), fr.u)))); }
+        if (x.on) { const fr = surfaceFrame(next.objects.find(y => y.id === x.on), next); x.at = r4(Math.max(0, Math.min(fr.length, vec.dot(vec.sub(bodyPose(st.scene, o), fr.p0), fr.u)))); }
         else { const p = bodyPose(st.scene, o); x.x = r4(p.x); x.y = r4(p.y); }
       }
       if (!commit(next, {keepSel: true})) paintSide();
@@ -511,14 +732,46 @@ function paintSide() {
     el.onchange = apply;
     if (f.k === 'txt') { el.oninput = () => texPreview(k, el.value); el.onfocus = () => { st.lastText = {id: o.id, k}; }; texPreview(k, el.value); }
   });
+  /* a slider changes the figure live while it moves, and is one step of history when it is let go */
+  box.querySelectorAll('[data-s]').forEach(el => {
+    const k = el.dataset.s, num = box.querySelector(`[data-f="${k}"]`);
+    el.oninput = () => {
+      if (!st.gesture) st.gesture = {before: JSON.stringify(st.scene)};
+      const x = byId(o.id), v = r4(parseFloat(el.value)); if (!x || !Number.isFinite(v)) return;
+      const J0 = x.type === 'bridge' ? jockey(x) : null;
+      x[k] = v; if (num) num.value = v;
+      if (J0) followJockey(st.scene, J0, jockey(x));
+      if (isBody(x) && x.on) for (let i = 0; i < 2; i++) for (const y of st.scene.objects) if (isBody(y) && y.on) { const fr = surfaceFrame(byId(y.on), st.scene); placeOnFrame(y, fr); }
+      if (st.sim) stopSim();
+      paintCanvas(); paintReadouts();
+    };
+    el.onchange = () => { const g = st.gesture; st.gesture = null; if (!g) return; const r = validateScene(st.scene); if (!r.ok) { st.scene = JSON.parse(g.before); paint(); return; } st.hist.record(g.before); st.scene = r.scene; save(); paint(); };
+  });
   box.querySelectorAll('[data-over]').forEach(el => el.onchange = () => {
-    const next = clone(st.scene), x = next.objects.find(y => y.id === o.id), ids = [...box.querySelectorAll('[data-over]')].filter(c => c.checked).map(c => c.dataset.over);
-    x.over = [...x.over.filter(id => ids.includes(id)), ...ids.filter(id => !x.over.includes(id))];
+    const next = clone(st.scene), x = next.objects.find(y => y.id === o.id), ids2 = [...box.querySelectorAll('[data-over]')].filter(c => c.checked).map(c => c.dataset.over);
+    x.over = [...x.over.filter(id => ids2.includes(id)), ...ids2.filter(id => !x.over.includes(id))];
     alignHanging(next, x); commit(next, {keepSel: true});
   });
   box.querySelectorAll('[data-sym]').forEach(b => b.onclick = () => { st.lastText = {id: o.id, k: b.dataset.sym}; openSymbols(); });
   box.querySelector('[data-act="dup"]')?.addEventListener('click', dup);
+  box.querySelector('[data-act="front"]').onclick = () => zOrder(true); box.querySelector('[data-act="back"]').onclick = () => zOrder(false);
   box.querySelector('[data-act="del"]').onclick = del;
+}
+/* several objects: align, distribute, the look of all of them */
+function paintMulti(box, ids) {
+  const tl = X3.tools, b = (act, t) => `<button type="button" data-al="${act}">${t}</button>`;
+  box.innerHTML = `<h2>${esc(tl.multi(ids.length))}</h2>
+    <div class="note">${tl.align}</div><div class="row tight">${b('aL', '⇤ ' + tl.aL)}${b('aC', '↔ ' + tl.aC)}${b('aR', tl.aR + ' ⇥')}${b('aT', '⤒ ' + tl.aT)}${b('aM', '↕ ' + tl.aM)}${b('aB', '⤓ ' + tl.aB)}</div>
+    <div class="note">${tl.distribute}</div><div class="row tight">${b('dH', '⋯ ' + tl.dH)}${b('dV', '⋮ ' + tl.dV)}</div>
+    <div class="props"><label>${T.fields.lw}<input data-all="lw" type="number" step="0.1" min="0.2" max="5" value="${byId(ids[0]).lw}"></label><label>${T.fields.ls}<input data-all="ls" type="number" step="0.1" min="0.3" max="4" value="${byId(ids[0]).ls}"></label></div>
+    <div class="row"><button type="button" data-act="dup">${T.dup}</button><button type="button" data-act="lock">${tl.lockAll}</button><button type="button" data-act="unlock">${tl.unlockAll}</button><button type="button" data-act="front">${tl.front}</button><button type="button" data-act="back">${tl.backZ}</button><button type="button" data-act="del">${T.del}</button></div>
+    <div class="olist">${ids.map(id => `<button type="button" data-pick="${esc(id)}">${esc(id)}</button>`).join('')}</div>`;
+  box.querySelectorAll('[data-al]').forEach(x => x.onclick = () => alignSel(x.dataset.al));
+  box.querySelectorAll('[data-all]').forEach(x => x.onchange = () => { const v = parseFloat(x.value); if (Number.isFinite(v)) setAll(x.dataset.all, v); });
+  box.querySelector('[data-act="dup"]').onclick = dup; box.querySelector('[data-act="del"]').onclick = del;
+  box.querySelector('[data-act="lock"]').onclick = () => setAll('lock', true); box.querySelector('[data-act="unlock"]').onclick = () => setAll('lock', false);
+  box.querySelector('[data-act="front"]').onclick = () => zOrder(true); box.querySelector('[data-act="back"]').onclick = () => zOrder(false);
+  box.querySelectorAll('[data-pick]').forEach(x => x.onclick = () => { setSel([x.dataset.pick]); paint(); });
 }
 /* the label as the figure will show it (the same typesetter as the SVG, in the figure's style) */
 function texPreview(k, v) {
@@ -549,11 +802,11 @@ const sig = v => typeof v === 'number' ? (Math.abs(v) >= 1e4 || (Math.abs(v) < 1
 const si = (v0, u) => { const v = +(+v0).toPrecision(6), a = Math.abs(v); const [k, p] = a >= 1e6 ? [1e-6, 'M'] : a >= 1e3 ? [1e-3, 'k'] : a >= 1 || a === 0 ? [1, ''] : a >= 1e-3 ? [1e3, 'm'] : a >= 1e-6 ? [1e6, 'μ'] : [1e9, 'n']; return `${+(v * k).toPrecision(4)} ${p}${u}`; };
 function staticReadouts() {
   const parts = [];
-  if (st.solve) {
+  if (st.solve && hasCircuit()) {
     const c = st.circuit || solveCircuit(st.scene);
     if (!c.ok) parts.push(`<p class="note bad">${X2.circuit}: ${esc(X2.noCircuit[c.code] || c.code)}</p>`);
     else {
-      const rows = [...c.el].filter(([id]) => byId(id)?.kind !== 'wire').map(([id, r]) => `<tr><td>${esc(id)}</td><td>${esc(X2.kinds[byId(id).kind])}</td><td>${si(Math.abs(r.drop) < 1e-6 ? 0 : r.drop, 'V')}</td><td>${si(Math.abs(r.I) < 1e-9 ? 0 : r.I, 'A')}</td></tr>`).join('');
+      const rows = [...c.el].filter(([id]) => byId(id) && byId(id).kind !== 'wire').map(([id, r]) => `<tr><td>${esc(id)}</td><td>${esc(X2.kinds[byId(id).kind])}</td><td>${si(Math.abs(r.drop) < 1e-6 ? 0 : r.drop, 'V')}</td><td>${si(Math.abs(r.I) < 1e-9 ? 0 : r.I, 'A')}</td></tr>`).join('');
       parts.push(`<div><table><thead><tr><th>${X2.element}</th><th></th><th>${X2.drop} V₁−V₂</th><th>${X2.current} (1→2)</th></tr></thead><tbody>${rows}</tbody></table></div>`);
       for (const t of c.transients) {
         const N = 120, pts = Array.from({length: N + 1}, (_, i) => { const tt = 5 * t.tau * i / N; return {t: tt, v: t.at(tt)}; }), lo = Math.min(0, ...pts.map(p => p.v)), hi = Math.max(1e-12, ...pts.map(p => p.v));
@@ -605,16 +858,14 @@ function paintSimBar() {
 }
 
 /* ── export ── */
-/* for the paper: the figure is printed about 70 mm wide (a column) (at most 62 mm high), so labels are drawn to come out near
-   3.3 mm (about 9.5 pt) there, and lines a little heavier */
-function paperScale() {
-  const v = view(), h = W * v.h / v.w, mm = Math.min(70, 62 * W / h), px = mm / W;
-  return {labelScale: Math.max(1, Math.min(3, 3.3 / (15 * px))), strokeScale: Math.max(1, Math.min(2, 0.3 / (1.7 * px)))};
-}
-function exportSvg(paper = false) {
+/* for the paper and the files: the figure drawn at the scale at which, printed at the style's typical width (or the
+   figure's own print width), its labels, lines and arrowheads come out at the sizes measured for that style
+   (draw-render.mjs STYLE_TABLE, printScale) */
+function paperScale() { const p = printScale(st.scene.style, st.scene.printW); return {labelScale: p.labelScale, strokeScale: p.strokeScale}; }
+function exportSvg(paper = true) {
   const sc = st.sim ? st.sim.applyTo(st.scene) : st.scene;
   let forces = null; if (st.fbd) { try { forces = (st.sim || buildSim(st.scene)).forces(); } catch (e) {} }
-  return renderSVG(sc, {width: W, view: view(), forces, circuit: st.solve ? solveCircuit(st.scene) : null, ...(paper ? paperScale() : {}), poses: st.sim ? st.sim.poses() : null, velocities: st.sim ? st.sim.velocities() : null, anchors: st.sim?.anchors, title: st.scene.title || T.title,
+  return renderSVG(sc, {width: W, view: view(), forces, circuit: st.solve && hasCircuit() ? solveCircuit(st.scene) : null, ...(paper ? paperScale() : {}), poses: st.sim ? st.sim.poses() : null, velocities: st.sim ? st.sim.velocities() : null, anchors: st.sim?.anchors, title: st.scene.title || T.title,
     conical: st.scene.objects.filter(o => (o.type === 'string' || o.type === 'rod') && o.mode === 'conical').map(conicalOrbit).filter(Boolean)});
 }
 const b64 = s => { const bytes = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(bin); };
@@ -666,7 +917,7 @@ function openScene(obj) {
   const r = validateScene(obj);
   if (!r.ok) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; return; }
   if (!r.scene.view) r.scene.view = sceneBounds(r.scene);
-  st.sel = ''; st.ai = null; commit(r.scene);
+  setSel([]); st.ai = null; st.zoom = null; commit(r.scene);
 }
 function paintOut(keepMsg) {
   const box = $('out'); if (!box) return;
@@ -705,7 +956,7 @@ async function photoFile(file) {
     const v = validateScene(r.scene);
     if (!v.ok) throw {code: 'scene_failed'};
     v.scene.view = sceneBounds(v.scene); if (!v.scene.title) v.scene.title = '';
-    st.ai = {unsure: Array.isArray(r.unsure) ? r.unsure : [], left: r.left}; st.sel = '';
+    st.ai = {unsure: Array.isArray(r.unsure) ? r.unsure : [], left: r.left}; setSel([]); st.zoom = null;
     commit(v.scene); flash('');
   } catch (e) { flash(`<span class="bad">${esc(errText(e))}</span>`); }
 }
@@ -716,7 +967,7 @@ function paintAi() {
   const u = st.ai.unsure.filter(x => T.unsure[x.what]);
   box.innerHTML = `<b>${T.aiNote}</b>${Number.isFinite(st.ai.left) ? ` <span>${T.left(st.ai.left)}</span>` : ''}
     ${u.length ? `<div>${T.aiUnsure}:</div><ul>${u.map(x => `<li>${x.id && byId(x.id) ? `${esc(x.id)}: ` : ''}${T.unsure[x.what]}${x.id && byId(x.id) ? `<button type="button" data-pick="${esc(x.id)}">↗</button>` : ''}</li>`).join('')}</ul>` : ''}`;
-  box.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { st.sel = b.dataset.pick; paint(); });
+  box.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => { setSel([b.dataset.pick]); paint(); });
 }
 
 /* ── the page ── */
@@ -748,33 +999,39 @@ function insertSymbol(tex) {
     const el = document.querySelector(`[data-f="${t.k}"]`), cur = String(o[t.k] || ''), a = el && document.activeElement === el ? el.selectionStart : (el?._caret ?? cur.length), b = el && document.activeElement === el ? el.selectionEnd : a;
     const val = (cur.slice(0, a) + tex + (/^\\[A-Za-z]+$/.test(tex) && /^[A-Za-z]/.test(cur.slice(b)) ? ' ' : '') + cur.slice(b)).slice(0, FIELDS[o.type][t.k].max);
     const next = clone(st.scene); next.objects.find(x => x.id === o.id)[t.k] = val;
-    if (commit(next, {keepSel: true})) { st.sel = o.id; paint(); const el2 = document.querySelector(`[data-f="${t.k}"]`); if (el2) { el2.focus(); const c = Math.min(val.length, a + tex.length); el2.setSelectionRange(c, c); el2._caret = c; } }
+    if (commit(next, {keepSel: true})) { setSel([o.id]); paint(); const el2 = document.querySelector(`[data-f="${t.k}"]`); if (el2) { el2.focus(); const c = Math.min(val.length, a + tex.length); el2.setSelectionRange(c, c); el2._caret = c; } }
     return;
   }
-  const v = view(), next = clone(st.scene), id = freeId('label');
+  const v = dview(), next = clone(st.scene), id = freeId('label');
   next.objects.push({...defaults('label'), id, x: r4(snapV(v.x + v.w / 2)), y: r4(snapV(v.y + v.h / 2)), text: tex});
-  if (commit(next)) { st.sel = id; st.lastText = {id, k: 'text'}; paint(); }
+  if (commit(next)) { setSel([id]); st.lastText = {id, k: 'text'}; paint(); }
 }
 function shell() {
+  const tl = X3.tools;
   $('app').innerHTML = `<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div></div>
     <div class="dbar"><select id="tpl" aria-label="${T.template}"><option value="">${T.template}…</option>${Object.keys(DOMAINS).map(d => `<optgroup label="${esc(X2.domains[d])}">${TEMPLATE_KEYS.filter(k => TEMPLATE_DOMAIN[k] === d).map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}</optgroup>`).join('')}<option value="blank">${T.blank}</option></select>
       <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bSym">${X2.symbols}</button>
       <label class="btn filebtn">📷 ${T.photo}<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/*"></label><span class="sep"></span>
-      <button type="button" id="bUndo" title="Ctrl+Z">↶ ${T.undo}</button><button type="button" id="bRedo" title="Ctrl+Y">↷ ${T.redo}</button><button type="button" id="bDup" title="Ctrl+D">${T.dup}</button><button type="button" id="bDel" title="Delete">${T.del}</button><span class="sep"></span>
-      <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><button type="button" id="bFit">${T.fit}</button></div>
+      <button type="button" id="bUndo" class="hist" title="${esc(tl.backT)}" aria-label="${esc(tl.backT)}">${tl.back}</button><button type="button" id="bRedo" class="hist" title="${esc(tl.fwdT)}" aria-label="${esc(tl.fwdT)}">${tl.fwd}</button>
+      <button type="button" id="bDup" title="Ctrl+D">${T.dup}</button><button type="button" id="bCopy" title="Ctrl+C">${tl.copy}</button><button type="button" id="bPaste" title="Ctrl+V">${tl.paste}</button><button type="button" id="bDel" title="Delete">${T.del}</button><button type="button" id="bClear" class="danger">${tl.clear}</button><span class="sep"></span>
+      <span class="zoom" role="group" aria-label="zoom"><button type="button" id="bZout" title="${esc(tl.zoomOut)} (−)" aria-label="${esc(tl.zoomOut)}">−</button><span id="zoomPct" class="pct">100%</span><button type="button" id="bZin" title="${esc(tl.zoomIn)} (+)" aria-label="${esc(tl.zoomIn)}">+</button><button type="button" id="bZfit" title="${esc(tl.zoomFit)} (0)">${tl.zoomFit}</button></span>
+      <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><label class="btn"><input type="checkbox" id="cVals" style="width:auto"> ${tl.values}</label><button type="button" id="bFit" title="${esc(tl.frameMark)}">${T.fit}</button></div>
     <div id="aiNote" class="ainote" hidden></div>
     <div class="work"><nav class="palwrap" aria-label="${X2.search}"><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></nav>
-      <section class="stage"><div id="stageTop"></div><div id="canvas" class="canvas"></div><p id="status" class="status" role="status"></p>
-        <div class="simbar"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button>
+      <section class="stage"><div id="stageTop"></div><div id="canvas" class="canvas" tabindex="0"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
+        <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
-          <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
+          <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label></span><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label id="solveLbl"><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
         <div id="readouts" class="readouts"></div></section>
       <div class="side"><section class="panel" id="props"></section><section class="panel" id="out"></section></div></div>`;
-  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; st.sel = ''; if (TEMPLATE_DOMAIN[k]) st.dom = TEMPLATE_DOMAIN[k]; commit(k === 'blank' ? {...blankScene(), view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene); };
+  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; setSel([]); st.zoom = null; if (TEMPLATE_DOMAIN[k]) st.dom = TEMPLATE_DOMAIN[k]; commit(k === 'blank' ? {...blankScene(), style: st.scene.style, view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene); };
   $('photo').onchange = e => { const f = e.target.files[0]; e.target.value = ''; photoFile(f); };
-  $('bUndo').onclick = undo; $('bRedo').onclick = redo; $('bDup').onclick = dup; $('bDel').onclick = del;
+  $('bUndo').onclick = undo; $('bRedo').onclick = redo; $('bDup').onclick = dup; $('bDel').onclick = del; $('bClear').onclick = clearAll;
+  $('bCopy').onclick = () => { if (copySel()) paintBar(); }; $('bPaste').onclick = () => pasteClip();
+  $('bZin').onclick = () => zoomBy(1.25); $('bZout').onclick = () => zoomBy(0.8); $('bZfit').onclick = () => { st.zoom = null; paintCanvas(); };
   $('cGrid').onchange = e => { st.grid = e.target.checked; paintCanvas(); }; $('cSnap').onchange = e => { st.snap = e.target.checked; };
-  $('bFit').onclick = () => { const next = clone(st.scene); next.view = sceneBounds(next); commit(next, {keepSel: true}); };
+  $('cVals').onchange = e => { const next = clone(st.scene); next.values = e.target.checked; commit(next, {keepSel: true}); };
+  $('bFit').onclick = () => { const next = clone(st.scene); next.view = sceneBounds(next); st.zoom = null; commit(next, {keepSel: true}); };
   $('palSearch').oninput = e => { st.q = e.target.value; paintPalette(); height(); };
   $('styleSel').onchange = e => { const next = clone(st.scene); next.style = e.target.value; commit(next, {keepSel: true}); const pop = $('symPop'); if (pop) { pop.remove(); } };
   $('bSym').onclick = openSymbols;
@@ -786,10 +1043,21 @@ function shell() {
   $('cRead').onchange = e => { st.readouts = e.target.checked; paintReadouts(); };
   bindCanvas(); paint(); paintOut();
 }
+/* the toolbar's state: back/forward only when there is something to go to; play only for mechanics; the circuit solver
+   only with a circuit */
+function paintBar() {
+  if (!$('bUndo')) return;
+  $('bUndo').disabled = !st.hist.canUndo; $('bRedo').disabled = !st.hist.canRedo;
+  const any = selIds().length > 0; $('bDel').disabled = !any; $('bDup').disabled = !any; $('bCopy').disabled = !any;
+  $('bPaste').disabled = !st.clip; $('bClear').disabled = !st.scene.objects.length;
+  $('cVals').checked = !!st.scene.values;
+  const mech = hasMech(), circ = hasCircuit();
+  $('mechBar').hidden = !mech; $('clock').hidden = !mech; $('solveLbl').hidden = !circ;
+  if (!mech && st.sim) stopSim();
+}
 function paint() {
-  paintCanvas(); paintSide(); paintReadouts(); paintSimBar(); status(); paintAi(); paintPalette();
+  paintCanvas(); paintSide(); paintReadouts(); paintSimBar(); status(); paintAi(); paintPalette(); paintBar();
   if ($('styleSel')) $('styleSel').value = st.scene.style;
-  if ($('bUndo')) { $('bUndo').disabled = !st.undo.length; $('bRedo').disabled = !st.redo.length; $('bDel').disabled = !st.sel; $('bDup').disabled = !st.sel; }
   height();
 }
 function height() { if (embedded) requestAnimationFrame(() => window.parent.postMessage({type: 'hl-draw-height', height: Math.ceil(document.querySelector('main').getBoundingClientRect().bottom + scrollY + 16)}, location.origin)); }
@@ -797,20 +1065,29 @@ let lastW = 0;
 if (typeof ResizeObserver === 'function') new ResizeObserver(() => { height(); const w = $('canvas')?.clientWidth || 0; if (w && Math.abs(w - lastW) > 30) { lastW = w; paintCanvas(); } }).observe(document.body);
 addEventListener('keydown', e => {
   if (e.target.closest?.('input,textarea,select')) return;
-  const mod = e.ctrlKey || e.metaKey;
-  if (e.key === 'Escape') { st.connect = null; st.sel = ''; paint(); }
-  else if (mod && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
-  else if (mod && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); }
-  else if (mod && e.key.toLowerCase() === 'd') { e.preventDefault(); dup(); }
-  else if ((e.key === 'Delete' || e.key === 'Backspace') && st.sel) { e.preventDefault(); del(); }
-  else if (st.sel && e.key.startsWith('Arrow')) {
-    const o = byId(st.sel); if (!o) return; e.preventDefault();
-    const d = st.scene.grid, dx = e.key === 'ArrowLeft' ? -d : e.key === 'ArrowRight' ? d : 0, dy = e.key === 'ArrowDown' ? -d : e.key === 'ArrowUp' ? d : 0;
-    const next = clone(st.scene), x = next.objects.find(y => y.id === o.id);
-    if (isBody(x) && x.on) x.at = r4(x.at + (dx || dy)); else if ('x1' in x) { x.x1 += dx; x.x2 += dx; x.y1 += dy; x.y2 += dy; } else if ('x' in x) { x.x = r4(x.x + dx); x.y = r4(x.y + dy); } else return;
+  const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+  if (e.key === ' ' && !st.space) { st.space = true; $('canvas')?.classList.add('panning'); e.preventDefault(); return; }
+  if (e.key === 'Escape') { st.connect = null; setSel([]); paint(); }
+  else if (mod && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
+  else if (mod && k === 'y') { e.preventDefault(); redo(); }
+  else if (mod && k === 'd') { e.preventDefault(); dup(); }
+  else if (mod && k === 'c') { if (copySel()) { e.preventDefault(); paintBar(); } }
+  else if (mod && k === 'v') { e.preventDefault(); pasteClip(); }
+  else if (mod && k === 'a') { e.preventDefault(); setSel(st.scene.objects.map(o => o.id)); paint(); }
+  else if (!mod && (e.key === '+' || e.key === '=')) zoomBy(1.25);
+  else if (!mod && (e.key === '-' || e.key === '_')) zoomBy(0.8);
+  else if (!mod && e.key === '0') { st.zoom = null; paintCanvas(); }
+  else if ((e.key === 'Delete' || e.key === 'Backspace') && selIds().length) { e.preventDefault(); del(); }
+  else if (selIds().length && e.key.startsWith('Arrow')) {
+    /* a grid step, ten with Shift: one step of history each */
+    e.preventDefault();
+    const d = st.scene.grid * (e.shiftKey ? 10 : 1), dx = e.key === 'ArrowLeft' ? -d : e.key === 'ArrowRight' ? d : 0, dy = e.key === 'ArrowDown' ? -d : e.key === 'ArrowUp' ? d : 0;
+    const next = clone(st.scene), ids = new Set(selIds());
+    for (const x of next.objects) if (ids.has(x.id) && !x.lock && !NO_DRAG.includes(x.type)) { const g = clone(x); if (isBody(x) && x.on) x.at = r4(x.at + (dx || dy)); else moveObj(x, dx, dy, g); }
     commit(next, {keepSel: true});
   }
 });
+addEventListener('keyup', e => { if (e.key === ' ') { st.space = false; $('canvas')?.classList.remove('panning'); } });
 st.scene = startScene();
 if (!st.scene.view) st.scene.view = sceneBounds(st.scene);
 if (document.readyState === 'loading') addEventListener('DOMContentLoaded', shell); else shell();

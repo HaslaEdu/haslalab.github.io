@@ -62,3 +62,16 @@ textarea.q{min-height:64px;font-size:13.5px}
   .canvas{padding:2px}.canvas svg{max-height:none}.syms button{min-width:40px;min-height:38px}
   .readouts{grid-template-columns:1fr}.simbar .clock{margin-left:0}
 }
+/* history, zoom, selection tools */
+.dbar .hist{font-weight:600}.dbar .hist:disabled,.dbar button:disabled{opacity:.42;cursor:default}
+.dbar .danger{color:var(--bad)}
+.dbar .zoom{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:10px;padding:1px 3px}
+.dbar .zoom button{padding:3px 9px;min-width:30px}.dbar .zoom .pct{font-size:12.5px;min-width:42px;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)}
+.canvas.panning,.canvas.panning .obj{cursor:grab}
+.canvas .obj.locked{cursor:default}.canvas .handle.rot{cursor:alias}
+.hint{margin:0 2px 8px}
+.numrow{display:flex;gap:6px;align-items:center}.numrow input[type=number]{flex:0 0 84px;min-width:0}.numrow input[type=range]{flex:1;min-width:0;padding:0;accent-color:var(--accent)}
+.props label.slide{grid-column:1/-1}
+details.stylesrc,details.look{margin-top:8px;font-size:12.5px}details.stylesrc summary,details.look summary{cursor:pointer;color:var(--muted)}
+.row.tight{margin-top:4px;gap:4px}.row.tight button{padding:4px 8px;font-size:12.5px}
+.simbar .grp{display:contents}.simbar [hidden]{display:none!important}

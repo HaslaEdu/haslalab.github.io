@@ -315,3 +315,93 @@ test('every template, in every style, draws without NaN; labels are typeset (acc
   const a=S.validateScene(S.template('atwood')).scene,size=svg=>Math.max(...[...svg.matchAll(/font-size="([\d.]+)"/g)].map(m=>+m[1]));
   assert.ok(size(R.renderSVG(a,{labelScale:2}))>1.8*size(R.renderSVG(a,{}))*0.9);
 });
+
+/* ── the added elements, the measured styles and the editor's history ── */
+test('turned objects: extents hold the turned corners; a plane mirror at 45° turns a ray through 90°; a turned lens still focuses',async()=>{
+  const {S,P}=await load();
+  const box=S.objectExtent({...S.defaults('region'),x:0,y:0,w:2,h:1,rot:90});near(box.w,1,1e-9,'w after 90°');near(box.h,2,1e-9,'h after 90°');near(box.x+box.w/2,1,1e-9,'same centre');
+  const m=S.objectExtent({...S.defaults('magnet'),x:0,y:0,w:2,h:0.4,rot:45}),d=(2+0.4)/Math.SQRT2;near(m.w,d,1e-9,'45° box');
+  const sc=scene(S,[{id:'M',type:'mirror',x:2,y:0,h:2,f:0,rot:-45}]),tr=P.traceRay(sc,{x:0,y:0},{x:1,y:0},{len:5});
+  near(tr.pts[1].x,2,1e-9,'hits the mirror');assert.ok(Math.abs(tr.d.x)<1e-9,'goes up: dx');near(tr.d.y,1,1e-9,'goes up: dy');
+  /* a lens turned half a turn is the same lens; a lens turned 90° about a vertical axis and hit along y focuses at f */
+  for(const rot of [0,180]){const s2=scene(S,[{id:'L',type:'lens',x:1,y:0,h:2,f:0.5,rot}]),t=P.traceRay(s2,{x:0,y:0.2},{x:1,y:0},{len:3});assert.ok(Math.abs(t.pts[1].y+t.d.y/t.d.x*0.5)<1e-9,'parallel ray through the focus, rot '+rot);}
+  const s3=scene(S,[{id:'L',type:'lens',x:0,y:1,h:2,f:0.5,rot:90}]),t3=P.traceRay(s3,{x:0.2,y:0},{x:0,y:1},{len:3});assert.ok(Math.abs(t3.pts[1].x+t3.d.x/t3.d.y*0.5)<1e-9,'turned lens focuses at f');
+  /* a half-silvered mirror passes the ray and forks a reflected branch; a screen stops a ray */
+  const s4=scene(S,[{id:'B',type:'mirror',x:1,y:0,h:1,f:0,rot:-45,half:true},{id:'Sc',type:'screen',x:3,y:0,h:1}]),t4=P.traceRay(s4,{x:0,y:0},{x:1,y:0},{len:10});
+  near(t4.end.x,3,1e-9,'stopped by the screen');assert.equal(t4.forks.length,1);near(t4.forks[0].d.y,1,1e-9,'reflected up');
+});
+
+test('stacked blocks with friction: they move together while F ≤ μ₂ g (m₁ + m₂) (frictionless floor), else the top slips with a = μ₂ g',async()=>{
+  const {S,P}=await load();
+  const make=(F,mu2,mu1=0)=>scene(S,[{id:'f',type:'floor',x:0,y:0,w:40,mu:mu1},{id:'M',type:'block',on:'f',at:5,w:1.2,h:0.3,mass:3,mu:mu2},{id:'m',type:'block',on:'M',at:0.6,w:0.4,h:0.3,mass:1},{id:'F',type:'force',on:'M',F,angle:0}]);
+  const mu2=0.4,lim=mu2*g*4;
+  const t=P.buildSim(make(0.8*lim,mu2));assert.equal(t.systems[0].kind,'stack');
+  near(t.accelerations().get('M').x,0.8*lim/4,1e-9,'together: a = F / (m₁ + m₂)');near(t.accelerations().get('m').x,0.8*lim/4,1e-9,'top too');
+  const fr=t.systems[0].friction();near(fr.between,1*0.8*lim/4,1e-9,'static friction on the top = m a');assert.equal(fr.slipping,false);
+  const F=2*lim,sl=P.buildSim(make(F,mu2));
+  near(sl.accelerations().get('m').x,mu2*g,1e-9,'top: μ₂ g');near(sl.accelerations().get('M').x,(F-mu2*1*g)/3,1e-9,'bottom: (F − μ₂ m g)/M');
+  sl.run(0.3);near(sl.velocities().get('M').x-sl.velocities().get('m').x,((F-mu2*g)/3-mu2*g)*0.3,1e-6,'relative speed');
+  const e=sl.energy();near(e.K+e.heat,e.work,1e-6,'work = kinetic energy + heat');
+  /* a floor with friction under a stack at rest holds a small pull */
+  const held=P.buildSim(make(5,0.4,0.5));held.run(1);assert.equal(held.poses().get('M').at,5);
+  /* the top slides off the block's edge */
+  const off=P.buildSim(make(2*lim,mu2));off.run(5);assert.equal(off.events[0].code,'end_of_surface');assert.equal(off.events[0].id,'m');
+});
+
+test('rolling without slipping: a = g sin θ / (1 + I/mr²) for a disk, a ring and a sphere; with too little friction it slides',async()=>{
+  const {S,P}=await load();
+  for(const [kind,k] of [['disk',0.5],['ring',1],['sphere',0.4]]){
+    const sim=P.buildSim(scene(S,[{id:'i',type:'incline',x:0,y:0,angle:30,length:6,mu:0.5},{id:'w',type:'wheel',on:'i',at:5,r:0.2,mass:2,kind}]));
+    const a=sim.accelerations().get('w');near(Math.hypot(a.x,a.y),P.rollingAccel(g,30,k),1e-9,kind);near(P.rollingAccel(g,30,k),g*0.5/(1+k),1e-12,'formula');
+    const E0=sim.energy().E;sim.run(0.6);near(sim.energy().E,E0,1e-6,kind+': rolling keeps the energy (K includes the spin)');
+  }
+  const slip=P.buildSim(scene(S,[{id:'i',type:'incline',x:0,y:0,angle:60,length:6,mu:0.1},{id:'w',type:'wheel',on:'i',at:5,r:0.2,mass:2,kind:'ring'}]));
+  const r=60*Math.PI/180,a=slip.accelerations().get('w');near(Math.hypot(a.x,a.y),g*(Math.sin(r)-0.1*Math.cos(r)),1e-9,'slides: g (sin θ − μ cos θ)');
+});
+
+test('buoyancy ρ g V, a floating fraction ρ_b/ρ_f; motional EMF ε = BLv; meter bridge balance R/S = l/(100 − l)',async()=>{
+  const {S,P}=await load();
+  near(P.buoyancy(1000,0.002,9.8),19.6,1e-12,'ρ g V');near(P.floatFraction(600,1000),0.6,1e-12,'fraction');
+  const sc=S.validateScene(S.template('buoyancy')).scene,info=P.containerInfo(sc,sc.objects.find(o=>o.id==='ct'));
+  const A=info.bodies.find(b=>b.id==='A');near(A.Vsub,0.5*0.24*0.5,1e-9,'submerged volume of A');near(A.B,1000*9.8*0.06,1e-9,'buoyancy on A');near(A.floats,0.6,1e-9,'A floats with 0.6 under');
+  const B=info.bodies.find(b=>b.id==='b1');near(B.B,1000*9.8*4/3*Math.PI*0.15**3,1e-9,'the sunken ball');
+  const rails={...S.defaults('rails'),h:0.5,v:4,B:0.2,R:2},m=P.motionalEMF(rails);near(m.emf,0.4,1e-12,'ε = BLv');near(m.I,0.2,1e-12,'I = ε/R');near(m.F,0.2*0.2*0.5,1e-12,'F = BIL');
+  near(P.meterBridgeBalance(4,6),40,1e-12,'l = 100 R/(R + S)');
+  const mb=S.validateScene(S.template('meter_bridge')).scene,c=P.solveCircuit(mb);assert.ok(c.ok);
+  assert.ok(Math.abs(c.el.get('G1').I)<1e-9,'balanced: no galvanometer current at l = 40 cm');
+  mb.objects.find(o=>o.id==='BR').at=0.6;const c2=P.solveCircuit(mb);assert.ok(Math.abs(c2.el.get('G1').I)>1e-4,'off balance: a current');
+  const rh=S.validateScene({objects:[{id:'E',type:'element',kind:'cell',x1:0,y1:0,x2:0,y2:1,value:3},{id:'R',type:'element',kind:'rheostat',x1:0,y1:1,x2:1,y2:1,value:30},{id:'C',type:'element',kind:'dielectric',x1:1,y1:1,x2:1,y2:0,value:10},{id:'W',type:'element',kind:'wire',x1:1,y1:0,x2:0,y2:0}]}).scene;
+  const c3=P.solveCircuit(rh);near(c3.transients[0].tau,30*10e-6,1e-9,'τ = RC with a rheostat and a dielectric capacitor');
+});
+
+test('history: one step a change, at most the limit, redo cleared by a new change; scene v2 with the added fields',async()=>{
+  const {S}=await load();
+  const h=S.createHistory(250);assert.equal(h.canUndo,false);assert.equal(h.limit>=200,true);
+  for(let i=0;i<300;i++)h.record(JSON.stringify({n:i}));assert.equal(h.size,250,'kept 250 steps');
+  let cur=JSON.stringify({n:300});const back=h.undo(cur);assert.equal(JSON.parse(back).n,299);assert.equal(h.canRedo,true);
+  const fwd=h.redo(back);assert.equal(JSON.parse(fwd).n,300);h.undo(fwd);h.record(JSON.stringify({n:'x'}));assert.equal(h.canRedo,false,'a new change clears redo');
+  const h2=S.createHistory();h2.record('{"a":1}');h2.record('{"a":1}');assert.equal(h2.size,1,'the same state twice is one step');
+  /* the added fields and types validate; stacks must end on a surface */
+  const ok=S.validateScene({values:true,printW:60,objects:[{id:'f',type:'floor',x:0,y:0,w:3},{id:'A',type:'block',on:'f',at:1,w:0.5,h:0.3,rot:0,look:'cart',lw:1.5,ls:1.2,lock:true},{id:'B',type:'block',on:'A',at:0.2,w:0.2,h:0.2},{id:'p',type:'panel',x:0,y:0,w:1,h:1,caption:'(가)'}]});
+  assert.ok(ok.ok,JSON.stringify(ok.errors));assert.equal(ok.scene.values,true);assert.equal(ok.scene.printW,60);near(ok.scene.objects.find(o=>o.id==='B').y,0.3+0.1,1e-9,'B sits on A');
+  const loop=S.validateScene({objects:[{id:'A',type:'block',on:'B',x:0,y:0},{id:'B',type:'block',on:'A',x:0,y:0}]});assert.equal(loop.ok,false);assert.ok(loop.errors.some(e=>e.code==='bad_stack'));
+  assert.equal(S.validateScene({objects:[{id:'A',type:'block',on:'B',x:0,y:0},{id:'B',type:'block',on:'A',x:0,y:0}]},{lenient:true}).ok,true);
+  assert.equal(S.validateScene({version:1,objects:[{id:'l',type:'line',x1:0,y1:0,x2:1,y2:1,dash:false}]}).scene.objects[0].pattern,'solid','v1 still migrates');
+  assert.ok(S.TEMPLATE_KEYS.length>=61,'at least 25 new templates');
+  for(const k of S.TEMPLATE_KEYS)assert.ok(S.validateScene(S.template(k)).ok,k);
+  assert.equal(S.template('ks_collision').style,'suneung');
+});
+
+test('figure styles come from the measured table: each preset has its row, 수능 exists with Hangul and caption faces, the print scale gives the measured sizes',async()=>{
+  const {S,R}=await load();
+  assert.deepEqual(Object.keys(R.STYLE_TABLE).sort(),[...S.STYLE_KEYS].sort());
+  for(const k of ['suneung','olympiad','university','jee']){const t=R.STYLE_TABLE[k];assert.ok(t.n>0&&t.source&&t.measured.length>=5,k+' is measured');}
+  for(const k of ['textbook','print'])assert.equal(R.STYLE_TABLE[k].source,'assumed');
+  const t=R.STYLE_TABLE.suneung,st=R.STYLES.suneung;near(st.lw,t.main*15/t.labelPt,1e-12,'lines keep the ratio to the label');assert.ok(st.hangul&&st.caption&&st.uprightNames);
+  const p=R.printScale('suneung');near(p.widthPt,t.widthPt,1e-12,'default print width');near(15*p.labelScale*p.widthPt/800,t.labelPt,1e-9,'labels come out at the measured pt');
+  const sc=S.validateScene(S.template('ks_collision')).scene,svg=R.renderSVG(sc,{});
+  assert.match(svg,/\(가\)/);assert.match(svg,/font-family="'Noto Serif KR'/,'captions in myeongjo');assert.match(svg,/>A<\/tspan>/);assert.ok(!/font-style="italic">A</.test(svg),'object names upright in 수능');
+  /* a floor in the 수능 style is a bare line: no hatching path next to it */
+  const f=S.validateScene({style:'suneung',objects:[{id:'f',type:'floor',x:0,y:0,w:2}]}).scene,f2={...f,style:'textbook'};
+  assert.ok(R.renderSVG(f,{view:{x:-1,y:-1,w:4,h:2}}).split('<path').length<R.renderSVG(f2,{view:{x:-1,y:-1,w:4,h:2}}).split('<path').length);
+});

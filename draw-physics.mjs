@@ -17,7 +17,7 @@
    its surface or the body it is tied to, a body landing on a floor or an incline, a body leaving its surface
    (N below zero), two bodies on one surface touching. Systems outside these kinds are reported in `unsupported`
    with a code, and the figure stays a figure. */
-import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec} from './draw-scene.mjs?v=db9a7a5f3c86';
+import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA} from './draw-scene.mjs?v=89d7475e50e7';
 
 export const SIM_DT = 1e-3;
 const EPS_V = 1e-9;
@@ -84,16 +84,96 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
         return {code: 'landed', id: b.id, on: s.id, g: along >= 0 && along <= fr.length ? vec.dot(vec.sub(p, fr.p0), fr.n) - hh : FAR}; })];
   };
 
+  /* ── stacks: a body resting on a block that rests on a floor or an incline ──
+     Coordinates along the lower surface's direction u: the lower block's place at₁ and velocity v₁, the upper body's
+     place on the block's top face at₂ and its own velocity v₂. Friction: μ of the surface under the lower block, and μ
+     of the block's top face (its field mu) between the two. Each contact either sticks or slides (Coulomb, one μ);
+     the modes are found at the start of every step by trying "sticks" and turning to "slides" where the friction it
+     needs is more than μN. */
+  const tiedTo = id => strings.some(s => s.a === id || s.b === id) || springs.some(s => s.a === id || s.b === id);
+  for (const top of bodies) {
+    const bot = byId.get(top.on);
+    if (!bot || bot.type !== 'block' || owner.has(top.id)) continue;
+    const base = byId.get(bot.on);
+    const ids = [bot.id, top.id];
+    if (!base || base.type === 'block' || owner.has(bot.id) || bodies.some(b => b !== top && b.on === bot.id) || bodies.some(b => b.on === top.id) || tiedTo(top.id) || tiedTo(bot.id)) { reject(ids, 'stack_unsupported'); continue; }
+    ids.forEach(id => owner.set(id, 'stack'));
+    systems.push(stackSystem(bot, top, base));
+  }
+  function stackSystem(B, Tb, S) {
+    const fr = surfaceFrame(S, scene), u = fr.u, n = fr.n, m1 = B.mass, m2 = Tb.mass, M = m1 + m2, mu1 = fr.mu, mu2 = B.mu;
+    const ang = Math.atan2(u.y, u.x), hw1 = B.w / 2, hw2 = bodyHalfWidth(Tb), h2 = bodyHalfHeight(Tb);
+    const q = Float64Array.from([B.at, vec.dot({x: B.vx, y: B.vy}, u), Tb.at, vec.dot({x: Tb.vx, y: Tb.vy}, u), 0, 0]);
+    const F1 = vec.add(vec.mul(G, m1), applied(B.id)), F2 = vec.add(vec.mul(G, m2), applied(Tb.id));
+    const Q1 = vec.dot(F1, u), Q2 = vec.dot(F2, u), N2 = Math.max(0, -vec.dot(F2, n)), N1 = Math.max(0, -vec.dot(F1, n) + N2);
+    const modes = {m1: 0, m12: 0};
+    const solve = (m1s, m12s) => {
+      let a1, a2, f1, f2;
+      if (m12s === 0) {
+        if (m1s === 0) { a1 = a2 = 0; f1 = -(Q1 + Q2); f2 = -Q2; }
+        else { f1 = -m1s * mu1 * N1; a1 = a2 = (Q1 + Q2 + f1) / M; f2 = m2 * a2 - Q2; }
+      } else {
+        f2 = -m12s * mu2 * N2; a2 = (Q2 + f2) / m2;
+        const net = Q1 - f2;
+        if (m1s === 0) { f1 = -net; a1 = 0; } else { f1 = -m1s * mu1 * N1; a1 = (net + f1) / m1; }
+      }
+      return {a1, a2, f1, f2};
+    };
+    const posesAt = qq => {
+      const c1 = vec.add(vec.add(fr.p0, vec.mul(u, qq[0])), vec.mul(n, B.h / 2)), p0B = vec.add(vec.sub(c1, vec.mul(u, hw1)), vec.mul(n, B.h / 2));
+      const c2 = vec.add(vec.add(p0B, vec.mul(u, qq[2])), vec.mul(n, h2));
+      return new Map([[B.id, {x: c1.x, y: c1.y, angle: ang, at: qq[0]}], [Tb.id, {x: c2.x, y: c2.y, angle: Tb.type === 'block' ? ang : 0, at: qq[2]}]]);
+    };
+    return {kind: 'stack', id: B.id + '+' + Tb.id, ids: [B.id, Tb.id], q, t: 0, modes, done: null,
+      prepare() {
+        const v1 = this.q[1], rel = this.q[3] - this.q[1];
+        modes.m1 = Math.abs(v1) > EPS_V ? sgn(v1) : 0; modes.m12 = Math.abs(rel) > EPS_V ? sgn(rel) : 0;
+        for (let k = 0; k < 4; k++) {
+          const r = solve(modes.m1, modes.m12); let changed = false;
+          if (modes.m12 === 0 && Math.abs(r.f2) > mu2 * N2 + 1e-12) { modes.m12 = -sgn(r.f2); changed = true; }
+          else if (modes.m1 === 0 && Math.abs(r.f1) > mu1 * N1 + 1e-12) { modes.m1 = -sgn(r.f1); changed = true; }
+          if (!changed) break;
+        }
+      },
+      f(qq) { const r = solve(modes.m1, modes.m12), out = new Float64Array(6);
+        out[0] = qq[1]; out[1] = r.a1; out[2] = qq[3] - qq[1]; out[3] = r.a2;
+        out[4] = (modes.m1 ? -r.f1 * qq[1] : 0) + (modes.m12 ? -r.f2 * (qq[3] - qq[1]) : 0);
+        out[5] = vec.dot(applied(B.id), vec.mul(u, qq[1])) + vec.dot(applied(Tb.id), vec.mul(u, qq[3]));
+        return out; },
+      events(qq) {
+        const out = [{code: 'end_of_surface', id: B.id, g: qq[0] - hw1}, {code: 'end_of_surface', id: B.id, g: fr.length - qq[0] - hw1},
+          {code: 'end_of_surface', id: Tb.id, g: qq[2] - hw2}, {code: 'end_of_surface', id: Tb.id, g: B.w - qq[2] - hw2}, {code: 'lift_off', id: Tb.id, g: N2}, {code: 'lift_off', id: B.id, g: N1}];
+        if (modes.m1 !== 0 && mu1 > 0) out.push({code: 'stick', which: 'm1', g: modes.m1 * qq[1], stop: false});
+        if (modes.m12 !== 0 && mu2 > 0) out.push({code: 'stick', which: 'm12', g: modes.m12 * (qq[3] - qq[1]), stop: false});
+        return out;
+      },
+      onStick(ev) { if (ev.which === 'm1') { const d = this.q[1]; this.q[1] = 0; if (modes.m12 === 0) this.q[3] -= d; modes.m1 = 0; } else { this.q[3] = this.q[1]; modes.m12 = 0; } },
+      poses(qq = this.q) { return posesAt(qq); },
+      velocities(qq = this.q) { return new Map([[B.id, vec.mul(u, qq[1])], [Tb.id, vec.mul(u, qq[3])]]); },
+      accel() { const r = solve(modes.m1, modes.m12); return new Map([[B.id, vec.mul(u, r.a1)], [Tb.id, vec.mul(u, r.a2)]]); },
+      tensions() { return {}; },
+      friction() { const r = solve(modes.m1, modes.m12); return {floor: r.f1, between: r.f2, slipping: modes.m12 !== 0}; },
+      forceList(qq = this.q) {
+        const r = solve(modes.m1, modes.m12), p = posesAt(qq), l2 = [{kind: 'gravity', v: vec.mul(G, m2)}, {kind: 'normal', v: vec.mul(n, N2)}], l1 = [{kind: 'gravity', v: vec.mul(G, m1)}, {kind: 'normal', v: vec.mul(n, N1)}, {kind: 'normal', v: vec.mul(n, -N2)}];
+        if (Math.abs(r.f2) > 1e-9) { l2.push({kind: 'friction', v: vec.mul(u, r.f2)}); l1.push({kind: 'friction', v: vec.mul(u, -r.f2)}); }
+        if (Math.abs(r.f1) > 1e-9) l1.push({kind: 'friction', v: vec.mul(u, r.f1)});
+        for (const [b, l] of [[B, l1], [Tb, l2]]) { const ap = applied(b.id); if (vec.len(ap) > 0) l.push({kind: 'applied', v: ap}); }
+        return new Map([[B.id, l1.map(x => ({...x, at: p.get(B.id)}))], [Tb.id, l2.map(x => ({...x, at: p.get(Tb.id)}))]]);
+      },
+      energy(qq = this.q) { const p = posesAt(qq); return {K: 0.5 * m1 * qq[1] ** 2 + 0.5 * m2 * qq[3] ** 2, Ug: m1 * g * p.get(B.id).y + m2 * g * p.get(Tb.id).y, Us: 0, heat: qq[4], work: qq[5]}; }
+    };
+  }
+
   /* ── chains: a string between two bodies ── */
   for (const s of strings) {
     if (s.type !== 'string') continue;
     const A = byId.get(s.a), B = byId.get(s.b);
-    if (!isBody(A) || !isBody(B)) continue;
+    if (!isBody(A) || !isBody(B) || owner.has(A.id) || owner.has(B.id)) continue;
     const path = stringPath(scene, s);
     const ends = [[A, path.a, path.segs[0][1], -1], [B, path.b, path.segs[path.segs.length - 1][0], 1]].map(([b, att, next, eps]) => {
       const pose = bodyPose(scene, b), out = vec.unit(vec.sub(att, next));
       let d, frame = null;
-      if (b.on) { frame = surfaceFrame(byId.get(b.on)); const sigma = sgn(vec.dot(out, frame.u)) || 1; d = vec.mul(frame.u, eps * sigma); }
+      if (b.on) { frame = surfaceFrame(byId.get(b.on), scene); const sigma = sgn(vec.dot(out, frame.u)) || 1; d = vec.mul(frame.u, eps * sigma); }
       else { if (Math.abs(out.y) < 0.985) return null; d = vec.mul(out, eps); }
       /* a hanging body stops where its top meets the rim of the pulley it hangs from, not at the string's tangent point */
       const w = path.wraps[eps < 0 ? 0 : path.wraps.length - 1];
@@ -239,7 +319,9 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
 
   /* ── bodies resting on surfaces ── */
   function surfaceSystem(list) {
-    const items = list.map(b => { const fr = surfaceFrame(byId.get(b.on)); return {b, id: b.id, m: b.mass, fr, mu: fr.mu, angle: Math.atan2(fr.u.y, fr.u.x)}; });
+    /* a wheel (k = I / m r² of its kind) on a surface with friction rolls without slipping while the friction that
+       needs, k Q / (1 + k), is at most μN: a = Q / (m (1 + k)); otherwise it slides (its spin is not followed) */
+    const items = list.map(b => { const fr = surfaceFrame(byId.get(b.on), scene); return {b, id: b.id, m: b.mass, fr, mu: fr.mu, angle: Math.atan2(fr.u.y, fr.u.x), k: b.type === 'wheel' && fr.mu > 0 ? INERTIA[b.kind] ?? 0.5 : 0}; });
     const n = items.length, q = new Float64Array(2 * n + 2);
     items.forEach((it, i) => { q[2 * i] = it.b.at; q[2 * i + 1] = vec.dot({x: it.b.vx, y: it.b.vy}, it.fr.u); });
     const centre = (it, at) => vec.add(vec.add(it.fr.p0, vec.mul(it.fr.u, at)), vec.mul(it.fr.n, bodyHalfHeight(it.b)));
@@ -253,6 +335,7 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
           for (const sp of springsOf(it.id)) F = vec.add(F, springForce(sp, it.id, id => poses.get(id)).F);
           const N = -vec.dot(F, it.fr.n), Q = vec.dot(F, it.fr.u), cap = it.mu * Math.max(0, N), v = qq[2 * i + 1];
           let f, a;
+          if (it.k > 0 && Math.abs(it.k * Q / (1 + it.k)) <= cap + 1e-12) return {F, N, Q, f: -it.k * Q / (1 + it.k), a: Q / (it.m * (1 + it.k)), pose: poses.get(it.id), rolling: true};
           if (modes[i] === 0 && Math.abs(v) <= EPS_V) { f = -Math.max(-cap, Math.min(cap, Q)); a = 0; }
           else { f = -(modes[i] || sgn(v)) * cap; a = (Q + f) / it.m; }
           return {F, N, Q, f, a, pose: poses.get(it.id)};
@@ -265,15 +348,15 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
       },
       f(qq) {
         const r = this.eval(qq), out = new Float64Array(qq.length);
-        items.forEach((it, i) => { const v = qq[2 * i + 1]; out[2 * i] = v; out[2 * i + 1] = modes[i] === 0 && Math.abs(v) <= EPS_V ? 0 : r[i].a;
-          out[2 * n] += -r[i].f * v * (modes[i] === 0 ? 0 : 1); out[2 * n + 1] += vec.dot(applied(it.id), vec.mul(it.fr.u, v)); });
+        items.forEach((it, i) => { const v = qq[2 * i + 1]; out[2 * i] = v; out[2 * i + 1] = r[i].rolling ? r[i].a : modes[i] === 0 && Math.abs(v) <= EPS_V ? 0 : r[i].a;
+          out[2 * n] += r[i].rolling ? 0 : -r[i].f * v * (modes[i] === 0 ? 0 : 1); out[2 * n + 1] += vec.dot(applied(it.id), vec.mul(it.fr.u, v)); });
         return out;
       },
       events(qq) {
         const r = this.eval(qq), out = [];
         items.forEach((it, i) => { const at = qq[2 * i], hw = bodyHalfWidth(it.b);
           out.push({code: 'end_of_surface', id: it.id, g: at - hw}, {code: 'end_of_surface', id: it.id, g: it.fr.length - at - hw}, {code: 'lift_off', id: it.id, g: r[i].N});
-          if (it.mu > 0 && modes[i] !== 0) out.push({code: 'stick', i, g: modes[i] * qq[2 * i + 1], stop: false});
+          if (it.mu > 0 && modes[i] !== 0 && !r[i].rolling) out.push({code: 'stick', i, g: modes[i] * qq[2 * i + 1], stop: false});
           for (let j = i + 1; j < n; j++) if (items[j].b.on === it.b.on) out.push({code: 'touched', id: it.id, g: Math.abs(qq[2 * j] - at) - hw - bodyHalfWidth(items[j].b)});
         });
         return out;
@@ -293,8 +376,8 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
           return [it.id, list.map(x => ({...x, at: r[i].pose}))];
         }));
       },
-      energy(qq = this.q) { const p = posesAt(qq);
-        return {K: items.reduce((k, it, i) => k + 0.5 * it.m * qq[2 * i + 1] ** 2, 0), Ug: items.reduce((u, it) => u + it.m * g * p.get(it.id).y, 0), Us: springEnergy(id => p.get(id)), heat: qq[2 * n], work: qq[2 * n + 1]}; }
+      energy(qq = this.q) { const p = posesAt(qq), r = this.eval(qq);
+        return {K: items.reduce((k, it, i) => k + 0.5 * it.m * qq[2 * i + 1] ** 2 * (r[i].rolling ? 1 + it.k : 1), 0), Ug: items.reduce((u, it) => u + it.m * g * p.get(it.id).y, 0), Us: springEnergy(id => p.get(id)), heat: qq[2 * n], work: qq[2 * n + 1]}; }
     };
     return sys;
   }
@@ -551,8 +634,29 @@ const TOL = 1e-6;
 const elementPath = e => e.kind === 'wire' && e.route !== 'straight' ? [{x: e.x1, y: e.y1}, e.route === 'hv' ? {x: e.x2, y: e.y1} : {x: e.x1, y: e.y2}, {x: e.x2, y: e.y2}] : [{x: e.x1, y: e.y1}, {x: e.x2, y: e.y2}];
 export {elementPath};
 /** the nodes of the circuit: terminals that coincide, wires joining their ends, ends lying on a wire */
+/** the circuit's two-terminal branches: the elements, and each bridge wire (meter bridge, potentiometer) as two
+ *  resistances on either side of its jockey J, R·at and R·(1 − at), so a lead ending at J joins the wire there */
+export function bridgeJockey(b) { return {x: b.x1 + (b.x2 - b.x1) * b.at, y: b.y1 + (b.y2 - b.y1) * b.at}; }
+export function circuitElements(scene) {
+  const bridges = scene.objects.filter(o => o.type === 'bridge');
+  /* a lead that ends on a bridge wire touches it at the jockey (the sliding contact), wherever it is drawn */
+  const onWire = (p, b) => { const A = {x: b.x1, y: b.y1}, B = {x: b.x2, y: b.y2}, L = vec.len(vec.sub(B, A)), t = vec.dot(vec.sub(p, A), vec.sub(B, A)) / (L * L || 1); return t > 0.01 && t < 0.99 && distSeg(p, A, B) < Math.max(0.01, (scene.grid || 0.1) / 100) ? bridgeJockey(b) : null; };
+  const out = scene.objects.filter(o => o.type === 'element').map(e => {
+    let c = e;
+    for (const b of bridges) for (const k of [1, 2]) { const J = onWire({x: c['x' + k], y: c['y' + k]}, b); if (J) c = {...c, ['x' + k]: J.x, ['y' + k]: J.y}; }
+    return c;
+  });
+  for (const b of bridges) {
+    const J = bridgeJockey(b);
+    out.push({id: b.id + '.1', type: 'element', kind: 'resistor', x1: b.x1, y1: b.y1, x2: J.x, y2: J.y, value: Math.max(1e-9, b.R * b.at), r: 0, part: b.id},
+      {id: b.id + '.2', type: 'element', kind: 'resistor', x1: J.x, y1: J.y, x2: b.x2, y2: b.y2, value: Math.max(1e-9, b.R * (1 - b.at)), r: 0, part: b.id});
+  }
+  return out;
+}
+/** the meter bridge's balance point: the jockey at l = L·R / (R + S) from the R end (galvanometer current zero) */
+export const meterBridgeBalance = (R, S, L = 100) => L * R / (R + S);
 export function circuitNodes(scene) {
-  const els = scene.objects.filter(o => o.type === 'element'), grounds = scene.objects.filter(o => o.type === 'ground');
+  const els = circuitElements(scene), grounds = scene.objects.filter(o => o.type === 'ground');
   const tol = Math.max(0.01, (scene.grid || 0.1) / 100);
   const terms = [];
   els.forEach(e => { terms.push({p: {x: e.x1, y: e.y1}, el: e, end: 1}); terms.push({p: {x: e.x2, y: e.y2}, el: e, end: 2}); });
@@ -577,7 +681,7 @@ function gauss(A, b) {
   for (let r = n - 1; r >= 0; r--) { let s = b[r]; for (let j = r + 1; j < n; j++) s -= A[r][j] * x[j]; x[r] = s / A[r][r]; }
   return x;
 }
-const SOURCE = ['battery', 'cell', 'dc'], RESIST = ['resistor', 'bulb', 'galvanometer'];
+const SOURCE = ['battery', 'cell', 'dc'], RESIST = ['resistor', 'bulb', 'galvanometer', 'rheostat'];
 /* one linear solve with given diode states; replace: {id: 'short'|'open'|{current}} overrides for the transient;
    zeroSources: emfs and drops at 0 */
 function mnaSolve(net, ref, diodeOn, replace = {}, zeroSources = false) {
@@ -639,13 +743,13 @@ export function solveCircuit(scene) {
   }
   const el = new Map([...sol.out].map(([id, r]) => [id, {...r, drop: r.V1 - r.V2}]));
   /* the transient of the one capacitor or inductor: its Thevenin resistance with the sources at zero */
-  const dyn = els.filter(e => e.kind === 'capacitor' || e.kind === 'inductor'), transients = [];
+  const dyn = els.filter(e => e.kind === 'capacitor' || e.kind === 'dielectric' || e.kind === 'inductor'), transients = [];
   if (dyn.length === 1) {
     const e = dyn[0], test = mnaSolve(net, ref, on, {[e.id]: {current: -1}}, true);
     if (test) {
       const r = test.out.get(e.id), Rth = r.V1 - r.V2;     /* the element drives 1 A out of its x1 end: V1 − V2 = R_th */
       if (Rth > 1e-9 && Rth < 1e12) {
-        if (e.kind === 'capacitor') { const tau = Rth * e.value * 1e-6, Vf = el.get(e.id).V1 - el.get(e.id).V2; transients.push({id: e.id, kind: 'rc', tau, R: Rth, final: Vf, at: t => Vf * (1 - Math.exp(-t / tau)), current: t => Vf / Rth * Math.exp(-t / tau)}); }
+        if (e.kind !== 'inductor') { const tau = Rth * e.value * 1e-6, Vf = el.get(e.id).V1 - el.get(e.id).V2; transients.push({id: e.id, kind: 'rc', tau, R: Rth, final: Vf, at: t => Vf * (1 - Math.exp(-t / tau)), current: t => Vf / Rth * Math.exp(-t / tau)}); }
         else { const tau = e.value / Rth, If = el.get(e.id).I; transients.push({id: e.id, kind: 'rl', tau, R: Rth, final: If, at: t => If * (1 - Math.exp(-t / tau))}); }
       }
     }
@@ -702,17 +806,29 @@ export const mirrorImage = (u, f) => 1 / (1 / f - 1 / u);
 export function prismCorners(o) { const ht = (o.size / 2) / Math.tan(o.apex * Math.PI / 360); return [{x: o.x - o.size / 2, y: o.y}, {x: o.x + o.size / 2, y: o.y}, {x: o.x, y: o.y + ht}]; }
 const slabCorners = o => [{x: o.x, y: o.y}, {x: o.x + o.w, y: o.y}, {x: o.x + o.w, y: o.y + o.h}, {x: o.x, y: o.y + o.h}];
 const inPoly = (p, P) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++) if ((P[i].y > p.y) !== (P[j].y > p.y) && p.x < (P[j].x - P[i].x) * (p.y - P[i].y) / (P[j].y - P[i].y) + P[i].x) c = !c; return c; };
-/** a ray from p in direction d through the scene's optics: {pts, hits, d (the last direction)} */
-export function traceRay(scene, p0, d0, {len = 50, maxHits = 16} = {}) {
-  const lenses = scene.objects.filter(o => o.type === 'lens'), mirrors = scene.objects.filter(o => o.type === 'mirror');
+/** a ray from p in direction d through the scene's optics: {pts, hits, d (the last direction), forks}. Lenses and
+ *  mirrors may be turned (rot): the ray is followed in the element's own frame (its axis along x). A half-silvered
+ *  mirror (half) lets the ray through and starts a reflected branch, traced on in forks [{pts, …}]; a screen stops it. */
+export function traceRay(scene, p0, d0, {len = 50, maxHits = 16, depth = 0} = {}) {
+  const lenses = scene.objects.filter(o => o.type === 'lens'), mirrors = scene.objects.filter(o => o.type === 'mirror'), screens = scene.objects.filter(o => o.type === 'screen');
   const polys = scene.objects.filter(o => o.type === 'prism' || o.type === 'slab').map(o => ({o, P: o.type === 'prism' ? prismCorners(o) : slabCorners(o)}));
-  let p = p0, d = vec.unit(d0), left = len, hits = 0; const pts = [p];
+  const frame = E => { const a = (E.rot || 0) * Math.PI / 180; return {c: Math.cos(a), s: Math.sin(a)}; };
+  const toL = (E, R, v) => ({x: R.c * v.x + R.s * v.y, y: -R.s * v.x + R.c * v.y}), toW = (R, v) => ({x: R.c * v.x - R.s * v.y, y: R.s * v.x + R.c * v.y});
+  let p = p0, d = vec.unit(d0), left = len, hits = 0; const pts = [p], forks = [];
   while (left > 1e-9 && hits < maxHits) {
     let best = null;
     const consider = (t, what) => { if (t > 1e-7 && t <= left && (!best || t < best.t)) best = {t, ...what}; };
-    if (Math.abs(d.x) > 1e-12) {
-      for (const L of lenses) { const t = (L.x - p.x) / d.x, y = p.y + d.y * t; if (Math.abs(y - L.y) <= L.h * 1.5) consider(t, {lens: L}); }
-      for (const M of mirrors) { const t = (M.x - p.x) / d.x, y = p.y + d.y * t; if (Math.abs(y - M.y) <= M.h / 2 * 1.02) consider(t, {mirror: M}); }
+    for (const E of [...lenses, ...mirrors]) {
+      const R = frame(E), lp = toL(E, R, vec.sub(p, E)), ld = toL(E, R, d);
+      if (Math.abs(ld.x) < 1e-12) continue;
+      const t = -lp.x / ld.x, y = lp.y + ld.y * t;
+      if (E.type === 'lens' ? Math.abs(y) <= E.h * 1.5 : Math.abs(y) <= E.h / 2 * 1.02) consider(t, E.type === 'lens' ? {lens: E} : {mirror: E});
+    }
+    for (const Sc of screens) {
+      const a = (Sc.rot || 0) * Math.PI / 180, e = {x: -Math.sin(a), y: Math.cos(a)}, A = vec.sub(Sc, vec.mul(e, Sc.h / 2)), s = vec.mul(e, Sc.h), den = vec.cross(d, s);
+      if (Math.abs(den) < 1e-14) continue;
+      const t = vec.cross(vec.sub(A, p), s) / den, u = vec.cross(vec.sub(A, p), d) / den;
+      if (u >= 0 && u <= 1) consider(t, {screen: Sc});
     }
     for (const {o, P} of polys) for (let i = 0; i < P.length; i++) {
       const a = P[i], b = P[(i + 1) % P.length], s = vec.sub(b, a), den = vec.cross(d, s); if (Math.abs(den) < 1e-14) continue;
@@ -721,13 +837,19 @@ export function traceRay(scene, p0, d0, {len = 50, maxHits = 16} = {}) {
     }
     if (!best) { p = vec.add(p, vec.mul(d, left)); pts.push(p); left = 0; break; }
     p = vec.add(p, vec.mul(d, best.t)); left -= best.t; pts.push(p); hits++;
+    if (best.screen) { left = 0; break; }
     if (best.lens || best.mirror) {
-      const E = best.lens || best.mirror, sx = Math.sign(d.x), s = d.y / Math.abs(d.x);
-      if (best.lens) d = vec.unit({x: sx, y: s - (p.y - E.y) / E.f});
+      const E = best.lens || best.mirror, R = frame(E), ld = toL(E, R, d), lp = toL(E, R, vec.sub(p, E)), sx = Math.sign(ld.x), sl = ld.y / Math.abs(ld.x);
+      let nd;
+      if (best.lens) nd = {x: sx, y: sl - lp.y / E.f};
       else {
-        if ((E.face === 'left') !== (sx > 0)) { left = 0; break; }      /* the back of a mirror */
-        d = vec.unit({x: -sx, y: E.f ? s - (p.y - E.y) / E.f : s});
+        const back = (E.face === 'left') !== (sx > 0);
+        const refl = {x: -sx, y: E.f ? sl - lp.y / E.f : sl};
+        if (E.half) { if (depth < 3) forks.push(traceRay(scene, vec.add(p, vec.mul(vec.unit(toW(R, refl)), 1e-9)), toW(R, refl), {len: left, maxHits, depth: depth + 1})); nd = ld; }
+        else if (back) { left = 0; break; }      /* the back of a mirror */
+        else nd = refl;
       }
+      d = vec.unit(toW(R, nd));
       p = vec.add(p, vec.mul(d, 1e-9));
     } else {
       const N0 = vec.perp(best.edge), inside = inPoly(vec.add(p, vec.mul(d, -1e-6)), best.P);
@@ -737,7 +859,7 @@ export function traceRay(scene, p0, d0, {len = 50, maxHits = 16} = {}) {
       p = vec.add(p, vec.mul(d, 1e-9));
     }
   }
-  return {pts, hits, d, end: p};
+  return {pts, hits, d, end: p, forks};
 }
 /** the image of an object arrow through the system, by tracing two rays from its tip and meeting their last lines:
  *  {x, y, h, real, m} (null if the rays leave parallel or there is no lens or mirror ahead) */
@@ -846,10 +968,35 @@ export function levelModel(o) {
 export const lorentzGamma = beta => 1 / Math.sqrt(1 - beta * beta);
 export const clockTicks = (o, max) => { const g = lorentzGamma(o.beta), out = []; for (let k = 1; g * k * o.tau <= max + 1e-9 && k < 200; k++) out.push({ct: g * k * o.tau, x: o.x0 + o.beta * g * k * o.tau, k}); return out; };
 
+/* ── rails and a sliding rod: ε = B L v, I = ε / R, the magnetic force on the rod F = B I L (against v), P = ε I ── */
+export function motionalEMF(o) { const emf = o.B * o.h * o.v, I = o.R > 0 ? emf / o.R : 0; return {emf, I, F: o.B * Math.abs(I) * o.h, P: emf * I}; }
+/* ── fluids: buoyancy ρ g V_sub; a body of density ρ_b floats with the fraction ρ_b / ρ_f under the surface ── */
+export const buoyancy = (rho, Vsub, g = 9.8) => rho * g * Vsub;
+export const floatFraction = (rhoBody, rhoFluid) => Math.min(1, rhoBody / rhoFluid);
+/** the liquid's surface height in a container, and each block standing in it: the submerged volume (a block's depth
+ *  into the page is taken equal to its width), the buoyant force and the fraction it would float with */
+export function containerInfo(scene, c, g = scene.g || 9.8) {
+  const top = c.y + c.h * c.level, out = [];
+  for (const b of scene.objects.filter(o => o.type === 'block' || o.type === 'ball')) {
+    const p = bodyPose(scene, b), hw = bodyHalfWidth(b), hh = bodyHalfHeight(b);
+    if (p.x - hw < c.x - 1e-9 || p.x + hw > c.x + c.w + 1e-9 || p.y - hh > top || p.y + hh < c.y) continue;
+    const sub = Math.max(0, Math.min(2 * hh, top - (p.y - hh)));
+    const V = b.type === 'ball' ? sphereCap(b.r, sub) : b.w * sub * b.w, Vb = b.type === 'ball' ? 4 / 3 * Math.PI * b.r ** 3 : b.w * b.h * b.w;
+    out.push({id: b.id, Vsub: V, B: buoyancy(c.rho, V, g), weight: b.mass * g, rhoB: b.mass / Vb, floats: floatFraction(b.mass / Vb, c.rho)});
+  }
+  return {surface: top, bodies: out};
+}
+const sphereCap = (r, h) => Math.PI * h * h * (3 * r - h) / 3;
+/** a wheel rolling without slipping down a slope θ: a = g sin θ / (1 + I / m r²) */
+export const rollingAccel = (g, thetaDeg, k) => g * Math.sin(thetaDeg * Math.PI / 180) / (1 + k);
+
 /** what the side panel shows for the figure's computed objects: [{id, type, ...values}] */
 export function computedInfo(scene) {
   const out = [];
   for (const o of scene.objects) {
+    if (o.type === 'rails') { const m = motionalEMF(o); out.push({id: o.id, type: o.type, emf: m.emf, I: m.I, F: m.F}); }
+    else if (o.type === 'container') { const c = containerInfo(scene, o); for (const b of c.bodies) out.push({id: b.id, type: 'buoyancy', B: b.B, W: b.weight, floats: b.floats}); }
+    else if (o.type === 'bridge' && o.kind === 'meter') out.push({id: o.id, type: o.type, l: o.at * 100});
     if (o.type === 'cycle') { const c = gasCycle(o); out.push({id: o.id, type: o.type, W: c.W, Qin: c.Qin, eta: c.eta, carnot: 1 - c.Tc / c.Th}); }
     else if (o.type === 'oarrow') { const im = opticImage(scene, o); if (im) out.push({id: o.id, type: o.type, x: im.x, h: im.h, m: im.m, real: im.real}); }
     else if (o.type === 'slits') out.push({id: o.id, type: o.type, dy: fringeSpacing(o), n: o.n});
