@@ -85,12 +85,16 @@
    validateScene() checks every field (type, range, references) and returns the normalised version-2 scene. */
 
 export const SCENE_FORMAT = 'haslalab-scene', SCENE_VERSION = 2, MAX_OBJECTS = 120;
-export const BODY_TYPES = ['block', 'ball'];
+export const BODY_TYPES = ['block', 'ball', 'wheel'];
 export const SURFACE_TYPES = ['floor', 'incline'];
 export const ANCHOR_TYPES = ['pivot', 'ceiling', 'wall', 'floor'];
-export const MARK_TYPES = ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point'];
-export const STYLE_KEYS = ['textbook', 'university', 'olympiad', 'jee', 'print'];
-export const ELEMENT_KINDS = ['wire', 'resistor', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer'];
+export const MARK_TYPES = ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'panel', 'brace', 'callout'];
+export const STYLE_KEYS = ['textbook', 'university', 'olympiad', 'jee', 'suneung', 'print'];
+export const ELEMENT_KINDS = ['wire', 'resistor', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer', 'rheostat', 'dielectric'];
+/* round bodies (a ball, a wheel) touch a surface at one point and are joined at their centre */
+export const isRound = o => !!o && (o.type === 'ball' || o.type === 'wheel');
+/* the moment of inertia of a body about its centre as a fraction of m r² (a wheel's kind; a ball or a block slides) */
+export const INERTIA = {disk: 0.5, ring: 1, wheel: 0.75, sphere: 0.4, shell: 2 / 3};
 export const PATTERNS = ['solid', 'dashed', 'dotted', 'dashdot', 'none'];
 const ID = /^[A-Za-z][A-Za-z0-9_-]{0,23}$/;
 const COORD = 200, SPEED = 300, DATA = 1e7;
@@ -107,10 +111,15 @@ const SEG = {x1: X1, y1: Y1, x2: X2, y2: Y2};
 const MOTION = {vx: num(0, -SPEED, SPEED), vy: num(0, -SPEED, SPEED), showV: bool(false), vLabel: txt('v_0', 24)};
 const BOX = (w, h) => ({x: X, y: Y, w: num(w, 0.05, 400), h: num(h, 0.05, 400)});
 const L = (d = '') => txt(d, 40);
+const ROT = num(0, -360, 360);
+const ON = ref([...SURFACE_TYPES, 'block']);
 export const FIELDS = {
   /* mechanics */
-  block: {x: X, y: Y, w: num(0.4, 0.02, 20), h: num(0.3, 0.02, 20), mass: num(1, 0.001, 10000), label: L(), on: ref(SURFACE_TYPES), at: num(0, -COORD, COORD), ...MOTION},
-  ball: {x: X, y: Y, r: num(0.1, 0.01, 5), mass: num(1, 0.001, 10000), label: L(), on: ref(SURFACE_TYPES), at: num(0, -COORD, COORD), ...MOTION, trail: bool(false)},
+  block: {x: X, y: Y, w: num(0.4, 0.02, 20), h: num(0.3, 0.02, 20), mass: num(1, 0.001, 10000), label: L(), on: ON, at: num(0, -COORD, COORD), ...MOTION, mu: num(0, 0, 2), look: pick('box', ['box', 'cart', 'car']), rot: ROT},
+  ball: {x: X, y: Y, r: num(0.1, 0.01, 5), mass: num(1, 0.001, 10000), label: L(), on: ON, at: num(0, -COORD, COORD), ...MOTION, trail: bool(false)},
+  wheel: {x: X, y: Y, r: num(0.2, 0.01, 20), mass: num(1, 0.001, 10000), kind: pick('disk', ['disk', 'ring', 'wheel', 'sphere', 'shell']), label: L(), on: ON, at: num(0, -COORD, COORD), ...MOTION, omega: pick('none', ['none', 'ccw', 'cw']), spokes: num(0, 0, 12), rot: ROT, trail: bool(false)},
+  plank: {x: X, y: Y, len: num(2, 0.1, 200), thick: num(0.08, 0.01, 5), rot: ROT, support: pick('fulcrum', ['none', 'pivot', 'hinge', 'fulcrum', 'wall']), at: num(0.5, 0, 1), mass: num(1, 0, 10000), label: L()},
+  track: {x: X, y: Y, r: num(1, 0.05, 100), from: num(180, -360, 360), to: num(360, -360, 360), side: pick('out', ['in', 'out']), hatch: bool(true), label: L()},
   floor: {x: X, y: Y, w: num(3, 0.05, 400), mu: num(0, 0, 2), hatch: bool(true)},
   ceiling: {x: X, y: Y, w: num(2, 0.05, 400), hatch: bool(true)},
   wall: {x: X, y: Y, h: num(1, 0.05, 400), side: pick('left', ['left', 'right'])},
@@ -123,6 +132,9 @@ export const FIELDS = {
   force: {on: ref(BODY_TYPES), F: num(10, 0, 1e6), angle: num(0, -360, 360), len: num(0.6, 0.05, 20), label: txt('F', 24)},
   /* electromagnetism */
   element: {...SEG, kind: pick('resistor', ELEMENT_KINDS), value: num(10, 0, 1e9), r: num(0, 0, 1e6), closed: bool(true), look: pick('auto', ['auto', 'zigzag', 'box']), route: pick('straight', ['straight', 'hv', 'vh']), label: L()},
+  bridge: {...SEG, kind: pick('meter', ['meter', 'pot']), R: num(10, 0.001, 1e6), at: num(0.5, 0, 1), scale: bool(true), label: L()},
+  transformer: {x: X, y: Y, h: num(1.2, 0.1, 50), np: num(6, 1, 40), ns: num(10, 1, 40), rot: ROT, label: L()},
+  rails: {x: X, y: Y, w: num(3, 0.2, 200), h: num(1, 0.05, 100), at: num(1.8, 0, 200), v: num(2, -1000, 1000), B: num(0.5, 0, 100), R: num(2, 0, 1e6), field: pick('in', ['in', 'out', 'none']), label: L()},
   ground: {x: X, y: Y, label: L()},
   charge: {x: X, y: Y, q: num(1, -1e4, 1e4), r: num(0.12, 0.02, 5), label: L(), mass: num(1, 1e-6, 1e6), ...MOTION, trail: bool(false)},
   plate: {...SEG, q: num(10, -1e5, 1e5), label: L(), marks: bool(true)},
@@ -130,21 +142,32 @@ export const FIELDS = {
   field: {...BOX(2, 1.5), kind: pick('B', ['B', 'E']), dir: pick('in', ['in', 'out', 'arrow']), angle: num(0, -360, 360), mag: num(1, 0, 1e9), spacing: num(0.3, 0.05, 20), pattern: pick('dashed', PATTERNS), label: L()},
   cwire: {...SEG, I: num(1, -1e6, 1e6), label: L('I'), arrow: bool(true)},
   current: {x: X, y: Y, r: num(0.08, 0.02, 2), dir: pick('out', ['out', 'in']), I: num(1, -1e6, 1e6), rings: num(0, 0, 6), label: L('I')},
-  solenoid: {...BOX(2.4, 0.8), turns: num(8, 2, 40), core: bool(false), showB: bool(false), label: L()},
+  solenoid: {...BOX(2.4, 0.8), turns: num(8, 2, 40), core: bool(false), showB: bool(false), label: L(), rot: ROT},
   loop: {x: X, y: Y, r: num(0.5, 0.05, 50), ccw: bool(true), tilt: num(0.35, 0.05, 1), label: L('I')},
-  magnet: {...BOX(1.6, 0.4), flip: bool(false), showB: bool(false)},
-  /* thermodynamics */
-  cylinder: {...BOX(1.2, 1.8), piston: num(0.6, 0.1, 0.95), gas: bool(true), weight: bool(false), heat: pick('none', ['none', 'in', 'out']), label: L()},
+  magnet: {...BOX(1.6, 0.4), flip: bool(false), showB: bool(false), rot: ROT},
+  /* thermodynamics and fluids */
+  cylinder: {...BOX(1.2, 1.8), piston: num(0.6, 0.1, 0.95), gas: bool(true), weight: bool(false), heat: pick('none', ['none', 'in', 'out']), label: L(), rot: ROT},
+  container: {...BOX(2, 1.6), level: num(0.6, 0, 1), rho: num(1000, 1, 1e5), fill: pick('gray', ['gray', 'lines', 'none']), open: bool(true), label: L()},
+  utube: {...BOX(1.6, 1.8), tube: num(0.24, 0.02, 10), left: num(0.45, 0, 1), right: num(0.65, 0, 1), fill: pick('gray', ['gray', 'lines', 'none']), label: L()},
+  thermometer: {x: X, y: Y, h: num(1.2, 0.1, 50), level: num(0.5, 0, 1), label: L('T')},
+  heater: {x: X, y: Y, w: num(0.8, 0.1, 50), kind: pick('flame', ['flame', 'coil', 'plate']), label: L()},
+  gasbox: {...BOX(1.6, 1.2), n: num(18, 0, 200), arrows: bool(true), seed: num(1, 1, 999), label: L()},
   reservoir: {...BOX(2, 0.5), hot: bool(true), label: L('T')},
   engine: {x: X, y: Y, size: num(1, 0.2, 40), kind: pick('engine', ['engine', 'fridge']), th: txt('T_H', 24), tc: txt('T_C', 24), qh: txt('Q_H', 24), qc: txt('Q_C', 24), wl: txt('W', 24)},
-  graph: {...BOX(3, 2.2), xmin: num(0, -DATA, DATA), xmax: num(1, -DATA, DATA), ymin: num(0, -DATA, DATA), ymax: num(1, -DATA, DATA), auto: bool(true), xlabel: txt('x', 24), ylabel: txt('y', 24), ticks: bool(false), grid: bool(false), origin: txt('O', 8)},
-  curve: {graph: ref(['graph']), kind: pick('func', ['func', 'isotherm', 'adiabat', 'isobar', 'isochore']), x1: num(0, -DATA, DATA), x2: num(1, -DATA, DATA), y1: num(1, -DATA, DATA), y2: num(0.5, -DATA, DATA), gamma: num(1.4, 1.01, 3), expr: expr('sin(x)'), heads: pick('none', ['none', 'mid', 'end']), pattern: pick('solid', PATTERNS), label: L()},
+  graph: {...BOX(3, 2.2), xmin: num(0, -DATA, DATA), xmax: num(1, -DATA, DATA), ymin: num(0, -DATA, DATA), ymax: num(1, -DATA, DATA), auto: bool(true), xlabel: txt('x', 24), ylabel: txt('y', 24), ticks: bool(false), grid: bool(false), origin: txt('O', 8),
+    xt: txt('', 120), yt: txt('', 120)},
+  curve: {graph: ref(['graph']), kind: pick('func', ['func', 'isotherm', 'adiabat', 'isobar', 'isochore', 'points']), x1: num(0, -DATA, DATA), x2: num(1, -DATA, DATA), y1: num(1, -DATA, DATA), y2: num(0.5, -DATA, DATA), gamma: num(1.4, 1.01, 3), expr: expr('sin(x)'),
+    data: txt('0,0 1,2 3,2 4,0', 240), heads: pick('none', ['none', 'mid', 'end']), pattern: pick('solid', PATTERNS), shade: bool(false), label: L()},
   cycle: {graph: ref(['graph']), kind: pick('carnot', ['carnot', 'otto', 'stirling']), v1: num(1, 1e-6, DATA), v2: num(2, 1e-6, DATA), t1: num(600, 1e-6, DATA), t2: num(400, 1e-6, DATA), gamma: num(1.4, 1.01, 3), labels: bool(true), arrows: bool(true), shade: bool(false)},
   /* optics */
-  lens: {x: X, y: Y, h: num(1.4, 0.05, 100), f: num(1, -1000, 1000), showF: bool(true), label: L()},
-  mirror: {x: X, y: Y, h: num(1.6, 0.05, 100), f: num(1, -1000, 1000), face: pick('left', ['left', 'right']), showF: bool(true), label: L()},
+  lens: {x: X, y: Y, h: num(1.4, 0.05, 100), f: num(1, -1000, 1000), showF: bool(true), label: L(), rot: ROT},
+  mirror: {x: X, y: Y, h: num(1.6, 0.05, 100), f: num(1, -1000, 1000), face: pick('left', ['left', 'right']), showF: bool(true), label: L(), rot: ROT, half: bool(false)},
   prism: {x: X, y: Y, size: num(1.6, 0.05, 100), apex: num(60, 10, 150), n: num(1.5, 1, 4), label: L()},
   slab: {...BOX(2, 0.8), n: num(1.5, 1, 4), label: L()},
+  screen: {x: X, y: Y, h: num(1.6, 0.05, 100), rot: ROT, label: L()},
+  eye: {x: X, y: Y, size: num(0.5, 0.05, 20), rot: ROT, label: L()},
+  source: {x: X, y: Y, kind: pick('bulb', ['bulb', 'laser', 'point', 'sun']), size: num(0.4, 0.02, 50), rot: ROT, label: L()},
+  fiber: {...SEG, r: num(0.15, 0.01, 10), angle: num(20, 0, 85), label: L()},
   oarrow: {x: X, y: Y, h: num(0.5, -100, 100), label: L('O'), rays: bool(true), image: bool(true), imageLabel: txt("I", 24)},
   ray: {x: X, y: Y, angle: num(0, -360, 360), len: num(8, 0.1, 400), arrow: bool(true), label: L()},
   slits: {x: X, y: Y, n: num(2, 1, 50), d: num(0.25, 1e-4, 100), a: num(0.05, 1e-4, 100), L: num(1, 1e-3, 1000), lambda: num(550, 10, 1e5), h: num(1.6, 0.1, 100), screen: num(2.4, 0.2, 200), pattern: bool(true), labels: bool(true), waves: bool(true)},
@@ -152,6 +175,8 @@ export const FIELDS = {
   /* waves */
   wave: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, 0, 50), lambda: num(1.6, 0.02, 400), phase: num(0, -360, 360), kind: pick('travel', ['travel', 'standing']), n: num(3, 1, 20), ends: pick('none', ['none', 'fixed']),
     showLambda: bool(true), showA: bool(true), envelope: bool(true), axis: bool(true), arrow: bool(false), label: L()},
+  pulse: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, -50, 50), width: num(0.6, 0.02, 100), pos: num(0.35, 0, 1), shape: pick('gauss', ['gauss', 'tri', 'square']), dir: pick('right', ['right', 'left', 'none']), axis: bool(true), label: L()},
+  interference: {x: X, y: Y, d: num(1, 0.01, 100), lambda: num(0.4, 0.01, 100), n: num(5, 1, 30), nodal: bool(true), labels: bool(true), rot: ROT},
   /* modern physics */
   well: {...BOX(4, 3), kind: pick('infinite', ['infinite', 'finite', 'harmonic', 'barrier', 'step']), L: num(1, 1e-3, 1e4), V0: num(5, 0, 1e6), mass: num(1, 1e-3, 1e6), levels: num(3, 0, 8), psi: pick('psi', ['none', 'psi', 'prob']), E: num(2, 0, 1e6), labels: bool(true)},
   levels: {...BOX(2.6, 3), kind: pick('hydrogen', ['hydrogen', 'custom']), n: num(5, 2, 10), values: txt('-13.6,-3.4,-1.51,-0.85', 160), trans: txt('3-2,2-1', 80), labels: bool(true), showLambda: bool(true)},
@@ -159,26 +184,37 @@ export const FIELDS = {
   spacetime: {x: X, y: Y, size: num(3, 0.2, 400), units: num(4, 1, 20), beta: num(0.5, -0.99, 0.99), primed: bool(true), cone: bool(true), grid: bool(false), hyperbola: bool(false), xlabel: txt('x', 24), ylabel: txt('$ct$', 24)},
   worldline: {diagram: ref(['spacetime']), x0: num(0, -100, 100), beta: num(0.5, -0.99, 0.99), ticks: bool(true), tau: num(1, 0.05, 50), label: L()},
   frames: {x: X, y: Y, size: num(1.2, 0.1, 100), gap: num(1.8, 0, 200), label: L('v')},
+  nucleus: {x: X, y: Y, r: num(0.3, 0.02, 20), np: num(6, 0, 60), nn: num(6, 0, 60), label: L()},
+  particle: {x: X, y: Y, kind: pick('electron', ['electron', 'positron', 'proton', 'neutron', 'alpha', 'photon', 'neutrino']), angle: num(0, -360, 360), len: num(0.8, 0, 50), label: L()},
   /* general marks */
-  label: {x: X, y: Y, text: txt('', 80), size: num(16, 8, 48), box: bool(false)},
+  label: {x: X, y: Y, text: txt('', 80), size: num(16, 8, 48), box: bool(false), rot: ROT},
   dim: {x1: X, y1: Y, x2: X, y2: Y, offset: num(0.15, -10, 10), text: txt('', 40)},
   arc: {x: X, y: Y, r: num(0.3, 0.02, 20), from: num(0, -360, 360), to: num(30, -360, 360), text: txt('', 24), arrow: bool(false)},
   axes: {x: X, y: Y, lx: num(1, 0, 100), ly: num(1, 0, 100), xlabel: txt('x', 12), ylabel: txt('y', 12)},
   line: {x1: X, y1: Y, x2: X, y2: Y, pattern: pick('dashed', PATTERNS), heads: pick('none', ['none', 'end', 'start', 'both', 'mid'])},
   vector: {...SEG, label: L(), width: num(1.6, 0.3, 6), head: pick('auto', ['auto', 'filled', 'open', 'stealth', 'none'])},
-  region: {...BOX(1, 0.8), shape: pick('rect', ['rect', 'ellipse']), fill: pick('gray', ['none', 'gray', 'hatch', 'dots']), pattern: pick('solid', PATTERNS), label: L()},
-  point: {x: X, y: Y, label: L(), filled: bool(true)}
+  region: {...BOX(1, 0.8), shape: pick('rect', ['rect', 'ellipse']), fill: pick('gray', ['none', 'gray', 'hatch', 'dots', 'cross', 'lines', 'dark']), pattern: pick('solid', PATTERNS), label: L(), rot: ROT},
+  point: {x: X, y: Y, label: L(), filled: bool(true)},
+  panel: {...BOX(2, 1.5), caption: txt('(가)', 24), frame: bool(false)},
+  brace: {...SEG, kind: pick('brace', ['brace', 'bracket']), offset: num(0.12, -10, 10), text: txt('', 40)},
+  callout: {x: X, y: Y, x2: num(1, -COORD, COORD), y2: num(0.6, -COORD, COORD), text: txt('', 60), end: pick('dot', ['dot', 'arrow', 'none'])},
+  parrows: {...SEG, n: num(5, 1, 40), len: num(0.4, 0.02, 50), dir: pick('out', ['in', 'out']), label: L()}
 };
+/* every object also has a line weight and a label size (multiples of the style's), and can be locked against dragging */
+export const COMMON_FIELDS = {lw: num(1, 0.2, 5), ls: num(1, 0.3, 4), lock: bool(false)};
+for (const t of Object.keys(FIELDS)) Object.assign(FIELDS[t], COMMON_FIELDS);
 export const TYPES = Object.keys(FIELDS);
+/* the types that turn by their field rot (degrees, anticlockwise) about their centre */
+export const ROTATABLE = TYPES.filter(t => 'rot' in FIELDS[t]);
 /* the palette's domains (draw.js tabs); every type is in one */
 export const DOMAINS = {
-  mech: ['block', 'ball', 'floor', 'ceiling', 'wall', 'incline', 'pulley', 'pivot', 'string', 'rod', 'spring', 'force'],
-  em: ['element', 'ground', 'charge', 'plate', 'fieldlines', 'field', 'cwire', 'current', 'solenoid', 'loop', 'magnet'],
-  thermo: ['cylinder', 'reservoir', 'engine', 'cycle', 'curve'],
-  optics: ['lens', 'mirror', 'prism', 'slab', 'oarrow', 'ray', 'slits', 'wavefront'],
-  waves: ['wave'],
-  modern: ['well', 'levels', 'phototube', 'spacetime', 'worldline', 'frames'],
-  general: ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'graph']
+  mech: ['block', 'ball', 'wheel', 'floor', 'ceiling', 'wall', 'incline', 'track', 'pulley', 'pivot', 'plank', 'string', 'rod', 'spring', 'force'],
+  em: ['element', 'bridge', 'transformer', 'rails', 'ground', 'charge', 'plate', 'fieldlines', 'field', 'cwire', 'current', 'solenoid', 'loop', 'magnet'],
+  thermo: ['cylinder', 'container', 'utube', 'thermometer', 'heater', 'gasbox', 'reservoir', 'engine', 'cycle', 'curve'],
+  optics: ['lens', 'mirror', 'prism', 'slab', 'oarrow', 'ray', 'slits', 'wavefront', 'screen', 'eye', 'source', 'fiber'],
+  waves: ['wave', 'pulse', 'interference'],
+  modern: ['well', 'levels', 'phototube', 'spacetime', 'worldline', 'frames', 'nucleus', 'particle'],
+  general: ['label', 'dim', 'arc', 'axes', 'line', 'vector', 'region', 'point', 'graph', 'panel', 'brace', 'callout', 'parrows']
 };
 export const TYPE_DOMAIN = Object.fromEntries(Object.entries(DOMAINS).flatMap(([d, list]) => list.map(t => [t, d])));
 /* references that must name an existing object, and which must not be the same */
@@ -265,6 +301,9 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
     return v;
   };
   const scene = {format: SCENE_FORMAT, version: SCENE_VERSION, title: '', g: top('g', 9.8, 0.1, 30), grid: top('grid', 0.1, 0.01, 1), style: 'textbook', objects: []};
+  /* optional: the values written on the figure (2 kg, 30°, 10 Ω …), and the printed width in mm (0: the style's) */
+  if (input.values !== undefined) { if (typeof input.values === 'boolean') { if (input.values) scene.values = true; } else if (!lenient) err('bad_bool', null, 'values'); }
+  if (input.printW !== undefined && input.printW !== 0) { const p = top('printW', 0, 20, 400); if (p) scene.printW = p; }
   if (input.style !== undefined) { if (STYLE_KEYS.includes(input.style)) scene.style = input.style; else if (lenient) notes.push({code: 'style_dropped'}); else err('bad_enum', null, 'style'); }
   if (input.title !== undefined) { const t = typeof input.title === 'string' ? cleanText(input.title, 80, aiText) : null; if (t == null) err('bad_text', null, 'title'); else scene.title = t; }
   if (input.view !== undefined && input.view !== null) {
@@ -341,6 +380,12 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
         }
       }
       if ((o.type === 'string' || o.type === 'spring') && o.a && o.a === o.b) { err('same_ends', o.id); bad = true; }
+      /* a body on a block: not on itself, and the blocks under it end on a floor or an incline (no loop) */
+      if (isBody(o) && o.on && !bad && byId.get(o.on)?.type === 'block') {
+        let cur = o, seen = new Set([o.id]), okStack = false;
+        for (let k = 0; k < 8; k++) { const s = byId.get(cur.on); if (!s) break; if (s.type !== 'block') { okStack = true; break; } if (seen.has(s.id)) break; seen.add(s.id); if (!s.on) { okStack = true; break; } cur = s; }
+        if (!okStack) { if (lenient) { o.on = ''; notes.push({code: 'ref_dropped', id: o.id, field: 'on'}); } else { err('bad_stack', o.id, 'on'); bad = true; } }
+      }
       if (o.type === 'string' && !bad && !isBody(byId.get(o.a)) && !isBody(byId.get(o.b))) { err('no_body', o.id); bad = true; }
       if (o.type === 'spring' && !bad && !isBody(byId.get(o.a)) && !isBody(byId.get(o.b))) { err('no_body', o.id); bad = true; }
       if ((o.type === 'string' || o.type === 'rod') && o.mode === 'conical' && !bad) {
@@ -363,7 +408,8 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
     return true;
   });
   scene.objects = keep;
-  for (const o of scene.objects) if (isBody(o) && o.on) placeOnSurface(scene, o);
+  /* bodies on bodies: the lower ones first */
+  for (let pass = 0; pass < 3; pass++) for (const o of scene.objects) if (isBody(o) && o.on) placeOnSurface(scene, o);
   const dropped = list.length - keep.length;
   if (lenient && dropped > 0) notes.push({code: 'dropped', n: dropped});
   return {ok: lenient ? true : errors.length === 0, scene, errors, notes};
@@ -376,6 +422,21 @@ export function defaults(type) {
   return o;
 }
 
+/** The editor's undo history: states (JSON text of the scene) before each change, at most `limit` steps back.
+ *  record(before) after a change that left `before` behind; undo(current) and redo(current) return the state to show
+ *  (or null). A drag or a slider gesture records once, at its end, with the state from its start. */
+export function createHistory(limit = 250) {
+  const past = [], future = [];
+  return {
+    limit,
+    record(before) { if (typeof before !== 'string') before = JSON.stringify(before); if (past[past.length - 1] === before) return; past.push(before); if (past.length > limit) past.shift(); future.length = 0; },
+    undo(current) { if (!past.length) return null; future.push(typeof current === 'string' ? current : JSON.stringify(current)); return past.pop(); },
+    redo(current) { if (!future.length) return null; past.push(typeof current === 'string' ? current : JSON.stringify(current)); return future.pop(); },
+    get canUndo() { return past.length > 0; }, get canRedo() { return future.length > 0; },
+    get size() { return past.length; }, clear() { past.length = 0; future.length = 0; }
+  };
+}
+
 /* ── geometry shared by the drawing and the solver ── */
 const rad = d => d * Math.PI / 180;
 export const vec = {
@@ -385,8 +446,14 @@ export const vec = {
   perp: a => ({x: -a.y, y: a.x})
 };
 /** a floor or an incline as a line: start p0, unit direction u along it, unit normal n out of it, and its length */
-export function surfaceFrame(s) {
+export function surfaceFrame(s, scene, depth = 0) {
   if (s.type === 'floor') return {p0: {x: s.x, y: s.y}, u: {x: 1, y: 0}, n: {x: 0, y: 1}, length: s.w, mu: s.mu};
+  if (s.type === 'block') {
+    /* the top face of a block (a body stacked on it): from its upper left corner, μ of that face */
+    const p = scene && depth < 8 ? bodyPose(scene, s, depth + 1) : {x: s.x, y: s.y, angle: (s.rot || 0) * Math.PI / 180};
+    const u = {x: Math.cos(p.angle), y: Math.sin(p.angle)}, n = {x: -u.y, y: u.x};
+    return {p0: {x: p.x - u.x * s.w / 2 + n.x * s.h / 2, y: p.y - u.y * s.w / 2 + n.y * s.h / 2}, u, n, length: s.w, mu: s.mu, block: s.id};
+  }
   const c = Math.cos(rad(s.angle)), sn = Math.sin(rad(s.angle)), base = s.length * c;
   return s.flip ? {p0: {x: s.x + base, y: s.y}, u: {x: -c, y: sn}, n: {x: sn, y: c}, length: s.length, mu: s.mu}
     : {p0: {x: s.x, y: s.y}, u: {x: c, y: sn}, n: {x: -sn, y: c}, length: s.length, mu: s.mu};
@@ -397,28 +464,28 @@ export function inclineCorners(s) {
   return {foot: f.p0, top, right: {x: top.x, y: s.y}};
 }
 /* half the body's extent along the surface normal */
-export const bodyHalfHeight = b => b.type === 'ball' ? b.r : b.h / 2;
-export const bodyHalfWidth = b => b.type === 'ball' ? b.r : b.w / 2;
+export const bodyHalfHeight = b => isRound(b) ? b.r : b.h / 2;
+export const bodyHalfWidth = b => isRound(b) ? b.r : b.w / 2;
 /** put a body that rests on a surface at its place on it (x, y from `at`) */
 export function placeOnSurface(scene, b) {
   const s = scene.objects.find(o => o.id === b.on);
   if (!s) { b.on = ''; return b; }
-  const f = surfaceFrame(s), c = vec.add(vec.add(f.p0, vec.mul(f.u, b.at)), vec.mul(f.n, bodyHalfHeight(b)));
+  const f = surfaceFrame(s, scene), c = vec.add(vec.add(f.p0, vec.mul(f.u, b.at)), vec.mul(f.n, bodyHalfHeight(b)));
   b.x = c.x; b.y = c.y;
   return b;
 }
 /** the body's centre and the angle of its base (radians) */
-export function bodyPose(scene, b) {
+export function bodyPose(scene, b, depth = 0) {
   if (b.on) {
     const s = scene.objects.find(o => o.id === b.on);
-    if (s) { const f = surfaceFrame(s), c = vec.add(vec.add(f.p0, vec.mul(f.u, b.at)), vec.mul(f.n, bodyHalfHeight(b))); return {x: c.x, y: c.y, angle: b.type === 'block' ? Math.atan2(f.u.y, f.u.x) : 0}; }
+    if (s) { const f = surfaceFrame(s, scene, depth), c = vec.add(vec.add(f.p0, vec.mul(f.u, b.at)), vec.mul(f.n, bodyHalfHeight(b))); return {x: c.x, y: c.y, angle: b.type === 'block' ? Math.atan2(f.u.y, f.u.x) : 0}; }
   }
-  return {x: b.x, y: b.y, angle: 0};
+  return {x: b.x, y: b.y, angle: b.type === 'block' ? (b.rot || 0) * Math.PI / 180 : 0};
 }
 /* the point where a string or a spring meets a body: the middle of the face looking towards `toward` (a block), or the
-   centre (a ball) */
+   centre (a ball, a wheel) */
 export function attachPoint(scene, b, toward, pose = bodyPose(scene, b)) {
-  if (b.type === 'ball') return {x: pose.x, y: pose.y};
+  if (isRound(b)) return {x: pose.x, y: pose.y};
   const ca = Math.cos(pose.angle), sa = Math.sin(pose.angle);
   const ax = {x: ca, y: sa}, ay = {x: -sa, y: ca}, d = vec.sub(toward, pose);
   const faces = [[ax, b.w / 2], [vec.mul(ax, -1), b.w / 2], [ay, b.h / 2], [vec.mul(ay, -1), b.h / 2]];
@@ -675,7 +742,187 @@ const NEW_TEMPLATES = {
     {id: 'rh', type: 'region', x: 2.8, y: 0.3, w: 1, h: 1.4, shape: 'rect', fill: 'hatch', pattern: 'solid', label: ''},
     {id: 'P', type: 'point', x: 1.3, y: 1, label: 'P'},
     {id: 'd', type: 'dim', x1: 0.2, y1: -0.15, x2: 2.4, y2: -0.15, offset: 0, text: '2a'},
-    {id: 'tb', type: 'label', x: 3.3, y: 2.1, text: '\\rho = \\mathrm{const}', size: 14, box: true}]]
+    {id: 'tb', type: 'label', x: 3.3, y: 2.1, text: '\\rho = \\mathrm{const}', size: 14, box: true}]],
+  /* ── added: mechanics ── */
+  stacked_blocks: ['mech', '쌓인 두 물체와 마찰 (아래 물체를 당김)', 'Two stacked blocks with friction (pulling the lower one)', 0.1, {x: -0.3, y: -0.45, w: 4.6, h: 1.65}, [
+    {id: 'gnd', type: 'floor', x: 0, y: 0, w: 4, mu: 0},
+    {id: 'M', type: 'block', on: 'gnd', at: 1.6, w: 1.3, h: 0.36, mass: 3, mu: 0.4, label: 'M'},
+    {id: 'm', type: 'block', on: 'M', at: 0.65, w: 0.5, h: 0.3, mass: 1, label: 'm'},
+    {id: 'F1', type: 'force', on: 'M', F: 20, angle: 0, len: 0.9, label: 'F'},
+    {id: 'lmu', type: 'label', x: 1.45, y: 0.5, text: '\\mu', size: 14}]],
+  rolling_incline: ['mech', '빗면을 굴러 내려가는 원통 (미끄러지지 않음)', 'A cylinder rolling down an incline without slipping', 0.1, {x: -0.3, y: -0.35, w: 3.6, h: 2.0}, [
+    {id: 'gnd', type: 'floor', x: -0.1, y: 0, w: 3.3},
+    {id: 'inc', type: 'incline', x: 0.1, y: 0, angle: 28, length: 3, mu: 0.3, angleLabel: '\\theta'},
+    {id: 'w1', type: 'wheel', on: 'inc', at: 2.3, r: 0.22, mass: 2, kind: 'disk', omega: 'ccw', label: ''},
+    {id: 'lR', type: 'label', x: 2.45, y: 1.62, text: 'm, R', size: 14}]],
+  seesaw: ['mech', '시소 (지레의 평형)', 'A seesaw (balance of a lever)', 0.1, {x: 0.1, y: 0, w: 3.8, h: 1.25}, [
+    {id: 'pl', type: 'plank', x: 2, y: 0.6, len: 3.2, thick: 0.07, rot: 0, support: 'fulcrum', at: 0.5, mass: 0},
+    {id: 'm1', type: 'block', x: 0.8, y: 0.785, w: 0.3, h: 0.3, mass: 3, label: 'm_1'},
+    {id: 'm2', type: 'block', x: 3.2, y: 0.755, w: 0.24, h: 0.24, mass: 2, label: 'm_2'},
+    {id: 'da', type: 'dim', x1: 0.8, y1: 1.05, x2: 2, y2: 1.05, offset: 0, text: 'a'},
+    {id: 'db', type: 'dim', x1: 2, y1: 1.05, x2: 3.2, y2: 1.05, offset: 0, text: 'b'}]],
+  hinged_beam: ['mech', '벽에 경첩으로 단 막대와 줄', 'A beam hinged to a wall, held by a cable', 0.1, {x: -0.2, y: 0.1, w: 3.0, h: 2.3}, [
+    {id: 'wl', type: 'wall', x: 0.2, y: 0.3, h: 2, side: 'left'},
+    {id: 'bm', type: 'plank', x: 1.2, y: 1, len: 2, thick: 0.07, rot: 0, support: 'wall', at: 0, mass: 2, label: 'L'},
+    {id: 'cb', type: 'line', x1: 2.2, y1: 1, x2: 0.2, y2: 2, pattern: 'solid'},
+    {id: 'hg', type: 'line', x1: 2.2, y1: 1, x2: 2.2, y2: 0.7, pattern: 'solid'},
+    {id: 'm1', type: 'block', x: 2.2, y: 0.55, w: 0.3, h: 0.3, mass: 5, label: 'm'},
+    {id: 'th', type: 'arc', x: 2.2, y: 1, r: 0.4, from: 153.43, to: 180, text: '\\theta'},
+    {id: 'T1', type: 'callout', x: 1.2, y: 1.5, x2: 1.5, y2: 1.9, text: '\\vec{T}', end: 'none'}]],
+  cart_ramp: ['mech', '경사면 위의 수레', 'A cart on a ramp', 0.1, {x: -0.3, y: -0.35, w: 3.8, h: 1.7}, [
+    {id: 'gnd', type: 'floor', x: -0.1, y: 0, w: 3.5},
+    {id: 'inc', type: 'incline', x: 0, y: 0, angle: 20, length: 3.2, angleLabel: '\\theta'},
+    {id: 'c1', type: 'block', on: 'inc', at: 1.9, w: 0.7, h: 0.42, mass: 1.5, look: 'cart', label: 'm', showV: true, vx: -1, vy: -0.364, vLabel: 'v'}]],
+  loop_track: ['mech', '곡면 경사로와 원형 궤도', 'A curved ramp and a vertical loop', 0.1, {x: -1.1, y: -0.45, w: 5.6, h: 2.6}, [
+    {id: 'rp', type: 'track', x: 1, y: 1.6, r: 1.6, from: 180, to: 270, side: 'out'},
+    {id: 'gnd', type: 'floor', x: 1, y: 0, w: 3.4},
+    {id: 'lp', type: 'track', x: 3.2, y: 0.6, r: 0.6, from: -90, to: 270, side: 'out'},
+    {id: 'b1', type: 'ball', x: -0.41, y: 1.09, r: 0.1, mass: 0.2, label: 'm'},
+    {id: 'dh', type: 'dim', x1: -0.85, y1: 0, x2: -0.85, y2: 1.09, offset: 0, text: 'h'},
+    {id: 'rr', type: 'line', x1: 3.2, y1: 0.6, x2: 3.2, y2: 1.2, pattern: 'solid', heads: 'end'},
+    {id: 'lR', type: 'label', x: 3.32, y: 0.92, text: 'R', size: 15},
+    {id: 'pc', type: 'point', x: 3.2, y: 0.6, label: '', filled: true}]],
+  two_pulleys: ['mech', '두 도르래에 걸친 줄과 두 물체', 'One rope over two pulleys with two hanging masses', 0.1, {x: 0, y: 0.15, w: 3.2, h: 1.7}, [
+    {id: 'tb', type: 'floor', x: 0.6, y: 1.4, w: 2},
+    {id: 'p1', type: 'pulley', x: 0.55, y: 1.5, r: 0.1, mount: 'tb'},
+    {id: 'p2', type: 'pulley', x: 2.65, y: 1.5, r: 0.1, mount: 'tb'},
+    {id: 'm1', type: 'block', x: 0.45, y: 0.6, w: 0.24, h: 0.24, mass: 2, label: 'm_1'},
+    {id: 'm2', type: 'block', x: 2.75, y: 0.85, w: 0.24, h: 0.24, mass: 3, label: 'm_2'},
+    {id: 's1', type: 'string', a: 'm1', b: 'm2', over: ['p1', 'p2']}]],
+  /* ── added: electromagnetism ── */
+  meter_bridge: ['em', '미터 브리지 (평형점 찾기)', 'Meter bridge (finding the balance point)', 0.1, {x: -0.6, y: -1.5, w: 5.2, h: 3.4}, [
+    {id: 'BR', type: 'bridge', x1: 0, y1: 0, x2: 4, y2: 0, kind: 'meter', R: 10, at: 0.4, label: 'J'},
+    {id: 'R1', type: 'element', kind: 'resistor', x1: 0, y1: 1.5, x2: 1.6, y2: 1.5, value: 4, label: 'R'},
+    {id: 'S1', type: 'element', kind: 'resistor', x1: 1.6, y1: 1.5, x2: 4, y2: 1.5, value: 6, label: 'S'},
+    {id: 'G1', type: 'element', kind: 'galvanometer', x1: 1.6, y1: 1.5, x2: 1.6, y2: 0, value: 20},
+    {id: 'W1', type: 'element', kind: 'wire', x1: 0, y1: 0, x2: 0, y2: 1.5},
+    {id: 'W2', type: 'element', kind: 'wire', x1: 4, y1: 0, x2: 4, y2: 1.5},
+    {id: 'W3', type: 'element', kind: 'wire', x1: 0, y1: 0, x2: 0, y2: -1},
+    {id: 'E1', type: 'element', kind: 'cell', x1: 0, y1: -1, x2: 4, y2: -1, value: 2, label: '\\mathcal{E}'},
+    {id: 'W4', type: 'element', kind: 'wire', x1: 4, y1: -1, x2: 4, y2: 0}]],
+  rails_emf: ['em', '도체 레일 위를 움직이는 막대 (유도 기전력)', 'A rod sliding on rails (motional EMF)', 0.1, {x: -0.6, y: -0.6, w: 4.6, h: 2.3}, [
+    {id: 'RL', type: 'rails', x: 0, y: 0, w: 3.4, h: 1.1, at: 2, v: 2, B: 0.5, R: 2, field: 'in'}]],
+  transformer_ac: ['em', '변압기 (교류 전원과 전구)', 'A transformer with an AC source and a bulb', 0.05, {x: -0.3, y: -0.35, w: 4.4, h: 2.2}, [
+    {id: 'TR', type: 'transformer', x: 2, y: 0.75, h: 1.4, np: 6, ns: 12},
+    {id: 'E1', type: 'element', kind: 'ac', x1: 0.3, y1: 0.19, x2: 0.3, y2: 1.31, value: 10, label: 'V_1'},
+    {id: 'W1', type: 'element', kind: 'wire', x1: 0.3, y1: 1.31, x2: 1.3, y2: 1.31},
+    {id: 'W2', type: 'element', kind: 'wire', x1: 0.3, y1: 0.19, x2: 1.3, y2: 0.19},
+    {id: 'B1', type: 'element', kind: 'bulb', x1: 3.7, y1: 1.31, x2: 3.7, y2: 0.19, value: 10},
+    {id: 'W3', type: 'element', kind: 'wire', x1: 2.7, y1: 1.31, x2: 3.7, y2: 1.31},
+    {id: 'W4', type: 'element', kind: 'wire', x1: 2.7, y1: 0.19, x2: 3.7, y2: 0.19}]],
+  dielectric_rc: ['em', '유전체를 넣은 축전기와 가변 저항', 'A capacitor with a dielectric and a rheostat', 0.25, {x: -0.8, y: -0.6, w: 4.6, h: 3.1}, [
+    {id: 'E1', type: 'element', kind: 'battery', x1: 0, y1: 0, x2: 0, y2: 2, value: 9, label: '\\mathcal{E}'},
+    {id: 'S1', type: 'element', kind: 'switch', x1: 0, y1: 2, x2: 1, y2: 2, closed: true, label: 'S'},
+    {id: 'R1', type: 'element', kind: 'rheostat', x1: 1, y1: 2, x2: 3, y2: 2, value: 1000, label: 'R'},
+    {id: 'C1', type: 'element', kind: 'dielectric', x1: 3, y1: 2, x2: 3, y2: 0, value: 220, label: '\\kappa C'},
+    {id: 'W1', type: 'element', kind: 'wire', x1: 3, y1: 0, x2: 0, y2: 0}]],
+  force_on_wire: ['em', '자기장 속 전류가 받는 힘', 'Force on a current in a magnetic field', 0.1, {x: -0.4, y: -0.5, w: 4.4, h: 2.8}, [
+    {id: 'B1', type: 'field', kind: 'B', dir: 'in', x: 0.3, y: 0, w: 3, h: 1.8, spacing: 0.4, pattern: 'dashed', label: '\\vec{B}'},
+    {id: 'I1', type: 'cwire', x1: 0, y1: 0.9, x2: 3.6, y2: 0.9, I: 2, label: 'I'},
+    {id: 'Fv', type: 'vector', x1: 1.8, y1: 0.9, x2: 1.8, y2: 1.75, label: '\\vec{F}'},
+    {id: 'dl', type: 'brace', x1: 0.3, y1: 0.9, x2: 3.3, y2: 0.9, kind: 'brace', offset: -0.25, text: 'L'}]],
+  /* ── added: heat and fluids ── */
+  buoyancy: ['thermo', '물에 뜬 물체와 가라앉은 공 (부력)', 'A floating block and a sunken ball (buoyancy)', 0.1, {x: -0.4, y: -0.35, w: 3.6, h: 2.3}, [
+    {id: 'ct', type: 'container', x: 0, y: 0, w: 2.4, h: 1.6, level: 0.6, rho: 1000, fill: 'gray'},
+    {id: 'A', type: 'block', x: 1, y: 0.92, w: 0.5, h: 0.4, mass: 60, label: 'A'},
+    {id: 'b1', type: 'ball', x: 1.9, y: 0.15, r: 0.15, mass: 40, label: 'B'},
+    {id: 'cw', type: 'callout', x: 0.35, y: 0.5, x2: -0.1, y2: 1.35, text: '물', end: 'dot'},
+    {id: 'Bu', type: 'parrows', x1: 1.2, y1: 0.72, x2: 0.8, y2: 0.72, n: 3, len: 0.2, dir: 'in', label: ''}]],
+  u_tube: ['thermo', 'U자관 속 액체의 높이 차', 'Liquid levels in a U-tube', 0.1, {x: 0, y: -0.35, w: 2.6, h: 2.4}, [
+    {id: 'ut', type: 'utube', x: 0.5, y: 0, w: 1.6, h: 1.8, tube: 0.24, left: 0.4, right: 0.7, fill: 'gray'},
+    {id: 'pa', type: 'parrows', x1: 0.54, y1: 1.15, x2: 0.7, y2: 1.15, n: 2, len: 0.3, dir: 'in', label: 'P_0'}]],
+  heated_gas: ['thermo', '가열되는 기체 (피스톤·온도계·열원)', 'Gas heated under a piston (thermometer, burner)', 0.1, {x: -0.3, y: -0.6, w: 3.4, h: 3.0}, [
+    {id: 'cyl', type: 'cylinder', x: 0.3, y: 0.3, w: 1.4, h: 1.9, piston: 0.6, gas: true, weight: true, label: 'n, T'},
+    {id: 'ht', type: 'heater', x: 1, y: -0.35, w: 0.9, kind: 'flame', label: '열원'},
+    {id: 'tm', type: 'thermometer', x: 2.3, y: 0.3, h: 1.6, level: 0.55, label: 'T'}]],
+  gas_box: ['thermo', '상자 속 기체 분자의 운동', 'Gas molecules moving in a box', 0.1, {x: -0.3, y: -0.4, w: 2.8, h: 2.1}, [
+    {id: 'gb', type: 'gasbox', x: 0, y: 0, w: 2.2, h: 1.5, n: 22, arrows: true, seed: 3, label: 'N, V, T'}]],
+  /* ── added: optics ── */
+  michelson: ['optics', '마이클슨 간섭계', 'Michelson interferometer', 0.1, {x: -0.6, y: -1.8, w: 5, h: 3.8}, [
+    {id: 'LS', type: 'source', x: 0, y: 0, kind: 'laser', size: 0.5, label: '레이저'},
+    {id: 'BS', type: 'mirror', x: 2, y: 0, h: 0.9, f: 0, rot: -45, half: true, showF: false, label: ''},
+    {id: 'M1', type: 'mirror', x: 2, y: 1.6, h: 0.9, f: 0, rot: 90, showF: false, label: ''},
+    {id: 'M2', type: 'mirror', x: 3.8, y: 0, h: 0.9, f: 0, rot: 0, showF: false, label: 'M_2'},
+    {id: 'SC', type: 'screen', x: 2, y: -1.4, h: 1, rot: 90, label: ''},
+    {id: 'r1', type: 'ray', x: 0.02, y: 0, angle: 0, len: 14, arrow: true},
+    {id: 'l1', type: 'label', x: 2.6, y: 1.75, text: 'M_1', size: 15},
+    {id: 'l2', type: 'label', x: 2.45, y: 0.3, text: '\\mathrm{BS}', size: 13},
+    {id: 'l3', type: 'label', x: 2.75, y: -1.5, text: '스크린', size: 14}]],
+  magnifier: ['optics', '볼록 렌즈와 눈 (돋보기)', 'A converging lens and the eye (magnifier)', 0.1, {x: -0.3, y: -1.3, w: 5.4, h: 2.6}, [
+    {id: 'ax', type: 'line', x1: -0.2, y1: 0, x2: 4.9, y2: 0, pattern: 'dashdot'},
+    {id: 'L1', type: 'lens', x: 2.4, y: 0, h: 1.8, f: 1.2, label: 'L'},
+    {id: 'O', type: 'oarrow', x: 1.6, y: 0, h: 0.4, label: 'O', rays: true, image: true, imageLabel: 'I'},
+    {id: 'ey', type: 'eye', x: 4.4, y: 0, size: 0.5, rot: 180, label: '눈'}]],
+  optical_fiber: ['optics', '광섬유 속 전반사', 'Total internal reflection in an optical fibre', 0.1, {x: -0.4, y: -0.8, w: 5.2, h: 1.6}, [
+    {id: 'fb', type: 'fiber', x1: 0, y1: 0, x2: 4.4, y2: 0, r: 0.2, angle: 18, label: ''},
+    {id: 'n1', type: 'label', x: 4.65, y: 0, text: 'n_1', size: 14}, {id: 'n2', type: 'label', x: 4.65, y: 0.3, text: 'n_2', size: 14}]],
+  tilted_mirror: ['optics', '기울인 평면거울에서의 반사', 'Reflection from a tilted plane mirror', 0.1, {x: -0.3, y: -1.2, w: 4.2, h: 2.6}, [
+    {id: 'M', type: 'mirror', x: 2.8, y: 0, h: 2, f: 0, rot: 20, showF: false, label: 'M'},
+    {id: 'r1', type: 'ray', x: 0, y: 0.5, angle: 0, len: 6, arrow: true},
+    {id: 'nl', type: 'line', x1: 2.618, y1: 0.5, x2: 1.49, y2: 0.09, pattern: 'dashed'},
+    {id: 'th', type: 'arc', x: 2.8, y: 0, r: 0.6, from: 90, to: 110, text: '\\alpha'}]],
+  /* ── added: waves and modern physics ── */
+  pulses: ['waves', '줄 위에서 마주 오는 두 펄스', 'Two pulses approaching on a string', 0.1, {x: -0.3, y: -0.7, w: 5, h: 1.6}, [
+    {id: 'p1', type: 'pulse', x: 0, y: 0, len: 4.4, A: 0.4, width: 0.8, pos: 0.25, shape: 'tri', dir: 'right', axis: true, label: 'v'},
+    {id: 'p2', type: 'pulse', x: 0, y: 0, len: 4.4, A: -0.3, width: 0.8, pos: 0.75, shape: 'square', dir: 'left', axis: false, label: 'v'}]],
+  two_sources: ['waves', '두 점파원의 간섭 (마디선)', 'Interference of two point sources (nodal lines)', 0.1, {x: -2.6, y: -2.2, w: 5.2, h: 4.4}, [
+    {id: 'IF', type: 'interference', x: 0, y: 0, d: 1.2, lambda: 0.4, n: 4, nodal: true, labels: true}]],
+  alpha_decay: ['modern', '알파 붕괴와 감마선', 'Alpha decay and a gamma ray', 0.1, {x: -0.4, y: -1.1, w: 4.4, h: 2.2}, [
+    {id: 'nu', type: 'nucleus', x: 0.6, y: 0, r: 0.45, np: 12, nn: 14, label: '{}^{A}_{Z}\\mathrm{X}'},
+    {id: 'al', type: 'particle', x: 1.4, y: 0.3, kind: 'alpha', angle: 20, len: 1.4, label: '\\alpha'},
+    {id: 'ga', type: 'particle', x: 1.3, y: -0.35, kind: 'photon', angle: -15, len: 1.8, label: '\\gamma'}]],
+  compton: ['modern', '광자와 전자의 충돌 (콤프턴 산란)', 'A photon scattering off an electron (Compton)', 0.1, {x: -0.3, y: -1.3, w: 4.6, h: 2.6}, [
+    {id: 'ph', type: 'particle', x: 0, y: 0, kind: 'photon', angle: 0, len: 1.7, label: 'h\\nu'},
+    {id: 'el', type: 'particle', x: 2, y: 0, kind: 'electron', angle: -35, len: 1.3, label: 'e^-'},
+    {id: 'sc', type: 'particle', x: 2.15, y: 0.08, kind: 'photon', angle: 40, len: 1.6, label: "h\\nu'"},
+    {id: 'ax', type: 'line', x1: 2, y1: 0, x2: 4, y2: 0, pattern: 'dashed'},
+    {id: 'th', type: 'arc', x: 2, y: 0, r: 0.6, from: 0, to: 40, text: '\\theta'}]],
+  /* ── added: graphs and multi-panel figures ── */
+  vt_area: ['general', 'v–t 그래프와 이동 거리 (넓이)', 'A v–t graph and the distance (area)', 0.1, {x: -0.6, y: -0.55, w: 5.2, h: 3.0}, [
+    {id: 'G1', type: 'graph', x: 0, y: 0, w: 4, h: 2, auto: false, xmin: 0, xmax: 6, ymin: 0, ymax: 3, xlabel: 't', ylabel: 'v', origin: '0', xt: '2:t_0, 4:2t_0, 5:3t_0', yt: '2:v_0'},
+    {id: 'c1', type: 'curve', graph: 'G1', kind: 'points', data: '0,0 2,2 4,2 5,0', shade: true, label: ''}]],
+  xt_vt_panels: ['general', '(가) x–t, (나) v–t 그래프', '(a) x–t and (b) v–t graphs', 0.1, {x: -0.5, y: -0.9, w: 7.6, h: 3.1}, [
+    {id: 'G1', type: 'graph', x: 0, y: 0, w: 2.8, h: 1.8, auto: false, xmin: 0, xmax: 4, ymin: 0, ymax: 4, xlabel: 't', ylabel: 'x', origin: '0', xt: '2:t_0'},
+    {id: 'c1', type: 'curve', graph: 'G1', kind: 'func', expr: '0.75x^2', x1: 0, x2: 2, label: ''},
+    {id: 'c1b', type: 'curve', graph: 'G1', kind: 'points', data: '2,3 3.4,4', label: ''},
+    {id: 'G2', type: 'graph', x: 3.9, y: 0, w: 2.8, h: 1.8, auto: false, xmin: 0, xmax: 4, ymin: 0, ymax: 4, xlabel: 't', ylabel: 'v', origin: '0', xt: '2:t_0', yt: '3:v_0'},
+    {id: 'c2', type: 'curve', graph: 'G2', kind: 'points', data: '0,0 2,3 3.6,3', label: ''},
+    {id: 'pa', type: 'panel', x: -0.3, y: -0.3, w: 3.4, h: 2.3, caption: '(가)'},
+    {id: 'pb', type: 'panel', x: 3.6, y: -0.3, w: 3.4, h: 2.3, caption: '(나)'}]],
+  /* ── added: 수능-style setups (style 수능: bare floor line, gray strips, (가)(나) captions) ── */
+  ks_collision: ['mech', '수능형: 수평면 위 두 물체의 충돌 (가)(나)', 'CSAT style: two blocks colliding on a floor, (a) and (b)', 0.1, {x: -0.3, y: -0.75, w: 6.95, h: 1.9}, [
+    {id: 'f1', type: 'floor', x: 0, y: 0, w: 2.9},
+    {id: 'A', type: 'block', on: 'f1', at: 0.6, w: 0.45, h: 0.32, mass: 2, label: 'A'},
+    {id: 'B', type: 'block', on: 'f1', at: 2.1, w: 0.45, h: 0.32, mass: 1, label: 'B'},
+    {id: 'vA', type: 'vector', x1: 0.9, y1: 0.18, x2: 1.4, y2: 0.18, width: 1.2, label: ''},
+    {id: 'lv', type: 'label', x: 1.15, y: 0.42, text: '2v', size: 14},
+    {id: 'ls', type: 'label', x: 2.1, y: 0.55, text: '정지', size: 13},
+    {id: 'lf', type: 'label', x: 0.35, y: -0.17, text: '수평면', size: 13},
+    {id: 'f2', type: 'floor', x: 3.4, y: 0, w: 2.9},
+    {id: 'A2', type: 'block', on: 'f2', at: 1.7, w: 0.45, h: 0.32, mass: 2, label: 'A'},
+    {id: 'B2', type: 'block', on: 'f2', at: 2.25, w: 0.45, h: 0.32, mass: 1, label: 'B'},
+    {id: 'vB', type: 'vector', x1: 5.95, y1: 0.18, x2: 6.3, y2: 0.18, width: 1.2, label: ''},
+    {id: 'lv2', type: 'label', x: 6.1, y: 0.42, text: 'v_B', size: 14},
+    {id: 'pa', type: 'panel', x: 0, y: -0.25, w: 2.9, h: 0.9, caption: '(가)'},
+    {id: 'pb', type: 'panel', x: 3.4, y: -0.25, w: 2.9, h: 0.9, caption: '(나)'}], {style: 'suneung'}],
+  ks_pulley: ['mech', '수능형: 실로 연결된 물체 A, B (도르래)', 'CSAT style: blocks A and B joined over a pulley', 0.1, {x: -0.2, y: -0.3, w: 3.1, h: 1.7}, [
+    {id: 'tb', type: 'floor', x: 0, y: 1, w: 2.2, hatch: false},
+    {id: 'A', type: 'block', on: 'tb', at: 1, w: 0.42, h: 0.3, mass: 2, label: 'A'},
+    {id: 'p1', type: 'pulley', x: 2.3, y: 1.1, r: 0.1, mount: 'tb'},
+    {id: 'B', type: 'block', x: 2.4, y: 0.35, w: 0.3, h: 0.3, mass: 1, label: 'B'},
+    {id: 's1', type: 'string', a: 'A', b: 'B', over: ['p1']},
+    {id: 'gd', type: 'floor', x: -0.1, y: 0, w: 3}, {id: 'lf', type: 'label', x: 0.3, y: -0.17, text: '수평면', size: 13},
+    {id: 'pq', type: 'point', x: 0.3, y: 1, label: 'p'}, {id: 'pr', type: 'point', x: 1.9, y: 1, label: 'q'}], {style: 'suneung'}],
+  ks_graph: ['general', '수능형: 속력–시간 그래프와 운동 (가)(나)', 'CSAT style: a speed–time graph with the motion, (a) and (b)', 0.1, {x: -0.3, y: -0.9, w: 7.0, h: 2.8}, [
+    {id: 'f1', type: 'floor', x: 0, y: 0.4, w: 2.6},
+    {id: 'A', type: 'block', on: 'f1', at: 0.5, w: 0.4, h: 0.3, mass: 1, label: 'A'},
+    {id: 'v1', type: 'vector', x1: 0.8, y1: 0.55, x2: 1.25, y2: 0.55, width: 1.2, label: ''}, {id: 'lv', type: 'label', x: 1.02, y: 0.78, text: 'v_0', size: 14},
+    {id: 'fz', type: 'region', x: 1.5, y: 0.34, w: 0.6, h: 0.06, fill: 'dark', pattern: 'none'},
+    {id: 'cz', type: 'callout', x: 1.8, y: 0.34, x2: 2.2, y2: 0.05, text: '마찰 구간', end: 'none'},
+    {id: 'G1', type: 'graph', x: 3.4, y: 0, w: 2.6, h: 1.6, auto: false, xmin: 0, xmax: 4, ymin: 0, ymax: 3, xlabel: '시간', ylabel: '속력', origin: '0', xt: '1:t_0, 2:2t_0', yt: '2:v_0'},
+    {id: 'c1', type: 'curve', graph: 'G1', kind: 'points', data: '0,2 1,2 2,1 3.5,1', label: ''},
+    {id: 'pa', type: 'panel', x: 0, y: -0.25, w: 2.6, h: 1.5, caption: '(가)'},
+    {id: 'pb', type: 'panel', x: 3.3, y: -0.25, w: 2.9, h: 1.5, caption: '(나)'}], {style: 'suneung'}]
 };
 export const TEMPLATE_KEYS = [...MECH_KEYS, ...Object.keys(NEW_TEMPLATES)];
 export const TEMPLATE_NAMES = {...MECH_NAMES, ...Object.fromEntries(Object.entries(NEW_TEMPLATES).map(([k, t]) => [k, {ko: t[1], en: t[2]}]))};
@@ -683,14 +930,44 @@ export const TEMPLATE_DOMAIN = {...Object.fromEntries(MECH_KEYS.map(k => [k, 'me
 export function template(key, lang = 'ko') {
   const name = (TEMPLATE_NAMES[key] || {})[lang === 'en' ? 'en' : 'ko'] || '';
   const t = NEW_TEMPLATES[key];
-  if (t) return T(name, t[5], t[4], {grid: t[3]});
+  if (t) return T(name, t[5], t[4], {grid: t[3], ...(t[6] || {})});
   return mechTemplate(key, name);
 }
 
-/** the world box of an object that is not a body or a connection (null for what is drawn inside another object) */
+/** the centre an object turns about (its field rot), in world units */
+export function rotCentre(o) {
+  if ('w' in o && 'h' in o && !isBody(o) && !['transformer'].includes(o.type)) return {x: o.x + o.w / 2, y: o.y + o.h / 2};
+  return {x: o.x, y: o.y};
+}
+/** the world box of an object that is not a body or a connection (null for what is drawn inside another object);
+ *  a turned object's box holds its turned corners */
 export function objectExtent(o) {
+  const b = baseExtent(o);
+  if (!b || !o.rot || !ROTATABLE.includes(o.type) || isBody(o) || ['plank', 'interference', 'particle'].includes(o.type)) return b;
+  const c = rotCentre(o), a = o.rot * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a);
+  const pts = [[b.x, b.y], [b.x + b.w, b.y], [b.x, b.y + b.h], [b.x + b.w, b.y + b.h]].map(([x, y]) => ({x: c.x + (x - c.x) * ca - (y - c.y) * sa, y: c.y + (x - c.x) * sa + (y - c.y) * ca}));
+  const xs = pts.map(p => p.x), ys = pts.map(p => p.y), x = Math.min(...xs), y = Math.min(...ys);
+  return {x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y};
+}
+function baseExtent(o) {
   const box = (x0, y0, x1, y1) => ({x: Math.min(x0, x1), y: Math.min(y0, y1), w: Math.abs(x1 - x0), h: Math.abs(y1 - y0)});
   switch (o.type) {
+    case 'plank': { const a = o.rot * Math.PI / 180, dx = Math.cos(a) * o.len / 2, dy = Math.sin(a) * o.len / 2, t = o.thick; return box(o.x - Math.abs(dx) - t, o.y - Math.abs(dy) - t - (o.support === 'fulcrum' ? 0.25 : 0.05), o.x + Math.abs(dx) + t, o.y + Math.abs(dy) + t); }
+    case 'track': { const pts = []; for (let i = 0; i <= 24; i++) { const t = (o.from + (o.to - o.from) * i / 24) * Math.PI / 180; pts.push([o.x + o.r * Math.cos(t), o.y + o.r * Math.sin(t)]); } const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]); return box(Math.min(...xs) - 0.1, Math.min(...ys) - 0.1, Math.max(...xs) + 0.1, Math.max(...ys) + 0.1); }
+    case 'bridge': case 'fiber': case 'parrows': case 'brace': { const r = o.type === 'fiber' ? o.r : o.type === 'parrows' ? o.len : 0.2; return box(Math.min(o.x1, o.x2) - r, Math.min(o.y1, o.y2) - r, Math.max(o.x1, o.x2) + r, Math.max(o.y1, o.y2) + r); }
+    case 'callout': return box(Math.min(o.x, o.x2) - 0.1, Math.min(o.y, o.y2) - 0.1, Math.max(o.x, o.x2) + 0.1, Math.max(o.y, o.y2) + 0.1);
+    case 'transformer': return box(o.x - o.h * 0.6, o.y - o.h / 2, o.x + o.h * 0.6, o.y + o.h / 2);
+    case 'rails': return box(o.x - 0.25, o.y - 0.15, o.x + o.w + 0.1, o.y + o.h + 0.15);
+    case 'container': case 'utube': case 'gasbox': case 'panel': return box(o.x, o.y, o.x + o.w, o.y + o.h);
+    case 'thermometer': return box(o.x - 0.12, o.y - 0.12, o.x + 0.12, o.y + o.h);
+    case 'heater': return box(o.x - o.w / 2, o.y - o.w * 0.3, o.x + o.w / 2, o.y + o.w * 0.4);
+    case 'screen': return box(o.x - 0.08, o.y - o.h / 2, o.x + 0.08, o.y + o.h / 2);
+    case 'eye': return box(o.x - o.size / 2, o.y - o.size / 2, o.x + o.size / 2, o.y + o.size / 2);
+    case 'source': return box(o.x - o.size / 2, o.y - o.size / 2, o.x + o.size / 2, o.y + o.size / 2);
+    case 'pulse': return box(o.x, o.y - Math.abs(o.A) - 0.3, o.x + o.len, o.y + Math.abs(o.A) + 0.3);
+    case 'interference': { const R = o.n * o.lambda + o.d / 2; return box(o.x - R, o.y - R, o.x + R, o.y + R); }
+    case 'nucleus': return box(o.x - o.r, o.y - o.r, o.x + o.r, o.y + o.r);
+    case 'particle': { const a = o.angle * Math.PI / 180; return box(Math.min(o.x, o.x + Math.cos(a) * o.len) - 0.1, Math.min(o.y, o.y + Math.sin(a) * o.len) - 0.1, Math.max(o.x, o.x + Math.cos(a) * o.len) + 0.1, Math.max(o.y, o.y + Math.sin(a) * o.len) + 0.1); }
     case 'floor': return box(o.x, o.y - 0.15, o.x + o.w, o.y);
     case 'ceiling': return box(o.x, o.y, o.x + o.w, o.y + 0.15);
     case 'wall': return box(o.x + (o.side === 'left' ? -0.15 : 0.15), o.y, o.x, o.y + o.h);
@@ -734,17 +1011,18 @@ export function sceneBounds(scene) {
 }
 
 /* what the vision model is asked to write (community/src/workshop-scene.js); kept here so it follows the schema */
-export const VISION_OBJECT_TYPES = ['block', 'ball', 'floor', 'ceiling', 'wall', 'incline', 'pulley', 'pivot', 'string', 'rod', 'spring', 'force',
-  'element', 'ground', 'charge', 'plate', 'field', 'cwire', 'current', 'solenoid', 'magnet',
-  'cylinder', 'reservoir', 'graph', 'curve',
-  'lens', 'mirror', 'prism', 'slab', 'oarrow', 'ray',
+export const VISION_OBJECT_TYPES = ['block', 'ball', 'wheel', 'floor', 'ceiling', 'wall', 'incline', 'pulley', 'pivot', 'plank', 'string', 'rod', 'spring', 'force',
+  'element', 'ground', 'charge', 'plate', 'field', 'cwire', 'current', 'solenoid', 'magnet', 'rails',
+  'cylinder', 'container', 'reservoir', 'graph', 'curve',
+  'lens', 'mirror', 'prism', 'slab', 'oarrow', 'ray', 'screen',
   'wave', 'well', 'spacetime',
-  'label', 'arc', 'dim', 'line', 'vector'];
+  'label', 'arc', 'dim', 'line', 'vector', 'panel'];
 export const UNSURE_FIELDS = ['object', 'position', 'mass', 'angle', 'mu', 'k', 'length', 'connection', 'velocity', 'force', 'label', 'value', 'charge', 'kind', 'focal'];
 /** every field the vision model may write for VISION_OBJECT_TYPES, as one JSON-schema property each (enums merged) */
 export function visionProperties() {
   const props = {};
   for (const t of VISION_OBJECT_TYPES) for (const [k, f] of Object.entries(FIELDS[t])) {
+    if (k in COMMON_FIELDS) continue;
     const s = f.k === 'num' ? {type: 'number'} : f.k === 'bool' ? {type: 'boolean'} : f.k === 'refs' ? {type: 'array', items: {type: 'string'}} : f.k === 'enum' ? {type: 'string', enum: [...f.list]} : {type: 'string'};
     const old = props[k];
     if (!old) props[k] = s;

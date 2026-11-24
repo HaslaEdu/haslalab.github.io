@@ -51,17 +51,22 @@ Mechanics
 - incline {x,y,angle,length,mu,flip,angleLabel}: rises to the right from its foot (x,y), length along the slope; flip:true rises to the left.
 - block {x,y,w,h,mass,label} (centre x,y; resting on a floor or incline: on = its id and at = distance along it, not x,y). ball {x,y,r,mass,label,vx,vy}.
 - pulley {x,y,r,mount}. pivot {x,y}. string {a,b,over,mode}: a, b bodies or a pivot; over = pulley ids in order; a hanging body straight below its pulley's edge. rod {a: pivot, b: body}. spring {a,b,k,L0}. force {on,F,angle,label}.
+- wheel {x,y,r,mass,kind:'disk'|'ring'|'wheel'|'sphere',on,at,omega:'none'|'ccw'|'cw'}: a rolling body (on, at as for a block). plank {x,y,len,thick,rot,support:'none'|'pivot'|'hinge'|'fulcrum'|'wall',at (0–1 along it),label}: a rod, lever or seesaw (x,y its middle). A block may rest on another block (on = that block's id, at from its left end); look:'cart'|'car' draws wheels. rot turns blocks, lenses, mirrors, magnets (degrees, anticlockwise).
 Electricity and magnetism
 - element {x1,y1,x2,y2,kind,value,label}: a circuit element between two grid points (multiples of 0.5). kind: wire, resistor (value Ω), battery or cell (value V; the x2,y2 end is +), capacitor (value μF), inductor (H), switch (closed true/false), diode, led, bulb, ammeter, voltmeter, galvanometer. Draw every wire as its own element of kind wire; ends that meet share exactly the same point.
 - ground {x,y}. charge {x,y,q (μC, signed),r,label}. plate {x1,y1,x2,y2,q,label}. field {x,y,w,h,kind:'B'|'E',dir:'in'|'out'|'arrow',angle,label}: a uniform field region (x,y lower left). cwire {x1,y1,x2,y2,I,label}. current {x,y,dir:'in'|'out',label}: a wire through the page. solenoid {x,y,w,h,turns}. magnet {x,y,w,h,flip}.
+- rails {x,y,w,h,at,v,B,R,field:'in'|'out'}: two rails h apart from x to x+w with a resistor at the left end and a rod at x+at moving with v.
 Heat
 - cylinder {x,y,w,h,piston,weight,label}. reservoir {x,y,w,h,label}. graph {x,y,w,h,xlabel,ylabel,auto:true}: plot axes; curve {graph,kind:'isotherm'|'adiabat'|'isobar'|'isochore'|'func',x1,x2,y1,y2,expr,label} in the graph's own units (expr in x for kind func, like "sin(x)").
+- container {x,y,w,h,level (0–1),rho,label}: a vessel of liquid filled to level.
 Optics
 - lens {x,y,h,f} (f < 0 diverging; y is the optical axis). mirror {x,y,h,f,face} (f 0 plane, > 0 concave, < 0 convex; face: the side light comes from). prism {x,y,size,apex,n}. slab {x,y,w,h,n}. oarrow {x,y,h,label}: an object arrow standing on the axis. ray {x,y,angle}. Draw the optical axis as a line {x1,y1,x2,y2,pattern:'dashdot'}.
+- screen {x,y,h,rot,label}.
 Waves and modern physics
 - wave {x,y,len,A,lambda,kind:'travel'|'standing',n,ends}. well {x,y,w,h,kind:'infinite'|'finite'|'barrier'|'harmonic'|'step',L (nm),V0 (eV),levels}. spacetime {x,y,size,beta}.
 Marks
 - label {x,y,text}. arc {x,y,r,from,to,text}. dim {x1,y1,x2,y2,text}. line {x1,y1,x2,y2,pattern}. vector {x1,y1,x2,y2,label}.
+- panel {x,y,w,h,caption}: one part of a figure in panels, with its caption like (가), (나) or (a), (b) under it.
 Use the values written in the problem. When a value is not given, choose a plausible one and list it in unsure.
 Labels: short TeX like m_1, \\theta, \\mu, v_0, \\vec{F}, R_1, \\mathcal{E}, T_H, \\lambda. ids: short letters and digits. At most ${MAX_OBJECTS} objects.
 unsure: every object or value you guessed or could not read, as {"id": the object's id, "what": one of ${UNSURE_FIELDS.join(', ')}}.
