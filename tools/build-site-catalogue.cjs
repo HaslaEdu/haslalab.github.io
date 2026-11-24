@@ -168,6 +168,17 @@ let practiceHtml=read('practice.html').replace(/href="practice\.css(?:\?[^"\n]*)
 for(const file of ['learn-path.js','learner-form.js','league-view.js','math-input.js','practice-tools.js','practice.js'])practiceHtml=practiceHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('practice.html',practiceHtml);
 /* the creations page (create.html): its own script and style, and the shared math and Python helpers it loads */
+/* Stamp the inline runtime for opaque frames where WebKit rejects external scripts with a self-only origin. */
+{
+  const js=read('workshop-runtime.js');
+  if(/<\/script/i.test(js))throw new Error('Runtime script cannot be embedded in HTML');
+  const hash=crypto.createHash('sha256').update(js).digest('base64');
+  const runtime=read('workshop-runtime.html').replace(/'sha256-[^']+'/,"'sha256-"+hash+"'")
+    .replace(/<script id="hl-workshop-runtime">[\s\S]*?<\/script>/,()=>'<script id="hl-workshop-runtime">'+js+'</script>');
+  outputs.set('workshop-runtime.html',runtime);
+  const compute=read('workshop-compute.js').replace(/workshop-runtime\.html\?v=[a-f0-9]{12}/,'workshop-runtime.html?v='+digest(runtime));
+  derivedSources.set('workshop-compute.js',compute);outputs.set('workshop-compute.js',compute);
+}
 let createHtml=read('create.html').replace(/href="create\.css(?:\?[^"\n]*)?"/,'href="create.css?v='+digest(read('create.css'))+'"');
 for(const file of ['math-input.js','compute-problems.js','code-editor.js','sim-templates.js','share-publish.js','share-makers.js','create-studio.js','workshop-projects.js','workshop-compute.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('create.html',createHtml);

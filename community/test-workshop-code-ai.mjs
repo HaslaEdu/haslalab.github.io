@@ -64,6 +64,17 @@ test('Python and C prompts carry the selected runtime and prior chat turns', asy
   await fails(route('/api/workshop/code-ai','POST',{prompt:'create',language:'java'},me),'bad_language');
 });
 
+test('computational project chat can explain code without submitting a patch',async()=>{
+  const {route,calls}=setup({ai:()=> '공기 저항이 커지면 도달 높이가 낮아집니다.'});
+  const result=await route('/api/workshop/code-ai','POST',{prompt:'왜 높이가 낮아져요?',code:'print(h)',language:'python',mode:'chat'},me);
+  assert.match(result.explanation,/공기 저항/);
+  assert.equal(result.code,undefined);
+  assert.equal(result.left,CODE_AI_FREE-1);
+  assert.match(calls[0].messages[0].content,/Do not return a replacement program/);
+  assert.equal(JSON.parse(calls[0].messages.at(-1).content).code,'print(h)');
+  await fails(route('/api/workshop/code-ai','POST',{prompt:'x',language:'python',mode:'unsupported'},me),'bad_mode');
+});
+
 test('the daily quota: free members get a few, a plan more; a failed call is given back',async()=>{
   let fail=false;
   const {route,db,now,tick}=setup({ai:()=>fail?new Error('down'):good});

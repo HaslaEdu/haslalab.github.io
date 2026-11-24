@@ -143,11 +143,15 @@
         activePreviews++;
         load(entry).then(async raw => {
           if (render !== rendering || !cover.isConnected) return;
+          const summary = cover.parentElement.querySelector('.project-card-summary');
           if (kind === 'figure') {
             const data = await figure(raw, 320);
             const img = make('img'); img.alt = ''; img.src = data.src; img.decoding = 'async';
             cover.replaceChildren(img);
+            const count = pages(raw).length;
+            summary.textContent = txt('그림 ' + count + '개', count + (count === 1 ? ' figure' : ' figures'));
           } else {
+            summary.textContent = typeof raw?.description === 'string' ? raw.description.trim().slice(0,180) : '';
             const lang = raw?.language === 'c' ? 'c' : 'python';
             const source = raw?.sources?.[lang];
             if (typeof source !== 'string') return;
@@ -204,7 +208,9 @@
           if (date) meta.append(make('span',date));
           meta.append(make('span', names[entry.provider] || names.store, 'project-card-source'));
           const title = make('strong',name,'project-card-name'); title.title = name;
-          item.append(cover,title,meta);
+          const body = make('span',null,'project-card-body');
+          body.append(title,make('span',null,'project-card-summary'),meta);
+          item.append(cover,body);
           if (observer) observer.observe(cover);
           else if (index < 9) queueMicrotask(() => queue(cover,entry));
         } else if (date) item.append(make('span', date, 'note'));
