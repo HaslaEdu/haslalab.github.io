@@ -1267,10 +1267,11 @@ function paintSide() {
   /* the object's own values first, its physics (a drawn shape), its look (line weight, label size, lock) last; its
      style (그림체) on top */
   const PK = Object.keys(PHYS_FIELDS), physRel = k => k === 'phys' || (o.phys === 'dynamic') || (o.phys === 'static' && (k === 'pmu' || k === 'pe'));
-  const main = fields.filter(([k]) => !['lw', 'ls', 'lock', 'style', ...PK].includes(k)), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k)), phys = fields.filter(([k]) => PK.includes(k) && physRel(k));
+  const lettering = fields.filter(([k]) => k === 'letterStyle' || k === 'letterFamily');
+  const main = fields.filter(([k]) => !['letterStyle', 'letterFamily', 'lw', 'ls', 'lock', 'style', ...PK].includes(k)), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k)), phys = fields.filter(([k]) => PK.includes(k) && physRel(k));
   const physBox = PHYS_SHAPES.includes(o.type) ? `<details class="physp"${o.phys !== 'none' ? ' open' : ''}><summary>⚙ ${esc(X5.physTitle)}${o.phys !== 'none' ? ' · ' + esc(T.enums[o.phys]) : ''}</summary><p class="note">${esc(X5.physHint)}</p><div class="props">${phys.map(field).join('')}</div>
     ${o.phys !== 'none' ? `<div class="row tight">${['spring', 'string', 'rod'].map(k2 => `<button type="button" data-join="${k2}">${esc(X5['join' + k2[0].toUpperCase() + k2.slice(1)])}</button>`).join('')}</div>` : ''}</details>` : '';
-  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2>${styleSelect(o.style || '')}<div class="props">${main.map(field).join('')}</div>${physBox}
+  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2>${styleSelect(o.style || '')}<div class="props">${lettering.concat(main).map(field).join('')}</div>${physBox}
     ${fields.some(([, f]) => f.k === 'txt') ? `<p class="note">${esc(T.texHint)}</p>` : ''}
     <details class="look"><summary>${ko ? '선 · 글자 · 잠금' : 'Lines, labels, lock'}</summary><div class="props">${look.map(field).join('')}</div></details>
     <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}<button type="button" data-act="front">${X3.tools.front}</button><button type="button" data-act="back">${X3.tools.backZ}</button><button type="button" data-act="del">${T.del}</button></div>`;
