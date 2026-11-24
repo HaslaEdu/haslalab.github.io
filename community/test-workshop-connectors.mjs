@@ -55,6 +55,12 @@ function google(){
       const body=parts[2].slice(parts[2].indexOf('\r\n\r\n')+4,-2);
       return json({id:add({name:metaJson.name,mimeType:'application/octet-stream',parents:metaJson.parents,bytes:Buffer.from(body,'latin1')})});
     }
+    if((m=/^\/upload\/drive\/v3\/files\/([^/]+)$/.exec(u.pathname)) && method==='PATCH'){
+      const f=files.get(decodeURIComponent(m[1]));
+      if(!f)return json({},404);
+      f.bytes=Buffer.from(init.body);f.modifiedTime='2026-11-21T00:00:00Z';
+      return json(meta(f));
+    }
     if((m=/^\/drive\/v3\/files\/([^/]+)$/.exec(u.pathname))){
       const f=files.get(decodeURIComponent(m[1]));if(!f)return json({error:{code:404}},404);
       if(method==='GET'&&u.searchParams.get('alt')==='media')return new Response(f.bytes);
@@ -122,8 +128,8 @@ function setup({configured=true,pem=PEM8}={}){
   const responses=[];
   const keep=r=>{responses.push(r instanceof Response?'':JSON.stringify(r));return r;};
   const call=async(p,m,body,me,extra='')=>keep(await route(p,m,body,me,new Request('https://haslalab-community.haslalab.workers.dev'+p+extra,{method:m==='HEAD'?'GET':m}),env));
-  const form=async(p,me,name,bytes,fields={})=>{const fd=new FormData();fd.set('file',new File([bytes],name));for(const [k,v] of Object.entries(fields))fd.set(k,v);
-    return keep(await route(p,'POST',{},me,new Request('https://x.test'+p,{method:'POST',body:fd}),env));};
+  const form=async(p,me,name,bytes,fields={},method='POST',query='')=>{const fd=new FormData();fd.set('file',new File([bytes],name));for(const [k,v] of Object.entries(fields))fd.set(k,v);
+    return keep(await route(p,method,{},me,new Request('https://x.test'+p+query,{method,body:fd}),env));};
   const visit=async url=>{const u=new URL(url);const r=await route(u.pathname,'GET',null,null,new Request(url),env);responses.push(r.headers.get('Location')||'');return r;};
   return {db,env,G,GH,route,call,form,visit,limits,responses,tick:s=>{t+=s;},fetchImpl};
 }
@@ -227,6 +233,31 @@ test('Google: tokens are sealed with AES-GCM in D1 and never reach a response',a
   noSecrets(S);
 });
 
+test('project saves write directly to linked storage and reject stale versions',async()=>{
+  const S=setup(), a=await connectDrive(S);
+  await S.call('/api/workshop/connectors/finish','POST',{ticket:a.ticket},alice);
+  const drive='/api/workshop/connectors/drive/files', name='test-haslalab-figure.json';
+  const created=(await S.form(drive,alice,name,Buffer.from('{"version":1}'),{project:'1'})).file;
+  assert.ok(created.modified);
+  const changed=(await S.form(drive+'/'+created.id,alice,name,Buffer.from('{"version":2}'),{base:created.modified},'PUT')).file;
+  assert.equal(changed.id,created.id);
+  assert.notEqual(changed.modified,created.modified);
+  await fails(S.form(drive+'/'+created.id,alice,name,Buffer.from('{"version":3}'),{base:created.modified},'PUT'),'drive_conflict',409);
+  const file=await S.call(drive+'/'+created.id,'GET',null,alice);
+  assert.deepEqual(await file.json(),{version:2});
+  S.GH.setInsts([{id:11,app_id:77,account:{login:'alice',type:'User'},users:['alice']}]);
+  const g=await connectGithub(S);
+  await S.call('/api/workshop/connectors/finish','POST',{ticket:g.ticket},alice);
+  await S.call('/api/workshop/connectors/github/repo','POST',{repo_id:501},alice);
+  const github='/api/workshop/connectors/github', scope='alice/notes/haslalab';
+  await S.form(github+'/files',alice,name,Buffer.from('{"version":1}'),{project:'1',scope});
+  await fails(S.form(github+'/files',alice,name,Buffer.from('{"version":2}'),{project:'1',scope}),'github_conflict',409);
+  const sha='a'.repeat(40);
+  S.GH.repoFiles.get('haslalab/'+name).sha=sha;
+  await fails(S.form(github+'/file',alice,name,Buffer.from('{"version":2}'),{base:sha,scope:'alice/site/haslalab'},'PUT','?path='+name),'github_conflict',409);
+  await S.form(github+'/file',alice,name,Buffer.from('{"version":2}'),{base:sha,scope},'PUT','?path='+name);
+  assert.equal(S.GH.puts.at(-1).sha,sha);
+});
 test('Drive: list, upload, download, rename, trash and copy, only inside the HaslaLab folder',async()=>{
   const S=setup();
   const a=await connectDrive(S);await S.call('/api/workshop/connectors/finish','POST',{ticket:a.ticket},alice);
