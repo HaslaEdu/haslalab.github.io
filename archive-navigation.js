@@ -47,7 +47,13 @@
   function scopedParams(input,category,sub){
     const params=clean(input);
     if(params.get('view')!=='private-textbooks')return params;
-    if(category==='books'&&sub==='phys')return new URLSearchParams({view:'private-textbooks'});
+    if(category==='books'&&sub==='phys'){
+      const privateParams=new URLSearchParams({view:'private-textbooks'});
+      const requested=input instanceof URLSearchParams?input:new URLSearchParams(input);
+      const book=requested.get('book');
+      if(requested.getAll('book').length===1&&/^[a-z][a-z0-9-]{0,31}$/.test(book||''))privateParams.set('book',book);
+      return privateParams;
+    }
     params.delete('view');
     return params;
   }
