@@ -682,3 +682,23 @@ test('diagrams and notation: matrices of any size with dots and augmented bars, 
     assert.doesNotMatch(svg,/>mathrm|>circ</,k);}
   const sch=S.sceneSchemaForAI();assert.equal(JSON.parse(JSON.stringify(sch)).types.block.fields.mass[0],'num');assert.deepEqual(sch.types.farrow.needs,['a','b']);assert.ok(sch.top.style[2].includes('modern'));
 });
+
+test('letter styles and families survive validation, preview and figure rendering', async () => {
+  const S = await import('../draw-scene.mjs'), R = await import('../draw-render.mjs');
+  const scene = S.validateScene({objects: [
+    {id:'styled', type:'label', x:0, y:0, text:'시험 ABC', letterStyle:'boldItalic', letterFamily:'sans'},
+    {id:'plain', type:'label', x:1, y:1, text:'ABC'},
+    {id:'mass', type:'block', x:2, y:2, label:'m_1', letterStyle:'regular', letterFamily:'mono'},
+  ]});
+  assert.equal(scene.ok, true);
+  assert.equal(scene.scene.objects[1].letterStyle, 'auto');
+  const svg = R.renderSVG(scene.scene, {edit:true});
+  const object = id => svg.match(new RegExp('data-id="' + id + '"[\\s\\S]*?</g>'))?.[0];
+  assert.match(object('styled'), /font-family="'Arial'/);
+  assert.match(object('styled'), /font-style="italic" font-weight="bold">시험/);
+  assert.doesNotMatch(object('plain'), /font-weight="bold"|font-style="italic"/);
+  assert.match(object('mass'), /font-family="'Courier New'/);
+  assert.doesNotMatch(object('mass'), /font-style="italic"/);
+  assert.match(R.texSVG('ABC',17,'textbook',scene.scene.objects[0]), /font-style="italic" font-weight="bold"/);
+  assert.equal(S.validateScene({objects:[{id:'bad',type:'label',letterFamily:'custom'}]}).ok,false);
+});

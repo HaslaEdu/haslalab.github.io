@@ -17,7 +17,7 @@
    its surface or the body it is tied to, a body landing on a floor or an incline, a body leaving its surface
    (N below zero), two bodies on one surface touching. Systems outside these kinds are reported in `unsupported`
    with a code, and the figure stays a figure. */
-import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr, isPhysShape, CONE_TILT} from './draw-scene.mjs?v=6a3c9af34d22';
+import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr, isPhysShape, CONE_TILT} from './draw-scene.mjs?v=0fa3728066f3';
 
 export const SIM_DT = 1e-3;
 const EPS_V = 1e-9;

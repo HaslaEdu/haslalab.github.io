@@ -13,9 +13,9 @@
    vector notation (an arrow over the letter, or bold). The presets follow the conventions of university problem
    sets, olympiad papers and JEE papers as drawn from general knowledge of how such figures look; nothing is traced
    or copied from them. */
-import {isBody, isRound, bodyPose, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=6a3c9af34d22';
+import {isBody, isRound, bodyPose, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=0fa3728066f3';
 import {funcFeatures, derivative, integrate, jointEnds, fieldLines, equipotentials, chargePath, circuitNodes, elementPath, processPoints, gasCycle, traceRay, principalRays, opticImage, prismCorners,
-  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=c28a48272a2b';
+  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=5c7e5138c56f';
 /* the types drawn turned by a transform about their centre (a block and a plank turn their own corners) */
 const ROT_WRAP = new Set(['transformer', 'solenoid', 'magnet', 'cylinder', 'lens', 'mirror', 'screen', 'eye', 'source', 'label', 'region', 'rect', 'ellipse']);
 /* the drawing tools' stroke colours (draw-scene.mjs COLORS) and the light tints their fill 'tint' uses */
@@ -124,6 +124,14 @@ export function printScale(style, printWmm, W = 800) {
   return {labelScale: k, strokeScale: k, widthPt: wpt};
 }
 let CUR = {...STYLES.textbook, ls: 1, ss: 1};
+const LETTER_FONTS = {
+  serif: "'Times New Roman','Noto Serif CJK KR','Batang',serif",
+  sans: "'Arial','Noto Sans CJK KR','Malgun Gothic',sans-serif",
+  mono: "'Courier New','Noto Sans Mono CJK KR','Malgun Gothic',monospace",
+};
+function letterFont() {
+  return Object.hasOwn(LETTER_FONTS, CUR.letterFamily) ? LETTER_FONTS[CUR.letterFamily] : null;
+}
 
 /* ── the TeX subset ── */
 const SYM = {alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', epsilon: 'ϵ', varepsilon: 'ε', zeta: 'ζ', eta: 'η', theta: 'θ', vartheta: 'ϑ', iota: 'ι', kappa: 'κ', varkappa: 'ϰ',
@@ -273,7 +281,12 @@ function charW(c, it) {
   if (/[\u{1D49C}-\u{1D4CF}ℬℰℱℋℐℒℳℛ]/u.test(c)) return 0.74;
   return 0.62;
 }
-const textWidth = (s, sz, it, bold) => { let w = 0; for (const c of s) w += charW(c, it); return w * sz * (CUR.wscale || (CUR.sans ? 1.08 : 1)) * (bold ? 1.04 : 1); };
+const textWidth = (s, sz, it, bold) => {
+  let w = 0;
+  for (const c of s) w += CUR.letterFamily === 'mono' && c.codePointAt(0) < 128 ? 0.6 : charW(c, it);
+  const scale = CUR.letterFamily === 'sans' ? 1.08 : letterFont() ? 1 : CUR.wscale || (CUR.sans ? 1.08 : 1);
+  return w * sz * scale * (bold && CUR.letterFamily !== 'mono' ? 1.04 : 1);
+};
 /* ── maths spacing: TeX's atom classes and the spaces between them (in em; none in scripts but around operators) ── */
 const BIN_CH = '+−-±∓×·∘•÷∗⋆∧∨⊕⊗∩∪', REL_CH = '=≈≠≤≥<>∝∼≃≅≡∈∉→←↔⇒⇐⇔⇌⇋↦⟶≪≫⊥∥', LOP_CH = '∑∏∫∬∭∮', OPEN_CH = '([{⟨', CLOSE_CH = ')]}⟩', PUNCT_CH = ',;';
 const charClass = c => !c ? 'ord' : LOP_CH.includes(c) ? 'op' : BIN_CH.includes(c) ? 'bin' : REL_CH.includes(c) ? 'rel' : OPEN_CH.includes(c) ? 'open' : CLOSE_CH.includes(c) ? 'close' : PUNCT_CH.includes(c) ? 'punct' : 'ord';
@@ -399,15 +412,18 @@ function layout(nodes, sz, ctx) {
 }
 function textBox(n, sz, ctx) {
   const items = []; let x = 0, high = false;
-  const bold = ctx.bold || n.font === 'bf' || n.font === 'bfit';
+  const style = CUR.letterStyle;
+  const forcedItalic = style === 'italic' || style === 'boldItalic';
+  const bold = ctx.bold || n.font === 'bf' || n.font === 'bfit' || style === 'bold' || style === 'boldItalic';
   const add = (t, it) => {
     if (!t) return;
+    if (n.font === 'auto' && style && style !== 'auto') it = forcedItalic;
     /* a placeholder of the symbol picker is an item of its own, drawn as a box */
     if (t.includes(PLACEHOLDER) && t !== PLACEHOLDER) { for (const part of t.split(new RegExp(`(${PLACEHOLDER})`))) add(part, it); return; }
     const last = items[items.length - 1];
     if (last && last.it && !it && !/^\s/.test(t)) x += sz * 0.05;
     const w = textWidth(t, sz, it, bold), ko = /[가-힣ㄱ-ㅎ]/.test(t);
-    items.push({x, y: 0, t, size: sz, it: it && !ko && t !== PLACEHOLDER, bf: bold, ko, ...(t === PLACEHOLDER ? {ph: true} : {})}); x += w; if ([...t].some(highChar)) high = true;
+    items.push({x, y: 0, t, size: sz, it: it && (!ko || forcedItalic) && t !== PLACEHOLDER, bf: bold, ko, ...(t === PLACEHOLDER ? {ph: true} : {})}); x += w; if ([...t].some(highChar)) high = true;
   };
   let s = n.s;
   /* in maths: a true minus sign, and room around relations and binary operators inside the run (a sign is unary at
@@ -468,14 +484,15 @@ export function texRuns(src) {
 /** SVG of a label at (x, y) px, anchored 'start' | 'middle' | 'end', its middle on y */
 export function texText(src, x, y, size = 16, anchor = 'middle', extra = '', opts = {}) {
   /* object names (A, B, P, a point's p) set upright in the styles that do so (수능, JEE) */
-  if (CUR.uprightNames && (opts.name || opts.point) && typeof src === 'string' && (opts.point ? /^[A-Za-z]('|_\{?[0-9A-Za-z]{1,3}\}?)?$/ : /^[A-Z]('|_\{?[0-9]{1,3}\}?)?$/).test(src)) src = `\\mathrm{${src[0]}}${src.slice(1)}`;
+  if ((!CUR.letterStyle || CUR.letterStyle === 'auto') && CUR.uprightNames && (opts.name || opts.point) && typeof src === 'string' && (opts.point ? /^[A-Za-z]('|_\{?[0-9A-Za-z]{1,3}\}?)?$/ : /^[A-Z]('|_\{?[0-9]{1,3}\}?)?$/).test(src)) src = `\\mathrm{${src[0]}}${src.slice(1)}`;
   const sz = size * (opts.raw ? 1 : CUR.ls), b = texLayout(src, sz);
   if (!b.items.length && !b.paths.length) return '';
   const x0 = anchor === 'start' ? x : anchor === 'end' ? x - b.w : x - b.w / 2, base = y + (b.a - b.d) / 2;
   const color = /fill="([^"]+)"/.exec(extra)?.[1] || '#000';
   const halo = opts.halo ? ` stroke="#fff" stroke-width="${f(Math.max(2, sz * 0.22))}" stroke-linejoin="round" paint-order="stroke"` : '';
   let t = '';
-  const kfont = it => it.ko && (opts.caption ? CUR.caption : CUR.hangul) ? ` font-family="${esc(opts.caption ? CUR.caption : CUR.hangul).replace(/&#39;/g, "'")}"` : '';
+  const family = letterFont();
+  const kfont = it => !family && it.ko && (opts.caption ? CUR.caption : CUR.hangul) ? ` font-family="${esc(opts.caption ? CUR.caption : CUR.hangul).replace(/&#39;/g, "'")}"` : '';
   let ph = '';
   for (const it of b.items) if (it.ph) { const w = textWidth(PLACEHOLDER, it.size, false, false); ph += `<rect class="ph" x="${f(x0 + it.x + it.size * 0.06)}" y="${f(base + it.y - it.size * 0.66)}" width="${f(w - it.size * 0.12)}" height="${f(it.size * 0.78)}" rx="${f(it.size * 0.08)}" fill="#dbeafe" stroke="#2563eb" stroke-width="${f(Math.max(0.6, it.size * 0.05))}" stroke-dasharray="${f(it.size * 0.12)} ${f(it.size * 0.08)}"/>`; }
   for (const it of b.items) if (!it.ph) t += `<tspan x="${f(x0 + it.x)}" y="${f(base + it.y)}"${Math.abs(it.size - sz) > 0.01 ? ` font-size="${f(it.size)}"` : ''}${it.it ? ' font-style="italic"' : ''}${it.bf ? ' font-weight="bold"' : ''}${kfont(it)}>${esc(it.t)}</tspan>`;
@@ -485,11 +502,11 @@ export function texText(src, x, y, size = 16, anchor = 'middle', extra = '', opt
     if (q.dot) p += `<circle cx="${f(ox + q.dot[0])}" cy="${f(oy + q.dot[1])}" r="${f(q.dot[2])}" fill="${color}"/>`;
     else p += `<path d="${q.d}" transform="translate(${f(ox)},${f(oy)})" fill="none" stroke="${color}" stroke-width="${f(q.sw)}"${q.join ? ' stroke-linejoin="round" stroke-linecap="round"' : ''}/>`;
   }
-  return `<g class="tex"${extra.replace(/fill="[^"]+"/, '')}>${ph}${t ? `<text font-size="${f(sz)}" font-family="${esc(CUR.font).replace(/&#39;/g, "'")}" fill="${color}"${halo}>${t}</text>` : ''}${p}</g>`;
+  return `<g class="tex"${extra.replace(/fill="[^"]+"/, '')}>${ph}${t ? `<text font-size="${f(sz)}" font-family="${esc(family || CUR.font).replace(/&#39;/g, "'")}" fill="${color}"${halo}>${t}</text>` : ''}${p}</g>`;
 }
 /** a label on its own, as an SVG document (the editor's previews and the symbol picker) */
-export function texSVG(src, size = 18, style = 'textbook') {
-  const saved = CUR; CUR = {...STYLES[style] || STYLES.textbook, ls: 1, ss: 1};
+export function texSVG(src, size = 18, style = 'textbook', {letterStyle, letterFamily} = {}) {
+  const saved = CUR; CUR = {...STYLES[style] || STYLES.textbook, ls: 1, ss: 1, letterStyle, letterFamily};
   const b = texLayout(src, size), pad = 3, W = Math.max(8, b.w + 2 * pad), H = b.a + b.d + 2 * pad;
   const out = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(W)} ${f(H)}" width="${f(W)}" height="${f(H)}">${texText(src, pad, pad + b.a - (b.a - b.d) / 2, size, 'start')}</svg>`;
   CUR = saved; return out;
@@ -675,6 +692,8 @@ export function renderSVG(scene, opts = {}) {
     if (ost !== st) setStyle(ost);
     /* the object's own line weight and label size */
     om = o.lw || 1; lw = B0.lw * om; thin = B0.thin * om; hair = B0.hair * om; thick = B0.thick * om; HL = B0.HL * Math.sqrt(om); CUR.ls = baseLs * (o.ls || 1);
+    CUR.letterStyle = o.letterStyle;
+    CUR.letterFamily = o.letterFamily;
     if (T === 'floor') {
       const a = screen(o), b = screen({x: o.x + o.w, y: o.y});
       s = `${line(a, b)}${o.hatch && st.floor !== 'line' ? hatch(a.x, a.y, b.x, b.y, 0, 1) : ''}${hit(`M${f(a.x)},${f(a.y)}H${f(b.x)}`)}`;
@@ -1477,6 +1496,7 @@ export function renderSVG(scene, opts = {}) {
   }
   if (st !== st0) setStyle(st0);
   om = 1; lw = B0.lw; thin = B0.thin; hair = B0.hair; thick = B0.thick; HL = B0.HL; CUR.ls = baseLs;
+  CUR.letterStyle = CUR.letterFamily = undefined;
 
   /* circuit readings, the junction dots of the circuit */
   if (els.length) out.push(circuitMarks());
