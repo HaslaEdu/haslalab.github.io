@@ -92,9 +92,10 @@ export async function privateTextbookRoute(request, env, url, user) {
         !Array.isArray(manifest.books) || manifest.books.length > 32) throw Error('textbook_integrity');
     const books = manifest.books;
     for (const book of books) {
-      if (!BOOKS.has(book?.id) || !integer(book.count, 1, 30000) ||
+      const batchSize = book?.batch_size ?? BATCH_SIZE;
+      if (!integer(batchSize, BATCH_SIZE, 192) || !BOOKS.has(book?.id) || !integer(book.count, 1, 30000) ||
           !integer(book.korean_count, 0, book.count) || !HEX.test(book.index_sha256) ||
-          !Array.isArray(book.batches) || book.batches.length !== Math.ceil(book.count / BATCH_SIZE)) {
+          !Array.isArray(book.batches) || book.batches.length !== Math.ceil(book.count / batchSize)) {
         throw Error('textbook_integrity');
       }
     }
@@ -130,10 +131,11 @@ export async function privateTextbookRoute(request, env, url, user) {
     }
     const ordinal = index(match[2]);
     if (ordinal > book.count) return status('not_found', 404);
-    const batch = Math.floor((ordinal - 1) / BATCH_SIZE);
+    const batchSize = book.batch_size ?? BATCH_SIZE;
+    const batch = Math.floor((ordinal - 1) / batchSize);
     const sha = book.batches[batch];
     const rows = await readJson(env.LIBRARY, objectBase(sha, priorBook?.batches?.[batch]) + '/batches/' + batch + '.json', sha);
-    const row = rows[(ordinal - 1) % BATCH_SIZE];
+    const row = rows[(ordinal - 1) % batchSize];
     if (row?.ordinal !== ordinal || !Array.isArray(row.media) || row.media.length > 100) throw Error('textbook_integrity');
     if (!match[3]) {
       const credit = book.id === 'savchenko' && /^https:\/\/savchenkosolutions\.com\/en\/[0-9]+(?:\.[0-9]+){2}$/.test(row.credit?.source_url)
