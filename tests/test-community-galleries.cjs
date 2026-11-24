@@ -49,8 +49,24 @@ test('the community keeps the gallery layout in HaslaLab\'s own colours, only on
   const css=read('site-design.css');
   assert.match(css,/body\.hl-site\[data-site-route="community"\] \.cm\{--cm-ink:#263247;[^}]*--cm-acc:#7059a4/,'the site\'s ink and violet accent');
   assert.doesNotMatch(css,/--dc:#3b4890|DCInside-style/,'no copy of another site\'s colours');
-  assert.match(css,/@media\(min-width:1101px\)\{body\.hl-site\[data-site-route="community"\] \.cmgrid/);
+  assert.match(css,/@media\(min-width:1280px\)\{body\.hl-site\[data-site-route="community"\] \.cmgrid/,'three columns only where the list keeps room');
+  assert.match(css,/@media\(min-width:761px\) and \(max-width:1279px\)\{body\.hl-site\[data-site-route="community"\] \.cmgrid\{grid-template-columns:200px minmax\(0,1fr\)/);
   assert.doesNotMatch(css,/@media\(max-width:1100px\)\{body\.hl-site\[data-site-route="community"\] \.cmgrid/,'the two-column rule must not reach phones');
+});
+
+test('the rules sit under the menu on the left, the side boxes never float over the list or a post',()=>{
+  const html=read('index.html'),css=read('site-design.css'),a=app();
+  a.run('lang="ko"');
+  const view=a.run('viewCommunity()');
+  assert.match(view,/<div class="cmleft"><aside class="cmrail" id="cmRail"><\/aside>\s*<aside class="cmside cmrules" id="cmRules"><h3>커뮤니티 규칙<\/h3>/,'rules under the menu rail');
+  assert.ok(view.indexOf('id="cmRules"')<view.indexOf('id="cmRoot"'),'rules belong to the left column');
+  assert.doesNotMatch(a.run('cmRight.toString()'),/rulesH/,'the right column no longer carries the rules');
+  /* every column is in the grid's flow: nothing sticky, fixed or absolute that could slide over the list */
+  const rules=[...html.matchAll(/^\.(cmgrid|cmleft|cmrail|cmright|cmside)\{[^}]*\}/gm)].map(m=>m[0]);
+  assert.equal(rules.length,5);for(const r of rules)assert.doesNotMatch(r,/position:(sticky|fixed|absolute)|z-index|margin[^;]*-\d/,r);
+  assert.doesNotMatch(css,/\.cm(rail|right|side|left)\{[^}]*position:(sticky|fixed|absolute)/);
+  assert.match(html,/@media\(max-width:1279px\)\{\.cmgrid\{grid-template-columns:200px minmax\(0,1fr\);grid-template-areas:"left main" "left side"\}/,'medium widths: side boxes under the list');
+  assert.match(html,/@media\(max-width:760px\)\{\.cmgrid\{grid-template-columns:minmax\(0,1fr\);grid-template-areas:"rail" "main" "side" "rules"\}/,'phones: menu, list, side boxes, rules');
 });
 
 test('gallery names are escaped wherever a post shows its board',()=>{

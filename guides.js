@@ -177,5 +177,33 @@
       .map(e=>({key:e.key,name:e.name,name_ko:e.name_ko,url:safe(e.url),country:e.country,start:e.start,end:e.end||e.start,days:Math.max(0,day(e.start)-day(today))}));
   }
   const upcoming=(n=3)=>get('data/schedule.json').then(d=>upcomingFrom(d,n));
-  window.HL_GUIDES={roadmapView,roadmapMount,coursesView,coursesMount,scheduleView,scheduleMount,upcoming,upcomingFrom};
+  /* the Olympiad home's card for one country (a two-letter code, any case; '' for none): that country's own rounds and
+     the stages and targets of its selection (data/schedule.json "selection"), then the events open to everyone
+     (country "intl": international, regional, online) to fill up to n. Another country's national rounds never.
+     An undated item counts only with a usual month (its "months", or a "typical" that is just a month name): it gets
+     month, no day and no days left. Past items drop out; the list is in date order. */
+  const usualMonth=e=>Array.isArray(e.months)&&e.months.length?Number(e.months[0])||0:MONTHS.en.findIndex(m=>String(e.typical||'').trim().toLowerCase()===m.toLowerCase())+1;
+  function upcomingFor(d,country,n=5,today=new Date().toISOString().slice(0,10)){
+    const day=x=>Date.parse(x+'T00:00:00Z')/86400000,DAY=/^\d{4}-\d{2}-\d{2}$/;
+    const events=(d?.events||[]).filter(olympiad),byKey=new Map(events.map(e=>[e.key,e]));
+    const c=String(country||'').toLowerCase(),plan=c&&!c.startsWith('_')&&c!=='intl'?d?.selection?.[c]:null;
+    const item=(e,own)=>{
+      if(!e||!e.name||!e.key)return null;
+      const base={key:e.key,name:e.name,name_ko:e.name_ko,url:safe(e.url),country:e.country||c,own};
+      if(DAY.test(e.start||'')){const end=e.end||e.start;return end<today?null:{...base,start:e.start,end,days:Math.max(0,day(e.start)-day(today)),at:e.start};}
+      const m=usualMonth(e);if(!m)return null;
+      const [y,now]=today.split('-').map(Number);
+      return {...base,start:null,end:null,days:null,month:m,at:`${m>=now?y:y+1}-${String(m).padStart(2,'0')}-15`};
+    };
+    const byDate=(a,b)=>a.at<b.at?-1:a.at>b.at?1:0,seen=new Set(),uniq=e=>e&&!seen.has(e.key)&&seen.add(e.key);
+    const mine=[...(plan?.stages||[]).map(s=>s.event?{...byKey.get(s.event),...s}:s),...(plan?.targets||[]).map(k=>byKey.get(k)),...(c?events.filter(e=>e.country===c):[])]
+      .map(e=>item(e,true)).filter(uniq).sort(byDate).slice(0,n);
+    const open=events.filter(e=>e.country==='intl').map(e=>item(e,false)).filter(uniq).sort(byDate);
+    return [...mine,...open].slice(0,n).sort(byDate);
+  }
+  /* whose calendar the Olympiad home shows before the learner profile answers: the country kept by the calendar page
+     on this device, else the Korean site's Korea; the English site has no default country (events open to all only) */
+  const homeCountry=language=>{const s=savedCountry();return s&&s!=='all'&&/^[a-z]{2}$/.test(s)?s:language==='ko'?'kr':'';};
+  const upcomingForCountry=(country,n=5)=>get('data/schedule.json').then(d=>upcomingFor(d,country,n));
+  window.HL_GUIDES={roadmapView,roadmapMount,coursesView,coursesMount,scheduleView,scheduleMount,upcoming,upcomingFrom,upcomingFor,upcomingForCountry,homeCountry};
 })();

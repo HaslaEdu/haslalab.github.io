@@ -894,9 +894,10 @@ html[data-theme="dark"] body.hl-site .section-nav a[aria-current="page"]{color:#
 /* ── community in HaslaLab's own look: the gallery layout (menu · list · side boxes) stays, drawn with the site's ink,
    violet accent, rounded white cards on the graph paper, mono labels and the dark slate buttons of the rest of the site ── */
 body.hl-site[data-site-route="community"] .cm{--cm-ink:#263247;--cm-muted:#657187;--cm-line:#d5dbe6;--cm-row:#edf1f6;--cm-soft:#f6f4fb;--cm-acc:#7059a4;--cm-acc2:#5c438f;--cm-accsoft:#ebe5f4;--cm-rail:#34405b;--cm-card:#fff;--cm-hot:#c2410c;font-size:13.5px}
-@media(min-width:1101px){body.hl-site[data-site-route="community"] .cmgrid{grid-template-columns:220px minmax(0,1fr) 260px;gap:18px}}
+/* three columns from 1280px only: below that the side boxes would squeeze the list's titles to a few characters, so they go under the list */
+@media(min-width:1280px){body.hl-site[data-site-route="community"] .cmgrid{grid-template-columns:220px minmax(0,1fr) 240px;gap:18px}}
 /* left menu: a card with mono section labels */
-body.hl-site[data-site-route="community"] .cmrail{background:var(--cm-card);color:var(--cm-ink);border:1px solid var(--cm-line);border-radius:14px;padding:0 0 10px;top:120px;overflow:hidden}
+body.hl-site[data-site-route="community"] .cmrail{background:var(--cm-card);color:var(--cm-ink);border:1px solid var(--cm-line);border-radius:14px;padding:0 0 10px;overflow:hidden}
 body.hl-site[data-site-route="community"] .cmrail .srv{background:var(--cm-rail);margin:0;padding:12px 14px;border:0}
 body.hl-site[data-site-route="community"] .cmrail .srv img{border-radius:6px}
 body.hl-site[data-site-route="community"] .cmrail .servers{flex-direction:row;gap:4px;padding:10px;border-bottom:1px solid var(--cm-row);margin:0}
@@ -966,8 +967,8 @@ html[data-theme="dark"] body.hl-site[data-site-route="community"] .cm{--cm-ink:#
 html[data-theme="dark"] body.hl-site[data-site-route="community"] .cmtbl tr.nt td{background:#211c2c}
 html[data-theme="dark"] body.hl-site[data-site-route="community"] .cmtbl td.t a:visited{color:#b9a9df}
 html[data-theme="dark"] body.hl-site[data-site-route="community"] .cmseg a:hover,html[data-theme="dark"] body.hl-site[data-site-route="community"] .cmseg button:hover{background:#25202f}
-@media(min-width:761px) and (max-width:1100px){body.hl-site[data-site-route="community"] .cmgrid{grid-template-columns:200px minmax(0,1fr)}}
-@media(max-width:760px){body.hl-site[data-site-route="community"] .cmrail{position:static}body.hl-site[data-site-route="community"] .cmbh h2{font-size:19px}body.hl-site[data-site-route="community"] .cmpanel{padding:2px 12px 12px}}
+@media(min-width:761px) and (max-width:1279px){body.hl-site[data-site-route="community"] .cmgrid{grid-template-columns:200px minmax(0,1fr);gap:18px}}
+@media(max-width:760px){body.hl-site[data-site-route="community"] .cmbh h2{font-size:19px}body.hl-site[data-site-route="community"] .cmpanel{padding:2px 12px 12px}}
 
 /* ── Learn home: today's problem on the left, the whole site in short lists on the right, the unit map below ── */
 body.hl-site .lh2{padding-top:20px}

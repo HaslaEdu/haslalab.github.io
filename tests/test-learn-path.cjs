@@ -323,6 +323,49 @@ test('the Olympiad home cards fill from the calendar, /monthly and /hpho, and fa
   assert.match(boxes.olyNow.innerHTML,/제2회 HPhO[\s\S]*접수 중[\s\S]*\d+일 남음/);
 });
 
+test('the Olympiad home shows the visitor\'s own selection and the events open to all, never another country\'s rounds',async()=>{
+  const sched=JSON.parse(read('data/schedule.json')),today='2026-11-24';
+  const guides=(saved=null)=>{const ctx={location:{hash:'#/olympiad'},window:{},localStorage:{getItem:()=>saved},fetch:async()=>({ok:true,json:async()=>sched})};
+    vm.createContext(ctx);vm.runInContext(read('guides.js'),ctx);return ctx.window.HL_GUIDES;};
+  const G=guides(),keys=c=>G.upcomingFor(sched,c,5,today).map(e=>e.key);
+  /* who is whose: the guides' fallback when the profile has not answered */
+  assert.equal(G.homeCountry('ko'),'kr');assert.equal(G.homeCountry('en'),'');
+  assert.equal(guides('us').homeCountry('ko'),'us');assert.equal(guides('all').homeCountry('ko'),'kr');
+  const kr=keys('kr');
+  for(const k of ['kr-kpho-winter-entrance-2027','kr-kpho-winter-school-2027','apho-2027','ipho-2027'])assert.ok(kr.includes(k),'kr sees '+k);
+  for(const k of kr)assert.ok(/^kr-/.test(k)||sched.events.find(e=>e.key===k).country==='intl','kr: no other country\'s round: '+k);
+  assert.ok(!kr.some(k=>/usapho|fma|inpho|nsep|bpho|ipho-r/.test(k)));
+  assert.deepEqual(keys('KR'),kr,'a learner profile\'s upper-case code works');
+  const us=keys('us');
+  for(const k of ['us-fma-2027','us-usapho-2027'])assert.ok(us.includes(k),'us sees '+k);
+  assert.ok(!us.some(k=>/^kr-|inpho/.test(k)));
+  /* no country, or one without a selection plan: only the events open to everyone */
+  for(const c of ['','fr'])for(const k of keys(c))assert.equal(sched.events.find(e=>e.key===k).country,'intl',c+' '+k);
+  for(const c of ['kr','us','','gb','in'])assert.ok(keys(c).length>=3&&keys(c).length<=5,c);
+  /* date order; an undated item only with its usual month and no days left */
+  const list=G.upcomingFor(sched,'kr',5,today),school=list.find(e=>e.key==='kr-kpho-winter-school-2027');
+  assert.equal(school.start,null);assert.equal(school.month,1);assert.equal(school.days,null);
+  for(let i=1;i<list.length;i++)assert.ok(list[i-1].at<=list[i].at);
+  assert.equal(list[0].key,'kr-kpho-winter-entrance-2027');assert.equal(list[0].days,18);
+  /* the page: the Korean site without a profile shows Korea's; a signed-in learner's profile country replaces it */
+  const a=app('#/olympiad'),boxes={};
+  const box=id=>boxes[id]||(boxes[id]={id,isConnected:true,innerHTML:'',dataset:{}});
+  a.context.document.getElementById=id=>['olyUpcoming','olyNow'].includes(id)?box(id):null;
+  a.context.cmApi=async()=>{throw Error('offline');};
+  const settle=async()=>{for(let i=0;i<6;i++)await new Promise(r=>setImmediate(r));};
+  a.context.window.HL_GUIDES={...G,upcomingForCountry:async(c,n)=>G.upcomingFor(sched,c,n,today)};
+  a.run('lang="ko";cmLearner=async()=>null');a.run('mountOlympiadHome()');await settle();
+  let html=boxes.olyUpcoming.innerHTML;
+  assert.equal(boxes.olyUpcoming.dataset.country,'kr');
+  assert.match(html,/겨울학교 입교시험[\s\S]*18일 남음/);assert.match(html,/겨울학교<small>예년 기준 1월<\/small>/);
+  assert.match(html,/아시아물리올림피아드/);assert.match(html,/국제물리올림피아드/);assert.doesNotMatch(html,/USAPhO|F=ma|INPhO/);
+  assert.equal((html.match(/<li>/g)||[]).length,5);
+  a.run('cmLearner=async()=>({country:"US",daily_goal:3})');boxes.olyUpcoming.innerHTML='';a.run('mountOlympiadHome()');await settle();
+  html=boxes.olyUpcoming.innerHTML;
+  assert.equal(boxes.olyUpcoming.dataset.country,'us');
+  assert.match(html,/F=ma/);assert.match(html,/USAPhO/);assert.doesNotMatch(html,/겨울학교|KPhO/);
+});
+
 test('the computational physics page embeds the judge and passes on only a valid problem id',()=>{
   const a=app('#/learn/compute?problem=kepler-orbit');
   let src=/id="learnComputeFrame"[^>]*src="([^"]+)"/.exec(a.run('viewLearnCompute()'))[1];

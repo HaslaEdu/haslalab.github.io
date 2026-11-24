@@ -649,12 +649,16 @@ footer{border-top:1px solid var(--grid-bold);padding:30px 0 44px;margin-top:26px
 .cm .cmtop p{margin:4px 0 0;color:var(--graphite);font-size:14px}
 .cm .cm-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .shell.cm{max-width:1680px}
-.cmgrid{display:grid;grid-template-columns:236px minmax(0,1fr) 300px;gap:20px;align-items:start}
-@media(max-width:1100px){.cmgrid{grid-template-columns:200px minmax(0,1fr)}.cmright{grid-column:1/-1}}
-@media(max-width:760px){.cmgrid{grid-template-columns:minmax(0,1fr)}}
+/* three columns only where the list keeps room for its titles: the menu and the rules on the left, the list,
+   the board's facts and trending posts on the right. Narrower, those two boxes go under the list (never beside it),
+   and on a phone everything stacks: menu, list, side boxes, rules. Every box is in the grid's flow: nothing is
+   sticky, fixed or absolute, so no box can slide over the list or a post. */
+.cmgrid{display:grid;grid-template-columns:220px minmax(0,1fr) 240px;grid-template-areas:"left main side";gap:20px;align-items:start}
+.cmleft{grid-area:left;display:flex;flex-direction:column;gap:14px;min-width:0}
+.cmgrid>#cmRoot{grid-area:main;min-width:0}
 
 /* the channel rail */
-.cmrail{background:var(--cm-rail);color:#c9d1db;border-radius:12px;padding:12px 8px;position:sticky;top:76px}
+.cmrail{background:var(--cm-rail);color:#c9d1db;border-radius:12px;padding:12px 8px}
 .cmrail .srv{display:flex;align-items:center;gap:9px;padding:4px 8px 12px;border-bottom:1px solid #313a47;margin-bottom:8px}
 .cmrail .srv img{width:28px;height:28px;border-radius:8px;background:#fff}
 .cmrail .srv b{color:#fff;font-size:14.5px}
@@ -787,7 +791,11 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmsrch input{flex:1;min-width:0}
 
 /* side cards */
-.cmright{display:flex;flex-direction:column;gap:14px}
+.cmright{grid-area:side;display:flex;flex-direction:column;gap:14px;min-width:0}
+@media(max-width:1279px){.cmgrid{grid-template-columns:200px minmax(0,1fr);grid-template-areas:"left main" "left side"}
+  .cmright{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));align-items:start}}
+@media(max-width:760px){.cmgrid{grid-template-columns:minmax(0,1fr);grid-template-areas:"rail" "main" "side" "rules"}
+  .cmleft{display:contents}.cmleft>.cmrail{grid-area:rail}.cmleft>.cmrules{grid-area:rules}.cmright{grid-template-columns:minmax(0,1fr)}}
 .cmside{background:#fff;border:1px solid var(--cm-line);border-radius:12px;overflow:hidden}
 .cmside h3{font-size:13px;padding:11px 14px;margin:0;background:var(--cm-soft);border-bottom:1px solid var(--cm-line)}
 .cmside .in{padding:12px 14px;font-size:13px;color:#4b5563}
@@ -799,6 +807,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmside .hot a{display:flex;gap:8px;padding:7px 0;border-bottom:1px dashed var(--cm-line);font-size:13px;color:var(--ink)}
 .cmside .hot a:last-child{border-bottom:0}
 .cmside .hot em{font-style:normal;color:var(--cm-up);font-weight:700;font-family:var(--mono);min-width:22px}
+.cmside .hot span{min-width:0;overflow-wrap:break-word}
 
 /* a post */
 .cmpost{padding:18px 20px 6px}
@@ -1035,7 +1044,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=24167dfe6480">
+<link rel="stylesheet" href="site-design.css?v=54a5c4799c76">
 <link rel="stylesheet" href="guide.css?v=022546be75f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
 <link rel="stylesheet" href="archive-library.css?v=3287381094c5">
@@ -1189,9 +1198,9 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-catalogue.js?v=7d2c385b7b26"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
-<script src="site-design.js?v=acd39be705c0"></script>
+<script src="site-design.js?v=264d9122e2d7"></script>
 <script src="hpho.js?v=ea67208eda3b"></script>
-<script src="guides.js?v=34dcae8f0e8d"></script>
+<script src="guides.js?v=2dcd3d5af493"></script>
 <script src="guide.js?v=3470e35a319e"></script>
 <script src="hpho-proctor.js?v=c8b93c4e12fb"></script>
 <script src="hpho-phone.js?v=3a6015cc1217"></script>
@@ -9921,7 +9930,8 @@ function viewCommunity(){
   <div class="shell cm">
     <div class="cmtop"><h1 class="cm-sr">${T.h}</h1><div style="margin-left:auto;align-self:center">${instaLink()}</div></div>
     <div class="cmgrid">
-      <aside class="cmrail" id="cmRail"></aside>
+      <div class="cmleft"><aside class="cmrail" id="cmRail"></aside>
+        <aside class="cmside cmrules" id="cmRules"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></aside></div>
       <div id="cmRoot"><div class="cmpanel"><p class="cmempty">${T.loading}</p></div></div>
       <aside class="cmright" id="cmRight"></aside>
     </div>
@@ -9956,8 +9966,7 @@ async function cmRight(where,alive=()=>true){
   el.innerHTML=`
     <div class="cmside"><h3>${T.aboutH}</h3><div class="in">${cmIsGallery(where)?esc(cm.galleries?.[where]?.intro||cmBoardName(where))+(cm.galleries?.[where]?`<br><small>${T.galOwner} · ${esc(cm.galleries[where].owner)}</small>`:""):(T.boardDesc[where]||T.boardDesc.all)}
       <div class="stat"><div><b>${tot.n}</b><span>${T.stPosts}</span></div><div><b>${tot.today}</b><span>${T.stToday}</span></div></div></div></div>
-    <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>
-    <div class="cmside"><h3>${T.rulesH}</h3><div class="in"><ol>${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol></div></div>`;
+    <div class="cmside"><h3>🔥 ${T.hotH}</h3><div class="in hot" id="cmHot">…</div></div>`;
   /* the gallery's manager (or an administrator) edits its introduction or closes it */
   const g=cmIsGallery(where)&&cm.galleries?.[where];
   if(g&&cm.me&&(cm.me.nickname===g.owner||cm.me.role==="admin")){

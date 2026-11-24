@@ -48,3 +48,22 @@ test('the Olympiad home lists olympiads only, and the page keeps the country cho
   assert.match(g,/cmLearner\(\)/,'the learner profile\'s country is the default');
   assert.match(g,/예년 기준 \$\{months\.join\('–'\)\}월/);
 });
+
+test('the Olympiad home card is per country: a Korean learner sees KPhO and APhO/IPhO, an American F=ma and USAPhO, neither the other\'s rounds',()=>{
+  const ctx={location:{hash:'#/olympiad'},window:{},localStorage:{getItem:()=>null},fetch:async()=>({ok:true,json:async()=>sched})};
+  vm.createContext(ctx);vm.runInContext(read('guides.js'),ctx);
+  const G=ctx.window.HL_GUIDES,keys=c=>G.upcomingFor(sched,c,5,'2026-11-24').map(e=>e.key),country=k=>sched.events.find(e=>e.key===k)?.country;
+  const kr=keys('kr'),us=keys('us');
+  for(const k of ['kr-kpho-winter-entrance-2027','kr-kpho-winter-school-2027','apho-2027','ipho-2027'])assert.ok(kr.includes(k),k);
+  for(const k of ['us-fma-2027','us-usapho-2027'])assert.ok(us.includes(k),k);
+  assert.ok(!kr.includes('us-usapho-2027')&&!kr.includes('in-inpho-2027')&&!kr.includes('us-fma-2027'));
+  assert.ok(!us.some(k=>k.startsWith('kr-'))&&!us.includes('in-inpho-2027'));
+  /* every country in the calendar: only its own rounds (or its plan's own stages) and events open to all */
+  for(const c of Object.keys(sched.selection).filter(c=>!c.startsWith('_'))){
+    const list=keys(c);assert.ok(list.length>=1&&list.length<=5,c);
+    for(const k of list)assert.ok([c,'intl',undefined].includes(country(k)),c+' shows '+k);
+  }
+  /* entrance exams never, and a past event drops out */
+  const t=G.upcomingFor({events:[{key:'jee',kind:'entrance',name:'JEE',country:'in',start:'2026-12-01'},{key:'old',kind:'selection',name:'Old',country:'in',start:'2026-11-01'},{key:'x',kind:'international',name:'X',country:'intl',start:'2026-12-02'}],selection:{}},'in',5,'2026-11-24');
+  assert.deepEqual([...t.map(e=>e.key)],['x']);
+});

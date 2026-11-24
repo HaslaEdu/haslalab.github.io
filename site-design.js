@@ -137,11 +137,11 @@ function viewHomeStudio(){
    (SITE_UPDATES entries that add papers) and the competitions most visited. */
 const OLY_TEXT={
   ko:{upcoming:"다가오는 대회",schedule:"전체 일정",live:"오늘의 상황",monthly:"월별문제",hpho:"HPhO",recent:"최근 추가된 기출",archive:"업데이트 전체",quick:"대회 바로가기",comps:"전체 대회",
-    loading:"불러오는 중…",noEvents:"정해진 날짜가 있는 대회가 아직 없습니다.",failed:"일정을 불러오지 못했습니다.",today:"진행 중",days:n=>`${n}일 남음`,
+    loading:"불러오는 중…",noEvents:"정해진 날짜가 있는 대회가 아직 없습니다.",failed:"일정을 불러오지 못했습니다.",today:"진행 중",days:n=>`${n}일 남음`,usual:m=>`예년 기준 ${m}월`,usualBadge:"날짜 미정",
     deadline:"마감",closed:"이번 달 마감",none:"이번 달 문제 준비 중",open:"보기",hphoNone:"다음 대회 일정 준비 중",
     hphoState:{open:"접수 중",closed:"접수 마감",soon:"접수 예정",rehearsal:"점검 중",finished:"종료"},regClose:"접수 마감",exam:"시험",cardMonthly:"이번 달 월별문제 · HPhO"},
   en:{upcoming:"Upcoming",schedule:"Full calendar",live:"Now",monthly:"Monthly problems",hpho:"HPhO",recent:"Recently added papers",archive:"All updates",quick:"Go to a competition",comps:"All competitions",
-    loading:"Loading…",noEvents:"No contest with a set date yet.",failed:"Could not load the calendar.",today:"On now",days:n=>n===1?"1 day left":`${n} days left`,
+    loading:"Loading…",noEvents:"No contest with a set date yet.",failed:"Could not load the calendar.",today:"On now",days:n=>n===1?"1 day left":`${n} days left`,usual:m=>`Usually ${new Date(Date.UTC(2000,m-1,1)).toLocaleDateString("en",{month:"long",timeZone:"UTC"})}`,usualBadge:"Date TBA",
     deadline:"Deadline",closed:"This month is closed",none:"This month's problems are coming",open:"Open",hphoNone:"Next round to be announced",
     hphoState:{open:"Registration open",closed:"Registration closed",soon:"Registration soon",rehearsal:"Test round",finished:"Finished"},regClose:"closes",exam:"exam",cardMonthly:"Monthly problems · HPhO"}
 };
@@ -175,12 +175,26 @@ function viewOlympiadHome(){
 function mountOlympiadHome(){
   const up=document.getElementById("olyUpcoming"),now=document.getElementById("olyNow");if(!up||!now)return;
   const current=lang,O=OLY_TEXT[current],ko=current==="ko",alive=el=>el.isConnected&&lang===current;
+  /* upcoming contests for the visitor's country (guides.js upcomingFor): its own selection stages and the events open
+     to everyone, never another country's national rounds. The country: the learner profile's when signed in, else the
+     calendar page's choice on this device, else the site language's (Korean site: Korea; English site: none) */
   const G=window.HL_GUIDES;
-  (G?.upcoming?G.upcoming(3):Promise.reject(Error("guides"))).then(list=>{
-    if(!alive(up))return;
-    up.innerHTML=list.length?`<ul class="oly-list">${list.map(e=>{const name=esc(ko?e.name_ko||e.name:e.name),when=`${olyShortDate(e.start,ko)}${e.end!==e.start?" – "+olyShortDate(e.end,ko):""}`;
-      return `<li>${e.url?`<a href="${esc(e.url)}" target="_blank" rel="noopener">`:"<div>"}<span>${name}<small>${when}</small></span><b class="oly-dday${e.days===0?" on":""}">${e.days===0?O.today:O.days(e.days)}</b>${e.url?"</a>":"</div>"}</li>`;}).join("")}</ul>`:`<p class="oly-note">${O.noEvents}</p>`;
-  }).catch(()=>{if(alive(up))up.innerHTML=`<p class="oly-note">${O.failed}</p>`;});
+  let want=G?.homeCountry?G.homeCountry(current):(ko?"kr":"");
+  const paintUpcoming=(country,list)=>{
+    if(!alive(up)||country!==want)return;
+    if(up.dataset)up.dataset.country=country;
+    up.innerHTML=list.length?`<ul class="oly-list">${list.map(e=>{const name=esc(ko?e.name_ko||e.name:e.name),dated=!!e.start,
+        when=dated?`${olyShortDate(e.start,ko)}${e.end!==e.start?" – "+olyShortDate(e.end,ko):""}`:O.usual(e.month),
+        flag=e.own&&e.country&&e.country!=="intl"&&typeof flagImg==="function"?flagImg(e.country,"sc-flag")+" ":"";
+      return `<li>${e.url?`<a href="${esc(e.url)}" target="_blank" rel="noopener">`:"<div>"}<span>${flag}${name}<small>${when}</small></span><b class="oly-dday${e.days===0?" on":""}">${!dated?O.usualBadge:e.days===0?O.today:O.days(e.days)}</b>${e.url?"</a>":"</div>"}</li>`;}).join("")}</ul>`:`<p class="oly-note">${O.noEvents}</p>`;
+  };
+  const loadUpcoming=country=>(G?.upcomingForCountry?G.upcomingForCountry(country,5):G?.upcoming?G.upcoming(3):Promise.reject(Error("guides")))
+    .then(list=>paintUpcoming(country,list)).catch(()=>{if(alive(up)&&country===want)up.innerHTML=`<p class="oly-note">${O.failed}</p>`;});
+  loadUpcoming(want);
+  if(G?.upcomingForCountry&&typeof cmLearner==="function")Promise.resolve().then(()=>cmLearner()).then(v=>{
+    const c=String(v?.country||"").toLowerCase();
+    if(/^[a-z]{2}$/.test(c)&&c!==want&&alive(up)){want=c;loadUpcoming(c);}
+  }).catch(()=>{});
   const kst=s=>new Date(s*1000).toLocaleString(ko?"ko-KR":"en",{timeZone:"Asia/Seoul",month:ko?"long":"short",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false})+(ko?"":" KST");
   const daysTo=(at,t)=>Math.max(0,Math.ceil((at-t)/86400));
   const row=(href,name,line,badge)=>`<li><a href="${href}"><span>${name}${line?`<small>${line}</small>`:""}</span>${badge?`<b class="oly-dday">${badge}</b>`:""}</a></li>`;
