@@ -57,7 +57,7 @@
       return api('GET', path).then(({shares}) => {
         if (!here() || !host.isConnected) return;
         const area = host.querySelector('[data-shared-list]');
-        area.innerHTML = shares.length ? shares.map(s => `<details class="ws-share-item" data-share="${esc(s.id)}"><summary>${esc(s.title)} <small>${esc(s.group_name)} · ${label(s.kind)} · ${s.file_count}</small></summary>
+        area.innerHTML = shares.length ? shares.map(s => `<details class="ws-share-item" data-share="${esc(s.id)}" data-share-kind="${esc(s.kind)}"><summary>${esc(s.title)} <small>${esc(s.group_name)} · ${label(s.kind)} · ${s.file_count}</small></summary>
           ${s.instructions ? `<p class="ws-share-instructions">${esc(s.instructions)}</p>` : ''}
           ${s.due_at ? `<p>${tr('마감', 'Due')} <time datetime="${new Date(s.due_at * 1000).toISOString()}">${new Date(s.due_at * 1000).toLocaleString()}</time></p>` : ''}
           <ul></ul><p role="status"></p>${s.mine ? `<button type="button" class="ws-btn" data-revoke>${tr('공유 취소', 'Stop sharing')}</button>` : ''}</details>`).join('') : `<p>${empty}</p>`;
@@ -72,7 +72,7 @@
                 b.type = 'button';
                 b.className = 'ws-btn';
                 b.textContent = f.name;
-                const worksheet = s.kind === 'assignment' && f.mime === 'application/json';
+                const worksheet = item.dataset.shareKind === 'assignment' && f.mime === 'application/json';
                 b.onclick = async () => { try { await saveFile(id, f.id, f.name, worksheet); } catch (e) { status.textContent = message(e); } };
                 li.append(b);
                 return li;

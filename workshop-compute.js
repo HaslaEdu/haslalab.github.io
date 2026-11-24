@@ -353,7 +353,8 @@
       $('cpPaper').onclick = () => {
         const transfer = {title: title.value.trim(), description: description.value.trim(), language: project.language, code: source.value, output: lastOutput, figure: project.figure};
         if (!write(sessionStorage, 'hlWorkshopProblem', transfer)) { msg(tr('문제 제작에 보낼 수 없습니다.', 'Could not send the project to the problem maker.')); return; }
-        window.top.location.assign('/#/workshop/make?tab=ai&from=compute');
+        if (window.top !== window) window.top.location.hash = '/workshop/make?tab=ai&from=compute';
+      else location.assign('/#/workshop/make?tab=ai&from=compute');
       };
       $('cpShare').onclick = () => {
         if (!login()) return;

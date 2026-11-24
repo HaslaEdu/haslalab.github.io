@@ -1335,7 +1335,8 @@ function toCompute() {
   if (figure.src.length >= 390000) { $('outMsg').textContent = ko ? '그림이 너무 큽니다. 요소를 줄인 뒤 다시 보내 주세요.' : 'Reduce the number of elements in the figure and try again.'; return; }
   try { sessionStorage.setItem('hlWorkshopFigure', JSON.stringify(figure)); }
   catch { $('outMsg').textContent = ko ? '그림을 전산물리 제작에 보낼 수 없습니다.' : 'Could not send the figure to Computational physics.'; return; }
-  window.top.location.assign(embedded ? '/#/workshop/create?view=compute&from=draw' : 'create.html?view=compute&from=draw&lang=' + lang);
+  if (embedded) window.top.location.hash = '/workshop/create?view=compute&from=draw';
+  else location.assign('create.html?view=compute&from=draw&lang=' + lang);
 }
 function toPaper() {
   let paper;

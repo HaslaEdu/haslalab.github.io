@@ -247,7 +247,8 @@
     const problem = {title: paper.title, text: item?.own?.q || item?.item?.q || '', figure: item?.own?.fig};
     try { sessionStorage.setItem('hlWorkshopComputeQuestion', JSON.stringify(problem)); }
     catch { say(ko ? '문제를 전산물리 제작에 보낼 수 없습니다.' : 'Could not send this question to Computational physics.'); return; }
-    window.top.location.assign(embedded ? '/#/workshop/create?view=compute&from=problem' : 'create.html?view=compute&from=problem&lang=' + lang);
+    if (embedded) window.top.location.hash = '/workshop/create?view=compute&from=problem';
+    else location.assign('create.html?view=compute&from=problem&lang=' + lang);
   }
   async function paintPaper(){
     const box=$('rightPanel');
