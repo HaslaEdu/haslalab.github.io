@@ -350,6 +350,8 @@ function selectProjectPage(index, {bind = true} = {}) {
   if (!bind) return;
   st.hist = createHistory(250);
   const editingPaper = st.paperEdit;
+  $('inkProposal').hidden = true;
+  $('inkStatus').textContent = '';
   st.paperEdit = null;
   st.ai = null;
   st.zoom = null;
@@ -2036,6 +2038,10 @@ async function recognizeInk() {
   box.textContent = ko ? '수식 인식 중…' : 'Recognizing formula…';
   try {
     const {latex} = await api('/api/workshop/ink-formula', 'POST', {strokes});
+    if (base !== JSON.stringify(projectData())) {
+      box.textContent = ko ? '그림이 바뀌었습니다. 현재 획을 선택해 다시 인식해 주세요.' : 'The figure changed. Select the current strokes and try again.';
+      return;
+    }
     const field = $('inkText'), render = () => { $('inkPreview').innerHTML = texSVG(field.value, 24, st.scene.style); height(); };
     field.value = latex;
     field.oninput = render;
