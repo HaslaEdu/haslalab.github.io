@@ -128,7 +128,7 @@
     let local;
     try { local=JSON.parse(localStorage.getItem('hlDrawScene') || 'null'); } catch {}
     const P=window.HL_WORKSHOP_PROJECTS;
-    P.pickFigure(P.client({base:API,token}),{local,height,onPick(fig){
+    P.pickFigure(P.client({base:API,token}),{local,height,allowIllustrations:true,onPick(fig){
       if(item && paper.items.includes(item) && item.own) item.own.fig=fig;
       else paper.items.push({key:'own:'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),pts:3,own:{q:'',answer:'',unit:'',sol:'',fig}});
       save();paintPaper();paintItems();
@@ -187,7 +187,7 @@
   const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(paper));}catch(e){}cloudSoon();};
   /* a figure from the figure editor (draw.js): an SVG data URL, its size and the scene it was drawn from. Only an
      SVG of a sane size is shown; as an <img> it cannot run anything */
-  const figOf=own=>{const f=own?.fig;return f&&typeof f.src==='string'&&f.src.length<400000&&/^data:image\/svg\+xml;base64,[A-Za-z0-9+/]+=*$/.test(f.src)?{src:f.src,w:Math.max(40,Math.min(2000,+f.w||800)),h:Math.max(20,Math.min(3000,+f.h||400))}:null;};
+  const figOf=own=>{const f=own?.fig;return f&&typeof f.src==='string'&&f.src.length<400000&&/^data:image\/(?:svg\+xml|png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/.test(f.src)?{src:f.src,w:Math.max(40,Math.min(2000,+f.w||800)),h:Math.max(20,Math.min(3000,+f.h||400))}:null;};
   const figHtml=own=>{const f=figOf(own);return f?`<figure class="dfig"><img src="${f.src}" width="${f.w}" height="${f.h}" alt="${T.fig}"></figure>`:'';};
   /* the editor writes the paper while this page may be open in another tab */
   addEventListener('storage',e=>{if(e.key!==KEY)return;try{const p=JSON.parse(e.newValue||'null');if(p&&Array.isArray(p.items)){paper={...blank(),...p};cloudSoon();if(state.tab==='paper')paintPaper();}}catch(x){}});

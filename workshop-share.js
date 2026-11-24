@@ -335,7 +335,7 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     }
     const set=p.payload||{items:[]};
     box.innerHTML=`${set.title?`<h2>${esc(set.title)}</h2>`:''}${set.info?`<p class="shr-meta">${esc(set.info)}</p>`:''}<p class="shr-meta">${T(`${set.items.length}문항`,`${set.items.length} problems`)}${set.minutes?` · ${T(`${+set.minutes}분`,`${+set.minutes} min`)}`:''}</p>
-      <ol class="shr-set">${set.items.map(it=>`<li>${it.own?`${md(it.own.q)}${it.own.fig&&/^data:image\/svg\+xml;base64,[A-Za-z0-9+/]+=*$/.test(it.own.fig.src)?`<img src="${it.own.fig.src}" alt="${T('그림','Figure')}" width="${+it.own.fig.w}" height="${+it.own.fig.h}" loading="lazy">`:''}${Array.isArray(it.own.choices)?`<ol class="shr-ch" type="1">${it.own.choices.map(c=>`<li style="list-style:decimal">${esc(c)}</li>`).join('')}</ol>`:''}`
+      <ol class="shr-set">${set.items.map(it=>`<li>${it.own?`${md(it.own.q)}${it.own.fig&&/^data:image\/(?:svg\+xml|png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/.test(it.own.fig.src)?`<img src="${it.own.fig.src}" alt="${T('그림','Figure')}" width="${+it.own.fig.w}" height="${+it.own.fig.h}" loading="lazy">`:''}${Array.isArray(it.own.choices)?`<ol class="shr-ch" type="1">${it.own.choices.map(c=>`<li style="list-style:decimal">${esc(c)}</li>`).join('')}</ol>`:''}`
         :`${T('하슬라랩 문제','HaslaLab problem')} <code class="shr-code" style="display:inline;padding:1px 5px;border:0">${esc(it.key)}</code>`} <span class="shr-meta">(${+it.pts||0}${T('점',' pts')})</span></li>`).join('')}</ol>
       <p class="shr-meta">${T('정답과 풀이는 «리믹스»로 문제 제작에 가져가면 볼 수 있습니다.','Remix it into Problems to see the answers and solutions.')}</p>`;
   }

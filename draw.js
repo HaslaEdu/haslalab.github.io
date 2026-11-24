@@ -1600,7 +1600,7 @@ async function openShared(n) {
 async function aiModels() {
   if (st.aiModels || !token()) return;
   try { const r = await api('/api/workshop/ai/models'); st.aiModels = (r.models || []).filter(m => m && m.id && m.configured !== false); const sel = $('aiModel');
-    if (sel && st.aiModels.length > 1) { sel.innerHTML = st.aiModels.map(m => `<option value="${esc(m.id)}"${m.id === r.default ? ' selected' : ''}>${esc(m.model || m.id)}</option>`).join(''); sel.hidden = false; }
+    if (sel && st.aiModels.length > 1) { sel.innerHTML = st.aiModels.map(m => `<option value="${esc(m.id)}"${m.id === r.default ? ' selected' : ''}>${esc(m.model || m.id)}</option>`).join(''); sel.hidden = false; syncAiControls(); }
   } catch (e) { st.aiModels = []; }
 }
 /* Preview a checked proposal in the existing AI panel before replacing the drawing. */
@@ -1628,31 +1628,173 @@ function showAiProposal(scene, base, edit, recognition = null) {
   };
   height();
 }
+const AI_MESSAGES = ko ? {
+  region_failed:'그림 영역을 찾지 못했습니다. 다시 찾거나 사진을 잘라서 올려 주세요.',
+  illustration_failed:'삽화를 만들지 못했습니다. 요청이나 참고 그림을 확인하고 다시 시도해 주세요.',
+  illustration_busy:'오늘의 삽화 생성 한도에 도달했습니다.',
+} : {
+  region_failed:'Could not find figure regions. Try again or upload a cropped photo.',
+  illustration_failed:'Could not generate the illustration. Check the request or reference and try again.',
+  illustration_busy:'The daily illustration generation limit has been reached.',
+};
+function syncAiControls() {
+  const attached = !!$('aiPhoto').files.length, raster = $('aiOutput').value === 'illustration';
+  $('aiClearPhoto').hidden = $('aiDetect').hidden = !attached;
+  $('aiWhole').hidden = !attached || !!st.aiPhoto || !st.aiRegionFailed;
+  for (const id of ['aiOutput','aiStyle','aiPhoto','aiRegion','aiClearPhoto','aiWhole']) $(id).disabled = !!st.aiWork;
+  $('aiEditLabel').hidden = $('aiEditCur').disabled = attached || raster;
+  $('aiModel').hidden = attached || raster || !(st.aiModels?.length > 1);
+  $('aiStyleLabel').hidden = $('aiStyle').hidden = !raster;
+  $('aiDetect').disabled = !!st.aiWork;
+  $('aiGo').disabled = !!st.aiWork || (attached && !st.aiPhoto);
+  $('aiGo').textContent = raster ? (ko ? '삽화 만들기' : 'Generate illustration')
+    : attached ? (ko ? '도식 복원' : 'Restore editable figure') : X6.aiGo;
+}
+function resetAiPhoto() {
+  st.aiPhoto = null;
+  st.aiRegionFailed = false;
+  $('aiScan').hidden = true;
+  $('aiSource').removeAttribute('src');
+  $('aiMsg').textContent = $('aiPhoto').files.length ? (ko ? '그림 영역 찾기를 눌러 주세요.' : 'Find the figure regions first.') : '';
+  syncAiControls();
+  height();
+}
+function paintAiOutline() {
+  const box = st.aiPhoto?.regions[Number($('aiRegion').value)]?.box;
+  const outline = $('aiBoxOutline');
+  outline.hidden = !box;
+  if (!box) return;
+  const [top,left,bottom,right] = box;
+  Object.assign(outline.style,{top:top/10+'%',left:left/10+'%',width:(right-left)/10+'%',height:(bottom-top)/10+'%'});
+}
+async function detectAiRegions({whole = false} = {}) {
+  const file = $('aiPhoto').files[0], msg = $('aiMsg');
+  if (!file || st.aiWork) return;
+  if (!token()) { msg.textContent = X6.aiErr.login_required; return; }
+  st.aiWork = true;
+  syncAiControls();
+  msg.textContent = whole ? (ko ? '사진을 불러오는 중…' : 'Loading photo…') : (ko ? '그림 영역을 찾는 중…' : 'Finding figure regions…');
+  try {
+    const source = await photoData(file);
+    const r = whole ? {regions:[]} : await api('/api/workshop/figure-regions','POST',{image:source, lang});
+    if ($('aiPhoto').files[0] !== file) return;
+    st.aiRegionFailed = false;
+    const regions = r.regions || [], select = $('aiRegion');
+    st.aiPhoto = {source,regions};
+    select.replaceChildren();
+    regions.forEach((region,i) => select.append(new Option((i+1)+' · '+(region.label || (ko ? '그림' : 'Figure')),String(i))));
+    select.append(new Option(ko ? '사진 전체' : 'Whole photo','-1'));
+    $('aiSource').src = source;
+    $('aiScan').hidden = false;
+    paintAiOutline();
+    msg.textContent = regions.length ? (ko ? '사용할 그림 영역을 골라 주세요.' : 'Choose a figure region.')
+      : (ko ? '자동 감지된 영역이 없습니다. 사진 전체를 쓰거나 잘라서 다시 올릴 수 있습니다.' : 'No regions detected. Use the whole photo or upload a crop.');
+  } catch (e) {
+    if ($('aiPhoto').files[0] === file) {
+      st.aiRegionFailed = true;
+      msg.textContent = AI_MESSAGES[e.code] || X6.aiErr[e.code] || errText(e);
+    }
+  } finally { st.aiWork = false; syncAiControls(); height(); }
+}
+async function decodeAiImage(src) {
+  const image = new Image();
+  image.src = src;
+  await image.decode();
+  return image;
+}
+async function aiCrop(photo, index) {
+  const box = photo.regions[index]?.box;
+  if (!box) return photo.source;
+  const im = await decodeAiImage(photo.source), canvas = document.createElement('canvas');
+  const [top,left,bottom,right] = box;
+  const x = Math.floor(left * im.width / 1000), y = Math.floor(top * im.height / 1000);
+  canvas.width = Math.max(1, Math.ceil(right * im.width / 1000) - x);
+  canvas.height = Math.max(1, Math.ceil(bottom * im.height / 1000) - y);
+  canvas.getContext('2d').drawImage(im,x,y,canvas.width,canvas.height,0,0,canvas.width,canvas.height);
+  return canvas.toDataURL('image/jpeg',.88);
+}
+async function illustrationAsset(src, title) {
+  const image = await decodeAiImage(src), c = document.createElement('canvas');
+  for (const scale of [1,.85,.7,.55,.4]) {
+    c.width = Math.max(1,Math.round(image.naturalWidth*scale));
+    c.height = Math.max(1,Math.round(image.naturalHeight*scale));
+    const g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0,0,c.width,c.height);
+    g.drawImage(image,0,0,c.width,c.height);
+    const compressed = c.toDataURL('image/jpeg',.9);
+    if (compressed.length < 280000) return {format:'haslalab-illustration',version:1,title,image:compressed,width:c.width,height:c.height};
+  }
+  throw new Error(ko ? '삽화 파일이 너무 큽니다.' : 'The illustration is too large.');
+}
+function showIllustration(src, prompt, left) {
+  if (typeof src !== 'string' || !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src)) throw {code:'illustration_failed'};
+  const host = $('aiIllustration');
+  host.hidden = false;
+  host.innerHTML = '<img id="aiRasterPreview" alt=""><label for="aiRasterTitle"></label><input id="aiRasterTitle" maxlength="60"><div class="row" id="aiRasterTools"></div><p class="note" id="aiRasterStatus" role="status"></p>';
+  const im = $('aiRasterPreview');
+  im.src = src; im.alt = ko ? '생성한 시험지 삽화' : 'Generated worksheet illustration';
+  const title = $('aiRasterTitle');
+  host.querySelector('label').textContent = ko ? '삽화 이름' : 'Illustration name';
+  title.value = prompt.slice(0,60) || (ko ? '문제 삽화' : 'Worksheet illustration');
+  const tools = $('aiRasterTools'), status = $('aiRasterStatus');
+  const provider = window.HL_WORKSHOP_PROJECTS.providerSelect();
+  const button = (text, fn) => { const b=document.createElement('button');b.type='button';b.textContent=text;b.onclick=fn;return b; };
+  const fileExt = src.slice(11,src.indexOf(';')), getTitle = () => title.value.trim() || (ko ? '문제 삽화' : 'Worksheet illustration');
+  tools.append(provider,button(ko ? '삽화 저장' : 'Save illustration', async (event) => {
+    const saveButton = event.currentTarget;
+    saveButton.disabled = true;
+    try {
+      const name = getTitle(), selected = provider.value, asset = await illustrationAsset(src,name);
+      if (selected === 'store') {
+        await api('/api/workshop/storage/files','POST',projectUpload(JSON.stringify(asset),projectFileName(name),{folder:'삽화',ensure_folder:'1'}),true);
+      } else await drawStorage.saveExternal(selected,'illustration',name,asset);
+      status.textContent = ko ? '저장했습니다. 시험지 제작에서 그림 불러오기로 선택할 수 있습니다.' : 'Saved. Select it under Import figure in the test-paper maker.';
+    } catch (e) { status.textContent = window.HL_WORKSHOP_PROJECTS.error(e); }
+    finally { saveButton.disabled = false; height(); }
+  }),button(ko ? '원본 내려받기' : 'Download original', () => {
+    const content = Uint8Array.from(atob(src.slice(src.indexOf(',')+1)),ch=>ch.charCodeAt(0));
+    const ext = fileExt === 'jpeg' ? 'jpg' : fileExt;
+    download(new Blob([content],{type:'image/'+fileExt}),projectFileName(getTitle()).replace(/\.json$/,'.'+ext));
+  }));
+  $('aiMsg').textContent = (ko ? '삽화가 생성되었습니다.' : 'Illustration generated.') + (Number.isFinite(left) ? ' '+X6.aiLeft(left) : '');
+  height();
+}
 async function aiDraw() {
-  const box = $('aiMsg'), text = ($('aiPrompt')?.value || '').trim(), file = $('aiPhoto').files[0];
-  const edit = !file && !!$('aiEditCur')?.checked;
-  if ($('aiGo').disabled) return;
-  if (!text && !file) { $('aiPrompt')?.focus(); return; }
-  if (!token()) { box.innerHTML = `${esc(X6.aiErr.login_required)} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
-  const base = JSON.stringify(projectData());
-  const scene = edit ? clone(st.scene) : null;
+  const box = $('aiMsg'), text = $('aiPrompt').value.trim(), file = $('aiPhoto').files[0];
+  const photo = st.aiPhoto, cropIndex = Number($('aiRegion').value), raster = $('aiOutput').value === 'illustration';
+  const edit = !raster && !file && $('aiEditCur').checked;
+  if (st.aiWork || (file && !photo)) return;
+  if (!text && !file) { $('aiPrompt').focus(); return; }
+  if (!token()) { box.innerHTML = '<span>'+esc(X6.aiErr.login_required)+'</span> <a class="btn" href="/#/login" target="_top">'+T.login+'</a>'; return; }
+  const base = JSON.stringify(projectData()), scene = edit ? clone(st.scene) : null;
+  const model = !$('aiModel').hidden ? $('aiModel').value : '', style = $('aiStyle').value;
   $('aiProposal').hidden = true;
   $('aiProposal').replaceChildren();
-  box.textContent = '…'; $('aiGo').disabled = true;
+  $('aiIllustration').hidden = true;
+  $('aiIllustration').replaceChildren();
+  box.textContent = raster ? (ko ? '삽화를 그리는 중…' : 'Generating illustration…') : '…';
+  st.aiWork = true;
+  syncAiControls();
   try {
-    const model = $('aiModel') && !$('aiModel').hidden ? $('aiModel').value : '';
-    const r = file
-      ? await api('/api/workshop/scene-from-image', 'POST', {image: await photoData(file), prompt: text, lang})
-      : await api('/api/workshop/ai/scene', 'POST', {prompt: text, ...(scene ? {scene} : {}), lang, ...(model ? {model} : {})});
-    const v = validateScene(r?.scene, {lenient: true});
-    if (!v.scene?.objects.length) throw Object.assign(new Error('empty'), {code: 'empty'});
+    const image = photo ? await aiCrop(photo,cropIndex) : undefined;
+    if (raster) {
+      const r = await api('/api/workshop/illustration','POST',{prompt:text,style,lang,...(image ? {image} : {})});
+      showIllustration(r.image,text,r.left);
+      return;
+    }
+    const r = image
+      ? await api('/api/workshop/scene-from-image', 'POST', {image, prompt:text, lang})
+      : await api('/api/workshop/ai/scene', 'POST', {prompt:text,...(scene ? {scene} : {}),lang,...(model ? {model} : {})});
+    const v = validateScene(r?.scene,{lenient:true});
+    if (!v.scene?.objects.length) throw {code:'empty'};
     if (!v.scene.view) v.scene.view = sceneBounds(v.scene);
-    const recognition = file ? {unsure: Array.isArray(r.unsure) ? r.unsure : [], left: r.left} : null;
-    showAiProposal(v.scene, base, edit, recognition);
-    const notes = (Array.isArray(r.notes) ? r.notes : []).filter(n => typeof n === 'string').slice(0, 6);
-    $('aiMsg').innerHTML = `${notes.length ? `<ul>${notes.map(n => `<li>${esc(n.slice(0, 200))}</li>`).join('')}</ul>` : ''}${Number.isFinite(r.left) ? `<span class="note">${esc(X6.aiLeft(r.left))}</span>` : ''}`;
-  } catch (e) { box.innerHTML = `<span class="bad">${esc(X6.aiErr[e.code] || errText(e))}</span>`; }
-  finally { if ($('aiGo')) $('aiGo').disabled = false; }
+    const recognition = image ? {unsure:Array.isArray(r.unsure) ? r.unsure : [],left:r.left} : null;
+    showAiProposal(v.scene,base,edit,recognition);
+    const notes = (Array.isArray(r.notes) ? r.notes : []).filter(n=>typeof n==='string').slice(0,6);
+    box.innerHTML = (notes.length ? '<ul>'+notes.map(n=>'<li>'+esc(n.slice(0,200))+'</li>').join('')+'</ul>' : '') +
+      (Number.isFinite(r.left) ? '<span class="note">'+esc(X6.aiLeft(r.left))+'</span>' : '');
+  } catch (e) { box.textContent = AI_MESSAGES[e.code] || X6.aiErr[e.code] || errText(e); }
+  finally { st.aiWork = false; syncAiControls(); height(); }
 }
 const saves = () => { try { const l = JSON.parse(store.get(SAVES_KEY) || '[]'); return Array.isArray(l) ? l.filter(x => x && typeof x.name === 'string' && x.scene) : []; } catch (e) { return []; } };
 function saveLocal() {
@@ -1878,10 +2020,14 @@ function shell() {
       <span class="zoom" role="group" aria-label="zoom"><button type="button" id="bZout" title="${esc(tl.zoomOut)} (−)" aria-label="${esc(tl.zoomOut)}">−</button><span id="zoomPct" class="pct">100%</span><button type="button" id="bZin" title="${esc(tl.zoomIn)} (+)" aria-label="${esc(tl.zoomIn)}">+</button><button type="button" id="bZfit" title="${esc(tl.zoomFit)} (0)">${tl.zoomFit}</button></span>
       <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><label class="btn"><input type="checkbox" id="cVals" style="width:auto"> ${tl.values}</label><button type="button" id="bFit" title="${esc(tl.frameMark)}">${T.fit}</button></div>
     <details class="aibox" id="aiBox"><summary>${ko ? '✨ AI 그림 작업' : '✨ AI figure maker'}</summary>
-      <p class="note">${ko ? '설명으로 그리거나 문제 사진의 도식을 편집 가능한 그림으로 복원합니다.' : 'Draw from a description or turn a problem photo into an editable figure.'}</p>
+      <p class="note">${ko ? '문제 사진의 그림 영역은 Gemini 3.8 Flash로 찾습니다.' : 'Gemini 3.8 Flash finds figure regions in worksheet photos.'}</p>
+      <div class="row"><label for="aiOutput">${ko ? '결과 형식' : 'Output'}</label><select id="aiOutput"><option value="scene">${ko ? '편집 가능한 시뮬레이션 도식' : 'Editable simulation figure'}</option><option value="illustration">${ko ? '시험지 삽화 · Gemini 3 Pro Image' : 'Worksheet illustration · Gemini 3 Pro Image'}</option></select>
+      <label for="aiStyle" id="aiStyleLabel" hidden>${ko ? '삽화 그림체' : 'Illustration style'}</label><select id="aiStyle" hidden><option value="exam">${ko ? '시험지 흑백 선화' : 'Exam line art'}</option><option value="textbook">${ko ? '교과서 컬러 삽화' : 'Color textbook'}</option><option value="technical">${ko ? '과학 논문 도식' : 'Technical diagram'}</option></select></div>
       <textarea id="aiPrompt" aria-label="${ko ? '그림 설명 또는 복원 요청' : 'Figure description or tracing instructions'}" rows="2" maxlength="1200" placeholder="${esc(X6.aiHint)}"></textarea>
-      <div class="row"><label class="note" for="aiPhoto">${ko ? '문제 사진 첨부' : 'Attach a problem photo'}</label><input type="file" id="aiPhoto" accept="image/jpeg,image/png,image/webp"><button type="button" id="aiClearPhoto" hidden>${ko ? '첨부 지우기' : 'Remove attachment'}</button></div>
-      <div class="row"><label class="chk"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div><div id="aiProposal" hidden></div></details>
+      <div class="row"><label class="note" for="aiPhoto">${ko ? '문제 사진 첨부' : 'Attach a problem photo'}</label><input type="file" id="aiPhoto" accept="image/jpeg,image/png,image/webp"><button type="button" id="aiClearPhoto" hidden>${ko ? '첨부 지우기' : 'Remove attachment'}</button><button type="button" id="aiDetect" hidden>${ko ? '그림 영역 찾기' : 'Find figure regions'}</button><button type="button" id="aiWhole" hidden>${ko ? '사진 전체 사용' : 'Use whole photo'}</button></div>
+      <div id="aiScan" hidden><div class="ai-photo-preview"><img id="aiSource" alt="${ko ? '첨부한 문제 사진' : 'Attached worksheet photo'}"><span id="aiBoxOutline" aria-hidden="true"></span></div>
+      <div class="row"><label for="aiRegion">${ko ? '사용할 영역' : 'Region to use'}</label><select id="aiRegion"></select></div></div>
+      <div class="row"><label class="chk" id="aiEditLabel"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div><div id="aiProposal" hidden></div><div id="aiIllustration" hidden></div></details>
     <div id="aiNote" class="ainote" hidden></div>
     <div class="work"><div class="draw-library">
       <details class="palwrap parts" id="templateShelf"><summary>${esc(X4.templates)}</summary><label class="note" for="templateDomain">${ko ? '분야' : 'Topic'}</label>
@@ -1912,15 +2058,13 @@ function shell() {
   $('bTemplates').onclick = () => { const shelf = $('templateShelf'); shelf.open = true; shelf.scrollIntoView({block: 'nearest'}); $('templateDomain').focus({preventScroll: true}); };
   $('templateShelf').ontoggle = e => { if (e.target.open) paintTemplates(); height(); };
   $('templateDomain').onchange = paintTemplates;
-  function syncAiPhoto() {
-    const attached = !!$('aiPhoto').files.length;
-    $('aiClearPhoto').hidden = !attached;
-    $('aiEditCur').disabled = attached;
-    $('aiModel').disabled = attached;
-    $('aiGo').textContent = attached ? (ko ? '사진에서 복원' : 'Trace photo') : X6.aiGo;
-  }
-  $('aiPhoto').onchange = syncAiPhoto;
-  $('aiClearPhoto').onclick = () => { $('aiPhoto').value = ''; syncAiPhoto(); $('aiPhoto').focus(); };
+  $('aiOutput').onchange = syncAiControls;
+  $('aiPhoto').onchange = resetAiPhoto;
+  $('aiClearPhoto').onclick = () => { $('aiPhoto').value = ''; resetAiPhoto(); $('aiPhoto').focus(); };
+  $('aiDetect').onclick = () => detectAiRegions();
+  $('aiWhole').onclick = () => detectAiRegions({whole:true});
+  $('aiRegion').onchange = paintAiOutline;
+  syncAiControls();
   $('bSave').onclick = toStorage; $('bOpenStore').onclick = showDrawProjects;
   $('aiGo').onclick = aiDraw; $('aiBox').ontoggle = () => { if ($('aiBox').open) aiModels(); };
   $('bShare').onclick = openShare;

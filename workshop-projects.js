@@ -62,12 +62,12 @@
     async function list(kind, provider) {
       if (provider === 'store') {
         const r = await request('/api/workshop/storage?kind=' + (kind === 'compute' ? 'sim' : 'figure'));
-        const folder = kind === 'compute' ? '전산물리' : '그림';
-        return (r.files || []).filter(f => f.folder === folder && /\.json$/i.test(f.name)).map(f => ({...f, provider}));
+        const folders = kind === 'compute' ? ['전산물리'] : kind === 'attachment' ? ['그림','삽화'] : ['그림'];
+        return (r.files || []).filter(f => folders.includes(f.folder) && /\.json$/i.test(f.name)).map(f => ({...f, provider}));
       }
       const r = await request(connector(provider, 'files'));
       return (r.files || []).filter(f => !f.folder && /\.json$/i.test(f.name) &&
-        (f.name.endsWith(suffix(kind)) || !/-haslalab-(figure|compute)\.json$/i.test(f.name))).map(f => ({...f, provider, scope: provider === 'github' ? scopeOf(r) : null}));
+        (f.name.endsWith(suffix(kind)) || (kind === 'attachment' && (f.name.endsWith(suffix('figure')) || f.name.endsWith(suffix('illustration')))) || !/-haslalab-(figure|compute|illustration)\.json$/i.test(f.name))).map(f => ({...f, provider, scope: provider === 'github' ? scopeOf(r) : null}));
     }
     function load(entry) {
       const p = entry.provider || 'store';
@@ -119,7 +119,7 @@
         if (round !== generation || !host.isConnected) return;
         status.textContent = rows.length ? '' : txt('이 저장소에 저장한 프로젝트가 없습니다.', 'No projects in this location.');
         for (const entry of rows) {
-          const name = entry.name.replace(/(?:-[a-f0-9]{8}-haslalab-(?:figure|compute))?\.json$/i, '');
+          const name = entry.name.replace(/(?:-[a-f0-9]{8}-haslalab-(?:figure|compute|illustration))?\.json$/i, '');
           const item = button(name, async () => {
             const selection = ++opening;
             item.disabled = true;
@@ -168,7 +168,7 @@
     const m = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(svg);
     return {src, w:m ? +m[1] : 800, h:m ? +m[2] : 400, scene:clean};
   }
-  function pickFigure(storage, {onPick, height, local}) {
+  function pickFigure(storage, {onPick, height, local, allowIllustrations = false}) {
     const dialog = make('dialog', null, 'stdlg');
     const head = make('div', null, 'dlg-head');
     head.append(make('h2', txt('그림 불러오기','Import figure')), button(txt('닫기','Close'), () => dialog.close()));
@@ -189,6 +189,22 @@
       finally { el.disabled = false; height?.(); }
     }
     const showPages = (raw, name) => {
+      if (allowIllustrations && raw?.format === 'haslalab-illustration') {
+        const src = raw.image, w = raw.width, h = raw.height;
+        if (typeof src !== 'string' || src.length >= 390000 || !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src) ||
+          !Number.isInteger(w) || w < 1 || w > 2000 || !Number.isInteger(h) || h < 1 || h > 2000)
+          throw new Error(txt('삽화 파일을 읽을 수 없습니다.', 'Could not read the illustration.'));
+        const preview = make('img'); preview.src = src; preview.alt = raw.title || txt('삽화','Illustration');
+        preview.style.maxWidth = '100%'; preview.style.maxHeight = '180px';
+        const use = button(txt('이 삽화 사용','Use this illustration'), async () => {
+          use.disabled = true;
+          try { await onPick({src,w,h}); if (dialog.open) dialog.close(); }
+          catch (e) { status.textContent = error(e); } finally { use.disabled = false; height?.(); }
+        });
+        choices.replaceChildren(preview, use);
+        use.focus();
+        return;
+      }
       const list = pages(raw);
       choices.replaceChildren(make('h3', name.replace(/\.json$/i,'')));
       for (const [i, scene] of list.entries()) {
@@ -198,7 +214,7 @@
       }
       choices.querySelector('button')?.focus();
     };
-    library(host, storage, {kind:'figure', title:txt('그림 프로젝트','Figure projects'), height,
+    library(host, storage, {kind:allowIllustrations ? 'attachment' : 'figure', title:allowIllustrations ? txt('그림과 삽화','Figures and illustrations') : txt('그림 프로젝트','Figure projects'), height,
       onOpen: (raw, entry) => showPages(raw, entry.name),
       onResume: local ? () => showPages(local, txt('현재 브라우저 작업','Current browser draft')) : null});
   }
