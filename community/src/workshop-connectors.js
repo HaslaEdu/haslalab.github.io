@@ -111,33 +111,48 @@ const fromB64 = s => Uint8Array.from(atob(String(s).replace(/\s+/g, '')), c => c
 const sha = async s => b64u(await crypto.subtle.digest('SHA-256', enc.encode(s)));
 const rand = n => b64u(crypto.getRandomValues(new Uint8Array(n)));
 
-/* ---- tokens at rest: AES-GCM with WORKSHOP_TOKEN_KEY, bound to the member and the use (additional data) ---- */
+/* ---- tokens at rest: AES-GCM, bound to the member and the use (additional data) ----
+   The key is WORKSHOP_TOKEN_KEY (base64, 32 bytes) when the owner set one ("v1." tokens); otherwise it is derived with
+   HKDF-SHA256 from the existing GOOGLE_CLIENT_SECRET ("d1." tokens; owner's choice, 2026-11-24, so no new secret is needed).
+   Changing the Google client secret (or adding WORKSHOP_TOKEN_KEY later) only means members link Drive again. */
 const keys = new Map();
 function tokenKeyBytes(env) {
   try { const k = fromB64(String(env?.WORKSHOP_TOKEN_KEY || '').trim()); return k.length === 32 ? k : null; } catch { return null; }
 }
-async function aesKey(env) {
-  const raw = String(env.WORKSHOP_TOKEN_KEY || '').trim();
-  if (!keys.has(raw)) {
-    const k = tokenKeyBytes(env);
-    if (!k) throw Object.assign(new Error('token_key_missing'), {status: 503, code: 'not_configured'});
-    keys.set(raw, await crypto.subtle.importKey('raw', k, 'AES-GCM', false, ['encrypt', 'decrypt']));
+const derivable = env => String(env?.GOOGLE_CLIENT_SECRET || '').length >= 16;
+async function aesKey(env, kind) {
+  if (kind === 'v1') {
+    const raw = String(env.WORKSHOP_TOKEN_KEY || '').trim(), id = 'v1:' + raw;
+    if (!keys.has(id)) {
+      const k = tokenKeyBytes(env);
+      if (!k) throw Object.assign(new Error('token_key_missing'), {status: 503, code: 'not_configured'});
+      keys.set(id, await crypto.subtle.importKey('raw', k, 'AES-GCM', false, ['encrypt', 'decrypt']));
+    }
+    return keys.get(id);
   }
-  return keys.get(raw);
+  const secret = String(env.GOOGLE_CLIENT_SECRET || ''), id = 'd1:' + secret;
+  if (!keys.has(id)) {
+    if (!derivable(env)) throw Object.assign(new Error('token_key_missing'), {status: 503, code: 'not_configured'});
+    const base = await crypto.subtle.importKey('raw', enc.encode(secret), 'HKDF', false, ['deriveKey']);
+    keys.set(id, await crypto.subtle.deriveKey({name: 'HKDF', hash: 'SHA-256', salt: enc.encode('haslalab-workshop-connectors'), info: enc.encode('drive-token-key-v1')},
+      base, {name: 'AES-GCM', length: 256}, false, ['encrypt', 'decrypt']));
+  }
+  return keys.get(id);
 }
 export async function sealToken(env, plain, aad) {
+  const kind = tokenKeyBytes(env) ? 'v1' : 'd1';
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const ct = await crypto.subtle.encrypt({name: 'AES-GCM', iv, additionalData: enc.encode(aad)}, await aesKey(env), enc.encode(plain));
-  return 'v1.' + b64u(iv) + '.' + b64u(ct);
+  const ct = await crypto.subtle.encrypt({name: 'AES-GCM', iv, additionalData: enc.encode(aad)}, await aesKey(env, kind), enc.encode(plain));
+  return kind + '.' + b64u(iv) + '.' + b64u(ct);
 }
 export async function openToken(env, sealed, aad) {
   const [v, iv, ct] = String(sealed || '').split('.');
-  if (v !== 'v1' || !iv || !ct) throw new Error('sealed_bad');
-  return dec.decode(await crypto.subtle.decrypt({name: 'AES-GCM', iv: unb64u(iv), additionalData: enc.encode(aad)}, await aesKey(env), unb64u(ct)));
+  if ((v !== 'v1' && v !== 'd1') || !iv || !ct) throw new Error('sealed_bad');
+  return dec.decode(await crypto.subtle.decrypt({name: 'AES-GCM', iv: unb64u(iv), additionalData: enc.encode(aad)}, await aesKey(env, v), unb64u(ct)));
 }
 
 /* ---- configuration ---- */
-export const driveConfigured = env => !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && tokenKeyBytes(env));
+export const driveConfigured = env => !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET && (tokenKeyBytes(env) || derivable(env)));
 export const githubConfigured = env => !!(env.GITHUB_APP_ID && env.GITHUB_APP_SLUG && /^[a-z0-9][a-z0-9-]{0,99}$/i.test(String(env.GITHUB_APP_SLUG))
   && env.GITHUB_APP_CLIENT_ID && env.GITHUB_APP_CLIENT_SECRET && env.GITHUB_APP_PRIVATE_KEY);
 

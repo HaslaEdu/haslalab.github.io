@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {generateKeyPairSync, verify as nodeVerify, createHash} from 'node:crypto';
-import {createWorkshopConnectorsRouter, workshopConnectorsForgetUser, cleanGhPath, ghFileName, githubAppJwt, sealToken, openToken, pkcs1ToPkcs8,
+import {createWorkshopConnectorsRouter, workshopConnectorsForgetUser, cleanGhPath, ghFileName, githubAppJwt, sealToken, openToken, driveConfigured, pkcs1ToPkcs8,
   googleRedirectUri, githubRedirectUri, connectorOrigin, CONNECTOR_ORIGIN, DRIVE_SCOPE, allowedReturn} from './src/workshop-connectors.js';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
@@ -402,4 +402,21 @@ test('GitHub paths: no "..", no leading "/", no dot folders, a bounded depth and
   assert.equal(cleanGhPath('',{allowEmpty:false}),null);
   assert.equal(ghFileName('../.env#1.pdf','pdf'),'_env_1.pdf');
   assert.equal(ghFileName('보고서 (최종).pdf','pdf'),'보고서 (최종).pdf');
+});
+
+test('without WORKSHOP_TOKEN_KEY the Drive token key is derived from the Google client secret; both kinds still open', async () => {
+  const derivedEnv = {GOOGLE_CLIENT_ID: 'id', GOOGLE_CLIENT_SECRET: 'a-google-client-secret-for-tests'};
+  assert.ok(driveConfigured(derivedEnv), 'Drive is set up with only the sign-in client');
+  assert.ok(!driveConfigured({GOOGLE_CLIENT_ID: 'id'}), 'not without the client secret');
+  const d = await sealToken(derivedEnv, 'refresh-token-value', 'drive-refresh:7');
+  assert.match(d, /^d1\./);
+  assert.ok(!d.includes('refresh-token-value'));
+  assert.equal(await openToken(derivedEnv, d, 'drive-refresh:7'), 'refresh-token-value');
+  await assert.rejects(openToken(derivedEnv, d, 'drive-refresh:8'), 'bound to the member');
+  await assert.rejects(openToken({...derivedEnv, GOOGLE_CLIENT_SECRET: 'another-secret-value-for-tests'}, d, 'drive-refresh:7'), 'a new client secret cannot open old tokens');
+  const keyEnv = {...derivedEnv, WORKSHOP_TOKEN_KEY: Buffer.alloc(32, 7).toString('base64')};
+  const v = await sealToken(keyEnv, 'x', 'a');
+  assert.match(v, /^v1\./);
+  assert.equal(await openToken(keyEnv, v, 'a'), 'x');
+  assert.equal(await openToken(keyEnv, d, 'drive-refresh:7'), 'refresh-token-value', 'derived tokens still open once a key is added');
 });

@@ -138,3 +138,5 @@ GitHub is "configured" once all five (`GITHUB_APP_ID`, `GITHUB_APP_SLUG`, `GITHU
   there is no leading `/`, and at most 8 levels and 300 characters. A Drive file is reached only if its parents lead
   up to the «HaslaLab» folder.
 - No Google or GitHub token is ever sent to the browser or written to the logs.
+
+> **Optional since 2026-11-24:** without `WORKSHOP_TOKEN_KEY` the Worker derives the Drive token key from the existing `GOOGLE_CLIENT_SECRET` (HKDF). Changing that client secret, or adding `WORKSHOP_TOKEN_KEY` later, only means members link Drive again.
