@@ -152,7 +152,6 @@ let expectedHtml=html.replace(/<script src="site-catalogue\.js(?:\?[^"\n]*)?"><\
   .replace(/<script src="learn-path\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="learn-path.js?v='+digest(read('learn-path.js'))+'"></script>');
 for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js','learner-form.js','league-view.js','weekly-set.js','workshop-connectors.js','share-publish.js','workshop-share.js','workshop-class-storage.js','workshop-publish-source.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
 expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
-outputs.set('index.html',expectedHtml);
 let examHtml=read('sim/exam.html');
 for(const file of ['result-comparison.js','exam-network.js','xlsx-lite.js'])examHtml=examHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read('sim/'+file))+'"');
 outputs.set('sim/exam.html',examHtml);
@@ -199,7 +198,9 @@ outputs.set('teach.html',teachHtml);
   drawHtml=drawHtml.replace(/src="draw\.js(?:\?[^"\n]*)?"/,'src="draw.js?v='+digest(drawJs)+'"').replace(/src="share-publish\.js(?:\?[^"\n]*)?"/,'src="share-publish.js?v='+digest(read('share-publish.js'))+'"');
   drawHtml=drawHtml.replace(/src="workshop-projects\.js(?:\?[^"\n]*)?"/,'src="workshop-projects.js?v='+digest(read('workshop-projects.js'))+'"');
   outputs.set('draw.html',drawHtml);
+  expectedHtml=expectedHtml.replace(/const DRAW_FRAME_VERSION="[a-f0-9]{12}";/,'const DRAW_FRAME_VERSION="'+digest(drawHtml)+'";');
 }
+outputs.set('index.html',expectedHtml);
 outputs.set('concepts.html',read('concepts.html').replace(/href="concepts\.css(?:\?[^"\n]*)?"/,'href="concepts.css?v='+digest(read('concepts.css'))+'"').replace(/src="concepts\.js(?:\?[^"\n]*)?"/,'src="concepts.js?v='+digest(read('concepts.js'))+'"'));
 const sheetModule=read('sim/monthly-answer-sheet.mjs').replace(/from '\.\.\/monthly-problems\.mjs(?:\?[^'\n]*)?'/,"from '../monthly-problems.mjs?v="+digest(read('monthly-problems.mjs'))+"'");
 outputs.set('sim/monthly-answer-sheet.mjs',sheetModule);
