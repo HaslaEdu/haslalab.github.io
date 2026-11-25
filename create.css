@@ -40,19 +40,25 @@ main.wide{max-width:1480px}
 .compute-maker details{margin-top:14px}.compute-maker details textarea{margin-top:8px}
 .compute-maker #cpPlots figure{margin:12px 0}.compute-maker #cpPlots img{display:block;max-width:100%;height:auto;margin:12px auto;border-radius:8px}
 .compute-maker #cpPlots svg{width:100%;display:block;background:var(--alt);border-radius:8px}
-.compute-chat #cpAssistantBody{width:min(100%,760px);margin-inline:auto;display:flex;flex-direction:column;min-height:min(65vh,580px)}
-.compute-transcript{flex:1;min-height:0}
-.compute-chat #cpChatHeading{font-size:1.1rem;margin:4px 0 16px}
-.compute-chat #cpChat{display:flex;flex-direction:column;gap:22px;max-height:min(49vh,520px);overflow:auto;overscroll-behavior:contain;padding:4px 8px}
+.compute-chat #cpAssistantBody{width:min(100%,820px);height:var(--dock-height,clamp(430px,68vh,720px));margin-inline:auto;display:flex;flex-direction:column;overflow:hidden}
+.compute-chat-header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 0 9px;border-bottom:1px solid var(--line)}
+.compute-chat #cpChatHeading{font-size:1.05rem;margin:0}
+.compute-chat-tools{display:flex;gap:5px}
+.compute-chat-tools button{min-width:34px;min-height:34px;padding:2px 7px;font-size:17px;line-height:1}
+.compute-transcript{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:14px 7px 8px}
+.compute-chat #cpChat{display:flex;flex-direction:column;gap:18px}
 .compute-chat #cpChat article{min-width:0;max-width:100%}
-.compute-chat #cpChat p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.compute-message{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;overflow-x:auto;line-height:1.65}
+.compute-message .katex-display{max-width:100%;padding-block:4px;overflow:auto hidden;white-space:normal}
+.compute-message pre{white-space:pre;line-height:1.45}
 .compute-chat #cpChat details{margin:8px 0;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--alt)}
 .compute-chat #cpChat button{padding:5px 10px;font-size:13px}
 .compute-chat #cpChat strong{display:block;margin-bottom:4px;font-size:12px;color:var(--muted)}
 .compute-chat #cpChat .compute-turn-user{align-self:flex-end;max-width:85%;padding:9px 13px;border-radius:16px 16px 4px 16px;background:var(--soft)}
 .compute-chat #cpChat .compute-turn-assistant{align-self:stretch}
 .compute-chat #cpTaskStatus:empty,.compute-chat #cpChat:empty{display:none}
-.compute-chat #cpForm{margin-top:14px;padding:10px;border:1px solid var(--line);border-radius:16px;background:var(--alt)}
+.compute-chat #cpTaskStatus{margin:5px 0 0}
+.compute-chat #cpForm{margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:16px;background:var(--alt)}
 .compute-chat #cpForm:focus-within{border-color:var(--accent)}
 .compute-chat #cpPrompt{border:0;background:transparent;resize:vertical;min-height:3.5em}
 .compute-chat #cpUndo{margin-top:10px;align-self:flex-start}
@@ -84,14 +90,18 @@ main.wide{max-width:1480px}
   .compute-maker:not(.is-workspace) #cpCodePane>[data-dock-body]{height:auto}
   .compute-maker:not(.is-workspace) #cpCodePane.dock-collapsed>[data-dock-body]{display:none}
   .compute-maker:not(.is-workspace) #cpCodePane.dock-collapsed{min-height:96px;padding-inline:0}
+  .is-workspace:not(.chat-expanded) .compute-work{display:grid;grid-template-columns:minmax(0,1fr) min(var(--dock-assistant-width,440px),62%);align-items:start;gap:22px}
+  .is-workspace:not(.chat-expanded) #cpAssistant>.dock-handle{--dock-axis:x;--dock-sign:-1;--dock-max:.62;top:0;bottom:0;left:-11px;right:auto;width:22px;height:auto;cursor:col-resize}
+  .is-workspace:not(.chat-expanded) #cpAssistant>.dock-handle::before{inset:0 auto 0 calc(50% - 1px);width:2px;height:auto}
 }
 .copy-fallback-field{position:fixed;inset:0 auto auto 0;inline-size:1px;block-size:1px;opacity:0;pointer-events:none}
 .compute-runtime-frame{position:absolute;inline-size:1px;block-size:1px;border:0;clip-path:inset(50%);pointer-events:none}
-.is-workspace .compute-work,.is-workspace .compute-document{display:block}
-.is-workspace[data-pane=assistant] .compute-document,.is-workspace:not([data-pane=assistant]) .compute-chat{display:none}
+.is-workspace .compute-document{display:block;margin:0}
+.is-workspace.chat-expanded .compute-document{display:none}
 .is-workspace[data-document=code] #cpResultPane,.is-workspace[data-document=result] #cpCodePane{display:none}
 @media(max-width:760px){
   .compute-document,.is-workspace .compute-work{display:block}
+  .is-workspace[data-pane=assistant] .compute-document,.is-workspace:not([data-pane=assistant]) .compute-chat{display:none}
   .compute-document>.panel+.panel{margin-top:12px}
   .is-workspace .compute-document>.panel+.panel{margin-top:0}
   .compute-maker .panel{padding:12px}
