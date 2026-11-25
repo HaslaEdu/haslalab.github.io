@@ -1,4 +1,4 @@
-import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=21eae3287f7a';
+import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=ec200103f909';
 import {FEYNMAN_HANDOUTS} from './feynman-handouts.js?v=5b92bb148a28';
 
 const API = '/api/problem-bank/private-textbooks';
@@ -35,7 +35,8 @@ const COPY = {
     chapterCount: '개 장', supplement: '부록', openPdf: '원본 PDF 열기', newTabPdf: '새 탭에서 PDF 열기',
     pdfError: 'PDF를 불러오지 못했습니다.', exercises: '연습문제',
     exerciseTitle: 'Caltech 공개 연습문제', findExercise: '연습문제 검색',
-    exerciseNote: '문항별 한국어·영어 요약입니다. 문제의 전체 조건, 그림과 해설은 각 문항의 Caltech 원문에서 볼 수 있습니다.',
+    exerciseNote: 'Caltech 공개 문제와 원본 과제에서 확인한 개별 문항의 한영 요약입니다. 링크를 열면 원문과 그림을 볼 수 있습니다.',
+    exerciseSet: '과제',
     exerciseSource: 'Caltech 원문 열기', exerciseIndex: 'Caltech 전체 목록', chapterReference: '강의 본문',
     handoutTitle: 'Caltech 강의 원본 과제·시험', handoutIndex: 'Caltech 원본 자료 전체 목차',
     handoutHomework: '과제', handoutTests: '시험·퀴즈', exerciseBook: '별책 연습문제집 (출판사 정보)',
@@ -59,7 +60,8 @@ const COPY = {
     chapterCount: 'chapters', supplement: 'Appendix', openPdf: 'Open original PDF', newTabPdf: 'Open PDF in a new tab',
     pdfError: 'Could not load the PDF.', exercises: 'Exercises',
     exerciseTitle: 'Caltech’s public exercises', findExercise: 'Find an exercise',
-    exerciseNote: 'Short Korean and English summaries. Open each Caltech original for the full statement, diagrams and solutions.',
+    exerciseNote: 'Korean and English summaries from Caltech’s exercise collection and verified course handouts. The links open the original text and figures.',
+    exerciseSet: 'Problem set',
     exerciseSource: 'Open Caltech original', exerciseIndex: 'Caltech’s full index', chapterReference: 'Lecture reference',
     handoutTitle: 'Caltech original homework and exams', handoutIndex: 'Caltech’s full handout index',
     handoutHomework: 'Homework', handoutTests: 'Exams and quizzes', exerciseBook: 'Published exercise book (publisher information)',
@@ -359,7 +361,7 @@ export function mountPrivateTextbooks(container, options) {
       const query = normalize(search.value.trim());
       const matches = FEYNMAN_EXERCISES.filter(row => !query || normalize(row.slice(1).join(' ')).includes(query));
       count.textContent = matches.length ? matches.length + ' ' + words.count : words.empty;
-      results.replaceChildren(...matches.map(([slug, titleKo, titleEn, summaryKo, summaryEn, chapter]) => {
+      results.replaceChildren(...matches.map(([slug, titleKo, titleEn, summaryKo, summaryEn, chapter, page, number, course, set]) => {
         const row = atom('details');
         row.dataset.source = slug;
         row.open = open.has(slug);
@@ -368,8 +370,10 @@ export function mountPrivateTextbooks(container, options) {
         body.lang = language;
         row.append(body);
         if (chapter) row.append(atom('p', words.chapterReference + ' ' + chapter));
+        if (page) row.append(atom('p', course + ' · ' + COPY[language].exerciseSet + ' ' + set + ' · #' + number));
         const source = atom('a', words.exerciseSource);
-        source.href = FEYNMAN_SITE + 'info/exercises/' + slug + '.html';
+        source.href = page ? FEYNMAN_COURSE_NOTES + 'pages/' + page + '.html'
+          : FEYNMAN_SITE + 'info/exercises/' + slug + '.html';
         source.target = '_blank';
         source.rel = 'noopener noreferrer';
         row.append(source);
