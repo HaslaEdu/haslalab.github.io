@@ -18,7 +18,7 @@ const problem = {ordinal: 1, number: '1.1', label: 'Sample', chapter: 'Chapter 1
 const flush = () => new Promise(done => setImmediate(done));
 
 async function setup(t, {initialToken = 'private-test-token', status = 200, withKorean = true, feynman = false,
-                         exercises = false} = {}) {
+                         exercises = false, multiChapter = false} = {}) {
   const dom = new JSDOM('<main></main>', {
     url: 'https://haslalab.org/' + PATH, runScripts: 'outside-only',
   });
@@ -53,7 +53,8 @@ async function setup(t, {initialToken = 'private-test-token', status = 200, with
     }
     if (url.pathname === API + '/goldstein') return {
       ok: true,
-      json: async () => ({book: BOOK, total: 1, page: 1, pages: 1, items: [problem]}),
+      json: async () => ({book: BOOK, total: multiChapter ? 2 : 1, page: 1, pages: 1,
+        items: multiChapter ? [problem, {...problem, ordinal: 2, number: '2.1', chapter: 'Chapter 2'}] : [problem]}),
     };
     if (url.pathname === API + '/goldstein/questions/1') return {
       ok: true,
@@ -170,7 +171,7 @@ test('Feynman guests select the same three volumes and only see official reading
   assert.equal(demo.calls.length, 0);
 });
 
-test('Feynman’s public exercises are listed inside the book and can be found in either language', async t => {
+test('Feynman’s public exercises show English by default and keep bilingual search', async t => {
   const path = PATH + '&book=feynman&section=exercises';
   assert.equal(nav.legacy(path), null);
   assert.equal(nav.parse(PATH + '&book=goldstein&section=exercises').params.get('section'), null);
@@ -184,10 +185,9 @@ test('Feynman’s public exercises are listed inside the book and can be found i
   field.value = '강제 진동';
   field.dispatchEvent(new field.ownerDocument.defaultView.Event('input'));
   assert.equal(section.querySelectorAll('details').length, 1);
-  section.querySelector('details').open = true;
-  await demo.click('English');
   const row = section.querySelector('details');
-  assert.ok(row.open);
+  assert.equal(row.lang, 'en');
+  assert.equal(section.querySelector('nav[aria-label="목차"]').textContent.includes('Dynamics and oscillations'), true);
   assert.match(row.textContent, /Driven pendulum.*I · 23/);
   assert.equal(row.querySelector('a').href, 'https://www.feynmanlectures.caltech.edu/info/exercises/forced_pendulum.html');
   assert.equal(demo.calls.length, 0);
@@ -201,13 +201,24 @@ test('the private Feynman workbook searches by exercise number and opens its ver
   const search = workbook.querySelector('input[type=search]');
   search.value = '2.1';
   search.dispatchEvent(new search.ownerDocument.defaultView.Event('input'));
-  assert.match(workbook.querySelector('details[open]').textContent, /Heat/);
+  assert.match(workbook.querySelector('nav[aria-label="목차"] [aria-current=true]').textContent, /Heat/);
   await demo.click('2.1');
-  assert.match(workbook.textContent, /온도 \$T\$를 구하라/);
-  assert.deepEqual(demo.math, ['온도 $T$를 구하라.']);
-  const english = [...workbook.querySelectorAll('button')].find(button => button.textContent === 'English');
-  english.click();
-  await flush();
   assert.equal(workbook.querySelector('iframe').getAttribute('src'), 'blob:private-source#page=5');
   assert.equal(demo.calls.at(-1).url.pathname, API + '/feynman/workbook/parts/2');
+  assert.equal(workbook.querySelector('button[aria-pressed=true]:last-child').textContent, 'English');
+  assert.deepEqual(demo.math, []);
+  await demo.click('한국어');
+  assert.match(workbook.textContent, /온도 \$T\$를 구하라/);
+  assert.deepEqual(demo.math, ['온도 $T$를 구하라.']);
+});
+
+test('private question lists can select a chapter from the same table-of-contents layout', async t => {
+  const demo = await setup(t, {multiChapter: true});
+  await demo.click(BOOK.title);
+  const navigator = demo.root.querySelector('nav[aria-label="목차"]');
+  const choose = [...navigator.querySelectorAll('button')].find(b => b.textContent.startsWith('Chapter 2'));
+  choose.click();
+  const results = demo.root.querySelector('.al-private-chapters .al-source-main');
+  assert.match(results.textContent, /2\.1 · Sample/);
+  assert.doesNotMatch(results.textContent, /1\.1 · Sample/);
 });

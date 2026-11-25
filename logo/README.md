@@ -38,4 +38,4 @@ KMChC·WOPhO는 저해상도 원본을 확대하지 않고, 원래 실루엣과 
 
 원본 이미지 주소와 자르기 내역: [물리](sources-physics.json), [과학](sources-science.json), [수학](sources-math.json). USAMO·Ortvay는 실제 문서의 제목을 사용하며 별도 영구 심벌로 주장하지 않습니다. Eötvös 원본은 유지하고 표시 크기만 조정했습니다.
 
-VPhO·VN TST는 베트남 교육훈련부 표장, SPhO·SPhO TST는 싱가포르 물리학회 표장, BPhO 두 라운드는 BPhO 공식 시험지의 표장을 공유합니다. F=ma는 AAPT 물리 대표팀 표장을 공유합니다. OBF와 SOIF는 각각의 공식 표장을 표시합니다. 추가 원본 및 추출 내역은 [물리 로고 기록](sources-physics.json)에 있습니다.
+VPhO·VN TST는 베트남 교육훈련부 표장, SPhO·SPhO TST는 싱가포르 물리학회 표장, BPhO 두 라운드는 BPhO 공식 시험지의 표장을 공유합니다. F=ma는 AAPT 물리 대표팀 표장을 공유합니다. 국가대표 선발 과정의 대회 카드와 단계 제목은 해당 국가의 국기를 표시합니다. 추가 원본 및 추출 내역은 [물리 로고 기록](sources-physics.json)에 있습니다.

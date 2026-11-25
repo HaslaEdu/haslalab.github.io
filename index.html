@@ -423,6 +423,7 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .comp .chead{display:flex;align-items:center;gap:16px;min-height:52px}
 .comp .chead .abbr{margin:0;flex:none}
 .comp .chead .clogo{max-width:54%}
+.clogo.selection-flag{width:auto;height:auto;max-width:46px;max-height:30px;border:1px solid var(--grid-bold)}
 .archive-stage-title{display:flex;align-items:center;gap:16px;--lcap:22px}
 .archive-stage-title .clogo{margin-left:0;max-width:112px}
 .clogo{width:auto;flex:none;object-fit:contain;display:block;border-radius:3px;
@@ -1057,7 +1058,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <link rel="stylesheet" href="site-design.css?v=b30f9f04791b">
 <link rel="stylesheet" href="guide.css?v=022546be75f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
-<link rel="stylesheet" href="archive-library.css?v=320eace230c8">
+<link rel="stylesheet" href="archive-library.css?v=683c26677e9c">
 </head>
 <body class="hl-site">
 
@@ -1205,7 +1206,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
 <script src="archive-navigation.js?v=10d33500b414"></script>
-<script src="site-catalogue.js?v=57aa924fd3be"></script>
+<script src="site-catalogue.js?v=27997ff2b50d"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=e43cec5305aa"></script>
 <script src="site-design.js?v=af0e919623fe"></script>
@@ -1275,7 +1276,7 @@ const pdfxUrl = p => String(p).replace(PDFX_RE, (m, sub, name) => PDF_BASE + "l/
 const UI={
 ko:{
   navHome:"홈", navComps:"아카이브", navLearn:"학습", navOly:"올림피아드", navAbout:"소개", navComm:"커뮤니티", navWork:"워크샵", navWeekly:"월별문제",
-  hOly:"올림피아드", olyLede:"국제 · 국내 물리올림피아드 기출, 실험 시뮬레이터, 월별 문제와 모의고사를 모았습니다.",
+  hOly:"올림피아드", olyLede:"국제 · 국가 물리올림피아드 기출, 실험 시뮬레이터, 월별 문제와 모의고사를 모았습니다.",
   ebLearn:"학습", hLearn:"학습", learnSoon:"준비중",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
   ownGuide:"HaslaLab 교재 · 학습 가이드", ownBasics:"HaslaLab 기초 실험 및 관측", soonOwn:"준비 중입니다.",
@@ -4928,7 +4929,11 @@ const flagImg = (cc,cls="flag",org=null) =>
 const LOGO_V = 20;
 const HOME_STRIP_V="e513a9631b25";   /* practice/home-strip.json's digest, stamped by tools/build-site-catalogue.cjs */
 const LOGO_FILES = {cmo:"cmo.svg",plancks:"plancks.svg"};
-const LOGO_SHARED={fma:"usapho",bphoii:"bpho",vntst:"vpho",sphotst:"spho"};
+const SELECTION_FLAGS={
+  aupho:"au", bpho:"gb", bphoii:"gb", fma:"us", inpho:"in", obf:"br", soif:"br",
+  spho:"sg", sphotst:"sg", twpho:"tw", usapho:"us", vntst:"vn", vpho:"vn",
+  ruphow:"ru", ruphox:"ru", ruphoy:"ru"
+};
 const LOGO_ORGANIZERS = {
   eotvos:["외트뵈시 물리학회","Roland Eotvos Physical Society"],
   baupc:["하버드 대학교","Harvard University"],cpho:["중국물리학회","Chinese Physical Society"],
@@ -4944,7 +4949,6 @@ const LOGO_ORGANIZERS = {
   vpho:["베트남 교육훈련부","Vietnam Ministry of Education and Training"]
 };
 function logoTitle(key){
-  key=LOGO_SHARED[key]||key;
   if(key==="aupho")return lang==="ko"?"호주 과학 올림피아드 공식 프로그램 표장":"Official Australian Science Olympiads program mark";
   if(key==="plancks")return lang==="ko"?"PLANCKS 2026 국제 결선 공식 표장":"Official PLANCKS 2026 international final mark";
   if(key==="ortvay")return lang==="ko"?"Ortvay 공식 문제지 워드마크":"Ortvay official paper wordmark";
@@ -4966,7 +4970,6 @@ const LOGO_TEXT = {ipho:0.297, apho:0.555, eupho:0.686, nbpho:0.435,
                    useso:0.32, ceso:0.36, jeso:0.36, kmchc:0.38,
                    usamo:0.83, putnam:0.45, amc:0.30, mskbo:0.40};
 function logoSource(key){
-  key=LOGO_SHARED[key]||key;
   const variant=window.LOGO_VARIANTS?.[key];
   return variant?.[document.documentElement.dataset.theme==="dark"?"dark":"light"]
     ||"logo/"+(LOGO_FILES[key]||key+".png");
@@ -4974,7 +4977,7 @@ function logoSource(key){
 function logoFallback(img){
   if(img.getAttribute("src").match(/^logo\/(dark|light)\//)){
     img.dataset.logoVariant="original";
-    const key=LOGO_SHARED[img.dataset.logoKey]||img.dataset.logoKey;
+    const key=img.dataset.logoKey;
     img.src="logo/"+(LOGO_FILES[key]||key+".png")+"?v="+LOGO_V;return;
   }
   if((img.dataset.try||"png")==="png"){
@@ -4983,7 +4986,9 @@ function logoFallback(img){
   }
   img.remove();
 }
-const compLogo = key =>
+const compLogo = key => SELECTION_FLAGS[key]
+  ? flagImg(SELECTION_FLAGS[key],"clogo selection-flag")
+  :
   `<img class="clogo" loading="lazy" decoding="async" alt="" data-logo-key="${key}" data-logo-variant="${logoSource(key).match(/\/(dark|light)\//)?.[1]||"original"}" data-try="${LOGO_FILES[key]?.endsWith(".svg")?"svg":"png"}" title="${esc(logoTitle(key))}"
      style="height:calc(var(--lcap)/${LOGO_TEXT[key]||0.5})"
      src="${logoSource(key)}?v=${LOGO_V}" onerror="logoFallback(this)">`;
@@ -5107,8 +5112,8 @@ const EN_HIDDEN=new Set(["cpho"]);
 const compShown=key=>!(lang==="en"&&EN_HIDDEN.has(key));
 const CONTEST_STAGES={
   vpho:{stage:"selection",key:"vntst",labels:[["전국 예선","National preliminary"],["국가대표 선발전 (VN TST)","Team selection (VN TST)"]]},
-  spho:{stage:"selection",key:"sphotst",labels:[["국내 본선","National olympiad"],["국가대표 선발전 (SPhO TST)","Team selection (SPhO TST)"]]},
-  obf:{stage:"selection",key:"soif",labels:[["국내 대회 (OBF)","National olympiad (OBF)"],["국가대표 선발전 (SOIF)","Team selection (SOIF)"]]},
+  spho:{stage:"selection",key:"sphotst",labels:[["국가 본선","National olympiad"],["국가대표 선발전 (SPhO TST)","Team selection (SPhO TST)"]]},
+  obf:{stage:"selection",key:"soif",labels:[["국가 대회 (OBF)","National olympiad (OBF)"],["국가대표 선발전 (SOIF)","Team selection (SOIF)"]]},
   usapho:{stage:"preliminary",key:"fma",labels:[["USAPhO 본선","USAPhO"],["F=ma 예선","F=ma qualifier"]]},
   bpho:{stage:"round2",key:"bphoii",labels:[["1라운드","Round 1"],["2라운드","Round 2"]]}
 };
@@ -5152,7 +5157,7 @@ function contestScopeParams(scope){
   return new URLSearchParams(scope?{scope}:{});
 }
 function contestScopeNav(sub,scope){
-  const choices=[["","전체","All"],["international","국제","International"],["regional","지역","Regional"],["national","국내","National"]];
+  const choices=[["","전체","All"],["international","국제","International"],["regional","지역","Regional"],["national","국가","National"]];
   return `<nav class="contest-scopes" aria-label="${lang==="ko"?"대회 범위":"Competition scope"}">${choices.map(([key,ko,en])=>`<a href="${archiveHref("contests",sub,contestScopeParams(key))}"${key===scope?' aria-current="true"':""}>${lang==="ko"?ko:en}</a>`).join("")}</nav>`;
 }
 function viewComps(sub,limit=Infinity,scope=""){
@@ -5240,7 +5245,7 @@ function updateArchiveReadingChrome(route){const node=document.getElementById('a
   try{ mountHaslaAdFitSides(); }catch(e){}}
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=1763a3e5372b"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=68513d2479c3"),import("./archive-reference-media.js?v=f4e45d13b8ee")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=1d845a3894fa"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=68513d2479c3"),import("./archive-reference-media.js?v=aebf173d879f")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){
@@ -5264,7 +5269,7 @@ function mountArchiveNative(route,generation){
     headers:{Authorization:"Bearer "+archiveToken},credentials:"omit",cache:"no-store",signal:AbortSignal.timeout(5000)
   }).then(response=>response.ok?response.json():null).then(data=>archiveToken===cmTok()&&Array.isArray(data?.books)?data.books:[]).catch(()=>[]):Promise.resolve([]);
   privateList.then(books=>{if(privateEntry?.isConnected)privateEntry.hidden=!books.length;});
-  const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=27720fdd1503"):loadArchiveModule();
+  const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=469d156968ce"):loadArchiveModule();
   Promise.all([modulePromise,privateList]).then(([module,privateBooksForAccount])=>{
     if(!current())return;
     archiveMountState={key:archiveMountKey(route),container};
@@ -6093,7 +6098,7 @@ function viewComp(key,mode){
       <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span><b>${heading.abbr}</b>
     </div>${trackSwitch(key)}</div>
     <div class="phead">
-      ${CONTEST_STAGES[parent]?`<div class="archive-stage-title"><h1>${heading.abbr}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr}</h1>`}
+      ${(CONTEST_STAGES[parent]||SELECTION_FLAGS[key])?`<div class="archive-stage-title"><h1>${heading.abbr}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr}</h1>`}
       <div class="sub">${c.full[lang]}</div>
       <dl class="meta">
         <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
@@ -6477,7 +6482,7 @@ function viewYear(key,year,mode=""){
       <a href="${compModeHref(parent)}">${heading.abbr}</a><span>/</span><b>${yr.y}</b>
     </div>${trackSwitch(key,yr)}</div>
     <div class="phead">
-      ${CONTEST_STAGES[parent]?`<div class="archive-stage-title"><h1>${heading.abbr} ${yr.y}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr} ${yr.y}</h1>`}
+      ${(CONTEST_STAGES[parent]||SELECTION_FLAGS[key])?`<div class="archive-stage-title"><h1>${heading.abbr} ${yr.y}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr} ${yr.y}</h1>`}
       <div class="sub subflag">${flagImg(yr.cc,"flag big",yr.org)}<span>${yr.host?yr.host[lang]:"—"}</span></div>
       <dl class="meta">
         <div><dt>${d.host}</dt><dd style="font-size:14px">${yr.host?yr.host[lang]:"—"}</dd></div>

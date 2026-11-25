@@ -1,4 +1,4 @@
-import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=21eae3287f7a';
+import {FEYNMAN_EXERCISES, FEYNMAN_TOPICS} from './feynman-exercises.js?v=96ba74fa5757';
 
 const API = '/api/problem-bank/private-textbooks';
 const BOOK = /^[a-z][a-z0-9-]{0,31}$/;
@@ -22,7 +22,7 @@ const COPY = {
     denied: '이 계정에는 비공개 교재 열람 권한이 없습니다.',
     failed: '교재를 열지 못했습니다.', retry: '다시 시도', book: '교재', allBooks: '교재를 선택하세요',
     count: '문제', koreanCount: '한국어', find: '문제 번호 또는 장 이름', search: '찾기',
-    empty: '검색 결과가 없습니다.', previous: '이전', next: '다음', back: '← 문제 목록',
+    empty: '검색 결과가 없습니다.', contents: '목차', pageContents: '현재 페이지 목차', allProblems: '전체 문항', unchaptered: '장 미분류', previous: '이전', next: '다음', back: '← 문제 목록',
     question: '문제', noKorean: '이 문제의 한국어 본문은 준비 중입니다.',
     original: '원문 이미지', showImage: '이미지 보기', imageError: '이미지를 불러오지 못했습니다.',
     question_crop: '문제 원문', source_page: '원본 PDF', english_page: '영어 참고판', figure: '문제 그림',
@@ -33,7 +33,7 @@ const COPY = {
     chapterCount: '개 장', supplement: '부록', openPdf: '원본 PDF 열기', newTabPdf: '새 탭에서 PDF 열기',
     pdfError: 'PDF를 불러오지 못했습니다.', exercises: '연습문제',
     exerciseTitle: 'Caltech 공개 연습문제', findExercise: '연습문제 검색',
-    exerciseNote: '문항별 한국어·영어 요약입니다. 문제의 전체 조건, 그림과 해설은 각 문항의 Caltech 원문에서 볼 수 있습니다.',
+    exerciseNote: '문항별 영어 요약입니다. 문제의 전체 조건, 그림과 해설은 각 문항의 Caltech 원문에서 볼 수 있습니다.',
     exerciseSource: 'Caltech 원문 열기', exerciseIndex: 'Caltech 전체 목록', chapterReference: '강의 본문',
     workbook: '파인만 별책 연습문제집', workbookContents: '목차', workbookAnswers: '정답·해설',
     workbookSearch: '문항 번호 또는 장 제목', workbookOriginal: '영어 원본 스캔',
@@ -46,7 +46,7 @@ const COPY = {
     denied: 'Your account does not have access to the private textbooks.',
     failed: 'Could not open the textbooks.', retry: 'Retry', book: 'Book', allBooks: 'Choose a book',
     count: 'problems', koreanCount: 'Korean', find: 'Problem number or chapter', search: 'Find',
-    empty: 'No matching problems.', previous: 'Previous', next: 'Next', back: '← Problem list',
+    empty: 'No matching problems.', contents: 'Contents', pageContents: 'Contents on this page', allProblems: 'All problems', unchaptered: 'Unassigned', previous: 'Previous', next: 'Next', back: '← Problem list',
     question: 'Problem', noKorean: 'A Korean statement is still being prepared for this problem.',
     original: 'Original image', showImage: 'Show image', imageError: 'Could not load the image.',
     question_crop: 'Problem excerpt', source_page: 'Original PDF', english_page: 'English reference edition',
@@ -58,7 +58,7 @@ const COPY = {
     chapterCount: 'chapters', supplement: 'Appendix', openPdf: 'Open original PDF', newTabPdf: 'Open PDF in a new tab',
     pdfError: 'Could not load the PDF.', exercises: 'Exercises',
     exerciseTitle: 'Caltech’s public exercises', findExercise: 'Find an exercise',
-    exerciseNote: 'Short Korean and English summaries. Open each Caltech original for the full statement, diagrams and solutions.',
+    exerciseNote: 'Short English summaries. Open each Caltech original for the full statement, diagrams and solutions.',
     exerciseSource: 'Open Caltech original', exerciseIndex: 'Caltech’s full index', chapterReference: 'Lecture reference',
     workbook: 'Exercises for the Feynman Lectures on Physics', workbookContents: 'Contents', workbookAnswers: 'Answers and solutions',
     workbookSearch: 'Problem number or chapter title', workbookOriginal: 'Original English scan',
@@ -100,7 +100,7 @@ export function mountPrivateTextbooks(container, options) {
   const token = () => String(options.getToken?.() || '');
   let observedToken = token();
   const requestedBook = options.params?.get('book') || '';
-  const bookState = book => ({book, page: 1, q: '', problem: null, volume: null});
+  const bookState = book => ({book, page: 1, q: '', problem: null, volume: null, chapter: null});
   const initialState = () => ({
     ...bookState(BOOK.test(requestedBook) ? requestedBook : ''),
     volume: requestedBook === 'feynman' && options.params?.get('section') === 'exercises' ? 'exercises' : null,
@@ -117,6 +117,57 @@ export function mountPrivateTextbooks(container, options) {
     element.addEventListener('click', click);
     return element;
   }
+  function groupProblems(items, chapterOf) {
+    const groups = new Map();
+    for (const item of items) {
+      const chapter = chapterOf(item);
+      if (!groups.has(chapter)) groups.set(chapter, []);
+      groups.get(chapter).push(item);
+    }
+    return groups;
+  }
+
+  function chapterBrowser(indexTitle, renderRows, onChange = () => {}) {
+    const element = atom('div');
+    element.className = 'al-source-layout al-private-chapters';
+    const outline = atom('aside');
+    outline.className = 'al-toc';
+    const nav = atom('nav');
+    nav.setAttribute('aria-label', indexTitle);
+    const main = atom('section');
+    main.className = 'al-source-main';
+    const result = atom('div');
+    main.append(result);
+    element.append(outline, main);
+    function update(groups, active) {
+      const list = atom('ol');
+      const heading = atom('h3', indexTitle);
+      nav.replaceChildren(heading, list);
+      outline.replaceChildren(nav);
+      outline.hidden = !groups.size;
+      element.classList.toggle('is-flat', !groups.size);
+      const all = [...groups.values()].flat();
+      const currentChapter = groups.has(active) ? active : groups.size === 1 ? groups.keys().next().value : null;
+      const entries = [...groups];
+      const rows = currentChapter === null ? all : groups.get(currentChapter);
+      if (entries.length > 1) entries.unshift([null, all]);
+      for (const [chapter, items] of entries) {
+        const item = atom('li');
+        const choice = button(chapter ?? words.allProblems, () => {
+          onChange(chapter);
+          update(groups, chapter);
+          nav.querySelector('[aria-current="true"]')?.focus({preventScroll: true});
+        });
+        choice.append(atom('small', String(items.length)));
+        if (chapter === currentChapter) choice.setAttribute('aria-current', 'true');
+        item.append(choice);
+        list.append(item);
+      }
+      result.replaceChildren(rows.length ? renderRows(rows) : atom('p', words.empty));
+    }
+    return {element, main, update};
+  }
+
   function release() {
     if (!imageUrl) return;
     win.URL.revokeObjectURL(imageUrl);
@@ -329,7 +380,6 @@ export function mountPrivateTextbooks(container, options) {
     search.type = 'search';
     search.maxLength = 160;
     searchLabel.append(search);
-    const chapters = atom('div');
     const preview = atom('section');
     const problemHeader = atom('h4');
     const languages = atom('div');
@@ -406,7 +456,7 @@ export function mountPrivateTextbooks(container, options) {
       if (attempt !== selection || !current(run)) return;
       selected = {page, ko: row?.ko};
       languages.hidden = !selected.ko;
-      selectLanguage(selected.ko && options.lang !== 'en' ? 'ko' : 'en');
+      selectLanguage('en');
     }
     function openReference(page) {
       selection++;
@@ -444,6 +494,17 @@ export function mountPrivateTextbooks(container, options) {
         if (current(run) && error.name !== 'AbortError') previewStatus.textContent = words.pdfError;
       }
     }
+    let activeChapter = null;
+    const chapters = chapterBrowser(words.contents, rows => {
+      const list = atom('ul');
+      list.className = 'al-private-book-list';
+      for (const [number, page, chapter] of rows) {
+        const item = atom('li');
+        item.append(button(number, () => openProblem(number, page)), atom('small', chapter));
+        list.append(item);
+      }
+      return list;
+    }, chapter => { activeChapter = chapter; });
     function renderChapters() {
       const query = search.value.trim().normalize('NFKC').toLowerCase();
       const matches = [];
@@ -451,26 +512,21 @@ export function mountPrivateTextbooks(container, options) {
         if (!query && chapter.volume !== Number(volume.value)) continue;
         const wholeChapter = !query || String(chapter.number) === query ||
           chapter.title.normalize('NFKC').toLowerCase().includes(query);
-        const problems = chapter.problems.map((page, offset) => [chapter.number + '.' + (offset + 1), page])
-          .filter(([number]) => wholeChapter || number === query);
-        if (!problems.length) continue;
-        const group = atom('details');
-        group.open = Boolean(query);
-        group.append(atom('summary', chapter.number + '. ' + chapter.title + ' (' + problems.length + ')'));
-        const list = atom('div');
-        list.className = 'al-private-controls';
-        for (const [number, page] of problems) list.append(button(number, () => openProblem(number, page)));
-        group.append(list);
-        matches.push(group);
+        const label = chapter.number + '. ' + chapter.title;
+        chapter.problems.forEach((page, offset) => {
+          const number = chapter.number + '.' + (offset + 1);
+          if (wholeChapter || number === query) matches.push([number, page, label]);
+        });
       }
-      chapters.replaceChildren(...(matches.length ? matches : [atom('p', words.empty)]));
+      chapters.update(groupProblems(matches, row => row[2]), activeChapter);
     }
-    volume.addEventListener('change', () => { search.value = ''; renderChapters(); });
-    search.addEventListener('input', renderChapters);
+    volume.addEventListener('change', () => { search.value = ''; activeChapter = null; renderChapters(); });
+    search.addEventListener('input', () => { activeChapter = null; renderChapters(); });
     controls.append(volumeLabel, searchLabel, button(words.workbookContents, () => openReference(workbook.contents)),
       button(words.workbookAnswers, () => openReference(workbook.answers)));
     renderChapters();
-    section.append(controls, preview, chapters);
+    chapters.main.append(preview);
+    section.append(controls, chapters.element);
   }
 
   function renderExerciseIndex() {
@@ -487,43 +543,41 @@ export function mountPrivateTextbooks(container, options) {
     const count = atom('p');
     count.className = 'al-muted';
     count.setAttribute('role', 'status');
-    const results = atom('div');
-    let language = options.lang === 'en' ? 'en' : 'ko';
-    const ko = button('한국어', () => { language = 'ko'; renderRows(); });
-    const en = button('English', () => { language = 'en'; renderRows(); });
-    controls.append(label, ko, en);
-    const normalize = value => value.normalize('NFKC').toLowerCase();
-    function renderRows() {
-      ko.setAttribute('aria-pressed', String(language === 'ko'));
-      en.setAttribute('aria-pressed', String(language === 'en'));
-      const open = new Set([...results.querySelectorAll('details[open]')].map(row => row.dataset.source));
-      const query = normalize(search.value.trim());
-      const matches = FEYNMAN_EXERCISES.filter(row => !query || normalize(row.slice(1).join(' ')).includes(query));
-      count.textContent = matches.length ? matches.length + ' ' + words.count : words.empty;
-      results.replaceChildren(...matches.map(([slug, titleKo, titleEn, summaryKo, summaryEn, chapter]) => {
+    controls.append(label);
+    let activeTopic = null;
+    const topicsBySlug = new Map(FEYNMAN_TOPICS.flatMap(([topic, ...slugs]) => slugs.map(slug => [slug, topic])));
+    const chapters = chapterBrowser(words.contents, rows => {
+      const results = atom('div');
+      for (const [slug, , titleEn, , summaryEn, chapter] of rows) {
         const row = atom('details');
         row.dataset.source = slug;
-        row.open = open.has(slug);
-        row.append(atom('summary', language === 'ko' ? titleKo : titleEn));
-        const body = atom('p', language === 'ko' ? summaryKo : summaryEn);
-        body.lang = language;
-        row.append(body);
+        row.lang = 'en';
+        row.append(atom('summary', titleEn), atom('p', summaryEn));
         if (chapter) row.append(atom('p', words.chapterReference + ' ' + chapter));
         const source = atom('a', words.exerciseSource);
         source.href = FEYNMAN_SITE + 'info/exercises/' + slug + '.html';
         source.target = '_blank';
         source.rel = 'noopener noreferrer';
         row.append(source);
-        return row;
-      }));
+        results.append(row);
+      }
+      return results;
+    }, topic => { activeTopic = topic; });
+    const normalize = value => value.normalize('NFKC').toLowerCase();
+    function renderRows() {
+      const query = normalize(search.value.trim());
+      const matches = FEYNMAN_EXERCISES.filter(row => !query ||
+        normalize([...row.slice(1), topicsBySlug.get(row[0]) || ''].join(' ')).includes(query));
+      count.textContent = matches.length ? matches.length + ' ' + words.count : words.empty;
+      chapters.update(groupProblems(matches, row => topicsBySlug.get(row[0]) || words.unchaptered), activeTopic);
     }
-    search.addEventListener('input', renderRows);
+    search.addEventListener('input', () => { activeTopic = null; renderRows(); });
     const index = atom('a', words.exerciseIndex);
     index.href = FEYNMAN_SITE + 'info/exercises.html';
     index.target = '_blank';
     index.rel = 'noopener noreferrer';
     renderRows();
-    section.append(title, atom('p', words.exerciseNote), controls, count, results, index);
+    section.append(title, atom('p', words.exerciseNote), controls, count, chapters.element, index);
     return section;
   }
 
@@ -547,30 +601,36 @@ export function mountPrivateTextbooks(container, options) {
       event.preventDefault();
       state.q = input.value.trim();
       state.page = 1;
+      state.chapter = null;
       refresh();
     });
-    const rows = atom('ul');
-    rows.className = 'al-private-book-list';
-    for (const item of data.items) {
-      const entry = atom('li');
-      const label = [item.number, item.label].filter(Boolean).join(' · ');
-      entry.append(button(label, () => {
-        state.problem = item.ordinal;
-        refresh();
-      }), atom('small', [item.chapter, item.has_korean ? (item.has_english === false ? 'KO' : 'KO · EN') : 'EN'].filter(Boolean).join(' · ')));
-      rows.append(entry);
-    }
+    const chapterOf = item => item.chapter?.trim() || words.unchaptered;
+    const chapters = chapterBrowser(data.pages > 1 ? words.pageContents : words.contents, items => {
+      const rows = atom('ul');
+      rows.className = 'al-private-book-list';
+      for (const item of items) {
+        const entry = atom('li');
+        const label = [item.number, item.label].filter(Boolean).join(' · ');
+        entry.append(button(label, () => {
+          state.problem = item.ordinal;
+          refresh();
+        }), atom('small', [chapterOf(item), item.has_korean ? (item.has_english === false ? 'KO' : 'KO · EN') : 'EN'].join(' · ')));
+        rows.append(entry);
+      }
+      return rows;
+    }, chapter => { state.chapter = chapter; });
+    chapters.update(groupProblems(data.items, chapterOf), state.chapter);
     const counts = atom('p', data.total + ' ' + words.count);
     counts.className = 'al-muted';
     const pages = atom('nav');
     pages.className = 'al-private-controls';
-    const jump = n => { state.page = n; refresh(); };
+    const jump = n => { state.page = n; state.chapter = null; refresh(); };
     const previous = button(words.previous, () => jump(state.page - 1));
     previous.disabled = state.page <= 1;
     const next = button(words.next, () => jump(state.page + 1));
     next.disabled = state.page >= data.pages;
     pages.append(previous, atom('span', data.page + ' / ' + data.pages), next);
-    content.replaceChildren(bookPicker(), form, counts, data.items.length ? rows : atom('p', words.empty), pages);
+    content.replaceChildren(bookPicker(), form, counts, chapters.element, pages);
   }
 
   function renderQuestion(row, run) {

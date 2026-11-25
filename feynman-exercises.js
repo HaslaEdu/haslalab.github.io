@@ -49,3 +49,15 @@ export const FEYNMAN_EXERCISES = [
   ['whirling_pendulum', '수평 원운동을 하는 진자', 'Conical pendulum', '추가 매단 점 아래 일정한 높이에서 수평 원운동을 한다. 원운동 평면까지의 수직 거리로 주기를 구한다.', 'Determine the orbital period of a suspended mass from the vertical separation between its circular path and the pivot.'],
   ['worlds_fair', '금속 구 네 개로 만든 조형물', 'Four-sphere sculpture', '바닥의 구 세 개가 위의 구 하나를 지탱한다. 아래 구들이 벌어지지 않게 하는 접합부의 하중을 안전계수와 함께 계산한다.', 'Calculate the required strength, including the safety factor, of the joints holding together the base spheres.'],
 ];
+
+// Study topics for browsing the Caltech exercises. These are not book chapters.
+export const FEYNMAN_TOPICS = [
+  ['Motion and kinematics', 'boat_time', 'hallway_pole', 'particle_points_parabola', 'rocket_vs_jet', 'speedometer_test', 'bug_on_band'],
+  ['Forces and equilibrium', 'atwood', 'balance_moon_stone', 'bobbin_on_incline', 'bosuns_chair', 'infinite_pulleys', 'mass_on_an_incline', 'particle_in_bowl', 'pile_of_bricks', 'plank_weight_trough', 'rough_inclined_plane', 'three_logs', 'worlds_fair'],
+  ['Dynamics and oscillations', 'ball_up_down', 'bead_parabola_accelerometer', 'forced_pendulum', 'particle_in_cone', 'particle_on_sphere', 'piston_ramp_spring', 'three_balls', 'turntable_cart', 'whirling_pendulum'],
+  ['Momentum and collisions', 'bursting_shell', 'falling_chain', 'flying_cable', 'maximum_angle_deflection'],
+  ['Rotation and rolling', 'bouncing_ball', 'bowling_ball_rolling', 'impelled_rod', 'roll_without_slipping', 'shooting_marbles', 'two_rolling_balls', 'wheel_and_block'],
+  ['Fluids', 'boat_anchor_lake'],
+  ['Relativity', 'inelastic_relativistic_collision', 'pion_muon_neutrino'],
+  ['Probability and combinatorics', 'bag_of_marbles', 'Feynmans_restaurant_problem', 'five_pills', 'gold%20mountain', 'half_pills', 'packs_of_shirts'],
+];

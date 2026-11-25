@@ -28,8 +28,8 @@ export const ARCHIVE_BOOK_REFERENCES = Object.freeze([
   },
   {
     id: 'feynman',
-    title: {ko: '파인만의 물리학 강의', en: 'The Feynman Lectures on Physics'},
-    full_title: {ko: '파인만의 물리학 강의 · The Feynman Lectures on Physics', en: 'The Feynman Lectures on Physics'},
+    title: {ko: 'The Feynman Lectures on Physics', en: 'The Feynman Lectures on Physics'},
+    full_title: {ko: 'The Feynman Lectures on Physics', en: 'The Feynman Lectures on Physics'},
     short_title: 'Feynman',
     author: 'Richard P. Feynman · Robert B. Leighton · Matthew Sands',
     topic_label: {ko: '역학 · 전자기학 · 양자역학', en: 'Mechanics, electromagnetism and quantum mechanics'},

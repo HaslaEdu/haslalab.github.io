@@ -236,7 +236,7 @@ export function mountArchiveLibrary(container,options={}){
     const cover=image
       ? `<img class="clogo al-card-cover" src="data:image/webp;base64,${esc(book.cover_webp)}" alt="" loading="lazy" decoding="async">`
       : `<span class="clogo al-card-cover-placeholder" aria-label="${esc(tr('noCover'))}">—</span>`;
-    return textbookCard({href,short:book.id==='feynman'&&config.lang==='ko'?'파인만':short,title,cover,language,edition:edition||'—',
+    return textbookCard({href,short,title,cover,language,edition:edition||'—',
       image:tr(image?(titlePage?'titlePage':'cover'):'noCover'),count:book.count,
       countLabel:book.kind==='lectures'?'chapters':'problems'});
   }

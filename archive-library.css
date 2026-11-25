@@ -207,3 +207,9 @@
 .al-feynman-workbook details{border-bottom:1px solid var(--al-line);padding:9px 0}
 .al-feynman-workbook summary{cursor:pointer;font-weight:650}
 .al-feynman-workbook [hidden]{display:none}
+
+.al .al-private-chapters{margin:20px 0}
+.al .al-private-chapters:has(>aside[hidden]){display:block}
+.al .al-private-chapters .al-toc button{display:flex;align-items:baseline;justify-content:space-between;gap:10px;width:100%;min-height:42px;padding:10px 12px;border:0;border-left:2px solid transparent;border-radius:0;background:transparent;text-align:left;overflow-wrap:anywhere}
+.al .al-private-chapters .al-toc button[aria-current=true]{border-left-color:var(--al-accent);color:var(--al-accent);background:color-mix(in srgb,var(--al-accent) 8%,transparent);font-weight:600}
+.al .al-private-chapters .al-toc button small{flex:none;font-size:11px}
