@@ -25,6 +25,27 @@
     });
   }
 
+  const chatMath = [
+    {left:'$$', right:'$$', display:true},
+    {left:'\\[', right:'\\]', display:true},
+    {left:'\\(', right:'\\)', display:false},
+    {left:'$', right:'$', display:false},
+  ];
+  function formatAnswer(node, value) {
+    const chunks = value.split(/```[^\n]*\n([\s\S]*?)```/g);
+    chunks.forEach((chunk, index) => {
+      if (index % 2 === 0) node.append(document.createTextNode(chunk));
+      else {
+        const block = document.createElement('pre'), code = document.createElement('code');
+        code.textContent = chunk;
+        block.className = 'out';
+        block.append(code);
+        node.append(block);
+      }
+    });
+    window.renderMathInElement?.(node, {delimiters:chatMath, throwOnError:false, trust:false, strict:'ignore'});
+  }
+
   function launch(host, language, code, onPhase, stdin = '') {
     const frame = document.createElement('iframe');
     frame.className = 'compute-runtime-frame';
@@ -105,8 +126,13 @@
     const tr = (a,b) => ko ? a : b;
     const share = window.HL_SHARE, forms = window.HL_SHARE_MAKER;
     const P = window.HL_WORKSHOP_PROJECTS, cloud = P.client({base:apiBase,token});
-    const localKey = transfer === 'draw' || transfer === 'problem' ? key + ':' + transfer : key;
-    const previous = !id ? read(localStorage, localKey) : null;
+    const resumeKey = key + ':resume';
+    const remembered = read(localStorage, resumeKey);
+    const draftKeys = [key, key + ':draw', key + ':problem'];
+    const localKey = id ? key + ':project:' + id :
+      transfer === 'draw' || transfer === 'problem' ? key + ':' + transfer :
+      draftKeys.includes(remembered) ? remembered : key;
+    const previous = !id && !preview ? read(localStorage, localKey) : null;
     const question = transfer === 'problem' ? read(sessionStorage, 'hlWorkshopComputeQuestion') : null;
     const figure = transfer === 'draw' ? read(sessionStorage, 'hlWorkshopFigure') : question?.figure;
     const draft = question || isFigure(figure) ? null : previous;
@@ -122,6 +148,7 @@
     }
     let stored = draft?.storage || null, sharedId = id ? +id : draft?.sharedId || null, published = !!draft?.published;
     let active = true, running = null, busy = false, lastError = '', lastOutput = '', copyOutput = '', copyPlot = null, undo = null;
+    let canPersist = !preview && !id, projectOpened = Boolean(draft || transfer);
     const {panelHandle,panelTab} = P;
     if (!isLanguage(project.language)) project.language = 'python';
     root.innerHTML = '<section id="cpProjects" hidden></section><div class="compute-maker" id="cpEditor">' +
@@ -137,11 +164,11 @@
       (preview ? '' : '<div class="row"><button id="cpImportFigure">' + tr('그림 불러오기','Import figure') + '</button></div>') +
       '<div id="cpFigure" hidden></div><details><summary>' + tr('작품 설명', 'Project description') + '</summary><textarea id="cpDescription" rows="3" maxlength="3000" aria-label="' + tr('작품 설명', 'Project description') + '"></textarea></details></div>' + panelHandle('cpCodeBody',['코드','code']) + '</section>' +
       '<section class="panel" id="cpResultPane" data-dock="result"><header class="dock-bar">' + panelTab('cpResultBody',['실행 결과','Results'],'≋') + '</header><div id="cpResultBody" data-dock-body><div class="row"><button id="cpStop" disabled>' + tr('중지','Stop') + '</button><button type="button" id="cpCopyResult" disabled>' + tr('결과 복사','Copy result') + '</button></div><p id="cpRunStatus" role="status"></p><div id="cpPlots"></div><pre class="out" id="cpOutput" hidden></pre></div>' + panelHandle('cpResultBody',['실행 결과','results']) + '</section></div>' +
-      (preview ? '' : '<section class="panel compute-chat" id="cpAssistant" aria-label="' + tr('하슬라 AI 대화','Chat with Hasla AI') + '" hidden><div id="cpAssistantBody"><div class="compute-transcript"><h2 id="cpChatHeading">' + tr('하슬라 AI','Hasla AI') + '</h2><p id="cpChatEmpty" class="note">' + tr('물리 모델을 설명하거나 열린 코드에 대해 질문해 보세요.', 'Describe a physical model or ask about the open code.') + '</p><div id="cpChat" role="log" aria-live="polite"></div><p id="cpTaskStatus" class="note" role="status"></p></div>' +
+      (preview ? '' : '<section class="panel compute-chat" id="cpAssistant" data-dock="assistant" data-dock-floor-width="320" data-dock-floor-height="340" aria-labelledby="cpChatHeading" hidden><div id="cpAssistantBody" data-dock-body><header class="compute-chat-header"><h2 id="cpChatHeading">' + tr('하슬라 AI','Hasla AI') + '</h2><div class="compute-chat-tools"><button type="button" id="cpChatSize" aria-pressed="false"></button><button type="button" id="cpChatClose" aria-label="' + tr('대화 닫기','Close chat') + '" title="' + tr('대화 닫기','Close chat') + '">×</button></div></header><div class="compute-transcript" id="cpChatScroll" tabindex="0" aria-label="' + tr('대화 기록','Conversation') + '"><p id="cpChatEmpty" class="note">' + tr('물리 모델을 설명하거나 열린 코드에 대해 질문해 보세요.', 'Describe a physical model or ask about the open code.') + '</p><div id="cpChat" role="log" aria-live="polite"></div></div><p id="cpTaskStatus" class="note" role="status"></p>' +
       '<form id="cpForm"><textarea id="cpPrompt" rows="3" maxlength="2000" required aria-label="' + tr('AI에게 요청할 내용', 'Prompt') + '" placeholder="' +
       tr('예: 공기 저항을 포함한 포물선 운동을 만들어 줘. 이후 질량을 바꿔 달라고 요청할 수 있어요.', 'E.g. Build a projectile model with air resistance. Then ask to change the mass.') + '"></textarea>' +
       '<div class="compute-composer"><span class="note" id="cpChatLanguage"></span><label for="cpTaskMode">' + tr('작업 방식','Task mode') + '</label><select id="cpTaskMode"><option value="edit">' + tr('코드 제안','Propose code') + '</option><option value="delegate">' + tr('적용하고 실행','Apply and run') + '</option><option value="chat">' + tr('질문만','Ask a question') + '</option></select><button class="primary" type="submit">' + tr('보내기','Send') + '</button></div>' +
-      '</form><button type="button" id="cpUndo" hidden>' + tr('AI 변경 되돌리기','Undo AI change') + '</button></div></section>') +
+      '</form><button type="button" id="cpUndo" hidden>' + tr('AI 변경 되돌리기','Undo AI change') + '</button></div>' + panelHandle('cpAssistantBody',['AI 대화','AI chat']) + '</section>') +
       '</div>' + (preview ? '' : '<div class="row compute-actions"><span id="cpProvider"></span><button id="cpSave">' + tr('저장', 'Save') + '</button><button id="cpOpen">' + tr('프로젝트 목록', 'Projects') + '</button>' +
       '<button class="primary" id="cpShare">' + tr('작품 공유', 'Share project') + '</button></div>') +
       '<p id="cpCopyStatus" role="status" class="note"></p><p id="cpStatus" role="status" class="note"></p><div id="cpRuntime"></div></div>';
@@ -151,12 +178,24 @@
     const editor = $('cpEditor'), workToggle = $('cpWorkspace');
     const dock = P.bindPanels($('cpDock'),height);
     let chatScroll = Infinity;
+    function setExpanded(expanded) {
+      const control = $('cpChatSize');
+      const label = expanded ? tr('대화 축소','Restore chat size') : tr('대화 확대','Expand chat');
+      editor.classList.toggle('chat-expanded', expanded);
+      control.setAttribute('aria-pressed', String(expanded));
+      control.setAttribute('aria-label', label);
+      control.title = label;
+      control.textContent = expanded ? '⤡' : '⤢';
+    }
     function selectPane(pane) {
-      const log = $('cpChat');
+      const log = $('cpChatScroll');
       if (editor.dataset.pane === 'assistant' && pane !== 'assistant' && log?.getClientRects().length) chatScroll = log.scrollTop;
       editor.dataset.pane = pane;
       if (pane === 'assistant') log.scrollTop = Math.min(log.scrollHeight,chatScroll);
-      else editor.dataset.document = pane;
+      else {
+        editor.dataset.document = pane;
+        setExpanded(false);
+      }
       $('cpViewbar')?.querySelectorAll('[data-pane]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pane === pane)));
       height();
     }
@@ -164,17 +203,47 @@
       if (!workToggle) return;
       editor.classList.toggle('is-workspace', opened);
       workToggle.setAttribute('aria-expanded', String(opened));
-      if (!opened && editor.dataset.pane === 'assistant') chatScroll = $('cpChat').scrollTop;
+      if (!opened && $('cpChatScroll').getClientRects().length) chatScroll = $('cpChatScroll').scrollTop;
       $('cpAssistant').hidden = $('cpViewbar').hidden = !opened;
       if (opened) {
-        editor.dataset.document = 'code'; selectPane('assistant');
+        editor.dataset.document ||= 'code';
+        selectPane('assistant');
         if (document.activeElement === workToggle) $('cpPrompt').focus({preventScroll:true});
       }
       height();
     }
     if (workToggle) {
-      workToggle.onclick = () => setWorkspace(!editor.classList.contains('is-workspace'));
-      $('cpViewbar').onclick = e => { const pane = e.target.closest('[data-pane]')?.dataset.pane; if (pane) selectPane(pane); };
+      const closeChat = () => {
+        setWorkspace(false);
+        persist();
+        workToggle.focus({preventScroll:true});
+      };
+      setExpanded(false);
+      workToggle.onclick = () => {
+        if (editor.classList.contains('is-workspace')) closeChat();
+        else {
+          setWorkspace(true);
+          persist();
+        }
+      };
+      $('cpChatClose').onclick = closeChat;
+      $('cpChatSize').onclick = () => {
+        const expanded = !editor.classList.contains('chat-expanded');
+        if (expanded) selectPane('assistant');
+        setExpanded(expanded);
+        persist();
+        height();
+      };
+      $('cpAssistant').addEventListener('keydown', event => {
+        if (event.key === 'Escape' && !event.defaultPrevented && !event.isComposing) {
+          event.preventDefault();
+          closeChat();
+        }
+      });
+      $('cpViewbar').onclick = e => {
+        const pane = e.target.closest('[data-pane]')?.dataset.pane;
+        if (pane) { selectPane(pane); persist(); }
+      };
     }
     function resetCopyResult() {
       copyOutput = '';
@@ -214,25 +283,37 @@
     };
     const legacyUnsaved = draft?.format === 'haslalab-compute' && draft.dirty === undefined && !stored;
     let savedSignature = draft?.dirty || legacyUnsaved || question || isFigure(figure) ? null : JSON.stringify(projectData());
-    let editorEntered = !!(id || transfer);
     let hasDraft = !!draft || savedSignature === null;
     const isDirty = () => savedSignature !== JSON.stringify(projectData());
-    const stopProtecting = preview ? () => {} : P.protectDraft(() => editorEntered && isDirty());
+    const stopProtecting = preview ? () => {} : P.protectDraft(() => projectOpened && isDirty());
+    const snapshot = () => ({
+      ...projectData(), storage: stored, sharedId, published, dirty: isDirty(),
+      assistant_open: editor.classList.contains('is-workspace'),
+      assistant_expanded: editor.classList.contains('chat-expanded'),
+    });
+    let lastSnapshot;
     const persist = () => {
-      if (preview) return;
-      const dirty = isDirty();
-      hasDraft ||= dirty || !!stored;
-      const snapshot = {...projectData(), storage:stored, sharedId, published, dirty};
-      if (!id && hasDraft && !write(localStorage, localKey, snapshot)) {
+      if (!active || !canPersist || !projectOpened) return;
+      const currentDraft = snapshot();
+      hasDraft ||= currentDraft.dirty || !!stored;
+      if (!hasDraft) return;
+      const data = JSON.stringify(currentDraft);
+      if (data === lastSnapshot) return;
+      try {
+        localStorage.setItem(localKey, data);
+        lastSnapshot = data;
+        if (!id) write(localStorage, resumeKey, localKey);
+      } catch {
         msg(tr('브라우저 저장공간이 부족합니다. 대화와 코드를 보관하려면 프로젝트를 저장해 주세요.','Browser storage is full. Save the project to keep the code and chat.'));
       }
     };
+    if (!preview) window.addEventListener('pagehide', persist);
     const contextHistory = () => project.history.slice(-6).map(({role,content}) => ({role,content}));
     const chat = (role, content, code, language) => {
       const entry = {id:crypto.randomUUID(),role,content:clip(content,2000)};
       if (typeof code === 'string' && code.trim() && isLanguage(language)) entry.version = {language,code:clip(code,60000)};
       project.history.push(entry);
-      paintChat(true); persist();
+      persist(); paintChat(true);
       return entry;
     };
     function applyVersion(entry, {keepUndo = false} = {}) {
@@ -250,17 +331,20 @@
       paint(); persist();
     }
     function paintChat(toLatest = false) {
-      const box = $('cpChat');
+      const box = $('cpChat'), scroll = $('cpChatScroll');
       if (!box) return;
       $('cpChatEmpty').hidden = project.history.length > 0;
       if (toLatest) chatScroll = Infinity;
-      const position = box.scrollTop, opened = new Set([...box.querySelectorAll('details[open]')].map(item => item.dataset.id));
+      const position = scroll.scrollTop, opened = new Set([...box.querySelectorAll('details[open]')].map(item => item.dataset.id));
       let versionNumber = 0;
       box.replaceChildren(...project.history.map(turn => {
         const row = document.createElement('article'), name = document.createElement('strong');
         row.className = turn.role === 'user' ? 'compute-turn-user' : 'compute-turn-assistant';
         name.textContent = turn.role === 'user' ? tr('나', 'You') : tr('하슬라 AI','Hasla AI');
-        const message = document.createElement('p'); message.textContent = turn.content;
+        const message = document.createElement('div');
+        message.className = 'compute-message';
+        if (turn.role === 'assistant') formatAnswer(message, turn.content);
+        else message.textContent = turn.content;
         row.append(name, message);
         if (turn.version) {
           const {language,code} = turn.version;
@@ -280,7 +364,7 @@
         }
         return row;
       }));
-      box.scrollTop = toLatest ? box.scrollHeight : position;
+      scroll.scrollTop = toLatest ? scroll.scrollHeight : position;
       height();
     }
     function paint() {
@@ -400,9 +484,14 @@
       modeInput.onchange = () => {
         taskStatus(modeInput.value === 'delegate' ? tr('코드를 적용해 실행하고, 코드 오류가 있으면 한 번 수정합니다.','Applies and runs the code, with one revision if the program fails.') : '');
       };
-      if (transfer && (project.question || isFigure(figure))) setWorkspace(true);
       if (project.question) prompt.value = tr('다음 문제를 시뮬레이션으로 만들어 줘. ', 'Build a simulation for this problem. ') + project.question.slice(0, 1500);
       else if (isFigure(figure)) prompt.value = tr('연결된 그림에 나타난 물리계의 시뮬레이션을 처음부터 만들어 줘.', 'Build a simulation for the physical system in the linked figure.');
+      prompt.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
+          event.preventDefault();
+          form.requestSubmit();
+        }
+      });
       const turn = async (request, language, code, error, history, mode) => {
         const scene = project.figure?.scene;
         const context = JSON.stringify({problem: project.question || '', objects: Array.isArray(scene?.objects) ? scene.objects.slice(0, 20) : []}).slice(0, 8000);
@@ -475,7 +564,6 @@
       if ($('cpPrompt')) $('cpPrompt').value = '';
       if ($('cpUndo')) $('cpUndo').hidden = true;
       paint();
-      setWorkspace(project.history.length > 0);
     }
     const save = async () => {
       if (!project.title.trim()) { title.focus(); throw new Error(tr('작품 제목을 입력해 주세요.', 'Enter a project title.')); }
@@ -499,22 +587,24 @@
     };
 
     let storageRevision = 0;
-    function showEditor() {
-      editorEntered = true;
+    function showEditor(preferences) {
       $('cpProjects').hidden = true;
       $('cpEditor').hidden = false;
       $('cpProvider').querySelector('select').value = stored?.provider || 'store';
-      setWorkspace(project.history.length > 0);
+      projectOpened = true;
+      setExpanded(preferences?.assistant_expanded === true);
+      setWorkspace(preferences?.assistant_open ?? project.history.length > 0);
       height();
     }
     function showProjects() {
       if (!active || busy) return;
       cancelRun();
+      persist();
       $('cpEditor').hidden = true;
       const host = $('cpProjects');
       host.hidden = false;
       const panel = P.library(host,cloud,{kind:'compute', unified:true, title:tr('전산물리 프로젝트','Computational physics projects'), height,
-        onResume:hasDraft ? showEditor : null,
+        onResume:hasDraft ? () => showEditor(snapshot()) : null,
         onNew() { loadProject(blank(), null); },
         onOpen:loadProject,
       });
@@ -527,14 +617,16 @@
       hydrate(data);
       savedSignature = JSON.stringify(projectData());
       hasDraft = !!entry;
+      lastSnapshot = undefined;
       if (!entry) { try { localStorage.removeItem(localKey); } catch {} }
       chatScroll = Infinity;
       editor.dataset.pane = '';
+      editor.dataset.document = 'code';
       storageRevision++;
       stored=entry; sharedId=null; published=false; lastOutput=''; lastError=''; resetCopyResult(); $('cpInput').value = '';
       $('cpPlots').replaceChildren(); $('cpOutput').hidden=true; $('cpRunStatus').textContent='';
+      showEditor(data);
       persist();
-      showEditor();
       title.focus();
     }
     async function perform(button, action) {
@@ -580,14 +672,20 @@
       };
     }
     paint();
-    if (!preview && !id && !transfer) showProjects();
-    if (!id && transfer) persist();
-    if (!preview && !id) P.showGuide('compute');
+    if (!preview && !id) {
+      if (draft || transfer) {
+        showEditor(draft || (question || isFigure(figure) ? {assistant_open:true} : null));
+        if (draft) lastSnapshot = JSON.stringify(snapshot());
+        else if (transfer) persist();
+      } else showProjects();
+      P.showGuide('compute');
+    }
     if (id) {
       $('cpRun').disabled = true;
       source.readOnly = lang.disabled = title.readOnly = description.readOnly = true;
       const shareButton = $('cpShare');
       if (shareButton) shareButton.disabled = true;
+      if (workToggle) workToggle.disabled = true;
       share.get(id).then(({project: p}) => {
         if (!active) return;
         if (!isLanguage(p.language) || typeof p.code !== 'string') throw new Error(tr('이 실행 형식을 열 수 없습니다.', 'This project uses a different runtime.'));
@@ -598,15 +696,33 @@
         project.sources[p.language] = p.code;
         published = p.status === 'public';
         savedSignature = JSON.stringify(projectData());
+        const ownerDraft = !preview ? read(localStorage, localKey) : null;
+        if (ownerDraft) {
+          try {
+            hydrate(ownerDraft);
+            stored = ownerDraft.storage || null;
+            hasDraft = true;
+            if (ownerDraft.dirty === false) savedSignature = JSON.stringify(projectData());
+          } catch {}
+        }
         paint();
         $('cpRun').disabled = false;
         if (!preview) {
+          canPersist = true;
           source.readOnly = lang.disabled = title.readOnly = description.readOnly = false;
-          shareButton.disabled = false;
+          shareButton.disabled = workToggle.disabled = false;
+          showEditor(ownerDraft);
+          lastSnapshot = JSON.stringify(snapshot());
         }
       }).catch(e => { if (active) msg(errorText(e)); });
     }
-    return {stop() { active = false; cancelRun(); stopProtecting(); }};
+    return {stop() {
+      persist();
+      active = false;
+      window.removeEventListener('pagehide', persist);
+      cancelRun();
+      stopProtecting();
+    }};
   }
   window.HL_WORKSHOP_COMPUTE = {open};
 })();
