@@ -122,6 +122,8 @@ test('only the listed types, whose first bytes match the extension, and at most 
 test('active Plus, teacher and school plans expand storage, and expiry preserves existing files', async () => {
   const {db, env, call, upload, replace, tick} = setup();
   const path = '/api/workshop/storage';
+  assert.equal(WORKSHOP_FREE_QUOTA, 5 * 1024 * 1024);
+  assert.equal(WORKSHOP_PAID_QUOTA, 100 * 1024 * 1024);
   const large = pdf(WORKSHOP_FREE_QUOTA);
   await fails(upload(alice, 'large.pdf', large), 'file_too_large', 413);
   await ensureLearnSchema(env);

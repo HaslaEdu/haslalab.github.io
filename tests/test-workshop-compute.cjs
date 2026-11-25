@@ -28,6 +28,7 @@ function setup(t) {
   const $ = id => root.querySelector('#' + id);
   w.HL_WORKSHOP_PROJECTS = {
     client: () => ({}), panelHandle: () => '', panelTab: () => '',
+    protectDraft: () => () => {}, showGuide() {},
     bindPanels: () => ({reveal() {}}),
     providerSelect: () => {
       const select = w.document.createElement('select');

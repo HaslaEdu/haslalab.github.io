@@ -173,6 +173,9 @@ main.wide{max-width:1480px}
 /* the storage dialog (보관함에서 열기) of the coding environment and the problem maker */
 dialog.stdlg{border:1px solid var(--line);border-radius:14px;padding:16px;width:min(560px,calc(100vw - 32px));max-height:min(80vh,640px);background:var(--surface,#fff);color:inherit}
 dialog.stdlg::backdrop{background:rgba(15,23,42,.35)}
+dialog.workshop-guide{position:fixed;inset:clamp(20px,7vh,68px) 0 auto;margin:0 auto;line-height:1.55}
+.workshop-guide ol{padding-inline-start:1.4em;margin:12px 0 18px}
+.workshop-guide li+li{margin-top:8px}
 .stdlg .dlg-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.stdlg h2{margin:0;font-size:18px}.stdlg .seg{margin:10px 0;width:max-content}
 .dlg-list{display:flex;flex-direction:column;gap:6px;overflow:auto;max-height:52vh}
 .dlg-file{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px}.dlg-file span{font-size:12px;color:var(--muted)}.dlg-file.on{border-color:var(--rail)}

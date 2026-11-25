@@ -277,15 +277,27 @@
       height();
     };
     if (!preview) $('cpProvider').append(P.providerSelect(stored?.provider));
+    const projectData = () => {
+      const {format, language, sources, figure, question, title, description, history, appliedVersion} = project;
+      return {format, language, sources, figure, question, title, description, history, appliedVersion};
+    };
+    const legacyUnsaved = draft?.format === 'haslalab-compute' && draft.dirty === undefined && !stored;
+    let savedSignature = draft?.dirty || legacyUnsaved || question || isFigure(figure) ? null : JSON.stringify(projectData());
+    let hasDraft = !!draft || savedSignature === null;
+    const isDirty = () => savedSignature !== JSON.stringify(projectData());
+    const stopProtecting = preview ? () => {} : P.protectDraft(() => projectOpened && isDirty());
     const snapshot = () => ({
-      ...project, storage: stored, sharedId, published,
+      ...projectData(), storage: stored, sharedId, published, dirty: isDirty(),
       assistant_open: editor.classList.contains('is-workspace'),
       assistant_expanded: editor.classList.contains('chat-expanded'),
     });
     let lastSnapshot;
     const persist = () => {
       if (!active || !canPersist || !projectOpened) return;
-      const data = JSON.stringify(snapshot());
+      const currentDraft = snapshot();
+      hasDraft ||= currentDraft.dirty || !!stored;
+      if (!hasDraft) return;
+      const data = JSON.stringify(currentDraft);
       if (data === lastSnapshot) return;
       try {
         localStorage.setItem(localKey, data);
@@ -559,17 +571,18 @@
       fd.append('kind','sim');
       fd.append('folder','전산물리');
       fd.append('ensure_folder','1');
-      const {format, language, sources, figure, question, title: name, description, history, appliedVersion} = project;
+      const data = projectData(), name = data.title;
+      const signature = JSON.stringify(data);
       const provider = $('cpProvider').querySelector('select').value;
-      const data = {format, language, sources, figure, question, title:name, description, history, appliedVersion};
       if (provider !== 'store') stored = await cloud.saveExternal(provider,'compute',name,data,stored);
       else {
         const local = stored?.provider === 'store' || (stored && !stored.provider) ? stored : null;
         if (local?.updated_at) fd.append('base', String(local.updated_at));
-        fd.append('file', new Blob([JSON.stringify(data)], {type:'application/json'}), local?.name || (name+'.json'));
+        fd.append('file', new Blob([signature], {type:'application/json'}), local?.name || (name+'.json'));
         const response = local ? await fileRequest('/files/' + encodeURIComponent(local.id) + '/content','PUT',fd) : await fileRequest('/files','POST',fd);
         stored = {...(await response.json()).file,provider:'store'};
       }
+      savedSignature = signature;
       persist();
     };
 
@@ -591,7 +604,7 @@
       const host = $('cpProjects');
       host.hidden = false;
       const panel = P.library(host,cloud,{kind:'compute', unified:true, title:tr('전산물리 프로젝트','Computational physics projects'), height,
-        onResume:() => showEditor(snapshot()),
+        onResume:hasDraft ? () => showEditor(snapshot()) : null,
         onNew() { loadProject(blank(), null); },
         onOpen:loadProject,
       });
@@ -599,9 +612,13 @@
       height();
     }
     function loadProject(data, entry) {
-      if (!active || busy || $('cpProjects').hidden) return;
+      if (!active || busy || $('cpProjects').hidden || (isDirty() && !P.confirmReplacement())) return;
       cancelRun();
       hydrate(data);
+      savedSignature = JSON.stringify(projectData());
+      hasDraft = !!entry;
+      lastSnapshot = undefined;
+      if (!entry) { try { localStorage.removeItem(localKey); } catch {} }
       chatScroll = Infinity;
       editor.dataset.pane = '';
       editor.dataset.document = 'code';
@@ -642,8 +659,8 @@
         const dlg = forms.dialog({lang: ctx.lang, type: 'sim', values: {title: title.value.trim(),description: description.value}, thumbnail,
           shared: sharedId && published ? {id: sharedId, published: true} : null, height,
           build: form => forms.publishInput({type: 'sim', form, payload: payload(), thumbnail, creationId: sharedId || undefined}),
-          publish: async input => { await save(); return share.publish(input); },
-          update: async input => { await save(); return share.update(sharedId, input); },
+          publish: input => share.publish(input),
+          update: input => share.update(sharedId, input),
           unpublish: () => share.unpublish(sharedId),
           onDone: r => {
             if (r?.id) sharedId = r.id;
@@ -661,6 +678,7 @@
         if (draft) lastSnapshot = JSON.stringify(snapshot());
         else if (transfer) persist();
       } else showProjects();
+      P.showGuide('compute');
     }
     if (id) {
       $('cpRun').disabled = true;
@@ -677,11 +695,14 @@
         project.language = p.language;
         project.sources[p.language] = p.code;
         published = p.status === 'public';
+        savedSignature = JSON.stringify(projectData());
         const ownerDraft = !preview ? read(localStorage, localKey) : null;
         if (ownerDraft) {
           try {
             hydrate(ownerDraft);
             stored = ownerDraft.storage || null;
+            hasDraft = true;
+            if (ownerDraft.dirty === false) savedSignature = JSON.stringify(projectData());
           } catch {}
         }
         paint();
@@ -700,6 +721,7 @@
       active = false;
       window.removeEventListener('pagehide', persist);
       cancelRun();
+      stopProtecting();
     }};
   }
   window.HL_WORKSHOP_COMPUTE = {open};
