@@ -132,8 +132,10 @@ test('Feynman owner chooses a volume and jumps to its chapter in the authenticat
   assert.deepEqual([...nav.querySelectorAll('button')].map(button => button.textContent), ['Volume 1', 'Volume 2', 'Volume 3']);
   assert.equal(demo.calls.length, 1);
   await demo.click('Volume 2');
+  assert.equal(demo.root.ownerDocument.activeElement.textContent, 'Volume 2');
   assert.match(demo.root.textContent, /Chapter in volume 2/);
   assert.doesNotMatch(demo.root.textContent, /Chapter in volume 1/);
+  assert.ok(demo.root.querySelector('a[href="https://www.feynmanlectures.caltech.edu/II_toc.html"]'));
   await demo.click('1. Chapter in volume 2');
   assert.equal(demo.root.querySelector('iframe').getAttribute('src'), 'blob:private-source#page=32');
   assert.equal(demo.calls.at(-1).url.pathname, API + '/feynman/volumes/2/pdf');

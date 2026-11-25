@@ -182,10 +182,13 @@ export function mountPrivateTextbooks(container, options) {
     choices.className = 'al-private-controls';
     choices.setAttribute('aria-label', words.volume);
     for (const item of book.volumes) {
-      const choice = button('Volume ' + item.number, () => {
+      const choice = button('Volume ' + item.number, async () => {
         if (state.volume === item.number) return;
         state.volume = item.number;
-        refresh();
+        await refresh();
+        if (!disposed && state.book === book.id && state.volume === item.number) {
+          content.querySelector('nav button[aria-pressed="true"]')?.focus({preventScroll: true});
+        }
       });
       choice.setAttribute('aria-pressed', String(state.volume === item.number));
       choices.append(choice);
@@ -202,14 +205,14 @@ export function mountPrivateTextbooks(container, options) {
     exercises.href = FEYNMAN_SITE + 'info/exercises.html';
     exercises.target = '_blank';
     exercises.rel = 'noopener noreferrer';
+    const official = atom('a', words.onlineEdition);
+    official.href = FEYNMAN_SITE + PUBLIC_FEYNMAN.volumes[volume.number - 1].toc;
+    official.target = '_blank';
+    official.rel = 'noopener noreferrer';
+    const links = atom('div');
+    links.className = 'al-private-controls';
+    links.append(official, exercises);
     if (publicEdition) {
-      const official = atom('a', words.onlineEdition);
-      official.href = FEYNMAN_SITE + volume.toc;
-      official.target = '_blank';
-      official.rel = 'noopener noreferrer';
-      const links = atom('div');
-      links.className = 'al-private-controls';
-      links.append(official, exercises);
       content.append(volumeTitle, links);
       return;
     }
@@ -266,7 +269,7 @@ export function mountPrivateTextbooks(container, options) {
     }
     search.addEventListener('input', filterChapters);
     filterChapters();
-    content.append(volumeTitle, preview, controls, chapters, empty, exercises);
+    content.append(volumeTitle, preview, controls, chapters, empty, links);
   }
 
   function showPublicLectures(run) {
