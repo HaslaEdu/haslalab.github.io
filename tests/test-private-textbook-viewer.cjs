@@ -7,8 +7,9 @@ const {JSDOM} = createRequire(resolve(__dirname, '../community/package.json'))('
 const nav = require('../archive-navigation.js');
 
 const exerciseData = readFileSync(resolve(__dirname, '../feynman-exercises.js'), 'utf8').replace(/^export /gm, '');
-const code = exerciseData + '\n' + readFileSync(resolve(__dirname, '../archive-private-textbooks.js'), 'utf8')
-  .replace(/^import .*;\r?\n/m, '').replace(/^export /gm, '');
+const handoutData = readFileSync(resolve(__dirname, '../feynman-handouts.js'), 'utf8').replace(/^export /gm, '');
+const code = exerciseData + '\n' + handoutData + '\n' + readFileSync(resolve(__dirname, '../archive-private-textbooks.js'), 'utf8')
+  .replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
 const API = '/api/problem-bank/private-textbooks/books';
 const PATH = '#/archive/books/phys?view=private-textbooks';
 const BOOK = {id: 'goldstein', title: 'Private synthetic book', count: 1, korean_count: 1};
@@ -179,5 +180,14 @@ test('Feynman’s public exercises are listed inside the book and can be found i
   assert.ok(row.open);
   assert.match(row.textContent, /Driven pendulum.*I · 23/);
   assert.equal(row.querySelector('a').href, 'https://www.feynmanlectures.caltech.edu/info/exercises/forced_pendulum.html');
+  const handouts = demo.root.querySelector('.al-feynman-handouts');
+  assert.equal(handouts.querySelectorAll('details').length, 6);
+  const scans = [...handouts.querySelectorAll('li a')].map(link => link.href);
+  assert.equal(scans.length, 82);
+  assert.equal(new Set(scans).size, scans.length);
+  const scanBase = 'https://www.feynmanlectures.caltech.edu/info/FLP_Original_Course_Notes/pages/';
+  assert.ok(scans.every(url => url.startsWith(scanBase)));
+  assert.ok(scans.includes(scanBase + 'ON1-215.html'));
+  assert.ok(scans.includes(scanBase + 'ON2-003.html'));
   assert.equal(demo.calls.length, 0);
 });

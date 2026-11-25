@@ -1054,7 +1054,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <link rel="stylesheet" href="site-design.css?v=b30f9f04791b">
 <link rel="stylesheet" href="guide.css?v=022546be75f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
-<link rel="stylesheet" href="archive-library.css?v=f6dea18c0436">
+<link rel="stylesheet" href="archive-library.css?v=36d45c8ea1ea">
 </head>
 <body class="hl-site">
 
@@ -5227,7 +5227,7 @@ function mountArchiveNative(route,generation){
     headers:{Authorization:"Bearer "+archiveToken},credentials:"omit",cache:"no-store",signal:AbortSignal.timeout(5000)
   }).then(response=>response.ok?response.json():null).then(data=>archiveToken===cmTok()&&Array.isArray(data?.books)?data.books:[]).catch(()=>[]):Promise.resolve([]);
   privateList.then(books=>{if(privateEntry?.isConnected)privateEntry.hidden=!books.length;});
-  const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=8fa40adc7f9d"):loadArchiveModule();
+  const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=267e5b6a7d24"):loadArchiveModule();
   Promise.all([modulePromise,privateList]).then(([module,privateBooksForAccount])=>{
     if(!current())return;
     archiveMountState={key:archiveMountKey(route),container};
