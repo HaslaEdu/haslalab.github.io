@@ -31,7 +31,8 @@
    opaque-origin frame) or in a Pyodide worker in the reader's browser. */
 import {ensureCreationSchema, publicCreationWrite, LIMITS as CL} from './creations.js';
 import {workshopReadBytes} from './workshop-storage.js';
-import {validateScene} from '../../draw-scene.mjs';
+import {sceneBounds, validateScene} from '../../draw-scene.mjs';
+import {renderSVG} from '../../draw-render.mjs';
 
 export const SHARE_SCHEMA = [
   `CREATE TABLE IF NOT EXISTS share_meta (
@@ -242,7 +243,7 @@ const SORTS = {
   likes: 'c.likes DESC, c.id DESC', views: 'c.plays DESC, c.id DESC',
   remixes: '(SELECT COUNT(*) FROM creations r WHERE r.forked_from=c.id AND r.status=\'public\') DESC, c.id DESC',
   featured: 's.featured_at DESC, c.id DESC'};
-const card = r => ({...r, type: TYPE_OF[r.kind], kind: undefined, tags: r.tags ? r.tags.split(',').filter(Boolean) : [], has_thumb: !!r.has_thumb, featured: !!r.featured,
+const card = r => ({...r, type: TYPE_OF[r.kind], kind: undefined, tags: r.tags ? r.tags.split(',').filter(Boolean) : [], has_thumb: !!r.has_thumb || TYPE_OF[r.kind] === 'figure', featured: !!r.featured,
   av: r.av && /^[A-Za-z0-9_-]{8,32}$/.test(r.av) ? r.av : null});
 const likeEsc = s => s.replace(/[\\%_]/g, c => '\\' + c);
 
@@ -425,9 +426,18 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
     if (act === 'thumb' && m === 'GET') {
       const th = (await DB.prepare('SELECT thumb FROM share_meta WHERE creation_id=?').bind(id).first())?.thumb || '';
       const mm = /^data:(image\/(?:png|jpeg|webp|svg\+xml));base64,(.+)$/.exec(th);
-      if (!mm) throw new HttpError(404, 'not_found');
-      const bytes = Uint8Array.from(atob(mm[2]), c => c.charCodeAt(0));
-      return new Response(bytes, {headers: {'Content-Type': mm[1], 'Cache-Control': 'public, max-age=300', 'X-Content-Type-Options': 'nosniff',
+      let mime = mm?.[1], bytes;
+      if (mm) bytes = Uint8Array.from(atob(mm[2]), c => c.charCodeAt(0));
+      else if (TYPE_OF[row.kind] === 'figure' && row.payload) {
+        const scene = validateScene(JSON.parse(row.payload).scene, {lenient: true}).scene;
+        if (scene?.objects.length) {
+          const svg = renderSVG(scene, {width:480, view:sceneBounds(scene)}).replaceAll('&#39;', '&apos;');
+          if (svgSafe(svg)) { mime = 'image/svg+xml'; bytes = utf8(svg); }
+        }
+      }
+      if (!bytes) throw new HttpError(404, 'not_found');
+      const cache = row.status === 'public' && !row.mod_hidden ? 'public, max-age=300' : 'private, no-store';
+      return new Response(bytes, {headers: {'Content-Type': mime, 'Cache-Control': cache, 'X-Content-Type-Options': 'nosniff',
         'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; sandbox", 'Cross-Origin-Resource-Policy': 'cross-origin', 'Content-Disposition': 'inline'}});
     }
     if (!act && m === 'GET') {
@@ -442,7 +452,7 @@ export function createShareRouter({HttpError, needUser, limit, now, bad, clientI
         tags: row.tags ? row.tags.split(',').filter(Boolean) : [], topic: row.topic || 'other', status: row.status, featured: !!row.featured, hidden_by_staff: !!row.mod_hidden,
         author: {id: row.user_id, nickname: row.gone ? null : row.nickname, av: !row.gone && row.av && /^[A-Za-z0-9_-]{8,32}$/.test(row.av) ? row.av : null},
         created_at: row.created_at, updated_at: row.updated_at, shared_at: row.shared_at || row.created_at,
-        likes: row.likes, views: row.plays, favs: row.favs || 0, comments: row.n_comments || 0, remixes: nRemix?.n || 0, has_thumb: row.thumb_len > 0, mine: owner,
+        likes: row.likes, views: row.plays, favs: row.favs || 0, comments: row.n_comments || 0, remixes: nRemix?.n || 0, has_thumb: row.thumb_len > 0 || type === 'figure', mine: owner,
         forked_from: row.forked_from || null,
         ...(type === 'sim' ? {code: payload?.code ?? row.code, language: payload?.language || 'js', question: row.body, answer: row.answer, answerUnit: row.unit} : {}),
         ...(type === 'python' ? {statement: row.body, starter: row.starter, grader: row.grader} : {}),

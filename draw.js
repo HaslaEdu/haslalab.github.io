@@ -1626,7 +1626,7 @@ function openShare() {
     <p class="note" id="shMsg" role="status"></p>`;
   const msg = t => { $('shMsg').innerHTML = t; };
   const fields = () => ({title: $('shTitle').value.trim() || st.scene.title || T.title, description: $('shDesc').value, howto: $('shHow').value, tags: $('shTags').value.split(',').map(x => x.trim()).filter(Boolean).slice(0, 8), topic: $('shTopic').value});
-  const content = () => { const thumb = S.svgThumb(exportSvg(false)); return {payload: {scene: st.scene}, ...(thumb ? {thumbnail: thumb} : {})}; };
+  const content = () => ({payload: {scene: st.scene}, thumbnail: ''});
   const fail = e => msg(`<span class="bad">${esc(e?.code === 'login_required' ? X7.login : T.err[e?.code] || e?.code || T.err.other)}</span>`);
   box.querySelector('[data-close]').onclick = () => { box.hidden = true; height(); };
   $('shPub')?.addEventListener('click', async () => {
@@ -2139,7 +2139,7 @@ function shell() {
       <div class="project-actions"><button type="button" id="bOpenStore">${ko ? '프로젝트 목록' : 'Projects'}</button><span id="drawProvider"></span><button type="button" id="bSave" class="primary">${esc(X6.save)}</button></div></div>
     <div class="project-line"><label class="note" for="projectTitle">${ko ? '프로젝트 이름' : 'Project name'}</label><input id="projectTitle" maxlength="60" placeholder="${ko ? '제목 없는 프로젝트' : 'Untitled project'}"><select id="projectPages" aria-label="${ko ? '프로젝트의 그림' : 'Figures in project'}"></select><button type="button" id="projectAdd">${ko ? '+ 그림 추가' : '+ Add figure'}</button><button type="button" id="projectRemove">${ko ? '현재 그림 삭제' : 'Remove current figure'}</button><span id="saveStatus" class="note" role="status"></span></div>
     <div id="hint3"></div>
-    <div class="dbar"><button type="button" id="bTemplates">${esc(X4.templates)}</button>
+    <div class="dbar">
       <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bShare">${esc(X7.share)}</button>
       <button type="button" id="bInsertAsset">${ko ? '에셋 불러오기' : 'Insert asset'}</button><label class="btn"><input type="checkbox" id="selectMore" style="width:auto"> ${ko ? '여러 물체 선택' : 'Multi-select'}</label>
       <span class="sep"></span>
@@ -2157,7 +2157,7 @@ function shell() {
       <div class="row"><label for="aiRegion">${ko ? '사용할 영역' : 'Region to use'}</label><select id="aiRegion"></select></div></div>
       <div class="row"><label class="chk" id="aiEditLabel"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div><div id="aiProposal" hidden></div><div id="aiIllustration" hidden></div></details>
     <div id="aiNote" class="ainote" hidden></div>
-    <div class="work" id="drawDock"><div class="draw-library" data-dock="tools"><div class="dock-bar">${panelTab('drawLibraryBody',['도구와 템플릿','Tools and templates'],'▦')}</div><div id="drawLibraryBody" data-dock-body>
+    <div class="work" id="drawDock"><div class="draw-library" data-dock="tools" data-dock-floor-width="144" data-dock-floor-height="90"><div class="dock-bar">${panelTab('drawLibraryBody',['도구와 템플릿','Tools and templates'],'▦')}</div><div id="drawLibraryBody" data-dock-body>
       <details class="palwrap parts" id="templateShelf"><summary>${esc(X4.templates)}</summary><label class="note" for="templateDomain">${ko ? '분야' : 'Topic'}</label>
         <select id="templateDomain">${Object.keys(DOMAINS).filter(d => TEMPLATE_KEYS.some(k => TEMPLATE_DOMAIN[k] === d)).map(d => `<option value="${d}">${esc(X2.domains[d])}</option>`).join('')}</select>
         <div id="templateCards" class="template-cards"></div></details>
@@ -2169,7 +2169,7 @@ function shell() {
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
           <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label><label id="rtLbl"><input type="checkbox" id="cRt"${st.rtrail ? ' checked' : ''}>${esc(X5.trails)}</label></span><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label id="solveLbl"><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
         <div id="readouts" class="readouts"></div></section>
-      <div class="side" data-dock="props"><div class="dock-bar">${panelTab('drawSideBody',['속성과 내보내기','Properties and export'],'☷')}</div><div id="drawSideBody" data-dock-body><section class="panel" id="props"></section><section class="panel" id="out"></section></div>${panelHandle('drawSideBody',['속성과 내보내기','properties and export'])}</div></div></div>`;
+      <div class="side" data-dock="props" data-dock-floor-width="188" data-dock-floor-height="90"><div class="dock-bar">${panelTab('drawSideBody',['속성과 내보내기','Properties and export'],'☷')}</div><div id="drawSideBody" data-dock-body><section class="panel" id="props"></section><section class="panel" id="out"></section></div>${panelHandle('drawSideBody',['속성과 내보내기','properties and export'])}</div></div></div>`;
   window.HL_WORKSHOP_PROJECTS.bindPanels($('drawDock'),()=>{ if (!$('drawEditor').hidden) paintCanvas(); height(); });
   $('drawProvider').append(window.HL_WORKSHOP_PROJECTS.providerSelect(st.storeIds?.provider));
 
@@ -2184,7 +2184,6 @@ function shell() {
     selectProjectPage(Math.min(p.index, p.pages.length - 1));
     $('projectPages').focus();
   };
-  $('bTemplates').onclick = () => { const shelf = $('templateShelf'); shelf.open = true; shelf.scrollIntoView({block: 'nearest'}); $('templateDomain').focus({preventScroll: true}); };
   $('templateShelf').ontoggle = e => { if (e.target.open) paintTemplates(); height(); };
   $('templateDomain').onchange = paintTemplates;
   $('aiOutput').onchange = syncAiControls;

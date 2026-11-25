@@ -137,22 +137,26 @@
       (preview ? '' : '<div class="row"><button id="cpImportFigure">' + tr('그림 불러오기','Import figure') + '</button></div>') +
       '<div id="cpFigure" hidden></div><details><summary>' + tr('작품 설명', 'Project description') + '</summary><textarea id="cpDescription" rows="3" maxlength="3000" aria-label="' + tr('작품 설명', 'Project description') + '"></textarea></details></div>' + panelHandle('cpCodeBody',['코드','code']) + '</section>' +
       '<section class="panel" id="cpResultPane" data-dock="result"><header class="dock-bar">' + panelTab('cpResultBody',['실행 결과','Results'],'≋') + '</header><div id="cpResultBody" data-dock-body><div class="row"><button id="cpStop" disabled>' + tr('중지','Stop') + '</button><button type="button" id="cpCopyResult" disabled>' + tr('결과 복사','Copy result') + '</button></div><p id="cpRunStatus" role="status"></p><div id="cpPlots"></div><pre class="out" id="cpOutput" hidden></pre></div>' + panelHandle('cpResultBody',['실행 결과','results']) + '</section></div>' +
-      (preview ? '' : '<section class="panel compute-chat" id="cpAssistant" data-dock="assistant" hidden><header class="dock-bar">' + panelTab('cpAssistantBody',['하슬라 AI와 작업','Work with Hasla AI'],'✦') + '</header><div id="cpAssistantBody" data-dock-body><p class="note" id="cpChatLanguage"></p><p id="cpChatEmpty" class="note">' + tr('물리 모델을 설명하거나 열린 코드에 대해 질문해 보세요.', 'Describe a physical model or ask about the open code.') + '</p><div id="cpChat" role="log" aria-live="polite"></div><p id="cpTaskStatus" class="note" role="status"></p>' +
+      (preview ? '' : '<section class="panel compute-chat" id="cpAssistant" aria-label="' + tr('하슬라 AI 대화','Chat with Hasla AI') + '" hidden><div id="cpAssistantBody"><div class="compute-transcript"><h2 id="cpChatHeading">' + tr('하슬라 AI','Hasla AI') + '</h2><p id="cpChatEmpty" class="note">' + tr('물리 모델을 설명하거나 열린 코드에 대해 질문해 보세요.', 'Describe a physical model or ask about the open code.') + '</p><div id="cpChat" role="log" aria-live="polite"></div><p id="cpTaskStatus" class="note" role="status"></p></div>' +
       '<form id="cpForm"><textarea id="cpPrompt" rows="3" maxlength="2000" required aria-label="' + tr('AI에게 요청할 내용', 'Prompt') + '" placeholder="' +
       tr('예: 공기 저항을 포함한 포물선 운동을 만들어 줘. 이후 질량을 바꿔 달라고 요청할 수 있어요.', 'E.g. Build a projectile model with air resistance. Then ask to change the mass.') + '"></textarea>' +
-      '<div class="compute-composer"><label for="cpTaskMode">' + tr('작업 방식','Task mode') + '</label><select id="cpTaskMode"><option value="edit">' + tr('코드 제안','Propose code') + '</option><option value="delegate">' + tr('적용하고 실행','Apply and run') + '</option><option value="chat">' + tr('질문만','Ask a question') + '</option></select><button class="primary" type="submit">' + tr('보내기','Send') + '</button></div>' +
-      '</form><button type="button" id="cpUndo" hidden>' + tr('AI 변경 되돌리기','Undo AI change') + '</button></div>' + panelHandle('cpAssistantBody',['AI 대화','AI chat']) + '</section>') +
+      '<div class="compute-composer"><span class="note" id="cpChatLanguage"></span><label for="cpTaskMode">' + tr('작업 방식','Task mode') + '</label><select id="cpTaskMode"><option value="edit">' + tr('코드 제안','Propose code') + '</option><option value="delegate">' + tr('적용하고 실행','Apply and run') + '</option><option value="chat">' + tr('질문만','Ask a question') + '</option></select><button class="primary" type="submit">' + tr('보내기','Send') + '</button></div>' +
+      '</form><button type="button" id="cpUndo" hidden>' + tr('AI 변경 되돌리기','Undo AI change') + '</button></div></section>') +
       '</div>' + (preview ? '' : '<div class="row compute-actions"><span id="cpProvider"></span><button id="cpSave">' + tr('저장', 'Save') + '</button><button id="cpOpen">' + tr('프로젝트 목록', 'Projects') + '</button>' +
-      '<button id="cpPaper">' + tr('문제 제작에 활용', 'Use in a problem') + '</button><button class="primary" id="cpShare">' + tr('작품 공유', 'Share project') + '</button></div>') +
+      '<button class="primary" id="cpShare">' + tr('작품 공유', 'Share project') + '</button></div>') +
       '<p id="cpCopyStatus" role="status" class="note"></p><p id="cpStatus" role="status" class="note"></p><div id="cpRuntime"></div></div>';
     const $ = id => root.querySelector('#' + id);
     const msg = s => { $('cpStatus').textContent = s || ''; height(); };
     const lang = $('cpLang'), source = $('cpCode'), title = $('cpTitle'), description = $('cpDescription');
     const editor = $('cpEditor'), workToggle = $('cpWorkspace');
     const dock = P.bindPanels($('cpDock'),height);
+    let chatScroll = Infinity;
     function selectPane(pane) {
+      const log = $('cpChat');
+      if (editor.dataset.pane === 'assistant' && pane !== 'assistant' && log?.getClientRects().length) chatScroll = log.scrollTop;
       editor.dataset.pane = pane;
-      if (pane !== 'assistant') editor.dataset.document = pane;
+      if (pane === 'assistant') log.scrollTop = Math.min(log.scrollHeight,chatScroll);
+      else editor.dataset.document = pane;
       $('cpViewbar')?.querySelectorAll('[data-pane]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pane === pane)));
       height();
     }
@@ -160,10 +164,11 @@
       if (!workToggle) return;
       editor.classList.toggle('is-workspace', opened);
       workToggle.setAttribute('aria-expanded', String(opened));
+      if (!opened && editor.dataset.pane === 'assistant') chatScroll = $('cpChat').scrollTop;
       $('cpAssistant').hidden = $('cpViewbar').hidden = !opened;
       if (opened) {
         editor.dataset.document = 'code'; selectPane('assistant');
-        const log = $('cpChat'); log.scrollTop = log.scrollHeight;
+        if (document.activeElement === workToggle) $('cpPrompt').focus({preventScroll:true});
       }
       height();
     }
@@ -235,6 +240,7 @@
       const box = $('cpChat');
       if (!box) return;
       $('cpChatEmpty').hidden = project.history.length > 0;
+      if (toLatest) chatScroll = Infinity;
       const position = box.scrollTop, opened = new Set([...box.querySelectorAll('details[open]')].map(item => item.dataset.id));
       let versionNumber = 0;
       box.replaceChildren(...project.history.map(turn => {
@@ -483,7 +489,7 @@
       $('cpProjects').hidden = true;
       $('cpEditor').hidden = false;
       $('cpProvider').querySelector('select').value = stored?.provider || 'store';
-      if (project.history.length) setWorkspace(true);
+      setWorkspace(project.history.length > 0);
       height();
     }
     function showProjects() {
@@ -504,6 +510,8 @@
       if (!active || busy || $('cpProjects').hidden) return;
       cancelRun();
       hydrate(data);
+      chatScroll = Infinity;
+      editor.dataset.pane = '';
       storageRevision++;
       stored=entry; sharedId=null; published=false; lastOutput=''; lastError=''; resetCopyResult(); $('cpInput').value = '';
       $('cpPlots').replaceChildren(); $('cpOutput').hidden=true; $('cpRunStatus').textContent='';
@@ -532,12 +540,6 @@
           project.figure=figure; paint(); persist();
         }});
       };
-      $('cpPaper').onclick = () => {
-        const transfer = {title: title.value.trim(), description: description.value.trim(), language: project.language, code: source.value, output: lastOutput, figure: project.figure};
-        if (!write(sessionStorage, 'hlWorkshopProblem', transfer)) { msg(tr('문제 제작에 보낼 수 없습니다.', 'Could not send the project to the problem maker.')); return; }
-        if (window.top !== window) window.top.location.hash = '/workshop/make?tab=ai&from=compute';
-      else location.assign('/#/workshop/make?tab=ai&from=compute');
-      };
       $('cpShare').onclick = () => {
         if (!login()) return;
         if (!title.value.trim()) { title.focus(); return; }
@@ -565,8 +567,8 @@
     if (id) {
       $('cpRun').disabled = true;
       source.readOnly = lang.disabled = title.readOnly = description.readOnly = true;
-      const shareButton = $('cpShare'), paperButton = $('cpPaper');
-      if (shareButton) shareButton.disabled = paperButton.disabled = true;
+      const shareButton = $('cpShare');
+      if (shareButton) shareButton.disabled = true;
       share.get(id).then(({project: p}) => {
         if (!active) return;
         if (!isLanguage(p.language) || typeof p.code !== 'string') throw new Error(tr('이 실행 형식을 열 수 없습니다.', 'This project uses a different runtime.'));
