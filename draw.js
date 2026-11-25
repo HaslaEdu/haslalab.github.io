@@ -1799,22 +1799,28 @@ async function decodeAiImage(src) {
   await image.decode();
   return image;
 }
-async function aiCrop(photo, index) {
+async function aiCrop(photo, index, original) {
   const box = photo.regions[index]?.box;
-  if (!box) return photo.source;
-  const im = await decodeAiImage(photo.source), canvas = document.createElement('canvas');
-  const [top,left,bottom,right] = box;
-  const x = Math.floor(left * im.width / 1000), y = Math.floor(top * im.height / 1000);
-  canvas.width = Math.max(1, Math.ceil(right * im.width / 1000) - x);
-  canvas.height = Math.max(1, Math.ceil(bottom * im.height / 1000) - y);
-  canvas.getContext('2d').drawImage(im,x,y,canvas.width,canvas.height,0,0,canvas.width,canvas.height);
-  return canvas.toDataURL('image/jpeg',.88);
+  if (!box && !original) return photo.source;
+  const im = original ? await createImageBitmap(original) : await decodeAiImage(photo.source);
+  try {
+    const [top,left,bottom,right] = box || [0,0,1000,1000];
+    const x = Math.floor(left * im.width / 1000), y = Math.floor(top * im.height / 1000);
+    const w = Math.max(1, Math.ceil(right * im.width / 1000) - x), h = Math.max(1, Math.ceil(bottom * im.height / 1000) - y);
+    const scale = original ? Math.min(1,3200/Math.max(w,h)) : 1;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1,Math.round(w*scale));
+    canvas.height = Math.max(1,Math.round(h*scale));
+    canvas.getContext('2d').drawImage(im,x,y,w,h,0,0,canvas.width,canvas.height);
+    return original ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg',.88);
+  } finally { if (original) im.close(); }
 }
 async function illustrationAsset(src, title) {
   const image = await decodeAiImage(src), c = document.createElement('canvas');
+  const maxScale = Math.min(1,2000/Math.max(image.naturalWidth,image.naturalHeight));
   for (const scale of [1,.85,.7,.55,.4]) {
-    c.width = Math.max(1,Math.round(image.naturalWidth*scale));
-    c.height = Math.max(1,Math.round(image.naturalHeight*scale));
+    c.width = Math.max(1,Math.round(image.naturalWidth*maxScale*scale));
+    c.height = Math.max(1,Math.round(image.naturalHeight*maxScale*scale));
     const g = c.getContext('2d');
     g.fillStyle = '#fff'; g.fillRect(0,0,c.width,c.height);
     g.drawImage(image,0,0,c.width,c.height);
@@ -1889,7 +1895,7 @@ async function aiDraw({restore = false, fromRegion = false} = {}) {
   st.aiWork = true;
   syncAiControls();
   try {
-    const image = (extract || fromRegion) ? await aiCrop(photo,cropIndex) : file ? await photoData(file) : undefined;
+    const image = (extract || fromRegion) ? await aiCrop(photo,cropIndex,rawCrop ? file : undefined) : file ? await photoData(file) : undefined;
     const name = extract ? photo.regions[cropIndex]?.label || (ko ? '문제 그림' : 'Worksheet figure') : text;
     if (rawCrop) { await showIllustration(image,name,undefined,undefined,true); return; }
     if (raster) {
