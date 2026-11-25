@@ -198,3 +198,7 @@
 .al-private-textbooks button[aria-pressed=true]{border-color:var(--al-accent);color:var(--al-accent)}
 .al-private-textbooks .al-reader .al-meta{margin:20px 0 0}
 .al-private-textbooks .al-figures img{max-height:none}
+.al-feynman-exercises details{border-bottom:1px solid var(--al-line);padding:10px 0}
+.al-feynman-exercises details summary{cursor:pointer;font-weight:650}
+.al-feynman-exercises details p{margin:8px 0}
+.al-feynman-exercises>a:last-child{display:inline-block;margin-top:12px}

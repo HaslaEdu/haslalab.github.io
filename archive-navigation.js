@@ -52,7 +52,10 @@
       const privateParams=new URLSearchParams({view:'private-textbooks'});
       const requested=input instanceof URLSearchParams?input:new URLSearchParams(input);
       const book=requested.get('book');
-      if(requested.getAll('book').length===1&&/^[a-z][a-z0-9-]{0,31}$/.test(book||''))privateParams.set('book',book);
+      if(requested.getAll('book').length===1&&/^[a-z][a-z0-9-]{0,31}$/.test(book||'')){
+        privateParams.set('book',book);
+        if(book==='feynman'&&requested.getAll('section').length===1&&requested.get('section')==='exercises')privateParams.set('section','exercises');
+      }
       return privateParams;
     }
     params.delete('view');

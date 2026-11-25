@@ -6,7 +6,9 @@ const {createRequire} = require('node:module');
 const {JSDOM} = createRequire(resolve(__dirname, '../community/package.json'))('jsdom');
 const nav = require('../archive-navigation.js');
 
-const code = readFileSync(resolve(__dirname, '../archive-private-textbooks.js'), 'utf8').replace(/^export /gm, '');
+const exerciseData = readFileSync(resolve(__dirname, '../feynman-exercises.js'), 'utf8').replace(/^export /gm, '');
+const code = exerciseData + '\n' + readFileSync(resolve(__dirname, '../archive-private-textbooks.js'), 'utf8')
+  .replace(/^import .*;\r?\n/m, '').replace(/^export /gm, '');
 const API = '/api/problem-bank/private-textbooks/books';
 const PATH = '#/archive/books/phys?view=private-textbooks';
 const BOOK = {id: 'goldstein', title: 'Private synthetic book', count: 1, korean_count: 1};
@@ -15,7 +17,8 @@ const FEYNMAN = {id: 'feynman', title: 'Sample lectures', kind: 'lectures', coun
 const problem = {ordinal: 1, number: '1.1', label: 'Sample', chapter: 'Chapter 1', has_korean: true};
 const flush = () => new Promise(done => setImmediate(done));
 
-async function setup(t, {initialToken = 'private-test-token', status = 200, withKorean = true, feynman = false} = {}) {
+async function setup(t, {initialToken = 'private-test-token', status = 200, withKorean = true, feynman = false,
+                         exercises = false} = {}) {
   const dom = new JSDOM('<main></main>', {
     url: 'https://haslalab.org/' + PATH, runScripts: 'outside-only',
   });
@@ -57,7 +60,7 @@ async function setup(t, {initialToken = 'private-test-token', status = 200, with
   const root = w.document.querySelector('main');
   const controller = w.mountPrivateTextbooks(root, {
     apiOrigin: 'https://worker.test', lang: 'ko', theme: 'light',
-    params: new URLSearchParams(feynman ? 'book=feynman' : ''),
+    params: new URLSearchParams(feynman ? 'book=feynman' + (exercises ? '&section=exercises' : '') : ''),
     getToken: () => token, renderMath: node => math.push(node.textContent), onLogin: () => {},
   });
   t.after(() => { controller.dispose(); w.close(); });
@@ -129,7 +132,7 @@ test('unsigned or denied sessions have no private text and only available langua
 test('Feynman owner chooses a volume and jumps to its chapter in the authenticated PDF', async t => {
   const demo = await setup(t, {feynman: true});
   const nav = demo.root.querySelector('nav[aria-label="권 선택"]');
-  assert.deepEqual([...nav.querySelectorAll('button')].map(button => button.textContent), ['Volume 1', 'Volume 2', 'Volume 3']);
+  assert.deepEqual([...nav.querySelectorAll('button')].map(button => button.textContent), ['Volume 1', 'Volume 2', 'Volume 3', '연습문제']);
   assert.equal(demo.calls.length, 1);
   await demo.click('Volume 2');
   assert.equal(demo.root.ownerDocument.activeElement.textContent, 'Volume 2');
@@ -153,5 +156,28 @@ test('Feynman guests select the same three volumes and only see official reading
     assert.ok(demo.root.querySelector('a[href="https://www.feynmanlectures.caltech.edu/' + label + '_toc.html"]'));
     assert.equal(demo.root.querySelector('iframe'), null);
   }
+  assert.equal(demo.calls.length, 0);
+});
+
+test('Feynman’s public exercises are listed inside the book and can be found in either language', async t => {
+  const path = PATH + '&book=feynman&section=exercises';
+  assert.equal(nav.legacy(path), null);
+  assert.equal(nav.parse(PATH + '&book=goldstein&section=exercises').params.get('section'), null);
+  const demo = await setup(t, {feynman: true, exercises: true, initialToken: ''});
+  const section = demo.root.querySelector('.al-feynman-exercises');
+  const links = [...section.querySelectorAll('details a')];
+  assert.equal(links.length, 47);
+  assert.equal(new Set(links.map(a => a.href)).size, 47);
+  assert.ok(links.every(a => a.href.startsWith('https://www.feynmanlectures.caltech.edu/info/exercises/')));
+  const field = section.querySelector('input[type=search]');
+  field.value = '강제 진동';
+  field.dispatchEvent(new field.ownerDocument.defaultView.Event('input'));
+  assert.equal(section.querySelectorAll('details').length, 1);
+  section.querySelector('details').open = true;
+  await demo.click('English');
+  const row = section.querySelector('details');
+  assert.ok(row.open);
+  assert.match(row.textContent, /Driven pendulum.*I · 23/);
+  assert.equal(row.querySelector('a').href, 'https://www.feynmanlectures.caltech.edu/info/exercises/forced_pendulum.html');
   assert.equal(demo.calls.length, 0);
 });
