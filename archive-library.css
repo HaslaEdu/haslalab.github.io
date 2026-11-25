@@ -10,6 +10,8 @@
 .al .al-official{padding:20px 0 0;margin-top:22px;border-top:1px solid var(--al-line)}
 .al .al-official h3{margin:0 0 12px}.al .al-official ul{list-style:none;padding:0;margin:0}
 .al .al-official li{border:0;margin:5px 0}.al .al-official li a{display:inline-block;min-height:44px;padding:9px 0}
+.al .al-official details{margin:8px 0}.al .al-official summary{cursor:pointer;font-weight:650;padding:8px 0}
+.al .al-official details ul{padding-inline-start:12px}
 .al .al-search-scope{font-size:.85rem;margin:12px 0}
 .al .al-search-disclosure{margin:0 0 20px;border-top:1px solid var(--al-line);border-bottom:1px solid var(--al-line)}
 .al .al-search-disclosure>summary{font-size:.9rem}.al .al-search-disclosure .al-search{border:0;padding:12px 0 18px}
@@ -198,9 +200,10 @@
 .al-private-textbooks button[aria-pressed=true]{border-color:var(--al-accent);color:var(--al-accent)}
 .al-private-textbooks .al-reader .al-meta{margin:20px 0 0}
 .al-private-textbooks .al-figures img{max-height:none}
-.al-feynman-exercises details,.al-feynman-handouts{border-bottom:1px solid var(--al-line);padding:10px 0}
-.al-feynman-exercises summary,.al-feynman-handouts summary{cursor:pointer;font-weight:650}
-.al-feynman-handouts>details{margin:12px 0 12px 12px}
-.al-feynman-handouts time{font-size:.875rem}
+.al-feynman-exercises details{border-bottom:1px solid var(--al-line);padding:10px 0}
+.al-feynman-exercises details summary{cursor:pointer;font-weight:650}
 .al-feynman-exercises details p{margin:8px 0}
 .al-feynman-exercises>a:last-child{display:inline-block;margin-top:12px}
+.al-feynman-workbook details{border-bottom:1px solid var(--al-line);padding:9px 0}
+.al-feynman-workbook summary{cursor:pointer;font-weight:650}
+.al-feynman-workbook iframe[hidden]{display:none}

@@ -1,13 +1,11 @@
-import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=ec200103f909';
-import {FEYNMAN_HANDOUTS} from './feynman-handouts.js?v=5b92bb148a28';
+import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=21eae3287f7a';
 
 const API = '/api/problem-bank/private-textbooks';
 const BOOK = /^[a-z][a-z0-9-]{0,31}$/;
 const WEBP = /^image\/webp(?:;|$)/i;
 const PDF = /^application\/pdf(?:;|$)/i;
 const FEYNMAN_SITE = 'https://www.feynmanlectures.caltech.edu/';
-const FEYNMAN_COURSE_NOTES = FEYNMAN_SITE + 'info/FLP_Original_Course_Notes/';
-const FEYNMAN_EXERCISE_BOOK = 'https://www.hachettebookgroup.com/titles/richard-p-feynman/exercises-for-the-feynman-lectures-on-physics/9780465060719/';
+const FEYNMAN_WORKBOOK = API + '/books/feynman/workbook';
 const PUBLIC_FEYNMAN = {
   id: 'feynman',
   title: 'The Feynman Lectures on Physics',
@@ -35,11 +33,10 @@ const COPY = {
     chapterCount: '개 장', supplement: '부록', openPdf: '원본 PDF 열기', newTabPdf: '새 탭에서 PDF 열기',
     pdfError: 'PDF를 불러오지 못했습니다.', exercises: '연습문제',
     exerciseTitle: 'Caltech 공개 연습문제', findExercise: '연습문제 검색',
-    exerciseNote: 'Caltech 공개 문제와 원본 과제에서 확인한 개별 문항의 한영 요약입니다. 링크를 열면 원문과 그림을 볼 수 있습니다.',
-    exerciseSet: '과제',
+    exerciseNote: '문항별 한국어·영어 요약입니다. 문제의 전체 조건, 그림과 해설은 각 문항의 Caltech 원문에서 볼 수 있습니다.',
     exerciseSource: 'Caltech 원문 열기', exerciseIndex: 'Caltech 전체 목록', chapterReference: '강의 본문',
-    handoutTitle: 'Caltech 강의 원본 과제·시험', handoutIndex: 'Caltech 원본 자료 전체 목차',
-    handoutHomework: '과제', handoutTests: '시험·퀴즈', exerciseBook: '별책 연습문제집 (출판사 정보)',
+    workbook: '파인만 별책 연습문제집', workbookContents: '목차', workbookAnswers: '정답·해설',
+    workbookSearch: '문항 번호 또는 장 제목', workbookOriginal: '영어 원본 스캔',
     onlineEdition: 'Caltech 공식 온라인판 열기', lectureLogin: 'Drive 원본 PDF는 승인된 계정으로 열 수 있습니다.',
   },
   en: {
@@ -60,11 +57,10 @@ const COPY = {
     chapterCount: 'chapters', supplement: 'Appendix', openPdf: 'Open original PDF', newTabPdf: 'Open PDF in a new tab',
     pdfError: 'Could not load the PDF.', exercises: 'Exercises',
     exerciseTitle: 'Caltech’s public exercises', findExercise: 'Find an exercise',
-    exerciseNote: 'Korean and English summaries from Caltech’s exercise collection and verified course handouts. The links open the original text and figures.',
-    exerciseSet: 'Problem set',
+    exerciseNote: 'Short Korean and English summaries. Open each Caltech original for the full statement, diagrams and solutions.',
     exerciseSource: 'Open Caltech original', exerciseIndex: 'Caltech’s full index', chapterReference: 'Lecture reference',
-    handoutTitle: 'Caltech original homework and exams', handoutIndex: 'Caltech’s full handout index',
-    handoutHomework: 'Homework', handoutTests: 'Exams and quizzes', exerciseBook: 'Published exercise book (publisher information)',
+    workbook: 'Exercises for the Feynman Lectures on Physics', workbookContents: 'Contents', workbookAnswers: 'Answers and solutions',
+    workbookSearch: 'Problem number or chapter title', workbookOriginal: 'Original English scan',
     onlineEdition: 'Open the official Caltech edition', lectureLogin: 'Sign in with an approved account to open the Drive PDFs.',
   },
 };
@@ -217,7 +213,15 @@ export function mountPrivateTextbooks(container, options) {
     addChoice(words.exercises, 'exercises');
     content.replaceChildren(...(publicEdition ? [] : [bookPicker()]), choices);
     if (state.volume === 'exercises') {
-      content.append(renderHandoutIndex(), renderExerciseIndex());
+      const workbook = atom('section');
+      workbook.className = 'al-feynman-workbook';
+      content.append(workbook, renderExerciseIndex());
+      if (publicEdition) {
+        workbook.append(atom('h3', words.workbook), atom('p', words.lectureLogin));
+        if (!observedToken) workbook.append(button(words.login, () => options.onLogin?.()));
+      } else {
+        void loadWorkbook(workbook, run);
+      }
       return;
     }
     if (publicEdition) {
@@ -294,44 +298,107 @@ export function mountPrivateTextbooks(container, options) {
     content.append(volumeTitle, preview, controls, chapters, empty, links);
   }
 
-  function renderHandoutIndex() {
-    const archive = atom('details');
-    archive.className = 'al-feynman-handouts';
-    archive.append(atom('summary', words.handoutTitle));
-    const english = options.lang === 'en';
-    function sourceLink(label, url) {
-      const link = atom('a', label);
-      link.href = url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      return link;
+  async function loadWorkbook(section, run) {
+    section.append(atom('h3', words.workbook));
+    const status = atom('p', words.loading);
+    status.setAttribute('role', 'status');
+    section.append(status);
+    let workbook;
+    try {
+      workbook = await get(FEYNMAN_WORKBOOK, run);
+    } catch (error) {
+      if (current(run) && error.name !== 'AbortError') status.textContent = words.failed;
+      return;
     }
-    for (const [course, homework, tests] of FEYNMAN_HANDOUTS) {
-      const group = atom('details');
-      group.append(atom('summary', course));
-      for (const [label, entries] of [[words.handoutHomework, homework], [words.handoutTests, tests]]) {
-        const list = atom('ul');
-        list.className = 'al-private-book-list';
-        for (const [page, date, ko, en] of entries) {
-          const item = atom('li');
-          item.append(sourceLink(english ? en : ko, FEYNMAN_COURSE_NOTES + 'pages/' + page + '.html'));
-          if (date) {
-            const time = atom('time', date);
-            time.dateTime = date;
-            item.append(time);
-          }
-          list.append(item);
+    status.textContent = workbook.count + ' ' + words.count + ' · ' + words.workbookOriginal;
+    const controls = atom('div');
+    controls.className = 'al-private-controls';
+    const volumeLabel = atom('label', words.volume + ' ');
+    const volume = atom('select');
+    for (const [number, label] of ['I', 'II', 'III'].entries()) {
+      const option = atom('option', 'Volume ' + label);
+      option.value = String(number + 1);
+      volume.append(option);
+    }
+    volumeLabel.append(volume);
+    const searchLabel = atom('label', words.workbookSearch + ' ');
+    const search = atom('input');
+    search.type = 'search';
+    search.maxLength = 160;
+    searchLabel.append(search);
+    const chapters = atom('div');
+    const preview = atom('section');
+    const previewStatus = atom('p');
+    previewStatus.setAttribute('role', 'status');
+    const open = atom('a', words.newTabPdf);
+    open.target = '_blank';
+    open.rel = 'noopener';
+    const frame = atom('iframe');
+    frame.className = 'al-private-pdf';
+    frame.title = words.workbook;
+    open.hidden = frame.hidden = true;
+    const pageControls = atom('div');
+    pageControls.className = 'al-private-controls';
+    const previousPart = button(words.previous, () => showPage(workbook.parts[loadedPart - 1].end));
+    const nextPart = button(words.next, () => showPage(workbook.parts[loadedPart + 1].start));
+    previousPart.hidden = nextPart.hidden = true;
+    pageControls.append(previousPart, nextPart, open);
+    preview.append(previewStatus, pageControls, frame);
+    let loadedPart = -1;
+    async function showPage(page) {
+      const part = workbook.parts.findIndex(row => row.start <= page && page <= row.end);
+      if (part < 0 || !current(run)) return;
+      previewStatus.textContent = words.loading;
+      try {
+        if (part !== loadedPart || !imageUrl) {
+          release();
+          loadedPart = -1;
+          previousPart.hidden = nextPart.hidden = open.hidden = frame.hidden = true;
+          const pdf = await get(FEYNMAN_WORKBOOK + '/parts/' + (part + 1), run, PDF);
+          imageUrl = win.URL.createObjectURL(pdf);
+          loadedPart = part;
+        } else {
+          pending?.abort();
         }
-        group.append(atom('h4', label), list);
+        const pageUrl = imageUrl + '#page=' + (page - workbook.parts[part].start + 1);
+        open.href = pageUrl;
+        frame.src = pageUrl;
+        open.hidden = frame.hidden = false;
+        previousPart.hidden = part === 0;
+        nextPart.hidden = part === workbook.parts.length - 1;
+        previewStatus.textContent = words.page + ' ' + page;
+        preview.scrollIntoView({block: 'start'});
+      } catch (error) {
+        if (current(run) && error.name !== 'AbortError') previewStatus.textContent = words.pdfError;
       }
-      archive.append(group);
     }
-    const links = atom('div');
-    links.className = 'al-private-controls';
-    links.append(sourceLink(words.handoutIndex, FEYNMAN_COURSE_NOTES + 'contents.html'),
-      sourceLink(words.exerciseBook, FEYNMAN_EXERCISE_BOOK));
-    archive.append(links);
-    return archive;
+    function renderChapters() {
+      const query = search.value.trim().normalize('NFKC').toLowerCase();
+      const matches = [];
+      for (const chapter of workbook.chapters) {
+        if (!query && chapter.volume !== Number(volume.value)) continue;
+        const wholeChapter = !query || String(chapter.number) === query ||
+          chapter.title.normalize('NFKC').toLowerCase().includes(query);
+        const problems = chapter.problems.map((page, offset) => [chapter.number + '.' + (offset + 1), page])
+          .filter(([number]) => wholeChapter || number === query);
+        if (!problems.length) continue;
+        const group = atom('details');
+        group.open = Boolean(query);
+        group.append(atom('summary', chapter.number + '. ' + chapter.title + ' (' + problems.length + ')'));
+        const list = atom('div');
+        list.className = 'al-private-controls';
+        for (const [number, page] of problems) list.append(button(number, () => showPage(page)));
+        group.append(list);
+        matches.push(group);
+      }
+      chapters.replaceChildren(...(matches.length ? matches : [atom('p', words.empty)]));
+    }
+    volume.addEventListener('change', () => { search.value = ''; renderChapters(); });
+    search.addEventListener('input', renderChapters);
+    controls.append(volumeLabel, searchLabel, button(words.workbookContents, () => showPage(workbook.contents)),
+      button(words.workbookAnswers, () => showPage(workbook.answers)));
+    renderChapters();
+    section.append(controls, preview, chapters);
   }
 
   function renderExerciseIndex() {
@@ -361,7 +428,7 @@ export function mountPrivateTextbooks(container, options) {
       const query = normalize(search.value.trim());
       const matches = FEYNMAN_EXERCISES.filter(row => !query || normalize(row.slice(1).join(' ')).includes(query));
       count.textContent = matches.length ? matches.length + ' ' + words.count : words.empty;
-      results.replaceChildren(...matches.map(([slug, titleKo, titleEn, summaryKo, summaryEn, chapter, page, number, course, set]) => {
+      results.replaceChildren(...matches.map(([slug, titleKo, titleEn, summaryKo, summaryEn, chapter]) => {
         const row = atom('details');
         row.dataset.source = slug;
         row.open = open.has(slug);
@@ -370,10 +437,8 @@ export function mountPrivateTextbooks(container, options) {
         body.lang = language;
         row.append(body);
         if (chapter) row.append(atom('p', words.chapterReference + ' ' + chapter));
-        if (page) row.append(atom('p', course + ' · ' + COPY[language].exerciseSet + ' ' + set + ' · #' + number));
         const source = atom('a', words.exerciseSource);
-        source.href = page ? FEYNMAN_COURSE_NOTES + 'pages/' + page + '.html'
-          : FEYNMAN_SITE + 'info/exercises/' + slug + '.html';
+        source.href = FEYNMAN_SITE + 'info/exercises/' + slug + '.html';
         source.target = '_blank';
         source.rel = 'noopener noreferrer';
         row.append(source);
