@@ -145,11 +145,16 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
       <p class="learn-tool-copy">${T("문제, 그림, 시뮬레이션을 둘러보고 워크샵에서 리믹스하세요.","Explore problems, figures and simulations, then remix them in the Workshop.")}</p></div>
       <div id="shrBody"><p class="ws-note" role="status">${T('불러오는 중…','Loading…')}</p></div>${C.adBanner?.()||''}</div>`;
   }
+  function restoreThumbnail(event){
+    const image=event.target;
+    if(image.matches?.('img[data-shr-thumb]'))image.outerHTML=art(image.dataset.shrThumb);
+  }
   function mount(ctx){
     C=ctx;style();
     if(stopSim){stopSim();stopSim=null;}
     if(observer){observer.disconnect();observer=null;}
     const r=route(),root=document.getElementById('shrRoot');if(!root)return;
+    root.addEventListener('error',restoreThumbnail,true);
     if(r.page==='project')return project(root,r.id);
     if(r.page==='user')return user(root,r.id);
     return explore(root,r.q);
@@ -160,7 +165,7 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     const text=String(it.preview||it.summary||'').replace(/\s+/g,' ').trim();
     const chars=Array.from(text), summary=chars.length>160?chars.slice(0,159).join('').trimEnd()+'…':text;
     return `<a class="shr-card" href="#/workshop/share/${+it.id}">
-      <div class="shr-thumb">${it.has_thumb?`<img src="${esc(thumbUrl(it))}" alt="" loading="lazy" decoding="async">`:art(it.type)}<span class="shr-badge">${esc(typeName(it.type))}</span>${it.featured?`<span class="shr-pick">${T('추천','Pick')}</span>`:''}</div>
+      <div class="shr-thumb">${it.has_thumb?`<img src="${esc(thumbUrl(it))}" data-shr-thumb="${esc(it.type)}" alt="" loading="lazy" decoding="async">`:art(it.type)}<span class="shr-badge">${esc(typeName(it.type))}</span>${it.featured?`<span class="shr-pick">${T('추천','Pick')}</span>`:''}</div>
       <div class="shr-body"><span class="shr-title">${esc(it.title)}</span>${summary?`<span class="shr-summary">${esc(summary)}</span>`:''}
         <span class="shr-by">${C.av(it.nickname||'?','s',it.av)}<span>${esc(it.nickname||T('탈퇴한 회원','Former member'))}</span></span>
         <span class="shr-stats"><span title="${T('좋아요','Likes')}">${icon('heart')}${nf(it.likes)}</span><span title="${T('조회','Views')}">${icon('eye')}${nf(it.views)}</span><span title="${T('리믹스','Remixes')}">${icon('remix')}${nf(it.remixes)}</span></span></div></a>`;
@@ -328,7 +333,7 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
       box.innerHTML=`<iframe id="learnCreateFrame" src="create.html?${q}" title="${esc(p.title)}" referrerpolicy="same-origin" style="height:640px"></iframe>`;return;
     }
     if(p.type==='figure'){
-      const fallback=()=>{box.innerHTML=p.has_thumb?`<img class="shr-fig" src="${esc(thumbUrl(p))}" alt="${esc(p.title)}">`:`<div class="shr-thumb">${art('figure')}</div>`;};
+      const fallback=()=>{box.innerHTML=`<div class="shr-thumb">${p.has_thumb?`<img src="${esc(thumbUrl(p))}" data-shr-thumb="figure" alt="${esc(p.title)}">`:art('figure')}</div>`;};
       fallback();
       /* the site's own renderer draws the stored scene; as an <img> the SVG cannot run anything */
       Promise.all([import('./draw-render.mjs'),import('./draw-scene.mjs')]).then(([R,S])=>{if(!box.isConnected)return;const scene=p.payload.scene,view=scene.view||S.sceneBounds?.(scene);
