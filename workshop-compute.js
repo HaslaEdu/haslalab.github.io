@@ -212,10 +212,12 @@
       const {format, language, sources, figure, question, title, description, history, appliedVersion} = project;
       return {format, language, sources, figure, question, title, description, history, appliedVersion};
     };
-    let savedSignature = draft?.dirty || question || isFigure(figure) ? null : JSON.stringify(projectData());
+    const legacyUnsaved = draft?.format === 'haslalab-compute' && draft.dirty === undefined && !stored;
+    let savedSignature = draft?.dirty || legacyUnsaved || question || isFigure(figure) ? null : JSON.stringify(projectData());
+    let editorEntered = !!(id || transfer);
     let hasDraft = !!draft || savedSignature === null;
     const isDirty = () => savedSignature !== JSON.stringify(projectData());
-    const stopProtecting = preview ? () => {} : P.protectDraft(isDirty);
+    const stopProtecting = preview ? () => {} : P.protectDraft(() => editorEntered && isDirty());
     const persist = () => {
       if (preview) return;
       const dirty = isDirty();
@@ -498,6 +500,7 @@
 
     let storageRevision = 0;
     function showEditor() {
+      editorEntered = true;
       $('cpProjects').hidden = true;
       $('cpEditor').hidden = false;
       $('cpProvider').querySelector('select').value = stored?.provider || 'store';
