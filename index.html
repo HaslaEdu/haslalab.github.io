@@ -1050,7 +1050,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <link rel="stylesheet" href="site-design.css?v=b30f9f04791b">
 <link rel="stylesheet" href="guide.css?v=022546be75f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
-<link rel="stylesheet" href="archive-library.css?v=3287381094c5">
+<link rel="stylesheet" href="archive-library.css?v=cb8935c8f3a2">
 </head>
 <body class="hl-site">
 
@@ -5177,7 +5177,7 @@ function updateArchiveReadingChrome(route){const node=document.getElementById('a
   try{ mountHaslaAdFitSides(); }catch(e){}}
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=f4ab34344486"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=356121d191a3"),import("./archive-reference-media.js?v=5e0538ed8abd")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=7561f57629b5"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=356121d191a3"),import("./archive-reference-media.js?v=5e0538ed8abd")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){
@@ -5201,7 +5201,7 @@ function mountArchiveNative(route,generation){
     headers:{Authorization:"Bearer "+archiveToken},credentials:"omit",cache:"no-store",signal:AbortSignal.timeout(5000)
   }).then(response=>response.ok?response.json():null).then(data=>archiveToken===cmTok()&&Array.isArray(data?.books)?data.books:[]).catch(()=>[]):Promise.resolve([]);
   privateList.then(books=>{if(privateEntry?.isConnected)privateEntry.hidden=!books.length;});
-  const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=8ff93944a776"):loadArchiveModule();
+  const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=ee0c171b6509"):loadArchiveModule();
   Promise.all([modulePromise,privateList]).then(([module,privateBooksForAccount])=>{
     if(!current())return;
     archiveMountState={key:archiveMountKey(route),container};

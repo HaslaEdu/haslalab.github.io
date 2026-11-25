@@ -1,6 +1,7 @@
 const API = '/api/problem-bank/private-textbooks';
 const BOOK = /^[a-z][a-z0-9-]{0,31}$/;
 const WEBP = /^image\/webp(?:;|$)/i;
+const PDF = /^application\/pdf(?:;|$)/i;
 const COPY = {
   ko: {
     heading: '내 비공개 교재', home: '← 교재 아카이브', loading: '자료를 불러오는 중…',
@@ -15,6 +16,9 @@ const COPY = {
     page: '쪽', source_compared: '원문 대조', model_source_reviewed: 'AI 원문 대조',
     machine_draft: '자동 번역 초안', upstream_corrected_edition: '원본 사이트 영어판',
     pending: '원문 대조 필요', source_scan: '원본 스캔 · 본문은 이미지에서 확인', source_extracted: '영어 원문 추출', study_adapted: '한국어 학습용 순화판', structured_english_russian: '공개 영어·러시아어 본문 기준',
+    volume: '권 선택', findChapter: '장 번호 또는 제목', noChapters: '일치하는 장이 없습니다.',
+    chapterCount: '개 장', supplement: '부록', openPdf: '원본 PDF 열기', newTabPdf: '새 탭에서 PDF 열기',
+    pdfError: 'PDF를 불러오지 못했습니다.', exercises: 'Caltech 공식 연습문제',
   },
   en: {
     heading: 'My private textbooks', home: '← Book archive', loading: 'Loading…',
@@ -30,6 +34,9 @@ const COPY = {
     model_source_reviewed: 'AI comparison with source', machine_draft: 'Machine translation draft',
     upstream_corrected_edition: 'English edition from the source website', pending: 'Source comparison pending', source_scan: 'Source scan · read the original image', source_extracted: 'Extracted English text', study_adapted: 'Korean study adaptation',
     structured_english_russian: 'Based on the published English and Russian statements',
+    volume: 'Choose a volume', findChapter: 'Chapter number or title', noChapters: 'No matching chapters.',
+    chapterCount: 'chapters', supplement: 'Appendix', openPdf: 'Open original PDF', newTabPdf: 'Open PDF in a new tab',
+    pdfError: 'Could not load the PDF.', exercises: 'Official Caltech exercises',
   },
 };
 
@@ -66,7 +73,8 @@ export function mountPrivateTextbooks(container, options) {
   const token = () => String(options.getToken?.() || '');
   let observedToken = token();
   const requestedBook = options.params?.get('book') || '';
-  const initialState = () => ({book: BOOK.test(requestedBook) ? requestedBook : '', page: 1, q: '', problem: null});
+  const bookState = book => ({book, page: 1, q: '', problem: null, volume: null});
+  const initialState = () => bookState(BOOK.test(requestedBook) ? requestedBook : '');
   let state = initialState();
   let books = [];
   let disposed = false;
@@ -91,7 +99,7 @@ export function mountPrivateTextbooks(container, options) {
   }
   const current = run => !disposed && epoch === run && token() === observedToken;
 
-  async function get(path, run, image = false) {
+  async function get(path, run, mediaType = null) {
     const url = new URL(path, origin);
     if (url.origin !== origin || !url.pathname.startsWith(API + '/books')) throw Error('invalid_url');
     pending?.abort();
@@ -102,8 +110,8 @@ export function mountPrivateTextbooks(container, options) {
       cache: 'no-store', redirect: 'error', signal: controller.signal,
     });
     if (!response.ok) throw Object.assign(Error('archive_failed'), {status: response.status});
-    const data = image ? await response.blob() : await response.json();
-    if (image && !WEBP.test(data.type)) throw Error('invalid_image');
+    const data = mediaType ? await response.blob() : await response.json();
+    if (mediaType && !mediaType.test(data.type)) throw Error('invalid_media');
     if (!current(run) || controller.signal.aborted) throw new win.DOMException('Stale response', 'AbortError');
     return data;
   }
@@ -132,7 +140,7 @@ export function mountPrivateTextbooks(container, options) {
     }
     select.value = state.book;
     select.addEventListener('change', () => {
-      state = {book: select.value, page: 1, q: '', problem: null};
+      state = bookState(select.value);
       refresh();
     });
     label.append(select);
@@ -146,12 +154,91 @@ export function mountPrivateTextbooks(container, options) {
       if (!BOOK.test(book.id)) continue;
       const item = atom('li');
       item.append(button(book.title, () => {
-        state = {book: book.id, page: 1, q: '', problem: null};
+        state = bookState(book.id);
         refresh();
-      }), atom('small', book.count + ' ' + words.count + ' · ' + words.koreanCount + ' ' + book.korean_count));
+      }), atom('small', book.kind === 'lectures' ? book.count + ' ' + words.chapterCount :
+        book.count + ' ' + words.count + ' · ' + words.koreanCount + ' ' + book.korean_count));
       list.append(item);
     }
     content.replaceChildren(list);
+  }
+
+  function renderLectures(book, volume, run) {
+    const heading = atom('h3', book.title);
+    const choices = atom('nav');
+    choices.className = 'al-private-controls';
+    choices.setAttribute('aria-label', words.volume);
+    for (const item of book.volumes) {
+      const choice = button('Volume ' + item.number, () => {
+        if (state.volume === item.number) return;
+        state.volume = item.number;
+        refresh();
+      });
+      choice.setAttribute('aria-pressed', String(state.volume === item.number));
+      choices.append(choice);
+    }
+    content.replaceChildren(bookPicker(), heading, choices);
+    if (!volume) return;
+
+    const volumeTitle = atom('h4', 'Volume ' + volume.number + ' · ' + volume.title);
+    const preview = atom('section');
+    const previewStatus = atom('p');
+    previewStatus.setAttribute('role', 'status');
+    const open = atom('a', words.newTabPdf);
+    open.target = '_blank';
+    open.rel = 'noopener';
+    const frame = atom('iframe');
+    frame.title = volumeTitle.textContent;
+    frame.className = 'al-private-pdf';
+    preview.append(previewStatus, open, frame);
+    open.hidden = frame.hidden = true;
+    async function showPdf(page) {
+      previewStatus.textContent = words.loading;
+      try {
+        if (!imageUrl) {
+          const pdfBlob = await get(API + '/books/' + book.id + '/volumes/' + volume.number + '/pdf', run, PDF);
+          imageUrl = win.URL.createObjectURL(pdfBlob);
+        }
+        const pageUrl = imageUrl + '#page=' + page;
+        open.href = pageUrl;
+        frame.src = pageUrl;
+        open.hidden = frame.hidden = false;
+        previewStatus.textContent = '';
+        preview.scrollIntoView({block: 'start'});
+      } catch (error) {
+        if (current(run) && error.name !== 'AbortError') previewStatus.textContent = words.pdfError;
+      }
+    }
+    const controls = atom('div');
+    controls.className = 'al-private-controls';
+    const find = atom('label', words.findChapter + ' ');
+    const search = atom('input');
+    search.type = 'search';
+    search.maxLength = 160;
+    find.append(search);
+    controls.append(find, button(words.openPdf, () => showPdf(1)));
+    const chapters = atom('ul');
+    chapters.className = 'al-private-book-list';
+    const empty = atom('p', words.noChapters);
+    function filterChapters() {
+      const query = search.value.trim().normalize('NFKC').toLowerCase();
+      const matches = volume.chapters.filter(chapter => String(chapter.number) === query ||
+        chapter.title.normalize('NFKC').toLowerCase().includes(query));
+      chapters.replaceChildren(...matches.map(chapter => {
+        const item = atom('li');
+        const title = (chapter.supplement ? words.supplement + ' · ' : '') + chapter.number + '. ' + chapter.title;
+        item.append(button(title, () => showPdf(chapter.page)), atom('small', words.page + ' ' + chapter.page));
+        return item;
+      }));
+      empty.hidden = matches.length > 0;
+    }
+    search.addEventListener('input', filterChapters);
+    filterChapters();
+    const exercises = atom('a', words.exercises);
+    exercises.href = 'https://www.feynmanlectures.caltech.edu/info/exercises.html';
+    exercises.target = '_blank';
+    exercises.rel = 'noopener noreferrer';
+    content.append(volumeTitle, preview, controls, chapters, empty, exercises);
   }
 
   function renderList(data) {
@@ -260,7 +347,7 @@ export function mountPrivateTextbooks(container, options) {
         release();
         stage.replaceChildren(atom('p', words.loading));
         try {
-          const data = await get(exact, run, true);
+          const data = await get(exact, run, WEBP);
           imageUrl = win.URL.createObjectURL(data);
           const img = atom('img');
           const caption = select.options[select.selectedIndex].textContent;
@@ -304,9 +391,14 @@ export function mountPrivateTextbooks(container, options) {
     }
     try {
       if (!books.length) books = (await get(API + '/books', run)).books;
-      if (!books.some(book => book.id === state.book)) state.book = '';
-      if (!state.book) renderBooks();
-      else if (state.problem) {
+      const book = books.find(book => book.id === state.book);
+      if (!book) {
+        state = bookState('');
+        renderBooks();
+      } else if (book.kind === 'lectures') {
+        const volume = state.volume ? await get(API + '/books/' + book.id + '/volumes/' + state.volume, run) : null;
+        renderLectures(book, volume, run);
+      } else if (state.problem) {
         const row = await get(API + '/books/' + state.book + '/questions/' + state.problem, run);
         renderQuestion(row, run);
       } else {
