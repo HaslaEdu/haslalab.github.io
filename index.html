@@ -373,6 +373,10 @@ section{padding:58px 0}
 .archive-reading>.adfit-banner.adfit-banner--top{margin:26px auto 22px}
 .archive-categories a{display:block;padding:12px 4px;color:var(--graphite);font-size:16px;border-bottom:2px solid transparent}
 .archive-categories a[aria-current="page"]{color:var(--accent,var(--rail));border-bottom-color:var(--accent,var(--rail));font-weight:600}
+.contest-scopes{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.contest-scopes a{display:inline-flex;align-items:center;min-height:42px;padding:6px 15px;border:1px solid var(--grid-bold);border-radius:20px;color:var(--graphite);font-size:14px}
+.contest-scopes a:hover,.contest-scopes a[aria-current="true"]{border-color:var(--accent,var(--rail));color:var(--accent,var(--rail))}
+.contest-scopes a[aria-current="true"]{font-weight:700}
 .archive-loading{padding:25px 0;color:var(--graphite)}
 @media(pointer:coarse){.archive-categories a{min-height:44px}}
 @media(max-width:600px){.learn-pending{padding:24px}.phead h1 .learn-state{margin-left:8px}}
@@ -1197,8 +1201,8 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="learn-path.js?v=57047175e02a"></script>
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
-<script src="archive-navigation.js?v=de6b12ec5c39"></script>
-<script src="site-catalogue.js?v=41dea20ff266"></script>
+<script src="archive-navigation.js?v=bfcd5c5115c9"></script>
+<script src="site-catalogue.js?v=15b94c9db49a"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
 <script src="site-design.js?v=af0e919623fe"></script>
@@ -5087,7 +5091,7 @@ const EN_HIDDEN=new Set(["cpho"]);
 const compShown=key=>!(lang==="en"&&EN_HIDDEN.has(key));
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","fipho","bpo","oibf","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe","obf","twpho","inpho","fma","bpho","bphoii"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","fipho","bpo","oibf","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe","obf","twpho","inpho","fma","bpho","bphoii","vpho","vntst","aupho","efo","onf","azpho","osn","soif","spho","sphotst","panpho"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","kmchc","usnco"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","mskbo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
@@ -5103,12 +5107,25 @@ function viewOlympiad(){
   return typeof viewOlympiadHome==="function"?viewOlympiadHome():viewOriginalHome();
 }
 
-function viewComps(sub,limit=Infinity){
+const REGIONAL_CONTESTS=new Set(["apho","eupho","nbpho","gpho","bpo","oibf","baupc","apao","panpho"]);
+function contestScope(key){
+  const label=DATA[key].scope.en;
+  if(REGIONAL_CONTESTS.has(key)||label.startsWith("Regional"))return "regional";
+  return label.startsWith("International")?"international":"national";
+}
+function contestScopeParams(scope){
+  return new URLSearchParams(scope?{scope}:{});
+}
+function contestScopeNav(sub,scope){
+  const choices=[["","전체","All"],["international","국제","International"],["regional","지역","Regional"],["national","국내","National"]];
+  return `<nav class="contest-scopes" aria-label="${lang==="ko"?"대회 범위":"Competition scope"}">${choices.map(([key,ko,en])=>`<a href="${archiveHref("contests",sub,contestScopeParams(key))}"${key===scope?' aria-current="true"':""}>${lang==="ko"?ko:en}</a>`).join("")}</nav>`;
+}
+function viewComps(sub,limit=Infinity,scope=""){
   const d=UI[lang];
   let cur=SUBJ.find(x=>x.k===sub);
   if(!cur){ let k=""; try{ k=localStorage.getItem("hlSubj")||""; }catch(e){} cur=SUBJ.find(x=>x.k===k)||SUBJ[0]; }
   try{ localStorage.setItem("hlSubj",cur.k); }catch(e){}
-  const list=cur.comps.filter(k=>DATA[k]&&compShown(k)).slice(0,limit);
+  const list=cur.comps.filter(k=>DATA[k]&&compShown(k)&&(!scope||contestScope(k)===scope)).slice(0,limit);
   return `
   <div class="shell">
     ${archiveCategories("contests",cur.k)}
@@ -5117,10 +5134,11 @@ function viewComps(sub,limit=Infinity){
       <h1>${d.hComps}</h1>
       <div class="sub">${d.pComps}</div>
     </div>
-    ${archiveSubjects("contests",cur.k)}
+    ${archiveSubjects("contests",cur.k,scope)}
+    ${contestScopeNav(cur.k,scope)}
     ${cur.k==="sci"?"":`<p class="learn-tool-copy"><a href="${archiveHref("contests",cur.k,new URLSearchParams({view:"web"}))}">${lang==="ko"?"웹 문항 찾아보기 →":"Browse web problems →"}</a></p>`}
     ${adFitBanner("secondary")}
-    ${list.length?"":`<div class="subjempty">${d.subjEmpty(cur[lang],cur.soon)}</div>`}
+    ${list.length?"":`<div class="subjempty">${scope?(lang==="ko"?"이 범위의 대회가 없습니다.":"No competitions in this scope."):d.subjEmpty(cur[lang],cur.soon)}</div>`}
     <div class="comps" data-lang="${lang}">
       ${list.map(key=>[key,DATA[key]]).map(([key,c])=>{
         const summary=window.HL_CATALOGUE?.competitions[key]?.counts;
@@ -5149,13 +5167,13 @@ function archiveHref(category="contests",subject="",params=""){
 function archiveCategories(category,subject){
   return `<nav class="archive-categories" aria-label="${lang==="ko"?"아카이브 자료 구분":"Archive categories"}">${[["contests","대회","Contests"],["books","교재","Books"],["schools","학교","Schools"]].map(([key,ko,en])=>`<a href="${archiveHref(key,subject==="sci"&&key!=="contests"?"phys":subject)}"${key===category?' aria-current="page"':""}>${lang==="ko"?ko:en}</a>`).join("")}</nav>`;
 }
-function archiveSubjects(category,subject){
+function archiveSubjects(category,subject,scope=""){
   const d=UI[lang],list=category==="contests"?SUBJ:SUBJ.filter(x=>x.k!=="sci");
   return `<nav class="subjs${category==="contests"?"":" archive-library-subjects"}" aria-label="${d.subjLabel}">${list.map(x=>{
-    const count=category==="contests"?x.comps.filter(k=>DATA[k]&&compShown(k)).length:null;
+    const count=category==="contests"?x.comps.filter(k=>DATA[k]&&compShown(k)&&(!scope||contestScope(k)===scope)).length:null;
     const note=count===null?(category==="books"?(lang==="ko"?"교재 보기":"Books"):(lang==="ko"?"학교 보기":"Schools")):(count?d.subjN(count):d.subjSoon);
     const picture=category==="contests"?`<img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)">`:`<img class="archive-subject-art" data-subject-art="${x.k}" src="archive-media/subjects/${x.k}.svg?v=1" alt="" loading="lazy" decoding="async">`;
-    return `<a href="${archiveHref(category,x.k)}"${x.k===subject?' aria-current="true"':""} class="${count===0?"none":""}">${picture}<b>${x[lang]}</b><small>${note}</small></a>`;
+    return `<a href="${archiveHref(category,x.k,contestScopeParams(scope))}"${x.k===subject?' aria-current="true"':""} class="${count===0?"none":""}">${picture}<b>${x[lang]}</b><small>${note}</small></a>`;
   }).join("")}</nav>`;
 }
 function viewArchiveDigital(route){
@@ -11132,7 +11150,7 @@ function render(){
   else if(first==="olympiad"){    html=second==="schedule"&&window.HL_GUIDES?HL_GUIDES.scheduleView():viewOlympiad(); active="olympiad"; }
   else if(first==="learn"){       html=!second?viewLearnHome():second==="subjects"?viewLearn():second==="lab"?viewLearnLab():second==="courses"&&window.HL_GUIDES?HL_GUIDES.coursesView():second==="guide"&&window.HL_GUIDE?HL_GUIDE.view():second==="concepts"?viewLearnConcepts():second==="practice"?viewLearnPractice():second==="compute"?viewLearnCompute():second==="roadmap"?viewLearnRoadmap(roadmapAlias):second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():viewLearnSubject(second); active="learn"; }
   else if(first==="workshop"){    html=second==="make"?viewWorkshopMake():second==="draw"?viewWorkshopDraw():second==="create"?viewWorkshopCreate():second==="share"?viewWorkshopShare():second==="storage"?viewWorkshopStorage():viewWorkshop(); active="workshop"; }
-  else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
+  else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second,Infinity,archiveRoute?.params.get("scope")||"");active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(first==="ranking"){     html=viewLeagueRanking(); active="learn"; }

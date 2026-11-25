@@ -74,7 +74,8 @@ outputs.set('community/src/lab-pair-catalog.js',generated+'export const LAB_PAIR
   'export const LAB_MIXED_CATALOGUE='+JSON.stringify(mixedProfiles)+';\n'+
   'export const LAB_SHORTLIST_CATALOGUE='+JSON.stringify(shortlistProfiles)+';\n');
 const {buildModelTestCatalogue}=require('./model-test-catalogue.cjs');
-const modelTestExams=buildModelTestCatalogue(DATA,{...scope.catalogueGroups,contests:window.CONTEST_EXAMS});
+const developerCompetitions=Object.fromEntries(Object.entries(DATA).filter(([key])=>!window.THEORY_META?.[key]?.archiveOnly));
+const modelTestExams=buildModelTestCatalogue(developerCompetitions,{...scope.catalogueGroups,contests:window.CONTEST_EXAMS});
 const modelTestVersion=digest(JSON.stringify(modelTestExams)+read('pdf-assets.json'));
 outputs.set('community/src/model-test-catalog.js',generated+'export const MODEL_TEST_CATALOGUE_VERSION='+JSON.stringify(modelTestVersion)+';\n'+
   'export const MODEL_TEST_EXAMS='+JSON.stringify(modelTestExams)+';\n');
