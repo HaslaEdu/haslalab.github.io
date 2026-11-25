@@ -153,7 +153,6 @@ const X4 = ko ? {
     pen: '펜: 손으로 그리기 (P)', text: '글자 (T)', dim: '치수선 (D)', angle: '각도 표시: 꼭짓점, 한쪽 변, 다른 변을 차례로', fill: '채우기: 도형을 누르세요 (F)', eraser: '지우개: 누르거나 끌어서 지우기 (E)'},
   style: {color: '색', width: '굵기', dash: '선 모양', fill: '채우기', heads: '화살촉', start: '시작', end: '끝'},
   parts: '물리 부품', partsHint: '상자, 도르래, 회로 소자, 렌즈… 값으로 움직이는 부품', templates: '템플릿 (완성된 그림)', drawing: '그리기 도구',
-  hint: ['그리기 도구로 시작: 선, 화살표, 도형, 펜으로 그리세요.', '물리 부품 추가: ‘물리 부품’ 칸에서 상자·도르래·회로·렌즈 등을 넣으세요.', '값 조절 · 내보내기: 오른쪽에서 값과 슬라이더로 고치고 SVG·PNG·시험지로 보내세요.'], hintClose: '알겠어요', hintTitle: '처음이라면',
   draftHint: {poly: '점을 찍으세요. 두 번 누르거나 Enter로 끝, Esc로 취소', polygon: '점을 찍으세요. 첫 점을 누르거나 Enter로 닫기', arc: '중심 → 시작점 → 끝점', angle: '꼭짓점 → 한쪽 변 위의 점 → 다른 변 위의 점'},
   lede: '선·화살표·도형·펜으로 간단히 그리고, 필요하면 물리 부품과 템플릿을 더합니다. 같은 그림을 시험지에 넣거나 시뮬레이션·계산으로 확인할 수 있습니다.'
 } : {
@@ -165,7 +164,6 @@ const X4 = ko ? {
     pen: 'Pen: freehand (P)', text: 'Text (T)', dim: 'Dimension (D)', angle: 'Angle mark: vertex, a point on each side', fill: 'Fill: click a shape (F)', eraser: 'Eraser: click or drag over (E)'},
   style: {color: 'Colour', width: 'Width', dash: 'Line', fill: 'Fill', heads: 'Arrowheads', start: 'Start', end: 'End'},
   parts: 'Physics parts', partsHint: 'Blocks, pulleys, circuit elements, lenses… parts that move by value', templates: 'Templates (finished figures)', drawing: 'Drawing tools',
-  hint: ['Start with the drawing tools: lines, arrows, shapes, the pen.', 'Add physics parts: blocks, pulleys, circuits, lenses from the “Physics parts” panel.', 'Adjust and export: change values and sliders on the right, then SVG, PNG or the test paper.'], hintClose: 'Got it', hintTitle: 'New here?',
   draftHint: {poly: 'Click points. Double-click or Enter ends, Esc cancels', polygon: 'Click points. Click the first point or press Enter to close', arc: 'Centre → start → end', angle: 'Vertex → a point on one side → a point on the other'},
   lede: 'Draw simply with lines, arrows, shapes and the pen, then add physics parts and templates when you need them. Put a figure on a test paper, or check it with a simulation or a calculation.'
 };
@@ -382,7 +380,7 @@ function replaceProject(project, ids = null) {
 }
 function canLeaveProject() {
   if (st.storageBusy) return false;
-  return !st.projectChanged || confirm(ko ? '현재 프로젝트를 보관함이나 이 브라우저에 저장하지 않고 다른 프로젝트를 열까요?' : 'Open another project without saving this one to storage or this browser?');
+  return !st.projectChanged || window.HL_WORKSHOP_PROJECTS.confirmReplacement();
 }
 function paintProject() {
   if (!$('projectPages')) return;
@@ -399,7 +397,7 @@ function startScene() {
   const t = params.get('t');
   if (t && TEMPLATE_KEYS.includes(t)) { st.unlinkedStart = true; st.dom = TEMPLATE_DOMAIN[t] || 'mech'; return validateScene(template(t, lang)).scene; }
   let saved = null;
-  try { const raw = JSON.parse(store.get(SCENE_KEY) || 'null'), p = decodeProject(raw); if (p) { st.project = p; st.savedProject = raw.project?.version === 1; st.projectChanged = !!raw.project?.dirty; saved = p.pages[p.index]; } } catch (e) {}
+  try { const raw = JSON.parse(store.get(SCENE_KEY) || 'null'), p = decodeProject(raw); if (p) { st.project = p; st.savedProject = true; st.projectChanged = !!raw.project?.dirty; saved = p.pages[p.index]; } } catch (e) {}
   if (saved && (saved.objects.length || st.savedProject || st.project.pages.length > 1 || st.project.title)) return saved;
   if (prefs().example === false) return saved || {...blankScene(), view: {x: -0.5, y: -0.5, w: 4, h: 3}};
   return validateScene(template(EXAMPLE, lang)).scene;
@@ -430,7 +428,9 @@ function save({changed = true} = {}) {
   if (changed) st.projectChanged = st.savedSignature !== projectSignature();
   const saved = projectData();
   saved.project.dirty = !!st.projectChanged;
-  return store.set(SCENE_KEY, JSON.stringify(saved));
+  const savedLocally = store.set(SCENE_KEY, JSON.stringify(saved));
+  if (savedLocally) st.savedProject = true;
+  return savedLocally;
 }
 function restore(text) { st.scene = JSON.parse(text); setSel(selIds(), st.sel); stopSim(); save(); paint(); }
 function undo() { const t = st.hist.undo(JSON.stringify(st.scene)); if (t) restore(t); }
@@ -2159,7 +2159,7 @@ function showDrawProjects() {
       showDrawEditor();
       $('projectTitle').focus();
     },
-    onResume:showDrawEditor,
+    onResume:st.savedProject ? showDrawEditor : null,
     onOpen(raw, entry) {
       const project = decodeProject(raw);
       if (!project) throw new Error(T.loadBad);
@@ -2194,7 +2194,6 @@ function shell() {
   $('app').innerHTML = `<section id="drawProjects" hidden></section><div id="drawEditor"><div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div>
       <div class="project-actions"><button type="button" id="bOpenStore">${ko ? '프로젝트 목록' : 'Projects'}</button><span id="drawProvider"></span><button type="button" id="bSave" class="primary">${esc(X6.save)}</button></div></div>
     <div class="project-line"><label class="note" for="projectTitle">${ko ? '프로젝트 이름' : 'Project name'}</label><input id="projectTitle" maxlength="60" placeholder="${ko ? '제목 없는 프로젝트' : 'Untitled project'}"><select id="projectPages" aria-label="${ko ? '프로젝트의 그림' : 'Figures in project'}"></select><button type="button" id="projectAdd">${ko ? '+ 그림 추가' : '+ Add figure'}</button><button type="button" id="projectRemove">${ko ? '현재 그림 삭제' : 'Remove current figure'}</button><span id="saveStatus" class="note" role="status"></span></div>
-    <div id="hint3"></div>
     <div class="dbar">
       <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bShare">${esc(X7.share)}</button>
       <button type="button" id="bInsertAsset">${ko ? '에셋 불러오기' : 'Insert asset'}</button><label class="btn"><input type="checkbox" id="selectMore" style="width:auto"> ${ko ? '여러 물체 선택' : 'Multi-select'}</label>
@@ -2233,7 +2232,11 @@ function shell() {
   window.HL_WORKSHOP_PROJECTS.bindPanels($('drawDock'),()=>{ if (!$('drawEditor').hidden) paintCanvas(); height(); });
   $('drawProvider').append(window.HL_WORKSHOP_PROJECTS.providerSelect(st.storeIds?.provider));
 
-  $('projectTitle').onchange = e => { st.project.title = e.target.value.trim(); save(); paintProject(); };
+  $('projectTitle').oninput = e => {
+    st.project.title = e.target.value.trim(); save();
+    $('saveStatus').textContent = st.projectChanged ? (ko ? '편집 중' : 'Edited') : '';
+  };
+  $('projectTitle').onchange = paintProject;
   $('projectPages').onchange = e => selectProjectPage(+e.target.value);
   $('projectAdd').onclick = () => addProjectPage();
   $('projectRemove').onclick = () => {
@@ -2287,16 +2290,10 @@ function shell() {
   $('inkGo').onclick = recognizeInk;
   $('inkDiscard').onclick = () => { $('inkProposal').hidden = true; $('canvas').focus(); height(); };
   $('penSmooth').onchange = e => setPref('penSmooth', e.target.checked);
-  bindCanvas(); paintHint(); paintTools(); paint(); paintOut();
+  bindCanvas(); paintTools(); paint(); paintOut();
   if (!params.get('t') && !params.get('share')) showDrawProjects();
-}
-/* the three steps a new member sees once (dismissed for good, in this browser) */
-function paintHint() {
-  const box = $('hint3'); if (!box) return;
-  if (store.get('hlDrawHint') === '1') { box.innerHTML = ''; box.hidden = true; return; }
-  box.hidden = false; box.className = 'hint3';
-  box.innerHTML = `<b>${esc(X4.hintTitle)}</b><ol>${X4.hint.map(t => `<li>${esc(t)}</li>`).join('')}</ol><button type="button" id="hintClose">${esc(X4.hintClose)}</button>`;
-  $('hintClose').onclick = () => { store.set('hlDrawHint', '1'); paintHint(); height(); };
+  window.HL_WORKSHOP_PROJECTS.protectDraft(() => !!st.projectChanged);
+  if (!params.get('share')) window.HL_WORKSHOP_PROJECTS.showGuide('draw');
 }
 /* the drawing toolbar: the tools, then the look of what they draw (also applied to the selected shapes) */
 const STYLE_FIELDS = ['color', 'lw', 'pattern', 'fill', 'heads'];

@@ -52,8 +52,8 @@ export const WORKSHOP_KINDS = ['file', 'paper', 'problem', 'figure', 'sim'];
 const kindOf = v => (typeof v === 'string' && WORKSHOP_KINDS.includes(v) ? v : null);
 export const WORKSHOP_PREFIX = 'workshop/';
 export const WORKSHOP_MAX_FILE = 20 * 1024 * 1024;
-export const WORKSHOP_FREE_QUOTA = 10 * 1024 * 1024;
-export const WORKSHOP_PAID_QUOTA = 500 * 1024 * 1024;
+export const WORKSHOP_FREE_QUOTA = 5 * 1024 * 1024;
+export const WORKSHOP_PAID_QUOTA = 100 * 1024 * 1024;
 
 async function storageLimits(env, userId, now) {
   await ensureLearnSchema(env);

@@ -106,7 +106,7 @@
     const notice = make('p', null, 'note'); notice.hidden = true;
     const say = message => { status.textContent = message; status.hidden = !message; };
     if (onNew) tools.append(button(txt('새 프로젝트', 'New project'), onNew, 'primary'));
-    if (onResume) tools.append(button(txt('현재 작업 이어서', 'Resume current work'), onResume));
+    if (onResume) tools.append(button(txt('이전 작업 이어하기', 'Resume previous work'), onResume));
     const select = unified ? null : providerSelect(initial);
     const search = make('input'), sort = make('select');
     search.type = 'search';
@@ -439,5 +439,51 @@
       if (!m.x && panel.style.getPropertyValue('--dock-height') && m.size < 140) dock.apply(m,200);
     }};
   }
-  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error, panelTab, panelHandle, bindPanels};
+  function showGuide(kind) {
+    const key = 'hlWorkshopGuide:' + kind;
+    if (document.getElementById('workshopGuide')) return;
+    try {
+      if (localStorage.getItem(key)) return;
+    } catch {}
+    const compute = kind === 'compute', dialog = make('dialog', null, 'stdlg workshop-guide');
+    dialog.id = 'workshopGuide';
+    dialog.setAttribute('aria-labelledby','workshopGuideTitle');
+    const title = make('h2', compute ? txt('전산물리 제작 시작하기','Getting started with computational physics') : txt('그림 제작 시작하기','Getting started with the figure editor'));
+    title.id = 'workshopGuideTitle';
+    const steps = make('ol');
+    const instructions = compute ? [
+      txt('새 프로젝트에서 Python이나 C를 골라 코드를 작성하고 실행 결과를 확인하세요.', 'Start a new project, choose Python or C, then run your code and review the result.'),
+      txt('AI에게 맡기기에서 코드를 요청하고 답변별 코드 버전을 적용할 수 있습니다.', 'Ask AI for code and apply the version from any reply.'),
+    ] : [
+      txt('새 프로젝트를 만든 뒤 도구로 직접 그리거나 왼쪽에서 템플릿과 물리 부품을 골라 보세요.', 'Start a new project, then draw it or choose a template and physics parts from the left panel.'),
+      txt('그림 요소를 선택하면 속성을 바꿀 수 있습니다. AI 그림 작업에서 문제 사진의 그림을 추출할 수도 있습니다.', 'Select an object to adjust its properties, or use AI figure tools to extract a figure from a worksheet photo.'),
+    ];
+    instructions.push(txt('보관함에 남기려면 저장을 누르세요. 이전 작업 이어하기는 이 브라우저의 임시 작업을 엽니다.', 'Press Save to keep work in storage. Resume previous work opens the draft from this browser.'));
+    steps.append(...instructions.map(text => make('li',text)));
+    const dismiss = button(txt('시작하기','Get started'), () => dialog.close(), 'primary');
+    dialog.append(title,steps,dismiss);
+    dialog.addEventListener('close', () => dialog.remove(), {once:true});
+    document.body.append(dialog);
+    dialog.showModal();
+    try { localStorage.setItem(key,'1'); } catch {}
+  }
+  function protectDraft(isDirty) {
+    const warning = () => isDirty() ? txt(
+      '저장하지 않은 변경 사항이 보관함에 반영되지 않습니다. 브라우저 임시 작업을 지우거나 덮어쓰면 변경 내용이 사라집니다. 나갈까요?',
+      'Unsaved changes are not in storage. They will be lost if the browser draft is cleared or overwritten. Leave this page?'
+    ) : '';
+    const beforeUnload = event => {
+      if (isDirty()) { event.preventDefault(); event.returnValue = true; }
+    };
+    window.HL_WORKSHOP_LEAVE_WARNING = warning;
+    addEventListener('beforeunload',beforeUnload);
+    return () => {
+      if (window.HL_WORKSHOP_LEAVE_WARNING === warning) delete window.HL_WORKSHOP_LEAVE_WARNING;
+      removeEventListener('beforeunload',beforeUnload);
+    };
+  }
+  function confirmReplacement() {
+    return confirm(txt('저장하지 않은 변경 사항이 사라집니다. 다른 작업을 열까요?', 'Unsaved changes will be lost. Open another project?'));
+  }
+  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error, panelTab, panelHandle, bindPanels, showGuide, protectDraft, confirmReplacement};
 })();

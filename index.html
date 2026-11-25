@@ -1215,8 +1215,16 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="share-publish.js?v=c4278342f87e"></script>
 <script src="workshop-share.js?v=7e6b1855c059"></script>
 <script src="workshop-publish-source.js?v=67091036105a"></script>
-<script src="workshop-class-storage.js?v=86b88dd474d4"></script>
+<script src="workshop-class-storage.js?v=af2eae6dc4b9"></script>
 <style>
+.ws-group-panel{background:var(--paper,#fff);border:1px solid var(--rule,#d5dbe6);border-radius:10px;padding:10px 14px;margin:8px 0 12px}
+.ws-group-panel summary{cursor:pointer;font-weight:600}
+.ws-group-forms{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px 18px;margin:12px 0}
+.ws-group-forms form,.ws-group-invite{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 10px}
+.ws-group-panel label{display:grid;gap:4px;flex:1 1 150px;font-size:13px;min-width:0}
+.ws-group-panel :is(input,select){width:100%;box-sizing:border-box;font:inherit;color:inherit;padding:7px 8px;border:1px solid var(--rule,#d5dbe6);border-radius:7px;background:var(--paper,#fff)}
+.ws-group-invite{border-top:1px solid var(--rule,#d5dbe6);padding-top:10px}
+.ws-group-invite p{flex-basis:100%}
 .ws-class-shares{margin:22px 0}.ws-class-shares h2{margin:0 0 8px}.ws-share-item{border:1px solid var(--rule,#d5dbe6);padding:10px 14px;border-radius:10px;margin:8px 0}.ws-share-item summary{cursor:pointer}.ws-share-item small{margin-inline-start:8px;color:var(--muted)}.ws-share-instructions{white-space:pre-wrap;overflow-wrap:anywhere}.ws-share-item ul{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px}
 .ws-share-dialog{width:min(470px,calc(100% - 24px));border:1px solid var(--rule,#d5dbe6);border-radius:14px;color:var(--ink);background:var(--paper,#fff);padding:20px}.ws-share-dialog::backdrop{background:#17203675}.ws-share-dialog form,.ws-share-dialog label{display:grid;gap:8px}.ws-share-dialog label[hidden]{display:none}.ws-share-dialog h2,.ws-share-dialog p{margin:0}.ws-student-paper{width:min(760px,calc(100% - 24px))}.ws-student-paper li{margin:8px 0}.ws-student-paper p{white-space:pre-wrap}.ws-student-paper img{max-width:100%;height:auto;display:block}.ws-share-dialog :is(select,input,textarea){width:100%;font:inherit;color:inherit;padding:7px 8px;border:1px solid var(--rule,#d5dbe6);border-radius:7px;background:var(--paper,#fff)}
 </style>
@@ -5730,7 +5738,7 @@ function mountWorkshopStorage(generation){
   cmLoadMe().then(me=>{
     if(!here())return;
     if(!me){
-      box.innerHTML=`<div class="ws-login"><p>${ko?"로그인하면 기본 10 MB를 쓸 수 있습니다. 이용권이 활성화되면 보관함 용량이 늘어납니다.":LX("Sign in for 10 MB of storage. An active plan increases your storage limit.")}</p><a class="hm-go" href="#/login">${CMT[lang].login}</a></div>`;
+      box.innerHTML=`<div class="ws-login"><p>${ko?"로그인하면 기본 5 MB를 쓸 수 있습니다. 구독 중에는 100 MB를 쓸 수 있습니다.":LX("Sign in for 5 MB of storage. An active subscription includes 100 MB.")}</p><a class="hm-go" href="#/login">${CMT[lang].login}</a></div>`;
       box.querySelector("a").addEventListener("click",()=>{try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}});
       return;
     }
@@ -5772,8 +5780,8 @@ ${files.map(f=>`<li class="ws-row"><span class="ws-name"><span class="ws-ext">${
   box.innerHTML=`<div class="ws-quota"><div class="ws-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="${T("사용한 용량","Space used")}"><span style="width:${pct}%"></span></div>
       <p>${capacity ? esc(capacity)+" · " : ""}${wsBytes(D.used)} / ${wsBytes(D.quota)} ${T("사용","used")} · ${T("파일당 최대 "+wsBytes(maxFile),"Up to "+wsBytes(maxFile)+" per file")}</p>
       ${D.used>D.quota?`<p class="ws-note">${T("현재 용량을 초과했습니다. 기존 파일은 내려받을 수 있으며, 새 파일을 올리려면 용량을 확보해야 합니다.","You are over your storage limit. You can still download your files. Free up space to upload new files.")}</p>`:""}
-      ${D.plan==="free"?`<p class="ws-note">${T("이용권이 활성화되면 보관함 용량이 늘어납니다.","An active plan increases your storage limit.")}</p>`:""}</div>
-    <div class="ws-tools"><b>${T("보관함","Storage")}</b>${folderTools("")}</div>
+      ${D.plan==="free"?`<p class="ws-note">${T("구독 중에는 보관함 100 MB를 사용할 수 있습니다.","An active subscription includes 100 MB of storage.")}</p>`:""}</div>
+    <div class="ws-tools"><b>${T("보관함","Storage")}</b><button type="button" class="ws-btn ghost" data-ws-invites>${T("멤버 초대 · 그룹","Invite members · Groups")}</button>${folderTools("")}</div>
     ${editFolder("")}
     <div class="ws-drop" data-ws-drop>${render("")}
       <p class="ws-hint">${T("파일을 여기로 끌어다 놓아도 됩니다. PDF, 그림(PNG·JPG·WebP·SVG), 한글(HWPX), 워드·엑셀·파워포인트, CSV·TXT·MD·JSON","You can also drop files here. PDF, images (PNG, JPG, WebP, SVG), HWPX, Word, Excel, PowerPoint, CSV, TXT, MD, JSON")}</p>
@@ -11173,8 +11181,18 @@ function render(){
   if(first==="comps"||first==="archive"){ const t=document.querySelector(".subjs a[aria-current]"); if(t){ const n=t.parentNode; n.scrollLeft+=t.getBoundingClientRect().left-n.getBoundingClientRect().left-(n.clientWidth-t.offsetWidth)/2; } }
 }
 
-addEventListener("hashchange",()=>{ render(); scrollTo({top:0,behavior:"instant"}); });
-addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;if(document.getElementById("learnStudioFrame")||document.getElementById("learnSearchFrame")){if(typeof arChip==="function")arChip();else cmAccountChip();}else render();}});
+addEventListener("hashchange",event=>{
+  const frame=document.getElementById("learnDrawFrame")||document.getElementById("learnCreateFrame");
+  let warning;
+  try{warning=frame?.contentWindow?.HL_WORKSHOP_LEAVE_WARNING?.();}catch{}
+  if(warning&&!confirm(warning)){
+    history.replaceState(history.state,"",event.oldURL);
+    return;
+  }
+  render();
+  scrollTo({top:0,behavior:"instant"});
+});
+addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;if(document.querySelector("#learnStudioFrame,#learnSearchFrame,#learnDrawFrame,#learnCreateFrame")){if(typeof arChip==="function")arChip();else cmAccountChip();}else render();}});
 initSiteDesign();
 render();
 </script>

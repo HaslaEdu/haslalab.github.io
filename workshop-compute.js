@@ -208,9 +208,20 @@
       height();
     };
     if (!preview) $('cpProvider').append(P.providerSelect(stored?.provider));
-    const snapshot = () => ({...project, storage: stored, sharedId, published});
+    const projectData = () => {
+      const {format, language, sources, figure, question, title, description, history, appliedVersion} = project;
+      return {format, language, sources, figure, question, title, description, history, appliedVersion};
+    };
+    let savedSignature = draft?.dirty || question || isFigure(figure) ? null : JSON.stringify(projectData());
+    let hasDraft = !!draft || savedSignature === null;
+    const isDirty = () => savedSignature !== JSON.stringify(projectData());
+    const stopProtecting = preview ? () => {} : P.protectDraft(isDirty);
     const persist = () => {
-      if (!id && !preview && !write(localStorage, localKey, snapshot())) {
+      if (preview) return;
+      const dirty = isDirty();
+      hasDraft ||= dirty || !!stored;
+      const snapshot = {...projectData(), storage:stored, sharedId, published, dirty};
+      if (!id && hasDraft && !write(localStorage, localKey, snapshot)) {
         msg(tr('브라우저 저장공간이 부족합니다. 대화와 코드를 보관하려면 프로젝트를 저장해 주세요.','Browser storage is full. Save the project to keep the code and chat.'));
       }
     };
@@ -470,17 +481,18 @@
       fd.append('kind','sim');
       fd.append('folder','전산물리');
       fd.append('ensure_folder','1');
-      const {format, language, sources, figure, question, title: name, description, history, appliedVersion} = project;
+      const data = projectData(), name = data.title;
+      const signature = JSON.stringify(data);
       const provider = $('cpProvider').querySelector('select').value;
-      const data = {format, language, sources, figure, question, title:name, description, history, appliedVersion};
       if (provider !== 'store') stored = await cloud.saveExternal(provider,'compute',name,data,stored);
       else {
         const local = stored?.provider === 'store' || (stored && !stored.provider) ? stored : null;
         if (local?.updated_at) fd.append('base', String(local.updated_at));
-        fd.append('file', new Blob([JSON.stringify(data)], {type:'application/json'}), local?.name || (name+'.json'));
+        fd.append('file', new Blob([signature], {type:'application/json'}), local?.name || (name+'.json'));
         const response = local ? await fileRequest('/files/' + encodeURIComponent(local.id) + '/content','PUT',fd) : await fileRequest('/files','POST',fd);
         stored = {...(await response.json()).file,provider:'store'};
       }
+      savedSignature = signature;
       persist();
     };
 
@@ -499,7 +511,7 @@
       const host = $('cpProjects');
       host.hidden = false;
       const panel = P.library(host,cloud,{kind:'compute', unified:true, title:tr('전산물리 프로젝트','Computational physics projects'), height,
-        onResume:showEditor,
+        onResume:hasDraft ? showEditor : null,
         onNew() { loadProject(blank(), null); },
         onOpen:loadProject,
       });
@@ -507,9 +519,12 @@
       height();
     }
     function loadProject(data, entry) {
-      if (!active || busy || $('cpProjects').hidden) return;
+      if (!active || busy || $('cpProjects').hidden || (isDirty() && !P.confirmReplacement())) return;
       cancelRun();
       hydrate(data);
+      savedSignature = JSON.stringify(projectData());
+      hasDraft = !!entry;
+      if (!entry) { try { localStorage.removeItem(localKey); } catch {} }
       chatScroll = Infinity;
       editor.dataset.pane = '';
       storageRevision++;
@@ -549,8 +564,8 @@
         const dlg = forms.dialog({lang: ctx.lang, type: 'sim', values: {title: title.value.trim(),description: description.value}, thumbnail,
           shared: sharedId && published ? {id: sharedId, published: true} : null, height,
           build: form => forms.publishInput({type: 'sim', form, payload: payload(), thumbnail, creationId: sharedId || undefined}),
-          publish: async input => { await save(); return share.publish(input); },
-          update: async input => { await save(); return share.update(sharedId, input); },
+          publish: input => share.publish(input),
+          update: input => share.update(sharedId, input),
           unpublish: () => share.unpublish(sharedId),
           onDone: r => {
             if (r?.id) sharedId = r.id;
@@ -564,6 +579,7 @@
     paint();
     if (!preview && !id && !transfer) showProjects();
     if (!id && transfer) persist();
+    if (!preview && !id) P.showGuide('compute');
     if (id) {
       $('cpRun').disabled = true;
       source.readOnly = lang.disabled = title.readOnly = description.readOnly = true;
@@ -577,15 +593,17 @@
         project.description = p.description;
         project.language = p.language;
         project.sources[p.language] = p.code;
-        published = p.status === 'public'; paint();
+        published = p.status === 'public';
+        savedSignature = JSON.stringify(projectData());
+        paint();
         $('cpRun').disabled = false;
         if (!preview) {
           source.readOnly = lang.disabled = title.readOnly = description.readOnly = false;
-          shareButton.disabled = paperButton.disabled = false;
+          shareButton.disabled = false;
         }
       }).catch(e => { if (active) msg(errorText(e)); });
     }
-    return {stop() { active = false; cancelRun(); }};
+    return {stop() { active = false; cancelRun(); stopProtecting(); }};
   }
   window.HL_WORKSHOP_COMPUTE = {open};
 })();
