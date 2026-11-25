@@ -1,4 +1,4 @@
-import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=745387c35de6';
+import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=21eae3287f7a';
 
 const API = '/api/problem-bank/private-textbooks';
 const BOOK = /^[a-z][a-z0-9-]{0,31}$/;
