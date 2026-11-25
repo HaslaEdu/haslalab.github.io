@@ -1,10 +1,13 @@
 import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=21eae3287f7a';
+import {FEYNMAN_HANDOUTS} from './feynman-handouts.js?v=5b92bb148a28';
 
 const API = '/api/problem-bank/private-textbooks';
 const BOOK = /^[a-z][a-z0-9-]{0,31}$/;
 const WEBP = /^image\/webp(?:;|$)/i;
 const PDF = /^application\/pdf(?:;|$)/i;
 const FEYNMAN_SITE = 'https://www.feynmanlectures.caltech.edu/';
+const FEYNMAN_COURSE_NOTES = FEYNMAN_SITE + 'info/FLP_Original_Course_Notes/';
+const FEYNMAN_EXERCISE_BOOK = 'https://www.hachettebookgroup.com/titles/richard-p-feynman/exercises-for-the-feynman-lectures-on-physics/9780465060719/';
 const PUBLIC_FEYNMAN = {
   id: 'feynman',
   title: 'The Feynman Lectures on Physics',
@@ -34,6 +37,8 @@ const COPY = {
     exerciseTitle: 'Caltech 공개 연습문제', findExercise: '연습문제 검색',
     exerciseNote: '문항별 한국어·영어 요약입니다. 문제의 전체 조건, 그림과 해설은 각 문항의 Caltech 원문에서 볼 수 있습니다.',
     exerciseSource: 'Caltech 원문 열기', exerciseIndex: 'Caltech 전체 목록', chapterReference: '강의 본문',
+    handoutTitle: 'Caltech 강의 원본 과제·시험', handoutIndex: 'Caltech 원본 자료 전체 목차',
+    handoutHomework: '과제', handoutTests: '시험·퀴즈', exerciseBook: '별책 연습문제집 (출판사 정보)',
     onlineEdition: 'Caltech 공식 온라인판 열기', lectureLogin: 'Drive 원본 PDF는 승인된 계정으로 열 수 있습니다.',
   },
   en: {
@@ -56,6 +61,8 @@ const COPY = {
     exerciseTitle: 'Caltech’s public exercises', findExercise: 'Find an exercise',
     exerciseNote: 'Short Korean and English summaries. Open each Caltech original for the full statement, diagrams and solutions.',
     exerciseSource: 'Open Caltech original', exerciseIndex: 'Caltech’s full index', chapterReference: 'Lecture reference',
+    handoutTitle: 'Caltech original homework and exams', handoutIndex: 'Caltech’s full handout index',
+    handoutHomework: 'Homework', handoutTests: 'Exams and quizzes', exerciseBook: 'Published exercise book (publisher information)',
     onlineEdition: 'Open the official Caltech edition', lectureLogin: 'Sign in with an approved account to open the Drive PDFs.',
   },
 };
@@ -208,7 +215,7 @@ export function mountPrivateTextbooks(container, options) {
     addChoice(words.exercises, 'exercises');
     content.replaceChildren(...(publicEdition ? [] : [bookPicker()]), choices);
     if (state.volume === 'exercises') {
-      content.append(renderExerciseIndex());
+      content.append(renderHandoutIndex(), renderExerciseIndex());
       return;
     }
     if (publicEdition) {
@@ -283,6 +290,46 @@ export function mountPrivateTextbooks(container, options) {
     search.addEventListener('input', filterChapters);
     filterChapters();
     content.append(volumeTitle, preview, controls, chapters, empty, links);
+  }
+
+  function renderHandoutIndex() {
+    const archive = atom('details');
+    archive.className = 'al-feynman-handouts';
+    archive.append(atom('summary', words.handoutTitle));
+    const english = options.lang === 'en';
+    function sourceLink(label, url) {
+      const link = atom('a', label);
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      return link;
+    }
+    for (const [course, homework, tests] of FEYNMAN_HANDOUTS) {
+      const group = atom('details');
+      group.append(atom('summary', course));
+      for (const [label, entries] of [[words.handoutHomework, homework], [words.handoutTests, tests]]) {
+        const list = atom('ul');
+        list.className = 'al-private-book-list';
+        for (const [page, date, ko, en] of entries) {
+          const item = atom('li');
+          item.append(sourceLink(english ? en : ko, FEYNMAN_COURSE_NOTES + 'pages/' + page + '.html'));
+          if (date) {
+            const time = atom('time', date);
+            time.dateTime = date;
+            item.append(time);
+          }
+          list.append(item);
+        }
+        group.append(atom('h4', label), list);
+      }
+      archive.append(group);
+    }
+    const links = atom('div');
+    links.className = 'al-private-controls';
+    links.append(sourceLink(words.handoutIndex, FEYNMAN_COURSE_NOTES + 'contents.html'),
+      sourceLink(words.exerciseBook, FEYNMAN_EXERCISE_BOOK));
+    archive.append(links);
+    return archive;
   }
 
   function renderExerciseIndex() {
