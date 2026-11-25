@@ -2,6 +2,16 @@ const API = '/api/problem-bank/private-textbooks';
 const BOOK = /^[a-z][a-z0-9-]{0,31}$/;
 const WEBP = /^image\/webp(?:;|$)/i;
 const PDF = /^application\/pdf(?:;|$)/i;
+const FEYNMAN_SITE = 'https://www.feynmanlectures.caltech.edu/';
+const PUBLIC_FEYNMAN = {
+  id: 'feynman',
+  title: 'The Feynman Lectures on Physics',
+  volumes: [
+    {number: 1, title: 'Mainly Mechanics, Radiation, and Heat', toc: 'I_toc.html'},
+    {number: 2, title: 'Mainly Electromagnetism and Matter', toc: 'II_toc.html'},
+    {number: 3, title: 'Quantum Mechanics', toc: 'III_toc.html'},
+  ],
+};
 const COPY = {
   ko: {
     heading: '내 비공개 교재', home: '← 교재 아카이브', loading: '자료를 불러오는 중…',
@@ -19,6 +29,7 @@ const COPY = {
     volume: '권 선택', findChapter: '장 번호 또는 제목', noChapters: '일치하는 장이 없습니다.',
     chapterCount: '개 장', supplement: '부록', openPdf: '원본 PDF 열기', newTabPdf: '새 탭에서 PDF 열기',
     pdfError: 'PDF를 불러오지 못했습니다.', exercises: 'Caltech 공식 연습문제',
+    onlineEdition: 'Caltech 공식 온라인판 열기', lectureLogin: 'Drive 원본 PDF는 승인된 계정으로 열 수 있습니다.',
   },
   en: {
     heading: 'My private textbooks', home: '← Book archive', loading: 'Loading…',
@@ -37,6 +48,7 @@ const COPY = {
     volume: 'Choose a volume', findChapter: 'Chapter number or title', noChapters: 'No matching chapters.',
     chapterCount: 'chapters', supplement: 'Appendix', openPdf: 'Open original PDF', newTabPdf: 'Open PDF in a new tab',
     pdfError: 'Could not load the PDF.', exercises: 'Official Caltech exercises',
+    onlineEdition: 'Open the official Caltech edition', lectureLogin: 'Sign in with an approved account to open the Drive PDFs.',
   },
 };
 
@@ -164,7 +176,8 @@ export function mountPrivateTextbooks(container, options) {
   }
 
   function renderLectures(book, volume, run) {
-    const heading = atom('h3', book.title);
+    const publicEdition = book === PUBLIC_FEYNMAN;
+    title.textContent = book.title;
     const choices = atom('nav');
     choices.className = 'al-private-controls';
     choices.setAttribute('aria-label', words.volume);
@@ -177,10 +190,29 @@ export function mountPrivateTextbooks(container, options) {
       choice.setAttribute('aria-pressed', String(state.volume === item.number));
       choices.append(choice);
     }
-    content.replaceChildren(bookPicker(), heading, choices);
+    content.replaceChildren(...(publicEdition ? [] : [bookPicker()]), choices);
+    if (publicEdition) {
+      content.append(atom('p', words.lectureLogin));
+      if (!observedToken) content.append(button(words.login, () => options.onLogin?.()));
+    }
     if (!volume) return;
 
-    const volumeTitle = atom('h4', 'Volume ' + volume.number + ' · ' + volume.title);
+    const volumeTitle = atom('h3', 'Volume ' + volume.number + ' · ' + volume.title);
+    const exercises = atom('a', words.exercises);
+    exercises.href = FEYNMAN_SITE + 'info/exercises.html';
+    exercises.target = '_blank';
+    exercises.rel = 'noopener noreferrer';
+    if (publicEdition) {
+      const official = atom('a', words.onlineEdition);
+      official.href = FEYNMAN_SITE + volume.toc;
+      official.target = '_blank';
+      official.rel = 'noopener noreferrer';
+      const links = atom('div');
+      links.className = 'al-private-controls';
+      links.append(official, exercises);
+      content.append(volumeTitle, links);
+      return;
+    }
     const preview = atom('section');
     const previewStatus = atom('p');
     previewStatus.setAttribute('role', 'status');
@@ -234,11 +266,12 @@ export function mountPrivateTextbooks(container, options) {
     }
     search.addEventListener('input', filterChapters);
     filterChapters();
-    const exercises = atom('a', words.exercises);
-    exercises.href = 'https://www.feynmanlectures.caltech.edu/info/exercises.html';
-    exercises.target = '_blank';
-    exercises.rel = 'noopener noreferrer';
     content.append(volumeTitle, preview, controls, chapters, empty, exercises);
+  }
+
+  function showPublicLectures(run) {
+    renderLectures(PUBLIC_FEYNMAN, PUBLIC_FEYNMAN.volumes.find(volume => volume.number === state.volume), run);
+    notice.textContent = '';
   }
 
   function renderList(data) {
@@ -383,16 +416,22 @@ export function mountPrivateTextbooks(container, options) {
   async function refresh() {
     if (disposed) return;
     const run = invalidate();
+    title.textContent = words.heading;
     content.replaceChildren();
     notice.textContent = words.loading;
     if (!observedToken) {
-      showFailure({status: 401});
+      if (state.book === 'feynman') showPublicLectures(run);
+      else showFailure({status: 401});
       return;
     }
     try {
       if (!books.length) books = (await get(API + '/books', run)).books;
       const book = books.find(book => book.id === state.book);
       if (!book) {
+        if (state.book === 'feynman') {
+          showPublicLectures(run);
+          return;
+        }
         state = bookState('');
         renderBooks();
       } else if (book.kind === 'lectures') {
@@ -408,7 +447,9 @@ export function mountPrivateTextbooks(container, options) {
       }
       notice.textContent = '';
     } catch (error) {
-      if (current(run)) showFailure(error);
+      if (!current(run)) return;
+      if (state.book === 'feynman' && (error.status === 401 || error.status === 403)) showPublicLectures(run);
+      else showFailure(error);
     }
   }
 

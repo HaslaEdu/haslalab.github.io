@@ -27,38 +27,14 @@ export const ARCHIVE_BOOK_REFERENCES = Object.freeze([
     resource_kind: 'handouts'
   },
   {
-    id: 'feynman-1',
-    title: {ko: 'The Feynman Lectures on Physics, Vol. I', en: 'The Feynman Lectures on Physics, Vol. I'},
-    full_title: {ko: 'The Feynman Lectures on Physics, Volume I — Feynman, Leighton & Sands', en: 'The Feynman Lectures on Physics, Volume I — Feynman, Leighton & Sands'},
-    short_title: 'FEYNMAN I',
+    id: 'feynman',
+    title: {ko: '파인만의 물리학 강의', en: 'The Feynman Lectures on Physics'},
+    full_title: {ko: '파인만의 물리학 강의 · The Feynman Lectures on Physics', en: 'The Feynman Lectures on Physics'},
+    short_title: 'Feynman',
     author: 'Richard P. Feynman · Robert B. Leighton · Matthew Sands',
-    topic_label: {ko: '역학 · 복사 · 열', en: 'Mechanics, radiation and heat'},
+    topic_label: {ko: '역학 · 전자기학 · 양자역학', en: 'Mechanics, electromagnetism and quantum mechanics'},
     collection: 'physics',
-    href: 'https://www.feynmanlectures.caltech.edu/I_toc.html',
-    availability: 'official_online',
-    resource_kind: 'lectures'
-  },
-  {
-    id: 'feynman-2',
-    title: {ko: 'The Feynman Lectures on Physics, Vol. II', en: 'The Feynman Lectures on Physics, Vol. II'},
-    full_title: {ko: 'The Feynman Lectures on Physics, Volume II — Feynman, Leighton & Sands', en: 'The Feynman Lectures on Physics, Volume II — Feynman, Leighton & Sands'},
-    short_title: 'FEYNMAN II',
-    author: 'Richard P. Feynman · Robert B. Leighton · Matthew Sands',
-    topic_label: {ko: '전자기학 · 물질', en: 'Electromagnetism and matter'},
-    collection: 'physics',
-    href: 'https://www.feynmanlectures.caltech.edu/II_toc.html',
-    availability: 'official_online',
-    resource_kind: 'lectures'
-  },
-  {
-    id: 'feynman-3',
-    title: {ko: 'The Feynman Lectures on Physics, Vol. III', en: 'The Feynman Lectures on Physics, Vol. III'},
-    full_title: {ko: 'The Feynman Lectures on Physics, Volume III — Feynman, Leighton & Sands', en: 'The Feynman Lectures on Physics, Volume III — Feynman, Leighton & Sands'},
-    short_title: 'FEYNMAN III',
-    author: 'Richard P. Feynman · Robert B. Leighton · Matthew Sands',
-    topic_label: {ko: '양자역학', en: 'Quantum mechanics'},
-    collection: 'physics',
-    href: 'https://www.feynmanlectures.caltech.edu/III_toc.html',
+    href: 'https://www.feynmanlectures.caltech.edu/',
     availability: 'official_online',
     resource_kind: 'lectures'
   }
