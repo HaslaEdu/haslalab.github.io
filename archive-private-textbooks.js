@@ -37,6 +37,7 @@ const COPY = {
     exerciseSource: 'Caltech 원문 열기', exerciseIndex: 'Caltech 전체 목록', chapterReference: '강의 본문',
     workbook: '파인만 별책 연습문제집', workbookContents: '목차', workbookAnswers: '정답·해설',
     workbookSearch: '문항 번호 또는 장 제목', workbookOriginal: '영어 원본 스캔',
+    workbookKorean: '한국어 문항', workbookDraft: '스캔 OCR을 바탕으로 한 번역 초안입니다. 수식·그림은 영어 원본에서 확인하세요.',
     onlineEdition: 'Caltech 공식 온라인판 열기', lectureLogin: 'Drive 원본 PDF는 승인된 계정으로 열 수 있습니다.',
   },
   en: {
@@ -61,6 +62,7 @@ const COPY = {
     exerciseSource: 'Open Caltech original', exerciseIndex: 'Caltech’s full index', chapterReference: 'Lecture reference',
     workbook: 'Exercises for the Feynman Lectures on Physics', workbookContents: 'Contents', workbookAnswers: 'Answers and solutions',
     workbookSearch: 'Problem number or chapter title', workbookOriginal: 'Original English scan',
+    workbookKorean: 'Korean exercises', workbookDraft: 'Draft translated from scan OCR. Check the English scan for equations and figures.',
     onlineEdition: 'Open the official Caltech edition', lectureLogin: 'Sign in with an approved account to open the Drive PDFs.',
   },
 };
@@ -310,7 +312,8 @@ export function mountPrivateTextbooks(container, options) {
       if (current(run) && error.name !== 'AbortError') status.textContent = words.failed;
       return;
     }
-    status.textContent = workbook.count + ' ' + words.count + ' · ' + words.workbookOriginal;
+    status.textContent = workbook.count + ' ' + words.count + ' · ' + (workbook.korean_count > 0
+      ? words.workbookKorean + ' ' + workbook.korean_count : words.workbookOriginal);
     const controls = atom('div');
     controls.className = 'al-private-controls';
     const volumeLabel = atom('label', words.volume + ' ');
@@ -328,6 +331,17 @@ export function mountPrivateTextbooks(container, options) {
     searchLabel.append(search);
     const chapters = atom('div');
     const preview = atom('section');
+    const problemHeader = atom('h4');
+    const languages = atom('div');
+    languages.className = 'al-private-controls';
+    const translation = atom('section');
+    const translationStatus = atom('p');
+    translationStatus.className = 'al-muted';
+    const translationBody = atom('div');
+    translationBody.lang = 'ko';
+    translationBody.className = 'al-prose';
+    translationBody.style.whiteSpace = 'pre-wrap';
+    translation.append(translationStatus, translationBody);
     const previewStatus = atom('p');
     previewStatus.setAttribute('role', 'status');
     const open = atom('a', words.newTabPdf);
@@ -343,8 +357,66 @@ export function mountPrivateTextbooks(container, options) {
     const nextPart = button(words.next, () => showPage(workbook.parts[loadedPart + 1].start));
     previousPart.hidden = nextPart.hidden = true;
     pageControls.append(previousPart, nextPart, open);
-    preview.append(previewStatus, pageControls, frame);
+    const original = atom('div');
+    original.append(previewStatus, pageControls, frame);
+    preview.append(problemHeader, languages, translation, original);
+    translation.hidden = true;
     let loadedPart = -1;
+    let selected = null;
+    let selection = 0;
+    const ko = button('한국어', () => selectLanguage('ko'));
+    const en = button('English', () => selectLanguage('en'));
+    languages.append(ko, en);
+    languages.hidden = true;
+    function selectLanguage(language) {
+      if (!selected) return;
+      const useKorean = language === 'ko' && selected.ko;
+      ko.setAttribute('aria-pressed', String(Boolean(useKorean)));
+      en.setAttribute('aria-pressed', String(!useKorean));
+      translation.hidden = !useKorean;
+      original.hidden = Boolean(useKorean);
+      if (!useKorean) {
+        void showPage(selected.page);
+        return;
+      }
+      pending?.abort();
+      translationStatus.textContent = selected.ko.review_status === 'source_compared'
+        ? words.source_compared : words.workbookDraft;
+      translationBody.textContent = selected.ko.text;
+      Promise.resolve(options.renderMath?.(translationBody)).catch(() => {});
+      preview.scrollIntoView({block: 'start'});
+    }
+    async function openProblem(number, page) {
+      const attempt = ++selection;
+      pending?.abort();
+      selected = null;
+      translation.hidden = languages.hidden = true;
+      original.hidden = false;
+      frame.hidden = open.hidden = previousPart.hidden = nextPart.hidden = true;
+      problemHeader.textContent = words.question + ' ' + number;
+      previewStatus.textContent = words.loading;
+      let row;
+      if (workbook.korean_count > 0) {
+        try {
+          row = await get(FEYNMAN_WORKBOOK + '/questions/' + number, run);
+        } catch (error) {
+          if (error.name === 'AbortError' || !current(run)) return;
+        }
+      }
+      if (attempt !== selection || !current(run)) return;
+      selected = {page, ko: row?.ko};
+      languages.hidden = !selected.ko;
+      selectLanguage(selected.ko && options.lang !== 'en' ? 'ko' : 'en');
+    }
+    function openReference(page) {
+      selection++;
+      pending?.abort();
+      selected = null;
+      problemHeader.textContent = '';
+      languages.hidden = translation.hidden = true;
+      original.hidden = false;
+      void showPage(page);
+    }
     async function showPage(page) {
       const part = workbook.parts.findIndex(row => row.start <= page && page <= row.end);
       if (part < 0 || !current(run)) return;
@@ -387,7 +459,7 @@ export function mountPrivateTextbooks(container, options) {
         group.append(atom('summary', chapter.number + '. ' + chapter.title + ' (' + problems.length + ')'));
         const list = atom('div');
         list.className = 'al-private-controls';
-        for (const [number, page] of problems) list.append(button(number, () => showPage(page)));
+        for (const [number, page] of problems) list.append(button(number, () => openProblem(number, page)));
         group.append(list);
         matches.push(group);
       }
@@ -395,8 +467,8 @@ export function mountPrivateTextbooks(container, options) {
     }
     volume.addEventListener('change', () => { search.value = ''; renderChapters(); });
     search.addEventListener('input', renderChapters);
-    controls.append(volumeLabel, searchLabel, button(words.workbookContents, () => showPage(workbook.contents)),
-      button(words.workbookAnswers, () => showPage(workbook.answers)));
+    controls.append(volumeLabel, searchLabel, button(words.workbookContents, () => openReference(workbook.contents)),
+      button(words.workbookAnswers, () => openReference(workbook.answers)));
     renderChapters();
     section.append(controls, preview, chapters);
   }

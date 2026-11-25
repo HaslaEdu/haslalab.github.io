@@ -34,9 +34,12 @@ async function setup(t, {initialToken = 'private-test-token', status = 200, with
     if (status !== 200) return {status, ok: false};
     if (url.pathname === API) return {ok: true, json: async () => ({books: [BOOK, FEYNMAN]})};
     if (url.pathname === API + '/feynman/workbook') return {ok: true, json: async () => ({
-      count: 3, chapters: [{number: 1, title: 'Atoms', volume: 1, problems: [6, 8]},
+      count: 3, korean_count: 1, chapters: [{number: 1, title: 'Atoms', volume: 1, problems: [6, 8]},
         {number: 2, title: 'Heat', volume: 2, problems: [15]}],
       parts: [{start: 1, end: 10}, {start: 11, end: 25}], contents: 2, answers: 21,
+    })};
+    if (url.pathname === API + '/feynman/workbook/questions/2.1') return {ok: true, json: async () => ({
+      number: '2.1', ko: {text: '온도 $T$를 구하라.', review_status: 'source_compared'},
     })};
     if (url.pathname === API + '/feynman/workbook/parts/2') return {
       ok: true, blob: async () => new w.Blob(['%PDF-'], {type: 'application/pdf'}),
@@ -200,6 +203,11 @@ test('the private Feynman workbook searches by exercise number and opens its ver
   search.dispatchEvent(new search.ownerDocument.defaultView.Event('input'));
   assert.match(workbook.querySelector('details[open]').textContent, /Heat/);
   await demo.click('2.1');
+  assert.match(workbook.textContent, /온도 \$T\$를 구하라/);
+  assert.deepEqual(demo.math, ['온도 $T$를 구하라.']);
+  const english = [...workbook.querySelectorAll('button')].find(button => button.textContent === 'English');
+  english.click();
+  await flush();
   assert.equal(workbook.querySelector('iframe').getAttribute('src'), 'blob:private-source#page=5');
   assert.equal(demo.calls.at(-1).url.pathname, API + '/feynman/workbook/parts/2');
 });
