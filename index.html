@@ -423,9 +423,10 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .comp .chead{display:flex;align-items:center;gap:16px;min-height:52px}
 .comp .chead .abbr{margin:0;flex:none}
 .comp .chead .clogo{max-width:54%}
-.clogo.selection-flag{width:auto;height:auto;max-width:46px;max-height:30px;border:1px solid var(--grid-bold)}
 .archive-stage-title{display:flex;align-items:center;gap:16px;--lcap:22px}
 .archive-stage-title .clogo{margin-left:0;max-width:112px}
+.comp .chead .selection-flag,.archive-stage-title .selection-flag{
+  width:auto;height:auto;max-width:min(64px,54%);max-height:42px;border:1px solid var(--grid-bold)}
 .clogo{width:auto;flex:none;object-fit:contain;display:block;border-radius:3px;
        margin-left:auto}                         /* sits at the card's right edge */
 .comp .abbr{font-size:1.5rem;font-weight:650;letter-spacing:-.03em}
@@ -1206,7 +1207,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
 <script src="archive-navigation.js?v=10d33500b414"></script>
-<script src="site-catalogue.js?v=27997ff2b50d"></script>
+<script src="site-catalogue.js?v=9a452d4b0143"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=e43cec5305aa"></script>
 <script src="site-design.js?v=af0e919623fe"></script>
@@ -4830,6 +4831,7 @@ const simHref=f=>{ const m=/^sim\/([A-Za-z0-9_]+)_web\.html/.exec(f||""), v=m&&w
   return f+(f.includes("?")?"&":"?")+(v?"v="+v:"v=0"); };
 const simsOf=(key,yr)=>((compOf(key)||{}).years||[]).filter(y=>String(y.y)===String(yr.y)).flatMap(y=>y.sims||[]).filter(p=>p.files&&p.files.sim);
 function theoryGroups(key,yr){
+  if(key==="osn") return [];   /* OSN's archived papers and independent solutions are for study. */
   const t=thyOf(key,yr.y); if(!t) return [];
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
   /* shortlist / backup problems (sl) are not part of the day's paper: each is its own exam, graded for 0.1 token */
@@ -4929,10 +4931,11 @@ const flagImg = (cc,cls="flag",org=null) =>
 const LOGO_V = 20;
 const HOME_STRIP_V="e513a9631b25";   /* practice/home-strip.json's digest, stamped by tools/build-site-catalogue.cjs */
 const LOGO_FILES = {cmo:"cmo.svg",plancks:"plancks.svg"};
-const SELECTION_FLAGS={
+const ARCHIVE_FLAGS={
   aupho:"au", bpho:"gb", bphoii:"gb", fma:"us", inpho:"in", obf:"br", soif:"br",
   spho:"sg", sphotst:"sg", twpho:"tw", usapho:"us", vntst:"vn", vpho:"vn",
-  ruphow:"ru", ruphox:"ru", ruphoy:"ru"
+  azpho:"az", cpho:"cn", efo:"ee", onf:"ro", osn:"id", panpho:"hk",
+  rupho:"ru", ruphow:"ru", ruphox:"ru", ruphoy:"ru"
 };
 const LOGO_ORGANIZERS = {
   eotvos:["외트뵈시 물리학회","Roland Eotvos Physical Society"],
@@ -4986,8 +4989,8 @@ function logoFallback(img){
   }
   img.remove();
 }
-const compLogo = key => SELECTION_FLAGS[key]
-  ? flagImg(SELECTION_FLAGS[key],"clogo selection-flag")
+const compLogo = key => ARCHIVE_FLAGS[key]
+  ? flagImg(ARCHIVE_FLAGS[key],"clogo selection-flag")
   :
   `<img class="clogo" loading="lazy" decoding="async" alt="" data-logo-key="${key}" data-logo-variant="${logoSource(key).match(/\/(dark|light)\//)?.[1]||"original"}" data-try="${LOGO_FILES[key]?.endsWith(".svg")?"svg":"png"}" title="${esc(logoTitle(key))}"
      style="height:calc(var(--lcap)/${LOGO_TEXT[key]||0.5})"
@@ -6098,7 +6101,7 @@ function viewComp(key,mode){
       <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span><b>${heading.abbr}</b>
     </div>${trackSwitch(key)}</div>
     <div class="phead">
-      ${(CONTEST_STAGES[parent]||SELECTION_FLAGS[key])?`<div class="archive-stage-title"><h1>${heading.abbr}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr}</h1>`}
+      ${(CONTEST_STAGES[parent]||ARCHIVE_FLAGS[key])?`<div class="archive-stage-title"><h1>${heading.abbr}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr}</h1>`}
       <div class="sub">${c.full[lang]}</div>
       <dl class="meta">
         <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
@@ -6482,7 +6485,7 @@ function viewYear(key,year,mode=""){
       <a href="${compModeHref(parent)}">${heading.abbr}</a><span>/</span><b>${yr.y}</b>
     </div>${trackSwitch(key,yr)}</div>
     <div class="phead">
-      ${(CONTEST_STAGES[parent]||SELECTION_FLAGS[key])?`<div class="archive-stage-title"><h1>${heading.abbr} ${yr.y}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr} ${yr.y}</h1>`}
+      ${(CONTEST_STAGES[parent]||ARCHIVE_FLAGS[key])?`<div class="archive-stage-title"><h1>${heading.abbr} ${yr.y}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr} ${yr.y}</h1>`}
       <div class="sub subflag">${flagImg(yr.cc,"flag big",yr.org)}<span>${yr.host?yr.host[lang]:"—"}</span></div>
       <dl class="meta">
         <div><dt>${d.host}</dt><dd style="font-size:14px">${yr.host?yr.host[lang]:"—"}</dd></div>

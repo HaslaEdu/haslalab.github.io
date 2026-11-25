@@ -298,6 +298,31 @@ test('async portal hydration retains the selected year and review mode while omi
   calls.length=0;portal.dataset.mode='exam';await a.run('xmMount("nbpho")');assert.equal(calls.length,2);assert.ok(calls.some(url=>url.includes('/lab/stats')));assert.ok(!portal.innerHTML.includes('review=1'));assert.ok(portal.innerHTML.includes('y=2026'));
 });
 
+test('national physics archive cards show the corresponding flags',()=>{
+  const a=app();
+  a.run('lang="ko"');
+  const cards=a.run('viewComps("phys",Infinity,"national")');
+  for(const [key,cc] of Object.entries({cpho:'cn',rupho:'ru',azpho:'az',panpho:'hk',osn:'id',onf:'ro',efo:'ee'})){
+    const card=cards.match(new RegExp('<a[^>]*href="#/'+key+'"[^>]*>[\\s\\S]*?</a>'))?.[0];
+    assert.ok(card?.includes('https://flagcdn.com/w80/'+cc+'.png'),key);
+  }
+});
+
+test('OSN archive pages serve theory and practical PDFs without adding timed exams',()=>{
+  const a=app();a.load('theory:osn');
+  const worker='https://haslalab-pdf.haslalab.workers.dev/pdf/';
+  for(const [track,year,files] of [
+    ['thy',2026,['OSN_2026_T4_ID.pdf','OSN_2026_T4S.pdf']],
+    ['exp',2007,['OSN_2007_E1_ID.pdf']]
+  ]){
+    a.run(`lang="ko";track="${track}"`);
+    const page=a.run(`viewYear("osn",${year})`);
+    for(const file of files)assert.ok(anchors(page).some(link=>link.url.startsWith(worker+file)),file);
+    assert.doesNotMatch(page,/drive\.google\.com/);
+  }
+  assert.deepEqual(plain(a.run('theoryGroups("osn",DATA.osn.years.find(y=>y.y===2026))')),[]);
+});
+
 test('shared competition pages keep the stage and its year in old and new archive links',async()=>{
   const a=app();
   a.run('lang="ko"; buildRails=()=>{}; paintSiteTheme=()=>{}; cmAccountChip=()=>{};');
