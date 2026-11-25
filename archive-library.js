@@ -194,7 +194,16 @@ export function mountArchiveLibrary(container,options={}){
     const count=papers.reduce((n,p)=>n+(Number.isSafeInteger(p.question_count)?p.question_count:0),0),short=school.aliases?.find(x=>/^[A-Z]{2,6}$/.test(x))||school.name?.en?.replace(/\s+University$/,'')||localized(school.name);
     return `<a class="comp al-school-card" href="${esc(href({school:school.id,source:null,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(short)}</div>${logo?`<img class="clogo al-card-school-logo${school.logo_monochrome?' al-logo-monochrome':''}" src="${esc(logo)}" data-logo-light="${esc(light)}" data-logo-dark="${esc(dark)}" alt="" loading="lazy" decoding="async">`:''}</div><div class="full">${esc(school.id==='other'?tr('unclassified'):localized(school.name))}</div>${metadata([[tr('materials'),papers.length||'—','data-card-papers'],[tr('materialType'),tr(papers.length?'schoolPapers':'officialLinks')],[tr('officialLinksCount'),schoolMaterials(school).length],[tr('problems'),papers.length?count:tr('notDigitized'),'data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
   }
-  function officialMaterialsHTML(school){const items=schoolMaterials(school);return items.length?`<section class="al-official"><h3>${esc(tr('officialMaterials'))}</h3><ul>${items.map(x=>`<li><a href="${esc(officialURL(x.url))}" target="_blank" rel="noopener noreferrer">${esc(localized(x.label)||x.url)} ↗</a></li>`).join('')}</ul></section>`:'';}
+  function officialMaterialsHTML(school){
+    const items=schoolMaterials(school);
+    if(!items.length)return '';
+    const link=item=>`<a href="${esc(officialURL(item.url))}" target="_blank" rel="noopener noreferrer">${esc(localized(item.label)||item.url)} ↗</a>`;
+    const groupList=item=>(item.groups||[]).map(group=>{
+      const entries=group.entries.filter(entry=>officialURL(entry.url));
+      return entries.length?`<details><summary>${esc(localized(group.label))}</summary><ul>${entries.map(entry=>`<li>${link(entry)}</li>`).join('')}</ul></details>`:'';
+    }).join('');
+    return `<section class="al-official"><h3>${esc(tr('officialMaterials'))}</h3><ul>${items.map(item=>`<li>${link(item)}${groupList(item)}</li>`).join('')}</ul></section>`;
+  }
   const privateTitles = {
     goldstein: 'Classical Mechanics — Goldstein',
     guopei: 'Guopei — Physics Olympiad Training and Selection',

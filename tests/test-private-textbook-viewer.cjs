@@ -7,9 +7,8 @@ const {JSDOM} = createRequire(resolve(__dirname, '../community/package.json'))('
 const nav = require('../archive-navigation.js');
 
 const exerciseData = readFileSync(resolve(__dirname, '../feynman-exercises.js'), 'utf8').replace(/^export /gm, '');
-const handoutData = readFileSync(resolve(__dirname, '../feynman-handouts.js'), 'utf8').replace(/^export /gm, '');
-const code = exerciseData + '\n' + handoutData + '\n' + readFileSync(resolve(__dirname, '../archive-private-textbooks.js'), 'utf8')
-  .replace(/^import .*;\r?\n/gm, '').replace(/^export /gm, '');
+const code = exerciseData + '\n' + readFileSync(resolve(__dirname, '../archive-private-textbooks.js'), 'utf8')
+  .replace(/^import .*;\r?\n/m, '').replace(/^export /gm, '');
 const API = '/api/problem-bank/private-textbooks/books';
 const PATH = '#/archive/books/phys?view=private-textbooks';
 const BOOK = {id: 'goldstein', title: 'Private synthetic book', count: 1, korean_count: 1};
@@ -34,6 +33,14 @@ async function setup(t, {initialToken = 'private-test-token', status = 200, with
     calls.push({url, options});
     if (status !== 200) return {status, ok: false};
     if (url.pathname === API) return {ok: true, json: async () => ({books: [BOOK, FEYNMAN]})};
+    if (url.pathname === API + '/feynman/workbook') return {ok: true, json: async () => ({
+      count: 3, chapters: [{number: 1, title: 'Atoms', volume: 1, problems: [6, 8]},
+        {number: 2, title: 'Heat', volume: 2, problems: [15]}],
+      parts: [{start: 1, end: 10}, {start: 11, end: 25}], contents: 2, answers: 21,
+    })};
+    if (url.pathname === API + '/feynman/workbook/parts/2') return {
+      ok: true, blob: async () => new w.Blob(['%PDF-'], {type: 'application/pdf'}),
+    };
     const volume = /^\/([123])(\/pdf)?$/.exec(url.pathname.slice((API + '/feynman/volumes').length));
     if (url.pathname.startsWith(API + '/feynman/volumes') && volume) {
       const number = Number(volume[1]);
@@ -166,11 +173,10 @@ test('Feynman’s public exercises are listed inside the book and can be found i
   assert.equal(nav.parse(PATH + '&book=goldstein&section=exercises').params.get('section'), null);
   const demo = await setup(t, {feynman: true, exercises: true, initialToken: ''});
   const section = demo.root.querySelector('.al-feynman-exercises');
-  const links = [...section.querySelectorAll('details a[href*="/info/exercises/"]')];
+  const links = [...section.querySelectorAll('details a')];
   assert.equal(links.length, 47);
   assert.equal(new Set(links.map(a => a.href)).size, 47);
   assert.ok(links.every(a => a.href.startsWith('https://www.feynmanlectures.caltech.edu/info/exercises/')));
-  assert.equal(section.querySelectorAll('details').length, 55);
   const field = section.querySelector('input[type=search]');
   field.value = '강제 진동';
   field.dispatchEvent(new field.ownerDocument.defaultView.Event('input'));
@@ -181,19 +187,19 @@ test('Feynman’s public exercises are listed inside the book and can be found i
   assert.ok(row.open);
   assert.match(row.textContent, /Driven pendulum.*I · 23/);
   assert.equal(row.querySelector('a').href, 'https://www.feynmanlectures.caltech.edu/info/exercises/forced_pendulum.html');
-  const handouts = demo.root.querySelector('.al-feynman-handouts');
-  assert.equal(handouts.querySelectorAll('details').length, 6);
-  const scans = [...handouts.querySelectorAll('li a')].map(link => link.href);
-  assert.equal(scans.length, 82);
-  assert.equal(new Set(scans).size, scans.length);
-  const scanBase = 'https://www.feynmanlectures.caltech.edu/info/FLP_Original_Course_Notes/pages/';
-  assert.ok(scans.every(url => url.startsWith(scanBase)));
-  assert.ok(scans.includes(scanBase + 'ON1-215.html'));
-  assert.ok(scans.includes(scanBase + 'ON2-003.html'));
-  field.value = '시리우스';
-  field.dispatchEvent(new field.ownerDocument.defaultView.Event('input'));
-  const sirius = section.querySelector('details');
-  assert.match(sirius.textContent, /Estimating the mass of Sirius.*Physics 1a · Problem set 1 · #5/);
-  assert.equal(sirius.querySelector('a').href, scanBase + 'ON1-216.html');
   assert.equal(demo.calls.length, 0);
+});
+
+test('the private Feynman workbook searches by exercise number and opens its verified PDF part', async t => {
+  const demo = await setup(t, {feynman: true, exercises: true});
+  const workbook = demo.root.querySelector('.al-feynman-workbook');
+  assert.match(workbook.textContent, /3 문제/);
+  assert.equal(workbook.querySelector('iframe').hidden, true);
+  const search = workbook.querySelector('input[type=search]');
+  search.value = '2.1';
+  search.dispatchEvent(new search.ownerDocument.defaultView.Event('input'));
+  assert.match(workbook.querySelector('details[open]').textContent, /Heat/);
+  await demo.click('2.1');
+  assert.equal(workbook.querySelector('iframe').getAttribute('src'), 'blob:private-source#page=5');
+  assert.equal(demo.calls.at(-1).url.pathname, API + '/feynman/workbook/parts/2');
 });

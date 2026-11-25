@@ -1,9 +1,30 @@
+import {FEYNMAN_HANDOUTS} from './feynman-handouts.js?v=5b92bb148a28';
+
 // Official institution marks and external course resources.
 // source_ids are observed canonical course sources, not inferred question counts.
 // External materials with no source_ids are not claimed as digitized questions.
 export const ARCHIVE_SCHOOL_MEDIA = {
   "version": "2026-11-03",
   "institutions": [
+    {
+      id: 'caltech',
+      name: {ko: '칼텍 · 캘리포니아 공과대학교', en: 'California Institute of Technology'},
+      aliases: ['Caltech', '칼텍', 'California Institute of Technology'],
+      source_ids: [],
+      materials: {
+        physics: [{
+          url: 'https://www.feynmanlectures.caltech.edu/info/FLP_Original_Course_Notes/contents.html',
+          label: {ko: '파인만 물리학 강의 원본 과제·시험 목차 (82건)', en: 'Original Feynman homework and exams index (82 documents)'},
+          groups: FEYNMAN_HANDOUTS.map(([course, homework, tests]) => ({
+            label: {ko: course, en: course},
+            entries: [...homework, ...tests].map(([page, date, ko, en]) => ({
+              url: 'https://www.feynmanlectures.caltech.edu/info/FLP_Original_Course_Notes/pages/' + page + '.html',
+              label: {ko: date ? ko + ' · ' + date : ko, en: date ? en + ' · ' + date : en},
+            })),
+          })),
+        }],
+      },
+    },
     {
       "id": "snu",
       "name": {
