@@ -352,7 +352,8 @@
         const min = x ? 38 : minHeight;
         const floor = Math.max(min, x ? minWidth : minBodyHeight);
         const fraction = Number(css.getPropertyValue('--dock-max').trim()) || .6;
-        const max = x ? Math.max(floor, Math.floor(grid.clientWidth * fraction)) : Math.max(floor, Math.min(innerHeight * 1.5,1200));
+        const cap = Number(css.getPropertyValue('--dock-cap').trim()) || Infinity;
+        const max = x ? Math.max(floor, Math.min(cap, Math.floor(grid.clientWidth * fraction))) : Math.max(floor, Math.min(innerHeight * 1.5,1200));
         const preferred = x ? parseFloat(grid.style.getPropertyValue(widthKey)) : parseFloat(panel.style.getPropertyValue('--dock-height'));
         const natural = x ? panel.getBoundingClientRect().width : body.getBoundingClientRect().height;
         const current = Number.isFinite(preferred) ? preferred : Math.max(floor,natural);
