@@ -2141,6 +2141,7 @@ function openAssetLibrary() {
   height();
 }
 function showDrawEditor() {
+  st.editorEntered = true;
   $('drawProjects').hidden = true;
   $('drawEditor').hidden = false;
   $('drawProvider').querySelector('select').value = st.storeIds?.provider || 'store';
@@ -2292,7 +2293,8 @@ function shell() {
   $('penSmooth').onchange = e => setPref('penSmooth', e.target.checked);
   bindCanvas(); paintTools(); paint(); paintOut();
   if (!params.get('t') && !params.get('share')) showDrawProjects();
-  window.HL_WORKSHOP_PROJECTS.protectDraft(() => !!st.projectChanged);
+  else st.editorEntered = true;
+  window.HL_WORKSHOP_PROJECTS.protectDraft(() => st.editorEntered && !!st.projectChanged);
   if (!params.get('share')) window.HL_WORKSHOP_PROJECTS.showGuide('draw');
 }
 /* the drawing toolbar: the tools, then the look of what they draw (also applied to the selected shapes) */
