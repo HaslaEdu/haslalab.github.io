@@ -1,3 +1,5 @@
+import {FEYNMAN_EXERCISES} from './feynman-exercises.js?v=21eae3287f7a';
+
 const API = '/api/problem-bank/private-textbooks';
 const BOOK = /^[a-z][a-z0-9-]{0,31}$/;
 const WEBP = /^image\/webp(?:;|$)/i;
@@ -28,7 +30,10 @@ const COPY = {
     pending: '원문 대조 필요', source_scan: '원본 스캔 · 본문은 이미지에서 확인', source_extracted: '영어 원문 추출', study_adapted: '한국어 학습용 순화판', structured_english_russian: '공개 영어·러시아어 본문 기준',
     volume: '권 선택', findChapter: '장 번호 또는 제목', noChapters: '일치하는 장이 없습니다.',
     chapterCount: '개 장', supplement: '부록', openPdf: '원본 PDF 열기', newTabPdf: '새 탭에서 PDF 열기',
-    pdfError: 'PDF를 불러오지 못했습니다.', exercises: 'Caltech 공식 연습문제',
+    pdfError: 'PDF를 불러오지 못했습니다.', exercises: '연습문제',
+    exerciseTitle: 'Caltech 공개 연습문제', findExercise: '연습문제 검색',
+    exerciseNote: '문항별 한국어·영어 요약입니다. 문제의 전체 조건, 그림과 해설은 각 문항의 Caltech 원문에서 볼 수 있습니다.',
+    exerciseSource: 'Caltech 원문 열기', exerciseIndex: 'Caltech 전체 목록', chapterReference: '강의 본문',
     onlineEdition: 'Caltech 공식 온라인판 열기', lectureLogin: 'Drive 원본 PDF는 승인된 계정으로 열 수 있습니다.',
   },
   en: {
@@ -47,7 +52,10 @@ const COPY = {
     structured_english_russian: 'Based on the published English and Russian statements',
     volume: 'Choose a volume', findChapter: 'Chapter number or title', noChapters: 'No matching chapters.',
     chapterCount: 'chapters', supplement: 'Appendix', openPdf: 'Open original PDF', newTabPdf: 'Open PDF in a new tab',
-    pdfError: 'Could not load the PDF.', exercises: 'Official Caltech exercises',
+    pdfError: 'Could not load the PDF.', exercises: 'Exercises',
+    exerciseTitle: 'Caltech’s public exercises', findExercise: 'Find an exercise',
+    exerciseNote: 'Short Korean and English summaries. Open each Caltech original for the full statement, diagrams and solutions.',
+    exerciseSource: 'Open Caltech original', exerciseIndex: 'Caltech’s full index', chapterReference: 'Lecture reference',
     onlineEdition: 'Open the official Caltech edition', lectureLogin: 'Sign in with an approved account to open the Drive PDFs.',
   },
 };
@@ -86,7 +94,10 @@ export function mountPrivateTextbooks(container, options) {
   let observedToken = token();
   const requestedBook = options.params?.get('book') || '';
   const bookState = book => ({book, page: 1, q: '', problem: null, volume: null});
-  const initialState = () => bookState(BOOK.test(requestedBook) ? requestedBook : '');
+  const initialState = () => ({
+    ...bookState(BOOK.test(requestedBook) ? requestedBook : ''),
+    volume: requestedBook === 'feynman' && options.params?.get('section') === 'exercises' ? 'exercises' : null,
+  });
   let state = initialState();
   let books = [];
   let disposed = false;
@@ -181,19 +192,25 @@ export function mountPrivateTextbooks(container, options) {
     const choices = atom('nav');
     choices.className = 'al-private-controls';
     choices.setAttribute('aria-label', words.volume);
-    for (const item of book.volumes) {
-      const choice = button('Volume ' + item.number, async () => {
-        if (state.volume === item.number) return;
-        state.volume = item.number;
+    function addChoice(label, value) {
+      const choice = button(label, async () => {
+        if (state.volume === value) return;
+        state.volume = value;
         await refresh();
-        if (!disposed && state.book === book.id && state.volume === item.number) {
+        if (!disposed && state.book === book.id && state.volume === value) {
           content.querySelector('nav button[aria-pressed="true"]')?.focus({preventScroll: true});
         }
       });
-      choice.setAttribute('aria-pressed', String(state.volume === item.number));
+      choice.setAttribute('aria-pressed', String(state.volume === value));
       choices.append(choice);
     }
+    for (const item of book.volumes) addChoice('Volume ' + item.number, item.number);
+    addChoice(words.exercises, 'exercises');
     content.replaceChildren(...(publicEdition ? [] : [bookPicker()]), choices);
+    if (state.volume === 'exercises') {
+      content.append(renderExerciseIndex());
+      return;
+    }
     if (publicEdition) {
       content.append(atom('p', words.lectureLogin));
       if (!observedToken) content.append(button(words.login, () => options.onLogin?.()));
@@ -201,17 +218,13 @@ export function mountPrivateTextbooks(container, options) {
     if (!volume) return;
 
     const volumeTitle = atom('h3', 'Volume ' + volume.number + ' · ' + volume.title);
-    const exercises = atom('a', words.exercises);
-    exercises.href = FEYNMAN_SITE + 'info/exercises.html';
-    exercises.target = '_blank';
-    exercises.rel = 'noopener noreferrer';
     const official = atom('a', words.onlineEdition);
     official.href = FEYNMAN_SITE + PUBLIC_FEYNMAN.volumes[volume.number - 1].toc;
     official.target = '_blank';
     official.rel = 'noopener noreferrer';
     const links = atom('div');
     links.className = 'al-private-controls';
-    links.append(official, exercises);
+    links.append(official);
     if (publicEdition) {
       content.append(volumeTitle, links);
       return;
@@ -270,6 +283,60 @@ export function mountPrivateTextbooks(container, options) {
     search.addEventListener('input', filterChapters);
     filterChapters();
     content.append(volumeTitle, preview, controls, chapters, empty, links);
+  }
+
+  function renderExerciseIndex() {
+    const section = atom('section');
+    section.className = 'al-feynman-exercises';
+    const title = atom('h3', words.exerciseTitle);
+    const controls = atom('div');
+    controls.className = 'al-private-controls';
+    const label = atom('label', words.findExercise + ' ');
+    const search = atom('input');
+    search.type = 'search';
+    search.maxLength = 160;
+    label.append(search);
+    const count = atom('p');
+    count.className = 'al-muted';
+    count.setAttribute('role', 'status');
+    const results = atom('div');
+    let language = options.lang === 'en' ? 'en' : 'ko';
+    const ko = button('한국어', () => { language = 'ko'; renderRows(); });
+    const en = button('English', () => { language = 'en'; renderRows(); });
+    controls.append(label, ko, en);
+    const normalize = value => value.normalize('NFKC').toLowerCase();
+    function renderRows() {
+      ko.setAttribute('aria-pressed', String(language === 'ko'));
+      en.setAttribute('aria-pressed', String(language === 'en'));
+      const open = new Set([...results.querySelectorAll('details[open]')].map(row => row.dataset.source));
+      const query = normalize(search.value.trim());
+      const matches = FEYNMAN_EXERCISES.filter(row => !query || normalize(row.slice(1).join(' ')).includes(query));
+      count.textContent = matches.length ? matches.length + ' ' + words.count : words.empty;
+      results.replaceChildren(...matches.map(([slug, titleKo, titleEn, summaryKo, summaryEn, chapter]) => {
+        const row = atom('details');
+        row.dataset.source = slug;
+        row.open = open.has(slug);
+        row.append(atom('summary', language === 'ko' ? titleKo : titleEn));
+        const body = atom('p', language === 'ko' ? summaryKo : summaryEn);
+        body.lang = language;
+        row.append(body);
+        if (chapter) row.append(atom('p', words.chapterReference + ' ' + chapter));
+        const source = atom('a', words.exerciseSource);
+        source.href = FEYNMAN_SITE + 'info/exercises/' + slug + '.html';
+        source.target = '_blank';
+        source.rel = 'noopener noreferrer';
+        row.append(source);
+        return row;
+      }));
+    }
+    search.addEventListener('input', renderRows);
+    const index = atom('a', words.exerciseIndex);
+    index.href = FEYNMAN_SITE + 'info/exercises.html';
+    index.target = '_blank';
+    index.rel = 'noopener noreferrer';
+    renderRows();
+    section.append(title, atom('p', words.exerciseNote), controls, count, results, index);
+    return section;
   }
 
   function showPublicLectures(run) {
@@ -438,7 +505,7 @@ export function mountPrivateTextbooks(container, options) {
         state = bookState('');
         renderBooks();
       } else if (book.kind === 'lectures') {
-        const volume = state.volume ? await get(API + '/books/' + book.id + '/volumes/' + state.volume, run) : null;
+        const volume = Number.isInteger(state.volume) ? await get(API + '/books/' + book.id + '/volumes/' + state.volume, run) : null;
         renderLectures(book, volume, run);
       } else if (state.problem) {
         const row = await get(API + '/books/' + state.book + '/questions/' + state.problem, run);
@@ -451,7 +518,7 @@ export function mountPrivateTextbooks(container, options) {
       notice.textContent = '';
     } catch (error) {
       if (!current(run)) return;
-      if (state.book === 'feynman' && (error.status === 401 || error.status === 403)) showPublicLectures(run);
+      if (state.book === 'feynman' && (state.volume === 'exercises' || error.status === 401 || error.status === 403)) showPublicLectures(run);
       else showFailure(error);
     }
   }

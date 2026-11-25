@@ -1054,7 +1054,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <link rel="stylesheet" href="site-design.css?v=b30f9f04791b">
 <link rel="stylesheet" href="guide.css?v=022546be75f1">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
-<link rel="stylesheet" href="archive-library.css?v=cb8935c8f3a2">
+<link rel="stylesheet" href="archive-library.css?v=f6dea18c0436">
 </head>
 <body class="hl-site">
 
@@ -1201,7 +1201,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="learn-path.js?v=57047175e02a"></script>
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
-<script src="archive-navigation.js?v=bfcd5c5115c9"></script>
+<script src="archive-navigation.js?v=10d33500b414"></script>
 <script src="site-catalogue.js?v=15b94c9db49a"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=f186eafdba6b"></script>
@@ -5194,7 +5194,7 @@ let archiveController=null,archiveMountState=null,archiveModulePromise=null,arch
 function disposeArchiveLibrary(){
   try{archiveController?.dispose();}catch(e){}archiveController=null;archiveMountState=null;
 }
-function archiveMountKey(route){return [route.kind,route.collection,route.baseHash,route.resolveLegacy,route.params.get('view')==='private-textbooks',route.params.get('book'),lang].join('|');}
+function archiveMountKey(route){return [route.kind,route.collection,route.baseHash,route.resolveLegacy,route.params.get('view')==='private-textbooks',route.params.get('book'),route.params.get('section'),lang].join('|');}
 function updateArchiveReadingChrome(route){const node=document.getElementById('archiveNative'),shell=node?.closest('.shell');if(!shell)return;const reading=route.params.has('source')||route.params.has('problem')||route.kind==='course'&&route.params.has('school');shell.dataset.archiveKind=route.kind;shell.classList.toggle('archive-reading',reading);for(const element of shell.querySelectorAll(':scope > .phead,:scope > .subjs'))element.hidden=reading||route.params.get('view')==='private-textbooks';
   /* a book or school spans the window, so nothing fits beside it: its ad sits under the category tabs, where it is seen,
      instead of below a long list; the lists keep theirs at the bottom and get the side ads where the margins allow */
@@ -5227,7 +5227,7 @@ function mountArchiveNative(route,generation){
     headers:{Authorization:"Bearer "+archiveToken},credentials:"omit",cache:"no-store",signal:AbortSignal.timeout(5000)
   }).then(response=>response.ok?response.json():null).then(data=>archiveToken===cmTok()&&Array.isArray(data?.books)?data.books:[]).catch(()=>[]):Promise.resolve([]);
   privateList.then(books=>{if(privateEntry?.isConnected)privateEntry.hidden=!books.length;});
-  const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=c2d0e7fe21f7"):loadArchiveModule();
+  const modulePromise=privateBooks?import("./archive-private-textbooks.js?v=8fa40adc7f9d"):loadArchiveModule();
   Promise.all([modulePromise,privateList]).then(([module,privateBooksForAccount])=>{
     if(!current())return;
     archiveMountState={key:archiveMountKey(route),container};
