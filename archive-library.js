@@ -300,7 +300,7 @@ export function mountArchiveLibrary(container,options={}){
     const privateBooks=books&&privateBookToken===token&&config.collection==='physics'?(config.privateBooks||[]).filter(book=>Object.hasOwn(privateTitles,book.id)):[];
     const privateCards=privateBooks.filter(book=>[privateTitles[book.id],book.id==='feynman'?'파인만 물리학 강의':''].join(' ').toLocaleLowerCase().includes(query)).map(privateBookCard).join('');
     const replacedReferences=new Set(privateBooks.map(book=>book.id==='goldstein'?'goldstein-classical-mechanics':book.id));
-    const references=books?referenceBooks().filter(item=>!replacedReferences.has(item.id)).filter(item=>[localized(item.title),localized(item.full_title),item.short_title,item.author,localized(item.topic_label)].join(' ').toLocaleLowerCase().includes(query)):[];
+    const references=books?referenceBooks().filter(item=>!replacedReferences.has(item.id)).filter(item=>[localized(item.title),localized(item.full_title),item.short_title,item.author,localized(item.topic_label),item.id==='feynman'?'파인만 물리학 강의':''].join(' ').toLocaleLowerCase().includes(query)):[];
     slot.innerHTML=list.length||references.length||privateCards?privateCards+list.map(s=>books?bookCard(s):`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join('')+references.map(referenceCard).join(''):books?`<div class="subjempty">${esc(tr('emptySources'))}</div>`:`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
   }
   function setSearchMode(mode){

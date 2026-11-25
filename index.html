@@ -5245,7 +5245,7 @@ function updateArchiveReadingChrome(route){const node=document.getElementById('a
   try{ mountHaslaAdFitSides(); }catch(e){}}
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=1d845a3894fa"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=68513d2479c3"),import("./archive-reference-media.js?v=aebf173d879f")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=c0550edf71f9"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=68513d2479c3"),import("./archive-reference-media.js?v=aebf173d879f")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){

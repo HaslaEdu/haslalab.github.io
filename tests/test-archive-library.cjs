@@ -491,12 +491,17 @@ test('official book references use real external links without phantom question 
 });
 
 test('Feynman has one catalogue card with or without access to the private copy',async t=>{
-  const reference={id:'feynman',title:{ko:'파인만',en:'Feynman'},collection:'physics',
+  const reference={id:'feynman',title:{ko:'The Feynman Lectures on Physics',en:'The Feynman Lectures on Physics'},collection:'physics',
     href:'https://www.feynmanlectures.caltech.edu/',availability:'official_online',resource_kind:'lectures'};
   const href='#/archive/books/phys?view=private-textbooks&book=feynman';
   const guest=await setup(t,{options:{bookReferences:[reference]}});
   assert.equal(guest.mount.querySelectorAll('a[data-reference-id=feynman]').length,1);
   assert.equal(guest.mount.querySelector('a[data-reference-id=feynman]').getAttribute('href'),href);
+  const search=guest.mount.querySelector('[data-source-query]');
+  search.value='파인만';
+  search.dispatchEvent(new guest.w.Event('input',{bubbles:true}));
+  assert.equal(guest.mount.querySelectorAll('a[data-reference-id=feynman]').length,1);
+
   const owner=await setup(t,{token:'owner',options:{bookReferences:[reference],
     privateBooks:[{id:'feynman',kind:'lectures',count:115}]}});
   const cards=owner.mount.querySelectorAll('a[href="'+href+'"]');
