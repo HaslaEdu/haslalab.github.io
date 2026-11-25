@@ -36,13 +36,51 @@
     "en": "2026 experimental round organizer notice"
    },
    "url": "https://singaporephysics.wordpress.com/2026/11/05/singapore-physics-olympiad-spho-2026-experimental-round/"
+  },
+  {
+   "label": {
+    "ko": "phoXiv 싱가포르 물리 올림피아드 자료실",
+    "en": "phoXiv Singapore Physics Olympiad archive"
+   },
+   "url": "https://phoxiv.org/olympiads/spho"
+  },
+  {
+   "label": {
+    "ko": "2026 이론 라운드 주최 측 안내",
+    "en": "2026 theory round organizer notice"
+   },
+   "url": "https://singaporephysics.wordpress.com/2026/10/12/singapore-physics-olympiad-spho-2026-theory-round/"
   }
  ],
  "resourceNote": {
-  "ko": "2025년 문제는 참가자들이 복원한 자료입니다. 2026년 실험 라운드 안내가 공개됐으며 시험지·해설은 확인되지 않았습니다.",
-  "en": "The 2025 questions are a participant reconstruction. The organizer posted the 2026 practical round notice, and no public paper or solutions were verified."
+  "ko": "2026년 이론은 공개 복원 부분본(1·2·3·4·6·8·10번)입니다. 공식 시험지와 해설, 실험 시험지는 아직 확인되지 않았습니다. 2025년 자료도 참가자 복원본입니다.",
+  "en": "The 2026 theory file is a partial public reconstruction (questions 1, 2, 3, 4, 6, 8 and 10). The official paper, solutions and practical paper remain unverified. The 2025 paper is also a participant reconstruction."
  },
  "years": [
+  {
+   "y": 2026,
+   "host": {
+    "ko": "싱가포르",
+    "en": "Singapore"
+   },
+   "cc": "sg",
+   "source_page": "https://phoxiv.org/olympiads/spho",
+   "problems": [],
+   "files": [
+    {
+     "file": "SPhO_2026_T_EN.pdf",
+     "part": "T",
+     "kind": "paper",
+     "url": "https://cdn.phoxiv.org/olympiads/spho/2026/problems.pdf",
+     "direct": true,
+     "lang": "EN",
+     "title": {
+      "ko": "이론 · 복원 부분본 (1·2·3·4·6·8·10번)",
+      "en": "Theory · partial reconstruction (questions 1, 2, 3, 4, 6, 8 and 10)"
+     }
+    }
+   ]
+  },
   {
    "y": 2025,
    "host": {
@@ -61,8 +99,8 @@
      "direct": true,
      "lang": "EN",
      "title": {
-      "ko": "공개 문항 1",
-      "en": "Published problems 1"
+      "ko": "이론 · 참가자 복원본",
+      "en": "Theory · participant reconstruction"
      }
     },
     {
@@ -92,8 +130,8 @@
      "direct": true,
      "lang": "EN",
      "title": {
-      "ko": "공개 문항 1",
-      "en": "Published problems 1"
+      "ko": "이론 시험지",
+      "en": "Theory paper"
      }
     }
    ]
@@ -116,8 +154,8 @@
      "direct": true,
      "lang": "EN",
      "title": {
-      "ko": "공개 문항 1",
-      "en": "Published problems 1"
+      "ko": "이론 시험지 1권",
+      "en": "Theory paper 1"
      }
     },
     {
@@ -128,8 +166,8 @@
      "direct": true,
      "lang": "EN",
      "title": {
-      "ko": "공개 문항 2",
-      "en": "Published problems 2"
+      "ko": "이론 시험지 2권",
+      "en": "Theory paper 2"
      }
     }
    ]
@@ -152,9 +190,10 @@
      "direct": true,
      "lang": "EN",
      "title": {
-      "ko": "공개 문항 1",
-      "en": "Published problems 1"
-     }
+      "ko": "이론 시험지 1권",
+      "en": "Theory paper 1"
+     },
+     "contains_solutions": true
     },
     {
      "file": "SPhO_2022_T2_EN.pdf",
@@ -164,9 +203,10 @@
      "direct": true,
      "lang": "EN",
      "title": {
-      "ko": "공개 문항 2",
-      "en": "Published problems 2"
-     }
+      "ko": "이론 시험지 2권",
+      "en": "Theory paper 2"
+     },
+     "contains_solutions": true
     }
    ]
   },
@@ -618,6 +658,8 @@
  "sources": [
   "https://ipssingapore.org/events/SPhO.html",
   "https://olimpicos.net/spho/",
-  "https://singaporephysics.wordpress.com/2026/11/05/singapore-physics-olympiad-spho-2026-experimental-round/"
+  "https://singaporephysics.wordpress.com/2026/11/05/singapore-physics-olympiad-spho-2026-experimental-round/",
+  "https://phoxiv.org/olympiads/spho",
+  "https://singaporephysics.wordpress.com/2026/10/12/singapore-physics-olympiad-spho-2026-theory-round/"
  ]
 }
