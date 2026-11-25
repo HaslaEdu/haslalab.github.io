@@ -188,6 +188,7 @@
 .al-private-textbooks>header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin:0 0 24px}
 .al-private-textbooks>header h2{margin:0}
 .al-private-textbooks .al-private-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin:16px 0}
+.al-private-textbooks .al-private-pdf{width:100%;height:clamp(430px,72vh,1000px);margin-top:8px;border:1px solid var(--al-line,#d8d8df);border-radius:8px}
 .al-private-textbooks label{display:inline-flex;align-items:center;flex-wrap:wrap;gap:8px;max-width:100%}
 .al-private-textbooks select{max-width:min(100%,540px)}
 .al-private-textbooks .al-private-prose{white-space:pre-wrap;margin:16px 0 30px}

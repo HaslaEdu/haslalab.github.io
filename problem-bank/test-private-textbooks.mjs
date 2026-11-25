@@ -60,7 +60,8 @@ function setup(user = {id: 19, role: 'admin'}, overrides = {}) {
 
 test('private books, details and media all authenticate before any object reads', async () => {
   for (const path of [ROOT, ROOT + '/goldstein', ROOT + '/goldstein/questions/1',
-                      ROOT + '/goldstein/questions/1/media/1']) {
+                      ROOT + '/goldstein/questions/1/media/1', ROOT + '/feynman/volumes/1',
+                      ROOT + '/feynman/volumes/1/pdf']) {
     const guest = setup();
     const noToken = await guest.call(path, null);
     assert.equal(noToken.status, 401);
@@ -72,6 +73,38 @@ test('private books, details and media all authenticate before any object reads'
       assert.equal(member.calls.length, 0);
     }
   }
+});
+
+test('Feynman is one catalogue entry with separate verified volumes and PDFs', async () => {
+  const pdfs = [1, 2, 3].map(number => Buffer.from('%PDF-1.7 synthetic volume ' + number));
+  const volumes = pdfs.map((pdf, offset) => ({
+    number: offset + 1, title: 'Subject ' + (offset + 1), pages: 40,
+    chapters: [{number: 1, title: 'Chapter in volume ' + (offset + 1), page: 12 + offset}],
+    pdf_size: pdf.length, pdf_sha256: hash(pdf),
+  }));
+  const fixture = JSON.parse(manifest);
+  fixture.books.push({id: 'feynman', kind: 'lectures', title: 'Feynman', count: 3, korean_count: 0, volumes});
+  const raw = bytes(fixture), release = hash(raw);
+  const state = setup(undefined, {BANK_TEXTBOOK_RELEASE: release});
+  state.data.set(PREFIX + '/releases/' + release + '/manifest.json', raw);
+  for (const [offset, volume] of volumes.entries()) {
+    state.data.set(PREFIX + '/documents/' + volume.pdf_sha256 + '.pdf', pdfs[offset]);
+  }
+  const catalogue = await (await state.call(ROOT)).json();
+  assert.deepEqual(catalogue.books.map(book => book.id), ['goldstein', 'feynman']);
+  assert.deepEqual(catalogue.books[1].volumes, volumes.map(({number, title}) => ({number, title})));
+  const detail = ROOT + '/feynman/volumes/2';
+  const chapter = await (await state.call(detail)).json();
+  assert.deepEqual(chapter.chapters, volumes[1].chapters);
+  assert.equal(chapter.pdf_sha256, undefined);
+  const original = await state.call(detail + '/pdf');
+  assert.equal(original.headers.get('content-type'), 'application/pdf');
+  assert.equal(original.headers.get('cache-control'), 'private, no-store');
+  assert.deepEqual(Buffer.from(await original.arrayBuffer()), pdfs[1]);
+  assert.equal((await state.call(detail + '/pdf?page=1')).status, 400);
+  assert.equal((await state.call(ROOT + '/feynman/volumes/4')).status, 404);
+  state.data.set(PREFIX + '/documents/' + volumes[1].pdf_sha256 + '.pdf', pdfs[2]);
+  assert.equal((await state.call(detail + '/pdf')).status, 503);
 });
 
 test('the private release is disabled without an explicit owner and verified manifest digest', async () => {
