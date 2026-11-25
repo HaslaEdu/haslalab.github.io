@@ -21,7 +21,7 @@ permissions:
 # Never cancel a deploy half way: a Pages deployment cut off while queued can leave the next one waiting until it
 # times out. Runs pushed meanwhile wait, and only the newest of them goes ahead.
 concurrency:
-  group: pages
+  group: pages-deployment
   cancel-in-progress: false
 
 jobs:
