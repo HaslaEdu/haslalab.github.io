@@ -207,6 +207,22 @@ test('a remix is the member\'s private draft linked to the original; publishing 
   assert.deepEqual((await r(`/api/share/${x.id}`,'GET',null,null)).original,{id:null,gone:true});
 });
 
+test('figure listings generate a thumbnail from the saved scene when no thumbnail was uploaded', async () => {
+  const r = setup();
+  const f = await r('/api/share','POST',{type:'figure',title:'Figure without a thumbnail',payload:{scene}},ana);
+  const listing = await r('/api/share','GET',null,null,'?type=figure');
+  assert.equal(listing.items[0].has_thumb,true);
+  assert.equal((await r(`/api/share/${f.id}`,'GET',null,null)).project.has_thumb,true);
+  const thumbnail = await r(`/api/share/${f.id}/thumb`,'GET',null,null);
+  assert.equal(thumbnail.headers.get('Content-Type'),'image/svg+xml');
+  const svg = await thumbnail.text();
+  assert.equal(svgSafe(svg),true);
+  assert.match(svg,/^<svg[\s>]/);
+  const draft = await r(`/api/share/${f.id}/remix`,'POST',{},bo);
+  await fails(r(`/api/share/${draft.id}/thumb`,'GET',null,null),'not_found');
+  assert.equal((await r(`/api/share/${draft.id}/thumb`,'GET',null,bo)).headers.get('Cache-Control'),'private, no-store');
+});
+
 test('only the owner edits and unpublishes; staff hide, pick and the owner cannot publish a hidden one again',async()=>{
   const r=setup();const {id}=await r('/api/share','POST',sim,ana);
   await fails(r(`/api/share/${id}`,'PATCH',{title:'Mine now'},bo),'not_owner');

@@ -1189,6 +1189,8 @@ body.hl-site .ws-upbtn:focus-within{outline:2px solid #b6a6d8;outline-offset:2px
 body.hl-site .ws-drop{border:1.5px dashed #c9cfdb;border-radius:14px;padding:6px 12px 10px;background:#fff}
 body.hl-site .ws-drop.on{border-color:#7059a4;background:#f6f3fb}
 body.hl-site .ws-list{list-style:none;margin:0;padding:0}
+body.hl-site .ws-branch{margin-inline-start:12px;padding-inline-start:12px;border-inline-start:2px solid var(--line,#d5dbe6)}
+body.hl-site .ws-branch>.ws-tools{justify-content:flex-end}
 body.hl-site .ws-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px 14px;align-items:center;padding:9px 2px;border-bottom:1px solid #edf0f5;font-size:14px}
 body.hl-site .ws-row-edit{grid-template-columns:1fr;border:0}
 body.hl-site .ws-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:8px;color:#263247}

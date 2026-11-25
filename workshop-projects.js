@@ -342,35 +342,42 @@
     const docks = [...grid.querySelectorAll('[data-dock-handle]')].map(handle => {
       const panel = handle.closest('[data-dock]'), body = panel.querySelector('[data-dock-body]');
       const id = panel.dataset.dock, minHeight = Number(panel.dataset.minHeight || 0);
+      const minWidth = Number(panel.dataset.dockFloorWidth) || 0;
+      const minBodyHeight = Number(panel.dataset.dockFloorHeight) || 0;
       const widthKey = '--dock-' + id + '-width';
       const tab = panel.querySelector('[data-dock-tab]'), restored = {x:0,y:0};
       let drag = null;
       function metrics() {
         const css = getComputedStyle(handle), x = css.getPropertyValue('--dock-axis').trim() === 'x';
         const min = x ? 38 : minHeight;
+        const floor = Math.max(min, x ? minWidth : minBodyHeight);
         const fraction = Number(css.getPropertyValue('--dock-max').trim()) || .6;
-        const max = x ? Math.max(min, Math.floor(grid.clientWidth * fraction)) : Math.max(min, Math.min(innerHeight * 1.5,1200));
+        const max = x ? Math.max(floor, Math.floor(grid.clientWidth * fraction)) : Math.max(floor, Math.min(innerHeight * 1.5,1200));
         const preferred = x ? parseFloat(grid.style.getPropertyValue(widthKey)) : parseFloat(panel.style.getPropertyValue('--dock-height'));
-        const current = Number.isFinite(preferred) ? preferred : x ? panel.getBoundingClientRect().width : body.getBoundingClientRect().height;
-        return {x,min,max,size:Math.max(min,Math.min(max,current)),sign:css.getPropertyValue('--dock-sign').trim() === '-1' ? -1 : 1};
+        const natural = x ? panel.getBoundingClientRect().width : body.getBoundingClientRect().height;
+        const current = Number.isFinite(preferred) ? preferred : Math.max(floor,natural);
+        return {x,min,floor,max,size:Math.max(min,Math.min(max,current)),sign:css.getPropertyValue('--dock-sign').trim() === '-1' ? -1 : 1};
       }
       function info(m = metrics()) {
         if (!handle.getClientRects().length) return;
         handle.setAttribute('aria-orientation',m.x ? 'vertical' : 'horizontal');
-        handle.setAttribute('aria-valuemin',String(m.min));
+        const bounded = m.floor > m.min;
+        const collapsed = bounded ? m.size === m.min : m.x ? m.size < 100 : !minHeight && m.size < 12;
+        handle.setAttribute('aria-valuemin',String(collapsed ? m.min : m.floor));
         handle.setAttribute('aria-valuemax',String(Math.round(m.max)));
         handle.setAttribute('aria-valuenow',String(Math.round(m.size)));
-        const collapsed = m.x ? m.size < 100 : !minHeight && m.size < 12;
+        handle.dataset.dockSize = Math.round(m.size) + ' px';
         panel.classList.toggle('dock-collapsed',collapsed);
         panel.classList.toggle('dock-icon-rail',collapsed && m.x);
         tab?.setAttribute('aria-expanded',String(!collapsed));
         body.inert = collapsed;
       }
-      function apply(m, value) {
-        const key = m.x ? 'x' : 'y', threshold = m.x ? 100 : m.min + 12;
-        if (m.size >= threshold && value < threshold) restored[key] = m.size;
-        let size = Math.round(Math.max(m.min,Math.min(m.max,value)));
-        if ((m.x && size < 70) || (!m.x && size < m.min+12)) size = m.min;
+      function apply(m, value, fold = false) {
+        const key = m.x ? 'x' : 'y', bounded = m.floor > m.min;
+        const threshold = bounded ? m.floor : m.x ? 100 : m.min + 12;
+        if (m.size >= threshold && (fold || (!bounded && value < threshold))) restored[key] = m.size;
+        let size = fold ? m.min : Math.round(Math.max(m.floor,Math.min(m.max,value)));
+        if (!bounded && ((m.x && size < 70) || (!m.x && size < m.min+12))) size = m.min;
         if (m.x) grid.style.setProperty(widthKey,size + 'px');
         else panel.style.setProperty('--dock-height',size + 'px');
         info({...m,size}); notify();
@@ -378,9 +385,10 @@
       function toggle() {
         const m = metrics(), key = m.x ? 'x' : 'y';
         if (panel.classList.contains('dock-collapsed')) apply(m,restored[key] || (m.x ? 224 : 260));
-        else apply(m,m.min);
+        else apply(m,m.min,true);
       }
-      if (tab) {
+      if (tab && panel.dataset.dockFloorHeight) tab.onclick = toggle;
+      else if (tab) {
         let revealedAt = -Infinity;
         tab.onclick = e => {
           if (panel.classList.contains('dock-collapsed')) { toggle(); revealedAt = performance.now(); }
@@ -399,13 +407,17 @@
       handle.addEventListener('pointermove',e => {
         if (drag?.id !== e.pointerId) return;
         const {m,start} = drag, delta = (coord(e,m.x)-start)*m.sign;
-        if (Math.abs(delta) > 2 || drag.moved) { drag.moved = true; apply(m,m.size+delta); }
+        if (Math.abs(delta) > 2 || drag.moved) {
+          drag.moved = true;
+          handle.dataset.dragging = '';
+          apply(m,m.size+delta);
+        }
       });
-      handle.addEventListener('lostpointercapture',() => { drag = null; });
+      handle.addEventListener('lostpointercapture',() => { drag = null; delete handle.dataset.dragging; });
       handle.addEventListener('keydown',e => {
         const m = metrics(), backwards = m.x ? 'ArrowLeft' : 'ArrowUp', forwards = m.x ? 'ArrowRight' : 'ArrowDown';
         let size;
-        if (e.key === 'Home') size = m.min;
+        if (e.key === 'Home') size = m.floor;
         else if (e.key === 'End') size = m.max;
         else if (e.key === backwards || e.key === forwards) size = m.size + (e.key === backwards ? -1 : 1)*m.sign*(e.shiftKey ? 12 : 64);
         else return;

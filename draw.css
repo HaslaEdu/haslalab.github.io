@@ -43,6 +43,19 @@ ul.info{margin:4px 0 0;padding-left:18px;font-size:13px}ul.info li{margin:2px 0}
 #drawDock [data-dock=canvas] #canvas{overflow:hidden}
 #drawDock [data-dock=canvas] #canvas svg{max-height:calc(var(--dock-height,min(68vh,640px)) - 14px)}
 #drawDock [data-dock=canvas]{margin-bottom:9px}
+#drawDock .dock-handle::before{background:var(--line)}
+#drawDock .dock-handle:hover::before,#drawDock .dock-handle[data-dragging]::before,#drawDock .dock-handle:focus-visible::before{background:var(--accent)}
+#drawDock .dock-handle::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:7px;border:1px solid var(--muted);border-radius:6px;background:var(--surface);pointer-events:none}
+#drawDock .dock-handle[data-dragging]::after{content:attr(data-dock-size);width:auto;height:auto;padding:2px 6px;font-size:11px;white-space:nowrap;color:var(--ink)}
+#drawDock .dock-tab[aria-expanded=true]::after{content:'▾';color:var(--muted)}
+#drawDock .dock-tab[aria-expanded=false]::after{content:'▸';color:var(--muted)}
+#drawDock .dock-icon-rail .dock-tab::after{display:none}
+@media(min-width:721px){
+  #drawDock .draw-library>.dock-handle:not([data-dragging])::after{width:7px;height:28px}
+}
+@media(min-width:1061px){
+  #drawDock .side>.dock-handle:not([data-dragging])::after{width:7px;height:28px}
+}
 @media(min-width:721px){
   #drawDock{grid-template-columns:min(var(--dock-tools-width,150px),30%) minmax(0,1fr);column-gap:22px}
   #drawDock .draw-library>.dock-handle{--dock-axis:x;--dock-max:.30;top:0;bottom:0;left:auto;right:-11px;width:22px;height:auto;cursor:col-resize}

@@ -474,12 +474,41 @@
       sessionStorage.removeItem('hlWorkshopProblem');
     } catch {}
   }
-  if (importedCompute) {
+  function useCompute(project) {
+    importedCompute = project;
     const snippet = String(importedCompute.code || '').slice(0, 650);
     const output = String(importedCompute.output || '').slice(0, 300);
     ai.f.prompt = [ko ? '다음 시뮬레이션의 물리 조건을 바탕으로 문제를 만들어 줘. 코드나 출력만으로 확정할 수 없는 물리 조건은 필요하면 명시해 줘.' : 'Write a physics problem using this simulation. State any necessary assumptions missing from the code or output.',
       String(importedCompute.title || '').slice(0, 80), String(importedCompute.description || '').slice(0, 250), snippet, output].filter(Boolean).join('\n\n');
     ai.f.count = 1;
+  }
+  if (importedCompute) useCompute(importedCompute);
+  function pickCompute() {
+    const projects = window.HL_WORKSHOP_PROJECTS;
+    const trigger = $('aiImportCompute');
+    const dialog = document.createElement('dialog');
+    dialog.className = 'stdlg';
+    const close = document.createElement('button'), host = document.createElement('div');
+    close.type = 'button';
+    close.textContent = ko ? '닫기' : 'Close';
+    close.onclick = () => dialog.close();
+    dialog.append(close, host);
+    dialog.addEventListener('close', () => { dialog.remove(); if (trigger.isConnected) trigger.focus(); height(); }, {once:true});
+    document.body.append(dialog);
+    const library = projects.library(host, projects.client({base:API,token}), {
+      kind:'compute', unified:true, title:ko ? '전산물리 프로젝트' : 'Computational physics projects', height,
+      onOpen(raw) {
+        const {language, title, description, sources, figure} = raw || {};
+        if (!['python','c'].includes(language) || typeof sources?.[language] !== 'string') throw new Error(ko ? '전산물리 프로젝트를 읽을 수 없습니다.' : 'Could not read this simulation.');
+        useCompute({language,title,description,code:sources[language],figure});
+        dialog.close();
+        paintAi();
+        $('aiPrompt').focus();
+      }
+    });
+    dialog.showModal();
+    library.heading.focus();
+    height();
   }
   let drawMods=null;
   const b64=s=>{const b=new TextEncoder().encode(s);let bin='';for(let i=0;i<b.length;i+=0x8000)bin+=String.fromCharCode(...b.subarray(i,i+0x8000));return btoa(bin);};
@@ -497,6 +526,7 @@
     const opt=(k,n,sel)=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`;
     const models=ai.models?ai.models.models:[{id:'gemini',model:'gemini',configured:true},{id:'gpt',model:'gpt',configured:true},{id:'claude',model:'claude',configured:true}];
     box.innerHTML=`<h2>${A.title}${ai.left!=null?`<span class="plan">${A.left(ai.left)}</span>`:''}</h2><p class="note">${A.how}</p>
+      <div class="row"><button type="button" id="aiImportCompute">${ko?'전산물리 불러오기':'Import simulation'}</button></div>
       ${importedCompute ? `<p class="note">${ko ? '연결된 전산물리 작품' : 'Linked simulation'} · ${esc(importedCompute.title || importedCompute.language)}</p>${figHtml({fig:importedCompute.figure})}<button type="button" class="btn" id="aiUseDraft">${ko?'시험지에 초안 추가':'Add a draft to the paper'}</button>` : ''}
       <label class="fld">${A.prompt}<textarea id="aiPrompt" rows="4" maxlength="1500" placeholder="${esc(A.promptPh)}">${esc(f.prompt)}</textarea></label>
       <div class="vform"><label>${A.unit}<input id="aiUnit" list="bpUnits" maxlength="60" value="${esc(f.unit)}"></label>
@@ -510,6 +540,7 @@
     const read=()=>{f.prompt=$('aiPrompt').value;f.unit=$('aiUnit').value;f.level=$('aiLevel').value;f.count=+$('aiCount').value;f.format=$('aiFormat').value;f.model=$('aiModel').value;f.withFigure=$('aiFig').checked;};
     box.querySelectorAll('textarea,input,select').forEach(el=>el.onchange=el.oninput=read);
     $('aiMake').onclick=()=>{read();makeAi();};
+    $('aiImportCompute').onclick=pickCompute;
     if ($('aiUseDraft')) $('aiUseDraft').onclick = () => {
       const q = [importedCompute.title, importedCompute.description, importedCompute.output?.slice(0, 400)].filter(Boolean).join('\n').slice(0, 4000) || (ko ? '시뮬레이션을 실행하고 어떤 물리 관계가 나타나는지 설명하세요.' : 'Run the simulation and explain the physical relationship you observe.');
       const fig = figOf({fig: importedCompute.figure}) ? importedCompute.figure : null;
