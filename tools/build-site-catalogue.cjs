@@ -100,11 +100,14 @@ for(const [key,name]of Object.entries({iypt:'iypt.js',usaco:'usaco.js',rupho:'ru
    changed simulator is fetched afresh instead of being served from a browser or CDN cache */
 versions.sims={};
 for(const f of fs.readdirSync(path.join(root,'sim')).filter(f=>/^[A-Za-z0-9_]+_web\.html$/.test(f)).sort())versions.sims[f.slice(0,-9)]=digest(read('sim/'+f));
+const stageMembers=new Set(vm.runInContext(main.slice(main.indexOf('const CONTEST_STAGES='),main.indexOf('const CONTEST_PARENT='))+
+  '\nObject.entries(CONTEST_STAGES).flatMap(([key,stage])=>[key,stage.key]);',scope));
 const competitions={};let years=0,probs=0,live=0,thy=0;
 for(const [key,c]of Object.entries(DATA)){
   const data={};for(const k of ['abbr','since','full','scope','plain','rounds','omr','open','obs','note','soon','chip','resources','officialWebsite','officialWebsiteArchived'])if(c[k]!==undefined)data[k]=c[k];
   const exp=c.years.reduce((n,y)=>n+y.problems.length,0),theory=Object.values(THEORY[key]||{}).reduce((n,t)=>n+(t.p?.length||Object.keys(t.f||{}).filter(k=>!t.f[k].kx).length),0);
   competitions[key]={data,counts:{years:c.years.length,hasProblems:c.years.some(y=>y.problems.length),mixed:!!c.theoryCount,problems:c.theoryCount?c.theoryCount+exp:c.years.some(y=>y.problems.length)?exp:theory}};
+  if(stageMembers.has(key))competitions[key].stageYears=c.years.map(year=>String(year.y));
   years+=c.years.length;
   for(const y of c.years){if(!c.plain)probs+=y.problems.length;live+=y.problems.concat(y.sims||[]).filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;}   /* sims: theory problems on a simulator */
 }

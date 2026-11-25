@@ -85,6 +85,47 @@
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
+    "aupho": {
+      "original": "logo/aupho.png",
+      "light": "logo/light/aupho.svg",
+      "dark": "logo/dark/aupho.svg",
+      "sourceWidth": 358,
+      "sourceHeight": 171,
+      "viewBox": [
+        10,
+        15,
+        338,
+        141
+      ],
+      "aspectRatio": 2.397163,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "d11ea2aa93d915419f078539e17b5c5db62b12135846898f9aa88f2fe9b1e6ad",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "azpho": {
+      "original": "logo/azpho.png",
+      "light": "logo/light/azpho.svg",
+      "dark": "logo/dark/azpho.svg",
+      "sourceWidth": 330,
+      "sourceHeight": 87,
+      "viewBox": [
+        0,
+        1,
+        329,
+        85
+      ],
+      "aspectRatio": 3.870588,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "77409c8a308f87209e1d2a47634668359ac782edc9d06451170f1dfe487abe81",
+      "notes": [
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
     "baupc": {
       "original": "logo/baupc.png",
       "light": "logo/light/baupc.svg",
@@ -103,6 +144,27 @@
       "sourceSha256": "2cb61f339af6d378bccaba83fe1636151c5d7e421a720f7781305f9171a4eff8",
       "notes": [
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "bpho": {
+      "original": "logo/bpho.png",
+      "light": "logo/light/bpho.svg",
+      "dark": "logo/dark/bpho.svg",
+      "sourceWidth": 291,
+      "sourceHeight": 99,
+      "viewBox": [
+        4,
+        8,
+        282,
+        88
+      ],
+      "aspectRatio": 3.204545,
+      "mode": "preserve-color",
+      "backgroundRemoved": "light",
+      "sourceSha256": "3396e29a638c09f826f43e67180f03565df852ea04449f69c28f6346c2643b83",
+      "notes": [
+        "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
@@ -187,6 +249,27 @@
       "sourceSha256": "8bac4c1d64da91522bdcbd0bd7f8071be56e55011277e909039e9d64e3ce2dca",
       "notes": [
         "An SVG gamma lift (0.4, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "efo": {
+      "original": "logo/efo.png",
+      "light": "logo/light/efo.svg",
+      "dark": "logo/dark/efo.svg",
+      "sourceWidth": 420,
+      "sourceHeight": 75,
+      "viewBox": [
+        0,
+        0,
+        420,
+        75
+      ],
+      "aspectRatio": 5.6,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "b3601ea8c4a5ddbc35a510ea9b62a9a6aa01b734c397e9365ea971899e244642",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
@@ -432,6 +515,28 @@
       "sourceSha256": "8bbe947f2f97c60a858f735b242079d5539a77348df69bbd3cb1073cf69bbbd9",
       "notes": [
         "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "inpho": {
+      "original": "logo/inpho.png",
+      "light": "logo/light/inpho.svg",
+      "dark": "logo/dark/inpho.svg",
+      "sourceWidth": 430,
+      "sourceHeight": 114,
+      "viewBox": [
+        47,
+        13,
+        338,
+        87
+      ],
+      "aspectRatio": 3.885057,
+      "mode": "preserve-color",
+      "backgroundRemoved": "light",
+      "sourceSha256": "6c9b5767eb4471363dd001bf236deb98292b0e269be9712a7b30575a16400628",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
@@ -743,6 +848,28 @@
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
+    "obf": {
+      "original": "logo/obf.png",
+      "light": "logo/light/obf.svg",
+      "dark": "logo/dark/obf.svg",
+      "sourceWidth": 300,
+      "sourceHeight": 294,
+      "viewBox": [
+        0,
+        0,
+        300,
+        294
+      ],
+      "aspectRatio": 1.020408,
+      "mode": "preserve-color-light-neutral-ink",
+      "backgroundRemoved": null,
+      "sourceSha256": "e8089044cb4cadc341e34a901feef16039d6aded1fca1c5599de6c9b1c5b4551",
+      "notes": [
+        "Only neutral dark lettering/strokes receive a #ded5ee vector overlay for contrast; colored marks and enclosed white lettering are preserved.",
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
     "oibf": {
       "original": "logo/oibf.png",
       "light": "logo/light/oibf.svg",
@@ -761,6 +888,28 @@
       "sourceSha256": "fbd018d5b40e878302baf71113cc2f818ba8ca5ed2ff850f52d13f50edf282ac",
       "notes": [
         "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "onf": {
+      "original": "logo/onf.png",
+      "light": "logo/light/onf.svg",
+      "dark": "logo/dark/onf.svg",
+      "sourceWidth": 73,
+      "sourceHeight": 76,
+      "viewBox": [
+        5,
+        4,
+        68,
+        70
+      ],
+      "aspectRatio": 0.971429,
+      "mode": "preserve-color",
+      "backgroundRemoved": "light",
+      "sourceSha256": "9c2fd98617b887575dbeebfbd57b9b86a5663c69fc778ce2ae5fb288d6f64d49",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Only edge-connected light background is removed by a vector mask; enclosed light areas are preserved.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
@@ -807,6 +956,27 @@
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
+    "osn": {
+      "original": "logo/osn.png",
+      "light": "logo/light/osn.svg",
+      "dark": "logo/dark/osn.svg",
+      "sourceWidth": 300,
+      "sourceHeight": 135,
+      "viewBox": [
+        26,
+        14,
+        252,
+        109
+      ],
+      "aspectRatio": 2.311927,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "2e50b638a43386d7a018e5449eaee3098219d80db1a04c3934c622d13cb9559f",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
     "owao": {
       "original": "logo/owao.png",
       "light": "logo/light/owao.svg",
@@ -826,6 +996,27 @@
       "notes": [
         "An SVG gamma lift (0.45, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "A 0.20 per-channel additive floor and 0.80 amplitude raise pure blue/navy luminance in the reviewed dark UI; original alpha and white remain unchanged.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "panpho": {
+      "original": "logo/panpho.png",
+      "light": "logo/light/panpho.svg",
+      "dark": "logo/dark/panpho.svg",
+      "sourceWidth": 195,
+      "sourceHeight": 300,
+      "viewBox": [
+        0,
+        0,
+        195,
+        300
+      ],
+      "aspectRatio": 0.65,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "494e1dcd294252d32d368b942a15569cbd7a8d6097098909bb5e0da89357a7b6",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
         "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
       ]
     },
@@ -1084,6 +1275,68 @@
         "paintPixels": 2120
       }
     },
+    "soif": {
+      "original": "logo/soif.png",
+      "light": "logo/light/soif.svg",
+      "dark": "logo/dark/soif.svg",
+      "sourceWidth": 397,
+      "sourceHeight": 300,
+      "viewBox": [
+        0,
+        0,
+        397,
+        300
+      ],
+      "aspectRatio": 1.323333,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "d0f20d40c14f94daced1ec3b849fa7fcfffc1053270b3d5fdc4da901fcf2420d",
+      "notes": [
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "spho": {
+      "original": "logo/spho.png",
+      "light": "logo/light/spho.svg",
+      "dark": "logo/dark/spho.svg",
+      "sourceWidth": 300,
+      "sourceHeight": 204,
+      "viewBox": [
+        4,
+        4,
+        292,
+        196
+      ],
+      "aspectRatio": 1.489796,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "b89cc9133af2f76e5581748ba77f8c77be2f9dde7d8565904624fd806795d0d2",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
+    "twpho": {
+      "original": "logo/twpho.png",
+      "light": "logo/light/twpho.svg",
+      "dark": "logo/dark/twpho.svg",
+      "sourceWidth": 430,
+      "sourceHeight": 115,
+      "viewBox": [
+        0,
+        0,
+        430,
+        115
+      ],
+      "aspectRatio": 3.73913,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "48d7abbac01eda536d89b3e39e0f3dc85e22afb3a70fe697ae8975fc878ee8d9",
+      "notes": [
+        "An SVG gamma lift (0.72, per RGB channel) improves dark colored ink visibility without hue inversion or a background plate.",
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
+    },
     "usaaao": {
       "original": "logo/usaaao.png",
       "light": "logo/light/usaaao.svg",
@@ -1262,6 +1515,26 @@
         "height": 290,
         "additionalPaperPixels": 5589
       }
+    },
+    "vpho": {
+      "original": "logo/vpho.png",
+      "light": "logo/light/vpho.svg",
+      "dark": "logo/dark/vpho.svg",
+      "sourceWidth": 95,
+      "sourceHeight": 97,
+      "viewBox": [
+        0,
+        0,
+        95,
+        97
+      ],
+      "aspectRatio": 0.979381,
+      "mode": "preserve-color",
+      "backgroundRemoved": null,
+      "sourceSha256": "d44d56822764287dcddfd3970c2f9f377648dcfa8b699279b2c7f712a4e4d699",
+      "notes": [
+        "Exterior transparent padding is cropped only with the SVG viewBox. Source asset bytes are unchanged."
+      ]
     },
     "wopho": {
       "original": "logo/wopho.png",

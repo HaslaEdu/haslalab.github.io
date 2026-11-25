@@ -298,6 +298,25 @@ test('async portal hydration retains the selected year and review mode while omi
   calls.length=0;portal.dataset.mode='exam';await a.run('xmMount("nbpho")');assert.equal(calls.length,2);assert.ok(calls.some(url=>url.includes('/lab/stats')));assert.ok(!portal.innerHTML.includes('review=1'));assert.ok(portal.innerHTML.includes('y=2026'));
 });
 
+test('shared competition pages keep the stage and its year in old and new archive links',async()=>{
+  const a=app();
+  a.run('lang="ko"; buildRails=()=>{}; paintSiteTheme=()=>{}; cmAccountChip=()=>{};');
+  const links=anchors(a.run('viewComps("phys",Infinity,"national")'));
+  for(const key of ['vpho','spho','obf','usapho','bpho','panpho'])assert.ok(links.some(link=>link.url==='#/'+key),key);
+  for(const key of ['vntst','sphotst','soif','fma','bphoii'])assert.ok(!links.some(link=>link.url==='#/'+key),key);
+  assert.equal(a.run('contestScope("panpho")'),'national');
+  a.context.history.replaceState=(_state,_title,hash)=>{a.context.location.hash=hash;};
+  a.context.location.hash='#/vntst/2022';
+  a.run('render()');await tick();
+  assert.equal(a.context.location.hash,'#/vpho/2022?stage=selection');
+  assert.equal(a.scripts.length,1);
+  assert.equal(a.scripts[0].src,catalogue.versions['theory:vntst']);
+  vm.runInContext(read(a.scripts[0].src.split('?')[0]),a.context);
+  a.scripts[0].onload();await tick();await tick();
+  assert.match(a.node('view').innerHTML,/<h1>VPhO 2022<\/h1>/);
+  assert.ok(anchors(a.node('view').innerHTML).some(link=>link.url==='#/vpho/2022'&&link.label==='전국 예선'));
+});
+
 test('loading RuPhO after another archive keeps stages and does not duplicate year problems on repeated hydration',()=>{
   const lean=app(),full=app({preload:true});lean.load('theory:amc');
   for(const key of ['theory:rupho','theory:ruphow','theory:ruphox','theory:ruphoy','rupho'])lean.load(key);

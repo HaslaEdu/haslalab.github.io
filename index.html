@@ -422,6 +422,9 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 @media(max-width:780px){.comps{--lcap:clamp(15px,3.6vw,21px)}}
 .comp .chead{display:flex;align-items:center;gap:16px;min-height:52px}
 .comp .chead .abbr{margin:0;flex:none}
+.comp .chead .clogo{max-width:54%}
+.archive-stage-title{display:flex;align-items:center;gap:16px;--lcap:22px}
+.archive-stage-title .clogo{margin-left:0;max-width:112px}
 .clogo{width:auto;flex:none;object-fit:contain;display:block;border-radius:3px;
        margin-left:auto}                         /* sits at the card's right edge */
 .comp .abbr{font-size:1.5rem;font-weight:650;letter-spacing:-.03em}
@@ -1202,9 +1205,9 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
 <script src="archive-navigation.js?v=10d33500b414"></script>
-<script src="site-catalogue.js?v=f21488b795d5"></script>
+<script src="site-catalogue.js?v=57aa924fd3be"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
-<script src="logo/variants.js?v=f186eafdba6b"></script>
+<script src="logo/variants.js?v=e43cec5305aa"></script>
 <script src="site-design.js?v=af0e919623fe"></script>
 <script src="hpho.js?v=ea67208eda3b"></script>
 <script src="guides.js?v=2dcd3d5af493"></script>
@@ -4922,16 +4925,27 @@ const flagImg = (cc,cls="flag",org=null) =>
 /* Bump LOGO_V after replacing anything in logo/.  Browsers hang on to an old
    image for a long time, on file:// as much as on Pages, and a stale copy is
    indistinguishable from a bad export. */
-const LOGO_V = 19;
+const LOGO_V = 20;
 const HOME_STRIP_V="e513a9631b25";   /* practice/home-strip.json's digest, stamped by tools/build-site-catalogue.cjs */
 const LOGO_FILES = {cmo:"cmo.svg",plancks:"plancks.svg"};
+const LOGO_SHARED={fma:"usapho",bphoii:"bpho",vntst:"vpho",sphotst:"spho"};
 const LOGO_ORGANIZERS = {
   eotvos:["외트뵈시 물리학회","Roland Eotvos Physical Society"],
   baupc:["하버드 대학교","Harvard University"],cpho:["중국물리학회","Chinese Physical Society"],
   usaaao:["미국 천문학 및 천체물리학 기구","USA Astronomy and Astrophysics Organization"],
-  kumc:["대한수학회","Korean Mathematical Society"],cmo:["중국수학회","Chinese Mathematical Society"]
+  kumc:["대한수학회","Korean Mathematical Society"],cmo:["중국수학회","Chinese Mathematical Society"],
+  azpho:["아제르바이잔 교육연구원","Institute of Education of Azerbaijan"],
+  efo:["타르투 대학교","University of Tartu"],
+  inpho:["호미 바바 과학교육센터","Homi Bhabha Centre for Science Education"],
+  onf:["루마니아 교육연구부","Romanian Ministry of Education and Research"],
+  panpho:["홍콩과학기술대학교","Hong Kong University of Science and Technology"],
+  spho:["싱가포르 물리학회","Institute of Physics Singapore"],
+  twpho:["국립대만사범대학교","National Taiwan Normal University"],
+  vpho:["베트남 교육훈련부","Vietnam Ministry of Education and Training"]
 };
 function logoTitle(key){
+  key=LOGO_SHARED[key]||key;
+  if(key==="aupho")return lang==="ko"?"호주 과학 올림피아드 공식 프로그램 표장":"Official Australian Science Olympiads program mark";
   if(key==="plancks")return lang==="ko"?"PLANCKS 2026 국제 결선 공식 표장":"Official PLANCKS 2026 international final mark";
   if(key==="ortvay")return lang==="ko"?"Ortvay 공식 문제지 워드마크":"Ortvay official paper wordmark";
   if(key==="usamo")return lang==="ko"?"USAMO 공식 교사용 매뉴얼 제목 표장":"USAMO official teacher manual title wordmark";
@@ -4952,6 +4966,7 @@ const LOGO_TEXT = {ipho:0.297, apho:0.555, eupho:0.686, nbpho:0.435,
                    useso:0.32, ceso:0.36, jeso:0.36, kmchc:0.38,
                    usamo:0.83, putnam:0.45, amc:0.30, mskbo:0.40};
 function logoSource(key){
+  key=LOGO_SHARED[key]||key;
   const variant=window.LOGO_VARIANTS?.[key];
   return variant?.[document.documentElement.dataset.theme==="dark"?"dark":"light"]
     ||"logo/"+(LOGO_FILES[key]||key+".png");
@@ -4959,7 +4974,8 @@ function logoSource(key){
 function logoFallback(img){
   if(img.getAttribute("src").match(/^logo\/(dark|light)\//)){
     img.dataset.logoVariant="original";
-    img.src="logo/"+(LOGO_FILES[img.dataset.logoKey]||img.dataset.logoKey+".png")+"?v="+LOGO_V;return;
+    const key=LOGO_SHARED[img.dataset.logoKey]||img.dataset.logoKey;
+    img.src="logo/"+(LOGO_FILES[key]||key+".png")+"?v="+LOGO_V;return;
   }
   if((img.dataset.try||"png")==="png"){
     img.dataset.try="svg";
@@ -5089,6 +5105,25 @@ function viewOriginalHome(){
    goes to the subject's list */
 const EN_HIDDEN=new Set(["cpho"]);
 const compShown=key=>!(lang==="en"&&EN_HIDDEN.has(key));
+const CONTEST_STAGES={
+  vpho:{stage:"selection",key:"vntst",labels:[["전국 예선","National preliminary"],["국가대표 선발전 (VN TST)","Team selection (VN TST)"]]},
+  spho:{stage:"selection",key:"sphotst",labels:[["국내 본선","National olympiad"],["국가대표 선발전 (SPhO TST)","Team selection (SPhO TST)"]]},
+  obf:{stage:"selection",key:"soif",labels:[["국내 대회 (OBF)","National olympiad (OBF)"],["국가대표 선발전 (SOIF)","Team selection (SOIF)"]]},
+  usapho:{stage:"preliminary",key:"fma",labels:[["USAPhO 본선","USAPhO"],["F=ma 예선","F=ma qualifier"]]},
+  bpho:{stage:"round2",key:"bphoii",labels:[["1라운드","Round 1"],["2라운드","Round 2"]]}
+};
+const CONTEST_PARENT=Object.fromEntries(Object.entries(CONTEST_STAGES).map(([parent,stage])=>[stage.key,parent]));
+const archiveListed=key=>!Object.hasOwn(CONTEST_PARENT,key)&&compShown(key);
+const contestParent=key=>Object.hasOwn(CONTEST_PARENT,key)?CONTEST_PARENT[key]:key;
+function contestStageNav(key,year=""){
+  const parent=contestParent(key), stages=CONTEST_STAGES[parent];
+  if(!stages)return "";
+  return `<nav class="contest-scopes" aria-label="${lang==="ko"?"대회 단계":"Competition stages"}">${[parent,stages.key].map((target,index)=>{
+    const years=window.HL_CATALOGUE?.competitions[target]?.stageYears;
+    const targetYear=year&&(years?years.includes(String(year)):DATA[target]?.years.some(y=>String(y.y)===String(year)))?year:"";
+    return `<a href="${compModeHref(target,"",targetYear)}"${target===key?' aria-current="true"':""}>${stages.labels[index][lang==="ko"?0:1]}</a>`;
+  }).join("")}</nav>`;
+}
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
   {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","fipho","bpo","oibf","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe","obf","twpho","inpho","fma","bpho","bphoii","vpho","vntst","aupho","efo","onf","azpho","osn","soif","spho","sphotst","panpho"]},
@@ -5107,7 +5142,7 @@ function viewOlympiad(){
   return typeof viewOlympiadHome==="function"?viewOlympiadHome():viewOriginalHome();
 }
 
-const REGIONAL_CONTESTS=new Set(["apho","eupho","nbpho","gpho","bpo","oibf","baupc","apao","panpho"]);
+const REGIONAL_CONTESTS=new Set(["apho","eupho","nbpho","gpho","bpo","oibf","baupc","apao"]);
 function contestScope(key){
   const label=DATA[key].scope.en;
   if(REGIONAL_CONTESTS.has(key)||label.startsWith("Regional"))return "regional";
@@ -5125,7 +5160,7 @@ function viewComps(sub,limit=Infinity,scope=""){
   let cur=SUBJ.find(x=>x.k===sub);
   if(!cur){ let k=""; try{ k=localStorage.getItem("hlSubj")||""; }catch(e){} cur=SUBJ.find(x=>x.k===k)||SUBJ[0]; }
   try{ localStorage.setItem("hlSubj",cur.k); }catch(e){}
-  const list=cur.comps.filter(k=>DATA[k]&&compShown(k)&&(!scope||contestScope(k)===scope)).slice(0,limit);
+  const list=cur.comps.filter(k=>DATA[k]&&archiveListed(k)&&(!scope||contestScope(k)===scope)).slice(0,limit);
   return `
   <div class="shell">
     ${archiveCategories("contests",cur.k)}
@@ -5141,15 +5176,17 @@ function viewComps(sub,limit=Infinity,scope=""){
     ${list.length?"":`<div class="subjempty">${scope?(lang==="ko"?"이 범위의 대회가 없습니다.":"No competitions in this scope."):d.subjEmpty(cur[lang],cur.soon)}</div>`}
     <div class="comps" data-lang="${lang}">
       ${list.map(key=>[key,DATA[key]]).map(([key,c])=>{
-        const summary=window.HL_CATALOGUE?.competitions[key]?.counts;
-        const probs=summary?summary.problems:c.theoryCount?c.theoryCount+c.years.reduce((n,y)=>n+y.problems.length,0):hasExpC(c)?c.years.reduce((n,y)=>n+y.problems.length,0):Object.values(THEORY[key]||{}).reduce((n,t)=>n+thyCount(t),0);
+        const summaries=window.HL_CATALOGUE?.competitions, summary=summaries?.[key]?.counts;
+        const nested=summaries?.[CONTEST_STAGES[key]?.key];
+        const stageYears=nested?new Set([...(summaries[key].stageYears||[]),...(nested.stageYears||[])]).size:null;
+        const probs=summary?summary.problems+(nested?.counts.problems||0):c.theoryCount?c.theoryCount+c.years.reduce((n,y)=>n+y.problems.length,0):hasExpC(c)?c.years.reduce((n,y)=>n+y.problems.length,0):Object.values(THEORY[key]||{}).reduce((n,t)=>n+thyCount(t),0);
         return `<a class="comp" href="#/${key}">
           <div class="chead"><div class="abbr">${c.abbr}</div>${compLogo(key)}</div>
           <div class="full">${c.full[lang]}</div>
           <dl>
             <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
             <div><dt>${d.lScope}</dt><dd>${c.scope[lang]}</dd></div>
-            <div><dt>${d.lYears}</dt><dd>${summary?summary.years:c.years.length}</dd></div>
+            <div><dt>${d.lYears}</dt><dd>${stageYears??(summary?summary.years:c.years.length)}</dd></div>
             <div><dt>${c.resources?.length&&!probs?(lang==="ko"?"공개 자료":"Public resources"):(summary?summary.mixed:c.theoryCount)?(lang==="ko"?"문제 · 시험지":"Problems / papers"):(summary?summary.hasProblems:hasExpC(c))?LB(c,"problems"):TL(c,"thyPapers")}</dt><dd>${c.resources?.length&&!probs?c.resources.length:probs}</dd></div>
           </dl>
           <span class="go">→</span>
@@ -5170,7 +5207,7 @@ function archiveCategories(category,subject){
 function archiveSubjects(category,subject,scope=""){
   const d=UI[lang],list=category==="contests"?SUBJ:SUBJ.filter(x=>x.k!=="sci");
   return `<nav class="subjs${category==="contests"?"":" archive-library-subjects"}" aria-label="${d.subjLabel}">${list.map(x=>{
-    const count=category==="contests"?x.comps.filter(k=>DATA[k]&&compShown(k)&&(!scope||contestScope(k)===scope)).length:null;
+    const count=category==="contests"?x.comps.filter(k=>DATA[k]&&archiveListed(k)&&(!scope||contestScope(k)===scope)).length:null;
     const note=count===null?(category==="books"?(lang==="ko"?"교재 보기":"Books"):(lang==="ko"?"학교 보기":"Schools")):(count?d.subjN(count):d.subjSoon);
     const picture=category==="contests"?`<img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)">`:`<img class="archive-subject-art" data-subject-art="${x.k}" src="archive-media/subjects/${x.k}.svg?v=1" alt="" loading="lazy" decoding="async">`;
     return `<a href="${archiveHref(category,x.k,contestScopeParams(scope))}"${x.k===subject?' aria-current="true"':""} class="${count===0?"none":""}">${picture}<b>${x[lang]}</b><small>${note}</small></a>`;
@@ -5969,7 +6006,11 @@ function viewAbout(){
 
 /* Paper browsing, timed sitting, and submitting work already solved are separate entry points. */
 const REVIEW_ONLY=new Set(["physcup","ortvay","opho","wopho"]);
-const compModeHref=(key,mode="",year="")=>`#/${key}${year?"/"+encodeURIComponent(year):""}${mode?"/"+mode:""}`;
+function compModeHref(key,mode="",year=""){
+  const parent=contestParent(key);
+  const stage=parent===key?"":"?stage="+CONTEST_STAGES[parent].stage;
+  return `#/${parent}${year?"/"+encodeURIComponent(year):""}${mode?"/"+mode:""}${stage}`;
+}
 function modeSwitch(key,mode,year=""){
   const d=UI[lang], ko=lang==="ko";
   const local=contestEntries(key).length>0;
@@ -6035,7 +6076,7 @@ function contestPortalHtml(key,mode="exam",year=""){
 }
 function viewComp(key,mode){
   if(key==="rupho"&&RUPHO_ARCHIVE) key=RUPHO_ARCHIVE.route(location.hash).key;
-  const d=UI[lang], c=compOf(key);
+  const d=UI[lang], c=compOf(key), parent=contestParent(key), heading=DATA[parent]||c;
   if(!c) return viewHome();
   if(mode==="exam"&&REVIEW_ONLY.has(key)) mode="review";
   if(mode&&!hasReview(c,key)) mode="";
@@ -6049,10 +6090,10 @@ function viewComp(key,mode){
   <div class="shell">
     <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
-      <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span><b>${c.abbr}</b>
+      <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span><b>${heading.abbr}</b>
     </div>${trackSwitch(key)}</div>
     <div class="phead">
-      <h1>${c.abbr}</h1>
+      ${CONTEST_STAGES[parent]?`<div class="archive-stage-title"><h1>${heading.abbr}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr}</h1>`}
       <div class="sub">${c.full[lang]}</div>
       <dl class="meta">
         <div><dt>${d.lSince}</dt><dd>${c.since}</dd></div>
@@ -6063,6 +6104,7 @@ function viewComp(key,mode){
         ${THEORY[key]?`<div><dt>${TL(c,"tThy")}</dt><dd>${Object.values(THEORY[key]).reduce((n,t)=>n+thyParts(t).length,0)}</dd></div>`:""}
       </dl>
     </div>
+    ${contestStageNav(key)}
     ${c.note?`<p class="cnote">${c.note[lang]}</p>`:""}
     ${archiveResources(c)}
     ${contestNote(key)}
@@ -6088,7 +6130,7 @@ function viewComp(key,mode){
           <div class="cnt">${(thy?rt:r)&&!none?'<i class="dot"></i>':""}${none?(thy?"—":LB(c,"noPapers")):
             thy?(key==="plancks"||key==="eotvos"?(lang==="ko"?`문제지 ${thyParts(th).length}개`:`${thyParts(th).length} paper${thyParts(th).length>1?"s":""}`):TL(c,"thyCnt")(thyCount(th)))+` · ${rt} ${d.cntReady}`:countLabel(c,y.problems)+(r?` · ${r} ${d.cntReady}`:"")}</div>`;
         return none ? `<div class="yr none">${inner}</div>`
-                    : `<a class="yr" href="#/${key}/${y.y}">${inner}</a>`;
+                    : `<a class="yr" href="${compModeHref(key,"",y.y)}">${inner}</a>`;
       }).join("")}
     </div>
   </div>
@@ -6415,7 +6457,7 @@ function genLinks(key,yr){
 }
 function viewYear(key,year,mode=""){
   if(key==="rupho"&&RUPHO_ARCHIVE) key=RUPHO_ARCHIVE.route(location.hash).key;
-  const d=UI[lang], c=compOf(key);
+  const d=UI[lang], c=compOf(key), parent=contestParent(key), heading=DATA[parent]||c;
   const yr = c && c.years.find(y=>String(y.y)===String(year));
   if(!yr) return viewComp(key);
   if(mode==="exam"&&REVIEW_ONLY.has(key)) mode="review";
@@ -6432,16 +6474,17 @@ function viewYear(key,year,mode=""){
     <div class="crumbrow"><div class="crumb">
       <a href="#/">${d.crumbHome}</a><span>/</span>
       <a href="#/comps/${subjOf(key)}">${d.navComps}</a><span>/</span>
-      <a href="${compModeHref(key,mode)}">${c.abbr}</a><span>/</span><b>${yr.y}</b>
+      <a href="${compModeHref(parent)}">${heading.abbr}</a><span>/</span><b>${yr.y}</b>
     </div>${trackSwitch(key,yr)}</div>
     <div class="phead">
-      <h1>${c.abbr} ${yr.y}</h1>
+      ${CONTEST_STAGES[parent]?`<div class="archive-stage-title"><h1>${heading.abbr} ${yr.y}</h1>${compLogo(key)}</div>`:`<h1>${heading.abbr} ${yr.y}</h1>`}
       <div class="sub subflag">${flagImg(yr.cc,"flag big",yr.org)}<span>${yr.host?yr.host[lang]:"—"}</span></div>
       <dl class="meta">
         <div><dt>${d.host}</dt><dd style="font-size:14px">${yr.host?yr.host[lang]:"—"}</dd></div>
         <div><dt>${thyY?TL(c,"thyPapers"):LB(c,"problems")}</dt><dd>${thyY?thyCount(thyOf(key,yr.y)):yr.problems.length}</dd></div>
       </dl>
     </div>
+    ${contestStageNav(key,year)}
     ${hasReview(c,key)?modeSwitch(key,mode,year):""}
     ${mode?portalHtml(key,mode,year):`
     ${adFitBanner("secondary")}
@@ -10936,9 +10979,10 @@ function setDocTitle(first, second){
   else if(first==="learn"&&second==="physics"&&location.hash.split("?")[0]==="#/learn/physics/search") parts.push(lang==="ko"?"학습 — 물리 — 문제 검색":"Learn — Physics — Search problems");
   else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
-    const c=first==="rupho"&&RUPHO_ARCHIVE?compOf(RUPHO_ARCHIVE.route(location.hash).key):DATA[first];
+    const dataKey=first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first;
+    const c=first==="rupho"?compOf(dataKey):DATA[contestParent(first)];
     const route=location.hash.split("?")[0].split("/"),mode=route.at(-1);
-    parts.push(mode==="review"||mode==="exam"&&REVIEW_ONLY.has(c===DATA[first]?first:RUPHO_ARCHIVE?.route(location.hash).key)?`${c.abbr} \u2014 ${lang==="ko"?"채점·첨삭만":"Grading & feedback"}`:mode==="exam" ? `${c.abbr} \u2014 ${UI[lang].modeExam}` : second ? `${c.abbr} ${second}` : `${c.abbr} \u2014 ${c.full[lang]}`);
+    parts.push(mode==="review"||mode==="exam"&&REVIEW_ONLY.has(dataKey)?`${c.abbr} \u2014 ${lang==="ko"?"채점·첨삭만":"Grading & feedback"}`:mode==="exam" ? `${c.abbr} \u2014 ${UI[lang].modeExam}` : second ? `${c.abbr} ${second}` : `${c.abbr} \u2014 ${c.full[lang]}`);
   }
   const tail = lang==="ko" ? "물리올림피아드 실험 시뮬레이터"
                            : "Physics Olympiad Experimental Simulations";
@@ -11111,6 +11155,14 @@ function render(){
   const d=UI[lang];
   const parts=location.hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean);
   let [first,second,third]=parts;
+  const stageParent=contestParent(first);
+  const hashQuery=new URLSearchParams(location.hash.split("?")[1]||"");
+  if(stageParent!==first){
+    hashQuery.set("stage",CONTEST_STAGES[stageParent].stage);
+    const canonicalStage="#/"+[stageParent,...parts.slice(1)].join("/")+"?"+hashQuery;
+    try{history.replaceState(null,"",canonicalStage);}catch(e){location.hash=canonicalStage;return;}
+  }
+  if(Object.hasOwn(CONTEST_STAGES,stageParent)&&hashQuery.get("stage")===CONTEST_STAGES[stageParent].stage)first=CONTEST_STAGES[stageParent].key;
   /* the unit map moved into the roadmap */
   let roadmapAlias="";
   if(first==="learn"&&second==="physics"&&!third){try{history.replaceState(null,"","#/learn/roadmap?view=units");}catch(e){}second="roadmap";roadmapAlias="units";}
@@ -11136,7 +11188,7 @@ function render(){
   }
   const studyMode=second==="exam"||second==="review"?second:third==="exam"||third==="review"?third:"";
   if(siteDataLoader){
-    const needs=window.HL_RUNTIME.routeNeeds(location.hash,{known:Object.keys(window.HL_CATALOGUE.competitions),theory:window.HL_CATALOGUE.theoryKeys,versions:window.HL_CATALOGUE.versions});
+    const needs=window.HL_RUNTIME.routeNeeds(Object.hasOwn(CONTEST_STAGES,stageParent)?"#/"+[first,...parts.slice(1)].join("/"):location.hash,{known:Object.keys(window.HL_CATALOGUE.competitions),theory:window.HL_CATALOGUE.theoryKeys,versions:window.HL_CATALOGUE.versions});
     if(!siteDataLoader.ready(needs)){
       document.getElementById("view").innerHTML='<div class="shell"><div class="phead"><p role="status">'+(lang==="ko"?"자료를 불러오는 중…":"Loading archive…")+'</p></div></div>';
       paintPageChrome(["monthly","weekly","rank","me","login","signup","oauth"].includes(first)?"weekly":first==="community"?"community":"comps");
