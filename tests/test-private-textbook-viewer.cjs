@@ -166,10 +166,11 @@ test('Feynman’s public exercises are listed inside the book and can be found i
   assert.equal(nav.parse(PATH + '&book=goldstein&section=exercises').params.get('section'), null);
   const demo = await setup(t, {feynman: true, exercises: true, initialToken: ''});
   const section = demo.root.querySelector('.al-feynman-exercises');
-  const links = [...section.querySelectorAll('details a')];
+  const links = [...section.querySelectorAll('details a[href*="/info/exercises/"]')];
   assert.equal(links.length, 47);
   assert.equal(new Set(links.map(a => a.href)).size, 47);
   assert.ok(links.every(a => a.href.startsWith('https://www.feynmanlectures.caltech.edu/info/exercises/')));
+  assert.equal(section.querySelectorAll('details').length, 55);
   const field = section.querySelector('input[type=search]');
   field.value = '강제 진동';
   field.dispatchEvent(new field.ownerDocument.defaultView.Event('input'));
@@ -189,5 +190,10 @@ test('Feynman’s public exercises are listed inside the book and can be found i
   assert.ok(scans.every(url => url.startsWith(scanBase)));
   assert.ok(scans.includes(scanBase + 'ON1-215.html'));
   assert.ok(scans.includes(scanBase + 'ON2-003.html'));
+  field.value = '시리우스';
+  field.dispatchEvent(new field.ownerDocument.defaultView.Event('input'));
+  const sirius = section.querySelector('details');
+  assert.match(sirius.textContent, /Estimating the mass of Sirius.*Physics 1a · Problem set 1 · #5/);
+  assert.equal(sirius.querySelector('a').href, scanBase + 'ON1-216.html');
   assert.equal(demo.calls.length, 0);
 });
