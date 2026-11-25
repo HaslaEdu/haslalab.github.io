@@ -41,7 +41,7 @@ ul.info{margin:4px 0 0;padding-left:18px;font-size:13px}ul.info li{margin:2px 0}
 .side{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}.side>.dock-bar{grid-column:1/-1}
 #drawSideBody:not([hidden]){display:grid;gap:12px;grid-column:1/-1;grid-template-columns:inherit}
 #drawDock [data-dock=canvas] #canvas{overflow:hidden}
-#drawDock [data-dock=canvas] #canvas svg{max-height:calc(var(--dock-height,min(68vh,640px)) - 14px)}
+#drawDock [data-dock=canvas] #canvas svg{width:100%;max-height:none}
 #drawDock [data-dock=canvas]{margin-bottom:9px}
 #drawDock .dock-handle::before{background:var(--line)}
 #drawDock .dock-handle:hover::before,#drawDock .dock-handle[data-dragging]::before,#drawDock .dock-handle:focus-visible::before{background:var(--accent)}

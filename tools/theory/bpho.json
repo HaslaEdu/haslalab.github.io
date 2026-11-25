@@ -1,24 +1,88 @@
 {
  "comp": "bpho",
  "prefix": "BPhO",
- "abbr": "BPhO R1",
+ "abbr": "BPhO",
  "full": {
-  "ko": "영국 물리 올림피아드 1라운드",
-  "en": "British Physics Olympiad Round 1"
+  "ko": "영국 물리 올림피아드",
+  "en": "British Physics Olympiad"
  },
  "since": 2001,
  "scope": {
-  "ko": "국가 · 영국 (대표 선발 1라운드)",
-  "en": "National · UK (first selection round)"
+  "ko": "국가 · 영국",
+  "en": "National · UK"
  },
  "plain": true,
- "about": "First round of the British Physics Olympiad (Section 1 short questions, Section 2 long questions). Originals mirrored by phoXiv.",
- "checked": "2026-11-21",
+ "about": "First round of the British Physics Olympiad (Section 1 short questions, Section 2 long questions). Public originals from the organiser and the phoXiv archive.",
+ "checked": "2026-11-25",
  "sources": [
-  "https://phoxiv.org/olympiads/bpho-r1"
+  "https://phoxiv.org/olympiads/bpho-r1",
+  "https://www.bpho.org.uk/Papers/R1/"
  ],
  "officialWebsite": "https://www.bpho.org.uk/",
  "years": [
+  {
+   "y": 2025,
+   "host": {
+    "ko": "영국",
+    "en": "United Kingdom"
+   },
+   "cc": "gb",
+   "source_page": "https://www.bpho.org.uk/Papers/R1/",
+   "problems": [
+    {
+     "id": "T1",
+     "title": "Section 1"
+    },
+    {
+     "id": "T2",
+     "title": "Section 2"
+    }
+   ],
+   "files": [
+    {
+     "file": "BPhO_2025_T1_EN.pdf",
+     "part": "T1",
+     "kind": "paper",
+     "url": "https://cookie.education/api/past-papers/board-file?url=https%3A%2F%2Fwww.bpho.org.uk%2FPapers%2FR1%2FRound_1_Section_1_Nov_2025.pdf&start=0&end=3999999",
+     "lang": "EN",
+     "source_url": "https://www.bpho.org.uk/Papers/R1/Round_1_Section_1_Nov_2025.pdf",
+     "pages": 8,
+     "bytes": 577833,
+     "sha256": "2e6deb60bd5708284fafe9913c5b395833cc59b9cdb8fda7c683bcdf3c2a3d34"
+    },
+    {
+     "file": "BPhO_2025_T1S.pdf",
+     "part": "T1",
+     "kind": "solution",
+     "url": "https://cookie.education/api/past-papers/board-file?url=https%3A%2F%2Fwww.bpho.org.uk%2FPapers%2FR1%2FRound_1_Nov_2025_Section_1_solutions.pdf&start=0&end=3999999",
+     "source_url": "https://www.bpho.org.uk/Papers/R1/Round_1_Nov_2025_Section_1_solutions.pdf",
+     "pages": 12,
+     "bytes": 393063,
+     "sha256": "34367ae42ce1a6c4dede0823ca96aa7a0f4604d8d16bba2ffaab84df68a05cb5"
+    },
+    {
+     "file": "BPhO_2025_T2_EN.pdf",
+     "part": "T2",
+     "kind": "paper",
+     "url": "https://cookie.education/api/past-papers/board-file?url=https%3A%2F%2Fwww.bpho.org.uk%2FPapers%2FR1%2FRound_1_Section_2_Nov_2025.pdf&start=0&end=3999999",
+     "lang": "EN",
+     "source_url": "https://www.bpho.org.uk/Papers/R1/Round_1_Section_2_Nov_2025.pdf",
+     "pages": 11,
+     "bytes": 3334397,
+     "sha256": "df133eef89ab85339ed0a55bf837011542972d3520d7e9841263aeb23e38e4a6"
+    },
+    {
+     "file": "BPhO_2025_T2S.pdf",
+     "part": "T2",
+     "kind": "solution",
+     "url": "https://cookie.education/api/past-papers/board-file?url=https%3A%2F%2Fwww.bpho.org.uk%2FPapers%2FR1%2FRound_1_Nov_2025_Section_2_solutions.pdf&start=0&end=3999999",
+     "source_url": "https://www.bpho.org.uk/Papers/R1/Round_1_Nov_2025_Section_2_solutions.pdf",
+     "pages": 12,
+     "bytes": 571726,
+     "sha256": "c13c86b409635058fdfa13a8f1b311ad8c95b220e8ab253e34fccc15de338c47"
+    }
+   ]
+  },
   {
    "y": 2024,
    "host": {

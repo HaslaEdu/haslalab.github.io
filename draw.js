@@ -404,8 +404,21 @@ function startScene() {
 }
 const byId = id => st.scene.objects.find(o => o.id === id);
 const view = () => st.scene.view || (st.scene.view = sceneBounds(st.scene));
-/* the part of the world the canvas shows: the figure's frame, or the zoomed part of it */
-const dview = () => st.zoom || view();
+const cameraView = () => st.zoom || view();
+/* Expand the visible world to fit the work area while keeping world units square. */
+function dview() {
+  const v = cameraView(), box = $('canvas');
+  if (!box?.clientWidth) return v;
+  const style = getComputedStyle(box);
+  const width = Math.max(1, box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight));
+  const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+  const frame = view(), dockHeight = parseFloat(style.getPropertyValue('--dock-height'));
+  const height = Math.max(1, Number.isFinite(dockHeight)
+    ? box.clientHeight - padding
+    : Math.min(width * frame.h / frame.w, Math.min(innerHeight * 0.68, 640) - padding - 2));
+  const aspect = width / height, w = Math.max(v.w, v.h * aspect), h = w / aspect;
+  return {x: v.x - (w - v.w) / 2, y: v.y - (h - v.h) / 2, w, h};
+}
 const selIds = () => [...st.selection].filter(id => byId(id));
 const groupOf = id => st.scene.groups?.find(members => members.includes(id));
 function setSel(ids, primary, {expand = true} = {}) { st.selection = new Set(ids.filter(Boolean).flatMap(id => (expand && groupOf(id)) || [id])); st.sel = primary && st.selection.has(primary) ? primary : st.selection.size === 1 ? [...st.selection][0] : st.selection.size ? (st.selection.has(st.sel) ? st.sel : [...st.selection].pop()) : ''; }
@@ -707,18 +720,19 @@ function paintCanvas() {
   const drawn = st.draft ? {...sc, objects: [...sc.objects, draftObject()].filter(Boolean)} : sc;
   let svg = renderSVG(drawn, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? [] : selIds(), forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit, marquee: st.marquee,
     velocities: simOn ? st.sim.velocities() : null, anchors: simOn ? st.sim.anchors : null, trails: simOn ? [...st.trails].filter(([id]) => byId(id)?.trail || (st.rtrail && isPhysShape(byId(id)))) : null, ...simDrawOpts(simOn)});
-  /* zoomed: the figure's frame (what is exported) as a thin dashed box */
-  if (st.zoom) { const f = view(), S = W / v.w, x = (f.x - v.x) * S, y = (v.y + v.h - f.y - f.h) * S; svg = svg.replace(/<\/svg>$/, `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(f.w * S).toFixed(1)}" height="${(f.h * S).toFixed(1)}" fill="none" stroke="#d97706" stroke-width="1.2" stroke-dasharray="7 4" pointer-events="none" class="frame"/></svg>`); }
+  /* Mark the export frame when the working area extends beyond it. */
+  const frame = view();
+  if (st.zoom || v.w > frame.w + 1e-6 || v.h > frame.h + 1e-6) {
+    const S = W / v.w, x = (frame.x - v.x) * S, y = (v.y + v.h - frame.y - frame.h) * S;
+    svg = svg.replace(/<\/svg>$/, `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(frame.w * S).toFixed(1)}" height="${(frame.h * S).toFixed(1)}" fill="none" stroke="#d97706" stroke-width="1.2" stroke-dasharray="7 4" pointer-events="none" class="frame"/></svg>`);
+  }
   box.innerHTML = svg;
   box.classList.toggle('connecting', !!st.connect); box.classList.toggle('panning', st.space); box.dataset.tool = st.tool;
-  const z = $('zoomPct'); if (z) z.textContent = `${Math.round(100 * view().w / v.w)}%`;
+  const z = $('zoomPct'); if (z) z.textContent = `${Math.round(100 * view().w / cameraView().w)}%`;
 }
-/* labels on screen: the 800-px drawing is shown at the canvas's width or, for a tall figure, at the height the canvas
-   allows (68% of the window, at most 640 px), so its labels are drawn larger by what it is shrunk, to stay about
-   12 px or more on screen (draw-render.mjs screenLabelScale) */
+/* The working SVG now fills the canvas width, even after resizing its height. */
 function screenLabelScale(box) {
-  const v = dview(), wide = !matchMedia('(max-width:720px)').matches;
-  return labelScaleFor((box.clientWidth || W) - 14, wide ? Math.min(innerHeight * 0.68, 640) : Infinity, W * v.h / v.w);
+  return labelScaleFor((box.clientWidth || W) - 14, Infinity, W);
 }
 function conicalOrbit(s) {
   const P = [byId(s.a), byId(s.b)].find(o => o?.type === 'pivot'), b = [byId(s.a), byId(s.b)].find(isBody);
@@ -732,19 +746,19 @@ function simDrawOpts(simOn) {
     jointEnds: rig ? rig.jointWorld() : null, rigidV: rig && st.rtrail ? rig.velocities() : null};
 }
 function worldAt(ev) {
-  const svg = $('canvas').querySelector('svg'), r = svg.getBoundingClientRect(), v = dview(), H = svg.viewBox.baseVal.height;
-  const px = (ev.clientX - r.left) * W / r.width, py = (ev.clientY - r.top) * H / r.height, S = W / v.w;
-  return {x: v.x + px / S, y: v.y + v.h - py / S};
+  const svg = $('canvas').querySelector('svg'), v = dview();
+  const {a, d, e, f} = svg.getScreenCTM(), S = W / v.w;
+  return {x: v.x + (ev.clientX - e) / a / S, y: v.y + v.h - (ev.clientY - f) / d / S};
 }
 /* zoom by k about a world point (the frame's aspect kept, so the canvas does not change height) */
 function zoomBy(k, at) {
-  const v = dview(), f = view(), c = at || {x: v.x + v.w / 2, y: v.y + v.h / 2};
+  const v = cameraView(), f = view(), c = at || {x: v.x + v.w / 2, y: v.y + v.h / 2};
   let w = Math.max(f.w / 20, Math.min(f.w * 4, v.w / k)); const h = w * f.h / f.w;
   if (Math.abs(w - f.w) < f.w * 0.02 && Math.abs(c.x - (f.x + f.w / 2)) < f.w * 0.02 && !at) { st.zoom = null; paintCanvas(); return; }
   const rx = (c.x - v.x) / v.w, ry = (c.y - v.y) / v.h;
   st.zoom = {x: c.x - rx * w, y: c.y - ry * h, w, h}; paintCanvas();
 }
-function panBy(dx, dy) { const v = dview(); st.zoom = {x: v.x - dx, y: v.y - dy, w: v.w, h: v.h}; paintCanvas(); }
+function panBy(dx, dy) { const v = cameraView(); st.zoom = {x: v.x - dx, y: v.y - dy, w: v.w, h: v.h}; paintCanvas(); }
 function pickAt(ev) { const g = ev.target.closest?.('[data-id]'); return g ? byId(g.dataset.id) : null; }
 const NO_DRAG = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline', 'fieldlines', 'gangle', 'joint', 'farrow'];
 /* a construction object is dragged by its free points (a segment by both ends, a circle by its centre and point …);
@@ -1005,7 +1019,7 @@ function bindCanvas() {
   box.addEventListener('pointerdown', ev => {
     if (st.drag?.penPointer != null && ev.pointerId !== st.drag.penPointer) return;
     pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
-    if (pts.size === 2) { const [a, b] = [...pts.values()]; st.drag = {pinch: true, d0: Math.hypot(a.x - b.x, a.y - b.y), v0: {...dview()}, mid: worldAt({clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2})}; st.marquee = null; return; }
+    if (pts.size === 2) { const [a, b] = [...pts.values()]; st.drag = {pinch: true, d0: Math.hypot(a.x - b.x, a.y - b.y), v0: {...cameraView()}, mid: worldAt({clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2})}; st.marquee = null; return; }
     if (ev.button === 1 || (ev.button === 0 && st.space)) { st.drag = {pan: true, last: {x: ev.clientX, y: ev.clientY}}; box.setPointerCapture?.(ev.pointerId); ev.preventDefault(); return; }
     if (ev.button !== 0) return;
     box.focus({preventScroll: true});
@@ -2400,7 +2414,7 @@ function paint() {
 }
 function height() { if (embedded) requestAnimationFrame(() => window.parent.postMessage({type: 'hl-draw-height', height: Math.ceil(document.querySelector('main').getBoundingClientRect().bottom + scrollY + 16)}, location.origin)); }
 let lastW = 0;
-if (typeof ResizeObserver === 'function') new ResizeObserver(() => { height(); const w = $('canvas')?.clientWidth || 0; if (w && Math.abs(w - lastW) > 30) { lastW = w; paintCanvas(); } }).observe(document.body);
+if (typeof ResizeObserver === 'function') new ResizeObserver(() => { height(); const w = $('canvas')?.clientWidth || 0; if (w && w !== lastW) { lastW = w; paintCanvas(); } }).observe(document.body);
 addEventListener('keydown', e => {
   if ($('drawEditor')?.hidden || e.defaultPrevented || e.isComposing || e.target.closest?.('input,textarea,select,[contenteditable]')) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();

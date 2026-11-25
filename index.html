@@ -213,6 +213,14 @@ nav a:hover,nav a.on{color:var(--ink);border-color:var(--laser)}
   letter-spacing:.07em;color:var(--graphite);transition:.15s}
 .lang button:hover{background:#F1F5F9;color:var(--ink)}
 .lang button[aria-pressed="true"]{background:var(--rail);color:#fff}
+.lang-picker{position:relative}
+.lang-picker summary{display:flex;align-items:center;justify-content:center;gap:6px;min-height:23px;padding:1px 7px;white-space:nowrap;cursor:pointer;list-style:none;font-size:11.5px;font-weight:600}
+.lang-picker summary::-webkit-details-marker{display:none}
+.lang-picker summary::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg)}
+.lang-picker[open] summary::after{transform:translateY(2px) rotate(225deg)}
+.lang-options{position:absolute;top:calc(100% + 5px);right:0;z-index:2;min-width:120px;display:grid;gap:3px;padding:4px;border:1px solid var(--grid-bold);border-radius:8px;background:#fff;box-shadow:0 6px 15px #0002}
+.lang-options button{justify-content:space-between;min-height:34px;white-space:nowrap}
+html[data-theme="dark"] .lang-options{background:#2b2236}
 /* experiment | theory, on a competition's pages: the same control as the language one */
 .crumbrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.crumbrow .crumb{flex:1;min-width:0;margin-bottom:0}
 .crumbrow+.phead{margin-top:18px}
@@ -1125,10 +1133,13 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
     <a id="eduLink" class="hl-edu" href="https://haslaedu.kr/" target="_blank" rel="noopener" title="HaslaEdu"><span>HaslaEdu</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h10v10M19 5 6 18"/></svg></a>
     <nav id="nav" aria-label="주요 메뉴"></nav>
     <button id="siteTheme" type="button" aria-label="다크 모드" aria-pressed="false">◐</button>
-    <div class="lang" role="group" aria-label="Language">
-      <button id="lang-ko" aria-pressed="true"><svg class="lflag ko"><use href="#flag-ko"/></svg>KO</button>
-      <button id="lang-en" aria-pressed="false"><svg class="lflag en"><use href="#flag-en"/></svg>EN</button>
-    </div>
+    <details class="lang lang-picker" id="lang-picker">
+      <summary id="lang-trigger">언어</summary>
+      <div class="lang-options">
+        <button id="lang-ko" type="button" lang="ko" aria-pressed="true">한국어 <svg class="lflag ko" aria-hidden="true"><use href="#flag-ko"/></svg></button>
+        <button id="lang-en" type="button" lang="en" aria-pressed="false">English <svg class="lflag en" aria-hidden="true"><use href="#flag-en"/></svg></button>
+      </div>
+    </details>
   </div>
 </header>
 
@@ -1207,7 +1218,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
 <script src="archive-navigation.js?v=10d33500b414"></script>
-<script src="site-catalogue.js?v=9a452d4b0143"></script>
+<script src="site-catalogue.js?v=791d09622382"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=e43cec5305aa"></script>
 <script src="site-design.js?v=af0e919623fe"></script>
@@ -4883,9 +4894,10 @@ let lang = uiLang==="ko" ? "ko" : "en";
 const LX = s => uiLang==="ko"||uiLang==="en" ? s : (window.HL_I18N?.t(s,uiLang) ?? s);
 const LP = o => !o ? "" : lang==="ko" ? (o.ko ?? o.en) : LX(o.en ?? o.ko);
 
-/* the toggle is painted from `lang`, never from the click, so a page opened
-   straight at ?lang=en lights the right button too */
+const langPicker=document.getElementById("lang-picker");
+const langTrigger=document.getElementById("lang-trigger");
 function paintLang(){
+  langTrigger.textContent=uiLang==="ko"?"언어":"Language";
   document.getElementById("lang-ko").setAttribute("aria-pressed", uiLang==="ko");
   document.getElementById("lang-en").setAttribute("aria-pressed", uiLang==="en");
 }
@@ -4904,8 +4916,19 @@ function setLang(next){
   }catch(e){}
   render();
 }
-document.getElementById("lang-ko").onclick=()=>setLang("ko");
-document.getElementById("lang-en").onclick=()=>setLang("en");
+for(const code of UI_LANGS) document.getElementById("lang-"+code).onclick=()=>{
+  langPicker.open=false;
+  if(code!==uiLang)setLang(code);
+  langTrigger.focus();
+};
+addEventListener("keydown",e=>{
+  if(e.key!=="Escape"||!langPicker.open)return;
+  langPicker.open=false;
+  if(langPicker.contains(document.activeElement))langTrigger.focus();
+});
+addEventListener("pointerdown",e=>{
+  if(langPicker.open&&!langPicker.contains(e.target))langPicker.open=false;
+});
 paintLang();
 
 /* a host country gets its flag; a year run by an institution gets its badge */
@@ -4934,7 +4957,7 @@ const LOGO_FILES = {cmo:"cmo.svg",plancks:"plancks.svg"};
 const ARCHIVE_FLAGS={
   aupho:"au", bpho:"gb", bphoii:"gb", fma:"us", inpho:"in", obf:"br", soif:"br",
   spho:"sg", sphotst:"sg", twpho:"tw", usapho:"us", vntst:"vn", vpho:"vn",
-  azpho:"az", cpho:"cn", efo:"ee", onf:"ro", osn:"id", panpho:"hk",
+  azpho:"az", cpho:"cn", dpho:"de", efo:"ee", jpho:"jp", onf:"ro", osn:"id", panpho:"hk",
   rupho:"ru", ruphow:"ru", ruphox:"ru", ruphoy:"ru"
 };
 const LOGO_ORGANIZERS = {
@@ -5134,7 +5157,7 @@ function contestStageNav(key,year=""){
 }
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","fipho","bpo","oibf","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe","obf","twpho","inpho","fma","bpho","bphoii","vpho","vntst","aupho","efo","onf","azpho","osn","soif","spho","sphotst","panpho"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","fipho","bpo","oibf","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe","obf","twpho","inpho","fma","bpho","bphoii","vpho","vntst","aupho","efo","onf","azpho","osn","soif","spho","sphotst","panpho","dpho","jpho"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","kmchc","usnco"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","mskbo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
@@ -5696,7 +5719,7 @@ addEventListener("message",event=>{
 
 /* Figures and simulations (#/workshop/draw, draw.html): a mechanics figure drawn by value, printed on a test or run as a
    simulation; the frame reports its height like the problem maker's. */
-const DRAW_FRAME_VERSION="42c9382f676a";
+const DRAW_FRAME_VERSION="20cd352ba404";
 function viewWorkshopDraw(){
   const label=wsTitle("draw");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:DRAW_FRAME_VERSION});
