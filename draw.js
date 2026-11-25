@@ -1376,7 +1376,10 @@ function paintSide() {
     x.over = [...x.over.filter(id => ids2.includes(id)), ...ids2.filter(id => !x.over.includes(id))];
     alignHanging(next, x); commit(next, {keepSel: true});
   });
-  box.querySelectorAll('[data-sym]').forEach(b => b.onclick = () => { st.lastText = {id: o.id, k: b.dataset.sym}; openSymbols(); });
+  box.querySelectorAll('[data-sym]').forEach(b => b.onclick = () => {
+    const k = b.dataset.sym, prior = st.lastText;
+    openSymbols(prior?.id === o.id && prior.k === k ? prior : {id:o.id,k});
+  });
   bindStyleSelect(box);
   box.querySelectorAll('[data-join]').forEach(b => b.onclick = () => { st.connect = {type: 'joint', kind: b.dataset.join, a: o.id, over: []}; status(); paintCanvas(); flash(esc(X5.joinHint)); });
   /* a text field: where its caret is (for the symbol picker), and Tab from one placeholder box to the next */
@@ -1697,25 +1700,61 @@ const AI_MESSAGES = ko ? {
   illustration_failed:'Could not generate the illustration. Check the request or reference and try again.',
   illustration_busy:'The daily illustration generation limit has been reached.',
 };
+const aiMode = () => $('aiMode').querySelector('[aria-pressed="true"]').dataset.aiMode;
+const aiCopy = ko ? {
+  extract:'시험지나 문제 사진을 올리고 그림 영역을 찾으세요. 찾은 영역을 잘라 저장하거나 선택한 그림체로 복원할 수 있습니다.',
+  create:'그리고 싶은 내용을 적고 그림체를 선택하세요. 참고 이미지를 첨부할 수도 있습니다.',
+  scene:'물리 도식을 설명하거나 참고 사진을 올리세요. 도형·화살표·수식을 캔버스에서 편집할 수 있습니다.',
+  finding:'그림 영역을 찾는 중…', preparing:'이미지를 준비하는 중…',
+  choose:'사용할 그림 영역을 골라 주세요.', noRegions:'그림 영역을 찾지 못했습니다. 사진 전체를 쓰거나 잘라서 다시 올릴 수 있습니다.',
+} : {
+  extract:'Upload a worksheet photo and find its figures. Save a crop or redraw it in a selected style.',
+  create:'Describe a new image and choose a style. You can attach a reference image.',
+  scene:'Describe a physics figure or attach a reference photo. Edit its shapes, vectors and formulas on the canvas.',
+  finding:'Finding figure regions…', preparing:'Preparing the image…',
+  choose:'Choose a figure region.', noRegions:'No regions found. Use the whole photo or upload a crop.',
+};
 function syncAiControls() {
-  const attached = !!$('aiPhoto').files.length, raster = $('aiOutput').value === 'illustration';
-  $('aiClearPhoto').hidden = $('aiDetect').hidden = !attached;
-  $('aiWhole').hidden = !attached || !!st.aiPhoto || !st.aiRegionFailed;
-  for (const id of ['aiOutput','aiStyle','aiPhoto','aiRegion','aiClearPhoto','aiWhole']) $(id).disabled = !!st.aiWork;
-  $('aiEditLabel').hidden = $('aiEditCur').disabled = attached || raster;
-  $('aiModel').hidden = attached || raster || !(st.aiModels?.length > 1);
-  $('aiStyleLabel').hidden = $('aiStyle').hidden = !raster;
-  $('aiDetect').disabled = !!st.aiWork;
-  $('aiGo').disabled = !!st.aiWork || (attached && !st.aiPhoto);
-  $('aiGo').textContent = raster ? (ko ? '삽화 만들기' : 'Generate illustration')
-    : attached ? (ko ? '도식 복원' : 'Restore editable figure') : X6.aiGo;
+  const mode = aiMode(), extract = mode === 'extract', scene = mode === 'scene';
+  const attached = !!$('aiPhoto').files.length, work = !!st.aiWork;
+  $('aiHint').textContent = aiCopy[mode];
+  $('aiPhotoLabel').textContent = extract ? (ko ? '문제 사진' : 'Worksheet photo') : (ko ? '참고 이미지 (선택)' : 'Reference image (optional)');
+  $('aiPrompt').hidden = extract;
+  $('aiClearPhoto').hidden = !attached;
+  $('aiDetect').hidden = !extract || !attached;
+  $('aiWhole').hidden = !extract || !attached || !!st.aiPhoto;
+  $('aiScan').hidden = !extract || !st.aiPhoto;
+  for (const id of ['aiStyle','aiPhoto','aiRegion','aiClearPhoto','aiWhole','aiDetect','aiRestore','aiToScene']) $(id).disabled = work;
+  $('aiMode').querySelectorAll('button').forEach(button => { button.disabled = work; });
+  $('aiEditLabel').hidden = $('aiEditCur').disabled = !scene || attached;
+  $('aiModel').hidden = !scene || attached || !(st.aiModels?.length > 1);
+  $('aiStyleLabel').hidden = $('aiStyle').hidden = scene || (extract && !st.aiPhoto);
+  $('aiRestore').hidden = $('aiToScene').hidden = !extract || !st.aiPhoto;
+  $('aiGo').disabled = work || (extract && !st.aiPhoto);
+  $('aiGo').textContent = extract ? (ko ? '선택 영역 잘라내기' : 'Crop selected region')
+    : scene ? (attached ? (ko ? '편집 가능한 도식으로 변환' : 'Convert to editable figure') : X6.aiGo)
+      : (ko ? '이미지 만들기' : 'Generate image');
+}
+function clearAiResults() {
+  for (const id of ['aiProposal','aiIllustration']) {
+    $(id).hidden = true;
+    $(id).replaceChildren();
+  }
+}
+function setAiMode(mode) {
+  if (mode === aiMode()) return;
+  for (const button of $('aiMode').querySelectorAll('button')) button.setAttribute('aria-pressed',String(button.dataset.aiMode === mode));
+  clearAiResults();
+  $('aiMsg').textContent = '';
+  syncAiControls();
+  if (mode === 'scene') aiModels();
+  height();
 }
 function resetAiPhoto() {
   st.aiPhoto = null;
-  st.aiRegionFailed = false;
-  $('aiScan').hidden = true;
   $('aiSource').removeAttribute('src');
-  $('aiMsg').textContent = $('aiPhoto').files.length ? (ko ? '그림 영역 찾기를 눌러 주세요.' : 'Find the figure regions first.') : '';
+  clearAiResults();
+  $('aiMsg').textContent = $('aiPhoto').files.length && aiMode() === 'extract' ? (ko ? '그림 영역 찾기를 눌러 주세요.' : 'Find the figure regions first.') : '';
   syncAiControls();
   height();
 }
@@ -1730,15 +1769,15 @@ function paintAiOutline() {
 async function detectAiRegions({whole = false} = {}) {
   const file = $('aiPhoto').files[0], msg = $('aiMsg');
   if (!file || st.aiWork) return;
-  if (!token()) { msg.textContent = X6.aiErr.login_required; return; }
+  if (!whole && !token()) { msg.textContent = X6.aiErr.login_required; return; }
   st.aiWork = true;
   syncAiControls();
-  msg.textContent = whole ? (ko ? '사진을 불러오는 중…' : 'Loading photo…') : (ko ? '그림 영역을 찾는 중…' : 'Finding figure regions…');
+  msg.textContent = whole ? aiCopy.preparing : aiCopy.finding;
   try {
     const source = await photoData(file);
     const r = whole ? {regions:[]} : await api('/api/workshop/figure-regions','POST',{image:source, lang});
     if ($('aiPhoto').files[0] !== file) return;
-    st.aiRegionFailed = false;
+    clearAiResults();
     const regions = r.regions || [], select = $('aiRegion');
     st.aiPhoto = {source,regions};
     select.replaceChildren();
@@ -1747,11 +1786,9 @@ async function detectAiRegions({whole = false} = {}) {
     $('aiSource').src = source;
     $('aiScan').hidden = false;
     paintAiOutline();
-    msg.textContent = regions.length ? (ko ? '사용할 그림 영역을 골라 주세요.' : 'Choose a figure region.')
-      : (ko ? '자동 감지된 영역이 없습니다. 사진 전체를 쓰거나 잘라서 다시 올릴 수 있습니다.' : 'No regions detected. Use the whole photo or upload a crop.');
+    msg.textContent = whole ? (ko ? '사진 전체를 선택했습니다.' : 'Selected the whole photo.') : regions.length ? aiCopy.choose : aiCopy.noRegions;
   } catch (e) {
     if ($('aiPhoto').files[0] === file) {
-      st.aiRegionFailed = true;
       msg.textContent = AI_MESSAGES[e.code] || X6.aiErr[e.code] || errText(e);
     }
   } finally { st.aiWork = false; syncAiControls(); height(); }
@@ -1786,7 +1823,7 @@ async function illustrationAsset(src, title) {
   }
   throw new Error(ko ? '삽화 파일이 너무 큽니다.' : 'The illustration is too large.');
 }
-async function showIllustration(src, prompt, left, style) {
+async function showIllustration(src, prompt, left, style, extracted = false) {
   if (typeof src !== 'string' || !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src)) throw {code:'illustration_failed'};
   if (style === 'exam') {
     const image = await decodeAiImage(src), canvas = document.createElement('canvas');
@@ -1806,7 +1843,8 @@ async function showIllustration(src, prompt, left, style) {
   host.hidden = false;
   host.innerHTML = '<img id="aiRasterPreview" alt=""><label for="aiRasterTitle"></label><input id="aiRasterTitle" maxlength="60"><div class="row" id="aiRasterTools"></div><p class="note" id="aiRasterStatus" role="status"></p>';
   const im = $('aiRasterPreview');
-  im.src = src; im.alt = ko ? '생성한 시험지 삽화' : 'Generated worksheet illustration';
+  im.src = src;
+  im.alt = extracted ? (ko ? '문제 사진에서 잘라낸 그림' : 'Figure cropped from worksheet') : (ko ? '생성한 이미지' : 'Generated image');
   const title = $('aiRasterTitle');
   host.querySelector('label').textContent = ko ? '삽화 이름' : 'Illustration name';
   title.value = prompt.slice(0,60) || (ko ? '문제 삽화' : 'Worksheet illustration');
@@ -1816,6 +1854,7 @@ async function showIllustration(src, prompt, left, style) {
   const fileExt = src.slice(11,src.indexOf(';')), getTitle = () => title.value.trim() || (ko ? '문제 삽화' : 'Worksheet illustration');
   tools.append(provider,button(ko ? '삽화 저장' : 'Save illustration', async (event) => {
     const saveButton = event.currentTarget;
+    if (!token()) { status.textContent = X6.aiErr.login_required; return; }
     saveButton.disabled = true;
     try {
       const name = getTitle(), selected = provider.value, asset = await illustrationAsset(src,name);
@@ -1830,30 +1869,32 @@ async function showIllustration(src, prompt, left, style) {
     const ext = fileExt === 'jpeg' ? 'jpg' : fileExt;
     download(new Blob([content],{type:'image/'+fileExt}),projectFileName(getTitle()).replace(/\.json$/,'.'+ext));
   }));
-  $('aiMsg').textContent = (ko ? '삽화가 생성되었습니다.' : 'Illustration generated.') + (Number.isFinite(left) ? ' '+X6.aiLeft(left) : '');
+  const done = extracted ? (ko ? '선택한 영역을 잘랐습니다.' : 'Cropped the selected area.') : (ko ? '이미지를 만들었습니다.' : 'Image created.');
+  $('aiMsg').textContent = done + (Number.isFinite(left) ? ' '+X6.aiLeft(left) : '');
   height();
 }
-async function aiDraw() {
-  const box = $('aiMsg'), text = $('aiPrompt').value.trim(), file = $('aiPhoto').files[0];
-  const photo = st.aiPhoto, cropIndex = Number($('aiRegion').value), raster = $('aiOutput').value === 'illustration';
-  const edit = !raster && !file && $('aiEditCur').checked;
-  if (st.aiWork || (file && !photo)) return;
-  if (!text && !file) { $('aiPrompt').focus(); return; }
-  if (!token()) { box.innerHTML = '<span>'+esc(X6.aiErr.login_required)+'</span> <a class="btn" href="/#/login" target="_top">'+T.login+'</a>'; return; }
-  const base = JSON.stringify(projectData()), scene = edit ? clone(st.scene) : null;
+async function aiDraw({restore = false, fromRegion = false} = {}) {
+  const box = $('aiMsg'), mode = aiMode(), extract = mode === 'extract';
+  const text = extract || fromRegion ? '' : $('aiPrompt').value.trim(), file = $('aiPhoto').files[0];
+  const photo = st.aiPhoto, cropIndex = Number($('aiRegion').value);
+  const rawCrop = extract && !restore, raster = mode === 'create' || restore;
+  const edit = mode === 'scene' && !file && $('aiEditCur').checked;
+  if (st.aiWork || (extract && !photo)) return;
+  if (!extract && !text && !file) { $('aiPrompt').focus({preventScroll:true}); return; }
+  if (!rawCrop && !token()) { box.innerHTML = '<span>'+esc(X6.aiErr.login_required)+'</span> <a class="btn" href="/#/login" target="_top">'+T.login+'</a>'; return; }
+  const base = raster || rawCrop ? null : JSON.stringify(projectData()), scene = edit ? clone(st.scene) : null;
   const model = !$('aiModel').hidden ? $('aiModel').value : '', style = $('aiStyle').value;
-  $('aiProposal').hidden = true;
-  $('aiProposal').replaceChildren();
-  $('aiIllustration').hidden = true;
-  $('aiIllustration').replaceChildren();
-  box.textContent = raster ? (ko ? '삽화를 그리는 중…' : 'Generating illustration…') : '…';
+  clearAiResults();
+  box.textContent = raster ? (ko ? '이미지를 그리는 중…' : 'Generating image…') : aiCopy.preparing;
   st.aiWork = true;
   syncAiControls();
   try {
-    const image = photo ? await aiCrop(photo,cropIndex) : undefined;
+    const image = (extract || fromRegion) ? await aiCrop(photo,cropIndex) : file ? await photoData(file) : undefined;
+    const name = extract ? photo.regions[cropIndex]?.label || (ko ? '문제 그림' : 'Worksheet figure') : text;
+    if (rawCrop) { await showIllustration(image,name,undefined,undefined,true); return; }
     if (raster) {
       const r = await api('/api/workshop/illustration','POST',{prompt:text,style,lang,...(image ? {image} : {})});
-      await showIllustration(r.image,text,r.left,style);
+      await showIllustration(r.image,name,r.left,style);
       return;
     }
     const r = image
@@ -1972,9 +2013,12 @@ function symItems(tab) {
   if (tab === 'const') return SYMTAB.const.map(c => [constTex(c), c[1], `${c[1].split(' ').filter(w => /[가-힣]/.test(w)).join(' ') || c[1]}: ${c[2].replace(/\\times10\^\{(-?\d+)\}/, ' × 10^$1')} ${c[3].replace(/\\,/g, '·')}`]);
   return SYMTAB[tab] || [];
 }
-function openSymbols() {
+function openSymbols(target = null) {
   let pop = $('symPop');
-  if (pop && !pop.hidden) { pop.hidden = true; return; }
+  if (pop && !pop.hidden && st.symbolTarget?.id === target?.id && st.symbolTarget?.k === target?.k) {
+    pop.hidden = true; height(); return;
+  }
+  st.symbolTarget = target;
   if (!pop) { pop = document.createElement('div'); pop.id = 'symPop'; pop.className = 'sympop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', X5.sym.title); $('stageTop').after(pop); }
   pop.hidden = false; paintSymbols(); height();
 }
@@ -2006,12 +2050,11 @@ function paintSymbols() {
   const sv = $('symVal'); if (sv) sv.onchange = () => { st.symValue = sv.checked; paintSymbols(); };
   const sq = $('symQ'); sq.oninput = () => { st.symQ = sq.value; const pos = sq.selectionStart; paintSymbols(); const s2 = $('symQ'); s2.focus(); s2.setSelectionRange(pos, pos); };
 }
-/* insert at the caret of the text field last used (else a new label): a structure whose first box is its base (X_□)
-   right after a letter takes that letter as its base; the first box of what was put in is selected */
+/* The toolbar places a separate label. A field's Ω inserts into that specific field at its saved caret. */
 function insertSymbol(tex) {
   store.set(SYM_RECENT, JSON.stringify([tex, ...symRecent().filter(x => x !== tex)].slice(0, 16)));
-  const t = st.lastText, o = t && byId(t.id);
-  const select = (el, from, to) => { const i = to.indexOf(PLACEHOLDER, from); const c = i >= 0 ? i : Math.min(to.length, from); el.focus(); el.setSelectionRange(c, i >= 0 ? c + 1 : c); st.lastText = {...st.lastText, caret: c, caretEnd: i >= 0 ? c + 1 : c}; };
+  const t = st.symbolTarget, o = t && st.sel === t.id && byId(t.id);
+  if (t && !o) { flash(ko ? '속성에서 수정할 그림 요소를 다시 선택해 주세요.' : 'Select the object in Properties again.'); return; }
   if (o && FIELDS[o.type][t.k]?.k === 'txt') {
     const el = document.querySelector(`[data-f="${t.k}"]`), live = el && el.value !== undefined ? el.value : String(o[t.k] || ''), cur = live;
     const a = el && document.activeElement === el ? el.selectionStart : (t.caret ?? cur.length), b = el && document.activeElement === el ? el.selectionEnd : (t.caretEnd ?? a);
@@ -2021,14 +2064,21 @@ function insertSymbol(tex) {
     /* a placeholder that is selected is replaced by what is inserted */
     const val = cur.slice(0, a) + ins + (/^\\[A-Za-z]+$/.test(ins) && /^[A-Za-z]/.test(cur.slice(b)) ? ' ' : '') + cur.slice(b);
     const max = FIELDS[o.type][t.k].max;
-    if (val.length > max) { flash(esc(X5.sym.tooLong)); st.lastText = null; return insertSymbol(tex); }
+    if (val.length > max) { flash(esc(X5.sym.tooLong)); return; }
     const next = clone(st.scene); next.objects.find(x => x.id === o.id)[t.k] = val;
-    if (commit(next, {keepSel: true})) { setSel([o.id]); paint(); const el2 = document.querySelector(`[data-f="${t.k}"]`); if (el2) select(el2, a, val); }
+    if (commit(next, {keepSel: true})) {
+      const end = val.indexOf(PLACEHOLDER,a), caret = end < 0 ? val.length - cur.length + b : end;
+      st.lastText = st.symbolTarget = {...t,caret,caretEnd:caret + (end >= 0 ? 1 : 0)};
+    }
     return;
   }
-  const v = dview(), next = clone(st.scene), id = freeId('label'), text = tex.startsWith(PLACEHOLDER + '_') || tex.startsWith(PLACEHOLDER + '^') ? tex : tex;
-  next.objects.push({...defaults('label'), id, x: r4(snapV(v.x + v.w / 2)), y: r4(snapV(v.y + v.h / 2)), text: text.slice(0, FIELDS.label.text.max)});
-  if (commit(next)) { setSel([id]); st.lastText = {id, k: 'text'}; paint(); const el2 = document.querySelector('[data-f="text"]'); if (el2) select(el2, 0, el2.value); }
+  const v = dview(), labels = st.scene.objects.filter(item => item.type === 'label');
+  const center = {x:r4(snapV(v.x + v.w/2)),y:r4(snapV(v.y + v.h/2))};
+  const step = Math.max(st.snap ? st.scene.grid : 0,v.w*.06);
+  const offsets = [0,1,-1,2,-2,3,-3,4,-4,5,-5];
+  const x = offsets.map(offset => r4(snapV(center.x + offset*step)))
+    .find(x => x > v.x && x < v.x+v.w && !labels.some(item => Math.abs(item.x-x)<step*.35 && Math.abs(item.y-center.y)<step*.35));
+  addShape({type:'label',x:x ?? center.x,y:center.y,text:tex.slice(0,FIELDS.label.text.max),size:16,color:st.dstyle.color});
 }
 const drawStorage = window.HL_WORKSHOP_PROJECTS.client({base:API, token});
 async function saveGroupAsset(ids) {
@@ -2148,16 +2198,20 @@ function shell() {
       <span class="zoom" role="group" aria-label="zoom"><button type="button" id="bZout" title="${esc(tl.zoomOut)} (−)" aria-label="${esc(tl.zoomOut)}">−</button><span id="zoomPct" class="pct">100%</span><button type="button" id="bZin" title="${esc(tl.zoomIn)} (+)" aria-label="${esc(tl.zoomIn)}">+</button><button type="button" id="bZfit" title="${esc(tl.zoomFit)} (0)">${tl.zoomFit}</button></span>
       <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><label class="btn"><input type="checkbox" id="cVals" style="width:auto"> ${tl.values}</label><button type="button" id="bFit" title="${esc(tl.frameMark)}">${T.fit}</button></div>
     <details class="aibox" id="aiBox"><summary>${ko ? '✨ AI 그림 작업' : '✨ AI figure maker'}</summary>
-      <p class="note">${ko ? '문제 사진의 그림 영역은 Gemini 3.8 Flash로 찾습니다.' : 'Gemini 3.8 Flash finds figure regions in worksheet photos.'}</p>
-      <div class="row"><label for="aiOutput">${ko ? '결과 형식' : 'Output'}</label><select id="aiOutput"><option value="scene">${ko ? '편집 가능한 시뮬레이션 도식' : 'Editable simulation figure'}</option><option value="illustration">${ko ? '시험지 삽화 · Gemini 3 Pro Image' : 'Worksheet illustration · Gemini 3 Pro Image'}</option></select>
-      <label for="aiStyle" id="aiStyleLabel" hidden>${ko ? '삽화 그림체' : 'Illustration style'}</label><select id="aiStyle" hidden><option value="exam">${ko ? '시험지 흑백 선화' : 'Exam line art'}</option><option value="textbook">${ko ? '교과서 컬러 삽화' : 'Color textbook'}</option><option value="technical">${ko ? '과학 논문 도식' : 'Technical diagram'}</option></select></div>
+      <div class="row ai-modes" id="aiMode" role="group" aria-label="${ko ? 'AI 그림 작업' : 'AI figure workflow'}">
+        <button type="button" data-ai-mode="extract" aria-pressed="true">${ko ? '문제에서 그림 추출' : 'Extract worksheet figures'}</button>
+        <button type="button" data-ai-mode="create" aria-pressed="false">${ko ? '이미지 제작' : 'Create image'}</button>
+        <button type="button" data-ai-mode="scene" aria-pressed="false">${ko ? '편집 가능한 도식' : 'Editable diagram'}</button>
+      </div>
+      <p class="note" id="aiHint"></p>
       <textarea id="aiPrompt" aria-label="${ko ? '그림 설명 또는 복원 요청' : 'Figure description or tracing instructions'}" rows="2" maxlength="1200" placeholder="${esc(X6.aiHint)}"></textarea>
-      <div class="row"><label class="note" for="aiPhoto">${ko ? '문제 사진 첨부' : 'Attach a problem photo'}</label><input type="file" id="aiPhoto" accept="image/jpeg,image/png,image/webp"><button type="button" id="aiClearPhoto" hidden>${ko ? '첨부 지우기' : 'Remove attachment'}</button><button type="button" id="aiDetect" hidden>${ko ? '그림 영역 찾기' : 'Find figure regions'}</button><button type="button" id="aiWhole" hidden>${ko ? '사진 전체 사용' : 'Use whole photo'}</button></div>
+      <div class="row"><label class="note" id="aiPhotoLabel" for="aiPhoto"></label><input type="file" id="aiPhoto" accept="image/jpeg,image/png,image/webp"><button type="button" id="aiClearPhoto" hidden>${ko ? '첨부 지우기' : 'Remove attachment'}</button><button type="button" class="primary" id="aiDetect" hidden>${ko ? '그림 영역 찾기' : 'Find figure regions'}</button><button type="button" id="aiWhole" hidden>${ko ? '사진 전체 사용' : 'Use whole photo'}</button></div>
       <div id="aiScan" hidden><div class="ai-photo-preview"><img id="aiSource" alt="${ko ? '첨부한 문제 사진' : 'Attached worksheet photo'}"><span id="aiBoxOutline" aria-hidden="true"></span></div>
       <div class="row"><label for="aiRegion">${ko ? '사용할 영역' : 'Region to use'}</label><select id="aiRegion"></select></div></div>
-      <div class="row"><label class="chk" id="aiEditLabel"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div><div id="aiProposal" hidden></div><div id="aiIllustration" hidden></div></details>
+      <div class="row"><label for="aiStyle" id="aiStyleLabel" hidden>${ko ? '그림체' : 'Style'}</label><select id="aiStyle" hidden><option value="exam">${ko ? '시험지 흑백 선화' : 'Exam line art'}</option><option value="textbook">${ko ? '교과서 컬러 삽화' : 'Color textbook'}</option><option value="technical">${ko ? '과학 논문 도식' : 'Technical diagram'}</option></select>
+      <label class="chk" id="aiEditLabel"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button><button type="button" id="aiRestore" hidden>${ko ? 'AI로 선명하게 복원' : 'Restore with AI'}</button><button type="button" id="aiToScene" hidden>${ko ? '편집 가능한 도식으로 변환' : 'Convert to editable diagram'}</button></div><div id="aiMsg" class="note" role="status"></div><div id="aiProposal" hidden></div><div id="aiIllustration" hidden></div></details>
     <div id="aiNote" class="ainote" hidden></div>
-    <div class="work" id="drawDock"><div class="draw-library" data-dock="tools" data-dock-floor-width="144" data-dock-floor-height="90"><div class="dock-bar">${panelTab('drawLibraryBody',['도구와 템플릿','Tools and templates'],'▦')}</div><div id="drawLibraryBody" data-dock-body>
+    <div class="work" id="drawDock"><div class="draw-library" data-dock="tools" data-dock-floor-width="82" data-dock-floor-height="24"><div class="dock-bar">${panelTab('drawLibraryBody',['도구와 템플릿','Tools and templates'],'▦')}</div><div id="drawLibraryBody" data-dock-body>
       <details class="palwrap parts" id="templateShelf"><summary>${esc(X4.templates)}</summary><label class="note" for="templateDomain">${ko ? '분야' : 'Topic'}</label>
         <select id="templateDomain">${Object.keys(DOMAINS).filter(d => TEMPLATE_KEYS.some(k => TEMPLATE_DOMAIN[k] === d)).map(d => `<option value="${d}">${esc(X2.domains[d])}</option>`).join('')}</select>
         <div id="templateCards" class="template-cards"></div></details>
@@ -2186,16 +2240,18 @@ function shell() {
   };
   $('templateShelf').ontoggle = e => { if (e.target.open) paintTemplates(); height(); };
   $('templateDomain').onchange = paintTemplates;
-  $('aiOutput').onchange = syncAiControls;
+  $('aiMode').querySelectorAll('button').forEach(button => { button.onclick = () => setAiMode(button.dataset.aiMode); });
   $('aiPhoto').onchange = resetAiPhoto;
   $('aiClearPhoto').onclick = () => { $('aiPhoto').value = ''; resetAiPhoto(); $('aiPhoto').focus(); };
   $('aiDetect').onclick = () => detectAiRegions();
   $('aiWhole').onclick = () => detectAiRegions({whole:true});
-  $('aiRegion').onchange = paintAiOutline;
+  $('aiRegion').onchange = () => { paintAiOutline(); clearAiResults(); $('aiMsg').textContent = aiCopy.choose; height(); };
   syncAiControls();
   $('bInsertAsset').onclick = openAssetLibrary;
   $('bSave').onclick = toStorage; $('bOpenStore').onclick = showDrawProjects;
-  $('aiGo').onclick = aiDraw; $('aiBox').ontoggle = () => { if ($('aiBox').open) aiModels(); };
+  $('aiGo').onclick = () => aiDraw();
+  $('aiRestore').onclick = () => aiDraw({restore:true});
+  $('aiToScene').onclick = () => { setAiMode('scene'); aiDraw({fromRegion:true}); };
   $('bShare').onclick = openShare;
   { const n = +params.get('share'); if (n > 0) { if (window.HL_SHARE) openShared(n); else addEventListener('load', () => openShared(n), {once: true}); } } $('aiPrompt').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) aiDraw(); };
   $('bUndo').onclick = undo; $('bRedo').onclick = redo; $('bDup').onclick = dup; $('bDel').onclick = del; $('bClear').onclick = clearAll;
@@ -2250,7 +2306,7 @@ function paintTools() {
       <label title="${esc(X4.style.fill)}">${esc(X4.style.fill)}<select data-ds="fill">${FILLS.map(v => `<option value="${v}"${v === ds.fill ? ' selected' : ''}>${esc(X4.enums[v] || T.enums[v] || v)}</option>`).join('')}</select></label>
       <span class="heads" title="${esc(X4.style.heads)}">${esc(X4.style.heads)} <label><input type="checkbox" data-dh="hs"${ds.hs ? ' checked' : ''}>${esc(X4.style.start)}</label><label><input type="checkbox" data-dh="he"${ds.he ? ' checked' : ''}>${esc(X4.style.end)}</label></span></div>`;
   box.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => setTool(b.dataset.tool));
-  $('bSym').onclick = openSymbols;
+  $('bSym').onclick = () => openSymbols();
   const keep = () => setPref('dstyle', st.dstyle);
   /* the look goes to the selected shapes too (one step of history) */
   const toSel = (k, v) => { const ids = new Set(selIds()); if (!ids.size) return; const next = clone(st.scene); let any = false;

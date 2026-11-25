@@ -57,15 +57,15 @@ ul.info{margin:4px 0 0;padding-left:18px;font-size:13px}ul.info li{margin:2px 0}
   #drawDock .side>.dock-handle:not([data-dragging])::after{width:7px;height:28px}
 }
 @media(min-width:721px){
-  #drawDock{grid-template-columns:min(var(--dock-tools-width,150px),30%) minmax(0,1fr);column-gap:22px}
-  #drawDock .draw-library>.dock-handle{--dock-axis:x;--dock-max:.30;top:0;bottom:0;left:auto;right:-11px;width:22px;height:auto;cursor:col-resize}
+  #drawDock{grid-template-columns:min(var(--dock-tools-width,150px),48%,520px) minmax(0,1fr);column-gap:22px}
+  #drawDock .draw-library>.dock-handle{--dock-axis:x;--dock-max:.48;--dock-cap:520;top:0;bottom:0;left:auto;right:-11px;width:22px;height:auto;cursor:col-resize}
   #drawDock .draw-library>.dock-handle::before{inset:0 auto 0 calc(50% - 1px);width:2px;height:auto}
-  #drawDock .draw-library>[data-dock-body]{height:auto}
+  #drawDock .draw-library>[data-dock-body]{height:auto;container-type:inline-size}
   #drawDock .draw-library.dock-collapsed>[data-dock-body]{display:none}
-  #drawDock .draw-library.dock-collapsed{min-height:86px}
+  #drawDock .draw-library.dock-collapsed{min-height:44px}
 }
 @media(min-width:1061px){
-  #drawDock{grid-template-columns:min(var(--dock-tools-width,172px),30%) minmax(0,1fr) min(var(--dock-props-width,300px),39%)}
+  #drawDock{grid-template-columns:min(var(--dock-tools-width,172px),48%,520px) minmax(0,1fr) min(var(--dock-props-width,300px),39%)}
   #drawDock .side>.dock-handle{--dock-axis:x;--dock-sign:-1;--dock-max:.39;top:0;bottom:0;right:auto;left:-11px;width:22px;height:auto;cursor:col-resize}
   #drawDock .side>.dock-handle::before{inset:0 auto 0 calc(50% - 1px);width:2px;height:auto}
   #drawDock .side>[data-dock-body]{height:auto}
@@ -154,10 +154,22 @@ details.aibox .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin
 .template-cards{display:grid;gap:6px;margin-top:8px;max-height:420px;overflow:auto}
 .template-cards button{display:grid;gap:4px;padding:5px;text-align:left;font-size:13px}
 .template-cards img{width:100%;height:70px;object-fit:contain;background:#fff;border-radius:5px}
+@container (max-width:110px){
+  .palwrap{padding:4px}
+  .palwrap summary{font-size:12px;overflow-wrap:anywhere}
+  .palwrap input[type=search],.palwrap select{min-width:0;padding-inline:3px}
+}
+@container (min-width:250px){
+  .template-cards,.palette .items{grid-template-columns:repeat(auto-fit,minmax(108px,1fr))}
+}
+@media(max-width:720px){
+  #drawLibraryBody .template-cards,#drawLibraryBody .palette .items{max-height:none}
+}
 #projectList button{width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left}
 @media(max-width:640px){.draw-library{grid-row:1}.template-cards{grid-template-columns:repeat(2,minmax(0,1fr));max-height:280px}}
 
 .aibox [hidden]{display:none!important}
+.aibox .ai-modes button[aria-pressed=true]{background:var(--soft);color:var(--accent2);border-color:var(--accent);font-weight:650}
 .ai-photo-preview{position:relative;display:inline-block;max-width:100%;margin-top:8px}
 .ai-photo-preview img{display:block;max-width:100%;max-height:320px;height:auto}
 #aiBoxOutline{position:absolute;box-sizing:border-box;border:2px solid #593ca0;box-shadow:0 0 0 1px #fff inset;background:#7655b323;pointer-events:none}
