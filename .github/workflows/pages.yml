@@ -85,10 +85,13 @@ jobs:
               break
             fi
             # An empty response can still leave a deployment for this commit.
-            if gh api "repos/$GITHUB_REPOSITORY/pages/deployments/$GITHUB_SHA" --jq '.status' >/dev/null 2>&1; then
-              id="$GITHUB_SHA"
-              break
-            fi
+            existing=$(gh api "repos/$GITHUB_REPOSITORY/pages/deployments/$GITHUB_SHA" --jq '.status' 2>/dev/null || true)
+            case "$existing" in
+              queued|deployment_queued|deployment_in_progress|syncing_files|finished_file_sync|updating_pages|succeed)
+                id="$GITHUB_SHA"
+                break
+                ;;
+            esac
             if [ "$attempt" -lt 3 ]; then
               echo "::warning::Pages did not return a deployment ID. Retrying in 10 seconds."
               sleep 10
@@ -102,7 +105,8 @@ jobs:
           echo "Pages deployment $id"
           last=""
           for i in $(seq 1 270); do
-            st=$(gh api "repos/$GITHUB_REPOSITORY/pages/deployments/$id" --jq .status || echo "unknown")
+            st=$(gh api "repos/$GITHUB_REPOSITORY/pages/deployments/$id" --jq .status || true)
+            st=${st:-unknown}
             [ "$st" != "$last" ] && echo "$(date -u +%T) $st" && last="$st"
             case "$st" in
               succeed) echo "published"; exit 0;;
