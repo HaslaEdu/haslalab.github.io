@@ -30,7 +30,7 @@ async function nonsulClaudeGrade(env, token, {model, system, prompt, schema, eff
       !['low', 'medium', 'high'].includes(effort)) return {status: 400};
   useEgress(env);
   const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST', redirect: 'error', signal: AbortSignal.timeout(150000),
+    method: 'POST', redirect: 'manual', signal: AbortSignal.timeout(150000),
     headers: {'content-type': 'application/json', 'anthropic-version': '2023-06-01',
       'x-api-key': env.ANTHROPIC_API_KEY || env.CLAUDE_API_KEY},
     body: JSON.stringify({model, system, max_tokens: maxTokens,
