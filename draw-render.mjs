@@ -13,9 +13,9 @@
    vector notation (an arrow over the letter, or bold). The presets follow the conventions of university problem
    sets, olympiad papers and JEE papers as drawn from general knowledge of how such figures look; nothing is traced
    or copied from them. */
-import {isBody, isRound, bodyPose, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=6a3c9af34d22';
-import {funcFeatures, derivative, integrate, jointEnds, fieldLines, equipotentials, chargePath, circuitNodes, elementPath, processPoints, gasCycle, traceRay, principalRays, opticImage, prismCorners,
-  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=c28a48272a2b';
+import {isBody, isRound, bodyPose, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=6e567e38776d';
+import {funcFeatures, derivative, integrate, jointEnds, fieldLines, equipotentials, chargePath, circuitNodes, splitWires, elementPath, processPoints, gasCycle, traceRay, principalRays, opticImage, prismCorners,
+  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=f6e7ef5cf9c1';
 /* the types drawn turned by a transform about their centre (a block and a plank turn their own corners) */
 const ROT_WRAP = new Set(['transformer', 'solenoid', 'magnet', 'cylinder', 'lens', 'mirror', 'screen', 'eye', 'source', 'label', 'region', 'rect', 'ellipse']);
 /* the drawing tools' stroke colours (draw-scene.mjs COLORS) and the light tints their fill 'tint' uses */
@@ -91,6 +91,18 @@ const KR_MYEONGJO = `'Noto Serif KR','Noto Serif CJK KR','Nanum Myeongjo','Batan
 const CM_SERIF = `'Latin Modern Roman','CMU Serif','Computer Modern','STIX Two Text','Times New Roman','Nimbus Roman','Liberation Serif',serif`;
 const SCHOOLBOOK = `'TeX Gyre Schola','Century Schoolbook','New Century Schoolbook','Century Schoolbook L','C059','Georgia','Noto Serif KR',serif`;
 const MODERN_SANS = `'Inter','Helvetica Neue','Helvetica','Arial','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif`;
+/* the faces a label or a text box can be set in (draw-scene.mjs TEXT_FONTS), as stacks of faces most computers and
+   phones have: no font is loaded or embedded, so the exported SVG and PNG show the same faces as the editor */
+const SANS = `'Helvetica Neue','Helvetica','Arial','Liberation Sans','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif`;
+const MONO = `'Courier New','Liberation Mono','DejaVu Sans Mono','Menlo','Consolas','D2Coding','Noto Sans Mono CJK KR',monospace`;
+const HAND = `'Segoe Print','Bradley Hand','Comic Sans MS','Chalkboard SE','Nanum Pen Script','Nanum Pen',cursive`;
+export const FONT_FAMILY = {serif: SERIF, sans: SANS, mono: MONO, hand: HAND};
+const FAMILY_METRIC = {serif: {wscale: 1, sans: false}, sans: {wscale: 1.08, sans: true}, mono: {wscale: 1, mono: true}, hand: {wscale: 1.1, sans: true}};
+/** a label's own look (its font, italic, bold, underline fields), as texLayout and texText take it; null when plain */
+export function labelStyle(o) {
+  if (!o || (!(o.font && o.font !== 'math') && !o.italic && !o.bold && !o.underline)) return null;
+  return {family: o.font && o.font !== 'math' && FONT_FAMILY[o.font] ? o.font : '', it: !!o.italic, bold: !!o.bold, under: !!o.underline};
+}
 const hex = g => { const v = Math.round(Math.max(0, Math.min(1, g)) * 255).toString(16).padStart(2, '0'); return '#' + v + v + v; };
 /** a preset from its row of STYLE_TABLE: px at the 800 px drawing, where a base label is 15 px */
 function preset(key, extra) {
@@ -141,7 +153,7 @@ const SYM = {alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', epsilon: 'ϵ', v
 const OPNAMES = new Set(['sin', 'cos', 'tan', 'cot', 'sec', 'csc', 'ln', 'log', 'exp', 'lim', 'max', 'min', 'det', 'sinh', 'cosh', 'tanh', 'arcsin', 'arccos', 'arctan']);
 const SPACES = {',': 0.17, ':': 0.22, ';': 0.28, ' ': 0.25, quad: 1, qquad: 2, '!': -0.1, enspace: 0.5, thinspace: 0.17};
 const ACCENTS = {vec: 'vec', hat: 'hat', widehat: 'hat', dot: 'dot', ddot: 'ddot', bar: 'bar', overline: 'bar', tilde: 'tilde', widetilde: 'tilde', overrightarrow: 'arrow', check: 'check', breve: 'breve', underline: 'under'};
-const FONTS = {mathrm: 'rm', text: 'rm', textrm: 'rm', rm: 'rm', operatorname: 'rm', mathbf: 'bf', bf: 'bf', textbf: 'bf', boldsymbol: 'bfit', bm: 'bfit', mathit: 'it', textit: 'it', mathsf: 'rm', mathcal: 'cal', mathscr: 'cal'};
+const FONTS = {mathrm: 'rm', text: 'rm', textrm: 'rm', textup: 'rm', textnormal: 'rm', rm: 'rm', operatorname: 'rm', mathbf: 'bf', bf: 'bf', textbf: 'bf', boldsymbol: 'bfit', bm: 'bfit', mathit: 'it', textit: 'it', emph: 'it', mathsf: 'sf', textsf: 'sf', mathtt: 'tt', texttt: 'tt', mathcal: 'cal', mathscr: 'cal'};
 const CAL = {A: '𝒜', B: 'ℬ', C: '𝒞', D: '𝒟', E: 'ℰ', F: 'ℱ', G: '𝒢', H: 'ℋ', I: 'ℐ', J: '𝒥', K: '𝒦', L: 'ℒ', M: 'ℳ', N: '𝒩', O: '𝒪', P: '𝒫', Q: '𝒬', R: 'ℛ', S: '𝒮', T: '𝒯', U: '𝒰', V: '𝒱', W: '𝒲', X: '𝒳', Y: '𝒴', Z: '𝒵'};
 const IGNORE = new Set(['left', 'right', 'big', 'Big', 'bigg', 'Bigg', 'displaystyle', 'textstyle', 'limits', 'nolimits', 'mathstrut']);
 
@@ -273,7 +285,7 @@ function charW(c, it) {
   if (/[\u{1D49C}-\u{1D4CF}ℬℰℱℋℐℒℳℛ]/u.test(c)) return 0.74;
   return 0.62;
 }
-const textWidth = (s, sz, it, bold) => { let w = 0; for (const c of s) w += charW(c, it); return w * sz * (CUR.wscale || (CUR.sans ? 1.08 : 1)) * (bold ? 1.04 : 1); };
+const textWidth = (s, sz, it, bold, fam) => { let w = 0; if (CUR.mono || fam === 'mono') { for (const c of s) w += /[가-힣ㄱ-ㅎ]/.test(c) ? 1 : 0.6; return w * sz; } for (const c of s) w += charW(c, it); if (fam === 'sans') w *= 1.08; return w * sz * (CUR.wscale || (CUR.sans ? 1.08 : 1)) * (bold ? 1.04 : 1); };
 /* ── maths spacing: TeX's atom classes and the spaces between them (in em; none in scripts but around operators) ── */
 const BIN_CH = '+−-±∓×·∘•÷∗⋆∧∨⊕⊗∩∪', REL_CH = '=≈≠≤≥<>∝∼≃≅≡∈∉→←↔⇒⇐⇔⇌⇋↦⟶≪≫⊥∥', LOP_CH = '∑∏∫∬∭∮', OPEN_CH = '([{⟨', CLOSE_CH = ')]}⟩', PUNCT_CH = ',;';
 const charClass = c => !c ? 'ord' : LOP_CH.includes(c) ? 'op' : BIN_CH.includes(c) ? 'bin' : REL_CH.includes(c) ? 'rel' : OPEN_CH.includes(c) ? 'open' : CLOSE_CH.includes(c) ? 'close' : PUNCT_CH.includes(c) ? 'punct' : 'ord';
@@ -399,15 +411,15 @@ function layout(nodes, sz, ctx) {
 }
 function textBox(n, sz, ctx) {
   const items = []; let x = 0, high = false;
-  const bold = ctx.bold || n.font === 'bf' || n.font === 'bfit';
+  const bold = ctx.bold || n.font === 'bf' || n.font === 'bfit', fam = n.font === 'sf' ? 'sans' : n.font === 'tt' ? 'mono' : undefined;
   const add = (t, it) => {
     if (!t) return;
     /* a placeholder of the symbol picker is an item of its own, drawn as a box */
     if (t.includes(PLACEHOLDER) && t !== PLACEHOLDER) { for (const part of t.split(new RegExp(`(${PLACEHOLDER})`))) add(part, it); return; }
     const last = items[items.length - 1];
     if (last && last.it && !it && !/^\s/.test(t)) x += sz * 0.05;
-    const w = textWidth(t, sz, it, bold), ko = /[가-힣ㄱ-ㅎ]/.test(t);
-    items.push({x, y: 0, t, size: sz, it: it && !ko && t !== PLACEHOLDER, bf: bold, ko, ...(t === PLACEHOLDER ? {ph: true} : {})}); x += w; if ([...t].some(highChar)) high = true;
+    const w = textWidth(t, sz, it, bold, fam), ko = /[가-힣ㄱ-ㅎ]/.test(t);
+    items.push({x, y: 0, t, size: sz, it: it && !ko && t !== PLACEHOLDER, bf: bold, ko, ...(fam ? {fam} : {}), ...(t === PLACEHOLDER ? {ph: true} : {})}); x += w; if ([...t].some(highChar)) high = true;
   };
   let s = n.s;
   /* in maths: a true minus sign, and room around relations and binary operators inside the run (a sign is unary at
@@ -424,8 +436,8 @@ function textBox(n, sz, ctx) {
     if (OPS.includes(orig.trimEnd().slice(-1))) s = s.trimEnd();
   }
   if (n.font === 'cal') s = [...s].map(c => CAL[c] || c).join('');
-  if (n.font === 'rm' || n.font === 'bf' || n.font === 'cal') add(s, false);
-  else if (n.font === 'it' || n.font === 'bfit') add(s, true);
+  if (n.font === 'rm' || n.font === 'bf' || n.font === 'cal' || n.font === 'sf' || n.font === 'tt') add(s, false);
+  else if (n.font === 'it' || n.font === 'bfit' || ctx.forceIt) add(s, true);
   else {
     /* auto: a maths letter is italic (a single letter, or every letter inside $…$), except function names; lower-case
        Greek is italic in maths, capitals and digits upright */
@@ -440,17 +452,21 @@ function textBox(n, sz, ctx) {
 }
 /** a label laid out at size sz (px): {w, a, d, items, paths}. $…$ is maths (every letter italic); outside $, a label
  *  without Hangul is maths too but only single letters are italic ("2 kg" stays upright, "m_1" is an italic m). */
-export function texLayout(src, sz = 16) {
+export function texLayout(src, sz = 16, sty = null) {
   const text = String(src ?? '');
-  const parts = text.includes('$') ? text.split('$').map((t, i) => ({t, math: i % 2 === 1, all: true})) : [{t: text, math: !/[가-힣]/.test(text), all: false}];
+  /* a label set in a text face (serif, sans, mono, hand): plain text outside $…$, its letters upright */
+  const plain = !!sty?.family;
+  const parts = text.includes('$') ? text.split('$').map((t, i) => ({t, math: i % 2 === 1, all: true})) : [{t: text, math: !plain && !/[가-힣]/.test(text), all: false}];
   let x = 0, a = sz * 0.47, d = sz * 0.05; const items = [], paths = [];
   for (const p of parts) {
     if (!p.t) continue;
-    const b = layout(parseTex(p.t), sz, {math: p.math, all: p.all, vec: CUR.vec, level: 0});
+    const b = layout(parseTex(p.t), sz, {math: p.math, all: p.all, vec: CUR.vec, level: 0, ...(sty?.bold ? {bold: true} : {}), ...(sty?.it ? {forceIt: true} : {})});
     for (const it of b.items) items.push({...it, x: it.x + x});
     for (const q of b.paths) paths.push({...q, ox: (q.ox || 0) + x});
     a = Math.max(a, b.a); d = Math.max(d, b.d); x += b.w;
   }
+  /* underlined: one rule under the whole label */
+  if (sty?.under && x > 0) { paths.push({d: `M0,${f(d + sz * 0.06)}H${f(x)}`, sw: Math.max(0.6, sz * 0.055)}); d += sz * 0.1; }
   return {w: x, a, d, items, paths};
 }
 /** the glyph boxes of a label laid out at size sz (for tests): [{t, x, w, y, size, it}] in reading order, each its
@@ -467,15 +483,21 @@ export function texRuns(src) {
 }
 /** SVG of a label at (x, y) px, anchored 'start' | 'middle' | 'end', its middle on y */
 export function texText(src, x, y, size = 16, anchor = 'middle', extra = '', opts = {}) {
+  const sty = opts.style;
+  if (sty?.family) { const saved = CUR; CUR = {...CUR, font: FONT_FAMILY[sty.family], wscale: FAMILY_METRIC[sty.family].wscale, sans: !!FAMILY_METRIC[sty.family].sans, mono: !!FAMILY_METRIC[sty.family].mono}; try { return texTextIn(src, x, y, size, anchor, extra, opts); } finally { CUR = saved; } }
+  return texTextIn(src, x, y, size, anchor, extra, opts);
+}
+function texTextIn(src, x, y, size, anchor, extra, opts) {
+  const sty = opts.style || null;
   /* object names (A, B, P, a point's p) set upright in the styles that do so (수능, JEE) */
   if (CUR.uprightNames && (opts.name || opts.point) && typeof src === 'string' && (opts.point ? /^[A-Za-z]('|_\{?[0-9A-Za-z]{1,3}\}?)?$/ : /^[A-Z]('|_\{?[0-9]{1,3}\}?)?$/).test(src)) src = `\\mathrm{${src[0]}}${src.slice(1)}`;
-  const sz = size * (opts.raw ? 1 : CUR.ls), b = texLayout(src, sz);
+  const sz = size * (opts.raw ? 1 : CUR.ls), b = texLayout(src, sz, sty);
   if (!b.items.length && !b.paths.length) return '';
   const x0 = anchor === 'start' ? x : anchor === 'end' ? x - b.w : x - b.w / 2, base = y + (b.a - b.d) / 2;
   const color = /fill="([^"]+)"/.exec(extra)?.[1] || '#000';
   const halo = opts.halo ? ` stroke="#fff" stroke-width="${f(Math.max(2, sz * 0.22))}" stroke-linejoin="round" paint-order="stroke"` : '';
   let t = '';
-  const kfont = it => it.ko && (opts.caption ? CUR.caption : CUR.hangul) ? ` font-family="${esc(opts.caption ? CUR.caption : CUR.hangul).replace(/&#39;/g, "'")}"` : '';
+  const kfont = it => it.fam ? ` font-family="${esc(FONT_FAMILY[it.fam]).replace(/&#39;/g, "'")}"` : sty?.family ? '' : it.ko && (opts.caption ? CUR.caption : CUR.hangul) ? ` font-family="${esc(opts.caption ? CUR.caption : CUR.hangul).replace(/&#39;/g, "'")}"` : '';
   let ph = '';
   for (const it of b.items) if (it.ph) { const w = textWidth(PLACEHOLDER, it.size, false, false); ph += `<rect class="ph" x="${f(x0 + it.x + it.size * 0.06)}" y="${f(base + it.y - it.size * 0.66)}" width="${f(w - it.size * 0.12)}" height="${f(it.size * 0.78)}" rx="${f(it.size * 0.08)}" fill="#dbeafe" stroke="#2563eb" stroke-width="${f(Math.max(0.6, it.size * 0.05))}" stroke-dasharray="${f(it.size * 0.12)} ${f(it.size * 0.08)}"/>`; }
   for (const it of b.items) if (!it.ph) t += `<tspan x="${f(x0 + it.x)}" y="${f(base + it.y)}"${Math.abs(it.size - sz) > 0.01 ? ` font-size="${f(it.size)}"` : ''}${it.it ? ' font-style="italic"' : ''}${it.bf ? ' font-weight="bold"' : ''}${kfont(it)}>${esc(it.t)}</tspan>`;
@@ -488,10 +510,11 @@ export function texText(src, x, y, size = 16, anchor = 'middle', extra = '', opt
   return `<g class="tex"${extra.replace(/fill="[^"]+"/, '')}>${ph}${t ? `<text font-size="${f(sz)}" font-family="${esc(CUR.font).replace(/&#39;/g, "'")}" fill="${color}"${halo}>${t}</text>` : ''}${p}</g>`;
 }
 /** a label on its own, as an SVG document (the editor's previews and the symbol picker) */
-export function texSVG(src, size = 18, style = 'textbook') {
+export function texSVG(src, size = 18, style = 'textbook', sty = null) {
   const saved = CUR; CUR = {...STYLES[style] || STYLES.textbook, ls: 1, ss: 1};
-  const b = texLayout(src, size), pad = 3, W = Math.max(8, b.w + 2 * pad), H = b.a + b.d + 2 * pad;
-  const out = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(W)} ${f(H)}" width="${f(W)}" height="${f(H)}">${texText(src, pad, pad + b.a - (b.a - b.d) / 2, size, 'start')}</svg>`;
+  if (sty?.family) CUR = {...CUR, font: FONT_FAMILY[sty.family], ...FAMILY_METRIC[sty.family]};
+  const b = texLayout(src, size, sty), pad = 3, W = Math.max(8, b.w + 2 * pad), H = b.a + b.d + 2 * pad;
+  const out = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(W)} ${f(H)}" width="${f(W)}" height="${f(H)}">${texText(src, pad, pad + b.a - (b.a - b.d) / 2, size, 'start', '', sty ? {style: sty} : {})}</svg>`;
   CUR = saved; return out;
 }
 
@@ -645,7 +668,7 @@ export function renderSVG(scene, opts = {}) {
   const ccen = els.length ? {x: els.reduce((s, e) => s + e.x1 + e.x2, 0) / (2 * els.length), y: els.reduce((s, e) => s + e.y1 + e.y2, 0) / (2 * els.length)} : {x: 0, y: 0};
 
   /* order: regions and frames, surfaces, connections, bodies, marks (so a string ends under the block it pulls) */
-  const RANK = {nnet: 3, fbox: 4, farrow: 3.5, gpoly: 1.5, gcircle: 2, gline: 2.2, gangle: 6.5, gpoint: 7.5, joint: 3.2, panel: -4, region: -3, container: -1.5, utube: -1.5, gasbox: -1, track: 0, plank: 4.5, wheel: 5, bridge: 3, rails: 2, transformer: 3, parrows: 6, brace: 7, callout: 7, particle: 6, nucleus: 5, interference: 1, pulse: 2, screen: 1, eye: 5, source: 5, fiber: 2, thermometer: 5, heater: 4, field: -2, graph: -2, well: -1, levels: -1, spacetime: -1, reservoir: -1, fieldlines: -0.5, floor: 0, ceiling: 0, wall: 0, incline: 1, line: 2, axes: 2, slab: 1, prism: 1,
+  const RANK = {nnet: 3, fbox: 4, farrow: 3.5, gpoly: 1.5, gcircle: 2, gline: 2.2, gangle: 6.5, gpoint: 7.5, joint: 3.2, panel: -4, region: -3, container: -1.5, utube: -1.5, gasbox: -1, track: 0, plank: 4.5, wheel: 5, bridge: 3, rails: 2, transformer: 3, parrows: 6, brace: 7, callout: 7, particle: 6, nucleus: 5, interference: 1, pulse: 2, screen: 1, eye: 5, source: 5, fiber: 2, thermometer: 5, heater: 4, field: -2, graph: -2, well: -1, levels: -1, spacetime: -1, reservoir: -1, fieldlines: -0.5, floor: 0, ceiling: 0, wall: 0, incline: 1, rough: 1.2, line: 2, axes: 2, slab: 1, prism: 1,
     curve: 2.5, cycle: 2.5, worldline: 2.5, pulley: 4, pivot: 4, string: 3, rod: 3, spring: 3, block: 5, ball: 5, force: 6, label: 7, dim: 7, arc: 7, point: 7, vector: 6, oarrow: 6, ray: 5.5, charge: 5, element: 3};
   const order = [...scene.objects].sort((a, b) => (RANK[a.type] ?? 4) - (RANK[b.type] ?? 4));
   /* a gray strip on the solid side of a fixed surface (수능 draws walls and ceilings so) */
@@ -655,7 +678,7 @@ export function renderSVG(scene, opts = {}) {
   const valueMark = o => {
     const T = o.type, at = (p, t, dx = 0, dy = 0, anchor = 'middle') => lbl(t, p.x + dx, p.y + dy, 12.5, anchor, '', {halo: true});
     if (isBody(o)) { const p = screen(opts.poses?.get?.(o.id) || poseOf(o)), r = (isRound(o) ? o.r : o.h / 2) * S; return at(p, `\\mathrm{${nv(o.mass)}\\,kg}`, 0, r + 11); }
-    if (T === 'incline') { const c = inclineCorners(o), q = screen(c.foot); return at(q, `${nv(o.angle)}^\\circ`, (o.flip ? -1 : 1) * 46, -7); }
+    if (T === 'incline') { if (o.angleLabel) return ''; const c = inclineCorners(o), q = screen(c.foot); return at(q, `${nv(o.angle)}^\\circ`, (o.flip ? -1 : 1) * 46, -7); }
     if (T === 'spring') { const A = byId.get(o.a), B = byId.get(o.b); if (!A || !B) return ''; const a = screen(isBody(A) ? poseOf(A) : A), b = screen(isBody(B) ? poseOf(B) : B); return at({x: (a.x + b.x) / 2, y: (a.y + b.y) / 2}, `\\mathrm{${nv(o.k)}\\,N/m}`, 0, 18); }
     if (T === 'force') { const b = byId.get(o.on); if (!b) return ''; const p = screen(poseOf(b)), th = o.angle * Math.PI / 180, L = o.len * S; return at({x: p.x + Math.cos(th) * L, y: p.y - Math.sin(th) * L}, `\\mathrm{${nv(o.F)}\\,N}`, 0, 16); }
     if (T === 'element' && X2U[o.kind]) { const m = screen({x: (o.x1 + o.x2) / 2, y: (o.y1 + o.y2) / 2}), vert = Math.abs(o.x2 - o.x1) < Math.abs(o.y2 - o.y1); return at(m, `\\mathrm{${nv(o.value)}\\,${X2U[o.kind]}}`, vert ? -22 : 0, vert ? 0 : 22, vert ? 'end' : 'middle'); }
@@ -664,7 +687,7 @@ export function renderSVG(scene, opts = {}) {
     if (T === 'rails') { const m = motionalEMF(o), p = screen({x: o.x + o.w / 2, y: o.y}); return at(p, `\\mathcal{E} = \\mathrm{${nv(m.emf)}\\,V}`, 0, 30); }
     if (T === 'container') { const p = screen({x: o.x + o.w / 2, y: o.y}); return at(p, `\\rho = \\mathrm{${nv(o.rho)}\\,kg/m^3}`, 0, 14); }
     if (T === 'bridge') { const p = screen(bridgeJockey(o)); return at(p, `l = \\mathrm{${nv(o.at * 100)}\\,cm}`, 0, 30); }
-    if (T === 'pulley' || T === 'wheel') { const c = screen(o); return at(c, `\\mathrm{${nv(o.r)}\\,m}`, 0, o.r * S + 12); }
+    if (T === 'wheel') { const c = screen(o); return at(c, `\\mathrm{${nv(o.r)}\\,m}`, 0, o.r * S + 12); }
     return '';
   };
   for (const o of order) {
@@ -675,7 +698,20 @@ export function renderSVG(scene, opts = {}) {
     if (ost !== st) setStyle(ost);
     /* the object's own line weight and label size */
     om = o.lw || 1; lw = B0.lw * om; thin = B0.thin * om; hair = B0.hair * om; thick = B0.thick * om; HL = B0.HL * Math.sqrt(om); CUR.ls = baseLs * (o.ls || 1);
-    if (T === 'floor') {
+    if (T === 'rough') {
+      /* a rough span of a floor or an incline: a shaded band on the side bodies rest on, its μ under the surface */
+      const sf = byId.get(o.on);
+      if (sf) {
+        const fr = surfaceFrame(sf, scene), a0 = Math.max(0, Math.min(fr.length, o.from)), a1 = Math.max(a0, Math.min(fr.length, o.from + o.len));
+        const pa = screen(vec.add(fr.p0, vec.mul(fr.u, a0))), pb = screen(vec.add(fr.p0, vec.mul(fr.u, a1))), sn = {x: fr.n.x, y: -fr.n.y}, t = Math.max(3.5, 5 * ss);
+        const q = [pa, pb, {x: pb.x + sn.x * t, y: pb.y + sn.y * t}, {x: pa.x + sn.x * t, y: pa.y + sn.y * t}], pts = q.map(p => `${f(p.x)},${f(p.y)}`).join(' ');
+        s += o.look === 'gray' && gray ? `<polygon points="${pts}" fill="${gray}" stroke="none"/>` : shade(`polygon points="${pts}"`, o.look === 'dots' ? 'dots' : o.look === 'gray' ? 'gray' : 'hatch');
+        s += `<polygon points="${pts}" fill="none" stroke="${ink}" stroke-width="${f(hair)}"/>`;
+        const text = o.label || (o.showMu ? `\\mu = ${nv(o.mu)}` : '');
+        if (text) s += lbl(text, (pa.x + pb.x) / 2 - sn.x * 14, (pa.y + pb.y) / 2 - sn.y * 14, 13.5, 'middle', '', {halo: true});
+        s += hit(`M${f(pa.x)},${f(pa.y)}L${f(pb.x)},${f(pb.y)}`);
+      }
+    } else if (T === 'floor') {
       const a = screen(o), b = screen({x: o.x + o.w, y: o.y});
       s = `${line(a, b)}${o.hatch && st.floor !== 'line' ? hatch(a.x, a.y, b.x, b.y, 0, 1) : ''}${hit(`M${f(a.x)},${f(a.y)}H${f(b.x)}`)}`;
     } else if (T === 'ceiling') {
@@ -691,7 +727,9 @@ export function renderSVG(scene, opts = {}) {
         const r = Math.min(34, 0.35 * Math.hypot(right.x - foot.x, right.y - foot.y)), th = o.angle * Math.PI / 180, dir = o.flip ? -1 : 1;
         const p1 = {x: foot.x + dir * r, y: foot.y}, p2 = {x: foot.x + dir * r * Math.cos(th), y: foot.y - r * Math.sin(th)};
         const mid = {x: foot.x + dir * (r + 13) * Math.cos(th / 2), y: foot.y - (r + 13) * Math.sin(th / 2)};
-        s += `<path d="M${f(p1.x)},${f(p1.y)}A${f(r)},${f(r)} 0 0 ${o.flip ? 1 : 0} ${f(p2.x)},${f(p2.y)}" fill="none" stroke="${ink}" stroke-width="${f(hair * 1.2)}"/>${lbl(o.angleLabel, mid.x + dir * 4, mid.y, 15)}`;
+        /* with the values shown, the angle's value goes with its name (θ = 30°), not on top of it */
+        const al = showValues ? lbl(`${o.angleLabel} = ${nv(o.angle)}^\\circ`, mid.x - dir * 4, mid.y, 15, o.flip ? 'end' : 'start') : lbl(o.angleLabel, mid.x + dir * 4, mid.y, 15);
+        s += `<path d="M${f(p1.x)},${f(p1.y)}A${f(r)},${f(r)} 0 0 ${o.flip ? 1 : 0} ${f(p2.x)},${f(p2.y)}" fill="none" stroke="${ink}" stroke-width="${f(hair * 1.2)}"/>${al}`;
       }
     } else if (T === 'pulley') {
       const c = screen(o), r = o.r * S, m = byId.get(o.mount);
@@ -1371,9 +1409,13 @@ export function renderSVG(scene, opts = {}) {
 
     /* ── marks ── */
     } else if (T === 'label') {
-      const c = screen(o);
-      if (o.box && o.text) { const b = texLayout(o.text, o.size * CUR.ls), pw = 6; s += `<rect x="${f(c.x - b.w / 2 - pw)}" y="${f(c.y - (b.a + b.d) / 2 - pw * 0.7)}" width="${f(b.w + 2 * pw)}" height="${f(b.a + b.d + pw * 1.4)}" fill="#fff" stroke="${ink}" stroke-width="${f(thin)}"/>`; }
-      s += lbl(o.text || (edit ? '…' : ''), c.x, c.y, o.size, 'middle', o.color && o.color !== 'black' ? ` fill="${COLOR_HEX[o.color]}"` : '') + (edit ? `<rect x="${f(c.x - 14)}" y="${f(c.y - 12)}" width="28" height="24" fill="transparent"/>` : '');
+      /* its own face, italic, bold, underline; aligned about x (left: x is where it starts) */
+      const c = screen(o), sty = labelStyle(o), anchor = o.align === 'left' ? 'start' : o.align === 'right' ? 'end' : 'middle';
+      const saved = CUR; if (sty?.family) CUR = {...CUR, font: FONT_FAMILY[sty.family], ...FAMILY_METRIC[sty.family]};
+      const b = texLayout(o.text || '…', o.size * CUR.ls, sty); CUR = saved;
+      const x0 = anchor === 'start' ? c.x : anchor === 'end' ? c.x - b.w : c.x - b.w / 2;
+      if (o.box && o.text) { const pw = 6; s += `<rect x="${f(x0 - pw)}" y="${f(c.y - (b.a + b.d) / 2 - pw * 0.7)}" width="${f(b.w + 2 * pw)}" height="${f(b.a + b.d + pw * 1.4)}" fill="#fff" stroke="${ink}" stroke-width="${f(thin)}"/>`; }
+      s += lbl(o.text || (edit ? '…' : ''), c.x, c.y, o.size, anchor, o.color && o.color !== 'black' ? ` fill="${COLOR_HEX[o.color]}"` : '', sty ? {style: sty} : undefined) + (edit ? `<rect x="${f(Math.min(x0, c.x - 14))}" y="${f(c.y - 12)}" width="${f(Math.max(28, b.w))}" height="24" fill="transparent"/>` : '');
     } else if (T === 'dim') {
       const a = screen({x: o.x1, y: o.y1}), b = screen({x: o.x2, y: o.y2}), L = Math.hypot(b.x - a.x, b.y - a.y);
       if (L > 1) {
@@ -1845,8 +1887,10 @@ export function renderSVG(scene, opts = {}) {
     for (const {p, n} of pts.values()) {
       let deg = n;
       for (const w of wires) { const P0 = elementPath(w); for (let i = 0; i + 1 < P0.length; i++) { const A = P0[i], B = P0[i + 1], ab = vec.sub(B, A), t = vec.dot(vec.sub(p, A), ab) / (vec.dot(ab, ab) || 1); if (t > 0.001 && t < 0.999 && vec.len(vec.sub(p, vec.add(A, vec.mul(ab, t)))) < 0.01) deg += 2; } }
-      if (deg >= 3) { const c = screen(p); d += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(st.dot * ss * 1.1)}" fill="${ink}"/>`; }
+      if (deg >= 3) { const c = screen(p); d += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="${f(st.dot * ss * 1.1)}" fill="${ink}" class="junction"/>`; }
     }
+    /* in the editor: an end that lies on the body of another element (it does not join it) gets a red ring */
+    if (edit) for (const l of splitWires(scene).loose) { const e = byId.get(l.id); if (e) { const c = screen({x: e['x' + l.end], y: e['y' + l.end]}); d += `<circle cx="${f(c.x)}" cy="${f(c.y)}" r="6" fill="none" stroke="#c0262d" stroke-width="1.6" class="loose" pointer-events="none"/>`; } }
     return d;
   }
 }
@@ -1864,6 +1908,7 @@ export function objectBox(scene, o, poses, opts2 = {}) {
     case 'fieldlines': return null;
     case 'joint': { const e = opts2.jointEnds?.get?.(o.id) || jointEnds(scene, o); return e ? box([e.a, e.b]) : null; }
     case 'farrow': { const A = byId.get(o.a), B = byId.get(o.b); return A && B ? box([A, B]) : null; }
+    case 'rough': { const sf = byId.get(o.on); if (!sf) return null; const fr = surfaceFrame(sf, scene), a = vec.add(fr.p0, vec.mul(fr.u, o.from)), b = vec.add(fr.p0, vec.mul(fr.u, o.from + o.len)); return box([a, b, vec.add(a, vec.mul(fr.n, 0.05)), vec.add(b, vec.mul(fr.n, 0.05))]); }
   }
   if (GEO_TYPES.includes(o.type)) return geoExtent(opts2.geo || computeGeometry(scene), o);
   return objectExtent(o);

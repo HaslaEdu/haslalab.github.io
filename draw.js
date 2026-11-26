@@ -6,9 +6,10 @@
    (/api/workshop/storage) or into this browser. "Start from a photo" sends one photo to /api/workshop/scene-from-image
    (community/src/workshop-scene.js) and opens what comes back for checking. */
 import {geoIntersect, validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath,
-  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape} from './draw-scene.mjs?v=6a3c9af34d22';
-import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=c28a48272a2b';
-import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=1d18c2e45bc3';
+  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape, sceneSig, docFor, docEdited, docSaved, docState, keepDraft, dropDraft, freeSpot, nextForce, TEXT_FONTS, SURFACE_TYPES} from './draw-scene.mjs?v=6e567e38776d';
+import {buildSim, solveCircuit, computedInfo, splitWires} from './draw-physics.mjs?v=f6e7ef5cf9c1';
+import {createInkController, toSceneObjects, candidatesFromScene, rasteriseStrokes, mathRequestBody, MATH_PATH, catmullRom, smoothFreehand} from './draw-ink.mjs?v=67b0af26ddfe';
+import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor, labelStyle, FONT_FAMILY} from './draw-render.mjs?v=3b724bb45866';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -263,7 +264,7 @@ T.unsure = {...T.unsure, ...(ko ? {charge: '전하', kind: '종류', focal: '초
 /* the palette: [type, preset, name] by domain */
 const K = X2.kinds, N2 = (k, e) => ko ? k : e;
 const PALETTE = {
-  mech: [...['block', 'ball', 'floor', 'incline', 'wall', 'ceiling', 'pulley', 'pivot', 'string', 'rod', 'spring', 'force'].map(t => [t, {}, T.types[t]]),
+  mech: [...['block', 'ball', 'floor', 'incline', 'wall', 'ceiling', 'pulley', 'pivot', 'string', 'rod', 'spring', 'force'].map(t => [t, {}, T.types[t]]), ['rough', {}, N2('마찰 구간 (거친 면)', 'Friction region (rough patch)'), 'friction rough region patch surface mu 마찰 거친 구간 면 μ'],
     ['block', {look: 'cart'}, N2('수레', 'Cart')], ['block', {look: 'car'}, N2('자동차', 'Car')], ['wheel', {kind: 'disk', omega: 'ccw'}, N2('원판 · 원통 (ω)', 'Disk, cylinder (ω)')], ['wheel', {kind: 'ring'}, N2('고리', 'Ring')], ['wheel', {kind: 'wheel', spokes: 6}, N2('바퀴', 'Wheel')],
     ['plank', {support: 'fulcrum'}, N2('시소 · 지레', 'Seesaw, lever')], ['plank', {support: 'hinge', at: 0}, N2('경첩 막대', 'Hinged rod')], ['plank', {support: 'none'}, N2('판 · 막대', 'Plank')], ['track', {from: 180, to: 270}, N2('곡면 경사로', 'Curved ramp')], ['track', {from: -90, to: 270}, N2('원형 궤도 (루프)', 'Loop')]],
   em: [...['wire', 'resistor', 'rheostat', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'dielectric', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer'].map(k => ['element', {kind: k}, K[k]]),
@@ -297,6 +298,56 @@ const PALETTE = {
 };
 const PAL_EN = {mech: 'block ball floor incline wall ceiling pulley pivot string rod spring force cart car wheel disk cylinder ring plank lever seesaw hinge track loop ramp', em: 'wire resistor rheostat battery cell dc ac capacitor dielectric inductor switch diode led bulb ammeter voltmeter galvanometer meter bridge potentiometer jockey transformer rails rod emf ground charge plate field lines B E current solenoid loop magnet', thermo: 'cylinder piston container liquid water buoyancy utube thermometer heater burner coil gas molecules pressure reservoir engine graph isotherm adiabat isobar isochore carnot otto stirling', optics: 'axis lens mirror prism slab object ray slit grating wavefront beam splitter half screen eye source laser bulb fiber', waves: 'wave standing travelling wavefront pulse interference', modern: 'well barrier step harmonic levels hydrogen photoelectric minkowski spacetime worldline frames nucleus particle electron photon alpha proton neutron', geo: 'point construction geometry segment line circle physics rigid box ball ramp', general: 'parametric polar inequality tangent area root extremum label text box vector dimension arc axes line dashed dotted arrow region hatch point graph function curve panel caption brace callout arrows'};
 
+/* the file (identity, save as, open, recovery), the friction region, plain error messages, the label's text style */
+const X8 = ko ? {
+  file: '파일', newFig: '새 그림 (빈 그림)', open: '📂 열기', openT: '보관함에서 그림 열기', save: '💾 저장', saveT: '보관함에 저장 (Ctrl+S). 이 그림을 연 파일이 있으면 그 파일에 저장합니다.', saveAs: '다른 이름으로 저장…', saveAsT: '새 파일로 저장 (Ctrl+Shift+S)', dupFig: '그림 복제',
+  dupDone: '사본을 만들었습니다. 저장하면 새 파일이 됩니다. 원본 파일과 공유는 그대로입니다.', view: '보기', edit: '편집', side: '속성', sideT: '오른쪽 속성 칸 접기·펴기', ai: '✨ AI', tools: '도구', geoMore: '작도 ▾', geoLess: '작도 ▴', more: '더 보기',
+  state: {saved: '저장됨', unsaved: n => `저장 안 됨 · 변경 ${n}`, fresh: '새 그림 · 저장 안 함'}, savedAt: p => `보관함 ‘${p}’`, sharedAs: n => `공유 #${n}`,
+  stashed: '저장하지 않은 앞의 그림은 ‘열기’의 ‘복구할 그림’에 보관했습니다.',
+  recOther: (t, w) => `저장하지 않은 그림 ‘${t}’(${w})이 남아 있습니다.`, recSame: n => `지난번에 저장하지 않은 변경 ${n}개를 이 그림에 되살렸습니다.`, reopen: '다시 열기', discard: '버리기', saveNow: '지금 저장', close: '닫기', untitled: '이름 없는 그림',
+  dlgSaveAs: '다른 이름으로 저장', fname: '파일 이름', folder: '폴더', newFolder: '새 폴더 (쓰면 그 폴더에)', go: '저장', cancel: '취소', saveAsNote: '새 파일로 저장합니다. 지금 연 파일과 공유는 바뀌지 않습니다.',
+  dlgOpen: '그림 열기', search: '이름이나 폴더로 찾기', none: '보관함에 그림이 없습니다.', drafts: '복구할 그림 (저장하지 않은 변경)', local: '이 브라우저에 저장한 그림', fromStore: '보관함의 그림 (모든 폴더)', root: '(맨 위)', changedAt: '고친 때',
+  renamed: '보관함에서 이름이나 폴더가 바뀐 파일에 그대로 저장했습니다.', created: p => `보관함 ‘${p}’에 새로 저장했습니다.`, overwrote: p => `보관함 ‘${p}’에 저장했습니다.`,
+  err: {zero_length: id => `${id}의 두 끝이 같은 점이 됩니다. 다른 끝도 옮기거나 값을 확인하세요.`, out_of_range: (id, n, lo, hi) => `${id}의 ‘${n}’ 값은 ${lo}에서 ${hi} 사이여야 합니다.`, bad_number: (id, n) => `${id}의 ‘${n}’에 숫자를 넣으세요.`,
+    missing_ref: (id, n) => `${id}에 ‘${n}’을(를) 골라 주세요.`, bad_ref: (id, n) => `${id}의 ‘${n}’이(가) 가리키는 것이 없거나 종류가 맞지 않습니다.`, same_ends: id => `${id}의 두 끝이 같은 물체입니다.`, two_strings: id => `한 물체에는 줄이나 막대를 하나만 이을 수 있습니다 (${id}).`,
+    no_body: id => `${id}의 한쪽 끝은 물체여야 합니다.`, bad_text: (id, n) => `${id}의 ‘${n}’ 글에 쓸 수 없는 문자가 있습니다.`, too_many: () => `물체는 ${MAX_OBJECTS}개까지 넣을 수 있습니다.`, other: id => `${id ? id + ': ' : ''}이 값은 받아들일 수 없습니다.`},
+  split: l => `도선 ${l}을(를) 접점에서 나눠 이었습니다 (접점은 ●로 표시).`, loose: (a, b) => `${a}의 끝이 ${b}의 몸통 위에 있어 이어지지 않습니다. 소자의 끝이나 도선 위에 놓으세요 (빨간 동그라미).`,
+  txt: {bar: '글자 모양', it: '기울임 (I)', bold: '굵게 (B)', under: '밑줄 (U)', font: '글꼴', align: '정렬', left: '왼쪽', center: '가운데', right: '오른쪽', sel: '고른 부분만:',
+    fonts: {math: '수식 (변수 기울임, 기본)', serif: '세리프 · 명조 (Times 계열)', sans: '고딕 (산세리프)', mono: '고정폭', hand: '손글씨'},
+    runs: {'\\textit': ['𝘪', '고른 글자 기울임'], '\\textbf': ['𝐛', '고른 글자 굵게'], '\\mathrm': ['rm', '고른 글자 바로 세움 (로만)'], '\\mathsf': ['sf', '고른 글자 고딕'], '\\mathtt': ['tt', '고른 글자 고정폭'], '\\text': ['abc', '고른 부분은 글자 (수식 아님)']}},
+  rough: '마찰 구간 (거친 면)', roughF: {from: '시작 위치 (m, 면의 시작부터)', len: '길이 (m)', look: '모양', showMu: 'μ 값 표시', on: '놓인 면', label: '이름표 (비우면 μ = 값)'}, roughNeeds: '마찰 구간은 바닥이나 빗면 위에 놓입니다. 바닥을 함께 넣었습니다.',
+  enums: {hatch: '빗금', gray: '회색', dots: '점'},
+  ink: {auto: '자동 보정', autoT: '펜을 떼면 선·원·사각형·빗면·저항·용수철 같은 모양으로 고칩니다', hold: '길게 눌러 보정', holdT: '선 끝에서 펜을 잠깐 멈추면 모양으로 바뀌고, 그대로 끌어 크기·방향을 맞춥니다', finger: '손가락으로 그리기', fingerT: '끄면 손가락은 화면 이동·확대, 펜과 마우스만 그립니다',
+    math: '수식 쓰기', mathT: '손으로 쓴 수식을 LaTeX 글자로 바꿉니다', convert: '변환', clear: '지우기', other: '다른 모양으로:', freehand: '손그림 그대로', reading: '손글씨 수식을 읽는 중…', mathLeft: n => `오늘 ${n}번 더 쓸 수 있습니다.`, mathAlt: '다른 읽기:', mathNone: '먼저 수식을 쓰세요.',
+    err: {login_required: '로그인하면 손글씨 수식을 바꿀 수 있습니다.', ai_limit: '오늘 쓸 수 있는 횟수를 다 썼습니다.', busy: 'AI가 바쁩니다. 잠시 뒤에 다시 하세요.', not_configured: 'AI가 아직 준비되지 않았습니다.', ai_failed: 'AI가 읽지 못했습니다. 다시 하세요.', ai_unusable: '읽을 수 없습니다. 조금 더 또박또박 써 주세요.', image_too_large: '글씨가 너무 큽니다. 나눠서 쓰세요.'},
+    types: {line: '선', arrow: '화살표', vector: '벡터', dashed: '점선', polyline: '꺾은선', polygon: '다각형', triangle: '삼각형', incline: '빗면', rect: '사각형', square: '정사각형', circle: '원', ellipse: '타원', arc: '호', curve: '곡선', zigzag: '지그재그', resistor: '저항', spring: '용수철', coil: '코일', inductor: '코일(인덕터)', wave: '사인파', cell: '전지', battery: '전지(여러 칸)', capacitor: '축전기', ground: '접지', freehand: '손그림', dot: '점'}}
+} : {
+  file: 'File', newFig: 'New (blank figure)', open: '📂 Open', openT: 'Open a figure from your storage', save: '💾 Save', saveT: 'Save to your storage (Ctrl+S): to the file this figure was opened from, if any.', saveAs: 'Save as…', saveAsT: 'Save to a new file (Ctrl+Shift+S)', dupFig: 'Duplicate figure',
+  dupDone: 'This is a copy. Saving it makes a new file; the original file and its sharing are unchanged.', view: 'View', edit: 'Edit', side: 'Properties', sideT: 'Show or hide the properties panel', ai: '✨ AI', tools: 'Tools', geoMore: 'Construct ▾', geoLess: 'Construct ▴', more: 'More',
+  state: {saved: 'Saved', unsaved: n => `Not saved · ${n} change${n === 1 ? '' : 's'}`, fresh: 'New figure · not saved'}, savedAt: p => `Storage: ${p}`, sharedAs: n => `Shared #${n}`,
+  stashed: 'The figure before had unsaved changes: it is kept under “Recover” in Open.',
+  recOther: (t, w) => `An unsaved figure “${t}” (${w}) is still here.`, recSame: n => `${n} unsaved change${n === 1 ? '' : 's'} from last time were brought back.`, reopen: 'Reopen', discard: 'Discard', saveNow: 'Save now', close: 'Close', untitled: 'Untitled figure',
+  dlgSaveAs: 'Save as', fname: 'File name', folder: 'Folder', newFolder: 'New folder (optional)', go: 'Save', cancel: 'Cancel', saveAsNote: 'Saves to a new file. The file open now and its sharing stay as they are.',
+  dlgOpen: 'Open a figure', search: 'Find by name or folder', none: 'No figures in your storage yet.', drafts: 'Recover (unsaved changes)', local: 'Saved in this browser', fromStore: 'In your storage (every folder)', root: '(top)', changedAt: 'Changed',
+  renamed: 'The file was renamed or moved in your storage; saved to it all the same.', created: p => `Saved to a new file: ${p}.`, overwrote: p => `Saved: ${p}.`,
+  err: {zero_length: id => `Both ends of ${id} would be the same point. Move the other end too, or check the values.`, out_of_range: (id, n, lo, hi) => `“${n}” of ${id} must be between ${lo} and ${hi}.`, bad_number: (id, n) => `Type a number for “${n}” of ${id}.`,
+    missing_ref: (id, n) => `Choose “${n}” for ${id}.`, bad_ref: (id, n) => `“${n}” of ${id} names nothing, or something of the wrong kind.`, same_ends: id => `Both ends of ${id} are the same object.`, two_strings: id => `A body can have one string or rod only (${id}).`,
+    no_body: id => `One end of ${id} must be a body.`, bad_text: (id, n) => `“${n}” of ${id} has characters that cannot be used.`, too_many: () => `A figure can have up to ${MAX_OBJECTS} objects.`, other: id => `${id ? id + ': ' : ''}this value cannot be used.`},
+  split: l => `Wire ${l} was split at the junction, so the branch is connected (junctions show as dots).`, loose: (a, b) => `An end of ${a} lies on the body of ${b} and is not connected. Put it on an end or on a wire (red ring).`,
+  txt: {bar: 'Text style', it: 'Italic (I)', bold: 'Bold (B)', under: 'Underline (U)', font: 'Font', align: 'Align', left: 'Left', center: 'Centre', right: 'Right', sel: 'Selection only:',
+    fonts: {math: 'Math italic (default)', serif: 'Serif (Times-like)', sans: 'Sans serif', mono: 'Monospace', hand: 'Handwriting'},
+    runs: {'\\textit': ['𝘪', 'Italic selection'], '\\textbf': ['𝐛', 'Bold selection'], '\\mathrm': ['rm', 'Upright (roman) selection'], '\\mathsf': ['sf', 'Sans serif selection'], '\\mathtt': ['tt', 'Monospace selection'], '\\text': ['abc', 'Selection as text (not maths)']}},
+  rough: 'Friction region (rough patch)', roughF: {from: 'Starts at (m from the surface\'s start)', len: 'Length (m)', look: 'Look', showMu: 'Show μ', on: 'On surface', label: 'Label (empty: μ = value)'}, roughNeeds: 'A friction region lies on a floor or an incline: a floor was added with it.',
+  enums: {hatch: 'Hatched', gray: 'Gray', dots: 'Dots'},
+  ink: {auto: 'Auto-shape', autoT: 'When the pen lifts, a stroke becomes a line, circle, rectangle, incline, resistor, spring …', hold: 'Hold to snap', holdT: 'Hold the pen still at the end of a stroke to snap it, then drag to size and turn it', finger: 'Draw with finger', fingerT: 'Off: fingers pan and zoom, only a pen or the mouse draws',
+    math: 'Write math', mathT: 'Handwritten maths becomes a LaTeX label', convert: 'Convert', clear: 'Clear', other: 'Other shape:', freehand: 'Keep as drawn', reading: 'Reading the handwriting…', mathLeft: n => `${n} left today.`, mathAlt: 'Other readings:', mathNone: 'Write a formula first.',
+    err: {login_required: 'Log in to convert handwriting.', ai_limit: 'You have used today’s quota.', busy: 'The AI is busy. Try again in a moment.', not_configured: 'The AI is not set up yet.', ai_failed: 'The AI could not read it. Try again.', ai_unusable: 'It could not be read. Write a little more clearly.', image_too_large: 'The writing is too large. Write it in parts.'},
+    types: {line: 'Line', arrow: 'Arrow', vector: 'Vector', dashed: 'Dashed line', polyline: 'Polyline', polygon: 'Polygon', triangle: 'Triangle', incline: 'Incline', rect: 'Rectangle', square: 'Square', circle: 'Circle', ellipse: 'Ellipse', arc: 'Arc', curve: 'Curve', zigzag: 'Zigzag', resistor: 'Resistor', spring: 'Spring', coil: 'Coil', inductor: 'Inductor', wave: 'Sine wave', cell: 'Cell', battery: 'Battery', capacitor: 'Capacitor', ground: 'Ground', freehand: 'Freehand', dot: 'Dot'}}
+};
+T.types.rough = ko ? '마찰 구간' : 'Friction region';
+for (const [k, v] of Object.entries(X8.enums)) if (!(k in T.enums)) T.enums[k] = v;
+for (const k of ['font', 'italic', 'bold', 'underline', 'align']) if (!(k in T.fields)) T.fields[k] = k === 'font' ? X8.txt.font : k === 'align' ? X8.txt.align : X8.txt[k === 'italic' ? 'it' : k === 'underline' ? 'under' : 'bold'].replace(/ \(.\)$/, '');
+
 /* ── the member's session, as the other Workshop pages read it ── */
 const API = (() => { let o = ''; try { o = localStorage.getItem('hlCmApi') || ''; } catch (e) {} return (/^https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev\/?$/.test(o) ? o : 'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/, ''); })();
 const token = () => { try { const v = localStorage.getItem('hlCmTok') || ''; return /^[A-Za-z0-9_-]{20,4096}$/.test(v) ? v : ''; } catch (e) { return ''; } };
@@ -322,16 +373,19 @@ const clone = o => JSON.parse(JSON.stringify(o));
 const prefs = () => { try { const p = JSON.parse(store.get(PREFS_KEY) || '{}'); return p && typeof p === 'object' ? p : {}; } catch (e) { return {}; } };
 const setPref = (k, v) => store.set(PREFS_KEY, JSON.stringify({...prefs(), [k]: v}));
 const EXAMPLE = 'incline_pulley';
+/* the figure the editor opens with: a template asked for (?t=), a figure sent from the paper, else the one this browser
+   had open (with its document: identity and links), else the example or an empty figure. restored: it is the figure
+   that was open before, so its document (st.doc) is still its own */
 function startScene() {
   const t = params.get('t');
-  if (t && TEMPLATE_KEYS.includes(t)) { st.dom = TEMPLATE_DOMAIN[t] || 'mech'; return validateScene(template(t, lang)).scene; }
+  if (t && TEMPLATE_KEYS.includes(t)) { st.dom = TEMPLATE_DOMAIN[t] || 'mech'; return {scene: validateScene(template(t, lang)).scene}; }
   /* a figure sent from the paper to be changed (teach.js "그림 고치기") */
-  try { const e = JSON.parse(store.get(EDIT_KEY) || 'null'); if (e && typeof e.key === 'string' && e.scene) { const r = validateScene(e.scene); if (r.ok) { st.paperEdit = e.key; store.del(EDIT_KEY); return r.scene; } } } catch (e) {}
+  try { const e = JSON.parse(store.get(EDIT_KEY) || 'null'); if (e && typeof e.key === 'string' && e.scene) { const r = validateScene(e.scene); if (r.ok) { st.paperEdit = e.key; store.del(EDIT_KEY); return {scene: r.scene}; } } } catch (e) {}
   let saved = null;
   try { const r = validateScene(JSON.parse(store.get(SCENE_KEY) || 'null')); if (r.ok) saved = r.scene; } catch (e) {}
-  if (saved && saved.objects.length) return saved;
-  if (prefs().example === false) return saved || {...blankScene(), view: {x: -0.5, y: -0.5, w: 4, h: 3}};
-  return validateScene(template(EXAMPLE, lang)).scene;
+  if (saved && saved.objects.length) return {scene: saved, restored: true};
+  if (prefs().example === false) return saved ? {scene: saved, restored: true} : {scene: {...blankScene(), view: {x: -0.5, y: -0.5, w: 4, h: 3}}};
+  return {scene: validateScene(template(EXAMPLE, lang)).scene};
 }
 const byId = id => st.scene.objects.find(o => o.id === id);
 const view = () => st.scene.view || (st.scene.view = sceneBounds(st.scene));
@@ -339,31 +393,116 @@ const view = () => st.scene.view || (st.scene.view = sceneBounds(st.scene));
 const dview = () => st.zoom || view();
 const selIds = () => [...st.selection].filter(id => byId(id));
 function setSel(ids, primary) { st.selection = new Set(ids.filter(Boolean)); st.sel = primary && st.selection.has(primary) ? primary : st.selection.size === 1 ? [...st.selection][0] : st.selection.size ? (st.selection.has(st.sel) ? st.sel : [...st.selection].pop()) : ''; }
-/* every change goes through here: checked, kept for undo (one step), saved in this browser */
-function commit(next, {keepSel = false, before = null} = {}) {
+/* every change goes through here: checked, its circuit's junctions made explicit, kept for undo (one step), saved in
+   this browser; load: the change opens another figure (draw-scene.mjs docFor: a new identity, the links it gets) */
+function commit(next, {keepSel = false, before = null, load = null} = {}) {
   const r = validateScene(next);
-  if (!r.ok) { flash(`<span class="bad">${T.invalid}: ${esc(r.errors.map(e => (e.id ? e.id + '.' : '') + (e.field || e.code)).slice(0, 3).join(', '))}</span>`); return false; }
+  if (!r.ok) { flash(`<span class="bad">${esc(plainErrors(r.errors, next))}</span>`); return false; }
+  const j = joinCircuit(r.scene);
   st.hist.record(before || JSON.stringify(st.scene));
-  st.scene = r.scene; if (!keepSel) setSel(selIds(), st.sel);
+  st.scene = j.scene; if (!keepSel) setSel(selIds(), st.sel);
+  st.doc = load ? docFor(load.action, st.scene, load.links || {}) : docEdited(st.doc);
   if (!st.scene.objects.length && prefs().example !== false) setPref('example', false);
-  stopSim(); save(); paint(); return true;
+  stopSim(); save(); paint(); if (j.msg) flash(j.msg); return true;
 }
-const save = () => store.set(SCENE_KEY, JSON.stringify(st.scene));
-function restore(text) { st.scene = JSON.parse(text); setSel(selIds(), st.sel); stopSim(); save(); paint(); }
+/* the end of a drag or a slider gesture: the figure as it is now, one step of history from `before` (back to it when
+   the result is not a valid figure, saying why) */
+function settle(before) {
+  const r = validateScene(st.scene);
+  if (!r.ok) { const why = plainErrors(r.errors, st.scene); st.scene = JSON.parse(before); paint(); flash(`<span class="bad">${esc(why)}</span>`); return false; }
+  const j = joinCircuit(r.scene);
+  st.hist.record(before); st.scene = j.scene; st.doc = docEdited(st.doc); save(); paint(); if (j.msg) flash(j.msg); return true;
+}
+const save = () => { store.set(SCENE_KEY, JSON.stringify(st.scene)); saveDoc(); };
+function restore(text) { st.scene = JSON.parse(text); setSel(selIds(), st.sel); stopSim(); st.doc = docEdited(st.doc); save(); paint(); }
 function undo() { const t = st.hist.undo(JSON.stringify(st.scene)); if (t) restore(t); }
 function redo() { const t = st.hist.redo(JSON.stringify(st.scene)); if (t) restore(t); }
-/* 모두 지우기: an empty figure in the same style and frame (one undo step); from then on the editor opens empty */
+/* 모두 지우기: an empty figure in the same style and frame (one undo step); from then on the editor opens empty. It is
+   another figure: no storage file or shared project of the one before is kept with it */
 function clearAll() {
   const next = {...blankScene(), style: st.scene.style, view: st.scene.view, ...(st.scene.printW ? {printW: st.scene.printW} : {})};
-  setSel([]); st.ai = null;
-  if (commit(next)) { setPref('example', false); flash(esc(X3.tools.cleared)); }
+  st.ai = null;
+  if (setFigure(next, 'new')) { setPref('example', false); flash(esc(X3.tools.cleared)); }
+}
+/* the validator's findings in plain words (no codes): the object, the field's name, its range */
+const TOP_RANGE = {g: [0.1, 30], grid: [0.01, 1], printW: [20, 400], drag: [0, 50]};
+function plainErrors(errs, sc) {
+  const find = id => (Array.isArray(sc?.objects) ? sc.objects : []).find(o => o && o.id === id);
+  return [...new Set((errs || []).slice(0, 3).map(e => {
+    const o = e.id ? find(e.id) : null, F = o && FIELDS[o.type], f = F && e.field ? F[e.field] : null;
+    const name = o && e.field && F ? fieldName(o, e.field) : e.field ? ({g: T.g, grid: T.gridSize, printW: X3.tools.printW, title: T.sceneTitle}[e.field] || e.field) : '';
+    const who = o ? `${o.id} (${o.type === 'element' ? X2.kinds[o.kind] || o.kind : T.types[o.type] || o.type})` : e.id || T.scene;
+    if (e.code === 'out_of_range') { const R = f ? [f.min, f.max] : TOP_RANGE[e.field]; if (R) return X8.err.out_of_range(who, name, R[0], R[1]); }
+    if (e.code === 'too_many') return X8.err.too_many();
+    const fn = X8.err[e.code]; return fn ? fn(who, name) : X8.err.other(who);
+  }))].join(' ');
+}
+/* a circuit's junctions: an end on the middle of a wire splits the wire there (draw-physics.mjs splitWires); an end on
+   the body of another element is pointed out once */
+function joinCircuit(sc) {
+  if (!sc.objects.some(o => o.type === 'element')) { st.looseKey = ''; return {scene: sc, msg: ''}; }
+  const j = splitWires(sc); let out = sc, msg = '';
+  if (j.split.length && j.scene.objects.length <= MAX_OBJECTS) { const v = validateScene(j.scene); if (v.ok) { out = v.scene; msg = esc(X8.split([...new Set(j.split.map(x => x.wire))].join(', '))); } }
+  const key = j.loose.map(l => l.id + '.' + l.end + '.' + l.on).join(',');
+  if (j.loose.length && key !== st.looseKey) msg += (msg ? ' ' : '') + `<span class="bad">${esc(X8.loose(j.loose[0].id, j.loose[0].on))}</span>`;
+  st.looseKey = key;
+  return {scene: out, msg};
+}
+
+/* ── the figure's document: its identity, the storage file and the shared project linked to it, saved or not, and the
+   recovery drafts of unsaved figures (draw-scene.mjs docFor, docState, keepDraft) ── */
+const DOC_KEY = 'hlDrawDoc', DRAFTS_KEY = 'hlDrawDrafts', TWINS_KEY = 'hlDrawTwins', FIG_FOLDER = '그림';
+const readJSON = (k, d) => { try { const v = JSON.parse(store.get(k) || 'null'); return v ?? d; } catch (e) { return d; } };
+const FILE_ID = /^[A-Za-z0-9_-]{1,80}$/;
+const okStore = v => v && typeof v === 'object' && typeof v.json === 'string' && FILE_ID.test(v.json)
+  ? {json: v.json, svg: typeof v.svg === 'string' && FILE_ID.test(v.svg) ? v.svg : '', base: Number.isFinite(+v.base) ? +v.base : 0, name: String(v.name || '').slice(0, 200), folder: typeof v.folder === 'string' ? v.folder.slice(0, 300) : FIG_FOLDER, hash: String(v.hash || '').slice(0, 40)} : null;
+const okShare = v => v && typeof v === 'object' && [v.id, v.draft, v.remixOf].some(n => Number.isInteger(n) && n > 0) ? v : null;
+function loadDoc(scene) {
+  const d = readJSON(DOC_KEY, null);
+  if (d && typeof d.uid === 'string' && typeof d.saved === 'string') return {uid: d.uid.slice(0, 40), store: okStore(d.store), share: okShare(d.share), saved: d.saved, changes: Math.max(0, +d.changes || 0)};
+  /* from before identities: the links this browser kept beside the figure are taken as its own, not as saved */
+  const old = {store: okStore(readJSON('hlDrawStoreIds', null)), share: okShare(readJSON('hlDrawShare', null))};
+  store.del('hlDrawStoreIds'); store.del('hlDrawShare');
+  return old.store || old.share ? docFor('draft', scene, {...old, changes: 1}) : docFor('new', scene);
+}
+const drafts = () => { const l = readJSON(DRAFTS_KEY, []); return Array.isArray(l) ? l.filter(d => d && typeof d.uid === 'string' && d.scene && typeof d.scene === 'object') : []; };
+const setDrafts = l => { if (!l.length) { store.del(DRAFTS_KEY); return; } if (!store.set(DRAFTS_KEY, JSON.stringify(l))) store.set(DRAFTS_KEY, JSON.stringify(l.slice(0, 1))); };
+/* kept after every change: the document, and the figure as a recovery draft while it has unsaved changes */
+function saveDoc() {
+  const s0 = docState(st.doc, st.scene);
+  if (!s0.dirty) st.doc.changes = 0;
+  store.set(DOC_KEY, JSON.stringify(st.doc));
+  const l = drafts();
+  if (s0.dirty && st.scene.objects.length) setDrafts(keepDraft(l, st.doc, st.scene));
+  else if (l.some(d => d.uid === st.doc.uid)) setDrafts(dropDraft(l, st.doc.uid));
+  paintDoc();
+}
+/* another figure in the editor (a template, a file, a shared figure, a copy …): the one before keeps its unsaved
+   changes as a recovery draft; the new one gets an identity of its own and only the links the action gives it */
+function setFigure(scene, action, links = {}) {
+  const was = docState(st.doc, st.scene).dirty && st.scene.objects.length > 0;
+  if (was) setDrafts(keepDraft(drafts(), st.doc, st.scene));
+  setSel([]); st.zoom = null; stopSim(); st.draft = null; st.connect = null;
+  if (!commit(scene, {load: {action, links}})) return false;
+  if (was) flash(esc(X8.stashed));
+  return true;
+}
+const docPath = d => d?.store ? `${d.store.folder ? d.store.folder + '/' : ''}${d.store.name || ''}` : '';
+/* the indicator by the figure's name: 저장됨 / 저장 안 됨 · 변경 n / 새 그림 */
+function paintDoc() {
+  const el = $('docState'); if (!el || !st.doc) return;
+  const s0 = docState(st.doc, st.scene);
+  el.className = 'docstate ' + s0.state;
+  el.textContent = s0.state === 'saved' ? '✓ ' + X8.state.saved : s0.state === 'unsaved' ? '● ' + X8.state.unsaved(s0.changes) : X8.state.fresh;
+  el.title = [docPath(st.doc) && X8.savedAt(docPath(st.doc)), st.doc.share?.id ? X8.sharedAs(st.doc.share.id) : ''].filter(Boolean).join(' · ');
+  const nm = $('docName'); if (nm) nm.textContent = st.scene.title || (st.doc.store?.name || '').replace(/\.json$/i, '') || X8.untitled;
 }
 let flashTimer;
 function flash(html) { st.msg = html; const el = $('status'); if (el) el.innerHTML = html; clearTimeout(flashTimer); flashTimer = setTimeout(() => { st.msg = ''; status(); }, 6000); }
 
 /* ids: the type's letter and the first free number */
 const PREFIX = {wheel: 'wh', plank: 'pl', track: 'tr', bridge: 'BR', transformer: 'TR', rails: 'RL', container: 'ct', utube: 'ut', thermometer: 'th', heater: 'ht', gasbox: 'gb', screen: 'sc', eye: 'eye', source: 'src', fiber: 'fb', pulse: 'pu', interference: 'IF', nucleus: 'nu', particle: 'pa', panel: 'pn', brace: 'br', callout: 'co', parrows: 'ar',
-  block: 'm', ball: 'b', floor: 'f', ceiling: 'c', wall: 'w', incline: 'i', pulley: 'p', pivot: 'o', string: 's', rod: 'r', spring: 'k', force: 'F', label: 'l', dim: 'd', arc: 'a', axes: 'x', line: 'n',
+  rough: 'mu', block: 'm', ball: 'b', floor: 'f', ceiling: 'c', wall: 'w', incline: 'i', pulley: 'p', pivot: 'o', string: 's', rod: 'r', spring: 'k', force: 'F', label: 'l', dim: 'd', arc: 'a', axes: 'x', line: 'n',
   element: 'e', ground: 'gnd', charge: 'q', plate: 'P', fieldlines: 'FL', field: 'B', cwire: 'I', current: 'J', solenoid: 'sol', loop: 'loop', magnet: 'mag', cylinder: 'cyl', reservoir: 'res', engine: 'eng', graph: 'G', curve: 'c', cycle: 'cyc',
   lens: 'L', mirror: 'M', prism: 'pr', slab: 'sl', oarrow: 'O', ray: 'ray', slits: 'S', wavefront: 'wf', wave: 'wave', well: 'W', levels: 'lv', phototube: 'pt', spacetime: 'st', worldline: 'wl', frames: 'fr', vector: 'v', region: 'rg', point: 'pt', rect: 'rc', ellipse: 'el', poly: 'pg', bezier: 'bz', qpot: 'Q'};
 const KIND_PREFIX = {rheostat: 'R', dielectric: 'C', wire: 'W', resistor: 'R', battery: 'E', cell: 'E', dc: 'E', ac: 'E', capacitor: 'C', inductor: 'L', switch: 'S', diode: 'D', led: 'D', bulb: 'B', ammeter: 'A', voltmeter: 'V', galvanometer: 'G'};
@@ -442,14 +581,42 @@ function addObject(type, preset = {}) {
     if (type === 'force' && isBody(sel)) { finishConnect({type: 'force', a: sel.id}); return; }
     st.connect = {type, a: null, over: []}; setSel([]); paint(); return;
   }
+  if (type === 'rough') { addRough(); return; }
   const next = clone(st.scene), o = {...defaults(type), id: freeId(type, preset.kind)};
   Object.assign(o, placeNew(type, preset, dview(), next), Object.fromEntries(Object.entries(preset).filter(([k]) => !(k === 'f' && (type === 'lens' || type === 'mirror')))));
   if (type === 'mirror' && preset.f === 0) o.f = 0;
+  /* not on top of what is there: the nearest free place in whole grid steps (draw-scene.mjs freeSpot) */
+  offsetNew(next, o);
   if (type === 'label' && !o.text) o.text = 'A';
   if (type === 'element' && !o.label) o.label = {resistor: 'R', capacitor: 'C', inductor: 'L', battery: '\\mathcal{E}', cell: '\\mathcal{E}', dc: '\\mathcal{E}', ac: '\\mathcal{E}', bulb: '', switch: 'S'}[o.kind] || '';
   if (type === 'element') o.value = {battery: 12, cell: 1.5, dc: 6, ac: 10, capacitor: 100, inductor: 0.1, diode: 0.7, led: 2, resistor: 100, bulb: 10, galvanometer: 0}[o.kind] ?? o.value;
   next.objects.push(o);
   if (commit(next)) { setSel([o.id]); paint(); }
+}
+/* a new part from the palette goes to the middle of what the canvas shows, moved on by whole steps (down and to the
+   right first) until its box covers no other part; surfaces, frames and regions underneath do not count */
+const UNDERLAY = new Set(['floor', 'ceiling', 'wall', 'incline', 'track', 'panel', 'region', 'graph', 'field', 'well', 'levels', 'qpot', 'spacetime', 'axes', 'fieldlines', 'container', 'rough', 'curve', 'cycle']);
+function offsetNew(next, o) {
+  if (UNDERLAY.has(o.type) || !('x' in o || 'x1' in o)) return;
+  const v = dview(), box = objectBox(next, o); if (!box) return;
+  const others = next.objects.filter(x => x.id !== o.id && !UNDERLAY.has(x.type)).map(x => objectBox(next, x)).filter(b => b && b.w * b.h < 0.4 * v.w * v.h);
+  const step = Math.max(st.scene.grid, r4(snapV(Math.max(v.w, v.h) * 0.06)) || st.scene.grid);
+  const n = next.objects.filter(x => x.type === o.type).length;
+  const {dx, dy} = freeSpot(box, others, step, v, n);
+  if (dx || dy) moveObj(o, dx, dy, clone(o));
+}
+/* a friction region (마찰 구간): on the selected floor or incline, else on the first one, else on a new floor */
+function addRough() {
+  const next = clone(st.scene), sel = byId(st.sel), v = dview();
+  let s0 = sel && SURFACE_TYPES.includes(sel.type) ? sel : sel && isBody(sel) && sel.on && SURFACE_TYPES.includes(byId(sel.on)?.type) ? byId(sel.on) : st.scene.objects.find(o => SURFACE_TYPES.includes(o.type));
+  let note = '';
+  if (!s0) { s0 = {...defaults('floor'), id: freeId('floor'), ...placeNew('floor', {}, v, next)}; next.objects.push(s0); note = X8.roughNeeds; }
+  const fr = surfaceFrame(s0, next), len = Math.max(st.scene.grid, r4(snapV(Math.min(1, fr.length / 3))));
+  const body = sel && isBody(sel) && sel.on === s0.id ? sel : null;
+  const from = Math.max(0, Math.min(fr.length - len, r4(snapV(body ? body.at + 0.3 : (fr.length - len) / 2))));
+  const o = {...defaults('rough'), id: freeId('rough'), on: s0.id, from, len, mu: s0.mu > 0 ? Math.min(2, r4(s0.mu * 2)) : 0.3};
+  next.objects.push(o);
+  if (commit(next)) { setSel([o.id]); paint(); if (note) flash(esc(note)); }
 }
 /* a click while a string, rod, spring or force is being joined */
 function connectClick(o, at) {
@@ -473,7 +640,8 @@ function finishConnect(c) {
   st.connect = null;
   const next = clone(st.scene), id = freeId(c.type), o = {...defaults(c.type), id};
   if (c.type === 'joint') Object.assign(o, {a: c.a, b: c.b, kind: c.kind, bx: c.b ? 0 : r4(c.bx), by: c.b ? 0 : r4(c.by), k: c.kind === 'spring' ? 40 : 50});
-  else if (c.type === 'force') Object.assign(o, {on: c.a});
+  /* a force after the body's others: mg, N, T, f, then F, each at its own angle (draw-scene.mjs nextForce) */
+  else if (c.type === 'force') Object.assign(o, {on: c.a}, nextForce(next, c.a) || {});
   else Object.assign(o, {a: c.a, b: c.b, ...(c.type === 'string' ? {over: c.over} : {})});
   if (c.type === 'spring') { const A = next.objects.find(x => x.id === c.a), B = next.objects.find(x => x.id === c.b), pa = isBody(A) ? bodyPose(next, A) : A, pb = isBody(B) ? bodyPose(next, B) : B; if (pa && pb && Number.isFinite(pa.x) && Number.isFinite(pb.x)) o.L0 = r4(Math.max(0.05, Math.hypot(pa.x - pb.x, pa.y - pb.y) * 0.8)); }
   next.objects.push(o);
@@ -497,7 +665,7 @@ function removeIds(scene, ids) {
     for (const o of scene.objects) {
       if (o.type === 'string') o.over = o.over.filter(p => !gone.has(p));
       if (['string', 'rod', 'spring'].includes(o.type) && (gone.has(o.a) || gone.has(o.b))) gone.add(o.id);
-      if (o.type === 'force' && gone.has(o.on)) gone.add(o.id);
+      if ((o.type === 'force' || o.type === 'rough') && gone.has(o.on)) gone.add(o.id);
       if (isBody(o) && o.on && gone.has(o.on)) { const p = bodyPose({...scene, objects: [...scene.objects, ...st.scene.objects.filter(x => x.id === o.on)]}, o); o.on = ''; o.x = r4(p.x); o.y = r4(p.y); }
       if (o.type === 'pulley' && gone.has(o.mount)) o.mount = '';
       if ((o.type === 'curve' || o.type === 'cycle') && gone.has(o.graph)) gone.add(o.id);
@@ -511,7 +679,7 @@ function removeIds(scene, ids) {
 function del() { const ids = selIds(); if (!ids.length) return; const next = clone(st.scene); removeIds(next, ids); setSel([]); commit(next); }
 /* copy and paste: the selected objects, and the strings, springs, forces and curves among them; pasted a few grid
    steps away with fresh ids (references inside the copy follow it, a body keeps the surface it rests on) */
-const LINKS = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline'];
+const LINKS = ['string', 'rod', 'spring', 'force', 'curve', 'cycle', 'worldline', 'rough'];
 function copySel() {
   const ids = new Set(selIds()); if (!ids.size) return false;
   for (const o of st.scene.objects) if (LINKS.includes(o.type) && !ids.has(o.id)) { const refs = refsOf(o); if (refs.length && refs.every(r => ids.has(r))) ids.add(o.id); }
@@ -588,11 +756,12 @@ function paintCanvas() {
   if (st.fbd) { try { forces = (simOn ? st.sim : buildSim(st.scene)).forces(); } catch (e) { forces = null; } }
   shownScene = sc; shownPoses = simOn ? st.sim.poses() : null;
   st.circuit = st.solve && hasCircuit() ? solveCircuit(st.scene) : null;
-  const drawn = st.draft ? {...sc, objects: [...sc.objects, draftObject()].filter(Boolean)} : sc;
+  const drawn = st.draft || st.inkPreview ? {...sc, objects: [...sc.objects, ...(st.draft ? [draftObject()] : []), ...(st.inkPreview || [])].filter(Boolean)} : sc;
   let svg = renderSVG(drawn, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? [] : selIds(), forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit, marquee: st.marquee,
     velocities: simOn ? st.sim.velocities() : null, anchors: simOn ? st.sim.anchors : null, trails: simOn ? [...st.trails].filter(([id]) => byId(id)?.trail || (st.rtrail && isPhysShape(byId(id)))) : null, ...simDrawOpts(simOn)});
   /* zoomed: the figure's frame (what is exported) as a thin dashed box */
   if (st.zoom) { const f = view(), S = W / v.w, x = (f.x - v.x) * S, y = (v.y + v.h - f.y - f.h) * S; svg = svg.replace(/<\/svg>$/, `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(f.w * S).toFixed(1)}" height="${(f.h * S).toFixed(1)}" fill="none" stroke="#d97706" stroke-width="1.2" stroke-dasharray="7 4" pointer-events="none" class="frame"/></svg>`); }
+  if (st.inkLive || st.inkMath?.length) svg = svg.replace(/<\/svg>$/, inkOverlay(v) + '</svg>');
   box.innerHTML = svg;
   box.classList.toggle('connecting', !!st.connect); box.classList.toggle('panning', st.space); box.dataset.tool = st.tool;
   const z = $('zoomPct'); if (z) z.textContent = `${Math.round(100 * view().w / v.w)}%`;
@@ -721,7 +890,11 @@ function geoFinish() {
   else { st.draft = null; paint(); }
   return true;
 }
-function setTool(t) { st.tool = TOOLS.includes(t) || GEO_TOOLS.includes(t) ? t : 'select'; st.draft = null; st.connect = null; paintTools(); paintCanvas(); status(); }
+function setTool(t) {
+  st.tool = TOOLS.includes(t) || GEO_TOOLS.includes(t) ? t : 'select'; st.draft = null; st.connect = null;
+  if (st.tool !== 'pen' && st.ink) { if (st.ink.mode === 'math') { st.ink.clearMath(); st.ink.mode = 'draw'; st.inkMath = []; } st.ink.cancel(); st.inkLast = null; }
+  paintTools(); paintCanvas(); status(); paintInkBar();
+}
 /* the points a new point snaps to */
 function snapTargets(exclude) {
   const out = [];
@@ -860,7 +1033,15 @@ function followersOf(o) {
 
 function bindCanvas() {
   const box = $('canvas'), pts = new Map();
+  initInk();
   box.addEventListener('pointerdown', ev => {
+    /* the pen tool: a pen, the mouse (and a finger when 손가락으로 그리기 is on) draw ink (draw-ink.mjs); a finger
+       otherwise pans, two pinch */
+    if (st.tool === 'pen' && !st.connect && !pts.size) {
+      if (st.sim) { stopSim(); paint(); }
+      if (st.ink.pointerdown(ev)) { try { box.setPointerCapture?.(ev.pointerId); } catch (e) {} ev.preventDefault(); return; }
+      if (ev.pointerType === 'touch') { pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY}); st.drag = {pan: true, last: {x: ev.clientX, y: ev.clientY}}; return; }
+    }
     pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
     if (pts.size === 2) { const [a, b] = [...pts.values()]; st.drag = {pinch: true, d0: Math.hypot(a.x - b.x, a.y - b.y), v0: {...dview()}, mid: worldAt({clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2})}; st.marquee = null; return; }
     if (ev.button === 1 || (ev.button === 0 && st.space)) { st.drag = {pan: true, last: {x: ev.clientX, y: ev.clientY}}; box.setPointerCapture?.(ev.pointerId); ev.preventDefault(); return; }
@@ -890,6 +1071,7 @@ function bindCanvas() {
     box.setPointerCapture?.(ev.pointerId);
   });
   box.addEventListener('pointermove', ev => {
+    if (st.ink?.pointermove(ev)) return;
     if (pts.has(ev.pointerId)) pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
     if (!st.drag && st.draft && st.draft.pts) { toolMove(ev); return; }
     const d = st.drag; if (!d) return;
@@ -914,16 +1096,15 @@ function bindCanvas() {
     paintCanvas();
   });
   const end = ev => {
+    if (st.ink && (ev.type === 'pointercancel' ? st.ink.drawing && st.ink.pointercancel(ev) : st.ink.pointerup(ev))) return;
     pts.delete(ev.pointerId);
     const d = st.drag; st.drag = null; if (!d) return;
     if (d.tool) { if (st.draft && DRAG_TOOLS.includes(st.draft.tool)) finishDraft(); return; }
     if (d.erase) { if (d.erase.size) { const next = clone(st.scene); removeIds(next, [...d.erase]); setSel([]); commit(next); } return; }
     if (d.marquee) { st.marquee = null; paint(); return; }
     if (d.pan || d.pinch || !d.moved) return;
-    const r = validateScene(st.scene);
-    if (!r.ok) { st.scene = JSON.parse(d.before); paint(); return; }
     /* one step of history a drag */
-    st.hist.record(d.before); st.scene = r.scene; save(); paint();
+    settle(d.before);
   };
   box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
   box.addEventListener('wheel', ev => {
@@ -931,6 +1112,98 @@ function bindCanvas() {
     else if (st.zoom) { ev.preventDefault(); const k = dview().w / (box.clientWidth || W); panBy((ev.shiftKey ? ev.deltaY : ev.deltaX) * k, (ev.shiftKey ? 0 : -ev.deltaY) * k); }
   }, {passive: false});
 }
+/* ── ink (draw-ink.mjs): the pen tool draws strokes that become shapes and physics parts (auto-shape, hold to snap,
+   strokes that complete a group: a dashed line, a cell, an arrow and its head), with the other readings offered as
+   chips; 수식 쓰기 keeps the strokes as ink and sends them to POST /api/workshop/ai/math for a $…$ label ── */
+const CIRCUIT_INK = ['zigzag', 'coil', 'cell', 'battery', 'capacitor', 'ground'];
+function initInk() {
+  if (st.ink) return;
+  const p = prefs();
+  st.inkMath = []; st.inkLive = null; st.inkPreview = null; st.inkLast = null;
+  st.ink = createInkController({
+    toWorld: worldAt, unit: () => dview().w / W, getCandidates: () => candidatesFromScene(st.scene),
+    onStroke: s0 => { st.inkLive = s0 ? s0.points.slice() : null; paintCanvas(); },
+    onPreview: r => { st.inkPreview = r ? inkObjects(r, st.scene.objects).map((o, i) => ({...o, id: 'zzInk' + i})) : null; paintCanvas(); },
+    onShape: (r, ctx) => insertInk(r, ctx), onFreehand: (r, ctx) => insertInk(r, ctx), onMathRegion: m => readMath(m.strokes),
+    options: {autoShape: p.inkAuto !== false, holdToSnap: p.inkHold !== false, fingerDraw: p.inkFinger === true}});
+}
+/* a result as scene objects, in the drawing tools' look; circuit glyphs on a coarser grid so they meet the wires */
+const inkObjects = (r, existing) => toSceneObjects(r, {existing, grid: CIRCUIT_INK.includes(r.type) ? Math.max(st.scene.grid, 0.5) : st.scene.grid, look: st.dstyle, unit: dview().w / W, scene: {...st.scene, objects: existing}});
+/* one stroke (or group) into the figure: one step of history; a group that replaces its first strokes keeps the step
+   from before its first stroke, so undo takes the whole group away */
+function insertInk(r, ctx = {}) {
+  if (ctx.math) { st.inkMath.push(ctx.stroke.points.map(q => ({x: q.x, y: q.y}))); paintInkBar(); paintCanvas(); return []; }
+  const replaces = ctx.replaces || [], before = replaces.length && st.inkLast?.before ? st.inkLast.before : JSON.stringify(st.scene);
+  const next = clone(st.scene); if (replaces.length) removeIds(next, replaces);
+  const objs = inkObjects(r, next.objects);
+  if (!objs.length) return [];
+  if (next.objects.length + objs.length > MAX_OBJECTS) { flash(`<span class="bad">${T.tooMany}</span>`); return []; }
+  next.objects.push(...objs);
+  if (!commit(next, {before})) return [];
+  const ids = objs.map(o => o.id).filter(id => byId(id));
+  st.inkLast = {result: r, ids, before, stroke: ctx.stroke, alts: (r.alternatives || []).filter(a => a && a.type && a.type !== r.type).slice(0, 4)};
+  setSel(ids); paint(); paintInkBar();
+  return ids;
+}
+/* 다른 모양으로: the same stroke as another reading, in place of the first (still one step of history) */
+function swapInk(alt) {
+  const L = st.inkLast; if (!L) return;
+  const next = clone(st.scene); removeIds(next, L.ids);
+  const objs = inkObjects(alt, next.objects); next.objects.push(...objs);
+  if (!commit(next, {before: L.before})) return;
+  const ids = objs.map(o => o.id); st.inkLast = {...L, result: alt, ids, alts: [L.result, ...L.alts.filter(a => a !== alt)].filter(a => a.type !== 'freehand' || a !== L.result).slice(0, 4)};
+  if (L.stroke) st.ink.bind(L.stroke.id, ids);
+  setSel(ids); paint(); paintInkBar();
+}
+const inkName = a => { const k = a.params?.kind && X8.ink.types[a.params.kind] ? a.params.kind : a.type; return X8.ink.types[k] || k; };
+/* the chips under the canvas's top: the other readings of the last stroke, or the maths: convert, clear, other readings */
+function paintInkBar() {
+  let bar = $('inkBar');
+  const L = st.inkLast, math = st.ink?.mode === 'math';
+  const alts = L && st.tool === 'pen' && !math ? L.alts : [], mAlts = st.mathAlts || [];
+  if (!math && !alts.length && !(L?.stroke && L.result.type !== 'freehand' && st.tool === 'pen')) { if (bar) bar.hidden = true; return; }
+  if (!bar) { bar = document.createElement('div'); bar.id = 'inkBar'; bar.className = 'inkbar'; bar.setAttribute('role', 'toolbar'); $('stageTop').append(bar); }
+  bar.hidden = false;
+  if (math) {
+    bar.innerHTML = `<b>${esc(X8.ink.math)}</b><button type="button" class="primary" id="inkConvert"${st.inkMath.length ? '' : ' disabled'}>${esc(X8.ink.convert)}</button><button type="button" id="inkClear"${st.inkMath.length ? '' : ' disabled'}>${esc(X8.ink.clear)}</button>
+      ${mAlts.length ? `<span class="note">${esc(X8.ink.mathAlt)}</span>${mAlts.map((t, i) => `<button type="button" class="chip" data-malt="${i}">${texSVG('$' + t + '$', 15, st.scene.style)}</button>`).join('')}` : ''}<span class="note" id="inkMsg" role="status">${st.inkMsg || ''}</span>`;
+    $('inkConvert').onclick = () => st.ink.finishMath(); $('inkClear').onclick = () => { st.ink.clearMath(); st.inkMath = []; paintInkBar(); paintCanvas(); };
+    bar.querySelectorAll('[data-malt]').forEach(b => b.onclick = () => { const id = st.mathLabel, o = byId(id); if (!o) return; const t = mAlts[+b.dataset.malt], next = clone(st.scene); next.objects.find(x => x.id === id).text = '$' + t + '$'; st.mathAlts = [o.text.replace(/^\$|\$$/g, ''), ...mAlts.filter(x => x !== t)].slice(0, 3); commit(next, {keepSel: true}); paintInkBar(); });
+    return;
+  }
+  const fh = L.stroke ? {type: 'freehand', params: {pts: smoothFreehand(L.stroke.points, {unit: dview().w / W})}} : null;
+  const list = [...alts.filter(a => a.type !== 'freehand'), ...(fh && L.result.type !== 'freehand' ? [fh] : [])];
+  bar.innerHTML = `<span class="note">${esc(X8.ink.other)}</span>${list.map((a, i) => `<button type="button" class="chip" data-alt="${i}">${esc(a.type === 'freehand' ? X8.ink.freehand : inkName(a))}</button>`).join('')}<button type="button" class="chip x" id="inkAltX" aria-label="${esc(X8.close)}">✕</button>`;
+  bar.querySelectorAll('[data-alt]').forEach(b => b.onclick = () => swapInk(list[+b.dataset.alt]));
+  $('inkAltX').onclick = () => { st.inkLast = null; paintInkBar(); };
+}
+/* 수식 쓰기 → 변환: the strokes as a small PNG to the server; its LaTeX goes in as one $…$ label where they were */
+async function readMath(strokes) {
+  if (!strokes?.length) { st.inkMsg = esc(X8.ink.mathNone); paintInkBar(); return; }
+  const E = X8.ink.err, say = h => { st.inkMsg = h; paintInkBar(); };
+  if (!token()) { say(`${esc(E.login_required)} <a class="btn" href="/#/login" target="_top">${T.login}</a>`); st.ink.clearMath(); st.inkMathKeep = strokes; return; }
+  say(esc(X8.ink.reading));
+  try {
+    const png = await rasteriseStrokes(strokes); if (!png) throw Object.assign(new Error('big'), {code: 'image_too_large'});
+    const r = await api(MATH_PATH, 'POST', mathRequestBody(png.dataUrl));
+    if (!r || typeof r.latex !== 'string' || !r.latex) throw Object.assign(new Error('x'), {code: 'ai_unusable'});
+    const all = strokes.flatMap(s0 => s0.points || s0), xs = all.map(q => q.x), ys = all.map(q => q.y);
+    const at = {x: (Math.min(...xs) + Math.max(...xs)) / 2, y: (Math.min(...ys) + Math.max(...ys)) / 2};
+    const next = clone(st.scene), objs = toSceneObjects({type: 'latex', params: {latex: r.latex, x: at.x, y: at.y, size: 18}}, {existing: next.objects, grid: st.scene.grid, look: st.dstyle});
+    next.objects.push(...objs);
+    if (commit(next)) { st.inkMath = []; st.mathLabel = objs[0]?.id; st.mathAlts = (Array.isArray(r.alternatives) ? r.alternatives : []).filter(t => typeof t === 'string' && t).slice(0, 3); setSel([objs[0].id]); paint(); }
+    say(Number.isFinite(r.left) ? esc(X8.ink.mathLeft(r.left)) : '');
+  } catch (e) { st.inkMath = strokes.map(s0 => (s0.points || s0).map(q => ({x: q.x, y: q.y}))); say(`<span class="bad">${esc(E[e.code] || errText(e))}</span>`); paintCanvas(); }
+}
+/* the ink drawn on top of the canvas: the stroke being drawn, the maths strokes waiting to be converted */
+function inkOverlay(v) {
+  const S = W / v.w, P = q => `${((q.x - v.x) * S).toFixed(1)},${((v.y + v.h - q.y) * S).toFixed(1)}`;
+  let out = '';
+  for (const m of st.inkMath || []) if (m.length > 1) out += `<polyline points="${m.map(P).join(' ')}" fill="none" stroke="#1d4ed8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="inkmath" pointer-events="none"/>`;
+  if (st.inkLive && st.inkLive.length > 1 && !st.inkPreview) out += `<polyline points="${catmullRom(st.inkLive).map(P).join(' ')}" fill="none" stroke="${COLOR_HEX[st.dstyle.color] || '#000'}" stroke-width="${(1.6 * st.dstyle.lw).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round" class="inklive" pointer-events="none"/>`;
+  return out;
+}
+
 /* where a dragged object goes: a body slides along the surface it rests on, drops onto one it is put near, or leaves it
    when pulled away; a body hanging from a pulley moves up and down only */
 function dragTo(d, p, dx, dy) {
@@ -951,6 +1224,8 @@ function dragTo(d, p, dx, dy) {
     if (h === 'r') { const q = snapPt(p, {exclude: o.id}); o.r = r4(Math.max(0.02, Math.hypot(q.x - o.x, q.y - o.y))); o.to = deg(o, q); return; }
     return;
   }
+  /* a friction region slides along its surface */
+  if (o.type === 'rough') { const sf = byId(o.on); if (!sf) return; const fr = surfaceFrame(sf, st.scene); o.from = r4(Math.max(0, Math.min(Math.max(0, fr.length - o.len), snapV(g.from + vec.dot({x: dx, y: dy}, fr.u))))); return; }
   if (isBody(o)) {
     const hanging = st.scene.objects.some(s => s.type === 'string' && s.over.length && (s.a === o.id || s.b === o.id)) && !g.on;
     if (g.on) {
@@ -1075,11 +1350,13 @@ function relevant(o, k) {
   return true;
 }
 const QNAME = {psi: 'psiQ', levels: 'levelsQ', E: 'EQ', mass: 'mass'};
-const fieldName = (o, k) => k === 'mass' && !['qpot', 'well'].includes(o.type) ? (o.type === 'charge' ? (ko ? '질량 (mg)' : 'Mass (mg)') : (ko ? '질량 (kg)' : 'Mass (kg)')) : GEO_TYPES.includes(o.type) && X5.geoFields[k] ? X5.geoFields[k] : o.type === 'joint' && (k === 'a' || k === 'b') ? X5.geoFields[k] : o.type === 'curve' && ['param', 'polar'].includes(o.kind) && (k === 'x1' || k === 'x2') ? (k === 'x1' ? (ko ? 't 처음' : 't from') : (ko ? 't 끝' : 't to'))
+const fieldName = (o, k) => o.type === 'rough' && X8.roughF[k] ? X8.roughF[k] : k === 'mass' && !['qpot', 'well'].includes(o.type) ? (o.type === 'charge' ? (ko ? '질량 (mg)' : 'Mass (mg)') : (ko ? '질량 (kg)' : 'Mass (kg)')) : GEO_TYPES.includes(o.type) && X5.geoFields[k] ? X5.geoFields[k] : o.type === 'joint' && (k === 'a' || k === 'b') ? X5.geoFields[k] : o.type === 'curve' && ['param', 'polar'].includes(o.kind) && (k === 'x1' || k === 'x2') ? (k === 'x1' ? (ko ? 't 처음' : 't from') : (ko ? 't 끝' : 't to'))
   : o.type === 'curve' && k === 'expr' && o.kind !== 'func' && ['param', 'polar', 'ineq'].includes(o.kind) ? ({param: 'x(t)', polar: ko ? 'r(t) (t = θ, 라디안)' : 'r(t) (t = θ, radians)', ineq: 'f(x)'})[o.kind] : o.type === 'particle' && k === 'arrow' ? X4.fields.speedArrow : o.type === 'qpot' && QNAME[k] ? X4.fields[QNAME[k]] : o.type === 'block' && k === 'mu' ? (ko ? '마찰 계수 μ (윗면)' : 'Friction μ (top face)') : o.type === 'element' && k === 'value' ? `${T.fields.value} (${X2.units[o.kind]})` : o.type === 'element' && k === 'r' ? (ko ? '내부 저항 (Ω)' : 'Internal resistance (Ω)') : o.type === 'element' && k === 'kind' ? T.fields.kind : T.fields[k] || k;
 /* the leads that touch a bridge wire at its jockey move with it */
 const jockey = b => ({x: b.x1 + (b.x2 - b.x1) * b.at, y: b.y1 + (b.y2 - b.y1) * b.at});
 function followJockey(scene, J0, J1) { for (const e of scene.objects) if (e.type === 'element') for (const k of [1, 2]) if (Math.hypot(e['x' + k] - J0.x, e['y' + k] - J0.y) < 1e-6) { e['x' + k] = r4(J1.x); e['y' + k] = r4(J1.y); } }
+const SEG_KEYS = ['x1', 'y1', 'x2', 'y2'];
+function segNote(box, text) { let n = box.querySelector('.segnote'); if (!n) { n = document.createElement('p'); n.className = 'note segnote bad'; n.setAttribute('role', 'alert'); box.querySelector('.props')?.after(n); } n.textContent = text; n.hidden = !text; }
 /* which simulation and solver controls make sense for this figure */
 const hasMech = () => st.scene.objects.some(o => isBody(o) || o.type === 'force' || o.type === 'spring' || (isPhysShape(o) && o.phys === 'dynamic'));
 const hasPhys = () => st.scene.objects.some(isPhysShape);
@@ -1130,10 +1407,11 @@ function paintSide() {
   /* the object's own values first, its physics (a drawn shape), its look (line weight, label size, lock) last; its
      style (그림체) on top */
   const PK = Object.keys(PHYS_FIELDS), physRel = k => k === 'phys' || (o.phys === 'dynamic') || (o.phys === 'static' && (k === 'pmu' || k === 'pe'));
-  const main = fields.filter(([k]) => !['lw', 'ls', 'lock', 'style', ...PK].includes(k)), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k)), phys = fields.filter(([k]) => PK.includes(k) && physRel(k));
+  const TS = o.type === 'label' ? ['font', 'italic', 'bold', 'underline', 'align'] : [];
+  const main = fields.filter(([k]) => !['lw', 'ls', 'lock', 'style', ...PK, ...TS].includes(k)), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k)), phys = fields.filter(([k]) => PK.includes(k) && physRel(k));
   const physBox = PHYS_SHAPES.includes(o.type) ? `<details class="physp"${o.phys !== 'none' ? ' open' : ''}><summary>⚙ ${esc(X5.physTitle)}${o.phys !== 'none' ? ' · ' + esc(T.enums[o.phys]) : ''}</summary><p class="note">${esc(X5.physHint)}</p><div class="props">${phys.map(field).join('')}</div>
     ${o.phys !== 'none' ? `<div class="row tight">${['spring', 'string', 'rod'].map(k2 => `<button type="button" data-join="${k2}">${esc(X5['join' + k2[0].toUpperCase() + k2.slice(1)])}</button>`).join('')}</div>` : ''}</details>` : '';
-  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2>${styleSelect(o.style || '')}<div class="props">${main.map(field).join('')}</div>${physBox}
+  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2>${styleSelect(o.style || '')}${o.type === 'label' ? textBar(o) : ''}<div class="props">${main.map(field).join('')}</div>${physBox}
     ${fields.some(([, f]) => f.k === 'txt') ? `<p class="note">${esc(T.texHint)}</p>` : ''}
     <details class="look"><summary>${ko ? '선 · 글자 · 잠금' : 'Lines, labels, lock'}</summary><div class="props">${look.map(field).join('')}</div></details>
     <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}<button type="button" data-act="front">${X3.tools.front}</button><button type="button" data-act="back">${X3.tools.backZ}</button><button type="button" data-act="del">${T.del}</button></div>`;
@@ -1141,7 +1419,17 @@ function paintSide() {
     const k = el.dataset.f, f = F[k];
     const apply = () => {
       const next = clone(st.scene), x = next.objects.find(y => y.id === o.id);
-      if (f.k === 'num') { const v = parseFloat(el.value); if (!Number.isFinite(v)) { paintSide(); return; } const J0 = x.type === 'bridge' ? jockey(x) : null; x[k] = v; if (J0) followJockey(next, J0, jockey(x)); }
+      /* the ends of a segment (a wire, an element, a line …): all four boxes as one change, so moving one end onto the
+         other's place for a moment is not refused; when the result is refused the typed values stay, with the reason */
+      if (f.k === 'num' && SEG_KEYS.includes(k) && SEG_KEYS.every(q => q in F)) {
+        const vals = SEG_KEYS.map(q => parseFloat(box.querySelector(`[data-f="${q}"]`)?.value));
+        if (vals.some(v => !Number.isFinite(v))) { segNote(box, X8.err.bad_number(o.id, fieldName(o, k))); return; }
+        SEG_KEYS.forEach((q, i) => { x[q] = vals[i]; });
+        const r = validateScene(next);
+        if (!r.ok) { segNote(box, plainErrors(r.errors, next)); return; }
+        segNote(box, ''); commit(next, {keepSel: true}); return;
+      }
+      if (f.k === 'num') { const v = parseFloat(el.value); if (!Number.isFinite(v)) { paintSide(); flash(`<span class="bad">${esc(X8.err.bad_number(o.id, fieldName(o, k)))}</span>`); return; } const J0 = x.type === 'bridge' ? jockey(x) : null; x[k] = v; if (J0) followJockey(next, J0, jockey(x)); }
       else if (f.k === 'bool') x[k] = el.checked;
       else x[k] = el.value;
       if (o.type === 'element' && k === 'kind' && X2.units[x.kind] && !X2.units[o.kind]) x.value = defaults('element').value;
@@ -1169,7 +1457,7 @@ function paintSide() {
       if (st.sim) stopSim();
       paintCanvas(); paintReadouts();
     };
-    el.onchange = () => { const g = st.gesture; st.gesture = null; if (!g) return; const r = validateScene(st.scene); if (!r.ok) { st.scene = JSON.parse(g.before); paint(); return; } st.hist.record(g.before); st.scene = r.scene; save(); paint(); };
+    el.onchange = () => { const g = st.gesture; st.gesture = null; if (g) settle(g.before); };
   });
   /* a parameter's slider (a function's or a potential's): the figure follows live, one step of history when let go */
   const setParam = (i, v, live) => {
@@ -1180,7 +1468,7 @@ function paintSide() {
   };
   box.querySelectorAll('[data-ps]').forEach(el => {
     el.oninput = () => setParam(+el.dataset.ps, r4(parseFloat(el.value)), true);
-    el.onchange = () => { const g = st.gesture; st.gesture = null; if (!g) return; const r = validateScene(st.scene); if (!r.ok) { st.scene = JSON.parse(g.before); paint(); return; } st.hist.record(g.before); st.scene = r.scene; save(); paint(); };
+    el.onchange = () => { const g = st.gesture; st.gesture = null; if (g) settle(g.before); };
   });
   box.querySelectorAll('[data-pv]').forEach(el => el.onchange = () => setParam(+el.dataset.pv, parseFloat(el.value), false));
   box.querySelectorAll('[data-over]').forEach(el => el.onchange = () => {
@@ -1193,6 +1481,7 @@ function paintSide() {
   box.querySelectorAll('[data-join]').forEach(b => b.onclick = () => { st.connect = {type: 'joint', kind: b.dataset.join, a: o.id, over: []}; status(); paintCanvas(); flash(esc(X5.joinHint)); });
   /* a text field: where its caret is (for the symbol picker), and Tab from one placeholder box to the next */
   box.querySelectorAll('[data-text]').forEach(el => bindTextField(el, o.id, el.dataset.f));
+  if (o.type === 'label') bindTextBar(box, o);
   box.querySelector('[data-act="dup"]')?.addEventListener('click', dup);
   box.querySelector('[data-act="front"]').onclick = () => zOrder(true); box.querySelector('[data-act="back"]').onclick = () => zOrder(false);
   box.querySelector('[data-act="del"]').onclick = del;
@@ -1220,7 +1509,34 @@ function paintMulti(box, ids) {
 /* the label as the figure will show it (the same typesetter as the SVG, in the figure's style) */
 function texPreview(k, v) {
   const el = document.querySelector(`[data-tex="${k}"]`); if (!el) return;
-  el.innerHTML = v ? texSVG(v, 17, st.scene.style) : '';
+  const o = byId(st.sel), sty = o?.type === 'label' && k === 'text' ? labelStyle(o) : null;
+  el.innerHTML = v ? texSVG(v, 17, o?.style || st.scene.style, sty) : '';
+}
+/* a label's text style, like a word processor's: italic, bold, underline, the face, the alignment for all of it; and
+   for the part of the text selected, a run in italic, bold, roman, sans, mono or plain text (\textit{…} …) */
+function textBar(o) {
+  const X = X8.txt, tg = (k, label, title, cls = '') => `<button type="button" class="tsb ${cls}" data-tog="${k}" aria-pressed="${!!o[k]}" title="${esc(title)}" aria-label="${esc(title)}">${label}</button>`;
+  return `<div class="txtbar" role="toolbar" aria-label="${esc(X.bar)}">
+    ${tg('italic', '<i>I</i>', X.it)}${tg('bold', '<b>B</b>', X.bold)}${tg('underline', '<u>U</u>', X.under)}
+    <select data-tfont aria-label="${esc(X.font)}" title="${esc(X.font)}">${TEXT_FONTS.map(f => `<option value="${f}"${o.font === f ? ' selected' : ''}${FONT_FAMILY[f] ? ` style="font-family:${esc(FONT_FAMILY[f])}"` : ''}>${esc(X.fonts[f])}</option>`).join('')}</select>
+    <span class="tsgroup" role="group" aria-label="${esc(X.align)}">${['left', 'center', 'right'].map(a => `<button type="button" class="tsb" data-align="${a}" aria-pressed="${o.align === a}" title="${esc(X[a])}" aria-label="${esc(X[a])}">${a === 'left' ? '⇤' : a === 'right' ? '⇥' : '↔'}</button>`).join('')}</span>
+    <span class="tsgroup runs" role="group" aria-label="${esc(X.sel)}"><span class="note">${esc(X.sel)}</span>${Object.entries(X.runs).map(([c, [l, t]]) => `<button type="button" class="tsb" data-wrap="${esc(c)}" title="${esc(t + ' (' + c + '{…})')}" aria-label="${esc(t)}">${esc(l)}</button>`).join('')}</span></div>`;
+}
+function bindTextBar(box, o) {
+  const set = (k, v) => { const next = clone(st.scene), x = next.objects.find(y => y.id === o.id); x[k] = v; commit(next, {keepSel: true}); };
+  box.querySelectorAll('[data-tog]').forEach(b => b.onclick = () => set(b.dataset.tog, !o[b.dataset.tog]));
+  box.querySelectorAll('[data-align]').forEach(b => b.onclick = () => set('align', b.dataset.align));
+  box.querySelector('[data-tfont]').onchange = e => set('font', e.target.value);
+  /* wrap what is selected in the text box (else put an empty run with its box selected) */
+  box.querySelectorAll('[data-wrap]').forEach(b => { b.onmousedown = e => e.preventDefault(); b.onclick = () => {
+    const el = box.querySelector('[data-f="text"]'); if (!el) return;
+    const v = el.value, lt = st.lastText?.id === o.id ? st.lastText : null;
+    const a = document.activeElement === el ? el.selectionStart : lt?.caret ?? v.length, z = document.activeElement === el ? el.selectionEnd : lt?.caretEnd ?? a;
+    const inner = v.slice(a, z) || PLACEHOLDER, val = v.slice(0, a) + `${b.dataset.wrap}{${inner}}` + v.slice(z);
+    if (val.length > FIELDS.label.text.max) { flash(esc(X5.sym.tooLong)); return; }
+    const next = clone(st.scene); next.objects.find(y => y.id === o.id).text = val;
+    if (commit(next, {keepSel: true})) { const el2 = document.querySelector('[data-f="text"]'); if (el2) { const s0 = a + b.dataset.wrap.length + 1; el2.focus(); el2.setSelectionRange(s0, s0 + inner.length); st.lastText = {id: o.id, k: 'text', caret: s0, caretEnd: s0 + inner.length}; } }
+  }; });
 }
 
 /* ── readouts and the graph ── */
@@ -1340,9 +1656,10 @@ function toPaper() {
   $('outMsg').innerHTML = `<span class="ok">${T.inPaper}</span> <a class="btn" href="${embedded ? '/#/workshop/make' : 'teach.html'}" target="_top">${T.openPaper}</a>`;
   paintOut(true);
 }
-/* ── HaslaLab storage (보관함) first: 저장 keeps the figure (JSON + SVG) in the folder 그림 and saves over the same files
-   the next time (their ids are kept with the figure in this browser); 보관함에서 열기 lists the figures there ── */
-const FIG_FOLDER = '그림', STORE_IDS_KEY = 'hlDrawStoreIds';
+/* ── HaslaLab storage (보관함) first: 저장 keeps the figure (JSON + SVG, kind figure) in storage, by default in the folder
+   그림, and saves over the same files the next time: the file ids belong to the figure's identity (st.doc.store), so a
+   file renamed or moved in 보관함 is still the one saved to. 다른 이름으로 저장 makes new files and a new identity;
+   열기 lists the figures of every folder with their date and their SVG as a thumbnail ── */
 const X6 = ko ? {save: '💾 저장', saveT: '보관함 ‘그림’ 폴더에 저장 (다시 누르면 같은 파일에 덮어씀)', open: '📂 보관함에서 열기', saved: n => `보관함 ‘그림/${n}’에 저장했습니다.`, overwritten: n => `보관함 ‘그림/${n}’을(를) 새 내용으로 바꿨습니다.`,
   changed: '보관함의 파일이 다른 곳에서 바뀌어 새 파일로 저장했습니다.', localOnly: '로그인하지 않아 이 브라우저에 저장했습니다.', list: '보관함 ‘그림’ 폴더의 그림', none: '보관함 ‘그림’ 폴더에 저장한 그림이 없습니다.', opened: n => `보관함에서 ‘${n}’을(를) 열었습니다.`,
   ai: '✨ AI로 그리기', aiHint: '그릴 그림을 말로 적으세요. 예: 30° 빗면 위 2 kg 블록, 마찰계수 0.2, 도르래로 1 kg 추와 연결', aiEdit: '현재 그림 고치기', aiGo: '그리기', aiLeft: n => `오늘 ${n}번 더 쓸 수 있습니다.`,
@@ -1351,75 +1668,189 @@ const X6 = ko ? {save: '💾 저장', saveT: '보관함 ‘그림’ 폴더에 �
   changed: 'The stored file was changed elsewhere, so this was saved as a new file.', localOnly: 'Not logged in: saved in this browser.', list: 'Figures in the “그림” folder', none: 'No figures in the “그림” folder yet.', opened: n => `Opened ‘${n}’ from storage.`,
   ai: '✨ Draw with AI', aiHint: 'Describe the figure. E.g. a 2 kg block on a 30° incline, μ = 0.2, tied over a pulley to a 1 kg mass', aiEdit: 'Change the current figure', aiGo: 'Draw', aiLeft: n => `${n} left today.`,
   aiErr: {login_required: 'Log in to use it.', quota: 'You have used today’s quota.', not_configured: 'The AI is not set up yet.', bad_prompt: 'Describe the figure a little more.', ai_failed: 'The AI could not make the figure. Try again.', empty: 'Nothing usable came back.'}};
-st.storeIds = (() => { try { const v = JSON.parse(store.get(STORE_IDS_KEY) || 'null'); return v && typeof v.json === 'string' ? v : null; } catch (e) { return null; } })();
-const keepStoreIds = ids => { st.storeIds = ids; if (ids) store.set(STORE_IDS_KEY, JSON.stringify(ids)); else store.del(STORE_IDS_KEY); };
-const figForm = (ext, body, type, extra = {}) => { const form = new FormData(); form.append('file', new File([body], fileName(ext), {type})); form.append('kind', 'figure'); for (const [k, v] of Object.entries(extra)) form.append(k, v); return form; };
-async function toStorage() {
-  const msg = $('outMsg') || $('status');
-  if (!token()) { saveLocal(); msg.innerHTML = `${esc(X6.localOnly)} ${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
-  msg.textContent = '…';
-  const json = JSON.stringify(st.scene, null, 1), svg = exportSvg(), parts = [['json', json, 'application/json'], ['svg', svg, 'image/svg+xml']];
-  const create = async () => { const out = {}; for (const [ext, body, type] of parts) { const r = await api('/api/workshop/storage/files', 'POST', figForm(ext, body, type, {folder: FIG_FOLDER, ensure_folder: '1'}), true); out[ext] = r.file; } return {json: out.json.id, svg: out.svg.id, base: out.json.updated_at, name: out.json.name}; };
-  try {
-    let ids = st.storeIds, how = 'saved';
-    if (ids?.json) {
-      try {
-        const r = await api(`/api/workshop/storage/files/${encodeURIComponent(ids.json)}/content`, 'PUT', figForm('json', json, 'application/json', ids.base ? {base: String(ids.base)} : {}), true);
-        let svgId = ids.svg;
-        try { if (svgId) await api(`/api/workshop/storage/files/${encodeURIComponent(svgId)}/content`, 'PUT', figForm('svg', svg, 'image/svg+xml'), true); } catch (e) { if (e.status !== 404) throw e; svgId = ''; }
-        if (!svgId) svgId = (await api('/api/workshop/storage/files', 'POST', figForm('svg', svg, 'image/svg+xml', {folder: FIG_FOLDER, ensure_folder: '1'}), true)).file.id;
-        ids = {...ids, svg: svgId, base: r.file?.updated_at ?? ids.base, name: r.file?.name || ids.name}; how = 'overwritten';
-      } catch (e) {
-        if (e.status === 404) ids = await create();
-        else if (e.status === 409) { ids = await create(); how = 'changed'; }
-        else throw e;
-      }
-    } else ids = await create();
-    keepStoreIds(ids);
-    msg.innerHTML = `<span class="ok">${esc(how === 'changed' ? X6.changed : X6[how](ids.name || fileName('json')))}</span>`;
-  } catch (e) { msg.innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
+const figForm = (ext, body, type, extra = {}, name = fileName(ext)) => { const form = new FormData(); form.append('file', new File([body], name, {type})); form.append('kind', 'figure'); for (const [k, v] of Object.entries(extra)) form.append(k, v); return form; };
+/* the raw text of a stored file (its SVG thumbnail, its JSON as it was written) */
+async function apiText(path) {
+  let r; try { r = await fetch(API + path, {headers: token() ? {Authorization: 'Bearer ' + token()} : {}}); } catch (e) { throw Object.assign(new Error('network'), {code: 'network'}); }
+  if (!r.ok) { const j = await r.json().catch(() => ({})); throw Object.assign(new Error(j.error || 'api ' + r.status), {code: j.error || 'other', status: r.status}); }
+  return r.text();
 }
-async function openFromStorage() {
-  const msg = $('outMsg');
-  if (!token()) { msg.innerHTML = `${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return; }
-  msg.textContent = '…';
+const textSig = t => sceneSig(String(t));
+const twins = () => { const m = readJSON(TWINS_KEY, {}); return m && typeof m === 'object' && !Array.isArray(m) ? m : {}; };
+const keepTwin = (json, svg) => { if (!json || !svg) return; const m = twins(); m[json] = svg; const keys = Object.keys(m); for (const k of keys.slice(0, Math.max(0, keys.length - 200))) delete m[k]; store.set(TWINS_KEY, JSON.stringify(m)); };
+const outMsg = () => $('outMsg') || $('status');
+/* save: to the figure's own files (PUT by id, with the updated_at last seen); saveAs: {name, folder} new files and a
+   new identity. A 409 (the file changed since) is looked at: if its content is still what this figure last wrote
+   there, only its name or folder changed (보관함's rename or move), so the save goes to it all the same */
+async function toStorage({saveAs = null} = {}) {
+  const msg = outMsg();
+  if (!token()) { saveLocal(); msg.innerHTML = `${esc(X6.localOnly)} ${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`; return false; }
+  msg.textContent = '…'; flash('…');
+  const json = JSON.stringify(st.scene, null, 1), svg = exportSvg(), hash = textSig(json);
+  const folder = saveAs ? saveAs.folder : st.doc.store?.folder ?? FIG_FOLDER, base0 = saveAs ? saveAs.name : (st.scene.title || 'figure');
+  const nm = ext => (String(base0).replace(/[\\/:*?"<>|]+/g, ' ').trim().slice(0, 60) || 'figure') + '.' + ext;
+  const create = async () => {
+    const out = {};
+    for (const [ext, body, type] of [['json', json, 'application/json'], ['svg', svg, 'image/svg+xml']]) out[ext] = (await api('/api/workshop/storage/files', 'POST', figForm(ext, body, type, {folder, ensure_folder: '1'}, nm(ext)), true)).file;
+    keepTwin(out.json.id, out.svg.id);
+    return {json: out.json.id, svg: out.svg.id, base: out.json.updated_at, name: out.json.name, folder: out.json.folder ?? folder, hash};
+  };
+  const put = (id, body, type, ext, base) => api(`/api/workshop/storage/files/${encodeURIComponent(id)}/content`, 'PUT', figForm(ext, body, type, base ? {base: String(base)} : {}), true);
   try {
-    const r = await api(`/api/workshop/storage?kind=figure&folder=${encodeURIComponent(FIG_FOLDER)}`), files = (r.files || []), jsons = files.filter(f => /\.json$/i.test(f.name));
-    if (!jsons.length) { msg.textContent = X6.none; return; }
-    msg.innerHTML = `<span class="note">${esc(X6.list)}</span><div class="saves">${jsons.slice(0, 60).map((f, i) => `<div><span>${esc(f.name.replace(/\.json$/i, ''))}</span><button type="button" data-sopen="${i}">${T.open}</button></div>`).join('')}</div>`;
-    msg.querySelectorAll('[data-sopen]').forEach(b => b.onclick = async () => {
-      const f = jsons[+b.dataset.sopen]; msg.textContent = '…';
-      try {
-        const scene = await api(`/api/workshop/storage/files/${encodeURIComponent(f.id)}`);
-        const r2 = validateScene(scene, {lenient: true}); if (!r2.scene.view) r2.scene.view = sceneBounds(r2.scene);
-        const svgf = files.find(x => x.name === f.name.replace(/\.json$/i, '.svg'));
-        setSel([]); st.ai = null; st.zoom = null; stopSim(); commit(r2.scene);
-        keepStoreIds({json: f.id, svg: svgf?.id || '', base: f.updated_at, name: f.name});
-        $('outMsg').innerHTML = `<span class="ok">${esc(X6.opened(f.name))}</span>`;
-      } catch (e) { $('outMsg').innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
-    });
-  } catch (e) { msg.innerHTML = `<span class="bad">${esc(errText(e))}</span>`; }
+    let ids, how = 'created';
+    const cur = st.doc.store;
+    if (saveAs || !cur?.json) ids = await create();
+    else {
+      let r;
+      try { r = await put(cur.json, json, 'application/json', 'json', cur.base); how = 'overwrote'; }
+      catch (e) {
+        if (e.status === 404) { ids = await create(); how = 'created'; }
+        else if (e.status === 409) {
+          /* was it only renamed or moved? the stored bytes are still what this figure wrote last */
+          let same = false; try { same = !!cur.hash && textSig(await apiText(`/api/workshop/storage/files/${encodeURIComponent(cur.json)}`)) === cur.hash; } catch (e2) {}
+          if (same) { r = await put(cur.json, json, 'application/json', 'json', 0); how = 'renamed'; }
+          else { ids = await create(); how = 'changed'; }
+        } else throw e;
+      }
+      if (r) {
+        let svgId = cur.svg || twins()[cur.json] || '';
+        try { if (svgId) await put(svgId, svg, 'image/svg+xml', 'svg', 0); } catch (e) { if (e.status !== 404) throw e; svgId = ''; }
+        if (!svgId) svgId = (await api('/api/workshop/storage/files', 'POST', figForm('svg', svg, 'image/svg+xml', {folder: r.file?.folder ?? cur.folder ?? FIG_FOLDER, ensure_folder: '1'}, (r.file?.name || nm('json')).replace(/\.json$/i, '.svg')), true)).file.id;
+        keepTwin(cur.json, svgId);
+        ids = {...cur, svg: svgId, base: r.file?.updated_at ?? cur.base, name: r.file?.name || cur.name, folder: r.file?.folder ?? cur.folder, hash};
+      }
+    }
+    /* save as (or a save that had to make new files because the old one changed elsewhere): a new identity on the new
+       files, nothing shared with it; else the same identity, now clean */
+    if (saveAs || how === 'changed') { const was = st.doc.uid; st.doc = docFor('saved-as', st.scene, {store: ids}); setDrafts(dropDraft(drafts(), was)); }
+    else st.doc = docSaved(st.doc, st.scene, ids);
+    saveDoc();
+    const text = how === 'changed' ? X6.changed : how === 'renamed' ? X8.renamed : X8[how](docPath(st.doc));
+    msg.innerHTML = `<span class="ok">${esc(text)}</span>`; flash(`<span class="ok">${esc(text)}</span>`);
+    return true;
+  } catch (e) { msg.innerHTML = `<span class="bad">${esc(errText(e))}</span>`; flash(`<span class="bad">${esc(errText(e))}</span>`); return false; }
+}
+/* 다른 이름으로 저장: a dialog for the file name and the folder (the folders of the member's storage) */
+async function saveAsDialog() {
+  if (!token()) { toStorage(); return; }
+  let dlg = $('saveAsDlg');
+  if (!dlg) { dlg = document.createElement('dialog'); dlg.id = 'saveAsDlg'; dlg.className = 'dlg'; document.body.append(dlg); }
+  const name0 = st.scene.title || (st.doc.store?.name || '').replace(/\.json$/i, '') || X8.untitled;
+  dlg.innerHTML = `<form method="dialog" class="dlgform"><h2>${esc(X8.dlgSaveAs)}</h2>
+    <label>${esc(X8.fname)}<input id="saName" maxlength="60" value="${esc(name0)}" required></label>
+    <label>${esc(X8.folder)}<select id="saFolder"><option value="${esc(FIG_FOLDER)}">${esc(FIG_FOLDER)}</option></select></label>
+    <label>${esc(X8.newFolder)}<input id="saNew" maxlength="60" placeholder="${esc(FIG_FOLDER)}/…"></label>
+    <p class="note">${esc(X8.saveAsNote)}</p><p class="note" id="saMsg" role="status"></p>
+    <div class="row"><button type="submit" class="primary" id="saGo" value="go">${esc(X8.go)}</button><button type="button" id="saCancel">${esc(X8.cancel)}</button></div></form>`;
+  dlg.querySelector('#saCancel').onclick = () => dlg.close();
+  const cur = st.doc.store?.folder ?? FIG_FOLDER;
+  api('/api/workshop/storage').then(r => {
+    const list = [...new Set([FIG_FOLDER, cur, ...(r.folders || []).filter(f => typeof f === 'string')])].filter(f => f !== '').sort((a, b) => a.localeCompare(b));
+    const sel = $('saFolder'); if (sel) sel.innerHTML = `<option value="">${esc(X8.root)}</option>` + list.map(f => `<option value="${esc(f)}"${f === cur ? ' selected' : ''}>${esc(f)}</option>`).join('');
+  }).catch(() => {});
+  dlg.querySelector('form').onsubmit = async e => {
+    e.preventDefault();
+    const name = $('saName').value.trim() || X8.untitled, nf = $('saNew').value.trim().replace(/^\/+|\/+$/g, ''), folder = nf || $('saFolder').value;
+    $('saGo').disabled = true; $('saMsg').textContent = '…';
+    /* the figure takes the name it is saved under */
+    if (name !== st.scene.title) { const next = clone(st.scene); next.title = name.slice(0, 80); commit(next, {keepSel: true}); }
+    const ok = await toStorage({saveAs: {name, folder}});
+    if (ok) dlg.close(); else { $('saGo').disabled = false; $('saMsg').innerHTML = outMsg().innerHTML; }
+  };
+  showDlg(dlg); setTimeout(() => { const n = $('saName'); n?.focus(); n?.select(); }, 0);
+}
+/* 그림 복제: the same figure as a new one, with no file and no sharing of its own yet */
+function duplicateFigure() {
+  const next = clone(st.scene); next.title = (st.scene.title ? `${st.scene.title} ${ko ? '(사본)' : '(copy)'}` : '').slice(0, 80);
+  if (setFigure(next, 'copy')) flash(esc(X8.dupDone));
+}
+/* a dialog where the member is looking: in the Workshop page the editor is a frame as tall as its content, so a dialog
+   centred in it could be far off screen; it opens by the control that was used (else by the canvas) */
+function showDlg(dlg) {
+  if (embedded) { const a = document.activeElement, r = (a && a !== document.body ? a : $('canvas'))?.getBoundingClientRect?.(); dlg.classList.add('framed'); dlg.style.top = Math.max(8, (r ? r.top : 0) - 20) + 'px'; }
+  dlg.showModal();
+}
+const when = t => { const d = new Date(t > 1e12 ? t : t * 1000); return Number.isFinite(+d) ? d.toLocaleString(ko ? 'ko-KR' : 'en-GB', {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}) : ''; };
+/* 열기: every figure in the member's storage (any folder), newest first, with its folder, date and thumbnail; the
+   recovery drafts and the figures saved in this browser below */
+async function openFromStorage() {
+  let dlg = $('openDlg');
+  if (!dlg) { dlg = document.createElement('dialog'); dlg.id = 'openDlg'; dlg.className = 'dlg wide'; document.body.append(dlg); }
+  const dr = drafts().filter(d => d.uid !== st.doc.uid), loc = saves();
+  dlg.innerHTML = `<div class="dlgform"><div class="dlghead"><h2>${esc(X8.dlgOpen)}</h2><button type="button" data-close aria-label="${esc(X8.close)}">✕</button></div>
+    <input type="search" id="opQ" placeholder="${esc(X8.search)}" aria-label="${esc(X8.search)}">
+    <div class="note">${esc(X8.fromStore)}</div><div id="opList" class="oplist" role="list"><p class="note">${token() ? '…' : `${T.storeLogin} <a class="btn" href="/#/login" target="_top">${T.login}</a>`}</p></div>
+    ${dr.length ? `<div class="note">${esc(X8.drafts)}</div><div class="oplist">${dr.map((d, i) => `<div class="opitem" role="listitem"><div class="thumb">${draftThumb(d.scene)}</div><div class="opmeta"><b>${esc(d.title || X8.untitled)}</b><span class="note">${esc(when(d.t))}${d.store ? ' · ' + esc(docPath(d)) : ''}</span></div><button type="button" class="primary" data-dopen="${i}">${esc(X8.reopen)}</button><button type="button" data-ddrop="${i}">${esc(X8.discard)}</button></div>`).join('')}</div>` : ''}
+    ${loc.length ? `<div class="note">${esc(X8.local)}</div><div class="oplist">${loc.map((x, i) => `<div class="opitem" role="listitem"><div class="opmeta"><b>${esc(x.name)}</b><span class="note">${esc(when(x.t))}</span></div><button type="button" data-lopen="${i}">${T.open}</button></div>`).join('')}</div>` : ''}
+    <p class="note" id="opMsg" role="status"></p></div>`;
+  dlg.querySelector('[data-close]').onclick = () => dlg.close();
+  dlg.querySelectorAll('[data-dopen]').forEach(b => b.onclick = () => { const d = dr[+b.dataset.dopen]; dlg.close(); reopenDraft(d); });
+  dlg.querySelectorAll('[data-ddrop]').forEach(b => b.onclick = () => { setDrafts(dropDraft(drafts(), dr[+b.dataset.ddrop].uid)); openFromStorage(); });
+  dlg.querySelectorAll('[data-lopen]').forEach(b => b.onclick = () => { dlg.close(); openScene(loc[+b.dataset.lopen].scene); });
+  if (!dlg.open) showDlg(dlg);
+  if (!token()) return;
+  try {
+    const r = await api('/api/workshop/storage?kind=figure'), files = (r.files || []).filter(f => f && typeof f.id === 'string'), tw = twins();
+    const jsons = files.filter(f => /\.json$/i.test(f.name)).sort((a, b) => (b.updated_at || 0) - (a.updated_at || 0));
+    const svgOf = f => files.find(x => x.id === tw[f.id]) || files.find(x => x.folder === f.folder && x.name === f.name.replace(/\.json$/i, '.svg')) || null;
+    const paint1 = () => {
+      const q = ($('opQ')?.value || '').trim().toLowerCase(), list = jsons.filter(f => !q || (f.folder + '/' + f.name).toLowerCase().includes(q));
+      const box = $('opList'); if (!box) return;
+      box.innerHTML = list.length ? list.slice(0, 200).map(f => { const sv = svgOf(f); return `<div class="opitem" role="listitem"><div class="thumb"${sv ? ` data-thumb="${esc(sv.id)}"` : ''}></div><div class="opmeta"><b>${esc(f.name.replace(/\.json$/i, ''))}</b><span class="note">${esc(f.folder || X8.root)} · ${esc(X8.changedAt)} ${esc(when(f.updated_at))}</span></div><button type="button" class="primary" data-sopen="${esc(f.id)}">${T.open}</button></div>`; }).join('') : `<p class="note">${esc(X8.none)}</p>`;
+      box.querySelectorAll('[data-sopen]').forEach(b => b.onclick = () => openStored(jsons.find(f => f.id === b.dataset.sopen), svgOf(jsons.find(f => f.id === b.dataset.sopen)), dlg));
+      loadThumbs(box);
+    };
+    $('opQ').oninput = paint1; paint1();
+  } catch (e) { const box = $('opList'); if (box) box.innerHTML = `<p class="bad">${esc(errText(e))}</p>`; }
+}
+/* thumbnails: the stored SVG twin, fetched as text (the files need the member's token) and shown as a data URL */
+const thumbCache = new Map();
+function loadThumbs(box) {
+  const els = [...box.querySelectorAll('[data-thumb]')];
+  const show = el => { const id = el.dataset.thumb; const put = u => { if (u) el.innerHTML = `<img alt="" src="${u}">`; };
+    if (thumbCache.has(id)) { put(thumbCache.get(id)); return; }
+    apiText(`/api/workshop/storage/files/${encodeURIComponent(id)}`).then(t => { const u = /^\s*<svg[\s>]/.test(t) && t.length < 3e6 ? svgDataUrl(t) : ''; thumbCache.set(id, u); put(u); }).catch(() => thumbCache.set(id, '')); };
+  if (typeof IntersectionObserver !== 'function') { els.slice(0, 40).forEach(show); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); show(e.target); } }), {root: box.closest('dialog') || null});
+  els.forEach(el => io.observe(el));
+}
+const draftThumb = sc => { try { const r = validateScene(sc, {lenient: true}).scene; return `<img alt="" src="${svgDataUrl(renderSVG(r, {width: 240, view: r.view || sceneBounds(r)}))}">`; } catch (e) { return ''; } };
+async function openStored(f, svgf, dlg) {
+  if (!f) return; const m = $('opMsg'); if (m) m.textContent = '…';
+  try {
+    const text = await apiText(`/api/workshop/storage/files/${encodeURIComponent(f.id)}`), r2 = validateScene(JSON.parse(text), {lenient: true});
+    if (!r2.scene.view) r2.scene.view = sceneBounds(r2.scene);
+    st.ai = null;
+    if (svgf) keepTwin(f.id, svgf.id);
+    setFigure(r2.scene, 'storage', {store: {json: f.id, svg: svgf?.id || '', base: f.updated_at, name: f.name, folder: f.folder ?? '', hash: textSig(text)}});
+    dlg?.close();
+    flash(`<span class="ok">${esc(X6.opened(docPath(st.doc)))}</span>`);
+  } catch (e) { if (m) m.innerHTML = `<span class="bad">${esc(e instanceof SyntaxError ? T.loadBad : errText(e))}</span>`; }
+}
+function reopenDraft(d) {
+  const r = validateScene(d.scene, {lenient: true}); if (!r.scene.view) r.scene.view = sceneBounds(r.scene);
+  st.ai = null; setDrafts(dropDraft(drafts(), d.uid));
+  setFigure(r.scene, 'draft', {uid: d.uid, store: okStore(d.store), share: okShare(d.share), changes: d.changes || 1});
 }
 /* ── sharing (작품 공유, share-publish.js window.HL_SHARE): publish the figure with a title, a description, how to use it,
    tags and a topic; the share id is kept with the figure in this browser, so the dialog offers to update the shared
    version or take it down. Opened as ?share=N: someone else's figure becomes a new draft published as a remix of N;
    one's own unpublished draft N is published as itself (creation_id). ── */
-const SHARE_KEY = 'hlDrawShare';
 const X7 = ko ? {share: '🔗 공유하기', title: '작품 공유', name: '제목', desc: '설명', howto: '사용 방법', tags: '태그 (쉼표로)', topic: '주제', publish: '공유하기', update: '공유 내용 업데이트', unpublish: '공유 취소', view: '공유 페이지 보기', cancel: '닫기',
   done: '공유했습니다.', updated: '공유 내용을 바꿨습니다.', removed: '공유를 취소했습니다.', remix: n => `공유된 그림 #${n}을(를) 불러왔습니다. 고쳐서 공유하면 리믹스가 됩니다.`, draft: n => `초안 #${n}을(를) 불러왔습니다.`, login: '로그인하면 공유할 수 있습니다.', unavailable: '공유 기능을 불러오지 못했습니다.',
   topics: {mechanics: '역학', em: '전자기', thermal: '열', optics: '광학', waves: '파동', modern: '현대물리', other: '기타'}}
   : {share: '🔗 Share', title: 'Share this figure', name: 'Title', desc: 'Description', howto: 'How to use it', tags: 'Tags (comma separated)', topic: 'Topic', publish: 'Share', update: 'Update the shared version', unpublish: 'Stop sharing', view: 'Open the share page', cancel: 'Close',
   done: 'Shared.', updated: 'The shared version was updated.', removed: 'No longer shared.', remix: n => `Loaded shared figure #${n}. Share your changes and it becomes a remix.`, draft: n => `Loaded draft #${n}.`, login: 'Log in to share.', unavailable: 'Sharing could not be loaded.',
   topics: {mechanics: 'Mechanics', em: 'E&M', thermal: 'Thermal', optics: 'Optics', waves: 'Waves', modern: 'Modern', other: 'Other'}};
-st.share = (() => { try { const v = JSON.parse(store.get(SHARE_KEY) || 'null'); return v && typeof v === 'object' ? v : null; } catch (e) { return null; } })();
-const keepShare = v => { st.share = v; if (v) store.set(SHARE_KEY, JSON.stringify(v)); else store.del(SHARE_KEY); };
+/* the shared project belongs to the figure's identity (st.doc.share): a figure started or loaded afterwards has none */
+const keepShare = v => { st.doc = {...st.doc, share: v}; saveDoc(); };
 const topicOf = () => { const d = Object.entries(DOMAINS).map(([k, l]) => [k, st.scene.objects.filter(o => l.includes(o.type)).length]).sort((a, b) => b[1] - a[1])[0]?.[0]; return {mech: 'mechanics', em: 'em', thermo: 'thermal', optics: 'optics', waves: 'waves', modern: 'modern'}[d] || 'other'; };
 function openShare() {
   const S = window.HL_SHARE; let box = $('shareBox');
   if (!S) { flash(`<span class="bad">${esc(X7.unavailable)}</span>`); return; }
   if (!token()) { flash(`${esc(X7.login)} <a class="btn" href="/#/login" target="_top">${T.login}</a>`); return; }
   if (!box) { box = document.createElement('div'); box.id = 'shareBox'; box.className = 'sharebox'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', X7.title); $('stageTop').after(box); }
-  const sh = st.share || {}, m = sh.meta || {};
+  const sh = st.doc.share || {}, m = sh.meta || {};
   box.hidden = false;
   box.innerHTML = `<div class="symhead"><b>${esc(X7.title)}</b><button type="button" data-close aria-label="✕">✕</button></div>
     <div class="props"><label class="wide">${esc(X7.name)}<input id="shTitle" maxlength="80" value="${esc(m.title || st.scene.title || '')}"></label>
@@ -1453,9 +1884,10 @@ async function openShared(n) {
     const r = await S.get(n), p = r?.project, sc = p?.payload?.scene || p?.payload;
     const v = validateScene(sc, {lenient: true}); if (!v.scene.objects.length) return;
     if (!v.scene.view) v.scene.view = sceneBounds(v.scene);
-    keepStoreIds(null); setSel([]); st.zoom = null; stopSim(); commit(v.scene);
     const mine = !!p.mine, meta = {title: p.title, description: p.description ?? p.descr ?? '', howto: p.howto || '', tags: p.tags || [], topic: p.topic};
-    keepShare(mine ? (p.status === 'public' ? {id: n, meta} : {draft: n, meta}) : {remixOf: n, meta: {...meta, title: p.title}});
+    st.ai = null;
+    /* a figure of its own: no storage file, only the shared project it came from */
+    setFigure(v.scene, 'share', {share: mine ? (p.status === 'public' ? {id: n, meta} : {draft: n, meta}) : {remixOf: n, meta: {...meta, title: p.title}}});
     flash(esc(mine ? X7.draft(n) : X7.remix(n)));
   } catch (e) { flash(`<span class="bad">${esc(T.err[e?.code] || T.err.other)}</span>`); }
 }
@@ -1479,9 +1911,8 @@ async function aiDraw() {
     const v = validateScene(r?.scene, {lenient: true});
     if (!v.scene.objects.length) throw Object.assign(new Error('empty'), {code: 'empty'});
     if (!v.scene.view) v.scene.view = sceneBounds(v.scene);
-    stopSim(); setSel([]); st.zoom = null; st.ai = null;
-    if (!edit) keepStoreIds(null);
-    commit(v.scene);
+    st.ai = null;
+    if (edit) { stopSim(); setSel([]); st.zoom = null; commit(v.scene); } else setFigure(v.scene, 'new');
     const notes = (Array.isArray(r.notes) ? r.notes : []).filter(n => typeof n === 'string').slice(0, 6);
     $('aiMsg').innerHTML = `${notes.length ? `<ul>${notes.map(n => `<li>${esc(n.slice(0, 200))}</li>`).join('')}</ul>` : ''}${Number.isFinite(r.left) ? `<span class="note">${esc(X6.aiLeft(r.left))}</span>` : ''}`;
   } catch (e) { box.innerHTML = `<span class="bad">${esc(X6.aiErr[e.code] || errText(e))}</span>`; }
@@ -1496,9 +1927,9 @@ function saveLocal() {
 }
 function openScene(obj) {
   const r = validateScene(obj);
-  if (!r.ok) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; return; }
+  if (!r.ok) { flash(`<span class="bad">${T.loadBad} ${esc(plainErrors(r.errors, obj))}</span>`); return; }
   if (!r.scene.view) r.scene.view = sceneBounds(r.scene);
-  setSel([]); st.ai = null; st.zoom = null; commit(r.scene);
+  st.ai = null; setFigure(r.scene, 'new');
 }
 function paintOut(keepMsg) {
   const box = $('out'); if (!box) return;
@@ -1508,16 +1939,12 @@ function paintOut(keepMsg) {
     <div class="row"><button type="button" id="oSvg">${T.svg}</button><button type="button" id="oPng">${T.png}</button></div>
     ${st.paperEdit ? '' : `<label class="note" for="paperQ">${T.paperQ}</label><textarea id="paperQ" class="q" rows="2"></textarea>`}
     <div class="row"><button type="button" class="primary" id="oPaper">${st.paperEdit ? T.replacePaper : T.toPaper}</button></div>
-    <div class="row"><button type="button" class="primary" id="oStore">${esc(X6.save)}</button><button type="button" id="oOpen">${esc(X6.open)}</button></div>
-    <div class="row"><button type="button" id="oLocal">${T.local}</button></div>
-    <div class="row"><button type="button" id="oJson">${T.json}</button><label class="btn filebtn">${T.load}<input type="file" id="oLoad" accept=".json,application/json"></label></div>
+    <div class="row"><button type="button" id="oSaveAs">${esc(X8.saveAs)}</button><button type="button" id="oLocal">${T.local}</button></div>
     <p class="note" id="outMsg" role="status">${old}</p>
     ${list.length ? `<div class="note">${T.saves}</div><div class="saves">${list.map((x, i) => `<div><span>${esc(x.name)}</span><button type="button" data-open="${i}">${T.open}</button><button type="button" data-drop="${i}" aria-label="${T.del}">✕</button></div>`).join('')}</div>` : ''}`;
   $('oSvg').onclick = () => download(new Blob([exportSvg()], {type: 'image/svg+xml'}), fileName('svg'));
   $('oPng').onclick = () => pngBlob(exportSvg()).then(b => download(b, fileName('png'))).catch(() => { $('outMsg').innerHTML = `<span class="bad">${T.err.other}</span>`; });
-  $('oPaper').onclick = toPaper; $('oStore').onclick = toStorage; $('oOpen').onclick = openFromStorage; $('oLocal').onclick = saveLocal;
-  $('oJson').onclick = () => download(new Blob([JSON.stringify(st.scene, null, 1)], {type: 'application/json'}), fileName('json'));
-  $('oLoad').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f || f.size > 1e6) return; try { openScene(JSON.parse(await f.text())); } catch (x) { $('outMsg').innerHTML = `<span class="bad">${T.loadBad}</span>`; } };
+  $('oPaper').onclick = toPaper; $('oSaveAs').onclick = saveAsDialog; $('oLocal').onclick = saveLocal;
   box.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openScene(list[+b.dataset.open].scene));
   box.querySelectorAll('[data-drop]').forEach(b => b.onclick = () => { const l = saves(); l.splice(+b.dataset.drop, 1); store.set(SAVES_KEY, JSON.stringify(l)); paintOut(); });
 }
@@ -1538,8 +1965,7 @@ async function photoFile(file) {
     const v = validateScene(r.scene);
     if (!v.ok) throw {code: 'scene_failed'};
     v.scene.view = sceneBounds(v.scene); if (!v.scene.title) v.scene.title = '';
-    st.ai = {unsure: Array.isArray(r.unsure) ? r.unsure : [], left: r.left}; setSel([]); st.zoom = null;
-    commit(v.scene); flash('');
+    setFigure(v.scene, 'new'); st.ai = {unsure: Array.isArray(r.unsure) ? r.unsure : [], left: r.left}; paintAi(); flash('');
   } catch (e) { flash(`<span class="bad">${esc(errText(e))}</span>`); }
 }
 function paintAi() {
@@ -1557,7 +1983,7 @@ function paintAi() {
 function paintPalette() {
   const box = $('palette'); if (!box) return;
   const q = st.q.trim().toLowerCase();
-  const entries = q ? Object.entries(PALETTE).flatMap(([d, list]) => list.map((e, i) => [d, i, e]).filter(([, , e]) => (e[2] + ' ' + e[0] + ' ' + (e[1].kind || '') + ' ' + PAL_EN[d]).toLowerCase().includes(q) || e[2].toLowerCase().includes(q)))
+  const entries = q ? Object.entries(PALETTE).flatMap(([d, list]) => list.map((e, i) => [d, i, e]).filter(([, , e]) => (e[2] + ' ' + e[0] + ' ' + (e[1].kind || '') + ' ' + (e[3] || '') + ' ' + PAL_EN[d]).toLowerCase().includes(q) || e[2].toLowerCase().includes(q)))
     : PALETTE[st.dom].map((e, i) => [st.dom, i, e]);
   box.innerHTML = `<div class="tabs" role="tablist">${Object.keys(PALETTE).map(d => `<button type="button" role="tab" data-dom="${d}" aria-selected="${!q && d === st.dom}" class="${!q && d === st.dom ? 'on' : ''}">${X2.domains[d]}</button>`).join('')}</div>
     <div class="items">${entries.map(([d, i, e]) => `<button type="button" data-add="${d}:${i}" class="${st.connect?.type === e[0] ? 'on' : ''}">${esc(e[2])}</button>`).join('') || `<span class="note">—</span>`}</div>`;
@@ -1651,35 +2077,57 @@ function insertSymbol(tex) {
   next.objects.push({...defaults('label'), id, x: r4(snapV(v.x + v.w / 2)), y: r4(snapV(v.y + v.h / 2)), text: text.slice(0, FIELDS.label.text.max)});
   if (commit(next)) { setSel([id]); st.lastText = {id, k: 'text'}; paint(); const el2 = document.querySelector('[data-f="text"]'); if (el2) select(el2, 0, el2.value); }
 }
+/* the page, canvas first: a compact bar on top (the file menu, save, open, share, undo, edit and view menus, zoom, the
+   style), the drawing tools in a rail on the left with the physics parts beside them, the canvas, and the properties on
+   the right (folded away with 속성); on a phone the canvas comes first and the tools run along under it */
 function shell() {
-  const tl = X3.tools;
-  $('app').innerHTML = `<div class="head"><div><h1>${T.title}</h1><p class="lede">${T.lede}</p></div></div>
-    <div id="hint3"></div>
-    <div class="dbar"><select id="tpl" aria-label="${esc(X4.templates)}" title="${esc(X4.templates)}"><option value="">${esc(X4.templates)}…</option>${Object.keys(DOMAINS).map(d => `<optgroup label="${esc(X2.domains[d])}">${TEMPLATE_KEYS.filter(k => TEMPLATE_DOMAIN[k] === d).map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}</optgroup>`).join('')}<option value="blank">${T.blank}</option></select>
-      <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(X2.style)}: ${esc(STYLES[k].name[lang])}</option>`).join('')}</select><button type="button" id="bSym">${X2.symbols}</button><button type="button" id="bSave" class="primary" title="${esc(X6.saveT)}">${esc(X6.save)}</button><button type="button" id="bOpenStore">${esc(X6.open)}</button><button type="button" id="bShare">${esc(X7.share)}</button>
-      <label class="btn filebtn">📷 ${T.photo}<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/*"></label><span class="sep"></span>
-      <button type="button" id="bUndo" class="hist" title="${esc(tl.backT)}" aria-label="${esc(tl.backT)}">${tl.back}</button><button type="button" id="bRedo" class="hist" title="${esc(tl.fwdT)}" aria-label="${esc(tl.fwdT)}">${tl.fwd}</button>
-      <button type="button" id="bDup" title="Ctrl+D">${T.dup}</button><button type="button" id="bCopy" title="Ctrl+C">${tl.copy}</button><button type="button" id="bPaste" title="Ctrl+V">${tl.paste}</button><button type="button" id="bDel" title="Delete">${T.del}</button><button type="button" id="bClear" class="danger">${tl.clear}</button><span class="sep"></span>
-      <span class="zoom" role="group" aria-label="zoom"><button type="button" id="bZout" title="${esc(tl.zoomOut)} (−)" aria-label="${esc(tl.zoomOut)}">−</button><span id="zoomPct" class="pct">100%</span><button type="button" id="bZin" title="${esc(tl.zoomIn)} (+)" aria-label="${esc(tl.zoomIn)}">+</button><button type="button" id="bZfit" title="${esc(tl.zoomFit)} (0)">${tl.zoomFit}</button></span>
-      <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><label class="btn"><input type="checkbox" id="cVals" style="width:auto"> ${tl.values}</label><button type="button" id="bFit" title="${esc(tl.frameMark)}">${T.fit}</button></div>
-    <details class="aibox" id="aiBox"><summary>${esc(X6.ai)}</summary><textarea id="aiPrompt" rows="2" maxlength="1200" placeholder="${esc(X6.aiHint)}"></textarea>
+  const tl = X3.tools, b = (id, text, title = '', cls = '') => `<button type="button" id="${id}"${cls ? ` class="${cls}"` : ''}${title ? ` title="${esc(title)}" aria-label="${esc(title)}"` : ''}>${text}</button>`;
+  const menu = (id, label, body) => `<details class="menu" id="${id}"><summary>${label}</summary><div class="mlist" role="menu">${body}</div></details>`;
+  $('app').innerHTML = `<div class="dhead"><h1 title="${esc(X2.lede)}">${T.title}</h1><span class="docname" id="docName"></span><span id="docState" class="docstate" role="status" aria-live="polite"></span></div>
+    <div id="recover" hidden></div><div id="hint3"></div>
+    <div class="topbar" role="toolbar" aria-label="${esc(X8.file)}">
+      ${menu('mFile', esc(X8.file) + ' ▾', `${b('mNew', esc(X8.newFig))}${b('mOpen', esc(X8.open) + '…', X8.openT)}${b('mSave', esc(X8.save) + ' <kbd>Ctrl+S</kbd>', X8.saveT)}${b('mSaveAs', esc(X8.saveAs) + ' <kbd>Ctrl+Shift+S</kbd>', X8.saveAsT)}${b('mDupFig', esc(X8.dupFig))}
+        <label class="btn filebtn">📷 ${T.photo}<input type="file" id="photo" accept="image/jpeg,image/png,image/webp,image/*"></label><label class="btn filebtn">${T.load}<input type="file" id="mLoad" accept=".json,application/json"></label>
+        ${b('mJson', T.json)}${b('mSvg', T.svg)}${b('mPng', T.png)}<hr>${b('bClear', tl.clear, '', 'danger')}`)}
+      <select id="tpl" aria-label="${esc(X4.templates)}" title="${esc(X4.templates)}"><option value="">${esc(X4.templates)}…</option>${Object.keys(DOMAINS).map(d => `<optgroup label="${esc(X2.domains[d])}">${TEMPLATE_KEYS.filter(k => TEMPLATE_DOMAIN[k] === d).map(k => `<option value="${k}">${esc(TEMPLATE_NAMES[k][lang])}</option>`).join('')}</optgroup>`).join('')}<option value="blank">${T.blank}</option></select>
+      ${b('bSave', esc(X8.save), X8.saveT, 'primary')}${b('bOpenStore', esc(X8.open), X8.openT)}${b('bShare', '🔗 ' + (ko ? '공유' : 'Share'), X7.title)}<span class="sep"></span>
+      ${b('bUndo', tl.back, tl.backT, 'hist')}${b('bRedo', tl.fwd, tl.fwdT, 'hist')}${b('bDup', T.dup, 'Ctrl+D')}${b('bDel', T.del, 'Delete')}
+      ${menu('mEdit', esc(X8.edit) + ' ▾', `${b('bCopy', tl.copy + ' <kbd>Ctrl+C</kbd>')}${b('bPaste', tl.paste + ' <kbd>Ctrl+V</kbd>')}${b('bAll', (ko ? '모두 선택' : 'Select all') + ' <kbd>Ctrl+A</kbd>')}`)}
+      <span class="zoom" role="group" aria-label="zoom">${b('bZout', '−', tl.zoomOut + ' (−)')}<span id="zoomPct" class="pct">100%</span>${b('bZin', '+', tl.zoomIn + ' (+)')}${b('bZfit', '⤢', tl.zoomFit + ' (0)')}</span>
+      ${menu('mView', esc(X8.view) + ' ▾', `<label class="chk"><input type="checkbox" id="cGrid" checked> ${T.grid}</label><label class="chk"><input type="checkbox" id="cSnap" checked> ${T.snap}</label><label class="chk"><input type="checkbox" id="cVals"> ${tl.values}</label>${b('bFit', T.fit, tl.frameMark)}`)}
+      <select id="styleSel" aria-label="${X2.style}" title="${X2.style}">${STYLE_KEYS.map(k => `<option value="${k}">${esc(STYLES[k].name[lang])}</option>`).join('')}</select>${b('bSym', 'Ω', X2.symbols + ': ' + X2.symTitle)}${b('bAi', esc(X8.ai), X6.ai)}${b('bSide', esc(X8.side) + ' ▸', X8.sideT, 'sidebtn')}
+    </div>
+    <details class="aibox" id="aiBox" hidden><summary>${esc(X6.ai)}</summary><textarea id="aiPrompt" rows="2" maxlength="1200" placeholder="${esc(X6.aiHint)}"></textarea>
       <div class="row"><label class="chk"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button></div><div id="aiMsg" class="note" role="status"></div></details>
     <div id="aiNote" class="ainote" hidden></div>
-    <div class="work"><details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details>
-      <section class="stage"><div id="tools" class="tools" role="toolbar" aria-label="${esc(X4.drawing)}"></div><div id="stageTop"></div><div id="canvas" class="canvas" tabindex="0"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
+    <div class="work${prefs().side === false ? ' noside' : ''}" id="work">
+      <nav id="tools" class="rail" role="toolbar" aria-label="${esc(X4.drawing)}"></nav>
+      <details class="palwrap parts" id="parts"${prefs().parts !== false ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details>
+      <section class="stage" id="stage"><div id="tstyle" class="tstyle" role="group" aria-label="${esc(X4.style.color)}"></div><div id="stageTop"></div><div id="canvas" class="canvas" tabindex="0"></div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
         <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
           <label><input type="checkbox" id="cFbd"${st.fbd ? ' checked' : ''}>${T.fbd}</label><label id="rtLbl"><input type="checkbox" id="cRt"${st.rtrail ? ' checked' : ''}>${esc(X5.trails)}</label></span><label><input type="checkbox" id="cRead"${st.readouts ? ' checked' : ''}>${T.readouts}</label><label id="solveLbl"><input type="checkbox" id="cSolve"${st.solve ? ' checked' : ''}>${X2.solve}</label><span class="clock" id="clock"></span></div>
         <div id="readouts" class="readouts"></div></section>
-      <div class="side"><section class="panel" id="props"></section><section class="panel" id="out"></section></div></div>`;
-  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; keepStoreIds(null); keepShare(null); setSel([]); st.zoom = null; if (TEMPLATE_DOMAIN[k]) st.dom = TEMPLATE_DOMAIN[k]; commit(k === 'blank' ? {...blankScene(), style: st.scene.style, view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene); };
-  $('photo').onchange = e => { const f = e.target.files[0]; e.target.value = ''; keepStoreIds(null); photoFile(f); };
-  $('bSave').onclick = toStorage; $('bOpenStore').onclick = () => { openFromStorage(); $('out')?.scrollIntoView?.({block: 'nearest'}); };
-  $('aiGo').onclick = aiDraw; $('aiBox').ontoggle = () => { if ($('aiBox').open) aiModels(); };
+      <div class="side" id="side"><section class="panel" id="props"></section><section class="panel" id="out"></section></div></div>`;
+  /* a menu closes when one of its items is used or when the page is pressed elsewhere */
+  document.querySelectorAll('details.menu').forEach(m => m.addEventListener('click', e => { if (e.target.closest('button') && !e.target.closest('summary')) m.open = false; }));
+  document.addEventListener('pointerdown', e => document.querySelectorAll('details.menu[open]').forEach(m => { if (!m.contains(e.target)) m.open = false; }));
+  $('tpl').onchange = e => { const k = e.target.value; e.target.value = ''; if (!k) return; st.ai = null; if (TEMPLATE_DOMAIN[k]) st.dom = TEMPLATE_DOMAIN[k]; setFigure(k === 'blank' ? {...blankScene(), style: st.scene.style, view: {x: -0.5, y: -0.5, w: 4, h: 3}} : validateScene(template(k, lang)).scene, 'new'); };
+  $('mNew').onclick = () => { st.ai = null; setFigure({...blankScene(), style: st.scene.style, view: {x: -0.5, y: -0.5, w: 4, h: 3}}, 'new'); };
+  $('photo').onchange = e => { const f = e.target.files[0]; e.target.value = ''; $('mFile').open = false; photoFile(f); };
+  $('mLoad').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; $('mFile').open = false; if (!f || f.size > 1e6) return; try { openScene(JSON.parse(await f.text())); } catch (x) { flash(`<span class="bad">${T.loadBad}</span>`); } };
+  $('bSave').onclick = () => toStorage(); $('mSave').onclick = () => toStorage(); $('mSaveAs').onclick = saveAsDialog; $('mDupFig').onclick = duplicateFigure;
+  $('bOpenStore').onclick = openFromStorage; $('mOpen').onclick = openFromStorage;
+  $('mJson').onclick = () => download(new Blob([JSON.stringify(st.scene, null, 1)], {type: 'application/json'}), fileName('json'));
+  $('mSvg').onclick = () => download(new Blob([exportSvg()], {type: 'image/svg+xml'}), fileName('svg'));
+  $('mPng').onclick = () => pngBlob(exportSvg()).then(bl => download(bl, fileName('png'))).catch(() => flash(`<span class="bad">${T.err.other}</span>`));
+  $('aiGo').onclick = aiDraw; $('aiBox').ontoggle = () => { if ($('aiBox').open) aiModels(); height(); };
+  $('bAi').onclick = () => { const a = $('aiBox'); a.hidden = !a.hidden; a.open = !a.hidden; if (a.open) { aiModels(); $('aiPrompt').focus(); } height(); };
   $('bShare').onclick = openShare;
-  { const n = +params.get('share'); if (n > 0) { if (window.HL_SHARE) openShared(n); else addEventListener('load', () => openShared(n), {once: true}); } } $('aiPrompt').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) aiDraw(); };
+  $('bSide').onclick = () => { const w = $('work'), off = !w.classList.toggle('noside'); setPref('side', off); $('bSide').setAttribute('aria-pressed', String(off)); lastW = 0; paintCanvas(); height(); };
+  { const n = params.get('share'); if (/^\d{1,9}$/.test(n || '') && +n > 0) { if (window.HL_SHARE) openShared(+n); else addEventListener('load', () => openShared(+n), {once: true}); } } $('aiPrompt').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) aiDraw(); };
   $('bUndo').onclick = undo; $('bRedo').onclick = redo; $('bDup').onclick = dup; $('bDel').onclick = del; $('bClear').onclick = clearAll;
-  $('bCopy').onclick = () => { if (copySel()) paintBar(); }; $('bPaste').onclick = () => pasteClip();
+  $('bCopy').onclick = () => { if (copySel()) paintBar(); }; $('bPaste').onclick = () => pasteClip(); $('bAll').onclick = () => { setSel(st.scene.objects.map(o => o.id)); paint(); };
   $('bZin').onclick = () => zoomBy(1.25); $('bZout').onclick = () => zoomBy(0.8); $('bZfit').onclick = () => { st.zoom = null; paintCanvas(); };
   $('cGrid').onchange = e => { st.grid = e.target.checked; paintCanvas(); }; $('cSnap').onchange = e => { st.snap = e.target.checked; };
   $('cVals').onchange = e => { const next = clone(st.scene); next.values = e.target.checked; commit(next, {keepSel: true}); };
@@ -1694,8 +2142,23 @@ function shell() {
   $('cFbd').onchange = e => { st.fbd = e.target.checked; paintCanvas(); };
   $('cRt').onchange = e => { st.rtrail = e.target.checked; paintCanvas(); };
   $('cRead').onchange = e => { st.readouts = e.target.checked; paintReadouts(); };
-  $('parts').ontoggle = e => { setPref('parts', e.target.open); height(); };
-  bindCanvas(); paintHint(); paintTools(); paint(); paintOut();
+  $('parts').ontoggle = e => { setPref('parts', e.target.open); lastW = 0; height(); };
+  bindCanvas(); paintHint(); paintTools(); paint(); paintOut(); paintRecover();
+}
+/* after a crash or a close without saving: the unsaved figure brought back (this one), or another one waiting */
+function paintRecover() {
+  const box = $('recover'); if (!box) return;
+  const s0 = docState(st.doc, st.scene), other = drafts().find(d => d.uid !== st.doc.uid), same = st.startDirty && s0.dirty;
+  if (!other && !same) { box.hidden = true; box.innerHTML = ''; height(); return; }
+  box.hidden = false; box.className = 'recover';
+  box.innerHTML = other ? `<span>${esc(X8.recOther(other.title || X8.untitled, when(other.t)))}</span><button type="button" class="primary" id="recOpen">${esc(X8.reopen)}</button><button type="button" id="recDrop">${esc(X8.discard)}</button><button type="button" id="recClose" aria-label="${esc(X8.close)}">✕</button>`
+    : `<span>${esc(X8.recSame(s0.changes))}</span><button type="button" class="primary" id="recSave">${esc(X8.saveNow)}</button><button type="button" id="recClose" aria-label="${esc(X8.close)}">✕</button>`;
+  const done = () => { st.startDirty = false; st.recoverSeen = true; box.hidden = true; height(); };
+  $('recOpen')?.addEventListener('click', () => { done(); reopenDraft(other); });
+  $('recDrop')?.addEventListener('click', () => { setDrafts(dropDraft(drafts(), other.uid)); done(); paintRecover(); });
+  $('recSave')?.addEventListener('click', async () => { if (await toStorage()) done(); });
+  $('recClose').onclick = () => { if (other) { st.dismissed = other.uid; } done(); };
+  height();
 }
 /* the three steps a new member sees once (dismissed for good, in this browser) */
 function paintHint() {
@@ -1708,24 +2171,31 @@ function paintHint() {
 /* the drawing toolbar: the tools, then the look of what they draw (also applied to the selected shapes) */
 const STYLE_FIELDS = ['color', 'lw', 'pattern', 'fill', 'heads'];
 function paintTools() {
-  const box = $('tools'); if (!box) return;
-  const ds = st.dstyle, sw = c => `<button type="button" class="swatch${ds.color === c ? ' on' : ''}" data-color="${c}" title="${esc(X4.enums[c])}" aria-label="${esc(X4.enums[c])}" style="--c:${COLOR_HEX[c]}"></button>`;
+  const box = $('tools'), sb = $('tstyle'); if (!box) return;
+  const ds = st.dstyle, sw = c => `<button type="button" class="swatch${ds.color === c ? ' on' : ''}" data-color="${c}" title="${esc(X4.enums[c])}" aria-label="${esc(X4.enums[c])}" aria-pressed="${ds.color === c}" style="--c:${COLOR_HEX[c]}"></button>`;
+  const geoOpen = st.geoOpen ?? (GEO_TOOLS.includes(st.tool) || prefs().geo === true);
   box.innerHTML = `<div class="tgroup">${TOOLS.map(t => `<button type="button" class="tool${st.tool === t ? ' on' : ''}" data-tool="${t}" title="${esc(X4.tools[t])}" aria-label="${esc(X4.tools[t])}" aria-pressed="${st.tool === t}">${TOOL_ICON[t]}</button>`).join('')}</div>
-    <div class="tgroup geo" role="group" aria-label="${esc(X5.geoGroup)}"><span class="tlabel">${esc(X5.geoGroup)}</span>${GEO_TOOLS.map(t => `<button type="button" class="tool${st.tool === t ? ' on' : ''}" data-tool="${t}" title="${esc(X5.geoTools[t])}" aria-label="${esc(X5.geoTools[t])}" aria-pressed="${st.tool === t}">${GEO_ICON[t]}</button>`).join('')}</div>
-    <div class="tgroup tstyle"><span class="swatches" role="group" aria-label="${esc(X4.style.color)}">${COLORS.map(sw).join('')}</span>
-      <label title="${esc(X4.style.width)}">${esc(X4.style.width)}<select data-ds="lw">${[0.5, 0.75, 1, 1.5, 2, 3].map(v => `<option value="${v}"${v === ds.lw ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
-      <label title="${esc(X4.style.dash)}">${esc(X4.style.dash)}<select data-ds="pattern">${['solid', 'dashed', 'dotted', 'dashdot'].map(v => `<option value="${v}"${v === ds.pattern ? ' selected' : ''}>${esc(T.enums[v])}</option>`).join('')}</select></label>
-      <label title="${esc(X4.style.fill)}">${esc(X4.style.fill)}<select data-ds="fill">${FILLS.map(v => `<option value="${v}"${v === ds.fill ? ' selected' : ''}>${esc(X4.enums[v] || T.enums[v] || v)}</option>`).join('')}</select></label>
-      <span class="heads" title="${esc(X4.style.heads)}">${esc(X4.style.heads)} <label><input type="checkbox" data-dh="hs"${ds.hs ? ' checked' : ''}>${esc(X4.style.start)}</label><label><input type="checkbox" data-dh="he"${ds.he ? ' checked' : ''}>${esc(X4.style.end)}</label></span></div>`;
+    <button type="button" class="geotoggle" id="geoToggle" aria-expanded="${geoOpen}" title="${esc(X5.geoHint)}">${esc(geoOpen ? X8.geoLess : X8.geoMore)}</button>
+    <div class="tgroup geo" role="group" aria-label="${esc(X5.geoGroup)}"${geoOpen ? '' : ' hidden'}>${GEO_TOOLS.map(t => `<button type="button" class="tool${st.tool === t ? ' on' : ''}" data-tool="${t}" title="${esc(X5.geoTools[t])}" aria-label="${esc(X5.geoTools[t])}" aria-pressed="${st.tool === t}">${GEO_ICON[t]}</button>`).join('')}</div>`;
+  if (sb) sb.innerHTML = `<span class="swatches" role="group" aria-label="${esc(X4.style.color)}">${COLORS.map(sw).join('')}</span>
+      <label title="${esc(X4.style.width)}"><span class="tl">${esc(X4.style.width)}</span><select data-ds="lw">${[0.5, 0.75, 1, 1.5, 2, 3].map(v => `<option value="${v}"${v === ds.lw ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
+      <label title="${esc(X4.style.dash)}"><span class="tl">${esc(X4.style.dash)}</span><select data-ds="pattern">${['solid', 'dashed', 'dotted', 'dashdot'].map(v => `<option value="${v}"${v === ds.pattern ? ' selected' : ''}>${esc(T.enums[v])}</option>`).join('')}</select></label>
+      <label title="${esc(X4.style.fill)}"><span class="tl">${esc(X4.style.fill)}</span><select data-ds="fill">${FILLS.map(v => `<option value="${v}"${v === ds.fill ? ' selected' : ''}>${esc(X4.enums[v] || T.enums[v] || v)}</option>`).join('')}</select></label>
+      <span class="heads" title="${esc(X4.style.heads)}"><span class="tl">${esc(X4.style.heads)}</span> <label><input type="checkbox" data-dh="hs"${ds.hs ? ' checked' : ''}>${esc(X4.style.start)}</label><label><input type="checkbox" data-dh="he"${ds.he ? ' checked' : ''}>${esc(X4.style.end)}</label></span>
+      ${st.tool === 'pen' && st.ink ? `<span class="inkopts" role="group" aria-label="${esc(X4.tools.pen)}">${[['auto', 'autoShape', st.ink.options.autoShape], ['hold', 'holdToSnap', st.ink.options.holdToSnap], ['finger', 'fingerDraw', st.ink.options.fingerDraw]].map(([k, o, on]) => `<button type="button" class="tsb" data-ink="${o}" aria-pressed="${!!on}" title="${esc(X8.ink[k + 'T'])}">${esc(X8.ink[k])}</button>`).join('')}<button type="button" class="tsb" data-inkmath aria-pressed="${st.ink.mode === 'math'}" title="${esc(X8.ink.mathT)}">∑ ${esc(X8.ink.math)}</button></span>` : ''}`;
   box.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => setTool(b.dataset.tool));
+  sb?.querySelectorAll('[data-ink]').forEach(b => b.onclick = () => { const k = b.dataset.ink, on = !st.ink.options[k]; st.ink.set({[k]: on}); if (k === 'fingerDraw' && on) st.ink.resetPen(); setPref({autoShape: 'inkAuto', holdToSnap: 'inkHold', fingerDraw: 'inkFinger'}[k], on); paintTools(); });
+  sb?.querySelector('[data-inkmath]')?.addEventListener('click', () => { st.ink.mode = st.ink.mode === 'math' ? 'draw' : 'math'; st.inkMsg = ''; if (st.ink.mode !== 'math') { st.inkMath = []; paintCanvas(); } paintTools(); paintInkBar(); });
+  $('geoToggle').onclick = () => { st.geoOpen = !geoOpen; setPref('geo', st.geoOpen); paintTools(); height(); };
   const keep = () => setPref('dstyle', st.dstyle);
   /* the look goes to the selected shapes too (one step of history) */
   const toSel = (k, v) => { const ids = new Set(selIds()); if (!ids.size) return; const next = clone(st.scene); let any = false;
     for (const o of next.objects) if (ids.has(o.id) && k in FIELDS[o.type]) { if (k === 'heads' && !FIELDS[o.type].heads.list.includes(v)) continue; if (k === 'fill' && !FIELDS[o.type].fill.list.includes(v)) continue; if (k === 'color' && !FIELDS[o.type].color.list.includes(v)) continue; o[k] = v; any = true; }
     if (any) commit(next, {keepSel: true}); };
-  box.querySelectorAll('[data-color]').forEach(b => b.onclick = () => { ds.color = b.dataset.color; keep(); toSel('color', ds.color); paintTools(); });
-  box.querySelectorAll('[data-ds]').forEach(el => el.onchange = () => { const k = el.dataset.ds; ds[k] = k === 'lw' ? +el.value : el.value; keep(); toSel(k, ds[k]); });
-  box.querySelectorAll('[data-dh]').forEach(el => el.onchange = () => { ds[el.dataset.dh] = el.checked; keep(); toSel('heads', headsOf(ds)); });
+  if (!sb) return;
+  sb.querySelectorAll('[data-color]').forEach(b => b.onclick = () => { ds.color = b.dataset.color; keep(); toSel('color', ds.color); paintTools(); });
+  sb.querySelectorAll('[data-ds]').forEach(el => el.onchange = () => { const k = el.dataset.ds; ds[k] = k === 'lw' ? +el.value : el.value; keep(); toSel(k, ds[k]); });
+  sb.querySelectorAll('[data-dh]').forEach(el => el.onchange = () => { ds[el.dataset.dh] = el.checked; keep(); toSel('heads', headsOf(ds)); });
 }
 /* the toolbar's state: back/forward only when there is something to go to; play only for mechanics; the circuit solver
    only with a circuit */
@@ -1737,6 +2207,7 @@ function paintBar() {
   $('cVals').checked = !!st.scene.values;
   const mech = hasMech(), circ = hasCircuit();
   $('mechBar').hidden = !mech; $('clock').hidden = !mech; $('solveLbl').hidden = !circ; $('rtLbl').hidden = !hasPhys();
+  $('bSide')?.setAttribute('aria-pressed', String(!$('work')?.classList.contains('noside'))); paintDoc();
   if (!mech && st.sim) stopSim();
 }
 function paint() {
@@ -1748,8 +2219,11 @@ function height() { if (embedded) requestAnimationFrame(() => window.parent.post
 let lastW = 0;
 if (typeof ResizeObserver === 'function') new ResizeObserver(() => { height(); const w = $('canvas')?.clientWidth || 0; if (w && Math.abs(w - lastW) > 30) { lastW = w; paintCanvas(); } }).observe(document.body);
 addEventListener('keydown', e => {
-  if (e.target.closest?.('input,textarea,select')) return;
   const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+  /* Ctrl/⌘+S saves, with Shift saves as; Ctrl/⌘+O opens (also from a text field: the browser's own dialogs are not wanted) */
+  if (mod && !e.altKey && k === 's') { e.preventDefault(); if (document.querySelector('dialog[open]')) return; document.activeElement?.blur?.(); if (e.shiftKey) saveAsDialog(); else toStorage(); return; }
+  if (mod && !e.altKey && !e.shiftKey && k === 'o') { e.preventDefault(); if (!document.querySelector('dialog[open]')) openFromStorage(); return; }
+  if (e.target.closest?.('input,textarea,select,dialog')) return;
   if (e.key === ' ' && !st.space) { st.space = true; $('canvas')?.classList.add('panning'); e.preventDefault(); return; }
   if (e.key === 'Escape' && st.draft) { st.draft = null; paintCanvas(); status(); return; }
   if (e.key === 'Enter' && st.draft) { e.preventDefault(); if (!geoFinish()) finishDraft(); return; }
@@ -1776,6 +2250,18 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (e.key === ' ') { st.space = false; $('canvas')?.classList.remove('panning'); } });
 try { const d = prefs().dstyle; if (d && typeof d === 'object') { const ds = st.dstyle; if (COLORS.includes(d.color)) ds.color = d.color; if ([0.5, 0.75, 1, 1.5, 2, 3].includes(d.lw)) ds.lw = d.lw; if (['solid', 'dashed', 'dotted', 'dashdot'].includes(d.pattern)) ds.pattern = d.pattern; if (FILLS.includes(d.fill)) ds.fill = d.fill; ds.hs = d.hs === true; ds.he = d.he === true; } } catch (e) {}
-st.scene = startScene();
-if (!st.scene.view) st.scene.view = sceneBounds(st.scene);
+{
+  const s0 = startScene(), had = readJSON(SCENE_KEY, null);
+  st.scene = s0.scene; if (!st.scene.view) st.scene.view = sceneBounds(st.scene);
+  if (s0.restored) st.doc = loadDoc(st.scene);
+  else {
+    /* the figure this browser had open is replaced: its unsaved changes are kept as a recovery draft */
+    try { const prev = had && validateScene(had).ok ? validateScene(had).scene : null; if (prev?.objects.length) { const d = loadDoc(prev); if (docState(d, prev).dirty) setDrafts(keepDraft(drafts(), d, prev)); } } catch (e) {}
+    st.doc = docFor('new', st.scene);
+  }
+  st.startDirty = docState(st.doc, st.scene).dirty;
+  store.set(SCENE_KEY, JSON.stringify(st.scene)); store.set(DOC_KEY, JSON.stringify(st.doc));
+}
+/* leaving with unsaved changes: the browser asks first */
+addEventListener('beforeunload', e => { if (st.doc && st.scene?.objects.length && docState(st.doc, st.scene).dirty) { e.preventDefault(); e.returnValue = ''; } });
 if (document.readyState === 'loading') addEventListener('DOMContentLoaded', shell); else shell();

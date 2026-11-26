@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "schemes/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "problem-search.*", "index.html", "arena.js", "tests/test-problem-search-*.cjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "draw-scene.mjs", "draw-physics.mjs", "draw-render.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "tools/sync-root-wrangler.mjs", "workshop-share.js", "share-publish.js", "tests/test-workshop-share.cjs", "pdf-worker/**", "ai-egress/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "schemes/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "problem-search.*", "index.html", "arena.js", "tests/test-problem-search-*.cjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "draw-scene.mjs", "draw-physics.mjs", "draw-render.mjs", "draw-ink.mjs", "tests/test-draw-ink.cjs", "tests/helpers/ink-strokes.cjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "tools/sync-root-wrangler.mjs", "workshop-share.js", "share-publish.js", "tests/test-workshop-share.cjs", "pdf-worker/**", "ai-egress/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -61,7 +61,7 @@ jobs:
       - run: node --test test-galleries.mjs test-practice-progress.mjs test-learn-services.mjs test-learner-profile.mjs test-league.mjs test-practice-grade.mjs test-handouts.mjs test-creations.mjs test-workshop-storage.mjs test-workshop-connectors.mjs test-workshop-scene.mjs ../tests/test-community-galleries.cjs ../tests/test-sim-sandbox.cjs test-workshop-code-ai.mjs test-workshop-ai.mjs ../tests/test-sim-helpers.cjs ../tests/test-code-editor.cjs
       # the Workshop's sharing place, 작품 공유 (workshop-share.js, share-publish.js)
       - run: node --test test-workshop-share.mjs ../tests/test-workshop-share.cjs
-      - run: node --test ../tests/test-learn-tracks.cjs ../tests/test-math-input.cjs ../tests/test-teach-tools.cjs ../tests/test-draw-physics.cjs
+      - run: node --test ../tests/test-learn-tracks.cjs ../tests/test-math-input.cjs ../tests/test-teach-tools.cjs ../tests/test-draw-physics.cjs ../tests/test-draw-ink.cjs
       - run: node --test test-ai-assistant.mjs
       - run: node --test test-ai-eval.mjs
       - run: node --test test-ai-train.mjs test-ai-keys.mjs test-ai-egress.mjs

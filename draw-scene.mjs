@@ -28,6 +28,7 @@
        incline  x,y (left end of the base) angle length (of the slope) mu flip angleLabel
        pulley   x,y r mount ('' or a ceiling, incline, floor or wall it is fixed to)   fixed, massless, frictionless
        pivot    x,y
+       rough    on (a floor or an incline) from len mu look ('hatch'|'gray'|'dots') showMu label   a rough span of it
        string   a b over:[pulley ids] mode label   rod  a (pivot) b (body) mode label
        spring   a b k L0 coils label               force on (body) F angle len label
    electromagnetism
@@ -82,7 +83,8 @@
        worldline diagram (a spacetime) x0 (units) beta ticks tau label
        frames   x,y size gap label        frames S and S′ with the velocity of S′
    general marks (drawn only)
-       label    x,y text size box          dim x1,y1,x2,y2 offset text      arc x,y r from to text arrow
+       label    x,y text size box font (math|serif|sans|mono|hand) italic bold underline align (left|center|right)
+                                           dim x1,y1,x2,y2 offset text      arc x,y r from to text arrow
        axes     x,y lx ly xlabel ylabel    line x1,y1,x2,y2 pattern heads   vector x1,y1,x2,y2 label width head
        region   x,y w,h shape fill pattern label                            point x,y label filled
    drawing (the editor's tools; color: black gray lightgray blue red green orange; fill: none white lightgray gray dark
@@ -163,6 +165,12 @@ const ON = ref([...SURFACE_TYPES, 'block']);
 export const PHYS_FIELDS = {phys: pick('none', ['none', 'dynamic', 'static']), pmass: num(1, 0.001, 1e4), pvx: num(0, -SPEED, SPEED), pvy: num(0, -SPEED, SPEED), pw: num(0, -200, 200),
   pmu: num(0.3, 0, 2), pe: num(0.2, 0, 1), pfx: num(0, -1e6, 1e6), pfy: num(0, -1e6, 1e6)};
 const GP = ref(['gpoint']), GEO_LINE = ['gline'], GEO_PATH = ['gline', 'gcircle', 'gpoly'];
+/* a label's or a text box's look, like a word processor's: the face (math: the figure style's face with italic
+   variables, as before; serif, sans, mono, hand: plain text in that face, letters upright), italic, bold and underline
+   for all of it, the alignment about x (a text box's text). Runs inside a label take \textit{} \textbf{} \mathrm{}
+   \mathsf{} \mathtt{} \text{} (draw-render.mjs). A label written before these fields reads as math, plain, centred. */
+export const TEXT_FONTS = ['math', 'serif', 'sans', 'mono', 'hand'];
+const TEXT_STYLE = {font: pick('math', TEXT_FONTS), italic: bool(false), bold: bool(false), underline: bool(false), align: pick('center', ['left', 'center', 'right'])};
 export const FIELDS = {
   /* mechanics */
   block: {x: X, y: Y, w: num(0.4, 0.02, 20), h: num(0.3, 0.02, 20), mass: num(1, 0.001, 10000), label: L(), on: ON, at: num(0, -COORD, COORD), ...MOTION, mu: num(0, 0, 2), look: pick('box', ['box', 'cart', 'car']), rot: ROT},
@@ -176,6 +184,9 @@ export const FIELDS = {
   incline: {x: X, y: Y, angle: num(30, 1, 89), length: num(2, 0.1, 200), mu: num(0, 0, 2), flip: bool(false), angleLabel: txt('', 24)},
   pulley: {x: X, y: Y, r: num(0.1, 0.01, 2), mount: ref(['ceiling', 'incline', 'floor', 'wall'])},
   pivot: {x: X, y: Y},
+  /* a rough part of a floor or an incline: from (m along the surface from its start) for len (m), with its own μ; the
+     solver uses that μ for a body resting on (or tied along) the surface while its foot is on the span */
+  rough: {on: ref(SURFACE_TYPES), from: num(0.5, 0, COORD), len: num(1, 0.02, COORD), mu: num(0.3, 0, 2), look: pick('hatch', ['hatch', 'gray', 'dots']), showMu: bool(true), label: txt('', 40)},
   string: {a: ref([...BODY_TYPES, 'pivot']), b: ref([...BODY_TYPES, 'pivot']), over: {k: 'refs', d: [], types: ['pulley'], max: 6}, mode: pick('normal', ['normal', 'conical']), label: txt('', 24)},
   rod: {a: ref(['pivot']), b: ref(BODY_TYPES), mode: pick('normal', ['normal', 'conical']), label: txt('', 24)},
   spring: {a: ref([...BODY_TYPES, ...ANCHOR_TYPES]), b: ref([...BODY_TYPES, ...ANCHOR_TYPES]), k: num(50, 0.01, 1e6), L0: num(1, 0.01, 100), coils: num(10, 3, 30), label: txt('', 24)},
@@ -243,7 +254,7 @@ export const FIELDS = {
   qpot: {...BOX(4.4, 3), V: expr('abs(x) < a/2 ? 0 : V0'), params: params('a=1 [0.2, 3], V0=5 [0, 20]'), xmin: num(-1.5, -1e4, 1e4), xmax: num(1.5, -1e4, 1e4), mass: num(1, 1e-3, 1e6),
     showV: bool(true), levels: num(3, 0, 10), psi: pick('psi', ['none', 'psi', 'prob']), E: num(0, 0, 1e6), tplot: bool(false), Emax: num(0, 0, 1e6), labels: bool(true)},
   /* general marks */
-  label: {x: X, y: Y, text: txt('', 240), size: num(16, 8, 48), box: bool(false), rot: ROT, color: COLOR},
+  label: {x: X, y: Y, text: txt('', 240), size: num(16, 8, 48), box: bool(false), rot: ROT, color: COLOR, ...TEXT_STYLE},
   dim: {x1: X, y1: Y, x2: X, y2: Y, offset: num(0.15, -10, 10), text: txt('', 40)},
   arc: {x: X, y: Y, r: num(0.3, 0.02, 20), from: num(0, -360, 360), to: num(30, -360, 360), text: txt('', 24), arrow: bool(false), color: COLOR, pattern: pick('solid', PATTERNS)},
   axes: {x: X, y: Y, lx: num(1, 0, 100), ly: num(1, 0, 100), xlabel: txt('x', 12), ylabel: txt('y', 12)},
@@ -288,7 +299,7 @@ export const TYPES = Object.keys(FIELDS);
 export const ROTATABLE = TYPES.filter(t => 'rot' in FIELDS[t]);
 /* the palette's domains (draw.js tabs); every type is in one */
 export const DOMAINS = {
-  mech: ['block', 'ball', 'wheel', 'floor', 'ceiling', 'wall', 'incline', 'track', 'pulley', 'pivot', 'plank', 'string', 'rod', 'spring', 'force'],
+  mech: ['block', 'ball', 'wheel', 'floor', 'ceiling', 'wall', 'incline', 'rough', 'track', 'pulley', 'pivot', 'plank', 'string', 'rod', 'spring', 'force'],
   em: ['element', 'bridge', 'transformer', 'rails', 'ground', 'charge', 'plate', 'fieldlines', 'field', 'cwire', 'current', 'solenoid', 'loop', 'magnet'],
   thermo: ['cylinder', 'container', 'utube', 'thermometer', 'heater', 'gasbox', 'reservoir', 'engine', 'cycle', 'curve'],
   optics: ['lens', 'mirror', 'prism', 'slab', 'oarrow', 'ray', 'slits', 'wavefront', 'screen', 'eye', 'source', 'fiber'],
@@ -299,7 +310,7 @@ export const DOMAINS = {
 };
 export const TYPE_DOMAIN = Object.fromEntries(Object.entries(DOMAINS).flatMap(([d, list]) => list.map(t => [t, d])));
 /* references that must name an existing object, and which must not be the same */
-const REQUIRED_REFS = {farrow: ['a', 'b'], string: ['a', 'b'], rod: ['a', 'b'], spring: ['a', 'b'], force: ['on'], curve: ['graph'], cycle: ['graph'], worldline: ['diagram'], joint: ['a'], gline: ['a'], gcircle: ['c'], gangle: ['a', 'b', 'c']};
+const REQUIRED_REFS = {rough: ['on'], farrow: ['a', 'b'], string: ['a', 'b'], rod: ['a', 'b'], spring: ['a', 'b'], force: ['on'], curve: ['graph'], cycle: ['graph'], worldline: ['diagram'], joint: ['a'], gline: ['a'], gcircle: ['c'], gangle: ['a', 'b', 'c']};
 /* references a geometric object needs as it is set */
 const geoNeeds = o => o.type === 'gpoint' ? (o.kind === 'on' ? ['a'] : o.kind === 'mid' ? ['a'] : o.kind === 'inter' ? ['a', 'b'] : [])
   : o.type === 'gline' ? (o.kind === 'perp' || o.kind === 'par' ? ['a', 'base'] : ['a', 'b']) : [];
@@ -609,6 +620,92 @@ export function createHistory(limit = 250) {
     get canUndo() { return past.length > 0; }, get canRedo() { return future.length > 0; },
     get size() { return past.length; }, clear() { past.length = 0; future.length = 0; }
   };
+}
+
+/* ── the editor's document (draw.js): which figure is open and what it is linked to ──
+   Every figure the editor has open has an identity of its own (uid). The storage files it saves to (store: the JSON
+   and SVG file ids, the updated_at last seen, the name and folder) and the shared project it updates (share) belong to
+   that identity only. Whatever starts or loads another figure (모두 지우기, a template or a blank figure, JSON import,
+   a figure saved in this browser, a photo, a new figure from AI, 복제, 다른 이름으로 저장) gets a new identity with no
+   links; opening a storage file links the new identity to that file, opening a shared figure to that project.
+   saved: the scene's signature when it was last saved or loaded; changes: edits since then. */
+export function sceneSig(scene) {
+  const s = JSON.stringify(scene ?? null); let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return (h >>> 0).toString(36) + '.' + s.length.toString(36);
+}
+export const newUid = (rand = Math.random) => 'f' + Date.now().toString(36) + Math.floor(rand() * 2 ** 32).toString(36).padStart(7, '0');
+/** the document for a figure that was just started or loaded: action 'new' (no links, clean), 'storage' ({store}),
+ *  'share' ({share}), 'copy' (no links, not saved yet: 복제), 'saved-as' ({store}: a new identity on new files),
+ *  'draft' (a recovery draft reopened: its own uid, store and share, unsaved) */
+export function docFor(action, scene, {store = null, share = null, uid = '', changes = 1} = {}) {
+  /* a recovery draft comes back as it was: its identity and links, with its changes not saved */
+  if (action === 'draft') return {uid: uid || newUid(), store: store || null, share: share || null, saved: '', changes: Math.max(1, changes)};
+  const clean = action !== 'copy';
+  return {uid: newUid(), store: action === 'storage' || action === 'saved-as' ? store : null, share: action === 'share' ? share : null, saved: clean ? sceneSig(scene) : '', changes: clean ? 0 : 1};
+}
+/** after a change: one more edit */
+export const docEdited = doc => ({...doc, changes: (doc.changes || 0) + 1});
+/** after a save to the same identity: linked to the files, clean */
+export const docSaved = (doc, scene, store) => ({...doc, store, saved: sceneSig(scene), changes: 0});
+/** what the indicator shows: 'saved' (in storage, unchanged), 'unsaved' (changed since saved or loaded, or never
+ *  saved after 복제), 'new' (not in storage, unchanged since it was started); changes: the edits counted */
+export function docState(doc, scene) {
+  const dirty = !doc || sceneSig(scene) !== doc.saved;
+  return {dirty, state: dirty ? 'unsaved' : doc.store ? 'saved' : 'new', changes: dirty ? Math.max(1, doc?.changes || 0) : 0};
+}
+/** recovery drafts (localStorage): the newest unsaved figure of each identity, at most `max`, newest first */
+export function keepDraft(list, doc, scene, t = Date.now(), max = 5) {
+  const rest = (Array.isArray(list) ? list : []).filter(d => d && d.uid !== doc.uid);
+  return [{uid: doc.uid, t, title: scene.title || '', scene, store: doc.store || null, share: doc.share || null, changes: doc.changes || 1}, ...rest].slice(0, max);
+}
+export const dropDraft = (list, uid) => (Array.isArray(list) ? list : []).filter(d => d && d.uid !== uid);
+
+/** where a new object goes so it does not cover the others: the offset (whole steps, the nearest ring first, down and
+ *  to the right before the other ways) at which its box overlaps none of `boxes` and stays inside `view`; when every
+ *  place is taken, a cascade of `nth` steps down and to the right */
+export function freeSpot(box, boxes, step, view, nth = 0, rings = 6) {
+  const eps = 1e-9, hits = (dx, dy) => boxes.some(b => b && box.x + dx < b.x + b.w - eps && box.x + dx + box.w > b.x + eps && box.y + dy < b.y + b.h - eps && box.y + dy + box.h > b.y + eps);
+  const inside = (dx, dy) => !view || (box.x + dx >= view.x - eps && box.x + dx + box.w <= view.x + view.w + eps && box.y + dy >= view.y - eps && box.y + dy + box.h <= view.y + view.h + eps);
+  const cand = [];
+  for (let i = -rings; i <= rings; i++) for (let j = -rings; j <= rings; j++) cand.push([i, j]);
+  cand.sort((a, b) => Math.max(Math.abs(a[0]), Math.abs(a[1])) - Math.max(Math.abs(b[0]), Math.abs(b[1])) || (b[0] >= 0 && b[1] <= 0) - (a[0] >= 0 && a[1] <= 0) || Math.abs(a[0] - a[1] * -1) - Math.abs(b[0] - b[1] * -1) || Math.abs(a[0]) + Math.abs(a[1]) - Math.abs(b[0]) - Math.abs(b[1]));
+  for (const [i, j] of cand) { const dx = i * step, dy = j * step; if (inside(dx, dy) && !hits(dx, dy)) return {dx, dy}; }
+  return {dx: nth * step, dy: -nth * step};
+}
+
+/** a force added to a body after the ones it has: its weight first (mg, down), then the normal force (N, off the
+ *  surface it rests on), the tension (T, along its string or rod), friction (f, against its motion or the way it
+ *  would slide), then F; never on top of a force it already has (turned on by 30° until the angle is free) */
+export function nextForce(scene, id) {
+  const byId = new Map(scene.objects.map(o => [o.id, o])), b = byId.get(id);
+  if (!isBody(b)) return null;
+  const g = scene.g || 9.8, mg = b.mass * g, have = scene.objects.filter(o => o.type === 'force' && o.on === id);
+  const used = new Set(have.map(o => String(o.label).replace(/^\$|\$$/g, '')));
+  const ang = v => Math.round(Math.atan2(v.y, v.x) * 18000 / Math.PI) / 100, r3 = v => +(+v).toPrecision(3);
+  const surf = b.on ? byId.get(b.on) : null, fr = surf ? surfaceFrame(surf, scene) : null;
+  const link = scene.objects.find(o => (o.type === 'string' || o.type === 'rod') && (o.a === id || o.b === id));
+  let tdir = null;
+  if (link?.type === 'string') { const P = stringPath(scene, link); if (P) { const [p, q] = link.a === id ? P.segs[0] : [...P.segs[P.segs.length - 1]].reverse(); if (vec.len(vec.sub(q, p)) > 1e-9) tdir = vec.unit(vec.sub(q, p)); } }
+  else if (link) { const far = byId.get(link.a === id ? link.b : link.a); if (far) { const d = vec.sub(isBody(far) ? bodyPose(scene, far) : far, bodyPose(scene, b)); if (vec.len(d) > 1e-9) tdir = vec.unit(d); } }
+  const cands = [{label: 'mg', angle: -90, F: mg}];
+  if (fr) cands.push({label: 'N', angle: ang(fr.n), F: mg * Math.max(0, fr.n.y)});
+  if (tdir) cands.push({label: 'T', angle: ang(tdir), F: 10});
+  if (fr) {
+    const v = vec.dot({x: b.vx, y: b.vy}, fr.u);
+    let s = v ? -Math.sign(v) : 0;
+    if (!s && tdir) s = -Math.sign(vec.dot(tdir, fr.u));
+    if (!s && Math.abs(fr.u.y) > 1e-9) s = Math.sign(fr.u.y);
+    const dir = s ? vec.mul(fr.u, s) : vec.mul(fr.u, -1), N = mg * Math.max(0, fr.n.y);
+    cands.push({label: 'f', angle: ang(dir), F: (fr.mu > 0 ? fr.mu : 0.2) * N || 1});
+  }
+  let pick = cands.find(c => !used.has(c.label));
+  if (!pick) { let n = 1, L = 'F'; while (used.has(L)) L = `F_${++n}`; pick = {label: L, angle: 0, F: 10}; }
+  let a = pick.angle;
+  const clash = x => have.some(o => Math.abs((((o.angle - x) % 360) + 540) % 360 - 180) < 5);
+  for (let k = 0; k < 12 && clash(a); k++) a = a + 30;
+  a = ((a + 540) % 360) - 180;
+  return {label: pick.label, angle: Math.round(a * 100) / 100, F: r3(Math.max(0, pick.F))};
 }
 
 /* ── geometry shared by the drawing and the solver ── */

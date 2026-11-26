@@ -94,9 +94,6 @@ details.parts .note{margin:0 0 4px}
 .hint3{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;background:var(--surface);padding:8px 12px;margin:0 0 10px;font-size:13.5px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
 .hint3 ol{margin:0;padding-left:20px;display:flex;flex-wrap:wrap;gap:2px 22px}.hint3 button{padding:3px 10px;font-size:12.5px;margin-left:auto}
 @media(max-width:720px){.tools .tool{min-width:38px;height:38px}.hint3 ol{display:block}}
-.work:has(details.parts:not([open])){grid-template-columns:auto minmax(0,1fr) 300px}
-@media(max-width:1060px){.work:has(details.parts:not([open])){grid-template-columns:auto minmax(0,1fr)}}
-@media(max-width:720px){.work:has(details.parts:not([open])){grid-template-columns:1fr}}
 /* the symbol picker in tabs, the construction tools, the physics and per-object style in the side panel */
 .symhead{gap:8px}.symhead input[type=search]{flex:1;min-width:0;max-width:340px;padding:4px 8px}
 .symtabs{display:flex;flex-wrap:wrap;gap:3px;margin:6px 0 4px}.symtabs button{padding:3px 8px;font-size:12.5px;border-radius:7px}.symtabs button.on{background:var(--ink,#111);color:var(--surface,#fff)}
@@ -112,3 +109,70 @@ details.aibox textarea{width:100%;box-sizing:border-box;margin-top:6px;font:inhe
 .sympop label.chk{display:inline-flex;gap:6px;align-items:center;margin:4px 0}
 .sharebox{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:8px 10px;margin:0 0 8px}.sharebox textarea{width:100%;box-sizing:border-box;font:inherit}
 details.aibox .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}details.aibox .row label.chk{display:inline-flex;gap:6px;align-items:center;margin:0}details.aibox .row select{width:auto;max-width:220px}details.aibox .row input[type=checkbox]{width:auto}
+/* ── canvas first (2026-11): a compact title line and one top bar, the tools in a rail on the left, the physics parts
+   beside them, the canvas, the properties on the right (folded with 속성); on a phone the canvas comes first and the
+   tools run along under it. Touch screens get 44 px targets ── */
+main{max-width:1440px}
+.dhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;margin:0 0 6px}
+.dhead h1{font-size:1.05rem;margin:0}.docname{font-weight:600;font-size:14px;max-width:40ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.docstate{font-size:12.5px;border-radius:999px;padding:2px 9px;border:1px solid var(--line);color:var(--muted)}
+.docstate.saved{color:var(--ok);border-color:currentColor}.docstate.unsaved{color:#b45309;border-color:#e5b54a;background:#fff8e6}
+:root[data-theme=dark] .docstate.unsaved{background:#33270f;color:#f0d9a8;border-color:#7a5a1a}
+.topbar{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:0 0 6px;padding:4px 6px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.topbar>button,.topbar>select,.topbar .btn,.topbar summary{padding:4px 7px;font-size:13px}.topbar>select{width:auto;max-width:112px}.topbar .sep{width:1px;height:24px;background:var(--line);margin:0 2px}
+.topbar .zoom{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:10px;padding:1px 3px}.topbar .zoom button{padding:3px 8px;min-width:28px}.topbar .zoom .pct{font-size:12.5px;min-width:40px;text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+.topbar .hist:disabled,.topbar button:disabled{opacity:.42;cursor:default}.topbar .danger,.mlist .danger{color:var(--bad)}
+details.menu{position:relative}details.menu summary{list-style:none;cursor:pointer;border:1px solid var(--line);border-radius:10px;background:var(--surface);user-select:none}details.menu summary::-webkit-details-marker{display:none}
+details.menu[open] summary{background:var(--soft)}
+.mlist{position:absolute;z-index:30;left:0;top:calc(100% + 4px);min-width:230px;display:grid;gap:2px;padding:6px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.mlist button,.mlist .btn{text-align:left;padding:7px 10px;font-size:13.5px;border-color:transparent;background:none;display:flex;justify-content:space-between;gap:12px}.mlist button:hover,.mlist .btn:hover{background:var(--soft)}
+.mlist kbd{font:11.5px ui-monospace,monospace;color:var(--muted)}.mlist hr{border:0;border-top:1px solid var(--line);margin:4px 0;width:100%}
+.mlist label.chk{display:flex;gap:8px;align-items:center;padding:6px 10px;font-size:13.5px}.mlist input[type=checkbox]{width:auto}
+.recover{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;border:1px solid #e5b54a;background:#fff8e6;color:#5c4300;border-radius:12px;padding:6px 10px;margin:0 0 6px;font-size:13.5px}
+:root[data-theme=dark] .recover{background:#33270f;color:#f0d9a8;border-color:#7a5a1a}.recover button{padding:3px 10px;font-size:13px}
+.hint3{padding:4px 10px;margin:0 0 6px;font-size:12.5px;flex-wrap:nowrap}.hint3 ol{gap:0 18px}.hint3 button,.hint3>b{flex:none}
+.work{grid-template-columns:auto auto minmax(0,1fr) 300px;gap:10px}.work.noside{grid-template-columns:auto auto minmax(0,1fr)}.work.noside .side{display:none}
+.rail{display:flex;flex-direction:column;gap:4px;align-items:stretch;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:5px;width:86px;box-sizing:border-box}
+.rail .tgroup{display:grid;grid-template-columns:repeat(2,36px);gap:3px;justify-content:center}.rail .tgroup[hidden]{display:none}
+.rail .tool{width:36px;height:36px;min-width:0;padding:0;line-height:0;border-radius:8px;display:inline-flex;align-items:center;justify-content:center}.rail .tool.on{background:var(--rail);border-color:var(--rail);color:#fff}
+.rail .geotoggle{font-size:11.5px;padding:3px 2px;border-radius:7px;color:var(--muted)}
+.tstyle{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font-size:12.5px;color:var(--muted);margin:0 0 6px}.tstyle label{display:flex;gap:4px;align-items:center}.tstyle select{width:auto;padding:2px 5px;font-size:12.5px}
+.tstyle .heads{display:flex;gap:6px;align-items:center}.tstyle .heads input{width:auto}
+details.parts{width:170px;box-sizing:border-box}details.parts:not([open]){width:auto}
+.canvas svg{max-height:min(68vh,520px)}
+/* dialogs: save as, open */
+dialog.dlg{border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);padding:0;width:min(440px,calc(100vw - 24px));max-height:calc(100vh - 40px)}dialog.dlg.wide{width:min(760px,calc(100vw - 24px))}
+dialog.dlg.framed{margin:0 auto;bottom:auto;max-height:620px}dialog.dlg::backdrop{background:rgba(15,23,42,.35)}.dlgform{display:grid;gap:10px;padding:14px 16px}.dlgform h2{margin:0;font-size:1.05rem}.dlgform label{display:grid;gap:3px;font-size:13px;color:var(--muted)}
+.dlghead{display:flex;justify-content:space-between;align-items:center}.dlghead button{padding:2px 9px}
+.oplist{display:grid;gap:6px;max-height:46vh;overflow:auto}.opitem{display:grid;grid-template-columns:96px minmax(0,1fr) auto auto;gap:10px;align-items:center;border:1px solid var(--row);border-radius:10px;padding:6px}
+.opitem .thumb{width:96px;height:64px;border-radius:6px;background:#fff;border:1px solid var(--row);display:flex;align-items:center;justify-content:center;overflow:hidden}.opitem .thumb img{max-width:100%;max-height:100%;display:block}
+.opmeta{display:grid;gap:2px;min-width:0}.opmeta b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.opitem button{padding:5px 12px}
+/* the label's text style bar */
+.txtbar{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:2px 0 8px;padding:4px;border:1px solid var(--line);border-radius:10px}
+.txtbar .tsb{min-width:30px;height:30px;padding:0 7px;border-radius:7px;font-size:13.5px;font-family:'Times New Roman',serif}.txtbar .tsb[aria-pressed=true]{background:var(--rail);border-color:var(--rail);color:#fff}
+.txtbar select{width:auto;max-width:170px;padding:3px 6px;font-size:13px}.tsgroup{display:inline-flex;gap:2px;align-items:center}.tsgroup.runs .note{margin:0 2px 0 4px}
+.segnote{margin:6px 0 0}
+/* the label preview stays black on white in the dark theme (it shows the printed figure) */
+.tex svg{background:#fff;border-radius:6px;padding:2px 4px;box-sizing:content-box}
+.canvas .junction{pointer-events:none}
+@media(max-width:1300px){.work{grid-template-columns:auto auto minmax(0,1fr) 260px}details.parts{width:150px}.tstyle .tl{display:none}}
+@media(max-width:960px){.work{grid-template-columns:auto auto minmax(0,1fr)}.side{grid-column:1/-1;grid-template-columns:1fr 1fr}.sidebtn{display:none}}
+@media(max-width:720px){
+  .work,.work.noside{display:flex;flex-direction:column;gap:8px}.stage{display:contents}.work.noside .side{display:grid}
+  #stageTop{order:1}.canvas{order:2}.status{order:3}.rail{order:4}.tstyle{order:5}.side{order:6}details.parts{order:7;width:auto}.simbar{order:8}.readouts{order:9}.hint{order:10}
+  .rail{flex-direction:row;width:auto;overflow-x:auto;flex-wrap:nowrap;align-items:center}.rail .tgroup{display:flex;flex-wrap:nowrap}.rail .tool{flex:none}.rail .geotoggle{flex:none;white-space:nowrap}
+  .topbar{flex-wrap:nowrap;overflow-x:auto}.topbar>*{flex:none}.mlist{position:fixed;left:8px;right:8px;top:auto;min-width:0}
+  .dhead h1{display:none}.opitem{grid-template-columns:72px minmax(0,1fr);}.opitem .thumb{width:72px;height:50px}.opitem button{grid-column:span 1}
+}
+@media(pointer:coarse){
+  .topbar>button,.topbar>select,.topbar summary,.topbar .zoom button,.rail .tool,.rail .geotoggle,.mlist button,.mlist .btn,.palette .items button,.palette .tabs button,.olist button,.row button,.row .btn,.txtbar .tsb,.txtbar select,.recover button,.simbar button,.simbar select,.props select,.props input,.dlgform input,.dlgform select,.opitem button{min-height:44px}
+  .rail .tool,.txtbar .tsb,.topbar .zoom button{min-width:44px}.rail .tool{width:44px;height:44px}.rail .tgroup{grid-template-columns:repeat(2,44px)}.rail{width:104px}
+  .swatch{width:44px;height:44px;border:9px solid transparent;background-clip:padding-box!important;box-shadow:none}.swatch.on{box-shadow:inset 0 0 0 2px var(--accent)}
+  .hint{display:none}
+}
+/* the pen: its options beside the drawing style, the other readings of a stroke and the maths bar over the canvas */
+.inkopts{display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;border-left:1px solid var(--line);padding-left:8px}.inkopts .tsb{height:30px;padding:0 8px;border-radius:7px;font-size:12.5px}.inkopts .tsb[aria-pressed=true]{background:var(--rail);border-color:var(--rail);color:#fff}
+.inkbar{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;margin:0 0 6px;padding:5px 8px;border:1px solid var(--accent,#3b6fd8);border-radius:10px;background:var(--soft,#eef4ff);font-size:13px}
+.inkbar .chip{padding:3px 10px;border-radius:999px;font-size:13px;display:inline-flex;align-items:center}.inkbar .chip svg{display:block;max-height:24px;background:#fff;border-radius:4px}.inkbar button{padding:3px 10px}
+@media(pointer:coarse){.inkopts .tsb,.inkbar button{min-height:44px}}
+@media(max-width:720px){.hint3 ol{display:none}}

@@ -682,3 +682,154 @@ test('diagrams and notation: matrices of any size with dots and augmented bars, 
     assert.doesNotMatch(svg,/>mathrm|>circ</,k);}
   const sch=S.sceneSchemaForAI();assert.equal(JSON.parse(JSON.stringify(sch)).types.block.fields.mass[0],'num');assert.deepEqual(sch.types.farrow.needs,['a','b']);assert.ok(sch.top.style[2].includes('modern'));
 });
+
+/* ── the figure editor round of 2026-11 (2): the figure's identity and links, the share passthrough, unsaved changes,
+   new parts that do not stack, circuit junctions, free-body defaults, the friction region, the text style ── */
+test('identity: a new, loaded or copied figure has its own uid; storage and share links go only with the figure they belong to',async()=>{
+  const {S}=await load();
+  const a=S.validateScene(S.template('atwood')).scene,b=S.validateScene(S.template('incline_pulley')).scene;
+  const file={json:'f1',svg:'f2',base:5,name:'x.json',folder:'그림',hash:'h'};
+  const opened=S.docFor('storage',a,{store:file});assert.deepEqual(opened.store,file);assert.equal(opened.share,null);assert.equal(S.docState(opened,a).state,'saved');
+  /* every action that starts or loads another figure: a new uid and no links (모두 지우기, template, JSON, browser save, AI, photo) */
+  const fresh=S.docFor('new',b);assert.notEqual(fresh.uid,opened.uid);assert.equal(fresh.store,null);assert.equal(fresh.share,null);assert.equal(S.docState(fresh,b).state,'new');
+  const shared=S.docFor('share',b,{share:{remixOf:100}});assert.equal(shared.store,null);assert.deepEqual(shared.share,{remixOf:100});
+  /* save as: a new identity on the new files; copy: no links and not saved */
+  const sa=S.docFor('saved-as',a,{store:{...file,json:'f9'}});assert.notEqual(sa.uid,opened.uid);assert.equal(sa.store.json,'f9');assert.equal(sa.share,null);
+  const cp=S.docFor('copy',a,{store:file,share:{id:3}});assert.equal(cp.store,null);assert.equal(cp.share,null);assert.equal(S.docState(cp,a).state,'unsaved');
+  /* a recovery draft keeps its own identity and links, unsaved */
+  const dr=S.docFor('draft',a,{uid:opened.uid,store:file,changes:4});assert.equal(dr.uid,opened.uid);assert.equal(dr.store.json,'f1');assert.deepEqual(S.docState(dr,a),{dirty:true,state:'unsaved',changes:4});
+  for(let i=0;i<50;i++)assert.notEqual(S.docFor('new',a).uid,S.docFor('new',a).uid);
+});
+
+test('unsaved indicator: changes counted after a save, clean again when saved or undone to the saved figure; recovery drafts by identity',async()=>{
+  const {S}=await load();
+  const a=S.validateScene(S.template('atwood')).scene;let doc=S.docFor('storage',a,{store:{json:'f1'}});
+  const b=JSON.parse(JSON.stringify(a));b.objects[0].mass=7;
+  doc=S.docEdited(doc);assert.deepEqual(S.docState(doc,b),{dirty:true,state:'unsaved',changes:1});
+  doc=S.docEdited(doc);assert.equal(S.docState(doc,b).changes,2);
+  assert.equal(S.docState(doc,JSON.parse(JSON.stringify(a))).state,'saved','back to the saved figure (undo): clean');
+  doc=S.docSaved(doc,b,{json:'f1',base:9});assert.deepEqual(S.docState(doc,b),{dirty:false,state:'saved',changes:0});
+  let l=S.keepDraft([],doc,b,1);l=S.keepDraft(l,{uid:'u2',changes:3},a,2);l=S.keepDraft(l,doc,b,3);
+  assert.deepEqual(l.map(d=>d.uid),[doc.uid,'u2'],'one draft an identity, newest first');assert.equal(l[0].store.json,'f1');
+  assert.deepEqual(S.dropDraft(l,'u2').map(d=>d.uid),[doc.uid]);
+  for(let i=0;i<9;i++)l=S.keepDraft(l,{uid:'k'+i},a,10+i);assert.equal(l.length,5);
+  assert.notEqual(S.sceneSig(a),S.sceneSig(b));assert.equal(S.sceneSig(a),S.sceneSig(JSON.parse(JSON.stringify(a))));
+});
+
+test('작품 공유 → editor: the figures page passes ?share=N (a whole number only) on to draw.html, as the problem maker does',async()=>{
+  const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),i=html.indexOf('function viewWorkshopDraw(){'),j=html.indexOf('\n}\n',i);
+  assert.ok(i>0&&j>i);
+  const src=(hash)=>{const ctx={lang:'ko',uiLang:'ko',UI:{ko:{navWork:'워크샵'}},wsTitle:()=>'그림 제작',location:{hash},document:{documentElement:{dataset:{theme:'light'}}},URLSearchParams};
+    vm.createContext(ctx);vm.runInContext(html.slice(i,j+2)+';globalThis.out=viewWorkshopDraw();',ctx);return /src="draw\.html\?([^"]+)"/.exec(ctx.out)[1];};
+  assert.match(src('#/workshop/draw?share=100'),/(^|&)share=100(&|$)/);
+  assert.match(src('#/workshop/draw?t=atwood&share=7'),/t=atwood/);
+  for(const bad of ['#/workshop/draw?share=1x','#/workshop/draw?share=0','#/workshop/draw?share=-3','#/workshop/draw'])assert.doesNotMatch(src(bad),/share=/,bad);
+  /* the gallery's remix and "open in the editor" go to #/workshop/draw?share=N */
+  assert.match(fs.readFileSync(path.join(__dirname,'..','workshop-share.js'),'utf8'),/#\/workshop\/draw\?share='\+p\.id/);
+});
+
+test('new parts do not stack: the nearest free place in whole steps, down and to the right first, inside the view',async()=>{
+  const {S}=await load();
+  const view={x:0,y:0,w:4,h:3},box={x:1.6,y:1.4,w:0.8,h:0.2};
+  assert.deepEqual(S.freeSpot(box,[],0.2,view),{dx:0,dy:0});
+  const placed=[];for(let k=0;k<6;k++){const {dx,dy}=S.freeSpot(box,placed,0.2,view);const b={...box,x:box.x+dx,y:box.y+dy};
+    assert.ok(placed.every(p=>!(b.x<p.x+p.w-1e-9&&b.x+b.w>p.x+1e-9&&b.y<p.y+p.h-1e-9&&b.y+b.h>p.y+1e-9)),'no overlap '+k);
+    assert.ok(b.x>=0&&b.x+b.w<=4&&b.y>=0&&b.y+b.h<=3,'inside');placed.push(b);}
+  assert.ok(placed[1].y<placed[0].y||placed[1].x>placed[0].x,'down or right first');
+  /* nowhere free: a cascade */
+  assert.deepEqual(S.freeSpot(box,[{x:-10,y:-10,w:30,h:30}],0.2,view,3),{dx:0.6000000000000001,dy:-0.6000000000000001});
+});
+
+test('circuits: an end on the middle of a wire splits it into a junction (a dot); two resistors in parallel get I = E/R each',async()=>{
+  const {S,P,R}=await load();
+  const el=(id,kind,x1,y1,x2,y2,value)=>({id,type:'element',kind,x1,y1,x2,y2,...(value!=null?{value}:{})});
+  /* battery on the left; R1 on top, R2 in the middle; the right rail is ONE wire from (2,1) to (2,0) that R2's lead ends on */
+  const sc=scene(S,[el('E1','battery',0,0,0,1,12),el('W1','wire',0,1,0.6,1),el('R1','resistor',0.6,1,1.4,1,100),el('W2','wire',1.4,1,2,1),
+    el('W3','wire',0.6,1,0.6,0.5),el('R2','resistor',0.6,0.5,1.4,0.5,200),el('W4','wire',1.4,0.5,2,0.5),el('W5','wire',2,1,2,0),el('W6','wire',2,0,0,0)]);
+  const j=P.splitWires(sc);assert.equal(j.split.length,1);assert.equal(j.split[0].wire,'W5');assert.deepEqual([j.split[0].x,j.split[0].y],[2,0.5]);
+  const w5=j.scene.objects.filter(o=>o.id==='W5'||o.id===j.split[0].added);assert.equal(w5.length,2);assert.ok(w5.some(w=>w.y2===0.5)&&w5.some(w=>w.y1===0.5));
+  assert.ok(S.validateScene(j.scene).ok);assert.equal(P.splitWires(j.scene).split.length,0,'nothing left to split');
+  for(const s0 of [sc,j.scene]){const c=P.solveCircuit(s0);assert.ok(c.ok);near(Math.abs(c.el.get('R1').I),0.12,1e-9,'I1 = 12/100');near(Math.abs(c.el.get('R2').I),0.06,1e-9,'I2 = 12/200');near(Math.abs(c.el.get('E1').I),0.18,1e-9,'I = I1 + I2');}
+  const svg=R.renderSVG(j.scene,{edit:true});assert.equal((svg.match(/class="junction"/g)||[]).length,2,'the two three-way junctions, (0.6, 1) and (2, 0.5), are dots');
+  /* an end on the body of a resistor does not join it: reported and ringed in the editor */
+  const bad=scene(S,[el('E1','battery',0,0,0,1,12),el('R1','resistor',0,1,2,1,100),el('W1','wire',1,1,1,0)]);
+  assert.deepEqual(P.splitWires(bad).loose,[{id:'W1',end:1,on:'R1'}]);assert.match(R.renderSVG(bad,{edit:true}),/class="loose"/);
+});
+
+test('free-body diagram: forces added one after another are mg (down), N (off the surface), T (along the string), f (against the motion), then F, at distinct angles',async()=>{
+  const {S}=await load();
+  let sc=S.validateScene(S.template('incline_pulley')).scene;const inc=sc.objects.find(o=>o.type==='incline'),th=inc.angle;
+  const out=[];for(let k=0;k<6;k++){const f=S.nextForce(sc,'m1');out.push(f);sc=S.validateScene({...sc,objects:[...sc.objects,{...S.defaults('force'),id:'Fq'+k,on:'m1',...f}]}).scene;}
+  assert.deepEqual(out.map(f=>f.label),['mg','N','T','f','F','F_2']);
+  assert.equal(out[0].angle,-90);near(out[0].F,2*9.8,1e-2,'mg');
+  near(out[1].angle,90+th,1e-6,'N ⟂ incline');near(out[2].angle,th,1e-6,'T up the slope');near(out[3].angle,th-180,1e-6,'f down the slope (m1 is pulled up)');
+  const angles=out.map(f=>((f.angle%360)+360)%360);assert.equal(new Set(angles.map(a=>Math.round(a))).size,angles.length,'all angles different');
+  /* a body hanging from the pulley: T straight up; a free body: mg then F */
+  assert.equal(S.nextForce(S.validateScene({...sc,objects:[...sc.objects,{...S.defaults('force'),id:'G1',on:'m2',...S.nextForce(sc,'m2')}]}).scene,'m2').angle,90);
+  assert.equal(S.nextForce(sc,'nothing'),null);
+});
+
+test('friction region (마찰 구간): on a floor or incline, checked, drawn as a band with μ, found in the palette data; the solver uses its μ on that span',async()=>{
+  const {S,P,R}=await load();
+  assert.ok(S.DOMAINS.mech.includes('rough'));assert.ok(!S.validateScene({objects:[{id:'z',type:'rough'}]}).ok,'needs a surface');
+  assert.ok(!S.validateScene({objects:[{id:'b',type:'block'},{id:'z',type:'rough',on:'b'}]}).ok,'a floor or an incline only');
+  /* a block sliding at 4 m/s on a smooth floor enters a span with μ = 0.5 at 1 m: it stops v²/(2μg) further on */
+  const mk=(mu,len=2)=>scene(S,[{id:'f',type:'floor',x:0,y:0,w:6,mu:0},{id:'z',type:'rough',on:'f',from:1,len,mu},{id:'b',type:'block',on:'f',at:0.5,w:0.2,h:0.2,mass:1,vx:4}]);
+  const sim=P.buildSim(mk(0.5));sim.run(0.1);near(Math.hypot(sim.velocities().get('b').x,0),4,1e-9,'smooth before the span');
+  sim.run(2);near(sim.poses().get('b').at,1+16/(2*0.5*g),1e-3,'stops at 1 + v²/(2μg)');near(sim.velocities().get('b').x,0,1e-9,'at rest');
+  const e=sim.energy();near(e.heat,0.5*16,1e-3,'all kinetic energy to heat');
+  /* a short span: it slows, leaves it and slides on at √(v² − 2μgL) */
+  const s2=P.buildSim(mk(0.5,0.5));s2.run(1.5);near(s2.velocities().get('b').x,Math.sqrt(16-2*0.5*g*0.5),1e-3,'out of the span');
+  /* an incline: a block held by the span (tan θ < μ) stays, one above it slides */
+  const inc=a=>scene(S,[{id:'i',type:'incline',x:0,y:0,angle:20,length:4,mu:0},{id:'z',type:'rough',on:'i',from:0,len:2,mu:0.6},{id:'b',type:'block',on:'i',at:a,w:0.2,h:0.2,mass:1}]);
+  const h=P.buildSim(inc(1));h.run(1);assert.equal(h.poses().get('b').at,1,'held');
+  const sl=P.buildSim(inc(3));sl.run(0.3);assert.ok(sl.poses().get('b').at<3,'slides above the span');
+  const svg=R.renderSVG(mk(0.5),{edit:true});assert.match(svg,/data-id="z"/);assert.match(svg,/<polygon points=/);assert.match(svg,/μ/);assert.doesNotMatch(svg,/NaN|undefined/);
+  const fs=require('node:fs'),path=require('node:path'),src=fs.readFileSync(path.join(__dirname,'..','draw.js'),'utf8');
+  assert.match(src,/\['rough', \{\}, N2\('마찰 구간 \(거친 면\)', 'Friction region \(rough patch\)'\), '[^']*friction rough[^']*마찰[^']*'\]/,'the palette finds it by 마찰, friction, rough');
+});
+
+test('values on the figure: no pulley radius; an incline\'s angle goes with its name (θ = 30°), not on top of it',async()=>{
+  const {S,R}=await load();
+  const sc={...S.validateScene(S.template('incline_pulley')).scene,values:true},svg=R.renderSVG(sc,{});
+  const p=sc.objects.find(o=>o.type==='pulley');assert.doesNotMatch(svg,new RegExp('>'+p.r+'</tspan>'),'no pulley radius');
+  const txt=[...svg.matchAll(/<text[^>]*>(.*?)<\/text>/g)].map(m=>m[1].replace(/<[^>]+>/g,''));assert.ok(txt.some(t=>/θ.*=.*30°/.test(t)),'θ = 30° together: '+txt.join(' | '));
+  assert.ok(!txt.some(t=>t==='30°'),'no separate 30°');
+});
+
+test('text style: labels and text boxes take face, italic, bold, underline, alignment; runs \\textit \\textbf \\mathrm \\mathsf \\mathtt \\text; old labels read as before; the SVG carries it',async()=>{
+  const {S,R}=await load();
+  const old=S.validateScene({objects:[{id:'l1',type:'label',x:0,y:0,text:'m_1 v'}]});assert.ok(old.ok);
+  assert.deepEqual(['font','italic','bold','underline','align'].map(k=>old.scene.objects[0][k]),['math',false,false,false,'center'],'migrated to the defaults');
+  const v={x:-1,y:-1,w:2,h:2};
+  assert.equal(R.renderSVG(old.scene,{view:v}),R.renderSVG(S.validateScene({objects:[{...old.scene.objects[0]}]}).scene,{view:v}),'the defaults draw as before');
+  const st={id:'l2',type:'label',x:0,y:0,text:'Hello x',font:'mono',italic:true,bold:true,underline:true,align:'left',box:true};
+  const r=S.validateScene({objects:[st]});assert.ok(r.ok);const back=S.validateScene(JSON.parse(JSON.stringify(r.scene)));assert.deepEqual(back.scene.objects[0],r.scene.objects[0],'round trip through JSON');
+  assert.ok(!S.validateScene({objects:[{...st,font:'comic'}]}).ok,'faces are a closed list');assert.ok(!S.validateScene({objects:[{...st,align:'justify'}]}).ok);
+  const svg=R.renderSVG(r.scene,{view:v});
+  assert.match(svg,/font-family="'Courier New'[^"]*monospace"/,'the mono stack');assert.match(svg,/font-style="italic"/);assert.match(svg,/font-weight="bold"/);
+  assert.match(svg,/<path d="M0,[\d.]+H[\d.]+"[^>]*stroke-width/,'the underline');assert.doesNotMatch(svg,/@font-face|url\(/,'no fonts loaded');
+  const x0=+/<tspan x="([\d.]+)"/.exec(svg)[1];assert.ok(Math.abs(x0-400)<1,'left-aligned: starts at x');
+  /* a text face: letters upright (no italic) unless asked */
+  const serif=R.renderSVG(S.validateScene({objects:[{id:'l3',type:'label',x:0,y:0,text:'m v',font:'serif'}]}).scene,{view:v});assert.doesNotMatch(serif,/font-style="italic"/);
+  for(const f of ['sans','hand'])assert.match(R.renderSVG(S.validateScene({objects:[{id:'l3',type:'label',x:0,y:0,text:'a',font:f}]}).scene,{view:v}),new RegExp(f==='sans'?"Helvetica":"Segoe Print"));
+  /* runs inside one label */
+  const runs=R.renderSVG(S.validateScene({objects:[{id:'l4',type:'label',x:0,y:0,text:'\\textbf{F} = \\mathtt{code} + \\mathsf{S} + \\textit{it} + \\text{kg}'}]}).scene,{view:v});
+  assert.match(runs,/font-weight="bold">F</);assert.match(runs,/monospace"[^>]*>code</);assert.match(runs,/sans-serif"[^>]*>S</);assert.match(runs,/font-style="italic"[^>]*>it</);assert.match(runs,/<tspan[^>]*>kg</);assert.doesNotMatch(runs,/italic"[^>]*>kg</);
+  assert.equal(R.texRuns('\\mathtt{ab}')[0].it,false);
+});
+
+test('ink in the editor: the pen tool drives draw-ink.mjs; a stroke or a group is one step of history; 다른 모양으로 swaps in place; 수식 쓰기 posts to the maths route',async()=>{
+  const {S}=await load();const I=await import('../draw-ink.mjs');
+  const fs=require('node:fs'),path=require('node:path'),src=fs.readFileSync(path.join(__dirname,'..','draw.js'),'utf8');
+  assert.match(src,/import \{createInkController, toSceneObjects, candidatesFromScene, rasteriseStrokes, mathRequestBody, MATH_PATH[^}]*\} from '\.\/draw-ink\.mjs/);
+  for(const re of [/st\.tool === 'pen'[^\n]*\n[^\n]*\n\s*if \(st\.ink\.pointerdown\(ev\)\)/,/if \(st\.ink\?\.pointermove\(ev\)\) return;/,/st\.ink\.pointerup\(ev\)/,/onShape: \(r, ctx\) => insertInk\(r, ctx\)/,/onMathRegion: m => readMath\(m\.strokes\)/,/api\(MATH_PATH, 'POST', mathRequestBody\(png\.dataUrl\)\)/,/commit\(next, \{before: L\.before\}\)/,/autoShape: p\.inkAuto !== false/,/fingerDraw: p\.inkFinger === true/])assert.match(src,re,String(re));
+  /* the history the editor keeps: stroke 1 (S0 → S1), then a group that replaces it, committed with the state before
+     stroke 1 → one undo goes back to S0 */
+  const h=S.createHistory(10),S0='{"s":0}';h.record(S0);h.record(S0);assert.equal(h.size,1,'the group adds no second step');assert.equal(h.undo('{"s":2}'),S0);
+  /* the shapes the editor inserts are scene objects the validator takes */
+  const line=I.toSceneObjects({type:'line',params:{a:{x:0,y:0},b:{x:1,y:0.02}}},{grid:0.1,look:{color:'blue',lw:1,pattern:'solid'}});assert.equal(line[0].type,'line');
+  const lab=I.toSceneObjects({type:'latex',params:{latex:'F = m\\vec{a}',x:1,y:1,size:18}},{});assert.equal(lab[0].text,'$F = m\\vec{a}$');
+  assert.ok(S.validateScene({objects:[...line,...lab]}).ok);assert.equal(I.MATH_PATH,'/api/workshop/ai/math');
+});

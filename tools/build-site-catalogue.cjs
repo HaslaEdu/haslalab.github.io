@@ -178,9 +178,9 @@ for(const file of ['learn-path.js','math-input.js','teach-tools.js','share-publi
 outputs.set('teach.html',teachHtml);
 /* the figure editor (draw.html): its modules import each other, so each import carries the digest of the stamped file */
 {
-  const stampImports=(source,map)=>source.replace(/(from\s+')\.\/(draw-(?:scene|physics|render)\.mjs)(?:\?[^'\n]*)?'/g,(_m,head,file)=>head+'./'+file+'?v='+map[file]+"'");
+  const stampImports=(source,map)=>source.replace(/(from\s+')\.\/(draw-(?:scene|physics|render|ink)\.mjs)(?:\?[^'\n]*)?'/g,(_m,head,file)=>head+'./'+file+'?v='+map[file]+"'");
   const sceneSrc=read('draw-scene.mjs'),stamped={'draw-scene.mjs':sceneSrc},ver={'draw-scene.mjs':digest(sceneSrc)};
-  for(const file of ['draw-physics.mjs','draw-render.mjs']){stamped[file]=stampImports(read(file),ver);ver[file]=digest(stamped[file]);derivedSources.set(file,stamped[file]);outputs.set(file,stamped[file]);}
+  for(const file of ['draw-physics.mjs','draw-render.mjs','draw-ink.mjs']){stamped[file]=stampImports(read(file),ver);ver[file]=digest(stamped[file]);derivedSources.set(file,stamped[file]);outputs.set(file,stamped[file]);}
   const drawJs=stampImports(read('draw.js'),ver);derivedSources.set('draw.js',drawJs);outputs.set('draw.js',drawJs);
   let drawHtml=read('draw.html');
   for(const file of ['create.css','draw.css'])drawHtml=drawHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');

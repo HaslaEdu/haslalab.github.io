@@ -751,6 +751,10 @@ body.hl-site .hpho-exam-icon{width:30px;height:30px;vertical-align:middle;margin
 body.hl-site .hpho-logo-dark,html[data-theme="dark"] body.hl-site .hpho-logo-light{display:none}
 html[data-theme="dark"] body.hl-site .hpho-logo-dark{display:inline-block}
 
+/* the figure editor: its canvas in the first screen, so the page's heading above the frame stays one short line */
+body.hl-site .shell.learn-draw{padding-top:6px}body.hl-site .learn-draw .phead{margin:0 0 4px;padding:0 0 4px;min-height:0}body.hl-site .learn-draw .phead .eyebrow{margin:0}
+/* the figure editor on a phone: the assistant's floating button would sit on the editor's own controls and dialogs */
+@media(max-width:720px),(pointer:coarse) and (max-width:1024px){body.hl-site:has(.learn-draw) .hlai-btn{display:none!important}}
 /* the HPhO exam page fills the exam window: none of the site around it */
 body.hl-site[data-site-route="hpho-exam"]>header,body.hl-site[data-site-route="hpho-exam"]>footer,
 body.hl-site[data-site-route="hpho-exam"] .hlai-btn,body.hl-site[data-site-route="hpho-exam"] .hlai-panel,

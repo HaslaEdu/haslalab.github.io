@@ -17,7 +17,7 @@
    its surface or the body it is tied to, a body landing on a floor or an incline, a body leaving its surface
    (N below zero), two bodies on one surface touching. Systems outside these kinds are reported in `unsupported`
    with a code, and the figure stays a figure. */
-import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr, isPhysShape, CONE_TILT} from './draw-scene.mjs?v=6a3c9af34d22';
+import {isBody, surfaceFrame, bodyPose, attachPoint, anchorPoint, stringPath, bodyHalfHeight, bodyHalfWidth, vec, INERTIA, boundExpr, isPhysShape, CONE_TILT} from './draw-scene.mjs?v=6e567e38776d';
 
 export const SIM_DT = 1e-3;
 const EPS_V = 1e-9;
@@ -70,6 +70,11 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
   const applied = id => forces.filter(f => f.on === id).reduce((a, f) => ({x: a.x + f.F * Math.cos(f.angle * Math.PI / 180), y: a.y + f.F * Math.sin(f.angle * Math.PI / 180)}), {x: 0, y: 0});
   const unsupported = [], owner = new Map(), systems = [];
   const reject = (ids, code) => { unsupported.push({ids, code}); ids.forEach(id => owner.set(id, 'none')); };
+  /* rough spans (마찰 구간) of each floor and incline: a body whose foot is on one slides with that span's μ */
+  const zonesOf = sid => scene.objects.filter(o => o.type === 'rough' && o.on === sid).map(z => ({from: z.from, to: z.from + z.len, mu: z.mu}));
+  const muAt = (zones, mu0, at) => { let m = mu0; for (const z of zones) if (at >= z.from - 1e-12 && at <= z.to + 1e-12) m = z.mu; return m; };
+  /* events at the ends of the spans (both ways): the step is cut there so μ changes exactly at the edge */
+  const zoneEvents = (zones, at, extra) => zones.flatMap(z => [at - z.from, z.from - at, at - z.to, z.to - at].map(g => ({code: 'zone', g, stop: false, ...extra})));
 
   /* springs: their fixed ends are fixed where they are at t = 0 */
   const springEnds = s => [byId.get(s.a), byId.get(s.b)];
@@ -201,7 +206,7 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
       const w = path.wraps[eps < 0 ? 0 : path.wraps.length - 1];
       let room = 0.01;
       if (w && !frame) { const dx = Math.max(0, Math.abs(w.c.x - pose.x) - bodyHalfWidth(b)); if (dx < w.r) room += Math.sqrt(w.r * w.r - dx * dx); }
-      return {b, id: b.id, m: b.mass, c0: {x: pose.x, y: pose.y}, at0: b.at, angle: pose.angle, d, frame, mu: frame ? frame.mu : 0, next, eps, out, att0: att, room};
+      return {b, id: b.id, m: b.mass, c0: {x: pose.x, y: pose.y}, at0: b.at, angle: pose.angle, d, frame, mu: frame ? frame.mu : 0, zones: frame && b.on ? zonesOf(b.on) : [], next, eps, out, att0: att, room};
     });
     const ids = [A.id, B.id];
     if (ends.some(e => !e)) { reject(ids, 'hanging_not_vertical'); continue; }
@@ -219,13 +224,14 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
       const N = e.frame ? -vec.dot(F, e.frame.n) : 0;
       return {F, N, Q: vec.dot(F, e.d)};
     };
-    const sys = {kind: 'chain', id: s.id, ids, q: Float64Array.from([0, v0, 0, 0]), t: 0, mode: 0, done: null, stickable: ends.some(e => e.mu > 0),
+    const atOf = (e, q) => e.at0 + q[0] * vec.dot(e.d, e.frame.u), muE = (e, q) => e.frame ? muAt(e.zones, e.mu, atOf(e, q)) : 0;
+    const sys = {kind: 'chain', id: s.id, ids, q: Float64Array.from([0, v0, 0, 0]), t: 0, mode: 0, done: null, stickable: ends.some(e => e.mu > 0 || e.zones.some(z => z.mu > 0)),
       eval(q) {
-        const poses = posesAt(q), parts = ends.map(e => ext(e, poses));
-        const Q = parts[0].Q + parts[1].Q, cap = ends.reduce((a, e, i) => a + e.mu * Math.max(0, parts[i].N), 0);
+        const poses = posesAt(q), parts = ends.map(e => ext(e, poses)), mus = ends.map(e => muE(e, q));
+        const Q = parts[0].Q + parts[1].Q, cap = ends.reduce((a, e, i) => a + mus[i] * Math.max(0, parts[i].N), 0);
         let a, fr = [0, 0];
-        if (this.mode === 0 && Math.abs(q[1]) <= EPS_V) { a = 0; fr = ends.map((e, i) => cap > 0 ? -Q * e.mu * Math.max(0, parts[i].N) / cap : 0); }
-        else { const m = this.mode || sgn(q[1]); fr = ends.map((e, i) => -m * e.mu * Math.max(0, parts[i].N)); a = (Q + fr[0] + fr[1]) / M; }
+        if (this.mode === 0 && Math.abs(q[1]) <= EPS_V) { a = 0; fr = ends.map((e, i) => cap > 0 ? -Q * mus[i] * Math.max(0, parts[i].N) / cap : 0); }
+        else { const m = this.mode || sgn(q[1]); fr = ends.map((e, i) => -m * mus[i] * Math.max(0, parts[i].N)); a = (Q + fr[0] + fr[1]) / M; }
         /* the string's pull on B is along −d_B: m_B a = F_B·d_B + f_B − T */
         const T = parts[1].Q + fr[1] - ends[1].m * a;
         return {poses, parts, Q, cap, a, fr, T};
@@ -248,9 +254,10 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
           else out.push(...landing(e.b, p));
         }
         if (this.stickable && this.mode !== 0) out.push({code: 'stick', g: this.mode * q[1], stop: false});
+        for (const e of ends) if (e.frame && e.zones.length) out.push(...zoneEvents(e.zones, atOf(e, q)));
         return out;
       },
-      onStick() { this.q[1] = 0; this.mode = 0; },
+      onStick(ev) { if (ev?.code === 'zone') return; this.q[1] = 0; this.mode = 0; },
       poses(q = this.q) { const p = posesAt(q); for (const e of ends) if (e.frame) p.get(e.id).at = e.at0 + q[0] * vec.dot(e.d, e.frame.u); return p; },
       velocities(q = this.q) { return new Map(ends.map(e => [e.id, vec.mul(e.d, q[1])])); },
       accel(q = this.q) { const a = this.eval(q).a; return new Map(ends.map(e => [e.id, vec.mul(e.d, a)])); },
@@ -361,7 +368,8 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
   function surfaceSystem(list) {
     /* a wheel (k = I / m r² of its kind) on a surface with friction rolls without slipping while the friction that
        needs, k Q / (1 + k), is at most μN: a = Q / (m (1 + k)); otherwise it slides (its spin is not followed) */
-    const items = list.map(b => { const fr = surfaceFrame(byId.get(b.on), scene); return {b, id: b.id, m: b.mass, fr, mu: fr.mu, angle: Math.atan2(fr.u.y, fr.u.x), k: b.type === 'wheel' && fr.mu > 0 ? INERTIA[b.kind] ?? 0.5 : 0}; });
+    const items = list.map(b => { const fr = surfaceFrame(byId.get(b.on), scene), zones = zonesOf(b.on); return {b, id: b.id, m: b.mass, fr, mu: fr.mu, zones, muMax: Math.max(fr.mu, ...zones.map(z => z.mu)), angle: Math.atan2(fr.u.y, fr.u.x), k: b.type === 'wheel' && fr.mu > 0 ? INERTIA[b.kind] ?? 0.5 : 0}; });
+    const muI = (it, at) => muAt(it.zones, it.mu, at);
     const n = items.length, q = new Float64Array(2 * n + 2);
     items.forEach((it, i) => { q[2 * i] = it.b.at; q[2 * i + 1] = vec.dot({x: it.b.vx, y: it.b.vy}, it.fr.u); });
     const centre = (it, at) => vec.add(vec.add(it.fr.p0, vec.mul(it.fr.u, at)), vec.mul(it.fr.n, bodyHalfHeight(it.b)));
@@ -373,7 +381,7 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
         return items.map((it, i) => {
           let F = vec.add(vec.mul(G, it.m), applied(it.id));
           for (const sp of springsOf(it.id)) F = vec.add(F, springForce(sp, it.id, id => poses.get(id)).F);
-          const N = -vec.dot(F, it.fr.n), Q = vec.dot(F, it.fr.u), cap = it.mu * Math.max(0, N), v = qq[2 * i + 1];
+          const N = -vec.dot(F, it.fr.n), Q = vec.dot(F, it.fr.u), cap = muI(it, qq[2 * i]) * Math.max(0, N), v = qq[2 * i + 1];
           let f, a;
           if (it.k > 0 && Math.abs(it.k * Q / (1 + it.k)) <= cap + 1e-12) return {F, N, Q, f: -it.k * Q / (1 + it.k), a: Q / (it.m * (1 + it.k)), pose: poses.get(it.id), rolling: true};
           if (modes[i] === 0 && Math.abs(v) <= EPS_V) { f = -Math.max(-cap, Math.min(cap, Q)); a = 0; }
@@ -384,7 +392,7 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
       prepare() {
         items.forEach((it, i) => { const v = this.q[2 * i + 1]; if (Math.abs(v) > EPS_V) modes[i] = sgn(v); else modes[i] = 0; });
         const r = this.eval(this.q);
-        items.forEach((it, i) => { if (modes[i] === 0) { const cap = it.mu * Math.max(0, r[i].N); modes[i] = Math.abs(r[i].Q) <= cap + 1e-12 ? 0 : sgn(r[i].Q); } });
+        items.forEach((it, i) => { if (modes[i] === 0) { const cap = muI(it, this.q[2 * i]) * Math.max(0, r[i].N); modes[i] = Math.abs(r[i].Q) <= cap + 1e-12 ? 0 : sgn(r[i].Q); } });
       },
       f(qq) {
         const r = this.eval(qq), out = new Float64Array(qq.length);
@@ -396,12 +404,13 @@ export function buildSim(scene, {dt = SIM_DT} = {}) {
         const r = this.eval(qq), out = [];
         items.forEach((it, i) => { const at = qq[2 * i], hw = bodyHalfWidth(it.b);
           out.push({code: 'end_of_surface', id: it.id, g: at - hw}, {code: 'end_of_surface', id: it.id, g: it.fr.length - at - hw}, {code: 'lift_off', id: it.id, g: r[i].N});
-          if (it.mu > 0 && modes[i] !== 0 && !r[i].rolling) out.push({code: 'stick', i, g: modes[i] * qq[2 * i + 1], stop: false});
+          if (it.muMax > 0 && modes[i] !== 0 && !r[i].rolling) out.push({code: 'stick', i, g: modes[i] * qq[2 * i + 1], stop: false});
+          if (it.zones.length) out.push(...zoneEvents(it.zones, at, {i}));
           for (let j = i + 1; j < n; j++) if (items[j].b.on === it.b.on) out.push({code: 'touched', id: it.id, g: Math.abs(qq[2 * j] - at) - hw - bodyHalfWidth(items[j].b)});
         });
         return out;
       },
-      onStick(ev) { this.q[2 * ev.i + 1] = 0; modes[ev.i] = 0; },
+      onStick(ev) { if (ev.code === 'zone') return; this.q[2 * ev.i + 1] = 0; modes[ev.i] = 0; },
       poses(qq = this.q) { return posesAt(qq); },
       velocities(qq = this.q) { return new Map(items.map((it, i) => [it.id, vec.mul(it.fr.u, qq[2 * i + 1])])); },
       accel(qq = this.q) { const r = this.eval(qq); return new Map(items.map((it, i) => [it.id, vec.mul(it.fr.u, r[i].a)])); },
@@ -1017,6 +1026,33 @@ export function circuitNodes(scene) {
   terms.forEach((t, i) => { for (let j = 0; j < terms.length; j += 2) { const w = terms[j].el; if (!w || w.kind !== 'wire' || t.el === w) continue; const P = elementPath(w); for (let s = 0; s + 1 < P.length; s++) if (distSeg(t.p, P[s], P[s + 1]) < tol) join(i, j); } });
   const ids = new Map(); terms.forEach((t, i) => { const r = find(i); if (!ids.has(r)) ids.set(r, ids.size); t.node = ids.get(r); });
   return {terms, count: ids.size, els, grounds};
+}
+/** the junctions a circuit drawing means: an element's end (or a ground) on the middle of a straight wire splits that
+ *  wire there into two wires, so the junction is a node of its own (drawn with a dot); an end on the middle of another
+ *  kind of element does not join it and is reported (loose). Returns {scene, split: [{wire, added, x, y}],
+ *  loose: [{id, end, on}]}; the scene is the one given when nothing was split. */
+export function splitWires(scene) {
+  const tol = Math.max(0.01, (scene.grid || 0.1) / 100), taken = new Set(scene.objects.map(o => o.id));
+  const fresh = () => { let n = 1; while (taken.has('W' + n)) n++; taken.add('W' + n); return 'W' + n; };
+  const inner = (p, A, B) => { const ab = vec.sub(B, A), L2 = vec.dot(ab, ab); if (L2 < 1e-12) return false; const t = vec.dot(vec.sub(p, A), ab) / L2; return t > 0 && t < 1 && distSeg(p, A, B) < tol && vec.len(vec.sub(p, A)) > tol && vec.len(vec.sub(p, B)) > tol; };
+  let objs = scene.objects.slice(); const split = [];
+  for (let pass = 0; pass < 60; pass++) {
+    const els = objs.filter(o => o.type === 'element');
+    const ends = [...els.flatMap(e => [{id: e.id, p: {x: e.x1, y: e.y1}}, {id: e.id, p: {x: e.x2, y: e.y2}}]), ...objs.filter(o => o.type === 'ground').map(g => ({id: g.id, p: {x: g.x, y: g.y}}))];
+    let done = false;
+    for (const w of els) {
+      if (w.kind !== 'wire' || (w.route && w.route !== 'straight')) continue;
+      const A = {x: w.x1, y: w.y1}, B = {x: w.x2, y: w.y2}, hit = ends.find(t => t.id !== w.id && inner(t.p, A, B));
+      if (!hit) continue;
+      const id = fresh(), i = objs.indexOf(w);
+      objs.splice(i, 1, {...w, x2: hit.p.x, y2: hit.p.y}, {...w, id, x1: hit.p.x, y1: hit.p.y, label: ''});
+      split.push({wire: w.id, added: id, x: hit.p.x, y: hit.p.y}); done = true; break;
+    }
+    if (!done) break;
+  }
+  const loose = [], els = objs.filter(o => o.type === 'element');
+  for (const e of els) for (const k of [1, 2]) { const p = {x: e['x' + k], y: e['y' + k]}; const on = els.find(o => o !== e && o.kind !== 'wire' && inner(p, {x: o.x1, y: o.y1}, {x: o.x2, y: o.y2})); if (on) loose.push({id: e.id, end: k, on: on.id}); }
+  return {scene: split.length ? {...scene, objects: objs} : scene, split, loose};
 }
 function gauss(A, b) {
   const n = b.length;

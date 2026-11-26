@@ -6,7 +6,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
-import {createWorkshopAiRouter, checkProblem, checkTemplate, leadNumber, plan, sceneFromObjects, WORKSHOP_AI_FREE, WORKSHOP_AI_PLAN, AI_MAX_PROMPT, AI_MAX_SCENE} from './src/workshop-ai.js';
+import {createWorkshopAiRouter, checkProblem, checkTemplate, leadNumber, plan, sceneFromObjects, WORKSHOP_AI_FREE, WORKSHOP_AI_PLAN, AI_MAX_PROMPT, AI_MAX_SCENE, sanitizeLatex, cleanMathImage, WORKSHOP_MATH_FREE, MATH_IMAGE_BYTES} from './src/workshop-ai.js';
+import {encodePNG1} from '../draw-ink.mjs';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
 const bad=code=>{throw new H(400,code);};
@@ -181,4 +182,65 @@ test('the Worker wires the router and forgets the log; the deploy runs this test
   assert.match(readFileSync(new URL('../.github/workflows/deploy-worker.yml',import.meta.url),'utf8'),/test-workshop-ai\.mjs/);
   const mod=readFileSync(new URL('./src/workshop-ai.js',import.meta.url),'utf8');
   assert.doesNotMatch(mod,/env\.[A-Z_]*(KEY|SECRET|TOKEN)/,'no secret read here: the providers come through vision-provider.js');
+});
+
+/* handwriting → LaTeX (POST /api/workshop/ai/math) */
+const MATH='/api/workshop/ai/math';
+const png=(w=200,h=80)=>{const bits=new Uint8Array(w*h);for(let x=20;x<180;x++)bits[40*w+x]=1;return 'data:image/png;base64,'+Buffer.from(encodePNG1(bits,w,h)).toString('base64');};
+const mathAnswer=over=>({readable:true,latex:'\\frac{1}{2}mv^2',alternatives:['\\frac{1}{2}m\\nu^2','\\input{/etc/passwd}','\\frac{1}{2}mv^2'],confidence:0.93,...over});
+
+test('math: members only, a real small PNG checked before any quota or model call',async()=>{
+  const {route,calls,db}=setup({answer:()=>mathAnswer()});
+  await fails(route(MATH,'POST',{image:png()},null),'login_required',401);
+  await fails(route(MATH,'POST',{image:'data:image/png;base64,AAAA'},me),'bad_image');
+  await fails(route(MATH,'POST',{image:'data:image/jpeg;base64,'+Buffer.from(new Uint8Array(200)).toString('base64')},me),'bad_image');
+  await fails(route(MATH,'POST',{image:'data:image/png;base64,'+Buffer.from(new Uint8Array(400).fill(7)).toString('base64')},me),'bad_image');
+  await fails(route(MATH,'POST',{image:png(1500,40)},me),'image_too_large',413);
+  await fails(route(MATH,'POST',{image:'data:image/png;base64,'+'A'.repeat(Math.ceil(MATH_IMAGE_BYTES*1.4)+100)},me),'image_too_large',413);
+  await fails(route(MATH,'POST',{image:png(),hint:'x'.repeat(201)},me),'bad_hint');
+  assert.equal(calls.length,0);
+  assert.equal(db.prepare("SELECT COUNT(*) n FROM sqlite_master WHERE name='ai_usage_daily'").get().n,0,'no quota touched');
+  assert.equal(cleanMathImage(png()).mime,'image/png');
+});
+
+test('math: the image goes to the cheapest configured vision model; only sanitised LaTeX comes back',async()=>{
+  const {route,calls,db}=setup({answer:()=>({...mathAnswer(),thinking:'raw model text',notes:['<b>x</b>']})});
+  const r=await route(MATH,'POST',{image:png(),hint:'운동 에너지'},me);
+  assert.deepEqual(Object.keys(r).sort(),['alternatives','confidence','latex','left','model']);
+  assert.equal(r.latex,'\\frac{1}{2}mv^2');
+  assert.deepEqual(r.alternatives,['\\frac{1}{2}m\\nu^2'],'the dangerous one and the repeat are dropped');
+  assert.equal(r.confidence,0.93);assert.equal(r.left,WORKSHOP_MATH_FREE-1);
+  assert.ok(!JSON.stringify(r).includes('raw model text')&&!JSON.stringify(r).includes('input'));
+  assert.equal(calls[0].images.length,1);assert.equal(calls[0].images[0].mime,'image/png');assert.equal(calls[0].provider,'openai');
+  assert.ok(calls[0].maxTokens<=600);assert.equal(calls[0].input.hint,'운동 에너지');assert.match(calls[0].policy,/LaTeX/);
+  assert.equal(db.prepare("SELECT n FROM ai_usage_daily WHERE user_id=7 AND kind='ws-math'").get().n,1,'its own lighter kind');
+  assert.equal(db.prepare("SELECT n FROM ai_usage_daily WHERE user_id=7 AND kind='ws-ai'").get()?.n??0,0,'not the makers\' quota');
+  assert.equal(db.prepare("SELECT n FROM ai_usage_daily WHERE user_id=0 AND kind='ws-ai-global'").get().n,1,'the global cap counts it');
+  const m=await route(MODELS,'GET',null,me);assert.deepEqual(m.math,{left:WORKSHOP_MATH_FREE-1,limit:WORKSHOP_MATH_FREE});assert.equal(m.left,WORKSHOP_AI_FREE);
+});
+
+test('math: an unsafe or unreadable answer is 422 and nothing of it is shown; a provider failure gives the member count back, not the global one',async()=>{
+  let mode='evil';
+  const {route,db}=setup({answer:()=>mode==='evil'?mathAnswer({latex:'\\write18{rm -rf /}',alternatives:['\\href{http://x}{y}','\\def\\a{b}']}):mode==='none'?{readable:false,latex:'',confidence:0}:mode==='alt'?mathAnswer({latex:'\\catcode',alternatives:['a^2+b^2=c^2']}):Object.assign(new Error('down'),{code:'vision_provider_failed'})});
+  await fails(route(MATH,'POST',{image:png()},me),'ai_unusable',422);
+  mode='none';await fails(route(MATH,'POST',{image:png()},me),'ai_unusable',422);
+  mode='err';await fails(route(MATH,'POST',{image:png()},me),'ai_failed',503);
+  assert.equal(db.prepare("SELECT n FROM ai_usage_daily WHERE user_id=7 AND kind='ws-math'").get().n,0,'every failure given back');
+  assert.equal(db.prepare("SELECT n FROM ai_usage_daily WHERE user_id=0 AND kind='ws-ai-global'").get().n,3,'the global count keeps every request that reached a model');
+  mode='alt';const r=await route(MATH,'POST',{image:png()},me);
+  assert.equal(r.latex,'a^2+b^2=c^2');assert.ok(r.confidence<0.93,'a fallback reading is less sure');
+  /* the daily limit, then the global cap */
+  const q=setup({answer:()=>mathAnswer(),vars:{WORKSHOP_AI_DAILY_CAP:'1000'}});
+  for(let i=0;i<WORKSHOP_MATH_FREE;i++)await q.route(MATH,'POST',{image:png()},me);
+  await fails(q.route(MATH,'POST',{image:png()},me),'ai_limit',429);
+  assert.ok(await q.route(SCENE,'POST',{prompt:'a'},me).catch(e=>e),'the makers keep their own quota');
+  const cap=setup({answer:()=>mathAnswer(),vars:{WORKSHOP_AI_DAILY_CAP:'1'}});
+  await cap.route(MATH,'POST',{image:png()},me);
+  await fails(cap.route(MATH,'POST',{image:png()},you),'busy',503);
+});
+
+test('sanitizeLatex keeps maths and drops what TeX could do besides',()=>{
+  for(const ok of ['E=mc^2','\\vec{F}=m\\vec{a}','\\int_0^\\infty e^{-x}\\,dx','\\left(\\frac{a}{b}\\right)^2','\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}','v=\\sqrt{2gh}\\ \\mathrm{m/s}','\\text{if } x>0','\\hbar\\omega','\\ket{\\psi}','F = 9.8 \\, \\mathrm{N}','\\Delta x \\cdot \\Delta p \\ge \\frac{\\hbar}{2}'])assert.ok(sanitizeLatex(ok),ok);
+  assert.equal(sanitizeLatex('$x^2$'),'x^2');assert.equal(sanitizeLatex('```latex\n\\alpha\n```'),'\\alpha');
+  for(const no of ['\\input{a}','\\include{a}','\\write18{x}','\\def\\x{y}','\\catcode`\\@=11','\\url{x}','\\href{x}{y}','\\newcommand{\\x}{y}','\\immediate','\\csname x\\endcsname','\\begin{document}','\\begin{pmatrix}a\\end{bmatrix}','{a','a}','\\left( a','x % y','#1','a$b','\\text{\\input{x}}','\\x','a\u0000b','\\'+'a'.repeat(5),'x'.repeat(601),'',null,42,{latex:'x'}])assert.equal(sanitizeLatex(no),null,String(no));
 });
