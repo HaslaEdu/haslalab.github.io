@@ -33,28 +33,20 @@ async function nonsulClaudeGrade(env, token, {model, system, prompt, schema, eff
   const client = new Anthropic({
     apiKey: env.ANTHROPIC_API_KEY || env.CLAUDE_API_KEY, timeout: 150000, maxRetries: 0,
   });
-  const request = {model, system, max_tokens: maxTokens, messages: [{role: 'user', content: prompt}],
-    output_config: {effort, format: {type: 'json_schema', schema}}};
-  const run = async options => client.messages.stream(options).finalMessage();
-  let body, format = 'structured';
+  // The grading schema is valid for Responses but Anthropic rejects it as a constrained-output grammar.
+  const systemWithFormat = system + '\nReturn one valid JSON object with no markdown. Follow this JSON Schema: ' + JSON.stringify(schema);
   try {
-    body = await run(request);
+    const body = await client.messages.stream({
+      model, system: systemWithFormat, max_tokens: maxTokens, output_config: {effort},
+      messages: [{role: 'user', content: prompt}],
+    }).finalMessage();
+    return {
+      status: 200, usage: body.usage, errorType: null, stopReason: body.stop_reason, format: 'prompted_json',
+      text: body.content.filter(block => block.type === 'text').map(block => block.text).join(''),
+    };
   } catch (error) {
-    const message = String(error?.error?.error?.message || error?.message || '');
-    if (error.status !== 400 || !/schema.{0,30}(complex|compil)|grammar.{0,30}(complex|compil)/i.test(message))
-      return nonsulClaudeFailure(error);
-    format = 'prompted_json';
-    try {
-      body = await run({...request, output_config: {effort},
-        system: system + '\nReturn one valid JSON object with no markdown. Follow this JSON Schema: ' + JSON.stringify(schema)});
-    } catch (fallbackError) {
-      return nonsulClaudeFailure(fallbackError);
-    }
+    return nonsulClaudeFailure(error);
   }
-  return {
-    status: 200, usage: body.usage, errorType: null, stopReason: body.stop_reason, format,
-    text: body.content.filter(block => block.type === 'text').map(block => block.text).join(''),
-  };
 }
 function nonsulClaudeFailure(error) {
   const type = error?.error?.error?.type || error?.error?.type || null;
