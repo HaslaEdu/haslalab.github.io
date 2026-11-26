@@ -2475,7 +2475,7 @@ async function recognizeInk() {
   const items = inkObjects(), box = $('inkStatus'), button = $('inkGo');
   if (!items.length || button.disabled) return;
   if (items.length > 32) { box.textContent = ko ? '수식에 해당하는 획을 32개 이하로 선택해 주세요.' : 'Select no more than 32 strokes for the formula.'; return; }
-  if (!token()) { box.textContent = T.storeLogin; return; }
+  if (!token()) { box.textContent = ko ? '선택한 획을 수식으로 인식하려면 로그인해 주세요.' : 'Log in to recognize the selected strokes as a formula.'; return; }
   const base = JSON.stringify(projectData()), ids = new Set(items.map(o => o.id));
   const paths = items.map(o => o.pts), points = paths.flat();
   const x = Math.min(...points.map(p => p[0])), y = Math.max(...points.map(p => p[1]));
