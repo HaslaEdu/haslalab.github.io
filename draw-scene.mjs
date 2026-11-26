@@ -225,7 +225,7 @@ export const FIELDS = {
   slits: {x: X, y: Y, n: num(2, 1, 50), d: num(0.25, 1e-4, 100), a: num(0.05, 1e-4, 100), L: num(1, 1e-3, 1000), lambda: num(550, 10, 1e5), h: num(1.6, 0.1, 100), screen: num(2.4, 0.2, 200), pattern: bool(true), labels: bool(true), waves: bool(true)},
   wavefront: {x: X, y: Y, kind: pick('circular', ['plane', 'circular']), n: num(5, 1, 30), spacing: num(0.3, 0.02, 50), angle: num(0, -360, 360), h: num(1.4, 0.05, 200)},
   /* waves */
-  wave: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, 0, 50), lambda: num(1.6, 0.02, 400), phase: num(0, -360, 360), kind: pick('travel', ['travel', 'standing']), n: num(3, 1, 20), ends: pick('none', ['none', 'fixed']),
+  wave: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, 0, 50), lambda: num(1.6, 0.02, 400), phase: num(0, -360, 360), expr: expr('sin(x)'), kind: pick('travel', ['travel', 'standing']), n: num(3, 1, 20), ends: pick('none', ['none', 'fixed']),
     showLambda: bool(false), showA: bool(false), envelope: bool(true), axis: bool(true), arrow: bool(false), label: L()},
   pulse: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, -50, 50), width: num(0.6, 0.02, 100), pos: num(0.35, 0, 1), shape: pick('gauss', ['gauss', 'tri', 'square']), dir: pick('right', ['right', 'left', 'none']), axis: bool(true), label: L()},
   interference: {x: X, y: Y, d: num(1, 0.01, 100), lambda: num(0.4, 0.01, 100), n: num(5, 1, 30), nodal: bool(true), labels: bool(true), rot: ROT},

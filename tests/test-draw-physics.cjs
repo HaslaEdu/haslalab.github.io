@@ -724,3 +724,16 @@ test('letter styles and families survive validation, preview and figure renderin
   assert.match(R.texSVG('ABC',17,'textbook',scene.scene.objects[0]), /font-style="italic" font-weight="bold"/);
   assert.equal(S.validateScene({objects:[{id:'bad',type:'label',letterFamily:'custom'}]}).ok,false);
 });
+
+test('traveling waves accept a custom profile and keep the built-in sine default', async () => {
+  const {S, R} = await load();
+  const base = {id: 'w1', type: 'wave', phase: 45, A: 0.4, lambda: 1.6};
+  const legacy = S.validateScene({objects:[base]});
+  assert.equal(legacy.ok, true);
+  assert.equal(legacy.scene.objects[0].expr, 'sin(x)');
+  const custom = {...base, expr: 'cos(x)'};
+  assert.notEqual(R.renderSVG(scene(S, [custom])), R.renderSVG(legacy.scene));
+  const invalid = S.validateScene({objects:[{...base, expr: 'sin('}]});
+  assert.equal(invalid.ok, false);
+  assert.equal(invalid.errors[0].code, 'bad_expr');
+});

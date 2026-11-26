@@ -6,9 +6,9 @@
    (/api/workshop/storage) or into this browser. "Start from a photo" sends one photo to /api/workshop/scene-from-image
    (community/src/workshop-scene.js) and opens what comes back for checking. */
 import {geoIntersect, validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, vectorPoints, vectorTransform, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath,
-  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape} from './draw-scene.mjs?v=7959e10d8eeb';
-import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=f6b4ee63f834';
-import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=f74e161993eb';
+  GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape} from './draw-scene.mjs?v=5fff7eb9b019';
+import {buildSim, solveCircuit, computedInfo} from './draw-physics.mjs?v=679f44216c8f';
+import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor} from './draw-render.mjs?v=057520224f72';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -262,6 +262,9 @@ T.unsure = {...T.unsure, ...(ko ? {charge: '전하', kind: '종류', focal: '초
 const K = X2.kinds, N2 = (k, e) => ko ? k : e;
 const PALETTE = {
   mech: [...['block', 'ball', 'floor', 'incline', 'wall', 'ceiling', 'pulley', 'pivot', 'string', 'rod', 'spring', 'force'].map(t => [t, {}, T.types[t]]),
+    ['rect', {phys: 'dynamic', fill: 'lightgray'}, N2('직사각형 강체', 'Rectangular rigid body')],
+    ['ellipse', {phys: 'dynamic', fill: 'lightgray'}, N2('타원형 강체', 'Elliptical rigid body')],
+    ['poly', {phys: 'dynamic', closed: true, fill: 'lightgray'}, N2('다각형 강체', 'Polygon rigid body')],
     ['block', {look: 'cart'}, N2('수레', 'Cart')], ['block', {look: 'car'}, N2('자동차', 'Car')], ['wheel', {kind: 'disk', omega: 'ccw'}, N2('원판 · 원통 (ω)', 'Disk, cylinder (ω)')], ['wheel', {kind: 'ring'}, N2('고리', 'Ring')], ['wheel', {kind: 'wheel', spokes: 6}, N2('바퀴', 'Wheel')],
     ['plank', {support: 'fulcrum'}, N2('시소 · 지레', 'Seesaw, lever')], ['plank', {support: 'hinge', at: 0}, N2('경첩 막대', 'Hinged rod')], ['plank', {support: 'none'}, N2('판 · 막대', 'Plank')], ['track', {from: 180, to: 270}, N2('곡면 경사로', 'Curved ramp')], ['track', {from: -90, to: 270}, N2('원형 궤도 (루프)', 'Loop')]],
   em: [...['wire', 'resistor', 'rheostat', 'battery', 'cell', 'dc', 'ac', 'capacitor', 'dielectric', 'inductor', 'switch', 'diode', 'led', 'bulb', 'ammeter', 'voltmeter', 'galvanometer'].map(k => ['element', {kind: k}, K[k]]),
@@ -501,6 +504,10 @@ function placeNew(type, preset, v, next) {
   else if (type === 'reservoir') box(0.4, 0.12);
   else if (type === 'graph' || type === 'well' || type === 'levels' || type === 'qpot') box(0.6, 0.65);
   else if (type === 'rect' || type === 'ellipse') box(0.25, 0.2);
+  else if (type === 'poly') {
+    const r = m * 0.13;
+    o.pts = [[cx-r,cy-r],[cx+r,cy-r],[cx,cy+r]].map(point => point.map(r4));
+  }
   else if (type === 'nnet') box(0.6, 0.55);
   else if (type === 'fbox') Object.assign(o, {x: cx, y: cy, w: r4(snapV(v.w * 0.18)) || 1, h: r4(snapV(v.h * 0.15)) || 0.6});
   else if (type === 'engine') Object.assign(o, {x: cx, y: cy, size: r4(m * 0.22)});
@@ -520,7 +527,7 @@ function placeNew(type, preset, v, next) {
   else if (type === 'axes') Object.assign(o, {x: cx, y: cy, lx: r4(m * 0.3), ly: r4(m * 0.3)});
   else if (type === 'curve' || type === 'cycle') {
     let g = next.objects.find(x => x.type === 'graph');
-    if (!g) { g = {...defaults('graph'), id: freeId('graph'), ...(type === 'cycle' || preset.kind !== 'func' ? {xlabel: 'V', ylabel: 'P'} : {})}; Object.assign(g, placeNew('graph', {}, v, next)); next.objects.push(g); }
+    if (!g) { g = {...defaults('graph'), id: freeId('graph'), ...(type === 'cycle' || ['isotherm', 'adiabat', 'isobar', 'isochore'].includes(preset.kind) ? {xlabel: 'V', ylabel: 'P'} : {})}; Object.assign(g, placeNew('graph', {}, v, next)); next.objects.push(g); }
     o.graph = g.id;
     if (type === 'curve') Object.assign(o, preset.kind === 'func' || !preset.kind ? {x1: 0, x2: 6.2832} : {x1: 1, x2: 3, y1: 3, y2: 1});
   } else if (type === 'worldline') {
@@ -747,7 +754,11 @@ function simDrawOpts(simOn) {
 }
 function worldAt(ev) {
   const svg = $('canvas').querySelector('svg'), v = dview();
-  const {a, d, e, f} = svg.getScreenCTM(), S = W / v.w;
+  const matrix = svg.getScreenCTM();
+  return worldFromPointer(ev, v, matrix);
+}
+function worldFromPointer(ev, v, matrix) {
+  const {a, d, e, f} = matrix, S = W / v.w;
   return {x: v.x + (ev.clientX - e) / a / S, y: v.y + v.h - (ev.clientY - f) / d / S};
 }
 /* zoom by k about a world point (the frame's aspect kept, so the canvas does not change height) */
@@ -883,7 +894,7 @@ function smoothInk(points, unit) {
   const dx = last.x - first.x, dy = last.y - first.y, length = Math.hypot(dx, dy);
   if (length >= 28 * unit && points.every(p => {
     const x = p.x - first.x, y = p.y - first.y, along = (x * dx + y * dy) / length;
-    return Math.abs(x * dy - y * dx) / length <= 4 * unit && along >= -unit && along <= length + unit;
+    return Math.abs(x * dy - y * dx) / length <= 1.25 * unit && along >= -unit && along <= length + unit;
   })) return [first, last];
   return points.map((p, i) => {
     if (!i || i === points.length - 1) return p;
@@ -917,10 +928,16 @@ function shapeOf(dr) {
     return {type: 'bezier', x1: a.x, y1: a.y, x2: b.x, y2: b.y, cx1: r4(a.x + dx / 3 + n.x * k), cy1: r4(a.y + dy / 3 + n.y * k), cx2: r4(a.x + 2 * dx / 3 + n.x * k), cy2: r4(a.y + 2 * dy / 3 + n.y * k), pattern: ds.pattern, heads: headsOf(ds), ...look};
   }
   if (t === 'pen') {
-    if (!dr.raw || dr.raw.length < 2) return null;
-    const unit = dview().w / W;
+    if (!dr.raw?.length) return null;
+    const unit = dr.unit;
+    if (dr.done && dr.raw.length === 1) {
+      const p = dr.raw[0];
+      // Use a short segment so dots survive export and can be sent to the recognizer.
+      return {type:'poly', pts:[[r4(p.x),r4(p.y)],[r4(p.x + Math.max(unit, 0.0002)),r4(p.y)]],
+        smooth:false, closed:false, fill:'none', pattern:'solid', heads:'none', ...look};
+    }
     const raw = dr.smooth && dr.done ? smoothInk(dr.raw, unit) : dr.raw;
-    const pts = dr.done ? simplifyPath(raw, (dr.smooth ? 1.2 : 0.6) * unit, 200) : raw;
+    const pts = dr.done ? simplifyPath(raw, (dr.smooth ? 0.8 : 0.35) * unit, 200) : raw;
     if (pts.length < 2) return null;
     return {type: 'poly', pts: pts.map(q => [r4(q.x), r4(q.y)]), smooth: dr.smooth && pts.length > 2, closed: false, fill: 'none', pattern: ds.pattern, heads: headsOf(ds), ...look};
   }
@@ -984,24 +1001,35 @@ function toolDown(ev) {
   }
   if (DRAG_TOOLS.includes(t)) {
     const a = t === 'pen' ? raw : snapPt(raw);
-    st.draft = t === 'pen' ? {tool: t, raw: [a], smooth: $('penSmooth').checked} : {tool: t, a, b: null};
-    st.drag = {tool: true, penPointer: ev.pointerType === 'pen' ? ev.pointerId : null};
+    const svg = $('canvas').querySelector('svg');
+    st.draft = t === 'pen' ? {tool: t, raw: [a], smooth: $('penSmooth').checked, unit: dview().w / Math.max(1, svg.getBoundingClientRect().width)} : {tool: t, a, b: null};
+    st.drag = {tool: true, pointer: ev.pointerId, pointerType: ev.pointerType};
     $('canvas').setPointerCapture?.(ev.pointerId);
   }
 }
+let inkFrame = 0;
+function sampleInk(dr, ev) {
+  const svg = $('canvas').querySelector('svg'), view = dview(), matrix = svg.getScreenCTM();
+  if (!matrix) return;
+  const events = ev.getCoalescedEvents?.() || [];
+  for (const sample of [...events, ev]) {
+    const point = worldFromPointer(sample, view, matrix), previous = dr.raw.at(-1);
+    if (Math.hypot(point.x - previous.x, point.y - previous.y) > 0.35 * dr.unit) dr.raw.push(point);
+  }
+  if (dr.raw.length > 1600) dr.raw = dr.raw.filter((_, i, all) => i % 2 === 0 || i === all.length - 1);
+}
 function toolMove(ev) {
   const dr = st.draft; if (!dr) return;
-  const raw = worldAt(ev);
   if (dr.tool === 'pen') {
-    const events = ev.getCoalescedEvents?.();
-    const threshold = 0.8 * dview().w / W;
-    for (const point of events?.length ? events.map(event => worldAt(event)) : [raw]) {
-      const q = dr.raw.at(-1);
-      if (Math.hypot(point.x - q.x, point.y - q.y) > threshold) dr.raw.push(point);
-    }
-    if (dr.raw.length > 1600) dr.raw = dr.raw.filter((_, i, all) => i % 2 === 0 || i === all.length - 1);
+    sampleInk(dr, ev);
+    if (!inkFrame) inkFrame = requestAnimationFrame(() => {
+      inkFrame = 0;
+      if (st.draft === dr) paintCanvas();
+    });
+    return;
   }
-  else if (dr.a) { dr.shift = ev.shiftKey; dr.b = ['rect', 'rrect', 'ellipse'].includes(dr.tool) ? snapPt(raw) : snapPt(raw, {from: dr.a, shift: ev.shiftKey}); }
+  const raw = worldAt(ev);
+  if (dr.a) { dr.shift = ev.shiftKey; dr.b = ['rect', 'rrect', 'ellipse'].includes(dr.tool) ? snapPt(raw) : snapPt(raw, {from: dr.a, shift: ev.shiftKey}); }
   else if (dr.pts) { const last = dr.pts[dr.pts.length - 1]; dr.cur = snapPt(raw, {from: last, shift: ev.shiftKey && !!last}); }
   paintCanvas();
 }
@@ -1017,18 +1045,24 @@ function followersOf(o) {
 function bindCanvas() {
   const box = $('canvas'), pts = new Map();
   box.addEventListener('pointerdown', ev => {
-    if (st.drag?.penPointer != null && ev.pointerId !== st.drag.penPointer) return;
-    pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
-    if (pts.size === 2) { const [a, b] = [...pts.values()]; st.drag = {pinch: true, d0: Math.hypot(a.x - b.x, a.y - b.y), v0: {...cameraView()}, mid: worldAt({clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2})}; st.marquee = null; return; }
+    if (st.drag?.pointerType === 'pen' && ev.pointerId !== st.drag.pointer) return;
+    if (ev.pointerType === 'pen') {
+      if (st.drag?.tool && st.drag.pointerType === 'touch') st.draft = null;
+      pts.clear();
+    }
+    pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY, type:ev.pointerType});
+    if (pts.size === 2 && [...pts.values()].every(p => p.type === 'touch')) {
+      if (st.drag?.tool) st.draft = null;
+      const [a, b] = [...pts.values()]; st.drag = {pinch: true, d0: Math.hypot(a.x - b.x, a.y - b.y), v0: {...cameraView()}, mid: worldAt({clientX: (a.x + b.x) / 2, clientY: (a.y + b.y) / 2})}; st.marquee = null; paintCanvas(); return; }
     if (ev.button === 1 || (ev.button === 0 && st.space)) { st.drag = {pan: true, last: {x: ev.clientX, y: ev.clientY}}; box.setPointerCapture?.(ev.pointerId); ev.preventDefault(); return; }
     if (ev.button !== 0) return;
     box.focus({preventScroll: true});
+    if (st.tool !== 'select' && !st.connect) { if (st.sim) { stopSim(); paint(); } toolDown(ev); return; }
     const before = JSON.stringify(st.scene);
     const hd = ev.target.closest?.('[data-handle]'), hs = hd && byId(st.sel);
     if (hs && !st.connect && !hs.lock) { if (st.sim) stopSim(); st.drag = {id: hs.id, handle: hd.dataset.handle, start: worldAt(ev), orig: clone(hs), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
     const rh = ev.target.closest?.('[data-rot]'), rs = rh && byId(st.sel);
     if (rs && !st.connect) { if (st.sim) stopSim(); const c = isBody(rs) ? bodyPose(st.scene, rs) : rotCentre(rs); st.drag = {id: rs.id, rot: true, c, before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
-    if (st.tool !== 'select' && !st.connect) { if (st.sim) { stopSim(); paint(); } toolDown(ev); return; }
     const o = pickAt(ev);
     if (st.connect) { connectClick(o, worldAt(ev)); return; }
     if (st.sim) { stopSim(); paint(); }
@@ -1051,8 +1085,8 @@ function bindCanvas() {
     box.setPointerCapture?.(ev.pointerId);
   });
   box.addEventListener('pointermove', ev => {
-    if (st.drag?.penPointer != null && ev.pointerId !== st.drag.penPointer) return;
-    if (pts.has(ev.pointerId)) pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY});
+    if (st.drag?.tool && ev.pointerId !== st.drag.pointer) return;
+    if (pts.has(ev.pointerId)) pts.set(ev.pointerId, {x: ev.clientX, y: ev.clientY, type:ev.pointerType});
     if (!st.drag && st.draft && st.draft.pts) { toolMove(ev); return; }
     const d = st.drag; if (!d) return;
     if (d.tool) { toolMove(ev); return; }
@@ -1076,12 +1110,16 @@ function bindCanvas() {
     paintCanvas();
   });
   const end = ev => {
-    if (st.drag?.penPointer != null && ev.pointerId !== st.drag.penPointer) return;
     pts.delete(ev.pointerId);
+    if (st.drag?.tool && ev.pointerId !== st.drag.pointer) return;
     const d = st.drag; st.drag = null; if (!d) return;
     if (d.tool) {
-      if (ev.type === 'pointercancel' && st.draft?.tool === 'pen') { st.draft = null; paintCanvas(); status(); }
-      else if (st.draft && DRAG_TOOLS.includes(st.draft.tool)) finishDraft();
+      if (ev.type !== 'pointerup') { st.draft = null; paintCanvas(); status(); }
+      else if (st.draft && DRAG_TOOLS.includes(st.draft.tool)) {
+        if (st.draft.tool === 'pen') sampleInk(st.draft, ev);
+        else toolMove(ev);
+        finishDraft();
+      }
       return;
     }
     if (d.erase) { if (d.erase.size) { const next = clone(st.scene); removeIds(next, [...d.erase]); setSel([]); commit(next); } return; }
@@ -1093,6 +1131,9 @@ function bindCanvas() {
     st.hist.record(d.before); st.scene = r.scene; save(); paint();
   };
   box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
+  box.addEventListener('lostpointercapture', ev => {
+    if (st.drag?.tool && ev.pointerId === st.drag.pointer) end(ev);
+  });
   box.addEventListener('wheel', ev => {
     if (ev.ctrlKey || ev.metaKey) { ev.preventDefault(); zoomBy(Math.exp(-ev.deltaY * 0.0022), worldAt(ev)); }
     else if (st.zoom) { ev.preventDefault(); const k = dview().w / (box.clientWidth || W); panBy((ev.shiftKey ? ev.deltaY : ev.deltaX) * k, (ev.shiftKey ? 0 : -ev.deltaY) * k); }
@@ -1259,12 +1300,12 @@ function relevant(o, k) {
   if (o.type === 'graph' && ['xmin', 'xmax', 'ymin', 'ymax'].includes(k)) return !o.auto;
   if (o.type === 'well') { if (k === 'E') return o.kind === 'barrier' || o.kind === 'step'; if (k === 'levels') return !['barrier', 'step'].includes(o.kind); if (k === 'L') return o.kind !== 'harmonic' && o.kind !== 'step'; }
   if (o.type === 'levels') { if (k === 'values') return o.kind === 'custom'; if (k === 'n') return o.kind === 'hydrogen'; }
-  if (o.type === 'wave') { if (k === 'n') return o.kind === 'standing'; if (k === 'lambda' || k === 'phase' || k === 'arrow') return o.kind === 'travel'; if (k === 'envelope') return o.kind === 'standing'; }
+  if (o.type === 'wave') { if (k === 'expr') return o.kind === 'travel'; if (k === 'showA' || k === 'showLambda') return o.kind === 'standing' || o.expr === 'sin(x)'; if (k === 'n') return o.kind === 'standing'; if (k === 'lambda' || k === 'phase' || k === 'arrow') return o.kind === 'travel'; if (k === 'envelope') return o.kind === 'standing'; }
   if (o.type === 'wavefront' && k === 'angle') return o.kind === 'plane';
   if (o.type === 'charge' && ['mass', 'vx', 'vy', 'showV', 'vLabel', 'trail'].includes(k)) return true;
   if (o.type === 'particle' && (k === 'angle' || k === 'len')) return o.arrow || o.kind === 'photon';
   if (isBody(o) && k === 'vLabel') return o.showV;
-  if (o.type === 'poly') { if (k === 'fill') return o.closed; if (k === 'heads') return !o.closed; if (k === 'pts') return false; }
+  if (o.type === 'poly') { if (k === 'fill') return o.closed; if (k === 'heads') return !o.closed; }
   if (o.type === 'qpot' && k === 'Emax') return true;
   return true;
 }
@@ -1313,7 +1354,7 @@ function paintSide() {
   const optional = k => !(['string', 'rod', 'spring'].includes(o.type) && (k === 'a' || k === 'b')) && !(o.type === 'force' && k === 'on');
   const field = ([k, f]) => {
     const lettering = k === 'letterStyle' || k === 'letterFamily';
-    const L = lettering ? LETTER_OPTIONS[k] : o.type === 'vector' && k === 'on' ? (ko ? '따라갈 물체' : 'Follow body')
+    const L = o.type === 'wave' && k === 'expr' ? 'f(x)' : lettering ? LETTER_OPTIONS[k] : o.type === 'vector' && k === 'on' ? (ko ? '따라갈 물체' : 'Follow body')
       : k === 'vectorFrame' ? (ko ? '벡터 방향' : 'Vector direction') : fieldName(o, k);
     if (f.k === 'num') { const sr = slideRange(o, k, f); return `<label class="${sr ? 'wide slide' : ''}">${L}<span class="numrow"><input data-f="${k}" type="number" step="${NUM_STEP[k] || 0.05}" min="${f.min}" max="${f.max}" value="${r4(o[k])}">${sr ? `<input data-s="${k}" type="range" min="${sr[0]}" max="${sr[1]}" step="${(sr[1] - sr[0]) / 200}" value="${Math.max(sr[0], Math.min(sr[1], o[k]))}" aria-label="${esc(L)}">` : ''}</span></label>`; }
     if (f.k === 'bool') return `<label class="chk wide"><input data-f="${k}" type="checkbox"${o[k] ? ' checked' : ''}>${L}</label>`;
@@ -1321,7 +1362,7 @@ function paintSide() {
     if (f.k === 'ref') return `<label>${L}<select data-f="${k}">${opts(f.types, o[k], optional(k))}</select></label>`;
     if (f.k === 'refs' && o.type === 'gpoly') return `<div class="wide note">${esc(L)}: ${esc(o.pts.join(', '))}</div>`;
     if (f.k === 'refs') { const ps = st.scene.objects.filter(x => x.type === 'pulley'); return ps.length ? `<div class="wide"><span class="note">${L}</span><div class="over">${ps.map(p => `<label><input type="checkbox" data-over="${esc(p.id)}"${o.over.includes(p.id) ? ' checked' : ''}>${esc(p.id)}</label>`).join('')}</div></div>` : ''; }
-    if (f.k === 'pts') return '';
+    if (f.k === 'pts') return `<label class="wide">${esc(L)} <span class="note">${N2('한 줄에 x, y 하나씩', 'One x, y pair per line')}</span><textarea data-f="${k}" rows="5" maxlength="6400" spellcheck="false">${esc(o[k].map(point => point.join(', ')).join('\n'))}</textarea></label>`;
     if (f.k === 'params') { const list = parseParams(o[k]) || []; return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>${list.map((q, i) => `<label class="wide slide">${esc(q.name)}<span class="numrow"><input data-pv="${i}" type="number" step="any" value="${+q.value.toPrecision(6)}"><input data-ps="${i}" type="range" min="${q.min}" max="${q.max}" step="${(q.max - q.min) / 200}" value="${q.value}" aria-label="${esc(q.name)}"></span></label>`).join('')}`; }
     if (f.k === 'expr' || k === 'data' || k === 'xt' || k === 'yt' || k === 'weights' || k === 'layers') return `<label class="wide">${L}<input data-f="${k}" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"></label>`;
     return `<label class="wide">${L}<span class="tin"><input data-f="${k}" data-text="1" maxlength="${f.max}" value="${esc(o[k])}" spellcheck="false" autocomplete="off"><button type="button" class="symbtn" data-sym="${k}" title="${esc(X2.symTitle)}">Ω</button></span><span class="tex" data-tex="${k}"></span></label>`;
@@ -1330,19 +1371,32 @@ function paintSide() {
      style (그림체) on top */
   const PK = Object.keys(PHYS_FIELDS), physRel = k => k === 'phys' || (o.phys === 'dynamic') || (o.phys === 'static' && (k === 'pmu' || k === 'pe'));
   const lettering = fields.filter(([k]) => k === 'letterStyle' || k === 'letterFamily');
-  const main = fields.filter(([k]) => !['letterStyle', 'letterFamily', 'lw', 'ls', 'lock', 'style', ...PK].includes(k)), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k)), phys = fields.filter(([k]) => PK.includes(k) && physRel(k));
-  const physBox = PHYS_SHAPES.includes(o.type) ? `<details class="physp"${o.phys !== 'none' ? ' open' : ''}><summary>⚙ ${esc(X5.physTitle)}${o.phys !== 'none' ? ' · ' + esc(T.enums[o.phys]) : ''}</summary><p class="note">${esc(X5.physHint)}</p><div class="props">${phys.map(field).join('')}</div>
+  const equations = fields.filter(([,f]) => f.k === 'expr' || f.k === 'params');
+  const main = fields.filter(([k,f]) => !['letterStyle', 'letterFamily', 'lw', 'ls', 'lock', 'style', ...PK].includes(k) && f.k !== 'expr' && f.k !== 'params'), look = fields.filter(([k]) => ['lw', 'ls', 'lock'].includes(k)), phys = fields.filter(([k]) => PK.includes(k) && physRel(k));
+  const physBox = PHYS_SHAPES.includes(o.type) ? `<details class="physp"${o.phys !== 'none' ? ' open' : ''}><summary>⚙ ${esc(X5.physTitle)}${o.phys !== 'none' ? ' · ' + esc(T.enums[o.phys]) : ''}</summary><p class="note">${esc(X5.physHint)}${o.type === 'poly' ? ' ' + N2('다각형의 충돌 경계는 꼭짓점의 볼록 껍질입니다.', 'Polygon collisions use the convex hull of its vertices.') : ''}</p><div class="props">${phys.map(field).join('')}</div>
     ${o.phys !== 'none' ? `<div class="row tight">${['spring', 'string', 'rod'].map(k2 => `<button type="button" data-join="${k2}">${esc(X5['join' + k2[0].toUpperCase() + k2.slice(1)])}</button>`).join('')}</div>` : ''}</details>` : '';
-  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2>${styleSelect(o.style || '')}<div class="props">${lettering.concat(main).map(field).join('')}</div>${physBox}
+  box.innerHTML = `<h2>${esc(o.type === 'element' ? X2.kinds[o.kind] : T.types[o.type])} <span class="note">${esc(o.id)}</span></h2>${styleSelect(o.style || '')}<div class="props">${lettering.concat(main).map(field).join('')}</div>
+    ${equations.length ? `<form data-equations class="equations"><h3>${N2('함수와 매개변수', 'Functions and parameters')}</h3><div class="props">${equations.map(field).join('')}</div>
+      <p class="note">${esc(o.type === 'wave' ? N2('x는 위상(라디안)입니다. 함수값은 −1~1 범위로 표시합니다.', 'x is phase in radians. Plot values are limited to −1 to 1.') : N2('함수와 매개변수를 함께 수정한 뒤 적용하세요. 예: A sin(k x)', 'Apply changes to the function and parameters together. Example: A sin(k x).'))}</p>
+      <button type="submit">${N2('함수 적용', 'Apply function')}</button></form>` : ''}${physBox}
     ${fields.some(([, f]) => f.k === 'txt') ? `<p class="note">${esc(T.texHint)}</p>` : ''}
     <details class="look"><summary>${ko ? '선 · 글자 · 잠금' : 'Lines, labels, lock'}</summary><div class="props">${look.map(field).join('')}</div></details>
     <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}<button type="button" data-act="front">${X3.tools.front}</button><button type="button" data-act="back">${X3.tools.backZ}</button><button type="button" data-act="del">${T.del}</button></div>`;
+  const equationsForm = box.querySelector('[data-equations]');
+  if (equationsForm) equationsForm.onsubmit = event => {
+    event.preventDefault();
+    const next = clone(st.scene), selected = next.objects.find(item => item.id === o.id);
+    for (const input of equationsForm.querySelectorAll('[data-f]')) selected[input.dataset.f] = input.value.trim();
+    commit(next, {keepSel:true});
+  };
   box.querySelectorAll('[data-f]').forEach(el => {
+    if (el.closest('[data-equations]')) return;
     const k = el.dataset.f, f = F[k];
     const apply = () => {
       const next = clone(st.scene), x = next.objects.find(y => y.id === o.id);
       if (f.k === 'num') { const v = parseFloat(el.value); if (!Number.isFinite(v)) { paintSide(); return; } const J0 = x.type === 'bridge' ? jockey(x) : null; x[k] = v; if (J0) followJockey(next, J0, jockey(x)); }
       else if (f.k === 'bool') x[k] = el.checked;
+      else if (f.k === 'pts') x[k] = el.value.trim().split(/\r?\n/).filter(line => line.trim()).map(line => line.split(',').map(v => v.trim() ? Number(v) : NaN));
       else if (o.type === 'vector' && (k === 'on' || k === 'vectorFrame')) setVectorAttachment(next, x, k === 'on' ? el.value : x.on, k === 'vectorFrame' ? el.value : x.vectorFrame);
       else x[k] = el.value;
       if (o.type === 'element' && k === 'kind' && X2.units[x.kind] && !X2.units[o.kind]) x.value = defaults('element').value;
@@ -1680,18 +1734,73 @@ async function aiModels() {
     if (sel && st.aiModels.length > 1) { sel.innerHTML = st.aiModels.map(m => `<option value="${esc(m.id)}"${m.id === r.default ? ' selected' : ''}>${esc(m.model || m.id)}</option>`).join(''); sel.hidden = false; syncAiControls(); }
   } catch (e) { st.aiModels = []; }
 }
-/* Preview a checked proposal in the existing AI panel before replacing the drawing. */
+/* IndexedDB keeps the latest result without putting a large image in the project or in localStorage. */
+let aiCache, aiRevision = 0;
+function aiResultCache(action, value) {
+  return (aiCache ||= new Promise((resolve, reject) => {
+    const open = indexedDB.open('hlDrawAI', 1);
+    open.onupgradeneeded = () => open.result.createObjectStore('results');
+    open.onsuccess = () => resolve(open.result);
+    open.onerror = () => reject(open.error);
+    open.onblocked = () => reject(new Error('AI result storage is blocked'));
+  })).then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction('results', action === 'get' ? 'readonly' : 'readwrite');
+    const items = tx.objectStore('results');
+    const request = action === 'get' ? items.get('latest') : action === 'put' ? items.put(value, 'latest') : items.delete('latest');
+    tx.oncomplete = () => resolve(request.result);
+    tx.onabort = tx.onerror = () => reject(tx.error);
+  }));
+}
+function rememberAiResult(result) {
+  const revision = ++aiRevision;
+  aiResultCache(result ? 'put' : 'delete', result).catch(() => {
+    if (result && aiRevision === revision) $('aiCacheNotice').textContent = ko ? '이 브라우저에 임시 저장하지 못했습니다. 저장하거나 내려받아 주세요.' : 'Browser storage is unavailable. Save or download your result.';
+  });
+}
+function showAiResult(kind) {
+  $('aiResult').hidden = !kind;
+  $('aiProposal').hidden = kind !== 'scene';
+  $('aiIllustration').hidden = kind !== 'image';
+  $('aiCacheNotice').textContent = '';
+  $('aiResultMsg').textContent = '';
+  height();
+}
+function dismissAiResult() {
+  showAiResult(null);
+  const id = $('aiBox').open ? 'aiGo' : 'aiBox';
+  (id === 'aiGo' ? $(id) : $(id).querySelector('summary')).focus();
+  rememberAiResult(null);
+}
+async function restoreAiResult() {
+  const revision = aiRevision;
+  try {
+    const result = await aiResultCache('get');
+    if (!result || aiRevision !== revision) return;
+    if (result.kind === 'image') await showIllustration(result.src, result.prompt, result.left, undefined, result.extracted, true);
+    if (result.kind === 'scene') {
+      const checked = validateScene(result.scene);
+      if (checked.ok && checked.scene.objects.length) showAiProposal(checked.scene, result.base, result.edit, result.recognition);
+    }
+  } catch { /* the current request and result still work with browser storage disabled */ }
+}
+/* Preview checked proposals before replacing the drawing. */
 function showAiProposal(scene, base, edit, recognition = null) {
   const panel = $('aiProposal');
   const caption = ko ? 'AI가 제안한 그림' : 'AI-proposed figure';
   panel.innerHTML = `<img src="${svgDataUrl(renderSVG(scene, {width: 480, view: scene.view}))}" alt="${caption}" width="480" style="max-width:100%;height:auto">
-    <div class="row"><button type="button" class="primary" id="aiApply">${ko ? '그림에 적용' : 'Apply to figure'}</button><button type="button" id="aiDiscard">${ko ? '제안 닫기' : 'Discard proposal'}</button></div>`;
-  panel.hidden = false;
-  const close = () => { panel.replaceChildren(); panel.hidden = true; $('aiGo').focus(); height(); };
-  $('aiDiscard').onclick = close;
+    <div class="row"><button type="button" class="primary" id="aiApply">${ko ? '그림에 적용' : 'Apply to figure'}</button><button type="button" id="aiAsPage">${ko ? '새 그림으로 추가' : 'Add as a new figure'}</button></div>`;
+  showAiResult('scene');
+  $('aiAsPage').onclick = () => {
+    if (st.project.pages.length >= PROJECT_PAGES) {
+      $('aiResultMsg').textContent = ko ? '프로젝트에 그림을 최대 12개까지 추가할 수 있습니다.' : 'A project can hold up to 12 figures.';
+      return;
+    }
+    addProjectPage(scene);
+    dismissAiResult();
+  };
   $('aiApply').onclick = () => {
-    if (JSON.stringify(projectData()) !== base) {
-      $('aiMsg').textContent = ko ? '요청 후 그림이 바뀌었습니다. 현재 그림으로 다시 요청해 주세요.' : 'The figure changed after this request. Ask again with the current figure.';
+    if (projectSignature() !== base) {
+      $('aiResultMsg').textContent = ko ? '요청 후 프로젝트가 바뀌었습니다. 결과를 새 그림으로 추가할 수 있습니다.' : 'The project changed after the request. You can add this result as a new figure.';
       return;
     }
     setSel([]);
@@ -1700,7 +1809,7 @@ function showAiProposal(scene, base, edit, recognition = null) {
     if (commit(scene)) {
       if (!edit) keepShare(null);
       $('aiMsg').textContent = ko ? '그림에 적용했습니다. 실행 취소로 되돌릴 수 있습니다.' : 'Applied to the figure. You can undo this change.';
-      close();
+      dismissAiResult();
     }
   };
   height();
@@ -1749,17 +1858,11 @@ function syncAiControls() {
     : scene ? (attached ? (ko ? '편집 가능한 도식으로 변환' : 'Convert to editable figure') : X6.aiGo)
       : (ko ? '이미지 만들기' : 'Generate image');
 }
-function clearAiResults() {
-  for (const id of ['aiProposal','aiIllustration']) {
-    $(id).hidden = true;
-    $(id).replaceChildren();
-  }
-}
 function setAiMode(mode) {
   if (mode === aiMode()) return;
   for (const button of $('aiMode').querySelectorAll('button')) button.setAttribute('aria-pressed',String(button.dataset.aiMode === mode));
-  clearAiResults();
   $('aiMsg').textContent = '';
+  setPref('aiMode', mode);
   syncAiControls();
   if (mode === 'scene') aiModels();
   height();
@@ -1767,7 +1870,6 @@ function setAiMode(mode) {
 function resetAiPhoto() {
   st.aiPhoto = null;
   $('aiSource').removeAttribute('src');
-  clearAiResults();
   $('aiMsg').textContent = $('aiPhoto').files.length && aiMode() === 'extract' ? (ko ? '그림 영역 찾기를 눌러 주세요.' : 'Find the figure regions first.') : '';
   syncAiControls();
   height();
@@ -1791,8 +1893,7 @@ async function detectAiRegions({whole = false} = {}) {
     const source = await photoData(file);
     const r = whole ? {regions:[]} : await api('/api/workshop/figure-regions','POST',{image:source, lang});
     if ($('aiPhoto').files[0] !== file) return;
-    clearAiResults();
-    const regions = r.regions || [], select = $('aiRegion');
+      const regions = r.regions || [], select = $('aiRegion');
     st.aiPhoto = {source,regions};
     select.replaceChildren();
     regions.forEach((region,i) => select.append(new Option((i+1)+' · '+(region.label || (ko ? '그림' : 'Figure')),String(i))));
@@ -1843,7 +1944,7 @@ async function illustrationAsset(src, title) {
   }
   throw new Error(ko ? '삽화 파일이 너무 큽니다.' : 'The illustration is too large.');
 }
-async function showIllustration(src, prompt, left, style, extracted = false) {
+async function showIllustration(src, prompt, left, style, extracted = false, restored = false) {
   if (typeof src !== 'string' || !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src)) throw {code:'illustration_failed'};
   if (style === 'exam') {
     const image = await decodeAiImage(src), canvas = document.createElement('canvas');
@@ -1860,7 +1961,7 @@ async function showIllustration(src, prompt, left, style, extracted = false) {
     src = canvas.toDataURL('image/png');
   }
   const host = $('aiIllustration');
-  host.hidden = false;
+  showAiResult('image');
   host.innerHTML = '<img id="aiRasterPreview" alt=""><label for="aiRasterTitle"></label><input id="aiRasterTitle" maxlength="60"><div class="row" id="aiRasterTools"></div><p class="note" id="aiRasterStatus" role="status"></p>';
   const im = $('aiRasterPreview');
   im.src = src;
@@ -1890,7 +1991,8 @@ async function showIllustration(src, prompt, left, style, extracted = false) {
     download(new Blob([content],{type:'image/'+fileExt}),projectFileName(getTitle()).replace(/\.json$/,'.'+ext));
   }));
   const done = extracted ? (ko ? '선택한 영역을 잘랐습니다.' : 'Cropped the selected area.') : (ko ? '이미지를 만들었습니다.' : 'Image created.');
-  $('aiMsg').textContent = done + (Number.isFinite(left) ? ' '+X6.aiLeft(left) : '');
+  $('aiResultMsg').textContent = done + (Number.isFinite(left) ? ' '+X6.aiLeft(left) : '');
+  if (!restored) rememberAiResult({kind:'image',src,prompt,left,extracted});
   height();
 }
 async function aiDraw({restore = false, fromRegion = false} = {}) {
@@ -1902,19 +2004,20 @@ async function aiDraw({restore = false, fromRegion = false} = {}) {
   if (st.aiWork || (extract && !photo)) return;
   if (!extract && !text && !file) { $('aiPrompt').focus({preventScroll:true}); return; }
   if (!rawCrop && !token()) { box.innerHTML = '<span>'+esc(X6.aiErr.login_required)+'</span> <a class="btn" href="/#/login" target="_top">'+T.login+'</a>'; return; }
-  const base = raster || rawCrop ? null : JSON.stringify(projectData()), scene = edit ? clone(st.scene) : null;
+  const base = raster || rawCrop ? null : projectSignature(), scene = edit ? clone(st.scene) : null;
   const model = !$('aiModel').hidden ? $('aiModel').value : '', style = $('aiStyle').value;
-  clearAiResults();
   box.textContent = raster ? (ko ? '이미지를 그리는 중…' : 'Generating image…') : aiCopy.preparing;
+  $('aiRequestStatus').textContent = box.textContent;
   st.aiWork = true;
   syncAiControls();
   try {
     const image = (extract || fromRegion) ? await aiCrop(photo,cropIndex,rawCrop ? file : undefined) : file ? await photoData(file) : undefined;
     const name = extract ? photo.regions[cropIndex]?.label || (ko ? '문제 그림' : 'Worksheet figure') : text;
-    if (rawCrop) { await showIllustration(image,name,undefined,undefined,true); return; }
+    if (rawCrop) { await showIllustration(image,name,undefined,undefined,true); box.textContent = ''; return; }
     if (raster) {
       const r = await api('/api/workshop/illustration','POST',{prompt:text,style,lang,...(image ? {image} : {})});
       await showIllustration(r.image,name,r.left,style);
+      box.textContent = '';
       return;
     }
     const r = image
@@ -1925,11 +2028,18 @@ async function aiDraw({restore = false, fromRegion = false} = {}) {
     if (!v.scene.view) v.scene.view = sceneBounds(v.scene);
     const recognition = image ? {unsure:Array.isArray(r.unsure) ? r.unsure : [],left:r.left} : null;
     showAiProposal(v.scene,base,edit,recognition);
+    rememberAiResult({kind:'scene',scene:v.scene,base,edit,recognition});
     const notes = (Array.isArray(r.notes) ? r.notes : []).filter(n=>typeof n==='string').slice(0,6);
-    box.innerHTML = (notes.length ? '<ul>'+notes.map(n=>'<li>'+esc(n.slice(0,200))+'</li>').join('')+'</ul>' : '') +
+    $('aiResultMsg').innerHTML = (notes.length ? '<ul>'+notes.map(n=>'<li>'+esc(n.slice(0,200))+'</li>').join('')+'</ul>' : '') +
       (Number.isFinite(r.left) ? '<span class="note">'+esc(X6.aiLeft(r.left))+'</span>' : '');
+    box.textContent = '';
   } catch (e) { box.textContent = AI_MESSAGES[e.code] || X6.aiErr[e.code] || errText(e); }
-  finally { st.aiWork = false; syncAiControls(); height(); }
+  finally {
+    st.aiWork = false;
+    $('aiRequestStatus').textContent = box.textContent;
+    syncAiControls();
+    height();
+  }
 }
 const saves = () => { try { const l = JSON.parse(store.get(SAVES_KEY) || '[]'); return Array.isArray(l) ? l.filter(x => x && typeof x.name === 'string' && x.scene) : []; } catch (e) { return []; } };
 function saveLocal() {
@@ -2217,7 +2327,7 @@ function shell() {
       <button type="button" id="bDup" title="Ctrl+D">${T.dup}</button><button type="button" id="bCopy" title="Ctrl+C">${tl.copy}</button><button type="button" id="bPaste" title="Ctrl+V">${tl.paste}</button><button type="button" id="bDel" title="Delete">${T.del}</button><button type="button" id="bClear" class="danger">${tl.clear}</button><span class="sep"></span>
       <span class="zoom" role="group" aria-label="zoom"><button type="button" id="bZout" title="${esc(tl.zoomOut)} (−)" aria-label="${esc(tl.zoomOut)}">−</button><span id="zoomPct" class="pct">100%</span><button type="button" id="bZin" title="${esc(tl.zoomIn)} (+)" aria-label="${esc(tl.zoomIn)}">+</button><button type="button" id="bZfit" title="${esc(tl.zoomFit)} (0)">${tl.zoomFit}</button></span>
       <label class="btn"><input type="checkbox" id="cGrid" checked style="width:auto"> ${T.grid}</label><label class="btn"><input type="checkbox" id="cSnap" checked style="width:auto"> ${T.snap}</label><label class="btn"><input type="checkbox" id="cVals" style="width:auto"> ${tl.values}</label><button type="button" id="bFit" title="${esc(tl.frameMark)}">${T.fit}</button></div>
-    <details class="aibox" id="aiBox"><summary>${ko ? '✨ AI 그림 작업' : '✨ AI figure maker'}</summary>
+    <details class="aibox" id="aiBox"><summary>${ko ? '✨ AI 그림 작업' : '✨ AI figure maker'} <span class="note" role="status" id="aiRequestStatus"></span></summary>
       <div class="row ai-modes" id="aiMode" role="group" aria-label="${ko ? 'AI 그림 작업' : 'AI figure workflow'}">
         <button type="button" data-ai-mode="extract" aria-pressed="true">${ko ? '문제에서 그림 추출' : 'Extract worksheet figures'}</button>
         <button type="button" data-ai-mode="create" aria-pressed="false">${ko ? '이미지 제작' : 'Create image'}</button>
@@ -2229,15 +2339,21 @@ function shell() {
       <div id="aiScan" hidden><div class="ai-photo-preview"><img id="aiSource" alt="${ko ? '첨부한 문제 사진' : 'Attached worksheet photo'}"><span id="aiBoxOutline" aria-hidden="true"></span></div>
       <div class="row"><label for="aiRegion">${ko ? '사용할 영역' : 'Region to use'}</label><select id="aiRegion"></select></div></div>
       <div class="row"><label for="aiStyle" id="aiStyleLabel" hidden>${ko ? '그림체' : 'Style'}</label><select id="aiStyle" hidden><option value="exam">${ko ? '시험지 흑백 선화' : 'Exam line art'}</option><option value="textbook">${ko ? '교과서 컬러 삽화' : 'Color textbook'}</option><option value="technical">${ko ? '과학 논문 도식' : 'Technical diagram'}</option></select>
-      <label class="chk" id="aiEditLabel"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button><button type="button" id="aiRestore" hidden>${ko ? 'AI로 선명하게 복원' : 'Restore with AI'}</button><button type="button" id="aiToScene" hidden>${ko ? '편집 가능한 도식으로 변환' : 'Convert to editable diagram'}</button></div><div id="aiMsg" class="note" role="status"></div><div id="aiProposal" hidden></div><div id="aiIllustration" hidden></div></details>
+      <label class="chk" id="aiEditLabel"><input type="checkbox" id="aiEditCur"> ${esc(X6.aiEdit)}</label><select id="aiModel" hidden aria-label="model"></select><button type="button" class="primary" id="aiGo">${esc(X6.aiGo)}</button><button type="button" id="aiRestore" hidden>${ko ? 'AI로 선명하게 복원' : 'Restore with AI'}</button><button type="button" id="aiToScene" hidden>${ko ? '편집 가능한 도식으로 변환' : 'Convert to editable diagram'}</button></div><div id="aiMsg" class="note" role="status"></div></details>
+    <section class="aibox ai-result" id="aiResult" hidden>
+      <div class="row"><strong>${ko ? '최근 AI 작업 결과' : 'Latest AI result'}</strong><button type="button" id="aiResultDiscard">${ko ? '결과 지우기' : 'Clear result'}</button></div>
+      <div id="aiResultMsg" class="note" role="status"></div><div id="aiCacheNotice" class="note" role="status"></div>
+      <div id="aiProposal" hidden></div><div id="aiIllustration" hidden></div>
+    </section>
     <div id="aiNote" class="ainote" hidden></div>
     <div class="work" id="drawDock"><div class="draw-library" data-dock="tools" data-dock-floor-width="82" data-dock-floor-height="24"><div class="dock-bar">${panelTab('drawLibraryBody',['도구와 템플릿','Tools and templates'],'▦')}</div><div id="drawLibraryBody" data-dock-body>
       <details class="palwrap parts" id="templateShelf"><summary>${esc(X4.templates)}</summary><label class="note" for="templateDomain">${ko ? '분야' : 'Topic'}</label>
         <select id="templateDomain">${Object.keys(DOMAINS).filter(d => TEMPLATE_KEYS.some(k => TEMPLATE_DOMAIN[k] === d)).map(d => `<option value="${d}">${esc(X2.domains[d])}</option>`).join('')}</select>
+        <p class="note">${N2('하슬라랩 내장 예제입니다. 열어서 개별 부품을 선택하면 속성을 바꿀 수 있습니다.', 'These are built-in HaslaLab examples. Open one and select a part to edit it.')}</p>
         <div id="templateCards" class="template-cards"></div></details>
-      <details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details></div>${panelHandle('drawLibraryBody',['도구와 템플릿','tools and templates'])}</div>
+      <details class="palwrap parts" id="parts"${prefs().parts ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)} · ${N2('하슬라랩 내장 부품. 추가 후 속성에서 편집할 수 있습니다.', 'Built-in HaslaLab parts. Edit them from Properties after inserting.')}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details></div>${panelHandle('drawLibraryBody',['도구와 템플릿','tools and templates'])}</div>
       <section class="stage"><div class="dock-bar">${ko ? '캔버스' : 'Canvas'}</div><div id="tools" class="tools" role="toolbar" aria-label="${esc(X4.drawing)}"></div><div id="stageTop"><label class="note" id="penSmoothLabel" hidden><input type="checkbox" id="penSmooth" style="width:auto"${prefs().penSmooth !== false ? ' checked' : ''}> ${ko ? '펜 흔들림 보정' : 'Stabilize pen strokes'}</label><select id="objectPicker" aria-label="${ko ? '그림 요소 선택' : 'Select figure object'}"></select>
-        <button type="button" id="inkGo" hidden title="${ko ? '선택한 획만 수식 인식 서비스에 전송합니다.' : 'Sends only the selected strokes to the formula recognizer.'}">${ko ? '선택한 획을 수식으로' : 'Recognize selected ink'}</button><span id="inkStatus" class="note" role="status"></span>
+        <button type="button" id="inkGo" hidden title="${ko ? '선택한 획만 Mathpix 수식 인식에 전송합니다.' : 'Sends only the selected strokes to Mathpix formula recognition.'}">${ko ? '선택한 획을 수식으로 · Mathpix' : 'Recognize selected ink · Mathpix'}</button><span id="inkStatus" class="note" role="status"></span>
         <div id="inkProposal" hidden><label for="inkText" class="note">LaTeX</label><input id="inkText" maxlength="240"><div id="inkPreview"></div><button type="button" id="inkApply">${ko ? '수식 적용' : 'Apply formula'}</button><button type="button" id="inkDiscard">${ko ? '닫기' : 'Close'}</button></div></div><div data-dock="canvas" data-min-height="112"><div id="canvas" class="canvas" data-dock-body tabindex="0" role="region" aria-label="${ko ? '그림 편집 캔버스' : 'Figure editing canvas'}"></div>${panelHandle('canvas',['캔버스','canvas'])}</div><p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
         <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button><button type="button" id="stepBtn">${ko ? '0.05초 진행' : 'Step 0.05 s'}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
@@ -2264,12 +2380,19 @@ function shell() {
   };
   $('templateShelf').ontoggle = e => { if (e.target.open) paintTemplates(); height(); };
   $('templateDomain').onchange = paintTemplates;
+  const savedMode = prefs().aiMode;
+  if (['extract', 'create', 'scene'].includes(savedMode)) setAiMode(savedMode);
+  $('aiPrompt').value = typeof prefs().aiPrompt === 'string' ? prefs().aiPrompt.slice(0, 1200) : '';
+  $('aiPrompt').oninput = e => setPref('aiPrompt', e.target.value);
+  $('aiResultDiscard').onclick = dismissAiResult;
+  $('aiBox').ontoggle = height;
+  restoreAiResult();
   $('aiMode').querySelectorAll('button').forEach(button => { button.onclick = () => setAiMode(button.dataset.aiMode); });
   $('aiPhoto').onchange = resetAiPhoto;
   $('aiClearPhoto').onclick = () => { $('aiPhoto').value = ''; resetAiPhoto(); $('aiPhoto').focus(); };
   $('aiDetect').onclick = () => detectAiRegions();
   $('aiWhole').onclick = () => detectAiRegions({whole:true});
-  $('aiRegion').onchange = () => { paintAiOutline(); clearAiResults(); $('aiMsg').textContent = aiCopy.choose; height(); };
+  $('aiRegion').onchange = () => { paintAiOutline(); $('aiMsg').textContent = aiCopy.choose; height(); };
   syncAiControls();
   $('bInsertAsset').onclick = openAssetLibrary;
   $('bSave').onclick = toStorage; $('bOpenStore').onclick = showDrawProjects;

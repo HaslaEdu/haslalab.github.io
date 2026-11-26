@@ -13,9 +13,9 @@
    vector notation (an arrow over the letter, or bold). The presets follow the conventions of university problem
    sets, olympiad papers and JEE papers as drawn from general knowledge of how such figures look; nothing is traced
    or copied from them. */
-import {isBody, isRound, bodyPose, vectorPoints, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=7959e10d8eeb';
+import {isBody, isRound, bodyPose, vectorPoints, surfaceFrame, inclineCorners, attachPoint, anchorPoint, stringPath, vec, objectExtent, compileExpr, boundExpr, bezierPoints, rotCentre, INERTIA, GEO_TYPES, computeGeometry, geoExtent, geoLinePoint, polyArea, CONE_TILT, curveVar, isPhysShape, nnLayers, nnWeights} from './draw-scene.mjs?v=5fff7eb9b019';
 import {funcFeatures, derivative, integrate, jointEnds, fieldLines, equipotentials, chargePath, circuitNodes, elementPath, processPoints, gasCycle, traceRay, principalRays, opticImage, prismCorners,
-  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=f6b4ee63f834';
+  slitIntensity, slitRange, fringeSpacing, wellModel, qpotModel, levelModel, clockTicks, lorentzGamma, bridgeJockey, motionalEMF} from './draw-physics.mjs?v=679f44216c8f';
 /* the types drawn turned by a transform about their centre (a block and a plank turn their own corners) */
 const ROT_WRAP = new Set(['transformer', 'solenoid', 'magnet', 'cylinder', 'lens', 'mirror', 'screen', 'eye', 'source', 'label', 'region', 'rect', 'ellipse']);
 /* the drawing tools' stroke colours (draw-scene.mjs COLORS) and the light tints their fill 'tint' uses */
@@ -1097,29 +1097,40 @@ export function renderSVG(scene, opts = {}) {
     /* ── waves ── */
     } else if (T === 'wave') {
       const N = 400, k = o.kind === 'standing' ? o.n * Math.PI / o.len : 2 * Math.PI / o.lambda, ph = o.phase * Math.PI / 180;
-      const yAt = x => o.kind === 'standing' ? o.A * Math.sin(k * x) : o.A * Math.sin(k * x + ph);
-      const pts = [], env = [];
-      for (let i = 0; i <= N; i++) { const x = o.len * i / N; pts.push(screen({x: o.x + x, y: o.y + yAt(x)})); env.push(screen({x: o.x + x, y: o.y - yAt(x)})); }
+      const custom = o.kind === 'travel' && o.expr && o.expr !== 'sin(x)' ? compileExpr(o.expr) : null;
+      const segments = [], env = [];
+      let pts = [];
+      for (let i = 0; i <= N; i++) {
+        const x = o.len * i / N, phase = k * x + (o.kind === 'standing' ? 0 : ph);
+        const val = custom ? custom(phase) : Math.sin(phase);
+        if (!Number.isFinite(val)) { if (pts.length) segments.push(pts); pts = []; continue; }
+        const y = o.A * Math.max(-1, Math.min(1, val));
+        pts.push(screen({x: o.x + x, y: o.y + y}));
+        if (o.kind === 'standing') env.push(screen({x: o.x + x, y: o.y - y}));
+      }
+      if (pts.length) segments.push(pts);
       const a0 = screen({x: o.x, y: o.y}), a1 = screen({x: o.x + o.len, y: o.y});
       if (o.axis) s += arrow(a0, {x: a1.x + 16, y: a1.y}, {width: hair}) + lbl('x', a1.x + 22, a1.y + 2, 15, 'start');
       if (o.kind === 'standing') { s += line(a0, a1, hair, dash('dotted')); if (o.envelope) s += poly(env, thin, dash('dashed')); }
-      s += poly(pts, lw);
+      for (const points of segments) {
+        if (points.length < 2) continue;
+        s += poly(points, lw) + hit('M' + points.map(p => `${f(p.x)},${f(p.y)}`).join('L'));
+      }
       if (o.ends === 'fixed') for (const p of [a0, a1]) { const sg = p === a0 ? -1 : 1, h2 = Math.max(16, o.A * S * 0.9); s += line({x: p.x, y: p.y - h2}, {x: p.x, y: p.y + h2}, lw * 1.3) + hatch(p.x, p.y - h2, p.x, p.y + h2, sg, 0); }
       const lam = o.kind === 'standing' ? 2 * o.len / o.n : o.lambda;
-      if (o.showLambda) {
+      if (o.showLambda && !custom) {
         let x1, yy;
         if (o.kind === 'standing') { x1 = 0; yy = o.y - o.A - 0.18 * o.A - 14 / S; }
         else { x1 = (((Math.PI / 2 - ph) / k) % lam + lam) % lam; yy = o.y + o.A + 14 / S; }
         if (x1 + lam <= o.len + 1e-9) { const p1 = screen({x: o.x + x1, y: yy}), p2 = screen({x: o.x + x1 + lam, y: yy}), m = {x: (p1.x + p2.x) / 2, y: p1.y};
           s += arrow(m, p1, {width: hair, head: HL * 0.75, kind: st.dimHead}) + arrow(m, p2, {width: hair, head: HL * 0.75, kind: st.dimHead}) + line({x: p1.x, y: p1.y - 5}, {x: p1.x, y: p1.y + 5}, hair) + line({x: p2.x, y: p2.y - 5}, {x: p2.x, y: p2.y + 5}, hair) + lbl('\\lambda', m.x, m.y - 10, 15, 'middle', '', {halo: true}); }
       }
-      if (o.showA) {
+      if (o.showA && !custom) {
         const xc = o.kind === 'standing' ? o.len / (2 * o.n) : ((((Math.PI / 2 - ph) / k) % lam + lam) % lam) + lam * (o.len > 1.6 * lam ? 1 : 0);
         if (xc <= o.len) { const p1 = screen({x: o.x + xc, y: o.y}), p2 = screen({x: o.x + xc, y: o.y + o.A}), xx = p1.x + 10; s += line(p2, {x: xx + 4, y: p2.y}, hair, dash('dotted')) + arrow({x: xx, y: (p1.y + p2.y) / 2}, {x: xx, y: p2.y}, {width: hair, head: HL * 0.7, kind: st.dimHead}) + arrow({x: xx, y: (p1.y + p2.y) / 2}, {x: xx, y: p1.y}, {width: hair, head: HL * 0.7, kind: st.dimHead}) + lbl('A', xx + 6, (p1.y + p2.y) / 2, 15, 'start', '', {halo: true}); }
       }
       if (o.arrow && o.kind === 'travel') { const p = screen({x: o.x + o.len * 0.78, y: o.y + o.A * 1.0 + 0.45 * Math.max(o.A, 0.3)}); s += arrow(p, {x: p.x + 0.12 * W, y: p.y}, {width: lw}) + (o.label ? lbl(o.label, p.x + 0.06 * W, p.y - 12, 15) : ''); }
       else if (o.label) s += lbl(o.label, a1.x, screen({x: 0, y: o.y + o.A}).y - 14, 15, 'end');
-      s += hit('M' + pts.map(p => `${f(p.x)},${f(p.y)}`).join('L'));
 
     /* ── modern physics ── */
     } else if (T === 'well') {
