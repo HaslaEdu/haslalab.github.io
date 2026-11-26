@@ -19,37 +19,37 @@ async function canRunNonsulProbe(token) {
   const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));
   return Array.from(new Uint8Array(bytes), byte => byte.toString(16).padStart(2, '0')).join('') === nonsulProbeDigest;
 }
-export class NonsulClaudeProbe extends WorkerEntrypoint {
-  async ready(token) {
-    return await canRunNonsulProbe(token) && !!(this.env.ANTHROPIC_API_KEY || this.env.CLAUDE_API_KEY);
-  }
-  async grade(token, {model, system, prompt, schema, effort, maxTokens} = {}) {
-    if (!(await this.ready(token))) return {status: 404};
-    if (!nonsulProbeModels.has(model) || typeof system !== 'string' || system.length > 16000 ||
-        typeof prompt !== 'string' || prompt.length > 16000 || schema?.type !== 'object' ||
-        JSON.stringify(schema).length > 16000 || maxTokens !== 24000 ||
-        !['low', 'medium', 'high'].includes(effort)) return {status: 400};
-    useEgress(this.env);
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST', redirect: 'error', signal: AbortSignal.timeout(150000),
-      headers: {'content-type': 'application/json', 'anthropic-version': '2023-06-01',
-        'x-api-key': this.env.ANTHROPIC_API_KEY || this.env.CLAUDE_API_KEY},
-      body: JSON.stringify({model, system, max_tokens: maxTokens,
-        messages: [{role: 'user', content: prompt}],
-        output_config: {effort, format: {type: 'json_schema', schema}}}),
-    });
-    const body = await response.json().catch(() => null);
-    return {
-      status: response.status, usage: body?.usage || null, errorType: body?.error?.type || null,
-      stopReason: body?.stop_reason || null,
-      text: response.ok ? (body?.content || []).filter(block => block.type === 'text').map(block => block.text).join('') : '',
-    };
-  }
+async function nonsulClaudeReady(env, token) {
+  return await canRunNonsulProbe(token) && !!(env.ANTHROPIC_API_KEY || env.CLAUDE_API_KEY);
+}
+async function nonsulClaudeGrade(env, token, {model, system, prompt, schema, effort, maxTokens} = {}) {
+  if (!(await nonsulClaudeReady(env, token))) return {status: 404};
+  if (!nonsulProbeModels.has(model) || typeof system !== 'string' || system.length > 16000 ||
+      typeof prompt !== 'string' || prompt.length > 16000 || schema?.type !== 'object' ||
+      JSON.stringify(schema).length > 16000 || maxTokens !== 24000 ||
+      !['low', 'medium', 'high'].includes(effort)) return {status: 400};
+  useEgress(env);
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST', redirect: 'error', signal: AbortSignal.timeout(150000),
+    headers: {'content-type': 'application/json', 'anthropic-version': '2023-06-01',
+      'x-api-key': env.ANTHROPIC_API_KEY || env.CLAUDE_API_KEY},
+    body: JSON.stringify({model, system, max_tokens: maxTokens,
+      messages: [{role: 'user', content: prompt}],
+      output_config: {effort, format: {type: 'json_schema', schema}}}),
+  });
+  const body = await response.json().catch(() => null);
+  return {
+    status: response.status, usage: body?.usage || null, errorType: body?.error?.type || null,
+    stopReason: body?.stop_reason || null,
+    text: response.ok ? (body?.content || []).filter(block => block.type === 'text').map(block => block.text).join('') : '',
+  };
 }
 // Named service-binding RPC for the HaslaEdu Worker (haslaedu-web src/account-sync.js): which of these account ids
 // have been deleted, so a withdrawal made on haslalab.org also removes the member's Hasla Nonsul records. Only answers
 // for ids it is given (no listing of accounts), and only deleted ones (deleted=1; suspended accounts are not deleted).
 export class AccountEvents extends WorkerEntrypoint {
+  async nonsulClaudeReady(token) { return nonsulClaudeReady(this.env, token); }
+  async nonsulClaudeGrade(token, input) { return nonsulClaudeGrade(this.env, token, input); }
   async deletedAmong(ids) {
     const wanted = [...new Set((Array.isArray(ids) ? ids : []).filter(id => Number.isSafeInteger(id) && id > 0))].slice(0, 500);
     const out = [];
