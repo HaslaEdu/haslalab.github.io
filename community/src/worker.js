@@ -1,4 +1,5 @@
 import { WorkerEntrypoint } from 'cloudflare:workers';
+import Anthropic from '@anthropic-ai/sdk';
 import { useEgress } from './ai-egress.js';
 import community from './index.js';
 import { studioRoute, deleteCommunityAccount, sweepDeletedStudioUsers } from './studio-gateway.js';
@@ -29,20 +30,43 @@ async function nonsulClaudeGrade(env, token, {model, system, prompt, schema, eff
       JSON.stringify(schema).length > 16000 || maxTokens !== 24000 ||
       !['low', 'medium', 'high'].includes(effort)) return {status: 400};
   useEgress(env);
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST', redirect: 'manual', signal: AbortSignal.timeout(150000),
-    headers: {'content-type': 'application/json', 'anthropic-version': '2023-06-01',
-      'x-api-key': env.ANTHROPIC_API_KEY || env.CLAUDE_API_KEY},
-    body: JSON.stringify({model, system, max_tokens: maxTokens,
-      messages: [{role: 'user', content: prompt}],
-      output_config: {effort, format: {type: 'json_schema', schema}}}),
+  const client = new Anthropic({
+    apiKey: env.ANTHROPIC_API_KEY || env.CLAUDE_API_KEY, timeout: 150000, maxRetries: 0,
   });
-  const body = await response.json().catch(() => null);
+  const request = {model, system, max_tokens: maxTokens, messages: [{role: 'user', content: prompt}],
+    output_config: {effort, format: {type: 'json_schema', schema}}};
+  const run = async options => client.messages.stream(options).finalMessage();
+  let body, format = 'structured';
+  try {
+    body = await run(request);
+  } catch (error) {
+    const message = String(error?.error?.error?.message || error?.message || '');
+    if (error.status !== 400 || !/schema.{0,30}(complex|compil)|grammar.{0,30}(complex|compil)/i.test(message))
+      return nonsulClaudeFailure(error);
+    format = 'prompted_json';
+    try {
+      body = await run({...request, output_config: {effort},
+        system: system + '\nReturn one valid JSON object with no markdown. Follow this JSON Schema: ' + JSON.stringify(schema)});
+    } catch (fallbackError) {
+      return nonsulClaudeFailure(fallbackError);
+    }
+  }
   return {
-    status: response.status, usage: body?.usage || null, errorType: body?.error?.type || null,
-    stopReason: body?.stop_reason || null,
-    text: response.ok ? (body?.content || []).filter(block => block.type === 'text').map(block => block.text).join('') : '',
+    status: 200, usage: body.usage, errorType: null, stopReason: body.stop_reason, format,
+    text: body.content.filter(block => block.type === 'text').map(block => block.text).join(''),
   };
+}
+function nonsulClaudeFailure(error) {
+  const type = error?.error?.error?.type || error?.error?.type || null;
+  const message = String(error?.error?.error?.message || error?.message || '');
+  let reason = type || 'transport_error';
+  if (/credit balance|insufficient (credit|balance)|purchase credits|billing/i.test(message)) reason = 'insufficient_credits';
+  else if (/rate.limit/i.test(message)) reason = 'rate_limit';
+  else if (/schema|grammar/i.test(message)) reason = 'schema_rejected';
+  else if (/model.{0,60}(not found|access|invalid|unavailable|does not exist)/i.test(message)) reason = 'model_unavailable';
+  else if (/stream|timeout/i.test(message)) reason = 'stream_rejected';
+  else if (/effort|thinking|max.tokens/i.test(message)) reason = 'request_parameters';
+  return {status: error.status || 502, errorType: reason};
 }
 // Named service-binding RPC for the HaslaEdu Worker (haslaedu-web src/account-sync.js): which of these account ids
 // have been deleted, so a withdrawal made on haslalab.org also removes the member's Hasla Nonsul records. Only answers
