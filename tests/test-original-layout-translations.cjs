@@ -20,6 +20,27 @@ const cacheRevision = Number(html.match(/const PDF_LINK_CACHE_REVISION=(\d+);/)?
 assert.ok(Number.isInteger(cacheRevision), 'PDF_LINK_CACHE_REVISION must be a number in index.html');
 const thyUrl = vm.runInNewContext(html.slice(begin, end) + '\nthyUrl;', {PDF_BASE: base, ORIGINAL_LAYOUT_PDF_VERSIONS: revisions, PDF_LINK_CACHE_REVISION: cacheRevision, window: {KPHE_PDF_VERSIONS: {'pdfx/kphe/existing.pdf': 'existing'}}});
 assert.ok(published.length > 0);
+const pdfFonts = require('./helpers/pdf-fonts.cjs');
+const sitePdfProblems = [];
+function checkSitePdf(item, qa) {
+  const data = fs.readFileSync(path.join(root, item.file));
+  assert.equal(data.length, item.bytes, `${item.file}: bytes differ from the reviewed edition`);
+  assert.equal(crypto.createHash('sha256').update(data).digest('hex'), item.sha256, `${item.file}: SHA-256 differs from the reviewed edition`);
+  const pdf = pdfFonts(data);
+  if (pdf.encrypted) {
+    // two organiser originals (English, shown beside a translation) are AES-encrypted with an empty password
+    assert.notEqual(item.language, 'ko', `${item.file}: an encrypted Korean edition cannot be checked`);
+    return;
+  }
+  assert.equal(pdf.pages, item.pages, `${item.file}: page count`);
+  // Hangul must be drawn with fonts carried inside the PDF (a viewer without Korean fonts would otherwise show boxes)
+  const loose = pdf.fonts.filter(f => f.hangul && !f.embedded).map(f => f.name || 'object ' + f.object);
+  if (loose.length) sitePdfProblems.push(`${item.file}: Hangul fonts not embedded: ${loose.join(', ')}`);
+  // a Korean edition carries an embedded Hangul font, unless it is the Korean delegation's own scanned paper
+  if (item.language === 'ko' && !pdf.fonts.some(f => f.hangul && f.embedded) && qa.official_korean_delegation_scan !== true) {
+    sitePdfProblems.push(`${item.file}: Korean edition without an embedded Hangul font`);
+  }
+}
 for (const item of published) {
   const record = read(item.qa);
   const assignedReady = item.audit_schema === 'legacy-reviewed-ready';
@@ -45,14 +66,36 @@ for (const item of published) {
   const stamp = '?v=' + item.sha256.slice(0, 16) + '&cv=' + cacheRevision;
   assert.equal(thyUrl(item.file), base + linked + stamp);
   assert.equal(thyUrl(base + item.file), base + item.file + stamp, 'a full link to the file keeps the same revision');
-  assert.ok(font, item.file);
-  assert.equal(assets[item.file], item.bytes, 'Released bytes must match the reviewed original-layout PDF');
-  assert.equal(font.bytes, item.bytes);
-  assert.equal(font.sha256, item.sha256);
+  if (item.file.startsWith('pdfx/')) {
+    // Site PDFs (pdfx/) are not in pdf-assets.json or the font-validation list: tools/pdfx_release.py uploads the
+    // repository file itself to release pdf-x<folder> (skipping it only when the release copy has the same SHA-256),
+    // so the reviewed bytes are pinned by the repository file, and its fonts are read from the PDF directly.
+    checkSitePdf(item, qa);
+  } else {
+    assert.ok(font, item.file);
+    assert.equal(assets[item.file], item.bytes, 'Released bytes must match the reviewed original-layout PDF');
+    assert.equal(font.bytes, item.bytes);
+    assert.equal(font.sha256, item.sha256);
+  }
   for (const alias of item.aliases || []) {
     assert.equal(assets[alias], item.bytes);
     assert.equal(revisions[alias], item.sha256.slice(0, 16));
     assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
+  }
+  if (item.audit_schema === 'olympiad-original-layout-v1') {
+    // Olympiad original-layout editions (IBO, IChO, IESO, IJSO, IMChO): their QA records come from several builders and
+    // have no common shape, so beyond the PDF checks above, a record that names this file must agree with it.
+    for (const row of [qa, ...(Array.isArray(qa) ? qa : []), ...(Array.isArray(qa.files) ? qa.files : [])]) {
+      if (!row || row.file !== item.file) continue;
+      // IBO_2024_T1_Blank_Answer_Sheet_KO's record keeps the published form's hash as form_sha256; its sha256/bytes
+      // describe the report page it was proofed against (original_report_single_page_proof)
+      const describesForm = row.form_sha256 === item.sha256 && row.original_report_single_page_proof === row.sha256;
+      for (const key of describesForm ? ['pages'] : ['sha256', 'bytes', 'pages']) {
+        if (row[key] !== undefined && row[key] !== item[key]) sitePdfProblems.push(`${item.file}: QA record ${item.qa} has ${key} ${row[key]}, the published edition ${item[key]}`);
+      }
+    }
+    if (item.native_qa) assert.ok(fs.existsSync(path.join(root, item.native_qa)), item.native_qa);
+    continue;
   }
   if (item.audit_schema === 'html-reflow-stamped-v1') {
     // Korean re-typeset on the source page geometry; figures, logos and pure-math displays stamped from the source
@@ -516,7 +559,8 @@ for (const item of published) {
     assert.equal(page.changed_pixels_outside_prose, 0);
   }
 }
-assert.equal(thyUrl('pdfx/kphe/existing.pdf'), base + 'l/kphe/existing.pdf?v=existing');   // pdfx/ PDFs: the PDF worker finds them in releases pdf-x<folder>
+assert.deepEqual(sitePdfProblems, [], sitePdfProblems.join('\n'));
+assert.equal(thyUrl('pdfx/kphe/existing.pdf'), base + 'l/kphe/existing.pdf?v=existing&cv=' + cacheRevision);   // pdfx/ PDFs: the PDF worker finds them in releases pdf-x<folder>
 assert.equal(thyUrl('unchanged.pdf'), base + 'unchanged.pdf');
 for (const font of read('tools/ko/fonts/NOTO_CJK_PROVENANCE.json')) {
   const data = fs.readFileSync(path.join(root, 'tools/ko/fonts', font.file));

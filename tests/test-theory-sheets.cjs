@@ -56,15 +56,19 @@ test('every problem card offers its answer and working sheets beside the problem
   // the sheets page keeps one kind when a card asks for it
   assert.match(sheets, /const KIND = Q\.get\("k"\)/);
   assert.match(sheets, /want = \{ answer: KIND !== "working", working: KIND !== "answer" \}/);
-  // theory cards: the official / Korean answer sheet and the Korean working sheet where the site has them, else the page
+  // theory cards: the official / Korean answer sheet and the working sheet in the page's language (Korean t.wk,
+  // English t.we) where the site has them, else the sheets page
   const thy = html.slice(html.indexOf('const sheetDocs='), html.indexOf('const card=(code,probs,f,k,head,docs)'));
-  assert.match(thy, /A\[0\]\?a\(A\[0\],ko\?"답안지":"Answer sheet"/);
-  assert.match(thy, /ko&&t\.wk\?a\(t\.wk,"워킹시트"\)/);
-  assert.match(html, /concat\(sheetDocs\(code,A,!omr\)\)/);
+  assert.match(thy, /A\[0\]\?\[a\(A\[0\],ko\?"답안지":"Answer sheet"/);
+  assert.match(thy, /else if\(!A\[0\]\) docs\.push\(sheetBtn\(sheetKind\(h,"answer"\)/);
+  assert.match(thy, /const working=ko\?t\.wk:t\.we;\s*if\(working\) docs\.push\(a\(working,ko\?"워킹시트":"Working sheet"\)\)/);
+  assert.match(thy, /else if\(!working\) docs\.push\(sheetBtn\(sheetKind\(h,"working"\)/);
+  // (not on OMR competitions, nor on a part the archive has only an answer key for: f.keyOnly)
+  assert.match(html, /concat\(sheetDocs\(code,A,!omr&&!f\.keyOnly\)\)/);
   // experiment cards: both, before the Python source
   assert.match(html, /if\(live&&!c\.open&&\/\^E\\d\*\$\/\.test\(p\.id\)\)\{ const h=expSheetsHref\(key,yr,p\), S=f\.sheets\|\|\{\};/);
   // a problem whose sheets the site has opens the PDF itself, in the page's language (ISPhO 2024–2026 E1)
-  assert.match(html, /S\[kind\]\?`<a class="btn ghost" href="\$\{esc\(pick\(S\[kind\]\)\)\}" target="_blank"/);
+  assert.match(html, /if\(S\[kind\]\) return `<a class="btn ghost" href="\$\{esc\(pick\(S\[kind\]\)\)\}" target="_blank"/);
   for (const y of [2024, 2025, 2026]) assert.ok(html.includes(`answer:{ko:"sim/sheets/ISPhO_${y}_E1_AS_KO.pdf"`), y);
   const sheetKind = new Function('return ' + html.match(/const sheetKind=([^;]+);/)[1])();
   assert.equal(sheetKind('sim/sheets.html?c=ipho', 'working'), 'sim/sheets.html?c=ipho&k=working');
