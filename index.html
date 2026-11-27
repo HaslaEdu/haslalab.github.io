@@ -1218,7 +1218,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
 <script src="archive-navigation.js?v=10d33500b414"></script>
-<script src="site-catalogue.js?v=231837785fe7"></script>
+<script src="site-catalogue.js?v=639e15d6a572"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=e43cec5305aa"></script>
 <script src="site-design.js?v=af0e919623fe"></script>
@@ -4777,7 +4777,8 @@ for(const [key,years] of Object.entries(window.ARCHIVE_PRACTICAL||{})){
     if(archive.g) yr.general=Object.fromEntries(Object.entries(archive.g).map(([language,file])=>[language,thyUrl(file)]));
     for(const [id,slot] of Object.entries(archive.f)){
       const title=slot.title||{ko:"실기 시험지",en:"Practical paper"};
-      let problem=yr.problems.find(p=>p.id===id);
+      const sourceId=slot.problemIds?.length===1?slot.problemIds[0]:id;
+      let problem=yr.problems.find(p=>p.id===id||p.id===sourceId);
       if(!problem){ problem={id,title,files:{}}; yr.problems.push(problem); }
       const files=problem.files;
       problem.archivePaper=true;
@@ -4789,7 +4790,7 @@ for(const [key,years] of Object.entries(window.ARCHIVE_PRACTICAL||{})){
       }
       for(const [kind,name] of [["paper","pdf"],["sol","sol"],["key","key"],["mark","mark"],["answer","answer"]]){
         if(!slot[kind]&&!slot.ko?.[kind]) continue;
-        const lang=kind==="paper"?slot.paperLang||"en":"en";
+        const lang=kind==="paper"?slot.paperLang||"en":kind==="sol"?slot.solLang||"en":"en";
         const start=kind==="paper"&&(slot.paperStart||slot.sourcePages?.[0]);
         const koreanStart=kind==="paper"&&(slot.ko?.paperStart||slot.ko?.sourcePage);
         files[name]={...(typeof files[name]==="string"?{en:files[name]}:files[name]),
@@ -4957,7 +4958,7 @@ const LOGO_FILES = {cmo:"cmo.svg",plancks:"plancks.svg"};
 const ARCHIVE_FLAGS={
   aupho:"au", bpho:"gb", bphoii:"gb", fma:"us", inpho:"in", obf:"br", soif:"br",
   spho:"sg", sphotst:"sg", twpho:"tw", usapho:"us", vntst:"vn", vpho:"vn",
-  azpho:"az", cpho:"cn", dpho:"de", efo:"ee", jpho:"jp", onf:"ro", osn:"id", panpho:"hk",
+  azpho:"az", cpho:"cn", dpho:"de", efo:"ee", jpho:"jp", onf:"ro", osn:"id", panpho:"hk", polpho:"pl",
   rupho:"ru", ruphow:"ru", ruphox:"ru", ruphoy:"ru"
 };
 const LOGO_ORGANIZERS = {
@@ -6396,6 +6397,7 @@ function theoryHtml(key,yr){
     const koreanOnly=ko&&key==="oibf";
     const o=(kv,fv)=>koreanOnly?[kv,""]:ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
      const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
+     if(S[0]===f.sol&&f.solLang&&f.solLang!==lang) S[1]=PaperLanguages.label(f.solLang,lang);
      const solutionLabel=(ko?k.solutionNotice:f.solutionNotice)?(ko?"해설 제공 안내":"Solution availability notice"):d.thySol;
      const paperLanguages=PaperLanguages.archiveChoices(key,lang,PaperLanguages.files({...f,ko:k}));
      /* in English, the English paper only, untagged, where there is one (no «Problems · 한국어» beside it) */

@@ -4,6 +4,7 @@ import community from './index.js';
 import { studioRoute, deleteCommunityAccount, sweepDeletedStudioUsers } from './studio-gateway.js';
 import { studioResponses, studioImageEdit, purgeStudioReceipts } from './studio-provider.js';
 import { ensureStudioSchema } from './studio-schema.js';
+import { hasNonsulOpus, gradeNonsulWithOpus } from './nonsul-opus.js';
 
 // Named service-binding RPC. No HTTP route exposes this credential-bearing interface.
 export class StudioProvider extends WorkerEntrypoint {
@@ -14,6 +15,11 @@ export class StudioProvider extends WorkerEntrypoint {
 // have been deleted, so a withdrawal made on haslalab.org also removes the member's Hasla Nonsul records. Only answers
 // for ids it is given (no listing of accounts), and only deleted ones (deleted=1; suspended accounts are not deleted).
 export class AccountEvents extends WorkerEntrypoint {
+  nonsulOpusReady() { return hasNonsulOpus(this.env); }
+  async nonsulOpusGrade(input) {
+    useEgress(this.env);
+    return gradeNonsulWithOpus(this.env, input);
+  }
   async deletedAmong(ids) {
     const wanted = [...new Set((Array.isArray(ids) ? ids : []).filter(id => Number.isSafeInteger(id) && id > 0))].slice(0, 500);
     const out = [];

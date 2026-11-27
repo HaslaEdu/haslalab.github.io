@@ -123,6 +123,11 @@ def load(practical=None):
                         slot.pop('sourcePages', None)
                 if kind == 'paper' and language:
                     slot['paperLang'] = language
+                if kind == 'sol':
+                    if f.get('lang') and re.fullmatch(r'[a-z]{2}', language) and language != 'en':
+                        slot['solLang'] = language
+                    else:
+                        slot.pop('solLang', None)
             if practical_files:
                 for problem in y.get('problems', []):
                     slot = practical_files.get(problem.get('id'))
@@ -140,6 +145,8 @@ def load(practical=None):
                     for k in ('paper', 'sol', 'mark', 'answer'):
                         if k not in slot and k in whole:
                             slot[k] = whole[k]
+                            if k == 'sol' and whole.get('solLang'):
+                                slot['solLang'] = whole['solLang']
                             if k == 'paper':
                                 for prop in ('papers', 'paperLang', 'containsSolutions', 'paperContainsSolutions', 'paperSourceTypes', 'paperNotes', 'sourcePages'):
                                     if prop in whole:
@@ -322,6 +329,8 @@ def english_edition(slot, edition):
     """Apply a reviewed English edition to either theory or practical papers."""
     slot.update({key: value for key, value in edition.items()
                  if key in ('paper', 'sol', 'mark', 'answer') and value})
+    if edition.get('sol'):
+        slot.pop('solLang', None)
     if edition.get('paper'):
         slot.setdefault('papers', {})['en'] = edition['paper']
         slot['paperLang'] = 'en'
