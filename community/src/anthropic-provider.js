@@ -10,7 +10,7 @@ const FALLBACK = /^claude-(opus|sonnet)-5-5$/;
 const EFFORT = { off: 'low', minimal: 'low', low: 'low', medium: 'medium', high: 'high' };
 
 /** content: [{text}] | [{mime, data(base64), label}] in order; returns the final message */
-export async function anthropicMessage({ apiKey, model, system, sequence, maxTokens, thinking, signal, timeoutMs, nativeFallback = true, cacheSystem = false, outputSchema }) {
+export async function anthropicMessage({ apiKey, model, system, sequence, maxTokens, thinking, signal, timeoutMs, nativeFallback = true, cacheSystem = false }) {
   const client = new Anthropic({ apiKey, maxRetries: 0, timeout: timeoutMs });
   const content = [];
   for (const part of sequence) {
@@ -26,8 +26,7 @@ export async function anthropicMessage({ apiKey, model, system, sequence, maxTok
   if (lastDoc >= 0) content[lastDoc] = { ...content[lastDoc], cache_control: { type: 'ephemeral' } };
   const instructions = cacheSystem ? [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }] : system;
   const params = { model, max_tokens: maxTokens, system: instructions, messages: [{ role: 'user', content }],
-    output_config: { effort: EFFORT[thinking] || 'low',
-      ...(outputSchema ? { format: { type: 'json_schema', schema: outputSchema } } : {}) } };
+    output_config: { effort: EFFORT[thinking] || 'low' } };
   const stream = nativeFallback && FALLBACK.test(model)
     ? client.beta.messages.stream({ ...params, betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' }, { signal })
     : client.messages.stream(params, { signal });
