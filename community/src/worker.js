@@ -20,6 +20,11 @@ export class AccountEvents extends WorkerEntrypoint {
     useEgress(this.env);
     return gradeNonsulWithOpus(this.env, input);
   }
+  nonsulSonnetReady() { return hasNonsulOpus(this.env); }
+  async nonsulSonnetGrade(input) {
+    useEgress(this.env);
+    return gradeNonsulWithOpus(this.env, input, 'claude-sonnet-5-5');
+  }
   async deletedAmong(ids) {
     const wanted = [...new Set((Array.isArray(ids) ? ids : []).filter(id => Number.isSafeInteger(id) && id > 0))].slice(0, 500);
     const out = [];
