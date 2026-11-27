@@ -227,7 +227,7 @@ test('the Learn class code: turned off by the owner, and it asks for approval li
   await fails(s.call(`${G}/${g.id}`,'PATCH',{legacy_code:true},minji),'forbidden');
 });
 
-test('account deletion: an owned group goes to the longest-serving admin, one without an admin closes, memberships go',async()=>{
+test('account deletion: every group the member owns closes, even with admins; memberships go',async()=>{
   const s=setup();
   await s.call(G,'GET',null,owner);
   s.db.exec("INSERT INTO entitlements(user_id,kind,starts_at,ends_at,source,created_at) VALUES (7,'teacher',0,NULL,'test',0)");
@@ -242,9 +242,8 @@ test('account deletion: an owned group goes to the longest-serving admin, one wi
   const cc=(await s.call(`${G}/${c.id}/invites`,'POST',{expires:'never',max_uses:null},minji)).code;
   await s.call(`${G}/join`,'POST',{code:cc},owner);
   await workshopForgetUser(s.env,7);
-  const ad=await s.call(`${G}/${a.id}`,'GET',null,minji);
-  assert.equal(ad.group.owner.nickname,'민지','the admin who joined first');
-  assert.deepEqual(ad.members.map(m=>[m.nickname,m.role]),[['민지','owner'],['서준','admin']]);
+  await fails(s.call(`${G}/${a.id}`,'GET',null,minji),'group_not_found');
+  assert.ok(s.db.prepare('SELECT closed_at FROM classes WHERE id=?').get(a.id).closed_at,'closed although it had admins');
   await fails(s.call(`${G}/${b.id}`,'GET',null,seojun),'group_not_found');
   assert.ok(s.db.prepare('SELECT closed_at FROM classes WHERE id=?').get(b.id).closed_at);
   assert.deepEqual((await s.call(`${G}/${c.id}`,'GET',null,minji)).members.map(m=>m.nickname),['민지']);

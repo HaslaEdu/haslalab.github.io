@@ -72,33 +72,25 @@ async function dropGroupRows(db, gid) {
     await db.prepare(sql).bind(gid).run().catch(e => { if (!/no such table/i.test(String(e?.message))) throw e; });
 }
 
-/* account deletion: each group the member owns goes to its longest-serving admin; one with no admin is closed (the
-   existing rule of the account deletion in index.js, which closes the classes still owned). Memberships, requests,
-   removals and the member's invite codes go. */
+/* account deletion: every group the member owns is closed (as index.js closes the classes still owned). Memberships,
+   requests, removals and the member's invite codes go. */
 export async function groupsForgetUser(env, uid, t) {
   await ensureLearnSchema(env);
   await ensureGroupSchema(env);
   const db = env.DB;
   const owned = (await db.prepare('SELECT id FROM classes WHERE teacher_id=? AND closed_at IS NULL').bind(uid).all()).results || [];
-  let moved = 0;
+  /* a group the member owns always closes with the account (owner's choice, 2026-11-27): no one inherits it or the
+     members' practice records that come with a Learn class */
   for (const {id} of owned) {
-    const heir = await db.prepare(`SELECT x.user_id FROM class_members x JOIN users u ON u.id=x.user_id AND u.deleted=0
-      WHERE x.class_id=? AND x.role='admin' AND x.user_id<>? ORDER BY x.joined_at,x.user_id LIMIT 1`).bind(id, uid).first();
-    if (heir) {
-      await db.prepare('UPDATE classes SET teacher_id=? WHERE id=? AND teacher_id=?').bind(heir.user_id, id, uid).run();
-      await db.prepare('DELETE FROM class_members WHERE class_id=? AND user_id=?').bind(id, heir.user_id).run();
-      moved++;
-    } else {
-      await db.prepare('UPDATE classes SET closed_at=? WHERE id=?').bind(t, id).run();
-      await dropGroupRows(db, id);
-    }
+    await db.prepare('UPDATE classes SET closed_at=? WHERE id=?').bind(t, id).run();
+    await dropGroupRows(db, id);
   }
   await db.prepare('UPDATE workshop_group_invites SET revoked_at=? WHERE created_by=? AND revoked_at IS NULL').bind(t, uid).run();
   await db.prepare('DELETE FROM workshop_group_requests WHERE user_id=?').bind(uid).run();
   await db.prepare('DELETE FROM workshop_group_blocks WHERE user_id=?').bind(uid).run();
   await db.prepare('DELETE FROM class_members WHERE user_id=?').bind(uid).run();
   await db.prepare('DELETE FROM workshop_group_join_fails WHERE k=?').bind('u:' + uid).run();
-  return {transferred: moved, closed: owned.length - moved};
+  return {transferred: 0, closed: owned.length};
 }
 
 export function createGroupRoutes({HttpError, limit, bad, quotaOf = () => null}) {
