@@ -5,7 +5,7 @@
   else root.PaperLanguages = api;
 })(typeof globalThis === 'object' ? globalThis : this, function () {
   'use strict';
-  const labels = {en:'English',ko:'한국어',ru:'Русский',zh:'中文',hu:'Magyar',de:'Deutsch',fr:'Français',es:'Español',pt:'Português',pl:'Polski',it:'Italiano',ja:'日本語',uk:'Українська',et:'Eesti',fi:'Suomi',sv:'Svenska',cs:'Čeština',sk:'Slovenčina',ro:'Română',bg:'Български',tr:'Türkçe',id:'Bahasa Indonesia'};
+  const labels = {en:'English',ko:'한국어',ru:'Русский',zh:'中文',hu:'Magyar',de:'Deutsch',fr:'Français',es:'Español',pt:'Português',pl:'Polski',it:'Italiano',ja:'日本語',uk:'Українська',et:'Eesti',fi:'Suomi',sv:'Svenska',cs:'Čeština',sk:'Slovenčina',ro:'Română',bg:'Български',tr:'Türkçe',id:'Bahasa Indonesia',hi:'हिन्दी',as:'অসমীয়া',bn:'বাংলা',gu:'ગુજરાતી',kn:'ಕನ್ನಡ',ml:'മലയാളം',mr:'मराठी',or:'ଓଡ଼ିଆ',pa:'ਪੰਜਾਬੀ',ta:'தமிழ்',te:'తెలుగు',ur:'اردو'};
   const code = value => /^[a-z]{2}$/.test(String(value).toLowerCase()) ? String(value).toLowerCase() : value === 'original' ? value : '';
   const path = value => typeof value === 'string' && value.length <= 2000 &&
     (/^(?:pdfx?\/[a-z]+\/)?[A-Za-z0-9][A-Za-z0-9_.-]{2,100}\.pdf$/.test(value) || /^https:\/\/[^\s<>"'|]+$/i.test(value));
