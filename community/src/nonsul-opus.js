@@ -2,11 +2,12 @@
 import { anthropicMessage } from './anthropic-provider.js';
 
 const OPUS = 'claude-opus-5-5';
+const SONNET = 'claude-sonnet-5-5';
 const apiKey = env => env.ANTHROPIC_API_KEY || env.CLAUDE_API_KEY || env.ANTHROPIC_KEY;
 export const hasNonsulOpus = env => !!apiKey(env);
 
-export async function gradeNonsulWithOpus(env, input) {
-  if (!hasNonsulOpus(env)) return { status: 503, code: 'provider_unavailable' };
+export async function gradeNonsulWithOpus(env, input, model = OPUS) {
+  if (![OPUS, SONNET].includes(model) || !hasNonsulOpus(env)) return { status: 503, code: 'provider_unavailable' };
   const { instructions, text, documents = [], reasoning, maxTokens, timeoutMs } = input;
   if (typeof instructions !== 'string' || instructions.length > 24000 ||
       typeof text !== 'string' || text.length > 360000 || !Array.isArray(documents) || documents.length > 8 ||
@@ -21,7 +22,7 @@ export async function gradeNonsulWithOpus(env, input) {
   if (documentBytes > 26000000) return { status: 413, code: 'documents_too_large' };
   try {
     const message = await anthropicMessage({
-      apiKey: apiKey(env), model: OPUS, system: instructions,
+      apiKey: apiKey(env), model, system: instructions,
       sequence: [...documents.map(file => ({ mime: 'application/pdf', ...file })), { text }],
       maxTokens, thinking: reasoning, timeoutMs, signal: AbortSignal.timeout(timeoutMs),
       nativeFallback: false, cacheSystem: true,
