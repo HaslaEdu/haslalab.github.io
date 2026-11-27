@@ -29,11 +29,19 @@ import {defaults, bodyPose, isBody, simplifyPath, ANCHOR_TYPES, BODY_TYPES} from
 
 export const INK_VERSION = 1;
 export const MATH_PATH = '/api/workshop/ai/math';
+/* Handwriting is ink (as in GoodNotes): a stroke becomes a shape when the pen is held still at its end (holdToSnap);
+   autoShape (a shape on every pen-up) is off unless asked for, and even then never takes a stroke that is
+   writing: smaller than minShapePx (CSS px, its bounding box's longer side), one of a quick run of small strokes
+   (a stroke under writePx that starts within writeGapMs of a small one ending), or glyph-like (under glyphPx with a
+   loop and a tail, crossing itself, or turning a lot). The physics glyphs (zigzag, coil, wave) need partConfidence,
+   minPartPx along their axis and at least minPeriods clear periods; a held stroke needs minHoldPx. */
 export const INK_DEFAULTS = Object.freeze({
-  autoShape: true, holdToSnap: true, fingerDraw: false, mouse: true,
+  autoShape: false, holdToSnap: true, fingerDraw: false, mouse: true,
   holdMs: 500, holdMovePx: 5, minConfidence: 0.6, snapPx: 14, angleTol: 6, axisTol: 8, snapStep: 15,
-  groupMs: 1600, groupPx: 160, mathIdleMs: 0, palmArea: 2200, unit: 1
+  groupMs: 1600, groupPx: 160, mathIdleMs: 0, palmArea: 2200, unit: 1,
+  minShapePx: 36, minHoldPx: 18, writePx: 90, writeGapMs: 700, glyphPx: 110, partConfidence: 0.8, minPartPx: 72, minPeriods: 2.5, minArrowPx: 100
 });
+export const PHYSICS_GLYPHS = ['zigzag', 'coil', 'wave'];
 const PI = Math.PI, DEG = 180 / PI, hyp = Math.hypot;
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 const r4 = v => Math.round(v * 1e4) / 1e4;
@@ -352,7 +360,7 @@ function analyse(stroke, opts) {
   const pts = stroke.points, unit = opts.unit ?? 1, L = pathLength(pts), bb = bounds(pts);
   const step = Math.max(Math.min(bb.diag / 48, L / 160), 0.6 * unit, L / 1500);
   let R = smooth121(resample(pts, step), false, 1);
-  const chord = d2(pts[0], pts[pts.length - 1]);
+  const Lr = pathLength(R), chord = d2(pts[0], pts[pts.length - 1]);
   /* closed: the ends meet, or one end runs past the other (the loop is cut where it comes back) */
   let closed = false;
   if (L > 1.6 * bb.diag && R.length > 12) {
@@ -365,7 +373,7 @@ function analyse(stroke, opts) {
   }
   if (closed && d2(R[0], R[R.length - 1]) < step * 1.5 && R.length > 3) R = R.slice(0, -1);
   if (closed) R = smooth121(R, true, 1);
-  return {pts, R, L, bb, chord, closed, unit, step};
+  return {pts, R, L, Lr, bb, chord, closed, unit, step};
 }
 const res = (type, params, confidence, extra = {}) => ({type, params, confidence: r4(clamp(confidence, 0, 1)), ...extra});
 
@@ -589,7 +597,7 @@ function oscillation(R, A, opts) {
   const zig = eTri < eSin * 0.85 || eTri < 0.12;
   const n = ex.length;
   if (zig || eTri < eSin * 1.4) {
-    const conf = ((0.55 + 0.4 * reg) * clamp(1 - eTri / 0.35, 0, 1) + 0.05) * (zig ? 1 : 0.7);
+    const conf = Math.min(0.98, (0.6 + 0.4 * reg) * clamp(1 - Math.max(0, eTri - 0.06) / 0.3, 0, 1) + 0.12) * (zig ? 1 : 0.7);
     /* a resistor has a few teeth, a spring many; the editor's context (what the ends touch) may say otherwise */
     const P = {a: {...a}, b: {...b}, n, amp, start: ex[0].i, end: ex[n - 1].i};
     const many = n >= 9;
@@ -622,15 +630,47 @@ export function recognizeStroke(raw, opts = {}) {
     const c = {x: A.bb.cx, y: A.bb.cy};
     return {...res('dot', {x: c.x, y: c.y, len: A.L, a: {...pts[0]}, b: {...pts[pts.length - 1]}}, 0.55), alternatives: [free()], ms: r4(now0() - t0)};
   }
-  const cands = (A.closed ? closedCandidates(A, o) : openCandidates(A, o)).filter(c => c.confidence > 0.05);
+  let cands = (A.closed ? closedCandidates(A, o) : openCandidates(A, o)).filter(c => c.confidence > 0.05);
+  /* the physics glyphs only from a stroke that is clearly one: confident, long enough along its axis, enough periods,
+     long against its height; else none of them is offered at all */
+  const part = c => {
+    if (!PHYSICS_GLYPHS.includes(c.type)) return true;
+    const p = c.params, len = c.type === 'wave' ? p.len : d2(p.a, p.b), amp = c.type === 'wave' ? p.A : p.amp;
+    const periods = c.type === 'coil' ? p.n : p.n / 2;
+    return len >= o.minPartPx * unit && periods >= o.minPeriods && len >= 3 * amp;
+  };
+  cands = cands.filter(part);
+  if (Math.max(0, ...cands.filter(c => PHYSICS_GLYPHS.includes(c.type)).map(c => c.confidence)) < o.partConfidence) cands = cands.filter(c => !PHYSICS_GLYPHS.includes(c.type));
+  /* an arrow drawn in one stroke needs a shaft (a "1" is not an arrow) */
+  cands = cands.filter(c => c.type !== 'arrow' || d2(c.params.a, c.params.b) >= o.minArrowPx * unit);
   cands.sort((x, y) => y.confidence - x.confidence || SHAPE_PRIORITY.indexOf(x.type) - SHAPE_PRIORITY.indexOf(y.type));
   const uniq = []; for (const c of cands) if (!uniq.some(u => u.type === c.type && JSON.stringify(u.params.kind) === JSON.stringify(c.params.kind))) uniq.push(c);
   const fh = free();
+  /* writing stays ink: the readings are kept (a dashed line is read from them) but none is the result */
+  const sizePx = Math.max(A.bb.w, A.bb.h) / unit, hold = o.via === 'hold';
+  const ink = hold ? (sizePx < o.minHoldPx ? 'small' : '') : o.writing ? 'writing' : sizePx < o.minShapePx ? 'small' : sizePx < o.glyphPx && glyphLike(A) ? 'glyph' : '';
+  if (ink) return {...fh, ink, closed: A.closed, alternatives: uniq.slice(0, 4), ms: r4(now0() - t0)};
   let best = uniq[0], alternatives;
   if (!best || best.confidence < o.minConfidence) { alternatives = uniq.slice(0, 4); best = fh; }
   else alternatives = [...uniq.slice(1, 5), fh];
   return {...best, closed: A.closed, alternatives, ms: r4(now0() - t0)};
 }
+/** a stroke that looks written rather than drawn: a loop with a tail (a, 6, 9, b), one that crosses itself (2 with a
+ *  loop, 8, e, l) or one that turns more than a closed loop does (3, 5, s, m), as measured on the smoothed path */
+export function glyphLike(A) {
+  const {R, pts, L, closed} = A;
+  if (R.length < 6) return false;
+  if (closed) { const tail = 1 - pathLength(R) / (A.Lr || L || 1); if (tail > 0.12) return true; }
+  let turn = 0; for (let i = 2; i < R.length; i++) turn += dirDiff(angOf(R[i - 2], R[i - 1]), angOf(R[i - 1], R[i]));
+  if (turn > (closed ? 470 : 300)) return true;
+  if (!closed) {
+    const Q = resample(pts, Math.max(A.bb.diag / 40, 1e-9));
+    for (let i = 0; i + 1 < Q.length; i++) for (let j = i + 3; j + 1 < Q.length; j++) if (cross(Q[i], Q[i + 1], Q[j], Q[j + 1])) return true;
+  }
+  return false;
+}
+const side3 = (a, b, c) => (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+const cross = (p, q, r, s) => { const d1 = side3(p, q, r), d2_ = side3(p, q, s), d3 = side3(r, s, p), d4 = side3(r, s, q); return ((d1 > 0) !== (d2_ > 0)) && ((d3 > 0) !== (d4 > 0)) && d1 !== 0 && d2_ !== 0 && d3 !== 0 && d4 !== 0; };
 
 /* ── several strokes ── */
 const asLine = it => {
@@ -641,6 +681,8 @@ const asLine = it => {
   if (r.type === 'dot') return {a: r.params.a || {x: r.params.x, y: r.params.y}, b: r.params.b || {x: r.params.x, y: r.params.y}, dot: true};
   return null;
 };
+/* what a stroke kept as ink (writing, small) would have been read as: its best reading, if a good one */
+const reading = r => r && r.type === 'freehand' && r.ink && r.alternatives?.[0]?.confidence >= INK_DEFAULTS.minConfidence ? r.alternatives[0] : r;
 const segInfo = s => { const len = d2(s.a, s.b), m = lerp(s.a, s.b, 0.5), th = len > 0 ? angOf(s.a, s.b) : 0; return {...s, len, m, th}; };
 /** a shape made of the last strokes (items: [{stroke, result}] oldest first): dashed line, ground, cell or capacitor,
  *  an arrow with a separate head. The result says how many of the last strokes it uses (strokes) */
@@ -654,8 +696,11 @@ export function recognizeGroup(items, opts = {}) {
     const S = segs.slice(n - k); if (S.some(s => !s)) continue;
     const r = dashed(S, o); if (r) return {...r, strokes: k};
   }
-  for (const k of [4, 3]) if (n >= k) { const S = segs.slice(n - k); if (S.every(Boolean)) { const r = ground(S, o); if (r) return {...r, strokes: k}; } }
-  for (const k of [4, 3, 2]) if (n >= k) { const S = segs.slice(n - k); if (S.every(Boolean)) { const r = bars(S, o); if (r) return {...r, strokes: k}; } }
+  /* while writing ("=", "+", "x", "≡"), only dashes make a group; bars and heads are a part only when drawn large */
+  if (o.writing) return null;
+  const big = S => Math.max(...S.map(s => s.len)) >= 1.5 * o.minShapePx * (o.unit ?? 1);
+  for (const k of [4, 3]) if (n >= k) { const S = segs.slice(n - k); if (S.every(Boolean) && big(S)) { const r = ground(S, o); if (r) return {...r, strokes: k}; } }
+  for (const k of [4, 3, 2]) if (n >= k) { const S = segs.slice(n - k); if (S.every(Boolean) && big(S)) { const r = bars(S, o); if (r) return {...r, strokes: k}; } }
   for (const k of [3, 2]) if (n >= k) { const r = arrowGroup(items.slice(n - k), o); if (r) return {...r, strokes: k}; }
   return null;
 }
@@ -735,10 +780,10 @@ function ground(S, o) {
 }
 function arrowGroup(items, o) {
   const shaftIt = items[0], sh = asLine(shaftIt); if (!sh || sh.dot || shaftIt.result.type === 'arrow') return null;
-  const S = segInfo(sh); if (S.len < 10 * (o.unit ?? 1)) return null;
+  const S = segInfo(sh); if (S.len < Math.max(10, o.minArrowPx) * (o.unit ?? 1)) return null;
   const heads = {a: 0, b: 0};
   for (const it of items.slice(1)) {
-    const r = it.result, pts = (r.type === 'polyline' ? r.params.pts : r.type === 'line' ? [r.params.a, r.params.b] : null);
+    const r = reading(it.result), pts = (r.type === 'polyline' ? r.params.pts : r.type === 'line' ? [r.params.a, r.params.b] : null);
     if (!pts) return null;
     if (pathLength(pts) > 1.2 * S.len) return null;
     let used = false;
@@ -878,7 +923,15 @@ export function toSceneObjects(result, {grid = 0.1, existing = [], look = {}, un
       push('incline', {x: C(p.x), y: C(p.y), angle: clamp(Math.round(p.angle), 1, 89), length: clamp(r4(p.length), 0.1, 200), flip: !!p.flip, mu: 0});
       break;
     case 'zigzag': case 'coil': {
-      const kind = p.kind || 'resistor';
+      const kind = p.kind || 'resistor', len = d2(p.a, p.b);
+      /* never a part smaller than one is drawn: a coil, a spring or a resistor this short (or with its turns closer
+         than 6 px) was not one: it stays as the stroke was drawn */
+      const turns = Math.min(Math.max(3, p.n || 10), Math.floor(len / (6 * unit)));
+      if (!(len >= INK_DEFAULTS.minPartPx * unit) || turns < 3) {
+        const fh = (result.alternatives || []).find(x => x.type === 'freehand');
+        if (fh) out.push(...toSceneObjects(fh, {grid, existing: [...existing, ...out], look, unit, idFor, snapPx, scene}));
+        break;
+      }
       if (kind === 'resistor' || kind === 'inductor') { element(kind, p.a, p.b); break; }
       /* a spring joins what its ends touch (a body and a body or an anchor); else it stays a drawn spring */
       const r = Math.max(snapPx * unit, 0.15 * d2(p.a, p.b));
@@ -886,7 +939,7 @@ export function toSceneObjects(result, {grid = 0.1, existing = [], look = {}, un
       if (A && B && (isBody(A) || isBody(B)) && [...BODY_TYPES, ...ANCHOR_TYPES].includes(A.type) && [...BODY_TYPES, ...ANCHOR_TYPES].includes(B.type)) {
         push('spring', {a: A.id, b: B.id, L0: clamp(r4(d2(p.a, p.b)), 0.01, 100), coils: clamp(Math.round(p.n || 10), 3, 30), k: 50});
       } else {
-        const pts = result.type === 'coil' ? coilPoints(p.a, p.b, p.n, p.amp) : zigPoints(p.a, p.b, p.n, p.amp);
+        const amp = clamp(p.amp || 0, 3 * unit, 0.35 * len), pts = result.type === 'coil' ? coilPoints(p.a, p.b, turns, amp) : zigPoints(p.a, p.b, turns, amp);
         push('poly', {pts: pts.slice(0, 400).map(P), closed: false, smooth: result.type === 'coil', color, lw, pattern: 'solid', fill: 'none', heads: 'none'});
       }
       break;
@@ -955,7 +1008,7 @@ function centreOf(r) {
 export function createInkController({onShape, onFreehand, onPreview, onStroke, onMathRegion, getCandidates, toWorld, unit, options = {}, timers} = {}) {
   const T = timers || {set: (f, ms) => setTimeout(f, ms), clear: id => clearTimeout(id), now: now0};
   const opt = {...INK_DEFAULTS, ...options};
-  let mode = options.mode || 'draw', cur = null, penSeen = 0, pending = [], math = [], mathTimer = null, seq = 0;
+  let mode = options.mode || 'draw', cur = null, penSeen = 0, pending = [], math = [], mathTimer = null, seq = 0, lastInk = null;
   const U = () => (typeof unit === 'function' ? unit() : unit) || opt.unit || 1;
   const W = ev => toWorld ? toWorld(ev) : {x: ev.offsetX ?? ev.clientX, y: -(ev.offsetY ?? ev.clientY)};
   const ropts = () => ({...opt, unit: U(), candidates: cur && getCandidates ? (getCandidates(bounds(cur.points)) || []) : []});
@@ -984,7 +1037,7 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
     cur.timer = T.set(() => {
       if (!cur || cur.snapped) return;
       if (pathLength(cur.points) < 10 * U()) return;
-      const r = recognizeStroke(cur, ropts());
+      const r = recognizeStroke(cur, {...ropts(), via: 'hold'});
       if (r.type === 'freehand' || r.type === 'dot') return;
       cur.snapped = {result: r, from: {...cur.points[cur.points.length - 1]}, now: r};
       onPreview?.(r, {stroke: cur});
@@ -1001,7 +1054,7 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
     if (cur) { if (ev.pointerType === 'touch' && cur.pointerType === 'touch') { cancel(); } return false; }
     if (!accepts(ev)) return false;
     const t = T.now();
-    cur = {id: 'ink' + (++seq), pointerId: ev.pointerId, pointerType: ev.pointerType || 'mouse', points: [point(ev, t)], screen: {x: ev.clientX, y: ev.clientY}, timer: null, snapped: null};
+    cur = {id: 'ink' + (++seq), pointerId: ev.pointerId, pointerType: ev.pointerType || 'mouse', points: [point(ev, t)], screen: {x: ev.clientX, y: ev.clientY}, timer: null, snapped: null, t0: t};
     if (mathTimer) { T.clear(mathTimer); mathTimer = null; }
     armHold(); onStroke?.(cur, {live: true});
     return true;
@@ -1023,7 +1076,14 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
     if (!cur.snapped) onStroke?.(cur, {live: true});
     return true;
   }
-  function emit(r, stroke) {
+  /* writing: this stroke and the one before it small, this one begun soon after that one ended (or a run of them) */
+  function writingNow(stroke) {
+    const b = bounds(stroke.points), size = Math.max(b.w, b.h) / U(), prev = lastInk;
+    const writing = !!prev && size < opt.writePx && prev.size < opt.writePx && (stroke.t0 ?? T.now()) - prev.end < (prev.writing ? 2 : 1) * opt.writeGapMs;
+    lastInk = {end: T.now(), size, writing};
+    return writing;
+  }
+  function emit(r, stroke, writing = false) {
     const now = T.now();
     /* the strokes that may still join this one: drawn one after another, each soon after and near the one before */
     if (pending.length && now - pending[pending.length - 1].end > opt.groupMs) pending = [];
@@ -1036,10 +1096,10 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
         if (hyp(b.cx - next.cx, b.cy - next.cy) > opt.groupPx * U() + (b.diag + next.diag) / 2) break;
         chain.unshift(pending[i]); next = b;
       }
-      const g = recognizeGroup([...chain, item], ropts());
+      const g = recognizeGroup([...chain, item], {...ropts(), writing: writing && !stroke.snapped});
       if (g) {
         const used = chain.slice(chain.length - (g.strokes - 1)), replaces = used.flatMap(it => it.ids || []);
-        const ids = onShape?.(g, {replaces, stroke, alternatives: g.alternatives || [], group: true}) || [];
+        const ids = onShape?.(g, {replaces, stroke, alternatives: g.alternatives || [], group: true, via: stroke.snapped ? 'hold' : 'auto'}) || [];
         for (const it of used) it.ids = [];
         item.ids = Array.isArray(ids) ? ids : []; item.group = g.type;
         /* a dashed line can still grow by another dash: its strokes stay; any other group is complete */
@@ -1049,7 +1109,7 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
       }
     }
     const isShape = r.type !== 'freehand';
-    const ids = (isShape ? onShape?.(r, {replaces: [], stroke, alternatives: r.alternatives || []}) : onFreehand?.(r, {stroke})) || [];
+    const ids = (isShape ? onShape?.(r, {replaces: [], stroke, alternatives: r.alternatives || [], via: stroke.snapped ? 'hold' : 'auto'}) : onFreehand?.(r, {stroke, writing})) || [];
     item.ids = Array.isArray(ids) ? ids : [];
     pending.push(item); if (pending.length > 40) pending.shift();
     return r;
@@ -1067,11 +1127,12 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
       return true;
     }
     let r;
+    const writing = writingNow(stroke);
     if (stroke.snapped) { r = stroke.snapped.now; onPreview?.(null, {stroke}); }
-    else if (opt.autoShape) r = recognizeStroke(stroke, ropts());
+    else if (opt.autoShape) r = recognizeStroke(stroke, {...ropts(), writing});
     else r = {type: 'freehand', params: {pts: smoothFreehand(stroke.points, {unit: U()}), lw: strokeLw(stroke.points)}, confidence: 1, alternatives: []};
     if (r.type === 'dot' && !opt.autoShape) r = {type: 'freehand', params: {pts: stroke.points.map(p => ({x: p.x, y: p.y})), lw: 1}, confidence: 1, alternatives: []};
-    emit(r.type === 'dot' ? {...r, type: 'freehand', params: {pts: stroke.points.length > 1 ? stroke.points.map(p => ({x: p.x, y: p.y})) : [stroke.points[0], {x: stroke.points[0].x + U(), y: stroke.points[0].y}], lw: 1, dot: r.params}} : r, stroke);
+    emit(r.type === 'dot' ? {...r, type: 'freehand', params: {pts: stroke.points.length > 1 ? stroke.points.map(p => ({x: p.x, y: p.y})) : [stroke.points[0], {x: stroke.points[0].x + U(), y: stroke.points[0].y}], lw: 1, dot: r.params}} : r, stroke, writing);
     return true;
   }
   function finishMath() {
@@ -1090,7 +1151,9 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
     get mode() { return mode; }, set mode(m) { if (['draw', 'math', 'off'].includes(m)) { if (m !== 'math' && math.length) finishMath(); mode = m; cancel(); } },
     get options() { return {...opt}; }, set(o) { Object.assign(opt, o || {}); },
     get drawing() { return !!cur; }, get current() { return cur; }, get penSeen() { return !!penSeen; },
-    resetPen() { penSeen = 0; }, forget() { pending = []; },
+    /** true while the strokes come as writing does (small, one soon after another) */
+    get writing() { return !!lastInk?.writing && T.now() - lastInk.end < 2 * opt.writeGapMs; },
+    resetPen() { penSeen = 0; }, forget() { pending = []; lastInk = null; },
     /** tell the controller the ids an earlier result became (when onShape could not return them) */
     bind(strokeId, ids) { const it = pending.find(x => x.stroke.id === strokeId); if (it) it.ids = ids; }
   };

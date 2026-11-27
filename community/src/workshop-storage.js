@@ -22,6 +22,7 @@
    never from a name or a folder the member typed, so nothing a member sends can reach another key. Names and folders
    live in D1. Shared files use the same attachment response after a class membership check. */
 import { classStorageRoutes, STORAGE_SHARE_SCHEMA } from './workshop-class-storage.js';
+import { createGroupRoutes, groupsForgetUser, touchGroupActivity } from './workshop-groups.js';
 import { ensureLearnSchema, planOf } from './learn-services.js';
 
 export const WORKSHOP_SCHEMA = [
@@ -150,6 +151,8 @@ export async function workshopForgetUser(env, userId) {
   await env.DB.prepare('DELETE FROM workshop_files WHERE owner_id=?').bind(userId).run();
   await env.DB.prepare('DELETE FROM workshop_folders WHERE owner_id=?').bind(userId).run();
   await env.DB.prepare('DELETE FROM workshop_class_shares WHERE owner_id=?').bind(userId).run();
+  /* the shared-storage groups: owned groups go to an admin or close, memberships go (workshop-groups.js) */
+  await groupsForgetUser(env, userId, Math.floor(Date.now() / 1000));
   return rows.length;
 }
 
@@ -294,6 +297,7 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
   };
   const view = fileView;
   const shared = classStorageRoutes({HttpError, limit, bad, cleanFolder, fileView, download});
+  const groups = createGroupRoutes({HttpError, limit, bad, quotaOf: plan => (plan === 'free' ? WORKSHOP_FREE_QUOTA : WORKSHOP_PAID_QUOTA)});
 
   async function download(env, row, method, transform = null) {
     if (!env.LAB_PAGES) throw new HttpError(503, 'r2_unavailable');
@@ -359,7 +363,11 @@ export function createWorkshopStorageRouter({HttpError, needUser, limit, now, ba
     needUser(me);
     await ensureWorkshopSchema(env);
     const DB = env.DB, t = now(), uid = me.id;
-    if (p === '/api/workshop/storage/shared' || p.startsWith('/api/workshop/storage/shared/')) return shared(p, m, body, uid, t, env);
+    if (p === '/api/workshop/storage/shared' || p.startsWith('/api/workshop/storage/shared/')) {
+      if (p === '/api/workshop/storage/shared' && m === 'GET') await touchGroupActivity(env, uid, t);
+      return shared(p, m, body, uid, t, env);
+    }
+    if (p === '/api/workshop/storage/groups' || p.startsWith('/api/workshop/storage/groups/')) return groups(p, m, body, uid, t, env, req);
 
     if (p === '/api/workshop/storage' && m === 'GET') {
       const url = req?.url ? new URL(req.url) : null, qk = url?.searchParams.get('kind'), qf = url?.searchParams.get('folder');

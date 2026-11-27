@@ -8,8 +8,8 @@
 import {geoIntersect, validateScene, defaults, template, TEMPLATE_KEYS, TEMPLATE_NAMES, TEMPLATE_DOMAIN, FIELDS, DOMAINS, STYLE_KEYS, isBody, isRound, bodyPose, vectorPoints, vectorTransform, surfaceFrame, sceneBounds, vec, blankScene, MAX_OBJECTS, createHistory, rotCentre, ROTATABLE, COLORS, FILLS, parseParams, paramsText, simplifyPath,
   GEO_TYPES, PHYS_SHAPES, PHYS_FIELDS, computeGeometry, isPhysShape, sceneSig, docFor, docEdited, docSaved, docState, keepDraft, dropDraft, freeSpot, nextForce, TEXT_FONTS, SURFACE_TYPES} from './draw-scene.mjs?v=6fd828e25ba4';
 import {buildSim, solveCircuit, computedInfo, splitWires} from './draw-physics.mjs?v=b7e62851099c';
-import {createInkController, toSceneObjects, candidatesFromScene, rasteriseStrokes, mathRequestBody, MATH_PATH, createPointerArbiter, catmullRom, smoothFreehand, polyToStroke} from './draw-ink.mjs?v=5b8a961d3ae8';
-import {renderSVG, texSVG, PLACEHOLDER, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor, labelStyle, FONT_FAMILY} from './draw-render.mjs?v=01cafb1aa402';
+import {createInkController, toSceneObjects, candidatesFromScene, rasteriseStrokes, mathRequestBody, MATH_PATH, createPointerArbiter, catmullRom, smoothFreehand, polyToStroke} from './draw-ink.mjs?v=558db03b0e70';
+import {renderSVG, texSVG, PLACEHOLDER, POLY_HANDLES, STYLES, STYLE_TABLE, objectBox, printScale, COLOR_HEX, labelScaleFor, labelStyle, FONT_FAMILY} from './draw-render.mjs?v=ba9359899d73';
 
 const $ = id => document.getElementById(id), params = new URL(location.href).searchParams;
 const embedded = params.get('embed') === '1' && window.parent !== window;
@@ -318,7 +318,16 @@ const X8 = ko ? {
     runs: {'\\textit': ['𝘪', '고른 글자 기울임'], '\\textbf': ['𝐛', '고른 글자 굵게'], '\\mathrm': ['rm', '고른 글자 바로 세움 (로만)'], '\\mathsf': ['sf', '고른 글자 고딕'], '\\mathtt': ['tt', '고른 글자 고정폭'], '\\text': ['abc', '고른 부분은 글자 (수식 아님)']}},
   rough: '마찰 구간 (거친 면)', roughF: {from: '시작 위치 (m, 면의 시작부터)', len: '길이 (m)', look: '모양', showMu: 'μ 값 표시', on: '놓인 면', label: '이름표 (비우면 μ = 값)'}, roughNeeds: '마찰 구간은 바닥이나 빗면 위에 놓입니다. 바닥을 함께 넣었습니다.',
   enums: {hatch: '빗금', gray: '회색', dots: '점'},
-  ink: {penMode: '✒ 펜 모드', penModeT: '펜으로 그리고 손가락으로는 화면만 움직입니다 (한 손가락 이동, 두 손가락 확대·축소, 두 손가락 탭 되돌리기, 세 손가락 탭 다시 하기). 누르면 손가락 모드', fingerMode: '☝ 손가락 모드', fingerModeT: '손가락으로 그립니다. 두 손가락은 이동·확대. 누르면 펜 모드',
+  clearT: '이 그림의 모든 요소를 지웁니다. ‘↶ 뒤로’로 되돌릴 수 있습니다.', clearAsk: n => `이 그림의 요소 ${n}개를 모두 지울까요? ‘↶ 뒤로’로 되돌릴 수 있습니다.`,
+  clearProject: '프로젝트 전체 지우기', clearProjectT: '프로젝트의 모든 그림을 지우고 빈 프로젝트로 시작합니다', clearProjectAsk: n => `프로젝트의 그림 ${n}개를 모두 지우고 빈 프로젝트로 시작할까요? 저장하지 않은 내용은 복구본으로 남습니다.`,
+  ink: {penMode: '펜으로 그리기 · 손가락은 화면 이동', penModeT: '펜으로 그리고, 손가락으로는 화면만 움직입니다. 누르면 손가락으로도 그립니다.', fingerMode: '손가락으로도 그리기', fingerModeT: '펜과 손가락 모두 그립니다. 누르면 손가락은 다시 화면 이동만 합니다.',
+    penModeTip: '지금은 펜만 그립니다. 손가락 한 개로 화면 이동, 두 개로 확대·축소, 두 손가락 탭은 되돌리기입니다.', fingerModeTip: '지금은 손가락으로도 그립니다. 두 손가락으로 화면 이동·확대합니다.',
+    settings: '펜 설정', settingsT: '펜 설정: 보정, 손가락으로 그리기, 흔들림 보정',
+    holdL: '길게 눌러 보정', holdD: '획 끝에서 펜을 잠깐 멈추면 선·원·사각형 같은 모양으로 바뀝니다.',
+    autoL: '펜을 떼면 바로 보정', autoD: '획마다 모양을 추측합니다 (작은 글씨는 그대로). 기본은 꺼짐.',
+    fingerL: '손가락으로도 그리기', fingerD: '켜면 손가락으로도 그립니다. 끄면 손가락은 화면 이동·확대만 합니다.',
+    smoothL: '흔들림 보정', smoothD: '손그림 획의 떨림을 다듬습니다.',
+    ptEdit: '점 편집', ptEditEnd: '점 편집 끝', ptEditT: '획을 12개 이하의 점으로 줄이고 점을 하나씩 옮깁니다',
     tapUndo: '두 손가락 탭: 되돌렸습니다.', tapRedo: '세 손가락 탭: 다시 했습니다.', smooth: '흔들림 보정', smoothT: '손그림 획의 떨림을 다듬습니다',
     loginMath: '선택한 획을 수식으로 인식하려면 로그인해 주세요.', unreadable: '수식을 읽지 못했습니다. 수식에 해당하는 획만 선택해 다시 시도해 주세요.', changed: '그림이 바뀌었습니다. 현재 획을 선택해 다시 인식해 주세요.', converted: '수식으로 바꿨습니다. 실행 취소로 되돌릴 수 있습니다.', review: '인식 결과를 확인하고 적용하세요.',
     toMath: '선택한 획을 수식으로', toMathT: '선택한 펜 획을 수식(LaTeX)으로 인식합니다', tooMany: '수식에 해당하는 획을 32개 이하로 선택해 주세요.',
@@ -344,7 +353,16 @@ const X8 = ko ? {
     runs: {'\\textit': ['𝘪', 'Italic selection'], '\\textbf': ['𝐛', 'Bold selection'], '\\mathrm': ['rm', 'Upright (roman) selection'], '\\mathsf': ['sf', 'Sans serif selection'], '\\mathtt': ['tt', 'Monospace selection'], '\\text': ['abc', 'Selection as text (not maths)']}},
   rough: 'Friction region (rough patch)', roughF: {from: 'Starts at (m from the surface\'s start)', len: 'Length (m)', look: 'Look', showMu: 'Show μ', on: 'On surface', label: 'Label (empty: μ = value)'}, roughNeeds: 'A friction region lies on a floor or an incline: a floor was added with it.',
   enums: {hatch: 'Hatched', gray: 'Gray', dots: 'Dots'},
-  ink: {penMode: '✒ Pen mode', penModeT: 'The pen draws; fingers only move the view (one finger pans, two zoom, a two-finger tap undoes, a three-finger tap redoes). Tap for finger mode', fingerMode: '☝ Finger mode', fingerModeT: 'A finger draws; two fingers pan and zoom. Tap for pen mode',
+  clearT: 'Remove everything in this figure. ‘↶ Back’ brings it back.', clearAsk: n => `Remove all ${n} objects of this figure? ‘↶ Back’ brings them back.`,
+  clearProject: 'Clear whole project', clearProjectT: 'Remove every figure of the project and start an empty one', clearProjectAsk: n => `Remove all ${n} figures of the project and start an empty one? Unsaved work is kept as a recovery draft.`,
+  ink: {penMode: 'Pen draws · fingers move the view', penModeT: 'The pen draws; fingers only move the view. Tap to draw with fingers too.', fingerMode: 'Fingers draw too', fingerModeT: 'Both the pen and fingers draw. Tap so fingers only move the view again.',
+    penModeTip: 'Only the pen draws now. One finger pans, two zoom, a two-finger tap undoes.', fingerModeTip: 'Fingers draw too now. Two fingers pan and zoom.',
+    settings: 'Pen settings', settingsT: 'Pen settings: shape correction, finger drawing, steadying',
+    holdL: 'Hold to snap', holdD: 'Hold the pen still at the end of a stroke to turn it into a line, circle, box…',
+    autoL: 'Shape on lift', autoD: 'Guess a shape for every stroke (small writing is left alone). Off by default.',
+    fingerL: 'Draw with fingers too', fingerD: 'On: fingers draw as well. Off: fingers only pan and zoom.',
+    smoothL: 'Steady strokes', smoothD: 'Smooth the wobble of hand-drawn strokes.',
+    ptEdit: 'Edit points', ptEditEnd: 'Done editing points', ptEditT: 'Simplify the stroke to at most 12 points and move them one by one',
     tapUndo: 'Two-finger tap: undone.', tapRedo: 'Three-finger tap: redone.', smooth: 'Steady strokes', smoothT: 'Smooth the wobble of strokes kept as drawn',
     loginMath: 'Log in to recognize the selected strokes as a formula.', unreadable: 'Could not read the formula. Select only its strokes and try again.', changed: 'The figure changed. Select the current strokes and try again.', converted: 'Converted to a formula. You can undo this change.', review: 'Review the recognized formula before applying.',
     toMath: 'Selected strokes → formula', toMathT: 'Recognize the selected pen strokes as a formula (LaTeX)', tooMany: 'Select no more than 32 strokes for the formula.',
@@ -521,14 +539,23 @@ function save() {
 function restore(text) { st.scene = JSON.parse(text); setSel(selIds(), st.sel); stopSim(); st.doc = docEdited(st.doc); save(); paint(); }
 function undo() { const t = st.hist.undo(JSON.stringify(st.scene)); if (t) restore(t); }
 function redo() { const t = st.hist.redo(JSON.stringify(st.scene)); if (t) restore(t); }
-/* 모두 지우기: an empty figure in the same style and frame. A project of one figure becomes another document (a new
-   identity: no storage file or shared project of the one before is kept with it, and its unsaved changes are kept as
-   a recovery draft); in a project of several figures only this page is emptied (one undo step) */
+/* 모두 지우기 (the toolbar): the figure in the editor emptied, its settings, style and frame kept: one step of history
+   (↶ 뒤로 brings it all back), the same document. Asked first only when there is something to lose: unsaved changes or
+   more than CLEAR_ASK objects. In a project of several figures only this figure is emptied; the whole project is
+   File ▸ 프로젝트 전체 지우기 (clearProject) */
+const CLEAR_ASK = 10;
 function clearAll() {
-  const next = {...blankScene(), style: st.scene.style, view: st.scene.view, ...(st.scene.printW ? {printW: st.scene.printW} : {})};
-  st.ai = null;
-  const ok = st.project.pages.length > 1 ? commit(next) : setDocument({title: '', index: 0, pages: [next]}, 'new');
-  if (ok) { setPref('example', false); flash(esc(X3.tools.cleared)); }
+  const n = st.scene.objects.length; if (!n) return;
+  if ((n > CLEAR_ASK || isDirty()) && !window.confirm(X8.clearAsk(n))) return;
+  st.ai = null; st.pointEdit = ''; st.inkLast = null; st.ink?.forget();
+  if (commit({...clone(st.scene), objects: []})) { setSel([]); setPref('example', false); flash(esc(X3.tools.cleared)); paint(); paintInkBar(); }
+}
+/* 프로젝트 전체 지우기: every figure of the project gone, a new empty document (its unsaved changes kept as a recovery
+   draft, as for 새로 만들기) */
+function clearProject() {
+  if (!window.confirm(X8.clearProjectAsk(st.project.pages.length))) return;
+  st.ai = null; st.pointEdit = ''; st.inkLast = null;
+  if (setDocument({title: '', index: 0, pages: [blankPage()]}, 'new')) { setPref('example', false); flash(esc(X3.tools.cleared)); }
 }
 /* the validator's findings in plain words (no codes): the object, the field's name, its range */
 const TOP_RANGE = {g: [0.1, 30], grid: [0.01, 1], printW: [20, 400], drag: [0, 50]};
@@ -915,7 +942,7 @@ function paintCanvas() {
   shownScene = sc; shownPoses = simOn ? st.sim.poses() : null;
   st.circuit = st.solve && hasCircuit() ? solveCircuit(st.scene) : null;
   const drawn = st.draft || st.inkPreview ? {...sc, objects: [...sc.objects, ...(st.draft ? [draftObject()] : []), ...(st.inkPreview || [])].filter(Boolean)} : sc;
-  let svg = renderSVG(drawn, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? [] : selIds(), forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit, marquee: st.marquee,
+  let svg = renderSVG(drawn, {width: W, view: v, edit: true, grid: st.grid && !simOn, selected: simOn ? [] : selIds(), pointEdit: st.pointEdit && st.pointEdit === st.sel ? st.pointEdit : '', forces, poses: shownPoses, labelScale: screenLabelScale(box), circuit: st.circuit, marquee: st.marquee,
     velocities: simOn ? st.sim.velocities() : null, anchors: simOn ? st.sim.anchors : null, trails: simOn ? [...st.trails].filter(([id]) => byId(id)?.trail || (st.rtrail && isPhysShape(byId(id)))) : null, ...simDrawOpts(simOn)});
   /* Mark the export frame when the working area extends beyond it. */
   const frame = view();
@@ -1243,16 +1270,31 @@ function followersOf(o) {
 const FINGER_MODES = ['auto', 'draw', 'nav'];
 function fingerModePref() { const p = prefs(); return FINGER_MODES.includes(p.fingerMode) ? p.fingerMode : p.inkFinger === true ? 'draw' : 'auto'; }
 function setFingerMode(m) { st.arb.fingerMode = m; setPref('fingerMode', m); setPref('inkFinger', m === 'draw'); paintInputMode(); paintTools(); }
-const touchDevice = () => (navigator.maxTouchPoints || 0) > 0 || st.arb?.penSeen;
-/* the chip that says which mode is on (펜 모드: a finger navigates · 손가락 모드: a finger draws), and switches it */
+/* a touch screen on which a pen has been used: only there does it matter what a finger does */
+const penTouch = () => (navigator.maxTouchPoints || 0) > 0 && !!st.arb?.penSeen;
+/* the chip over the canvas that says what a finger does now, with an icon (✒ the pen draws, a finger moves the view ·
+   ☝ a finger draws too), shown only on a touch screen once a pen has been used; a tap switches, and the first tap
+   says in one line what that means */
 function paintInputMode() {
   const b = $('inputMode'); if (!b || !st.arb) return;
-  b.hidden = !touchDevice();
+  b.hidden = !penTouch();
   const pen = st.arb.mode === 'pen';
-  b.textContent = pen ? X8.ink.penMode : X8.ink.fingerMode;
+  b.innerHTML = `${pen ? INPUT_ICON.pen : INPUT_ICON.finger} ${esc(pen ? X8.ink.penMode : X8.ink.fingerMode)}`;
   b.title = pen ? X8.ink.penModeT : X8.ink.fingerModeT;
   b.setAttribute('aria-pressed', String(!pen));
   b.classList.toggle('on', !pen);
+  const tip = $('inputTip'); if (tip && b.hidden) tip.hidden = true;
+}
+const INPUT_ICON = {pen: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M11.5 1.8l2.7 2.7-8.6 8.6-3.6.9.9-3.6z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+  finger: '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 8V2.8a1.2 1.2 0 0 1 2.4 0V7l3.4.8c.8.2 1.3 1 1.1 1.8l-.9 4.4H6.3L3.6 10.3a1.1 1.1 0 0 1 1.6-1.5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>'};
+function toggleInputMode() {
+  setFingerMode(st.arb.mode === 'pen' ? 'draw' : 'nav');
+  const tip0 = $('inputTip'); if (tip0) tip0.hidden = true;
+  if (prefs().inputTip) return;
+  setPref('inputTip', true);
+  const tip = $('inputTip'); if (!tip) return;
+  tip.textContent = st.arb.mode === 'pen' ? X8.ink.penModeTip : X8.ink.fingerModeTip; tip.hidden = false;
+  clearTimeout(st.inputTipTimer); st.inputTipTimer = setTimeout(() => { tip.hidden = true; }, 6000);
 }
 function bindCanvas() {
   const box = $('canvas');
@@ -1303,7 +1345,12 @@ function bindCanvas() {
     const hd = ev.target.closest?.('[data-handle]'), hs = hd && byId(st.sel);
     if (hs && !st.connect && !hs.lock) { if (st.sim) stopSim(); st.drag = {id: hs.id, handle: hd.dataset.handle, start: worldAt(ev), orig: clone(hs), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
     const rh = ev.target.closest?.('[data-rot]'), rs = rh && byId(st.sel);
-    if (rs && !st.connect) { if (st.sim) stopSim(); const c = isBody(rs) ? bodyPose(st.scene, rs) : rotCentre(rs); st.drag = {id: rs.id, rot: true, c, before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
+    if (rs && !st.connect) {
+      if (st.sim) stopSim();
+      /* a pen stroke (poly) turns about its box's centre: its points turn */
+      if (rs.type === 'poly') { const xs = rs.pts.map(q => q[0]), ys = rs.pts.map(q => q[1]), c = {x: (Math.min(...xs) + Math.max(...xs)) / 2, y: (Math.min(...ys) + Math.max(...ys)) / 2}, w = worldAt(ev); st.drag = {id: rs.id, rot: true, poly: true, c, a0: Math.atan2(w.y - c.y, w.x - c.x), orig: clone(rs), before, moved: false}; box.setPointerCapture?.(ev.pointerId); return; }
+      const c = isBody(rs) ? bodyPose(st.scene, rs) : rotCentre(rs); st.drag = {id: rs.id, rot: true, c, before, moved: false}; box.setPointerCapture?.(ev.pointerId); return;
+    }
     const o = pickAt(ev);
     if (st.connect) { connectClick(o, worldAt(ev)); return; }
     if (st.sim) { stopSim(); paint(); }
@@ -1351,6 +1398,7 @@ function bindCanvas() {
       const hits = st.scene.objects.filter(o => { const b = objectBox(st.scene, o); return b && b.x <= x1 && b.x + b.w >= x0 && b.y <= y1 && b.y + b.h >= y0 && !(b.x < x0 && b.x + b.w > x1 && b.y < y0 && b.y + b.h > y1); }).map(o => o.id);
       setSel([...d.keep, ...hits]); paintCanvas(); return;
     }
+    if (d.rot && d.poly) { const o = byId(d.id); if (!o) return; let a = (Math.atan2(p.y - d.c.y, p.x - d.c.x) - d.a0) * 180 / Math.PI; if (!ev.shiftKey) a = Math.round(a / 15) * 15; const c = Math.cos(a * Math.PI / 180), sn = Math.sin(a * Math.PI / 180); o.pts = d.orig.pts.map(([x, y]) => [r4(d.c.x + (x - d.c.x) * c - (y - d.c.y) * sn), r4(d.c.y + (x - d.c.x) * sn + (y - d.c.y) * c)]); d.moved = true; paintCanvas(); return; }
     if (d.rot) { const o = byId(d.id); if (!o) return; let a = Math.atan2(p.y - d.c.y, p.x - d.c.x) * 180 / Math.PI - 90; if (!ev.shiftKey) a = Math.round(a / 15) * 15; o.rot = r4(((a + 540) % 360) - 180); d.moved = true; paintCanvas(); return; }
     d.shift = ev.shiftKey;
     const dx = p.x - d.start.x, dy = p.y - d.start.y;
@@ -1399,15 +1447,28 @@ function bindCanvas() {
 const CIRCUIT_INK = ['zigzag', 'coil', 'cell', 'battery', 'capacitor', 'ground'];
 function initInk() {
   if (st.ink) return;
-  const p = prefs();
+  const p = inkPrefs();
   st.inkMath = []; st.inkLive = null; st.inkPreview = null; st.inkLast = null;
   st.ink = createInkController({
     toWorld: worldAt, unit: () => dview().w / W, getCandidates: () => candidatesFromScene(st.scene),
-    onStroke: s0 => { st.inkLive = s0 ? s0.points.slice() : null; paintCanvas(); },
+    onStroke: s0 => {
+      /* writing on: the offer of other shapes for the stroke before goes away */
+      if (s0 && s0.points.length === 1 && st.inkLast?.bar) { st.inkLast.bar = false; paintInkBar(); }
+      st.inkLive = s0 ? s0.points.slice() : null; paintCanvas();
+    },
     onPreview: r => { st.inkPreview = r ? inkObjects(r, st.scene.objects).map((o, i) => ({...o, id: 'zzInk' + i})) : null; paintCanvas(); },
     onShape: (r, ctx) => insertInk(r, ctx), onFreehand: (r, ctx) => insertInk(r, ctx), onMathRegion: m => readMath(m.strokes),
     /* which pointer draws is the arbiter's call (bindCanvas, createPointerArbiter): the controller takes what it is given */
-    options: {autoShape: p.inkAuto !== false, holdToSnap: p.inkHold !== false, fingerDraw: p.inkFinger === true, arbitrated: true}});
+    options: {autoShape: p.inkAuto === true, holdToSnap: p.inkHold !== false, fingerDraw: p.inkFinger === true, arbitrated: true}});
+}
+/* the pen's settings in this browser. 자동 보정 (a shape on every pen-up) used to be on by default and turned writing
+   into shapes; it is now off by default, and a browser that had it on from before is set back to off once (inkV 2).
+   After that it stays as the person sets it in 펜 설정 */
+const INK_PREFS_V = 2;
+function inkPrefs() {
+  const p = prefs();
+  if (p.inkV !== INK_PREFS_V) { store.set(PREFS_KEY, JSON.stringify({...p, inkAuto: false, inkV: INK_PREFS_V})); return {...p, inkAuto: false, inkV: INK_PREFS_V}; }
+  return p;
 }
 /* a result as scene objects, in the drawing tools' look; circuit glyphs on a coarser grid so they meet the wires */
 const inkObjects = (r, existing) => toSceneObjects(r, {existing, grid: CIRCUIT_INK.includes(r.type) ? Math.max(st.scene.grid, 0.5) : st.scene.grid, look: st.dstyle, unit: dview().w / W, scene: {...st.scene, objects: existing}});
@@ -1426,9 +1487,25 @@ function insertInk(r, ctx = {}) {
   next.objects.push(...objs);
   if (!commit(next, {before})) return [];
   const ids = objs.map(o => o.id).filter(id => byId(id));
-  st.inkLast = {result: r, ids, before, stroke: ctx.stroke, alts: (r.alternatives || []).filter(a => a && a.type && a.type !== r.type).slice(0, 4)};
-  setSel(ids); paint(); paintInkBar();
+  /* GoodNotes-like: the pen stays the pen and nothing is selected (no handles over the writing); the other readings
+     are offered only when a stroke was actually turned into a shape (held still, or 자동 보정 on) */
+  st.inkLast = {result: r, ids, before, stroke: ctx.stroke, bar: r.type !== 'freehand', alts: (r.alternatives || []).filter(a => a && a.type && a.type !== r.type).slice(0, 4)};
+  if (replaces.length) setSel(selIds().filter(id => byId(id)));
+  paint(); paintInkBar();
   return ids;
+}
+/* 점 편집: a pen stroke's points as handles, simplified first to at most POLY_HANDLES of them (one step of history);
+   pressed again, the stroke is a box again */
+function pointEdit(id) {
+  if (st.pointEdit === id) { st.pointEdit = ''; paint(); return; }
+  const o = byId(id); if (!o || o.type !== 'poly') return;
+  if (o.pts.length > POLY_HANDLES) {
+    const next = clone(st.scene), q = next.objects.find(x => x.id === id);
+    const pts = simplifyPath(q.pts.map(([x, y]) => ({x, y})), 0.5 * dview().w / W, POLY_HANDLES);
+    q.pts = pts.map(p => [r4(p.x), r4(p.y)]);
+    if (!commit(next, {keepSel: true})) return;
+  }
+  st.pointEdit = id; paint();
 }
 /* 다른 모양으로: the same stroke as another reading, in place of the first (still one step of history) */
 function swapInk(alt) {
@@ -1438,7 +1515,7 @@ function swapInk(alt) {
   if (!commit(next, {before: L.before})) return;
   const ids = objs.map(o => o.id); st.inkLast = {...L, result: alt, ids, alts: [L.result, ...L.alts.filter(a => a !== alt)].filter(a => a.type !== 'freehand' || a !== L.result).slice(0, 4)};
   if (L.stroke) st.ink.bind(L.stroke.id, ids);
-  setSel(ids); paint(); paintInkBar();
+  paint(); paintInkBar();
 }
 const inkName = a => { const k = a.params?.kind && X8.ink.types[a.params.kind] ? a.params.kind : a.type; return X8.ink.types[k] || k; };
 /* the chips under the canvas's top: the other readings of the last stroke, or the maths: convert, clear, other readings */
@@ -1446,8 +1523,8 @@ function paintInkBar() {
   let bar = $('inkBar');
   const L = st.inkLast, math = st.ink?.mode === 'math';
   const alts = L && st.tool === 'pen' && !math ? L.alts : [], mAlts = st.mathAlts || [];
-  if (!math && !alts.length && !(L?.stroke && L.result.type !== 'freehand' && st.tool === 'pen')) { if (bar) bar.hidden = true; return; }
-  if (!bar) { bar = document.createElement('div'); bar.id = 'inkBar'; bar.className = 'inkbar'; bar.setAttribute('role', 'toolbar'); $('stageTop').append(bar); }
+  if (!math && !(L?.bar && L.stroke && st.tool === 'pen')) { if (bar) bar.hidden = true; return; }
+  if (!bar) { bar = document.createElement('div'); bar.id = 'inkBar'; bar.className = 'inkbar'; bar.setAttribute('role', 'toolbar'); (document.querySelector('#stage .canvasdock') || $('stageTop')).append(bar); }
   bar.hidden = false;
   if (math) {
     bar.innerHTML = `<b>${esc(X8.ink.math)}</b><button type="button" class="primary" id="inkConvert"${st.inkMath.length ? '' : ' disabled'}>${esc(X8.ink.convert)}</button><button type="button" id="inkClear"${st.inkMath.length ? '' : ' disabled'}>${esc(X8.ink.clear)}</button>
@@ -1460,7 +1537,7 @@ function paintInkBar() {
   const list = [...alts.filter(a => a.type !== 'freehand'), ...(fh && L.result.type !== 'freehand' ? [fh] : [])];
   bar.innerHTML = `<span class="note">${esc(X8.ink.other)}</span>${list.map((a, i) => `<button type="button" class="chip" data-alt="${i}">${esc(a.type === 'freehand' ? X8.ink.freehand : inkName(a))}</button>`).join('')}<button type="button" class="chip x" id="inkAltX" aria-label="${esc(X8.close)}">✕</button>`;
   bar.querySelectorAll('[data-alt]').forEach(b => b.onclick = () => swapInk(list[+b.dataset.alt]));
-  $('inkAltX').onclick = () => { st.inkLast = null; paintInkBar(); };
+  $('inkAltX').onclick = () => { st.inkLast.bar = false; paintInkBar(); };
 }
 /* ── handwriting → a formula: one way in for both ways of writing it — 수식 쓰기 (strokes kept as ink, 변환) and pen
    strokes already in the figure that are selected (수식으로 바꾸기). The strokes go first to the stroke recogniser
@@ -1555,6 +1632,14 @@ function dragTo(d, p, dx, dy) {
       if (o.type === 'vector') q = vectorTransform(st.scene, o).toLocal(q);
       if (o.type === 'callout') { if (h === '1') { o.x = q.x; o.y = q.y; } else { o.x2 = q.x; o.y2 = q.y; } return; }
       o['x' + h] = q.x; o['y' + h] = q.y; return;
+    }
+    if (h === 'ps' && o.type === 'poly') {
+      /* a pen stroke's corner: it scales about the opposite corner (Shift: width and height apart) */
+      const xs = g.pts.map(q => q[0]), ys = g.pts.map(q => q[1]), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+      let kx = (p.x - x0) / Math.max(x1 - x0, 1e-6), ky = (y1 - p.y) / Math.max(y1 - y0, 1e-6);
+      if (!d.shift) { const k = x1 - x0 < 1e-6 ? ky : y1 - y0 < 1e-6 ? kx : Math.max(kx, ky); kx = ky = k; }
+      kx = Math.max(0.05, kx); ky = Math.max(0.05, ky);
+      o.pts = g.pts.map(([x, y]) => [r4(x0 + (x - x0) * kx), r4(y1 - (y1 - y) * ky)]); return;
     }
     if (h[0] === 'p' && o.type === 'poly') { const i = +h.slice(1), prev = o.pts[i - 1] || o.pts[i + 1], q = snapPt(p, {from: prev && {x: prev[0], y: prev[1]}, shift: !!d.shift && !!prev, exclude: o.id}); o.pts[i] = [q.x, q.y]; return; }
     if (h === 'c1' || h === 'c2') { const k = h[1], q = snapPt(p, {from: {x: o['x' + k], y: o['y' + k]}, shift: !!d.shift, exclude: o.id}); o['cx' + k] = q.x; o['cy' + k] = q.y; return; }
@@ -1789,7 +1874,7 @@ function paintSide() {
       <button type="submit">${N2('함수 적용', 'Apply function')}</button></form>` : ''}${physBox}
     ${fields.some(([, f]) => f.k === 'txt') ? `<p class="note">${esc(T.texHint)}</p>` : ''}
     <details class="look"><summary>${ko ? '선 · 글자 · 잠금' : 'Lines, labels, lock'}</summary><div class="props">${look.map(field).join('')}</div></details>
-    <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}<button type="button" data-act="front">${X3.tools.front}</button><button type="button" data-act="back">${X3.tools.backZ}</button><button type="button" data-act="del">${T.del}</button></div>`;
+    <div class="row">${['string', 'rod', 'spring', 'force'].includes(o.type) ? '' : `<button type="button" data-act="dup">${T.dup}</button>`}${o.type === 'poly' && !o.lock && (o.pts.length > POLY_HANDLES || st.pointEdit === o.id) ? `<button type="button" data-act="ptedit" aria-pressed="${st.pointEdit === o.id}" title="${esc(X8.ink.ptEditT)}">${esc(st.pointEdit === o.id ? X8.ink.ptEditEnd : X8.ink.ptEdit)}</button>` : ''}<button type="button" data-act="front">${X3.tools.front}</button><button type="button" data-act="back">${X3.tools.backZ}</button><button type="button" data-act="del">${T.del}</button></div>`;
   const equationsForm = box.querySelector('[data-equations]');
   if (equationsForm) equationsForm.onsubmit = event => {
     event.preventDefault();
@@ -1872,6 +1957,7 @@ function paintSide() {
   box.querySelectorAll('[data-text]').forEach(el => bindTextField(el, o.id, el.dataset.f));
   if (o.type === 'label') bindTextBar(box, o);
   box.querySelector('[data-act="dup"]')?.addEventListener('click', dup);
+  box.querySelector('[data-act="ptedit"]')?.addEventListener('click', () => pointEdit(o.id));
   box.querySelector('[data-act="front"]').onclick = () => zOrder(true); box.querySelector('[data-act="back"]').onclick = () => zOrder(false);
   box.querySelector('[data-act="del"]').onclick = del;
 }
@@ -2909,9 +2995,9 @@ function shell() {
     <div class="topbar" role="toolbar" aria-label="${esc(X8.file)}">
       ${menu('mFile', esc(X8.file) + ' ▾', `${b('mNew', esc(X8.newFig))}${b('mProjects', esc(X8.projects))}${b('mOpen', esc(X8.open) + '… <kbd>Ctrl+O</kbd>', X8.openT)}${b('mSave', esc(X8.save) + ' <kbd>Ctrl+S</kbd>', X8.saveT)}${b('mSaveAs', esc(X8.saveAs) + ' <kbd>Ctrl+Shift+S</kbd>', X8.saveAsT)}${b('mDupFig', esc(X8.dupFig))}
         <label class="btn filebtn">${T.load}<input type="file" id="mLoad" accept=".json,application/json"></label>${b('bInsertAsset', ko ? '에셋 불러오기' : 'Insert asset')}
-        ${b('mJson', T.json)}${b('mSvg', T.svg)}${b('mPng', T.png)}<hr>${b('bClear', tl.clear, '', 'danger')}`)}
+        ${b('mJson', T.json)}${b('mSvg', T.svg)}${b('mPng', T.png)}<hr>${b('mClearProject', esc(X8.clearProject), X8.clearProjectT, 'danger')}`)}
       <span id="drawProvider" title="${esc(X8.where)}"></span>${b('bSave', esc(X8.save), X8.saveT, 'primary')}${b('bOpenStore', esc(X8.open), X8.openT)}${b('bShare', '🔗 ' + (ko ? '공유' : 'Share'), X7.title)}<span class="sep"></span>
-      ${b('bUndo', tl.back, tl.backT, 'hist')}${b('bRedo', tl.fwd, tl.fwdT, 'hist')}${b('bDup', T.dup, 'Ctrl+D')}${b('bDel', T.del, 'Delete')}
+      ${b('bUndo', tl.back, tl.backT, 'hist')}${b('bRedo', tl.fwd, tl.fwdT, 'hist')}${b('bDup', T.dup, 'Ctrl+D')}${b('bDel', T.del, 'Delete')}${b('bClear', '🗑 ' + esc(tl.clear), X8.clearT, 'danger')}
       ${menu('mEdit', esc(X8.edit) + ' ▾', `${b('bCopy', tl.copy + ' <kbd>Ctrl+C</kbd>')}${b('bPaste', tl.paste + ' <kbd>Ctrl+V</kbd>')}${b('bAll', (ko ? '모두 선택' : 'Select all') + ' <kbd>Ctrl+A</kbd>')}<label class="chk"><input type="checkbox" id="selectMore"> ${ko ? '여러 물체 선택 (누를 때마다 더하기)' : 'Multi-select (each tap adds)'}</label>`)}
       <span class="zoom" role="group" aria-label="zoom">${b('bZout', '−', tl.zoomOut + ' (−)')}<span id="zoomPct" class="pct">100%</span>${b('bZin', '+', tl.zoomIn + ' (+)')}${b('bZfit', '⤢', tl.zoomFit + ' (0)')}</span>
       ${menu('mView', esc(X8.view) + ' ▾', `<label class="chk"><input type="checkbox" id="cGrid" checked> ${T.grid}</label><label class="chk"><input type="checkbox" id="cSnap" checked> ${T.snap}</label><label class="chk"><input type="checkbox" id="cVals"> ${tl.values}</label>${b('bFit', T.fit, tl.frameMark)}`)}
@@ -2944,10 +3030,10 @@ function shell() {
         <div id="templateCards" class="template-cards"></div></details>
       <details class="palwrap parts" id="parts"${prefs().parts !== false ? ' open' : ''}><summary title="${esc(X4.partsHint)}">${esc(X4.parts)}</summary><p class="note">${esc(X4.partsHint)} · ${N2('하슬라랩 내장 부품. 추가 후 속성에서 편집할 수 있습니다.', 'Built-in HaslaLab parts. Edit them from Properties after inserting.')}</p><input type="search" id="palSearch" placeholder="${esc(X2.search)}" aria-label="${esc(X2.search)}"><div id="palette" class="palette"></div></details></div>${panelHandle('drawLibraryBody', ['도구와 템플릿', 'tools and templates'])}</div>
       <section class="stage" id="stage"><div class="dock-bar">${ko ? '캔버스' : 'Canvas'}</div><div id="tstyle" class="tstyle" role="group" aria-label="${esc(X4.style.color)}"></div>
-        <div id="stageTop"><button type="button" id="inputMode" class="chip inputmode" aria-pressed="false" hidden></button><select id="objectPicker" aria-label="${ko ? '그림 요소 선택' : 'Select figure object'}"></select>
+        <div id="stageTop"><select id="objectPicker" aria-label="${ko ? '그림 요소 선택' : 'Select figure object'}"></select>
           <button type="button" id="inkGo" hidden title="${esc(X8.ink.toMathT)}">${esc(X8.ink.toMath)}</button><span id="inkStatus" class="note" role="status"></span>
           <div id="inkProposal" hidden><label for="inkText" class="note">LaTeX</label><input id="inkText" maxlength="240"><div id="inkPreview"></div><div id="inkAlts" class="row tight"></div><button type="button" id="inkApply">${ko ? '수식 적용' : 'Apply formula'}</button><button type="button" id="inkDiscard">${ko ? '닫기' : 'Close'}</button></div></div>
-        <div class="stagebody"><nav id="tools" class="rail" role="toolbar" aria-label="${esc(X4.drawing)}"></nav><div data-dock="canvas" data-min-height="112" class="canvasdock"><div id="canvas" class="canvas" data-dock-body tabindex="0" role="region" aria-label="${ko ? '그림 편집 캔버스' : 'Figure editing canvas'}"></div>${panelHandle('canvas', ['캔버스', 'canvas'])}</div></div>
+        <div class="stagebody"><nav id="tools" class="rail" role="toolbar" aria-label="${esc(X4.drawing)}"></nav><div data-dock="canvas" data-min-height="112" class="canvasdock"><div id="canvas" class="canvas" data-dock-body tabindex="0" role="region" aria-label="${ko ? '그림 편집 캔버스' : 'Figure editing canvas'}"></div><div class="inputbox"><span id="inputTip" class="inputtip" role="status" hidden></span><button type="button" id="inputMode" class="chip inputmode" aria-pressed="false" hidden></button></div>${panelHandle('canvas', ['캔버스', 'canvas'])}</div></div>
         <p id="status" class="status" role="status"></p><p class="note hint">${esc(tl.zoomHint)}</p>
         <div class="simbar"><span id="mechBar" class="grp"><button type="button" class="primary" id="playBtn"></button><button type="button" id="resetBtn">⟲ ${T.reset}</button><button type="button" id="stepBtn">${ko ? '0.05초 진행' : 'Step 0.05 s'}</button>
           <label>${T.speed}<select id="speed">${[0.1, 0.25, 0.5, 1, 2].map(v => `<option value="${v}"${v === st.speed ? ' selected' : ''}>${v}×</option>`).join('')}</select></label>
@@ -3002,7 +3088,7 @@ function shell() {
   $('aiToScene').onclick = () => { setAiMode('scene'); aiDraw({fromRegion: true}); };
   $('bShare').onclick = openShare;
   { const n = params.get('share'); if (/^\d{1,9}$/.test(n || '') && +n > 0) { if (window.HL_SHARE) openShared(+n); else addEventListener('load', () => openShared(+n), {once: true}); } } $('aiPrompt').onkeydown = e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) aiDraw(); };
-  $('bUndo').onclick = undo; $('bRedo').onclick = redo; $('bDup').onclick = dup; $('bDel').onclick = del; $('bClear').onclick = clearAll;
+  $('bUndo').onclick = undo; $('bRedo').onclick = redo; $('bDup').onclick = dup; $('bDel').onclick = del; $('bClear').onclick = clearAll; $('mClearProject').onclick = clearProject;
   $('bCopy').onclick = () => { if (copySel()) paintBar(); }; $('bPaste').onclick = () => pasteClip(); $('bAll').onclick = () => { setSel(st.scene.objects.map(o => o.id)); paint(); };
   $('bZin').onclick = () => zoomBy(1.25); $('bZout').onclick = () => zoomBy(0.8); $('bZfit').onclick = () => { st.zoom = null; paintCanvas(); };
   $('cGrid').onchange = e => { st.grid = e.target.checked; paintCanvas(); }; $('cSnap').onchange = e => { st.snap = e.target.checked; };
@@ -3028,7 +3114,7 @@ function shell() {
   };
   $('inkGo').onclick = recognizeInk;
   $('inkDiscard').onclick = () => { $('inkProposal').hidden = true; $('canvas').focus(); height(); };
-  $('inputMode').onclick = () => setFingerMode(st.arb.mode === 'pen' ? 'draw' : 'nav');
+  $('inputMode').onclick = toggleInputMode; $('inputTip').onclick = () => { $('inputTip').hidden = true; };
   bindCanvas(); paintTools(); paint(); paintOut(); paintInputMode();
   if (!params.get('t') && !params.get('share')) showDrawProjects();
   else { st.editorEntered = true; paintRecover(); }
@@ -3065,13 +3151,17 @@ function paintTools() {
       <label title="${esc(X4.style.dash)}"><span class="tl">${esc(X4.style.dash)}</span><select data-ds="pattern">${['solid', 'dashed', 'dotted', 'dashdot'].map(v => `<option value="${v}"${v === ds.pattern ? ' selected' : ''}>${esc(T.enums[v])}</option>`).join('')}</select></label>
       <label title="${esc(X4.style.fill)}"><span class="tl">${esc(X4.style.fill)}</span><select data-ds="fill">${FILLS.map(v => `<option value="${v}"${v === ds.fill ? ' selected' : ''}>${esc(X4.enums[v] || T.enums[v] || v)}</option>`).join('')}</select></label>
       <span class="heads" title="${esc(X4.style.heads)}"><span class="tl">${esc(X4.style.heads)}</span> <label><input type="checkbox" data-dh="hs"${ds.hs ? ' checked' : ''}>${esc(X4.style.start)}</label><label><input type="checkbox" data-dh="he"${ds.he ? ' checked' : ''}>${esc(X4.style.end)}</label></span>
-      ${st.tool === 'pen' && st.ink ? `<span class="inkopts" role="group" aria-label="${esc(X4.tools.pen)}">${[['auto', 'autoShape', st.ink.options.autoShape], ['hold', 'holdToSnap', st.ink.options.holdToSnap], ['finger', 'fingerDraw', st.arb?.mode === 'finger'], ['smooth', 'penSmooth', prefs().penSmooth !== false]].map(([k, o, on]) => `<button type="button" class="tsb" data-ink="${o}" aria-pressed="${!!on}" title="${esc(X8.ink[k + 'T'])}">${esc(X8.ink[k])}</button>`).join('')}<button type="button" class="tsb" data-inkmath aria-pressed="${st.ink.mode === 'math'}" title="${esc(X8.ink.mathT)}">∑ ${esc(X8.ink.math)}</button></span>` : ''}`;
+      ${st.tool === 'pen' && st.ink ? `<span class="inkopts" role="group" aria-label="${esc(X4.tools.pen)}">${inkSettings()}<button type="button" class="tsb" data-inkmath aria-pressed="${st.ink.mode === 'math'}" title="${esc(X8.ink.mathT)}">∑ ${esc(X8.ink.math)}</button></span>` : ''}`;
   box.querySelectorAll('[data-tool]').forEach(b => b.onclick = () => setTool(b.dataset.tool));
-  /* 손가락으로 그리기 is the same switch as the 펜 모드 / 손가락 모드 chip; 흔들림 보정 steadies strokes kept as drawn */
-  sb?.querySelectorAll('[data-ink]').forEach(b => b.onclick = () => { const k = b.dataset.ink;
-    if (k === 'fingerDraw') { setFingerMode(st.arb.mode === 'finger' ? 'nav' : 'draw'); return; }
-    if (k === 'penSmooth') { setPref('penSmooth', prefs().penSmooth === false); paintTools(); return; }
-    const on = !st.ink.options[k]; st.ink.set({[k]: on}); setPref({autoShape: 'inkAuto', holdToSnap: 'inkHold'}[k], on); paintTools(); });
+  /* the pen's settings (one popover): 손가락으로도 그리기 is the same switch as the chip over the canvas */
+  const pop = sb?.querySelector('#inkSet');
+  /* kept inside the window: moved left by as much as it would run past the right edge */
+  const fit = () => { const box = pop?.querySelector('.inkpop'); if (!pop?.open || !box) return; box.style.left = '0px'; const r = box.getBoundingClientRect(), over = r.right - (document.documentElement.clientWidth - 8); if (over > 0) box.style.left = -Math.min(over, r.left - 8) + 'px'; };
+  if (pop) { pop.ontoggle = () => { st.inkSetOpen = pop.open; fit(); }; fit(); }
+  sb?.querySelectorAll('[data-ink]').forEach(b => b.onchange = () => { const k = b.dataset.ink;
+    if (k === 'fingerDraw') { setFingerMode(b.checked ? 'draw' : 'nav'); return; }
+    if (k === 'penSmooth') { setPref('penSmooth', b.checked); return; }
+    st.ink.set({[k]: b.checked}); setPref({autoShape: 'inkAuto', holdToSnap: 'inkHold'}[k], b.checked); });
   sb?.querySelector('[data-inkmath]')?.addEventListener('click', () => { st.ink.mode = st.ink.mode === 'math' ? 'draw' : 'math'; st.inkMsg = ''; if (st.ink.mode !== 'math') { st.inkMath = []; paintCanvas(); } paintTools(); paintInkBar(); });
   $('geoToggle').onclick = () => { st.geoOpen = !geoOpen; setPref('geo', st.geoOpen); paintTools(); height(); };
   $('bSym').onclick = () => openSymbols();
@@ -3085,13 +3175,19 @@ function paintTools() {
   sb.querySelectorAll('[data-ds]').forEach(el => el.onchange = () => { const k = el.dataset.ds; ds[k] = k === 'lw' ? +el.value : el.value; keep(); toSel(k, ds[k]); });
   sb.querySelectorAll('[data-dh]').forEach(el => el.onchange = () => { ds[el.dataset.dh] = el.checked; keep(); toSel('heads', headsOf(ds)); });
 }
+/* 펜 설정: one icon button in the pen bar, a popover of the pen's switches, each with one line saying what it does */
+function inkSettings() {
+  const I = X8.ink, row = (k, key, on, show = true) => show ? `<label class="inkrow"><input type="checkbox" data-ink="${key}"${on ? ' checked' : ''}><span><b>${esc(I[k + 'L'])}</b><small>${esc(I[k + 'D'])}</small></span></label>` : '';
+  return `<details class="inkset" id="inkSet"${st.inkSetOpen ? ' open' : ''}><summary class="tsb" title="${esc(I.settingsT)}" aria-label="${esc(I.settings)}">⚙ <span class="tl">${esc(I.settings)}</span></summary><div class="inkpop" role="group" aria-label="${esc(I.settings)}">
+    ${row('hold', 'holdToSnap', st.ink.options.holdToSnap)}${row('auto', 'autoShape', st.ink.options.autoShape)}${row('finger', 'fingerDraw', st.arb?.mode === 'finger', penTouch())}${row('smooth', 'penSmooth', prefs().penSmooth !== false)}</div></details>`;
+}
 /* the toolbar's state: back/forward only when there is something to go to; play only for mechanics; the circuit solver
    only with a circuit */
 function paintBar() {
   if (!$('bUndo')) return;
   $('bUndo').disabled = !st.hist.canUndo; $('bRedo').disabled = !st.hist.canRedo;
   const any = selIds().length > 0; $('bDel').disabled = !any; $('bDup').disabled = !any; $('bCopy').disabled = !any;
-  $('bPaste').disabled = !st.clip; $('bClear').disabled = !st.scene.objects.length;
+  $('bPaste').disabled = !st.clip; $('bClear').disabled = !st.scene.objects.length; $('mClearProject').hidden = st.project.pages.length < 2;
   $('cVals').checked = !!st.scene.values;
   const mech = hasMech(), circ = hasCircuit();
   $('mechBar').hidden = !mech; $('clock').hidden = !mech; $('solveLbl').hidden = !circ; $('rtLbl').hidden = !hasPhys();

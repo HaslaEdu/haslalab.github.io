@@ -553,6 +553,10 @@ const fmtSI = (v0, unit) => {
 };
 let CLIP = 0;
 /* a smooth path through screen points (Catmull–Rom turned into cubic Béziers) */
+/** the most points a polyline shows as handles (more: 점 편집 simplifies it to this many) */
+export const POLY_HANDLES = 12;
+/* a spring's teeth (two a coil) on a body this many px long: at most one every 4 px, at least two */
+const springTeeth = (coils, body) => Math.max(2, Math.min(Math.round(coils) * 2, 2 * Math.floor(Math.max(0, body) / 8)));
 function smoothPath(pts, closed) {
   const n = pts.length; if (n < 3) return 'M' + pts.map(q => `${f(q.x)},${f(q.y)}`).join('L') + (closed ? 'Z' : '');
   const at = i => closed ? pts[(i + n) % n] : pts[Math.max(0, Math.min(n - 1, i))];
@@ -803,7 +807,8 @@ export function renderSVG(scene, opts = {}) {
         };
         const a = screen(end(A, B)), b = screen(end(B, A)), L = Math.hypot(b.x - a.x, b.y - a.y);
         if (L > 2) {
-          const ux = (b.x - a.x) / L, uy = (b.y - a.y) / L, lead = Math.min(12 * ss, L * 0.15), n = Math.round(o.coils) * 2, amp = 6.5 * ss;
+          /* never a coil squeezed tighter than one turn every 4 px, nor wider than the spring is long */
+          const ux = (b.x - a.x) / L, uy = (b.y - a.y) / L, lead = Math.min(12 * ss, L * 0.15), n = springTeeth(o.coils, L - 2 * lead), amp = Math.min(6.5 * ss, L * 0.3);
           let d = `M${f(a.x)},${f(a.y)}l${f(ux * lead)},${f(uy * lead)}`;
           const seg = (L - 2 * lead) / n;
           for (let i = 0; i < n; i++) { const t = lead + seg * (i + 0.5), side = i % 2 ? -1 : 1; d += `L${f(a.x + ux * t - uy * amp * side)},${f(a.y + uy * t + ux * amp * side)}`; }
@@ -1597,12 +1602,17 @@ export function renderSVG(scene, opts = {}) {
       if (id !== sel || o.lock) continue;
       if (('x1' in o && 'y2' in o) || o.type === 'callout') for (const k of [1, 2]) { const p = o.type === 'callout' ? screen(k === 1 ? {x: o.x, y: o.y} : {x: o.x2, y: o.y2}) : screen(o.type === 'vector' ? vectorPoints(scene, o, opts.poses)[k - 1] : {x: o['x' + k], y: o['y' + k]}); out.push(`<circle data-handle="${k}" cx="${f(p.x)}" cy="${f(p.y)}" r="7" fill="#fff" fill-opacity="0.85" stroke="#3b6fd8" stroke-width="1.6" class="handle"/>`); }
       const hd = (k, p, extra = '') => `<circle data-handle="${k}" cx="${f(p.x)}" cy="${f(p.y)}" r="6.5" fill="#fff" fill-opacity="0.9" stroke="#3b6fd8" stroke-width="1.6" class="handle"${extra}/>`;
-      if (o.type === 'poly') o.pts.forEach((q, i) => out.push(hd('p' + i, screen({x: q[0], y: q[1]}))));
+      /* a polyline's points are handles only when there are few of them (a polyline drawn point by point) or when
+         점 편집 is on (opts.pointEdit); a pen stroke (many points) is a box: drag to move, the corner scales it, the
+         knob above turns it */
+      const polyBox = o.type === 'poly' && opts.pointEdit !== id && o.pts.length > POLY_HANDLES;
+      if (o.type === 'poly' && !polyBox) o.pts.forEach((q, i) => out.push(hd('p' + i, screen({x: q[0], y: q[1]}))));
+      if (polyBox && b) out.push(hd('ps', {x: X(b.x + b.w) + 5, y: Y(b.y) + 5}, ' data-scale="1"'));
       if (o.type === 'bezier') for (const k of [1, 2]) { const a = screen({x: o['x' + k], y: o['y' + k]}), c = screen({x: o['cx' + k], y: o['cy' + k]}); out.push(`<line x1="${f(a.x)}" y1="${f(a.y)}" x2="${f(c.x)}" y2="${f(c.y)}" stroke="#3b6fd8" stroke-width="1" stroke-dasharray="3 2" pointer-events="none"/>` + hd('c' + k, c, ' data-ctrl="1"')); }
       if (['rect', 'ellipse', 'region', 'qpot', 'graph', 'panel'].includes(o.type) && !o.rot) out.push(hd('wh', screen({x: o.x + o.w, y: o.y + o.h})));
       if (o.type === 'arc') { const t = o.to * Math.PI / 180; out.push(hd('r', screen({x: o.x + o.r * Math.cos(t), y: o.y + o.r * Math.sin(t)}))); }
       /* the turning handle above a turnable object */
-      if ('rot' in o && b && !(isBody(o) && o.on)) { const cx = X(b.x + b.w / 2), top = Y(b.y + b.h) - 5; out.push(`<line x1="${f(cx)}" y1="${f(top)}" x2="${f(cx)}" y2="${f(top - 22)}" stroke="#3b6fd8" stroke-width="1.2" pointer-events="none"/><circle data-rot="1" cx="${f(cx)}" cy="${f(top - 26)}" r="7" fill="#fff" stroke="#3b6fd8" stroke-width="1.6" class="handle rot"/><path d="M${f(cx - 3.5)},${f(top - 28)}a3.6,3.6 0 1 1 1,3" fill="none" stroke="#3b6fd8" stroke-width="1.1" pointer-events="none"/>`); }
+      if ((('rot' in o && !(isBody(o) && o.on)) || polyBox) && b) { const cx = X(b.x + b.w / 2), top = Y(b.y + b.h) - 5; out.push(`<line x1="${f(cx)}" y1="${f(top)}" x2="${f(cx)}" y2="${f(top - 22)}" stroke="#3b6fd8" stroke-width="1.2" pointer-events="none"/><circle data-rot="1" cx="${f(cx)}" cy="${f(top - 26)}" r="7" fill="#fff" stroke="#3b6fd8" stroke-width="1.6" class="handle rot"/><path d="M${f(cx - 3.5)},${f(top - 28)}a3.6,3.6 0 1 1 1,3" fill="none" stroke="#3b6fd8" stroke-width="1.1" pointer-events="none"/>`); }
     }
   }
   if (edit && opts.marquee) { const m = opts.marquee; out.push(`<rect x="${f(Math.min(X(m.x0), X(m.x1)))}" y="${f(Math.min(Y(m.y0), Y(m.y1)))}" width="${f(Math.abs(X(m.x1) - X(m.x0)))}" height="${f(Math.abs(Y(m.y1) - Y(m.y0)))}" fill="#3b6fd8" fill-opacity="0.08" stroke="#3b6fd8" stroke-width="1" stroke-dasharray="4 3" pointer-events="none" class="marquee"/>`); }
@@ -1763,7 +1773,7 @@ export function renderSVG(scene, opts = {}) {
     if (L < 1) return '';
     const ux = (b.x - a.x) / L, uy = (b.y - a.y) / L, d0 = `M${f(a.x)},${f(a.y)}L${f(b.x)},${f(b.y)}`;
     if (o.kind === 'spring') {
-      const lead = Math.min(12 * ss, L * 0.15), n = Math.round(o.coils) * 2, amp = 6 * ss, seg = (L - 2 * lead) / n;
+      const lead = Math.min(12 * ss, L * 0.15), n = springTeeth(o.coils, L - 2 * lead), amp = Math.min(6 * ss, L * 0.3), seg = (L - 2 * lead) / n;
       let d = `M${f(a.x)},${f(a.y)}l${f(ux * lead)},${f(uy * lead)}`;
       for (let i = 0; i < n; i++) { const t = lead + seg * (i + 0.5), side = i % 2 ? -1 : 1; d += `L${f(a.x + ux * t - uy * amp * side)},${f(a.y + uy * t + ux * amp * side)}`; }
       d += `L${f(b.x - ux * lead)},${f(b.y - uy * lead)}L${f(b.x)},${f(b.y)}`;
@@ -1866,8 +1876,10 @@ export function renderSVG(scene, opts = {}) {
     if (K === 'resistor' || K === 'rheostat') {
       half = Math.min(L * 0.32, 22 * k);
       const look = e.look === 'auto' ? st.resistor : e.look;
-      if (look === 'box') { body = `<polygon points="${pt(-half, -6.5 * k)} ${pt(half, -6.5 * k)} ${pt(half, 6.5 * k)} ${pt(-half, 6.5 * k)}" fill="#fff" stroke="${ink}" stroke-width="${f(W2 * 1.1)}"/>`; halfW = 8 * k; }
-      else { let d = `M${pt(-half, 0)}`; for (let i = 0; i < 6; i++) d += `L${pt(-half + half * 2 * (2 * i + 1) / 12, (i % 2 ? -1 : 1) * 6.5 * k)}`; d += `L${pt(half, 0)}`; body = `<path d="${d}" fill="none" stroke="${ink}" stroke-width="${f(W2 * 1.1)}" stroke-linejoin="round"/>`; halfW = 8 * k; }
+      /* a short resistor keeps its proportions: its teeth no taller than it is long */
+      const ra = Math.min(6.5 * k, half * 0.6);
+      if (look === 'box') { body = `<polygon points="${pt(-half, -ra)} ${pt(half, -ra)} ${pt(half, ra)} ${pt(-half, ra)}" fill="#fff" stroke="${ink}" stroke-width="${f(W2 * 1.1)}"/>`; halfW = 8 * k; }
+      else { let d = `M${pt(-half, 0)}`; for (let i = 0; i < 6; i++) d += `L${pt(-half + half * 2 * (2 * i + 1) / 12, (i % 2 ? -1 : 1) * ra)}`; d += `L${pt(half, 0)}`; body = `<path d="${d}" fill="none" stroke="${ink}" stroke-width="${f(W2 * 1.1)}" stroke-linejoin="round"/>`; halfW = 8 * k; }
       if (K === 'rheostat') body += arrow(P2(-half * 0.9, 11 * k), P2(half * 0.95, -13 * k), {width: W2, head: 7 * k}); halfW = K === 'rheostat' ? 13 * k : halfW;
     } else if (K === 'dielectric') {
       half = 6 * k; const pr = `polygon points="${pt(-half, -11 * k)} ${pt(half, -11 * k)} ${pt(half, 11 * k)} ${pt(-half, 11 * k)}"`;

@@ -486,6 +486,11 @@ test('basic shapes: rect, ellipse, polyline/polygon/pen and Bézier are checked,
   for(const style of S.STYLE_KEYS){const svg=R.renderSVG({...sc,style},{width:800,view:{x:-0.5,y:-0.5,w:4,h:4},...R.printScale(style)});assert.doesNotMatch(svg,/NaN|undefined|Infinity/,style);
     assert.match(svg,/stroke="#1d4ed8"/);assert.match(svg,/fill="#c0262d" fill-opacity="0.16"/);assert.match(svg,/ C|C[0-9.]/);assert.match(svg,/fill="#e6e8ec"/);}
   const ed=R.renderSVG(sc,{width:800,view:{x:-0.5,y:-0.5,w:4,h:4},edit:true,selected:['p']});assert.equal((ed.match(/data-handle="p\d"/g)||[]).length,3,'a handle for each vertex');
+  /* a pen stroke (many points) is a box with a corner and a turning knob, not a handle on every sampled point; 점 편집
+     (pointEdit) shows its points */
+  const ink=scene(S,[{id:'k',type:'poly',smooth:true,pts:Array.from({length:60},(_,i)=>[i*0.02,Math.sin(i/6)*0.3])}]),inkEd=R.renderSVG(ink,{width:800,view:{x:-0.5,y:-0.5,w:4,h:4},edit:true,selected:['k']});
+  assert.equal((inkEd.match(/data-handle="p\d+"/g)||[]).length,0,'no handle per point');assert.match(inkEd,/data-handle="ps"/);assert.match(inkEd,/data-rot="1"/);
+  assert.equal((R.renderSVG(ink,{width:800,view:{x:-0.5,y:-0.5,w:4,h:4},edit:true,selected:['k'],pointEdit:'k'}).match(/data-handle="p\d+"/g)||[]).length,60,'점 편집');assert.equal(R.POLY_HANDLES,12);
   assert.match(R.renderSVG(sc,{width:800,view:{x:-0.5,y:-0.5,w:4,h:4},edit:true,selected:['b']}),/data-handle="c1"[\s\S]*data-handle="c2"/,'Bézier control handles');
   for(const bad of [{pts:[[0,0]]},{pts:[[0,'a'],[1,1]]},{pts:[[0,0],[1e6,0]]},{pts:'0,0 1,1'}])assert.ok(!S.validateScene({objects:[{id:'p',type:'poly',...bad}]}).ok,JSON.stringify(bad));
   assert.ok(!S.validateScene({objects:[{id:'r',type:'rect',x:0,y:0,w:1,h:1,color:'purple'}]}).ok,'only the listed colours');
@@ -846,7 +851,7 @@ test('ink in the editor: the pen tool drives draw-ink.mjs; a stroke or a group i
   const {S}=await load();const I=await import('../draw-ink.mjs');
   const fs=require('node:fs'),path=require('node:path'),src=fs.readFileSync(path.join(__dirname,'..','draw.js'),'utf8');
   assert.match(src,/import \{createInkController, toSceneObjects, candidatesFromScene, rasteriseStrokes, mathRequestBody, MATH_PATH[^}]*\} from '\.\/draw-ink\.mjs/);
-  for(const re of [/st\.tool === 'pen'[^\n]*\n[^\n]*\n\s*if \(st\.ink\.pointerdown\(ev\)\)/,/if \(st\.ink\?\.pointermove\(ev\)\) return;/,/st\.ink\.pointerup\(ev\)/,/onShape: \(r, ctx\) => insertInk\(r, ctx\)/,/onMathRegion: m => readMath\(m\.strokes\)/,/api\(MATH_PATH, 'POST', mathRequestBody\(png\.dataUrl\)\)/,/commit\(next, \{before: L\.before\}\)/,/autoShape: p\.inkAuto !== false/,/fingerDraw: p\.inkFinger === true/])assert.match(src,re,String(re));
+  for(const re of [/st\.tool === 'pen'[^\n]*\n[^\n]*\n\s*if \(st\.ink\.pointerdown\(ev\)\)/,/if \(st\.ink\?\.pointermove\(ev\)\) return;/,/st\.ink\.pointerup\(ev\)/,/onShape: \(r, ctx\) => insertInk\(r, ctx\)/,/onMathRegion: m => readMath\(m\.strokes\)/,/api\(MATH_PATH, 'POST', mathRequestBody\(png\.dataUrl\)\)/,/commit\(next, \{before: L\.before\}\)/,/autoShape: p\.inkAuto === true/,/fingerDraw: p\.inkFinger === true/])assert.match(src,re,String(re));
   /* the history the editor keeps: stroke 1 (S0 → S1), then a group that replaces it, committed with the state before
      stroke 1 → one undo goes back to S0 */
   const h=S.createHistory(10),S0='{"s":0}';h.record(S0);h.record(S0);assert.equal(h.size,1,'the group adds no second step');assert.equal(h.undo('{"s":2}'),S0);

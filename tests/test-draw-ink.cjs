@@ -241,12 +241,12 @@ function rig(I, options = {}) {
 
 test('the controller: a pen draws and is cleaned up; with a pen in use touches are the palm; a finger only when allowed', async () => {
   const {I} = await load();
-  const {c, log, draw} = rig(I);
+  const {c, log, draw} = rig(I, {autoShape: true});
   assert.equal(draw(G.ellipse(2, 2, 0.8, 0.8)), true);
   assert.equal(log.shapes[0].r.type, 'circle');
   assert.equal(draw(G.line(0, 0, 2, 0), {type: 'touch', id: 5}), false, 'a palm after the pen');
   assert.equal(log.shapes.length, 1);
-  const f = rig(I, {fingerDraw: true});
+  const f = rig(I, {fingerDraw: true, autoShape: true});
   assert.equal(f.draw(G.line(0, 0, 2, 1), {type: 'touch', id: 3}), true, 'a finger with 손가락으로 그리기');
   assert.equal(f.log.shapes[0].r.type, 'line');
   const off = rig(I);
@@ -276,15 +276,16 @@ test('hold to snap: a pause at the end shows the shape, which follows the pen un
 
 test('the controller groups strokes: the dashes inserted one by one are replaced by one dashed line', async () => {
   const {I} = await load();
-  const {log, draw} = rig(I);
+  const {log, draw} = rig(I, {autoShape: true});
   for (let i = 0; i < 4; i++) draw(G.seg({x: i * 0.5, y: 1}, {x: i * 0.5 + 0.3, y: 1}), {seed: i + 1});
-  const [d1, d2, d3, d4] = log.shapes;
-  assert.deepEqual([d1.r.type, d2.r.type, d3.r.type, d4.r.type], ['line', 'line', 'dashed', 'dashed']);
+  /* each dash alone is too small to be a shape (kept as ink); the third makes them a dashed line */
+  const [d1, d2] = log.free, [d3, d4] = log.shapes;
+  assert.deepEqual([d1.r.type, d2.r.type, d3.r.type, d4.r.type], ['freehand', 'freehand', 'dashed', 'dashed']);
   assert.deepEqual(d3.ctx.replaces, [...d1.ids, ...d2.ids], 'the third dash replaces the two lines');
   assert.deepEqual(d4.ctx.replaces, d3.ids, 'the fourth replaces the dashed line it grows');
   assert.ok(d4.ctx.group); near(d4.r.params.b.x - d4.r.params.a.x, 1.8, 0.08, 'all four dashes');
   /* a cell from two bars */
-  const b = rig(I);
+  const b = rig(I, {autoShape: true});
   b.draw(G.seg({x: 1, y: 0.5}, {x: 1, y: 1.5})); b.draw(G.seg({x: 1.25, y: 0.8}, {x: 1.25, y: 1.2}), {seed: 2});
   assert.equal(b.log.shapes.at(-1).r.type, 'cell'); assert.deepEqual(b.log.shapes.at(-1).ctx.replaces, b.log.shapes[0].ids);
 });
@@ -375,4 +376,99 @@ test('pen buttons: S Pen side / barrel button and the eraser end erase; the ink 
   /* coalesced samples (Chrome / Samsung Internet on Android, Windows Ink) are all taken */
   C.pointermove({pointerType:'pen',pointerId:1,clientX:30,clientY:0,getCoalescedEvents:()=>[10,20,30].map(x=>({pointerType:'pen',pointerId:1,clientX:x,clientY:0,pressure:0.6}))});
   assert.equal(C.current.points.length,4);
+});
+
+/* ── handwriting stays ink (2026-11, a Galaxy Tab with an S Pen: "a + b = 2" written with the pen, the 2 became a coil
+   drawn tiny, with a handle on each of its points) ── */
+const arcP = (cx, cy, rx, ry, a0, a1, n = 40) => Array.from({length: n + 1}, (_, i) => { const t = (a0 + (a1 - a0) * i / n) * Math.PI / 180; return {x: cx + rx * Math.cos(t), y: cy + ry * Math.sin(t)}; });
+const cat = (...ps) => ps.flat();
+/* glyphs in a box about 1 wide and 1.4 high (y up), each a list of strokes */
+const GLYPHS = {
+  0: [arcP(0.45, 0.7, 0.4, 0.65, 100, 480, 60)],
+  1: [cat(G.seg({x: 0.3, y: 1.1}, {x: 0.55, y: 1.4}, 10), G.seg({x: 0.55, y: 1.4}, {x: 0.55, y: 0}, 30))],
+  2: [cat(arcP(0.5, 1.0, 0.4, 0.4, 170, -10, 30), G.seg({x: 0.88, y: 0.9}, {x: 0.05, y: 0}, 30), G.seg({x: 0.05, y: 0}, {x: 0.95, y: 0.02}, 20))],
+  '2 with a loop': [cat(arcP(0.5, 1.0, 0.4, 0.4, 170, -10, 30), G.seg({x: 0.88, y: 0.9}, {x: 0.15, y: 0.05}, 30), arcP(0.18, 0.12, 0.12, 0.1, -90, -450, 24), G.seg({x: 0.18, y: 0.02}, {x: 0.95, y: 0.05}, 20))],
+  3: [cat(arcP(0.45, 1.05, 0.4, 0.33, 150, -90, 30), arcP(0.45, 0.37, 0.45, 0.37, 90, -150, 30))],
+  4: [cat(G.seg({x: 0.7, y: 0}, {x: 0.7, y: 1.4}, 20), G.seg({x: 0.7, y: 1.4}, {x: 0, y: 0.4}, 20), G.seg({x: 0, y: 0.4}, {x: 1, y: 0.4}, 20))],
+  5: [cat(G.seg({x: 0.9, y: 1.4}, {x: 0.15, y: 1.4}, 12), G.seg({x: 0.15, y: 1.4}, {x: 0.1, y: 0.8}, 10), arcP(0.45, 0.45, 0.42, 0.42, 140, -160, 30))],
+  6: [cat(arcP(0.6, 0.7, 0.5, 0.7, 70, 190, 20), arcP(0.5, 0.35, 0.4, 0.35, 180, 540, 40))],
+  7: [cat(G.seg({x: 0, y: 1.4}, {x: 1, y: 1.4}, 15), G.seg({x: 1, y: 1.4}, {x: 0.35, y: 0}, 25))],
+  8: [Array.from({length: 80}, (_, i) => { const t = i / 79 * 2 * Math.PI + 0.3; return {x: 0.45 + 0.4 * Math.sin(2 * t), y: 0.7 + 0.68 * Math.cos(t)}; })],
+  9: [cat(arcP(0.5, 1.05, 0.4, 0.35, 0, 370, 40), G.seg({x: 0.9, y: 1.1}, {x: 0.8, y: 0}, 20))],
+  a: [cat(arcP(0.45, 0.4, 0.4, 0.4, 30, 380, 40), G.seg({x: 0.85, y: 0.7}, {x: 0.9, y: 0}, 14))],
+  b: [cat(G.seg({x: 0.1, y: 1.4}, {x: 0.1, y: 0}, 20), arcP(0.45, 0.38, 0.38, 0.38, 180, 540, 40))],
+  c: [arcP(0.5, 0.45, 0.42, 0.45, 45, 315, 30)],
+  e: [cat(G.seg({x: 0.1, y: 0.45}, {x: 0.85, y: 0.45}, 12), arcP(0.47, 0.45, 0.4, 0.45, 0, 320, 34))],
+  x: [G.seg({x: 0, y: 0.9}, {x: 0.85, y: 0}, 15), G.seg({x: 0.85, y: 0.9}, {x: 0, y: 0}, 15)],
+  y: [G.seg({x: 0, y: 0.9}, {x: 0.45, y: 0.3}, 12), G.seg({x: 0.9, y: 0.9}, {x: 0.2, y: -0.6}, 20)],
+  '+': [G.seg({x: 0, y: 0.5}, {x: 0.9, y: 0.5}, 12), G.seg({x: 0.45, y: 0.95}, {x: 0.45, y: 0.05}, 12)],
+  '=': [G.seg({x: 0, y: 0.65}, {x: 0.9, y: 0.65}, 12), G.seg({x: 0, y: 0.3}, {x: 0.9, y: 0.3}, 12)]
+};
+const place = (path, size, ox, oy) => path.map(p => ({x: ox + p.x * size, y: oy + p.y * size}));
+
+test('handwriting: digits 0–9 and a, b, c, e, x, y written small stay ink, even with 자동 보정 on', async () => {
+  const {I} = await load();
+  assert.equal(I.INK_DEFAULTS.autoShape, false, '자동 보정 is off by default');
+  const bad = [];
+  /* 20–30 px high (0.2–0.3 m at 100 px/m), written quickly */
+  for (const [name, strokes] of Object.entries(GLYPHS)) for (const size of [0.14, 0.2]) for (const seed of [1, 2, 3]) for (const [k, path] of strokes.entries()) {
+    const r = I.recognizeStroke(G.hand(place(path, size, 1, 1), {seed: seed * 5 + k, speed: 900, wobble: 2, jitter: 0.6}), {...O, autoShape: true});
+    if (r.type !== 'freehand' && r.type !== 'dot') bad.push(`${name}@${size}#${seed}.${k}: ${kindOf(r)}`);
+  }
+  assert.deepEqual(bad, []);
+  /* written larger (40–80 px), a glyph alone still is no shape: a loop with a tail, crossing itself, a "1" is no arrow */
+  for (const name of ['2', '2 with a loop', '3', '5', '6', '8', '9', 'a', 'b', 'e', '1']) for (const size of [0.4, 0.55]) {
+    const r = I.recognizeStroke(G.hand(place(GLYPHS[name][0], size, 1, 1), {seed: 4, speed: 900}), {...O, autoShape: true});
+    assert.ok(r.type === 'freehand', `${name}@${size}: ${kindOf(r)}`);
+  }
+  /* no glyph, at any size, is read as a spring, a coil or a resistor */
+  for (const [name, strokes] of Object.entries(GLYPHS)) for (const size of [0.2, 0.5, 1, 2]) for (const path of strokes) {
+    const r = I.recognizeStroke(G.hand(place(path, size, 1, 1), {seed: 7, speed: 900}), {...O, via: 'hold'});
+    assert.ok(![r, ...r.alternatives].some(c => I.PHYSICS_GLYPHS.includes(c.type)), `${name}@${size}: ${kindOf(r)}`);
+  }
+});
+
+test('the physics glyphs need a clear one: three periods, long enough, confident; else no part is offered', async () => {
+  const {I} = await load();
+  /* two teeth or a short squiggle: not a resistor */
+  for (const [path, why] of [[G.zig({x: 0, y: 1}, {x: 2, y: 1}, 3, 0.15), '3 teeth'], [G.zig({x: 0, y: 1}, {x: 0.5, y: 1}, 6, 0.05), 'tiny'], [G.coil({x: 0, y: 1}, {x: 0.4, y: 1}, 4, 0.05), 'a tiny coil'], [G.sine(0, 1, 2, 0.4, 1.6), 'one wave']]) {
+    const r = I.recognizeStroke(G.hand(path, {seed: 3}), {...O, via: 'hold'});
+    assert.ok(![r, ...r.alternatives].some(c => I.PHYSICS_GLYPHS.includes(c.type)), `${why}: ${kindOf(r)}`);
+  }
+  /* a drawn coil is never smaller than a part is drawn: too short, it is put in as the stroke itself */
+  const tiny = {type: 'coil', params: {a: {x: 0, y: 0}, b: {x: 0.3, y: 0}, n: 7, amp: 0.05, kind: 'spring'}, alternatives: [{type: 'freehand', params: {pts: [{x: 0, y: 0}, {x: 0.1, y: 0.05}, {x: 0.3, y: 0}]}}]};
+  const objs = I.toSceneObjects(tiny, {unit: G.U});
+  assert.equal(objs.length, 1); assert.equal(objs[0].type, 'poly'); assert.equal(objs[0].pts.length, 3, 'the stroke, not a coil');
+  /* a long coil drawn with too many turns for its length: at most one turn every 6 px */
+  const many = I.toSceneObjects({type: 'coil', params: {a: {x: 0, y: 0}, b: {x: 1, y: 0}, n: 40, amp: 0.1, kind: 'spring'}}, {unit: G.U})[0];
+  assert.ok(many.pts.length <= 16 * 17 + 1, 'turns capped');
+});
+
+test('writing "a + b = 2" on a tablet: every stroke stays ink, nothing grouped; a big circle held becomes a circle', async () => {
+  const {I} = await load();
+  for (const options of [{}, {autoShape: true}]) {
+    const {log, c, ev, advance} = rig(I, options);
+    let x = 0.5, seed = 1;
+    for (const ch of ['a', '+', 'b', '=', '2']) {
+      for (const path of GLYPHS[ch]) {
+        const s = G.hand(place(path, 0.22, x, 1), {seed: seed++, speed: 800}).points;
+        c.pointerdown(ev(s[0])); for (const p of s.slice(1)) { advance(5); c.pointermove(ev(p)); }
+        advance(5); c.pointerup(ev(s[s.length - 1])); advance(160);
+      }
+      x += 0.32; advance(120);
+    }
+    assert.equal(log.shapes.length, 0, JSON.stringify(options) + ': ' + log.shapes.map(s0 => kindOf(s0.r)).join(','));
+    assert.equal(log.free.length, 7, JSON.stringify(options) + log.free.map(f => f.r.type + f.ctx.writing).join()); assert.equal(log.previews.length, 0, 'no snap while writing');
+    if (options.autoShape) assert.ok(log.free.slice(1).every(f => f.ctx.writing), 'seen as writing');
+  }
+  /* a big circle, the pen held still at its end: a circle, from the hold, with its other readings */
+  const {log, c, ev, advance} = rig(I);
+  const s = G.hand(G.ellipse(2, 2, 0.8, 0.8), {seed: 2}).points;
+  c.pointerdown(ev(s[0])); for (const p of s.slice(1)) { advance(8); c.pointermove(ev(p)); }
+  advance(600); assert.equal(log.previews.at(-1).type, 'circle');
+  c.pointerup(ev(s[s.length - 1]));
+  assert.equal(log.shapes.length, 1); assert.equal(log.shapes[0].r.type, 'circle'); assert.equal(log.shapes[0].ctx.via, 'hold');
+  assert.ok(log.shapes[0].ctx.alternatives.length >= 1);
+  /* the same circle without the hold: ink */
+  const fr = rig(I); fr.draw(G.ellipse(2, 2, 0.8, 0.8)); assert.equal(fr.log.shapes.length, 0); assert.equal(fr.log.free.length, 1);
 });

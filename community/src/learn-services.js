@@ -6,6 +6,7 @@
    Plans live in `entitlements` (one row per grant: a payment, a school, an admin). Nothing here charges anyone; a
    payment provider's webhook or an admin adds the row. */
 import { generate } from './ai-assistant.js';
+import { legacyJoinGate } from './workshop-group-gate.js';
 
 export const LEARN_SCHEMA = [
   `CREATE TABLE IF NOT EXISTS entitlements (
@@ -304,6 +305,9 @@ export function createLearnRouter({HttpError, needUser, limit, now, bad, clientI
       const c = await one('SELECT id,teacher_id,name FROM classes WHERE code=? AND closed_at IS NULL', code);
       if (!c) throw new HttpError(404, 'class_not_found');
       if (c.teacher_id === me.id) bad('own_class');
+      /* a removed member, a group that turned its class code off or asks for approval (workshop-group-gate.js) */
+      const refused = await legacyJoinGate(env, c.id, me.id, t);
+      if (refused) throw new HttpError(refused === 'class_not_found' ? 404 : 403, refused);
       const plan = await planOf(env, c.teacher_id, t), seats = plan.plan === 'free' ? FREE_SEATS : PLAN_SEATS;
       const n = await one('SELECT COUNT(*) AS n FROM class_members WHERE class_id=?', c.id);
       const already = await one('SELECT 1 AS y FROM class_members WHERE class_id=? AND user_id=?', c.id, me.id);

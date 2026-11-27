@@ -1235,7 +1235,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="share-publish.js?v=c4278342f87e"></script>
 <script src="workshop-share.js?v=7e6b1855c059"></script>
 <script src="workshop-publish-source.js?v=67091036105a"></script>
-<script src="workshop-class-storage.js?v=af2eae6dc4b9"></script>
+<script src="workshop-class-storage.js?v=d0d7906c2378"></script>
 <style>
 .ws-group-panel{background:var(--paper,#fff);border:1px solid var(--rule,#d5dbe6);border-radius:10px;padding:10px 14px;margin:8px 0 12px}
 .ws-group-panel summary{cursor:pointer;font-weight:600}
@@ -5720,7 +5720,7 @@ addEventListener("message",event=>{
 
 /* Figures and simulations (#/workshop/draw, draw.html): a mechanics figure drawn by value, printed on a test or run as a
    simulation; the frame reports its height like the problem maker's. */
-const DRAW_FRAME_VERSION="dbb4559d8ff4";
+const DRAW_FRAME_VERSION="1c3418cab5f9";
 function viewWorkshopDraw(){
   const label=wsTitle("draw");
   const query=new URLSearchParams({embed:"1",lang:uiLang==="ko"?"ko":"en",theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:DRAW_FRAME_VERSION});
@@ -5876,7 +5876,7 @@ ${files.map(f=>`<li class="ws-row"><span class="ws-name"><span class="ws-ext">${
       <p class="ws-hint">${T("파일을 여기로 끌어다 놓아도 됩니다. PDF, 그림(PNG·JPG·WebP·SVG), 한글(HWPX), 워드·엑셀·파워포인트, CSV·TXT·MD·JSON","You can also drop files here. PDF, images (PNG, JPG, WebP, SVG), HWPX, Word, Excel, PowerPoint, CSV, TXT, MD, JSON")}</p>
     </div>
     <p class="ws-msg" role="status">${esc(wsStore.msg)}</p><section class="ws-class-shares" data-class-shares></section>`;
-  window.HL_WS_CLASS_STORAGE?.({host:box.querySelector("[data-class-shares]"),root:box,api:cmApi,fetchFile:wsFetch,text:T,esc,error:wsErr,files:D.files,folders:D.folders,here});
+  window.HL_WS_CLASS_STORAGE?.({host:box.querySelector("[data-class-shares]"),root:box,api:cmApi,fetchFile:wsFetch,text:T,esc,error:wsErr,files:D.files,folders:D.folders,here,av:cmAv});
   const again=()=>{if(here())wsPaint(box,here);};
   const reload=()=>wsLoad(box,here);
   const fail=e=>{wsStore.msg=wsErr(e?.code);again();};

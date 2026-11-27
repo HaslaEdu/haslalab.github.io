@@ -254,3 +254,19 @@ dialog.dlg.framed{margin:0 auto;bottom:auto;max-height:620px}dialog.dlg::backdro
 .inputmode{padding:3px 10px;border-radius:999px;font-size:12.5px}.inputmode.on{background:var(--soft);border-color:var(--accent);color:var(--accent2)}
 #stageTop{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}#stageTop>#inkProposal,#stageTop>.inkbar{flex-basis:100%}
 @media(pointer:coarse){.inputmode{min-height:44px}}
+/* 펜 설정: one button in the pen bar, a popover of the pen's switches with a line each */
+.inkset{position:relative;display:inline-block}.inkset>summary{list-style:none;display:inline-flex;align-items:center;gap:4px;cursor:pointer;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink);font-size:12.5px}
+.inkset>summary::-webkit-details-marker{display:none}.inkset[open]>summary{background:var(--rail);border-color:var(--rail);color:#fff}
+.inkpop{position:absolute;z-index:30;top:calc(100% + 4px);left:0;width:min(330px,calc(100vw - 24px));display:grid;gap:2px;padding:6px;border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:0 6px 22px rgba(0,0,0,.16)}
+.inkrow{display:flex!important;gap:8px;align-items:flex-start!important;padding:6px;border-radius:7px;cursor:pointer;color:var(--ink)}.inkrow:hover{background:var(--soft)}.inkrow input{width:auto;margin-top:3px}
+.inkrow span{display:grid;gap:1px}.inkrow b{font-size:13px;font-weight:600}.inkrow small{font-size:12px;color:var(--muted);line-height:1.35}
+.inputtip{font-size:12.5px;padding:4px 10px;border-radius:8px;background:var(--soft);border:1px solid var(--accent);color:var(--ink);cursor:pointer}
+@media(pointer:coarse){.inkset>summary{min-height:44px}.inkrow{min-height:44px}}
+.inkbar[hidden],.inputtip[hidden],.inputmode[hidden]{display:none!important}
+.inputmode .ico{width:15px;height:15px;vertical-align:-3px}
+/* the other readings (and the maths bar) float over the canvas's top edge: showing or hiding them never moves the
+   canvas under the pen */
+.canvasdock{position:relative}.canvasdock>.inkbar{position:absolute;z-index:6;top:6px;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100% - 12px);margin:0;box-shadow:0 4px 14px rgba(0,0,0,.14)}
+/* what a finger does (the chip) sits on the canvas's lower left, over it: appearing when a pen is first seen, it moves nothing */
+.canvasdock>.inputbox{position:absolute;z-index:6;left:8px;bottom:14px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;max-width:calc(100% - 16px);pointer-events:none}
+.inputbox>*{pointer-events:auto}.inputbox .inputmode{background:var(--surface);box-shadow:0 2px 8px rgba(0,0,0,.12)}
