@@ -1212,13 +1212,13 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="sim/result-comparison.js?v=b189a5d97ba5"></script>
 <script src="monthly-figures.js?v=a75f89ada7f1"></script>
 <script src="examdur.js?v=9a7cae160dd1"></script>
-<script src="paper-languages.js?v=8fc1f58f4d5c"></script>
+<script src="paper-languages.js?v=62c8dca6b7d1"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="learn-path.js?v=57047175e02a"></script>
 <script src="learner-form.js?v=3f26ac6f4a76"></script>
 <script src="league-view.js?v=19c48c94248c"></script>
 <script src="archive-navigation.js?v=10d33500b414"></script>
-<script src="site-catalogue.js?v=639e15d6a572"></script>
+<script src="site-catalogue.js?v=a41004e92574"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=e43cec5305aa"></script>
 <script src="site-design.js?v=af0e919623fe"></script>
@@ -4958,7 +4958,7 @@ const LOGO_FILES = {cmo:"cmo.svg",plancks:"plancks.svg"};
 const ARCHIVE_FLAGS={
   aupho:"au", bpho:"gb", bphoii:"gb", fma:"us", inpho:"in", obf:"br", soif:"br",
   spho:"sg", sphotst:"sg", twpho:"tw", usapho:"us", vntst:"vn", vpho:"vn",
-  azpho:"az", cpho:"cn", dpho:"de", efo:"ee", jpho:"jp", onf:"ro", osn:"id", panpho:"hk", polpho:"pl",
+  azpho:"az", capphysics:"ca", cpho:"cn", dpho:"de", efo:"ee", jeea:"in", jeem:"in", jpho:"jp", onf:"ro", osn:"id", panpho:"hk", physicsbowl:"us", polpho:"pl", swpho:"ch",
   rupho:"ru", ruphow:"ru", ruphox:"ru", ruphoy:"ru"
 };
 const LOGO_ORGANIZERS = {
@@ -5158,7 +5158,7 @@ function contestStageNav(key,year=""){
 }
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
-  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","fipho","bpo","oibf","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe","obf","twpho","inpho","fma","bpho","bphoii","vpho","vntst","aupho","efo","onf","azpho","osn","soif","spho","sphotst","panpho","dpho","jpho"]},
+  {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","fipho","bpo","oibf","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe","obf","twpho","inpho","fma","bpho","bphoii","vpho","vntst","aupho","efo","onf","azpho","osn","soif","spho","sphotst","panpho","dpho","jpho","polpho","swpho","capphysics","physicsbowl","jeem","jeea"]},
   {k:"chem", ko:"화학", en:"Chemistry", logo:"icho", comps:["icho","imcho","kmchc","usnco"]},
   {k:"bio", ko:"생물", en:"Biology", logo:"ibo", comps:["ibo","mskbo","usabo"]},
   {k:"earth", ko:"지구과학", en:"Earth science", logo:"ieso", comps:["ieso","useso","ceso","jeso"]},
@@ -6409,7 +6409,7 @@ function theoryHtml(key,yr){
      const paperStart=selectedLanguage==="ko"?k.paperStart:P[0]===f.paper&&(f.paperStart||f.sourcePages?.[0]);
      const paperDisplay=paperStart?P[0]+"#page="+paperStart:P[0];
      /* (an original that also holds the solutions, e.g. a Hungarian report beside an English translation, stays) */
-     const bilingualArchive=["ieso","icho","imcho","ibo","ijso"].includes(key);
+     const bilingualArchive=["ieso","icho","imcho","ibo","ijso","jeem","jeea","swpho"].includes(key);
      const languageDocs=ko&&!bilingualArchive?[]:Object.entries(paperLanguages).filter(([language,file])=>file!==P[0]&&(key==="oibf"||bilingualArchive||!paperLanguages.en||f.paperContainsSolutions?.[language])).map(([language,file])=>{
        const label=language==="ko"&&k.partial?`${d.thyPaper} (${ko?"부분":"partial"})`:f.paperContainsSolutions?.[language]?(ko?"문제·해설 합본":"Problems & solutions"):key==="oibf"?"Original paper":d.thyPaper;
        const start=file===f.paper&&f.sourcePages?.[0];
