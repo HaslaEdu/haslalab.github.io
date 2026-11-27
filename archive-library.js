@@ -24,6 +24,8 @@ WORDS.ko.titlePage='표제지';WORDS.en.titlePage='Title page';
 WORDS.ko.searchProblems='자료·문항 검색';WORDS.en.searchProblems='Search materials and problems';
 Object.assign(WORDS.ko,{edition:'판본',originalLanguage:'원문',imageType:'이미지',cover:'표지',materials:'수록 자료',materialType:'구분',officialLinksCount:'공식 링크',notDigitized:'미수록'});
 Object.assign(WORDS.en,{edition:'Edition',originalLanguage:'Original',imageType:'Image',cover:'Cover',materials:'Papers',materialType:'Type',officialLinksCount:'Official links',notDigitized:'Not stored'});
+WORDS.ko.chapters='강의 장';
+WORDS.en.chapters='Chapters';
 Object.assign(WORDS.ko,{contents:'목차',chapter:'장·구분',chooseChapter:'목차에서 장·구분을 선택하세요.',unchaptered:'문제 목록',perPage:'페이지당 20문제',number:'번호',problemTitle:'문제',chapterContents:'장·구분별 문제',backContents:'목차',allChapters:'모든 장에서 검색',page:'페이지',previous:'이전',problem:'문제'});
 Object.assign(WORDS.en,{contents:'Contents',chapter:'Chapter / section',chooseChapter:'Choose a chapter or section.',unchaptered:'Problems',perPage:'20 problems per page',number:'No.',problemTitle:'Problem',chapterContents:'Chapters and sections',backContents:'Contents',allChapters:'Search all chapters',page:'Page',previous:'Previous'});
 Object.assign(WORDS.ko,{hideContents:'목차 접기',showContents:'목차 펼치기',textSearch:'텍스트 검색',photoSearch:'사진 · OCR',searchBook:'이 교재 전체',searchPaper:'이 자료 전체',searchPart:'선택한 장·구분',searchScope:'검색 범위',ocrRestricted:'사진 검색은 현재 관리자만 사용할 수 있습니다.',ocrChecking:'사진 검색 권한을 확인하고 있습니다.',choosePartNote:'왼쪽 목차에서 장·구분을 선택하면 문제 목록을 불러옵니다.',filters:'상세 조건',sourceClassification:'자료 분류'});
@@ -67,6 +69,7 @@ export function mountArchiveLibrary(container,options={}){
   let config={kind:'book',collection:'physics',lang:'ko',theme:'light',apiOrigin:'https://haslalab-problem-bank.haslalab.workers.dev',params:new URLSearchParams(),...options};
   let disposed=false,epoch=0,panelRequest=0,bootstrapRequest=0,readerRequest=0,identifyRequest=0,activeQuestion=null,identifyBusy=false,mathLayoutFrame=0,sources=[],status={},statusChecked=false,contents=null,urls=new Set(),controllers=new Set(),metadataControllers=new Set();
   let token=String(config.getToken?.()||''),params=cleanParams(config.params),candidateItems=null;
+  const privateBookToken=token;
   const root=doc.createElement('section');root.className='al';container.replaceChildren(root);
   const $=selector=>root.querySelector(selector),tr=key=>WORDS[config.lang==='en'?'en':'ko'][key]||key;
   const current=e=>!disposed&&e===epoch&&String(config.getToken?.()||'')===token;
@@ -178,18 +181,70 @@ export function mountArchiveLibrary(container,options={}){
     const media=config.bookMedia?.[source.id],title=source.published_title_en||source.published_title_ko||source.title||media?.title||sourceTitle(source),edition=source.edition_label||media?.edition||'—';
     const image=media?.image_url?tr(media.provenanceKind==='source_title_page'?'titlePage':'cover'):tr('noCover');
     const short=localized(media?.short_title)||source.primary_author||title,topic=localized(media?.topic_label);
-    return `<a class="comp al-book-card" href="${esc(href({source:source.id,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(short)}${topic?`<span class="al-card-topic${media.topic_prominent?' prominent':''}">${esc(topic)}</span>`:''}</div>${cardImage(source)}</div><div class="full">${esc(media?.full_title||title)}</div>${metadata([[tr('originalLanguage'),source.source_language?.toUpperCase()||'—'],[tr('edition'),edition],[tr('imageType'),image],[tr('problems'),Number.isSafeInteger(source.question_count)?source.question_count:'—','data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
+    return textbookCard({href:href({source:source.id,problem:null,cursor:null}),short,topic,
+      prominent:media?.topic_prominent,title:media?.full_title||title,cover:cardImage(source),
+      language:source.source_language?.toUpperCase()||'—',edition,image,count:source.question_count});
+  }
+  function textbookCard({href,short,topic,prominent,title,cover,language,edition,image,count,countLabel='problems'}){
+    const countAttribute=countLabel==='chapters'?'data-card-chapters':'data-card-questions';
+    return `<a class="comp al-book-card" href="${esc(href)}"><div class="chead"><div class="abbr">${esc(short)}${topic?`<span class="al-card-topic${prominent?' prominent':''}">${esc(topic)}</span>`:''}</div>${cover}</div><div class="full">${esc(title)}</div>${metadata([[tr('originalLanguage'),language],[tr('edition'),edition],[tr('imageType'),image],[tr(countLabel),Number.isSafeInteger(count)?count:'—',countAttribute]])}<span class="go" aria-hidden="true">→</span></a>`;
   }
   function schoolCard(school){
     const papers=schoolSources(school),light=safeMediaURL(school.logo_url),dark=safeMediaURL(school.dark_logo_url),logo=config.theme==='dark'&&dark?dark:light;
     const count=papers.reduce((n,p)=>n+(Number.isSafeInteger(p.question_count)?p.question_count:0),0),short=school.aliases?.find(x=>/^[A-Z]{2,6}$/.test(x))||school.name?.en?.replace(/\s+University$/,'')||localized(school.name);
     return `<a class="comp al-school-card" href="${esc(href({school:school.id,source:null,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(short)}</div>${logo?`<img class="clogo al-card-school-logo${school.logo_monochrome?' al-logo-monochrome':''}" src="${esc(logo)}" data-logo-light="${esc(light)}" data-logo-dark="${esc(dark)}" alt="" loading="lazy" decoding="async">`:''}</div><div class="full">${esc(school.id==='other'?tr('unclassified'):localized(school.name))}</div>${metadata([[tr('materials'),papers.length||'—','data-card-papers'],[tr('materialType'),tr(papers.length?'schoolPapers':'officialLinks')],[tr('officialLinksCount'),schoolMaterials(school).length],[tr('problems'),papers.length?count:tr('notDigitized'),'data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
   }
-  function officialMaterialsHTML(school){const items=schoolMaterials(school);return items.length?`<section class="al-official"><h3>${esc(tr('officialMaterials'))}</h3><ul>${items.map(x=>`<li><a href="${esc(officialURL(x.url))}" target="_blank" rel="noopener noreferrer">${esc(localized(x.label)||x.url)} ↗</a></li>`).join('')}</ul></section>`:'';}
+  function officialMaterialsHTML(school){
+    const items=schoolMaterials(school);
+    if(!items.length)return '';
+    const link=item=>`<a href="${esc(officialURL(item.url))}" target="_blank" rel="noopener noreferrer">${esc(localized(item.label)||item.url)} ↗</a>`;
+    const groupList=item=>(item.groups||[]).map(group=>{
+      const entries=group.entries.filter(entry=>officialURL(entry.url));
+      return entries.length?`<details><summary>${esc(localized(group.label))}</summary><ul>${entries.map(entry=>`<li>${link(entry)}</li>`).join('')}</ul></details>`:'';
+    }).join('');
+    return `<section class="al-official"><h3>${esc(tr('officialMaterials'))}</h3><ul>${items.map(item=>`<li>${link(item)}${groupList(item)}</li>`).join('')}</ul></section>`;
+  }
+  const privateTitles = {
+    goldstein: 'Classical Mechanics — Goldstein',
+    guopei: 'Guopei — Physics Olympiad Training and Selection',
+    savchenko: 'Problems in Physics — Savchenko',
+    estonian: '200 Estonian Physics Olympiad Problems',
+    russian: 'Russian Physics Olympiads 2005–2021',
+    general: 'Problems in General Physics — Irodov',
+    aptitude: 'Aptitude Test Problems in Physics — Krotov',
+    halliday: 'Fundamentals of Physics, 10th ed. — Halliday',
+    perfect: '퍼펙트물리',
+    feynman: 'The Feynman Lectures on Physics',
+  };
+  const privateBookLabels = {
+    goldstein: ['Goldstein', 'EN', '3rd edition'],
+    guopei: ['Guopei', 'ZH'],
+    savchenko: ['Savchenko', 'RU', ''],
+    estonian: ['Estonian', 'EN'],
+    russian: ['Russian Olympiads', 'EN'],
+    general: ['Irodov', 'EN'],
+    aptitude: ['Krotov', 'EN'],
+    halliday: ['Halliday', 'EN', '10th edition'],
+    perfect: ['퍼펙트물리', 'KO'],
+    feynman: ['Feynman', 'EN', 'New Millennium'],
+  };
+  function privateBookCard(book){
+    const title=privateTitles[book.id], href='#/archive/books/phys?view=private-textbooks&book='+book.id;
+    const [short,language,edition]=privateBookLabels[book.id];
+    const image=typeof book.cover_webp==='string'&&/^UklGR[A-Za-z0-9+/]{100,31995}={0,2}$/.test(book.cover_webp);
+    const titlePage=['savchenko','estonian','russian','perfect'].includes(book.id);
+    const cover=image
+      ? `<img class="clogo al-card-cover" src="data:image/webp;base64,${esc(book.cover_webp)}" alt="" loading="lazy" decoding="async">`
+      : `<span class="clogo al-card-cover-placeholder" aria-label="${esc(tr('noCover'))}">—</span>`;
+    return textbookCard({href,short,title,cover,language,edition:edition||'—',
+      image:tr(image?(titlePage?'titlePage':'cover'):'noCover'),count:book.count,
+      countLabel:book.kind==='lectures'?'chapters':'problems'});
+  }
   function referenceBooks(){return (Array.isArray(config.bookReferences)?config.bookReferences:[]).filter(item=>item?.collection===config.collection&&typeof item.id==='string'&&!SID.test(item.id)&&officialURL(item.href));}
   function referenceCard(item){
     const title=localized(item.full_title||item.title),topic=localized(item.topic_label),availability=tr(item.availability==='digitization_pending'?'digitizationPending':item.resource_kind==='handouts'?'officialProblems':'officialOnline');
-    return `<a class="comp al-reference-card" data-reference-id="${esc(item.id)}" href="${esc(officialURL(item.href))}" target="_blank" rel="noopener noreferrer"><div class="chead"><div class="abbr">${esc(item.short_title||localized(item.title))}${topic?`<span class="al-card-topic">${esc(topic)}</span>`:''}</div><span class="clogo al-reference-spine" aria-label="${esc(tr('noCover'))}">${esc(tr('externalMaterial'))}</span></div><div class="full">${esc(title)}</div>${metadata([[tr('author'),item.author||'—'],[tr('topic'),topic||'—'],[tr('materialType'),tr(item.resource_kind||'textbook')],[tr('access'),availability]])}<span class="go" aria-hidden="true">↗</span></a>`;
+    const local=item.id==='feynman',href=local?'#/archive/books/phys?view=private-textbooks&book=feynman':officialURL(item.href);
+    return `<a class="comp al-reference-card" data-reference-id="${esc(item.id)}" href="${esc(href)}"${local?'':' target="_blank" rel="noopener noreferrer"'}><div class="chead"><div class="abbr">${esc(item.short_title||localized(item.title))}${topic?`<span class="al-card-topic">${esc(topic)}</span>`:''}</div><span class="clogo al-reference-spine" aria-label="${esc(tr('noCover'))}">${esc(tr('externalMaterial'))}</span></div><div class="full">${esc(title)}</div>${metadata([[tr('author'),item.author||'—'],[tr('topic'),topic||'—'],[tr('materialType'),tr(item.resource_kind||'textbook')],[tr('access'),availability]])}<span class="go" aria-hidden="true">${local?'→':'↗'}</span></a>`;
   }
   function ordered(list){const c=new Intl.Collator(config.lang,{numeric:true,sensitivity:'base'});return [...list].sort((a,b)=>config.kind==='contest'?(c.compare(a.competition||'',b.competition||'')||(b.year||0)-(a.year||0)||c.compare(sourceTitle(a),sourceTitle(b))):c.compare(sourceTitle(a),sourceTitle(b))||String(a.id).localeCompare(String(b.id)));}
   async function loadSources(unscoped=false){
@@ -242,8 +297,11 @@ export function mountArchiveLibrary(container,options={}){
     }
     const list=visibleSources().filter(s=>[sourceTitle(s),sourceMeta(s),localized(sourceMedia(s.id).short_title),localized(sourceMedia(s.id).topic_label),sourceMedia(s.id).full_title].join(' ').toLocaleLowerCase().includes(query)),books=config.kind==='book';slot.className=books?'comps':'al-paper-list';
     if(books)slot.dataset.lang=config.lang;else slot.removeAttribute('data-lang');
-    const references=books?referenceBooks().filter(item=>[localized(item.title),localized(item.full_title),item.short_title,item.author,localized(item.topic_label)].join(' ').toLocaleLowerCase().includes(query)):[];
-    slot.innerHTML=list.length||references.length?list.map(s=>books?bookCard(s):`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join('')+references.map(referenceCard).join(''):books?`<div class="subjempty">${esc(tr('emptySources'))}</div>`:`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
+    const privateBooks=books&&privateBookToken===token&&config.collection==='physics'?(config.privateBooks||[]).filter(book=>Object.hasOwn(privateTitles,book.id)):[];
+    const privateCards=privateBooks.filter(book=>[privateTitles[book.id],book.id==='feynman'?'파인만 물리학 강의':''].join(' ').toLocaleLowerCase().includes(query)).map(privateBookCard).join('');
+    const replacedReferences=new Set(privateBooks.map(book=>book.id==='goldstein'?'goldstein-classical-mechanics':book.id));
+    const references=books?referenceBooks().filter(item=>!replacedReferences.has(item.id)).filter(item=>[localized(item.title),localized(item.full_title),item.short_title,item.author,localized(item.topic_label),item.id==='feynman'?'파인만 물리학 강의':''].join(' ').toLocaleLowerCase().includes(query)):[];
+    slot.innerHTML=list.length||references.length||privateCards?privateCards+list.map(s=>books?bookCard(s):`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join('')+references.map(referenceCard).join(''):books?`<div class="subjempty">${esc(tr('emptySources'))}</div>`:`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
   }
   function setSearchMode(mode){
     if(!['text','ocr'].includes(mode))return;viewState().searchMode=mode;

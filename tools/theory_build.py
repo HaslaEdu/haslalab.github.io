@@ -50,7 +50,7 @@ def load(practical=None):
         # a competition the site lists only for its papers names itself here (full, since, scope): window.THEORY_META
         if m.get('full'):
             meta[comp] = {'abbr': m.get('abbr', prefix), 'full': m['full'], 'since': m.get('since'), 'scope': m.get('scope', {'ko': '', 'en': ''}), 'plain': bool(m.get('plain')), 'rounds': bool(m.get('rounds')), 'omr': bool(m.get('omr'))}
-            for field in ('officialWebsite', 'resourceNote', 'resources'):
+            for field in ('officialWebsite', 'resourceNote', 'resources', 'archiveOnly'):
                 if m.get(field):
                     meta[comp][field] = m[field]
         for y in m.get('years', []):

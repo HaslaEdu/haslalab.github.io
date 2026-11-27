@@ -124,6 +124,16 @@
     const r=await fetch(API+path,{method,headers:{...(token()?{Authorization:'Bearer '+token()}:{}),...(body?{'content-type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});
     const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error||'api '+r.status),{code:j.error,status:r.status});return j;
   }
+  function importWorkshopFigure(item) {
+    let local;
+    try { local=JSON.parse(localStorage.getItem('hlDrawScene') || 'null'); } catch {}
+    const P=window.HL_WORKSHOP_PROJECTS;
+    P.pickFigure(P.client({base:API,token}),{local,height,allowIllustrations:true,onPick(fig){
+      if(item && paper.items.includes(item) && item.own) item.own.fig=fig;
+      else paper.items.push({key:'own:'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),pts:3,own:{q:'',answer:'',unit:'',sol:'',fig}});
+      save();paintPaper();paintItems();
+    }});
+  }
   const errText=e=>T.err[e.code]||e.message||'error';
   function height(){if(embedded)requestAnimationFrame(()=>window.parent.postMessage({type:'hl-teach-height',height:Math.ceil(document.querySelector('main').getBoundingClientRect().bottom+scrollY+16)},location.origin));}
   if(typeof ResizeObserver==='function')new ResizeObserver(height).observe(document.body);
@@ -177,7 +187,7 @@
   const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(paper));}catch(e){}cloudSoon();};
   /* a figure from the figure editor (draw.js): an SVG data URL, its size and the scene it was drawn from. Only an
      SVG of a sane size is shown; as an <img> it cannot run anything */
-  const figOf=own=>{const f=own?.fig;return f&&typeof f.src==='string'&&f.src.length<400000&&/^data:image\/svg\+xml;base64,[A-Za-z0-9+/]+=*$/.test(f.src)?{src:f.src,w:Math.max(40,Math.min(2000,+f.w||800)),h:Math.max(20,Math.min(3000,+f.h||400))}:null;};
+  const figOf=own=>{const f=own?.fig;return f&&typeof f.src==='string'&&f.src.length<400000&&/^data:image\/(?:svg\+xml|png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/.test(f.src)?{src:f.src,w:Math.max(40,Math.min(2000,+f.w||800)),h:Math.max(20,Math.min(3000,+f.h||400))}:null;};
   const figHtml=own=>{const f=figOf(own);return f?`<figure class="dfig"><img src="${f.src}" width="${f.w}" height="${f.h}" alt="${T.fig}"></figure>`:'';};
   /* the editor writes the paper while this page may be open in another tab */
   addEventListener('storage',e=>{if(e.key!==KEY)return;try{const p=JSON.parse(e.newValue||'null');if(p&&Array.isArray(p.items)){paper={...blank(),...p};cloudSoon();if(state.tab==='paper')paintPaper();}}catch(x){}});
@@ -243,6 +253,13 @@
     height();
   }
 
+  function toCompute(item) {
+    const problem = {title: paper.title, text: item?.own?.q || item?.item?.q || '', figure: item?.own?.fig};
+    try { sessionStorage.setItem('hlWorkshopComputeQuestion', JSON.stringify(problem)); }
+    catch { say(ko ? '문제를 전산물리 제작에 보낼 수 없습니다.' : 'Could not send this question to Computational physics.'); return; }
+    if (embedded) window.top.location.hash = '/workshop/create?view=compute&from=problem';
+    else location.assign('create.html?view=compute&from=problem&lang=' + lang);
+  }
   async function paintPaper(){
     const box=$('rightPanel');
     const items=await Promise.all(paper.items.map(async p=>({...p,item:p.own?null:await itemOf(p.key)})));
@@ -254,12 +271,12 @@
         <label>${T.pMin}<input data-f="minutes" inputmode="numeric" value="${esc(paper.minutes)}"></label><label>${T.pNote}<input data-f="note" value="${esc(paper.note)}"></label></div>
       <div class="opts">${[['two',T.two],['key',T.key],['sol',T.sol],['space',T.space],['bp',T.bp.attach]].map(([k,n])=>`<label><input type="checkbox" data-o="${k}"${paper[k]?' checked':''}>${n}</label>`).join('')}</div>
       <div class="plist">${items.length?items.map((x,i)=>`<div class="pitem" data-i="${i}"><span class="n">${i+1}</span><span class="t">${figOf(x.own)?`<img class="fthumb" src="${figOf(x.own).src}" alt="">`:''}${esc(label(x))}${x.own?`<span class="own">${T.own}</span>`:''}</span>
-        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts">${x.own?`<button type="button" data-one title="${X.saveOne}">${X.saveOne}</button>`:''}${figOf(x.own)&&x.own.fig.scene?`<button type="button" data-fig>${T.editFig}</button>`:''}<button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-del title="${T.del}">✕</button></span>
+        <input data-pts value="${esc(x.pts)}" inputmode="decimal" aria-label="${T.pts}"><span class="acts">${x.own?`<button type="button" data-one title="${X.saveOne}">${X.saveOne}</button>`:''}${x.own?`<button type="button" data-fig>${figOf(x.own) ? (ko?'그림 바꾸기':'Replace figure') : (ko?'그림 불러오기':'Import figure')}</button>`:''}<button type="button" data-up title="${T.up}">↑</button><button type="button" data-down title="${T.down}">↓</button><button type="button" data-vary>${T.vary}</button><button type="button" data-compute>${ko?"시뮬레이션으로 제작":"Make a simulation"}</button><button type="button" data-del title="${T.del}">✕</button></span>
         <span class="pbp"><input data-bpu list="bpUnits" maxlength="40" value="${esc(bpOf(x,x.item).unit)}" placeholder="${T.bp.unit}" aria-label="${T.bp.unit}"><select data-bpl aria-label="${T.bp.level}">${LEVELS.map(l=>`<option value="${l}"${bpOf(x,x.item).level===l?' selected':''}>${T.bp.levels[l]}</option>`).join('')}</select></span></div>`).join(''):`<p class="empty">${T.empty}</p>`}</div>
       ${items.length?`<details class="bpbox" id="bpBox"${paper.bp?' open':''}><summary>${T.bp.title}</summary><p class="note">${T.bp.note}</p><div id="bpTable"></div></details>`:''}
       <div class="row store-row"><button type="button" class="primary" id="stSave">${X.save}</button><button type="button" id="stOpen">${X.open}</button><button type="button" id="stNew">${X.newPaper}</button><span class="note" id="stStatus" role="status">${esc(cloudStatus())}</span></div>
       <div class="row share-row" id="shareRow"></div>
-      <div class="row"><a class="btn" href="/#/workshop/draw" target="_top">${T.drawFig}</a></div>
+      <div class="row"><button type="button" id="stFigure">${ko?'그림 불러오기':'Import figure'}</button></div>
       <div class="row"><button type="button" class="primary" id="print"${items.length?'':' disabled'}>${T.print}</button><button type="button" id="assign"${items.some(x=>!x.own)?'':' disabled'}>${T.assign}</button><button type="button" id="clear"${items.length?'':' disabled'}>${T.clear}</button></div>
       <div id="assignBox"></div>`;
     box.querySelectorAll('[data-f]').forEach(el=>el.oninput=()=>{paper[el.dataset.f]=el.value.slice(0,120);save();});
@@ -270,13 +287,15 @@
       el.querySelector('[data-up]').onclick=()=>{if(i>0){[paper.items[i-1],paper.items[i]]=[paper.items[i],paper.items[i-1]];save();paintPaper();}};
       el.querySelector('[data-down]').onclick=()=>{if(i<paper.items.length-1){[paper.items[i+1],paper.items[i]]=[paper.items[i],paper.items[i+1]];save();paintPaper();}};
       el.querySelector('[data-del]').onclick=()=>{paper.items.splice(i,1);save();paintPaper();paintItems();};
+      el.querySelector('[data-compute]').onclick=()=>toCompute(items[i]);
       const ob=el.querySelector('[data-one]');if(ob)ob.onclick=()=>saveProblem(paper.items[i],$('stStatus'));
-      const fb=el.querySelector('[data-fig]');if(fb)fb.onclick=()=>{try{localStorage.setItem('hlDrawEdit',JSON.stringify({key:paper.items[i].key,scene:paper.items[i].own.fig.scene}));}catch(e){}window.top.location.assign(embedded?'/#/workshop/draw':'draw.html');};
+      const fb=el.querySelector('[data-fig]');if(fb)fb.onclick=()=>importWorkshopFigure(paper.items[i]);
       const bpSet=()=>{paper.items[i].bp={unit:el.querySelector('[data-bpu]').value.trim().slice(0,40),level:el.querySelector('[data-bpl]').value};save();paintBlueprint(items);};
       el.querySelector('[data-bpu]').onchange=bpSet;el.querySelector('[data-bpl]').onchange=bpSet;
       el.querySelector('[data-vary]').onclick=()=>{const x=items[i];state.source=x.own?{q:x.own.q,answerPlain:x.own.answer,sol:x.own.sol,plainCh:x.own.choices||[],qHtml:textHtml(x.own.q)}:x.item;state.tab='vary';shell();};
     });
     paintBlueprint(items);paintShare();
+    $('stFigure').onclick=()=>importWorkshopFigure(null);
     $('print').onclick=()=>printPaper(items);
     $('clear').onclick=()=>{if(confirm(T.clearAsk)){paper=blank();save();paintPaper();paintItems();}};
     $('assign').onclick=()=>assignBox(items);
@@ -448,6 +467,49 @@
 
   /* ── the AI maker: a prompt → checked problems (community/src/workshop-ai.js) ── */
   const ai={busy:false,out:[],notes:[],models:null,left:null,f:{prompt:'',unit:'',level:'medium',count:3,format:'mc',model:'auto',withFigure:false}};
+  let importedCompute = null;
+  if (params.get('from') === 'compute') {
+    try {
+      importedCompute = JSON.parse(sessionStorage.getItem('hlWorkshopProblem') || 'null');
+      sessionStorage.removeItem('hlWorkshopProblem');
+    } catch {}
+  }
+  function useCompute(project) {
+    importedCompute = project;
+    const snippet = String(importedCompute.code || '').slice(0, 650);
+    const output = String(importedCompute.output || '').slice(0, 300);
+    ai.f.prompt = [ko ? '다음 시뮬레이션의 물리 조건을 바탕으로 문제를 만들어 줘. 코드나 출력만으로 확정할 수 없는 물리 조건은 필요하면 명시해 줘.' : 'Write a physics problem using this simulation. State any necessary assumptions missing from the code or output.',
+      String(importedCompute.title || '').slice(0, 80), String(importedCompute.description || '').slice(0, 250), snippet, output].filter(Boolean).join('\n\n');
+    ai.f.count = 1;
+  }
+  if (importedCompute) useCompute(importedCompute);
+  function pickCompute() {
+    const projects = window.HL_WORKSHOP_PROJECTS;
+    const trigger = $('aiImportCompute');
+    const dialog = document.createElement('dialog');
+    dialog.className = 'stdlg';
+    const close = document.createElement('button'), host = document.createElement('div');
+    close.type = 'button';
+    close.textContent = ko ? '닫기' : 'Close';
+    close.onclick = () => dialog.close();
+    dialog.append(close, host);
+    dialog.addEventListener('close', () => { dialog.remove(); if (trigger.isConnected) trigger.focus(); height(); }, {once:true});
+    document.body.append(dialog);
+    const library = projects.library(host, projects.client({base:API,token}), {
+      kind:'compute', unified:true, title:ko ? '전산물리 프로젝트' : 'Computational physics projects', height,
+      onOpen(raw) {
+        const {language, title, description, sources, figure} = raw || {};
+        if (!['python','c'].includes(language) || typeof sources?.[language] !== 'string') throw new Error(ko ? '전산물리 프로젝트를 읽을 수 없습니다.' : 'Could not read this simulation.');
+        useCompute({language,title,description,code:sources[language],figure});
+        dialog.close();
+        paintAi();
+        $('aiPrompt').focus();
+      }
+    });
+    dialog.showModal();
+    library.heading.focus();
+    height();
+  }
   let drawMods=null;
   const b64=s=>{const b=new TextEncoder().encode(s);let bin='';for(let i=0;i<b.length;i+=0x8000)bin+=String.fromCharCode(...b.subarray(i,i+0x8000));return btoa(bin);};
   /* a scene → the paper's figure ({src, w, h, scene}) with the figure editor's own renderer, or null */
@@ -464,6 +526,8 @@
     const opt=(k,n,sel)=>`<option value="${k}"${k===sel?' selected':''}>${n}</option>`;
     const models=ai.models?ai.models.models:[{id:'gemini',model:'gemini',configured:true},{id:'gpt',model:'gpt',configured:true},{id:'claude',model:'claude',configured:true}];
     box.innerHTML=`<h2>${A.title}${ai.left!=null?`<span class="plan">${A.left(ai.left)}</span>`:''}</h2><p class="note">${A.how}</p>
+      <div class="row"><button type="button" id="aiImportCompute">${ko?'전산물리 불러오기':'Import simulation'}</button></div>
+      ${importedCompute ? `<p class="note">${ko ? '연결된 전산물리 작품' : 'Linked simulation'} · ${esc(importedCompute.title || importedCompute.language)}</p>${figHtml({fig:importedCompute.figure})}<button type="button" class="btn" id="aiUseDraft">${ko?'시험지에 초안 추가':'Add a draft to the paper'}</button>` : ''}
       <label class="fld">${A.prompt}<textarea id="aiPrompt" rows="4" maxlength="1500" placeholder="${esc(A.promptPh)}">${esc(f.prompt)}</textarea></label>
       <div class="vform"><label>${A.unit}<input id="aiUnit" list="bpUnits" maxlength="60" value="${esc(f.unit)}"></label>
         <label>${A.level}<select id="aiLevel">${Object.entries(A.levels).map(([k,n])=>opt(k,n,f.level)).join('')}</select></label>
@@ -476,6 +540,14 @@
     const read=()=>{f.prompt=$('aiPrompt').value;f.unit=$('aiUnit').value;f.level=$('aiLevel').value;f.count=+$('aiCount').value;f.format=$('aiFormat').value;f.model=$('aiModel').value;f.withFigure=$('aiFig').checked;};
     box.querySelectorAll('textarea,input,select').forEach(el=>el.onchange=el.oninput=read);
     $('aiMake').onclick=()=>{read();makeAi();};
+    $('aiImportCompute').onclick=pickCompute;
+    if ($('aiUseDraft')) $('aiUseDraft').onclick = () => {
+      const q = [importedCompute.title, importedCompute.description, importedCompute.output?.slice(0, 400)].filter(Boolean).join('\n').slice(0, 4000) || (ko ? '시뮬레이션을 실행하고 어떤 물리 관계가 나타나는지 설명하세요.' : 'Run the simulation and explain the physical relationship you observe.');
+      const fig = figOf({fig: importedCompute.figure}) ? importedCompute.figure : null;
+      paper.items.push(aiItem({stem:q, answer:'', fig}));
+      save();
+      state.tab = 'paper'; shell();
+    };
     paintAiOut();
     if(!ai.models)api('/api/workshop/ai/models').then(r=>{ai.models=r;if(r.left!=null)ai.left=r.left;if(state.tab==='ai'&&!ai.busy)paintAi();}).catch(()=>{ai.models={models}; });
     height();
@@ -487,7 +559,7 @@
     ai.busy=true;$('aiMake').disabled=true;msg.textContent=A.making;
     try{
       const r=await api('/api/workshop/ai/problem','POST',{prompt:f.prompt.trim(),unit:f.unit.trim(),level:f.level,count:f.count,format:f.format,model:f.model,withFigure:f.withFigure,lang});
-      ai.out=await Promise.all((r.problems||[]).map(async p=>({...p,fig:p.figure_scene?await figFromScene(p.figure_scene):null,added:false})));
+      ai.out=await Promise.all((r.problems||[]).map(async p=>({...p,fig:p.figure_scene?await figFromScene(p.figure_scene):figOf({fig:importedCompute?.figure}) ? importedCompute.figure : null,added:false})));
       ai.notes=Array.isArray(r.notes)?r.notes:[];if(Number.isFinite(r.left))ai.left=r.left;
       ai.busy=false;paintAi();
     }catch(e){ai.busy=false;$('aiMake').disabled=false;msg.innerHTML=`<span class="bad">${esc(A.err[e.code]||errText(e))}</span>`;}

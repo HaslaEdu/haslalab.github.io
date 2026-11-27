@@ -12,7 +12,7 @@
   function clean(input,{legacy=false}={}){
     const src=input instanceof URLSearchParams?input:new URLSearchParams(input||''),out=new URLSearchParams();
     const one=key=>src.getAll(key).length===1?src.get(key):null;
-    for(const [key,pattern] of [['source',/^src_[a-f0-9]{64}$/],['problem',/^q_[a-f0-9]{64}$/],['stars',/^[1-5]$/],['competition',/^[a-z][a-z0-9_-]{1,49}$/],['type',/^(theory|experiment)$/]]){const v=one(key);if(v&&pattern.test(v))out.set(key,v);}
+    for(const [key,pattern] of [['source',/^src_[a-f0-9]{64}$/],['problem',/^q_[a-f0-9]{64}$/],['stars',/^[1-5]$/],['competition',/^[a-z][a-z0-9_-]{1,49}$/],['type',/^(theory|experiment)$/],['scope',/^(international|regional|national)$/]]){const v=one(key);if(v&&pattern.test(v))out.set(key,v);}
     const q=one('q');if(q&&q.length<=600&&!/[\u0000-\u001f\u007f]/.test(q))out.set('q',q);
     const year=one('year');if(/^\d{4}$/.test(year||'')&&Number(year)>=1800&&Number(year)<=2199)out.set('year',year);
     const topic=one('topic')||one('subject');if(topics.has(topic))out.set('topic',topic);
@@ -46,8 +46,18 @@
   }
   function scopedParams(input,category,sub){
     const params=clean(input);
+    if(category!=='contests'||params.has('view'))params.delete('scope');
     if(params.get('view')!=='private-textbooks')return params;
-    if(category==='books'&&sub==='phys')return new URLSearchParams({view:'private-textbooks'});
+    if(category==='books'&&sub==='phys'){
+      const privateParams=new URLSearchParams({view:'private-textbooks'});
+      const requested=input instanceof URLSearchParams?input:new URLSearchParams(input);
+      const book=requested.get('book');
+      if(requested.getAll('book').length===1&&/^[a-z][a-z0-9-]{0,31}$/.test(book||'')){
+        privateParams.set('book',book);
+        if(book==='feynman'&&requested.getAll('section').length===1&&requested.get('section')==='exercises')privateParams.set('section','exercises');
+      }
+      return privateParams;
+    }
     params.delete('view');
     return params;
   }

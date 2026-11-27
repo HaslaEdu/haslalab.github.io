@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-uEdE1itItMTKMT0eWAjnk1arUrjXdTlzI9+Q4kwYI80=' https://cdn.jsdelivr.net https://fastly.jsdelivr.net 'wasm-unsafe-eval'; worker-src blob:; connect-src https://cdn.jsdelivr.net https://fastly.jsdelivr.net; base-uri 'none'; form-action 'none'">
+<title>HaslaLab runtime</title>
+<script id="hl-workshop-runtime">/* Each run stays in an opaque-origin frame and a disposable worker. */
+(() => {
+  if (self === parent || self.origin !== 'null') return;
+
+  function runtime() {
+    const mirrors = ['https://cdn.jsdelivr.net', 'https://fastly.jsdelivr.net'];
+    const send = self.postMessage.bind(self);
+    const text = error => String(error?.message || error).slice(0, 8000);
+    async function withMirror(action) {
+      try { return await action(mirrors[0]); }
+      catch (error) {
+        if (error?.program) throw error;
+        send({phase:'retrying'});
+        return action(mirrors[1]);
+      }
+    }
+    const points = stdout => {
+      const rows = stdout.split('\n').slice(0, 2000).map(line => line.trim())
+        .filter(line => /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?,\s*[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(line))
+        .map(line => line.split(',').map(Number));
+      return rows.length > 1 ? [{x:rows.map(r => r[0]), y:rows.map(r => r[1]),label:''}] : [];
+    };
+    let started = false;
+    self.onmessage = async ({data}) => {
+      if (started) return;
+      started = true;
+      const {language, code, binary} = data;
+      const stdin = (typeof data.stdin === 'string' ? data.stdin : '').replace(/\r\n?/g,'\n').slice(0,8000);
+      let stdout = '', stderr = '', plots = [], images = [], stage = 'runtime';
+      try {
+        if (language === 'python') {
+          send({phase:'python'});
+          const py = await withMirror(async host => {
+            const url = host + '/pyodide/v0.26.4/full/';
+            importScripts(url + 'pyodide.js');
+            const instance = await loadPyodide({indexURL:url});
+            try { await instance.loadPackagesFromImports(code); }
+            catch (error) {
+              if (/SyntaxError|IndentationError|TabError/.test(text(error))) {
+                stage = 'program';
+                throw Object.assign(new Error(text(error)), {program:true});
+              }
+              throw error;
+            }
+            return instance;
+          });
+          const lines = stdin.split('\n');
+          if (lines.at(-1) === '') lines.pop();
+          let input = 0;
+          py.setStdin({stdin:() => lines[input++] ?? null});
+          py.setStdout({batched:s => { if (stdout.length < 32000) stdout += s.slice(0, 32000) + '\n'; }});
+          py.setStderr({batched:s => { if (stderr.length < 8000) stderr += s.slice(0, 8000) + '\n'; }});
+          py.globals.set('_hl_plot', (x, y, label) => {
+            if (plots.length < 6) plots.push({x:x.toJs(), y:y.toJs(), label:String(label).slice(0, 80)});
+          });
+          await py.runPythonAsync(
+            '\nfrom itertools import islice as _hl_slice\n' +
+            'def plot(x, y, label=""):\n' +
+            '    _hl_plot(list(map(float, _hl_slice(iter(x), 2000))), list(map(float, _hl_slice(iter(y), 2000))), label)\n'
+          );
+          const matplotlib = /\b(?:import|from)\s+matplotlib\b/.test(code);
+          stage = 'program';
+          send({phase:'running'});
+          if (matplotlib) {
+            py.globals.set('_hl_image', data => { if (images.length < 4 && data.length <= 500000) images.push(data); });
+            await py.runPythonAsync(
+              'import matplotlib as _hl_mpl\n_hl_mpl.use("Agg")\n' +
+              'import matplotlib.pyplot as _hl_plt\n_hl_plt.show = lambda *a, **k: None\n'
+            );
+          }
+          const result = await py.runPythonAsync(code);
+          if (typeof result?.destroy === 'function') result.destroy();
+          if (matplotlib) await py.runPythonAsync(
+            'import io as _hl_io, base64 as _hl_b64\n' +
+            'for _hl_num in _hl_plt.get_fignums()[:4]:\n' +
+            '    with _hl_io.BytesIO() as _hl_buffer:\n' +
+            '        _hl_plt.figure(_hl_num).savefig(_hl_buffer, format="png", dpi=80)\n' +
+            '        _hl_image(_hl_b64.b64encode(_hl_buffer.getvalue()).decode("ascii"))\n'
+          );
+        } else if (language === 'c' && !binary) {
+          send({phase:'compiler'});
+          const wasm = await withMirror(async host => {
+            const {runClang} = await import(host + '/npm/@yowasp/clang@22.0.0-git20695-13/gen/bundle.js');
+            const decoder = new TextDecoder();
+            stderr = '';
+            try {
+              const files = await runClang(['clang','-std=c17','-O0','main.c','-o','main.wasm'], {'main.c':code}, {
+                decodeASCII:false,stdout:null,
+                stderr:b => { if (b && stderr.length < 8000) stderr += decoder.decode(b,{stream:true}).slice(0,8000); },
+                fetchProgress:() => {}
+              });
+              stderr += decoder.decode();
+              return new Uint8Array(files['main.wasm']).buffer;
+            } catch (error) {
+              stderr += decoder.decode();
+              if (/\b(?:error|fatal error):/i.test(stderr)) {
+                stage = 'program';
+                throw Object.assign(new Error(text(error)), {program:true});
+              }
+              throw error;
+            }
+          });
+          send({phase:'compiled',binary:wasm,stderr:stderr.slice(0,8000)}, [wasm]);
+          return;
+        } else if (language === 'c') {
+          const {WASI,File,OpenFile,ConsoleStdout} = await withMirror(host =>
+            import(host + '/npm/@bjorn3/browser_wasi_shim@0.4.2/dist/index.js'));
+          stderr = data.stderr || '';
+          const outDecoder = new TextDecoder(), errDecoder = new TextDecoder();
+          const wasi = new WASI(['simulation'], [], [
+            new OpenFile(new File(new TextEncoder().encode(stdin))),
+            new ConsoleStdout(b => { if (stdout.length < 32000) stdout += outDecoder.decode(b,{stream:true}).slice(0,32000); }),
+            new ConsoleStdout(b => { if (stderr.length < 8000) stderr += errDecoder.decode(b,{stream:true}).slice(0,8000); })
+          ]);
+          stage = 'program';
+          send({phase:'running'});
+          const {instance} = await WebAssembly.instantiate(binary, {wasi_snapshot_preview1:wasi.wasiImport});
+          const status = wasi.start(instance);
+          stdout += outDecoder.decode(); stderr += errDecoder.decode();
+          if (status) throw new Error('C exit code ' + status);
+          plots = points(stdout);
+        } else throw new Error('Unsupported runtime');
+        send({phase:'done',stdout:stdout.slice(0,32000),stderr:stderr.slice(0,8000),plots,images});
+      } catch (error) {
+        send({phase:'done',stage,stdout:stdout.slice(0,32000),error:(stderr + '\n' + text(error)).trim().slice(0,8000)});
+      }
+    };
+  }
+
+  const url = URL.createObjectURL(new Blob(['(' + runtime.toString() + ')();'], {type:'text/javascript'}));
+  let worker, parentOrigin, started = false;
+  const forward = data => parent.postMessage(data, parentOrigin);
+  function runWorker(input, transfer = []) {
+    try {
+      worker = new Worker(url);
+      worker.onmessage = ({data}) => {
+        if (input.language === 'c' && !input.binary && data?.phase === 'compiled' && data.binary instanceof ArrayBuffer) {
+          worker.terminate();
+          runWorker({language:'c',binary:data.binary,stderr:data.stderr,stdin:input.stdin}, [data.binary]);
+        } else forward(data);
+      };
+      worker.onerror = event => forward({phase:'done',stage:'runtime',error:event.message || 'Browser runtime failed to start'});
+      worker.postMessage(input, transfer);
+    } catch (error) {
+      forward({phase:'done',stage:'runtime',error:String(error?.message || error)});
+    }
+  }
+  addEventListener('message', e => {
+    if (e.source !== parent || e.origin === 'null' || e.data?.type !== 'workshop-run' || started) return;
+    if (typeof e.data.code !== 'string' || e.data.code.length > 60000 || !['python','c'].includes(e.data.language)) return;
+    started = true;
+    parentOrigin = e.origin;
+    runWorker({language:e.data.language,code:e.data.code,stdin:typeof e.data.stdin === 'string' ? e.data.stdin.slice(0,8000) : ''});
+  });
+  addEventListener('pagehide', () => { worker?.terminate(); URL.revokeObjectURL(url); });
+  parent.postMessage({phase:'ready'}, '*');
+})();
+</script>
+</html>

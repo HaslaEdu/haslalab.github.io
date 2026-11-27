@@ -46,3 +46,21 @@ test('chapter routes preserve an exact empty or nonempty chapter only with one a
   assert.equal(A.clean({chapter:'1'}).has('chapter'),false);assert.equal(A.clean({source,chapter:'bad\u0000chapter'}).has('chapter'),false);
   assert.equal(A.clean('source='+source+'&chapter=1&chapter=2').has('chapter'),false);
 });
+
+test('the archive menu keeps the existing contest entrance and separate textbook category', ()=>{
+  assert.equal(A.legacy('#/archive'),'#/archive/contests');
+  assert.equal(A.parse('#/archive/contests').category,'contests');
+  assert.equal(A.parse('#/archive/books/phys').category,'books');
+});
+
+test('competition scope survives subject navigation and belongs only to the contest list',()=>{
+  for(const scope of ['international','regional','national']){
+    const href=A.href('contests','phys',{scope});
+    assert.equal(A.parse(href).params.get('scope'),scope);
+    assert.equal(A.legacy(href),null);
+    assert.equal(A.href('books','phys',{scope}),'#/archive/books/phys');
+    assert.equal(A.href('contests','phys',{scope,view:'web'}),'#/archive/contests/phys?view=web');
+  }
+  assert.equal(A.parse('#/archive/contests/phys?scope=school').params.has('scope'),false);
+  assert.equal(A.parse('#/archive/contests/phys?scope=regional&scope=national').params.has('scope'),false);
+});

@@ -298,6 +298,50 @@ test('async portal hydration retains the selected year and review mode while omi
   calls.length=0;portal.dataset.mode='exam';await a.run('xmMount("nbpho")');assert.equal(calls.length,2);assert.ok(calls.some(url=>url.includes('/lab/stats')));assert.ok(!portal.innerHTML.includes('review=1'));assert.ok(portal.innerHTML.includes('y=2026'));
 });
 
+test('national physics archive cards show the corresponding flags',()=>{
+  const a=app();
+  a.run('lang="ko"');
+  const cards=a.run('viewComps("phys",Infinity,"national")');
+  for(const [key,cc] of Object.entries({cpho:'cn',rupho:'ru',azpho:'az',panpho:'hk',osn:'id',onf:'ro',efo:'ee'})){
+    const card=cards.match(new RegExp('<a[^>]*href="#/'+key+'"[^>]*>[\\s\\S]*?</a>'))?.[0];
+    assert.ok(card?.includes('https://flagcdn.com/w80/'+cc+'.png'),key);
+  }
+});
+
+test('OSN archive pages serve theory and practical PDFs without adding timed exams',()=>{
+  const a=app();a.load('theory:osn');
+  const worker='https://haslalab-pdf.haslalab.workers.dev/pdf/';
+  for(const [track,year,files] of [
+    ['thy',2026,['OSN_2026_T4_ID.pdf','OSN_2026_T4S.pdf']],
+    ['exp',2007,['OSN_2007_E1_ID.pdf']]
+  ]){
+    a.run(`lang="ko";track="${track}"`);
+    const page=a.run(`viewYear("osn",${year})`);
+    for(const file of files)assert.ok(anchors(page).some(link=>link.url.startsWith(worker+file)),file);
+    assert.doesNotMatch(page,/drive\.google\.com/);
+  }
+  assert.deepEqual(plain(a.run('theoryGroups("osn",DATA.osn.years.find(y=>y.y===2026))')),[]);
+});
+
+test('shared competition pages keep the stage and its year in old and new archive links',async()=>{
+  const a=app();
+  a.run('lang="ko"; buildRails=()=>{}; paintSiteTheme=()=>{}; cmAccountChip=()=>{};');
+  const links=anchors(a.run('viewComps("phys",Infinity,"national")'));
+  for(const key of ['vpho','spho','obf','usapho','bpho','panpho'])assert.ok(links.some(link=>link.url==='#/'+key),key);
+  for(const key of ['vntst','sphotst','soif','fma','bphoii'])assert.ok(!links.some(link=>link.url==='#/'+key),key);
+  assert.equal(a.run('contestScope("panpho")'),'national');
+  a.context.history.replaceState=(_state,_title,hash)=>{a.context.location.hash=hash;};
+  a.context.location.hash='#/vntst/2022';
+  a.run('render()');await tick();
+  assert.equal(a.context.location.hash,'#/vpho/2022?stage=selection');
+  assert.equal(a.scripts.length,1);
+  assert.equal(a.scripts[0].src,catalogue.versions['theory:vntst']);
+  vm.runInContext(read(a.scripts[0].src.split('?')[0]),a.context);
+  a.scripts[0].onload();await tick();await tick();
+  assert.match(a.node('view').innerHTML,/<h1>VPhO 2022<\/h1>/);
+  assert.ok(anchors(a.node('view').innerHTML).some(link=>link.url==='#/vpho/2022'&&link.label==='전국 예선'));
+});
+
 test('loading RuPhO after another archive keeps stages and does not duplicate year problems on repeated hydration',()=>{
   const lean=app(),full=app({preload:true});lean.load('theory:amc');
   for(const key of ['theory:rupho','theory:ruphow','theory:ruphox','theory:ruphoy','rupho'])lean.load(key);

@@ -243,6 +243,7 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
     catch { fail(502, what + '_unreachable'); }
     if (r.status === 404) fail(404, 'not_found');
     if (r.status === 401) fail(409, 'drive_reconnect');
+    if (r.status === 412) fail(409, 'drive_conflict');
     if (r.status === 403 || r.status === 429) { const j = await r.json().catch(() => ({})); console.error('workshop drive', what, r.status, String(j?.error?.errors?.[0]?.reason || '').slice(0, 40)); fail(r.status === 429 ? 429 : 403, r.status === 429 ? 'rate_limited' : 'drive_forbidden'); }
     if (!r.ok) { console.error('workshop drive', what, r.status); fail(502, 'drive_failed'); }
     return r;
@@ -271,7 +272,7 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
     return j.access_token;
   }
   const META = 'id,name,mimeType,size,modifiedTime,parents,trashed,appProperties';
-  const driveMeta = (token, id) => driveFetch(token, `${DRIVE_API}/drive/v3/files/${encodeURIComponent(id)}?fields=${encodeURIComponent(META)}`, {}, 'meta').then(r => r.json());
+  const driveMeta = (token, id) => driveFetch(token, `${DRIVE_API}/drive/v3/files/${encodeURIComponent(id)}?fields=${encodeURIComponent(META)}`, {}, 'meta').then(async r => ({...await r.json(), etag:r.headers.get('ETag')}));
   /* the «HaslaLab» folder: the one we know, else the one marked haslalab=root, else a new one */
   async function driveRoot(env, conn, token) {
     if (conn.root_id) {
@@ -309,13 +310,13 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
     if (folder === false && meta.mimeType === DRIVE_FOLDER) fail(400, 'is_a_folder');
     return {meta, trail};
   }
-  async function driveDownload(token, root, id) {
+  async function driveDownload(token, root, id, maxBytes = WORKSHOP_MAX_FILE) {
     const {meta} = await driveInside(token, root, id, {folder: false});
     if (/^application\/vnd\.google-apps\./.test(meta.mimeType || '')) fail(415, 'type_not_allowed');
-    if (+meta.size > WORKSHOP_MAX_FILE) fail(413, 'file_too_large');
+    if (+meta.size > maxBytes) fail(413, 'file_too_large');
     const r = await driveFetch(token, `${DRIVE_API}/drive/v3/files/${encodeURIComponent(id)}?alt=media`, {}, 'download');
     const bytes = new Uint8Array(await r.arrayBuffer());
-    if (bytes.length > WORKSHOP_MAX_FILE) fail(413, 'file_too_large');
+    if (bytes.length > maxBytes) fail(413, 'file_too_large');
     return {meta, bytes};
   }
   const driveView = x => ({id: x.id, name: x.name, folder: x.mimeType === DRIVE_FOLDER, size: x.size != null ? +x.size : null, modified: x.modifiedTime || null});
@@ -382,25 +383,26 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
     try { return await (await ghFetch(token, contentsUrl(conn.repo, full, conn.branch), {}, 'meta')).json(); }
     catch (e) { if (e.code === 'not_found') return null; throw e; }
   }
-  async function ghPut(env, conn, rel, bytes, what) {
+  async function ghPut(env, conn, rel, bytes, what, base = null) {
     const token = await installationToken(env, conn.installation_id, {repoId: conn.repo_id, write: true});
     const full = joinPath(conn.folder, rel), old = await ghMeta(token, conn, full);
     if (Array.isArray(old) || (old && old.type !== 'file')) fail(409, 'is_a_folder');
+    if (base !== null && (old?.sha || '') !== base) fail(409, 'github_conflict');
     const name = full.split('/').pop();
     const body = {message: `HaslaLab: ${old ? 'update' : 'add'} ${name}${what ? ' (' + what + ')' : ''}`, content: b64(bytes), branch: conn.branch || undefined, ...(old?.sha ? {sha: old.sha} : {})};
     const r = await ghFetch(token, contentsUrl(conn.repo, full, null), {method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}, 'put');
     const j = await r.json();
     return {path: rel, name, size: bytes.length, sha: j.content?.sha || null, updated: !!old};
   }
-  async function ghDownload(env, conn, rel) {
+  async function ghDownload(env, conn, rel, maxBytes = WORKSHOP_MAX_FILE) {
     const token = await installationToken(env, conn.installation_id, {repoId: conn.repo_id});
     const full = joinPath(conn.folder, rel), meta = await ghMeta(token, conn, full);
     if (!meta) fail(404, 'not_found');
     if (Array.isArray(meta) || meta.type !== 'file') fail(400, 'is_a_folder');
-    if (+meta.size > WORKSHOP_MAX_FILE) fail(413, 'file_too_large');
+    if (+meta.size > maxBytes) fail(413, 'file_too_large');
     const r = await ghFetch(token, contentsUrl(conn.repo, full, conn.branch), {headers: {Accept: 'application/vnd.github.raw'}}, 'raw');
     const bytes = new Uint8Array(await r.arrayBuffer());
-    if (bytes.length > WORKSHOP_MAX_FILE) fail(413, 'file_too_large');
+    if (bytes.length > maxBytes) fail(413, 'file_too_large');
     return {name: meta.name, bytes};
   }
   const relOf = v => { const p = cleanGhPath(v); return p == null ? bad('bad_path') : p; };
@@ -420,7 +422,7 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
     if (bytes.length > WORKSHOP_MAX_FILE) fail(413, 'file_too_large');
     if (!contentMatches(ext, bytes)) fail(415, 'type_mismatch');
     const val = k => { const v = form.get(k); return typeof v === 'string' ? v : ''; };
-    return {bytes, ext, name: file.name, folder: val('folder'), path: val('path')};
+    return {bytes, ext, name: file.name, folder: val('folder'), path: val('path'), base: val('base'), scope: val('scope'), project: val('project') === '1'};
   }
 
   /* ======== the connect flow ======== */
@@ -597,7 +599,7 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
   }
 
   /* ======== routes ======== */
-  return async function workshopConnectorsRoute(p, m, body, me, req, env) {
+  return async function workshopConnectorsRoute(p, m, body, me, req, env, projectSource = null) {
     if (p !== '/api/workshop/connectors' && !p.startsWith('/api/workshop/connectors/')) return undefined;
     await ensureConnectorSchema(env);
     const url = new URL(req?.url || 'https://x.invalid' + p);
@@ -633,6 +635,10 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
       const read = m === 'GET';
       await limit(env, (read ? 'wsc-read:' : 'wsc-write:') + uid, read ? 600 : 200, 3600);
       const token = await driveAccess(env, conn), root = await driveRoot(env, conn, token);
+      if (projectSource) {
+        const {meta,bytes}=await driveDownload(token,root,projectSource.ref,projectSource.maxBytes);
+        return {name:meta.name,mime:WORKSHOP_TYPES[extOf(meta.name)]?.mime,bytes,key:'drive:'+projectSource.ref};
+      }
 
       if (p === '/api/workshop/connectors/drive/files' && m === 'GET') {
         const id = url.searchParams.get('folder') || root;
@@ -645,7 +651,8 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
       if (p === '/api/workshop/connectors/drive/files' && m === 'POST') {
         const form = await readForm(req), parent = form.folder || root;
         await driveInside(token, root, parent, {folder: true});
-        return {file: {id: await driveUp(token, parent, form.name, form.bytes), name: cleanName(form.name, form.ext), size: form.bytes.length}};
+        const id = await driveUp(token, parent, form.name, form.bytes);
+        return {file: form.project ? driveView(await driveMeta(token, id)) : {id, name: cleanName(form.name, form.ext), size: form.bytes.length}};
       }
       if (p === '/api/workshop/connectors/drive/folders' && m === 'POST') {
         const parent = String(body?.parent || '') || root;
@@ -678,6 +685,15 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
       if (m === 'GET') {
         const {meta, bytes} = await driveDownload(token, root, id);
         return attachment(bytes, meta.name, bytes.length);
+      }
+      if (m === 'PUT') {
+        const form = await readForm(req);
+        const {meta} = await driveInside(token, root, id, {folder: false});
+        if (form.ext !== 'json' || extOf(meta.name) !== 'json') fail(415, 'type_not_allowed');
+        if (!form.base || form.base !== meta.modifiedTime) fail(409, 'drive_conflict');
+        const r = await driveFetch(token, `${DRIVE_API}/upload/drive/v3/files/${encodeURIComponent(id)}?uploadType=media&fields=${encodeURIComponent(META)}`,
+          {method:'PATCH', headers:{'Content-Type':'application/json', ...(meta.etag ? {'If-Match':meta.etag} : {})}, body:form.bytes}, 'update project');
+        return {file: driveView(await r.json())};
       }
       if (m === 'PATCH') {
         const {meta} = await driveInside(token, root, id);
@@ -726,17 +742,31 @@ export function createWorkshopConnectorsRouter({HttpError, needUser, limit, now,
         if (j && !Array.isArray(j)) fail(400, 'not_a_folder');
         const base = conn.folder + '/';
         const files = (j || []).filter(x => x.type === 'file' || x.type === 'dir').filter(x => String(x.path || '').startsWith(base))
-          .map(x => ({name: x.name, path: x.path.slice(base.length), folder: x.type === 'dir', size: x.type === 'file' ? +x.size || 0 : null}))
+          .map(x => ({name: x.name, path: x.path.slice(base.length), folder: x.type === 'dir', size: x.type === 'file' ? +x.size || 0 : null, ...(x.type === 'file' ? {sha: x.sha || null} : {})}))
           .sort((a, b) => (b.folder - a.folder) || a.name.localeCompare(b.name));
         return {repo: conn.repo, folder: conn.folder, path: rel, files};
       }
       if (p === '/api/workshop/connectors/github/files' && m === 'POST') {
         const form = await readForm(req), dir = relOf(form.path);
-        return {file: await ghPut(env, conn, joinPath(dir, ghFileName(form.name, form.ext)), form.bytes)};
+        if (form.project && form.scope !== conn.repo + '/' + conn.folder) fail(409, 'github_conflict');
+        return {file: await ghPut(env, conn, joinPath(dir, ghFileName(form.name, form.ext)), form.bytes, null, form.project ? '' : null)};
+      }
+      if (projectSource) {
+        const rel=fileRel(projectSource.ref);
+        const {name,bytes}=await ghDownload(env,conn,rel,projectSource.maxBytes);
+        return {name,mime:WORKSHOP_TYPES[extOf(name)]?.mime,bytes,key:['github',conn.repo_id,conn.branch,conn.folder,rel].join(':')};
       }
       if (p === '/api/workshop/connectors/github/file') {
         const rel = fileRel(url.searchParams.get('path'));
+        const scope = url.searchParams.get('scope');
+        if (scope && scope !== conn.repo + '/' + conn.folder) fail(409, 'github_conflict');
         if (m === 'GET') { const {name, bytes} = await ghDownload(env, conn, rel); return attachment(bytes, name, bytes.length); }
+        if (m === 'PUT') {
+          const form = await readForm(req);
+          if (form.ext !== 'json' || extOf(rel) !== 'json') fail(415, 'type_not_allowed');
+          if (form.scope !== conn.repo + '/' + conn.folder || !/^[a-f0-9]{40,64}$/.test(form.base)) fail(409, 'github_conflict');
+          return {file: await ghPut(env, conn, rel, form.bytes, 'project', form.base)};
+        }
         if (m === 'DELETE') {
           const token = await installationToken(env, conn.installation_id, {repoId: conn.repo_id, write: true});
           const full = joinPath(conn.folder, rel), meta = await ghMeta(token, conn, full);

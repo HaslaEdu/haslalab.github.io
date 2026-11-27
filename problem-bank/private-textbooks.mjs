@@ -1,11 +1,12 @@
 const ROUTE = '/api/problem-bank/private-textbooks';
 const PREFIX = 'textbook-intake/2026-11-21/viewer-v1';
 const HEX = /^[0-9a-f]{64}$/;
-const BOOKS = new Set(['goldstein', 'guopei', 'savchenko', 'estonian', 'russian', 'general', 'aptitude']);
+const BOOKS = new Set(['goldstein', 'guopei', 'savchenko', 'estonian', 'russian', 'general', 'aptitude', 'halliday', 'perfect', 'feynman']);
 const BATCH_SIZE = 24;
 const LIST_SIZE = 24;
 const MAX_JSON = 6 * 1024 * 1024;
 const MAX_IMAGE = 2 * 1024 * 1024;
+const MAX_PDF = 32 * 1024 * 1024;
 const HEADERS = {
   'Cache-Control': 'private, no-store',
   'X-Content-Type-Options': 'nosniff',
@@ -44,7 +45,55 @@ async function readJson(bucket, key, expected) {
 
 function publicBook(book) {
   return {id: book.id, title: text(book.title, 250), count: book.count,
-          korean_count: book.korean_count, limitation: text(book.limitation, 600)};
+          korean_count: book.korean_count, limitation: text(book.limitation, 600),
+          ...(book.kind === 'lectures' ? {kind: book.kind, volumes: book.volumes.map(volume => ({
+            number: volume.number, title: volume.title,
+          }))} : {}),
+          ...(typeof book.cover_webp === 'string' && /^UklGR[A-Za-z0-9+/]{100,31995}={0,2}$/.test(book.cover_webp)
+            ? {cover_webp: book.cover_webp} : {})};
+}
+
+function validateLectureBook(book) {
+  if (!Array.isArray(book.volumes) || book.volumes.length !== 3) throw Error('textbook_integrity');
+  let count = 0;
+  for (const [offset, volume] of book.volumes.entries()) {
+    if (volume.number !== offset + 1 || !text(volume.title, 200) ||
+        !HEX.test(volume.pdf_sha256) || !integer(volume.pdf_size, 5, MAX_PDF) ||
+        !integer(volume.pages, 1, 5000) ||
+        !Array.isArray(volume.chapters) || !integer(volume.chapters.length, 1, 100)) {
+      throw Error('textbook_integrity');
+    }
+    const numbers = new Set();
+    let lastPage = 0;
+    for (const chapter of volume.chapters) {
+      if (!integer(chapter.number, 1, 100) || numbers.has(chapter.number) ||
+          !text(chapter.title, 250) || !integer(chapter.page, lastPage + 1, volume.pages) ||
+          (chapter.supplement !== undefined && chapter.supplement !== true)) throw Error('textbook_integrity');
+      numbers.add(chapter.number);
+      lastPage = chapter.page;
+      if (!chapter.supplement) count++;
+    }
+  }
+  if (book.count !== count || book.korean_count !== 0) throw Error('textbook_integrity');
+}
+
+async function lectureVolume(env, book, number, openPdf) {
+  const volume = book.volumes[number - 1];
+  if (!openPdf) return json({
+    number: volume.number, title: volume.title, pages: volume.pages,
+    chapters: volume.chapters.map(chapter => ({
+      number: chapter.number, title: text(chapter.title, 250), page: chapter.page,
+      ...(chapter.supplement ? {supplement: true} : {}),
+    })),
+  });
+  const bytes = await verifiedObject(env.LIBRARY, PREFIX + '/documents/' + volume.pdf_sha256 + '.pdf',
+                                     volume.pdf_sha256, MAX_PDF);
+  if (bytes.byteLength !== volume.pdf_size ||
+      new TextDecoder().decode(new Uint8Array(bytes, 0, 5)) !== '%PDF-') throw Error('textbook_integrity');
+  return new Response(bytes, {headers: {
+    ...HEADERS, 'Content-Type': 'application/pdf', 'Content-Length': String(bytes.byteLength),
+    'Content-Disposition': 'inline; filename="Feynman-Volume-' + number + '.pdf"',
+  }});
 }
 
 function mediaView(attrs, endpoint) {
@@ -73,9 +122,10 @@ export async function privateTextbookRoute(request, env, url, user) {
   const relative = url.pathname.slice(ROUTE.length);
   const list = relative === '/books';
   const match = /^\/books\/([a-z][a-z0-9-]{0,31})(?:\/questions\/([1-9]\d{0,5})(?:\/media\/([1-9]\d{0,5}))?)?$/.exec(relative);
-  if (!list && (!match || !BOOKS.has(match[1]))) return status('not_found', 404);
+  const selectedVolume = /^\/books\/feynman\/volumes\/([123])(\/pdf)?$/.exec(relative);
+  if (!list && !selectedVolume && (!match || !BOOKS.has(match[1]))) return status('not_found', 404);
   const query = url.searchParams;
-  if ([...query.keys()].some(key => list || match[2] || !['page', 'q'].includes(key)) ||
+  if ([...query.keys()].some(key => list || selectedVolume || match[2] || !['page', 'q'].includes(key)) ||
       query.getAll('page').length > 1 || query.getAll('q').length > 1) return status('invalid_textbook_query', 400);
   const page = query.has('page') ? index(query.get('page')) : 1;
   const search = (query.get('q') || '').trim();
@@ -90,18 +140,39 @@ export async function privateTextbookRoute(request, env, url, user) {
         !Array.isArray(manifest.books) || manifest.books.length > 32) throw Error('textbook_integrity');
     const books = manifest.books;
     for (const book of books) {
-      if (!BOOKS.has(book?.id) || !integer(book.count, 1, 30000) ||
+      if (book?.id === 'feynman') {
+        if (book.kind !== 'lectures') throw Error('textbook_integrity');
+        validateLectureBook(book);
+        continue;
+      }
+      const batchSize = book?.batch_size ?? BATCH_SIZE;
+      if (!integer(batchSize, BATCH_SIZE, 192) || !BOOKS.has(book?.id) || !integer(book.count, 1, 30000) ||
           !integer(book.korean_count, 0, book.count) || !HEX.test(book.index_sha256) ||
-          !Array.isArray(book.batches) || book.batches.length !== Math.ceil(book.count / BATCH_SIZE)) {
+          !Array.isArray(book.batches) || book.batches.length !== Math.ceil(book.count / batchSize)) {
         throw Error('textbook_integrity');
       }
     }
     if (list) return json({books: books.map(publicBook)});
-    const book = books.find(item => item.id === match[1]);
+    const book = books.find(item => item.id === (selectedVolume ? 'feynman' : match[1]));
     if (!book) return status('not_found', 404);
+    if (book.kind === 'lectures') {
+      if (selectedVolume) return await lectureVolume(env, book, Number(selectedVolume[1]), Boolean(selectedVolume[2]));
+      return !match[2] && !query.size ? json({book: publicBook(book)}) : status('not_found', 404);
+    }
     const bookBase = base + '/' + book.id;
+    let priorBook, priorBase;
+    if (manifest.inherit_from !== undefined) {
+      const inherited = manifest.inherit_from;
+      if (typeof inherited !== 'string' || !HEX.test(inherited) || inherited === release) throw Error('textbook_integrity');
+      priorBase = PREFIX + '/releases/' + inherited;
+      const prior = await readJson(env.LIBRARY, priorBase + '/manifest.json', inherited);
+      if (prior.schema !== manifest.schema || prior.inherit_from !== undefined ||
+          !Array.isArray(prior.books)) throw Error('textbook_integrity');
+      priorBook = prior.books.find(item => item.id === book.id);
+    }
+    const objectBase = (sha, priorSha) => sha === priorSha ? priorBase + '/' + book.id : bookBase;
     if (!match[2]) {
-      const directory = await readJson(env.LIBRARY, bookBase + '/index.json', book.index_sha256);
+      const directory = await readJson(env.LIBRARY, objectBase(book.index_sha256, priorBook?.index_sha256) + '/index.json', book.index_sha256);
       if (!Array.isArray(directory) || directory.length !== book.count) throw Error('textbook_integrity');
       const keyword = search.normalize('NFKC').toLowerCase();
       const found = keyword ? directory.filter(item => [item.number, item.label, item.chapter, item.kind]
@@ -111,14 +182,17 @@ export async function privateTextbookRoute(request, env, url, user) {
       const items = found.slice((page - 1) * LIST_SIZE, page * LIST_SIZE).map(item => ({
         ordinal: item.ordinal, number: text(item.number, 100), label: text(item.label, 140),
         chapter: text(item.chapter, 160), kind: text(item.kind, 40), has_korean: item.has_korean === true,
+        ...(item.has_english === false ? {has_english: false} : {}),
       }));
       return json({book: publicBook(book), items, page, pages, total: found.length});
     }
     const ordinal = index(match[2]);
     if (ordinal > book.count) return status('not_found', 404);
-    const batch = Math.floor((ordinal - 1) / BATCH_SIZE);
-    const rows = await readJson(env.LIBRARY, bookBase + '/batches/' + batch + '.json', book.batches[batch]);
-    const row = rows[(ordinal - 1) % BATCH_SIZE];
+    const batchSize = book.batch_size ?? BATCH_SIZE;
+    const batch = Math.floor((ordinal - 1) / batchSize);
+    const sha = book.batches[batch];
+    const rows = await readJson(env.LIBRARY, objectBase(sha, priorBook?.batches?.[batch]) + '/batches/' + batch + '.json', sha);
+    const row = rows[(ordinal - 1) % batchSize];
     if (row?.ordinal !== ordinal || !Array.isArray(row.media) || row.media.length > 100) throw Error('textbook_integrity');
     if (!match[3]) {
       const credit = book.id === 'savchenko' && /^https:\/\/savchenkosolutions\.com\/en\/[0-9]+(?:\.[0-9]+){2}$/.test(row.credit?.source_url)

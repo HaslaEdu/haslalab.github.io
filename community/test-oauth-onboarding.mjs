@@ -19,6 +19,13 @@ function setup(){
  const coded=async body=>({...body,...await signupCode(sql)});
  return{sql,env,api,get,oauth,coded,close(){sql.close()}};
 }
+test('a first social sign-in records its originating service and later sign-ins keep it',async()=>{
+ const s=setup();try{
+  await s.oauth('/api/oauth/google/start?return='+encodeURIComponent('https://physleague.kr/'),'source-fixture');
+  await s.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'),'source-fixture');
+  assert.deepEqual(s.sql.prepare('SELECT source FROM account_signup_sources').all().map(r=>r.source),['nonsul']);
+ }finally{s.close()}
+});
 test('social registration requires a unique chosen username before protected API use; existing admin identity is retained',async()=>{
  const s=setup();try{
   assert.equal((await s.api('POST','/signup',{nickname:'No ID',password:'fixture-password'})).data.error,'bad_username');

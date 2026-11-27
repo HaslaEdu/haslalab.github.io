@@ -22,9 +22,10 @@
      to the scene     toSceneObjects(result, {grid, existing, look, unit, idFor}) → objects of draw-scene.mjs types
                       candidatesFromScene(scene) → points a line can snap to
      the controller   createInkController({onShape, onFreehand, onMathRegion, onPreview, getCandidates, toWorld, options})
+     pen and finger   createPointerArbiter({fingerMode, palmMs, palmPx}) → which pointer does what (see below) · penButton(ev)
      maths            rasteriseStrokes(strokes, {maxSize, maxBytes}) → Promise<{dataUrl, width, height, bytes}>
                       strokesInLasso(strokes, lasso) · polyToStroke(obj) · mathRequestBody(dataUrl, hint) */
-import {defaults, bodyPose, isBody, simplifyPath, ANCHOR_TYPES, BODY_TYPES} from './draw-scene.mjs?v=6e567e38776d';
+import {defaults, bodyPose, isBody, simplifyPath, ANCHOR_TYPES, BODY_TYPES} from './draw-scene.mjs?v=6fd828e25ba4';
 
 export const INK_VERSION = 1;
 export const MATH_PATH = '/api/workshop/ai/math';
@@ -961,7 +962,9 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
   function accepts(ev) {
     const type = ev.pointerType || 'mouse';
     if (mode === 'off') return false;
-    if (type === 'pen') return true;
+    if (type === 'pen') return !penButton(ev);
+    /* the editor's arbiter (createPointerArbiter) has already decided that this touch draws */
+    if (opt.arbitrated) return true;
     if (type === 'touch') {
       if (penSeen) return false; /* a pen is in use: touches are the palm */
       if (!opt.fingerDraw) return false;
@@ -970,7 +973,11 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
     }
     return opt.mouse && (ev.button ?? 0) === 0;
   }
-  const point = (ev, t) => { const w = W(ev); return {x: w.x, y: w.y, t, pressure: ev.pointerType === 'mouse' ? 0.5 : (ev.pressure > 0 ? ev.pressure : 0.5)}; };
+  /* pressure from any pen (Apple Pencil, S Pen, Windows Ink, Wacom) through PointerEvent.pressure; tilt kept when the
+     pen reports it (tiltX/tiltY, or altitudeAngle where only that is given) — never WebKit-only touch.force */
+  const point = (ev, t) => { const w = W(ev), q = {x: w.x, y: w.y, t, pressure: ev.pointerType === 'mouse' ? 0.5 : (ev.pressure > 0 ? ev.pressure : 0.5)};
+    if (ev.pointerType === 'pen' && (ev.tiltX || ev.tiltY)) { q.tiltX = ev.tiltX; q.tiltY = ev.tiltY; } else if (ev.pointerType === 'pen' && Number.isFinite(ev.altitudeAngle) && ev.altitudeAngle < Math.PI / 2) q.altitude = ev.altitudeAngle;
+    return q; };
   function armHold() {
     if (!cur) return; if (cur.timer) T.clear(cur.timer);
     if (!opt.holdToSnap || mode !== 'draw') return;
@@ -1087,6 +1094,85 @@ export function createInkController({onShape, onFreehand, onPreview, onStroke, o
     /** tell the controller the ids an earlier result became (when onShape could not return them) */
     bind(strokeId, ids) { const it = pending.find(x => x.stroke.id === strokeId); if (it) it.ids = ids; }
   };
+}
+
+/* ── pen and finger: which pointer does what ──
+   A pen's side or eraser button: an S Pen's side button (and a Wacom or Surface pen's barrel button) reports button 2
+   or buttons & 2; the eraser end of a Windows / Wacom pen reports button 5 or buttons & 32. Either one erases for as long
+   as it is held, as in Samsung Notes and OneNote. */
+export function penButton(ev) {
+  if (!ev || ev.pointerType !== 'pen') return null;
+  const b = ev.buttons || 0;
+  if (ev.button === 5 || (b & 32)) return 'eraser';
+  if (ev.button === 2 || (b & 2)) return 'barrel';
+  return null;
+}
+/** The rules the canvas follows, so a pen and a finger are never confused:
+ *  · the mouse and the trackpad: the tool, always;
+ *  · once a pen has been seen (pointerType 'pen'), the pen draws and edits with the tool and a finger only navigates
+ *    (one finger pans, two pinch-zoom, a two-finger tap undoes, a three-finger tap redoes); it never draws, moves or
+ *    selects, unless fingerMode is 'draw' (손가락으로 그리기);
+ *  · before any pen (phones, finger-only tablets) a finger is the tool as before, a second finger turns it into a pinch;
+ *  · palm rejection: touches while a pen is down or within palmMs after it lifted, touches with a large contact
+ *    (width or height over palmPx CSS px where the browser reports them) and touches starting near a pen that is hovering
+ *    (S Pen, Apple Pencil hover: pen moves with no buttons) are ignored;
+ *  · a pen that starts while a finger gesture is on wins: the finger's stroke or pan is cancelled.
+ *  down(ev) / move(ev) / up(ev) answer {route: 'tool' | 'erase' | 'nav' | 'ignore', cancel?: 'tool' | 'nav', tap?: 'undo' | 'redo'};
+ *  hover(ev) takes pen moves with no contact. fingerMode: 'auto' (finger draws until a pen is seen), 'draw', 'nav'. */
+export function createPointerArbiter({fingerMode = 'auto', palmMs = 500, palmPx = 30, hoverMs = 250, hoverPx = 320, tapMs = 300, tapPx = 12, now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now())} = {}) {
+  let penSeen = false, pen = null, penUpAt = -Infinity, hoverAt = -Infinity, hoverPt = null, fmode = fingerMode;
+  const touches = new Map(), ignored = new Set();
+  let toolTouch = null, gesture = null; /* gesture: {max, t0, moved} for the fingers down together */
+  const fingerDraws = () => fmode === 'draw' || (fmode === 'auto' && !penSeen);
+  const big = ev => (ev.width || 0) > palmPx || (ev.height || 0) > palmPx;
+  function down(ev) {
+    const type = ev.pointerType || 'mouse';
+    if (type === 'pen') {
+      penSeen = true; pen = ev.pointerId; hoverPt = null;
+      const cancel = toolTouch != null ? 'tool' : touches.size ? 'nav' : undefined;
+      for (const id of touches.keys()) ignored.add(id);
+      touches.clear(); toolTouch = null; gesture = null;
+      return {route: penButton(ev) ? 'erase' : 'tool', ...(cancel ? {cancel} : {})};
+    }
+    if (type !== 'touch') return {route: 'tool'};
+    const t = now();
+    if (pen != null || t - penUpAt < palmMs || big(ev) || (hoverPt && t - hoverAt < hoverMs && Math.hypot(ev.clientX - hoverPt.x, ev.clientY - hoverPt.y) < hoverPx)) { ignored.add(ev.pointerId); return {route: 'ignore'}; }
+    touches.set(ev.pointerId, {x: ev.clientX, y: ev.clientY, x0: ev.clientX, y0: ev.clientY});
+    if (!gesture) gesture = {max: 0, t0: t, moved: false};
+    gesture.max = Math.max(gesture.max, touches.size);
+    if (touches.size === 1 && fingerDraws()) { toolTouch = ev.pointerId; return {route: 'tool'}; }
+    if (toolTouch != null) { toolTouch = null; return {route: 'nav', cancel: 'tool'}; }
+    return {route: 'nav'};
+  }
+  function move(ev) {
+    const type = ev.pointerType || 'mouse';
+    if (type === 'pen') { if (pen == null) { hoverAt = now(); hoverPt = {x: ev.clientX, y: ev.clientY}; return {route: 'ignore'}; } return {route: ev.pointerId === pen ? 'tool' : 'ignore'}; }
+    if (type !== 'touch') return {route: 'tool'};
+    if (ignored.has(ev.pointerId) || !touches.has(ev.pointerId)) return {route: 'ignore'};
+    const p = touches.get(ev.pointerId); p.x = ev.clientX; p.y = ev.clientY;
+    if (gesture && Math.hypot(ev.clientX - p.x0, ev.clientY - p.y0) > tapPx) gesture.moved = true;
+    return {route: ev.pointerId === toolTouch ? 'tool' : 'nav'};
+  }
+  function up(ev) {
+    const type = ev.pointerType || 'mouse';
+    if (type === 'pen') { if (ev.pointerId !== pen) return {route: 'ignore'}; pen = null; penUpAt = now(); return {route: 'tool'}; }
+    if (type !== 'touch') return {route: 'tool'};
+    if (ignored.delete(ev.pointerId) || !touches.has(ev.pointerId)) return {route: 'ignore'};
+    const route = ev.pointerId === toolTouch ? 'tool' : 'nav';
+    touches.delete(ev.pointerId); if (ev.pointerId === toolTouch) toolTouch = null;
+    let tap;
+    if (!touches.size && gesture) {
+      if (ev.type !== 'pointercancel' && !gesture.moved && gesture.max >= 2 && now() - gesture.t0 < tapMs) tap = gesture.max === 2 ? 'undo' : 'redo';
+      gesture = null;
+    }
+    return {route, ...(tap ? {tap} : {})};
+  }
+  return {down, move, up, hover: ev => { if (ev.pointerType === 'pen' && pen == null) { hoverAt = now(); hoverPt = {x: ev.clientX, y: ev.clientY}; } },
+    get penSeen() { return penSeen; }, get penDown() { return pen != null; }, get fingerMode() { return fmode; }, set fingerMode(m) { if (['auto', 'draw', 'nav'].includes(m)) fmode = m; },
+    /** 'pen': fingers navigate; 'finger': a finger draws */
+    get mode() { return fingerDraws() ? 'finger' : 'pen'; }, fingerDraws, resetPen() { penSeen = false; }, get touching() { return touches.size; },
+    /** the navigating fingers where they are now (pan, pinch) */
+    points() { return [...touches].filter(([id]) => id !== toolTouch).map(([id, p]) => [id, {x: p.x, y: p.y}]); }};
 }
 
 /* ── maths: strokes → a small PNG for the server ── */

@@ -320,3 +320,59 @@ test('the build stamps draw-ink.mjs and its import; the deploy runs this test', 
   assert.match(fs.readFileSync(path.join(__dirname, '../.github/workflows/deploy-worker.yml'), 'utf8'), /test-draw-ink\.cjs/);
   assert.doesNotMatch(fs.readFileSync(path.join(__dirname, '../draw-ink.mjs'), 'utf8'), /\b(document|window)\.(?!createElement)/, 'no DOM in the core');
 });
+
+/* ── pen and finger never confused (createPointerArbiter): sequences of pointer events → what each one does ── */
+test('arbiter: mouse is the tool; before any pen a finger is the tool, a second finger cancels it into a pinch',async()=>{
+  const {I}=await load();let t=0;const A=I.createPointerArbiter({now:()=>t});
+  assert.deepEqual(A.down({pointerType:'mouse',pointerId:1,button:0,clientX:0,clientY:0}),{route:'tool'});assert.equal(A.move({pointerType:'mouse',pointerId:1}).route,'tool');A.up({pointerType:'mouse',pointerId:1});
+  assert.equal(A.mode,'finger');
+  assert.deepEqual(A.down({pointerType:'touch',pointerId:5,clientX:100,clientY:100}),{route:'tool'});
+  assert.equal(A.move({pointerType:'touch',pointerId:5,clientX:120,clientY:100}).route,'tool');
+  assert.deepEqual(A.down({pointerType:'touch',pointerId:6,clientX:200,clientY:100}),{route:'nav',cancel:'tool'},'the second finger: the stroke goes, a pinch starts');
+  assert.equal(A.move({pointerType:'touch',pointerId:5,clientX:130,clientY:100}).route,'nav');assert.equal(A.points().length,2);
+});
+test('arbiter: once a pen is seen fingers only navigate; two- and three-finger taps undo and redo; 손가락으로 그리기 turns finger drawing back on',async()=>{
+  const {I}=await load();let t=0;const A=I.createPointerArbiter({now:()=>t});
+  assert.deepEqual(A.down({pointerType:'pen',pointerId:2,button:0,buttons:1,pressure:0.4,clientX:50,clientY:50}),{route:'tool'});
+  assert.equal(A.move({pointerType:'pen',pointerId:2,clientX:60,clientY:50}).route,'tool');
+  t=10;assert.equal(A.up({pointerType:'pen',pointerId:2}).route,'tool');assert.equal(A.mode,'pen');
+  t=2000;assert.deepEqual(A.down({pointerType:'touch',pointerId:7,clientX:400,clientY:400}),{route:'nav'},'one finger pans');
+  assert.equal(A.move({pointerType:'touch',pointerId:7,clientX:450,clientY:400}).route,'nav');A.up({pointerType:'touch',pointerId:7,type:'pointerup'});
+  t=3000;A.down({pointerType:'touch',pointerId:8,clientX:400,clientY:400});A.down({pointerType:'touch',pointerId:9,clientX:480,clientY:400});
+  t=3100;A.up({pointerType:'touch',pointerId:8,type:'pointerup'});assert.deepEqual(A.up({pointerType:'touch',pointerId:9,type:'pointerup'}),{route:'nav',tap:'undo'});
+  t=4000;for(const id of [10,11,12])A.down({pointerType:'touch',pointerId:id,clientX:300+id*40,clientY:400});
+  t=4100;A.up({pointerType:'touch',pointerId:10,type:'pointerup'});A.up({pointerType:'touch',pointerId:11,type:'pointerup'});assert.equal(A.up({pointerType:'touch',pointerId:12,type:'pointerup'}).tap,'redo');
+  /* a moved two-finger gesture is a pinch, not a tap */
+  t=5000;A.down({pointerType:'touch',pointerId:13,clientX:400,clientY:400});A.down({pointerType:'touch',pointerId:14,clientX:480,clientY:400});A.move({pointerType:'touch',pointerId:14,clientX:560,clientY:400});
+  A.up({pointerType:'touch',pointerId:13,type:'pointerup'});assert.equal(A.up({pointerType:'touch',pointerId:14,type:'pointerup'}).tap,undefined);
+  A.fingerMode='draw';assert.equal(A.mode,'finger');t=6000;assert.equal(A.down({pointerType:'touch',pointerId:15,clientX:10,clientY:10}).route,'tool');
+});
+test('arbiter: palm rejection — while the pen is down, 500 ms after it lifts, a large contact, near a hovering pen; a pen that starts during a finger gesture wins',async()=>{
+  const {I}=await load();let t=0;const A=I.createPointerArbiter({now:()=>t});
+  A.down({pointerType:'pen',pointerId:2,button:0,clientX:300,clientY:300});
+  assert.equal(A.down({pointerType:'touch',pointerId:3,clientX:350,clientY:420}).route,'ignore','palm while the pen writes');
+  assert.equal(A.move({pointerType:'touch',pointerId:3,clientX:360,clientY:430}).route,'ignore');assert.equal(A.up({pointerType:'touch',pointerId:3}).route,'ignore');
+  t=100;A.up({pointerType:'pen',pointerId:2});t=400;assert.equal(A.down({pointerType:'touch',pointerId:4,clientX:350,clientY:420}).route,'ignore','within 500 ms');
+  t=1200;assert.equal(A.down({pointerType:'touch',pointerId:5,clientX:100,clientY:100,width:48,height:60}).route,'ignore','a large contact');
+  t=2000;A.hover({pointerType:'pen',pointerId:2,clientX:300,clientY:300,buttons:0,pressure:0});t=2100;
+  assert.equal(A.down({pointerType:'touch',pointerId:6,clientX:380,clientY:420}).route,'ignore','near a hovering pen');
+  t=3000;assert.equal(A.down({pointerType:'touch',pointerId:7,clientX:900,clientY:100}).route,'nav','an ordinary finger later: navigation');
+  assert.deepEqual(A.down({pointerType:'pen',pointerId:2,button:0,clientX:300,clientY:300}),{route:'tool',cancel:'nav'},'the pen wins');
+  assert.equal(A.move({pointerType:'touch',pointerId:7,clientX:950,clientY:100}).route,'ignore','the cancelled finger is done');
+  /* in finger mode, a pen during a finger stroke cancels the stroke */
+  const B=I.createPointerArbiter({now:()=>t,fingerMode:'draw'});B.down({pointerType:'touch',pointerId:1,clientX:0,clientY:0});
+  assert.deepEqual(B.down({pointerType:'pen',pointerId:2,button:0}),{route:'tool',cancel:'tool'});
+});
+test('pen buttons: S Pen side / barrel button and the eraser end erase; the ink controller does not draw with them; tilt and pressure kept',async()=>{
+  const {I}=await load();
+  assert.equal(I.penButton({pointerType:'pen',button:2,buttons:2}),'barrel');assert.equal(I.penButton({pointerType:'pen',button:0,buttons:3}),'barrel');
+  assert.equal(I.penButton({pointerType:'pen',button:5,buttons:32}),'eraser');assert.equal(I.penButton({pointerType:'pen',button:0,buttons:1}),null);assert.equal(I.penButton({pointerType:'mouse',button:2}),null);
+  const A=I.createPointerArbiter();assert.equal(A.down({pointerType:'pen',pointerId:1,button:5,buttons:32}).route,'erase');
+  const C=I.createInkController({toWorld:e=>({x:e.clientX/100,y:-e.clientY/100}),unit:0.01,options:{arbitrated:true}});
+  assert.equal(C.pointerdown({pointerType:'pen',pointerId:1,button:2,buttons:2,clientX:0,clientY:0}),false);
+  assert.equal(C.pointerdown({pointerType:'pen',pointerId:1,button:0,buttons:1,pressure:0.7,tiltX:30,tiltY:-10,clientX:0,clientY:0}),true);
+  const p=C.current.points[0];assert.equal(p.pressure,0.7);assert.equal(p.tiltX,30);
+  /* coalesced samples (Chrome / Samsung Internet on Android, Windows Ink) are all taken */
+  C.pointermove({pointerType:'pen',pointerId:1,clientX:30,clientY:0,getCoalescedEvents:()=>[10,20,30].map(x=>({pointerType:'pen',pointerId:1,clientX:x,clientY:0,pressure:0.6}))});
+  assert.equal(C.current.points.length,4);
+});

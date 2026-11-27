@@ -93,13 +93,13 @@ function imageParts(images,provider) {
       [{type:'text',text:label},{type:'image_url',image_url:{url:'data:'+mime+';base64,'+data,detail:'high'}}];
   });
 }
-async function boundedJSON(response) {
+export async function boundedJSON(response, maxBytes = MAX_RESPONSE) {
   const size=Number(response.headers.get('content-length'));
-  if(Number.isFinite(size)&&size>MAX_RESPONSE) {await response.body?.cancel();fail(502,'vision_invalid_response');}
+  if(Number.isFinite(size)&&size>maxBytes) {await response.body?.cancel();fail(502,'vision_invalid_response');}
   if(!response.body)fail(502,'vision_invalid_response');
   const reader=response.body.getReader(),chunks=[];let length=0;
   try{while(true){const {done,value}=await reader.read();if(done)break;length+=value.byteLength;
-    if(length>MAX_RESPONSE){await reader.cancel();fail(502,'vision_invalid_response');}chunks.push(value);}}
+    if(length>maxBytes){await reader.cancel();fail(502,'vision_invalid_response');}chunks.push(value);}}
   finally{reader.releaseLock();}
   const bytes=new Uint8Array(length);let at=0;for(const chunk of chunks){bytes.set(chunk,at);at+=chunk.length;}
   try{return JSON.parse(new TextDecoder().decode(bytes));}catch{fail(502,'vision_invalid_response');}

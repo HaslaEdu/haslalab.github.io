@@ -236,7 +236,7 @@ export const FIELDS = {
   slits: {x: X, y: Y, n: num(2, 1, 50), d: num(0.25, 1e-4, 100), a: num(0.05, 1e-4, 100), L: num(1, 1e-3, 1000), lambda: num(550, 10, 1e5), h: num(1.6, 0.1, 100), screen: num(2.4, 0.2, 200), pattern: bool(true), labels: bool(true), waves: bool(true)},
   wavefront: {x: X, y: Y, kind: pick('circular', ['plane', 'circular']), n: num(5, 1, 30), spacing: num(0.3, 0.02, 50), angle: num(0, -360, 360), h: num(1.4, 0.05, 200)},
   /* waves */
-  wave: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, 0, 50), lambda: num(1.6, 0.02, 400), phase: num(0, -360, 360), kind: pick('travel', ['travel', 'standing']), n: num(3, 1, 20), ends: pick('none', ['none', 'fixed']),
+  wave: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, 0, 50), lambda: num(1.6, 0.02, 400), phase: num(0, -360, 360), expr: expr('sin(x)'), kind: pick('travel', ['travel', 'standing']), n: num(3, 1, 20), ends: pick('none', ['none', 'fixed']),
     showLambda: bool(false), showA: bool(false), envelope: bool(true), axis: bool(true), arrow: bool(false), label: L()},
   pulse: {x: X, y: Y, len: num(4, 0.1, 400), A: num(0.4, -50, 50), width: num(0.6, 0.02, 100), pos: num(0.35, 0, 1), shape: pick('gauss', ['gauss', 'tri', 'square']), dir: pick('right', ['right', 'left', 'none']), axis: bool(true), label: L()},
   interference: {x: X, y: Y, d: num(1, 0.01, 100), lambda: num(0.4, 0.01, 100), n: num(5, 1, 30), nodal: bool(true), labels: bool(true), rot: ROT},
@@ -259,7 +259,7 @@ export const FIELDS = {
   arc: {x: X, y: Y, r: num(0.3, 0.02, 20), from: num(0, -360, 360), to: num(30, -360, 360), text: txt('', 24), arrow: bool(false), color: COLOR, pattern: pick('solid', PATTERNS)},
   axes: {x: X, y: Y, lx: num(1, 0, 100), ly: num(1, 0, 100), xlabel: txt('x', 12), ylabel: txt('y', 12)},
   line: {x1: X, y1: Y, x2: X, y2: Y, pattern: pick('dashed', PATTERNS), heads: pick('none', ['none', 'end', 'start', 'both', 'mid']), color: COLOR},
-  vector: {...SEG, label: L(), width: num(1.6, 0.3, 6), head: pick('auto', ['auto', 'filled', 'open', 'stealth', 'none'])},
+  vector: {...SEG, on: ref(BODY_TYPES), vectorFrame: pick('world', ['world', 'body']), label: L(), width: num(1.6, 0.3, 6), head: pick('auto', ['auto', 'filled', 'open', 'stealth', 'none'])},
   region: {...BOX(1, 0.8), shape: pick('rect', ['rect', 'ellipse']), fill: pick('gray', ['none', 'gray', 'hatch', 'dots', 'cross', 'lines', 'dark']), pattern: pick('solid', PATTERNS), label: L(), rot: ROT},
   point: {x: X, y: Y, label: L(), filled: bool(true)},
   panel: {...BOX(2, 1.5), caption: txt('(가)', 24), frame: bool(false)},
@@ -293,7 +293,14 @@ for (const t of PHYS_SHAPES) Object.assign(FIELDS[t], PHYS_FIELDS);
 const LEGACY_ON = {particle: {arrow: raw => (typeof raw.len === 'number' ? raw.len : 0.8) > 0}, wave: {showLambda: () => true, showA: () => true}, levels: {showLambda: () => true}};
 /* every object also has a line weight and a label size (multiples of the style's), and can be locked against dragging */
 export const COMMON_FIELDS = {lw: num(1, 0.2, 5), ls: num(1, 0.3, 4), lock: bool(false), style: pick('', ['', ...STYLE_KEYS])};
-for (const t of Object.keys(FIELDS)) Object.assign(FIELDS[t], COMMON_FIELDS);
+const LETTER_FIELDS = {
+  letterStyle: pick('auto', ['auto', 'regular', 'italic', 'bold', 'boldItalic']),
+  letterFamily: pick('auto', ['auto', 'serif', 'sans', 'mono']),
+};
+for (const fields of Object.values(FIELDS)) {
+  if (Object.values(fields).some(field => field.k === 'txt')) Object.assign(fields, LETTER_FIELDS);
+  Object.assign(fields, COMMON_FIELDS);
+}
 export const TYPES = Object.keys(FIELDS);
 /* the types that turn by their field rot (degrees, anticlockwise) about their centre */
 export const ROTATABLE = TYPES.filter(t => 'rot' in FIELDS[t]);
@@ -593,6 +600,18 @@ export function validateScene(input0, {lenient = false, aiText = false} = {}) {
   const cyc = computeGeometry({objects: keep}).cyclic;
   if (cyc.size) { for (const id of cyc) err('geo_cycle', id); if (lenient) keep = keep.filter(o => !cyc.has(o.id)); }
   scene.objects = keep;
+  if (Array.isArray(input.groups)) {
+    const present = new Set(keep.map(o => o.id)), grouped = new Set();
+    const groups = [];
+    for (const members of input.groups.slice(0, MAX_OBJECTS)) {
+      if (!Array.isArray(members)) continue;
+      const ids = [...new Set(members.slice(0, MAX_OBJECTS))].filter(id => present.has(id) && !grouped.has(id));
+      if (ids.length < 2) continue;
+      ids.forEach(id => grouped.add(id));
+      groups.push(ids);
+    }
+    if (groups.length) scene.groups = groups;
+  }
   /* bodies on bodies: the lower ones first */
   for (let pass = 0; pass < 3; pass++) for (const o of scene.objects) if (isBody(o) && o.on) placeOnSurface(scene, o);
   const dropped = list.length - keep.length;
@@ -752,6 +771,22 @@ export function bodyPose(scene, b, depth = 0) {
     if (s) { const f = surfaceFrame(s, scene, depth), c = vec.add(vec.add(f.p0, vec.mul(f.u, b.at)), vec.mul(f.n, bodyHalfHeight(b))); return {x: c.x, y: c.y, angle: b.type === 'block' ? Math.atan2(f.u.y, f.u.x) : 0}; }
   }
   return {x: b.x, y: b.y, angle: b.type === 'block' ? (b.rot || 0) * Math.PI / 180 : 0};
+}
+/* Attached vector endpoints are offsets from the body's centre, in world or body axes. */
+export function vectorTransform(scene, o, poses) {
+  const body = o.on && scene.objects.find(x => x.id === o.on);
+  const p = body ? (poses?.get(body.id) || bodyPose(scene, body)) : {x: 0, y: 0};
+  const angle = body && o.vectorFrame === 'body'
+    ? (p.angle || 0) + (p.spin || 0) + (isRound(body) ? rad(body.rot || 0) : 0) : 0;
+  const c = Math.cos(angle), s = Math.sin(angle);
+  return {
+    toWorld: ({x, y}) => ({x: p.x + x*c - y*s, y: p.y + x*s + y*c}),
+    toLocal: ({x, y}) => ({x: (x-p.x)*c + (y-p.y)*s, y: -(x-p.x)*s + (y-p.y)*c}),
+  };
+}
+export function vectorPoints(scene, o, poses) {
+  const {toWorld} = vectorTransform(scene, o, poses);
+  return [toWorld({x:o.x1, y:o.y1}), toWorld({x:o.x2, y:o.y2})];
 }
 /* the point where a string or a spring meets a body: the middle of the face looking towards `toward` (a block), or the
    centre (a ball, a wheel) */
@@ -1149,7 +1184,7 @@ const NEW_TEMPLATES = {
   rolling_incline: ['mech', '빗면을 굴러 내려가는 원통 (미끄러지지 않음)', 'A cylinder rolling down an incline without slipping', 0.1, {x: -0.3, y: -0.35, w: 3.6, h: 2.0}, [
     {id: 'gnd', type: 'floor', x: -0.1, y: 0, w: 3.3},
     {id: 'inc', type: 'incline', x: 0.1, y: 0, angle: 28, length: 3, mu: 0.3, angleLabel: '\\theta'},
-    {id: 'w1', type: 'wheel', on: 'inc', at: 2.3, r: 0.22, mass: 2, kind: 'disk', omega: 'ccw', label: ''},
+    {id: 'w1', type: 'wheel', on: 'inc', at: 2.3, r: 0.22, mass: 2, kind: 'disk', omega: 'ccw', spokes: 1, label: ''},
     {id: 'lR', type: 'label', x: 2.45, y: 1.62, text: 'm, R', size: 14}]],
   seesaw: ['mech', '시소 (지레의 평형)', 'A seesaw (balance of a lever)', 0.1, {x: 0.1, y: 0, w: 3.8, h: 1.25}, [
     {id: 'pl', type: 'plank', x: 2, y: 0.6, len: 3.2, thick: 0.07, rot: 0, support: 'fulcrum', at: 0.5, mass: 0},
@@ -1473,6 +1508,7 @@ export function sceneBounds(scene) {
   for (const o of scene.objects) {
     if (geo && GEO_TYPES.includes(o.type)) { const b = geoExtent(geo, o); if (b) { add(b.x, b.y); add(b.x + b.w, b.y + b.h); } continue; }
     if (isBody(o)) { const p = bodyPose(scene, o), r = Math.max(bodyHalfWidth(o), bodyHalfHeight(o)) * 1.5; add(p.x - r, p.y - r); add(p.x + r, p.y + r); continue; }
+    if (o.type === 'vector' && o.on) { for (const p of vectorPoints(scene, o)) add(p.x, p.y); continue; }
     const b = objectExtent(o);
     if (b) { add(b.x, b.y); add(b.x + b.w, b.y + b.h); }
   }
@@ -1493,7 +1529,7 @@ export const UNSURE_FIELDS = ['object', 'position', 'mass', 'angle', 'mu', 'k', 
 export function visionProperties() {
   const props = {};
   for (const t of VISION_OBJECT_TYPES) for (const [k, f] of Object.entries(FIELDS[t])) {
-    if (k in COMMON_FIELDS || k in PHYS_FIELDS) continue;
+    if (k in COMMON_FIELDS || k in PHYS_FIELDS || k in LETTER_FIELDS) continue;
     const s = f.k === 'num' ? {type: 'number'} : f.k === 'bool' ? {type: 'boolean'} : f.k === 'refs' ? {type: 'array', items: {type: 'string'}} : f.k === 'enum' ? {type: 'string', enum: [...f.list]} : {type: 'string'};
     const old = props[k];
     if (!old) props[k] = s;

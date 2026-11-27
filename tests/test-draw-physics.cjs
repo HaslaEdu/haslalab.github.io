@@ -354,9 +354,31 @@ test('rolling without slipping: a = g sin θ / (1 + I/mr²) for a disk, a ring a
     const sim=P.buildSim(scene(S,[{id:'i',type:'incline',x:0,y:0,angle:30,length:6,mu:0.5},{id:'w',type:'wheel',on:'i',at:5,r:0.2,mass:2,kind}]));
     const a=sim.accelerations().get('w');near(Math.hypot(a.x,a.y),P.rollingAccel(g,30,k),1e-9,kind);near(P.rollingAccel(g,30,k),g*0.5/(1+k),1e-12,'formula');
     const E0=sim.energy().E;sim.run(0.6);near(sim.energy().E,E0,1e-6,kind+': rolling keeps the energy (K includes the spin)');
+    const pose=sim.poses().get('w');
+    near(pose.spin,(5-pose.at)/0.2,1e-8,'angle follows rolling distance');
+    const v=sim.velocities().get('w');
+    near(pose.omega,Math.hypot(v.x,v.y)/0.2,1e-8,'positive angular speed down the rising incline');
   }
   const slip=P.buildSim(scene(S,[{id:'i',type:'incline',x:0,y:0,angle:60,length:6,mu:0.1},{id:'w',type:'wheel',on:'i',at:5,r:0.2,mass:2,kind:'ring'}]));
   const r=60*Math.PI/180,a=slip.accelerations().get('w');near(Math.hypot(a.x,a.y),g*(Math.sin(r)-0.1*Math.cos(r)),1e-9,'slides: g (sin θ − μ cos θ)');
+  const E0=slip.energy().E;slip.run(0.5);
+  near(slip.poses().get('w').omega,0.1*g*Math.cos(r)*0.5/0.2,1e-8,'friction spins the sliding ring');
+  near(slip.energy().E+slip.energy().heat,E0,1e-8,'sliding accounts for rotational energy and heat');
+});
+
+test('vectors can follow a rolling body in world axes or rotate with its radius',async()=>{
+  const {S,P}=await load();
+  const raw=S.template('rolling_incline');
+  raw.objects.push({id:'arrow',type:'vector',on:'w1',vectorFrame:'body',x1:0,y1:0,x2:1,y2:0});
+  raw.groups=[['w1','arrow','missing']];
+  const scene=S.validateScene(raw).scene, arrow=scene.objects.find(o=>o.id==='arrow');
+  assert.deepEqual(scene.groups,[['w1','arrow']]);
+  const simulation=P.buildSim(scene).run(0.5), poses=simulation.poses(), w=poses.get('w1');
+  const [base,tip]=S.vectorPoints(scene,arrow,poses);
+  near(base.x,w.x,1e-10,'starts at axle');near(base.y,w.y,1e-10,'follows axle');
+  near(tip.x-base.x,Math.cos(w.spin),1e-10,'body-frame x');near(tip.y-base.y,Math.sin(w.spin),1e-10,'body-frame y');
+  const [fixedBase,fixedTip]=S.vectorPoints(scene,{...arrow,vectorFrame:'world'},poses);
+  near(fixedTip.x-fixedBase.x,1,1e-10,'world-frame x');near(fixedTip.y-fixedBase.y,0,1e-10,'world-frame y');
 });
 
 test('buoyancy ρ g V, a floating fraction ρ_b/ρ_f; motional EMF ε = BLv; meter bridge balance R/S = l/(100 − l)',async()=>{
@@ -720,7 +742,7 @@ test('작품 공유 → editor: the figures page passes ?share=N (a whole number
   const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
   const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8'),i=html.indexOf('function viewWorkshopDraw(){'),j=html.indexOf('\n}\n',i);
   assert.ok(i>0&&j>i);
-  const src=(hash)=>{const ctx={lang:'ko',uiLang:'ko',UI:{ko:{navWork:'워크샵'}},wsTitle:()=>'그림 제작',location:{hash},document:{documentElement:{dataset:{theme:'light'}}},URLSearchParams};
+  const src=(hash)=>{const ctx={DRAW_FRAME_VERSION:'test',lang:'ko',uiLang:'ko',UI:{ko:{navWork:'워크샵'}},wsTitle:()=>'그림 제작',location:{hash},document:{documentElement:{dataset:{theme:'light'}}},URLSearchParams};
     vm.createContext(ctx);vm.runInContext(html.slice(i,j+2)+';globalThis.out=viewWorkshopDraw();',ctx);return /src="draw\.html\?([^"]+)"/.exec(ctx.out)[1];};
   assert.match(src('#/workshop/draw?share=100'),/(^|&)share=100(&|$)/);
   assert.match(src('#/workshop/draw?t=atwood&share=7'),/t=atwood/);
@@ -832,4 +854,37 @@ test('ink in the editor: the pen tool drives draw-ink.mjs; a stroke or a group i
   const line=I.toSceneObjects({type:'line',params:{a:{x:0,y:0},b:{x:1,y:0.02}}},{grid:0.1,look:{color:'blue',lw:1,pattern:'solid'}});assert.equal(line[0].type,'line');
   const lab=I.toSceneObjects({type:'latex',params:{latex:'F = m\\vec{a}',x:1,y:1,size:18}},{});assert.equal(lab[0].text,'$F = m\\vec{a}$');
   assert.ok(S.validateScene({objects:[...line,...lab]}).ok);assert.equal(I.MATH_PATH,'/api/workshop/ai/math');
+});
+
+test('letter styles and families survive validation, preview and figure rendering', async () => {
+  const S = await import('../draw-scene.mjs'), R = await import('../draw-render.mjs');
+  const scene = S.validateScene({objects: [
+    {id:'styled', type:'label', x:0, y:0, text:'시험 ABC', letterStyle:'boldItalic', letterFamily:'sans'},
+    {id:'plain', type:'label', x:1, y:1, text:'ABC'},
+    {id:'mass', type:'block', x:2, y:2, label:'m_1', letterStyle:'regular', letterFamily:'mono'},
+  ]});
+  assert.equal(scene.ok, true);
+  assert.equal(scene.scene.objects[1].letterStyle, 'auto');
+  const svg = R.renderSVG(scene.scene, {edit:true});
+  const object = id => svg.match(new RegExp('data-id="' + id + '"[\\s\\S]*?</g>'))?.[0];
+  assert.match(object('styled'), /font-family="'Arial'/);
+  assert.match(object('styled'), /font-style="italic" font-weight="bold">시험/);
+  assert.doesNotMatch(object('plain'), /font-weight="bold"|font-style="italic"/);
+  assert.match(object('mass'), /font-family="'Courier New'/);
+  assert.doesNotMatch(object('mass'), /font-style="italic"/);
+  assert.match(R.texSVG('ABC',17,'textbook',scene.scene.objects[0]), /font-style="italic" font-weight="bold"/);
+  assert.equal(S.validateScene({objects:[{id:'bad',type:'label',letterFamily:'custom'}]}).ok,false);
+});
+
+test('traveling waves accept a custom profile and keep the built-in sine default', async () => {
+  const {S, R} = await load();
+  const base = {id: 'w1', type: 'wave', phase: 45, A: 0.4, lambda: 1.6};
+  const legacy = S.validateScene({objects:[base]});
+  assert.equal(legacy.ok, true);
+  assert.equal(legacy.scene.objects[0].expr, 'sin(x)');
+  const custom = {...base, expr: 'cos(x)'};
+  assert.notEqual(R.renderSVG(scene(S, [custom])), R.renderSVG(legacy.scene));
+  const invalid = S.validateScene({objects:[{...base, expr: 'sin('}]});
+  assert.equal(invalid.ok, false);
+  assert.equal(invalid.errors[0].code, 'bad_expr');
 });

@@ -1,0 +1,496 @@
+/* Project entry and figure picker shared by all three Workshop editors. */
+(function () {
+  'use strict';
+  const providers = ['store', 'drive', 'github'];
+  const CONNECT = '/api/workshop/connectors';
+  const labels = ko => ({store: ko ? '하슬라랩 보관함' : 'HaslaLab storage', drive: 'Google Drive', github: 'GitHub'});
+  const suffix = kind => '-haslalab-' + kind + '.json';
+  const scopeOf = data => data.repo + '/' + data.folder;
+  const txt = (ko, en) => document.documentElement.lang === 'ko' ? ko : en;
+  const messages = {
+    not_connected: ['보관함에서 계정을 먼저 연결해 주세요.', 'Connect your account in Storage first.'],
+    not_configured: ['아직 이 저장소가 연결 설정되지 않았습니다.', 'This storage provider is not configured.'],
+    repo_not_chosen: ['보관함에서 GitHub 저장소를 먼저 선택해 주세요.', 'Choose a GitHub repository in Storage first.'],
+    github_conflict: ['GitHub 파일이나 저장소가 바뀌었습니다. 프로젝트를 다시 열고 저장해 주세요.', 'The GitHub file or repository changed. Reopen it before saving.'],
+    drive_reconnect: ['보관함에서 Google Drive를 다시 연결해 주세요.', 'Reconnect Google Drive in Storage.'],
+    github_reconnect: ['보관함에서 GitHub를 다시 연결해 주세요.', 'Reconnect GitHub in Storage.'],
+    drive_conflict: ['Google Drive 파일이 바뀌었습니다. 프로젝트를 다시 열고 저장해 주세요.', 'The Drive file changed. Reopen it before saving.'],
+    quota_exceeded: ['하슬라랩 보관함 용량이 부족합니다.', 'HaslaLab storage is full.'],
+    login_required: ['로그인하면 저장한 프로젝트를 볼 수 있습니다.', 'Sign in to see saved projects.'],
+  };
+  function error(err) {
+    const message = messages[err?.code];
+    return message ? txt(...message) : err?.message || txt('처리하지 못했습니다. 다시 시도해 주세요.', 'Could not complete the action. Try again.');
+  }
+  const make = (tag, text, cls) => {
+    const el = document.createElement(tag);
+    if (text) el.textContent = text;
+    if (cls) el.className = cls;
+    return el;
+  };
+  const button = (text, fn, cls) => {
+    const el = make('button', text, cls);
+    el.type = 'button';
+    el.onclick = fn;
+    return el;
+  };
+  function providerSelect(value = 'store') {
+    const select = make('select', null, 'project-provider');
+    select.setAttribute('aria-label', txt('저장 위치', 'Storage location'));
+    for (const [key, name] of Object.entries(labels(document.documentElement.lang === 'ko'))) {
+      const option = make('option', name);
+      option.value = key;
+      select.append(option);
+    }
+    select.value = providers.includes(value) ? value : 'store';
+    return select;
+  }
+  function client({base, token}) {
+    async function request(path, method = 'GET', body) {
+      const auth = token();
+      if (!auth) throw {code:'login_required'};
+      let r;
+      try { r = await fetch(base + path, {method, body, headers:{Authorization:'Bearer ' + auth}}); }
+      catch { throw new Error(txt('저장소에 연결할 수 없습니다.', 'Could not connect to storage.')); }
+      if (!r.ok) {
+        const body = await r.json().catch(() => ({}));
+        throw {code:body.error, status:r.status};
+      }
+      return r.json();
+    }
+    const connector = (provider, route) => CONNECT + '/' + provider + '/' + route;
+    async function list(kind, provider) {
+      if (provider === 'store') {
+        const r = await request('/api/workshop/storage?kind=' + (kind === 'compute' ? 'sim' : 'figure'));
+        const folders = kind === 'compute' ? ['전산물리'] : kind === 'attachment' ? ['그림','삽화'] : kind === 'asset' ? ['에셋'] : ['그림'];
+        return (r.files || []).filter(f => folders.includes(f.folder) && /\.json$/i.test(f.name)).map(f => ({...f, provider}));
+      }
+      const r = await request(connector(provider, 'files'));
+      return (r.files || []).filter(f => !f.folder && /\.json$/i.test(f.name) &&
+        (f.name.endsWith(suffix(kind)) || (kind === 'attachment' && (f.name.endsWith(suffix('figure')) || f.name.endsWith(suffix('illustration')))) || (kind !== 'asset' && !/-haslalab-(figure|compute|illustration|asset)\.json$/i.test(f.name)))).map(f => ({...f, provider, scope: provider === 'github' ? scopeOf(r) : null}));
+    }
+    function load(entry) {
+      const p = entry.provider || 'store';
+      if (p === 'store') return request('/api/workshop/storage/files/' + encodeURIComponent(entry.id));
+      if (p === 'drive') return request(connector(p, 'files/' + encodeURIComponent(entry.id)));
+      return request(connector(p, 'file?' + new URLSearchParams({path:entry.path,scope:entry.scope || ''})));
+    }
+    async function saveExternal(provider, kind, title, data, previous) {
+      const existing = previous?.provider === provider ? previous : null;
+      const safe = (title || 'project').replace(/[^\p{L}\p{N} ._-]/gu, '_').replace(/^[. -]+/, '').slice(0, 32) || 'project';
+      const name = existing?.name || safe + '-' + crypto.randomUUID().slice(0, 8) + suffix(kind);
+      const form = new FormData();
+      form.append('file', new Blob([JSON.stringify(data)], {type:'application/json'}), name);
+      form.append('project','1');
+      let scope = null;
+      if (provider === 'github') {
+        scope = scopeOf(await request(connector(provider, 'files')));
+        if (existing && scope !== existing.scope) throw {code:'github_conflict'};
+        form.append('scope', scope);
+      }
+      if (existing) {
+        form.append('base', existing.modified || existing.sha || '');
+        const route = provider === 'drive' ? 'files/' + encodeURIComponent(existing.id) : 'file?path=' + encodeURIComponent(existing.path);
+        return {...(await request(connector(provider, route), 'PUT', form)).file, provider, scope};
+      }
+      return {...(await request(connector(provider, 'files'), 'POST', form)).file, provider, scope};
+    }
+    return {list, load, saveExternal, token};
+  }
+  function library(host, storage, {kind, title, onOpen, onNew, onResume, initial = 'store', unified = false, height = () => {}}) {
+    host.classList.toggle('project-library', unified);
+    const heading = make('h1', title, 'project-library-title'); heading.tabIndex = -1;
+    const tools = make('div', null, 'row project-library-tools');
+    const list = make('div', null, 'grid project-library-grid');
+    const status = make('p', null, 'note'); status.setAttribute('role', 'status'); status.hidden = true;
+    const notice = make('p', null, 'note'); notice.hidden = true;
+    const say = message => { status.textContent = message; status.hidden = !message; };
+    if (onNew) tools.append(button(txt('새 프로젝트', 'New project'), onNew, 'primary'));
+    if (onResume) tools.append(button(txt('이전 작업 이어하기', 'Resume previous work'), onResume));
+    const select = unified ? null : providerSelect(initial);
+    const search = make('input'), sort = make('select');
+    search.type = 'search';
+    search.placeholder = txt('프로젝트 이름 검색', 'Search project names');
+    search.setAttribute('aria-label', search.placeholder);
+    sort.setAttribute('aria-label', txt('프로젝트 정렬', 'Sort projects'));
+    sort.append(new Option(txt('최근 수정순', 'Last modified'), 'recent'), new Option(txt('이름순', 'Name'), 'name'));
+    const filters = make('div', null, 'project-library-filters');
+    filters.append(search, sort);
+    if (select) tools.append(select);
+    const storageLink = make('a', txt('저장소 연결 관리', 'Manage storage connections'), 'btn project-library-manage');
+    storageLink.href = '/#/workshop/storage'; storageLink.target = '_top'; tools.append(storageLink);
+    const head = make('div', null, 'project-library-head');
+    head.append(heading, tools);
+    host.replaceChildren(head, ...(unified ? [filters] : []), notice, status, list);
+    const names = labels(document.documentElement.lang === 'ko');
+    const docs = new WeakMap();
+    function load(entry) {
+      if (!docs.has(entry)) docs.set(entry, storage.load(entry).catch(e => { docs.delete(entry); throw e; }));
+      return docs.get(entry);
+    }
+    let generation = 0, opening = 0, rendering = 0, activePreviews = 0, rows = [], pending = [];
+    const cardName = entry => entry.name.replace(/(?:-[a-f0-9]{8}-haslalab-(?:figure|compute|illustration|asset))?\.json$/i, '');
+    const timestamp = entry => Date.parse(entry.modified || '') || (entry.updated_at || 0) * 1000;
+    let observer;
+    function queue(cover, entry) {
+      pending.push({cover,entry,render:rendering});
+      paintPreviews();
+    }
+    function paintPreviews() {
+      while (activePreviews < 3 && pending.length) {
+        const {cover,entry,render} = pending.shift();
+        if (render !== rendering || !cover.isConnected) continue;
+        activePreviews++;
+        load(entry).then(async raw => {
+          if (render !== rendering || !cover.isConnected) return;
+          const summary = cover.parentElement.querySelector('.project-card-summary');
+          if (kind === 'figure') {
+            const data = await figure(raw, 320);
+            const img = make('img'); img.alt = ''; img.src = data.src; img.decoding = 'async';
+            cover.replaceChildren(img);
+            const count = pages(raw).length;
+            summary.textContent = txt('그림 ' + count + '개', count + (count === 1 ? ' figure' : ' figures'));
+          } else {
+            summary.textContent = typeof raw?.description === 'string' ? raw.description.trim().slice(0,180) : '';
+            const lang = raw?.language === 'c' ? 'c' : 'python';
+            const source = raw?.sources?.[lang];
+            if (typeof source !== 'string') return;
+            const snippet = source.split(/\r?\n/).filter(line => line.trim()).slice(0,4).map(line => line.slice(0,64)).join('\n');
+            const badge = make('span', lang === 'c' ? 'C' : 'Python', 'project-preview-language');
+            cover.replaceChildren(badge, make('code', snippet));
+          }
+        }).catch(() => {}).finally(() => { activePreviews--; paintPreviews(); });
+      }
+    }
+    function renderRows() {
+      rendering++;
+      observer?.disconnect();
+      pending = [];
+      list.replaceChildren();
+      const query = search.value.trim().toLocaleLowerCase();
+      const orderByName = (a,b) => cardName(a).localeCompare(cardName(b), document.documentElement.lang);
+      const shown = rows.filter(entry => !query || cardName(entry).toLocaleLowerCase().includes(query))
+        .sort((a,b) => (sort.value === 'recent' ? timestamp(b) - timestamp(a) : 0) || orderByName(a,b));
+      if (!shown.length && !status.textContent) {
+        list.append(make('p', query ? txt('검색 결과가 없습니다.', 'No projects match your search.')
+          : txt('저장된 프로젝트가 없습니다.', 'No saved projects.'), 'project-library-empty'));
+      }
+      if (unified && typeof IntersectionObserver === 'function') {
+        observer = new IntersectionObserver((entries, current) => {
+          for (const item of entries) if (item.isIntersecting) {
+            current.unobserve(item.target);
+            const entry = shown[Number(item.target.dataset.preview)];
+            if (entry) queue(item.target, entry);
+          }
+        }, {rootMargin:'120px'});
+      }
+      shown.forEach((entry,index) => {
+        const name = cardName(entry);
+        const item = button(unified ? '' : name, async () => {
+          const selection = ++opening, round = generation;
+          item.disabled = true;
+          say(txt('프로젝트 여는 중…', 'Opening project…'));
+          try {
+            const data = await load(entry);
+            if (round !== generation || selection !== opening || !host.isConnected || host.hidden) return;
+            await onOpen(data, entry);
+            say('');
+          } catch (e) { if (selection === opening && round === generation) say(error(e)); }
+          finally { item.disabled = false; height(); }
+        }, 'card project-library-card');
+        const stamp = timestamp(entry), date = stamp ? new Date(stamp).toLocaleDateString(document.documentElement.lang) : '';
+        if (unified) {
+          const cover = make('span', null, 'project-preview project-preview--' + kind);
+          cover.setAttribute('aria-hidden','true');
+          cover.append(make('span', kind === 'compute' ? '</>' : '◇', 'project-preview-placeholder'));
+          cover.dataset.preview = String(index);
+          const meta = make('span', null, 'project-card-meta');
+          if (date) meta.append(make('span',date));
+          meta.append(make('span', names[entry.provider] || names.store, 'project-card-source'));
+          const title = make('strong',name,'project-card-name'); title.title = name;
+          const body = make('span',null,'project-card-body');
+          body.append(title,make('span',null,'project-card-summary'),meta);
+          item.append(cover,body);
+          if (observer) observer.observe(cover);
+          else if (index < 9) queueMicrotask(() => queue(cover,entry));
+        } else if (date) item.append(make('span', date, 'note'));
+        list.append(item);
+      });
+      height();
+    }
+    async function refresh() {
+      const round = ++generation;
+      rows = [];
+      say(txt('프로젝트 불러오는 중…', 'Loading projects…'));
+      notice.hidden = true;
+      renderRows();
+      try {
+        if (unified) {
+          if (!storage.token()) throw {code:'login_required'};
+          const results = await Promise.allSettled(providers.map(provider => storage.list(kind, provider)));
+          if (round !== generation || !host.isConnected) return;
+          if (results.every(r => r.status === 'rejected')) throw results[0].reason;
+          rows = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+          const unavailable = results.flatMap((r,i) => r.status === 'rejected' && !['not_connected','not_configured','repo_not_chosen'].includes(r.reason?.code) ? [names[providers[i]]] : []);
+          if (unavailable.length) {
+            notice.textContent = txt('일부 저장소를 불러오지 못했습니다. ', 'Some storage locations could not be loaded. ') + unavailable.join(', ');
+            notice.hidden = false;
+          }
+        } else {
+          const result = await storage.list(kind, select.value);
+          if (round !== generation || !host.isConnected) return;
+          rows = result;
+        }
+        if (round !== generation || !host.isConnected) return;
+        say('');
+      } catch (e) { if (round === generation) say(error(e)); }
+      finally { if (round === generation) renderRows(); }
+    }
+    if (select) select.onchange = refresh;
+    search.oninput = sort.onchange = renderRows;
+    refresh();
+    return {refresh, heading};
+  }
+  function pages(raw) {
+    if (!raw || !Array.isArray(raw.objects)) throw new Error(txt('그림 프로젝트 파일을 선택해 주세요.', 'Choose a figure project.'));
+    if (raw.project?.version !== 1) return [raw];
+    const {index, otherPages} = raw.project;
+    if (!Array.isArray(otherPages) || !Number.isInteger(index) || index < 0 || index > otherPages.length) throw new Error(txt('그림 목록을 읽을 수 없습니다.', 'Could not read the figure pages.'));
+    const {project, ...scene} = raw;
+    const result = [...otherPages];
+    result.splice(index, 0, scene);
+    return result;
+  }
+  async function figure(scene, width = 800) {
+    const [S,R] = await Promise.all([import('./draw-scene.mjs'), import('./draw-render.mjs')]);
+    const v = S.validateScene(scene);
+    if (!v.ok) throw new Error(txt('그림 데이터를 읽을 수 없습니다.', 'Could not read the figure.'));
+    const clean = v.scene, view = clean.view || S.sceneBounds(clean);
+    const svg = R.renderSVG(clean, {width, view, ...R.printScale(clean.style, clean.printW)});
+    const bytes = new TextEncoder().encode(svg);
+    let binary = '';
+    for (let i=0; i<bytes.length; i+=0x8000) binary += String.fromCharCode(...bytes.subarray(i,i+0x8000));
+    const src = 'data:image/svg+xml;base64,' + btoa(binary);
+    if (src.length >= 390000) throw new Error(txt('그림이 커서 첨부할 수 없습니다.', 'The figure is too large to attach.'));
+    const m = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(svg);
+    return {src, w:m ? +m[1] : 800, h:m ? +m[2] : 400, scene:clean};
+  }
+  function pickFigure(storage, {onPick, height, local, allowIllustrations = false}) {
+    const dialog = make('dialog', null, 'stdlg');
+    const head = make('div', null, 'dlg-head');
+    head.append(make('h2', txt('그림 불러오기','Import figure')), button(txt('닫기','Close'), () => dialog.close()));
+    const host = make('div'), choices = make('div'), status = make('p', null, 'note');
+    status.setAttribute('role', 'status');
+    dialog.append(head, host, choices, status);
+    dialog.onclose = () => dialog.remove();
+    document.body.append(dialog);
+    dialog.showModal();
+    async function choose(scene, el) {
+      el.disabled = true;
+      try {
+        const attachment = await figure(scene);
+        if (!dialog.open) return;
+        await onPick(attachment);
+        dialog.close();
+      } catch (e) { status.textContent = error(e); }
+      finally { el.disabled = false; height?.(); }
+    }
+    const showPages = (raw, name) => {
+      if (allowIllustrations && raw?.format === 'haslalab-illustration') {
+        const src = raw.image, w = raw.width, h = raw.height;
+        if (typeof src !== 'string' || src.length >= 390000 || !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src) ||
+          !Number.isInteger(w) || w < 1 || w > 2000 || !Number.isInteger(h) || h < 1 || h > 2000)
+          throw new Error(txt('삽화 파일을 읽을 수 없습니다.', 'Could not read the illustration.'));
+        const preview = make('img'); preview.src = src; preview.alt = raw.title || txt('삽화','Illustration');
+        preview.style.maxWidth = '100%'; preview.style.maxHeight = '180px';
+        const use = button(txt('이 삽화 사용','Use this illustration'), async () => {
+          use.disabled = true;
+          try { await onPick({src,w,h}); if (dialog.open) dialog.close(); }
+          catch (e) { status.textContent = error(e); } finally { use.disabled = false; height?.(); }
+        });
+        choices.replaceChildren(preview, use);
+        use.focus();
+        return;
+      }
+      const list = pages(raw);
+      choices.replaceChildren(make('h3', name.replace(/\.json$/i,'')));
+      for (const [i, scene] of list.entries()) {
+        const label = (i+1) + ' · ' + (scene?.title || txt('그림','Figure'));
+        const el = button(label, () => choose(scene, el));
+        choices.append(el);
+      }
+      choices.querySelector('button')?.focus();
+    };
+    library(host, storage, {kind:allowIllustrations ? 'attachment' : 'figure', title:allowIllustrations ? txt('그림과 삽화','Figures and illustrations') : txt('그림 프로젝트','Figure projects'), height,
+      onOpen: (raw, entry) => showPages(raw, entry.name),
+      onResume: local ? () => showPages(local, txt('현재 브라우저 작업','Current browser draft')) : null});
+  }
+  function panelTab(bodyId, name, icon) {
+    const title = txt(...name);
+    return '<button type="button" class="dock-tab" data-dock-tab aria-controls="'+bodyId+'" aria-expanded="true" aria-label="'+title+'" title="'+title+'"><span aria-hidden="true" class="dock-tab-icon">'+icon+'</span><span class="dock-tab-label">'+title+'</span></button>';
+  }
+  function panelHandle(bodyId, name) {
+    const label = txt(name[0] + ' 크기 조절', 'Resize ' + name[1]);
+    return '<div class="dock-handle" data-dock-handle role="separator" tabindex="0" aria-controls="' + bodyId +
+      '" aria-label="' + label + '" title="' + label + '"></div>';
+  }
+  function bindPanels(grid, changed) {
+    let frame = 0;
+    const notify = () => {
+      if (!frame) frame = requestAnimationFrame(() => { frame = 0; changed(); });
+    };
+    const docks = [...grid.querySelectorAll('[data-dock-handle]')].map(handle => {
+      const panel = handle.closest('[data-dock]'), body = panel.querySelector('[data-dock-body]');
+      const id = panel.dataset.dock, minHeight = Number(panel.dataset.minHeight || 0);
+      const minWidth = Number(panel.dataset.dockFloorWidth) || 0;
+      const minBodyHeight = Number(panel.dataset.dockFloorHeight) || 0;
+      const widthKey = '--dock-' + id + '-width';
+      const tab = panel.querySelector('[data-dock-tab]'), restored = {x:0,y:0};
+      let drag = null;
+      function metrics() {
+        const css = getComputedStyle(handle), x = css.getPropertyValue('--dock-axis').trim() === 'x';
+        const min = x ? 38 : minHeight;
+        const floor = Math.max(min, x ? minWidth : minBodyHeight);
+        const fraction = Number(css.getPropertyValue('--dock-max').trim()) || .6;
+        const cap = Number(css.getPropertyValue('--dock-cap').trim()) || Infinity;
+        const reserve = parseFloat(css.getPropertyValue('--dock-reserve')) || 0;
+        let available = Infinity;
+        if (x && reserve) {
+          const neighbor = grid.querySelector(':scope > [data-dock]:not([data-dock="' + id + '"])');
+          const gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+          available = grid.clientWidth - reserve - (neighbor?.getBoundingClientRect().width || 0) - 2*gap;
+        }
+        const max = x ? Math.max(floor, Math.min(cap, Math.floor(grid.clientWidth * fraction), Math.floor(available))) : Math.max(floor, Math.min(innerHeight * 1.5,1200));
+        const preferred = x ? parseFloat(grid.style.getPropertyValue(widthKey)) : parseFloat(panel.style.getPropertyValue('--dock-height'));
+        const natural = x ? panel.getBoundingClientRect().width : body.getBoundingClientRect().height;
+        const current = Number.isFinite(preferred) ? preferred : Math.max(floor,natural);
+        return {x,min,floor,max,size:Math.max(min,Math.min(max,current)),sign:css.getPropertyValue('--dock-sign').trim() === '-1' ? -1 : 1};
+      }
+      function info(m = metrics()) {
+        if (!handle.getClientRects().length) return;
+        handle.setAttribute('aria-orientation',m.x ? 'vertical' : 'horizontal');
+        const bounded = m.floor > m.min;
+        const collapsed = bounded ? m.size === m.min : m.x ? m.size < 100 : !minHeight && m.size < 12;
+        handle.setAttribute('aria-valuemin',String(collapsed ? m.min : m.floor));
+        handle.setAttribute('aria-valuemax',String(Math.round(m.max)));
+        handle.setAttribute('aria-valuenow',String(Math.round(m.size)));
+        handle.dataset.dockSize = Math.round(m.size) + ' px';
+        panel.classList.toggle('dock-collapsed',collapsed);
+        panel.classList.toggle('dock-icon-rail',collapsed && m.x);
+        tab?.setAttribute('aria-expanded',String(!collapsed));
+        body.inert = collapsed;
+      }
+      function apply(m, value, fold = false) {
+        const key = m.x ? 'x' : 'y', bounded = m.floor > m.min;
+        const threshold = bounded ? m.floor : m.x ? 100 : m.min + 12;
+        if (m.size >= threshold && (fold || (!bounded && value < threshold))) restored[key] = m.size;
+        let size = fold ? m.min : Math.round(Math.max(m.floor,Math.min(m.max,value)));
+        if (!bounded && ((m.x && size < 70) || (!m.x && size < m.min+12))) size = m.min;
+        if (m.x) grid.style.setProperty(widthKey,size + 'px');
+        else panel.style.setProperty('--dock-height',size + 'px');
+        info({...m,size}); notify();
+      }
+      function toggle() {
+        const m = metrics(), key = m.x ? 'x' : 'y';
+        if (panel.classList.contains('dock-collapsed')) apply(m,restored[key] || (m.x ? 224 : 260));
+        else apply(m,m.min,true);
+      }
+      if (tab && panel.dataset.dockFloorHeight) tab.onclick = toggle;
+      else if (tab) {
+        let revealedAt = -Infinity;
+        tab.onclick = e => {
+          if (panel.classList.contains('dock-collapsed')) { toggle(); revealedAt = performance.now(); }
+          else if (e.detail === 0) toggle();
+        };
+        tab.ondblclick = () => { if (performance.now() - revealedAt > 500) toggle(); };
+      }
+      const coord = (e, x) => x ? e.clientX : e.clientY;
+      handle.addEventListener('pointerdown',e => {
+        if (drag || e.button !== 0) return;
+        const m = metrics();
+        drag = {m,start:coord(e,m.x),id:e.pointerId};
+        handle.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+      handle.addEventListener('pointermove',e => {
+        if (drag?.id !== e.pointerId) return;
+        const {m,start} = drag, delta = (coord(e,m.x)-start)*m.sign;
+        if (Math.abs(delta) > 2 || drag.moved) {
+          drag.moved = true;
+          handle.dataset.dragging = '';
+          apply(m,m.size+delta);
+        }
+      });
+      handle.addEventListener('lostpointercapture',() => { drag = null; delete handle.dataset.dragging; });
+      handle.addEventListener('keydown',e => {
+        const m = metrics(), backwards = m.x ? 'ArrowLeft' : 'ArrowUp', forwards = m.x ? 'ArrowRight' : 'ArrowDown';
+        let size;
+        if (e.key === 'Home') size = m.floor;
+        else if (e.key === 'End') size = m.max;
+        else if (e.key === backwards || e.key === forwards) size = m.size + (e.key === backwards ? -1 : 1)*m.sign*(e.shiftKey ? 12 : 64);
+        else return;
+        e.preventDefault(); apply(m,size);
+      });
+      info();
+      return {panel,handle,info,metrics,apply};
+    });
+    const observer = new ResizeObserver(() => {
+      if (grid.isConnected) docks.forEach(dock => dock.info());
+      else observer.disconnect();
+    });
+    observer.observe(grid);
+    return {reveal(panel) {
+      const dock = docks.find(item => item.panel === panel);
+      if (!dock) return;
+      const m = dock.metrics();
+      if (!m.x && panel.style.getPropertyValue('--dock-height') && m.size < 140) dock.apply(m,200);
+    }};
+  }
+  function showGuide(kind) {
+    const key = 'hlWorkshopGuide:' + kind;
+    if (document.getElementById('workshopGuide')) return;
+    try {
+      if (localStorage.getItem(key)) return;
+    } catch {}
+    const compute = kind === 'compute', dialog = make('dialog', null, 'stdlg workshop-guide');
+    dialog.id = 'workshopGuide';
+    dialog.setAttribute('aria-labelledby','workshopGuideTitle');
+    const title = make('h2', compute ? txt('전산물리 제작 시작하기','Getting started with computational physics') : txt('그림 제작 시작하기','Getting started with the figure editor'));
+    title.id = 'workshopGuideTitle';
+    const steps = make('ol');
+    const instructions = compute ? [
+      txt('새 프로젝트에서 Python이나 C를 골라 코드를 작성하고 실행 결과를 확인하세요.', 'Start a new project, choose Python or C, then run your code and review the result.'),
+      txt('AI에게 맡기기에서 코드를 요청하고 답변별 코드 버전을 적용할 수 있습니다.', 'Ask AI for code and apply the version from any reply.'),
+    ] : [
+      txt('새 프로젝트를 만든 뒤 도구로 직접 그리거나 왼쪽에서 템플릿과 물리 부품을 골라 보세요.', 'Start a new project, then draw it or choose a template and physics parts from the left panel.'),
+      txt('그림 요소를 선택하면 속성을 바꿀 수 있습니다. AI 그림 작업에서 문제 사진의 그림을 추출할 수도 있습니다.', 'Select an object to adjust its properties, or use AI figure tools to extract a figure from a worksheet photo.'),
+    ];
+    instructions.push(txt('보관함에 남기려면 저장을 누르세요. 이전 작업 이어하기는 이 브라우저의 임시 작업을 엽니다.', 'Press Save to keep work in storage. Resume previous work opens the draft from this browser.'));
+    steps.append(...instructions.map(text => make('li',text)));
+    const dismiss = button(txt('시작하기','Get started'), () => dialog.close(), 'primary');
+    dialog.append(title,steps,dismiss);
+    dialog.addEventListener('close', () => dialog.remove(), {once:true});
+    document.body.append(dialog);
+    dialog.showModal();
+    try { localStorage.setItem(key,'1'); } catch {}
+  }
+  function protectDraft(isDirty) {
+    const warning = () => isDirty() ? txt(
+      '저장하지 않은 변경 사항이 보관함에 반영되지 않습니다. 브라우저 임시 작업을 지우거나 덮어쓰면 변경 내용이 사라집니다. 나갈까요?',
+      'Unsaved changes are not in storage. They will be lost if the browser draft is cleared or overwritten. Leave this page?'
+    ) : '';
+    const beforeUnload = event => {
+      if (isDirty()) { event.preventDefault(); event.returnValue = true; }
+    };
+    window.HL_WORKSHOP_LEAVE_WARNING = warning;
+    addEventListener('beforeunload',beforeUnload);
+    return () => {
+      if (window.HL_WORKSHOP_LEAVE_WARNING === warning) delete window.HL_WORKSHOP_LEAVE_WARNING;
+      removeEventListener('beforeunload',beforeUnload);
+    };
+  }
+  function confirmReplacement() {
+    return confirm(txt('저장하지 않은 변경 사항이 사라집니다. 다른 작업을 열까요?', 'Unsaved changes will be lost. Open another project?'));
+  }
+  window.HL_WORKSHOP_PROJECTS = {client, library, providerSelect, pickFigure, error, panelTab, panelHandle, bindPanels, showGuide, protectDraft, confirmReplacement};
+})();

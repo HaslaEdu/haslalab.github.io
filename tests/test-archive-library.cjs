@@ -2,6 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),{createRequire}=require('node:module');
 const {JSDOM}=createRequire(path.resolve(__dirname,'../community/package.json'))('jsdom');
 const code=fs.readFileSync(path.resolve(__dirname,'../archive-library.js'),'utf8').replace(/^export /gm,'');
+const loadDataModule=file=>fs.readFileSync(path.resolve(__dirname,'../'+file),'utf8').replace(/^import .*;\r?\n/gm,'').replace(/^export /gm,'');
 const Q='q_'+'1'.repeat(64),Q2='q_'+'2'.repeat(64),SID='src_'+'a'.repeat(64),SID2='src_'+'b'.repeat(64),FIG='f_'+'c'.repeat(64);
 const source=(id=SID,extra={})=>({id,title:'A Published Book',primary_author:'Author',kind:'book',collection:'physics',question_count:2,language_bodies:4,subjects:['classical_mechanics'],...extra});
 const item=(id=Q,extra={})=>({id,source_id:SID,source_title:'A Published Book',source_kind:'book',collection:'physics',original_number:'1.2',snippet:'A particle has mass $m$.',stars:2,difficulty:{status:'provisional'},...extra});
@@ -221,6 +222,17 @@ test('selected school lists only its exact source IDs and keeps school filter ou
   const h=await setup(t,{params:'school=mit',options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
   const cards=[...h.mount.querySelectorAll('[data-source-list] a')];assert.equal(cards.length,2);assert(cards.every(a=>a.href.includes('school=mit')&&a.href.includes('source=src_')));assert.doesNotMatch(h.mount.textContent,/Unclassified public paper/);
   assert.equal(h.calls.some(c=>c.url.searchParams.has('school')),false);assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);
+});
+
+test('Caltech school groups all 82 original course documents by term',async t=>{
+  const schoolMedia=new Function(loadDataModule('feynman-handouts.js')+'\n'+
+    loadDataModule('archive-school-media.js')+'\nreturn ARCHIVE_SCHOOL_MEDIA;')();
+  const site=await setup(t,{params:'school=caltech',options:{kind:'course',collection:'physics',baseHash:'#/archive/schools/phys',schoolMedia}});
+  const materials=site.mount.querySelector('.al-official');
+  assert.equal(materials.querySelectorAll('details').length,6);
+  const links=[...materials.querySelectorAll('details a')].map(link=>link.href);
+  assert.equal(new Set(links).size,82);
+  assert.ok(links.every(url=>url.startsWith('https://www.feynmanlectures.caltech.edu/info/FLP_Original_Course_Notes/pages/')));
 });
 
 test('SNU official-only entry exposes verified links without inventing digitized questions',async t=>{
@@ -476,4 +488,35 @@ test('official book references use real external links without phantom question 
   const h=await setup(t,{options:{bookReferences:references}}),cards=h.mount.querySelectorAll('.al-reference-card');assert.equal(cards.length,2);assert.match(cards[0].textContent,/웹문항 준비 중/);assert.match(cards[1].textContent,/공식 문제자료/);
   for(const card of cards){assert.equal(card.target,'_blank');assert.match(card.rel,/noopener/);assert.equal(new URL(card.href).protocol,'https:');assert.equal(card.querySelector('[data-card-questions]'),null);assert.equal(card.querySelector('img'),null);assert(!card.href.includes('source=src_'));}
   assert.equal(h.mount.querySelectorAll('[data-card-questions]').length,1);const filter=h.mount.querySelector('[data-source-query]');filter.value='Goldstein';filter.dispatchEvent(new h.w.Event('input',{bubbles:true}));assert.equal(h.mount.querySelectorAll('.al-reference-card').length,1);assert.equal(h.mount.querySelectorAll('.al-book-card').length,0);assert.equal(h.calls.length,1);
+});
+
+test('Feynman has one catalogue card with or without access to the private copy',async t=>{
+  const reference={id:'feynman',title:{ko:'The Feynman Lectures on Physics',en:'The Feynman Lectures on Physics'},collection:'physics',
+    href:'https://www.feynmanlectures.caltech.edu/',availability:'official_online',resource_kind:'lectures'};
+  const href='#/archive/books/phys?view=private-textbooks&book=feynman';
+  const guest=await setup(t,{options:{bookReferences:[reference]}});
+  assert.equal(guest.mount.querySelectorAll('a[data-reference-id=feynman]').length,1);
+  assert.equal(guest.mount.querySelector('a[data-reference-id=feynman]').getAttribute('href'),href);
+  const search=guest.mount.querySelector('[data-source-query]');
+  search.value='파인만';
+  search.dispatchEvent(new guest.w.Event('input',{bubbles:true}));
+  assert.equal(guest.mount.querySelectorAll('a[data-reference-id=feynman]').length,1);
+
+  const owner=await setup(t,{token:'owner',options:{bookReferences:[reference],
+    privateBooks:[{id:'feynman',kind:'lectures',count:115}]}});
+  const cards=owner.mount.querySelectorAll('a[href="'+href+'"]');
+  assert.equal(cards.length,1);
+  assert.ok(cards[0].classList.contains('al-book-card'));
+  assert.equal(cards[0].querySelector('[data-card-chapters]').textContent,'115');
+});
+
+test('private textbooks share the standard card hierarchy, image class and count row',async t=>{
+  const h=await setup(t,{token:'owner',options:{privateBooks:[{id:'halliday',count:3946,cover_webp:'UklGR'+'A'.repeat(100)}]}});
+  const cards=h.mount.querySelectorAll('.al-book-card');
+  assert.equal(cards.length,2);
+  assert.equal(cards[0].querySelector('.chead .abbr').textContent,'Halliday');
+  assert.equal(cards[0].querySelector('img').className,'clogo al-card-cover');
+  assert.ok(cards[0].querySelector('.full').textContent.includes('Fundamentals of Physics'));
+  assert.equal(cards[0].querySelectorAll('dl div').length,cards[1].querySelectorAll('dl div').length);
+  assert.equal(cards[0].querySelector('[data-card-questions]').textContent,'3946');
 });

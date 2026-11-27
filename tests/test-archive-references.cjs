@@ -6,13 +6,11 @@ const references=vm.runInNewContext(code+'\nARCHIVE_BOOK_REFERENCES');
 const expected=new Map([
   ['goldstein-classical-mechanics','https://www.pearson.com/en-us/subject-catalog/p/Goldstein-Classical-Mechanics-3rd-Edition/P200000006871?view=educator'],
   ['kzhou-handouts','https://knzhou.github.io/teaching/'],
-  ['feynman-1','https://www.feynmanlectures.caltech.edu/I_toc.html'],
-  ['feynman-2','https://www.feynmanlectures.caltech.edu/II_toc.html'],
-  ['feynman-3','https://www.feynmanlectures.caltech.edu/III_toc.html']
+  ['feynman','https://www.feynmanlectures.caltech.edu/']
 ]);
 
-test('external book references point to five distinct verified primary pages without inventing source IDs or question counts',()=>{
-  assert.equal(references.length,5);const ids=new Set(),urls=new Set();
+test('external book references point to distinct verified primary pages without inventing source IDs or question counts',()=>{
+  assert.equal(references.length,3);const ids=new Set(),urls=new Set();
   for(const item of references){
     assert.match(item.id,/^[a-z][a-z0-9-]+$/);assert(!ids.has(item.id));ids.add(item.id);
     assert.equal(item.href,expected.get(item.id));const url=new URL(item.href);assert.equal(url.protocol,'https:');assert(!urls.has(url.href));urls.add(url.href);
@@ -26,11 +24,14 @@ test('external book references point to five distinct verified primary pages wit
   assert.equal(ids.size,expected.size);assert(Object.isFrozen(references));
 });
 
-test('Feynman references are separate Caltech lecture volumes with the correct subjects and current authorship',()=>{
-  const volumes=references.filter(item=>item.id.startsWith('feynman-'));
-  assert.equal(volumes.length,3);
-  assert.deepEqual(Array.from(volumes,item=>item.topic_label.en),['Mechanics, radiation and heat','Electromagnetism and matter','Quantum mechanics']);
-  for(const item of volumes){assert.equal(item.availability,'official_online');assert.equal(item.resource_kind,'lectures');assert.match(item.author,/Feynman.*Leighton.*Sands/);assert.match(item.full_title.en,/The Feynman Lectures on Physics, Volume I{1,3}/);}
+test('Feynman has a single Caltech lecture reference for all three volumes',()=>{
+  const items=references.filter(item=>item.id.startsWith('feynman'));
+  assert.equal(items.length,1);
+  const [item]=items;
+  assert.equal(item.availability,'official_online');
+  assert.equal(item.resource_kind,'lectures');
+  assert.match(item.author,/Feynman.*Leighton.*Sands/);
+  assert.equal(item.full_title.en,'The Feynman Lectures on Physics');
 });
 
 test('Goldstein remains marked pending digitization and Kevin Zhou links to his actual teaching and handout index',()=>{

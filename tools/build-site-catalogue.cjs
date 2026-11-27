@@ -74,7 +74,8 @@ outputs.set('community/src/lab-pair-catalog.js',generated+'export const LAB_PAIR
   'export const LAB_MIXED_CATALOGUE='+JSON.stringify(mixedProfiles)+';\n'+
   'export const LAB_SHORTLIST_CATALOGUE='+JSON.stringify(shortlistProfiles)+';\n');
 const {buildModelTestCatalogue}=require('./model-test-catalogue.cjs');
-const modelTestExams=buildModelTestCatalogue(DATA,{...scope.catalogueGroups,contests:window.CONTEST_EXAMS});
+const developerCompetitions=Object.fromEntries(Object.entries(DATA).filter(([key])=>!window.THEORY_META?.[key]?.archiveOnly));
+const modelTestExams=buildModelTestCatalogue(developerCompetitions,{...scope.catalogueGroups,contests:window.CONTEST_EXAMS});
 const modelTestVersion=digest(JSON.stringify(modelTestExams)+read('pdf-assets.json'));
 outputs.set('community/src/model-test-catalog.js',generated+'export const MODEL_TEST_CATALOGUE_VERSION='+JSON.stringify(modelTestVersion)+';\n'+
   'export const MODEL_TEST_EXAMS='+JSON.stringify(modelTestExams)+';\n');
@@ -99,11 +100,14 @@ for(const [key,name]of Object.entries({iypt:'iypt.js',usaco:'usaco.js',rupho:'ru
    changed simulator is fetched afresh instead of being served from a browser or CDN cache */
 versions.sims={};
 for(const f of fs.readdirSync(path.join(root,'sim')).filter(f=>/^[A-Za-z0-9_]+_web\.html$/.test(f)).sort())versions.sims[f.slice(0,-9)]=digest(read('sim/'+f));
+const stageMembers=new Set(vm.runInContext(main.slice(main.indexOf('const CONTEST_STAGES='),main.indexOf('const CONTEST_PARENT='))+
+  '\nObject.entries(CONTEST_STAGES).flatMap(([key,stage])=>[key,stage.key]);',scope));
 const competitions={};let years=0,probs=0,live=0,thy=0;
 for(const [key,c]of Object.entries(DATA)){
   const data={};for(const k of ['abbr','since','full','scope','plain','rounds','omr','open','obs','note','soon','chip','resources','officialWebsite','officialWebsiteArchived'])if(c[k]!==undefined)data[k]=c[k];
   const exp=c.years.reduce((n,y)=>n+y.problems.length,0),theory=Object.values(THEORY[key]||{}).reduce((n,t)=>n+(t.p?.length||Object.keys(t.f||{}).filter(k=>!t.f[k].kx).length),0);
   competitions[key]={data,counts:{years:c.years.length,hasProblems:c.years.some(y=>y.problems.length),mixed:!!c.theoryCount,problems:c.theoryCount?c.theoryCount+exp:c.years.some(y=>y.problems.length)?exp:theory}};
+  if(stageMembers.has(key))competitions[key].stageYears=c.years.map(year=>String(year.y));
   years+=c.years.length;
   for(const y of c.years){if(!c.plain)probs+=y.problems.length;live+=y.problems.concat(y.sims||[]).filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;}   /* sims: theory problems on a simulator */
 }
@@ -149,9 +153,8 @@ let expectedHtml=html.replace(/<script src="site-catalogue\.js(?:\?[^"\n]*)?"><\
   .replace(/<script src="site-runtime\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-runtime.js?v='+digest(read('site-runtime.js'))+'"></script>')
   .replace(/<script src="site-design\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="site-design.js?v='+digest(read('site-design.js'))+'"></script>')
   .replace(/<script src="learn-path\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="learn-path.js?v='+digest(read('learn-path.js'))+'"></script>');
-for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js','learner-form.js','league-view.js','weekly-set.js','workshop-connectors.js','share-publish.js','workshop-share.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
+for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/variants.js','sim/result-comparison.js','ai-chat.js','site-ux.js','hpho.js','guides.js','hpho-proctor.js','hpho-phone.js','hpho-exam.js','learner-form.js','league-view.js','weekly-set.js','workshop-connectors.js','share-publish.js','workshop-share.js','workshop-class-storage.js','workshop-publish-source.js'])expectedHtml=expectedHtml.replace(new RegExp('<script src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"></script>'),'<script src="'+file+'?v='+digest(read(file))+'"></script>');
 expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
-outputs.set('index.html',expectedHtml);
 let examHtml=read('sim/exam.html');
 for(const file of ['result-comparison.js','exam-network.js','xlsx-lite.js'])examHtml=examHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read('sim/'+file))+'"');
 outputs.set('sim/exam.html',examHtml);
@@ -168,13 +171,24 @@ let practiceHtml=read('practice.html').replace(/href="practice\.css(?:\?[^"\n]*)
 for(const file of ['learn-path.js','learner-form.js','league-view.js','math-input.js','practice-tools.js','practice.js'])practiceHtml=practiceHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('practice.html',practiceHtml);
 /* the creations page (create.html): its own script and style, and the shared math and Python helpers it loads */
+/* Stamp the inline runtime for opaque frames where WebKit rejects external scripts with a self-only origin. */
+{
+  const js=read('workshop-runtime.js');
+  if(/<\/script/i.test(js))throw new Error('Runtime script cannot be embedded in HTML');
+  const hash=crypto.createHash('sha256').update(js).digest('base64');
+  const runtime=read('workshop-runtime.html').replace(/'sha256-[^']+'/,"'sha256-"+hash+"'")
+    .replace(/<script id="hl-workshop-runtime">[\s\S]*?<\/script>/,()=>'<script id="hl-workshop-runtime">'+js+'</script>');
+  outputs.set('workshop-runtime.html',runtime);
+  const compute=read('workshop-compute.js').replace(/workshop-runtime\.html\?v=[a-f0-9]{12}/,'workshop-runtime.html?v='+digest(runtime));
+  derivedSources.set('workshop-compute.js',compute);outputs.set('workshop-compute.js',compute);
+}
 let createHtml=read('create.html').replace(/href="create\.css(?:\?[^"\n]*)?"/,'href="create.css?v='+digest(read('create.css'))+'"');
-for(const file of ['math-input.js','compute-problems.js','code-editor.js','sim-templates.js','share-publish.js','share-makers.js','create-studio.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['math-input.js','compute-problems.js','code-editor.js','sim-templates.js','share-publish.js','share-makers.js','create-studio.js','workshop-projects.js','workshop-compute.js','create.js'])createHtml=createHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('create.html',createHtml);
 /* the teachers' page (teach.html): test builder and AI variants */
 let teachHtml=read('teach.html');
 for(const file of ['create.css','teach.css'])teachHtml=teachHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
-for(const file of ['learn-path.js','math-input.js','teach-tools.js','share-publish.js','share-makers.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
+for(const file of ['learn-path.js','math-input.js','teach-tools.js','share-publish.js','share-makers.js','workshop-projects.js','teach.js'])teachHtml=teachHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read(file))+'"');
 outputs.set('teach.html',teachHtml);
 /* the figure editor (draw.html): its modules import each other, so each import carries the digest of the stamped file */
 {
@@ -185,8 +199,11 @@ outputs.set('teach.html',teachHtml);
   let drawHtml=read('draw.html');
   for(const file of ['create.css','draw.css'])drawHtml=drawHtml.replace(new RegExp('href="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'href="'+file+'?v='+digest(read(file))+'"');
   drawHtml=drawHtml.replace(/src="draw\.js(?:\?[^"\n]*)?"/,'src="draw.js?v='+digest(drawJs)+'"').replace(/src="share-publish\.js(?:\?[^"\n]*)?"/,'src="share-publish.js?v='+digest(read('share-publish.js'))+'"');
+  drawHtml=drawHtml.replace(/src="workshop-projects\.js(?:\?[^"\n]*)?"/,'src="workshop-projects.js?v='+digest(read('workshop-projects.js'))+'"');
   outputs.set('draw.html',drawHtml);
+  expectedHtml=expectedHtml.replace(/const DRAW_FRAME_VERSION="[a-f0-9]{12}";/,'const DRAW_FRAME_VERSION="'+digest(drawHtml)+'";');
 }
+outputs.set('index.html',expectedHtml);
 outputs.set('concepts.html',read('concepts.html').replace(/href="concepts\.css(?:\?[^"\n]*)?"/,'href="concepts.css?v='+digest(read('concepts.css'))+'"').replace(/src="concepts\.js(?:\?[^"\n]*)?"/,'src="concepts.js?v='+digest(read('concepts.js'))+'"'));
 const sheetModule=read('sim/monthly-answer-sheet.mjs').replace(/from '\.\.\/monthly-problems\.mjs(?:\?[^'\n]*)?'/,"from '../monthly-problems.mjs?v="+digest(read('monthly-problems.mjs'))+"'");
 outputs.set('sim/monthly-answer-sheet.mjs',sheetModule);

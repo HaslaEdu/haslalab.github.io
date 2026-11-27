@@ -14,12 +14,13 @@ async function setup(){
  const env={DB,ALLOWED_ORIGINS:origin};
  const user=(id,username,{role='user',deleted=0,pw='x',at=T-3600}={})=>sql.prepare('INSERT INTO users(id,username,nickname,pw,role,created_at,deleted) VALUES(?,?,?,?,?,?,?)').run(id,username,'nick_'+username,pw,role,at,deleted);
  user(1,'boss_account',{role:'admin'});user(2,'student_one');user(3,'student_two',{pw:null});user(4,'gone_student',{deleted:1,at:T-40*86400});user(5,'~pending_abc',{pw:null});
+ sql.exec("INSERT INTO account_signup_sources(user_id,source) VALUES(1,'lab'),(2,'lab'),(3,'nonsul')");
  sql.prepare('INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)').run('google','g-3',3,T);
  sql.prepare('INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)').run('discord','d-5',5,T);
  let labN=0;const lab=(uid,status,key='ipho2011_E2')=>sql.prepare(`INSERT INTO lab_sessions(user_id,exam_key,comp,year,tasks,started_at,ended_at,scan_until,upload_hash,status,created_at,graded_at) VALUES(?,?,'ipho',2011,'[]',?,?,?,?,?,?,?)`).run(uid,key,T,T,T,'h'+(++labN),status,T-600,status==='graded'?T-60:null);
  lab(1,'graded');lab(1,'graded');lab(2,'graded');lab(2,'graded','apho2023_E1');lab(3,'cancelled');
  const tokens={};for(const [id,name] of [[1,'admin'],[2,'student']]){tokens[name]=name.padEnd(32,'k');sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(await hash(tokens[name]),id,T,T+86400);}
- const get=async token=>{const r=await worker.fetch(new Request('https://worker.invalid/api/admin/stats',{headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.44',...(token?{Authorization:'Bearer '+token}:{})}}),env,{waitUntil(){}});return{status:r.status,cache:r.headers.get('Cache-Control'),text:await r.text()}};
+ const get=async (token,path='/api/admin/stats')=>{const r=await worker.fetch(new Request('https://worker.invalid'+path,{headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.44',...(token?{Authorization:'Bearer '+token}:{})}}),env,{waitUntil(){}});return{status:r.status,cache:r.headers.get('Cache-Control'),text:await r.text()}};
  const visit=async({first=0,country='KR',region='Seoul',ua='Mozilla/5.0 (Macintosh)',ip='192.0.2.50'}={})=>{const ctx={tasks:[],waitUntil(p){this.tasks.push(p)}};const r=await worker.fetch(new Request('https://worker.invalid/api/visit',{method:'POST',body:JSON.stringify({first}),headers:{Origin:origin,'Content-Type':'text/plain','User-Agent':ua,'CF-Connecting-IP':ip,...(country?{'CF-IPCountry':country}:{}),...(region?{'X-Hasla-Region':encodeURIComponent(region)}:{})}}),env,ctx);await Promise.all(ctx.tasks);return r.status};
  return{get,visit,sql,tokens,close(){sql.close()}};
 }
@@ -32,11 +33,23 @@ test('admin stats: only an admin session reads them',async()=>{
  }finally{s.close()}
 });
 
+test('member countries require an administrator and disable shared caching',async()=>{
+ const s=await setup();const path='/api/admin/member-countries?q=student_one';try{
+  assert.equal((await s.get(undefined,path)).status,403);
+  assert.equal((await s.get(s.tokens.student,path)).status,403);
+  const r=await s.get(s.tokens.admin,path);
+  assert.equal(r.status,200);assert.match(r.cache,/no-store/);
+  assert.deepEqual(JSON.parse(r.text),{users:[{id:2,username:'student_one',nickname:'nick_student_one',country:null}],next:null});
+ }finally{s.close()}
+});
+
 test('admin stats: people leave out admin accounts; grading, sign-in methods and the daily series add up',async()=>{
  const s=await setup();try{
   const r=await s.get(s.tokens.admin),d=JSON.parse(r.text);
   assert.equal(d.users.created,5);assert.equal(d.users.active,4);assert.equal(d.users.deleted,1);
   assert.equal(d.users.admins,1);assert.equal(d.users.people,3,'students 2, 3 and the pending one');
+  assert.deepEqual(Object.fromEntries(Object.entries(d.signup_sources).map(([source, counts])=>[source, counts.period])),{lab:1,nonsul:1,unknown:1});
+  assert.deepEqual(['lab','nonsul','unknown'].map(source=>d.series.reduce((sum,row)=>sum+row['signup_'+source],0)),[1,1,1]);
   assert.equal(d.users.pending_username,1);assert.equal(d.users.new_period,3,'the deleted account joined before the period; the admin is not counted');
   assert.deepEqual(d.users.methods,{password:1,google:1,discord:1});
   assert.equal(d.lab.graded,2,'the admin’s two graded exams are left out');assert.equal(d.lab.graded_people,1);assert.equal(d.graded.people,1);

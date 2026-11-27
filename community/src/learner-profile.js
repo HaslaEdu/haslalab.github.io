@@ -43,6 +43,19 @@ export function cleanLearner(body, bad) {
   return { country, daily_goal: goal };
 }
 
+export async function listLearnerCountries(env, {query = '', before = 0} = {}) {
+  await ensureLearnerSchema(env);
+  const needle = String(query).trim().slice(0,64).toLowerCase();
+  const cursor = Number.isSafeInteger(before) && before > 0 ? before : 0;
+  const matches = needle ? ' AND (instr(lower(u.username),?)>0 OR instr(lower(u.nickname),?)>0 OR CAST(u.id AS TEXT)=?)' : '';
+  const rows = (await env.DB.prepare(`SELECT u.id,u.username,u.nickname,l.country
+    FROM users u LEFT JOIN learner_profile l ON l.user_id=u.id
+    WHERE u.deleted=0${cursor ? ' AND u.id<?' : ''}${matches}
+    ORDER BY u.id DESC LIMIT 51`).bind(...(cursor ? [cursor] : []), ...(needle ? [needle,needle,needle] : [])).all()).results || [];
+  const users = rows.slice(0,50).map(row => ({...row,country:isCountry(row.country) ? row.country : null}));
+  return {users,next:rows.length>50 ? users.at(-1).id : null};
+}
+
 export async function readLearner(env, userId) {
   await ensureLearnerSchema(env);
   const row = await env.DB.prepare('SELECT country,daily_goal,updated_at FROM learner_profile WHERE user_id=?').bind(userId).first();

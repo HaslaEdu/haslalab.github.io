@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {createWorkshopSceneRouter, cleanImage, sceneFromAnswer, SCENE_PATH, SCENE_DAILY, SCENE_IMAGE_BYTES, SCENE_RESPONSE, scenePolicy} from './src/workshop-scene.js';
+import {createWorkshopSceneRouter, cleanImage, sceneFromAnswer, SCENE_PATH, SCENE_DAILY, SCENE_IMAGE_BYTES, SCENE_RESPONSE, scenePolicy, REGION_PATH, ILLUSTRATION_PATH, detectWorkshopRegions, generateWorkshopIllustration} from './src/workshop-scene.js';
 import {validateScene, UNSURE_FIELDS} from '../draw-scene.mjs';
 
 class H extends Error{constructor(status,code){super(code);this.status=status;this.code=code;}}
@@ -17,12 +17,12 @@ const GOOD={mechanics:true,g:9.8,objects:[
   {id:'p1',type:'pulley',x:2.45,y:1.28,r:0.09,mount:'inc'},
   {id:'m2',type:'block',x:2.54,y:0.8,w:0.24,h:0.24,mass:3,label:'m_2'},
   {id:'s1',type:'string',a:'m1',b:'m2',over:['p1']}],unsure:[{id:'inc',what:'mu'}]};
-function setup(answer=GOOD,{fail=null,provider=true}={}){
+function setup(answer=GOOD,{fail=null,provider=true,detect,generate}={}){
   const db=new DatabaseSync(':memory:');
   const D1={prepare(sql){let args=[];return{bind(...a){args=a;return this;},async first(){return db.prepare(sql).get(...args)||null;},async all(){return{results:db.prepare(sql).all(...args)};},async run(){db.prepare(sql).run(...args);return{};}};}};
   const calls=[],limits=[];
   const vision=async(env,args)=>{calls.push(args);if(fail)throw Object.assign(new Error(fail),{code:fail});return {raw:typeof answer==='function'?answer():answer,usage:{}};};
-  const route=createWorkshopSceneRouter({HttpError:H,bad,now:()=>1_800_000_000,needUser:u=>{if(!u)throw new H(401,'login_required');return u;},limit:async(env,key,max,win)=>{limits.push([key,max,win]);},vision});
+  const route=createWorkshopSceneRouter({HttpError:H,bad,now:()=>1_800_000_000,needUser:u=>{if(!u)throw new H(401,'login_required');return u;},limit:async(env,key,max,win)=>{limits.push([key,max,win]);},vision,detect,generate});
   const env={DB:D1,...(provider?{GEMINI_API_KEY:'test'}:{})};
   const call=(body,me={id:5})=>route(SCENE_PATH,'POST',body,me,null,env);
   return {db,calls,limits,call,route,env};
@@ -126,4 +126,70 @@ test('plain drawn shapes (rect, ellipse) come back checked; a bad fill or a path
   assert.ok(validateScene(r.scene).ok);
   assert.deepEqual(r.scene.objects.map(o=>o.id+':'+o.fill),['r1:hatch','e1:lightgray','r2:none'],'an unknown fill falls back; a polyline is not for the model');
   assert.ok(SCENE_RESPONSE.properties.objects.items.properties.type.enum.includes('rect'));assert.match(scenePolicy(),/rect \{x,y,w,h/);
+});
+
+test('Mathpix stroke recognition preserves stroke groups and drops math delimiters',async()=>{
+  const {mathpixStrokes}=await import('./src/ocr-engines.js');
+  const env={MATHPIX_APP_ID:'fixture-id',MATHPIX_APP_KEY:'fixture-key'};
+  const result=await mathpixStrokes(env,[[[15,16],[19,20]],[[25,26],[29,30]]],{fetchImpl:async(url,options)=>{
+    assert.equal(url,'https://api.mathpix.com/v3/strokes');
+    const body=JSON.parse(options.body);
+    assert.deepEqual(body.strokes.strokes,{x:[[15,19],[25,29]],y:[[16,20],[26,30]]});
+    assert.equal(body.metadata.improve_mathpix,false);
+    return Response.json({latex_styled:'\\(\\frac{1}{2}\\)'});
+  }});
+  assert.equal(result,'\\frac{1}{2}');
+});
+
+test('photo region detection selects Gemini 3.8 Flash and normalizes boxes',async()=>{
+  const image=cleanImage(jpeg());
+  const regions=await detectWorkshopRegions({}, {image,lang:'ko'},async(_env,call)=>{
+    assert.equal(call.model,'gemini-3.8-flash');
+    assert.equal(call.thinking,'low');
+    assert.deepEqual(call.images,[image]);
+    return {raw:{regions:[
+      {box:[-10,45.8,500,1020],label:'빗면'},
+      {box:[50,60,45,70],label:'invalid'},
+      {box:[0,46,500,1000],label:'duplicate'},
+      {box:[0,0,200,'300'],label:'bad type'},
+    ]}};
+  });
+  assert.deepEqual(regions,[{box:[0,46,500,1000],label:'빗면'}]);
+});
+
+test('illustration selects Gemini 3 Pro Image, respects the chosen style and only returns a raster',async()=>{
+  const crop=cleanImage(jpeg()), reply=png();
+  const got=await generateWorkshopIllustration({GEMINI_API_KEY:'fixture-key'},{
+    image:crop, prompt:'Keep the arrows', lang:'ko', style:'exam',
+  },async(url,options)=>{
+    assert.match(url,/\/gemini-3-pro-image:generateContent$/);
+    assert.equal(options.headers['x-goog-api-key'],'fixture-key');
+    const body=JSON.parse(options.body);
+    assert.deepEqual(body.generationConfig.responseModalities,['IMAGE']);
+    assert.match(body.contents[0].parts[0].text,/black variable-weight outlines/);
+    assert.match(body.contents[0].parts[0].text,/Keep the arrows/);
+    assert.deepEqual(body.contents[0].parts[1].inlineData,{mimeType:crop.mime,data:crop.data});
+    return Response.json({candidates:[{content:{parts:[
+      {inlineData:{mimeType:'image/svg+xml',data:Buffer.from('<svg/>').toString('base64')}},
+      {inlineData:{mimeType:'image/png',data:reply.split(',')[1]}},
+    ]}}]});
+  });
+  assert.equal(got,reply);
+});
+
+test('region and illustration routes require sign-in; invalid style and exhausted global quota do not call a model',async()=>{
+  const requests=[];
+  const {route,env,call}=setup(GOOD,{detect:async (_env,x)=>{requests.push(x);return [];},generate:async(_env,x)=>{requests.push(x);return png();}});
+  const run=(path,body,user={id:8})=>route(path,'POST',body,user,null,env);
+  await fails(run(REGION_PATH,{image:jpeg()},null),'login_required',401);
+  await fails(run(ILLUSTRATION_PATH,{prompt:'draw a ramp',style:'unknown'}),'bad_prompt',400);
+  assert.equal(requests.length,0);
+  assert.deepEqual(await run(REGION_PATH,{image:jpeg()}),{regions:[],model:'gemini-3.8-flash',left:19});
+  env.WORKSHOP_ILLUSTRATION_DAILY_CAP='0';
+  await fails(run(ILLUSTRATION_PATH,{prompt:'draw a ramp',style:'exam'}),'illustration_busy',503);
+  assert.equal(requests.length,1);
+  delete env.WORKSHOP_ILLUSTRATION_DAILY_CAP;
+  assert.deepEqual(await run(ILLUSTRATION_PATH,{prompt:'draw a ramp',style:'technical'}),{image:png(),model:'gemini-3-pro-image',left:5});
+  assert.equal(requests.at(-1).style,'technical');
+  assert.ok((await call({image:jpeg()})).scene.objects.length,'editable figure route still returns scene objects');
 });

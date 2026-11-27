@@ -27,6 +27,31 @@ export const CREATION_SCHEMA = [
      updated_at INTEGER NOT NULL)`,
   `CREATE INDEX IF NOT EXISTS creations_list ON creations(status, kind, created_at DESC)`,
   `CREATE INDEX IF NOT EXISTS creations_user ON creations(user_id)`,
+  `CREATE TABLE IF NOT EXISTS creation_first_publication (
+    creation_id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, published_at INTEGER NOT NULL)`,
+  `CREATE INDEX IF NOT EXISTS creation_publication_owner_time ON creation_first_publication(user_id,published_at)`,
+  ...['INSERT', 'UPDATE'].flatMap(event => {
+    const transition = event === 'INSERT' ? '' : " AND OLD.status<>'public'";
+    const name = event.toLowerCase();
+    return [
+      `CREATE TRIGGER IF NOT EXISTS creation_public_cap_${name} BEFORE ${event} ON creations
+        WHEN NEW.status='public'${transition}
+        BEGIN
+          SELECT RAISE(ABORT,'workshop_public_cap') WHERE
+            (SELECT COUNT(*) FROM creations WHERE user_id=NEW.user_id AND status='public')>=10;
+          SELECT RAISE(ABORT,'workshop_daily_share_limit') WHERE
+            (SELECT COUNT(*) FROM creation_first_publication WHERE user_id=NEW.user_id
+              AND published_at>=NEW.updated_at-((NEW.updated_at+32400)%86400))>=3
+            AND NOT EXISTS(SELECT 1 FROM creation_first_publication WHERE creation_id=NEW.id);
+        END`,
+      `CREATE TRIGGER IF NOT EXISTS creation_public_log_${name} AFTER ${event} ON creations
+        WHEN NEW.status='public'${transition}
+        BEGIN
+          INSERT OR IGNORE INTO creation_first_publication(creation_id,user_id,published_at)
+            VALUES(NEW.id,NEW.user_id,NEW.updated_at);
+        END`
+    ];
+  }),
   `CREATE TABLE IF NOT EXISTS creation_likes (
      creation_id INTEGER NOT NULL,
      user_id INTEGER NOT NULL,
@@ -45,7 +70,21 @@ const ready = new WeakSet();
 export async function ensureCreationSchema(env) {
   if (ready.has(env.DB)) return;
   for (const sql of CREATION_SCHEMA) await env.DB.prepare(sql).run();
+  for (const col of ['source_file','source_digest']) {
+    try { await env.DB.prepare(`ALTER TABLE creations ADD COLUMN ${col} TEXT`).run(); }
+    catch (e) { if (!/duplicate column/i.test(String(e?.message || e))) throw e; }
+    await env.DB.prepare(`CREATE UNIQUE INDEX IF NOT EXISTS creations_${col}_idx ON creations(user_id,${col}) WHERE ${col} IS NOT NULL`).run();
+  }
   ready.add(env.DB);
+}
+export async function publicCreationWrite(statement, HttpError) {
+  try { return await statement.run(); }
+  catch (error) {
+    for (const code of ['workshop_public_cap','workshop_daily_share_limit']) {
+      if (String(error?.message || error).includes(code)) throw new HttpError(429, code);
+    }
+    throw error;
+  }
 }
 const LIST_COLS = 'c.id,c.kind,c.title,c.summary,c.plays,c.likes,c.solves,c.forked_from,c.created_at,c.updated_at,c.user_id,u.nickname';
 
@@ -92,8 +131,8 @@ export function createCreationRouter({HttpError, needUser, limit, now, bad, clie
       await limit(env, 'creation-new:' + me.id, 20, 86400);
       const c = clean(body);complete(c);
       const from = Number.isInteger(body?.forked_from) ? body.forked_from : null;
-      const r = await DB.prepare(`INSERT INTO creations(user_id,kind,title,summary,body,code,starter,grader,answer,unit,forked_from,created_at,updated_at)
-        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(me.id, c.kind, c.title, c.summary, c.body, c.code, c.starter, c.grader, c.answer, c.unit, from, t, t).run();
+      const r = await publicCreationWrite(DB.prepare(`INSERT INTO creations(user_id,kind,title,summary,body,code,starter,grader,answer,unit,forked_from,created_at,updated_at)
+        VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(me.id, c.kind, c.title, c.summary, c.body, c.code, c.starter, c.grader, c.answer, c.unit, from, t, t), HttpError);
       return {id: r.meta.last_row_id};
     }
     const mm = /^\/api\/creations\/(\d+)(?:\/(like|play|solve))?$/.exec(p);
@@ -105,7 +144,8 @@ export function createCreationRouter({HttpError, needUser, limit, now, bad, clie
     if (!mm[2] && m === 'GET') {
       const liked = me ? !!(await DB.prepare('SELECT 1 AS y FROM creation_likes WHERE creation_id=? AND user_id=?').bind(id, me.id).first()) : false;
       const solved = me ? !!(await DB.prepare('SELECT 1 AS y FROM creation_solves WHERE creation_id=? AND user_id=?').bind(id, me.id).first()) : false;
-      return {creation: {...row, mine: !!owner}, liked, solved};
+      const {source_file, source_digest, ...creation} = row;
+      return {creation: {...creation, mine: !!owner}, liked, solved};
     }
     if (!mm[2] && m === 'PATCH') {
       needUser(me);
@@ -113,8 +153,8 @@ export function createCreationRouter({HttpError, needUser, limit, now, bad, clie
       await limit(env, 'creation-edit:' + me.id, 120, 3600);
       const c = {...row, ...clean(body, true)};complete(c);
       /* a remix starts as the member's private draft (workshop-share.js); the editor's "save and publish" makes it public */
-      await DB.prepare(`UPDATE creations SET kind=?,title=?,summary=?,body=?,code=?,starter=?,grader=?,answer=?,unit=?,updated_at=?,status=CASE WHEN status='draft' AND user_id=? THEN 'public' ELSE status END WHERE id=?`)
-        .bind(c.kind, c.title, c.summary, c.body, c.code, c.starter, c.grader, c.answer, c.unit, t, me.id, id).run();
+      await publicCreationWrite(DB.prepare(`UPDATE creations SET kind=?,title=?,summary=?,body=?,code=?,starter=?,grader=?,answer=?,unit=?,updated_at=?,status=CASE WHEN status='draft' AND user_id=? THEN 'public' ELSE status END WHERE id=?`)
+        .bind(c.kind, c.title, c.summary, c.body, c.code, c.starter, c.grader, c.answer, c.unit, t, me.id, id), HttpError);
       return {ok: true};
     }
     if (!mm[2] && m === 'DELETE') {

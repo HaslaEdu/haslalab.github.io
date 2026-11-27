@@ -17,7 +17,7 @@
   const esc=s=>C.esc(s==null?'':String(s));
   const TOPICS=['mechanics','em','thermal','optics','waves','modern','other'];
   const TOPIC_NAMES={mechanics:['역학','Mechanics'],em:['전자기','Electromagnetism'],thermal:['열','Heat'],optics:['광학','Optics'],waves:['파동','Waves'],modern:['현대물리','Modern physics'],other:['기타','Other']};
-  const TYPE_NAMES={sim:['시뮬레이션','Simulation'],python:['전산물리(Python)','Computational (Python)'],figure:['그림','Figure'],set:['문제 세트','Problem set']};
+  const TYPE_NAMES={set:['문제·시험지','Problems & papers'],figure:['그림','Figures'],sim:['시뮬레이션','Simulations'],python:['전산물리 문제','Coding problems']};
   const TABS=[['popular','인기','Popular'],['new','최신','New'],['featured','추천','Staff picks'],['topic','주제별','By topic']];
   const SORTS=[['popular','인기순','Most popular'],['new','최신순','Newest'],['likes','좋아요순','Most liked'],['views','조회순','Most viewed'],['remixes','리믹스순','Most remixed']];
   const topicName=k=>T(...(TOPIC_NAMES[k]||TOPIC_NAMES.other));
@@ -66,7 +66,7 @@
 .shr-search button{border:0;background:var(--sh-acc2);color:#fff;border-radius:999px;padding:6px 14px;font:600 13px var(--sans);cursor:pointer}
 .shr-me{display:flex;gap:8px;flex-wrap:wrap}.shr-me a{font:600 13.5px var(--sans);color:var(--sh-acc2);text-decoration:none;border:1px solid var(--sh-line);border-radius:999px;padding:6px 12px;background:var(--sh-card)}.shr-me a:hover{border-color:var(--sh-acc)}
 .shr h2{font-size:17px;margin:0 0 10px;color:var(--sh-ink)}.shr-week{margin:0 0 22px}
-.shr-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,232px);gap:12px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x proximity}.shr-row>*{scroll-snap-align:start}
+.shr-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(285px,325px);gap:12px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x proximity}.shr-row>*{scroll-snap-align:start}
 .shr-tabs{display:flex;gap:4px;border-bottom:1px solid var(--sh-line);margin:0 0 12px;overflow-x:auto}
 .shr-tabs button{background:none;border:0;border-bottom:2px solid transparent;padding:9px 14px;font:600 14.5px var(--sans);color:var(--sh-mute);cursor:pointer;white-space:nowrap}
 .shr-tabs button[aria-selected="true"]{color:var(--sh-acc2);border-bottom-color:var(--sh-acc)}
@@ -74,19 +74,27 @@
 .shr-chips{display:flex;flex-wrap:wrap;gap:6px}.shr-chips button{border:1px solid var(--sh-line);background:var(--sh-card);color:var(--sh-ink);border-radius:999px;padding:5px 12px;font:13px var(--sans);cursor:pointer}
 .shr-chips button[aria-pressed="true"]{background:var(--sh-soft);border-color:var(--sh-acc);color:var(--sh-acc2);font-weight:600}
 .shr-sort{font:13px var(--sans);color:var(--sh-mute);display:flex;gap:6px;align-items:center}.shr-sort select{font:13px var(--sans);padding:5px 8px;border:1px solid var(--sh-line);border-radius:8px;background:var(--sh-card);color:var(--sh-ink)}
-.shr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-.shr-card{display:flex;flex-direction:column;border:1px solid var(--sh-line);border-radius:14px;background:var(--sh-card);color:var(--sh-ink);text-decoration:none;overflow:hidden;transition:border-color .15s,transform .15s}
+.shr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.shr-card{display:grid;grid-template-columns:minmax(96px,34%) minmax(0,1fr);min-height:126px;border:1px solid var(--sh-line);border-radius:14px;background:var(--sh-card);color:var(--sh-ink);text-decoration:none;overflow:hidden;transition:border-color .15s,transform .15s}
 .shr-card:hover{border-color:var(--sh-acc);transform:translateY(-1px)}.shr-card:focus-visible{outline:2px solid var(--sh-acc);outline-offset:2px}
-.shr-thumb{position:relative;aspect-ratio:3/2;background:linear-gradient(135deg,#f4f1fa,#eef3f9);display:grid;place-items:center;border-bottom:1px solid var(--sh-line)}
-.shr-thumb img{width:100%;height:100%;object-fit:contain;background:#fff}.shr-art{width:62%;height:auto;stroke:#8d78bf;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}.shr-art .f{fill:#d9cff0}
+.shr-thumb{position:relative;min-width:0;overflow:hidden;background:linear-gradient(135deg,#f4f1fa,#eef3f9);display:grid;place-items:center;border-inline-end:1px solid var(--sh-line)}
+.shr-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff}.shr-art{width:62%;height:auto;stroke:#8d78bf;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}.shr-art .f{fill:#d9cff0}
 .shr-badge{position:absolute;left:8px;top:8px;font:600 11.5px var(--sans);color:var(--sh-acc2);background:rgba(255,255,255,.92);border:1px solid #e3dcf2;border-radius:6px;padding:1px 7px}
 .shr-pick{position:absolute;right:8px;top:8px;font:600 11.5px var(--sans);color:#7a5a10;background:#fff4d6;border:1px solid #f0d9a8;border-radius:6px;padding:1px 7px}
-.shr-body{display:grid;gap:6px;padding:10px 12px 12px}.shr-title{font-weight:700;font-size:14.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.shr-body{min-width:0;display:flex;flex-direction:column;gap:5px;padding:12px 13px}.shr-title{font-weight:700;font-size:15.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.shr-summary{font-size:13px;line-height:1.45;color:var(--sh-mute);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}.shr-body .shr-by{margin-top:auto}
 .shr-by{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--sh-mute);min-width:0}.shr-by span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.shr-by .cmav{width:22px;height:22px;font-size:11px;flex:none}
 .shr-stats{display:flex;gap:12px;font-size:12.5px;color:var(--sh-mute)}.shr-stats span{display:inline-flex;align-items:center;gap:3px}
 .shr-i{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .shr-more{display:flex;justify-content:center;margin:18px 0 6px}.shr-empty{padding:28px 14px;text-align:center;color:var(--sh-mute);border:1px dashed var(--sh-line);border-radius:14px}
-.shr-how{margin:26px 0 4px;padding:12px 14px;border-radius:12px;background:var(--sh-bg2);font-size:13.5px;color:var(--sh-mute);line-height:1.6}
+.shr-explore .phead{padding:22px 24px;border:1px solid var(--sh-line);border-radius:18px;background:var(--sh-soft);margin:0 0 16px}
+.shr-explore .shr-top{margin:0 0 18px}.shr-explore .shr-filters{background:var(--sh-bg2);padding:10px 12px;border-radius:12px}
+.shr-explore .shr-chips button,.shr-explore .shr-tabs button,.shr-explore .shr-sort select{min-height:40px;font-size:14px}
+.shr-explore .shr-week{padding:14px 0;margin:16px 0}.shr-explore .shr-empty{grid-column:1/-1;padding:36px 16px}
+@media(max-width:680px){.shr-grid{grid-template-columns:1fr}}
+.shr-explore .shr-filters select{max-width:140px}.shr-explore .shr-tools{display:flex;align-items:center;gap:6px 12px;flex-wrap:wrap}
+.shr-runtime{padding:16px;display:grid;justify-items:start;gap:10px}.shr-runtime .shr-note{margin:0;color:var(--sh-mute)}
+@media(max-width:560px){.shr-explore .phead{padding:16px}.shr-explore .shr-tools{width:100%}.shr-explore .shr-filters{padding:8px}.shr-explore .shr-chips button{padding:4px 8px}}
 .shr-proj{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
 .shr-stage{border:1px solid var(--sh-line);border-radius:14px;background:var(--sh-card);padding:12px;min-height:240px}
 .shr-stage iframe{display:block;width:100%;height:460px;border:0;background:transparent}.shr-stage .shr-fig{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border-radius:8px}
@@ -113,7 +121,7 @@
 .shr-msg{font-size:13px;color:#a32f46;min-height:1em;margin:4px 0}.shr-ok{color:#2f7a56}
 .shr-user{display:flex;gap:14px;align-items:center;margin:4px 0 18px}.shr-user .cmav{width:56px;height:56px;font-size:24px}.shr-user h1{margin:0}.shr-user p{margin:2px 0 0;color:var(--sh-mute);font-size:13.5px}
 @media(max-width:900px){.shr-proj{grid-template-columns:minmax(0,1fr)}.shr-stage iframe{height:440px}}
-@media(max-width:560px){.shr-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.shr-body{padding:8px 9px 10px}.shr-title{font-size:13.5px}.shr-stats{gap:8px;font-size:11.5px}.shr-row{grid-auto-columns:minmax(168px,180px)}.shr-cmt.re{margin-left:20px}.shr-search{flex-basis:100%}}
+@media(max-width:560px){.shr-grid{grid-template-columns:1fr;gap:10px}.shr-body{padding:8px 9px 10px}.shr-title{font-size:13.5px}.shr-stats{gap:8px;font-size:11.5px}.shr-row{grid-auto-columns:minmax(250px,85%)}.shr-cmt.re{margin-left:20px}.shr-search{flex-basis:100%}}
 html[data-theme="dark"] .shr{--sh-ink:#ebe8f5;--sh-mute:#aca6bd;--sh-line:#3b344d;--sh-soft:#30243f;--sh-acc:#bca0ed;--sh-acc2:#cfbdf2;--sh-card:#1b1824;--sh-bg2:#211d2b}
 html[data-theme="dark"] .shr .shr-thumb{background:linear-gradient(135deg,#2a2238,#1f2430)}html[data-theme="dark"] .shr .shr-art{stroke:#bca0ed}html[data-theme="dark"] .shr .shr-art .f{fill:#4a3a68}
 html[data-theme="dark"] .shr .shr-text,html[data-theme="dark"] .shr .shr-set .shr-ch{color:#d6d1e4}html[data-theme="dark"] .shr .shr-btn.pri,html[data-theme="dark"] .shr .shr-search button{background:#7059a4;border-color:#7059a4;color:#fff}
@@ -133,15 +141,20 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
   function view(ctx){
     C=ctx;const r=route();
     if(r.page!=='explore')return `<div class="shell ws shr" id="shrRoot"><div class="phead">${crumbs('…')}</div><p class="ws-note" role="status">${T('불러오는 중…','Loading…')}</p></div>`;
-    return `<div class="shell ws shr" id="shrRoot"><div class="phead">${crumbs()}<h1>${esc(C.title)}</h1>
-      <p class="learn-tool-copy">${T('회원들이 워크샵에서 만든 시뮬레이션, 전산물리 문제, 그림, 문제 세트를 실행해 보고, 마음에 들면 리믹스해서 내 것으로 고쳐 씁니다.','Run the simulations, computational problems, figures and problem sets members made in the Workshop, and remix one to make it your own.')}</p></div>
-      <div id="shrBody"><p class="ws-note" role="status">${T('불러오는 중…','Loading…')}</p></div></div>`;
+    return `<div class="shell ws shr shr-explore" id="shrRoot"><div class="phead">${crumbs()}<h1>${esc(C.title)}</h1>
+      <p class="learn-tool-copy">${T("문제, 그림, 시뮬레이션을 둘러보고 워크샵에서 리믹스하세요.","Explore problems, figures and simulations, then remix them in the Workshop.")}</p></div>
+      <div id="shrBody"><p class="ws-note" role="status">${T('불러오는 중…','Loading…')}</p></div>${C.adBanner?.()||''}</div>`;
+  }
+  function restoreThumbnail(event){
+    const image=event.target;
+    if(image.matches?.('img[data-shr-thumb]'))image.outerHTML=art(image.dataset.shrThumb);
   }
   function mount(ctx){
     C=ctx;style();
     if(stopSim){stopSim();stopSim=null;}
     if(observer){observer.disconnect();observer=null;}
     const r=route(),root=document.getElementById('shrRoot');if(!root)return;
+    root.addEventListener('error',restoreThumbnail,true);
     if(r.page==='project')return project(root,r.id);
     if(r.page==='user')return user(root,r.id);
     return explore(root,r.q);
@@ -149,9 +162,11 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
 
   /* ── cards ── */
   function cardHtml(it){
+    const text=String(it.preview||it.summary||'').replace(/\s+/g,' ').trim();
+    const chars=Array.from(text), summary=chars.length>160?chars.slice(0,159).join('').trimEnd()+'…':text;
     return `<a class="shr-card" href="#/workshop/share/${+it.id}">
-      <div class="shr-thumb">${it.has_thumb?`<img src="${esc(thumbUrl(it))}" alt="" loading="lazy" decoding="async">`:art(it.type)}<span class="shr-badge">${esc(typeName(it.type))}</span>${it.featured?`<span class="shr-pick">${T('추천','Pick')}</span>`:''}</div>
-      <div class="shr-body"><span class="shr-title">${esc(it.title)}</span>
+      <div class="shr-thumb">${it.has_thumb?`<img src="${esc(thumbUrl(it))}" data-shr-thumb="${esc(it.type)}" alt="" loading="lazy" decoding="async">`:art(it.type)}<span class="shr-badge">${esc(typeName(it.type))}</span>${it.featured?`<span class="shr-pick">${T('추천','Pick')}</span>`:''}</div>
+      <div class="shr-body"><span class="shr-title">${esc(it.title)}</span>${summary?`<span class="shr-summary">${esc(summary)}</span>`:''}
         <span class="shr-by">${C.av(it.nickname||'?','s',it.av)}<span>${esc(it.nickname||T('탈퇴한 회원','Former member'))}</span></span>
         <span class="shr-stats"><span title="${T('좋아요','Likes')}">${icon('heart')}${nf(it.likes)}</span><span title="${T('조회','Views')}">${icon('eye')}${nf(it.views)}</span><span title="${T('리믹스','Remixes')}">${icon('remix')}${nf(it.remixes)}</span></span></div></a>`;
   }
@@ -159,33 +174,39 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
   /* ── explore ── */
   function explore(root,q0){
     const body=document.getElementById('shrBody');if(!body)return;
-    const st={tab:TABS.some(t=>t[0]===q0.get('tab'))?q0.get('tab'):'popular',type:TYPE_NAMES[q0.get('type')]?q0.get('type'):'',topic:TOPICS.includes(q0.get('topic'))?q0.get('topic'):'',
+    const st={tab:TABS.some(t=>t[0]===q0.get('tab'))?q0.get('tab'):'popular',type:Object.hasOwn(TYPE_NAMES,q0.get('type'))?q0.get('type'):'',topic:TOPICS.includes(q0.get('topic'))?q0.get('topic'):'',
       sort:SORTS.some(s=>s[0]===q0.get('sort'))?q0.get('sort'):'',q:(q0.get('q')||'').slice(0,60),fav:q0.get('fav')==='1',page:0,more:true,busy:false,seq:0};
     if(st.topic&&st.tab!=='topic')st.tab='topic';
-    const save=()=>{const q=new URLSearchParams();if(st.tab!=='popular')q.set('tab',st.tab);for(const k of ['type','topic','sort','q'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');
+    const periods = {"7":T("최근 7일","Last 7 days"),"30":T("최근 30일","Last 30 days"),"90":T("최근 90일","Last 90 days")};
+    st.period = Object.hasOwn(periods,q0.get("period")) ? q0.get("period") : "";
+    const save=()=>{const q=new URLSearchParams();if(st.tab!=='popular')q.set('tab',st.tab);for(const k of ['type','topic','sort','q','period'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');
       try{history.replaceState(null,'','#/workshop/share'+(q.toString()?'?'+q:''));}catch(e){}};
     body.innerHTML=`<div class="shr-top"><form class="shr-search" role="search" id="shrSearch">${icon('search')}<input id="shrQ" type="search" maxlength="60" value="${esc(st.q)}" placeholder="${T('제목, 태그, 만든 사람으로 찾기','Search titles, tags or authors')}" aria-label="${T('작품 검색','Search projects')}"><button type="submit">${T('찾기','Search')}</button></form>
-        <nav class="shr-me" id="shrMe" aria-label="${T('내 작품','My projects')}"></nav></div>
+        <nav class="shr-me" id="shrMe" aria-label="${T('내 작품','My projects')}"></nav><a class="shr-btn pri" href="#/workshop/storage">${T("보관함에서 작품 공개","Publish from Storage")}</a></div>
       <section class="shr-week" id="shrWeek" aria-labelledby="shrWeekH" hidden><h2 id="shrWeekH">${T('이번 주 인기','Popular this week')}</h2><div class="shr-row" id="shrWeekRow"></div></section>
       <div class="shr-tabs" role="tablist" aria-label="${T('작품 목록','Project lists')}">${TABS.map(([k,ko,en])=>`<button type="button" role="tab" data-tab="${k}" aria-selected="${st.tab===k&&!st.fav}">${T(ko,en)}</button>`).join('')}</div>
       <div class="shr-chips" id="shrTopics" ${st.tab==='topic'?'':'hidden'} style="margin:0 0 10px">${TOPICS.map(k=>`<button type="button" data-topic="${k}" aria-pressed="${st.topic===k}">${esc(topicName(k))}</button>`).join('')}</div>
       <div class="shr-filters"><div class="shr-chips" role="group" aria-label="${T('종류','Type')}"><button type="button" data-type="" aria-pressed="${!st.type}">${T('전체','All')}</button>${Object.keys(TYPE_NAMES).map(k=>`<button type="button" data-type="${k}" aria-pressed="${st.type===k}">${esc(typeName(k))}</button>`).join('')}</div>
-        <label class="shr-sort">${T('정렬','Sort')}<select id="shrSort"><option value="">${T('탭 기본','Tab default')}</option>${SORTS.map(([k,ko,en])=>`<option value="${k}"${st.sort===k?' selected':''}>${T(ko,en)}</option>`).join('')}</select></label></div>
+        <div class="shr-tools"><label class="shr-sort">${T('정렬','Sort')}<select id="shrSort"><option value="">${T('탭 기본','Tab default')}</option>${SORTS.map(([k,ko,en])=>`<option value="${k}"${st.sort===k?' selected':''}>${T(ko,en)}</option>`).join('')}</select></label><label class="shr-sort">${T('기간','Period')}<select id="shrPeriod"><option value="">${T('전체 기간','Any time')}</option>${Object.entries(periods).map(([k,v])=>`<option value="${k}"${st.period===k?' selected':''}>${v}</option>`).join('')}</select></label></div></div>
       <div class="shr-grid" id="shrGrid" aria-live="polite"></div><div class="shr-more"><button type="button" class="shr-btn" id="shrMore" hidden>${T('더 보기','Show more')}</button></div><p class="shr-msg" id="shrMsg"></p>
-      <p class="shr-how">${T('문제 제작, 그림 제작, 전산물리 제작에서 만든 것을 «공유하기»로 올리면 여기에 나옵니다. 남의 작품은 «리믹스»로 내 워크샵에 복사해 고칠 수 있고, 원작이 함께 표시됩니다.','Use “Share” in Problems, Figures or Computational physics to post what you made here. “Remix” copies someone’s project into your Workshop to change, and the original is credited.')}</p>`;
+`;
     const grid=document.getElementById('shrGrid'),more=document.getElementById('shrMore'),msg=document.getElementById('shrMsg');
     const query=page=>{const q=new URLSearchParams({page:String(page)});const tab=st.fav?'':st.tab==='topic'?'':st.tab;if(tab)q.set('tab',tab);if(st.tab==='topic'&&!st.sort)q.set('sort','popular');
-      for(const k of ['type','topic','sort','q'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');return '/share?'+q;};
+      for(const k of ['type','topic','sort','q','period'])if(st[k])q.set(k,st[k]);if(st.fav)q.set('fav','1');return '/share?'+q;};
     async function load(reset){
-      if(reset){st.page=0;st.more=true;grid.innerHTML='';st.seq++;}
-      if(st.busy||!st.more)return;st.busy=true;const seq=st.seq;msg.textContent='';
+      if(reset){st.page=0;st.more=true;st.busy=false;grid.innerHTML='';st.seq++;more.hidden=true;}
+      grid.setAttribute('aria-busy','true');
+      if(st.busy||!st.more){if(!st.busy)grid.setAttribute('aria-busy','false');return;}st.busy=true;const seq=st.seq;msg.textContent='';
       try{const r=await api('GET',query(st.page+1));if(seq!==st.seq||!C.here())return;
         st.page=r.page;st.more=r.more;grid.insertAdjacentHTML('beforeend',r.items.map(cardHtml).join(''));
         if(!grid.children.length)grid.innerHTML=`<div class="shr-empty">${st.q?T('찾는 작품이 없습니다. 다른 낱말로 찾아 보세요.','No projects match. Try other words.'):st.fav?T('즐겨찾기한 작품이 없습니다. 작품 페이지에서 ★를 누르면 여기에 모입니다.','No favourites yet. Press ★ on a project to keep it here.'):T('아직 올라온 작품이 없습니다. 첫 작품을 공유해 보세요.','Nothing shared here yet. Be the first to share.')}</div>`;
       }catch(e){if(seq===st.seq)msg.textContent=err(e);}
-      finally{if(seq===st.seq){st.busy=false;more.hidden=!st.more;}}
+      finally{if(seq===st.seq){st.busy=false;grid.setAttribute('aria-busy','false');more.hidden=!st.more;}}
     }
-    const repaint=()=>{save();
+    const week=document.getElementById('shrWeek');
+    let hasWeek=false;
+    const showWeek=()=>{week.hidden=!hasWeek||!!(st.type||st.q||st.fav||st.period||st.tab!=='popular');};
+    const repaint=()=>{save();showWeek();
       body.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',String(!st.fav&&b.dataset.tab===st.tab)));
       body.querySelectorAll('[data-type]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.type===st.type)));
       body.querySelectorAll('[data-topic]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.topic===st.topic)));
@@ -193,12 +214,13 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     body.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{st.tab=b.dataset.tab;st.fav=false;if(st.tab!=='topic')st.topic='';else if(!st.topic)st.topic='mechanics';repaint();});
     body.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>{st.type=b.dataset.type;repaint();});
     body.querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>{st.topic=b.dataset.topic;repaint();});
+    document.getElementById('shrPeriod').onchange=e=>{st.period=e.target.value;repaint();};
     document.getElementById('shrSort').onchange=e=>{st.sort=e.target.value;repaint();};
     document.getElementById('shrSearch').onsubmit=e=>{e.preventDefault();st.q=document.getElementById('shrQ').value.trim().slice(0,60);repaint();};
     more.onclick=()=>load(false);
     if(typeof IntersectionObserver==='function'){observer=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)&&C.here()&&st.page>0)load(false);},{rootMargin:'600px'});observer.observe(more.parentNode);}
     load(true);
-    api('GET','/share?tab=week').then(r=>{if(!C.here()||!r.items.length)return;document.getElementById('shrWeekRow').innerHTML=r.items.map(cardHtml).join('');document.getElementById('shrWeek').hidden=false;}).catch(()=>{});
+    api('GET','/share?tab=week').then(r=>{if(!C.here()||!r.items.length)return;document.getElementById('shrWeekRow').innerHTML=r.items.map(cardHtml).join('');hasWeek=true;showWeek();}).catch(()=>{});
     C.me().then(me=>{const nav=document.getElementById('shrMe');if(!nav||!C.here())return;
       nav.innerHTML=me?`<a href="#/workshop/share/user/${+me.id}">${T('내 작품','My projects')}</a><a href="#/workshop/share?fav=1" id="shrFav">★ ${T('즐겨찾기','Favourites')}</a>`:`<a href="#/login" id="shrLogin">${T('로그인하고 공유하기','Sign in to share')}</a>`;
       const f=document.getElementById('shrFav');if(f)f.onclick=e=>{e.preventDefault();st.fav=true;repaint();};
@@ -206,7 +228,8 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
   }
 
   /* ── a project ── */
-  const editHash=p=>p.type==='figure'?'#/workshop/draw?share='+p.id:p.type==='set'?'#/workshop/make?share='+p.id:'#/workshop/create?view=edit&id='+p.id;
+  const computeLanguage=p=>['python','c'].includes(p.language);
+  const editHash=p=>computeLanguage(p)?'#/workshop/create?view=compute&id='+p.id:p.type==='figure'?'#/workshop/draw?share='+p.id:p.type==='set'?'#/workshop/make?share='+p.id:'#/workshop/create?view=edit&id='+p.id;
   async function project(root,id){
     let d;
     try{d=await api('GET','/share/'+id);}catch(e){if(C.here())root.innerHTML=`<div class="phead">${crumbs(T('작품','Project'))}</div><div class="shr-empty" role="alert">${esc(err(e))}</div><p><a class="shr-btn" href="#/workshop/share">${T('작품 공유로 돌아가기','Back to Showcase')}</a></p>`;return;}
@@ -235,7 +258,7 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
           <button type="button" class="shr-btn" id="shrLink">${icon('link')}${T('링크 복사','Copy link')}</button></div>
         <div class="shr-acts">${p.mine?`<a class="shr-btn pri" href="${editHash(p)}">${icon('edit')}${T('편집기에서 열기','Open in editor')}</a>`:`<button type="button" class="shr-btn pri" id="shrRemix">${icon('remix')}${T('리믹스','Remix')}</button>`}
           ${p.type==='sim'||p.type==='python'?`<button type="button" class="shr-btn" id="shrShowCode" aria-expanded="false">${icon('code')}${T('코드 보기','See the code')}</button>`:''}</div>
-        <div class="shr-acts">${p.mine?`<button type="button" class="shr-btn quiet" id="shrEdit">${T('설명 고치기','Edit details')}</button>${p.status==='public'?`<button type="button" class="shr-btn quiet" id="shrUnshare">${T('공유 취소','Unshare')}</button>`:''}`:''}
+        <div class="shr-acts">${p.mine?`<button type="button" class="shr-btn quiet" id="shrEdit">${T('수정','Edit')}</button>${p.status==='public'?`<button type="button" class="shr-btn quiet" id="shrUnshare">${T('삭제','Delete')}</button>`:''}`:''}
           ${d.staff&&p.status==='public'?`<button type="button" class="shr-btn quiet" id="shrPick">${p.featured?T('추천 해제','Remove pick'):T('추천','Staff pick')}</button>${p.mine?'':`<button type="button" class="shr-btn quiet" id="shrHide">${T('숨기기','Hide')}</button>`}`:''}
           ${!p.mine?`<button type="button" class="shr-btn quiet" id="shrReport">${icon('flag')}${T('신고','Report')}</button>`:''}</div>
         <p class="shr-msg" id="shrMsg2" role="status"></p><div id="shrEditBox"></div></div></aside></div>`;
@@ -248,7 +271,7 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     $('shrLink').onclick=async()=>{try{await navigator.clipboard.writeText(link);msg(T('링크를 복사했습니다.','Link copied.'),true);}catch(e){msg(link,true);}};
     if($('shrRemix'))$('shrRemix').onclick=async()=>{if(!needMe())return;try{const r=await api('POST',`/share/${id}/remix`,{});location.hash=r.edit.slice(1);}catch(e){msg(err(e));}};
     if($('shrShowCode'))$('shrShowCode').onclick=()=>{const box=$('shrCode'),open=!box.innerHTML;box.innerHTML=open?`<pre class="shr-code" tabindex="0" aria-label="${T('코드','Code')}">${esc(p.type==='sim'?p.code:p.starter+'\n\n# ── grader.py ──\n'+p.grader)}</pre>`:'';$('shrShowCode').setAttribute('aria-expanded',String(open));};
-    if($('shrUnshare'))$('shrUnshare').onclick=async()=>{if(!confirm(T('공유를 취소할까요? 작품은 내 워크샵에 남습니다.','Unshare this project? It stays in your Workshop.')))return;try{await api('DELETE','/share/'+id);location.hash='/workshop/share/user/'+(+me.id);}catch(e){msg(err(e));}};
+    if($('shrUnshare'))$('shrUnshare').onclick=async()=>{if(!confirm(T('작품 공유 목록에서 삭제할까요? 보관함 원본은 유지됩니다.','Delete this showcase listing? The original remains in storage.')))return;try{await api('DELETE','/share/'+id);location.hash='/workshop/share/user/'+(+me.id);}catch(e){msg(err(e));}};
     if($('shrHide'))$('shrHide').onclick=async()=>{if(!confirm(T('이 작품을 숨길까요? 만든 사람은 다시 공유할 수 없습니다.','Hide this project? The author cannot share it again.')))return;try{await api('DELETE','/share/'+id);location.hash='/workshop/share';}catch(e){msg(err(e));}};
     if($('shrPick'))$('shrPick').onclick=async()=>{try{const r=await api('POST',`/share/${id}/feature`,{on:!p.featured});p.featured=r.featured;$('shrPick').textContent=r.featured?T('추천 해제','Remove pick'):T('추천','Staff pick');msg(r.featured?T('추천에 올렸습니다.','Added to staff picks.'):T('추천에서 내렸습니다.','Removed from staff picks.'),true);}catch(e){msg(err(e));}};
     if($('shrReport'))$('shrReport').onclick=async()=>{if(!needMe())return;const reason=prompt(T('신고 이유를 적어 주세요. 운영진이 확인합니다.','Why are you reporting this project? Staff will check it.'));if(!reason||!reason.trim())return;try{await api('POST',`/share/${id}/report`,{reason:reason.trim().slice(0,300)});msg(T('신고했습니다. 고맙습니다.','Reported. Thank you.'),true);}catch(e){msg(err(e));}};
@@ -295,6 +318,11 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     return stop;
   }
   function stage(box,p){
+    if(p.type==='sim' && computeLanguage(p)){
+      const runtime = p.language === 'c' ? 'C' : 'Python';
+      box.innerHTML = `<div class="shr-runtime"><h2>${runtime} ${T('시뮬레이션','simulation')}</h2><p class="shr-note">${T('실행 환경을 열고 이 기기에서 계산할 수 있습니다.','Open the runtime to compute on this device.')}</p><a class="shr-btn pri" href="#/workshop/create?view=compute-preview&id=${+p.id}">${T('실행 환경 열기','Open runtime')}</a></div>`;
+      return;
+    }
     if(p.type==='sim'){
       box.innerHTML='<div id="shrSim"></div>'+(p.question?`<div class="shr-q"><b>${T('질문','Question')}</b><div class="shr-text">${md(p.question)}</div>${p.answer?`<a class="shr-btn" href="#/workshop/create?view=play&id=${+p.id}">${T('답 확인하기','Check your answer')}</a>`:''}</div>`:'');
       stopSim=runSim(document.getElementById('shrSim'),p.code);return;
@@ -305,7 +333,7 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
       box.innerHTML=`<iframe id="learnCreateFrame" src="create.html?${q}" title="${esc(p.title)}" referrerpolicy="same-origin" style="height:640px"></iframe>`;return;
     }
     if(p.type==='figure'){
-      const fallback=()=>{box.innerHTML=p.has_thumb?`<img class="shr-fig" src="${esc(thumbUrl(p))}" alt="${esc(p.title)}">`:`<div class="shr-thumb">${art('figure')}</div>`;};
+      const fallback=()=>{box.innerHTML=`<div class="shr-thumb">${p.has_thumb?`<img src="${esc(thumbUrl(p))}" data-shr-thumb="figure" alt="${esc(p.title)}">`:art('figure')}</div>`;};
       fallback();
       /* the site's own renderer draws the stored scene; as an <img> the SVG cannot run anything */
       Promise.all([import('./draw-render.mjs'),import('./draw-scene.mjs')]).then(([R,S])=>{if(!box.isConnected)return;const scene=p.payload.scene,view=scene.view||S.sceneBounds?.(scene);
@@ -315,7 +343,7 @@ html[data-theme="dark"] .shr .shr-badge{background:rgba(27,24,36,.9);border-colo
     }
     const set=p.payload||{items:[]};
     box.innerHTML=`${set.title?`<h2>${esc(set.title)}</h2>`:''}${set.info?`<p class="shr-meta">${esc(set.info)}</p>`:''}<p class="shr-meta">${T(`${set.items.length}문항`,`${set.items.length} problems`)}${set.minutes?` · ${T(`${+set.minutes}분`,`${+set.minutes} min`)}`:''}</p>
-      <ol class="shr-set">${set.items.map(it=>`<li>${it.own?`${md(it.own.q)}${it.own.fig&&/^data:image\/svg\+xml;base64,[A-Za-z0-9+/]+=*$/.test(it.own.fig.src)?`<img src="${it.own.fig.src}" alt="${T('그림','Figure')}" width="${+it.own.fig.w}" height="${+it.own.fig.h}" loading="lazy">`:''}${Array.isArray(it.own.choices)?`<ol class="shr-ch" type="1">${it.own.choices.map(c=>`<li style="list-style:decimal">${esc(c)}</li>`).join('')}</ol>`:''}`
+      <ol class="shr-set">${set.items.map(it=>`<li>${it.own?`${md(it.own.q)}${it.own.fig&&/^data:image\/(?:svg\+xml|png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/.test(it.own.fig.src)?`<img src="${it.own.fig.src}" alt="${T('그림','Figure')}" width="${+it.own.fig.w}" height="${+it.own.fig.h}" loading="lazy">`:''}${Array.isArray(it.own.choices)?`<ol class="shr-ch" type="1">${it.own.choices.map(c=>`<li style="list-style:decimal">${esc(c)}</li>`).join('')}</ol>`:''}`
         :`${T('하슬라랩 문제','HaslaLab problem')} <code class="shr-code" style="display:inline;padding:1px 5px;border:0">${esc(it.key)}</code>`} <span class="shr-meta">(${+it.pts||0}${T('점',' pts')})</span></li>`).join('')}</ol>
       <p class="shr-meta">${T('정답과 풀이는 «리믹스»로 문제 제작에 가져가면 볼 수 있습니다.','Remix it into Problems to see the answers and solutions.')}</p>`;
   }

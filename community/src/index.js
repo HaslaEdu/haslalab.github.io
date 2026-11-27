@@ -31,7 +31,7 @@ import { BOOKMARK_HEADER, primaryCheckpointRequest } from './public-consistency.
 import { readPublicBoards, readPublicPosts, readPublicRanking, PublicDataError } from './public-data.js';
 import { createGalleryRouter, activeGallery } from './galleries.js';
 import { createPracticeRouter, ensurePracticeSchema } from './practice-progress.js';
-import { createLearnerRouter, ensureLearnerSchema, learnerDeletion } from './learner-profile.js';
+import { createLearnerRouter, ensureLearnerSchema, learnerDeletion, listLearnerCountries } from './learner-profile.js';
 import { createLeagueRouter, ensureLeagueSchema, leagueDeletion, closeLeagueWeeks } from './league.js';
 import { createLearnRouter, ensureLearnSchema } from './learn-services.js';
 import { createHandoutRouter } from './handouts.js';
@@ -70,7 +70,7 @@ import { reasonBudgeted, readMarkLines, QWQ_MODEL, QWQ_CONTEXT } from './qwq-rea
 import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH } from './ai-eval.js';
 import { createAiTrainRouter, AI_TRAIN_PATH } from './ai-train.js';
-import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
+import { mathpixRead, mathpixStrokes, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount, writtenSwap } from './focus-read.js';
 import { screenAnswer, flagForReview, clearFlag, suspendForInjection, liftSuspension, ensureSuspensionSchema, SUSPENDED } from './injection-guard.js';
@@ -78,6 +78,7 @@ import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 import { createAccountSecurityRouter, ensureAccountSecuritySchema } from './account-security.js';
+import { ensureSignupSources, signupSource } from './signup-source.js';
 import { createSignupEmail, ensureSignupCodeSchema, CODE_HELD } from './signup-email.js';
 import { APPLE, appleConfigured, appleClientSecret, appleSubject, keepAppleToken, revokeAppleTokens } from './oauth-apple.js';
 import { setAiTrainConsent, aiTrainAllowed } from './consent.js';
@@ -284,7 +285,11 @@ const learnRouter = createLearnRouter({HttpError, needUser, limit, now, bad, cli
 const handoutRouter = createHandoutRouter({HttpError, needUser, limit, now, bad, isAdmin: u => isAdmin(u)});
 const gradeRouter = createGradeRouter({HttpError, needUser, limit, now, bad, clientIp, isStaff: u => isAdmin(u)});
 const creationRouter = createCreationRouter({HttpError, needUser, limit, now, bad, clientIp});
-const shareRouter = createShareRouter({HttpError, needUser, limit, now, bad, clientIp, text, isStaff: u => isAdmin(u)});
+const shareRouter = createShareRouter({HttpError, needUser, limit, now, bad, clientIp, text, isStaff: u => isAdmin(u),
+  externalProject: (provider, ref, maxBytes, me, env) => {
+    const path='/api/workshop/connectors/'+provider+'/project-source';
+    return workshopConnectorsRouter(path,'GET',null,me,new Request('https://workshop.internal'+path),env,{ref,maxBytes});
+  }});
 const workshopStorageRouter = createWorkshopStorageRouter({HttpError, needUser, limit, now, bad});
 const workshopConnectorsRouter = createWorkshopConnectorsRouter({HttpError, needUser, limit, now, bad});
 const workshopSceneRouter = createWorkshopSceneRouter({HttpError, needUser, limit, now, bad});
@@ -387,6 +392,7 @@ async function handle(req, env, url, ctx) {
        guarded is already bounded by the day cap, the mailed-code limits (per IP, per address) and the code's 5 tries. */
     await signupCapCheck(env, req);
     /* the mailed code last: a name taken or a box left unticked does not spend one of its tries */
+    await ensureSignupSources(env.DB);
     const { email, hash, t } = await signupEmail.checkCode(env, body);
     let res;
     try {
@@ -396,6 +402,8 @@ async function handle(req, env, url, ctx) {
           .bind(username, nickname, await hashPw(body.password), t, SIGNUP_TOKENS, email, hash, t),
         env.DB.prepare(`INSERT INTO account_emails(user_id,email,verified_at) SELECT id,?,? FROM users WHERE username=? AND deleted=0 AND ${CODE_HELD}`)
           .bind(email, t, username, email, hash, t),
+        env.DB.prepare(`INSERT INTO account_signup_sources(user_id,source) SELECT id,? FROM users WHERE username=? AND deleted=0 AND ${CODE_HELD}`)
+          .bind(signupSource(req.headers.get("Origin")), username, email, hash, t),
         env.DB.prepare("DELETE FROM signup_email_codes WHERE email=? AND code_hash=?").bind(email, hash),
       ]);
     } catch (e) {                                       // someone took the name or the address between the check and here
@@ -846,6 +854,21 @@ async function handle(req, env, url, ctx) {
   if (workshopStorage !== undefined) return workshopStorage;
   const workshopConnectors = await workshopConnectorsRouter(p, m, body, me, req, env);
   if (workshopConnectors !== undefined) return workshopConnectors;
+  if (p === '/api/workshop/ink-formula' && m === 'POST') {
+    needUser(me);
+    const strokes = body.strokes;
+    const validPoint = point => Array.isArray(point) && point.length === 2 &&
+      point.every(n => Number.isSafeInteger(n) && n >= 0 && n <= 4096);
+    if (!Array.isArray(strokes) || !strokes.length || strokes.length > 32 ||
+      !strokes.every(s => Array.isArray(s) && s.length >= 2 && s.length <= 200 && s.every(validPoint))) bad('bad_strokes');
+    if (!ocrEngineKeys(env).mathpix) throw new HttpError(503,'ocr_engine_unavailable');
+    await limit(env, 'workshop-ink:' + me.id, 16, 3600);
+    let latex;
+    try { latex = await mathpixStrokes(env, strokes); }
+    catch { throw new HttpError(503,'ocr_engine_failed'); }
+    if (!latex || latex.length > 240 || /[\r\n]/.test(latex)) throw new HttpError(422,'ink_unreadable');
+    return {latex};
+  }
   const workshopScene = await workshopSceneRouter(p, m, body, me, req, env);
   if (workshopScene !== undefined) return workshopScene;
   const workshopCodeAi = await workshopCodeAiRouter(p, m, body, me, req, env);
@@ -1616,7 +1639,14 @@ async function arena(p, m, body, me, req, env, url) {
     if (!isAdmin(me)) throw new HttpError(403, "forbidden");
     /* accounts suspended for an answer that instructed the grader: why (the matched passages), and lifting it */
     /* sign-ups, grading and Hasla AI use, as counts only (admin-stats.js) */
-    if (p === "/api/admin/stats" && m === "GET") return adminStats(env[DB_SCOPE] || env.DB, { days: url.searchParams.get("days") });
+    if (p === "/api/admin/member-countries" && m === "GET") {
+      await limit(env, "admin-member-countries:" + me.id, 90, 60);
+      return listLearnerCountries(env,{query:url.searchParams.get("q") || "",before:Number(url.searchParams.get("before"))});
+    }
+    if (p === "/api/admin/stats" && m === "GET") {
+      await ensureSignupSources(env.DB);
+      return adminStats(env[DB_SCOPE] || env.DB, { days: url.searchParams.get("days") });
+    }
     if (p === "/api/admin/suspensions" && m === "GET") {
       await ensureSuspensionSchema(env.DB, env[DB_SCOPE] || env.DB);
       return { suspensions: (await env.DB.prepare(`SELECT x.user_id,u.nickname,x.reason,x.source,x.evidence,x.created_at,x.lifted_at FROM account_suspensions x
@@ -5391,10 +5421,15 @@ async function oauthSignIn(req, env, prov, sub, name, st, afterUser = null) {
   else {
     await signupCapCheck(env, req);
     const uname = '~pending_' + b64u(crypto.getRandomValues(new Uint8Array(18)));
-    const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,NULL,?,?)").bind(uname, await freeNick(env, name), now(), SIGNUP_TOKENS).run();
+    await ensureSignupSources(env.DB);
+    const origin = st.return_to.startsWith('desktop:') ? await desktopOAuth.signupOrigin(env, st.return_to) : st.return_to;
+    const t = now(), [res] = await env.DB.batch([
+      env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,NULL,?,?)").bind(uname, await freeNick(env, name), t, SIGNUP_TOKENS),
+      env.DB.prepare("INSERT INTO account_signup_sources(user_id,source) SELECT id,? FROM users WHERE username=?").bind(signupSource(origin), uname),
+      env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) SELECT ?,?,id,? FROM users WHERE username=?").bind(prov, sub, t, uname),
+    ]);
     userId = res.meta.last_row_id; fresh = 1;
     await signupCapCount(env, req);
-    await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, userId, now()).run();
   }
   if (afterUser) await afterUser(userId);
   if(st.return_to.startsWith('desktop:'))return desktopOAuth.finish(env,st.return_to,userId,fresh);

@@ -501,7 +501,7 @@ def build(path: Path):
 def main():
     (LOGO / "dark").mkdir(exist_ok=True)
     (LOGO / "light").mkdir(exist_ok=True)
-    paths = sorted(path for path in LOGO.iterdir() if path.suffix.lower() in {".png", ".svg"})
+    paths = sorted(path for path in LOGO.iterdir() if path.suffix.lower() in {".png", ".svg"} and path.stem != "snu-emblem")
     before = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
     entries = {path.stem: build(path) for path in paths}
     for path, digest in before.items():
