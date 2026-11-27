@@ -51,6 +51,15 @@ def dump(orig, out):
     json.dump({str(n + 1): blocks(p) for n, p in enumerate(d)}, open(out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 
 
+def inside(it, rs):
+    """A level stroke lying well inside one painted-out line (a fraction bar or overline of its math), not a rule of the
+    table: it is not put back. (Upright strokes are always put back: a short cell border can sit inside a painted line.)"""
+    a = pymupdf.Rect(it[1], it[2]) if it[0] == 'l' else pymupdf.Rect(it[1])
+    if a.height > 2.5 or a.width <= a.height:
+        return False
+    return any(r.x0 - 0.5 <= a.x0 and a.x1 <= r.x1 + 0.5 and r.y0 + 1.5 <= a.y0 and a.y1 <= r.y1 - 1.5 for r in rs)
+
+
 def rules(page):
     """The straight rules of the page: level ones as (y, x0, x1), upright ones as (x, y0, y1)."""
     hr, vr = [], []
@@ -216,8 +225,9 @@ def html(orig, ko, out):
         sh = pg.new_shape()                    # then the rules of the table go back on top: straight level or upright
         for q in paths:                        # lines and outlined boxes only, not the slanted lines of figures
             items = [it for it in q['items'] if
-                     (it[0] == 'l' and ((abs(it[1].x - it[2].x) < 0.5 and abs(it[1].y - it[2].y) > 8) or (abs(it[1].y - it[2].y) < 0.5 and abs(it[1].x - it[2].x) > 25)))
-                     or (it[0] == 're' and (min(it[1].width, it[1].height) < 2.5 or not q.get('fill')) and max(it[1].width, it[1].height) > 4)]
+                     ((it[0] == 'l' and ((abs(it[1].x - it[2].x) < 0.5 and abs(it[1].y - it[2].y) > 8) or (abs(it[1].y - it[2].y) < 0.5 and abs(it[1].x - it[2].x) > 25)))
+                      or (it[0] == 're' and (min(it[1].width, it[1].height) < 2.5 or not q.get('fill')) and max(it[1].width, it[1].height) > 4))
+                     and not inside(it, rs)]
             if not items:
                 continue
             for it in items:

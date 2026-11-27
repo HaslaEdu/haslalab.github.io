@@ -10,8 +10,12 @@ const fs = require("fs"), path = require("path");
   const [src, out, head] = args;
   const root = path.resolve(__dirname, "../.."), katex = "file://" + path.join(root, "vendor/katex");
   const tpl = fs.readFileSync(tplPath ? path.resolve(tplPath) : path.join(__dirname, "template.html"), "utf8").replace(/KATEX\//g, katex + "/");
-  const body = fs.readFileSync(src, "utf8");
-  const html = tpl.replace("<!-- BODY -->", () => body);   // a function: "$$" in the body must stay "$$"
+  // inline math and the word it is glued to (a particle such as «$x$에서», a bracket) stay on one line: <span class="w">
+  const keep = [], body = fs.readFileSync(src, "utf8")
+    .replace(/<(style|script)\b[\s\S]*?<\/\1>|\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\]/g, m => `\u0000${keep.push(m) - 1}\u0000`)
+    .replace(/[^\s<>$\u0000]*(?:\$[^$\u0000]*\$[^\s<>$(\u0000]*)+/g, m => `<span class="w">${m}</span>`)
+    .replace(/\u0000(\d+)\u0000/g, (m, i) => keep[i]);
+  const html = tpl.replace("<!-- BODY -->", () => body).replace("</head>", () => "<style>.w{white-space:nowrap}</style></head>");   // functions: "$$" in the body must stay "$$"
   const tmp = path.join(path.dirname(path.resolve(src)), ".render-" + path.basename(src));
   fs.writeFileSync(tmp, html);
   const br = await chromium.launch(), pg = await br.newPage();
